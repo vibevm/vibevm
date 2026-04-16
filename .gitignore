@@ -1,0 +1,25 @@
+# Rust
+/target/
+**/target/
+Cargo.lock.bak
+*.pdb
+
+# vibevm internal cache (per-project, gitignored per spec §4.2)
+.vibe/
+
+# Editor / OS
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Reference sources and author's book chapters — cloned/placed externally,
+# not part of the vibevm distribution. Kept out of git both to respect
+# upstream copyright and to keep the public repo lean.
+/refs/
+
+# Local playgrounds for hand-testing M0 (not source of truth)
+/playground/
