@@ -4,7 +4,7 @@ _Updated: 2026-04-17_
 ## Current phase
 
 **Milestone M0 — walking skeleton: COMPLETE.**
-**Project rules adopted.** Repository wired to gitverse remote, first commits about to land.
+**Project rules adopted.** Repository wired to gitverse remote and the initial history (10 commits) published to `git@gitverse.ru:anarchic/vibevm.git` on 2026-04-17.
 
 All M0 acceptance checklist items (`VIBEVM-SPEC.md` §16) pass. The `vibe` binary performs the full `init → install → list → uninstall` loop against a local-directory registry. The canonical `flow:wal` package is hand-written under `packages/flow/wal/v0.1.0/` and the end-to-end cycle is covered by integration tests. The four non-negotiable project rules (attribution, Conventional Commits, grouping by meaning, autonomy on routine changes) are recorded verbatim in `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` and are reproduced authoritatively in [spec://vibevm/common/PROP-000#commits](common/PROP-000.md#commits).
 
@@ -53,7 +53,7 @@ Next milestone: M1 — git registry, `vibe update`, `vibe check`, `vibe show`, a
 
 ## In progress
 
-First Git publish to `git@gitverse.ru:anarchic/vibevm.git`. Commits being authored in grouped units per rule 3.
+Nothing active. Next session picks up at the start of M1.
 
 ## Next
 
