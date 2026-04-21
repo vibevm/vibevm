@@ -3,18 +3,18 @@
 //! Plan → user-confirm → apply → update-lockfile → report. Mutating nodes run
 //! only after an `Approval` is produced.
 //!
-//! Spec: `VIBEVM-SPEC.md` §5.6, §6, §11.1.
+//! ## Package layout
 //!
-//! ## Package layout convention (M0)
+//! Packages use the **mirror layout** pinned in `VIBEVM-SPEC.md` §13.1: every
+//! entry in `writes.files` is both the source path inside the package and the
+//! target path inside the project. Boot snippets are the one exception — they
+//! carry an explicit `source` field, and their target is always
+//! `spec/boot/<filename>`. `plan_install` relies on this and computes each
+//! write's `source_abs` as `cache_dir.join(file)`.
 //!
-//! <!-- REVIEW: VIBEVM-SPEC.md §13.1 shows a package layout with a `content/`
-//! directory and a separate `writes.files` listing target paths, but the spec
-//! does not pin down how target paths map back to source paths. M0 adopts a
-//! **mirror layout** convention: target paths in `writes.files` are used
-//! verbatim as source paths inside the package directory, so the package
-//! contains files at the same relative paths where they will be installed.
-//! `boot_snippet.source` remains an explicit source path (typically `boot/…`).
-//! Reconcile the spec's example if this convention sticks. -->
+//! Spec: `VIBEVM-SPEC.md` §5.6 (install subgraph), §6 (boot dir), §11.1 (M0
+//! scope), §13 (package model); [`spec://vibevm/common/PROP-000#package-layout`]
+//! for the decision record.
 
 #![forbid(unsafe_code)]
 

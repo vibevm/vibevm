@@ -419,6 +419,8 @@ install:report          (input: ... → Report)
 
 Each named node is a built-in. `install:user-confirm` is a `prompt` node that pauses for user input. All other mutating nodes (`install:apply`, `install:update-lockfile`) only run after `install:user-confirm` produces an `Approval` with a positive value.
 
+**M0 implementation note.** In M0 the `install` workflow is implemented procedurally inside the `vibe-install` library (`plan_install` / `apply_install` / `register_installed`) rather than executed through a formal graph runner. The node names above reflect the logical shape and map one-to-one onto library functions. `install:review` is elided entirely in M0 (no corresponding function); when M2 introduces an LLM-driven censor it will land as a new stage between `install:fetch` and `install:plan`. The graph-runner sophistication described here is a v2 deliverable — v1 ships the same semantics executed procedurally so the type system and testability benefits hold without the runner's infrastructure cost.
+
 ### 5.7 The `build` workflow in detail (v1.5 scope; document for forward compatibility)
 
 When the user invokes `vibe build feat:welcome-page --stack rust-cli`, the subgraph:
@@ -500,7 +502,10 @@ The user always owns `00-core.md` and `90-user.md`. `vibe init` creates these. `
 
 When a package is installed:
 1. The package manifest's `boot_snippet` field declares: target filename (e.g., `10-flow-wal.md`) and source file within the package.
-2. The CLI checks if the target filename already exists in `spec/boot/`. If yes, conflict — abort with clear error message.
+2. The CLI scans `spec/boot/` for two kinds of conflict:
+   - **Exact-filename conflict.** Another file with the same name already exists. Abort with exit code 3 and, if possible, name the owning package (the lockfile is consulted for attribution).
+   - **Numeric-prefix conflict.** Another file in the package-writable range `10-89` shares the same `NN-` prefix. This is the case §6.2 anticipates: two packages independently picked the same number. Abort with exit code 3.
+   - User-owned files in ranges `00-09` and `90-99` are excluded from both checks; packages cannot target those ranges at all.
 3. The CLI copies the source file to the target path.
 
 When a package is uninstalled:
@@ -720,20 +725,28 @@ v1 architectural hook: the `install:review` node exists in the install subgraph 
 ### 9.1 Command summary (v1)
 
 ```
-vibe init [--stack <stack-name>]                       # Create project structure
-vibe install <pkgref> [<pkgref> ...]                   # Install packages
-vibe uninstall <pkgref>                                # Remove a package
-vibe update <pkgref> | --all                           # Re-fetch and apply changes
-vibe list [--kind <kind>]                              # Show installed packages
-vibe check                                             # Validate spec consistency
-vibe show effective [--feat <name>] [--stack <name>]   # Print effective spec
-vibe show graph [<workflow-name>]                      # Print task graph
-vibe show node <node-name>                             # Print node details
-vibe show plan <workflow-name> [args...]               # Print what would happen, don't execute
-vibe registry sync                                     # Force-refresh the registry cache
+vibe init [--path <dir>] [--name <n>] [--stack <stack-name>]
+    # Create project structure. --path defaults to cwd, --name defaults to the
+    # directory basename, --stack pre-populates `[active]` in vibe.toml.
+vibe install <pkgref> [<pkgref> ...] [--path <dir>] [--registry <path>] [--assume-yes]
+    # Install one or more packages. --registry wins over the vibe.toml
+    # [registry] url; --assume-yes skips the interactive confirmation
+    # (required in non-TTY environments like CI).
+vibe uninstall <pkgref> [--path <dir>] [--assume-yes]
+    # Remove a package. Version portion of <pkgref> is ignored on uninstall.
+vibe update <pkgref> | --all                           # Re-fetch and apply changes (M1)
+vibe list [--kind <kind>] [--path <dir>]               # Show installed packages
+vibe check                                             # Validate spec consistency (M1)
+vibe show effective [--feat <name>] [--stack <name>]   # Print effective spec (M1)
+vibe show graph [<workflow-name>]                      # Print task graph (M1)
+vibe show node <node-name>                             # Print node details (M1)
+vibe show plan <workflow-name> [args...]               # Print what would happen, don't execute (M1)
+vibe registry sync                                     # Force-refresh the registry cache (M1)
 vibe help [<command>]                                  # Help text
 vibe version                                           # Version info
 ```
+
+Every command honours the two global flags `--json` (machine-readable output) and `--quiet` (one-line summary); they are mutually exclusive. `--json` output is a stream of one or more JSON documents on stdout — `install`, for instance, emits the plan and then the report as separate top-level objects so consumers can parse the plan before approval lands.
 
 ### 9.2 Commands deferred to v1.5
 
@@ -887,14 +900,14 @@ vibevm ships in staged milestones. Each milestone is *useful on its own* — if 
 **Scope.** A minimum-viable installer that proves the file-management mechanics work.
 
 **Commands shipped.**
-- `vibe init` — creates project structure (`spec/boot/`, `00-core.md`, `90-user.md`, `vibe.toml`, `vibe.lock`, `CLAUDE.md`, `AGENTS.md`).
-- `vibe install <kind>:<name>` — installs from a *local directory* registry (no git yet). Reads the package, validates manifest, shows plan, confirms with user, copies files.
-- `vibe list` — reads lockfile, shows installed packages.
-- `vibe uninstall <kind>:<name>` — reverses the install.
+- `vibe init [--path] [--name] [--stack]` — creates the §4.2 project structure: `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` redirect files, the `spec/` tree with `boot/00-core.md`, `boot/90-user.md`, `WAL.md`, a project-level `.gitignore`, `.vibe/cache/`, `vibe.toml` (with `[active]` pre-populated if `--stack` was given), and an empty `vibe.lock`. Idempotent: a second run never clobbers user-modified files and reports each as `kept`.
+- `vibe install <kind>:<name>[@version] [...] [--registry <path>] [--assume-yes]` — installs from a *local directory* registry (no git yet). Reads the package manifest, fetches into `.vibe/cache/`, plans the writes (including conflict detection), shows the plan, confirms with user, applies the writes, updates `vibe.lock`.
+- `vibe list [--kind]` — reads lockfile, renders a table (default) or JSON (`--json`) or a one-line comma list (`--quiet`).
+- `vibe uninstall <kind>:<name> [--assume-yes]` — reverses an install. Never touches user-owned files (`00-core.md`, `90-user.md`) or structural directories.
 
-**Out of scope.** No git registry. No LLM. No `build`. No `sync`. No `check`. No `update`. No graph runner sophistication.
+**Out of scope.** No git registry. No LLM. No `build`. No `sync`. No `check`. No `update`. No formal graph runner (workflows are implemented procedurally inside `vibe-install` — see §5.6's M0 implementation note).
 
-**Verification.** Init a project, install a hand-written `flow:wal` from a local directory, verify files appear in the right places, uninstall, verify files are removed. Hand-written `flow:wal` is the test fixture.
+**Verification.** Init a project, install a hand-written `flow:wal` from a local directory, verify files appear in the right places, uninstall, verify files are removed. Hand-written `flow:wal` is the test fixture. All 15 items in §16 (M0 acceptance checklist) pass.
 
 **Estimated effort.** One weekend.
 
@@ -994,13 +1007,19 @@ This is the canonical demo package. Implementing it correctly is the v1 acceptan
 flow-wal-package/
 ├── vibe-package.toml
 ├── README.md
-├── content/
-│   ├── WAL-PROTOCOL.md         # Detailed protocol description
-│   ├── session-end-hook.md     # Instructions for end-of-session WAL update
-│   └── morning-routine.md      # Instructions for morning WAL review
+├── spec/
+│   └── flows/
+│       └── wal/
+│           ├── WAL-PROTOCOL.md      # -> <project>/spec/flows/wal/WAL-PROTOCOL.md
+│           ├── session-end-hook.md  # -> <project>/spec/flows/wal/session-end-hook.md
+│           └── morning-routine.md   # -> <project>/spec/flows/wal/morning-routine.md
 └── boot/
-    └── 10-flow-wal.md           # The boot snippet
+    └── 10-flow-wal.md                # source path; target is <project>/spec/boot/10-flow-wal.md
 ```
+
+**Package layout is a mirror layout.** Every entry in `writes.files` is simultaneously (a) the path of the file inside the package directory and (b) the path at which it will be installed in the consumer's project. There is no separate `target = "…"` field per entry; `writes.files` is the single source of truth. A human author inspecting a package directory knows immediately what will appear in a consumer's project — no mapping, no rewriting, no sidecar configuration.
+
+**Boot snippets are the one exception.** The `[boot_snippet]` table has an explicit `source` field naming the path inside the package (conventionally `boot/NN-<name>.md`) because the target is always `spec/boot/<filename>` — a fixed prefix plus the filename, not a free-form project path.
 
 ### 13.2 Manifest
 
