@@ -82,7 +82,7 @@ Constraint forms in CLI:
 
 **Decision:**
 - **M0:** local-directory registry only. No git. Registry is a path on disk with the layout from `VIBEVM-SPEC.md` §8.2.
-- **M1:** git registry added per `VIBEVM-SPEC.md` §8. Configured in `vibe.toml`'s `[registry]` section. Default public registry URL = `git@gitverse.ru:anarchic/vibespecs.git` (SSH, see `spec/boot/90-user.md`). `VIBEVM-SPEC.md` §7.5 now carries this URL directly (was a `github.com/anarchic-org/...` placeholder earlier).
+- **M1:** git registry added per `VIBEVM-SPEC.md` §8. Configured in `vibe.toml`'s `[registry]` section. Default public registry URL = `git@gitverse.ru:anarchic/vibespecs.git` (SSH, see `spec/boot/90-user.md`). `VIBEVM-SPEC.md` §7.5 now carries this URL directly (was a `github.com/anarchic-org/...` placeholder earlier). **Backend choice, trait design, cache layout, and Windows UX for M1** are pinned in [spec://vibevm/modules/vibe-registry/PROP-001](../modules/vibe-registry/PROP-001-git-backend.md) — in brief: shell-out to the system `git` (not `libgit2`), behind a `GitBackend` trait that leaves the door open for a future `libgit2` swap.
 
 **Source repositories:**
 - The vibevm tool itself: `git@gitverse.ru:anarchic/vibevm.git` (SSH) / `https://gitverse.ru/anarchic/vibevm` (web).
