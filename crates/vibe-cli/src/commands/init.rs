@@ -284,42 +284,7 @@ fn normalize_display(requested: &Path, canonical: &Path) -> String {
 }
 
 pub(crate) fn current_timestamp_utc() -> String {
-    use std::time::{SystemTime, UNIX_EPOCH};
-    let secs = SystemTime::now()
-        .duration_since(UNIX_EPOCH)
-        .map(|d| d.as_secs())
-        .unwrap_or(0);
-    format_unix_utc(secs)
-}
-
-/// Render a UNIX epoch in seconds as `YYYY-MM-DDTHH:MM:SSZ` using the
-/// Gregorian proleptic calendar. No external date crate — we convert directly.
-fn format_unix_utc(secs: u64) -> String {
-    let days = secs / 86_400;
-    let rem = secs % 86_400;
-    let hour = rem / 3600;
-    let minute = (rem / 60) % 60;
-    let second = rem % 60;
-
-    // Calendar math (1970-01-01 is day 0). This implementation matches what
-    // chrono does for sane inputs. Good enough for lockfile timestamps.
-    let (year, month, day) = gregorian_from_days(days as i64);
-    format!("{year:04}-{month:02}-{day:02}T{hour:02}:{minute:02}:{second:02}Z")
-}
-
-fn gregorian_from_days(days_since_epoch: i64) -> (i64, u32, u32) {
-    // Howard Hinnant's civil_from_days algorithm, adapted.
-    let z = days_since_epoch + 719_468;
-    let era = z.div_euclid(146_097);
-    let doe = (z - era * 146_097) as u64; // [0, 146096]
-    let yoe = (doe - doe / 1460 + doe / 36_524 - doe / 146_096) / 365; // [0, 399]
-    let y = yoe as i64 + era * 400;
-    let doy = doe - (365 * yoe + yoe / 4 - yoe / 100); // [0, 365]
-    let mp = (5 * doy + 2) / 153; // [0, 11]
-    let d = (doy - (153 * mp + 2) / 5 + 1) as u32; // [1, 31]
-    let m = if mp < 10 { mp + 3 } else { mp - 9 } as u32; // [1, 12]
-    let y = if m <= 2 { y + 1 } else { y };
-    (y, m, d)
+    vibe_core::timestamp::now_utc()
 }
 
 fn report(
@@ -470,27 +435,3 @@ desktop.ini
 .vscode/
 "#;
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn gregorian_epoch_is_1970_01_01() {
-        assert_eq!(gregorian_from_days(0), (1970, 1, 1));
-    }
-
-    #[test]
-    fn gregorian_one_day() {
-        assert_eq!(gregorian_from_days(1), (1970, 1, 2));
-    }
-
-    #[test]
-    fn gregorian_2026_04_16() {
-        // Days from 1970-01-01 to 2026-04-16 =
-        //   56 years * 365 + 14 leap days (1972, 76, 80, 84, 88, 92, 96, 2000,
-        //   04, 08, 12, 16, 20, 24) + days in 2026 up to Apr 16 (Jan 31 + Feb 28 + Mar 31 + 16 = 106)
-        // = 56*365 + 14 + 106 - 1 (because Jan 1 is day 0 of the year) = 20560 + 14 + 105 = 20679
-        let (y, m, d) = gregorian_from_days(20_559);
-        assert_eq!((y, m, d), (2026, 4, 16));
-    }
-}

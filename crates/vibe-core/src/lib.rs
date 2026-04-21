@@ -12,6 +12,7 @@
 pub mod error;
 pub mod manifest;
 pub mod package_ref;
+pub mod timestamp;
 pub mod values;
 
 pub use error::{Error, Result};
