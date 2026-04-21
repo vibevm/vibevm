@@ -36,3 +36,4 @@ tempfile.workspace = true
 toml.workspace = true
 vibe-core.workspace = true
 serde_json.workspace = true
+walkdir.workspace = true

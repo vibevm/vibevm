@@ -953,6 +953,7 @@ dependencies = [
  "vibe-graph",
  "vibe-install",
  "vibe-registry",
+ "walkdir",
 ]
 
 [[package]]

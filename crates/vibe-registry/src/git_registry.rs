@@ -113,7 +113,7 @@ impl GitRegistry {
                 })?;
             }
             tracing::info!(target: "vibe_registry", url = %normalized, dest = %clone_dir.display(), "cloning registry");
-            backend.bootstrap(url, refname, &clone_dir)?;
+            backend.bootstrap(strip_git_plus_prefix(url), refname, &clone_dir)?;
             write_meta(&meta_path, &normalized, refname, &full_hash)?;
         } else if should_pull(existing_meta.as_ref(), freshness_secs) {
             tracing::info!(target: "vibe_registry", url = %normalized, "updating registry (cache stale)");
@@ -222,10 +222,28 @@ impl Registry for GitRegistry {
     }
 }
 
-/// Return `~/.vibe/registries/` as the default cache root.
+/// Return the default cache root for registry clones.
+///
+/// Honours `VIBE_REGISTRY_CACHE` if set (used by tests and by users
+/// who want an explicit out-of-home location), otherwise returns
+/// `~/.vibe/registries/` per `VIBEVM-SPEC.md` §8.3.
 pub fn default_cache_root() -> Result<PathBuf, RegistryError> {
+    if let Some(custom) = std::env::var_os("VIBE_REGISTRY_CACHE") {
+        return Ok(PathBuf::from(custom));
+    }
     let home = dirs::home_dir().ok_or(RegistryError::NoHomeDir)?;
     Ok(home.join(".vibe").join("registries"))
+}
+
+/// Strip a `git+` transport-wrapper prefix (`git+ssh://`, `git+https://`,
+/// `git+file://`, `git+http://`) before handing the URL to git.
+///
+/// `git+` is a pip / Cargo convention that labels a URL as "this is a
+/// git source" in a lockfile or manifest. Native git does not
+/// understand the prefix itself, so we peel it off at the backend
+/// boundary.
+fn strip_git_plus_prefix(url: &str) -> &str {
+    url.strip_prefix("git+").unwrap_or(url)
 }
 
 /// Normalize a registry URL for hashing and comparison.

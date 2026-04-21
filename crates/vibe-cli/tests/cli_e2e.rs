@@ -240,3 +240,152 @@ fn install_boot_snippet_conflict_exits_with_code_three() {
     let output = assertion.get_output();
     assert_eq!(output.status.code(), Some(3));
 }
+
+// ---------------------------------------------------------------------------
+// M1.1 — install from a git-backed registry
+// ---------------------------------------------------------------------------
+
+fn git_available() -> bool {
+    std::process::Command::new("git")
+        .arg("--version")
+        .output()
+        .map(|o| o.status.success())
+        .unwrap_or(false)
+}
+
+fn run_git(cwd: &Path, args: &[&str]) {
+    let out = std::process::Command::new("git")
+        .args(args)
+        .current_dir(cwd)
+        .env("LC_ALL", "C")
+        .env("LANG", "C")
+        .output()
+        .expect("spawn git");
+    assert!(
+        out.status.success(),
+        "git {} failed: {}",
+        args.join(" "),
+        String::from_utf8_lossy(&out.stderr)
+    );
+}
+
+/// Build a bare git "registry" repo at `root/vibespecs.git` seeded with
+/// the canonical `flow:wal@0.1.0` package under `flow/wal/v0.1.0/`.
+fn make_bare_registry(root: &Path) -> PathBuf {
+    let src = root.join("src");
+    fs::create_dir_all(&src).unwrap();
+    run_git(&src, &["init", "--initial-branch=main"]);
+    run_git(&src, &["config", "user.email", "t@example.com"]);
+    run_git(&src, &["config", "user.name", "Test"]);
+
+    // Copy the fixture package into the work tree at the right path.
+    let pkg_dst = src.join("flow/wal/v0.1.0");
+    fs::create_dir_all(&pkg_dst).unwrap();
+    copy_tree(&fixture_registry().join("flow/wal/v0.1.0"), &pkg_dst);
+
+    run_git(&src, &["add", "-A"]);
+    run_git(&src, &["commit", "-m", "seed flow:wal@0.1.0"]);
+
+    let bare = root.join("vibespecs.git");
+    run_git(root, &[
+        "clone", "--bare", src.to_str().unwrap(), bare.to_str().unwrap(),
+    ]);
+    run_git(&bare, &["symbolic-ref", "HEAD", "refs/heads/main"]);
+    bare
+}
+
+fn copy_tree(src: &Path, dst: &Path) {
+    for entry in walkdir::WalkDir::new(src).into_iter().filter_map(|e| e.ok()) {
+        let rel = entry.path().strip_prefix(src).unwrap();
+        let target = dst.join(rel);
+        if entry.file_type().is_dir() {
+            fs::create_dir_all(&target).unwrap();
+        } else if entry.file_type().is_file() {
+            if let Some(parent) = target.parent() {
+                fs::create_dir_all(parent).unwrap();
+            }
+            fs::copy(entry.path(), target).unwrap();
+        }
+    }
+}
+
+fn write_project_with_git_registry(project_dir: &Path, registry_url: &str) {
+    // Replace the default vibe.toml with one that carries a [registry]
+    // section pointing at the given URL.
+    let manifest = format!(
+        r#"[project]
+name = "demo"
+version = "0.0.1"
+
+[registry]
+url = "{registry_url}"
+ref = "main"
+"#
+    );
+    fs::write(project_dir.join("vibe.toml"), manifest).unwrap();
+}
+
+#[test]
+fn install_from_git_registry() {
+    if !git_available() {
+        eprintln!("skipping install_from_git_registry: git not on PATH");
+        return;
+    }
+
+    let outer = tempfile::tempdir().unwrap();
+    let bare = make_bare_registry(outer.path());
+    let cache = outer.path().join("cache");
+    fs::create_dir_all(&cache).unwrap();
+
+    let project = tempfile::tempdir().unwrap();
+    init_project(project.path());
+
+    let url = format!("git+file://{}", bare.to_string_lossy().replace('\\', "/"));
+    write_project_with_git_registry(project.path(), &url);
+
+    vibe()
+        .env("VIBE_REGISTRY_CACHE", &cache)
+        .arg("install")
+        .arg("flow:wal")
+        .arg("--path")
+        .arg(project.path())
+        .arg("--assume-yes")
+        .assert()
+        .success();
+
+    // Lockfile carries the git+ source URI with the fragment.
+    let lock_text = fs::read_to_string(project.path().join("vibe.lock")).unwrap();
+    let lock: vibe_core::manifest::Lockfile = toml::from_str(&lock_text).unwrap();
+    assert_eq!(lock.packages.len(), 1);
+    assert!(
+        lock.packages[0].source.starts_with("git+"),
+        "expected git+ source, got: {}",
+        lock.packages[0].source
+    );
+    assert!(
+        lock.packages[0].source.ends_with("#flow/wal/v0.1.0"),
+        "expected #flow/wal/v0.1.0 fragment, got: {}",
+        lock.packages[0].source
+    );
+
+    // Cache now contains a clone dir with the bare repo's tree.
+    let clone_dirs: Vec<_> = fs::read_dir(&cache).unwrap().filter_map(|e| e.ok()).collect();
+    assert_eq!(clone_dirs.len(), 1, "expected one registry cache dir");
+    let reg_dir = clone_dirs[0].path();
+    assert!(reg_dir.join("clone/.git").exists(), "clone/.git missing");
+    assert!(reg_dir.join("meta.toml").exists(), "meta.toml missing");
+    assert!(
+        reg_dir.join("clone/flow/wal/v0.1.0/vibe-package.toml").exists(),
+        "registry tree not in clone"
+    );
+
+    // `vibe registry sync` succeeds against the same registry.
+    vibe()
+        .env("VIBE_REGISTRY_CACHE", &cache)
+        .arg("registry")
+        .arg("sync")
+        .arg("--path")
+        .arg(project.path())
+        .assert()
+        .success();
+}

@@ -42,8 +42,30 @@ pub enum Command {
     /// Remove an installed package from the current project.
     Uninstall(UninstallArgs),
 
+    /// Manage the registry cache (clone, sync).
+    Registry(RegistryArgs),
+
     /// Print version information.
     Version,
+}
+
+#[derive(Debug, clap::Args)]
+pub struct RegistryArgs {
+    #[command(subcommand)]
+    pub command: RegistrySubcommand,
+}
+
+#[derive(Debug, Subcommand)]
+pub enum RegistrySubcommand {
+    /// Force a `git fetch` on the configured registry cache.
+    Sync(RegistrySyncArgs),
+}
+
+#[derive(Debug, clap::Args)]
+pub struct RegistrySyncArgs {
+    /// Directory of the project (defaults to current).
+    #[arg(long, default_value = ".")]
+    pub path: PathBuf,
 }
 
 #[derive(Debug, clap::Args)]

@@ -13,7 +13,7 @@ use vibe_core::manifest::{Lockfile, ProjectManifest};
 use vibe_install::{
     InstallError, InstallPlan, WriteKind, apply_install, plan_install, register_installed,
 };
-use vibe_registry::LocalRegistry;
+use vibe_registry::{GitRegistry, LocalRegistry, Registry};
 
 use crate::cli::InstallArgs;
 use crate::output;
@@ -22,9 +22,7 @@ pub fn run(ctx: &output::Context, args: InstallArgs) -> Result<()> {
     let project_root = resolve_project_root(&args.path)?;
     let manifest = load_project_manifest(&project_root)?;
     let mut lockfile = load_or_empty_lockfile(&project_root)?;
-    let registry_root = resolve_registry_root(&args, &manifest)?;
-    let registry = LocalRegistry::new(registry_root.clone())
-        .map_err(|e| anyhow!("failed to open registry at `{}`: {e}", registry_root.display()))?;
+    let registry: Box<dyn Registry> = resolve_registry(&args, &manifest)?;
 
     // Cache layout matches §8.3: `.vibe/cache/<kind>/<name>/<version>/`.
     let cache_root = project_root.join(".vibe/cache");
@@ -148,31 +146,53 @@ fn load_or_empty_lockfile(root: &Path) -> Result<Lockfile> {
     }
 }
 
-fn resolve_registry_root(args: &InstallArgs, manifest: &ProjectManifest) -> Result<PathBuf> {
+/// Build the concrete [`Registry`] for this invocation.
+///
+/// Precedence (matches `VIBEVM-SPEC.md` §9.1 and
+/// [`spec://vibevm/common/PROP-000#registry`]):
+/// 1. `--registry <path>` — always a local directory (M0 behaviour).
+/// 2. `[registry].url` in `vibe.toml`:
+///    - `file://<abs>` — local directory.
+///    - anything else (`git+ssh://…`, `ssh://…`, `https://…`,
+///      `git@host:…`) — git-backed registry under
+///      `~/.vibe/registries/<hash>/`.
+pub(crate) fn resolve_registry(
+    args: &InstallArgs,
+    manifest: &ProjectManifest,
+) -> Result<Box<dyn Registry>> {
     if let Some(explicit) = &args.registry {
         let p = explicit
             .canonicalize()
             .with_context(|| format!("registry path `{}`", explicit.display()))?;
-        return Ok(super::init::strip_unc_public(p));
+        let p = super::init::strip_unc_public(p);
+        return Ok(Box::new(
+            LocalRegistry::new(p.clone())
+                .map_err(|e| anyhow!("failed to open registry at `{}`: {e}", p.display()))?,
+        ));
     }
-    if let Some(reg) = &manifest.registry {
-        let path = parse_file_uri(&reg.url).ok_or_else(|| {
-            anyhow!(
-                "vibe.toml registry url `{}` is not a local `file://` URI, and M0 only supports local-directory registries. Pass `--registry <path>` explicitly.",
-                reg.url
-            )
-        })?;
+    let Some(reg) = &manifest.registry else {
+        bail!(
+            "no registry configured. Pass `--registry <path>` or add a `[registry]` section to `vibe.toml`."
+        );
+    };
+    if let Some(path) = parse_file_uri(&reg.url) {
         let p = path
             .canonicalize()
             .with_context(|| format!("registry `{}`", path.display()))?;
-        return Ok(super::init::strip_unc_public(p));
+        let p = super::init::strip_unc_public(p);
+        return Ok(Box::new(
+            LocalRegistry::new(p.clone())
+                .map_err(|e| anyhow!("failed to open registry at `{}`: {e}", p.display()))?,
+        ));
     }
-    bail!(
-        "no registry configured. Pass `--registry <path>` or add a `[registry]` section to `vibe.toml`."
-    );
+    // Anything else is a git URL. GitRegistry::open handles clone +
+    // freshness TTL internally.
+    let git = GitRegistry::open(&reg.url, &reg.r#ref)
+        .with_context(|| format!("opening git registry `{}`", reg.url))?;
+    Ok(Box::new(git))
 }
 
-fn parse_file_uri(url: &str) -> Option<PathBuf> {
+pub(crate) fn parse_file_uri(url: &str) -> Option<PathBuf> {
     let rest = url.strip_prefix("file://")?;
     // Accept both `file:///C:/...` (tri-slash) and `file:///home/...`.
     let mut trimmed = rest.trim_start_matches('/');
