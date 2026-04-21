@@ -1,10 +1,15 @@
 # vibevm — roadmap
 
-> **Status snapshot (2026-04-17):** M0 walking skeleton is complete and
-> published to `git@gitverse.ru:anarchic/vibevm.git`. 64 tests green, 0
-> warnings, 0 clippy warnings. The `vibe init → install → list →
-> uninstall` loop works end-to-end against a local-directory registry,
-> with `flow:wal@0.1.0` as the canonical hand-written package.
+> **Status snapshot (2026-04-22):** M0 is complete and published. M1.1
+> — the git-backed registry — is code-complete. `vibe install` now
+> reads `[registry]` from `vibe.toml`, clones the remote into
+> `~/.vibe/registries/<hash>/clone/`, and stamps the lockfile with
+> `git+…#<kind>/<name>/vN` source URIs; `vibe registry sync` forces a
+> refresh. 77 tests green, 0 warnings, clippy clean. Design pinned in
+> [PROP-001](spec/modules/vibe-registry/PROP-001-git-backend.md).
+> Remaining M1.1 acceptance: manual smoke-test against the real
+> `gitverse.ru` registry and two more demo packages in the published
+> registry.
 
 This document is the long-form version of `VIBEVM-SPEC.md` §11 (staging
 plan). It keeps the "why" and "nuance" that a compressed staging table
@@ -73,36 +78,61 @@ a local dir, `vibe registry sync` is a no-op, and `vibe check`
 works fine without a remote. Adding git first means every subsequent
 M1 feature ships against a realistic remote from day one.
 
-### M1.1 — Git-backed registry
+### M1.1 — Git-backed registry ✅ CODE-COMPLETE (2026-04-22)
 
-**What lands.**
+**Shipped.** All items below landed; design decisions pinned in
+[PROP-001](spec/modules/vibe-registry/PROP-001-git-backend.md).
 
-- `vibe-registry` gains a `GitRegistry` type that implements the same
-  interface as `LocalRegistry` (resolve / list_versions / fetch). The
-  existing `LocalRegistry` stays, because M0 tests and demo workflows
-  still use it; `--registry <path>` keeps working against a local
-  dir.
-- First-use clone into `~/.vibe/registries/<hash>/` where `<hash>` is
-  a sha256 of the `vibe.toml` `[registry].url`. Subsequent calls do a
-  `git pull` unless the cache is fresh (cache-freshness window TBD,
-  initially 1 hour).
-- Sparse-checkout is *not* in scope for M1 — clone the whole
-  registry. Optimisation lands in M2 if the registry gets large.
-- The `[registry]` section in `vibe.toml` starts actually being read
-  (M0 only had a `--registry` override).
-- Source URI format in the lockfile switches from `file:///…` to
-  `git+ssh://git@gitverse.ru/anarchic/vibespecs.git#<kind>/<name>/v<ver>`
-  when the package came from a git registry.
+- `vibe-registry` gained a `Registry` trait implemented by both
+  `LocalRegistry` (M0 code path, kept for tests and `--registry
+  <path>`) and `GitRegistry` (new).
+- First-use clone into `~/.vibe/registries/<hash>/clone/`, where
+  `<hash>` is the 16-hex prefix of sha256 over the normalized
+  registry URL. The full hash is stashed in `meta.toml` alongside the
+  clone for audit. `VIBE_REGISTRY_CACHE` overrides the default root.
+- Freshness policy: ≤1h skips the pull; >1h (or TTL=0 — i.e. `vibe
+  registry sync`) triggers `git fetch --prune origin` + `git reset
+  --hard origin/<ref>`. The reset-hard is deliberate: the registry
+  cache is a read-only mirror, so a surprise merge commit would be a
+  bug.
+- `[registry]` in `vibe.toml` is now actually consumed (M0 only had
+  `--registry`). `file://` URLs still route through `LocalRegistry`;
+  anything else (SSH shorthand, `ssh://`, `https://`, `git+…://`)
+  routes through `GitRegistry::open`.
+- Lockfile `source_uri` switched to
+  `git+<transport>://<host>/<path>#<kind>/<name>/v<ver>` for git
+  sources; local registries still emit `file://`.
+- `vibe registry sync [--path]` force-refreshes the configured git
+  registry; no-ops with a note on a `file://` registry.
 
-**Decisions required during this slice.**
+**Decisions made during the slice.**
 
-- `git2` crate vs shelling out to `git`? `git2` adds a hefty
-  dependency (libgit2 bindings). Shelling out relies on `git` being on
-  `PATH` but keeps the dep tree small. Default: try `git2` first; if
-  build complexity or binary size gets ugly, swap to shell.
-- Authentication: SSH-agent is the default. Token-based HTTPS auth is
-  M2 scope (private registries). For M1, document that the user must
-  have a working SSH identity that the git backend can discover.
+- **Shell-out to `git`, not `git2`.** Headline reasons: SSH auth on
+  Windows via OpenSSH-agent "just works" through the user's existing
+  `git`, while `libgit2`/`libssh2` on Windows is a known lottery; no
+  C toolchain or native-lib weight in the build; native error
+  messages for free. Reversible via the narrow `GitBackend` trait
+  (method names: `bootstrap` + `update` — the first dodges collisions
+  with `Clone::clone` / `ToOwned::clone_into` on `Arc<dyn
+  GitBackend>`). Full rationale: PROP-001 §2.1.
+- **Windows posture.** Every git subprocess is spawned with
+  `CREATE_NO_WINDOW`, `LC_ALL=C`, `LANG=C`, `GIT_TERMINAL_PROMPT=0`
+  — no stray console windows, stable stderr for classification, no
+  interactive prompts blocking CI.
+- **Auth for M1.** SSH-agent (delegated to the user's git). Token /
+  credential-helper HTTPS is M2.
+
+**Remaining before tagging M1.1.**
+
+- Manual smoke-test against the real
+  `git@gitverse.ru:anarchic/vibespecs.git` — running
+  `vibe install flow:wal` on a fresh project with the real
+  `[registry]` URL and confirming the lockfile shape. Record the
+  command in `spec/boot/90-user.md`.
+- Publish two more demo packages — `flow:sync-from-code` and
+  `flow:atomic-commits` — which double as regression fixtures for
+  boot-snippet prefix collisions and multi-package lockfiles (see
+  "M1.5-gate" below).
 
 ### M1.2 — `vibe update`
 
@@ -167,17 +197,17 @@ Before cutting the M1 tag:
 
 ### M1 acceptance (from §16 of the spec)
 
-- [ ] `vibe install` resolves packages from git per `vibe.toml`.
-- [ ] Registry cache lives at `~/.vibe/registries/<hash>/`.
-- [ ] `vibe registry sync` refreshes.
-- [ ] `vibe update <pkgref>` and `--all` work with diff display.
-- [ ] `vibe check` runs every §12 check.
-- [ ] `vibe check --fix` autofixes only safe issues.
+- [x] `vibe install` resolves packages from git per `vibe.toml`. ✅ M1.1
+- [x] Registry cache lives at `~/.vibe/registries/<hash>/`. ✅ M1.1
+- [x] `vibe registry sync` refreshes. ✅ M1.1
+- [ ] `vibe update <pkgref>` and `--all` work with diff display. *(M1.2)*
+- [ ] `vibe check` runs every §12 check. *(M1.3)*
+- [ ] `vibe check --fix` autofixes only safe issues. *(M1.3)*
 - [ ] `vibe show effective` / `graph` / `config` all produce useful
-      output.
-- [ ] Public registry on GitVerse with ≥ 3 packages.
+      output. *(M1.4)*
+- [ ] Public registry on GitVerse with ≥ 3 packages. *(M1.5-gate — 1/3 today)*
 - [ ] Documentation in `docs/` covers every command plus authoring
-      guide per kind.
+      guide per kind. *(M1.5-gate)*
 
 **Estimated effort.** 2–4 weekends. The git backend is the biggest
 lift; the rest is straightforward with `vibe-core` already in place.

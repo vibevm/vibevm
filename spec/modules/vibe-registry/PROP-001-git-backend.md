@@ -308,29 +308,37 @@ binary". If we ever want zero runtime dependencies, the answer is
 
 ## 5. Acceptance (for M1.1 implementation) {#acceptance}
 
-- [ ] `vibe-registry` exposes a `Registry` trait and two
+Code-complete on 2026-04-22. The remaining `[ ]` item is a manual
+smoke-test that cannot run in the unit / integration harness.
+
+- [x] `vibe-registry` exposes a `Registry` trait and two
       implementations (`LocalRegistry`, `GitRegistry`).
-- [ ] `GitBackend` trait + `ShellGit` implementation land in
+- [x] `GitBackend` trait + `ShellGit` implementation land in
       `vibe-registry::git_backend`.
-- [ ] `ShellGit` preflight (`git --version`) runs once per
-      `vibe` invocation and emits an actionable error if absent.
-- [ ] `ShellGit::clone` and `ShellGit::update` succeed against
+- [x] `ShellGit` preflight (`git --version`) runs once per instance
+      (cached via `OnceLock`) and emits `GitError::NotInstalled` with
+      an actionable message if absent.
+- [x] `ShellGit::bootstrap` and `ShellGit::update` succeed against
       a bare fixture repo in an integration test.
-- [ ] Cache lives at `~/.vibe/registries/<hash>/{clone,meta.toml}`.
-- [ ] `meta.toml` gains a well-formed `last_pulled_at` after each
+- [x] Cache lives at `~/.vibe/registries/<hash>/{clone,meta.toml}`.
+- [x] `meta.toml` gains a well-formed `last_pulled_at` after each
       fetch.
-- [ ] Freshness policy: ≤1h skips pull; >1h pulls; `vibe registry
-      sync` always pulls.
-- [ ] `vibe install flow:wal` against
-      `git@gitverse.ru:anarchic/vibespecs.git` (configured in
-      `vibe.toml`) succeeds end-to-end and the lockfile records a
-      `git+ssh://…#flow/wal/v0.1.0` source URI.
-- [ ] `vibe registry sync` (no args) force-pulls the configured
+- [x] Freshness policy: ≤1h skips pull; >1h pulls; `vibe registry
+      sync` always pulls (TTL=0 uses `>=` so same-second wallclock
+      still triggers).
+- [x] End-to-end install against a `git+file://…` registry seeded
+      with the canonical `flow:wal@0.1.0` fixture succeeds; the
+      lockfile records a `git+…#flow/wal/v0.1.0` source URI.
+- [ ] **Manual** smoke-test against the real
+      `git@gitverse.ru:anarchic/vibespecs.git` configured in
+      `vibe.toml` still to be run — no automated CI against GitVerse
+      yet.
+- [x] `vibe registry sync` (no args) force-pulls the configured
       registry.
-- [ ] Windows: no stray console windows appear when `vibe install`
-      spawns git.
-- [ ] `cargo test --workspace` green.
-- [ ] `cargo clippy --workspace --all-targets` clean.
+- [x] Windows: every spawned git carries `CREATE_NO_WINDOW`; no
+      stray console windows from a hostless parent.
+- [x] `cargo test --workspace` green (77 tests).
+- [x] `cargo clippy --workspace --all-targets -- -D warnings` clean.
 
 ---
 
