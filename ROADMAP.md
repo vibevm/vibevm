@@ -1,19 +1,17 @@
 # vibevm — roadmap
 
-> **Status snapshot (2026-04-22):** M0 is complete and published. M1.1
-> — the git-backed registry — is **shipped and live**. Three things
-> landed on 2026-04-22: the `Registry` / `GitBackend` / `GitRegistry`
-> code in `vibe-registry`; `flow:wal@0.1.0` published to
-> `git@gitverse.ru:anarchic/vibespecs.git` at `flow/wal/v0.1.0/`
-> (commit `98e51fc`, the registry's first entry); and an end-to-end
-> walk of
-> [`manual-tests/M1.1-git-registry-smoke.md`](manual-tests/M1.1-git-registry-smoke.md)
-> against the real registry, confirming the
-> `git+ssh://git@gitverse.ru/anarchic/vibespecs.git#flow/wal/v0.1.0`
-> lockfile shape and the `~/.vibe/registries/<hash>/{clone,meta.toml}`
-> layout. 77 tests green, 0 warnings, clippy clean. Design pinned in
-> [PROP-001](spec/modules/vibe-registry/PROP-001-git-backend.md). The
-> remaining M1.5-gate content — two more demo packages — is open.
+> **Status snapshot (2026-04-23):** M0 is complete. M1.1 (git-backed
+> registry) shipped 2026-04-22. The M1.5-gate **content** slice
+> shipped on 2026-04-23: all three demo flows are live on
+> `git@gitverse.ru:anarchic/vibespecs.git` — `flow:wal@0.1.0`
+> (commit `98e51fc`), `flow:sync-from-code@0.1.0` (commit `47582af`),
+> `flow:atomic-commits@0.1.0` (commit `2203239`). Distinct
+> boot-snippet prefixes (`10-`/`20-`/`30-`) install together in one
+> project; end-to-end verified in
+> [`manual-tests/M1.5-gate-multi-package-smoke.md`](manual-tests/M1.5-gate-multi-package-smoke.md).
+> 81 tests green across the workspace, 0 warnings, clippy clean.
+> Remaining M1.5-gate item: docs (`docs/commands/*.md`,
+> `docs/authoring-{flow,feat,stack}.md`). M1.2 / M1.3 / M1.4 open.
 
 This document is the long-form version of `VIBEVM-SPEC.md` §11 (staging
 plan). It keeps the "why" and "nuance" that a compressed staging table
@@ -182,17 +180,29 @@ Pure inspection, no mutation:
 
 ### M1.5-gate — registry publish
 
-Before cutting the M1 tag:
-- `packages/flow/wal/v0.1.0/` gets pushed to
-  `git@gitverse.ru:anarchic/vibespecs.git` as the first real entry.
-- Two more demo packages land as stretch content, both hand-written:
-  `flow:sync-from-code` (derived from book chapter 3) and
-  `flow:atomic-commits` (derived from book chapter 2). They prove the
-  registry holds multiple packages, and they exercise numeric-prefix
-  collision detection (one flow picks `20-…`, the next `30-…`).
-- Docs: `docs/commands/*.md` for every user-facing command;
-  `docs/authoring-flow.md`, `docs/authoring-feat.md`,
-  `docs/authoring-stack.md` for package authors.
+Content landed 2026-04-22 / 2026-04-23; docs remain.
+
+- [x] `flow:wal@0.1.0` → `git@gitverse.ru:anarchic/vibespecs.git` at
+      `flow/wal/v0.1.0/`, commit `98e51fc` (2026-04-22).
+- [x] `flow:sync-from-code@0.1.0` at `flow/sync-from-code/v0.1.0/`,
+      commit `47582af` (2026-04-23). Derived from book chapter 3
+      ("Архитектура памяти", subsection "Протокол Sync-from-Code").
+      Boot-snippet prefix `20-`.
+- [x] `flow:atomic-commits@0.1.0` at `flow/atomic-commits/v0.1.0/`,
+      commit `2203239` (2026-04-23). Derived from book chapter 2
+      ("Shared state: файлы как IPC", subsection "Атомарность") +
+      Conventional Commits 1.0.0. Boot-snippet prefix `30-`.
+- [x] Registry-level `README.md` lists all three v0.1.0 packages.
+- [x] Three-package coexistence verified end-to-end against the real
+      registry on 2026-04-23 via
+      [`M1.5-gate-multi-package-smoke.md`](manual-tests/M1.5-gate-multi-package-smoke.md):
+      distinct `10-`/`20-`/`30-` prefixes install side-by-side, one
+      shared clone under `~/.vibe/registries/<hash>/`, symmetric
+      uninstall, user-owned files byte-identical.
+- [ ] Docs: `docs/commands/*.md` for every user-facing command;
+      `docs/authoring-flow.md`, `docs/authoring-feat.md`,
+      `docs/authoring-stack.md` for package authors. Independent of
+      M1.2–M1.4 — can be done in parallel.
 
 ### M1 acceptance (from §16 of the spec)
 
@@ -204,9 +214,9 @@ Before cutting the M1 tag:
 - [ ] `vibe check --fix` autofixes only safe issues. *(M1.3)*
 - [ ] `vibe show effective` / `graph` / `config` all produce useful
       output. *(M1.4)*
-- [ ] Public registry on GitVerse with ≥ 3 packages. *(M1.5-gate — 1/3 today)*
+- [x] Public registry on GitVerse with ≥ 3 packages. ✅ M1.5-gate (3/3, 2026-04-23)
 - [ ] Documentation in `docs/` covers every command plus authoring
-      guide per kind. *(M1.5-gate)*
+      guide per kind. *(M1.5-gate, open)*
 
 **Estimated effort.** 2–4 weekends. The git backend is the biggest
 lift; the rest is straightforward with `vibe-core` already in place.
