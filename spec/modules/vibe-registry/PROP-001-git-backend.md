@@ -1,9 +1,21 @@
 # PROP-001: Git-backed registry for `vibe-registry` {#root}
 
 **Milestone:** M1.1 ([`ROADMAP.md`](../../../ROADMAP.md#m11--git-backed-registry)).
-**Status:** accepted 2026-04-22, implementation in progress.
+**Status:** accepted 2026-04-22, shipped 2026-04-22. **Partially superseded by [PROP-002](PROP-002-decentralized-registry.md) (2026-04-24).** See the "Superseded parts" block below.
 **Supersedes:** nothing.
-**Related:** [spec://vibevm/common/PROP-000#registry](../../common/PROP-000.md#registry), [`VIBEVM-SPEC.md` §8](../../../VIBEVM-SPEC.md).
+**Related:** [spec://vibevm/common/PROP-000#registry](../../common/PROP-000.md#registry), [`VIBEVM-SPEC.md` §8](../../../VIBEVM-SPEC.md), [PROP-002](PROP-002-decentralized-registry.md).
+
+## Superseded parts (by PROP-002)
+
+The following decisions in this PROP were revised by [PROP-002](PROP-002-decentralized-registry.md) when the registry model moved from monorepo-as-registry to decentralized per-package repos. Use PROP-002 as the authoritative source for these:
+
+- **§2.3 `Registry` trait** — the single-registry trait is extended by a `MultiRegistryResolver` coordinating several `[[registry]]` entries, each wrapped as a `GitPackageRegistry`. The monorepo-era `GitRegistry` is retired.
+- **§2.4 Cache layout** — `~/.vibe/registries/<hash>/clone/` (one clone per registry URL) is replaced by `~/.vibe/registries/<canonical-url-hash>/packages/<kind>-<name>/{clone,meta.toml}` (one clone per package).
+- **§2.6 Lockfile `source_uri` format** — `git+<transport>://<host>/<path>.git#<kind>/<name>/v<ver>` (path-in-monorepo) is replaced by full lockfile fields: `registry`, `source_url`, `source_ref`, `resolved_commit`, `content_hash`; `#fragment` is no longer used.
+
+What is **not** superseded (and remains authoritative here): §2.1 (shell-out-to-git backend choice), §2.2 (`GitBackend` trait), §2.5 (1-hour freshness TTL), §2.7 (Windows UX and stderr classification).
+
+Additionally, the size-footprint argument in §2.1 is pruned by [PROP-000 §15](../../common/PROP-000.md#dep-weight) (dependency weight is not a decision factor). The remaining arguments against `git2` (Windows SSH-auth lottery, diagnostic clarity of shell-out error messages) still carry the decision for M1 — but the argument tree is narrower now. Revisit when a concrete reason arises, e.g. programmatic object reads that shell-out can't do cheaply.
 
 ---
 
