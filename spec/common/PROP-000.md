@@ -198,6 +198,81 @@ Concretely, `packages/flow/wal/v0.1.0/` contains `spec/flows/wal/WAL-PROTOCOL.md
 
 ---
 
+## 15. Dependency weight is not a decision factor {#dep-weight}
+
+**Decision:** Binary size, crate count, transitive dep weight are NOT decision factors when selecting third-party libraries. Pick the strongest available library for the job — for both the Rust CLI and any future Java / frontend side.
+
+**Why:** Software of comparable surface area (Chrome, modern IDEs, production package managers) routinely ships tens to hundreds of dependencies and remains fast and capable. Under-specifying a load-bearing component to save megabytes creates ongoing architectural debt that is much more expensive to repay than the weight it saves. vibevm intends to be best-in-class, and best-in-class means using best-in-class primitives.
+
+**Legitimate reasons to reject a dep:**
+- non-permissive license (see §3 — MIT / Apache-2.0 / BSD / Unlicense only; GPL / AGPL / LGPL forbidden; MPL-2.0 allowed case by case, since its weak copyleft does not taint consumers),
+- abandoned upstream,
+- demonstrated security issues (CVE history, unpatched known exploit),
+- fundamentally bad API ergonomics that would propagate into our own interfaces.
+
+"Too heavy" alone is **not** a reason.
+
+**Concrete consequences:** libraries previously rejected on footprint grounds are re-admissible. Notable: `libsolv` (C, with Rust bindings), `git2` (wrapping `libgit2`), bundled native C deps, embedded interpreters when justified. The size-based argument in [PROP-001 §2.1](../modules/vibe-registry/PROP-001-git-backend.md#backend) against `git2` is to be pruned — the remaining arguments (Windows SSH auth, shell-out diagnostic clarity) may still carry that decision, but not the size one.
+
+---
+
+## 16. JTD + codegen for wire contracts {#jtd}
+
+**Decision:** JSON Type Definition (RFC 8927) schemas are the single source of truth for every client/server and machine-to-machine contract in this project. Rust types — and types in any future non-Rust clients — are **generated** from JTD schemas via `jtd-codegen`, not hand-maintained. No client/server duplication is permitted on contracts.
+
+**Why:** duplication between a server contract and a hand-written client is a classic source of version-skew bugs; schema-first codegen eliminates that class of bug categorically. JTD specifically (over JSON Schema / OpenAPI alone) because JTD is deliberately narrower: its schema grammar is constructed so every JTD schema maps to a clean static type in every target language, with no language-specific escape hatches.
+
+**In scope:** LLM provider API wrappers (Anthropic, OpenAI, OpenRouter, Ollama), GitVerse public-API client, `vibe --json` CLI output, telemetry / event log formats, future hosted-registry HTTP surface.
+
+**Out of scope:** human-authored manifests — `vibe.toml`, `vibe.lock`, `vibe-package.toml` — stay TOML via `serde`. JTD is for wire, not for configs humans hand-edit.
+
+**Toolchain placement:**
+- `jtd-codegen` binary in project-local `tools/jtd-codegen/` (gitignored; version pinned).
+- Schemas in `schemas/` at repo root, one `.jtd.json` file per contract, committed.
+- Generated Rust code in `crates/vibe-wire/src/generated/`, committed, with a `// DO NOT EDIT — regenerate via cargo xtask codegen` header on every file.
+- Regeneration via `cargo xtask codegen`. CI enforces zero drift (`cargo xtask codegen && git diff --exit-code`).
+
+**Toolchain install ownership:** the coding agent sets up the codegen toolchain itself. Machine-global changes (PATH mutation, admin-level installs, env-var additions) go through `runas` with an operator confirmation at the moment of the change.
+
+---
+
+## 17. Production architecture in the prototype phase {#prod-arch}
+
+**Decision:** Load-bearing surfaces — lockfile schema, registry protocol, dep-resolver semantics, wire formats, identity model — are designed to production quality from day one. The project is a prototype today; the formats and protocols it chooses today are the ones its future users will be bound to. Changing them later is orders of magnitude more expensive than designing them correctly now.
+
+**Lens:** "a principal engineer at a top-tier infrastructure company, designing a format or protocol that will be used by millions" is one of the reflection lenses to reach for when a design decision lands. It is **not** the only lens — "the simplest thing that works" remains valid for leaf features — but architecture-heavy surfaces prefer the principal-engineer lens.
+
+**Consequences:**
+- Prefer a recent-but-well-designed library over a tactical shortcut, even when the shortcut is cheaper in the short term.
+- Extension points, versioning markers, and forward-compatibility hooks land with the initial cut, not in a later "hardening" pass.
+- Reversibility matters: if a format or protocol decision is hard to reverse (lockfile schema, registry URL scheme, identity hash), lean heavier into design rigour before first commit.
+- "We'll fix it later" is a valid stance only for implementation quality inside a well-chosen architectural surface — not for the surface itself.
+
+---
+
+## 18. Complexity expectation: higher than RPM {#complexity}
+
+**Decision:** The dependency / package model is designed to handle complexity **at least** matching RPM-class systems (zypper, DNF), and in several dimensions greater. Manifest grammar and lockfile schema reserve fields for — and the resolver actually implements — capabilities, provides / requires / obsoletes / conflicts / supplements / recommends, disjunctions (`A or B`), boolean rich-dep syntax, capability-based resolve, multi-kind cross-deps, and semantic (LLM-reviewed) conflicts. These are designed in from day one, not deferred.
+
+**Why:** vibevm's dependency surface is not simpler than RPM — it is wider. A `feat` package may require a `stack` providing a specific capability, `flow`s may declare semantic compatibility with other `flow`s, LLM-backed review adds a non-mechanical conflict dimension RPM never had. Undershoot — picking a resolver that lacks virtual packages or disjunctions, or a manifest that cannot express capability-based requires — would force an incompatible schema migration after users exist.
+
+**Resolver choice** (pinned in the module PROP): `resolvo` crate as the primary depsolver, with `libsolv` as an explicit FFI-backed fallback behind a `DepSolver` trait (analogous to [PROP-001 §2.2](../modules/vibe-registry/PROP-001-git-backend.md#backend-trait)'s `GitBackend` pattern). PubGrub is rejected for the *primary* role — its algorithm does not handle virtual packages or disjunctions — but is acceptable for explanatory rendering of conflicts in CLI output if it proves superior there.
+
+---
+
+## 19. Load-bearing setup documentation {#setup-docs}
+
+**Decision:** Two files at the repo root are load-bearing for the project:
+
+- [`DEV-GUIDE.md`](../../DEV-GUIDE.md) — contributor-facing: everything to install on a fresh machine to clone, build, test, contribute to, and (if authorized) publish from this repository.
+- [`RUNTIME-GUIDE.md`](../../RUNTIME-GUIDE.md) — user-facing: everything to install and env-configure to run the shipped `vibe` CLI.
+
+Every change that touches toolchain, prerequisites, env variables, paths, or bootstrap steps MUST update the relevant guide in the **same** commit. Never ship a setup change with the doc update deferred — a contributor or user hitting a broken setup with no matching doc is exactly the failure these files exist to prevent.
+
+The obligation is pinned here (rather than only in the guides themselves) so that every contributor sees it during the boot-sequence read-order, before touching env or toolchain code.
+
+---
+
 ## Invariants
 
 (These restate the most load-bearing rules from the spec and the book. If anything below seems violated in practice, stop and reconcile before proceeding.)
