@@ -34,10 +34,18 @@ pub fn run(ctx: &output::Context, args: ListArgs) -> Result<()> {
             kind: &'a str,
             name: &'a str,
             version: String,
-            source: &'a str,
+            #[serde(skip_serializing_if = "Option::is_none")]
+            registry: Option<&'a str>,
+            source_url: &'a str,
+            #[serde(skip_serializing_if = "Option::is_none")]
+            source_ref: Option<&'a str>,
+            #[serde(skip_serializing_if = "Option::is_none")]
+            resolved_commit: Option<&'a str>,
             content_hash: &'a str,
             boot_snippet: Option<&'a str>,
             files_written: Vec<String>,
+            #[serde(skip_serializing_if = "std::ops::Not::not")]
+            overridden: bool,
         }
         let entries: Vec<JsonEntry<'_>> = filtered
             .iter()
@@ -45,7 +53,10 @@ pub fn run(ctx: &output::Context, args: ListArgs) -> Result<()> {
                 kind: p.kind.as_str(),
                 name: &p.name,
                 version: p.version.to_string(),
-                source: &p.source,
+                registry: p.registry.as_deref(),
+                source_url: &p.source_url,
+                source_ref: p.source_ref.as_deref(),
+                resolved_commit: p.resolved_commit.as_deref(),
                 content_hash: &p.content_hash,
                 boot_snippet: p.boot_snippet.as_deref(),
                 files_written: p
@@ -53,6 +64,7 @@ pub fn run(ctx: &output::Context, args: ListArgs) -> Result<()> {
                     .iter()
                     .map(|f| f.to_string_lossy().to_string())
                     .collect(),
+                overridden: p.overridden,
             })
             .collect();
         ctx.emit_json(&serde_json::json!({

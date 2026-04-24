@@ -358,14 +358,14 @@ fn install_from_git_registry() {
     let lock: vibe_core::manifest::Lockfile = toml::from_str(&lock_text).unwrap();
     assert_eq!(lock.packages.len(), 1);
     assert!(
-        lock.packages[0].source.starts_with("git+"),
-        "expected git+ source, got: {}",
-        lock.packages[0].source
+        lock.packages[0].source_url.starts_with("git+"),
+        "expected git+ source_url, got: {}",
+        lock.packages[0].source_url
     );
     assert!(
-        lock.packages[0].source.ends_with("#flow/wal/v0.1.0"),
+        lock.packages[0].source_url.ends_with("#flow/wal/v0.1.0"),
         "expected #flow/wal/v0.1.0 fragment, got: {}",
-        lock.packages[0].source
+        lock.packages[0].source_url
     );
 
     // Cache now contains a clone dir with the bare repo's tree.

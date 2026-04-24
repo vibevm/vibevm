@@ -244,7 +244,7 @@ fn present_plans(ctx: &output::Context, project_root: &Path, plans: &[InstallPla
         struct JsonPlanEntry<'a> {
             package: String,
             version: String,
-            source: &'a str,
+            source_url: &'a str,
             content_hash: &'a str,
             writes: Vec<String>,
             boot_snippet: Option<&'a str>,
@@ -257,7 +257,7 @@ fn present_plans(ctx: &output::Context, project_root: &Path, plans: &[InstallPla
                     p.cached.resolved.kind, p.cached.resolved.name
                 ),
                 version: p.cached.resolved.version.to_string(),
-                source: p.cached.source_uri.as_str(),
+                source_url: p.cached.source_uri.as_str(),
                 content_hash: p.cached.content_hash.as_str(),
                 writes: p
                     .writes

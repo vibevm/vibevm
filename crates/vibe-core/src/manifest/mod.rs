@@ -12,7 +12,7 @@ mod lockfile;
 mod package;
 mod project;
 
-pub use lockfile::{Lockfile, LockfileMeta, LockedPackage};
+pub use lockfile::{CURRENT_SCHEMA_VERSION, Lockfile, LockedPackage, LockfileMeta};
 pub use package::{
     BootSnippet, Compatibility, ConflictsList, Obsoletes, PackageDependencies, PackageManifest,
     PackageMeta, Provides, Requires, RequiresAny, WritesSection,

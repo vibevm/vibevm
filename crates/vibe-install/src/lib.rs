@@ -257,14 +257,26 @@ pub fn register_installed(
     files_written: Vec<PathBuf>,
     generated_at: String,
 ) {
+    // Phase A: the per-package-registry / resolver fields
+    // (`registry`, `source_ref`, `resolved_commit`, `dependencies`,
+    // `overridden`) will be populated by the `MultiRegistryResolver` +
+    // `GitPackageRegistry` commits queued in TASKS.md. For now
+    // `source_url` carries the legacy combined URI string and the rest
+    // stays at its schema-v2 default. The lockfile on disk is already
+    // in v2 shape — the fields are just unset until upstream fills them.
     let entry = LockedPackage {
         kind: plan.cached.resolved.kind,
         name: plan.cached.resolved.name.clone(),
         version: plan.cached.resolved.version.clone(),
-        source: plan.cached.source_uri.clone(),
+        registry: None,
+        source_url: plan.cached.source_uri.clone(),
+        source_ref: None,
+        resolved_commit: None,
         content_hash: plan.cached.content_hash.clone(),
         boot_snippet: plan.boot_snippet_filename.clone(),
         files_written,
+        dependencies: Vec::new(),
+        overridden: false,
     };
     lockfile.packages.push(entry);
     lockfile.meta.generated_at = generated_at;
@@ -796,13 +808,18 @@ files = ["../escape.md"]
             kind: PackageKind::Flow,
             name: "wal".into(),
             version: semver::Version::parse("0.3.0").unwrap(),
-            source: "file:///fake".into(),
+            registry: None,
+            source_url: "file:///fake".into(),
+            source_ref: None,
+            resolved_commit: None,
             content_hash: "sha256:whatever".into(),
             boot_snippet: Some("10-flow-wal.md".into()),
             files_written: vec![
                 PathBuf::from("spec/boot/00-core.md"),
                 PathBuf::from("spec/boot/10-flow-wal.md"),
             ],
+            dependencies: Vec::new(),
+            overridden: false,
         });
 
         let project = empty_project();

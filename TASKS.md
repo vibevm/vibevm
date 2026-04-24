@@ -33,7 +33,7 @@ Full design locked in [PROP-002](spec/modules/vibe-registry/PROP-002-decentraliz
 
 - [x] `feat(core)`: type-safe package dependencies — parse `[provides]` / `[requires]` / `[[requires_any]]` / `[obsoletes]` / `[conflicts]` into `PackageRef` / `CapabilityRef` values; legacy `[dependencies]` compact form migrates transparently via `PackageManifest::normalize_legacy_deps`.
 - [x] `feat(core)`: `vibe.toml` schema v2 — `[[registry]]` array with `naming` convention, `[[mirror]]` with priority + wildcard `of = "*"`, `[[override]]` for surgical pkgref pins; v1 singleton auto-migrated on read; serializes in modern form on write; `primary_registry()` / `registry_by_name()` / `mirrors_for()` helpers.
-- [ ] `feat(core)`: `vibe.lock` schema v2 — full record per package (`registry`, `source_url`, `source_ref`, `resolved_commit`, `content_hash`, `dependencies`), `[meta] schema_version = 2`, `[meta] solver = "resolvo-<ver>"`, `[meta] root_dependencies`.
+- [x] `feat(core)`: `vibe.lock` schema v2 — `LockedPackage` gains `registry` / `source_url` (renamed from `source` with serde alias) / `source_ref` / `resolved_commit` / `dependencies` / `overridden`; `LockfileMeta` gains `schema_version` / `solver` / `root_dependencies`; v1 lockfiles auto-migrate on next write via serde alias + defaults; `looks_like_v1_on_disk()` heuristic for future UX nudges; `vibe list --json` and `vibe install --json` plan output renamed `source` → `source_url` to match lockfile shape.
 
 ### Resolver and registry layer
 
