@@ -22,6 +22,9 @@ pub enum Error {
     )]
     BadPackageName(String),
 
+    #[error("invalid capability reference `{input}`: {reason}")]
+    BadCapabilityRef { input: String, reason: String },
+
     #[error("invalid version spec `{input}`")]
     BadVersionSpec {
         input: String,

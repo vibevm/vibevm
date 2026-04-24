@@ -122,7 +122,13 @@ impl fmt::Display for VersionSpec {
 /// A reference to an installable package.
 ///
 /// Parsed from strings like `flow:wal`, `flow:wal@0.3.0`, or `flow:wal@^0.3`.
-#[derive(Debug, Clone, PartialEq, Eq)]
+///
+/// Serde support goes via the string wire form: on the wire a `PackageRef`
+/// is always a single string, parsed through [`PackageRef::parse`]. This
+/// lets it appear inline in TOML arrays (e.g. `requires.packages =
+/// ["flow:wal@^0.1"]`) and makes the schema self-documenting.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(try_from = "String", into = "String")]
 pub struct PackageRef {
     pub kind: PackageKind,
     pub name: String,
@@ -201,10 +207,27 @@ impl FromStr for PackageRef {
     }
 }
 
+impl TryFrom<String> for PackageRef {
+    type Error = Error;
+
+    fn try_from(s: String) -> std::result::Result<Self, Self::Error> {
+        PackageRef::parse(&s)
+    }
+}
+
+impl From<PackageRef> for String {
+    fn from(r: PackageRef) -> String {
+        r.to_string()
+    }
+}
+
 /// Kebab-case: one or more lowercase ASCII alphanumeric segments joined by
 /// single hyphens. First and last characters must be alphanumeric; consecutive
 /// hyphens are rejected.
-fn validate_package_name(name: &str) -> Result<()> {
+///
+/// Used to validate both package names (`<kind>:<name>`) and capability
+/// segments (`<namespace>:<name>` in [`crate::capability_ref::CapabilityRef`]).
+pub(crate) fn validate_package_name(name: &str) -> Result<()> {
     if name.is_empty() {
         return Err(Error::BadPackageName(name.to_owned()));
     }

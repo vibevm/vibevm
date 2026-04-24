@@ -14,7 +14,8 @@ mod project;
 
 pub use lockfile::{Lockfile, LockfileMeta, LockedPackage};
 pub use package::{
-    BootSnippet, Compatibility, PackageDependencies, PackageManifest, PackageMeta, WritesSection,
+    BootSnippet, Compatibility, ConflictsList, Obsoletes, PackageDependencies, PackageManifest,
+    PackageMeta, Provides, Requires, RequiresAny, WritesSection,
 };
 pub use project::{
     ActiveSection, DEFAULT_REGISTRY_REF, DEFAULT_REGISTRY_URL, LlmSection, ProjectManifest,

@@ -31,7 +31,7 @@ Full design locked in [PROP-002](spec/modules/vibe-registry/PROP-002-decentraliz
 
 ### Core types (Rust)
 
-- [ ] `feat(core)`: type-safe package dependencies — parse `required` / `conflicts` / `requires_any` / `provides` / `obsoletes` into `PackageRef` / capability values; legacy `[dependencies] required = [...]` migrates to `[requires] packages = [...]` with a deprecation warning.
+- [x] `feat(core)`: type-safe package dependencies — parse `[provides]` / `[requires]` / `[[requires_any]]` / `[obsoletes]` / `[conflicts]` into `PackageRef` / `CapabilityRef` values; legacy `[dependencies]` compact form migrates transparently via `PackageManifest::normalize_legacy_deps`.
 - [ ] `feat(core)`: `vibe.toml` schema v2 — `[[registry]]` array (singleton auto-migrated), `[[mirror]]`, `[[override]]`; integrity-aware consumption.
 - [ ] `feat(core)`: `vibe.lock` schema v2 — full record per package (`registry`, `source_url`, `source_ref`, `resolved_commit`, `content_hash`, `dependencies`), `[meta] schema_version = 2`, `[meta] solver = "resolvo-<ver>"`, `[meta] root_dependencies`.
 
