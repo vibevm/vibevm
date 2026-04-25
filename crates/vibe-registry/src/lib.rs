@@ -28,9 +28,11 @@ use vibe_core::{PackageKind, PackageRef, VersionSpec};
 use walkdir::WalkDir;
 
 pub mod git_backend;
+pub mod git_package_registry;
 pub mod git_registry;
 
 pub use git_backend::{GitBackend, GitError, ShellGit};
+pub use git_package_registry::GitPackageRegistry;
 pub use git_registry::{GitRegistry, RegistryMeta, default_cache_root};
 
 #[derive(Debug, Error)]
