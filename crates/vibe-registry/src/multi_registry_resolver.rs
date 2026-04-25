@@ -72,18 +72,6 @@ pub struct MultiResolution {
     pub overridden: bool,
 }
 
-/// A fetched package with provenance — same shape as `MultiResolution`
-/// but carrying the materialised [`CachedPackage`] (manifest, cache dir,
-/// content_hash) instead of the lazier `ResolvedPackage`.
-#[derive(Debug, Clone)]
-pub struct MultiCached {
-    pub cached: CachedPackage,
-    pub registry_name: Option<String>,
-    pub source_url: String,
-    pub source_ref: Option<String>,
-    pub overridden: bool,
-}
-
 /// Resolver coordinating an ordered set of [`GitPackageRegistry`]
 /// instances plus the cross-cutting `[[mirror]]` and `[[override]]`
 /// layers from `vibe.toml`.
@@ -291,11 +279,14 @@ impl MultiRegistryResolver {
     }
 
     /// Materialise a previously-resolved package into the per-project cache.
+    /// The returned [`CachedPackage`] carries lockfile-v2 provenance
+    /// (`registry_name` / `source_ref` / `overridden`) populated by the
+    /// `GitPackageRegistry` impl or by the override path.
     pub fn fetch(
         &self,
         resolution: &MultiResolution,
         project_cache: &Path,
-    ) -> Result<MultiCached, RegistryError> {
+    ) -> Result<CachedPackage, RegistryError> {
         if resolution.overridden {
             return self.fetch_override(resolution, project_cache);
         }
@@ -315,21 +306,16 @@ impl MultiRegistryResolver {
                     kind: resolution.resolved.kind,
                     name: resolution.resolved.name.clone(),
                 })?;
-        let cached = reg.fetch(&resolution.resolved, project_cache)?;
-        Ok(MultiCached {
-            cached,
-            registry_name: resolution.registry_name.clone(),
-            source_url: resolution.source_url.clone(),
-            source_ref: resolution.source_ref.clone(),
-            overridden: false,
-        })
+        // `GitPackageRegistry::fetch` already populates `registry_name` /
+        // `source_ref` / `overridden = false` correctly; nothing to wrap.
+        reg.fetch(&resolution.resolved, project_cache)
     }
 
     fn fetch_override(
         &self,
         resolution: &MultiResolution,
         project_cache: &Path,
-    ) -> Result<MultiCached, RegistryError> {
+    ) -> Result<CachedPackage, RegistryError> {
         let url = &resolution.source_url;
         let refname = resolution
             .source_ref
@@ -357,7 +343,7 @@ impl MultiRegistryResolver {
         let manifest = PackageManifest::read(&manifest_path)?;
         let content_hash = compute_content_hash(&dest)?;
 
-        let cached = CachedPackage {
+        Ok(CachedPackage {
             resolved: ResolvedPackage {
                 kind,
                 name: name.to_string(),
@@ -368,12 +354,9 @@ impl MultiRegistryResolver {
             manifest,
             content_hash,
             source_uri: url.clone(),
-        };
-        Ok(MultiCached {
-            cached,
             registry_name: None,
-            source_url: url.clone(),
             source_ref: Some(refname),
+            resolved_commit: None,
             overridden: true,
         })
     }
@@ -779,11 +762,11 @@ mod tests {
 
         assert_eq!(cached.registry_name.as_deref(), Some("b"));
         assert!(!cached.overridden);
-        assert_eq!(cached.source_url, "git@host:org-b/flow-wal.git");
+        assert_eq!(cached.source_uri, "git@host:org-b/flow-wal.git");
         assert_eq!(cached.source_ref.as_deref(), Some("v0.5.0"));
-        assert_eq!(cached.cached.manifest.package.version.to_string(), "0.5.0");
-        assert!(cached.cached.cache_dir.join("vibe-package.toml").exists());
-        assert!(!cached.cached.cache_dir.join(".git").exists());
+        assert_eq!(cached.manifest.package.version.to_string(), "0.5.0");
+        assert!(cached.cache_dir.join("vibe-package.toml").exists());
+        assert!(!cached.cache_dir.join(".git").exists());
         // Bootstrap exactly once — only against registry "b".
         assert_eq!(fake.bootstrap_count(), 1);
     }
@@ -828,15 +811,15 @@ mod tests {
 
         assert!(cached.overridden);
         assert!(cached.registry_name.is_none());
-        assert_eq!(cached.source_url, "git@my-fork:vibevm/wal-fork.git");
+        assert_eq!(cached.source_uri, "git@my-fork:vibevm/wal-fork.git");
         assert_eq!(cached.source_ref.as_deref(), Some("my-fix"));
-        assert_eq!(cached.cached.manifest.package.version.to_string(), "0.9.0");
+        assert_eq!(cached.manifest.package.version.to_string(), "0.9.0");
         // Override clone lives under cache_root/__overrides__/flow-wal/clone/
         let overrides_root = cache.path().join("__overrides__").join("flow-wal").join("clone");
         assert!(overrides_root.join(".git").exists());
         // Materialised cache holds payload only.
-        assert!(cached.cached.cache_dir.join("vibe-package.toml").exists());
-        assert!(!cached.cached.cache_dir.join(".git").exists());
+        assert!(cached.cache_dir.join("vibe-package.toml").exists());
+        assert!(!cached.cache_dir.join(".git").exists());
     }
 
     #[test]

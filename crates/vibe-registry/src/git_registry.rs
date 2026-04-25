@@ -218,6 +218,13 @@ impl Registry for GitRegistry {
             manifest,
             content_hash,
             source_uri,
+            // The legacy monorepo registry pre-dates the per-package /
+            // multi-registry / override schema; lockfile-v2 provenance
+            // fields stay blank for content fetched through this path.
+            registry_name: None,
+            source_ref: None,
+            resolved_commit: None,
+            overridden: false,
         })
     }
 }

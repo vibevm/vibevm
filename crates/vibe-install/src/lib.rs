@@ -257,26 +257,34 @@ pub fn register_installed(
     files_written: Vec<PathBuf>,
     generated_at: String,
 ) {
-    // Phase A: the per-package-registry / resolver fields
-    // (`registry`, `source_ref`, `resolved_commit`, `dependencies`,
-    // `overridden`) will be populated by the `MultiRegistryResolver` +
-    // `GitPackageRegistry` commits queued in TASKS.md. For now
-    // `source_url` carries the legacy combined URI string and the rest
-    // stays at its schema-v2 default. The lockfile on disk is already
-    // in v2 shape — the fields are just unset until upstream fills them.
+    // Lockfile-v2 provenance fields are forwarded from the `CachedPackage`
+    // produced by whichever registry impl served this install. Each impl
+    // fills them according to its semantics:
+    //
+    // - `LocalRegistry` (`--registry <path>`) and the legacy monorepo
+    //   `GitRegistry` leave them blank (None / false) — the M0-shape
+    //   doesn't carry registry-name or source-ref provenance.
+    // - `GitPackageRegistry` (per-package model, PROP-002) fills
+    //   `registry_name` from the `[[registry]].name` and `source_ref`
+    //   from the version tag.
+    // - `MultiRegistryResolver`'s override path sets `overridden = true`
+    //   and records the override's ref.
+    //
+    // `dependencies` stays empty in this commit — the resolver wires
+    // transitive deps in a follow-up.
     let entry = LockedPackage {
         kind: plan.cached.resolved.kind,
         name: plan.cached.resolved.name.clone(),
         version: plan.cached.resolved.version.clone(),
-        registry: None,
+        registry: plan.cached.registry_name.clone(),
         source_url: plan.cached.source_uri.clone(),
-        source_ref: None,
-        resolved_commit: None,
+        source_ref: plan.cached.source_ref.clone(),
+        resolved_commit: plan.cached.resolved_commit.clone(),
         content_hash: plan.cached.content_hash.clone(),
         boot_snippet: plan.boot_snippet_filename.clone(),
         files_written,
         dependencies: Vec::new(),
-        overridden: false,
+        overridden: plan.cached.overridden,
     };
     lockfile.packages.push(entry);
     lockfile.meta.generated_at = generated_at;

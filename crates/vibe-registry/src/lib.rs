@@ -36,7 +36,7 @@ pub use git_backend::{GitBackend, GitError, ShellGit};
 pub use git_package_registry::GitPackageRegistry;
 pub use git_registry::{GitRegistry, RegistryMeta, default_cache_root};
 pub use multi_registry_resolver::{
-    DEFAULT_OVERRIDE_REF, MultiCached, MultiRegistryResolver, MultiResolution,
+    DEFAULT_OVERRIDE_REF, MultiRegistryResolver, MultiResolution,
 };
 
 #[derive(Debug, Error)]
@@ -122,10 +122,28 @@ pub struct CachedPackage {
     /// Parsed manifest from the cached copy.
     pub manifest: PackageManifest,
     /// `sha256:<hex>` content hash over every file in the package, using
-    /// relative paths for stability.
+    /// relative paths for stability. The **identity** half of the
+    /// `(kind, name, version, content_hash)` tuple per PROP-002 §2.1.
     pub content_hash: String,
-    /// Source URI recorded in the lockfile (e.g. `file:///abs/path`).
+    /// Source URI recorded in the lockfile under the `source_url` field.
+    /// Informational — package identity does not depend on this string.
     pub source_uri: String,
+    /// Name of the `[[registry]]` entry in `vibe.toml` that served this
+    /// package. `None` for `LocalRegistry` (`--registry <path>`), the
+    /// legacy monorepo `GitRegistry`, and packages resolved through
+    /// `[[override]]`.
+    pub registry_name: Option<String>,
+    /// Git ref the content was fetched at — typically `v<version>` for
+    /// per-package registries; the override's ref for `[[override]]`-resolved
+    /// packages. `None` for non-git sources (file://, M0 local-directory).
+    pub source_ref: Option<String>,
+    /// Commit hash the ref resolved to at fetch time. Reserved for the
+    /// resolver-aware install pipeline; populated by [`GitPackageRegistry`]
+    /// in a follow-up commit. Always `None` here.
+    pub resolved_commit: Option<String>,
+    /// `true` iff this package was resolved through a `[[override]]`
+    /// entry rather than the registry layer.
+    pub overridden: bool,
 }
 
 pub struct LocalRegistry {
@@ -262,6 +280,13 @@ impl LocalRegistry {
             manifest,
             content_hash,
             source_uri,
+            // `LocalRegistry` (`--registry <path>`) is the M0-shape and
+            // does not participate in the per-package / multi-registry
+            // model; it leaves the lockfile-v2 provenance fields blank.
+            registry_name: None,
+            source_ref: None,
+            resolved_commit: None,
+            overridden: false,
         })
     }
 }

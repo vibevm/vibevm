@@ -312,10 +312,15 @@ impl GitPackageRegistry {
             manifest,
             content_hash,
             // Per-package canonical URL — what lockfile v2's `source_url`
-            // ultimately stores. The tag and resolved commit, when the
-            // resolver wires them through, become `source_ref` and
-            // `resolved_commit`.
+            // stores. `resolved_commit` will be populated when the
+            // resolver wires `git rev-parse` through; today it remains
+            // `None` and the lockfile's `resolved_commit` stays blank
+            // for entries fetched via this path.
             source_uri: url,
+            registry_name: Some(self.name.clone()),
+            source_ref: Some(tag),
+            resolved_commit: None,
+            overridden: false,
         })
     }
 }
