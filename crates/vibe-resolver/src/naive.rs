@@ -72,6 +72,29 @@ impl<P: DepProvider> DepSolver for NaiveDepSolver<P> {
             packages.push(node_from_entry(kind, name, entry, false));
         }
 
+        // Pin every dependency reference to the exact version chosen for
+        // it in the graph. Lockfile `dependencies` per entry stores
+        // exact-pinned `kind:name@=version` so a later `vibe install`
+        // off this lockfile reproduces the same install bit-for-bit.
+        let resolved_versions: std::collections::HashMap<(PackageKind, String), semver::Version> =
+            packages
+                .iter()
+                .map(|n| ((n.kind, n.name.clone()), n.version.clone()))
+                .collect();
+        for node in packages.iter_mut() {
+            for dep in node.dependencies.iter_mut() {
+                if let Some(version) = resolved_versions.get(&(dep.kind, dep.name.clone()))
+                    && let Ok(req) = semver::VersionReq::parse(&format!("={version}"))
+                {
+                    *dep = PackageRef {
+                        kind: dep.kind,
+                        name: dep.name.clone(),
+                        version: VersionSpec::Req(req),
+                    };
+                }
+            }
+        }
+
         Ok(ResolvedGraph { packages })
     }
 }
@@ -770,5 +793,42 @@ required = ["flow:wal@^0.1"]
         let roots: Vec<_> = graph.roots().collect();
         assert_eq!(roots.len(), 1);
         assert_eq!(roots[0].name, "wal");
+    }
+
+    #[test]
+    fn dependencies_are_exact_pinned_after_solve() {
+        let p = MapProvider::new();
+        p.seed(
+            PackageKind::Flow,
+            "wal",
+            &manifest_with_requires("flow", "wal", "0.1.0", &["flow:atomic-commits@^0.1"]),
+        );
+        // Two versions of atomic-commits; ^0.1 should resolve to 0.1.5.
+        p.seed(
+            PackageKind::Flow,
+            "atomic-commits",
+            &manifest_minimal("flow", "atomic-commits", "0.1.0"),
+        );
+        p.seed(
+            PackageKind::Flow,
+            "atomic-commits",
+            &manifest_minimal("flow", "atomic-commits", "0.1.5"),
+        );
+
+        let solver = NaiveDepSolver::new(p);
+        let graph = solver
+            .solve(&[PackageRef::parse("flow:wal").unwrap()])
+            .unwrap();
+        let wal = graph.find(PackageKind::Flow, "wal").unwrap();
+        assert_eq!(wal.dependencies.len(), 1);
+        // Dep must be pinned to the exact version chosen, not the
+        // original `^0.1` constraint. A future re-install reads this
+        // pin verbatim to reproduce the same graph.
+        let dep = &wal.dependencies[0];
+        assert_eq!(dep.qualified_name(), "flow:atomic-commits");
+        let pinned = semver::Version::parse("0.1.5").unwrap();
+        assert!(dep.version.matches(&pinned));
+        let other = semver::Version::parse("0.1.0").unwrap();
+        assert!(!dep.version.matches(&other), "pin should not match older");
     }
 }

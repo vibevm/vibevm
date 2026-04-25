@@ -8,12 +8,15 @@ use std::path::{Path, PathBuf};
 use anyhow::{Context, Result, anyhow, bail};
 use dialoguer::Confirm;
 use serde::Serialize;
-use vibe_core::PackageRef;
+use vibe_core::{PackageRef, VersionSpec};
 use vibe_core::manifest::{Lockfile, ProjectManifest};
 use vibe_install::{
     InstallError, InstallPlan, WriteKind, apply_install, plan_install, register_installed,
 };
 use vibe_registry::{CachedPackage, LocalRegistry, MultiRegistryResolver};
+use vibe_resolver::{
+    DepSolver, LocalRegistryProvider, MultiRegistryProvider, NaiveDepSolver, ResolvedNode,
+};
 
 use crate::cli::InstallArgs;
 use crate::output;
@@ -29,21 +32,53 @@ pub fn run(ctx: &output::Context, args: InstallArgs) -> Result<()> {
     fs::create_dir_all(&cache_root)
         .with_context(|| format!("creating cache dir `{}`", cache_root.display()))?;
 
-    // Plan every package before asking the user for approval. If any
-    // package's plan fails, we abort without prompting.
+    // 1. Parse every CLI pkgref into the typed root list.
+    let roots: Vec<PackageRef> = args
+        .packages
+        .iter()
+        .map(|raw| {
+            PackageRef::parse(raw).with_context(|| format!("parsing `{raw}`"))
+        })
+        .collect::<Result<_>>()?;
+
+    // 2. Run the depsolver — this expands transitive deps into the full
+    //    graph the install pipeline materialises below. For the
+    //    all-empty-deps case (today's three demo flows), the graph
+    //    equals the input roots, no behaviour change.
+    ctx.heading(&format!(
+        "Resolving {} root package{}…",
+        roots.len(),
+        if roots.len() == 1 { "" } else { "s" }
+    ));
+    let graph = resolver
+        .solve(&roots)
+        .with_context(|| "dependency resolution failed")?;
+
+    if graph.packages.len() > roots.len() {
+        ctx.step(&format!(
+            "{} root, {} transitive — {} package{} total",
+            roots.len(),
+            graph.packages.len() - roots.len(),
+            graph.packages.len(),
+            if graph.packages.len() == 1 { "" } else { "s" },
+        ));
+    }
+
+    // 3. For each node in graph order (roots first, then transitives in
+    //    deterministic order), pin to exact version, fetch, plan.
     let mut plans: Vec<InstallPlan> = Vec::new();
-    for raw in &args.packages {
-        let pkgref = PackageRef::parse(raw).with_context(|| format!("parsing `{raw}`"))?;
-        ctx.heading(&format!("Resolving {pkgref}…"));
+    let mut node_meta: Vec<NodeInstallMeta> = Vec::new();
+
+    for node in graph.iter() {
+        let pkgref = exact_pinned_pkgref(node);
         let cached = resolver.resolve_and_fetch(&pkgref, &cache_root)?;
-        // Each plan must observe the updated view: if we install two packages
-        // in one invocation and both contribute a boot snippet, the second
-        // plan must see the first one's intended writes. We do the cheap
-        // thing: call plan_install against the lockfile + a shadow of the
-        // already-planned targets.
         let plan = plan_install(&project_root, &lockfile, cached)?;
         check_cross_plan_conflicts(&plans, &plan)?;
         plans.push(plan);
+        node_meta.push(NodeInstallMeta {
+            dependencies: node.dependencies.clone(),
+            is_root: node.is_root,
+        });
     }
 
     // Show combined plan.
@@ -79,9 +114,12 @@ pub fn run(ctx: &output::Context, args: InstallArgs) -> Result<()> {
 
     // Apply each plan in turn; update lockfile after each success.
     let mut applied: Vec<AppliedReport> = Vec::new();
-    for plan in &plans {
+    for (plan, meta) in plans.iter().zip(node_meta.iter()) {
         let label = plan.package_label();
-        ctx.step(&format!("Installing {label}"));
+        ctx.step(&format!(
+            "Installing {label}{}",
+            if meta.is_root { "" } else { " (transitive)" }
+        ));
         let written = apply_install(plan)?;
         let written_count = written.len();
         register_installed(
@@ -89,6 +127,7 @@ pub fn run(ctx: &output::Context, args: InstallArgs) -> Result<()> {
             plan,
             written.clone(),
             crate::commands::init::current_timestamp_utc(),
+            meta.dependencies.clone(),
         );
         applied.push(AppliedReport {
             package: label,
@@ -99,6 +138,11 @@ pub fn run(ctx: &output::Context, args: InstallArgs) -> Result<()> {
                 .collect(),
         });
     }
+
+    // Update meta.root_dependencies — what the user directly asked for,
+    // distinct from transitives the solver pulled in. Lockfile uses this
+    // to drive `vibe uninstall` semantics.
+    merge_root_dependencies(&mut lockfile, &roots);
 
     // Save lockfile on disk.
     lockfile.write(project_root.join(Lockfile::FILENAME))?;
@@ -112,6 +156,45 @@ struct AppliedReport {
     package: String,
     files_written: usize,
     paths: Vec<String>,
+}
+
+/// Per-node install metadata threaded from the solver into the lockfile
+/// register call.
+struct NodeInstallMeta {
+    dependencies: Vec<PackageRef>,
+    is_root: bool,
+}
+
+/// Build a `kind:name@=<exact-version>` pkgref for fetching the version
+/// the solver chose, regardless of how the user originally constrained
+/// the package.
+fn exact_pinned_pkgref(node: &ResolvedNode) -> PackageRef {
+    let req = semver::VersionReq::parse(&format!("={}", node.version))
+        .expect("exact version always parses as VersionReq");
+    PackageRef {
+        kind: node.kind,
+        name: node.name.clone(),
+        version: VersionSpec::Req(req),
+    }
+}
+
+/// Merge new root pkgrefs into `lockfile.meta.root_dependencies`,
+/// deduplicating on `(kind, name)` (idempotent re-installs don't grow
+/// the list). Existing entries for the same `(kind, name)` are
+/// overwritten by the new pkgref so a constraint change in
+/// `vibe install` updates the recorded root constraint.
+fn merge_root_dependencies(lockfile: &mut Lockfile, roots: &[PackageRef]) {
+    for r in roots {
+        let pos = lockfile
+            .meta
+            .root_dependencies
+            .iter()
+            .position(|existing| existing.kind == r.kind && existing.name == r.name);
+        match pos {
+            Some(i) => lockfile.meta.root_dependencies[i] = r.clone(),
+            None => lockfile.meta.root_dependencies.push(r.clone()),
+        }
+    }
 }
 
 fn resolve_project_root(path: &Path) -> Result<PathBuf> {
@@ -150,10 +233,14 @@ fn load_or_empty_lockfile(root: &Path) -> Result<Lockfile> {
 /// resolver covering the `[[registry]]` / `[[mirror]]` / `[[override]]`
 /// sections in `vibe.toml`.
 ///
-/// Both branches expose a single [`Self::resolve_and_fetch`] entry point
-/// returning a [`CachedPackage`] with lockfile-v2 provenance fields
-/// populated by the underlying impl (`None` / `false` for the local-dir
-/// path; populated for the per-package + override paths).
+/// Both branches expose:
+/// - [`Self::resolve_and_fetch`] — returns a [`CachedPackage`] with
+///   lockfile-v2 provenance fields populated by the underlying impl
+///   (`None` / `false` for the local-dir path; populated for the
+///   per-package + override paths).
+/// - [`Self::solve`] — runs the depsolver against this resolver via the
+///   appropriate `DepProvider` adapter. Returns the full transitive
+///   graph the install pipeline materialises.
 pub(crate) enum InstallResolver {
     Local(LocalRegistry),
     Multi(MultiRegistryResolver),
@@ -173,6 +260,22 @@ impl InstallResolver {
             InstallResolver::Multi(m) => {
                 let resolution = m.resolve(pkgref)?;
                 Ok(m.fetch(&resolution, cache_root)?)
+            }
+        }
+    }
+
+    pub(crate) fn solve(
+        &self,
+        roots: &[PackageRef],
+    ) -> Result<vibe_resolver::ResolvedGraph, vibe_resolver::SolveError> {
+        match self {
+            InstallResolver::Local(r) => {
+                let provider = LocalRegistryProvider::new(r);
+                NaiveDepSolver::new(provider).solve(roots)
+            }
+            InstallResolver::Multi(m) => {
+                let provider = MultiRegistryProvider::new(m);
+                NaiveDepSolver::new(provider).solve(roots)
             }
         }
     }

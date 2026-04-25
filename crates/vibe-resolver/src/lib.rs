@@ -42,9 +42,11 @@ use thiserror::Error;
 use vibe_core::manifest::PackageManifest;
 use vibe_core::{PackageKind, PackageRef, VersionSpec};
 
+pub mod local_registry_provider;
 pub mod multi_registry_provider;
 pub mod naive;
 
+pub use local_registry_provider::LocalRegistryProvider;
 pub use multi_registry_provider::MultiRegistryProvider;
 pub use naive::NaiveDepSolver;
 

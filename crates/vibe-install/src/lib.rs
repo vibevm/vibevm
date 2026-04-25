@@ -251,11 +251,17 @@ pub fn apply_install(plan: &InstallPlan) -> Result<Vec<PathBuf>, InstallError> {
 }
 
 /// Update `lockfile` to reflect a successful install.
+///
+/// `dependencies` carries the exact-pinned transitive deps of the
+/// installed package as decided by the depsolver. Empty `Vec` is the
+/// pre-resolver shape — pre-PROP-002 callers and the legacy single-pkg
+/// install path.
 pub fn register_installed(
     lockfile: &mut Lockfile,
     plan: &InstallPlan,
     files_written: Vec<PathBuf>,
     generated_at: String,
+    dependencies: Vec<PackageRef>,
 ) {
     // Lockfile-v2 provenance fields are forwarded from the `CachedPackage`
     // produced by whichever registry impl served this install. Each impl
@@ -270,8 +276,6 @@ pub fn register_installed(
     // - `MultiRegistryResolver`'s override path sets `overridden = true`
     //   and records the override's ref.
     //
-    // `dependencies` stays empty in this commit — the resolver wires
-    // transitive deps in a follow-up.
     let entry = LockedPackage {
         kind: plan.cached.resolved.kind,
         name: plan.cached.resolved.name.clone(),
@@ -283,7 +287,7 @@ pub fn register_installed(
         content_hash: plan.cached.content_hash.clone(),
         boot_snippet: plan.boot_snippet_filename.clone(),
         files_written,
-        dependencies: Vec::new(),
+        dependencies,
         overridden: plan.cached.overridden,
     };
     lockfile.packages.push(entry);
@@ -645,7 +649,7 @@ source = "boot/10-flow-wal.md"
             assert!(project.path().join(rel).is_file(), "expected {rel:?} exists");
         }
 
-        register_installed(&mut lockfile, &plan, written, "t1".into());
+        register_installed(&mut lockfile, &plan, written, "t1".into(), Vec::new());
         assert_eq!(lockfile.packages.len(), 1);
         let entry = &lockfile.packages[0];
         assert_eq!(entry.kind, PackageKind::Flow);
@@ -667,7 +671,7 @@ source = "boot/10-flow-wal.md"
         // Pre-install.
         let plan = plan_install(project.path(), &lockfile, cached.clone()).unwrap();
         let written = apply_install(&plan).unwrap();
-        register_installed(&mut lockfile, &plan, written, "t1".into());
+        register_installed(&mut lockfile, &plan, written, "t1".into(), Vec::new());
 
         // Plan again: should error.
         let err = plan_install(project.path(), &lockfile, cached).unwrap_err();
@@ -790,7 +794,7 @@ files = ["../escape.md"]
         let mut lockfile = Lockfile::empty("vibe-test", "t0");
         let plan = plan_install(project.path(), &lockfile, cached).unwrap();
         let written = apply_install(&plan).unwrap();
-        register_installed(&mut lockfile, &plan, written, "t1".into());
+        register_installed(&mut lockfile, &plan, written, "t1".into(), Vec::new());
 
         let pkgref = PackageRef::parse("flow:wal").unwrap();
         let uplan = plan_uninstall(project.path(), &lockfile, &pkgref).unwrap();
