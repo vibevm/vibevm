@@ -5,6 +5,7 @@ members = [
     "crates/vibe-core",
     "crates/vibe-graph",
     "crates/vibe-registry",
+    "crates/vibe-resolver",
     "crates/vibe-install",
     "crates/vibe-llm",
     "crates/vibe-check",
@@ -28,6 +29,7 @@ categories = ["command-line-utilities", "development-tools"]
 vibe-core = { path = "crates/vibe-core", version = "0.1.0-dev" }
 vibe-graph = { path = "crates/vibe-graph", version = "0.1.0-dev" }
 vibe-registry = { path = "crates/vibe-registry", version = "0.1.0-dev" }
+vibe-resolver = { path = "crates/vibe-resolver", version = "0.1.0-dev" }
 vibe-install = { path = "crates/vibe-install", version = "0.1.0-dev" }
 vibe-llm = { path = "crates/vibe-llm", version = "0.1.0-dev" }
 vibe-check = { path = "crates/vibe-check", version = "0.1.0-dev" }

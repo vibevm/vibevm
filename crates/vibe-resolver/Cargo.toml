@@ -1,0 +1,22 @@
+[package]
+name = "vibe-resolver"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+license-file.workspace = true
+publish.workspace = true
+repository.workspace = true
+homepage.workspace = true
+description = "Dependency resolution for vibevm packages — capability-based, multi-registry-aware"
+
+[dependencies]
+thiserror.workspace = true
+semver.workspace = true
+tracing.workspace = true
+vibe-core.workspace = true
+vibe-registry.workspace = true
+
+[dev-dependencies]
+tempfile.workspace = true
+toml.workspace = true
