@@ -30,10 +30,14 @@ use walkdir::WalkDir;
 pub mod git_backend;
 pub mod git_package_registry;
 pub mod git_registry;
+pub mod multi_registry_resolver;
 
 pub use git_backend::{GitBackend, GitError, ShellGit};
 pub use git_package_registry::GitPackageRegistry;
 pub use git_registry::{GitRegistry, RegistryMeta, default_cache_root};
+pub use multi_registry_resolver::{
+    DEFAULT_OVERRIDE_REF, MultiCached, MultiRegistryResolver, MultiResolution,
+};
 
 #[derive(Debug, Error)]
 pub enum RegistryError {

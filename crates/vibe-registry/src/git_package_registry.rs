@@ -357,8 +357,9 @@ fn short_url_hash(s: &str) -> String {
 /// Recursively copy `src` into `dst`, excluding any `.git` directory at any
 /// depth. Used to materialise a clone into the package cache without
 /// dragging the git index along — the cache holds payload only, identity
-/// rides on `content_hash`.
-fn copy_dir_excluding_git(src: &Path, dst: &Path) -> Result<(), RegistryError> {
+/// rides on `content_hash`. `pub(crate)` because the multi-registry
+/// resolver shares the same materialisation path for `[[override]]` clones.
+pub(crate) fn copy_dir_excluding_git(src: &Path, dst: &Path) -> Result<(), RegistryError> {
     fs::create_dir_all(dst).map_err(|source| RegistryError::Io {
         path: dst.to_path_buf(),
         source,
