@@ -40,7 +40,9 @@ use vibe_core::manifest::{NamingConvention, PackageManifest};
 use vibe_core::{PackageKind, PackageRef, VersionSpec};
 
 use crate::git_backend::{GitBackend, GitError, ShellGit};
-use crate::git_registry::{DEFAULT_FRESHNESS_SECS, default_cache_root, normalize_url};
+use crate::git_registry::{
+    DEFAULT_FRESHNESS_SECS, default_cache_root, normalize_url, strip_git_plus_prefix,
+};
 use crate::{
     CachedPackage, Registry, RegistryError, ResolvedPackage, compute_content_hash,
 };
@@ -164,7 +166,7 @@ impl GitPackageRegistry {
         name: &str,
     ) -> Result<Vec<semver::Version>, RegistryError> {
         let url = self.package_repo_url(kind, name);
-        let tags = self.backend.list_tags(&url).map_err(|e| match e {
+        let tags = self.backend.list_tags(strip_git_plus_prefix(&url)).map_err(|e| match e {
             GitError::RepoNotFound { .. } => RegistryError::UnknownPackage {
                 kind,
                 name: name.to_owned(),
@@ -227,9 +229,11 @@ impl GitPackageRegistry {
     ) -> Result<PackageManifest, RegistryError> {
         let url = self.package_repo_url(kind, name);
         let tag = format!("v{version}");
-        let bytes = self
-            .backend
-            .fetch_file_at_ref(&url, &tag, PackageManifest::FILENAME)?;
+        let bytes = self.backend.fetch_file_at_ref(
+            strip_git_plus_prefix(&url),
+            &tag,
+            PackageManifest::FILENAME,
+        )?;
         let text = String::from_utf8(bytes).map_err(|e| RegistryError::MalformedMeta {
             path: PathBuf::from(format!("{url}@{tag}:{}", PackageManifest::FILENAME)),
             reason: format!("invalid UTF-8: {e}"),
@@ -286,7 +290,8 @@ impl GitPackageRegistry {
                 dest = %clone_dir.display(),
                 "cloning per-package repo"
             );
-            self.backend.bootstrap(&url, &tag, &clone_dir)?;
+            self.backend
+                .bootstrap(strip_git_plus_prefix(&url), &tag, &clone_dir)?;
         }
 
         // Materialise into the per-project package cache, stripping `.git/`.

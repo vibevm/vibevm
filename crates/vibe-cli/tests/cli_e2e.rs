@@ -269,29 +269,36 @@ fn run_git(cwd: &Path, args: &[&str]) {
     );
 }
 
-/// Build a bare git "registry" repo at `root/vibespecs.git` seeded with
-/// the canonical `flow:wal@0.1.0` package under `flow/wal/v0.1.0/`.
-fn make_bare_registry(root: &Path) -> PathBuf {
-    let src = root.join("src");
+/// Build a per-package bare git registry under `root/`: one bare repo
+/// per package, content at the repo root, tagged `v<semver>`.
+///
+/// For this test we seed exactly one package: `flow:wal@0.1.0` →
+/// `<root>/flow-wal.git`. The "registry" is then `<root>` itself —
+/// `MultiRegistryResolver` composes per-package URLs by appending
+/// `<kind>-<name>.git` to the org URL.
+///
+/// Returns the org root path (not any single repo), since the install
+/// flow points `[[registry]]` at the org URL.
+fn make_per_package_registry(root: &Path) -> PathBuf {
+    let src = root.join("src-flow-wal");
     fs::create_dir_all(&src).unwrap();
     run_git(&src, &["init", "--initial-branch=main"]);
     run_git(&src, &["config", "user.email", "t@example.com"]);
     run_git(&src, &["config", "user.name", "Test"]);
 
-    // Copy the fixture package into the work tree at the right path.
-    let pkg_dst = src.join("flow/wal/v0.1.0");
-    fs::create_dir_all(&pkg_dst).unwrap();
-    copy_tree(&fixture_registry().join("flow/wal/v0.1.0"), &pkg_dst);
-
+    // Per-package layout: package contents live AT THE ROOT of the repo,
+    // not under `<kind>/<name>/v<ver>/`.
+    copy_tree(&fixture_registry().join("flow/wal/v0.1.0"), &src);
     run_git(&src, &["add", "-A"]);
-    run_git(&src, &["commit", "-m", "seed flow:wal@0.1.0"]);
+    run_git(&src, &["commit", "-m", "flow:wal@0.1.0"]);
+    run_git(&src, &["tag", "v0.1.0"]);
 
-    let bare = root.join("vibespecs.git");
+    let bare = root.join("flow-wal.git");
     run_git(root, &[
         "clone", "--bare", src.to_str().unwrap(), bare.to_str().unwrap(),
     ]);
     run_git(&bare, &["symbolic-ref", "HEAD", "refs/heads/main"]);
-    bare
+    root.to_path_buf()
 }
 
 fn copy_tree(src: &Path, dst: &Path) {
@@ -309,17 +316,17 @@ fn copy_tree(src: &Path, dst: &Path) {
     }
 }
 
-fn write_project_with_git_registry(project_dir: &Path, registry_url: &str) {
-    // Replace the default vibe.toml with one that carries a [registry]
-    // section pointing at the given URL.
+fn write_project_with_per_package_registry(project_dir: &Path, registry_url: &str) {
+    // [[registry]] in PROP-002 shape, pointing at the per-package org URL.
+    // `naming = "kind-name"` is the default convention for vibespecs.
     let manifest = format!(
         r#"[project]
 name = "demo"
 version = "0.0.1"
 
-[registry]
+[[registry]]
+name = "default"
 url = "{registry_url}"
-ref = "main"
 "#
     );
     fs::write(project_dir.join("vibe.toml"), manifest).unwrap();
@@ -333,15 +340,19 @@ fn install_from_git_registry() {
     }
 
     let outer = tempfile::tempdir().unwrap();
-    let bare = make_bare_registry(outer.path());
+    let org_root = make_per_package_registry(outer.path());
     let cache = outer.path().join("cache");
     fs::create_dir_all(&cache).unwrap();
 
     let project = tempfile::tempdir().unwrap();
     init_project(project.path());
 
-    let url = format!("git+file://{}", bare.to_string_lossy().replace('\\', "/"));
-    write_project_with_git_registry(project.path(), &url);
+    // Org URL = parent of `flow-wal.git`. `git+file://` prefix is the
+    // Cargo / pip convention recorded in lockfiles; the resolver strips
+    // it before invoking `git`, so it works with both prefixed and bare
+    // forms in `vibe.toml`.
+    let url = format!("git+file://{}", org_root.to_string_lossy().replace('\\', "/"));
+    write_project_with_per_package_registry(project.path(), &url);
 
     vibe()
         .env("VIBE_REGISTRY_CACHE", &cache)
@@ -353,39 +364,54 @@ fn install_from_git_registry() {
         .assert()
         .success();
 
-    // Lockfile carries the git+ source URI with the fragment.
+    // Lockfile reflects the per-package shape.
     let lock_text = fs::read_to_string(project.path().join("vibe.lock")).unwrap();
     let lock: vibe_core::manifest::Lockfile = toml::from_str(&lock_text).unwrap();
     assert_eq!(lock.packages.len(), 1);
+    let entry = &lock.packages[0];
+
+    // schema_version = 2 in the meta block.
+    assert_eq!(lock.meta.schema_version, 2);
+
+    // PROP-002 §2.7 provenance: registry name, full per-package source_url,
+    // tag in source_ref. No more `#flow/wal/v0.1.0` fragment shape.
+    assert_eq!(entry.registry.as_deref(), Some("default"));
     assert!(
-        lock.packages[0].source_url.starts_with("git+"),
-        "expected git+ source_url, got: {}",
-        lock.packages[0].source_url
+        entry.source_url.starts_with("git+file://"),
+        "expected git+file:// prefix, got: {}",
+        entry.source_url
     );
     assert!(
-        lock.packages[0].source_url.ends_with("#flow/wal/v0.1.0"),
-        "expected #flow/wal/v0.1.0 fragment, got: {}",
-        lock.packages[0].source_url
+        entry.source_url.ends_with("/flow-wal.git"),
+        "expected per-package URL ending in /flow-wal.git, got: {}",
+        entry.source_url
+    );
+    assert_eq!(entry.source_ref.as_deref(), Some("v0.1.0"));
+    assert!(!entry.overridden);
+
+    // Cache layout: one bucket dir under cache/, with packages/<kind>-<name>/
+    // and a clone subdir. The registry-level meta.toml lands together with
+    // freshness machinery in a follow-up — this commit only requires the
+    // bucket directory itself plus the package clone.
+    let clone_dirs: Vec<_> = fs::read_dir(&cache)
+        .unwrap()
+        .filter_map(|e| e.ok())
+        .collect();
+    assert_eq!(clone_dirs.len(), 1, "expected one registry cache bucket");
+    let bucket = clone_dirs[0].path();
+    let pkg_clone = bucket.join("packages/flow-wal/clone");
+    assert!(
+        pkg_clone.join(".git").exists(),
+        "per-package clone missing .git/: {}",
+        pkg_clone.display()
+    );
+    assert!(
+        pkg_clone.join("vibe-package.toml").exists(),
+        "vibe-package.toml not in per-package clone: {}",
+        pkg_clone.display()
     );
 
-    // Cache now contains a clone dir with the bare repo's tree.
-    let clone_dirs: Vec<_> = fs::read_dir(&cache).unwrap().filter_map(|e| e.ok()).collect();
-    assert_eq!(clone_dirs.len(), 1, "expected one registry cache dir");
-    let reg_dir = clone_dirs[0].path();
-    assert!(reg_dir.join("clone/.git").exists(), "clone/.git missing");
-    assert!(reg_dir.join("meta.toml").exists(), "meta.toml missing");
-    assert!(
-        reg_dir.join("clone/flow/wal/v0.1.0/vibe-package.toml").exists(),
-        "registry tree not in clone"
-    );
-
-    // `vibe registry sync` succeeds against the same registry.
-    vibe()
-        .env("VIBE_REGISTRY_CACHE", &cache)
-        .arg("registry")
-        .arg("sync")
-        .arg("--path")
-        .arg(project.path())
-        .assert()
-        .success();
+    // `vibe registry sync` is migrated separately — the legacy single-repo
+    // sync path doesn't fit a per-package org URL. The follow-up commit
+    // walks the lockfile to refresh per-package clones.
 }

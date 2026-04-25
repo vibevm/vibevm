@@ -13,7 +13,7 @@ use vibe_core::manifest::{Lockfile, ProjectManifest};
 use vibe_install::{
     InstallError, InstallPlan, WriteKind, apply_install, plan_install, register_installed,
 };
-use vibe_registry::{GitRegistry, LocalRegistry, Registry};
+use vibe_registry::{CachedPackage, LocalRegistry, MultiRegistryResolver};
 
 use crate::cli::InstallArgs;
 use crate::output;
@@ -22,7 +22,7 @@ pub fn run(ctx: &output::Context, args: InstallArgs) -> Result<()> {
     let project_root = resolve_project_root(&args.path)?;
     let manifest = load_project_manifest(&project_root)?;
     let mut lockfile = load_or_empty_lockfile(&project_root)?;
-    let registry: Box<dyn Registry> = resolve_registry(&args, &manifest)?;
+    let resolver = build_install_resolver(&args, &manifest)?;
 
     // Cache layout matches §8.3: `.vibe/cache/<kind>/<name>/<version>/`.
     let cache_root = project_root.join(".vibe/cache");
@@ -35,8 +35,7 @@ pub fn run(ctx: &output::Context, args: InstallArgs) -> Result<()> {
     for raw in &args.packages {
         let pkgref = PackageRef::parse(raw).with_context(|| format!("parsing `{raw}`"))?;
         ctx.heading(&format!("Resolving {pkgref}…"));
-        let resolved = registry.resolve(&pkgref)?;
-        let cached = registry.fetch(&resolved, &cache_root)?;
+        let cached = resolver.resolve_and_fetch(&pkgref, &cache_root)?;
         // Each plan must observe the updated view: if we install two packages
         // in one invocation and both contribute a boot snippet, the second
         // plan must see the first one's intended writes. We do the cheap
@@ -146,68 +145,74 @@ fn load_or_empty_lockfile(root: &Path) -> Result<Lockfile> {
     }
 }
 
-/// Build the concrete [`Registry`] for this invocation.
+/// Either a M0-shape local-directory registry (used by `--registry <path>`
+/// and the in-tree fixture path) or a full PROP-002 multi-registry
+/// resolver covering the `[[registry]]` / `[[mirror]]` / `[[override]]`
+/// sections in `vibe.toml`.
 ///
-/// Precedence (matches `VIBEVM-SPEC.md` §9.1 and
-/// [`spec://vibevm/common/PROP-000#registry`]):
-/// 1. `--registry <path>` — always a local directory (M0 behaviour).
-/// 2. `[registry].url` in `vibe.toml`:
-///    - `file://<abs>` — local directory.
-///    - anything else (`git+ssh://…`, `ssh://…`, `https://…`,
-///      `git@host:…`) — git-backed registry under
-///      `~/.vibe/registries/<hash>/`.
-pub(crate) fn resolve_registry(
+/// Both branches expose a single [`Self::resolve_and_fetch`] entry point
+/// returning a [`CachedPackage`] with lockfile-v2 provenance fields
+/// populated by the underlying impl (`None` / `false` for the local-dir
+/// path; populated for the per-package + override paths).
+pub(crate) enum InstallResolver {
+    Local(LocalRegistry),
+    Multi(MultiRegistryResolver),
+}
+
+impl InstallResolver {
+    pub(crate) fn resolve_and_fetch(
+        &self,
+        pkgref: &PackageRef,
+        cache_root: &Path,
+    ) -> Result<CachedPackage> {
+        match self {
+            InstallResolver::Local(r) => {
+                let resolved = r.resolve(pkgref)?;
+                Ok(r.fetch(&resolved, cache_root)?)
+            }
+            InstallResolver::Multi(m) => {
+                let resolution = m.resolve(pkgref)?;
+                Ok(m.fetch(&resolution, cache_root)?)
+            }
+        }
+    }
+}
+
+/// Build the install resolver for this invocation.
+///
+/// Precedence (matches `VIBEVM-SPEC.md` §9.1):
+/// 1. `--registry <path>` — explicit local-directory registry (M0 shape,
+///    used by tests and offline workflows).
+/// 2. `[[registry]]` array in `vibe.toml` → [`MultiRegistryResolver`]
+///    covering priority order, mirrors, and overrides per
+///    [PROP-002](../../../../spec/modules/vibe-registry/PROP-002-decentralized-registry.md).
+pub(crate) fn build_install_resolver(
     args: &InstallArgs,
     manifest: &ProjectManifest,
-) -> Result<Box<dyn Registry>> {
+) -> Result<InstallResolver> {
     if let Some(explicit) = &args.registry {
         let p = explicit
             .canonicalize()
             .with_context(|| format!("registry path `{}`", explicit.display()))?;
         let p = super::init::strip_unc_public(p);
-        return Ok(Box::new(
-            LocalRegistry::new(p.clone())
-                .map_err(|e| anyhow!("failed to open registry at `{}`: {e}", p.display()))?,
-        ));
+        let local = LocalRegistry::new(p.clone())
+            .map_err(|e| anyhow!("failed to open registry at `{}`: {e}", p.display()))?;
+        return Ok(InstallResolver::Local(local));
     }
-    let Some(reg) = manifest.primary_registry() else {
+
+    if manifest.registries.is_empty() {
         bail!(
             "no registry configured. Pass `--registry <path>` or add a `[[registry]]` entry to `vibe.toml`."
         );
-    };
-    if let Some(path) = parse_file_uri(&reg.url) {
-        let p = path
-            .canonicalize()
-            .with_context(|| format!("registry `{}`", path.display()))?;
-        let p = super::init::strip_unc_public(p);
-        return Ok(Box::new(
-            LocalRegistry::new(p.clone())
-                .map_err(|e| anyhow!("failed to open registry at `{}`: {e}", p.display()))?,
-        ));
     }
-    // Anything else is a git URL. GitRegistry::open handles clone +
-    // freshness TTL internally.
-    let git = GitRegistry::open(&reg.url, &reg.r#ref)
-        .with_context(|| format!("opening git registry `{}`", reg.url))?;
-    Ok(Box::new(git))
-}
 
-pub(crate) fn parse_file_uri(url: &str) -> Option<PathBuf> {
-    let rest = url.strip_prefix("file://")?;
-    // Accept both `file:///C:/...` (tri-slash) and `file:///home/...`.
-    let mut trimmed = rest.trim_start_matches('/');
-    // On Windows paths of the form `C:/Users/...` have the drive letter at the
-    // start. Keep them as-is.
-    let looks_like_windows = trimmed
-        .chars()
-        .nth(1)
-        .map(|c| c == ':')
-        .unwrap_or(false);
-    if !looks_like_windows {
-        // It's a Unix absolute path; re-prepend the `/`.
-        trimmed = rest; // restore leading slashes
-    }
-    Some(PathBuf::from(trimmed))
+    let mrr = MultiRegistryResolver::open(
+        &manifest.registries,
+        &manifest.mirrors,
+        &manifest.overrides,
+    )
+    .context("opening multi-registry resolver")?;
+    Ok(InstallResolver::Multi(mrr))
 }
 
 fn check_cross_plan_conflicts(prior: &[InstallPlan], new: &InstallPlan) -> Result<()> {

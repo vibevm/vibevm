@@ -45,7 +45,7 @@ use vibe_core::manifest::{
 
 use crate::git_backend::{GitBackend, ShellGit};
 use crate::git_package_registry::{GitPackageRegistry, copy_dir_excluding_git};
-use crate::git_registry::{DEFAULT_FRESHNESS_SECS, default_cache_root};
+use crate::git_registry::{DEFAULT_FRESHNESS_SECS, default_cache_root, strip_git_plus_prefix};
 use crate::{
     CachedPackage, RegistryError, ResolvedPackage, compute_content_hash,
 };
@@ -262,9 +262,11 @@ impl MultiRegistryResolver {
         url: &str,
         refname: &str,
     ) -> Result<PackageManifest, RegistryError> {
-        let bytes = self
-            .backend
-            .fetch_file_at_ref(url, refname, PackageManifest::FILENAME)?;
+        let bytes = self.backend.fetch_file_at_ref(
+            strip_git_plus_prefix(url),
+            refname,
+            PackageManifest::FILENAME,
+        )?;
         let text = String::from_utf8(bytes).map_err(|e| RegistryError::MalformedMeta {
             path: PathBuf::from(format!("{url}@{refname}:{}", PackageManifest::FILENAME)),
             reason: format!("invalid UTF-8: {e}"),
@@ -396,7 +398,7 @@ fn ensure_clone_at(
             source,
         })?;
     }
-    backend.bootstrap(url, refname, clone_dir)?;
+    backend.bootstrap(strip_git_plus_prefix(url), refname, clone_dir)?;
     Ok(())
 }
 

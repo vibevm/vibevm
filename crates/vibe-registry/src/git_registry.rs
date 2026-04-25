@@ -248,8 +248,9 @@ pub fn default_cache_root() -> Result<PathBuf, RegistryError> {
 /// `git+` is a pip / Cargo convention that labels a URL as "this is a
 /// git source" in a lockfile or manifest. Native git does not
 /// understand the prefix itself, so we peel it off at the backend
-/// boundary.
-fn strip_git_plus_prefix(url: &str) -> &str {
+/// boundary. Used by `GitRegistry`, `GitPackageRegistry`, and the
+/// override path in `MultiRegistryResolver`.
+pub(crate) fn strip_git_plus_prefix(url: &str) -> &str {
     url.strip_prefix("git+").unwrap_or(url)
 }
 
