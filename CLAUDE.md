@@ -66,3 +66,32 @@ Project facts do **not** belong in the running harness's global per-user auto-me
 Global user-memory is reserved for facts about *this developer's machine* — shell quirks, SSH-agent setup on this box, installed-tool specifics that persist across sessions but are not universal.
 
 **Default:** when uncertain whether a fact is project-scoped or machine-scoped, treat it as project-scoped and write it into the repo. Moving a fact from the project into user-memory later is cheap; the reverse has already silently cost a teammate context.
+
+## Session-end checkpoint command — `ЗАВЕРШИ СЕССИЮ` / `END SESSION`
+
+When the user issues any of the trigger phrases below, treat it as a structured wind-down request — the user is about to close the conversation and may continue from a fresh context (different machine, new session, post-compaction). The job is to capture *everything a cold reader would need* into durable repository state.
+
+**Trigger phrases** (case-insensitive; exact wording not required, recognise the intent):
+
+- Russian: `ЗАВЕРШИ СЕССИЮ КОДИРОВАНИЯ`, `ЗАВЕРШИ СЕССИЮ`, `КОНЕЦ СЕССИИ`, `ЗАКАНЧИВАЕМ СЕССИЮ`, `ЗАВЕРШАЕМ СЕССИЮ`, `СВОРАЧИВАЕМСЯ`, `ФИКСИРУЕМ И ЗАКАНЧИВАЕМ`.
+- English: `END SESSION`, `WRAP UP SESSION`, `WRAP UP`, `FINISH SESSION`, `CLOSING SESSION`, `CHECKPOINT AND CLOSE`.
+
+**Required behaviour** when a trigger phrase fires:
+
+1. **Overwrite `CONTINUE.md` at repo root** with a comprehensive cold-resume document. If the file exists, replace it wholesale (do not append — staleness compounds otherwise). The body must include, at minimum:
+   - A short TL;DR / executive summary at the top.
+   - Where work currently stands (branch, ahead/behind origin, working tree status).
+   - The active blocker (if any) and the exact human action that unblocks it.
+   - Exact next-steps recipe (commands, file paths, line numbers) for whoever picks up cold.
+   - Any non-obvious findings discovered this session (API quirks, config gotchas, vendor-specific surprises).
+   - A repository map (top-level layout + what each crate / directory holds).
+   - The list of important architectural / policy decisions still in force, in long form.
+   - The recent commit chain (last ~25 commits, oneline format) so cold reader sees velocity.
+   - Quick-start commands for the workspace.
+   - A pointer noting the WAL is the canonical *living* state and supersedes this snapshot if they diverge.
+2. **Update `spec/WAL.md`** with the current checkpoint — bump the date line, refresh the "Current phase" / "Next" / "Known issues" sections, record any new findings or commits since the last WAL update.
+3. **Commit the changes in topic-grouped commits** per Rule 3. Typical shape: one `docs(continue): cold-resume checkpoint` for `CONTINUE.md`, one `docs(wal): session-end checkpoint` for `spec/WAL.md`. If the same session-end run also lands a code or boot-file change, that is a separate third commit.
+4. **Push to `origin/main`** — routine per Rule 4, since the user invoked the wind-down explicitly. (If push would be non-fast-forward or otherwise risky, stop and ask first per Rule 4's escape hatch.)
+5. **Emit a TL;DR / executive summary in the chat response** describing what this command did: which files were written / updated, which commits were created, push status, what the next session should pick up first. Keep it short enough to scan in one screen, but include enough detail (file paths, commit subjects, blockers) that the user can verify nothing was missed without opening the files.
+
+The point of this command is to make session-boundary loss-of-context cheap: any session can be ended at any time and resumed from `CONTINUE.md` + `spec/WAL.md` with no degradation. Treat it as a hard contract, not a courtesy.
