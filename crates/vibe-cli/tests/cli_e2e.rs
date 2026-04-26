@@ -1,6 +1,6 @@
 //! End-to-end tests for the full M0 walk: init → install → list → uninstall.
 //!
-//! The registry used here is the hand-written `packages/` tree that ships in
+//! The registry used here is the hand-written `fixtures/registry/` tree that ships in
 //! the vibevm repo itself (the canonical `flow:wal` fixture per
 //! `VIBEVM-SPEC.md` §13).
 
@@ -14,14 +14,19 @@ fn vibe() -> Command {
     Command::cargo_bin("vibe").expect("vibe binary built")
 }
 
-/// The `packages/` directory at the repo root is the fixture registry.
+/// The `fixtures/registry/` directory at the repo root holds the
+/// hermetic fixture registry the e2e tests run against. Layout is the
+/// M0/M1.1 monorepo shape (`<kind>/<name>/v<ver>/…`); the directory
+/// is intentionally separate from the future `packages/` tree (where
+/// vibevm dogfoods its own packages — keeps test fixtures and live
+/// artefacts visually distinct).
 fn fixture_registry() -> PathBuf {
     let crate_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
     let workspace = crate_dir
         .parent()
         .and_then(|p| p.parent())
         .expect("workspace root");
-    workspace.join("packages")
+    workspace.join("fixtures").join("registry")
 }
 
 fn init_project(dir: &Path) {
