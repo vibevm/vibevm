@@ -420,3 +420,96 @@ fn install_from_git_registry() {
     // sync path doesn't fit a per-package org URL. The follow-up commit
     // walks the lockfile to refresh per-package clones.
 }
+
+// ---------------------------------------------------------------------------
+// Help-text smoke — every CLI subcommand renders `--help`
+// ---------------------------------------------------------------------------
+//
+// Regression defence for the clap derive on `crates/vibe-cli/src/cli.rs`. A
+// silently-empty help text on a subcommand has happened in other Rust CLIs
+// when a `#[command]` attribute drifts (missing `about` on a fresh
+// subcommand, mistyped `subcommand` attribute on a parent, etc.) — the CLI
+// still parses and runs, but `--help` returns blank and confuses users.
+// This test catches that the next time someone adds a subcommand without
+// also adding its docstring.
+//
+// Each entry is a path to a help target. `--help` is appended; the subcommand
+// itself never runs (clap short-circuits on `--help`), so no project setup
+// or network access is needed.
+
+#[test]
+fn every_subcommand_renders_help() {
+    // Path lists for every help surface clap exposes today. When a new
+    // subcommand lands in `crates/vibe-cli/src/cli.rs`, add it here too —
+    // the help-text contract is part of the user-facing surface.
+    let subcommand_paths: &[&[&str]] = &[
+        &[],                            // top-level: `vibe --help`
+        &["init"],
+        &["install"],
+        &["list"],
+        &["uninstall"],
+        &["registry"],                  // shows the `sync` / `publish` enum
+        &["registry", "sync"],
+        &["registry", "publish"],
+        &["version"],
+    ];
+
+    for path in subcommand_paths {
+        let mut cmd = vibe();
+        for seg in *path {
+            cmd.arg(seg);
+        }
+        cmd.arg("--help");
+        let out = cmd.output().unwrap_or_else(|e| {
+            panic!(
+                "spawning `vibe {} --help` failed: {e}",
+                path.join(" ")
+            )
+        });
+
+        let label = if path.is_empty() {
+            "vibe --help".to_string()
+        } else {
+            format!("vibe {} --help", path.join(" "))
+        };
+
+        assert!(
+            out.status.success(),
+            "`{label}` should exit 0 — got {:?}, stderr: {}",
+            out.status.code(),
+            String::from_utf8_lossy(&out.stderr)
+        );
+
+        let stdout = String::from_utf8_lossy(&out.stdout);
+        assert!(
+            !stdout.trim().is_empty(),
+            "`{label}` produced empty stdout — clap derive likely lost the docstring"
+        );
+        // Cheap sanity: every help screen mentions usage. Catches the
+        // "wrong binary got invoked" scenario without coupling to wording.
+        assert!(
+            stdout.to_lowercase().contains("usage"),
+            "`{label}` stdout did not contain `Usage` — got:\n{stdout}"
+        );
+    }
+}
+
+#[test]
+fn version_subcommand_matches_version_flag() {
+    // `vibe version` and `vibe --version` are documented as identical
+    // (see docs/commands/version.md). Drift between the two would confuse
+    // any tooling that scrapes the version string.
+    let sub = vibe().arg("version").output().expect("spawn vibe version");
+    let flag = vibe().arg("--version").output().expect("spawn vibe --version");
+    assert!(sub.status.success() && flag.status.success());
+    let sub_out = String::from_utf8_lossy(&sub.stdout).trim().to_string();
+    let flag_out = String::from_utf8_lossy(&flag.stdout).trim().to_string();
+    assert_eq!(
+        sub_out, flag_out,
+        "`vibe version` and `vibe --version` must produce identical output"
+    );
+    assert!(
+        sub_out.starts_with("vibe "),
+        "version output should start with `vibe `, got: {sub_out}"
+    );
+}
