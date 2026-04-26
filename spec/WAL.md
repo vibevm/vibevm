@@ -1,9 +1,9 @@
 # WAL — Project Continuation State
-_Updated: 2026-04-24_
+_Updated: 2026-04-25_
 
 ## Current phase
 
-**M1.1-revision — decentralized per-package registry refactor. Documentation slice landed; code slice next.**
+**M1.1-revision — decentralized per-package registry refactor. Phase A code slice complete; live migration of the three demo packages into the `vibespecs` org is the only remaining step.**
 
 The M1.1 monorepo-shaped registry (one `anarchic/vibespecs` repo, `<kind>/<name>/v<ver>/` directories, `[registry]` singleton in `vibe.toml`) was replaced — at the design level — with a decentralized per-package model before any downstream consumer is at risk of being locked into it. Full design lock lives in [PROP-002](modules/vibe-registry/PROP-002-decentralized-registry.md).
 
@@ -29,7 +29,9 @@ The three live v0.1.0 flows (`flow:wal`, `flow:sync-from-code`, `flow:atomic-com
 - Load-bearing setup docs at repo root: [`DEV-GUIDE.md`](../DEV-GUIDE.md), [`RUNTIME-GUIDE.md`](../RUNTIME-GUIDE.md).
 - Project facts stay in the project; no project-level state in tool-specific global user-memory.
 
-**Immediate next work:** start the code slice of Phase A per [`TASKS.md`](../TASKS.md). First logical commits: JTD toolchain vendor, schema seeds, core schema v2 (`vibe.toml` array, `vibe.lock` v2 with auto-migration from v1, capability-based deps parse).
+**Immediate next work:** the only outstanding Phase A item is the **live migration** of the three v0.1.0 demo flows into per-package repos under `vibespecs/<kind>-<name>` via `vibe registry publish`. This is **non-routine** per CLAUDE.md Rule 4 (creates real artefacts in a public org and exercises the GitVerse API for the first time), so it requires explicit owner sign-off before push. Once those three repos exist on GitVerse and the smoke-test [`M1.5-gate-v2-per-package-smoke.md`](../manual-tests/M1.5-gate-v2-per-package-smoke.md) passes, `DEFAULT_REGISTRY_URL` rotates to the new org root and Phase A closes.
+
+**JTD toolchain.** Scaffolding is in place (`tools/jtd-codegen/`, `xtask`, `schemas/`, `crates/vibe-wire/`); the `jtd-codegen` binary itself needs a one-time install per `tools/jtd-codegen/README.md` before the first `cargo xtask codegen` run. Migration of existing hand-rolled `Serialize` structs to JTD-driven types is incremental and lands as the consumers are touched.
 
 ## Constraints (do not violate without discussion)
 
@@ -95,19 +97,44 @@ The three live v0.1.0 flows (`flow:wal`, `flow:sync-from-code`, `flow:atomic-com
 - [x] [`ROADMAP.md`](../ROADMAP.md) — M1.1-revision active section, M1.6 (multi-registry polish) queued.
 - [x] [`TASKS.md`](../TASKS.md) at repo root — live checklist for the current slice.
 
-## In progress
+## Code slice landed (2026-04-24 → 2026-04-25)
 
-Code slice of Phase A — first logical commits queued in [`TASKS.md`](../TASKS.md):
+The full Phase A code slice is in. Each item below is one or more
+shipped commits on `origin/main`; cross-reference the commit log for
+specifics. Total workspace state: 169+ tests green, clippy clean
+with `-D warnings` across the workspace, six new crates / modules
+since the documentation checkpoint:
 
-1. `build(tools)`: vendor `jtd-codegen` under `tools/jtd-codegen/` and wire `cargo xtask codegen` with zero-drift CI.
-2. `feat(schemas)`: first JTD schemas — GitVerse publish-API, `vibe --json` event shape.
-3. `feat(core)`: capability-based dep parsing (`[provides]` / `[requires]` / `[[requires_any]]` / `[obsoletes]` / `[conflicts]`) with legacy compact-form auto-migration.
-4. `feat(core)`: `vibe.toml` schema v2 — `[[registry]]` array + `[[mirror]]` + `[[override]]` parsing with singleton auto-migration.
-5. `feat(core)`: `vibe.lock` schema v2 — full record, v1 auto-migration on write.
+- **`chore(git): pin line endings to LF`** — `.gitattributes` everywhere; content_hash is OS-stable.
+- **`feat(core): capability-based package dependencies`** — `CapabilityRef`, `[provides]`/`[requires]`/`[[requires_any]]`/`[obsoletes]`/`[conflicts]` typed and serde-wired; legacy `[dependencies]` migrates transparently.
+- **`feat(core): vibe.toml schema v2`** — `[[registry]]` array + `[[mirror]]` + `[[override]]`; singleton legacy form auto-migrates on read; `NamingConvention` enum with three forms.
+- **`feat(core): vibe.lock schema v2`** — `schema_version`, `solver`, `root_dependencies` in `[meta]`; `registry`/`source_url`/`source_ref`/`resolved_commit`/`dependencies`/`overridden` per package; serde alias on `source` reads v1 transparently.
+- **`feat(registry): shallow ShellGit primitives`** — `list_tags` (via `git ls-remote --tags`, peeled-form deduped) + `fetch_file_at_ref` (via `git archive`, in-process tar extraction).
+- **`feat(registry): GitPackageRegistry`** — per-package repo addressing through `NamingConvention`, tag-based versions, lazy clones, `fetch_dep_manifest` reads manifest without cloning.
+- **`feat(registry): MultiRegistryResolver`** — priority + override + mirror schema; identity verification on overrides; `mirrors_for(name)` accessor for Phase B; `refresh_lockfile_clones` for `vibe registry sync`.
+- **`refactor(registry): provenance through CachedPackage`** — `registry_name`/`source_ref`/`resolved_commit`/`overridden` flow from registry into lockfile.
+- **`feat(install): switch CLI to MultiRegistryResolver`** — `git+` prefix stripping at backend boundary; e2e test rewritten for per-package fixture.
+- **`feat(registry): per-package vibe registry sync`** — walks lockfile, refreshes per-package clones; legacy / override / unattributed entries reported correctly.
+- **`feat(vibe-resolver): DepSolver trait + NaiveDepSolver`** — DFS solver with capability/obsoletes/conflicts/disjunction handling; `MultiRegistryProvider` and `LocalRegistryProvider` adapters; resolvo / libsolv slots reserved.
+- **`feat(install): transitive install via NaiveDepSolver`** — `vibe install` now drives the solver end-to-end; lockfile `dependencies` populated with exact pins; `[meta].root_dependencies` carries user-typed roots.
+- **`feat(vibe-publish): RepoCreator + GitVerseCreator + vibe registry publish`** — Gitea-compatible HTTP client (reqwest+rustls); `Token` redaction; `Publisher` orchestrator; CLI subcommand with `--dry-run`. Live API verification deferred to first real publish.
+- **`build(tools): JTD codegen scaffolding`** — `xtask` crate, `tools/jtd-codegen/` README + gitignore, first JTD schema, `crates/vibe-wire/` placeholder, `.cargo/config.toml` alias.
+- **`chore(fixtures): relocate packages/ → fixtures/registry/`** — `git mv`, history preserved; `packages/` reserved for future dogfooding.
+- **`test(manual): M1.5-gate-v2-per-package-smoke.md`** — protocol for the live three-package smoke against the new `vibespecs` org. Fill in "Last known pass" on first successful run.
 
 ## Next
 
-After the core-schema commits: `vibe-resolver` crate (resolvo), `GitPackageRegistry`, `MultiRegistryResolver`, shallow `ShellGit` primitives (`list_tags`, `fetch_file_at_ref`), install pipeline with transitive resolve, `vibe-publish` + GitVerse adapter, fixture relocation, live migration of three packages, new manual smoke. Detailed order in [`TASKS.md`](../TASKS.md).
+**Live migration of the three v0.1.0 demo flows into `vibespecs/<kind>-<name>` via `vibe registry publish`.** Non-routine (creates real public artefacts, first GitVerse-API exercise). Procedure once approved:
+
+1. Build release: `cargo build --release --workspace`.
+2. Confirm the publish token at `~/.vibevm/git.publish.token` (or `VIBEVM_PUBLISH_TOKEN` env) has `repo:create` scope in the `vibespecs` org.
+3. Dry-run each: `vibe registry publish fixtures/registry/flow/<name>/v0.1.0 --dry-run` for `wal`, `sync-from-code`, `atomic-commits`.
+4. Apply: drop `--dry-run`, run for each in turn.
+5. Walk [`manual-tests/M1.5-gate-v2-per-package-smoke.md`](../manual-tests/M1.5-gate-v2-per-package-smoke.md) end to end.
+6. If smoke passes: rotate `DEFAULT_REGISTRY_URL` in `vibe-core::manifest::project` to `git@gitverse.ru:vibespecs`, update tests, ship the rotation as its own commit.
+7. WAL / ROADMAP checkpoint Phase A complete; M1.6 becomes the next active milestone.
+
+**Beyond Phase A.** M1.6 polishes multi-registry / mirror dispatch / `vibe vendor` per [PROP-002](modules/vibe-registry/PROP-002-decentralized-registry.md#phase-b). M1.5-gate docs (`docs/commands/*.md`, `docs/authoring-{flow,feat,stack}.md`) are still open and parallelisable.
 
 ## Known issues
 
@@ -118,13 +145,14 @@ After the core-schema commits: `vibe-resolver` crate (resolvo), `GitPackageRegis
 
 ## Session context
 
-- **Entry point for next session:** read `CLAUDE.md`, then this WAL, then [PROP-000](common/PROP-000.md) and [PROP-002](modules/vibe-registry/PROP-002-decentralized-registry.md); consult [`TASKS.md`](../TASKS.md) for the current queue. Code slice of Phase A is the active work.
-- **Do NOT touch:** `VIBEVM-SPEC.md` (owner-frozen — I did the approved PROP-002-driven amendments today; any further edit needs a new owner sign-off), `refs/book/**`, `spec/boot/00-core.md`, `spec/boot/90-user.md`, any `fixtures/registry/<kind>-<name>/v0.1.0/` snapshot once relocated (canonical test payloads — changes must be a new version).
+- **Entry point for next session:** read `CLAUDE.md`, then this WAL, then [PROP-000](common/PROP-000.md) and [PROP-002](modules/vibe-registry/PROP-002-decentralized-registry.md); consult [`TASKS.md`](../TASKS.md) for the current queue. The remaining Phase A item is the live migration — see "Next" above for the procedure.
+- **Do NOT touch:** `VIBEVM-SPEC.md` (owner-frozen — the approved PROP-002-driven amendments landed in the documentation slice; any further edit needs a new owner sign-off), `refs/book/**`, `spec/boot/00-core.md`, `spec/boot/90-user.md`, any `fixtures/registry/flow/<name>/v0.1.0/` snapshot (canonical test payloads — changes must be a new version).
 - **Key commands to know:**
-  - `cargo test --workspace` — 81 tests green on `main` at checkpoint; Phase A code adds more.
+  - `cargo test --workspace` — 169+ tests green on `main` at checkpoint.
   - `cargo clippy --workspace --all-targets -- -D warnings` — clean.
-  - `cargo xtask codegen` — regen JTD-derived Rust types (once the tool lands).
+  - `cargo xtask codegen` — regen JTD-derived Rust types (requires `tools/jtd-codegen/` install per its README).
+  - `cargo xtask check-codegen` — drift check; CI uses this once a schema is wired into a real consumer.
   - `cargo run -p vibe-cli -- init --path <dir>` — scaffold a project.
-  - `cargo run -p vibe-cli -- install flow:wal --path <project>` — install from the default registry.
-  - `cargo run -p vibe-cli -- registry publish <path>` — publish a package (maintainers; once the crate lands).
-  - `cargo run -p vibe-cli -- registry sync --path <project>` — force-refresh registry caches touched by the project.
+  - `cargo run -p vibe-cli -- install flow:wal --path <project>` — transitive resolve via `NaiveDepSolver`, populated lockfile v2 entry.
+  - `cargo run -p vibe-cli -- registry publish <path> [--registry <name>] [--dry-run]` — publish a package (maintainers; needs `~/.vibevm/git.publish.token`).
+  - `cargo run -p vibe-cli -- registry sync --path <project>` — refresh per-package clones referenced by the lockfile.

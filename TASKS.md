@@ -53,8 +53,8 @@ Full design locked in [PROP-002](spec/modules/vibe-registry/PROP-002-decentraliz
 
 - [x] `chore(fixtures)`: relocated `packages/` → `fixtures/registry/` via `git mv` (history preserved). Layout intentionally stays M0-monorepo for the LocalRegistry hermetic-fixture path; `cli_e2e::fixture_registry()` updated; `packages/` is now reserved for the future dogfooding tree (vibevm using vibevm).
 - [ ] `test(e2e)`: update `cli_e2e.rs` against the new fixture layout.
-- [ ] `feat(packages-live)`: migrate three v0.1.0 flows to per-package repos in the `vibespecs` organization — `vibespecs/flow-wal`, `vibespecs/flow-sync-from-code`, `vibespecs/flow-atomic-commits` — via `vibe registry publish`.
-- [ ] `test(manual)`: new manual smoke `M1.5-gate-v2-per-package-smoke.md` against live per-package registry; retire or mark v1-era monorepo smoke as historical.
+- [ ] `feat(packages-live)`: migrate three v0.1.0 flows to per-package repos in the `vibespecs` organization — `vibespecs/flow-wal`, `vibespecs/flow-sync-from-code`, `vibespecs/flow-atomic-commits` — via `vibe registry publish`. Non-routine (creates public artefacts, first GitVerse API exercise) — needs explicit owner sign-off before push.
+- [x] `test(manual)`: `manual-tests/M1.5-gate-v2-per-package-smoke.md` written against the per-package shape; "Last known pass" line filled in after the first successful run against `vibespecs/`. Index in `manual-tests/README.md` updated.
 
 ### Close-out
 
