@@ -148,13 +148,13 @@ fn walk(root: &Path) -> Result<Vec<std::path::PathBuf>, PublishError> {
 fn run_git_in(cwd: &Path, args: &[&str]) -> Result<Output, PublishError> {
     let output = git_command(cwd, args).output().map_err(|e| PublishError::Git(format!(
         "spawning git {}: {e}",
-        args.join(" ")
+        join_args_redacted(args)
     )))?;
     if !output.status.success() {
-        let stderr = String::from_utf8_lossy(&output.stderr).trim().to_string();
+        let stderr = redact_credentials(String::from_utf8_lossy(&output.stderr).trim());
         return Err(PublishError::Git(format!(
             "git {} failed: {stderr}",
-            args.join(" ")
+            join_args_redacted(args)
         )));
     }
     Ok(output)
@@ -169,28 +169,25 @@ fn push_with_classification(
 ) -> Result<(), PublishError> {
     let output = git_command(cwd, args).output().map_err(|e| PublishError::Git(format!(
         "spawning git {}: {e}",
-        args.join(" ")
+        join_args_redacted(args)
     )))?;
     if output.status.success() {
         return Ok(());
     }
     let stderr = String::from_utf8_lossy(&output.stderr).to_lowercase();
+    let safe_repo = redact_credentials(clone_url);
     if stderr.contains("permission denied")
         || stderr.contains("publickey")
         || stderr.contains("authentication failed")
         || stderr.contains("403")
     {
-        return Err(PublishError::PushDenied {
-            repo: clone_url.to_string(),
-        });
+        return Err(PublishError::PushDenied { repo: safe_repo });
     }
     if stderr.contains("could not resolve host")
         || stderr.contains("network is unreachable")
         || stderr.contains("could not read from remote repository")
     {
-        return Err(PublishError::HostUnreachable {
-            host: clone_url.to_string(),
-        });
+        return Err(PublishError::HostUnreachable { host: safe_repo });
     }
     if stderr.contains("already exists") && (stderr.contains("tag") || stderr.contains("ref")) {
         // Pull the tag out of args for a useful message.
@@ -202,15 +199,93 @@ fn push_with_classification(
             .unwrap_or("<unknown>")
             .to_string();
         return Err(PublishError::TagCollision {
-            repo: clone_url.to_string(),
+            repo: safe_repo,
             tag,
         });
     }
+    let safe_stderr = redact_credentials(String::from_utf8_lossy(&output.stderr).trim());
     Err(PublishError::Git(format!(
         "git {} failed: {}",
-        args.join(" "),
-        String::from_utf8_lossy(&output.stderr).trim()
+        join_args_redacted(args),
+        safe_stderr
     )))
+}
+
+/// Replace `userinfo` (everything between `://` and `@`) in any URL-looking
+/// substring with `***`. Modern git already does this on its own diagnostic
+/// output (≥ 2.31), but `vibe-publish` cannot rely on the version of git
+/// the operator has installed and MUST scrub anything that could end up in
+/// a `PublishError` message rendered to the user. Per
+/// [PROP-000 §20](../../../spec/common/PROP-000.md#token-secrecy) the
+/// publish token never appears in any vibevm-produced output.
+pub(crate) fn redact_credentials(s: impl AsRef<str>) -> String {
+    let s = s.as_ref();
+    // Walk the string and replace any "<scheme>://<user[:pass]>@" with
+    // "<scheme>://***@". The set of schemes is anything before "://"
+    // matching `[a-zA-Z][a-zA-Z0-9+.-]*` (per RFC 3986 §3.1).
+    let mut out = String::with_capacity(s.len());
+    let mut i = 0;
+    let bytes = s.as_bytes();
+    while i < bytes.len() {
+        if let Some(rel) = s[i..].find("://") {
+            let scheme_end = i + rel;
+            // Walk back to find the start of the scheme.
+            let mut start = scheme_end;
+            while start > 0 {
+                let b = bytes[start - 1];
+                let valid = b.is_ascii_alphanumeric() || b == b'+' || b == b'-' || b == b'.';
+                if !valid {
+                    break;
+                }
+                start -= 1;
+            }
+            // Scheme must start with an ASCII alpha.
+            if start < scheme_end && bytes[start].is_ascii_alphabetic() {
+                // Copy everything before scheme.
+                out.push_str(&s[i..start]);
+                // Search for the next '@', '/', '?', or '#' boundary
+                // after the "://". An '@' before any path-delimiter
+                // means user-info is present.
+                let after_scheme = scheme_end + 3; // past "://"
+                let mut at_pos = None;
+                let mut bound = bytes.len();
+                let stops = [b'/', b'?', b'#', b' ', b'\t', b'\n', b'\r', b'"', b'\''];
+                for (j, b) in bytes.iter().enumerate().skip(after_scheme) {
+                    if *b == b'@' {
+                        at_pos = Some(j);
+                        bound = j + 1;
+                        break;
+                    }
+                    if stops.contains(b) {
+                        bound = j;
+                        break;
+                    }
+                }
+                if let Some(at) = at_pos {
+                    out.push_str(&s[start..after_scheme]);
+                    out.push_str("***");
+                    out.push('@');
+                    i = at + 1;
+                } else {
+                    // No userinfo — copy through the end of the host segment.
+                    out.push_str(&s[start..bound]);
+                    i = bound;
+                }
+                continue;
+            }
+        }
+        // Default: copy one byte and advance.
+        out.push(bytes[i] as char);
+        i += 1;
+    }
+    out
+}
+
+/// Render an argv slice for human display, with any embedded credentials
+/// redacted. Used in error messages — never on a fast path.
+fn join_args_redacted(args: &[&str]) -> String {
+    let parts: Vec<String> = args.iter().map(|a| redact_credentials(*a)).collect();
+    parts.join(" ")
 }
 
 fn git_command(cwd: &Path, args: &[&str]) -> Command {
@@ -323,4 +398,64 @@ mod tests {
     // non-fast-forward before reaching the tag push. The collision
     // path is best validated against a real registry; that's part of
     // the live-migration smoke-test in the next commit.
+
+    #[test]
+    fn redact_credentials_hides_user_info() {
+        let url = "https://x-access-token:abcd1234@github.com/vibespecs/flow-wal.git";
+        let scrubbed = redact_credentials(url);
+        assert_eq!(
+            scrubbed,
+            "https://***@github.com/vibespecs/flow-wal.git",
+            "credentials must be replaced with `***`"
+        );
+        assert!(!scrubbed.contains("abcd1234"));
+    }
+
+    #[test]
+    fn redact_credentials_passthrough_when_no_credentials() {
+        let url = "https://github.com/vibespecs/flow-wal.git";
+        assert_eq!(redact_credentials(url), url);
+    }
+
+    #[test]
+    fn redact_credentials_handles_ssh_no_scheme() {
+        // SSH shorthand `git@host:path` does not match the userinfo
+        // pattern (no `://`); pass-through is correct here because
+        // this form has no embedded password to hide.
+        let url = "git@github.com:vibespecs/flow-wal.git";
+        assert_eq!(redact_credentials(url), url);
+    }
+
+    #[test]
+    fn redact_credentials_handles_ssh_scheme() {
+        let url = "ssh://git@github.com/vibespecs/flow-wal.git";
+        // `ssh://git@github.com/...` has user `git` but no password —
+        // the helper still scrubs it to be safe (consistent with the
+        // PROP-000 §20 "never any credential-like token in output"
+        // posture). Operators that genuinely needed to see "git" can
+        // read the registry URL from `vibe.toml`.
+        assert_eq!(
+            redact_credentials(url),
+            "ssh://***@github.com/vibespecs/flow-wal.git"
+        );
+    }
+
+    #[test]
+    fn redact_credentials_within_message() {
+        let msg = "git remote add origin https://x-access-token:secret@github.com/foo/bar.git failed: oops";
+        let scrubbed = redact_credentials(msg);
+        assert!(!scrubbed.contains("secret"));
+        assert!(scrubbed.contains("https://***@github.com/foo/bar.git"));
+        assert!(scrubbed.contains("failed: oops"));
+    }
+
+    #[test]
+    fn redact_credentials_multiple_urls_in_message() {
+        let msg = "trying https://user:pw1@host.example/a then https://user:pw2@other.example/b done";
+        let scrubbed = redact_credentials(msg);
+        assert!(!scrubbed.contains("pw1"));
+        assert!(!scrubbed.contains("pw2"));
+        assert!(scrubbed.contains("https://***@host.example/a"));
+        assert!(scrubbed.contains("https://***@other.example/b"));
+    }
 }
