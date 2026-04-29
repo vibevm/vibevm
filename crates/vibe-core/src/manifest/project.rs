@@ -275,17 +275,23 @@ pub struct OverrideSection {
 /// Default registry URL written into every new project's `vibe.toml` by
 /// `vibe init` unless the operator overrides it.
 ///
-/// *Transition note.* This URL still points at the v1 monorepo registry
-/// (`anarchic/vibespecs`) while the decentralized `vibespecs/<kind>-<name>`
-/// per-package repos are being populated. It will rotate to the `vibespecs`
-/// org root (`git@gitverse.ru:vibespecs`) once live migration of the three
-/// demo packages completes — see [PROP-002](../../../spec/modules/vibe-registry/PROP-002-decentralized-registry.md)
-/// and `TASKS.md`.
-pub const DEFAULT_REGISTRY_URL: &str = "git@gitverse.ru:anarchic/vibespecs.git";
+/// **Org root, not a per-package URL.** Per-package URLs are derived at
+/// fetch time via the registry's `naming` convention (default
+/// `kind-name` produces `<org>/<kind>-<name>`).
+///
+/// **Host: GitHub.** The `vibespecs` registry organization moved from
+/// GitVerse to GitHub on 2026-04-29 because GitVerse's public REST API
+/// does not expose org-scoped repo creation, blocking
+/// `vibe registry publish` end-to-end automation. Migration rationale:
+/// [PROP-000 §7](../../../spec/common/PROP-000.md#registry) and
+/// [PROP-002 §2.10](../../../spec/modules/vibe-registry/PROP-002-decentralized-registry.md#publish).
+/// The vibevm tool source itself stays on GitVerse —
+/// `git@gitverse.ru:anarchic/vibevm.git` — only the registry org moves.
+pub const DEFAULT_REGISTRY_URL: &str = "https://github.com/vibespecs";
 
 /// Default name for the single registry written by `vibe init` into new
 /// projects. Matches the `name` field callers see in `vibe.toml`.
-pub const DEFAULT_REGISTRY_NAME: &str = "default";
+pub const DEFAULT_REGISTRY_NAME: &str = "vibespecs";
 
 /// Default ref on the registry URL — `main`. Applies to both registry-level
 /// metadata refs and to the git-backend's `origin/<ref>` fetch target.

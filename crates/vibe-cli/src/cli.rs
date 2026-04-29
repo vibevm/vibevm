@@ -108,9 +108,9 @@ pub struct InitArgs {
     pub name: Option<String>,
 
     /// Override the default registry URL written into `vibe.toml`.
-    /// When unset, `vibe init` writes the public GitVerse registry
-    /// (`git@gitverse.ru:anarchic/vibespecs.git`). Conflicts with
-    /// `--no-registry`.
+    /// When unset, `vibe init` writes the public `vibespecs`
+    /// organization on GitHub (`https://github.com/vibespecs`).
+    /// Conflicts with `--no-registry`.
     #[arg(long = "registry-url", conflicts_with = "no_registry")]
     pub registry_url: Option<String>,
 
