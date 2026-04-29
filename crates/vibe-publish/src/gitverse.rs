@@ -49,17 +49,28 @@ const GITVERSE_ACCEPT: &str = "application/vnd.gitverse.object+json;version=1";
 pub struct GitVerseCreator {
     api_base: String,
     host_name: String,
+    /// Org this adapter is scoped to. Drives [`RepoCreator::expected_org`]
+    /// and the default [`RepoCreator::validate_scope`] guard. Constructor
+    /// requires it so adapters built in production never trust a caller
+    /// not to escalate scope.
+    expected_org: String,
     token: Token,
     client: reqwest::blocking::Client,
 }
 
 impl GitVerseCreator {
-    pub fn new(token: Token) -> Result<Self, PublishError> {
-        Self::with_endpoint(token, DEFAULT_GITVERSE_API_BASE, DEFAULT_GITVERSE_HOST_NAME)
+    pub fn new(token: Token, expected_org: impl Into<String>) -> Result<Self, PublishError> {
+        Self::with_endpoint(
+            token,
+            expected_org,
+            DEFAULT_GITVERSE_API_BASE,
+            DEFAULT_GITVERSE_HOST_NAME,
+        )
     }
 
     pub fn with_endpoint(
         token: Token,
+        expected_org: impl Into<String>,
         api_base: &str,
         host_name: &str,
     ) -> Result<Self, PublishError> {
@@ -73,6 +84,7 @@ impl GitVerseCreator {
         Ok(GitVerseCreator {
             api_base: api_base.trim_end_matches('/').to_string(),
             host_name: host_name.to_string(),
+            expected_org: expected_org.into(),
             token,
             client,
         })
@@ -113,7 +125,18 @@ impl RepoCreator for GitVerseCreator {
         &self.host_name
     }
 
+    fn expected_org(&self) -> Option<&str> {
+        Some(&self.expected_org)
+    }
+
+    fn push_url(&self, org: &str, name: &str) -> String {
+        // GitVerse uses SSH for pushes — the user's SSH agent / key handles
+        // authentication. The token is API-only, never embedded in URL.
+        format!("git@{}:{}/{}.git", self.host_name, org, name)
+    }
+
     fn repo_exists(&self, org: &str, name: &str) -> Result<bool, PublishError> {
+        self.validate_scope(org)?;
         let url = format!("{}/repos/{}/{}", self.api_base, org, name);
         let res = self
             .client
@@ -149,6 +172,7 @@ impl RepoCreator for GitVerseCreator {
         name: &str,
         opts: &CreateOpts,
     ) -> Result<RepoInfo, PublishError> {
+        self.validate_scope(org)?;
         let url = format!("{}/orgs/{}/repos", self.api_base, org);
         let body = CreateRepoBody {
             name,

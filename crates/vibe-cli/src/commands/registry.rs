@@ -18,7 +18,8 @@ use anyhow::{Context, Result, anyhow, bail};
 use serde::Serialize;
 use vibe_core::manifest::{Lockfile, ProjectManifest};
 use vibe_publish::{
-    GitVerseCreator, PublishConfig, Publisher, load_token,
+    PublishConfig, Publisher, creator_for_url, extract_host_segment, extract_org_segment,
+    load_token_for_host,
 };
 use vibe_registry::{MultiRegistryResolver, RefreshedVia};
 
@@ -252,12 +253,16 @@ fn run_publish(ctx: &output::Context, args: RegistryPublishArgs) -> Result<()> {
         .with_context(|| format!("source path `{}`", args.source.display()))?;
     let source_dir = super::init::strip_unc_public(source_dir);
 
-    // Phase A only ships a GitVerse adapter. When more hosts land
-    // (GitHub, Gitea, Forgejo per PROP-002 §2.10), pick the adapter
-    // by host. For now, blow up clearly if the org URL doesn't look
-    // like a GitVerse-shaped one — better to refuse than silently
-    // mis-target.
-    let host = "gitverse.ru";
+    // Pick the host adapter from the registry URL's host segment per
+    // PROP-002 §2.10. `creator_for_url` returns a boxed `RepoCreator`
+    // already scoped to the configured org; that's the boundary that
+    // enforces "never operate outside the configured organization"
+    // per PROP-000 §20. Each adapter additionally validates the org
+    // at every method call as defence in depth.
+    let host = extract_host_segment(&registry_section.url)
+        .map_err(|e| anyhow!("registry URL `{}`: {e}", registry_section.url))?;
+    let org_segment = extract_org_segment(&registry_section.url)
+        .map_err(|e| anyhow!("registry URL `{}`: {e}", registry_section.url))?;
 
     ctx.heading(&format!(
         "Publishing {} → registry `{}` (`{}`){}",
@@ -267,18 +272,20 @@ fn run_publish(ctx: &output::Context, args: RegistryPublishArgs) -> Result<()> {
         if args.dry_run { " [dry-run]" } else { "" },
     ));
 
-    let token = load_token(host).context("loading publish token")?;
-    if !args.dry_run {
-        ctx.step(&format!(
-            "Loaded publish token from {} (value redacted)",
-            match token.source() {
-                vibe_publish::TokenSource::Explicit => "explicit argument".to_string(),
-                vibe_publish::TokenSource::EnvVar(name) => format!("$ {name}"),
-                vibe_publish::TokenSource::File(p) => p.display().to_string(),
-            }
-        ));
-    }
-    let creator = GitVerseCreator::new(token).context("constructing GitVerse adapter")?;
+    let token = load_token_for_host(&host).context("loading publish token")?;
+    // The CLI surfaces the *source* of the token (env var, file path),
+    // never the value. Token::Display redacts to `***` defensively in
+    // case any future code path reaches for it.
+    ctx.step(&format!(
+        "Loaded publish token from {} (value redacted)",
+        match token.source() {
+            vibe_publish::TokenSource::Explicit => "explicit argument".to_string(),
+            vibe_publish::TokenSource::EnvVar(name) => format!("$ {name}"),
+            vibe_publish::TokenSource::File(p) => p.display().to_string(),
+        }
+    ));
+    let creator = creator_for_url(&registry_section.url, org_segment, token)
+        .map_err(|e| anyhow!("{e}"))?;
 
     let config = PublishConfig {
         source_dir: source_dir.clone(),
@@ -288,7 +295,7 @@ fn run_publish(ctx: &output::Context, args: RegistryPublishArgs) -> Result<()> {
         dry_run: args.dry_run,
     };
 
-    let outcome = Publisher::new(&creator)
+    let outcome = Publisher::new(creator.as_ref())
         .publish(&config)
         .map_err(|e| anyhow!("{e}"))?;
 
