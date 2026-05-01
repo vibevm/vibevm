@@ -72,6 +72,9 @@ pub enum RegistrySubcommand {
 
     /// Add a new `[[registry]]` block to `vibe.toml`.
     Add(RegistryAddArgs),
+
+    /// Add a `[[mirror]]` block targeting a registry (or `*` for any).
+    SetMirror(RegistrySetMirrorArgs),
 }
 
 #[derive(Debug, clap::Args)]
@@ -114,6 +117,25 @@ pub struct RegistryAddArgs {
     /// it at the end. Defaults to `append`.
     #[arg(long = "position", default_value = "append")]
     pub position: String,
+
+    /// Project root with `vibe.toml`. Defaults to current directory.
+    #[arg(long, default_value = ".")]
+    pub path: PathBuf,
+}
+
+#[derive(Debug, clap::Args)]
+pub struct RegistrySetMirrorArgs {
+    /// Target registry name (matches a `[[registry]].name`) or `*` for
+    /// any registry.
+    pub of: String,
+
+    /// Mirror URL. Any git URL `git` accepts.
+    pub url: String,
+
+    /// Priority within the target registry's mirror chain — lower =
+    /// tried first. Defaults to 0.
+    #[arg(long = "priority", default_value_t = 0)]
+    pub priority: i32,
 
     /// Project root with `vibe.toml`. Defaults to current directory.
     #[arg(long, default_value = ".")]
