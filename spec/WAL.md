@@ -1,7 +1,23 @@
 # WAL — Project Continuation State
-_Updated: 2026-04-29_
+_Updated: 2026-05-01_
 
 ## Current phase
+
+**M1.6 Phase B v0 — IN PROGRESS (2026-05-01).** Phase A is closed; the registry-management CLI surface and the read-only mirror-dispatch runtime are in. Active commits since the Phase A checkpoint (`9646de9`):
+
+- `1089417 fix(vibe-install): drop uninstalled package from root_dependencies` — regression surfaced by walking `manual-tests/M1.5-gate-v2-per-package-smoke.md` top-to-bottom against the live GitHub host. `unregister_installed` now retains roots whose `(kind, name)` doesn't match the uninstalled package, symmetric with the install merge.
+- `152c607 test(manual): record M1.5-gate-v2 smoke pass on GitHub host` — first formal walk of the smoke filled in. Date 2026-05-01, vibevm `1089417`, peeled SHAs `1c3a1355` / `a620157d` / `d76512034`, Windows 11 / git 2.52.
+- `8260f83 feat(cli): vibe registry list` + `7c26faf docs(commands): vibe registry list reference` — read-only inspector for `[[registry]]` / `[[mirror]]` / `[[override]]` blocks; reports the host adapter `vibe registry publish` would dispatch to per PROP-002 §2.10.
+- `001f364 feat(cli): vibe registry add` + `2c13276 docs(commands): vibe registry add reference` — mutating sibling: append a new `[[registry]]` (or insert as `--position primary`); validates name uniqueness, URL shape via `extract_*_segment`, naming convention, and position. Manifest-only — no host probe, no lockfile mutation.
+- `3fa8c01 feat(cli): vibe registry set-mirror` + `54e64f5 docs(commands): vibe registry set-mirror reference` — append a `[[mirror]]` block; named `<OF>` requires the registry to exist, wildcard `*` is accepted even before any registry is configured (forward-compatible).
+- `2e9ebf8 feat(vibe-registry): mirror-aware lookups (Phase B v0)` — read-only mirror dispatch landed. `GitPackageRegistry` carries `mirror_urls` (org-level, populated by `MultiRegistryResolver::from_manifest` from `mirrors_for(reg.name)` priority-sorted output). `list_versions` and `fetch_dep_manifest` archive path try primary first, then each mirror; the cache-mutating `fetch` and `refresh_package` paths stay primary-only until cross-source `content_hash` verification lands. The `try_lookup<T, F>` helper centralises the dispatch and returns the **primary's** error on full failure (most informative diagnostic). `tracing::info!` on mirror-served lookups, `tracing::debug!` on per-mirror failures.
+- `5d7e751 feat(cli): vibe registry remove` + `1c9adf8 docs(commands): vibe registry remove reference` — closes the registry-management CRUD: drop `[[registry]]` (refuses to orphan named mirrors; wildcard `*` mirrors are unaffected) or `[[mirror]]` (exact `(of, url)` match; warns on hand-edited duplicates).
+
+Workspace state: 217+ tests across the workspace (5 new in `vibe-registry` covering primary-success / fallback-to-mirror / multi-mirror-priority-walk / all-fail-returns-primary-error / `fetch_dep_manifest` archive path mirror dispatch; 5 new in `vibe-cli` covering `adapter_for_host` and `parse_naming`; 1 new in `vibe-install` pinning the `unregister_installed` root-dependency contract). `cargo clippy --workspace --all-targets -- -D warnings` clean.
+
+The CLI inspector + mutator surface for registry management is now full. Next slice of Phase B is mirror-dispatch on the cache-mutating paths (`fetch`, `refresh_package`) plus cross-source `content_hash` verification — that's what makes mirrors useful for actual installs (not just dep walks). After that: `vibe vendor` (offline mirror generator), and continued use of the multi-registry surface in real-world scenarios.
+
+---
 
 **M1.1-revision Phase A — DONE (2026-04-29).** Decentralized per-package registry shipped end-to-end on its production host. All three v0.1.0 demo flows (`flow:wal`, `flow:sync-from-code`, `flow:atomic-commits`) live at `https://github.com/vibespecs/flow-<name>` with `v0.1.0` tags; a fresh `vibe init` → `vibe install flow:wal` / `flow:sync-from-code` / `flow:atomic-commits` resolves all three, populates lockfile v2, refreshes per-package clones via `vibe registry sync`. Registry org migrated from GitVerse to GitHub on 2026-04-29 because GitVerse's public REST API does not expose org-scoped repo creation; `GitHubCreator` adapter behind the existing `RepoCreator` trait drives the publish flow against `POST /orgs/{org}/repos`. The vibevm tool source itself stays on GitVerse — only the registry org moves.
 
