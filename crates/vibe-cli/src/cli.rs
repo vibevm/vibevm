@@ -75,6 +75,9 @@ pub enum RegistrySubcommand {
 
     /// Add a `[[mirror]]` block targeting a registry (or `*` for any).
     SetMirror(RegistrySetMirrorArgs),
+
+    /// Remove a `[[registry]]` or `[[mirror]]` block from `vibe.toml`.
+    Remove(RegistryRemoveArgs),
 }
 
 #[derive(Debug, clap::Args)]
@@ -136,6 +139,49 @@ pub struct RegistrySetMirrorArgs {
     /// tried first. Defaults to 0.
     #[arg(long = "priority", default_value_t = 0)]
     pub priority: i32,
+
+    /// Project root with `vibe.toml`. Defaults to current directory.
+    #[arg(long, default_value = ".")]
+    pub path: PathBuf,
+}
+
+#[derive(Debug, clap::Args)]
+pub struct RegistryRemoveArgs {
+    /// What to remove. Subcommand-style: `registry <name>` removes the
+    /// `[[registry]]` with that name; `mirror <of> <url>` removes the
+    /// `[[mirror]]` block matching exactly on `(of, url)`.
+    #[command(subcommand)]
+    pub target: RegistryRemoveTarget,
+}
+
+#[derive(Debug, Subcommand)]
+pub enum RegistryRemoveTarget {
+    /// Remove a `[[registry]]` named `<NAME>`. Refuses if any
+    /// `[[mirror]]` targets this registry by name (those would be
+    /// orphaned). Wildcard `of = "*"` mirrors are unaffected.
+    Registry(RegistryRemoveRegistryArgs),
+
+    /// Remove a `[[mirror]]` exactly matching `(<OF>, <URL>)`.
+    Mirror(RegistryRemoveMirrorArgs),
+}
+
+#[derive(Debug, clap::Args)]
+pub struct RegistryRemoveRegistryArgs {
+    /// `[[registry]].name` to remove.
+    pub name: String,
+
+    /// Project root with `vibe.toml`. Defaults to current directory.
+    #[arg(long, default_value = ".")]
+    pub path: PathBuf,
+}
+
+#[derive(Debug, clap::Args)]
+pub struct RegistryRemoveMirrorArgs {
+    /// `[[mirror]].of` of the entry to remove.
+    pub of: String,
+
+    /// `[[mirror]].url` of the entry to remove (exact match).
+    pub url: String,
 
     /// Project root with `vibe.toml`. Defaults to current directory.
     #[arg(long, default_value = ".")]
