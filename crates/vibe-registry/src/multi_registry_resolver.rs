@@ -120,11 +120,24 @@ impl MultiRegistryResolver {
     ) -> Result<Self, RegistryError> {
         let mut built = Vec::with_capacity(registries.len());
         for reg in registries {
-            built.push(Arc::new(GitPackageRegistry::open_with(
+            // Compose the priority-sorted mirror chain for this registry
+            // (named `of = "<reg.name>"` plus wildcard `of = "*"`). This
+            // is exactly what `Self::mirrors_for` would compute, but
+            // we're still building `self`.
+            let mut chain: Vec<&MirrorSection> = mirrors
+                .iter()
+                .filter(|m| m.of == reg.name || m.of == "*")
+                .collect();
+            chain.sort_by_key(|m| m.priority);
+            let mirror_urls: Vec<String> =
+                chain.into_iter().map(|m| m.url.clone()).collect();
+
+            built.push(Arc::new(GitPackageRegistry::open_with_mirrors(
                 &reg.name,
                 &reg.url,
                 &reg.r#ref,
                 reg.naming,
+                mirror_urls,
                 &cache_root,
                 Arc::clone(&backend),
                 freshness_secs,

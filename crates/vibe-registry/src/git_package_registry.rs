@@ -56,6 +56,16 @@ pub struct GitPackageRegistry {
     naming: NamingConvention,
     cache_root: PathBuf,
     canonical_hash: String,
+    /// Org-level mirror URLs in priority order (lower index = tried
+    /// first). Mirrors share the registry's [`NamingConvention`], so
+    /// each mirror URL is treated as an alternate org root from which
+    /// per-package URLs are composed identically. Empty in M0/M1.1 and
+    /// when `vibe.toml` carries no `[[mirror]]` for this registry.
+    /// Phase B v0 wires this only for the read-only lookup paths
+    /// (`list_versions`, `fetch_dep_manifest` archive path) — the
+    /// fetch/clone path stays primary-only until cross-source
+    /// `content_hash` verification lands.
+    mirror_urls: Vec<String>,
     /// Implicit-update freshness TTL — reserved for the next commit, where
     /// per-package `meta.toml` files track `last_synced_at`. Stored now so
     /// callers parameterising it do not need to thread it through later.
@@ -95,6 +105,34 @@ impl GitPackageRegistry {
         backend: Arc<dyn GitBackend>,
         freshness_secs: u64,
     ) -> Result<Self, RegistryError> {
+        Self::open_with_mirrors(
+            name,
+            org_url,
+            org_ref,
+            naming,
+            Vec::new(),
+            cache_root,
+            backend,
+            freshness_secs,
+        )
+    }
+
+    /// Like [`open_with`](Self::open_with), but accepts an org-level
+    /// mirror chain in priority order. Used by the multi-registry
+    /// resolver to thread `[[mirror]]` from `vibe.toml` into the
+    /// registry instance. Empty `mirror_urls` is the same as
+    /// [`open_with`].
+    #[allow(clippy::too_many_arguments)]
+    pub fn open_with_mirrors(
+        name: &str,
+        org_url: &str,
+        org_ref: &str,
+        naming: NamingConvention,
+        mirror_urls: Vec<String>,
+        cache_root: &Path,
+        backend: Arc<dyn GitBackend>,
+        freshness_secs: u64,
+    ) -> Result<Self, RegistryError> {
         let normalized = normalize_url(org_url);
         let canonical_hash = short_url_hash(&normalized);
         let cache_root_owned = cache_root.to_path_buf();
@@ -116,6 +154,7 @@ impl GitPackageRegistry {
             naming,
             cache_root: cache_root_owned,
             canonical_hash,
+            mirror_urls,
             freshness_secs,
         })
     }
@@ -149,6 +188,83 @@ impl GitPackageRegistry {
         format!("{trimmed}/{repo_name}.git")
     }
 
+    /// All URLs to try for a `(kind, name)` lookup, primary first.
+    /// Mirrors are composed using the same naming convention as the
+    /// primary, since the mirror is meant to be a transparent
+    /// alternative to the primary's content.
+    fn package_urls(&self, kind: PackageKind, name: &str) -> Vec<String> {
+        let repo_name = self.naming.repo_name(kind, name);
+        let mut urls = Vec::with_capacity(1 + self.mirror_urls.len());
+        urls.push(format!(
+            "{}/{}.git",
+            self.org_url.trim_end_matches('/'),
+            repo_name
+        ));
+        for mirror in &self.mirror_urls {
+            urls.push(format!("{}/{}.git", mirror.trim_end_matches('/'), repo_name));
+        }
+        urls
+    }
+
+    /// Run a read-only lookup `f` against the primary URL first, then
+    /// each mirror URL in priority order. Returns the first `Ok`
+    /// produced by any URL. If every URL fails, the **primary's**
+    /// error is returned (not the last mirror's) — the primary is the
+    /// canonical source and its diagnostic is the most useful one for
+    /// the operator. Mirror errors are recorded in `tracing::debug!`
+    /// for ops to correlate.
+    ///
+    /// `f` MUST be a pure read against the host (no cache writes, no
+    /// per-package clone state) — the fetch / refresh paths use
+    /// dedicated logic with content-hash verification across mirrors.
+    fn try_lookup<T, F>(
+        &self,
+        kind: PackageKind,
+        name: &str,
+        f: F,
+    ) -> Result<T, RegistryError>
+    where
+        F: Fn(&str) -> Result<T, RegistryError>,
+    {
+        let urls = self.package_urls(kind, name);
+        let mut primary_err: Option<RegistryError> = None;
+        for (i, url) in urls.iter().enumerate() {
+            match f(url) {
+                Ok(v) => {
+                    if i > 0 {
+                        tracing::info!(
+                            target: "vibe_registry",
+                            registry = %self.name,
+                            primary = %urls[0],
+                            served_by = %url,
+                            mirror_index = i - 1,
+                            "lookup served by mirror"
+                        );
+                    }
+                    return Ok(v);
+                }
+                Err(e) => {
+                    if i == 0 {
+                        primary_err = Some(e);
+                    } else {
+                        tracing::debug!(
+                            target: "vibe_registry",
+                            registry = %self.name,
+                            mirror = %url,
+                            error = %e,
+                            "mirror lookup failed; trying next"
+                        );
+                    }
+                }
+            }
+        }
+        // Safety: urls always has at least one entry (primary), so the
+        // first iteration sets primary_err on Err. If primary returned
+        // Ok we'd have returned already; if it returned Err and no
+        // mirror saved us, primary_err is the right diagnostic.
+        Err(primary_err.expect("primary URL must exist"))
+    }
+
     /// Where this package's clone lives on disk —
     /// `<cache_dir>/packages/<kind>-<name>/clone/`. Note the internal
     /// subdirectory is always `<kind>-<name>`, regardless of registry naming
@@ -160,28 +276,38 @@ impl GitPackageRegistry {
 
     /// Enumerate available versions for `<kind>:<name>` *without cloning*.
     /// Tags that don't match `v<semver>` are silently dropped.
+    ///
+    /// Mirror-aware: tries the primary URL first, then each mirror in
+    /// priority order. The first URL that yields a tag list wins. If
+    /// every URL says `RepoNotFound`, the result is `UnknownPackage`
+    /// (treated identically to the primary-only path).
     pub fn list_versions(
         &self,
         kind: PackageKind,
         name: &str,
     ) -> Result<Vec<semver::Version>, RegistryError> {
-        let url = self.package_repo_url(kind, name);
-        let tags = self.backend.list_tags(strip_git_plus_prefix(&url)).map_err(|e| match e {
-            GitError::RepoNotFound { .. } => RegistryError::UnknownPackage {
-                kind,
-                name: name.to_owned(),
-            },
-            other => RegistryError::Git(other),
-        })?;
-        let mut versions: Vec<semver::Version> = tags
-            .iter()
-            .filter_map(|t| {
-                let stripped = t.strip_prefix('v')?;
-                semver::Version::parse(stripped).ok()
-            })
-            .collect();
-        versions.sort();
-        Ok(versions)
+        let backend = Arc::clone(&self.backend);
+        let owned_name = name.to_owned();
+        self.try_lookup(kind, name, move |url| {
+            let tags = backend
+                .list_tags(strip_git_plus_prefix(url))
+                .map_err(|e| match e {
+                    GitError::RepoNotFound { .. } => RegistryError::UnknownPackage {
+                        kind,
+                        name: owned_name.clone(),
+                    },
+                    other => RegistryError::Git(other),
+                })?;
+            let mut versions: Vec<semver::Version> = tags
+                .iter()
+                .filter_map(|t| {
+                    let stripped = t.strip_prefix('v')?;
+                    semver::Version::parse(stripped).ok()
+                })
+                .collect();
+            versions.sort();
+            Ok(versions)
+        })
     }
 
     /// Pick the best tag matching `pkgref.version` from the upstream tag list.
@@ -221,21 +347,34 @@ impl GitPackageRegistry {
     /// `[requires]` of a candidate before committing to install. A walk
     /// over N candidates of one package costs N `git archive` round-trips,
     /// not N clones.
+    ///
+    /// Mirror-aware on the archive path: the primary URL is tried
+    /// first, then each mirror in priority order. The clone-fallback
+    /// path (used when *every* URL says `ArchiveUnsupported`) clones
+    /// only against the primary URL — the clone state is shared and
+    /// cross-source verification has not yet landed (Phase B v0).
     pub fn fetch_dep_manifest(
         &self,
         kind: PackageKind,
         name: &str,
         version: &semver::Version,
     ) -> Result<PackageManifest, RegistryError> {
-        let url = self.package_repo_url(kind, name);
         let tag = format!("v{version}");
-        let bytes = match self.backend.fetch_file_at_ref(
-            strip_git_plus_prefix(&url),
-            &tag,
-            PackageManifest::FILENAME,
-        ) {
+        let backend = Arc::clone(&self.backend);
+        let tag_for_lookup = tag.clone();
+        let archive_result = self.try_lookup(kind, name, move |url| {
+            backend
+                .fetch_file_at_ref(
+                    strip_git_plus_prefix(url),
+                    &tag_for_lookup,
+                    PackageManifest::FILENAME,
+                )
+                .map_err(RegistryError::from)
+        });
+        let url = self.package_repo_url(kind, name);
+        let bytes = match archive_result {
             Ok(bytes) => bytes,
-            Err(GitError::ArchiveUnsupported { .. }) => {
+            Err(RegistryError::Git(GitError::ArchiveUnsupported { .. })) => {
                 // GitHub (and a few other hosts) disable
                 // `upload-archive` server-side, so `git archive --remote`
                 // can't pull a single file without cloning. Fall back to
@@ -246,6 +385,11 @@ impl GitPackageRegistry {
                 // per-package cache directory the install path would
                 // use anyway, so this is also pre-warming the cache for
                 // the imminent install.
+                //
+                // Phase B v0: the clone fallback talks only to the
+                // primary URL. Mirror dispatch for the clone path
+                // requires the cross-source `content_hash` check to
+                // come along with it, so it lands together with that.
                 self.refresh_package(kind, name, &tag)?;
                 let clone_dir = self.package_clone_dir(kind, name);
                 let manifest_path = clone_dir.join(PackageManifest::FILENAME);
@@ -254,7 +398,7 @@ impl GitPackageRegistry {
                     source,
                 })?
             }
-            Err(other) => return Err(other.into()),
+            Err(other) => return Err(other),
         };
         let text = String::from_utf8(bytes).map_err(|e| RegistryError::MalformedMeta {
             path: PathBuf::from(format!("{url}@{tag}:{}", PackageManifest::FILENAME)),
@@ -723,6 +867,127 @@ mod tests {
         assert!(matches!(err, RegistryError::UnknownPackage { .. }));
     }
 
+    fn registry_with_mirrors(
+        cache: &Path,
+        org_url: &str,
+        naming: NamingConvention,
+        mirror_urls: Vec<String>,
+        backend: Arc<dyn GitBackend>,
+    ) -> GitPackageRegistry {
+        GitPackageRegistry::open_with_mirrors(
+            "vibespecs",
+            org_url,
+            "main",
+            naming,
+            mirror_urls,
+            cache,
+            backend,
+            DEFAULT_FRESHNESS_SECS,
+        )
+        .unwrap()
+    }
+
+    #[test]
+    fn list_versions_falls_through_to_mirror_when_primary_unreachable() {
+        // Primary's per-package URL is NOT seeded — primary returns
+        // RepoNotFound. Mirror's URL IS seeded with tags. Mirror
+        // dispatch should pick up the tag list from the mirror.
+        let cache = tempdir().unwrap();
+        let fake = Arc::new(FakeBackend::default());
+        fake.seed_tags(
+            "https://mirror.example/vibespecs/flow-wal.git",
+            vec!["v0.1.0".into(), "v0.2.0".into()],
+        );
+        let r = registry_with_mirrors(
+            cache.path(),
+            "https://primary.example/vibespecs",
+            NamingConvention::KindName,
+            vec!["https://mirror.example/vibespecs".to_string()],
+            fake,
+        );
+        let versions = r.list_versions(PackageKind::Flow, "wal").unwrap();
+        assert_eq!(versions.len(), 2);
+        assert_eq!(versions[0].to_string(), "0.1.0");
+        assert_eq!(versions[1].to_string(), "0.2.0");
+    }
+
+    #[test]
+    fn list_versions_prefers_primary_when_both_seeded() {
+        // Primary has [v0.1.0] only; mirror has [v0.1.0, v0.2.0].
+        // Primary wins because it answers first; the mirror is never
+        // consulted. The user's lockfile thus reflects what the
+        // canonical source publishes — mirrors don't get to introduce
+        // versions the primary doesn't carry.
+        let cache = tempdir().unwrap();
+        let fake = Arc::new(FakeBackend::default());
+        fake.seed_tags(
+            "https://primary.example/vibespecs/flow-wal.git",
+            vec!["v0.1.0".into()],
+        );
+        fake.seed_tags(
+            "https://mirror.example/vibespecs/flow-wal.git",
+            vec!["v0.1.0".into(), "v0.2.0".into()],
+        );
+        let r = registry_with_mirrors(
+            cache.path(),
+            "https://primary.example/vibespecs",
+            NamingConvention::KindName,
+            vec!["https://mirror.example/vibespecs".to_string()],
+            fake,
+        );
+        let versions = r.list_versions(PackageKind::Flow, "wal").unwrap();
+        assert_eq!(versions.len(), 1);
+        assert_eq!(versions[0].to_string(), "0.1.0");
+    }
+
+    #[test]
+    fn list_versions_returns_primary_error_when_all_urls_fail() {
+        // Neither primary nor mirror is seeded. The result is
+        // UnknownPackage from the *primary's* `RepoNotFound` — that's
+        // the canonical "the package doesn't exist" diagnostic.
+        let cache = tempdir().unwrap();
+        let fake = Arc::new(FakeBackend::default());
+        let r = registry_with_mirrors(
+            cache.path(),
+            "https://primary.example/vibespecs",
+            NamingConvention::KindName,
+            vec!["https://mirror.example/vibespecs".to_string()],
+            fake,
+        );
+        let err = r.list_versions(PackageKind::Flow, "ghost").unwrap_err();
+        assert!(matches!(err, RegistryError::UnknownPackage { .. }));
+    }
+
+    #[test]
+    fn list_versions_walks_mirrors_in_priority_order() {
+        // Three mirrors, only the third is seeded. The dispatcher
+        // should iterate through mirrors[0], mirrors[1], mirrors[2]
+        // and find the answer on mirrors[2]. Mirror order is the
+        // caller's responsibility (MultiRegistryResolver does the
+        // priority sort) — at this layer we only verify left-to-right
+        // dispatch.
+        let cache = tempdir().unwrap();
+        let fake = Arc::new(FakeBackend::default());
+        fake.seed_tags(
+            "https://m3.example/vibespecs/flow-wal.git",
+            vec!["v0.3.0".into()],
+        );
+        let r = registry_with_mirrors(
+            cache.path(),
+            "https://primary.example/vibespecs",
+            NamingConvention::KindName,
+            vec![
+                "https://m1.example/vibespecs".to_string(),
+                "https://m2.example/vibespecs".to_string(),
+                "https://m3.example/vibespecs".to_string(),
+            ],
+            fake,
+        );
+        let versions = r.list_versions(PackageKind::Flow, "wal").unwrap();
+        assert_eq!(versions.len(), 1);
+        assert_eq!(versions[0].to_string(), "0.3.0");
+    }
+
     #[test]
     fn resolve_picks_latest_stable() {
         let cache = tempdir().unwrap();
@@ -795,6 +1060,42 @@ mod tests {
         let p = PackageRef::parse("flow:wal@^9.0").unwrap();
         let err = r.resolve(&p).unwrap_err();
         assert!(matches!(err, RegistryError::NoMatchingVersion { .. }));
+    }
+
+    #[test]
+    fn fetch_dep_manifest_falls_through_to_mirror_on_archive_path() {
+        // Primary's archive endpoint is empty (FakeBackend returns
+        // FileNotFoundInRef). Mirror's archive endpoint has the
+        // manifest. Dispatch should hit the mirror and return the
+        // manifest without a clone.
+        let cache = tempdir().unwrap();
+        let fake = Arc::new(FakeBackend::default());
+        let primary_url = "https://primary.example/vibespecs/flow-wal.git";
+        let mirror_url = "https://mirror.example/vibespecs/flow-wal.git";
+        // Tag list seeded only on the mirror — list_versions will land
+        // on the mirror first too.
+        fake.seed_tags(mirror_url, vec!["v0.1.0".into()]);
+        fake.seed_file(
+            mirror_url,
+            "v0.1.0",
+            "vibe-package.toml",
+            manifest_text("wal", "flow", "0.1.0").into_bytes(),
+        );
+        let _ = primary_url; // documented for reading the test
+        let r = registry_with_mirrors(
+            cache.path(),
+            "https://primary.example/vibespecs",
+            NamingConvention::KindName,
+            vec!["https://mirror.example/vibespecs".to_string()],
+            fake.clone(),
+        );
+        let v = semver::Version::parse("0.1.0").unwrap();
+        let manifest = r.fetch_dep_manifest(PackageKind::Flow, "wal", &v).unwrap();
+        assert_eq!(manifest.package.name, "wal");
+        // No clone — the mirror served the manifest via the archive
+        // path, same as the primary-only test asserts.
+        assert_eq!(fake.bootstrap_count(), 0);
+        assert_eq!(fake.update_count(), 0);
     }
 
     #[test]
