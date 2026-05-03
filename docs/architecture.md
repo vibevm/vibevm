@@ -87,9 +87,13 @@ Host-specific operations for the publish flow: `host_name`, `repo_exists`, `crea
     │
     ▼
 for each node in graph:
-    [InstallResolver::resolve_and_fetch(pkgref, cache_root)]
+    [InstallResolver::resolve_and_fetch(pkgref, cache_root, expected_hash)]
     │   - resolve via [[override]] short-circuit OR [[registry]] priority walk
-    │   - fetch via GitPackageRegistry::fetch (clone-if-absent / update-if-present)
+    │   - fetch via GitPackageRegistry::fetch_with_expected_hash:
+    │       primary URL first, then [[mirror]] chain in priority order
+    │       per-source: clone or update-if-present, then materialise + content_hash
+    │       if expected_hash supplied (lockfile pin) and source disagrees,
+    │         tracing::warn! and fall through to next source
     │   - copy worktree into project cache, strip .git/
     │   - compute content_hash
     ▼

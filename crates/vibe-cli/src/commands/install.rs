@@ -71,7 +71,17 @@ pub fn run(ctx: &output::Context, args: InstallArgs) -> Result<()> {
 
     for node in graph.iter() {
         let pkgref = exact_pinned_pkgref(node);
-        let cached = resolver.resolve_and_fetch(&pkgref, &cache_root)?;
+        // Pass the lockfile pin (if any) through to the resolver so a
+        // mirror-aware fetch can fall through past a source whose
+        // content_hash disagrees with the pin. Without a pin (first
+        // install for this `(kind, name)`) the registry layer accepts
+        // the first reachable source's content; vibe-install's
+        // `plan_install` is still the authoritative integrity gate.
+        let expected = lockfile
+            .find(node.kind, &node.name)
+            .map(|p| p.content_hash.clone());
+        let cached =
+            resolver.resolve_and_fetch(&pkgref, &cache_root, expected.as_deref())?;
         let plan = plan_install(&project_root, &lockfile, cached)?;
         check_cross_plan_conflicts(&plans, &plan)?;
         plans.push(plan);
@@ -247,10 +257,19 @@ pub(crate) enum InstallResolver {
 }
 
 impl InstallResolver {
+    /// Resolve `pkgref` and materialise its content into the
+    /// per-project cache. `expected_hash` (typically the lockfile pin
+    /// for `(pkgref.kind, pkgref.name, version)`) is forwarded to the
+    /// multi-registry path's mirror-aware fetch so a source serving
+    /// disagreeing bytes can be skipped in favour of a matching one.
+    /// The local-directory path ignores the hint — there's only ever
+    /// one source on that path, and integrity is checked by
+    /// `plan_install` against the lockfile pin.
     pub(crate) fn resolve_and_fetch(
         &self,
         pkgref: &PackageRef,
         cache_root: &Path,
+        expected_hash: Option<&str>,
     ) -> Result<CachedPackage> {
         match self {
             InstallResolver::Local(r) => {
@@ -259,7 +278,7 @@ impl InstallResolver {
             }
             InstallResolver::Multi(m) => {
                 let resolution = m.resolve(pkgref)?;
-                Ok(m.fetch(&resolution, cache_root)?)
+                Ok(m.fetch_with_expected_hash(&resolution, cache_root, expected_hash)?)
             }
         }
     }
