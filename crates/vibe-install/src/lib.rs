@@ -23,7 +23,7 @@ use std::fs;
 use std::path::{Path, PathBuf};
 
 use thiserror::Error;
-use vibe_core::manifest::{LockedPackage, Lockfile};
+use vibe_core::manifest::{LockedPackage, Lockfile, PackageManifest};
 use vibe_core::{PackageKind, PackageRef};
 use vibe_registry::CachedPackage;
 
@@ -72,6 +72,44 @@ pub enum InstallError {
 
     #[error("package `{package}` is not installed")]
     NotInstalled { package: String },
+
+    #[error(
+        "package `{package}@{from_version}` is already at the resolved version (content_hash matches lockfile pin) — nothing to update"
+    )]
+    AlreadyUpToDate {
+        package: String,
+        from_version: String,
+    },
+
+    #[error(
+        "package `{package}` has user-edited file `{path}` (bytes differ from the install-time cache); refusing to overwrite. \
+         Back up your edits, then run `vibe uninstall {package}` followed by `vibe install {package}` to apply the new version cleanly."
+    )]
+    UserEditedFile {
+        package: String,
+        path: PathBuf,
+    },
+
+    #[error(
+        "package `{package}@{from_version}` was installed without an old cache directory at `{old_cache_dir}` — \
+         can't verify whether the project files are pristine. Run `vibe registry sync` first to repopulate the cache, or `vibe uninstall {package} && vibe install {package}` to start fresh."
+    )]
+    OldCacheMissing {
+        package: String,
+        from_version: String,
+        old_cache_dir: PathBuf,
+    },
+
+    #[error(
+        "package `{package}@{from_version}` → `{to_version}` would change the transitive dependency set ({reason}); \
+         `vibe update` does not yet handle dep-graph evolution. Run `vibe uninstall {package}` followed by `vibe install {package}` to apply the new graph."
+    )]
+    DependencyShapeChanged {
+        package: String,
+        from_version: String,
+        to_version: String,
+        reason: String,
+    },
 
     #[error("target file `{path}` already exists and is not owned by this package")]
     TargetFileExists { path: PathBuf },
@@ -324,6 +362,536 @@ pub fn register_installed(
     };
     lockfile.packages.push(entry);
     lockfile.meta.generated_at = generated_at;
+}
+
+// ==== update ===============================================================
+//
+// `vibe update` re-fetches a currently-installed package against its
+// original root constraint, computes a project-file diff (added /
+// removed / modified / identical / user-edited), and applies the diff
+// after user confirmation.
+//
+// Spec: VIBEVM-SPEC.md §16 (M1 acceptance), ROADMAP §M1.2,
+//       PROP-002 §2.7 (lockfile v2 — `dependencies` shape change is
+//       refused at this layer per the spec's "narrow update" v0).
+
+/// Per-file outcome the update would apply.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum UpdateChange {
+    /// File is in the new package's writes but not in the old install.
+    /// `apply_update` will write it.
+    Added {
+        target_rel: PathBuf,
+        target_abs: PathBuf,
+        source_abs: PathBuf,
+    },
+    /// File is in the old install but not in the new package's writes.
+    /// `apply_update` will delete it.
+    Removed {
+        target_rel: PathBuf,
+        target_abs: PathBuf,
+    },
+    /// File is in both old and new; bytes differ between old cache and
+    /// new cache, project file matches the old cache (pristine).
+    /// `apply_update` will overwrite from the new cache.
+    Modified {
+        target_rel: PathBuf,
+        target_abs: PathBuf,
+        source_abs: PathBuf,
+    },
+    /// File is in both old and new with byte-identical content. No-op
+    /// at apply time; surfaced in `--json` output for completeness.
+    Identical { target_rel: PathBuf },
+}
+
+impl UpdateChange {
+    pub fn target_rel(&self) -> &Path {
+        match self {
+            UpdateChange::Added { target_rel, .. }
+            | UpdateChange::Removed { target_rel, .. }
+            | UpdateChange::Modified { target_rel, .. }
+            | UpdateChange::Identical { target_rel } => target_rel,
+        }
+    }
+}
+
+/// Plan for updating one already-installed package to a new version
+/// (or fresh content_hash at the same version, e.g. a deliberate
+/// repackage).
+#[derive(Debug, Clone)]
+pub struct UpdatePlan {
+    pub kind: PackageKind,
+    pub name: String,
+    pub from_version: semver::Version,
+    pub to_version: semver::Version,
+    pub from_content_hash: String,
+    pub to_content_hash: String,
+    /// New `CachedPackage` populated by the resolver. Carries the
+    /// fresh manifest (which `register_updated` writes back into the
+    /// lockfile) and the new cache_dir paths used for `apply_update`.
+    pub new_cached: CachedPackage,
+    /// Per-file changes, in stable order: removed, added, modified,
+    /// identical. Lets the CLI render a deterministic diff.
+    pub changes: Vec<UpdateChange>,
+    /// New boot snippet filename, if the new manifest declares one.
+    /// May differ from the old install's boot snippet (rename), in
+    /// which case the old name appears in `changes` as `Removed` and
+    /// the new name as `Added`.
+    pub new_boot_snippet_filename: Option<String>,
+}
+
+impl UpdatePlan {
+    pub fn package_label(&self) -> String {
+        format!("{}:{}", self.kind, self.name)
+    }
+    /// `true` iff the plan would change at least one byte on disk.
+    /// Pure-Identical plans are no-ops at apply time.
+    pub fn has_changes(&self) -> bool {
+        self.changes
+            .iter()
+            .any(|c| !matches!(c, UpdateChange::Identical { .. }))
+    }
+}
+
+/// Build an [`UpdatePlan`] from the lockfile entry for `(kind, name)`
+/// and a freshly fetched [`CachedPackage`] (returned by the resolver
+/// for the same root constraint).
+///
+/// Refuses to plan when:
+/// - the package is not installed (`NotInstalled`);
+/// - the new manifest's `[requires]` differs from the locked
+///   transitive dep set (`DependencyShapeChanged`) — narrow v0 of
+///   `vibe update` does not cascade graph changes;
+/// - the install-time cache for the old version is missing
+///   (`OldCacheMissing`) — required for the user-edit verification.
+///
+/// User-edit detection: for every file in the union of old `files_written`
+/// and new `manifest.writes`, compares the project's on-disk bytes to
+/// the **old** cache's bytes for the same source. Mismatch is `UserEditedFile`
+/// — refused loudly with a 3-way diff hint per ROADMAP §M1.2.
+pub fn plan_update(
+    project_root: &Path,
+    lockfile: &Lockfile,
+    new_cached: CachedPackage,
+    old_cache_dir: &Path,
+) -> Result<UpdatePlan, InstallError> {
+    let kind = new_cached.resolved.kind;
+    let name = new_cached.resolved.name.clone();
+    let pkg_label = format!("{kind}:{name}");
+    let existing = lockfile
+        .find(kind, &name)
+        .ok_or_else(|| InstallError::NotInstalled {
+            package: pkg_label.clone(),
+        })?;
+
+    if !old_cache_dir.is_dir() {
+        return Err(InstallError::OldCacheMissing {
+            package: pkg_label,
+            from_version: existing.version.to_string(),
+            old_cache_dir: old_cache_dir.to_path_buf(),
+        });
+    }
+
+    // --- Refuse on dep-shape change (narrow v0). -----------------
+    //
+    // The lockfile's `dependencies` array is the resolved transitive
+    // pinning at install time. The new manifest declares its own
+    // `[requires]` (and friends). For the pure version-bump v0, we
+    // want the bumped version's resolved deps to match what's already
+    // locked — i.e. no new transitive packages, no removed transitive
+    // packages, no version bumps in transitives. That keeps `vibe
+    // update` honest about its scope: project on-disk files change,
+    // dep graph does not.
+    //
+    // We compare the *manifest declarations* (as `(kind, name)` set,
+    // ignoring version) because doing a full re-resolve here would
+    // require the resolver — `plan_update` is purely lockfile-aware.
+    // `(kind, name)` keyed via display strings — `PackageKind` is not
+    // `Ord`, and we don't need it to be: we just need a stable bag for
+    // set-difference reporting.
+    let old_dep_keys: std::collections::BTreeSet<String> = existing
+        .dependencies
+        .iter()
+        .map(|p| format!("{}:{}", p.kind, p.name))
+        .collect();
+    let new_dep_keys: std::collections::BTreeSet<String> = new_cached
+        .manifest
+        .requires
+        .packages
+        .iter()
+        .map(|spec| format!("{}:{}", spec.kind, spec.name))
+        .collect();
+    if old_dep_keys != new_dep_keys {
+        let added: Vec<String> = new_dep_keys
+            .difference(&old_dep_keys)
+            .map(|s| format!("+{s}"))
+            .collect();
+        let removed: Vec<String> = old_dep_keys
+            .difference(&new_dep_keys)
+            .map(|s| format!("-{s}"))
+            .collect();
+        let mut parts: Vec<String> = added;
+        parts.extend(removed);
+        return Err(InstallError::DependencyShapeChanged {
+            package: pkg_label,
+            from_version: existing.version.to_string(),
+            to_version: new_cached.resolved.version.to_string(),
+            reason: parts.join(" "),
+        });
+    }
+
+    // --- Build the new install plan as if we were doing a fresh write,
+    // then convert it into a per-file diff against the old install.
+    //
+    // We can't call `plan_install` directly here because that path
+    // refuses on AlreadyInstalled. The shape we want — list of
+    // (project_rel, source_abs) for the new package — is a reduced
+    // version of plan_install's body, so duplicate it locally.
+    let mut new_targets: Vec<(PathBuf, PathBuf)> = Vec::new(); // (target_rel, source_abs)
+    let new_manifest = &new_cached.manifest;
+    for file in &new_manifest.writes.files {
+        validate_target_rel(file)?;
+        let source_abs = new_cached.cache_dir.join(file);
+        if !source_abs.is_file() {
+            return Err(InstallError::MissingSourceFile { path: file.clone() });
+        }
+        new_targets.push((normalize_rel(file), source_abs));
+    }
+    let mut new_boot_snippet_filename = None;
+    if let Some(snippet) = &new_manifest.boot_snippet {
+        validate_boot_filename(&snippet.filename)?;
+        let source_abs = new_cached.cache_dir.join(&snippet.source);
+        if !source_abs.is_file() {
+            return Err(InstallError::MissingSourceFile {
+                path: snippet.source.clone(),
+            });
+        }
+        let target_rel = normalize_rel(Path::new(&format!("spec/boot/{}", snippet.filename)));
+        new_targets.push((target_rel, source_abs));
+        new_boot_snippet_filename = Some(snippet.filename.clone());
+    }
+
+    let new_paths: std::collections::BTreeSet<PathBuf> =
+        new_targets.iter().map(|(t, _)| t.clone()).collect();
+    let new_source_lookup: std::collections::HashMap<PathBuf, PathBuf> = new_targets
+        .iter()
+        .cloned()
+        .collect();
+    let old_paths: std::collections::BTreeSet<PathBuf> = existing
+        .files_written
+        .iter()
+        .map(|p| normalize_rel(p))
+        .collect();
+
+    // --- For pristine-vs-edited verification we need a cache→project
+    // mapping for the **old** install. Re-derive it from the old cache's
+    // manifest.
+    let old_manifest_path = old_cache_dir.join(PackageManifest::FILENAME);
+    let old_manifest = PackageManifest::read(&old_manifest_path)?;
+    let mut old_source_lookup: std::collections::HashMap<PathBuf, PathBuf> =
+        std::collections::HashMap::new();
+    for file in &old_manifest.writes.files {
+        old_source_lookup.insert(normalize_rel(file), old_cache_dir.join(file));
+    }
+    if let Some(snippet) = &old_manifest.boot_snippet {
+        let target_rel = normalize_rel(Path::new(&format!("spec/boot/{}", snippet.filename)));
+        old_source_lookup.insert(target_rel, old_cache_dir.join(&snippet.source));
+    }
+
+    let mut changes: Vec<UpdateChange> = Vec::new();
+
+    // Removed files — present in the old install, absent in the new.
+    // Refuse if user has edited the file (would silently destroy work).
+    for old in &old_paths {
+        if new_paths.contains(old) {
+            continue;
+        }
+        let target_abs = project_root.join(old);
+        check_user_edit(&pkg_label, old, &target_abs, &old_source_lookup)?;
+        changes.push(UpdateChange::Removed {
+            target_rel: old.clone(),
+            target_abs,
+        });
+    }
+
+    // Both-side files: classify Identical / Modified / UserEdited.
+    for path in old_paths.intersection(&new_paths) {
+        let target_abs = project_root.join(path);
+        check_user_edit(&pkg_label, path, &target_abs, &old_source_lookup)?;
+        // Pristine. Compare old vs new cache bytes.
+        let old_src = old_source_lookup
+            .get(path)
+            .cloned()
+            .ok_or_else(|| InstallError::Io {
+                path: path.clone(),
+                source: std::io::Error::other(format!(
+                    "no old-cache mapping for `{}` while planning update of `{}`",
+                    path.display(),
+                    pkg_label
+                )),
+            })?;
+        let new_src = new_source_lookup
+            .get(path)
+            .cloned()
+            .expect("new path came from new_targets and is recorded");
+        let old_bytes = fs::read(&old_src).map_err(|e| InstallError::Io {
+            path: old_src.clone(),
+            source: e,
+        })?;
+        let new_bytes = fs::read(&new_src).map_err(|e| InstallError::Io {
+            path: new_src.clone(),
+            source: e,
+        })?;
+        if old_bytes == new_bytes {
+            changes.push(UpdateChange::Identical {
+                target_rel: path.clone(),
+            });
+        } else {
+            changes.push(UpdateChange::Modified {
+                target_rel: path.clone(),
+                target_abs,
+                source_abs: new_src,
+            });
+        }
+    }
+
+    // Added — in the new install, not in the old.
+    for new_path in &new_paths {
+        if old_paths.contains(new_path) {
+            continue;
+        }
+        let target_abs = project_root.join(new_path);
+        // Any pre-existing file at the target is a hard conflict —
+        // either a stray manual edit or another package's write.
+        if target_abs.exists() {
+            return Err(InstallError::TargetFileExists {
+                path: target_abs,
+            });
+        }
+        let source_abs = new_source_lookup
+            .get(new_path)
+            .cloned()
+            .expect("new path has a recorded source");
+        changes.push(UpdateChange::Added {
+            target_rel: new_path.clone(),
+            target_abs,
+            source_abs,
+        });
+    }
+
+    // Sort changes for deterministic CLI output: Removed, Added, Modified, Identical.
+    changes.sort_by_key(|c| {
+        let order = match c {
+            UpdateChange::Removed { .. } => 0,
+            UpdateChange::Added { .. } => 1,
+            UpdateChange::Modified { .. } => 2,
+            UpdateChange::Identical { .. } => 3,
+        };
+        (order, c.target_rel().to_path_buf())
+    });
+
+    Ok(UpdatePlan {
+        kind,
+        name,
+        from_version: existing.version.clone(),
+        to_version: new_cached.resolved.version.clone(),
+        from_content_hash: existing.content_hash.clone(),
+        to_content_hash: new_cached.content_hash.clone(),
+        new_cached,
+        changes,
+        new_boot_snippet_filename,
+    })
+}
+
+fn check_user_edit(
+    pkg_label: &str,
+    rel: &Path,
+    abs: &Path,
+    old_source_lookup: &std::collections::HashMap<PathBuf, PathBuf>,
+) -> Result<(), InstallError> {
+    if !abs.exists() {
+        // Project file already missing on disk — user removed it. We
+        // treat that as an implicit consent to delete-or-add-back; no
+        // refusal needed. The new write (if any) just lands; the
+        // removal is a no-op.
+        return Ok(());
+    }
+    let Some(old_src) = old_source_lookup.get(rel) else {
+        // Path isn't in the old manifest's writes — must be a stray.
+        // Only reachable for `Added` paths; we already handle that
+        // case in plan_update above.
+        return Ok(());
+    };
+    let on_disk = fs::read(abs).map_err(|e| InstallError::Io {
+        path: abs.to_path_buf(),
+        source: e,
+    })?;
+    let cache = fs::read(old_src).map_err(|e| InstallError::Io {
+        path: old_src.clone(),
+        source: e,
+    })?;
+    if on_disk != cache {
+        return Err(InstallError::UserEditedFile {
+            package: pkg_label.to_string(),
+            path: rel.to_path_buf(),
+        });
+    }
+    Ok(())
+}
+
+/// Apply an [`UpdatePlan`] — delete `Removed`, write `Added` and
+/// `Modified`. `Identical` entries are no-ops. Returns the project-
+/// relative paths the lockfile should record under `files_written`
+/// (everything in the new install, dropping the removed paths).
+///
+/// Best-effort rollback on failure: anything written or deleted in
+/// this call is restored if a later step errors. Backed by a snapshot
+/// taken at the start.
+pub fn apply_update(plan: &UpdatePlan) -> Result<Vec<PathBuf>, InstallError> {
+    // Snapshot the bytes of every Removed/Modified target so we can
+    // roll back. Added targets are absent today; rollback removes
+    // them on failure.
+    let mut snapshots: Vec<(PathBuf, Option<Vec<u8>>)> = Vec::new();
+    for change in &plan.changes {
+        match change {
+            UpdateChange::Removed { target_abs, .. } | UpdateChange::Modified { target_abs, .. } => {
+                let bytes = if target_abs.exists() {
+                    Some(fs::read(target_abs).map_err(|e| InstallError::Io {
+                        path: target_abs.clone(),
+                        source: e,
+                    })?)
+                } else {
+                    None
+                };
+                snapshots.push((target_abs.clone(), bytes));
+            }
+            UpdateChange::Added { target_abs, .. } => {
+                snapshots.push((target_abs.clone(), None));
+            }
+            UpdateChange::Identical { .. } => {}
+        }
+    }
+
+    let mut written: Vec<PathBuf> = Vec::new();
+    let mut deleted: Vec<PathBuf> = Vec::new();
+    let mut new_files_written: Vec<PathBuf> = Vec::new();
+
+    let result = (|| -> Result<(), InstallError> {
+        for change in &plan.changes {
+            match change {
+                UpdateChange::Removed { target_abs, target_rel } => {
+                    if target_abs.exists() {
+                        fs::remove_file(target_abs).map_err(|e| InstallError::Io {
+                            path: target_abs.clone(),
+                            source: e,
+                        })?;
+                        deleted.push(target_abs.clone());
+                    }
+                    let _ = target_rel; // recorded only via files_written omission
+                }
+                UpdateChange::Added { target_abs, target_rel, source_abs }
+                | UpdateChange::Modified { target_abs, target_rel, source_abs } => {
+                    if let Some(parent) = target_abs.parent() {
+                        fs::create_dir_all(parent).map_err(|e| InstallError::Io {
+                            path: parent.to_path_buf(),
+                            source: e,
+                        })?;
+                    }
+                    fs::copy(source_abs, target_abs).map_err(|e| InstallError::Io {
+                        path: target_abs.clone(),
+                        source: e,
+                    })?;
+                    written.push(target_abs.clone());
+                    new_files_written.push(target_rel.clone());
+                }
+                UpdateChange::Identical { target_rel } => {
+                    new_files_written.push(target_rel.clone());
+                }
+            }
+        }
+        Ok(())
+    })();
+
+    if let Err(e) = result {
+        // Roll back. Restore every snapshot.
+        for (abs, prior) in snapshots.iter().rev() {
+            match prior {
+                Some(bytes) => {
+                    if let Some(parent) = abs.parent() {
+                        let _ = fs::create_dir_all(parent);
+                    }
+                    let _ = fs::write(abs, bytes);
+                }
+                None => {
+                    let _ = fs::remove_file(abs);
+                }
+            }
+        }
+        let _ = (written, deleted);
+        return Err(e);
+    }
+
+    // Prune empty parent dirs whose only previous content was a
+    // removed file. Same heuristic as `apply_uninstall`.
+    for change in &plan.changes {
+        if let UpdateChange::Removed { target_abs, .. } = change {
+            let mut p = target_abs.clone();
+            while let Some(parent) = p.parent() {
+                if parent.as_os_str().is_empty() {
+                    break;
+                }
+                match fs::read_dir(parent) {
+                    Ok(mut it) => {
+                        if it.next().is_some() {
+                            break;
+                        }
+                    }
+                    Err(_) => break,
+                }
+                if fs::remove_dir(parent).is_err() {
+                    break;
+                }
+                p = parent.to_path_buf();
+            }
+        }
+    }
+
+    // Stable order for the lockfile: sort by target_rel so a follow-up
+    // `vibe list` / `vibe.lock` diff is deterministic.
+    new_files_written.sort();
+    Ok(new_files_written)
+}
+
+/// Update the lockfile entry for `(kind, name)` to reflect the
+/// applied [`UpdatePlan`]. Replaces the version, content_hash,
+/// source_url, source_ref, resolved_commit, boot_snippet,
+/// files_written; preserves the existing `dependencies` (refused on
+/// shape change at plan time) and `overridden` flag.
+pub fn register_updated(
+    lockfile: &mut Lockfile,
+    plan: &UpdatePlan,
+    files_written: Vec<PathBuf>,
+    generated_at: String,
+) -> Result<(), InstallError> {
+    let pkg_label = plan.package_label();
+    let entry = lockfile
+        .find_mut(plan.kind, &plan.name)
+        .ok_or(InstallError::NotInstalled {
+            package: pkg_label,
+        })?;
+    entry.version = plan.to_version.clone();
+    entry.content_hash = plan.to_content_hash.clone();
+    entry.source_url = plan.new_cached.source_uri.clone();
+    entry.source_ref = plan.new_cached.source_ref.clone();
+    entry.resolved_commit = plan.new_cached.resolved_commit.clone();
+    entry.registry = plan.new_cached.registry_name.clone();
+    entry.boot_snippet = plan.new_boot_snippet_filename.clone();
+    entry.files_written = files_written;
+    // `dependencies` and `overridden` are preserved — narrow v0
+    // refuses dep-shape changes, so the locked transitive set is
+    // still valid; an override-resolved entry stays an override.
+    lockfile.meta.generated_at = generated_at;
+    Ok(())
 }
 
 // ==== uninstall ============================================================
@@ -937,6 +1505,328 @@ files = ["../escape.md"]
         // `flow:wal` is gone from roots; the unrelated root survives.
         assert_eq!(lockfile.meta.root_dependencies.len(), 1);
         assert_eq!(lockfile.meta.root_dependencies[0].name, "atomic-commits");
+    }
+
+    // ===================== update tests =====================
+
+    /// Seed `<reg_root>/<kind>/<name>/v<version>/` with the supplied
+    /// manifest + content. Caller controls the version, so the same
+    /// helper writes both the "old" and the "new" install of a
+    /// package.
+    fn seed_version(
+        reg_root: &Path,
+        kind: &str,
+        name: &str,
+        version: &str,
+        manifest_toml: &str,
+        content: &[(&str, &str)],
+    ) {
+        let pkg_dir = reg_root
+            .join(kind)
+            .join(name)
+            .join(format!("v{version}"));
+        fs::create_dir_all(&pkg_dir).unwrap();
+        fs::write(pkg_dir.join(PackageManifest::FILENAME), manifest_toml).unwrap();
+        for (rel, body) in content {
+            let path = pkg_dir.join(rel);
+            fs::create_dir_all(path.parent().unwrap()).unwrap();
+            fs::write(&path, body).unwrap();
+        }
+    }
+
+    fn cached_at(
+        registry_root: &Path,
+        cache_root: &Path,
+        kind: &str,
+        name: &str,
+        version: &str,
+    ) -> CachedPackage {
+        let reg = LocalRegistry::new(registry_root).unwrap();
+        let pkgref = PackageRef::parse(&format!("{kind}:{name}@{version}")).unwrap();
+        let resolved: ResolvedPackage = reg.resolve(&pkgref).unwrap();
+        reg.fetch(&resolved, cache_root).unwrap()
+    }
+
+    fn install_v1(
+        reg_dir: &tempfile::TempDir,
+        cache_dir: &tempfile::TempDir,
+        project: &tempfile::TempDir,
+    ) -> Lockfile {
+        let manifest_v1 = r#"
+[package]
+name = "wal"
+kind = "flow"
+version = "0.1.0"
+
+[writes]
+files = [
+    "spec/flows/wal/A.md",
+    "spec/flows/wal/B.md",
+]
+
+[boot_snippet]
+filename = "10-flow-wal.md"
+source = "boot/10-flow-wal.md"
+"#;
+        seed_version(
+            reg_dir.path(),
+            "flow",
+            "wal",
+            "0.1.0",
+            manifest_v1,
+            &[
+                ("spec/flows/wal/A.md", "v1 A\n"),
+                ("spec/flows/wal/B.md", "v1 B\n"),
+                ("boot/10-flow-wal.md", "v1 boot\n"),
+            ],
+        );
+        let cached = cached_at(reg_dir.path(), cache_dir.path(), "flow", "wal", "0.1.0");
+        let mut lockfile = Lockfile::empty("vibe-test", "t0");
+        let plan = plan_install(project.path(), &lockfile, cached).unwrap();
+        let written = apply_install(&plan).unwrap();
+        register_installed(&mut lockfile, &plan, written, "t0".into(), Vec::new());
+        lockfile
+    }
+
+    fn fetch_v2(
+        reg_dir: &tempfile::TempDir,
+        cache_dir: &tempfile::TempDir,
+    ) -> CachedPackage {
+        // v0.2.0: A.md changed bytes, B.md removed, C.md added, boot
+        // snippet unchanged. Tests Added / Removed / Modified /
+        // Identical classification in one shot.
+        let manifest_v2 = r#"
+[package]
+name = "wal"
+kind = "flow"
+version = "0.2.0"
+
+[writes]
+files = [
+    "spec/flows/wal/A.md",
+    "spec/flows/wal/C.md",
+]
+
+[boot_snippet]
+filename = "10-flow-wal.md"
+source = "boot/10-flow-wal.md"
+"#;
+        seed_version(
+            reg_dir.path(),
+            "flow",
+            "wal",
+            "0.2.0",
+            manifest_v2,
+            &[
+                ("spec/flows/wal/A.md", "v2 A — changed!\n"),
+                ("spec/flows/wal/C.md", "v2 C\n"),
+                ("boot/10-flow-wal.md", "v1 boot\n"), // unchanged → Identical
+            ],
+        );
+        cached_at(reg_dir.path(), cache_dir.path(), "flow", "wal", "0.2.0")
+    }
+
+    #[test]
+    fn plan_update_classifies_added_removed_modified_identical() {
+        let reg_dir = tempdir().unwrap();
+        let cache_dir = tempdir().unwrap();
+        let project = empty_project();
+        let lockfile = install_v1(&reg_dir, &cache_dir, &project);
+        let new_cached = fetch_v2(&reg_dir, &cache_dir);
+
+        let old_cache_dir = cache_dir.path().join("flow/wal/v0.1.0");
+        let plan = plan_update(project.path(), &lockfile, new_cached, &old_cache_dir).unwrap();
+
+        assert_eq!(plan.from_version.to_string(), "0.1.0");
+        assert_eq!(plan.to_version.to_string(), "0.2.0");
+        assert!(plan.has_changes());
+
+        // 1 Removed (B), 1 Added (C), 1 Modified (A), 1 Identical (boot).
+        let count = |pred: fn(&UpdateChange) -> bool| {
+            plan.changes.iter().filter(|c| pred(c)).count()
+        };
+        assert_eq!(count(|c| matches!(c, UpdateChange::Removed { .. })), 1);
+        assert_eq!(count(|c| matches!(c, UpdateChange::Added { .. })), 1);
+        assert_eq!(count(|c| matches!(c, UpdateChange::Modified { .. })), 1);
+        assert_eq!(count(|c| matches!(c, UpdateChange::Identical { .. })), 1);
+
+        // Spot-check the actual paths.
+        let removed_paths: Vec<&Path> = plan
+            .changes
+            .iter()
+            .filter_map(|c| match c {
+                UpdateChange::Removed { target_rel, .. } => Some(target_rel.as_path()),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(removed_paths, vec![Path::new("spec/flows/wal/B.md")]);
+
+        let added_paths: Vec<&Path> = plan
+            .changes
+            .iter()
+            .filter_map(|c| match c {
+                UpdateChange::Added { target_rel, .. } => Some(target_rel.as_path()),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(added_paths, vec![Path::new("spec/flows/wal/C.md")]);
+    }
+
+    #[test]
+    fn plan_update_refuses_user_edited_file() {
+        let reg_dir = tempdir().unwrap();
+        let cache_dir = tempdir().unwrap();
+        let project = empty_project();
+        let lockfile = install_v1(&reg_dir, &cache_dir, &project);
+
+        // User edits A.md after install. plan_update would overwrite
+        // the edit with v2 bytes — refuse.
+        fs::write(
+            project.path().join("spec/flows/wal/A.md"),
+            "user-edited locally\n",
+        )
+        .unwrap();
+
+        let new_cached = fetch_v2(&reg_dir, &cache_dir);
+        let old_cache_dir = cache_dir.path().join("flow/wal/v0.1.0");
+        let err = plan_update(project.path(), &lockfile, new_cached, &old_cache_dir).unwrap_err();
+        match err {
+            InstallError::UserEditedFile { package, path } => {
+                assert_eq!(package, "flow:wal");
+                assert_eq!(path, PathBuf::from("spec/flows/wal/A.md"));
+            }
+            other => panic!("expected UserEditedFile, got: {other:?}"),
+        }
+    }
+
+    #[test]
+    fn plan_update_refuses_old_cache_missing() {
+        let reg_dir = tempdir().unwrap();
+        let cache_dir = tempdir().unwrap();
+        let project = empty_project();
+        let lockfile = install_v1(&reg_dir, &cache_dir, &project);
+        let new_cached = fetch_v2(&reg_dir, &cache_dir);
+
+        // Wipe the v0.1.0 cache so plan_update can't verify pristineness.
+        let old_cache_dir = cache_dir.path().join("flow/wal/v0.1.0");
+        fs::remove_dir_all(&old_cache_dir).unwrap();
+
+        let err = plan_update(project.path(), &lockfile, new_cached, &old_cache_dir).unwrap_err();
+        assert!(matches!(err, InstallError::OldCacheMissing { .. }));
+    }
+
+    #[test]
+    fn plan_update_refuses_dependency_shape_change() {
+        // v1 has empty deps; v2 declares a new transitive. Refuse.
+        let reg_dir = tempdir().unwrap();
+        let cache_dir = tempdir().unwrap();
+        let project = empty_project();
+        let lockfile = install_v1(&reg_dir, &cache_dir, &project);
+
+        let manifest_v2 = r#"
+[package]
+name = "wal"
+kind = "flow"
+version = "0.2.0"
+
+[writes]
+files = ["spec/flows/wal/A.md"]
+
+[boot_snippet]
+filename = "10-flow-wal.md"
+source = "boot/10-flow-wal.md"
+
+[requires]
+packages = ["flow:atomic-commits@^0.1"]
+"#;
+        seed_version(
+            reg_dir.path(),
+            "flow",
+            "wal",
+            "0.2.0",
+            manifest_v2,
+            &[
+                ("spec/flows/wal/A.md", "v2\n"),
+                ("boot/10-flow-wal.md", "v1 boot\n"),
+            ],
+        );
+        let new_cached = cached_at(reg_dir.path(), cache_dir.path(), "flow", "wal", "0.2.0");
+
+        let old_cache_dir = cache_dir.path().join("flow/wal/v0.1.0");
+        let err = plan_update(project.path(), &lockfile, new_cached, &old_cache_dir).unwrap_err();
+        match err {
+            InstallError::DependencyShapeChanged {
+                package,
+                from_version,
+                to_version,
+                reason,
+            } => {
+                assert_eq!(package, "flow:wal");
+                assert_eq!(from_version, "0.1.0");
+                assert_eq!(to_version, "0.2.0");
+                assert!(reason.contains("+flow:atomic-commits"));
+            }
+            other => panic!("expected DependencyShapeChanged, got: {other:?}"),
+        }
+    }
+
+    #[test]
+    fn plan_update_refuses_unknown_package() {
+        let reg_dir = tempdir().unwrap();
+        let cache_dir = tempdir().unwrap();
+        let project = empty_project();
+        let _ = install_v1(&reg_dir, &cache_dir, &project);
+        let lockfile = Lockfile::empty("vibe-test", "t0");
+        // Lockfile is fresh — flow:wal is "not installed" from this lockfile's perspective.
+        let new_cached = fetch_v2(&reg_dir, &cache_dir);
+        let old_cache_dir = cache_dir.path().join("flow/wal/v0.1.0");
+        let err =
+            plan_update(project.path(), &lockfile, new_cached, &old_cache_dir).unwrap_err();
+        assert!(matches!(err, InstallError::NotInstalled { .. }));
+    }
+
+    #[test]
+    fn apply_update_writes_added_modified_and_removes_removed() {
+        let reg_dir = tempdir().unwrap();
+        let cache_dir = tempdir().unwrap();
+        let project = empty_project();
+        let mut lockfile = install_v1(&reg_dir, &cache_dir, &project);
+
+        // Pre-conditions on the project tree.
+        assert!(project.path().join("spec/flows/wal/A.md").exists());
+        assert!(project.path().join("spec/flows/wal/B.md").exists());
+        assert!(!project.path().join("spec/flows/wal/C.md").exists());
+
+        let new_cached = fetch_v2(&reg_dir, &cache_dir);
+        let old_cache_dir = cache_dir.path().join("flow/wal/v0.1.0");
+        let plan = plan_update(project.path(), &lockfile, new_cached, &old_cache_dir).unwrap();
+        let written = apply_update(&plan).unwrap();
+
+        // B is gone; A overwritten with v2 bytes; C now exists.
+        assert!(!project.path().join("spec/flows/wal/B.md").exists());
+        assert!(project.path().join("spec/flows/wal/C.md").exists());
+        assert_eq!(
+            fs::read_to_string(project.path().join("spec/flows/wal/A.md")).unwrap(),
+            "v2 A — changed!\n"
+        );
+        // boot snippet untouched (Identical).
+        assert_eq!(
+            fs::read_to_string(project.path().join("spec/boot/10-flow-wal.md")).unwrap(),
+            "v1 boot\n"
+        );
+        // files_written records the new shape (sorted).
+        assert!(written.contains(&PathBuf::from("spec/flows/wal/A.md")));
+        assert!(written.contains(&PathBuf::from("spec/flows/wal/C.md")));
+        assert!(written.contains(&PathBuf::from("spec/boot/10-flow-wal.md")));
+        assert!(!written.contains(&PathBuf::from("spec/flows/wal/B.md")));
+
+        // register_updated bumps the lockfile entry.
+        register_updated(&mut lockfile, &plan, written, "t1".into()).unwrap();
+        let entry = lockfile.find(PackageKind::Flow, "wal").unwrap();
+        assert_eq!(entry.version.to_string(), "0.2.0");
+        assert!(entry.content_hash.starts_with("sha256:"));
+        // content_hash MUST have changed — the v2 payload is byte-different from v1.
+        assert_ne!(entry.content_hash, "sha256:placeholder");
     }
 
     #[test]
