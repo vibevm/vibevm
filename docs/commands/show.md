@@ -135,10 +135,34 @@ Environment:
 | --- | --- |
 | `vibe.toml` | Read from the project manifest. Every `[[registry]]` / `[[mirror]]` / `[[override]]` block sources here in v0. |
 | `env` | Set in the environment, raw value safe to print. |
-| `redacted` | Set in the environment, but the value is sensitive (token-shaped); the real bytes are never displayed — `vibe show config` prints `(redacted; set in environment)` instead. Same secrecy invariant `vibe registry publish` applies. |
-| `default` | Not set in the environment; the runtime falls back to its built-in default. |
+| `redacted` | Set in the environment **or** defaulted via the user-level config, but the value is sensitive (token-shaped); the real bytes are never displayed — `vibe show config` prints `(redacted; set in environment)` or `(redacted; defaulted in user config)` instead. Same secrecy invariant `vibe registry publish` applies. |
+| `user-config` | Defaulted via `~/.config/vibe/config.toml [env]`. Live env-vars (when set) win over this layer. |
+| `default` | Neither env-var nor user-config defaults the value; the runtime falls back to its built-in default. |
 
-User-level `~/.config/vibe/config.toml` and CLI overrides will surface as additional provenance values once those layers ship — `VIBEVM-SPEC.md` §9.5 lists the full precedence chain.
+`VIBEVM-SPEC.md` §9.5 lists the full precedence chain (CLI > env > project `vibe.toml` > user-level config > built-in defaults). v0 of `vibe show config` reads four of those layers and surfaces them via the table above. CLI-flag-level overrides will plug in as a fifth provenance value when they ship.
+
+### User-level config
+
+`~/.config/vibe/config.toml` is optional. When present, its `[env]` section provides defaults for environment-variable-driven runtime knobs:
+
+```toml
+[env]
+VIBE_REGISTRY_CACHE = "/data/vibe-cache"
+VIBE_LOG = "vibe_registry=info"
+```
+
+Path resolution order:
+
+1. `VIBEVM_USER_CONFIG` env-var pointing at the file directly (override; useful for tests + ad-hoc invocations).
+2. `$XDG_CONFIG_HOME/vibe/config.toml` if `XDG_CONFIG_HOME` is set.
+3. `%APPDATA%\vibe\config.toml` on Windows.
+4. `$HOME/.config/vibe/config.toml` everywhere else.
+
+Schema is `deny_unknown_fields` strict — a typo in `[env]` (`[envv]`, `[environment]`) surfaces as a parse error rather than silently ignored.
+
+**Operator caveat (v0).** The user-level config is read by `vibe show config` for provenance display and is fully wired into the inspection path. v0 deliberately does **not** inject those defaults into runtime consumers (registry cache root, tracing init, etc.) — the operator must `export VIBE_REGISTRY_CACHE=…` for the value to actually apply at install / update time. Runtime injection lands in a follow-up commit once the workspace-wide policy on env-var promotion is settled. Until then, treat the user-level config as documentation that surfaces in `vibe show config` rather than as live runtime configuration.
+
+**Token discipline.** Putting `VIBEVM_PUBLISH_TOKEN` in the user-level config is a poor operator choice (the right home is `~/.vibevm/<host>.publish.token` per [PROP-000 §20](../../spec/common/PROP-000.md#token-secrecy)), but `vibe show config` will not refuse to parse the file — it surfaces the token as `redacted` regardless of source, never prints the bytes.
 
 ### JSON shape
 
@@ -177,7 +201,7 @@ vibe --json show config | jq -e '.env[] | select(.provenance == "env" or .proven
 ## Limitations (v0)
 
 - `vibe show graph`, `vibe show node`, `vibe show plan` are deferred to M1.5 alongside the LLM-build runner.
-- User-level `~/.config/vibe/config.toml` is not read in v0 — the only `provenance` value beside `env` / `default` / `redacted` is `vibe.toml`. Adding the user-level layer is a follow-up commit.
+- User-level `~/.config/vibe/config.toml` is read for provenance display only — runtime consumers (registry cache root, tracing filter) still consult the live env directly. Wiring user-config defaults into runtime resolution is a follow-up slice.
 - The effective-spec view does not parse markdown; it concatenates raw file content. `vibe check` v1+ will add anchor-aware analysis, but `vibe show effective` is intentionally byte-faithful.
 
 ## Related

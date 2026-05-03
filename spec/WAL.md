@@ -3,6 +3,12 @@ _Updated: 2026-05-04_
 
 ## Current phase
 
+**M1.4 `vibe show` user-config layer — LANDED (2026-05-04).** Closes the remaining gap in the §9.5 precedence chain that `vibe show` v0 left open. New `vibe-core::user_config::UserConfig` reads `~/.config/vibe/config.toml` (with `XDG_CONFIG_HOME` / `%APPDATA%` / `VIBEVM_USER_CONFIG` resolution) into a strictly-typed `[env]` `BTreeMap<String, String>`. `vibe show config` consumes it as the fourth provenance layer: live env-var > user-config > built-in default; sensitive vars (`VIBEVM_PUBLISH_TOKEN`) stay `redacted` regardless of source. `vibe show config --json` gains a `user_config { path, loaded, error? }` block that surfaces the resolved path and parse-failure mode so an operator with a malformed file sees that the layer is silently inert. v0 scope deliberately stops at inspection — runtime consumers (cache root, tracing init) still read live env-vars only; runtime injection is a follow-up.
+
+5 new unit tests in `vibe-core::user_config::tests` (default-empty, missing-file-is-default, parses [env], rejects unknown top-level section, rejects malformed TOML); 3 new e2e tests in `cli_e2e.rs` — `show_config_user_layer_provides_default_for_unset_env`, `show_config_live_env_overrides_user_config`, `show_config_user_token_default_redacts_value` (the token-bytes-never-leak gate against a deliberate misuse where the operator drops a token into the user-config). `cargo clippy --workspace --all-targets -- -D warnings` clean. Reference docs at [`docs/commands/show.md`](../docs/commands/show.md).
+
+The earlier slices stay in force.
+
 **M1.4 `vibe show` v0 — SHIPPED (2026-05-04).** Inspection commands online. Two subcommands ship in v0; the runner-aware ones (`graph` / `node` / `plan`) defer to M1.5 alongside the LLM-build pipeline.
 
 `vibe show effective` materialises the project's full spec corpus as a single deterministic stream — `spec/boot/*.md` sorted by `NN-` prefix first, then `spec/WAL.md`, then per-package `files_written` in lockfile order (with `spec/boot/*` paths skipped to avoid duplicating step 1). Each section is preceded by a `--- spec://… (origin)` provenance header where the origin is `user`, `wal`, or `package:<kind>:<name>@<version>`. The boot snippet attribution comes from each `LockedPackage::boot_snippet` field; user-foundation files (`00-core.md` / `90-user.md`) and any unclaimed boot file fall through to `user`. `--json` emits a structured envelope with `command = "show:effective"` and a `sections[]` array carrying `spec_uri` / `path` / `origin` / `body`.
