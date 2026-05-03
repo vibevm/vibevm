@@ -160,7 +160,9 @@ Path resolution order:
 
 Schema is `deny_unknown_fields` strict — a typo in `[env]` (`[envv]`, `[environment]`) surfaces as a parse error rather than silently ignored.
 
-**Operator caveat (v0).** The user-level config is read by `vibe show config` for provenance display and is fully wired into the inspection path. v0 deliberately does **not** inject those defaults into runtime consumers (registry cache root, tracing init, etc.) — the operator must `export VIBE_REGISTRY_CACHE=…` for the value to actually apply at install / update time. Runtime injection lands in a follow-up commit once the workspace-wide policy on env-var promotion is settled. Until then, treat the user-level config as documentation that surfaces in `vibe show config` rather than as live runtime configuration.
+**Runtime injection.** Every value listed in `[env]` is promoted into the process environment at the very top of `main`, before the dispatcher selects a subcommand and before any thread is spawned. Subsequent runtime consumers (`vibe-registry::default_cache_root`, the tracing init, future LLM-key paths) read whatever is in the process env without caring who put it there. Live env-vars set by the operator at invocation time always win — promotion only fires when the variable was unset.
+
+This means a user-config file that pins `VIBE_REGISTRY_CACHE = "/data/vibe-cache"` actually relocates the cache for `vibe install` / `vibe registry sync` invocations on the same machine — no `export` needed. `vibe show config` distinguishes operator-set values (`provenance = "env"`) from promoted defaults (`provenance = "user-config"`) by tracking which names the startup promotion wrote.
 
 **Token discipline.** Putting `VIBEVM_PUBLISH_TOKEN` in the user-level config is a poor operator choice (the right home is `~/.vibevm/<host>.publish.token` per [PROP-000 §20](../../spec/common/PROP-000.md#token-secrecy)), but `vibe show config` will not refuse to parse the file — it surfaces the token as `redacted` regardless of source, never prints the bytes.
 
@@ -201,7 +203,6 @@ vibe --json show config | jq -e '.env[] | select(.provenance == "env" or .proven
 ## Limitations (v0)
 
 - `vibe show graph`, `vibe show node`, `vibe show plan` are deferred to M1.5 alongside the LLM-build runner.
-- User-level `~/.config/vibe/config.toml` is read for provenance display only — runtime consumers (registry cache root, tracing filter) still consult the live env directly. Wiring user-config defaults into runtime resolution is a follow-up slice.
 - The effective-spec view does not parse markdown; it concatenates raw file content. `vibe check` v1+ will add anchor-aware analysis, but `vibe show effective` is intentionally byte-faithful.
 
 ## Related
