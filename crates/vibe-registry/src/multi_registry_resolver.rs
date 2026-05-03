@@ -302,6 +302,30 @@ impl MultiRegistryResolver {
         resolution: &MultiResolution,
         project_cache: &Path,
     ) -> Result<CachedPackage, RegistryError> {
+        self.fetch_with_expected_hash(resolution, project_cache, None)
+    }
+
+    /// Mirror-aware fetch with an optional cross-source content_hash gate.
+    ///
+    /// `expected_hash`, when supplied (typically the lockfile pin for
+    /// this `(kind, name, version)`), is enforced source-by-source:
+    /// each URL in the registry's primary-then-mirror chain is tried,
+    /// and the first whose served content matches the pin wins. A
+    /// disagreeing source is logged at `tracing::warn!` and skipped.
+    /// If every source disagrees, the last one's [`CachedPackage`] is
+    /// returned and the install layer's
+    /// [`vibe_install::plan_install`] surfaces the
+    /// `ContentDrift` error against the lockfile pin.
+    ///
+    /// Override-resolved entries skip mirror dispatch entirely —
+    /// `[[override]]` is a surgical pin to one specific URL/ref by
+    /// design, so the same URL is the only legitimate source.
+    pub fn fetch_with_expected_hash(
+        &self,
+        resolution: &MultiResolution,
+        project_cache: &Path,
+        expected_hash: Option<&str>,
+    ) -> Result<CachedPackage, RegistryError> {
         if resolution.overridden {
             return self.fetch_override(resolution, project_cache);
         }
@@ -321,9 +345,10 @@ impl MultiRegistryResolver {
                     kind: resolution.resolved.kind,
                     name: resolution.resolved.name.clone(),
                 })?;
-        // `GitPackageRegistry::fetch` already populates `registry_name` /
-        // `source_ref` / `overridden = false` correctly; nothing to wrap.
-        reg.fetch(&resolution.resolved, project_cache)
+        // `GitPackageRegistry::fetch_with_expected_hash` already populates
+        // `registry_name` / `source_ref` / `overridden = false` correctly;
+        // nothing to wrap.
+        reg.fetch_with_expected_hash(&resolution.resolved, project_cache, expected_hash)
     }
 
     fn fetch_override(

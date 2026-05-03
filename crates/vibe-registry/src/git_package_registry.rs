@@ -265,6 +265,122 @@ impl GitPackageRegistry {
         Err(primary_err.expect("primary URL must exist"))
     }
 
+    /// Bootstrap (or refresh) the per-package clone at `clone_dir`
+    /// against `url`. Used by [`Self::ensure_clone_against_sources`]
+    /// and the mirror-fallback variants of [`Self::fetch`] /
+    /// [`Self::refresh_package`].
+    ///
+    /// On entry: `clone_dir` is either absent, empty, or a previously
+    /// populated git working tree. If the working tree exists,
+    /// [`GitBackend::update`] is tried first — that preserves the local
+    /// clone and is the cheap path. If `update` fails (origin
+    /// unreachable, ref missing, etc.), the clone is wiped and we
+    /// retry via [`GitBackend::bootstrap`] against the same URL. The
+    /// wipe-and-rebootstrap branch is what allows the next mirror in
+    /// the chain to take over cleanly even if a previous clone left
+    /// stale state behind.
+    fn bootstrap_or_update_at(
+        &self,
+        url: &str,
+        refname: &str,
+        clone_dir: &Path,
+    ) -> Result<(), RegistryError> {
+        if clone_dir.join(".git").exists() {
+            match self.backend.update(clone_dir, refname) {
+                Ok(()) => return Ok(()),
+                Err(e) => {
+                    tracing::debug!(
+                        target: "vibe_registry",
+                        registry = %self.name,
+                        url = %url,
+                        error = %e,
+                        "update on existing clone failed; wiping and re-bootstrapping"
+                    );
+                    fs::remove_dir_all(clone_dir).map_err(|source| RegistryError::Io {
+                        path: clone_dir.to_path_buf(),
+                        source,
+                    })?;
+                }
+            }
+        }
+        if clone_dir.exists() {
+            // Half-populated dir from a prior failed bootstrap — clean.
+            fs::remove_dir_all(clone_dir).map_err(|source| RegistryError::Io {
+                path: clone_dir.to_path_buf(),
+                source,
+            })?;
+        }
+        if let Some(parent) = clone_dir.parent() {
+            fs::create_dir_all(parent).map_err(|source| RegistryError::Io {
+                path: parent.to_path_buf(),
+                source,
+            })?;
+        }
+        self.backend
+            .bootstrap(strip_git_plus_prefix(url), refname, clone_dir)?;
+        Ok(())
+    }
+
+    /// Bring the per-package clone at `package_clone_dir(kind, name)`
+    /// to `refname` by trying the primary URL first, then each mirror
+    /// URL in priority order. Returns the URL that ultimately served
+    /// the clone (canonical or a mirror) so the caller can record /
+    /// log it.
+    ///
+    /// Mirror dispatch on this path is the cache-mutating sibling of
+    /// [`Self::try_lookup`]: same primary-first ordering, same
+    /// "primary's error is the most informative" semantics on full
+    /// failure. The crucial difference is per-source state — each
+    /// retry that goes through bootstrap wipes the local clone first,
+    /// so a flapping primary that left a half-populated dir cannot
+    /// poison the mirror attempt.
+    ///
+    /// **Mirror integrity** is **not** checked here: the content from
+    /// whichever URL succeeds is taken verbatim. The caller (typically
+    /// [`Self::fetch_with_expected_hash`]) layers a content_hash
+    /// gate on top when a lockfile pin is available.
+    fn ensure_clone_against_sources(
+        &self,
+        kind: PackageKind,
+        name: &str,
+        refname: &str,
+    ) -> Result<String, RegistryError> {
+        let urls = self.package_urls(kind, name);
+        let clone_dir = self.package_clone_dir(kind, name);
+        let mut primary_err: Option<RegistryError> = None;
+        for (i, url) in urls.iter().enumerate() {
+            match self.bootstrap_or_update_at(url, refname, &clone_dir) {
+                Ok(()) => {
+                    if i > 0 {
+                        tracing::info!(
+                            target: "vibe_registry",
+                            registry = %self.name,
+                            primary = %urls[0],
+                            served_by = %url,
+                            mirror_index = i - 1,
+                            "fetch served by mirror"
+                        );
+                    }
+                    return Ok(url.clone());
+                }
+                Err(e) => {
+                    if i == 0 {
+                        primary_err = Some(e);
+                    } else {
+                        tracing::debug!(
+                            target: "vibe_registry",
+                            registry = %self.name,
+                            mirror = %url,
+                            error = %e,
+                            "mirror fetch failed; trying next"
+                        );
+                    }
+                }
+            }
+        }
+        Err(primary_err.expect("primary URL must exist"))
+    }
+
     /// Where this package's clone lives on disk —
     /// `<cache_dir>/packages/<kind>-<name>/clone/`. Note the internal
     /// subdirectory is always `<kind>-<name>`, regardless of registry naming
@@ -417,7 +533,9 @@ impl GitPackageRegistry {
 
     /// Refresh the per-package clone for `(kind, name)` against `refname`
     /// without touching the per-project cache. If the clone exists, runs
-    /// `update`; otherwise bootstraps a fresh clone.
+    /// `update`; otherwise bootstraps a fresh clone. Mirror-aware:
+    /// the primary URL is tried first, then each mirror in priority
+    /// order — the first source that lands a working clone wins.
     ///
     /// Used by `vibe registry sync` to walk lockfile entries and pull
     /// upstream changes for everything currently installed, without
@@ -428,26 +546,7 @@ impl GitPackageRegistry {
         name: &str,
         refname: &str,
     ) -> Result<(), RegistryError> {
-        let url = self.package_repo_url(kind, name);
-        let clone_dir = self.package_clone_dir(kind, name);
-        if clone_dir.join(".git").exists() {
-            self.backend.update(&clone_dir, refname)?;
-        } else {
-            if clone_dir.exists() {
-                fs::remove_dir_all(&clone_dir).map_err(|source| RegistryError::Io {
-                    path: clone_dir.clone(),
-                    source,
-                })?;
-            }
-            if let Some(parent) = clone_dir.parent() {
-                fs::create_dir_all(parent).map_err(|source| RegistryError::Io {
-                    path: parent.to_path_buf(),
-                    source,
-                })?;
-            }
-            self.backend
-                .bootstrap(strip_git_plus_prefix(&url), refname, &clone_dir)?;
-        }
+        self.ensure_clone_against_sources(kind, name, refname)?;
         Ok(())
     }
 
@@ -455,80 +554,178 @@ impl GitPackageRegistry {
     /// (or updates) the per-package repo at the requested tag, then copies
     /// the worktree into `<cache_root>/<kind>/<name>/v<version>/`,
     /// stripping `.git/`.
+    ///
+    /// Mirror-aware: the primary URL is tried first, then each mirror
+    /// in priority order. Whichever source lands the clone first wins
+    /// and the cache is materialised from that clone. The
+    /// [`CachedPackage::source_uri`] is **always** the canonical
+    /// primary URL — mirror URLs are an availability detail, not a
+    /// lockfile-recorded identity (PROP-002 §2.3 step 3).
+    ///
+    /// No content_hash gate at this layer — see
+    /// [`Self::fetch_with_expected_hash`] for the cross-source
+    /// integrity check.
     pub fn fetch(
         &self,
         resolved: &ResolvedPackage,
         cache_root: &Path,
     ) -> Result<CachedPackage, RegistryError> {
-        let url = self.package_repo_url(resolved.kind, &resolved.name);
+        self.fetch_with_expected_hash(resolved, cache_root, None)
+    }
+
+    /// Mirror-aware fetch with an optional cross-source content_hash
+    /// gate.
+    ///
+    /// Walks the URL chain primary-first; for each URL that yields a
+    /// working clone, materialises the cache and computes the
+    /// content_hash:
+    ///
+    /// - If `expected_hash` is `None` (no lockfile pin), accept the
+    ///   first source that lands content. Equivalent to [`Self::fetch`].
+    /// - If `expected_hash` is `Some(h)`, accept the first source
+    ///   whose computed hash equals `h`. Sources serving a disagreeing
+    ///   hash trigger a `tracing::warn!` (mirror-integrity event) and
+    ///   the walk continues to the next URL — the cache is wiped
+    ///   between attempts so a poisoned source cannot leave bytes
+    ///   behind. This is the supply-chain check from
+    ///   [PROP-002 §2.3](../../../spec/modules/vibe-registry/PROP-002-decentralized-registry.md#mirror).
+    ///
+    /// If every URL is reached but none matches, the **last
+    /// successful fetch's** [`CachedPackage`] is returned (with the
+    /// disagreeing hash); it is the caller's responsibility — today
+    /// `vibe-install`'s `plan_install` — to convert the stored hash
+    /// vs. lockfile-pin mismatch into the user-actionable
+    /// `ContentDrift` error. This split keeps registry-layer concerns
+    /// (sources, fallback, integrity attempts) separate from
+    /// install-layer concerns (lockfile-aware error rendering).
+    ///
+    /// If every URL fails at the network layer (no source produced
+    /// any content), the **primary's** error is surfaced — same
+    /// "primary is canonical and its diagnostic is most useful"
+    /// semantics as [`Self::try_lookup`].
+    pub fn fetch_with_expected_hash(
+        &self,
+        resolved: &ResolvedPackage,
+        cache_root: &Path,
+        expected_hash: Option<&str>,
+    ) -> Result<CachedPackage, RegistryError> {
+        let canonical_url = self.package_repo_url(resolved.kind, &resolved.name);
         let tag = format!("v{}", resolved.version);
+        let urls = self.package_urls(resolved.kind, &resolved.name);
         let clone_dir = self.package_clone_dir(resolved.kind, &resolved.name);
-
-        if clone_dir.join(".git").exists() {
-            // Clone exists from a previous fetch — refresh it. `update`
-            // does `fetch --prune` + hard-reset to `origin/<ref>`. We pass
-            // the *tag* as `<ref>`, which `git fetch` resolves through
-            // refs/tags/*; the subsequent `git reset --hard origin/<tag>`
-            // works because git looks up the ref via the same machinery.
-            self.backend.update(&clone_dir, &tag)?;
-        } else {
-            if clone_dir.exists() {
-                // Half-populated dir from a prior failed bootstrap — clean.
-                fs::remove_dir_all(&clone_dir).map_err(|source| RegistryError::Io {
-                    path: clone_dir.clone(),
-                    source,
-                })?;
-            }
-            if let Some(parent) = clone_dir.parent() {
-                fs::create_dir_all(parent).map_err(|source| RegistryError::Io {
-                    path: parent.to_path_buf(),
-                    source,
-                })?;
-            }
-            tracing::info!(
-                target: "vibe_registry",
-                url = %url,
-                tag = %tag,
-                dest = %clone_dir.display(),
-                "cloning per-package repo"
-            );
-            self.backend
-                .bootstrap(strip_git_plus_prefix(&url), &tag, &clone_dir)?;
-        }
-
-        // Materialise into the per-project package cache, stripping `.git/`.
         let dest_cache = cache_root
             .join(resolved.kind.as_str())
             .join(&resolved.name)
             .join(format!("v{}", resolved.version));
-        if dest_cache.exists() {
-            fs::remove_dir_all(&dest_cache).map_err(|source| RegistryError::Io {
-                path: dest_cache.clone(),
-                source,
-            })?;
+
+        let mut primary_err: Option<RegistryError> = None;
+        let mut last_cached: Option<CachedPackage> = None;
+
+        for (i, url) in urls.iter().enumerate() {
+            // 1. Bring the local clone to `tag` from this URL.
+            if let Err(e) = self.bootstrap_or_update_at(url, &tag, &clone_dir) {
+                if i == 0 {
+                    primary_err = Some(e);
+                } else {
+                    tracing::debug!(
+                        target: "vibe_registry",
+                        registry = %self.name,
+                        mirror = %url,
+                        error = %e,
+                        "mirror fetch failed; trying next"
+                    );
+                }
+                continue;
+            }
+
+            // 2. Materialise the per-project cache, stripping `.git/`.
+            if dest_cache.exists() {
+                fs::remove_dir_all(&dest_cache).map_err(|source| RegistryError::Io {
+                    path: dest_cache.clone(),
+                    source,
+                })?;
+            }
+            copy_dir_excluding_git(&clone_dir, &dest_cache)?;
+
+            let manifest_path = dest_cache.join(PackageManifest::FILENAME);
+            let manifest = PackageManifest::read(&manifest_path)?;
+            let content_hash = compute_content_hash(&dest_cache)?;
+
+            // 3. Cross-source content_hash gate.
+            let cached = CachedPackage {
+                resolved: resolved.clone(),
+                cache_dir: dest_cache.clone(),
+                manifest,
+                content_hash: content_hash.clone(),
+                source_uri: canonical_url.clone(),
+                registry_name: Some(self.name.clone()),
+                source_ref: Some(tag.clone()),
+                resolved_commit: None,
+                overridden: false,
+            };
+            match expected_hash {
+                None => {
+                    if i > 0 {
+                        tracing::info!(
+                            target: "vibe_registry",
+                            registry = %self.name,
+                            primary = %urls[0],
+                            served_by = %url,
+                            mirror_index = i - 1,
+                            "fetch served by mirror"
+                        );
+                    }
+                    return Ok(cached);
+                }
+                Some(expected) if expected == content_hash => {
+                    if i > 0 {
+                        tracing::info!(
+                            target: "vibe_registry",
+                            registry = %self.name,
+                            primary = %urls[0],
+                            served_by = %url,
+                            mirror_index = i - 1,
+                            "fetch served by mirror; content_hash matches lockfile pin"
+                        );
+                    }
+                    return Ok(cached);
+                }
+                Some(expected) => {
+                    tracing::warn!(
+                        target: "vibe_registry",
+                        registry = %self.name,
+                        url = %url,
+                        expected = %expected,
+                        actual = %content_hash,
+                        "source served content with unexpected content_hash; \
+                         falling through to next source"
+                    );
+                    last_cached = Some(cached);
+                    // Wipe the local clone state so the next URL bootstraps
+                    // fresh — a poisoned mirror's working tree must not
+                    // survive into the next attempt.
+                    if clone_dir.exists() {
+                        fs::remove_dir_all(&clone_dir).map_err(|source| RegistryError::Io {
+                            path: clone_dir.clone(),
+                            source,
+                        })?;
+                    }
+                }
+            }
         }
-        copy_dir_excluding_git(&clone_dir, &dest_cache)?;
 
-        let manifest_path = dest_cache.join(PackageManifest::FILENAME);
-        let manifest = PackageManifest::read(&manifest_path)?;
-        let content_hash = compute_content_hash(&dest_cache)?;
-
-        Ok(CachedPackage {
-            resolved: resolved.clone(),
-            cache_dir: dest_cache,
-            manifest,
-            content_hash,
-            // Per-package canonical URL — what lockfile v2's `source_url`
-            // stores. `resolved_commit` will be populated when the
-            // resolver wires `git rev-parse` through; today it remains
-            // `None` and the lockfile's `resolved_commit` stays blank
-            // for entries fetched via this path.
-            source_uri: url,
-            registry_name: Some(self.name.clone()),
-            source_ref: Some(tag),
-            resolved_commit: None,
-            overridden: false,
-        })
+        // Every URL was exhausted.
+        if let Some(cached) = last_cached {
+            // At least one source served content; none matched the
+            // expected hash. Return the last one — `vibe-install`'s
+            // `plan_install` will lift this into a `ContentDrift`
+            // error against the lockfile pin and surface the actionable
+            // message. Doing the rendering here would duplicate that
+            // logic and lose the lockfile context the install layer
+            // already carries.
+            return Ok(cached);
+        }
+        Err(primary_err.expect("primary URL must exist"))
     }
 }
 
@@ -610,7 +807,7 @@ pub(crate) fn copy_dir_excluding_git(src: &Path, dst: &Path) -> Result<(), Regis
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::collections::HashMap;
+    use std::collections::{HashMap, HashSet};
     use std::sync::Mutex;
     use tempfile::tempdir;
 
@@ -622,8 +819,17 @@ mod tests {
         tags: Mutex<HashMap<String, Vec<String>>>,
         files: Mutex<HashMap<(String, String, String), Vec<u8>>>,
         bootstrap_seeds: Mutex<HashMap<String, PathBuf>>,
+        /// URLs that should make `update` fail with `RefNotFound`. Used
+        /// to test the "primary's working clone is now stuck on a tag
+        /// the remote no longer carries; fall through to mirror"
+        /// scenario — the mirror walk must wipe the local clone and
+        /// re-bootstrap from the next URL when `update` fails.
+        update_fail_urls: Mutex<HashSet<String>>,
         bootstrap_calls: Mutex<u32>,
         update_calls: Mutex<u32>,
+        /// Recorded bootstrap-call URLs, in order. Tests assert on
+        /// this when verifying primary-then-mirror dispatch.
+        bootstrap_urls: Mutex<Vec<String>>,
     }
 
     impl FakeBackend {
@@ -648,17 +854,29 @@ mod tests {
                 .unwrap()
                 .insert(url.into(), source_dir);
         }
+        /// Wire `update(dest, refname)` to fail with `RefNotFound` when
+        /// the clone at `dest` was last bootstrapped from `url`. Used
+        /// to drive the "wipe and fall through" branch of
+        /// `bootstrap_or_update_at`.
+        #[allow(dead_code)]
+        fn fail_update_for_url(&self, url: impl Into<String>) {
+            self.update_fail_urls.lock().unwrap().insert(url.into());
+        }
         fn bootstrap_count(&self) -> u32 {
             *self.bootstrap_calls.lock().unwrap()
         }
         fn update_count(&self) -> u32 {
             *self.update_calls.lock().unwrap()
         }
+        fn bootstrap_urls(&self) -> Vec<String> {
+            self.bootstrap_urls.lock().unwrap().clone()
+        }
     }
 
     impl GitBackend for FakeBackend {
         fn bootstrap(&self, url: &str, _refname: &str, dest: &Path) -> Result<(), GitError> {
             *self.bootstrap_calls.lock().unwrap() += 1;
+            self.bootstrap_urls.lock().unwrap().push(url.to_string());
             let seed = self
                 .bootstrap_seeds
                 .lock()
@@ -685,11 +903,23 @@ mod tests {
                 }
             }
             // Mark dest as a real git repo for the `.git` presence check.
+            // Stash the URL inside `.git/origin-url` so `update` can
+            // recover which URL last sourced this clone — that lets
+            // `fail_update_for_url` selectively fail updates per origin.
             fs::create_dir_all(dest.join(".git")).unwrap();
+            fs::write(dest.join(".git/origin-url"), url).unwrap();
             Ok(())
         }
-        fn update(&self, _dest: &Path, _refname: &str) -> Result<(), GitError> {
+        fn update(&self, dest: &Path, refname: &str) -> Result<(), GitError> {
             *self.update_calls.lock().unwrap() += 1;
+            let origin = fs::read_to_string(dest.join(".git/origin-url"))
+                .unwrap_or_default();
+            if self.update_fail_urls.lock().unwrap().contains(&origin) {
+                return Err(GitError::RefNotFound {
+                    url: origin,
+                    refname: refname.to_string(),
+                });
+            }
             Ok(())
         }
         fn list_tags(&self, url: &str) -> Result<Vec<String>, GitError> {
@@ -1203,6 +1433,470 @@ conflicts = ["flow:legacy-wal"]
 
         // Bootstrap was called exactly once.
         assert_eq!(fake.bootstrap_count(), 1);
+    }
+
+    #[test]
+    fn fetch_falls_through_to_mirror_when_primary_unreachable() {
+        // Primary URL has tags seeded (so list_versions finds the
+        // version) but no bootstrap seed → primary's clone fails.
+        // Mirror has BOTH tags and bootstrap seeded. The fetch
+        // walk should land on the mirror, materialise from there,
+        // and still record the canonical primary URL as
+        // `cached.source_uri` per PROP-002 §2.3 step 3.
+        let cache = tempdir().unwrap();
+        let pkg_cache = tempdir().unwrap();
+        let upstream = tempdir().unwrap();
+        let pkg_root = upstream.path().join("pkg");
+        fs::create_dir_all(&pkg_root).unwrap();
+        fs::write(
+            pkg_root.join("vibe-package.toml"),
+            manifest_text("wal", "flow", "0.1.0"),
+        )
+        .unwrap();
+
+        let primary_url = "https://primary.example/vibespecs/flow-wal.git";
+        let mirror_url = "https://mirror.example/vibespecs/flow-wal.git";
+
+        let fake = Arc::new(FakeBackend::default());
+        // Tags on both — list_versions hits primary first and finds it.
+        fake.seed_tags(primary_url, vec!["v0.1.0".into()]);
+        fake.seed_tags(mirror_url, vec!["v0.1.0".into()]);
+        // Bootstrap only on mirror — primary's clone path fails.
+        fake.seed_bootstrap(mirror_url, pkg_root.clone());
+
+        let r = registry_with_mirrors(
+            cache.path(),
+            "https://primary.example/vibespecs",
+            NamingConvention::KindName,
+            vec!["https://mirror.example/vibespecs".to_string()],
+            fake.clone(),
+        );
+
+        let p = PackageRef::parse("flow:wal@0.1.0").unwrap();
+        let resolved = r.resolve(&p).unwrap();
+        let cached = r.fetch(&resolved, pkg_cache.path()).unwrap();
+
+        // Materialised from the mirror.
+        assert_eq!(cached.manifest.package.name, "wal");
+        assert_eq!(cached.manifest.package.version.to_string(), "0.1.0");
+        // PROP-002 §2.3 step 3: source_uri is canonical primary URL,
+        // regardless of which source actually served the bytes.
+        assert_eq!(cached.source_uri, primary_url);
+        assert_eq!(cached.source_ref.as_deref(), Some("v0.1.0"));
+        assert_eq!(cached.registry_name.as_deref(), Some("vibespecs"));
+
+        // Bootstrap was attempted twice: primary (fail) + mirror (ok).
+        assert_eq!(fake.bootstrap_count(), 2);
+        assert_eq!(fake.bootstrap_urls(), vec![primary_url.to_string(), mirror_url.to_string()]);
+    }
+
+    #[test]
+    fn fetch_prefers_primary_when_both_reachable() {
+        let cache = tempdir().unwrap();
+        let pkg_cache = tempdir().unwrap();
+        let upstream = tempdir().unwrap();
+        let pkg_root = upstream.path().join("pkg");
+        fs::create_dir_all(&pkg_root).unwrap();
+        fs::write(
+            pkg_root.join("vibe-package.toml"),
+            manifest_text("wal", "flow", "0.1.0"),
+        )
+        .unwrap();
+
+        let primary_url = "https://primary.example/vibespecs/flow-wal.git";
+        let mirror_url = "https://mirror.example/vibespecs/flow-wal.git";
+
+        let fake = Arc::new(FakeBackend::default());
+        fake.seed_tags(primary_url, vec!["v0.1.0".into()]);
+        fake.seed_tags(mirror_url, vec!["v0.1.0".into()]);
+        // Both URLs serve the same content from the same source dir.
+        fake.seed_bootstrap(primary_url, pkg_root.clone());
+        fake.seed_bootstrap(mirror_url, pkg_root.clone());
+
+        let r = registry_with_mirrors(
+            cache.path(),
+            "https://primary.example/vibespecs",
+            NamingConvention::KindName,
+            vec!["https://mirror.example/vibespecs".to_string()],
+            fake.clone(),
+        );
+
+        let p = PackageRef::parse("flow:wal@0.1.0").unwrap();
+        let resolved = r.resolve(&p).unwrap();
+        let _ = r.fetch(&resolved, pkg_cache.path()).unwrap();
+
+        // Bootstrap exactly once — primary won, mirror untouched.
+        assert_eq!(fake.bootstrap_count(), 1);
+        assert_eq!(fake.bootstrap_urls(), vec![primary_url.to_string()]);
+    }
+
+    #[test]
+    fn fetch_falls_through_when_primary_update_fails() {
+        // First fetch lands a working clone via primary. Then the
+        // primary's tag goes missing (we wire `fail_update_for_url`).
+        // Second fetch tries `update` against primary, fails,
+        // wipes-and-rebootstraps from primary (still fails — no seed
+        // after wipe? actually bootstrap is still seeded), …
+        //
+        // Actually — once `update` fails on the primary's existing
+        // clone, `bootstrap_or_update_at` wipes the clone and retries
+        // bootstrap on the SAME URL. The bootstrap then re-seeds
+        // (primary IS seeded), so the SAME URL succeeds. To force
+        // fall-through, primary must fail BOTH update AND bootstrap.
+        // Drop primary's bootstrap seed before the second fetch.
+        let cache = tempdir().unwrap();
+        let pkg_cache = tempdir().unwrap();
+        let upstream = tempdir().unwrap();
+        let pkg_root = upstream.path().join("pkg");
+        fs::create_dir_all(&pkg_root).unwrap();
+        fs::write(
+            pkg_root.join("vibe-package.toml"),
+            manifest_text("wal", "flow", "0.1.0"),
+        )
+        .unwrap();
+
+        let primary_url = "https://primary.example/vibespecs/flow-wal.git";
+        let mirror_url = "https://mirror.example/vibespecs/flow-wal.git";
+
+        let fake = Arc::new(FakeBackend::default());
+        fake.seed_tags(primary_url, vec!["v0.1.0".into()]);
+        fake.seed_tags(mirror_url, vec!["v0.1.0".into()]);
+        fake.seed_bootstrap(primary_url, pkg_root.clone());
+        fake.seed_bootstrap(mirror_url, pkg_root.clone());
+
+        let r = registry_with_mirrors(
+            cache.path(),
+            "https://primary.example/vibespecs",
+            NamingConvention::KindName,
+            vec!["https://mirror.example/vibespecs".to_string()],
+            fake.clone(),
+        );
+
+        // First fetch lands the clone via primary.
+        let p = PackageRef::parse("flow:wal@0.1.0").unwrap();
+        let resolved = r.resolve(&p).unwrap();
+        let _ = r.fetch(&resolved, pkg_cache.path()).unwrap();
+        assert_eq!(fake.bootstrap_count(), 1);
+        assert_eq!(fake.update_count(), 0);
+
+        // Now make primary's update + bootstrap both fail. Mirror
+        // remains seeded.
+        fake.fail_update_for_url(primary_url);
+        fake.bootstrap_seeds.lock().unwrap().remove(primary_url);
+
+        // Second fetch: update primary fails → wipe+re-bootstrap from
+        // primary fails → fall through to mirror, which seeds a fresh
+        // clone via bootstrap.
+        let _ = r.fetch(&resolved, pkg_cache.path()).unwrap();
+        // Update was tried once (against primary, failed). Bootstrap
+        // counts: 1 (initial primary) + 1 (re-bootstrap primary, fails
+        // RepoNotFound after seed removed) + 1 (mirror, succeeds).
+        assert_eq!(fake.update_count(), 1);
+        assert_eq!(fake.bootstrap_count(), 3);
+        assert_eq!(
+            fake.bootstrap_urls(),
+            vec![
+                primary_url.to_string(), // initial fetch
+                primary_url.to_string(), // retry after update fail
+                mirror_url.to_string(),  // mirror takes over
+            ]
+        );
+    }
+
+    #[test]
+    fn fetch_with_expected_hash_passes_through_when_no_pin() {
+        // expected_hash = None — equivalent to `fetch`. Just verifies
+        // the trait/wrapper plumbing is wired and identical to the
+        // existing single-source fetch behaviour.
+        let cache = tempdir().unwrap();
+        let pkg_cache = tempdir().unwrap();
+        let upstream = tempdir().unwrap();
+        let pkg_root = upstream.path().join("pkg");
+        fs::create_dir_all(&pkg_root).unwrap();
+        fs::write(
+            pkg_root.join("vibe-package.toml"),
+            manifest_text("wal", "flow", "0.1.0"),
+        )
+        .unwrap();
+
+        let fake = Arc::new(FakeBackend::default());
+        let url = "git@host:org/flow-wal.git";
+        fake.seed_tags(url, vec!["v0.1.0".into()]);
+        fake.seed_bootstrap(url, pkg_root.clone());
+
+        let r = registry_with(
+            cache.path(),
+            "git@host:org",
+            NamingConvention::KindName,
+            fake.clone(),
+        );
+
+        let p = PackageRef::parse("flow:wal@0.1.0").unwrap();
+        let resolved = r.resolve(&p).unwrap();
+        let cached = r
+            .fetch_with_expected_hash(&resolved, pkg_cache.path(), None)
+            .unwrap();
+        assert!(cached.content_hash.starts_with("sha256:"));
+        assert_eq!(cached.manifest.package.name, "wal");
+    }
+
+    #[test]
+    fn fetch_with_expected_hash_skips_mirror_with_disagreeing_content() {
+        // Two seeded mirrors. Primary serves content A; mirror[0]
+        // serves content B (disagreeing); mirror[1] serves content A
+        // (matches the lockfile pin which is the hash of A).
+        // Expected: primary wins on the first iteration because A
+        // matches the pin — mirror walk never runs.
+        //
+        // To make the cross-source check actually fire, we make
+        // primary unreachable so the walk reaches the mirrors. Then
+        // mirror[0] serves B, hash check fails, fall through to
+        // mirror[1] which serves A and matches.
+        let cache = tempdir().unwrap();
+        let pkg_cache = tempdir().unwrap();
+        let upstream = tempdir().unwrap();
+
+        // Two distinct fixture trees → distinct content_hashes.
+        let pkg_a = upstream.path().join("pkg-a");
+        fs::create_dir_all(&pkg_a).unwrap();
+        fs::write(
+            pkg_a.join("vibe-package.toml"),
+            manifest_text("wal", "flow", "0.1.0"),
+        )
+        .unwrap();
+        fs::write(pkg_a.join("README.md"), "# canonical content\n").unwrap();
+
+        let pkg_b = upstream.path().join("pkg-b");
+        fs::create_dir_all(&pkg_b).unwrap();
+        fs::write(
+            pkg_b.join("vibe-package.toml"),
+            manifest_text("wal", "flow", "0.1.0"),
+        )
+        .unwrap();
+        fs::write(pkg_b.join("README.md"), "# DIVERGENT content\n").unwrap();
+
+        // Compute the expected hash of pkg_a for the lockfile pin.
+        let temp_for_hash = tempdir().unwrap();
+        copy_dir_excluding_git(&pkg_a, temp_for_hash.path()).unwrap();
+        let expected_hash = compute_content_hash(temp_for_hash.path()).unwrap();
+
+        let primary_url = "https://primary.example/vibespecs/flow-wal.git";
+        let mirror_a_url = "https://mirror-bad.example/vibespecs/flow-wal.git";
+        let mirror_b_url = "https://mirror-ok.example/vibespecs/flow-wal.git";
+
+        let fake = Arc::new(FakeBackend::default());
+        // All sources seed tags so the resolver reaches them in order.
+        fake.seed_tags(primary_url, vec!["v0.1.0".into()]);
+        fake.seed_tags(mirror_a_url, vec!["v0.1.0".into()]);
+        fake.seed_tags(mirror_b_url, vec!["v0.1.0".into()]);
+        // Primary unreachable for clone (no bootstrap seed).
+        // mirror_a serves divergent content.
+        fake.seed_bootstrap(mirror_a_url, pkg_b.clone());
+        // mirror_b serves canonical content.
+        fake.seed_bootstrap(mirror_b_url, pkg_a.clone());
+
+        let r = registry_with_mirrors(
+            cache.path(),
+            "https://primary.example/vibespecs",
+            NamingConvention::KindName,
+            vec![
+                "https://mirror-bad.example/vibespecs".to_string(),
+                "https://mirror-ok.example/vibespecs".to_string(),
+            ],
+            fake.clone(),
+        );
+
+        let p = PackageRef::parse("flow:wal@0.1.0").unwrap();
+        let resolved = r.resolve(&p).unwrap();
+        let cached = r
+            .fetch_with_expected_hash(&resolved, pkg_cache.path(), Some(&expected_hash))
+            .unwrap();
+
+        // Final material is canonical content.
+        assert_eq!(cached.content_hash, expected_hash);
+        // source_uri remains the canonical primary URL.
+        assert_eq!(cached.source_uri, primary_url);
+
+        // Walk: primary (bootstrap fail) → mirror_a (succeed, hash mismatch,
+        // fall through) → mirror_b (succeed, hash match).
+        assert_eq!(
+            fake.bootstrap_urls(),
+            vec![
+                primary_url.to_string(),
+                mirror_a_url.to_string(),
+                mirror_b_url.to_string(),
+            ]
+        );
+    }
+
+    #[test]
+    fn fetch_with_expected_hash_returns_last_attempt_when_no_match() {
+        // Every source serves disagreeing content; lockfile pins
+        // something else. Per the contract, the registry returns the
+        // last successful CachedPackage with its (non-matching) hash;
+        // vibe-install's `plan_install` then renders ContentDrift.
+        let cache = tempdir().unwrap();
+        let pkg_cache = tempdir().unwrap();
+        let upstream = tempdir().unwrap();
+        let pkg_root = upstream.path().join("pkg");
+        fs::create_dir_all(&pkg_root).unwrap();
+        fs::write(
+            pkg_root.join("vibe-package.toml"),
+            manifest_text("wal", "flow", "0.1.0"),
+        )
+        .unwrap();
+
+        let primary_url = "https://primary.example/vibespecs/flow-wal.git";
+        let mirror_url = "https://mirror.example/vibespecs/flow-wal.git";
+
+        let fake = Arc::new(FakeBackend::default());
+        fake.seed_tags(primary_url, vec!["v0.1.0".into()]);
+        fake.seed_tags(mirror_url, vec!["v0.1.0".into()]);
+        fake.seed_bootstrap(primary_url, pkg_root.clone());
+        fake.seed_bootstrap(mirror_url, pkg_root.clone());
+
+        let r = registry_with_mirrors(
+            cache.path(),
+            "https://primary.example/vibespecs",
+            NamingConvention::KindName,
+            vec!["https://mirror.example/vibespecs".to_string()],
+            fake.clone(),
+        );
+
+        let bogus_pin =
+            "sha256:0000000000000000000000000000000000000000000000000000000000000000";
+        let p = PackageRef::parse("flow:wal@0.1.0").unwrap();
+        let resolved = r.resolve(&p).unwrap();
+        let cached = r
+            .fetch_with_expected_hash(&resolved, pkg_cache.path(), Some(bogus_pin))
+            .unwrap();
+
+        // Returned cached carries the actual (non-matching) hash —
+        // not the pin. vibe-install's plan_install lifts this into
+        // ContentDrift.
+        assert_ne!(cached.content_hash, bogus_pin);
+        assert!(cached.content_hash.starts_with("sha256:"));
+        // Both URLs were tried.
+        assert_eq!(fake.bootstrap_count(), 2);
+    }
+
+    #[test]
+    fn refresh_package_falls_through_to_mirror_when_primary_unreachable() {
+        // refresh_package walks primary then mirror, same as fetch.
+        // Used by `vibe registry sync`. Test that a fresh sync against
+        // an unreachable primary lands the clone via mirror.
+        let cache = tempdir().unwrap();
+        let upstream = tempdir().unwrap();
+        let pkg_root = upstream.path().join("pkg");
+        fs::create_dir_all(&pkg_root).unwrap();
+        fs::write(
+            pkg_root.join("vibe-package.toml"),
+            manifest_text("wal", "flow", "0.1.0"),
+        )
+        .unwrap();
+
+        let primary_url = "https://primary.example/vibespecs/flow-wal.git";
+        let mirror_url = "https://mirror.example/vibespecs/flow-wal.git";
+
+        let fake = Arc::new(FakeBackend::default());
+        fake.seed_bootstrap(mirror_url, pkg_root.clone());
+
+        let r = registry_with_mirrors(
+            cache.path(),
+            "https://primary.example/vibespecs",
+            NamingConvention::KindName,
+            vec!["https://mirror.example/vibespecs".to_string()],
+            fake.clone(),
+        );
+
+        r.refresh_package(PackageKind::Flow, "wal", "v0.1.0").unwrap();
+
+        // Primary (fail) + mirror (succeed).
+        assert_eq!(
+            fake.bootstrap_urls(),
+            vec![primary_url.to_string(), mirror_url.to_string()]
+        );
+    }
+
+    #[test]
+    fn fetch_dep_manifest_clone_fallback_uses_mirror_dispatch() {
+        // GitHub-shape host: archive endpoint is unsupported. The
+        // dep-manifest fetch falls back to the per-package clone via
+        // refresh_package. With mirror dispatch wired, the clone walk
+        // tries primary then mirror — mirror seeded, primary not.
+        let cache = tempdir().unwrap();
+        let upstream = tempdir().unwrap();
+        let pkg_root = upstream.path().join("pkg");
+        fs::create_dir_all(&pkg_root).unwrap();
+        fs::write(
+            pkg_root.join("vibe-package.toml"),
+            manifest_text("wal", "flow", "0.1.0"),
+        )
+        .unwrap();
+
+        let primary_url = "https://primary.example/vibespecs/flow-wal.git";
+        let mirror_url = "https://mirror.example/vibespecs/flow-wal.git";
+
+        // FakeBackend's `fetch_file_at_ref` returns FileNotFoundInRef
+        // when not seeded. To trigger the clone fallback we need an
+        // ArchiveUnsupported. Build a dedicated backend variant.
+        struct NoArchiveBackend(Arc<FakeBackend>);
+        impl GitBackend for NoArchiveBackend {
+            fn bootstrap(
+                &self,
+                url: &str,
+                refname: &str,
+                dest: &Path,
+            ) -> Result<(), GitError> {
+                self.0.bootstrap(url, refname, dest)
+            }
+            fn update(&self, dest: &Path, refname: &str) -> Result<(), GitError> {
+                self.0.update(dest, refname)
+            }
+            fn list_tags(&self, url: &str) -> Result<Vec<String>, GitError> {
+                self.0.list_tags(url)
+            }
+            fn fetch_file_at_ref(
+                &self,
+                url: &str,
+                _refname: &str,
+                _path: &str,
+            ) -> Result<Vec<u8>, GitError> {
+                Err(GitError::ArchiveUnsupported {
+                    url: url.to_string(),
+                })
+            }
+        }
+
+        let inner = Arc::new(FakeBackend::default());
+        inner.seed_tags(primary_url, vec!["v0.1.0".into()]);
+        inner.seed_tags(mirror_url, vec!["v0.1.0".into()]);
+        inner.seed_bootstrap(mirror_url, pkg_root.clone());
+        // Primary has no bootstrap seed → primary's clone fails →
+        // mirror takes over.
+
+        let backend: Arc<dyn GitBackend> = Arc::new(NoArchiveBackend(inner.clone()));
+        let r = GitPackageRegistry::open_with_mirrors(
+            "vibespecs",
+            "https://primary.example/vibespecs",
+            "main",
+            NamingConvention::KindName,
+            vec!["https://mirror.example/vibespecs".to_string()],
+            cache.path(),
+            backend,
+            DEFAULT_FRESHNESS_SECS,
+        )
+        .unwrap();
+
+        let v = semver::Version::parse("0.1.0").unwrap();
+        let manifest = r.fetch_dep_manifest(PackageKind::Flow, "wal", &v).unwrap();
+        assert_eq!(manifest.package.name, "wal");
+
+        // Clone-fallback walked primary (fail) + mirror (ok).
+        assert_eq!(
+            inner.bootstrap_urls(),
+            vec![primary_url.to_string(), mirror_url.to_string()]
+        );
     }
 
     #[test]
