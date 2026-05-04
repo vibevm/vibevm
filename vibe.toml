@@ -1,0 +1,14 @@
+[project]
+name = "vibevm"
+version = "0.1.0-dev"
+authors = ["Oleg Chirukhin"]
+
+# vibevm is its own bootstrap project — the tool itself, not yet a
+# consumer of any other vibevm registry. The `[[registry]]` below is
+# the canonical vibespecs org, kept here so `vibe check` /
+# `vibe show config` can resolve provenance against the same default
+# every other vibevm project uses. Full self-hosting under
+# `packages/` lands post-M1.
+[[registry]]
+name = "vibespecs"
+url = "https://github.com/vibespecs"

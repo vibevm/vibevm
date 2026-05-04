@@ -108,6 +108,18 @@ cargo run --release -p vibe-cli -- registry publish fixtures/registry/flow/wal/v
 
 The dry-run output shows the synthetic clone URL, the action verb (`Would create` or `Would reuse existing`), and the tag that would be pushed. No token value appears anywhere in output — `vibe` reads the token in-process, redacts on `Display`/`Debug`, and never logs the value. The video-recording-safe defaults are baked in.
 
-## 6. Troubleshooting
+## 6. Self-check (`vibe check` against the vibevm tree)
+
+vibevm is its own bootstrap project: the repo root carries a minimal `vibe.toml` plus an empty-`[[package]]` `vibe.lock` so the shipped `vibe check` linter can run against the same `spec/` corpus the tool itself produces. The manifest does not declare any installed packages — vibevm is the tool, not a consumer of itself today; full self-hosting under `packages/` lands post-M1.
+
+```sh
+cargo run -p vibe-cli -- check --path . --quiet
+```
+
+The expected output is `vibe check: 0 errors, 0 warnings, 0 info`. The six v0 checks (manifest validity, WAL freshness, WAL well-formedness, boot directory, lockfile/disk consistency, REVIEW marker aging) all run.
+
+If you `vibe install <pkgref>` against this manifest by accident, the install will succeed — there are no boot-prefix collisions today (`spec/boot/` carries only `00-core.md` and `90-user.md`). It will, however, materialise package files into `spec/flows/`, `spec/feats/`, or `spec/stacks/` and rewrite `vibe.lock` with `[[package]]` entries; revert with `vibe uninstall` (or `git restore vibe.lock spec/`) before committing.
+
+## 7. Troubleshooting
 
 (Populated as real issues arise. Empty today.)
