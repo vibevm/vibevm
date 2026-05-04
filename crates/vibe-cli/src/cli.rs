@@ -373,6 +373,46 @@ pub enum McpSubcommand {
     /// Run the MCP server over stdio. Blocks until the client
     /// disconnects (EOF on stdin).
     Serve(McpServeArgs),
+
+    /// Detect supported coding agents in the project tree (Claude
+    /// Code, Cursor, Gemini, Codex) and write the per-agent MCP
+    /// server configuration so the agent picks up vibevm
+    /// automatically on its next session start. Idempotent —
+    /// already-correct configs surface as `unchanged`.
+    Install(McpInstallArgs),
+
+    /// Same as `install` but printing the planned config diff
+    /// without writing any files. Useful for CI / review.
+    Status(McpStatusArgs),
+}
+
+#[derive(Debug, clap::Args)]
+pub struct McpInstallArgs {
+    /// Project root with `vibe.toml`. Defaults to current directory.
+    #[arg(long, default_value = ".")]
+    pub path: PathBuf,
+
+    /// Restrict to a specific agent: `claude`, `cursor`, or `all`
+    /// (default — write configs for every detected agent).
+    #[arg(long, default_value = "all")]
+    pub agent: String,
+
+    /// Print the planned config without writing files.
+    #[arg(long)]
+    pub dry_run: bool,
+
+    /// Force-write even when no agent is detected in the project
+    /// tree (useful when the agent's marker dir is not yet
+    /// present but the operator wants the config provisioned).
+    #[arg(long)]
+    pub force: bool,
+}
+
+#[derive(Debug, clap::Args)]
+pub struct McpStatusArgs {
+    /// Project root with `vibe.toml`. Defaults to current directory.
+    #[arg(long, default_value = ".")]
+    pub path: PathBuf,
 }
 
 #[derive(Debug, clap::Args)]

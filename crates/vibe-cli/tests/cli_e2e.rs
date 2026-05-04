@@ -1550,6 +1550,166 @@ fn install_no_default_features_skips_default_subskills() {
 // when they speak to the server.
 
 #[test]
+fn mcp_install_writes_claude_settings() {
+    let project = tempfile::tempdir().unwrap();
+    init_project(project.path());
+    // `vibe init` writes CLAUDE.md so the Claude marker fires
+    // automatically — but make the .claude/ marker-dir explicit
+    // for clarity.
+    fs::create_dir_all(project.path().join(".claude")).unwrap();
+
+    vibe()
+        .arg("mcp")
+        .arg("install")
+        .arg("--path")
+        .arg(project.path())
+        .assert()
+        .success();
+
+    let settings = project.path().join(".claude/settings.json");
+    assert!(settings.is_file(), "expected `.claude/settings.json` written");
+    let v: serde_json::Value =
+        serde_json::from_str(&fs::read_to_string(&settings).unwrap()).unwrap();
+    assert_eq!(v["mcpServers"]["vibevm"]["command"], "vibe");
+    let args: Vec<&str> = v["mcpServers"]["vibevm"]["args"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .map(|a| a.as_str().unwrap())
+        .collect();
+    assert_eq!(args[0], "mcp");
+    assert_eq!(args[1], "serve");
+    assert_eq!(args[2], "--path");
+}
+
+#[test]
+fn mcp_install_is_idempotent() {
+    let project = tempfile::tempdir().unwrap();
+    init_project(project.path());
+    fs::create_dir_all(project.path().join(".claude")).unwrap();
+
+    vibe()
+        .arg("mcp")
+        .arg("install")
+        .arg("--path")
+        .arg(project.path())
+        .arg("--agent")
+        .arg("claude")
+        .assert()
+        .success();
+
+    let out = vibe()
+        .arg("--json")
+        .arg("mcp")
+        .arg("install")
+        .arg("--path")
+        .arg(project.path())
+        .arg("--agent")
+        .arg("claude")
+        .output()
+        .unwrap();
+    assert!(out.status.success());
+    let v: serde_json::Value =
+        serde_json::from_slice(&out.stdout).expect("JSON envelope");
+    let claude_result = v["results"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .find(|r| r["agent"] == "claude")
+        .expect("claude result present");
+    assert_eq!(claude_result["status"], "unchanged");
+}
+
+#[test]
+fn mcp_install_dry_run_does_not_write() {
+    let project = tempfile::tempdir().unwrap();
+    init_project(project.path());
+    fs::create_dir_all(project.path().join(".cursor")).unwrap();
+
+    vibe()
+        .arg("mcp")
+        .arg("install")
+        .arg("--path")
+        .arg(project.path())
+        .arg("--dry-run")
+        .assert()
+        .success();
+
+    assert!(
+        !project.path().join(".cursor/mcp.json").exists(),
+        "dry-run must not write any file"
+    );
+}
+
+#[test]
+fn mcp_install_force_writes_even_without_marker() {
+    // No .claude/ or CLAUDE.md present → without --force, the agent
+    // is not detected, no config written. With --force + --agent
+    // claude, the config is provisioned regardless.
+    let project = tempfile::tempdir().unwrap();
+    init_project(project.path());
+    // `vibe init` does write CLAUDE.md by default — remove it to
+    // simulate a project where Claude isn't yet detected.
+    let _ = fs::remove_file(project.path().join("CLAUDE.md"));
+    let _ = fs::remove_dir_all(project.path().join(".claude"));
+
+    vibe()
+        .arg("mcp")
+        .arg("install")
+        .arg("--path")
+        .arg(project.path())
+        .arg("--agent")
+        .arg("claude")
+        .arg("--force")
+        .assert()
+        .success();
+
+    assert!(
+        project.path().join(".claude/settings.json").is_file(),
+        "expected force-written `.claude/settings.json`"
+    );
+}
+
+#[test]
+fn mcp_status_reports_per_agent_state() {
+    let project = tempfile::tempdir().unwrap();
+    init_project(project.path());
+    fs::create_dir_all(project.path().join(".claude")).unwrap();
+
+    let out = vibe()
+        .arg("--json")
+        .arg("mcp")
+        .arg("status")
+        .arg("--path")
+        .arg(project.path())
+        .output()
+        .unwrap();
+    assert!(out.status.success());
+    let v: serde_json::Value = serde_json::from_slice(&out.stdout).unwrap();
+    let detected: Vec<&str> = v["detected"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .map(|d| d.as_str().unwrap())
+        .collect();
+    assert!(detected.contains(&"claude"));
+    let claude_status = v["results"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .find(|r| r["agent"] == "claude")
+        .unwrap();
+    // Either `would-create` (no settings file yet) or `would-update`
+    // (existing file). On a fresh tempdir without prior `vibe mcp
+    // install` run, expect `would-create`.
+    let s = claude_status["status"].as_str().unwrap();
+    assert!(
+        s == "would-create" || s == "would-update" || s == "unchanged",
+        "unexpected status `{s}`"
+    );
+}
+
+#[test]
 fn mcp_serve_responds_to_initialize_and_query_package() {
     let registry = workspace_root().join("fixtures").join("registry");
     let project = tempfile::tempdir().unwrap();
@@ -3047,6 +3207,8 @@ fn every_subcommand_renders_help() {
         &["outdated"],
         &["mcp"],
         &["mcp", "serve"],
+        &["mcp", "install"],
+        &["mcp", "status"],
         &["uninstall"],
         &["update"],
         &["check"],
