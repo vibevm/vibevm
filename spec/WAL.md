@@ -243,7 +243,6 @@ Comprehensive cold-resume document (long form, with repo map, decision history, 
 
 ## Known issues
 
-- **`vibe registry set-mirror` rejects `file:///` vendor URLs** (surfaced 2026-05-04 by `manual-tests/M1.6-mirror-vendor-smoke.md` Scenario A4). The mirror-URL validator runs the same `extract_*_segment` org-extractor used for `[[registry]]` URLs, but a `file:///<vendor-dir>` URL produced by `vibe registry vendor` is a content path with no meaningful org segment. The same `vibe registry vendor` command suggests this exact URL as a `[[mirror]]` line in its summary, so the CLI contradicts itself. Runtime mirror dispatch accepts a hand-written `[[mirror]]` block with the same URL fine (verified by Scenario A5), so the regression is scoped to the manifest-mutating CLI command, not to the resolver. Fix shape: drop the org-segment requirement for mirror URLs (mirror is an availability copy, not an org root), or special-case the `file://` scheme. Smoke A4 carries the workaround in the meantime.
 - **Legacy lockfile v1 auto-migration UX.** Every project with an existing `vibe.lock` from M1.1 will see a migration notice on next `vibe install`. Behaviour benign (resolution unchanged); message must be actionable, not noisy.
 - **Line-ending warnings** on every commit — `.gitattributes` with `* text=auto eol=lf` side-quest still open.
 - **Registry cache locking** — two concurrent `vibe` invocations can race on the same per-package clone directory. Noted in PROP-001 §6 as M2 hardening; behaviour today: if a clone fails, delete the cache dir and retry.
