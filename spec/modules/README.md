@@ -2,7 +2,8 @@
 
 Per-crate specifications (PROP / FEAT) land here as work progresses.
 Foundation decisions that cross every crate live in
-[`spec/common/`](../common/).
+[`spec/common/`](../common/). Comparative research and threat-model
+backgrounder documents live in [`spec/research/`](../research/).
 
 ## Index
 

@@ -31,6 +31,17 @@
 > CHANGELOG). M1.2 / M1.3 / M1.4 open. M1.6 queued (polished
 > multi-registry / mirror UX, `vibe vendor`, richer publish
 > adapters).
+>
+> **Status snapshot (2026-05-04, post-M1.4 + Tessl research).**
+> M1.2 / M1.3 / M1.4 SHIPPED v0; M1.6 Phase B v0 SHIPPED. Both
+> live smokes (M1.5-gate-v2, M1.6-mirror-vendor) walked end-to-end
+> pass. Schema v3 design proposal in
+> [PROP-003](spec/modules/vibe-resolver/PROP-003-dep-evolution.md)
+> covers SAT solver via libsolv, cargo-style features, vibevm-native
+> subskills, BCP-47 i18n. New milestones M1.7–M1.11 and M2.7–M2.10
+> derive from
+> [PROP-004 Tessl comparative research](spec/research/PROP-004-tessl-comparative-research.md):
+> `vibe-mcp` (Claude-native context provider) leads the bunch.
 
 This document is the long-form version of `VIBEVM-SPEC.md` §11 (staging
 plan). It keeps the "why" and "nuance" that a compressed staging table
@@ -327,6 +338,82 @@ multi-source story to production quality.
 
 **Estimated effort.** 2–3 weekends on top of M1.1-revision.
 
+### M1.7 — `vibe-mcp` server (Claude-native context provider)
+
+**Thesis.** Today vibevm only writes files into the project tree; the agent reads everything that happens to be there. To position vibevm as a *Claude-native* package manager, it must speak Model Context Protocol so the agent can query packages, capabilities, and subskills on demand — like Tessl's `query_library_docs`, but built around vibevm's decentralised content-hashed primitives.
+
+Source: [PROP-004 §5.1](spec/research/PROP-004-tessl-comparative-research.md#mcp-server). Targets [`https://modelcontextprotocol.io`](https://modelcontextprotocol.io).
+
+**Scope.**
+
+- New `vibe-mcp` crate exposing an MCP server over stdio.
+- Tools: `query_package(name, version?)`, `read_subskill(package, path, language?)`, `list_capabilities(query?)`, `materialise_subskill(package, path)`.
+- `vibe init` writes the appropriate MCP config block to `.claude/settings.json` (Claude Code), `.cursor/mcp.json` (Cursor), `.gemini/...` (Gemini), etc., based on agent detection (M1.11).
+- New manual smoke `manual-tests/M1.7-mcp-claude-code-smoke.md` walking a full Claude Code → MCP → vibevm round-trip.
+
+**Estimated effort.** 2–3 weekends.
+
+### M1.8 — `vibe review` static quality scoring
+
+**Thesis.** vibevm has `vibe check` (binary findings, structural). It has no quality score, no LLM-judge component, no aggregate "this package is 87% production-ready" surface. Tessl ships exactly that and ties it to publish gates. Static portion is buildable today without LLM.
+
+Source: [PROP-004 §5.2](spec/research/PROP-004-tessl-comparative-research.md#quality-evaluation).
+
+**Scope (static portion only).**
+
+- New `vibe-eval` crate.
+- Three-axis scoring: validation (frontmatter / line-count / structural), implementation (heuristics — content density, code-block balance), activation (description specificity heuristics).
+- `vibe review <pkgref>` outputs 0-100 per axis + aggregate.
+- Threshold conventions: 90%+ ready, 70–89% ship-with-warnings, <70% blocks publish unless `--accept-low-quality`.
+- `vibe review --json` for CI consumption.
+
+LLM-judge mode and `--optimize` auto-edit loop land in M2.7 once `vibe-llm` is real.
+
+**Estimated effort.** 1 weekend (static).
+
+### M1.9 — `describes` PURL linkage to upstream packages
+
+**Thesis.** Tessl's headline marketing — "version-matched documentation for 10K+ packages" — rides on a single field: `describes = "pkg:pypi/fastapi@0.116.1"`. We need the equivalent so vibevm packages can declare which external library they're authored against.
+
+Source: [PROP-004 §5.3](spec/research/PROP-004-tessl-comparative-research.md#purl-describes). Targets the [Package URL spec](https://github.com/package-url/purl-spec).
+
+**Scope.**
+
+- Optional `[package].describes` field in `vibe-package.toml` accepting PURL syntax.
+- PURL parser in `vibe-core`.
+- Lockfile records the upstream PURL.
+- `vibe check` warns when project-declared upstream version differs from a `describes` package's pinned upstream.
+
+**Estimated effort.** 1 weekend.
+
+### M1.10 — `vibe outdated`
+
+**Thesis.** Trivial UX win that scales with adoption. Cargo / npm / dnf all have it. We don't.
+
+Source: [PROP-004 §5.13](spec/research/PROP-004-tessl-comparative-research.md#outdated).
+
+**Scope.**
+
+- `vibe outdated` reads lockfile, calls `MultiRegistryResolver::list_versions` per package, renders a status table.
+- `--json` for CI.
+- `--upstream` mode walks `describes` PURL targets (composes with M1.9).
+
+**Estimated effort.** 1 weekend.
+
+### M1.11 — Agent auto-detection at `vibe init`
+
+**Thesis.** Tessl's `tessl init` detects which coding agent is in use and writes appropriate config. We currently write all three (`CLAUDE.md` / `AGENTS.md` / `GEMINI.md`) regardless. With M1.7 in flight, agent detection becomes load-bearing — different agents need different MCP-config files.
+
+Source: [PROP-004 §5.7](spec/research/PROP-004-tessl-comparative-research.md#agent-auto-detect).
+
+**Scope.**
+
+- Probes for Claude Code, Cursor, Gemini, Codex, Copilot CLI/VSCode.
+- Per detected agent, write the corresponding instruction file plus MCP-server config (composes with M1.7).
+- Falls back to writing all three when no agent is detected.
+
+**Estimated effort.** 1 weekend.
+
 ---
 
 ## M1.5 — Generation
@@ -465,6 +552,58 @@ use vibevm safely. Up through M1.5, the author is the only user and
 **No M2 acceptance list in the spec** — §11.4 says "open-ended;
 depends on adoption signals." Treat M2 as a rolling quality bar.
 
+### M2.7 — `vibe review --optimize` and multi-model comparison
+
+**Thesis.** Once `vibe-llm` exists (M1.5.1), the static review surface from M1.8 grows two LLM-driven extensions: a judge for the implementation and activation axes, and a `--optimize` auto-edit loop analogous to Tessl's. Plus per-model A/B comparison (`--agents=<m1>,<m2>`).
+
+Source: [PROP-004 §5.2](spec/research/PROP-004-tessl-comparative-research.md#quality-evaluation) (LLM-judge portion), [§5.6](spec/research/PROP-004-tessl-comparative-research.md#multi-model).
+
+**Estimated effort.** 2 weekends on top of M1.5.1 + M1.8.
+
+### M2.8 — Three-mode delivery (eager / lazy-push / lazy-pull)
+
+**Thesis.** Tessl's most distinctive architectural choice: rules eager-push, skills lazy-push by description match, docs lazy-pull on agent demand. vibevm today is eager-push of materialised files only. Adopt the three-mode model so packages can be authored with appropriate delivery semantics.
+
+Source: [PROP-004 §5.4](spec/research/PROP-004-tessl-comparative-research.md#three-modes).
+
+**Scope.**
+
+- Subskill manifest gains `delivery = "eager" | "lazy-push" | "lazy-pull"`.
+- `vibe-mcp` (M1.7) enforces lazy-pull on demand.
+- `vibe-install` materialises eager + lazy-push (the latter only when an MCP-connected agent's task description matches the package's `description`).
+- Lockfile schema bump (v4) recording per-subskill delivery mode.
+
+**Estimated effort.** 2–3 weekends. Depends on M1.7.
+
+### M2.9 — Scenario generation from real commits
+
+**Thesis.** Tessl's most architecturally distinctive primitive: scenarios generated from a project's actual git history, not synthetic tests. Once `vibe-eval` exists (M1.8) and `vibe-llm` is real (M1.5.1), `vibe scenario generate <repo> --commits=<...>` reads diffs, generates `task.md` + `criteria.json` + `scenario.json` triples, runs them as evals.
+
+Source: [PROP-004 §5.5](spec/research/PROP-004-tessl-comparative-research.md#codebase-readiness).
+
+**Scope.**
+
+- `vibe scenario generate <repo> --commits=<sha1>,<sha2>` and `--prs <num1>,<num2>` modes.
+- `vibe scenario download / view / list` analogous to Tessl's CLI surface.
+- Format pinned to be drop-in compatible with Tessl's scenario layout (`task.md` + `criteria.json` + `scenario.json` per scenario directory) so cross-tooling is possible.
+- `vibe eval run ./evals/` runs scenarios, scores, reports per-criterion + aggregate + cost-per-model.
+
+**Estimated effort.** 4–6 weekends. Depends on M1.5.1, M1.8.
+
+### M2.10 — `vibe search` registry inspector
+
+**Thesis.** With ~3 packages today, `vibe install` is fine; with 100+ it won't be. Tessl ships `tessl search` as a registry-side feature — vibevm's decentralised model makes naive search trivial: walk all configured `[[registry]]` URLs.
+
+Source: [PROP-004 §5.12](spec/research/PROP-004-tessl-comparative-research.md#search).
+
+**Scope.**
+
+- `vibe search <query>` walks all configured `[[registry]]` URLs, lists packages whose `vibe-package.toml` description matches.
+- Cache results in `~/.vibe/search-cache/`.
+- Naive at first; indexing is a future optimisation.
+
+**Estimated effort.** 1 weekend.
+
 ---
 
 ## M3+ — Speculative directions
@@ -485,6 +624,14 @@ M2 decisions keep these futures open rather than foreclosing them.
 - **Hosted registry.** Replace git-as-registry with a proper package
   registry server: metadata index, search, signed publishes, a web
   UI. Only worth building if the community shape signals it.
+
+### M3.1 — Security review threat model (research-only)
+
+**Thesis.** Standard package-manager security (CVE feeds, dependency-vulnerability scanners) doesn't fit vibevm's surface — packages are spec-content, not arbitrary code. The threat surface is *prompt injection / capability misrepresentation / data-exfiltration via subtle wording*. Needs a research slice to define the threat model before any scanner can be built.
+
+Source: [PROP-004 §5.9](spec/research/PROP-004-tessl-comparative-research.md#security).
+
+Not action-eligible. Park as research; revisit when adoption surfaces real threats.
 
 ---
 
