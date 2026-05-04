@@ -375,8 +375,11 @@ fn install_from_git_registry() {
     assert_eq!(lock.packages.len(), 1);
     let entry = &lock.packages[0];
 
-    // schema_version = 2 in the meta block.
-    assert_eq!(lock.meta.schema_version, 2);
+    // schema_version matches CURRENT (3 after PROP-003 r2).
+    assert_eq!(
+        lock.meta.schema_version,
+        vibe_core::manifest::CURRENT_SCHEMA_VERSION,
+    );
 
     // PROP-002 §2.7 provenance: registry name, full per-package source_url,
     // tag in source_ref. No more `#flow/wal/v0.1.0` fragment shape.
@@ -1319,6 +1322,161 @@ fn vendor_refuses_non_empty_out_dir_without_force() {
     assert!(
         vendor_dir.join("flow-wal.git").is_dir(),
         "vendored bare repo missing after --force"
+    );
+}
+
+/// Build a self-contained local fixture registry that ships a flow
+/// package whose `morning-routine.md` carries a Russian sidecar
+/// (`morning-routine.ru.md`). Returns the registry root path and the
+/// expected canonical / Russian text bytes for assertions.
+fn make_i18n_fixture_registry(root: &Path) -> (PathBuf, &'static str, &'static str) {
+    let registry = root.join("registry");
+    let pkg_dir = registry.join("flow").join("hello-i18n").join("v0.1.0");
+    fs::create_dir_all(pkg_dir.join("spec/flows/hello-i18n")).unwrap();
+    fs::create_dir_all(pkg_dir.join("boot")).unwrap();
+
+    fs::write(
+        pkg_dir.join("vibe-package.toml"),
+        r#"[package]
+name = "hello-i18n"
+kind = "flow"
+version = "0.1.0"
+
+[i18n]
+canonical = "en"
+available = ["en", "ru"]
+
+[writes]
+files = [
+    "spec/flows/hello-i18n/PROTOCOL.md",
+]
+
+[boot_snippet]
+filename = "50-hello-i18n.md"
+source = "boot/50-hello-i18n.md"
+"#,
+    )
+    .unwrap();
+
+    fs::write(
+        pkg_dir.join("spec/flows/hello-i18n/PROTOCOL.md"),
+        "# Hello protocol (canonical English)\n",
+    )
+    .unwrap();
+    fs::write(
+        pkg_dir.join("spec/flows/hello-i18n/PROTOCOL.ru.md"),
+        "# Привет, протокол (русская версия)\n",
+    )
+    .unwrap();
+    fs::write(
+        pkg_dir.join("boot/50-hello-i18n.md"),
+        "Boot snippet (English).\n",
+    )
+    .unwrap();
+    fs::write(
+        pkg_dir.join("boot/50-hello-i18n.ru.md"),
+        "Boot snippet (русская версия).\n",
+    )
+    .unwrap();
+
+    (
+        registry,
+        "# Hello protocol (canonical English)\n",
+        "# Привет, протокол (русская версия)\n",
+    )
+}
+
+#[test]
+fn install_with_language_flag_picks_localised_content() {
+    // PROP-003 §2.7 i18n end-to-end. The fixture package ships canonical
+    // English plus a Russian sidecar. `vibe install --language ru`
+    // materialises the Russian content; `vibe install` (no flag)
+    // materialises the canonical form.
+    let outer = tempfile::tempdir().unwrap();
+    let (registry, en_text, ru_text) = make_i18n_fixture_registry(outer.path());
+
+    let project = tempfile::tempdir().unwrap();
+    init_project(project.path());
+
+    vibe()
+        .arg("install")
+        .arg("flow:hello-i18n")
+        .arg("--registry")
+        .arg(&registry)
+        .arg("--path")
+        .arg(project.path())
+        .arg("--language")
+        .arg("ru")
+        .arg("--assume-yes")
+        .assert()
+        .success();
+
+    // Canonical target path on disk — `.ru.` segment NOT preserved.
+    let materialised = fs::read_to_string(
+        project.path().join("spec/flows/hello-i18n/PROTOCOL.md"),
+    )
+    .unwrap();
+    assert_eq!(
+        materialised, ru_text,
+        "expected Russian content, got:\n{materialised}"
+    );
+
+    // Boot snippet also localised.
+    let boot = fs::read_to_string(
+        project.path().join("spec/boot/50-hello-i18n.md"),
+    )
+    .unwrap();
+    assert!(boot.contains("русская версия"));
+
+    // Without --language, canonical English wins.
+    let project2 = tempfile::tempdir().unwrap();
+    init_project(project2.path());
+    vibe()
+        .arg("install")
+        .arg("flow:hello-i18n")
+        .arg("--registry")
+        .arg(&registry)
+        .arg("--path")
+        .arg(project2.path())
+        .arg("--assume-yes")
+        .assert()
+        .success();
+    let materialised_en = fs::read_to_string(
+        project2.path().join("spec/flows/hello-i18n/PROTOCOL.md"),
+    )
+    .unwrap();
+    assert_eq!(materialised_en, en_text);
+}
+
+#[test]
+fn install_with_language_falls_back_to_canonical_when_translation_missing() {
+    // Project requests Japanese; package ships only English + Russian.
+    // Per PROP-003 §2.7.2 the resolution chain falls through to the
+    // canonical English content rather than failing.
+    let outer = tempfile::tempdir().unwrap();
+    let (registry, en_text, _ru_text) = make_i18n_fixture_registry(outer.path());
+
+    let project = tempfile::tempdir().unwrap();
+    init_project(project.path());
+    vibe()
+        .arg("install")
+        .arg("flow:hello-i18n")
+        .arg("--registry")
+        .arg(&registry)
+        .arg("--path")
+        .arg(project.path())
+        .arg("--language")
+        .arg("ja")
+        .arg("--assume-yes")
+        .assert()
+        .success();
+    let materialised = fs::read_to_string(
+        project.path().join("spec/flows/hello-i18n/PROTOCOL.md"),
+    )
+    .unwrap();
+    assert_eq!(
+        materialised, en_text,
+        "fallback to canonical English failed: got\n{materialised}"
     );
 }
 

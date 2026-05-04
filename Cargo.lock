@@ -1725,6 +1725,8 @@ dependencies = [
  "tempfile",
  "thiserror 2.0.18",
  "vibe-core",
+ "vibe-resolver",
+ "walkdir",
 ]
 
 [[package]]
@@ -1854,6 +1856,7 @@ dependencies = [
  "tracing",
  "vibe-core",
  "vibe-registry",
+ "walkdir",
 ]
 
 [[package]]

@@ -59,6 +59,20 @@ pub enum CheckId {
     BootDirectory,
     LockfileFiles,
     ReviewAging,
+    /// PROP-003 §2.10 — `[features]` table is internally consistent
+    /// (no cycles to unknown features, no exclusive-group violations,
+    /// every `subskill:<path>` reference resolves on disk).
+    FeaturesGraph,
+    /// PROP-003 §2.10 — every `subskills/<path>/vibe-subskill.toml`
+    /// in scope parses, fields are well-formed, `delivery` matches
+    /// PROP-003 §2.5.0, and lazy-push / lazy-pull subskills carry
+    /// the load-bearing `description` field.
+    SubskillStructure,
+    /// PROP-003 §2.10 — every file declared in `[content].files_written`
+    /// exists for the package's canonical language; missing
+    /// translations for languages declared in `[i18n].available`
+    /// surface as warnings.
+    I18nCoverage,
 }
 
 impl CheckId {
@@ -70,6 +84,9 @@ impl CheckId {
             CheckId::BootDirectory => "boot_directory",
             CheckId::LockfileFiles => "lockfile_files",
             CheckId::ReviewAging => "review_aging",
+            CheckId::FeaturesGraph => "features_graph",
+            CheckId::SubskillStructure => "subskill_structure",
+            CheckId::I18nCoverage => "i18n_coverage",
         }
     }
 
@@ -82,6 +99,9 @@ impl CheckId {
             CheckId::BootDirectory,
             CheckId::LockfileFiles,
             CheckId::ReviewAging,
+            CheckId::FeaturesGraph,
+            CheckId::SubskillStructure,
+            CheckId::I18nCoverage,
         ]
     }
 }
@@ -204,8 +224,233 @@ pub fn check_project(project_root: &Path, opts: &CheckOptions) -> CheckReport {
     check_boot_directory(project_root, &mut report);
     check_lockfile_files(project_root, &mut report);
     check_review_aging(project_root, &mut report, now, opts.review_max_age_days);
+    check_features_graph(project_root, &mut report);
+    check_subskill_structure(project_root, &mut report);
+    check_i18n_coverage(project_root, &mut report);
 
     report
+}
+
+// ===================== PROP-003 checks =====================
+
+/// Walk every package available to the project (lockfile + project tree
+/// `packages/`) and validate its `[features]` table. Diagnostics from
+/// the resolver's [`vibe_resolver::validate_features_table`] surface as
+/// warnings since a misconfigured table won't break install for
+/// projects that don't activate any of its features but is still worth
+/// surfacing.
+fn check_features_graph(project_root: &Path, report: &mut CheckReport) {
+    for (pkg_root, source_label) in scan_local_packages(project_root) {
+        let manifest_path =
+            pkg_root.join(vibe_core::manifest::PackageManifest::FILENAME);
+        let manifest = match vibe_core::manifest::PackageManifest::read(&manifest_path) {
+            Ok(m) => m,
+            Err(_) => continue, // ManifestValidity check surfaces this elsewhere.
+        };
+        if manifest.features.is_empty() {
+            continue;
+        }
+        let findings =
+            vibe_resolver::validate_features_table(&manifest.features);
+        let rel = manifest_path
+            .strip_prefix(project_root)
+            .map(|p| p.to_path_buf())
+            .ok();
+        for f in findings {
+            report.warn(
+                CheckId::FeaturesGraph,
+                rel.clone(),
+                None,
+                format!("[{source_label}] {f}"),
+            );
+        }
+    }
+}
+
+/// Walk every package and inspect its `subskills/` tree. For each
+/// `vibe-subskill.toml`: ensure it parses, validate via
+/// [`SubskillManifest::validation_findings`], and that paths declared
+/// in the manifest's `[content].files_written` exist on disk relative
+/// to the subskill's own directory.
+fn check_subskill_structure(project_root: &Path, report: &mut CheckReport) {
+    for (pkg_root, source_label) in scan_local_packages(project_root) {
+        let subskills_dir = pkg_root.join("subskills");
+        if !subskills_dir.is_dir() {
+            continue;
+        }
+        for entry in walkdir::WalkDir::new(&subskills_dir)
+            .max_depth(6)
+            .into_iter()
+            .filter_map(|e| e.ok())
+        {
+            if !entry.file_type().is_file() {
+                continue;
+            }
+            if entry.file_name()
+                != vibe_core::manifest::SubskillManifest::FILENAME
+            {
+                continue;
+            }
+            let manifest_path = entry.path().to_path_buf();
+            let rel = manifest_path
+                .strip_prefix(project_root)
+                .map(|p| p.to_path_buf())
+                .ok();
+            let manifest = match vibe_core::manifest::SubskillManifest::read(
+                &manifest_path,
+            ) {
+                Ok(m) => m,
+                Err(e) => {
+                    report.err(
+                        CheckId::SubskillStructure,
+                        rel,
+                        None,
+                        format!("[{source_label}] subskill manifest fails to parse: {e}"),
+                    );
+                    continue;
+                }
+            };
+            for finding in manifest.validation_findings() {
+                report.err(
+                    CheckId::SubskillStructure,
+                    rel.clone(),
+                    None,
+                    format!("[{source_label}] {finding}"),
+                );
+            }
+            // Every declared file exists relative to the subskill's
+            // own root.
+            let sub_root = manifest_path.parent().unwrap_or(&manifest_path);
+            for f in &manifest.content.files_written {
+                let absolute = sub_root.join(f);
+                if !absolute.is_file() {
+                    report.err(
+                        CheckId::SubskillStructure,
+                        rel.clone(),
+                        None,
+                        format!(
+                            "[{source_label}] subskill `{}` declares file `{}` which is missing on disk",
+                            manifest.subskill.path,
+                            f.display()
+                        ),
+                    );
+                }
+            }
+        }
+    }
+}
+
+/// For every package with an `[i18n].available` declaration, every
+/// file in `[writes]` plus boot snippet must exist for the canonical
+/// language (error) and SHOULD exist for every other listed language
+/// (warning when missing).
+fn check_i18n_coverage(project_root: &Path, report: &mut CheckReport) {
+    for (pkg_root, source_label) in scan_local_packages(project_root) {
+        let manifest_path =
+            pkg_root.join(vibe_core::manifest::PackageManifest::FILENAME);
+        let manifest = match vibe_core::manifest::PackageManifest::read(&manifest_path) {
+            Ok(m) => m,
+            Err(_) => continue,
+        };
+        if manifest.i18n.available.is_empty() {
+            continue;
+        }
+        let canonical = &manifest.i18n.canonical;
+        let logical_paths: Vec<std::path::PathBuf> = manifest
+            .writes
+            .files
+            .iter()
+            .cloned()
+            .chain(
+                manifest
+                    .boot_snippet
+                    .as_ref()
+                    .map(|b| b.source.clone())
+                    .into_iter(),
+            )
+            .collect();
+        let rel_manifest = manifest_path
+            .strip_prefix(project_root)
+            .map(|p| p.to_path_buf())
+            .ok();
+        // Canonical must exist.
+        for logical in &logical_paths {
+            let abs = pkg_root.join(logical);
+            if !abs.is_file() {
+                report.err(
+                    CheckId::I18nCoverage,
+                    rel_manifest.clone(),
+                    None,
+                    format!(
+                        "[{source_label}] canonical `{}` (language `{}`) missing for declared file `{}`",
+                        logical.display(),
+                        canonical,
+                        logical.display()
+                    ),
+                );
+            }
+        }
+        // Every other declared language: warn on missing translation.
+        for lang in &manifest.i18n.available {
+            if lang == canonical {
+                continue;
+            }
+            for logical in &logical_paths {
+                let localised = vibe_core::manifest::i18n::localised_path(
+                    logical, lang,
+                );
+                let abs = pkg_root.join(&localised);
+                if !abs.is_file() {
+                    report.warn(
+                        CheckId::I18nCoverage,
+                        rel_manifest.clone(),
+                        None,
+                        format!(
+                            "[{source_label}] no `{}` translation of `{}` (looked for `{}`)",
+                            lang,
+                            logical.display(),
+                            localised.display()
+                        ),
+                    );
+                }
+            }
+        }
+    }
+}
+
+/// Find every locally-discoverable package manifest. Today: scans
+/// `packages/` (vibevm's own dogfooding tree) at depth 3. Also includes
+/// the project root itself if it carries a `vibe-package.toml` (rare —
+/// `vibe-package.toml` is for *packages*, not projects, but a few of
+/// our own internal fixtures use this layout). Returns
+/// `(package_root, label)` pairs.
+fn scan_local_packages(project_root: &Path) -> Vec<(PathBuf, String)> {
+    let mut out: Vec<(PathBuf, String)> = Vec::new();
+    if project_root
+        .join(vibe_core::manifest::PackageManifest::FILENAME)
+        .is_file()
+    {
+        out.push((project_root.to_path_buf(), "project root".to_string()));
+    }
+    let packages_dir = project_root.join("packages");
+    if packages_dir.is_dir() {
+        for entry in walkdir::WalkDir::new(&packages_dir)
+            .max_depth(4)
+            .into_iter()
+            .filter_map(|e| e.ok())
+        {
+            if entry.file_name() == vibe_core::manifest::PackageManifest::FILENAME
+                && let Some(parent) = entry.path().parent()
+            {
+                let rel = parent
+                    .strip_prefix(project_root)
+                    .map(|p| p.display().to_string().replace('\\', "/"))
+                    .unwrap_or_else(|_| parent.display().to_string());
+                out.push((parent.to_path_buf(), rel));
+            }
+        }
+    }
+    out
 }
 
 // ===================== check 1: manifest validity =====================
@@ -1066,5 +1311,221 @@ files_written = ["spec/flows/wal/A.md"]
     fn parse_iso_date_rejects_garbage() {
         assert!(parse_iso_date("not-a-date").is_none());
         assert!(parse_iso_date("2026").is_none());
+    }
+
+    // ============================================================
+    // PROP-003 r2 — feature graph / subskill / i18n coverage checks
+    // ============================================================
+
+    fn write_pkg_with_features(project: &Path, features_section: &str) {
+        write_minimal_project(project);
+        let pkg = project.join("packages").join("flow").join("test-pkg");
+        fs::create_dir_all(&pkg).unwrap();
+        fs::write(
+            pkg.join("vibe-package.toml"),
+            format!(
+                r#"[package]
+name = "test-pkg"
+kind = "flow"
+version = "0.1.0"
+
+[features]
+{features_section}
+"#
+            ),
+        )
+        .unwrap();
+    }
+
+    #[test]
+    fn features_graph_passes_clean() {
+        let project = tempdir().unwrap();
+        write_pkg_with_features(
+            project.path(),
+            r#"default = ["a"]
+a = []
+"#,
+        );
+        let report = check_project(project.path(), &opts());
+        let feature_findings: Vec<_> = report
+            .findings
+            .iter()
+            .filter(|f| f.check == CheckId::FeaturesGraph)
+            .collect();
+        assert!(
+            feature_findings.is_empty(),
+            "expected no features findings, got: {:?}",
+            feature_findings
+        );
+    }
+
+    #[test]
+    fn features_graph_flags_unknown_referenced_feature() {
+        let project = tempdir().unwrap();
+        write_pkg_with_features(
+            project.path(),
+            r#"a = ["bogus-feature"]
+"#,
+        );
+        let report = check_project(project.path(), &opts());
+        assert!(
+            report
+                .findings
+                .iter()
+                .any(|f| f.check == CheckId::FeaturesGraph
+                    && f.message.contains("unknown feature")),
+            "expected unknown-feature finding; got: {:?}",
+            report.findings
+        );
+    }
+
+    #[test]
+    fn subskill_structure_flags_lazy_push_without_description() {
+        let project = tempdir().unwrap();
+        write_minimal_project(project.path());
+        let pkg = project.path().join("packages").join("flow").join("test-pkg");
+        fs::create_dir_all(&pkg).unwrap();
+        fs::write(
+            pkg.join("vibe-package.toml"),
+            r#"[package]
+name = "test-pkg"
+kind = "flow"
+version = "0.1.0"
+"#,
+        )
+        .unwrap();
+        // Subskill with delivery=lazy-push but no description.
+        let sub = pkg.join("subskills/stack/rust");
+        fs::create_dir_all(&sub).unwrap();
+        fs::write(
+            sub.join("vibe-subskill.toml"),
+            r#"[subskill]
+path = "stack/rust"
+delivery = "lazy-push"
+"#,
+        )
+        .unwrap();
+        let report = check_project(project.path(), &opts());
+        assert!(
+            report.findings.iter().any(|f| {
+                f.check == CheckId::SubskillStructure
+                    && f.message.contains("requires a non-empty `description`")
+            }),
+            "expected subskill description finding; got: {:?}",
+            report.findings
+        );
+    }
+
+    #[test]
+    fn subskill_structure_flags_missing_declared_file() {
+        let project = tempdir().unwrap();
+        write_minimal_project(project.path());
+        let pkg = project.path().join("packages").join("flow").join("test-pkg");
+        fs::create_dir_all(&pkg).unwrap();
+        fs::write(
+            pkg.join("vibe-package.toml"),
+            r#"[package]
+name = "test-pkg"
+kind = "flow"
+version = "0.1.0"
+"#,
+        )
+        .unwrap();
+        let sub = pkg.join("subskills/stack/rust");
+        fs::create_dir_all(&sub).unwrap();
+        fs::write(
+            sub.join("vibe-subskill.toml"),
+            r#"[subskill]
+path = "stack/rust"
+
+[content]
+files_written = ["spec/missing.md"]
+"#,
+        )
+        .unwrap();
+        let report = check_project(project.path(), &opts());
+        assert!(
+            report.findings.iter().any(|f| {
+                f.check == CheckId::SubskillStructure
+                    && f.message.contains("missing on disk")
+            }),
+            "expected missing-file finding; got: {:?}",
+            report.findings
+        );
+    }
+
+    #[test]
+    fn i18n_coverage_warns_on_missing_translation() {
+        let project = tempdir().unwrap();
+        write_minimal_project(project.path());
+        let pkg = project.path().join("packages").join("flow").join("test-pkg");
+        fs::create_dir_all(pkg.join("spec/flows/x")).unwrap();
+        fs::write(
+            pkg.join("vibe-package.toml"),
+            r#"[package]
+name = "test-pkg"
+kind = "flow"
+version = "0.1.0"
+
+[i18n]
+canonical = "en"
+available = ["en", "ru"]
+
+[writes]
+files = ["spec/flows/x/PROTOCOL.md"]
+"#,
+        )
+        .unwrap();
+        fs::write(pkg.join("spec/flows/x/PROTOCOL.md"), "EN content").unwrap();
+        // Russian sidecar deliberately missing.
+        let report = check_project(project.path(), &opts());
+        let warns: Vec<_> = report
+            .findings
+            .iter()
+            .filter(|f| f.check == CheckId::I18nCoverage)
+            .collect();
+        assert!(
+            !warns.is_empty(),
+            "expected i18n coverage warning; got: {:?}",
+            report.findings
+        );
+        assert!(warns.iter().any(|f| f.message.contains("ru")));
+    }
+
+    #[test]
+    fn i18n_coverage_clean_when_all_translations_present() {
+        let project = tempdir().unwrap();
+        write_minimal_project(project.path());
+        let pkg = project.path().join("packages").join("flow").join("test-pkg");
+        fs::create_dir_all(pkg.join("spec/flows/x")).unwrap();
+        fs::write(
+            pkg.join("vibe-package.toml"),
+            r#"[package]
+name = "test-pkg"
+kind = "flow"
+version = "0.1.0"
+
+[i18n]
+canonical = "en"
+available = ["en", "ru"]
+
+[writes]
+files = ["spec/flows/x/PROTOCOL.md"]
+"#,
+        )
+        .unwrap();
+        fs::write(pkg.join("spec/flows/x/PROTOCOL.md"), "EN content").unwrap();
+        fs::write(pkg.join("spec/flows/x/PROTOCOL.ru.md"), "RU content").unwrap();
+        let report = check_project(project.path(), &opts());
+        let i18n_findings: Vec<_> = report
+            .findings
+            .iter()
+            .filter(|f| f.check == CheckId::I18nCoverage)
+            .collect();
+        assert!(
+            i18n_findings.is_empty(),
+            "expected no i18n findings; got: {:?}",
+            i18n_findings
+        );
     }
 }

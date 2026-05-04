@@ -11,7 +11,8 @@ use serde::Serialize;
 use vibe_core::{PackageRef, VersionSpec};
 use vibe_core::manifest::{Lockfile, ProjectManifest};
 use vibe_install::{
-    InstallError, InstallPlan, WriteKind, apply_install, plan_install, register_installed,
+    InstallError, InstallOptions, InstallPlan, WriteKind, apply_install,
+    plan_install_with_options, register_installed,
 };
 use vibe_registry::{CachedPackage, LocalRegistry, MultiRegistryResolver};
 use vibe_resolver::{
@@ -26,6 +27,15 @@ pub fn run(ctx: &output::Context, args: InstallArgs) -> Result<()> {
     let manifest = load_project_manifest(&project_root)?;
     let mut lockfile = load_or_empty_lockfile(&project_root)?;
     let resolver = build_install_resolver(&args, &manifest)?;
+
+    // PROP-003 §2.7 — language preference resolution. Order:
+    // 1. CLI flag `--language` is the head of the chain.
+    // 2. The project manifest's `[i18n]` block contributes its
+    //    `preferred` / `available` / `fallback` entries.
+    // 3. Canonical (`I18nDecl::canonical`, default `en`) closes the
+    //    chain so step 3 of PROP-003 §2.7.2's fallback ladder is
+    //    always reachable.
+    let install_options = build_install_options(args.language.as_deref(), &manifest);
 
     // Cache layout matches §8.3: `.vibe/cache/<kind>/<name>/<version>/`.
     let cache_root = project_root.join(".vibe/cache");
@@ -82,7 +92,12 @@ pub fn run(ctx: &output::Context, args: InstallArgs) -> Result<()> {
             .map(|p| p.content_hash.clone());
         let cached =
             resolver.resolve_and_fetch(&pkgref, &cache_root, expected.as_deref())?;
-        let plan = plan_install(&project_root, &lockfile, cached)?;
+        let plan = plan_install_with_options(
+            &project_root,
+            &lockfile,
+            cached,
+            &install_options,
+        )?;
         check_cross_plan_conflicts(&plans, &plan)?;
         plans.push(plan);
         node_meta.push(NodeInstallMeta {
@@ -460,4 +475,26 @@ fn emit_report(
         if total_files == 1 { "" } else { "s" },
     ));
     Ok(())
+}
+
+/// Build [`InstallOptions`] from a CLI flag override + the project's
+/// `[i18n]` declaration. The CLI flag is the head of the chain;
+/// project-level preference and fallback come next; canonical /
+/// registry-default `en` close the chain.
+fn build_install_options(
+    cli_language: Option<&str>,
+    manifest: &ProjectManifest,
+) -> InstallOptions {
+    let mut effective = manifest.i18n.clone();
+    if let Some(lang) = cli_language {
+        effective.preferred = Some(lang.to_string());
+    }
+    let chain = if effective.is_default() && cli_language.is_none() {
+        Vec::new()
+    } else {
+        effective.project_preference_chain()
+    };
+    InstallOptions {
+        language_chain: chain,
+    }
 }

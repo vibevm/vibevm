@@ -190,6 +190,7 @@ fn ensure_project_manifest(
         registries: registry.into_iter().collect(),
         mirrors: Vec::new(),
         overrides: Vec::new(),
+        i18n: vibe_core::manifest::i18n::I18nDecl::default(),
     };
 
     manifest.write(&path)?;

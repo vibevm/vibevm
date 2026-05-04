@@ -304,6 +304,15 @@ pub struct InstallArgs {
     /// Skip the interactive confirmation prompt (non-interactive envs).
     #[arg(long, alias = "yes")]
     pub assume_yes: bool,
+
+    /// Override the project's resolved language preference for this
+    /// install (PROP-003 §2.7). BCP-47 tag (`ru`, `ja`, `pt-BR`).
+    /// When set, supplies the head of the language fallback chain;
+    /// canonical (no-suffix) content is always the last fallback.
+    /// Without this flag, the project-level `[i18n]` block in
+    /// `vibe.toml` decides; absent any declaration, English-only.
+    #[arg(long)]
+    pub language: Option<String>,
 }
 
 #[derive(Debug, clap::Args)]
