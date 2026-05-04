@@ -225,6 +225,19 @@ pub struct ActiveSubskill {
     pub describes: Option<String>,
     /// Channels that fired during evaluation (for diagnostic output).
     pub channels_matched: Vec<&'static str>,
+    /// Project-relative files this subskill specifically contributed
+    /// at plan time. For `eager` / `lazy-push` modes, these are the
+    /// target paths under the project root; for `lazy-pull`, this
+    /// stays empty because the content never materialises into the
+    /// project tree.
+    pub files_written: Vec<PathBuf>,
+    /// For `lazy-pull` subskills: relative paths inside the package
+    /// cache (`<cache>/subskills/<path>/...`). The MCP server
+    /// reads these on-demand via `read_subskill`. For `eager` /
+    /// `lazy-push` modes, this is also populated so the MCP server
+    /// has a precise per-subskill index regardless of delivery
+    /// mode.
+    pub cache_files: Vec<PathBuf>,
 }
 
 #[derive(Debug, Clone)]
@@ -435,15 +448,29 @@ pub fn plan_install_with_options(
             })?;
         match sub.delivery {
             DeliveryMode::Eager => {}
-            DeliveryMode::LazyPush | DeliveryMode::LazyPull => {
+            DeliveryMode::LazyPush => {
                 tracing::warn!(
                     target: "vibe_install",
                     subskill = %sub.path,
-                    delivery = %sub.delivery.as_str(),
+                    delivery = "lazy-push",
                     package = %format!("{}:{}", cached.resolved.kind, cached.resolved.name),
-                    "subskill delivery `{}` not yet runtime-supported (M1.7); degrading to `eager` for materialisation. Manifest mode preserved in lockfile.",
-                    sub.delivery.as_str()
+                    "subskill delivery `lazy-push` not yet runtime-supported (M2.8); degrading to `eager` for materialisation. Manifest mode preserved in lockfile."
                 );
+            }
+            DeliveryMode::LazyPull => {
+                // Genuinely lazy: never materialise into the project
+                // tree at install time. The MCP `read_subskill` tool
+                // (M1.7 slice 3) reads from the package cache on
+                // demand. Lockfile records the cache-file index so
+                // the server can locate them without re-walking the
+                // subskill manifest at each call.
+                tracing::debug!(
+                    target: "vibe_install",
+                    subskill = %sub.path,
+                    package = %format!("{}:{}", cached.resolved.kind, cached.resolved.name),
+                    "lazy-pull subskill — skipping materialisation; MCP read_subskill will surface content on demand"
+                );
+                continue;
             }
         }
         for file in &sub_manifest.content.files_written {
@@ -597,11 +624,34 @@ fn collect_active_subskills(
             channels.push("manual");
         }
         channels.extend(probe_outcome.channels_matched);
+        let files_written: Vec<PathBuf> = match manifest.subskill.delivery {
+            // `lazy-pull` keeps the project tree clean — files stay
+            // in the package cache and surface only via the MCP
+            // `read_subskill` tool.
+            DeliveryMode::LazyPull => Vec::new(),
+            // `eager` and `lazy-push` (lazy-push degrades to eager
+            // until M2.8) materialise files into the project; their
+            // declared `files_written` are the target paths.
+            _ => manifest
+                .content
+                .files_written
+                .iter()
+                .map(|p| normalize_rel(p))
+                .collect(),
+        };
+        let cache_files: Vec<PathBuf> = manifest
+            .content
+            .files_written
+            .iter()
+            .map(|p| normalize_rel(p))
+            .collect();
         active.push(ActiveSubskill {
             path: path.clone(),
             delivery: manifest.subskill.delivery,
             describes: manifest.subskill.describes.as_ref().map(|p| p.to_string()),
             channels_matched: channels,
+            files_written,
+            cache_files,
         });
     }
 
@@ -728,6 +778,8 @@ pub fn register_installed_with_metadata(
             path: s.path.clone(),
             delivery: s.delivery.as_str().to_string(),
             describes: s.describes.clone(),
+            files_written: s.files_written.clone(),
+            cache_files: s.cache_files.clone(),
         })
         .collect();
     let entry = LockedPackage {
