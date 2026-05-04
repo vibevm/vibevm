@@ -1540,6 +1540,108 @@ fn install_no_default_features_skips_default_subskills() {
 }
 
 // ============================================================
+// M1.7 vibe-mcp e2e — driving `vibe mcp serve` via stdio
+// ============================================================
+//
+// We spawn the CLI with `vibe mcp serve --path <project>`, write a
+// JSON-RPC `initialize` + `tools/call query_package` script to its
+// stdin, close stdin to signal EOF, and parse the line-delimited
+// JSON responses. This is the same shape Claude Code / Cursor use
+// when they speak to the server.
+
+#[test]
+fn mcp_serve_responds_to_initialize_and_query_package() {
+    let registry = workspace_root().join("fixtures").join("registry");
+    let project = tempfile::tempdir().unwrap();
+    init_project(project.path());
+
+    // Install the omnibus alpha package so query_package has
+    // something interesting to return.
+    vibe()
+        .arg("install")
+        .arg("flow:integration-alpha")
+        .arg("--registry")
+        .arg(&registry)
+        .arg("--path")
+        .arg(project.path())
+        .arg("--features")
+        .arg("extra-discipline")
+        .arg("--assume-yes")
+        .assert()
+        .success();
+
+    // Drive the MCP server. We send three line-delimited JSON-RPC
+    // messages: initialize, tools/list, tools/call query_package.
+    let script = [
+        r#"{"jsonrpc":"2.0","id":1,"method":"initialize","params":{}}"#,
+        r#"{"jsonrpc":"2.0","id":2,"method":"tools/list","params":{}}"#,
+        r#"{"jsonrpc":"2.0","id":3,"method":"tools/call","params":{"name":"query_package","arguments":{"name":"flow:integration-alpha"}}}"#,
+        "",
+    ]
+    .join("\n");
+
+    // `assert_cmd::Command` lacks the `Stdio` knobs we need for stdin
+    // piping; reconstruct the underlying `std::process::Command` to
+    // get full control.
+    let bin = env!("CARGO_BIN_EXE_vibe");
+    let mut cmd = std::process::Command::new(bin);
+    cmd.arg("mcp").arg("serve").arg("--path").arg(project.path());
+    let mut child = cmd
+        .stdin(std::process::Stdio::piped())
+        .stdout(std::process::Stdio::piped())
+        .stderr(std::process::Stdio::piped())
+        .spawn()
+        .expect("spawn vibe mcp serve");
+
+    use std::io::Write;
+    child
+        .stdin
+        .as_mut()
+        .unwrap()
+        .write_all(script.as_bytes())
+        .unwrap();
+    drop(child.stdin.take()); // signal EOF
+    let output = child.wait_with_output().expect("wait child");
+    assert!(
+        output.status.success(),
+        "mcp serve exit non-zero — stderr: {}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    let stdout = String::from_utf8(output.stdout).unwrap();
+    let lines: Vec<&str> = stdout.lines().filter(|l| !l.is_empty()).collect();
+    assert_eq!(lines.len(), 3, "expected 3 response lines; got:\n{stdout}");
+
+    let init: serde_json::Value = serde_json::from_str(lines[0]).unwrap();
+    assert_eq!(init["id"], 1);
+    assert_eq!(init["result"]["protocolVersion"], "2024-11-05");
+    assert_eq!(init["result"]["serverInfo"]["name"], "vibe-mcp");
+
+    let list: serde_json::Value = serde_json::from_str(lines[1]).unwrap();
+    let tool_names: Vec<&str> = list["result"]["tools"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .map(|t| t["name"].as_str().unwrap())
+        .collect();
+    assert!(tool_names.contains(&"query_package"));
+    assert!(tool_names.contains(&"read_subskill"));
+
+    let call: serde_json::Value = serde_json::from_str(lines[2]).unwrap();
+    assert_eq!(call["result"]["isError"], false);
+    let pkg = &call["result"]["structuredContent"];
+    assert_eq!(pkg["kind"], "flow");
+    assert_eq!(pkg["name"], "integration-alpha");
+    assert_eq!(pkg["describes"], "pkg:cargo/sqlx@0.8.0");
+    let sub_paths: Vec<&str> = pkg["subskills_active"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .map(|s| s["path"].as_str().unwrap())
+        .collect();
+    assert!(sub_paths.contains(&"feature/extra-discipline"));
+}
+
+// ============================================================
 // PROP-003 r2 omnibus integration e2e
 // ============================================================
 //
@@ -2943,6 +3045,8 @@ fn every_subcommand_renders_help() {
         &["install"],
         &["list"],
         &["outdated"],
+        &["mcp"],
+        &["mcp", "serve"],
         &["uninstall"],
         &["update"],
         &["check"],

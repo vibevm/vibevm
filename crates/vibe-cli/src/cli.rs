@@ -45,6 +45,13 @@ pub enum Command {
     /// PROP-003 §M1.10.
     Outdated(OutdatedArgs),
 
+    /// Start the MCP (Model Context Protocol) server over stdio,
+    /// exposing the project's lockfile and active subskills to a
+    /// connected coding agent (Claude Code, Cursor, etc.). Per
+    /// PROP-004 §5.1 / ROADMAP §M1.7. Reads JSON-RPC 2.0 requests
+    /// line-by-line from stdin; writes responses to stdout.
+    Mcp(McpArgs),
+
     /// Remove an installed package from the current project.
     Uninstall(UninstallArgs),
 
@@ -351,6 +358,29 @@ pub struct InstallArgs {
 #[derive(Debug, clap::Args)]
 pub struct OutdatedArgs {
     /// Project root with `vibe.toml`. Defaults to current directory.
+    #[arg(long, default_value = ".")]
+    pub path: PathBuf,
+}
+
+#[derive(Debug, clap::Args)]
+pub struct McpArgs {
+    #[command(subcommand)]
+    pub command: McpSubcommand,
+}
+
+#[derive(Debug, Subcommand)]
+pub enum McpSubcommand {
+    /// Run the MCP server over stdio. Blocks until the client
+    /// disconnects (EOF on stdin).
+    Serve(McpServeArgs),
+}
+
+#[derive(Debug, clap::Args)]
+pub struct McpServeArgs {
+    /// Project root with `vibe.toml`. Defaults to current directory.
+    /// The server reloads the lockfile fresh on every tool call so a
+    /// concurrent `vibe install` run becomes visible without a
+    /// restart.
     #[arg(long, default_value = ".")]
     pub path: PathBuf,
 }
