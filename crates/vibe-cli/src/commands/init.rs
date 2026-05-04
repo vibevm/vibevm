@@ -327,15 +327,28 @@ fn report(
     let kept = outcomes.iter().filter(|o| o.action == Action::Kept).count();
 
     if ctx.is_json() {
-        let payload = serde_json::json!({
-            "ok": true,
-            "command": "init",
-            "project": name,
-            "path": display_root,
-            "created": created,
-            "kept": kept,
-            "outcomes": outcomes,
-        });
+        use vibe_wire::generated::init_report::{
+            InitReport, Outcome as WireOutcome, OutcomeAction,
+        };
+        let payload = InitReport {
+            ok: true,
+            command: "init".to_string(),
+            project: name.to_string(),
+            path: display_root.to_string(),
+            created: u32::try_from(created).unwrap_or(u32::MAX),
+            kept: u32::try_from(kept).unwrap_or(u32::MAX),
+            outcomes: outcomes
+                .iter()
+                .map(|o| WireOutcome {
+                    path: o.path.clone(),
+                    action: match o.action {
+                        Action::Created => OutcomeAction::Created,
+                        Action::Kept => OutcomeAction::Kept,
+                    },
+                    reason: o.reason.to_string(),
+                })
+                .collect(),
+        };
         ctx.emit_json(&payload)?;
         return Ok(());
     }

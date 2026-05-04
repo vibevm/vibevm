@@ -22,6 +22,7 @@ vibe-resolver.workspace = true
 vibe-install.workspace = true
 vibe-check.workspace = true
 vibe-publish.workspace = true
+vibe-wire.workspace = true
 semver.workspace = true
 anyhow.workspace = true
 clap.workspace = true
