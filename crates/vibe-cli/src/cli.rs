@@ -39,6 +39,12 @@ pub enum Command {
     /// Install one or more packages into the current project.
     Install(InstallArgs),
 
+    /// Show installed packages whose registry-side latest version is
+    /// newer than what the lockfile currently pins. Read-only — does
+    /// not touch the lockfile or fetch package content. Per
+    /// PROP-003 §M1.10.
+    Outdated(OutdatedArgs),
+
     /// Remove an installed package from the current project.
     Uninstall(UninstallArgs),
 
@@ -334,6 +340,13 @@ pub struct InstallArgs {
     /// are set, `--all-features` wins.
     #[arg(long)]
     pub all_features: bool,
+}
+
+#[derive(Debug, clap::Args)]
+pub struct OutdatedArgs {
+    /// Project root with `vibe.toml`. Defaults to current directory.
+    #[arg(long, default_value = ".")]
+    pub path: PathBuf,
 }
 
 #[derive(Debug, clap::Args)]

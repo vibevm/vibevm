@@ -53,6 +53,7 @@ fn main() -> ExitCode {
         Command::Init(args) => commands::init::run(&ctx, args),
         Command::List(args) => commands::list::run(&ctx, args),
         Command::Install(args) => commands::install::run(&ctx, args),
+        Command::Outdated(args) => commands::outdated::run(&ctx, args),
         Command::Uninstall(args) => commands::uninstall::run(&ctx, args),
         Command::Update(args) => commands::update::run(&ctx, args),
         Command::Check(args) => commands::check::run(&ctx, args),

@@ -1539,6 +1539,343 @@ fn install_no_default_features_skips_default_subskills() {
     );
 }
 
+/// Build a per-package git registry hosting three flow packages:
+///
+/// - `flow:dispatcher` v0.1.0 with a `[target."context(stack:rust)"]`
+///   conditional dep on `flow:rust-helper@^0.1`.
+/// - `flow:rust-helper` v0.1.0 (the conditional target).
+/// - `stack:rust-cli` v0.1.0 (a stack package that the project will
+///   install to make the predicate match).
+///
+/// Returns the org root path and a `git+file://...` URL pointing at it.
+fn make_conditional_deps_registry(root: &Path) -> (PathBuf, String) {
+    let org = root.join("org");
+    fs::create_dir_all(&org).unwrap();
+
+    fn make_pkg(
+        out_root: &Path,
+        org_dir: &Path,
+        kind: &str,
+        name: &str,
+        version: &str,
+        manifest_extras: &str,
+        files: &[(&str, &str)],
+    ) {
+        let src = out_root.join(format!("src-{}-{}", kind, name));
+        fs::create_dir_all(&src).unwrap();
+        run_git(&src, &["init", "--initial-branch=main"]);
+        run_git(&src, &["config", "user.email", "t@example.com"]);
+        run_git(&src, &["config", "user.name", "Test"]);
+        let writes = files
+            .iter()
+            .map(|(p, _)| format!("    \"{p}\""))
+            .collect::<Vec<_>>()
+            .join(",\n");
+        let manifest = format!(
+            r#"[package]
+name = "{name}"
+kind = "{kind}"
+version = "{version}"
+
+[writes]
+files = [
+{writes}
+]
+{manifest_extras}
+"#
+        );
+        fs::write(src.join("vibe-package.toml"), manifest).unwrap();
+        for (path, content) in files {
+            let target = src.join(path);
+            if let Some(parent) = target.parent() {
+                fs::create_dir_all(parent).unwrap();
+            }
+            fs::write(target, content).unwrap();
+        }
+        run_git(&src, &["add", "-A"]);
+        run_git(&src, &["commit", "-m", &format!("v{version}")]);
+        run_git(&src, &["tag", &format!("v{version}")]);
+
+        let bare = org_dir.join(format!("{kind}-{name}.git"));
+        run_git(out_root, &[
+            "clone",
+            "--bare",
+            src.to_str().unwrap(),
+            bare.to_str().unwrap(),
+        ]);
+        run_git(&bare, &["symbolic-ref", "HEAD", "refs/heads/main"]);
+    }
+
+    make_pkg(
+        root,
+        &org,
+        "flow",
+        "dispatcher",
+        "0.1.0",
+        r#"
+[target."context(stack:rust-cli)".dependencies]
+packages = ["flow:rust-helper@^0.1"]
+"#,
+        &[("spec/flows/dispatcher/CORE.md", "# dispatcher core")],
+    );
+    make_pkg(
+        root,
+        &org,
+        "flow",
+        "rust-helper",
+        "0.1.0",
+        "",
+        &[("spec/flows/rust-helper/HINT.md", "# rust hint")],
+    );
+    make_pkg(
+        root,
+        &org,
+        "stack",
+        "rust-cli",
+        "0.1.0",
+        "",
+        &[("spec/stacks/rust-cli/STACK.md", "# rust-cli stack")],
+    );
+
+    let abs_org = org
+        .canonicalize()
+        .unwrap()
+        .to_string_lossy()
+        .replace('\\', "/")
+        .trim_start_matches("//?/")
+        .to_string();
+    let url = format!("git+file:///{abs_org}");
+    (org, url)
+}
+
+#[test]
+fn install_expands_conditional_dependencies_when_predicate_matches() {
+    if !git_available() {
+        eprintln!("skipping install_expands_conditional_dependencies: git not on PATH");
+        return;
+    }
+    let outer = tempfile::tempdir().unwrap();
+    let (_org, registry_url) = make_conditional_deps_registry(outer.path());
+
+    let project = tempfile::tempdir().unwrap();
+    init_project(project.path());
+    write_project_with_per_package_registry(project.path(), &registry_url);
+    let cache = outer.path().join("cache");
+    fs::create_dir_all(&cache).unwrap();
+
+    // Install stack:rust-cli first to make `stack:rust` present in the
+    // graph before dispatcher's conditional predicate evaluates.
+    vibe()
+        .env("VIBE_REGISTRY_CACHE", &cache)
+        .arg("install")
+        .arg("stack:rust-cli")
+        .arg("flow:dispatcher")
+        .arg("--path")
+        .arg(project.path())
+        .arg("--assume-yes")
+        .assert()
+        .success();
+
+    // The conditional dependency `flow:rust-helper` should have been
+    // pulled in as well.
+    let lock_text =
+        fs::read_to_string(project.path().join("vibe.lock")).unwrap();
+    let lock: vibe_core::manifest::Lockfile =
+        toml::from_str(&lock_text).unwrap();
+    let names: Vec<_> = lock
+        .packages
+        .iter()
+        .map(|p| format!("{}:{}", p.kind, p.name))
+        .collect();
+    assert!(
+        names.iter().any(|n| n == "stack:rust-cli"),
+        "expected stack:rust-cli; got {:?}",
+        names
+    );
+    assert!(
+        names.iter().any(|n| n == "flow:dispatcher"),
+        "expected flow:dispatcher; got {:?}",
+        names
+    );
+    assert!(
+        names.iter().any(|n| n == "flow:rust-helper"),
+        "expected flow:rust-helper to be pulled in via conditional dep; got {:?}",
+        names
+    );
+}
+
+#[test]
+fn conditional_dependencies_dormant_when_predicate_misses() {
+    if !git_available() {
+        eprintln!("skipping conditional_dependencies_dormant: git not on PATH");
+        return;
+    }
+    let outer = tempfile::tempdir().unwrap();
+    let (_org, registry_url) = make_conditional_deps_registry(outer.path());
+
+    let project = tempfile::tempdir().unwrap();
+    init_project(project.path());
+    write_project_with_per_package_registry(project.path(), &registry_url);
+    let cache = outer.path().join("cache");
+    fs::create_dir_all(&cache).unwrap();
+
+    // Install dispatcher WITHOUT stack:rust-cli. The conditional
+    // predicate `context(stack:rust)` doesn't match → rust-helper
+    // stays dormant.
+    vibe()
+        .env("VIBE_REGISTRY_CACHE", &cache)
+        .arg("install")
+        .arg("flow:dispatcher")
+        .arg("--path")
+        .arg(project.path())
+        .arg("--assume-yes")
+        .assert()
+        .success();
+
+    let lock: vibe_core::manifest::Lockfile = toml::from_str(
+        &fs::read_to_string(project.path().join("vibe.lock")).unwrap(),
+    )
+    .unwrap();
+    let names: Vec<_> = lock
+        .packages
+        .iter()
+        .map(|p| format!("{}:{}", p.kind, p.name))
+        .collect();
+    assert!(
+        names.iter().any(|n| n == "flow:dispatcher"),
+        "got {:?}",
+        names
+    );
+    assert!(
+        !names.iter().any(|n| n == "flow:rust-helper"),
+        "rust-helper should NOT be installed; got {:?}",
+        names
+    );
+}
+
+/// Build a per-package git registry with two tagged versions of
+/// `flow:test-multi`: v0.1.0 (the older release) and v0.2.0 (newer).
+/// Returns `(registry_org_root, file_url_for_org)` so tests can wire
+/// the registry into a project's `vibe.toml`.
+fn make_two_version_per_package_registry(root: &Path) -> (PathBuf, String) {
+    let org = root.join("org");
+    fs::create_dir_all(&org).unwrap();
+    let src = root.join("src-flow-test-multi");
+    fs::create_dir_all(src.join("spec/flows/test-multi")).unwrap();
+    run_git(&src, &["init", "--initial-branch=main"]);
+    run_git(&src, &["config", "user.email", "t@example.com"]);
+    run_git(&src, &["config", "user.name", "Test"]);
+    fs::write(
+        src.join("vibe-package.toml"),
+        r#"[package]
+name = "test-multi"
+kind = "flow"
+version = "0.1.0"
+
+[writes]
+files = ["spec/flows/test-multi/PROTOCOL.md"]
+"#,
+    )
+    .unwrap();
+    fs::write(
+        src.join("spec/flows/test-multi/PROTOCOL.md"),
+        "# v0.1.0",
+    )
+    .unwrap();
+    run_git(&src, &["add", "-A"]);
+    run_git(&src, &["commit", "-m", "v0.1.0"]);
+    run_git(&src, &["tag", "v0.1.0"]);
+
+    // Bump to 0.2.0.
+    fs::write(
+        src.join("vibe-package.toml"),
+        r#"[package]
+name = "test-multi"
+kind = "flow"
+version = "0.2.0"
+
+[writes]
+files = ["spec/flows/test-multi/PROTOCOL.md"]
+"#,
+    )
+    .unwrap();
+    fs::write(
+        src.join("spec/flows/test-multi/PROTOCOL.md"),
+        "# v0.2.0",
+    )
+    .unwrap();
+    run_git(&src, &["add", "-A"]);
+    run_git(&src, &["commit", "-m", "v0.2.0"]);
+    run_git(&src, &["tag", "v0.2.0"]);
+
+    let bare = org.join("flow-test-multi.git");
+    run_git(root, &[
+        "clone",
+        "--bare",
+        src.to_str().unwrap(),
+        bare.to_str().unwrap(),
+    ]);
+    run_git(&bare, &["symbolic-ref", "HEAD", "refs/heads/main"]);
+
+    let abs_org = org
+        .canonicalize()
+        .unwrap()
+        .to_string_lossy()
+        .replace('\\', "/")
+        .trim_start_matches("//?/")
+        .to_string();
+    let url = format!("git+file:///{abs_org}");
+    (org, url)
+}
+
+#[test]
+fn outdated_reports_newer_version_available() {
+    if !git_available() {
+        eprintln!("skipping outdated_reports_newer_version_available: git not on PATH");
+        return;
+    }
+    let outer = tempfile::tempdir().unwrap();
+    let (_org, registry_url) = make_two_version_per_package_registry(outer.path());
+
+    let project = tempfile::tempdir().unwrap();
+    init_project(project.path());
+    write_project_with_per_package_registry(project.path(), &registry_url);
+
+    let cache = outer.path().join("cache");
+    fs::create_dir_all(&cache).unwrap();
+
+    // Install pinned to v0.1.0 explicitly.
+    vibe()
+        .env("VIBE_REGISTRY_CACHE", &cache)
+        .arg("install")
+        .arg("flow:test-multi@=0.1.0")
+        .arg("--path")
+        .arg(project.path())
+        .arg("--assume-yes")
+        .assert()
+        .success();
+
+    let out = vibe()
+        .env("VIBE_REGISTRY_CACHE", &cache)
+        .arg("--json")
+        .arg("outdated")
+        .arg("--path")
+        .arg(project.path())
+        .output()
+        .unwrap();
+    assert!(out.status.success(), "stderr: {}", String::from_utf8_lossy(&out.stderr));
+    let v: serde_json::Value =
+        serde_json::from_slice(&out.stdout).expect("stdout must be JSON");
+    assert_eq!(v["command"], "outdated");
+    assert_eq!(v["update_available"], 1);
+    let pkg = &v["packages"][0];
+    assert_eq!(pkg["kind"], "flow");
+    assert_eq!(pkg["name"], "test-multi");
+    assert_eq!(pkg["installed"], "0.1.0");
+    assert_eq!(pkg["latest"], "0.2.0");
+    assert_eq!(pkg["status"], "update available");
+}
+
 #[test]
 fn show_features_lists_active_features_after_install() {
     // After installing with --features, `vibe show features --json`
@@ -1934,6 +2271,7 @@ fn every_subcommand_renders_help() {
         &["init"],
         &["install"],
         &["list"],
+        &["outdated"],
         &["uninstall"],
         &["update"],
         &["check"],
