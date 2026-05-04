@@ -23,6 +23,7 @@ use std::fs;
 use std::path::{Path, PathBuf};
 
 use thiserror::Error;
+use vibe_core::manifest::i18n::resolve_localised;
 use vibe_core::manifest::{LockedPackage, Lockfile, PackageManifest};
 use vibe_core::{PackageKind, PackageRef};
 use vibe_registry::CachedPackage;
@@ -188,11 +189,38 @@ impl InstallPlan {
     }
 }
 
-/// Build an [`InstallPlan`] without touching disk beyond reads.
+/// Knobs threaded into `plan_install`. Empty default = legacy behaviour
+/// (no language fallback, English-only canonical paths). PROP-003 r2
+/// language preference flows in here from `vibe-cli install --language`
+/// + project-level `[i18n]` declaration.
+#[derive(Debug, Clone, Default)]
+pub struct InstallOptions {
+    /// Resolved language preference chain in priority order. First entry
+    /// is primary; subsequent entries are fallback. The canonical
+    /// (no-suffix) variant is consulted last. Empty = no localisation,
+    /// all source files used verbatim.
+    pub language_chain: Vec<String>,
+}
+
+/// Build an [`InstallPlan`] without touching disk beyond reads. Legacy
+/// signature — language preference defaults to empty (no localisation).
 pub fn plan_install(
     project_root: &Path,
     lockfile: &Lockfile,
     cached: CachedPackage,
+) -> Result<InstallPlan, InstallError> {
+    plan_install_with_options(project_root, lockfile, cached, &InstallOptions::default())
+}
+
+/// Build an [`InstallPlan`] with PROP-003 r2 options (i18n preference,
+/// per-package features pre-applied at the call site, etc.). Today this
+/// only acts on `language_chain`; future slices wire in feature- and
+/// subskill-aware planning.
+pub fn plan_install_with_options(
+    project_root: &Path,
+    lockfile: &Lockfile,
+    cached: CachedPackage,
+    options: &InstallOptions,
 ) -> Result<InstallPlan, InstallError> {
     // 1. Lockfile-vs-fetched integrity check first, *before* the
     // already-installed guard. If the lockfile pins a content_hash
@@ -226,12 +254,25 @@ pub fn plan_install(
 
     // 2. Regular writes: each entry is BOTH a source (relative to package)
     // and a target (relative to project root). See the module-level REVIEW.
+    //
+    // PROP-003 r2 i18n: source path is resolved through the language
+    // fallback chain. `<file>.<lang>.<ext>` is preferred over the
+    // canonical form when the consumer's preferred language is set and
+    // the localised variant exists. Target path is always canonical —
+    // operators want `spec/flows/wal/WAL-PROTOCOL.md`, not
+    // `WAL-PROTOCOL.ru.md`, in their tree.
     for file in &manifest.writes.files {
         validate_target_rel(file)?;
-        let source_abs = cached.cache_dir.join(file);
-        if !source_abs.is_file() {
-            return Err(InstallError::MissingSourceFile { path: file.clone() });
-        }
+        let source_abs = if options.language_chain.is_empty() {
+            let abs = cached.cache_dir.join(file);
+            if !abs.is_file() {
+                return Err(InstallError::MissingSourceFile { path: file.clone() });
+            }
+            abs
+        } else {
+            resolve_localised(&cached.cache_dir, file, &options.language_chain)
+                .ok_or_else(|| InstallError::MissingSourceFile { path: file.clone() })?
+        };
         let target_abs = project_root.join(file);
         reject_existing_target(&target_abs)?;
         let target_rel = normalize_rel(file);
@@ -251,12 +292,20 @@ pub fn plan_install(
     let mut boot_snippet_filename = None;
     if let Some(snippet) = &manifest.boot_snippet {
         validate_boot_filename(&snippet.filename)?;
-        let source_abs = cached.cache_dir.join(&snippet.source);
-        if !source_abs.is_file() {
-            return Err(InstallError::MissingSourceFile {
-                path: snippet.source.clone(),
-            });
-        }
+        let source_abs = if options.language_chain.is_empty() {
+            let abs = cached.cache_dir.join(&snippet.source);
+            if !abs.is_file() {
+                return Err(InstallError::MissingSourceFile {
+                    path: snippet.source.clone(),
+                });
+            }
+            abs
+        } else {
+            resolve_localised(&cached.cache_dir, &snippet.source, &options.language_chain)
+                .ok_or_else(|| InstallError::MissingSourceFile {
+                    path: snippet.source.clone(),
+                })?
+        };
         let target_rel = normalize_rel(Path::new(&format!("spec/boot/{}", snippet.filename)));
         let target_abs = project_root.join(&target_rel);
         reject_boot_snippet_conflict(
@@ -359,6 +408,15 @@ pub fn register_installed(
         files_written,
         dependencies,
         overridden: plan.cached.overridden,
+        // PROP-003 r2 v3 fields — populated by feature/subskill aware
+        // install paths landing in subsequent slices. Today's plain
+        // `register_installed` carries the same shape as v2, so these
+        // are empty/None and the lockfile entry serialises in the
+        // legacy form.
+        features: Vec::new(),
+        subskills_active: Vec::new(),
+        describes: None,
+        language: None,
     };
     lockfile.packages.push(entry);
     lockfile.meta.generated_at = generated_at;
@@ -1319,6 +1377,10 @@ source = "boot/10-flow-wal.md"
             files_written: vec![],
             dependencies: Vec::new(),
             overridden: false,
+            features: Vec::new(),
+            subskills_active: Vec::new(),
+            describes: None,
+            language: None,
         });
 
         let project = empty_project();
@@ -1498,6 +1560,10 @@ files = ["../escape.md"]
             files_written: Vec::new(),
             dependencies: Vec::new(),
             overridden: false,
+            features: Vec::new(),
+            subskills_active: Vec::new(),
+            describes: None,
+            language: None,
         });
 
         let _ = unregister_installed(&mut lockfile, &pkgref, "t1".into()).unwrap();
@@ -1850,6 +1916,10 @@ packages = ["flow:atomic-commits@^0.1"]
             ],
             dependencies: Vec::new(),
             overridden: false,
+            features: Vec::new(),
+            subskills_active: Vec::new(),
+            describes: None,
+            language: None,
         });
 
         let project = empty_project();
