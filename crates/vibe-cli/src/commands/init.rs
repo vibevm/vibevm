@@ -10,8 +10,9 @@ use std::path::Path;
 use anyhow::{Context, Result, bail};
 use serde::Serialize;
 use vibe_core::manifest::{
-    ActiveSection, DEFAULT_REGISTRY_NAME, DEFAULT_REGISTRY_REF, DEFAULT_REGISTRY_URL, Lockfile,
-    NamingConvention, ProjectManifest, ProjectSection, RegistrySection,
+    ActiveSection, DEFAULT_REGISTRY_GITVERSE_NAME, DEFAULT_REGISTRY_GITVERSE_URL,
+    DEFAULT_REGISTRY_NAME, DEFAULT_REGISTRY_REF, DEFAULT_REGISTRY_URL, Lockfile, NamingConvention,
+    ProjectManifest, ProjectSection, RegistrySection,
 };
 
 use crate::cli::InitArgs;
@@ -80,13 +81,13 @@ pub fn run(ctx: &output::Context, args: InitArgs) -> Result<()> {
     )?);
 
     // 5. Project manifest and empty lockfile.
-    let registry = resolve_registry_section(&args);
+    let registries = resolve_registry_sections(&args);
     outcomes.push(ensure_project_manifest(
         ctx,
         &path,
         &project_name,
         args.stack.as_deref(),
-        registry,
+        registries,
     )?);
     outcomes.push(ensure_empty_lockfile(ctx, &path)?);
 
@@ -164,7 +165,7 @@ fn ensure_project_manifest(
     root: &Path,
     name: &str,
     stack: Option<&str>,
-    registry: Option<RegistrySection>,
+    registries: Vec<RegistrySection>,
 ) -> Result<Outcome> {
     let path = root.join(ProjectManifest::FILENAME);
     let rel = relative_to_root(root, &path);
@@ -187,7 +188,7 @@ fn ensure_project_manifest(
             stack: Some(s.to_string()),
         }),
         llm: None,
-        registries: registry.into_iter().collect(),
+        registries,
         mirrors: Vec::new(),
         overrides: Vec::new(),
         i18n: vibe_core::manifest::i18n::I18nDecl::default(),
@@ -202,28 +203,58 @@ fn ensure_project_manifest(
     })
 }
 
-/// Build the `[[registry]]` entry to write into a fresh `vibe.toml`.
+/// Build the `[[registry]]` entries to write into a fresh `vibe.toml`.
 ///
-/// - `--no-registry` → `None` (vibe.toml has no `[[registry]]`).
-/// - otherwise → a single entry named `"default"` with the organization-root
-///   URL and default kind-name naming convention. `--registry-url` /
-///   `--registry-ref` override url / ref respectively.
-fn resolve_registry_section(args: &InitArgs) -> Option<RegistrySection> {
+/// - `--no-registry` → empty (vibe.toml has no `[[registry]]`).
+/// - `--registry-url <URL>` → one entry — the operator's custom registry,
+///   replacing the defaults entirely. `--registry-ref` further overrides
+///   the ref.
+/// - default → two entries:
+///   1. `vibespecs` on GitHub (primary — drives `vibe registry publish`
+///      and the first stop on resolve fallback).
+///   2. `vibespecs-gitverse` on GitVerse (secondary — different package
+///      set; consulted on `UnknownPackage` fall-through). Publishing here
+///      is currently a stub; resolve-time read works.
+fn resolve_registry_sections(args: &InitArgs) -> Vec<RegistrySection> {
     if args.no_registry {
-        return None;
+        return Vec::new();
     }
-    Some(RegistrySection {
+    if let Some(url) = &args.registry_url {
+        return vec![RegistrySection {
+            name: DEFAULT_REGISTRY_NAME.to_string(),
+            url: url.clone(),
+            r#ref: args
+                .registry_ref
+                .clone()
+                .unwrap_or_else(|| DEFAULT_REGISTRY_REF.to_string()),
+            naming: NamingConvention::KindName,
+        }];
+    }
+    let github = RegistrySection {
         name: DEFAULT_REGISTRY_NAME.to_string(),
-        url: args
-            .registry_url
-            .clone()
-            .unwrap_or_else(|| DEFAULT_REGISTRY_URL.to_string()),
+        url: DEFAULT_REGISTRY_URL.to_string(),
         r#ref: args
             .registry_ref
             .clone()
             .unwrap_or_else(|| DEFAULT_REGISTRY_REF.to_string()),
         naming: NamingConvention::KindName,
-    })
+    };
+    // GitVerse default uses `naming = "name"` (no kind prefix). The
+    // public `vibespecs` org on GitVerse provisions repos under their
+    // package name only — `vibespecs/vibevm-direct-push-smoke` rather
+    // than `vibespecs/flow-vibevm-direct-push-smoke`. Keeping the
+    // default consistent with what the org actually carries means a
+    // fresh `vibe init` resolves GitVerse-only packages correctly out
+    // of the box. The convention is recorded per-registry in
+    // `vibe.toml`, so a project mirroring a different org (where
+    // kind-name is the convention) overrides it freely.
+    let gitverse = RegistrySection {
+        name: DEFAULT_REGISTRY_GITVERSE_NAME.to_string(),
+        url: DEFAULT_REGISTRY_GITVERSE_URL.to_string(),
+        r#ref: DEFAULT_REGISTRY_REF.to_string(),
+        naming: NamingConvention::Name,
+    };
+    vec![github, gitverse]
 }
 
 fn ensure_empty_lockfile(ctx: &output::Context, root: &Path) -> Result<Outcome> {

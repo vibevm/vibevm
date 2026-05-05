@@ -1,17 +1,23 @@
 //! Publish-token loading.
 //!
-//! Per-host file precedence pinned in
+//! Host-aware precedence pinned in
 //! [PROP-000 §20](../../../spec/common/PROP-000.md#token-secrecy):
 //!
 //! 1. Explicit value (`Token::from_explicit`) — used by tests.
-//! 2. `VIBEVM_PUBLISH_TOKEN` environment variable — wins over files;
-//!    suitable for CI.
-//! 3. `~/.vibevm/<host-prefix>.publish.token` — per-host file. The
+//! 2. `VIBEVM_PUBLISH_TOKEN_<HOST>` environment variable — host-specific
+//!    (`VIBEVM_PUBLISH_TOKEN_GITHUB` for `github.com`,
+//!    `VIBEVM_PUBLISH_TOKEN_GITVERSE` for `gitverse.ru`, …). Lets CI
+//!    hold tokens for several hosts in the same env without a single
+//!    `VIBEVM_PUBLISH_TOKEN` clobbering them all.
+//! 3. `VIBEVM_PUBLISH_TOKEN` — legacy host-agnostic env var. Kept so
+//!    setups that already exported it keep working without a rename;
+//!    the host-specific form should be preferred in new setups.
+//! 4. `~/.vibevm/<host-prefix>.publish.token` — per-host file. The
 //!    prefix is the **first label** of the host: `github` for
 //!    `github.com`, `gitverse` for `gitverse.ru`, `gitlab` for
 //!    `gitlab.com`. Lets one operator hold tokens for several hosts
-//!    without juggling env vars.
-//! 4. `~/.vibevm/git.publish.token` — legacy host-agnostic fallback.
+//!    without juggling env vars at all.
+//! 5. `~/.vibevm/git.publish.token` — legacy host-agnostic file.
 //!    Kept so existing GitVerse-only setups keep working without a
 //!    rename. Will be retired in a future major version once the
 //!    per-host pattern is universal.
@@ -30,11 +36,13 @@ use crate::PublishError;
 
 /// Where the loaded token came from. Not the value — that stays inside
 /// the `Token`. Useful in CLI output ("loaded token from
-/// $VIBEVM_PUBLISH_TOKEN") and error attribution.
+/// $VIBEVM_PUBLISH_TOKEN_GITHUB") and error attribution. The variable
+/// name is owned because the host-specific form is computed at runtime
+/// from the host segment.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum TokenSource {
     Explicit,
-    EnvVar(&'static str),
+    EnvVar(String),
     File(PathBuf),
 }
 
@@ -77,20 +85,56 @@ impl fmt::Display for Token {
     }
 }
 
-const ENV_VAR: &str = "VIBEVM_PUBLISH_TOKEN";
+/// Legacy host-agnostic env var. Kept as a fallback for setups that
+/// already exported it; the host-specific form via [`host_env_var`]
+/// is preferred for new configuration.
+pub const LEGACY_ENV_VAR: &str = "VIBEVM_PUBLISH_TOKEN";
+
+/// Backwards-compatible alias. Prefer [`LEGACY_ENV_VAR`] in new code.
+pub const ENV_VAR: &str = LEGACY_ENV_VAR;
+
+/// Compute the host-specific env var name for `host` (e.g.
+/// `github.com` → `VIBEVM_PUBLISH_TOKEN_GITHUB`,
+/// `gitverse.ru` → `VIBEVM_PUBLISH_TOKEN_GITVERSE`). Returns `None`
+/// for a host whose first-label prefix can't be derived.
+pub fn host_env_var(host: &str) -> Option<String> {
+    let prefix = host_prefix(host)?;
+    let upper: String = prefix
+        .chars()
+        .map(|c| {
+            if c.is_ascii_alphanumeric() {
+                c.to_ascii_uppercase()
+            } else {
+                '_'
+            }
+        })
+        .collect();
+    if upper.is_empty() {
+        return None;
+    }
+    Some(format!("{LEGACY_ENV_VAR}_{upper}"))
+}
 
 /// Load a token using the host-aware precedence.
 ///
-/// Walks: env var → `~/.vibevm/<host-prefix>.publish.token` →
-/// legacy `~/.vibevm/git.publish.token`. The `host` argument shapes
-/// the per-host file lookup and surfaces in the `AuthMissing` error.
+/// Walks (in order):
+/// 1. `VIBEVM_PUBLISH_TOKEN_<HOST>` env var (host-specific).
+/// 2. `VIBEVM_PUBLISH_TOKEN` env var (legacy host-agnostic).
+/// 3. `~/.vibevm/<host-prefix>.publish.token` file (host-specific).
+/// 4. `~/.vibevm/git.publish.token` file (legacy host-agnostic).
 ///
-/// The `<host-prefix>` is derived as the first label of `host`:
-/// `github.com` → `github`, `gitverse.ru` → `gitverse`. Hosts that
-/// don't fit this shape (a bare hostname, an IP address) fall straight
-/// through to the legacy file.
+/// The `host` argument shapes the per-host lookup and surfaces in the
+/// `AuthMissing` error. The `<host-prefix>` is derived as the first
+/// label of `host`: `github.com` → `github`, `gitverse.ru` →
+/// `gitverse`. Hosts that don't fit this shape (a bare hostname, an
+/// IP address) skip the host-specific layers and fall straight through
+/// to the legacy ones.
 pub fn load_token_for_host(host: &str) -> Result<Token, PublishError> {
-    if let Some(t) = read_env_token() {
+    if let Some(t) = read_host_env_token(host) {
+        return Ok(t);
+    }
+
+    if let Some(t) = read_legacy_env_token() {
         return Ok(t);
     }
 
@@ -114,15 +158,28 @@ pub fn load_token(host: &str) -> Result<Token, PublishError> {
     load_token_for_host(host)
 }
 
-fn read_env_token() -> Option<Token> {
-    let value = std::env::var(ENV_VAR).ok()?;
+fn read_host_env_token(host: &str) -> Option<Token> {
+    let name = host_env_var(host)?;
+    let value = std::env::var(&name).ok()?;
     let trimmed = value.trim();
     if trimmed.is_empty() {
         return None;
     }
     Some(Token {
         value: trimmed.to_string(),
-        source: TokenSource::EnvVar(ENV_VAR),
+        source: TokenSource::EnvVar(name),
+    })
+}
+
+fn read_legacy_env_token() -> Option<Token> {
+    let value = std::env::var(LEGACY_ENV_VAR).ok()?;
+    let trimmed = value.trim();
+    if trimmed.is_empty() {
+        return None;
+    }
+    Some(Token {
+        value: trimmed.to_string(),
+        source: TokenSource::EnvVar(LEGACY_ENV_VAR.to_string()),
     })
 }
 
@@ -237,6 +294,44 @@ mod tests {
     // construction path is exercised by the explicit-value test plus
     // the redaction tests above. Live env / file behaviour gets a
     // smoke-test pass during real publish runs.
+
+    #[test]
+    fn host_env_var_renders_per_host() {
+        assert_eq!(
+            host_env_var("github.com").as_deref(),
+            Some("VIBEVM_PUBLISH_TOKEN_GITHUB")
+        );
+        assert_eq!(
+            host_env_var("gitverse.ru").as_deref(),
+            Some("VIBEVM_PUBLISH_TOKEN_GITVERSE")
+        );
+        assert_eq!(
+            host_env_var("gitlab.com").as_deref(),
+            Some("VIBEVM_PUBLISH_TOKEN_GITLAB")
+        );
+    }
+
+    #[test]
+    fn host_env_var_uppercases_and_sanitises_prefix() {
+        // Mixed case input → uppercase env var.
+        assert_eq!(
+            host_env_var("GitHub.COM").as_deref(),
+            Some("VIBEVM_PUBLISH_TOKEN_GITHUB")
+        );
+        // Hyphens / dots / underscores in the first label fold to `_`
+        // so the env-var name stays a valid POSIX identifier — the
+        // shell barfs on `VIBEVM_PUBLISH_TOKEN_some-host` otherwise.
+        assert_eq!(
+            host_env_var("some-host").as_deref(),
+            Some("VIBEVM_PUBLISH_TOKEN_SOME_HOST")
+        );
+    }
+
+    #[test]
+    fn host_env_var_handles_blank_input() {
+        assert_eq!(host_env_var(""), None);
+        assert_eq!(host_env_var("   "), None);
+    }
 
     #[test]
     fn host_prefix_strips_to_first_label() {

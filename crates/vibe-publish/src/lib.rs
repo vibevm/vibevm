@@ -31,14 +31,16 @@ use thiserror::Error;
 use vibe_core::PackageKind;
 use vibe_core::manifest::{NamingConvention, PackageManifest};
 
+pub mod direct_git;
 pub mod git_publish;
 pub mod github;
 pub mod gitverse;
 pub mod token;
 
+pub use direct_git::DirectGitCreator;
 pub use github::GitHubCreator;
 pub use gitverse::GitVerseCreator;
-pub use token::{Token, TokenSource, load_token, load_token_for_host};
+pub use token::{Token, TokenSource, host_env_var, load_token, load_token_for_host};
 
 /// Information about a package repository on a host.
 #[derive(Debug, Clone)]
@@ -125,6 +127,16 @@ pub trait RepoCreator {
         }
         Ok(())
     }
+
+    /// When set, signals "no host API in play — push the freshly-built
+    /// commit + tag straight to this URL using the local user's git
+    /// credentials". [`Publisher::publish`] short-circuits the whole
+    /// org-extraction + repo_exists + create_repo dance when this
+    /// returns `Some`. Default `None` means the regular host-adapter
+    /// flow (token, API, scope-guard) applies. See [`crate::DirectGitCreator`].
+    fn direct_repo_url(&self) -> Option<&str> {
+        None
+    }
 }
 
 /// Inputs to a single publish run.
@@ -203,8 +215,48 @@ impl<'c, C: RepoCreator + ?Sized> Publisher<'c, C> {
         let kind = manifest.package.kind;
         let name = manifest.package.name.clone();
         let version = manifest.package.version.clone();
-        let repo_name = config.naming.repo_name(kind, &name);
         let tag = format!("{}{}", config.tag_prefix, version);
+
+        // Direct-git short-circuit: when the adapter declares a direct
+        // repo URL, vibevm pushes straight to it using local-git creds.
+        // No org extraction (the URL is repo-level, not org-level), no
+        // repo_exists probe, no create_repo, no token. Repo presence is
+        // the operator's responsibility — `git push` errors out cleanly
+        // if the URL is wrong, and `git_publish::push_with_classification`
+        // surfaces a structured `PublishError` with the URL inline
+        // (credentials redacted per PROP-000 §20).
+        if let Some(direct_url) = self.creator.direct_repo_url() {
+            // No naming convention probe — the operator supplied the
+            // URL, so the host's actual repo path is whatever they
+            // chose. For the human-facing `PublishOutcome.repo_name`
+            // we fall back to the conventional `<kind>-<name>` form
+            // (matches what the operator typically picked when they
+            // provisioned the repo); the truth-of-the-matter is the
+            // URL itself, surfaced in `repo_url`.
+            let repo_name = config.naming.repo_name(kind, &name);
+            if !config.dry_run {
+                git_publish::push_release(
+                    &config.source_dir,
+                    direct_url,
+                    &tag,
+                    &name,
+                    &version,
+                )?;
+            }
+            return Ok(PublishOutcome {
+                kind,
+                name,
+                version,
+                repo_name,
+                repo_url: direct_url.to_string(),
+                tag,
+                created_repo: false,
+                host: self.creator.host_name().to_string(),
+                dry_run: config.dry_run,
+            });
+        }
+
+        let repo_name = config.naming.repo_name(kind, &name);
 
         // Step 2: derive org segment from the configured org URL.
         let org_segment = extract_org_segment(&config.org_url)?;

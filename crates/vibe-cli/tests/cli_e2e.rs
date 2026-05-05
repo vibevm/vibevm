@@ -3274,6 +3274,263 @@ fn set_mirror_rejects_empty_url() {
 }
 
 // ---------------------------------------------------------------------------
+// `vibe registry publish` against GitVerse — stub, not API call
+// ---------------------------------------------------------------------------
+//
+// GitVerse's public REST API does not expose org-scoped repository creation
+// today, so `vibe registry publish` cannot run end to end against a GitVerse
+// `[[registry]]`. The CLI short-circuits at the host-detection step with a
+// clear "not implemented" envelope. This test pins that contract: targeting
+// the GitVerse-shaped default registry produces the stub envelope, exits 0
+// (so the operator can script around it without `||` machinery), and never
+// reaches token loading or any HTTP call.
+
+#[test]
+fn publish_against_gitverse_registry_emits_stub_envelope() {
+    let project = tempfile::tempdir().unwrap();
+    init_project(project.path());
+
+    // Synthesize a minimal package directory the publisher can read.
+    // The stub fires before any of these bytes matter — the test
+    // would still pass with an empty file — but the manifest is what
+    // the non-stub path would consume, so writing one keeps the test
+    // honest about exercising the real argument flow.
+    let pkg_dir = tempfile::tempdir().unwrap();
+    fs::write(
+        pkg_dir.path().join("vibe-package.toml"),
+        r#"[package]
+name = "tiny"
+kind = "flow"
+version = "0.0.1"
+"#,
+    )
+    .unwrap();
+
+    let out = vibe()
+        .arg("--json")
+        .arg("registry")
+        .arg("publish")
+        .arg(pkg_dir.path())
+        .arg("--registry")
+        .arg("vibespecs-gitverse")
+        .arg("--path")
+        .arg(project.path())
+        .output()
+        .unwrap();
+    assert!(
+        out.status.success(),
+        "stub path returns success status; stderr: {}",
+        String::from_utf8_lossy(&out.stderr)
+    );
+
+    let payload: serde_json::Value =
+        serde_json::from_slice(&out.stdout).expect("valid JSON");
+    assert_eq!(payload["ok"], false);
+    assert_eq!(payload["command"], "registry:publish");
+    assert_eq!(payload["stub"], true);
+    assert_eq!(payload["host"], "gitverse.ru");
+    assert_eq!(payload["registry"], "vibespecs-gitverse");
+    let reason = payload["reason"].as_str().expect("reason is a string");
+    assert!(
+        reason.contains("not implemented"),
+        "reason should call out the limitation; got: {reason}"
+    );
+}
+
+// ---------------------------------------------------------------------------
+// `vibe registry publish --repo-url` — direct git push, no API in play
+// ---------------------------------------------------------------------------
+//
+// The no-API path takes a single git URL and pushes the package contents
+// + tag to it using whatever credentials the local `git` is wired to use.
+// We exercise this end to end against a temporary `--bare` repo on the
+// local filesystem: a `file:///` URL is enough to drive the same code
+// path that an SSH or HTTPS URL would on a real host, without any
+// network or token machinery in scope. The token-loading code is
+// asserted-not-invoked by setting an obviously-bogus value for
+// `VIBEVM_PUBLISH_TOKEN`/`VIBEVM_PUBLISH_TOKEN_GITHUB`: if the direct
+// path were silently falling back into the registry path, the publish
+// would fail with an auth error against api.github.com.
+
+#[test]
+fn publish_direct_repo_url_pushes_to_local_bare_repo() {
+    if !git_available() {
+        eprintln!("skipping: git not on PATH");
+        return;
+    }
+
+    let project = tempfile::tempdir().unwrap();
+    init_project(project.path());
+
+    // Synthesize a minimal package directory.
+    let pkg_dir = tempfile::tempdir().unwrap();
+    fs::write(
+        pkg_dir.path().join("vibe-package.toml"),
+        r#"[package]
+name = "tiny"
+kind = "flow"
+version = "0.0.1"
+"#,
+    )
+    .unwrap();
+    fs::create_dir_all(pkg_dir.path().join("spec")).unwrap();
+    fs::write(pkg_dir.path().join("spec/PROTOCOL.md"), "hello\n").unwrap();
+
+    // Build a bare origin we can push to. `file:///<abs>` is a real
+    // git URL — the same pipeline that would handle SSH/HTTPS handles
+    // file:// equivalently, so this exercises the direct-push code
+    // without leaking credentials, network, or hostnames into the
+    // test environment.
+    let bare_dir = tempfile::tempdir().unwrap();
+    let bare = bare_dir.path().join("origin.git");
+    let init_status = std::process::Command::new("git")
+        .args(["init", "--bare", bare.to_str().unwrap()])
+        .env("LC_ALL", "C")
+        .status()
+        .unwrap();
+    assert!(init_status.success(), "git init --bare must succeed");
+
+    let abs_bare = bare.to_string_lossy().replace('\\', "/");
+    let repo_url = format!("file:///{}", abs_bare.trim_start_matches('/'));
+
+    let out = vibe()
+        // Set bogus tokens to assert the direct path does NOT call
+        // load_token_for_host. If it did, the github path would barf
+        // on a 401 or 403 against api.github.com.
+        .env("VIBEVM_PUBLISH_TOKEN", "should-not-be-read-on-direct-path")
+        .env(
+            "VIBEVM_PUBLISH_TOKEN_GITHUB",
+            "should-not-be-read-on-direct-path",
+        )
+        .arg("--json")
+        .arg("registry")
+        .arg("publish")
+        .arg(pkg_dir.path())
+        .arg("--repo-url")
+        .arg(&repo_url)
+        .arg("--path")
+        .arg(project.path())
+        .output()
+        .unwrap();
+    assert!(
+        out.status.success(),
+        "direct publish should succeed; stderr: {}",
+        String::from_utf8_lossy(&out.stderr)
+    );
+
+    let payload: serde_json::Value =
+        serde_json::from_slice(&out.stdout).expect("valid JSON");
+    assert_eq!(payload["ok"], true);
+    assert_eq!(payload["command"], "registry:publish");
+    assert_eq!(payload["mode"], "direct-git");
+    assert_eq!(payload["repo_url"], repo_url);
+    assert_eq!(payload["tag"], "v0.0.1");
+    assert_eq!(payload["dry_run"], false);
+
+    // The bare repo must now carry the tag and the main branch.
+    let tags = std::process::Command::new("git")
+        .args(["-C", bare.to_str().unwrap(), "tag", "--list"])
+        .env("LC_ALL", "C")
+        .output()
+        .unwrap();
+    let tag_list = String::from_utf8_lossy(&tags.stdout);
+    assert!(
+        tag_list.contains("v0.0.1"),
+        "expected v0.0.1 in tags after direct push, got: {tag_list}"
+    );
+
+    let branches = std::process::Command::new("git")
+        .args(["-C", bare.to_str().unwrap(), "branch", "--list"])
+        .env("LC_ALL", "C")
+        .output()
+        .unwrap();
+    assert!(
+        String::from_utf8_lossy(&branches.stdout).contains("main"),
+        "expected main branch in bare origin after direct push"
+    );
+}
+
+#[test]
+fn publish_direct_repo_url_dry_run_skips_actual_push() {
+    let project = tempfile::tempdir().unwrap();
+    init_project(project.path());
+
+    let pkg_dir = tempfile::tempdir().unwrap();
+    fs::write(
+        pkg_dir.path().join("vibe-package.toml"),
+        r#"[package]
+name = "tiny"
+kind = "flow"
+version = "0.0.1"
+"#,
+    )
+    .unwrap();
+
+    // `--dry-run` against a deliberately invalid URL must NOT fail —
+    // dry-run on the direct path skips the git push entirely.
+    let out = vibe()
+        .arg("--json")
+        .arg("registry")
+        .arg("publish")
+        .arg(pkg_dir.path())
+        .arg("--repo-url")
+        .arg("ssh://git@invalid.example/never/created.git")
+        .arg("--dry-run")
+        .arg("--path")
+        .arg(project.path())
+        .output()
+        .unwrap();
+    assert!(
+        out.status.success(),
+        "dry-run direct publish should succeed; stderr: {}",
+        String::from_utf8_lossy(&out.stderr)
+    );
+
+    let payload: serde_json::Value =
+        serde_json::from_slice(&out.stdout).expect("valid JSON");
+    assert_eq!(payload["ok"], true);
+    assert_eq!(payload["mode"], "direct-git");
+    assert_eq!(payload["dry_run"], true);
+    assert_eq!(
+        payload["repo_url"],
+        "ssh://git@invalid.example/never/created.git"
+    );
+}
+
+#[test]
+fn publish_repo_url_and_registry_are_mutually_exclusive() {
+    let project = tempfile::tempdir().unwrap();
+    init_project(project.path());
+
+    let pkg_dir = tempfile::tempdir().unwrap();
+    fs::write(
+        pkg_dir.path().join("vibe-package.toml"),
+        r#"[package]
+name = "tiny"
+kind = "flow"
+version = "0.0.1"
+"#,
+    )
+    .unwrap();
+
+    // clap surfaces `conflicts_with` violations as a usage error
+    // (exit code 2). Pin that — passing both `--registry` and
+    // `--repo-url` should never proceed past arg parsing.
+    vibe()
+        .arg("registry")
+        .arg("publish")
+        .arg(pkg_dir.path())
+        .arg("--registry")
+        .arg("vibespecs")
+        .arg("--repo-url")
+        .arg("ssh://git@example.org/foo.git")
+        .arg("--path")
+        .arg(project.path())
+        .assert()
+        .failure();
+}
+
+// ---------------------------------------------------------------------------
 // Help-text smoke — every CLI subcommand renders `--help`
 // ---------------------------------------------------------------------------
 //

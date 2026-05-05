@@ -243,9 +243,17 @@ pub struct RegistryPublishArgs {
     pub source: PathBuf,
 
     /// Name of the `[[registry]]` to publish into. Defaults to the
-    /// first registry in `vibe.toml`.
-    #[arg(long = "registry")]
+    /// first registry in `vibe.toml`. Conflicts with `--repo-url`.
+    #[arg(long = "registry", conflicts_with = "repo_url")]
     pub registry: Option<String>,
+
+    /// Push directly to the given git URL — SSH or HTTPS — bypassing
+    /// every host API. The repo must already exist on the host. Git
+    /// authentication is the local user's: SSH agent, `credential.helper`,
+    /// `~/.netrc`, whatever the local git is wired to use. No publish
+    /// token is loaded on this path. Conflicts with `--registry`.
+    #[arg(long = "repo-url", conflicts_with = "registry")]
+    pub repo_url: Option<String>,
 
     /// Project root with `vibe.toml`. Defaults to current directory.
     #[arg(long, default_value = ".")]
@@ -271,9 +279,13 @@ pub struct InitArgs {
     pub name: Option<String>,
 
     /// Override the default registry URL written into `vibe.toml`.
-    /// When unset, `vibe init` writes the public `vibespecs`
-    /// organization on GitHub (`https://github.com/vibespecs`).
-    /// Conflicts with `--no-registry`.
+    /// When unset, `vibe init` writes two `[[registry]]` blocks: the
+    /// `vibespecs` organisation on GitHub (primary, drives `vibe
+    /// registry publish` and the first stop on resolve fallback) and
+    /// `vibespecs-gitverse` on GitVerse (secondary, queried on
+    /// `UnknownPackage` fall-through). Setting this flag replaces both
+    /// defaults with a single `[[registry]]` pointing at the supplied
+    /// URL. Conflicts with `--no-registry`.
     #[arg(long = "registry-url", conflicts_with = "no_registry")]
     pub registry_url: Option<String>,
 

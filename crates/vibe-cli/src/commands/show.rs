@@ -351,8 +351,18 @@ const CONFIG_ENV_VARS: &[(&str, &str, bool /* sensitive */)] = &[
         false,
     ),
     (
+        "VIBEVM_PUBLISH_TOKEN_GITHUB",
+        "Publish token for `vibe registry publish` against GitHub. Wins over the legacy `VIBEVM_PUBLISH_TOKEN` and over `~/.vibevm/github.publish.token`.",
+        true,
+    ),
+    (
+        "VIBEVM_PUBLISH_TOKEN_GITVERSE",
+        "Publish token for `vibe registry publish` against GitVerse (publishing is currently a stub; reserved for when the GitVerse public API gains parity).",
+        true,
+    ),
+    (
         "VIBEVM_PUBLISH_TOKEN",
-        "Publish token for `vibe registry publish` (host-agnostic; takes precedence over `~/.vibevm/<host>.publish.token`).",
+        "Legacy host-agnostic publish token. Used only when no `VIBEVM_PUBLISH_TOKEN_<HOST>` is set; prefer the per-host form in new setups.",
         true,
     ),
 ];

@@ -298,13 +298,28 @@ pub struct OverrideSection {
 /// `git@gitverse.ru:anarchic/vibevm.git` — only the registry org moves.
 pub const DEFAULT_REGISTRY_URL: &str = "https://github.com/vibespecs";
 
-/// Default name for the single registry written by `vibe init` into new
+/// Default name for the primary registry written by `vibe init` into new
 /// projects. Matches the `name` field callers see in `vibe.toml`.
 pub const DEFAULT_REGISTRY_NAME: &str = "vibespecs";
 
 /// Default ref on the registry URL — `main`. Applies to both registry-level
 /// metadata refs and to the git-backend's `origin/<ref>` fetch target.
 pub const DEFAULT_REGISTRY_REF: &str = "main";
+
+/// Secondary `[[registry]]` written by `vibe init` alongside the GitHub
+/// primary. Different organisation, different package set: GitHub remains
+/// canonical for `vibe registry publish` automation; GitVerse is queried
+/// on resolve fall-through (`UnknownPackage` from GitHub) so consumers can
+/// install packages that only live on GitVerse without manual setup.
+///
+/// Note that `vibe registry publish` against this host currently emits a
+/// not-implemented stub — the GitVerse public API does not yet expose
+/// org-scoped repo creation. The block is provisioned for resolve-time
+/// use; publishing remains GitHub-only until the API gains parity.
+pub const DEFAULT_REGISTRY_GITVERSE_URL: &str = "https://gitverse.ru/vibespecs";
+
+/// Default name for the secondary GitVerse registry written by `vibe init`.
+pub const DEFAULT_REGISTRY_GITVERSE_NAME: &str = "vibespecs-gitverse";
 
 fn default_ref() -> String {
     DEFAULT_REGISTRY_REF.to_string()

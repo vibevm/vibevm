@@ -4,11 +4,23 @@ version = "0.1.0-dev"
 authors = ["Oleg Chirukhin"]
 
 # vibevm is its own bootstrap project — the tool itself, not yet a
-# consumer of any other vibevm registry. The `[[registry]]` below is
-# the canonical vibespecs org, kept here so `vibe check` /
-# `vibe show config` can resolve provenance against the same default
-# every other vibevm project uses. Full self-hosting under
-# `packages/` lands post-M1.
+# consumer of any other vibevm registry. The `[[registry]]` blocks
+# below are the same defaults `vibe init` writes for every new
+# project, kept here so `vibe check` / `vibe show config` can resolve
+# provenance against the same shape every other vibevm project uses.
+# Full self-hosting under `packages/` lands post-M1.
+#
+# Two registries by default: `vibespecs` on GitHub is the canonical
+# publish target (the only host where `vibe registry publish` drives
+# the create-repo + push-tag flow end to end today); `vibespecs-gitverse`
+# is queried on resolve fall-through so packages that only live on
+# GitVerse install without manual setup. Publishing to GitVerse is
+# currently a stub — see `crates/vibe-cli/src/commands/registry.rs`.
 [[registry]]
 name = "vibespecs"
 url = "https://github.com/vibespecs"
+
+[[registry]]
+name = "vibespecs-gitverse"
+url = "https://gitverse.ru/vibespecs"
+naming = "name"

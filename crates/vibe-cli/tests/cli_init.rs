@@ -186,6 +186,12 @@ fn init_version() {
 
 #[test]
 fn init_writes_default_registry() {
+    // Default `vibe init` provisions two `[[registry]]` blocks: GitHub
+    // primary (canonical publish target) + GitVerse secondary
+    // (resolve-time fall-through). The block order is load-bearing —
+    // primary first drives `vibe registry publish` and the resolver
+    // walk order. See `resolve_registry_sections` in
+    // `crates/vibe-cli/src/commands/init.rs`.
     let dir = tempfile::tempdir().unwrap();
     let path = dir.path();
 
@@ -194,23 +200,42 @@ fn init_writes_default_registry() {
     let manifest_text = fs::read_to_string(path.join("vibe.toml")).unwrap();
     let parsed: vibe_core::manifest::ProjectManifest =
         toml::from_str(&manifest_text).unwrap();
-    let reg = parsed
-        .primary_registry()
-        .expect("[[registry]] should be written by default");
-    assert_eq!(reg.name, vibe_core::manifest::DEFAULT_REGISTRY_NAME);
-    assert_eq!(reg.url, vibe_core::manifest::DEFAULT_REGISTRY_URL);
-    assert_eq!(reg.r#ref, vibe_core::manifest::DEFAULT_REGISTRY_REF);
     assert_eq!(
-        reg.naming,
-        vibe_core::manifest::NamingConvention::KindName
+        parsed.registries.len(),
+        2,
+        "default `vibe init` writes both GitHub + GitVerse registries; got: {manifest_text}"
     );
-    // The default ref and default naming should be skipped-on-serialize,
-    // so the raw TOML carries the URL but not ref / naming.
+
+    let primary = &parsed.registries[0];
+    assert_eq!(primary.name, vibe_core::manifest::DEFAULT_REGISTRY_NAME);
+    assert_eq!(primary.url, vibe_core::manifest::DEFAULT_REGISTRY_URL);
+    assert_eq!(primary.r#ref, vibe_core::manifest::DEFAULT_REGISTRY_REF);
+    assert_eq!(primary.naming, vibe_core::manifest::NamingConvention::KindName);
+
+    let secondary = &parsed.registries[1];
+    assert_eq!(
+        secondary.name,
+        vibe_core::manifest::DEFAULT_REGISTRY_GITVERSE_NAME
+    );
+    assert_eq!(
+        secondary.url,
+        vibe_core::manifest::DEFAULT_REGISTRY_GITVERSE_URL
+    );
+    // GitVerse default uses `naming = "name"` (no kind-prefix);
+    // the public `vibespecs` org on GitVerse provisions repos
+    // under bare package names (`vibevm-direct-push-smoke`) and the
+    // resolver must match that to find them.
+    assert_eq!(
+        secondary.naming,
+        vibe_core::manifest::NamingConvention::Name
+    );
+
     assert!(
         manifest_text.contains("[[registry]]"),
         "manifest must contain [[registry]]: {manifest_text}"
     );
     assert!(manifest_text.contains(vibe_core::manifest::DEFAULT_REGISTRY_URL));
+    assert!(manifest_text.contains(vibe_core::manifest::DEFAULT_REGISTRY_GITVERSE_URL));
 }
 
 #[test]
@@ -239,6 +264,10 @@ fn init_no_registry_flag_omits_section() {
 
 #[test]
 fn init_registry_url_override() {
+    // `--registry-url` replaces both default registries with a single
+    // operator-controlled one. The GitVerse fall-through default is
+    // intentionally dropped — the operator who supplied a custom URL
+    // is asking for an explicit, single-source layout.
     let dir = tempfile::tempdir().unwrap();
     let path = dir.path();
 
@@ -256,6 +285,11 @@ fn init_registry_url_override() {
     let manifest_text = fs::read_to_string(path.join("vibe.toml")).unwrap();
     let parsed: vibe_core::manifest::ProjectManifest =
         toml::from_str(&manifest_text).unwrap();
+    assert_eq!(
+        parsed.registries.len(),
+        1,
+        "--registry-url replaces defaults with a single entry; got: {manifest_text}"
+    );
     let reg = parsed
         .primary_registry()
         .expect("[[registry]] should exist");
@@ -263,6 +297,8 @@ fn init_registry_url_override() {
     assert_eq!(reg.r#ref, "develop");
     // Non-default ref must be serialized.
     assert!(manifest_text.contains("develop"));
+    // GitVerse default must NOT appear when the operator supplied their own URL.
+    assert!(!manifest_text.contains(vibe_core::manifest::DEFAULT_REGISTRY_GITVERSE_URL));
 }
 
 #[test]
