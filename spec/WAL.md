@@ -3,6 +3,19 @@ _Updated: 2026-05-05_
 
 ## Current phase
 
+**Session-end checkpoint (2026-05-05, end of day).** M1.7 vibe-mcp shipped completely (non-LLM scope) across three slices in this push window plus PROP-003 r2 fully landed end-to-end across earlier slices. Workspace at HEAD `0566dbf`: **403 tests across the workspace**, `cargo clippy --workspace --all-targets -- -D warnings` clean, `tools/self-check.sh` green. Working tree clean; ready for resume.
+
+What's effectively complete (non-LLM, non-libsolv):
+
+- PROP-003 r2 — schema + features + subskills (4 channels + 3 delivery modes, lazy-pull genuinely lazy via cache+MCP) + BCP-47 i18n + conditional dependencies (cascading fixed-point loop) + lockfile schema v3 with full provenance.
+- M1.7 — `vibe-mcp` crate, `vibe mcp serve` CLI, agent auto-detection + `vibe mcp install/status` for Claude Code & Cursor, cache-precise `read_subskill`, on-demand `materialise_subskill`.
+- M1.10 — `vibe outdated`.
+- M1.11 — agent auto-detection (closed alongside M1.7 slice 2).
+- vibe-check — three new PROP-003 checks (`features_graph`, `subskill_structure`, `i18n_coverage`) + `activation_conflict` Jaccard heuristic.
+- Three integration fixture packages exercising every PROP-003 r2 surface in combination, with omnibus e2e suite proving cross-cutting correctness.
+
+What's open: M1.5 LLM (big, non-routine, needs sign-off), M1.8 `vibe review` static, M2.10 `vibe search`, libsolv FFI (Phase A), `vibe update` feature-awareness, vibe-mcp follow-ups (Gemini/Codex/Copilot writers, `list_capabilities` tool). Detailed forward queue lives in `CONTINUE.md`.
+
 **M1.7 vibe-mcp slice 3 — per-subskill files index + materialise_subskill (2026-05-05).** Closes the lazy-pull runtime promise from PROP-003 §2.5.0. Three coupled changes land together so `delivery=lazy-pull` subskills behave correctly end-to-end without polluting the project tree.
 
 - **`LockedSubskill` schema** (`390fc3a`). Two new fields on the v3 lockfile entry. `files_written: Vec<PathBuf>` — project-relative paths a subskill specifically contributed (empty for lazy-pull). `cache_files: Vec<PathBuf>` — subskill-root-relative paths inside the package cache (populated for every delivery mode so MCP can resolve bytes via the cache regardless of mode). Both `#[serde(default)]` so legacy lockfiles parse.
@@ -344,9 +357,17 @@ since the documentation checkpoint:
 
 ## Next
 
-**Phase A is closed.** M1.6 (Phase B of the decentralized-registry refactor — polished multi-registry / mirror dispatch, `vibe vendor` for offline mirrors, richer publish adapters) becomes the next active milestone. M1.2 (`vibe update`), M1.3 (`vibe check`), M1.4 (`vibe show …`) are open in their original positions in the roadmap. M1.5-gate docs landed.
+**Forward queue (2026-05-05 session-end snapshot).** Sorted by smallness × payoff. Detailed write-up in [`CONTINUE.md`](../CONTINUE.md).
 
-**Optional follow-up tasks.** Useful but not required to declare Phase A complete:
+1. **M1.8 — `vibe review` static quality scoring.** New `vibe-eval` crate, three-axis rubric (validation / implementation / activation), no LLM dependency at this level. ~1 weekend.
+2. **M2.10 — `vibe search` registry inspector.** Walks every configured `[[registry]]` URL. Naive at first; indexing later. ~1 weekend.
+3. **`vibe update` feature-awareness.** Mirror `plan_install_with_options` into `plan_update_with_options`. ~1 weekend; closes a known gap.
+4. **vibe-mcp follow-ups.** Gemini / Codex / Copilot agent writers, `list_capabilities` / `query_capabilities` discovery tool, user-level config (`~/.config/claude/...`).
+5. **Documentation files.** `docs/commands/{features,subskills,purls,outdated,mcp-serve,mcp-install,mcp-status}.md`. Mechanical translation of `--help` text.
+6. **M1.5 — LLM provider abstraction + `vibe build`.** Big, non-routine — needs explicit owner sign-off per CLAUDE.md Rule 4 before starting. 3-6 weekends. Once `vibe-llm` is real, M2.7 (`--optimize` + multi-model A/B) and M2.9 (scenario gen from real commits) light up.
+7. **libsolv FFI / `SatDepSolver`** (PROP-003 §2.1, Phase A). 2-3 weekends; standalone slice.
+
+**Historical Phase A close-out follow-ups (still open).**
 
 - Smoke-test Last-known-pass line in [`manual-tests/M1.5-gate-v2-per-package-smoke.md`](../manual-tests/M1.5-gate-v2-per-package-smoke.md) — the manual protocol still says "TBD" since the in-session smoke ran an automated bash equivalent, not the full markdown protocol.
 - Schedule a recurring agent to verify the `vibespecs` org on GitHub stays reachable and `v0.1.0` tags don't drift (peeled SHAs as of 2026-04-29: `flow-wal` `1c3a1355`, `flow-sync-from-code` `a620157d`, `flow-atomic-commits` `d76512034`).
