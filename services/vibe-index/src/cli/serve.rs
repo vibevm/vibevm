@@ -7,7 +7,8 @@ use clap::Parser;
 
 use crate::error::{Error, Result};
 use crate::index::Index;
-use crate::server::{AppState, ServerLock, TokenStore, build_app};
+use crate::server::{AppState, RateLimitConfig, ServerLock, TokenStore, build_app};
+use crate::server::rate_limit::DEFAULT_MAX_BUCKETS;
 
 #[derive(Debug, Parser)]
 #[command(about = "Run the HTTP server.")]
@@ -33,6 +34,21 @@ pub struct Args {
     /// git push` in the data directory. Slice 5 stub.
     #[arg(long)]
     pub auto_commit_push: bool,
+
+    /// Per-token rate limit (requests / minute, per bearer token).
+    /// `0` disables (the default). PROP-005 §9 Q10. Bucket capacity
+    /// equals the RPM (so a fresh token can burst up to its full
+    /// minute allowance, then is throttled to RPM/60 per second
+    /// steady-state). Routes `/healthz`, `/readyz`, `/metrics` are
+    /// always exempt.
+    #[arg(long, value_name = "RPM", default_value_t = 0)]
+    pub rate_limit_per_token: u32,
+
+    /// Per-IP rate limit (requests / minute, per anonymous peer
+    /// IP). `0` disables. Same semantics as `--rate-limit-per-token`
+    /// but for unauthenticated reads.
+    #[arg(long, value_name = "RPM", default_value_t = 0)]
+    pub rate_limit_per_ip: u32,
 }
 
 pub fn run(args: Args) -> Result<()> {
@@ -54,7 +70,19 @@ pub fn run(args: Args) -> Result<()> {
         None => TokenStore::load(&args.data_dir)?,
     };
 
-    let state = AppState::with_tokens(args.data_dir.clone(), args.read_only, index, tokens);
+    let rate_limit = RateLimitConfig {
+        per_token_rpm: args.rate_limit_per_token,
+        per_ip_rpm: args.rate_limit_per_ip,
+        max_buckets: DEFAULT_MAX_BUCKETS,
+    };
+
+    let state = AppState::with_tokens_and_rate_limit(
+        args.data_dir.clone(),
+        args.read_only,
+        index,
+        tokens,
+        rate_limit,
+    );
 
     let runtime = tokio::runtime::Builder::new_multi_thread()
         .enable_all()
@@ -78,7 +106,12 @@ pub fn run(args: Args) -> Result<()> {
             std::process::id(),
         );
 
-        let server = axum::serve(listener, app);
+        // `into_make_service_with_connect_info::<SocketAddr>` is what
+        // makes peer-IP available to the rate-limit middleware via
+        // the `ConnectInfo<SocketAddr>` extension. PROP-005 §9 Q10.
+        let make_svc =
+            app.into_make_service_with_connect_info::<std::net::SocketAddr>();
+        let server = axum::serve(listener, make_svc);
         tokio::select! {
             r = server => r.map_err(|e| Error::Io {
                 path: args.data_dir.clone(),

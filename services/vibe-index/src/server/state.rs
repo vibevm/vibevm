@@ -10,6 +10,7 @@ use tokio::sync::RwLock;
 
 use crate::index::Index;
 use crate::server::auth::TokenStore;
+use crate::server::rate_limit::{RateLimitConfig, RateLimiter};
 
 #[derive(Debug)]
 pub struct AppState {
@@ -20,6 +21,7 @@ pub struct AppState {
     pub index: RwLock<Index>,
     pub stats: Stats,
     pub tokens: TokenStore,
+    pub rate_limiter: RateLimiter,
 }
 
 #[derive(Debug, Default)]
@@ -48,6 +50,22 @@ impl AppState {
         index: Index,
         tokens: TokenStore,
     ) -> Self {
+        Self::with_tokens_and_rate_limit(
+            data_dir,
+            read_only,
+            index,
+            tokens,
+            RateLimitConfig::disabled(),
+        )
+    }
+
+    pub fn with_tokens_and_rate_limit(
+        data_dir: PathBuf,
+        read_only: bool,
+        index: Index,
+        tokens: TokenStore,
+        rate_limit: RateLimitConfig,
+    ) -> Self {
         AppState {
             generator: index.generator.clone(),
             data_dir,
@@ -56,6 +74,7 @@ impl AppState {
             index: RwLock::new(index),
             stats: Stats::default(),
             tokens,
+            rate_limiter: RateLimiter::new(rate_limit),
         }
     }
 }
