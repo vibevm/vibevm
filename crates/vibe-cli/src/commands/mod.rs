@@ -7,6 +7,7 @@ pub mod list;
 pub mod mcp;
 pub mod outdated;
 pub mod registry;
+pub mod search;
 pub mod show;
 pub mod uninstall;
 pub mod update;

@@ -3557,6 +3557,7 @@ fn every_subcommand_renders_help() {
         &["install"],
         &["list"],
         &["outdated"],
+        &["search"],
         &["mcp"],
         &["mcp", "serve"],
         &["mcp", "install"],

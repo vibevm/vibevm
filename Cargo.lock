@@ -1882,6 +1882,7 @@ version = "0.1.0-dev"
 dependencies = [
  "anyhow",
  "assert_cmd",
+ "axum",
  "clap",
  "console",
  "dialoguer",
@@ -1890,6 +1891,7 @@ dependencies = [
  "serde",
  "serde_json",
  "tempfile",
+ "tokio",
  "toml",
  "tracing",
  "tracing-subscriber",

@@ -45,6 +45,14 @@ pub enum Command {
     /// PROP-003 §M1.10.
     Outdated(OutdatedArgs),
 
+    /// Search the configured `[[registry]]` entries for packages whose
+    /// description, name, keywords, or capabilities match a query.
+    /// Walks each registry's index server (resolved via
+    /// `VIBEVM_INDEX_URL_<R>` per PROP-005); registries without an
+    /// index URL or unreachable servers are reported but do not abort
+    /// the run. Per ROADMAP §M2.10.
+    Search(SearchArgs),
+
     /// Start the MCP (Model Context Protocol) server over stdio,
     /// exposing the project's lockfile and active subskills to a
     /// connected coding agent (Claude Code, Cursor, etc.). Per
@@ -369,6 +377,39 @@ pub struct InstallArgs {
 
 #[derive(Debug, clap::Args)]
 pub struct OutdatedArgs {
+    /// Project root with `vibe.toml`. Defaults to current directory.
+    #[arg(long, default_value = ".")]
+    pub path: PathBuf,
+}
+
+#[derive(Debug, clap::Args)]
+pub struct SearchArgs {
+    /// Free-text query. Tokenised on the server side: lowercase ASCII
+    /// alphanumeric runs, common stopwords filtered, single-character
+    /// tokens dropped. At least one 2+ character non-stopword must
+    /// remain after filtering for the query to match anything.
+    #[arg(required = true)]
+    pub query: Vec<String>,
+
+    /// Restrict results to a single package kind (`flow`, `feat`,
+    /// `stack`, `tool`).
+    #[arg(long)]
+    pub kind: Option<String>,
+
+    /// Restrict to one configured `[[registry]]` by name. Default: walk
+    /// every registry that has `VIBEVM_INDEX_URL_<R>` set in the
+    /// environment.
+    #[arg(long)]
+    pub registry: Option<String>,
+
+    /// Maximum hits to fetch from each registry's index server. The
+    /// server may apply its own cap; the union is then deduplicated
+    /// by `(kind, name)` keeping the highest-score hit. Defaults to
+    /// 20 — large enough to be useful, small enough that no single
+    /// registry dominates.
+    #[arg(long, default_value_t = 20)]
+    pub limit: usize,
+
     /// Project root with `vibe.toml`. Defaults to current directory.
     #[arg(long, default_value = ".")]
     pub path: PathBuf,
