@@ -10,23 +10,33 @@ Spec: [ROADMAP §M2.10](../../ROADMAP.md), [PROP-005 §2.10](../../spec/modules/
 
 ```
 vibe search <query>...
+            [--purl <PURL>]
             [--kind <flow|feat|stack|tool>]
             [--registry <name>]
             [--limit <N>]
+            [--full-scan]
+            [--no-cache | --cache-ttl <SECONDS>]
             [--path <dir>]
             [--json | --quiet]
 ```
 
-Multiple positional arguments are joined with a single space before being sent to the index — `vibe search wal log` is one query, not two.
+Two query modes (mutually exclusive):
+
+- **Free-text** — positional `<query>...` arguments. Multiple words are joined with a single space before being sent to the index.
+- **PURL lookup** — `--purl <PURL>` runs an exact match against `[package].describes` and any subskill-level `describes`. Hits carry a `binding_site` field (`package` vs `subskill`) so consumers see where the match originated.
 
 ## Flags
 
 | Flag | Description | Default |
 | --- | --- | --- |
-| `<query>...` | Free-text query. Tokenised server-side (lowercase ASCII alphanumeric runs, ~30-stopword filter, single-character tokens dropped). | — |
-| `--kind <K>` | Restrict to one package kind. | all |
+| `<query>...` | Free-text query. Tokenised server-side (lowercase ASCII alphanumeric runs, ~30-stopword filter, single-character tokens dropped). Mutually exclusive with `--purl`. | — |
+| `--purl <PURL>` | Direct PURL lookup. Errors if the value does not start with `pkg:`. Mutually exclusive with the positional query. | — |
+| `--kind <K>` | Restrict to one package kind. Applies only to free-text search; PURL lookup ignores it. | all |
 | `--registry <NAME>` | Walk only the named `[[registry]]`. Errors if `NAME` is not in `vibe.toml`. | walk every configured registry |
-| `--limit <N>` | Maximum hits to fetch from each registry's index. The server may apply its own cap; the union is then deduplicated by `(kind, name)` keeping the highest-score variant. | `20` |
+| `--limit <N>` | Maximum hits to fetch from each registry's index. The server may apply its own cap; the union is then deduplicated by `(kind, name)` keeping the highest-score variant. Ignored on `--purl` lookups. | `20` |
+| `--full-scan` | For registries without a configured `VIBEVM_INDEX_URL_<R>`, fall back to a naive org-walk via the host's REST API. v0 supports `github.com` only. Slower than an index; rate-limited. Ignored on `--purl` lookups. | off |
+| `--no-cache` | Bypass the persistent search cache under `~/.vibe/search-cache/`. Reads still go to the network even when a fresh entry exists; freshly-fetched results are not written back. | off |
+| `--cache-ttl <SECONDS>` | Override the default cache TTL. Entries older than this many seconds are misses. | `3600` (1h) |
 | `--path <dir>` | Project root with `vibe.toml`. | `.` |
 | `--json` | Structured JSON envelope — see [Output (JSON)](#output-json). | off |
 | `--quiet` | One-line summary `vibe search: N hits across M registries`. | off |
@@ -70,7 +80,7 @@ When no registry has an index URL configured, the summary line points at this do
 (no registry has VIBEVM_INDEX_URL_<R> configured — see docs/commands/search.md)
 ```
 
-### Output (JSON)
+### Output (JSON, free-text)
 
 ```jsonc
 {
@@ -90,13 +100,49 @@ When no registry has an index URL configured, the summary line points at this do
       "score": 3,
       "matched_tokens": ["wal", "log", "ahead"],
       "description": "Write-ahead log discipline for spec-driven projects.",
+      "registry": "vibespecs",
+      "source": "index"
+    }
+  ]
+}
+```
+
+`hits[].source` is `"index"` for results served from a `vibe-index` server and `"full-scan"` for results from the `--full-scan` org-walk fallback. `registries_unreachable[]` carries `{ name, reason }` per failure (HTTP status / connect-fail / malformed JSON). When `--full-scan` is active, two additional fields surface: `registries_full_scanned[]` (registries whose org-walk succeeded) and `registries_full_scan_unsupported[]` (non-GitHub hosts the v0 fallback can't handle). Both are omitted from the envelope when `--full-scan` is off.
+
+`ok` stays `true` even when every registry fails — the command surfaces the failure mode in the envelope rather than aborting, so a CI step that wants strict semantics can `jq -e '.registries_unreachable | length == 0'`.
+
+### Output (JSON, --purl lookup)
+
+```jsonc
+{
+  "ok": true,
+  "command": "search:purl",
+  "project": "/path/to/project",
+  "purl": "pkg:cargo/sqlx@0.8.0",
+  "registries_searched": ["vibespecs"],
+  "registries_unconfigured": ["vibespecs-gitverse"],
+  "registries_unreachable": [],
+  "hit_count": 2,
+  "hits": [
+    {
+      "kind": "flow",
+      "name": "sqlx-skin",
+      "version": "0.1.0",
+      "binding_site": "package",
+      "registry": "vibespecs"
+    },
+    {
+      "kind": "stack",
+      "name": "rust",
+      "version": "0.2.0",
+      "binding_site": "subskill",
       "registry": "vibespecs"
     }
   ]
 }
 ```
 
-`registries_unreachable[]` carries `{ name, reason }` per failure (HTTP status / connect-fail / malformed JSON). `ok` stays `true` even when every registry fails — the command surfaces the failure mode in the envelope rather than aborting, so a CI step that wants strict semantics can `jq -e '.registries_unreachable | length == 0'`.
+`binding_site` is `"package"` when the PURL appears on the entry's top-level `[package].describes` field, `"subskill"` when it comes from a subskill-level `describes`. Hits are deduplicated by `(kind, name, version)` across registries — earlier registries (vibe.toml priority order) win on ties.
 
 ## Examples
 
@@ -116,6 +162,18 @@ vibe search "ahead of time" --kind feat
 # Higher limit for deep org-wide searches.
 vibe search auth --limit 100
 
+# Find every package binding to a specific upstream library.
+vibe search --purl pkg:cargo/sqlx@0.8.0
+
+# Org-walk fallback for a registry without a vibe-index server (GitHub only in v0).
+vibe search auth --full-scan
+
+# Force a refresh past the 1-hour TTL.
+vibe search auth --no-cache
+
+# Force a refresh past a smaller TTL — useful in CI to keep search results fresh.
+vibe search auth --cache-ttl 60
+
 # Programmatic.
 vibe --json search auth | jq '.hits[].name'
 ```
@@ -130,10 +188,12 @@ vibe --json search auth | jq '.hits[].name'
 
 ## Limitations (v0)
 
-- **Index-only.** Without a `VIBEVM_INDEX_URL_<R>` configured, a registry contributes nothing to search results. A future revision may add a `--full-scan` mode that walks `git ls-remote` across the org for cases where the operator accepts the latency cost.
-- **No client-side caching.** Each invocation hits the index server cold. ROADMAP §M2.10 mentions `~/.vibe/search-cache/`; that lands when search becomes a frequent enough operation to make the cache pay for its complexity.
+- **`--full-scan` is GitHub-only.** v0 supports `github.com`-hosted registries only. Other hosts surface in `registries_full_scan_unsupported[]`. GitVerse parity unblocks once their public REST API exposes org-scoped repo enumeration ([PROP-002 §2.10](../../spec/modules/vibe-registry/PROP-002-decentralized-registry.md#publish) tracks the same gap for `vibe registry publish`).
 - **Stable-only ranking signal.** Server-side score is term-overlap (one point per matched query token). Tantivy / BM25 upgrades land server-side without a client change — the wire shape `{score: u32}` is the same.
-- **No `describes`-aware search.** Querying for `pkg:cargo/sqlx@0.8.0` returns hits whose name or description happens to contain the literal string. The dedicated `/v1/purls/{purl}` route on the index server already exists ([PROP-005 §2.10](../../spec/modules/vibe-index/PROP-005-package-index.md#index-routes)); a future `vibe search --purl <P>` flag would dispatch there directly.
+- **`--full-scan` reads HEAD, not tags.** What lands in `latest_stable` for a full-scan hit is the manifest's declared `version`, not the highest semver tag in the repo. For most vibevm packages these match; the gap matters only when a repo is mid-release.
+- **`--full-scan` rate limit.** Anonymous GitHub API allows 60 req/h; setting `VIBEVM_PUBLISH_TOKEN_GITHUB` lifts that to 5000 req/h. Hard cap of 500 repos scanned per registry per invocation prevents runaway scans on huge orgs — operators with bigger orgs should run an index instead.
+- **Cache scoped per `(registry, query, kind, limit)`.** Changing the index URL for a registry without a fresh-fetch flag continues to serve the old cache for up to 1 hour. Use `--no-cache` to force a refresh after a server-side rotation.
+- **PURL lookups bypass the cache.** Exact-match queries are cheap on the server side; we don't bother caching them. v0 keeps it simple; a follow-up may add a parallel cache layer if PURL searches become a bottleneck.
 
 ## Related
 
