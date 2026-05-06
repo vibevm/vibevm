@@ -126,15 +126,19 @@ impl Index {
         // arrives in slice 7.
         clear_by_name(data_dir)?;
 
-        // Write primary.jsonl.
+        // Write primary.jsonl + primary.jsonl.gz.
         let mut entries: Vec<VersionEntry> = self.iter_versions().cloned().collect();
-        let primary_meta = primary::write(data_dir, &mut entries)?;
+        let (primary_meta, primary_gz_meta) = primary::write(data_dir, &mut entries)?;
 
         // Write every by-name file; collect their checksums.
         let mut files: BTreeMap<String, RepomdFileEntry> = BTreeMap::new();
         files.insert(
             primary::FILENAME.into(),
             RepomdFileEntry::file(primary_meta.size, primary_meta.sha256),
+        );
+        files.insert(
+            primary::FILENAME_GZ.into(),
+            RepomdFileEntry::file(primary_gz_meta.size, primary_gz_meta.sha256),
         );
         for pkg in self.by_pkgref.values() {
             let written = by_name::write(data_dir, pkg)?;

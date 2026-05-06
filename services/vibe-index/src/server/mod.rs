@@ -45,6 +45,10 @@ pub fn build_app(state: AppState) -> Router {
             get(routes::index_files::primary_jsonl),
         )
         .route(
+            "/v1/index/primary.jsonl.gz",
+            get(routes::index_files::primary_jsonl_gz),
+        )
+        .route(
             "/v1/index/by-name/{kind}/{name}",
             get(routes::index_files::by_name_json),
         )

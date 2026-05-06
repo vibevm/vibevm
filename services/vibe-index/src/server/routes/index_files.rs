@@ -27,6 +27,35 @@ pub async fn primary_jsonl(State(state): State<Arc<AppState>>) -> Result<Respons
     .await
 }
 
+pub async fn primary_jsonl_gz(State(state): State<Arc<AppState>>) -> Result<Response, ApiError> {
+    state.stats.note_request();
+    let path = state.data_dir.join("primary.jsonl.gz");
+    let bytes = match tokio::fs::read(&path).await {
+        Ok(b) => b,
+        Err(e) if e.kind() == std::io::ErrorKind::NotFound => {
+            return Err(ApiError::not_found(format!(
+                "`{}` is not present in this index",
+                path.display()
+            )));
+        }
+        Err(e) => {
+            return Err(ApiError::internal(format!(
+                "could not read `{}`: {e}",
+                path.display()
+            )));
+        }
+    };
+    let mut resp = Response::builder()
+        .status(StatusCode::OK)
+        .header(header::CONTENT_TYPE, "application/x-ndjson")
+        .header(header::CONTENT_ENCODING, "gzip")
+        .body(Body::from(bytes))
+        .map_err(|e| ApiError::internal(format!("response build: {e}")))?;
+    resp.headers_mut()
+        .insert(header::CACHE_CONTROL, "no-cache".parse().unwrap());
+    Ok(resp.into_response())
+}
+
 pub async fn by_name_json(
     State(state): State<Arc<AppState>>,
     Path((kind_str, name_with_ext)): Path<(String, String)>,

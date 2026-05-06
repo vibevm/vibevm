@@ -48,6 +48,7 @@ tower = "0.5"
 tower-http = { version = "0.6", features = ["cors", "trace"] }
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 reqwest = { version = "0.12", default-features = false, features = ["blocking", "json", "rustls-tls"] }
+flate2 = "1"
 
 [dev-dependencies]
 assert_cmd = "2"

@@ -1,13 +1,22 @@
 //! `primary.jsonl` — JSON Lines, one [`VersionEntry`] per line, sorted
-//! by `(kind, name, version)`.
+//! by `(kind, name, version)`. Plus `primary.jsonl.gz` — gzip
+//! sibling for bandwidth-conscious consumers (PROP-005 §2.4). The
+//! gzip output is deterministic (level 6, `mtime=0`, no filename in
+//! the header) so its sha256 stays stable across machines for
+//! identical input.
 
+use std::io::Write;
 use std::path::Path;
+
+use flate2::Compression;
+use flate2::write::GzEncoder;
 
 use crate::error::{Error, Result};
 use crate::index::persistence::{atomic_write, sha256_of_bytes};
 use crate::types::VersionEntry;
 
 pub const FILENAME: &str = "primary.jsonl";
+pub const FILENAME_GZ: &str = "primary.jsonl.gz";
 
 /// Serialise `entries` to JSONL bytes (newline-terminated, sorted).
 /// `entries` are sorted in place by [`VersionEntry::sort_key`] so the
@@ -29,14 +38,36 @@ pub fn serialise(entries: &mut [VersionEntry]) -> Result<Vec<u8>> {
     Ok(out)
 }
 
-pub fn write(dir: &Path, entries: &mut [VersionEntry]) -> Result<WrittenFile> {
+pub fn write(dir: &Path, entries: &mut [VersionEntry]) -> Result<(WrittenFile, WrittenFile)> {
     let bytes = serialise(entries)?;
     let path = dir.join(FILENAME);
     atomic_write(&path, &bytes)?;
-    Ok(WrittenFile {
+    let plain = WrittenFile {
         size: bytes.len() as u64,
         sha256: sha256_of_bytes(&bytes),
-    })
+    };
+    let gz_bytes = gzip_deterministic(&bytes)?;
+    let gz_path = dir.join(FILENAME_GZ);
+    atomic_write(&gz_path, &gz_bytes)?;
+    let gz = WrittenFile {
+        size: gz_bytes.len() as u64,
+        sha256: sha256_of_bytes(&gz_bytes),
+    };
+    Ok((plain, gz))
+}
+
+/// gzip-encode `bytes` deterministically: header `mtime=0`, no
+/// filename, level 6 (the zlib default that gzip-1.x ships). Same
+/// input → same output across machines so the sha256 in
+/// `repomd.json` stays stable.
+pub fn gzip_deterministic(bytes: &[u8]) -> Result<Vec<u8>> {
+    let mut encoder = GzEncoder::new(Vec::new(), Compression::new(6));
+    encoder
+        .write_all(bytes)
+        .map_err(|e| Error::Malformed(format!("gzip write: {e}")))?;
+    encoder
+        .finish()
+        .map_err(|e| Error::Malformed(format!("gzip finish: {e}")))
 }
 
 pub fn read(dir: &Path) -> Result<Vec<VersionEntry>> {
@@ -149,12 +180,33 @@ mod tests {
     fn write_persists_on_disk() {
         let dir = tempdir().unwrap();
         let mut entries = vec![entry(PackageKind::Flow, "wal", "0.1.0")];
-        let written = write(dir.path(), &mut entries).unwrap();
-        assert!(written.size > 0);
-        assert!(written.sha256.starts_with("sha256:"));
+        let (plain, gz) = write(dir.path(), &mut entries).unwrap();
+        assert!(plain.size > 0);
+        assert!(plain.sha256.starts_with("sha256:"));
+        assert!(gz.size > 0);
+        assert!(gz.sha256.starts_with("sha256:"));
         let back = read(dir.path()).unwrap();
         assert_eq!(back.len(), 1);
         assert_eq!(back[0].name, "wal");
+        assert!(dir.path().join("primary.jsonl.gz").is_file());
+    }
+
+    #[test]
+    fn gzip_is_deterministic() {
+        let bytes = b"vibevm primary.jsonl bytes go here\n";
+        let a = gzip_deterministic(bytes).unwrap();
+        let b = gzip_deterministic(bytes).unwrap();
+        assert_eq!(a, b, "gzip output must be byte-identical for identical input");
+    }
+
+    #[test]
+    fn gzip_round_trips_to_original_bytes() {
+        let original = b"line one\nline two\nline three\n";
+        let compressed = gzip_deterministic(original).unwrap();
+        let mut decoder = flate2::read::GzDecoder::new(&compressed[..]);
+        let mut decompressed = Vec::new();
+        std::io::Read::read_to_end(&mut decoder, &mut decompressed).unwrap();
+        assert_eq!(decompressed, original);
     }
 
     #[test]

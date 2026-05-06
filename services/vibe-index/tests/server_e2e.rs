@@ -194,6 +194,31 @@ async fn primary_jsonl_served_with_ndjson_content_type() {
 }
 
 #[tokio::test]
+async fn primary_jsonl_gz_served_with_gzip_encoding() {
+    let (_tmp, state) = populated_state();
+    let app = build_app(state);
+    let resp = app
+        .oneshot(req(Method::GET, "/v1/index/primary.jsonl.gz"))
+        .await
+        .unwrap();
+    assert_eq!(resp.status(), StatusCode::OK);
+    assert_eq!(
+        resp.headers().get(header::CONTENT_TYPE).unwrap(),
+        "application/x-ndjson"
+    );
+    assert_eq!(
+        resp.headers().get(header::CONTENT_ENCODING).unwrap(),
+        "gzip"
+    );
+    let bytes = axum::body::to_bytes(resp.into_body(), usize::MAX)
+        .await
+        .unwrap();
+    // The gzip magic number is 0x1f 0x8b.
+    assert_eq!(bytes[0], 0x1f);
+    assert_eq!(bytes[1], 0x8b);
+}
+
+#[tokio::test]
 async fn by_name_route_serves_per_package_file() {
     let (_tmp, state) = populated_state();
     let app = build_app(state);
