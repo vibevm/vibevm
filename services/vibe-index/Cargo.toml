@@ -1,0 +1,44 @@
+[package]
+name = "vibe-index"
+version = "0.1.0-dev"
+edition = "2024"
+rust-version = "1.93"
+authors = ["Oleg Chirukhin"]
+publish = false
+description = "Standalone package index utility for vibevm-shaped registries"
+homepage = "https://gitverse.ru/anarchic/vibevm"
+repository = "https://gitverse.ru/anarchic/vibevm"
+keywords = ["vibevm", "package-index", "metadata", "spec-driven"]
+categories = ["command-line-utilities", "development-tools"]
+default-run = "vibe-index"
+
+[workspace]
+# Standalone workspace per spec://vibevm/modules/vibe-index/PROP-005#distribution.
+#
+# `services/vibe-index/` is deliberately outside the top-level vibevm
+# `crates/` workspace so an org owner who wants to host their own index
+# server can vendor just this subdirectory and `cargo install --path .`
+# without pulling the rest of vibevm. The empty `[workspace]` table
+# tells Cargo "this is a workspace root", which prevents the parent
+# directory's workspace from absorbing this package.
+
+[lib]
+name = "vibe_index"
+path = "src/lib.rs"
+
+[[bin]]
+name = "vibe-index"
+path = "src/main.rs"
+
+[dependencies]
+clap = { version = "4", features = ["derive"] }
+thiserror = "2"
+
+[dev-dependencies]
+assert_cmd = "2"
+predicates = "3"
+
+[profile.release]
+lto = "thin"
+codegen-units = 1
+strip = "symbols"
