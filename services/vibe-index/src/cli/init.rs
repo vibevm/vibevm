@@ -42,6 +42,8 @@ pub fn run(args: Args) -> Result<()> {
     }
     let index = Index::new(&args.registry, &args.registry_url, args.naming);
     index.write_to(&args.data_dir)?;
+    write_gitignore(&args.data_dir)?;
+    write_readme(&args.data_dir, &index.registry, &index.registry_url)?;
     println!(
         "Initialised empty index for `{}` at `{}` ({}, naming = {})",
         index.registry,
@@ -50,4 +52,69 @@ pub fn run(args: Args) -> Result<()> {
         index.naming,
     );
     Ok(())
+}
+
+fn write_gitignore(data_dir: &std::path::Path) -> Result<()> {
+    let path = data_dir.join(".gitignore");
+    if path.exists() {
+        return Ok(());
+    }
+    let body = "# vibe-index — local server / runtime state.\n\
+        # Index files (repomd.json, primary.jsonl[.gz],\n\
+        # by-name/, by-cap/, by-purl/) are tracked; everything\n\
+        # under state/ is per-host runtime data and stays out of\n\
+        # the source tree.\n\
+        /state/\n";
+    std::fs::write(&path, body).map_err(|e| Error::Io {
+        path,
+        message: e.to_string(),
+    })
+}
+
+fn write_readme(
+    data_dir: &std::path::Path,
+    registry: &str,
+    registry_url: &str,
+) -> Result<()> {
+    let path = data_dir.join("README.md");
+    if path.exists() {
+        return Ok(());
+    }
+    let body = format!(
+        "# vibe-index — `{registry}`\n\
+        \n\
+        Metadata index for the vibevm registry `{registry}` (`{registry_url}`).\n\
+        Format: [PROP-005](https://gitverse.ru/anarchic/vibevm/raw/branch/main/spec/modules/vibe-index/PROP-005-package-index.md).\n\
+        \n\
+        ## Files\n\
+        \n\
+        - `repomd.json` — manifest with sha256 of every other file.\n\
+        - `primary.jsonl` / `primary.jsonl.gz` — one `VersionEntry` per line.\n\
+        - `by-name/<kind>/<name>.json` — cargo-sparse-style per-package.\n\
+        - `by-cap/<slug>.jsonl` — inverted index by advertised capability.\n\
+        - `by-purl/<slug>.jsonl` — inverted index by `describes` PURL.\n\
+        - `state/` — gitignored runtime data (server PID, admin tokens,\n\
+          incremental-reindex checkpoint).\n\
+        \n\
+        ## Maintenance\n\
+        \n\
+        Refresh from the authoritative org clones with:\n\
+        \n\
+        ```sh\n\
+        vibe-index reindex . --from-clones <org-dir> --incremental\n\
+        ```\n\
+        \n\
+        Or walk a GitHub org directly:\n\
+        \n\
+        ```sh\n\
+        vibe-index reindex . --from-github <org> --token-file <pat-file>\n\
+        ```\n\
+        \n\
+        See `services/vibe-index/docs/` in the vibevm source tree for\n\
+        the full operator handbook + consumer protocol + format reference.\n"
+    );
+    std::fs::write(&path, body).map_err(|e| Error::Io {
+        path,
+        message: e.to_string(),
+    })
 }

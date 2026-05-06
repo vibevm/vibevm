@@ -158,6 +158,41 @@ fn init_seeds_empty_repomd_with_inverted_dirs() {
     assert!(files.contains_key("by-purl"));
 }
 
+#[test]
+fn init_writes_gitignore_and_readme() {
+    let dir = tempfile::tempdir().unwrap();
+    init_at(dir.path());
+    let gi = std::fs::read_to_string(dir.path().join(".gitignore")).unwrap();
+    assert!(gi.contains("/state/"));
+    let readme = std::fs::read_to_string(dir.path().join("README.md")).unwrap();
+    assert!(readme.contains("vibespecs"));
+    assert!(readme.contains("primary.jsonl"));
+    assert!(readme.contains("by-cap"));
+    assert!(readme.contains("PROP-005"));
+}
+
+#[test]
+fn init_preserves_existing_readme_on_force() {
+    let dir = tempfile::tempdir().unwrap();
+    init_at(dir.path());
+    let custom = "# Custom README\n\nThis was hand-written by the operator.\n";
+    std::fs::write(dir.path().join("README.md"), custom).unwrap();
+    cmd()
+        .args([
+            "init",
+            dir.path().to_str().unwrap(),
+            "--registry",
+            "vibespecs",
+            "--registry-url",
+            "https://example.invalid/vibespecs",
+            "--force",
+        ])
+        .assert()
+        .success();
+    let readme = std::fs::read_to_string(dir.path().join("README.md")).unwrap();
+    assert_eq!(readme, custom, "operator-edited README must survive --force");
+}
+
 fn init_at(dir: &Path) {
     cmd()
         .args([
