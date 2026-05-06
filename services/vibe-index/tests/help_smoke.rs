@@ -70,11 +70,16 @@ fn unknown_subcommand_fails_clean() {
 
 #[test]
 fn stub_subcommands_emit_not_yet_implemented() {
-    // A no-arg invocation of a subcommand that takes a positional path
-    // arg fails clap parsing first; supply the positional so we hit
-    // the dispatcher's NotYetImplemented branch.
+    // `add` is still a stub in slice 2 — `init` / `dump` / `verify`
+    // got real bodies. Supply enough args so clap parses; the
+    // dispatcher's NotYetImplemented branch fires.
     let out = cmd()
-        .args(["init", "/tmp/does-not-matter-stub"])
+        .args([
+            "add",
+            "/tmp/does-not-matter-stub",
+            "--manifest",
+            "/tmp/nope.toml",
+        ])
         .assert()
         .failure();
     let stderr = String::from_utf8(out.get_output().stderr.clone()).unwrap();

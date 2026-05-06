@@ -18,5 +18,7 @@
 
 pub mod cli;
 pub mod error;
+pub mod index;
+pub mod types;
 
 pub use error::{Error, Result};
