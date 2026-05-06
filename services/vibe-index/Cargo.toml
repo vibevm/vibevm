@@ -40,11 +40,12 @@ semver = { version = "1", features = ["serde"] }
 sha2 = "0.10"
 walkdir = "2"
 chrono = { version = "0.4", default-features = false, features = ["serde", "clock", "std"] }
+tempfile = "3"
+tracing = "0.1"
 
 [dev-dependencies]
 assert_cmd = "2"
 predicates = "3"
-tempfile = "3"
 
 [profile.release]
 lto = "thin"

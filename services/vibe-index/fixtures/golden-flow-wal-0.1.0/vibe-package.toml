@@ -1,0 +1,27 @@
+[package]
+name = "wal"
+kind = "flow"
+version = "0.1.0"
+authors = ["Oleg Chirukhin"]
+license = "EULA"
+description = "Write-Ahead Log discipline for human-AI development sessions"
+keywords = ["wal", "memory", "discipline", "session-management"]
+
+[compatibility]
+min_vibe_version = "0.1.0"
+requires_kinds = []
+
+[writes]
+files = [
+    "spec/flows/wal/WAL-PROTOCOL.md",
+    "spec/flows/wal/session-end-hook.md",
+    "spec/flows/wal/morning-routine.md",
+]
+
+[boot_snippet]
+filename = "10-flow-wal.md"
+source = "boot/10-flow-wal.md"
+
+[dependencies]
+required = []
+conflicts = []

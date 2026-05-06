@@ -1,0 +1,11 @@
+//! Source-of-truth walkers — `from_clones` walks a local org-dir of
+//! package-repo clones; `from_github` and `from_gitverse` (slice 8)
+//! walk host APIs. Each scanner produces an [`Iterator<Item =
+//! ScanResult<VersionEntry>>`] that the reindex command folds into
+//! the in-memory [`Index`](crate::index::Index).
+
+pub mod from_clones;
+pub mod git_cli;
+pub mod manifest;
+
+pub use from_clones::{FromClonesOptions, scan_org_dir};
