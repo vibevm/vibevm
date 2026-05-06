@@ -383,16 +383,31 @@ pub struct OutdatedArgs {
 }
 
 #[derive(Debug, clap::Args)]
+#[command(group(
+    clap::ArgGroup::new("query_mode")
+        .args(["query", "purl"])
+        .required(true)
+        .multiple(false)
+))]
 pub struct SearchArgs {
     /// Free-text query. Tokenised on the server side: lowercase ASCII
     /// alphanumeric runs, common stopwords filtered, single-character
     /// tokens dropped. At least one 2+ character non-stopword must
     /// remain after filtering for the query to match anything.
-    #[arg(required = true)]
+    /// Mutually exclusive with `--purl`.
     pub query: Vec<String>,
 
+    /// Direct PURL lookup — find every package whose `[package].describes`
+    /// or any subskill's `describes` equals this Package URL. Mutually
+    /// exclusive with the positional free-text query. Hits carry a
+    /// `binding_site` field (`package` vs `subskill`) so consumers see
+    /// where the match originated.
+    #[arg(long)]
+    pub purl: Option<String>,
+
     /// Restrict results to a single package kind (`flow`, `feat`,
-    /// `stack`, `tool`).
+    /// `stack`, `tool`). Applies only to free-text search; PURL
+    /// lookup ignores it.
     #[arg(long)]
     pub kind: Option<String>,
 
@@ -406,9 +421,34 @@ pub struct SearchArgs {
     /// server may apply its own cap; the union is then deduplicated
     /// by `(kind, name)` keeping the highest-score hit. Defaults to
     /// 20 — large enough to be useful, small enough that no single
-    /// registry dominates.
+    /// registry dominates. Ignored on `--purl` lookups (PURL match
+    /// is exact and saturates well below any reasonable limit).
     #[arg(long, default_value_t = 20)]
     pub limit: usize,
+
+    /// For registries without a configured `VIBEVM_INDEX_URL_<R>`,
+    /// fall back to a naive org-walk via the host's REST API. v0
+    /// supports GitHub-hosted registries only (`github.com`); other
+    /// hosts are reported as unsupported. Slower than an index;
+    /// rate-limited; reads `vibe-package.toml` from each repo's HEAD
+    /// via the GitHub Contents API. Ignored on `--purl` lookups.
+    #[arg(long = "full-scan")]
+    pub full_scan: bool,
+
+    /// Bypass the persistent search cache under
+    /// `~/.vibe/search-cache/`. Reads still go to the network even
+    /// when a fresh entry exists; freshly fetched results are not
+    /// written back. Useful for testing or when an index update
+    /// landed and the operator wants to force a refresh without
+    /// waiting for the TTL to expire.
+    #[arg(long = "no-cache")]
+    pub no_cache: bool,
+
+    /// Override the default cache TTL (1 hour) — entries older than
+    /// this many seconds are treated as misses. Ignored when
+    /// `--no-cache` is set.
+    #[arg(long = "cache-ttl")]
+    pub cache_ttl: Option<u64>,
 
     /// Project root with `vibe.toml`. Defaults to current directory.
     #[arg(long, default_value = ".")]
