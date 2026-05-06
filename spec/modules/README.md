@@ -19,3 +19,10 @@ backgrounder documents live in [`spec/research/`](../research/).
     — SAT solver via libsolv (BSD-3-Clause), cargo-style features,
     vibevm-native subskills with context-based activation, BCP-47
     sidecar i18n, lockfile v3. **Status: design proposal.**
+- [`vibe-index/`](vibe-index/) — optional per-org package index + standalone server.
+  - [PROP-005: Optional package index](vibe-index/PROP-005-package-index.md)
+    — per-org `<org>/index` git repo with cargo-sparse-style `by-name/`
+    + DNF-style `repomd.json` manifest + JSONL primary; standalone
+    `services/vibe-index/` utility (one binary, two modes — CLI + HTTP
+    server); single-writer in-RAM with atomic on-disk persistence;
+    full-and-incremental reindex; opt-in everywhere. **Status: draft 2026-05-06.**
