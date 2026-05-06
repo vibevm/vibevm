@@ -90,6 +90,51 @@ pub enum ConfigLocation {
     User,
 }
 
+/// Where a `vibevm` skill artefact lives — alongside the project (in
+/// the agent's project-scoped skills dir, committed to git) or in the
+/// operator's home / config dir (machine-local, not in git).
+//
+// `#[allow(dead_code)]` until the Phase-D install UX wires this through.
+// The next slice consumes every variant + method on this type.
+#[allow(dead_code)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum SkillScope {
+    Project,
+    User,
+}
+
+#[allow(dead_code)]
+impl SkillScope {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            SkillScope::Project => "project",
+            SkillScope::User => "user",
+        }
+    }
+
+    pub fn parse(value: &str) -> Result<SkillScope> {
+        match value {
+            "project" => Ok(SkillScope::Project),
+            "user" => Ok(SkillScope::User),
+            other => bail!(
+                "unknown --skill-scope value `{other}` (expected `project` or `user`)"
+            ),
+        }
+    }
+}
+
+/// Bytes of the `vibevm` SKILL.md template, vendored at compile time.
+/// Living right beside `mcp.rs` keeps the template version-locked to
+/// the surrounding agent + tool surface — when the CLI grows a new
+/// flag the skill text travels with it through `cargo build`.
+#[allow(dead_code)] // wired in Phase D
+pub const SKILL_TEMPLATE: &str = include_str!("skill_template.md");
+
+/// Skill name. Matches the `name:` frontmatter field in the template
+/// and the directory name we write under each agent's skills root.
+#[allow(dead_code)] // wired in Phase D
+pub const SKILL_NAME: &str = "vibevm";
+
 #[derive(Debug, Clone)]
 pub enum ConfigPayload {
     Json(JsonValue),
@@ -250,6 +295,91 @@ impl Agent {
             }
         }
         self.host_present()
+    }
+
+    /// Whether the agent loads filesystem-backed skill files
+    /// (`<dir>/<name>/SKILL.md` with YAML frontmatter). Cursor and
+    /// Claude Desktop are JSON-config-only — they have no on-disk skill
+    /// loader, so [`Agent::skill_path`] returns `None` and
+    /// `vibe mcp install --with-skill` reports them as `skipped`.
+    #[allow(dead_code)] // wired in Phase D
+    pub fn supports_skill(self) -> bool {
+        match self {
+            Agent::ClaudeCode | Agent::OpenCode | Agent::Codex => true,
+            Agent::ClaudeCodeDesktop | Agent::Cursor => false,
+        }
+    }
+
+    /// Filesystem path the skill artefact should land at, given a
+    /// [`SkillScope`]. Returns `Ok(None)` for agents that do not
+    /// support filesystem skills (Cursor, Claude Desktop). Returns
+    /// `Err(...)` if the host-config dir cannot be resolved (HOME /
+    /// XDG_CONFIG_HOME / APPDATA missing) — that is a hard failure
+    /// because the operator explicitly asked for `--skill-scope user`.
+    ///
+    /// Per-agent layout (see PROP-004 §5.1 / WAL slice 4 notes):
+    ///
+    /// | Agent       | Project scope                                         | User scope                                            |
+    /// |-------------|-------------------------------------------------------|-------------------------------------------------------|
+    /// | Claude Code | `<project>/.claude/skills/vibevm/SKILL.md`            | `<home>/.claude/skills/vibevm/SKILL.md`               |
+    /// | OpenCode    | `<project>/.opencode/skills/vibevm/SKILL.md`          | `<config-dir>/opencode/skills/vibevm/SKILL.md`        |
+    /// | Codex       | `<project>/.agents/skills/vibevm/SKILL.md`            | `<home>/.agents/skills/vibevm/SKILL.md`               |
+    #[allow(dead_code)] // wired in Phase D
+    pub fn skill_path(
+        self,
+        scope: SkillScope,
+        project_root: &Path,
+    ) -> Result<Option<PathBuf>> {
+        if !self.supports_skill() {
+            return Ok(None);
+        }
+        let path = match (self, scope) {
+            (Agent::ClaudeCode, SkillScope::Project) => project_root
+                .join(".claude")
+                .join("skills")
+                .join(SKILL_NAME)
+                .join("SKILL.md"),
+            (Agent::ClaudeCode, SkillScope::User) => {
+                let home = dirs::home_dir().ok_or_else(|| {
+                    anyhow!("could not resolve home dir for Claude Code skill")
+                })?;
+                home.join(".claude")
+                    .join("skills")
+                    .join(SKILL_NAME)
+                    .join("SKILL.md")
+            }
+            (Agent::OpenCode, SkillScope::Project) => project_root
+                .join(".opencode")
+                .join("skills")
+                .join(SKILL_NAME)
+                .join("SKILL.md"),
+            (Agent::OpenCode, SkillScope::User) => {
+                let cfg = dirs::config_dir().ok_or_else(|| {
+                    anyhow!("could not resolve user-config dir for OpenCode skill")
+                })?;
+                cfg.join("opencode")
+                    .join("skills")
+                    .join(SKILL_NAME)
+                    .join("SKILL.md")
+            }
+            (Agent::Codex, SkillScope::Project) => project_root
+                .join(".agents")
+                .join("skills")
+                .join(SKILL_NAME)
+                .join("SKILL.md"),
+            (Agent::Codex, SkillScope::User) => {
+                let home = dirs::home_dir()
+                    .ok_or_else(|| anyhow!("could not resolve home dir for Codex skill"))?;
+                home.join(".agents")
+                    .join("skills")
+                    .join(SKILL_NAME)
+                    .join("SKILL.md")
+            }
+            (Agent::Cursor | Agent::ClaudeCodeDesktop, _) => {
+                return Ok(None);
+            }
+        };
+        Ok(Some(path))
     }
 }
 
@@ -614,6 +744,94 @@ fn resolve_project_root(path: &Path) -> Result<PathBuf> {
     Ok(stripped)
 }
 
+// ---------------------------------------------------------------------------
+// Skill artefact — per-agent SKILL.md writer
+// ---------------------------------------------------------------------------
+
+#[allow(dead_code)] // wired in Phase D
+#[derive(Debug, Clone, Serialize)]
+pub struct SkillInstallReport {
+    pub agent: String,
+    pub scope: &'static str,
+    /// Resolved path, if the agent supports filesystem skills.
+    pub path: Option<String>,
+    /// `created` / `updated` / `unchanged` / `would-create` /
+    /// `would-update` / `skipped`.
+    pub status: &'static str,
+    pub note: Option<String>,
+}
+
+/// Write the `vibevm` SKILL.md to the agent's skill directory under
+/// the chosen scope. Idempotent: re-running with byte-identical output
+/// reports `unchanged`. Cursor / Claude Desktop are reported as
+/// `skipped` because they have no filesystem skill loader.
+#[allow(dead_code)] // wired in Phase D
+pub fn install_skill(
+    agent: Agent,
+    scope: SkillScope,
+    project_root: &Path,
+    dry_run: bool,
+) -> Result<SkillInstallReport> {
+    let agent_str = agent.as_str().to_string();
+    let scope_str = scope.as_str();
+
+    let Some(path) = agent.skill_path(scope, project_root)? else {
+        return Ok(SkillInstallReport {
+            agent: agent_str,
+            scope: scope_str,
+            path: None,
+            status: "skipped",
+            note: Some(format!(
+                "agent `{}` does not load filesystem skills",
+                agent.as_str()
+            )),
+        });
+    };
+
+    let body = SKILL_TEMPLATE;
+    let path_str = path.display().to_string().replace('\\', "/");
+    let status = decide_skill_action(&path, body)?;
+
+    let final_status: &'static str = match (status, dry_run) {
+        ("unchanged", _) => "unchanged",
+        ("created", true) => "would-create",
+        ("updated", true) => "would-update",
+        (s, _) => s,
+    };
+
+    if !dry_run && final_status != "unchanged" {
+        if let Some(parent) = path.parent() {
+            fs::create_dir_all(parent).with_context(|| {
+                format!("creating skill dir `{}`", parent.display())
+            })?;
+        }
+        fs::write(&path, body)
+            .with_context(|| format!("writing skill `{}`", path.display()))?;
+    }
+
+    Ok(SkillInstallReport {
+        agent: agent_str,
+        scope: scope_str,
+        path: Some(path_str),
+        status: final_status,
+        note: None,
+    })
+}
+
+#[allow(dead_code)] // wired in Phase D
+fn decide_skill_action(path: &Path, body: &str) -> Result<&'static str> {
+    if !path.exists() {
+        return Ok("created");
+    }
+    let existing = fs::read_to_string(path)
+        .with_context(|| format!("reading skill `{}`", path.display()))?;
+    if existing == body {
+        Ok("unchanged")
+    } else {
+        Ok("updated")
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -911,5 +1129,172 @@ mod tests {
         let payload = Agent::Codex.build_mcp_entry(dir.path());
         let (status, _) = decide_action(Agent::Codex, &path, &payload).unwrap();
         assert_eq!(status, "updated");
+    }
+
+    // ---- skill scope + supports_skill ----
+
+    #[test]
+    fn skill_scope_parse_known_values() {
+        assert_eq!(SkillScope::parse("project").unwrap(), SkillScope::Project);
+        assert_eq!(SkillScope::parse("user").unwrap(), SkillScope::User);
+        assert!(SkillScope::parse("global").is_err());
+    }
+
+    #[test]
+    fn supports_skill_only_for_claude_opencode_codex() {
+        assert!(Agent::ClaudeCode.supports_skill());
+        assert!(Agent::OpenCode.supports_skill());
+        assert!(Agent::Codex.supports_skill());
+        assert!(!Agent::ClaudeCodeDesktop.supports_skill());
+        assert!(!Agent::Cursor.supports_skill());
+    }
+
+    // ---- skill_path ----
+
+    #[test]
+    fn skill_path_project_scope_lands_in_per_agent_dir() {
+        let dir = tempfile::tempdir().unwrap();
+        let p = Agent::ClaudeCode
+            .skill_path(SkillScope::Project, dir.path())
+            .unwrap()
+            .unwrap();
+        let s = p.display().to_string().replace('\\', "/");
+        assert!(s.ends_with("/.claude/skills/vibevm/SKILL.md"), "got {s}");
+
+        let p = Agent::OpenCode
+            .skill_path(SkillScope::Project, dir.path())
+            .unwrap()
+            .unwrap();
+        let s = p.display().to_string().replace('\\', "/");
+        assert!(s.ends_with("/.opencode/skills/vibevm/SKILL.md"), "got {s}");
+
+        let p = Agent::Codex
+            .skill_path(SkillScope::Project, dir.path())
+            .unwrap()
+            .unwrap();
+        let s = p.display().to_string().replace('\\', "/");
+        assert!(s.ends_with("/.agents/skills/vibevm/SKILL.md"), "got {s}");
+    }
+
+    #[test]
+    fn skill_path_returns_none_for_unsupported_agents() {
+        let dir = tempfile::tempdir().unwrap();
+        assert!(
+            Agent::Cursor
+                .skill_path(SkillScope::Project, dir.path())
+                .unwrap()
+                .is_none()
+        );
+        assert!(
+            Agent::Cursor
+                .skill_path(SkillScope::User, dir.path())
+                .unwrap()
+                .is_none()
+        );
+        assert!(
+            Agent::ClaudeCodeDesktop
+                .skill_path(SkillScope::Project, dir.path())
+                .unwrap()
+                .is_none()
+        );
+        assert!(
+            Agent::ClaudeCodeDesktop
+                .skill_path(SkillScope::User, dir.path())
+                .unwrap()
+                .is_none()
+        );
+    }
+
+    // ---- skill template content ----
+
+    #[test]
+    fn skill_template_has_required_frontmatter() {
+        assert!(SKILL_TEMPLATE.starts_with("---"));
+        assert!(SKILL_TEMPLATE.contains("name: vibevm"));
+        assert!(SKILL_TEMPLATE.contains("description: "));
+    }
+
+    #[test]
+    fn skill_template_documents_invoked_by_and_mcp_tools() {
+        // Hard-coded contract: the skill must mention the three MCP
+        // tools by name and the `--invoked-by` flag, otherwise the
+        // agent has nothing actionable to invoke.
+        assert!(SKILL_TEMPLATE.contains("query_package"));
+        assert!(SKILL_TEMPLATE.contains("read_subskill"));
+        assert!(SKILL_TEMPLATE.contains("materialise_subskill"));
+        assert!(SKILL_TEMPLATE.contains("--invoked-by"));
+        assert!(SKILL_TEMPLATE.contains("VIBE_INVOKED_BY"));
+    }
+
+    // ---- install_skill writer ----
+
+    #[test]
+    fn install_skill_creates_file_with_template_body() {
+        let dir = tempfile::tempdir().unwrap();
+        let report = install_skill(Agent::OpenCode, SkillScope::Project, dir.path(), false)
+            .unwrap();
+        assert_eq!(report.status, "created");
+        assert_eq!(report.scope, "project");
+        let path = dir.path().join(".opencode/skills/vibevm/SKILL.md");
+        assert!(path.exists(), "expected skill at {}", path.display());
+        let body = std::fs::read_to_string(&path).unwrap();
+        assert_eq!(body, SKILL_TEMPLATE);
+    }
+
+    #[test]
+    fn install_skill_is_idempotent() {
+        let dir = tempfile::tempdir().unwrap();
+        let r1 =
+            install_skill(Agent::ClaudeCode, SkillScope::Project, dir.path(), false).unwrap();
+        assert_eq!(r1.status, "created");
+        let r2 =
+            install_skill(Agent::ClaudeCode, SkillScope::Project, dir.path(), false).unwrap();
+        assert_eq!(r2.status, "unchanged");
+    }
+
+    #[test]
+    fn install_skill_detects_drift_and_reports_updated() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join(".agents/skills/vibevm/SKILL.md");
+        std::fs::create_dir_all(path.parent().unwrap()).unwrap();
+        std::fs::write(&path, "stale content").unwrap();
+        let report =
+            install_skill(Agent::Codex, SkillScope::Project, dir.path(), false).unwrap();
+        assert_eq!(report.status, "updated");
+        let body = std::fs::read_to_string(&path).unwrap();
+        assert_eq!(body, SKILL_TEMPLATE);
+    }
+
+    #[test]
+    fn install_skill_dry_run_does_not_write() {
+        let dir = tempfile::tempdir().unwrap();
+        let report =
+            install_skill(Agent::ClaudeCode, SkillScope::Project, dir.path(), true).unwrap();
+        assert_eq!(report.status, "would-create");
+        let path = dir.path().join(".claude/skills/vibevm/SKILL.md");
+        assert!(
+            !path.exists(),
+            "dry-run must not write; expected {} absent",
+            path.display()
+        );
+    }
+
+    #[test]
+    fn install_skill_skips_unsupported_agents() {
+        let dir = tempfile::tempdir().unwrap();
+        let report =
+            install_skill(Agent::Cursor, SkillScope::Project, dir.path(), false).unwrap();
+        assert_eq!(report.status, "skipped");
+        assert!(report.path.is_none());
+
+        let report = install_skill(
+            Agent::ClaudeCodeDesktop,
+            SkillScope::User,
+            dir.path(),
+            false,
+        )
+        .unwrap();
+        assert_eq!(report.status, "skipped");
+        assert!(report.path.is_none());
     }
 }
