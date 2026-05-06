@@ -35,11 +35,13 @@ pub mod direct_git;
 pub mod git_publish;
 pub mod github;
 pub mod gitverse;
+pub mod post_hook;
 pub mod token;
 
 pub use direct_git::DirectGitCreator;
 pub use github::GitHubCreator;
 pub use gitverse::GitVerseCreator;
+pub use post_hook::{HookConfig, HookError, HookReport, fire as fire_index_hook};
 pub use token::{Token, TokenSource, host_env_var, load_token, load_token_for_host};
 
 /// Information about a package repository on a host.

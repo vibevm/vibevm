@@ -1265,6 +1265,11 @@ struct PublishReport {
     tag: String,
     created_repo: bool,
     dry_run: bool,
+    /// Status of the optional post-publish index hook. Always
+    /// present; `fired = false` + `error = None` means the hook was
+    /// dormant (no env config) and the operator wanted no index update.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    index_hook: Option<vibe_publish::HookReport>,
 }
 
 /// Envelope emitted when the operator targets a host whose publish path
@@ -1432,6 +1437,18 @@ fn run_publish(ctx: &output::Context, args: RegistryPublishArgs) -> Result<()> {
         .publish(&config)
         .map_err(|e| anyhow!("{e}"))?;
 
+    // Optional post-publish hook — POST the freshly-built entry to a
+    // configured vibevm-index server. Activation is per-registry via
+    // env vars; the hook stays dormant when either VIBEVM_INDEX_URL_<R>
+    // or VIBEVM_INDEX_TOKEN_<R> is unset. Hook failures are warnings,
+    // never fail the publish itself (PROP-005 §2.14).
+    let hook_report = if outcome.dry_run {
+        // Dry-runs do not push real bytes; suppress the hook.
+        vibe_publish::HookReport::dormant()
+    } else {
+        vibe_publish::fire_index_hook(&outcome, &source_dir, &registry_section.name)
+    };
+
     if ctx.is_json() {
         ctx.emit_json(&PublishReport {
             ok: true,
@@ -1443,8 +1460,21 @@ fn run_publish(ctx: &output::Context, args: RegistryPublishArgs) -> Result<()> {
             tag: outcome.tag.clone(),
             created_repo: outcome.created_repo,
             dry_run: outcome.dry_run,
+            index_hook: Some(hook_report),
         })?;
         return Ok(());
+    }
+    if hook_report.fired {
+        ctx.step(&format!(
+            "Index hook posted to {} (status {})",
+            hook_report
+                .url_endpoint
+                .as_deref()
+                .unwrap_or("(unknown)"),
+            hook_report.status.unwrap_or(0)
+        ));
+    } else if let Some(err) = &hook_report.error {
+        tracing::warn!(target: "vibe_cli::registry::publish", "index hook skipped: {err}");
     }
 
     let action_verb = if outcome.dry_run {

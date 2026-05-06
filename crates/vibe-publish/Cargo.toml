@@ -20,9 +20,13 @@ reqwest.workspace = true
 dirs.workspace = true
 semver.workspace = true
 tempfile.workspace = true
+walkdir.workspace = true
+chrono.workspace = true
 vibe-core.workspace = true
 vibe-registry.workspace = true
 
 [dev-dependencies]
 tempfile.workspace = true
 walkdir.workspace = true
+axum.workspace = true
+tokio.workspace = true
