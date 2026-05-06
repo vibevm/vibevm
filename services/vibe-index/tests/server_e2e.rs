@@ -194,6 +194,58 @@ async fn primary_jsonl_served_with_ndjson_content_type() {
 }
 
 #[tokio::test]
+async fn by_cap_jsonl_serves_inverted_capability_index() {
+    let (_tmp, state) = populated_state();
+    let app = build_app(state);
+    // populated_state has flow:wal + stack:rust each providing
+    // `interface:wal`. Slug is fs-safe encoding (`:` → `--`).
+    let resp = app
+        .oneshot(req(
+            Method::GET,
+            "/v1/index/by-cap/interface--wal.jsonl",
+        ))
+        .await
+        .unwrap();
+    assert_eq!(resp.status(), StatusCode::OK);
+    let body = body_to_string(resp.into_body()).await;
+    assert!(body.contains("\"capability\":\"interface:wal\""));
+    assert!(body.contains("\"name\":\"wal\""));
+}
+
+#[tokio::test]
+async fn by_purl_jsonl_serves_inverted_describes_index() {
+    let (_tmp, state) = populated_state();
+    let app = build_app(state);
+    // populated_state has flow:sqlx-skin describing pkg:cargo/sqlx@0.8.0
+    // (package binding) and stack:rust subskill describing same purl.
+    let resp = app
+        .oneshot(req(
+            Method::GET,
+            "/v1/index/by-purl/pkg--cargo--sqlx--0.8.0.jsonl",
+        ))
+        .await
+        .unwrap();
+    assert_eq!(resp.status(), StatusCode::OK);
+    let body = body_to_string(resp.into_body()).await;
+    assert!(body.contains("\"binding_site\":\"package\""));
+    assert!(body.contains("\"binding_site\":\"subskill\""));
+}
+
+#[tokio::test]
+async fn by_cap_route_404s_for_missing_slug() {
+    let (_tmp, state) = populated_state();
+    let app = build_app(state);
+    let resp = app
+        .oneshot(req(
+            Method::GET,
+            "/v1/index/by-cap/definitely-not-a-real-cap.jsonl",
+        ))
+        .await
+        .unwrap();
+    assert_eq!(resp.status(), StatusCode::NOT_FOUND);
+}
+
+#[tokio::test]
 async fn primary_jsonl_gz_served_with_gzip_encoding() {
     let (_tmp, state) = populated_state();
     let app = build_app(state);

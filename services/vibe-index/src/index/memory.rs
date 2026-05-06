@@ -11,7 +11,7 @@ use std::path::{Path, PathBuf};
 use chrono::{DateTime, Utc};
 
 use crate::error::{Error, Result};
-use crate::index::{by_name, primary, repomd};
+use crate::index::{by_name, inverted, primary, repomd};
 use crate::types::{NamingConvention, PackageEntry, PackageKind, Repomd, RepomdFileEntry, VersionEntry};
 
 pub type PkgKey = (PackageKind, String);
@@ -120,11 +120,16 @@ impl Index {
             message: e.to_string(),
         })?;
 
-        // Drop existing by-name files for packages we no longer carry.
-        // Simplest correct approach: clear the directory before
-        // rewriting. A cleverer diff lands when incremental reindex
-        // arrives in slice 7.
+        // Drop existing by-name / by-cap / by-purl directories before
+        // rewriting. Simplest correct approach: clear before rewrite,
+        // so removed packages do not leave stale files behind. The
+        // incremental-reindex path (slice 7) does its own per-package
+        // diff for the by-name dir; here we still scorched-earth the
+        // inverted indices because they regenerate cheaply from the
+        // already-loaded entries.
         clear_by_name(data_dir)?;
+        inverted::clear_dir(&inverted::by_cap_dir(data_dir))?;
+        inverted::clear_dir(&inverted::by_purl_dir(data_dir))?;
 
         // Write primary.jsonl + primary.jsonl.gz.
         let mut entries: Vec<VersionEntry> = self.iter_versions().cloned().collect();
@@ -150,6 +155,32 @@ impl Index {
         files.insert(
             by_name::DIRNAME.into(),
             RepomdFileEntry::directory(by_name::entry_count(data_dir)),
+        );
+
+        // Build the inverted views and emit by-cap/<slug>.jsonl +
+        // by-purl/<slug>.jsonl. PROP-005 §2.4.
+        let view = inverted::InvertedView::from_entries(self.iter_versions());
+        for (slug, rows) in &view.by_capability {
+            let written = inverted::write_capability(data_dir, slug, rows)?;
+            files.insert(
+                written.relative_path,
+                RepomdFileEntry::file(written.size, written.sha256),
+            );
+        }
+        for (slug, rows) in &view.by_purl {
+            let written = inverted::write_purl(data_dir, slug, rows)?;
+            files.insert(
+                written.relative_path,
+                RepomdFileEntry::file(written.size, written.sha256),
+            );
+        }
+        files.insert(
+            inverted::BY_CAP_DIRNAME.into(),
+            RepomdFileEntry::directory(inverted::entry_count_capability(data_dir)),
+        );
+        files.insert(
+            inverted::BY_PURL_DIRNAME.into(),
+            RepomdFileEntry::directory(inverted::entry_count_purl(data_dir)),
         );
 
         // Stamp the manifest.

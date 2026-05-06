@@ -135,6 +135,29 @@ fn verify_text_format_human_readable() {
         .stdout(predicate::str::contains("status    : OK"));
 }
 
+#[test]
+fn init_writes_primary_jsonl_gz_alongside_plain() {
+    let dir = tempfile::tempdir().unwrap();
+    init_at(dir.path());
+    assert!(dir.path().join("primary.jsonl").exists());
+    assert!(dir.path().join("primary.jsonl.gz").exists());
+}
+
+#[test]
+fn init_seeds_empty_repomd_with_inverted_dirs() {
+    let dir = tempfile::tempdir().unwrap();
+    init_at(dir.path());
+    let repomd: serde_json::Value =
+        serde_json::from_slice(&std::fs::read(dir.path().join("repomd.json")).unwrap())
+            .unwrap();
+    let files = repomd["files"].as_object().unwrap();
+    assert!(files.contains_key("primary.jsonl"));
+    assert!(files.contains_key("primary.jsonl.gz"));
+    assert!(files.contains_key("by-name"));
+    assert!(files.contains_key("by-cap"));
+    assert!(files.contains_key("by-purl"));
+}
+
 fn init_at(dir: &Path) {
     cmd()
         .args([

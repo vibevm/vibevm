@@ -56,6 +56,40 @@ pub async fn primary_jsonl_gz(State(state): State<Arc<AppState>>) -> Result<Resp
     Ok(resp.into_response())
 }
 
+pub async fn by_cap_jsonl(
+    State(state): State<Arc<AppState>>,
+    Path(slug_with_ext): Path<String>,
+) -> Result<Response, ApiError> {
+    state.stats.note_request();
+    let slug = slug_with_ext.strip_suffix(".jsonl").ok_or_else(|| {
+        ApiError::not_found(format!(
+            "expected `<slug>.jsonl` path segment, got `{slug_with_ext}`"
+        ))
+    })?;
+    let path = state
+        .data_dir
+        .join("by-cap")
+        .join(format!("{slug}.jsonl"));
+    serve_file(&path, "application/x-ndjson").await
+}
+
+pub async fn by_purl_jsonl(
+    State(state): State<Arc<AppState>>,
+    Path(slug_with_ext): Path<String>,
+) -> Result<Response, ApiError> {
+    state.stats.note_request();
+    let slug = slug_with_ext.strip_suffix(".jsonl").ok_or_else(|| {
+        ApiError::not_found(format!(
+            "expected `<slug>.jsonl` path segment, got `{slug_with_ext}`"
+        ))
+    })?;
+    let path = state
+        .data_dir
+        .join("by-purl")
+        .join(format!("{slug}.jsonl"));
+    serve_file(&path, "application/x-ndjson").await
+}
+
 pub async fn by_name_json(
     State(state): State<Arc<AppState>>,
     Path((kind_str, name_with_ext)): Path<(String, String)>,

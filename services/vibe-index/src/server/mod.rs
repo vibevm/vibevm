@@ -52,6 +52,14 @@ pub fn build_app(state: AppState) -> Router {
             "/v1/index/by-name/{kind}/{name}",
             get(routes::index_files::by_name_json),
         )
+        .route(
+            "/v1/index/by-cap/{slug}",
+            get(routes::index_files::by_cap_jsonl),
+        )
+        .route(
+            "/v1/index/by-purl/{slug}",
+            get(routes::index_files::by_purl_jsonl),
+        )
         // Structured query.
         .route(
             "/v1/packages",
