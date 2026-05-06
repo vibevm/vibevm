@@ -70,20 +70,20 @@ fn unknown_subcommand_fails_clean() {
 }
 
 #[test]
-fn reindex_from_github_still_unimplemented() {
-    // `--from-github` waits on slice 8; the dispatcher returns
-    // `NotYetImplemented` so the help-smoke can keep an eye on
-    // when that branch comes online without depending on which
-    // subcommand happens to still be stubbed.
+fn reindex_from_gitverse_still_unimplemented() {
+    // `--from-gitverse` waits on GitVerse exposing org-scoped repo
+    // enumeration in their public API. Until then the dispatcher
+    // returns `NotYetImplemented` so the help-smoke notices when
+    // that branch comes online.
     let dir = tempfile::tempdir().unwrap();
     cmd()
         .args([
             "init",
             dir.path().to_str().unwrap(),
             "--registry",
-            "vibespecs",
+            "vibespecs-gitverse",
             "--registry-url",
-            "https://example.invalid/vibespecs",
+            "https://gitverse.ru/vibespecs",
         ])
         .assert()
         .success();
@@ -91,7 +91,7 @@ fn reindex_from_github_still_unimplemented() {
         .args([
             "reindex",
             dir.path().to_str().unwrap(),
-            "--from-github",
+            "--from-gitverse",
             "vibespecs",
         ])
         .assert()

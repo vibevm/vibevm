@@ -15,6 +15,7 @@ use crate::index::checkpoint::{self, Checkpoint};
 use crate::scanner::from_clones::{
     FromClonesOptions, ScanReport, scan_org_dir, scan_org_dir_with_filter,
 };
+use crate::scanner::from_github::{FromGithubOptions, clone_org as github_clone_org};
 use crate::types::{NamingConvention, PackageKind, VersionEntry};
 
 #[derive(Debug, Parser)]
@@ -44,6 +45,17 @@ pub struct Args {
     #[arg(long, value_name = "FILE")]
     pub token_file: Option<PathBuf>,
 
+    /// GitHub REST API base URL. Defaults to `https://api.github.com`.
+    /// Override for tests or self-hosted GitHub Enterprise instances.
+    #[arg(long, value_name = "URL", default_value = "https://api.github.com")]
+    pub api_base: String,
+
+    /// Where the `--from-github` scanner clones repos. Defaults to a
+    /// fresh tempdir that is removed at the end of the run. Pass an
+    /// explicit path to keep a warm cache (subsequent runs reuse it).
+    #[arg(long, value_name = "DIR")]
+    pub clone_cache: Option<PathBuf>,
+
     /// Force a full rebuild even if a checkpoint exists. Default in slice 3.
     #[arg(long)]
     pub full: bool,
@@ -58,17 +70,9 @@ pub struct Args {
 }
 
 pub fn run(args: Args) -> Result<()> {
-    if args.from_github.is_some() {
-        return Err(Error::NotYetImplemented("reindex --from-github"));
-    }
     if args.from_gitverse.is_some() {
         return Err(Error::NotYetImplemented("reindex --from-gitverse"));
     }
-    let Some(org_dir) = args.from_clones.as_deref() else {
-        return Err(Error::InvalidInput(
-            "missing --from-clones / --from-github / --from-gitverse".into(),
-        ));
-    };
 
     // Load existing index manifest to preserve registry name / URL /
     // naming. Refuse if the data dir was never `init`-ed.
@@ -80,6 +84,45 @@ pub fn run(args: Args) -> Result<()> {
         )),
         other => other,
     })?;
+
+    // Resolve the org-dir for the scanner. --from-clones uses the
+    // path verbatim; --from-github clones the org first into a temp
+    // (or operator-supplied) directory and then proceeds as if we
+    // had been pointed at it directly. Hold the TempDir alive until
+    // the function returns so the directory survives the scan.
+    let mut _temp_guard: Option<tempfile::TempDir> = None;
+    let org_dir: PathBuf = if let Some(path) = args.from_clones.clone() {
+        path
+    } else if let Some(org) = args.from_github.clone() {
+        let token = match args.token_file.as_deref() {
+            Some(path) => Some(read_token(path)?),
+            None => None,
+        };
+        let clone_into = if let Some(p) = args.clone_cache.clone() {
+            p
+        } else {
+            let dir = tempfile::tempdir().map_err(|e| Error::Io {
+                path: args.data_dir.clone(),
+                message: format!("could not create scratch clone dir: {e}"),
+            })?;
+            let path = dir.path().to_path_buf();
+            _temp_guard = Some(dir);
+            path
+        };
+        let opts = FromGithubOptions {
+            api_base: args.api_base.clone(),
+            org: org.clone(),
+            token,
+            clone_into: clone_into.clone(),
+            timeout: std::time::Duration::from_secs(60),
+            skip_forks: true,
+        };
+        github_clone_org(&opts)?
+    } else {
+        return Err(Error::InvalidInput(
+            "missing --from-clones / --from-github / --from-gitverse".into(),
+        ));
+    };
 
     let opts = FromClonesOptions {
         registry: existing.registry.clone(),
@@ -96,9 +139,9 @@ pub fn run(args: Args) -> Result<()> {
     };
 
     let report = if args.incremental {
-        scan_org_dir_with_filter(org_dir, &opts, prior.as_ref())?
+        scan_org_dir_with_filter(&org_dir, &opts, prior.as_ref())?
     } else {
-        scan_org_dir(org_dir, &opts)?
+        scan_org_dir(&org_dir, &opts)?
     };
 
     // For incremental, retain entries for repos that the scanner
@@ -151,11 +194,17 @@ pub fn run(args: Args) -> Result<()> {
     };
     checkpoint::save(&args.data_dir, &new_checkpoint)?;
 
+    let source = if args.from_github.is_some() {
+        "github"
+    } else {
+        "clones"
+    };
     let summary = Summary::from_report(
         &report,
         &args.data_dir,
         &existing.registry,
         &next,
+        source,
         if args.incremental { "incremental" } else { "full" },
     );
     if args.json {
@@ -182,6 +231,23 @@ pub struct Summary {
     pub by_kind: Vec<KindCount>,
 }
 
+fn read_token(path: &std::path::Path) -> Result<String> {
+    let bytes = std::fs::read(path).map_err(|e| Error::Io {
+        path: path.to_path_buf(),
+        message: e.to_string(),
+    })?;
+    let s = std::str::from_utf8(&bytes)
+        .map_err(|e| Error::Malformed(format!("token file is not UTF-8: {e}")))?;
+    let trimmed = s.trim();
+    if trimmed.is_empty() {
+        return Err(Error::InvalidInput(format!(
+            "token file `{}` is empty",
+            path.display()
+        )));
+    }
+    Ok(trimmed.to_string())
+}
+
 #[derive(Debug, Serialize)]
 pub struct SkippedSummary {
     pub repo: String,
@@ -201,6 +267,7 @@ impl Summary {
         data_dir: &std::path::Path,
         registry: &str,
         index: &Index,
+        source: &'static str,
         mode: &'static str,
     ) -> Self {
         let mut by_kind: Vec<KindCount> = PackageKind::all()
@@ -220,7 +287,7 @@ impl Summary {
             command: "reindex",
             data_dir: data_dir.to_path_buf(),
             registry: registry.to_string(),
-            source: "clones",
+            source,
             mode,
             package_count: index.package_count(),
             version_count: index.version_count(),

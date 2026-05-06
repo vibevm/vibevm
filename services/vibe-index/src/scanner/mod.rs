@@ -5,7 +5,9 @@
 //! the in-memory [`Index`](crate::index::Index).
 
 pub mod from_clones;
+pub mod from_github;
 pub mod git_cli;
 pub mod manifest;
 
 pub use from_clones::{FromClonesOptions, scan_org_dir};
+pub use from_github::{FromGithubOptions, clone_org, list_repos};
