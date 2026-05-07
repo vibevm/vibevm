@@ -2142,10 +2142,9 @@ mod tests {
     fn skill_template_covers_both_bootstrap_and_inside_project_modes() {
         // Two-state contract: the skill must explain BOTH the
         // bootstrap path (no vibe.toml present, run `vibe init`) AND
-        // the inside-project path (vibe.toml present, follow boot
-        // protocol). Without both sections, an agent in an empty
-        // directory has no actionable guidance for "create a vibevm
-        // project".
+        // the inside-project path (vibe.toml present, query MCP).
+        // Without both sections, an agent in an empty directory has
+        // no actionable guidance for "create a vibevm project".
         let body = SKILL_TEMPLATE.to_lowercase();
         assert!(body.contains("vibe init"), "expected mention of `vibe init` for bootstrap");
         assert!(body.contains("section a"), "expected explicit Section A header for bootstrap");
@@ -2154,9 +2153,7 @@ mod tests {
             body.contains("vibe.toml"),
             "expected the detect-step to mention vibe.toml as the discriminator"
         );
-        // Bootstrap section names install + a starter package.
         assert!(body.contains("vibe install"));
-        assert!(body.contains("flow:wal"));
     }
 
     #[test]
@@ -2168,5 +2165,53 @@ mod tests {
         assert!(SKILL_TEMPLATE.contains("uninstall"));
         assert!(SKILL_TEMPLATE.contains("--scope"));
         assert!(SKILL_TEMPLATE.contains("--what"));
+    }
+
+    #[test]
+    fn skill_template_does_not_impose_project_conventions() {
+        // Regression guard. Past versions of the skill (slice 4 +
+        // slice 5 first pass) treated "read CLAUDE.md → spec/boot/*
+        // → spec/WAL.md → relevant PROP/FEAT" as a binding bootstrap
+        // protocol for ALL vibevm projects. That conflated this
+        // repo's conventions with the package manager's contract —
+        // vibevm commands work identically whether the project
+        // adopts WAL discipline, PROP-style design docs, or the four
+        // commit rules. None of those are part of the package
+        // manager.
+        //
+        // The replacement skill explicitly notes that conventions
+        // are out of scope and live in the project's own
+        // CLAUDE.md / additional skills / installed packages
+        // (e.g. flow:wal as one possible WAL protocol — not
+        // mandatory). This test locks the new posture so a future
+        // edit doesn't regress it back to "you MUST read X".
+        let body = SKILL_TEMPLATE.to_lowercase();
+        // Reading WAL must not be presented as required.
+        assert!(
+            !body.contains("you must read spec/wal")
+                && !body.contains("required to read spec/wal")
+                && !body.contains("must read `spec/wal"),
+            "skill must not mandate reading spec/WAL.md as universal requirement"
+        );
+        // PROP/FEAT must not be required reading either.
+        assert!(
+            !body.contains("must consult prop")
+                && !body.contains("required prop")
+                && !body.contains("you must read prop"),
+            "skill must not mandate reading PROP-* / FEAT-* docs"
+        );
+        // No "non-negotiable rules" framing — those are this repo's,
+        // not the package manager's.
+        assert!(
+            !body.contains("non-negotiable"),
+            "skill must not import this repo's non-negotiable-rules framing"
+        );
+        // Positive: the skill must explicitly disclaim project-
+        // convention scope.
+        assert!(
+            body.contains("project conventions") || body.contains("project-specific")
+                || body.contains("conventions"),
+            "skill must name 'conventions' explicitly to disclaim them"
+        );
     }
 }

@@ -116,29 +116,46 @@ when you see no vibe.toml here.
 ### Prompt B — bootstrap a hello-world project (full demo)
 
 ```
-Create a vibevm-managed Hello World project in this directory. Use vibevm:
+Create a vibevm-managed Hello World project in this directory. Steps:
 
 1. Run `vibe init` to scaffold the project.
-2. Install flow:wal as the first package.
-3. After install, query the wal package via MCP and read its subskills.
-4. Build a minimal hello-world: README.md with one line, docs/hello.md
-   with "Hello, world!", and update spec/WAL.md per the WAL protocol so
-   the `## current phase` section reflects "we just bootstrapped".
-5. Pass --invoked-by opencode on every vibe CLI call.
-6. Run `vibe <subcmd> --help` before suggesting any flag — do not
-   guess flags from training data.
+2. Build a minimal hello-world: README.md with one line about the
+   project, docs/hello.md saying "Hello, world!".
+3. Inspect the resulting project — `vibe list`, `vibe show config`,
+   and `vibe outdated` so I see what's tracked.
+4. Pass --invoked-by opencode on every vibe CLI call you issue.
+5. Before suggesting any vibe flag, run `vibe <subcmd> --help` and
+   read the actual current surface — do not guess from training data.
 
-End with a short next-steps plan that follows the WAL protocol.
+End with a one-paragraph summary of what you did and what command I
+might want to run next (e.g. install a real package).
 ```
 
 **Pass criteria:**
 
-- `vibe init` runs, creates `vibe.toml` and friends.
-- `vibe install flow:wal --invoked-by opencode` succeeds.
-- opencode calls `query_package("wal")` and `read_subskill(...)` (visible in TUI).
+- `vibe init` runs, creates `vibe.toml`, `vibe.lock`, and the
+  starter files (`spec/boot/...`, `spec/WAL.md`, `CLAUDE.md`,
+  `AGENTS.md`, `GEMINI.md`).
 - `README.md` and `docs/hello.md` materialise with sensible content.
-- `spec/WAL.md` gains a coherent `## current phase` section.
+- `vibe list` / `vibe show config` / `vibe outdated` actually run
+  (outputs visible in TUI), with `--invoked-by opencode` on each.
 - Every `vibe …` line in the transcript carries `--invoked-by opencode`.
+
+This prompt deliberately does NOT assume any project convention
+(WAL discipline, PROP/FEAT spec corpus, etc.). The vibevm skill
+covers only the package manager surface; project-specific
+disciplines (such as the WAL protocol shipped by `flow:wal`) are
+opt-in via `vibe install <pkgref>` and additional skills.
+
+If you want the agent to also adopt a specific convention, install
+the relevant package + its skill explicitly. For example, after
+Prompt B:
+
+```
+Install flow:wal via vibevm. Then read the WAL protocol via the
+vibevm MCP server (read_subskill) and apply it: update spec/WAL.md
+to record what we did in this session per the protocol.
+```
 
 ### Prompt C — operator wants project-scope skill committed too
 
@@ -165,7 +182,7 @@ Use this list as both an integration-test gate and a triage tool. Copy into a PR
 - [ ] `~/.config/opencode/skills/vibevm/SKILL.md` exists, starts with `---`, contains `name: vibevm`, has `Section A` (bootstrap) and `Section B` (inside-project) headers, references `query_package` / `read_subskill` / `materialise_subskill` / `--invoked-by` / `VIBE_INVOKED_BY`.
 - [ ] Hand test in step 2 returns a JSON envelope with `protocolVersion: "2024-11-05"`.
 - [ ] After launching opencode in an EMPTY directory and running Prompt A, the TUI shows a tool call to `query_package` AND the agent's response references Section A without prompting.
-- [ ] After Prompt B, all of: `vibe.toml`, `vibe.lock`, `spec/boot/`, `spec/WAL.md`, `README.md`, `docs/hello.md` exist with sensible content; `vibe.lock` records `flow:wal@0.1.0` with a populated `content_hash`.
+- [ ] After Prompt B, all of: `vibe.toml`, `vibe.lock` (empty), `spec/boot/` (with starter files), `README.md`, `docs/hello.md` exist with sensible content. (No package install required by Prompt B; the lockfile is empty until the user opts in to a `vibe install`.)
 - [ ] Every `vibe …` invocation in the opencode transcript includes `--invoked-by opencode`.
 - [ ] `vibe --json mcp status` after Prompt B reports `unchanged` for the user-scope opencode entries (since the user-scope install hasn't drifted).
 - [ ] After Prompt C, `<project>/.opencode/skills/vibevm/SKILL.md` exists.
