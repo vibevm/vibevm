@@ -27,7 +27,7 @@ use crate::output;
 
 pub fn run(ctx: &output::Context, args: InstallArgs) -> Result<()> {
     let project_root = resolve_project_root(&args.path)?;
-    let manifest = load_project_manifest(&project_root)?;
+    let mut manifest = load_project_manifest(&project_root)?;
     let mut lockfile = load_or_empty_lockfile(&project_root)?;
     let resolver = build_install_resolver(&args, &manifest)?;
 
@@ -41,14 +41,60 @@ pub fn run(ctx: &output::Context, args: InstallArgs) -> Result<()> {
     fs::create_dir_all(&cache_root)
         .with_context(|| format!("creating cache dir `{}`", cache_root.display()))?;
 
-    // 1. Parse every CLI pkgref into the typed root list.
-    let roots: Vec<PackageRef> = args
+    // 1. Decide the effective root list. Three input shapes:
+    //
+    //    a. CLI pkgrefs given (`vibe install flow:wal …`) — those are
+    //       the roots; they are also merged into `vibe.toml`
+    //       `[requires].packages` after a successful apply (Cargo /
+    //       npm shape: explicit install records the dep on disk).
+    //    b. No CLI args, manifest has `[requires].packages` — install
+    //       every declared entry. The cargo `cargo build` / `npm
+    //       install` shape: a fresh clone reproduces the project's
+    //       package set without re-typing.
+    //    c. No CLI args, manifest is empty, but the lockfile already
+    //       carries `meta.root_dependencies` — first-run migration
+    //       path for projects that pre-date the `[requires]` schema
+    //       (PROP-002 §2.7). Seed the manifest from the lockfile
+    //       snapshot, persist the manifest, and proceed as in case b.
+    //
+    //    Anything else (no CLI, no manifest entries, no lockfile
+    //    snapshot) is an error — there is nothing to install.
+    let cli_roots: Vec<PackageRef> = args
         .packages
         .iter()
         .map(|raw| {
             PackageRef::parse(raw).with_context(|| format!("parsing `{raw}`"))
         })
         .collect::<Result<_>>()?;
+
+    let roots: Vec<PackageRef> = if cli_roots.is_empty() {
+        if manifest.requires.packages.is_empty()
+            && !lockfile.meta.root_dependencies.is_empty()
+        {
+            ctx.step(&format!(
+                "Migrating [requires] from `vibe.lock` meta.root_dependencies ({} entry{})",
+                lockfile.meta.root_dependencies.len(),
+                if lockfile.meta.root_dependencies.len() == 1 { "" } else { "ies" },
+            ));
+            manifest
+                .requires
+                .packages
+                .clone_from(&lockfile.meta.root_dependencies);
+            // Persist the migration before solving, so a panic mid-solve
+            // does not lose the snapshot we just inferred.
+            manifest.write(project_root.join(ProjectManifest::FILENAME))?;
+        }
+        if manifest.requires.packages.is_empty() {
+            bail!(
+                "no packages to install. Pass `<kind>:<name>[@<version>] …` on the command \
+                 line, or add entries to `[requires].packages` in `{}/vibe.toml`.",
+                project_root.display()
+            );
+        }
+        manifest.requires.packages.clone()
+    } else {
+        cli_roots.clone()
+    };
 
     // 2. Run the depsolver.
     ctx.heading(&format!(
@@ -408,9 +454,24 @@ pub fn run(ctx: &output::Context, args: InstallArgs) -> Result<()> {
     }
     lockfile.meta.active_features = active_features_global.into_iter().collect();
 
-    // Update meta.root_dependencies — what the user directly asked for,
-    // distinct from transitives the solver pulled in. Lockfile uses this
-    // to drive `vibe uninstall` semantics.
+    // 7. Update `vibe.toml` `[requires].packages` with the CLI-supplied
+    //    roots. De-dup by `(kind, name)`; a repeat install with a new
+    //    constraint replaces the old entry. No-op when there were no
+    //    CLI args (install-from-manifest mode) — the manifest is
+    //    already authoritative in that case.
+    let manifest_changed = if !cli_roots.is_empty() {
+        merge_manifest_requires(&mut manifest, &cli_roots)
+    } else {
+        false
+    };
+    if manifest_changed {
+        manifest.write(project_root.join(ProjectManifest::FILENAME))?;
+    }
+
+    // 8. Mirror the manifest's declared roots into `meta.root_dependencies`
+    //    so the lockfile remains a self-contained snapshot. PROP-002
+    //    §2.7: `root_dependencies` is a copy of `vibe.toml`
+    //    `[requires].packages` plus any CLI-only roots from this run.
     merge_root_dependencies(&mut lockfile, &roots);
 
     // Save lockfile on disk.
@@ -464,6 +525,37 @@ fn merge_root_dependencies(lockfile: &mut Lockfile, roots: &[PackageRef]) {
             None => lockfile.meta.root_dependencies.push(r.clone()),
         }
     }
+}
+
+/// Merge new root pkgrefs into `manifest.requires.packages`, same
+/// dedup discipline as `merge_root_dependencies`. Returns `true` if
+/// any entry was added or changed — caller writes the manifest only
+/// when the in-memory shape actually diverged from disk.
+fn merge_manifest_requires(
+    manifest: &mut ProjectManifest,
+    roots: &[PackageRef],
+) -> bool {
+    let mut changed = false;
+    for r in roots {
+        let pos = manifest
+            .requires
+            .packages
+            .iter()
+            .position(|existing| existing.kind == r.kind && existing.name == r.name);
+        match pos {
+            Some(i) => {
+                if manifest.requires.packages[i] != *r {
+                    manifest.requires.packages[i] = r.clone();
+                    changed = true;
+                }
+            }
+            None => {
+                manifest.requires.packages.push(r.clone());
+                changed = true;
+            }
+        }
+    }
+    changed
 }
 
 fn resolve_project_root(path: &Path) -> Result<PathBuf> {
@@ -824,4 +916,74 @@ where
         }
     }
     ctx
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use vibe_core::manifest::{ProjectManifest, ProjectSection};
+
+    fn empty_manifest() -> ProjectManifest {
+        ProjectManifest {
+            project: ProjectSection {
+                name: "demo".to_string(),
+                version: "0.0.1".to_string(),
+                authors: vec![],
+            },
+            requires: vibe_core::manifest::Requires::default(),
+            active: None,
+            llm: None,
+            registries: Vec::new(),
+            mirrors: Vec::new(),
+            overrides: Vec::new(),
+            i18n: vibe_core::manifest::i18n::I18nDecl::default(),
+        }
+    }
+
+    #[test]
+    fn merge_manifest_requires_appends_new_pkgref() {
+        let mut m = empty_manifest();
+        let r = PackageRef::parse("flow:wal@^0.1").unwrap();
+        let changed = merge_manifest_requires(&mut m, std::slice::from_ref(&r));
+        assert!(changed);
+        assert_eq!(m.requires.packages.len(), 1);
+        assert_eq!(m.requires.packages[0], r);
+    }
+
+    #[test]
+    fn merge_manifest_requires_idempotent_on_repeat() {
+        let mut m = empty_manifest();
+        let r = PackageRef::parse("flow:wal@^0.1").unwrap();
+        merge_manifest_requires(&mut m, std::slice::from_ref(&r));
+        // Second call with the same pkgref must not duplicate the entry
+        // and must not mark the manifest dirty.
+        let changed_again = merge_manifest_requires(&mut m, std::slice::from_ref(&r));
+        assert!(!changed_again, "second merge of the same pkgref must be a no-op");
+        assert_eq!(m.requires.packages.len(), 1);
+    }
+
+    #[test]
+    fn merge_manifest_requires_overwrites_constraint_change() {
+        let mut m = empty_manifest();
+        let r1 = PackageRef::parse("flow:wal@^0.1").unwrap();
+        merge_manifest_requires(&mut m, std::slice::from_ref(&r1));
+        let r2 = PackageRef::parse("flow:wal@=0.2.0").unwrap();
+        let changed = merge_manifest_requires(&mut m, std::slice::from_ref(&r2));
+        assert!(changed, "constraint change must mark the manifest dirty");
+        assert_eq!(m.requires.packages.len(), 1);
+        assert_eq!(m.requires.packages[0], r2);
+    }
+
+    #[test]
+    fn merge_manifest_requires_keeps_unrelated_entries() {
+        let mut m = empty_manifest();
+        let other = PackageRef::parse("stack:rust-cli").unwrap();
+        m.requires.packages.push(other.clone());
+        let r = PackageRef::parse("flow:wal").unwrap();
+        merge_manifest_requires(&mut m, std::slice::from_ref(&r));
+        assert_eq!(m.requires.packages.len(), 2);
+        // Unrelated entry survives.
+        assert!(m.requires.packages.contains(&other));
+        assert!(m.requires.packages.contains(&r));
+    }
 }

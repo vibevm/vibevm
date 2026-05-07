@@ -340,8 +340,12 @@ pub struct ListArgs {
 
 #[derive(Debug, clap::Args)]
 pub struct InstallArgs {
-    /// One or more package references, each `<kind>:<name>[@<version>]`.
-    #[arg(required = true)]
+    /// Zero or more package references, each `<kind>:<name>[@<version>]`.
+    /// When empty, `vibe install` reads the project's `vibe.toml`
+    /// `[requires].packages` and installs every entry — same shape as
+    /// `cargo build` / `npm install` against an existing manifest.
+    /// When non-empty, each pkgref is added to (or updates the
+    /// constraint on) `vibe.toml` `[requires].packages`.
     pub packages: Vec<String>,
 
     /// Directory of the project (defaults to current).

@@ -218,6 +218,170 @@ fn uninstall_errors_when_package_not_installed() {
         .stderr(predicate::str::contains("not installed"));
 }
 
+/// `vibe install <pkgref>` records the user-supplied pkgref in
+/// `vibe.toml` `[requires].packages` (Cargo / npm shape — explicit
+/// install records the dep in the manifest, not just the lockfile).
+#[test]
+fn install_writes_pkgref_to_vibe_toml_requires() {
+    let project = tempfile::tempdir().unwrap();
+    init_project(project.path());
+
+    vibe()
+        .arg("install")
+        .arg("flow:wal")
+        .arg("--path")
+        .arg(project.path())
+        .arg("--registry")
+        .arg(fixture_registry())
+        .arg("--assume-yes")
+        .assert()
+        .success();
+
+    let toml_text = fs::read_to_string(project.path().join("vibe.toml")).unwrap();
+    let manifest: vibe_core::manifest::ProjectManifest =
+        toml::from_str(&toml_text).expect("vibe.toml round-trips");
+    assert_eq!(
+        manifest.requires.packages.len(),
+        1,
+        "expected exactly one entry in [requires].packages, got: {:#?}",
+        manifest.requires.packages
+    );
+    assert_eq!(manifest.requires.packages[0].qualified_name(), "flow:wal");
+    // Rendered TOML carries the section header verbatim — humans should
+    // see it in code review without parsing the file.
+    assert!(
+        toml_text.contains("[requires]"),
+        "expected [requires] header in rendered vibe.toml:\n{toml_text}"
+    );
+    assert!(
+        toml_text.contains("\"flow:wal\""),
+        "expected `flow:wal` literal in rendered vibe.toml:\n{toml_text}"
+    );
+}
+
+/// `vibe install` with no arguments installs every entry from
+/// `vibe.toml` `[requires].packages` — the cargo `cargo build` /
+/// npm `npm install` shape. A fresh clone of a vibevm project
+/// reproduces its package set without re-typing every pkgref.
+#[test]
+fn install_from_manifest_uses_requires() {
+    let project = tempfile::tempdir().unwrap();
+    init_project(project.path());
+
+    // Hand-edit vibe.toml: declare flow:wal as a required package without
+    // having installed it yet. This is the freshly-cloned-project case —
+    // `vibe.toml` already declares the deps, but nothing has been resolved.
+    let toml_path = project.path().join("vibe.toml");
+    let toml_text = fs::read_to_string(&toml_path).unwrap();
+    let mut manifest: vibe_core::manifest::ProjectManifest =
+        toml::from_str(&toml_text).unwrap();
+    manifest.requires.packages.push(
+        vibe_core::PackageRef::parse("flow:wal").unwrap(),
+    );
+    manifest.write(&toml_path).unwrap();
+
+    // Run `vibe install` with no pkgref arguments — should pick up the
+    // manifest declaration and install flow:wal.
+    vibe()
+        .arg("install")
+        .arg("--path")
+        .arg(project.path())
+        .arg("--registry")
+        .arg(fixture_registry())
+        .arg("--assume-yes")
+        .assert()
+        .success();
+
+    // Files materialised, lockfile populated, manifest unchanged.
+    assert!(project
+        .path()
+        .join("spec/flows/wal/WAL-PROTOCOL.md")
+        .is_file());
+    let lock_text = fs::read_to_string(project.path().join("vibe.lock")).unwrap();
+    let lock: vibe_core::manifest::Lockfile = toml::from_str(&lock_text).unwrap();
+    assert_eq!(lock.packages.len(), 1);
+    assert_eq!(lock.packages[0].name, "wal");
+    assert_eq!(lock.meta.root_dependencies.len(), 1);
+    assert_eq!(
+        lock.meta.root_dependencies[0].qualified_name(),
+        "flow:wal"
+    );
+}
+
+/// `vibe install` with no arguments and no declared packages anywhere
+/// (manifest empty AND lockfile empty) is a clear error pointing at
+/// the two ways to declare an input list.
+#[test]
+fn install_no_args_no_manifest_no_lock_errors() {
+    let project = tempfile::tempdir().unwrap();
+    init_project(project.path());
+
+    vibe()
+        .arg("install")
+        .arg("--path")
+        .arg(project.path())
+        .arg("--registry")
+        .arg(fixture_registry())
+        .arg("--assume-yes")
+        .assert()
+        .failure()
+        .stderr(predicate::str::contains("no packages to install"))
+        .stderr(predicate::str::contains("[requires].packages"));
+}
+
+/// `vibe uninstall <pkgref>` removes the matching entry from
+/// `vibe.toml` `[requires].packages`, mirroring the lockfile cleanup.
+/// Pure transitives (never declared in the manifest) leave the
+/// manifest untouched.
+#[test]
+fn uninstall_drops_pkgref_from_vibe_toml() {
+    let project = tempfile::tempdir().unwrap();
+    init_project(project.path());
+
+    vibe()
+        .arg("install")
+        .arg("flow:wal")
+        .arg("--path")
+        .arg(project.path())
+        .arg("--registry")
+        .arg(fixture_registry())
+        .arg("--assume-yes")
+        .assert()
+        .success();
+
+    // Manifest carries the pkgref after install (sanity check that the
+    // earlier test's invariant still holds in this fresh tempdir).
+    let toml_text = fs::read_to_string(project.path().join("vibe.toml")).unwrap();
+    let manifest: vibe_core::manifest::ProjectManifest =
+        toml::from_str(&toml_text).unwrap();
+    assert_eq!(manifest.requires.packages.len(), 1);
+
+    vibe()
+        .arg("uninstall")
+        .arg("flow:wal")
+        .arg("--path")
+        .arg(project.path())
+        .arg("--assume-yes")
+        .assert()
+        .success();
+
+    // Manifest now empty.
+    let toml_text = fs::read_to_string(project.path().join("vibe.toml")).unwrap();
+    let manifest: vibe_core::manifest::ProjectManifest =
+        toml::from_str(&toml_text).unwrap();
+    assert!(
+        manifest.requires.packages.is_empty(),
+        "[requires].packages should be empty after uninstall, got: {:#?}",
+        manifest.requires.packages
+    );
+    // Empty [requires] is skipped on serialize — the rendered TOML
+    // should not carry an empty section header.
+    assert!(
+        !toml_text.contains("[requires]"),
+        "expected empty [requires] to be skipped on serialize:\n{toml_text}"
+    );
+}
+
 #[test]
 fn install_boot_snippet_conflict_exits_with_code_three() {
     let project = tempfile::tempdir().unwrap();
