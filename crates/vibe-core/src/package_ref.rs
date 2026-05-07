@@ -64,16 +64,22 @@ impl FromStr for PackageKind {
 ///
 /// Spec examples (`VIBEVM-SPEC.md` §7.1):
 /// - `flow:wal` → `Latest`.
-/// - `flow:wal@0.3.0` → `Req(=0.3.0)` (exact).
-/// - `flow:wal@^0.3` → `Req(^0.3)` (semver range).
+/// - `flow:wal@0.3.0` → `Req(^0.3.0)` (caret — same Cargo / npm /
+///   Poetry default; "compatible release"). Use `=0.3.0` for the
+///   strict-equal form.
+/// - `flow:wal@=0.3.0` → `Req(=0.3.0)` (exact).
+/// - `flow:wal@^0.3` → `Req(^0.3)` (semver caret range).
+/// - `flow:wal@~0.3.1` → `Req(~0.3.1)` (tilde range).
+/// - `flow:wal@>=0.2, <1.0` → compound constraint (any
+///   `semver::VersionReq` syntax).
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum VersionSpec {
     /// No version given — resolve to the latest stable.
     Latest,
-    /// Explicit version requirement. Bare semver (e.g. `0.3.0`) is treated as
-    /// exact (`=0.3.0`) to match the spec's "installs exactly that version"
-    /// wording; anything starting with `^`, `~`, `>=`, `<`, `*` or a comma-
-    /// separated list is parsed as a full `semver::VersionReq`.
+    /// Explicit version requirement parsed through
+    /// [`semver::VersionReq`]. Same parser Cargo uses, so bare
+    /// semver like `0.3.0` is treated as caret `^0.3.0`. To pin
+    /// strictly equal, write `=0.3.0`.
     Req(semver::VersionReq),
 }
 
@@ -83,18 +89,6 @@ impl VersionSpec {
         if trimmed.is_empty() {
             return Ok(VersionSpec::Latest);
         }
-
-        if let Ok(version) = semver::Version::parse(trimmed) {
-            let req_src = format!("={version}");
-            let req = semver::VersionReq::parse(&req_src).map_err(|source| {
-                Error::BadVersionSpec {
-                    input: input.to_owned(),
-                    source,
-                }
-            })?;
-            return Ok(VersionSpec::Req(req));
-        }
-
         let req = semver::VersionReq::parse(trimmed).map_err(|source| Error::BadVersionSpec {
             input: input.to_owned(),
             source,
@@ -299,14 +293,37 @@ mod tests {
     }
 
     #[test]
-    fn parse_exact_version() {
+    fn parse_bare_semver_is_caret_per_cargo() {
+        // Cargo / npm / Poetry semantics: a bare semver like `0.3.0`
+        // is shorthand for `^0.3.0` (caret — compatible release).
+        // To pin strictly equal, write `=0.3.0`. This matches what
+        // every mainstream package manager does and avoids the
+        // surprising "I wrote 0.3.0, why won't 0.3.1 install?" footgun.
         let r = PackageRef::parse("flow:wal@0.3.0").unwrap();
         assert_eq!(r.kind, PackageKind::Flow);
         assert_eq!(r.name, "wal");
-        let v = semver::Version::parse("0.3.0").unwrap();
-        assert!(r.version.matches(&v));
-        let v2 = semver::Version::parse("0.3.1").unwrap();
-        assert!(!r.version.matches(&v2), "`0.3.0` must not match 0.3.1");
+        // `0.3.0` matches itself.
+        assert!(r.version.matches(&semver::Version::parse("0.3.0").unwrap()));
+        // Caret behaviour for pre-1.0: matches the same minor, no farther.
+        assert!(
+            r.version.matches(&semver::Version::parse("0.3.5").unwrap()),
+            "0.3.0 caret must accept 0.3.5"
+        );
+        assert!(
+            !r.version.matches(&semver::Version::parse("0.4.0").unwrap()),
+            "0.3.0 caret must reject 0.4.0 (different pre-1.0 minor)"
+        );
+    }
+
+    #[test]
+    fn parse_eq_version_is_exact() {
+        // `=0.3.0` is the explicit exact form. Same Cargo notation.
+        let r = PackageRef::parse("flow:wal@=0.3.0").unwrap();
+        assert!(r.version.matches(&semver::Version::parse("0.3.0").unwrap()));
+        assert!(
+            !r.version.matches(&semver::Version::parse("0.3.1").unwrap()),
+            "=0.3.0 must reject 0.3.1"
+        );
     }
 
     #[test]
@@ -316,6 +333,15 @@ mod tests {
         assert!(r.version.matches(&v));
         let v2 = semver::Version::parse("0.4.0").unwrap();
         assert!(!r.version.matches(&v2));
+    }
+
+    #[test]
+    fn parse_tilde_version() {
+        // Tilde: `~0.3.1` → `>=0.3.1, <0.4.0`. Same Cargo / npm.
+        let r = PackageRef::parse("flow:wal@~0.3.1").unwrap();
+        assert!(r.version.matches(&semver::Version::parse("0.3.1").unwrap()));
+        assert!(r.version.matches(&semver::Version::parse("0.3.5").unwrap()));
+        assert!(!r.version.matches(&semver::Version::parse("0.4.0").unwrap()));
     }
 
     #[test]

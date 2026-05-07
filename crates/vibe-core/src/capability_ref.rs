@@ -165,12 +165,22 @@ mod tests {
     }
 
     #[test]
-    fn parse_with_exact_version() {
+    fn parse_with_bare_semver_is_caret_per_cargo() {
+        // Same Cargo / npm / Poetry default the package_ref parser
+        // uses: bare semver `0.3.0` is shorthand for `^0.3.0`.
         let c = CapabilityRef::parse("ui:landing-page@0.3.0").unwrap();
-        let v = semver::Version::parse("0.3.0").unwrap();
-        assert!(c.version.matches(&v));
-        let v2 = semver::Version::parse("0.3.1").unwrap();
-        assert!(!c.version.matches(&v2));
+        assert!(c.version.matches(&semver::Version::parse("0.3.0").unwrap()));
+        // pre-1.0 caret accepts patch bumps within the same minor…
+        assert!(c.version.matches(&semver::Version::parse("0.3.5").unwrap()));
+        // …but not the next minor.
+        assert!(!c.version.matches(&semver::Version::parse("0.4.0").unwrap()));
+    }
+
+    #[test]
+    fn parse_with_eq_version_is_exact() {
+        let c = CapabilityRef::parse("ui:landing-page@=0.3.0").unwrap();
+        assert!(c.version.matches(&semver::Version::parse("0.3.0").unwrap()));
+        assert!(!c.version.matches(&semver::Version::parse("0.3.1").unwrap()));
     }
 
     #[test]

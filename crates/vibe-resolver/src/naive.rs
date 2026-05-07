@@ -264,31 +264,27 @@ fn verify_capability_requires(
 }
 
 /// The capability's "declared version" for the providers_index. A
-/// provides-side `CapabilityRef` is semantically expected to be an
-/// exact version (`@0.3.0`); the type system still uses the same
-/// `VersionSpec` as the requires side, so we extract the exact form
-/// here. If the provider declared no version (`VersionSpec::Latest`),
-/// fall back to the providing package's resolved version — that's the
-/// most useful default for capability matching across versions.
+/// provides-side `CapabilityRef` is semantically "this API version is
+/// provided" — but the type system still uses the same `VersionSpec`
+/// as the requires side, and after the Cargo-shape parser change a
+/// bare semver like `0.3.0` is shorthand for `^0.3.0`. We treat
+/// `0.3.0`, `=0.3.0`, `^0.3.0`, `~0.3.0` all as "the package
+/// provides version 0.3.0" by walking the first comparator and
+/// reading off its (major, minor, patch). For ranges like `>=1.0`
+/// the same reading produces `1.0.0` which is a sensible anchor.
+/// `VersionSpec::Latest` (no version on the provides line) falls
+/// back to the providing package's resolved version.
 fn capability_version_for_provider(
     cap: &CapabilityRef,
     package_version: &semver::Version,
 ) -> semver::Version {
     match &cap.version {
         VersionSpec::Latest => package_version.clone(),
-        VersionSpec::Req(req) => {
-            let s = req.to_string();
-            if let Some(rest) = s.strip_prefix('=')
-                && let Ok(v) = semver::Version::parse(rest.trim())
-            {
-                return v;
-            }
-            // Non-exact form on the provides side is unusual; treat it
-            // as "this version" and fall back to the package's version
-            // so capability range-matching still works for the common
-            // case the user intended.
-            package_version.clone()
-        }
+        VersionSpec::Req(req) => req
+            .comparators
+            .first()
+            .map(|c| semver::Version::new(c.major, c.minor.unwrap_or(0), c.patch.unwrap_or(0)))
+            .unwrap_or_else(|| package_version.clone()),
     }
 }
 
