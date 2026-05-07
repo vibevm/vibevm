@@ -1619,9 +1619,6 @@ fn mcp_materialise_subskill_promotes_lazy_pull_into_project() {
 fn mcp_install_writes_claude_settings() {
     let project = tempfile::tempdir().unwrap();
     init_project(project.path());
-    // `vibe init` writes CLAUDE.md so the Claude marker fires
-    // automatically — but make the .claude/ marker-dir explicit
-    // for clarity.
     fs::create_dir_all(project.path().join(".claude")).unwrap();
 
     vibe()
@@ -1631,6 +1628,10 @@ fn mcp_install_writes_claude_settings() {
         .arg(project.path())
         .arg("--agent")
         .arg("claude")
+        .arg("--scope")
+        .arg("project")
+        .arg("--what")
+        .arg("mcp")
         .assert()
         .success();
 
@@ -1663,6 +1664,10 @@ fn mcp_install_is_idempotent() {
         .arg(project.path())
         .arg("--agent")
         .arg("claude")
+        .arg("--scope")
+        .arg("project")
+        .arg("--what")
+        .arg("mcp")
         .assert()
         .success();
 
@@ -1674,6 +1679,10 @@ fn mcp_install_is_idempotent() {
         .arg(project.path())
         .arg("--agent")
         .arg("claude")
+        .arg("--scope")
+        .arg("project")
+        .arg("--what")
+        .arg("mcp")
         .output()
         .unwrap();
     assert!(out.status.success());
@@ -1686,6 +1695,7 @@ fn mcp_install_is_idempotent() {
         .find(|r| r["agent"] == "claude")
         .expect("claude result present");
     assert_eq!(claude_result["status"], "unchanged");
+    assert_eq!(claude_result["scope"], "project");
 }
 
 #[test]
@@ -1701,6 +1711,10 @@ fn mcp_install_dry_run_does_not_write() {
         .arg(project.path())
         .arg("--agent")
         .arg("cursor")
+        .arg("--scope")
+        .arg("project")
+        .arg("--what")
+        .arg("mcp")
         .arg("--dry-run")
         .assert()
         .success();
@@ -1713,13 +1727,8 @@ fn mcp_install_dry_run_does_not_write() {
 
 #[test]
 fn mcp_install_force_writes_even_without_marker() {
-    // No .claude/ or CLAUDE.md present → without --force, the agent
-    // is not detected, no config written. With --force + --agent
-    // claude, the config is provisioned regardless.
     let project = tempfile::tempdir().unwrap();
     init_project(project.path());
-    // `vibe init` does write CLAUDE.md by default — remove it to
-    // simulate a project where Claude isn't yet detected.
     let _ = fs::remove_file(project.path().join("CLAUDE.md"));
     let _ = fs::remove_dir_all(project.path().join(".claude"));
 
@@ -1730,6 +1739,10 @@ fn mcp_install_force_writes_even_without_marker() {
         .arg(project.path())
         .arg("--agent")
         .arg("claude")
+        .arg("--scope")
+        .arg("project")
+        .arg("--what")
+        .arg("mcp")
         .arg("--force")
         .assert()
         .success();
@@ -1741,7 +1754,7 @@ fn mcp_install_force_writes_even_without_marker() {
 }
 
 #[test]
-fn mcp_install_with_skill_writes_skill_md_for_claude() {
+fn mcp_install_what_both_writes_skill_md_for_claude() {
     let project = tempfile::tempdir().unwrap();
     init_project(project.path());
     fs::create_dir_all(project.path().join(".claude")).unwrap();
@@ -1754,15 +1767,20 @@ fn mcp_install_with_skill_writes_skill_md_for_claude() {
         .arg(project.path())
         .arg("--agent")
         .arg("claude")
-        .arg("--with-skill")
+        .arg("--scope")
+        .arg("project")
+        .arg("--what")
+        .arg("both")
         .output()
         .unwrap();
     assert!(out.status.success(), "stderr: {}", String::from_utf8_lossy(&out.stderr));
     let v: serde_json::Value = serde_json::from_slice(&out.stdout).unwrap();
-    assert_eq!(v["install_skill"], true);
+    assert_eq!(v["what"], "both");
+    assert_eq!(v["scope"], "project");
     let skill_results = v["skill_results"].as_array().unwrap();
     assert_eq!(skill_results.len(), 1);
     assert_eq!(skill_results[0]["agent"], "claude");
+    assert_eq!(skill_results[0]["scope"], "project");
     assert!(matches!(
         skill_results[0]["status"].as_str(),
         Some("created" | "unchanged")
@@ -1777,7 +1795,7 @@ fn mcp_install_with_skill_writes_skill_md_for_claude() {
 }
 
 #[test]
-fn mcp_install_with_skill_writes_skill_for_opencode() {
+fn mcp_install_what_both_writes_skill_for_opencode() {
     let project = tempfile::tempdir().unwrap();
     init_project(project.path());
     fs::create_dir_all(project.path().join(".opencode")).unwrap();
@@ -1789,7 +1807,10 @@ fn mcp_install_with_skill_writes_skill_for_opencode() {
         .arg(project.path())
         .arg("--agent")
         .arg("opencode")
-        .arg("--with-skill")
+        .arg("--scope")
+        .arg("project")
+        .arg("--what")
+        .arg("both")
         .assert()
         .success();
 
@@ -1808,7 +1829,7 @@ fn mcp_install_with_skill_writes_skill_for_opencode() {
 }
 
 #[test]
-fn mcp_install_with_skill_for_cursor_reports_skipped() {
+fn mcp_install_what_skill_for_cursor_reports_skipped() {
     let project = tempfile::tempdir().unwrap();
     init_project(project.path());
     fs::create_dir_all(project.path().join(".cursor")).unwrap();
@@ -1821,7 +1842,10 @@ fn mcp_install_with_skill_for_cursor_reports_skipped() {
         .arg(project.path())
         .arg("--agent")
         .arg("cursor")
-        .arg("--with-skill")
+        .arg("--scope")
+        .arg("project")
+        .arg("--what")
+        .arg("skill")
         .output()
         .unwrap();
     assert!(out.status.success());
@@ -1834,7 +1858,7 @@ fn mcp_install_with_skill_for_cursor_reports_skipped() {
 }
 
 #[test]
-fn mcp_install_without_skill_emits_empty_skill_results() {
+fn mcp_install_what_mcp_emits_empty_skill_results() {
     let project = tempfile::tempdir().unwrap();
     init_project(project.path());
     fs::create_dir_all(project.path().join(".claude")).unwrap();
@@ -1847,17 +1871,19 @@ fn mcp_install_without_skill_emits_empty_skill_results() {
         .arg(project.path())
         .arg("--agent")
         .arg("claude")
-        .arg("--without-skill")
+        .arg("--scope")
+        .arg("project")
+        .arg("--what")
+        .arg("mcp")
         .output()
         .unwrap();
     assert!(out.status.success());
     let v: serde_json::Value = serde_json::from_slice(&out.stdout).unwrap();
-    assert_eq!(v["install_skill"], false);
+    assert_eq!(v["what"], "mcp");
     assert!(v["skill_results"].as_array().unwrap().is_empty());
-    // SKILL.md must NOT be present
     assert!(
         !project.path().join(".claude/skills/vibevm/SKILL.md").exists(),
-        "without-skill must not write SKILL.md"
+        "what=mcp must not write SKILL.md"
     );
 }
 
@@ -1865,10 +1891,6 @@ fn mcp_install_without_skill_emits_empty_skill_results() {
 fn mcp_install_auto_with_dry_run_previews_every_detected_agent() {
     let project = tempfile::tempdir().unwrap();
     init_project(project.path());
-    // Light up multiple project markers so detection finds several
-    // agents at once. We stay on `--dry-run` so the run does not
-    // touch the operator's user-level config dirs (Claude Desktop,
-    // Codex), even when those exist on the test host.
     fs::create_dir_all(project.path().join(".claude")).unwrap();
     fs::create_dir_all(project.path().join(".cursor")).unwrap();
     fs::create_dir_all(project.path().join(".opencode")).unwrap();
@@ -1887,7 +1909,9 @@ fn mcp_install_auto_with_dry_run_previews_every_detected_agent() {
     let v: serde_json::Value = serde_json::from_slice(&out.stdout).unwrap();
     assert_eq!(v["mode"], "auto");
     assert_eq!(v["dry_run"], true);
-    assert_eq!(v["install_skill"], true);
+    // --auto with vibe.toml present resolves scope=project; what=both.
+    assert_eq!(v["scope"], "project");
+    assert_eq!(v["what"], "both");
     let detected: Vec<&str> = v["detected"]
         .as_array()
         .unwrap()
@@ -1900,27 +1924,18 @@ fn mcp_install_auto_with_dry_run_previews_every_detected_agent() {
             "expected `{a}` in detected={detected:?}"
         );
     }
-    // Every targeted agent gets a `would-create` or similar
-    // status; nothing actually got written because --dry-run.
     for r in v["results"].as_array().unwrap() {
         let s = r["status"].as_str().unwrap();
         assert!(
-            s.starts_with("would-") || s == "unchanged",
+            s.starts_with("would-") || s == "unchanged" || s == "skipped",
             "unexpected dry-run status `{s}`"
         );
     }
-    // Skill results should reflect supports_skill: claude + opencode
-    // emit `would-create`/`unchanged`, cursor emits `skipped`.
     let skill_by_agent: std::collections::BTreeMap<&str, &str> = v["skill_results"]
         .as_array()
         .unwrap()
         .iter()
-        .map(|r| {
-            (
-                r["agent"].as_str().unwrap(),
-                r["status"].as_str().unwrap(),
-            )
-        })
+        .map(|r| (r["agent"].as_str().unwrap(), r["status"].as_str().unwrap()))
         .collect();
     assert_eq!(skill_by_agent.get("cursor"), Some(&"skipped"));
     assert!(matches!(
@@ -1930,6 +1945,169 @@ fn mcp_install_auto_with_dry_run_previews_every_detected_agent() {
     assert!(matches!(
         skill_by_agent.get("opencode"),
         Some(&"would-create") | Some(&"unchanged")
+    ));
+}
+
+#[test]
+fn mcp_install_scope_user_works_without_vibe_toml() {
+    // Bootstrap mode: directory has no vibe.toml, scope=user → no
+    // resolve_project_root_required gate, install proceeds against
+    // user-level paths. Use --dry-run so we don't touch real ~/.claude.
+    let project = tempfile::tempdir().unwrap();
+    // Deliberately no init_project — no vibe.toml.
+
+    let out = vibe()
+        .arg("--json")
+        .arg("mcp")
+        .arg("install")
+        .arg("--path")
+        .arg(project.path())
+        .arg("--agent")
+        .arg("claude")
+        .arg("--scope")
+        .arg("user")
+        .arg("--what")
+        .arg("mcp")
+        .arg("--dry-run")
+        .arg("--force")
+        .output()
+        .unwrap();
+    assert!(
+        out.status.success(),
+        "stderr: {}",
+        String::from_utf8_lossy(&out.stderr)
+    );
+    let v: serde_json::Value = serde_json::from_slice(&out.stdout).unwrap();
+    assert_eq!(v["scope"], "user");
+    assert!(v["project"].is_null() || v["project"].as_str().is_some());
+    let results = v["results"].as_array().unwrap();
+    assert_eq!(results.len(), 1);
+    assert_eq!(results[0]["agent"], "claude");
+    assert_eq!(results[0]["scope"], "user");
+}
+
+#[test]
+fn mcp_install_user_scope_mcp_entry_omits_path_arg() {
+    // dry-run a user-scope install and confirm the would-create
+    // output's wire shape lacks `--path` in args. We can't read the
+    // resulting file (would touch ~/.claude/), but the JSON envelope
+    // doesn't expose the args directly — instead, rely on the unit
+    // test `user_scope_mcp_entry_omits_path_arg` for that contract
+    // and just assert here that the install succeeds.
+    let project = tempfile::tempdir().unwrap();
+    let out = vibe()
+        .arg("mcp")
+        .arg("install")
+        .arg("--path")
+        .arg(project.path())
+        .arg("--agent")
+        .arg("claude")
+        .arg("--scope")
+        .arg("user")
+        .arg("--what")
+        .arg("mcp")
+        .arg("--dry-run")
+        .arg("--force")
+        .output()
+        .unwrap();
+    assert!(
+        out.status.success(),
+        "stderr: {}",
+        String::from_utf8_lossy(&out.stderr)
+    );
+}
+
+#[test]
+fn mcp_install_scope_project_without_vibe_toml_errors() {
+    // Inverse of bootstrap-mode test: if scope=project but vibe.toml
+    // is absent, the gate must fire with a helpful message.
+    let project = tempfile::tempdir().unwrap();
+    let out = vibe()
+        .arg("mcp")
+        .arg("install")
+        .arg("--path")
+        .arg(project.path())
+        .arg("--agent")
+        .arg("claude")
+        .arg("--scope")
+        .arg("project")
+        .arg("--what")
+        .arg("mcp")
+        .arg("--force")
+        .output()
+        .unwrap();
+    assert!(!out.status.success(), "expected failure when vibe.toml missing under scope=project");
+    let stderr = String::from_utf8_lossy(&out.stderr);
+    assert!(
+        stderr.contains("vibe.toml") && stderr.contains("--scope user"),
+        "expected hint about --scope user; got: {stderr}"
+    );
+}
+
+#[test]
+fn mcp_install_scope_both_writes_to_project_and_user_for_claude() {
+    let project = tempfile::tempdir().unwrap();
+    init_project(project.path());
+    fs::create_dir_all(project.path().join(".claude")).unwrap();
+
+    let out = vibe()
+        .arg("--json")
+        .arg("mcp")
+        .arg("install")
+        .arg("--path")
+        .arg(project.path())
+        .arg("--agent")
+        .arg("claude")
+        .arg("--scope")
+        .arg("both")
+        .arg("--what")
+        .arg("mcp")
+        .arg("--dry-run")
+        .output()
+        .unwrap();
+    assert!(out.status.success(), "stderr: {}", String::from_utf8_lossy(&out.stderr));
+    let v: serde_json::Value = serde_json::from_slice(&out.stdout).unwrap();
+    assert_eq!(v["scope"], "both");
+    let results = v["results"].as_array().unwrap();
+    let scopes: Vec<&str> = results.iter().map(|r| r["scope"].as_str().unwrap()).collect();
+    assert!(scopes.contains(&"project"));
+    assert!(scopes.contains(&"user"));
+}
+
+#[test]
+fn mcp_install_scope_both_collapses_to_user_for_user_only_agent() {
+    let project = tempfile::tempdir().unwrap();
+    init_project(project.path());
+
+    let out = vibe()
+        .arg("--json")
+        .arg("mcp")
+        .arg("install")
+        .arg("--path")
+        .arg(project.path())
+        .arg("--agent")
+        .arg("codex")
+        .arg("--scope")
+        .arg("both")
+        .arg("--what")
+        .arg("mcp")
+        .arg("--force")
+        .arg("--dry-run")
+        .output()
+        .unwrap();
+    assert!(out.status.success(), "stderr: {}", String::from_utf8_lossy(&out.stderr));
+    let v: serde_json::Value = serde_json::from_slice(&out.stdout).unwrap();
+    let results = v["results"].as_array().unwrap();
+    // Both expands to two entries — but the project one is `skipped`
+    // (Codex has no project surface) and the user one is `would-create`.
+    let by_scope: std::collections::BTreeMap<&str, &str> = results
+        .iter()
+        .map(|r| (r["scope"].as_str().unwrap(), r["status"].as_str().unwrap()))
+        .collect();
+    assert_eq!(by_scope.get("project"), Some(&"skipped"));
+    assert!(matches!(
+        by_scope.get("user"),
+        Some(&"would-create") | Some(&"would-update") | Some(&"unchanged")
     ));
 }
 
@@ -1961,9 +2139,6 @@ fn mcp_install_no_args_in_non_tty_emits_error() {
     init_project(project.path());
     fs::create_dir_all(project.path().join(".claude")).unwrap();
 
-    // assert_cmd runs the binary with stdin piped, so user_attended_stdin
-    // is false. The command should fail with a helpful message rather
-    // than panic in dialoguer.
     let out = vibe()
         .arg("mcp")
         .arg("install")
@@ -1974,8 +2149,8 @@ fn mcp_install_no_args_in_non_tty_emits_error() {
     assert!(!out.status.success(), "expected failure in non-TTY interactive path");
     let stderr = String::from_utf8_lossy(&out.stderr);
     assert!(
-        stderr.contains("--agent") || stderr.contains("--auto"),
-        "expected hint pointing at --agent/--auto; got: {stderr}"
+        stderr.contains("--scope") || stderr.contains("--auto"),
+        "expected hint pointing at --scope/--auto; got: {stderr}"
     );
 }
 
@@ -1995,7 +2170,10 @@ fn mcp_install_with_invoked_by_stamps_envelope() {
         .arg(project.path())
         .arg("--agent")
         .arg("claude")
-        .arg("--without-skill")
+        .arg("--scope")
+        .arg("project")
+        .arg("--what")
+        .arg("mcp")
         .output()
         .unwrap();
     assert!(out.status.success());

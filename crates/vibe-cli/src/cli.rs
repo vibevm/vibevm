@@ -500,48 +500,54 @@ pub enum McpSubcommand {
 #[derive(Debug, clap::Args)]
 pub struct McpInstallArgs {
     /// Project root with `vibe.toml`. Defaults to current directory.
+    /// Required only when `--scope` is `project` or `both`. With
+    /// `--scope user` (or auto-resolved to `user` because no
+    /// `vibe.toml` is present in CWD), the command runs without a
+    /// project.
     #[arg(long, default_value = ".")]
     pub path: PathBuf,
 
     /// Restrict to a specific agent. One of `all`, `claude`,
     /// `claude-desktop`, `cursor`, `opencode`, `codex`. When absent
-    /// and `--auto` is also absent, the command runs interactively
+    /// and `--auto` is also absent, the wizard's agents step asks
     /// (TTY required). Conflicts with `--auto`.
     #[arg(long, conflicts_with = "auto")]
     pub agent: Option<String>,
 
-    /// Detect every supported agent on this machine and install MCP
-    /// config + skill in all of them. No prompts. Skill defaults to
-    /// on under `--auto`; pass `--without-skill` to suppress. Useful
-    /// for first-run scripts and CI. Conflicts with `--agent`.
+    /// Detect every supported agent on this machine and install in
+    /// all of them. No prompts (except final apply confirm — pass
+    /// `--yes` to skip even that). Conflicts with `--agent`.
     #[arg(long)]
     pub auto: bool,
 
-    /// Also install the `vibevm` SKILL.md alongside the MCP config.
-    /// Three agents support filesystem skills (Claude Code, OpenCode,
-    /// Codex); Cursor and Claude Desktop report `skipped`. Conflicts
-    /// with `--without-skill`.
-    #[arg(long = "with-skill", conflicts_with = "without_skill")]
-    pub with_skill: bool,
+    /// Where to install. One of `project` (per-project files —
+    /// `<proj>/.<agent>/...`), `user` (global home / config dirs),
+    /// `both` (project AND user). When absent, the wizard asks; with
+    /// `--auto` it auto-resolves to `project` if `vibe.toml` is in
+    /// `--path`, else `user`.
+    #[arg(long)]
+    pub scope: Option<String>,
 
-    /// Install only the MCP server entry, suppressing any SKILL.md
-    /// write. Conflicts with `--with-skill`.
-    #[arg(long = "without-skill")]
-    pub without_skill: bool,
-
-    /// Where to land the SKILL.md when skill installation is active.
-    /// `project` (default) commits to the per-agent project skill
-    /// dir; `user` writes to the operator's home / config dir.
-    #[arg(long = "skill-scope", default_value = "project")]
-    pub skill_scope: String,
+    /// What to install. One of `both` (default — MCP server entry +
+    /// SKILL.md), `mcp` (server entry only), `skill` (SKILL.md only).
+    /// When absent under `--auto`, defaults to `both`; in
+    /// interactive mode the wizard asks.
+    #[arg(long)]
+    pub what: Option<String>,
 
     /// Print the planned config without writing files.
     #[arg(long)]
     pub dry_run: bool,
 
+    /// Skip the final apply confirm prompt. Implied by `--auto` when
+    /// `--scope` is also explicit.
+    #[arg(long)]
+    pub yes: bool,
+
     /// Force-write even when no agent is detected in the project
-    /// tree (useful when the agent's marker dir is not yet
-    /// present but the operator wants the config provisioned).
+    /// tree / on this machine (useful when the agent's marker dir
+    /// is not yet present but the operator wants the config
+    /// provisioned).
     #[arg(long)]
     pub force: bool,
 }
