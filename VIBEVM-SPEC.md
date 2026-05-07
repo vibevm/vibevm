@@ -408,6 +408,9 @@ install:user-confirm    (input: WritePlan → Approval; interactive)
 install:apply           (input: WritePlan + Approval → CommandResult)
         │
         ▼
+install:update-manifest (input: PackageRef → ProjectManifest with [requires] dirty)
+        │
+        ▼
 install:update-lockfile (input: PackageRef + applied → Lockfile)
         │
         ▼
@@ -417,7 +420,9 @@ install:complete        (barrier)
 install:report          (input: ... → Report)
 ```
 
-Each named node is a built-in. `install:user-confirm` is a `prompt` node that pauses for user input. All other mutating nodes (`install:apply`, `install:update-lockfile`) only run after `install:user-confirm` produces an `Approval` with a positive value.
+Each named node is a built-in. `install:user-confirm` is a `prompt` node that pauses for user input. All other mutating nodes (`install:apply`, `install:update-manifest`, `install:update-lockfile`) only run after `install:user-confirm` produces an `Approval` with a positive value. `install:update-manifest` writes the user-supplied pkgref(s) into `vibe.toml` `[requires].packages` (de-duplicated by `(kind, name)`; a repeat install with a new constraint overwrites the old one). `install:update-lockfile` then writes the resolved graph and pins to `vibe.lock`. The two writes are atomic per file but not transactional across files — if the lockfile write fails after the manifest write succeeded, the operator re-runs `vibe install` and the resolver re-derives the lockfile from the manifest.
+
+**`vibe install` with no arguments — install-from-manifest.** When invoked without pkgref arguments, the workflow reads `vibe.toml` `[requires].packages` and treats those entries as the input root list. This is the cargo / npm / Poetry shape: the project ships `vibe.toml` (and ideally `vibe.lock`) in git, a fresh clone runs `vibe install`, every declared package lands. `install:update-manifest` is a no-op in this mode — there are no new pkgrefs to record.
 
 **M0 implementation note.** In M0 the `install` workflow is implemented procedurally inside the `vibe-install` library (`plan_install` / `apply_install` / `register_installed`) rather than executed through a formal graph runner. The node names above reflect the logical shape and map one-to-one onto library functions. `install:review` is elided entirely in M0 (no corresponding function); when M2 introduces an LLM-driven censor it will land as a new stage between `install:fetch` and `install:plan`. The graph-runner sophistication described here is a v2 deliverable — v1 ships the same semantics executed procedurally so the type system and testability benefits hold without the runner's infrastructure cost.
 
@@ -629,7 +634,7 @@ generated_by      = "vibe 0.2.0"
 generated_at      = "2026-04-24T12:00:00Z"
 schema_version    = 2
 solver            = "resolvo-0.x"                   # depsolver identity (see §8.6)
-root_dependencies = ["flow:wal", "stack:rust-cli"]  # what the user directly asked for
+root_dependencies = ["flow:wal", "stack:rust-cli"]  # mirror of `vibe.toml` `[requires].packages`
 
 [[package]]
 kind            = "flow"
@@ -671,6 +676,17 @@ The lockfile is the source of truth for what is installed. `vibe list` reads it.
 name = "my-telegram-client"
 version = "0.0.1"
 authors = ["Oleg <oleg@example.com>"]
+
+# Direct dependencies the project declares — what the user explicitly asked
+# vibevm to install. Capability requirements satisfied by any provider go in
+# `capabilities`. `vibe install <pkgref>` appends here; `vibe uninstall` drops.
+# `vibe install` with no arguments installs every entry in this section
+# (the cargo / npm "install from manifest" shape). The lockfile carries the
+# resolved transitive graph and the exact pins; this section carries the
+# author's intent (constraints), nothing else.
+[requires]
+packages     = ["flow:wal@^0.3", "stack:rust-cli"]   # `<kind>:<name>[@<version>]`; bare = Latest
+capabilities = []                                     # abstract requirements satisfied by any provider
 
 [active]
 # The currently active stack (used as default for `vibe build`)
@@ -718,6 +734,10 @@ naming = "kind-name"                      # convention: package repo name = "<ki
 # ref        = "my-fix-branch"            # optional — tag, branch, or commit
 # reason     = "awaiting upstream PR #42" # optional — surfaces in `vibe list --overrides`
 ```
+
+**Two-file model.** `vibe.toml` is the **declaration** (what the human asked for, in semver-constraint form: `^0.3`, `~1.2`, exact `=0.3.0`, or bare `flow:wal` meaning Latest). `vibe.lock` is the **materialisation** (one resolved version per package, with content-hash, source URL, exact transitive graph). Same shape as Cargo (`Cargo.toml` ↔ `Cargo.lock`), npm (`package.json` ↔ `package-lock.json`), Bundler, Poetry, Go modules. The lockfile mirrors `[requires].packages` into `[meta].root_dependencies` so the lockfile is a self-contained snapshot of the solve state, but the source of truth for *what the user wants* is `vibe.toml`.
+
+This is the difference that makes `vibe install` (no arguments) meaningful: the manifest carries the input list, the resolver produces the lockfile from it. Cloning a vibevm project from git and running `vibe install` reproduces the project's package set without re-typing every pkgref. `vibe install <pkgref>` is sugar for "append to `[requires]`, then sync"; `vibe uninstall <pkgref>` is sugar for "drop from `[requires]`, then sync".
 
 ---
 

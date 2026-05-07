@@ -182,7 +182,8 @@ overridden      = false
 ```
 
 - `schema_version = 1` (monorepo-era) is accepted read-only and auto-migrated to v2 on the next `vibe install` / `vibe update`, with a user-visible notice.
-- `root_dependencies` distinguishes what the user directly asked for from what the solver pulled in transitively. `vibe uninstall` of a root dep removes it from that list and prunes orphaned transitives; `vibe uninstall` of a pure transitive is rejected with an explanation.
+- `root_dependencies` is a **mirror of `vibe.toml` `[requires].packages`** — the lockfile keeps the user's declared roots inline so it remains a self-contained snapshot of the solve state (nothing inside `vibe.lock` requires reading `vibe.toml` to interpret). The source of truth for *what the user asked for* is the manifest's `[requires]` section; the lockfile carries a copy plus the resolved transitive closure. `vibe uninstall` of a root drops the entry from both files; `vibe uninstall` of a pure transitive is rejected with an explanation.
+- A first-run migration path covers projects whose `vibe.toml` predates the `[requires]` section: when the manifest's `[requires]` is empty but the lockfile's `meta.root_dependencies` is non-empty, `vibe install` (no arguments) seeds `[requires].packages` from the lockfile snapshot before resolving. After that the manifest is authoritative.
 - `dependencies` field per package is **resolved** (exact version, not constraint) — the lockfile is the full resolved graph, not a constraint manifest.
 
 ### 2.8 Depsolver: resolvo primary, DepSolver trait for fallback {#solver}
