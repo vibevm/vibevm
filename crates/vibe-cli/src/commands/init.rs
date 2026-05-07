@@ -181,6 +181,7 @@ fn ensure_project_manifest(
             version: "0.0.1".to_string(),
             authors: vec![],
         },
+        requires: vibe_core::manifest::Requires::default(),
         active: stack.map(|s| ActiveSection {
             stack: Some(s.to_string()),
         }),

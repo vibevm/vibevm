@@ -20,6 +20,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::error::Result;
 
+use super::package::Requires;
 use super::{read_toml, write_toml};
 
 /// Top-level `vibe.toml` structure.
@@ -30,6 +31,20 @@ use super::{read_toml, write_toml};
 #[serde(deny_unknown_fields)]
 pub struct ProjectManifest {
     pub project: ProjectSection,
+
+    /// `[requires]` — packages and capabilities the project directly
+    /// declares as dependencies. Spec: `VIBEVM-SPEC.md` §7.5. The
+    /// shape mirrors `[requires]` on a package manifest (so the same
+    /// `Requires` type covers both); semantics differ — here it is the
+    /// user's input list (constraint form like `^0.3`), there it is
+    /// the package's own dependency declaration.
+    ///
+    /// `vibe install <pkgref>` appends to this section; `vibe install`
+    /// with no arguments installs every entry. The lockfile mirrors
+    /// `requires.packages` into `[meta].root_dependencies` so the
+    /// lockfile remains a self-contained snapshot of the solve state.
+    #[serde(default, skip_serializing_if = "Requires::is_empty")]
+    pub requires: Requires,
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub active: Option<ActiveSection>,
@@ -83,6 +98,8 @@ impl<'de> Deserialize<'de> for ProjectManifest {
 #[serde(deny_unknown_fields)]
 struct ProjectManifestWire {
     project: ProjectSection,
+    #[serde(default)]
+    requires: Requires,
     #[serde(default)]
     active: Option<ActiveSection>,
     #[serde(default)]
@@ -141,6 +158,7 @@ impl From<ProjectManifestWire> for ProjectManifest {
         };
         ProjectManifest {
             project: w.project,
+            requires: w.requires,
             active: w.active,
             llm: w.llm,
             registries,
@@ -652,6 +670,49 @@ url = "git@host:org"
 bogus = 1
 "#;
         assert!(toml::from_str::<ProjectManifest>(raw).is_err());
+    }
+
+    #[test]
+    fn requires_section_roundtrips() {
+        let raw = r#"
+[project]
+name = "with-requires"
+version = "0.1.0"
+
+[requires]
+packages     = ["flow:wal@^0.3", "stack:rust-cli", "feat:welcome-page@0.2.0"]
+capabilities = []
+"#;
+        let m: ProjectManifest = toml::from_str(raw).unwrap();
+        assert_eq!(m.requires.packages.len(), 3);
+        assert_eq!(m.requires.packages[0].qualified_name(), "flow:wal");
+        assert_eq!(m.requires.packages[1].qualified_name(), "stack:rust-cli");
+        assert_eq!(m.requires.packages[2].qualified_name(), "feat:welcome-page");
+        // Round-trip through write — the modern shape comes back.
+        let rendered = toml::to_string_pretty(&m).unwrap();
+        assert!(rendered.contains("[requires]"), "expected [requires] in:\n{rendered}");
+        let back: ProjectManifest = toml::from_str(&rendered).unwrap();
+        assert_eq!(m, back);
+    }
+
+    #[test]
+    fn requires_is_optional_for_legacy_manifests() {
+        // A pre-[requires] manifest must still parse cleanly; .requires comes
+        // out empty. This is the migration path for projects that were already
+        // initialised before [requires] existed in the schema.
+        let raw = r#"
+[project]
+name = "legacy"
+version = "0.1.0"
+"#;
+        let m: ProjectManifest = toml::from_str(raw).unwrap();
+        assert!(m.requires.is_empty());
+        // Round-trip skips the empty [requires] section.
+        let rendered = toml::to_string_pretty(&m).unwrap();
+        assert!(
+            !rendered.contains("[requires]"),
+            "empty [requires] must be skipped on serialize:\n{rendered}"
+        );
     }
 
     #[test]
