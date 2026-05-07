@@ -85,20 +85,47 @@ cargo fmt --all
 
 ### 3.1 Quick-reinstall shortcut (optional)
 
-While iterating on `vibe-cli` you'll typically rebuild + reinstall many times a session:
+While iterating on `vibe-cli` you'll typically rebuild + reinstall many times a session. There are two paths, with very different cost / coverage trade-offs.
+
+#### Two modes, when to use which
+
+**Fast (default — for the iteration loop):**
 
 ```
-cd <repo>
+cargo build -p vibe-cli
+cp target/debug/vibe(.exe) ~/.cargo/bin/
+```
+
+`cargo build -p vibe-cli` uses the regular `target/debug/` cache with **incremental compilation** — only what you actually changed gets recompiled. Then we just copy the resulting binary over `~/.cargo/bin/vibe(.exe)` (the path `cargo install` would put it). Total: 5–30 seconds depending on the change. The binary is bigger and microseconds slower at startup, but for a CLI that runs in fractions of a second that's invisible.
+
+Use this in your edit-build-test loop. It is **always safe** for behaviour — the binary is the same logic, just compiled with `-O0` and without LTO.
+
+**Release (occasional — before commits / pushes):**
+
+```
 cargo install --path crates/vibe-cli --locked
 ```
 
-Below are platform-specific shell shortcuts for that pair, written so the helper preserves your CWD (uses `Push-Location` / `pushd`) and bails on a failed build before doing anything else (so you can chain follow-ups like `vibe mcp upgrade` safely).
+Goes through `[profile.release]`: `lto = "thin"` + `codegen-units = 1` + `strip = "symbols"`, all single-threaded final stages. 1–3 minutes on a clean cache (and `cargo install` keeps a separate cache from `cargo build`, so it usually IS clean).
+
+Use this:
+- Before pushing — to confirm the release-build still compiles cleanly.
+- Before tagging a release — same reason, plus to install the actual release-shaped binary you'd ship.
+- When debugging a release-only issue — sometimes optimizations expose UB or expose a different code path.
 
 #### PowerShell (Windows)
 
-PowerShell aliases (`Set-Alias`) cannot accept arguments or chain commands — use a function plus a short alias.
+PowerShell aliases (`Set-Alias`) can't accept arguments or chain commands — use a function plus a short alias.
 
-Add to your `$PROFILE` (`notepad $PROFILE`; create with `New-Item -Path $PROFILE -ItemType File -Force` if absent):
+If `$PROFILE` doesn't yet exist (visible as `notepad $PROFILE` opening nothing, or `Test-Path $PROFILE` returning `False`), create it once:
+
+```powershell
+New-Item -Path $PROFILE -ItemType File -Force
+```
+
+`-Force` also creates the parent directory (`Documents\PowerShell\` for PS 7+, `Documents\WindowsPowerShell\` for PS 5.1) if it's absent.
+
+Then add to `$PROFILE`:
 
 ```powershell
 $env:VIBEVM_REPO = 'C:\Users\<you>\gits\vibevm'   # adjust path
@@ -106,9 +133,12 @@ $env:VIBEVM_REPO = 'C:\Users\<you>\gits\vibevm'   # adjust path
 function Update-Vibe {
     [CmdletBinding()]
     param(
-        # -Refresh: after a successful install, run `vibe mcp upgrade --yes`
-        # so SKILL.md / MCP-config files in every wired agent get
-        # resynced to the freshly-built binary.
+        # -Release: `cargo install --path` (release profile, LTO, 1-3 min).
+        # Default is fast: `cargo build` + copy of the debug binary.
+        [switch]$Release,
+        # -Refresh: after a successful build, run `vibe mcp upgrade --yes`
+        # so SKILL.md / MCP-config in every wired agent get resynced to
+        # the freshly-built binary.
         [switch]$Refresh
     )
     if (-not (Test-Path $env:VIBEVM_REPO)) {
@@ -117,7 +147,15 @@ function Update-Vibe {
     }
     Push-Location $env:VIBEVM_REPO
     try {
-        cargo install --path crates/vibe-cli --locked
+        if ($Release) {
+            cargo install --path crates/vibe-cli --locked
+        } else {
+            cargo build -p vibe-cli
+            if ($LASTEXITCODE -eq 0) {
+                Copy-Item target\debug\vibe.exe `
+                    "$env:USERPROFILE\.cargo\bin\vibe.exe" -Force
+            }
+        }
         if ($LASTEXITCODE -eq 0 -and $Refresh) {
             vibe mcp upgrade --yes --invoked-by powershell-update-vibe
         }
@@ -134,7 +172,14 @@ Reload the profile in the current session (or open a new window):
 . $PROFILE
 ```
 
-Usage: `vu` rebuilds; `vu -Refresh` (or `vu -r`, PowerShell accepts unambiguous prefixes) rebuilds and refreshes integrations.
+Usage:
+
+- `vu` — fast (debug build + copy). Default for the iteration loop.
+- `vu -Release` (or `vu -R`) — full release-mode `cargo install`. Use before pushing / tagging.
+- `vu -Refresh` (or `vu -r`) — fast build + `vibe mcp upgrade` to resync agent integrations.
+- `vu -R -r` — release build + agent resync.
+
+PowerShell accepts unambiguous parameter-name prefixes, so `vu -Re` would be ambiguous (matches both `-Release` and `-Refresh`) — use `-R` / `-r` (single-letter) or the full names.
 
 If PowerShell refuses to load the profile with `running scripts is disabled on this system`, allow user-scope scripts once: `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`.
 
@@ -147,8 +192,24 @@ export VIBEVM_REPO="$HOME/gits/vibevm"   # adjust path
 
 vu() {
     [ -d "$VIBEVM_REPO" ] || { echo "VIBEVM_REPO ($VIBEVM_REPO) does not exist" >&2; return 1; }
-    ( cd "$VIBEVM_REPO" && cargo install --path crates/vibe-cli --locked ) || return $?
-    if [ "$1" = "--refresh" ] || [ "$1" = "-r" ]; then
+    local mode="fast" refresh=false arg
+    for arg in "$@"; do
+        case "$arg" in
+            --release|-R) mode="release" ;;
+            --refresh|-r) refresh=true ;;
+            *) echo "vu: unknown arg '$arg'" >&2; return 1 ;;
+        esac
+    done
+    if [ "$mode" = "release" ]; then
+        ( cd "$VIBEVM_REPO" && cargo install --path crates/vibe-cli --locked ) || return $?
+    else
+        ( cd "$VIBEVM_REPO" \
+            && cargo build -p vibe-cli \
+            && cp "target/debug/vibe$([ "$(uname -s)" = "MINGW"* ] && echo .exe)" \
+                  "$HOME/.cargo/bin/vibe$([ "$(uname -s)" = "MINGW"* ] && echo .exe)" \
+        ) || return $?
+    fi
+    if [ "$refresh" = true ]; then
         vibe mcp upgrade --yes --invoked-by shell-update-vibe
     fi
 }
@@ -156,9 +217,14 @@ vu() {
 
 Reload: `source ~/.bashrc` (or `~/.zshrc`).
 
-Usage: `vu` rebuilds; `vu --refresh` (or `vu -r`) rebuilds + refreshes MCP integrations.
+Usage:
 
-The `( … )` subshell handles CWD restoration automatically — exit the subshell, you're back where you started. The `|| return $?` propagates a build failure so the optional refresh step doesn't run against a stale binary.
+- `vu` — fast (default).
+- `vu --release` / `vu -R` — full release-mode install.
+- `vu --refresh` / `vu -r` — fast build + agent resync.
+- `vu -R -r` — release build + agent resync.
+
+The `( … )` subshell handles CWD restoration automatically — exit the subshell, you're back where you started. The `|| return $?` propagates a build failure so the optional refresh step never runs against a stale binary.
 
 ## 4. Manual smoke-tests
 
