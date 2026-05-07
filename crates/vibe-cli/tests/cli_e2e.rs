@@ -2641,16 +2641,47 @@ fn mcp_status_reports_per_agent_state() {
         .as_array()
         .unwrap()
         .iter()
-        .find(|r| r["agent"] == "claude")
+        .find(|r| r["agent"] == "claude" && r["scope"] == "project")
         .unwrap();
-    // Either `would-create` (no settings file yet) or `would-update`
-    // (existing file). On a fresh tempdir without prior `vibe mcp
-    // install` run, expect `would-create`.
     let s = claude_status["status"].as_str().unwrap();
     assert!(
         s == "would-create" || s == "would-update" || s == "unchanged",
         "unexpected status `{s}`"
     );
+    // skill_results must be present — skill drift is reported by
+    // status now, not just install/upgrade.
+    assert!(v["skill_results"].is_array(), "expected skill_results in envelope");
+}
+
+#[test]
+fn mcp_status_reports_skill_drift() {
+    let project = tempfile::tempdir().unwrap();
+    init_project(project.path());
+    fs::create_dir_all(project.path().join(".claude")).unwrap();
+
+    // Plant a stale skill file by hand.
+    let skill_path = project.path().join(".claude/skills/vibevm/SKILL.md");
+    fs::create_dir_all(skill_path.parent().unwrap()).unwrap();
+    fs::write(&skill_path, "stale content").unwrap();
+
+    let out = vibe()
+        .arg("--json")
+        .arg("mcp")
+        .arg("status")
+        .arg("--path")
+        .arg(project.path())
+        .output()
+        .unwrap();
+    assert!(out.status.success());
+    let v: serde_json::Value = serde_json::from_slice(&out.stdout).unwrap();
+    let claude_skill = v["skill_results"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .find(|r| r["agent"] == "claude" && r["scope"] == "project")
+        .expect("claude project skill entry present");
+    // Stale on-disk content → would-update.
+    assert_eq!(claude_skill["status"], "would-update");
 }
 
 #[test]

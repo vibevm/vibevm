@@ -730,9 +730,13 @@ struct StatusReport {
     project: Option<String>,
     detected: Vec<String>,
     /// MCP-config preview entries, one per (agent × concrete-scope)
-    /// combination that has a surface. Skill drift report is in a
-    /// future slice.
+    /// combination that has a surface.
     results: Vec<AgentInstallReport>,
+    /// SKILL.md drift preview entries — same shape as install /
+    /// upgrade. Empty for agents without filesystem skill loaders
+    /// (Cursor, Claude Desktop). Status is `would-create` /
+    /// `would-update` / `unchanged`.
+    skill_results: Vec<SkillInstallReport>,
 }
 
 fn run_status(ctx: &output::Context, args: McpStatusArgs) -> Result<()> {
@@ -747,15 +751,27 @@ fn run_status(ctx: &output::Context, args: McpStatusArgs) -> Result<()> {
         .filter(|p| p.join(ProjectManifest::FILENAME).exists());
     let detected = detect_agents(project_root.as_deref());
     let mut results: Vec<AgentInstallReport> = Vec::new();
+    let mut skill_results: Vec<SkillInstallReport> = Vec::new();
     for agent in Agent::ALL.iter().copied() {
         for scope in [Scope::Project, Scope::User] {
             if scope == Scope::Project && project_root.is_none() {
                 continue;
             }
-            let path = agent.config_path(scope, project_root.as_deref())?;
-            let Some(path) = path else { continue };
-            let payload = agent.build_mcp_entry(scope, project_root.as_deref());
-            results.push(preview_install_mcp(agent, scope, &path, &payload)?);
+            // MCP-config preview.
+            if let Some(path) = agent.config_path(scope, project_root.as_deref())? {
+                let payload = agent.build_mcp_entry(scope, project_root.as_deref());
+                results.push(preview_install_mcp(agent, scope, &path, &payload)?);
+            }
+            // Skill preview — only for agents that load skills + have
+            // a path for this scope. install_skill with dry_run=true
+            // reuses the decide-then-(don't-)apply logic and emits
+            // would-create / would-update / unchanged.
+            if agent.supports_skill()
+                && agent.skill_path(scope, project_root.as_deref())?.is_some()
+            {
+                let outcome = install_skill(agent, scope, project_root.as_deref(), true)?;
+                skill_results.push(outcome);
+            }
         }
     }
     let report = StatusReport {
@@ -764,6 +780,7 @@ fn run_status(ctx: &output::Context, args: McpStatusArgs) -> Result<()> {
         project: project_root.as_ref().map(|p| p.display().to_string()),
         detected: detected.iter().map(|a| a.as_str().to_string()).collect(),
         results: results.clone(),
+        skill_results: skill_results.clone(),
     };
     if ctx.is_json() {
         ctx.emit_json(&report)?;
@@ -780,8 +797,16 @@ fn run_status(ctx: &output::Context, args: McpStatusArgs) -> Result<()> {
     for r in &results {
         let note = r.note.as_deref().map(|n| format!(" ({n})")).unwrap_or_default();
         ctx.step(&format!(
-            "{} {} ({}) → {}{note}",
+            "{} mcp     {} ({}) → {}{note}",
             r.status, r.agent, r.scope, r.config_path
+        ));
+    }
+    for r in &skill_results {
+        let note = r.note.as_deref().map(|n| format!(" ({n})")).unwrap_or_default();
+        let path_str = r.path.as_deref().unwrap_or("(no skill loader)");
+        ctx.step(&format!(
+            "{} skill   {} ({}) → {}{note}",
+            r.status, r.agent, r.scope, path_str
         ));
     }
     Ok(())
