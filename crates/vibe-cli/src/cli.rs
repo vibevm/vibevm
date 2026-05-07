@@ -389,6 +389,14 @@ pub struct InstallArgs {
     /// are set, `--all-features` wins.
     #[arg(long)]
     pub all_features: bool,
+
+    /// Pin the resolved version exactly (`=x.y.z`) instead of the
+    /// default caret constraint (`^x.y.z`) when writing pkgrefs to
+    /// `vibe.toml` `[requires].packages`. Same semantics as npm's
+    /// `--save-exact`. Overrides whatever constraint shape the user
+    /// supplied on the CLI, including explicit caret / tilde / range.
+    #[arg(long)]
+    pub exact: bool,
 }
 
 #[derive(Debug, clap::Args)]

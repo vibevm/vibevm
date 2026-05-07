@@ -218,11 +218,13 @@ fn uninstall_errors_when_package_not_installed() {
         .stderr(predicate::str::contains("not installed"));
 }
 
-/// `vibe install <pkgref>` records the user-supplied pkgref in
-/// `vibe.toml` `[requires].packages` (Cargo / npm shape — explicit
-/// install records the dep in the manifest, not just the lockfile).
+/// `vibe install <pkgref>` (no version) records the user-supplied
+/// pkgref in `vibe.toml` `[requires].packages` with the **caret**
+/// shape derived from the resolved version (`flow:wal@^0.1.0`).
+/// Same default as Cargo / npm / Poetry — `vibe update` later picks
+/// up patch-compatible bumps without needing an explicit re-pin.
 #[test]
-fn install_writes_pkgref_to_vibe_toml_requires() {
+fn install_writes_caret_pkgref_to_vibe_toml_requires() {
     let project = tempfile::tempdir().unwrap();
     init_project(project.path());
 
@@ -246,16 +248,85 @@ fn install_writes_pkgref_to_vibe_toml_requires() {
         "expected exactly one entry in [requires].packages, got: {:#?}",
         manifest.requires.packages
     );
-    assert_eq!(manifest.requires.packages[0].qualified_name(), "flow:wal");
-    // Rendered TOML carries the section header verbatim — humans should
-    // see it in code review without parsing the file.
+    let recorded = &manifest.requires.packages[0];
+    assert_eq!(recorded.qualified_name(), "flow:wal");
+    // Caret shape: rendered string ends in `@^<resolved>`. The fixture
+    // ships flow:wal at v0.1.0 so the manifest should carry `^0.1.0`.
+    assert_eq!(
+        recorded.to_string(),
+        "flow:wal@^0.1.0",
+        "expected caret-default constraint, got: {recorded}"
+    );
+    // Rendered TOML carries the section header + the caret string
+    // verbatim so humans see it in code review without parsing.
     assert!(
         toml_text.contains("[requires]"),
         "expected [requires] header in rendered vibe.toml:\n{toml_text}"
     );
     assert!(
-        toml_text.contains("\"flow:wal\""),
-        "expected `flow:wal` literal in rendered vibe.toml:\n{toml_text}"
+        toml_text.contains("\"flow:wal@^0.1.0\""),
+        "expected `flow:wal@^0.1.0` literal in rendered vibe.toml:\n{toml_text}"
+    );
+}
+
+/// `vibe install <pkgref>@^0.1` (explicit constraint) records the
+/// constraint verbatim — we don't tighten or override what the
+/// operator typed. Symmetric guard around the
+/// `finalize_pkgref_for_manifest` "preserve explicit" branch.
+#[test]
+fn install_preserves_explicit_constraint_in_vibe_toml() {
+    let project = tempfile::tempdir().unwrap();
+    init_project(project.path());
+
+    vibe()
+        .arg("install")
+        .arg("flow:wal@^0.1")
+        .arg("--path")
+        .arg(project.path())
+        .arg("--registry")
+        .arg(fixture_registry())
+        .arg("--assume-yes")
+        .assert()
+        .success();
+
+    let toml_text = fs::read_to_string(project.path().join("vibe.toml")).unwrap();
+    let manifest: vibe_core::manifest::ProjectManifest =
+        toml::from_str(&toml_text).unwrap();
+    assert_eq!(manifest.requires.packages.len(), 1);
+    // CLI typed `^0.1`; manifest preserves `^0.1`. We do NOT tighten
+    // to the resolved `^0.1.0` — the operator's wider declaration
+    // wins.
+    assert_eq!(manifest.requires.packages[0].to_string(), "flow:wal@^0.1");
+}
+
+/// `vibe install <pkgref> --exact` pins the manifest to the exact
+/// resolved version (`=0.1.0`), npm `--save-exact` shape. Overrides
+/// any constraint the CLI form carried.
+#[test]
+fn install_with_exact_flag_pins_manifest_to_eq_resolved() {
+    let project = tempfile::tempdir().unwrap();
+    init_project(project.path());
+
+    vibe()
+        .arg("install")
+        .arg("flow:wal")
+        .arg("--exact")
+        .arg("--path")
+        .arg(project.path())
+        .arg("--registry")
+        .arg(fixture_registry())
+        .arg("--assume-yes")
+        .assert()
+        .success();
+
+    let toml_text = fs::read_to_string(project.path().join("vibe.toml")).unwrap();
+    let manifest: vibe_core::manifest::ProjectManifest =
+        toml::from_str(&toml_text).unwrap();
+    assert_eq!(manifest.requires.packages.len(), 1);
+    assert_eq!(
+        manifest.requires.packages[0].to_string(),
+        "flow:wal@=0.1.0",
+        "expected =-pinned exact constraint with --exact"
     );
 }
 

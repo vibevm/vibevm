@@ -455,12 +455,37 @@ pub fn run(ctx: &output::Context, args: InstallArgs) -> Result<()> {
     lockfile.meta.active_features = active_features_global.into_iter().collect();
 
     // 7. Update `vibe.toml` `[requires].packages` with the CLI-supplied
-    //    roots. De-dup by `(kind, name)`; a repeat install with a new
+    //    roots. Default constraint shape mirrors Cargo / npm / Poetry:
+    //    when the CLI form had no version (`flow:wal`), we resolve to
+    //    a concrete version and write the caret form (`flow:wal@^0.1.0`).
+    //    When the CLI form had an explicit constraint (`@^0.1`,
+    //    `@=0.2.0`, etc.), we preserve it verbatim — the user already
+    //    declared their intent. `--exact` overrides both: it always
+    //    pins to `=<resolved>` regardless of CLI form.
+    //
+    //    De-dup by `(kind, name)`; a repeat install with a new
     //    constraint replaces the old entry. No-op when there were no
     //    CLI args (install-from-manifest mode) — the manifest is
     //    already authoritative in that case.
-    let manifest_changed = if !cli_roots.is_empty() {
-        merge_manifest_requires(&mut manifest, &cli_roots)
+    let finalized_cli_roots: Vec<PackageRef> = cli_roots
+        .iter()
+        .map(|cli_pkgref| {
+            let resolved = plans
+                .iter()
+                .find(|p| {
+                    p.cached.resolved.kind == cli_pkgref.kind
+                        && p.cached.resolved.name == cli_pkgref.name
+                })
+                .map(|p| &p.cached.resolved.version)
+                .expect(
+                    "every CLI root has a corresponding plan after resolve+plan; \
+                     resolver invariant",
+                );
+            finalize_pkgref_for_manifest(cli_pkgref, resolved, args.exact)
+        })
+        .collect();
+    let manifest_changed = if !finalized_cli_roots.is_empty() {
+        merge_manifest_requires(&mut manifest, &finalized_cli_roots)
     } else {
         false
     };
@@ -470,9 +495,16 @@ pub fn run(ctx: &output::Context, args: InstallArgs) -> Result<()> {
 
     // 8. Mirror the manifest's declared roots into `meta.root_dependencies`
     //    so the lockfile remains a self-contained snapshot. PROP-002
-    //    §2.7: `root_dependencies` is a copy of `vibe.toml`
-    //    `[requires].packages` plus any CLI-only roots from this run.
-    merge_root_dependencies(&mut lockfile, &roots);
+    //    §2.7: `root_dependencies` mirrors `vibe.toml`
+    //    `[requires].packages`; in CLI mode we feed the finalized
+    //    pkgrefs (with caret / `--exact` applied) so the two files
+    //    agree byte-for-byte on the constraint shape.
+    let lock_roots: &[PackageRef] = if cli_roots.is_empty() {
+        &roots
+    } else {
+        &finalized_cli_roots
+    };
+    merge_root_dependencies(&mut lockfile, lock_roots);
 
     // Save lockfile on disk.
     lockfile.write(project_root.join(Lockfile::FILENAME))?;
@@ -524,6 +556,41 @@ fn merge_root_dependencies(lockfile: &mut Lockfile, roots: &[PackageRef]) {
             Some(i) => lockfile.meta.root_dependencies[i] = r.clone(),
             None => lockfile.meta.root_dependencies.push(r.clone()),
         }
+    }
+}
+
+/// Convert a CLI-supplied root into the form that lands on disk in
+/// `vibe.toml` `[requires].packages`. Three cases:
+///
+/// 1. `--exact` set → always `=<resolved-version>`, ignoring whatever
+///    constraint the user typed (matches npm `--save-exact` —
+///    operator wants exact pinning, not the default).
+/// 2. CLI had no version (`flow:wal` → `VersionSpec::Latest`) → write
+///    caret based on the resolved version (`^0.1.0`). Same default as
+///    Cargo `cargo add`, npm `npm install`, Poetry `poetry add`.
+/// 3. CLI had an explicit constraint (`@^0.1`, `@=0.2.0`, `@~0.3.1`,
+///    `@>=0.2, <1.0`, …) → preserve it verbatim. The user already
+///    declared their intent; we don't second-guess.
+fn finalize_pkgref_for_manifest(
+    cli_pkgref: &PackageRef,
+    resolved_version: &semver::Version,
+    exact: bool,
+) -> PackageRef {
+    let version = if exact {
+        let req = semver::VersionReq::parse(&format!("={resolved_version}"))
+            .expect("`=<version>` always parses as VersionReq");
+        VersionSpec::Req(req)
+    } else if matches!(cli_pkgref.version, VersionSpec::Latest) {
+        let req = semver::VersionReq::parse(&format!("^{resolved_version}"))
+            .expect("`^<version>` always parses as VersionReq");
+        VersionSpec::Req(req)
+    } else {
+        cli_pkgref.version.clone()
+    };
+    PackageRef {
+        kind: cli_pkgref.kind,
+        name: cli_pkgref.name.clone(),
+        version,
     }
 }
 
@@ -972,6 +1039,59 @@ mod tests {
         assert!(changed, "constraint change must mark the manifest dirty");
         assert_eq!(m.requires.packages.len(), 1);
         assert_eq!(m.requires.packages[0], r2);
+    }
+
+    fn vsemver(s: &str) -> semver::Version {
+        semver::Version::parse(s).unwrap()
+    }
+
+    #[test]
+    fn finalize_caret_when_cli_had_no_version() {
+        // `vibe install flow:wal` → resolves 0.1.0 → manifest gets
+        // `flow:wal@^0.1.0`. Same default as Cargo / npm / Poetry.
+        let cli = PackageRef::parse("flow:wal").unwrap();
+        let out = finalize_pkgref_for_manifest(&cli, &vsemver("0.1.0"), false);
+        assert_eq!(out.to_string(), "flow:wal@^0.1.0");
+    }
+
+    #[test]
+    fn finalize_preserves_explicit_caret() {
+        let cli = PackageRef::parse("flow:wal@^0.1").unwrap();
+        let out = finalize_pkgref_for_manifest(&cli, &vsemver("0.1.5"), false);
+        // CLI form preserved — we don't tighten the operator's
+        // explicitly stated constraint.
+        assert_eq!(out, cli);
+    }
+
+    #[test]
+    fn finalize_preserves_explicit_eq() {
+        let cli = PackageRef::parse("flow:wal@=0.1.0").unwrap();
+        let out = finalize_pkgref_for_manifest(&cli, &vsemver("0.1.0"), false);
+        assert_eq!(out, cli);
+    }
+
+    #[test]
+    fn finalize_preserves_explicit_tilde_and_range() {
+        for raw in ["flow:wal@~0.1.0", "flow:wal@>=0.1, <0.3"] {
+            let cli = PackageRef::parse(raw).unwrap();
+            let out = finalize_pkgref_for_manifest(&cli, &vsemver("0.1.5"), false);
+            assert_eq!(out, cli, "explicit constraint `{raw}` must be preserved");
+        }
+    }
+
+    #[test]
+    fn finalize_exact_overrides_cli_form_to_eq_resolved() {
+        // `--exact` is always-pin: even `@^0.1` becomes `=0.1.5`.
+        let cli = PackageRef::parse("flow:wal@^0.1").unwrap();
+        let out = finalize_pkgref_for_manifest(&cli, &vsemver("0.1.5"), true);
+        assert_eq!(out.to_string(), "flow:wal@=0.1.5");
+    }
+
+    #[test]
+    fn finalize_exact_with_no_cli_version() {
+        let cli = PackageRef::parse("flow:wal").unwrap();
+        let out = finalize_pkgref_for_manifest(&cli, &vsemver("0.1.5"), true);
+        assert_eq!(out.to_string(), "flow:wal@=0.1.5");
     }
 
     #[test]
