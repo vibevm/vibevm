@@ -152,16 +152,32 @@ function Update-Vibe {
     }
     Push-Location $env:VIBEVM_REPO
     try {
+        $ok = $false
         if ($Release) {
             cargo install --path crates/vibe-cli --locked
+            $ok = ($LASTEXITCODE -eq 0)
         } else {
             cargo build -p vibe-cli
             if ($LASTEXITCODE -eq 0) {
-                Copy-Item target\debug\vibe.exe `
-                    "$env:USERPROFILE\.cargo\bin\vibe.exe" -Force
+                $src = Join-Path $env:VIBEVM_REPO 'target\debug\vibe.exe'
+                $dst = Join-Path $env:USERPROFILE '.cargo\bin\vibe.exe'
+                # Copy-Item is a PowerShell cmdlet — it does NOT update
+                # $LASTEXITCODE on failure (that's nativ-command-only).
+                # Wrap in try/catch so a locked destination (vibe.exe
+                # held open by a running `vibe mcp serve` from your
+                # opencode / Claude session, etc.) surfaces loudly
+                # instead of silently leaving a stale binary in place.
+                try {
+                    Copy-Item -LiteralPath $src -Destination $dst -Force -ErrorAction Stop
+                    Write-Host "✓ vibe.exe → $dst" -ForegroundColor Green
+                    $ok = $true
+                } catch {
+                    Write-Error "Copy-Item failed: $_"
+                    Write-Error "Hint: another process may hold vibe.exe — close opencode / Claude / any shell currently running vibe and retry."
+                }
             }
         }
-        if ($LASTEXITCODE -eq 0 -and $Refresh) {
+        if ($ok -and $Refresh) {
             vibe mcp upgrade --yes --invoked-by powershell-update-vibe
         }
     } finally {
@@ -207,14 +223,17 @@ vu() {
             *) echo "vu: unknown arg '$arg'" >&2; return 1 ;;
         esac
     done
+    local ext=""
+    case "$(uname -s)" in MINGW*|MSYS*|CYGWIN*) ext=".exe" ;; esac
     if [ "$mode" = "release" ]; then
         ( cd "$VIBEVM_REPO" && cargo install --path crates/vibe-cli --locked ) || return $?
     else
-        ( cd "$VIBEVM_REPO" \
-            && cargo build -p vibe-cli \
-            && cp "target/debug/vibe$([ "$(uname -s)" = "MINGW"* ] && echo .exe)" \
-                  "$HOME/.cargo/bin/vibe$([ "$(uname -s)" = "MINGW"* ] && echo .exe)" \
-        ) || return $?
+        ( cd "$VIBEVM_REPO" && cargo build -p vibe-cli ) || return $?
+        # cp's exit status surfaces destination-locked errors
+        # (busy on Windows when a process holds vibe.exe).
+        cp "$VIBEVM_REPO/target/debug/vibe$ext" "$HOME/.cargo/bin/vibe$ext" \
+            && echo "✓ vibe$ext → $HOME/.cargo/bin/vibe$ext" \
+            || { echo "vu: cp failed — close any running vibe / vibe mcp serve and retry" >&2; return 1; }
     fi
     if [ "$refresh" = true ]; then
         vibe mcp upgrade --yes --invoked-by shell-update-vibe
