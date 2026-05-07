@@ -16,14 +16,16 @@ vibe install [<pkgref> ...] [--path <dir>] [--registry <path>]
 
 ## Pkgref syntax
 
-A package reference is `<kind>:<name>[@<version>]`:
+A package reference is `<kind>:<name>[@<version>]`. Version syntax follows Cargo / npm / Poetry conventions — bare semver is shorthand for caret, use `=` for strict equal:
 
 | Form | Meaning |
 | --- | --- |
-| `flow:wal` | Latest stable. |
-| `flow:wal@0.3.0` | Exact version. |
-| `flow:wal@^0.3` | Highest matching version per semver caret rules. |
-| `flow:wal@>=0.2, <1.0` | Compound semver constraint. |
+| `flow:wal` | Latest stable; manifest stores caret of resolved version (e.g. `flow:wal@^0.1.0`). |
+| `flow:wal@0.3.0` | Caret shorthand — equivalent to `^0.3.0`; matches `>=0.3.0, <0.4.0` (pre-1.0 rules). |
+| `flow:wal@^0.3` | Same caret, written explicitly. |
+| `flow:wal@~0.3.1` | Tilde range: `>=0.3.1, <0.4.0`. |
+| `flow:wal@=0.3.0` | Strict equal — only that version. |
+| `flow:wal@>=0.2, <1.0` | Arbitrary `semver::VersionReq` syntax. |
 
 `<kind>` is one of `flow`, `feat`, `stack`, `tool`. `<name>` is kebab-case.
 
@@ -36,6 +38,7 @@ A package reference is `<kind>:<name>[@<version>]`:
 | `--assume-yes` | Skip the interactive confirmation prompt. **Required** when stdin is not a TTY (CI, scripts). Aliased to `--yes`. | off |
 | `--json` | Emit two structured documents: the plan (command `"install:plan"`) before confirmation, the report (command `"install"`) after apply. Schemas: [`schemas/install_plan.jtd.json`](../../schemas/install_plan.jtd.json), [`schemas/install_report.jtd.json`](../../schemas/install_report.jtd.json). When `--json` is set, confirmation is auto-approved (the assumption is the consumer is a script). | off |
 | `--quiet` | One-line summary after apply. Conflicts with `--json`. | off |
+| `--exact` | Pin the resolved version exactly (`=x.y.z`) in `vibe.toml` `[requires].packages` instead of the default caret. Same shape as npm's `--save-exact`. Overrides whatever constraint the CLI form carried. | off |
 
 ## Pipeline
 
@@ -54,7 +57,12 @@ User-owned files (`spec/boot/00-core.md`, `spec/boot/90-user.md`, `spec/WAL.md`,
 
 After a successful apply, `vibe install` writes:
 
-- `vibe.toml` `[requires].packages` — appends each user-supplied pkgref (CLI args), de-duplicated by `(kind, name)`. A repeat install with a new constraint (`flow:wal@^0.3` → `flow:wal@=0.4.0`) overwrites the old entry. A no-arguments install (install-from-manifest mode) leaves the section untouched — the manifest was already authoritative for that input.
+- `vibe.toml` `[requires].packages` — appends each user-supplied pkgref (CLI args), de-duplicated by `(kind, name)`. Constraint shape rules:
+  - CLI had no version (`flow:wal`) → manifest gets caret of resolved version (`flow:wal@^0.1.0`). Cargo / npm / Poetry default.
+  - CLI had explicit constraint (`flow:wal@^0.1`, `@~0.1.0`, `@=0.1.0`, `@>=0.1, <0.3`, ...) → preserved verbatim; we don't tighten what the operator typed.
+  - `--exact` flag set → always `=<resolved-version>`, overriding both above.
+
+  A repeat install with a new constraint replaces the old entry. A no-arguments install (install-from-manifest mode) leaves the section untouched — the manifest was already authoritative for that input.
 - `vibe.lock` — schema v2 shape ([`VIBEVM-SPEC.md` §7.4](../../VIBEVM-SPEC.md)):
   - `[meta].schema_version = 2`
   - `[meta].root_dependencies` mirrors `vibe.toml` `[requires].packages` so the lockfile is a self-contained snapshot of the solve state.
@@ -82,10 +90,17 @@ Install three flows in one transaction:
 vibe install flow:wal flow:sync-from-code flow:atomic-commits
 ```
 
-Pin an exact version:
+Pin an exact version (Cargo `=` form):
 
 ```bash
-vibe install stack:rust-cli@0.1.0
+vibe install stack:rust-cli@=0.1.0
+```
+
+Use `--exact` so the manifest pins to the resolved version regardless of CLI form:
+
+```bash
+vibe install flow:wal --exact
+# `vibe.toml` ends up with `flow:wal@=0.1.0` (or whatever resolved)
 ```
 
 Install from a local fixture directory (M0 path, used by tests):

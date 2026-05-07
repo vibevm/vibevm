@@ -444,6 +444,22 @@ hash/source/ref lines in the lockfile).
 
 **Estimated effort.** One slice. Tests: 4 e2e + 4 unit + 2 schema round-trip.
 
+### M1.13 — Cargo-shape version constraints (caret default + `--exact`) ✅ SHIPPED (2026-05-08)
+
+**Thesis.** M1.12 made `[requires].packages` the source of truth for declared deps, but it stored whatever the CLI form was — bare `flow:wal` (no version) round-tripped as `"flow:wal"` with `VersionSpec::Latest`, which made every subsequent `vibe install` / `vibe update` potentially pull a breaking-change major. Cargo / npm / Poetry / Bundler all solve this the same way: resolve to a concrete version at install time, write a caret constraint in the manifest. M1.13 adopts that convention and aligns the parser with Cargo's shorthand rules.
+
+**Scope (closed in one slice).**
+
+- ✅ `VersionSpec::parse` simplified to a single `semver::VersionReq::parse` call. Bare semver (`0.3.0`) is now Cargo shorthand for caret (`^0.3.0`); `=0.3.0` is the explicit-equal form. Same parser Cargo / npm / Poetry use.
+- ✅ `vibe install <pkgref>` (no version) resolves to a concrete version and writes the caret constraint to `vibe.toml` `[requires].packages` (`flow:wal@^0.1.0`). Explicit CLI constraints (`@^0.1`, `@~0.1.0`, `@=0.1.0`, ...) are preserved verbatim — operator's intent wins.
+- ✅ New `--exact` flag (npm `--save-exact` shape): always pins the manifest to `=<resolved-version>`, overriding any CLI constraint form. For operators who want strict reproducibility regardless of how they typed the pkgref.
+- ✅ `vibe-resolver`'s `capability_version_for_provider` updated to read `(major, minor, patch)` from the first `Comparator` of any constraint shape — bare `0.3.0`, `=0.3.0`, `^0.3.0`, `~0.3.0` all anchor at version 0.3.0 for capability matching. Previously it relied on the `=`-prefix string trick which broke when the parser stopped emitting `=` for bare semver.
+- ✅ Spec updated: `VIBEVM-SPEC.md` §7.1 documents the Cargo-style version syntax and the caret-default + `--exact` write-side rules; §7.5 example shows `^0.1.0` constraints; install.md gets a full pkgref-syntax table and an `--exact` example.
+
+**Migration policy.** Old `"flow:wal"` (no-version) entries already on disk in `vibe.toml` are left untouched — `vibe.toml` is human-edited and we don't auto-rewrite without explicit operator action. New installs write caret. The two coexist cleanly: `Latest` and `^x.y.z` are both valid `VersionSpec` shapes.
+
+**Estimated effort.** One slice. Tests: 6 unit on `finalize_pkgref_for_manifest` + 3 e2e (caret default / explicit preservation / `--exact`) + 3 unit on the new bare-semver-as-caret + tilde + eq parsing in `package_ref` and `capability_ref`.
+
 ---
 
 ## M1.5 — Generation

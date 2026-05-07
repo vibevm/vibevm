@@ -546,10 +546,16 @@ A package is identified by `<kind>:<name>@<version>` where:
 
 Example: `flow:wal@0.3.0`, `feat:welcome-page@1.2.0`, `stack:rust-cli@0.1.0`.
 
-In CLI commands, version is optional and defaults to "latest stable":
+In CLI commands, version is optional and defaults to "latest stable". The version syntax follows Cargo / npm / Poetry conventions — bare semver is shorthand for caret, `=` is the explicit-equal form:
+
 - `vibe install flow:wal` → installs latest stable `flow:wal`.
-- `vibe install flow:wal@0.3.0` → installs exactly that version.
-- `vibe install flow:wal@^0.3` → installs latest 0.3.x.
+- `vibe install flow:wal@0.3.0` → caret shorthand: matches `>=0.3.0, <0.4.0` (pre-1.0 caret rules; `>=1.0.0, <2.0.0` for post-1.0).
+- `vibe install flow:wal@^0.3` → equivalent caret form, written explicitly.
+- `vibe install flow:wal@~0.3.1` → tilde range: `>=0.3.1, <0.4.0`.
+- `vibe install flow:wal@=0.3.0` → strict-equal: only that version.
+- `vibe install flow:wal@>=0.3, <1.0` → arbitrary `semver::VersionReq` syntax.
+
+`vibe install <pkgref>` records the dep in `vibe.toml` `[requires].packages`. When the CLI form had no version, the resolver pins to a concrete version and the manifest stores the **caret** form (`flow:wal@^0.1.0`) — same default Cargo's `cargo add` writes. When the CLI form had an explicit constraint, the manifest preserves it verbatim. The `--exact` flag overrides both: it always pins to `=<resolved-version>` (npm `--save-exact` shape).
 
 ### 7.2 Package contents
 
@@ -685,8 +691,8 @@ authors = ["Oleg <oleg@example.com>"]
 # resolved transitive graph and the exact pins; this section carries the
 # author's intent (constraints), nothing else.
 [requires]
-packages     = ["flow:wal@^0.3", "stack:rust-cli"]   # `<kind>:<name>[@<version>]`; bare = Latest
-capabilities = []                                     # abstract requirements satisfied by any provider
+packages     = ["flow:wal@^0.3", "stack:rust-cli@^0.1.0"]   # caret-default; bare semver = caret (Cargo)
+capabilities = []                                            # abstract requirements satisfied by any provider
 
 [active]
 # The currently active stack (used as default for `vibe build`)
