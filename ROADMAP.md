@@ -344,20 +344,22 @@ multi-source story to production quality.
 
 Source: [PROP-004 §5.1](spec/research/PROP-004-tessl-comparative-research.md#mcp-server). Targets [`https://modelcontextprotocol.io`](https://modelcontextprotocol.io).
 
-**Scope (slices 1–4 shipped).**
+**Scope (slices 1–5 shipped).**
 
 - ✅ `vibe-mcp` crate exposing an MCP server over stdio (slice 1).
 - ✅ Tools: `query_package`, `read_subskill`, `materialise_subskill` (slices 1+3).
 - ✅ Per-subskill files index in lockfile schema v3, lazy-pull works end-to-end (slice 3).
 - ✅ Agent auto-detection + config writers — slice 2 (Claude Code, Cursor); slice 4 extends to Claude Desktop, OpenCode, Codex.
-- ✅ `vibe mcp install` UX — slice 4: interactive multi-select, `--auto`, `--with-skill` / `--without-skill`, `--skill-scope project|user`. Per-format mergers (JSON for Claude Code/Desktop/Cursor/OpenCode, TOML for Codex). OpenCode's command-array shape and Codex's `mcp_servers` snake-case section name handled per-agent.
-- ✅ `vibevm` SKILL.md — slice 4: short opinionated MD vendored in the binary, written under each supporting agent's skill dir on `--with-skill`. Pins the bootstrap protocol, requires `query_package` before guessing, requires `--invoked-by`, requires `vibe <subcmd> --help` consultation.
-- ✅ Global `--invoked-by <agent>` flag + `VIBE_INVOKED_BY` env var — slice 4: stamps every JSON envelope with the calling agent's identity. SKILL.md instructs the agent to pass it on every invocation.
-- New manual smoke `manual-tests/M1.7-mcp-claude-code-smoke.md` walking a full Claude Code → MCP → vibevm round-trip — pending. Operator-walked smoke for OpenCode + Codex tracks alongside.
+- ✅ `vibe mcp install` UX — slice 4 first-pass; slice 5 reshape to `--scope project|user|both` × `--what mcp|skill|both` axes with three-question wizard. Per-format mergers (JSON for Claude Code/Desktop/Cursor/OpenCode, TOML for Codex).
+- ✅ `vibevm` SKILL.md — slice 4 first version (inside-project only); slice 5 rewrite into two-state form (Section A bootstrap-mode for empty directories, Section B inside-project, common section for both). Vendored at compile-time. Description widened to trigger on bootstrap intents.
+- ✅ Global `--invoked-by <agent>` flag + `VIBE_INVOKED_BY` env var (slice 4). Stamps every JSON envelope with the calling agent's identity.
+- ✅ **Bootstrap mode (slice 5).** `vibe mcp install --scope user` works without `vibe.toml` — the operator can wire vibevm into agents globally on first install, then let the agent itself create vibevm projects on demand. MCP entry under user-scope omits `--path` so one global config serves every project.
+- ✅ **Lifecycle commands (slice 5).** New `vibe mcp upgrade` (refresh stale installs after `cargo install` — does NOT create new installations) + `vibe mcp uninstall` (mirror of install — drops `vibevm` block, deletes SKILL.md, foreign keys preserved). `vibe mcp status` extended with skill-drift report.
+- New manual smoke `manual-tests/M1.7-mcp-claude-code-smoke.md` walking a full Claude Code → MCP → vibevm round-trip — pending. Operator-walked smoke for OpenCode + Codex covered by [`docs/guides/agent-mcp-quickstart-opencode.md`](docs/guides/agent-mcp-quickstart-opencode.md) acceptance checklist.
 
-**Open follow-ups.** `query_capabilities` / `list_subskills` discovery tools, Gemini agent, integration with the LLM virtual-capability emission story (Phase F, post-M1.5), preserving comments in handcrafted Codex `config.toml` (would require switching from `toml` to `toml_edit`).
+**Open follow-ups.** Plan-preview + apply-confirm prompt before writes (currently the wizard skips straight to apply). `query_capabilities` / `list_subskills` discovery MCP-tools. Gemini agent + Copilot CLI/VSCode. Integration with the LLM virtual-capability emission story (Phase F, post-M1.5). Preserving comments in handcrafted Codex `config.toml` (would require switching from `toml` to `toml_edit`).
 
-**Estimated effort.** Slices 1–4 done. Remaining follow-ups roll into M1.5 dependencies.
+**Estimated effort.** Slices 1–5 done. Remaining follow-ups roll into M1.5 dependencies.
 
 ### M1.8 — `vibe review` static quality scoring
 
