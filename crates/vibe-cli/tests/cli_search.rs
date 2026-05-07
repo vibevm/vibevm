@@ -752,6 +752,51 @@ fn search_without_full_scan_keeps_unconfigured_status() {
     );
 }
 
+/// `vibe search` in a project where no registry has an
+/// `VIBEVM_INDEX_URL_<R>` env var configured prints a text-mode
+/// hint pointing the operator at `vibe install <kind>:<name>`
+/// directly. Regression guard surfaced by the opencode glm-flash
+/// walk: the prior message ("see docs/commands/search.md") was
+/// terse enough that a small model interpreted empty search as
+/// "registries broken" and started mutating the project's
+/// registry list. The new hint names install as the way around
+/// the missing index.
+#[test]
+fn search_text_hint_directs_agent_to_install_when_no_index_configured() {
+    let project = tempfile::tempdir().unwrap();
+    init_project(project.path());
+    write_github_only_manifest(project.path());
+    let cache_dir = tempfile::tempdir().unwrap();
+
+    let out = vibe_isolated_cache(cache_dir.path())
+        .env_remove("VIBEVM_INDEX_URL_VIBESPECS")
+        .arg("search")
+        .arg("wal")
+        .arg("--path")
+        .arg(project.path())
+        .output()
+        .unwrap();
+    assert!(out.status.success());
+    let stdout = String::from_utf8(out.stdout).unwrap();
+    // Headline still names the env-var so the agent recognises it.
+    assert!(
+        stdout.contains("VIBEVM_INDEX_URL_<R>"),
+        "expected the env-var name in stdout:\n{stdout}"
+    );
+    // New hint: install bypasses the index. This is the load-bearing
+    // line that prevents the panic-loop the opencode walk surfaced.
+    assert!(
+        stdout.contains("vibe install <kind>:<name>"),
+        "expected an explicit install-as-workaround hint:\n{stdout}"
+    );
+    // Phrase wraps across a newline ("does not need an\nindex.") so
+    // assert on the prefix that survives word-wrapping.
+    assert!(
+        stdout.contains("does not need an"),
+        "expected the hint to state install bypasses the index:\n{stdout}"
+    );
+}
+
 #[test]
 fn search_caches_results_and_serves_subsequent_runs_from_disk() {
     let mock = spawn_mock(Canned {

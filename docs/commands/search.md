@@ -74,11 +74,17 @@ flow    wal                           0.1.0        3      vibespecs             
 1 hit across 1 registry
 ```
 
-When no registry has an index URL configured, the summary line points at this doc:
+When no registry has an index URL configured, the summary line spells out the index-vs-install distinction:
 
 ```
-(no registry has VIBEVM_INDEX_URL_<R> configured — see docs/commands/search.md)
+(no registry has VIBEVM_INDEX_URL_<R> configured; search returns empty.
+ To install a known package, run `vibe install <kind>:<name>` directly —
+ install resolves through `[[registry]]` over git and does not need an
+ index. The index is a discovery optimisation, not a runtime dependency.
+ See docs/commands/search.md for setting up an index server.)
 ```
+
+`vibe install` does not consult the index: it walks `[[registry]]` priority order, asks each adapter to enumerate tags, and fetches the matching version. The index speeds up discovery and listing — running an index server is optional and can be deferred until a project actually wants `vibe search`.
 
 ### Output (JSON, free-text)
 
