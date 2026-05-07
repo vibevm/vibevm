@@ -2068,4 +2068,54 @@ mod tests {
         let dir = tempfile::tempdir().unwrap();
         assert!(!has_vibe_toml(dir.path()));
     }
+
+    // ---- SKILL.md template content contract ----
+
+    #[test]
+    fn skill_template_has_required_frontmatter() {
+        assert!(SKILL_TEMPLATE.starts_with("---"));
+        assert!(SKILL_TEMPLATE.contains("name: vibevm"));
+        assert!(SKILL_TEMPLATE.contains("description: "));
+    }
+
+    #[test]
+    fn skill_template_documents_mcp_tools_and_invoked_by() {
+        assert!(SKILL_TEMPLATE.contains("query_package"));
+        assert!(SKILL_TEMPLATE.contains("read_subskill"));
+        assert!(SKILL_TEMPLATE.contains("materialise_subskill"));
+        assert!(SKILL_TEMPLATE.contains("--invoked-by"));
+        assert!(SKILL_TEMPLATE.contains("VIBE_INVOKED_BY"));
+    }
+
+    #[test]
+    fn skill_template_covers_both_bootstrap_and_inside_project_modes() {
+        // Two-state contract: the skill must explain BOTH the
+        // bootstrap path (no vibe.toml present, run `vibe init`) AND
+        // the inside-project path (vibe.toml present, follow boot
+        // protocol). Without both sections, an agent in an empty
+        // directory has no actionable guidance for "create a vibevm
+        // project".
+        let body = SKILL_TEMPLATE.to_lowercase();
+        assert!(body.contains("vibe init"), "expected mention of `vibe init` for bootstrap");
+        assert!(body.contains("section a"), "expected explicit Section A header for bootstrap");
+        assert!(body.contains("section b"), "expected explicit Section B header for inside-project");
+        assert!(
+            body.contains("vibe.toml"),
+            "expected the detect-step to mention vibe.toml as the discriminator"
+        );
+        // Bootstrap section names install + a starter package.
+        assert!(body.contains("vibe install"));
+        assert!(body.contains("flow:wal"));
+    }
+
+    #[test]
+    fn skill_template_mentions_new_mcp_subcommands() {
+        // Slice 5 added upgrade / uninstall / status subcommands and
+        // the --scope / --what axes — they must appear in the help
+        // section so the agent knows to consider them.
+        assert!(SKILL_TEMPLATE.contains("upgrade"));
+        assert!(SKILL_TEMPLATE.contains("uninstall"));
+        assert!(SKILL_TEMPLATE.contains("--scope"));
+        assert!(SKILL_TEMPLATE.contains("--what"));
+    }
 }
