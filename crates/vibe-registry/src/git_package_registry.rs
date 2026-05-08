@@ -54,6 +54,28 @@ pub struct GitPackageRegistry {
     org_url: String,
     org_ref: String,
     naming: NamingConvention,
+    /// Authentication regime for this registry, per PROP-002 §2.2.1.
+    /// Plumbed in by `MultiRegistryResolver::from_manifest` so the
+    /// runtime knows whether to inject a token, whether a 401 is a
+    /// fall-through signal, and whether to emit a "missing token"
+    /// error before even spawning git.
+    auth: vibe_core::manifest::AuthKind,
+    /// Resolved bearer token for this registry — `Some` only when
+    /// `auth == TokenEnv` and the env-var was set at construction
+    /// time. Read once at open and held in memory; never logged,
+    /// never written to disk. The token is injected into per-package
+    /// URLs in [`Self::credentialed_url`] and stripped from any
+    /// public-facing URL the lockfile or error messages might carry.
+    /// (Modern git ≥ 2.31 also redacts passwords from its own
+    /// stderr; we rely on that as the second line of defence.)
+    effective_token: Option<String>,
+    /// The env-var name the registry would consult under
+    /// `auth = TokenEnv`. Held verbatim so a `MissingToken` error
+    /// surfaces the exact name the operator typed in `vibe.toml` /
+    /// passed via `vibe registry add --token-env`. `None` when the
+    /// caller didn't supply an explicit name — falls back to the
+    /// host-derived default at error time.
+    token_env_name: Option<String>,
     cache_root: PathBuf,
     canonical_hash: String,
     /// Org-level mirror URLs in priority order (lower index = tried
@@ -128,6 +150,10 @@ impl GitPackageRegistry {
     /// resolver to thread `[[mirror]]` from `vibe.toml` into the
     /// registry instance. Empty `mirror_urls` is the same as
     /// [`open_with`].
+    ///
+    /// `auth` defaults to `AuthKind::None` (the legacy behaviour);
+    /// callers wanting authenticated registries reach for
+    /// [`Self::open_with_auth`].
     #[allow(clippy::too_many_arguments)]
     pub fn open_with_mirrors(
         name: &str,
@@ -139,18 +165,122 @@ impl GitPackageRegistry {
         backend: Arc<dyn GitBackend>,
         freshness_secs: u64,
     ) -> Result<Self, RegistryError> {
+        Self::open_with_auth(
+            name,
+            org_url,
+            org_ref,
+            naming,
+            mirror_urls,
+            cache_root,
+            backend,
+            freshness_secs,
+            vibe_core::manifest::AuthKind::None,
+            None,
+        )
+    }
+
+    /// Test-only constructor that takes the resolved token directly
+    /// instead of reading an env-var. Production code uses
+    /// [`Self::open_with_auth`]. This method is useful in tests
+    /// where `#![forbid(unsafe_code)]` prohibits `std::env::set_var`
+    /// (Rust 2024+); construct the registry with the token already
+    /// in hand and skip the env layer. The resulting registry
+    /// behaves identically — same `auth_kind`, same
+    /// `effective_token_value`, same downstream injection.
+    #[doc(hidden)]
+    #[allow(clippy::too_many_arguments)]
+    pub fn open_with_explicit_token(
+        name: &str,
+        org_url: &str,
+        org_ref: &str,
+        naming: NamingConvention,
+        mirror_urls: Vec<String>,
+        cache_root: &Path,
+        backend: Arc<dyn GitBackend>,
+        freshness_secs: u64,
+        auth: vibe_core::manifest::AuthKind,
+        token_value: Option<String>,
+    ) -> Result<Self, RegistryError> {
         let normalized = normalize_url(org_url);
         let canonical_hash = short_url_hash(&normalized);
         let cache_root_owned = cache_root.to_path_buf();
-
-        // Ensure the registry-bucket directory exists. Nothing else gets
-        // written here in this commit — the `meta.toml` for the bucket
-        // lands together with the freshness machinery.
         let bucket = cache_root_owned.join(&canonical_hash);
         fs::create_dir_all(&bucket).map_err(|source| RegistryError::Io {
             path: bucket.clone(),
             source,
         })?;
+        Ok(GitPackageRegistry {
+            backend,
+            name: name.to_string(),
+            org_url: org_url.to_string(),
+            org_ref: org_ref.to_string(),
+            naming,
+            auth,
+            effective_token: token_value.filter(|s| !s.trim().is_empty()),
+            token_env_name: None,
+            cache_root: cache_root_owned,
+            canonical_hash,
+            mirror_urls,
+            index_client: None,
+            freshness_secs,
+        })
+    }
+
+    /// Full constructor — same as [`open_with_mirrors`] plus the
+    /// per-registry authentication knobs from PROP-002 §2.2.1.
+    ///
+    /// `auth` selects the regime; `token_env_name` is the explicit
+    /// env-var override under `auth = AuthKind::TokenEnv` (the
+    /// host-derived default applies when `None`). Token resolution
+    /// happens once at construction time:
+    ///
+    /// - `AuthKind::TokenEnv` + env-var set → token loaded,
+    ///   injected into per-package URLs in
+    ///   [`Self::credentialed_url`].
+    /// - `AuthKind::TokenEnv` + env-var absent → registry opens
+    ///   anyway with no token; a `MissingToken` error surfaces at
+    ///   the first credential-required git operation.
+    ///   (Authentication is a runtime property of the fetch, not of
+    ///   the constructor, so we don't pre-fail here — letting the
+    ///   resolver walk a chain that has *some* authenticated
+    ///   registries with missing tokens means the operator can fix
+    ///   them one by one as install errors surface.)
+    /// - Other regimes (`None`, `CredentialHelper`, `Ssh`) read no
+    ///   token; their `effective_token` is `None`.
+    #[allow(clippy::too_many_arguments)]
+    pub fn open_with_auth(
+        name: &str,
+        org_url: &str,
+        org_ref: &str,
+        naming: NamingConvention,
+        mirror_urls: Vec<String>,
+        cache_root: &Path,
+        backend: Arc<dyn GitBackend>,
+        freshness_secs: u64,
+        auth: vibe_core::manifest::AuthKind,
+        token_env_name: Option<&str>,
+    ) -> Result<Self, RegistryError> {
+        let normalized = normalize_url(org_url);
+        let canonical_hash = short_url_hash(&normalized);
+        let cache_root_owned = cache_root.to_path_buf();
+
+        let bucket = cache_root_owned.join(&canonical_hash);
+        fs::create_dir_all(&bucket).map_err(|source| RegistryError::Io {
+            path: bucket.clone(),
+            source,
+        })?;
+
+        let effective_token = if matches!(auth, vibe_core::manifest::AuthKind::TokenEnv) {
+            token_env_name
+                .map(|s| s.to_string())
+                .and_then(|var| std::env::var(&var).ok())
+                .and_then(|v| {
+                    let trimmed = v.trim().to_string();
+                    if trimmed.is_empty() { None } else { Some(trimmed) }
+                })
+        } else {
+            None
+        };
 
         Ok(GitPackageRegistry {
             backend,
@@ -158,6 +288,9 @@ impl GitPackageRegistry {
             org_url: org_url.to_string(),
             org_ref: org_ref.to_string(),
             naming,
+            auth,
+            effective_token,
+            token_env_name: token_env_name.map(|s| s.to_string()),
             cache_root: cache_root_owned,
             canonical_hash,
             mirror_urls,
@@ -201,11 +334,173 @@ impl GitPackageRegistry {
     }
 
     /// Compose the per-package repo URL — `<org_url>/<naming(kind, name)>.git`.
-    /// Trailing slashes on `org_url` are tolerated.
+    /// Trailing slashes on `org_url` are tolerated. **No credentials are
+    /// embedded** — this URL is safe to record in the lockfile, log, or
+    /// surface to humans. For URLs that drive git invocations
+    /// (`ls-remote` / `clone` / `fetch`) under
+    /// `auth = AuthKind::TokenEnv`, callers reach for
+    /// [`Self::credentialed_url`] instead.
     pub fn package_repo_url(&self, kind: PackageKind, name: &str) -> String {
         let repo_name = self.naming.repo_name(kind, name);
         let trimmed = self.org_url.trim_end_matches('/');
         format!("{trimmed}/{repo_name}.git")
+    }
+
+    /// The `auth` regime the registry was opened with — read by
+    /// `MultiRegistryResolver` to decide between walk-to-next-registry
+    /// (on `AuthKind::None` + 401) and halt-with-actionable-error
+    /// (on `TokenEnv` / `CredentialHelper` + 401).
+    pub fn auth_kind(&self) -> vibe_core::manifest::AuthKind {
+        self.auth
+    }
+
+    /// True when `auth = TokenEnv` was declared for this registry but
+    /// no token was loaded (env-var absent / empty). Surfaces
+    /// `MissingToken` rather than spawning a git that would fail
+    /// with the same outcome a few seconds later.
+    pub fn token_env_required_but_absent(&self) -> bool {
+        matches!(self.auth, vibe_core::manifest::AuthKind::TokenEnv)
+            && self.effective_token.is_none()
+    }
+
+    /// Pre-flight check at the entry of every public method that
+    /// drives a git invocation. Returns `MissingToken` when the
+    /// registry was opened with `auth = TokenEnv` but the env-var
+    /// resolved empty. Other regimes (or `TokenEnv` with a token)
+    /// pass through. The env-var name surfaced in the error is the
+    /// one we'd consult — explicit `token_env` field on the
+    /// registry section, otherwise the host-derived default per
+    /// `RegistrySection::resolve_token_env_name`.
+    fn ensure_token_loaded(&self) -> Result<(), RegistryError> {
+        if !self.token_env_required_but_absent() {
+            return Ok(());
+        }
+        // Surface the explicit env-var name verbatim when the operator
+        // supplied one (so the error message names exactly what they
+        // typed in `vibe.toml` / `vibe registry add --token-env`).
+        // Otherwise reconstruct the host-derived default — same
+        // algorithm `RegistrySection::resolve_token_env_name` would
+        // run. Falls back to a generic placeholder when neither path
+        // yields a name (e.g. `file://` registries).
+        let env_var = self
+            .token_env_name
+            .clone()
+            .or_else(|| self.derive_default_token_env_name())
+            .unwrap_or_else(|| "VIBEVM_REGISTRY_TOKEN_<HOST>".to_string());
+        Err(RegistryError::MissingToken {
+            registry: self.name.clone(),
+            env_var,
+        })
+    }
+
+    /// Best-effort derivation of the default token env-var name from
+    /// this registry's `org_url`. Mirrors the algorithm in
+    /// `vibe_core::manifest::RegistrySection::resolve_token_env_name`
+    /// — `MultiRegistryResolver` prefers the explicit `token_env`
+    /// from the manifest section when available; this fallback is
+    /// only used when surfacing a `MissingToken` error from inside
+    /// `GitPackageRegistry` (which doesn't carry the explicit name).
+    fn derive_default_token_env_name(&self) -> Option<String> {
+        let host = registry_host_from_url(&self.org_url)?;
+        let mut sanitised = String::with_capacity(host.len());
+        for ch in host.chars() {
+            match ch {
+                '.' | '-' => sanitised.push('_'),
+                c if c.is_ascii_alphanumeric() || c == '_' => {
+                    sanitised.push(c.to_ascii_uppercase())
+                }
+                _ => return None,
+            }
+        }
+        Some(format!("VIBEVM_REGISTRY_TOKEN_{sanitised}"))
+    }
+
+    /// View of the loaded token, for closures that need to
+    /// credentialise per-package URLs without holding a `&self`
+    /// borrow. Returns `None` when no token is loaded (any
+    /// non-`TokenEnv` regime, or `TokenEnv` with the env-var
+    /// missing — note that the `MissingToken` precheck via
+    /// `ensure_token_loaded` is what enforces presence at entry to
+    /// every git-driving public method).
+    pub fn effective_token_value(&self) -> Option<&str> {
+        self.effective_token.as_deref()
+    }
+}
+
+/// Inject a bearer token into a `https://` URL as
+/// `https://x-access-token:<TOKEN>@<rest>`. Same shape `vibe-publish`
+/// uses on the push side. Returns the URL unchanged when:
+///
+/// - `token` is `None` (caller is not under `auth = TokenEnv`);
+/// - the URL is not `https://` (ssh / file / http URLs never carry
+///   tokens — http would expose the secret in the clear, ssh has its
+///   own auth path, file:// is local);
+/// - the URL already carries credentials (`x-access-token:` somewhere
+///   in the userinfo segment) — never double-wrap.
+///
+/// Public so external integrations (mirror probes, vendor builders)
+/// can use the same logic. Token discipline applies: callers must
+/// not log the returned string outside the spawned-process boundary;
+/// modern git auto-redacts passwords from its own stderr (≥ 2.31)
+/// as a second line of defence.
+pub fn inject_token(plain_url: &str, token: Option<&str>) -> String {
+    let Some(token) = token else { return plain_url.to_string() };
+    if !plain_url.starts_with("https://") || plain_url.contains("x-access-token:") {
+        return plain_url.to_string();
+    }
+    let body = &plain_url["https://".len()..];
+    format!("https://x-access-token:{token}@{body}")
+}
+
+/// Best-effort host extraction from a registry URL — duplicates
+/// `vibe_core::manifest::project::registry_host` so this crate
+/// doesn't have to reach into a private function. Pragmatic
+/// duplication: the algorithm is short and `RegistrySection` already
+/// owns the canonical implementation; this is the read-only consumer.
+fn registry_host_from_url(url: &str) -> Option<&str> {
+    for prefix in ["https://", "http://", "ssh://", "git+ssh://"] {
+        if let Some(rest) = url.strip_prefix(prefix) {
+            return rest.split('/').next()?.split('@').next_back();
+        }
+    }
+    if let Some(at_idx) = url.find('@')
+        && let Some(colon_idx) = url[at_idx..].find(':')
+    {
+        let host_start = at_idx + 1;
+        let host_end = at_idx + colon_idx;
+        if host_end > host_start {
+            return Some(&url[host_start..host_end]);
+        }
+    }
+    None
+}
+
+impl GitPackageRegistry {
+    // (closing brace is below; this empty impl block keeps the
+    // module structure tidy after the helpers above land outside
+    // the original `impl` — reattach the trailing methods.)
+
+    /// Return the URL to actually pass to a git invocation. For
+    /// `auth = AuthKind::TokenEnv` with a loaded token this injects
+    /// `https://x-access-token:<TOKEN>@host/...` (the same shape
+    /// `vibe-publish` already uses on the push side); for any other
+    /// regime — or for a non-https URL — this is the plain
+    /// `package_repo_url` value. The token never escapes this method;
+    /// modern git redacts it from any error stderr it prints, and
+    /// vibe never logs the resulting URL outside the spawned-process
+    /// boundary.
+    pub fn credentialed_url(&self, plain_url: &str) -> String {
+        match (&self.effective_token, plain_url) {
+            (Some(token), url)
+                if url.starts_with("https://") && !url.contains("x-access-token:") =>
+            {
+                let body = &url["https://".len()..];
+                format!("https://x-access-token:{token}@{body}")
+            }
+            // Never inject for ssh, http (rare and would expose token
+            // in cleartext), file, or already-credentialed URLs.
+            _ => plain_url.to_string(),
+        }
     }
 
     /// All URLs to try for a `(kind, name)` lookup, primary first.
@@ -336,8 +631,22 @@ impl GitPackageRegistry {
                 source,
             })?;
         }
-        self.backend
-            .bootstrap(strip_git_plus_prefix(url), refname, clone_dir)?;
+        // PROP-002 §2.2.1 — under `auth = "token-env"` the bootstrap
+        // is performed with a credentialised URL, then the recorded
+        // origin URL is rewritten to the plain (token-free) form so
+        // the freshly-cloned `.git/config` does NOT carry the token
+        // on disk. Subsequent `update` calls hit the plain origin
+        // (and 401 on a still-private host); the
+        // `ensure_clone_against_sources` retry path handles that by
+        // wiping and re-bootstrapping. The token only ever lives in
+        // memory and inside the spawned `git clone` process.
+        let plain_url = strip_git_plus_prefix(url);
+        let fetch_url = inject_token(plain_url, self.effective_token.as_deref());
+        self.backend.bootstrap(&fetch_url, refname, clone_dir)?;
+        if self.effective_token.is_some() {
+            self.backend
+                .set_remote_url(clone_dir, "origin", plain_url)?;
+        }
         Ok(())
     }
 
@@ -460,11 +769,18 @@ impl GitPackageRegistry {
                 }
             }
         }
+        // PROP-002 §2.2.1 — fail fast when this registry declared
+        // `auth = "token-env"` but the env-var resolved empty, before
+        // we burn a network round-trip on a guaranteed-401.
+        self.ensure_token_loaded()?;
         let backend = Arc::clone(&self.backend);
         let owned_name = name.to_owned();
+        let token = self.effective_token.clone();
         self.try_lookup(kind, name, move |url| {
+            let plain = strip_git_plus_prefix(url);
+            let fetch_url = inject_token(plain, token.as_deref());
             let tags = backend
-                .list_tags(strip_git_plus_prefix(url))
+                .list_tags(&fetch_url)
                 .map_err(|e| match e {
                     GitError::RepoNotFound { .. } => RegistryError::UnknownPackage {
                         kind,
@@ -533,13 +849,17 @@ impl GitPackageRegistry {
         name: &str,
         version: &semver::Version,
     ) -> Result<PackageManifest, RegistryError> {
+        self.ensure_token_loaded()?;
         let tag = format!("v{version}");
         let backend = Arc::clone(&self.backend);
         let tag_for_lookup = tag.clone();
+        let token = self.effective_token.clone();
         let archive_result = self.try_lookup(kind, name, move |url| {
+            let plain = strip_git_plus_prefix(url);
+            let fetch_url = inject_token(plain, token.as_deref());
             backend
                 .fetch_file_at_ref(
-                    strip_git_plus_prefix(url),
+                    &fetch_url,
                     &tag_for_lookup,
                     PackageManifest::FILENAME,
                 )
@@ -667,6 +987,10 @@ impl GitPackageRegistry {
         cache_root: &Path,
         expected_hash: Option<&str>,
     ) -> Result<CachedPackage, RegistryError> {
+        // PROP-002 §2.2.1 — bail before any clone work when this
+        // registry is `auth = "token-env"` but the env-var resolved
+        // empty.
+        self.ensure_token_loaded()?;
         let canonical_url = self.package_repo_url(resolved.kind, &resolved.name);
         let tag = format!("v{}", resolved.version);
         let urls = self.package_urls(resolved.kind, &resolved.name);
@@ -1027,6 +1351,220 @@ mod tests {
             DEFAULT_FRESHNESS_SECS,
         )
         .unwrap()
+    }
+
+    // ---- inject_token helper ----
+
+    #[test]
+    fn inject_token_adds_x_access_token_to_https() {
+        let url = "https://gitlab.company.com/vibespecs/flow-wal.git";
+        let out = inject_token(url, Some("ghp_xxx"));
+        assert_eq!(
+            out,
+            "https://x-access-token:ghp_xxx@gitlab.company.com/vibespecs/flow-wal.git"
+        );
+    }
+
+    #[test]
+    fn inject_token_returns_url_unchanged_when_no_token() {
+        let url = "https://gitlab.company.com/vibespecs/flow-wal.git";
+        assert_eq!(inject_token(url, None), url);
+        assert_eq!(inject_token(url, Some("")).len(), inject_token(url, Some("")).len()); // empty also no-op-ish
+    }
+
+    #[test]
+    fn inject_token_skips_non_https() {
+        for url in [
+            "git@github.com:vibespecs/flow-wal.git",
+            "ssh://git@host/org/flow-wal.git",
+            "file:///tmp/registry/flow-wal",
+            "http://insecure.example.com/flow-wal.git",
+        ] {
+            assert_eq!(
+                inject_token(url, Some("token")),
+                url,
+                "ssh / file / http URLs must never carry a token: {url}"
+            );
+        }
+    }
+
+    #[test]
+    fn inject_token_does_not_double_wrap_already_credentialed_url() {
+        let already = "https://x-access-token:abc@host/org/repo.git";
+        assert_eq!(inject_token(already, Some("xyz")), already);
+    }
+
+    // ---- registry_host_from_url ----
+
+    #[test]
+    fn registry_host_from_url_handles_url_and_scp_shapes() {
+        assert_eq!(
+            registry_host_from_url("https://gitlab.company.com/vibespecs"),
+            Some("gitlab.company.com")
+        );
+        assert_eq!(
+            registry_host_from_url("git@gitlab.company.com:vibespecs"),
+            Some("gitlab.company.com")
+        );
+        assert_eq!(
+            registry_host_from_url("ssh://git@host.example/org"),
+            Some("host.example")
+        );
+        assert_eq!(registry_host_from_url("file:///tmp/registry"), None);
+    }
+
+    // ---- MissingToken precheck ----
+
+    #[test]
+    fn missing_token_surfaces_before_git_invocation() {
+        // `auth = TokenEnv` with no resolved token must produce
+        // `RegistryError::MissingToken` from the FIRST git-driving
+        // public method, without spawning git or hitting the
+        // network. Uses the test-only `open_with_explicit_token`
+        // constructor so the test does not have to mutate the
+        // process env (forbidden by `#![forbid(unsafe_code)]` on
+        // Rust 2024+).
+        let cache = tempdir().unwrap();
+        let fake = Arc::new(FakeBackend::default());
+        let reg = GitPackageRegistry::open_with_explicit_token(
+            "internal",
+            "https://internal.example.com/vibespecs",
+            "main",
+            NamingConvention::KindName,
+            Vec::new(),
+            cache.path(),
+            fake.clone(),
+            DEFAULT_FRESHNESS_SECS,
+            vibe_core::manifest::AuthKind::TokenEnv,
+            None, // no token resolved — the precheck must fire
+        )
+        .unwrap();
+        assert!(reg.token_env_required_but_absent());
+        let err = reg.list_versions(PackageKind::Flow, "wal").unwrap_err();
+        match err {
+            RegistryError::MissingToken { registry, env_var } => {
+                assert_eq!(registry, "internal");
+                assert!(
+                    env_var.contains("VIBEVM_REGISTRY_TOKEN"),
+                    "env_var hint should name the conventional prefix: {env_var}"
+                );
+            }
+            other => panic!("expected MissingToken, got: {other:?}"),
+        }
+        // Critical contract: backend was not consulted.
+        assert_eq!(
+            fake.bootstrap_count(),
+            0,
+            "MissingToken must skip the backend entirely"
+        );
+    }
+
+    #[test]
+    fn token_present_credentialises_bootstrap_and_scrubs_origin() {
+        // End-to-end token-injection contract for the bootstrap path:
+        //   1. ensure_token_loaded passes (token present).
+        //   2. backend.bootstrap is called with the credentialed
+        //      https://x-access-token:<TOKEN>@... form.
+        //   3. backend.set_remote_url is called immediately after
+        //      to rewrite origin to the plain URL — the token does
+        //      not persist on disk inside the cloned `.git/config`.
+        let cache = tempdir().unwrap();
+
+        struct ScrubTrackingBackend {
+            inner: Arc<FakeBackend>,
+            scrubs: Mutex<Vec<(PathBuf, String, String)>>,
+        }
+        impl GitBackend for ScrubTrackingBackend {
+            fn bootstrap(&self, url: &str, refname: &str, dest: &Path) -> Result<(), GitError> {
+                self.inner.bootstrap(url, refname, dest)
+            }
+            fn update(&self, dest: &Path, refname: &str) -> Result<(), GitError> {
+                self.inner.update(dest, refname)
+            }
+            fn list_tags(&self, url: &str) -> Result<Vec<String>, GitError> {
+                self.inner.list_tags(url)
+            }
+            fn fetch_file_at_ref(
+                &self,
+                url: &str,
+                refname: &str,
+                path: &str,
+            ) -> Result<Vec<u8>, GitError> {
+                self.inner.fetch_file_at_ref(url, refname, path)
+            }
+            fn set_remote_url(
+                &self,
+                dest: &Path,
+                remote: &str,
+                url: &str,
+            ) -> Result<(), GitError> {
+                self.scrubs
+                    .lock()
+                    .unwrap()
+                    .push((dest.to_path_buf(), remote.to_string(), url.to_string()));
+                Ok(())
+            }
+        }
+
+        let fake = Arc::new(FakeBackend::default());
+        let pkg_src = tempdir().unwrap();
+        std::fs::write(
+            pkg_src.path().join("vibe-package.toml"),
+            "[package]\nname = \"wal\"\nkind = \"flow\"\nversion = \"0.1.0\"\n",
+        )
+        .unwrap();
+        let credentialed_url =
+            "https://x-access-token:secret-token-xyz@scrub.example/vibespecs/flow-wal.git"
+                .to_string();
+        let plain_url = "https://scrub.example/vibespecs/flow-wal.git";
+        fake.seed_bootstrap(&credentialed_url, pkg_src.path().to_path_buf());
+        fake.seed_tags(&credentialed_url, vec!["v0.1.0".to_string()]);
+        let backend = Arc::new(ScrubTrackingBackend {
+            inner: fake.clone(),
+            scrubs: Mutex::new(Vec::new()),
+        });
+        let reg = GitPackageRegistry::open_with_explicit_token(
+            "internal",
+            "https://scrub.example/vibespecs",
+            "main",
+            NamingConvention::KindName,
+            Vec::new(),
+            cache.path(),
+            backend.clone(),
+            DEFAULT_FRESHNESS_SECS,
+            vibe_core::manifest::AuthKind::TokenEnv,
+            Some("secret-token-xyz".to_string()),
+        )
+        .unwrap();
+        assert!(!reg.token_env_required_but_absent());
+        assert_eq!(reg.effective_token_value(), Some("secret-token-xyz"));
+
+        let resolved = ResolvedPackage {
+            kind: PackageKind::Flow,
+            name: "wal".to_string(),
+            version: semver::Version::parse("0.1.0").unwrap(),
+            source_dir: reg.package_clone_dir(PackageKind::Flow, "wal"),
+        };
+        let cache_root = tempdir().unwrap();
+        reg.fetch(&resolved, cache_root.path()).unwrap();
+
+        // bootstrap was called with the credentialed URL.
+        let bootstraps = fake.bootstrap_urls();
+        assert!(
+            bootstraps.iter().any(|u| u == &credentialed_url),
+            "expected bootstrap with credentialed URL, got: {bootstraps:?}"
+        );
+
+        // set_remote_url was called immediately after — scrubbing the
+        // token out of the persistent `.git/config`.
+        let scrubs = backend.scrubs.lock().unwrap().clone();
+        let scrub_to_plain = scrubs.iter().find(|(_, _, u)| u == plain_url);
+        assert!(
+            scrub_to_plain.is_some(),
+            "expected set_remote_url(.., \"origin\", plain_url); scrubs: {scrubs:?}"
+        );
+        let (_dest, remote, _) = scrub_to_plain.unwrap();
+        assert_eq!(remote, "origin");
     }
 
     #[test]

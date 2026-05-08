@@ -80,6 +80,19 @@ pub enum RegistryError {
     #[error("registry meta file at `{path}` is malformed: {reason}")]
     MalformedMeta { path: PathBuf, reason: String },
 
+    /// Registry is declared `auth = "token-env"` (PROP-002 §2.2.1) but
+    /// the resolved env-var is empty / unset. Surfaces before any git
+    /// invocation so the operator gets an actionable hint pointing at
+    /// the env-var to set, instead of a generic 401 from the host.
+    #[error(
+        "registry `{registry}` declares `auth = \"token-env\"` but env-var `{env_var}` is empty or unset; \
+         set it to a personal access token with read access to the registry org"
+    )]
+    MissingToken {
+        registry: String,
+        env_var: String,
+    },
+
     #[error("I/O error on `{path}`")]
     Io {
         path: PathBuf,
