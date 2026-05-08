@@ -446,6 +446,16 @@ pub struct OutdatedArgs {
     /// Project root with `vibe.toml`. Defaults to current directory.
     #[arg(long, default_value = ".")]
     pub path: PathBuf,
+
+    /// Strict authentication gate — same semantics as
+    /// `vibe install --auth-required` / `vibe update --auth-required`.
+    /// When set, a 401 / 403 from an `auth = "none"` (public)
+    /// registry halts the probe instead of walking past. The probe
+    /// is read-only, so the trade-off is mostly diagnostic clarity
+    /// — you want to see "this private registry is down" rather
+    /// than silently miss its packages.
+    #[arg(long)]
+    pub auth_required: bool,
 }
 
 #[derive(Debug, clap::Args)]
@@ -612,8 +622,12 @@ pub struct McpInstallArgs {
     pub dry_run: bool,
 
     /// Skip the final apply confirm prompt. Implied by `--auto` when
-    /// `--scope` is also explicit.
-    #[arg(long)]
+    /// `--scope` is also explicit. The global `--unattended` flag
+    /// (or `VIBE_UNATTENDED` env-var) has the same effect; pick
+    /// whichever reads better in your context. `--assume-yes` is an
+    /// alias for symmetry with `vibe install` / `uninstall` /
+    /// `update`.
+    #[arg(long, alias = "assume-yes")]
     pub yes: bool,
 
     /// Force-write even when no agent is detected in the project
@@ -665,7 +679,9 @@ pub struct McpUninstallArgs {
     pub dry_run: bool,
 
     /// Skip the apply confirm prompt. Useful in CI / cron.
-    #[arg(long)]
+    /// `--assume-yes` is an alias for symmetry with `vibe install`
+    /// / `uninstall` / `update`.
+    #[arg(long, alias = "assume-yes")]
     pub yes: bool,
 }
 
@@ -704,7 +720,9 @@ pub struct McpUpgradeArgs {
     pub dry_run: bool,
 
     /// Skip the apply confirm prompt. Useful in CI / cron.
-    #[arg(long)]
+    /// `--assume-yes` is an alias for symmetry with `vibe install`
+    /// / `uninstall` / `update`.
+    #[arg(long, alias = "assume-yes")]
     pub yes: bool,
 }
 
@@ -819,6 +837,26 @@ pub struct UpdateArgs {
     /// Skip the interactive confirmation prompt.
     #[arg(long, alias = "yes")]
     pub assume_yes: bool,
+
+    /// Pin the resolved version exactly (`=x.y.z`) in
+    /// `vibe.toml` `[requires].packages` instead of preserving the
+    /// existing constraint shape. Same flag as `vibe install`'s.
+    /// Useful for "bump and pin" — re-resolve to a newer version
+    /// AND tighten the manifest constraint to that exact version
+    /// in one step. Without this flag, `vibe update` only refreshes
+    /// the lockfile pin and leaves the manifest's `^` / `~` /
+    /// range constraint untouched (cargo's default behaviour).
+    #[arg(long)]
+    pub exact: bool,
+
+    /// Strict authentication gate — same semantics as
+    /// `vibe install --auth-required`. When set, a 401 / 403
+    /// against an `auth = "none"` (public) registry halts the
+    /// update instead of walking past. Useful in CI / cron where
+    /// a fallback to a public substitute would mask a private-
+    /// registry outage.
+    #[arg(long)]
+    pub auth_required: bool,
 }
 
 #[derive(Debug, clap::Args)]

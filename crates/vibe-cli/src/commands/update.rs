@@ -42,7 +42,7 @@ use crate::output;
 
 pub fn run(ctx: &output::Context, args: UpdateArgs) -> Result<()> {
     let project_root = resolve_project_root(&args.path)?;
-    let manifest = load_project_manifest(&project_root)?;
+    let mut manifest = load_project_manifest(&project_root)?;
     let mut lockfile = load_or_empty_lockfile(&project_root)?;
 
     if !args.all && args.packages.is_empty() {
@@ -71,7 +71,8 @@ pub fn run(ctx: &output::Context, args: UpdateArgs) -> Result<()> {
         &manifest.mirrors,
         &manifest.overrides,
     )
-    .context("opening multi-registry resolver")?;
+    .context("opening multi-registry resolver")?
+    .with_strict_auth(args.auth_required);
 
     // 1. Decide which packages to update. `--all` walks every entry
     // in the lockfile (roots + any transitives). Named pkgrefs walk
@@ -242,6 +243,39 @@ pub fn run(ctx: &output::Context, args: UpdateArgs) -> Result<()> {
             modified: count_changes(plan, |c| matches!(c, UpdateChange::Modified { .. })),
             identical: count_changes(plan, |c| matches!(c, UpdateChange::Identical { .. })),
         });
+    }
+
+    // `--exact`: tighten each updated root's manifest constraint to
+    // the freshly-resolved exact version. Equivalent of cargo's
+    // `cargo update --precise X.Y.Z` plus a manifest pin in one
+    // step. Only applied to packages declared in `vibe.toml`
+    // `[requires].packages` — non-root transitives are not in the
+    // manifest. No-op when --exact wasn't passed.
+    if args.exact && !plans.is_empty() {
+        let mut manifest_changed = false;
+        for plan in &plans {
+            let kind = plan.kind;
+            let name = plan.name.clone();
+            let version = plan.to_version.clone();
+            let pos = manifest
+                .requires
+                .packages
+                .iter()
+                .position(|r| r.kind == kind && r.name == name);
+            if let Some(i) = pos {
+                let req = semver::VersionReq::parse(&format!("={version}"))
+                    .expect("`=<version>` always parses as VersionReq");
+                manifest.requires.packages[i] = vibe_core::PackageRef {
+                    kind,
+                    name,
+                    version: vibe_core::VersionSpec::Req(req),
+                };
+                manifest_changed = true;
+            }
+        }
+        if manifest_changed {
+            manifest.write(project_root.join(vibe_core::manifest::ProjectManifest::FILENAME))?;
+        }
     }
 
     lockfile.write(project_root.join(Lockfile::FILENAME))?;

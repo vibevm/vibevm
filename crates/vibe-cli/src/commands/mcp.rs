@@ -43,9 +43,11 @@ use std::io::IsTerminal;
 use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result, anyhow, bail};
+use dialoguer::Confirm;
 use serde::Serialize;
 use serde_json::{Map, Value as JsonValue};
 use vibe_core::manifest::ProjectManifest;
+use vibe_install::InstallError;
 use vibe_mcp::{Server, ServerContext};
 
 use crate::cli::{
@@ -683,56 +685,79 @@ fn run_install(ctx: &output::Context, args: McpInstallArgs) -> Result<()> {
     //    scope, or when `Both` was selected without a `vibe.toml`
     //    making the project-leg unreachable).
     let project_leg_skipped_no_manifest = scope == Scope::Both && project_root.is_none();
-    let mut results: Vec<AgentInstallReport> = Vec::new();
-    let mut skill_results: Vec<SkillInstallReport> = Vec::new();
-    for agent in &targeted {
-        for concrete_scope in scope.expand() {
-            // `Both` without `vibe.toml`: the user-leg runs as
-            // normal, the project-leg is silently skipped. Symmetric
-            // with `vibe mcp upgrade` / `vibe mcp uninstall`.
-            if concrete_scope == Scope::Project && project_root.is_none() {
-                continue;
-            }
 
-            // ---- MCP entry ----
-            if what.includes_mcp() {
-                let path = agent.config_path(concrete_scope, project_root.as_deref())?;
-                if let Some(path) = path {
-                    let payload = agent.build_mcp_entry(concrete_scope, project_root.as_deref());
-                    let outcome = if args.dry_run {
-                        preview_install_mcp(*agent, concrete_scope, &path, &payload)?
-                    } else {
-                        apply_install_mcp(*agent, concrete_scope, &path, &payload)?
-                    };
-                    results.push(outcome);
-                } else if scope == Scope::Both {
-                    // Both selected but this agent has no surface for
-                    // this concrete scope — note as skipped, no error.
-                    results.push(AgentInstallReport {
-                        agent: agent.as_str().to_string(),
-                        scope: concrete_scope.as_str(),
-                        config_path: String::new(),
-                        status: "skipped",
-                        note: Some(format!(
-                            "agent `{}` has no {}-scope MCP config",
-                            agent.as_str(),
-                            concrete_scope.as_str()
-                        )),
-                    });
-                }
-            }
-            // ---- SKILL.md ----
-            if what.includes_skill() {
-                let outcome = install_skill(
-                    *agent,
-                    concrete_scope,
-                    project_root.as_deref(),
-                    args.dry_run,
-                )?;
-                skill_results.push(outcome);
-            }
+    // Two-pass walk so the operator's `--yes` / `--unattended` /
+    // `--auto` / `--json` / `--dry-run` flags actually gate a
+    // confirmation prompt (PROP-002 §2.3.1 hint about destructive
+    // operations). First pass is always dry-run — gathers the
+    // would-do/won't-do list without touching any config files.
+    // Second pass writes only when (a) the operator approved AND
+    // (b) the original invocation wasn't `--dry-run`.
+    let (preview_results, preview_skill) = walk_install(
+        &targeted,
+        scope,
+        project_root.as_deref(),
+        what,
+        args.force,
+        true,
+    )?;
+
+    let needs_change = preview_results.iter().any(|r| {
+        matches!(r.status, "would-create" | "would-update")
+    }) || preview_skill.iter().any(|r| {
+        matches!(r.status, "would-create" | "would-update")
+    });
+
+    if !args.dry_run && needs_change {
+        // Confirmation gating: skip the prompt when the operator
+        // already signalled "go" via flag / env, OR when we are
+        // not attached to a TTY (CI / opencode harness — the
+        // pre-this-commit behaviour with no confirm at all is the
+        // baseline; we never break those scripts). Show the
+        // interactive prompt only on a real TTY without an
+        // explicit skip-flag.
+        let approved = if args.yes
+            || ctx.is_unattended()
+            || args.auto
+            || ctx.is_json()
+            || !console::user_attended()
+        {
+            true
+        } else {
+            print_install_results(ctx, true, &preview_results, &preview_skill);
+            let mcp_count = preview_results.iter().filter(|r| {
+                matches!(r.status, "would-create" | "would-update")
+            }).count();
+            let skill_count = preview_skill.iter().filter(|r| {
+                matches!(r.status, "would-create" | "would-update")
+            }).count();
+            Confirm::new()
+                .with_prompt(format!(
+                    "Apply this plan? ({mcp_count} MCP entr{}, {skill_count} SKILL.md file{})",
+                    if mcp_count == 1 { "y" } else { "ies" },
+                    if skill_count == 1 { "" } else { "s" },
+                ))
+                .default(false)
+                .interact()
+                .context("reading user confirmation")?
+        };
+        if !approved {
+            return Err(InstallError::UserDeclined.into());
         }
     }
+
+    let (results, skill_results) = if args.dry_run || !needs_change {
+        (preview_results, preview_skill)
+    } else {
+        walk_install(
+            &targeted,
+            scope,
+            project_root.as_deref(),
+            what,
+            args.force,
+            false,
+        )?
+    };
 
     let report = InstallReport {
         ok: true,
@@ -802,6 +827,66 @@ fn print_install_results(
             prefix, r.agent, r.scope, path_str
         ));
     }
+}
+
+/// Per-(agent × scope) install walker. Extracted from `run_install`
+/// so the two-pass `confirm-then-apply` flow can call it twice —
+/// once with `dry_run = true` to gather the would-do plan, then
+/// (after the operator approves) once with `dry_run = false` to
+/// actually write. The semantics inside the loop are unchanged
+/// from the prior single-pass implementation; only the surrounding
+/// state lives in `run_install` now.
+fn walk_install(
+    targeted: &[Agent],
+    scope: Scope,
+    project_root: Option<&Path>,
+    what: What,
+    _force: bool,
+    dry_run: bool,
+) -> Result<(Vec<AgentInstallReport>, Vec<SkillInstallReport>)> {
+    let mut results: Vec<AgentInstallReport> = Vec::new();
+    let mut skill_results: Vec<SkillInstallReport> = Vec::new();
+    for agent in targeted {
+        for concrete_scope in scope.expand() {
+            // `Both` without `vibe.toml`: the user-leg runs as
+            // normal, the project-leg is silently skipped.
+            if concrete_scope == Scope::Project && project_root.is_none() {
+                continue;
+            }
+            // ---- MCP entry ----
+            if what.includes_mcp() {
+                let path = agent.config_path(concrete_scope, project_root)?;
+                if let Some(path) = path {
+                    let payload = agent.build_mcp_entry(concrete_scope, project_root);
+                    let outcome = if dry_run {
+                        preview_install_mcp(*agent, concrete_scope, &path, &payload)?
+                    } else {
+                        apply_install_mcp(*agent, concrete_scope, &path, &payload)?
+                    };
+                    results.push(outcome);
+                } else if scope == Scope::Both {
+                    results.push(AgentInstallReport {
+                        agent: agent.as_str().to_string(),
+                        scope: concrete_scope.as_str(),
+                        config_path: String::new(),
+                        status: "skipped",
+                        note: Some(format!(
+                            "agent `{}` has no {}-scope MCP config",
+                            agent.as_str(),
+                            concrete_scope.as_str()
+                        )),
+                    });
+                }
+            }
+            // ---- SKILL.md ----
+            if what.includes_skill() {
+                let outcome =
+                    install_skill(*agent, concrete_scope, project_root, dry_run)?;
+                skill_results.push(outcome);
+            }
+        }
+    }
+    Ok((results, skill_results))
 }
 
 // ---------------------------------------------------------------------------
@@ -955,45 +1040,49 @@ fn run_upgrade(ctx: &output::Context, args: McpUpgradeArgs) -> Result<()> {
         Agent::ALL.to_vec()
     };
 
-    let mut results: Vec<AgentInstallReport> = Vec::new();
-    let mut skill_results: Vec<SkillInstallReport> = Vec::new();
+    // Two-pass walk + apply-confirm. Same shape as run_install
+    // (above) — preview first, ask confirm, then real apply only
+    // when the operator approves AND the original invocation is
+    // not `--dry-run`.
+    let (preview_results, preview_skill) =
+        walk_upgrade(&agents, scope, project_root.as_deref(), what, true)?;
+    let needs_change = preview_results.iter().any(|r| r.status == "would-update")
+        || preview_skill.iter().any(|r| r.status == "would-update");
 
-    for agent in &agents {
-        for concrete_scope in scope.expand() {
-            // Skip project-scope walks when no vibe.toml resolved.
-            if concrete_scope == Scope::Project && project_root.is_none() {
-                continue;
-            }
-
-            // ---- MCP entry ----
-            if what.includes_mcp() {
-                let path = agent.config_path(concrete_scope, project_root.as_deref())?;
-                if let Some(path) = path {
-                    let outcome = upgrade_mcp_entry(
-                        *agent,
-                        concrete_scope,
-                        &path,
-                        project_root.as_deref(),
-                        args.dry_run,
-                    )?;
-                    results.push(outcome);
-                }
-            }
-
-            // ---- SKILL.md ----
-            if what.includes_skill() {
-                let outcome = upgrade_skill(
-                    *agent,
-                    concrete_scope,
-                    project_root.as_deref(),
-                    args.dry_run,
-                )?;
-                if let Some(o) = outcome {
-                    skill_results.push(o);
-                }
-            }
+    if !args.dry_run && needs_change {
+        // Confirm only on real TTY without a skip-flag (see the
+        // matching block in `run_install` for the rationale —
+        // non-TTY scripts pre-date the confirm prompt and must
+        // continue to work without `--yes`).
+        let approved = if args.yes
+            || ctx.is_unattended()
+            || ctx.is_json()
+            || !console::user_attended()
+        {
+            true
+        } else {
+            print_upgrade_results(ctx, true, &preview_results, &preview_skill);
+            let stale = preview_results.iter().filter(|r| r.status == "would-update").count()
+                + preview_skill.iter().filter(|r| r.status == "would-update").count();
+            Confirm::new()
+                .with_prompt(format!(
+                    "Refresh {stale} stale entr{}?",
+                    if stale == 1 { "y" } else { "ies" }
+                ))
+                .default(false)
+                .interact()
+                .context("reading user confirmation")?
+        };
+        if !approved {
+            return Err(InstallError::UserDeclined.into());
         }
     }
+
+    let (results, skill_results) = if args.dry_run || !needs_change {
+        (preview_results, preview_skill)
+    } else {
+        walk_upgrade(&agents, scope, project_root.as_deref(), what, false)?
+    };
 
     let report = UpgradeReport {
         ok: true,
@@ -1027,6 +1116,49 @@ fn run_upgrade(ctx: &output::Context, args: McpUpgradeArgs) -> Result<()> {
 
     print_upgrade_results(ctx, args.dry_run, &results, &skill_results);
     Ok(())
+}
+
+/// Per-(agent × scope) upgrade walker. Same role as `walk_install`
+/// for the install path: invoked twice from `run_upgrade` (once
+/// dry-run for the plan, once real for the apply) so the operator's
+/// `--yes` / `--unattended` / `--auto` / `--json` actually gate a
+/// confirmation prompt.
+fn walk_upgrade(
+    agents: &[Agent],
+    scope: Scope,
+    project_root: Option<&Path>,
+    what: What,
+    dry_run: bool,
+) -> Result<(Vec<AgentInstallReport>, Vec<SkillInstallReport>)> {
+    let mut results: Vec<AgentInstallReport> = Vec::new();
+    let mut skill_results: Vec<SkillInstallReport> = Vec::new();
+    for agent in agents {
+        for concrete_scope in scope.expand() {
+            if concrete_scope == Scope::Project && project_root.is_none() {
+                continue;
+            }
+            if what.includes_mcp() {
+                let path = agent.config_path(concrete_scope, project_root)?;
+                if let Some(path) = path {
+                    let outcome = upgrade_mcp_entry(
+                        *agent,
+                        concrete_scope,
+                        &path,
+                        project_root,
+                        dry_run,
+                    )?;
+                    results.push(outcome);
+                }
+            }
+            if what.includes_skill() {
+                let outcome = upgrade_skill(*agent, concrete_scope, project_root, dry_run)?;
+                if let Some(o) = outcome {
+                    skill_results.push(o);
+                }
+            }
+        }
+    }
+    Ok((results, skill_results))
 }
 
 /// One-place upgrade probe + apply for an MCP-config block.
@@ -1210,39 +1342,52 @@ fn run_uninstall(ctx: &output::Context, args: McpUninstallArgs) -> Result<()> {
         Agent::ALL.to_vec()
     };
 
-    let mut results: Vec<AgentInstallReport> = Vec::new();
-    let mut skill_results: Vec<SkillInstallReport> = Vec::new();
+    // Two-pass walk + apply-confirm. Uninstall is the most
+    // destructive of the three MCP commands (it deletes SKILL.md
+    // files and drops the vibevm block from MCP configs), so the
+    // confirm step here matters more than for install / upgrade.
+    let (preview_results, preview_skill) =
+        walk_uninstall(&agents, scope, project_root.as_deref(), what, true)?;
+    let needs_change = preview_results.iter().any(|r| r.status == "would-remove")
+        || preview_skill.iter().any(|r| r.status == "would-remove");
 
-    for agent in &agents {
-        for concrete_scope in scope.expand() {
-            if concrete_scope == Scope::Project && project_root.is_none() {
-                continue;
-            }
-
-            // ---- MCP entry ----
-            if what.includes_mcp() {
-                let path = agent.config_path(concrete_scope, project_root.as_deref())?;
-                if let Some(path) = path {
-                    let outcome =
-                        uninstall_mcp_entry(*agent, concrete_scope, &path, args.dry_run)?;
-                    results.push(outcome);
-                }
-            }
-
-            // ---- SKILL.md ----
-            if what.includes_skill() {
-                let outcome = uninstall_skill(
-                    *agent,
-                    concrete_scope,
-                    project_root.as_deref(),
-                    args.dry_run,
-                )?;
-                if let Some(o) = outcome {
-                    skill_results.push(o);
-                }
-            }
+    if !args.dry_run && needs_change {
+        // Same TTY-only confirm policy as install / upgrade.
+        let approved = if args.yes
+            || ctx.is_unattended()
+            || ctx.is_json()
+            || !console::user_attended()
+        {
+            true
+        } else {
+            print_uninstall_results(ctx, true, &preview_results, &preview_skill);
+            let to_remove = preview_results
+                .iter()
+                .filter(|r| r.status == "would-remove")
+                .count()
+                + preview_skill
+                    .iter()
+                    .filter(|r| r.status == "would-remove")
+                    .count();
+            Confirm::new()
+                .with_prompt(format!(
+                    "Remove {to_remove} entr{}?",
+                    if to_remove == 1 { "y" } else { "ies" }
+                ))
+                .default(false)
+                .interact()
+                .context("reading user confirmation")?
+        };
+        if !approved {
+            return Err(InstallError::UserDeclined.into());
         }
     }
+
+    let (results, skill_results) = if args.dry_run || !needs_change {
+        (preview_results, preview_skill)
+    } else {
+        walk_uninstall(&agents, scope, project_root.as_deref(), what, false)?
+    };
 
     let report = UninstallReport {
         ok: true,
@@ -1276,6 +1421,43 @@ fn run_uninstall(ctx: &output::Context, args: McpUninstallArgs) -> Result<()> {
 
     print_uninstall_results(ctx, args.dry_run, &results, &skill_results);
     Ok(())
+}
+
+/// Per-(agent × scope) uninstall walker. Mirrors `walk_install` /
+/// `walk_upgrade`: invoked twice from `run_uninstall`, once
+/// dry-run, once apply.
+fn walk_uninstall(
+    agents: &[Agent],
+    scope: Scope,
+    project_root: Option<&Path>,
+    what: What,
+    dry_run: bool,
+) -> Result<(Vec<AgentInstallReport>, Vec<SkillInstallReport>)> {
+    let mut results: Vec<AgentInstallReport> = Vec::new();
+    let mut skill_results: Vec<SkillInstallReport> = Vec::new();
+    for agent in agents {
+        for concrete_scope in scope.expand() {
+            if concrete_scope == Scope::Project && project_root.is_none() {
+                continue;
+            }
+            if what.includes_mcp() {
+                let path = agent.config_path(concrete_scope, project_root)?;
+                if let Some(path) = path {
+                    let outcome =
+                        uninstall_mcp_entry(*agent, concrete_scope, &path, dry_run)?;
+                    results.push(outcome);
+                }
+            }
+            if what.includes_skill() {
+                let outcome =
+                    uninstall_skill(*agent, concrete_scope, project_root, dry_run)?;
+                if let Some(o) = outcome {
+                    skill_results.push(o);
+                }
+            }
+        }
+    }
+    Ok((results, skill_results))
 }
 
 /// Remove the `vibevm` block from an MCP-config file. Foreign keys

@@ -76,7 +76,8 @@ pub fn run(ctx: &output::Context, args: OutdatedArgs) -> Result<()> {
         &manifest.mirrors,
         &manifest.overrides,
     )
-    .context("opening multi-registry resolver")?;
+    .context("opening multi-registry resolver")?
+    .with_strict_auth(args.auth_required);
 
     let mut entries: Vec<OutdatedEntry> = Vec::with_capacity(lockfile.packages.len());
     let mut update_available = 0usize;
