@@ -203,6 +203,20 @@ pub struct RegistryAddArgs {
     #[arg(long = "position", default_value = "append")]
     pub position: String,
 
+    /// Authentication regime for fetching from this registry. One of
+    /// `none` (default; public read), `token-env` (read token from
+    /// `VIBEVM_REGISTRY_TOKEN_<HOST>` or the explicit `--token-env`
+    /// override), `credential-helper` (opt in to system git credential
+    /// helpers; GUI prompts allowed), `ssh` (URL must be ssh-form,
+    /// auth via ssh-agent / keys). See PROP-002 §2.2.1.
+    #[arg(long = "auth")]
+    pub auth: Option<String>,
+
+    /// Override the env-var name used by `auth = token-env`. Default
+    /// is derived from the registry's host.
+    #[arg(long = "token-env")]
+    pub token_env: Option<String>,
+
     /// Project root with `vibe.toml`. Defaults to current directory.
     #[arg(long, default_value = ".")]
     pub path: PathBuf,

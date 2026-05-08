@@ -494,11 +494,39 @@ fn run_add(ctx: &output::Context, args: RegistryAddArgs) -> Result<()> {
         ),
     };
 
+    let auth = match args.auth.as_deref() {
+        None | Some("none") => vibe_core::manifest::AuthKind::None,
+        Some("token-env") => vibe_core::manifest::AuthKind::TokenEnv,
+        Some("credential-helper") => vibe_core::manifest::AuthKind::CredentialHelper,
+        Some("ssh") => vibe_core::manifest::AuthKind::Ssh,
+        Some(other) => bail!(
+            "unknown --auth `{other}` — must be `none`, `token-env`, `credential-helper`, or `ssh`"
+        ),
+    };
+    if matches!(auth, vibe_core::manifest::AuthKind::TokenEnv) && args.token_env.is_none() {
+        // No --token-env supplied: that's fine, the resolver will derive
+        // the default name from the registry's host. But warn the
+        // operator so they don't get a confusing "env-var not set" error
+        // later if they meant to point at a specific name.
+        tracing::debug!(
+            target: "vibe_cli::registry::add",
+            "auth=token-env without explicit --token-env; will derive from host on resolve"
+        );
+    }
+    if args.token_env.is_some() && !matches!(auth, vibe_core::manifest::AuthKind::TokenEnv) {
+        bail!(
+            "--token-env is only meaningful with --auth token-env; got --auth {:?}",
+            auth.as_str()
+        );
+    }
+
     let new = RegistrySection {
         name: args.name.clone(),
         url: args.url.clone(),
         r#ref: args.registry_ref.unwrap_or_else(|| "main".to_string()),
         naming,
+        auth,
+        token_env: args.token_env.clone(),
     };
 
     match position_label {

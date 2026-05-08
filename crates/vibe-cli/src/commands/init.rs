@@ -226,6 +226,8 @@ fn resolve_registry_sections(args: &InitArgs) -> Vec<RegistrySection> {
                 .clone()
                 .unwrap_or_else(|| DEFAULT_REGISTRY_REF.to_string()),
             naming: NamingConvention::KindName,
+            auth: vibe_core::manifest::AuthKind::None,
+            token_env: None,
         }];
     }
     let github = RegistrySection {
@@ -236,6 +238,8 @@ fn resolve_registry_sections(args: &InitArgs) -> Vec<RegistrySection> {
             .clone()
             .unwrap_or_else(|| DEFAULT_REGISTRY_REF.to_string()),
         naming: NamingConvention::KindName,
+        auth: vibe_core::manifest::AuthKind::None,
+        token_env: None,
     };
     // GitVerse default uses `naming = "name"` (no kind prefix). The
     // public `vibespecs` org on GitVerse provisions repos under their
@@ -251,6 +255,8 @@ fn resolve_registry_sections(args: &InitArgs) -> Vec<RegistrySection> {
         url: DEFAULT_REGISTRY_GITVERSE_URL.to_string(),
         r#ref: DEFAULT_REGISTRY_REF.to_string(),
         naming: NamingConvention::Name,
+        auth: vibe_core::manifest::AuthKind::None,
+        token_env: None,
     };
     vec![github, gitverse]
 }

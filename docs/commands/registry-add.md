@@ -11,6 +11,8 @@ vibe registry add <NAME> <URL>
                   [--ref <REF>]
                   [--naming kind-name|name|kind/name]
                   [--position primary|append]
+                  [--auth none|token-env|credential-helper|ssh]
+                  [--token-env <ENV_VAR_NAME>]
                   [--path <DIR>]
                   [--json | --quiet]
 ```
@@ -29,6 +31,8 @@ vibe registry add <NAME> <URL>
 | `--ref <REF>` | Registry-level git ref. Reserved for a future registry-metadata branch and not consumed by install today. | `main` |
 | `--naming <CONV>` | Convention mapping `<kind>:<name>` to a repo name under the org. `kind-name` produces `<org>/<kind>-<name>`; `name` produces `<org>/<name>` (only valid when names are globally unique across kinds); `kind/name` produces `<org>/<kind>/<name>` (requires host support for nested repository paths). | `kind-name` |
 | `--position <pos>` | `primary` inserts the new entry at index 0; `append` adds it at the tail. | `append` |
+| `--auth <kind>` | Authentication regime — see [PROP-002 §2.2.1](../../spec/modules/vibe-registry/PROP-002-decentralized-registry.md#registry-auth). `none` = public read-only (default). `token-env` = read PAT from env-var. `credential-helper` = opt in to system git credential helpers (allows GUI prompts on interactive TTY). `ssh` = ssh-form URL with ssh-agent / keys. | `none` |
+| `--token-env <NAME>` | Override the env-var name for `--auth token-env`. Default (omitted) is derived from the registry host: `VIBEVM_REGISTRY_TOKEN_<HOST_UPPER>`, dots and hyphens mapped to underscores (`gitlab.company.com` → `VIBEVM_REGISTRY_TOKEN_GITLAB_COMPANY_COM`). Only meaningful with `--auth token-env`; rejected otherwise. | (derived) |
 | `--path <dir>` | Project directory containing `vibe.toml`. | `.` |
 | `--json` | Structured payload. | off |
 | `--quiet` | One-line summary. | off |
@@ -93,6 +97,17 @@ vibe registry add private "git@gitverse.ru:somecorp"
 vibe registry add fork "https://github.com/me/forks" --position primary --naming "kind/name" --ref develop
 vibe registry add scratch "file:///abs/path/to/local-org" --quiet
 vibe registry add public "https://github.com/vibespecs" --json | jq .registry.adapter
+
+# Private registry over HTTPS with PAT in an env-var.
+vibe registry add internal "https://gitlab.company.com/vibespecs" \
+                  --auth token-env \
+                  --token-env VIBEVM_REGISTRY_TOKEN_INTERNAL
+
+# Same but with the env-var name derived from host.
+vibe registry add internal "https://gitlab.company.com/vibespecs" --auth token-env
+
+# Private registry over SSH (delegates to ssh-agent / keys).
+vibe registry add internal-ssh "git@gitlab.company.com:vibespecs" --auth ssh
 ```
 
 ## Errors
