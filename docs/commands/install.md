@@ -35,7 +35,7 @@ A package reference is `<kind>:<name>[@<version>]`. Version syntax follows Cargo
 | --- | --- | --- |
 | `--path <dir>` | Project directory containing `vibe.toml`. | `.` |
 | `--registry <path>` | Use a local-directory registry. Overrides `[[registry]]` in `vibe.toml`. | use the configured registry |
-| `--assume-yes` | Skip the interactive confirmation prompt. **Required** when stdin is not a TTY (CI, scripts). Aliased to `--yes`. | off |
+| `--assume-yes` | Skip the interactive confirmation prompt. **Required** when stdin is not a TTY (CI, scripts). Aliased to `--yes`. The global `--unattended` flag (or `VIBE_UNATTENDED` env-var) has the same effect — pick whichever reads better in your context. | off |
 | `--json` | Emit two structured documents: the plan (command `"install:plan"`) before confirmation, the report (command `"install"`) after apply. Schemas: [`schemas/install_plan.jtd.json`](../../schemas/install_plan.jtd.json), [`schemas/install_report.jtd.json`](../../schemas/install_report.jtd.json). When `--json` is set, confirmation is auto-approved (the assumption is the consumer is a script). | off |
 | `--quiet` | One-line summary after apply. Conflicts with `--json`. | off |
 | `--exact` | Pin the resolved version exactly (`=x.y.z`) in `vibe.toml` `[requires].packages` instead of the default caret. Same shape as npm's `--save-exact`. Overrides whatever constraint the CLI form carried. | off |

@@ -20,7 +20,7 @@ vibe uninstall <pkgref> [--path <dir>] [--assume-yes]
 | Flag | Description | Default |
 | --- | --- | --- |
 | `--path <dir>` | Project directory containing `vibe.lock`. | `.` |
-| `--assume-yes` | Skip the interactive confirmation. Required in non-TTY environments. Aliased to `--yes`. | off |
+| `--assume-yes` | Skip the interactive confirmation. Required in non-TTY environments. Aliased to `--yes`. The global `--unattended` flag (or `VIBE_UNATTENDED` env-var) has the same effect. | off |
 | `--json` | Structured payload. Schema: [`schemas/uninstall_report.jtd.json`](../../schemas/uninstall_report.jtd.json). | off |
 | `--quiet` | One-line summary. | off |
 

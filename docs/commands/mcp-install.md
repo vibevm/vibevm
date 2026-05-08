@@ -65,6 +65,7 @@ Without flags, drops into a 3-question wizard (TTY required): pick scope, pick w
 | `--json` (global) | Emit a structured envelope. | off |
 | `--quiet` (global) | One-line summary. | off |
 | `--invoked-by <agent>` (global) | Stamps `invoked_by` on the JSON envelope. | (env: `VIBE_INVOKED_BY`, else absent) |
+| `--unattended` (global) | Implies `--yes` and refuses to open any interactive wizard — if `--scope` / `--what` / `--agent` are missing under `--unattended`, the command bails with a hint instead of prompting. Stamps `unattended: true` on the JSON envelope. Falls back to `VIBE_UNATTENDED` env-var (truthy: `1`, `true`, `yes`, `on`). | (env: `VIBE_UNATTENDED`, else off) |
 
 ## Examples
 
@@ -106,20 +107,30 @@ vibe mcp install --scope both --auto
 
 A setup script that runs once per user — before any vibevm project
 exists on the machine — wires up MCP + SKILL.md at the user level
-for a specific agent without prompting and without `--auto`:
+for a specific agent. Use the global `--unattended` flag instead of
+`--yes` — it's the human-readable shape for "I'm in a script, no
+prompts, no wizard":
 
 ```bash
-vibe mcp install \
+vibe --unattended mcp install \
     --agent opencode \
     --scope both \
-    --what both \
-    --yes \
-    --invoked-by setup
+    --what both
+```
+
+Or via env-var (handier inside cloud-init / Dockerfile / Ansible):
+
+```bash
+VIBE_UNATTENDED=1 vibe mcp install --agent opencode --scope both --what both
 ```
 
 The project leg is silently skipped (no `vibe.toml` here yet); the
 user leg writes once and applies in every directory the operator
 opens later. Re-runs are idempotent — entries become `unchanged`.
+
+`--unattended` also refuses to open any wizard — if you forget one
+of `--agent` / `--scope` / `--what`, the command bails with a hint
+rather than blocking on a hidden prompt. CI-safe by construction.
 
 ### Pre-flight diff before applying
 
@@ -261,6 +272,7 @@ The exact body is `crates/vibe-cli/src/commands/skill_template.md`, vendored at 
 - **Non-TTY without `--auto` / `--agent` / `--scope`.** The wizard refuses with a hint pointing at `--scope`/`--auto` rather than panicking inside dialoguer.
 - **`--scope project` without `vibe.toml`.** Hard error with a hint pointing at `--scope user` for bootstrap-mode.
 - **`--scope both` without `vibe.toml`.** Soft skip: the project leg is silently dropped, the user leg runs as normal, and a `note:` line in text mode flags what happened. Exit 0. Use this from first-time-user provisioning scripts that run before any vibevm project exists.
+- **`--unattended` with missing wizard dimensions.** Hard error with a concrete hint listing which of `--scope` / `--what` / `--agent` is missing. The bail is deliberate — `--unattended` promises no wizard will open, so silently picking a default would be the wrong contract. Pass the missing flag(s) or use `--auto` to detect every dimension automatically.
 - **Stale skill content.** `install --what skill` overwrites stale on-disk SKILL.md with the current template — the contract is set by the binary. For "refresh after vibe upgrade" use [`vibe mcp upgrade`](mcp-upgrade.md).
 - **Foreign keys.** The JSON / TOML mergers preserve every key outside the `mcpServers` / `mcp` / `mcp_servers` block.
 - **User-level `--scope user` writes touch `~/`.** Claude Desktop and Codex configs live in the operator's home / config dir, not the project tree. `--auto` will mutate them when their parent dir exists. `--dry-run` is the safe preview path.

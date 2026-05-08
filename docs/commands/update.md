@@ -21,7 +21,7 @@ vibe update --all                   [--path <dir>] [--assume-yes]
 | --- | --- | --- |
 | `--all` | Update every package in `vibe.lock` (roots + transitives). Mutually exclusive with named pkgrefs. | off |
 | `--path <dir>` | Project directory containing `vibe.toml` and `vibe.lock`. | `.` |
-| `--assume-yes` | Skip the interactive confirmation prompt. Aliased to `--yes`. **Required** when stdin is not a TTY (CI / scripts). | off |
+| `--assume-yes` | Skip the interactive confirmation prompt. Aliased to `--yes`. **Required** when stdin is not a TTY (CI / scripts). The global `--unattended` flag (or `VIBE_UNATTENDED` env-var) has the same effect. | off |
 | `--json` | Two structured documents: the plan (command `"update:plan"`) before apply, the report (command `"update"`) after. With `--json` the confirmation is auto-approved. | off |
 | `--quiet` | One-line summary after apply. Conflicts with `--json`. | off |
 
