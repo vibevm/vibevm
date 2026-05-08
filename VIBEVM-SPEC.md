@@ -716,12 +716,22 @@ api_key_env = "ANTHROPIC_API_KEY"
 
 # Registries are a priority-ordered list. Resolving `flow:foo` tries each registry
 # in the order written; the first one that has the package wins. `vibe init`
-# scaffolds a single entry pointing at the default public vibespecs organization.
+# scaffolds two default entries (vibespecs on GitHub + vibespecs-gitverse on GitVerse).
 [[registry]]
 name   = "vibespecs"
 url    = "git@gitverse.ru:vibespecs"     # ORG root (not a package repo)
 ref    = "main"                           # registry-level metadata ref (reserved; not used today)
 naming = "kind-name"                      # convention: package repo name = "<kind>-<name>" under this org
+auth   = "none"                           # public read-only — default; no credential prompts in scripted runs
+
+# Authenticated registry — token from env-var (PROP-002 §2.2.1). On 401 with
+# the token present it is a hard error (token wrong / expired), and on 401
+# without the token a hint is printed pointing at the env-var. Never prompts.
+# [[registry]]
+# name      = "internal"
+# url       = "https://gitlab.company.com/vibespecs"
+# auth      = "token-env"
+# token_env = "VIBEVM_REGISTRY_TOKEN_INTERNAL"   # optional; default = derived from host
 
 # Mirrors are transparent fallbacks for a specific registry (or `*` = any).
 # `source_url` in the lockfile always records the canonical URL, not the mirror URL,

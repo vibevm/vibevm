@@ -64,6 +64,57 @@ naming = "kind-name"
 
 Resolution: the solver iterates registries in array order; the first that has a satisfying match for a pkgref wins. Versions of the same pkgref are **not** unioned across registries — this prevents a lower-trust registry from influencing resolve when a higher-trust one already has a valid answer.
 
+### 2.2.1 Per-registry authentication {#registry-auth}
+
+**Decision.** Each `[[registry]]` declares its authentication regime via an `auth` field. Four variants:
+
+```toml
+[[registry]]
+name   = "vibespecs"
+url    = "https://github.com/vibespecs"
+auth   = "none"                                  # default; public read-only
+
+[[registry]]
+name      = "internal"
+url       = "https://gitlab.company.com/vibespecs"
+auth      = "token-env"
+token_env = "VIBEVM_REGISTRY_TOKEN_INTERNAL"     # optional override; default = derived from host
+
+[[registry]]
+name = "corporate-sso"
+url  = "https://corporate.example.com/vibespecs"
+auth = "credential-helper"                       # opt in to system git credential.helper / GCM
+
+[[registry]]
+name = "ssh-mirror"
+url  = "git@host.example.com:vibespecs"
+auth = "ssh"                                     # ssh-agent / keys; URL must be ssh-form
+```
+
+| `auth` value | What vibevm does | When to use |
+| --- | --- | --- |
+| `none` (default) | Read-only HTTPS or `file://`. **No** credentials are sent; `git ls-remote` runs with `credential.helper` and `core.askPass` reset to empty in non-TTY / `--unattended` mode (so GUI / GCM popups are suppressed). On 401 the resolver classifies the registry as having no public answer and walks to the next entry — same fall-through as 404. | Public registries (the default for both `vibespecs` and `vibespecs-gitverse`). |
+| `token-env` | Reads a personal access token from `VIBEVM_REGISTRY_TOKEN_<HOST>` (or the explicit `token_env` override) and injects it into the URL as `https://x-access-token:<TOKEN>@<host>/...` for the duration of the git invocation. The token is never logged, never recorded in the lockfile, never appears in git's stderr (modern git redacts passwords). On 401 with the token set: hard error (the token is wrong / expired / scoped wrong). On token absent: hard error directing the operator at the env-var; resolver does not silently fall through. | Private organisation registries; CI; agent harnesses. Symmetric with the publish-side `VIBEVM_PUBLISH_TOKEN_<HOST>` already specified in §2.10. |
+| `credential-helper` | The opt-in mode. Vibe leaves `credential.helper` / `core.askPass` untouched; the system git falls through to whatever is configured in `~/.gitconfig` (Git Credential Manager on Windows, `osxkeychain` on macOS, `libsecret` on Linux). GUI prompts may appear; that is the point. Only consulted when an interactive TTY is attached *and* `--unattended` is not set; in non-TTY / scripted runs this collapses to the same behaviour as `none` (helpers silenced, 401 → walk). | Operators with corporate SSO already wired through GCM and a working interactive workflow. |
+| `ssh` | URL must be ssh-form (`git@host:org`, `ssh://...`). Authentication is delegated to the system ssh-agent and keys. Vibe does not touch ssh config, does not ask for passphrases — if a passphrase prompt appears, that is the operator's ssh-agent decision. | The classic developer workflow on personal machines with ssh keys configured. |
+
+**`token_env` defaulting.** When `auth = "token-env"` and `token_env` is omitted, the env-var name is derived from the registry's host: lowercase host, dots and hyphens to underscores, prefixed with `VIBEVM_REGISTRY_TOKEN_` and uppercased. For `https://gitlab.company.com/vibespecs` the default is `VIBEVM_REGISTRY_TOKEN_GITLAB_COMPANY_COM`. Operators who want stable env-var names across host migrations set `token_env` explicitly; everyone else gets a working default.
+
+**Token never lands on disk via vibevm.** The token comes from the operator's environment. Vibe reads it, builds the credentialed URL in memory, hands it to the spawned git process, and discards. The lockfile's `source_url` field always carries the **canonical** URL (no embedded credentials) — symmetric with the `[[mirror]]` invariant in §2.3. Token discipline (PROP-000 §20) applies: the value is treated as surface-secret; it does not appear in any vibevm-emitted output. Modern git (≥2.31) auto-redacts passwords from its own stderr, so even on errors the token is not echoed.
+
+**TTY-aware silencing.** The `none` and `token-env` regimes silence git's interactive credential mechanisms (terminal prompt + GCM + system credential.helper) **only when the run is non-interactive**: stdin is not a TTY, OR the global `--unattended` flag is set, OR `VIBE_UNATTENDED` resolves truthy. On an interactive TTY without `--unattended` we leave them alone — an operator might genuinely benefit from a one-off interactive credential entry, and silencing is a worse default. The four-cell matrix:
+
+| Mode | Interactive (TTY, no `--unattended`) | Non-interactive (no TTY OR `--unattended`) |
+| --- | --- | --- |
+| `auth = none` | Helpers untouched; git may prompt | Helpers silenced; 401 → walk |
+| `auth = token-env` | Token injected; helpers silenced regardless (token wins) | Token injected; helpers silenced |
+| `auth = credential-helper` | Helpers untouched; GCM / keychain may pop up | Helpers silenced; behaves like `none` |
+| `auth = ssh` | URL must be ssh-form; behaviour delegated to ssh-agent / system | Same |
+
+This is what makes the `none` default safe in CI / opencode harnesses (no GUI popups for a public-registry 401) without breaking interactive `vibe install` runs where a manually-typed credential is acceptable.
+
+**Migration.** Pre-this-decision `vibe.toml` files with no `auth` field on `[[registry]]` parse as `auth = "none"` (default), preserving every current behaviour for public registries. Operators who want token-based access add the field explicitly; nothing breaks for anyone else.
+
 ### 2.3 Mirror layer: transparent, integrity-verified {#mirror}
 
 **Decision.** `[[mirror]]` entries are parallel alternative URLs for a specific registry (or `*` for any). During fetch:
@@ -87,7 +138,9 @@ Phase A: `[[mirror]]` parser and lockfile-canonical-URL invariant ship. Runtime 
 
 `[[registry]]` and `[[mirror]]` mean different things, and the resolver treats their failures differently. Confusing them produces either silent mis-config (treating typos in a primary URL as transient) or broken offline workflows (failing fast on a mirror that is supposed to absorb outages).
 
-- A `[[registry]]` is a **distinct package source** — its own naming convention, its own publishing identity, its own trust scope. The priority-ordered registry walk falls through on **`UnknownPackage` only**: a registry that confidently answers "I don't have this package" is free to defer to the next one. Any other primary failure — connect-failure (DNS / TCP), auth-failure (bad token, missing key), server error, malformed manifest — halts the install with an actionable error. This is the same policy Cargo and npm apply to a registry that errors out: the operator wants to know about a typo or an outage, not paper over it with a different registry that may carry a different version.
+- A `[[registry]]` is a **distinct package source** — its own naming convention, its own publishing identity, its own trust scope. The priority-ordered registry walk falls through on **`UnknownPackage` only**: a registry that confidently answers "I don't have this package" is free to defer to the next one. Any other primary failure — connect-failure (DNS / TCP), auth-failure on a registry that explicitly requires authentication, server error, malformed manifest — halts the install with an actionable error. This is the same policy Cargo and npm apply to a registry that errors out: the operator wants to know about a typo or an outage, not paper over it with a different registry that may carry a different version.
+
+  **`auth`-aware 401 classification (§2.2.1).** On `auth = "none"` a 401 / 403 response is an `UnknownPackage` signal, not an auth-failure: the registry is declared public, anything that responds with "you cannot read this without credentials" is — from this consumer's standpoint — equivalent to "this package does not have a public answer here." The walk falls through to the next registry, exactly like a 404. This is what unblocks the common case where one host (GitVerse) returns 401 for a missing repo while another (GitHub) returns 404 — the resolver treats both uniformly. On `auth = "token-env"` or `"credential-helper"` a 401 is a real `AuthFailed` and halts: the registry was declared as authenticated, the credentials presented were rejected, this is information the operator must see.
 - A `[[mirror]]` is an **availability copy of the same source** — same naming, same identity, same `content_hash`. The mirror walk falls through on **any availability failure** (`NetworkUnreachable`, `AuthFailed` on the mirror, server error, `content_hash` mismatch). `RepoNotFound` from a mirror bubbles up to the registry-walk layer (same policy as if the canonical primary had said `UnknownPackage`), because absence-of-package is a registry-level fact, not a mirror-level one.
 
 **Why split.** A single uniform "fall through on any failure" rule maximises resilience but loses the ability to detect a misconfigured primary. A single uniform "fail-fast on any failure" rule preserves diagnostics but breaks the offline / vendor-mirror story Phase B v0 explicitly enables (`vibe registry vendor` → wire as `file://` `[[mirror]]` → install while the network primary is down). Splitting failure semantics by entry kind keeps both properties intact.
