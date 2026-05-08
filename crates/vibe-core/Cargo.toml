@@ -15,6 +15,7 @@ anyhow.workspace = true
 thiserror.workspace = true
 serde.workspace = true
 toml.workspace = true
+toml_edit.workspace = true
 semver.workspace = true
 indexmap.workspace = true
 sha2.workspace = true
