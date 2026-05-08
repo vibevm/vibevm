@@ -425,6 +425,20 @@ pub struct InstallArgs {
     /// supplied on the CLI, including explicit caret / tilde / range.
     #[arg(long)]
     pub exact: bool,
+
+    /// Strict authentication gate — when set, a 401 / 403 against an
+    /// `auth = "none"` (public) registry halts the install instead of
+    /// walking to the next registry. Default behaviour (without this
+    /// flag) follows PROP-002 §2.3.1: public-401 means "no public
+    /// answer here", walk past, useful when the host returns 401 for
+    /// missing public repos (GitVerse). Strict mode is for CI / cron
+    /// where an authenticated registry is supposed to answer; if its
+    /// 401 leaks through to a public fallback, you want to know
+    /// rather than silently install a different package. Per-registry
+    /// `auth = "token-env"` / `"credential-helper"` halt on 401
+    /// regardless of this flag.
+    #[arg(long)]
+    pub auth_required: bool,
 }
 
 #[derive(Debug, clap::Args)]

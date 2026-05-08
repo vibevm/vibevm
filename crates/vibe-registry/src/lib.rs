@@ -93,6 +93,24 @@ pub enum RegistryError {
         env_var: String,
     },
 
+    /// Aggregated walk-failure: every configured registry was tried,
+    /// none had a satisfying answer, and at least one walked-past
+    /// 401 / 403 (auth=none) needs surfacing so the operator sees
+    /// per-registry status. `summary` is the pre-formatted
+    /// multi-line block that `Display` renders verbatim. Returned
+    /// only when at least one registry was walked; the
+    /// no-registries-at-all path still returns the simpler
+    /// `UnknownPackage` variant for back-compat with downstream
+    /// consumers that match on it.
+    #[error(
+        "package `{kind}:{name}` not found in any configured registry.\nTried:\n{summary}"
+    )]
+    PackageNotFoundEverywhere {
+        kind: PackageKind,
+        name: String,
+        summary: String,
+    },
+
     #[error("I/O error on `{path}`")]
     Io {
         path: PathBuf,

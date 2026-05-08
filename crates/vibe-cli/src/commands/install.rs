@@ -751,7 +751,8 @@ pub(crate) fn build_install_resolver(
         &manifest.mirrors,
         &manifest.overrides,
     )
-    .context("opening multi-registry resolver")?;
+    .context("opening multi-registry resolver")?
+    .with_strict_auth(args.auth_required);
     Ok(InstallResolver::Multi(mrr))
 }
 

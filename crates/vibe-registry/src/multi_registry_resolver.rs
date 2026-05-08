@@ -35,6 +35,7 @@
 //! field on the wrapper.
 
 use std::collections::HashMap;
+use std::fmt::Write as _;
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
 
@@ -81,6 +82,95 @@ pub struct MultiRegistryResolver {
     overrides: HashMap<String, OverrideSection>,
     backend: Arc<dyn GitBackend>,
     cache_root: PathBuf,
+    /// Strict-auth posture — when `true`, a 401 / 403 against a
+    /// public (`auth = "none"`) registry is treated as a halt
+    /// instead of a walk-to-next, even though the §2.3.1 default
+    /// for that combination is fall-through. Useful in CI / cron
+    /// where the operator wants to gate "private install must
+    /// come from the private registry; if the private registry is
+    /// down or its 401 leaks through to a fallback, fail loudly
+    /// rather than silently picking up a public substitute."
+    /// Toggled by `MultiRegistryResolver::with_strict_auth`.
+    strict_auth: bool,
+}
+
+/// One row in the aggregated "tried these registries" report
+/// surfaced via `RegistryError::PackageNotFoundEverywhere`. Captured
+/// per-registry during the walk in [`MultiRegistryResolver::resolve`]
+/// and pre-formatted into the error's `summary` string before
+/// raising. Public so test fixtures can assert on the shape.
+#[derive(Debug, Clone)]
+struct RegistryWalkAttempt {
+    name: String,
+    url: String,
+    auth: vibe_core::manifest::AuthKind,
+    status: WalkAttemptStatus,
+}
+
+#[derive(Debug, Clone, Copy)]
+enum WalkAttemptStatus {
+    /// Registry's `resolve` returned `UnknownPackage` — the
+    /// registry was reachable, manifest parsed, just no version
+    /// matching the pkgref.
+    NotFound,
+    /// Registry returned 401 / 403 (`AuthFailed`) but was declared
+    /// `auth = "none"` and `strict_auth` was off, so the resolver
+    /// reclassified the failure as "no public answer here" and
+    /// walked past. The line below tells the operator the host
+    /// would need credentials if they want to access this
+    /// registry as authenticated.
+    Public401,
+}
+
+impl WalkAttemptStatus {
+    fn as_label(&self) -> &'static str {
+        match self {
+            WalkAttemptStatus::NotFound => "not found",
+            WalkAttemptStatus::Public401 => "access denied (401, walked past — auth=none)",
+        }
+    }
+}
+
+fn format_walk_attempts(attempts: &[RegistryWalkAttempt]) -> String {
+    // Compute the column width for the registry-name column so
+    // the rendered table stays aligned regardless of label
+    // length. URLs are too varied to align — they wrap to the
+    // right of the arrow.
+    let name_width = attempts
+        .iter()
+        .map(|a| a.name.len())
+        .max()
+        .unwrap_or(0);
+    let url_width = attempts
+        .iter()
+        .map(|a| a.url.len())
+        .max()
+        .unwrap_or(0);
+    let mut out = String::new();
+    for a in attempts {
+        // Indent each line with two spaces so the report nests
+        // visually under the parent error's "Tried:" label.
+        let _ = writeln!(
+            out,
+            "  - {:<name_width$}  ({:<url_width$})  → {} (auth={})",
+            a.name,
+            a.url,
+            a.status.as_label(),
+            a.auth.as_str(),
+            name_width = name_width,
+            url_width = url_width,
+        );
+    }
+    // Hint at the bottom — the most common operator next step
+    // when nothing was found anywhere.
+    if attempts.iter().any(|a| matches!(a.status, WalkAttemptStatus::Public401)) {
+        out.push_str(
+            "\nHint: at least one registry returned 401 / 403 and was walked past as `auth=none`.\n\
+             If that registry is actually private, set `auth = \"token-env\"` and provide the\n\
+             token via `VIBEVM_REGISTRY_TOKEN_<HOST>`; see docs/registry-auth.md.",
+        );
+    }
+    out
 }
 
 impl MultiRegistryResolver {
@@ -103,7 +193,21 @@ impl MultiRegistryResolver {
             overrides,
             backend,
             cache_root,
+            strict_auth: false,
         }
+    }
+
+    /// Toggle strict-auth posture (see field docs / PROP-002 §2.3.1
+    /// strict-auth corollary). Builder-style consume-and-return.
+    pub fn with_strict_auth(mut self, strict: bool) -> Self {
+        self.strict_auth = strict;
+        self
+    }
+
+    /// Whether the resolver is in strict-auth mode. Tests + the
+    /// CLI surface read this to confirm the toggle flowed through.
+    pub fn strict_auth(&self) -> bool {
+        self.strict_auth
     }
 
     /// Build a resolver from `vibe.toml`-shape sections plus a backend
@@ -244,7 +348,7 @@ impl MultiRegistryResolver {
         //   which would mask configuration errors.)
         // - any other error → halt as before (network, malformed
         //   manifest, server error, ...).
-        let mut last_unknown: Option<RegistryError> = None;
+        let mut attempts: Vec<RegistryWalkAttempt> = Vec::new();
         for reg in &self.registries {
             match reg.resolve(pkgref) {
                 Ok(resolved) => {
@@ -259,9 +363,11 @@ impl MultiRegistryResolver {
                     });
                 }
                 Err(RegistryError::UnknownPackage { .. }) => {
-                    last_unknown = Some(RegistryError::UnknownPackage {
-                        kind: pkgref.kind,
-                        name: pkgref.name.clone(),
+                    attempts.push(RegistryWalkAttempt {
+                        name: reg.name().to_string(),
+                        url: reg.org_url().to_string(),
+                        auth: reg.auth_kind(),
+                        status: WalkAttemptStatus::NotFound,
                     });
                     continue;
                 }
@@ -269,16 +375,18 @@ impl MultiRegistryResolver {
                     if matches!(
                         reg.auth_kind(),
                         vibe_core::manifest::AuthKind::None
-                    ) =>
+                    ) && !self.strict_auth =>
                 {
                     tracing::debug!(
                         target: "vibe_registry::resolve",
                         registry = %reg.name(),
                         "auth_failed on auth=none registry treated as unknown-package; walking"
                     );
-                    last_unknown = Some(RegistryError::UnknownPackage {
-                        kind: pkgref.kind,
-                        name: pkgref.name.clone(),
+                    attempts.push(RegistryWalkAttempt {
+                        name: reg.name().to_string(),
+                        url: reg.org_url().to_string(),
+                        auth: reg.auth_kind(),
+                        status: WalkAttemptStatus::Public401,
                     });
                     continue;
                 }
@@ -286,10 +394,25 @@ impl MultiRegistryResolver {
             }
         }
 
-        Err(last_unknown.unwrap_or(RegistryError::UnknownPackage {
+        // No registry had a satisfying answer. Two shapes:
+        //
+        // - If we walked at least one registry, surface the
+        //   aggregate per-registry status so the operator sees
+        //   exactly what happened where (PackageNotFoundEverywhere).
+        // - Otherwise (no `[[registry]]` configured) fall back to
+        //   the simpler UnknownPackage for back-compat with
+        //   downstream consumers that match on it specifically.
+        if attempts.is_empty() {
+            return Err(RegistryError::UnknownPackage {
+                kind: pkgref.kind,
+                name: pkgref.name.clone(),
+            });
+        }
+        Err(RegistryError::PackageNotFoundEverywhere {
             kind: pkgref.kind,
             name: pkgref.name.clone(),
-        }))
+            summary: format_walk_attempts(&attempts),
+        })
     }
 
     fn resolve_override(
@@ -843,10 +966,13 @@ mod tests {
     }
 
     #[test]
-    fn resolve_unknown_package_when_no_registry_has_it() {
+    fn resolve_aggregates_walk_attempts_when_no_registry_has_it() {
         let cache = tempdir().unwrap();
         let fake = Arc::new(FakeBackend::default());
-        // No seed for any URL.
+        // No seed for any URL — both registries return UnknownPackage
+        // for `flow:ghost`. The resolver collects both into the
+        // aggregate `PackageNotFoundEverywhere` report so the
+        // operator sees per-registry status.
 
         let r = build_resolver(
             cache.path(),
@@ -861,7 +987,27 @@ mod tests {
 
         let p = PackageRef::parse("flow:ghost").unwrap();
         let err = r.resolve(&p).unwrap_err();
-        assert!(matches!(err, RegistryError::UnknownPackage { .. }));
+        match err {
+            RegistryError::PackageNotFoundEverywhere {
+                kind,
+                name,
+                summary,
+            } => {
+                assert_eq!(kind, vibe_core::PackageKind::Flow);
+                assert_eq!(name, "ghost");
+                assert!(
+                    summary.contains("a") && summary.contains("b"),
+                    "summary must list both walked registries: {summary}"
+                );
+                assert!(
+                    summary.contains("not found"),
+                    "expected `not found` status label: {summary}"
+                );
+            }
+            other => panic!(
+                "expected PackageNotFoundEverywhere with attempts, got: {other:?}"
+            ),
+        }
     }
 
     #[test]
@@ -872,6 +1018,52 @@ mod tests {
         let p = PackageRef::parse("flow:wal").unwrap();
         let err = r.resolve(&p).unwrap_err();
         assert!(matches!(err, RegistryError::UnknownPackage { .. }));
+    }
+
+    /// PROP-002 §2.3.1 strict-auth corollary: when
+    /// `with_strict_auth(true)` is set, a 401 on an `auth = "none"`
+    /// public registry halts instead of walking past. Useful for
+    /// CI / cron where the operator wants to gate "must come from
+    /// the private registry; if its 401 leaks to a public fallback,
+    /// fail loudly". Default behaviour (without strict_auth) is
+    /// covered by `resolve_walks_past_auth_failed_when_registry_is_public`
+    /// below.
+    #[test]
+    fn resolve_strict_auth_halts_on_public_401_instead_of_walking() {
+        let cache = tempdir().unwrap();
+        let fake = Arc::new(FakeBackend::default());
+        // Primary public registry returns AuthFailed; secondary has
+        // the package. With strict_auth on, the resolver must NOT
+        // walk to the secondary.
+        fake.seed_auth_failure("git@host:org-a/flow-wal.git");
+        fake.seed_tags("git@host:org-b/flow-wal.git", vec!["v0.5.0".into()]);
+
+        let r = build_resolver(
+            cache.path(),
+            vec![
+                registry_section("public-a", "git@host:org-a"),
+                registry_section("public-b", "git@host:org-b"),
+            ],
+            vec![],
+            vec![],
+            fake,
+        )
+        .with_strict_auth(true);
+        assert!(r.strict_auth());
+
+        let p = PackageRef::parse("flow:wal").unwrap();
+        let err = r.resolve(&p).unwrap_err();
+        match err {
+            RegistryError::Git(GitError::AuthFailed { url }) => {
+                assert!(
+                    url.contains("org-a"),
+                    "halt error must surface the failing registry's URL: {url}"
+                );
+            }
+            other => panic!(
+                "strict-auth: expected halt with AuthFailed on first registry, got: {other:?}"
+            ),
+        }
     }
 
     /// PROP-002 §2.3.1: 401 / 403 on an `auth = "none"` registry is
