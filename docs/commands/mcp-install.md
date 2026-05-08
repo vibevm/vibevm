@@ -60,7 +60,7 @@ Without flags, drops into a 3-question wizard (TTY required): pick scope, pick w
 | `--scope project|user|both` | See [Two scopes](#two-scopes--project-vs-user). | (interactive / auto-resolved under `--auto`) |
 | `--what mcp|skill|both` | See [Two install kinds](#two-install-kinds--mcp-and-skillmd). | `both` |
 | `--dry-run` | Print what would be written without touching disk. | off |
-| `--yes` | Skip the apply confirm prompt. | off |
+| `--yes` | Skip the apply confirm prompt on a TTY. Aliased to `--assume-yes` for symmetry with `vibe install` / `uninstall` / `update`. The global `--unattended` flag (or `VIBE_UNATTENDED` env-var) has the same effect. In non-TTY runs (CI / opencode harness), no prompt is shown regardless — pre-this-version behaviour preserved for scripts that never passed `--yes`. | off |
 | `--force` | Provision the agent's config even when no presence marker is detected. | off |
 | `--json` (global) | Emit a structured envelope. | off |
 | `--quiet` (global) | One-line summary. | off |

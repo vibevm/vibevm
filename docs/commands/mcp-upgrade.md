@@ -27,7 +27,7 @@ vibe mcp upgrade [--path <dir>]
 | `--config-only` | Refresh only MCP-config files, skip SKILL.md. Conflicts with `--skill-only`. | off |
 | `--skill-only` | Refresh only SKILL.md files, skip MCP-config. Conflicts with `--config-only`. | off |
 | `--dry-run` | Print refresh plan without writing. | off |
-| `--yes` | Skip apply confirm prompt. | off |
+| `--yes` | Skip the apply confirm prompt on a TTY. Aliased to `--assume-yes`. The global `--unattended` flag (or `VIBE_UNATTENDED`) has the same effect. In non-TTY runs no prompt is shown regardless. | off |
 | `--json` (global) | Structured envelope. | off |
 | `--quiet` (global) | One-line summary. | off |
 

@@ -25,7 +25,7 @@ vibe mcp uninstall [--path <dir>]
 | `--config-only` | Drop only MCP-config blocks (keep SKILL.md). Conflicts with `--skill-only`. | off |
 | `--skill-only` | Delete only SKILL.md (keep MCP-config block). Conflicts with `--config-only`. | off |
 | `--dry-run` | Print removal plan without writing. | off |
-| `--yes` | Skip apply confirm prompt. | off |
+| `--yes` | Skip the apply confirm prompt on a TTY. Aliased to `--assume-yes`. The global `--unattended` flag (or `VIBE_UNATTENDED`) has the same effect. In non-TTY runs no prompt is shown regardless. | off |
 | `--json` (global) | Structured envelope. | off |
 | `--quiet` (global) | One-line summary. | off |
 

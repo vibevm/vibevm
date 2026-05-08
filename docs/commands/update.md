@@ -22,6 +22,8 @@ vibe update --all                   [--path <dir>] [--assume-yes]
 | `--all` | Update every package in `vibe.lock` (roots + transitives). Mutually exclusive with named pkgrefs. | off |
 | `--path <dir>` | Project directory containing `vibe.toml` and `vibe.lock`. | `.` |
 | `--assume-yes` | Skip the interactive confirmation prompt. Aliased to `--yes`. **Required** when stdin is not a TTY (CI / scripts). The global `--unattended` flag (or `VIBE_UNATTENDED` env-var) has the same effect. | off |
+| `--exact` | After re-resolving each root, tighten its `vibe.toml` `[requires].packages` constraint to `=<resolved>` (the new version). Equivalent of cargo `cargo update --precise X.Y.Z` plus a manifest pin in one step. Without this flag, `vibe update` only refreshes the lockfile pin and leaves the manifest constraint (`^` / `~` / range) untouched — cargo's default. | off |
+| `--auth-required` | Strict authentication gate — same shape as `vibe install --auth-required`. A 401 / 403 against an `auth = "none"` (public) registry halts the update instead of walking past. Useful in CI / cron where a fallback to a public substitute would mask a private-registry outage. | off |
 | `--json` | Two structured documents: the plan (command `"update:plan"`) before apply, the report (command `"update"`) after. With `--json` the confirmation is auto-approved. | off |
 | `--quiet` | One-line summary after apply. Conflicts with `--json`. | off |
 
