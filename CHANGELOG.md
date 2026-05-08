@@ -8,7 +8,43 @@ Format roughly follows [Keep a Changelog](https://keepachangelog.com/), grouped 
 
 ## [Unreleased]
 
-Phase A of M1.1-revision shipped on `main` between 2026-04-23 and 2026-04-25; the only remaining Phase A item is the live migration of the three demo flows into the `vibespecs/` org. After that, M1.2 (`vibe update`) starts.
+The 2026-05-08 push bundled four milestones in one day. They land here under one block because the surface-consistency closer (M1.14.3) only makes sense in the context of M1.14 having shipped first; together they constitute the v0.1.0-ready package-management story.
+
+### M1.12 — `vibe.toml` `[requires]` + cargo-shape install (2026-05-08)
+
+- `ProjectManifest` gains `[requires].packages` / `.capabilities` re-using the `Requires` type from `vibe-package.toml`.
+- `vibe install <pkgref>` now writes the user-supplied pkgref to `vibe.toml` after a successful apply — the cargo / npm pattern. `vibe install` with no arguments installs everything in `[requires]`.
+- `vibe uninstall <pkgref>` symmetrically drops from `[requires]`.
+- First-run migration: pre-`[requires]` projects get the manifest seeded from `vibe.lock` `meta.root_dependencies` on the next install.
+
+### M1.13 — Cargo-shape version constraints (2026-05-08)
+
+- `VersionSpec::parse` collapses to a single `semver::VersionReq::parse` call: bare semver `0.3.0` is shorthand for `^0.3.0` (caret), matching Cargo / npm / Poetry. Use `=0.3.0` for strict equal.
+- `vibe install <pkgref>` (no version) records caret-of-resolved in the manifest. Explicit constraints are preserved verbatim.
+- `--exact` flag (npm `--save-exact` shape) overrides both with `=<resolved>`.
+
+### M1.14 — Authenticated registries (2026-05-08)
+
+The big one — turns vibevm from "public registries only" into "production-ready for private repos."
+
+- **Per-registry `auth` axis** (PROP-002 §2.2.1): `none` (default) / `token-env` / `credential-helper` / `ssh`. CLI: `vibe registry add --auth --token-env <NAME>`.
+- **Token-env runtime**: `VIBEVM_REGISTRY_TOKEN_<HOST>` (or explicit `token_env`) loaded once at registry-open, injected as `https://x-access-token:<TOKEN>@host/...` in per-package URLs only at git-invocation time. Token never persists on disk — `set_remote_url(.., "origin", plain_url)` scrubs the credential out of `.git/config` immediately after `bootstrap`. `MissingToken` precheck before spawning git.
+- **Auth-aware 401 classifier** (PROP-002 §2.3.1): public-registry 401 walks past as "no public answer here"; authenticated-registry 401 halts with actionable error. Closes the GitVerse-returns-401-for-missing-public-repo regression that surfaced via opencode + glm-flash.
+- **TTY-aware credential silencing** in `apply_common_env` — non-TTY / `--unattended` runs silence GCM, `credential.helper`, `core.askPass` so a 401 cannot become a blocking GUI window.
+- **Stderr classifier** extended for `could not read Username/Password`, `User cancelled dialog`, `HTTP 401/403`, `401 Unauthorized`, `403 Forbidden` (M1.14.1).
+- **`--auth-required` flag** for strict CI gating: public-401 halts instead of walking, useful when fallback to a public substitute would be wrong (M1.14.2).
+- **Aggregated per-registry error report** — `PackageNotFoundEverywhere { kind, name, summary }` lists each walked registry with URL, auth regime, and outcome. Inline multi-line `Display` flows through the standard error chain (M1.14.2).
+- **`toml_edit`-based comment-preserving writes** — operator's hand-edited comments in `vibe.toml` survive every `vibe install` / `uninstall` / `registry add` mutation. Three layers preserved: header, per-table prefix, document trailing (M1.14.2).
+- **Surface consistency closing slice** (M1.14.3): MCP `--yes` flag wired to actual TTY confirm prompt (was vestigial); `--assume-yes` alias on every MCP confirm-skip flag for symmetry with package commands; `--exact` extends from `install` to `update` (cargo `cargo update --precise X.Y.Z` shape — re-resolve and tighten manifest in one step); `--auth-required` extends from `install` to `update` + `outdated`.
+
+### Other UX
+
+- **Global `--unattended` flag + `VIBE_UNATTENDED` env-var**: implies `--assume-yes` / `--yes`, blocks wizards from opening, stamps `unattended: true` on JSON envelopes. Replaces the awkward `--invoked-by user-provisioning` workaround.
+- **`docs/registry-auth.md`**: new operator reference covering all four auth regimes, env-var conventions, walk-vs-halt matrix, troubleshooting.
+- **`docs/version-syntax.md`**: new operator reference for semver constraints (caret / tilde / equal / range), the two-file model (manifest = declaration, lockfile = materialisation), Cargo / npm / Poetry / Bundler comparison.
+- **`vibe mcp install --scope both` works without `vibe.toml`**: provisioning scripts on a fresh user account succeed (project-leg silently skipped, user-leg writes as normal).
+
+Phase A of M1.1-revision shipped earlier on `main` between 2026-04-23 and 2026-04-25; M1.7 (vibe-mcp server) shipped 2026-05-05; M1.10 (`vibe outdated`) shipped 2026-05-04. The next major milestone is M1.5 (LLM-based generation) — non-routine, needs separate sign-off.
 
 ---
 

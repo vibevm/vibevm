@@ -460,6 +460,29 @@ hash/source/ref lines in the lockfile).
 
 **Estimated effort.** One slice. Tests: 6 unit on `finalize_pkgref_for_manifest` + 3 e2e (caret default / explicit preservation / `--exact`) + 3 unit on the new bare-semver-as-caret + tilde + eq parsing in `package_ref` and `capability_ref`.
 
+### M1.14 — Authenticated registries (production-ready private repos) ✅ SHIPPED (2026-05-08)
+
+**Thesis.** A real-world walk against opencode + glm-flash on a fresh machine surfaced a UX hole: `vibe install` of a non-existent package produced a Git Credential Manager Core popup on Windows when GitVerse returned 401 for the missing public repo. Two underlying gaps: (1) no declarative model for "is this registry public or authenticated"; (2) no runtime policy on what 401 means in each case. M1.14 closes both end-to-end and brings vibevm in line with cargo / npm / Poetry on the auth axis. Twelve sub-slices total, landed across the day:
+
+**Scope (all closed across `5f296d9..a915b12`).**
+
+- ✅ Spec contract — PROP-002 §2.2.1 (per-registry auth axis: `none` / `token-env` / `credential-helper` / `ssh`); PROP-002 §2.3.1 (auth-aware 401 classifier — public-401 walks past, authenticated-401 halts).
+- ✅ Schema — `AuthKind` enum, `RegistrySection.auth/token_env`, `resolve_token_env_name()` host-derivation helper.
+- ✅ CLI — `vibe registry add --auth --token-env`; flags table updated.
+- ✅ TTY-aware credential-helper silencing — non-TTY / `--unattended` runs silence GCM, `credential.helper`, `core.askPass` so a 401 cannot become a blocking GUI window.
+- ✅ Stderr classifier — `could not read Username/Password`, `User cancelled dialog`, `HTTP 401/403`, `401 Unauthorized`, `403 Forbidden` all classify as `AuthFailed`.
+- ✅ Token injection — `inject_token(plain_url, token)` helper applies `https://x-access-token:<TOKEN>@host` shape to https URLs only; `GitPackageRegistry::open_with_auth` resolves env-var at construction time; `effective_token_value` getter for closure capture.
+- ✅ Bootstrap-with-scrub — token never persists in `.git/config`. After `backend.bootstrap(credentialed_url, ...)` succeeds, `backend.set_remote_url(clone_dir, "origin", plain_url)` rewrites origin to credential-free form. New `GitBackend::set_remote_url` trait method with default impl.
+- ✅ MissingToken precheck — `auth = "token-env"` without env-var fails before spawning git, with hint naming the exact env-var to set.
+- ✅ Per-auth walk-vs-halt in resolver — `auth = "none"` + 401 → walk; `token-env` / `credential-helper` + 401 → halt; `MissingToken` always halts.
+- ✅ `--auth-required` strict-auth gate — flips public-401 from walk-past to halt for CI / cron use cases. Reaches `install` (M1.14.2) and `update` / `outdated` (M1.14.3 — surface consistency).
+- ✅ Aggregated per-registry error report — `RegistryError::PackageNotFoundEverywhere { kind, name, summary }` carries pre-formatted multi-line per-registry status; surfaces inline through the standard `error: ...` chain.
+- ✅ `toml_edit`-based comment-preserving writes — operator's hand-edited comments in `vibe.toml` survive `vibe install` / `uninstall` / `registry add` writes.
+- ✅ Surface consistency — MCP `--yes` flag wired to actual TTY confirm prompt (was vestigial); `--assume-yes` alias on every MCP confirm-skip flag; `--exact` extends from `install` to `update`; `--auth-required` extends from `install` to `update` + `outdated`.
+- ✅ User-facing reference — `docs/registry-auth.md` (250+ lines) with TL;DR table, per-regime walkthroughs, token-discipline checks, troubleshooting; `docs/version-syntax.md` for semver constraints.
+
+**Estimated effort.** Took the full 2026-05-08 push (twelve commits across the day from `5f296d9` to `a915b12`). Production-ready for v0; no known auth-related gaps for private read-only registries.
+
 ---
 
 ## M1.5 — Generation
