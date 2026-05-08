@@ -689,6 +689,8 @@ mod tests {
             url: url.to_string(),
             r#ref: "main".to_string(),
             naming: NamingConvention::KindName,
+            auth: vibe_core::manifest::AuthKind::None,
+            token_env: None,
         }
     }
 

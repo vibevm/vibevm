@@ -65,8 +65,8 @@ impl ShellGit {
     pub fn preflight(&self) -> Result<(), GitError> {
         let ok = *self.preflight_cache.get_or_init(|| {
             let mut cmd = Command::new(&self.binary);
-            cmd.arg("--version");
             apply_common_env(&mut cmd);
+            cmd.arg("--version");
             cmd.output().map(|o| o.status.success()).unwrap_or(false)
         });
         if ok { Ok(()) } else { Err(GitError::NotInstalled) }
@@ -74,11 +74,14 @@ impl ShellGit {
 
     fn run(&self, args: &[&str], cwd: Option<&Path>) -> Result<Output, GitError> {
         let mut cmd = Command::new(&self.binary);
+        // apply_common_env may push `-c <key>=<value>` flags that must
+        // come BEFORE the subcommand — push the env / global-flag
+        // layer first, then the actual git subcommand args.
+        apply_common_env(&mut cmd);
         cmd.args(args);
         if let Some(d) = cwd {
             cmd.current_dir(d);
         }
-        apply_common_env(&mut cmd);
 
         tracing::debug!(target: "vibe_registry::git", argv = ?render_argv(&self.binary, args), cwd = ?cwd, "running git");
 
@@ -99,11 +102,11 @@ impl ShellGit {
     /// unsupported").
     fn run_raw(&self, args: &[&str], cwd: Option<&Path>) -> Result<Output, GitError> {
         let mut cmd = Command::new(&self.binary);
+        apply_common_env(&mut cmd);
         cmd.args(args);
         if let Some(d) = cwd {
             cmd.current_dir(d);
         }
-        apply_common_env(&mut cmd);
 
         tracing::debug!(target: "vibe_registry::git", argv = ?render_argv(&self.binary, args), cwd = ?cwd, "running git (raw)");
 
@@ -345,22 +348,94 @@ fn parse_octal(buf: &[u8]) -> Option<usize> {
     usize::from_str_radix(trimmed, 8).ok()
 }
 
+/// Apply environment + global git flags that every spawned git
+/// invocation needs. Two layers:
+///
+/// 1. **Always.** `LC_ALL=C` / `LANG=C` for stable error parsing;
+///    `GIT_TERMINAL_PROMPT=0` so terminal-style prompts don't block
+///    a non-TTY parent; on Windows `CREATE_NO_WINDOW` so a hostless
+///    parent doesn't flash a console.
+/// 2. **TTY-aware.** When running unattended (no stdin TTY OR
+///    `VIBE_UNATTENDED` env-var truthy), suppress every channel git
+///    might use for *interactive* credential entry: GCM popups
+///    (`GCM_INTERACTIVE=Never`), system credential helpers
+///    (`-c credential.helper=`), `core.askPass` (`-c core.askPass=`),
+///    and `GIT_ASKPASS` (set to empty). This is the policy from
+///    PROP-002 §2.2.1: in a scripted run a 401 must not become a
+///    blocking GUI prompt; the resolver instead classifies it as an
+///    `UnknownPackage` (for `auth = "none"` registries) or as an
+///    `AuthFailed` halt (for `auth = "token-env"` /
+///    `"credential-helper"` registries).
+///
+/// **Layering note.** This function MUST be called BEFORE the
+/// caller pushes the actual git subcommand args, because the
+/// silencing layer prepends `-c <key>=<value>` flags that have to
+/// come before the subcommand. The `[run, run_raw, preflight]`
+/// methods on this module already follow that order.
+///
+/// Override: `VIBEVM_GIT_SILENCE_HELPERS=1` forces silencing on
+/// regardless of TTY; `VIBEVM_GIT_SILENCE_HELPERS=0` forces it off.
+/// Neither value is the typical case — the TTY-derived default
+/// covers most operators.
 fn apply_common_env(cmd: &mut Command) {
     cmd.env("LC_ALL", "C").env("LANG", "C");
-
-    // Never ask the user for interactive auth — the registry is either
-    // public (no auth needed) or uses a configured ssh/credential
-    // helper. A prompt would hang CI and non-TTY invocations.
     cmd.env("GIT_TERMINAL_PROMPT", "0");
+
+    if should_silence_credential_helpers() {
+        cmd.env("GCM_INTERACTIVE", "Never");
+        // Reset both ends of the system credential machinery for the
+        // duration of this invocation. `credential.helper=` empty
+        // disables every helper configured in `~/.gitconfig` /
+        // `/etc/gitconfig`; `core.askPass=` empty stops git from
+        // exec'ing a binary asker. `GIT_ASKPASS` is deliberately
+        // NOT set here — on some platforms an empty string for
+        // that variable can confuse git's startup probe of the
+        // path; clearing the two git-config keys plus the
+        // already-set `GIT_TERMINAL_PROMPT=0` is sufficient to
+        // close every interactive avenue.
+        cmd.arg("-c").arg("credential.helper=");
+        cmd.arg("-c").arg("core.askPass=");
+    }
 
     #[cfg(windows)]
     {
         use std::os::windows::process::CommandExt;
-        // CREATE_NO_WINDOW — if `vibe` is ever spawned from a hostless
-        // parent (GUI, service, IDE plugin), child git must not flash
-        // a console window.
         cmd.creation_flags(0x0800_0000);
     }
+}
+
+/// Decide whether to silence interactive credential mechanisms.
+/// Resolution order:
+///
+/// 1. `VIBEVM_GIT_SILENCE_HELPERS` env-var — explicit operator
+///    override (truthy / falsy vocabulary same as `VIBE_UNATTENDED`:
+///    `1`, `true`, `yes`, `on` for true; everything else for false).
+/// 2. `VIBE_UNATTENDED` env-var truthy — global unattended posture
+///    (PROP-002 §2.2.1 + `vibe --unattended` flag).
+/// 3. stdin not a TTY — we are running under a non-interactive
+///    parent (CI, service, opencode harness).
+///
+/// Otherwise (interactive TTY without `--unattended`), leave git
+/// alone — an operator running `vibe install` at a real terminal
+/// might genuinely want to type a password.
+fn should_silence_credential_helpers() -> bool {
+    if let Ok(v) = std::env::var("VIBEVM_GIT_SILENCE_HELPERS") {
+        return is_truthy(v.trim());
+    }
+    if let Ok(v) = std::env::var("VIBE_UNATTENDED")
+        && is_truthy(v.trim())
+    {
+        return true;
+    }
+    use std::io::IsTerminal;
+    !std::io::stdin().is_terminal()
+}
+
+fn is_truthy(s: &str) -> bool {
+    matches!(
+        s.to_ascii_lowercase().as_str(),
+        "1" | "true" | "yes" | "on"
+    )
 }
 
 fn classify_failure(args: &[&str], output: &Output) -> GitError {
@@ -492,9 +567,9 @@ mod tests {
 
     fn run_or_panic(cwd: &Path, args: &[&str]) {
         let mut cmd = Command::new("git");
+        apply_common_env(&mut cmd);
         cmd.args(args);
         cmd.current_dir(cwd);
-        apply_common_env(&mut cmd);
         let out = cmd.output().expect("failed to spawn git for test setup");
         if !out.status.success() {
             panic!(
