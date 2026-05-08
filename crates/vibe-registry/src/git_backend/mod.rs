@@ -133,4 +133,29 @@ pub trait GitBackend: Send + Sync {
         refname: &str,
         path: &str,
     ) -> Result<Vec<u8>, GitError>;
+
+    /// Rewrite the `<remote>` URL inside an existing clone at `dest`
+    /// to `url`. Implemented via `git -C <dest> remote set-url
+    /// <remote> <url>`. Used by the per-package registry under
+    /// `auth = "token-env"` (PROP-002 §2.2.1) to scrub the
+    /// credentialised URL out of the freshly-cloned `.git/config`
+    /// after `bootstrap` — the token only ever lives in memory and
+    /// in the spawned `git clone` invocation; once the clone is on
+    /// disk the recorded `remote.<remote>.url` is the plain
+    /// (credential-free) URL. Subsequent `update` calls re-issue
+    /// auth via the `bootstrap` retry path when the plain URL
+    /// returns 401, rather than persisting credentials in the
+    /// clone state.
+    ///
+    /// Returns `GitError::CommandFailed` when the remote is
+    /// unknown or git rejects the URL; the caller is responsible
+    /// for ensuring the remote exists (it always does after a
+    /// successful `bootstrap`, where `origin` is the default).
+    ///
+    /// Default impl is provided so non-shell test backends don't
+    /// have to stub it explicitly when they don't exercise the
+    /// auth path.
+    fn set_remote_url(&self, _dest: &Path, _remote: &str, _url: &str) -> Result<(), GitError> {
+        Ok(())
+    }
 }

@@ -278,6 +278,19 @@ impl GitBackend for ShellGit {
         }
         Err(classify_failure(&args, &output))
     }
+
+    fn set_remote_url(&self, dest: &Path, remote: &str, url: &str) -> Result<(), GitError> {
+        self.preflight()?;
+        // `git -C <dest> remote set-url <remote> <url>`. The
+        // `dest`-via-`-C` form is exactly what `self.run(.., Some(dest))`
+        // produces (it sets `current_dir`), but `remote set-url` is
+        // a config write, not a ref-network operation, so it does
+        // not need any of the auth handling — `apply_common_env`
+        // still applies for stable error parsing and Windows
+        // window-suppression.
+        self.run(&["remote", "set-url", remote, url], Some(dest))
+            .map(|_| ())
+    }
 }
 
 /// Pull a single file's bytes out of a tar stream. Returns `None` if the
@@ -483,7 +496,34 @@ fn classify_stderr_message(combined: &str, url: String, refname: String) -> Opti
     {
         return Some(GitError::RepoNotFound { url });
     }
-    if lc.contains("permission denied (publickey)") || lc.contains("authentication failed") {
+    // Authentication-required signals. Three families:
+    //
+    //   1. ssh / direct refusal — `Permission denied (publickey).`
+    //      / `fatal: Authentication failed`.
+    //   2. HTTPS without working credentials — git tried to ask the
+    //      operator (or a credential helper) for username/password
+    //      and could not get one. With our `GIT_TERMINAL_PROMPT=0` +
+    //      silenced helpers (PROP-002 §2.2.1), git prints
+    //      `fatal: could not read Username for '<url>'` /
+    //      `fatal: could not read Password for ...` and exits
+    //      non-zero. Some credential helpers also leave a `User
+    //      cancelled dialog.` line on stderr when their GUI
+    //      window is dismissed (the original GCM popup case).
+    //   3. Direct HTTP status codes from the underlying transport —
+    //      `HTTP 401` / `HTTP 403` / `401 Unauthorized` /
+    //      `403 Forbidden`. These appear when the host returns a
+    //      structured response without redirecting through the
+    //      credential layer (some proxies, some CI runners).
+    if lc.contains("permission denied (publickey)")
+        || lc.contains("authentication failed")
+        || lc.contains("could not read username")
+        || lc.contains("could not read password")
+        || lc.contains("user cancelled dialog")
+        || lc.contains("http 401")
+        || lc.contains("http 403")
+        || lc.contains("401 unauthorized")
+        || lc.contains("403 forbidden")
+    {
         return Some(GitError::AuthFailed { url });
     }
     // Network / connect-failure shapes seen in the wild from git 2.x +
@@ -955,6 +995,44 @@ mod tests {
             classify("remote: HTTP Basic: Access denied\nfatal: Authentication failed for ...").unwrap(),
             GitError::AuthFailed { .. }
         ));
+    }
+
+    #[test]
+    fn classify_credential_prompt_failure_after_silencing() {
+        // PROP-002 §2.2.1: when our credential helpers are silenced
+        // (`-c credential.helper=` + `GIT_TERMINAL_PROMPT=0`), git
+        // can't ask anyone for a username/password and emits
+        // `fatal: could not read Username for '...'`. This is what
+        // the original opencode walk against GitVerse produced.
+        // Must classify as AuthFailed so the resolver can apply the
+        // per-`auth` walk-vs-halt rule (§2.3.1).
+        for stderr in [
+            "fatal: User cancelled dialog.\nfatal: could not read Username for 'https://gitverse.ru': terminal prompts disabled",
+            "fatal: could not read Password for 'https://example.invalid': terminal prompts disabled",
+        ] {
+            assert!(
+                matches!(classify(stderr).unwrap(), GitError::AuthFailed { .. }),
+                "expected AuthFailed for: {stderr}"
+            );
+        }
+    }
+
+    #[test]
+    fn classify_http_status_codes() {
+        // Direct HTTP transport errors — when the host returns a
+        // structured response without redirecting through the
+        // credential layer (some proxies, some CI runners).
+        for stderr in [
+            "fatal: unable to access 'https://x/y.git/': The requested URL returned error: 401 Unauthorized",
+            "fatal: unable to access 'https://x/y.git/': HTTP 401",
+            "fatal: unable to access 'https://x/y.git/': The requested URL returned error: 403 Forbidden",
+            "fatal: unable to access 'https://x/y.git/': HTTP 403",
+        ] {
+            assert!(
+                matches!(classify(stderr).unwrap(), GitError::AuthFailed { .. }),
+                "expected AuthFailed for: {stderr}"
+            );
+        }
     }
 
     #[test]
