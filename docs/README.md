@@ -46,6 +46,10 @@ End-to-end walkthroughs that compose multiple commands into a real scenario. Eac
 
 [`version-syntax.md`](version-syntax.md) — how version constraints work everywhere a pkgref appears (`vibe install`, `[requires].packages`, `[provides].capabilities`, `[[override]]`). Caret / tilde / equal / range operators, the `vibe.toml` ↔ `vibe.lock` two-file model, the `--exact` flag, comparison with Cargo / npm / Poetry / Bundler. Read this if you've ever been surprised that `flow:wal@0.3.0` matched `0.3.5`.
 
+## Registry authentication
+
+[`registry-auth.md`](registry-auth.md) — how to authenticate against private registries. Four `auth` regimes (`none` / `token-env` / `credential-helper` / `ssh`), env-var conventions, what happens on 401 / 403 per regime (walk-vs-halt), token discipline, troubleshooting. Read this if you have a private vibespecs org or are seeing GUI credential popups during installs.
+
 ## Lockfile reference
 
 [`lockfile-format.md`](lockfile-format.md) — exhaustive reference for `vibe.lock` v2. Field-by-field semantics, identity model, v1 → v2 migration, tooling examples (jq snippets), worked example.
