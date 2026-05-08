@@ -1,7 +1,9 @@
 # WAL — Project Continuation State
-_Updated: 2026-05-08_
+_Updated: 2026-05-08 (session-end)_
 
 ## Current phase
+
+**Session-end checkpoint (2026-05-08).** The day closed M1.12 + M1.13 + M1.14 (with three half-step closers .1 / .2 / .3) across 25 commits. Workspace is at HEAD `8ab5c9c`, working tree clean, `cargo test --workspace` all green, clippy `-D warnings` clean, `vibe check --path . --quiet` 0/0/0. No active blockers. See `CONTINUE.md` at the repo root for the cold-resume snapshot — exhaustive non-obvious findings, per-crate file map, repo-wide policy reminders, six "what to do first" options, full commit chain. The blocks below remain the canonical living history.
 
 **Working checkpoint (2026-05-08 +2, M1.14.3 — surface consistency: MCP `--yes` actually wired, `--auth-required` reach extends to `update` + `outdated`, `--exact` extends to `update`).** Closes the four CLI-surface consistency gaps surfaced by the audit after M1.14.2 landed: (a) `--yes` on `mcp install/upgrade/uninstall` was a vestigial flag that never gated anything; (b) `--auth-required` only existed on `vibe install`, not `vibe update` / `vibe outdated`; (c) `--exact` only existed on `vibe install`, not `vibe update` (cargo has the equivalent as `cargo update --precise X.Y.Z`); (d) MCP commands accepted `--yes` but not `--assume-yes`, splitting the operator's mental model from the package commands. **HEAD `<pending>`**, vibe-cli e2e at **89 hermetic + 3 ignored** (no count change — the existing tests exercise the new code paths through their existing flags), workspace `cargo test --workspace` all green, `cargo clippy --workspace --all-targets -- -D warnings` clean, `vibe check --path . --quiet` reports 0/0/0.
 
