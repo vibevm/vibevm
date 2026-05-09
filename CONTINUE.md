@@ -1,30 +1,40 @@
 # CONTINUE — cold-resume checkpoint
 
-_Written: 2026-05-08 session-end. Owner-readable, self-contained. Pick this up with zero prior context._
+_Written: 2026-05-09 session-end. Owner-readable, self-contained. Pick this up with zero prior context._
 
 ---
 
 ## TL;DR (executive summary)
 
-**The 2026-05-08 push closed three full milestones — M1.12, M1.13, and M1.14 (with three half-step closers: M1.14.1 / .2 / .3) — across 25 commits.** Together they make `vibe`'s package-management surface ready for v0.1.0: cargo-shape version constraints, `[requires]` declaration in `vibe.toml`, full registry-auth runtime (public + private), `--unattended` posture, comment-preserving manifest writes, MCP confirm-prompts wired correctly, and the `--auth-required` / `--exact` flags reaching every command they should.
+**The 2026-05-09 push closed the entire M1.14 deferred-list and validated the full registry-auth runtime against a live private GitHub repo.** Three commits land on top of yesterday's M1.12 + M1.13 + M1.14 (.1 / .2 / .3) push: a new `vibe registry test` diagnostic command, a structured-JSON error envelope for "package not found in any registry" failures (`error_kind` + `attempts` array), and the corner-case finish on inline-comment preservation inside `[[registry]]` blocks. Plus the production walk against `olegchir/vibevm-private-probe` (private GitHub repo) confirmed end-to-end that `auth = "token-env"` works, `MissingToken` precheck fires, `vibe registry test` correctly classifies token states, and the token never lands on disk in `.git/config` after a clone. The full M1.14 surface is feature-complete for v0.
 
-Workspace state at HEAD `8ab5c9c`:
-- vibe-cli e2e: **89 hermetic + 3 ignored**.
-- vibe-core: **115 hermetic** (+5 toml_edit merge tests, +8 auth schema, +2 schema round-trip from earlier).
-- vibe-registry: **94 hermetic** (+12 from M1.14 — classifier patterns, inject_token edges, MissingToken precheck, bootstrap-with-scrub end-to-end, resolver walk-vs-halt rules, strict-auth halt, aggregated walk attempts).
-- vibe-cli bin: **93 hermetic** (+9 from `--unattended` resolver tests, schema lock-tests for env-vars).
+Workspace state at HEAD `2541083` (after this session's three commits):
+- vibe-cli e2e: **89 hermetic + 3 ignored** (no count change — `vibe registry test` is wired through CLI dispatch but its end-to-end coverage came from the live walk, not new hermetic e2e tests).
+- vibe-core: **116 hermetic** (was 115; +1 inline-kv comment-preservation test).
+- vibe-registry: **94 hermetic** (unchanged; `RegistryWalkAttempt` / `WalkAttemptStatus` made public-with-serde but no behavioural diff to test).
+- vibe-cli bin: **93 hermetic** (unchanged).
 - `cargo test --workspace` all green; `cargo clippy --workspace --all-targets -- -D warnings` clean; `vibe check --path . --quiet` 0/0/0.
 
-Working tree is clean. `origin/main` is at `8ab5c9c`. No active blockers. Three deferred enhancements (aggregated JSON-mode error report, inline-comment preservation inside `[[registry]]` blocks, `vibe registry test` diagnostic) are all listed at the bottom of `spec/WAL.md` — none load-bearing.
+Working tree is clean. `origin/main` is still at `8ab5c9c` until this session's three commits + the docs / WAL / CONTINUE updates push. No active blockers. **The M1.14 deferred-list is now empty.** Next major surface is M1.5 (LLM generation) — non-routine, requires owner sign-off.
 
 ---
 
 ## Where we are right now
 
-- **Branch:** `main`. Working tree clean.
-- **Latest commits this session (newest-first; full session was 25 commits):**
+- **Branch:** `main`. Working tree clean (after this session's three code commits — docs / WAL / CONTINUE update is the next planned commit).
+- **This session's commits (newest-first; on top of yesterday's 25):**
 
   ```
+  2541083 feat(vibe-cli): vibe registry test diagnostic command
+  41f567b feat(resolver,registry,cli): structured per-registry attempts in JSON error envelope
+  568825b feat(vibe-core): preserve inline-key comments inside vibe.toml writes
+  ```
+
+- **Latest commits previous session (newest-first; full session was 25 commits):**
+
+  ```
+  ec77471 docs(wal): session-end checkpoint — pointer to CONTINUE.md
+  d4ee973 docs(continue): cold-resume checkpoint at 2026-05-08 session-end
   8ab5c9c docs(roadmap,changelog): catch up on M1.12 / M1.13 / M1.14 milestones
   a915b12 docs(commands,wal): surface-consistency closing slice
   1f58e71 feat(vibe-cli): surface consistency — MCP --yes wired, --auth-required + --exact reach
@@ -58,40 +68,32 @@ Working tree is clean. `origin/main` is at `8ab5c9c`. No active blockers. Three 
 
 ## What to do first in the next session
 
-Pick whichever matches the owner's interest:
+The M1.14 deferred-list is now empty. Pick whichever matches the owner's interest:
 
-### Option 1 — walk a real-world install against a private registry
+### Option 1 — M1.5 (LLM generation)
 
-The headline feature of this push is end-to-end private-registry support. The natural validation walk:
+The next major milestone per ROADMAP. **Non-routine — needs explicit owner sign-off before starting.** M1.5 is what makes vibevm "produce software" rather than "manage specs." Scope, design constraints, and entry points need to be discussed before any code lands. The whole previous session converged on "registry-auth surface is feature-complete; M1.5 is next" — this is the natural pickup.
 
-1. Stand up a small test registry on GitLab / Gitea / forgejo with one package repo + a tag.
-2. `vibe registry add internal "https://<host>/<org>" --auth token-env` (let it derive the env-var name).
-3. `export VIBEVM_REGISTRY_TOKEN_<HOST>=<PAT>` with read scope.
-4. `vibe install <kind>:<name> --assume-yes` — should resolve, fetch via credentialed URL, and `git remote -v` inside the cloned cache should show the **plain** URL (token scrubbed).
-5. `grep -r x-access-token ~/.vibe/registries/` — must come up empty (the hard token-discipline invariant).
-6. `vibe install` again — should be `unchanged` everywhere.
+### Option 2 — re-run the production walk
 
-Reference: `docs/registry-auth.md` covers every regime. If anything goes off-script, the symptom narrows the slice (classifier? token injection? walk-vs-halt? scrub?).
+Useful as a smoke test whenever the auth pipeline changes. Recipe (also recorded in `spec/WAL.md` under M1.14.4):
 
-### Option 2 — `vibe registry test` diagnostic command
+1. Confirm `olegchir/vibevm-private-probe` still exists on GitHub (or recreate from `manual-tests/` recipe — to be added if the repo gets deleted).
+2. Fresh consumer project: `vibe init`, then add the registry: `vibe registry add probe "https://github.com/olegchir" --auth token-env`.
+3. `vibe registry test --path .` — expect `missing-token` for the probe registry.
+4. `export VIBEVM_REGISTRY_TOKEN_GITHUB_COM=<PAT>` (read scope on the private repo).
+5. `vibe registry test --path .` — expect `reachable`.
+6. `vibe install flow:vibevm-private-probe --assume-yes` — expect a clean install with `spec/flows/private-probe/PROBE.md` materialised.
+7. `grep -r x-access-token ~/.vibe/registries/` — must come up empty.
+8. Inspect `~/.vibe/registries/<hash>/packages/flow-vibevm-private-probe/clone/.git/config` — `remote.origin.url` must be the plain credential-free form.
 
-Read-only `git ls-remote` against each `[[registry]]`, prints per-registry status (reachable / auth-ok / auth-required / unreachable). Hour or so of work; very useful when first wiring a private registry. Code anchor: a new subcommand under `crates/vibe-cli/src/commands/registry.rs` next to `list` / `sync` / `vendor`.
+### Option 3 — Tag v0.1.0
 
-### Option 3 — JSON-mode aggregated error report
+CHANGELOG `[Unreleased]` carries M1.12 / M1.13 / M1.14 / M1.14.x. ROADMAP marks all four as SHIPPED. The full registry-auth surface is now feature-complete. If the owner is ready to cut the first tagged release, the steps are: lift `[Unreleased]` to `[0.1.0]` in CHANGELOG, finalise `Cargo.toml` versions across crates, `git tag v0.1.0`, push tag, optionally publish to a binary release channel.
 
-Currently `RegistryError::PackageNotFoundEverywhere` carries a pre-formatted `summary: String` that flows through `Display` for text mode. JSON envelope still serialises through generic `Other(String)`. To structure it: extend `DepProviderError::UnknownPackage` with `attempts: Vec<RegistryAttempt>` (or a new variant), thread through resolver → install error → `emit_report`. Cross-crate API change in vibe-resolver; medium effort, narrow scope. WAL deferred-list calls this out explicitly.
+### Option 4 — A fresh full-project audit
 
-### Option 4 — Inline-comment preservation inside `[[registry]]` blocks
-
-Current `toml_edit`-merge in `vibe-core::manifest::write_toml` preserves three layers (header / per-table prefix / document trailing). What it doesn't preserve: comments **inside** a table (between `name = ...` and `url = ...`). Operators rarely write those, but if a case surfaces, the fix is per-key decor copy across the schema-paired keys. Same pattern as the existing per-table prefix copy.
-
-### Option 5 — M1.5 (LLM generation)
-
-The next major milestone per ROADMAP. Non-routine — needs explicit owner sign-off before starting. M1.5 is what makes vibevm "produce software" rather than "manage specs."
-
-### Option 6 — CHANGELOG / ROADMAP further refinement
-
-CHANGELOG `[Unreleased]` block now covers M1.12 / M1.13 / M1.14. Whenever v0.1.0 actually tags, that block migrates to a numbered `[0.1.0]` section. Same for ROADMAP — when a future release closes the v0.1 surface, M1.x entries can be lifted into a "Released" group.
+After three intense days of feature work, a "step back and read what we've got" pass would be high-value. Does `docs/` cover every surface? Are there orphan TODOs? Is the spec tree internally consistent? Possible lightweight scope: walk every `docs/commands/*.md`, every `spec/modules/**/*.md`, run `vibe check`, look for FIXMEs. Half-day exercise; sets up M1.5 with a clean baseline.
 
 ---
 
@@ -144,6 +146,25 @@ if args.yes || ctx.is_unattended() || args.auto || ctx.is_json()
 ```
 
 The `!console::user_attended()` short-circuit at the bottom is what preserves CI-script compat. If a future change wants to make MCP commands strictly confirm in non-TTY too, that condition is the one place to touch.
+
+### `#[error(transparent)]` does NOT propagate `downcast_ref` through anyhow chain depth
+
+Discovered while wiring the JSON-mode structured error envelope (M1.14.4). The setup: `SolveError::Provider(#[from] DepProviderError)` is `#[error(transparent)]` so that the `Display` impl forwards to the inner error. Surface intuition: walking `anyhow::Error::chain()` and calling `cause.downcast_ref::<DepProviderError>()` on each link should find the inner type at some depth. **It does not.** Empirically the chain stops at `SolveError`; the `transparent` attribute affects only `Display` / `source()`, not the type identity that `downcast_ref` operates on.
+
+Fix shape: when the chain walk wants to reach the inner type behind a transparent wrapper, downcast to the wrapper itself and pattern-match:
+
+```rust
+let candidate: Option<&DepProviderError> =
+    if let Some(d) = cause.downcast_ref::<DepProviderError>() { Some(d) }
+    else if let Some(SolveError::Provider(d)) = cause.downcast_ref::<SolveError>() { Some(d) }
+    else { None };
+```
+
+Same pattern will apply to any future structured-error work that crosses `#[error(transparent)]` wrappers. Search for `#[error(transparent)]` in the codebase before adding a new chain-walking error stamper — every transparent wrapper is a hop the walk can't transparently make.
+
+### Token-discipline invariant is now production-validated, not just unit-tested
+
+The hermetic suite asserts that `set_remote_url` rewrites `.git/config` to the plain URL after bootstrap. The 2026-05-09 production walk confirmed the same on a real filesystem against `olegchir/vibevm-private-probe` (private GitHub): after a successful `vibe install flow:vibevm-private-probe`, the recursive `grep -r x-access-token ~/.vibe/registries/` came up empty and the `clone/.git/config` recorded the plain URL. This is the canonical smoke recipe — re-run when touching anything in the auth pipeline.
 
 ---
 
