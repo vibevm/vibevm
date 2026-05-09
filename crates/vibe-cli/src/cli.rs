@@ -135,6 +135,19 @@ pub enum RegistrySubcommand {
     /// Remove a `[[registry]]` or `[[mirror]]` block from `vibe.toml`.
     Remove(RegistryRemoveArgs),
 
+    /// Probe each configured `[[registry]]` for reachability +
+    /// authentication status. Read-only diagnostic — does not
+    /// fetch or write anything. Per-registry status: `reachable`
+    /// (org URL responded), `auth-required` (got 401 / 403 — for
+    /// public registries this is "host policy on missing repos
+    /// is 401"; for authenticated registries this means the
+    /// configured credentials are missing or wrong),
+    /// `unreachable` (network / DNS / cert error), or
+    /// `missing-token` (registry declares `auth = "token-env"`
+    /// but the env-var resolves empty). Useful when first wiring
+    /// a private registry to confirm credentials line up.
+    Test(RegistryTestArgs),
+
     /// Generate a local mirror directory containing every package
     /// referenced by `vibe.lock`, suitable for use as a
     /// `[[mirror]] url = "file:///<abs-path>"` for offline / air-gapped
@@ -171,6 +184,13 @@ pub struct RegistrySyncArgs {
 
 #[derive(Debug, clap::Args)]
 pub struct RegistryListArgs {
+    /// Project root with `vibe.toml`. Defaults to current directory.
+    #[arg(long, default_value = ".")]
+    pub path: PathBuf,
+}
+
+#[derive(Debug, clap::Args)]
+pub struct RegistryTestArgs {
     /// Project root with `vibe.toml`. Defaults to current directory.
     #[arg(long, default_value = ".")]
     pub path: PathBuf,
