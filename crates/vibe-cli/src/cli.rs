@@ -459,6 +459,48 @@ pub struct InstallArgs {
     /// regardless of this flag.
     #[arg(long)]
     pub auth_required: bool,
+
+    /// Add a git-source declaration for the single positional pkgref
+    /// — fetches the package directly from this git URL rather than
+    /// resolving it through `[[registry]]`. PROP-002 §2.4.1.
+    /// Requires exactly one of `--tag`, `--branch`, or `--rev`.
+    /// Cannot be combined with `--exact` (constraint shape is
+    /// orthogonal to git-source) or with `--registry` (git-source
+    /// bypasses the registry layer).
+    #[arg(long, value_name = "URL", group = "source")]
+    pub git: Option<String>,
+
+    /// Git tag to pin against when `--git <url>` is set. Mutually
+    /// exclusive with `--branch` / `--rev`. Immutable; force-pushed
+    /// tag rewrite caught as `IntegrityError` on next install via
+    /// content-hash. PROP-002 §2.4.1.
+    #[arg(long, value_name = "TAG", group = "git_ref", requires = "git")]
+    pub tag: Option<String>,
+
+    /// Git branch to track when `--git <url>` is set. Mutually
+    /// exclusive with `--tag` / `--rev`. Mutable: `vibe install`
+    /// (no `update`) sticks to the lockfile-pinned commit; `vibe
+    /// update` re-walks branch HEAD. PROP-002 §2.4.1.
+    #[arg(long, value_name = "BRANCH", group = "git_ref", requires = "git")]
+    pub branch: Option<String>,
+
+    /// Git commit SHA to pin against when `--git <url>` is set.
+    /// Mutually exclusive with `--tag` / `--branch`. Most strict;
+    /// the lockfile records the same SHA. PROP-002 §2.4.1.
+    #[arg(long, value_name = "REV", group = "git_ref", requires = "git")]
+    pub rev: Option<String>,
+
+    /// Auth regime for the `--git <url>` target — same enum as
+    /// `[[registry]] auth`: `none` / `token-env` / `credential-helper`
+    /// / `ssh`. Default `none`. PROP-002 §2.4.1.
+    #[arg(long, value_name = "AUTH", requires = "git")]
+    pub git_auth: Option<String>,
+
+    /// Env-var name when `--git-auth token-env`. Default derived
+    /// from URL host (e.g. `https://gitlab.acme.example/...` →
+    /// `VIBEVM_REGISTRY_TOKEN_GITLAB_ACME_EXAMPLE`).
+    #[arg(long, value_name = "ENV_VAR", requires = "git")]
+    pub git_token_env: Option<String>,
 }
 
 #[derive(Debug, clap::Args)]

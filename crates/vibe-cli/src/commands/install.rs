@@ -29,6 +29,17 @@ pub fn run(ctx: &output::Context, args: InstallArgs) -> Result<()> {
     let project_root = resolve_project_root(&args.path)?;
     let mut manifest = load_project_manifest(&project_root)?;
     let mut lockfile = load_or_empty_lockfile(&project_root)?;
+
+    // M1.15: `vibe install <pkgref> --git <url> --tag/branch/rev <ref>`
+    // adds a git-source declaration to `[requires.packages]` before
+    // resolving. The added declaration is picked up by the resolver
+    // built immediately below; subsequent installs of the same project
+    // reproduce the install via the now-recorded git-source entry.
+    if args.git.is_some() {
+        apply_git_source_flag(&args, &mut manifest, &project_root)
+            .context("recording --git declaration to vibe.toml")?;
+    }
+
     let resolver = build_install_resolver(&args, &manifest)?;
 
     // PROP-003 §2.7 language chain (CLI flag > project [i18n]).
@@ -606,12 +617,27 @@ fn finalize_pkgref_for_manifest(
 /// dedup discipline as `merge_root_dependencies`. Returns `true` if
 /// any entry was added or changed — caller writes the manifest only
 /// when the in-memory shape actually diverged from disk.
+///
+/// Skips pkgrefs that are already declared as a git-source in
+/// `manifest.requires.git_packages` — those were recorded earlier via
+/// `apply_git_source_flag` (M1.15) and writing them again as
+/// registry-resolved would create a `(kind, name)` duplicate that
+/// `try_from = "RequiresWire"` rejects on the next parse.
 fn merge_manifest_requires(
     manifest: &mut ProjectManifest,
     roots: &[PackageRef],
 ) -> bool {
     let mut changed = false;
     for r in roots {
+        if manifest
+            .requires
+            .git_packages
+            .iter()
+            .any(|g| g.kind == r.kind && g.name == r.name)
+        {
+            // Already declared as git-source — leave untouched.
+            continue;
+        }
         let pos = manifest
             .requires
             .packages
@@ -724,6 +750,90 @@ impl InstallResolver {
             }
         }
     }
+}
+
+/// Process the M1.15 `--git`/`--tag`/`--branch`/`--rev`/`--git-auth`/
+/// `--git-token-env` flags. Validates the flag combination, parses
+/// the single positional pkgref, builds a `GitPackageDep`, merges it
+/// into `manifest.requires.git_packages` (replacing any prior entry
+/// for the same `(kind, name)`), and persists the manifest before
+/// resolving so a panic mid-resolve cannot leave the on-disk
+/// declaration out of sync. Removes any conflicting registry-resolved
+/// entry for the same pkgref to keep `manifest.requires` in a valid
+/// shape (no duplicate `(kind, name)` between `packages` and
+/// `git_packages`).
+fn apply_git_source_flag(
+    args: &InstallArgs,
+    manifest: &mut vibe_core::manifest::ProjectManifest,
+    project_root: &std::path::Path,
+) -> Result<()> {
+    use vibe_core::manifest::{AuthKind, GitPackageDep, GitRefKind};
+
+    if args.exact {
+        bail!("--exact has no meaning with --git (constraint shape is registry-resolved); drop one of the two flags");
+    }
+    if args.registry.is_some() {
+        bail!("--git bypasses the registry layer; drop --registry or drop --git");
+    }
+    if args.packages.len() != 1 {
+        bail!("--git requires exactly one positional pkgref `<kind>:<name>`; got {}", args.packages.len());
+    }
+    // Allow user to type either `flow:internal` or `flow:internal@*` —
+    // version is irrelevant for git-source (the ref decides), but we
+    // accept both shapes for muscle-memory compatibility.
+    let pr = PackageRef::parse(&args.packages[0])
+        .with_context(|| format!("parsing `{}`", args.packages[0]))?;
+    let url = args.git.clone().expect("caller checked args.git.is_some()");
+    let ref_kind = match (args.tag.as_deref(), args.branch.as_deref(), args.rev.as_deref()) {
+        (Some(t), None, None) => GitRefKind::Tag(t.to_string()),
+        (None, Some(b), None) => GitRefKind::Branch(b.to_string()),
+        (None, None, Some(r)) => GitRefKind::Rev(r.to_string()),
+        (None, None, None) => bail!(
+            "--git requires exactly one of --tag, --branch, or --rev"
+        ),
+        _ => bail!(
+            "--git accepts exactly one of --tag, --branch, --rev — drop the extras"
+        ),
+    };
+    let auth = match args.git_auth.as_deref() {
+        None | Some("none") => AuthKind::None,
+        Some("token-env") => AuthKind::TokenEnv,
+        Some("credential-helper") => AuthKind::CredentialHelper,
+        Some("ssh") => AuthKind::Ssh,
+        Some(other) => bail!(
+            "unknown --git-auth `{other}` — must be `none`, `token-env`, `credential-helper`, or `ssh`"
+        ),
+    };
+    if args.git_token_env.is_some() && !matches!(auth, AuthKind::TokenEnv) {
+        bail!(
+            "--git-token-env is only meaningful with --git-auth token-env; got `{}`",
+            args.git_auth.as_deref().unwrap_or("none")
+        );
+    }
+    let dep = GitPackageDep {
+        kind: pr.kind,
+        name: pr.name.clone(),
+        url,
+        ref_kind,
+        version: None,
+        auth,
+        token_env: args.git_token_env.clone(),
+    };
+
+    // Drop any prior registry-resolved entry for the same pkgref —
+    // M1.15 forbids `(kind, name)` collision between
+    // `requires.packages` and `requires.git_packages`.
+    manifest.requires.packages.retain(|p| !(p.kind == dep.kind && p.name == dep.name));
+    // Replace any prior git-source entry for the same pkgref (same
+    // shape as updating an existing constraint).
+    manifest
+        .requires
+        .git_packages
+        .retain(|g| !(g.kind == dep.kind && g.name == dep.name));
+    manifest.requires.git_packages.push(dep);
+
+    manifest.write(project_root.join(vibe_core::manifest::ProjectManifest::FILENAME))?;
+    Ok(())
 }
 
 /// Build the install resolver for this invocation.
