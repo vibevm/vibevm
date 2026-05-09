@@ -165,6 +165,124 @@ The resolver short-circuits: it does not consult `[[registry]]` for this pkgref 
 
 This is the vibevm analogue of Cargo's `[patch]` and Go's `replace`. Same shape, same use case: pinning a fork during an in-flight upstream PR, emergency hotfixes, internal forks of public packages.
 
+### 2.4.1 Git-source declarations: `[requires.packages]` table-form {#git-source}
+
+**Decision.** A dependency may be declared as a first-class git-source in `[requires.packages]` — fetching the package from an arbitrary git repository instead of resolving it through `[[registry]]`. This is the vibevm analogue of Cargo's `[dependencies] foo = { git = "..." }`, npm's `"foo": "git+https://..."`, Poetry's `foo = { git = "..." }`, Bundler's `gem 'foo', git: '...'`, Go modules' baseline behaviour. The use cases are:
+
+- **Internal / private packages without a registry org.** A team has one private vibevm package they want to share across projects; standing up a multi-package `[[registry]]` org is overkill, and a single-repo declaration is the natural shape.
+- **Active development against a fork.** The fork is the canonical source while the upstream PR is in flight (overlap with `[[override]]` — see "Comparison with override" below).
+- **Cross-organisation pulls.** A project consumes a package whose author lives in a different git org than any registered registry.
+
+**Wire form.** `[requires.packages]` becomes a TOML table whose values are either a version-constraint **string** (registry-resolved, the M1.13 shape) or an inline-table (registry-resolved with options, or git-source). The legacy array-of-strings shape (`packages = ["flow:wal@^0.3"]`) parses transparently into table-form on read; on round-trip the manifest writes table-form.
+
+```toml
+[requires.packages]
+# Registry-resolved, simple constraint:
+"flow:wal"      = "^0.3"
+"feat:auth"     = "^0.5"
+
+# Registry-resolved, table-form (reserved for future options like features):
+"stack:rust-cli" = { version = "^0.2" }
+
+# Git-source, immutable tag:
+"flow:internal-helper" = { git = "git@gitlab.company.com:specs/internal-helper", tag = "v0.1.0" }
+
+# Git-source, immutable commit SHA:
+"flow:wal-fork" = { git = "https://github.com/me/flow-wal-fork", rev = "abc12345" }
+
+# Git-source, mutable branch (HEAD on every resolve):
+"flow:experimental" = { git = "https://github.com/me/flow-experimental", branch = "main" }
+
+# Git-source on a private host with explicit auth:
+"flow:internal-secret" = {
+  git       = "https://gitlab.company.com/specs/internal-secret",
+  tag       = "v1.0.0",
+  auth      = "token-env",
+  token_env = "VIBEVM_REGISTRY_TOKEN_GITLAB_COMPANY_COM",
+}
+
+# Git-source with verification version constraint:
+"flow:checked" = {
+  git     = "https://github.com/me/flow-checked",
+  tag     = "v0.1.0",
+  version = "^0.1",
+}
+```
+
+The wire grammar for the inline-table values:
+
+| Field | Required | Meaning |
+|---|---|---|
+| `version` | optional (registry) / optional (git) | Version constraint. Registry-resolved: identical semantics to the bare-string form. Git-source: **verification only** — after resolving the package version from the git ref, the constraint must be satisfied; otherwise the install fails with `VersionMismatch`. |
+| `git` | required for git-source | Full git URL of the single-package repository. Same URL grammar as `[[registry]] url` and `[[override]] source_url` — `git@host:…`, `ssh://`, `https://`, `file://`. No host shorthands. |
+| `tag` | one of `tag`/`rev`/`branch` is required | Immutable tag. Resolved commit pinned in lockfile; force-pushed tag rewrite caught as `IntegrityError` per §2.1. |
+| `rev` | one of `tag`/`rev`/`branch` is required | Commit SHA (full or short, ≥ 7 chars). Most strict; lockfile records the same SHA. |
+| `branch` | one of `tag`/`rev`/`branch` is required | Mutable branch. Lockfile records the resolved commit at install time; subsequent `vibe update` re-walks branch HEAD. **Mutable** — see "Mutability and `vibe update`" below. |
+| `auth` | optional | Per-source auth regime. Same enum as `[[registry]] auth`: `"none" | "token-env" | "credential-helper" | "ssh"`. Default `"none"`. |
+| `token_env` | optional | Env-var name when `auth = "token-env"`. Default derived from URL host (same rule as `[[registry]]` per §2.2.1). |
+
+**Exactly one** of `tag` / `rev` / `branch` must be present in a git-source declaration. Zero is rejected at parse time with `MissingRef`. Two or more rejected with `ConflictingRefs`. There is no "default branch HEAD" fall-back — too magical for a security-sensitive surface; explicit > implicit.
+
+**Resolution order.** When the resolver looks up a pkgref, the source is decided in this order:
+
+1. **`[[override]]`** — if a matching override exists, it short-circuits everything (existing §2.4 semantics, unchanged).
+2. **Git-source declaration** in `[requires.packages]` — if the value carries a `git` field, the resolver fetches directly from that URL at the declared ref. `[[registry]]` is not consulted for this pkgref. Same content-hash discipline as override.
+3. **Registry-resolved declaration** — bare string or `{ version = "..." }` table — falls through to the existing §2.2 priority-ordered registry walk.
+
+Override > git-source-decl reflects the semantic "override is intentional patch on top of a declared dependency", same as Cargo's `[patch]` overriding `[dependencies] foo = { git = "..." }`.
+
+**Identity.** Identical content-hash discipline as registry-resolved (§2.1): identity is `(kind, name, version, content_hash)`; the URL is informational. Two projects that pull the same git-source from different mirrors and produce the same `content_hash` are bit-identical installs. Force-pushed tag rewrite caught as `IntegrityError`.
+
+The pkgref `<kind>:<name>` is read from the package's `vibe-package.toml` `[package]` section on the resolved git ref (same path as registry-resolved manifest fetch via `git archive`). The resolver verifies that the `(kind, name)` declared in `[requires.packages]` matches what the repo actually carries; mismatch = `PackageIdentityMismatch`. This means a malicious git-source cannot impersonate `flow:wal` if its `vibe-package.toml` declares it as `feat:auth`.
+
+**Mutability and `vibe update`.** Tags and revs are immutable by definition; force-push is detected via content-hash. Branches are explicitly mutable: `vibe install` against a branch resolves to the current branch HEAD and pins that commit in the lockfile. `vibe update` re-walks each branch-declared git-source, and if HEAD has moved, re-resolves and re-locks. `vibe install` (no flag) **does not** chase a branch's HEAD on subsequent runs — the lockfile's `resolved_commit` is authoritative until `update` is called. This matches Cargo's behaviour (`cargo build` does not bump branch deps; `cargo update` does).
+
+**Auth.** Per-source `auth` is **explicit, not host-derived**. The resolver does not look at `[[registry]] auth` for the same host and apply it transitively to a git-source pointing at that host — too magical, creates implicit ordering dependencies between sections of the manifest. If a project has multiple packages from the same private host, the operator can either:
+
+- declare them through `[[registry]]` with shared auth (the DRY way; recommended for ≥ 3 packages from one host), or
+- declare each through `[requires.packages]` with explicit `auth` / `token_env` per source (verbose but transparent).
+
+The token-discipline contract from §2.2.1 (read once, in-memory, scrubbed from `.git/config` after bootstrap) applies identically to git-source.
+
+**Cache layout.** Same as registry-resolved (§2.6), keyed by canonical URL hash. A git-source pointing at `https://github.com/me/flow-internal` lives at `~/.vibe/registries/<sha256(canonical-url)>/packages/flow-internal/clone/`. Multiple git-source declarations across different consumer projects pointing at the same URL share the same cache slot.
+
+**Lockfile schema.** A new `source_kind` field per `[[package]]` makes the resolution path explicit:
+
+```toml
+[[package]]
+kind            = "flow"
+name            = "internal-helper"
+version         = "0.1.0"
+source_kind     = "git"                                                # NEW field; "registry" | "git" | "override"
+registry        = ""                                                   # empty for git / override
+source_url      = "git@gitlab.company.com:specs/internal-helper"
+source_ref      = "v0.1.0"                                             # tag / branch name / rev as declared
+resolved_commit = "abc123…def"
+content_hash    = "sha256:…"
+overridden      = false
+```
+
+`source_kind` is `"registry"` for the M1.13 default, `"git"` for git-source declarations, `"override"` for `[[override]]`-resolved (existing `overridden = true` is preserved as redundant marker for back-compat). Lockfile schema bumps to v3; v2 lockfiles read transparently and migrate to v3 on next install (everything that was `overridden = true` becomes `source_kind = "override"`; everything else `"registry"`).
+
+**Transitive dependencies.** A git-source package's own `[requires]` declarations are resolved through the consuming project's `[[registry]]` (same path as override-resolved, §2.4). A git-source package may itself declare git-source dependencies — they recursively resolve through the same path, with cycle detection inheriting the existing solver's protection. There is no "git-source registry" concept; the consumer project's manifest is the authoritative resolution surface for transitives.
+
+**Comparison with `[[override]]`.** Both declare a git URL + ref for a pkgref. The difference is semantic:
+
+| | `[requires.packages]` git-source | `[[override]]` |
+|---|---|---|
+| Role | Primary declaration | Patch on top of an existing declaration |
+| Pairs with | A bare `[requires.packages]` entry? No — git-source IS the declaration | A `[requires.packages]` entry — override patches it |
+| Lockfile marker | `source_kind = "git"` | `source_kind = "override"`, `overridden = true` |
+| Typical lifetime | Long-lived (project's normal architecture) | Short-lived (awaiting upstream PR / hotfix) |
+| `vibe list --overrides` | Not surfaced (it is a normal dependency) | Surfaced |
+| Removal | `vibe uninstall <pkgref>` drops the entry | Drop the `[[override]]` block; the underlying dependency comes back |
+
+A project may use both: declare `flow:internal` through `[requires.packages]` git-source (the architecture), and override `flow:wal` through `[[override]]` while waiting for an upstream fix (the patch). The override always wins.
+
+**Migration: legacy array form parses as map form.** Existing manifests with `packages = ["flow:wal@^0.3", ...]` continue to parse — the deserializer accepts both shapes for a release window. `["flow:wal@^0.3"]` is canonically equivalent to `{ "flow:wal" = "^0.3" }`. On the next manifest write (any command that mutates `vibe.toml` — `vibe install`, `vibe uninstall`, `vibe registry add`), the array form is rewritten in map form. After that the array form is no longer present in the file. The parser keeps accepting the array form indefinitely — there is no version-fence; both shapes are equivalent forever, but only the map form is written.
+
+**Out of scope for this slice.** Multiple `git-source` entries against the same `(kind, name)` with different URLs (i.e. parallel forks of the same package): rejected as `DuplicateDeclaration`. There is no "first-priority" fallback chain for git-source — the operator picks one URL. If they need failover, that's `[[mirror]]` territory, which is registry-only by design (§2.3). `vibe registry test` does not currently probe git-source declarations; the diagnostic is registry-scoped because git-source has no fall-through walk to validate. May add a `vibe deps test` (or extend `registry test`) in a follow-up if operators ask.
+
 ### 2.5 Per-package layout: flat, tag-based {#layout}
 
 **Decision.** A package repository contains the package content flat at the repository root:

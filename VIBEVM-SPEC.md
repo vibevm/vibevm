@@ -690,9 +690,29 @@ authors = ["Oleg <oleg@example.com>"]
 # (the cargo / npm "install from manifest" shape). The lockfile carries the
 # resolved transitive graph and the exact pins; this section carries the
 # author's intent (constraints), nothing else.
+#
+# `[requires.packages]` is a TOML table: each entry maps a pkgref to either
+# a version-constraint string (registry-resolved, the default shape) or an
+# inline-table (registry-resolved with options, or git-source). The legacy
+# array-of-strings form `packages = ["flow:wal@^0.3", ...]` parses
+# transparently (same semantics) and is rewritten to the table form on the
+# next manifest write.
 [requires]
-packages     = ["flow:wal@^0.3", "stack:rust-cli@^0.1.0"]   # caret-default; bare semver = caret (Cargo)
 capabilities = []                                            # abstract requirements satisfied by any provider
+
+[requires.packages]
+"flow:wal"        = "^0.3"                # registry-resolved; caret-default (Cargo shorthand)
+"stack:rust-cli"  = "^0.1.0"
+
+# Git-source: a whole repository = one package. PROP-002 §2.4.1.
+# Use case: a single private/internal package without a multi-package
+# `[[registry]]` org behind it.
+# "flow:internal-helper" = { git = "git@gitlab.company.com:specs/internal-helper",
+#                            tag = "v0.1.0" }
+# "flow:experimental"    = { git = "https://github.com/me/flow-experimental",
+#                            branch = "main" }     # mutable; vibe update follows HEAD
+# "flow:wal-fork"        = { git = "https://github.com/me/flow-wal-fork",
+#                            rev = "abc12345" }    # commit SHA (most strict)
 
 [active]
 # The currently active stack (used as default for `vibe build`)

@@ -485,6 +485,28 @@ hash/source/ref lines in the lockfile).
 
 ---
 
+### M1.15 — Git-source dependencies (whole-repo-as-package) ⏳ PROPOSED (2026-05-09)
+
+**Thesis.** Cargo / npm / Poetry / Bundler / Go modules all let you declare a dependency as "this whole git repository is the package" — `[dependencies] foo = { git = "..." }`, `"foo": "git+https://...#tag"`, `gem 'foo', git: '...'`. vibevm's existing `[[override]]` mechanism technically does this, but it is semantically a *patch* (replace a registry-resolved pkg with a fork) — not a *first-class declaration*. The use cases for first-class git-source are different: a single private/internal package without a multi-package `[[registry]]` org behind it, an active fork that **is** the source (not a patch on top), or a cross-organisation pull. Spec contract per [PROP-002 §2.4.1](spec/modules/vibe-registry/PROP-002-decentralized-registry.md#git-source).
+
+**Scope.**
+
+- Spec — PROP-002 §2.4.1 ([git-source declarations](spec/modules/vibe-registry/PROP-002-decentralized-registry.md#git-source)) + `VIBEVM-SPEC.md` §7.5 update (table-form `[requires.packages]` example with git-source). Done.
+- Schema — `Requires.packages` becomes `BTreeMap<PackageRef, PackageDep>` instead of `Vec<PackageRef>`. New `PackageDep` enum: `Constraint(VersionSpec)` (registry-resolved) | `Git { url, ref_kind: GitRef, version: Option<VersionSpec>, auth, token_env }`. Custom `Deserialize` accepts both legacy array-of-strings form and modern table form; on round-trip writes table form.
+- Wire grammar — exactly one of `tag` / `rev` / `branch` required for git-source; zero or two+ rejected at parse time. `version` optional (verification only). `auth` defaults to `"none"`; per-source explicit (no host-match against `[[registry]]`).
+- Resolver — `MultiRegistryResolver` learns to short-circuit on a git-source declaration the same way it does for `[[override]]`. Resolution order: override > git-source > registry-walk. Transitives of a git-source package resolve through the consuming project's `[[registry]]` (existing override path).
+- Single-package `GitPackageRegistry` constructor — direct repo URL instead of `org_url + naming`. Reuses the existing token-injection / bootstrap-with-scrub / content-hash discipline.
+- Lockfile — schema bumps to v3; new `source_kind = "registry" | "git" | "override"` field per `[[package]]`. v2 lockfiles read transparently and migrate on next install.
+- `vibe install` / `uninstall` — accept `vibe install <pkgref> --git <url> --tag/branch/rev <ref>` to add a git-source declaration to `[requires.packages]` without hand-editing `vibe.toml`. Uninstall identical to registry-resolved.
+- Tests — hermetic for parser (legacy/modern wire-form round-trip, missing/conflicting refs, identity mismatch); resolver (override > git > registry order, transitive resolution); production walk against a real private GitHub repo (extending the M1.14.4 recipe).
+- Docs — new `docs/git-source-dependencies.md` operator reference; update `docs/commands/install.md` with new flags; update `docs/registry-auth.md` to clarify per-source auth vs `[[registry]]` auth.
+
+**Out of scope.** Multiple git-source entries against the same `(kind, name)` (rejected as `DuplicateDeclaration`). `vibe registry test` probing git-source (registry-only diagnostic by design — git-source has no fall-through walk). Mirror chain for git-source (`[[mirror]]` is registry-only). git-source-as-mirror-of-registry-package (collapses semantically with `[[override]]`).
+
+**Estimated effort.** Medium. Schema is the largest change; Resolver/registry/lockfile are surgical. Expected ~8–12 commits across one day. Backwards compat is the most subtle aspect — every existing manifest must continue to parse and round-trip.
+
+---
+
 ## M1.5 — Generation
 
 **Thesis.** vibevm earns its tagline — "the disciplined runtime for
