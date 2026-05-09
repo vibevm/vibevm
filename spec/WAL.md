@@ -1,7 +1,43 @@
 # WAL — Project Continuation State
-_Updated: 2026-05-09 (M1.14.4 — production walk + final UX closers)_
+_Updated: 2026-05-10 (M1.15 implementation — git-source dependencies)_
 
 ## Current phase
+
+**Working checkpoint (2026-05-10, M1.15 — `[requires.packages]` table-form schema + git-source dispatch end-to-end).** Six implementation commits land the M1.15 spec from PROP-002 §2.4.1. The schema, single-package registry constructor, resolver dispatch, lockfile field, CLI wiring, and CLI flags are all in place; the workspace builds clean, every existing test passes, two new resolver hermetic tests + 12 new schema-parser tests cover the new surfaces. Production smoke walk (against a real GitHub repo) and full doc set follow in the next session-end.
+
+Six commits land the slice (newest-first; on top of the two PROPOSED spec commits from yesterday):
+
+- `<pending> docs(commands,git-source,readme): user-facing reference for git-source declarations` — new `docs/git-source-dependencies.md`, `docs/commands/install.md` flag-table extension, `docs/README.md` index entry. WAL block (this one).
+- `90bf10b feat(vibe-cli): vibe install --git/--tag/--branch/--rev for git-source declarations` — Cargo-shape CLI affordance for adding a git-source dep without hand-editing `vibe.toml`. New `--git <URL>`, `--tag/--branch/--rev`, `--git-auth`, `--git-token-env` flags on `InstallArgs`. New `apply_git_source_flag` helper validates flag combinations, builds `GitPackageDep`, persists the manifest before resolving. `merge_manifest_requires` extended to skip CLI roots already declared as git-source (avoids `(kind, name)` duplicate that the parser would reject).
+- `a7dce7f feat(vibe-core,vibe-registry,vibe-install): lockfile source_kind field for git/override discriminant` — new `SourceKind` enum (`Registry` / `Git` / `Override`) on `LockedPackage`, derived from `cached.overridden` / `cached.is_git_source`. `CachedPackage.is_git_source` propagates through five construction sites in vibe-registry. Wire-compatible — `Option<SourceKind>` defaults to `None` for pre-M1.15 lockfiles.
+- `153f3a2 feat(vibe-cli): wire git-source declarations through install/update/outdated` — three `MultiRegistryResolver::open` call-sites chain `.with_git_packages(manifest.requires.git_packages.clone())`. `install::run` roots derivation combines `requires.packages` + `requires.git_packages` into one `Vec<PackageRef>`.
+- `161b7b1 feat(vibe-registry): MultiRegistryResolver dispatches to git-source declarations` — resolver short-circuits the registry walk for any pkgref in `git_packages` map. New `resolve_git_source` synthesises a single-package registry, fetches manifest at the declared ref via `fetch_manifest_at_ref` (tag/branch/rev), verifies `(kind, name)` and optional `version` constraint. New `fetch_git_source` mirrors `fetch_override` but threads `dep.auth`/`dep.token_env` through M1.14 token-injection + scrub plumbing. `MultiResolution.is_git_source: bool` discriminates downstream. Two new hermetic resolver tests (`resolve_dispatches_to_git_source_short_circuiting_registries`, `resolve_git_source_rejects_kind_name_mismatch`).
+- `c313ebd feat(vibe-registry): GitPackageRegistry::open_single_package for git-source` — new constructor that wraps `open_with_auth` and flips a `single_package_url: Option<String>` field. `package_repo_url` / `package_urls` consult the field and return the URL verbatim instead of applying `naming` to compose `<org>/<kind>-<name>.git`. New `is_single_package() -> bool` predicate. Two unit tests.
+- `2544d76 feat(vibe-core): [requires.packages] table-form schema with git-source slot` — schema bumps. New `GitPackageDep`, `GitRefKind` types. `Requires.packages` keeps `Vec<PackageRef>` for back-compat (~40 downstream call-sites untouched); new `git_packages: Vec<GitPackageDep>` field stores git-source declarations separately. Custom Deserialize accepts both legacy array-of-strings shape (M1.13) and modern map shape (M1.15) — manual `Visitor` for clean inner-error propagation. Round-trip writes the modern map form. New `Error::BadDependencyDecl` variant. 12 new tests covering tag/branch/rev variants, auth, version-constraint, missing-ref / multiple-refs / `@`-in-key validation, full round-trip.
+
+Workspace state at HEAD `90bf10b`:
+
+- vibe-core: **128 hermetic** (was 116; +12 git-source schema tests).
+- vibe-registry: **98 hermetic** (was 94; +2 single-package constructor + 2 resolver dispatch).
+- vibe-install: **22 hermetic** (unchanged in count; +`source_kind` field touched 3 test fixtures).
+- vibe-cli e2e: **89 hermetic + 3 ignored** (unchanged; one fixture string updated for new `[requires.packages]` map-form output).
+- vibe-cli bin: **93 hermetic** (unchanged).
+- `cargo test --workspace` all green; `cargo clippy --workspace --all-targets -- -D warnings` clean; `vibe check --path . --quiet` reports 0/0/0.
+
+Operational notes:
+
+- **Wire-form back-compat is dual-direction.** Legacy `packages = ["flow:wal@^0.3"]` array still parses for any vibe.toml file produced before M1.15. Round-trip writes the modern map form. Both shapes are read forever; only the map form is written.
+- **`(kind, name)` collision rejected.** A pkgref cannot appear simultaneously in `packages` (registry-resolved) and `git_packages` (git-source). TOML's no-duplicate-keys grammar already enforces this through the wire form; the `TryFrom<RequiresWire>` validation is defence-in-depth for any future Vec-based wire form.
+- **Resolution priority: override > git-source > registry.** The order matches Cargo's `[patch] foo` overriding `[dependencies] foo = { git = "..." }` overriding `[dependencies] foo = "*"`. The git-source layer is the *primary declaration* (long-lived architecture); override is a *patch* (short-lived fix).
+- **`#[error(transparent)]` chain-walk quirk reused.** The structured-error envelope from M1.14.4 already documented that `cause.downcast_ref::<DepProviderError>()` does not propagate through `#[error(transparent)]` wrappers; the new git-source error path goes through the same `RegistryError::MalformedMeta` channel and inherits the manual destructure-on-`SolveError::Provider` plumbing.
+- **Token-discipline preserved.** `fetch_git_source` synthesises a single-package `GitPackageRegistry` to leverage its `credentialed_url` plumbing for token injection, then immediately calls `set_remote_url(.., "origin", plain_url)` after `ensure_clone_at` to scrub the token from the freshly-bootstrapped `.git/config`. Same M1.14 contract; same hard invariant ("no token bytes on disk").
+
+What still needs to land (planned for the next session):
+
+- **Production smoke walk** against a real GitHub repo as a git-source target. Verify (a) install succeeds with `tag = "v..."`, (b) lockfile records `source_kind = "git"` + correct `source_url`, (c) `grep -r x-access-token ~/.vibe/registries/` empty if `auth = "token-env"`, (d) re-run is `unchanged`. Recipe analogous to M1.14.4's private-probe walk.
+- **Branch-resolve test** — exercise `branch = "main"` end-to-end, verify `vibe install` sticks to lockfile commit, `vibe update` walks HEAD.
+- **Hermetic e2e test** in `vibe-cli/tests/cli_e2e.rs` covering the `vibe install <pkgref> --git ... --tag ...` happy path — currently the wiring is exercised through unit tests at the resolver layer; an end-to-end CLI test would lock in the manifest+lockfile state across a real shell invocation.
+- **VIBEVM-SPEC.md §7 update** if the wire-form or terminology shifts after the smoke walk.
 
 **Working checkpoint (2026-05-09, M1.14.4 — production walk against a live private GitHub repo + the last three deferred-list items closed).** This is the slice that takes M1.14 from "all the moving parts pass hermetic tests" to "validated end-to-end against a real private vibevm package on a real GitHub org." The walk produced one operationally-significant insight, three small UX closers, and a new diagnostic command. **HEAD `<pending>`**, vibe-core at **116 hermetic** (was 115; +1 inline-kv comment preservation test), workspace `cargo test --workspace` all green, `cargo clippy --workspace --all-targets -- -D warnings` clean, `vibe check --path . --quiet` reports 0/0/0.
 
