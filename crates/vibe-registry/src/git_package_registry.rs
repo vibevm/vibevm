@@ -1157,6 +1157,7 @@ impl GitPackageRegistry {
                 source_ref: Some(tag.clone()),
                 resolved_commit: None,
                 overridden: false,
+                is_git_source: false,
             };
             match expected_hash {
                 None => {

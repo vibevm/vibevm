@@ -715,6 +715,7 @@ impl MultiRegistryResolver {
             source_ref: Some(refname),
             resolved_commit: None,
             overridden: true,
+            is_git_source: false,
         })
     }
 
@@ -805,6 +806,7 @@ impl MultiRegistryResolver {
             source_ref: Some(refname),
             resolved_commit: None,
             overridden: false,
+            is_git_source: true,
         })
     }
 

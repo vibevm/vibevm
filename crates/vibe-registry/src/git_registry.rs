@@ -225,6 +225,7 @@ impl Registry for GitRegistry {
             source_ref: None,
             resolved_commit: None,
             overridden: false,
+            is_git_source: false,
         })
     }
 }

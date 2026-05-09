@@ -782,6 +782,13 @@ pub fn register_installed_with_metadata(
             cache_files: s.cache_files.clone(),
         })
         .collect();
+    let source_kind = if plan.cached.overridden {
+        Some(vibe_core::manifest::SourceKind::Override)
+    } else if plan.cached.is_git_source {
+        Some(vibe_core::manifest::SourceKind::Git)
+    } else {
+        Some(vibe_core::manifest::SourceKind::Registry)
+    };
     let entry = LockedPackage {
         kind: plan.cached.resolved.kind,
         name: plan.cached.resolved.name.clone(),
@@ -795,6 +802,7 @@ pub fn register_installed_with_metadata(
         files_written,
         dependencies,
         overridden: plan.cached.overridden,
+        source_kind,
         features: metadata.features,
         subskills_active,
         describes: metadata.describes,
@@ -1759,6 +1767,7 @@ source = "boot/10-flow-wal.md"
             files_written: vec![],
             dependencies: Vec::new(),
             overridden: false,
+            source_kind: Some(vibe_core::manifest::SourceKind::Registry),
             features: Vec::new(),
             subskills_active: Vec::new(),
             describes: None,
@@ -1942,6 +1951,7 @@ files = ["../escape.md"]
             files_written: Vec::new(),
             dependencies: Vec::new(),
             overridden: false,
+            source_kind: Some(vibe_core::manifest::SourceKind::Registry),
             features: Vec::new(),
             subskills_active: Vec::new(),
             describes: None,
@@ -2298,6 +2308,7 @@ packages = ["flow:atomic-commits@^0.1"]
             ],
             dependencies: Vec::new(),
             overridden: false,
+            source_kind: Some(vibe_core::manifest::SourceKind::Registry),
             features: Vec::new(),
             subskills_active: Vec::new(),
             describes: None,

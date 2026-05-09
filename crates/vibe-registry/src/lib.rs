@@ -185,6 +185,11 @@ pub struct CachedPackage {
     /// `true` iff this package was resolved through a `[[override]]`
     /// entry rather than the registry layer.
     pub overridden: bool,
+    /// `true` iff this package was resolved through a `[requires.packages]`
+    /// table-form git-source declaration (PROP-002 §2.4.1) rather than
+    /// the registry walk or `[[override]]`. Mutually exclusive with
+    /// `overridden`. Lockfile maps this to `source_kind = "git"`.
+    pub is_git_source: bool,
 }
 
 pub struct LocalRegistry {
@@ -328,6 +333,7 @@ impl LocalRegistry {
             source_ref: None,
             resolved_commit: None,
             overridden: false,
+            is_git_source: false,
         })
     }
 }

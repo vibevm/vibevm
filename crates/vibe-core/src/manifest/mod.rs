@@ -16,7 +16,7 @@ pub mod purl;
 mod subskill;
 
 pub use lockfile::{
-    CURRENT_SCHEMA_VERSION, Lockfile, LockedPackage, LockedSubskill, LockfileMeta,
+    CURRENT_SCHEMA_VERSION, Lockfile, LockedPackage, LockedSubskill, LockfileMeta, SourceKind,
     VirtualCapabilityRecord,
 };
 pub use package::{

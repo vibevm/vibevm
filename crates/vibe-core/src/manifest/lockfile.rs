@@ -141,6 +141,18 @@ pub struct VirtualCapabilityRecord {
     pub emitted_at: String,
 }
 
+/// Discriminator for `LockedPackage.source_kind` — which resolution path
+/// produced the entry. Maps directly onto the three short-circuit
+/// branches in `MultiRegistryResolver::resolve` (override > git-source
+/// > registry-walk). PROP-002 §2.4.1.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum SourceKind {
+    Registry,
+    Git,
+    Override,
+}
+
 /// One installed package, as it appears in the lockfile.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -198,6 +210,16 @@ pub struct LockedPackage {
     /// `vibe list --overrides` and gates certain update paths.
     #[serde(default, skip_serializing_if = "is_false")]
     pub overridden: bool,
+
+    /// Resolution path that produced this entry — `"registry"` (default
+    /// `[[registry]]` walk), `"git"` (PROP-002 §2.4.1
+    /// `[requires.packages]` git-source), or `"override"` (`[[override]]`-
+    /// resolved patch). Optional for back-compat with pre-M1.15
+    /// lockfiles, which can be assumed `"override"` if `overridden = true`
+    /// else `"registry"` until rewritten on the next install.
+    /// PROP-002 §2.4.1.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub source_kind: Option<SourceKind>,
 
     /// Features active for this package (PROP-003 §2.4). Empty for
     /// packages with no `[features]` table or where no features were
