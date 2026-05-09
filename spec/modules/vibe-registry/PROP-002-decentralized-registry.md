@@ -283,6 +283,129 @@ A project may use both: declare `flow:internal` through `[requires.packages]` gi
 
 **Out of scope for this slice.** Multiple `git-source` entries against the same `(kind, name)` with different URLs (i.e. parallel forks of the same package): rejected as `DuplicateDeclaration`. There is no "first-priority" fallback chain for git-source — the operator picks one URL. If they need failover, that's `[[mirror]]` territory, which is registry-only by design (§2.3). `vibe registry test` does not currently probe git-source declarations; the diagnostic is registry-scoped because git-source has no fall-through walk to validate. May add a `vibe deps test` (or extend `registry test`) in a follow-up if operators ask.
 
+### 2.4.2 Registry redirect: delegating package content to an external repo {#redirect}
+
+**Decision.** A registry org may host a **stub repo** for a package — a normal `<org>/<kind>-<name>` repository whose content is **not** the package itself but a single file pointing at an external git repository where the package actually lives. The resolver, when fetching the package manifest, transparently follows the pointer; consumers `vibe install <pkgref>` see no difference from a direct registry-resolved package. The use case is **delegation**: an org owner wants the package to live in their namespace (so consumers find it via the org's `[[registry]]` walk without knowing about the external author) but offload the development, the PR queue, and the hosting platform's permission management to a different team or person who already has their own repo.
+
+This is the vibevm analogue of Linux distro virtual packages with `Provides:` pointing at external SRPMs, DNS CNAME records, GitHub's repo-redirect feature, and Cargo's never-shipped `[workspace.metadata.redirect]` proposal. The closest direct analogue is **Bundler's `gem "foo", git: "..."` declared at the registry level rather than the consumer level** — and that is exactly what this is: registry-side declaration that "this package's content lives elsewhere".
+
+**Marker file.** A stub repo carries `vibe-redirect.toml` at its root **instead of** `vibe-package.toml`. Both files in the same repo at the same ref is rejected at parse as `AmbiguousStub`.
+
+```toml
+# vibe-redirect.toml at the root of <org>/<kind>-<name> stub repo
+
+[redirect]
+target_url = "git@gitlab.acme.example:flows/internal-helper"
+
+# Tag policy. Default "pass-through-tag" — covered by the absence of these
+# fields. Operator must declare `pinned_ref` if `ref_policy = "pinned"`.
+# ref_policy = "pinned"
+# pinned_ref = "v0.3.0"
+
+# Auth-hint for the consumer's resolver when fetching from `target_url`.
+# Same enum as [[registry]] auth (§2.2.1); same env-var conventions.
+# Default "none".
+# auth      = "token-env"
+# token_env = "VIBEVM_TARGET_TOKEN_GITLAB_ACME_EXAMPLE"
+
+# Optional human-readable note surfaced by `vibe show <pkgref>` and
+# `vibe registry list`. Useful for "contact: …", "delegated to …", etc.
+description = "Delegated to acme-corp; contact maintainers@acme.example"
+```
+
+**Wire grammar:**
+
+| Field | Required | Meaning |
+|---|---|---|
+| `target_url` | required | Full git URL of the package's actual content repository. Same URL grammar as `[[registry]] url`. |
+| `ref_policy` | optional | `"pass-through-tag"` (default) or `"pinned"`. |
+| `pinned_ref` | required iff `ref_policy = "pinned"` | Tag, branch, or commit on `target_url` that ALL consumers resolve to, regardless of which version they ask for. |
+| `auth` | optional | Auth regime for `target_url`. Same enum as `[[registry]]` auth. Default `"none"`. |
+| `token_env` | optional | Env-var name when `auth = "token-env"`. Default derived from target host. |
+| `description` | optional | Free-form text shown to operators. |
+
+**Resolver behaviour.** When fetching a package manifest at a ref `T` from a registry-level `<stub_url>`:
+
+1. Probe `git archive --remote=<stub_url> <T> vibe-package.toml`. If found — normal package, proceed as today (§2.5).
+2. If the file is missing, probe `vibe-redirect.toml` at the same ref. If found — this is a stub.
+3. Parse the marker. Compute `target_ref`:
+   - `ref_policy = "pass-through-tag"` (default): `target_ref = T` (same tag name on target).
+   - `ref_policy = "pinned"`: `target_ref = pinned_ref` (all stub tags collapse to this single target ref; `T` from step 1 is informational metadata only).
+4. Apply `[redirect].auth` (or its host-derived default) to fetch from `target_url`.
+5. Re-enter the standard resolution path against `target_url` at `target_ref`. Fetch `vibe-package.toml`, compute content-hash over target content, fetch package files for install via the same `GitPackageRegistry` machinery used elsewhere.
+6. **Hop limit: 1.** If `target_url`'s content-root is itself a stub (carries `vibe-redirect.toml`), reject with `RedirectChainNotAllowed`. There is no chain-following — stubs are flat indirection, not a redirect graph.
+
+**Tag visibility.** `list_versions(stub_url)` returns the tags of the **stub** repo, not the target. The org owner controls which versions surface in their namespace by managing stub tags — which is exactly the gating mechanism a registry already has via `vibe registry publish`. Adding a new version to the namespace = `git tag v<ver> && git push origin v<ver>` against the stub repo (or `vibe registry redirect-sync <pkgref>` if it auto-mirrors target tags — see "Sync helper" below). The stub itself need contain no actual code — only `vibe-redirect.toml`, optionally a `README.md` for humans browsing the repo.
+
+The fact that stub-tags exist independently of target-tags is the key affordance: org owner certifies each version that enters their namespace. A target tag `v2.0.0` with a breaking change does NOT automatically appear in the org's namespace — the owner must `git tag v2.0.0 && git push origin v2.0.0` against the stub repo. Pass-through happens during a single resolve, not during version listing.
+
+**Sync helper (`vibe registry redirect-sync`).** Org owner can run `vibe registry redirect-sync <pkgref>` to copy target-side tags into the stub repo (with operator confirmation per tag, or `--all` for batch). This is opt-in convenience tooling; the stub repo is just a normal git repo and tags can equally be managed by hand or CI.
+
+**Identity and content-hash.** Identity remains `(kind, name, version, content_hash)` per §2.1. The `content_hash` is computed over the **target's** content, not the stub's. The stub repo carries only `vibe-redirect.toml` and (optionally) human-readable companion files; nothing in the stub ships into the consumer project. A force-pushed target tag is detected exactly as it would be for a non-redirected package: hash mismatch on the next install raises `IntegrityError`.
+
+**Trust model.** The stub is mutable — its owner can change `target_url` at any commit. Defence is layered:
+
+- **Content-hash in lockfile** catches a target switch on the next install. The consumer sees `IntegrityError` and can investigate before any write happens.
+- **`--trust-redirect`** flag (parallel to `--trust-mirror` from §2.1) lets an operator accept a deliberate target switch — e.g. when the external maintainer migrates their hosting from GitLab to Forgejo. Never silent; always operator-initiated.
+- **Description field** lets the org owner publish contact / verification info for their delegate; consumers can manually verify out of band.
+- **Future: signed redirects** (out of scope; tracked under §7 open questions). For v0, plain text + content-hash is the contract.
+
+**Lockfile shape.** A new `via_redirect` field per `[[package]]` records the stub URL when a redirect was followed. `null` (or absent) for non-redirected packages.
+
+```toml
+[[package]]
+kind            = "flow"
+name            = "internal-helper"
+version         = "0.3.0"
+source_kind     = "registry"                                     # registry-resolved (via stub)
+registry        = "vibespecs"                                    # which [[registry]] hosted the stub
+source_url      = "git@gitlab.acme.example:flows/internal-helper"  # target URL — actual content
+via_redirect    = "git@github.com:vibespecs/flow-internal-helper"  # NEW; stub URL that delegated
+source_ref      = "v0.3.0"                                       # target ref (= stub tag for pass-through, = pinned_ref for pinned)
+resolved_commit = "abc123…def"                                   # target commit
+content_hash    = "sha256:…"                                     # over target content
+overridden      = false
+```
+
+`via_redirect` is purely diagnostic / auditing — `vibe show <pkgref>` surfaces it; `vibe list --json` includes it; the resolver does not consult it on subsequent installs (lockfile is authoritative). Lockfile schema bumps to v3 (same bump as §2.4.1's `source_kind`); v2 lockfiles read transparently and migrate on next install with `via_redirect = null` for all entries.
+
+**Cache layout.** Both stub and target appear in the per-user registry cache (§2.6) as separate entries keyed by their canonical URL hash. Stub cache holds the `vibe-redirect.toml` parse result for freshness window TTL (1 hour, per §2.6); target cache holds the actual package content. Consequence: the redirect file is not re-fetched on every consume within the freshness window, but the target's manifest is consulted per resolution call as today.
+
+**Auth for the stub vs auth for the target.** Two independent layers:
+
+- Stub auth = the registry's `[[registry]] auth` regime. The stub repo is a child of the registry org and inherits its auth. If the registry is `auth = "token-env"`, fetching the stub uses that token.
+- Target auth = the redirect's `[redirect].auth`. Independent. The stub may be in a public registry (`auth = "none"`) but point at a private target (`auth = "token-env"` against a different host).
+
+Tokens flow through the same M1.14 plumbing: read once at resolver-open time, kept in memory, scrubbed from `.git/config` after any clone. The `inject_token` / `set_remote_url` discipline applies identically to both URLs.
+
+**Comparison with related mechanisms:**
+
+| Mechanism | Set by | Lifetime | Lockfile marker | Use case |
+|---|---|---|---|---|
+| `[[registry]]` direct package | Registry owner | Long | `source_kind = "registry"`, `via_redirect = null` | Standard ownership |
+| `[[registry]]` stub (this section) | Registry owner | Long | `source_kind = "registry"`, `via_redirect = <stub_url>` | Owner delegates content hosting to external party |
+| `[[mirror]]` | Consumer | Long | `source_kind = "registry"`; mirror URL not in lockfile | Operator-side fallback URL for the same content |
+| `[[override]]` | Consumer | Short | `source_kind = "override"`, `overridden = true` | Operator-side patch / fork pin |
+| `[requires.packages]` git-source (§2.4.1) | Consumer | Long | `source_kind = "git"` | Consumer declares package not in any registry |
+
+The key distinction between **stub** and **mirror** is *who controls the indirection*. Mirror is consumer-side (the operator's `vibe.toml` says "if vibespecs is slow, try this URL for the same content"). Stub is org-side (the registry owner's stub repo says "for this specific package, the content lives over there"). Same wire-level effect (redirected fetch), inverse control axis.
+
+**Publish helper (`vibe registry redirect`).** A new CLI command:
+
+```
+vibe registry redirect <pkgref> --to <target-url>
+                                [--ref-policy pass-through-tag|pinned]
+                                [--pinned-ref <ref>]
+                                [--auth <none|token-env|credential-helper|ssh>]
+                                [--token-env <NAME>]
+                                [--description "..."]
+                                [--registry <name>]              # default = primary
+```
+
+Creates `<org>/<kind>-<name>` stub repo via the registry's `RepoCreator` (PROP-002 §2.10), commits a `vibe-redirect.toml`, pushes. Does not tag — operator runs `vibe registry redirect-sync <pkgref>` separately when ready to publish a version. Symmetric to `vibe registry publish` (which is the non-redirect path); the two commands are mutually exclusive on the same `<pkgref>` slot.
+
+**Out of scope for this slice.** Redirect chains (stub → stub → real) — explicitly rejected at hop = 2. Signed redirect markers (cryptographic attestation that `target_url` is approved by org owner — `[redirect].signature = "..."` with org's pubkey). Auto-deprecation marker (a stub repo could carry `[redirect.deprecated] new_pkgref = "..."` to forward consumers to a renamed package — separate feature, separate PROP). `[[mirror]]` against a stub repo (mirror infrastructure pre-redirect) — undefined behaviour for v0; the resolver follows redirect first, mirror semantics apply to the target URL.
+
 ### 2.5 Per-package layout: flat, tag-based {#layout}
 
 **Decision.** A package repository contains the package content flat at the repository root:

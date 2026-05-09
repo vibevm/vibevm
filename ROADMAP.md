@@ -507,6 +507,32 @@ hash/source/ref lines in the lockfile).
 
 ---
 
+### M1.16 — Registry redirect (delegated package via stub repo) ⏳ PROPOSED (2026-05-10)
+
+**Thesis.** A registry org's stub repo for a package may carry a marker file pointing at an external git repo where the package actually lives, instead of carrying the package content itself. Use case: an org owner wants the package to live in their namespace (so consumers find it via the standard `[[registry]]` walk without knowing about the external author) but offload hosting / PRs / permissions to a different team. Spec contract per [PROP-002 §2.4.2](spec/modules/vibe-registry/PROP-002-decentralized-registry.md#redirect).
+
+**Scope.**
+
+- Spec — PROP-002 §2.4.2 ([registry redirect](spec/modules/vibe-registry/PROP-002-decentralized-registry.md#redirect)) + `VIBEVM-SPEC.md` §7 update with marker-file shape. Done.
+- Marker file — new `vibe-redirect.toml` schema in `vibe-core` (parallel to `vibe-package.toml`). Required `target_url`; optional `ref_policy = pass-through-tag | pinned`, `pinned_ref` (required if pinned), `auth` / `token_env` (target-side, mirrors PROP-002 §2.2.1), `description`.
+- Registry resolver — `GitPackageRegistry::fetch_dep_manifest` falls through to `vibe-redirect.toml` when `vibe-package.toml` is absent. New `RegistryError::AmbiguousStub` (both files present). Hop limit = 1 — if the target is itself a stub, raise `RedirectChainNotAllowed`. Apply `[redirect].auth` (independent of stub auth) when fetching the target.
+- Tag visibility — `list_versions(stub_url)` returns stub tags (not target tags). Org owner gates which versions enter their namespace.
+- Identity — `content_hash` over target content (not stub). Force-pushed target tag detected by hash mismatch on next install. New `--trust-redirect` flag to accept deliberate target switches (parallel to `--trust-mirror`).
+- Lockfile — new `via_redirect` field per `[[package]]` records the stub URL when redirect was followed. Same v3 schema bump as M1.15 (additive `via_redirect = null` for non-redirected entries).
+- Cache — stub and target are separate entries in the per-user registry cache (`~/.vibe/registries/<canonical-url-hash>/...`), independent freshness windows.
+- CLI — `vibe registry redirect <pkgref> --to <url>` creates a stub repo via `RepoCreator`. Symmetric to `vibe registry publish`; mutually exclusive on the same pkgref slot. `vibe registry redirect-sync <pkgref>` mirrors target tags into the stub for ergonomic version gating.
+- `vibe show <pkgref>` and `vibe registry list` surface `via_redirect` URL and the redirect's `description` field.
+- Tests — hermetic for marker-file parser (round-trip, missing fields, ambiguous-stub); resolver (pass-through-tag, pinned, hop-limit=1 rejection, auth-on-target, identity over target content); production walk against a stub→target pair on real GitHub.
+- Docs — new `docs/registry-redirect.md` operator reference; update `docs/registry-auth.md` to clarify two-layer auth (stub + target).
+
+**Out of scope.** Redirect chains (rejected at hop=2). Signed redirect markers (target-attestation by org owner's key). Auto-deprecation forwarding (`[redirect.deprecated] new_pkgref = ...`) for renames — separate feature. `[[mirror]]` interaction with stubs.
+
+**Estimated effort.** Medium-small. Less invasive than M1.15 (no schema change to existing manifests). Resolver fall-through + new marker parser + lockfile field + CLI command. Expected ~6–10 commits.
+
+**Order vs M1.15.** M1.15 (git-source) and M1.16 (registry redirect) are independent surfaces and may land in either order. Reasonable shape: M1.15 first because it shares the `GitPackageRegistry::open_single_package` constructor that M1.16's redirect-follow path also wants (target_url is a single-package URL). Landing M1.15 first means M1.16 reuses already-tested machinery.
+
+---
+
 ## M1.5 — Generation
 
 **Thesis.** vibevm earns its tagline — "the disciplined runtime for

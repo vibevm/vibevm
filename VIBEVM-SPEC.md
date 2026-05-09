@@ -714,6 +714,31 @@ capabilities = []                                            # abstract requirem
 # "flow:wal-fork"        = { git = "https://github.com/me/flow-wal-fork",
 #                            rev = "abc12345" }    # commit SHA (most strict)
 
+# ----- Registry redirect (PROP-002 §2.4.2) -----------------------------
+#
+# A registry's stub repo may carry `vibe-redirect.toml` instead of
+# `vibe-package.toml`, pointing at an external git repo where the package
+# actually lives. Consumers see no difference at the `vibe install` surface
+# — the org owner has delegated content hosting to an external party.
+#
+# Marker file lives at the root of the stub repo:
+#
+#   # vibe-redirect.toml
+#   [redirect]
+#   target_url  = "git@gitlab.acme.example:flows/internal-helper"
+#   description = "Delegated to acme-corp; contact maintainers@acme.example"
+#   # Default ref_policy = "pass-through-tag" — stub tag v0.3.0 → target v0.3.0.
+#   # Opt in to pinning with:
+#   # ref_policy = "pinned"
+#   # pinned_ref = "v0.3.0"
+#   # Optional target-side auth:
+#   # auth      = "token-env"
+#   # token_env = "VIBEVM_TARGET_TOKEN"
+#
+# In `vibe.lock`, redirected entries carry an extra `via_redirect = "<stub_url>"`
+# alongside `source_url = "<target_url>"`. Both URLs are surfaced by
+# `vibe show <pkgref>`. -----------------------------------------------
+
 [active]
 # The currently active stack (used as default for `vibe build`)
 stack = "rust-cli"
