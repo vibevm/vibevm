@@ -47,6 +47,10 @@ End-to-end walkthroughs that compose multiple commands into a real scenario. Eac
 
 [`version-syntax.md`](version-syntax.md) — how version constraints work everywhere a pkgref appears (`vibe install`, `[requires].packages`, `[provides].capabilities`, `[[override]]`). Caret / tilde / equal / range operators, the `vibe.toml` ↔ `vibe.lock` two-file model, the `--exact` flag, comparison with Cargo / npm / Poetry / Bundler. Read this if you've ever been surprised that `flow:wal@0.3.0` matched `0.3.5`.
 
+## Git-source dependencies (whole-repo-as-package)
+
+[`git-source-dependencies.md`](git-source-dependencies.md) — declare a dep as `{ git = "...", tag = "..." }` in `[requires.packages]` and the resolver fetches the package directly from that git repo, bypassing `[[registry]]`. Use when a single private/internal package doesn't justify a multi-package registry org. Cargo / npm / Poetry / Bundler shape. Spec: [PROP-002 §2.4.1](../spec/modules/vibe-registry/PROP-002-decentralized-registry.md#git-source).
+
 ## Registry authentication
 
 [`registry-auth.md`](registry-auth.md) — how to authenticate against private registries. Four `auth` regimes (`none` / `token-env` / `credential-helper` / `ssh`), env-var conventions, what happens on 401 / 403 per regime (walk-vs-halt), token discipline, troubleshooting. Read this if you have a private vibespecs org or are seeing GUI credential popups during installs.

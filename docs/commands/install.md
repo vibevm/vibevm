@@ -40,6 +40,12 @@ A package reference is `<kind>:<name>[@<version>]`. Version syntax follows Cargo
 | `--quiet` | One-line summary after apply. Conflicts with `--json`. | off |
 | `--exact` | Pin the resolved version exactly (`=x.y.z`) in `vibe.toml` `[requires].packages` instead of the default caret. Same shape as npm's `--save-exact`. Overrides whatever constraint the CLI form carried. | off |
 | `--auth-required` | Strict authentication gate: a 401 / 403 against an `auth = "none"` (public) registry halts the install instead of walking to the next registry. Useful in CI / cron where the operator wants to gate "private install must come from the private registry; if its 401 leaks through to a public fallback, fail loudly." Per-registry `auth = "token-env"` / `"credential-helper"` halts on 401 regardless of this flag. See [`registry-auth.md`](../registry-auth.md). | off |
+| `--git <URL>` | Add a git-source declaration for the single positional pkgref — fetches the package directly from this git URL rather than resolving it through `[[registry]]`. PROP-002 §2.4.1. Requires exactly one of `--tag`, `--branch`, or `--rev`. Cannot be combined with `--exact` or `--registry`. See [`git-source-dependencies.md`](../git-source-dependencies.md). | unset |
+| `--tag <TAG>` | Git tag to pin against when `--git <url>` is set. Mutually exclusive with `--branch` / `--rev`. Immutable; force-pushed tag rewrite caught as `IntegrityError` on next install via content-hash. | unset |
+| `--branch <BRANCH>` | Git branch to track when `--git <url>` is set. Mutually exclusive with `--tag` / `--rev`. Mutable: `vibe install` (no `update`) sticks to the lockfile-pinned commit; `vibe update` re-walks branch HEAD. | unset |
+| `--rev <REV>` | Git commit SHA to pin against when `--git <url>` is set. Mutually exclusive with `--tag` / `--branch`. Most strict; the lockfile records the same SHA. | unset |
+| `--git-auth <AUTH>` | Auth regime for the `--git <url>` target — same enum as `[[registry]] auth`: `none` / `token-env` / `credential-helper` / `ssh`. | `none` |
+| `--git-token-env <ENV_VAR>` | Env-var name when `--git-auth token-env`. Default derived from URL host. | derived |
 
 ## Pipeline
 
