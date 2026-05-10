@@ -1,7 +1,30 @@
 # WAL — Project Continuation State
-_Updated: 2026-05-10 (M1.15 implementation — git-source dependencies)_
+_Updated: 2026-05-10 (M1.15 + M1.16 implementation — git-source + registry redirect)_
 
 ## Current phase
+
+**Working checkpoint (2026-05-10 +1, M1.16 — registry redirect resolver wired end-to-end).** Three commits land on top of M1.15 to deliver the PROP-002 §2.4.2 contract: a registry org's stub repo carrying `vibe-redirect.toml` redirects the resolver to an external target URL, with full token-discipline preserved through the redirect path. The resolver-side support is fully wired — consumers can `vibe install <pkgref>` against a project whose registry has stubs, and the redirect is followed transparently. Operator-side stub creation (CLI helper `vibe registry redirect <pkgref> --to <url>`) is documented as a manual procedure for v0; CLI tooling is a planned follow-up. **HEAD `<pending>`**, vibe-core at **139 hermetic** (was 128; +11 redirect parser tests), vibe-registry at **102 hermetic** (was 98; +4 redirect resolver tests), workspace `cargo test` all green, clippy `-D warnings` clean, `vibe check --path . --quiet` reports 0/0/0.
+
+Three commits land the M1.16 slice (newest-first):
+
+- `<pending> docs(commands,registry-redirect,wal): user-facing redirect reference + checkpoint` — new `docs/registry-redirect.md` (full operator reference: marker file shape, wire grammar, resolver behaviour, tag visibility, identity rules, lockfile shape, two-layer auth, manual stub creation procedure, comparison table); `docs/README.md` index entry; WAL block (this one).
+- `6e861ac feat(vibe-registry): MultiRegistryResolver follows vibe-redirect.toml stubs` — resolver detects stub at registry-walk success, follows redirect via `try_fetch_redirect` + `follow_redirect`. New `MultiResolution` fields `redirect_target_auth` / `redirect_target_token_env` carry the redirect's auth declaration through the resolve→fetch boundary. New `fetch_via_redirect` synthesises a target-side `GitPackageRegistry` and clones into `<cache_root>/__redirects__/...`. Hop limit = 1 enforced. Identity check against target's `[package]`. Four hermetic tests: pass-through-tag dispatch, hop-limit-rejection, pinned ref, identity mismatch.
+- `b37e1b3 feat(vibe-core,vibe-registry,vibe-install): vibe-redirect.toml parser + via_redirect lockfile field` — new `vibe-core::manifest::redirect` module with `RedirectFile`, `RedirectSection`, `RefPolicy` types. `parse_redirect_bytes` helper. `LockedPackage.via_redirect: Option<String>` and parallel `MultiResolution.via_redirect` / `CachedPackage.via_redirect` fields propagate the stub URL through the install pipeline. 11 unit tests covering all shapes + validation errors.
+
+Operational notes:
+
+- **Resolver dispatch is conservative.** The redirect probe runs only after the registry-walk leg succeeded (the registry returned a tag); a missing-package response from `list_versions` doesn't trigger a redirect probe. This matches PROP-002 §2.4.2's stance that stubs are full-on registry entries with their own tags, not fallback indicators.
+- **Two-layer auth preserved.** Stub auth is the registry's `[[registry]] auth`; target auth is `[redirect].auth`. The fetch path synthesises a target-side `GitPackageRegistry` with the redirect's auth, ensuring token-discipline (M1.14 plumbing — `inject_token` + scrub-from-`.git/config`) applies to private targets.
+- **Cache layout adds a third tier.** Registry-served clones live at `<cache>/<canonical-url-hash>/packages/...`. Override clones live at `<cache>/__overrides__/<kind>-<name>/clone/`. Git-source clones live at `<cache>/__git_sources__/<kind>-<name>/clone/`. M1.16 adds `<cache>/__redirects__/<kind>-<name>/clone/` so a package that flips between resolution modes (registry / override / git-source / redirect) does not share state across modes.
+- **Hop limit = 1 is hard-coded by spec.** Stubs are flat indirection. A redirect chain (stub → stub → real) is rejected with "redirect chain not allowed" at the resolver layer; no operator override exists. If chains ever become useful, that's a future spec change.
+- **CLI helper `vibe registry redirect` is the v0 gap.** The resolver works against any properly-formed stub repo; what's missing is a one-liner operator command that creates the stub. The manual procedure (git init / write marker / commit / push / tag) is documented and works. Closing the gap is a small follow-up commit reusing the existing `RepoCreator` infrastructure from `vibe registry publish`.
+
+What still needs to land for full M1.16 ship:
+
+- **`vibe registry redirect <pkgref> --to <url>`** — CLI helper that creates the stub repo automatically (analogous to `vibe registry publish` but commits a `vibe-redirect.toml` instead of package content).
+- **`vibe registry redirect-sync <pkgref>`** — convenience tool that mirrors target tags into the stub for ergonomic version gating. Opt-in (operators can equally manage stub tags by hand).
+- **Production smoke walk** against a real GitHub stub→target pair. Recipe shape analogous to M1.14.4's private-probe walk; deferred to when an operator session has the appropriate token loaded.
+- **e2e CLI test** in `vibe-cli/tests/cli_e2e.rs` exercising the redirect path end-to-end through a real shell invocation. Hermetic resolver tests already cover the dispatch; an e2e test would lock in the install→lockfile shape across a real CLI run.
 
 **Working checkpoint (2026-05-10, M1.15 — `[requires.packages]` table-form schema + git-source dispatch end-to-end).** Six implementation commits land the M1.15 spec from PROP-002 §2.4.1. The schema, single-package registry constructor, resolver dispatch, lockfile field, CLI wiring, and CLI flags are all in place; the workspace builds clean, every existing test passes, two new resolver hermetic tests + 12 new schema-parser tests cover the new surfaces. Production smoke walk (against a real GitHub repo) and full doc set follow in the next session-end.
 
