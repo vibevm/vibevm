@@ -485,7 +485,7 @@ hash/source/ref lines in the lockfile).
 
 ---
 
-### M1.15 — Git-source dependencies (whole-repo-as-package) ⏳ PROPOSED (2026-05-09)
+### M1.15 — Git-source dependencies (whole-repo-as-package) ✅ SHIPPED (2026-05-10)
 
 **Thesis.** Cargo / npm / Poetry / Bundler / Go modules all let you declare a dependency as "this whole git repository is the package" — `[dependencies] foo = { git = "..." }`, `"foo": "git+https://...#tag"`, `gem 'foo', git: '...'`. vibevm's existing `[[override]]` mechanism technically does this, but it is semantically a *patch* (replace a registry-resolved pkg with a fork) — not a *first-class declaration*. The use cases for first-class git-source are different: a single private/internal package without a multi-package `[[registry]]` org behind it, an active fork that **is** the source (not a patch on top), or a cross-organisation pull. Spec contract per [PROP-002 §2.4.1](spec/modules/vibe-registry/PROP-002-decentralized-registry.md#git-source).
 
@@ -507,7 +507,7 @@ hash/source/ref lines in the lockfile).
 
 ---
 
-### M1.16 — Registry redirect (delegated package via stub repo) ⏳ PROPOSED (2026-05-10)
+### M1.16 — Registry redirect (delegated package via stub repo) ✅ SHIPPED (2026-05-10)
 
 **Thesis.** A registry org's stub repo for a package may carry a marker file pointing at an external git repo where the package actually lives, instead of carrying the package content itself. Use case: an org owner wants the package to live in their namespace (so consumers find it via the standard `[[registry]]` walk without knowing about the external author) but offload hosting / PRs / permissions to a different team. Spec contract per [PROP-002 §2.4.2](spec/modules/vibe-registry/PROP-002-decentralized-registry.md#redirect).
 

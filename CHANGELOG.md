@@ -8,6 +8,39 @@ Format roughly follows [Keep a Changelog](https://keepachangelog.com/), grouped 
 
 ## [Unreleased]
 
+### M1.15 — Git-source dependencies (2026-05-10)
+
+The Cargo / npm / Poetry / Bundler / Go-modules-style affordance — declare a dep as `{ git = "https://...", tag = "v0.1.0" }` instead of resolving it through `[[registry]]`. Spec: [PROP-002 §2.4.1](spec/modules/vibe-registry/PROP-002-decentralized-registry.md#git-source).
+
+- **`[requires.packages]` table-form schema** in `vibe-core`: `Vec<PackageRef>` (legacy) and `BTreeMap<PackageRef, GitPackageDep>` (modern) parse transparently; round-trip writes the modern map. Inline-table values declare git-source: `"flow:internal-helper" = { git = "...", tag = "v0.1.0", auth = "token-env", ... }`.
+- **`GitPackageRegistry::open_single_package`** — single-package URL constructor that bypasses `org_url + naming`. Reuses M1.14 token-injection / bootstrap-with-scrub plumbing.
+- **`MultiRegistryResolver` short-circuits** the registry walk for any pkgref in `[requires.packages]` git-source declarations. Resolution priority: override > git-source > registry-walk.
+- **`vibe install` flags** — `--git <url>`, `--tag/--branch/--rev`, `--git-auth`, `--git-token-env` add a git-source declaration without hand-editing `vibe.toml`.
+- **Lockfile** — new `source_kind = "registry" | "git" | "override"` discriminant per `[[package]]`. Wire-compatible — `Option<SourceKind>` defaults to `None` for pre-M1.15 lockfiles.
+- **Hermetic e2e** in `vibe-cli/tests/cli_e2e.rs` — install with `--tag`, install with `--branch`, repeat install rejection, uninstall removal from both `requires.packages` and `requires.git_packages`.
+- **Production smoke walk** documented at `manual-tests/M1.15-git-source-smoke.md`. Validated against `https://github.com/olegchir/vibevm-m1-smoke-flow-internal` — `git archive --remote` → shallow-clone fall-back exercised on the GitHub case.
+- **Bug fix** along the way: `fetch_manifest_at_ref` (used by git-source path) now falls back to `refresh_package` when the host refuses `upload-archive`, matching `fetch_dep_manifest`. Without this, GitHub-hosted git-source targets failed at resolution time.
+- **Bug fix**: `vibe uninstall <pkgref>` now removes the entry from BOTH `requires.packages` and `requires.git_packages` (was a one-list-only walk).
+- Docs: new `docs/git-source-dependencies.md` operator reference (in M1.15 spec landing); `docs/commands/install.md` extended with the new flags.
+
+### M1.16 — Registry redirect (delegated package via stub repo) (2026-05-10)
+
+The Linux-distro-style virtual-package mechanism — a registry org's stub repo carries `vibe-redirect.toml` pointing at an external git repo where the package's actual content lives, instead of carrying the content directly. Spec: [PROP-002 §2.4.2](spec/modules/vibe-registry/PROP-002-decentralized-registry.md#redirect).
+
+- **`vibe-redirect.toml` schema** in `vibe-core::manifest::redirect`: `[redirect]` block with required `target_url`, optional `ref_policy = pass-through-tag | pinned`, `pinned_ref` (required iff pinned), `auth` / `token_env` (target-side, mirrors PROP-002 §2.2.1), `description`. Mutually exclusive with `vibe-package.toml` at the same ref (`AmbiguousStub`). 11 unit tests.
+- **`MultiRegistryResolver::follow_redirect`** — resolver detects the marker after a registry-walk success, opens a synthetic single-package registry on `target_url`, fetches manifest at the pass-through-tag (or `pinned_ref`). Hop limit = 1: target cannot itself be a stub. `MultiResolution.via_redirect` carries the stub URL through the resolve→fetch boundary; `redirect_target_auth` / `redirect_target_token_env` propagate target-side auth.
+- **`MultiRegistryResolver::fetch_manifest`** — new redirect-aware DepProvider entry point. Reuses `resolve()` to converge on the same `MultiResolution` the install pipeline already saw, then reads the manifest from whichever URL the resolution recorded (target for redirects, declared URL for git-source, registry's URL otherwise).
+- **`fetch_via_redirect`** — clones target into `<cache>/__redirects__/<kind>-<name>/clone/`, distinct from registry / override / git-source cache tiers. Token-discipline preserved.
+- **`try_fetch_redirect_for_url`** — two-path read: `git archive` first (cheap, file://-friendly), shallow-clone fall-back when the host refuses `upload-archive` (the GitHub case). Marker-first hop check fires before manifest fetch so chain rejection works against stub-only target repos.
+- **`vibe registry redirect <pkgref> --to <url>`** — CLI helper that creates the stub repo automatically through the `RepoCreator` infrastructure. Flags: `--ref-policy`, `--pinned-ref`, `--target-auth`, `--target-token-env`, `--description`, `--sync` (mirror target tags immediately), `--dry-run`. Refuses if the stub already exists (editing is manual for v0).
+- **`vibe registry redirect-sync <pkgref>`** — mirrors target tags into the stub. Reads stub's `vibe-redirect.toml`, lists target tags, pushes the missing ones. Refuses for `pinned`-policy stubs (semantically meaningless to sync).
+- **Lockfile** — `via_redirect` field per `[[package]]` records the stub URL; `source_url` carries the target URL; `source_kind = "registry"` (redirect-resolved packages came through a registry stub, just delegated).
+- **Hermetic e2e** in `vibe-cli/tests/cli_e2e.rs` — pass-through-tag install, pinned-policy install, identity-mismatch reject, hop-limit chain reject. Plus 9 helper unit tests for `parse_target_auth`, `build_redirect_readme`, `derive_target_token_env`, `inject_token_into_url`, `build_target_fetch_url`.
+- **Production smoke walk** documented at `manual-tests/M1.16-redirect-smoke.md`. Validated against a `vibespecs/feat-helper` stub → `olegchir/vibevm-m1-smoke-feat-helper` target pair on real GitHub: `vibe registry redirect`, `vibe registry redirect-sync`, then `vibe install feat:helper@^0.1` resolving through the stub. Lockfile records `via_redirect = "https://github.com/vibespecs/feat-helper.git"` and `source_url = "https://github.com/olegchir/..."`.
+- Docs: new `docs/commands/registry-redirect.md` and `docs/commands/registry-redirect-sync.md`; `docs/registry-redirect.md` updated with the CLI workflow (manual procedure kept as a fallback section).
+
+### v0.1.0-ready package-management bundle — 2026-05-08
+
 The 2026-05-08 push bundled four milestones in one day. They land here under one block because the surface-consistency closer (M1.14.3) only makes sense in the context of M1.14 having shipped first; together they constitute the v0.1.0-ready package-management story.
 
 ### M1.12 — `vibe.toml` `[requires]` + cargo-shape install (2026-05-08)

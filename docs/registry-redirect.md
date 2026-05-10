@@ -109,9 +109,64 @@ For v0, plain text + content-hash is the contract. Signed redirect markers (`[re
 
 Tokens flow through the same M1.14 plumbing: read once at resolver-open time, kept in memory, scrubbed from `.git/config` after any clone. The `inject_token` / `set_remote_url` discipline applies identically to both URLs.
 
-## Creating a stub repo (manual procedure)
+## Creating a stub repo
 
-For M1.16 the resolver-side support is fully wired, but the CLI helper `vibe registry redirect <pkgref> --to <url>` is a planned follow-up. Operators create stubs by hand:
+### `vibe registry redirect` (recommended)
+
+The CLI helper creates the stub repo automatically — analogous to `vibe registry publish`, but commits a `vibe-redirect.toml` marker instead of package content. It uses the same publish-token and host-adapter infrastructure (PROP-002 §2.10), so the same `~/.vibevm/<host>.publish.token` you already configured for publishing is consumed here.
+
+```bash
+# Bare minimum — pass-through-tag policy, no auth.
+vibe registry redirect flow:internal-helper \
+  --to git@gitlab.acme.example:flows/internal-helper \
+  --description "Delegated to acme-corp; contact maintainers@acme.example"
+
+# Pinned-policy stub: every consumer resolves to v1.0.0 on the target,
+# regardless of which stub tag they probed.
+vibe registry redirect flow:legacy-pinned \
+  --to https://github.com/legacy-vendor/flow-pinned \
+  --ref-policy pinned --pinned-ref v1.0.0
+
+# Private target: redirect carries `[redirect].auth = "token-env"` so
+# the consumer's resolver knows to inject `VIBEVM_TARGET_TOKEN_<HOST>`
+# when fetching from `target_url`.
+vibe registry redirect flow:internal-secret \
+  --to https://gitlab.company.com/specs/internal-secret \
+  --target-auth token-env \
+  --target-token-env VIBEVM_TARGET_TOKEN_GITLAB_COMPANY_COM
+
+# Create the stub AND immediately mirror current target tags.
+# Equivalent to running `vibe registry redirect-sync <pkgref>` once
+# the stub exists — useful when you already have v0.1.0 / v0.2.0 / ...
+# sitting on the target side.
+vibe registry redirect flow:internal-helper \
+  --to git@gitlab.acme.example:flows/internal-helper \
+  --sync
+```
+
+The command writes `vibe-redirect.toml` (and a small README explaining the delegation) into the stub repo, then pushes to the registry org's `<kind>-<name>` slot. By default no tags are added — surface a target version via `vibe registry redirect-sync` (below) or by hand.
+
+### Surfacing target tags into the stub — `vibe registry redirect-sync`
+
+In `pass-through-tag` policy, the stub's tags determine which target versions the org's namespace exposes. Mirror them across in one command:
+
+```bash
+vibe registry redirect-sync flow:internal-helper
+```
+
+What it does:
+
+1. Shallow-clones the stub repo, reads `vibe-redirect.toml` to discover the target URL.
+2. `git ls-remote --tags` against both the stub and the target.
+3. For every target tag missing on the stub, creates an annotated tag on the stub's `main` commit (the marker-file commit) and pushes it.
+
+Already-present tags are skipped quietly. `pinned`-policy stubs reject the sync command with a clear message — pinned-policy semantically ignores stub-side tags.
+
+The command fits naturally into a periodic CI job: every Monday, `vibe registry redirect-sync flow:internal-helper` against every redirect stub the org owns; new target versions appear in the consumer-facing namespace within a week.
+
+### Manual procedure (fallback)
+
+The stub is just a git repo with a single marker file. If for any reason `vibe registry redirect` cannot run (offline / unsupported host / stub already partially exists), you can equivalently:
 
 ```bash
 # Step 1: prepare the stub directory.
@@ -126,18 +181,6 @@ description = "Delegated to acme-corp; contact maintainers@acme.example"
 EOF
 
 # Step 3 (optional): add a README explaining the delegation.
-cat > README.md <<'EOF'
-# flow:internal-helper — registry stub
-
-This repo is a vibevm registry stub that redirects consumers to the
-canonical home of `flow:internal-helper`:
-
-  https://gitlab.acme.example/flows/internal-helper
-
-Operators reach this package via `vibe install flow:internal-helper`
-through the org's `[[registry]]` configuration; vibevm follows the
-`vibe-redirect.toml` marker transparently.
-EOF
 
 # Step 4: commit.
 git add vibe-redirect.toml README.md
@@ -179,7 +222,7 @@ The key distinction between **stub** and **mirror** is *who controls the indirec
 - **Signed redirect markers** — cryptographic attestation that `target_url` is approved by the org owner. Plain text + content-hash for v0.
 - **Auto-deprecation forwarding** (`[redirect.deprecated] new_pkgref = "..."` to forward consumers to a renamed package). Separate feature, separate PROP.
 - **`[[mirror]]` against a stub repo** — undefined behaviour for v0; the resolver follows redirect first, mirror semantics apply to the target URL.
-- **`vibe registry redirect` / `vibe registry redirect-sync` CLI helpers**. Operator creates stubs manually for now; CLI helpers planned as a follow-up.
+- **Editing an existing stub via the CLI**. `vibe registry redirect` only creates fresh stubs; updating the marker file (e.g. to change `target_url`) is a manual `git clone` / edit / push procedure for v0.
 
 ## Related
 
