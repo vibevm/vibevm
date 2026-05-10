@@ -1,10 +1,35 @@
 # CONTINUE — cold-resume checkpoint
 
-_Written: 2026-05-10 mid-session (M1.15 implementation landed; production smoke walk + final docs pending). Owner-readable, self-contained. Pick this up with zero prior context._
+_Written: 2026-05-10 late-session (M1.15 + M1.16 implementation landed; CLI helper for stub creation + production smoke walk pending). Owner-readable, self-contained. Pick this up with zero prior context._
 
 ---
 
 ## TL;DR (executive summary)
+
+**The 2026-05-10 push lands two complete features in sequence — M1.15 (git-source dependencies, consumer-side) and M1.16 (registry redirect, org-side delegation).** Together they extend `vibevm`'s package-source surface with the Cargo / npm / Poetry / Bundler git-dep idiom (M1.15) plus a Linux-distro-style virtual `Provides:` mechanism for org owners to delegate package hosting to external authors (M1.16) — both with full M1.14 token-discipline preserved through the new code paths.
+
+**M1.16 implementation commits this session (newest first; on top of M1.15):**
+
+```
+<pending> docs(commands,registry-redirect,wal): user-facing redirect reference + checkpoint
+6e861ac feat(vibe-registry): MultiRegistryResolver follows vibe-redirect.toml stubs
+b37e1b3 feat(vibe-core,vibe-registry,vibe-install): vibe-redirect.toml parser + via_redirect lockfile field
+```
+
+**M1.15 implementation commits this session (also today):**
+
+```
+f9ce420 test(vibe-cli): e2e coverage for vibe install --git --tag and --branch
+540f6c0 docs(continue): mid-session checkpoint at 2026-05-10 (M1.15 implementation)
+5c3751c docs(wal): M1.15 implementation checkpoint
+0411f2b docs(commands,git-source,readme): user-facing reference for git-source declarations
+90bf10b feat(vibe-cli): vibe install --git/--tag/--branch/--rev for git-source declarations
+a7dce7f feat(vibe-core,vibe-registry,vibe-install): lockfile source_kind field for git/override discriminant
+153f3a2 feat(vibe-cli): wire git-source declarations through install/update/outdated
+161b7b1 feat(vibe-registry): MultiRegistryResolver dispatches to git-source declarations
+c313ebd feat(vibe-registry): GitPackageRegistry::open_single_package for git-source
+2544d76 feat(vibe-core): [requires.packages] table-form schema with git-source slot
+```
 
 **The 2026-05-10 push lands the full M1.15 implementation — git-source dependencies, the Cargo / npm / Poetry / Bundler-style "whole repo = one package" affordance.** Six commits across vibe-core (schema), vibe-registry (single-package constructor + resolver dispatch), vibe-install (lockfile `source_kind`), vibe-cli (CLI flags + wiring). Wire-form changes from `packages = ["flow:wal@^0.3"]` (legacy array) to `[requires.packages] "flow:wal" = "^0.3"` (modern map) — both parse forever, only the map form is written. Inline-table values declare git-source: `"flow:internal" = { git = "...", tag = "v0.1.0" }`. The earlier 2026-05-09 push closed the M1.14 deferred-list and validated the full registry-auth runtime against a live private GitHub repo; that work remains live.
 
