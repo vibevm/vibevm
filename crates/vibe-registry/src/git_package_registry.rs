@@ -431,10 +431,30 @@ impl GitPackageRegistry {
         self.ensure_token_loaded()?;
         let plain_url = self.package_repo_url(kind, name);
         let fetch_url = self.credentialed_url(&plain_url);
-        let bytes = self
+        let bytes = match self
             .backend
             .fetch_file_at_ref(&fetch_url, refname, PackageManifest::FILENAME)
-            .map_err(RegistryError::from)?;
+        {
+            Ok(bytes) => bytes,
+            Err(GitError::ArchiveUnsupported { .. }) => {
+                // GitHub (and a handful of other hosts) refuse
+                // `git archive --remote` for `upload-archive` access
+                // policy reasons. The git-source / redirect path hits
+                // this when the target is on GitHub. Same fall-back
+                // shape as `fetch_dep_manifest`: shallow-clone at the
+                // requested ref and read `vibe-package.toml` from the
+                // working tree. Slower than archive but works on every
+                // host that accepts `git clone`.
+                self.refresh_package(kind, name, refname)?;
+                let clone_dir = self.package_clone_dir(kind, name);
+                let manifest_path = clone_dir.join(PackageManifest::FILENAME);
+                fs::read(&manifest_path).map_err(|source| RegistryError::Io {
+                    path: manifest_path.clone(),
+                    source,
+                })?
+            }
+            Err(other) => return Err(RegistryError::from(other)),
+        };
         let text = String::from_utf8(bytes).map_err(|e| RegistryError::MalformedMeta {
             path: PathBuf::from(format!(
                 "{plain_url}@{refname}:{}",
