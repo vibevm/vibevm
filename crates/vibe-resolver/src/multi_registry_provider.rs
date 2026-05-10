@@ -72,33 +72,25 @@ impl<'a> DepProvider for MultiRegistryProvider<'a> {
         name: &str,
         version: &semver::Version,
     ) -> Result<PackageManifest, DepProviderError> {
-        // Walk registries in priority order; first one that has the
-        // package serves the manifest. The `MultiRegistryResolver`
-        // doesn't expose a manifest accessor today (its job is
-        // resolve+fetch), so we fan out across its `registries()` list
-        // ourselves. Overrides are not read here — they short-circuit
-        // at `resolve_version` time and the install pipeline handles
-        // their content fetch separately.
-        let mut last_err: Option<DepProviderError> = None;
-        for reg in self.resolver.registries() {
-            match reg.fetch_dep_manifest(kind, name, version) {
-                Ok(m) => return Ok(m),
-                Err(RegistryError::UnknownPackage { .. })
-                | Err(RegistryError::Git(_))
-                | Err(RegistryError::NoMatchingVersion { .. }) => {
-                    // Try the next registry — this one didn't have it.
-                    last_err = Some(DepProviderError::UnknownPackage {
-                        kind,
-                        name: name.to_string(),
-                    });
-                    continue;
-                }
-                Err(other) => return Err(DepProviderError::Other(other.to_string())),
+        // Delegate to the resolver's redirect-aware `fetch_manifest`:
+        // walks registries in priority order, follows any
+        // `vibe-redirect.toml` stub it lands on (PROP-002 §2.4.2),
+        // returns the target's manifest. Overrides are not read here —
+        // they short-circuit at `resolve_version` time and the install
+        // pipeline handles their content fetch separately.
+        match self.resolver.fetch_manifest(kind, name, version) {
+            Ok(m) => Ok(m),
+            Err(RegistryError::UnknownPackage { kind, name }) => {
+                Err(DepProviderError::UnknownPackage { kind, name })
             }
+            Err(RegistryError::NoMatchingVersion { kind, name, req }) => {
+                Err(DepProviderError::NoMatchingVersion {
+                    kind,
+                    name,
+                    constraint: req,
+                })
+            }
+            Err(other) => Err(DepProviderError::Other(other.to_string())),
         }
-        Err(last_err.unwrap_or(DepProviderError::UnknownPackage {
-            kind,
-            name: name.to_string(),
-        }))
     }
 }

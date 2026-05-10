@@ -45,12 +45,13 @@ use vibe_core::manifest::{
     RefPolicy, RegistrySection, parse_redirect_bytes,
 };
 
-use crate::git_backend::{GitBackend, ShellGit};
+use crate::git_backend::{GitBackend, GitError, ShellGit};
 use crate::git_package_registry::{GitPackageRegistry, copy_dir_excluding_git};
 use crate::git_registry::{DEFAULT_FRESHNESS_SECS, default_cache_root, strip_git_plus_prefix};
 use crate::{
     CachedPackage, RegistryError, ResolvedPackage, compute_content_hash,
 };
+use vibe_core::PackageKind;
 
 /// Default ref for `[[override]]` entries that omit `ref`. Most adopters
 /// will pin a tag or branch explicitly; `main` is the practical default
@@ -221,6 +222,21 @@ fn try_fetch_redirect(
 /// `GitPackageRegistry` plus `(kind, name, ref)` and probe its repo
 /// for a `vibe-redirect.toml`. Used both for the initial probe at
 /// the stub layer and the hop-limit check at the target.
+///
+/// Two-path read shape — same idea as `fetch_dep_manifest`:
+///
+/// 1. `git archive --remote=<url> <ref> -- vibe-redirect.toml` is the
+///    cheap, no-clone read. Works against `file://` and the handful
+///    of hosts that expose `upload-archive`.
+/// 2. When the host refuses `upload-archive` (GitHub, by design) the
+///    archive call returns `ArchiveUnsupported`. Fall back to a
+///    shallow clone of the repo at `refname` and read the file from
+///    the working tree. The clone directory is the same the install
+///    pipeline would use later, so this is also pre-warming.
+///
+/// Returns `Ok(None)` when neither path finds the marker — the common
+/// "non-stub package" case where `vibe-redirect.toml` simply isn't
+/// part of the package payload.
 fn try_fetch_redirect_for_url(
     backend: &Arc<dyn GitBackend>,
     reg: &GitPackageRegistry,
@@ -230,27 +246,44 @@ fn try_fetch_redirect_for_url(
 ) -> Result<Option<RedirectFile>, RegistryError> {
     let plain_url = reg.package_repo_url(kind, name);
     let fetch_url = reg.credentialed_url(&plain_url);
-    match backend.fetch_file_at_ref(
+    let bytes = match backend.fetch_file_at_ref(
         strip_git_plus_prefix(&fetch_url),
         refname,
         RedirectFile::FILENAME,
     ) {
-        Ok(bytes) => {
-            let r = parse_redirect_bytes(&bytes).map_err(|e| RegistryError::MalformedMeta {
-                path: PathBuf::from(format!(
-                    "{plain_url}@{refname}:{}",
-                    RedirectFile::FILENAME
-                )),
-                reason: e.to_string(),
-            })?;
-            Ok(Some(r))
+        Ok(b) => b,
+        Err(crate::git_backend::GitError::FileNotFoundInRef { .. }) => return Ok(None),
+        Err(crate::git_backend::GitError::ArchiveUnsupported { .. }) => {
+            // Host refuses `upload-archive` — the GitHub case. Fall
+            // back to a shallow clone and read the marker from the
+            // clone's working tree. `refresh_package` reuses the
+            // existing per-package clone if present; for a fresh
+            // bucket it bootstraps. The token-discipline (M1.14)
+            // applies — if the registry has `auth = "token-env"`,
+            // the clone uses the credentialed URL and immediately
+            // scrubs `.git/config` after bootstrap.
+            reg.refresh_package(kind, name, refname)?;
+            let marker_path = reg
+                .package_clone_dir(kind, name)
+                .join(RedirectFile::FILENAME);
+            if !marker_path.exists() {
+                return Ok(None);
+            }
+            std::fs::read(&marker_path).map_err(|source| RegistryError::Io {
+                path: marker_path,
+                source,
+            })?
         }
-        Err(err) => match err {
-            crate::git_backend::GitError::FileNotFoundInRef { .. }
-            | crate::git_backend::GitError::ArchiveUnsupported { .. } => Ok(None),
-            other => Err(other.into()),
-        },
-    }
+        Err(other) => return Err(other.into()),
+    };
+    let r = parse_redirect_bytes(&bytes).map_err(|e| RegistryError::MalformedMeta {
+        path: PathBuf::from(format!(
+            "{plain_url}@{refname}:{}",
+            RedirectFile::FILENAME
+        )),
+        reason: e.to_string(),
+    })?;
+    Ok(Some(r))
 }
 
 impl MultiRegistryResolver {
@@ -616,11 +649,14 @@ impl MultiRegistryResolver {
             redirect.redirect.auth,
             redirect.redirect.token_env.as_deref(),
         )?;
-        let target_manifest =
-            target_reg.fetch_manifest_at_ref(pkgref.kind, &pkgref.name, &target_ref)?;
         // Hop limit = 1: target cannot itself be a stub. Probe
-        // `vibe-redirect.toml` at the target ref; if the file
-        // exists, refuse.
+        // `vibe-redirect.toml` at the target ref BEFORE attempting to
+        // read the target's `vibe-package.toml` — a stub-only repo
+        // carries only the marker, so reading the manifest first
+        // would return `FileNotFoundInRef` and the chain detection
+        // would never fire. Marker-first preserves the policy contract
+        // independent of what the target's content shape happens to
+        // be.
         let target_redirect = try_fetch_redirect_for_url(
             &self.backend,
             &target_reg,
@@ -640,6 +676,8 @@ impl MultiRegistryResolver {
                 ),
             });
         }
+        let target_manifest =
+            target_reg.fetch_manifest_at_ref(pkgref.kind, &pkgref.name, &target_ref)?;
         // Sanity: the target's `[package]` must declare the same
         // `(kind, name)` that the consumer asked for. Mismatch =
         // org owner pointed at the wrong target, refuse to install.
@@ -691,6 +729,170 @@ impl MultiRegistryResolver {
             .join("__redirects__")
             .join(format!("{}-{}", kind.as_str(), name))
             .join("clone")
+    }
+
+    /// Read `vibe-package.toml` for a resolved `(kind, name, version)`,
+    /// transparently following any registry-redirect stub (PROP-002
+    /// §2.4.2) or git-source declaration (§2.4.1). The depsolver's
+    /// [`DepProvider::fetch_manifest`] adapter uses this so a
+    /// stub-served pkgref returns the **target's** manifest (the stub
+    /// itself carries only `vibe-redirect.toml`) and a git-source
+    /// pkgref returns the manifest at the declared `tag`/`branch`/`rev`.
+    ///
+    /// The implementation re-runs [`Self::resolve`] with the version
+    /// constraint pinned to `=<version>` so it converges on the same
+    /// `MultiResolution` the install pipeline already saw, then reads
+    /// the manifest from whichever URL the resolution recorded —
+    /// stub's target for redirects, declared URL for git-source,
+    /// the registry's own URL otherwise. Walking registries directly
+    /// (the pre-M1.16 shape) cannot serve a stub-only repo.
+    pub fn fetch_manifest(
+        &self,
+        kind: PackageKind,
+        name: &str,
+        version: &semver::Version,
+    ) -> Result<PackageManifest, RegistryError> {
+        // Build a pinned pkgref so `resolve` converges on the exact
+        // slot the install pipeline committed to (the depsolver pinned
+        // the version via `resolve_version` first). For pass-through
+        // redirects (and direct registry installs) the stub's tag list
+        // contains `v<version>` and the pinned resolve hits it
+        // immediately. For pinned-policy redirects the stub may have
+        // unrelated tags (the pinned semantic — every consumer goes
+        // to the target's pinned ref, so the stub tag is irrelevant);
+        // we fall back to a constraint-free resolve and verify the
+        // resolved version still matches.
+        let pinned_pkgref = PackageRef::parse(&format!("{kind}:{name}@={version}")).map_err(
+            |e| RegistryError::MalformedMeta {
+                path: PathBuf::from("<synthetic-pkgref>"),
+                reason: format!("constructing pinned pkgref: {e}"),
+            },
+        )?;
+        let resolution = match self.resolve(&pinned_pkgref) {
+            Ok(r) => r,
+            Err(RegistryError::NoMatchingVersion { .. })
+            | Err(RegistryError::PackageNotFoundEverywhere { .. })
+            | Err(RegistryError::UnknownPackage { .. }) => {
+                // The stub's tag list does not contain `=version` —
+                // happens with pinned-policy redirects where the
+                // stub-side tag and the target version are decoupled.
+                // Re-resolve without a constraint and accept the
+                // result as long as the version it produces matches
+                // what the depsolver pinned.
+                let fallback_pkgref =
+                    PackageRef::parse(&format!("{kind}:{name}")).map_err(|e| {
+                        RegistryError::MalformedMeta {
+                            path: PathBuf::from("<synthetic-pkgref>"),
+                            reason: format!("constructing latest pkgref: {e}"),
+                        }
+                    })?;
+                let r = self.resolve(&fallback_pkgref)?;
+                if &r.resolved.version != version {
+                    return Err(RegistryError::NoMatchingVersion {
+                        kind,
+                        name: name.to_string(),
+                        req: format!("={version}"),
+                    });
+                }
+                r
+            }
+            Err(other) => return Err(other),
+        };
+
+        if resolution.via_redirect.is_some() {
+            // Redirect-resolved: target_url is in source_url, target_ref
+            // is in source_ref. Open a synthetic single-package
+            // registry on the target and read the manifest at the
+            // recorded ref. Auth carries the redirect's declared
+            // policy so private targets keep working.
+            let target_url = resolution.source_url.clone();
+            let target_ref = resolution.source_ref.clone().unwrap_or_default();
+            let synthetic_name = format!("redirect-target-{kind}-{name}");
+            let target_reg = GitPackageRegistry::open_single_package(
+                &synthetic_name,
+                &target_url,
+                &target_ref,
+                &self.cache_root,
+                Arc::clone(&self.backend),
+                DEFAULT_FRESHNESS_SECS,
+                resolution.redirect_target_auth,
+                resolution.redirect_target_token_env.as_deref(),
+            )?;
+            return target_reg.fetch_manifest_at_ref(kind, name, &target_ref);
+        }
+
+        if resolution.is_git_source {
+            // Git-source: source_url + source_ref carry the operator-
+            // declared `tag`/`branch`/`rev`. Construct the same
+            // synthetic registry the resolver used and re-read the
+            // manifest at that ref.
+            //
+            // Note: `git_packages` lookup gives us the original
+            // `auth` / `token_env`; the resolver did the lookup at
+            // `resolve` time and stored the values there too.
+            let dep = self
+                .git_packages
+                .get(&pinned_pkgref.qualified_name())
+                .ok_or_else(|| RegistryError::UnknownPackage {
+                    kind,
+                    name: name.to_string(),
+                })?;
+            let source_ref = resolution
+                .source_ref
+                .clone()
+                .unwrap_or_else(|| dep.ref_kind.as_str().to_string());
+            let synthetic_name = format!("git-source-{kind}-{name}");
+            let reg = GitPackageRegistry::open_single_package(
+                &synthetic_name,
+                &dep.url,
+                &source_ref,
+                &self.cache_root,
+                Arc::clone(&self.backend),
+                DEFAULT_FRESHNESS_SECS,
+                dep.auth,
+                dep.token_env.as_deref(),
+            )?;
+            return reg.fetch_manifest_at_ref(kind, name, &source_ref);
+        }
+
+        // Override or registry: walk in priority order, preferring the
+        // registry the resolver picked. Override-served packages have
+        // `registry_name = None`, so we just walk and the first match
+        // wins (overrides are not consulted by `fetch_dep_manifest` —
+        // those are handled by the install pipeline directly).
+        if let Some(name_filter) = &resolution.registry_name
+            && let Some(reg) = self
+                .registries
+                .iter()
+                .find(|r| r.name() == name_filter.as_str())
+        {
+            return reg.fetch_dep_manifest(kind, name, version);
+        }
+        let mut last_err: Option<RegistryError> = None;
+        for reg in &self.registries {
+            match reg.fetch_dep_manifest(kind, name, version) {
+                Ok(m) => return Ok(m),
+                Err(err)
+                    if matches!(
+                        err,
+                        RegistryError::Git(GitError::FileNotFoundInRef { .. })
+                            | RegistryError::Git(GitError::ArchiveUnsupported { .. })
+                            | RegistryError::Io { .. }
+                            | RegistryError::MalformedMeta { .. }
+                            | RegistryError::UnknownPackage { .. }
+                            | RegistryError::NoMatchingVersion { .. }
+                    ) =>
+                {
+                    last_err = Some(err);
+                    continue;
+                }
+                Err(other) => return Err(other),
+            }
+        }
+        Err(last_err.unwrap_or(RegistryError::UnknownPackage {
+            kind,
+            name: name.to_string(),
+        }))
     }
 
     /// Resolve a `[requires.packages]` git-source declaration
