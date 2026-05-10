@@ -41,7 +41,8 @@ use std::sync::Arc;
 
 use vibe_core::PackageRef;
 use vibe_core::manifest::{
-    GitPackageDep, Lockfile, MirrorSection, OverrideSection, PackageManifest, RegistrySection,
+    GitPackageDep, Lockfile, MirrorSection, OverrideSection, PackageManifest, RedirectFile,
+    RefPolicy, RegistrySection, parse_redirect_bytes,
 };
 
 use crate::git_backend::{GitBackend, ShellGit};
@@ -82,6 +83,16 @@ pub struct MultiResolution {
     /// URL is recorded here while `source_url` carries the **target**
     /// URL. `None` for non-redirected resolutions.
     pub via_redirect: Option<String>,
+    /// Auth regime declared in the redirect's `[redirect].auth`. Only
+    /// meaningful when `via_redirect.is_some()`; for non-redirected
+    /// resolutions the registry's own auth applies via `registry_name`
+    /// → registry lookup. The fetch path uses this to synthesise a
+    /// target-side `GitPackageRegistry` with the right auth without
+    /// re-fetching the redirect marker.
+    pub redirect_target_auth: vibe_core::manifest::AuthKind,
+    /// Env-var name when `redirect_target_auth = TokenEnv`. `None`
+    /// otherwise.
+    pub redirect_target_token_env: Option<String>,
 }
 
 /// Resolver coordinating an ordered set of [`GitPackageRegistry`]
@@ -189,6 +200,57 @@ fn format_walk_attempts(attempts: &[RegistryWalkAttempt]) -> String {
         );
     }
     out
+}
+
+/// Probe the `(kind, name)` slot in `reg` at `tag` for a
+/// `vibe-redirect.toml` marker. Returns `Some(parsed)` when the
+/// marker exists; `None` when the file is absent (the common case
+/// — non-stub package). Surfaces parse errors and other I/O errors
+/// directly. Cheap: one extra `git archive` call per registry-walk
+/// success.
+fn try_fetch_redirect(
+    backend: &Arc<dyn GitBackend>,
+    reg: &GitPackageRegistry,
+    resolved: &ResolvedPackage,
+    tag: &str,
+) -> Result<Option<RedirectFile>, RegistryError> {
+    try_fetch_redirect_for_url(backend, reg, resolved.kind, &resolved.name, tag)
+}
+
+/// Lower-level form of `try_fetch_redirect`: take an already-built
+/// `GitPackageRegistry` plus `(kind, name, ref)` and probe its repo
+/// for a `vibe-redirect.toml`. Used both for the initial probe at
+/// the stub layer and the hop-limit check at the target.
+fn try_fetch_redirect_for_url(
+    backend: &Arc<dyn GitBackend>,
+    reg: &GitPackageRegistry,
+    kind: vibe_core::PackageKind,
+    name: &str,
+    refname: &str,
+) -> Result<Option<RedirectFile>, RegistryError> {
+    let plain_url = reg.package_repo_url(kind, name);
+    let fetch_url = reg.credentialed_url(&plain_url);
+    match backend.fetch_file_at_ref(
+        strip_git_plus_prefix(&fetch_url),
+        refname,
+        RedirectFile::FILENAME,
+    ) {
+        Ok(bytes) => {
+            let r = parse_redirect_bytes(&bytes).map_err(|e| RegistryError::MalformedMeta {
+                path: PathBuf::from(format!(
+                    "{plain_url}@{refname}:{}",
+                    RedirectFile::FILENAME
+                )),
+                reason: e.to_string(),
+            })?;
+            Ok(Some(r))
+        }
+        Err(err) => match err {
+            crate::git_backend::GitError::FileNotFoundInRef { .. }
+            | crate::git_backend::GitError::ArchiveUnsupported { .. } => Ok(None),
+            other => Err(other.into()),
+        },
+    }
 }
 
 impl MultiRegistryResolver {
@@ -397,16 +459,30 @@ impl MultiRegistryResolver {
         for reg in &self.registries {
             match reg.resolve(pkgref) {
                 Ok(resolved) => {
+                    let stub_tag = format!("v{}", resolved.version);
+                    // Step 2a: redirect probe (PROP-002 §2.4.2). The
+                    // registry served a tag; check whether the repo
+                    // at that tag is a stub pointing elsewhere. The
+                    // probe is one extra `git archive` call, only
+                    // when the registry-walk leg succeeded; cheap.
+                    if let Some(redirect) =
+                        try_fetch_redirect(&self.backend, reg, &resolved, &stub_tag)?
+                    {
+                        return self.follow_redirect(
+                            pkgref, &resolved, reg, &redirect, &stub_tag,
+                        );
+                    }
                     let url = reg.package_repo_url(resolved.kind, &resolved.name);
-                    let source_ref = format!("v{}", resolved.version);
                     return Ok(MultiResolution {
                         resolved,
                         registry_name: Some(reg.name().to_string()),
                         source_url: url,
-                        source_ref: Some(source_ref),
+                        source_ref: Some(stub_tag),
                         overridden: false,
                         is_git_source: false,
                         via_redirect: None,
+                        redirect_target_auth: vibe_core::manifest::AuthKind::None,
+                        redirect_target_token_env: None,
                     });
                 }
                 Err(RegistryError::UnknownPackage { .. }) => {
@@ -500,7 +576,121 @@ impl MultiRegistryResolver {
             overridden: true,
             is_git_source: false,
             via_redirect: None,
+            redirect_target_auth: vibe_core::manifest::AuthKind::None,
+            redirect_target_token_env: None,
         })
+    }
+
+    /// Follow a `vibe-redirect.toml` marker found in a registry stub
+    /// repo (PROP-002 §2.4.2). The stub registry served a tag; we
+    /// re-resolve against the redirect's `target_url` at the
+    /// pass-through-tag (default — same tag as the stub) or the
+    /// `pinned_ref` (when `ref_policy = "pinned"`). Hop limit = 1:
+    /// if the target is itself a stub, raise
+    /// `RedirectChainNotAllowed`.
+    fn follow_redirect(
+        &self,
+        pkgref: &PackageRef,
+        stub_resolved: &ResolvedPackage,
+        stub_reg: &GitPackageRegistry,
+        redirect: &RedirectFile,
+        stub_tag: &str,
+    ) -> Result<MultiResolution, RegistryError> {
+        let target_url = redirect.redirect.target_url.clone();
+        let target_ref = match redirect.redirect.ref_policy {
+            RefPolicy::PassThroughTag => stub_tag.to_string(),
+            RefPolicy::Pinned => redirect
+                .redirect
+                .pinned_ref
+                .clone()
+                .expect("RedirectSection parser guarantees pinned_ref when ref_policy=pinned"),
+        };
+        let synthetic_name = format!("redirect-target-{}-{}", pkgref.kind, pkgref.name);
+        let target_reg = GitPackageRegistry::open_single_package(
+            &synthetic_name,
+            &target_url,
+            &target_ref,
+            &self.cache_root,
+            Arc::clone(&self.backend),
+            DEFAULT_FRESHNESS_SECS,
+            redirect.redirect.auth,
+            redirect.redirect.token_env.as_deref(),
+        )?;
+        let target_manifest =
+            target_reg.fetch_manifest_at_ref(pkgref.kind, &pkgref.name, &target_ref)?;
+        // Hop limit = 1: target cannot itself be a stub. Probe
+        // `vibe-redirect.toml` at the target ref; if the file
+        // exists, refuse.
+        let target_redirect = try_fetch_redirect_for_url(
+            &self.backend,
+            &target_reg,
+            stub_resolved.kind,
+            &stub_resolved.name,
+            &target_ref,
+        )?;
+        if target_redirect.is_some() {
+            return Err(RegistryError::MalformedMeta {
+                path: PathBuf::from(format!(
+                    "{target_url}@{target_ref}:{}",
+                    RedirectFile::FILENAME
+                )),
+                reason: format!(
+                    "redirect chain not allowed: stub `{}` redirects to `{target_url}` which is itself a stub (hop limit = 1, PROP-002 §2.4.2)",
+                    stub_reg.package_repo_url(stub_resolved.kind, &stub_resolved.name),
+                ),
+            });
+        }
+        // Sanity: the target's `[package]` must declare the same
+        // `(kind, name)` that the consumer asked for. Mismatch =
+        // org owner pointed at the wrong target, refuse to install.
+        if target_manifest.package.kind != pkgref.kind
+            || target_manifest.package.name != pkgref.name
+        {
+            return Err(RegistryError::MalformedMeta {
+                path: PathBuf::from(format!(
+                    "{target_url}@{target_ref}:{}",
+                    PackageManifest::FILENAME
+                )),
+                reason: format!(
+                    "redirect target for `{}:{}` declares `{}:{}` — refusing to install",
+                    pkgref.kind,
+                    pkgref.name,
+                    target_manifest.package.kind,
+                    target_manifest.package.name
+                ),
+            });
+        }
+        let stub_url = stub_reg.package_repo_url(stub_resolved.kind, &stub_resolved.name);
+        let resolved = ResolvedPackage {
+            kind: pkgref.kind,
+            name: pkgref.name.clone(),
+            version: target_manifest.package.version.clone(),
+            source_dir: self.redirect_clone_dir(pkgref.kind, &pkgref.name),
+        };
+        Ok(MultiResolution {
+            resolved,
+            // Registry name from the stub layer — that's the surface
+            // the consumer's `vibe.toml` `[[registry]]` named.
+            registry_name: Some(stub_reg.name().to_string()),
+            source_url: target_url,
+            source_ref: Some(target_ref),
+            overridden: false,
+            is_git_source: false,
+            via_redirect: Some(stub_url),
+            redirect_target_auth: redirect.redirect.auth,
+            redirect_target_token_env: redirect.redirect.token_env.clone(),
+        })
+    }
+
+    /// Where redirect-followed clones live —
+    /// `<cache_root>/__redirects__/<kind>-<name>/clone/`. Distinct
+    /// from registry-served, override, and git-source clones so
+    /// re-resolutions across modes do not share state.
+    fn redirect_clone_dir(&self, kind: vibe_core::PackageKind, name: &str) -> PathBuf {
+        self.cache_root
+            .join("__redirects__")
+            .join(format!("{}-{}", kind.as_str(), name))
+            .join("clone")
     }
 
     /// Resolve a `[requires.packages]` git-source declaration
@@ -577,6 +767,8 @@ impl MultiRegistryResolver {
             overridden: false,
             is_git_source: true,
             via_redirect: None,
+            redirect_target_auth: vibe_core::manifest::AuthKind::None,
+            redirect_target_token_env: None,
         })
     }
 
@@ -654,6 +846,9 @@ impl MultiRegistryResolver {
         if resolution.is_git_source {
             return self.fetch_git_source(resolution, project_cache, expected_hash);
         }
+        if resolution.via_redirect.is_some() {
+            return self.fetch_via_redirect(resolution, project_cache, expected_hash);
+        }
         let registry_name =
             resolution
                 .registry_name
@@ -725,6 +920,92 @@ impl MultiRegistryResolver {
             overridden: true,
             is_git_source: false,
             via_redirect: None,
+        })
+    }
+
+    /// Fetch a redirect-resolved package — the target's content lives at
+    /// `resolution.source_url`, fetched with auth from
+    /// `resolution.redirect_target_auth` / `redirect_target_token_env`.
+    /// The stub URL is preserved as `via_redirect` on the lockfile entry
+    /// for diagnostic / auditing.
+    fn fetch_via_redirect(
+        &self,
+        resolution: &MultiResolution,
+        project_cache: &Path,
+        _expected_hash: Option<&str>,
+    ) -> Result<CachedPackage, RegistryError> {
+        let kind = resolution.resolved.kind;
+        let name = resolution.resolved.name.as_str();
+        let target_url = resolution.source_url.clone();
+        let refname = resolution
+            .source_ref
+            .clone()
+            .ok_or_else(|| RegistryError::MalformedMeta {
+                path: PathBuf::from(format!("{target_url}:{}", PackageManifest::FILENAME)),
+                reason: "redirect resolution carries no source_ref — internal invariant violated"
+                    .to_string(),
+            })?;
+
+        // Synthesise a single-package registry on the target URL with
+        // the redirect's declared auth, so the M1.14 token-injection
+        // + scrub-from-`.git/config` discipline applies here too.
+        let synthetic_name = format!("redirect-target-{kind}-{name}");
+        let target_reg = GitPackageRegistry::open_single_package(
+            &synthetic_name,
+            &target_url,
+            &refname,
+            &self.cache_root,
+            Arc::clone(&self.backend),
+            DEFAULT_FRESHNESS_SECS,
+            resolution.redirect_target_auth,
+            resolution.redirect_target_token_env.as_deref(),
+        )?;
+        let plain_url = target_reg.package_repo_url(kind, name);
+        let credentialed = target_reg.credentialed_url(&plain_url);
+
+        let clone_dir = self.redirect_clone_dir(kind, name);
+        ensure_clone_at(self.backend.as_ref(), &credentialed, &refname, &clone_dir)?;
+        if credentialed != plain_url {
+            self.backend
+                .set_remote_url(&clone_dir, "origin", &plain_url)
+                .ok();
+        }
+
+        let dest = project_cache
+            .join(kind.as_str())
+            .join(name)
+            .join(format!("v{}", resolution.resolved.version));
+        if dest.exists() {
+            std::fs::remove_dir_all(&dest).map_err(|source| RegistryError::Io {
+                path: dest.clone(),
+                source,
+            })?;
+        }
+        copy_dir_excluding_git(&clone_dir, &dest)?;
+        let manifest_path = dest.join(PackageManifest::FILENAME);
+        let manifest = PackageManifest::read(&manifest_path)?;
+        let content_hash = compute_content_hash(&dest)?;
+
+        Ok(CachedPackage {
+            resolved: ResolvedPackage {
+                kind,
+                name: name.to_string(),
+                version: resolution.resolved.version.clone(),
+                source_dir: clone_dir,
+            },
+            cache_dir: dest,
+            manifest,
+            content_hash,
+            source_uri: plain_url,
+            // Lockfile records the stub registry's name so the entry
+            // is associated with the registry the consumer's
+            // `vibe.toml` named.
+            registry_name: resolution.registry_name.clone(),
+            source_ref: Some(refname),
+            resolved_commit: None,
+            overridden: false,
+            is_git_source: false,
+            via_redirect: resolution.via_redirect.clone(),
         })
     }
 
@@ -1145,6 +1426,200 @@ mod tests {
             DEFAULT_FRESHNESS_SECS,
         )
         .unwrap()
+    }
+
+    #[test]
+    fn resolve_follows_registry_redirect_pass_through_tag() {
+        // M1.16 PROP-002 §2.4.2: a registry stub repo carries
+        // vibe-redirect.toml at its root. The resolver detects the
+        // marker, follows it, and returns a MultiResolution carrying
+        // the target URL in source_url and the stub URL in via_redirect.
+        let cache = tempdir().unwrap();
+        let fake = Arc::new(FakeBackend::default());
+        // Stub repo at the registry: tag v0.3.0 has a vibe-redirect.toml
+        // pointing at the target URL. NO vibe-package.toml.
+        let stub_url = "git@host:org-stub/flow-internal.git";
+        fake.seed_tags(stub_url, vec!["v0.3.0".into()]);
+        fake.seed_file(
+            stub_url,
+            "v0.3.0",
+            "vibe-redirect.toml",
+            br#"[redirect]
+target_url = "git@host:external/flow-internal.git"
+"#
+            .to_vec(),
+        );
+        // Target repo at the external host: tag v0.3.0 has a real
+        // vibe-package.toml.
+        let target_url = "git@host:external/flow-internal.git";
+        fake.seed_tags(target_url, vec!["v0.3.0".into()]);
+        fake.seed_file(
+            target_url,
+            "v0.3.0",
+            "vibe-package.toml",
+            manifest_text("internal", "flow", "0.3.0").into_bytes(),
+        );
+        let r = build_resolver(
+            cache.path(),
+            vec![registry_section("stub-org", "git@host:org-stub")],
+            vec![],
+            vec![],
+            fake,
+        );
+        let p = PackageRef::parse("flow:internal").unwrap();
+        let m = r.resolve(&p).expect("redirect-follow must succeed");
+        assert_eq!(
+            m.via_redirect.as_deref(),
+            Some(stub_url),
+            "via_redirect must carry the stub URL"
+        );
+        assert_eq!(
+            m.source_url, target_url,
+            "source_url must carry the target URL"
+        );
+        assert_eq!(m.source_ref.as_deref(), Some("v0.3.0"));
+        assert!(!m.is_git_source);
+        assert!(!m.overridden);
+        assert_eq!(m.registry_name.as_deref(), Some("stub-org"));
+    }
+
+    #[test]
+    fn resolve_redirect_chain_rejected_at_hop_two() {
+        // Two stubs in sequence: the first redirects to a URL that is
+        // itself a stub. Per PROP-002 §2.4.2 hop limit = 1, this is
+        // rejected with `RedirectChainNotAllowed` (surfaced as
+        // MalformedMeta with chain-not-allowed reason).
+        let cache = tempdir().unwrap();
+        let fake = Arc::new(FakeBackend::default());
+        let stub_a = "git@host:org-a/flow-foo.git";
+        let stub_b = "git@host:org-b/flow-foo.git";
+        fake.seed_tags(stub_a, vec!["v1.0.0".into()]);
+        fake.seed_file(
+            stub_a,
+            "v1.0.0",
+            "vibe-redirect.toml",
+            format!(
+                "[redirect]\ntarget_url = \"{stub_b}\"\n"
+            )
+            .into_bytes(),
+        );
+        // Hop limit probe: target URL has its own vibe-redirect.toml
+        // at the same tag. Chain rejected.
+        fake.seed_file(
+            stub_b,
+            "v1.0.0",
+            "vibe-redirect.toml",
+            br#"[redirect]
+target_url = "git@host:org-c/flow-foo.git"
+"#
+            .to_vec(),
+        );
+        // The target's vibe-package.toml is also seeded (some hop-2
+        // detectors only check the redirect file; ours also fetches
+        // the manifest first, so seed it to avoid noise).
+        fake.seed_file(
+            stub_b,
+            "v1.0.0",
+            "vibe-package.toml",
+            manifest_text("foo", "flow", "1.0.0").into_bytes(),
+        );
+        let r = build_resolver(
+            cache.path(),
+            vec![registry_section("a", "git@host:org-a")],
+            vec![],
+            vec![],
+            fake,
+        );
+        let p = PackageRef::parse("flow:foo").unwrap();
+        let err = r.resolve(&p).expect_err("redirect chain must reject");
+        let msg = err.to_string();
+        assert!(
+            msg.contains("redirect chain not allowed") || msg.contains("hop limit"),
+            "expected hop-limit rejection, got: {msg}"
+        );
+    }
+
+    #[test]
+    fn resolve_redirect_pinned_uses_pinned_ref() {
+        // ref_policy = "pinned" + pinned_ref = "v1.0.0": stub at
+        // any tag should resolve to target's v1.0.0, regardless of
+        // the stub's own tag.
+        let cache = tempdir().unwrap();
+        let fake = Arc::new(FakeBackend::default());
+        let stub_url = "git@host:org-stub/flow-pinned.git";
+        let target_url = "git@host:external/flow-pinned.git";
+        // Stub has v9.9.9 tag (irrelevant — pinned overrides).
+        fake.seed_tags(stub_url, vec!["v9.9.9".into()]);
+        fake.seed_file(
+            stub_url,
+            "v9.9.9",
+            "vibe-redirect.toml",
+            br#"[redirect]
+target_url = "git@host:external/flow-pinned.git"
+ref_policy = "pinned"
+pinned_ref = "v1.0.0"
+"#
+            .to_vec(),
+        );
+        // Target has v1.0.0 (the pinned ref).
+        fake.seed_file(
+            target_url,
+            "v1.0.0",
+            "vibe-package.toml",
+            manifest_text("pinned", "flow", "1.0.0").into_bytes(),
+        );
+        let r = build_resolver(
+            cache.path(),
+            vec![registry_section("stub-org", "git@host:org-stub")],
+            vec![],
+            vec![],
+            fake,
+        );
+        let p = PackageRef::parse("flow:pinned").unwrap();
+        let m = r.resolve(&p).expect("pinned redirect must succeed");
+        assert_eq!(m.source_ref.as_deref(), Some("v1.0.0"));
+        assert_eq!(m.resolved.version.to_string(), "1.0.0");
+        assert_eq!(m.via_redirect.as_deref(), Some(stub_url));
+    }
+
+    #[test]
+    fn resolve_redirect_target_kind_name_mismatch_rejected() {
+        // Stub redirects to a target whose vibe-package.toml declares
+        // a different (kind, name). Refuse — pulling code under the
+        // wrong pkgref slot would silently misroute on disk.
+        let cache = tempdir().unwrap();
+        let fake = Arc::new(FakeBackend::default());
+        let stub_url = "git@host:org-stub/flow-internal.git";
+        let target_url = "git@host:external/some-other-pkg.git";
+        fake.seed_tags(stub_url, vec!["v0.1.0".into()]);
+        fake.seed_file(
+            stub_url,
+            "v0.1.0",
+            "vibe-redirect.toml",
+            format!(
+                "[redirect]\ntarget_url = \"{target_url}\"\n"
+            )
+            .into_bytes(),
+        );
+        fake.seed_file(
+            target_url,
+            "v0.1.0",
+            "vibe-package.toml",
+            manifest_text("something-else", "feat", "0.1.0").into_bytes(),
+        );
+        let r = build_resolver(
+            cache.path(),
+            vec![registry_section("stub-org", "git@host:org-stub")],
+            vec![],
+            vec![],
+            fake,
+        );
+        let p = PackageRef::parse("flow:internal").unwrap();
+        let err = r.resolve(&p).expect_err("identity mismatch must reject");
+        assert!(
+            err.to_string().contains("refusing to install"),
+            "got: {err}"
+        );
     }
 
     #[test]
