@@ -13,6 +13,7 @@ mod lockfile;
 mod package;
 mod project;
 pub mod purl;
+mod redirect;
 mod subskill;
 
 pub use lockfile::{
@@ -29,6 +30,7 @@ pub use project::{
     DEFAULT_REGISTRY_NAME, DEFAULT_REGISTRY_REF, DEFAULT_REGISTRY_URL, LlmSection, MirrorSection,
     NamingConvention, OverrideSection, ProjectManifest, ProjectSection, RegistrySection,
 };
+pub use redirect::{RedirectFile, RedirectSection, RefPolicy, parse_redirect_bytes};
 pub use subskill::{
     ActivationRules, DeliveryMode, SubskillConflicts, SubskillContent, SubskillManifest,
     SubskillMeta, SubskillRecommends,

@@ -1158,6 +1158,7 @@ impl GitPackageRegistry {
                 resolved_commit: None,
                 overridden: false,
                 is_git_source: false,
+                via_redirect: None,
             };
             match expected_hash {
                 None => {

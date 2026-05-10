@@ -77,6 +77,11 @@ pub struct MultiResolution {
     /// the registry walk or `[[override]]`. Lockfile maps this to
     /// `source_kind = "git"`.
     pub is_git_source: bool,
+    /// When this package was resolved via a registry stub that
+    /// redirected to an external URL (PROP-002 §2.4.2), the **stub**
+    /// URL is recorded here while `source_url` carries the **target**
+    /// URL. `None` for non-redirected resolutions.
+    pub via_redirect: Option<String>,
 }
 
 /// Resolver coordinating an ordered set of [`GitPackageRegistry`]
@@ -401,6 +406,7 @@ impl MultiRegistryResolver {
                         source_ref: Some(source_ref),
                         overridden: false,
                         is_git_source: false,
+                        via_redirect: None,
                     });
                 }
                 Err(RegistryError::UnknownPackage { .. }) => {
@@ -493,6 +499,7 @@ impl MultiRegistryResolver {
             source_ref: Some(refname),
             overridden: true,
             is_git_source: false,
+            via_redirect: None,
         })
     }
 
@@ -569,6 +576,7 @@ impl MultiRegistryResolver {
             source_ref: Some(refname),
             overridden: false,
             is_git_source: true,
+            via_redirect: None,
         })
     }
 
@@ -716,6 +724,7 @@ impl MultiRegistryResolver {
             resolved_commit: None,
             overridden: true,
             is_git_source: false,
+            via_redirect: None,
         })
     }
 
@@ -807,6 +816,7 @@ impl MultiRegistryResolver {
             resolved_commit: None,
             overridden: false,
             is_git_source: true,
+            via_redirect: None,
         })
     }
 

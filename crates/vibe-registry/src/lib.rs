@@ -190,6 +190,14 @@ pub struct CachedPackage {
     /// the registry walk or `[[override]]`. Mutually exclusive with
     /// `overridden`. Lockfile maps this to `source_kind = "git"`.
     pub is_git_source: bool,
+
+    /// When this package was resolved via a registry stub that
+    /// redirected to an external URL (PROP-002 §2.4.2), the **stub**
+    /// URL is recorded here while `source_uri` carries the **target**
+    /// URL. `None` for direct registry / git-source / override
+    /// resolutions. Lockfile mirrors this verbatim into
+    /// `LockedPackage.via_redirect`.
+    pub via_redirect: Option<String>,
 }
 
 pub struct LocalRegistry {
@@ -334,6 +342,7 @@ impl LocalRegistry {
             resolved_commit: None,
             overridden: false,
             is_git_source: false,
+            via_redirect: None,
         })
     }
 }

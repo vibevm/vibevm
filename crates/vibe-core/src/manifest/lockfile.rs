@@ -221,6 +221,15 @@ pub struct LockedPackage {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub source_kind: Option<SourceKind>,
 
+    /// When this entry was resolved via a registry stub that redirected
+    /// to an external URL (PROP-002 §2.4.2), records the **stub** URL
+    /// here while `source_url` carries the **target** URL. `None` for
+    /// non-redirected entries — the common case. Diagnostic / auditing
+    /// only; `vibe show <pkgref>` and `vibe list --json` surface this
+    /// to operators.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub via_redirect: Option<String>,
+
     /// Features active for this package (PROP-003 §2.4). Empty for
     /// packages with no `[features]` table or where no features were
     /// requested.
