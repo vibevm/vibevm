@@ -75,6 +75,186 @@ pub fn push_release(
     Ok(())
 }
 
+/// Initialise a temp git repo, copy `source_dir` contents into it, commit
+/// on `main`, and push to `clone_url`. No tag — used by redirect-stub
+/// creation where the stub repo starts tag-less and tags accrete later
+/// via [`push_tag_only`] (`vibe registry redirect-sync`).
+pub fn push_initial(
+    source_dir: &Path,
+    clone_url: &str,
+    commit_msg: &str,
+) -> Result<(), PublishError> {
+    let staging = TempDir::new().map_err(|e| PublishError::Io {
+        path: std::env::temp_dir(),
+        message: format!("creating publish staging dir: {e}"),
+    })?;
+    let staging_path = staging.path();
+
+    copy_dir(source_dir, staging_path)?;
+
+    run_git_in(staging_path, &["init", "--initial-branch=main"])?;
+    run_git_in(
+        staging_path,
+        &["config", "user.email", "publish@vibevm.local"],
+    )?;
+    run_git_in(staging_path, &["config", "user.name", "vibevm publisher"])?;
+
+    run_git_in(staging_path, &["add", "-A"])?;
+    run_git_in(staging_path, &["commit", "-m", commit_msg])?;
+
+    run_git_in(staging_path, &["remote", "add", "origin", clone_url])?;
+    push_with_classification(staging_path, &["push", "-u", "origin", "main"], clone_url)?;
+
+    Ok(())
+}
+
+/// List remote tags via `git ls-remote --tags <url>`. Returned tags are
+/// stripped of the `refs/tags/` prefix and any `^{}` peeled-form suffix;
+/// duplicates are de-duplicated. Used by the redirect-sync flow to
+/// enumerate the target's tag list before mirroring missing tags into
+/// the stub.
+///
+/// `url` may carry embedded credentials (`https://x-access-token:T@…`)
+/// — this function never prints the URL, only the structured stderr
+/// classification of failures (with credentials redacted).
+pub fn ls_remote_tags(url: &str) -> Result<Vec<String>, PublishError> {
+    let output = git_command_in_temp(&["ls-remote", "--tags", "--", url])
+        .output()
+        .map_err(|e| {
+            PublishError::Git(format!(
+                "spawning git ls-remote {}: {e}",
+                redact_credentials(url)
+            ))
+        })?;
+    if !output.status.success() {
+        let stderr = String::from_utf8_lossy(&output.stderr).to_lowercase();
+        let safe = redact_credentials(url);
+        if stderr.contains("could not resolve host") || stderr.contains("network is unreachable") {
+            return Err(PublishError::HostUnreachable { host: safe });
+        }
+        if stderr.contains("authentication failed")
+            || stderr.contains("403")
+            || stderr.contains("401")
+            || stderr.contains("permission denied")
+        {
+            return Err(PublishError::PushDenied { repo: safe });
+        }
+        let safe_stderr = redact_credentials(String::from_utf8_lossy(&output.stderr).trim());
+        return Err(PublishError::Git(format!(
+            "git ls-remote {safe} failed: {safe_stderr}"
+        )));
+    }
+    let mut tags: Vec<String> = Vec::new();
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    for line in stdout.lines() {
+        let parts: Vec<&str> = line.split_whitespace().collect();
+        if parts.len() < 2 {
+            continue;
+        }
+        let refname = parts[1];
+        let stripped = refname.strip_prefix("refs/tags/").unwrap_or(refname);
+        // ls-remote returns both the tag itself and the peeled-form
+        // (`refs/tags/v0.1.0^{}`) for annotated tags. Strip the suffix
+        // and de-dup.
+        let cleaned = stripped.trim_end_matches("^{}");
+        if !cleaned.is_empty() && !tags.iter().any(|t| t == cleaned) {
+            tags.push(cleaned.to_string());
+        }
+    }
+    Ok(tags)
+}
+
+/// Push a single tag pointing at `target_commit_sha` to `clone_url` —
+/// no working tree, no checkout, no fetch of objects. Used by
+/// redirect-sync: the stub repo only needs the tag ref pointing at the
+/// existing initial commit (the `main` branch HEAD), since stub content
+/// is just the marker file regardless of which tag a consumer probes.
+///
+/// `staging_path` must be an existing local clone of the stub remote
+/// (so `git push origin <tag>` can resolve `<tag>` to a known commit).
+pub fn push_tag_only(
+    staging_path: &Path,
+    clone_url: &str,
+    tag: &str,
+) -> Result<(), PublishError> {
+    let tag_msg = format!("redirect stub: surface target ref {tag}");
+    run_git_in(
+        staging_path,
+        &["tag", "-a", tag, "-m", &tag_msg],
+    )?;
+    push_with_classification(staging_path, &["push", "origin", tag], clone_url)?;
+    Ok(())
+}
+
+/// Like [`git_command`] but cwd-less — used by network-only ops
+/// (`ls-remote`) that don't need a working tree.
+fn git_command_in_temp(args: &[&str]) -> Command {
+    let mut cmd = Command::new("git");
+    cmd.args(args);
+    cmd.env("LC_ALL", "C").env("LANG", "C");
+    cmd.env("GIT_TERMINAL_PROMPT", "0");
+    #[cfg(windows)]
+    {
+        use std::os::windows::process::CommandExt;
+        cmd.creation_flags(0x0800_0000); // CREATE_NO_WINDOW
+    }
+    cmd
+}
+
+/// Clone `clone_url` into a temp working tree on the current branch and
+/// return the path. Used by redirect-sync to obtain a local clone of an
+/// existing stub before tagging missing target tags into it. The clone
+/// is shallow (`--depth=1`) — we only need the `main` commit to anchor
+/// new tags onto.
+pub fn shallow_clone(clone_url: &str) -> Result<TempDir, PublishError> {
+    let staging = TempDir::new().map_err(|e| PublishError::Io {
+        path: std::env::temp_dir(),
+        message: format!("creating clone staging dir: {e}"),
+    })?;
+    let dest_str = staging.path().to_string_lossy().into_owned();
+    let mut cmd = git_command_in_temp(&[
+        "clone",
+        "--depth=1",
+        "--single-branch",
+        "--branch=main",
+        clone_url,
+        &dest_str,
+    ]);
+    let output = cmd.output().map_err(|e| {
+        PublishError::Git(format!(
+            "spawning git clone {}: {e}",
+            redact_credentials(clone_url)
+        ))
+    })?;
+    if !output.status.success() {
+        let stderr = String::from_utf8_lossy(&output.stderr).to_lowercase();
+        let safe = redact_credentials(clone_url);
+        if stderr.contains("could not resolve host") || stderr.contains("network is unreachable") {
+            return Err(PublishError::HostUnreachable { host: safe });
+        }
+        if stderr.contains("authentication failed")
+            || stderr.contains("403")
+            || stderr.contains("401")
+            || stderr.contains("permission denied")
+        {
+            return Err(PublishError::PushDenied { repo: safe });
+        }
+        let safe_stderr = redact_credentials(String::from_utf8_lossy(&output.stderr).trim());
+        return Err(PublishError::Git(format!(
+            "git clone {safe} failed: {safe_stderr}"
+        )));
+    }
+    // Re-write `origin` to the unredacted (credentialed) URL so subsequent
+    // `git push origin <tag>` runs reuse the credentials. Equivalent of
+    // `git remote set-url origin <clone_url>` on the cloned working tree.
+    run_git_in(staging.path(), &["remote", "set-url", "origin", clone_url])?;
+    // Set local identity (parallel to push_release / push_initial) so
+    // tag annotation does not require a global git config.
+    run_git_in(staging.path(), &["config", "user.email", "publish@vibevm.local"])?;
+    run_git_in(staging.path(), &["config", "user.name", "vibevm publisher"])?;
+    Ok(staging)
+}
+
 /// Recursively copy `src` → `dst`. Skips any `.git/` subtree (defensive;
 /// unusual to find one in a publish source dir).
 fn copy_dir(src: &Path, dst: &Path) -> Result<(), PublishError> {
