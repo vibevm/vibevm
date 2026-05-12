@@ -1,9 +1,45 @@
 # WAL — Project Continuation State
-_Updated: 2026-05-12 (test fixture re-homing — smoke artefacts moved out of canonical `vibespecs` org into dedicated test orgs)_
+_Updated: 2026-05-12 (session-end — M1.15 + M1.16 ship-complete AND test fixture re-homing)_
 
 ## Current phase
 
-**Working checkpoint (2026-05-12, test fixture re-homing — `vibespecstest1/2/3`).** Live e2e and manual-test smoke fixtures moved out of the canonical `vibespecs` org (GitHub + GitVerse) and `olegchir` personal namespace into three dedicated test orgs: `vibespecstest1` (GitHub, registry-side fixtures), `vibespecstest2` (GitHub, external-target fixtures), `vibespecstest3` (GitVerse, GitVerse-side fixtures). Five GitHub repos migrated via `git clone --mirror` + `git push --mirror`; one GitVerse repo seeded from local fixture via `vibe registry publish --repo-url`. The `feat-helper` stub's `vibe-redirect.toml` updated to point at the new `vibespecstest2/...` target (commit + retag + force-push of `v0.1.0`). `cli_live_e2e.rs` rewritten so `init_project` overwrites `vibe.toml` with explicit `[[registry]]` blocks pointing at the test orgs (rather than relying on `vibe init`'s canonical defaults); asserts now check `registry = "vibespecstest1"` / `"vibespecstest3"`. M1.15 / M1.16 manual-test recipes rewritten to provision under `/orgs/vibespecstest2/repos` instead of `/user/repos` under `olegchir`, and the consumer-side `vibe.toml` is overridden to point at `vibespecstest1` before install. All three live tests pass; workspace `cargo test --workspace` green; clippy `-D warnings` clean. **HEAD `<pending>`**, no change in test counts.
+**Session-end checkpoint (2026-05-12).** The day's work split into three slices, all on `main`, all pushed to `origin/main`:
+
+1. **M1.16 finalisation (2026-05-10).** Seven commits (`5b9a2dc..9b22adb`) closed the M1.16 deferred-list: `vibe registry redirect` + `vibe registry redirect-sync` CLI commands, four hermetic redirect e2e tests, four git-source corner-case e2e tests, two bug fixes (uninstall git-source cleanup; `fetch_manifest_at_ref` archive→clone fall-back on GitHub), and a redirect-aware `MultiRegistryResolver::fetch_manifest` (depsolver path now sees stub-only repos). M1.15 also gained its deferred production smoke walk along the way.
+
+2. **Test-fixture re-homing (2026-05-12).** Commit `dbba8d7` plus the docs catch-up in `4e852f0`. Five GitHub repos + one GitVerse repo migrated out of canonical `vibespecs` + `olegchir` personal namespace into three dedicated test orgs: `vibespecstest1` (GitHub, registry-side fixtures), `vibespecstest2` (GitHub, external-target fixtures), `vibespecstest3` (GitVerse, GitVerse-side fixtures). Migration via `git clone --mirror` + `git push --mirror` for five GitHub repos; `vibe registry publish --repo-url` from a local fixture for the GitVerse leg. The `feat-helper` stub marker rewritten + retagged to point at `vibespecstest2/vibevm-m1-smoke-feat-helper`. `cli_live_e2e.rs` rewritten to overwrite `vibe.toml` after `vibe init` with explicit test-org `[[registry]]` blocks; M1.15 / M1.16 manual-test recipes reprovision via `/orgs/vibespecstest2/repos`. Five old smoke artefacts deleted via GitHub API (`HTTP 204` for all). `github.com/vibespecs` now hosts only real packages: `flow-wal`, `flow-sync-from-code`, `flow-atomic-commits`. All three live e2e tests pass.
+
+3. **Documentation catch-up.** Commits `ad9b8b3` + `9b22adb` + `4e852f0` covered CHANGELOG / ROADMAP / WAL / CONTINUE / `docs/registry-redirect.md` / `docs/commands/registry-redirect{,-sync}.md` and the two new `manual-tests/M1.{15,16}-*-smoke.md` recipes. ROADMAP flips M1.15 + M1.16 to `✅ SHIPPED (2026-05-10)`.
+
+**HEAD `4e852f0`**. Workspace clean (only `.claude/settings.local.json` untracked). `cargo test --workspace` all green; clippy `-D warnings` clean; `vibe check --path . --quiet` 0/0/0. **No active blockers.**
+
+vibe-cli e2e: **97 hermetic + 3 ignored** (was 89; +8). vibe-cli bin: **103 hermetic** (was 93; +10). vibe-registry: **102 hermetic**. vibe-core: **139 hermetic**.
+
+Outstanding manual step (owner-only): delete `https://gitverse.ru/vibespecs/vibevm-direct-push-smoke` via the GitVerse web UI. GitVerse has no API DELETE endpoint vibevm could call; the equivalent GitHub cleanup completed via `curl -X DELETE`.
+
+**Test-org map (live):**
+
+- `https://github.com/vibespecstest1` — `flow-vibevm-github-smoke` (live-e2e GitHub leg), `feat-helper` (M1.16 redirect stub).
+- `https://github.com/vibespecstest2` — `vibevm-m1-smoke-flow-internal` (M1.15 target), `vibevm-m1-smoke-feat-helper` (M1.16 target), `vibevm-private-probe` (M1.14.4 private target).
+- `https://gitverse.ru/vibespecstest3` — `vibevm-direct-push-smoke` (live-e2e GitVerse leg, SSH-only).
+
+Operational notes carried into this session:
+
+- **GitHub `upload-archive` refusal** is a host policy. Any code path that wants to read a single file from a GitHub repo without cloning must fall back to a shallow clone. Three call sites needed it this session: `fetch_dep_manifest` (already had it), `fetch_manifest_at_ref` (added), `try_fetch_redirect_for_url` (added).
+- **`MultiRegistryResolver::fetch_manifest`** is now the canonical depsolver-side manifest read. Pre-this-session DepProvider walked registries directly and missed stub-only repos / pinned redirects / git-source declarations. The new method delegates to `resolve()` and reads from whichever URL the resolution recorded.
+- **Pinned-policy redirects** decouple stub-tag from target version. The depsolver pins on target version, but the stub may not have that tag. Fall-back: re-resolve `latest` and verify version match.
+- **GitVerse HTTPS-vs-SSH**: canonical `vibespecs` happens to be HTTPS-readable; new orgs are not. Live tests use SSH form (`git@gitverse.ru:vibespecstest3`); operator docs and manual-tests do the same.
+- **Token-discipline invariant remains intact** through M1.15, M1.16, and the migration recipe. `grep -r x-access-token ~/.vibe/registries/` empty after every production walk this session. `.git/config` in all redirect / git-source / migrated clones carries plain (credential-free) URLs.
+
+What's deferred:
+
+- **`vibe registry redirect-update`** — editing an existing stub's marker is a manual clone/edit/push procedure for v0. `feat-helper` retargeting in this session was done by hand. ~3-5 commits to deliver a CLI affordance.
+- **Pinned-policy bridging in install pipeline** — pure `stub_tag != pinned_ref` case works at the resolver level (FakeBackend hermetic test) but not through the install pipeline. Bridging needs the install pipeline to remember the redirect-discovery rather than re-resolve through `=<version>`.
+- **Manual-test recipe for M1.14.4 private-probe** — target migrated to `vibespecstest2/vibevm-private-probe` but no recipe file exists yet. ~150 lines.
+
+---
+
+## Earlier checkpoint (kept for context — M1.16 +1, 2026-05-10)
 
 Out-of-line discovery: GitVerse https requires credentials even for public reads against new orgs (canonical `vibespecs` happens to be publicly readable over https, but a fresh org isn't). `cli_live_e2e` now uses SSH form `git@gitverse.ru:vibespecstest3` for the GitVerse registry URL, matching the operator path documented in `spec/boot/90-user.md`.
 
