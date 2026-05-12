@@ -1,8 +1,16 @@
 //! Live end-to-end tests against the public internet.
 //!
-//! These tests reach `github.com` and `gitverse.ru` — the canonical
-//! `vibespecs` package registry on each host. Marked `#[ignore]` so
-//! `cargo test --workspace` stays hermetic; run them explicitly with:
+//! These tests reach `github.com` and `gitverse.ru` — but NOT the
+//! canonical `vibespecs` orgs. Smoke fixtures live in dedicated
+//! test-orgs so the canonical orgs stay populated with only real,
+//! installable packages:
+//!
+//! - GitHub: `https://github.com/vibespecstest1` (registry-side) +
+//!   `https://github.com/vibespecstest2` (external-target side).
+//! - GitVerse: `https://gitverse.ru/vibespecstest3`.
+//!
+//! Marked `#[ignore]` so `cargo test --workspace` stays hermetic;
+//! run them explicitly with:
 //!
 //! ```
 //! cargo test --test cli_live_e2e -- --ignored
@@ -12,39 +20,57 @@
 //! ===============
 //!
 //! 1. `cross_registry_resolution_routes_each_package_to_correct_host`
-//!    — given the default two-registry layout (GitHub primary +
-//!    GitVerse secondary), `vibe install` resolves a GitHub-only
-//!    package against GitHub and a GitVerse-only package against
-//!    GitVerse, in a single invocation. The lockfile records the
-//!    correct `registry` per package, proving the fall-through walk
-//!    on `UnknownPackage` works against real hosts.
-//! 2. `install_github_smoke_alone` / `install_gitverse_smoke_alone`
-//!    — split-half coverage so that a failure in one host doesn't
+//!    — given a two-registry layout (GitHub `vibespecstest1` primary +
+//!    GitVerse `vibespecstest3` secondary), `vibe install` resolves a
+//!    GitHub-only package against GitHub and a GitVerse-only package
+//!    against GitVerse, in a single invocation. The lockfile records
+//!    the correct `registry` per package, proving the fall-through
+//!    walk on `UnknownPackage` works against real hosts.
+//! 2. `install_github_smoke_alone` / `install_gitverse_smoke_alone` —
+//!    split-half coverage so that a failure in one host doesn't
 //!    obscure the other in the cross-registry combined case.
 //!
 //! Test fixtures published live
 //! ============================
 //!
-//! - GitHub: `https://github.com/vibespecs/flow-vibevm-github-smoke`
+//! - GitHub: `https://github.com/vibespecstest1/flow-vibevm-github-smoke`
 //!   (created via `vibe registry publish` API path; see
 //!   `fixtures/manual-test-packages/flow-vibevm-github-smoke/`).
-//! - GitVerse: `https://gitverse.ru/vibespecs/flow-vibevm-direct-push-smoke`
+//! - GitVerse: `https://gitverse.ru/vibespecstest3/vibevm-direct-push-smoke`
 //!   (created via `vibe registry publish --repo-url …` direct-push;
 //!   see `fixtures/manual-test-packages/flow-vibevm-direct-push-smoke/`).
 //!
 //! Both carry `v0.0.1` and a single eager file plus a boot snippet —
 //! enough to exercise the resolver, fetcher, integrity check, and
-//! materialisation paths without burning a real package name.
+//! materialisation paths without burning a real package name in the
+//! canonical `vibespecs` orgs.
 
 use std::fs;
 use std::path::Path;
 
 use assert_cmd::Command;
 
+const TEST_REGISTRY_GITHUB_NAME: &str = "vibespecstest1";
+const TEST_REGISTRY_GITHUB_URL: &str = "https://github.com/vibespecstest1";
+const TEST_REGISTRY_GITVERSE_NAME: &str = "vibespecstest3";
+/// SSH form for GitVerse: the live test reaches it via the local
+/// `gitverse.ru` SSH key (`spec/boot/90-user.md` covers the
+/// preflight). HTTPS against GitVerse repos demands credentials
+/// even for public reads — the canonical `vibespecs` org happens to
+/// be publicly readable over HTTPS too, but new test orgs cannot
+/// be assumed public, and SSH is the documented operator path.
+const TEST_REGISTRY_GITVERSE_URL: &str = "git@gitverse.ru:vibespecstest3";
+
 fn vibe() -> Command {
     Command::cargo_bin("vibe").expect("vibe binary built")
 }
 
+/// Initialise a project and overwrite the default `[[registry]]`
+/// blocks with the live-test orgs. The `vibespecstest1` org hosts
+/// GitHub-side fixtures (default `kind-name` naming, matching
+/// canonical `vibespecs`); `vibespecstest3` hosts GitVerse-side
+/// fixtures (default `name` naming for that registry, matching the
+/// canonical `vibespecs-gitverse` shape).
 fn init_project(dir: &Path) {
     vibe()
         .arg("init")
@@ -52,6 +78,22 @@ fn init_project(dir: &Path) {
         .arg(dir)
         .assert()
         .success();
+    let manifest = format!(
+        r#"[project]
+name = "live-e2e"
+version = "0.0.1"
+
+[[registry]]
+name = "{TEST_REGISTRY_GITHUB_NAME}"
+url = "{TEST_REGISTRY_GITHUB_URL}"
+
+[[registry]]
+name = "{TEST_REGISTRY_GITVERSE_NAME}"
+url = "{TEST_REGISTRY_GITVERSE_URL}"
+naming = "name"
+"#
+    );
+    fs::write(dir.join("vibe.toml"), manifest).expect("vibe.toml writeable");
 }
 
 #[test]
@@ -81,8 +123,8 @@ fn install_github_smoke_alone() {
         .expect("flow:vibevm-github-smoke must land in the lockfile");
     assert_eq!(
         pkg.registry.as_deref(),
-        Some("vibespecs"),
-        "GitHub package must attribute to `vibespecs` registry; lockfile entry: {pkg:?}"
+        Some(TEST_REGISTRY_GITHUB_NAME),
+        "GitHub package must attribute to `vibespecstest1` registry; lockfile entry: {pkg:?}"
     );
     assert!(
         pkg.source_url.contains("github.com"),
@@ -130,8 +172,8 @@ fn install_gitverse_smoke_alone() {
         .expect("flow:vibevm-direct-push-smoke must land in the lockfile");
     assert_eq!(
         pkg.registry.as_deref(),
-        Some("vibespecs-gitverse"),
-        "GitVerse-only package must attribute to `vibespecs-gitverse`; lockfile entry: {pkg:?}"
+        Some(TEST_REGISTRY_GITVERSE_NAME),
+        "GitVerse-only package must attribute to `vibespecstest3`; lockfile entry: {pkg:?}"
     );
     assert!(
         pkg.source_url.contains("gitverse.ru"),
@@ -184,8 +226,8 @@ fn cross_registry_resolution_routes_each_package_to_correct_host() {
         .expect("github fixture installed");
     assert_eq!(
         github_pkg.registry.as_deref(),
-        Some("vibespecs"),
-        "github fixture must attribute to `vibespecs`; got: {github_pkg:?}"
+        Some(TEST_REGISTRY_GITHUB_NAME),
+        "github fixture must attribute to `vibespecstest1`; got: {github_pkg:?}"
     );
     assert!(
         github_pkg.source_url.contains("github.com"),
@@ -200,8 +242,8 @@ fn cross_registry_resolution_routes_each_package_to_correct_host() {
         .expect("gitverse fixture installed");
     assert_eq!(
         gitverse_pkg.registry.as_deref(),
-        Some("vibespecs-gitverse"),
-        "gitverse fixture must attribute to `vibespecs-gitverse`; got: {gitverse_pkg:?}"
+        Some(TEST_REGISTRY_GITVERSE_NAME),
+        "gitverse fixture must attribute to `vibespecstest3`; got: {gitverse_pkg:?}"
     );
     assert!(
         gitverse_pkg.source_url.contains("gitverse.ru"),
