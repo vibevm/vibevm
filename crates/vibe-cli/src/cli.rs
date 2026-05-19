@@ -165,6 +165,16 @@ pub enum RegistrySubcommand {
     /// command refuses with a clear message.
     RedirectSync(RegistryRedirectSyncArgs),
 
+    /// Rewrite an existing registry stub's `vibe-redirect.toml` (PROP-002
+    /// §2.4.2). Each flag is optional — fields not specified retain their
+    /// current value, so this is a true partial update. Changes that
+    /// affect resolution outcomes for consumers (`--to` rewriting the
+    /// target URL, `--ref-policy` flipping the resolution mode) require
+    /// `--trust-redirect` per PROP-002 §2.4.2's trust model: such a switch
+    /// is never silent and must be operator-initiated. Refuses if the
+    /// computed marker is byte-identical to the stub's current marker.
+    RedirectUpdate(RegistryRedirectUpdateArgs),
+
     /// Generate a local mirror directory containing every package
     /// referenced by `vibe.lock`, suitable for use as a
     /// `[[mirror]] url = "file:///<abs-path>"` for offline / air-gapped
@@ -244,6 +254,81 @@ pub struct RegistryRedirectSyncArgs {
     /// first registry in `vibe.toml`.
     #[arg(long = "registry")]
     pub registry: Option<String>,
+
+    /// Project root with `vibe.toml`. Defaults to current directory.
+    #[arg(long, default_value = ".")]
+    pub path: PathBuf,
+
+    /// Describe what would happen but make no API calls or pushes.
+    #[arg(long = "dry-run")]
+    pub dry_run: bool,
+}
+
+#[derive(Debug, clap::Args)]
+pub struct RegistryRedirectUpdateArgs {
+    /// Pkgref (`<kind>:<name>`) of an existing stub to rewrite.
+    pub pkgref: String,
+
+    /// New target git URL. Omit to keep the current `target_url`.
+    /// Changing the target URL requires `--trust-redirect` because it
+    /// switches the content consumers receive — see PROP-002 §2.4.2 on
+    /// the trust model.
+    #[arg(long = "to")]
+    pub to: Option<String>,
+
+    /// Name of the `[[registry]]` hosting the stub. Defaults to the
+    /// first registry in `vibe.toml`.
+    #[arg(long = "registry")]
+    pub registry: Option<String>,
+
+    /// New ref policy. `pass-through-tag` or `pinned`. Omit to keep the
+    /// current policy. Flipping policy requires `--trust-redirect`.
+    #[arg(long = "ref-policy")]
+    pub ref_policy: Option<String>,
+
+    /// New pinned ref. Required when switching to `--ref-policy pinned`;
+    /// allowed when keeping `pinned` policy (changes the pinned target).
+    /// Rejected when current or new policy is `pass-through-tag`.
+    #[arg(long = "pinned-ref")]
+    pub pinned_ref: Option<String>,
+
+    /// New target-side auth regime. Mirrors the registry-level axis from
+    /// PROP-002 §2.2.1 — `none`, `token-env`, `credential-helper`, `ssh`.
+    /// Omit to keep the current auth regime.
+    #[arg(long = "target-auth")]
+    pub target_auth: Option<String>,
+
+    /// Override the env-var name used by `--target-auth token-env`.
+    /// Cleared automatically when the new auth regime is not `token-env`.
+    #[arg(long = "target-token-env")]
+    pub target_token_env: Option<String>,
+
+    /// New description text recorded in `[redirect].description`. Omit
+    /// to keep the current description; pass `--clear-description` to
+    /// drop it entirely.
+    #[arg(long = "description")]
+    pub description: Option<String>,
+
+    /// Drop the existing `[redirect].description` field. Mutually
+    /// exclusive with `--description`.
+    #[arg(long = "clear-description")]
+    pub clear_description: bool,
+
+    /// Confirm a deliberate switch of `target_url` or `ref_policy`. Per
+    /// PROP-002 §2.4.2, such a switch changes the content consumers
+    /// receive — this flag is the operator's explicit acknowledgement.
+    /// Without it, requested target/policy changes are rejected with a
+    /// pointer at this flag.
+    #[arg(long = "trust-redirect")]
+    pub trust_redirect: bool,
+
+    /// After pushing the rewritten marker, run `vibe registry
+    /// redirect-sync <pkgref>` to mirror target tags into the stub. Most
+    /// useful when `--to` migrates the stub to a different target whose
+    /// tag set differs from the prior target's. No-op for pinned-policy
+    /// stubs after update.
+    #[arg(long = "resync")]
+    pub resync: bool,
 
     /// Project root with `vibe.toml`. Defaults to current directory.
     #[arg(long, default_value = ".")]
