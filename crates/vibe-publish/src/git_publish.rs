@@ -186,6 +186,40 @@ pub fn push_tag_only(
     Ok(())
 }
 
+/// Stage every change in `working_dir`, commit with `commit_msg`, push to
+/// `clone_url` on `main`. Used by `vibe registry redirect-update` to land
+/// a rewritten `vibe-redirect.toml` into an already-existing stub repo
+/// without re-creating it. The push is a fast-forward (no `--force`) — the
+/// new marker is layered on top of the stub's existing history.
+///
+/// `working_dir` must be an existing local clone of the remote with at
+/// least one prior commit and identity already configured (see
+/// [`shallow_clone`], which sets `user.email` / `user.name` after clone).
+/// If `git status --porcelain` is empty (nothing staged), the call fails
+/// with [`PublishError::Git`] rather than recording an empty commit —
+/// callers are expected to short-circuit "nothing changed" upstream.
+pub fn commit_and_push(
+    working_dir: &Path,
+    clone_url: &str,
+    commit_msg: &str,
+) -> Result<(), PublishError> {
+    run_git_in(working_dir, &["add", "-A"])?;
+
+    // Refuse to record an empty commit. If nothing staged, the caller
+    // mis-computed the diff — surface that as a hard error rather than
+    // emit a no-op commit on the stub's history.
+    let status = run_git_in(working_dir, &["status", "--porcelain"])?;
+    if status.stdout.iter().all(u8::is_ascii_whitespace) {
+        return Err(PublishError::Git(
+            "commit_and_push: working tree clean; nothing to commit".to_string(),
+        ));
+    }
+
+    run_git_in(working_dir, &["commit", "-m", commit_msg])?;
+    push_with_classification(working_dir, &["push", "origin", "main"], clone_url)?;
+    Ok(())
+}
+
 /// Like [`git_command`] but cwd-less — used by network-only ops
 /// (`ls-remote`) that don't need a working tree.
 fn git_command_in_temp(args: &[&str]) -> Command {
@@ -627,6 +661,90 @@ mod tests {
         assert!(!scrubbed.contains("secret"));
         assert!(scrubbed.contains("https://***@github.com/foo/bar.git"));
         assert!(scrubbed.contains("failed: oops"));
+    }
+
+    #[test]
+    fn commit_and_push_lands_local_edit_on_bare_origin() {
+        if !git_available() {
+            eprintln!("skipping: git not on PATH");
+            return;
+        }
+
+        // Build a bare origin, seed it via push_initial so it has a
+        // `main` HEAD, then clone, edit a file, and exercise
+        // commit_and_push. Mirrors the real workflow of
+        // `vibe registry redirect-update`.
+        let outer = tempdir().unwrap();
+        let bare = outer.path().join("origin.git");
+        let init_status = Command::new("git")
+            .args(["init", "--bare", bare.to_str().unwrap()])
+            .env("LC_ALL", "C")
+            .status()
+            .unwrap();
+        assert!(init_status.success());
+
+        let seed = tempdir().unwrap();
+        fs::write(seed.path().join("vibe-redirect.toml"), "[redirect]\ntarget_url = \"https://example.invalid/v1\"\n").unwrap();
+        let url = bare.to_string_lossy().into_owned();
+        push_initial(seed.path(), &url, "stub: initial").expect("seed ok");
+
+        let work = shallow_clone(&url).expect("clone ok");
+        fs::write(
+            work.path().join("vibe-redirect.toml"),
+            "[redirect]\ntarget_url = \"https://example.invalid/v2\"\n",
+        )
+        .unwrap();
+
+        commit_and_push(work.path(), &url, "stub: retarget to v2").expect("commit_and_push ok");
+
+        // The bare origin must now carry two commits on main.
+        let log = Command::new("git")
+            .args(["-C", bare.to_str().unwrap(), "log", "--oneline", "main"])
+            .env("LC_ALL", "C")
+            .output()
+            .unwrap();
+        let log_out = String::from_utf8_lossy(&log.stdout);
+        let lines: Vec<&str> = log_out.lines().collect();
+        assert_eq!(
+            lines.len(),
+            2,
+            "expected exactly two commits on main, got: {log_out}"
+        );
+        assert!(
+            lines[0].contains("retarget"),
+            "newest commit subject lost: {log_out}"
+        );
+    }
+
+    #[test]
+    fn commit_and_push_refuses_when_working_tree_clean() {
+        if !git_available() {
+            eprintln!("skipping: git not on PATH");
+            return;
+        }
+
+        let outer = tempdir().unwrap();
+        let bare = outer.path().join("origin.git");
+        let init_status = Command::new("git")
+            .args(["init", "--bare", bare.to_str().unwrap()])
+            .env("LC_ALL", "C")
+            .status()
+            .unwrap();
+        assert!(init_status.success());
+
+        let seed = tempdir().unwrap();
+        fs::write(seed.path().join("file.txt"), "hi").unwrap();
+        let url = bare.to_string_lossy().into_owned();
+        push_initial(seed.path(), &url, "initial").expect("seed ok");
+
+        let work = shallow_clone(&url).expect("clone ok");
+        // No edits — working tree is clean against HEAD.
+        let err = commit_and_push(work.path(), &url, "should fail").unwrap_err();
+        let msg = format!("{err}");
+        assert!(
+            msg.contains("nothing to commit"),
+            "expected nothing-to-commit error, got: {msg}"
+        );
     }
 
     #[test]
