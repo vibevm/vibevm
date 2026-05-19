@@ -1333,6 +1333,106 @@ fn install_via_redirect_chain_rejected_at_hop_two() {
         );
 }
 
+// ---------------------------------------------------------------------------
+// `vibe registry redirect-update` — args-level guard rails (PROP-002 §2.4.2)
+//
+// The full apply path requires a real publish host (`creator_for_url` only
+// dispatches to GitHub or GitVerse) and is exercised by the production
+// smoke walk against `vibespecstest1/feat-helper`. The hermetic tests
+// below cover the args parsing + early validation slice: flag-combo
+// mutual exclusion, pkgref parsing, missing-manifest, and CLI help. The
+// computational core (merging flags into a new RedirectSection, diffing,
+// commit-message building) is covered by the unit tests in
+// `commands::registry::tests`.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn redirect_update_help_lists_partial_update_flags() {
+    let out = vibe()
+        .arg("registry")
+        .arg("redirect-update")
+        .arg("--help")
+        .output()
+        .expect("spawn vibe");
+    assert!(out.status.success(), "--help should succeed");
+    let stdout = String::from_utf8_lossy(&out.stdout);
+    for flag in &[
+        "--to",
+        "--ref-policy",
+        "--pinned-ref",
+        "--target-auth",
+        "--target-token-env",
+        "--description",
+        "--clear-description",
+        "--trust-redirect",
+        "--resync",
+        "--dry-run",
+    ] {
+        assert!(
+            stdout.contains(flag),
+            "expected help to mention `{flag}`, got:\n{stdout}"
+        );
+    }
+}
+
+#[test]
+fn redirect_update_rejects_description_and_clear_combined() {
+    // Mutual-exclusion check fires FIRST in the handler, before any
+    // filesystem or network work — so we can test it with an empty
+    // working directory (no `vibe.toml` needed).
+    let scratch = tempfile::tempdir().unwrap();
+    vibe()
+        .arg("registry")
+        .arg("redirect-update")
+        .arg("flow:wal")
+        .arg("--description")
+        .arg("new text")
+        .arg("--clear-description")
+        .arg("--path")
+        .arg(scratch.path())
+        .assert()
+        .failure()
+        .stderr(predicate::str::contains("mutually exclusive"));
+}
+
+#[test]
+fn redirect_update_rejects_invalid_pkgref() {
+    let project = tempfile::tempdir().unwrap();
+    init_project(project.path());
+    write_project_with_per_package_registry(project.path(), "https://github.com/some-org");
+
+    vibe()
+        .arg("registry")
+        .arg("redirect-update")
+        .arg("not-a-pkgref")
+        .arg("--description")
+        .arg("anything")
+        .arg("--path")
+        .arg(project.path())
+        .assert()
+        .failure()
+        .stderr(predicate::str::contains("parsing pkgref"));
+}
+
+#[test]
+fn redirect_update_rejects_missing_vibe_toml() {
+    // Path exists but carries no `vibe.toml` — handler bails after the
+    // mutual-exclusion check (passed: no `--clear-description`) with a
+    // clear "no vibe.toml" hint pointing at `vibe init`.
+    let scratch = tempfile::tempdir().unwrap();
+    vibe()
+        .arg("registry")
+        .arg("redirect-update")
+        .arg("flow:wal")
+        .arg("--description")
+        .arg("anything")
+        .arg("--path")
+        .arg(scratch.path())
+        .assert()
+        .failure()
+        .stderr(predicate::str::contains("no `vibe.toml`"));
+}
+
 #[test]
 fn uninstall_removes_git_source_from_manifest_and_lockfile() {
     if !git_available() {
