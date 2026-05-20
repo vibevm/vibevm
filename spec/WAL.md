@@ -1,7 +1,25 @@
 # WAL — Project Continuation State
-_Updated: 2026-05-12 (session-end — M1.15 + M1.16 ship-complete AND test fixture re-homing)_
+_Updated: 2026-05-20 (session-end — redirect-update shipped + workspace/naming design session)_
 
 ## Current phase
+
+**Session-end checkpoint (2026-05-20).** Two slices, both on `main`:
+
+1. **`vibe registry redirect-update` shipped.** Four commits (`f8af587..b44729d`, pushed mid-session) closed the one remaining M1.16 deferred-list item — a CLI command to rewrite an existing redirect stub's `vibe-redirect.toml` in place (retarget via `--to`, switch `--ref-policy`, edit description), replacing the manual `git clone` / edit / push procedure. New `vibe_publish::git_publish::commit_and_push` helper (fast-forward push on an existing clone, refuses an empty commit). Trust model per PROP-002 §2.4.2 — `target_url` / `ref_policy` / `pinned_ref` changes require `--trust-redirect`; operator metadata does not. 15 unit tests on `compute_updated_redirect_section` + helpers, 2 on `commit_and_push`, 4 hermetic e2e on args-level guard rails. New `docs/commands/registry-redirect-update.md`. **The M1.16 deferred-list is now empty.**
+
+2. **Workspace + qualified-naming design session.** Two commits (`ff23a0f`, `4d6775a`) record a multi-fork design discussion with the owner — the largest refactor proposed so far. Produced **PROP-007** ([workspace](modules/vibe-workspace/PROP-007-workspace.md) — multi-package projects, recursive nesting, unified `vibe.toml`, `path`-source, `[workspace.versions]`, selective publish) and **PROP-008** ([qualified naming](modules/vibe-registry/PROP-008-qualified-naming.md) — reverse-FQDN `group`, identity `(group, name, version, content_hash)`, short-name aliases, collision detection), both `DRAFT` — requirements locked, **implementation deliberately deferred to a fresh session**. Also: a new non-normative documentation genre `spec/design/` (genre recorded in `spec/design/README.md`), with the full fork-by-fork lore in `spec/design/workspace-and-qualified-naming.md`. ROADMAP gains M1.17 / M1.18 stubs + an M3+ registry-explorer entry. The owner granted explicit sanction to edit any specification, including the owner-frozen `VIBEVM-SPEC.md`, for this refactor (recorded in the PROP-007/008 headers); the `VIBEVM-SPEC.md` edits land at implementation time, not yet.
+
+**HEAD `4d6775a`.** Working tree clean (only `.claude/settings.local.json` untracked). `cargo clippy --workspace --all-targets -- -D warnings` clean; `vibe check --path . --quiet` 0 errors. Test counts this session: vibe-publish **51 hermetic** (+2 `commit_and_push`); vibe-cli bins **118 hermetic** (+15 redirect-update unit); vibe-cli e2e **101 hermetic** (+4 redirect-update guard-rail).
+
+**Known environment issue (not a code bug):** `cargo test -p vibe-install` — and therefore `cargo test --workspace` — fails on this machine with `os error 740` ("requires elevation"). Windows Defender / Smart App Control blocks the freshly-compiled unsigned `vibe_install-<hash>.exe` test runner; `cargo clean` does not help. The `vibe-install` crate was not touched this session. The owner is resolving the AV side himself. `cargo build -p vibe-install --tests` type-checks cleanly.
+
+**Next session:** implement **M1.17 — Workspace** ([PROP-007](modules/vibe-workspace/PROP-007-workspace.md)). It has no dependency on the index and delivers the bulk of the request. Read `spec/design/workspace-and-qualified-naming.md` first — it carries the design reasoning. M1.18 (PROP-008) follows, but depends on PROP-005 (index) being implemented for short-name resolution.
+
+**Outstanding manual step (owner-only, carried from 2026-05-12):** delete `https://gitverse.ru/vibespecs/vibevm-direct-push-smoke` via the GitVerse web UI (no API DELETE endpoint). Not blocking.
+
+---
+
+## Earlier checkpoint (kept for context — M1.15 + M1.16 ship + test re-home, 2026-05-12)
 
 **Session-end checkpoint (2026-05-12).** The day's work split into three slices, all on `main`, all pushed to `origin/main`:
 
