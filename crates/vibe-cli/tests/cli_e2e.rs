@@ -4076,7 +4076,7 @@ fn omnibus_install_exercises_every_prop003_surface() {
         &fs::read_to_string(project.path().join("vibe.lock")).unwrap(),
     )
     .unwrap();
-    assert_eq!(lock.meta.schema_version, 3);
+    assert_eq!(lock.meta.schema_version, 4);
     assert_eq!(lock.meta.language_chain, vec!["ru", "en"]);
     assert_eq!(lock.packages.len(), 3);
     let alpha = lock

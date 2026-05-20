@@ -404,7 +404,7 @@ mod tests {
 [meta]
 generated_by = "vibe-test"
 generated_at = "2026-05-05T00:00:00Z"
-schema_version = 3
+schema_version = 4
 
 [[package]]
 kind = "flow"

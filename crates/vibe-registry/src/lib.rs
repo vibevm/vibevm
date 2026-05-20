@@ -42,7 +42,7 @@ pub use index_client::{
 };
 pub use multi_registry_resolver::{
     DEFAULT_OVERRIDE_REF, MultiRegistryResolver, MultiResolution, RefreshReport, RefreshedEntry,
-    RefreshedVia, RegistryWalkAttempt, SkippedEntry, WalkAttemptStatus,
+    RefreshedVia, RegistryWalkAttempt, ResolvedPathDep, SkippedEntry, WalkAttemptStatus,
 };
 
 #[derive(Debug, Error)]
@@ -190,6 +190,16 @@ pub struct CachedPackage {
     /// the registry walk or `[[override]]`. Mutually exclusive with
     /// `overridden`. Lockfile maps this to `source_kind = "git"`.
     pub is_git_source: bool,
+
+    /// `true` iff this package was resolved through a `[requires.packages]`
+    /// table-form path-source declaration (PROP-007 §2.5) — a package in
+    /// a local directory, typically a sibling workspace member — rather
+    /// than the registry walk, `[[override]]`, or git-source. Mutually
+    /// exclusive with `overridden` and `is_git_source`. Lockfile maps
+    /// this to `source_kind = "path"`, and `source_uri` then carries the
+    /// member's path relative to the workspace root — never a URL, never
+    /// an absolute path.
+    pub is_path_source: bool,
 
     /// When this package was resolved via a registry stub that
     /// redirected to an external URL (PROP-002 §2.4.2), the **stub**
@@ -364,6 +374,7 @@ impl LocalRegistry {
             resolved_commit: None,
             overridden: false,
             is_git_source: false,
+            is_path_source: false,
             via_redirect: None,
         })
     }

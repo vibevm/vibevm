@@ -1319,7 +1319,7 @@ url = "https://example/vibespecs"
         let lockfile = r#"[meta]
 generated_by = "vibe-test"
 generated_at = "2026-05-04T00:00:00Z"
-schema_version = 2
+schema_version = 4
 
 [[package]]
 kind = "flow"
@@ -1354,7 +1354,7 @@ files_written = ["spec/flows/wal/A.md"]
         // Empty lockfile (no packages declare anything).
         fs::write(
             project.path().join("vibe.lock"),
-            "[meta]\ngenerated_by = \"vibe-test\"\ngenerated_at = \"2026-05-04T00:00:00Z\"\nschema_version = 2\n",
+            "[meta]\ngenerated_by = \"vibe-test\"\ngenerated_at = \"2026-05-04T00:00:00Z\"\nschema_version = 4\n",
         )
         .unwrap();
         let report = check_project(project.path(), &opts());

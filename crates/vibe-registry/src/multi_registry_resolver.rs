@@ -39,11 +39,11 @@ use std::fmt::Write as _;
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
 
-use vibe_core::PackageRef;
 use vibe_core::manifest::{
     GitPackageDep, Lockfile, Manifest, MirrorSection, OverrideSection, RedirectFile, RefPolicy,
     RegistrySection, parse_redirect_bytes,
 };
+use vibe_core::{PackageRef, VersionSpec};
 
 use crate::git_backend::{GitBackend, GitError, ShellGit};
 use crate::git_package_registry::{GitPackageRegistry, copy_dir_excluding_git};
@@ -79,6 +79,13 @@ pub struct MultiResolution {
     /// the registry walk or `[[override]]`. Lockfile maps this to
     /// `source_kind = "git"`.
     pub is_git_source: bool,
+    /// True when this package was resolved via a `[requires.packages]`
+    /// path-source declaration (PROP-007 §2.5) — a package in a local
+    /// directory, typically a sibling workspace member — rather than the
+    /// registry walk, `[[override]]`, or git-source. Lockfile maps this
+    /// to `source_kind = "path"`, and `source_url` then carries the
+    /// member's path relative to the workspace root, not a URL.
+    pub is_path_source: bool,
     /// When this package was resolved via a registry stub that
     /// redirected to an external URL (PROP-002 §2.4.2), the **stub**
     /// URL is recorded here while `source_url` carries the **target**
@@ -96,6 +103,37 @@ pub struct MultiResolution {
     pub redirect_target_token_env: Option<String>,
 }
 
+/// A `[requires.packages]` path-source declaration (PROP-007 §2.5) with
+/// the on-disk location already computed by the caller. A path-source
+/// dependency is a package living in a local directory — typically a
+/// sibling workspace member — so there is no registry walk and no git
+/// clone: the source is a directory the resolver reads and copies.
+///
+/// The resolver does **no** filesystem path arithmetic. The caller (the
+/// workspace layer, a later milestone) resolves `PathPackageDep.path`
+/// against the declaring manifest's directory, canonicalises it, and
+/// hands the absolute `package_dir` plus the workspace-relative
+/// `workspace_rel` in already-computed. The resolver just consumes them.
+#[derive(Debug, Clone)]
+pub struct ResolvedPathDep {
+    pub kind: PackageKind,
+    pub name: String,
+    /// Optional dual-form version constraint from `{ path, version }`.
+    /// When present, the package's own `[package].version` must satisfy
+    /// it; mismatch is a hard error — same shape as the git-source
+    /// version check.
+    pub version: Option<VersionSpec>,
+    /// Absolute directory where the dependency package lives. The caller
+    /// resolves `PathPackageDep.path` against the declaring manifest's
+    /// directory and canonicalises it; the resolver just consumes it.
+    pub package_dir: PathBuf,
+    /// `package_dir` relative to the workspace absolute root,
+    /// forward-slashed. Recorded verbatim as the lockfile `source_url`
+    /// for this entry — a portable relative path, never a URL, never
+    /// absolute.
+    pub workspace_rel: String,
+}
+
 /// Resolver coordinating an ordered set of [`GitPackageRegistry`]
 /// instances plus the cross-cutting `[[mirror]]` and `[[override]]`
 /// layers from `vibe.toml`.
@@ -105,8 +143,13 @@ pub struct MultiRegistryResolver {
     overrides: HashMap<String, OverrideSection>,
     /// Git-source declarations from `[requires.packages]` table-form
     /// (PROP-002 §2.4.1), keyed by `<kind>:<name>`. Resolution order
-    /// (resolve()): override > git-source > registry-walk.
+    /// (resolve()): override > path-source > git-source > registry-walk.
     git_packages: HashMap<String, GitPackageDep>,
+    /// Path-source declarations from `[requires.packages]` table-form
+    /// (PROP-007 §2.5), keyed by `<kind>:<name>`. Sits one notch above
+    /// git-source in the resolution order — a pkgref present here wins
+    /// over a same-pkgref git-source declaration.
+    path_packages: HashMap<String, ResolvedPathDep>,
     backend: Arc<dyn GitBackend>,
     cache_root: PathBuf,
     /// Strict-auth posture — when `true`, a 401 / 403 against a
@@ -305,6 +348,7 @@ impl MultiRegistryResolver {
             mirrors,
             overrides,
             git_packages: HashMap::new(),
+            path_packages: HashMap::new(),
             backend,
             cache_root,
             strict_auth: false,
@@ -326,6 +370,26 @@ impl MultiRegistryResolver {
     /// Read-only view of the registered git-source declarations.
     pub fn git_packages(&self) -> &HashMap<String, GitPackageDep> {
         &self.git_packages
+    }
+
+    /// Plumb in the path-source declarations from `vibe.toml`'s
+    /// `[requires.packages]` table-form (PROP-007 §2.5). Builder-style,
+    /// mirroring [`Self::with_git_packages`] — existing call-sites that
+    /// don't thread path-source deps stay source-compatible. Each
+    /// [`ResolvedPathDep`] arrives with `package_dir` / `workspace_rel`
+    /// already computed by the workspace layer; the resolver does no
+    /// filesystem path arithmetic itself.
+    pub fn with_path_packages(mut self, deps: Vec<ResolvedPathDep>) -> Self {
+        self.path_packages = deps
+            .into_iter()
+            .map(|d| (format!("{}:{}", d.kind, d.name), d))
+            .collect();
+        self
+    }
+
+    /// Read-only view of the registered path-source declarations.
+    pub fn path_packages(&self) -> &HashMap<String, ResolvedPathDep> {
+        &self.path_packages
     }
 
     /// Toggle strict-auth posture (see field docs / PROP-002 §2.3.1
@@ -459,6 +523,16 @@ impl MultiRegistryResolver {
             return self.resolve_override(pkgref, ovr);
         }
 
+        // Step 1.25: path-source short-circuit (PROP-007 §2.5).
+        // `[requires.packages]` table-form may declare a dep as
+        // `{ path = "..." }`; the package lives in a local directory
+        // (typically a sibling workspace member). Path-source sits one
+        // notch above git-source — a pkgref present in both sets
+        // resolves via path-source. No registry walk, no git clone.
+        if let Some(dep) = self.path_packages.get(&pkgref.qualified_name()) {
+            return self.resolve_path_source(pkgref, dep);
+        }
+
         // Step 1.5: git-source short-circuit (PROP-002 §2.4.1).
         // `[requires.packages]` table-form may declare a dep as
         // `{ git = "...", tag/branch/rev = "..." }`; the resolver
@@ -513,6 +587,7 @@ impl MultiRegistryResolver {
                         source_ref: Some(stub_tag),
                         overridden: false,
                         is_git_source: false,
+                        is_path_source: false,
                         via_redirect: None,
                         redirect_target_auth: vibe_core::manifest::AuthKind::None,
                         redirect_target_token_env: None,
@@ -614,6 +689,7 @@ impl MultiRegistryResolver {
             source_ref: Some(refname),
             overridden: true,
             is_git_source: false,
+            is_path_source: false,
             via_redirect: None,
             redirect_target_auth: vibe_core::manifest::AuthKind::None,
             redirect_target_token_env: None,
@@ -725,6 +801,7 @@ impl MultiRegistryResolver {
             source_ref: Some(target_ref),
             overridden: false,
             is_git_source: false,
+            is_path_source: false,
             via_redirect: Some(stub_url),
             redirect_target_auth: redirect.redirect.auth,
             redirect_target_token_env: redirect.redirect.token_env.clone(),
@@ -809,6 +886,23 @@ impl MultiRegistryResolver {
             }
             Err(other) => return Err(other),
         };
+
+        if resolution.is_path_source {
+            // Path-source: the package lives in a local directory.
+            // `path_packages` carries the resolver-side `package_dir`
+            // (already canonicalised by the workspace layer); read
+            // `vibe.toml` straight off disk so transitive dependencies
+            // of a path-source package resolve.
+            let dep = self
+                .path_packages
+                .get(&pinned_pkgref.qualified_name())
+                .ok_or_else(|| RegistryError::UnknownPackage {
+                    kind,
+                    name: name.to_string(),
+                })?;
+            let manifest_path = dep.package_dir.join(Manifest::FILENAME);
+            return Manifest::read(&manifest_path).map_err(RegistryError::from);
+        }
 
         if resolution.via_redirect.is_some() {
             // Redirect-resolved: target_url is in source_url, target_ref
@@ -975,6 +1069,77 @@ impl MultiRegistryResolver {
             source_ref: Some(refname),
             overridden: false,
             is_git_source: true,
+            is_path_source: false,
+            via_redirect: None,
+            redirect_target_auth: vibe_core::manifest::AuthKind::None,
+            redirect_target_token_env: None,
+        })
+    }
+
+    /// Resolve a `[requires.packages]` path-source declaration
+    /// (PROP-007 §2.5). The package lives in a local directory
+    /// (`dep.package_dir`, already canonicalised by the workspace
+    /// layer); there is no registry walk and no git clone. Reads the
+    /// package's `vibe.toml`, verifies `(kind, name)` matches and the
+    /// optional `version` constraint is satisfied, returns a
+    /// `MultiResolution` with `is_path_source = true` and the source
+    /// recorded as the workspace-relative path (`dep.workspace_rel`).
+    fn resolve_path_source(
+        &self,
+        pkgref: &PackageRef,
+        dep: &ResolvedPathDep,
+    ) -> Result<MultiResolution, RegistryError> {
+        let manifest_path = dep.package_dir.join(Manifest::FILENAME);
+        let manifest = Manifest::read(&manifest_path)?;
+        let meta = manifest
+            .require_package()
+            .map_err(|e| RegistryError::MalformedMeta {
+                path: manifest_path.clone(),
+                reason: e.to_string(),
+            })?;
+        // Sanity: the declaration says (kind, name) but the package's
+        // own manifest declares some other identity. Refuse to install —
+        // pulling code under a misnamed slot would silently misroute
+        // on disk and confuse downstream commands.
+        if meta.kind != pkgref.kind || meta.name != pkgref.name {
+            return Err(RegistryError::MalformedMeta {
+                path: manifest_path.clone(),
+                reason: format!(
+                    "path-source `{}:{}` points at a manifest declaring `{}:{}` — refusing to install",
+                    pkgref.kind, pkgref.name, meta.kind, meta.name
+                ),
+            });
+        }
+        // Verify the optional version constraint, if the path-dep
+        // carried the dual-form `{ path, version }`. The resolved
+        // version is the package's own `[package].version`.
+        if let Some(spec) = &dep.version
+            && !spec.matches(&meta.version)
+        {
+            return Err(RegistryError::MalformedMeta {
+                path: manifest_path.clone(),
+                reason: format!(
+                    "path-source `{}:{}` at `{}` declares version `{}`, which does not satisfy the constraint `{}`",
+                    pkgref.kind, pkgref.name, dep.workspace_rel, meta.version, spec
+                ),
+            });
+        }
+        let resolved = ResolvedPackage {
+            kind: pkgref.kind,
+            name: pkgref.name.clone(),
+            version: meta.version.clone(),
+            source_dir: dep.package_dir.clone(),
+        };
+        Ok(MultiResolution {
+            resolved,
+            registry_name: None,
+            // `source_url` records the workspace-relative path, never an
+            // absolute path and never a URL — PROP-007 §2.5.
+            source_url: dep.workspace_rel.clone(),
+            source_ref: None,
+            overridden: false,
+            is_git_source: false,
+            is_path_source: true,
             via_redirect: None,
             redirect_target_auth: vibe_core::manifest::AuthKind::None,
             redirect_target_token_env: None,
@@ -1048,6 +1213,9 @@ impl MultiRegistryResolver {
     ) -> Result<CachedPackage, RegistryError> {
         if resolution.overridden {
             return self.fetch_override(resolution, project_cache);
+        }
+        if resolution.is_path_source {
+            return self.fetch_path_source(resolution, project_cache);
         }
         if resolution.is_git_source {
             return self.fetch_git_source(resolution, project_cache, expected_hash);
@@ -1131,6 +1299,7 @@ impl MultiRegistryResolver {
             resolved_commit: None,
             overridden: true,
             is_git_source: false,
+            is_path_source: false,
             via_redirect: None,
         })
     }
@@ -1223,6 +1392,7 @@ impl MultiRegistryResolver {
             resolved_commit: None,
             overridden: false,
             is_git_source: false,
+            is_path_source: false,
             via_redirect: resolution.via_redirect.clone(),
         })
     }
@@ -1321,6 +1491,75 @@ impl MultiRegistryResolver {
             resolved_commit: None,
             overridden: false,
             is_git_source: true,
+            is_path_source: false,
+            via_redirect: None,
+        })
+    }
+
+    /// Fetch a path-source-resolved package into the per-project cache.
+    /// Unlike git-source there is NO git clone — a path-source package
+    /// is a local directory. `resolution.resolved.source_dir` carries
+    /// the resolver-supplied absolute `package_dir`; we copy its content
+    /// (excluding any `.git/`) straight into the per-project package
+    /// cache and hash the copied tree. PROP-007 §2.5.
+    fn fetch_path_source(
+        &self,
+        resolution: &MultiResolution,
+        project_cache: &Path,
+    ) -> Result<CachedPackage, RegistryError> {
+        let kind = resolution.resolved.kind;
+        let name = resolution.resolved.name.as_str();
+        // The resolver stored the canonicalised package directory on
+        // `resolved.source_dir`; `workspace_rel` is in `source_url`.
+        let package_dir = resolution.resolved.source_dir.clone();
+        let workspace_rel = resolution.source_url.clone();
+
+        let dest = project_cache
+            .join(kind.as_str())
+            .join(name)
+            .join(format!("v{}", resolution.resolved.version));
+        if dest.exists() {
+            std::fs::remove_dir_all(&dest).map_err(|source| RegistryError::Io {
+                path: dest.clone(),
+                source,
+            })?;
+        }
+        // Copy the local directory's content into the cache, excluding
+        // any `.git/` — same exclusion the registry / override / git-
+        // source paths apply. A path-source package directory is
+        // ordinarily not a git checkout of its own, but a workspace
+        // member can be, so the exclusion is load-bearing.
+        copy_dir_excluding_git(&package_dir, &dest)?;
+        let manifest_path = dest.join(Manifest::FILENAME);
+        let manifest = Manifest::read(&manifest_path)?;
+        if manifest.package.is_none() {
+            return Err(RegistryError::MalformedMeta {
+                path: manifest_path.clone(),
+                reason: "registry package manifest must carry a [package] table".to_string(),
+            });
+        }
+        let content_hash = compute_content_hash(&dest)?;
+
+        Ok(CachedPackage {
+            resolved: ResolvedPackage {
+                kind,
+                name: name.to_string(),
+                version: resolution.resolved.version.clone(),
+                source_dir: package_dir,
+            },
+            cache_dir: dest,
+            manifest,
+            content_hash,
+            // `source_uri` records the workspace-relative path — the
+            // lockfile `source_url` for a path entry. Never a URL,
+            // never absolute.
+            source_uri: workspace_rel,
+            registry_name: None,
+            source_ref: None,
+            resolved_commit: None,
+            overridden: false,
+            is_git_source: false,
+            is_path_source: true,
             via_redirect: None,
         })
     }
@@ -2477,5 +2716,220 @@ pinned_ref = "v1.0.0"
         assert_eq!(m[0].url, "https://b");
         assert_eq!(m[1].url, "https://a");
         assert_eq!(m[2].url, "https://catchall");
+    }
+
+    // ----- path-source (PROP-007 §2.5) ------------------------------
+
+    /// Lay down a path-source package directory under `parent`:
+    /// `<parent>/<dirname>/vibe.toml` carrying a `[package]` table.
+    /// Returns the package directory.
+    fn seed_path_package(
+        parent: &Path,
+        dirname: &str,
+        name: &str,
+        kind: &str,
+        version: &str,
+    ) -> PathBuf {
+        let dir = parent.join(dirname);
+        fs::create_dir_all(&dir).unwrap();
+        fs::write(dir.join("vibe.toml"), manifest_text(name, kind, version)).unwrap();
+        dir
+    }
+
+    #[test]
+    fn resolve_dispatches_to_path_source_short_circuiting_registries() {
+        // PROP-007 §2.5: a `[requires.packages]` path-source declaration
+        // bypasses the registry walk for that pkgref. The resolver reads
+        // the package's `vibe.toml` straight off the local directory and
+        // returns `MultiResolution { is_path_source: true, ... }`.
+        let cache = tempdir().unwrap();
+        let ws = tempdir().unwrap();
+        let fake = Arc::new(FakeBackend::default());
+        // Registry has nothing — would fail without path-source dispatch.
+        let pkg_dir = seed_path_package(ws.path(), "flow-internal", "internal", "flow", "0.3.0");
+
+        let dep = ResolvedPathDep {
+            kind: vibe_core::PackageKind::Flow,
+            name: "internal".to_string(),
+            version: None,
+            package_dir: pkg_dir.clone(),
+            workspace_rel: "flow-internal".to_string(),
+        };
+        let r = build_resolver(cache.path(), vec![], vec![], vec![], fake)
+            .with_path_packages(vec![dep]);
+
+        let p = PackageRef::parse("flow:internal").unwrap();
+        let m = r.resolve(&p).expect("path-source resolution must succeed");
+        assert!(m.is_path_source);
+        assert!(!m.is_git_source);
+        assert!(!m.overridden);
+        assert_eq!(m.registry_name, None);
+        // source_url carries the workspace-relative path, never an
+        // absolute path and never a URL.
+        assert_eq!(m.source_url, "flow-internal");
+        assert_eq!(m.source_ref, None);
+        assert_eq!(m.resolved.version.to_string(), "0.3.0");
+    }
+
+    #[test]
+    fn resolve_path_source_rejects_kind_name_mismatch() {
+        // The package's `vibe.toml` says feat:something-else, but the
+        // consumer's `[requires.packages]` declared flow:internal
+        // pointing at this directory. Refuse — installing code under a
+        // misnamed slot would silently misroute on disk.
+        let cache = tempdir().unwrap();
+        let ws = tempdir().unwrap();
+        let fake = Arc::new(FakeBackend::default());
+        let pkg_dir =
+            seed_path_package(ws.path(), "wrong-pkg", "something-else", "feat", "0.1.0");
+
+        let dep = ResolvedPathDep {
+            kind: vibe_core::PackageKind::Flow,
+            name: "internal".to_string(),
+            version: None,
+            package_dir: pkg_dir,
+            workspace_rel: "wrong-pkg".to_string(),
+        };
+        let r = build_resolver(cache.path(), vec![], vec![], vec![], fake)
+            .with_path_packages(vec![dep]);
+
+        let p = PackageRef::parse("flow:internal").unwrap();
+        let err = r.resolve(&p).unwrap_err();
+        let msg = err.to_string();
+        assert!(
+            msg.contains("refusing to install"),
+            "expected identity-mismatch refusal, got: {msg}"
+        );
+    }
+
+    #[test]
+    fn resolve_path_source_rejects_version_constraint_mismatch() {
+        // The path-dep carried a dual-form `{ path, version }` constraint
+        // that the package's own `[package].version` does not satisfy.
+        // Refuse — same shape as the git-source version check.
+        let cache = tempdir().unwrap();
+        let ws = tempdir().unwrap();
+        let fake = Arc::new(FakeBackend::default());
+        let pkg_dir = seed_path_package(ws.path(), "flow-wal", "wal", "flow", "0.1.0");
+
+        let dep = ResolvedPathDep {
+            kind: vibe_core::PackageKind::Flow,
+            name: "wal".to_string(),
+            // Package is 0.1.0; constraint demands ^0.3 — mismatch.
+            version: Some(VersionSpec::parse("^0.3").unwrap()),
+            package_dir: pkg_dir,
+            workspace_rel: "flow-wal".to_string(),
+        };
+        let r = build_resolver(cache.path(), vec![], vec![], vec![], fake)
+            .with_path_packages(vec![dep]);
+
+        let p = PackageRef::parse("flow:wal").unwrap();
+        let err = r.resolve(&p).unwrap_err();
+        let msg = err.to_string();
+        assert!(
+            msg.contains("does not satisfy the constraint"),
+            "expected version-constraint refusal, got: {msg}"
+        );
+    }
+
+    #[test]
+    fn resolve_path_source_wins_over_same_pkgref_git_source() {
+        // PROP-007 §2.5 priority: a pkgref declared as BOTH path-source
+        // and git-source resolves via path-source — path-source sits one
+        // notch above git-source in the resolution order.
+        let cache = tempdir().unwrap();
+        let ws = tempdir().unwrap();
+        let fake = Arc::new(FakeBackend::default());
+        // path-source package: version 0.5.0.
+        let pkg_dir = seed_path_package(ws.path(), "flow-dual", "dual", "flow", "0.5.0");
+        // git-source for the SAME pkgref: a different version on a URL.
+        let git_url = "git@host:owner/flow-dual.git";
+        fake.seed_file(
+            git_url,
+            "v9.9.9",
+            "vibe.toml",
+            manifest_text("dual", "flow", "9.9.9").into_bytes(),
+        );
+
+        let path_dep = ResolvedPathDep {
+            kind: vibe_core::PackageKind::Flow,
+            name: "dual".to_string(),
+            version: None,
+            package_dir: pkg_dir,
+            workspace_rel: "flow-dual".to_string(),
+        };
+        let git_dep = vibe_core::manifest::GitPackageDep {
+            kind: vibe_core::PackageKind::Flow,
+            name: "dual".to_string(),
+            url: git_url.to_string(),
+            ref_kind: vibe_core::manifest::GitRefKind::Tag("v9.9.9".to_string()),
+            version: None,
+            auth: vibe_core::manifest::AuthKind::None,
+            token_env: None,
+        };
+        let r = build_resolver(cache.path(), vec![], vec![], vec![], fake)
+            .with_git_packages(vec![git_dep])
+            .with_path_packages(vec![path_dep]);
+
+        let p = PackageRef::parse("flow:dual").unwrap();
+        let m = r.resolve(&p).expect("path-source must win and resolve");
+        assert!(m.is_path_source, "path-source must win over git-source");
+        assert!(!m.is_git_source);
+        // The path-source version (0.5.0), not the git-source (9.9.9).
+        assert_eq!(m.resolved.version.to_string(), "0.5.0");
+        assert_eq!(m.source_url, "flow-dual");
+    }
+
+    #[test]
+    fn fetch_path_source_copies_local_dir_and_computes_hash() {
+        // PROP-007 §2.5: fetching a path-source package copies the local
+        // directory's content into the per-project package cache,
+        // excludes any `.git/`, and computes a content_hash over the
+        // copied tree. No git clone happens.
+        let cache = tempdir().unwrap();
+        let pkg_cache = tempdir().unwrap();
+        let ws = tempdir().unwrap();
+        let fake = Arc::new(FakeBackend::default());
+
+        // Path-source package with a regular file AND a `.git/` subtree
+        // that must NOT make it into the cache.
+        let pkg_dir = seed_path_package(ws.path(), "flow-local", "local", "flow", "0.2.0");
+        fs::write(pkg_dir.join("README.md"), "# local package\n").unwrap();
+        let git_dir = pkg_dir.join(".git");
+        fs::create_dir_all(&git_dir).unwrap();
+        fs::write(git_dir.join("HEAD"), "ref: refs/heads/main\n").unwrap();
+
+        let dep = ResolvedPathDep {
+            kind: vibe_core::PackageKind::Flow,
+            name: "local".to_string(),
+            version: None,
+            package_dir: pkg_dir,
+            workspace_rel: "flow-local".to_string(),
+        };
+        let r = build_resolver(cache.path(), vec![], vec![], vec![], fake.clone())
+            .with_path_packages(vec![dep]);
+
+        let p = PackageRef::parse("flow:local").unwrap();
+        let resolution = r.resolve(&p).unwrap();
+        let cached = r.fetch(&resolution, pkg_cache.path()).unwrap();
+
+        assert!(cached.is_path_source);
+        assert!(!cached.is_git_source);
+        assert!(!cached.overridden);
+        assert_eq!(cached.registry_name, None);
+        assert_eq!(cached.source_ref, None);
+        // source_uri is the workspace-relative path, recorded verbatim
+        // as the lockfile `source_url` for a path entry.
+        assert_eq!(cached.source_uri, "flow-local");
+        assert_eq!(cached.package_meta().version.to_string(), "0.2.0");
+        // Cache is populated with the package payload.
+        assert!(cached.cache_dir.join("vibe.toml").exists());
+        assert!(cached.cache_dir.join("README.md").exists());
+        // `.git/` was excluded.
+        assert!(!cached.cache_dir.join(".git").exists());
+        // content_hash computed over the copied tree.
+        assert!(cached.content_hash.starts_with("sha256:"));
+        // No git clone — `bootstrap` was never invoked.
+        assert_eq!(fake.bootstrap_count(), 0);
     }
 }

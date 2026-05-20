@@ -1,31 +1,28 @@
 //! `vibe.lock` — the project lockfile.
 //!
-//! Schema: `VIBEVM-SPEC.md` §7.4, [PROP-002 §2.7](../../../spec/modules/vibe-registry/PROP-002-decentralized-registry.md#lockfile).
+//! Schema: `VIBEVM-SPEC.md` §7.4,
+//! [PROP-002 §2.7](../../../spec/modules/vibe-registry/PROP-002-decentralized-registry.md#lockfile),
+//! [PROP-007 §2.5](../../../spec/modules/vibe-workspace/PROP-007-workspace.md).
 //!
-//! # Schema versioning
+//! # Schema version
 //!
-//! `meta.schema_version = 2` is the current form. `1` is the M0 / M1.1
-//! shape (single `source = "git+…#<kind>/<name>/v<ver>"` field per
-//! package, no integrity fields beyond `content_hash`, no `solver`, no
-//! `root_dependencies`, no per-package `dependencies`).
-//!
-//! v1 lockfiles are read via field aliases — `source` → `source_url` — and
-//! everything else defaults. There is no in-place migration function;
-//! round-tripping a v1 lockfile through `read()` then `write()` produces
-//! a v2 file (schema_version 2, source_url, `dependencies = []`, etc.)
-//! without any caller-side work. A v1 lockfile in the tree stays a v1
-//! lockfile until the next `vibe install` / `vibe update` rewrites it.
+//! [`CURRENT_SCHEMA_VERSION`] is the one and only supported version.
+//! vibevm is pre-release and breaks lockfile compatibility freely; there is
+//! no migration path and none is needed. [`Lockfile::read`] rejects a
+//! `vibe.lock` whose `schema_version` is anything else — the fix is always
+//! to regenerate it with `vibe install`.
 //!
 //! # Identity vs. source_url
 //!
-//! Package identity in v2 is the tuple `(kind, name, version,
-//! content_hash)`. `source_url` is informational — it records which URL
-//! answered the fetch on this particular install. Mirror-switching,
-//! host-migration, and override pins all change source_url without
-//! changing identity — the integrity check keys off content_hash.
+//! Package identity is the tuple `(kind, name, version, content_hash)`.
+//! `source_url` is informational — it records where the content came from
+//! on this particular install. Mirror-switching, host-migration, and
+//! override pins all change `source_url` without changing identity; the
+//! integrity check keys off `content_hash`. This is the property whose
+//! absence trapped Nix on GitHub (PROP-002 §1).
 //!
-//! This is the property whose absence trapped Nix on GitHub (see
-//! PROP-002 §1).
+//! One lockfile lives at the absolute root of a workspace (PROP-007 §2.4) —
+//! members never carry their own.
 
 use std::path::{Path, PathBuf};
 
@@ -36,24 +33,16 @@ use crate::package_ref::{PackageKind, PackageRef, VersionSpec};
 
 use super::{read_toml, write_toml};
 
-/// The current lockfile schema version produced by fresh `write()`s.
+/// The current — and only supported — lockfile schema version.
 ///
-/// History:
-/// - `1` — M0 / M1.1 (single `source = "git+…#<kind>/<name>/v<ver>"` per
-///   package, no `solver`, no `root_dependencies`).
-/// - `2` — M1.1-revision (per-package registries, `[meta] schema_version
-///   = 2`, registry/source_url/source_ref/resolved_commit/dependencies/
-///   overridden per package, root_dependencies/solver in [meta]).
-/// - `3` — PROP-003 r2 (active features in [meta], virtual_capabilities
-///   in [meta], language preference in [meta], features +
-///   subskills_active + describes per package). v2 → v3 is read-side
-///   compatible — every new field defaults; on next write the lockfile
-///   surfaces in v3 form.
-pub const CURRENT_SCHEMA_VERSION: u32 = 3;
-
-fn default_schema_version() -> u32 {
-    CURRENT_SCHEMA_VERSION
-}
+/// vibevm is pre-release and breaks lockfile compatibility freely. A
+/// `vibe.lock` whose `schema_version` is not exactly this value is rejected
+/// by [`Lockfile::read`]; the next `vibe install` regenerates it.
+///
+/// History (for the record only — earlier versions are not read):
+/// `1` M0/M1.1 · `2` per-package registries · `3` PROP-003 features ·
+/// `4` PROP-007 workspace path-source (`source_kind = "path"`).
+pub const CURRENT_SCHEMA_VERSION: u32 = 4;
 
 fn is_false(b: &bool) -> bool {
     !*b
@@ -83,11 +72,9 @@ pub struct LockfileMeta {
     pub generated_by: String,
     pub generated_at: String,
 
-    /// Lockfile schema version. Fresh writes emit `2`; reading a v1 file
-    /// (no `schema_version` key) transparently defaults to `2` since
-    /// v1 and v2 are a linear extension and all code paths consume the
-    /// v2 runtime shape.
-    #[serde(default = "default_schema_version")]
+    /// Lockfile schema version — always [`CURRENT_SCHEMA_VERSION`]. A
+    /// required field: a `vibe.lock` without it, or carrying any other
+    /// value, is rejected by [`Lockfile::read`].
     pub schema_version: u32,
 
     /// Identity of the depsolver that produced this lockfile — e.g.
@@ -142,15 +129,22 @@ pub struct VirtualCapabilityRecord {
 }
 
 /// Discriminator for `LockedPackage.source_kind` — which resolution path
-/// produced the entry. Maps directly onto the three short-circuit
-/// branches in `MultiRegistryResolver::resolve` (override > git-source
-/// > registry-walk). PROP-002 §2.4.1.
+/// produced the entry. Maps onto the short-circuit branches in
+/// `MultiRegistryResolver::resolve`: `[[override]]` > path-source >
+/// git-source > registry-walk. PROP-002 §2.4.1, PROP-007 §2.5.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 pub enum SourceKind {
+    /// Resolved through the `[[registry]]` walk.
     Registry,
+    /// A git-source declaration — `[requires.packages]` `{ git = … }`.
     Git,
+    /// A `[[override]]` pin.
     Override,
+    /// A path-source declaration — `[requires.packages]` `{ path = … }`,
+    /// typically a sibling workspace member. `source_url` then carries the
+    /// path relative to the workspace root, not a URL. PROP-007 §2.5.
+    Path,
 }
 
 /// One installed package, as it appears in the lockfile.
@@ -168,12 +162,12 @@ pub struct LockedPackage {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub registry: Option<String>,
 
-    /// URL that served the content on the install that produced this
+    /// Where the content came from on the install that produced this
     /// entry. Informational — identity is `(kind, name, version,
-    /// content_hash)`. For v1 lockfiles the on-disk key is `source`;
-    /// serde's alias accepts both on read and writes `source_url` on
-    /// write.
-    #[serde(alias = "source")]
+    /// content_hash)`. A git URL for registry / git-source / override
+    /// entries; for a path-source entry (`source_kind = "path"`) it is the
+    /// member's path relative to the workspace root — portable, never an
+    /// absolute path.
     pub source_url: String,
 
     /// Git ref the content was fetched at — typically the version tag
@@ -211,13 +205,9 @@ pub struct LockedPackage {
     #[serde(default, skip_serializing_if = "is_false")]
     pub overridden: bool,
 
-    /// Resolution path that produced this entry — `"registry"` (default
-    /// `[[registry]]` walk), `"git"` (PROP-002 §2.4.1
-    /// `[requires.packages]` git-source), or `"override"` (`[[override]]`-
-    /// resolved patch). Optional for back-compat with pre-M1.15
-    /// lockfiles, which can be assumed `"override"` if `overridden = true`
-    /// else `"registry"` until rewritten on the next install.
-    /// PROP-002 §2.4.1.
+    /// Resolution path that produced this entry — `registry`, `git`,
+    /// `override`, or `path`. `None` only on an entry that predates the
+    /// field; fresh writes always set it. PROP-002 §2.4.1, PROP-007 §2.5.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub source_kind: Option<SourceKind>,
 
@@ -308,7 +298,14 @@ impl Lockfile {
     }
 
     pub fn read(path: impl AsRef<Path>) -> Result<Self> {
-        read_toml(path)
+        let lockfile: Lockfile = read_toml(path)?;
+        if lockfile.meta.schema_version != CURRENT_SCHEMA_VERSION {
+            return Err(crate::error::Error::UnsupportedLockfile {
+                found: lockfile.meta.schema_version,
+                expected: CURRENT_SCHEMA_VERSION,
+            });
+        }
+        Ok(lockfile)
     }
 
     pub fn write(&self, path: impl AsRef<Path>) -> Result<()> {
@@ -337,29 +334,6 @@ impl Lockfile {
         Some(self.packages.remove(idx))
     }
 
-    /// `true` iff this lockfile was originally a schema-v1 file
-    /// (detected by absence of newer-than-v1 data). Not exact — see
-    /// the heuristic below — but good enough for a one-shot UX nudge
-    /// the first time `vibe install` rewrites it.
-    ///
-    /// The heuristic: a v2 fresh-write would fill `schema_version = 2`
-    /// AND either set `solver` / `root_dependencies` / any package's
-    /// `registry` / `source_ref` / `resolved_commit` / `dependencies` /
-    /// `overridden`. A file where `schema_version` is the parse default
-    /// AND every post-v1 field is empty is indistinguishable from a v1
-    /// parse — and that's the case we want to flag for "will be
-    /// rewritten as v2 on next update".
-    pub fn looks_like_v1_on_disk(&self) -> bool {
-        self.meta.solver.is_none()
-            && self.meta.root_dependencies.is_empty()
-            && self.packages.iter().all(|p| {
-                p.registry.is_none()
-                    && p.source_ref.is_none()
-                    && p.resolved_commit.is_none()
-                    && p.dependencies.is_empty()
-                    && !p.overridden
-            })
-    }
 }
 
 impl LockedPackage {
@@ -375,11 +349,11 @@ impl LockedPackage {
 mod tests {
     use super::*;
 
-    const FIXTURE_V2: &str = r#"
+    const FIXTURE: &str = r#"
 [meta]
-generated_by = "vibe 0.2.0"
-generated_at = "2026-04-24T12:00:00Z"
-schema_version = 2
+generated_by = "vibe 0.1.0-dev"
+generated_at = "2026-05-21T12:00:00Z"
+schema_version = 4
 solver = "resolvo-0.x"
 root_dependencies = ["flow:wal", "stack:rust-cli"]
 
@@ -392,6 +366,7 @@ source_url = "git@gitverse.ru:vibespecs/flow-wal.git"
 source_ref = "v0.3.0"
 resolved_commit = "abc123def456"
 content_hash = "sha256:abc"
+source_kind = "registry"
 boot_snippet = "10-flow-wal.md"
 files_written = [
     "spec/flows/wal/WAL-PROTOCOL.md",
@@ -408,38 +383,13 @@ source_url = "git@gitverse.ru:vibespecs/stack-rust-cli.git"
 source_ref = "v0.1.0"
 resolved_commit = "999888777666"
 content_hash = "sha256:def"
-"#;
-
-    const FIXTURE_V1: &str = r#"
-[meta]
-generated_by = "vibe 0.1.0-dev"
-generated_at = "2026-04-16T12:00:00Z"
-
-[[package]]
-kind = "flow"
-name = "wal"
-version = "0.3.0"
-source = "git+ssh://git@gitverse.ru/anarchic/vibespecs.git#flow/wal/v0.3.0"
-content_hash = "sha256:abc"
-boot_snippet = "10-flow-wal.md"
-files_written = [
-    "spec/flows/wal/WAL-PROTOCOL.md",
-    "spec/boot/10-flow-wal.md",
-]
-
-[[package]]
-kind = "stack"
-name = "rust-cli"
-version = "0.1.0"
-source = "file:///tmp/reg/stack/rust-cli/v0.1.0"
-content_hash = "sha256:def"
-files_written = []
+source_kind = "registry"
 "#;
 
     #[test]
-    fn parses_v2_fully() {
-        let lf: Lockfile = toml::from_str(FIXTURE_V2).unwrap();
-        assert_eq!(lf.meta.schema_version, 2);
+    fn parses_fully() {
+        let lf: Lockfile = toml::from_str(FIXTURE).unwrap();
+        assert_eq!(lf.meta.schema_version, 4);
         assert_eq!(lf.meta.solver.as_deref(), Some("resolvo-0.x"));
         assert_eq!(lf.meta.root_dependencies.len(), 2);
         assert_eq!(lf.packages.len(), 2);
@@ -447,84 +397,29 @@ files_written = []
         let wal = lf.find(PackageKind::Flow, "wal").unwrap();
         assert_eq!(wal.version.to_string(), "0.3.0");
         assert_eq!(wal.registry.as_deref(), Some("vibespecs"));
-        assert_eq!(
-            wal.source_url,
-            "git@gitverse.ru:vibespecs/flow-wal.git"
-        );
+        assert_eq!(wal.source_url, "git@gitverse.ru:vibespecs/flow-wal.git");
         assert_eq!(wal.source_ref.as_deref(), Some("v0.3.0"));
         assert_eq!(wal.resolved_commit.as_deref(), Some("abc123def456"));
         assert_eq!(wal.dependencies.len(), 1);
         assert_eq!(wal.dependencies[0].qualified_name(), "flow:atomic-commits");
+        assert_eq!(wal.source_kind, Some(SourceKind::Registry));
         assert!(!wal.overridden);
     }
 
     #[test]
-    fn parses_v1_via_source_alias() {
-        let lf: Lockfile = toml::from_str(FIXTURE_V1).unwrap();
-        // Missing schema_version defaults to CURRENT_SCHEMA_VERSION
-        // (currently 3 after the PROP-003 r2 bump).
-        assert_eq!(lf.meta.schema_version, CURRENT_SCHEMA_VERSION);
-        assert!(lf.meta.solver.is_none());
-        assert!(lf.meta.root_dependencies.is_empty());
-
-        assert_eq!(lf.packages.len(), 2);
-        let wal = lf.find(PackageKind::Flow, "wal").unwrap();
-        // The v1 `source` key lands in source_url via serde alias.
-        assert_eq!(
-            wal.source_url,
-            "git+ssh://git@gitverse.ru/anarchic/vibespecs.git#flow/wal/v0.3.0"
-        );
-        // Every v2-only field defaults.
-        assert!(wal.registry.is_none());
-        assert!(wal.source_ref.is_none());
-        assert!(wal.resolved_commit.is_none());
-        assert!(wal.dependencies.is_empty());
-        assert!(!wal.overridden);
-    }
-
-    #[test]
-    fn looks_like_v1_heuristic_works() {
-        let v1: Lockfile = toml::from_str(FIXTURE_V1).unwrap();
-        assert!(v1.looks_like_v1_on_disk());
-        let v2: Lockfile = toml::from_str(FIXTURE_V2).unwrap();
-        assert!(!v2.looks_like_v1_on_disk());
-    }
-
-    #[test]
-    fn v1_migrates_to_current_schema_on_write() {
-        let lf: Lockfile = toml::from_str(FIXTURE_V1).unwrap();
-        let rendered = toml::to_string_pretty(&lf).unwrap();
-        // Fresh-write always includes the current schema_version
-        // (3 after the PROP-003 r2 bump). `schema_version = 2` would
-        // mean we silently regressed.
-        let expected = format!("schema_version = {CURRENT_SCHEMA_VERSION}");
-        assert!(
-            rendered.contains(&expected),
-            "expected `{expected}` in rendered:\n{rendered}"
-        );
-        // The `source` key is replaced by `source_url` on write (the
-        // alias is read-only — serialization uses the primary name).
-        assert!(rendered.contains("source_url = "));
-        assert!(!rendered.contains("\nsource = "));
-        // Round-trip: v1-parsed → v3-written → v3-parsed is stable.
-        let back: Lockfile = toml::from_str(&rendered).unwrap();
-        assert_eq!(lf, back);
-    }
-
-    #[test]
-    fn v2_roundtrip() {
-        let lf: Lockfile = toml::from_str(FIXTURE_V2).unwrap();
+    fn roundtrip() {
+        let lf: Lockfile = toml::from_str(FIXTURE).unwrap();
         let rendered = toml::to_string_pretty(&lf).unwrap();
         let back: Lockfile = toml::from_str(&rendered).unwrap();
         assert_eq!(lf, back);
     }
 
     #[test]
-    fn empty_lockfile_has_v2_defaults() {
-        let lf = Lockfile::empty("vibe 0.2.0-dev", "2026-04-24T00:00:00Z");
+    fn empty_lockfile_has_v4_defaults() {
+        let lf = Lockfile::empty("vibe 0.1.0-dev", "2026-05-21T00:00:00Z");
         assert_eq!(lf.meta.schema_version, CURRENT_SCHEMA_VERSION);
+        assert_eq!(CURRENT_SCHEMA_VERSION, 4);
         assert!(lf.meta.solver.is_none());
-        assert!(lf.meta.root_dependencies.is_empty());
         assert!(lf.packages.is_empty());
 
         let rendered = toml::to_string_pretty(&lf).unwrap();
@@ -533,8 +428,78 @@ files_written = []
     }
 
     #[test]
+    fn read_accepts_current_version() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("vibe.lock");
+        Lockfile::empty("vibe", "2026-05-21T00:00:00Z")
+            .write(&path)
+            .unwrap();
+        let lf = Lockfile::read(&path).unwrap();
+        assert_eq!(lf.meta.schema_version, 4);
+    }
+
+    #[test]
+    fn read_rejects_non_current_version() {
+        // A pre-v4 lockfile is rejected outright — no legacy reader, no
+        // migration. The fix is to regenerate with `vibe install`.
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("vibe.lock");
+        std::fs::write(
+            &path,
+            "[meta]\ngenerated_by = \"old\"\ngenerated_at = \"x\"\nschema_version = 3\n",
+        )
+        .unwrap();
+        let err = Lockfile::read(&path).unwrap_err();
+        assert!(
+            matches!(
+                err,
+                crate::error::Error::UnsupportedLockfile {
+                    found: 3,
+                    expected: 4
+                }
+            ),
+            "{err}"
+        );
+    }
+
+    #[test]
+    fn path_source_kind_round_trips() {
+        // A path-source member: source_kind = "path", and source_url is the
+        // workspace-root-relative path, not a URL. PROP-007 §2.5.
+        let raw = r#"
+[meta]
+generated_by = "vibe"
+generated_at = "2026-05-21T00:00:00Z"
+schema_version = 4
+
+[[package]]
+kind = "flow"
+name = "wal"
+version = "0.1.0"
+source_url = "packages/flow-wal"
+content_hash = "sha256:abc"
+source_kind = "path"
+"#;
+        let lf: Lockfile = toml::from_str(raw).unwrap();
+        let wal = lf.find(PackageKind::Flow, "wal").unwrap();
+        assert_eq!(wal.source_kind, Some(SourceKind::Path));
+        assert_eq!(wal.source_url, "packages/flow-wal");
+        let rendered = toml::to_string_pretty(&lf).unwrap();
+        assert!(rendered.contains("source_kind = \"path\""));
+        let back: Lockfile = toml::from_str(&rendered).unwrap();
+        assert_eq!(lf, back);
+    }
+
+    #[test]
+    fn rejects_missing_schema_version() {
+        // schema_version is a required field — no default.
+        let raw = "[meta]\ngenerated_by = \"vibe\"\ngenerated_at = \"x\"\n";
+        assert!(toml::from_str::<Lockfile>(raw).is_err());
+    }
+
+    #[test]
     fn remove_drops_entry() {
-        let mut lf: Lockfile = toml::from_str(FIXTURE_V2).unwrap();
+        let mut lf: Lockfile = toml::from_str(FIXTURE).unwrap();
         assert_eq!(lf.packages.len(), 2);
         let removed = lf.remove(PackageKind::Flow, "wal").unwrap();
         assert_eq!(removed.name, "wal");
@@ -546,9 +511,9 @@ files_written = []
     fn override_flag_round_trips() {
         let raw = r#"
 [meta]
-generated_by = "vibe 0.2.0"
-generated_at = "2026-04-24T00:00:00Z"
-schema_version = 2
+generated_by = "vibe 0.1.0-dev"
+generated_at = "2026-05-21T00:00:00Z"
+schema_version = 4
 
 [[package]]
 kind = "flow"
@@ -557,6 +522,7 @@ version = "0.3.0"
 source_url = "git@mycompany:forks/wal"
 source_ref = "my-fix"
 content_hash = "sha256:xyz"
+source_kind = "override"
 overridden = true
 "#;
         let lf: Lockfile = toml::from_str(raw).unwrap();
@@ -564,7 +530,7 @@ overridden = true
 
         let rendered = toml::to_string_pretty(&lf).unwrap();
         assert!(rendered.contains("overridden = true"));
-        // And the false case (default) is skipped-on-serialize.
+        // The false case (default) is skipped on serialize.
         let mut lf2 = lf.clone();
         lf2.packages[0].overridden = false;
         let rendered2 = toml::to_string_pretty(&lf2).unwrap();
@@ -576,7 +542,8 @@ overridden = true
         let raw = r#"
 [meta]
 generated_by = "vibe"
-generated_at = "2026-04-24T00:00:00Z"
+generated_at = "2026-05-21T00:00:00Z"
+schema_version = 4
 
 [[package]]
 kind = "flow"

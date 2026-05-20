@@ -784,6 +784,11 @@ pub fn register_installed_with_metadata(
         .collect();
     let source_kind = if plan.cached.overridden {
         Some(vibe_core::manifest::SourceKind::Override)
+    } else if plan.cached.is_path_source {
+        // Path-source (PROP-007 §2.5) — a workspace-local package.
+        // `source_url` (`cached.source_uri`) already carries the
+        // workspace-relative path; no special-casing needed here.
+        Some(vibe_core::manifest::SourceKind::Path)
     } else if plan.cached.is_git_source {
         Some(vibe_core::manifest::SourceKind::Git)
     } else {

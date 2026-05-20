@@ -704,7 +704,11 @@ fn load_or_empty_lockfile(root: &Path) -> Result<Lockfile> {
 ///   graph the install pipeline materialises.
 pub(crate) enum InstallResolver {
     Local(LocalRegistry),
-    Multi(MultiRegistryResolver),
+    // Boxed: `MultiRegistryResolver` is by far the larger variant
+    // (it carries the registry list plus the override / git-source /
+    // path-source maps), so an unboxed enum would bloat every
+    // `InstallResolver` value to the size of the multi-registry path.
+    Multi(Box<MultiRegistryResolver>),
 }
 
 impl InstallResolver {
@@ -871,7 +875,7 @@ pub(crate) fn build_install_resolver(
     .context("opening multi-registry resolver")?
     .with_strict_auth(args.auth_required)
     .with_git_packages(manifest.requires.git_packages.clone());
-    Ok(InstallResolver::Multi(mrr))
+    Ok(InstallResolver::Multi(Box::new(mrr)))
 }
 
 fn check_cross_plan_conflicts(prior: &[InstallPlan], new: &InstallPlan) -> Result<()> {

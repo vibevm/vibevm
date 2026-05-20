@@ -188,11 +188,18 @@ pub struct Requires {
     /// iterates registry-resolved roots stays untouched; resolver and CLI
     /// code consult both when they need the full root set.
     pub git_packages: Vec<GitPackageDep>,
+    /// Path-source package dependencies — a package living in a local
+    /// directory, typically a sibling workspace member (PROP-007 §2.5).
+    /// Its own bucket, for the same reason as `git_packages`.
+    pub path_packages: Vec<PathPackageDep>,
 }
 
 impl Requires {
     pub fn is_empty(&self) -> bool {
-        self.packages.is_empty() && self.capabilities.is_empty() && self.git_packages.is_empty()
+        self.packages.is_empty()
+            && self.capabilities.is_empty()
+            && self.git_packages.is_empty()
+            && self.path_packages.is_empty()
     }
 
     /// Return every root pkgref (registry-resolved + git-source) in a single
@@ -202,6 +209,7 @@ impl Requires {
             .iter()
             .map(|p| (p.kind, p.name.as_str()))
             .chain(self.git_packages.iter().map(|g| (g.kind, g.name.as_str())))
+            .chain(self.path_packages.iter().map(|p| (p.kind, p.name.as_str())))
     }
 }
 
@@ -252,6 +260,24 @@ impl GitRefKind {
     }
 }
 
+/// A `[requires.packages.<pkgref>]` inline-table value pointing at a package
+/// in a local directory — typically a sibling workspace member. PROP-007 §2.5.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct PathPackageDep {
+    pub kind: PackageKind,
+    pub name: String,
+    /// Path to the package directory, relative to the manifest that declares
+    /// this dependency. Forward-slashed; portable across machines.
+    pub path: String,
+    /// Optional version constraint — the dual-form `{ path, version }`.
+    /// `path` drives local development inside the workspace; `version` takes
+    /// effect when the consuming node is itself published (the published copy
+    /// references the registry version — an external consumer has no access
+    /// to the local path). Required for any path-dep whose consumer is itself
+    /// publishable; that is enforced at publish time, not here.
+    pub version: Option<VersionSpec>,
+}
+
 // ---------------------------------------------------------------------------
 // Wire types for `Requires` — private; reached only via Serialize / Deserialize.
 // ---------------------------------------------------------------------------
@@ -280,6 +306,8 @@ struct InlinePackageDepWire {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     version: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
+    path: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     git: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     tag: Option<String>,
@@ -306,6 +334,7 @@ impl From<Requires> for RequiresWire {
             let key = format!("{}:{}", g.kind, g.name);
             let inline = InlinePackageDepWire {
                 version: g.version.as_ref().map(version_spec_to_constraint_str),
+                path: None,
                 git: Some(g.url.clone()),
                 tag: match &g.ref_kind {
                     GitRefKind::Tag(s) => Some(s.clone()),
@@ -328,6 +357,15 @@ impl From<Requires> for RequiresWire {
             };
             packages.insert(key, RequiresPackageEntryWire::Inline(inline));
         }
+        for p in &r.path_packages {
+            let key = format!("{}:{}", p.kind, p.name);
+            let inline = InlinePackageDepWire {
+                version: p.version.as_ref().map(version_spec_to_constraint_str),
+                path: Some(p.path.clone()),
+                ..Default::default()
+            };
+            packages.insert(key, RequiresPackageEntryWire::Inline(inline));
+        }
         RequiresWire {
             packages,
             capabilities: r.capabilities,
@@ -341,6 +379,7 @@ impl TryFrom<RequiresWire> for Requires {
     fn try_from(w: RequiresWire) -> std::result::Result<Self, Self::Error> {
         let mut packages: Vec<PackageRef> = Vec::new();
         let mut git_packages: Vec<GitPackageDep> = Vec::new();
+        let mut path_packages: Vec<PathPackageDep> = Vec::new();
         for (key, entry) in w.packages {
             let (kind, name) = parse_pkgref_key(&key).map_err(|e| e.to_string())?;
             match entry {
@@ -349,7 +388,14 @@ impl TryFrom<RequiresWire> for Requires {
                     packages.push(PackageRef::new(kind, name, version).map_err(|e| e.to_string())?);
                 }
                 RequiresPackageEntryWire::Inline(inline) => {
-                    if inline.git.is_some() {
+                    // Dispatch on source-kind: path wins over git wins over
+                    // registry. Each `inline_to_*` rejects fields that belong
+                    // to a different source-kind.
+                    if inline.path.is_some() {
+                        path_packages.push(
+                            inline_to_path_dep(kind, name, inline).map_err(|e| e.to_string())?,
+                        );
+                    } else if inline.git.is_some() {
                         git_packages
                             .push(inline_to_git_dep(kind, name, inline).map_err(|e| e.to_string())?);
                     } else {
@@ -361,22 +407,26 @@ impl TryFrom<RequiresWire> for Requires {
                 }
             }
         }
-        // Defence-in-depth: a `(kind, name)` cannot appear in both buckets
-        // because the wire form is one TOML table and TOML rejects duplicate
-        // keys at parse time. The check stays in case the wire form ever
-        // changes shape.
-        for g in &git_packages {
-            if packages.iter().any(|p| p.kind == g.kind && p.name == g.name) {
-                return Err(format!(
-                    "dependency `{}:{}` declared as both registry-resolved and git-source",
-                    g.kind, g.name
-                ));
+        // Defence-in-depth: one `(kind, name)` cannot land in two buckets.
+        // The wire form is a single TOML table with unique keys, so this is
+        // unreachable from a valid manifest — kept against a future wire shape.
+        let mut seen: std::collections::HashSet<(PackageKind, String)> =
+            std::collections::HashSet::new();
+        for (kind, name) in packages
+            .iter()
+            .map(|p| (p.kind, p.name.clone()))
+            .chain(git_packages.iter().map(|g| (g.kind, g.name.clone())))
+            .chain(path_packages.iter().map(|p| (p.kind, p.name.clone())))
+        {
+            if !seen.insert((kind, name.clone())) {
+                return Err(format!("dependency `{kind}:{name}` declared more than once"));
             }
         }
         Ok(Requires {
             packages,
             capabilities: w.capabilities,
             git_packages,
+            path_packages,
         })
     }
 }
@@ -456,6 +506,42 @@ fn inline_to_git_dep(
         version,
         auth: inline.auth.unwrap_or_default(),
         token_env: inline.token_env,
+    })
+}
+
+fn inline_to_path_dep(
+    kind: PackageKind,
+    name: String,
+    inline: InlinePackageDepWire,
+) -> Result<PathPackageDep> {
+    let key_for_err = format!("{kind}:{name}");
+    let path = inline.path.expect("caller checked path is Some");
+    if inline.git.is_some()
+        || inline.tag.is_some()
+        || inline.branch.is_some()
+        || inline.rev.is_some()
+    {
+        return Err(Error::BadDependencyDecl {
+            input: key_for_err,
+            reason: "path-source dep cannot also specify `git`/`tag`/`branch`/`rev`".to_string(),
+        });
+    }
+    if inline.auth.is_some() || inline.token_env.is_some() {
+        return Err(Error::BadDependencyDecl {
+            input: key_for_err,
+            reason: "path-source dep cannot specify `auth`/`token_env` — the source is local"
+                .to_string(),
+        });
+    }
+    let version = match inline.version.as_deref() {
+        Some(s) => Some(VersionSpec::parse(s)?),
+        None => None,
+    };
+    Ok(PathPackageDep {
+        kind,
+        name,
+        path,
+        version,
     })
 }
 
@@ -771,6 +857,59 @@ mod tests {
         )
         .unwrap_err();
         assert!(err.to_string().contains("must be the value, not part of the key"));
+    }
+
+    #[test]
+    fn path_source_parses() {
+        let r = requires_from_toml(
+            r#"[packages]
+"flow:wal" = { path = "../flow-wal" }
+"#,
+        );
+        assert!(r.packages.is_empty());
+        assert!(r.git_packages.is_empty());
+        assert_eq!(r.path_packages.len(), 1);
+        let p = &r.path_packages[0];
+        assert_eq!(p.kind, PackageKind::Flow);
+        assert_eq!(p.name, "wal");
+        assert_eq!(p.path, "../flow-wal");
+        assert!(p.version.is_none());
+    }
+
+    #[test]
+    fn path_source_dual_form_parses() {
+        let r = requires_from_toml(
+            r#"[packages]
+"flow:wal" = { path = "../flow-wal", version = "^0.1" }
+"#,
+        );
+        assert_eq!(r.path_packages.len(), 1);
+        assert!(r.path_packages[0].version.is_some());
+    }
+
+    #[test]
+    fn path_source_rejects_git_alongside() {
+        let err = toml::from_str::<Requires>(
+            r#"[packages]
+"flow:bad" = { path = "../x", git = "https://x/y" }
+"#,
+        )
+        .unwrap_err();
+        assert!(err.to_string().contains("cannot also specify"), "{err}");
+    }
+
+    #[test]
+    fn path_source_round_trips() {
+        let original = requires_from_toml(
+            r#"[packages]
+"flow:wal" = { path = "../flow-wal", version = "^0.1" }
+"feat:auth" = { path = "../feat-auth" }
+"#,
+        );
+        let rendered = toml::to_string_pretty(&original).unwrap();
+        let back: Requires = toml::from_str(&rendered).unwrap();
+        assert_eq!(original, back);
+        assert_eq!(back.path_packages.len(), 2);
     }
 
     #[test]
