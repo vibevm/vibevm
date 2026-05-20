@@ -25,7 +25,7 @@ use anyhow::{Context, Result, bail};
 use serde::Serialize;
 use semver::Version;
 use vibe_core::PackageKind;
-use vibe_core::manifest::ProjectManifest;
+use vibe_core::manifest::Manifest;
 use vibe_registry::{
     BindingSite, IndexClient, PurlLookupHit, SearchHit, index_url_for,
 };
@@ -608,7 +608,7 @@ fn resolve_project_root(path: &Path) -> Result<std::path::PathBuf> {
         .canonicalize()
         .with_context(|| format!("canonicalizing `{}`", path.display()))?;
     let stripped = super::init::strip_unc_public(canonical);
-    if !stripped.join(ProjectManifest::FILENAME).exists() {
+    if !stripped.join(Manifest::FILENAME).exists() {
         bail!(
             "no `vibe.toml` in `{}`; run `vibe init` first",
             stripped.display()
@@ -617,7 +617,7 @@ fn resolve_project_root(path: &Path) -> Result<std::path::PathBuf> {
     Ok(stripped)
 }
 
-fn load_project_manifest(root: &Path) -> Result<ProjectManifest> {
-    let path = root.join(ProjectManifest::FILENAME);
-    Ok(ProjectManifest::read(&path)?)
+fn load_project_manifest(root: &Path) -> Result<Manifest> {
+    let path = root.join(Manifest::FILENAME);
+    Ok(Manifest::read(&path)?)
 }

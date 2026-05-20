@@ -21,7 +21,3 @@ files = [
 [boot_snippet]
 filename = "30-flow-atomic-commits.md"
 source = "boot/30-flow-atomic-commits.md"
-
-[dependencies]
-required = []
-conflicts = []

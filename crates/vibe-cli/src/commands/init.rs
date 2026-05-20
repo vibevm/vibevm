@@ -11,8 +11,8 @@ use anyhow::{Context, Result, bail};
 use serde::Serialize;
 use vibe_core::manifest::{
     ActiveSection, DEFAULT_REGISTRY_GITVERSE_NAME, DEFAULT_REGISTRY_GITVERSE_URL,
-    DEFAULT_REGISTRY_NAME, DEFAULT_REGISTRY_REF, DEFAULT_REGISTRY_URL, Lockfile, NamingConvention,
-    ProjectManifest, ProjectSection, RegistrySection,
+    DEFAULT_REGISTRY_NAME, DEFAULT_REGISTRY_REF, DEFAULT_REGISTRY_URL, Lockfile, Manifest,
+    NamingConvention, ProjectSection, RegistrySection,
 };
 
 use crate::cli::InitArgs;
@@ -164,7 +164,7 @@ fn ensure_project_manifest(
     stack: Option<&str>,
     registries: Vec<RegistrySection>,
 ) -> Result<Outcome> {
-    let path = root.join(ProjectManifest::FILENAME);
+    let path = root.join(Manifest::FILENAME);
     let rel = relative_to_root(root, &path);
     if path.exists() {
         ctx.skipped(&rel, "already exists");
@@ -175,21 +175,17 @@ fn ensure_project_manifest(
         });
     }
 
-    let manifest = ProjectManifest {
-        project: ProjectSection {
+    let manifest = Manifest {
+        project: Some(ProjectSection {
             name: name.to_string(),
             version: "0.0.1".to_string(),
             authors: vec![],
-        },
-        requires: vibe_core::manifest::Requires::default(),
+        }),
         active: stack.map(|s| ActiveSection {
             stack: Some(s.to_string()),
         }),
-        llm: None,
         registries,
-        mirrors: Vec::new(),
-        overrides: Vec::new(),
-        i18n: vibe_core::manifest::i18n::I18nDecl::default(),
+        ..Default::default()
     };
 
     manifest.write(&path)?;

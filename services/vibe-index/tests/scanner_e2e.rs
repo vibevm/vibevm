@@ -34,7 +34,7 @@ fn init_repo(repo: &Path) {
 }
 
 fn commit_and_tag(repo: &Path, manifest: &str, tag: &str) {
-    std::fs::write(repo.join("vibe-package.toml"), manifest).unwrap();
+    std::fs::write(repo.join("vibe.toml"), manifest).unwrap();
     std::fs::write(repo.join("README.md"), format!("# {tag}\n")).unwrap();
     git(repo, &["add", "."]);
     git(repo, &["commit", "--quiet", "-m", tag]);

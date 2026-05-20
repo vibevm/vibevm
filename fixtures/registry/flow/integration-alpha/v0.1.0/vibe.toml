@@ -39,4 +39,4 @@ strictness = ["prefer-strict", "prefer-loose"]
 # pull in flow:integration-beta. Tests the conditional-dep fixed-point
 # loop end-to-end.
 [target."context(stack:integration-rust)".dependencies]
-packages = ["flow:integration-beta@^0.1"]
+packages = { "flow:integration-beta" = "^0.1" }

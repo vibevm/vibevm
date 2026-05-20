@@ -46,7 +46,7 @@ use anyhow::{Context, Result, anyhow, bail};
 use dialoguer::Confirm;
 use serde::Serialize;
 use serde_json::{Map, Value as JsonValue};
-use vibe_core::manifest::ProjectManifest;
+use vibe_core::manifest::Manifest;
 use vibe_install::InstallError;
 use vibe_mcp::{Server, ServerContext};
 
@@ -647,7 +647,7 @@ fn run_install(ctx: &output::Context, args: McpInstallArgs) -> Result<()> {
             .canonicalize()
             .ok()
             .map(super::init::strip_unc_public)
-            .filter(|p| p.join(ProjectManifest::FILENAME).exists())
+            .filter(|p| p.join(Manifest::FILENAME).exists())
     };
 
     // 3. Resolve what.
@@ -918,7 +918,7 @@ fn run_status(ctx: &output::Context, args: McpStatusArgs) -> Result<()> {
         .canonicalize()
         .ok()
         .map(super::init::strip_unc_public)
-        .filter(|p| p.join(ProjectManifest::FILENAME).exists());
+        .filter(|p| p.join(Manifest::FILENAME).exists());
     let detected = detect_agents(project_root.as_deref());
     let mut results: Vec<AgentInstallReport> = Vec::new();
     let mut skill_results: Vec<SkillInstallReport> = Vec::new();
@@ -1023,7 +1023,7 @@ fn run_upgrade(ctx: &output::Context, args: McpUpgradeArgs) -> Result<()> {
         .canonicalize()
         .ok()
         .map(super::init::strip_unc_public)
-        .filter(|p| p.join(ProjectManifest::FILENAME).exists());
+        .filter(|p| p.join(Manifest::FILENAME).exists());
 
     // If scope == Project but project_root is None — error fast.
     if scope == Scope::Project && project_root.is_none() {
@@ -1326,7 +1326,7 @@ fn run_uninstall(ctx: &output::Context, args: McpUninstallArgs) -> Result<()> {
         .canonicalize()
         .ok()
         .map(super::init::strip_unc_public)
-        .filter(|p| p.join(ProjectManifest::FILENAME).exists());
+        .filter(|p| p.join(Manifest::FILENAME).exists());
 
     if scope == Scope::Project && project_root.is_none() {
         bail!(
@@ -1923,7 +1923,7 @@ fn has_vibe_toml(path: &Path) -> bool {
     path.canonicalize()
         .ok()
         .map(super::init::strip_unc_public)
-        .map(|p| p.join(ProjectManifest::FILENAME).exists())
+        .map(|p| p.join(Manifest::FILENAME).exists())
         .unwrap_or(false)
 }
 
@@ -1932,7 +1932,7 @@ fn resolve_project_root_required(path: &Path) -> Result<PathBuf> {
         .canonicalize()
         .with_context(|| format!("canonicalizing `{}`", path.display()))?;
     let stripped = super::init::strip_unc_public(canonical);
-    if !stripped.join(ProjectManifest::FILENAME).exists() {
+    if !stripped.join(Manifest::FILENAME).exists() {
         bail!(
             "no `vibe.toml` in `{}`; run `vibe init` first, pass `--path <dir>`, \
              or use `--scope user` to install without a project",
@@ -2360,7 +2360,7 @@ mod tests {
     #[test]
     fn has_vibe_toml_returns_true_when_present() {
         let dir = tempfile::tempdir().unwrap();
-        std::fs::write(dir.path().join(ProjectManifest::FILENAME), "").unwrap();
+        std::fs::write(dir.path().join(Manifest::FILENAME), "").unwrap();
         assert!(has_vibe_toml(dir.path()));
     }
 

@@ -10,7 +10,7 @@ use anyhow::{Context, Result, anyhow, bail};
 use dialoguer::Confirm;
 use serde::Serialize;
 use vibe_core::{PackageRef, VersionSpec};
-use vibe_core::manifest::{Lockfile, ProjectManifest};
+use vibe_core::manifest::{Lockfile, Manifest};
 use vibe_install::{
     InstallError, InstallOptions, InstallPlan, RegisterMetadata, WriteKind, apply_install,
     plan_install_with_options, register_installed_with_metadata,
@@ -94,7 +94,7 @@ pub fn run(ctx: &output::Context, args: InstallArgs) -> Result<()> {
                 .clone_from(&lockfile.meta.root_dependencies);
             // Persist the migration before solving, so a panic mid-solve
             // does not lose the snapshot we just inferred.
-            manifest.write(project_root.join(ProjectManifest::FILENAME))?;
+            manifest.write(project_root.join(Manifest::FILENAME))?;
         }
         if manifest.requires.packages.is_empty() && manifest.requires.git_packages.is_empty() {
             bail!(
@@ -371,8 +371,7 @@ pub fn run(ctx: &output::Context, args: InstallArgs) -> Result<()> {
     for f in fetched {
         let describes_string = f
             .cached
-            .manifest
-            .package
+            .package_meta()
             .describes
             .as_ref()
             .map(|p| p.to_string());
@@ -509,7 +508,7 @@ pub fn run(ctx: &output::Context, args: InstallArgs) -> Result<()> {
         false
     };
     if manifest_changed {
-        manifest.write(project_root.join(ProjectManifest::FILENAME))?;
+        manifest.write(project_root.join(Manifest::FILENAME))?;
     }
 
     // 8. Mirror the manifest's declared roots into `meta.root_dependencies`
@@ -624,7 +623,7 @@ fn finalize_pkgref_for_manifest(
 /// registry-resolved would create a `(kind, name)` duplicate that
 /// `try_from = "RequiresWire"` rejects on the next parse.
 fn merge_manifest_requires(
-    manifest: &mut ProjectManifest,
+    manifest: &mut Manifest,
     roots: &[PackageRef],
 ) -> bool {
     let mut changed = false;
@@ -664,7 +663,7 @@ fn resolve_project_root(path: &Path) -> Result<PathBuf> {
         .canonicalize()
         .with_context(|| format!("canonicalizing `{}`", path.display()))?;
     let stripped = super::init::strip_unc_public(canonical);
-    if !stripped.join(ProjectManifest::FILENAME).exists() {
+    if !stripped.join(Manifest::FILENAME).exists() {
         bail!(
             "no `vibe.toml` in `{}`; run `vibe init` first",
             stripped.display()
@@ -673,9 +672,9 @@ fn resolve_project_root(path: &Path) -> Result<PathBuf> {
     Ok(stripped)
 }
 
-fn load_project_manifest(root: &Path) -> Result<ProjectManifest> {
-    let path = root.join(ProjectManifest::FILENAME);
-    Ok(ProjectManifest::read(&path)?)
+fn load_project_manifest(root: &Path) -> Result<Manifest> {
+    let path = root.join(Manifest::FILENAME);
+    Ok(Manifest::read(&path)?)
 }
 
 fn load_or_empty_lockfile(root: &Path) -> Result<Lockfile> {
@@ -764,7 +763,7 @@ impl InstallResolver {
 /// `git_packages`).
 fn apply_git_source_flag(
     args: &InstallArgs,
-    manifest: &mut vibe_core::manifest::ProjectManifest,
+    manifest: &mut Manifest,
     project_root: &std::path::Path,
 ) -> Result<()> {
     use vibe_core::manifest::{AuthKind, GitPackageDep, GitRefKind};
@@ -832,7 +831,7 @@ fn apply_git_source_flag(
         .retain(|g| !(g.kind == dep.kind && g.name == dep.name));
     manifest.requires.git_packages.push(dep);
 
-    manifest.write(project_root.join(vibe_core::manifest::ProjectManifest::FILENAME))?;
+    manifest.write(project_root.join(Manifest::FILENAME))?;
     Ok(())
 }
 
@@ -846,7 +845,7 @@ fn apply_git_source_flag(
 ///    [PROP-002](../../../../spec/modules/vibe-registry/PROP-002-decentralized-registry.md).
 pub(crate) fn build_install_resolver(
     args: &InstallArgs,
-    manifest: &ProjectManifest,
+    manifest: &Manifest,
 ) -> Result<InstallResolver> {
     if let Some(explicit) = &args.registry {
         let p = explicit
@@ -1028,7 +1027,7 @@ fn emit_report(
 /// registry-default `en` close the chain.
 fn build_language_chain(
     cli_language: Option<&str>,
-    manifest: &ProjectManifest,
+    manifest: &Manifest,
 ) -> Vec<String> {
     let mut effective = manifest.i18n.clone();
     if let Some(lang) = cli_language {
@@ -1098,7 +1097,7 @@ where
                 ctx.add_provides(qualified);
             }
         }
-        if let Some(purl) = &c.manifest.package.describes {
+        if let Some(purl) = &c.package_meta().describes {
             ctx.describes_types.insert(purl.purl_type.clone());
         }
     }
@@ -1108,22 +1107,16 @@ where
 #[cfg(test)]
 mod tests {
     use super::*;
-    use vibe_core::manifest::{ProjectManifest, ProjectSection};
+    use vibe_core::manifest::ProjectSection;
 
-    fn empty_manifest() -> ProjectManifest {
-        ProjectManifest {
-            project: ProjectSection {
+    fn empty_manifest() -> Manifest {
+        Manifest {
+            project: Some(ProjectSection {
                 name: "demo".to_string(),
                 version: "0.0.1".to_string(),
                 authors: vec![],
-            },
-            requires: vibe_core::manifest::Requires::default(),
-            active: None,
-            llm: None,
-            registries: Vec::new(),
-            mirrors: Vec::new(),
-            overrides: Vec::new(),
-            i18n: vibe_core::manifest::i18n::I18nDecl::default(),
+            }),
+            ..Default::default()
         }
     }
 

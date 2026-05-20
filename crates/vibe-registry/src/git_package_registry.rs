@@ -36,7 +36,7 @@ use std::path::{Path, PathBuf};
 use std::sync::Arc;
 
 use sha2::{Digest, Sha256};
-use vibe_core::manifest::{NamingConvention, PackageManifest};
+use vibe_core::manifest::{Manifest, NamingConvention};
 use vibe_core::{PackageKind, PackageRef, VersionSpec};
 
 use crate::git_backend::{GitBackend, GitError, ShellGit};
@@ -412,7 +412,7 @@ impl GitPackageRegistry {
         self.single_package_url.is_some()
     }
 
-    /// Fetch `vibe-package.toml` at an arbitrary git ref (tag, branch,
+    /// Fetch `vibe.toml` at an arbitrary git ref (tag, branch,
     /// or commit SHA) — used by the git-source resolver path
     /// (PROP-002 §2.4.1) where the operator declared `tag = "..."` /
     /// `branch = "..."` / `rev = "..."` and we cannot enumerate
@@ -427,13 +427,13 @@ impl GitPackageRegistry {
         kind: PackageKind,
         name: &str,
         refname: &str,
-    ) -> Result<PackageManifest, RegistryError> {
+    ) -> Result<Manifest, RegistryError> {
         self.ensure_token_loaded()?;
         let plain_url = self.package_repo_url(kind, name);
         let fetch_url = self.credentialed_url(&plain_url);
         let bytes = match self
             .backend
-            .fetch_file_at_ref(&fetch_url, refname, PackageManifest::FILENAME)
+            .fetch_file_at_ref(&fetch_url, refname, Manifest::FILENAME)
         {
             Ok(bytes) => bytes,
             Err(GitError::ArchiveUnsupported { .. }) => {
@@ -442,12 +442,12 @@ impl GitPackageRegistry {
                 // policy reasons. The git-source / redirect path hits
                 // this when the target is on GitHub. Same fall-back
                 // shape as `fetch_dep_manifest`: shallow-clone at the
-                // requested ref and read `vibe-package.toml` from the
+                // requested ref and read `vibe.toml` from the
                 // working tree. Slower than archive but works on every
                 // host that accepts `git clone`.
                 self.refresh_package(kind, name, refname)?;
                 let clone_dir = self.package_clone_dir(kind, name);
-                let manifest_path = clone_dir.join(PackageManifest::FILENAME);
+                let manifest_path = clone_dir.join(Manifest::FILENAME);
                 fs::read(&manifest_path).map_err(|source| RegistryError::Io {
                     path: manifest_path.clone(),
                     source,
@@ -456,22 +456,13 @@ impl GitPackageRegistry {
             Err(other) => return Err(RegistryError::from(other)),
         };
         let text = String::from_utf8(bytes).map_err(|e| RegistryError::MalformedMeta {
-            path: PathBuf::from(format!(
-                "{plain_url}@{refname}:{}",
-                PackageManifest::FILENAME
-            )),
+            path: PathBuf::from(format!("{plain_url}@{refname}:{}", Manifest::FILENAME)),
             reason: format!("invalid UTF-8: {e}"),
         })?;
-        let mut m: PackageManifest =
-            toml::from_str(&text).map_err(|e| RegistryError::MalformedMeta {
-                path: PathBuf::from(format!(
-                    "{plain_url}@{refname}:{}",
-                    PackageManifest::FILENAME
-                )),
-                reason: e.to_string(),
-            })?;
-        m.normalize_legacy_deps();
-        Ok(m)
+        Manifest::parse_str(&text).map_err(|e| RegistryError::MalformedMeta {
+            path: PathBuf::from(format!("{plain_url}@{refname}:{}", Manifest::FILENAME)),
+            reason: e.to_string(),
+        })
     }
 
     /// The `auth` regime the registry was opened with — read by
@@ -965,7 +956,7 @@ impl GitPackageRegistry {
         })
     }
 
-    /// Read a candidate version's `vibe-package.toml` *without cloning*. The
+    /// Read a candidate version's `vibe.toml` *without cloning*. The
     /// depsolver calls this during the resolve walk to read declared
     /// `[requires]` of a candidate before committing to install. A walk
     /// over N candidates of one package costs N `git archive` round-trips,
@@ -981,7 +972,7 @@ impl GitPackageRegistry {
         kind: PackageKind,
         name: &str,
         version: &semver::Version,
-    ) -> Result<PackageManifest, RegistryError> {
+    ) -> Result<Manifest, RegistryError> {
         self.ensure_token_loaded()?;
         let tag = format!("v{version}");
         let backend = Arc::clone(&self.backend);
@@ -991,11 +982,7 @@ impl GitPackageRegistry {
             let plain = strip_git_plus_prefix(url);
             let fetch_url = inject_token(plain, token.as_deref());
             backend
-                .fetch_file_at_ref(
-                    &fetch_url,
-                    &tag_for_lookup,
-                    PackageManifest::FILENAME,
-                )
+                .fetch_file_at_ref(&fetch_url, &tag_for_lookup, Manifest::FILENAME)
                 .map_err(RegistryError::from)
         });
         let url = self.package_repo_url(kind, name);
@@ -1019,7 +1006,7 @@ impl GitPackageRegistry {
                 // come along with it, so it lands together with that.
                 self.refresh_package(kind, name, &tag)?;
                 let clone_dir = self.package_clone_dir(kind, name);
-                let manifest_path = clone_dir.join(PackageManifest::FILENAME);
+                let manifest_path = clone_dir.join(Manifest::FILENAME);
                 fs::read(&manifest_path).map_err(|source| RegistryError::Io {
                     path: manifest_path.clone(),
                     source,
@@ -1028,18 +1015,13 @@ impl GitPackageRegistry {
             Err(other) => return Err(other),
         };
         let text = String::from_utf8(bytes).map_err(|e| RegistryError::MalformedMeta {
-            path: PathBuf::from(format!("{url}@{tag}:{}", PackageManifest::FILENAME)),
+            path: PathBuf::from(format!("{url}@{tag}:{}", Manifest::FILENAME)),
             reason: format!("invalid UTF-8: {e}"),
         })?;
-        let mut manifest: PackageManifest =
-            toml::from_str(&text).map_err(|e| RegistryError::MalformedMeta {
-                path: PathBuf::from(format!("{url}@{tag}:{}", PackageManifest::FILENAME)),
-                reason: e.to_string(),
-            })?;
-        // Apply the same legacy-deps migration the on-disk reader does, so
-        // resolver consumers always see modern-form `[requires]` / `[conflicts]`.
-        manifest.normalize_legacy_deps();
-        Ok(manifest)
+        Manifest::parse_str(&text).map_err(|e| RegistryError::MalformedMeta {
+            path: PathBuf::from(format!("{url}@{tag}:{}", Manifest::FILENAME)),
+            reason: e.to_string(),
+        })
     }
 
     /// Refresh the per-package clone for `(kind, name)` against `refname`
@@ -1162,8 +1144,15 @@ impl GitPackageRegistry {
             }
             copy_dir_excluding_git(&clone_dir, &dest_cache)?;
 
-            let manifest_path = dest_cache.join(PackageManifest::FILENAME);
-            let manifest = PackageManifest::read(&manifest_path)?;
+            let manifest_path = dest_cache.join(Manifest::FILENAME);
+            let manifest = Manifest::read(&manifest_path)?;
+            if manifest.package.is_none() {
+                return Err(RegistryError::MalformedMeta {
+                    path: manifest_path.clone(),
+                    reason: "registry package manifest must carry a [package] table"
+                        .to_string(),
+                });
+            }
             let content_hash = compute_content_hash(&dest_cache)?;
 
             // 3. Cross-source content_hash gate.
@@ -1644,7 +1633,7 @@ mod tests {
         let fake = Arc::new(FakeBackend::default());
         let pkg_src = tempdir().unwrap();
         std::fs::write(
-            pkg_src.path().join("vibe-package.toml"),
+            pkg_src.path().join("vibe.toml"),
             "[package]\nname = \"wal\"\nkind = \"flow\"\nversion = \"0.1.0\"\n",
         )
         .unwrap();
@@ -2089,7 +2078,7 @@ mod tests {
         fake.seed_file(
             mirror_url,
             "v0.1.0",
-            "vibe-package.toml",
+            "vibe.toml",
             manifest_text("wal", "flow", "0.1.0").into_bytes(),
         );
         let _ = primary_url; // documented for reading the test
@@ -2102,7 +2091,7 @@ mod tests {
         );
         let v = semver::Version::parse("0.1.0").unwrap();
         let manifest = r.fetch_dep_manifest(PackageKind::Flow, "wal", &v).unwrap();
-        assert_eq!(manifest.package.name, "wal");
+        assert_eq!(manifest.require_package().unwrap().name, "wal");
         // No clone — the mirror served the manifest via the archive
         // path, same as the primary-only test asserts.
         assert_eq!(fake.bootstrap_count(), 0);
@@ -2118,7 +2107,7 @@ mod tests {
         fake.seed_file(
             url,
             "v0.1.0",
-            "vibe-package.toml",
+            "vibe.toml",
             manifest_text("wal", "flow", "0.1.0").into_bytes(),
         );
         let r = registry_with(
@@ -2129,40 +2118,11 @@ mod tests {
         );
         let v = semver::Version::parse("0.1.0").unwrap();
         let manifest = r.fetch_dep_manifest(PackageKind::Flow, "wal", &v).unwrap();
-        assert_eq!(manifest.package.name, "wal");
-        assert_eq!(manifest.package.version.to_string(), "0.1.0");
+        assert_eq!(manifest.require_package().unwrap().name, "wal");
+        assert_eq!(manifest.require_package().unwrap().version.to_string(), "0.1.0");
         // Critically: no clone was triggered for this manifest read.
         assert_eq!(fake.bootstrap_count(), 0);
         assert_eq!(fake.update_count(), 0);
-    }
-
-    #[test]
-    fn fetch_dep_manifest_normalises_legacy_deps() {
-        let cache = tempdir().unwrap();
-        let fake = Arc::new(FakeBackend::default());
-        let url = "git@host:org/flow-wal.git";
-        let legacy = r#"
-[package]
-name = "wal"
-kind = "flow"
-version = "0.1.0"
-
-[dependencies]
-required = ["flow:atomic-commits@^0.1"]
-conflicts = ["flow:legacy-wal"]
-"#;
-        fake.seed_file(url, "v0.1.0", "vibe-package.toml", legacy.as_bytes().to_vec());
-        let r = registry_with(
-            cache.path(),
-            "git@host:org",
-            NamingConvention::KindName,
-            fake,
-        );
-        let v = semver::Version::parse("0.1.0").unwrap();
-        let m = r.fetch_dep_manifest(PackageKind::Flow, "wal", &v).unwrap();
-        assert!(m.dependencies.is_empty(), "legacy section migrated away");
-        assert_eq!(m.requires.packages.len(), 1);
-        assert_eq!(m.conflicts.packages.len(), 1);
     }
 
     #[test]
@@ -2170,13 +2130,13 @@ conflicts = ["flow:legacy-wal"]
         let cache = tempdir().unwrap();
         let pkg_cache = tempdir().unwrap();
         let upstream = tempdir().unwrap();
-        // Build a fake upstream tree at the seeded URL: vibe-package.toml
+        // Build a fake upstream tree at the seeded URL: vibe.toml
         // plus a spec file and a stray `.git/` to make sure the copy
         // strips it on the way to the cache.
         let pkg_root = upstream.path().join("pkg");
         fs::create_dir_all(pkg_root.join("spec")).unwrap();
         fs::write(
-            pkg_root.join("vibe-package.toml"),
+            pkg_root.join("vibe.toml"),
             manifest_text("wal", "flow", "0.1.0"),
         )
         .unwrap();
@@ -2201,12 +2161,12 @@ conflicts = ["flow:legacy-wal"]
         let cached = r.fetch(&resolved, pkg_cache.path()).unwrap();
 
         // Cache populated, no .git/ dragged through.
-        assert!(cached.cache_dir.join("vibe-package.toml").exists());
+        assert!(cached.cache_dir.join("vibe.toml").exists());
         assert!(cached.cache_dir.join("spec/foo.md").exists());
         assert!(!cached.cache_dir.join(".git").exists());
 
         // Manifest parsed and content_hash populated.
-        assert_eq!(cached.manifest.package.name, "wal");
+        assert_eq!(cached.package_meta().name, "wal");
         assert!(cached.content_hash.starts_with("sha256:"));
 
         // source_uri is the canonical per-package repo URL.
@@ -2230,7 +2190,7 @@ conflicts = ["flow:legacy-wal"]
         let pkg_root = upstream.path().join("pkg");
         fs::create_dir_all(&pkg_root).unwrap();
         fs::write(
-            pkg_root.join("vibe-package.toml"),
+            pkg_root.join("vibe.toml"),
             manifest_text("wal", "flow", "0.1.0"),
         )
         .unwrap();
@@ -2258,8 +2218,8 @@ conflicts = ["flow:legacy-wal"]
         let cached = r.fetch(&resolved, pkg_cache.path()).unwrap();
 
         // Materialised from the mirror.
-        assert_eq!(cached.manifest.package.name, "wal");
-        assert_eq!(cached.manifest.package.version.to_string(), "0.1.0");
+        assert_eq!(cached.package_meta().name, "wal");
+        assert_eq!(cached.package_meta().version.to_string(), "0.1.0");
         // PROP-002 §2.3 step 3: source_uri is canonical primary URL,
         // regardless of which source actually served the bytes.
         assert_eq!(cached.source_uri, primary_url);
@@ -2279,7 +2239,7 @@ conflicts = ["flow:legacy-wal"]
         let pkg_root = upstream.path().join("pkg");
         fs::create_dir_all(&pkg_root).unwrap();
         fs::write(
-            pkg_root.join("vibe-package.toml"),
+            pkg_root.join("vibe.toml"),
             manifest_text("wal", "flow", "0.1.0"),
         )
         .unwrap();
@@ -2331,7 +2291,7 @@ conflicts = ["flow:legacy-wal"]
         let pkg_root = upstream.path().join("pkg");
         fs::create_dir_all(&pkg_root).unwrap();
         fs::write(
-            pkg_root.join("vibe-package.toml"),
+            pkg_root.join("vibe.toml"),
             manifest_text("wal", "flow", "0.1.0"),
         )
         .unwrap();
@@ -2395,7 +2355,7 @@ conflicts = ["flow:legacy-wal"]
         let pkg_root = upstream.path().join("pkg");
         fs::create_dir_all(&pkg_root).unwrap();
         fs::write(
-            pkg_root.join("vibe-package.toml"),
+            pkg_root.join("vibe.toml"),
             manifest_text("wal", "flow", "0.1.0"),
         )
         .unwrap();
@@ -2418,7 +2378,7 @@ conflicts = ["flow:legacy-wal"]
             .fetch_with_expected_hash(&resolved, pkg_cache.path(), None)
             .unwrap();
         assert!(cached.content_hash.starts_with("sha256:"));
-        assert_eq!(cached.manifest.package.name, "wal");
+        assert_eq!(cached.package_meta().name, "wal");
     }
 
     #[test]
@@ -2441,7 +2401,7 @@ conflicts = ["flow:legacy-wal"]
         let pkg_a = upstream.path().join("pkg-a");
         fs::create_dir_all(&pkg_a).unwrap();
         fs::write(
-            pkg_a.join("vibe-package.toml"),
+            pkg_a.join("vibe.toml"),
             manifest_text("wal", "flow", "0.1.0"),
         )
         .unwrap();
@@ -2450,7 +2410,7 @@ conflicts = ["flow:legacy-wal"]
         let pkg_b = upstream.path().join("pkg-b");
         fs::create_dir_all(&pkg_b).unwrap();
         fs::write(
-            pkg_b.join("vibe-package.toml"),
+            pkg_b.join("vibe.toml"),
             manifest_text("wal", "flow", "0.1.0"),
         )
         .unwrap();
@@ -2522,7 +2482,7 @@ conflicts = ["flow:legacy-wal"]
         let pkg_root = upstream.path().join("pkg");
         fs::create_dir_all(&pkg_root).unwrap();
         fs::write(
-            pkg_root.join("vibe-package.toml"),
+            pkg_root.join("vibe.toml"),
             manifest_text("wal", "flow", "0.1.0"),
         )
         .unwrap();
@@ -2571,7 +2531,7 @@ conflicts = ["flow:legacy-wal"]
         let pkg_root = upstream.path().join("pkg");
         fs::create_dir_all(&pkg_root).unwrap();
         fs::write(
-            pkg_root.join("vibe-package.toml"),
+            pkg_root.join("vibe.toml"),
             manifest_text("wal", "flow", "0.1.0"),
         )
         .unwrap();
@@ -2610,7 +2570,7 @@ conflicts = ["flow:legacy-wal"]
         let pkg_root = upstream.path().join("pkg");
         fs::create_dir_all(&pkg_root).unwrap();
         fs::write(
-            pkg_root.join("vibe-package.toml"),
+            pkg_root.join("vibe.toml"),
             manifest_text("wal", "flow", "0.1.0"),
         )
         .unwrap();
@@ -2671,7 +2631,7 @@ conflicts = ["flow:legacy-wal"]
 
         let v = semver::Version::parse("0.1.0").unwrap();
         let manifest = r.fetch_dep_manifest(PackageKind::Flow, "wal", &v).unwrap();
-        assert_eq!(manifest.package.name, "wal");
+        assert_eq!(manifest.require_package().unwrap().name, "wal");
 
         // Clone-fallback walked primary (fail) + mirror (ok).
         assert_eq!(
@@ -2688,7 +2648,7 @@ conflicts = ["flow:legacy-wal"]
         let pkg_root = upstream.path().join("pkg");
         fs::create_dir_all(&pkg_root).unwrap();
         fs::write(
-            pkg_root.join("vibe-package.toml"),
+            pkg_root.join("vibe.toml"),
             manifest_text("wal", "flow", "0.1.0"),
         )
         .unwrap();

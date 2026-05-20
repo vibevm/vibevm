@@ -7,7 +7,7 @@
 //! through `git archive` (no clone) for registry-served packages and
 //! through the same shallow primitive for overrides.
 
-use vibe_core::manifest::PackageManifest;
+use vibe_core::manifest::Manifest;
 use vibe_core::{PackageKind, PackageRef};
 use vibe_registry::{MultiRegistryResolver, RegistryError};
 
@@ -71,7 +71,7 @@ impl<'a> DepProvider for MultiRegistryProvider<'a> {
         kind: PackageKind,
         name: &str,
         version: &semver::Version,
-    ) -> Result<PackageManifest, DepProviderError> {
+    ) -> Result<Manifest, DepProviderError> {
         // Delegate to the resolver's redirect-aware `fetch_manifest`:
         // walks registries in priority order, follows any
         // `vibe-redirect.toml` stub it lands on (PROP-002 §2.4.2),

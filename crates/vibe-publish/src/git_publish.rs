@@ -538,7 +538,7 @@ mod tests {
         fs::write(src.path().join(".git/HEAD"), "ref: refs/heads/main").unwrap();
         fs::write(src.path().join("README.md"), "hi").unwrap();
         fs::write(
-            src.path().join("vibe-package.toml"),
+            src.path().join("vibe.toml"),
             "[package]\nname = \"x\"\nkind = \"flow\"\nversion = \"0.1.0\"\n",
         )
         .unwrap();
@@ -546,7 +546,7 @@ mod tests {
         copy_dir(src.path(), dst.path()).unwrap();
 
         assert!(dst.path().join("README.md").exists());
-        assert!(dst.path().join("vibe-package.toml").exists());
+        assert!(dst.path().join("vibe.toml").exists());
         assert!(!dst.path().join(".git").exists());
         assert!(!dst.path().join(".git/HEAD").exists());
     }
@@ -571,7 +571,7 @@ mod tests {
         // Build a fake source dir with a manifest + spec file.
         let src = tempdir().unwrap();
         fs::write(
-            src.path().join("vibe-package.toml"),
+            src.path().join("vibe.toml"),
             "[package]\nname = \"wal\"\nkind = \"flow\"\nversion = \"0.1.0\"\n",
         )
         .unwrap();

@@ -39,7 +39,7 @@
 use std::collections::{HashMap, HashSet, VecDeque};
 
 use thiserror::Error;
-use vibe_core::manifest::PackageManifest;
+use vibe_core::manifest::Manifest;
 use vibe_core::{PackageKind, PackageRef, VersionSpec};
 
 pub mod activation;
@@ -119,7 +119,7 @@ pub trait DepProvider {
         kind: PackageKind,
         name: &str,
         version: &semver::Version,
-    ) -> Result<PackageManifest, DepProviderError>;
+    ) -> Result<Manifest, DepProviderError>;
 }
 
 /// What the install / update pipeline calls.
@@ -221,7 +221,7 @@ pub(crate) struct SolverState {
 
 pub(crate) struct ChosenEntry {
     pub version: semver::Version,
-    pub manifest: PackageManifest,
+    pub manifest: Manifest,
     pub direct_deps: Vec<PackageRef>,
     pub is_root: bool,
 }

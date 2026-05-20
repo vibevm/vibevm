@@ -56,13 +56,13 @@ fn init_creates_expected_layout() {
     assert_eq!(agents, gemini);
     assert!(claude.trim_end().ends_with("await the user's instructions."));
 
-    // vibe.toml should parse as a valid ProjectManifest.
+    // vibe.toml should parse as a valid Manifest.
     let manifest_text = fs::read_to_string(path.join("vibe.toml")).unwrap();
-    let parsed: vibe_core::manifest::ProjectManifest = toml::from_str(&manifest_text).unwrap();
-    assert_eq!(parsed.project.version, "0.0.1");
-    assert!(parsed.project.name.ends_with(
+    let parsed = vibe_core::manifest::Manifest::parse_str(&manifest_text).unwrap();
+    assert_eq!(parsed.require_project().unwrap().version, "0.0.1");
+    assert!(parsed.require_project().unwrap().name.ends_with(
         path.file_name().unwrap().to_str().unwrap()
-    ) || parsed.project.name == path.file_name().unwrap().to_str().unwrap());
+    ) || parsed.require_project().unwrap().name == path.file_name().unwrap().to_str().unwrap());
 
     // Empty lockfile parses back and carries the expected metadata.
     let lock_text = fs::read_to_string(path.join("vibe.lock")).unwrap();
@@ -117,7 +117,7 @@ fn init_stack_flag_sets_active_stack() {
         .success();
 
     let manifest_text = fs::read_to_string(path.join("vibe.toml")).unwrap();
-    let parsed: vibe_core::manifest::ProjectManifest = toml::from_str(&manifest_text).unwrap();
+    let parsed = vibe_core::manifest::Manifest::parse_str(&manifest_text).unwrap();
     assert_eq!(
         parsed.active.as_ref().and_then(|a| a.stack.as_deref()),
         Some("rust-cli")
@@ -139,8 +139,8 @@ fn init_custom_name() {
         .success();
 
     let manifest_text = fs::read_to_string(path.join("vibe.toml")).unwrap();
-    let parsed: vibe_core::manifest::ProjectManifest = toml::from_str(&manifest_text).unwrap();
-    assert_eq!(parsed.project.name, "my-special-project");
+    let parsed = vibe_core::manifest::Manifest::parse_str(&manifest_text).unwrap();
+    assert_eq!(parsed.require_project().unwrap().name, "my-special-project");
 }
 
 #[test]
@@ -210,8 +210,8 @@ fn init_writes_default_registry() {
     vibe().arg("init").arg("--path").arg(path).assert().success();
 
     let manifest_text = fs::read_to_string(path.join("vibe.toml")).unwrap();
-    let parsed: vibe_core::manifest::ProjectManifest =
-        toml::from_str(&manifest_text).unwrap();
+    let parsed =
+        vibe_core::manifest::Manifest::parse_str(&manifest_text).unwrap();
     assert_eq!(
         parsed.registries.len(),
         2,
@@ -264,8 +264,8 @@ fn init_no_registry_flag_omits_section() {
         .success();
 
     let manifest_text = fs::read_to_string(path.join("vibe.toml")).unwrap();
-    let parsed: vibe_core::manifest::ProjectManifest =
-        toml::from_str(&manifest_text).unwrap();
+    let parsed =
+        vibe_core::manifest::Manifest::parse_str(&manifest_text).unwrap();
     assert!(
         parsed.registries.is_empty(),
         "[[registry]] must be absent after --no-registry: {manifest_text}"
@@ -295,8 +295,8 @@ fn init_registry_url_override() {
         .success();
 
     let manifest_text = fs::read_to_string(path.join("vibe.toml")).unwrap();
-    let parsed: vibe_core::manifest::ProjectManifest =
-        toml::from_str(&manifest_text).unwrap();
+    let parsed =
+        vibe_core::manifest::Manifest::parse_str(&manifest_text).unwrap();
     assert_eq!(
         parsed.registries.len(),
         1,

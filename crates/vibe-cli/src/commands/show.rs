@@ -23,7 +23,7 @@ use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result, bail};
 use serde::Serialize;
-use vibe_core::manifest::{Lockfile, ProjectManifest};
+use vibe_core::manifest::{Lockfile, Manifest};
 use vibe_core::user_config::UserConfig;
 
 use crate::cli::{
@@ -387,10 +387,13 @@ const CONFIG_ENV_VARS: &[(&str, &str, bool /* sensitive */)] = &[
 
 fn run_config(ctx: &output::Context, args: ShowConfigArgs) -> Result<()> {
     let project_root = resolve_project_root(&args.path)?;
-    let manifest_path = project_root.join(ProjectManifest::FILENAME);
-    let manifest = ProjectManifest::read(&manifest_path).with_context(|| {
+    let manifest_path = project_root.join(Manifest::FILENAME);
+    let manifest = Manifest::read(&manifest_path).with_context(|| {
         format!("reading `{}`", manifest_path.display())
     })?;
+    let project = manifest
+        .require_project()
+        .with_context(|| format!("`{}` has no `[project]` table", manifest_path.display()))?;
 
     let registries: Vec<ConfigRegistry> = manifest
         .registries
@@ -519,8 +522,8 @@ fn run_config(ctx: &output::Context, args: ShowConfigArgs) -> Result<()> {
             ok: true,
             command: "show:config",
             project: project_root.display().to_string(),
-            project_name: manifest.project.name.clone(),
-            project_version: manifest.project.version.clone(),
+            project_name: project.name.clone(),
+            project_version: project.version.clone(),
             registries,
             mirrors,
             overrides,
@@ -546,8 +549,8 @@ fn run_config(ctx: &output::Context, args: ShowConfigArgs) -> Result<()> {
 
     println!(
         "Project: {} {} ({})",
-        manifest.project.name,
-        manifest.project.version,
+        project.name,
+        project.version,
         project_root.display()
     );
     println!();
@@ -682,7 +685,7 @@ fn resolve_project_root(path: &Path) -> Result<PathBuf> {
         .canonicalize()
         .with_context(|| format!("canonicalizing `{}`", path.display()))?;
     let stripped = super::init::strip_unc_public(canonical);
-    if !stripped.join(ProjectManifest::FILENAME).exists() {
+    if !stripped.join(Manifest::FILENAME).exists() {
         bail!(
             "no `vibe.toml` in `{}`; run `vibe init` first or pass `--path <dir>` pointing at a project root",
             stripped.display()

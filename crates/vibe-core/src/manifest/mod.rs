@@ -1,14 +1,15 @@
 //! Manifest schemas used throughout vibevm.
 //!
-//! Three manifests exist:
-//! - [`ProjectManifest`] — `vibe.toml` at a project's root. Schema:
-//!   `VIBEVM-SPEC.md` §7.5.
-//! - [`PackageManifest`] — `vibe-package.toml` inside a package directory.
-//!   Schema: `VIBEVM-SPEC.md` §7.3.
-//! - [`Lockfile`] — `vibe.lock` at a project's root. Schema: `VIBEVM-SPEC.md`
-//!   §7.4.
+//! - [`Manifest`] — the unified `vibe.toml` carried by every node: a plain
+//!   project, a workspace member, a published package, a workspace
+//!   coordinator. The node's role is expressed by which sections are
+//!   present. Schema: `VIBEVM-SPEC.md` §7,
+//!   `spec/modules/vibe-workspace/PROP-007-workspace.md`.
+//! - [`Lockfile`] — `vibe.lock` at a workspace's absolute root. Schema:
+//!   `VIBEVM-SPEC.md` §7.4.
 
 pub mod i18n;
+mod document;
 mod lockfile;
 mod package;
 mod project;
@@ -16,19 +17,20 @@ pub mod purl;
 mod redirect;
 mod subskill;
 
+pub use document::{Manifest, OriginSection, WorkspaceSection};
 pub use lockfile::{
     CURRENT_SCHEMA_VERSION, Lockfile, LockedPackage, LockedSubskill, LockfileMeta, SourceKind,
     VirtualCapabilityRecord,
 };
 pub use package::{
     BootSnippet, Compatibility, ConditionalTarget, ConflictsList, FeaturesTable, GitPackageDep,
-    GitRefKind, Obsoletes, PackageDependencies, PackageManifest, PackageMeta, Provides, Requires,
-    RequiresAny, WritesSection,
+    GitRefKind, Obsoletes, PackageMeta, Provides, PublishPosture, Requires, RequiresAny,
+    WritesSection,
 };
 pub use project::{
     ActiveSection, AuthKind, DEFAULT_REGISTRY_GITVERSE_NAME, DEFAULT_REGISTRY_GITVERSE_URL,
     DEFAULT_REGISTRY_NAME, DEFAULT_REGISTRY_REF, DEFAULT_REGISTRY_URL, LlmSection, MirrorSection,
-    NamingConvention, OverrideSection, ProjectManifest, ProjectSection, RegistrySection,
+    NamingConvention, OverrideSection, ProjectSection, RegistrySection,
 };
 pub use redirect::{RedirectFile, RedirectSection, RefPolicy, parse_redirect_bytes};
 pub use subskill::{

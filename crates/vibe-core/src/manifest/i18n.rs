@@ -25,7 +25,7 @@ use serde::{Deserialize, Serialize};
 /// `[i18n]` block at any layer still parses to a usable resolution.
 pub const DEFAULT_CANONICAL_LANGUAGE: &str = "en";
 
-/// `[i18n]` block in `vibe-package.toml` and `vibe.toml`.
+/// `[i18n]` block in `vibe.toml`.
 ///
 /// At the package level: declares which languages this package ships
 /// translations for. At the project level: declares the consumer's

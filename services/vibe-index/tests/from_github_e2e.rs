@@ -120,7 +120,7 @@ fn make_local_repo(parent: &Path, dir_name: &str, manifests: &[(&str, &str)]) ->
     git(&repo, &["config", "user.email", "test@test.invalid"]);
     git(&repo, &["config", "user.name", "Test"]);
     for (tag, body) in manifests {
-        std::fs::write(repo.join("vibe-package.toml"), body).unwrap();
+        std::fs::write(repo.join("vibe.toml"), body).unwrap();
         std::fs::write(repo.join("README.md"), format!("# {tag}\n")).unwrap();
         git(&repo, &["add", "."]);
         git(&repo, &["commit", "--quiet", "-m", tag]);

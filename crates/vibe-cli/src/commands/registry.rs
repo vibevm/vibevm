@@ -18,7 +18,7 @@ use anyhow::{Context, Result, anyhow, bail};
 use serde::Serialize;
 use vibe_core::manifest::{
     DEFAULT_REGISTRY_NAME, DEFAULT_REGISTRY_URL, Lockfile, MirrorSection, NamingConvention,
-    ProjectManifest, RegistrySection,
+    Manifest, RegistrySection,
 };
 use vibe_publish::{
     DirectGitCreator, PublishConfig, Publisher, creator_for_url, extract_host_segment,
@@ -77,14 +77,14 @@ struct SkippedReportEntry {
 
 fn run_sync(ctx: &output::Context, args: RegistrySyncArgs) -> Result<()> {
     let project_root = resolve_project_root(&args.path)?;
-    let manifest_path = project_root.join(ProjectManifest::FILENAME);
+    let manifest_path = project_root.join(Manifest::FILENAME);
     if !manifest_path.exists() {
         bail!(
             "no `vibe.toml` in `{}`; run `vibe init` first",
             project_root.display()
         );
     }
-    let manifest = ProjectManifest::read(&manifest_path)
+    let manifest = Manifest::read(&manifest_path)
         .with_context(|| format!("reading `{}`", manifest_path.display()))?;
 
     let lockfile_path = project_root.join(Lockfile::FILENAME);
@@ -276,14 +276,14 @@ fn adapter_for_host(host: &str) -> Option<&'static str> {
 
 fn run_list(ctx: &output::Context, args: RegistryListArgs) -> Result<()> {
     let project_root = resolve_project_root(&args.path)?;
-    let manifest_path = project_root.join(ProjectManifest::FILENAME);
+    let manifest_path = project_root.join(Manifest::FILENAME);
     if !manifest_path.exists() {
         bail!(
             "no `vibe.toml` in `{}`; run `vibe init` first",
             project_root.display()
         );
     }
-    let manifest = ProjectManifest::read(&manifest_path)
+    let manifest = Manifest::read(&manifest_path)
         .with_context(|| format!("reading `{}`", manifest_path.display()))?;
 
     let mut registries: Vec<ListReportRegistry> = Vec::with_capacity(manifest.registries.len());
@@ -457,14 +457,14 @@ fn parse_naming(s: &str) -> Result<NamingConvention> {
 
 fn run_add(ctx: &output::Context, args: RegistryAddArgs) -> Result<()> {
     let project_root = resolve_project_root(&args.path)?;
-    let manifest_path = project_root.join(ProjectManifest::FILENAME);
+    let manifest_path = project_root.join(Manifest::FILENAME);
     if !manifest_path.exists() {
         bail!(
             "no `vibe.toml` in `{}`; run `vibe init` first",
             project_root.display()
         );
     }
-    let mut manifest = ProjectManifest::read(&manifest_path)
+    let mut manifest = Manifest::read(&manifest_path)
         .with_context(|| format!("reading `{}`", manifest_path.display()))?;
 
     // Validation: name must not collide with an existing registry.
@@ -622,14 +622,14 @@ struct SetMirrorReport {
 
 fn run_set_mirror(ctx: &output::Context, args: RegistrySetMirrorArgs) -> Result<()> {
     let project_root = resolve_project_root(&args.path)?;
-    let manifest_path = project_root.join(ProjectManifest::FILENAME);
+    let manifest_path = project_root.join(Manifest::FILENAME);
     if !manifest_path.exists() {
         bail!(
             "no `vibe.toml` in `{}`; run `vibe init` first",
             project_root.display()
         );
     }
-    let mut manifest = ProjectManifest::read(&manifest_path)
+    let mut manifest = Manifest::read(&manifest_path)
         .with_context(|| format!("reading `{}`", manifest_path.display()))?;
 
     if args.of.trim().is_empty() {
@@ -781,14 +781,14 @@ fn run_remove_registry(
     args: RegistryRemoveRegistryArgs,
 ) -> Result<()> {
     let project_root = resolve_project_root(&args.path)?;
-    let manifest_path = project_root.join(ProjectManifest::FILENAME);
+    let manifest_path = project_root.join(Manifest::FILENAME);
     if !manifest_path.exists() {
         bail!(
             "no `vibe.toml` in `{}`; run `vibe init` first",
             project_root.display()
         );
     }
-    let mut manifest = ProjectManifest::read(&manifest_path)
+    let mut manifest = Manifest::read(&manifest_path)
         .with_context(|| format!("reading `{}`", manifest_path.display()))?;
 
     if manifest.registry_by_name(&args.name).is_none() {
@@ -859,14 +859,14 @@ fn run_remove_registry(
 
 fn run_remove_mirror(ctx: &output::Context, args: RegistryRemoveMirrorArgs) -> Result<()> {
     let project_root = resolve_project_root(&args.path)?;
-    let manifest_path = project_root.join(ProjectManifest::FILENAME);
+    let manifest_path = project_root.join(Manifest::FILENAME);
     if !manifest_path.exists() {
         bail!(
             "no `vibe.toml` in `{}`; run `vibe init` first",
             project_root.display()
         );
     }
-    let mut manifest = ProjectManifest::read(&manifest_path)
+    let mut manifest = Manifest::read(&manifest_path)
         .with_context(|| format!("reading `{}`", manifest_path.display()))?;
 
     let before = manifest.mirrors.len();
@@ -963,14 +963,14 @@ struct VendoredReportEntry {
 
 fn run_vendor(ctx: &output::Context, args: RegistryVendorArgs) -> Result<()> {
     let project_root = resolve_project_root(&args.path)?;
-    let manifest_path = project_root.join(ProjectManifest::FILENAME);
+    let manifest_path = project_root.join(Manifest::FILENAME);
     if !manifest_path.exists() {
         bail!(
             "no `vibe.toml` in `{}`; run `vibe init` first",
             project_root.display()
         );
     }
-    let manifest = ProjectManifest::read(&manifest_path)
+    let manifest = Manifest::read(&manifest_path)
         .with_context(|| format!("reading `{}`", manifest_path.display()))?;
 
     let lockfile_path = project_root.join(Lockfile::FILENAME);
@@ -1339,14 +1339,14 @@ struct DirectPublishReport {
 
 fn run_publish(ctx: &output::Context, args: RegistryPublishArgs) -> Result<()> {
     let project_root = resolve_project_root(&args.path)?;
-    let manifest_path = project_root.join(ProjectManifest::FILENAME);
+    let manifest_path = project_root.join(Manifest::FILENAME);
     if !manifest_path.exists() {
         bail!(
             "no `vibe.toml` in `{}`; run `vibe init` first",
             project_root.display()
         );
     }
-    let manifest = ProjectManifest::read(&manifest_path)
+    let manifest = Manifest::read(&manifest_path)
         .with_context(|| format!("reading `{}`", manifest_path.display()))?;
 
     // `--repo-url <url>`: bypass registries, host adapters, tokens, and
@@ -1650,14 +1650,14 @@ struct TestReportRegistry {
 
 fn run_test(ctx: &output::Context, args: RegistryTestArgs) -> Result<()> {
     let project_root = resolve_project_root(&args.path)?;
-    let manifest_path = project_root.join(ProjectManifest::FILENAME);
+    let manifest_path = project_root.join(Manifest::FILENAME);
     if !manifest_path.exists() {
         bail!(
             "no `vibe.toml` in `{}`; run `vibe init` first",
             project_root.display()
         );
     }
-    let manifest = ProjectManifest::read(&manifest_path)
+    let manifest = Manifest::read(&manifest_path)
         .with_context(|| format!("reading `{}`", manifest_path.display()))?;
 
     if manifest.registries.is_empty() {
@@ -1903,7 +1903,7 @@ fn parse_target_auth(s: Option<&str>) -> Result<vibe_core::manifest::AuthKind> {
 
 /// Resolve the registry to act on for a redirect / redirect-sync command.
 fn resolve_target_registry<'m>(
-    manifest: &'m ProjectManifest,
+    manifest: &'m Manifest,
     requested: Option<&str>,
     manifest_path: &Path,
 ) -> Result<&'m RegistrySection> {
@@ -1932,14 +1932,14 @@ fn run_redirect(ctx: &output::Context, args: RegistryRedirectArgs) -> Result<()>
     use vibe_core::manifest::{AuthKind, RedirectFile, RefPolicy};
 
     let project_root = resolve_project_root(&args.path)?;
-    let manifest_path = project_root.join(ProjectManifest::FILENAME);
+    let manifest_path = project_root.join(Manifest::FILENAME);
     if !manifest_path.exists() {
         bail!(
             "no `vibe.toml` in `{}`; run `vibe init` first",
             project_root.display()
         );
     }
-    let manifest = ProjectManifest::read(&manifest_path)
+    let manifest = Manifest::read(&manifest_path)
         .with_context(|| format!("reading `{}`", manifest_path.display()))?;
 
     let pkgref = PackageRef::parse(&args.pkgref)
@@ -2217,7 +2217,7 @@ fn build_redirect_readme(pkgref: &str, target_url: &str, description: Option<&st
          Operators reach this package via `vibe install {pkgref}` through the\n\
          org's `[[registry]]` configuration; vibevm follows the\n\
          `vibe-redirect.toml` marker transparently. The actual package content\n\
-         (`vibe-package.toml`, spec files, etc.) lives at the target URL above.\n\n\
+         (`vibe.toml`, spec files, etc.) lives at the target URL above.\n\n\
          See [PROP-002 §2.4.2](https://example.invalid/spec) for the redirect\n\
          protocol and [`docs/registry-redirect.md`](https://example.invalid/docs)\n\
          for the operator reference.\n"
@@ -2228,14 +2228,14 @@ fn run_redirect_sync(ctx: &output::Context, args: RegistryRedirectSyncArgs) -> R
     use vibe_core::PackageRef;
 
     let project_root = resolve_project_root(&args.path)?;
-    let manifest_path = project_root.join(ProjectManifest::FILENAME);
+    let manifest_path = project_root.join(Manifest::FILENAME);
     if !manifest_path.exists() {
         bail!(
             "no `vibe.toml` in `{}`; run `vibe init` first",
             project_root.display()
         );
     }
-    let manifest = ProjectManifest::read(&manifest_path)
+    let manifest = Manifest::read(&manifest_path)
         .with_context(|| format!("reading `{}`", manifest_path.display()))?;
 
     let pkgref = PackageRef::parse(&args.pkgref)
@@ -2336,14 +2336,14 @@ fn run_redirect_update(
     }
 
     let project_root = resolve_project_root(&args.path)?;
-    let manifest_path = project_root.join(ProjectManifest::FILENAME);
+    let manifest_path = project_root.join(Manifest::FILENAME);
     if !manifest_path.exists() {
         bail!(
             "no `vibe.toml` in `{}`; run `vibe init` first",
             project_root.display()
         );
     }
-    let manifest = ProjectManifest::read(&manifest_path)
+    let manifest = Manifest::read(&manifest_path)
         .with_context(|| format!("reading `{}`", manifest_path.display()))?;
 
     let pkgref = PackageRef::parse(&args.pkgref)

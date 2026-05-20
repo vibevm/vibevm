@@ -1,11 +1,11 @@
 //! `DepProvider` adapter over a [`vibe_registry::LocalRegistry`].
 //!
 //! For the `--registry <path>` install path. Reads manifests directly off
-//! disk under `<root>/<kind>/<name>/v<ver>/vibe-package.toml`.
+//! disk under `<root>/<kind>/<name>/v<ver>/vibe.toml`.
 
 use std::path::PathBuf;
 
-use vibe_core::manifest::PackageManifest;
+use vibe_core::manifest::Manifest;
 use vibe_core::{PackageKind, PackageRef};
 use vibe_registry::{LocalRegistry, RegistryError};
 
@@ -48,15 +48,15 @@ impl<'a> DepProvider for LocalRegistryProvider<'a> {
         kind: PackageKind,
         name: &str,
         version: &semver::Version,
-    ) -> Result<PackageManifest, DepProviderError> {
+    ) -> Result<Manifest, DepProviderError> {
         let path: PathBuf = self
             .registry
             .root()
             .join(kind.as_str())
             .join(name)
             .join(format!("v{version}"))
-            .join(PackageManifest::FILENAME);
-        PackageManifest::read(&path).map_err(|e| {
+            .join(Manifest::FILENAME);
+        Manifest::read(&path).map_err(|e| {
             DepProviderError::Other(format!(
                 "failed to read manifest at `{}`: {e}",
                 path.display()

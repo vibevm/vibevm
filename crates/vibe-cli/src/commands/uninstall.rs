@@ -8,7 +8,7 @@ use anyhow::{Context, Result, bail};
 use dialoguer::Confirm;
 use serde::Serialize;
 use vibe_core::PackageRef;
-use vibe_core::manifest::{Lockfile, ProjectManifest};
+use vibe_core::manifest::{Lockfile, Manifest};
 use vibe_install::{InstallError, apply_uninstall, plan_uninstall, unregister_installed};
 
 use crate::cli::UninstallArgs;
@@ -73,7 +73,7 @@ pub fn run(ctx: &output::Context, args: UninstallArgs) -> Result<()> {
     // was never declared in the manifest.
     let manifest_changed = drop_from_manifest_requires(&mut manifest, &pkgref);
     if manifest_changed {
-        manifest.write(project_root.join(ProjectManifest::FILENAME))?;
+        manifest.write(project_root.join(Manifest::FILENAME))?;
     }
 
     lockfile.write(project_root.join(Lockfile::FILENAME))?;
@@ -86,7 +86,7 @@ pub fn run(ctx: &output::Context, args: UninstallArgs) -> Result<()> {
 /// iff an entry was actually removed from either list (caller persists
 /// only on change). Pkgrefs are matched on `(kind, name)` — the version
 /// constraint / git ref policy is irrelevant for uninstall.
-fn drop_from_manifest_requires(manifest: &mut ProjectManifest, pkgref: &PackageRef) -> bool {
+fn drop_from_manifest_requires(manifest: &mut Manifest, pkgref: &PackageRef) -> bool {
     let before_pkgs = manifest.requires.packages.len();
     manifest
         .requires
@@ -173,7 +173,7 @@ fn load_lockfile(root: &Path) -> Result<Lockfile> {
     Ok(Lockfile::read(&path)?)
 }
 
-fn load_project_manifest(root: &Path) -> Result<ProjectManifest> {
-    let path = root.join(ProjectManifest::FILENAME);
-    Ok(ProjectManifest::read(&path)?)
+fn load_project_manifest(root: &Path) -> Result<Manifest> {
+    let path = root.join(Manifest::FILENAME);
+    Ok(Manifest::read(&path)?)
 }

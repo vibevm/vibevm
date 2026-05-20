@@ -490,7 +490,7 @@ pub struct RegistryRemoveMirrorArgs {
 
 #[derive(Debug, clap::Args)]
 pub struct RegistryPublishArgs {
-    /// Path to the package directory (containing `vibe-package.toml`).
+    /// Path to the package directory (containing `vibe.toml`).
     #[arg(required = true)]
     pub source: PathBuf,
 
@@ -752,7 +752,7 @@ pub struct SearchArgs {
     /// fall back to a naive org-walk via the host's REST API. v0
     /// supports GitHub-hosted registries only (`github.com`); other
     /// hosts are reported as unsupported. Slower than an index;
-    /// rate-limited; reads `vibe-package.toml` from each repo's HEAD
+    /// rate-limited; reads `vibe.toml` from each repo's HEAD
     /// via the GitHub Contents API. Ignored on `--purl` lookups.
     #[arg(long = "full-scan")]
     pub full_scan: bool,

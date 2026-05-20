@@ -2,7 +2,7 @@
 //! that travel to disk (`primary.jsonl`, `by-name/<kind>/<name>.json`,
 //! `repomd.json`) or out of the HTTP API.
 //!
-//! Types here mirror the `vibe-package.toml` schema in `vibe-core`
+//! Types here mirror the `vibe.toml` schema in `vibe-core`
 //! deliberately rather than re-using `vibe-core::manifest`. PROP-005
 //! §3.2 explained the trade-off: standalone redistribution beats
 //! workspace re-use, so we duplicate the relevant subset and let a

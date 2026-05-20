@@ -46,7 +46,7 @@ use std::fs;
 use std::path::{Path, PathBuf};
 use std::time::{SystemTime, UNIX_EPOCH};
 
-use vibe_core::manifest::{Lockfile, ProjectManifest};
+use vibe_core::manifest::{Lockfile, Manifest};
 
 /// Stable identifier for a single check. Used in [`Finding::check`]
 /// and surfaced verbatim under `--json` so downstream tooling can
@@ -249,9 +249,8 @@ pub fn check_project(project_root: &Path, opts: &CheckOptions) -> CheckReport {
 /// surfacing.
 fn check_features_graph(project_root: &Path, report: &mut CheckReport) {
     for (pkg_root, source_label) in scan_local_packages(project_root) {
-        let manifest_path =
-            pkg_root.join(vibe_core::manifest::PackageManifest::FILENAME);
-        let manifest = match vibe_core::manifest::PackageManifest::read(&manifest_path) {
+        let manifest_path = pkg_root.join(Manifest::FILENAME);
+        let manifest = match Manifest::read(&manifest_path) {
             Ok(m) => m,
             Err(_) => continue, // ManifestValidity check surfaces this elsewhere.
         };
@@ -369,9 +368,8 @@ fn check_subskill_structure(project_root: &Path, report: &mut CheckReport) {
 /// (warning when missing).
 fn check_i18n_coverage(project_root: &Path, report: &mut CheckReport) {
     for (pkg_root, source_label) in scan_local_packages(project_root) {
-        let manifest_path =
-            pkg_root.join(vibe_core::manifest::PackageManifest::FILENAME);
-        let manifest = match vibe_core::manifest::PackageManifest::read(&manifest_path) {
+        let manifest_path = pkg_root.join(Manifest::FILENAME);
+        let manifest = match Manifest::read(&manifest_path) {
             Ok(m) => m,
             Err(_) => continue,
         };
@@ -548,18 +546,16 @@ fn jaccard_overlap(
     }
 }
 
-/// Find every locally-discoverable package manifest. Today: scans
+/// Find every locally-discoverable manifest. Today: scans
 /// `packages/` (vibevm's own dogfooding tree) at depth 3. Also includes
-/// the project root itself if it carries a `vibe-package.toml` (rare —
-/// `vibe-package.toml` is for *packages*, not projects, but a few of
-/// our own internal fixtures use this layout). Returns
-/// `(package_root, label)` pairs.
+/// the project root itself, which always carries a `vibe.toml`. Returns
+/// `(manifest_root, label)` pairs. Consumers (`check_features_graph`,
+/// `check_i18n_coverage`, `check_subskill_structure`) tolerate a
+/// non-package `vibe.toml`: they short-circuit on an empty
+/// `[features]` / `[i18n]` table and a missing `subskills/` tree.
 fn scan_local_packages(project_root: &Path) -> Vec<(PathBuf, String)> {
     let mut out: Vec<(PathBuf, String)> = Vec::new();
-    if project_root
-        .join(vibe_core::manifest::PackageManifest::FILENAME)
-        .is_file()
-    {
+    if project_root.join(Manifest::FILENAME).is_file() {
         out.push((project_root.to_path_buf(), "project root".to_string()));
     }
     let packages_dir = project_root.join("packages");
@@ -569,7 +565,7 @@ fn scan_local_packages(project_root: &Path) -> Vec<(PathBuf, String)> {
             .into_iter()
             .filter_map(|e| e.ok())
         {
-            if entry.file_name() == vibe_core::manifest::PackageManifest::FILENAME
+            if entry.file_name() == Manifest::FILENAME
                 && let Some(parent) = entry.path().parent()
             {
                 let rel = parent
@@ -586,25 +582,25 @@ fn scan_local_packages(project_root: &Path) -> Vec<(PathBuf, String)> {
 // ===================== check 1: manifest validity =====================
 
 fn check_manifest_validity(project_root: &Path, report: &mut CheckReport) {
-    let manifest_path = project_root.join(ProjectManifest::FILENAME);
+    let manifest_path = project_root.join(Manifest::FILENAME);
     if !manifest_path.exists() {
         report.err(
             CheckId::ManifestValidity,
-            Some(PathBuf::from(ProjectManifest::FILENAME)),
+            Some(PathBuf::from(Manifest::FILENAME)),
             None,
             format!(
                 "no `{}` in project root — every vibevm project carries one. Run `vibe init`.",
-                ProjectManifest::FILENAME
+                Manifest::FILENAME
             ),
         );
         return;
     }
-    if let Err(e) = ProjectManifest::read(&manifest_path) {
+    if let Err(e) = Manifest::read(&manifest_path) {
         report.err(
             CheckId::ManifestValidity,
-            Some(PathBuf::from(ProjectManifest::FILENAME)),
+            Some(PathBuf::from(Manifest::FILENAME)),
             None,
-            format!("`{}` failed to parse: {e}", ProjectManifest::FILENAME),
+            format!("`{}` failed to parse: {e}", Manifest::FILENAME),
         );
     }
 
@@ -754,7 +750,7 @@ fn check_boot_directory(project_root: &Path, report: &mut CheckReport) {
         // Empty / fresh project — `vibe init` creates it. If the
         // project's vibe.toml exists but boot/ doesn't, that's a
         // structural error.
-        if project_root.join(ProjectManifest::FILENAME).exists() {
+        if project_root.join(Manifest::FILENAME).exists() {
             report.err(
                 CheckId::BootDirectory,
                 Some(boot_rel),
@@ -1481,7 +1477,7 @@ files_written = ["spec/flows/wal/A.md"]
         let pkg = project.join("packages").join("flow").join("test-pkg");
         fs::create_dir_all(&pkg).unwrap();
         fs::write(
-            pkg.join("vibe-package.toml"),
+            pkg.join("vibe.toml"),
             format!(
                 r#"[package]
 name = "test-pkg"
@@ -1545,7 +1541,7 @@ a = []
         let pkg = project.path().join("packages").join("flow").join("test-pkg");
         fs::create_dir_all(&pkg).unwrap();
         fs::write(
-            pkg.join("vibe-package.toml"),
+            pkg.join("vibe.toml"),
             r#"[package]
 name = "test-pkg"
 kind = "flow"
@@ -1582,7 +1578,7 @@ delivery = "lazy-push"
         let pkg = project.path().join("packages").join("flow").join("test-pkg");
         fs::create_dir_all(&pkg).unwrap();
         fs::write(
-            pkg.join("vibe-package.toml"),
+            pkg.join("vibe.toml"),
             r#"[package]
 name = "test-pkg"
 kind = "flow"
@@ -1620,7 +1616,7 @@ files_written = ["spec/missing.md"]
         let pkg = project.path().join("packages").join("flow").join("test-pkg");
         fs::create_dir_all(pkg.join("spec/flows/x")).unwrap();
         fs::write(
-            pkg.join("vibe-package.toml"),
+            pkg.join("vibe.toml"),
             r#"[package]
 name = "test-pkg"
 kind = "flow"
@@ -1658,7 +1654,7 @@ files = ["spec/flows/x/PROTOCOL.md"]
         let pkg = project.path().join("packages").join("flow").join("test-pkg");
         fs::create_dir_all(&pkg).unwrap();
         fs::write(
-            pkg.join("vibe-package.toml"),
+            pkg.join("vibe.toml"),
             r#"[package]
 name = "test-pkg"
 kind = "flow"
@@ -1707,7 +1703,7 @@ description = "{desc}"
         let pkg = project.path().join("packages").join("flow").join("test-pkg");
         fs::create_dir_all(&pkg).unwrap();
         fs::write(
-            pkg.join("vibe-package.toml"),
+            pkg.join("vibe.toml"),
             r#"[package]
 name = "test-pkg"
 kind = "flow"
@@ -1743,7 +1739,7 @@ path = "a/b/c/d"
         let pkg = project.path().join("packages").join("flow").join("test-pkg");
         fs::create_dir_all(&pkg).unwrap();
         fs::write(
-            pkg.join("vibe-package.toml"),
+            pkg.join("vibe.toml"),
             r#"[package]
 name = "test-pkg"
 kind = "flow"
@@ -1789,7 +1785,7 @@ description = "{desc}"
         let pkg = project.path().join("packages").join("flow").join("test-pkg");
         fs::create_dir_all(pkg.join("spec/flows/x")).unwrap();
         fs::write(
-            pkg.join("vibe-package.toml"),
+            pkg.join("vibe.toml"),
             r#"[package]
 name = "test-pkg"
 kind = "flow"

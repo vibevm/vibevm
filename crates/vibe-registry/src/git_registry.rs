@@ -19,7 +19,7 @@ use std::sync::Arc;
 
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
-use vibe_core::manifest::PackageManifest;
+use vibe_core::manifest::Manifest;
 use vibe_core::timestamp;
 use vibe_core::{PackageKind, PackageRef};
 
@@ -201,8 +201,14 @@ impl Registry for GitRegistry {
         }
         copy_dir_recursive(&resolved.source_dir, &cache_dir)?;
 
-        let manifest_path = cache_dir.join(PackageManifest::FILENAME);
-        let manifest = PackageManifest::read(&manifest_path)?;
+        let manifest_path = cache_dir.join(Manifest::FILENAME);
+        let manifest = Manifest::read(&manifest_path)?;
+        if manifest.package.is_none() {
+            return Err(RegistryError::MalformedMeta {
+                path: manifest_path.clone(),
+                reason: "registry package manifest must carry a [package] table".to_string(),
+            });
+        }
         let content_hash = compute_content_hash(&cache_dir)?;
 
         let source_uri = source_uri_for_git(
@@ -473,7 +479,7 @@ mod tests {
         let v = root.join("flow/wal/v0.1.0");
         fs::create_dir_all(&v).unwrap();
         fs::write(
-            v.join("vibe-package.toml"),
+            v.join("vibe.toml"),
             r#"[package]
 name = "wal"
 kind = "flow"
@@ -542,7 +548,7 @@ description = "WAL v0.1.0"
         .unwrap();
         assert_eq!(fake.clone_count(), 1);
         assert_eq!(fake.update_count(), 0);
-        assert!(r1.clone_dir().join("flow/wal/v0.1.0/vibe-package.toml").exists());
+        assert!(r1.clone_dir().join("flow/wal/v0.1.0/vibe.toml").exists());
         assert!(r1.cache_dir().join("meta.toml").exists());
 
         // Second open with fresh TTL → no update.

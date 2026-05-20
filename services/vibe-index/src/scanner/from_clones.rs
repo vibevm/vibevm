@@ -174,8 +174,8 @@ fn build_entry(
     git_cli::materialise_at_ref(repo, tag, &snapshot)?;
 
     let manifest_bytes =
-        std::fs::read(snapshot.join("vibe-package.toml")).map_err(|e| Error::Io {
-            path: snapshot.join("vibe-package.toml"),
+        std::fs::read(snapshot.join("vibe.toml")).map_err(|e| Error::Io {
+            path: snapshot.join("vibe.toml"),
             message: e.to_string(),
         })?;
     let raw = mfst::parse_manifest(&manifest_bytes)?;

@@ -29,7 +29,7 @@ use std::path::PathBuf;
 
 use thiserror::Error;
 use vibe_core::PackageKind;
-use vibe_core::manifest::{NamingConvention, PackageManifest};
+use vibe_core::manifest::{Manifest, NamingConvention};
 
 pub mod direct_git;
 pub mod git_publish;
@@ -144,7 +144,7 @@ pub trait RepoCreator {
 /// Inputs to a single publish run.
 #[derive(Debug, Clone)]
 pub struct PublishConfig {
-    /// Filesystem directory containing `vibe-package.toml` and the rest
+    /// Filesystem directory containing `vibe.toml` and the rest
     /// of the package content. The publisher copies this into a fresh
     /// staging clone before pushing.
     pub source_dir: PathBuf,
@@ -204,19 +204,26 @@ impl<'c, C: RepoCreator + ?Sized> Publisher<'c, C> {
     /// Publish the package at `config.source_dir` under the org named in
     /// `config.org_url`.
     pub fn publish(&self, config: &PublishConfig) -> Result<PublishOutcome, PublishError> {
-        // Step 1: read the package manifest (and apply legacy-deps
-        // migration so the published manifest is in modern shape).
-        let manifest_path = config.source_dir.join(PackageManifest::FILENAME);
-        let manifest = PackageManifest::read(&manifest_path).map_err(|e| {
+        // Step 1: read the package manifest. `publish` only operates on
+        // a publishable `[package]` manifest; a `[project]`-only or
+        // `[workspace]`-only `vibe.toml` is rejected as source-invalid.
+        let manifest_path = config.source_dir.join(Manifest::FILENAME);
+        let manifest = Manifest::read(&manifest_path).map_err(|e| {
             PublishError::SourceInvalid {
                 path: manifest_path.clone(),
                 reason: format!("could not read or parse manifest: {e}"),
             }
         })?;
+        let meta = manifest
+            .require_package()
+            .map_err(|e| PublishError::SourceInvalid {
+                path: manifest_path.clone(),
+                reason: e.to_string(),
+            })?;
 
-        let kind = manifest.package.kind;
-        let name = manifest.package.name.clone();
-        let version = manifest.package.version.clone();
+        let kind = meta.kind;
+        let name = meta.name.clone();
+        let version = meta.version.clone();
         let tag = format!("{}{}", config.tag_prefix, version);
 
         // Direct-git short-circuit: when the adapter declares a direct
@@ -287,9 +294,9 @@ impl<'c, C: RepoCreator + ?Sized> Publisher<'c, C> {
             }
         } else {
             let opts = CreateOpts {
-                description: manifest.package.description.clone(),
+                description: meta.description.clone(),
                 default_branch: Some("main".to_string()),
-                homepage: manifest.package.homepage.clone(),
+                homepage: meta.homepage.clone(),
             };
             let info = self.creator.create_repo(&org_segment, &repo_name, &opts)?;
             created_repo = true;

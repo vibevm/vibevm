@@ -83,7 +83,7 @@ fn full_install_cycle() {
     // Cache directory populated.
     assert!(project
         .path()
-        .join(".vibe/cache/flow/wal/v0.1.0/vibe-package.toml")
+        .join(".vibe/cache/flow/wal/v0.1.0/vibe.toml")
         .is_file());
 
     // `vibe list` reflects the install.
@@ -240,8 +240,8 @@ fn install_writes_caret_pkgref_to_vibe_toml_requires() {
         .success();
 
     let toml_text = fs::read_to_string(project.path().join("vibe.toml")).unwrap();
-    let manifest: vibe_core::manifest::ProjectManifest =
-        toml::from_str(&toml_text).expect("vibe.toml round-trips");
+    let manifest =
+        vibe_core::manifest::Manifest::parse_str(&toml_text).expect("vibe.toml round-trips");
     assert_eq!(
         manifest.requires.packages.len(),
         1,
@@ -290,8 +290,8 @@ fn install_preserves_explicit_constraint_in_vibe_toml() {
         .success();
 
     let toml_text = fs::read_to_string(project.path().join("vibe.toml")).unwrap();
-    let manifest: vibe_core::manifest::ProjectManifest =
-        toml::from_str(&toml_text).unwrap();
+    let manifest =
+        vibe_core::manifest::Manifest::parse_str(&toml_text).unwrap();
     assert_eq!(manifest.requires.packages.len(), 1);
     // CLI typed `^0.1`; manifest preserves `^0.1`. We do NOT tighten
     // to the resolved `^0.1.0` — the operator's wider declaration
@@ -320,8 +320,8 @@ fn install_with_exact_flag_pins_manifest_to_eq_resolved() {
         .success();
 
     let toml_text = fs::read_to_string(project.path().join("vibe.toml")).unwrap();
-    let manifest: vibe_core::manifest::ProjectManifest =
-        toml::from_str(&toml_text).unwrap();
+    let manifest =
+        vibe_core::manifest::Manifest::parse_str(&toml_text).unwrap();
     assert_eq!(manifest.requires.packages.len(), 1);
     assert_eq!(
         manifest.requires.packages[0].to_string(),
@@ -344,8 +344,8 @@ fn install_from_manifest_uses_requires() {
     // `vibe.toml` already declares the deps, but nothing has been resolved.
     let toml_path = project.path().join("vibe.toml");
     let toml_text = fs::read_to_string(&toml_path).unwrap();
-    let mut manifest: vibe_core::manifest::ProjectManifest =
-        toml::from_str(&toml_text).unwrap();
+    let mut manifest =
+        vibe_core::manifest::Manifest::parse_str(&toml_text).unwrap();
     manifest.requires.packages.push(
         vibe_core::PackageRef::parse("flow:wal").unwrap(),
     );
@@ -423,8 +423,8 @@ fn uninstall_drops_pkgref_from_vibe_toml() {
     // Manifest carries the pkgref after install (sanity check that the
     // earlier test's invariant still holds in this fresh tempdir).
     let toml_text = fs::read_to_string(project.path().join("vibe.toml")).unwrap();
-    let manifest: vibe_core::manifest::ProjectManifest =
-        toml::from_str(&toml_text).unwrap();
+    let manifest =
+        vibe_core::manifest::Manifest::parse_str(&toml_text).unwrap();
     assert_eq!(manifest.requires.packages.len(), 1);
 
     vibe()
@@ -438,8 +438,8 @@ fn uninstall_drops_pkgref_from_vibe_toml() {
 
     // Manifest now empty.
     let toml_text = fs::read_to_string(project.path().join("vibe.toml")).unwrap();
-    let manifest: vibe_core::manifest::ProjectManifest =
-        toml::from_str(&toml_text).unwrap();
+    let manifest =
+        vibe_core::manifest::Manifest::parse_str(&toml_text).unwrap();
     assert!(
         manifest.requires.packages.is_empty(),
         "[requires].packages should be empty after uninstall, got: {:#?}",
@@ -649,8 +649,8 @@ fn install_from_git_registry() {
         pkg_clone.display()
     );
     assert!(
-        pkg_clone.join("vibe-package.toml").exists(),
-        "vibe-package.toml not in per-package clone: {}",
+        pkg_clone.join("vibe.toml").exists(),
+        "vibe.toml not in per-package clone: {}",
         pkg_clone.display()
     );
 
@@ -719,8 +719,8 @@ fn install_from_git_source_with_tag_records_source_kind_git() {
 
     // Manifest: pkgref recorded as git-source, NOT as registry-resolved.
     let manifest_text = fs::read_to_string(project.path().join("vibe.toml")).unwrap();
-    let manifest: vibe_core::manifest::ProjectManifest =
-        toml::from_str(&manifest_text).expect("vibe.toml round-trips");
+    let manifest =
+        vibe_core::manifest::Manifest::parse_str(&manifest_text).expect("vibe.toml round-trips");
     assert_eq!(
         manifest.requires.git_packages.len(),
         1,
@@ -798,8 +798,8 @@ fn install_from_git_source_with_branch_pins_lockfile_to_resolved_commit() {
         .success();
 
     let manifest_text = fs::read_to_string(project.path().join("vibe.toml")).unwrap();
-    let manifest: vibe_core::manifest::ProjectManifest =
-        toml::from_str(&manifest_text).expect("vibe.toml round-trips");
+    let manifest =
+        vibe_core::manifest::Manifest::parse_str(&manifest_text).expect("vibe.toml round-trips");
     let g = &manifest.requires.git_packages[0];
     assert!(
         matches!(&g.ref_kind, vibe_core::manifest::GitRefKind::Branch(b) if b == "main"),
@@ -876,8 +876,8 @@ fn install_git_source_then_repeat_install_no_args_reports_already_installed() {
     // Manifest unchanged — still one git-source entry; no duplicate
     // wrote into either list during the failed re-install.
     let manifest_text = fs::read_to_string(project.path().join("vibe.toml")).unwrap();
-    let manifest: vibe_core::manifest::ProjectManifest =
-        toml::from_str(&manifest_text).expect("vibe.toml round-trips");
+    let manifest =
+        vibe_core::manifest::Manifest::parse_str(&manifest_text).expect("vibe.toml round-trips");
     assert_eq!(manifest.requires.git_packages.len(), 1);
     assert!(manifest.requires.packages.is_empty());
 
@@ -896,7 +896,7 @@ fn install_git_source_then_repeat_install_no_args_reports_already_installed() {
 // ---------------------------------------------------------------------------
 
 /// Build a single-package bare repo carrying `vibe-redirect.toml` (NOT
-/// `vibe-package.toml`). Used by the redirect-stub tests as the slot a
+/// `vibe.toml`). Used by the redirect-stub tests as the slot a
 /// registry org's per-package walk lands on; the resolver detects the
 /// marker and follows it to the target.
 ///
@@ -949,7 +949,7 @@ fn make_redirect_stub_bare_repo(
     bare
 }
 
-/// Build a target bare repo carrying `vibe-package.toml` + a single
+/// Build a target bare repo carrying `vibe.toml` + a single
 /// content file. Used as the redirect target — `vibe install` reads
 /// the manifest from this repo after following the stub's marker.
 ///
@@ -989,7 +989,7 @@ files = [
 ]
 "#
     );
-    fs::write(src.join("vibe-package.toml"), manifest).unwrap();
+    fs::write(src.join("vibe.toml"), manifest).unwrap();
     fs::create_dir_all(src.join(format!("spec/{pkg_kind}s/{pkg_name}"))).unwrap();
     fs::write(
         src.join(format!("spec/{pkg_kind}s/{pkg_name}/MANIFEST.md")),
@@ -1474,8 +1474,8 @@ fn uninstall_removes_git_source_from_manifest_and_lockfile() {
 
     // Manifest: git_packages entry removed.
     let manifest_text = fs::read_to_string(project.path().join("vibe.toml")).unwrap();
-    let manifest: vibe_core::manifest::ProjectManifest =
-        toml::from_str(&manifest_text).expect("vibe.toml round-trips");
+    let manifest =
+        vibe_core::manifest::Manifest::parse_str(&manifest_text).expect("vibe.toml round-trips");
     assert!(
         manifest.requires.git_packages.is_empty(),
         "expected git_packages emptied after uninstall, got: {:?}",
@@ -1525,7 +1525,7 @@ source = "boot/10-flow-wal.md"
     // bytes the test asserts on (`"v1 A\n"`) won't match what
     // ends up in the cache (`"v1 A\r\n"`).
     fs::write(src.join(".gitattributes"), "* text=auto eol=lf\n").unwrap();
-    fs::write(src.join("vibe-package.toml"), manifest_v1).unwrap();
+    fs::write(src.join("vibe.toml"), manifest_v1).unwrap();
     fs::create_dir_all(src.join("spec/flows/wal")).unwrap();
     fs::create_dir_all(src.join("boot")).unwrap();
     fs::write(src.join("spec/flows/wal/A.md"), "v1 A\n").unwrap();
@@ -1551,7 +1551,7 @@ files = [
 filename = "10-flow-wal.md"
 source = "boot/10-flow-wal.md"
 "#;
-    fs::write(src.join("vibe-package.toml"), manifest_v2).unwrap();
+    fs::write(src.join("vibe.toml"), manifest_v2).unwrap();
     fs::write(src.join("spec/flows/wal/A.md"), "v2 A — changed!\n").unwrap();
     fs::write(src.join("spec/flows/wal/C.md"), "v2 C\n").unwrap();
     fs::remove_file(src.join("spec/flows/wal/B.md")).unwrap();
@@ -2344,7 +2344,7 @@ fn vendor_produces_bare_repo_per_lockfile_entry() {
         String::from_utf8_lossy(&clone_out.stderr)
     );
     assert!(
-        worktree.join("vibe-package.toml").is_file(),
+        worktree.join("vibe.toml").is_file(),
         "vendored repo's v0.1.0 tag did not produce expected payload"
     );
 }
@@ -2427,7 +2427,7 @@ fn vendor_refuses_non_empty_out_dir_without_force() {
 ///
 /// ```text
 /// registry/flow/feat-pkg/v0.1.0/
-/// ├── vibe-package.toml      [features].default = ["base"]
+/// ├── vibe.toml      [features].default = ["base"]
 /// │                          [features].base = []
 /// │                          [features].with-rust = ["subskill:stack/rust"]
 /// │                          [package].describes = "pkg:cargo/sqlx@0.8.0"
@@ -2456,7 +2456,7 @@ fn make_features_fixture_registry(root: &Path) -> PathBuf {
         .unwrap();
 
     fs::write(
-        pkg.join("vibe-package.toml"),
+        pkg.join("vibe.toml"),
         r#"[package]
 name = "feat-pkg"
 kind = "flow"
@@ -4596,7 +4596,7 @@ files = [
 {manifest_extras}
 "#
         );
-        fs::write(src.join("vibe-package.toml"), manifest).unwrap();
+        fs::write(src.join("vibe.toml"), manifest).unwrap();
         for (path, content) in files {
             let target = src.join(path);
             if let Some(parent) = target.parent() {
@@ -4626,7 +4626,7 @@ files = [
         "0.1.0",
         r#"
 [target."context(stack:rust-cli)".dependencies]
-packages = ["flow:rust-helper@^0.1"]
+packages = { "flow:rust-helper" = "^0.1" }
 "#,
         &[("spec/flows/dispatcher/CORE.md", "# dispatcher core")],
     );
@@ -4766,7 +4766,7 @@ files = [
 {manifest_extras}
 "#
         );
-        fs::write(src.join("vibe-package.toml"), manifest).unwrap();
+        fs::write(src.join("vibe.toml"), manifest).unwrap();
         for (path, content) in files {
             let target = src.join(path);
             if let Some(parent) = target.parent() {
@@ -4805,7 +4805,7 @@ files = [
         "0.1.0",
         r#"
 [target."context(stack:rust-cli)".dependencies]
-packages = ["flow:cascade-mid@^0.1"]
+packages = { "flow:cascade-mid" = "^0.1" }
 "#,
         &[("spec/flows/cascade-root/CORE.md", "# root")],
     );
@@ -4817,7 +4817,7 @@ packages = ["flow:cascade-mid@^0.1"]
         "0.1.0",
         r#"
 [target."context(flow:cascade-root)".dependencies]
-packages = ["flow:cascade-leaf@^0.1"]
+packages = { "flow:cascade-leaf" = "^0.1" }
 "#,
         &[("spec/flows/cascade-mid/MID.md", "# mid")],
     );
@@ -4954,7 +4954,7 @@ fn make_two_version_per_package_registry(root: &Path) -> (PathBuf, String) {
     run_git(&src, &["config", "user.email", "t@example.com"]);
     run_git(&src, &["config", "user.name", "Test"]);
     fs::write(
-        src.join("vibe-package.toml"),
+        src.join("vibe.toml"),
         r#"[package]
 name = "test-multi"
 kind = "flow"
@@ -4976,7 +4976,7 @@ files = ["spec/flows/test-multi/PROTOCOL.md"]
 
     // Bump to 0.2.0.
     fs::write(
-        src.join("vibe-package.toml"),
+        src.join("vibe.toml"),
         r#"[package]
 name = "test-multi"
 kind = "flow"
@@ -5225,7 +5225,7 @@ fn make_i18n_fixture_registry(root: &Path) -> (PathBuf, &'static str, &'static s
     fs::create_dir_all(pkg_dir.join("boot")).unwrap();
 
     fs::write(
-        pkg_dir.join("vibe-package.toml"),
+        pkg_dir.join("vibe.toml"),
         r#"[package]
 name = "hello-i18n"
 kind = "flow"
@@ -5457,7 +5457,7 @@ fn publish_against_gitverse_registry_emits_stub_envelope() {
     // honest about exercising the real argument flow.
     let pkg_dir = tempfile::tempdir().unwrap();
     fs::write(
-        pkg_dir.path().join("vibe-package.toml"),
+        pkg_dir.path().join("vibe.toml"),
         r#"[package]
 name = "tiny"
 kind = "flow"
@@ -5525,7 +5525,7 @@ fn publish_direct_repo_url_pushes_to_local_bare_repo() {
     // Synthesize a minimal package directory.
     let pkg_dir = tempfile::tempdir().unwrap();
     fs::write(
-        pkg_dir.path().join("vibe-package.toml"),
+        pkg_dir.path().join("vibe.toml"),
         r#"[package]
 name = "tiny"
 kind = "flow"
@@ -5617,7 +5617,7 @@ fn publish_direct_repo_url_dry_run_skips_actual_push() {
 
     let pkg_dir = tempfile::tempdir().unwrap();
     fs::write(
-        pkg_dir.path().join("vibe-package.toml"),
+        pkg_dir.path().join("vibe.toml"),
         r#"[package]
 name = "tiny"
 kind = "flow"
@@ -5664,7 +5664,7 @@ fn publish_repo_url_and_registry_are_mutually_exclusive() {
 
     let pkg_dir = tempfile::tempdir().unwrap();
     fs::write(
-        pkg_dir.path().join("vibe-package.toml"),
+        pkg_dir.path().join("vibe.toml"),
         r#"[package]
 name = "tiny"
 kind = "flow"

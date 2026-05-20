@@ -35,6 +35,9 @@ pub enum Error {
     #[error("invalid dependency declaration for `{input}`: {reason}")]
     BadDependencyDecl { input: String, reason: String },
 
+    #[error("invalid manifest: {reason}")]
+    InvalidManifest { reason: String },
+
     #[error("failed to read file at {path}")]
     Read {
         path: PathBuf,

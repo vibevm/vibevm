@@ -183,7 +183,7 @@ mod tests {
             .status()
             .unwrap();
         for (tag, manifest_body) in versions {
-            fs::write(repo.join("vibe-package.toml"), manifest_body).unwrap();
+            fs::write(repo.join("vibe.toml"), manifest_body).unwrap();
             fs::write(repo.join("README.md"), format!("# {tag}\n")).unwrap();
             Command::new("git")
                 .args(["-C", repo.to_str().unwrap(), "add", "."])
@@ -265,7 +265,7 @@ mod tests {
         let dest_holder = tempdir().unwrap();
         let dest = dest_holder.path().join("snapshot");
         materialise_at_ref(&repo, "v0.1.0", &dest).unwrap();
-        assert!(dest.join("vibe-package.toml").is_file());
+        assert!(dest.join("vibe.toml").is_file());
         assert!(dest.join("README.md").is_file());
         assert!(!dest.join(".git").exists());
     }

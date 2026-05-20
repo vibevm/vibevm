@@ -90,7 +90,7 @@ fn spawn_mock() -> Mock {
 
 fn write_fixture_package(dir: &Path) {
     std::fs::write(
-        dir.join("vibe-package.toml"),
+        dir.join("vibe.toml"),
         r#"[package]
 name = "wal"
 kind = "flow"
@@ -219,7 +219,7 @@ fn surfaces_error_when_manifest_missing() {
     let _u = temp_set("VIBEVM_INDEX_URL_HOOKTESTE", &mock.base_url);
     let _t = temp_set("VIBEVM_INDEX_TOKEN_HOOKTESTE", "tok");
     let work = tempfile::tempdir().unwrap();
-    // No vibe-package.toml in work.path() — the read should fail.
+    // No vibe.toml in work.path() — the read should fail.
     let report = fire_index_hook(&outcome(), work.path(), "hookteste");
     assert!(!report.fired);
     assert!(report.error.is_some());

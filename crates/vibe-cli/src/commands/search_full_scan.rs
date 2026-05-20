@@ -3,8 +3,8 @@
 //!
 //! Walks `GET /orgs/{org}/repos` (Link-header pagination, same shape
 //! as `services/vibe-index::scanner::from_github`), fetches each
-//! repo's `vibe-package.toml` via the Contents API, parses the
-//! manifest with `vibe_core::manifest::PackageManifest`, then runs a
+//! repo's `vibe.toml` via the Contents API, parses the
+//! manifest with `vibe_core::manifest::Manifest`, then runs a
 //! lightweight token-based match against `name`, `description`,
 //! `keywords`, and `provides.capabilities`. Score is the number of
 //! distinct query tokens that hit any of those fields — same idea as
@@ -28,7 +28,7 @@ use std::time::Duration;
 use serde::Deserialize;
 use thiserror::Error;
 use vibe_core::PackageKind;
-use vibe_core::manifest::PackageManifest;
+use vibe_core::manifest::{Manifest, PackageMeta};
 
 const REQUEST_TIMEOUT_SECS: u64 = 15;
 const PER_PAGE: u32 = 100;
@@ -85,7 +85,7 @@ pub fn detect_github_org(url: &str) -> Option<String> {
 }
 
 /// Run the full-scan against a GitHub org. Pulls every public repo,
-/// fetches each `vibe-package.toml`, scores against the supplied
+/// fetches each `vibe.toml`, scores against the supplied
 /// query tokens. Returns a flat list of hits sorted by score (desc)
 /// then `(kind, name)` lex.
 pub fn full_scan_github_org(
@@ -117,20 +117,26 @@ pub fn full_scan_github_org(
             }
             Err(_) => continue,             // transient — skip this repo
         };
+        // A `vibe.toml` without a `[package]` table (project- or
+        // workspace-root manifest, redirect stub) is not a publishable
+        // package — skip it the same way a missing manifest is skipped.
+        let Ok(meta) = manifest.require_package() else {
+            continue;
+        };
         if let Some(k) = kind_filter
-            && manifest.package.kind != k
+            && meta.kind != k
         {
             continue;
         }
-        let (score, matched) = score_manifest(&manifest, query_tokens);
+        let (score, matched) = score_manifest(&manifest, meta, query_tokens);
         if score == 0 {
             continue;
         }
         hits.push(FullScanHit {
-            kind: manifest.package.kind,
-            name: manifest.package.name.clone(),
-            version: manifest.package.version.clone(),
-            description: manifest.package.description.clone(),
+            kind: meta.kind,
+            name: meta.name.clone(),
+            version: meta.version.clone(),
+            description: meta.description.clone(),
             score,
             matched_tokens: matched,
         });
@@ -254,9 +260,9 @@ fn fetch_package_manifest(
     owner: &str,
     repo: &str,
     token: Option<&str>,
-) -> std::result::Result<Option<PackageManifest>, FullScanError> {
+) -> std::result::Result<Option<Manifest>, FullScanError> {
     let url = format!(
-        "{}/repos/{}/{}/contents/vibe-package.toml",
+        "{}/repos/{}/{}/contents/vibe.toml",
         api_base.trim_end_matches('/'),
         owner,
         repo
@@ -306,7 +312,7 @@ fn fetch_package_manifest(
         url: url.clone(),
         message: format!("utf-8 decode: {e}"),
     })?;
-    let manifest: PackageManifest = toml::from_str(toml_str).map_err(|e| {
+    let manifest = Manifest::parse_str(toml_str).map_err(|e| {
         FullScanError::Malformed {
             url: url.clone(),
             message: format!("toml parse: {e}"),
@@ -360,15 +366,15 @@ fn decode_base64(input: &str) -> std::result::Result<Vec<u8>, &'static str> {
 /// tokens. Each distinct token that hits any of `name`,
 /// `description`, `keywords`, or `provides.capabilities` adds one to
 /// the score. Returns the score plus the actual tokens matched.
-fn score_manifest(manifest: &PackageManifest, query_tokens: &[String]) -> (u32, Vec<String>) {
+fn score_manifest(manifest: &Manifest, meta: &PackageMeta, query_tokens: &[String]) -> (u32, Vec<String>) {
     let mut haystack = String::new();
-    haystack.push_str(&manifest.package.name);
+    haystack.push_str(&meta.name);
     haystack.push(' ');
-    if let Some(d) = &manifest.package.description {
+    if let Some(d) = &meta.description {
         haystack.push_str(d);
         haystack.push(' ');
     }
-    for kw in &manifest.package.keywords {
+    for kw in &meta.keywords {
         haystack.push_str(kw);
         haystack.push(' ');
     }
@@ -530,7 +536,7 @@ mod tests {
             b"hi".to_vec(),
             b"abc".to_vec(),
             b"hello world".to_vec(),
-            b"vibe-package.toml".to_vec(),
+            b"vibe.toml".to_vec(),
             (0..=255u8).collect::<Vec<u8>>(),
         ] {
             let encoded = encode_base64_for_test(&body);

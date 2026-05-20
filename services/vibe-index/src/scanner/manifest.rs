@@ -1,6 +1,6 @@
-//! Parse `vibe-package.toml` (and `subskills/<path>/vibe-subskill.toml`)
+//! Parse `vibe.toml` (and `subskills/<path>/vibe-subskill.toml`)
 //! into [`VersionEntry`] field components. Mirrors the relevant subset
-//! of `vibe-core::manifest::PackageManifest`. PROP-005 §3.2 explained
+//! of `vibe-core::manifest::Manifest`. PROP-005 §3.2 explained
 //! the duplicate-not-import trade-off; the parity test `tests/
 //! content_hash_parity.rs` plus integration tests under
 //! `tests/scanner_e2e.rs` lock the byte shape against the reference.
@@ -18,7 +18,7 @@ use crate::types::{
     ObsoletesEntry, PackageKind, ProvidesEntry, RequiresAnyEntry, RequiresEntry, SubskillEntry,
 };
 
-/// Subset of `vibe-package.toml` we care about for the index.
+/// Subset of `vibe.toml` we care about for the index.
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct RawManifest {
@@ -149,9 +149,9 @@ pub struct RawBootSnippet {
 
 pub fn parse_manifest(bytes: &[u8]) -> Result<RawManifest> {
     let s = std::str::from_utf8(bytes)
-        .map_err(|e| Error::Malformed(format!("vibe-package.toml is not UTF-8: {e}")))?;
+        .map_err(|e| Error::Malformed(format!("vibe.toml is not UTF-8: {e}")))?;
     toml::from_str::<RawManifest>(s)
-        .map_err(|e| Error::Malformed(format!("vibe-package.toml: {e}")))
+        .map_err(|e| Error::Malformed(format!("vibe.toml: {e}")))
 }
 
 /// Convert `RawManifest` features into the [`FeaturesEntry`] shape —
@@ -444,7 +444,7 @@ group = ["a", "b"]
 
     #[test]
     fn parses_real_fixture() {
-        let body = include_bytes!("../../fixtures/golden-flow-wal-0.1.0/vibe-package.toml");
+        let body = include_bytes!("../../fixtures/golden-flow-wal-0.1.0/vibe.toml");
         let m = parse_manifest(body).unwrap();
         assert_eq!(m.package.name, "wal");
         assert_eq!(m.package.kind, PackageKind::Flow);

@@ -21,7 +21,3 @@ files = [
 [boot_snippet]
 filename = "20-flow-sync-from-code.md"
 source = "boot/20-flow-sync-from-code.md"
-
-[dependencies]
-required = []
-conflicts = []

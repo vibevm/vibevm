@@ -3,7 +3,7 @@
 //! Single pass, no backtracking. See [`crate`] module docs for the
 //! pinned limitations and when to upgrade to a SAT-style solver.
 
-use vibe_core::manifest::PackageManifest;
+use vibe_core::manifest::Manifest;
 use vibe_core::{CapabilityRef, PackageKind, PackageRef, VersionSpec};
 
 use crate::{
@@ -241,7 +241,7 @@ impl<P: DepProvider> NaiveDepSolver<P> {
 fn verify_capability_requires(
     state: &SolverState,
     pkgref: &PackageRef,
-    manifest: &PackageManifest,
+    manifest: &Manifest,
 ) -> Result<(), SolveError> {
     for cap_req in &manifest.requires.capabilities {
         let any_match = state
@@ -327,7 +327,7 @@ mod tests {
     use vibe_core::PackageRef;
 
     type ProviderEntries =
-        HashMap<(PackageKind, String), Vec<(semver::Version, PackageManifest)>>;
+        HashMap<(PackageKind, String), Vec<(semver::Version, Manifest)>>;
 
     /// In-memory provider for tests. Pre-seeded with `(kind, name) →
     /// list-of-(version, manifest)` pairs.
@@ -342,8 +342,8 @@ mod tests {
             }
         }
         fn seed(&self, kind: PackageKind, name: &str, manifest_toml: &str) {
-            let m: PackageManifest = toml::from_str(manifest_toml).unwrap();
-            let v = m.package.version.clone();
+            let m = Manifest::parse_str(manifest_toml).unwrap();
+            let v = m.require_package().unwrap().version.clone();
             self.entries
                 .borrow_mut()
                 .entry((kind, name.to_string()))
@@ -388,7 +388,7 @@ mod tests {
             kind: PackageKind,
             name: &str,
             version: &semver::Version,
-        ) -> Result<PackageManifest, crate::DepProviderError> {
+        ) -> Result<Manifest, crate::DepProviderError> {
             let key = (kind, name.to_string());
             let entries = self.entries.borrow();
             let candidates =
@@ -418,12 +418,16 @@ mod tests {
         version: &str,
         requires: &[&str],
     ) -> String {
+        // `[requires.packages]` is a TOML table — each key a bare
+        // `<kind>:<name>` pkgref, each value the version constraint.
+        // The test helpers pass entries in the `<kind>:<name>@<req>`
+        // shorthand; split on the `@` to render the table form.
         let mut s = manifest_minimal(kind, name, version);
-        s.push_str("\n[requires]\npackages = [\n");
+        s.push_str("\n[requires.packages]\n");
         for r in requires {
-            s.push_str(&format!("    \"{r}\",\n"));
+            let (pkg, req) = r.split_once('@').unwrap_or((r, "*"));
+            s.push_str(&format!("\"{pkg}\" = \"{req}\"\n"));
         }
-        s.push_str("]\n");
         s
     }
 
@@ -730,43 +734,6 @@ one_of = ["stack:a@^0.1", "stack:b@^0.1"]
         // First alternative gets enqueued; resolution succeeds.
         assert_eq!(graph.packages.len(), 2);
         assert!(graph.find(PackageKind::Stack, "a").is_some());
-    }
-
-    #[test]
-    fn legacy_dependencies_section_migrates_into_solver_graph() {
-        // Manifest in the v1 [dependencies] form must be parsed into
-        // [requires] before the solver sees it. PackageManifest::read
-        // does this, so MapProvider seeding via toml::from_str also
-        // gets it via normalize_legacy_deps in our test setup. Verify.
-        let legacy = r#"
-[package]
-name = "legacy"
-kind = "feat"
-version = "0.1.0"
-
-[dependencies]
-required = ["flow:wal@^0.1"]
-"#;
-        let mut m: PackageManifest = toml::from_str(legacy).unwrap();
-        m.normalize_legacy_deps();
-        let p = MapProvider::new();
-        p.entries
-            .borrow_mut()
-            .entry((PackageKind::Feat, "legacy".to_string()))
-            .or_default()
-            .push((m.package.version.clone(), m));
-        p.seed(
-            PackageKind::Flow,
-            "wal",
-            &manifest_minimal("flow", "wal", "0.1.0"),
-        );
-
-        let solver = NaiveDepSolver::new(p);
-        let graph = solver
-            .solve(&[PackageRef::parse("feat:legacy").unwrap()])
-            .unwrap();
-        assert_eq!(graph.packages.len(), 2);
-        assert!(graph.find(PackageKind::Flow, "wal").is_some());
     }
 
     #[test]

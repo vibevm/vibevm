@@ -81,7 +81,7 @@ pub enum Command {
     /// Compare a `vibe.lock` against the index and report outdated entries.
     Outdated(outdated::Args),
 
-    /// Insert/upsert a single index entry from a `vibe-package.toml` manifest.
+    /// Insert/upsert a single index entry from a `vibe.toml` manifest.
     Add(add::Args),
 
     /// Remove one or all versions of a package from the index.

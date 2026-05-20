@@ -22,7 +22,7 @@ use reqwest::header::{AUTHORIZATION, CONTENT_TYPE, HeaderValue};
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 use tracing::warn;
-use vibe_core::manifest::PackageManifest;
+use vibe_core::manifest::Manifest;
 use vibe_registry::compute_content_hash;
 use walkdir::WalkDir;
 
@@ -139,11 +139,19 @@ impl HookReport {
 /// `vibe-index::types::VersionEntry`'s serde shape).
 pub fn build_payload(
     outcome: &PublishOutcome,
-    manifest: &PackageManifest,
+    manifest: &Manifest,
     source_dir: &Path,
     registry: &str,
     indexed_at: DateTime<Utc>,
 ) -> Result<serde_json::Value, HookError> {
+    // The index hook only ever describes a publishable `[package]`
+    // manifest; reject a `[project]`/`[workspace]`-only `vibe.toml`.
+    let meta = manifest
+        .require_package()
+        .map_err(|e| HookError::Manifest {
+            path: source_dir.join(Manifest::FILENAME),
+            source: Box::new(e),
+        })?;
     let content_hash =
         compute_content_hash(source_dir).map_err(|source| HookError::ContentHash {
             path: source_dir.to_path_buf(),
@@ -198,19 +206,19 @@ pub fn build_payload(
 
     let mut payload = serde_json::json!({
         "schema_version": 1u32,
-        "kind": manifest.package.kind,
-        "name": manifest.package.name,
-        "version": manifest.package.version,
+        "kind": meta.kind,
+        "name": meta.name,
+        "version": meta.version,
         "content_hash": content_hash,
         "source_url": outcome.repo_url,
         "source_ref": outcome.tag,
         "registry": registry,
-        "license": manifest.package.license,
-        "authors": manifest.package.authors,
-        "description": manifest.package.description,
-        "homepage": manifest.package.homepage,
-        "keywords": manifest.package.keywords,
-        "describes": manifest.package.describes.as_ref().map(|p| p.to_string()),
+        "license": meta.license,
+        "authors": meta.authors,
+        "description": meta.description,
+        "homepage": meta.homepage,
+        "keywords": meta.keywords,
+        "describes": meta.describes.as_ref().map(|p| p.to_string()),
         "compatibility": serde_json::json!({
             "min_vibe_version": manifest.compatibility.min_vibe_version,
             "requires_kinds": manifest.compatibility.requires_kinds,
@@ -278,7 +286,7 @@ pub fn fire(
         return HookReport::dormant();
     };
     let endpoint = format!("{}/v1/packages", config.index_url.trim_end_matches('/'));
-    let manifest = match PackageManifest::read(source_dir.join(PackageManifest::FILENAME)) {
+    let manifest = match Manifest::read(source_dir.join(Manifest::FILENAME)) {
         Ok(m) => m,
         Err(e) => {
             warn!(target: "vibe_publish::post_hook", error = %e, "skipping index hook: manifest unreadable");

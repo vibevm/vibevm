@@ -4,7 +4,7 @@
 //! - Package identity: [`PackageRef`], [`PackageKind`], [`VersionSpec`].
 //! - Capability identity: [`CapabilityRef`] — abstract interfaces a package
 //!   can `provide` and another package can `require` (PROP-002 §2.9).
-//! - Manifest schemas: [`manifest::ProjectManifest`], [`manifest::PackageManifest`], [`manifest::Lockfile`].
+//! - Manifest schemas: [`manifest::Manifest`], [`manifest::Lockfile`].
 //! - Typed-value tags exchanged between task-graph nodes: [`values::ValueTag`].
 //!
 //! Spec: `VIBEVM-SPEC.md` §4, §5.3, §7.

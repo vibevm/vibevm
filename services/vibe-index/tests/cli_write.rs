@@ -33,7 +33,7 @@ license = "{license}"
 description = "test {kind}:{name}@{version}"
 "#
     );
-    let path = dir.join("vibe-package.toml");
+    let path = dir.join("vibe.toml");
     std::fs::write(&path, body).unwrap();
     std::fs::write(dir.join("README.md"), format!("# {name}@{version}\n")).unwrap();
     path

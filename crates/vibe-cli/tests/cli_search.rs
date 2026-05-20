@@ -98,7 +98,7 @@ async fn purls_handler(
 
 #[derive(Clone, Default)]
 struct GitHubCanned {
-    /// Map from "owner/repo" → vibe-package.toml content (raw TOML, not
+    /// Map from "owner/repo" → vibe.toml content (raw TOML, not
     /// yet base64-encoded). `None` => respond 404 (not a vibevm package).
     package_files: std::collections::HashMap<String, Option<String>>,
     /// Map from org → list of repos (each just a name; non-fork,
@@ -217,7 +217,7 @@ fn spawn_github_mock(canned: GitHubCanned) -> GitHubMock {
             let app = Router::new()
                 .route("/orgs/{org}/repos", get(org_repos_handler))
                 .route(
-                    "/repos/{owner}/{repo}/contents/vibe-package.toml",
+                    "/repos/{owner}/{repo}/contents/vibe.toml",
                     get(contents_handler),
                 )
                 .with_state(state);

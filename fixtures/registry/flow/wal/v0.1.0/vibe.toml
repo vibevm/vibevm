@@ -21,7 +21,3 @@ files = [
 [boot_snippet]
 filename = "10-flow-wal.md"
 source = "boot/10-flow-wal.md"
-
-[dependencies]
-required = []
-conflicts = []

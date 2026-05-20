@@ -19,7 +19,3 @@ files = [
 [boot_snippet]
 filename = "10-flow-vibevm-direct-push-smoke.md"
 source = "boot/10-flow-vibevm-direct-push-smoke.md"
-
-[dependencies]
-required = []
-conflicts = []

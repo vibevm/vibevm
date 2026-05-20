@@ -80,7 +80,7 @@ pub enum GitError {
 ///   uses to enumerate versions and read manifests *without* a clone (see
 ///   PROP-002 §2.12 — performance strategy). A resolver pass that touches
 ///   N candidate versions of a package must not clone all N; it walks
-///   `list_tags` then reads `vibe-package.toml` per candidate via
+///   `list_tags` then reads `vibe.toml` per candidate via
 ///   `fetch_file_at_ref`, and only `bootstrap`s the version it commits to.
 ///
 /// **Method names.** `bootstrap` (not `clone`) avoids collision with

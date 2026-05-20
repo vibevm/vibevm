@@ -24,7 +24,7 @@ use std::path::{Path, PathBuf};
 
 use thiserror::Error;
 use vibe_core::manifest::i18n::resolve_localised;
-use vibe_core::manifest::{LockedPackage, Lockfile, PackageManifest};
+use vibe_core::manifest::{LockedPackage, Lockfile, Manifest};
 use vibe_core::{PackageKind, PackageRef};
 use vibe_registry::CachedPackage;
 
@@ -426,8 +426,8 @@ pub fn plan_install_with_options(
     // delivery modes degrade to eager with a `tracing::warn!` until
     // M1.7 (`vibe-mcp`) lands; the manifest mode is preserved on the
     // ActiveSubskill record so the lockfile stays truthful.
-    let manifest_describes_type = manifest
-        .package
+    let manifest_describes_type = cached
+        .package_meta()
         .describes
         .as_ref()
         .map(|p| p.purl_type.clone());
@@ -1035,8 +1035,8 @@ pub fn plan_update(
     // --- For pristine-vs-edited verification we need a cache→project
     // mapping for the **old** install. Re-derive it from the old cache's
     // manifest.
-    let old_manifest_path = old_cache_dir.join(PackageManifest::FILENAME);
-    let old_manifest = PackageManifest::read(&old_manifest_path)?;
+    let old_manifest_path = old_cache_dir.join(Manifest::FILENAME);
+    let old_manifest = Manifest::read(&old_manifest_path)?;
     let mut old_source_lookup: std::collections::HashMap<PathBuf, PathBuf> =
         std::collections::HashMap::new();
     for file in &old_manifest.writes.files {
@@ -1610,7 +1610,7 @@ mod tests {
     fn seed_registry(root: &Path, manifest_toml: &str, content: &[(&str, &str)]) {
         let pkg_dir = root.join("flow/wal/v0.3.0");
         fs::create_dir_all(&pkg_dir).unwrap();
-        fs::write(pkg_dir.join("vibe-package.toml"), manifest_toml).unwrap();
+        fs::write(pkg_dir.join("vibe.toml"), manifest_toml).unwrap();
         fs::write(pkg_dir.join("README.md"), "# wal\n").unwrap();
         for (rel, body) in content {
             let path = pkg_dir.join(rel);
@@ -1888,7 +1888,7 @@ files = ["../escape.md"]
         let reg_dir = tempdir().unwrap();
         let pkg_dir = reg_dir.path().join("flow/wal/v0.3.0");
         fs::create_dir_all(&pkg_dir).unwrap();
-        fs::write(pkg_dir.join("vibe-package.toml"), manifest).unwrap();
+        fs::write(pkg_dir.join("vibe.toml"), manifest).unwrap();
         fs::write(pkg_dir.join("README.md"), "hi").unwrap();
         // We don't need the source file; plan_install rejects before file lookup.
 
@@ -1987,7 +1987,7 @@ files = ["../escape.md"]
             .join(name)
             .join(format!("v{version}"));
         fs::create_dir_all(&pkg_dir).unwrap();
-        fs::write(pkg_dir.join(PackageManifest::FILENAME), manifest_toml).unwrap();
+        fs::write(pkg_dir.join(Manifest::FILENAME), manifest_toml).unwrap();
         for (rel, body) in content {
             let path = pkg_dir.join(rel);
             fs::create_dir_all(path.parent().unwrap()).unwrap();
@@ -2197,8 +2197,8 @@ files = ["spec/flows/wal/A.md"]
 filename = "10-flow-wal.md"
 source = "boot/10-flow-wal.md"
 
-[requires]
-packages = ["flow:atomic-commits@^0.1"]
+[requires.packages]
+"flow:atomic-commits" = "^0.1"
 "#;
         seed_version(
             reg_dir.path(),

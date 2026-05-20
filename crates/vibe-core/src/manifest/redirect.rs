@@ -1,14 +1,14 @@
 //! `vibe-redirect.toml` — registry stub marker file.
 //!
 //! Schema: PROP-002 §2.4.2. A stub repo carries `vibe-redirect.toml` at
-//! its root *instead of* `vibe-package.toml`; the file points at an
+//! its root *instead of* `vibe.toml`; the file points at an
 //! external git URL where the package's actual content lives. The
 //! resolver, when fetching a manifest at `<stub_url>@<ref>`, falls
-//! through from `vibe-package.toml` to `vibe-redirect.toml`, parses
+//! through from `vibe.toml` to `vibe-redirect.toml`, parses
 //! the marker, and re-resolves against `target_url` at the
 //! pass-through-tag (`<ref>`) or pinned ref.
 //!
-//! The marker file is mutually exclusive with `vibe-package.toml` in
+//! The marker file is mutually exclusive with `vibe.toml` in
 //! the same repo at the same ref — both present is rejected as
 //! `AmbiguousStub`.
 
@@ -180,10 +180,10 @@ impl TryFrom<RedirectSectionWire> for RedirectSection {
     }
 }
 
-/// Try to interpret a `vibe-package.toml`-shaped byte slice as a stub
-/// marker. Used by the registry resolver after a `git archive` of
-/// `vibe-package.toml` came up empty: the same archive call is
-/// re-run with `vibe-redirect.toml` and the result fed here.
+/// Try to interpret a byte slice as a stub marker. Used by the
+/// registry resolver after a `git archive` of `vibe.toml` came up
+/// empty: the same archive call is re-run with `vibe-redirect.toml`
+/// and the result fed here.
 pub fn parse_redirect_bytes(bytes: &[u8]) -> Result<RedirectFile> {
     let text = std::str::from_utf8(bytes).map_err(|e| Error::BadDependencyDecl {
         input: RedirectFile::FILENAME.to_string(),

@@ -1,5 +1,5 @@
 //! `vibe-index add <data-dir>` — insert/upsert a single index entry
-//! from a `vibe-package.toml` manifest. The package's working
+//! from a `vibe.toml` manifest. The package's working
 //! directory (containing the manifest) is hashed to populate
 //! `content_hash`. Source URL / ref / commit are supplied via flags
 //! when the operator has them; otherwise sensible defaults apply.
@@ -17,11 +17,11 @@ use crate::server::lock::ServerLock;
 use crate::types::{NamingConvention, PackageKind, VersionEntry};
 
 #[derive(Debug, Parser)]
-#[command(about = "Insert/upsert a single index entry from a vibe-package.toml manifest.")]
+#[command(about = "Insert/upsert a single index entry from a vibe.toml manifest.")]
 pub struct Args {
     pub data_dir: PathBuf,
 
-    /// Path to the `vibe-package.toml` whose entry should be inserted.
+    /// Path to the `vibe.toml` whose entry should be inserted.
     /// The directory holding this file is hashed for `content_hash`.
     #[arg(long, value_name = "PATH")]
     pub manifest: PathBuf,

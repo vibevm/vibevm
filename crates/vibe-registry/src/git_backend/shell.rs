@@ -729,27 +729,27 @@ mod tests {
         run_or_panic(&src, &["config", "user.name", "Test"]);
 
         // Commit 1 + lightweight tag v0.1.0.
-        fs::write(src.join("vibe-package.toml"), "[package]\nname = \"x\"\nkind = \"flow\"\nversion = \"0.1.0\"\n").unwrap();
-        run_or_panic(&src, &["add", "vibe-package.toml"]);
+        fs::write(src.join("vibe.toml"), "[package]\nname = \"x\"\nkind = \"flow\"\nversion = \"0.1.0\"\n").unwrap();
+        run_or_panic(&src, &["add", "vibe.toml"]);
         run_or_panic(&src, &["commit", "-m", "0.1.0"]);
         run_or_panic(&src, &["tag", "v0.1.0"]);
 
         // Commit 2 + lightweight tag v0.2.0.
-        fs::write(src.join("vibe-package.toml"), "[package]\nname = \"x\"\nkind = \"flow\"\nversion = \"0.2.0\"\n").unwrap();
-        run_or_panic(&src, &["add", "vibe-package.toml"]);
+        fs::write(src.join("vibe.toml"), "[package]\nname = \"x\"\nkind = \"flow\"\nversion = \"0.2.0\"\n").unwrap();
+        run_or_panic(&src, &["add", "vibe.toml"]);
         run_or_panic(&src, &["commit", "-m", "0.2.0"]);
         run_or_panic(&src, &["tag", "v0.2.0"]);
 
         // Commit 3 + ANNOTATED tag v0.3.0 (this is the one that produces
         // a peeled `^{}` line in `ls-remote --tags` output).
-        fs::write(src.join("vibe-package.toml"), "[package]\nname = \"x\"\nkind = \"flow\"\nversion = \"0.3.0\"\n").unwrap();
-        run_or_panic(&src, &["add", "vibe-package.toml"]);
+        fs::write(src.join("vibe.toml"), "[package]\nname = \"x\"\nkind = \"flow\"\nversion = \"0.3.0\"\n").unwrap();
+        run_or_panic(&src, &["add", "vibe.toml"]);
         run_or_panic(&src, &["commit", "-m", "0.3.0"]);
         run_or_panic(&src, &["tag", "-a", "v0.3.0", "-m", "release 0.3.0"]);
 
         // Commit 4 + tag v1.0.0-rc.1.
-        fs::write(src.join("vibe-package.toml"), "[package]\nname = \"x\"\nkind = \"flow\"\nversion = \"1.0.0-rc.1\"\n").unwrap();
-        run_or_panic(&src, &["add", "vibe-package.toml"]);
+        fs::write(src.join("vibe.toml"), "[package]\nname = \"x\"\nkind = \"flow\"\nversion = \"1.0.0-rc.1\"\n").unwrap();
+        run_or_panic(&src, &["add", "vibe.toml"]);
         run_or_panic(&src, &["commit", "-m", "1.0.0-rc.1"]);
         run_or_panic(&src, &["tag", "v1.0.0-rc.1"]);
 
@@ -814,7 +814,7 @@ mod tests {
 
         let g = ShellGit::new();
         let bytes = g
-            .fetch_file_at_ref(&bare.to_string_lossy(), "v0.2.0", "vibe-package.toml")
+            .fetch_file_at_ref(&bare.to_string_lossy(), "v0.2.0", "vibe.toml")
             .expect("fetch ok");
         let text = String::from_utf8(bytes).unwrap();
         assert!(text.contains("version = \"0.2.0\""), "got: {text}");
@@ -828,7 +828,7 @@ mod tests {
 
         let g = ShellGit::new();
         let bytes = g
-            .fetch_file_at_ref(&bare.to_string_lossy(), "v0.3.0", "vibe-package.toml")
+            .fetch_file_at_ref(&bare.to_string_lossy(), "v0.3.0", "vibe.toml")
             .expect("fetch via annotated tag ok");
         let text = String::from_utf8(bytes).unwrap();
         assert!(text.contains("version = \"0.3.0\""));
@@ -844,7 +844,7 @@ mod tests {
         // Caller hands us a Windows-style path; the backend should
         // normalise to forward slash before talking to `git archive`.
         let bytes = g
-            .fetch_file_at_ref(&bare.to_string_lossy(), "v0.1.0", "vibe-package.toml")
+            .fetch_file_at_ref(&bare.to_string_lossy(), "v0.1.0", "vibe.toml")
             .expect("fetch ok");
         assert!(!bytes.is_empty());
     }
@@ -860,7 +860,7 @@ mod tests {
             .fetch_file_at_ref(
                 &bare.to_string_lossy(),
                 "v9.9.9",
-                "vibe-package.toml",
+                "vibe.toml",
             )
             .unwrap_err();
         match err {
@@ -895,9 +895,9 @@ mod tests {
         // requested one by name, ignoring the other.
         let tar = build_tar(&[
             ("a.txt", b"AAA\n"),
-            ("vibe-package.toml", b"hello world\n"),
+            ("vibe.toml", b"hello world\n"),
         ]);
-        let got = extract_single_file_from_tar(&tar, "vibe-package.toml")
+        let got = extract_single_file_from_tar(&tar, "vibe.toml")
             .expect("file extracted");
         assert_eq!(got, b"hello world\n");
 
@@ -907,8 +907,8 @@ mod tests {
 
     #[test]
     fn extract_single_file_from_tar_handles_dot_slash_prefix() {
-        let tar = build_tar(&[("./vibe-package.toml", b"prefixed\n")]);
-        let got = extract_single_file_from_tar(&tar, "vibe-package.toml").unwrap();
+        let tar = build_tar(&[("./vibe.toml", b"prefixed\n")]);
+        let got = extract_single_file_from_tar(&tar, "vibe.toml").unwrap();
         assert_eq!(got, b"prefixed\n");
     }
 
