@@ -1,0 +1,19 @@
+[package]
+name = "vibe-workspace"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+license-file.workspace = true
+publish.workspace = true
+repository.workspace = true
+homepage.workspace = true
+description = "Workspace discovery and the multi-package member model for vibevm"
+
+[dependencies]
+thiserror.workspace = true
+glob.workspace = true
+vibe-core.workspace = true
+
+[dev-dependencies]
+tempfile.workspace = true
