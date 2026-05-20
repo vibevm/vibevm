@@ -643,12 +643,12 @@ packages = []                       # e.g., ["flow:legacy-wal"]
 ### 7.4 Lockfile schema
 
 ```toml
-# vibe.lock at project root
+# vibe.lock — one per workspace, at the absolute root
 
 [meta]
 generated_by      = "vibe 0.2.0"
 generated_at      = "2026-04-24T12:00:00Z"
-schema_version    = 2
+schema_version    = 4
 solver            = "resolvo-0.x"                   # depsolver identity (see §8.6)
 root_dependencies = ["flow:wal", "stack:rust-cli"]  # mirror of `vibe.toml` `[requires].packages`
 
@@ -661,6 +661,7 @@ source_url      = "git@gitverse.ru:vibespecs/flow-wal.git"     # WHERE it was fe
 source_ref      = "v0.3.0"                                      # git ref (typically the tag)
 resolved_commit = "abc123…def"                                  # commit the ref pointed at
 content_hash    = "sha256:…"                                    # hash over the package tree — the IDENTITY
+source_kind     = "registry"                                    # registry | git | override | path
 boot_snippet    = "10-flow-wal.md"
 files_written   = [
     "spec/flows/wal/WAL-PROTOCOL.md",
@@ -679,7 +680,9 @@ version = "0.1.0"
 
 **Identity is `(kind, name, version, content_hash)`**, not the URL. `source_url` is informational — which URL answered the fetch on this particular install. A reinstall through a mirror with a different URL but the same `content_hash` is a no-op; a mismatched `content_hash` is a fatal error (integrity violation). This makes mirror-switching and host-migration invisible to the lockfile — the exact property whose absence turned Nix into a hostage of a single hosting provider.
 
-**Schema versioning.** `schema_version = 2` is introduced with the decentralized per-package registry refactor. `schema_version = 1` (the M0 / M1.1-initial form with a single `source = "git+…#<kind>/<name>/v<ver>"` field) is accepted read-only and migrated to v2 on the next `vibe install` / `vibe update`, with a user-visible notice.
+**`source_kind`** records which resolution path produced the entry — `registry` (the `[[registry]]` walk), `git` (a `[requires.packages]` git-source), `override` (a `[[override]]` pin), or `path` (a `[requires.packages]` path-source — typically a sibling workspace member, PROP-007 §2.5). For a `path` entry `source_url` is not a URL: it is the member's directory **relative to the workspace root**, so the lockfile stays portable across machines.
+
+**Schema versioning.** `schema_version` is `4`. vibevm is pre-release and breaks lockfile compatibility freely — there is no migration path and none is needed. A `vibe.lock` whose version is not the current one is rejected outright; `vibe install` regenerates it.
 
 The lockfile is the source of truth for what is installed. `vibe list` reads it. `vibe uninstall` reads it to know what files to remove. It is committed to git.
 
