@@ -1,7 +1,28 @@
 # WAL — Project Continuation State
-_Updated: 2026-05-20 (session-end — redirect-update shipped + workspace/naming design session)_
+_Updated: 2026-05-21 (M1.17 — Workspace: Phases 1–5 shipped on branch `m1.17-workspace`)_
 
 ## Current phase
+
+**M1.17 — Workspace: Phases 1–5 shipped (2026-05-21).** PROP-007 (multi-package workspaces) implemented across five phases on branch **`m1.17-workspace`** — not yet merged to `main`. Commits `b794e7a..b673d2b` plus the Phase 6 docs commits:
+
+1. **Phase 1 — unified manifest** (`b794e7a`, `9a190ff`). One `vibe.toml` per node replaces `ProjectManifest` + `PackageManifest`; the role is set by section (`[project]` ⊕ `[package]`, `[workspace]`). All manifest legacy deleted — the `vibe-package.toml` filename, `[dependencies]`, array-form `packages`, singleton `[registry]`. ~190 call-sites + 8 fixtures migrated. `VIBEVM-SPEC.md` §7 rewritten.
+2. **Phase 2 — workspace model** (`ece30a6`). New `vibe-workspace` crate: `Workspace::discover` bubbles to the absolute root, recursive nesting, glob members, cycle detection. No absolute path is ever persisted — members carry a portable `rel_path`.
+3. **Phase 3 — path-source + lockfile v4** (`ff21de3`, `e9a15d2`). `{ path = "../sibling" }` deps; resolver priority `override > path > git > registry`; `vibe.lock` schema v4 (`source_kind = "path"`), legacy v1/v2/v3 readers removed.
+4. **Phase 4 — `[workspace.versions]`** (`98795e8`). Named version placeholders; `{ version.var = "core" }`; recursive matryoshka resolution in the workspace loader (nearest enclosing `[workspace.versions]` wins).
+5. **Phase 5 — selective publish** (`b673d2b`). `vibe workspace publish` — topological walk of self-publishing members, `[origin]` marker + "contribute upstream" signalling, non-atomic stop-on-first-failure.
+6. **Phase 6 — docs.** `VIBEVM-SPEC.md` §4.2 / §7.6, `PROP-007` status, ROADMAP / CHANGELOG, docs sweep, this WAL.
+
+**State.** Branch `m1.17-workspace`, working tree clean (only `.claude/settings.local.json` untracked, pre-existing). Every phase landed clippy-clean (`cargo clippy --workspace --all-targets -- -D warnings`) with its test suite green. Test counts: vibe-core 142, vibe-workspace 24, vibe-registry 106, vibe-cli bin 124 + e2e 111, vibe-publish 51, vibe-resolver 48, vibe-check 25, vibe-mcp 22. `vibe check --path . --quiet` 0/0/0.
+
+**Known environment issue (unchanged, not a code bug):** `cargo test -p vibe-install` fails on this machine with `os error 740` — Windows Defender blocks the unsigned test binary. `vibe-install` was touched this milestone (the `SourceKind::Path` lockfile mapping) but verified via `cargo build -p vibe-install --tests` (clean).
+
+**Next — the remaining M1.17 piece.** Wire `vibe install` / `vibe build` to discover the workspace and run unified multi-member resolution (PROP-007 §6 question 3). It is gated on a per-member **materialisation-target** decision PROP-007 §2.4 / §3 leaves open — a genuine spec fork that wants owner input (when a dependency is resolved for member M, which member's `spec/` does its content land in?). The path-source resolver capability it builds on is already implemented and tested. Also deferred: `version = { workspace = true }` member-version inheritance (PROP-007 §6 q4) and the `--archive` publish lockdown. Then: merge `m1.17-workspace` to `main`; M1.18 (PROP-008, qualified naming) follows, after PROP-005 (index).
+
+**Outstanding manual step (owner-only, carried from 2026-05-12):** delete `https://gitverse.ru/vibespecs/vibevm-direct-push-smoke` via the GitVerse web UI (no API DELETE endpoint). Not blocking.
+
+---
+
+## Earlier checkpoint (kept for context — redirect-update + workspace/naming design, 2026-05-20)
 
 **Session-end checkpoint (2026-05-20).** Two slices, both on `main`:
 
