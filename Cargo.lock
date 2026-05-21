@@ -1963,19 +1963,7 @@ dependencies = [
 name = "vibe-install"
 version = "0.1.0-dev"
 dependencies = [
- "anyhow",
- "console",
- "dialoguer",
- "semver",
- "tempfile",
  "thiserror 2.0.18",
- "toml",
- "tracing",
- "vibe-core",
- "vibe-graph",
- "vibe-registry",
- "vibe-resolver",
- "walkdir",
 ]
 
 [[package]]

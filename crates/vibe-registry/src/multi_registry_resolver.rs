@@ -1198,9 +1198,8 @@ impl MultiRegistryResolver {
     /// and the first whose served content matches the pin wins. A
     /// disagreeing source is logged at `tracing::warn!` and skipped.
     /// If every source disagrees, the last one's [`CachedPackage`] is
-    /// returned and the install layer's
-    /// [`vibe_install::plan_install`] surfaces the
-    /// `ContentDrift` error against the lockfile pin.
+    /// returned — its `content_hash` differs from `expected_hash`, so the
+    /// caller can compare the two to detect drift against the lockfile pin.
     ///
     /// Override-resolved entries skip mirror dispatch entirely —
     /// `[[override]]` is a surgical pin to one specific URL/ref by

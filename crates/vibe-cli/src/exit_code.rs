@@ -47,15 +47,6 @@ mod tests {
     }
 
     #[test]
-    fn install_conflict_maps_to_three() {
-        let err = anyhow::Error::from(InstallError::BootSnippetConflict {
-            filename: "10-foo.md".into(),
-            existing_owner: Some("flow:bar".into()),
-        });
-        assert_eq!(code_of_install(err.downcast_ref().unwrap()), PACKAGE_CONFLICT);
-    }
-
-    #[test]
     fn install_declined_maps_to_five() {
         let err = anyhow::Error::from(InstallError::UserDeclined);
         assert_eq!(code_of_install(err.downcast_ref().unwrap()), USER_DECLINED);
