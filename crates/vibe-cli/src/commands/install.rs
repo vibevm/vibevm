@@ -10,25 +10,26 @@ use anyhow::{Context, Result, anyhow, bail};
 use dialoguer::Confirm;
 use serde::Serialize;
 use vibe_core::{PackageRef, VersionSpec};
-use vibe_core::manifest::{Lockfile, Manifest};
-use vibe_install::{
-    InstallError, InstallOptions, InstallPlan, RegisterMetadata, WriteKind, apply_install,
-    plan_install_with_options, register_installed_with_metadata,
-};
+use vibe_core::manifest::{Lockfile, LockedPackage, Manifest, SourceKind};
+use vibe_install::InstallError;
 use vibe_registry::{CachedPackage, LocalRegistry, MultiRegistryResolver};
 use vibe_resolver::{
     ActivationContext, DepSolver, FeatureExpansion, FeatureRequest, LocalRegistryProvider,
     MultiRegistryProvider, NaiveDepSolver, ResolvedNode, conditional::ConditionalPredicate,
     expand_features,
 };
+use vibe_workspace::Workspace;
+use vibe_workspace::install::{InstallOutcome, ResolvedDep, apply_resolution};
 
 use crate::cli::InstallArgs;
 use crate::output;
 
 pub fn run(ctx: &output::Context, args: InstallArgs) -> Result<()> {
     let project_root = resolve_project_root(&args.path)?;
+    let workspace = Workspace::discover(&project_root)
+        .context("discovering the workspace enclosing the project")?;
     let mut manifest = load_project_manifest(&project_root)?;
-    let mut lockfile = load_or_empty_lockfile(&project_root)?;
+    let mut lockfile = load_or_empty_lockfile(&workspace.root)?;
 
     // M1.15: `vibe install <pkgref> --git <url> --tag/branch/rev <ref>`
     // adds a git-source declaration to `[requires.packages]` before
@@ -48,7 +49,8 @@ pub fn run(ctx: &output::Context, args: InstallArgs) -> Result<()> {
     let root_feature_request = build_feature_request(&args);
 
     // Cache layout matches §8.3: `.vibe/cache/<kind>/<name>/<version>/`.
-    let cache_root = project_root.join(".vibe/cache");
+    // The cache lives at the absolute workspace root — one shared cache.
+    let cache_root = workspace.root.join(".vibe/cache");
     fs::create_dir_all(&cache_root)
         .with_context(|| format!("creating cache dir `{}`", cache_root.display()))?;
 
@@ -140,11 +142,6 @@ pub fn run(ctx: &output::Context, args: InstallArgs) -> Result<()> {
     //    activation context, since context probes (`if_present`,
     //    `if_provides`, `if_describes_match`) depend on the union of
     //    capabilities, interfaces, and PURLs across the graph.
-    struct Fetched {
-        cached: CachedPackage,
-        feature_expansion: FeatureExpansion,
-        meta: NodeInstallMeta,
-    }
     let mut fetched: Vec<Fetched> = Vec::with_capacity(graph.packages.len());
 
     for node in graph.iter() {
@@ -351,46 +348,31 @@ pub fn run(ctx: &output::Context, args: InstallArgs) -> Result<()> {
         }
     }
 
-    // 5. Build the final activation context once from the (possibly
-    //    expanded) graph.
-    let activation_context = build_activation_context(
-        fetched.iter().map(|f| &f.cached),
-        &project_root,
-        &language_chain,
-    );
-
-    // 5. Phase two — plan per node with feature expansion, activation
-    //    context, and language chain plumbed in.
-    let mut plans: Vec<InstallPlan> = Vec::new();
-    let mut node_meta: Vec<NodeInstallMeta> = Vec::new();
-    let mut feature_state: Vec<FeatureExpansion> = Vec::new();
-    let mut described_purls: Vec<Option<String>> = Vec::new();
+    // 5. Build the resolution — every fetched package as a `ResolvedDep`
+    //    the workspace orchestrator materialises. The loading model
+    //    materialises a package's tree verbatim, so the per-file
+    //    activation context is no longer consulted at install time.
     let resolved_language: Option<String> =
         language_chain.first().cloned().filter(|l| l != "en");
+    let resolution: Vec<ResolvedDep> = fetched
+        .iter()
+        .map(|f| ResolvedDep {
+            kind: f.cached.resolved.kind,
+            name: f.cached.resolved.name.clone(),
+            version: f.cached.resolved.version.clone(),
+            content_dir: f.cached.cache_dir.clone(),
+            manifest: f.cached.manifest.clone(),
+            requires: f
+                .meta
+                .dependencies
+                .iter()
+                .map(|p| (p.kind, p.name.clone()))
+                .collect(),
+        })
+        .collect();
 
-    for f in fetched {
-        let describes_string = f
-            .cached
-            .package_meta()
-            .describes
-            .as_ref()
-            .map(|p| p.to_string());
-        let opts = InstallOptions {
-            language_chain: language_chain.clone(),
-            feature_expansion: f.feature_expansion.clone(),
-            activation_context: activation_context.clone(),
-            describes: describes_string.clone(),
-        };
-        let plan = plan_install_with_options(&project_root, &lockfile, f.cached, &opts)?;
-        check_cross_plan_conflicts(&plans, &plan)?;
-        plans.push(plan);
-        node_meta.push(f.meta);
-        feature_state.push(f.feature_expansion);
-        described_purls.push(describes_string);
-    }
-
-    // Show combined plan.
-    present_plans(ctx, &project_root, &plans);
+    // Show the plan: the packages to materialise.
+    present_resolution(ctx, &resolution);
 
     // Confirm (unless --assume-yes or --json or not a TTY).
     let approved = if args.assume_yes || ctx.is_unattended() || ctx.is_json() {
@@ -402,15 +384,12 @@ pub fn run(ctx: &output::Context, args: InstallArgs) -> Result<()> {
             "no TTY available for confirmation; re-run with `--assume-yes` to apply this plan non-interactively"
         );
     } else {
-        let prompt = format!(
-            "Apply this install plan ({} file{} across {} package{})?",
-            total_writes(&plans),
-            if total_writes(&plans) == 1 { "" } else { "s" },
-            plans.len(),
-            if plans.len() == 1 { "" } else { "s" },
-        );
         Confirm::new()
-            .with_prompt(prompt)
+            .with_prompt(format!(
+                "Materialise {} package{} into vibedeps/ and regenerate boot artifacts?",
+                resolution.len(),
+                if resolution.len() == 1 { "" } else { "s" },
+            ))
             .default(false)
             .interact()
             .context("reading user confirmation")?
@@ -420,85 +399,51 @@ pub fn run(ctx: &output::Context, args: InstallArgs) -> Result<()> {
         return Err(InstallError::UserDeclined.into());
     }
 
-    // Apply each plan in turn; update lockfile after each success.
-    let mut applied: Vec<AppliedReport> = Vec::new();
-    for (idx, (plan, meta)) in plans.iter().zip(node_meta.iter()).enumerate() {
-        let label = plan.package_label();
-        ctx.step(&format!(
-            "Installing {label}{}",
-            if meta.is_root { "" } else { " (transitive)" }
-        ));
-        let written = apply_install(plan)?;
-        let written_count = written.len();
-        let metadata = RegisterMetadata {
-            features: feature_state[idx]
-                .active_features
-                .iter()
-                .cloned()
-                .collect(),
-            describes: described_purls[idx].clone(),
-            language: resolved_language.clone(),
-        };
-        register_installed_with_metadata(
-            &mut lockfile,
-            plan,
-            written.clone(),
-            crate::commands::init::current_timestamp_utc(),
-            meta.dependencies.clone(),
-            metadata,
-        );
-        applied.push(AppliedReport {
-            package: label,
-            files_written: written_count,
-            paths: written
-                .into_iter()
-                .map(|p| p.to_string_lossy().replace('\\', "/"))
-                .collect(),
-        });
-    }
+    // 6. Apply: materialise each package into vibedeps/ and regenerate
+    //    every node's boot artifacts.
+    let outcome = apply_resolution(&workspace, &resolution)
+        .context("materialising the resolution into the workspace")?;
 
-    // 6. Record top-level lockfile metadata: language chain + active
-    //    features. Language chain only when explicitly resolved (not
-    //    just default `en`).
+    // 7. Rebuild the lockfile from the fresh resolution — `vibe install`
+    //    re-resolves the whole graph, so the recorded package set is
+    //    replaced wholesale.
+    lockfile.packages.clear();
+    for f in &fetched {
+        lockfile
+            .packages
+            .push(locked_package_from_fetched(f, resolved_language.as_deref()));
+    }
+    lockfile.meta.generated_at = crate::commands::init::current_timestamp_utc();
+
+    // Record top-level lockfile metadata: the resolved language chain
+    // and the union of active features across the resolution.
     if !language_chain.is_empty() && language_chain != ["en"] {
         lockfile.meta.language_chain = language_chain.clone();
     }
     let mut active_features_global: BTreeSet<String> = BTreeSet::new();
-    for (plan, fe) in plans.iter().zip(feature_state.iter()) {
-        let pkg_label = format!("{}:{}", plan.cached.resolved.kind, plan.cached.resolved.name);
-        for f in &fe.active_features {
-            active_features_global.insert(format!("{pkg_label}/{f}"));
+    for f in &fetched {
+        let pkg_label = format!("{}:{}", f.cached.resolved.kind, f.cached.resolved.name);
+        for feat in &f.feature_expansion.active_features {
+            active_features_global.insert(format!("{pkg_label}/{feat}"));
         }
     }
     lockfile.meta.active_features = active_features_global.into_iter().collect();
 
-    // 7. Update `vibe.toml` `[requires].packages` with the CLI-supplied
-    //    roots. Default constraint shape mirrors Cargo / npm / Poetry:
-    //    when the CLI form had no version (`flow:wal`), we resolve to
-    //    a concrete version and write the caret form (`flow:wal@^0.1.0`).
-    //    When the CLI form had an explicit constraint (`@^0.1`,
-    //    `@=0.2.0`, etc.), we preserve it verbatim — the user already
-    //    declared their intent. `--exact` overrides both: it always
-    //    pins to `=<resolved>` regardless of CLI form.
-    //
-    //    De-dup by `(kind, name)`; a repeat install with a new
-    //    constraint replaces the old entry. No-op when there were no
-    //    CLI args (install-from-manifest mode) — the manifest is
-    //    already authoritative in that case.
+    // 8. Update `vibe.toml` `[requires].packages` with the CLI-supplied
+    //    roots — caret by default, `--exact` pins `=<resolved>`, an
+    //    explicit constraint is preserved verbatim. De-dup by
+    //    `(kind, name)`; a no-op in install-from-manifest mode.
     let finalized_cli_roots: Vec<PackageRef> = cli_roots
         .iter()
         .map(|cli_pkgref| {
-            let resolved = plans
+            let resolved = fetched
                 .iter()
-                .find(|p| {
-                    p.cached.resolved.kind == cli_pkgref.kind
-                        && p.cached.resolved.name == cli_pkgref.name
+                .find(|f| {
+                    f.cached.resolved.kind == cli_pkgref.kind
+                        && f.cached.resolved.name == cli_pkgref.name
                 })
-                .map(|p| &p.cached.resolved.version)
-                .expect(
-                    "every CLI root has a corresponding plan after resolve+plan; \
-                     resolver invariant",
-                );
+                .map(|f| &f.cached.resolved.version)
+                .expect("every CLI root has a fetched package — resolver invariant");
             finalize_pkgref_for_manifest(cli_pkgref, resolved, args.exact)
         })
         .collect();
@@ -511,12 +456,8 @@ pub fn run(ctx: &output::Context, args: InstallArgs) -> Result<()> {
         manifest.write(project_root.join(Manifest::FILENAME))?;
     }
 
-    // 8. Mirror the manifest's declared roots into `meta.root_dependencies`
-    //    so the lockfile remains a self-contained snapshot. PROP-002
-    //    §2.7: `root_dependencies` mirrors `vibe.toml`
-    //    `[requires].packages`; in CLI mode we feed the finalized
-    //    pkgrefs (with caret / `--exact` applied) so the two files
-    //    agree byte-for-byte on the constraint shape.
+    // 9. Mirror the declared roots into `meta.root_dependencies` so the
+    //    lockfile stays a self-contained snapshot (PROP-002 §2.7).
     let lock_roots: &[PackageRef] = if cli_roots.is_empty() {
         &roots
     } else {
@@ -524,18 +465,10 @@ pub fn run(ctx: &output::Context, args: InstallArgs) -> Result<()> {
     };
     merge_root_dependencies(&mut lockfile, lock_roots);
 
-    // Save lockfile on disk.
-    lockfile.write(project_root.join(Lockfile::FILENAME))?;
+    lockfile.write(workspace.lockfile_path())?;
 
-    emit_report(ctx, &applied, &project_root)?;
+    emit_report(ctx, &outcome)?;
     Ok(())
-}
-
-#[derive(Debug, Serialize)]
-struct AppliedReport {
-    package: String,
-    files_written: usize,
-    paths: Vec<String>,
 }
 
 /// Per-node install metadata threaded from the solver into the lockfile
@@ -543,6 +476,14 @@ struct AppliedReport {
 struct NodeInstallMeta {
     dependencies: Vec<PackageRef>,
     is_root: bool,
+}
+
+/// One resolved + fetched package, with the feature expansion and the
+/// per-node metadata gathered alongside it during resolution.
+struct Fetched {
+    cached: CachedPackage,
+    feature_expansion: FeatureExpansion,
+    meta: NodeInstallMeta,
 }
 
 /// Build a `kind:name@=<exact-version>` pkgref for fetching the version
@@ -878,149 +819,101 @@ pub(crate) fn build_install_resolver(
     Ok(InstallResolver::Multi(Box::new(mrr)))
 }
 
-fn check_cross_plan_conflicts(prior: &[InstallPlan], new: &InstallPlan) -> Result<()> {
-    use std::collections::HashSet;
-    let prior_targets: HashSet<&PathBuf> =
-        prior.iter().flat_map(|p| p.writes.iter().map(|w| &w.target_rel)).collect();
-    for w in &new.writes {
-        if prior_targets.contains(&w.target_rel) {
-            bail!(
-                "two packages in this install would write to the same path `{}`",
-                w.target_rel.display()
-            );
-        }
+/// Build a [`LockedPackage`] from a fetched node. The lockfile records the
+/// resolution provenance; the materialised footprint is the `vibedeps/`
+/// slot — deterministic from `(kind, name, version)` — so `files_written`
+/// stays empty and the `NN-` `boot_snippet` filename is retired.
+fn locked_package_from_fetched(f: &Fetched, language: Option<&str>) -> LockedPackage {
+    let c = &f.cached;
+    let source_kind = if c.overridden {
+        SourceKind::Override
+    } else if c.is_path_source {
+        SourceKind::Path
+    } else if c.is_git_source {
+        SourceKind::Git
+    } else {
+        SourceKind::Registry
+    };
+    LockedPackage {
+        kind: c.resolved.kind,
+        name: c.resolved.name.clone(),
+        version: c.resolved.version.clone(),
+        registry: c.registry_name.clone(),
+        source_url: c.source_uri.clone(),
+        source_ref: c.source_ref.clone(),
+        resolved_commit: c.resolved_commit.clone(),
+        content_hash: c.content_hash.clone(),
+        boot_snippet: None,
+        files_written: Vec::new(),
+        dependencies: f.meta.dependencies.clone(),
+        overridden: c.overridden,
+        source_kind: Some(source_kind),
+        via_redirect: c.via_redirect.clone(),
+        features: f.feature_expansion.active_features.iter().cloned().collect(),
+        subskills_active: Vec::new(),
+        describes: c.package_meta().describes.as_ref().map(|p| p.to_string()),
+        language: language.map(str::to_string),
     }
-    let prior_snippets: HashSet<&str> = prior
-        .iter()
-        .filter_map(|p| p.boot_snippet_filename.as_deref())
-        .collect();
-    if let Some(snippet) = new.boot_snippet_filename.as_deref()
-        && prior_snippets.contains(snippet)
-    {
-        bail!("two packages in this install share boot snippet filename `{snippet}`");
-    }
-    Ok(())
 }
 
-fn total_writes(plans: &[InstallPlan]) -> usize {
-    plans.iter().map(|p| p.writes.len()).sum()
-}
-
-fn present_plans(ctx: &output::Context, project_root: &Path, plans: &[InstallPlan]) {
+fn present_resolution(ctx: &output::Context, resolution: &[ResolvedDep]) {
     if ctx.is_json() {
         #[derive(Serialize)]
-        struct JsonPlanEntry<'a> {
+        struct PlanEntry {
             package: String,
             version: String,
-            source_url: &'a str,
-            content_hash: &'a str,
-            writes: Vec<String>,
-            boot_snippet: Option<&'a str>,
         }
-        let payload: Vec<JsonPlanEntry<'_>> = plans
+        let payload: Vec<PlanEntry> = resolution
             .iter()
-            .map(|p| JsonPlanEntry {
-                package: format!(
-                    "{}:{}",
-                    p.cached.resolved.kind, p.cached.resolved.name
-                ),
-                version: p.cached.resolved.version.to_string(),
-                source_url: p.cached.source_uri.as_str(),
-                content_hash: p.cached.content_hash.as_str(),
-                writes: p
-                    .writes
-                    .iter()
-                    .map(|w| w.target_rel.to_string_lossy().to_string())
-                    .collect(),
-                boot_snippet: p.boot_snippet_filename.as_deref(),
+            .map(|d| PlanEntry {
+                package: format!("{}:{}", d.kind, d.name),
+                version: d.version.to_string(),
             })
             .collect();
-        let envelope = serde_json::json!({
+        let _ = ctx.emit_json(&serde_json::json!({
             "command": "install:plan",
-            "plans": payload,
-        });
-        let _ = ctx.emit_json(&envelope);
+            "packages": payload,
+        }));
         return;
     }
     if ctx.is_quiet() {
         return;
     }
-    for plan in plans {
-        ctx.heading(&format!("\nPlan for {}", plan.package_label()));
-        for w in &plan.writes {
-            let prefix = match &w.kind {
-                WriteKind::Regular => "create".to_string(),
-                WriteKind::BootSnippet => "boot  ".to_string(),
-                WriteKind::SubskillContent { subskill_path } => {
-                    format!("sub:{subskill_path}")
-                }
-                WriteKind::SubskillBootSnippet { subskill_path } => {
-                    format!("sub-boot:{subskill_path}")
-                }
-            };
-            let rel = w
-                .target_abs
-                .strip_prefix(project_root)
-                .unwrap_or(&w.target_abs);
-            let rel_s = rel.to_string_lossy().replace('\\', "/");
-            println!("  {prefix}  {}", rel_s);
-        }
-        if !plan.active_subskills.is_empty() {
-            ctx.step(&format!(
-                "  ↳ {} subskill{} active: {}",
-                plan.active_subskills.len(),
-                if plan.active_subskills.len() == 1 {
-                    ""
-                } else {
-                    "s"
-                },
-                plan.active_subskills
-                    .iter()
-                    .map(|s| s.path.as_str())
-                    .collect::<Vec<_>>()
-                    .join(", "),
-            ));
-        }
+    ctx.heading(&format!(
+        "\nMaterialising {} package{} into vibedeps/:",
+        resolution.len(),
+        if resolution.len() == 1 { "" } else { "s" },
+    ));
+    for d in resolution {
+        println!("  {}:{}@{}", d.kind, d.name, d.version);
     }
     println!();
 }
 
-fn emit_report(
-    ctx: &output::Context,
-    applied: &[AppliedReport],
-    project_root: &Path,
-) -> Result<()> {
+fn emit_report(ctx: &output::Context, outcome: &InstallOutcome) -> Result<()> {
     if ctx.is_json() {
-        let payload = serde_json::json!({
+        ctx.emit_json(&serde_json::json!({
             "ok": true,
             "command": "install",
-            "project": project_root.display().to_string(),
-            "installed": applied,
-        });
-        ctx.emit_json(&payload)?;
+            "materialised": outcome.materialised,
+            "nodes_regenerated": outcome.nodes_regenerated,
+        }))?;
         return Ok(());
     }
-    let total_files: usize = applied.iter().map(|a| a.files_written).sum();
     if ctx.is_quiet() {
         ctx.summary(&format!(
-            "vibe install: {} package{}, {total_files} file{} written",
-            applied.len(),
-            if applied.len() == 1 { "" } else { "s" },
-            if total_files == 1 { "" } else { "s" },
+            "vibe install: {} package{} materialised",
+            outcome.materialised.len(),
+            if outcome.materialised.len() == 1 { "" } else { "s" },
         ));
         return Ok(());
     }
-    for a in applied {
-        for p in &a.paths {
-            ctx.created(p);
-        }
-    }
     ctx.summary(&format!(
-        "\nInstalled {} package{} ({} file{} written).",
-        applied.len(),
-        if applied.len() == 1 { "" } else { "s" },
-        total_files,
-        if total_files == 1 { "" } else { "s" },
+        "\nMaterialised {} package{} into vibedeps/; regenerated boot artifacts for {} node{}.",
+        outcome.materialised.len(),
+        if outcome.materialised.len() == 1 { "" } else { "s" },
+        outcome.nodes_regenerated.len(),
+        if outcome.nodes_regenerated.len() == 1 { "" } else { "s" },
     ));
     Ok(())
 }
