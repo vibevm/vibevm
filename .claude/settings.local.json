@@ -1,8 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(rm -rf crates/vibe-wire/src/generated/*)",
-      "Bash(cargo xtask *)"
-    ]
-  }
-}

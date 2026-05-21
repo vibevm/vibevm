@@ -16,6 +16,9 @@ Cargo.lock.bak
 Thumbs.db
 desktop.ini
 
+# Claude Code per-developer local settings — machine-scoped, not shared.
+.claude/settings.local.json
+
 # Reference sources and author's book chapters — cloned/placed externally,
 # not part of the vibevm distribution. Kept out of git both to respect
 # upstream copyright and to keep the public repo lean.
