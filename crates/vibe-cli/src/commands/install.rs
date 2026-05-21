@@ -81,6 +81,10 @@ pub fn run(ctx: &output::Context, args: InstallArgs) -> Result<()> {
         .collect::<Result<_>>()?;
 
     let roots: Vec<PackageRef> = if cli_roots.is_empty() {
+        // Legacy migration (case c): a project predating `[requires]`
+        // whose entry manifest is empty but whose lockfile snapshot is
+        // not — seed the entry manifest from `meta.root_dependencies`,
+        // persisted before solving so a panic mid-solve cannot lose it.
         if manifest.requires.packages.is_empty()
             && manifest.requires.git_packages.is_empty()
             && !lockfile.meta.root_dependencies.is_empty()
@@ -94,23 +98,38 @@ pub fn run(ctx: &output::Context, args: InstallArgs) -> Result<()> {
                 .requires
                 .packages
                 .clone_from(&lockfile.meta.root_dependencies);
-            // Persist the migration before solving, so a panic mid-solve
-            // does not lose the snapshot we just inferred.
             manifest.write(project_root.join(Manifest::FILENAME))?;
         }
-        if manifest.requires.packages.is_empty() && manifest.requires.git_packages.is_empty() {
+        // Unified resolution (PROP-009 §2.7): the root set is the union
+        // of every workspace node's `[requires]`. Re-discover so the
+        // migration above, an earlier `--git` declaration, and any
+        // `[workspace.versions]` placeholders are all reflected; a
+        // standalone project is a one-node workspace, so this degenerates
+        // to "just the entry node". The resolver dispatches each pkgref
+        // through the right path internally (override > git > registry).
+        let discovered = Workspace::discover(&project_root)
+            .context("re-discovering the workspace to collect every member's [requires]")?;
+        let mut all: Vec<PackageRef> = Vec::new();
+        let mut seen: std::collections::HashSet<(_, String)> =
+            std::collections::HashSet::new();
+        for (_, node) in discovered.iter_nodes() {
+            for p in &node.requires.packages {
+                if seen.insert((p.kind, p.name.clone())) {
+                    all.push(p.clone());
+                }
+            }
+            for g in &node.requires.git_packages {
+                if seen.insert((g.kind, g.name.clone())) {
+                    all.push(PackageRef::new(g.kind, g.name.clone(), VersionSpec::Latest)?);
+                }
+            }
+        }
+        if all.is_empty() {
             bail!(
                 "no packages to install. Pass `<kind>:<name>[@<version>] …` on the command \
                  line, or add entries to `[requires].packages` in `{}/vibe.toml`.",
                 project_root.display()
             );
-        }
-        // Combine registry-resolved + git-source declarations into one
-        // root set. Resolver dispatches each pkgref through the right
-        // path internally (override > git-source > registry-walk).
-        let mut all = manifest.requires.packages.clone();
-        for g in &manifest.requires.git_packages {
-            all.push(PackageRef::new(g.kind, g.name.clone(), VersionSpec::Latest)?);
         }
         all
     } else {
