@@ -1,73 +1,57 @@
 # CONTINUE — cold-resume checkpoint
 
-_Written: 2026-05-21 session-end. Owner-readable, self-contained. Pick this up with zero prior context._
+_Written: 2026-05-21 checkpoint. Owner-readable, self-contained. Pick this up with zero prior context._
 
 ---
 
 ## TL;DR
 
-**This session implemented M1.17 — Workspace (multi-package projects), the [PROP-007](spec/modules/vibe-workspace/PROP-007-workspace.md) milestone — across six phases, on the branch `m1.17-workspace`.** The complete workspace data model and tooling shipped: one unified `vibe.toml` per node, the `vibe-workspace` discovery engine, path-source dependencies + `vibe.lock` schema v4, `[workspace.versions]` placeholders, and the `vibe workspace publish` command. Ten commits (`b794e7a..3cb2a03`) plus the session-end docs commits; every phase landed clippy-clean with its tests green — **703 hermetic tests** across the workspace, `vibe check` 0/0/0.
+**This session reopened the one question M1.17 deferred — and it became the design of the next milestone, M1.18.** PROP-007 §6 q3 ("when a dependency is resolved for member M, which member's `spec/` does its content land in?") proved to be a redesign of vibevm's whole **loading model**, not a directory choice. The session closed the **design + contract** phase:
 
-**One piece of M1.17 is deliberately deferred:** wiring `vibe install` / `vibe build` to discover the workspace and run unified multi-member resolution. It is gated on a design decision PROP-007 leaves open — see **Deferred** below.
+- **[`spec/design/loading-and-boot-model.md`](spec/design/loading-and-boot-model.md)** — the non-normative rationale (the static/dynamic-linking metaphor, four principles, the fork-by-fork record).
+- **[PROP-009](spec/modules/vibe-workspace/PROP-009-loading-model.md)** — the contract. DRAFT, but every §5 open question is resolved — **ready for M1.18 implementation**.
 
-**The branch is local** — not pushed to origin, not merged to `main`. It awaits the owner's review.
+**Next session: implement M1.18.** See "What to do next" — it is a full-milestone effort, the scale of PROP-007's implementation, and must be done *additively* to keep the build green.
 
-The detailed implementation record is **[PROP-007 §9](spec/modules/vibe-workspace/PROP-007-workspace.md#impl)**. The canonical living state is **[`spec/WAL.md`](spec/WAL.md)** — if it disagrees with this file, trust the WAL.
+The branch is **`m1.17-workspace`**, local — M1.17 (shipped) plus this session's six docs commits. Not pushed, not merged: the owner's call.
 
----
+The canonical living state is **[`spec/WAL.md`](spec/WAL.md)** — trust it over this file if they diverge.
 
 ## Where work stands
 
-- **Branch:** `m1.17-workspace` — 10 commits ahead of `main` (`8de20c2`), plus this session-end's docs commits. **Local only — `origin` does not have this branch.**
-- **`main`** is untouched, still at `8de20c2`.
-- **Working tree:** clean (only `.claude/settings.local.json` untracked — pre-existing, not part of this work).
-- **Active blocker:** none for the shipped work. The one remaining M1.17 piece is blocked on an owner decision — see **Deferred** #1.
-- **Gates:** `cargo clippy --workspace --all-targets -- -D warnings` clean; 703 hermetic tests pass, 0 failures; `vibe check --path . --quiet` reports 0/0/0.
+- **Branch:** `m1.17-workspace` — local only, not on origin. Carries M1.17 (the shipped workspace milestone, `b794e7a..3cb2a03`), the PROP-009 design + contract (`b48ba7f`, `1c1c19c`, `72ac624`), and this checkpoint.
+- **`main`** is untouched at `8de20c2`.
+- **Working tree:** clean (only `.claude/settings.local.json` untracked — pre-existing).
+- **Gates:** the full workspace test suite is green this session (vibe-core 142, vibe-cli 124 + 111 + 11 + 15, vibe-registry 106 + 5 + 7, vibe-publish 51 + 5, vibe-resolver 48, vibe-workspace 31, vibe-check 25, vibe-mcp 22; vibe-install 18 — see Non-obvious finding #1). The PROP-009 work is docs-only — no code touched.
+- **Active blocker:** none. M1.18 implementation can begin.
 
-## What was built — the six phases
+## What this session produced — the loading model
 
-Brief; the full account is [PROP-007 §9](spec/modules/vibe-workspace/PROP-007-workspace.md#impl).
+The flat boot model (`VIBEVM-SPEC.md` §6 — one `spec/boot/NN-*.md` directory, one entry point) does not survive a workspace, which has N nodes, N entry points, N boot sequences. PROP-009 replaces it. The owner's hard constraint: installing a dependency must never modify any node's authored spec.
 
-1. **Phase 1 — unified manifest** (`b794e7a`, `9a190ff`). One `Manifest` type / one `vibe.toml` per node replaces `ProjectManifest` + `PackageManifest`; the role is the set of sections present (`[project]` ⊕ `[package]`, `[workspace]`). **All manifest legacy deleted** — the `vibe-package.toml` filename, `[dependencies]`, array-form `packages`, the singleton `[registry]`. ~190 downstream call-sites + 8 fixtures migrated.
-2. **Phase 2 — workspace model** (`ece30a6`). New `vibe-workspace` crate: `Workspace::discover` bubbles to the absolute root, recursive nesting, glob members, cycle detection. A standalone project is a degenerate workspace, so discovery is universal.
-3. **Phase 3 — path-source + lockfile v4** (`ff21de3`, `e9a15d2`). `{ path = "../sibling" }` deps; resolver priority `override > path > git > registry`; `vibe.lock` schema v4 (`source_kind = "path"`), legacy v1/v2/v3 readers removed.
-4. **Phase 4 — `[workspace.versions]`** (`98795e8`). Named version placeholders; `{ version.var = "core" }`; recursive matryoshka resolution in the workspace loader.
-5. **Phase 5 — `vibe workspace publish`** (`b673d2b`). Selective publish (`[package].publish`), topological walk, `[origin]` marker + "contribute upstream" signalling, non-atomic.
-6. **Phase 6 — documentation** (`047f92d`, `10406a1`, `3cb2a03`, + session-end). `VIBEVM-SPEC.md` §4.2 / §7.6, PROP-007 §9, ROADMAP / CHANGELOG, the `docs/` + `manual-tests/` sweep, `docs/commands/workspace-publish.md`, WAL, this file.
+**The model in one breath.** Two physically separate trees — authored `spec/` (only the author writes it) and a committed `vibedeps/` (only `vibe` writes it; one slot `vibedeps/<kind>-<name>/<version>/` per resolved package, the package's tree verbatim). The boot sequence is *computed* per node from the unified resolution — inherited foundation + own boot + dependency boot + overrides. `vibe install` generates, per entry-point node, `spec/boot/INLINE.md` (verbatim concatenation of `inline`-typed contributions, read first — the priority lane) and `spec/boot/INDEX.md` (a TOML manifest of `static` paths + `dynamic` INCLUDE pointers). Three inclusion types — `inline` / `static` / `dynamic` — set per dependency in `vibe.toml` (`link = …`, default `static`). The `NN-` prefix is retired; `vibe` orders by category. `[writes]` is retired. `vibe reinstall [<path>] [--force]` regenerates. One computed-view engine serves both boot and the effective spec. The model is uniform — a single-package project is a degenerate workspace.
 
-## What to do first in the next session
+The four design forks and the eight §5 contract questions were all resolved with the owner — the normative record is PROP-009 §5; the lore is the design doc §5.
 
-The branch is review-ready. Two natural pickups:
+## What to do next — implement M1.18
 
-1. **Owner review of `m1.17-workspace`.** It is the entire M1.17 model + tooling. After review, the owner decides whether to push to origin and merge to `main`.
-2. **The remaining M1.17 piece — workspace-aware `vibe install`** — once the owner answers the materialisation-target question (Deferred #1). Recipe: read PROP-007 §2.4 / §3, §6 question 3, and §9.3. `vibe install`'s entry point is `crates/vibe-cli/src/commands/install.rs::run`; `resolve_project_root` there would become a `vibe_workspace::Workspace::discover` call; the resolve would gather every member's `[requires]` (registry + git + `path_packages` → `vibe_registry::ResolvedPathDep` fed to `MultiRegistryResolver::with_path_packages`); one `vibe.lock` written at the absolute root.
+PROP-009 §7 lists eight phases. **Read PROP-009 §2 (decisions) and §7 (phase plan) first.** The load-bearing implementation note discovered this session:
 
----
+> The §7 phases are a *logical* decomposition, **not** a sequence of independently-green commits. "Retire `[writes]`" (Phase 1) cannot land with a green build on its own — `vibe install` (`crates/vibe-install/src/lib.rs`) is built entirely on `manifest.writes.files`. **Implement additively:** add the new model (the `link` field, `[boot_snippet].category`, the `vibedeps/` materialisation, the computed-view engine, `INLINE.md` / `INDEX.md` generation) *beside* the old `[writes]` / `NN-` path; switch `vibe install` over; then delete the old path. This is the strategy PROP-007 Phase 3 used for path-source. The first realistic green slice is schema + materialisation + artifact generation together.
 
-## Deferred — with rationale
+The computed-view engine likely extends `vibe-workspace` (it already owns `Workspace::discover` and the `[workspace.versions]` finalize pass) or lands as a new `vibe-boot` crate — PROP-009 §3 leaves this to implementation time.
 
-Three pieces of PROP-007 were deliberately not built this milestone. None is an oversight; each is recorded here, in [PROP-007 §9.3](spec/modules/vibe-workspace/PROP-007-workspace.md#impl-deferred), and as an open question in [PROP-007 §6](spec/modules/vibe-workspace/PROP-007-workspace.md#open).
-
-1. **Workspace-aware `vibe install` / `vibe build`.** The one remaining piece of PROP-007's intent — discovering the workspace and running unified multi-member resolution. **Why deferred:** the concrete behaviour turns on a *per-member materialisation target* — when a dependency is resolved for member M, into which member's `spec/` does its content land? PROP-007 §2.4 / §3 sketch command-bubbling and unified resolution but do not specify this; it is a genuine design fork that wants an explicit owner decision, not an improvised one. The path-source resolver capability it builds on **is** implemented and tested (Phase 3). **Standalone single-package projects — every project today — are unaffected: `vibe install` works exactly as before.**
-2. **`version = { workspace = true }`** — a member inheriting its own `[package].version` from the workspace. **Why deferred:** PROP-007 §2.6 names the feature but defines no source table for the inherited version — cargo reads `[workspace.package].version`, a table PROP-007 never specifies. Shipping it means extending the spec; that is a decision to take explicitly. The `[workspace.versions]` named placeholders (shipped) already cover the owner's stated "write the version once" use case.
-3. **Publish-signalling polish** (PROP-007 §2.8) — `--archive` (the GitHub `archived = true` lockdown and its unarchive→push→archive re-publish cycle), `has_issues = false` at repo creation, the `published_repos = "read-only" | "open"` toggle, and multi-registry fan-out. **Why deferred:** the `[origin]` marker + README banner + PR template + description (all shipped) already make a published copy unmistakably a generated read-only copy; these remaining layers are incremental host-API hardening, and `--archive`'s re-publish cycle is a feature in its own right.
-
-## Requires owner attention
-
-1. **`spec/boot/00-core.md` line 38** still reads `package manifest = vibe-package.toml`. That is factually stale after Phase 1 — there is no `vibe-package.toml` any more. But `00-core.md` is a **user-owned boot file** vibevm tooling must not edit (it is on the must-not-touch list in that very file). **The owner should change that line to `vibe.toml`.**
-2. **Branch `m1.17-workspace` is local** — not pushed to origin, not merged to `main`. The work was kept on a branch per the owner's instruction. Pushing / merging is the owner's call after review.
-3. **The materialisation-target decision** ([PROP-007 §6 question 3](spec/modules/vibe-workspace/PROP-007-workspace.md#open)) is the gate on the remaining workspace-aware `vibe install` work. It needs an owner answer before that work can proceed well.
-4. **(Carried from 2026-05-12.)** Delete `https://gitverse.ru/vibespecs/vibevm-direct-push-smoke` via the GitVerse web UI — GitVerse has no API DELETE endpoint. Not blocking.
-
----
+**Gate before Phase 7:** the `VIBEVM-SPEC.md` edits (§6, §4.2, §4.6, §13.1) need explicit owner sanction — not yet granted. Phases 1–6 do not need it.
 
 ## Non-obvious findings
 
-1. **Windows Defender blocks `cargo test -p vibe-install` (`os error 740`).** On this machine, the freshly-compiled unsigned `vibe_install-<hash>.exe` test runner is blocked ("requires elevation"). This is **not a code bug** — `cargo build -p vibe-install --tests` type-checks cleanly, and `vibe-install` was verified that way this milestone (it carries the `is_path_source → SourceKind::Path` lockfile mapping). A cold session on this machine must not mistake this for a regression. The owner is resolving the AV side himself.
-2. **The no-legacy hard break is by design.** vibevm is pre-release; M1.17 deleted *all* manifest and lockfile legacy rather than carry compatibility shims. There is **no migration path and none is intended**: a `vibe-package.toml`, a legacy `[dependencies]` / array-form `packages` / singleton `[registry]`, or a pre-v4 `vibe.lock` is now a hard parse error. Anyone resuming must not "add back" a reader out of a sense of politeness — the break is deliberate.
-3. **`vibe-workspace` is wired into `vibe-cli` only.** The new crate is a dependency of `vibe-cli` (for `vibe workspace publish`) and nothing else. The resolver (`vibe-registry`) and the install pipeline do **not** depend on it yet — that wiring is the deferred install-integration work.
-4. **The path-source resolver is done but unwired into `vibe install`.** `vibe-registry`'s `MultiRegistryResolver` can resolve a path-dep when handed a `ResolvedPathDep` (absolute dir + workspace-relative path). What does not exist yet is the code that computes those `ResolvedPathDep`s from a discovered `Workspace` and feeds them in during `vibe install`. The seam is intentional — Phase 3 built and tested the capability; the integration is Deferred #1.
-5. **`scan_local_packages` in `vibe-check`** now also returns the project-root `vibe.toml` (the filename is unified). Harmless — its three consumers short-circuit on empty `[features]` / `[i18n]` / missing `subskills/` — and the doc comment says so. Noted in case a future `vibe check` change wants to filter by `is_package()`.
+1. **`os error 740` is NOT Windows Defender — it is UAC installer detection.** `cargo test -p vibe-install` fails on this machine because Windows heuristically treats any unsigned, unmanifested executable whose name contains `install` (the test binary is `vibe_install-<hash>.exe`) as a legacy installer requiring elevation. **Proof:** the identical binary copied to a name without "install" runs all 18 tests cleanly. Disabling Windows Defender did not help — Defender was never the cause. Past checkpoints and PROP-007 §9.5 carried the wrong "Defender" diagnosis — corrected this session. Fix: `HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\EnableInstallerDetection = 0` (registry, admin, once), or run that crate's tests from an elevated shell. Linux / CI unaffected.
+2. **The PROP-009 phase plan is entangled** — see "What to do next". Implement additively, or the build breaks between phases.
+3. **vibevm dogfoods itself.** The vibevm repository is a vibevm project; PROP-009's migration (PROP-009 §4) changes how *this* repository boots — `spec/boot/00-core.md` and `90-user.md` stay user-owned; generated `INLINE.md` / `INDEX.md` join them.
+
+## Backlog — parked behind PROP-009
+
+PROP-007 §9.3's deferred items: **workspace-aware `vibe install`** in the old framing is *subsumed* — it is the install half of PROP-009. **`version = { workspace = true }`** member-version inheritance and the **publish-signalling polish** (`--archive`, `has_issues = false`, `published_repos`) are *parked* behind M1.18 — recorded, not dropped. **PROP-008** (qualified naming) is unchanged: it follows PROP-005 (index); the milestone numbering shifts — PROP-009 takes M1.18, PROP-008 moves to M1.19.
 
 ## Repository map
 
@@ -75,58 +59,66 @@ Three pieces of PROP-007 were deliberately not built this milestone. None is an 
 vibevm/
 ├── CLAUDE.md / AGENTS.md / GEMINI.md   # Three identical copies of the four rules.
 ├── CONTINUE.md                          # This file. Cold-resume snapshot.
-├── ROADMAP.md                           # M1.17 — Phases 1–5 shipped; install-integration remaining.
+├── ROADMAP.md                           # M1.17 shipped; M1.18 to be renumbered to PROP-009.
 ├── CHANGELOG.md                         # [Unreleased] holds the M1.17 milestone entry.
-├── VIBEVM-SPEC.md                       # Owner-frozen spec; §4.2 + §7.6 now document the workspace model.
-├── vibe.lock                            # The repo's own lockfile — schema v4.
+├── VIBEVM-SPEC.md                       # Owner-frozen spec; PROP-009 will edit §6/§4.2/§4.6/§13.1 under sanction.
+├── vibe.lock / vibe.toml                # The repo's own manifest + lockfile (schema v4).
 ├── crates/
-│   ├── vibe-core/                       # Manifest + lockfile schema. manifest/document.rs = the
-│   │   │                                #   unified `Manifest`; package.rs / project.rs = sections;
-│   │   │                                #   lockfile.rs = schema v4.
-│   ├── vibe-workspace/                  # NEW crate (M1.17). Workspace discovery + member model
-│   │   │                                #   (lib.rs) and publish selection/staging (publish.rs).
-│   ├── vibe-registry/                   # MultiRegistryResolver — now path-source aware.
+│   ├── vibe-core/                       # Manifest + lockfile schema. manifest/document.rs = unified
+│   │   │                                #   `Manifest`; package.rs = package-role sections (BootSnippet,
+│   │   │                                #   WritesSection, Requires); lockfile.rs = schema v4.
+│   ├── vibe-workspace/                  # Workspace discovery + member model + publish staging.
+│   │   │                                #   Likely host of the PROP-009 computed-view engine.
+│   ├── vibe-registry/                   # MultiRegistryResolver — registry / git / path / override.
 │   ├── vibe-resolver/                   # Depsolver + DepProvider adapters.
-│   ├── vibe-publish/                    # RepoCreator + push helpers (reused by workspace publish).
-│   ├── vibe-cli/                        # `vibe` binary. commands/workspace.rs = `vibe workspace publish`.
-│   └── ... (vibe-install, vibe-check, vibe-mcp, vibe-graph, vibe-llm, vibe-wire)
+│   ├── vibe-publish/                    # RepoCreator + push helpers.
+│   ├── vibe-install/                    # install/uninstall/update. Built on `manifest.writes` —
+│   │   │                                #   PROP-009 Phase 1-5 reshapes this crate heavily.
+│   ├── vibe-cli/                        # `vibe` binary. commands/*.rs.
+│   └── ... (vibe-check, vibe-mcp, vibe-graph, vibe-llm, vibe-wire)
 ├── spec/
-│   ├── boot/{00-core,90-user}.md         # User-owned. NOTE: 00-core.md line 38 is stale — see attention.
+│   ├── boot/{00-core,90-user}.md         # User-owned. NOTE: 00-core.md line 38 is stale (see WAL).
 │   ├── WAL.md                            # Living checkpoint — authoritative, supersedes this file.
 │   ├── common/PROP-000…PROP-006
 │   ├── modules/
 │   │   ├── vibe-workspace/PROP-007-workspace.md   # The workspace contract + §9 implementation record.
+│   │   ├── vibe-workspace/PROP-009-loading-model.md  # NEW — the loading-model contract (DRAFT, §5 resolved).
 │   │   ├── vibe-registry/PROP-002, PROP-008
 │   │   ├── vibe-resolver/PROP-003, vibe-index/PROP-005
 │   ├── research/PROP-004
-│   └── design/workspace-and-qualified-naming.md   # The pre-implementation design lore.
-├── docs/                                 # User guides — swept for the unified-manifest facts.
-│   └── commands/workspace-publish.md     # NEW — `vibe workspace publish` reference.
-├── manual-tests/                         # Runnable smoke protocols. M1.17-workspace-publish-smoke.md new.
+│   └── design/
+│       ├── workspace-and-qualified-naming.md      # PROP-007/008 design lore.
+│       └── loading-and-boot-model.md              # NEW — PROP-009 design lore.
+├── docs/                                 # User guides.
+├── manual-tests/                         # Runnable smoke protocols.
 └── services/vibe-index/                  # Separate index service (PROP-005); not in the cargo workspace.
 ```
 
 ## Architectural / policy decisions in force
 
-In rough order of how often they bite a fresh contributor:
-
 1. **Four non-negotiable rules** ([PROP-000 §12](spec/common/PROP-000.md#commits)): no AI/machine-author attribution anywhere; Conventional Commits (subject ≤ 60, body explains WHY); group commits by meaning; autonomy on routine changes only.
 2. **Memory discipline.** Project facts live in the repo, not in per-machine user-memory.
-3. **One unified manifest (M1.17).** Every node carries one `vibe.toml`; the role is the set of sections present. `[project]` ⊕ `[package]`; `[workspace]` composes with either or neither. There is no `vibe-package.toml`.
-4. **No legacy, by design (M1.17).** All manifest and lockfile legacy forms are deleted; a removed form is a hard error. vibevm is pre-release — see Non-obvious findings #2.
-5. **Vocabulary lock.** Only `flow`, `feat`, `stack`, `tool`. Never `lifecycle` / `phase` / `goal` / `plugin`.
-6. **Language: Rust.** Permissive licenses only.
-7. **Identity: `(kind, name, version, content_hash)`.** URL is informational. (PROP-008, not yet implemented, will change this to `(group, name, version, content_hash)` at M1.18.)
-8. **Lockfile is schema v4** at the absolute workspace root; one per workspace. `source_kind` ∈ `registry` / `git` / `override` / `path`.
+3. **One unified manifest (M1.17).** Every node carries one `vibe.toml`; the role is the set of sections present. No `vibe-package.toml`.
+4. **No legacy, by design.** vibevm is pre-release; removed manifest / lockfile forms are hard errors. PROP-009 continues this — its migration (§4) has no compatibility shim.
+5. **The loading model (PROP-009, M1.18).** Authored `spec/` and a committed `vibedeps/` are separate trees; the boot sequence is computed per node; `INLINE.md` / `INDEX.md` are generated; inclusion types `inline` / `static` / `dynamic`; `[writes]` and `NN-` retired. See PROP-009.
+6. **Vocabulary lock.** Only `flow`, `feat`, `stack`, `tool`. Never `lifecycle` / `phase` / `goal` / `plugin`.
+7. **Language: Rust.** Permissive licenses only.
+8. **Lockfile is schema v4** at the absolute workspace root; one per workspace.
 9. **Token secrecy** ([PROP-000 §20](spec/common/PROP-000.md#token-secrecy)). Never printed in any vibevm output.
 10. **Repository hosts.** vibevm source = GitVerse. Package registry = GitHub `vibespecs` (primary) + GitVerse `vibespecs` (secondary).
-11. **User-owned files** vibevm never touches: `spec/boot/00-core.md`, `spec/boot/90-user.md`, `spec/WAL.md`, `VIBEVM-SPEC.md` (edited this milestone only under the owner sanction recorded in PROP-007's header), `refs/book/**`.
-12. **Resolution priority** (M1.17): `[[override]]` > path-source > git-source > registry-walk.
-13. **Owner sanction for `VIBEVM-SPEC.md` edits** — granted for the workspace + qualified-naming refactor; recorded in the PROP-007 / PROP-008 headers.
+11. **User-owned files** vibevm never touches: `spec/boot/00-core.md`, `spec/boot/90-user.md`, `spec/WAL.md`, `VIBEVM-SPEC.md` (edited only under recorded owner sanction).
+12. **Resolution priority:** `[[override]]` > path-source > git-source > registry-walk.
+13. **Owner sanction for `VIBEVM-SPEC.md` edits** — granted for the workspace + qualified-naming refactor; **not yet granted for PROP-009** (needed at M1.18 Phase 7).
 
 ## Recent commit chain (newest first)
 
 ```
+72ac624 docs(spec): resolve PROP-009 §5 open questions
+1c1c19c docs(spec): draft PROP-009 — loading model contract
+b48ba7f docs(spec): loading & boot model design rationale
+ec3d614 docs(continue): cold-resume checkpoint — M1.17
+17e6c1d docs(wal): session-end checkpoint — M1.17
+0be50ef docs(spec): PROP-007 §9 — M1.17 implementation record
 3cb2a03 docs(wal): M1.17 Phases 1-5 checkpoint
 10406a1 docs: document the M1.17 workspace model
 047f92d build: sync Cargo.lock — vibe-cli now depends on vibe-workspace
@@ -138,18 +130,9 @@ ece30a6 feat(workspace): discovery and the member model
 9a190ff docs(spec): VIBEVM-SPEC §7 — unified vibe.toml manifest
 b794e7a feat(core): unify manifests into a single vibe.toml
 8de20c2 docs(wal): session-end checkpoint 2026-05-20          <- main HEAD
-23a568e docs(continue): cold-resume checkpoint 2026-05-20
-4d6775a docs(spec): add spec/design genre + workspace/naming design rationale
-ff23a0f docs(spec): draft PROP-007 + PROP-008 — workspace & qualified naming
-b44729d docs(commands,registry-redirect,changelog): redirect-update reference
-3553b2e test(vibe-cli): hermetic e2e for redirect-update args-level guard rails
-cce61ac feat(vibe-cli): vibe registry redirect-update command
-f8af587 feat(vibe-publish): commit_and_push helper for in-place stub updates
-9740c10 docs(continue,wal): session-end checkpoint 2026-05-12
-4e852f0 docs(registry-redirect,changelog,wal,continue): note test-org re-home
 ```
 
-Plus this session-end's docs commits (PROP-007 §9 implementation record, the WAL checkpoint, this `CONTINUE.md`). The 10 M1.17 commits are `b794e7a..3cb2a03`; everything from `8de20c2` down is on `main` already.
+Plus this checkpoint's three commits: the `os error 740` diagnosis correction, this WAL update, this `CONTINUE.md`.
 
 ## Quick-start commands
 
@@ -157,19 +140,19 @@ Plus this session-end's docs commits (PROP-007 §9 implementation record, the WA
 # Build everything.
 cargo build --workspace
 
-# Test gate (matches CI). NOTE: `cargo test -p vibe-install` may fail on this
-# machine with `os error 740` — Windows AV blocking the test binary, NOT a code
-# bug (see Non-obvious findings #1). Use `cargo build -p vibe-install --tests`
-# to type-check that crate instead.
+# Test gate. NOTE: `cargo test -p vibe-install` fails with `os error 740` —
+# Windows UAC installer detection (the binary name contains "install"), NOT a
+# code bug (Non-obvious finding #1). Either run that crate's tests from an
+# elevated shell, set EnableInstallerDetection=0, or test the rest:
+cargo test --workspace --exclude vibe-install
 cargo clippy --workspace --all-targets -- -D warnings
-cargo test -p vibe-core -p vibe-workspace -p vibe-registry -p vibe-resolver \
-           -p vibe-publish -p vibe-check -p vibe-cli -p vibe-mcp
 cargo run -p vibe-cli -- check --path . --quiet
 
-# See the new workspace command.
-cargo run -p vibe-cli -- workspace publish --help
+# The new loading-model spec.
+#   spec/modules/vibe-workspace/PROP-009-loading-model.md   (the contract)
+#   spec/design/loading-and-boot-model.md                   (the rationale)
 ```
 
 ## Pointer
 
-[`spec/WAL.md`](spec/WAL.md) is the canonical **living** checkpoint. If anything here disagrees with the top of the WAL, trust the WAL. The detailed implementation record for M1.17 is [PROP-007 §9](spec/modules/vibe-workspace/PROP-007-workspace.md#impl); the workspace contract is PROP-007 §1–§7; the pre-implementation design lore is [`spec/design/workspace-and-qualified-naming.md`](spec/design/workspace-and-qualified-naming.md).
+[`spec/WAL.md`](spec/WAL.md) is the canonical **living** checkpoint. If anything here disagrees with the top of the WAL, trust the WAL. The contract for the next milestone is [PROP-009](spec/modules/vibe-workspace/PROP-009-loading-model.md); its rationale is [`spec/design/loading-and-boot-model.md`](spec/design/loading-and-boot-model.md); the workspace milestone it builds on is [PROP-007 §9](spec/modules/vibe-workspace/PROP-007-workspace.md#impl).
