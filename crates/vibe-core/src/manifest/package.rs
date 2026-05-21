@@ -258,11 +258,17 @@ pub struct Requires {
     /// placeholder chain into a concrete `PackageRef` in `packages`. Empty
     /// once a workspace has finalised the manifest. PROP-007 §2.6.
     pub var_packages: Vec<VarRegistryDep>,
-    /// Per-dependency inclusion type (PROP-009 §2.4), keyed by the bare
-    /// `<kind>:<name>` pkgref. Only non-default entries are stored — an
-    /// absent key is [`LinkType::Static`]. The key is version-independent,
-    /// so it survives the `var_packages` → `packages` resolution the
-    /// workspace loader performs. Read it through [`Requires::link_for`].
+    /// Per-dependency inclusion type the consumer declared (PROP-009 §2.4),
+    /// keyed by the bare `<kind>:<name>` pkgref. Every declared `link` is
+    /// stored, **including an explicit `static`** — so a consumer's explicit
+    /// choice can be told apart from an absent one. The distinction is
+    /// load-bearing: an explicit `link` overrides a workspace
+    /// `[boot].default_link` and a package-suggested link, while an absent
+    /// one yields to them. The key is version-independent, so it survives
+    /// the `var_packages` → `packages` resolution the workspace loader
+    /// performs. Read it through [`Requires::link_for`] (resolved, with the
+    /// default applied) or [`Requires::declared_link`] (raw — distinguishes
+    /// an absent declaration from an explicit one).
     pub links: BTreeMap<String, LinkType>,
 }
 
@@ -287,14 +293,22 @@ impl Requires {
             .chain(self.var_packages.iter().map(|v| (v.kind, v.name.as_str())))
     }
 
-    /// The inclusion type (PROP-009 §2.4) declared for `<kind>:<name>` in
-    /// this `[requires]`. An absent declaration is [`LinkType::Static`] —
-    /// the contract default.
+    /// The inclusion type (PROP-009 §2.4) in effect for `<kind>:<name>` in
+    /// this `[requires]`, with the contract default applied — an absent
+    /// declaration resolves to [`LinkType::Static`].
     pub fn link_for(&self, kind: PackageKind, name: &str) -> LinkType {
-        self.links
-            .get(&format!("{kind}:{name}"))
-            .copied()
-            .unwrap_or_default()
+        self.declared_link(kind, name).unwrap_or_default()
+    }
+
+    /// The inclusion type the consumer **explicitly declared** for
+    /// `<kind>:<name>`, or `None` if it declared none. Unlike
+    /// [`Requires::link_for`], an explicit `link = "static"` returns
+    /// `Some(LinkType::Static)`, not `None`: the loading-model precedence
+    /// (PROP-009 §2.4) lets an explicit declaration override a workspace
+    /// `[boot].default_link` or a package-suggested link, and that
+    /// distinction is lost if explicit `static` is folded into "absent".
+    pub fn declared_link(&self, kind: PackageKind, name: &str) -> Option<LinkType> {
+        self.links.get(&format!("{kind}:{name}")).copied()
     }
 }
 
@@ -439,7 +453,7 @@ impl From<Requires> for RequiresWire {
         for p in &r.packages {
             let key = format!("{}:{}", p.kind, p.name);
             let constraint = version_spec_to_constraint_str(&p.version);
-            // A registry dep carrying a non-default `link` cannot use the
+            // A registry dep carrying a declared `link` cannot use the
             // bare constraint-string form — it must round-trip as an
             // inline table so the `link` field has somewhere to live.
             let value = match r.links.get(&key).copied() {
@@ -529,13 +543,14 @@ impl TryFrom<RequiresWire> for Requires {
                     packages.push(PackageRef::new(kind, name, version).map_err(|e| e.to_string())?);
                 }
                 RequiresPackageEntryWire::Inline(inline) => {
-                    // Capture a non-default inclusion type (PROP-009 §2.4)
-                    // before the source-kind dispatch — `link` is valid on
-                    // every source kind, and the explicit `static` default
-                    // is elided (an absent key reads back as `static`).
-                    if let Some(link) = inline.link
-                        && link != LinkType::Static
-                    {
+                    // Record the consumer's `link` declaration (PROP-009
+                    // §2.4) before the source-kind dispatch — `link` is
+                    // valid on every source kind. Every declared value is
+                    // stored, an explicit `static` included: writing
+                    // `link = "static"` overrides a workspace
+                    // `[boot].default_link` / a package-suggested link, and
+                    // that intent is lost if explicit `static` is dropped.
+                    if let Some(link) = inline.link {
                         links.insert(format!("{kind}:{name}"), link);
                     }
                     // Dispatch on source-kind: path wins over git wins over
@@ -1270,15 +1285,38 @@ stacks = ["rust-stack", "python-stack"]
     }
 
     #[test]
-    fn requires_explicit_static_link_is_elided() {
-        // `link = "static"` is the default — it is not stored, so the wire
-        // form stays minimal and an absent key still reads back as static.
+    fn requires_explicit_static_link_is_stored() {
+        // An explicit `link = "static"` is kept, not folded into "absent":
+        // the loading-model precedence (PROP-009 §2.4) lets it override a
+        // workspace default, so the explicit choice must survive — and it
+        // survives a serialize round-trip as an inline table.
         let r = requires_from_toml(
             r#"[packages]
 "flow:wal" = { version = "^0.3", link = "static" }
 "#,
         );
-        assert!(r.links.is_empty());
+        assert_eq!(
+            r.declared_link(PackageKind::Flow, "wal"),
+            Some(LinkType::Static)
+        );
+        assert_eq!(r.link_for(PackageKind::Flow, "wal"), LinkType::Static);
+        let back: Requires = toml::from_str(&toml::to_string_pretty(&r).unwrap()).unwrap();
+        assert_eq!(
+            back.declared_link(PackageKind::Flow, "wal"),
+            Some(LinkType::Static)
+        );
+    }
+
+    #[test]
+    fn requires_declared_link_is_none_when_unspecified() {
+        // A bare entry declares no `link` — `declared_link` is `None`,
+        // while `link_for` applies the `static` default.
+        let r = requires_from_toml(
+            r#"[packages]
+"flow:wal" = "^0.3"
+"#,
+        );
+        assert_eq!(r.declared_link(PackageKind::Flow, "wal"), None);
         assert_eq!(r.link_for(PackageKind::Flow, "wal"), LinkType::Static);
     }
 
