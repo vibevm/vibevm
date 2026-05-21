@@ -17,15 +17,15 @@ pub mod purl;
 mod redirect;
 mod subskill;
 
-pub use document::{Manifest, OriginSection, WorkspaceSection};
+pub use document::{BootSection, Manifest, OriginSection, WorkspaceSection};
 pub use lockfile::{
     CURRENT_SCHEMA_VERSION, Lockfile, LockedPackage, LockedSubskill, LockfileMeta, SourceKind,
     VirtualCapabilityRecord,
 };
 pub use package::{
-    BootSnippet, Compatibility, ConditionalTarget, ConflictsList, FeaturesTable, GitPackageDep,
-    GitRefKind, Obsoletes, PackageMeta, PathPackageDep, Provides, PublishPosture, Requires,
-    RequiresAny, VarRegistryDep, WritesSection,
+    BootCategory, BootSnippet, Compatibility, ConditionalTarget, ConflictsList, FeaturesTable,
+    GitPackageDep, GitRefKind, LinkType, Obsoletes, PackageMeta, PathPackageDep, Provides,
+    PublishPosture, Requires, RequiresAny, VarRegistryDep, WritesSection,
 };
 pub use project::{
     ActiveSection, AuthKind, DEFAULT_REGISTRY_GITVERSE_NAME, DEFAULT_REGISTRY_GITVERSE_URL,

@@ -15,7 +15,9 @@
 //! `[requires.packages]` is a TOML table — each key a bare `<kind>:<name>`
 //! pkgref, each value either a version-constraint string (registry-resolved)
 //! or an inline-table (registry-resolved with options, or a git-source
-//! declaration per PROP-002 §2.4.1). There is no legacy array form.
+//! declaration per PROP-002 §2.4.1). There is no legacy array form. An
+//! inline-table value may also carry a `link` field — the dependency's
+//! inclusion type (PROP-009 §2.4).
 
 use std::collections::BTreeMap;
 use std::path::PathBuf;
@@ -141,14 +143,72 @@ impl WritesSection {
     }
 }
 
+/// Inclusion type for a dependency's boot contribution — the point on the
+/// static/dynamic-linking spectrum at which `vibe` resolves it (PROP-009
+/// §2.4).
+///
+/// Set by the consumer on a `[requires.packages]` entry (`link = "…"`); a
+/// package may suggest a default on its own `[boot_snippet]`; a workspace
+/// may set a fallback in `[boot].default_link`. Absent everywhere, the
+/// type is [`LinkType::Static`].
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Default)]
+#[serde(rename_all = "lowercase")]
+pub enum LinkType {
+    /// Concatenated verbatim into the generated `INLINE.md`, read first —
+    /// the emergency priority lane. Duplicates the text on disk, so used
+    /// sparingly, for critical disciplines and top-level skills.
+    Inline,
+    /// The default. `vibe` resolves the contribution to a concrete path in
+    /// the generated `INDEX.md`; the agent reads it directly.
+    #[default]
+    Static,
+    /// `INDEX.md` carries an INCLUDE pointer the agent resolves at boot —
+    /// supports conditional, context-gated loading.
+    Dynamic,
+}
+
+/// Ordering band for a package's boot snippet within the computed boot
+/// sequence (PROP-009 §2.5). Replaces the author-chosen `NN-` numeric
+/// prefix, which cannot survive a workspace's combined namespace.
+///
+/// `vibe` composes the sequence `foundation` → the node's own boot →
+/// dependency boot → `user-override`.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum BootCategory {
+    /// Project-wide foundation — conventions, the four rules, technology
+    /// choices. Composed first.
+    Foundation,
+    /// A `flow` package's discipline contribution.
+    Flow,
+    /// A `stack` package's technology contribution.
+    Stack,
+    /// User-owned overrides — composed last, so they win.
+    UserOverride,
+}
+
+/// `[boot_snippet]` — the boot contribution a package ships (package-role).
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct BootSnippet {
     /// Target filename inside `spec/boot/`, e.g. `10-flow-wal.md`.
+    ///
+    /// Retained additively for the PROP-009 M1.18 transition: the `NN-`
+    /// prefix is retired (§2.5) once `vibe install` switches to the
+    /// computed model and `vibe` owns ordering — this field goes then.
     pub filename: String,
     /// Path to the source file inside the package directory, e.g.
     /// `boot/10-flow-wal.md`.
     pub source: PathBuf,
+    /// Ordering category for the computed boot sequence (PROP-009 §2.5).
+    /// Absent on pre-PROP-009 manifests; the computed-view engine derives
+    /// a fallback from the package kind when this is `None`.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub category: Option<BootCategory>,
+    /// Suggested default inclusion type (PROP-009 §2.4). Only a hint — the
+    /// consumer's own `link` declaration always wins.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub link: Option<LinkType>,
 }
 
 /// `[provides]` — capabilities this package advertises.
@@ -198,6 +258,12 @@ pub struct Requires {
     /// placeholder chain into a concrete `PackageRef` in `packages`. Empty
     /// once a workspace has finalised the manifest. PROP-007 §2.6.
     pub var_packages: Vec<VarRegistryDep>,
+    /// Per-dependency inclusion type (PROP-009 §2.4), keyed by the bare
+    /// `<kind>:<name>` pkgref. Only non-default entries are stored — an
+    /// absent key is [`LinkType::Static`]. The key is version-independent,
+    /// so it survives the `var_packages` → `packages` resolution the
+    /// workspace loader performs. Read it through [`Requires::link_for`].
+    pub links: BTreeMap<String, LinkType>,
 }
 
 impl Requires {
@@ -207,6 +273,7 @@ impl Requires {
             && self.git_packages.is_empty()
             && self.path_packages.is_empty()
             && self.var_packages.is_empty()
+            && self.links.is_empty()
     }
 
     /// Return every root pkgref (registry-resolved + git-source) in a single
@@ -218,6 +285,16 @@ impl Requires {
             .chain(self.git_packages.iter().map(|g| (g.kind, g.name.as_str())))
             .chain(self.path_packages.iter().map(|p| (p.kind, p.name.as_str())))
             .chain(self.var_packages.iter().map(|v| (v.kind, v.name.as_str())))
+    }
+
+    /// The inclusion type (PROP-009 §2.4) declared for `<kind>:<name>` in
+    /// this `[requires]`. An absent declaration is [`LinkType::Static`] —
+    /// the contract default.
+    pub fn link_for(&self, kind: PackageKind, name: &str) -> LinkType {
+        self.links
+            .get(&format!("{kind}:{name}"))
+            .copied()
+            .unwrap_or_default()
     }
 }
 
@@ -338,6 +415,10 @@ struct InlinePackageDepWire {
     auth: Option<AuthKind>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     token_env: Option<String>,
+    /// Inclusion type (PROP-009 §2.4). Valid on every source kind; lifted
+    /// into `Requires::links` by the `TryFrom` conversion.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    link: Option<LinkType>,
 }
 
 /// The `version` field of an inline `[requires.packages]` entry — either a
@@ -357,8 +438,18 @@ impl From<Requires> for RequiresWire {
         let mut packages: BTreeMap<String, RequiresPackageEntryWire> = BTreeMap::new();
         for p in &r.packages {
             let key = format!("{}:{}", p.kind, p.name);
-            let value =
-                RequiresPackageEntryWire::Constraint(version_spec_to_constraint_str(&p.version));
+            let constraint = version_spec_to_constraint_str(&p.version);
+            // A registry dep carrying a non-default `link` cannot use the
+            // bare constraint-string form — it must round-trip as an
+            // inline table so the `link` field has somewhere to live.
+            let value = match r.links.get(&key).copied() {
+                Some(link) => RequiresPackageEntryWire::Inline(InlinePackageDepWire {
+                    version: Some(VersionFieldWire::Constraint(constraint)),
+                    link: Some(link),
+                    ..Default::default()
+                }),
+                None => RequiresPackageEntryWire::Constraint(constraint),
+            };
             packages.insert(key, value);
         }
         for g in &r.git_packages {
@@ -388,6 +479,7 @@ impl From<Requires> for RequiresWire {
                     Some(g.auth)
                 },
                 token_env: g.token_env.clone(),
+                link: r.links.get(&key).copied(),
             };
             packages.insert(key, RequiresPackageEntryWire::Inline(inline));
         }
@@ -399,6 +491,7 @@ impl From<Requires> for RequiresWire {
                     .as_ref()
                     .map(|v| VersionFieldWire::Constraint(version_spec_to_constraint_str(v))),
                 path: Some(p.path.clone()),
+                link: r.links.get(&key).copied(),
                 ..Default::default()
             };
             packages.insert(key, RequiresPackageEntryWire::Inline(inline));
@@ -407,6 +500,7 @@ impl From<Requires> for RequiresWire {
             let key = format!("{}:{}", v.kind, v.name);
             let inline = InlinePackageDepWire {
                 version: Some(VersionFieldWire::Var { var: v.var.clone() }),
+                link: r.links.get(&key).copied(),
                 ..Default::default()
             };
             packages.insert(key, RequiresPackageEntryWire::Inline(inline));
@@ -426,6 +520,7 @@ impl TryFrom<RequiresWire> for Requires {
         let mut git_packages: Vec<GitPackageDep> = Vec::new();
         let mut path_packages: Vec<PathPackageDep> = Vec::new();
         let mut var_packages: Vec<VarRegistryDep> = Vec::new();
+        let mut links: BTreeMap<String, LinkType> = BTreeMap::new();
         for (key, entry) in w.packages {
             let (kind, name) = parse_pkgref_key(&key).map_err(|e| e.to_string())?;
             match entry {
@@ -434,6 +529,15 @@ impl TryFrom<RequiresWire> for Requires {
                     packages.push(PackageRef::new(kind, name, version).map_err(|e| e.to_string())?);
                 }
                 RequiresPackageEntryWire::Inline(inline) => {
+                    // Capture a non-default inclusion type (PROP-009 §2.4)
+                    // before the source-kind dispatch — `link` is valid on
+                    // every source kind, and the explicit `static` default
+                    // is elided (an absent key reads back as `static`).
+                    if let Some(link) = inline.link
+                        && link != LinkType::Static
+                    {
+                        links.insert(format!("{kind}:{name}"), link);
+                    }
                     // Dispatch on source-kind: path wins over git wins over
                     // registry. A registry-resolved entry whose version is a
                     // `[workspace.versions]` placeholder is held in var_packages
@@ -480,6 +584,7 @@ impl TryFrom<RequiresWire> for Requires {
             git_packages,
             path_packages,
             var_packages,
+            links,
         })
     }
 }
@@ -1123,5 +1228,194 @@ stacks = ["rust-stack", "python-stack"]
         let rendered = toml::to_string_pretty(&ft).unwrap();
         let back: FeaturesTable = toml::from_str(&rendered).unwrap();
         assert_eq!(ft, back);
+    }
+
+    // --- PROP-009 §2.4 / §2.5 — inclusion type + boot category ----------
+
+    #[test]
+    fn link_type_default_is_static() {
+        assert_eq!(LinkType::default(), LinkType::Static);
+    }
+
+    #[test]
+    fn requires_link_on_registry_dep_parses() {
+        let r = requires_from_toml(
+            r#"[packages]
+"flow:wal" = { version = "^0.3", link = "inline" }
+"#,
+        );
+        assert_eq!(r.packages.len(), 1);
+        assert_eq!(r.link_for(PackageKind::Flow, "wal"), LinkType::Inline);
+    }
+
+    #[test]
+    fn requires_link_dynamic_parses() {
+        let r = requires_from_toml(
+            r#"[packages]
+"stack:rust" = { version = "^2.0", link = "dynamic" }
+"#,
+        );
+        assert_eq!(r.link_for(PackageKind::Stack, "rust"), LinkType::Dynamic);
+    }
+
+    #[test]
+    fn requires_link_absent_is_static() {
+        let r = requires_from_toml(
+            r#"[packages]
+"flow:wal" = "^0.3"
+"#,
+        );
+        assert!(r.links.is_empty());
+        assert_eq!(r.link_for(PackageKind::Flow, "wal"), LinkType::Static);
+    }
+
+    #[test]
+    fn requires_explicit_static_link_is_elided() {
+        // `link = "static"` is the default — it is not stored, so the wire
+        // form stays minimal and an absent key still reads back as static.
+        let r = requires_from_toml(
+            r#"[packages]
+"flow:wal" = { version = "^0.3", link = "static" }
+"#,
+        );
+        assert!(r.links.is_empty());
+        assert_eq!(r.link_for(PackageKind::Flow, "wal"), LinkType::Static);
+    }
+
+    #[test]
+    fn requires_link_on_git_source_parses() {
+        let r = requires_from_toml(
+            r#"[packages]
+"flow:internal" = { git = "https://github.com/me/flow-internal", tag = "v0.1.0", link = "dynamic" }
+"#,
+        );
+        assert_eq!(r.git_packages.len(), 1);
+        assert_eq!(r.link_for(PackageKind::Flow, "internal"), LinkType::Dynamic);
+    }
+
+    #[test]
+    fn requires_link_on_path_source_parses() {
+        let r = requires_from_toml(
+            r#"[packages]
+"flow:wal" = { path = "../flow-wal", link = "inline" }
+"#,
+        );
+        assert_eq!(r.path_packages.len(), 1);
+        assert_eq!(r.link_for(PackageKind::Flow, "wal"), LinkType::Inline);
+    }
+
+    #[test]
+    fn requires_link_on_var_dep_parses() {
+        let r = requires_from_toml(
+            r#"[packages]
+"flow:wal" = { version.var = "core", link = "dynamic" }
+"#,
+        );
+        assert_eq!(r.var_packages.len(), 1);
+        assert_eq!(r.link_for(PackageKind::Flow, "wal"), LinkType::Dynamic);
+    }
+
+    #[test]
+    fn requires_link_rejects_unknown_value() {
+        let err = toml::from_str::<Requires>(
+            r#"[packages]
+"flow:wal" = { version = "^0.3", link = "weird" }
+"#,
+        )
+        .unwrap_err();
+        assert!(
+            err.to_string().contains("variant") || err.to_string().contains("link"),
+            "{err}"
+        );
+    }
+
+    #[test]
+    fn requires_registry_link_renders_as_inline_table() {
+        // A registry dep with a non-default link cannot use the bare-string
+        // form — it must serialise as an inline table so `link` survives.
+        let r = requires_from_toml(
+            r#"[packages]
+"flow:wal" = { version = "^0.3", link = "inline" }
+"#,
+        );
+        let rendered = toml::to_string_pretty(&r).unwrap();
+        assert!(rendered.contains("link = \"inline\""), "{rendered}");
+    }
+
+    #[test]
+    fn requires_link_round_trips_across_all_source_kinds() {
+        let original = requires_from_toml(
+            r#"[packages]
+"flow:wal" = { version = "^0.3", link = "inline" }
+"flow:internal" = { git = "https://github.com/me/flow-internal", tag = "v0.1.0", link = "dynamic" }
+"feat:auth" = { path = "../feat-auth", link = "dynamic" }
+"stack:rust" = { version.var = "core", link = "inline" }
+"flow:plain" = "^0.1"
+"#,
+        );
+        let rendered = toml::to_string_pretty(&original).unwrap();
+        let back: Requires = toml::from_str(&rendered).unwrap();
+        assert_eq!(original, back);
+        // Four declared links survive; the bare entry stays implicitly static.
+        assert_eq!(back.links.len(), 4);
+        assert_eq!(back.link_for(PackageKind::Flow, "wal"), LinkType::Inline);
+        assert_eq!(back.link_for(PackageKind::Flow, "internal"), LinkType::Dynamic);
+        assert_eq!(back.link_for(PackageKind::Feat, "auth"), LinkType::Dynamic);
+        assert_eq!(back.link_for(PackageKind::Stack, "rust"), LinkType::Inline);
+        assert_eq!(back.link_for(PackageKind::Flow, "plain"), LinkType::Static);
+    }
+
+    #[test]
+    fn boot_snippet_parses_category_and_link() {
+        let bs: BootSnippet = toml::from_str(
+            r#"filename = "10-flow-wal.md"
+source = "boot/10-flow-wal.md"
+category = "flow"
+link = "inline"
+"#,
+        )
+        .unwrap();
+        assert_eq!(bs.category, Some(BootCategory::Flow));
+        assert_eq!(bs.link, Some(LinkType::Inline));
+    }
+
+    #[test]
+    fn boot_snippet_pre_prop009_form_still_parses() {
+        // filename + source only — the shape every existing package ships.
+        let bs: BootSnippet = toml::from_str(
+            r#"filename = "10-flow-wal.md"
+source = "boot/10-flow-wal.md"
+"#,
+        )
+        .unwrap();
+        assert!(bs.category.is_none());
+        assert!(bs.link.is_none());
+    }
+
+    #[test]
+    fn boot_category_user_override_is_kebab_case() {
+        let bs: BootSnippet = toml::from_str(
+            r#"filename = "90-user.md"
+source = "boot/90-user.md"
+category = "user-override"
+"#,
+        )
+        .unwrap();
+        assert_eq!(bs.category, Some(BootCategory::UserOverride));
+    }
+
+    #[test]
+    fn boot_snippet_round_trips_with_category_and_link() {
+        let bs: BootSnippet = toml::from_str(
+            r#"filename = "20-stack-rust.md"
+source = "boot/20-stack-rust.md"
+category = "stack"
+link = "dynamic"
+"#,
+        )
+        .unwrap();
+        let rendered = toml::to_string_pretty(&bs).unwrap();
+        let back: BootSnippet = toml::from_str(&rendered).unwrap();
+        assert_eq!(bs, back);
     }
 }

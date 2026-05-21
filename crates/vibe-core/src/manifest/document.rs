@@ -20,7 +20,7 @@
 //! with `[project]`, with `[package]` (a cargo-style root package), or with
 //! neither (a virtual workspace root — just a coordinator). Consumer-side
 //! configuration (`[requires]`, `[[registry]]`, `[[mirror]]`, `[[override]]`,
-//! `[active]`, `[llm]`, `[i18n]`) may appear on any node. Package-role
+//! `[active]`, `[llm]`, `[i18n]`, `[boot]`) may appear on any node. Package-role
 //! sections (`[writes]`, `[provides]`, `[[requires_any]]`, `[obsoletes]`,
 //! `[conflicts]`, `[compatibility]`, `[boot_snippet]`, `[features]`,
 //! `[target.*]`) are meaningful only alongside `[package]`.
@@ -35,8 +35,8 @@ use crate::package_ref::PackageRef;
 
 use super::i18n::I18nDecl;
 use super::package::{
-    BootSnippet, Compatibility, ConditionalTarget, ConflictsList, FeaturesTable, Obsoletes,
-    PackageMeta, Provides, Requires, RequiresAny, WritesSection,
+    BootSnippet, Compatibility, ConditionalTarget, ConflictsList, FeaturesTable, LinkType,
+    Obsoletes, PackageMeta, Provides, Requires, RequiresAny, WritesSection,
 };
 use super::project::{
     ActiveSection, LlmSection, MirrorSection, OverrideSection, ProjectSection, RegistrySection,
@@ -128,6 +128,10 @@ pub struct Manifest {
     /// `[i18n]` — project-level language preference (PROP-003 §2.7).
     #[serde(default, skip_serializing_if = "I18nDecl::is_default")]
     pub i18n: I18nDecl,
+
+    /// `[boot]` — workspace-wide loading settings (PROP-009 §2.6).
+    #[serde(default, skip_serializing_if = "BootSection::is_empty")]
+    pub boot: BootSection,
 }
 
 /// `[workspace]` — declares the member packages a node coordinates.
@@ -173,6 +177,29 @@ pub struct OriginSection {
     pub generated_by: String,
     /// ISO-8601 timestamp of generation.
     pub generated_at: String,
+}
+
+/// `[boot]` — workspace-wide loading settings (PROP-009 §2.6).
+///
+/// Consumer-side: may appear on any node, with or without a `[package]`
+/// table. For v1 it carries only a default inclusion type — the fallback
+/// `link` for dependencies that declare none of their own. Room to grow;
+/// nothing further is defined yet.
+#[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct BootSection {
+    /// Default inclusion type for dependencies that declare no `link` of
+    /// their own. Absent → the PROP-009 §2.4 default, [`LinkType::Static`].
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub default_link: Option<LinkType>,
+}
+
+impl BootSection {
+    /// `true` when the table carries nothing — lets the serializer skip it
+    /// on a manifest that sets no loading options.
+    pub fn is_empty(&self) -> bool {
+        self.default_link.is_none()
+    }
 }
 
 impl Manifest {
@@ -668,5 +695,56 @@ priority = 99
         m.write(&path).unwrap();
         let back = Manifest::read(&path).unwrap();
         assert_eq!(m, back);
+    }
+
+    #[test]
+    fn boot_section_parses_and_round_trips() {
+        let raw = r#"
+[project]
+name = "demo"
+version = "0.1.0"
+
+[boot]
+default_link = "dynamic"
+"#;
+        let m = Manifest::parse_str(raw).unwrap();
+        assert_eq!(m.boot.default_link, Some(LinkType::Dynamic));
+        let back = Manifest::parse_str(&toml::to_string_pretty(&m).unwrap()).unwrap();
+        assert_eq!(m, back);
+    }
+
+    #[test]
+    fn boot_section_absent_is_empty_and_not_emitted() {
+        let m = Manifest::new_project("demo", "0.1.0");
+        assert!(m.boot.is_empty());
+        let rendered = toml::to_string_pretty(&m).unwrap();
+        assert!(!rendered.contains("[boot]"), "{rendered}");
+    }
+
+    #[test]
+    fn boot_section_is_consumer_side_allowed_without_package() {
+        // [boot] is not a package-role section — valid on a plain project.
+        let raw = r#"
+[project]
+name = "demo"
+version = "0.1.0"
+
+[boot]
+default_link = "inline"
+"#;
+        Manifest::parse_str(raw).unwrap();
+    }
+
+    #[test]
+    fn boot_section_rejects_unknown_field() {
+        let raw = r#"
+[project]
+name = "demo"
+version = "0.1.0"
+
+[boot]
+mystery = "x"
+"#;
+        assert!(toml::from_str::<Manifest>(raw).is_err());
     }
 }
