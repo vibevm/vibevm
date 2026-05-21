@@ -550,7 +550,30 @@ hash/source/ref lines in the lockfile).
 
 **Order.** PROP-007 has no dependency on the index and landed before M1.18. It delivers the bulk of the multi-package request on its own.
 
-### M1.18 — Qualified package naming — DRAFT design
+### M1.18 — Loading model (PROP-009) — 🚧 Phases 1–6 shipped (2026-05-21)
+
+**Thesis.** Replace the flat `spec/boot/NN-*.md` boot model with a
+computed loading model: two physically separate trees — authored
+`spec/` and a committed `vibedeps/` — with each node's boot sequence
+*computed* from the unified resolution and projected into generated
+`INLINE.md` / `INDEX.md` artifacts. Answers PROP-007 §6 question 3 and
+subsumes the workspace-aware `vibe install` left open by M1.17. Design
+lock: [PROP-009](spec/modules/vibe-workspace/PROP-009-loading-model.md).
+
+**Shipped (2026-05-21).** Phases 1–6 — the schema (`link` types, boot
+`category`, retired `[writes]` and `NN-` prefix), the `vibedeps/`
+materialisation tree, the computed-view boot engine, `INLINE.md` /
+`INDEX.md` / redirect generation, workspace-aware `vibe install` (plus
+five follow-ups), `vibe reinstall`, and published-copy boot
+regeneration in `vibe workspace publish`.
+
+**Remaining.** Phase 7 — existing-project migration, the vibevm
+self-migration, the `VIBEVM-SPEC.md` edits (owner sanction required),
+and the `docs/` sweep. Phase 8 — the effective-spec view (v1.5 scope).
+
+**Order.** Followed M1.17 directly; no dependency on the index.
+
+### M1.19 — Qualified package naming — DRAFT design
 
 **Thesis.** Replace the flat `<kind>:<name>` namespace with reverse-FQDN `group` qualification (Maven `groupId` shape), keeping short names as CLI sugar. Design lock: [PROP-008](spec/modules/vibe-registry/PROP-008-qualified-naming.md).
 
@@ -562,7 +585,45 @@ hash/source/ref lines in the lockfile).
 - Index-backed short-name resolution (depends on PROP-005 being implemented); collision detection with new exit code `7`.
 - Migration of the three canonical packages to `group = "org.vibevm"`; lockfile schema v4 (shared bump with M1.17).
 
-**Order.** Depends on [PROP-005](spec/modules/vibe-index/PROP-005-package-index.md) implementation for short-name resolution. Sequence: M1.17 → PROP-005 impl → M1.18.
+**Order.** Depends on [PROP-005](spec/modules/vibe-index/PROP-005-package-index.md) implementation for short-name resolution. Sequence: M1.17 → M1.18 → PROP-005 impl → M1.19.
+
+### M1.20 — Local package cache (PROP-010) — DRAFT design
+
+**Thesis.** Elevate the registry cache to a first-class,
+machine-global, accretive package store with an offline mode — so a
+new workspace member or an entirely new project resolves and
+materialises its dependencies from the cache with no network, reusing
+whatever earlier, unrelated projects pulled. Design lock:
+[PROP-010](spec/modules/vibe-registry/PROP-010-local-package-cache.md).
+
+**Scope (DRAFT — five §5 open questions pending an owner design
+session).** The cache keyed by PROP-008 qualified package identity, so
+it is registry-config-independent; a `--offline` policy flag
+(`VIBE_OFFLINE`); offline resolution against the cache; a user-level
+default registry configuration that seeds new projects; a `vibe cache`
+management surface (`path` / `list` / `add` / `clean`).
+
+**Order.** The identity-keyed cache depends on PROP-008 (M1.19);
+sequenced after it.
+
+### M1.21 — Incremental install (PROP-011) — DRAFT design
+
+**Thesis.** Refine PROP-009's whole-tree `vibe install` into an
+incremental operation: skip the depsolver when `vibe.lock` is fresh —
+which also makes `vibe install` lockfile-respecting — and
+re-materialise only the `vibedeps/` slots that actually changed, so
+`vibe install` on a large workspace stops paying whole-tree cost.
+Boot-artifact regeneration deliberately stays whole-tree: it is the
+cheap phase. Design lock:
+[PROP-011](spec/modules/vibe-workspace/PROP-011-incremental-install.md).
+
+**Scope (DRAFT — three §5 open questions pending an owner design
+session).** A content-based lockfile-freshness check; the slot-present
+materialisation skip; incremental re-resolution on a `[requires]`
+delta.
+
+**Order.** No dependency beyond PROP-009 (M1.18, shipped) — the M1.21
+number is nominal; it can be resequenced earlier.
 
 ---
 
