@@ -36,6 +36,7 @@ use vibe_core::{PackageKind, PackageRef, VersionSpec};
 
 pub mod boot;
 pub mod boot_artifacts;
+pub mod install;
 pub mod publish;
 pub mod vibedeps;
 
@@ -258,6 +259,16 @@ impl Workspace {
     /// `rel_path`. In-memory only; do not persist the result.
     pub fn member_abs_path(&self, member: &WorkspaceMember) -> PathBuf {
         join_rel(&self.root, &member.rel_path)
+    }
+
+    /// The absolute on-disk path of a node by its `rel_path` — `"."` is
+    /// the root. In-memory only; do not persist the result.
+    pub fn node_abs_path(&self, rel: &str) -> PathBuf {
+        if rel == "." {
+            self.root.clone()
+        } else {
+            join_rel(&self.root, rel)
+        }
     }
 
     /// Iterate every node in the workspace — the root first (as `"."`),
