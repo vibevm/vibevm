@@ -11,13 +11,6 @@ keywords = ["git", "commits", "discipline", "conventional-commits"]
 min_vibe_version = "0.1.0"
 requires_kinds = []
 
-[writes]
-files = [
-    "spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md",
-    "spec/flows/atomic-commits/conventional-commits.md",
-    "spec/flows/atomic-commits/splitting-large-changes.md",
-]
-
 [boot_snippet]
-filename = "30-flow-atomic-commits.md"
 source = "boot/30-flow-atomic-commits.md"
+category = "flow"

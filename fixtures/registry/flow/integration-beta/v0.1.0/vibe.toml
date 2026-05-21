@@ -7,14 +7,9 @@ license = "EULA"
 description = "Companion fixture pulled by integration-alpha's conditional dep when stack:integration-rust is active"
 keywords = ["test", "fixture", "integration"]
 
-[writes]
-files = [
-    "spec/flows/integration-beta/PROTOCOL.md",
-]
-
 [boot_snippet]
-filename = "41-flow-integration-beta.md"
 source = "boot/41-flow-integration-beta.md"
+category = "flow"
 
 [provides]
 capabilities = [

@@ -348,7 +348,7 @@ mod tests {
         let (dep, _pkg) = dep_with_boot(
             "wal",
             "0.3.0",
-            "[boot_snippet]\nfilename = \"10-flow-wal.md\"\nsource = \"boot/10-flow-wal.md\"\ncategory = \"flow\"\n",
+            "[boot_snippet]\nsource = \"boot/10-flow-wal.md\"\ncategory = \"flow\"\n",
             "boot/10-flow-wal.md",
             "# wal boot",
         );
@@ -407,7 +407,7 @@ mod tests {
         let (dep, _pkg) = dep_with_boot(
             "crit",
             "1.0.0",
-            "[boot_snippet]\nfilename = \"10-flow-crit.md\"\nsource = \"boot/crit.md\"\n",
+            "[boot_snippet]\nsource = \"boot/crit.md\"\n",
             "boot/crit.md",
             "# critical discipline",
         );
@@ -437,14 +437,14 @@ mod tests {
         let (wal, _w) = dep_with_boot(
             "wal",
             "0.3.0",
-            "[boot_snippet]\nfilename = \"10-flow-wal.md\"\nsource = \"boot/wal.md\"\n",
+            "[boot_snippet]\nsource = \"boot/wal.md\"\n",
             "boot/wal.md",
             "# wal",
         );
         let (extra, _e) = dep_with_boot(
             "extra",
             "0.1.0",
-            "[boot_snippet]\nfilename = \"10-flow-extra.md\"\nsource = \"boot/extra.md\"\n",
+            "[boot_snippet]\nsource = \"boot/extra.md\"\n",
             "boot/extra.md",
             "# extra",
         );

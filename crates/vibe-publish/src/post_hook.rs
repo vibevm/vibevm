@@ -241,7 +241,10 @@ pub fn build_payload(
     });
 
     if let Some(boot) = &manifest.boot_snippet {
-        payload["boot_snippet"] = serde_json::json!({ "filename": boot.filename });
+        payload["boot_snippet"] = serde_json::json!({
+            "source": boot.source,
+            "category": boot.category,
+        });
     }
 
     Ok(payload)

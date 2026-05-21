@@ -377,18 +377,13 @@ fn check_i18n_coverage(project_root: &Path, report: &mut CheckReport) {
             continue;
         }
         let canonical = &manifest.i18n.canonical;
+        // PROP-009 retired `[writes]`; a package's only manifest-declared
+        // canonical path is now its `[boot_snippet]` source.
         let logical_paths: Vec<std::path::PathBuf> = manifest
-            .writes
-            .files
-            .iter()
-            .cloned()
-            .chain(
-                manifest
-                    .boot_snippet
-                    .as_ref()
-                    .map(|b| b.source.clone())
-                    .into_iter(),
-            )
+            .boot_snippet
+            .as_ref()
+            .map(|b| b.source.clone())
+            .into_iter()
             .collect();
         let rel_manifest = manifest_path
             .strip_prefix(project_root)
@@ -1614,7 +1609,7 @@ files_written = ["spec/missing.md"]
         let project = tempdir().unwrap();
         write_minimal_project(project.path());
         let pkg = project.path().join("packages").join("flow").join("test-pkg");
-        fs::create_dir_all(pkg.join("spec/flows/x")).unwrap();
+        fs::create_dir_all(pkg.join("boot")).unwrap();
         fs::write(
             pkg.join("vibe.toml"),
             r#"[package]
@@ -1626,12 +1621,13 @@ version = "0.1.0"
 canonical = "en"
 available = ["en", "ru"]
 
-[writes]
-files = ["spec/flows/x/PROTOCOL.md"]
+[boot_snippet]
+source = "boot/x.md"
+category = "flow"
 "#,
         )
         .unwrap();
-        fs::write(pkg.join("spec/flows/x/PROTOCOL.md"), "EN content").unwrap();
+        fs::write(pkg.join("boot/x.md"), "EN content").unwrap();
         // Russian sidecar deliberately missing.
         let report = check_project(project.path(), &opts());
         let warns: Vec<_> = report
@@ -1783,7 +1779,7 @@ description = "{desc}"
         let project = tempdir().unwrap();
         write_minimal_project(project.path());
         let pkg = project.path().join("packages").join("flow").join("test-pkg");
-        fs::create_dir_all(pkg.join("spec/flows/x")).unwrap();
+        fs::create_dir_all(pkg.join("boot")).unwrap();
         fs::write(
             pkg.join("vibe.toml"),
             r#"[package]
@@ -1795,13 +1791,14 @@ version = "0.1.0"
 canonical = "en"
 available = ["en", "ru"]
 
-[writes]
-files = ["spec/flows/x/PROTOCOL.md"]
+[boot_snippet]
+source = "boot/x.md"
+category = "flow"
 "#,
         )
         .unwrap();
-        fs::write(pkg.join("spec/flows/x/PROTOCOL.md"), "EN content").unwrap();
-        fs::write(pkg.join("spec/flows/x/PROTOCOL.ru.md"), "RU content").unwrap();
+        fs::write(pkg.join("boot/x.md"), "EN content").unwrap();
+        fs::write(pkg.join("boot/x.ru.md"), "RU content").unwrap();
         let report = check_project(project.path(), &opts());
         let i18n_findings: Vec<_> = report
             .findings

@@ -36,7 +36,7 @@ use crate::package_ref::PackageRef;
 use super::i18n::I18nDecl;
 use super::package::{
     BootSnippet, Compatibility, ConditionalTarget, ConflictsList, FeaturesTable, LinkType,
-    Obsoletes, PackageMeta, Provides, Requires, RequiresAny, WritesSection,
+    Obsoletes, PackageMeta, Provides, Requires, RequiresAny,
 };
 use super::project::{
     ActiveSection, LlmSection, MirrorSection, OverrideSection, ProjectSection, RegistrySection,
@@ -88,10 +88,6 @@ pub struct Manifest {
     /// `[compatibility]` — minimum vibe version, required kinds (package-role).
     #[serde(default, skip_serializing_if = "Compatibility::is_empty")]
     pub compatibility: Compatibility,
-
-    /// `[writes]` — files this package owns exclusively (package-role).
-    #[serde(default, skip_serializing_if = "WritesSection::is_empty")]
-    pub writes: WritesSection,
 
     /// `[boot_snippet]` — boot snippet this package contributes (package-role).
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -274,9 +270,6 @@ impl Manifest {
 
         if !has_package {
             let mut offenders: Vec<&str> = Vec::new();
-            if !self.writes.is_empty() {
-                offenders.push("[writes]");
-            }
             if self.boot_snippet.is_some() {
                 offenders.push("[boot_snippet]");
             }
@@ -458,12 +451,9 @@ description = "Write-Ahead Log discipline"
 [compatibility]
 min_vibe_version = "0.1.0"
 
-[writes]
-files = ["spec/flows/wal/WAL-PROTOCOL.md"]
-
 [boot_snippet]
-filename = "10-flow-wal.md"
 source = "boot/10-flow-wal.md"
+category = "flow"
 
 [provides]
 capabilities = ["discipline:wal@0.3.0"]
@@ -476,8 +466,10 @@ capabilities = ["discipline:wal@0.3.0"]
         assert_eq!(pkg.name, "wal");
         assert_eq!(pkg.kind, PackageKind::Flow);
         assert!(pkg.publish.is_default());
-        assert_eq!(m.writes.files.len(), 1);
-        assert_eq!(m.boot_snippet.as_ref().unwrap().filename, "10-flow-wal.md");
+        assert_eq!(
+            m.boot_snippet.as_ref().unwrap().source.to_string_lossy(),
+            "boot/10-flow-wal.md"
+        );
         assert_eq!(m.provides.capabilities.len(), 1);
         assert_eq!(m.requires.packages.len(), 1);
         assert_eq!(m.as_package_ref().unwrap().name, "wal");
@@ -600,11 +592,11 @@ version = "0.0.1"
 name = "demo"
 version = "0.0.1"
 
-[writes]
-files = ["x.md"]
+[boot_snippet]
+source = "boot/x.md"
 "#;
         let err = Manifest::parse_str(raw).unwrap_err();
-        assert!(err.to_string().contains("[writes]"), "{err}");
+        assert!(err.to_string().contains("[boot_snippet]"), "{err}");
         assert!(err.to_string().contains("without a [package]"), "{err}");
     }
 

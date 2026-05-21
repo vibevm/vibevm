@@ -11,13 +11,6 @@ keywords = ["sync", "reconciliation", "spec-drift", "discipline"]
 min_vibe_version = "0.1.0"
 requires_kinds = []
 
-[writes]
-files = [
-    "spec/flows/sync-from-code/SYNC-PROTOCOL.md",
-    "spec/flows/sync-from-code/when-to-apply.md",
-    "spec/flows/sync-from-code/review-workflow.md",
-]
-
 [boot_snippet]
-filename = "20-flow-sync-from-code.md"
 source = "boot/20-flow-sync-from-code.md"
+category = "flow"

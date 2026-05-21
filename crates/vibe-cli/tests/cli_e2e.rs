@@ -1079,18 +1079,13 @@ fn make_redirect_target_bare_repo(
     )
     .unwrap();
 
-    // Minimal valid manifest + a single declared write so install has
-    // material to put on disk.
+    // Minimal valid package manifest. The package ships one content file
+    // (`MANIFEST.md`), materialised verbatim into its vibedeps/ slot.
     let manifest = format!(
         r#"[package]
 name = "{pkg_name}"
 kind = "{pkg_kind}"
 version = "{version}"
-
-[writes]
-files = [
-    "spec/{pkg_kind}s/{pkg_name}/MANIFEST.md",
-]
 "#
     );
     fs::write(src.join("vibe.toml"), manifest).unwrap();
@@ -1618,15 +1613,9 @@ name = "wal"
 kind = "flow"
 version = "0.1.0"
 
-[writes]
-files = [
-    "spec/flows/wal/A.md",
-    "spec/flows/wal/B.md",
-]
-
 [boot_snippet]
-filename = "10-flow-wal.md"
 source = "boot/10-flow-wal.md"
+category = "flow"
 "#;
     // Pin LF endings in the fixture repo — otherwise on Windows
     // git's `core.autocrlf` will rewrite text on checkout and the
@@ -1649,15 +1638,9 @@ name = "wal"
 kind = "flow"
 version = "0.2.0"
 
-[writes]
-files = [
-    "spec/flows/wal/A.md",
-    "spec/flows/wal/C.md",
-]
-
 [boot_snippet]
-filename = "10-flow-wal.md"
 source = "boot/10-flow-wal.md"
+category = "flow"
 "#;
     fs::write(src.join("vibe.toml"), manifest_v2).unwrap();
     fs::write(src.join("spec/flows/wal/A.md"), "v2 A — changed!\n").unwrap();
@@ -2455,12 +2438,9 @@ kind = "flow"
 version = "0.1.0"
 describes = "pkg:cargo/sqlx@0.8.0"
 
-[writes]
-files = ["spec/feats/feat-pkg/CORE.md"]
-
 [boot_snippet]
-filename = "10-feat-pkg.md"
 source = "boot/10-feat-pkg.md"
+category = "flow"
 
 [features]
 default = ["base"]
@@ -4338,21 +4318,11 @@ fn make_conditional_deps_registry(root: &Path) -> (PathBuf, String) {
         run_git(&src, &["init", "--initial-branch=main"]);
         run_git(&src, &["config", "user.email", "t@example.com"]);
         run_git(&src, &["config", "user.name", "Test"]);
-        let writes = files
-            .iter()
-            .map(|(p, _)| format!("    \"{p}\""))
-            .collect::<Vec<_>>()
-            .join(",\n");
         let manifest = format!(
             r#"[package]
 name = "{name}"
 kind = "{kind}"
 version = "{version}"
-
-[writes]
-files = [
-{writes}
-]
 {manifest_extras}
 "#
         );
@@ -4508,21 +4478,11 @@ fn make_cascading_conditional_registry(root: &Path) -> (PathBuf, String) {
         run_git(&src, &["init", "--initial-branch=main"]);
         run_git(&src, &["config", "user.email", "t@example.com"]);
         run_git(&src, &["config", "user.name", "Test"]);
-        let writes = files
-            .iter()
-            .map(|(p, _)| format!("    \"{p}\""))
-            .collect::<Vec<_>>()
-            .join(",\n");
         let manifest = format!(
             r#"[package]
 name = "{name}"
 kind = "{kind}"
 version = "{version}"
-
-[writes]
-files = [
-{writes}
-]
 {manifest_extras}
 "#
         );
@@ -4719,9 +4679,6 @@ fn make_two_version_per_package_registry(root: &Path) -> (PathBuf, String) {
 name = "test-multi"
 kind = "flow"
 version = "0.1.0"
-
-[writes]
-files = ["spec/flows/test-multi/PROTOCOL.md"]
 "#,
     )
     .unwrap();
@@ -4741,9 +4698,6 @@ files = ["spec/flows/test-multi/PROTOCOL.md"]
 name = "test-multi"
 kind = "flow"
 version = "0.2.0"
-
-[writes]
-files = ["spec/flows/test-multi/PROTOCOL.md"]
 "#,
     )
     .unwrap();

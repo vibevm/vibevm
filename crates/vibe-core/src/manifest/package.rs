@@ -130,19 +130,6 @@ impl Compatibility {
     }
 }
 
-#[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(deny_unknown_fields)]
-pub struct WritesSection {
-    #[serde(default, skip_serializing_if = "Vec::is_empty")]
-    pub files: Vec<PathBuf>,
-}
-
-impl WritesSection {
-    pub fn is_empty(&self) -> bool {
-        self.files.is_empty()
-    }
-}
-
 /// Inclusion type for a dependency's boot contribution — the point on the
 /// static/dynamic-linking spectrum at which `vibe` resolves it (PROP-009
 /// §2.4).
@@ -191,12 +178,6 @@ pub enum BootCategory {
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct BootSnippet {
-    /// Target filename inside `spec/boot/`, e.g. `10-flow-wal.md`.
-    ///
-    /// Retained additively for the PROP-009 M1.18 transition: the `NN-`
-    /// prefix is retired (§2.5) once `vibe install` switches to the
-    /// computed model and `vibe` owns ordering — this field goes then.
-    pub filename: String,
     /// Path to the source file inside the package directory, e.g.
     /// `boot/10-flow-wal.md`.
     pub source: PathBuf,
@@ -956,15 +937,6 @@ mod tests {
     }
 
     #[test]
-    fn writes_section_is_empty() {
-        assert!(WritesSection::default().is_empty());
-        let w = WritesSection {
-            files: vec![PathBuf::from("a.md")],
-        };
-        assert!(!w.is_empty());
-    }
-
-    #[test]
     fn requires_map_bare_constraint_parses() {
         let r = requires_from_toml(
             r#"[packages]
@@ -1406,8 +1378,7 @@ stacks = ["rust-stack", "python-stack"]
     #[test]
     fn boot_snippet_parses_category_and_link() {
         let bs: BootSnippet = toml::from_str(
-            r#"filename = "10-flow-wal.md"
-source = "boot/10-flow-wal.md"
+            r#"source = "boot/10-flow-wal.md"
 category = "flow"
 link = "inline"
 "#,
@@ -1418,14 +1389,10 @@ link = "inline"
     }
 
     #[test]
-    fn boot_snippet_pre_prop009_form_still_parses() {
-        // filename + source only — the shape every existing package ships.
-        let bs: BootSnippet = toml::from_str(
-            r#"filename = "10-flow-wal.md"
-source = "boot/10-flow-wal.md"
-"#,
-        )
-        .unwrap();
+    fn boot_snippet_minimal_form_parses() {
+        // `source` is the only required field; `category` and `link` are
+        // optional and absent here.
+        let bs: BootSnippet = toml::from_str("source = \"boot/10-flow-wal.md\"\n").unwrap();
         assert!(bs.category.is_none());
         assert!(bs.link.is_none());
     }
@@ -1433,8 +1400,7 @@ source = "boot/10-flow-wal.md"
     #[test]
     fn boot_category_user_override_is_kebab_case() {
         let bs: BootSnippet = toml::from_str(
-            r#"filename = "90-user.md"
-source = "boot/90-user.md"
+            r#"source = "boot/90-user.md"
 category = "user-override"
 "#,
         )
@@ -1445,8 +1411,7 @@ category = "user-override"
     #[test]
     fn boot_snippet_round_trips_with_category_and_link() {
         let bs: BootSnippet = toml::from_str(
-            r#"filename = "20-stack-rust.md"
-source = "boot/20-stack-rust.md"
+            r#"source = "boot/20-stack-rust.md"
 category = "stack"
 link = "dynamic"
 "#,

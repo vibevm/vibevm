@@ -11,13 +11,6 @@ keywords = ["wal", "memory", "discipline", "session-management"]
 min_vibe_version = "0.1.0"
 requires_kinds = []
 
-[writes]
-files = [
-    "spec/flows/wal/WAL-PROTOCOL.md",
-    "spec/flows/wal/session-end-hook.md",
-    "spec/flows/wal/morning-routine.md",
-]
-
 [boot_snippet]
-filename = "10-flow-wal.md"
 source = "boot/10-flow-wal.md"
+category = "flow"

@@ -7,14 +7,9 @@ license = "EULA"
 description = "Stack fixture activating integration-alpha's Rust-specific subskill and conditional dep"
 keywords = ["test", "fixture", "integration", "rust"]
 
-[writes]
-files = [
-    "spec/stacks/integration-rust/STACK.md",
-]
-
 [boot_snippet]
-filename = "30-stack-integration-rust.md"
 source = "boot/30-stack-integration-rust.md"
+category = "stack"
 
 [provides]
 capabilities = [

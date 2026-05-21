@@ -12,15 +12,9 @@ describes = "pkg:cargo/sqlx@0.8.0"
 canonical = "en"
 available = ["en", "ru"]
 
-[writes]
-files = [
-    "spec/flows/integration-alpha/PROTOCOL.md",
-    "spec/flows/integration-alpha/overview.md",
-]
-
 [boot_snippet]
-filename = "40-flow-integration-alpha.md"
 source = "boot/40-flow-integration-alpha.md"
+category = "flow"
 
 [provides]
 capabilities = ["capability:integration-discipline"]
