@@ -63,6 +63,7 @@ fn main() -> ExitCode {
         Command::Mcp(args) => commands::mcp::run(&ctx, args),
         Command::Uninstall(args) => commands::uninstall::run(&ctx, args),
         Command::Update(args) => commands::update::run(&ctx, args),
+        Command::Reinstall(args) => commands::reinstall::run(&ctx, args),
         Command::Check(args) => commands::check::run(&ctx, args),
         Command::Show(args) => commands::show::run(&ctx, args),
         Command::Registry(args) => commands::registry::run(&ctx, args),

@@ -7,6 +7,7 @@ pub mod list;
 pub mod mcp;
 pub mod outdated;
 pub mod registry;
+pub mod reinstall;
 pub mod search;
 pub mod search_cache;
 pub mod search_full_scan;

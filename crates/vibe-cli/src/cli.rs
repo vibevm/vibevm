@@ -92,6 +92,10 @@ pub enum Command {
     /// Re-fetch and apply changes for one or more installed packages.
     Update(UpdateArgs),
 
+    /// Recompute the materialised dependencies and the boot artifacts
+    /// of a workspace without re-resolving (PROP-009 §2.10).
+    Reinstall(ReinstallArgs),
+
     /// Run the spec-consistency linter against the project tree.
     Check(CheckArgs),
 
@@ -1157,6 +1161,30 @@ pub struct UpdateArgs {
     /// registry outage.
     #[arg(long)]
     pub auth_required: bool,
+}
+
+#[derive(Debug, clap::Args)]
+pub struct ReinstallArgs {
+    /// Any directory inside the workspace. Discovery bubbles up to the
+    /// absolute workspace root; `vibe reinstall` regenerates the boot
+    /// artifacts of every node. Defaults to the current directory.
+    #[arg(default_value = ".")]
+    pub path: PathBuf,
+
+    /// Re-fetch every locked package's content from its source
+    /// repository — at the version `vibe.lock` pins, never re-resolving
+    /// — bypassing the local cache and overwriting the current
+    /// `vibedeps/` files. The escape hatch for a corrupted or
+    /// hand-edited `vibedeps/` subtree. Without this flag,
+    /// `vibe reinstall` only recomputes the boot artifacts from the
+    /// materialised tree already on disk — no fetch, no network — which
+    /// is the fix for a stale or wrongly-generated `INDEX.md`.
+    #[arg(long)]
+    pub force: bool,
+
+    /// Skip the interactive confirmation prompt.
+    #[arg(long, alias = "yes")]
+    pub assume_yes: bool,
 }
 
 #[derive(Debug, clap::Args)]
