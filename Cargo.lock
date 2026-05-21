@@ -2070,8 +2070,10 @@ version = "0.1.0-dev"
 dependencies = [
  "glob",
  "semver",
+ "serde",
  "tempfile",
  "thiserror 2.0.18",
+ "toml",
  "vibe-core",
 ]
 

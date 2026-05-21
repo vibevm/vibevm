@@ -35,6 +35,7 @@ use vibe_core::manifest::{Manifest, Requires};
 use vibe_core::{PackageKind, PackageRef, VersionSpec};
 
 pub mod boot;
+pub mod boot_artifacts;
 pub mod publish;
 pub mod vibedeps;
 
