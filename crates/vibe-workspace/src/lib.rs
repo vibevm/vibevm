@@ -34,6 +34,7 @@ use thiserror::Error;
 use vibe_core::manifest::{Manifest, Requires};
 use vibe_core::{PackageKind, PackageRef, VersionSpec};
 
+pub mod boot;
 pub mod publish;
 pub mod vibedeps;
 
@@ -99,6 +100,11 @@ pub enum WorkspaceError {
     /// A `[workspace.versions]` entry holds an unparseable version constraint.
     #[error("[workspace.versions] placeholder `{var}` has an invalid constraint `{constraint}`")]
     BadVersionVar { var: String, constraint: String },
+
+    /// The dependency boot graph handed to the computed-view engine
+    /// contains a cycle — a package transitively requires itself.
+    #[error("boot dependency cycle among: {packages}")]
+    BootDependencyCycle { packages: String },
 }
 
 type Result<T> = std::result::Result<T, WorkspaceError>;
