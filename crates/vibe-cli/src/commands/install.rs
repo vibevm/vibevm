@@ -11,6 +11,7 @@ use dialoguer::Confirm;
 use serde::Serialize;
 use vibe_core::{PackageRef, VersionSpec};
 use vibe_core::manifest::{Lockfile, LockedPackage, Manifest, SourceKind};
+use vibe_core::user_config::UserConfig;
 use crate::exit_code::InstallError;
 use vibe_registry::{CachedPackage, LocalRegistry, MultiRegistryResolver};
 use vibe_resolver::{
@@ -30,6 +31,12 @@ pub fn run(ctx: &output::Context, args: InstallArgs) -> Result<()> {
         .context("discovering the workspace enclosing the project")?;
     let mut manifest = load_project_manifest(&project_root)?;
     let mut lockfile = load_or_empty_lockfile(&workspace.root)?;
+    // PROP-011 §2.3 — the materialise-diff strategy, read once from the
+    // user config so a malformed config fails before any resolution.
+    let slot_integrity = UserConfig::load()
+        .context("loading the user config")?
+        .install
+        .slot_integrity;
 
     // M1.15: `vibe install <pkgref> --git <url> --tag/branch/rev <ref>`
     // adds a git-source declaration to `[requires.packages]` before
@@ -482,7 +489,7 @@ pub fn run(ctx: &output::Context, args: InstallArgs) -> Result<()> {
 
     // 8. Apply: materialise each package into vibedeps/ and regenerate
     //    every node's boot artifacts.
-    let outcome = apply_resolution(&workspace, &resolution)
+    let outcome = apply_resolution(&workspace, &resolution, slot_integrity)
         .context("materialising the resolution into the workspace")?;
 
     // 9. Rebuild the lockfile from the fresh resolution — `vibe install`
@@ -947,6 +954,7 @@ fn emit_report(ctx: &output::Context, outcome: &InstallOutcome) -> Result<()> {
             "ok": true,
             "command": "install",
             "materialised": outcome.materialised,
+            "skipped": outcome.skipped,
             "pruned": outcome.pruned,
             "nodes_regenerated": outcome.nodes_regenerated,
         }))?;
@@ -967,6 +975,13 @@ fn emit_report(ctx: &output::Context, outcome: &InstallOutcome) -> Result<()> {
         outcome.nodes_regenerated.len(),
         if outcome.nodes_regenerated.len() == 1 { "" } else { "s" },
     ));
+    if !outcome.skipped.is_empty() {
+        ctx.step(&format!(
+            "{} slot{} already present — re-copy skipped (PROP-011 §2.3)",
+            outcome.skipped.len(),
+            if outcome.skipped.len() == 1 { "" } else { "s" },
+        ));
+    }
     if !outcome.pruned.is_empty() {
         ctx.step(&format!(
             "pruned {} stale vibedeps/ slot{}",

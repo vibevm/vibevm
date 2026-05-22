@@ -32,6 +32,7 @@ use std::path::{Path, PathBuf};
 use anyhow::{Context, Result, bail};
 use dialoguer::Confirm;
 use vibe_core::manifest::{Lockfile, Manifest};
+use vibe_core::user_config::SlotIntegrity;
 use vibe_core::{PackageKind, PackageRef, VersionSpec};
 use vibe_workspace::Workspace;
 use vibe_workspace::install::{ResolvedDep, apply_resolution, regenerate_boot};
@@ -117,7 +118,10 @@ fn run_force(
         if !confirm(ctx, args, "No packages are locked — regenerate boot artifacts only?")? {
             return Err(InstallError::UserDeclined.into());
         }
-        let outcome = apply_resolution(workspace, &[]).context("regenerating the workspace")?;
+        // `--force` always re-materialises — `SlotIntegrity::Verify` —
+        // though with an empty resolution there is nothing to copy.
+        let outcome = apply_resolution(workspace, &[], SlotIntegrity::Verify)
+            .context("regenerating the workspace")?;
         emit_report(ctx, true, &outcome.nodes_regenerated, &outcome.pruned);
         return Ok(());
     }
@@ -189,8 +193,11 @@ fn run_force(
         });
     }
 
-    let outcome =
-        apply_resolution(workspace, &resolution).context("re-materialising the workspace")?;
+    // `--force` re-fetched every slot's content; `SlotIntegrity::Verify`
+    // makes `apply_resolution` overwrite every slot rather than trust a
+    // present one — re-materialisation is the whole point of `--force`.
+    let outcome = apply_resolution(workspace, &resolution, SlotIntegrity::Verify)
+        .context("re-materialising the workspace")?;
     emit_report(ctx, true, &outcome.nodes_regenerated, &outcome.pruned);
     Ok(())
 }

@@ -200,11 +200,11 @@ fn full_install_cycle() {
         .stdout(predicate::str::contains("no packages"));
 }
 
-/// Under the PROP-009 loading model `vibe install` re-resolves and
-/// re-materialises the whole graph; a second install of the same
-/// package is an idempotent no-op-shaped success, not a rejection.
-/// `vibedeps::materialise` clears and rewrites the slot, so the result
-/// is byte-identical, and the lockfile keeps exactly one entry.
+/// A second `vibe install` of the same package is an idempotent
+/// success, not a rejection. The depsolver still runs — a CLI pkgref
+/// always takes the full path — but PROP-011 §2.3 skips re-copying the
+/// `vibedeps/` slot already present for the resolved version. The slot
+/// still stands and the lockfile keeps exactly one entry.
 #[test]
 fn install_second_install_is_idempotent() {
     let project = tempfile::tempdir().unwrap();
@@ -221,8 +221,8 @@ fn install_second_install_is_idempotent() {
         .assert()
         .success();
 
-    // Second install of the same package succeeds — it re-materialises
-    // the verbatim `vibedeps/` slot.
+    // Second install of the same package succeeds — the slot is already
+    // present for 0.1.0, so materialisation skips it (PROP-011 §2.3).
     vibe()
         .arg("install")
         .arg("flow:wal")
@@ -249,6 +249,55 @@ fn install_second_install_is_idempotent() {
     .unwrap();
     assert_eq!(lock.packages.len(), 1);
     assert_eq!(lock.packages[0].name, "wal");
+}
+
+/// PROP-011 §2.3 — materialise only the diff. A re-install whose slot
+/// is already present for the resolved version skips the re-copy: the
+/// install report lists the slot under `skipped`, not `materialised`.
+#[test]
+fn install_skips_a_present_slot_on_re_install() {
+    let project = tempfile::tempdir().unwrap();
+    init_project(project.path());
+
+    // First install materialises the `vibedeps/flow-wal/0.1.0` slot.
+    vibe()
+        .arg("install")
+        .arg("flow:wal")
+        .arg("--path")
+        .arg(project.path())
+        .arg("--registry")
+        .arg(fixture_registry())
+        .arg("--assume-yes")
+        .assert()
+        .success();
+
+    // Second install — same pkgref, full pipeline — but the slot is
+    // already present for the resolved version, so the copy is skipped.
+    let out = vibe()
+        .arg("--json")
+        .arg("install")
+        .arg("flow:wal")
+        .arg("--path")
+        .arg(project.path())
+        .arg("--registry")
+        .arg(fixture_registry())
+        .arg("--assume-yes")
+        .output()
+        .unwrap();
+    assert!(out.status.success());
+    let stdout = String::from_utf8(out.stdout).unwrap();
+    let docs: Vec<serde_json::Value> = serde_json::Deserializer::from_str(&stdout)
+        .into_iter::<serde_json::Value>()
+        .collect::<Result<_, _>>()
+        .expect("stdout is a stream of JSON documents");
+    let report = docs.last().unwrap();
+    let skipped = report["skipped"].as_array().unwrap();
+    assert_eq!(skipped.len(), 1, "the present slot must be skipped");
+    assert_eq!(skipped[0].as_str().unwrap(), "vibedeps/flow-wal/0.1.0");
+    assert!(
+        report["materialised"].as_array().unwrap().is_empty(),
+        "nothing is freshly materialised on a no-op re-install"
+    );
 }
 
 #[test]

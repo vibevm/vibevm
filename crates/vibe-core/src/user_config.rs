@@ -2,11 +2,10 @@
 //!
 //! VIBEVM-SPEC §9.5 places this file fourth in the configuration
 //! precedence chain (CLI flags > env vars > project `vibe.toml` >
-//! user-level config > built-in defaults). v0 of the user-config
-//! layer carries one section — `[env]` — mapping environment-
-//! variable names to default values. `vibe show config` consumes
-//! this layer to surface a `user-config` provenance when an env-var
-//! is unset in the live environment but defaulted here.
+//! user-level config > built-in defaults). The user-config layer
+//! carries two sections: `[env]` — environment-variable defaults,
+//! surfaced by `vibe show config` — and `[install]`, the install-
+//! behaviour settings of [PROP-011](../../../spec/modules/vibe-workspace/PROP-011-incremental-install.md).
 //!
 //! Path resolution:
 //!
@@ -38,6 +37,49 @@ pub struct UserConfig {
     /// invocation time) wins.
     #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
     pub env: BTreeMap<String, String>,
+
+    /// `[install]` — install-behaviour settings (PROP-011).
+    #[serde(default, skip_serializing_if = "InstallConfig::is_default")]
+    pub install: InstallConfig,
+}
+
+/// `[install]` section — install-behaviour settings (PROP-011 §5.2).
+#[derive(Debug, Default, Clone, PartialEq, Eq, Deserialize, Serialize)]
+#[serde(deny_unknown_fields)]
+pub struct InstallConfig {
+    /// How `vibe install` treats a `vibedeps/` slot that already exists
+    /// for the resolved version (PROP-011 §2.3). Default:
+    /// [`SlotIntegrity::TrustPresence`].
+    #[serde(default)]
+    pub slot_integrity: SlotIntegrity,
+}
+
+impl InstallConfig {
+    /// `true` for the all-defaults section — lets the serializer skip
+    /// `[install]` entirely on a config that never set it.
+    pub fn is_default(&self) -> bool {
+        *self == InstallConfig::default()
+    }
+}
+
+/// `[install].slot_integrity` — the materialisation slot-skip strategy
+/// (PROP-011 §2.3 / §5.2). Chosen once in the user config; it persists
+/// across runs.
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, Deserialize, Serialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum SlotIntegrity {
+    /// A `vibedeps/` slot present for the resolved version is trusted —
+    /// `vibe install` skips re-copying it. Versions are immutable, so a
+    /// slot for the exact version is correct content; this is the
+    /// **default**, and the win PROP-011 §2.3 ships. A hand-corrupted
+    /// slot is repaired with `vibe reinstall --force`.
+    #[default]
+    TrustPresence,
+    /// A present slot is re-materialised regardless — its content is
+    /// re-copied from source on every install, so a hand-edited or
+    /// corrupted slot is silently overwritten. Trades the §2.3 speed-up
+    /// for a per-install correctness guarantee.
+    Verify,
 }
 
 impl UserConfig {
@@ -197,5 +239,49 @@ VIBE_REGISTRY_CACHE = "/typo"
         std::fs::write(&path, "this is = not = toml").unwrap();
         let err = UserConfig::load_from(&path).unwrap_err();
         assert!(matches!(err, UserConfigError::Parse { .. }));
+    }
+
+    // --- PROP-011 §5.2 — the `[install]` section --------------------------
+
+    #[test]
+    fn slot_integrity_defaults_to_trust_presence() {
+        let cfg = UserConfig::default();
+        assert_eq!(cfg.install.slot_integrity, SlotIntegrity::TrustPresence);
+        assert!(cfg.install.is_default());
+    }
+
+    #[test]
+    fn load_from_parses_install_slot_integrity() {
+        let dir = tempdir().unwrap();
+        let path = dir.path().join("config.toml");
+        std::fs::write(&path, "[install]\nslot_integrity = \"verify\"\n").unwrap();
+        let cfg = UserConfig::load_from(&path).unwrap();
+        assert_eq!(cfg.install.slot_integrity, SlotIntegrity::Verify);
+        assert!(!cfg.install.is_default());
+    }
+
+    #[test]
+    fn install_section_round_trips() {
+        let cfg = UserConfig {
+            install: InstallConfig {
+                slot_integrity: SlotIntegrity::Verify,
+            },
+            ..Default::default()
+        };
+        let rendered = toml::to_string_pretty(&cfg).unwrap();
+        assert!(rendered.contains("slot_integrity = \"verify\""), "{rendered}");
+        let back: UserConfig = toml::from_str(&rendered).unwrap();
+        assert_eq!(cfg, back);
+    }
+
+    #[test]
+    fn load_from_rejects_an_unknown_install_key() {
+        let dir = tempdir().unwrap();
+        let path = dir.path().join("config.toml");
+        std::fs::write(&path, "[install]\nbogus = true\n").unwrap();
+        assert!(matches!(
+            UserConfig::load_from(&path).unwrap_err(),
+            UserConfigError::Parse { .. }
+        ));
     }
 }

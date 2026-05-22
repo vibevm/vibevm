@@ -21,6 +21,7 @@ use std::path::{Path, PathBuf};
 
 use vibe_core::PackageKind;
 use vibe_core::manifest::{BootCategory, Manifest};
+use vibe_core::user_config::SlotIntegrity;
 
 use crate::boot::{self, AuthoredBoot, DependencyBoot, NodeBootInputs};
 use crate::{Workspace, WorkspaceError, boot_artifacts, vibedeps};
@@ -47,8 +48,13 @@ pub struct ResolvedDep {
 /// What [`apply_resolution`] did — for the caller to report.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct InstallOutcome {
-    /// `vibedeps/` slot paths materialised, in resolution order.
+    /// `vibedeps/` slot paths freshly materialised this run — a new or
+    /// version-bumped dependency whose content was copied.
     pub materialised: Vec<String>,
+    /// `vibedeps/` slot paths skipped — already present for the resolved
+    /// version, trusted and not re-copied (PROP-011 §2.3). Empty when
+    /// `slot_integrity` is `Verify`.
+    pub skipped: Vec<String>,
     /// `vibedeps/` slot paths pruned — present before, absent from this
     /// resolution (a version bump, or a dropped dependency).
     pub pruned: Vec<String>,
@@ -63,37 +69,61 @@ pub struct InstallOutcome {
 /// package at the absolute root. Boot artifacts are computed per node: the
 /// root from the whole resolution, a member from its own `[requires]`
 /// closure, with the absolute root's foundation boot inherited downward.
+///
+/// `slot_integrity` governs the PROP-011 §2.3 materialise-diff skip: with
+/// [`SlotIntegrity::TrustPresence`] a slot already on disk for the
+/// resolved version is trusted and not re-copied; with
+/// [`SlotIntegrity::Verify`] every slot is re-materialised. `vibe install`
+/// passes the user-config value; `vibe reinstall --force` passes `Verify`,
+/// since its whole purpose is to overwrite slots from a fresh fetch.
 pub fn apply_resolution(
     workspace: &Workspace,
     resolution: &[ResolvedDep],
+    slot_integrity: SlotIntegrity,
 ) -> Result<InstallOutcome, WorkspaceError> {
     // 0. Validate every node's `<vibevm>` instruction-file block before
     //    any mutation — a malformed block aborts here, not mid-install
     //    (PROP-012 §2.4).
     validate_redirect_blocks(workspace)?;
 
-    // 1. Materialise every resolved package into its `vibedeps/` slot.
-    let mut materialised = Vec::with_capacity(resolution.len());
+    // 1. Materialise the resolution into `vibedeps/`. PROP-011 §2.3 — a
+    //    slot already present for the resolved (immutable) version is
+    //    trusted and skipped; only a new or version-bumped dependency
+    //    pays the recursive copy. `SlotIntegrity::Verify` opts out, so a
+    //    hand-edited slot is overwritten.
+    let mut materialised = Vec::new();
+    let mut skipped = Vec::new();
     for dep in resolution {
-        vibedeps::materialise(
-            &workspace.root,
-            dep.kind,
-            &dep.name,
-            &dep.version,
-            &dep.content_dir,
-        )?;
-        materialised.push(vibedeps::slot_rel_path(dep.kind, &dep.name, &dep.version));
+        let slot = vibedeps::slot_rel_path(dep.kind, &dep.name, &dep.version);
+        let present =
+            vibedeps::is_materialised(&workspace.root, dep.kind, &dep.name, &dep.version);
+        if present && slot_integrity == SlotIntegrity::TrustPresence {
+            skipped.push(slot);
+        } else {
+            vibedeps::materialise(
+                &workspace.root,
+                dep.kind,
+                &dep.name,
+                &dep.version,
+                &dep.content_dir,
+            )?;
+            materialised.push(slot);
+        }
     }
 
     // 2. Prune any `vibedeps/` slot no longer in the resolution — a
-    //    version bump or a dropped dependency must leave no orphan.
-    let pruned = prune_stale_slots(&workspace.root, &materialised)?;
+    //    version bump or a dropped dependency must leave no orphan. Both
+    //    the freshly-materialised and the skipped slots belong to the
+    //    current resolution and are kept.
+    let kept: Vec<String> = materialised.iter().chain(&skipped).cloned().collect();
+    let pruned = prune_stale_slots(&workspace.root, &kept)?;
 
     // 3. Regenerate every node's boot artifacts from the resolution.
     let nodes_regenerated = regenerate_boot_from(workspace, resolution)?;
 
     Ok(InstallOutcome {
         materialised,
+        skipped,
         pruned,
         nodes_regenerated,
     })
@@ -449,7 +479,9 @@ mod tests {
         );
 
         let ws = Workspace::load(ws_dir.path()).unwrap();
-        let outcome = apply_resolution(&ws, std::slice::from_ref(&dep)).unwrap();
+        let outcome =
+            apply_resolution(&ws, std::slice::from_ref(&dep), SlotIntegrity::TrustPresence)
+                .unwrap();
 
         assert_eq!(outcome.materialised, vec!["vibedeps/flow-wal/0.3.0"]);
         assert_eq!(outcome.nodes_regenerated, vec!["."]);
@@ -482,7 +514,7 @@ mod tests {
         );
         write(ws_dir.path(), "spec/boot/00-core.md", "# core");
         let ws = Workspace::load(ws_dir.path()).unwrap();
-        let outcome = apply_resolution(&ws, &[]).unwrap();
+        let outcome = apply_resolution(&ws, &[], SlotIntegrity::TrustPresence).unwrap();
         assert!(outcome.materialised.is_empty());
         assert_eq!(outcome.nodes_regenerated, vec!["."]);
         assert!(ws_dir.path().join("spec/boot/INDEX.md").is_file());
@@ -508,7 +540,7 @@ mod tests {
         );
 
         let ws = Workspace::load(ws_dir.path()).unwrap();
-        apply_resolution(&ws, std::slice::from_ref(&dep)).unwrap();
+        apply_resolution(&ws, std::slice::from_ref(&dep), SlotIntegrity::TrustPresence).unwrap();
 
         // The consumer declared `link = "inline"`, so the dependency's
         // boot is concatenated into INLINE.md.
@@ -536,7 +568,7 @@ mod tests {
         );
 
         let ws = Workspace::load(ws_dir.path()).unwrap();
-        apply_resolution(&ws, std::slice::from_ref(&dep)).unwrap();
+        apply_resolution(&ws, std::slice::from_ref(&dep), SlotIntegrity::TrustPresence).unwrap();
 
         // The `[boot_snippet].when` rides into INDEX.md, and the entry is
         // dynamic — a condition forces the dynamic INCLUDE form even with
@@ -579,7 +611,7 @@ mod tests {
         );
 
         let ws = Workspace::load(ws_dir.path()).unwrap();
-        apply_resolution(&ws, &[wal, extra]).unwrap();
+        apply_resolution(&ws, &[wal, extra], SlotIntegrity::TrustPresence).unwrap();
 
         let index = fs::read_to_string(ws_dir.path().join("spec/boot/INDEX.md")).unwrap();
         assert!(index.contains("vibedeps/flow-wal/0.3.0/boot/wal.md"), "{index}");
@@ -609,7 +641,8 @@ mod tests {
             "boot/wal.md",
             "# v1",
         );
-        apply_resolution(&ws, std::slice::from_ref(&wal_v1)).unwrap();
+        apply_resolution(&ws, std::slice::from_ref(&wal_v1), SlotIntegrity::TrustPresence)
+            .unwrap();
         assert!(ws_dir.path().join("vibedeps/flow-wal/0.1.0").is_dir());
 
         // Re-apply with wal bumped to 0.2.0 — the 0.1.0 slot is now stale.
@@ -620,12 +653,89 @@ mod tests {
             "boot/wal.md",
             "# v2",
         );
-        let outcome = apply_resolution(&ws, std::slice::from_ref(&wal_v2)).unwrap();
+        let outcome =
+            apply_resolution(&ws, std::slice::from_ref(&wal_v2), SlotIntegrity::TrustPresence)
+                .unwrap();
         assert!(ws_dir.path().join("vibedeps/flow-wal/0.2.0").is_dir());
         assert!(
             !ws_dir.path().join("vibedeps/flow-wal/0.1.0").exists(),
             "the stale 0.1.0 slot must be pruned"
         );
         assert_eq!(outcome.pruned, vec!["vibedeps/flow-wal/0.1.0"]);
+    }
+
+    // --- PROP-011 §2.3 — materialise only the diff -----------------------
+
+    #[test]
+    fn apply_resolution_skips_a_present_slot_under_trust_presence() {
+        let ws_dir = TempDir::new().unwrap();
+        write(
+            ws_dir.path(),
+            "vibe.toml",
+            "[project]\nname = \"demo\"\nversion = \"0.1.0\"\n\n\
+             [requires.packages]\n\"flow:wal\" = \"^0.3\"\n",
+        );
+        write(ws_dir.path(), "spec/boot/00-core.md", "# core");
+        let (dep, _pkg) = dep_with_boot(
+            "wal",
+            "0.3.0",
+            "[boot_snippet]\nsource = \"boot/wal.md\"\n",
+            "boot/wal.md",
+            "# wal",
+        );
+        let ws = Workspace::load(ws_dir.path()).unwrap();
+
+        // First apply — the slot is absent, so it is materialised.
+        let first =
+            apply_resolution(&ws, std::slice::from_ref(&dep), SlotIntegrity::TrustPresence)
+                .unwrap();
+        assert_eq!(first.materialised, vec!["vibedeps/flow-wal/0.3.0"]);
+        assert!(first.skipped.is_empty());
+
+        // A sentinel inside the slot — a file the source never had. If
+        // the second apply re-copies the slot, `materialise` clears it
+        // first and the sentinel vanishes; if it skips, the sentinel
+        // survives. It is the proof the skip actually skipped.
+        let sentinel = ws_dir.path().join("vibedeps/flow-wal/0.3.0/SENTINEL");
+        fs::write(&sentinel, "untouched").unwrap();
+
+        let second =
+            apply_resolution(&ws, std::slice::from_ref(&dep), SlotIntegrity::TrustPresence)
+                .unwrap();
+        assert!(second.materialised.is_empty(), "a present slot must not be re-copied");
+        assert_eq!(second.skipped, vec!["vibedeps/flow-wal/0.3.0"]);
+        assert!(sentinel.is_file(), "TrustPresence must leave the slot untouched");
+    }
+
+    #[test]
+    fn apply_resolution_rematerialises_a_present_slot_under_verify() {
+        let ws_dir = TempDir::new().unwrap();
+        write(
+            ws_dir.path(),
+            "vibe.toml",
+            "[project]\nname = \"demo\"\nversion = \"0.1.0\"\n\n\
+             [requires.packages]\n\"flow:wal\" = \"^0.3\"\n",
+        );
+        write(ws_dir.path(), "spec/boot/00-core.md", "# core");
+        let (dep, _pkg) = dep_with_boot(
+            "wal",
+            "0.3.0",
+            "[boot_snippet]\nsource = \"boot/wal.md\"\n",
+            "boot/wal.md",
+            "# wal",
+        );
+        let ws = Workspace::load(ws_dir.path()).unwrap();
+
+        apply_resolution(&ws, std::slice::from_ref(&dep), SlotIntegrity::Verify).unwrap();
+        let sentinel = ws_dir.path().join("vibedeps/flow-wal/0.3.0/SENTINEL");
+        fs::write(&sentinel, "doomed").unwrap();
+
+        // Second apply under Verify — the present slot is re-materialised,
+        // so the sentinel is cleared along with it.
+        let second =
+            apply_resolution(&ws, std::slice::from_ref(&dep), SlotIntegrity::Verify).unwrap();
+        assert_eq!(second.materialised, vec!["vibedeps/flow-wal/0.3.0"]);
+        assert!(second.skipped.is_empty(), "Verify must re-copy, never skip");
+        assert!(!sentinel.exists(), "Verify must re-materialise the slot");
     }
 }
