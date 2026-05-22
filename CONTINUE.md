@@ -1,7 +1,7 @@
 # CONTINUE.md — cold-resume checkpoint
 
-_Written 2026-05-22 at session end (`ЗАВЕРШИ СЕССИЮ`). `main` is at
-`e83c398`, even with `origin/main`, working tree clean._
+_Written 2026-05-22 at session end (`СОХРАНИ СЕССИЮ`). `main` is at
+`639b959`, even with `origin/main`, working tree clean._
 
 > **`spec/WAL.md` is the canonical living state.** If this snapshot and the
 > WAL ever disagree, the WAL wins — it is refreshed every session; this file
@@ -11,152 +11,164 @@ _Written 2026-05-22 at session end (`ЗАВЕРШИ СЕССИЮ`). `main` is at
 
 ## TL;DR
 
-This session shipped **PROP-008 Phase 2** — the group-qualified
-package-identity refactor — and, by an owner decision taken mid-session,
-folded **Phases 3 and 4** into the same commit. It landed on `main` as one
-atomic `feat(core)` commit **`c5c4fe6`**, with a `docs(wal)` checkpoint
-`e83c398` on top. `bash tools/self-check.sh` is green on all four steps.
-The scaffolding branch `prop-008-phase2` is deleted.
+This session shipped **PROP-008 Phase 7** — the group-native package
+index. `vibe-index` is now the index analogue of what Phase 4 did to the
+registry: package identity inside the index is `(group, name)`, `kind` is
+pure metadata. It landed on `main` as three commits — `59355d3`
+(`feat(vibe-index)`, 32 files), `569d1b0` (`docs(spec)`), `639b959`
+(`docs(wal)`) — all pushed to `origin/main`. `bash tools/self-check.sh`
+is green on all four steps.
 
-**The change.** `PackageRef` is now
-`{ kind: Option<PackageKind>, group: Option<Group>, name, version }`.
-Package identity is `(group, name, version, content_hash)`; `kind`
-(flow/feat/stack/tool) left identity entirely — it stays a mandatory
-`[package]` field, but as pure metadata. Manifests store the kindless
-qualified pkgref `org.vibevm/wal`. The registry is fully group-native:
-`NamingConvention::Fqdn` is the new default (`org.vibevm.wal` repos),
-resolution keys on `(group, name)`, the lockfile is schema v5,
-`fixtures/registry/` is relaid-out under `org.vibevm/`.
+**Why Phase 7 and not Phase 5.** The session opened on "do the next
+phase". A design pass found Phase 5 (index-backed short-name resolution)
+cannot be built until the index carries `group` and re-keys `by-name`
+by bare name — that *is* Phase 7. So the dependency-correct order is
+**7 → 5 → 6**; Phase 7 was done first.
 
-**No blocker.** PROP-008 Phases 5–8 remain — index-backed short-name
-resolution, collision detection, the `vibe-index` entry extension,
-canonical-package migration + `VIBEVM-SPEC.md` + docs. The next session
-picks one.
+**The change.** The index entry (`VersionEntry`) gained the mandatory
+`group` and the optional `workspace_origin`. `PackageEntry` re-keyed
+from `kind` to `group`; the in-RAM `PkgKey` is `(Group, name)`. The
+`by-name/` layer moved from `by-name/<kind>/<name>.json` to the
+candidate-set file **`by-name/<name>.json`** — a new `NameEntry` holding
+every `(group, *)` package that shares one bare name, so PROP-008 §2.6
+short-name resolution becomes one GET per registry. `NamingConvention`
+gained `Fqdn` (the new default) + `KindSlashName`; HTTP routes, the
+`vibe-index` CLI, and the `vibe.lock` reader followed. The two
+cross-crate consumers were realigned in the same cut:
+`vibe-registry::IndexClient::list_versions` reads the candidate set and
+selects by `group`; `vibe-publish::post_hook` adds `group` to the entry
+it POSTs.
+
+**No blocker.** PROP-008 Phases 5, 6, 8 remain. The next session picks
+one — Phase 5 is now fully unblocked.
 
 ---
 
 ## Where work stands
 
-- **Branch `main`:** at `e83c398`, even with `origin/main`, working tree
+- **Branch `main`:** at `639b959`, even with `origin/main`, working tree
   clean. Gate green — `bash tools/self-check.sh` passes all four steps
   (`cargo fmt --all --check`, `cargo test --workspace`, `cargo clippy
-  --workspace --all-targets -- -D warnings`, `vibe check --path .`).
-- **Branch `prop-008-phase2`:** **deleted** (local + origin). It was
-  scaffolding for this refactor; its two WIP commits are squashed into the
-  single `feat(core)` commit `c5c4fe6` on `main`.
+  --workspace --all-targets -- -D warnings`, `vibe check --path .`
+  reports 0/0/0).
 - **Branch `m1.17-workspace`:** still retained on origin (merged long ago,
   never deleted) — harmless, ignorable.
-- Test totals, all green, 0 failures: vibe-core 180, vibe-registry
-  106 + 5 + 7, vibe-resolver 48, vibe-workspace 103, vibe-publish 51 + 5,
-  vibe-check 27, vibe-mcp 22, vibe-index 169 (across its bin + e2e
-  binaries), vibe-cli bin 124 / e2e 106 / cli_init 11 / cli_search 15
-  (3 `cli_live_e2e` ignored — they need live registries).
+- `cargo test --workspace` — 0 failures. `vibe-index` is **92 lib tests**
+  plus its integration suites (`cli_lifecycle`, `cli_read`, `cli_write`,
+  `scanner_e2e`, `server_e2e`, `server_writes`, `from_github_e2e`,
+  `rate_limit_e2e`, `content_hash_parity`, `help_smoke`), all green.
 
 ## Active blocker
 
-None. PROP-008 Phases 1–4 are shipped and green. Phases 5–8 are fresh
-units of work, not blockers.
+None. PROP-008 Phases 1–4 + 7 are shipped and green. Phases 5, 6, 8 are
+fresh units of work, not blockers.
 
 **Owner-only outward-facing work** (deferred, blocks nothing in-repo):
 rename / re-publish the live `vibespecs` GitHub package repos and
 re-lay-out the `vibespecstest1/2/3` test orgs into the `naming = "fqdn"`
-shape (`org.vibevm.wal`, …). Until then, live-registry e2e against those
-orgs would not resolve group-natively — but every hermetic test is
-self-contained and green, so this gates nothing.
+shape (`org.vibevm.wal`, …). Every hermetic test is self-contained and
+green, so this gates nothing.
 
 ---
 
-## Next steps — PROP-008 Phases 5–8
+## Next steps — PROP-008 Phases 5, 6, 8
 
-The identity core is done. Remaining, from PROP-008 §6's phase plan as
-revised this session (Phase 4 was pulled forward into the Phase-2 commit):
+The identity core (Phases 1–4) and the group-native index (Phase 7) are
+done. Remaining, from PROP-008 §6:
 
-- **Phase 5 — index-backed short-name resolution.** A CLI-boundary lookup:
-  `vibe install wal` resolves the bare `wal` → `org.vibevm/wal` via the
-  package index, then writes the qualified form into `[requires]`
+- **Phase 5 — index-backed short-name resolution.** A CLI-boundary
+  lookup: `vibe install wal` resolves the bare `wal` → `org.vibevm/wal`
+  via the package index, then writes the qualified form into `[requires]`
   (PROP-008 §2.6). Manifests are always qualified; the short form is
-  CLI-only sugar. Needs a small design pass on how the resolver enumerates
-  `(*, name)` candidates across registries via the index.
+  CLI-only sugar. **Now fully unblocked** — Phase 7 shipped exactly what
+  it consumes: one GET of `by-name/<name>.json` per registry yields the
+  whole candidate set (a `NameEntry` with one `PackageEntry` per group).
+  The resolver enumerates `(*, name)` by reading that file across every
+  configured registry. Wants a short design pass on where the
+  CLI-boundary lookup sits relative to `MultiRegistryResolver`.
 - **Phase 6 — collision detection + exit code `7`.** When a short name
-  matches two packages with different `group`, fail and list the
-  alternatives; new exit code `7` ("ambiguous package"), distinct from `3`
-  ("package conflict"). PROP-008 §2.7.
-- **Phase 7 — `vibe-index` entry extension.** Add `group` and
-  `workspace_origin` to the index entry schema (PROP-008 §2.8, PROP-005
-  §2.6). NOTE: the index's on-disk `by-name/<kind>/<name>.json` layout
-  still keys on the package's own metadata `kind` — Phase 7 should decide
-  whether `by-name` re-keys on `group`/bare-`name` per §2.8.
-- **Phase 8 — milestone close-out.** Migrate the three canonical packages
-  (`flow-wal`, `flow-sync-from-code`, `flow-atomic-commits`) to
-  `group = "org.vibevm"`; edit `VIBEVM-SPEC.md §7.1` (owner sanction is
+  matches two packages with different `group` — i.e. the `NameEntry`
+  read in Phase 5 has `packages.len() > 1` — fail and list the
+  alternatives; new exit code `7` ("ambiguous package"), distinct from
+  `3` ("package conflict"). PROP-008 §2.7. Naturally pairs with Phase 5.
+- **Phase 8 — milestone close-out.** Migrate the three canonical
+  packages (`flow-wal`, `flow-sync-from-code`, `flow-atomic-commits`) to
+  `group = "org.vibevm"`; edit `VIBEVM-SPEC.md §7.1` (owner sanction
   already recorded in the PROP-008 header — name-uniqueness moves from
-  "within a kind" to "within a group", and the identity tuple + pkgref
-  grammar update); update `CHANGELOG.md` and `ROADMAP.md` (neither records
-  PROP-008 Phase 2 yet); docs sweep.
+  "within a kind" to "within a group", the identity tuple + pkgref
+  grammar update); update `CHANGELOG.md` and `ROADMAP.md` (neither
+  records PROP-008 yet); docs sweep.
 
 **Lightest starting point:** Phase 8's docs half — `CHANGELOG.md` /
-`ROADMAP.md` / `VIBEVM-SPEC.md §7.1` for what already shipped — closes the
-milestone's paper trail and needs no design work. Phase 5 is the next real
-code unit and may want a short design pass first.
+`ROADMAP.md` / `VIBEVM-SPEC.md §7.1` for everything already shipped
+(Phases 1–4 + 7) — closes the milestone's paper trail and needs no
+design work. **Phase 5 is the next real code unit** and may want a short
+design pass first; Phase 6 then folds in beside it.
 
 Recipe for whoever picks up cold:
 
-1. Run the boot sequence (`CLAUDE.md` → `spec/boot/` → `spec/WAL.md`), then
-   read PROP-008 (`spec/modules/vibe-registry/PROP-008-qualified-naming.md`)
-   and PROP-005 (`spec/modules/vibe-index/PROP-005-package-index.md`).
+1. Run the boot sequence (`CLAUDE.md` → `spec/boot/` → `spec/WAL.md`),
+   then read PROP-008
+   (`spec/modules/vibe-registry/PROP-008-qualified-naming.md`) and
+   PROP-005 (`spec/modules/vibe-index/PROP-005-package-index.md`).
 2. Confirm green: `bash tools/self-check.sh`.
-3. Pick a phase above; proceed under MFBT.
+3. For Phase 5: read `crates/vibe-registry/src/index_client.rs`
+   (`list_versions` already reads `by-name/<name>.json`) and the
+   `MultiRegistryResolver`; decide where the bare-name → qualified
+   lookup sits. Proceed under MFBT.
 
 ---
 
 ## Non-obvious findings (this session)
 
-- **The kind/group registry tension — resolved by an owner decision.**
-  PROP-008's phase plan put `naming = "fqdn"` in Phase 4, separate from
-  Phase 2; but the same plan wanted Phase 2's manifests kindless
-  (`org.vibevm/wal`). Those are incompatible — a kindless pkgref cannot
-  resolve against a `kind-name`-keyed registry. The owner chose, via an
-  explicit mid-session question, "full kindless now": pull Phase 4's
-  registry-side work into the Phase-2 commit so the registry is
-  group-native at once rather than half-migrated. This is why the landed
-  commit `c5c4fe6` covers Phases 2 + 3 + 4.
-- **`NamingConvention::Fqdn` is the new default.** Signature is now
-  `repo_name(kind: Option<PackageKind>, group: &Group, name: &str)
-  -> Result<String>` — `Fqdn` → `<group>.<name>` (infallible, uses only
-  group). The legacy `KindName` / `Name` / `KindSlashName` conventions
-  stay in the enum (PROP-008 §2.5 keeps them for non-group registries) but
-  are non-default and unused by vibevm's own registries/fixtures; calling
-  a legacy convention with `kind = None` is an error.
-- **`vibedeps/<kind>-<name>/<version>/` slot directories kept `kind` in
-  the path.** That is a PROP-009 (loading-model) schema, out of PROP-008's
-  scope, deliberately left intact. Consequence: `vibe-workspace`'s
-  `ResolvedDep` / `DependencyBoot` / `PublishNode` carry **both** `group`
-  (identity) and `kind` (still needed to name the slot dir).
-  `vibe-registry`'s `ResolvedPackage` carries only `group`.
-- **`context(...)` predicates and subskill `if_present` tags keep the
-  `kind:name` form.** They are activation-grammar tokens — the same opaque
-  namespace as `interface:foo` / `capability:foo` — not package labels, so
-  `org.vibevm/`-qualification does not apply. A conservative,
-  behaviour-preserving choice; `vibe-core`'s grammar still accepts it.
-- **Lockfile schema is v5.** A per-package `group` field;
-  `Lockfile::find` / `find_mut` / `remove` take `(group: &Group,
-  name: &str)`. The repo's own `vibe.lock` was bumped 4 → 5 (it is
-  package-free, so only the schema envelope changed).
-- **`RegistryError::UnqualifiedPkgref(String)`** is a new variant — raised
-  when a pkgref reaches registry resolution without a `group`. A short ref
-  must be qualified at the CLI boundary first; that boundary lookup is
-  Phase 5, not yet built, so in practice every test uses qualified refs.
-- **`fixtures/registry/` was relaid-out** from `<kind>/<name>/v<version>/`
-  to `org.vibevm/<name>/v<version>/` — all six fixtures, via `git mv`
-  (100 % renames, content preserved).
-- **Two stale fixtures remain.**
-  `fixtures/manual-test-packages/flow-vibevm-{direct-push,github}-smoke/vibe.toml`
-  still use a pre-M1.18 schema; not exercised by `cargo test`; left
-  untouched. Dead weight — deletion candidates.
-- **The landing was a squash-merge.** `prop-008-phase2` carried two WIP
-  commits (`a7d2238` + `45d9c41`); `git merge --squash` collapsed both
-  into one `feat(core)` commit on `main`, so the intentionally-non-green
-  WIP commit never entered `main`'s history.
+- **Phase 7 was the dependency-correct "next phase", not Phase 5.**
+  PROP-008's CONTINUE list ordered the phases 5–8, but Phase 5
+  (short-name resolution) consumes a `by-name/<name>.json` candidate set
+  that did not exist until Phase 7. The real order is 7 → 5 → 6; the
+  CONTINUE numbering was a listing order, not an implementation order.
+- **Phase 4's `IndexClient` had guessed the wrong by-name shape.** When
+  `vibe-registry` went group-native in Phase 4, `IndexClient::list_versions`
+  was written to fetch `by-name/<group>/<name>.json` — a one-for-one
+  `kind`→`group` swap of the old layout. But PROP-008 §2.8 actually
+  specifies `by-name/<name>.json`, the bare-name **candidate set**.
+  Phase 7 reconciled the client to the spec: it now fetches
+  `by-name/<name>.json` and selects the candidate whose `group` matches.
+- **`vibe-publish::post_hook` would have been rejected by a Phase-7
+  index.** `build_payload` POSTs a JSON entry to `/v1/packages`; it did
+  not include `group`. After Phase 7 the server deserialises the body as
+  `VersionEntry`, where `group` is mandatory — the publish hook would
+  400 on every fire. Phase 7 added `group` (+ `workspace_origin`) to the
+  payload. The lesson: an index schema change ripples to every producer
+  and consumer of index data; the cut must be atomic across crates.
+- **`by-name/<name>.json` is a candidate set, not one package.** The
+  file is a `NameEntry { name, indexed_at, packages: [PackageEntry] }`.
+  `packages.len() > 1` is, by construction, a short-name collision
+  (PROP-008 §2.7) — Phase 6 reads exactly this.
+- **The index's `repo_name` is infallible; the registry's is not.**
+  `vibe-core::NamingConvention::repo_name` returns `Result` because a
+  kindless pkgref cannot feed a legacy `kind-*` convention. The index
+  always has a concrete `kind` on every entry, so
+  `vibe-index`'s mirror of `repo_name` takes `kind: PackageKind` (not
+  `Option`) and never fails.
+- **Incremental reindex reverse-derives a clone's directory name.** The
+  `--incremental` retention path computes `naming.repo_name(kind, group,
+  name)` and matches it against the scanned clone directory names. With
+  `Fqdn` now the default, the `scanner_e2e` fixtures had to be renamed
+  from the `KindName` shape (`flow-wal`) to the `fqdn` shape
+  (`org.vibevm.wal`) to stay representative. Latent fragility worth a
+  note: an operator whose `--from-clones` directory layout does not
+  match the registry's `naming` will see incremental retention silently
+  drop entries — pre-existing, out of Phase 7 scope, not redesigned.
+- **`Group` is re-exported from `vibe_index::types`.** Integration tests
+  in `crates/vibe-index/tests/` cannot `use vibe_core::…` (vibe-core is a
+  regular dependency, not a dev-dependency). `vibe_index::types` now
+  re-exports `vibe_core::Group` so the test crates — and any external
+  consumer of `vibe_index::types` — reach it without a second dep.
+- **No JTD schema directory exists for `vibe-index`.** PROP-005 §2.6 /
+  §3.1 reference `crates/vibe-index/schemas/index-entry.jtd.json`, but no
+  `schemas/` directory is on disk — the index wire types are hand-rolled
+  serde structs. Pre-existing doc-rot, left untouched (out of Phase 7
+  scope); a candidate for a future de-rot pass.
 
 ---
 
@@ -174,13 +186,14 @@ vibevm/
 │   │                    the unified Manifest, Lockfile (schema v5), Purl, i18n
 │   ├── vibe-cli         the `vibe` binary — every subcommand
 │   ├── vibe-registry    git-backed registry, multi-registry resolver,
-│   │                    IndexClient, compute_content_hash — now group-native
+│   │                    IndexClient (group-native), compute_content_hash
 │   ├── vibe-resolver    dependency resolution — depsolver, features, activation
 │   ├── vibe-workspace   workspace discovery, the loading model, the install
 │   │                    orchestrator, vibedeps, freshness
 │   ├── vibe-publish     publishing to GitHub / GitVerse, the post-publish index hook
 │   ├── vibe-check       the spec linter (`vibe check`)
-│   ├── vibe-index       the package index utility — server + CLI (a crates/ member)
+│   ├── vibe-index       the package index utility — server + CLI; group-native
+│   │                    as of PROP-008 Phase 7 (entry identity = (group, name))
 │   ├── vibe-mcp         MCP server
 │   ├── vibe-graph       task graph
 │   ├── vibe-llm         LLM provider integration (M1.5 — deferred)
@@ -190,13 +203,14 @@ vibevm/
 │   ├── boot/            00-core.md, 90-user.md (authored) + generated INDEX.md
 │   ├── common/          PROP-000 (process), PROP-004 (research), PROP-006 (modes)
 │   ├── modules/         per-crate PROPs — PROP-008 (qualified naming) under
-│   │                    modules/vibe-registry/
+│   │                    modules/vibe-registry/, PROP-005 (index) under
+│   │                    modules/vibe-index/
 │   ├── design/          workspace-and-qualified-naming.md — the PROP-007/008 lore
 │   ├── research/
 │   └── WAL.md           the canonical living checkpoint
 ├── docs/                user-facing docs (commands/, loading-model.md, …)
 ├── fixtures/registry/   hermetic test-fixture packages — laid out
-│                        org.vibevm/<name>/v<version>/ (group-native as of PROP-008)
+│                        org.vibevm/<name>/v<version>/ (group-native)
 ├── manual-tests/        operator smoke recipes
 ├── tools/               self-check.sh, jtd-codegen
 └── refs/                the owner's book + reference sources (read-only)
@@ -216,31 +230,37 @@ vibevm/
 - **MFBT operating mode** (PROP-006 §2): when the owner says "move fast and
   break things", the agent works heads-down through testable phases with no
   mid-work confirmations; the four rules and the red-line escape hatch
-  survive. This session's PROP-008 work ran under MFBT.
+  survive. This session's PROP-008 Phase 7 work ran under MFBT.
 - **Language Rust, manifests TOML.** One `vibe.toml` per node; role set by
   section (`[project]` ⊕ `[package]`, optional `[workspace]`). Lockfile
-  `vibe.lock`, **schema v5**. Four installable kinds: `flow` / `feat` /
+  `vibe.lock`, **schema v5**. Four installable kinds — `flow` / `feat` /
   `stack` / `tool` — but `kind` is **metadata only**, not identity.
-- **PROP-008 — qualified naming (M1.19): Phases 1–4 SHIPPED.** Identity is
-  `(group, name, version, content_hash)`; reverse-FQDN `group` qualifier;
-  pkgref grammar `[kind:][group/]name[@version]`; manifests store the
-  kindless `org.vibevm/<name>`; registry is group-native with
-  `NamingConvention::Fqdn` default. Phases 5–8 remain (short-name
-  resolution, collision detection + exit code 7, index entry extension,
-  migration + `VIBEVM-SPEC.md §7.1` + docs).
+- **PROP-008 — qualified naming (M1.19): Phases 1–4 + 7 SHIPPED.**
+  Identity is `(group, name, version, content_hash)`; reverse-FQDN
+  `group` qualifier; pkgref grammar `[kind:][group/]name[@version]`;
+  manifests store the kindless `org.vibevm/<name>`; the registry **and**
+  the package index are both group-native, `NamingConvention::Fqdn` the
+  default. The index entry carries `group` + `workspace_origin`; the
+  `by-name/` layer is the candidate-set file `by-name/<name>.json`.
+  Phases 5 (short-name resolution), 6 (collision detection + exit code
+  7), 8 (canonical-package migration + `VIBEVM-SPEC.md §7.1` + docs)
+  remain.
+- **The package index (PROP-005).** Opt-in; a derived hot cache —
+  package repos stay authoritative, `content_hash` verified at fetch
+  time. `vibe-index` lives at `crates/vibe-index/`, a workspace member,
+  parsing manifests through `vibe-core::Manifest`. Group-native as of
+  PROP-008 Phase 7.
 - **Loading model (PROP-009, M1.18).** Two physically separate trees —
-  authored `spec/` and committed `vibedeps/`. The boot sequence is computed
-  per node and projected into `spec/boot/INLINE.md` + `INDEX.md`. `vibe`
-  owns one `<vibevm>` block inside `CLAUDE.md` / `AGENTS.md` / `GEMINI.md`
-  (PROP-012). The `vibedeps/<kind>-<name>/<version>/` slot layout still
-  carries `kind` — a PROP-009 schema, untouched by PROP-008.
+  authored `spec/` and committed `vibedeps/`. The boot sequence is
+  computed per node and projected into `spec/boot/INLINE.md` + `INDEX.md`.
+  `vibe` owns one `<vibevm>` block inside `CLAUDE.md` / `AGENTS.md` /
+  `GEMINI.md` (PROP-012). The `vibedeps/<kind>-<name>/<version>/` slot
+  layout still carries `kind` — a PROP-009 schema, untouched by PROP-008.
 - **Decentralised registry (PROP-002).** Git-as-registry; content-hash
   identity; `[[registry]]` / `[[mirror]]` / `[[override]]`; redirect stubs.
 - **Incremental install (PROP-011, M1.21).** `vibe install` is
   lockfile-respecting — skips the depsolver when `vibe.lock` is fresh,
   materialises only the changed `vibedeps/` slots.
-- **The package index (PROP-005).** Opt-in; a derived hot cache — package
-  repos stay authoritative, `content_hash` verified at fetch time.
 - **Split-host posture.** vibevm source on GitVerse
   (`git@gitverse.ru:anarchic/vibevm.git`); the package registry org on
   GitHub (`github.com/vibespecs`).
@@ -252,6 +272,10 @@ vibevm/
 ## Recent commit chain (newest first)
 
 ```
+639b959 docs(wal): checkpoint PROP-008 Phase 7
+569d1b0 docs(spec): reconcile PROP-005/008 — group-native index
+59355d3 feat(vibe-index): group-native index (PROP-008 Phase 7)
+d69ff04 docs(continue): cold-resume checkpoint
 e83c398 docs(wal): checkpoint PROP-008 Phases 1-4 shipped
 c5c4fe6 feat(core): group-qualified package identity (PROP-008 Phase 2)
 1ebd279 docs(wal): session-end checkpoint
@@ -273,16 +297,11 @@ ac5ce1d docs(changelog): record the PROP-005 package index milestone
 9e3ee85 style(vibe-index): apply rustfmt across the standalone workspace
 455795d refactor(vibe-index): retire the slice-1 skeleton scaffolding
 c1f0a26 fix(vibe-index): realign the scanner with the current schema
-f6e47bf docs: record the M1.5 deferral — stabilise the base first
-8295333 docs(wal): checkpoint — M1.21 PROP-011 shipped
-3f95333 docs: register M1.21 — incremental install
-577e11d docs(spec): VIBEVM-SPEC §9.1 + PROP-011 — the shipped install contract
 ```
 
-The PROP-008 Phase 2 work this session is `c5c4fe6` (the atomic refactor)
-+ `e83c398` (the WAL checkpoint). The two pre-this-session WIP commits on
-`prop-008-phase2` (`a7d2238`, `45d9c41`) were squashed away and the branch
-deleted.
+The PROP-008 Phase 7 work this session is `59355d3` (the atomic
+`feat(vibe-index)` cut — 32 files), `569d1b0` (the PROP-005/PROP-008
+reconciliation), and `639b959` (the WAL checkpoint).
 
 ---
 
@@ -298,6 +317,9 @@ cargo test --workspace
 cargo clippy --workspace --all-targets -- -D warnings
 cargo run -p vibe-cli -- check --path .
 
+# Just the index crate (the Phase 7 surface).
+cargo test -p vibe-index
+
 # Routine push (GitVerse SSH key picked up automatically in Git Bash).
 git push origin main
 ```
@@ -306,7 +328,7 @@ git push origin main
 
 ## Pointer
 
-`spec/WAL.md` is the canonical living state and supersedes this snapshot if
-they diverge. The WAL's "Current phase" block carries the full PROP-008
-status — Phases 1–4 shipped, the design decision that pulled Phase 4
-forward, and the Phase 5–8 plan.
+`spec/WAL.md` is the canonical living state and supersedes this snapshot
+if they diverge. The WAL's "Current phase" block carries the full
+PROP-008 status — Phases 1–4 + 7 shipped, the Phase-7 detail, the two
+cross-crate findings, and the Phase 5 / 6 / 8 plan.
