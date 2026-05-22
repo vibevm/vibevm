@@ -32,8 +32,8 @@
 
 use std::collections::HashSet;
 
-use vibe_core::manifest::Lockfile;
-use vibe_core::{PackageKind, VersionSpec};
+use vibe_core::manifest::{Lockfile, SourceKind};
+use vibe_core::{PackageKind, PackageRef, VersionSpec};
 
 use crate::{Workspace, vibedeps};
 
@@ -156,6 +156,48 @@ fn satisfies(spec: &VersionSpec, version: &semver::Version) -> bool {
 
 fn stale(reason: String) -> Freshness {
     Freshness::Stale(reason)
+}
+
+/// Pin every registry-resolved declared root the lockfile still satisfies
+/// to its exact locked version — the minimum-churn re-resolution of
+/// PROP-011 §5.3.
+///
+/// When [`check`] reports `Stale`, `vibe install` must re-resolve. A
+/// *free* re-resolve re-picks every root within its constraint, drifting
+/// dependencies the operator never touched. Instead, every root the
+/// current lock still satisfies is pinned to `=<locked>`, so only the
+/// changed root and its subtree move — `vibe install` stays
+/// lockfile-respecting even when it re-resolves. A git-, path-, or
+/// override-sourced root keeps its declared form (its version is not the
+/// resolution key); so does a root the lock no longer satisfies — that is
+/// the change being installed.
+///
+/// The pinned set can over-constrain: a changed root may be incompatible
+/// with a held pin. The caller treats a depsolver error on the pinned set
+/// as the signal to fall back to a full, free re-resolve (PROP-011 §5.3).
+///
+/// This *holds* the pins; it does not *skip* the registry walk. Skipping
+/// the walk for an unchanged subtree needs the depsolver's pin-preference
+/// machinery (PROP-003 §2.1), deferred with the SAT solver.
+pub fn hold_pins(declared_roots: &[PackageRef], lockfile: &Lockfile) -> Vec<PackageRef> {
+    declared_roots
+        .iter()
+        .map(|root| match lockfile.find(root.kind, &root.name) {
+            Some(locked)
+                if locked.source_kind == Some(SourceKind::Registry)
+                    && satisfies(&root.version, &locked.version) =>
+            {
+                let req = semver::VersionReq::parse(&format!("={}", locked.version))
+                    .expect("`=<version>` always parses as a VersionReq");
+                PackageRef {
+                    kind: root.kind,
+                    name: root.name.clone(),
+                    version: VersionSpec::Req(req),
+                }
+            }
+            _ => root.clone(),
+        })
+        .collect()
 }
 
 #[cfg(test)]
@@ -322,5 +364,70 @@ mod tests {
         let (_t, ws) = workspace_with_requires("");
         let lf = lockfile(&[], "");
         assert!(check(&ws, &lf).is_fresh());
+    }
+
+    // --- PROP-011 §5.3 — minimum-churn re-resolution (`hold_pins`) --------
+
+    #[test]
+    fn hold_pins_pins_a_satisfied_registry_root() {
+        let lf = lockfile(&["flow:wal"], &registry_pkg("flow", "wal", "0.3.2"));
+        let declared = vec![PackageRef::parse("flow:wal@^0.3").unwrap()];
+        let pinned = hold_pins(&declared, &lf);
+        // `^0.3` becomes `=0.3.2` — the locked version is held.
+        assert_eq!(pinned[0].to_string(), "flow:wal@=0.3.2");
+    }
+
+    #[test]
+    fn hold_pins_leaves_a_changed_root_free() {
+        // The constraint moved to `^0.4`; the lock at 0.3.2 no longer
+        // satisfies it — this is the change, it must resolve freely.
+        let lf = lockfile(&["flow:wal"], &registry_pkg("flow", "wal", "0.3.2"));
+        let declared = vec![PackageRef::parse("flow:wal@^0.4").unwrap()];
+        let pinned = hold_pins(&declared, &lf);
+        assert_eq!(pinned[0], declared[0]);
+    }
+
+    #[test]
+    fn hold_pins_leaves_an_unlocked_root_free() {
+        let lf = lockfile(&[], "");
+        let declared = vec![PackageRef::parse("flow:new@^1.0").unwrap()];
+        let pinned = hold_pins(&declared, &lf);
+        assert_eq!(pinned[0], declared[0]);
+    }
+
+    #[test]
+    fn hold_pins_does_not_pin_a_git_sourced_root() {
+        // A git-source root resolves by ref, not version — pinning it to
+        // `=<version>` would be meaningless, so it is left at its declared
+        // form and resolves freely.
+        let lf = lockfile(
+            &["flow:internal"],
+            "[[package]]\nkind = \"flow\"\nname = \"internal\"\nversion = \"0.1.0\"\n\
+             source_url = \"https://example/i\"\ncontent_hash = \"sha256:x\"\n\
+             source_kind = \"git\"\n",
+        );
+        let declared = vec![PackageRef::parse("flow:internal").unwrap()];
+        let pinned = hold_pins(&declared, &lf);
+        assert_eq!(pinned[0], declared[0]);
+    }
+
+    #[test]
+    fn hold_pins_mixes_held_and_free_roots() {
+        // wal is satisfied (held); auth's constraint moved (free).
+        let lf = lockfile(
+            &["flow:wal", "feat:auth"],
+            &format!(
+                "{}\n{}",
+                registry_pkg("flow", "wal", "0.3.2"),
+                registry_pkg("feat", "auth", "1.0.0"),
+            ),
+        );
+        let declared = vec![
+            PackageRef::parse("flow:wal@^0.3").unwrap(),
+            PackageRef::parse("feat:auth@^2.0").unwrap(),
+        ];
+        let pinned = hold_pins(&declared, &lf);
+        assert_eq!(pinned[0].to_string(), "flow:wal@=0.3.2");
+        assert_eq!(pinned[1], declared[1]);
     }
 }

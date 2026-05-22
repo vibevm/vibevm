@@ -143,6 +143,11 @@ pub fn run(ctx: &output::Context, args: InstallArgs) -> Result<()> {
         cli_roots.clone()
     };
 
+    // The root set the depsolver actually runs against. For a CLI-pkgref
+    // install it is `roots` verbatim; for a stale bare install PROP-011
+    // §5.3 replaces it with the pin-held set below.
+    let mut solve_roots = roots.clone();
+
     // PROP-011 §2.2 — the freshness fast path. When no CLI pkgref was
     // given (the install-from-manifest shape) and `vibe.lock` is already
     // a correct resolution of every node's `[requires]`, the depsolver —
@@ -164,6 +169,10 @@ pub fn run(ctx: &output::Context, args: InstallArgs) -> Result<()> {
             }
             vibe_workspace::freshness::Freshness::Stale(reason) => {
                 ctx.step(&format!("re-resolving — {reason}"));
+                // PROP-011 §5.3 — minimum churn: hold the locked version
+                // of every root the change did not touch, so re-resolution
+                // moves only the changed dependency and its subtree.
+                solve_roots = vibe_workspace::freshness::hold_pins(&roots, &lockfile);
             }
         }
     }
@@ -174,9 +183,23 @@ pub fn run(ctx: &output::Context, args: InstallArgs) -> Result<()> {
         roots.len(),
         if roots.len() == 1 { "" } else { "s" }
     ));
-    let graph = resolver
-        .solve(&roots)
-        .with_context(|| "dependency resolution failed")?;
+    let graph = match resolver.solve(&solve_roots) {
+        Ok(graph) => graph,
+        Err(e) if solve_roots != roots => {
+            // PROP-011 §5.3 — the pin-held set over-constrained: a changed
+            // dependency is incompatible with a held pin. Fall back to a
+            // full, free re-resolve.
+            ctx.step(&format!(
+                "held pins conflicted with the change ({e}); re-resolving freely"
+            ));
+            resolver
+                .solve(&roots)
+                .with_context(|| "dependency resolution failed")?
+        }
+        Err(e) => {
+            return Err(anyhow::Error::new(e).context("dependency resolution failed"));
+        }
+    };
 
     if graph.packages.len() > roots.len() {
         ctx.step(&format!(
