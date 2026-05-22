@@ -1235,7 +1235,7 @@ Checks performed:
 4. **Anchor uniqueness.** Each `{#anchor}` is unique within its spec file.
 5. **WAL freshness.** `spec/WAL.md` modification timestamp is less than 24 hours old; warn if older.
 6. **WAL well-formedness.** WAL has the required sections (Current Phase, Constraints, Done, Next, Issues).
-7. **Boot directory consistency.** `spec/boot/` exists and holds only markdown files; the generated `INDEX.md` / `INLINE.md` are recognised artifacts. The retired `NN-` filename prefix is not enforced.
+7. **Boot directory consistency.** `spec/boot/` exists and holds only markdown files; the generated `INDEX.md` / `INLINE.md` are recognised artifacts. The retired `NN-` filename prefix is not enforced. The `<vibevm>` block in `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` is well-formed — at most one ordered `<vibevm>` … `</vibevm>` pair.
 8. **Lockfile consistency.** Every package in `vibe.lock` has a materialised `vibedeps/` slot, and `vibedeps/` carries no slot absent from the lockfile.
 9. **REVIEW marker aging.** Any `<!-- REVIEW: ... -->` older than configured threshold (default 14 days) is reported.
 10. **Implementation coverage.** For each feat with a `build` history, files generated from it should have `Implements: spec://...` markers. Report missing markers.

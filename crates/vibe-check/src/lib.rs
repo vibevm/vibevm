@@ -19,10 +19,11 @@
 //!    markdown files. PROP-009 retired the `NN-` filename prefix; the
 //!    directory holds authored boot files and `vibe`-generated
 //!    `INDEX.md` / `INLINE.md` artifacts, none numerically prefixed.
-//! 8. [`CheckId::LockfileFiles`] — every package in `vibe.lock` has
-//!    its declared `files_written` present on disk; spec/flows,
-//!    spec/feats, spec/stacks subtrees have no orphan files (files
-//!    not in any lockfile entry's `files_written`).
+//!    [`CheckId::RedirectBlock`] checks the `<vibevm>` block of each
+//!    agent instruction file is well-formed (PROP-012).
+//! 8. [`CheckId::LockfileFiles`] — every package in `vibe.lock` has a
+//!    materialised `vibedeps/` slot on disk, and `vibedeps/` carries
+//!    no slot absent from the lockfile (PROP-009 §2.1).
 //! 9. [`CheckId::ReviewAging`] — every `<!-- REVIEW: YYYY-MM-DD ... -->`
 //!    marker in `spec/**/*.md` whose date is older than
 //!    `review_max_age_days` (default 14) is reported as a warning.
@@ -77,6 +78,11 @@ pub enum CheckId {
     /// the same package's lazy-push / lazy-pull set. Mirrors Tessl's
     /// review-rubric "activation distinctiveness" axis.
     ActivationConflict,
+    /// PROP-012 §2.2 — the `<vibevm>` block in each agent instruction
+    /// file (`CLAUDE.md` / `AGENTS.md` / `GEMINI.md`) at the project
+    /// root is well-formed: zero markers, or exactly one ordered
+    /// `<vibevm>` … `</vibevm>` pair.
+    RedirectBlock,
 }
 
 impl CheckId {
@@ -92,6 +98,7 @@ impl CheckId {
             CheckId::SubskillStructure => "subskill_structure",
             CheckId::I18nCoverage => "i18n_coverage",
             CheckId::ActivationConflict => "activation_conflict",
+            CheckId::RedirectBlock => "redirect_block",
         }
     }
 
@@ -108,6 +115,7 @@ impl CheckId {
             CheckId::SubskillStructure,
             CheckId::I18nCoverage,
             CheckId::ActivationConflict,
+            CheckId::RedirectBlock,
         ]
     }
 }
@@ -228,6 +236,7 @@ pub fn check_project(project_root: &Path, opts: &CheckOptions) -> CheckReport {
     check_wal_freshness(project_root, &mut report, now, opts.wal_max_age_hours);
     check_wal_wellformed(project_root, &mut report);
     check_boot_directory(project_root, &mut report);
+    check_redirect_blocks(project_root, &mut report);
     check_lockfile_files(project_root, &mut report);
     check_review_aging(project_root, &mut report, now, opts.review_max_age_days);
     check_features_graph(project_root, &mut report);
@@ -786,9 +795,68 @@ fn check_boot_directory(project_root: &Path, report: &mut CheckReport) {
     }
 }
 
-// ===================== check 8: lockfile files =====================
+// ===================== check: redirect block =====================
 
-const PACKAGE_OWNED_ROOTS: &[&str] = &["spec/flows", "spec/feats", "spec/stacks"];
+/// PROP-012 §2.2 — each agent instruction file at the project root
+/// carries at most one well-formed `<vibevm>` block. A malformed file
+/// is an error: a mutating `vibe` command would refuse to proceed
+/// against it.
+fn check_redirect_blocks(project_root: &Path, report: &mut CheckReport) {
+    for name in ["CLAUDE.md", "AGENTS.md", "GEMINI.md"] {
+        let path = project_root.join(name);
+        let content = match fs::read_to_string(&path) {
+            Ok(c) => c,
+            Err(_) => continue, // an absent file is fine — `vibe` creates it
+        };
+        if let Some(reason) = malformed_vibevm_block(&content) {
+            report.err(
+                CheckId::RedirectBlock,
+                Some(PathBuf::from(name)),
+                None,
+                format!("`{name}` has a malformed <vibevm> block: {reason}"),
+            );
+        }
+    }
+}
+
+/// Classify the `<vibevm>` markers in `content` (PROP-012 §2.2): a line
+/// whose trimmed text is exactly `<vibevm>` / `</vibevm>` is a marker.
+/// Returns `Some(reason)` when the file is malformed — anything other
+/// than zero markers or exactly one ordered pair. The scan is
+/// duplicated from `vibe-workspace::boot_artifacts` rather than
+/// re-exported, to keep `vibe-check` independent of that crate's surface.
+fn malformed_vibevm_block(content: &str) -> Option<String> {
+    let mut opens = 0usize;
+    let mut closes = 0usize;
+    let mut first_open: Option<usize> = None;
+    let mut first_close: Option<usize> = None;
+    for (i, line) in content.lines().enumerate() {
+        match line.trim() {
+            "<vibevm>" => {
+                opens += 1;
+                first_open.get_or_insert(i);
+            }
+            "</vibevm>" => {
+                closes += 1;
+                first_close.get_or_insert(i);
+            }
+            _ => {}
+        }
+    }
+    match (opens, closes) {
+        (0, 0) => None,
+        (1, 1) if first_open < first_close => None,
+        (1, 1) => {
+            Some("the `</vibevm>` marker precedes its `<vibevm>` opener".to_string())
+        }
+        (o, c) => Some(format!(
+            "expected exactly one `<vibevm>` … `</vibevm>` pair, found {o} `<vibevm>` \
+             and {c} `</vibevm>` marker line(s)"
+        )),
+    }
+}
+
+// ============== check 8: lockfile / vibedeps consistency ==============
 
 fn check_lockfile_files(project_root: &Path, report: &mut CheckReport) {
     let lockfile_path = project_root.join(Lockfile::FILENAME);
@@ -803,54 +871,68 @@ fn check_lockfile_files(project_root: &Path, report: &mut CheckReport) {
         }
     };
 
-    // 1. Every locked package's files_written present on disk.
-    let mut declared_paths: std::collections::BTreeSet<PathBuf> =
+    // Under the loading model (PROP-009 §2.1) a package is materialised
+    // verbatim into `vibedeps/<kind>-<name>/<version>/`. Check 8 verifies
+    // that the lockfile and that tree agree.
+
+    // 1. Every locked package has its `vibedeps/` slot on disk.
+    let mut expected: std::collections::BTreeSet<String> =
         std::collections::BTreeSet::new();
     for pkg in &lockfile.packages {
-        for rel in &pkg.files_written {
-            declared_paths.insert(normalize(rel));
-            let abs = project_root.join(rel);
-            if !abs.exists() {
-                report.err(
-                    CheckId::LockfileFiles,
-                    Some(rel.clone()),
-                    None,
-                    format!(
-                        "lockfile entry `{}:{}@{}` declares `{}` but the file is missing on disk",
-                        pkg.kind,
-                        pkg.name,
-                        pkg.version,
-                        rel.display()
-                    ),
-                );
-            }
+        let slot = format!("vibedeps/{}-{}/{}", pkg.kind, pkg.name, pkg.version);
+        if !project_root.join(&slot).is_dir() {
+            report.err(
+                CheckId::LockfileFiles,
+                Some(PathBuf::from(&slot)),
+                None,
+                format!(
+                    "lockfile entry `{}:{}@{}` has no materialised `vibedeps/` slot — \
+                     run `vibe reinstall --force`",
+                    pkg.kind, pkg.name, pkg.version
+                ),
+            );
         }
+        expected.insert(slot);
     }
 
-    // 2. No orphan files in package-owned subtrees.
-    for root in PACKAGE_OWNED_ROOTS {
-        let dir = project_root.join(root);
-        if !dir.is_dir() {
-            continue;
-        }
-        for entry in walk_files(&dir) {
-            let rel = match entry.strip_prefix(project_root) {
-                Ok(r) => normalize(r),
-                Err(_) => continue,
-            };
-            if !declared_paths.contains(&rel) {
-                report.warn(
-                    CheckId::LockfileFiles,
-                    Some(rel.clone()),
-                    None,
-                    format!(
-                        "`{}` is in a package-owned subtree but no lockfile entry claims it (orphan)",
-                        rel.display()
-                    ),
-                );
+    // 2. No `vibedeps/` slot absent from the lockfile — `vibe install`
+    //    prunes a slot a version bump or a dropped dependency orphans.
+    let vibedeps = project_root.join("vibedeps");
+    if vibedeps.is_dir() {
+        for kind_name in read_subdirs(&vibedeps) {
+            for version in read_subdirs(&kind_name) {
+                let rel = match version.strip_prefix(project_root) {
+                    Ok(r) => r.to_string_lossy().replace('\\', "/"),
+                    Err(_) => continue,
+                };
+                if !expected.contains(&rel) {
+                    report.warn(
+                        CheckId::LockfileFiles,
+                        Some(PathBuf::from(&rel)),
+                        None,
+                        format!(
+                            "`{rel}` is a vibedeps/ slot no lockfile entry claims \
+                             (orphan) — `vibe install` prunes these"
+                        ),
+                    );
+                }
             }
         }
     }
+}
+
+/// Immediate sub-directories of `dir`, sorted for deterministic output.
+fn read_subdirs(dir: &Path) -> Vec<PathBuf> {
+    let mut out: Vec<PathBuf> = match fs::read_dir(dir) {
+        Ok(rd) => rd
+            .filter_map(|e| e.ok())
+            .map(|e| e.path())
+            .filter(|p| p.is_dir())
+            .collect(),
+        Err(_) => Vec::new(),
+    };
+    out.sort();
+    out
 }
 
 fn walk_files(root: &Path) -> Vec<PathBuf> {
@@ -1262,7 +1344,7 @@ url = "https://example/vibespecs"
     }
 
     #[test]
-    fn lockfile_files_missing_on_disk_is_an_error() {
+    fn lockfile_files_missing_slot_is_an_error() {
         let project = tempdir().unwrap();
         write_minimal_project(project.path());
         let lockfile = r#"[meta]
@@ -1276,10 +1358,10 @@ name = "wal"
 version = "0.1.0"
 source_url = "file:///fake"
 content_hash = "sha256:00"
-files_written = ["spec/flows/wal/A.md"]
+files_written = []
 "#;
         fs::write(project.path().join("vibe.lock"), lockfile).unwrap();
-        // Don't create spec/flows/wal/A.md — we want the error.
+        // No vibedeps/flow-wal/0.1.0/ slot on disk — the error.
         let report = check_project(project.path(), &opts());
         assert!(
             report
@@ -1287,25 +1369,23 @@ files_written = ["spec/flows/wal/A.md"]
                 .iter()
                 .any(|f| f.check == CheckId::LockfileFiles
                     && f.severity == Severity::Error
-                    && f.message.contains("missing on disk")),
+                    && f.message.contains("no materialised")),
             "got: {:?}",
             report.findings
         );
     }
 
     #[test]
-    fn lockfile_files_orphan_in_package_subtree_warns() {
+    fn lockfile_files_orphan_vibedeps_slot_warns() {
         let project = tempdir().unwrap();
         write_minimal_project(project.path());
-        // Stray file in spec/flows/ — not in any lockfile entry.
-        fs::create_dir_all(project.path().join("spec/flows/orphan")).unwrap();
-        fs::write(project.path().join("spec/flows/orphan/stray.md"), "x").unwrap();
-        // Empty lockfile (no packages declare anything).
+        // An empty lockfile, but a vibedeps/ slot on disk — orphan.
         fs::write(
             project.path().join("vibe.lock"),
             "[meta]\ngenerated_by = \"vibe-test\"\ngenerated_at = \"2026-05-04T00:00:00Z\"\nschema_version = 4\n",
         )
         .unwrap();
+        fs::create_dir_all(project.path().join("vibedeps/flow-ghost/1.0.0")).unwrap();
         let report = check_project(project.path(), &opts());
         assert!(
             report
@@ -1315,6 +1395,47 @@ files_written = ["spec/flows/wal/A.md"]
                     && f.severity == Severity::Warning
                     && f.message.contains("orphan")),
             "got: {:?}",
+            report.findings
+        );
+    }
+
+    #[test]
+    fn redirect_block_malformed_is_an_error() {
+        let project = tempdir().unwrap();
+        write_minimal_project(project.path());
+        // Two <vibevm> openers — malformed.
+        fs::write(
+            project.path().join("CLAUDE.md"),
+            "<vibevm>\na\n</vibevm>\n<vibevm>\nb\n</vibevm>\n",
+        )
+        .unwrap();
+        let report = check_project(project.path(), &opts());
+        assert!(
+            report
+                .findings
+                .iter()
+                .any(|f| f.check == CheckId::RedirectBlock && f.severity == Severity::Error),
+            "got: {:?}",
+            report.findings
+        );
+    }
+
+    #[test]
+    fn redirect_block_well_formed_is_clean() {
+        let project = tempdir().unwrap();
+        write_minimal_project(project.path());
+        fs::write(
+            project.path().join("CLAUDE.md"),
+            "# my own instructions\n\n<vibevm>\nredirect\n</vibevm>\n",
+        )
+        .unwrap();
+        let report = check_project(project.path(), &opts());
+        assert!(
+            !report
+                .findings
+                .iter()
+                .any(|f| f.check == CheckId::RedirectBlock),
+            "a well-formed block must not be flagged; got: {:?}",
             report.findings
         );
     }
