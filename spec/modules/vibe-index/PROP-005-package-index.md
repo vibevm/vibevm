@@ -1,7 +1,7 @@
 # PROP-005: Optional package index — per-org metadata + standalone index server {#root}
 
 **Milestone:** retrofits into M2.10 (`vibe search`) and M1.10 (`vibe outdated`) from `ROADMAP.md`. Slices land independently; index is opt-in everywhere.
-**Status:** draft 2026-05-06.
+**Status:** implemented 2026-05-22 — slices 1–8 (the `vibe-index` server + CLI) shipped to `services/vibe-index/`; slices 9–10 (publisher hook + consumer fast path) and M2.10 `vibe search` shipped to the `crates/` workspace. Reconciled with the codebase on 2026-05-22 after the manifest-schema de-rot — see [§9](#open) item 11.
 **Related:** [PROP-001](../vibe-registry/PROP-001-git-backend.md) (git backend), [PROP-002](../vibe-registry/PROP-002-decentralized-registry.md) (`[[registry]]` / `[[mirror]]` / `[[override]]` / content-hashed identity), [PROP-003](../vibe-resolver/PROP-003-dep-evolution.md) (features / subskills / `describes` / conditional deps), [PROP-004](../../research/PROP-004-tessl-comparative-research.md) §5.x (gap analysis), [`spec://vibevm/common/PROP-000`](../../common/PROP-000.md) (especially §15 dep weight, §16 JTD, §17 production architecture, §18 complexity ≥ RPM, §20 token secrecy).
 
 > **Out-of-band research summary** (2026-05-06, prior session). Comparative inventory of indexing strategies in production package managers — Maven Central (Lucene + directory layout), npm (CouchDB replicated DB), PyPI (PEP 503/691 simple API), RPM/DNF (`repodata/primary.xml.gz` + libsolv), Deb/APT (`Packages.gz` RFC822), Cargo (git index → sparse HTTP), Go modules (proxy + Merkle sumdb), Nix flakes (per-flake `flake.lock`, no global index), Homebrew (mono-repo formula), OCI registries (`/v2/_catalog`). Three candidate paths surfaced for vibevm: **(a)** Cargo-sparse-style per-package JSON files in an org-level index; **(b)** DNF-style single repodata directory with full SAT-ready dep graph; **(c)** Nix-flake-style indexless live-resolve (current state) with optional `flake-registry`-shape short-name mapping. PROP-005 picks (a) augmented by (b)'s integrity-manifest pattern (`repomd.json`).
@@ -22,7 +22,7 @@ This works at the M0 / M1 demonstration scale (3 packages in `vibespecs`). It do
 
 1. **Cold-cache install latency grows linearly with the dep graph.** A project with 20 transitive deps spread across two registries spends 30–60 s in `git ls-remote` alone before any actual content fetch.
 2. **Rate-limit visibility for `vibe outdated`.** Polling N packages at refresh time burns N requests; against an unauthenticated GitHub registry, this exhausts the quota at 60 packages.
-3. **`vibe search` is impossible.** Even with an authenticated org-listing endpoint, parsing every repo's `vibe-package.toml` at every search would be intractable.
+3. **`vibe search` is impossible.** Even with an authenticated org-listing endpoint, parsing every repo's `vibe.toml` at every search would be intractable.
 4. **Discovery story is silent.** A consumer with a fresh checkout of an unknown vibevm org has no way to enumerate "what packages live here?" without scraping the host UI.
 5. **Mirror-driven offline workflows degrade silently.** [PROP-002 §2.3](../vibe-registry/PROP-002-decentralized-registry.md#mirror) makes mirror dispatch invisible to the lockfile, but `ls-remote` against a mirror still leaks live host calls when the resolver wants to know "what versions exist?" — there's no offline catalog.
 
@@ -244,7 +244,8 @@ Determinism matters because the index repo lives in git: a non-deterministic ord
     "default": "en"
   },
   "boot_snippet": {
-    "filename": "10-flow-wal.md"
+    "source": "boot/10-flow-wal.md",
+    "category": "flow"
   },
   "files_count": 5,
   "indexed_at": "2026-05-06T12:00:00Z",
@@ -254,7 +255,7 @@ Determinism matters because the index repo lives in git: a non-deterministic ord
 
 **Field provenance.**
 
-- `kind` / `name` / `version` / `license` / `authors` / `description` / `homepage` / `keywords` / `describes` / `compatibility` / `provides` / `requires` / `requires_any` / `obsoletes` / `conflicts` / `features` / `i18n` / `boot_snippet.filename` — read directly from `vibe-package.toml` at the tagged ref.
+- `kind` / `name` / `version` / `license` / `authors` / `description` / `homepage` / `keywords` / `describes` / `compatibility` / `provides` / `requires` / `requires_any` / `obsoletes` / `conflicts` / `features` / `i18n` / `boot_snippet.source` / `boot_snippet.category` — read directly from `vibe.toml` at the tagged ref. (M1.18's loading model, PROP-009, retired the author-chosen `boot_snippet.filename`; a snippet is now its `source` path plus an ordering `category`.)
 - `subskills` — collected by walking `<package-root>/subskills/<path>/vibe-subskill.toml` at the tagged ref; each entry: `{path, delivery, describes, description, channels}`. Same fields the lockfile records.
 - `content_hash` — computed by the same algorithm `vibe-registry::compute_content_hash` uses (sha256 over deterministically-ordered file bytes). Index uses **the same hash** as the lockfile, so cross-checks are byte-equal.
 - `source_url` — the canonical org URL (§2.4 of [PROP-002](../vibe-registry/PROP-002-decentralized-registry.md#registry-model)) composed with the package repo name. Mirror URLs do not appear here (same invariant as the lockfile).
@@ -278,7 +279,7 @@ The `repomd.json::files[*].sha256` covers integrity of the index files themselve
 
 **Decision.** Two regeneration modes, both available via CLI (`vibe-index reindex`) and HTTP (`POST /v1/admin/reindex`):
 
-**Full reindex.** Walk every package repo in the org; for each repo, list tags; for each `v<semver>` tag, read `vibe-package.toml` and `subskills/**/vibe-subskill.toml` at that ref; compute `content_hash`; assemble §2.6 entry. Replace the in-memory index wholesale, then atomic-write the on-disk files.
+**Full reindex.** Walk every package repo in the org; for each repo, list tags; for each `v<semver>` tag, read `vibe.toml` and `subskills/**/vibe-subskill.toml` at that ref; compute `content_hash`; assemble §2.6 entry. Replace the in-memory index wholesale, then atomic-write the on-disk files.
 
 Sources for the walk:
 
@@ -499,7 +500,7 @@ Each integration point is a separate slice. v0 of `vibe-index` ships without any
 
 ### 2.15 What index must NEVER do {#never}
 
-- **Never replace `vibe-package.toml` as the source of truth.** A package with a missing index entry still installs from git per the live path. A package with a divergent index entry triggers `IntegrityError`, never silent acceptance.
+- **Never replace `vibe.toml` as the source of truth.** A package with a missing index entry still installs from git per the live path. A package with a divergent index entry triggers `IntegrityError`, never silent acceptance.
 - **Never modify package repos.** The index utility reads package repos (for the `--from-clones` walk) but never writes to them.
 - **Never echo tokens.** Same discipline as [PROP-000 §20](../../common/PROP-000.md#token-secrecy). Auth tokens for the server, GitHub API tokens for `--from-github`, publish tokens propagated through hooks — none ever appear in stdout / stderr / logs / JSON envelopes.
 - **Never assume mirror infrastructure.** The index is opt-in everywhere; no consumer or publisher fails because the index disappeared.
@@ -618,7 +619,7 @@ Minimal Rust crates to keep redistribution clean:
 
 **Deliberately NOT pulling:**
 
-- A dep on `vibe-core` / `vibe-registry`. The utility ships standalone so duplicates a few small types (`PackageKind`, `NamingConvention`) and the `compute_content_hash` algorithm. Trade-off: the algorithm MUST stay byte-for-byte identical to `vibe-registry`'s; a parity test in `tests/content_hash_parity.rs` walks the same fixture through both crates and asserts equality. The cost of keeping them in sync is low (algorithm doesn't change); the benefit (no dependency on the vibevm workspace) is high for redistribution.
+- A dep on `vibe-core` / `vibe-registry`. The utility ships standalone, so it duplicates a few small types (`PackageKind`, `NamingConvention`), the `compute_content_hash` algorithm, and a read-only `vibe.toml` parser (`scanner/manifest.rs`). Trade-off: every duplicate MUST track its `vibe-core` / `vibe-registry` original. `compute_content_hash` is gated by `tests/content_hash_parity.rs`, which runs a fixture — a byte-for-byte copy of the main workspace's `fixtures/registry/flow/wal/v0.1.0/` — through the duplicate and asserts the digest the canonical algorithm produces. The `compute_content_hash` cost is low (the algorithm is stable); the manifest-parser cost proved higher — the duplicate parser silently rotted against the M1.17 / M1.18 schema churn (see [§9](#open) item 11). The benefit (no dependency on the vibevm workspace) is high for redistribution.
 - A database (SQLite / PostgreSQL). All state in RAM + flat files.
 
 ### 3.3 Git access in the scanner {#git-access}
@@ -811,7 +812,9 @@ Most consumers see only the static raw-HTTP files; the server is for orgs that n
 7. **WebSockets / Server-Sent Events for live publish notifications** — out of scope. Polling `/v1/admin/status::last_reindex` is sufficient at our scale.
 8. **OCI registry shape** — could we host the index inside an OCI registry instead of git? Out of scope; revisit if the OCI tooling becomes universal among vibevm operators.
 9. **Capability- vs PURL-driven search** — v0 ships `by-cap` and `by-purl` as separate files. If usage shows one dominates, the loser may be folded into the inverted text index. Empirical question.
-10. **Rate-limiting on the server** — v0 has none. Production deployments put it behind a reverse proxy that has its own rate-limit. v1 may add per-token rate-limits to mute abusive clients without proxy help.
+10. **Rate-limiting on the server** — shipped after the v0 plan: `server/rate_limit.rs` is a per-token and per-IP token-bucket limiter, disabled by default and opt-in by flag. Production deployments may still front it with a reverse proxy's limiter; the two compose.
+
+11. **Standalone-workspace duplication costs more than §3.2 budgeted.** The 2026-05-22 de-rot found `services/vibe-index/` had silently rotted: its duplicated `vibe.toml` parser still expected the pre-M1.17 shape (`[writes]`, `[dependencies]`, `[boot_snippet].filename`) and could not parse a current manifest, and its `content_hash` parity test had drifted off a fixture renamed by the M1.17 manifest unification. §3.2 weighed the duplication cost for `compute_content_hash` alone ("the algorithm doesn't change"); the *manifest schema*, by contrast, churned hard through M1.17 (unified `vibe.toml`) and M1.18 (loading model), and the duplicate parser had no cross-check to catch the drift — the standalone workspace also sits outside the routine `cargo test --workspace` gate, so only `tools/self-check.sh` exercises it. The de-rot rewrote the parser for the current schema and made it lenient (unknown sections ignored rather than fatal), but the structural choice stands open: depend on `vibe-core` for manifest parsing — killing the rot at the root but coupling the redistribution story to the vibevm workspace — or keep duplicating and accept a periodic reconciliation tax. An owner design session decides.
 
 ---
 
@@ -865,3 +868,4 @@ These live in `services/vibe-index/docs/operator-handbook.md` rather than as shi
 ## 12. Version history {#history}
 
 - **2026-05-06 — draft 1.** Initial proposal. Open for review.
+- **2026-05-22 — reconciled with the implementation.** Slices 1–8 (server + CLI) shipped to `services/vibe-index/`; slices 9–10 (publisher hook + consumer fast path) and M2.10 `vibe search` shipped to the `crates/` workspace. This revision corrects the §2.6 `boot_snippet` schema (`source` + `category`, not the retired `filename`), the `vibe.toml` manifest filename throughout, the §2.10 rate-limiter status (§9 item 10), and records the standalone-workspace duplication finding (§9 item 11) surfaced by the manifest-schema de-rot.

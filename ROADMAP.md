@@ -588,10 +588,10 @@ shares the computed-view engine and rides with the M1.5 milestone.
 - Mandatory `[package].group`; identity tuple becomes `(group, name, version, content_hash)`; `kind` leaves identity, stays metadata.
 - pkgref grammar `[kind:][group/]name[@version]` — `kind` prefix optional, validated when present.
 - `naming = "fqdn"` repo names (`org.vibevm.wal`); `kind` leaves the repository name.
-- Index-backed short-name resolution (depends on PROP-005 being implemented); collision detection with new exit code `7`.
+- Index-backed short-name resolution (PROP-005, now implemented); collision detection with new exit code `7`.
 - Migration of the three canonical packages to `group = "org.vibevm"`; lockfile schema v4 (shared bump with M1.17).
 
-**Order.** Depends on [PROP-005](spec/modules/vibe-index/PROP-005-package-index.md) implementation for short-name resolution. Sequence: M1.17 → M1.18 → PROP-005 impl → M1.19.
+**Order.** Needs short-name resolution from [PROP-005](spec/modules/vibe-index/PROP-005-package-index.md), which is now implemented (the index server, the consumer fast path, and `vibe search`). Sequence: M1.17 → M1.18 → PROP-005 (done) → M1.19.
 
 ### M1.20 — Local package cache (PROP-010) — DRAFT design
 
@@ -838,19 +838,19 @@ Source: [PROP-004 §5.5](spec/research/PROP-004-tessl-comparative-research.md#co
 
 **Estimated effort.** 4–6 weekends. Depends on M1.5.1, M1.8.
 
-### M2.10 — `vibe search` registry inspector
+### M2.10 — `vibe search` registry inspector — ✅ SHIPPED (2026-05-22)
 
-**Thesis.** With ~3 packages today, `vibe install` is fine; with 100+ it won't be. Tessl ships `tessl search` as a registry-side feature — vibevm's decentralised model makes naive search trivial: walk all configured `[[registry]]` URLs.
+**Thesis.** With ~3 packages today, `vibe install` is fine; with 100+ it won't be. Tessl ships `tessl search` as a registry-side feature; vibevm's decentralised model needs an index to make search tractable at scale.
 
-Source: [PROP-004 §5.12](spec/research/PROP-004-tessl-comparative-research.md#search).
+Source: [PROP-004 §5.12](spec/research/PROP-004-tessl-comparative-research.md#search), [PROP-005](spec/modules/vibe-index/PROP-005-package-index.md).
 
-**Scope.**
+**Shipped.**
 
-- `vibe search <query>` walks all configured `[[registry]]` URLs, lists packages whose `vibe-package.toml` description matches.
-- Cache results in `~/.vibe/search-cache/`.
-- Naive at first; indexing is a future optimisation.
+- `vibe search <query>` queries each configured registry's PROP-005 index (`IndexClient::search` against `/v1/packages?q=`); `--full-scan` falls back to the indexless registry walk for registries without an index.
+- `vibe search --purl <purl>` answers "which packages describe this upstream library?" via the index's `by-purl` lane.
+- Results cached in `~/.vibe/search-cache/`.
 
-**Estimated effort.** 1 weekend.
+The index that makes this tractable is [PROP-005](spec/modules/vibe-index/PROP-005-package-index.md), implemented alongside — the `vibe-index` server + CLI in `services/vibe-index/`, and the consumer-side `IndexClient` fast path in `vibe-registry`.
 
 ---
 
