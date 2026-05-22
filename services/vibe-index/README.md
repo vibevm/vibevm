@@ -27,8 +27,12 @@ cargo install --path .
 
 ## Status
 
-Slice 1 — skeleton (CLI dispatch, stub subcommands, help-smoke test).
-Subsequent slices land per [PROP-005 §4](../../spec/modules/vibe-index/PROP-005-package-index.md#phases).
+PROP-005 slices 1–8 are implemented — the full CLI (`init` / `reindex`
+/ `add` / `remove` / `get` / `list` / `search` / `capabilities` /
+`purls` / `outdated` / `verify` / `dump`) and the read + write HTTP
+server (`serve`), fed by `reindex --from-clones` or `--from-github`.
+The consumer-side integration (PROP-005 slices 9–10) lives in the main
+`crates/` workspace. Slice plan: [PROP-005 §4](../../spec/modules/vibe-index/PROP-005-package-index.md#phases).
 
 ## Quick start
 
@@ -38,9 +42,9 @@ vibe-index init   ./vibespecs-index --registry vibespecs --registry-url https://
 vibe-index serve  ./vibespecs-index --bind 127.0.0.1:8412
 ```
 
-(Subcommand bodies land in slices 2+; slice 1 stubs respond with a
-"not yet implemented" envelope so the dispatch surface is exercisable
-end to end.)
+Most consumers read the static index files over raw HTTP (or a git
+clone of the `index` repo); the `serve` mode is for orgs that need
+real-time, publish-time index updates.
 
 ## Licensing
 

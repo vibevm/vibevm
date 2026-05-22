@@ -5,12 +5,12 @@
 //! surface so integration tests can call into the dispatcher without
 //! shelling out to the binary.
 //!
-//! Slice 1 lands the CLI skeleton (clap-derived subcommand dispatch +
-//! a stubbed entry point per subcommand returning
-//! [`Error::NotYetImplemented`]). The subsequent slices fill in the
-//! actual subcommand bodies. Help-text rendering for every subcommand
-//! is exercised by `tests/help_smoke.rs` and is a regression invariant
-//! across all later slices.
+//! The utility builds and serves an opt-in per-org metadata catalog:
+//! `init` / `reindex` / `add` / `remove` mutate a data directory of
+//! index files; `get` / `list` / `search` / `capabilities` / `purls`
+//! / `outdated` read it; `serve` exposes the same surface over HTTP.
+//! Help-text rendering for every subcommand is exercised by
+//! `tests/help_smoke.rs` and is a standing regression invariant.
 //!
 //! [prop]: ../../../spec/modules/vibe-index/PROP-005-package-index.md
 

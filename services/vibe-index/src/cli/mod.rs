@@ -1,8 +1,7 @@
 //! CLI dispatch — clap-derived `Cli` / `Command` enum + per-subcommand
-//! modules. Slice 1 ships the full subcommand surface as stubs so the
-//! help-text smoke test asserts against the v1 dispatch shape from
-//! day one. Subsequent slices replace stubs with real implementations
-//! one subcommand at a time.
+//! modules. The help-text smoke test (`tests/help_smoke.rs`) asserts
+//! against the full dispatch shape, so every subcommand renders help
+//! and parses its arguments whatever the caller does next.
 
 use clap::{Parser, Subcommand};
 
