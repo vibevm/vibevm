@@ -7,7 +7,7 @@
 ## Session boot sequence
 
 Every session starts here. In order:
-1. Read this file and the rest of `spec/boot/` end to end.
+1. Read this file and the rest of `spec/boot/` end to end — including the generated `INDEX.md` (the computed boot manifest) and `INLINE.md` (the priority lane). `vibe` owns the boot order; see `VIBEVM-SPEC.md` §6.
 2. Read `spec/WAL.md` — current project state (checkpoint, not log).
 3. Read the relevant PROP/FEAT under `spec/common/` and `spec/modules/` for the task at hand.
 4. Only then start work.
@@ -35,7 +35,7 @@ Information flows top-down. If code changes first, reconcile up via the Sync-fro
 ## Hard conventions
 
 - **Language:** Rust. See [spec://vibevm/common/PROP-000#language](../common/PROP-000.md#language).
-- **Manifests:** TOML. Project manifest = `vibe.toml`; package manifest = `vibe-package.toml`; lockfile = `vibe.lock`.
+- **Manifests:** TOML. One `vibe.toml` per node — the role is set by section (`[project]` ⊕ `[package]`, optionally `[workspace]`); lockfile = `vibe.lock`.
 - **Terminology:** only four installable kinds — `flow`, `feat`, `stack`, `tool`. Never say "lifecycle", "phase", "goal", "plugin" (except that "plugin" == "package" in passing context). See `VIBEVM-SPEC.md` §4.
 - **Repository URLs:** vibevm source = `git@gitverse.ru:anarchic/vibevm.git` / `https://gitverse.ru/anarchic/vibevm`. Package registry (future) = `git@gitverse.ru:anarchic/vibespecs.git`.
 
