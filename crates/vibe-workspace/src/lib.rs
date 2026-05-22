@@ -36,6 +36,7 @@ use vibe_core::{PackageKind, PackageRef, VersionSpec};
 
 pub mod boot;
 pub mod boot_artifacts;
+pub mod freshness;
 pub mod install;
 pub mod publish;
 pub mod vibedeps;

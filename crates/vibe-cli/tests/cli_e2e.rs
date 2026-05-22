@@ -294,6 +294,53 @@ fn install_reports_json() {
     assert_eq!(last["nodes_regenerated"].as_array().unwrap().len(), 1);
 }
 
+/// PROP-011 §2.2 — a bare `vibe install` after a full install finds the
+/// lockfile fresh and skips the depsolver entirely. The fast-path report
+/// carries `unchanged: true` and emits no resolution plan ahead of it.
+#[test]
+fn install_skips_resolution_when_the_lockfile_is_fresh() {
+    let project = tempfile::tempdir().unwrap();
+    init_project(project.path());
+
+    // First install — the full pipeline: resolve, materialise, lock. It
+    // also records `flow:wal` in `[requires].packages`.
+    vibe()
+        .arg("install")
+        .arg("flow:wal")
+        .arg("--path")
+        .arg(project.path())
+        .arg("--registry")
+        .arg(fixture_registry())
+        .arg("--assume-yes")
+        .assert()
+        .success();
+
+    // Second install with no pkgref — `[requires]` carries flow:wal, the
+    // lock is a fresh resolution of it, the slot is materialised: the
+    // depsolver is skipped.
+    let out = vibe()
+        .arg("--json")
+        .arg("install")
+        .arg("--path")
+        .arg(project.path())
+        .arg("--registry")
+        .arg(fixture_registry())
+        .arg("--assume-yes")
+        .output()
+        .unwrap();
+    assert!(out.status.success());
+    let stdout = String::from_utf8(out.stdout).unwrap();
+    let docs: Vec<serde_json::Value> = serde_json::Deserializer::from_str(&stdout)
+        .into_iter::<serde_json::Value>()
+        .collect::<Result<_, _>>()
+        .expect("stdout is a stream of JSON documents");
+    // The fast path emits exactly one document — the report — with no
+    // preceding resolution plan, and flags itself unchanged.
+    assert_eq!(docs.len(), 1, "fast path emits only the report, no plan");
+    assert_eq!(docs[0]["command"], "install");
+    assert_eq!(docs[0]["unchanged"], true);
+}
+
 #[test]
 fn uninstall_errors_when_package_not_installed() {
     let project = tempfile::tempdir().unwrap();

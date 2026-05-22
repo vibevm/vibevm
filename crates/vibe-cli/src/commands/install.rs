@@ -136,6 +136,31 @@ pub fn run(ctx: &output::Context, args: InstallArgs) -> Result<()> {
         cli_roots.clone()
     };
 
+    // PROP-011 §2.2 — the freshness fast path. When no CLI pkgref was
+    // given (the install-from-manifest shape) and `vibe.lock` is already
+    // a correct resolution of every node's `[requires]`, the depsolver —
+    // a registry walk over the network — is skipped entirely: the
+    // resolution is the lock, and application is just a whole-tree boot
+    // regeneration (cheap, self-healing — PROP-011 §2.4). This is also
+    // what makes `vibe install` lockfile-respecting: a fresh lock is
+    // honoured verbatim, with no version drift inside a constraint. An
+    // explicit `vibe install <pkgref>` always runs the full pipeline.
+    if cli_roots.is_empty() {
+        let ws = Workspace::discover(&project_root)
+            .context("re-discovering the workspace for the freshness check")?;
+        match vibe_workspace::freshness::check(&ws, &lockfile) {
+            vibe_workspace::freshness::Freshness::Fresh => {
+                ctx.heading("vibe.lock is fresh — skipping resolution");
+                let nodes = vibe_workspace::install::regenerate_boot(&ws)
+                    .context("regenerating boot artifacts from the materialised state")?;
+                return emit_fresh_report(ctx, &nodes);
+            }
+            vibe_workspace::freshness::Freshness::Stale(reason) => {
+                ctx.step(&format!("re-resolving — {reason}"));
+            }
+        }
+    }
+
     // 2. Run the depsolver.
     ctx.heading(&format!(
         "Resolving {} root package{}…",
@@ -949,6 +974,27 @@ fn emit_report(ctx: &output::Context, outcome: &InstallOutcome) -> Result<()> {
             if outcome.pruned.len() == 1 { "" } else { "s" },
         ));
     }
+    Ok(())
+}
+
+/// Report the PROP-011 §2.2 fast path — `vibe.lock` was fresh, so no
+/// resolution ran. Kept distinct from [`emit_report`] so the operator can
+/// tell a no-op `vibe install` from one that materialised packages.
+fn emit_fresh_report(ctx: &output::Context, nodes_regenerated: &[String]) -> Result<()> {
+    if ctx.is_json() {
+        ctx.emit_json(&serde_json::json!({
+            "ok": true,
+            "command": "install",
+            "unchanged": true,
+            "nodes_regenerated": nodes_regenerated,
+        }))?;
+        return Ok(());
+    }
+    ctx.summary(&format!(
+        "vibe install: vibe.lock unchanged — nothing to re-resolve ({} node{} up to date)",
+        nodes_regenerated.len(),
+        if nodes_regenerated.len() == 1 { "" } else { "s" },
+    ));
     Ok(())
 }
 
