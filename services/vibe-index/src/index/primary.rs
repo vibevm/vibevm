@@ -196,7 +196,10 @@ mod tests {
         let bytes = b"vibevm primary.jsonl bytes go here\n";
         let a = gzip_deterministic(bytes).unwrap();
         let b = gzip_deterministic(bytes).unwrap();
-        assert_eq!(a, b, "gzip output must be byte-identical for identical input");
+        assert_eq!(
+            a, b,
+            "gzip output must be byte-identical for identical input"
+        );
     }
 
     #[test]

@@ -14,9 +14,9 @@ use crate::index::Index;
 use crate::types::{PackageKind, VersionEntry};
 
 const STOPWORDS: &[&str] = &[
-    "a", "an", "and", "are", "as", "at", "be", "by", "for", "from", "has", "he", "in", "is",
-    "it", "its", "of", "on", "or", "she", "that", "the", "this", "to", "was", "were", "with",
-    "you", "your",
+    "a", "an", "and", "are", "as", "at", "be", "by", "for", "from", "has", "he", "in", "is", "it",
+    "its", "of", "on", "or", "she", "that", "the", "this", "to", "was", "were", "with", "you",
+    "your",
 ];
 
 #[derive(Debug, Clone)]
@@ -203,8 +203,14 @@ mod tests {
 
     #[test]
     fn capability_matches_exact_and_left_only() {
-        assert!(capability_matches("ui:landing-page@0.3.0", "ui:landing-page@0.3.0"));
-        assert!(capability_matches("ui:landing-page@0.3.0", "ui:landing-page"));
+        assert!(capability_matches(
+            "ui:landing-page@0.3.0",
+            "ui:landing-page@0.3.0"
+        ));
+        assert!(capability_matches(
+            "ui:landing-page@0.3.0",
+            "ui:landing-page"
+        ));
         assert!(capability_matches("ui:landing-page", "ui:landing-page"));
         assert!(!capability_matches("ui:landing-page", "ui:dashboard"));
     }

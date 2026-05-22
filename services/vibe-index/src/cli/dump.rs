@@ -62,9 +62,8 @@ fn dump_json(index: &Index) -> Result<()> {
         "version_count": index.version_count(),
         "entries": entries,
     });
-    let pretty = serde_json::to_string_pretty(&payload).map_err(|e| {
-        Error::Malformed(format!("could not serialise dump payload: {e}"))
-    })?;
+    let pretty = serde_json::to_string_pretty(&payload)
+        .map_err(|e| Error::Malformed(format!("could not serialise dump payload: {e}")))?;
     println!("{pretty}");
     Ok(())
 }

@@ -59,12 +59,7 @@ pub fn resolve_commit(repo: &Path, tag: &str) -> Result<String> {
 /// `None` for empty repositories or weird states (no commits at all).
 pub fn head_commit(repo: &Path) -> Option<String> {
     let out = std::process::Command::new(binary())
-        .args([
-            "-C",
-            repo.to_str()?,
-            "rev-parse",
-            "HEAD",
-        ])
+        .args(["-C", repo.to_str()?, "rev-parse", "HEAD"])
         .output()
         .ok()?;
     if !out.status.success() {
@@ -88,14 +83,7 @@ pub fn materialise_at_ref(src_repo: &Path, tag: &str, dest: &Path) -> Result<()>
     })?;
     let status = Command::new(binary())
         .args([
-            "clone",
-            "--quiet",
-            "--depth",
-            "1",
-            "--branch",
-            tag,
-            src_str,
-            dest_str,
+            "clone", "--quiet", "--depth", "1", "--branch", tag, src_str, dest_str,
         ])
         .status()
         .map_err(|e| Error::Io {
@@ -159,7 +147,14 @@ mod tests {
         let repo = parent.join(name);
         fs::create_dir_all(&repo).unwrap();
         Command::new("git")
-            .args(["-C", repo.to_str().unwrap(), "init", "--quiet", "-b", "main"])
+            .args([
+                "-C",
+                repo.to_str().unwrap(),
+                "init",
+                "--quiet",
+                "-b",
+                "main",
+            ])
             .status()
             .unwrap();
         Command::new("git")
@@ -173,13 +168,7 @@ mod tests {
             .status()
             .unwrap();
         Command::new("git")
-            .args([
-                "-C",
-                repo.to_str().unwrap(),
-                "config",
-                "user.name",
-                "Test",
-            ])
+            .args(["-C", repo.to_str().unwrap(), "config", "user.name", "Test"])
             .status()
             .unwrap();
         for (tag, manifest_body) in versions {
@@ -190,14 +179,7 @@ mod tests {
                 .status()
                 .unwrap();
             Command::new("git")
-                .args([
-                    "-C",
-                    repo.to_str().unwrap(),
-                    "commit",
-                    "--quiet",
-                    "-m",
-                    tag,
-                ])
+                .args(["-C", repo.to_str().unwrap(), "commit", "--quiet", "-m", tag])
                 .status()
                 .unwrap();
             Command::new("git")
@@ -221,7 +203,11 @@ mod tests {
         if !git_available() {
             return;
         }
-        let repo = make_repo(dir.path(), "flow-wal", &[("v0.1.0", &manifest_for("0.1.0"))]);
+        let repo = make_repo(
+            dir.path(),
+            "flow-wal",
+            &[("v0.1.0", &manifest_for("0.1.0"))],
+        );
         assert!(is_git_dir(&repo));
     }
 
@@ -250,7 +236,11 @@ mod tests {
             return;
         }
         let dir = tempdir().unwrap();
-        let repo = make_repo(dir.path(), "flow-wal", &[("v0.1.0", &manifest_for("0.1.0"))]);
+        let repo = make_repo(
+            dir.path(),
+            "flow-wal",
+            &[("v0.1.0", &manifest_for("0.1.0"))],
+        );
         let sha = resolve_commit(&repo, "v0.1.0").unwrap();
         assert_eq!(sha.len(), 40, "expected a 40-char SHA, got `{sha}`");
     }
@@ -261,7 +251,11 @@ mod tests {
             return;
         }
         let parent = tempdir().unwrap();
-        let repo = make_repo(parent.path(), "flow-wal", &[("v0.1.0", &manifest_for("0.1.0"))]);
+        let repo = make_repo(
+            parent.path(),
+            "flow-wal",
+            &[("v0.1.0", &manifest_for("0.1.0"))],
+        );
         let dest_holder = tempdir().unwrap();
         let dest = dest_holder.path().join("snapshot");
         materialise_at_ref(&repo, "v0.1.0", &dest).unwrap();

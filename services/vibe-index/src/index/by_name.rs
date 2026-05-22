@@ -17,7 +17,9 @@ pub fn dir(data_dir: &Path) -> PathBuf {
 }
 
 pub fn file_path(data_dir: &Path, kind: PackageKind, name: &str) -> PathBuf {
-    dir(data_dir).join(kind.as_str()).join(format!("{name}.json"))
+    dir(data_dir)
+        .join(kind.as_str())
+        .join(format!("{name}.json"))
 }
 
 /// Serialise `entry` to pretty-printed JSON bytes (with trailing newline).
@@ -94,7 +96,9 @@ pub fn entry_count(data_dir: &Path) -> u32 {
         .max_depth(2)
         .into_iter()
         .filter_map(|e| e.ok())
-        .filter(|e| e.file_type().is_file() && e.path().extension().and_then(|s| s.to_str()) == Some("json"))
+        .filter(|e| {
+            e.file_type().is_file() && e.path().extension().and_then(|s| s.to_str()) == Some("json")
+        })
         .count() as u32
 }
 

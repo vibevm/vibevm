@@ -124,7 +124,10 @@ pub fn parse_next_link(link: &str) -> Option<String> {
     for part in link.split(',') {
         let part = part.trim();
         let (url_part, rel_part) = part.split_once(';')?;
-        let url = url_part.trim().trim_start_matches('<').trim_end_matches('>');
+        let url = url_part
+            .trim()
+            .trim_start_matches('<')
+            .trim_end_matches('>');
         let rel = rel_part.trim();
         if rel == "rel=\"next\"" {
             return Some(url.to_string());

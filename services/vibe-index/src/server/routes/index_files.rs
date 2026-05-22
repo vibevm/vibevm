@@ -66,10 +66,7 @@ pub async fn by_cap_jsonl(
             "expected `<slug>.jsonl` path segment, got `{slug_with_ext}`"
         ))
     })?;
-    let path = state
-        .data_dir
-        .join("by-cap")
-        .join(format!("{slug}.jsonl"));
+    let path = state.data_dir.join("by-cap").join(format!("{slug}.jsonl"));
     serve_file(&path, "application/x-ndjson").await
 }
 
@@ -83,10 +80,7 @@ pub async fn by_purl_jsonl(
             "expected `<slug>.jsonl` path segment, got `{slug_with_ext}`"
         ))
     })?;
-    let path = state
-        .data_dir
-        .join("by-purl")
-        .join(format!("{slug}.jsonl"));
+    let path = state.data_dir.join("by-purl").join(format!("{slug}.jsonl"));
     serve_file(&path, "application/x-ndjson").await
 }
 
@@ -100,11 +94,11 @@ pub async fn by_name_json(
             "unknown kind `{kind_str}` — expected one of: flow, feat, stack, tool"
         ))
     })?;
-    let name = name_with_ext
-        .strip_suffix(".json")
-        .ok_or_else(|| ApiError::not_found(format!(
+    let name = name_with_ext.strip_suffix(".json").ok_or_else(|| {
+        ApiError::not_found(format!(
             "expected `<name>.json` path segment, got `{name_with_ext}`"
-        )))?;
+        ))
+    })?;
     let path = state
         .data_dir
         .join("by-name")

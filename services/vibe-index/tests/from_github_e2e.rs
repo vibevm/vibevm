@@ -113,7 +113,11 @@ fn spawn_mock(pages: Vec<Vec<CannedRepo>>) -> MockServer {
     }
 }
 
-fn make_local_repo(parent: &Path, dir_name: &str, manifests: &[(&str, &str)]) -> std::path::PathBuf {
+fn make_local_repo(
+    parent: &Path,
+    dir_name: &str,
+    manifests: &[(&str, &str)],
+) -> std::path::PathBuf {
     let repo = parent.join(dir_name);
     std::fs::create_dir_all(&repo).unwrap();
     git(&repo, &["init", "--quiet", "-b", "main"]);

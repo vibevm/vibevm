@@ -41,10 +41,8 @@ pub fn build_app(state: AppState) -> Router {
         .allow_methods(Any)
         .allow_headers(Any);
 
-    let rate_limit_layer = middleware::from_fn_with_state(
-        Arc::clone(&state),
-        rate_limit_middleware,
-    );
+    let rate_limit_layer =
+        middleware::from_fn_with_state(Arc::clone(&state), rate_limit_middleware);
 
     Router::new()
         // Liveness / readiness.
@@ -139,9 +137,7 @@ async fn rate_limit_middleware(
             .get::<ConnectInfo<SocketAddr>>()
             .map(|ci| ci.0.ip())
             .unwrap_or(IpAddr::V4(Ipv4Addr::LOCALHOST));
-        state
-            .rate_limiter
-            .check(rate_limit::RateLimitKey::Ip(ip))
+        state.rate_limiter.check(rate_limit::RateLimitKey::Ip(ip))
     };
 
     if !decision.allowed {

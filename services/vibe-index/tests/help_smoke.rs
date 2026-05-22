@@ -63,10 +63,7 @@ fn every_subcommand_renders_help() {
 
 #[test]
 fn unknown_subcommand_fails_clean() {
-    cmd()
-        .arg("definitely-not-a-subcommand")
-        .assert()
-        .failure();
+    cmd().arg("definitely-not-a-subcommand").assert().failure();
 }
 
 #[test]

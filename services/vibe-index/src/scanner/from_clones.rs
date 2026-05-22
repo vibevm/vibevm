@@ -173,11 +173,10 @@ fn build_entry(
     let snapshot = workspace.path().join("snapshot");
     git_cli::materialise_at_ref(repo, tag, &snapshot)?;
 
-    let manifest_bytes =
-        std::fs::read(snapshot.join("vibe.toml")).map_err(|e| Error::Io {
-            path: snapshot.join("vibe.toml"),
-            message: e.to_string(),
-        })?;
+    let manifest_bytes = std::fs::read(snapshot.join("vibe.toml")).map_err(|e| Error::Io {
+        path: snapshot.join("vibe.toml"),
+        message: e.to_string(),
+    })?;
     let raw = mfst::parse_manifest(&manifest_bytes)?;
 
     let content_hash = compute_content_hash(&snapshot)?;
@@ -246,7 +245,10 @@ fn source_url_for(
 
 fn count_files(dir: &Path) -> Result<usize> {
     let mut count = 0;
-    for entry in walkdir::WalkDir::new(dir).into_iter().filter_map(|e| e.ok()) {
+    for entry in walkdir::WalkDir::new(dir)
+        .into_iter()
+        .filter_map(|e| e.ok())
+    {
         if entry.file_type().is_file() {
             count += 1;
         }
@@ -262,7 +264,10 @@ mod tests {
     #[test]
     fn parse_v_tag_accepts_simple_form() {
         assert_eq!(parse_v_tag("v0.1.0").unwrap().to_string(), "0.1.0");
-        assert_eq!(parse_v_tag("v1.0.0-rc.1").unwrap().to_string(), "1.0.0-rc.1");
+        assert_eq!(
+            parse_v_tag("v1.0.0-rc.1").unwrap().to_string(),
+            "1.0.0-rc.1"
+        );
         assert!(parse_v_tag("0.1.0").is_none());
         assert!(parse_v_tag("v-not-semver").is_none());
         assert!(parse_v_tag("vibe").is_none());

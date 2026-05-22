@@ -28,10 +28,7 @@ fn init_creates_repomd_and_empty_primary() {
         .success()
         .stdout(predicate::str::contains("Initialised empty index"));
 
-    assert_disk_has_files(
-        dir.path(),
-        &["repomd.json", "primary.jsonl"],
-    );
+    assert_disk_has_files(dir.path(), &["repomd.json", "primary.jsonl"]);
 
     let repomd = std::fs::read_to_string(dir.path().join("repomd.json")).unwrap();
     assert!(repomd.contains("\"registry\": \"vibespecs\""));
@@ -68,7 +65,10 @@ fn dump_jsonl_emits_no_lines_for_empty_index() {
         .assert()
         .success();
     let stdout = String::from_utf8(out.get_output().stdout.clone()).unwrap();
-    assert!(stdout.trim().is_empty(), "expected empty dump, got: {stdout}");
+    assert!(
+        stdout.trim().is_empty(),
+        "expected empty dump, got: {stdout}"
+    );
 }
 
 #[test]
@@ -76,12 +76,7 @@ fn dump_json_emits_envelope_for_empty_index() {
     let dir = tempfile::tempdir().unwrap();
     init_at(dir.path());
     let out = cmd()
-        .args([
-            "dump",
-            dir.path().to_str().unwrap(),
-            "--format",
-            "json",
-        ])
+        .args(["dump", dir.path().to_str().unwrap(), "--format", "json"])
         .assert()
         .success();
     let stdout = String::from_utf8(out.get_output().stdout.clone()).unwrap();
@@ -148,8 +143,7 @@ fn init_seeds_empty_repomd_with_inverted_dirs() {
     let dir = tempfile::tempdir().unwrap();
     init_at(dir.path());
     let repomd: serde_json::Value =
-        serde_json::from_slice(&std::fs::read(dir.path().join("repomd.json")).unwrap())
-            .unwrap();
+        serde_json::from_slice(&std::fs::read(dir.path().join("repomd.json")).unwrap()).unwrap();
     let files = repomd["files"].as_object().unwrap();
     assert!(files.contains_key("primary.jsonl"));
     assert!(files.contains_key("primary.jsonl.gz"));
@@ -190,7 +184,10 @@ fn init_preserves_existing_readme_on_force() {
         .assert()
         .success();
     let readme = std::fs::read_to_string(dir.path().join("README.md")).unwrap();
-    assert_eq!(readme, custom, "operator-edited README must survive --force");
+    assert_eq!(
+        readme, custom,
+        "operator-edited README must survive --force"
+    );
 }
 
 fn init_at(dir: &Path) {

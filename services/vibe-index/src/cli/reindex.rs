@@ -171,10 +171,7 @@ pub fn run(args: Args) -> Result<()> {
                         .any(|e| e.kind == entry.kind && e.name == entry.name)
                 })
                 .unwrap_or(false);
-            let kept_unchanged = report
-                .snapshots
-                .contains_key(&repo_name)
-                && !scanned_now;
+            let kept_unchanged = report.snapshots.contains_key(&repo_name) && !scanned_now;
             if kept_unchanged {
                 next.upsert(entry.clone());
             }
@@ -205,12 +202,15 @@ pub fn run(args: Args) -> Result<()> {
         &existing.registry,
         &next,
         source,
-        if args.incremental { "incremental" } else { "full" },
+        if args.incremental {
+            "incremental"
+        } else {
+            "full"
+        },
     );
     if args.json {
-        let envelope = serde_json::to_string_pretty(&summary).map_err(|e| {
-            Error::Malformed(format!("could not serialise reindex summary: {e}"))
-        })?;
+        let envelope = serde_json::to_string_pretty(&summary)
+            .map_err(|e| Error::Malformed(format!("could not serialise reindex summary: {e}")))?;
         println!("{envelope}");
     } else {
         render_text(&summary);
@@ -321,11 +321,7 @@ impl Summary {
             .iter()
             .map(|k| KindCount {
                 kind: *k,
-                count: index
-                    .by_pkgref
-                    .keys()
-                    .filter(|(kk, _)| kk == k)
-                    .count() as u32,
+                count: index.by_pkgref.keys().filter(|(kk, _)| kk == k).count() as u32,
             })
             .collect();
         by_kind.retain(|kc| kc.count > 0);

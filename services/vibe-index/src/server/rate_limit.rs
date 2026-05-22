@@ -246,7 +246,6 @@ mod tests {
         })
     }
 
-
     #[test]
     fn disabled_allows_everything() {
         let r = RateLimiter::new(RateLimitConfig::disabled());
@@ -352,6 +351,9 @@ mod tests {
         // to make room.
         let new_ip: IpAddr = "10.0.0.99".parse().unwrap();
         r.check_at(RateLimitKey::Ip(new_ip), now);
-        assert!(r.ip_pool_size() <= 4, "expected eviction to keep pool ≤ max");
+        assert!(
+            r.ip_pool_size() <= 4,
+            "expected eviction to keep pool ≤ max"
+        );
     }
 }

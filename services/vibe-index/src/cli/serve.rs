@@ -7,8 +7,8 @@ use clap::Parser;
 
 use crate::error::{Error, Result};
 use crate::index::Index;
-use crate::server::{AppState, RateLimitConfig, ServerLock, TokenStore, build_app};
 use crate::server::rate_limit::DEFAULT_MAX_BUCKETS;
+use crate::server::{AppState, RateLimitConfig, ServerLock, TokenStore, build_app};
 
 #[derive(Debug, Parser)]
 #[command(about = "Run the HTTP server.")]
@@ -94,9 +94,9 @@ pub fn run(args: Args) -> Result<()> {
 
     runtime.block_on(async move {
         let app = build_app(state);
-        let listener = tokio::net::TcpListener::bind(args.bind).await.map_err(|e| {
-            Error::InvalidInput(format!("could not bind {}: {e}", args.bind))
-        })?;
+        let listener = tokio::net::TcpListener::bind(args.bind)
+            .await
+            .map_err(|e| Error::InvalidInput(format!("could not bind {}: {e}", args.bind)))?;
 
         eprintln!(
             "vibe-index serving `{}` at http://{} (read-only={}, pid={})",
@@ -109,8 +109,7 @@ pub fn run(args: Args) -> Result<()> {
         // `into_make_service_with_connect_info::<SocketAddr>` is what
         // makes peer-IP available to the rate-limit middleware via
         // the `ConnectInfo<SocketAddr>` extension. PROP-005 §9 Q10.
-        let make_svc =
-            app.into_make_service_with_connect_info::<std::net::SocketAddr>();
+        let make_svc = app.into_make_service_with_connect_info::<std::net::SocketAddr>();
         let server = axum::serve(listener, make_svc);
         tokio::select! {
             r = server => r.map_err(|e| Error::Io {

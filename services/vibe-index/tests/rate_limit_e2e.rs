@@ -10,11 +10,14 @@ use axum::http::{Method, Request, StatusCode, header};
 use tower::util::ServiceExt;
 
 use vibe_index::index::Index;
-use vibe_index::server::{AppState, RateLimitConfig, TokenStore, build_app};
 use vibe_index::server::rate_limit::DEFAULT_MAX_BUCKETS;
+use vibe_index::server::{AppState, RateLimitConfig, TokenStore, build_app};
 use vibe_index::types::NamingConvention;
 
-fn fresh_state(rate_limit: RateLimitConfig, with_token: Option<&str>) -> (tempfile::TempDir, AppState) {
+fn fresh_state(
+    rate_limit: RateLimitConfig,
+    with_token: Option<&str>,
+) -> (tempfile::TempDir, AppState) {
     let tmp = tempfile::tempdir().unwrap();
     let idx = Index::new(
         "vibespecs",

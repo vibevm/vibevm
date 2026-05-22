@@ -71,11 +71,7 @@ fn write_gitignore(data_dir: &std::path::Path) -> Result<()> {
     })
 }
 
-fn write_readme(
-    data_dir: &std::path::Path,
-    registry: &str,
-    registry_url: &str,
-) -> Result<()> {
+fn write_readme(data_dir: &std::path::Path, registry: &str, registry_url: &str) -> Result<()> {
     let path = data_dir.join("README.md");
     if path.exists() {
         return Ok(());

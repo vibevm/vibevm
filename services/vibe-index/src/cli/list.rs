@@ -55,10 +55,7 @@ pub fn run(args: Args) -> Result<()> {
         .values()
         .filter(|p| args.kind.is_none_or(|k| p.kind == k))
         .map(|p| {
-            let description = p
-                .versions
-                .last()
-                .and_then(|v| v.description.clone());
+            let description = p.versions.last().and_then(|v| v.description.clone());
             PackageRow {
                 kind: p.kind,
                 name: p.name.clone(),
@@ -70,7 +67,11 @@ pub fn run(args: Args) -> Result<()> {
         .collect();
     rows.sort_by(|a, b| a.kind.cmp(&b.kind).then(a.name.cmp(&b.name)));
     let package_count = rows.len() as u32;
-    let returned: Vec<PackageRow> = rows.into_iter().skip(args.offset).take(args.limit).collect();
+    let returned: Vec<PackageRow> = rows
+        .into_iter()
+        .skip(args.offset)
+        .take(args.limit)
+        .collect();
 
     if args.json {
         let env = Envelope {
@@ -89,7 +90,11 @@ pub fn run(args: Args) -> Result<()> {
         );
     } else {
         println!("registry  : {}", index.registry);
-        println!("packages  : {} ({} returned)", package_count, returned.len());
+        println!(
+            "packages  : {} ({} returned)",
+            package_count,
+            returned.len()
+        );
         for row in returned {
             print!("  {}:{}", row.kind, row.name);
             if let Some(latest) = &row.latest_stable {

@@ -67,10 +67,7 @@ pub fn run(args: Args) -> Result<()> {
             let req: semver::Version = v.parse().map_err(|e| {
                 Error::InvalidInput(format!("`--version {v}` is not valid semver: {e}"))
             })?;
-            pkg.versions
-                .iter()
-                .filter(|ve| ve.version == req)
-                .collect()
+            pkg.versions.iter().filter(|ve| ve.version == req).collect()
         }
         None => pkg.versions.iter().collect(),
     };
@@ -125,7 +122,11 @@ fn render_text(pkg: &PackageEntry, versions: &[&VersionEntry]) {
     }
     println!("versions      : {}", versions.len());
     for v in versions {
-        println!("  - {} (commit {})", v.version, v.resolved_commit.as_deref().unwrap_or("-"));
+        println!(
+            "  - {} (commit {})",
+            v.version,
+            v.resolved_commit.as_deref().unwrap_or("-")
+        );
         if let Some(d) = &v.description {
             println!("    {d}");
         }

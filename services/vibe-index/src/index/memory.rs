@@ -12,7 +12,9 @@ use chrono::{DateTime, Utc};
 
 use crate::error::{Error, Result};
 use crate::index::{by_name, inverted, primary, repomd};
-use crate::types::{NamingConvention, PackageEntry, PackageKind, Repomd, RepomdFileEntry, VersionEntry};
+use crate::types::{
+    NamingConvention, PackageEntry, PackageKind, Repomd, RepomdFileEntry, VersionEntry,
+};
 
 pub type PkgKey = (PackageKind, String);
 
@@ -54,9 +56,10 @@ impl Index {
     /// recomputed via [`PackageEntry::finalise`].
     pub fn upsert(&mut self, entry: VersionEntry) {
         let key = (entry.kind, entry.name.clone());
-        let pkg = self.by_pkgref.entry(key).or_insert_with(|| {
-            PackageEntry::new(entry.kind, entry.name.clone(), entry.indexed_at)
-        });
+        let pkg = self
+            .by_pkgref
+            .entry(key)
+            .or_insert_with(|| PackageEntry::new(entry.kind, entry.name.clone(), entry.indexed_at));
         pkg.versions.retain(|v| v.version != entry.version);
         pkg.versions.push(entry);
         pkg.finalise();
@@ -288,8 +291,11 @@ mod tests {
 
     #[test]
     fn upsert_replaces_existing_version() {
-        let mut idx =
-            Index::new("vibespecs", "https://example.invalid", NamingConvention::KindName);
+        let mut idx = Index::new(
+            "vibespecs",
+            "https://example.invalid",
+            NamingConvention::KindName,
+        );
         idx.upsert(entry(PackageKind::Flow, "wal", "0.1.0"));
         idx.upsert(entry(PackageKind::Flow, "wal", "0.1.0"));
         assert_eq!(idx.version_count(), 1);
@@ -297,8 +303,11 @@ mod tests {
 
     #[test]
     fn remove_version_works() {
-        let mut idx =
-            Index::new("vibespecs", "https://example.invalid", NamingConvention::KindName);
+        let mut idx = Index::new(
+            "vibespecs",
+            "https://example.invalid",
+            NamingConvention::KindName,
+        );
         idx.upsert(entry(PackageKind::Flow, "wal", "0.1.0"));
         idx.upsert(entry(PackageKind::Flow, "wal", "0.2.0"));
         let v = "0.1.0".parse().unwrap();

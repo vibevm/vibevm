@@ -215,9 +215,8 @@ pub async fn upsert(
             .map(|p| p.versions.iter().any(|v| v.version == version))
             .unwrap_or(false);
         idx.upsert(entry);
-        idx.write_to(&state.data_dir).map_err(|e| {
-            ApiError::internal(format!("could not persist index: {e}"))
-        })?;
+        idx.write_to(&state.data_dir)
+            .map_err(|e| ApiError::internal(format!("could not persist index: {e}")))?;
         !existed
     };
 
@@ -264,9 +263,8 @@ pub async fn delete_version(
         let mut idx = state.index.write().await;
         let r = idx.remove_version(kind, &name, &v);
         if r {
-            idx.write_to(&state.data_dir).map_err(|e| {
-                ApiError::internal(format!("could not persist index: {e}"))
-            })?;
+            idx.write_to(&state.data_dir)
+                .map_err(|e| ApiError::internal(format!("could not persist index: {e}")))?;
         }
         r
     };
@@ -295,9 +293,8 @@ pub async fn delete_package(
         let mut idx = state.index.write().await;
         let r = idx.remove_package(kind, &name);
         if r {
-            idx.write_to(&state.data_dir).map_err(|e| {
-                ApiError::internal(format!("could not persist index: {e}"))
-            })?;
+            idx.write_to(&state.data_dir)
+                .map_err(|e| ApiError::internal(format!("could not persist index: {e}")))?;
         }
         r
     };
@@ -315,9 +312,7 @@ pub async fn delete_package(
 
 fn require_writeable(state: &AppState, headers: &HeaderMap) -> Result<(), ApiError> {
     if state.read_only {
-        return Err(ApiError::forbidden(
-            "server is running in --read-only mode",
-        ));
+        return Err(ApiError::forbidden("server is running in --read-only mode"));
     }
     if !state.tokens.has_any() {
         return Err(ApiError::forbidden(

@@ -24,9 +24,8 @@ pub fn run(args: Args) -> Result<()> {
     let manifest = repomd::read(&args.data_dir)?;
     let report = check(&args.data_dir, &manifest)?;
     if args.json {
-        let envelope = serde_json::to_string_pretty(&report).map_err(|e| {
-            Error::Malformed(format!("could not serialise verify report: {e}"))
-        })?;
+        let envelope = serde_json::to_string_pretty(&report)
+            .map_err(|e| Error::Malformed(format!("could not serialise verify report: {e}")))?;
         println!("{envelope}");
     } else {
         render_text(&report);

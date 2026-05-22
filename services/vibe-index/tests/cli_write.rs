@@ -23,7 +23,13 @@ fn init_at(dir: &Path) {
         .success();
 }
 
-fn write_pkg(dir: &Path, name: &str, kind: &str, version: &str, license: &str) -> std::path::PathBuf {
+fn write_pkg(
+    dir: &Path,
+    name: &str,
+    kind: &str,
+    version: &str,
+    license: &str,
+) -> std::path::PathBuf {
     let body = format!(
         r#"[package]
 name = "{name}"
@@ -79,11 +85,21 @@ fn add_upserts_when_version_already_present() {
     let manifest = write_pkg(&pkg_dir, "wal", "flow", "0.1.0", "EULA");
 
     cmd()
-        .args(["add", data.to_str().unwrap(), "--manifest", manifest.to_str().unwrap()])
+        .args([
+            "add",
+            data.to_str().unwrap(),
+            "--manifest",
+            manifest.to_str().unwrap(),
+        ])
         .assert()
         .success();
     cmd()
-        .args(["add", data.to_str().unwrap(), "--manifest", manifest.to_str().unwrap()])
+        .args([
+            "add",
+            data.to_str().unwrap(),
+            "--manifest",
+            manifest.to_str().unwrap(),
+        ])
         .assert()
         .success();
 
@@ -138,12 +154,22 @@ fn remove_deletes_specific_version() {
     std::fs::create_dir_all(&pkg_dir).unwrap();
     let manifest = write_pkg(&pkg_dir, "wal", "flow", "0.1.0", "EULA");
     cmd()
-        .args(["add", data.to_str().unwrap(), "--manifest", manifest.to_str().unwrap()])
+        .args([
+            "add",
+            data.to_str().unwrap(),
+            "--manifest",
+            manifest.to_str().unwrap(),
+        ])
         .assert()
         .success();
     write_pkg(&pkg_dir, "wal", "flow", "0.2.0", "EULA");
     cmd()
-        .args(["add", data.to_str().unwrap(), "--manifest", manifest.to_str().unwrap()])
+        .args([
+            "add",
+            data.to_str().unwrap(),
+            "--manifest",
+            manifest.to_str().unwrap(),
+        ])
         .assert()
         .success();
 
@@ -176,7 +202,12 @@ fn remove_drops_entire_package_without_version_flag() {
     std::fs::create_dir_all(&pkg_dir).unwrap();
     let manifest = write_pkg(&pkg_dir, "wal", "flow", "0.1.0", "EULA");
     cmd()
-        .args(["add", data.to_str().unwrap(), "--manifest", manifest.to_str().unwrap()])
+        .args([
+            "add",
+            data.to_str().unwrap(),
+            "--manifest",
+            manifest.to_str().unwrap(),
+        ])
         .assert()
         .success();
 
