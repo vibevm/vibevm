@@ -32,8 +32,8 @@ vibe check [--path <dir>]
 | `manifest_validity` | error | `vibe.toml` is present and parses; `vibe.lock` (if present) parses. Both must match the current schema in `vibe-core::manifest` — the lockfile at schema v4. Missing `vibe.toml` is an error; missing `vibe.lock` is fine (empty project). |
 | `wal_freshness` | warning | `spec/WAL.md` modification time is within `--wal-max-age-hours`. Older → warning. Future-dated mtime (clock skew) → info. |
 | `wal_wellformed` | warning | WAL has the canonical `## current phase`, `## constraints`, `## done`, `## next`, `## known issues` top-level sections. Matching is case-insensitive and tolerates parenthetical suffixes (e.g. `## Constraints (do not violate without discussion)`). |
-| `boot_directory` | error / warning | Every file in `spec/boot/` matches `NN-name.md` (NN = two ASCII digits). No two files share the same `NN` prefix. Non-markdown files in `spec/boot/` warn. |
-| `lockfile_files` | error / warning | Each lockfile entry's `files_written` exists on disk (error if missing). No orphan files in `spec/flows/`, `spec/feats/`, `spec/stacks/` (warning — likely a leftover from a manual edit or a partial uninstall). |
+| `boot_directory` | error / warning | `spec/boot/` exists (error if a project's `vibe.toml` is present but the directory is gone) and holds markdown files. The two-digit `NN-` filename prefix is **retired** ([PROP-009 §2.5](../../spec/modules/vibe-workspace/PROP-009-loading-model.md#ordering)) — `vibe` owns boot ordering by `category`, so any markdown filename is valid and the generated `INDEX.md` / `INLINE.md` artifacts (no numeric prefix) are recognised. Only a non-markdown stray file in `spec/boot/` warns. |
+| `lockfile_files` | error / warning | No orphan files in `spec/flows/`, `spec/feats/`, `spec/stacks/` (warning — likely a leftover from a manual edit). Under the loading model the lockfile carries no per-file `files_written` list, so there is nothing per-package to verify present on disk. |
 | `review_aging` | warning | `<!-- REVIEW: YYYY-MM-DD ... -->` markers in `spec/**/*.md` whose date is older than `--review-max-age-days`. Markers with non-date prose (`<!-- REVIEW: ... -->`, `<!-- REVIEW: TODO -->`) are silently skipped — they're documentation, not work. |
 
 ## Exit codes
@@ -49,7 +49,7 @@ This matches `VIBEVM-SPEC.md` §12 exactly: "Exit code: 0 if no errors, 1 if err
 
 ```
 vibe check: 3 findings in `/path/to/project`
-  [E]  [boot_directory] spec/boot — boot prefix `10` is shared by 2 files: 10-flow-other.md, 10-flow-wal.md
+  [E]  [boot_directory] spec/boot — spec/boot/ is missing — every project owns this directory; run `vibe init` if it disappeared.
   [W]  [wal_freshness] spec/WAL.md — WAL is 41 hours old (threshold: 24h). Consider an end-session checkpoint.
   [W]  [review_aging] spec/notes/old.md:7 — REVIEW marker dated 2026-04-01 is 33 days old (threshold: 14d) — resolve or refresh
 

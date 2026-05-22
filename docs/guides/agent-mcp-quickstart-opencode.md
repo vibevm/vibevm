@@ -134,8 +134,10 @@ might want to run next (e.g. install a real package).
 **Pass criteria:**
 
 - `vibe init` runs, creates `vibe.toml`, `vibe.lock`, and the
-  starter files (`spec/boot/...`, `spec/WAL.md`, `CLAUDE.md`,
-  `AGENTS.md`, `GEMINI.md`).
+  starter files: `spec/boot/` (the authored `00-core.md` /
+  `90-user.md` plus the generated `INDEX.md`), `spec/WAL.md`, and
+  the `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` instruction files,
+  each carrying a managed `<vibevm>` block.
 - `README.md` and `docs/hello.md` materialise with sensible content.
 - `vibe list` / `vibe show config` / `vibe outdated` actually run
   (outputs visible in TUI), with `--invoked-by opencode` on each.
@@ -182,7 +184,7 @@ Use this list as both an integration-test gate and a triage tool. Copy into a PR
 - [ ] `~/.config/opencode/skills/vibevm/SKILL.md` exists, starts with `---`, contains `name: vibevm`, has `Section A` (bootstrap) and `Section B` (inside-project) headers, references `query_package` / `read_subskill` / `materialise_subskill` / `--invoked-by` / `VIBE_INVOKED_BY`.
 - [ ] Hand test in step 2 returns a JSON envelope with `protocolVersion: "2024-11-05"`.
 - [ ] After launching opencode in an EMPTY directory and running Prompt A, the TUI shows a tool call to `query_package` AND the agent's response references Section A without prompting.
-- [ ] After Prompt B, all of: `vibe.toml`, `vibe.lock` (empty), `spec/boot/` (with starter files), `README.md`, `docs/hello.md` exist with sensible content. (No package install required by Prompt B; the lockfile is empty until the user opts in to a `vibe install`.)
+- [ ] After Prompt B, all of: `vibe.toml`, `vibe.lock` (empty), `spec/boot/` (the authored `00-core.md` / `90-user.md` plus the generated `INDEX.md`), `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` (each with a `<vibevm>` block), `README.md`, `docs/hello.md` exist with sensible content. (No package install required by Prompt B; the lockfile is empty and no `vibedeps/` tree exists until the user opts in to a `vibe install`.)
 - [ ] Every `vibe …` invocation in the opencode transcript includes `--invoked-by opencode`.
 - [ ] `vibe --json mcp status` after Prompt B reports `unchanged` for the user-scope opencode entries (since the user-scope install hasn't drifted).
 - [ ] After Prompt C, `<project>/.opencode/skills/vibevm/SKILL.md` exists.

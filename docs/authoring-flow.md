@@ -7,7 +7,7 @@ Examples shipped today:
 - `flow:sync-from-code` — the protocol for reconciling spec drift from code.
 - `flow:atomic-commits` — one-commit-per-idea + Conventional Commits format.
 
-A flow is *content*. There is no executable component, no LLM call, no build artefact — at install time a flow's files land verbatim in the consumer project's `spec/flows/<name>/` tree, and a single boot snippet is added to `spec/boot/` so the AI session reads it first.
+A flow is *content*. There is no executable component, no LLM call, no build artefact — at install time a flow's published tree is materialised verbatim into a `vibedeps/` slot, and its boot snippet is folded into each consuming node's computed boot sequence so the AI session reads it.
 
 ## Anatomy of a flow package
 
@@ -16,7 +16,7 @@ flow-<name>/                 # the per-package repo on the registry
 ├── vibe.toml                # required; manifest, carries a [package] table
 ├── README.md                # required; human-readable description
 ├── boot/
-│   └── <prefix>-flow-<name>.md   # the boot-snippet content
+│   └── flow-<name>.md       # the boot-snippet content
 └── spec/
     └── flows/
         └── <name>/
@@ -25,32 +25,27 @@ flow-<name>/                 # the per-package repo on the registry
             └── <subprotocol-2>.md
 ```
 
-After `vibe install flow:<name>`, the consumer's tree has:
+After `vibe install flow:<name>`, the package's whole published tree is materialised verbatim into a slot under the workspace-root `vibedeps/` tree:
 
 ```
-<consumer>/
-├── spec/
-│   ├── boot/<prefix>-flow-<name>.md     # mirror — same content
-│   └── flows/<name>/                     # mirror — same content
-│       ├── PROTOCOL.md
-│       └── …
+<workspace-root>/
+└── vibedeps/
+    └── flow-<name>/
+        └── <version>/                  # the flow's published tree, verbatim
+            ├── vibe.toml
+            ├── boot/flow-<name>.md
+            └── spec/flows/<name>/
+                ├── PROTOCOL.md
+                └── …
 ```
 
-This is the **mirror layout** ([`VIBEVM-SPEC.md` §13.1](../VIBEVM-SPEC.md)): every entry under `[writes].files` in the manifest is simultaneously the path inside the package and the path it will appear at in the consumer project. No path mapping. The boot snippet is the single exception — it has an explicit `[boot_snippet]` section because its target is fixed to `spec/boot/<filename>` regardless of how it's organised inside the package.
+This is the **loading model** ([PROP-009](../spec/modules/vibe-workspace/PROP-009-loading-model.md), [docs/loading-model.md](loading-model.md)): a materialised package *is* its verbatim subtree under its `vibedeps/` slot. `vibe install` never writes into a consuming node's authored `spec/` — the C++-`#include` rule. There is no per-file write list to author: drop `[writes]` entirely. Cross-references inside your package must be package-relative or `spec://` URIs.
 
-## The boot-snippet prefix
+## The boot snippet
 
-Every flow's boot snippet is named `<NN>-flow-<name>.md`, where `<NN>` is a two-digit prefix that determines read order at session start. The numbering convention from [`VIBEVM-SPEC.md` §6.2](../VIBEVM-SPEC.md):
+A flow contributes one boot snippet, declared in the `[boot_snippet]` table (see the manifest below). You declare a **`category`**, not a numbered filename — `vibe` owns boot ordering, computing each consuming node's boot sequence from the resolution graph. The two-digit `NN-` filename prefix and the flat numeric-order `spec/boot/` directory are **retired**.
 
-| Range | Reserved for |
-| --- | --- |
-| `00`-`09` | User-owned (`vibe install` never writes here). |
-| `10`-`89` | Package-contributed snippets. Flows traditionally start at `10` and go up. |
-| `90`-`99` | User-owned overrides (`vibe install` never writes here). |
-
-Pick a prefix that doesn't clash with anything you intend to install alongside. Today's three demo flows use `10-` (`flow:wal`), `20-` (`flow:sync-from-code`), `30-` (`flow:atomic-commits`). A new flow that's meant to coexist with these picks `40-` or higher.
-
-`vibe install` rejects with exit code `3` if two installs would land at the same `NN-` prefix.
+A flow's snippet is conventionally `category = "flow"`. Within a node's computed boot sequence the order is `foundation` → the node's own authored boot → dependency boot (topological — a dependency before its dependents) → `user-override`. Prefix collisions are impossible by construction — there is no prefix — so there is no longer an exit-3 prefix-conflict check to design around. The snippet's `source` field gives the path to the boot file inside your package; name it whatever you like (`boot/flow-<name>.md` is the convention).
 
 ## Manifest: `vibe.toml`
 
@@ -69,17 +64,15 @@ keywords = ["commits", "discipline", "conventional-commits"]
 [compatibility]
 min_vibe_version = "0.1.0"
 
-[writes]
-files = [
-    "spec/flows/atomic-commits/PROTOCOL.md",
-    "spec/flows/atomic-commits/conventional-commits.md",
-    "spec/flows/atomic-commits/splitting-large-changes.md",
-]
-
 [boot_snippet]
-filename = "30-flow-atomic-commits.md"
-source = "boot/30-flow-atomic-commits.md"
+category = "flow"
+source = "boot/flow-atomic-commits.md"
+# Optional: a suggested default link type. The consumer can override
+# it in their own [requires.packages] entry; absent both, it is `static`.
+# link = "static"
 ```
+
+`[boot_snippet]` declares a `category` (`foundation` / `flow` / `stack` / `user-override`) and a `source` (the path to the boot file inside the package). There is **no `filename` field** and **no `[writes]` section** — `vibe` owns boot ordering and a materialised package is simply its verbatim `vibedeps/` subtree.
 
 `[provides]`, `[requires]`, `[[requires_any]]`, `[obsoletes]`, `[conflicts]` are all optional. A typical flow has none of them — it's self-contained content. Use them when:
 
@@ -91,7 +84,7 @@ See [`VIBEVM-SPEC.md` §7.3](../VIBEVM-SPEC.md) for the full manifest schema.
 
 ## Writing the boot snippet
 
-The boot snippet is the *only* file from your package that the AI agent is guaranteed to read every session — `spec/boot/` is loaded in filename order before anything else. Treat it as the front page.
+The boot snippet is the *only* file from your package that the AI agent is guaranteed to read every session — `vibe` folds it into the consuming node's computed boot sequence, read before the rest of the spec. Treat it as the front page.
 
 Good boot snippet shape:
 
@@ -120,7 +113,7 @@ Versions are git tags on the per-package repo, prefixed `v` (e.g. `v0.1.0`). Bum
 
 - **Patch** (`0.1.0` → `0.1.1`): wording fixes, typo corrections, no semantic change to the protocol.
 - **Minor** (`0.1.0` → `0.2.0`): additive changes — new optional subsections, new examples, expanded protocol that doesn't remove existing rules.
-- **Major** (`0.1.0` → `1.0.0`): breaking change — rules removed or replaced, prefix renumber, `[requires]` added.
+- **Major** (`0.1.0` → `1.0.0`): breaking change — rules removed or replaced, the boot snippet's `category` changed, `[requires]` added.
 
 Pre-1.0 (`0.x`), even minor bumps may break consumers — that's the SemVer convention for unstable APIs.
 
@@ -144,5 +137,6 @@ See [`vibe registry publish`](commands/registry-publish.md) for the full token /
 ## Related
 
 - [`vibe install`](commands/install.md) — installing a flow.
-- [`VIBEVM-SPEC.md` §6](../VIBEVM-SPEC.md) — the boot directory model.
+- [The loading model](loading-model.md) — how a boot snippet's `category` and `link` feed the computed boot sequence.
+- [PROP-009](../spec/modules/vibe-workspace/PROP-009-loading-model.md) — the loading-model contract.
 - [authoring-feat.md](authoring-feat.md) — feats are the runtime-y counterpart of flows.

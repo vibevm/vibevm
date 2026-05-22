@@ -2,6 +2,8 @@
 
 Installs one or more packages into the current project. Every install runs through the four-stage pipeline pinned in [`VIBEVM-SPEC.md` §5.6](../../VIBEVM-SPEC.md): **resolve → plan → confirm → apply**. Installs are transitive — when a package's `[requires]` lists other packages, the depsolver pulls them in automatically.
 
+`vibe install` is **workspace-aware** ([PROP-009 §2.7](../../spec/modules/vibe-workspace/PROP-009-loading-model.md)). Run anywhere inside a workspace it discovers the absolute root, runs one unified resolution across every member's `[requires]`, materialises each resolved package once into the workspace-root `vibedeps/` tree, and regenerates the boot artifacts for every entry-point node. A standalone single-package project is a degenerate (zero-member) workspace and follows the identical path. See [the loading model](../loading-model.md) for what is produced.
+
 Two-file model. `vibe.toml` carries the *declaration* — `[requires].packages` lists every pkgref the project depends on directly. `vibe.lock` carries the *materialisation* — exact resolved versions, content hashes, transitive graph. Same shape as Cargo (`Cargo.toml` / `Cargo.lock`), npm (`package.json` / `package-lock.json`), Poetry, Bundler.
 
 `vibe install <pkgref>` does two things: it resolves and applies the package as before, AND it appends the user-supplied pkgref to `vibe.toml` `[requires].packages` (de-duplicated by `(kind, name)`; a re-install with a new constraint replaces the old entry). `vibe install` without arguments reads `[requires].packages` and installs every entry — the cargo `cargo build` / npm `npm install` shape, useful when cloning a vibevm project from git for the first time.
@@ -49,16 +51,19 @@ A package reference is `<kind>:<name>[@<version>]`. Version syntax follows Cargo
 
 ## Pipeline
 
-1. **Resolve.** Each top-level pkgref is parsed; the project's `[[registry]]` array is consulted in priority order; `[[override]]` entries short-circuit the registry layer for specific pkgrefs. The depsolver expands transitive dependencies.
-2. **Plan.** For each resolved package, the install computes the file-level diff: which files would be created, which boot snippet (if any) it contributes, any conflicts against already-installed packages or the user-owned-paths guard.
+1. **Resolve.** Each top-level pkgref is parsed; the project's `[[registry]]` array is consulted in priority order; `[[override]]` entries short-circuit the registry layer for specific pkgrefs. The depsolver runs one unified resolution across the whole workspace and expands transitive dependencies.
+2. **Plan.** The plan's unit is **the set of packages to materialise into `vibedeps/` plus the boot artifacts to regenerate** — not a per-file write list. Plan-time validation also classifies every entry-point node's `<vibevm>` instruction-file block ([PROP-012 §2.5](../../spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md)); a malformed block aborts the operation before any mutation.
 3. **Confirm.** Unless `--assume-yes` or `--json` is set, the operator sees the combined plan and confirms interactively. Decline → exit code `5`.
-4. **Apply.** Files are written; the lockfile is updated atomically. On a partial failure, written files are rolled back best-effort and the error is surfaced.
+4. **Apply.** Each resolved package's published tree is materialised verbatim into its `vibedeps/` slot; the boot artifacts (`spec/boot/INLINE.md`, `spec/boot/INDEX.md`) are regenerated for every entry-point node; the `<vibevm>` redirect block is spliced into each instruction file; the lockfile is updated. Stale `vibedeps/` slots no longer in the resolution are pruned.
 
 ## What gets written
 
-Per package, every entry in the package's `vibe.toml` `[writes].files` list is materialised verbatim under the project root (mirror layout — see [`VIBEVM-SPEC.md` §13.1](../../VIBEVM-SPEC.md)). A publishable package's `vibe.toml` carries a `[package]` table; that is what marks it as an installable artifact. The optional `[boot_snippet]` lands at `spec/boot/<filename>`.
+`vibe install` writes to two places, and **never to a node's authored `spec/`** — the C++-`#include` rule ([PROP-009 §2.1](../../spec/modules/vibe-workspace/PROP-009-loading-model.md#two-trees)):
 
-User-owned files (`spec/boot/00-core.md`, `spec/boot/90-user.md`, `spec/WAL.md`, `VIBEVM-SPEC.md`, `refs/book/**`, any `00-` or `90-` boot file) are never written. Any package whose declared writes target a user-owned path is rejected at plan time with exit code `3`.
+- **The `vibedeps/` tree** at the absolute workspace root. Each resolved package's published tree is materialised verbatim into a slot, `vibedeps/<kind>-<name>/<version>/`. A materialised package *is* its subtree under that slot — there is no per-file write list and no `[writes]` section to author. `vibedeps/` is committed to git. A publishable package's `vibe.toml` carries a `[package]` table; that is what marks it as an installable artifact.
+- **The generated boot artifacts** under each entry-point node's `spec/boot/`: `INLINE.md` (the verbatim `inline`-linked priority lane, when there are inline contributions) and `INDEX.md` (a generated TOML manifest of the computed boot sequence). Plus the managed `<vibevm>` block inside each instruction file (`CLAUDE.md` / `AGENTS.md` / `GEMINI.md`) — vibevm writes only between the markers; the rest of the file is preserved verbatim ([PROP-012](../../spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md)).
+
+A node's authored `spec/` tree — including the conventional user-owned boot files `spec/boot/00-core.md` and `spec/boot/90-user.md`, and `spec/WAL.md` — is written only by its author. `vibe install` references those files in the computed boot sequence but never rewrites them. See [the loading model](../loading-model.md) for the full picture.
 
 ## Manifest and lockfile updates
 
@@ -73,7 +78,7 @@ After a successful apply, `vibe install` writes:
 - `vibe.lock` — schema v4 shape ([`VIBEVM-SPEC.md` §7.4](../../VIBEVM-SPEC.md)):
   - `[meta].schema_version = 4`
   - `[meta].root_dependencies` mirrors `vibe.toml` `[requires].packages` so the lockfile is a self-contained snapshot of the solve state.
-  - Per `[[package]]`: `kind`, `name`, `version`, `registry` (matching `[[registry]].name`), `source_kind` (one of `registry`, `git`, `override`, `path`), `source_url`, `source_ref`, `resolved_commit`, `content_hash` (the *identity* of the install), `boot_snippet`, `files_written`, `dependencies`, `overridden`.
+  - Per `[[package]]`: `kind`, `name`, `version`, `registry` (matching `[[registry]].name`), `source_kind` (one of `registry`, `git`, `override`, `path`), `source_url`, `source_ref`, `resolved_commit`, `content_hash` (the *identity* of the install), `dependencies`, `overridden`. Under the loading model the per-file `files_written` list and the `boot_snippet` filename field are retired (a materialised package *is* its `vibedeps/` slot, and boot ordering is computed) — see [`docs/lockfile-format.md`](../lockfile-format.md).
 
 `Lockfile::read` accepts only `schema_version = 4`; an older lockfile (schema 1, 2, or 3) is rejected rather than migrated — regenerate it with `vibe install`. vibevm is pre-release, so there is no on-disk migration path and none is needed.
 
@@ -127,13 +132,15 @@ vibe --json install flow:wal --assume-yes \
 
 - `0` — success.
 - `1` — generic error (parse, network, manifest invalid, etc.).
-- `3` — plan-time conflict (boot-snippet collision, write-to-user-owned-path, two installs share a target file).
+- `3` — plan-time conflict (a malformed `<vibevm>` block in an instruction file, a resolver-level package conflict).
 - `5` — operator declined the interactive confirmation.
 
 ## Related
 
 - [`vibe list`](list.md) — show what's installed.
 - [`vibe uninstall`](uninstall.md) — reverse an install.
+- [`vibe reinstall`](reinstall.md) — recompute `vibedeps/` and the boot artifacts without re-resolving.
 - [`vibe registry sync`](registry-sync.md) — refresh per-package clones for installed packages.
+- [The loading model](../loading-model.md) — the `vibedeps/` tree and the generated boot artifacts an install produces.
 - [authoring guides](../README.md) — how to write a new package.
 - [`PROP-002`](../../spec/modules/vibe-registry/PROP-002-decentralized-registry.md) — registry resolution model (priority, mirrors, overrides).

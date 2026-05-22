@@ -17,7 +17,7 @@ feat-<name>/
 ├── vibe.toml                       # manifest, carries a [package] table
 ├── README.md
 ├── boot/
-│   └── <prefix>-feat-<name>.md     # optional — only if the feat needs front-page mention
+│   └── feat-<name>.md              # optional — only if the feat needs front-page mention
 └── spec/
     └── feats/
         └── <name>/
@@ -29,14 +29,18 @@ feat-<name>/
             └── failure-modes.md    # what should happen when things go wrong
 ```
 
-After `vibe install feat:<name>`:
+After `vibe install feat:<name>`, the package's whole published tree is materialised verbatim into a slot under the workspace-root `vibedeps/` tree:
 
 ```
-<consumer>/
-├── spec/
-│   ├── boot/<prefix>-feat-<name>.md       # if the feat ships one
-│   └── feats/<name>/                       # mirror of all spec/ files
+<workspace-root>/
+└── vibedeps/
+    └── feat-<name>/
+        └── <version>/                  # the feat's published tree, verbatim
+            ├── vibe.toml
+            └── spec/feats/<name>/
 ```
+
+A materialised package *is* its verbatim subtree under its `vibedeps/` slot — `vibe install` never writes into a consuming node's authored `spec/` ([the loading model](loading-model.md)).
 
 ## What goes in `SPEC.md`
 
@@ -75,18 +79,13 @@ min_vibe_version = "0.1.0"
 # is a hint; the actual constraint is in [requires] / [[requires_any]].
 requires_kinds = ["stack"]
 
-[writes]
-files = [
-    "spec/feats/welcome-page/SPEC.md",
-    "spec/feats/welcome-page/acceptance.md",
-    "spec/feats/welcome-page/ui-flows.md",
-]
-
 # Optional: only ship a boot snippet if you want the feat surfaced at
-# session start (e.g. a project's headline feat).
+# session start (e.g. a project's headline feat). `category` sets the
+# band in the computed boot sequence; `source` is the path to the boot
+# file inside the package. There is no `filename` field, no `[writes]`.
 # [boot_snippet]
-# filename = "60-feat-welcome-page.md"
-# source = "boot/60-feat-welcome-page.md"
+# category = "flow"
+# source = "boot/feat-welcome-page.md"
 
 [provides]
 capabilities = []   # feats rarely provide; they consume

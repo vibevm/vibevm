@@ -22,7 +22,7 @@ You normally don't run this manually — agents launch it themselves through the
 
 | Tool | Arguments | Returns |
 | --- | --- | --- |
-| `query_package` | `name: string` | The lockfile entry for an installed package: kind, name, version, content_hash, registry, source_url, source_ref, resolved_commit, files_written, features, subskills_active, top-level describes PURL, language. |
+| `query_package` | `name: string` | The lockfile entry for an installed package: kind, name, version, content_hash, registry, source_url, source_ref, resolved_commit, features, subskills_active, top-level describes PURL, language. (The legacy `files_written` field is retained in the lockfile schema but left empty under the loading model — see [`docs/lockfile-format.md`](../lockfile-format.md).) |
 | `read_subskill` | `package: string`, `subskill_path: string` | Concatenated text of an active subskill's content files. For `lazy-pull` deliveries the bytes come from the package cache without writing to the project tree. |
 | `materialise_subskill` | `package: string`, `subskill_path: string`, `force?: bool` | Promotes a `lazy-pull` subskill into the project tree on demand. Refuses to overwrite existing files unless `force = true`. Returns the list of paths it wrote. |
 

@@ -16,7 +16,19 @@ Writing a new package. Per-kind guides under [`docs/authoring-flow.md`](authorin
 
 ### boot snippet
 
-A markdown file under `<project>/spec/boot/` named `<NN>-<topic>.md` that the AI agent reads at session start, in numeric-prefix order. `00-09` and `90-99` are user-owned; `10-89` are package-contributed. Spec: [`VIBEVM-SPEC.md` §6](../VIBEVM-SPEC.md).
+A package's contribution to a node's boot sequence. A package declares it in its `[boot_snippet]` table with a `category` (`foundation` / `flow` / `stack` / `user-override`) and a `source` (the path to the boot file inside the package); it may carry a suggested `link` default. `vibe install` does **not** copy the snippet into a numbered `spec/boot/` slot — it folds the contribution into the node's computed boot sequence, generated into [`INLINE.md` / `INDEX.md`](#boot-artifacts). The two-digit `NN-` filename prefix and the flat numeric-order `spec/boot/` directory are **retired** — see [the loading model](loading-model.md). Spec: [PROP-009 §2.5](../spec/modules/vibe-workspace/PROP-009-loading-model.md#ordering).
+
+### boot artifacts
+
+The two files `vibe install` generates under each entry-point node's `spec/boot/`: `INLINE.md` (the verbatim concatenation of every `inline`-linked boot contribution — read first; generated only when there are inline contributions) and `INDEX.md` (a generated TOML manifest — a `schema` int, an optional `inline` pointer, and ordered `[[entry]]` tables, each with a `path` and a `kind` of `"static"` or `"dynamic"`). Both are git-tracked and carry a "generated — do not edit" header. The agent reads `INLINE.md` then `INDEX.md` and the entries it names. Spec: [PROP-009 §2.3](../spec/modules/vibe-workspace/PROP-009-loading-model.md#artifacts).
+
+### computed boot sequence
+
+A node's full boot order, *computed* by `vibe` from the unified resolution rather than authored as a flat directory: inherited foundation (from ancestors) + the node's own authored boot + the boot of its transitive dependencies + user overrides. Projected into the [boot artifacts](#boot-artifacts). Spec: [PROP-009 §2.2](../spec/modules/vibe-workspace/PROP-009-loading-model.md#effective-boot).
+
+### link type (boot inclusion type)
+
+How a dependency's boot contribution is folded into a consumer's boot. Set per dependency in `vibe.toml` `[requires.packages]` via `link = "..."`: `static` (default — resolved to a concrete path in `INDEX.md`, read directly), `inline` (concatenated verbatim into `INLINE.md`, read first — the emergency priority lane), or `dynamic` (an INCLUDE the agent resolves at boot, gated by a `when` activation condition). Spec: [PROP-009 §2.4](../spec/modules/vibe-workspace/PROP-009-loading-model.md#inclusion-types).
 
 ### canonical URL (registry)
 
@@ -70,9 +82,9 @@ The TOML schema describing a vibevm node. Every node carries one `vibe.toml`; it
 
 Transparent fallback URL for a registry. `[[mirror]] of = "<name>" url = "<alt>" priority = N` adds an alternative source for the named registry; `of = "*"` matches any. The lockfile records the *canonical* URL only — mirror identity does not leak to lockfile. Runtime fallback chain lands in M1.6 (Phase B); schema is wired today. [PROP-002 §2.3](../spec/modules/vibe-registry/PROP-002-decentralized-registry.md#mirror).
 
-### mirror layout
+### materialised dependency
 
-Convention that every entry in `[writes].files` is *both* the source path inside the package and the target path inside the consumer project. No path mapping. The single exception: boot snippets carry an explicit `[boot_snippet].source` field. Pinned in [PROP-000 §13](../spec/common/PROP-000.md#package-layout).
+A resolved package's content as it lands on disk: its published tree, copied verbatim into a slot under [`vibedeps/`](#vibedeps). A materialised package *is* its subtree under its slot — there is no per-file write list. Spec: [PROP-009 §2.1](../spec/modules/vibe-workspace/PROP-009-loading-model.md#two-trees).
 
 ### `naming` (registry naming convention)
 
@@ -101,7 +113,7 @@ Type: [`PackageRef`](../crates/vibe-core/src/package_ref.rs). Defined in [`VIBEV
 
 ### plan (install pipeline stage)
 
-Stage 3 of `vibe install`. After resolve + fetch, before confirm. Computes the file-level diff: which files would be created, which boot snippet contributed, conflicts against already-installed packages or the user-owned-paths guard. Output: [`InstallPlan`](../crates/vibe-install/src/lib.rs).
+Stage 3 of `vibe install`. After resolve + fetch, before confirm. Under the [loading model](loading-model.md) the plan's unit is **the set of packages to materialise into `vibedeps/` plus the boot artifacts to regenerate** — not a per-file write list ([PROP-009 §2.7](../spec/modules/vibe-workspace/PROP-009-loading-model.md#install)). Plan-time validation also classifies every entry-point node's `<vibevm>` instruction-file block; a malformed block aborts the operation. Output: [`InstallPlan`](../crates/vibe-install/src/lib.rs).
 
 ### priority (registry / mirror)
 
@@ -141,7 +153,7 @@ A dep the solver pulled in because some other dep declared it, not because the u
 
 ### user-owned (file)
 
-Files vibevm-managed commands NEVER write or remove: `spec/boot/00-core.md`, `spec/boot/90-user.md`, `spec/WAL.md`, `VIBEVM-SPEC.md`, `refs/book/**`, any `00-` or `90-` boot file. The boundary that separates "owned by the project" from "owned by vibevm tooling". Pinned at [`vibe-install::USER_OWNED_PATHS`](../crates/vibe-install/src/lib.rs).
+A node's **authored `spec/` tree** — written only by the node's author, never by `vibe`. The C++-`#include` rule of the [loading model](loading-model.md): installing a dependency never edits authored content. A dependency's content lands instead in the separate [`vibedeps/`](#vibedeps) tree. The conventional user-owned boot files `spec/boot/00-core.md` and `spec/boot/90-user.md`, plus `spec/WAL.md`, are part of the authored `spec/`; `vibe` references them in the [computed boot sequence](#computed-boot-sequence) but never rewrites them. The generated [boot artifacts](#boot-artifacts) `INLINE.md` / `INDEX.md`, by contrast, are vibevm-owned. Spec: [PROP-009 §2.1](../spec/modules/vibe-workspace/PROP-009-loading-model.md#two-trees).
 
 ### `[package]` (manifest table)
 
@@ -154,6 +166,14 @@ The project lockfile. Schema v4 today; an older schema version is rejected, not 
 ### vibe.toml
 
 The single manifest file every vibevm node carries. Its role is set by which tables it carries: `[project]` (a non-publishable consumer) XOR `[package]` (a publishable artifact); `[workspace]` composes with either or neither. Other sections: `[active]`, `[llm]`, `[[registry]]`, `[[mirror]]`, `[[override]]`, `[requires.packages]`, `[origin]`. Schema: [`VIBEVM-SPEC.md` §7.5](../VIBEVM-SPEC.md), Rust source: [`crates/vibe-core/src/manifest/project.rs`](../crates/vibe-core/src/manifest/project.rs).
+
+### `vibedeps/`
+
+The materialised-dependency tree at the **absolute workspace root**, written only by `vibe` and committed to git. One slot per resolved package — `vibedeps/<kind>-<name>/<version>/` — holding that package's published tree verbatim. Physically separate from any node's authored `spec/`, so installing a dependency never modifies authored content. Spec: [PROP-009 §2.1](../spec/modules/vibe-workspace/PROP-009-loading-model.md#two-trees).
+
+### `<vibevm>` block
+
+The single delimited region vibevm owns inside each agent instruction file (`CLAUDE.md` / `AGENTS.md` / `GEMINI.md`) — bounded by the literal bare tags `<vibevm>` and `</vibevm>`, each alone on its own line. `vibe` writes only between the markers (the boot redirect); everything outside is preserved verbatim, since those files are a shared contact surface. Exactly one block per file; a malformed file (not exactly one ordered pair) is a hard error the user repairs by hand. Spec: [PROP-012](../spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md).
 
 ### `vibevm`
 

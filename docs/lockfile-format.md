@@ -1,6 +1,6 @@
 # `vibe.lock` — schema reference
 
-Authoritative reference for the `vibe.lock` file at the root of every vibevm project. The lockfile is the source of truth for what is installed; `vibe list` reads it, `vibe uninstall` reads it to know what files to remove, `vibe registry sync` walks it to refresh per-package clones. **It is committed to git.**
+Authoritative reference for the `vibe.lock` file at the root of every vibevm project. The lockfile is the source of truth for what is installed; `vibe list` reads it, `vibe uninstall` reads it to find the `vibedeps/` slot to remove, `vibe reinstall` recomputes the materialised state from it, `vibe registry sync` walks it to refresh per-package clones. **It is committed to git.**
 
 The file is TOML 1.0. Schema is defined by [`crates/vibe-core/src/manifest/lockfile.rs`](../crates/vibe-core/src/manifest/lockfile.rs); spec text in [`VIBEVM-SPEC.md` §7.4](../VIBEVM-SPEC.md). Identity model in [`PROP-002 §2.1`](../spec/modules/vibe-registry/PROP-002-decentralized-registry.md#identity).
 
@@ -45,8 +45,8 @@ Each `[[package]]` block describes one installed package.
 | `source_ref` | string | no | Git ref the content was fetched at — typically `v<version>` for per-package registries; the override's ref for `[[override]]` resolutions. `None` for non-git sources (`file://...`, M0 local-directory installs). |
 | `resolved_commit` | string | no | Commit hash the ref resolved to at install time. Lets a future `vibe check` detect silent tag rewrites (commit changed but `(kind, name, version)` stayed the same — a force-pushed tag). Reserved; populated by the resolver when `git rev-parse` plumbing wires through. Absent today. |
 | `content_hash` | string (`sha256:<hex>`) | yes | Hash over the deterministically-ordered file tree. The **identity** half of the `(kind, name, version, content_hash)` tuple — see [identity model](#identity-model). |
-| `boot_snippet` | string | no | Filename (under `spec/boot/`) of the boot snippet this package contributes. `None` for packages without a boot snippet. |
-| `files_written` | array of strings | yes (may be empty) | Forward-slash-normalised relative paths, every file the install wrote. `vibe uninstall` reads this list to know what to remove. User-owned paths are never present here (filtered at plan time). |
+| `boot_snippet` | string | no | **Retired by the loading model.** Formerly the `NN-`-prefixed boot-snippet filename. Under [PROP-009](../spec/modules/vibe-workspace/PROP-009-loading-model.md) `vibe` owns boot ordering by `category` and generates `INDEX.md` / `INLINE.md`, so a package no longer pins a boot filename — the field is left `None`. The struct slot is retained for schema-v4 compatibility. |
+| `files_written` | array of strings | yes (may be empty) | **Retired by the loading model.** Formerly the list of every file an install wrote into the project. Under PROP-009 a package is materialised verbatim into a `vibedeps/` slot — there is no per-file write list to record — so the field is left empty. The struct slot is retained for schema-v4 compatibility. |
 | `dependencies` | array of pkgref strings | no, default `[]` | Transitive deps the solver chose, pinned to exact versions (`"flow:atomic-commits@=0.1.0"`). Reproduces the resolved graph on a fresh install from this lockfile. Empty for a package with no dependencies. |
 | `overridden` | bool | no, default `false` | True iff this package was resolved through `[[override]]` rather than the registry layer. `vibe list --overrides` filters on this; the deliberate-divergence escape hatch (`--trust-mirror`, M1.6) keys off it. |
 
@@ -110,13 +110,7 @@ source_kind     = "registry"
 source_url      = "git@gitverse.ru:vibespecs/flow-wal.git"
 source_ref      = "v0.1.0"
 content_hash    = "sha256:7d8f…b1"
-boot_snippet    = "10-flow-wal.md"
-files_written   = [
-    "spec/boot/10-flow-wal.md",
-    "spec/flows/wal/WAL-PROTOCOL.md",
-    "spec/flows/wal/morning-routine.md",
-    "spec/flows/wal/session-end-hook.md",
-]
+files_written   = []
 dependencies    = ["flow:atomic-commits@=0.1.0"]
 
 [[package]]
@@ -128,13 +122,7 @@ source_kind     = "registry"
 source_url      = "git@gitverse.ru:vibespecs/flow-atomic-commits.git"
 source_ref      = "v0.1.0"
 content_hash    = "sha256:1c4e…02"
-boot_snippet    = "30-flow-atomic-commits.md"
-files_written   = [
-    "spec/boot/30-flow-atomic-commits.md",
-    "spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md",
-    "spec/flows/atomic-commits/conventional-commits.md",
-    "spec/flows/atomic-commits/splitting-large-changes.md",
-]
+files_written   = []
 ```
 
 Reading from this:
@@ -142,7 +130,7 @@ Reading from this:
 - Both packages came from the same registry (`vibespecs`), so `vibe registry sync` will refresh both via one `MultiRegistryResolver` instance.
 - `flow:wal` declared a transitive `flow:atomic-commits@^0.1`; the solver pinned it to exact `=0.1.0` (the only version available). Re-resolving against this lockfile picks the same version even if `vibespecs` later tags `v0.1.1`.
 - `flow:atomic-commits` is **not** in `root_dependencies` — `vibe uninstall flow:atomic-commits` would refuse (it's a transitive, not a root). To remove it, `vibe uninstall flow:wal` first; future `vibe update --prune` will then orphan-collect `flow:atomic-commits` if no other root reaches it.
-- Every `boot_snippet` matches a numeric prefix per [`VIBEVM-SPEC.md` §6.2](../VIBEVM-SPEC.md): `10-` and `30-` here, no clash.
+- `files_written` is empty and `boot_snippet` is absent on both entries: under the [loading model](loading-model.md) each package is materialised verbatim into a `vibedeps/` slot and boot ordering is computed — there is no per-file write list and no pinned boot filename. The slots here are `vibedeps/flow-wal/0.1.0/` and `vibedeps/flow-atomic-commits/0.1.0/`.
 - `content_hash` values are the identity. A re-fetch that produces a different hash for the same `(flow, wal, 0.1.0)` would trigger `InstallError::ContentDrift` on the next install of an already-locked entry.
 
 ## Related

@@ -30,23 +30,25 @@ vibe update --all                   [--path <dir>] [--assume-yes]
 ## Pipeline
 
 1. **Resolve.** For each target package, look up its original constraint in `[meta].root_dependencies` (e.g. `flow:wal@^0.3`); fall back to an exact-version pin for non-root transitives. The `MultiRegistryResolver` walks `[[registry]]` priority order, falls through `[[mirror]]` URLs on primary failure (PROP-002 §2.3), and applies the cross-source `content_hash` gate from [`vibe install`](install.md). Override-pinned packages re-fetch at the override's ref.
-2. **Compare.** If the resolved version + content_hash matches the lockfile entry, the package is reported as `up-to-date` and skipped. Otherwise build an [`UpdatePlan`](#per-file-classification) by comparing the new package's `[writes]` against the old install's `files_written`, plus boot snippet rename/move handling.
-3. **Refuse on user-edits.** For every project file in either the old or new install, compare its on-disk bytes to the **install-time** cache (`.vibe/cache/<kind>/<name>/v<old-version>/`). If they differ, the user has edited the file post-install — refuse with [`UserEditedFile`](#errors). Restore the original cache or run `vibe uninstall && vibe install` to consciously discard edits.
+2. **Compare.** If the resolved version + content_hash matches the lockfile entry, the package is reported as `up-to-date` and skipped. Otherwise build an [`UpdatePlan`](#per-file-classification) by diffing the new package's published tree against the materialised content in the old version's `vibedeps/` slot.
+3. **Refuse on user-edits.** For every file in either the old or new package tree, compare its on-disk bytes in `vibedeps/` to the **install-time** cache (`.vibe/cache/<kind>/<name>/v<old-version>/`). If they differ, the slot was hand-edited post-install — refuse with [`UserEditedFile`](#errors). Restore the original cache, or run `vibe uninstall && vibe install` to consciously discard the edits.
 4. **Refuse on dep-shape change.** If the new manifest's `[requires].packages` declares a different set of `(kind, name)` than the locked transitive set, refuse with [`DependencyShapeChanged`](#errors). Narrow v0 of `vibe update` does not cascade graph changes — run `vibe uninstall && vibe install` to apply the new graph.
 5. **Confirm.** Unless `--assume-yes` or `--json` is set, the operator sees the combined plan and confirms interactively. Decline → exit code `5`.
-6. **Apply.** `Removed` files are deleted, `Added` and `Modified` files are written from the new cache, `Identical` files are no-ops. Best-effort rollback on partial failure (snapshots taken at apply start are restored).
-7. **Bump lockfile.** The lockfile entry's `version`, `content_hash`, `source_url`, `source_ref`, `resolved_commit`, `boot_snippet`, `files_written` are rewritten; `dependencies` and `overridden` are preserved (the dep-shape gate kept them stable).
+6. **Apply.** The package's `vibedeps/` slot is re-materialised at the new version: `Removed` files are deleted, `Added` and `Modified` files are written from the new cache, `Identical` files are no-ops. The boot artifacts (`spec/boot/INLINE.md`, `spec/boot/INDEX.md`) are then regenerated for every node so the updated package's boot contribution is recomputed. Best-effort rollback on partial failure (snapshots taken at apply start are restored).
+7. **Bump lockfile.** The lockfile entry's `version`, `content_hash`, `source_url`, `source_ref`, `resolved_commit` are rewritten; `dependencies` and `overridden` are preserved (the dep-shape gate kept them stable). The lockfile no longer carries a per-file `files_written` list or a `boot_snippet` filename — see [`docs/lockfile-format.md`](../lockfile-format.md).
 
 ## Per-file classification
 
+The diff is over the files of the package's `vibedeps/` slot, old version against new:
+
 | Sigil | Meaning | Apply behaviour |
 | --- | --- | --- |
-| `[+]` `Added` | In the new package's writes; not in the old install. | Write from new cache. |
-| `[-]` `Removed` | In the old install; not in the new package's writes. | Delete from project. |
-| `[~]` `Modified` | In both old and new with **different** bytes; project file is **pristine** (matches old cache). | Overwrite from new cache. |
-| `[=]` `Identical` | In both old and new with byte-identical content. | No-op (recorded in `files_written` for completeness). |
+| `[+]` `Added` | In the new package tree; not in the old slot. | Write into the slot from the new cache. |
+| `[-]` `Removed` | In the old slot; not in the new package tree. | Delete from the slot. |
+| `[~]` `Modified` | In both old and new with **different** bytes; the slot file is **pristine** (matches the old cache). | Overwrite in the slot from the new cache. |
+| `[=]` `Identical` | In both old and new with byte-identical content. | No-op. |
 
-A `[boot_snippet]` rename (e.g. `10-flow-wal.md` → `10-flow-wal-v2.md`) lands as one `Removed` (old name) plus one `Added` (new name) in the diff.
+A change to the package's `[boot_snippet]` — a new `category`, a moved `source` file — is reflected automatically: the slot is re-materialised verbatim, and regenerating the boot artifacts recomputes the package's place in every node's boot sequence. There is no boot-filename rename to track, because there is no boot filename.
 
 ## Errors
 

@@ -1,6 +1,6 @@
 # `vibe init` — scaffold a new vibevm project
 
-Creates the standard project tree spelled out in [`VIBEVM-SPEC.md` §4.2](../../VIBEVM-SPEC.md): boot snippets the AI agent reads at session start, an empty `spec/` content tree, a `vibe.toml` project manifest pointing at the default public registry, an empty `vibe.lock`, and the per-project cache directory.
+Creates the standard project tree spelled out in [`VIBEVM-SPEC.md` §4.2](../../VIBEVM-SPEC.md): the authored boot files the AI agent reads at session start, a generated `spec/boot/INDEX.md`, an empty `spec/` content tree, a `vibe.toml` project manifest pointing at the default public registry, an empty `vibe.lock`, the per-project cache directory, and a managed `<vibevm>` block in each agent instruction file.
 
 `init` is **idempotent**. Running it twice in the same directory does not destroy user-modified files — every existing file is reported as `kept`, and only missing pieces are created.
 
@@ -31,16 +31,17 @@ After a fresh `vibe init`:
 
 ```
 <project>/
-├── CLAUDE.md          # AI-agent redirect
-├── AGENTS.md          # AI-agent redirect (byte-identical to CLAUDE.md)
-├── GEMINI.md          # AI-agent redirect (byte-identical)
+├── CLAUDE.md          # Agent instruction file — carries a managed <vibevm> block.
+├── AGENTS.md          # Agent instruction file — carries a managed <vibevm> block.
+├── GEMINI.md          # Agent instruction file — carries a managed <vibevm> block.
 ├── spec/
 │   ├── boot/
-│   │   ├── 00-core.md   # User-owned. The "first thing every session reads."
-│   │   └── 90-user.md   # User-owned overrides.
-│   ├── flows/           # Empty — populated by `vibe install flow:…`.
-│   ├── feats/           # Empty — populated by `vibe install feat:…`.
-│   ├── stacks/          # Empty — populated by `vibe install stack:…`.
+│   │   ├── 00-core.md   # Authored, user-owned. The "first thing every session reads."
+│   │   ├── 90-user.md   # Authored, user-owned overrides.
+│   │   └── INDEX.md     # Generated boot manifest — do not edit.
+│   ├── flows/           # Empty — for project-authored flow content.
+│   ├── feats/           # Empty — for project-authored feat content.
+│   ├── stacks/          # Empty — for project-authored stack content.
 │   ├── common/          # Empty — for project-specific PROP / FEAT docs.
 │   ├── modules/         # Empty — for module-specific docs.
 │   └── WAL.md           # User-owned project state checkpoint.
@@ -52,7 +53,9 @@ After a fresh `vibe init`:
 └── .gitignore         # Sensible defaults for vibevm projects.
 ```
 
-`spec/boot/00-core.md`, `spec/boot/90-user.md`, and `spec/WAL.md` are **user-owned** — `vibe install` and `vibe uninstall` never modify them. Edit freely.
+`CLAUDE.md`, `AGENTS.md`, and `GEMINI.md` are **shared** agent instruction files — `vibe init` writes a managed `<vibevm>` block into each (the boot redirect; per [PROP-012](../../spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md)) and leaves the rest of the file to you. If the file does not exist, `vibe init` creates it containing just the block; if it already has hand-authored content, the block is appended at the end and you may move it wherever you like.
+
+`spec/boot/00-core.md`, `spec/boot/90-user.md`, and `spec/WAL.md` are **authored, user-owned** — `vibe install`, `vibe reinstall`, and `vibe uninstall` never modify them. Edit freely. `spec/boot/INDEX.md` is a **generated** boot manifest ([the loading model](../loading-model.md)); `vibe` rewrites it and `INLINE.md` (when there are inline contributions) — do not hand-edit them. A dependency's content is never written into `spec/`: `vibe install` materialises it into a separate `vibedeps/` tree at the workspace root.
 
 ## Examples
 
@@ -93,6 +96,7 @@ vibe init \
 
 ## Related
 
-- [`vibe install`](install.md) — populate the `spec/` tree from a registry.
+- [`vibe install`](install.md) — resolve packages and materialise them into `vibedeps/`.
+- [The loading model](../loading-model.md) — the boot artifacts and the `<vibevm>` block `vibe init` scaffolds.
 - [`vibe.toml` schema](../../VIBEVM-SPEC.md) §7.5.
 - [`PROP-002` §2.2](../../spec/modules/vibe-registry/PROP-002-decentralized-registry.md#registry-model) — the registry model (`[[registry]]` array, naming convention, mirror layer).

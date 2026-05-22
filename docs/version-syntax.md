@@ -180,7 +180,7 @@ source_url = "https://github.com/vibespecs/flow-wal.git"
 source_ref = "v0.1.5"
 resolved_commit = "abc123…"
 content_hash = "sha256:def456…"
-files_written = [...]
+dependencies = []
 ```
 
 `version` is a single concrete `semver::Version`, not a constraint. The lockfile is the byte-level commitment; identity is `(kind, name, version, content_hash)`. See [`lockfile-format.md`](lockfile-format.md) for the full schema.

@@ -35,17 +35,13 @@ If you don't find your error here, the message is probably from a layer below `v
 
 Never edit `vibe.lock` by hand to silence this — that defeats the integrity check.
 
-### `boot snippet filename `…` is already claimed[ by `…`]`
+### `malformed <vibevm> block in `…``
 
-**What.** Two installed packages would write the same file under `spec/boot/`. Plan-time conflict, exit code `3`.
+**What.** An agent instruction file (`CLAUDE.md`, `AGENTS.md`, or `GEMINI.md`) does not contain exactly one well-formed managed block — vibevm needs exactly one `<vibevm>` line followed later by exactly one `</vibevm>` line. Two of either marker, an opener with no closer, a closer with no opener, or a closer before its opener is malformed. Caught at plan time, before any `vibedeps/` materialisation; exit code `3`.
 
-**Action.** Pick a different prefix or rename one of the snippets. Boot-snippet filenames are `<NN>-<kind>-<name>.md`; see [`VIBEVM-SPEC.md` §6.2](../VIBEVM-SPEC.md). If the colliding package is third-party, file an issue with that package's maintainer.
+**Why.** vibevm owns only the delimited `<vibevm>` block of those shared files and writes only between the markers ([PROP-012](../spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md)). A malformed block is ambiguous — vibevm never guesses which of two regions is canonical, and never auto-deletes a stray marker.
 
-### `boot snippet numeric prefix `NN` is already taken by `…`; pick a different NN-* number`
-
-**What.** Two packages share the same `NN-` prefix even though their full filenames differ — same boot-snippet slot, different contents. Plan-time conflict, exit code `3`.
-
-**Action.** The package author needs to pick a different prefix. Convention: flows tend to use `10-`–`30-`, stacks `40-`–`60-`, feats `70-`–`80-`; `00-`–`09-` and `90-`–`99-` are user-owned (never written by `vibe install`).
+**Action.** Open the named file and repair the markers by hand so there is exactly one ordered `<vibevm>` … `</vibevm>` pair, each tag alone on its own line. Then re-run. `vibe check` reports the same defect, so you can find it before the next install.
 
 ### `package `…` is not installed`
 
@@ -53,29 +49,17 @@ Never edit `vibe.lock` by hand to silence this — that defeats the integrity ch
 
 **Action.** `vibe list` to see what's actually installed; check spelling.
 
-### `target file `…` already exists and is not owned by this package`
+### `the materialised vibedeps/ tree is incomplete — … slot(s) missing`
 
-**What.** A package's `[writes].files` lists a path that already exists in the project, and the existing file did not come from this package. Plan-time refusal — vibevm never silently overwrites unrelated content.
+**What.** `vibe reinstall` (without `--force`) found that a package the lockfile pins has no `vibedeps/<kind>-<name>/<version>/` slot on disk. Regenerate mode reads only the materialised tree — it cannot conjure missing content. Exit code `1`.
 
-**Action.** Move or delete the conflicting file, or remove the offending entry from the package manifest. Common case: a hand-edited file at a path a new package now wants to claim.
+**Action.** Re-run with `--force`: `vibe reinstall --force` re-fetches every locked package's content from source at the pinned version and re-materialises the `vibedeps/` tree. See [`docs/commands/reinstall.md`](commands/reinstall.md).
 
-### `package declares a write to user-owned path `…` — packages must not touch these`
+### `package declares a [boot_snippet].source `…` that does not exist in the package`
 
-**What.** A package tried to write to one of the user-owned files (`spec/boot/00-core.md`, `spec/boot/90-user.md`, `spec/WAL.md`, `VIBEVM-SPEC.md`, `refs/book/**`, any `00-` / `90-` boot file). Hard refusal at plan time.
+**What.** The package's `[boot_snippet]` table names a `source` file that is not actually present in the package payload.
 
-**Action.** This is an authoring bug in the package, not a configuration issue on your side. Report it upstream. The package's `[writes].files` needs to use a non-user-owned path.
-
-### `package declares a write to an absolute or escaping path `…` — writes must stay within the project`
-
-**What.** A package tried to escape its project root via `..` or an absolute path.
-
-**Action.** Authoring bug. Report upstream.
-
-### `package declares a source file `…` that does not exist in the package`
-
-**What.** The package's manifest lists a file in `[writes].files` or `[boot_snippet].source` that isn't actually in the package payload. The registry contents are missing the file the manifest claims.
-
-**Action.** Either the published package is corrupt (rare; report upstream) or the cache is corrupted. Try `rm -rf <project>/.vibe/cache && vibe install <pkgref>` to force a re-fetch.
+**Action.** Either the published package is corrupt (rare; report upstream) or the cache is corrupted. Try `rm -rf <project>/.vibe/cache && vibe install <pkgref>` to force a re-fetch. (Note: the loading model retired the per-file `[writes]` list — a package's footprint is its verbatim `vibedeps/` slot — so there is no longer a per-file write-target conflict or user-owned-path write error; a dependency's content lands in `vibedeps/`, never in a node's authored `spec/`.)
 
 ### `user declined the install plan`
 
@@ -279,13 +263,13 @@ Never edit `vibe.lock` by hand to silence this — that defeats the integrity ch
 
 ### `no `vibe.toml` in `…`; run `vibe init` first`
 
-**What.** A project-scoped command (`install`, `list`, `uninstall`, `registry sync`, `registry publish`) ran in a directory without `vibe.toml`.
+**What.** A project-scoped command (`install`, `reinstall`, `list`, `uninstall`, `registry sync`, `registry publish`) ran in a directory without `vibe.toml`.
 
-**Action.** `cd` into the right directory, or `vibe init --path <project>` to scaffold one. Use `--path <dir>` to point at a project from elsewhere.
+**Action.** `cd` into the right directory, or `vibe init --path <project>` to scaffold one. Use `--path <dir>` (or, for `vibe reinstall`, the positional path) to point at a project from elsewhere.
 
 ### `no TTY available for confirmation; re-run with `--assume-yes` to apply this plan non-interactively`
 
-**What.** `vibe install` / `uninstall` was run in a non-TTY environment (CI, pipe, redirect) without `--assume-yes`, and would otherwise hang waiting for interactive confirmation.
+**What.** `vibe install` / `uninstall` / `reinstall` was run in a non-TTY environment (CI, pipe, redirect) without `--assume-yes`, and would otherwise hang waiting for interactive confirmation.
 
 **Action.** Add `--assume-yes` (or its alias `--yes`) for non-interactive runs. `--json` also auto-approves on the assumption a script is driving.
 
