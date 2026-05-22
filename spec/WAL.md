@@ -1,5 +1,5 @@
 # WAL — Project Continuation State
-_Updated: 2026-05-22 (session-end — M1.18 loading model SHIPPED and merged to `main`; `main` is at merge commit `ffd5e1c`)_
+_Updated: 2026-05-22 (M1.18 loading model SHIPPED and merged to `main` at `ffd5e1c`; the dynamic-entry `when` gate shipped on top — see below)_
 
 ## Current phase
 
@@ -7,7 +7,9 @@ _Updated: 2026-05-22 (session-end — M1.18 loading model SHIPPED and merged to 
 
 **The model in one breath.** Two physically separate trees — authored `spec/` (only the author writes it) and a committed `vibedeps/` (only `vibe` writes it; one slot `vibedeps/<kind>-<name>/<version>/` per resolved package, the package's published tree verbatim). The boot sequence is *computed* per node from the unified resolution — inherited foundation + own boot + dependency boot + overrides — and projected into `spec/boot/INLINE.md` (the verbatim `inline` priority lane) and `spec/boot/INDEX.md` (a TOML manifest of `static` paths + `dynamic` INCLUDE pointers). Three inclusion types — `inline` / `static` / `dynamic` — set per dependency via `link` (default `static`). The `NN-` filename prefix and `[writes]` are retired; `vibe` owns ordering by `[boot_snippet].category` band. `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` are co-tenant files — vibevm owns only a `<vibevm>` block inside each, never the whole file (PROP-012). `vibe reinstall` regenerates without re-resolving.
 
-**Shipped this session — M1.18 Phase 7 + three follow-ups** (commits `78d9613` … `56d7a5f`, then merge `ffd5e1c`):
+**Shipped 2026-05-22, on top of the M1.18 merge — the dynamic-entry `when` gate.** PROP-009 §2.3 showed a `when` activation condition on a `dynamic` `INDEX.md` entry, but §2.6 pinned no field that declared it — the contract gap flagged at Phase 4. It is now closed. A package's `[boot_snippet]` may carry an optional `when`; for v1 the only condition is an operating-system match — the wire string `"os:<name>"` (`windows` / `macos` / `linux`), enough for OS-specific packages and subskills. `vibe-core` gains `WhenCondition` / `TargetOs` (`feat(core)`); the computed-view engine forces a `when`-bearing snippet to `dynamic` — a condition cannot be `inline`d or read as plain `static` — and carries the condition into `BootEntry`; `render_index` writes `when = "os:<name>"` into the `[[entry]]`, and the `INDEX.md` header documents the OS test for the agent, which evaluates it at boot (the committed `INDEX.md` stays OS-invariant). The same OS probe is reserved as `if_os` in the subskill `[activation]` vocabulary (PROP-003 §2.5.2) — one grammar across both mechanisms. Gate green: vibe-core 169 tests, vibe-workspace 87; `cargo clippy --workspace --all-targets -- -D warnings` clean; `vibe check --path .` clean.
+
+**Shipped earlier 2026-05-22 — M1.18 Phase 7 + three follow-ups** (commits `78d9613` … `56d7a5f`, then merge `ffd5e1c`):
 
 - **PROP-012 — the managed `<vibevm>` block** (`78d9613`, `651a57d` design; `55f24cd` impl). The Phase-4 redirect code overwrote the *whole* of `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` on every install — destroying hand-authored content. `vibe` now owns only a delimited `<vibevm>` … `</vibevm>` block: locate / classify / splice / append / migrate; exactly one block per file (malformed → hard error, validated at plan time). `vibe init` now generates the boot artifacts, so a fresh project is bootable at once.
 - **`vibe check` aligned with the loading model** (`ee117f4` boot-directory; `f35c557` check 8 + the malformed-block check). The `NN-` enforcement is retired; check 8 (`lockfile_files`) now verifies `vibedeps/` slot consistency; new `CheckId::RedirectBlock` reports a malformed `<vibevm>` block.
@@ -17,13 +19,12 @@ _Updated: 2026-05-22 (session-end — M1.18 loading model SHIPPED and merged to 
 
 **Earlier in M1.18 (Phases 1–6, pre-this-session)** — the schema, the `vibedeps/` tree, the computed-view engine, `INLINE.md` / `INDEX.md` generation, workspace-aware `vibe install` (+ five follow-ups), `vibe reinstall`, published-copy boot regeneration. Full detail in `CHANGELOG.md` and PROP-009 §8.
 
-**Branch state.** On `main` (`ffd5e1c`), pushed to `origin/main`. The `m1.17-workspace` feature branch is retained (merged, not deleted). Gate green — test counts: vibe-cli bin 124 / e2e 104 / cli_init 11 / cli_search 15 (3 ignored), vibe-core 161, vibe-workspace 80, vibe-check 27, vibe-registry 106 + 5 + 7, vibe-publish 51 + 5, vibe-resolver 48, vibe-mcp 22.
+**Branch state.** On `main`, pushed to `origin/main`. The `when`-gate commits land on top of the M1.18 session-end checkpoints (`6c58d79`, `c74b2a5`), themselves on the `--no-ff` merge `ffd5e1c`. The `m1.17-workspace` feature branch is retained (merged, not deleted). Gate green — test counts: vibe-cli bin 124 / e2e 104 / cli_init 11 / cli_search 15 (3 ignored), vibe-core 169, vibe-workspace 87, vibe-check 27, vibe-registry 106 + 5 + 7, vibe-publish 51 + 5, vibe-resolver 48, vibe-mcp 22.
 
-**Next — owner's choice; no blocker.** (a) The PROP-010 / PROP-011 owner design sessions — close their §5 open questions before scheduling; PROP-011 (incremental install) has no dependency beyond shipped PROP-009 and can go first. (b) PROP-005 (the package index) implementation → then M1.19 / PROP-008 (qualified naming). (c) M1.5 (Generation — the LLM `vibe build`). (d) The one remaining loading-model design question — PROP-009 §2.3's `when` on a `dynamic` `INDEX.md` entry has no declared manifest field; the renderer is `when`-ready but leaves it unset.
+**Next — owner's choice; no blocker.** (a) The PROP-010 / PROP-011 owner design sessions — close their §5 open questions before scheduling; PROP-011 (incremental install) has no dependency beyond shipped PROP-009 and can go first. (b) PROP-005 (the package index) implementation → then M1.19 / PROP-008 (qualified naming). (c) M1.5 (Generation — the LLM `vibe build`). The owner directed proceeding through (a) → (b) → (c) under MFBT (PROP-006 §2) for each large unit.
 
 **Known issues / open items.**
 
-- **PROP-009 §2.3 `when` contract gap** — a `dynamic` `INDEX.md` entry can carry a `when` activation condition, but no manifest field declares it. A small design decision (likely `[boot_snippet]` or the `[requires.packages]` entry).
 - **PROP-010 / PROP-011** — DRAFT; each needs an owner design session to close its §5 open questions before implementation.
 - **Parked backlog** — `version = { workspace = true }` member-version inheritance (PROP-007 §6 q4); the publish-signalling polish (`--archive`, `has_issues`); PROP-008 (M1.19) follows PROP-005 (index).
 - (carried) delete `https://gitverse.ru/vibespecs/vibevm-direct-push-smoke` via the GitVerse web UI — owner-only, no API DELETE endpoint. Not blocking.
