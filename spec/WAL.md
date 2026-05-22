@@ -1,7 +1,16 @@
 # WAL — Project Continuation State
-_Updated: 2026-05-22 (M1.18 loading model SHIPPED and merged to `main` at `ffd5e1c`; the dynamic-entry `when` gate shipped on top — see below)_
+_Updated: 2026-05-22 (M1.18 loading model on `main` at `ffd5e1c`; the `when` gate and M1.21 — PROP-011 incremental install — shipped on top)_
 
 ## Current phase
+
+**M1.21 — Incremental install (PROP-011): SHIPPED 2026-05-22.** `vibe install` is now incremental — it does the least work a change requires. Four phases, all on `main`:
+
+- **Phase 1 — skip resolution when fresh** (`feat(install)` `d6c4248`). A new `vibe-workspace::freshness` module runs a `cargo`-style satisfiability check before the depsolver: is `vibe.lock` still a correct resolution of every node's `[requires]`? When it is, a bare `vibe install` skips the depsolver entirely — no registry walk, no network, just a whole-tree boot regeneration. `vibe install` is now **lockfile-respecting** — an unchanged `[requires]` honours the locked versions, ending the silent version drift.
+- **Phase 2 — materialise only the diff** (`2b1b6cc`). `apply_resolution` skips re-copying a `vibedeps/` slot already present for the resolved (immutable) version. A `slot_integrity` key in the vibevm user config (`trust-presence` default, or `verify`) governs the skip; `vibe reinstall --force` passes `verify`.
+- **Phase 3 — minimum-churn re-resolution** (`f22f629`). When `[requires]` changed, `vibe install` re-resolves but pins every still-satisfied registry root to its locked version, so an untouched dependency never drifts; a held-pin conflict falls back to a full re-resolve.
+- **Phase 4 — docs** (this checkpoint). `VIBEVM-SPEC.md` §9.1 records the lockfile-respecting contract (owner sanction granted this session); PROP-011 reconciled to the implementation; CHANGELOG / ROADMAP register M1.21; `docs/commands/install.md` documents the incremental behaviour.
+
+**Two implementation findings, reconciled into PROP-011 (Sync-from-Code).** (1) FU3's `vibe update <pkgref>` scoped resolution is correctness-relaxed — it never unifies the held and re-resolved subtrees — so it cannot serve `vibe install`'s unified contract; Phase 3 holds pins via constraint-tightening instead, and skipping the registry walk for an unchanged subtree is deferred to PROP-003's SAT solver. (2) `slot_integrity = verify` re-materialises rather than hash-comparing — the cheaper `content_hash` spot-check waits until `compute_content_hash` is lowered out of `vibe-registry`.
 
 **M1.18 — Loading model (PROP-009 + PROP-012): SHIPPED 2026-05-22, merged to `main`.** The flat `spec/boot/NN-*.md` boot model is gone; vibevm now boots from a computed loading model. `main` is at the `--no-ff` merge commit **`ffd5e1c`** — M1.17 (Workspace) and M1.18 (Loading model) both landed. Working tree clean; `cargo test --workspace`, `cargo clippy --workspace --all-targets -- -D warnings`, and `vibe check --path .` all green.
 
@@ -19,13 +28,14 @@ _Updated: 2026-05-22 (M1.18 loading model SHIPPED and merged to `main` at `ffd5e
 
 **Earlier in M1.18 (Phases 1–6, pre-this-session)** — the schema, the `vibedeps/` tree, the computed-view engine, `INLINE.md` / `INDEX.md` generation, workspace-aware `vibe install` (+ five follow-ups), `vibe reinstall`, published-copy boot regeneration. Full detail in `CHANGELOG.md` and PROP-009 §8.
 
-**Branch state.** On `main`, pushed to `origin/main`. The `when`-gate commits land on top of the M1.18 session-end checkpoints (`6c58d79`, `c74b2a5`), themselves on the `--no-ff` merge `ffd5e1c`. The `m1.17-workspace` feature branch is retained (merged, not deleted). Gate green — test counts: vibe-cli bin 124 / e2e 104 / cli_init 11 / cli_search 15 (3 ignored), vibe-core 169, vibe-workspace 87, vibe-check 27, vibe-registry 106 + 5 + 7, vibe-publish 51 + 5, vibe-resolver 48, vibe-mcp 22.
+**Branch state.** On `main`, pushed to `origin/main`. The M1.21 (PROP-011) commits — `d6c4248`, `2b1b6cc`, `f22f629`, plus this Phase-4 docs checkpoint — land on top of the `when`-gate commits (`fef37e5` … `0164a20`, `00bdd48`) and the M1.18 session-end checkpoints (`ffd5e1c` merge → `c74b2a5`). The `m1.17-workspace` feature branch is retained (merged, not deleted). Gate green — test counts: vibe-cli bin 124 / e2e 106 / cli_init 11 / cli_search 15 (3 ignored), vibe-core 173, vibe-workspace 103, vibe-check 27, vibe-registry 106 + 5 + 7, vibe-publish 51 + 5, vibe-resolver 48, vibe-mcp 22.
 
-**Next — owner's choice; no blocker.** (a) The PROP-010 / PROP-011 owner design sessions — close their §5 open questions before scheduling; PROP-011 (incremental install) has no dependency beyond shipped PROP-009 and can go first. (b) PROP-005 (the package index) implementation → then M1.19 / PROP-008 (qualified naming). (c) M1.5 (Generation — the LLM `vibe build`). The owner directed proceeding through (a) → (b) → (c) under MFBT (PROP-006 §2) for each large unit.
+**Next — per the owner's plan; no blocker.** PROP-011 is shipped. Remaining, in order, each under MFBT (PROP-006 §2): (a) **PROP-010** — local package cache — close its §5 open questions in an owner design session, then implement. (b) **PROP-005** (the package index) implementation → then M1.19 / PROP-008 (qualified naming). (c) M1.5 (Generation — the LLM `vibe build`).
 
 **Known issues / open items.**
 
-- **PROP-010 / PROP-011** — DRAFT; each needs an owner design session to close its §5 open questions before implementation.
+- **PROP-010** — DRAFT; needs an owner design session to close its §5 open questions before implementation. PROP-011 is shipped (see Current phase).
+- **Deferred PROP-011 refinements** (recorded in PROP-011 §5/§8) — the `content_hash` slot spot-check for `slot_integrity = verify` (needs `compute_content_hash` lowered out of `vibe-registry`); true incremental re-resolution that skips the registry walk for an unchanged subtree (needs PROP-003's SAT `pin_preferences`).
 - **Parked backlog** — `version = { workspace = true }` member-version inheritance (PROP-007 §6 q4); the publish-signalling polish (`--archive`, `has_issues`); PROP-008 (M1.19) follows PROP-005 (index).
 - (carried) delete `https://gitverse.ru/vibespecs/vibevm-direct-push-smoke` via the GitVerse web UI — owner-only, no API DELETE endpoint. Not blocking.
 
