@@ -40,11 +40,11 @@ An abstract interface a package can `[provides]` and another package can `[requi
 
 ### content_hash
 
-`sha256:<hex>` over the deterministically-ordered file tree of a package. **The identity** half of `(kind, name, version, content_hash)`. Computed by [`vibe-registry::compute_content_hash`](../crates/vibe-registry/src/lib.rs); recorded per-`[[package]]` in `vibe.lock`. PROP-002 §2.1 makes content_hash the load-bearing identity field; URL is informational only.
+`sha256:<hex>` over the deterministically-ordered file tree of a package. **The identity** half of `(group, name, version, content_hash)`. Computed by [`vibe-registry::compute_content_hash`](../crates/vibe-registry/src/lib.rs); recorded per-`[[package]]` in `vibe.lock`. PROP-002 §2.1 makes content_hash the load-bearing identity field; URL is informational only.
 
 ### content drift
 
-Mismatch between a `vibe.lock` entry's pinned `content_hash` and the freshly-fetched bytes' hash for the same `(kind, name, version)`. Surfaces as `InstallError::ContentDrift`; refused at plan time. Catches force-pushed tags, malicious mirrors, override-source rotations.
+Mismatch between a `vibe.lock` entry's pinned `content_hash` and the freshly-fetched bytes' hash for the same `(group, name, version)`. Surfaces as `InstallError::ContentDrift`; refused at plan time. Catches force-pushed tags, malicious mirrors, override-source rotations.
 
 ### `flow` (kind)
 
@@ -62,17 +62,21 @@ Language / framework target. The *how* a feat becomes real software. Authoring: 
 
 Reserved for v2+. Not yet authorable.
 
+### group
+
+The reverse-FQDN qualifier in a package's identity — `org.vibevm`, `com.acme`. Dot-separated segments, each `[a-z0-9_-]+`, ASCII lowercase; **mandatory** in `[package]`. With `name` it forms the `(group, name)` package identity — `name` is unique within a `group`, not globally and not within a `kind`. Reverse-FQDN is the recommended convention, not a shape the core enforces (the posture Maven takes on `groupId`). `org.vibevm` is the canonical group for every first-party vibevm package. [PROP-008 §2.1](../spec/modules/vibe-registry/PROP-008-qualified-naming.md).
+
 ### identity (of a package)
 
-The tuple `(kind, name, version, content_hash)` per [PROP-002 §2.1](../spec/modules/vibe-registry/PROP-002-decentralized-registry.md#identity). Two installs with the same identity are *the same install* regardless of which URL served them — that's the property that makes mirrors transparent and host-migration cheap.
+The tuple `(group, name, version, content_hash)` — content-addressed per [PROP-002 §2.1](../spec/modules/vibe-registry/PROP-002-decentralized-registry.md#identity), `group`-qualified per [PROP-008 §2.2](../spec/modules/vibe-registry/PROP-008-qualified-naming.md). `kind` is **not** part of it — it is metadata. Two installs with the same identity are *the same install* regardless of which URL served them — that's the property that makes mirrors transparent and host-migration cheap.
 
 ### kind
 
-One of `flow`, `feat`, `stack`, `tool`. Closed enum; adding a fifth is a spec change. Defined in [`VIBEVM-SPEC.md` §4.1](../VIBEVM-SPEC.md).
+One of `flow`, `feat`, `stack`, `tool`. Closed enum; adding a fifth is a spec change. Defined in [`VIBEVM-SPEC.md` §4.1](../VIBEVM-SPEC.md). Since [PROP-008](../spec/modules/vibe-registry/PROP-008-qualified-naming.md) `kind` is **metadata, not identity** — it places content and drives the `--kind` filter, but package identity is `(group, name, …)` and the default `fqdn` repo name does not carry it.
 
 ### lockfile
 
-`vibe.lock` at the project root. Records exactly what is installed, with full provenance (registry name, source kind, source URL, source ref, resolved commit, content hash, transitive deps, override flag). Schema v4 today. Reference: [`docs/lockfile-format.md`](lockfile-format.md).
+`vibe.lock` at the project root. Records exactly what is installed, with full provenance (registry name, source kind, source URL, source ref, resolved commit, content hash, transitive deps, override flag). Schema v5 today. Reference: [`docs/lockfile-format.md`](lockfile-format.md).
 
 ### manifest
 
@@ -88,13 +92,14 @@ A resolved package's content as it lands on disk: its published tree, copied ver
 
 ### `naming` (registry naming convention)
 
-Per-registry rule for mapping a `<kind>:<name>` pkgref to a per-package repo name under the registry's org URL. Three values:
+Per-registry rule for mapping a pkgref to a per-package repo name under the registry's org URL. Four values:
 
-- `kind-name` (default): `flow:wal` → `<org>/flow-wal.git`. Used by `vibespecs`.
-- `name`: `flow:wal` → `<org>/wal.git`. Legal when names are globally unique across kinds in the registry.
+- `fqdn` (default): `org.vibevm/wal` → `<org>/org.vibevm.wal.git`. Repo name is `<group>.<name>` — collision-free, since `(group, name)` is unique. The convention vibevm's own registries use; the default since [PROP-008](../spec/modules/vibe-registry/PROP-008-qualified-naming.md).
+- `kind-name`: `flow:wal` → `<org>/flow-wal.git`. The pre-PROP-008 default; kept for registries that have not adopted `group`.
+- `name`: `flow:wal` → `<org>/wal.git`. Legal when names are globally unique across the registry.
 - `kind/name`: `flow:wal` → `<org>/flow/wal.git`. Requires host support for nested repo paths.
 
-A property of the registry, not a global CLI rule. [PROP-002 §2.2](../spec/modules/vibe-registry/PROP-002-decentralized-registry.md#registry-model).
+A property of the registry, not a global CLI rule. [PROP-002 §2.2](../spec/modules/vibe-registry/PROP-002-decentralized-registry.md#registry-model), [PROP-008 §2.5](../spec/modules/vibe-registry/PROP-008-qualified-naming.md).
 
 ### override
 
@@ -102,14 +107,14 @@ A property of the registry, not a global CLI rule. [PROP-002 §2.2](../spec/modu
 
 ### pkgref (package reference)
 
-A string `<kind>:<name>[@<version>]`. Variants:
+A package reference: `[<kind>:][<group>/]<name>[@<version>]`. The qualified `<group>/<name>` form is what manifests and the lockfile store; the short `<name>` form is CLI-only sugar, resolved to the qualified form via the package index at the CLI input boundary ([PROP-008 §2.6](../spec/modules/vibe-registry/PROP-008-qualified-naming.md)). Variants:
 
-- `flow:wal` — latest stable.
-- `flow:wal@0.3.0` — exact version.
-- `flow:wal@^0.3` — semver caret range.
-- `flow:wal@>=0.2, <1.0` — compound semver constraint.
+- `org.vibevm/wal` — qualified; resolved exactly.
+- `flow:org.vibevm/wal` — qualified, kind-prefixed; `kind` is validated against the manifest after resolution.
+- `wal` — short form, CLI-only sugar; index-resolved.
+- `wal@^0.3` — short form with a semver caret constraint.
 
-Type: [`PackageRef`](../crates/vibe-core/src/package_ref.rs). Defined in [`VIBEVM-SPEC.md` §7.1](../VIBEVM-SPEC.md).
+`kind` is metadata, not identity ([PROP-008 §2.3](../spec/modules/vibe-registry/PROP-008-qualified-naming.md)); a short-name collision is a `group` collision, never a `kind` one. Type: [`PackageRef`](../crates/vibe-core/src/package_ref.rs). Defined in [`VIBEVM-SPEC.md` §7.1](../VIBEVM-SPEC.md), [PROP-008 §2.4](../spec/modules/vibe-registry/PROP-008-qualified-naming.md).
 
 ### plan (install pipeline stage)
 
@@ -161,7 +166,7 @@ The table in a node's `vibe.toml` that marks it as a publishable artifact. Prese
 
 ### vibe.lock
 
-The project lockfile. Schema v4 today; an older schema version is rejected, not migrated. Reference: [`docs/lockfile-format.md`](lockfile-format.md).
+The project lockfile. Schema v5 today; an older schema version is rejected, not migrated. Reference: [`docs/lockfile-format.md`](lockfile-format.md).
 
 ### vibe.toml
 

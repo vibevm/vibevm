@@ -9,7 +9,7 @@ Mutates `vibe.toml` to add a new `[[registry]]` block. The new entry is appended
 ```
 vibe registry add <NAME> <URL>
                   [--ref <REF>]
-                  [--naming kind-name|name|kind/name]
+                  [--naming fqdn|kind-name|name|kind/name]
                   [--position primary|append]
                   [--auth none|token-env|credential-helper|ssh]
                   [--token-env <ENV_VAR_NAME>]
@@ -29,7 +29,7 @@ vibe registry add <NAME> <URL>
 | Flag | Description | Default |
 | --- | --- | --- |
 | `--ref <REF>` | Registry-level git ref. Reserved for a future registry-metadata branch and not consumed by install today. | `main` |
-| `--naming <CONV>` | Convention mapping `<kind>:<name>` to a repo name under the org. `kind-name` produces `<org>/<kind>-<name>`; `name` produces `<org>/<name>` (only valid when names are globally unique across kinds); `kind/name` produces `<org>/<kind>/<name>` (requires host support for nested repository paths). | `kind-name` |
+| `--naming <CONV>` | Convention mapping a pkgref to a repo name under the org. `fqdn` (default since [PROP-008](../../spec/modules/vibe-registry/PROP-008-qualified-naming.md)) produces `<org>/<group>.<name>`; `kind-name` produces `<org>/<kind>-<name>`; `name` produces `<org>/<name>` (only valid when names are globally unique); `kind/name` produces `<org>/<kind>/<name>` (requires host support for nested repository paths). | `fqdn` |
 | `--position <pos>` | `primary` inserts the new entry at index 0; `append` adds it at the tail. | `append` |
 | `--auth <kind>` | Authentication regime — see [PROP-002 §2.2.1](../../spec/modules/vibe-registry/PROP-002-decentralized-registry.md#registry-auth). `none` = public read-only (default). `token-env` = read PAT from env-var. `credential-helper` = opt in to system git credential helpers (allows GUI prompts on interactive TTY). `ssh` = ssh-form URL with ssh-agent / keys. | `none` |
 | `--token-env <NAME>` | Override the env-var name for `--auth token-env`. Default (omitted) is derived from the registry host: `VIBEVM_REGISTRY_TOKEN_<HOST_UPPER>`, dots and hyphens mapped to underscores (`gitlab.company.com` → `VIBEVM_REGISTRY_TOKEN_GITLAB_COMPANY_COM`). Only meaningful with `--auth token-env`; rejected otherwise. | (derived) |
@@ -57,7 +57,7 @@ The `(adapter: <name>)` suffix names the host adapter `vibe registry publish` wi
     "name": "private",
     "url": "git@gitverse.ru:somecorp",
     "ref": "main",
-    "naming": "kind-name",
+    "naming": "fqdn",
     "host": "gitverse.ru",
     "org": "somecorp",
     "adapter": "gitverse",
@@ -70,7 +70,7 @@ The `(adapter: <name>)` suffix names the host adapter `vibe registry publish` wi
 
 ## What gets written
 
-The new `[[registry]]` block is written into `vibe.toml` at the chosen position. Default values (`ref = "main"`, `naming = "kind-name"`) are skip-on-serialize, so a freshly-added registry with all defaults renders as just `name` + `url`:
+The new `[[registry]]` block is written into `vibe.toml` at the chosen position. Default values (`ref = "main"`, `naming = "fqdn"`) are skip-on-serialize, so a freshly-added registry with all defaults renders as just `name` + `url`:
 
 ```toml
 [[registry]]

@@ -6,7 +6,7 @@ Installs one or more packages into the current project. Every install runs throu
 
 Two-file model. `vibe.toml` carries the *declaration* — `[requires].packages` lists every pkgref the project depends on directly. `vibe.lock` carries the *materialisation* — exact resolved versions, content hashes, transitive graph. Same shape as Cargo (`Cargo.toml` / `Cargo.lock`), npm (`package.json` / `package-lock.json`), Poetry, Bundler.
 
-`vibe install <pkgref>` does two things: it resolves and applies the package as before, AND it appends the user-supplied pkgref to `vibe.toml` `[requires].packages` (de-duplicated by `(kind, name)`; a re-install with a new constraint replaces the old entry). `vibe install` without arguments reads `[requires].packages` and installs every entry — the cargo `cargo build` / npm `npm install` shape, useful when cloning a vibevm project from git for the first time.
+`vibe install <pkgref>` does two things: it resolves and applies the package as before, AND it appends the user-supplied pkgref to `vibe.toml` `[requires].packages` (de-duplicated by `(group, name)`; a re-install with a new constraint replaces the old entry). `vibe install` without arguments reads `[requires].packages` and installs every entry — the cargo `cargo build` / npm `npm install` shape, useful when cloning a vibevm project from git for the first time.
 
 ## Usage
 
@@ -18,7 +18,7 @@ vibe install [<pkgref> ...] [--path <dir>] [--registry <path>]
 
 ## Pkgref syntax
 
-A package reference is `<kind>:<name>[@<version>]`. Version syntax follows Cargo / npm / Poetry conventions — bare semver is shorthand for caret, use `=` for strict equal:
+A package reference is `[<kind>:][<group>/]<name>[@<version>]`. The qualified `<group>/<name>` form (`org.vibevm/wal`) is what manifests store; the short `<name>` / `<kind>:<name>` form used in the examples below is CLI-only sugar, resolved through the package index. Version syntax follows Cargo / npm / Poetry conventions — bare semver is shorthand for caret, use `=` for strict equal:
 
 | Form | Meaning |
 | --- | --- |
@@ -91,18 +91,18 @@ A node's authored `spec/` tree — including the conventional user-owned boot fi
 
 After a successful apply, `vibe install` writes:
 
-- `vibe.toml` `[requires].packages` — appends each user-supplied pkgref (CLI args), de-duplicated by `(kind, name)`. Constraint shape rules:
-  - CLI had no version (`flow:wal`) → manifest gets caret of resolved version (`flow:wal@^0.1.0`). Cargo / npm / Poetry default.
+- `vibe.toml` `[requires].packages` — appends each user-supplied pkgref (CLI args), de-duplicated by `(group, name)`. Constraint shape rules:
+  - CLI had no version (`flow:wal`) → manifest gets caret of resolved version, in qualified form (`org.vibevm/wal@^0.1.0`). Cargo / npm / Poetry default.
   - CLI had explicit constraint (`flow:wal@^0.1`, `@~0.1.0`, `@=0.1.0`, `@>=0.1, <0.3`, ...) → preserved verbatim; we don't tighten what the operator typed.
   - `--exact` flag set → always `=<resolved-version>`, overriding both above.
 
   A repeat install with a new constraint replaces the old entry. A no-arguments install (install-from-manifest mode) leaves the section untouched — the manifest was already authoritative for that input.
-- `vibe.lock` — schema v4 shape ([`VIBEVM-SPEC.md` §7.4](../../VIBEVM-SPEC.md)):
-  - `[meta].schema_version = 4`
+- `vibe.lock` — schema v5 shape ([`VIBEVM-SPEC.md` §7.4](../../VIBEVM-SPEC.md)):
+  - `[meta].schema_version = 5`
   - `[meta].root_dependencies` mirrors `vibe.toml` `[requires].packages` so the lockfile is a self-contained snapshot of the solve state.
-  - Per `[[package]]`: `kind`, `name`, `version`, `registry` (matching `[[registry]].name`), `source_kind` (one of `registry`, `git`, `override`, `path`), `source_url`, `source_ref`, `resolved_commit`, `content_hash` (the *identity* of the install), `dependencies`, `overridden`. Under the loading model the per-file `files_written` list and the `boot_snippet` filename field are retired (a materialised package *is* its `vibedeps/` slot, and boot ordering is computed) — see [`docs/lockfile-format.md`](../lockfile-format.md).
+  - Per `[[package]]`: `kind`, `name`, `group`, `version`, `registry` (matching `[[registry]].name`), `source_kind` (one of `registry`, `git`, `override`, `path`), `source_url`, `source_ref`, `resolved_commit`, `content_hash` — identity is `(group, name, version, content_hash)` — `dependencies`, `overridden`. Under the loading model the per-file `files_written` list and the `boot_snippet` filename field are retired (a materialised package *is* its `vibedeps/` slot, and boot ordering is computed) — see [`docs/lockfile-format.md`](../lockfile-format.md).
 
-`Lockfile::read` accepts only `schema_version = 4`; an older lockfile (schema 1, 2, or 3) is rejected rather than migrated — regenerate it with `vibe install`. vibevm is pre-release, so there is no on-disk migration path and none is needed.
+`Lockfile::read` accepts only `schema_version = 5`; an older lockfile (schema 1–4) is rejected rather than migrated — regenerate it with `vibe install`. vibevm is pre-release, so there is no on-disk migration path and none is needed.
 
 ## Examples
 

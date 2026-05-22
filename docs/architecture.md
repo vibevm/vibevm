@@ -6,7 +6,7 @@ A contributor-facing tour of the workspace. For the canonical specification, rea
 
 Three concepts together describe almost everything vibevm does:
 
-1. **Package** — a `(kind, name, version)` triple plus a content tree. Identity is `(kind, name, version, content_hash)` ([PROP-002 §2.1](../spec/modules/vibe-registry/PROP-002-decentralized-registry.md#identity)). Four kinds: `flow`, `feat`, `stack`, `tool`. Authoring is documented per kind in [`authoring-{flow,feat,stack}.md`](README.md).
+1. **Package** — a `(group, name, version)` triple plus a content tree. Identity is `(group, name, version, content_hash)` ([PROP-002 §2.1](../spec/modules/vibe-registry/PROP-002-decentralized-registry.md#identity), [PROP-008 §2.2](../spec/modules/vibe-registry/PROP-008-qualified-naming.md)). `kind` (`flow` / `feat` / `stack` / `tool`) is metadata, not identity. Authoring is documented per kind in [`authoring-{flow,feat,stack}.md`](README.md).
 
 2. **Registry** — a hosting organization URL with one git repo per package underneath. `vibe.toml`'s `[[registry]]` array lists registries in priority order; `[[mirror]]` adds transparent fallbacks; `[[override]]` short-circuits the registry layer for specific packages. Detailed in [PROP-002](../spec/modules/vibe-registry/PROP-002-decentralized-registry.md).
 

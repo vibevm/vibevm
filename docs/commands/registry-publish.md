@@ -50,7 +50,7 @@ Token must be issued by the host and must have `repo:create` permission in the t
 ## Pipeline
 
 1. **Read manifest** at `<source>/vibe.toml`. It must carry a `[package]` table and use the current `[requires]` / `[conflicts]` shape — there is no legacy `[dependencies]` form, and a manifest using one is a hard parse error.
-2. **Compute repo name** under the org via the registry's `naming` convention. Default `kind-name` produces `<kind>-<name>`; alternatives are `name` or `kind/name` per [PROP-002 §2.2](../../spec/modules/vibe-registry/PROP-002-decentralized-registry.md#registry-model).
+2. **Compute repo name** under the org via the registry's `naming` convention. Default `fqdn` produces `<group>.<name>`; alternatives are `kind-name`, `name`, or `kind/name` per [PROP-002 §2.2](../../spec/modules/vibe-registry/PROP-002-decentralized-registry.md#registry-model) / [PROP-008 §2.5](../../spec/modules/vibe-registry/PROP-008-qualified-naming.md).
 3. **Pick host adapter** from the registry URL's host. Loads the appropriate token via the precedence above.
 4. **Check or create repo.** `GET /repos/{org}/{repo}` (or the host's analogue) probes existence; if missing, `POST /orgs/{org}/repos` creates it with `auto_init = false` (we push our own initial commit). On hosts that don't expose org-scoped creation (current GitVerse), the operator pre-creates the empty repo via the web UI; the publisher then takes the `repo_exists() == true` path and proceeds straight to push.
 5. **Stage in a temp working tree.** Contents copied (excluding any `.git/` subtree); `git init`, repo-local identity (`publish@vibevm.local`), `git add -A`, commit `Release <name>@<version>`.

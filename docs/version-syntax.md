@@ -24,7 +24,7 @@ When the two disagree (operator hand-edits `vibe.toml`, deletes `vibe.lock`, etc
 
 ## Pkgref syntax
 
-A package reference is `<kind>:<name>[@<version>]`. The version part accepts every form `semver::VersionReq` accepts:
+A package reference is `[<kind>:][<group>/]<name>[@<version>]`. Manifests store the qualified `<group>/<name>` form (`org.vibevm/wal`); the short `<kind>:<name>` form used in the examples below is CLI sugar resolved through the package index (see [`VIBEVM-SPEC.md` §7.1](../VIBEVM-SPEC.md)). The version part accepts every form `semver::VersionReq` accepts:
 
 | Form | Meaning | Matches | Doesn't match |
 | --- | --- | --- | --- |
@@ -105,7 +105,7 @@ Resolver picks `0.1.0` (latest stable). Manifest gets:
 
 ```toml
 [requires.packages]
-"flow:wal" = "^0.1.0"
+"org.vibevm/wal" = "^0.1.0"
 ```
 
 This is the **default**, and matches `cargo add` / `npm install` / `poetry add`.
@@ -120,17 +120,17 @@ Manifest stores exactly what was typed:
 
 ```toml
 [requires.packages]
-"flow:wal" = "^0.1"
+"org.vibevm/wal" = "^0.1"
 ```
 
 We don't tighten `^0.1` to `^0.1.0`, even though the resolver produces a concrete patch. The operator's wider declaration wins. Same for tilde, equal, and ranges:
 
 | You typed | Manifest stores |
 | --- | --- |
-| `flow:wal@^0.1` | `"flow:wal" = "^0.1"` |
-| `flow:wal@~0.1.0` | `"flow:wal" = "~0.1.0"` |
-| `flow:wal@=0.1.0` | `"flow:wal" = "=0.1.0"` |
-| `flow:wal@>=0.1, <0.3` | `"flow:wal" = ">=0.1, <0.3"` |
+| `flow:wal@^0.1` | `"org.vibevm/wal" = "^0.1"` |
+| `flow:wal@~0.1.0` | `"org.vibevm/wal" = "~0.1.0"` |
+| `flow:wal@=0.1.0` | `"org.vibevm/wal" = "=0.1.0"` |
+| `flow:wal@>=0.1, <0.3` | `"org.vibevm/wal" = ">=0.1, <0.3"` |
 
 ### Rule 3 — `--exact` overrides everything
 
@@ -148,7 +148,7 @@ Manifest pins to `=<resolved>`, regardless of CLI form:
 
 ```toml
 [requires.packages]
-"flow:wal" = "=0.1.0"
+"org.vibevm/wal" = "=0.1.0"
 ```
 
 `--exact` is npm's `--save-exact` shape. Use it when you want strict reproducibility from the moment of install and don't want a later `vibe update` to wander.
@@ -174,6 +174,7 @@ The lockfile pins each package to one concrete version with a content hash:
 [[package]]
 kind = "flow"
 name = "wal"
+group = "org.vibevm"
 version = "0.1.5"
 registry = "vibespecs"
 source_url = "https://github.com/vibespecs/flow-wal.git"
@@ -183,7 +184,7 @@ content_hash = "sha256:def456…"
 dependencies = []
 ```
 
-`version` is a single concrete `semver::Version`, not a constraint. The lockfile is the byte-level commitment; identity is `(kind, name, version, content_hash)`. See [`lockfile-format.md`](lockfile-format.md) for the full schema.
+`version` is a single concrete `semver::Version`, not a constraint. The lockfile is the byte-level commitment; identity is `(group, name, version, content_hash)`. See [`lockfile-format.md`](lockfile-format.md) for the full schema.
 
 `vibe.lock` also carries `[meta].root_dependencies` — a mirror of the manifest's `[requires].packages`. It's there so the lockfile is a self-contained snapshot of the solve state; the manifest is still authoritative for *what the user wants*.
 
