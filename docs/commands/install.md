@@ -56,6 +56,28 @@ A package reference is `<kind>:<name>[@<version>]`. Version syntax follows Cargo
 3. **Confirm.** Unless `--assume-yes` or `--json` is set, the operator sees the combined plan and confirms interactively. Decline → exit code `5`.
 4. **Apply.** Each resolved package's published tree is materialised verbatim into its `vibedeps/` slot; the boot artifacts (`spec/boot/INLINE.md`, `spec/boot/INDEX.md`) are regenerated for every entry-point node; the `<vibevm>` redirect block is spliced into each instruction file; the lockfile is updated. Stale `vibedeps/` slots no longer in the resolution are pruned.
 
+## Incremental install
+
+`vibe install` is incremental ([PROP-011](../../spec/modules/vibe-workspace/PROP-011-incremental-install.md)) — it does the least work a change requires.
+
+- **Fresh lockfile → no resolution.** Before the depsolver runs, a bare `vibe install` (no pkgref arguments) checks whether `vibe.lock` is still a correct resolution of every node's `[requires]`. When it is, the depsolver is skipped entirely — no registry walk, no network — and the run goes straight to a whole-tree boot regeneration. This makes `vibe install` **lockfile-respecting**: an unchanged `[requires]` honours the versions `vibe.lock` pins, with no silent drift inside a `^` constraint. The `--json` report of a skipped install carries `"unchanged": true` and no preceding plan.
+- **Changed lockfile → minimum churn.** When `[requires]` *has* changed, `vibe install` re-resolves, but holds the locked version of every dependency the change did not touch — only the changed dependency and its subtree move. Moving an untouched version is `vibe update`'s job.
+- **Materialise only the diff.** A `vibedeps/` slot already present for the resolved version is not re-copied — versions are immutable, so its content is correct. Only a new or version-bumped dependency is materialised.
+
+### `slot_integrity` — the materialisation strategy
+
+The materialise-diff skip is governed by an `[install]` key in the vibevm user config (`~/.config/vibe/config.toml`, or `%APPDATA%\vibe\config.toml` on Windows):
+
+```toml
+[install]
+slot_integrity = "trust-presence"   # default — or "verify"
+```
+
+- `trust-presence` (default) — trust a slot present for the resolved version; skip the re-copy. Fast.
+- `verify` — re-materialise every slot from source on every install, overwriting a hand-edited or corrupted one. Trades the skip for a per-install guarantee.
+
+To re-fetch and re-materialise the whole tree once — the repair for a corrupted `vibedeps/` subtree — use [`vibe reinstall --force`](reinstall.md).
+
 ## What gets written
 
 `vibe install` writes to two places, and **never to a node's authored `spec/`** — the C++-`#include` rule ([PROP-009 §2.1](../../spec/modules/vibe-workspace/PROP-009-loading-model.md#two-trees)):

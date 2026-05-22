@@ -612,7 +612,7 @@ management surface (`path` / `list` / `add` / `clean`).
 **Order.** The identity-keyed cache depends on PROP-008 (M1.19);
 sequenced after it.
 
-### M1.21 — Incremental install (PROP-011) — DRAFT design
+### M1.21 — Incremental install (PROP-011) — ✅ SHIPPED (2026-05-22)
 
 **Thesis.** Refine PROP-009's whole-tree `vibe install` into an
 incremental operation: skip the depsolver when `vibe.lock` is fresh —
@@ -623,13 +623,18 @@ Boot-artifact regeneration deliberately stays whole-tree: it is the
 cheap phase. Design lock:
 [PROP-011](spec/modules/vibe-workspace/PROP-011-incremental-install.md).
 
-**Scope (DRAFT — three §5 open questions pending an owner design
-session).** A content-based lockfile-freshness check; the slot-present
-materialisation skip; incremental re-resolution on a `[requires]`
-delta.
+**Shipped (2026-05-22), four phases.** A cargo-style lockfile-freshness
+check (`vibe-workspace::freshness`) that lets a bare `vibe install`
+skip the depsolver outright; the slot-present materialisation skip plus
+the `slot_integrity` user-config setting; minimum-churn re-resolution
+that holds the locked version of every untouched dependency; the
+`VIBEVM-SPEC.md` §9.1 contract edit under owner sanction.
 
-**Order.** No dependency beyond PROP-009 (M1.18, shipped) — the M1.21
-number is nominal; it can be resequenced earlier.
+**Deferred.** Skipping the registry walk for an unchanged subtree —
+true incremental re-resolution — needs the depsolver's pin-preference
+machinery (PROP-003 §2.1) and rides with the SAT solver.
+
+**Order.** No dependency beyond PROP-009 (M1.18, shipped).
 
 ### M1.22 — Managed redirect block (PROP-012) — ✅ SHIPPED (2026-05-22, within M1.18)
 

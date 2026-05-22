@@ -8,6 +8,17 @@ Format roughly follows [Keep a Changelog](https://keepachangelog.com/), grouped 
 
 ## [Unreleased]
 
+### M1.21 — Incremental install (PROP-011) (2026-05-22)
+
+PROP-009's `vibe install` re-ran the depsolver and re-copied every `vibedeps/` slot on every invocation, whatever had changed. PROP-011 makes it incremental — the `cargo build` / `npm install` shape. Design lock: [PROP-011](spec/modules/vibe-workspace/PROP-011-incremental-install.md).
+
+- **Skip resolution when fresh.** Before the depsolver runs, a freshness check asks whether `vibe.lock` is still a correct resolution of every node's `[requires]` — a cargo-style satisfiability test, no manifest digest stored. When it is, a bare `vibe install` skips the depsolver entirely: no registry walk, no network, just a whole-tree boot regeneration. This also makes `vibe install` **lockfile-respecting** — an unchanged `[requires]` honours the locked versions verbatim, ending the silent version drift the unconditional re-resolve caused.
+- **Materialise only the diff.** Materialisation skips a `vibedeps/` slot already present for the resolved version — versions are immutable, so the content is correct; only a new or version-bumped dependency is copied. A `slot_integrity` key in the vibevm user config (`trust-presence` default, or `verify`) governs the skip; `verify` re-materialises every slot.
+- **Minimum-churn re-resolution.** When `[requires]` *has* changed, `vibe install` re-resolves but holds the locked version of every dependency the change did not touch, so an untouched dependency never drifts; a held-pin conflict falls back to a full re-resolve.
+- **No new flag, no schema bump.** `vibe update` and `vibe reinstall --force` stay the bypasses; `vibe.lock` is unchanged — the lockfile itself is the freshness baseline. `VIBEVM-SPEC.md` §9.1 records the lockfile-respecting contract.
+
+Boot-artifact regeneration deliberately stays whole-tree — the cheap, self-healing phase. Skipping the registry walk for an unchanged subtree (true incremental re-resolution) is deferred to PROP-003's SAT solver. Every phase landed clippy-clean with its test suite green.
+
 ### M1.18 — Loading model (PROP-009 + PROP-012) (2026-05-22)
 
 The flat `spec/boot/NN-*.md` boot model is replaced by a computed loading model. Design locks: [PROP-009](spec/modules/vibe-workspace/PROP-009-loading-model.md), [PROP-012](spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md). Shipped across seven phases.
