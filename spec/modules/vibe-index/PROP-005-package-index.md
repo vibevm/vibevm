@@ -1,7 +1,7 @@
 # PROP-005: Optional package index — per-org metadata + standalone index server {#root}
 
 **Milestone:** retrofits into M2.10 (`vibe search`) and M1.10 (`vibe outdated`) from `ROADMAP.md`. Slices land independently; index is opt-in everywhere.
-**Status:** implemented 2026-05-22 — slices 1–8 (the `vibe-index` server + CLI) shipped to `services/vibe-index/`; slices 9–10 (publisher hook + consumer fast path) and M2.10 `vibe search` shipped to the `crates/` workspace. Reconciled with the codebase on 2026-05-22 after the manifest-schema de-rot — see [§9](#open) item 11.
+**Status:** implemented; folded into the workspace 2026-05-22. Slices 1–8 (the `vibe-index` server + CLI) and slices 9–10 (publisher hook + consumer fast path) are shipped, plus M2.10 `vibe search`. `vibe-index` lives at `crates/vibe-index/` as a workspace member ([§6](#distribution)) and parses through `vibe-core::Manifest`. See [§9](#open) item 11 for the de-rot and fold that got it there.
 **Related:** [PROP-001](../vibe-registry/PROP-001-git-backend.md) (git backend), [PROP-002](../vibe-registry/PROP-002-decentralized-registry.md) (`[[registry]]` / `[[mirror]]` / `[[override]]` / content-hashed identity), [PROP-003](../vibe-resolver/PROP-003-dep-evolution.md) (features / subskills / `describes` / conditional deps), [PROP-004](../../research/PROP-004-tessl-comparative-research.md) §5.x (gap analysis), [`spec://vibevm/common/PROP-000`](../../common/PROP-000.md) (especially §15 dep weight, §16 JTD, §17 production architecture, §18 complexity ≥ RPM, §20 token secrecy).
 
 > **Out-of-band research summary** (2026-05-06, prior session). Comparative inventory of indexing strategies in production package managers — Maven Central (Lucene + directory layout), npm (CouchDB replicated DB), PyPI (PEP 503/691 simple API), RPM/DNF (`repodata/primary.xml.gz` + libsolv), Deb/APT (`Packages.gz` RFC822), Cargo (git index → sparse HTTP), Go modules (proxy + Merkle sumdb), Nix flakes (per-flake `flake.lock`, no global index), Homebrew (mono-repo formula), OCI registries (`/v2/_catalog`). Three candidate paths surfaced for vibevm: **(a)** Cargo-sparse-style per-package JSON files in an org-level index; **(b)** DNF-style single repodata directory with full SAT-ready dep graph; **(c)** Nix-flake-style indexless live-resolve (current state) with optional `flake-registry`-shape short-name mapping. PROP-005 picks (a) augmented by (b)'s integrity-manifest pattern (`repomd.json`).
@@ -197,11 +197,11 @@ Determinism matters because the index repo lives in git: a non-deterministic ord
 
 **Why one binary, not two.** Same code paths (the in-memory `Index` struct, the persistence layer, the scanner) are shared. Two binaries would force consumers to install both. clap-style subcommand dispatch handles the mode selection.
 
-**Distribution.** The utility lives in `services/vibe-index/` at the repository root — outside the main Cargo workspace under `crates/`. This is deliberate: §6 explains the separate-workspace decision and what it buys for redistribution.
+**Distribution.** The utility lives in `crates/vibe-index/` at the repository root — outside the main Cargo workspace under `crates/`. This is deliberate: §6 explains the separate-workspace decision and what it buys for redistribution.
 
 ### 2.6 Index entry shape (the canonical record) {#entry}
 
-**Decision.** Every `(kind, name, version)` entry carries the following fields. This is the schema lines of `primary.jsonl` follow, and the elements of `by-name/<kind>/<name>.json::versions[]` carry. JTD schema lives in `services/vibe-index/schemas/index-entry.jtd.json` (PROP-000 §16).
+**Decision.** Every `(kind, name, version)` entry carries the following fields. This is the schema lines of `primary.jsonl` follow, and the elements of `by-name/<kind>/<name>.json::versions[]` carry. JTD schema lives in `crates/vibe-index/schemas/index-entry.jtd.json` (PROP-000 §16).
 
 ```json
 {
@@ -404,11 +404,11 @@ vibe-index serve <data-dir> [--bind ADDR] [--auth-tokens-file FILE] [--read-only
 vibe-index stop <data-dir>                                       # graceful shutdown via lock-file PID
 ```
 
-**Help-text smoke** lives under `services/vibe-index/tests/help_smoke.rs`, mirroring `every_subcommand_renders_help` in `vibe-cli`.
+**Help-text smoke** lives under `crates/vibe-index/tests/help_smoke.rs`, mirroring `every_subcommand_renders_help` in `vibe-cli`.
 
 ### 2.12 Data structures {#types}
 
-**Decision.** Rust types live in `services/vibe-index/src/types/`, derived from the JTD schemas under `services/vibe-index/schemas/`:
+**Decision.** Rust types live in `crates/vibe-index/src/types/`, derived from the JTD schemas under `crates/vibe-index/schemas/`:
 
 ```rust
 pub struct Index {
@@ -513,9 +513,8 @@ Each integration point is a separate slice. v0 of `vibe-index` ships without any
 ### 3.1 Crate layout {#crate-layout}
 
 ```
-services/vibe-index/                        # standalone — NOT part of crates/ workspace
-├── Cargo.toml                              # has its own [workspace] table
-├── Cargo.lock
+crates/vibe-index/                          # a member of the vibevm workspace
+├── Cargo.toml                              # depends on vibe-core; no [workspace] table
 ├── README.md                               # operator-facing — how to run, common recipes
 ├── LICENSE                                 # EULA (vibevm's proprietary license)
 ├── schemas/                                # JTD wire contracts
@@ -617,9 +616,10 @@ Minimal Rust crates to keep redistribution clean:
 - `tempfile` — atomic write helpers.
 - `prometheus` — `/metrics` endpoint.
 
+**`vibe-core` dependency.** `vibe-index` parses `vibe.toml` and `vibe-subskill.toml` through `vibe-core`'s own `Manifest` / `SubskillManifest` types, so the index can never drift from the manifest schema. This reverses the proposal's original standalone-no-`vibe-core` stance — [§6](#distribution) records the reversal, [§9](#open) item 11 the de-rot finding that forced it. What stays duplicated is small and stable: the four-variant `PackageKind` / `NamingConvention` (`src/types/kinds.rs`, frozen by `VIBEVM-SPEC.md` §4, needing the `Ord` + `clap::ValueEnum` the `vibe-core` originals lack) and the `compute_content_hash` algorithm (`src/content_hash.rs`, gated by `tests/content_hash_parity.rs` against a byte-for-byte copy of `fixtures/registry/flow/wal/v0.1.0/`). `compute_content_hash` folds into `vibe-core` once it is lowered out of `vibe-registry`.
+
 **Deliberately NOT pulling:**
 
-- A dep on `vibe-core` / `vibe-registry`. The utility ships standalone, so it duplicates a few small types (`PackageKind`, `NamingConvention`), the `compute_content_hash` algorithm, and a read-only `vibe.toml` parser (`scanner/manifest.rs`). Trade-off: every duplicate MUST track its `vibe-core` / `vibe-registry` original. `compute_content_hash` is gated by `tests/content_hash_parity.rs`, which runs a fixture — a byte-for-byte copy of the main workspace's `fixtures/registry/flow/wal/v0.1.0/` — through the duplicate and asserts the digest the canonical algorithm produces. The `compute_content_hash` cost is low (the algorithm is stable); the manifest-parser cost proved higher — the duplicate parser silently rotted against the M1.17 / M1.18 schema churn (see [§9](#open) item 11). The benefit (no dependency on the vibevm workspace) is high for redistribution.
 - A database (SQLite / PostgreSQL). All state in RAM + flat files.
 
 ### 3.3 Git access in the scanner {#git-access}
@@ -646,7 +646,7 @@ Each slice = one or more conventional commits. The utility becomes useful at sli
 
 ### 4.1 Slice 1 — skeleton {#slice-1}
 
-`services/vibe-index/` standalone crate with `Cargo.toml` + `src/main.rs` + `src/lib.rs`. clap dispatch with stub subcommands that all print "not yet implemented". `vibe-index --version` works. `tests/help_smoke.rs` passes.
+`crates/vibe-index/` standalone crate with `Cargo.toml` + `src/main.rs` + `src/lib.rs`. clap dispatch with stub subcommands that all print "not yet implemented". `vibe-index --version` works. `tests/help_smoke.rs` passes.
 
 Commit: `feat(services/vibe-index): skeleton crate + clap subcommand dispatch`.
 
@@ -724,7 +724,7 @@ Commit: `feat(vibe-registry): consume registry index for resolve fast path (opt-
 
 ### 4.11 Slice 11 — docs + manual-test smoke {#slice-11}
 
-`services/vibe-index/docs/` filled in (operator-handbook, consumer-protocol, format). `manual-tests/M2.10-index-smoke.md` walks the live e2e: bootstrap an index from a fresh org dir, serve it, install a package through it, search it.
+`crates/vibe-index/docs/` filled in (operator-handbook, consumer-protocol, format). `manual-tests/M2.10-index-smoke.md` walks the live e2e: bootstrap an index from a fresh org dir, serve it, install a package through it, search it.
 
 Commits:
 - `docs(vibe-index): operator handbook + consumer protocol + format reference`
@@ -738,27 +738,22 @@ Per slice (specifics in §4); cumulative state at GA:
 
 - **Unit:** every type round-trips through serde JSON / TOML; every CLI subcommand has at least one happy-path test; every server route has at least one happy-path + one auth-fail test.
 - **Integration:** full-reindex against `fixtures/sample-org/` produces a byte-identical `primary.jsonl` to `fixtures/golden-index/primary.jsonl`. Incremental reindex applied to the same starting state is byte-identical to a full reindex.
-- **Parity:** `tests/content_hash_parity.rs` runs the same fixture package through `vibe-registry::compute_content_hash` AND `services/vibe-index/src/content_hash.rs`, asserts equality. CI gates the merge if they diverge.
+- **Parity:** `tests/content_hash_parity.rs` runs the same fixture package through `vibe-registry::compute_content_hash` AND `crates/vibe-index/src/content_hash.rs`, asserts equality. CI gates the merge if they diverge.
 - **End-to-end:** `tests/server_e2e.rs` spawns the server in-process (axum's `oneshot` style), drives every documented route over HTTP, asserts response shapes.
 - **Crash recovery:** `tests/persistence_atomic.rs` simulates mid-write crash by failing the rename step; asserts the previous version remains readable.
 - **Hermetic vs live:** all tests above run hermetically (no network). A separate `cli_live_e2e.rs` (`#[ignore]`-d, opt-in via `cargo test -- --ignored`) walks `--from-github vibespecs` against the real registry to confirm the API walk works against actual infrastructure.
 
 ---
 
-## 6. Distribution / standalone-workspace decision {#distribution}
+## 6. Distribution — a workspace crate {#distribution}
 
-**Decision.** `services/vibe-index/` is **outside** the main `crates/` workspace. Its `Cargo.toml` carries its own `[workspace]` table. Dev iteration is `cd services/vibe-index && cargo test`. CI runs both workspaces independently.
+**Decision (revised 2026-05-22).** `vibe-index` lives at `crates/vibe-index/` as a member of the top-level vibevm workspace. It is built, tested, clippy-gated, and fmt-checked by the same `cargo … --workspace` invocations as every other crate, and it depends on `vibe-core` directly.
 
-**Why standalone:**
+**Why this reverses the original standalone-workspace decision.** The proposal first placed `vibe-index` in its own Cargo workspace under `services/`, outside `crates/`, so an org owner could vendor just that subdirectory. The cost was a hand-duplicated `vibe.toml` parser with nothing tying it to `vibe-core` — and, sitting outside `cargo test --workspace`, nothing routinely exercising it. It rotted silently against the M1.17 / M1.18 manifest-schema churn ([§9](#open) item 11). Folding the crate back in kills both failure modes at once: the scanner now parses through `vibe-core::Manifest` (one source of truth — the schema cannot drift), and the routine workspace gate covers it (drift is caught the moment it appears).
 
-1. **Redistribution shape.** An org owner who wants to host their own index server clones `services/vibe-index/` (or downloads a tarball of just that subdirectory) and `cargo install --path .`. They do not need to clone the entire `vibevm` repo's workspace, build all 13 crates, just to ship one binary.
-2. **Dep isolation.** The server pulls axum / tower / reqwest; the main vibevm crates don't. Keeping them in separate workspaces avoids polluting `Cargo.lock` for everyone with HTTP-server deps that 90% of vibevm contributors do not need.
-3. **Versioning independence.** The index server can ship a patch update without touching the rest of vibevm. Same shape `tools/jtd-codegen/` (which is a vendored binary, but the principle is the same — separately-bound concern).
-4. **No backward dep on `vibe-core`.** §3.2 explained the parity-with-duplication trade-off: the index utility duplicates `PackageKind`, `NamingConvention`, `compute_content_hash` rather than importing them. Standalone workspace makes that the natural path; trying to keep them in the main workspace would tempt accidental imports.
+**Redistribution.** An org owner who wants to host their own index server clones the vibevm repository and runs `cargo install --path crates/vibe-index`. The "vendor only the subdirectory" affordance is gone; in exchange the binary can never ship a stale view of the manifest schema. The HTTP-server deps (`axum` / `tower` / `tower-http`) enter the workspace `Cargo.lock` — `reqwest` was already there for the `vibe-registry` index client, so the marginal cost is `tower` / `tower-http` / `flate2`.
 
-**`tools/self-check.sh` integration.** A new line `(cd services/vibe-index && cargo test --workspace)` joins the existing checks, so CI gates the index utility alongside everything else. `cargo clippy` + `cargo fmt` policy carries across.
-
-**Versioning.** The bin's `Cargo.toml` carries its own `version`, decoupled from the main workspace's. README + changelog at `services/vibe-index/CHANGELOG.md` track its independent release history.
+**Gate.** `tools/self-check.sh` no longer special-cases a second workspace — steps 1–2 (`cargo test --workspace`, `cargo clippy --workspace`) cover `vibe-index` like any member.
 
 ---
 
@@ -814,7 +809,7 @@ Most consumers see only the static raw-HTTP files; the server is for orgs that n
 9. **Capability- vs PURL-driven search** — v0 ships `by-cap` and `by-purl` as separate files. If usage shows one dominates, the loser may be folded into the inverted text index. Empirical question.
 10. **Rate-limiting on the server** — shipped after the v0 plan: `server/rate_limit.rs` is a per-token and per-IP token-bucket limiter, disabled by default and opt-in by flag. Production deployments may still front it with a reverse proxy's limiter; the two compose.
 
-11. **Standalone-workspace duplication costs more than §3.2 budgeted.** The 2026-05-22 de-rot found `services/vibe-index/` had silently rotted: its duplicated `vibe.toml` parser still expected the pre-M1.17 shape (`[writes]`, `[dependencies]`, `[boot_snippet].filename`) and could not parse a current manifest, and its `content_hash` parity test had drifted off a fixture renamed by the M1.17 manifest unification. §3.2 weighed the duplication cost for `compute_content_hash` alone ("the algorithm doesn't change"); the *manifest schema*, by contrast, churned hard through M1.17 (unified `vibe.toml`) and M1.18 (loading model), and the duplicate parser had no cross-check to catch the drift — the standalone workspace also sits outside the routine `cargo test --workspace` gate, so only `tools/self-check.sh` exercises it. The de-rot rewrote the parser for the current schema and made it lenient (unknown sections ignored rather than fatal), but the structural choice stands open: depend on `vibe-core` for manifest parsing — killing the rot at the root but coupling the redistribution story to the vibevm workspace — or keep duplicating and accept a periodic reconciliation tax. An owner design session decides.
+11. **Standalone-workspace duplication — RESOLVED 2026-05-22 by folding the crate in.** The 2026-05-22 de-rot found `crates/vibe-index/` had silently rotted: its duplicated `vibe.toml` parser still expected the pre-M1.17 shape (`[writes]`, `[dependencies]`, `[boot_snippet].filename`) and could not parse a current manifest, and its `content_hash` parity test had drifted off a fixture renamed by the M1.17 manifest unification. §3.2 had weighed the duplication cost for `compute_content_hash` alone ("the algorithm doesn't change"); the *manifest schema*, by contrast, churned hard through M1.17 / M1.18, and the duplicate parser had no cross-check to catch the drift — the standalone workspace also sat outside the routine `cargo test --workspace` gate. **Resolution:** fold `vibe-index` into the `crates/` workspace and parse through `vibe-core::Manifest` (see [§6](#distribution)). The duplicated parser is deleted; only the tiny, schema-frozen `PackageKind` / `NamingConvention` and the `compute_content_hash` algorithm remain duplicated, both justified in §3.2.
 
 ---
 
@@ -823,11 +818,11 @@ Most consumers see only the static raw-HTTP files; the server is for orgs that n
 A given slice is considered accepted when:
 
 - All tests in its slice pass.
-- `cd services/vibe-index && cargo clippy --workspace --all-targets -- -D warnings` is clean.
-- `cd services/vibe-index && cargo fmt --check` is clean.
-- `tools/self-check.sh` (extended to invoke the services workspace) is green.
+- `cargo clippy --workspace --all-targets -- -D warnings` is clean.
+- `cargo fmt --check` is clean.
+- `tools/self-check.sh` is green.
 - Help-text smoke covers any new subcommand.
-- A manual walk through `services/vibe-index/docs/operator-handbook.md` succeeds against `fixtures/sample-org/`.
+- A manual walk through `crates/vibe-index/docs/operator-handbook.md` succeeds against `fixtures/sample-org/`.
 
 PROP-005 is considered closed once slices 1–8 land. Slices 9–11 are integration with the rest of vibevm and ship under their respective milestone PRs.
 
@@ -861,11 +856,11 @@ done
 */5 * * * *  vibe-index reindex /home/owner/vibespecs-index --incremental --from-clones /var/lib/vibespecs-mirror >>/var/log/vibe-index.log 2>&1
 ```
 
-These live in `services/vibe-index/docs/operator-handbook.md` rather than as shipped binaries — operators integrate at their own host, and the hook shape varies enough across hosting platforms that one-size-fits-all isn't worth shipping.
+These live in `crates/vibe-index/docs/operator-handbook.md` rather than as shipped binaries — operators integrate at their own host, and the hook shape varies enough across hosting platforms that one-size-fits-all isn't worth shipping.
 
 ---
 
 ## 12. Version history {#history}
 
 - **2026-05-06 — draft 1.** Initial proposal. Open for review.
-- **2026-05-22 — reconciled with the implementation.** Slices 1–8 (server + CLI) shipped to `services/vibe-index/`; slices 9–10 (publisher hook + consumer fast path) and M2.10 `vibe search` shipped to the `crates/` workspace. This revision corrects the §2.6 `boot_snippet` schema (`source` + `category`, not the retired `filename`), the `vibe.toml` manifest filename throughout, the §2.10 rate-limiter status (§9 item 10), and records the standalone-workspace duplication finding (§9 item 11) surfaced by the manifest-schema de-rot.
+- **2026-05-22 — reconciled with the implementation, then folded into the workspace.** A state review found PROP-005 already implemented (slices 1–10 + M2.10 `vibe search`) but rotted; the de-rot realigned the scanner with the current `vibe.toml` schema and corrected this document (§2.6 `boot_snippet`, the `vibe.toml` filename, §2.10 rate-limiter status). The fold then moved `vibe-index` from its own `services/` workspace into `crates/vibe-index/` and switched it to parse through `vibe-core::Manifest` — §3.2, §6, and §9 item 11 are revised for the reversed standalone-workspace decision.

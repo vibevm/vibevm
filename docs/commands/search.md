@@ -2,7 +2,7 @@
 
 Search every `[[registry]]` configured in `vibe.toml` for packages whose name, description, keywords, capabilities, or `describes` PURL match a query. Read-only — does not touch the lockfile, the registry cache, or any remote git host.
 
-`vibe search` consults each registry's optional **package index** ([PROP-005](../../spec/modules/vibe-index/PROP-005-package-index.md)) — a per-org metadata service that ships separately from the registry itself. Without an index URL configured for a registry, that registry is reported as `registries_unconfigured` in the envelope and silently skipped. Without an index there is nothing fast to query — naive `git ls-remote`-shape enumeration across an org of 100+ packages would be unacceptably slow, so the search command refuses to do that. Operators that want search either run their own [`vibe-index`](../../services/vibe-index/) instance or wait for one to land at the upstream org.
+`vibe search` consults each registry's optional **package index** ([PROP-005](../../spec/modules/vibe-index/PROP-005-package-index.md)) — a per-org metadata service that ships separately from the registry itself. Without an index URL configured for a registry, that registry is reported as `registries_unconfigured` in the envelope and silently skipped. Without an index there is nothing fast to query — naive `git ls-remote`-shape enumeration across an org of 100+ packages would be unacceptably slow, so the search command refuses to do that. Operators that want search either run their own [`vibe-index`](../../crates/vibe-index/) instance or wait for one to land at the upstream org.
 
 Spec: [ROADMAP §M2.10](../../ROADMAP.md), [PROP-005 §2.10](../../spec/modules/vibe-index/PROP-005-package-index.md#index-routes), [PROP-004 §5.12](../../spec/research/PROP-004-tessl-comparative-research.md#search).
 
@@ -204,7 +204,7 @@ vibe --json search auth | jq '.hits[].name'
 ## Related
 
 - [PROP-005](../../spec/modules/vibe-index/PROP-005-package-index.md) — full design of the per-org package index, including the `/v1/packages` query route and operator handbook.
-- [`services/vibe-index/`](../../services/vibe-index/) — standalone utility that produces and serves the index.
+- [`crates/vibe-index/`](../../crates/vibe-index/) — the utility that produces and serves the index.
 - [`vibe registry publish`](registry-publish.md) — populates the index via the post-publish hook when `VIBEVM_INDEX_URL_<R>` and `VIBEVM_INDEX_TOKEN_<R>` are set.
 - [`vibe outdated`](../../ROADMAP.md#m110--vibe-outdated) — cousins-by-source: same `IndexClient` underpins outdated-checks and search.
 - [`vibe show config`](show.md) — surfaces the `VIBEVM_INDEX_URL_<R>` env-vars that decide which registries are searchable.

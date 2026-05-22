@@ -850,7 +850,7 @@ Source: [PROP-004 §5.12](spec/research/PROP-004-tessl-comparative-research.md#s
 - `vibe search --purl <purl>` answers "which packages describe this upstream library?" via the index's `by-purl` lane.
 - Results cached in `~/.vibe/search-cache/`.
 
-The index that makes this tractable is [PROP-005](spec/modules/vibe-index/PROP-005-package-index.md), implemented alongside — the `vibe-index` server + CLI in `services/vibe-index/`, and the consumer-side `IndexClient` fast path in `vibe-registry`.
+The index that makes this tractable is [PROP-005](spec/modules/vibe-index/PROP-005-package-index.md), implemented alongside — the `vibe-index` server + CLI in `crates/vibe-index/`, and the consumer-side `IndexClient` fast path in `vibe-registry`.
 
 ---
 
