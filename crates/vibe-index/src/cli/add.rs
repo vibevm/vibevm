@@ -57,12 +57,13 @@ pub fn run(args: Args) -> Result<()> {
         path: args.manifest.clone(),
         message: e.to_string(),
     })?;
-    let raw = mfst::parse_manifest(&manifest_bytes)?;
+    let manifest = mfst::parse_manifest(&manifest_bytes)?;
+    let pkg = mfst::require_package(&manifest)?;
     let pkg_root = args.manifest.parent().unwrap_or(std::path::Path::new("."));
 
-    let kind = raw.package.kind;
-    let name = raw.package.name.clone();
-    let version = raw.package.version.clone();
+    let kind = mfst::package_kind(pkg.kind);
+    let name = pkg.name.clone();
+    let version = pkg.version.clone();
 
     let content_hash = compute_content_hash(pkg_root)?;
     let source_ref = args.r#ref.unwrap_or_else(|| format!("v{version}"));
@@ -85,22 +86,22 @@ pub fn run(args: Args) -> Result<()> {
         source_ref,
         resolved_commit: args.commit,
         registry: index.registry.clone(),
-        license: raw.package.license.clone(),
-        authors: raw.package.authors.clone(),
-        description: raw.package.description.clone(),
-        homepage: raw.package.homepage.clone(),
-        keywords: raw.package.keywords.clone(),
-        describes: raw.package.describes.clone(),
-        compatibility: mfst::compatibility_from_raw(&raw.compatibility),
-        provides: mfst::provides_from_raw(&raw.provides),
-        requires: mfst::requires_from_raw(&raw.requires),
-        requires_any: mfst::requires_any_from_raw(&raw.requires_any),
-        obsoletes: mfst::obsoletes_from_raw(&raw.obsoletes),
-        conflicts: mfst::conflicts_from_raw(&raw.conflicts),
-        features: mfst::features_from_raw(&raw.features)?,
+        license: pkg.license.clone(),
+        authors: pkg.authors.clone(),
+        description: pkg.description.clone(),
+        homepage: pkg.homepage.clone(),
+        keywords: pkg.keywords.clone(),
+        describes: pkg.describes.as_ref().map(|p| p.to_string()),
+        compatibility: mfst::compatibility_from(&manifest.compatibility),
+        provides: mfst::provides_from(&manifest.provides),
+        requires: mfst::requires_from(&manifest.requires),
+        requires_any: mfst::requires_any_from(&manifest.requires_any),
+        obsoletes: mfst::obsoletes_from(&manifest.obsoletes),
+        conflicts: mfst::conflicts_from(&manifest.conflicts),
+        features: mfst::features_from(&manifest.features),
         subskills: mfst::collect_subskills(pkg_root)?,
-        i18n: mfst::i18n_from_raw(&raw.i18n),
-        boot_snippet: mfst::boot_snippet_from_raw(&raw.boot_snippet),
+        i18n: mfst::i18n_from(&manifest.i18n),
+        boot_snippet: mfst::boot_snippet_from(&manifest.boot_snippet),
         files_count,
         indexed_at: Utc::now(),
         indexed_by: format!("vibe-index {}", env!("CARGO_PKG_VERSION")),

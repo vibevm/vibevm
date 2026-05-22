@@ -2,7 +2,7 @@
 //! that do not run a `vibe-index` server.
 //!
 //! Walks `GET /orgs/{org}/repos` (Link-header pagination, same shape
-//! as `services/vibe-index::scanner::from_github`), fetches each
+//! as `vibe_index::scanner::from_github`), fetches each
 //! repo's `vibe.toml` via the Contents API, parses the
 //! manifest with `vibe_core::manifest::Manifest`, then runs a
 //! lightweight token-based match against `name`, `description`,

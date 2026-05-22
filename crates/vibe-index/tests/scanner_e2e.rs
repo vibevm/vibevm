@@ -459,9 +459,13 @@ link = "static"
             .unwrap();
     let entry = &feat_json["versions"][0];
     assert_eq!(entry["describes"], "pkg:cargo/welcome@0.3.0");
+    // The scanner parses each capability through `vibe-core`'s
+    // `CapabilityRef` and records its canonical form: a bare version
+    // (`@0.3.0`) canonicalises to the caret constraint, the same
+    // Cargo-style normalisation `PackageRef` applies.
     assert_eq!(
         entry["provides"]["capabilities"][0],
-        "ui:landing-page@0.3.0"
+        "ui:landing-page@^0.3.0"
     );
     // The modern `[requires.packages]` table flattens to a pkgref string.
     assert_eq!(entry["requires"]["packages"][0], "flow:wal@^0.1");

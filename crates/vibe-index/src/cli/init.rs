@@ -106,7 +106,7 @@ fn write_readme(data_dir: &std::path::Path, registry: &str, registry_url: &str) 
         vibe-index reindex . --from-github <org> --token-file <pat-file>\n\
         ```\n\
         \n\
-        See `services/vibe-index/docs/` in the vibevm source tree for\n\
+        See `crates/vibe-index/docs/` in the vibevm source tree for\n\
         the full operator handbook + consumer protocol + format reference.\n"
     );
     std::fs::write(&path, body).map_err(|e| Error::Io {

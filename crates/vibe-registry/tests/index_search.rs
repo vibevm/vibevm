@@ -1,7 +1,7 @@
 //! Integration coverage of `IndexClient::search` against a mock
 //! axum server matching the wire shape that
-//! `services/vibe-index::server::routes::packages::list_or_search`
-//! emits. The mock avoids depending on the live services workspace
+//! `vibe_index::server::routes::packages::list_or_search`
+//! emits. The mock avoids spinning up a live `vibe-index` server
 //! by hand-rolling the response — keeps this test hermetic to the
 //! `vibe-registry` crate while still gating the wire contract.
 

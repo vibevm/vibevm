@@ -280,7 +280,7 @@ struct VersionEntryView {
 }
 
 /// Decoded body of the structured search route. Mirrors the wire
-/// shape produced by `services/vibe-index::server::routes::packages::SearchResponse`.
+/// shape produced by `vibe_index::server::routes::packages::SearchResponse`.
 /// Extra fields on the wire (today: `command`) are tolerated
 /// silently — kept simple so a server-side envelope addition does
 /// not force a client bump.
@@ -314,7 +314,7 @@ pub struct SearchHit {
 }
 
 /// Decoded body of the structured PURL-lookup route. Mirrors
-/// `services/vibe-index::server::routes::purls::Response`.
+/// `vibe_index::server::routes::purls::Response`.
 #[derive(Debug, Clone, Deserialize)]
 pub struct PurlLookupResults {
     #[serde(default)]

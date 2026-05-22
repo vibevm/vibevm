@@ -74,18 +74,6 @@ run_step "cargo clippy --workspace --all-targets -- -D warnings" \
 run_step "cargo run -p vibe-cli -- check --path . --quiet" \
   cargo run --quiet -p vibe-cli -- check --path . --quiet || OVERALL=$?
 
-# 4. Standalone services/ workspace — vibe-index lives in its own
-# Cargo workspace per spec://vibevm/modules/vibe-index/PROP-005#distribution
-# (redistribution shape: an org owner can vendor `services/vibe-index/`
-# alone). CI runs the same test + clippy gates against it, just from a
-# different workspace root.
-if [ -d services/vibe-index ]; then
-  run_step "services/vibe-index: cargo test" \
-    sh -c 'cd services/vibe-index && cargo test --workspace --quiet' || OVERALL=$?
-  run_step "services/vibe-index: cargo clippy --all-targets -- -D warnings" \
-    sh -c 'cd services/vibe-index && cargo clippy --workspace --all-targets --quiet -- -D warnings' || OVERALL=$?
-fi
-
 if [ "$QUIET" -eq 0 ]; then
   if [ "$OVERALL" -eq 0 ]; then
     printf '\nself-check: all green\n' >&2

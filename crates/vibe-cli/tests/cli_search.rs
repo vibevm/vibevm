@@ -1,7 +1,7 @@
 //! End-to-end coverage of `vibe search` against a mock axum index
 //! server. Exercises the multi-registry walk, dedup, env-var
 //! attribution, and the JSON envelope shape — without any live
-//! internet or `services/vibe-index` binary dependency.
+//! internet or a `vibe-index` binary dependency.
 
 use std::sync::{Arc, Mutex, mpsc};
 use std::thread;

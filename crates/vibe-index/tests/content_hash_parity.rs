@@ -1,5 +1,5 @@
 //! Golden-hash parity test — locks the on-disk bytes of the
-//! `services/vibe-index/fixtures/golden-flow-wal-0.1.0/` fixture to
+//! `crates/vibe-index/fixtures/golden-flow-wal-0.1.0/` fixture to
 //! the content_hash that `vibe-registry::compute_content_hash`
 //! produces for the same files. Algorithm: see PROP-005 §3.2.
 //!

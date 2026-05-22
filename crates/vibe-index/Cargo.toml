@@ -1,0 +1,46 @@
+[package]
+name = "vibe-index"
+version = "0.1.0-dev"
+edition = "2024"
+rust-version = "1.93"
+authors = ["Oleg Chirukhin"]
+publish = false
+description = "Package index utility for vibevm-shaped registries"
+homepage = "https://gitverse.ru/anarchic/vibevm"
+repository = "https://gitverse.ru/anarchic/vibevm"
+keywords = ["vibevm", "package-index", "metadata", "spec-driven"]
+categories = ["command-line-utilities", "development-tools"]
+default-run = "vibe-index"
+
+[lib]
+name = "vibe_index"
+path = "src/lib.rs"
+
+[[bin]]
+name = "vibe-index"
+path = "src/main.rs"
+
+[dependencies]
+vibe-core = { workspace = true }
+clap = { workspace = true }
+thiserror = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+toml = { workspace = true }
+semver = { workspace = true }
+sha2 = { workspace = true }
+walkdir = { workspace = true }
+chrono = { workspace = true }
+tempfile = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
+reqwest = { workspace = true }
+axum = { workspace = true }
+tokio = { workspace = true, features = ["signal", "sync", "time", "fs"] }
+tower = "0.5"
+tower-http = { version = "0.6", features = ["cors", "trace"] }
+flate2 = "1"
+
+[dev-dependencies]
+assert_cmd = { workspace = true }
+predicates = { workspace = true }

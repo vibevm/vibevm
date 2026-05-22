@@ -177,19 +177,14 @@ fn build_entry(
         path: snapshot.join("vibe.toml"),
         message: e.to_string(),
     })?;
-    let raw = mfst::parse_manifest(&manifest_bytes)?;
+    let manifest = mfst::parse_manifest(&manifest_bytes)?;
+    let pkg = mfst::require_package(&manifest)?;
 
     let content_hash = compute_content_hash(&snapshot)?;
     let resolved_commit = git_cli::resolve_commit(repo, tag).ok();
     let files_count = count_files(&snapshot)? as u32;
 
-    let kind = raw.package.kind;
-    let name = raw.package.name.clone();
-
-    if name != raw.package.name {
-        // Manifest carries a name; we trust it (not the dir name).
-    }
-
+    let kind = mfst::package_kind(pkg.kind);
     let _ = repo_name; // dir name kept for diagnostics; not part of the entry.
 
     let subskills = mfst::collect_subskills(&snapshot)?;
@@ -197,29 +192,29 @@ fn build_entry(
     let entry = VersionEntry {
         schema_version: VersionEntry::SCHEMA_VERSION,
         kind,
-        name,
+        name: pkg.name.clone(),
         version: version.clone(),
         content_hash,
-        source_url: source_url_for(&opts.registry_url, opts.naming, kind, &raw.package.name),
+        source_url: source_url_for(&opts.registry_url, opts.naming, kind, &pkg.name),
         source_ref: tag.to_string(),
         resolved_commit,
         registry: opts.registry.clone(),
-        license: raw.package.license.clone(),
-        authors: raw.package.authors.clone(),
-        description: raw.package.description.clone(),
-        homepage: raw.package.homepage.clone(),
-        keywords: raw.package.keywords.clone(),
-        describes: raw.package.describes.clone(),
-        compatibility: mfst::compatibility_from_raw(&raw.compatibility),
-        provides: mfst::provides_from_raw(&raw.provides),
-        requires: mfst::requires_from_raw(&raw.requires),
-        requires_any: mfst::requires_any_from_raw(&raw.requires_any),
-        obsoletes: mfst::obsoletes_from_raw(&raw.obsoletes),
-        conflicts: mfst::conflicts_from_raw(&raw.conflicts),
-        features: mfst::features_from_raw(&raw.features)?,
+        license: pkg.license.clone(),
+        authors: pkg.authors.clone(),
+        description: pkg.description.clone(),
+        homepage: pkg.homepage.clone(),
+        keywords: pkg.keywords.clone(),
+        describes: pkg.describes.as_ref().map(|p| p.to_string()),
+        compatibility: mfst::compatibility_from(&manifest.compatibility),
+        provides: mfst::provides_from(&manifest.provides),
+        requires: mfst::requires_from(&manifest.requires),
+        requires_any: mfst::requires_any_from(&manifest.requires_any),
+        obsoletes: mfst::obsoletes_from(&manifest.obsoletes),
+        conflicts: mfst::conflicts_from(&manifest.conflicts),
+        features: mfst::features_from(&manifest.features),
         subskills,
-        i18n: mfst::i18n_from_raw(&raw.i18n),
-        boot_snippet: mfst::boot_snippet_from_raw(&raw.boot_snippet),
+        i18n: mfst::i18n_from(&manifest.i18n),
+        boot_snippet: mfst::boot_snippet_from(&manifest.boot_snippet),
         files_count,
         indexed_at: opts.indexed_at,
         indexed_by: opts.generator.clone(),

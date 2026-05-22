@@ -1,4 +1,4 @@
-# vibe-index — standalone package index utility
+# vibe-index — package index utility
 
 `vibe-index` builds and serves an opt-in metadata catalog for one or
 more package repos in a vibevm-shaped registry. It runs in two modes:
@@ -13,17 +13,20 @@ more package repos in a vibevm-shaped registry. It runs in two modes:
 
 Specification: [`spec://vibevm/modules/vibe-index/PROP-005`](../../spec/modules/vibe-index/PROP-005-package-index.md).
 
-## Standalone redistribution
+## A member of the vibevm workspace
 
-This subdirectory is its own Cargo workspace, deliberately outside the
-top-level vibevm `crates/` workspace. An org owner who wants to host
-their own index server can vendor only `services/vibe-index/` and:
+`vibe-index` is a member of the top-level vibevm `crates/` workspace.
+It parses manifests through `vibe-core`'s own `Manifest` type, so the
+index schema can never drift from the manifest schema — the
+duplicated parser that once lived here, and silently rotted against
+the M1.17 / M1.18 schema churn, is gone (PROP-005 §3.2 / §9 item 11).
 
+Build from the repository root:
+
+```sh
+cargo build -p vibe-index
+cargo install --path crates/vibe-index   # to put `vibe-index` on PATH
 ```
-cargo install --path .
-```
-
-— without pulling the rest of vibevm.
 
 ## Status
 
@@ -31,8 +34,8 @@ PROP-005 slices 1–8 are implemented — the full CLI (`init` / `reindex`
 / `add` / `remove` / `get` / `list` / `search` / `capabilities` /
 `purls` / `outdated` / `verify` / `dump`) and the read + write HTTP
 server (`serve`), fed by `reindex --from-clones` or `--from-github`.
-The consumer-side integration (PROP-005 slices 9–10) lives in the main
-`crates/` workspace. Slice plan: [PROP-005 §4](../../spec/modules/vibe-index/PROP-005-package-index.md#phases).
+The consumer-side integration (PROP-005 slices 9–10) lives in
+`vibe-registry`. Slice plan: [PROP-005 §4](../../spec/modules/vibe-index/PROP-005-package-index.md#phases).
 
 ## Quick start
 
@@ -48,6 +51,4 @@ real-time, publish-time index updates.
 
 ## Licensing
 
-Inherits the project license at the repo root (`../../LICENSE.md`).
-When vendoring this subdirectory standalone, copy `LICENSE.md` along
-with it.
+Inherits the project license at the repository root (`../../LICENSE.md`).
