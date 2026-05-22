@@ -207,6 +207,7 @@ pub fn build_payload(
     let mut payload = serde_json::json!({
         "schema_version": 1u32,
         "kind": meta.kind,
+        "group": meta.group,
         "name": meta.name,
         "version": meta.version,
         "content_hash": content_hash,
@@ -244,6 +245,18 @@ pub fn build_payload(
         payload["boot_snippet"] = serde_json::json!({
             "source": boot.source,
             "category": boot.category,
+        });
+    }
+
+    // Workspace provenance (PROP-007 §2.8, PROP-008 §2.8) — present only
+    // on a copy `vibe workspace publish` generated from a workspace member.
+    if let Some(origin) = &manifest.origin {
+        payload["workspace_origin"] = serde_json::json!({
+            "upstream": origin.upstream,
+            "path": origin.path,
+            "commit": origin.commit,
+            "generated_by": origin.generated_by,
+            "generated_at": origin.generated_at,
         });
     }
 

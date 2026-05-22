@@ -26,9 +26,9 @@ use vibe_registry::{GitError, GitPackageRegistry, IndexClient};
 #[derive(Default)]
 struct CannedFiles {
     repomd_status: u16,
-    /// Keyed by `(group, name)` — the index lookup path is
-    /// `by-name/<group>/<name>.json` after PROP-008.
-    by_name: HashMap<(String, String), Option<serde_json::Value>>,
+    /// Keyed by bare `name` — the `by-name/` layer is the candidate
+    /// set `by-name/<name>.json` (PROP-008 §2.8).
+    by_name: HashMap<String, Option<serde_json::Value>>,
 }
 
 #[derive(Clone)]
@@ -61,14 +61,13 @@ async fn repomd_handler(State(state): State<MockState>) -> impl IntoResponse {
 
 async fn by_name_handler(
     State(state): State<MockState>,
-    AxumPath((group_str, name_with_ext)): AxumPath<(String, String)>,
+    AxumPath(name_with_ext): AxumPath<String>,
 ) -> axum::response::Response {
     let name = match name_with_ext.strip_suffix(".json") {
         Some(n) => n,
         None => return (StatusCode::NOT_FOUND, "expected .json").into_response(),
     };
-    let key = (group_str, name.to_string());
-    let payload = state.files.lock().unwrap().by_name.get(&key).cloned();
+    let payload = state.files.lock().unwrap().by_name.get(name).cloned();
     match payload {
         Some(Some(v)) => (StatusCode::OK, axum::Json(v)).into_response(),
         Some(None) => StatusCode::NOT_FOUND.into_response(),
@@ -99,7 +98,7 @@ fn spawn_mock(files: CannedFiles) -> Mock {
             };
             let app = Router::new()
                 .route("/repomd.json", get(repomd_handler))
-                .route("/by-name/{kind}/{name}", get(by_name_handler))
+                .route("/by-name/{name}", get(by_name_handler))
                 .with_state(state);
             tx.send(format!("http://{addr}")).unwrap();
             axum::serve(listener, app).await.unwrap();
@@ -112,13 +111,21 @@ fn spawn_mock(files: CannedFiles) -> Mock {
     }
 }
 
-fn package_entry_json(kind: PackageKind, name: &str, versions: &[&str]) -> serde_json::Value {
+/// A `by-name/<name>.json` candidate set carrying one `(group, name)`
+/// package — the PROP-008 §2.8 layout the index serves.
+fn name_entry_json(
+    group: &str,
+    kind: PackageKind,
+    name: &str,
+    versions: &[&str],
+) -> serde_json::Value {
     let entries: Vec<serde_json::Value> = versions
         .iter()
         .map(|v| {
             serde_json::json!({
                 "schema_version": 1,
                 "kind": kind,
+                "group": group,
                 "name": name,
                 "version": v,
                 "content_hash": "sha256:0000",
@@ -132,11 +139,17 @@ fn package_entry_json(kind: PackageKind, name: &str, versions: &[&str]) -> serde
         })
         .collect();
     serde_json::json!({
-        "kind": kind,
         "name": name,
         "indexed_at": "2026-05-06T12:00:00Z",
-        "latest_stable": versions.last(),
-        "versions": entries,
+        "packages": [
+            {
+                "group": group,
+                "name": name,
+                "indexed_at": "2026-05-06T12:00:00Z",
+                "latest_stable": versions.last(),
+                "versions": entries,
+            }
+        ],
     })
 }
 
@@ -180,8 +193,9 @@ fn index_fast_path_serves_versions() {
         by_name: HashMap::new(),
     };
     canned.by_name.insert(
-        ("org.vibevm".into(), "wal".into()),
-        Some(package_entry_json(
+        "wal".into(),
+        Some(name_entry_json(
+            "org.vibevm",
             PackageKind::Flow,
             "wal",
             &["0.1.0", "0.2.0"],
@@ -287,7 +301,7 @@ fn index_5xx_falls_through_to_git_backend() {
     // mentions 5xx; let's adapt to "non-200 for by-name returns
     // gracefully" by toggling status.
     canned.by_name.insert(
-        ("org.vibevm".into(), "wal".into()),
+        "wal".into(),
         None, // explicit "404 expected" marker
     );
     let mock = spawn_mock(canned);

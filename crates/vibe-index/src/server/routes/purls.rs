@@ -4,6 +4,7 @@ use axum::Json;
 use axum::extract::{Path, State};
 use semver::Version;
 use serde::Serialize;
+use vibe_core::Group;
 
 use crate::index::search;
 use crate::server::error::ApiError;
@@ -21,6 +22,7 @@ pub struct Response {
 #[derive(Serialize)]
 pub struct Hit {
     pub kind: PackageKind,
+    pub group: Group,
     pub name: String,
     pub version: Version,
     pub binding_site: &'static str,
@@ -38,6 +40,7 @@ pub async fn lookup(
         .iter()
         .map(|e| Hit {
             kind: e.kind,
+            group: e.group.clone(),
             name: e.name.clone(),
             version: e.version.clone(),
             binding_site: if e.describes.as_deref() == Some(purl_norm.as_str()) {

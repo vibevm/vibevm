@@ -9,6 +9,8 @@ use std::path::PathBuf;
 use chrono::Utc;
 use clap::Parser;
 
+use vibe_core::Group;
+
 use crate::content_hash::compute_content_hash;
 use crate::error::{Error, Result};
 use crate::index::Index;
@@ -62,13 +64,14 @@ pub fn run(args: Args) -> Result<()> {
     let pkg_root = args.manifest.parent().unwrap_or(std::path::Path::new("."));
 
     let kind = mfst::package_kind(pkg.kind);
+    let group = pkg.group.clone();
     let name = pkg.name.clone();
     let version = pkg.version.clone();
 
     let content_hash = compute_content_hash(pkg_root)?;
     let source_ref = args.r#ref.unwrap_or_else(|| format!("v{version}"));
     let source_url = args.repo_url.unwrap_or_else(|| {
-        compose_default_repo_url(&index.registry_url, index.naming, kind, &name)
+        compose_default_repo_url(&index.registry_url, index.naming, kind, &group, &name)
     });
     let files_count = walkdir::WalkDir::new(pkg_root)
         .into_iter()
@@ -79,6 +82,7 @@ pub fn run(args: Args) -> Result<()> {
     let entry = VersionEntry {
         schema_version: VersionEntry::SCHEMA_VERSION,
         kind,
+        group,
         name,
         version,
         content_hash,
@@ -86,6 +90,7 @@ pub fn run(args: Args) -> Result<()> {
         source_ref,
         resolved_commit: args.commit,
         registry: index.registry.clone(),
+        workspace_origin: mfst::workspace_origin_from(&manifest.origin),
         license: pkg.license.clone(),
         authors: pkg.authors.clone(),
         description: pkg.description.clone(),
@@ -108,8 +113,8 @@ pub fn run(args: Args) -> Result<()> {
     };
 
     println!(
-        "adding {}:{} @ {} ({})",
-        entry.kind, entry.name, entry.version, entry.content_hash
+        "adding {}:{}/{} @ {} ({})",
+        entry.kind, entry.group, entry.name, entry.version, entry.content_hash
     );
     index.upsert(entry);
     index.write_to(&args.data_dir)?;
@@ -120,10 +125,11 @@ fn compose_default_repo_url(
     registry_url: &str,
     naming: NamingConvention,
     kind: PackageKind,
+    group: &Group,
     name: &str,
 ) -> String {
     let trimmed = registry_url.trim_end_matches('/');
-    let repo = naming.repo_name(kind, name);
+    let repo = naming.repo_name(kind, group, name);
     format!("{trimmed}/{repo}.git")
 }
 

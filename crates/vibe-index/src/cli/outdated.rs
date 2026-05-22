@@ -6,6 +6,7 @@ use std::path::PathBuf;
 use clap::Parser;
 use semver::Version;
 use serde::Serialize;
+use vibe_core::Group;
 
 use crate::error::{Error, Result};
 use crate::index::Index;
@@ -35,6 +36,7 @@ struct Envelope {
 #[derive(Debug, Serialize)]
 struct Row {
     kind: PackageKind,
+    group: Group,
     name: String,
     installed: Version,
     latest: Option<Version>,
@@ -57,7 +59,7 @@ pub fn run(args: Args) -> Result<()> {
     let mut update_available = 0u32;
     for pkg in &lock.package {
         let latest = index
-            .get(pkg.kind, &pkg.name)
+            .get(&pkg.group, &pkg.name)
             .and_then(|p| p.latest_stable.clone());
         let status = match &latest {
             None => Status::Unknown,
@@ -69,6 +71,7 @@ pub fn run(args: Args) -> Result<()> {
         };
         rows.push(Row {
             kind: pkg.kind,
+            group: pkg.group.clone(),
             name: pkg.name.clone(),
             installed: pkg.version.clone(),
             latest,
@@ -103,8 +106,8 @@ pub fn run(args: Args) -> Result<()> {
                 .map(|v| v.to_string())
                 .unwrap_or_else(|| "?".to_string());
             println!(
-                "  {} {}:{} {} {} {}",
-                arrow, row.kind, row.name, row.installed, arrow, latest
+                "  {} {}/{} {} {} {}",
+                arrow, row.group, row.name, row.installed, arrow, latest
             );
         }
     }

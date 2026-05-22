@@ -1,13 +1,15 @@
 //! `VersionEntry` — the canonical per-version index record. Schema
 //! pinned in PROP-005 §2.6. Every line of `primary.jsonl` is one of
-//! these; every element of `by-name/<kind>/<name>.json::versions[]` is
-//! one of these; every `POST /v1/packages` body is one of these.
+//! these; every element of a `by-name/<name>.json` candidate's
+//! `versions[]` is one of these; every `POST /v1/packages` body is one
+//! of these.
 
 use std::collections::BTreeMap;
 
 use chrono::{DateTime, Utc};
 use semver::Version;
 use serde::{Deserialize, Serialize};
+use vibe_core::Group;
 
 use super::kinds::PackageKind;
 
@@ -18,6 +20,11 @@ pub struct VersionEntry {
     pub schema_version: u32,
 
     pub kind: PackageKind,
+    /// Reverse-FQDN namespace qualifier (PROP-008 §2.1). With `name` it
+    /// forms the package's identity — `name` is unique within a `group`,
+    /// so `(group, name)` identifies a package without `kind` (PROP-008
+    /// §2.2). `kind` stays on the entry as pure metadata (PROP-008 §2.3).
+    pub group: Group,
     pub name: String,
     pub version: Version,
 
@@ -29,6 +36,12 @@ pub struct VersionEntry {
     pub resolved_commit: Option<String>,
 
     pub registry: String,
+
+    /// Workspace provenance — set when the package was published from a
+    /// workspace member, carrying that member's `[origin]` marker
+    /// (PROP-007 §2.8, PROP-008 §2.8). `None` for a standalone publish.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub workspace_origin: Option<WorkspaceOriginEntry>,
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub license: Option<String>,
@@ -86,10 +99,32 @@ pub struct VersionEntry {
 impl VersionEntry {
     pub const SCHEMA_VERSION: u32 = 1;
 
-    /// Stable sort key (kind, name, version).
-    pub fn sort_key(&self) -> (PackageKind, &str, &Version) {
-        (self.kind, self.name.as_str(), &self.version)
+    /// Stable sort key `(group, name, version)` — the PROP-008 §2.2
+    /// identity ordering. `kind` left the key when it left identity.
+    pub fn sort_key(&self) -> (&Group, &str, &Version) {
+        (&self.group, self.name.as_str(), &self.version)
     }
+}
+
+/// `[origin]` projection — the provenance marker `vibe workspace publish`
+/// writes into a published workspace-member copy (PROP-007 §2.8). Mirrors
+/// `vibe-core::manifest::OriginSection`; surfaced in the index so the
+/// registry explorer can trace a package repository back to the monorepo
+/// it was generated from (PROP-008 §2.8 / §2.9).
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct WorkspaceOriginEntry {
+    /// URL of the source monorepo the published copy was generated from.
+    pub upstream: String,
+    /// Path of the package directory within that monorepo.
+    pub path: String,
+    /// Monorepo commit at generation time — present when it was a git repo.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub commit: Option<String>,
+    /// Tool identity that generated the copy — e.g. `vibe 0.1.0`.
+    pub generated_by: String,
+    /// ISO-8601 timestamp of generation.
+    pub generated_at: String,
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
@@ -237,12 +272,13 @@ pub struct BootSnippetEntry {
     pub category: Option<String>,
 }
 
-/// Aggregated record stored on disk in `by-name/<kind>/<name>.json`.
-/// Wraps a `Vec<VersionEntry>` plus per-package metadata.
+/// One package — every indexed version of a single `(group, name)`
+/// identity (PROP-008 §2.2). A [`NameEntry`] holds the candidate set:
+/// every `PackageEntry` that shares one bare `name`.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct PackageEntry {
-    pub kind: PackageKind,
+    pub group: Group,
     pub name: String,
     pub indexed_at: DateTime<Utc>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -251,9 +287,9 @@ pub struct PackageEntry {
 }
 
 impl PackageEntry {
-    pub fn new(kind: PackageKind, name: impl Into<String>, indexed_at: DateTime<Utc>) -> Self {
+    pub fn new(group: Group, name: impl Into<String>, indexed_at: DateTime<Utc>) -> Self {
         PackageEntry {
-            kind,
+            group,
             name: name.into(),
             indexed_at,
             latest_stable: None,
@@ -273,6 +309,42 @@ impl PackageEntry {
     }
 }
 
+/// `by-name/<name>.json` — the candidate set for one bare package name
+/// (PROP-008 §2.8). A single HTTP GET per registry yields every package
+/// sharing the short name `<name>`, each carrying its own `group`; this
+/// is what makes CLI short-name resolution (PROP-008 §2.6) one round-trip
+/// per registry and lets a collision (PROP-008 §2.7) be detected at once.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct NameEntry {
+    pub name: String,
+    pub indexed_at: DateTime<Utc>,
+    /// One entry per `group` that publishes a package called `name`,
+    /// sorted by `group`. A length greater than one is a short-name
+    /// collision (PROP-008 §2.7).
+    pub packages: Vec<PackageEntry>,
+}
+
+impl NameEntry {
+    pub fn new(name: impl Into<String>, indexed_at: DateTime<Utc>) -> Self {
+        NameEntry {
+            name: name.into(),
+            indexed_at,
+            packages: Vec::new(),
+        }
+    }
+
+    /// Sort the candidate packages by `group` and stamp `indexed_at` with
+    /// the freshest candidate's, so the on-disk file is byte-deterministic
+    /// from its data regardless of insertion order.
+    pub fn finalise(&mut self) {
+        self.packages.sort_by(|a, b| a.group.cmp(&b.group));
+        if let Some(latest) = self.packages.iter().map(|p| p.indexed_at).max() {
+            self.indexed_at = latest;
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -281,6 +353,7 @@ mod tests {
         VersionEntry {
             schema_version: VersionEntry::SCHEMA_VERSION,
             kind: PackageKind::Flow,
+            group: Group::parse("org.vibevm").unwrap(),
             name: "wal".into(),
             version: "0.1.0".parse().unwrap(),
             content_hash: "sha256:0000".into(),
@@ -288,6 +361,7 @@ mod tests {
             source_ref: "v0.1.0".into(),
             resolved_commit: Some("abc123".into()),
             registry: "vibespecs".into(),
+            workspace_origin: None,
             license: Some("EULA".into()),
             authors: vec!["Oleg".into()],
             description: Some("WAL discipline".into()),
@@ -335,7 +409,7 @@ mod tests {
     #[test]
     fn package_entry_finalise_picks_latest_stable() {
         let mut p = PackageEntry::new(
-            PackageKind::Flow,
+            Group::parse("org.vibevm").unwrap(),
             "wal",
             DateTime::parse_from_rfc3339("2026-05-06T12:00:00Z")
                 .unwrap()
@@ -364,5 +438,54 @@ mod tests {
         assert_eq!(v, "\"lazy-push\"");
         let parsed: DeliveryMode = serde_json::from_str("\"lazy-pull\"").unwrap();
         assert_eq!(parsed, DeliveryMode::LazyPull);
+    }
+
+    #[test]
+    fn workspace_origin_round_trips_through_json() {
+        let mut v = sample_entry();
+        v.workspace_origin = Some(WorkspaceOriginEntry {
+            upstream: "https://github.com/you/monorepo".into(),
+            path: "packages/flow-wal".into(),
+            commit: Some("abc123".into()),
+            generated_by: "vibe 0.1.0".into(),
+            generated_at: "2026-05-20T00:00:00Z".into(),
+        });
+        let json = serde_json::to_string(&v).unwrap();
+        assert!(json.contains("workspace_origin"));
+        let back: VersionEntry = serde_json::from_str(&json).unwrap();
+        assert_eq!(v, back);
+    }
+
+    #[test]
+    fn name_entry_finalise_sorts_candidates_by_group() {
+        let now = DateTime::parse_from_rfc3339("2026-05-06T12:00:00Z")
+            .unwrap()
+            .with_timezone(&Utc);
+        let mut ne = NameEntry::new("wal", now);
+        ne.packages.push(PackageEntry::new(
+            Group::parse("org.vibevm").unwrap(),
+            "wal",
+            now,
+        ));
+        ne.packages.push(PackageEntry::new(
+            Group::parse("com.acme").unwrap(),
+            "wal",
+            now,
+        ));
+        ne.finalise();
+        assert_eq!(ne.packages[0].group.as_str(), "com.acme");
+        assert_eq!(ne.packages[1].group.as_str(), "org.vibevm");
+        let json = serde_json::to_string(&ne).unwrap();
+        let back: NameEntry = serde_json::from_str(&json).unwrap();
+        assert_eq!(ne, back);
+    }
+
+    #[test]
+    fn sort_key_orders_by_group_then_name_then_version() {
+        let mut a = sample_entry();
+        a.group = Group::parse("com.acme").unwrap();
+        let b = sample_entry(); // org.vibevm
+        // com.acme sorts before org.vibevm regardless of name.
+        assert!(a.sort_key() < b.sort_key());
     }
 }

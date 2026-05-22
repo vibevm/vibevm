@@ -132,7 +132,13 @@ fn get_returns_versions_for_known_package() {
         return;
     };
     let out = cmd()
-        .args(["get", data.to_str().unwrap(), "stack", "rust", "--json"])
+        .args([
+            "get",
+            data.to_str().unwrap(),
+            "org.vibevm",
+            "rust",
+            "--json",
+        ])
         .assert()
         .success();
     let stdout = String::from_utf8(out.get_output().stdout.clone()).unwrap();
@@ -150,7 +156,7 @@ fn get_specific_version_filters_correctly() {
         .args([
             "get",
             data.to_str().unwrap(),
-            "stack",
+            "org.vibevm",
             "rust",
             "--version",
             "0.2.0",
@@ -170,7 +176,12 @@ fn get_unknown_package_text_form_errors() {
         return;
     };
     cmd()
-        .args(["get", data.to_str().unwrap(), "flow", "definitely-absent"])
+        .args([
+            "get",
+            data.to_str().unwrap(),
+            "org.vibevm",
+            "definitely-absent",
+        ])
         .assert()
         .failure();
 }
@@ -184,7 +195,7 @@ fn get_unknown_json_form_returns_found_false() {
         .args([
             "get",
             data.to_str().unwrap(),
-            "flow",
+            "org.vibevm",
             "definitely-absent",
             "--json",
         ])
@@ -322,15 +333,17 @@ fn outdated_flags_upgrade_candidates() {
     std::fs::write(
         &lock,
         r#"[meta]
-schema_version = 2
+schema_version = 5
 
 [[package]]
 kind = "flow"
+group = "org.vibevm"
 name = "wal"
 version = "0.1.0"
 
 [[package]]
 kind = "stack"
+group = "org.vibevm"
 name = "rust"
 version = "0.1.0"
 "#,
@@ -367,6 +380,7 @@ fn outdated_unknown_packages_marked_unknown() {
         &lock,
         r#"[[package]]
 kind = "flow"
+group = "org.vibevm"
 name = "ghost-pkg"
 version = "0.1.0"
 "#,

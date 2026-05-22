@@ -5,6 +5,7 @@ use std::path::PathBuf;
 use clap::Parser;
 use semver::Version;
 use serde::Serialize;
+use vibe_core::Group;
 
 use crate::cli::kinds::PackageKind;
 use crate::error::{Error, Result};
@@ -41,7 +42,10 @@ struct Envelope {
 
 #[derive(Debug, Serialize)]
 struct PackageRow {
-    kind: PackageKind,
+    /// `kind` is metadata (PROP-008 §2.3) — read from the package's
+    /// versions; `None` only for the (rare) zero-version package row.
+    kind: Option<PackageKind>,
+    group: Group,
     name: String,
     versions: Vec<Version>,
     latest_stable: Option<Version>,
@@ -53,11 +57,15 @@ pub fn run(args: Args) -> Result<()> {
     let mut rows: Vec<PackageRow> = index
         .by_pkgref
         .values()
-        .filter(|p| args.kind.is_none_or(|k| p.kind == k))
+        .filter(|p| {
+            args.kind
+                .is_none_or(|k| p.versions.iter().any(|v| v.kind == k))
+        })
         .map(|p| {
             let description = p.versions.last().and_then(|v| v.description.clone());
             PackageRow {
-                kind: p.kind,
+                kind: p.versions.first().map(|v| v.kind),
+                group: p.group.clone(),
                 name: p.name.clone(),
                 versions: p.versions.iter().map(|v| v.version.clone()).collect(),
                 latest_stable: p.latest_stable.clone(),
@@ -65,7 +73,7 @@ pub fn run(args: Args) -> Result<()> {
             }
         })
         .collect();
-    rows.sort_by(|a, b| a.kind.cmp(&b.kind).then(a.name.cmp(&b.name)));
+    rows.sort_by(|a, b| a.group.cmp(&b.group).then(a.name.cmp(&b.name)));
     let package_count = rows.len() as u32;
     let returned: Vec<PackageRow> = rows
         .into_iter()
@@ -96,7 +104,7 @@ pub fn run(args: Args) -> Result<()> {
             returned.len()
         );
         for row in returned {
-            print!("  {}:{}", row.kind, row.name);
+            print!("  {}/{}", row.group, row.name);
             if let Some(latest) = &row.latest_stable {
                 print!(" @ {latest}");
             }

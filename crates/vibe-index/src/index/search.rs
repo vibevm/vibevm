@@ -4,11 +4,13 @@
 //! `vibe-check::activation_conflict`).
 //!
 //! Scoring is term-overlap: a hit gains one point per query token
-//! it carries. Ties are broken by package kind / name lexicographic
-//! order. Good enough for the indexed scale targeted by slice 4
-//! (≤ 10k packages); a tantivy-backed upgrade is a v1 lever.
+//! it carries. Ties are broken by the `(group, name)` identity in
+//! lexicographic order. Good enough for the indexed scale targeted by
+//! slice 4 (≤ 10k packages); a tantivy-backed upgrade is a v1 lever.
 
 use std::collections::{BTreeMap, BTreeSet};
+
+use vibe_core::Group;
 
 use crate::index::Index;
 use crate::types::{PackageKind, VersionEntry};
@@ -22,6 +24,7 @@ const STOPWORDS: &[&str] = &[
 #[derive(Debug, Clone)]
 pub struct SearchHit {
     pub kind: PackageKind,
+    pub group: Group,
     pub name: String,
     pub latest_stable: Option<semver::Version>,
     pub score: u32,
@@ -60,13 +63,8 @@ pub fn search(index: &Index, query: &str, kind_filter: Option<PackageKind>) -> V
     if query_tokens.is_empty() {
         return Vec::new();
     }
-    let mut hits: BTreeMap<(PackageKind, String), SearchHit> = BTreeMap::new();
+    let mut hits: BTreeMap<(Group, String), SearchHit> = BTreeMap::new();
     for pkg in index.by_pkgref.values() {
-        if let Some(k) = kind_filter
-            && pkg.kind != k
-        {
-            continue;
-        }
         let latest = pkg
             .versions
             .iter()
@@ -75,16 +73,24 @@ pub fn search(index: &Index, query: &str, kind_filter: Option<PackageKind>) -> V
         let Some(latest) = latest else {
             continue;
         };
+        // `kind` is per-version metadata (PROP-008 §2.3) — filter on
+        // the version actually scored.
+        if let Some(k) = kind_filter
+            && latest.kind != k
+        {
+            continue;
+        }
         let pkg_tokens: BTreeSet<String> = collect_tokens_for(latest).into_iter().collect();
         let matched: BTreeSet<&String> = query_tokens.intersection(&pkg_tokens).collect();
         if matched.is_empty() {
             continue;
         }
-        let key = (pkg.kind, pkg.name.clone());
+        let key = (pkg.group.clone(), pkg.name.clone());
         hits.insert(
             key,
             SearchHit {
-                kind: pkg.kind,
+                kind: latest.kind,
+                group: pkg.group.clone(),
                 name: pkg.name.clone(),
                 latest_stable: pkg.latest_stable.clone(),
                 score: matched.len() as u32,
@@ -97,7 +103,7 @@ pub fn search(index: &Index, query: &str, kind_filter: Option<PackageKind>) -> V
     out.sort_by(|a, b| {
         b.score
             .cmp(&a.score)
-            .then(a.kind.cmp(&b.kind))
+            .then(a.group.cmp(&b.group))
             .then(a.name.cmp(&b.name))
     });
     out

@@ -1,12 +1,12 @@
-//! `vibe-index get <data-dir> <kind> <name>` — read one package
-//! entry from the index.
+//! `vibe-index get <data-dir> <group> <name>` — read one package entry
+//! from the index by its `(group, name)` identity (PROP-008 §2.2).
 
 use std::path::PathBuf;
 
 use clap::Parser;
 use serde::Serialize;
+use vibe_core::Group;
 
-use crate::cli::kinds::PackageKind;
 use crate::error::{Error, Result};
 use crate::index::Index;
 use crate::types::{PackageEntry, VersionEntry};
@@ -16,8 +16,8 @@ use crate::types::{PackageEntry, VersionEntry};
 pub struct Args {
     pub data_dir: PathBuf,
 
-    #[arg(value_enum)]
-    pub kind: PackageKind,
+    /// Reverse-FQDN group qualifier — e.g. `org.vibevm`.
+    pub group: Group,
 
     pub name: String,
 
@@ -33,19 +33,19 @@ pub struct Args {
 struct GetEnvelope<'a> {
     command: &'static str,
     found: bool,
-    kind: PackageKind,
+    group: &'a Group,
     name: &'a str,
     versions: Vec<&'a VersionEntry>,
 }
 
 pub fn run(args: Args) -> Result<()> {
     let index = Index::load_from(&args.data_dir)?;
-    let Some(pkg) = index.get(args.kind, &args.name) else {
+    let Some(pkg) = index.get(&args.group, &args.name) else {
         if args.json {
             let env = GetEnvelope {
                 command: "get",
                 found: false,
-                kind: args.kind,
+                group: &args.group,
                 name: &args.name,
                 versions: vec![],
             };
@@ -57,8 +57,8 @@ pub fn run(args: Args) -> Result<()> {
             return Ok(());
         }
         return Err(Error::InvalidInput(format!(
-            "package `{}:{}` is not in the index",
-            args.kind, args.name
+            "package `{}/{}` is not in the index",
+            args.group, args.name
         )));
     };
 
@@ -76,7 +76,7 @@ pub fn run(args: Args) -> Result<()> {
             let env = GetEnvelope {
                 command: "get",
                 found: false,
-                kind: args.kind,
+                group: &args.group,
                 name: &args.name,
                 versions,
             };
@@ -88,8 +88,8 @@ pub fn run(args: Args) -> Result<()> {
             return Ok(());
         }
         return Err(Error::InvalidInput(format!(
-            "package `{}:{}` has no version `{}` in the index",
-            args.kind,
+            "package `{}/{}` has no version `{}` in the index",
+            args.group,
             args.name,
             args.version.unwrap()
         )));
@@ -99,7 +99,7 @@ pub fn run(args: Args) -> Result<()> {
         let env = GetEnvelope {
             command: "get",
             found: true,
-            kind: args.kind,
+            group: &args.group,
             name: &args.name,
             versions,
         };
@@ -115,8 +115,11 @@ pub fn run(args: Args) -> Result<()> {
 }
 
 fn render_text(pkg: &PackageEntry, versions: &[&VersionEntry]) {
-    println!("kind          : {}", pkg.kind);
+    println!("group         : {}", pkg.group);
     println!("name          : {}", pkg.name);
+    if let Some(kind) = pkg.versions.first().map(|v| v.kind) {
+        println!("kind          : {kind}");
+    }
     if let Some(latest) = &pkg.latest_stable {
         println!("latest stable : {latest}");
     }

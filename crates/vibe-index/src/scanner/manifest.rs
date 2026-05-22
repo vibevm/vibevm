@@ -21,8 +21,8 @@ use vibe_core::PackageKind as CorePackageKind;
 use vibe_core::manifest::i18n::I18nDecl;
 use vibe_core::manifest::{
     ActivationRules, BootCategory, BootSnippet, Compatibility, ConflictsList,
-    DeliveryMode as CoreDeliveryMode, FeaturesTable, Manifest, Obsoletes, PackageMeta, Provides,
-    Requires, RequiresAny, SubskillManifest,
+    DeliveryMode as CoreDeliveryMode, FeaturesTable, Manifest, Obsoletes, OriginSection,
+    PackageMeta, Provides, Requires, RequiresAny, SubskillManifest,
 };
 use walkdir::WalkDir;
 
@@ -30,6 +30,7 @@ use crate::error::{Error, Result};
 use crate::types::{
     BootSnippetEntry, CompatibilityEntry, ConflictsEntry, DeliveryMode, FeaturesEntry, I18nEntry,
     ObsoletesEntry, PackageKind, ProvidesEntry, RequiresAnyEntry, RequiresEntry, SubskillEntry,
+    WorkspaceOriginEntry,
 };
 
 /// Parse a `vibe.toml` byte buffer into the canonical `vibe-core`
@@ -140,6 +141,19 @@ pub fn boot_snippet_from(b: &Option<BootSnippet>) -> Option<BootSnippetEntry> {
     b.as_ref().map(|bs| BootSnippetEntry {
         source: bs.source.to_string_lossy().replace('\\', "/"),
         category: bs.category.map(boot_category_str),
+    })
+}
+
+/// Project the `[origin]` provenance marker (PROP-007 §2.8) — present
+/// only on a copy `vibe workspace publish` generated from a workspace
+/// member — into the index entry's `workspace_origin` (PROP-008 §2.8).
+pub fn workspace_origin_from(origin: &Option<OriginSection>) -> Option<WorkspaceOriginEntry> {
+    origin.as_ref().map(|o| WorkspaceOriginEntry {
+        upstream: o.upstream.clone(),
+        path: o.path.clone(),
+        commit: o.commit.clone(),
+        generated_by: o.generated_by.clone(),
+        generated_at: o.generated_at.clone(),
     })
 }
 

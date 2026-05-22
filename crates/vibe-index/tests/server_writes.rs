@@ -9,7 +9,7 @@ use tower::util::ServiceExt;
 use vibe_index::index::Index;
 use vibe_index::server::{AppState, TokenStore, build_app};
 use vibe_index::types::{
-    BootSnippetEntry, NamingConvention, PackageKind, ProvidesEntry, VersionEntry,
+    BootSnippetEntry, Group, NamingConvention, PackageKind, ProvidesEntry, VersionEntry,
 };
 
 fn now() -> DateTime<Utc> {
@@ -22,6 +22,7 @@ fn entry(kind: PackageKind, name: &str, version: &str) -> VersionEntry {
     VersionEntry {
         schema_version: VersionEntry::SCHEMA_VERSION,
         kind,
+        group: Group::parse("org.vibevm").unwrap(),
         name: name.into(),
         version: version.parse().unwrap(),
         content_hash: format!("sha256:{name}{version}"),
@@ -29,6 +30,7 @@ fn entry(kind: PackageKind, name: &str, version: &str) -> VersionEntry {
         source_ref: format!("v{version}"),
         resolved_commit: None,
         registry: "vibespecs".into(),
+        workspace_origin: None,
         license: Some("EULA".into()),
         authors: vec![],
         description: Some(format!("{name} package")),
@@ -59,7 +61,7 @@ fn fresh_state(read_only: bool, with_token: Option<&str>) -> (tempfile::TempDir,
     let idx = Index::new(
         "vibespecs",
         "https://example.invalid/vibespecs",
-        NamingConvention::KindName,
+        NamingConvention::Fqdn,
     );
     idx.write_to(tmp.path()).unwrap();
     let tokens = if let Some(t) = with_token {
@@ -216,7 +218,10 @@ async fn delete_version_removes_existing() {
         .await
         .unwrap();
     let resp = app
-        .oneshot(req_delete("/v1/packages/flow/wal/0.1.0", Some("topsecret")))
+        .oneshot(req_delete(
+            "/v1/packages/org.vibevm/wal/0.1.0",
+            Some("topsecret"),
+        ))
         .await
         .unwrap();
     assert_eq!(resp.status(), StatusCode::OK);
@@ -229,7 +234,7 @@ async fn delete_version_unauthenticated_is_401() {
     let (_tmp, state) = fresh_state(false, Some("topsecret"));
     let app = build_app(state);
     let resp = app
-        .oneshot(req_delete("/v1/packages/flow/wal/0.1.0", None))
+        .oneshot(req_delete("/v1/packages/org.vibevm/wal/0.1.0", None))
         .await
         .unwrap();
     assert_eq!(resp.status(), StatusCode::UNAUTHORIZED);
@@ -250,7 +255,7 @@ async fn delete_package_drops_all_versions() {
         .await
         .unwrap();
     let resp = app
-        .oneshot(req_delete("/v1/packages/flow/wal", Some("topsecret")))
+        .oneshot(req_delete("/v1/packages/org.vibevm/wal", Some("topsecret")))
         .await
         .unwrap();
     assert_eq!(resp.status(), StatusCode::OK);
@@ -265,7 +270,7 @@ async fn delete_missing_returns_removed_false() {
     let app = build_app(state);
     let resp = app
         .oneshot(req_delete(
-            "/v1/packages/flow/ghost-package",
+            "/v1/packages/org.vibevm/ghost-package",
             Some("topsecret"),
         ))
         .await

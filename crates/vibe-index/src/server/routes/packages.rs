@@ -1,4 +1,8 @@
 //! Structured query routes for `/v1/packages*`.
+//!
+//! A package is addressed by its `(group, name)` identity (PROP-008
+//! §2.2): the path shape is `/v1/packages/{group}/{name}[/{version}]`.
+//! `kind` is metadata and never keys a route.
 
 use std::sync::Arc;
 
@@ -7,6 +11,7 @@ use axum::extract::{Path, Query, State};
 use axum::http::{HeaderMap, StatusCode, header};
 use semver::Version;
 use serde::{Deserialize, Serialize};
+use vibe_core::Group;
 
 use crate::index::search;
 use crate::server::error::ApiError;
@@ -34,7 +39,10 @@ pub struct ListResponse {
 
 #[derive(Debug, Serialize)]
 pub struct PackageRow {
-    pub kind: PackageKind,
+    /// `kind` is metadata (PROP-008 §2.3) — read from the package's
+    /// versions; `None` only for a zero-version package row.
+    pub kind: Option<PackageKind>,
+    pub group: Group,
     pub name: String,
     pub latest_stable: Option<Version>,
     pub versions: Vec<Version>,
@@ -52,11 +60,24 @@ pub struct SearchResponse {
 #[derive(Debug, Serialize)]
 pub struct SearchHit {
     pub kind: PackageKind,
+    pub group: Group,
     pub name: String,
     pub latest_stable: Option<Version>,
     pub score: u32,
     pub matched_tokens: Vec<String>,
     pub description: Option<String>,
+}
+
+/// Parse a `{group}` path segment into a validated [`Group`]. A
+/// malformed segment is a 400 — the URL itself is syntactically wrong.
+fn parse_group(s: &str) -> Result<Group, ApiError> {
+    Group::parse(s).map_err(|e| ApiError::bad_request(format!("invalid group `{s}`: {e}")))
+}
+
+/// The package's `kind` — metadata carried per version (PROP-008 §2.3).
+/// `None` only for the rare zero-version package row.
+fn package_kind(pkg: &crate::types::PackageEntry) -> Option<PackageKind> {
+    pkg.versions.first().map(|v| v.kind)
 }
 
 pub async fn list_or_search(
@@ -76,6 +97,7 @@ pub async fn list_or_search(
             .take(limit)
             .map(|h| SearchHit {
                 kind: h.kind,
+                group: h.group,
                 name: h.name,
                 latest_stable: h.latest_stable,
                 score: h.score,
@@ -92,20 +114,25 @@ pub async fn list_or_search(
         return Ok(Json(body).into_response());
     }
 
-    // List mode.
+    // List mode. `kind` is per-version metadata, so the `?kind=` filter
+    // keeps a package iff any of its versions carries that kind.
     let mut rows: Vec<PackageRow> = index
         .by_pkgref
         .values()
-        .filter(|p| q.kind.is_none_or(|k| p.kind == k))
+        .filter(|p| {
+            q.kind
+                .is_none_or(|k| p.versions.iter().any(|v| v.kind == k))
+        })
         .map(|p| PackageRow {
-            kind: p.kind,
+            kind: package_kind(p),
+            group: p.group.clone(),
             name: p.name.clone(),
             latest_stable: p.latest_stable.clone(),
             versions: p.versions.iter().map(|v| v.version.clone()).collect(),
             description: p.versions.last().and_then(|v| v.description.clone()),
         })
         .collect();
-    rows.sort_by(|a, b| a.kind.cmp(&b.kind).then(a.name.cmp(&b.name)));
+    rows.sort_by(|a, b| a.group.cmp(&b.group).then(a.name.cmp(&b.name)));
     let package_count = rows.len() as u32;
     let returned: Vec<PackageRow> = rows.into_iter().skip(offset).take(limit).collect();
     let body = ListResponse {
@@ -122,19 +149,18 @@ pub async fn list_or_search(
 
 pub async fn package_versions(
     State(state): State<Arc<AppState>>,
-    Path((kind_str, name)): Path<(String, String)>,
+    Path((group_str, name)): Path<(String, String)>,
 ) -> Result<Json<PackageVersionsResponse>, ApiError> {
     state.stats.note_request();
-    let kind: PackageKind = kind_str
-        .parse()
-        .map_err(|_| ApiError::not_found(format!("unknown kind `{kind_str}`")))?;
+    let group = parse_group(&group_str)?;
     let index = state.index.read().await;
     let pkg = index
-        .get(kind, &name)
-        .ok_or_else(|| ApiError::not_found(format!("`{kind}:{name}` is not in the index")))?;
+        .get(&group, &name)
+        .ok_or_else(|| ApiError::not_found(format!("`{group}/{name}` is not in the index")))?;
     Ok(Json(PackageVersionsResponse {
         command: "package",
-        kind: pkg.kind,
+        kind: package_kind(pkg),
+        group: pkg.group.clone(),
         name: pkg.name.clone(),
         latest_stable: pkg.latest_stable.clone(),
         versions: pkg.versions.clone(),
@@ -144,7 +170,8 @@ pub async fn package_versions(
 #[derive(Serialize)]
 pub struct PackageVersionsResponse {
     pub command: &'static str,
-    pub kind: PackageKind,
+    pub kind: Option<PackageKind>,
+    pub group: Group,
     pub name: String,
     pub latest_stable: Option<Version>,
     pub versions: Vec<VersionEntry>,
@@ -152,25 +179,25 @@ pub struct PackageVersionsResponse {
 
 pub async fn single_version(
     State(state): State<Arc<AppState>>,
-    Path((kind_str, name, version_str)): Path<(String, String, String)>,
+    Path((group_str, name, version_str)): Path<(String, String, String)>,
 ) -> Result<Json<VersionEntry>, ApiError> {
     state.stats.note_request();
-    let kind: PackageKind = kind_str
-        .parse()
-        .map_err(|_| ApiError::not_found(format!("unknown kind `{kind_str}`")))?;
+    let group = parse_group(&group_str)?;
     let v: Version = version_str
         .parse()
         .map_err(|e| ApiError::bad_request(format!("`{version_str}` is not valid semver: {e}")))?;
     let index = state.index.read().await;
     let pkg = index
-        .get(kind, &name)
-        .ok_or_else(|| ApiError::not_found(format!("`{kind}:{name}` is not in the index")))?;
+        .get(&group, &name)
+        .ok_or_else(|| ApiError::not_found(format!("`{group}/{name}` is not in the index")))?;
     let entry = pkg
         .versions
         .iter()
         .find(|e| e.version == v)
         .ok_or_else(|| {
-            ApiError::not_found(format!("`{kind}:{name}@{version_str}` is not in the index"))
+            ApiError::not_found(format!(
+                "`{group}/{name}@{version_str}` is not in the index"
+            ))
         })?
         .clone();
     Ok(Json(entry))
@@ -186,6 +213,7 @@ use axum::response::IntoResponse;
 pub struct UpsertResponse {
     pub command: &'static str,
     pub kind: PackageKind,
+    pub group: Group,
     pub name: String,
     pub version: Version,
     pub created: bool,
@@ -205,13 +233,14 @@ pub async fn upsert(
         )));
     }
     let kind = entry.kind;
+    let group = entry.group.clone();
     let name = entry.name.clone();
     let version = entry.version.clone();
 
     let created = {
         let mut idx = state.index.write().await;
         let existed = idx
-            .get(kind, &name)
+            .get(&group, &name)
             .map(|p| p.versions.iter().any(|v| v.version == version))
             .unwrap_or(false);
         idx.upsert(entry);
@@ -231,6 +260,7 @@ pub async fn upsert(
         Json(UpsertResponse {
             command: "upsert",
             kind,
+            group,
             name,
             version,
             created,
@@ -241,7 +271,7 @@ pub async fn upsert(
 #[derive(Debug, Serialize)]
 pub struct DeleteResponse {
     pub command: &'static str,
-    pub kind: PackageKind,
+    pub group: Group,
     pub name: String,
     pub version: Option<Version>,
     pub removed: bool,
@@ -250,18 +280,16 @@ pub struct DeleteResponse {
 pub async fn delete_version(
     State(state): State<Arc<AppState>>,
     headers: HeaderMap,
-    Path((kind_str, name, version_str)): Path<(String, String, String)>,
+    Path((group_str, name, version_str)): Path<(String, String, String)>,
 ) -> Result<Json<DeleteResponse>, ApiError> {
     require_writeable(&state, &headers)?;
-    let kind: PackageKind = kind_str
-        .parse()
-        .map_err(|_| ApiError::not_found(format!("unknown kind `{kind_str}`")))?;
+    let group = parse_group(&group_str)?;
     let v: Version = version_str
         .parse()
         .map_err(|e| ApiError::bad_request(format!("`{version_str}` is not valid semver: {e}")))?;
     let removed = {
         let mut idx = state.index.write().await;
-        let r = idx.remove_version(kind, &name, &v);
+        let r = idx.remove_version(&group, &name, &v);
         if r {
             idx.write_to(&state.data_dir)
                 .map_err(|e| ApiError::internal(format!("could not persist index: {e}")))?;
@@ -273,7 +301,7 @@ pub async fn delete_version(
     }
     Ok(Json(DeleteResponse {
         command: "delete",
-        kind,
+        group,
         name,
         version: Some(v),
         removed,
@@ -283,15 +311,13 @@ pub async fn delete_version(
 pub async fn delete_package(
     State(state): State<Arc<AppState>>,
     headers: HeaderMap,
-    Path((kind_str, name)): Path<(String, String)>,
+    Path((group_str, name)): Path<(String, String)>,
 ) -> Result<Json<DeleteResponse>, ApiError> {
     require_writeable(&state, &headers)?;
-    let kind: PackageKind = kind_str
-        .parse()
-        .map_err(|_| ApiError::not_found(format!("unknown kind `{kind_str}`")))?;
+    let group = parse_group(&group_str)?;
     let removed = {
         let mut idx = state.index.write().await;
-        let r = idx.remove_package(kind, &name);
+        let r = idx.remove_package(&group, &name);
         if r {
             idx.write_to(&state.data_dir)
                 .map_err(|e| ApiError::internal(format!("could not persist index: {e}")))?;
@@ -303,7 +329,7 @@ pub async fn delete_package(
     }
     Ok(Json(DeleteResponse {
         command: "delete",
-        kind,
+        group,
         name,
         version: None,
         removed,

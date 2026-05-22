@@ -14,6 +14,7 @@ use std::path::{Path, PathBuf};
 
 use chrono::Utc;
 use semver::Version;
+use vibe_core::Group;
 
 use crate::content_hash::compute_content_hash;
 use crate::error::{Error, Result};
@@ -192,13 +193,15 @@ fn build_entry(
     let entry = VersionEntry {
         schema_version: VersionEntry::SCHEMA_VERSION,
         kind,
+        group: pkg.group.clone(),
         name: pkg.name.clone(),
         version: version.clone(),
         content_hash,
-        source_url: source_url_for(&opts.registry_url, opts.naming, kind, &pkg.name),
+        source_url: source_url_for(&opts.registry_url, opts.naming, kind, &pkg.group, &pkg.name),
         source_ref: tag.to_string(),
         resolved_commit,
         registry: opts.registry.clone(),
+        workspace_origin: mfst::workspace_origin_from(&manifest.origin),
         license: pkg.license.clone(),
         authors: pkg.authors.clone(),
         description: pkg.description.clone(),
@@ -231,9 +234,10 @@ fn source_url_for(
     registry_url: &str,
     naming: NamingConvention,
     kind: PackageKind,
+    group: &Group,
     name: &str,
 ) -> String {
-    let repo = naming.repo_name(kind, name);
+    let repo = naming.repo_name(kind, group, name);
     let trimmed = registry_url.trim_end_matches('/');
     format!("{trimmed}/{repo}.git")
 }
@@ -270,11 +274,23 @@ mod tests {
 
     #[test]
     fn source_url_uses_naming_convention() {
+        let org = Group::parse("org.vibevm").unwrap();
+        assert_eq!(
+            source_url_for(
+                "https://github.com/vibespecs",
+                NamingConvention::Fqdn,
+                PackageKind::Flow,
+                &org,
+                "wal"
+            ),
+            "https://github.com/vibespecs/org.vibevm.wal.git"
+        );
         assert_eq!(
             source_url_for(
                 "https://github.com/vibespecs",
                 NamingConvention::KindName,
                 PackageKind::Flow,
+                &org,
                 "wal"
             ),
             "https://github.com/vibespecs/flow-wal.git"
@@ -284,6 +300,7 @@ mod tests {
                 "https://gitverse.ru/vibespecs/",
                 NamingConvention::Name,
                 PackageKind::Flow,
+                &org,
                 "wal"
             ),
             "https://gitverse.ru/vibespecs/wal.git"

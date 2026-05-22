@@ -66,13 +66,14 @@ fn add_inserts_entry_from_manifest() {
         .assert()
         .success();
 
-    let by_name = data.join("by-name/flow/wal.json");
+    let by_name = data.join("by-name/wal.json");
     assert!(by_name.exists());
     let parsed: serde_json::Value =
         serde_json::from_slice(&std::fs::read(&by_name).unwrap()).unwrap();
-    assert_eq!(parsed["versions"].as_array().unwrap().len(), 1);
-    assert_eq!(parsed["versions"][0]["name"], "wal");
-    assert_eq!(parsed["versions"][0]["license"], "EULA");
+    let versions = &parsed["packages"][0]["versions"];
+    assert_eq!(versions.as_array().unwrap().len(), 1);
+    assert_eq!(versions[0]["name"], "wal");
+    assert_eq!(versions[0]["license"], "EULA");
 }
 
 #[test]
@@ -104,10 +105,13 @@ fn add_upserts_when_version_already_present() {
         .assert()
         .success();
 
-    let by_name = data.join("by-name/flow/wal.json");
+    let by_name = data.join("by-name/wal.json");
     let parsed: serde_json::Value =
         serde_json::from_slice(&std::fs::read(&by_name).unwrap()).unwrap();
-    assert_eq!(parsed["versions"].as_array().unwrap().len(), 1);
+    assert_eq!(
+        parsed["packages"][0]["versions"].as_array().unwrap().len(),
+        1
+    );
 }
 
 #[test]
@@ -136,10 +140,10 @@ fn add_with_repo_url_overrides_default() {
         .assert()
         .success();
 
-    let by_name = data.join("by-name/flow/wal.json");
+    let by_name = data.join("by-name/wal.json");
     let parsed: serde_json::Value =
         serde_json::from_slice(&std::fs::read(&by_name).unwrap()).unwrap();
-    let entry = &parsed["versions"][0];
+    let entry = &parsed["packages"][0]["versions"][0];
     assert_eq!(entry["source_url"], "git@example.invalid:custom/path.git");
     assert_eq!(entry["source_ref"], "release-0.1");
     assert_eq!(entry["resolved_commit"], "deadbeefdeadbeef");
@@ -178,7 +182,7 @@ fn remove_deletes_specific_version() {
         .args([
             "remove",
             data.to_str().unwrap(),
-            "flow",
+            "org.vibevm",
             "wal",
             "--version",
             "0.1.0",
@@ -186,11 +190,12 @@ fn remove_deletes_specific_version() {
         .assert()
         .success();
 
-    let by_name = data.join("by-name/flow/wal.json");
+    let by_name = data.join("by-name/wal.json");
     let parsed: serde_json::Value =
         serde_json::from_slice(&std::fs::read(&by_name).unwrap()).unwrap();
-    assert_eq!(parsed["versions"].as_array().unwrap().len(), 1);
-    assert_eq!(parsed["versions"][0]["version"], "0.2.0");
+    let versions = &parsed["packages"][0]["versions"];
+    assert_eq!(versions.as_array().unwrap().len(), 1);
+    assert_eq!(versions[0]["version"], "0.2.0");
 }
 
 #[test]
@@ -213,11 +218,11 @@ fn remove_drops_entire_package_without_version_flag() {
         .success();
 
     cmd()
-        .args(["remove", data.to_str().unwrap(), "flow", "wal"])
+        .args(["remove", data.to_str().unwrap(), "org.vibevm", "wal"])
         .assert()
         .success();
 
-    assert!(!data.join("by-name/flow/wal.json").exists());
+    assert!(!data.join("by-name/wal.json").exists());
 }
 
 #[test]
@@ -226,7 +231,7 @@ fn remove_unknown_errors() {
     let data = work.path().join("data");
     init_at(&data);
     cmd()
-        .args(["remove", data.to_str().unwrap(), "flow", "ghost"])
+        .args(["remove", data.to_str().unwrap(), "org.vibevm", "ghost"])
         .assert()
         .failure();
 }

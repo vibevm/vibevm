@@ -24,7 +24,9 @@ pub struct Args {
     pub registry_url: String,
 
     /// Naming convention used by this org for package repo names.
-    #[arg(long, value_enum, default_value_t = NamingConvention::KindName)]
+    /// Defaults to `fqdn` — the reverse-FQDN `<group>.<name>` shape
+    /// every group-native registry uses (PROP-008 §2.5).
+    #[arg(long, value_enum, default_value_t = NamingConvention::Fqdn)]
     pub naming: NamingConvention,
 
     /// Force initialisation even when the data directory already
@@ -86,7 +88,7 @@ fn write_readme(data_dir: &std::path::Path, registry: &str, registry_url: &str) 
         \n\
         - `repomd.json` — manifest with sha256 of every other file.\n\
         - `primary.jsonl` / `primary.jsonl.gz` — one `VersionEntry` per line.\n\
-        - `by-name/<kind>/<name>.json` — cargo-sparse-style per-package.\n\
+        - `by-name/<name>.json` — candidate set for one bare name (every group).\n\
         - `by-cap/<slug>.jsonl` — inverted index by advertised capability.\n\
         - `by-purl/<slug>.jsonl` — inverted index by `describes` PURL.\n\
         - `state/` — gitignored runtime data (server PID, admin tokens,\n\

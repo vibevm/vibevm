@@ -222,11 +222,10 @@ fn from_github_walks_mock_org_into_index() {
     assert_eq!(summary["package_count"], 2);
     assert_eq!(summary["version_count"], 3);
 
-    assert!(data.join("by-name/flow/wal.json").exists());
+    assert!(data.join("by-name/wal.json").exists());
     let rust_json: serde_json::Value =
-        serde_json::from_slice(&std::fs::read(data.join("by-name/stack/rust.json")).unwrap())
-            .unwrap();
-    assert_eq!(rust_json["latest_stable"], "0.2.0");
+        serde_json::from_slice(&std::fs::read(data.join("by-name/rust.json")).unwrap()).unwrap();
+    assert_eq!(rust_json["packages"][0]["latest_stable"], "0.2.0");
 
     // The clone cache survives so a second --from-github would reuse it.
     assert!(cache.join("flow-wal/.git").exists());

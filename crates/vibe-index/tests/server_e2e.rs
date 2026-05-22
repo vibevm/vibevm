@@ -12,7 +12,8 @@ use tower::util::ServiceExt;
 use vibe_index::index::Index;
 use vibe_index::server::{AppState, build_app};
 use vibe_index::types::{
-    BootSnippetEntry, NamingConvention, PackageEntry, PackageKind, ProvidesEntry, VersionEntry,
+    BootSnippetEntry, Group, NamingConvention, PackageEntry, PackageKind, ProvidesEntry,
+    VersionEntry,
 };
 
 fn now() -> DateTime<Utc> {
@@ -32,6 +33,7 @@ fn entry(
     VersionEntry {
         schema_version: VersionEntry::SCHEMA_VERSION,
         kind,
+        group: Group::parse("org.vibevm").unwrap(),
         name: name.into(),
         version: version.parse().unwrap(),
         content_hash: format!("sha256:{name}{version}"),
@@ -39,6 +41,7 @@ fn entry(
         source_ref: format!("v{version}"),
         resolved_commit: Some("abc123".into()),
         registry: "vibespecs".into(),
+        workspace_origin: None,
         license: Some("EULA".into()),
         authors: vec!["Tester".into()],
         description: description.map(|s| s.to_string()),
@@ -71,7 +74,7 @@ fn populated_state() -> (tempfile::TempDir, AppState) {
     let mut idx = Index::new(
         "vibespecs",
         "https://example.invalid/vibespecs",
-        NamingConvention::KindName,
+        NamingConvention::Fqdn,
     );
     idx.upsert(entry(
         PackageKind::Flow,
@@ -107,8 +110,8 @@ fn populated_state() -> (tempfile::TempDir, AppState) {
     );
     let pkg = idx
         .by_pkgref
-        .entry((PackageKind::Stack, "rust".to_string()))
-        .or_insert_with(|| PackageEntry::new(PackageKind::Stack, "rust", now()));
+        .entry((Group::parse("org.vibevm").unwrap(), "rust".to_string()))
+        .or_insert_with(|| PackageEntry::new(Group::parse("org.vibevm").unwrap(), "rust", now()));
     entry_with_subskill.subskills = vec![vibe_index::types::SubskillEntry {
         path: "extras".into(),
         delivery: vibe_index::types::DeliveryMode::Eager,
@@ -269,17 +272,21 @@ async fn primary_jsonl_gz_served_with_gzip_encoding() {
 }
 
 #[tokio::test]
-async fn by_name_route_serves_per_package_file() {
+async fn by_name_route_serves_candidate_set_file() {
     let (_tmp, state) = populated_state();
     let app = build_app(state);
     let resp = app
-        .oneshot(req(Method::GET, "/v1/index/by-name/flow/wal.json"))
+        .oneshot(req(Method::GET, "/v1/index/by-name/wal.json"))
         .await
         .unwrap();
     assert_eq!(resp.status(), StatusCode::OK);
     let body: serde_json::Value = body_to_json(resp.into_body()).await;
     assert_eq!(body["name"], "wal");
-    assert_eq!(body["versions"].as_array().unwrap().len(), 2);
+    // The by-name file is the candidate set: one package per group,
+    // each carrying its versions (PROP-008 §2.8).
+    let packages = body["packages"].as_array().unwrap();
+    assert_eq!(packages.len(), 1);
+    assert_eq!(packages[0]["versions"].as_array().unwrap().len(), 2);
 }
 
 #[tokio::test]
@@ -287,7 +294,7 @@ async fn by_name_route_404s_for_missing() {
     let (_tmp, state) = populated_state();
     let app = build_app(state);
     let resp = app
-        .oneshot(req(Method::GET, "/v1/index/by-name/flow/nope.json"))
+        .oneshot(req(Method::GET, "/v1/index/by-name/nope.json"))
         .await
         .unwrap();
     assert_eq!(resp.status(), StatusCode::NOT_FOUND);
@@ -327,7 +334,7 @@ async fn package_versions_returns_full_entries() {
     let (_tmp, state) = populated_state();
     let app = build_app(state);
     let resp = app
-        .oneshot(req(Method::GET, "/v1/packages/flow/wal"))
+        .oneshot(req(Method::GET, "/v1/packages/org.vibevm/wal"))
         .await
         .unwrap();
     assert_eq!(resp.status(), StatusCode::OK);
@@ -341,7 +348,7 @@ async fn single_version_returns_entry() {
     let (_tmp, state) = populated_state();
     let app = build_app(state);
     let resp = app
-        .oneshot(req(Method::GET, "/v1/packages/flow/wal/0.2.0"))
+        .oneshot(req(Method::GET, "/v1/packages/org.vibevm/wal/0.2.0"))
         .await
         .unwrap();
     assert_eq!(resp.status(), StatusCode::OK);
@@ -355,7 +362,7 @@ async fn single_version_404_for_missing_version() {
     let (_tmp, state) = populated_state();
     let app = build_app(state);
     let resp = app
-        .oneshot(req(Method::GET, "/v1/packages/flow/wal/9.9.9"))
+        .oneshot(req(Method::GET, "/v1/packages/org.vibevm/wal/9.9.9"))
         .await
         .unwrap();
     assert_eq!(resp.status(), StatusCode::NOT_FOUND);
@@ -418,11 +425,12 @@ async fn metrics_route_emits_prometheus_lines() {
 }
 
 #[tokio::test]
-async fn unknown_kind_in_url_yields_not_found() {
+async fn unknown_group_in_url_yields_not_found() {
+    // A syntactically valid but unindexed group resolves to no package.
     let (_tmp, state) = populated_state();
     let app = build_app(state);
     let resp = app
-        .oneshot(req(Method::GET, "/v1/packages/plugin/wal"))
+        .oneshot(req(Method::GET, "/v1/packages/com.absent/wal"))
         .await
         .unwrap();
     assert_eq!(resp.status(), StatusCode::NOT_FOUND);

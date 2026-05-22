@@ -69,7 +69,7 @@ fn reindex_from_clones_walks_three_packages() {
     let org = work.path().join("vibespecs-org");
     fs_must_create(&org);
 
-    let wal = org.join("flow-wal");
+    let wal = org.join("org.vibevm.wal");
     init_repo(&wal);
     commit_and_tag(
         &wal,
@@ -77,7 +77,7 @@ fn reindex_from_clones_walks_three_packages() {
         "v0.1.0",
     );
 
-    let commits = org.join("flow-atomic-commits");
+    let commits = org.join("org.vibevm.atomic-commits");
     init_repo(&commits);
     commit_and_tag(
         &commits,
@@ -85,7 +85,7 @@ fn reindex_from_clones_walks_three_packages() {
         "v0.1.0",
     );
 
-    let rust = org.join("stack-rust");
+    let rust = org.join("org.vibevm.rust");
     init_repo(&rust);
     commit_and_tag(
         &rust,
@@ -151,14 +151,15 @@ fn reindex_from_clones_walks_three_packages() {
         "primary.jsonl content was: {primary}"
     );
 
-    assert!(data.join("by-name/flow/wal.json").exists());
-    assert!(data.join("by-name/flow/atomic-commits.json").exists());
-    assert!(data.join("by-name/stack/rust.json").exists());
+    assert!(data.join("by-name/wal.json").exists());
+    assert!(data.join("by-name/atomic-commits.json").exists());
+    assert!(data.join("by-name/rust.json").exists());
 
-    let rust_json = std::fs::read_to_string(data.join("by-name/stack/rust.json")).unwrap();
+    let rust_json = std::fs::read_to_string(data.join("by-name/rust.json")).unwrap();
     let rust: serde_json::Value = serde_json::from_str(&rust_json).unwrap();
-    assert_eq!(rust["latest_stable"], "0.2.0");
-    assert_eq!(rust["versions"].as_array().unwrap().len(), 2);
+    let rust_pkg = &rust["packages"][0];
+    assert_eq!(rust_pkg["latest_stable"], "0.2.0");
+    assert_eq!(rust_pkg["versions"].as_array().unwrap().len(), 2);
 
     cmd()
         .args(["verify", data.to_str().unwrap()])
@@ -175,7 +176,7 @@ fn reindex_skips_non_v_semver_tags() {
     let org = work.path().join("org");
     fs_must_create(&org);
 
-    let repo = org.join("flow-wal");
+    let repo = org.join("org.vibevm.wal");
     init_repo(&repo);
     commit_and_tag(&repo, &manifest_for("wal", "flow", "0.1.0", None), "v0.1.0");
     git(&repo, &["tag", "release-candidate"]);
@@ -261,7 +262,7 @@ fn incremental_skips_unchanged_repos_and_picks_up_new_tags() {
     let org = work.path().join("org");
     fs_must_create(&org);
 
-    let wal = org.join("flow-wal");
+    let wal = org.join("org.vibevm.wal");
     init_repo(&wal);
     commit_and_tag(
         &wal,
@@ -344,9 +345,8 @@ fn incremental_skips_unchanged_repos_and_picks_up_new_tags() {
     assert_eq!(summary["version_count"], 2);
 
     let by_name: serde_json::Value =
-        serde_json::from_slice(&std::fs::read(data.join("by-name/flow/wal.json")).unwrap())
-            .unwrap();
-    assert_eq!(by_name["latest_stable"], "0.2.0");
+        serde_json::from_slice(&std::fs::read(data.join("by-name/wal.json")).unwrap()).unwrap();
+    assert_eq!(by_name["packages"][0]["latest_stable"], "0.2.0");
 }
 
 #[test]
@@ -404,7 +404,7 @@ fn reindex_captures_current_schema_manifest() {
     let org = work.path().join("org");
     fs_must_create(&org);
 
-    let feat = org.join("feat-welcome");
+    let feat = org.join("org.vibevm.welcome");
     init_repo(&feat);
     let modern = r#"[package]
 group = "org.vibevm"
@@ -457,9 +457,8 @@ link = "static"
         .success();
 
     let feat_json: serde_json::Value =
-        serde_json::from_slice(&std::fs::read(data.join("by-name/feat/welcome.json")).unwrap())
-            .unwrap();
-    let entry = &feat_json["versions"][0];
+        serde_json::from_slice(&std::fs::read(data.join("by-name/welcome.json")).unwrap()).unwrap();
+    let entry = &feat_json["packages"][0]["versions"][0];
     assert_eq!(entry["describes"], "pkg:cargo/welcome@0.3.0");
     // The scanner parses each capability through `vibe-core`'s
     // `CapabilityRef` and records its canonical form: a bare version

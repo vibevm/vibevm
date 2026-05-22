@@ -155,20 +155,22 @@ pub fn run(args: Args) -> Result<()> {
             // Map entry → repo name via the registry's naming
             // convention; if that repo's snapshot was skipped (i.e.
             // not in the new scan's `entries`), keep the entry.
-            let repo_name = existing.naming.repo_name(entry.kind, &entry.name);
+            let repo_name = existing
+                .naming
+                .repo_name(entry.kind, &entry.group, &entry.name);
             let scanned_now = report
                 .snapshots
                 .get(&repo_name)
                 .map(|_| {
                     // Repo is present in the scan; if entries from this
-                    // scan ALSO carry an entry for the same (kind, name),
-                    // that's the freshly walked source. Otherwise the
-                    // repo was skipped as unchanged — keep the existing
-                    // entry.
+                    // scan ALSO carry an entry for the same (group, name)
+                    // identity, that's the freshly walked source.
+                    // Otherwise the repo was skipped as unchanged — keep
+                    // the existing entry.
                     report
                         .entries
                         .iter()
-                        .any(|e| e.kind == entry.kind && e.name == entry.name)
+                        .any(|e| e.group == entry.group && e.name == entry.name)
                 })
                 .unwrap_or(false);
             let kept_unchanged = report.snapshots.contains_key(&repo_name) && !scanned_now;
@@ -321,7 +323,13 @@ impl Summary {
             .iter()
             .map(|k| KindCount {
                 kind: *k,
-                count: index.by_pkgref.keys().filter(|(kk, _)| kk == k).count() as u32,
+                // `kind` is per-version metadata (PROP-008 §2.3) — a
+                // package's kind is the kind its versions carry.
+                count: index
+                    .by_pkgref
+                    .values()
+                    .filter(|p| p.versions.first().map(|v| v.kind) == Some(*k))
+                    .count() as u32,
             })
             .collect();
         by_kind.retain(|kc| kc.count > 0);

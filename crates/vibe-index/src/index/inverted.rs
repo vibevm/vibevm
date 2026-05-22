@@ -15,7 +15,7 @@
 //! consumers; the canonical capability/purl lives inside the
 //! file's lines), the reversibility detail is informational only.
 //!
-//! Each line is one JSON record sorted by `(kind, name, version)`.
+//! Each line is one JSON record sorted by `(group, name, version)`.
 
 use std::collections::BTreeMap;
 use std::fs;
@@ -23,6 +23,7 @@ use std::path::{Path, PathBuf};
 
 use semver::Version;
 use serde::{Deserialize, Serialize};
+use vibe_core::Group;
 use walkdir::WalkDir;
 
 use crate::error::{Error, Result};
@@ -62,6 +63,7 @@ fn fs_safe_slug(s: &str) -> String {
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct CapabilityRow {
     pub kind: PackageKind,
+    pub group: Group,
     pub name: String,
     pub version: Version,
     pub capability: String,
@@ -70,6 +72,7 @@ pub struct CapabilityRow {
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct PurlRow {
     pub kind: PackageKind,
+    pub group: Group,
     pub name: String,
     pub version: Version,
     pub purl: String,
@@ -105,6 +108,7 @@ impl InvertedView {
                 let slug = capability_slug(cap);
                 by_capability.entry(slug).or_default().push(CapabilityRow {
                     kind: entry.kind,
+                    group: entry.group.clone(),
                     name: entry.name.clone(),
                     version: entry.version.clone(),
                     capability: cap.clone(),
@@ -114,6 +118,7 @@ impl InvertedView {
                 let slug = purl_slug(purl);
                 by_purl.entry(slug).or_default().push(PurlRow {
                     kind: entry.kind,
+                    group: entry.group.clone(),
                     name: entry.name.clone(),
                     version: entry.version.clone(),
                     purl: purl.clone(),
@@ -125,6 +130,7 @@ impl InvertedView {
                     let slug = purl_slug(purl);
                     by_purl.entry(slug).or_default().push(PurlRow {
                         kind: entry.kind,
+                        group: entry.group.clone(),
                         name: entry.name.clone(),
                         version: entry.version.clone(),
                         purl: purl.clone(),
@@ -133,11 +139,12 @@ impl InvertedView {
                 }
             }
         }
-        // Deterministic line order per file: sort by (kind, name, version, identifier).
+        // Deterministic line order per file: sort by the PROP-008 §2.2
+        // identity `(group, name, version)`, then the row identifier.
         for rows in by_capability.values_mut() {
             rows.sort_by(|a, b| {
-                (a.kind, a.name.as_str(), &a.version, a.capability.as_str()).cmp(&(
-                    b.kind,
+                (&a.group, a.name.as_str(), &a.version, a.capability.as_str()).cmp(&(
+                    &b.group,
                     b.name.as_str(),
                     &b.version,
                     b.capability.as_str(),
@@ -146,8 +153,8 @@ impl InvertedView {
         }
         for rows in by_purl.values_mut() {
             rows.sort_by(|a, b| {
-                (a.kind, a.name.as_str(), &a.version, a.binding_site as u8).cmp(&(
-                    b.kind,
+                (&a.group, a.name.as_str(), &a.version, a.binding_site as u8).cmp(&(
+                    &b.group,
                     b.name.as_str(),
                     &b.version,
                     b.binding_site as u8,
@@ -288,6 +295,7 @@ mod tests {
         VersionEntry {
             schema_version: VersionEntry::SCHEMA_VERSION,
             kind,
+            group: Group::parse("org.vibevm").unwrap(),
             name: name.into(),
             version: version.parse().unwrap(),
             content_hash: "sha256:0".into(),
@@ -295,6 +303,7 @@ mod tests {
             source_ref: format!("v{version}"),
             resolved_commit: None,
             registry: "vibespecs".into(),
+            workspace_origin: None,
             license: None,
             authors: vec![],
             description: None,
@@ -424,6 +433,7 @@ mod tests {
         let dir = tempdir().unwrap();
         let rows = vec![CapabilityRow {
             kind: PackageKind::Feat,
+            group: Group::parse("org.vibevm").unwrap(),
             name: "welcome".into(),
             version: "0.3.0".parse().unwrap(),
             capability: "ui:landing-page@0.3.0".into(),

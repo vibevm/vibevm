@@ -1,5 +1,5 @@
 //! `primary.jsonl` — JSON Lines, one [`VersionEntry`] per line, sorted
-//! by `(kind, name, version)`. Plus `primary.jsonl.gz` — gzip
+//! by `(group, name, version)`. Plus `primary.jsonl.gz` — gzip
 //! sibling for bandwidth-conscious consumers (PROP-005 §2.4). The
 //! gzip output is deterministic (level 6, `mtime=0`, no filename in
 //! the header) so its sha256 stays stable across machines for
@@ -109,11 +109,13 @@ mod tests {
     use crate::types::{PackageKind, VersionEntry};
     use chrono::{DateTime, Utc};
     use tempfile::tempdir;
+    use vibe_core::Group;
 
     fn entry(kind: PackageKind, name: &str, version: &str) -> VersionEntry {
         VersionEntry {
             schema_version: VersionEntry::SCHEMA_VERSION,
             kind,
+            group: Group::parse("org.vibevm").unwrap(),
             name: name.into(),
             version: version.parse().unwrap(),
             content_hash: format!("sha256:{name}{version}"),
@@ -121,6 +123,7 @@ mod tests {
             source_ref: format!("v{version}"),
             resolved_commit: None,
             registry: "vibespecs".into(),
+            workspace_origin: None,
             license: None,
             authors: vec![],
             description: None,

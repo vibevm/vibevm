@@ -9,6 +9,7 @@ use std::str::FromStr;
 
 use clap::ValueEnum;
 use serde::{Deserialize, Serialize};
+use vibe_core::Group;
 
 #[derive(
     Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, ValueEnum, Serialize, Deserialize,
@@ -63,31 +64,57 @@ impl FromStr for PackageKind {
     }
 }
 
-/// Naming convention used to map `<kind>:<name>` to a repo name under
-/// the registry's org root. Mirrors `vibe-core::manifest::NamingConvention`.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, ValueEnum, Serialize, Deserialize)]
-#[serde(rename_all = "kebab-case")]
-#[value(rename_all = "kebab-case")]
+/// Naming convention used to map a pkgref to a repo name under the
+/// registry's org root. Mirrors `vibe-core::manifest::NamingConvention` —
+/// the same four variants and the same wire strings, so the `naming`
+/// field of `repomd.json` reads exactly as a `[[registry]].naming` does.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq, ValueEnum, Serialize, Deserialize)]
 pub enum NamingConvention {
-    /// `flow:wal` → `<org>/flow-wal` (default for GitHub-shape orgs).
+    /// `org.vibevm/wal` → `<org>/org.vibevm.wal` — the reverse-FQDN repo
+    /// name (PROP-008 §2.5). The default: a flat `<group>.<name>`,
+    /// collision-free because `(group, name)` is unique. Every
+    /// group-native registry uses it.
+    #[default]
+    #[serde(rename = "fqdn")]
+    #[value(name = "fqdn")]
+    Fqdn,
+    /// `flow:wal` → `<org>/flow-wal` — a pre-`group` convention, kept for
+    /// registries that have not adopted reverse-FQDN naming.
+    #[serde(rename = "kind-name")]
+    #[value(name = "kind-name")]
     KindName,
-    /// `flow:wal` → `<org>/wal` (default for orgs that provision repos
-    /// without a kind prefix — e.g. `vibespecs` on GitVerse).
+    /// `flow:wal` → `<org>/wal`. Legal only when names are globally
+    /// unique across kinds within a registry.
+    #[serde(rename = "name")]
+    #[value(name = "name")]
     Name,
+    /// `flow:wal` → `<org>/flow/wal` — needs host support for nested
+    /// repository paths (GitLab groups, Gitea orgs).
+    #[serde(rename = "kind/name")]
+    #[value(name = "kind/name")]
+    KindSlashName,
 }
 
 impl NamingConvention {
     pub fn as_str(&self) -> &'static str {
         match self {
+            NamingConvention::Fqdn => "fqdn",
             NamingConvention::KindName => "kind-name",
             NamingConvention::Name => "name",
+            NamingConvention::KindSlashName => "kind/name",
         }
     }
 
-    pub fn repo_name(&self, kind: PackageKind, name: &str) -> String {
+    /// Repository name for a `(kind, group, name)` package under this
+    /// convention. Unlike `vibe-core`'s registry-side counterpart this is
+    /// infallible: an index entry always carries a concrete `kind`, so
+    /// even the legacy `kind-*` conventions have what they need.
+    pub fn repo_name(&self, kind: PackageKind, group: &Group, name: &str) -> String {
         match self {
+            NamingConvention::Fqdn => format!("{group}.{name}"),
             NamingConvention::KindName => format!("{kind}-{name}"),
             NamingConvention::Name => name.to_string(),
+            NamingConvention::KindSlashName => format!("{kind}/{name}"),
         }
     }
 }
@@ -124,22 +151,48 @@ mod tests {
     }
 
     #[test]
-    fn naming_convention_serde_kebab() {
-        let json = serde_json::to_string(&NamingConvention::KindName).unwrap();
-        assert_eq!(json, "\"kind-name\"");
+    fn naming_convention_serde_matches_vibe_core_wire() {
+        // The `repomd.json` `naming` value must read exactly as a
+        // `[[registry]].naming` does — same four wire strings.
+        assert_eq!(
+            serde_json::to_string(&NamingConvention::Fqdn).unwrap(),
+            "\"fqdn\""
+        );
+        assert_eq!(
+            serde_json::to_string(&NamingConvention::KindName).unwrap(),
+            "\"kind-name\""
+        );
+        assert_eq!(
+            serde_json::to_string(&NamingConvention::KindSlashName).unwrap(),
+            "\"kind/name\""
+        );
         let parsed: NamingConvention = serde_json::from_str("\"name\"").unwrap();
         assert_eq!(parsed, NamingConvention::Name);
     }
 
     #[test]
-    fn repo_name_composes_kind_name() {
+    fn naming_convention_default_is_fqdn() {
+        assert_eq!(NamingConvention::default(), NamingConvention::Fqdn);
+    }
+
+    #[test]
+    fn repo_name_composes_under_every_convention() {
+        let group = Group::parse("org.vibevm").unwrap();
         assert_eq!(
-            NamingConvention::KindName.repo_name(PackageKind::Flow, "wal"),
+            NamingConvention::Fqdn.repo_name(PackageKind::Flow, &group, "wal"),
+            "org.vibevm.wal"
+        );
+        assert_eq!(
+            NamingConvention::KindName.repo_name(PackageKind::Flow, &group, "wal"),
             "flow-wal"
         );
         assert_eq!(
-            NamingConvention::Name.repo_name(PackageKind::Flow, "wal"),
+            NamingConvention::Name.repo_name(PackageKind::Flow, &group, "wal"),
             "wal"
+        );
+        assert_eq!(
+            NamingConvention::KindSlashName.repo_name(PackageKind::Flow, &group, "wal"),
+            "flow/wal"
         );
     }
 }

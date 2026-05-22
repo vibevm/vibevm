@@ -62,7 +62,7 @@ pub fn build_app(state: AppState) -> Router {
             get(routes::index_files::primary_jsonl_gz),
         )
         .route(
-            "/v1/index/by-name/{kind}/{name}",
+            "/v1/index/by-name/{name}",
             get(routes::index_files::by_name_json),
         )
         .route(
@@ -79,11 +79,11 @@ pub fn build_app(state: AppState) -> Router {
             get(routes::packages::list_or_search).post(routes::packages::upsert),
         )
         .route(
-            "/v1/packages/{kind}/{name}",
+            "/v1/packages/{group}/{name}",
             get(routes::packages::package_versions).delete(routes::packages::delete_package),
         )
         .route(
-            "/v1/packages/{kind}/{name}/{version}",
+            "/v1/packages/{group}/{name}/{version}",
             get(routes::packages::single_version).delete(routes::packages::delete_version),
         )
         .route(

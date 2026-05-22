@@ -1,11 +1,12 @@
-//! `vibe-index remove <data-dir> <kind> <name>` — drop one or all
-//! versions of a package from the index.
+//! `vibe-index remove <data-dir> <group> <name>` — drop one or all
+//! versions of a package from the index, addressed by its `(group,
+//! name)` identity (PROP-008 §2.2).
 
 use std::path::PathBuf;
 
 use clap::Parser;
+use vibe_core::Group;
 
-use crate::cli::kinds::PackageKind;
 use crate::error::{Error, Result};
 use crate::index::Index;
 use crate::server::lock::ServerLock;
@@ -15,8 +16,8 @@ use crate::server::lock::ServerLock;
 pub struct Args {
     pub data_dir: PathBuf,
 
-    #[arg(value_enum)]
-    pub kind: PackageKind,
+    /// Reverse-FQDN group qualifier — e.g. `org.vibevm`.
+    pub group: Group,
 
     pub name: String,
 
@@ -35,26 +36,26 @@ pub fn run(args: Args) -> Result<()> {
             let parsed: semver::Version = v.parse().map_err(|e| {
                 Error::InvalidInput(format!("`--version {v}` is not valid semver: {e}"))
             })?;
-            index.remove_version(args.kind, &args.name, &parsed)
+            index.remove_version(&args.group, &args.name, &parsed)
         }
-        None => index.remove_package(args.kind, &args.name),
+        None => index.remove_package(&args.group, &args.name),
     };
     if !removed {
         return Err(Error::InvalidInput(match args.version {
             Some(v) => format!(
-                "`{}:{}@{}` is not in the index — nothing to remove",
-                args.kind, args.name, v
+                "`{}/{}@{}` is not in the index — nothing to remove",
+                args.group, args.name, v
             ),
             None => format!(
-                "`{}:{}` is not in the index — nothing to remove",
-                args.kind, args.name
+                "`{}/{}` is not in the index — nothing to remove",
+                args.group, args.name
             ),
         }));
     }
     index.write_to(&args.data_dir)?;
     println!(
-        "removed {}:{}{}",
-        args.kind,
+        "removed {}/{}{}",
+        args.group,
         args.name,
         args.version
             .as_deref()

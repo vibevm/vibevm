@@ -22,7 +22,7 @@ const FETCH_TIMEOUT_SECS: u64 = 10;
 /// Resolved client.
 ///
 /// `file_base` is the URL prefix that, when joined with `repomd.json`
-/// or `by-name/<kind>/<name>.json`, addresses the per-file endpoints
+/// or `by-name/<name>.json`, addresses the per-file endpoints
 /// (the static-mirror-friendly read surface from PROP-005 §2.4).
 /// `server_base` is the URL prefix for structured live-server routes
 /// (`/v1/packages`, `/v1/capabilities/{cap}`, etc. from PROP-005
@@ -101,25 +101,23 @@ impl IndexClient {
         &self.server_base
     }
 
-    /// Fetch `by-name/<group>/<name>.json` and return the versions in
-    /// ascending semver order. Returns `Ok(None)` for 404 (package
-    /// absent in the index — the caller should fall through to
-    /// `git ls-remote`); `Ok(Some(versions))` for 200; `Err(...)`
-    /// for any other failure.
+    /// Fetch the `by-name/<name>.json` candidate set and return the
+    /// versions of the `(group, name)` package in ascending semver
+    /// order. Returns `Ok(None)` when the file is absent (404) **or**
+    /// the candidate set carries no package for `group` — both mean
+    /// "fall through to `git ls-remote`". `Ok(Some(versions))` on a
+    /// hit; `Err(...)` for any other failure.
     ///
-    /// The index lookup is keyed by `(group, name)` identity — the
-    /// group-native shape after PROP-008.
+    /// The `by-name/` layer is keyed by bare `name` and holds the whole
+    /// candidate set — every group that publishes a package of that
+    /// name (PROP-008 §2.8). The lookup selects the candidate whose
+    /// `group` matches the requested `(group, name)` identity.
     pub fn list_versions(
         &self,
         group: &Group,
         name: &str,
     ) -> Result<Option<Vec<Version>>, IndexError> {
-        let url = format!(
-            "{}/by-name/{}/{}.json",
-            self.file_base,
-            group.as_str(),
-            name
-        );
+        let url = format!("{}/by-name/{}.json", self.file_base, name);
         let client = Self::build_client(Duration::from_secs(FETCH_TIMEOUT_SECS)).map_err(|e| {
             IndexError::Http {
                 url: url.clone(),
@@ -144,12 +142,15 @@ impl IndexClient {
             url: url.clone(),
             message: e.to_string(),
         })?;
-        let parsed: PackageEntryView =
+        let parsed: NameEntryView =
             serde_json::from_slice(&body).map_err(|e| IndexError::Malformed {
                 url: url.clone(),
                 message: e.to_string(),
             })?;
-        let mut versions: Vec<Version> = parsed.versions.into_iter().map(|v| v.version).collect();
+        let Some(pkg) = parsed.packages.into_iter().find(|p| &p.group == group) else {
+            return Ok(None);
+        };
+        let mut versions: Vec<Version> = pkg.versions.into_iter().map(|v| v.version).collect();
         versions.sort();
         Ok(Some(versions))
     }
@@ -274,8 +275,19 @@ impl IndexClient {
     }
 }
 
+/// Decoded `by-name/<name>.json` — the candidate set for one bare name
+/// (PROP-008 §2.8). Only the fields the resolver's version selector
+/// needs are read; the rest of the on-disk shape is tolerated.
+#[derive(Debug, Deserialize)]
+struct NameEntryView {
+    #[serde(default)]
+    packages: Vec<PackageEntryView>,
+}
+
 #[derive(Debug, Deserialize)]
 struct PackageEntryView {
+    group: Group,
+    #[serde(default)]
     versions: Vec<VersionEntryView>,
 }
 

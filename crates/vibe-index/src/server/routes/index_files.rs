@@ -11,7 +11,6 @@ use axum::response::{IntoResponse, Response};
 
 use crate::server::error::ApiError;
 use crate::server::state::AppState;
-use crate::types::PackageKind;
 
 pub async fn repomd_json(State(state): State<Arc<AppState>>) -> Result<Response, ApiError> {
     state.stats.note_request();
@@ -86,24 +85,15 @@ pub async fn by_purl_jsonl(
 
 pub async fn by_name_json(
     State(state): State<Arc<AppState>>,
-    Path((kind_str, name_with_ext)): Path<(String, String)>,
+    Path(name_with_ext): Path<String>,
 ) -> Result<Response, ApiError> {
     state.stats.note_request();
-    let _kind: PackageKind = kind_str.parse().map_err(|_| {
-        ApiError::not_found(format!(
-            "unknown kind `{kind_str}` — expected one of: flow, feat, stack, tool"
-        ))
-    })?;
     let name = name_with_ext.strip_suffix(".json").ok_or_else(|| {
         ApiError::not_found(format!(
             "expected `<name>.json` path segment, got `{name_with_ext}`"
         ))
     })?;
-    let path = state
-        .data_dir
-        .join("by-name")
-        .join(&kind_str)
-        .join(format!("{name}.json"));
+    let path = state.data_dir.join("by-name").join(format!("{name}.json"));
     serve_file(&path, "application/json").await
 }
 
