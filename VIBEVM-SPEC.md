@@ -980,10 +980,15 @@ vibe init [--path <dir>] [--name <n>] [--stack <stack-name>]
 vibe install <pkgref> [<pkgref> ...] [--path <dir>] [--registry <path>] [--assume-yes]
     # Install one or more packages. --registry wins over the vibe.toml
     # [registry] url; --assume-yes skips the interactive confirmation
-    # (required in non-TTY environments like CI).
+    # (required in non-TTY environments like CI). Lockfile-respecting:
+    # when the declared [requires] is unchanged, `vibe install` honours
+    # the versions vibe.lock pins and re-resolves nothing; when it does
+    # re-resolve it holds the pin of every dependency the change left
+    # untouched. Moving a version is `vibe update`'s job, never install's.
 vibe uninstall <pkgref> [--path <dir>] [--assume-yes]
     # Remove a package. Version portion of <pkgref> is ignored on uninstall.
-vibe update <pkgref> | --all                           # Re-fetch and apply changes (M1)
+vibe update <pkgref> | --all   # Re-resolve, moving versions within their
+                               # declared constraints — the version-mover (M1)
 vibe list [--kind <kind>] [--path <dir>]               # Show installed packages
 vibe check                                             # Validate spec consistency (M1)
 vibe show effective [--feat <name>] [--stack <name>]   # Print effective spec (M1)
