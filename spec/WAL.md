@@ -1,9 +1,40 @@
 # WAL — Project Continuation State
-_Updated: 2026-05-21 (session-end checkpoint — M1.18 / PROP-009 loading model: Phases 1–6 landed; PROP-010 + PROP-011 drafted and registered; Phase 7 (migration + docs) is next, gated on the VIBEVM-SPEC.md sanction)_
+_Updated: 2026-05-22 (session-end — M1.18 loading model SHIPPED and merged to `main`; `main` is at merge commit `ffd5e1c`)_
 
 ## Current phase
 
-**M1.18 — Loading model (PROP-009): implementation underway — Phases 1–6 landed; `vibe reinstall` and published-copy boot regeneration are done and the whole workspace builds and tests green (2026-05-21).** A design session reopened [PROP-007 §6 q3](modules/vibe-workspace/PROP-007-workspace.md#open) — the per-member materialisation target left open by M1.17 — and established it is a redesign of vibevm's whole loading model, not a directory choice. The vision, the contract, and Phases 1–6 are committed and pushed on branch **`m1.17-workspace`**:
+**M1.18 — Loading model (PROP-009 + PROP-012): SHIPPED 2026-05-22, merged to `main`.** The flat `spec/boot/NN-*.md` boot model is gone; vibevm now boots from a computed loading model. `main` is at the `--no-ff` merge commit **`ffd5e1c`** — M1.17 (Workspace) and M1.18 (Loading model) both landed. Working tree clean; `cargo test --workspace`, `cargo clippy --workspace --all-targets -- -D warnings`, and `vibe check --path .` all green.
+
+**The model in one breath.** Two physically separate trees — authored `spec/` (only the author writes it) and a committed `vibedeps/` (only `vibe` writes it; one slot `vibedeps/<kind>-<name>/<version>/` per resolved package, the package's published tree verbatim). The boot sequence is *computed* per node from the unified resolution — inherited foundation + own boot + dependency boot + overrides — and projected into `spec/boot/INLINE.md` (the verbatim `inline` priority lane) and `spec/boot/INDEX.md` (a TOML manifest of `static` paths + `dynamic` INCLUDE pointers). Three inclusion types — `inline` / `static` / `dynamic` — set per dependency via `link` (default `static`). The `NN-` filename prefix and `[writes]` are retired; `vibe` owns ordering by `[boot_snippet].category` band. `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` are co-tenant files — vibevm owns only a `<vibevm>` block inside each, never the whole file (PROP-012). `vibe reinstall` regenerates without re-resolving.
+
+**Shipped this session — M1.18 Phase 7 + three follow-ups** (commits `78d9613` … `56d7a5f`, then merge `ffd5e1c`):
+
+- **PROP-012 — the managed `<vibevm>` block** (`78d9613`, `651a57d` design; `55f24cd` impl). The Phase-4 redirect code overwrote the *whole* of `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` on every install — destroying hand-authored content. `vibe` now owns only a delimited `<vibevm>` … `</vibevm>` block: locate / classify / splice / append / migrate; exactly one block per file (malformed → hard error, validated at plan time). `vibe init` now generates the boot artifacts, so a fresh project is bootable at once.
+- **`vibe check` aligned with the loading model** (`ee117f4` boot-directory; `f35c557` check 8 + the malformed-block check). The `NN-` enforcement is retired; check 8 (`lockfile_files`) now verifies `vibedeps/` slot consistency; new `CheckId::RedirectBlock` reports a malformed `<vibevm>` block.
+- **vibevm self-migration** (`2981970`). The repo migrated to its own loading model — `spec/boot/INDEX.md` generated, a `<vibevm>` block appended to its instruction files (every hand-authored line, the four rules included, preserved).
+- **`VIBEVM-SPEC.md` consistency pass** (`bcb09fe`) — owner sanctioned a full pass; §6 rewritten, the retired-model footprint cleared across ~18 sections.
+- **Docs + status** (`2028699` register M1.18; `09592af` docs sweep; `56d7a5f` 00-core.md). New `docs/loading-model.md`, `docs/commands/reinstall.md`; the `docs/` sweep; ROADMAP / CHANGELOG flipped M1.18 to shipped; `00-core.md` updated under owner sanction.
+
+**Earlier in M1.18 (Phases 1–6, pre-this-session)** — the schema, the `vibedeps/` tree, the computed-view engine, `INLINE.md` / `INDEX.md` generation, workspace-aware `vibe install` (+ five follow-ups), `vibe reinstall`, published-copy boot regeneration. Full detail in `CHANGELOG.md` and PROP-009 §8.
+
+**Branch state.** On `main` (`ffd5e1c`), pushed to `origin/main`. The `m1.17-workspace` feature branch is retained (merged, not deleted). Gate green — test counts: vibe-cli bin 124 / e2e 104 / cli_init 11 / cli_search 15 (3 ignored), vibe-core 161, vibe-workspace 80, vibe-check 27, vibe-registry 106 + 5 + 7, vibe-publish 51 + 5, vibe-resolver 48, vibe-mcp 22.
+
+**Next — owner's choice; no blocker.** (a) The PROP-010 / PROP-011 owner design sessions — close their §5 open questions before scheduling; PROP-011 (incremental install) has no dependency beyond shipped PROP-009 and can go first. (b) PROP-005 (the package index) implementation → then M1.19 / PROP-008 (qualified naming). (c) M1.5 (Generation — the LLM `vibe build`). (d) The one remaining loading-model design question — PROP-009 §2.3's `when` on a `dynamic` `INDEX.md` entry has no declared manifest field; the renderer is `when`-ready but leaves it unset.
+
+**Known issues / open items.**
+
+- **PROP-009 §2.3 `when` contract gap** — a `dynamic` `INDEX.md` entry can carry a `when` activation condition, but no manifest field declares it. A small design decision (likely `[boot_snippet]` or the `[requires.packages]` entry).
+- **PROP-010 / PROP-011** — DRAFT; each needs an owner design session to close its §5 open questions before implementation.
+- **Parked backlog** — `version = { workspace = true }` member-version inheritance (PROP-007 §6 q4); the publish-signalling polish (`--archive`, `has_issues`); PROP-008 (M1.19) follows PROP-005 (index).
+- (carried) delete `https://gitverse.ru/vibespecs/vibevm-direct-push-smoke` via the GitVerse web UI — owner-only, no API DELETE endpoint. Not blocking.
+
+**Resolved this session** (were Owner-attention / flagged items): the `VIBEVM-SPEC.md` PROP-009 sanction (granted; the full consistency pass landed); `00-core.md` line 38 + boot-sequence (fixed under owner sanction); the `vibe-check` boot-directory + lockfile-consistency staleness; the deferred malformed-block `vibe check` finding (now `CheckId::RedirectBlock`); the `m1.17-workspace` → `main` merge.
+
+---
+
+## Earlier checkpoint (kept for context — M1.18 Phases 1–6, 2026-05-21)
+
+**M1.18 Phases 1–6 landed on `m1.17-workspace`** before this session. PROP-009's loading model implemented in six phases: Phase 1 schema (`LinkType`, `BootCategory`, `[boot_snippet].category`, the `[boot]` table — commit `ce14877`); Phase 2 the `vibedeps/` materialisation tree (`e0a8d75`); Phase 3 the computed-view engine `compute_effective_boot` (`4e488e1`, `15dbefe`); Phase 4 boot-artifact generation — `INLINE.md` / `INDEX.md` / the redirect (`e06a5ff`); Phase 5 workspace-aware `vibe install` switch-over, `[writes]` deleted, plus five follow-ups FU1–FU5 (`f4d45a4` … `85dbc9a`); Phase 6 `vibe reinstall` + published-copy boot regeneration (`4606132`, `0706ae2`). PROP-010 (local package cache) and PROP-011 (incremental install) were drafted and registered as DRAFTs. Full detail: `CHANGELOG.md` M1.18 entry, PROP-009 §8.
 
 - [`spec/design/loading-and-boot-model.md`](design/loading-and-boot-model.md) — non-normative rationale: the static/dynamic-linking metaphor, the four principles, the fork-by-fork record (commit `b48ba7f`).
 - [PROP-009](modules/vibe-workspace/PROP-009-loading-model.md) — the contract; DRAFT, but every §5 open question is resolved — ready for M1.18 implementation (commits `1c1c19c`, `72ac624`).
