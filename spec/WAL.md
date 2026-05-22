@@ -1,5 +1,5 @@
 # WAL — Project Continuation State
-_Updated: 2026-05-22 (M1.19 — qualified package naming (PROP-008): SHIPPED under MFBT. All eight phases on `main` — identity core `c5c4fe6`, group-native index `59355d3`, short-name resolution `f4e8ee2`, collision detection `cee8c4a`. Next: PROP-010 (local package cache), needs an owner design session.)_
+_Updated: 2026-05-23 (M1.19 qualified naming SHIPPED 2026-05-22; the canonical GitHub `vibespecs` registry org migrated to the `fqdn` shape; PROP-013 — the periodic health audit — established, seed inventory in `AUDIT.md`. Next: the first full audit run + PROP-010 (local package cache).)_
 
 ## Current phase
 
@@ -54,8 +54,11 @@ The dependency-correct sequence for the base, each under MFBT (PROP-006 §2):
 
 Then M1.5. No blocker.
 
+**Test hardening before the next layer.** PROP-013 — the periodic health audit ([`common/PROP-013`](common/PROP-013-periodic-health-audit.md)) — is now an established process; findings live in [`AUDIT.md`](../AUDIT.md). Its seed run (2026-05-23) flags one **P1**: the production git-registry + naming path is under-tested — the gap that let the `vibe init` defect ship green through all eight phases of M1.19. Per the owner's base-machinery-first principle, the first full audit run and that P1 (a hermetic harness driving `GitPackageRegistry` against real `file://` git repositories, plus a default-path `vibe init` → `vibe install` e2e) should be weighed before, or run in parallel with, PROP-010 — laying the cache on an under-tested base only compounds the risk.
+
 **Known issues / open items.**
 
+- **Health audit (PROP-013).** A periodic defect / rot / drift inventory is now an established process — [`common/PROP-013`](common/PROP-013-periodic-health-audit.md), written to [`AUDIT.md`](../AUDIT.md). The seed run (2026-05-23) catalogued **13 findings** (2 P1, 4 P2, 7 P3; 2 already fixed). The items in this list are mirrored there with severities and stable IDs; `AUDIT.md` is the canonical inventory and the durable health record. Re-run per PROP-013 §3 — floor: once per milestone.
 - **Registry-org migration — GitHub `vibespecs` done 2026-05-22; GitVerse + test orgs remain.** The canonical GitHub org is migrated under the owner's token authorisation: `org.vibevm.{wal,sync-from-code,atomic-commits}` published in the `fqdn` shape (tag `v0.1.0`), the legacy `flow-*` repos archived (read-only — reversible; the owner can delete them outright if a fully-clean org is wanted). The `vibe init` / `vibe registry add` naming-default bug the live smoke surfaced is fixed. Remaining: **(a)** the GitVerse side — `vibespecs-gitverse` and `vibespecstest3` — the GitHub token does not apply and GitVerse has no API DELETE, so this is owner web-UI / owner-token work; **(b)** the GitHub test orgs `vibespecstest1/2`, whose re-layout is coupled to the `#[ignore]`d `cli_live_e2e` tests — re-laying those fixtures means updating what the live tests expect, a unit of work best done together. Gates nothing in-repo — every hermetic test is self-contained and green.
 - **`fixtures/manual-test-packages/` rot.** `flow-vibevm-github-smoke` (and likely `flow-vibevm-direct-push-smoke`) carry retired schema — `[writes]`, `[boot_snippet].filename`, no `[package].group`. Stale since M1.18 / PROP-008; not parsed by any hermetic test (manual-test fixtures only), so the gate stays green. A small de-rot pass, out of M1.19 scope.
 - **PROP-010** — DRAFT; needs an owner design session to close its §5 open questions before implementation. PROP-011 is shipped (see Current phase).
