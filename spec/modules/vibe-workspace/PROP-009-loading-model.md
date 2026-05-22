@@ -1,10 +1,10 @@
 # PROP-009: Loading model — computed boot composition and the effective spec {#root}
 
 **Milestone:** design proposal; targets a new `M1.18` ([`ROADMAP.md`](../../../ROADMAP.md)). Not implementation-locked.
-**Status:** DRAFT — requirements and the §5 open questions resolved 2026-05-21 in owner design sessions; ready for M1.18 implementation.
+**Status:** DRAFT — requirements resolved 2026-05-21; M1.18 phases 1–7 shipped 2026-05-22. Phase 8 (the effective-spec view) is v1.5 scope.
 **Related:** [`VIBEVM-SPEC.md` §4.2 / §4.6 / §6 / §13.1](../../../VIBEVM-SPEC.md); [PROP-007](PROP-007-workspace.md) (workspace — PROP-009 answers its [§6 question 3](PROP-007-workspace.md#open)); [PROP-003 §2.5](../vibe-resolver/PROP-003-dep-evolution.md) (subskills, delivery modes, the `[activation]` vocabulary); [PROP-002](../vibe-registry/PROP-002-decentralized-registry.md) (identity, registry).
 **Design rationale:** [`spec/design/loading-and-boot-model.md`](../../design/loading-and-boot-model.md) — the *why*, the static/dynamic-linking metaphor, the fork-by-fork record. Non-normative; this PROP is the contract.
-**Owner sanction:** PROP-009 reshapes the owner-frozen `VIBEVM-SPEC.md` (§6 boot model, §4.2 layout, §4.6 effective spec, §13.1 package layout). This PROP is the requirements record; the `VIBEVM-SPEC.md` edits land at implementation time and **require explicit owner sanction** — not yet granted (M1.17's sanction covered the workspace + qualified-naming refactor only). See §5 item 8.
+**Owner sanction:** PROP-009 reshapes the owner-frozen `VIBEVM-SPEC.md` (§6 boot model, §4.2 layout, §4.6 effective spec, §13.1 package layout). The `VIBEVM-SPEC.md` edits required explicit owner sanction; it was **granted 2026-05-22** — for a full consistency pass, not only those four sections — and landed in Phase 7. See §5 item 8.
 
 ---
 
@@ -66,6 +66,8 @@ when = "rust"
 Both artifacts are generated, git-tracked, and marked "generated — do not edit". Authored boot files (the user-owned snippets, the node's own authored boot) continue to live alongside as ordinary files; `INDEX.md` references them in computed order.
 
 **Session-start order:** the `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` redirect → `spec/boot/INLINE.md` (if present) → `spec/boot/INDEX.md` and the entries it names, in order. Boot remains **pure file-reading** — the redirect never becomes "run `vibe`", preserving the zero-dependency cross-agent property of `VIBEVM-SPEC.md` §6.1.
+
+**The redirect is a managed block (PROP-012).** The `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` redirect is not a whole generated file. [PROP-012](PROP-012-managed-redirect-block.md) refines it: vibevm owns only a delimited `<vibevm>` block inside each shared instruction file and preserves every byte outside it — the file is a co-tenant surface, not vibevm's property.
 
 ### 2.4 Inclusion types — `inline`, `static`, `dynamic` {#inclusion-types}
 
@@ -174,7 +176,7 @@ The eight questions opened in draft 1 were resolved in an owner session on 2026-
 
 **Deferred:**
 
-8. `VIBEVM-SPEC.md` edits (§6, §4.2, §4.6, §13.1) require explicit owner sanction. Phases 1–6 do not need it; the decision is taken when Phase 7 (docs / spec) is reached.
+8. `VIBEVM-SPEC.md` edits — **resolved 2026-05-22.** The owner granted the sanction for a full consistency pass (not only §6 / §4.2 / §4.6 / §13.1); it landed in Phase 7.
 
 ---
 
@@ -189,7 +191,7 @@ The eight questions opened in draft 1 were resolved in an owner session on 2026-
 
 ## 7. Phase plan {#phases}
 
-Targets M1.18. PROP-008 (qualified naming) shifts to M1.19; `ROADMAP.md` updates in the docs phase.
+Targets M1.18. PROP-008 (qualified naming) shifts to M1.19. **Phases 1–7 shipped 2026-05-22**; phase 8 is v1.5 scope.
 
 1. **Schema** — the `link` field, `[boot_snippet]` `category`, retire the `NN-` filename and the `[writes]` section; `vibe.lock` bump if needed. `vibe-core`.
 2. **Materialisation tree** — the `vibedeps/` layout, materialise packages verbatim; retire the mirror layout.
@@ -206,3 +208,4 @@ Targets M1.18. PROP-008 (qualified naming) shifts to M1.19; `ROADMAP.md` updates
 
 - **2026-05-21 — draft 1.** Requirements captured in an owner design session: the loading-model redesign answering PROP-007 §6 question 3, the static/dynamic-linking spine, the four-fork resolution. Rationale recorded in [`spec/design/loading-and-boot-model.md`](../../design/loading-and-boot-model.md).
 - **2026-05-21 — draft 2.** The eight §5 open questions resolved in a follow-up owner session: `vibedeps/`, `vibe reinstall`, the TOML `INDEX.md`, `[writes]` retired, dynamic conditions reusing the subskill `[activation]` vocabulary, a minimal `[boot]` table, the effective-spec view kept v1.5-scoped. The `VIBEVM-SPEC.md` sanction (§5 item 8) is the one item carried to Phase 7. Ready for M1.18 implementation.
+- **2026-05-22 — Phase 7 shipped.** The migration-and-docs phase landed in M1.18: the vibevm self-migration, the `VIBEVM-SPEC.md` consistency pass (owner sanction granted — §5 item 8), and [PROP-012](PROP-012-managed-redirect-block.md), which refines §2.3's redirect into a managed `<vibevm>` block. Phases 1–7 are shipped; phase 8 (the effective-spec view) remains v1.5 scope.

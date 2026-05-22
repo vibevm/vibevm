@@ -8,6 +8,20 @@ Format roughly follows [Keep a Changelog](https://keepachangelog.com/), grouped 
 
 ## [Unreleased]
 
+### M1.18 — Loading model (PROP-009 + PROP-012) (2026-05-22)
+
+The flat `spec/boot/NN-*.md` boot model is replaced by a computed loading model. Design locks: [PROP-009](spec/modules/vibe-workspace/PROP-009-loading-model.md), [PROP-012](spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md). Shipped across seven phases.
+
+- **Two trees.** A node's authored `spec/` and its materialised dependencies are physically separate. `vibe install` copies each resolved package's published tree verbatim into a committed `vibedeps/<kind>-<name>/<version>/` slot at the workspace root, and never writes into authored `spec/`. The `[writes]` package section is retired — a materialised package *is* its subtree.
+- **Computed boot.** Each node's boot sequence is computed from the unified resolution — inherited foundation + the node's own authored boot + dependency boot + user overrides — and projected into generated `spec/boot/INLINE.md` (the verbatim inline priority lane) and `spec/boot/INDEX.md` (a TOML manifest of `static` / `dynamic` entries). Three inclusion types — `inline` / `static` / `dynamic` — are declared per dependency via `link`. The `NN-` filename prefix is retired; `vibe` owns ordering by `category` band.
+- **`vibe reinstall`.** Regenerates the materialised state and boot artifacts without re-resolving; `--force` re-fetches every locked package from source.
+- **The managed `<vibevm>` block (PROP-012).** `vibe` no longer overwrites the whole of `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` — it owns only a delimited `<vibevm>` … `</vibevm>` block and preserves every byte outside it, so the developer and other tools can co-tenant the file. A malformed block is a hard error, validated before any mutation; `vibe install` maps it to exit code 3.
+- **The boot-directory linter** (`vibe check`) stops enforcing the retired `NN-` filename pattern; it now verifies only that `spec/boot/` exists and holds markdown.
+- **vibevm self-migration.** vibevm migrated to its own loading model — `spec/boot/INDEX.md` generated, a `<vibevm>` block appended to its `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` (every hand-authored line, the four rules included, preserved).
+- **Docs.** `VIBEVM-SPEC.md` §6 and the rest of the retired-model footprint rewritten for the loading model; the `docs/` sweep covers the new model and `vibe reinstall`.
+
+Every phase landed clippy-clean (`-D warnings`) with its full test suite green.
+
 ### M1.17 — Workspace (multi-package projects) (2026-05-21)
 
 The cargo-`[workspace]` / Maven-multi-module shape: a project decomposes into member packages, each published independently — or not at all. Design lock: [PROP-007](spec/modules/vibe-workspace/PROP-007-workspace.md). Shipped in five implementation phases plus documentation.

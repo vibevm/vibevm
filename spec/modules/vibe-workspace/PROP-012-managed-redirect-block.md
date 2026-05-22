@@ -86,7 +86,7 @@ Consequently this PROP **supersedes the "thin generated file" wording of PROP-00
 - **`vibe-workspace::boot_artifacts`** — the implementation site. `write_boot_artifacts`'s redirect loop changes from a whole-file `fs::write` to a locate-validate-splice. New helpers: locate the block, classify well-formedness, splice the body. `render_redirect` becomes the block-*body* renderer; `REDIRECT_BODY`'s "do not edit" framing moves inside the block.
 - **The install orchestration** (`apply_resolution` and the `vibe reinstall` path) — gains the §2.5 plan-time validation pass over every node's instruction files before any mutation.
 - **`vibe-cli`** — `vibe install` / `reinstall` / `uninstall` / `update` surface the malformed-block abort as a clear error; `vibe init` scaffolds each instruction file with a `<vibevm>` block instead of a one-line file.
-- **`vibe-check`** — a finding for a malformed `<vibevm>` block, composing with the boot-directory check.
+- **`vibe-check`** — a finding for a malformed `<vibevm>` block. **Deferred** in the M1.18 Phase-7 implementation: the plan-time validation (§2.4) already hard-stops every mutating command on a malformed block, so correctness is covered; the linter finding is a convenience for earlier detection and can land later (it wants `vibe-check` to reach the block-locating helper).
 - **Exit code** — the malformed-block abort is conflict-shaped; reusing exit code `3` (package conflict) is the working assumption (§5).
 
 ---

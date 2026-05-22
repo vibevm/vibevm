@@ -550,7 +550,7 @@ hash/source/ref lines in the lockfile).
 
 **Order.** PROP-007 has no dependency on the index and landed before M1.18. It delivers the bulk of the multi-package request on its own.
 
-### M1.18 — Loading model (PROP-009) — 🚧 Phases 1–6 shipped (2026-05-21)
+### M1.18 — Loading model (PROP-009) — ✅ SHIPPED (2026-05-22)
 
 **Thesis.** Replace the flat `spec/boot/NN-*.md` boot model with a
 computed loading model: two physically separate trees — authored
@@ -560,16 +560,19 @@ computed loading model: two physically separate trees — authored
 subsumes the workspace-aware `vibe install` left open by M1.17. Design
 lock: [PROP-009](spec/modules/vibe-workspace/PROP-009-loading-model.md).
 
-**Shipped (2026-05-21).** Phases 1–6 — the schema (`link` types, boot
-`category`, retired `[writes]` and `NN-` prefix), the `vibedeps/`
-materialisation tree, the computed-view boot engine, `INLINE.md` /
-`INDEX.md` / redirect generation, workspace-aware `vibe install` (plus
-five follow-ups), `vibe reinstall`, and published-copy boot
-regeneration in `vibe workspace publish`.
+**Shipped (2026-05-22), phases 1–7.** Phases 1–6 — the schema (`link`
+types, boot `category`, retired `[writes]` and `NN-` prefix), the
+`vibedeps/` materialisation tree, the computed-view boot engine,
+`INLINE.md` / `INDEX.md` / redirect generation, workspace-aware
+`vibe install` (plus five follow-ups), `vibe reinstall`, and
+published-copy boot regeneration in `vibe workspace publish`. Phase 7 —
+the vibevm self-migration, the `VIBEVM-SPEC.md` consistency pass (owner
+sanction granted), the `docs/` sweep, and
+[PROP-012](spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md)
+(the managed `<vibevm>` redirect block) folded in.
 
-**Remaining.** Phase 7 — existing-project migration, the vibevm
-self-migration, the `VIBEVM-SPEC.md` edits (owner sanction required),
-and the `docs/` sweep. Phase 8 — the effective-spec view (v1.5 scope).
+**Remaining.** Phase 8 — the effective-spec view — is v1.5 scope; it
+shares the computed-view engine and rides with the M1.5 milestone.
 
 **Order.** Followed M1.17 directly; no dependency on the index.
 
@@ -625,26 +628,22 @@ delta.
 **Order.** No dependency beyond PROP-009 (M1.18, shipped) — the M1.21
 number is nominal; it can be resequenced earlier.
 
-### M1.22 — Managed redirect block (PROP-012) — DRAFT design
+### M1.22 — Managed redirect block (PROP-012) — ✅ SHIPPED (2026-05-22, within M1.18)
 
-**Thesis.** `vibe install` must stop overwriting the whole of
-`CLAUDE.md` / `AGENTS.md` / `GEMINI.md`. Those files are a shared
-contact surface — hand-authored instructions, other tools, the four
-non-negotiable rules in vibevm's own copy — and the PROP-009 Phase-4
-code replaces every byte of them on each install. vibevm must own only
-a `<vibevm>`-delimited block and leave the rest to its co-tenants.
-Design lock: [PROP-012](spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md).
+**Thesis.** `vibe install` overwrote the whole of `CLAUDE.md` /
+`AGENTS.md` / `GEMINI.md` on every run — destroying hand-authored
+instructions, other tools' content, and vibevm's own four rules.
+vibevm now owns only a `<vibevm>`-delimited block and leaves the rest
+to its co-tenants. Design lock:
+[PROP-012](spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md).
 
-**Scope (DRAFT — a small §5 open-question set, chiefly the marker
-syntax).** A machine-locatable `<vibevm>` … `</vibevm>` block; exactly
-one per file, a hard stop on a malformed file; absent → create,
-present → splice; plan-time validation; migration of the old
-whole-file generated redirect.
-
-**Order.** PROP-012 corrects a destructive defect already shipped in
-PROP-009 Phase 4, so it is a prerequisite for the M1.18 Phase-7
-redirect rewrite — recommended to land **within M1.18 Phase 7**. The
-M1.22 number is nominal and exists only to register the PROP.
+**Shipped.** A machine-locatable `<vibevm>` … `</vibevm>` block;
+exactly one per file, a hard stop on a malformed file; absent →
+create, present → splice; plan-time validation; migration of the old
+whole-file generated redirect. PROP-012 corrects a defect shipped in
+PROP-009 Phase 4, so it was a prerequisite for the Phase-7 redirect
+rewrite and landed **inside M1.18 Phase 7**. The M1.22 number is
+nominal — the work is part of M1.18.
 
 ---
 
