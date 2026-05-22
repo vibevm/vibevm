@@ -248,11 +248,14 @@ fn resolve_registry_sections(args: &InitArgs) -> Vec<RegistrySection> {
                 .registry_ref
                 .clone()
                 .unwrap_or_else(|| DEFAULT_REGISTRY_REF.to_string()),
-            naming: NamingConvention::KindName,
+            naming: NamingConvention::Fqdn,
             auth: vibe_core::manifest::AuthKind::None,
             token_env: None,
         }];
     }
+    // The canonical `vibespecs` GitHub org is fqdn-shaped since
+    // PROP-008 — `<group>.<name>` repositories (`org.vibevm.wal`) — so a
+    // fresh project resolves the qualified packages out of the box.
     let github = RegistrySection {
         name: DEFAULT_REGISTRY_NAME.to_string(),
         url: DEFAULT_REGISTRY_URL.to_string(),
@@ -260,7 +263,7 @@ fn resolve_registry_sections(args: &InitArgs) -> Vec<RegistrySection> {
             .registry_ref
             .clone()
             .unwrap_or_else(|| DEFAULT_REGISTRY_REF.to_string()),
-        naming: NamingConvention::KindName,
+        naming: NamingConvention::Fqdn,
         auth: vibe_core::manifest::AuthKind::None,
         token_env: None,
     };

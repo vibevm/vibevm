@@ -453,8 +453,8 @@ pub struct RegistryAddArgs {
     #[arg(long = "ref")]
     pub registry_ref: Option<String>,
 
-    /// Naming convention mapping `<kind>:<name>` to a repo name under
-    /// the org. One of `kind-name` (default), `name`, `kind/name`.
+    /// Naming convention mapping a pkgref to a repo name under the org.
+    /// One of `fqdn` (default), `kind-name`, `name`, `kind/name`.
     #[arg(long = "naming")]
     pub naming: Option<String>,
 

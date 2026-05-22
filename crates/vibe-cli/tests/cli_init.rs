@@ -243,10 +243,8 @@ fn init_writes_default_registry() {
     assert_eq!(primary.name, vibe_core::manifest::DEFAULT_REGISTRY_NAME);
     assert_eq!(primary.url, vibe_core::manifest::DEFAULT_REGISTRY_URL);
     assert_eq!(primary.r#ref, vibe_core::manifest::DEFAULT_REGISTRY_REF);
-    assert_eq!(
-        primary.naming,
-        vibe_core::manifest::NamingConvention::KindName
-    );
+    // The GitHub `vibespecs` org is fqdn-shaped (PROP-008 §2.5).
+    assert_eq!(primary.naming, vibe_core::manifest::NamingConvention::Fqdn);
 
     let secondary = &parsed.registries[1];
     assert_eq!(
@@ -329,6 +327,8 @@ fn init_registry_url_override() {
         .expect("[[registry]] should exist");
     assert_eq!(reg.url, "git+https://example.test/registry.git");
     assert_eq!(reg.r#ref, "develop");
+    // A custom registry inherits the project-wide `fqdn` default.
+    assert_eq!(reg.naming, vibe_core::manifest::NamingConvention::Fqdn);
     // Non-default ref must be serialized.
     assert!(manifest_text.contains("develop"));
     // GitVerse default must NOT appear when the operator supplied their own URL.

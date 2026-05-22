@@ -449,11 +449,12 @@ struct AddReport {
 /// spelling exactly.
 fn parse_naming(s: &str) -> Result<NamingConvention> {
     match s {
+        "fqdn" => Ok(NamingConvention::Fqdn),
         "kind-name" => Ok(NamingConvention::KindName),
         "name" => Ok(NamingConvention::Name),
         "kind/name" => Ok(NamingConvention::KindSlashName),
         other => Err(anyhow!(
-            "unknown naming convention `{other}` — must be one of `kind-name`, `name`, `kind/name`"
+            "unknown naming convention `{other}` — must be one of `fqdn`, `kind-name`, `name`, `kind/name`"
         )),
     }
 }
