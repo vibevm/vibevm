@@ -1,7 +1,9 @@
 # WAL — Project Continuation State
-_Updated: 2026-05-22 (M1.18 loading model on `main` at `ffd5e1c`; the `when` gate and M1.21 — PROP-011 incremental install — shipped on top)_
+_Updated: 2026-05-22 (M1.21 — PROP-011 incremental install — on `main` at `f6e47bf`; PROP-005 — the package index — found already implemented, de-rotted against the M1.17 / M1.18 manifest schema)_
 
 ## Current phase
+
+**PROP-005 — the package index: found IMPLEMENTED, de-rotted 2026-05-22.** A state review opening the planned PROP-005 work found the index was not pending at all: slices 1–8 (the `vibe-index` server + CLI in `services/vibe-index/`), slices 9–10 (the `vibe-publish` post-publish hook and the `vibe-registry` consumer-side `IndexClient` fast path), and M2.10 `vibe search` had all shipped in earlier sessions. But `services/vibe-index/` is a standalone Cargo workspace, outside the routine `cargo test --workspace` gate, and it had silently rotted: its duplicated `vibe.toml` parser still expected the pre-M1.17 schema (`[writes]`, `[dependencies]`, `[boot_snippet].filename`) and could not parse a current manifest, and its `content_hash` parity test had drifted off a fixture renamed by the M1.17 manifest unification — the suite was red. The de-rot this session rewrote `scanner/manifest.rs` for the unified `vibe.toml` (M1.17) + loading model (M1.18) and made it lenient against future schema additions; fixed `BootSnippetEntry` (`filename` → `source` / `category`); refreshed the golden fixture to a byte-copy of `fixtures/registry/flow/wal/v0.1.0/` and recomputed the parity hash, cross-checked against the canonical `vibe-registry::compute_content_hash`; added a current-schema scanner regression test; retired the dead slice-1 scaffolding. `services/vibe-index/` is now green — **169 tests**, `cargo clippy -D warnings` clean, `cargo fmt` clean (the workspace-wide fmt is a separate `style` commit — the standalone workspace carried pre-existing fmt drift). PROP-005 spec reconciled: §2.6 entry schema, the `vibe.toml` manifest filename throughout, the status line, and §9 item 11 recording the standalone-workspace duplication finding for an owner design session.
 
 **M1.21 — Incremental install (PROP-011): SHIPPED 2026-05-22.** `vibe install` is now incremental — it does the least work a change requires. Four phases, all on `main`:
 
@@ -30,21 +32,22 @@ _Updated: 2026-05-22 (M1.18 loading model on `main` at `ffd5e1c`; the `when` gat
 
 **Branch state.** On `main`, pushed to `origin/main`. The M1.21 (PROP-011) commits — `d6c4248`, `2b1b6cc`, `f22f629`, plus this Phase-4 docs checkpoint — land on top of the `when`-gate commits (`fef37e5` … `0164a20`, `00bdd48`) and the M1.18 session-end checkpoints (`ffd5e1c` merge → `c74b2a5`). The `m1.17-workspace` feature branch is retained (merged, not deleted). Gate green — test counts: vibe-cli bin 124 / e2e 106 / cli_init 11 / cli_search 15 (3 ignored), vibe-core 173, vibe-workspace 103, vibe-check 27, vibe-registry 106 + 5 + 7, vibe-publish 51 + 5, vibe-resolver 48, vibe-mcp 22.
 
-**Next — base-machinery-first, per the owner (2026-05-22).** The owner **deferred M1.5 (LLM Generation)** to a later phase. The rationale, recorded verbatim in intent: the base package machinery is to be brought to relative stability first — covered with tests, ready for large structural refactors — before *any* generation (not only LLM generation) is layered on top. Stability is a fuzzy target for a research prototype, but as much as possible should be done on the base before moving into a different knowledge domain like LLM generation.
+**Next — base-machinery-first, per the owner (2026-05-22).** The owner **deferred M1.5 (LLM Generation)** to a later phase: the base package machinery is to be brought to relative stability first — covered with tests, ready for large structural refactors — before *any* generation (not only LLM generation) is layered on top.
 
 The dependency-correct sequence for the base, each under MFBT (PROP-006 §2):
 
-- (a) **PROP-005 — the package index.** Consumer side: `vibe` resolves against a cached/mirrorable index instead of live `git ls-remote`. The `services/vibe-index/` server already exists (outside the cargo workspace); PROP-005 is an older draft (2026-05-06) — start with a state review of what is built versus what the consumer side needs.
-- (b) **PROP-008 — qualified naming (M1.19).** Needs PROP-005 for short-name resolution.
+- (a) **PROP-005 — the package index. ✅ DONE.** The state review that opened this work found PROP-005 already implemented — slices 1–10 plus M2.10 `vibe search` — and de-rotted it (see the PROP-005 entry above). One structural question it surfaced is recorded as PROP-005 §9 item 11 for an owner design session.
+- (b) **PROP-008 — qualified naming (M1.19).** Its PROP-005 dependency (index-backed short-name resolution) is now satisfied — this is the next implementation target.
 - (c) **PROP-010 — the local package cache (M1.20).** §2.3 keys it by PROP-008 identity; its five §5 open questions need an owner design session before implementation.
 
-Then M1.5. No blocker. The earlier "PROP-010 next" ordering was dependency-infeasible — PROP-010 ⟸ PROP-008 ⟸ PROP-005 — and is corrected here.
+Then M1.5. No blocker.
 
 **Known issues / open items.**
 
+- **PROP-005 §9 item 11 — owner design session.** The de-rot exposed that `services/vibe-index/`'s standalone-workspace duplication (a hand-maintained `vibe.toml` parser, a duplicated `compute_content_hash`) is structurally fragile: the parser rotted against the M1.17 / M1.18 schema churn because nothing cross-checks it against `vibe-core` and the workspace sits outside `cargo test --workspace`. The parser is rewritten and lenient now; the structural choice — depend on `vibe-core` for manifest parsing vs. keep duplicating and pay a periodic reconciliation tax — wants an owner decision.
 - **PROP-010** — DRAFT; needs an owner design session to close its §5 open questions before implementation. PROP-011 is shipped (see Current phase).
 - **Deferred PROP-011 refinements** (recorded in PROP-011 §5/§8) — the `content_hash` slot spot-check for `slot_integrity = verify` (needs `compute_content_hash` lowered out of `vibe-registry`); true incremental re-resolution that skips the registry walk for an unchanged subtree (needs PROP-003's SAT `pin_preferences`).
-- **Parked backlog** — `version = { workspace = true }` member-version inheritance (PROP-007 §6 q4); the publish-signalling polish (`--archive`, `has_issues`); PROP-008 (M1.19) follows PROP-005 (index).
+- **Parked backlog** — `version = { workspace = true }` member-version inheritance (PROP-007 §6 q4); the publish-signalling polish (`--archive`, `has_issues`). PROP-008 (M1.19) is the next base-machinery milestone — its PROP-005 dependency is now satisfied.
 - (carried) delete `https://gitverse.ru/vibespecs/vibevm-direct-push-smoke` via the GitVerse web UI — owner-only, no API DELETE endpoint. Not blocking.
 
 **Resolved this session** (were Owner-attention / flagged items): the `VIBEVM-SPEC.md` PROP-009 sanction (granted; the full consistency pass landed); `00-core.md` line 38 + boot-sequence (fixed under owner sanction); the `vibe-check` boot-directory + lockfile-consistency staleness; the deferred malformed-block `vibe check` finding (now `CheckId::RedirectBlock`); the `m1.17-workspace` → `main` merge.
