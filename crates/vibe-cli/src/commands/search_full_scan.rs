@@ -107,7 +107,7 @@ pub fn full_scan_github_org(
         }
         let manifest = match fetch_package_manifest(&client, api_base, org, &repo.name, token) {
             Ok(Some(m)) => m,
-            Ok(None) => continue,            // not a vibevm package — skip
+            Ok(None) => continue, // not a vibevm package — skip
             Err(FullScanError::Status { status: 404, .. }) => continue,
             Err(FullScanError::Status { status, url }) if status == 403 || status == 429 => {
                 // Rate-limited — surface upward so the caller can
@@ -115,7 +115,7 @@ pub fn full_scan_github_org(
                 // silently truncating results.
                 return Err(FullScanError::Status { status, url });
             }
-            Err(_) => continue,             // transient — skip this repo
+            Err(_) => continue, // transient — skip this repo
         };
         // A `vibe.toml` without a `[package]` table (project- or
         // workspace-root manifest, redirect stub) is not a publishable
@@ -213,12 +213,11 @@ fn list_org_repos(
             url: url.clone(),
             message: e.to_string(),
         })?;
-        let page_repos: Vec<RepoEntry> = serde_json::from_slice(&bytes).map_err(|e| {
-            FullScanError::Malformed {
+        let page_repos: Vec<RepoEntry> =
+            serde_json::from_slice(&bytes).map_err(|e| FullScanError::Malformed {
                 url: url.clone(),
                 message: e.to_string(),
-            }
-        })?;
+            })?;
         all.extend(page_repos);
         if all.len() >= MAX_REPOS_PER_SCAN {
             break;
@@ -289,10 +288,11 @@ fn fetch_package_manifest(
         });
     }
     let body: ContentsResponse =
-        resp.json::<ContentsResponse>().map_err(|e| FullScanError::Malformed {
-            url: url.clone(),
-            message: e.to_string(),
-        })?;
+        resp.json::<ContentsResponse>()
+            .map_err(|e| FullScanError::Malformed {
+                url: url.clone(),
+                message: e.to_string(),
+            })?;
     if body.encoding != "base64" {
         return Err(FullScanError::Malformed {
             url,
@@ -312,11 +312,9 @@ fn fetch_package_manifest(
         url: url.clone(),
         message: format!("utf-8 decode: {e}"),
     })?;
-    let manifest = Manifest::parse_str(toml_str).map_err(|e| {
-        FullScanError::Malformed {
-            url: url.clone(),
-            message: format!("toml parse: {e}"),
-        }
+    let manifest = Manifest::parse_str(toml_str).map_err(|e| FullScanError::Malformed {
+        url: url.clone(),
+        message: format!("toml parse: {e}"),
     })?;
     Ok(Some(manifest))
 }
@@ -366,7 +364,11 @@ fn decode_base64(input: &str) -> std::result::Result<Vec<u8>, &'static str> {
 /// tokens. Each distinct token that hits any of `name`,
 /// `description`, `keywords`, or `provides.capabilities` adds one to
 /// the score. Returns the score plus the actual tokens matched.
-fn score_manifest(manifest: &Manifest, meta: &PackageMeta, query_tokens: &[String]) -> (u32, Vec<String>) {
+fn score_manifest(
+    manifest: &Manifest,
+    meta: &PackageMeta,
+    query_tokens: &[String],
+) -> (u32, Vec<String>) {
     let mut haystack = String::new();
     haystack.push_str(&meta.name);
     haystack.push(' ');

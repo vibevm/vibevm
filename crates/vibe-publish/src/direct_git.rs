@@ -44,7 +44,10 @@ impl DirectGitCreator {
     pub fn new(repo_url: impl Into<String>) -> Self {
         let repo_url = repo_url.into();
         let host_name = extract_host_segment(&repo_url).unwrap_or_else(|_| "git".to_string());
-        DirectGitCreator { repo_url, host_name }
+        DirectGitCreator {
+            repo_url,
+            host_name,
+        }
     }
 
     /// The configured URL. Exposed so the CLI can echo it in the
@@ -160,7 +163,10 @@ mod tests {
     fn push_url_returns_configured_url_verbatim() {
         let c = DirectGitCreator::new("https://example.org/foo/bar.git");
         // org and name args are ignored on this path.
-        assert_eq!(c.push_url("ignored", "also-ignored"), "https://example.org/foo/bar.git");
+        assert_eq!(
+            c.push_url("ignored", "also-ignored"),
+            "https://example.org/foo/bar.git"
+        );
     }
 
     #[test]

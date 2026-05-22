@@ -397,7 +397,10 @@ url = "https://github.com/vibespecs"
             auth: AuthKind::TokenEnv,
             token_env: Some("MY_CUSTOM_TOKEN".to_string()),
         };
-        assert_eq!(r.resolve_token_env_name().as_deref(), Some("MY_CUSTOM_TOKEN"));
+        assert_eq!(
+            r.resolve_token_env_name().as_deref(),
+            Some("MY_CUSTOM_TOKEN")
+        );
     }
 
     #[test]

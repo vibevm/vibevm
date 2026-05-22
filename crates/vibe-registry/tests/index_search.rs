@@ -155,7 +155,10 @@ fn search_decodes_response_and_propagates_query_params() {
     assert_eq!(result.hits[0].kind, PackageKind::Flow);
     assert_eq!(result.hits[0].name, "wal");
     assert_eq!(result.hits[0].score, 2);
-    assert_eq!(result.hits[0].latest_stable.as_ref().unwrap().to_string(), "0.1.0");
+    assert_eq!(
+        result.hits[0].latest_stable.as_ref().unwrap().to_string(),
+        "0.1.0"
+    );
     assert_eq!(result.hits[0].matched_tokens, vec!["wal".to_string()]);
     assert_eq!(result.hits[1].name, "audit-log");
 

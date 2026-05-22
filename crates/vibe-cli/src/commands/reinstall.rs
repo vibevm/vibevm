@@ -115,7 +115,11 @@ fn run_force(
     // regenerate boot so a stale artifact is recomputed.
     if lockfile.packages.is_empty() {
         ctx.heading("\nReinstall --force — no packages locked; regenerate boot only.");
-        if !confirm(ctx, args, "No packages are locked — regenerate boot artifacts only?")? {
+        if !confirm(
+            ctx,
+            args,
+            "No packages are locked — regenerate boot artifacts only?",
+        )? {
             return Err(InstallError::UserDeclined.into());
         }
         // `--force` always re-materialises — `SlotIntegrity::Verify` —
@@ -129,7 +133,11 @@ fn run_force(
     ctx.heading(&format!(
         "\nReinstall --force — re-fetch {} package{} from source:",
         lockfile.packages.len(),
-        if lockfile.packages.len() == 1 { "" } else { "s" },
+        if lockfile.packages.len() == 1 {
+            ""
+        } else {
+            "s"
+        },
     ));
     for p in &lockfile.packages {
         ctx.step(&format!("{}:{}@{}", p.kind, p.name, p.version));
@@ -141,7 +149,11 @@ fn run_force(
         &format!(
             "Re-fetch {} package{} from source and re-materialise vibedeps/?",
             lockfile.packages.len(),
-            if lockfile.packages.len() == 1 { "" } else { "s" },
+            if lockfile.packages.len() == 1 {
+                ""
+            } else {
+                "s"
+            },
         ),
     )? {
         return Err(InstallError::UserDeclined.into());
@@ -207,7 +219,11 @@ fn run_force(
 fn exact_pkgref(kind: PackageKind, name: &str, version: &semver::Version) -> Result<PackageRef> {
     let req = semver::VersionReq::parse(&format!("={version}"))
         .expect("`=<version>` always parses as a VersionReq");
-    Ok(PackageRef::new(kind, name.to_string(), VersionSpec::Req(req))?)
+    Ok(PackageRef::new(
+        kind,
+        name.to_string(),
+        VersionSpec::Req(req),
+    )?)
 }
 
 /// The `InstallArgs` `build_install_resolver` reads. `vibe reinstall`
@@ -276,14 +292,22 @@ fn emit_report(
         ctx.summary(&format!(
             "vibe reinstall: boot artifacts regenerated for {} node{}",
             nodes_regenerated.len(),
-            if nodes_regenerated.len() == 1 { "" } else { "s" },
+            if nodes_regenerated.len() == 1 {
+                ""
+            } else {
+                "s"
+            },
         ));
         return;
     }
     ctx.summary(&format!(
         "\nReinstalled — regenerated boot artifacts for {} node{}{}.",
         nodes_regenerated.len(),
-        if nodes_regenerated.len() == 1 { "" } else { "s" },
+        if nodes_regenerated.len() == 1 {
+            ""
+        } else {
+            "s"
+        },
         if forced { " from a fresh fetch" } else { "" },
     ));
     if !pruned.is_empty() {

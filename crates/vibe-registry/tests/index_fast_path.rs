@@ -182,7 +182,11 @@ fn index_fast_path_serves_versions() {
     };
     canned.by_name.insert(
         (PackageKind::Flow, "wal".into()),
-        Some(package_entry_json(PackageKind::Flow, "wal", &["0.1.0", "0.2.0"])),
+        Some(package_entry_json(
+            PackageKind::Flow,
+            "wal",
+            &["0.1.0", "0.2.0"],
+        )),
     );
     let mock = spawn_mock(canned);
     let cache = tempdir().unwrap();
@@ -202,10 +206,7 @@ fn index_fast_path_serves_versions() {
 
     let versions = registry.list_versions(PackageKind::Flow, "wal").unwrap();
     assert_eq!(
-        versions
-            .iter()
-            .map(|v| v.to_string())
-            .collect::<Vec<_>>(),
+        versions.iter().map(|v| v.to_string()).collect::<Vec<_>>(),
         vec!["0.1.0".to_string(), "0.2.0".to_string()]
     );
 }
@@ -256,7 +257,10 @@ fn probe_returns_some_when_repomd_responds() {
     let mock = spawn_mock(canned);
     let client = IndexClient::probe(&mock.base_url);
     assert!(client.is_some());
-    assert_eq!(client.unwrap().file_base(), mock.base_url.trim_end_matches('/'));
+    assert_eq!(
+        client.unwrap().file_base(),
+        mock.base_url.trim_end_matches('/')
+    );
 }
 
 #[test]
@@ -302,7 +306,9 @@ fn index_5xx_falls_through_to_git_backend() {
     .unwrap()
     .with_index_client(IndexClient::at(&mock.base_url));
 
-    let err = registry.list_versions(PackageKind::Flow, "wal").unwrap_err();
+    let err = registry
+        .list_versions(PackageKind::Flow, "wal")
+        .unwrap_err();
     match err {
         vibe_registry::RegistryError::UnknownPackage { name, .. } => {
             assert_eq!(name, "wal");
@@ -318,7 +324,9 @@ fn index_5xx_falls_through_to_git_backend() {
         let mut f = mock.files.lock().unwrap();
         f.repomd_status = 500;
     }
-    let err = registry.list_versions(PackageKind::Flow, "wal").unwrap_err();
+    let err = registry
+        .list_versions(PackageKind::Flow, "wal")
+        .unwrap_err();
     assert!(matches!(
         err,
         vibe_registry::RegistryError::UnknownPackage { .. }

@@ -154,13 +154,10 @@ impl PackageRef {
             None => (trimmed, None),
         };
 
-        let (kind_str, name_str) =
-            prefix
-                .split_once(':')
-                .ok_or_else(|| Error::BadPackageRef {
-                    input: input.to_owned(),
-                    reason: "expected `<kind>:<name>[@<version>]` — missing `:`".into(),
-                })?;
+        let (kind_str, name_str) = prefix.split_once(':').ok_or_else(|| Error::BadPackageRef {
+            input: input.to_owned(),
+            reason: "expected `<kind>:<name>[@<version>]` — missing `:`".into(),
+        })?;
 
         let kind = PackageKind::from_str(kind_str)?;
         validate_package_name(name_str)?;

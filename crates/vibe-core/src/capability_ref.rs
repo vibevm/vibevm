@@ -29,7 +29,7 @@ use std::str::FromStr;
 use serde::{Deserialize, Serialize};
 
 use crate::error::{Error, Result};
-use crate::package_ref::{validate_package_name, VersionSpec};
+use crate::package_ref::{VersionSpec, validate_package_name};
 
 /// A capability identifier plus an optional version constraint.
 ///

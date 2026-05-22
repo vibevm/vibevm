@@ -8,8 +8,8 @@
 //! - [`Lockfile`] — `vibe.lock` at a workspace's absolute root. Schema:
 //!   `VIBEVM-SPEC.md` §7.4.
 
-pub mod i18n;
 mod document;
+pub mod i18n;
 mod lockfile;
 mod package;
 mod project;
@@ -19,7 +19,7 @@ mod subskill;
 
 pub use document::{BootSection, Manifest, OriginSection, WorkspaceSection};
 pub use lockfile::{
-    CURRENT_SCHEMA_VERSION, Lockfile, LockedPackage, LockedSubskill, LockfileMeta, SourceKind,
+    CURRENT_SCHEMA_VERSION, LockedPackage, LockedSubskill, Lockfile, LockfileMeta, SourceKind,
     VirtualCapabilityRecord,
 };
 pub use package::{
@@ -127,9 +127,7 @@ fn merge_preserving_comments(existing: &str, new_rendered: &str) -> String {
     let existing_root = existing_doc.as_table();
     let new_root = new_doc.as_table_mut();
     if let Some(prefix) = existing_root.decor().prefix() {
-        new_root
-            .decor_mut()
-            .set_prefix(prefix.clone());
+        new_root.decor_mut().set_prefix(prefix.clone());
     }
 
     // 2. Per-table decoration. `Item::Table` carries its own
@@ -223,9 +221,7 @@ fn copy_inline_kv_decor(existing: &toml_edit::Table, new: &mut toml_edit::Table)
     let mut updates: Vec<(String, Option<Decor>, Option<Decor>)> = Vec::new();
     for (key, _) in new.iter() {
         let key_str = key.to_string();
-        let key_decor = existing
-            .key(&key_str)
-            .map(|k| k.leaf_decor().clone());
+        let key_decor = existing.key(&key_str).map(|k| k.leaf_decor().clone());
         let val_decor = match existing.get(&key_str) {
             Some(toml_edit::Item::Value(v)) => Some(v.decor().clone()),
             _ => None,

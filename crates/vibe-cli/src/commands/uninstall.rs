@@ -9,11 +9,11 @@
 
 use std::path::{Path, PathBuf};
 
+use crate::exit_code::InstallError;
 use anyhow::{Context, Result, anyhow, bail};
 use dialoguer::Confirm;
 use vibe_core::PackageRef;
 use vibe_core::manifest::{Lockfile, Manifest};
-use crate::exit_code::InstallError;
 use vibe_workspace::Workspace;
 use vibe_workspace::install::regenerate_boot;
 use vibe_workspace::vibedeps;
@@ -28,8 +28,8 @@ pub fn run(ctx: &output::Context, args: UninstallArgs) -> Result<()> {
     let mut manifest = load_project_manifest(&project_root)?;
     let mut lockfile = load_lockfile(&workspace.root)?;
 
-    let pkgref = PackageRef::parse(&args.package)
-        .with_context(|| format!("parsing `{}`", args.package))?;
+    let pkgref =
+        PackageRef::parse(&args.package).with_context(|| format!("parsing `{}`", args.package))?;
 
     // The materialised slot is keyed by the resolved version; read it
     // from the lockfile entry.

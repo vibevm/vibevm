@@ -95,7 +95,8 @@ impl FeatureExpansion {
     /// Merge another expansion into this one. Used at the cross-package
     /// unification layer.
     pub fn merge(&mut self, other: &FeatureExpansion) {
-        self.active_features.extend(other.active_features.iter().cloned());
+        self.active_features
+            .extend(other.active_features.iter().cloned());
         self.active_deps.extend(other.active_deps.iter().cloned());
         for (k, v) in &other.dep_features {
             self.dep_features
@@ -109,7 +110,8 @@ impl FeatureExpansion {
                 .or_default()
                 .extend(v.iter().cloned());
         }
-        self.active_subskills.extend(other.active_subskills.iter().cloned());
+        self.active_subskills
+            .extend(other.active_subskills.iter().cloned());
     }
 }
 
@@ -176,9 +178,9 @@ pub fn expand_features(
         let activations = table.get(&f).unwrap_or(&[]);
         for raw in activations {
             let val = FeatureValue::parse(raw).map_err(|e| match e {
-                FeatureError::Malformed(_) => FeatureError::Malformed(format!(
-                    "feature `{f}` activation `{raw}`",
-                )),
+                FeatureError::Malformed(_) => {
+                    FeatureError::Malformed(format!("feature `{f}` activation `{raw}`",))
+                }
                 other => other,
             })?;
             match val {
@@ -448,7 +450,12 @@ foo = ["other?/some-feat"]
         );
         let exp = expand_features(&t, &FeatureRequest::default()).unwrap();
         assert!(!exp.active_deps.contains("other"));
-        assert!(exp.weak_dep_features.get("other").unwrap().contains("some-feat"));
+        assert!(
+            exp.weak_dep_features
+                .get("other")
+                .unwrap()
+                .contains("some-feat")
+        );
     }
 
     #[test]

@@ -29,10 +29,8 @@ impl<P: DepProvider> NaiveDepSolver<P> {
 impl<P: DepProvider> DepSolver for NaiveDepSolver<P> {
     fn solve(&self, roots: &[PackageRef]) -> Result<ResolvedGraph, SolveError> {
         let mut state = SolverState::new();
-        let root_keys: Vec<(PackageKind, String)> = roots
-            .iter()
-            .map(|r| (r.kind, r.name.clone()))
-            .collect();
+        let root_keys: Vec<(PackageKind, String)> =
+            roots.iter().map(|r| (r.kind, r.name.clone())).collect();
         for r in roots {
             state.queue.push_back(EnqueuedPkg {
                 pkgref: r.clone(),
@@ -326,8 +324,7 @@ mod tests {
     use std::collections::HashMap;
     use vibe_core::PackageRef;
 
-    type ProviderEntries =
-        HashMap<(PackageKind, String), Vec<(semver::Version, Manifest)>>;
+    type ProviderEntries = HashMap<(PackageKind, String), Vec<(semver::Version, Manifest)>>;
 
     /// In-memory provider for tests. Pre-seeded with `(kind, name) →
     /// list-of-(version, manifest)` pairs.
@@ -359,12 +356,13 @@ mod tests {
         ) -> Result<semver::Version, crate::DepProviderError> {
             let key = (pkgref.kind, pkgref.name.clone());
             let entries = self.entries.borrow();
-            let candidates = entries
-                .get(&key)
-                .ok_or_else(|| crate::DepProviderError::UnknownPackage {
-                    kind: pkgref.kind,
-                    name: pkgref.name.clone(),
-                })?;
+            let candidates =
+                entries
+                    .get(&key)
+                    .ok_or_else(|| crate::DepProviderError::UnknownPackage {
+                        kind: pkgref.kind,
+                        name: pkgref.name.clone(),
+                    })?;
             // Pick highest matching version, prefer stable.
             let mut versions: Vec<&semver::Version> = candidates.iter().map(|(v, _)| v).collect();
             versions.sort();
@@ -372,9 +370,7 @@ mod tests {
                 .iter()
                 .rev()
                 .find(|v| pkgref.version.matches(v) && v.pre.is_empty())
-                .or_else(|| {
-                    versions.iter().rev().find(|v| pkgref.version.matches(v))
-                })
+                .or_else(|| versions.iter().rev().find(|v| pkgref.version.matches(v)))
                 .copied()
                 .ok_or_else(|| crate::DepProviderError::NoMatchingVersion {
                     kind: pkgref.kind,
@@ -402,9 +398,11 @@ mod tests {
                 .iter()
                 .find(|(v, _)| v == version)
                 .map(|(_, m)| m.clone())
-                .ok_or_else(|| crate::DepProviderError::Other(format!(
-                    "no manifest for {kind}:{name}@{version}"
-                )))
+                .ok_or_else(|| {
+                    crate::DepProviderError::Other(format!(
+                        "no manifest for {kind}:{name}@{version}"
+                    ))
+                })
         }
     }
 
@@ -412,12 +410,7 @@ mod tests {
         format!("[package]\nname = \"{name}\"\nkind = \"{kind}\"\nversion = \"{version}\"\n")
     }
 
-    fn manifest_with_requires(
-        kind: &str,
-        name: &str,
-        version: &str,
-        requires: &[&str],
-    ) -> String {
+    fn manifest_with_requires(kind: &str, name: &str, version: &str, requires: &[&str]) -> String {
         // `[requires.packages]` is a TOML table — each key a bare
         // `<kind>:<name>` pkgref, each value the version constraint.
         // The test helpers pass entries in the `<kind>:<name>@<req>`
@@ -477,7 +470,11 @@ mod tests {
         assert!(!graph.find(PackageKind::Stack, "rust").unwrap().is_root);
         assert!(!graph.find(PackageKind::Flow, "wal").unwrap().is_root);
         assert_eq!(
-            graph.find(PackageKind::Feat, "ui").unwrap().dependencies.len(),
+            graph
+                .find(PackageKind::Feat, "ui")
+                .unwrap()
+                .dependencies
+                .len(),
             1
         );
     }

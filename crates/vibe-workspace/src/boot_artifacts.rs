@@ -536,7 +536,10 @@ mod tests {
         let parsed: toml::Value = toml::from_str(&render_index(&b)).unwrap();
         let e = &parsed.get("entry").unwrap().as_array().unwrap()[0];
         assert_eq!(e.get("kind").unwrap().as_str(), Some("dynamic"));
-        assert!(e.get("when").is_none(), "an unconditional dynamic entry carries no `when`");
+        assert!(
+            e.get("when").is_none(),
+            "an unconditional dynamic entry carries no `when`"
+        );
     }
 
     #[test]
@@ -553,7 +556,10 @@ mod tests {
         let parsed: toml::Value = toml::from_str(&render_index(&b)).unwrap();
         let e = &parsed.get("entry").unwrap().as_array().unwrap()[0];
         assert_eq!(e.get("kind").unwrap().as_str(), Some("static"));
-        assert!(e.get("when").is_none(), "a static entry must not carry `when`");
+        assert!(
+            e.get("when").is_none(),
+            "a static entry must not carry `when`"
+        );
     }
 
     #[test]

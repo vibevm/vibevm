@@ -170,9 +170,7 @@ pub struct NodeBootInputs<'a> {
 /// Errors only on a [`WorkspaceError::BootDependencyCycle`] — a cycle in
 /// the dependency boot graph. A resolution from the depsolver is acyclic;
 /// the check guards the engine against a malformed input.
-pub fn compute_effective_boot(
-    inputs: NodeBootInputs<'_>,
-) -> Result<EffectiveBoot, WorkspaceError> {
+pub fn compute_effective_boot(inputs: NodeBootInputs<'_>) -> Result<EffectiveBoot, WorkspaceError> {
     let order = topo_order(inputs.dependencies)?;
 
     let mut entries: Vec<BootEntry> = Vec::new();
@@ -299,10 +297,7 @@ fn topo_order(deps: &[DependencyBoot]) -> Result<Vec<usize>, WorkspaceError> {
     }
 
     if order.len() != n {
-        let mut stuck: Vec<String> = (0..n)
-            .filter(|i| !order.contains(i))
-            .map(key)
-            .collect();
+        let mut stuck: Vec<String> = (0..n).filter(|i| !order.contains(i)).map(key).collect();
         stuck.sort();
         return Err(WorkspaceError::BootDependencyCycle {
             packages: stuck.join(", "),
@@ -373,7 +368,11 @@ mod tests {
         let bands: Vec<BootBand> = boot.entries.iter().map(|e| e.band).collect();
         assert_eq!(
             bands,
-            vec![BootBand::Foundation, BootBand::NodeOwn, BootBand::UserOverride]
+            vec![
+                BootBand::Foundation,
+                BootBand::NodeOwn,
+                BootBand::UserOverride
+            ]
         );
         // Authored boot is always `static`.
         assert!(boot.entries.iter().all(|e| e.link == LinkType::Static));
@@ -393,7 +392,10 @@ mod tests {
 
     #[test]
     fn inherited_foundation_precedes_own_foundation() {
-        let inherited = vec![authored("spec/boot/00-core.md", Some(BootCategory::Foundation))];
+        let inherited = vec![authored(
+            "spec/boot/00-core.md",
+            Some(BootCategory::Foundation),
+        )];
         let own = vec![authored(
             "packages/x/spec/boot/00-core.md",
             Some(BootCategory::Foundation),
@@ -495,8 +497,7 @@ mod tests {
         let plain = dep("wal", true, &[]); // static
         let boot = compute(&[], &[], &[inline, dynamic, plain], None);
 
-        let inline_origins: Vec<&str> =
-            boot.inline_entries().map(|e| e.origin.as_str()).collect();
+        let inline_origins: Vec<&str> = boot.inline_entries().map(|e| e.origin.as_str()).collect();
         assert_eq!(inline_origins, vec!["flow:crit"]);
 
         let indexed_origins: Vec<&str> =
@@ -507,10 +508,16 @@ mod tests {
 
     #[test]
     fn full_composition_orders_all_four_bands() {
-        let inherited = vec![authored("spec/boot/00-core.md", Some(BootCategory::Foundation))];
+        let inherited = vec![authored(
+            "spec/boot/00-core.md",
+            Some(BootCategory::Foundation),
+        )];
         let own = vec![
             authored("packages/x/spec/boot/intro.md", None),
-            authored("packages/x/spec/boot/90-user.md", Some(BootCategory::UserOverride)),
+            authored(
+                "packages/x/spec/boot/90-user.md",
+                Some(BootCategory::UserOverride),
+            ),
         ];
         let deps = vec![dep("a", true, &["b"]), dep("b", true, &[])];
         let boot = compute(&own, &inherited, &deps, None);
@@ -518,11 +525,11 @@ mod tests {
         assert_eq!(
             bands,
             vec![
-                BootBand::Foundation,  // inherited 00-core.md
-                BootBand::NodeOwn,     // intro.md
-                BootBand::Dependency,  // flow:b
-                BootBand::Dependency,  // flow:a
-                BootBand::UserOverride // 90-user.md
+                BootBand::Foundation,   // inherited 00-core.md
+                BootBand::NodeOwn,      // intro.md
+                BootBand::Dependency,   // flow:b
+                BootBand::Dependency,   // flow:a
+                BootBand::UserOverride  // 90-user.md
             ]
         );
         let origins: Vec<&str> = boot.entries.iter().map(|e| e.origin.as_str()).collect();
@@ -566,7 +573,10 @@ mod tests {
     fn authored_boot_never_carries_a_when() {
         // `when` is a property of a dependency's `[boot_snippet]`; a node's
         // own and inherited authored boot are unconditional.
-        let inherited = vec![authored("spec/boot/00-core.md", Some(BootCategory::Foundation))];
+        let inherited = vec![authored(
+            "spec/boot/00-core.md",
+            Some(BootCategory::Foundation),
+        )];
         let own = vec![authored("spec/boot/notes.md", None)];
         let boot = compute(&own, &inherited, &[], None);
         assert!(boot.entries.iter().all(|e| e.when.is_none()));

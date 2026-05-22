@@ -105,11 +105,7 @@ pub fn select_publishable_nodes(
     // If `--member` was given, confirm the node exists at all (root or a
     // member). A non-existent rel_path is an operator error.
     if let Some(target) = only_member {
-        let exists = target == "."
-            || workspace
-                .members
-                .iter()
-                .any(|m| m.rel_path == target);
+        let exists = target == "." || workspace.members.iter().any(|m| m.rel_path == target);
         if !exists {
             return Err(WorkspaceError::MemberNotFound {
                 pattern: target.to_string(),
@@ -140,9 +136,7 @@ pub fn select_publishable_nodes(
         if !meta.publish.includes(primary_registry) {
             selection.skipped.push(SkippedNode {
                 rel_path: rel_path.to_string(),
-                reason: format!(
-                    "publish posture excludes registry `{primary_registry}`"
-                ),
+                reason: format!("publish posture excludes registry `{primary_registry}`"),
             });
             continue;
         }
@@ -181,7 +175,10 @@ pub fn topo_order(workspace: &Workspace, nodes: &[PublishNode]) -> Result<Vec<Pu
     // once; consulted per path-dependency.
     let mut dir_to_rel: HashMap<PathBuf, String> = HashMap::new();
     for node in &sorted {
-        dir_to_rel.insert(node_abs_dir(workspace, &node.rel_path), node.rel_path.clone());
+        dir_to_rel.insert(
+            node_abs_dir(workspace, &node.rel_path),
+            node.rel_path.clone(),
+        );
     }
 
     // Build the dependency edges: deps[m] = set of rel_paths m depends on.
@@ -569,9 +566,7 @@ fn copy_tree_excluding(src: &Path, dst: &Path) -> Result<()> {
                 reason: format!("read_dir entry: {e}"),
             })?;
             let path = entry.path();
-            let rel = path
-                .strip_prefix(src)
-                .expect("walk yields paths under src");
+            let rel = path.strip_prefix(src).expect("walk yields paths under src");
             // Skip `.git/` and `.vibe/` at any depth — the published copy
             // is a clean repo; the dev cache must not travel.
             if rel
@@ -754,8 +749,7 @@ mod tests {
         write(tmp.path(), "packages/a/vibe.toml", &package("a", "flow"));
         write(tmp.path(), "packages/b/vibe.toml", &package("b", "flow"));
         let ws = Workspace::load(tmp.path()).unwrap();
-        let sel =
-            select_publishable_nodes(&ws, "vibespecs", Some("packages/b")).unwrap();
+        let sel = select_publishable_nodes(&ws, "vibespecs", Some("packages/b")).unwrap();
         assert_eq!(sel.publishable.len(), 1);
         assert_eq!(sel.publishable[0].rel_path, "packages/b");
     }
@@ -775,8 +769,7 @@ mod tests {
         );
         let ws = Workspace::load(tmp.path()).unwrap();
         // --member names a real node, but its posture excludes it.
-        let sel =
-            select_publishable_nodes(&ws, "vibespecs", Some("packages/a")).unwrap();
+        let sel = select_publishable_nodes(&ws, "vibespecs", Some("packages/a")).unwrap();
         assert!(sel.publishable.is_empty());
         assert_eq!(sel.skipped.len(), 1);
         assert!(sel.skipped[0].reason.contains("publish = false"));
@@ -792,10 +785,11 @@ mod tests {
         );
         write(tmp.path(), "packages/a/vibe.toml", &package("a", "flow"));
         let ws = Workspace::load(tmp.path()).unwrap();
-        let err =
-            select_publishable_nodes(&ws, "vibespecs", Some("packages/ghost"))
-                .unwrap_err();
-        assert!(matches!(err, WorkspaceError::MemberNotFound { .. }), "{err}");
+        let err = select_publishable_nodes(&ws, "vibespecs", Some("packages/ghost")).unwrap_err();
+        assert!(
+            matches!(err, WorkspaceError::MemberNotFound { .. }),
+            "{err}"
+        );
     }
 
     // ----- topological order -----
@@ -942,14 +936,9 @@ mod tests {
         let tmp = TempDir::new().unwrap();
         write(tmp.path(), "packages/a/vibe.toml", &package("a", "flow"));
         write(tmp.path(), "packages/a/spec/X.md", "spec content");
-        let staged = stage_node(
-            &tmp.path().join("packages/a"),
-            "packages/a",
-            &origin_info(),
-        )
-        .unwrap();
-        let manifest =
-            Manifest::read(staged.staging.path().join("vibe.toml")).unwrap();
+        let staged =
+            stage_node(&tmp.path().join("packages/a"), "packages/a", &origin_info()).unwrap();
+        let manifest = Manifest::read(staged.staging.path().join("vibe.toml")).unwrap();
         let origin = manifest.origin.as_ref().expect("origin written");
         assert_eq!(origin.upstream, "https://github.com/you/monorepo");
         assert_eq!(origin.path, "packages/a");
@@ -968,12 +957,8 @@ mod tests {
         write(tmp.path(), "packages/a/.git/objects/x", "obj");
         write(tmp.path(), "packages/a/.vibe/cache.bin", "cache");
         write(tmp.path(), "packages/a/keep.md", "keep me");
-        let staged = stage_node(
-            &tmp.path().join("packages/a"),
-            "packages/a",
-            &origin_info(),
-        )
-        .unwrap();
+        let staged =
+            stage_node(&tmp.path().join("packages/a"), "packages/a", &origin_info()).unwrap();
         assert!(!staged.staging.path().join(".git").exists());
         assert!(!staged.staging.path().join(".vibe").exists());
         assert!(staged.staging.path().join("keep.md").is_file());
@@ -984,14 +969,9 @@ mod tests {
         let tmp = TempDir::new().unwrap();
         write(tmp.path(), "packages/a/vibe.toml", &package("a", "flow"));
         write(tmp.path(), "packages/a/README.md", "# Original readme\n");
-        let staged = stage_node(
-            &tmp.path().join("packages/a"),
-            "packages/a",
-            &origin_info(),
-        )
-        .unwrap();
-        let readme =
-            fs::read_to_string(staged.staging.path().join("README.md")).unwrap();
+        let staged =
+            stage_node(&tmp.path().join("packages/a"), "packages/a", &origin_info()).unwrap();
+        let readme = fs::read_to_string(staged.staging.path().join("README.md")).unwrap();
         assert!(readme.contains("Generated copy — do not contribute here"));
         assert!(readme.contains("https://github.com/you/monorepo"));
         // Original content preserved below the banner.
@@ -1004,12 +984,8 @@ mod tests {
     fn stage_node_creates_readme_when_absent() {
         let tmp = TempDir::new().unwrap();
         write(tmp.path(), "packages/a/vibe.toml", &package("a", "flow"));
-        let staged = stage_node(
-            &tmp.path().join("packages/a"),
-            "packages/a",
-            &origin_info(),
-        )
-        .unwrap();
+        let staged =
+            stage_node(&tmp.path().join("packages/a"), "packages/a", &origin_info()).unwrap();
         let readme_path = staged.staging.path().join("README.md");
         assert!(readme_path.is_file());
         let readme = fs::read_to_string(&readme_path).unwrap();
@@ -1020,12 +996,8 @@ mod tests {
     fn stage_node_writes_pr_template() {
         let tmp = TempDir::new().unwrap();
         write(tmp.path(), "packages/a/vibe.toml", &package("a", "flow"));
-        let staged = stage_node(
-            &tmp.path().join("packages/a"),
-            "packages/a",
-            &origin_info(),
-        )
-        .unwrap();
+        let staged =
+            stage_node(&tmp.path().join("packages/a"), "packages/a", &origin_info()).unwrap();
         let pr_template = fs::read_to_string(
             staged
                 .staging
@@ -1042,14 +1014,9 @@ mod tests {
     fn stage_node_sets_generated_copy_description() {
         let tmp = TempDir::new().unwrap();
         write(tmp.path(), "packages/a/vibe.toml", &package("a", "flow"));
-        let staged = stage_node(
-            &tmp.path().join("packages/a"),
-            "packages/a",
-            &origin_info(),
-        )
-        .unwrap();
-        let manifest =
-            Manifest::read(staged.staging.path().join("vibe.toml")).unwrap();
+        let staged =
+            stage_node(&tmp.path().join("packages/a"), "packages/a", &origin_info()).unwrap();
+        let manifest = Manifest::read(staged.staging.path().join("vibe.toml")).unwrap();
         let desc = manifest
             .package
             .as_ref()
@@ -1065,10 +1032,8 @@ mod tests {
         write(tmp.path(), "packages/a/vibe.toml", &package("a", "flow"));
         let mut info = origin_info();
         info.commit = None;
-        let staged =
-            stage_node(&tmp.path().join("packages/a"), "packages/a", &info).unwrap();
-        let manifest =
-            Manifest::read(staged.staging.path().join("vibe.toml")).unwrap();
+        let staged = stage_node(&tmp.path().join("packages/a"), "packages/a", &info).unwrap();
+        let manifest = Manifest::read(staged.staging.path().join("vibe.toml")).unwrap();
         assert!(manifest.origin.as_ref().unwrap().commit.is_none());
     }
 
@@ -1090,17 +1055,19 @@ mod tests {
              path = \"vibedeps/flow-dep/1.0.0/boot/dep.md\"\nkind = \"static\"\n",
         );
         // A stale INLINE.md left over from a dev-tree inline dependency.
-        write(tmp.path(), "packages/a/spec/boot/INLINE.md", "stale inline lane");
+        write(
+            tmp.path(),
+            "packages/a/spec/boot/INLINE.md",
+            "stale inline lane",
+        );
         write(tmp.path(), "packages/a/CLAUDE.md", "stale dev redirect");
 
         let staged =
-            stage_node(&tmp.path().join("packages/a"), "packages/a", &origin_info())
-                .unwrap();
+            stage_node(&tmp.path().join("packages/a"), "packages/a", &origin_info()).unwrap();
 
         // The dangling `vibedeps/` reference is gone; the node's own
         // authored foundation boot is named instead.
-        let index =
-            fs::read_to_string(staged.staging.path().join("spec/boot/INDEX.md")).unwrap();
+        let index = fs::read_to_string(staged.staging.path().join("spec/boot/INDEX.md")).unwrap();
         assert!(
             !index.contains("vibedeps/"),
             "the published INDEX.md must not dangle on a workspace vibedeps/ slot:\n{index}"
@@ -1116,8 +1083,7 @@ mod tests {
             "a stale INLINE.md must be cleared in the published copy"
         );
         // The redirect is regenerated as a thin generated pointer.
-        let claude =
-            fs::read_to_string(staged.staging.path().join("CLAUDE.md")).unwrap();
+        let claude = fs::read_to_string(staged.staging.path().join("CLAUDE.md")).unwrap();
         assert!(
             claude.contains("Generated by vibe") && claude.contains("spec/boot/INDEX.md"),
             "CLAUDE.md must be a regenerated redirect:\n{claude}"

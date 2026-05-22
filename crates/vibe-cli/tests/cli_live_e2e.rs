@@ -72,12 +72,7 @@ fn vibe() -> Command {
 /// fixtures (default `name` naming for that registry, matching the
 /// canonical `vibespecs-gitverse` shape).
 fn init_project(dir: &Path) {
-    vibe()
-        .arg("init")
-        .arg("--path")
-        .arg(dir)
-        .assert()
-        .success();
+    vibe().arg("init").arg("--path").arg(dir).assert().success();
     let manifest = format!(
         r#"[project]
 name = "live-e2e"
@@ -112,10 +107,8 @@ fn install_github_smoke_alone() {
         .success();
 
     // Lockfile must record the GitHub registry as the source.
-    let lock_text =
-        fs::read_to_string(project.path().join("vibe.lock")).expect("lockfile present");
-    let lock: vibe_core::manifest::Lockfile =
-        toml::from_str(&lock_text).expect("lockfile parses");
+    let lock_text = fs::read_to_string(project.path().join("vibe.lock")).expect("lockfile present");
+    let lock: vibe_core::manifest::Lockfile = toml::from_str(&lock_text).expect("lockfile parses");
     let pkg = lock
         .packages
         .iter()
@@ -161,10 +154,8 @@ fn install_gitverse_smoke_alone() {
     // Lockfile must record the GitVerse registry as the source after
     // the GitHub `[[registry]]` returned `UnknownPackage` (the package
     // does not exist on GitHub by design).
-    let lock_text =
-        fs::read_to_string(project.path().join("vibe.lock")).expect("lockfile present");
-    let lock: vibe_core::manifest::Lockfile =
-        toml::from_str(&lock_text).expect("lockfile parses");
+    let lock_text = fs::read_to_string(project.path().join("vibe.lock")).expect("lockfile present");
+    let lock: vibe_core::manifest::Lockfile = toml::from_str(&lock_text).expect("lockfile parses");
     let pkg = lock
         .packages
         .iter()
@@ -214,10 +205,8 @@ fn cross_registry_resolution_routes_each_package_to_correct_host() {
         .assert()
         .success();
 
-    let lock_text =
-        fs::read_to_string(project.path().join("vibe.lock")).expect("lockfile present");
-    let lock: vibe_core::manifest::Lockfile =
-        toml::from_str(&lock_text).expect("lockfile parses");
+    let lock_text = fs::read_to_string(project.path().join("vibe.lock")).expect("lockfile present");
+    let lock: vibe_core::manifest::Lockfile = toml::from_str(&lock_text).expect("lockfile parses");
 
     let github_pkg = lock
         .packages

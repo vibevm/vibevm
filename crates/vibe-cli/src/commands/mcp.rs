@@ -49,11 +49,11 @@ use serde_json::{Map, Value as JsonValue};
 use vibe_core::manifest::Manifest;
 use vibe_mcp::{Server, ServerContext};
 
-use crate::exit_code::InstallError;
 use crate::cli::{
     McpArgs, McpInstallArgs, McpServeArgs, McpStatusArgs, McpSubcommand, McpUninstallArgs,
     McpUpgradeArgs,
 };
+use crate::exit_code::InstallError;
 use crate::output;
 
 /// Centralised TTY probe for the install UX gates. Pulled out so the
@@ -117,9 +117,9 @@ impl Scope {
             "project" => Ok(Scope::Project),
             "user" => Ok(Scope::User),
             "both" => Ok(Scope::Both),
-            other => bail!(
-                "unknown --scope value `{other}` (expected `project`, `user`, or `both`)"
-            ),
+            other => {
+                bail!("unknown --scope value `{other}` (expected `project`, `user`, or `both`)")
+            }
         }
     }
 
@@ -172,9 +172,7 @@ impl What {
             "mcp" => Ok(What::Mcp),
             "skill" => Ok(What::Skill),
             "both" => Ok(What::Both),
-            other => bail!(
-                "unknown --what value `{other}` (expected `mcp`, `skill`, or `both`)"
-            ),
+            other => bail!("unknown --what value `{other}` (expected `mcp`, `skill`, or `both`)"),
         }
     }
 
@@ -295,22 +293,19 @@ impl Agent {
     /// Returns `Ok(None)` if the agent does not support this scope
     /// (e.g. Claude Desktop + Project). Returns `Err(...)` if the
     /// host cannot resolve required dirs (HOME / config-dir).
-    pub fn config_path(
-        self,
-        scope: Scope,
-        project_root: Option<&Path>,
-    ) -> Result<Option<PathBuf>> {
+    pub fn config_path(self, scope: Scope, project_root: Option<&Path>) -> Result<Option<PathBuf>> {
         match (self, scope) {
-            (_, Scope::Both) => bail!(
-                "internal: Agent::config_path requires concrete scope; expand Both first"
-            ),
+            (_, Scope::Both) => {
+                bail!("internal: Agent::config_path requires concrete scope; expand Both first")
+            }
             // ---- Project scope ----
-            (Agent::ClaudeCode, Scope::Project) => Ok(project_root
-                .map(|p| p.join(".claude").join("settings.json"))),
-            (Agent::Cursor, Scope::Project) => Ok(project_root
-                .map(|p| p.join(".cursor").join("mcp.json"))),
-            (Agent::OpenCode, Scope::Project) => Ok(project_root
-                .map(|p| p.join("opencode.json"))),
+            (Agent::ClaudeCode, Scope::Project) => {
+                Ok(project_root.map(|p| p.join(".claude").join("settings.json")))
+            }
+            (Agent::Cursor, Scope::Project) => {
+                Ok(project_root.map(|p| p.join(".cursor").join("mcp.json")))
+            }
+            (Agent::OpenCode, Scope::Project) => Ok(project_root.map(|p| p.join("opencode.json"))),
             (Agent::ClaudeCodeDesktop | Agent::Codex, Scope::Project) => Ok(None),
             // ---- User scope ----
             (Agent::ClaudeCode, Scope::User) => {
@@ -362,44 +357,52 @@ impl Agent {
     /// (Cursor, Claude Desktop) regardless of scope. Returns `Ok(None)`
     /// for project scope when the agent has no project surface (Claude
     /// Desktop, Codex — though those are skill-unsupported anyway).
-    pub fn skill_path(
-        self,
-        scope: Scope,
-        project_root: Option<&Path>,
-    ) -> Result<Option<PathBuf>> {
+    pub fn skill_path(self, scope: Scope, project_root: Option<&Path>) -> Result<Option<PathBuf>> {
         if !self.supports_skill() {
             return Ok(None);
         }
         match (self, scope) {
-            (_, Scope::Both) => bail!(
-                "internal: Agent::skill_path requires concrete scope; expand Both first"
-            ),
+            (_, Scope::Both) => {
+                bail!("internal: Agent::skill_path requires concrete scope; expand Both first")
+            }
             // ---- Project scope ----
             (Agent::ClaudeCode, Scope::Project) => Ok(project_root.map(|p| {
-                p.join(".claude").join("skills").join(SKILL_NAME).join("SKILL.md")
+                p.join(".claude")
+                    .join("skills")
+                    .join(SKILL_NAME)
+                    .join("SKILL.md")
             })),
             (Agent::OpenCode, Scope::Project) => Ok(project_root.map(|p| {
-                p.join(".opencode").join("skills").join(SKILL_NAME).join("SKILL.md")
+                p.join(".opencode")
+                    .join("skills")
+                    .join(SKILL_NAME)
+                    .join("SKILL.md")
             })),
             (Agent::Codex, Scope::Project) => Ok(project_root.map(|p| {
-                p.join(".agents").join("skills").join(SKILL_NAME).join("SKILL.md")
+                p.join(".agents")
+                    .join("skills")
+                    .join(SKILL_NAME)
+                    .join("SKILL.md")
             })),
             (Agent::Cursor | Agent::ClaudeCodeDesktop, _) => Ok(None),
             // ---- User scope ----
             (Agent::ClaudeCode, Scope::User) => {
-                let home = dirs::home_dir().ok_or_else(|| {
-                    anyhow!("could not resolve home dir for Claude Code skill")
-                })?;
-                Ok(Some(home.join(".claude").join("skills").join(SKILL_NAME).join("SKILL.md")))
+                let home = dirs::home_dir()
+                    .ok_or_else(|| anyhow!("could not resolve home dir for Claude Code skill"))?;
+                Ok(Some(
+                    home.join(".claude")
+                        .join("skills")
+                        .join(SKILL_NAME)
+                        .join("SKILL.md"),
+                ))
             }
             (Agent::OpenCode, Scope::User) => {
                 // Same XDG-on-every-OS contract as Agent::config_path
                 // for OpenCode — see the comment there. Empirically
                 // verified that opencode reads `~/.config/opencode/`
                 // on Windows, NOT `%APPDATA%\opencode\`.
-                let home = dirs::home_dir().ok_or_else(|| {
-                    anyhow!("could not resolve home dir for OpenCode skill")
-                })?;
+                let home = dirs::home_dir()
+                    .ok_or_else(|| anyhow!("could not resolve home dir for OpenCode skill"))?;
                 Ok(Some(
                     home.join(".config")
                         .join("opencode")
@@ -409,10 +412,14 @@ impl Agent {
                 ))
             }
             (Agent::Codex, Scope::User) => {
-                let home = dirs::home_dir().ok_or_else(|| {
-                    anyhow!("could not resolve home dir for Codex skill")
-                })?;
-                Ok(Some(home.join(".agents").join("skills").join(SKILL_NAME).join("SKILL.md")))
+                let home = dirs::home_dir()
+                    .ok_or_else(|| anyhow!("could not resolve home dir for Codex skill"))?;
+                Ok(Some(
+                    home.join(".agents")
+                        .join("skills")
+                        .join(SKILL_NAME)
+                        .join("SKILL.md"),
+                ))
             }
         }
     }
@@ -454,9 +461,7 @@ impl Agent {
                 tbl.insert("command".into(), toml::Value::String("vibe".into()));
                 tbl.insert(
                     "args".into(),
-                    toml::Value::Array(
-                        args_array.into_iter().map(toml::Value::String).collect(),
-                    ),
+                    toml::Value::Array(args_array.into_iter().map(toml::Value::String).collect()),
                 );
                 ConfigPayload::Toml(toml::Value::Table(tbl))
             }
@@ -573,9 +578,7 @@ fn run_install(ctx: &output::Context, args: McpInstallArgs) -> Result<()> {
     // The mode is `auto` if --auto was passed; `flags` if any of
     // (--scope/--what/--agent) was passed without --auto and we don't
     // need to ask anything; `interactive` otherwise (asks via wizard).
-    let any_explicit_target = args.agent.is_some()
-        || args.scope.is_some()
-        || args.what.is_some();
+    let any_explicit_target = args.agent.is_some() || args.scope.is_some() || args.what.is_some();
     let mode = if args.auto {
         InstallMode::Auto
     } else if any_explicit_target {
@@ -702,11 +705,12 @@ fn run_install(ctx: &output::Context, args: McpInstallArgs) -> Result<()> {
         true,
     )?;
 
-    let needs_change = preview_results.iter().any(|r| {
-        matches!(r.status, "would-create" | "would-update")
-    }) || preview_skill.iter().any(|r| {
-        matches!(r.status, "would-create" | "would-update")
-    });
+    let needs_change = preview_results
+        .iter()
+        .any(|r| matches!(r.status, "would-create" | "would-update"))
+        || preview_skill
+            .iter()
+            .any(|r| matches!(r.status, "would-create" | "would-update"));
 
     if !args.dry_run && needs_change {
         // Confirmation gating: skip the prompt when the operator
@@ -725,12 +729,14 @@ fn run_install(ctx: &output::Context, args: McpInstallArgs) -> Result<()> {
             true
         } else {
             print_install_results(ctx, true, &preview_results, &preview_skill);
-            let mcp_count = preview_results.iter().filter(|r| {
-                matches!(r.status, "would-create" | "would-update")
-            }).count();
-            let skill_count = preview_skill.iter().filter(|r| {
-                matches!(r.status, "would-create" | "would-update")
-            }).count();
+            let mcp_count = preview_results
+                .iter()
+                .filter(|r| matches!(r.status, "would-create" | "would-update"))
+                .count();
+            let skill_count = preview_skill
+                .iter()
+                .filter(|r| matches!(r.status, "would-create" | "would-update"))
+                .count();
             Confirm::new()
                 .with_prompt(format!(
                     "Apply this plan? ({mcp_count} MCP entr{}, {skill_count} SKILL.md file{})",
@@ -778,12 +784,19 @@ fn run_install(ctx: &output::Context, args: McpInstallArgs) -> Result<()> {
         return Ok(());
     }
     if ctx.is_quiet() {
-        let mcp_written = results.iter().filter(|r| matches!(r.status, "created" | "updated")).count();
-        let skill_written = skill_results.iter().filter(|r| matches!(r.status, "created" | "updated")).count();
+        let mcp_written = results
+            .iter()
+            .filter(|r| matches!(r.status, "created" | "updated"))
+            .count();
+        let skill_written = skill_results
+            .iter()
+            .filter(|r| matches!(r.status, "created" | "updated"))
+            .count();
         let verb = if args.dry_run { "previewed" } else { "written" };
         ctx.summary(&format!(
             "vibe mcp install: scope={} what={} — {mcp_written} MCP + {skill_written} skill {verb}",
-            scope.as_str(), what.as_str()
+            scope.as_str(),
+            what.as_str()
         ));
         return Ok(());
     }
@@ -807,7 +820,11 @@ fn print_install_results(
 ) {
     for r in results {
         let prefix = if dry_run { "would" } else { r.status };
-        let note = r.note.as_deref().map(|n| format!(" ({n})")).unwrap_or_default();
+        let note = r
+            .note
+            .as_deref()
+            .map(|n| format!(" ({n})"))
+            .unwrap_or_default();
         let target = if r.config_path.is_empty() {
             "(no surface)".to_string()
         } else {
@@ -820,7 +837,11 @@ fn print_install_results(
     }
     for r in skill_results {
         let prefix = if dry_run { "would" } else { r.status };
-        let note = r.note.as_deref().map(|n| format!(" ({n})")).unwrap_or_default();
+        let note = r
+            .note
+            .as_deref()
+            .map(|n| format!(" ({n})"))
+            .unwrap_or_default();
         let path_str = r.path.as_deref().unwrap_or("(no skill loader)");
         ctx.step(&format!(
             "{} skill   {} ({}) → {}{note}",
@@ -880,8 +901,7 @@ fn walk_install(
             }
             // ---- SKILL.md ----
             if what.includes_skill() {
-                let outcome =
-                    install_skill(*agent, concrete_scope, project_root, dry_run)?;
+                let outcome = install_skill(*agent, concrete_scope, project_root, dry_run)?;
                 skill_results.push(outcome);
             }
         }
@@ -936,8 +956,7 @@ fn run_status(ctx: &output::Context, args: McpStatusArgs) -> Result<()> {
             // a path for this scope. install_skill with dry_run=true
             // reuses the decide-then-(don't-)apply logic and emits
             // would-create / would-update / unchanged.
-            if agent.supports_skill()
-                && agent.skill_path(scope, project_root.as_deref())?.is_some()
+            if agent.supports_skill() && agent.skill_path(scope, project_root.as_deref())?.is_some()
             {
                 let outcome = install_skill(agent, scope, project_root.as_deref(), true)?;
                 skill_results.push(outcome);
@@ -961,18 +980,30 @@ fn run_status(ctx: &output::Context, args: McpStatusArgs) -> Result<()> {
         if detected.is_empty() {
             "(none)".to_string()
         } else {
-            detected.iter().map(|a| a.as_str()).collect::<Vec<_>>().join(", ")
+            detected
+                .iter()
+                .map(|a| a.as_str())
+                .collect::<Vec<_>>()
+                .join(", ")
         }
     ));
     for r in &results {
-        let note = r.note.as_deref().map(|n| format!(" ({n})")).unwrap_or_default();
+        let note = r
+            .note
+            .as_deref()
+            .map(|n| format!(" ({n})"))
+            .unwrap_or_default();
         ctx.step(&format!(
             "{} mcp     {} ({}) → {}{note}",
             r.status, r.agent, r.scope, r.config_path
         ));
     }
     for r in &skill_results {
-        let note = r.note.as_deref().map(|n| format!(" ({n})")).unwrap_or_default();
+        let note = r
+            .note
+            .as_deref()
+            .map(|n| format!(" ({n})"))
+            .unwrap_or_default();
         let path_str = r.path.as_deref().unwrap_or("(no skill loader)");
         ctx.step(&format!(
             "{} skill   {} ({}) → {}{note}",
@@ -1054,25 +1085,28 @@ fn run_upgrade(ctx: &output::Context, args: McpUpgradeArgs) -> Result<()> {
         // matching block in `run_install` for the rationale —
         // non-TTY scripts pre-date the confirm prompt and must
         // continue to work without `--yes`).
-        let approved = if args.yes
-            || ctx.is_unattended()
-            || ctx.is_json()
-            || !console::user_attended()
-        {
-            true
-        } else {
-            print_upgrade_results(ctx, true, &preview_results, &preview_skill);
-            let stale = preview_results.iter().filter(|r| r.status == "would-update").count()
-                + preview_skill.iter().filter(|r| r.status == "would-update").count();
-            Confirm::new()
-                .with_prompt(format!(
-                    "Refresh {stale} stale entr{}?",
-                    if stale == 1 { "y" } else { "ies" }
-                ))
-                .default(false)
-                .interact()
-                .context("reading user confirmation")?
-        };
+        let approved =
+            if args.yes || ctx.is_unattended() || ctx.is_json() || !console::user_attended() {
+                true
+            } else {
+                print_upgrade_results(ctx, true, &preview_results, &preview_skill);
+                let stale = preview_results
+                    .iter()
+                    .filter(|r| r.status == "would-update")
+                    .count()
+                    + preview_skill
+                        .iter()
+                        .filter(|r| r.status == "would-update")
+                        .count();
+                Confirm::new()
+                    .with_prompt(format!(
+                        "Refresh {stale} stale entr{}?",
+                        if stale == 1 { "y" } else { "ies" }
+                    ))
+                    .default(false)
+                    .interact()
+                    .context("reading user confirmation")?
+            };
         if !approved {
             return Err(InstallError::UserDeclined.into());
         }
@@ -1108,9 +1142,15 @@ fn run_upgrade(ctx: &output::Context, args: McpUpgradeArgs) -> Result<()> {
                 .iter()
                 .filter(|r| matches!(r.status, "would-update" | "updated"))
                 .count();
-        let verb = if args.dry_run { "previewed" } else { "refreshed" };
-        ctx.summary(&format!("vibe mcp upgrade: {stale} stale entr{} {verb}",
-            if stale == 1 { "y" } else { "ies" }));
+        let verb = if args.dry_run {
+            "previewed"
+        } else {
+            "refreshed"
+        };
+        ctx.summary(&format!(
+            "vibe mcp upgrade: {stale} stale entr{} {verb}",
+            if stale == 1 { "y" } else { "ies" }
+        ));
         return Ok(());
     }
 
@@ -1140,13 +1180,8 @@ fn walk_upgrade(
             if what.includes_mcp() {
                 let path = agent.config_path(concrete_scope, project_root)?;
                 if let Some(path) = path {
-                    let outcome = upgrade_mcp_entry(
-                        *agent,
-                        concrete_scope,
-                        &path,
-                        project_root,
-                        dry_run,
-                    )?;
+                    let outcome =
+                        upgrade_mcp_entry(*agent, concrete_scope, &path, project_root, dry_run)?;
                     results.push(outcome);
                 }
             }
@@ -1184,19 +1219,15 @@ fn upgrade_mcp_entry(
     }
     let section = agent.mcp_section_key();
     let has_vibevm_block = match (&payload, agent.config_format()) {
-        (ConfigPayload::Json(_), ConfigFormat::Json) => {
-            read_json(config_path)?
-                .get(section)
-                .and_then(|v| v.get(SERVER_NAME))
-                .is_some()
-        }
-        (ConfigPayload::Toml(_), ConfigFormat::Toml) => {
-            read_toml(config_path)?
-                .get(section)
-                .and_then(|v| v.as_table())
-                .and_then(|t| t.get(SERVER_NAME))
-                .is_some()
-        }
+        (ConfigPayload::Json(_), ConfigFormat::Json) => read_json(config_path)?
+            .get(section)
+            .and_then(|v| v.get(SERVER_NAME))
+            .is_some(),
+        (ConfigPayload::Toml(_), ConfigFormat::Toml) => read_toml(config_path)?
+            .get(section)
+            .and_then(|v| v.as_table())
+            .and_then(|t| t.get(SERVER_NAME))
+            .is_some(),
         _ => bail!(
             "internal: agent `{}` config_format/payload mismatch",
             agent.as_str()
@@ -1262,11 +1293,21 @@ fn print_upgrade_results(
     for r in results {
         let prefix = match r.status {
             "unchanged" => "✓",
-            "would-update" | "updated" => if dry_run { "would" } else { "updated" },
+            "would-update" | "updated" => {
+                if dry_run {
+                    "would"
+                } else {
+                    "updated"
+                }
+            }
             "not-installed" => "·",
             other => other,
         };
-        let note = r.note.as_deref().map(|n| format!(" ({n})")).unwrap_or_default();
+        let note = r
+            .note
+            .as_deref()
+            .map(|n| format!(" ({n})"))
+            .unwrap_or_default();
         ctx.step(&format!(
             "{} mcp     {} ({}) → {}{note}",
             prefix, r.agent, r.scope, r.config_path
@@ -1275,11 +1316,21 @@ fn print_upgrade_results(
     for r in skill_results {
         let prefix = match r.status {
             "unchanged" => "✓",
-            "would-update" | "updated" => if dry_run { "would" } else { "updated" },
+            "would-update" | "updated" => {
+                if dry_run {
+                    "would"
+                } else {
+                    "updated"
+                }
+            }
             "not-installed" => "·",
             other => other,
         };
-        let note = r.note.as_deref().map(|n| format!(" ({n})")).unwrap_or_default();
+        let note = r
+            .note
+            .as_deref()
+            .map(|n| format!(" ({n})"))
+            .unwrap_or_default();
         let path_str = r.path.as_deref().unwrap_or("(no skill loader)");
         ctx.step(&format!(
             "{} skill   {} ({}) → {}{note}",
@@ -1353,31 +1404,28 @@ fn run_uninstall(ctx: &output::Context, args: McpUninstallArgs) -> Result<()> {
 
     if !args.dry_run && needs_change {
         // Same TTY-only confirm policy as install / upgrade.
-        let approved = if args.yes
-            || ctx.is_unattended()
-            || ctx.is_json()
-            || !console::user_attended()
-        {
-            true
-        } else {
-            print_uninstall_results(ctx, true, &preview_results, &preview_skill);
-            let to_remove = preview_results
-                .iter()
-                .filter(|r| r.status == "would-remove")
-                .count()
-                + preview_skill
+        let approved =
+            if args.yes || ctx.is_unattended() || ctx.is_json() || !console::user_attended() {
+                true
+            } else {
+                print_uninstall_results(ctx, true, &preview_results, &preview_skill);
+                let to_remove = preview_results
                     .iter()
                     .filter(|r| r.status == "would-remove")
-                    .count();
-            Confirm::new()
-                .with_prompt(format!(
-                    "Remove {to_remove} entr{}?",
-                    if to_remove == 1 { "y" } else { "ies" }
-                ))
-                .default(false)
-                .interact()
-                .context("reading user confirmation")?
-        };
+                    .count()
+                    + preview_skill
+                        .iter()
+                        .filter(|r| r.status == "would-remove")
+                        .count();
+                Confirm::new()
+                    .with_prompt(format!(
+                        "Remove {to_remove} entr{}?",
+                        if to_remove == 1 { "y" } else { "ies" }
+                    ))
+                    .default(false)
+                    .interact()
+                    .context("reading user confirmation")?
+            };
         if !approved {
             return Err(InstallError::UserDeclined.into());
         }
@@ -1414,8 +1462,10 @@ fn run_uninstall(ctx: &output::Context, args: McpUninstallArgs) -> Result<()> {
                 .filter(|r| matches!(r.status, "would-remove" | "removed"))
                 .count();
         let verb = if args.dry_run { "previewed" } else { "removed" };
-        ctx.summary(&format!("vibe mcp uninstall: {removed} entr{} {verb}",
-            if removed == 1 { "y" } else { "ies" }));
+        ctx.summary(&format!(
+            "vibe mcp uninstall: {removed} entr{} {verb}",
+            if removed == 1 { "y" } else { "ies" }
+        ));
         return Ok(());
     }
 
@@ -1443,14 +1493,12 @@ fn walk_uninstall(
             if what.includes_mcp() {
                 let path = agent.config_path(concrete_scope, project_root)?;
                 if let Some(path) = path {
-                    let outcome =
-                        uninstall_mcp_entry(*agent, concrete_scope, &path, dry_run)?;
+                    let outcome = uninstall_mcp_entry(*agent, concrete_scope, &path, dry_run)?;
                     results.push(outcome);
                 }
             }
             if what.includes_skill() {
-                let outcome =
-                    uninstall_skill(*agent, concrete_scope, project_root, dry_run)?;
+                let outcome = uninstall_skill(*agent, concrete_scope, project_root, dry_run)?;
                 if let Some(o) = outcome {
                     skill_results.push(o);
                 }
@@ -1481,19 +1529,15 @@ fn uninstall_mcp_entry(
     }
     let section = agent.mcp_section_key();
     let has_block = match agent.config_format() {
-        ConfigFormat::Json => {
-            read_json(config_path)?
-                .get(section)
-                .and_then(|v| v.get(SERVER_NAME))
-                .is_some()
-        }
-        ConfigFormat::Toml => {
-            read_toml(config_path)?
-                .get(section)
-                .and_then(|v| v.as_table())
-                .and_then(|t| t.get(SERVER_NAME))
-                .is_some()
-        }
+        ConfigFormat::Json => read_json(config_path)?
+            .get(section)
+            .and_then(|v| v.get(SERVER_NAME))
+            .is_some(),
+        ConfigFormat::Toml => read_toml(config_path)?
+            .get(section)
+            .and_then(|v| v.as_table())
+            .and_then(|t| t.get(SERVER_NAME))
+            .is_some(),
     };
     if !has_block {
         return Ok(AgentInstallReport {
@@ -1567,8 +1611,7 @@ fn uninstall_skill(
             note: Some("delete SKILL.md (and parent vibevm/ dir if empty)".into()),
         }));
     }
-    fs::remove_file(&path)
-        .with_context(|| format!("removing SKILL.md `{}`", path.display()))?;
+    fs::remove_file(&path).with_context(|| format!("removing SKILL.md `{}`", path.display()))?;
     // Try to remove the parent `vibevm/` skill dir if it became empty.
     // Best-effort — don't fail uninstall if the dir has stragglers.
     if let Some(parent) = path.parent() {
@@ -1583,11 +1626,7 @@ fn uninstall_skill(
     }))
 }
 
-fn strip_json_entry(
-    config_path: &Path,
-    section_key: &str,
-    server_name: &str,
-) -> Result<JsonValue> {
+fn strip_json_entry(config_path: &Path, section_key: &str, server_name: &str) -> Result<JsonValue> {
     let mut existing = read_json(config_path)?;
     if let Some(obj) = existing.as_object_mut()
         && let Some(servers) = obj.get_mut(section_key).and_then(|v| v.as_object_mut())
@@ -1619,11 +1658,21 @@ fn print_uninstall_results(
 ) {
     for r in results {
         let prefix = match r.status {
-            "removed" | "would-remove" => if dry_run { "would" } else { "removed" },
+            "removed" | "would-remove" => {
+                if dry_run {
+                    "would"
+                } else {
+                    "removed"
+                }
+            }
             "not-installed" => "·",
             other => other,
         };
-        let note = r.note.as_deref().map(|n| format!(" ({n})")).unwrap_or_default();
+        let note = r
+            .note
+            .as_deref()
+            .map(|n| format!(" ({n})"))
+            .unwrap_or_default();
         ctx.step(&format!(
             "{} mcp     {} ({}) → {}{note}",
             prefix, r.agent, r.scope, r.config_path
@@ -1631,11 +1680,21 @@ fn print_uninstall_results(
     }
     for r in skill_results {
         let prefix = match r.status {
-            "removed" | "would-remove" => if dry_run { "would" } else { "removed" },
+            "removed" | "would-remove" => {
+                if dry_run {
+                    "would"
+                } else {
+                    "removed"
+                }
+            }
             "not-installed" => "·",
             other => other,
         };
-        let note = r.note.as_deref().map(|n| format!(" ({n})")).unwrap_or_default();
+        let note = r
+            .note
+            .as_deref()
+            .map(|n| format!(" ({n})"))
+            .unwrap_or_default();
         let path_str = r.path.as_deref().unwrap_or("(no skill loader)");
         ctx.step(&format!(
             "{} skill   {} ({}) → {}{note}",
@@ -1765,7 +1824,10 @@ fn decide_action(
                 .and_then(|t| t.get(SERVER_NAME));
             match existing_entry {
                 Some(e) if e == entry => Ok(("unchanged", None)),
-                Some(_) => Ok(("updated", Some(format!("[{section}.{SERVER_NAME}] differs")))),
+                Some(_) => Ok((
+                    "updated",
+                    Some(format!("[{section}.{SERVER_NAME}] differs")),
+                )),
                 None => Ok(("updated", Some(format!("[{section}.{SERVER_NAME}] absent")))),
             }
         }
@@ -1862,8 +1924,8 @@ fn read_toml(path: &Path) -> Result<toml::Value> {
     if text.trim().is_empty() {
         return Ok(toml::Value::Table(toml::value::Table::new()));
     }
-    let v: toml::Value = toml::from_str(&text)
-        .with_context(|| format!("parsing TOML `{}`", path.display()))?;
+    let v: toml::Value =
+        toml::from_str(&text).with_context(|| format!("parsing TOML `{}`", path.display()))?;
     Ok(v)
 }
 
@@ -1985,8 +2047,7 @@ pub fn install_skill(
             fs::create_dir_all(parent)
                 .with_context(|| format!("creating skill dir `{}`", parent.display()))?;
         }
-        fs::write(&path, body)
-            .with_context(|| format!("writing skill `{}`", path.display()))?;
+        fs::write(&path, body).with_context(|| format!("writing skill `{}`", path.display()))?;
     }
 
     Ok(SkillInstallReport {
@@ -2002,8 +2063,8 @@ fn decide_skill_action(path: &Path, body: &str) -> Result<&'static str> {
     if !path.exists() {
         return Ok("created");
     }
-    let existing = fs::read_to_string(path)
-        .with_context(|| format!("reading skill `{}`", path.display()))?;
+    let existing =
+        fs::read_to_string(path).with_context(|| format!("reading skill `{}`", path.display()))?;
     if existing == body {
         Ok("unchanged")
     } else {
@@ -2113,10 +2174,19 @@ mod tests {
     #[test]
     fn parse_filter_known_values() {
         assert_eq!(Agent::parse_filter("all").unwrap(), Agent::ALL.to_vec());
-        assert_eq!(Agent::parse_filter("claude").unwrap(), vec![Agent::ClaudeCode]);
-        assert_eq!(Agent::parse_filter("claude-desktop").unwrap(), vec![Agent::ClaudeCodeDesktop]);
+        assert_eq!(
+            Agent::parse_filter("claude").unwrap(),
+            vec![Agent::ClaudeCode]
+        );
+        assert_eq!(
+            Agent::parse_filter("claude-desktop").unwrap(),
+            vec![Agent::ClaudeCodeDesktop]
+        );
         assert_eq!(Agent::parse_filter("cursor").unwrap(), vec![Agent::Cursor]);
-        assert_eq!(Agent::parse_filter("opencode").unwrap(), vec![Agent::OpenCode]);
+        assert_eq!(
+            Agent::parse_filter("opencode").unwrap(),
+            vec![Agent::OpenCode]
+        );
         assert_eq!(Agent::parse_filter("codex").unwrap(), vec![Agent::Codex]);
         assert!(Agent::parse_filter("nope").is_err());
     }
@@ -2223,7 +2293,11 @@ mod tests {
     #[test]
     fn config_path_both_is_internal_error() {
         let dir = tempfile::tempdir().unwrap();
-        assert!(Agent::ClaudeCode.config_path(Scope::Both, Some(dir.path())).is_err());
+        assert!(
+            Agent::ClaudeCode
+                .config_path(Scope::Both, Some(dir.path()))
+                .is_err()
+        );
     }
 
     // ---- build_mcp_entry scope-awareness ----
@@ -2232,7 +2306,12 @@ mod tests {
     fn project_scope_mcp_entry_carries_path_arg() {
         let dir = tempfile::tempdir().unwrap();
         let v = json_payload(Agent::ClaudeCode, Scope::Project, Some(dir.path()));
-        let args: Vec<&str> = v["args"].as_array().unwrap().iter().map(|a| a.as_str().unwrap()).collect();
+        let args: Vec<&str> = v["args"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|a| a.as_str().unwrap())
+            .collect();
         assert_eq!(args[0], "mcp");
         assert_eq!(args[1], "serve");
         assert_eq!(args[2], "--path");
@@ -2242,14 +2321,24 @@ mod tests {
     #[test]
     fn user_scope_mcp_entry_omits_path_arg() {
         let v = json_payload(Agent::ClaudeCode, Scope::User, None);
-        let args: Vec<&str> = v["args"].as_array().unwrap().iter().map(|a| a.as_str().unwrap()).collect();
+        let args: Vec<&str> = v["args"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|a| a.as_str().unwrap())
+            .collect();
         assert_eq!(args, vec!["mcp", "serve"], "user-scope must omit --path");
     }
 
     #[test]
     fn opencode_user_scope_entry_uses_command_array_without_path() {
         let v = json_payload(Agent::OpenCode, Scope::User, None);
-        let cmd: Vec<&str> = v["command"].as_array().unwrap().iter().map(|a| a.as_str().unwrap()).collect();
+        let cmd: Vec<&str> = v["command"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|a| a.as_str().unwrap())
+            .collect();
         assert_eq!(cmd, vec!["vibe", "mcp", "serve"]);
         assert_eq!(v["type"], "local");
         assert_eq!(v["enabled"], true);
@@ -2396,9 +2485,18 @@ mod tests {
         // Without both sections, an agent in an empty directory has
         // no actionable guidance for "create a vibevm project".
         let body = SKILL_TEMPLATE.to_lowercase();
-        assert!(body.contains("vibe init"), "expected mention of `vibe init` for bootstrap");
-        assert!(body.contains("section a"), "expected explicit Section A header for bootstrap");
-        assert!(body.contains("section b"), "expected explicit Section B header for inside-project");
+        assert!(
+            body.contains("vibe init"),
+            "expected mention of `vibe init` for bootstrap"
+        );
+        assert!(
+            body.contains("section a"),
+            "expected explicit Section A header for bootstrap"
+        );
+        assert!(
+            body.contains("section b"),
+            "expected explicit Section B header for inside-project"
+        );
         assert!(
             body.contains("vibe.toml"),
             "expected the detect-step to mention vibe.toml as the discriminator"
@@ -2531,7 +2629,8 @@ mod tests {
         // Positive: the skill must explicitly disclaim project-
         // convention scope.
         assert!(
-            body.contains("project conventions") || body.contains("project-specific")
+            body.contains("project conventions")
+                || body.contains("project-specific")
                 || body.contains("conventions"),
             "skill must name 'conventions' explicitly to disclaim them"
         );

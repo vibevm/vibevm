@@ -160,7 +160,10 @@ impl CheckReport {
         self.findings.push(f);
     }
     pub fn count(&self, severity: Severity) -> usize {
-        self.findings.iter().filter(|f| f.severity == severity).count()
+        self.findings
+            .iter()
+            .filter(|f| f.severity == severity)
+            .count()
     }
     pub fn has_errors(&self) -> bool {
         self.findings.iter().any(|f| f.severity == Severity::Error)
@@ -265,8 +268,7 @@ fn check_features_graph(project_root: &Path, report: &mut CheckReport) {
         if manifest.features.is_empty() {
             continue;
         }
-        let findings =
-            vibe_resolver::validate_features_table(&manifest.features);
+        let findings = vibe_resolver::validate_features_table(&manifest.features);
         let rel = manifest_path
             .strip_prefix(project_root)
             .map(|p| p.to_path_buf())
@@ -301,9 +303,7 @@ fn check_subskill_structure(project_root: &Path, report: &mut CheckReport) {
             if !entry.file_type().is_file() {
                 continue;
             }
-            if entry.file_name()
-                != vibe_core::manifest::SubskillManifest::FILENAME
-            {
+            if entry.file_name() != vibe_core::manifest::SubskillManifest::FILENAME {
                 continue;
             }
             let manifest_path = entry.path().to_path_buf();
@@ -311,9 +311,7 @@ fn check_subskill_structure(project_root: &Path, report: &mut CheckReport) {
                 .strip_prefix(project_root)
                 .map(|p| p.to_path_buf())
                 .ok();
-            let manifest = match vibe_core::manifest::SubskillManifest::read(
-                &manifest_path,
-            ) {
+            let manifest = match vibe_core::manifest::SubskillManifest::read(&manifest_path) {
                 Ok(m) => m,
                 Err(e) => {
                     report.err(
@@ -420,9 +418,7 @@ fn check_i18n_coverage(project_root: &Path, report: &mut CheckReport) {
                 continue;
             }
             for logical in &logical_paths {
-                let localised = vibe_core::manifest::i18n::localised_path(
-                    logical, lang,
-                );
+                let localised = vibe_core::manifest::i18n::localised_path(logical, lang);
                 let abs = pkg_root.join(&localised);
                 if !abs.is_file() {
                     report.warn(
@@ -520,10 +516,9 @@ fn tokenise_for_overlap(s: &str) -> std::collections::HashSet<String> {
     /// agent-trigger description. Removing them sharpens the
     /// distinctiveness signal of the remaining keywords.
     const STOPWORDS: &[&str] = &[
-        "the", "this", "that", "those", "these", "with", "when", "while",
-        "for", "and", "but", "into", "your", "you", "are", "have", "has",
-        "had", "from", "into", "over", "about", "above", "below", "after",
-        "before", "during", "use", "using", "used", "needs", "need",
+        "the", "this", "that", "those", "these", "with", "when", "while", "for", "and", "but",
+        "into", "your", "you", "are", "have", "has", "had", "from", "into", "over", "about",
+        "above", "below", "after", "before", "during", "use", "using", "used", "needs", "need",
         "needed", "want", "wants", "wanted",
     ];
     s.split(|c: char| !c.is_alphanumeric())
@@ -846,9 +841,7 @@ fn malformed_vibevm_block(content: &str) -> Option<String> {
     match (opens, closes) {
         (0, 0) => None,
         (1, 1) if first_open < first_close => None,
-        (1, 1) => {
-            Some("the `</vibevm>` marker precedes its `<vibevm>` opener".to_string())
-        }
+        (1, 1) => Some("the `</vibevm>` marker precedes its `<vibevm>` opener".to_string()),
         (o, c) => Some(format!(
             "expected exactly one `<vibevm>` … `</vibevm>` pair, found {o} `<vibevm>` \
              and {c} `</vibevm>` marker line(s)"
@@ -876,8 +869,7 @@ fn check_lockfile_files(project_root: &Path, report: &mut CheckReport) {
     // that the lockfile and that tree agree.
 
     // 1. Every locked package has its `vibedeps/` slot on disk.
-    let mut expected: std::collections::BTreeSet<String> =
-        std::collections::BTreeSet::new();
+    let mut expected: std::collections::BTreeSet<String> = std::collections::BTreeSet::new();
     for pkg in &lockfile.packages {
         let slot = format!("vibedeps/{}-{}/{}", pkg.kind, pkg.name, pkg.version);
         if !project_root.join(&slot).is_dir() {
@@ -1198,7 +1190,8 @@ url = "https://example/vibespecs"
             report
                 .findings
                 .iter()
-                .any(|f| f.check == CheckId::ManifestValidity && f.message.contains("failed to parse")),
+                .any(|f| f.check == CheckId::ManifestValidity
+                    && f.message.contains("failed to parse")),
         );
     }
 
@@ -1278,8 +1271,7 @@ url = "https://example/vibespecs"
             report
                 .findings
                 .iter()
-                .all(|f| f.check != CheckId::WalWellformed
-                    && f.check != CheckId::WalFreshness),
+                .all(|f| f.check != CheckId::WalWellformed && f.check != CheckId::WalFreshness),
             "missing WAL must produce no WAL findings; got: {:?}",
             report.findings
         );
@@ -1608,7 +1600,11 @@ a = []
     fn subskill_structure_flags_lazy_push_without_description() {
         let project = tempdir().unwrap();
         write_minimal_project(project.path());
-        let pkg = project.path().join("packages").join("flow").join("test-pkg");
+        let pkg = project
+            .path()
+            .join("packages")
+            .join("flow")
+            .join("test-pkg");
         fs::create_dir_all(&pkg).unwrap();
         fs::write(
             pkg.join("vibe.toml"),
@@ -1645,7 +1641,11 @@ delivery = "lazy-push"
     fn subskill_structure_flags_missing_declared_file() {
         let project = tempdir().unwrap();
         write_minimal_project(project.path());
-        let pkg = project.path().join("packages").join("flow").join("test-pkg");
+        let pkg = project
+            .path()
+            .join("packages")
+            .join("flow")
+            .join("test-pkg");
         fs::create_dir_all(&pkg).unwrap();
         fs::write(
             pkg.join("vibe.toml"),
@@ -1671,8 +1671,7 @@ files_written = ["spec/missing.md"]
         let report = check_project(project.path(), &opts());
         assert!(
             report.findings.iter().any(|f| {
-                f.check == CheckId::SubskillStructure
-                    && f.message.contains("missing on disk")
+                f.check == CheckId::SubskillStructure && f.message.contains("missing on disk")
             }),
             "expected missing-file finding; got: {:?}",
             report.findings
@@ -1683,7 +1682,11 @@ files_written = ["spec/missing.md"]
     fn i18n_coverage_warns_on_missing_translation() {
         let project = tempdir().unwrap();
         write_minimal_project(project.path());
-        let pkg = project.path().join("packages").join("flow").join("test-pkg");
+        let pkg = project
+            .path()
+            .join("packages")
+            .join("flow")
+            .join("test-pkg");
         fs::create_dir_all(pkg.join("boot")).unwrap();
         fs::write(
             pkg.join("vibe.toml"),
@@ -1722,7 +1725,11 @@ category = "flow"
     fn activation_conflict_flags_overlapping_descriptions() {
         let project = tempdir().unwrap();
         write_minimal_project(project.path());
-        let pkg = project.path().join("packages").join("flow").join("test-pkg");
+        let pkg = project
+            .path()
+            .join("packages")
+            .join("flow")
+            .join("test-pkg");
         fs::create_dir_all(&pkg).unwrap();
         fs::write(
             pkg.join("vibe.toml"),
@@ -1736,8 +1743,14 @@ version = "0.1.0"
         // Two lazy-push subskills with deliberately overlapping
         // descriptions — same vocabulary, no distinct keywords.
         for (name, desc) in [
-            ("a", "When working with database migrations using sqlx in a Rust project"),
-            ("b", "When using sqlx in a Rust project for database migrations work"),
+            (
+                "a",
+                "When working with database migrations using sqlx in a Rust project",
+            ),
+            (
+                "b",
+                "When using sqlx in a Rust project for database migrations work",
+            ),
         ] {
             let dir = pkg.join(format!("subskills/{name}"));
             fs::create_dir_all(&dir).unwrap();
@@ -1771,7 +1784,11 @@ description = "{desc}"
     fn subskill_structure_warns_on_excessive_nesting_depth() {
         let project = tempdir().unwrap();
         write_minimal_project(project.path());
-        let pkg = project.path().join("packages").join("flow").join("test-pkg");
+        let pkg = project
+            .path()
+            .join("packages")
+            .join("flow")
+            .join("test-pkg");
         fs::create_dir_all(&pkg).unwrap();
         fs::write(
             pkg.join("vibe.toml"),
@@ -1794,10 +1811,12 @@ path = "a/b/c/d"
         .unwrap();
         let report = check_project(project.path(), &opts());
         assert!(
-            report.findings.iter().any(|f| f.check
-                == CheckId::SubskillStructure
-                && f.severity == Severity::Warning
-                && f.message.contains("nested 4 levels deep")),
+            report
+                .findings
+                .iter()
+                .any(|f| f.check == CheckId::SubskillStructure
+                    && f.severity == Severity::Warning
+                    && f.message.contains("nested 4 levels deep")),
             "expected depth-4 warning; got {:?}",
             report.findings
         );
@@ -1807,7 +1826,11 @@ path = "a/b/c/d"
     fn activation_conflict_clean_when_descriptions_distinct() {
         let project = tempdir().unwrap();
         write_minimal_project(project.path());
-        let pkg = project.path().join("packages").join("flow").join("test-pkg");
+        let pkg = project
+            .path()
+            .join("packages")
+            .join("flow")
+            .join("test-pkg");
         fs::create_dir_all(&pkg).unwrap();
         fs::write(
             pkg.join("vibe.toml"),
@@ -1853,7 +1876,11 @@ description = "{desc}"
     fn i18n_coverage_clean_when_all_translations_present() {
         let project = tempdir().unwrap();
         write_minimal_project(project.path());
-        let pkg = project.path().join("packages").join("flow").join("test-pkg");
+        let pkg = project
+            .path()
+            .join("packages")
+            .join("flow")
+            .join("test-pkg");
         fs::create_dir_all(pkg.join("boot")).unwrap();
         fs::write(
             pkg.join("vibe.toml"),

@@ -12,13 +12,18 @@ use thiserror::Error;
 // tests and make the catalogue literal in one place; they're otherwise
 // allowed to be dead code in the binary itself.
 
-#[allow(dead_code)] pub const OK: u8 = 0;
+#[allow(dead_code)]
+pub const OK: u8 = 0;
 pub const GENERAL: u8 = 1;
-#[allow(dead_code)] pub const USAGE: u8 = 2;
+#[allow(dead_code)]
+pub const USAGE: u8 = 2;
 pub const PACKAGE_CONFLICT: u8 = 3;
-#[allow(dead_code)] pub const TYPE_MISMATCH: u8 = 4;
-#[allow(dead_code)] pub const USER_DECLINED: u8 = 5;
-#[allow(dead_code)] pub const LLM_PROVIDER: u8 = 6;
+#[allow(dead_code)]
+pub const TYPE_MISMATCH: u8 = 4;
+#[allow(dead_code)]
+pub const USER_DECLINED: u8 = 5;
+#[allow(dead_code)]
+pub const LLM_PROVIDER: u8 = 6;
 
 /// A structured `vibe install` / `vibe uninstall` failure the CLI maps to
 /// a specific process exit code (`VIBEVM-SPEC.md` §9.4). Until PROP-009

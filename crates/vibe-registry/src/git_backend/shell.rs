@@ -69,7 +69,11 @@ impl ShellGit {
             cmd.arg("--version");
             cmd.output().map(|o| o.status.success()).unwrap_or(false)
         });
-        if ok { Ok(()) } else { Err(GitError::NotInstalled) }
+        if ok {
+            Ok(())
+        } else {
+            Err(GitError::NotInstalled)
+        }
     }
 
     fn run(&self, args: &[&str], cwd: Option<&Path>) -> Result<Output, GitError> {
@@ -121,14 +125,7 @@ impl GitBackend for ShellGit {
     fn bootstrap(&self, url: &str, refname: &str, dest: &Path) -> Result<(), GitError> {
         self.preflight()?;
         let dest_s = dest.to_string_lossy();
-        let args = [
-            "clone",
-            "--branch",
-            refname,
-            "--",
-            url,
-            dest_s.as_ref(),
-        ];
+        let args = ["clone", "--branch", refname, "--", url, dest_s.as_ref()];
         self.run(&args, None).map(|_| ())
     }
 
@@ -186,12 +183,7 @@ impl GitBackend for ShellGit {
         Ok(tags)
     }
 
-    fn fetch_file_at_ref(
-        &self,
-        url: &str,
-        refname: &str,
-        path: &str,
-    ) -> Result<Vec<u8>, GitError> {
+    fn fetch_file_at_ref(&self, url: &str, refname: &str, path: &str) -> Result<Vec<u8>, GitError> {
         self.preflight()?;
         // Normalise platform separators to forward slash — `git archive`
         // expects in-repo paths in posix form.
@@ -445,10 +437,7 @@ fn should_silence_credential_helpers() -> bool {
 }
 
 fn is_truthy(s: &str) -> bool {
-    matches!(
-        s.to_ascii_lowercase().as_str(),
-        "1" | "true" | "yes" | "on"
-    )
+    matches!(s.to_ascii_lowercase().as_str(), "1" | "true" | "yes" | "on")
 }
 
 fn classify_failure(args: &[&str], output: &Output) -> GitError {
@@ -545,8 +534,7 @@ fn classify_stderr_message(combined: &str, url: String, refname: String) -> Opti
     {
         return Some(GitError::NetworkUnreachable { url });
     }
-    if lc.contains("remote branch")
-        && lc.contains("not found")
+    if lc.contains("remote branch") && lc.contains("not found")
         || lc.contains("couldn't find remote ref")
     {
         return Some(GitError::RefNotFound { url, refname });
@@ -596,9 +584,15 @@ mod tests {
         run_or_panic(&src, &["commit", "-m", "init"]);
 
         let bare = root.join("origin.git");
-        run_or_panic(root, &[
-            "clone", "--bare", src.to_str().unwrap(), bare.to_str().unwrap(),
-        ]);
+        run_or_panic(
+            root,
+            &[
+                "clone",
+                "--bare",
+                src.to_str().unwrap(),
+                bare.to_str().unwrap(),
+            ],
+        );
         // Make sure HEAD in the bare repo points at main.
         run_or_panic(&bare, &["symbolic-ref", "HEAD", "refs/heads/main"]);
 
@@ -671,9 +665,10 @@ mod tests {
 
         // Push a new commit into origin, then update from the clone.
         let src2 = tmp.path().join("src2");
-        run_or_panic(tmp.path(), &[
-            "clone", bare.to_str().unwrap(), src2.to_str().unwrap(),
-        ]);
+        run_or_panic(
+            tmp.path(),
+            &["clone", bare.to_str().unwrap(), src2.to_str().unwrap()],
+        );
         run_or_panic(&src2, &["config", "user.email", "t@example.com"]);
         run_or_panic(&src2, &["config", "user.name", "Test"]);
         fs::write(src2.join("new.md"), "new\n").unwrap();
@@ -693,7 +688,9 @@ mod tests {
         let dest = tmp.path().join("clone");
 
         let g = ShellGit::new();
-        let err = g.bootstrap(&bogus.to_string_lossy(), "main", &dest).unwrap_err();
+        let err = g
+            .bootstrap(&bogus.to_string_lossy(), "main", &dest)
+            .unwrap_err();
         // The exact message varies by git version; classification should
         // land on either RepoNotFound or a generic CommandFailed with
         // the raw stderr — both are acceptable for this test.
@@ -711,7 +708,9 @@ mod tests {
         let dest = tmp.path().join("clone");
 
         let g = ShellGit::new();
-        let err = g.bootstrap(&bare.to_string_lossy(), "no-such-branch", &dest).unwrap_err();
+        let err = g
+            .bootstrap(&bare.to_string_lossy(), "no-such-branch", &dest)
+            .unwrap_err();
         match err {
             GitError::RefNotFound { .. } | GitError::CommandFailed { .. } => {}
             other => panic!("unexpected classification: {other:?}"),
@@ -729,34 +728,56 @@ mod tests {
         run_or_panic(&src, &["config", "user.name", "Test"]);
 
         // Commit 1 + lightweight tag v0.1.0.
-        fs::write(src.join("vibe.toml"), "[package]\nname = \"x\"\nkind = \"flow\"\nversion = \"0.1.0\"\n").unwrap();
+        fs::write(
+            src.join("vibe.toml"),
+            "[package]\nname = \"x\"\nkind = \"flow\"\nversion = \"0.1.0\"\n",
+        )
+        .unwrap();
         run_or_panic(&src, &["add", "vibe.toml"]);
         run_or_panic(&src, &["commit", "-m", "0.1.0"]);
         run_or_panic(&src, &["tag", "v0.1.0"]);
 
         // Commit 2 + lightweight tag v0.2.0.
-        fs::write(src.join("vibe.toml"), "[package]\nname = \"x\"\nkind = \"flow\"\nversion = \"0.2.0\"\n").unwrap();
+        fs::write(
+            src.join("vibe.toml"),
+            "[package]\nname = \"x\"\nkind = \"flow\"\nversion = \"0.2.0\"\n",
+        )
+        .unwrap();
         run_or_panic(&src, &["add", "vibe.toml"]);
         run_or_panic(&src, &["commit", "-m", "0.2.0"]);
         run_or_panic(&src, &["tag", "v0.2.0"]);
 
         // Commit 3 + ANNOTATED tag v0.3.0 (this is the one that produces
         // a peeled `^{}` line in `ls-remote --tags` output).
-        fs::write(src.join("vibe.toml"), "[package]\nname = \"x\"\nkind = \"flow\"\nversion = \"0.3.0\"\n").unwrap();
+        fs::write(
+            src.join("vibe.toml"),
+            "[package]\nname = \"x\"\nkind = \"flow\"\nversion = \"0.3.0\"\n",
+        )
+        .unwrap();
         run_or_panic(&src, &["add", "vibe.toml"]);
         run_or_panic(&src, &["commit", "-m", "0.3.0"]);
         run_or_panic(&src, &["tag", "-a", "v0.3.0", "-m", "release 0.3.0"]);
 
         // Commit 4 + tag v1.0.0-rc.1.
-        fs::write(src.join("vibe.toml"), "[package]\nname = \"x\"\nkind = \"flow\"\nversion = \"1.0.0-rc.1\"\n").unwrap();
+        fs::write(
+            src.join("vibe.toml"),
+            "[package]\nname = \"x\"\nkind = \"flow\"\nversion = \"1.0.0-rc.1\"\n",
+        )
+        .unwrap();
         run_or_panic(&src, &["add", "vibe.toml"]);
         run_or_panic(&src, &["commit", "-m", "1.0.0-rc.1"]);
         run_or_panic(&src, &["tag", "v1.0.0-rc.1"]);
 
         let bare = root.join("origin.git");
-        run_or_panic(root, &[
-            "clone", "--bare", src.to_str().unwrap(), bare.to_str().unwrap(),
-        ]);
+        run_or_panic(
+            root,
+            &[
+                "clone",
+                "--bare",
+                src.to_str().unwrap(),
+                bare.to_str().unwrap(),
+            ],
+        );
         run_or_panic(&bare, &["symbolic-ref", "HEAD", "refs/heads/main"]);
         bare
     }
@@ -857,11 +878,7 @@ mod tests {
 
         let g = ShellGit::new();
         let err = g
-            .fetch_file_at_ref(
-                &bare.to_string_lossy(),
-                "v9.9.9",
-                "vibe.toml",
-            )
+            .fetch_file_at_ref(&bare.to_string_lossy(), "v9.9.9", "vibe.toml")
             .unwrap_err();
         match err {
             GitError::RefNotFound { .. } | GitError::CommandFailed { .. } => {}
@@ -877,11 +894,7 @@ mod tests {
 
         let g = ShellGit::new();
         let err = g
-            .fetch_file_at_ref(
-                &bare.to_string_lossy(),
-                "v0.1.0",
-                "no-such-file.txt",
-            )
+            .fetch_file_at_ref(&bare.to_string_lossy(), "v0.1.0", "no-such-file.txt")
             .unwrap_err();
         match err {
             GitError::FileNotFoundInRef { .. } | GitError::CommandFailed { .. } => {}
@@ -893,12 +906,8 @@ mod tests {
     fn extract_single_file_from_tar_picks_match() {
         // Hand-build a minimal tar with two files; verify we extract the
         // requested one by name, ignoring the other.
-        let tar = build_tar(&[
-            ("a.txt", b"AAA\n"),
-            ("vibe.toml", b"hello world\n"),
-        ]);
-        let got = extract_single_file_from_tar(&tar, "vibe.toml")
-            .expect("file extracted");
+        let tar = build_tar(&[("a.txt", b"AAA\n"), ("vibe.toml", b"hello world\n")]);
+        let got = extract_single_file_from_tar(&tar, "vibe.toml").expect("file extracted");
         assert_eq!(got, b"hello world\n");
 
         let absent = extract_single_file_from_tar(&tar, "nope.txt");
@@ -992,7 +1001,8 @@ mod tests {
             GitError::AuthFailed { .. }
         ));
         assert!(matches!(
-            classify("remote: HTTP Basic: Access denied\nfatal: Authentication failed for ...").unwrap(),
+            classify("remote: HTTP Basic: Access denied\nfatal: Authentication failed for ...")
+                .unwrap(),
             GitError::AuthFailed { .. }
         ));
     }
@@ -1044,7 +1054,10 @@ mod tests {
             "ssh: connect to host x port 22: Network is unreachable",
         ] {
             assert!(
-                matches!(classify(stderr).unwrap(), GitError::NetworkUnreachable { .. }),
+                matches!(
+                    classify(stderr).unwrap(),
+                    GitError::NetworkUnreachable { .. }
+                ),
                 "expected NetworkUnreachable for: {stderr}"
             );
         }
@@ -1063,7 +1076,10 @@ mod tests {
             "fatal: unable to access 'https://x/y.git/': Operation timed out after 30001 ms",
         ] {
             assert!(
-                matches!(classify(stderr).unwrap(), GitError::NetworkUnreachable { .. }),
+                matches!(
+                    classify(stderr).unwrap(),
+                    GitError::NetworkUnreachable { .. }
+                ),
                 "expected NetworkUnreachable for: {stderr}"
             );
         }
@@ -1091,7 +1107,11 @@ mod tests {
         // `unable to access` is a wrapper that frames many other
         // failures; it must NOT shadow the inner connect-failure or
         // auth-failed classification.
-        let stderr = "fatal: unable to access 'https://x/y.git/': Authentication failed for 'https://x/'";
-        assert!(matches!(classify(stderr).unwrap(), GitError::AuthFailed { .. }));
+        let stderr =
+            "fatal: unable to access 'https://x/y.git/': Authentication failed for 'https://x/'";
+        assert!(matches!(
+            classify(stderr).unwrap(),
+            GitError::AuthFailed { .. }
+        ));
     }
 }

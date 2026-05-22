@@ -350,7 +350,8 @@ fn current_epoch_secs() -> Option<u64> {
 /// Preserves the original transport in the scheme prefix.
 pub fn source_uri_for_git(url: &str, kind: PackageKind, name: &str, version: &str) -> String {
     let transport = detect_transport(url);
-    format!("{transport}://{host_path}#{kind}/{name}/v{version}",
+    format!(
+        "{transport}://{host_path}#{kind}/{name}/v{version}",
         transport = transport,
         host_path = to_uri_body(url),
         kind = kind.as_str(),
@@ -465,7 +466,10 @@ mod tests {
     }
 
     fn copy_tree(src: &Path, dst: &Path) {
-        for entry in walkdir::WalkDir::new(src).into_iter().filter_map(|e| e.ok()) {
+        for entry in walkdir::WalkDir::new(src)
+            .into_iter()
+            .filter_map(|e| e.ok())
+        {
             let rel = entry.path().strip_prefix(src).unwrap();
             let target = dst.join(rel);
             if entry.file_type().is_dir() {
@@ -565,14 +569,8 @@ description = "WAL v0.1.0"
         assert_eq!(fake.update_count(), 0);
 
         // Second open with zero TTL → update fires.
-        let _r3 = GitRegistry::open_with(
-            "git@host:o/r.git",
-            "main",
-            &cache_root,
-            fake.clone(),
-            0,
-        )
-        .unwrap();
+        let _r3 = GitRegistry::open_with("git@host:o/r.git", "main", &cache_root, fake.clone(), 0)
+            .unwrap();
         assert_eq!(fake.clone_count(), 1);
         assert_eq!(fake.update_count(), 1);
     }

@@ -231,10 +231,7 @@ fn read_legacy_token() -> Result<Option<Token>, PublishError> {
 pub fn per_host_token_path(host: &str) -> Option<PathBuf> {
     let prefix = host_prefix(host)?;
     let home = dirs::home_dir()?;
-    Some(
-        home.join(".vibevm")
-            .join(format!("{prefix}.publish.token")),
-    )
+    Some(home.join(".vibevm").join(format!("{prefix}.publish.token")))
 }
 
 /// Path to the legacy host-agnostic token file: `<home>/.vibevm/git.publish.token`.

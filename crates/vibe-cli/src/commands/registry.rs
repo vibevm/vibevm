@@ -17,8 +17,8 @@ use std::path::{Path, PathBuf};
 use anyhow::{Context, Result, anyhow, bail};
 use serde::Serialize;
 use vibe_core::manifest::{
-    DEFAULT_REGISTRY_NAME, DEFAULT_REGISTRY_URL, Lockfile, MirrorSection, NamingConvention,
-    Manifest, RegistrySection,
+    DEFAULT_REGISTRY_NAME, DEFAULT_REGISTRY_URL, Lockfile, Manifest, MirrorSection,
+    NamingConvention, RegistrySection,
 };
 use vibe_publish::{
     DirectGitCreator, PublishConfig, Publisher, creator_for_url, extract_host_segment,
@@ -138,17 +138,18 @@ fn run_sync(ctx: &output::Context, args: RegistrySyncArgs) -> Result<()> {
         return Ok(());
     }
 
-    let mrr = MultiRegistryResolver::open(
-        &manifest.registries,
-        &manifest.mirrors,
-        &manifest.overrides,
-    )
-    .context("opening multi-registry resolver")?;
+    let mrr =
+        MultiRegistryResolver::open(&manifest.registries, &manifest.mirrors, &manifest.overrides)
+            .context("opening multi-registry resolver")?;
 
     ctx.heading(&format!(
         "Syncing {} package clone{} referenced by lockfile",
         lockfile.packages.len(),
-        if lockfile.packages.len() == 1 { "" } else { "s" }
+        if lockfile.packages.len() == 1 {
+            ""
+        } else {
+            "s"
+        }
     ));
 
     let report = mrr
@@ -482,10 +483,10 @@ fn run_add(ctx: &output::Context, args: RegistryAddArgs) -> Result<()> {
     // Validation: URL must shape-parse for both org and host
     // segmentation. If either fails, the URL is unusable as a
     // `[[registry]].url` regardless of host adapter availability.
-    let host = extract_host_segment(&args.url)
-        .map_err(|e| anyhow!("registry URL `{}`: {e}", args.url))?;
-    let org = extract_org_segment(&args.url)
-        .map_err(|e| anyhow!("registry URL `{}`: {e}", args.url))?;
+    let host =
+        extract_host_segment(&args.url).map_err(|e| anyhow!("registry URL `{}`: {e}", args.url))?;
+    let org =
+        extract_org_segment(&args.url).map_err(|e| anyhow!("registry URL `{}`: {e}", args.url))?;
 
     let naming = match args.naming.as_deref() {
         Some(s) => parse_naming(s)?,
@@ -494,9 +495,7 @@ fn run_add(ctx: &output::Context, args: RegistryAddArgs) -> Result<()> {
 
     let position_label = match args.position.as_str() {
         "primary" | "append" => args.position.as_str(),
-        other => bail!(
-            "unknown --position `{other}` — must be `primary` or `append`"
-        ),
+        other => bail!("unknown --position `{other}` — must be `primary` or `append`"),
     };
 
     let auth = match args.auth.as_deref() {
@@ -590,7 +589,9 @@ fn run_add(ctx: &output::Context, args: RegistryAddArgs) -> Result<()> {
     let adapter_text = adapter
         .as_deref()
         .map(|a| format!(" (adapter: {a})"))
-        .unwrap_or_else(|| " (adapter: none — `vibe registry publish` won't dispatch here)".to_string());
+        .unwrap_or_else(|| {
+            " (adapter: none — `vibe registry publish` won't dispatch here)".to_string()
+        });
     ctx.step(&format!(
         "Added `[[registry]]` `{}`{} → {} on host {}{}",
         new.name, position_text, new.url, host, adapter_text
@@ -641,7 +642,11 @@ fn run_set_mirror(ctx: &output::Context, args: RegistrySetMirrorArgs) -> Result<
     // a forward-compatible declaration that any future registry should
     // try this mirror.
     if args.of != "*" && manifest.registry_by_name(&args.of).is_none() {
-        let known: Vec<&str> = manifest.registries.iter().map(|r| r.name.as_str()).collect();
+        let known: Vec<&str> = manifest
+            .registries
+            .iter()
+            .map(|r| r.name.as_str())
+            .collect();
         let known_text = if known.is_empty() {
             "(none configured)".to_string()
         } else {
@@ -703,11 +708,7 @@ fn run_set_mirror(ctx: &output::Context, args: RegistrySetMirrorArgs) -> Result<
     // Compute which registries this mirror now attaches to. `*` →
     // every registry; otherwise the single named registry.
     let attached_to: Vec<String> = if args.of == "*" {
-        manifest
-            .registries
-            .iter()
-            .map(|r| r.name.clone())
-            .collect()
+        manifest.registries.iter().map(|r| r.name.clone()).collect()
     } else {
         vec![args.of.clone()]
     };
@@ -776,10 +777,7 @@ fn run_remove(ctx: &output::Context, args: RegistryRemoveArgs) -> Result<()> {
     }
 }
 
-fn run_remove_registry(
-    ctx: &output::Context,
-    args: RegistryRemoveRegistryArgs,
-) -> Result<()> {
+fn run_remove_registry(ctx: &output::Context, args: RegistryRemoveRegistryArgs) -> Result<()> {
     let project_root = resolve_project_root(&args.path)?;
     let manifest_path = project_root.join(Manifest::FILENAME);
     if !manifest_path.exists() {
@@ -792,7 +790,11 @@ fn run_remove_registry(
         .with_context(|| format!("reading `{}`", manifest_path.display()))?;
 
     if manifest.registry_by_name(&args.name).is_none() {
-        let known: Vec<&str> = manifest.registries.iter().map(|r| r.name.as_str()).collect();
+        let known: Vec<&str> = manifest
+            .registries
+            .iter()
+            .map(|r| r.name.as_str())
+            .collect();
         let known_text = if known.is_empty() {
             "(none configured)".to_string()
         } else {
@@ -1011,25 +1013,25 @@ fn run_vendor(ctx: &output::Context, args: RegistryVendorArgs) -> Result<()> {
             );
         }
         if args.force {
-            std::fs::remove_dir_all(&out_dir).with_context(|| {
-                format!("wiping `{}`", out_dir.display())
-            })?;
+            std::fs::remove_dir_all(&out_dir)
+                .with_context(|| format!("wiping `{}`", out_dir.display()))?;
         }
     }
     std::fs::create_dir_all(&out_dir)
         .with_context(|| format!("creating `{}`", out_dir.display()))?;
 
-    let mrr = MultiRegistryResolver::open(
-        &manifest.registries,
-        &manifest.mirrors,
-        &manifest.overrides,
-    )
-    .context("opening multi-registry resolver")?;
+    let mrr =
+        MultiRegistryResolver::open(&manifest.registries, &manifest.mirrors, &manifest.overrides)
+            .context("opening multi-registry resolver")?;
 
     ctx.heading(&format!(
         "Vendoring {} lockfile entr{} into `{}`",
         lockfile.packages.len(),
-        if lockfile.packages.len() == 1 { "y" } else { "ies" },
+        if lockfile.packages.len() == 1 {
+            "y"
+        } else {
+            "ies"
+        },
         out_dir.display()
     ));
 
@@ -1103,14 +1105,12 @@ fn run_vendor(ctx: &output::Context, args: RegistryVendorArgs) -> Result<()> {
         let repo_name = reg.naming().repo_name(entry.kind, &entry.name);
         let vendor_repo = out_dir.join(format!("{repo_name}.git"));
         if vendor_repo.exists() {
-            std::fs::remove_dir_all(&vendor_repo).with_context(|| {
-                format!("wiping stale vendor repo `{}`", vendor_repo.display())
-            })?;
+            std::fs::remove_dir_all(&vendor_repo)
+                .with_context(|| format!("wiping stale vendor repo `{}`", vendor_repo.display()))?;
         }
         if let Some(parent) = vendor_repo.parent() {
-            std::fs::create_dir_all(parent).with_context(|| {
-                format!("creating parent dir `{}`", parent.display())
-            })?;
+            std::fs::create_dir_all(parent)
+                .with_context(|| format!("creating parent dir `{}`", parent.display()))?;
         }
 
         bare_clone_from_clone(&clone_git, &vendor_repo).with_context(|| {
@@ -1139,8 +1139,7 @@ fn run_vendor(ctx: &output::Context, args: RegistryVendorArgs) -> Result<()> {
     }
 
     let suggested_url = file_url_for_dir(&out_dir);
-    write_vendor_readme(&out_dir, &suggested_url, &vendored)
-        .context("writing vendor README.md")?;
+    write_vendor_readme(&out_dir, &suggested_url, &vendored).context("writing vendor README.md")?;
 
     if !skipped.is_empty() {
         for s in &skipped {
@@ -1209,13 +1208,12 @@ fn forward_slash_display(path: &Path) -> String {
 /// a plain `fs::copy` produces a self-contained vendor that survives a
 /// `~/.vibe/registries` wipe.
 fn bare_clone_from_clone(src_git: &Path, dst: &Path) -> Result<()> {
-    std::fs::create_dir_all(dst)
-        .with_context(|| format!("creating `{}`", dst.display()))?;
-    for entry in walkdir::WalkDir::new(src_git).into_iter().filter_map(|e| e.ok()) {
-        let rel = entry
-            .path()
-            .strip_prefix(src_git)
-            .unwrap_or(entry.path());
+    std::fs::create_dir_all(dst).with_context(|| format!("creating `{}`", dst.display()))?;
+    for entry in walkdir::WalkDir::new(src_git)
+        .into_iter()
+        .filter_map(|e| e.ok())
+    {
+        let rel = entry.path().strip_prefix(src_git).unwrap_or(entry.path());
         if rel.as_os_str().is_empty() {
             continue;
         }
@@ -1369,9 +1367,12 @@ fn run_publish(ctx: &output::Context, args: RegistryPublishArgs) -> Result<()> {
     }
 
     let registry_section = match &args.registry {
-        Some(name) => manifest
-            .registry_by_name(name)
-            .ok_or_else(|| anyhow!("no `[[registry]]` named `{name}` in `{}`", manifest_path.display()))?,
+        Some(name) => manifest.registry_by_name(name).ok_or_else(|| {
+            anyhow!(
+                "no `[[registry]]` named `{name}` in `{}`",
+                manifest_path.display()
+            )
+        })?,
         None => manifest
             .primary_registry()
             .ok_or_else(|| anyhow!("no `[[registry]]` configured"))?,
@@ -1455,8 +1456,8 @@ fn run_publish(ctx: &output::Context, args: RegistryPublishArgs) -> Result<()> {
             vibe_publish::TokenSource::File(p) => p.display().to_string(),
         }
     ));
-    let creator = creator_for_url(&registry_section.url, org_segment, token)
-        .map_err(|e| anyhow!("{e}"))?;
+    let creator =
+        creator_for_url(&registry_section.url, org_segment, token).map_err(|e| anyhow!("{e}"))?;
 
     let config = PublishConfig {
         source_dir: source_dir.clone(),
@@ -1500,10 +1501,7 @@ fn run_publish(ctx: &output::Context, args: RegistryPublishArgs) -> Result<()> {
     if hook_report.fired {
         ctx.step(&format!(
             "Index hook posted to {} (status {})",
-            hook_report
-                .url_endpoint
-                .as_deref()
-                .unwrap_or("(unknown)"),
+            hook_report.url_endpoint.as_deref().unwrap_or("(unknown)"),
             hook_report.status.unwrap_or(0)
         ));
     } else if let Some(err) = &hook_report.error {
@@ -1661,9 +1659,7 @@ fn run_test(ctx: &output::Context, args: RegistryTestArgs) -> Result<()> {
         .with_context(|| format!("reading `{}`", manifest_path.display()))?;
 
     if manifest.registries.is_empty() {
-        ctx.summary(
-            "No `[[registry]]` entries to probe. Add one with `vibe registry add` first.",
-        );
+        ctx.summary("No `[[registry]]` entries to probe. Add one with `vibe registry add` first.");
         if ctx.is_json() {
             ctx.emit_json(&TestReport {
                 ok: true,
@@ -1686,8 +1682,8 @@ fn run_test(ctx: &output::Context, args: RegistryTestArgs) -> Result<()> {
     // mirrors, so the diagnostic reflects what the install path
     // would actually see.
     use vibe_core::PackageRef;
-    use vibe_registry::{MultiRegistryResolver, RegistryError};
     use vibe_registry::git_backend::GitError;
+    use vibe_registry::{MultiRegistryResolver, RegistryError};
 
     // The probe pkgref. Using a UUID-like suffix keeps the
     // `(kind, name)` extraordinarily unlikely to clash with any
@@ -1720,15 +1716,21 @@ fn run_test(ctx: &output::Context, args: RegistryTestArgs) -> Result<()> {
         };
         let outcome = resolver.resolve(&probe_pkgref);
         let (status, note) = match outcome {
-            Ok(_) => ("reachable", Some("probe pkgref unexpectedly resolved (treating as reachable)".into())),
+            Ok(_) => (
+                "reachable",
+                Some("probe pkgref unexpectedly resolved (treating as reachable)".into()),
+            ),
             Err(RegistryError::UnknownPackage { .. }) => ("reachable", None),
             // Aggregate-walk shape from a single-registry resolver
             // collapses to PackageNotFoundEverywhere with one
             // attempt. Same meaning as UnknownPackage above.
             Err(RegistryError::PackageNotFoundEverywhere { .. }) => ("reachable", None),
-            Err(RegistryError::MissingToken { env_var, .. }) => {
-                ("missing-token", Some(format!("set `{env_var}` to a personal access token with read scope")))
-            }
+            Err(RegistryError::MissingToken { env_var, .. }) => (
+                "missing-token",
+                Some(format!(
+                    "set `{env_var}` to a personal access token with read scope"
+                )),
+            ),
             Err(RegistryError::Git(GitError::AuthFailed { .. })) => {
                 let hint = match reg.auth {
                     vibe_core::manifest::AuthKind::None => {
@@ -1747,9 +1749,10 @@ fn run_test(ctx: &output::Context, args: RegistryTestArgs) -> Result<()> {
                 };
                 ("auth-required", Some(hint.to_string()))
             }
-            Err(RegistryError::Git(GitError::NetworkUnreachable { .. })) => {
-                ("unreachable", Some("DNS / TCP / cert error reaching the host".to_string()))
-            }
+            Err(RegistryError::Git(GitError::NetworkUnreachable { .. })) => (
+                "unreachable",
+                Some("DNS / TCP / cert error reaching the host".to_string()),
+            ),
             Err(RegistryError::Git(GitError::NotInstalled)) => {
                 ("unknown", Some("`git` is not on PATH".to_string()))
             }
@@ -1780,7 +1783,11 @@ fn run_test(ctx: &output::Context, args: RegistryTestArgs) -> Result<()> {
     if !ctx.is_quiet() {
         ctx.heading("Registry test");
         for r in &rows {
-            let note = r.note.as_deref().map(|n| format!(" — {n}")).unwrap_or_default();
+            let note = r
+                .note
+                .as_deref()
+                .map(|n| format!(" — {n}"))
+                .unwrap_or_default();
             println!(
                 "  {:<name_w$}  {:<url_w$}  → {:<status_w$}  (auth={}){note}",
                 r.name,
@@ -1945,7 +1952,8 @@ fn run_redirect(ctx: &output::Context, args: RegistryRedirectArgs) -> Result<()>
     let pkgref = PackageRef::parse(&args.pkgref)
         .with_context(|| format!("parsing pkgref `{}`", args.pkgref))?;
 
-    let registry_section = resolve_target_registry(&manifest, args.registry.as_deref(), &manifest_path)?;
+    let registry_section =
+        resolve_target_registry(&manifest, args.registry.as_deref(), &manifest_path)?;
 
     // Validate URL shape early — before any side-effecting work — so the
     // operator gets a fast actionable error instead of a network failure.
@@ -1972,9 +1980,7 @@ fn run_redirect(ctx: &output::Context, args: RegistryRedirectArgs) -> Result<()>
         }
         "pinned" => {
             let r = args.pinned_ref.as_deref().ok_or_else(|| {
-                anyhow!(
-                    "--ref-policy pinned requires --pinned-ref <tag/branch/rev>"
-                )
+                anyhow!("--ref-policy pinned requires --pinned-ref <tag/branch/rev>")
             })?;
             (RefPolicy::Pinned, Some(r.to_string()))
         }
@@ -1998,9 +2004,7 @@ fn run_redirect(ctx: &output::Context, args: RegistryRedirectArgs) -> Result<()>
     }
 
     // Compute the stub repo name from naming convention.
-    let stub_repo_name = registry_section
-        .naming
-        .repo_name(pkgref.kind, &pkgref.name);
+    let stub_repo_name = registry_section.naming.repo_name(pkgref.kind, &pkgref.name);
     // Stub URL surfaced in JSON / human output. Construction mirrors what
     // [`MultiRegistryResolver`] does at resolve time.
     let stub_url = format!(
@@ -2024,14 +2028,18 @@ fn run_redirect(ctx: &output::Context, args: RegistryRedirectArgs) -> Result<()>
 
     let staging = tempfile::tempdir().context("creating stub staging dir")?;
     let stub_marker_path = staging.path().join(RedirectFile::FILENAME);
-    stub_file.write(&stub_marker_path).with_context(|| {
-        format!("writing `{}`", stub_marker_path.display())
-    })?;
+    stub_file
+        .write(&stub_marker_path)
+        .with_context(|| format!("writing `{}`", stub_marker_path.display()))?;
 
     // README — operator-friendly summary so a human visiting the stub
     // repo on the host's web UI understands what they're looking at
     // without needing to read the marker file.
-    let readme = build_redirect_readme(&pkgref.qualified_name(), &args.to, args.description.as_deref());
+    let readme = build_redirect_readme(
+        &pkgref.qualified_name(),
+        &args.to,
+        args.description.as_deref(),
+    );
     std::fs::write(staging.path().join("README.md"), readme).with_context(|| {
         format!(
             "writing README into stub staging dir `{}`",
@@ -2138,14 +2146,13 @@ fn run_redirect(ctx: &output::Context, args: RegistryRedirectArgs) -> Result<()>
     // Push the stub contents to `main`. Token embedded only at the
     // moment of git invocation; never in stdout / stderr / logs.
     let push_url = creator.push_url(&org_segment, &stub_repo_name);
-    let commit_msg = format!(
-        "stub: delegate {} to {}",
-        pkgref.qualified_name(),
-        args.to
-    );
+    let commit_msg = format!("stub: delegate {} to {}", pkgref.qualified_name(), args.to);
     vibe_publish::git_publish::push_initial(staging.path(), &push_url, &commit_msg)
         .map_err(|e| anyhow!("{e}"))?;
-    ctx.step(&format!("Pushed stub `{}` to `main`", RedirectFile::FILENAME));
+    ctx.step(&format!(
+        "Pushed stub `{}` to `main`",
+        RedirectFile::FILENAME
+    ));
 
     // Optional: sync target tags into the stub immediately.
     let sync_report = if args.sync && matches!(ref_policy, RefPolicy::PassThroughTag) {
@@ -2240,14 +2247,13 @@ fn run_redirect_sync(ctx: &output::Context, args: RegistryRedirectSyncArgs) -> R
 
     let pkgref = PackageRef::parse(&args.pkgref)
         .with_context(|| format!("parsing pkgref `{}`", args.pkgref))?;
-    let registry_section = resolve_target_registry(&manifest, args.registry.as_deref(), &manifest_path)?;
+    let registry_section =
+        resolve_target_registry(&manifest, args.registry.as_deref(), &manifest_path)?;
     let host = extract_host_segment(&registry_section.url)
         .map_err(|e| anyhow!("registry URL `{}`: {e}", registry_section.url))?;
     let org_segment = extract_org_segment(&registry_section.url)
         .map_err(|e| anyhow!("registry URL `{}`: {e}", registry_section.url))?;
-    let stub_repo_name = registry_section
-        .naming
-        .repo_name(pkgref.kind, &pkgref.name);
+    let stub_repo_name = registry_section.naming.repo_name(pkgref.kind, &pkgref.name);
     let stub_url = format!(
         "{}/{}",
         registry_section.url.trim_end_matches('/'),
@@ -2302,26 +2308,35 @@ fn run_redirect_sync(ctx: &output::Context, args: RegistryRedirectSyncArgs) -> R
              present on stub.",
             pkgref.qualified_name(),
             report.already_present.len(),
-            if report.already_present.len() == 1 { "" } else { "s" }
+            if report.already_present.len() == 1 {
+                ""
+            } else {
+                "s"
+            }
         ));
     } else {
         ctx.summary(&format!(
             "\nvibe registry redirect-sync: pushed {} tag{} into stub `{}`. {} tag{} were \
              already present.",
             report.pushed_tags.len(),
-            if report.pushed_tags.len() == 1 { "" } else { "s" },
+            if report.pushed_tags.len() == 1 {
+                ""
+            } else {
+                "s"
+            },
             pkgref.qualified_name(),
             report.already_present.len(),
-            if report.already_present.len() == 1 { "" } else { "s" }
+            if report.already_present.len() == 1 {
+                ""
+            } else {
+                "s"
+            }
         ));
     }
     Ok(())
 }
 
-fn run_redirect_update(
-    ctx: &output::Context,
-    args: RegistryRedirectUpdateArgs,
-) -> Result<()> {
+fn run_redirect_update(ctx: &output::Context, args: RegistryRedirectUpdateArgs) -> Result<()> {
     use vibe_core::PackageRef;
     use vibe_core::manifest::{RedirectFile, RefPolicy};
     use vibe_publish::git_publish;
@@ -2330,9 +2345,7 @@ fn run_redirect_update(
     // filesystem or network. Operators expect "bad flag combo" to fail
     // with a clear message even when no project is in scope.
     if args.description.is_some() && args.clear_description {
-        bail!(
-            "--description and --clear-description are mutually exclusive; pass exactly one"
-        );
+        bail!("--description and --clear-description are mutually exclusive; pass exactly one");
     }
 
     let project_root = resolve_project_root(&args.path)?;
@@ -2354,9 +2367,7 @@ fn run_redirect_update(
         .map_err(|e| anyhow!("registry URL `{}`: {e}", registry_section.url))?;
     let org_segment = extract_org_segment(&registry_section.url)
         .map_err(|e| anyhow!("registry URL `{}`: {e}", registry_section.url))?;
-    let stub_repo_name = registry_section
-        .naming
-        .repo_name(pkgref.kind, &pkgref.name);
+    let stub_repo_name = registry_section.naming.repo_name(pkgref.kind, &pkgref.name);
     let stub_url = format!(
         "{}/{}",
         registry_section.url.trim_end_matches('/'),
@@ -2503,9 +2514,9 @@ fn run_redirect_update(
     let new_file = RedirectFile {
         redirect: new_section,
     };
-    new_file.write(&marker_path).with_context(|| {
-        format!("writing `{}`", marker_path.display())
-    })?;
+    new_file
+        .write(&marker_path)
+        .with_context(|| format!("writing `{}`", marker_path.display()))?;
     let readme = build_redirect_readme(
         &pkgref.qualified_name(),
         &new_file.redirect.target_url,
@@ -2521,29 +2532,29 @@ fn run_redirect_update(
     let commit_msg = build_redirect_update_commit_msg(&pkgref.qualified_name(), &changes);
     git_publish::commit_and_push(stub_clone.path(), &push_url, &commit_msg)
         .map_err(|e| anyhow!("{e}"))?;
-    ctx.step(&format!("Pushed updated `{}` to `main`", RedirectFile::FILENAME));
+    ctx.step(&format!(
+        "Pushed updated `{}` to `main`",
+        RedirectFile::FILENAME
+    ));
 
-    let sync_report = if args.resync
-        && matches!(new_file.redirect.ref_policy, RefPolicy::PassThroughTag)
-    {
-        ctx.step("Re-syncing target tags into the updated stub");
-        Some(do_redirect_sync(
-            ctx,
-            registry_section,
-            &pkgref.qualified_name(),
-            &stub_url,
-            &new_file.redirect.target_url,
-            &push_url,
-            false,
-        )?)
-    } else if args.resync && matches!(new_file.redirect.ref_policy, RefPolicy::Pinned) {
-        ctx.step(
-            "Skipping --resync: pinned-policy stubs do not pass through target tags",
-        );
-        None
-    } else {
-        None
-    };
+    let sync_report =
+        if args.resync && matches!(new_file.redirect.ref_policy, RefPolicy::PassThroughTag) {
+            ctx.step("Re-syncing target tags into the updated stub");
+            Some(do_redirect_sync(
+                ctx,
+                registry_section,
+                &pkgref.qualified_name(),
+                &stub_url,
+                &new_file.redirect.target_url,
+                &push_url,
+                false,
+            )?)
+        } else if args.resync && matches!(new_file.redirect.ref_policy, RefPolicy::Pinned) {
+            ctx.step("Skipping --resync: pinned-policy stubs do not pass through target tags");
+            None
+        } else {
+            None
+        };
 
     let report = RedirectUpdateReport {
         ok: true,
@@ -2586,7 +2597,10 @@ fn run_redirect_update(
 fn compute_updated_redirect_section(
     current: &vibe_core::manifest::RedirectSection,
     args: &RegistryRedirectUpdateArgs,
-) -> Result<(vibe_core::manifest::RedirectSection, Vec<RedirectChangeEntry>)> {
+) -> Result<(
+    vibe_core::manifest::RedirectSection,
+    Vec<RedirectChangeEntry>,
+)> {
     use vibe_core::manifest::{AuthKind, RedirectSection, RefPolicy};
 
     // target_url
@@ -2605,9 +2619,9 @@ fn compute_updated_redirect_section(
         None => current.ref_policy,
         Some("pass-through-tag") => RefPolicy::PassThroughTag,
         Some("pinned") => RefPolicy::Pinned,
-        Some(other) => bail!(
-            "unknown --ref-policy `{other}` — must be `pass-through-tag` or `pinned`"
-        ),
+        Some(other) => {
+            bail!("unknown --ref-policy `{other}` — must be `pass-through-tag` or `pinned`")
+        }
     };
 
     // pinned_ref — depends on new_ref_policy
@@ -2651,17 +2665,15 @@ fn compute_updated_redirect_section(
     // token_env — only meaningful with TokenEnv
     let new_token_env = match new_auth {
         AuthKind::TokenEnv => match &args.target_token_env {
-            Some(name) if name.trim().is_empty() => bail!(
-                "--target-token-env must be a non-empty env-var name"
-            ),
+            Some(name) if name.trim().is_empty() => {
+                bail!("--target-token-env must be a non-empty env-var name")
+            }
             Some(name) => Some(name.clone()),
             None => current.token_env.clone(),
         },
         _ => {
             if args.target_token_env.is_some() {
-                bail!(
-                    "--target-token-env is only meaningful with --target-auth token-env"
-                );
+                bail!("--target-token-env is only meaningful with --target-auth token-env");
             }
             None
         }
@@ -2849,7 +2861,9 @@ fn do_redirect_sync(
 
     if dry_run {
         for t in &to_push {
-            ctx.step(&format!("Would push tag `{t}` (target has it; stub does not)"));
+            ctx.step(&format!(
+                "Would push tag `{t}` (target has it; stub does not)"
+            ));
         }
         for t in &already {
             ctx.skipped(&format!("tag `{t}`"), "already present on stub");
@@ -2930,9 +2944,7 @@ fn build_target_fetch_url(
 
 fn derive_target_token_env(target_url: &str) -> Option<String> {
     let host = extract_host_segment(target_url).ok()?;
-    let upper = host
-        .to_ascii_uppercase()
-        .replace(['.', '-'], "_");
+    let upper = host.to_ascii_uppercase().replace(['.', '-'], "_");
     Some(format!("VIBEVM_TARGET_TOKEN_{upper}"))
 }
 
@@ -2953,9 +2965,9 @@ fn inject_token_into_url(url: &str, token: &str) -> String {
 mod tests {
     use super::{
         adapter_for_host, bare_clone_from_clone, build_redirect_readme,
-        build_redirect_update_commit_msg, build_target_fetch_url,
-        compute_updated_redirect_section, derive_target_token_env, diff_redirect_sections,
-        file_url_for_dir, inject_token_into_url, parse_naming, parse_target_auth,
+        build_redirect_update_commit_msg, build_target_fetch_url, compute_updated_redirect_section,
+        derive_target_token_env, diff_redirect_sections, file_url_for_dir, inject_token_into_url,
+        parse_naming, parse_target_auth,
     };
     use crate::cli::RegistryRedirectUpdateArgs;
     use std::fs;
@@ -3017,7 +3029,11 @@ mod tests {
         fs::create_dir_all(src_git.join("refs/tags")).unwrap();
         fs::create_dir_all(src_git.join("objects/pack")).unwrap();
         fs::write(src_git.join("HEAD"), "ref: refs/heads/main\n").unwrap();
-        fs::write(src_git.join("config"), "[core]\n\trepositoryformatversion = 0\n").unwrap();
+        fs::write(
+            src_git.join("config"),
+            "[core]\n\trepositoryformatversion = 0\n",
+        )
+        .unwrap();
         fs::write(src_git.join("refs/heads/main"), "abc123\n").unwrap();
         fs::write(src_git.join("refs/tags/v0.1.0"), "def456\n").unwrap();
         fs::write(src_git.join("objects/pack/pack-x.idx"), b"binary").unwrap();
@@ -3202,7 +3218,10 @@ mod tests {
             description: None,
         };
         let err = build_target_fetch_url("https://example.invalid/x", &section).unwrap_err();
-        assert!(err.to_string().contains("VIBEVM_TEST_DEFINITELY_UNSET_TOKEN_VAR"));
+        assert!(
+            err.to_string()
+                .contains("VIBEVM_TEST_DEFINITELY_UNSET_TOKEN_VAR")
+        );
     }
 
     // -----------------------------------------------------------------
@@ -3254,7 +3273,8 @@ mod tests {
     fn compute_update_only_description_change_detected() {
         let mut args = empty_update_args();
         args.description = Some("new description".into());
-        let (new, changes) = compute_updated_redirect_section(&baseline_pass_through(), &args).unwrap();
+        let (new, changes) =
+            compute_updated_redirect_section(&baseline_pass_through(), &args).unwrap();
         assert_eq!(new.description.as_deref(), Some("new description"));
         assert_eq!(new.target_url, "https://github.com/old/flow-wal");
         assert_eq!(changes.len(), 1);
@@ -3316,8 +3336,7 @@ mod tests {
     fn compute_update_switch_to_pass_through_clears_pinned_ref() {
         let mut args = empty_update_args();
         args.ref_policy = Some("pass-through-tag".into());
-        let (new, changes) =
-            compute_updated_redirect_section(&baseline_pinned(), &args).unwrap();
+        let (new, changes) = compute_updated_redirect_section(&baseline_pinned(), &args).unwrap();
         assert!(matches!(new.ref_policy, RefPolicy::PassThroughTag));
         assert_eq!(new.pinned_ref, None);
         // Two changes: ref_policy + pinned_ref (was Some, now None).
@@ -3376,7 +3395,10 @@ mod tests {
         // Current auth is None; flag not provided → token_env not
         // meaningful.
         let err = compute_updated_redirect_section(&baseline_pass_through(), &args).unwrap_err();
-        assert!(err.to_string().contains("--target-token-env is only meaningful"));
+        assert!(
+            err.to_string()
+                .contains("--target-token-env is only meaningful")
+        );
     }
 
     #[test]

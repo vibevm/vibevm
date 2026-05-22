@@ -55,8 +55,13 @@ fn gregorian_from_days(days_since_epoch: i64) -> (i64, u32, u32) {
 /// crate itself produces — this is not a general RFC 3339 parser.
 pub fn parse_unix_utc(s: &str) -> Option<u64> {
     let bytes = s.as_bytes();
-    if bytes.len() != 20 || bytes[4] != b'-' || bytes[7] != b'-' || bytes[10] != b'T'
-        || bytes[13] != b':' || bytes[16] != b':' || bytes[19] != b'Z'
+    if bytes.len() != 20
+        || bytes[4] != b'-'
+        || bytes[7] != b'-'
+        || bytes[10] != b'T'
+        || bytes[13] != b':'
+        || bytes[16] != b':'
+        || bytes[19] != b'Z'
     {
         return None;
     }

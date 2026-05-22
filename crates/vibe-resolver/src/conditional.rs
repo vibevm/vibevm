@@ -63,7 +63,9 @@ pub enum PredicateError {
     #[error("malformed conditional-dep predicate `{0}` (expected `context(<key>)`)")]
     Malformed(String),
 
-    #[error("conditional-dep predicate `{0}` uses an unsupported form. Today only `context(<key>)` (capability/pkgref/interface tag) is recognised.")]
+    #[error(
+        "conditional-dep predicate `{0}` uses an unsupported form. Today only `context(<key>)` (capability/pkgref/interface tag) is recognised."
+    )]
     Unsupported(String),
 }
 

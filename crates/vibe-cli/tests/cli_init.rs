@@ -66,9 +66,15 @@ fn init_creates_expected_layout() {
     let manifest_text = fs::read_to_string(path.join("vibe.toml")).unwrap();
     let parsed = vibe_core::manifest::Manifest::parse_str(&manifest_text).unwrap();
     assert_eq!(parsed.require_project().unwrap().version, "0.0.1");
-    assert!(parsed.require_project().unwrap().name.ends_with(
-        path.file_name().unwrap().to_str().unwrap()
-    ) || parsed.require_project().unwrap().name == path.file_name().unwrap().to_str().unwrap());
+    assert!(
+        parsed
+            .require_project()
+            .unwrap()
+            .name
+            .ends_with(path.file_name().unwrap().to_str().unwrap())
+            || parsed.require_project().unwrap().name
+                == path.file_name().unwrap().to_str().unwrap()
+    );
 
     // Empty lockfile parses back and carries the expected metadata.
     let lock_text = fs::read_to_string(path.join("vibe.lock")).unwrap();
@@ -194,7 +200,10 @@ fn init_quiet_emits_single_line() {
 
     let stdout = String::from_utf8(out.stdout).unwrap();
     let trimmed = stdout.trim();
-    assert!(!trimmed.contains('\n'), "quiet output must be single line: {trimmed:?}");
+    assert!(
+        !trimmed.contains('\n'),
+        "quiet output must be single line: {trimmed:?}"
+    );
     assert!(trimmed.contains("vibe init:"));
 }
 
@@ -215,11 +224,15 @@ fn init_writes_default_registry() {
     let dir = tempfile::tempdir().unwrap();
     let path = dir.path();
 
-    vibe().arg("init").arg("--path").arg(path).assert().success();
+    vibe()
+        .arg("init")
+        .arg("--path")
+        .arg(path)
+        .assert()
+        .success();
 
     let manifest_text = fs::read_to_string(path.join("vibe.toml")).unwrap();
-    let parsed =
-        vibe_core::manifest::Manifest::parse_str(&manifest_text).unwrap();
+    let parsed = vibe_core::manifest::Manifest::parse_str(&manifest_text).unwrap();
     assert_eq!(
         parsed.registries.len(),
         2,
@@ -230,7 +243,10 @@ fn init_writes_default_registry() {
     assert_eq!(primary.name, vibe_core::manifest::DEFAULT_REGISTRY_NAME);
     assert_eq!(primary.url, vibe_core::manifest::DEFAULT_REGISTRY_URL);
     assert_eq!(primary.r#ref, vibe_core::manifest::DEFAULT_REGISTRY_REF);
-    assert_eq!(primary.naming, vibe_core::manifest::NamingConvention::KindName);
+    assert_eq!(
+        primary.naming,
+        vibe_core::manifest::NamingConvention::KindName
+    );
 
     let secondary = &parsed.registries[1];
     assert_eq!(
@@ -272,8 +288,7 @@ fn init_no_registry_flag_omits_section() {
         .success();
 
     let manifest_text = fs::read_to_string(path.join("vibe.toml")).unwrap();
-    let parsed =
-        vibe_core::manifest::Manifest::parse_str(&manifest_text).unwrap();
+    let parsed = vibe_core::manifest::Manifest::parse_str(&manifest_text).unwrap();
     assert!(
         parsed.registries.is_empty(),
         "[[registry]] must be absent after --no-registry: {manifest_text}"
@@ -303,8 +318,7 @@ fn init_registry_url_override() {
         .success();
 
     let manifest_text = fs::read_to_string(path.join("vibe.toml")).unwrap();
-    let parsed =
-        vibe_core::manifest::Manifest::parse_str(&manifest_text).unwrap();
+    let parsed = vibe_core::manifest::Manifest::parse_str(&manifest_text).unwrap();
     assert_eq!(
         parsed.registries.len(),
         1,

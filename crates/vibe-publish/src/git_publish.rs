@@ -58,10 +58,7 @@ pub fn push_release(
     // Tag the commit. `-a` annotated so the registry's `ls-remote
     // --tags` peeled-form dedup is exercised on the consumer side.
     let tag_msg = format!("{package_name}@{version}");
-    run_git_in(
-        staging_path,
-        &["tag", "-a", tag, "-m", &tag_msg],
-    )?;
+    run_git_in(staging_path, &["tag", "-a", tag, "-m", &tag_msg])?;
 
     // Wire up origin and push the branch first, then the tag. Two
     // separate pushes because `--mirror` would imply we own every
@@ -172,16 +169,9 @@ pub fn ls_remote_tags(url: &str) -> Result<Vec<String>, PublishError> {
 ///
 /// `staging_path` must be an existing local clone of the stub remote
 /// (so `git push origin <tag>` can resolve `<tag>` to a known commit).
-pub fn push_tag_only(
-    staging_path: &Path,
-    clone_url: &str,
-    tag: &str,
-) -> Result<(), PublishError> {
+pub fn push_tag_only(staging_path: &Path, clone_url: &str, tag: &str) -> Result<(), PublishError> {
     let tag_msg = format!("redirect stub: surface target ref {tag}");
-    run_git_in(
-        staging_path,
-        &["tag", "-a", tag, "-m", &tag_msg],
-    )?;
+    run_git_in(staging_path, &["tag", "-a", tag, "-m", &tag_msg])?;
     push_with_classification(staging_path, &["push", "origin", tag], clone_url)?;
     Ok(())
 }
@@ -284,7 +274,10 @@ pub fn shallow_clone(clone_url: &str) -> Result<TempDir, PublishError> {
     run_git_in(staging.path(), &["remote", "set-url", "origin", clone_url])?;
     // Set local identity (parallel to push_release / push_initial) so
     // tag annotation does not require a global git config.
-    run_git_in(staging.path(), &["config", "user.email", "publish@vibevm.local"])?;
+    run_git_in(
+        staging.path(),
+        &["config", "user.email", "publish@vibevm.local"],
+    )?;
     run_git_in(staging.path(), &["config", "user.name", "vibevm publisher"])?;
     Ok(staging)
 }
@@ -360,10 +353,9 @@ fn walk(root: &Path) -> Result<Vec<std::path::PathBuf>, PublishError> {
 }
 
 fn run_git_in(cwd: &Path, args: &[&str]) -> Result<Output, PublishError> {
-    let output = git_command(cwd, args).output().map_err(|e| PublishError::Git(format!(
-        "spawning git {}: {e}",
-        join_args_redacted(args)
-    )))?;
+    let output = git_command(cwd, args).output().map_err(|e| {
+        PublishError::Git(format!("spawning git {}: {e}", join_args_redacted(args)))
+    })?;
     if !output.status.success() {
         let stderr = redact_credentials(String::from_utf8_lossy(&output.stderr).trim());
         return Err(PublishError::Git(format!(
@@ -381,10 +373,9 @@ fn push_with_classification(
     args: &[&str],
     clone_url: &str,
 ) -> Result<(), PublishError> {
-    let output = git_command(cwd, args).output().map_err(|e| PublishError::Git(format!(
-        "spawning git {}: {e}",
-        join_args_redacted(args)
-    )))?;
+    let output = git_command(cwd, args).output().map_err(|e| {
+        PublishError::Git(format!("spawning git {}: {e}", join_args_redacted(args)))
+    })?;
     if output.status.success() {
         return Ok(());
     }
@@ -618,8 +609,7 @@ mod tests {
         let url = "https://x-access-token:abcd1234@github.com/vibespecs/flow-wal.git";
         let scrubbed = redact_credentials(url);
         assert_eq!(
-            scrubbed,
-            "https://***@github.com/vibespecs/flow-wal.git",
+            scrubbed, "https://***@github.com/vibespecs/flow-wal.git",
             "credentials must be replaced with `***`"
         );
         assert!(!scrubbed.contains("abcd1234"));
@@ -684,7 +674,11 @@ mod tests {
         assert!(init_status.success());
 
         let seed = tempdir().unwrap();
-        fs::write(seed.path().join("vibe-redirect.toml"), "[redirect]\ntarget_url = \"https://example.invalid/v1\"\n").unwrap();
+        fs::write(
+            seed.path().join("vibe-redirect.toml"),
+            "[redirect]\ntarget_url = \"https://example.invalid/v1\"\n",
+        )
+        .unwrap();
         let url = bare.to_string_lossy().into_owned();
         push_initial(seed.path(), &url, "stub: initial").expect("seed ok");
 
@@ -749,7 +743,8 @@ mod tests {
 
     #[test]
     fn redact_credentials_multiple_urls_in_message() {
-        let msg = "trying https://user:pw1@host.example/a then https://user:pw2@other.example/b done";
+        let msg =
+            "trying https://user:pw1@host.example/a then https://user:pw2@other.example/b done";
         let scrubbed = redact_credentials(msg);
         assert!(!scrubbed.contains("pw1"));
         assert!(!scrubbed.contains("pw2"));

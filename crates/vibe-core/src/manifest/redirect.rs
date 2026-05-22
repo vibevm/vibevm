@@ -213,7 +213,10 @@ mod tests {
 target_url = "https://github.com/external/flow-internal"
 "#;
         let r = parse(raw).unwrap();
-        assert_eq!(r.redirect.target_url, "https://github.com/external/flow-internal");
+        assert_eq!(
+            r.redirect.target_url,
+            "https://github.com/external/flow-internal"
+        );
         assert_eq!(r.redirect.ref_policy, RefPolicy::PassThroughTag);
         assert_eq!(r.redirect.pinned_ref, None);
         assert_eq!(r.redirect.auth, AuthKind::None);
@@ -244,7 +247,10 @@ description = "Delegated to acme-corp"
         let r = parse(raw).unwrap();
         assert_eq!(r.redirect.auth, AuthKind::TokenEnv);
         assert_eq!(r.redirect.token_env.as_deref(), Some("VIBEVM_TARGET_TOKEN"));
-        assert_eq!(r.redirect.description.as_deref(), Some("Delegated to acme-corp"));
+        assert_eq!(
+            r.redirect.description.as_deref(),
+            Some("Delegated to acme-corp")
+        );
     }
 
     #[test]
@@ -322,7 +328,10 @@ secret_field = "..."
         let rendered = toml::to_string_pretty(&r).unwrap();
         // Defaults elide: only `target_url` is present.
         assert!(rendered.contains("target_url = \"https://github.com/x/y\""));
-        assert!(!rendered.contains("ref_policy"), "default ref_policy should elide");
+        assert!(
+            !rendered.contains("ref_policy"),
+            "default ref_policy should elide"
+        );
         assert!(!rendered.contains("auth"), "default auth should elide");
         let back: RedirectFile = toml::from_str(&rendered).unwrap();
         assert_eq!(r, back);

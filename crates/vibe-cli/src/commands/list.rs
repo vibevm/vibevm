@@ -133,9 +133,7 @@ pub fn run(ctx: &output::Context, args: ListArgs) -> Result<()> {
     }
     println!(
         "{:<k_w$}  {:<n_w$}  {:<v_w$}  BOOT SNIPPET",
-        "KIND",
-        "NAME",
-        "VERSION"
+        "KIND", "NAME", "VERSION"
     );
     for p in &filtered {
         println!(
@@ -165,7 +163,11 @@ pub fn run(ctx: &output::Context, args: ListArgs) -> Result<()> {
             }
         }
     }
-    println!("\n{} package{} installed.", filtered.len(), if filtered.len() == 1 { "" } else { "s" });
+    println!(
+        "\n{} package{} installed.",
+        filtered.len(),
+        if filtered.len() == 1 { "" } else { "s" }
+    );
     Ok(())
 }
 

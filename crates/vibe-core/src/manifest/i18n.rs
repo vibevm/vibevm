@@ -141,11 +141,7 @@ pub fn localised_path(path: &Path, lang: &str) -> PathBuf {
 /// `chain` is a list of language tags in priority order — typically
 /// produced by [`I18nDecl::project_preference_chain`]. The canonical
 /// (no-suffix) form is appended automatically as the last fallback.
-pub fn resolve_localised(
-    base_dir: &Path,
-    logical: &Path,
-    chain: &[String],
-) -> Option<PathBuf> {
+pub fn resolve_localised(base_dir: &Path, logical: &Path, chain: &[String]) -> Option<PathBuf> {
     for lang in chain {
         if lang.is_empty() {
             continue;
@@ -219,8 +215,7 @@ mod tests {
         fs::write(root.join("README.md"), "EN").unwrap();
         fs::write(root.join("README.ru.md"), "RU").unwrap();
         let chain = vec!["ru".to_string(), "en".to_string()];
-        let resolved =
-            resolve_localised(root, Path::new("README.md"), &chain).unwrap();
+        let resolved = resolve_localised(root, Path::new("README.md"), &chain).unwrap();
         assert_eq!(resolved, root.join("README.ru.md"));
     }
 
@@ -230,8 +225,7 @@ mod tests {
         let root = tmp.path();
         fs::write(root.join("README.md"), "EN").unwrap();
         let chain = vec!["ja".to_string(), "en".to_string()];
-        let resolved =
-            resolve_localised(root, Path::new("README.md"), &chain).unwrap();
+        let resolved = resolve_localised(root, Path::new("README.md"), &chain).unwrap();
         assert_eq!(resolved, root.join("README.md"));
     }
 
@@ -250,8 +244,7 @@ mod tests {
         fs::write(root.join("README.md"), "EN").unwrap();
         fs::write(root.join("README.pt.md"), "PT").unwrap();
         let chain = vec!["pt-BR".to_string(), "en".to_string()];
-        let resolved =
-            resolve_localised(root, Path::new("README.md"), &chain).unwrap();
+        let resolved = resolve_localised(root, Path::new("README.md"), &chain).unwrap();
         assert_eq!(resolved, root.join("README.pt.md"));
     }
 

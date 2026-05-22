@@ -210,10 +210,7 @@ impl<T: Transport> Server<T> {
             "tools/list" => self.handle_tools_list(req),
             "tools/call" => self.handle_tools_call(req),
             "ping" => JsonRpcResponse::ok(req.id, Value::Object(serde_json::Map::new())),
-            other => JsonRpcResponse::error(
-                req.id,
-                JsonRpcError::method_not_found(other),
-            ),
+            other => JsonRpcResponse::error(req.id, JsonRpcError::method_not_found(other)),
         }
     }
 
@@ -265,8 +262,9 @@ impl<T: Transport> Server<T> {
             Ok(value) => {
                 let text = match &value {
                     Value::String(s) => s.clone(),
-                    other => serde_json::to_string_pretty(other)
-                        .unwrap_or_else(|_| other.to_string()),
+                    other => {
+                        serde_json::to_string_pretty(other).unwrap_or_else(|_| other.to_string())
+                    }
                 };
                 let result = serde_json::json!({
                     "content": [

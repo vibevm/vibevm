@@ -362,8 +362,7 @@ fn search_aggregates_hits_from_configured_registries() {
         "stderr: {}",
         String::from_utf8_lossy(&out.stderr)
     );
-    let v: serde_json::Value =
-        serde_json::from_slice(&out.stdout).expect("stdout must be JSON");
+    let v: serde_json::Value = serde_json::from_slice(&out.stdout).expect("stdout must be JSON");
     assert_eq!(v["command"], "search");
     assert_eq!(v["query"], "wal");
     assert_eq!(v["hit_count"], 1);
@@ -503,7 +502,11 @@ fn search_reports_unreachable_registry_without_aborting() {
         .arg(project.path())
         .output()
         .unwrap();
-    assert!(out.status.success(), "stderr: {}", String::from_utf8_lossy(&out.stderr));
+    assert!(
+        out.status.success(),
+        "stderr: {}",
+        String::from_utf8_lossy(&out.stderr)
+    );
     let v: serde_json::Value = serde_json::from_slice(&out.stdout).unwrap();
 
     assert_eq!(v["hit_count"], 1);
@@ -557,10 +560,17 @@ fn search_filters_to_one_registry_via_flag() {
     let v: serde_json::Value = serde_json::from_slice(&out.stdout).unwrap();
 
     let searched = v["registries_searched"].as_array().unwrap();
-    assert_eq!(searched.len(), 1, "only the named registry should be walked");
+    assert_eq!(
+        searched.len(),
+        1,
+        "only the named registry should be walked"
+    );
     assert_eq!(searched[0], "secondary");
     let unconfigured = v["registries_unconfigured"].as_array().unwrap();
-    assert!(unconfigured.is_empty(), "primary was filtered out — not reported");
+    assert!(
+        unconfigured.is_empty(),
+        "primary was filtered out — not reported"
+    );
 }
 
 #[test]
@@ -835,14 +845,21 @@ fn search_caches_results_and_serves_subsequent_runs_from_disk() {
         .arg(project.path())
         .output()
         .unwrap();
-    assert!(out.status.success(), "stderr: {}", String::from_utf8_lossy(&out.stderr));
+    assert!(
+        out.status.success(),
+        "stderr: {}",
+        String::from_utf8_lossy(&out.stderr)
+    );
     let v: serde_json::Value = serde_json::from_slice(&out.stdout).unwrap();
     let cold = &v["hits"][0];
     assert_eq!(cold["description"], "Pre-cache version.");
 
     // The cache directory now has a file under primary/.
     let primary_cache_dir = cache_dir.path().join("primary");
-    assert!(primary_cache_dir.is_dir(), "expected per-registry cache dir");
+    assert!(
+        primary_cache_dir.is_dir(),
+        "expected per-registry cache dir"
+    );
     let entries: Vec<_> = std::fs::read_dir(&primary_cache_dir)
         .unwrap()
         .filter_map(|e| e.ok())

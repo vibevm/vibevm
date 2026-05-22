@@ -208,11 +208,9 @@ impl<'c, C: RepoCreator + ?Sized> Publisher<'c, C> {
         // a publishable `[package]` manifest; a `[project]`-only or
         // `[workspace]`-only `vibe.toml` is rejected as source-invalid.
         let manifest_path = config.source_dir.join(Manifest::FILENAME);
-        let manifest = Manifest::read(&manifest_path).map_err(|e| {
-            PublishError::SourceInvalid {
-                path: manifest_path.clone(),
-                reason: format!("could not read or parse manifest: {e}"),
-            }
+        let manifest = Manifest::read(&manifest_path).map_err(|e| PublishError::SourceInvalid {
+            path: manifest_path.clone(),
+            reason: format!("could not read or parse manifest: {e}"),
         })?;
         let meta = manifest
             .require_package()
@@ -244,13 +242,7 @@ impl<'c, C: RepoCreator + ?Sized> Publisher<'c, C> {
             // URL itself, surfaced in `repo_url`.
             let repo_name = config.naming.repo_name(kind, &name);
             if !config.dry_run {
-                git_publish::push_release(
-                    &config.source_dir,
-                    direct_url,
-                    &tag,
-                    &name,
-                    &version,
-                )?;
+                git_publish::push_release(&config.source_dir, direct_url, &tag, &name, &version)?;
             }
             return Ok(PublishOutcome {
                 kind,
@@ -313,13 +305,7 @@ impl<'c, C: RepoCreator + ?Sized> Publisher<'c, C> {
         // carries the public clone URL for display).
         if !config.dry_run {
             let push_url = self.creator.push_url(&org_segment, &repo_name);
-            git_publish::push_release(
-                &config.source_dir,
-                &push_url,
-                &tag,
-                &name,
-                &version,
-            )?;
+            git_publish::push_release(&config.source_dir, &push_url, &tag, &name, &version)?;
         }
 
         Ok(PublishOutcome {
@@ -632,8 +618,7 @@ mod tests {
     #[test]
     fn creator_for_url_picks_github() {
         let token = Token::from_explicit("test-token-please-redact");
-        let creator =
-            creator_for_url("https://github.com/vibespecs", "vibespecs", token).unwrap();
+        let creator = creator_for_url("https://github.com/vibespecs", "vibespecs", token).unwrap();
         assert_eq!(creator.host_name(), "github.com");
         assert_eq!(creator.expected_org(), Some("vibespecs"));
     }
@@ -641,8 +626,7 @@ mod tests {
     #[test]
     fn creator_for_url_picks_gitverse() {
         let token = Token::from_explicit("test-token-please-redact");
-        let creator =
-            creator_for_url("git@gitverse.ru:vibespecs", "vibespecs", token).unwrap();
+        let creator = creator_for_url("git@gitverse.ru:vibespecs", "vibespecs", token).unwrap();
         assert_eq!(creator.host_name(), "gitverse.ru");
         assert_eq!(creator.expected_org(), Some("vibespecs"));
     }

@@ -48,9 +48,7 @@ use vibe_core::{PackageRef, VersionSpec};
 use crate::git_backend::{GitBackend, GitError, ShellGit};
 use crate::git_package_registry::{GitPackageRegistry, copy_dir_excluding_git};
 use crate::git_registry::{DEFAULT_FRESHNESS_SECS, default_cache_root, strip_git_plus_prefix};
-use crate::{
-    CachedPackage, RegistryError, ResolvedPackage, compute_content_hash,
-};
+use crate::{CachedPackage, RegistryError, ResolvedPackage, compute_content_hash};
 use vibe_core::PackageKind;
 
 /// Default ref for `[[override]]` entries that omit `ref`. Most adopters
@@ -209,16 +207,8 @@ fn format_walk_attempts(attempts: &[RegistryWalkAttempt]) -> String {
     // the rendered table stays aligned regardless of label
     // length. URLs are too varied to align — they wrap to the
     // right of the arrow.
-    let name_width = attempts
-        .iter()
-        .map(|a| a.name.len())
-        .max()
-        .unwrap_or(0);
-    let url_width = attempts
-        .iter()
-        .map(|a| a.url.len())
-        .max()
-        .unwrap_or(0);
+    let name_width = attempts.iter().map(|a| a.name.len()).max().unwrap_or(0);
+    let url_width = attempts.iter().map(|a| a.url.len()).max().unwrap_or(0);
     let mut out = String::new();
     for a in attempts {
         // Indent each line with two spaces so the report nests
@@ -236,7 +226,10 @@ fn format_walk_attempts(attempts: &[RegistryWalkAttempt]) -> String {
     }
     // Hint at the bottom — the most common operator next step
     // when nothing was found anywhere.
-    if attempts.iter().any(|a| matches!(a.status, WalkAttemptStatus::Public401)) {
+    if attempts
+        .iter()
+        .any(|a| matches!(a.status, WalkAttemptStatus::Public401))
+    {
         out.push_str(
             "\nHint: at least one registry returned 401 / 403 and was walked past as `auth=none`.\n\
              If that registry is actually private, set `auth = \"token-env\"` and provide the\n\
@@ -320,10 +313,7 @@ fn try_fetch_redirect_for_url(
         Err(other) => return Err(other.into()),
     };
     let r = parse_redirect_bytes(&bytes).map_err(|e| RegistryError::MalformedMeta {
-        path: PathBuf::from(format!(
-            "{plain_url}@{refname}:{}",
-            RedirectFile::FILENAME
-        )),
+        path: PathBuf::from(format!("{plain_url}@{refname}:{}", RedirectFile::FILENAME)),
         reason: e.to_string(),
     })?;
     Ok(Some(r))
@@ -428,8 +418,7 @@ impl MultiRegistryResolver {
                 .filter(|m| m.of == reg.name || m.of == "*")
                 .collect();
             chain.sort_by_key(|m| m.priority);
-            let mirror_urls: Vec<String> =
-                chain.into_iter().map(|m| m.url.clone()).collect();
+            let mirror_urls: Vec<String> = chain.into_iter().map(|m| m.url.clone()).collect();
 
             // PROP-002 §2.2.1 — thread the registry's auth regime and
             // the explicit-or-derived token env-var name into the
@@ -575,9 +564,7 @@ impl MultiRegistryResolver {
                     if let Some(redirect) =
                         try_fetch_redirect(&self.backend, reg, &resolved, &stub_tag)?
                     {
-                        return self.follow_redirect(
-                            pkgref, &resolved, reg, &redirect, &stub_tag,
-                        );
+                        return self.follow_redirect(pkgref, &resolved, reg, &redirect, &stub_tag);
                     }
                     let url = reg.package_repo_url(resolved.kind, &resolved.name);
                     return Ok(MultiResolution {
@@ -603,10 +590,8 @@ impl MultiRegistryResolver {
                     continue;
                 }
                 Err(RegistryError::Git(crate::git_backend::GitError::AuthFailed { .. }))
-                    if matches!(
-                        reg.auth_kind(),
-                        vibe_core::manifest::AuthKind::None
-                    ) && !self.strict_auth =>
+                    if matches!(reg.auth_kind(), vibe_core::manifest::AuthKind::None)
+                        && !self.strict_auth =>
                 {
                     tracing::debug!(
                         target: "vibe_registry::resolve",
@@ -775,10 +760,7 @@ impl MultiRegistryResolver {
         // org owner pointed at the wrong target, refuse to install.
         if target_meta.kind != pkgref.kind || target_meta.name != pkgref.name {
             return Err(RegistryError::MalformedMeta {
-                path: PathBuf::from(format!(
-                    "{target_url}@{target_ref}:{}",
-                    Manifest::FILENAME
-                )),
+                path: PathBuf::from(format!("{target_url}@{target_ref}:{}", Manifest::FILENAME)),
                 reason: format!(
                     "redirect target for `{}:{}` declares `{}:{}` — refusing to install",
                     pkgref.kind, pkgref.name, target_meta.kind, target_meta.name
@@ -850,12 +832,13 @@ impl MultiRegistryResolver {
         // to the target's pinned ref, so the stub tag is irrelevant);
         // we fall back to a constraint-free resolve and verify the
         // resolved version still matches.
-        let pinned_pkgref = PackageRef::parse(&format!("{kind}:{name}@={version}")).map_err(
-            |e| RegistryError::MalformedMeta {
-                path: PathBuf::from("<synthetic-pkgref>"),
-                reason: format!("constructing pinned pkgref: {e}"),
-            },
-        )?;
+        let pinned_pkgref =
+            PackageRef::parse(&format!("{kind}:{name}@={version}")).map_err(|e| {
+                RegistryError::MalformedMeta {
+                    path: PathBuf::from("<synthetic-pkgref>"),
+                    reason: format!("constructing pinned pkgref: {e}"),
+                }
+            })?;
         let resolution = match self.resolve(&pinned_pkgref) {
             Ok(r) => r,
             Err(RegistryError::NoMatchingVersion { .. })
@@ -1158,11 +1141,7 @@ impl MultiRegistryResolver {
             .join("clone")
     }
 
-    fn read_override_manifest(
-        &self,
-        url: &str,
-        refname: &str,
-    ) -> Result<Manifest, RegistryError> {
+    fn read_override_manifest(&self, url: &str, refname: &str) -> Result<Manifest, RegistryError> {
         let bytes = self.backend.fetch_file_at_ref(
             strip_git_plus_prefix(url),
             refname,
@@ -1230,14 +1209,14 @@ impl MultiRegistryResolver {
                     kind: resolution.resolved.kind,
                     name: resolution.resolved.name.clone(),
                 })?;
-        let reg =
-            self.registries
-                .iter()
-                .find(|r| r.name() == registry_name)
-                .ok_or_else(|| RegistryError::UnknownPackage {
-                    kind: resolution.resolved.kind,
-                    name: resolution.resolved.name.clone(),
-                })?;
+        let reg = self
+            .registries
+            .iter()
+            .find(|r| r.name() == registry_name)
+            .ok_or_else(|| RegistryError::UnknownPackage {
+                kind: resolution.resolved.kind,
+                name: resolution.resolved.name.clone(),
+            })?;
         // `GitPackageRegistry::fetch_with_expected_hash` already populates
         // `registry_name` / `source_ref` / `overridden = false` correctly;
         // nothing to wrap.
@@ -1317,14 +1296,16 @@ impl MultiRegistryResolver {
         let kind = resolution.resolved.kind;
         let name = resolution.resolved.name.as_str();
         let target_url = resolution.source_url.clone();
-        let refname = resolution
-            .source_ref
-            .clone()
-            .ok_or_else(|| RegistryError::MalformedMeta {
-                path: PathBuf::from(format!("{target_url}:{}", Manifest::FILENAME)),
-                reason: "redirect resolution carries no source_ref — internal invariant violated"
-                    .to_string(),
-            })?;
+        let refname =
+            resolution
+                .source_ref
+                .clone()
+                .ok_or_else(|| RegistryError::MalformedMeta {
+                    path: PathBuf::from(format!("{target_url}:{}", Manifest::FILENAME)),
+                    reason:
+                        "redirect resolution carries no source_ref — internal invariant violated"
+                            .to_string(),
+                })?;
 
         // Synthesise a single-package registry on the target URL with
         // the redirect's declared auth, so the M1.14 token-injection
@@ -1409,12 +1390,13 @@ impl MultiRegistryResolver {
         let kind = resolution.resolved.kind;
         let name = resolution.resolved.name.as_str();
         let qualified = format!("{kind}:{name}");
-        let dep = self.git_packages.get(&qualified).ok_or_else(|| {
-            RegistryError::UnknownPackage {
-                kind,
-                name: name.to_string(),
-            }
-        })?;
+        let dep =
+            self.git_packages
+                .get(&qualified)
+                .ok_or_else(|| RegistryError::UnknownPackage {
+                    kind,
+                    name: name.to_string(),
+                })?;
         let refname = resolution
             .source_ref
             .clone()
@@ -1727,8 +1709,8 @@ mod tests {
     use std::fs;
     use std::sync::Mutex;
     use tempfile::tempdir;
-    use vibe_core::manifest::NamingConvention;
     use vibe_core::PackageRef;
+    use vibe_core::manifest::NamingConvention;
 
     use crate::git_backend::GitError;
 
@@ -1836,13 +1818,16 @@ mod tests {
             path: &str,
         ) -> Result<Vec<u8>, GitError> {
             let key = (url.to_string(), refname.to_string(), path.to_string());
-            self.files.lock().unwrap().get(&key).cloned().ok_or_else(|| {
-                GitError::FileNotFoundInRef {
+            self.files
+                .lock()
+                .unwrap()
+                .get(&key)
+                .cloned()
+                .ok_or_else(|| GitError::FileNotFoundInRef {
                     url: url.to_string(),
                     refname: refname.to_string(),
                     path: path.to_string(),
-                }
-            })
+                })
         }
     }
 
@@ -1960,10 +1945,7 @@ target_url = "git@host:external/flow-internal.git"
             stub_a,
             "v1.0.0",
             "vibe-redirect.toml",
-            format!(
-                "[redirect]\ntarget_url = \"{stub_b}\"\n"
-            )
-            .into_bytes(),
+            format!("[redirect]\ntarget_url = \"{stub_b}\"\n").into_bytes(),
         );
         // Hop limit probe: target URL has its own vibe-redirect.toml
         // at the same tag. Chain rejected.
@@ -2058,10 +2040,7 @@ pinned_ref = "v1.0.0"
             stub_url,
             "v0.1.0",
             "vibe-redirect.toml",
-            format!(
-                "[redirect]\ntarget_url = \"{target_url}\"\n"
-            )
-            .into_bytes(),
+            format!("[redirect]\ntarget_url = \"{target_url}\"\n").into_bytes(),
         );
         fake.seed_file(
             target_url,
@@ -2112,8 +2091,8 @@ pinned_ref = "v1.0.0"
             auth: vibe_core::manifest::AuthKind::None,
             token_env: None,
         };
-        let r = build_resolver(cache.path(), vec![], vec![], vec![], fake)
-            .with_git_packages(vec![dep]);
+        let r =
+            build_resolver(cache.path(), vec![], vec![], vec![], fake).with_git_packages(vec![dep]);
 
         let p = PackageRef::parse("flow:internal").unwrap();
         let m = r.resolve(&p).expect("git-source resolution must succeed");
@@ -2149,8 +2128,8 @@ pinned_ref = "v1.0.0"
             auth: vibe_core::manifest::AuthKind::None,
             token_env: None,
         };
-        let r = build_resolver(cache.path(), vec![], vec![], vec![], fake)
-            .with_git_packages(vec![dep]);
+        let r =
+            build_resolver(cache.path(), vec![], vec![], vec![], fake).with_git_packages(vec![dep]);
 
         let p = PackageRef::parse("flow:internal").unwrap();
         let err = r.resolve(&p).unwrap_err();
@@ -2257,9 +2236,7 @@ pinned_ref = "v1.0.0"
                     "expected `not found` status label: {summary}"
                 );
             }
-            other => panic!(
-                "expected PackageNotFoundEverywhere with attempts, got: {other:?}"
-            ),
+            other => panic!("expected PackageNotFoundEverywhere with attempts, got: {other:?}"),
         }
     }
 
@@ -2384,10 +2361,7 @@ pinned_ref = "v1.0.0"
         // A second registry has the package — but the resolver must
         // NOT walk to it (the operator declared the first registry
         // as authenticated; AuthFailed is information they need).
-        fake.seed_tags(
-            "git@host:org-public/flow-wal.git",
-            vec!["v0.5.0".into()],
-        );
+        fake.seed_tags("git@host:org-public/flow-wal.git", vec!["v0.5.0".into()]);
 
         // Stash the token in an env-var so `from_manifest` can find
         // one. We can't `set_var` from this test (`forbid(unsafe_code)`),
@@ -2453,10 +2427,7 @@ pinned_ref = "v1.0.0"
         let fake = Arc::new(FakeBackend::default());
         // Public fallback also has the package — must NOT be walked
         // past the missing-token registry.
-        fake.seed_tags(
-            "git@host:org-public/flow-wal.git",
-            vec!["v0.5.0".into()],
-        );
+        fake.seed_tags("git@host:org-public/flow-wal.git", vec!["v0.5.0".into()]);
 
         // `auth = token-env` with an env-var that resolves to nothing
         // (deliberately exotic name unlikely to be set anywhere).
@@ -2464,7 +2435,11 @@ pinned_ref = "v1.0.0"
         let r = build_resolver(
             cache.path(),
             vec![
-                registry_section_token_env("internal", "https://internal.example/vibespecs", env_name),
+                registry_section_token_env(
+                    "internal",
+                    "https://internal.example/vibespecs",
+                    env_name,
+                ),
                 registry_section("public-fallback", "git@host:org-public"),
             ],
             vec![],
@@ -2668,7 +2643,11 @@ pinned_ref = "v1.0.0"
         assert_eq!(cached.source_ref.as_deref(), Some("my-fix"));
         assert_eq!(cached.package_meta().version.to_string(), "0.9.0");
         // Override clone lives under cache_root/__overrides__/flow-wal/clone/
-        let overrides_root = cache.path().join("__overrides__").join("flow-wal").join("clone");
+        let overrides_root = cache
+            .path()
+            .join("__overrides__")
+            .join("flow-wal")
+            .join("clone");
         assert!(overrides_root.join(".git").exists());
         // Materialised cache holds payload only.
         assert!(cached.cache_dir.join("vibe.toml").exists());
@@ -2779,8 +2758,7 @@ pinned_ref = "v1.0.0"
         let cache = tempdir().unwrap();
         let ws = tempdir().unwrap();
         let fake = Arc::new(FakeBackend::default());
-        let pkg_dir =
-            seed_path_package(ws.path(), "wrong-pkg", "something-else", "feat", "0.1.0");
+        let pkg_dir = seed_path_package(ws.path(), "wrong-pkg", "something-else", "feat", "0.1.0");
 
         let dep = ResolvedPathDep {
             kind: vibe_core::PackageKind::Flow,

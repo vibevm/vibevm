@@ -30,12 +30,7 @@ fn fixture_registry() -> PathBuf {
 }
 
 fn init_project(dir: &Path) {
-    vibe()
-        .arg("init")
-        .arg("--path")
-        .arg(dir)
-        .assert()
-        .success();
+    vibe().arg("init").arg("--path").arg(dir).assert().success();
 }
 
 #[test]
@@ -83,7 +78,10 @@ fn full_install_cycle() {
     }
     // The OLD mirror paths must NOT exist any more.
     assert!(
-        !project.path().join("spec/flows/wal/WAL-PROTOCOL.md").exists(),
+        !project
+            .path()
+            .join("spec/flows/wal/WAL-PROTOCOL.md")
+            .exists(),
         "the legacy [writes] mirror layout is retired — no project-tree mirror"
     );
     assert!(
@@ -100,7 +98,10 @@ fn full_install_cycle() {
     assert!(index_path.is_file(), "spec/boot/INDEX.md must be generated");
     let index = fs::read_to_string(&index_path).unwrap();
     let index_toml: toml::Value = toml::from_str(&index).expect("INDEX.md is TOML");
-    assert_eq!(index_toml.get("schema").and_then(|v| v.as_integer()), Some(1));
+    assert_eq!(
+        index_toml.get("schema").and_then(|v| v.as_integer()),
+        Some(1)
+    );
     assert!(
         index.contains("spec/boot/00-core.md"),
         "INDEX.md must name the node's own foundation boot:\n{index}"
@@ -147,10 +148,12 @@ fn full_install_cycle() {
     );
 
     // Cache directory populated.
-    assert!(project
-        .path()
-        .join(".vibe/cache/flow/wal/v0.1.0/vibe.toml")
-        .is_file());
+    assert!(
+        project
+            .path()
+            .join(".vibe/cache/flow/wal/v0.1.0/vibe.toml")
+            .is_file()
+    );
 
     // `vibe list` reflects the install.
     vibe()
@@ -243,10 +246,8 @@ fn install_second_install_is_idempotent() {
             .is_file(),
         "vibedeps/ slot must survive a re-install"
     );
-    let lock: vibe_core::manifest::Lockfile = toml::from_str(
-        &fs::read_to_string(project.path().join("vibe.lock")).unwrap(),
-    )
-    .unwrap();
+    let lock: vibe_core::manifest::Lockfile =
+        toml::from_str(&fs::read_to_string(project.path().join("vibe.lock")).unwrap()).unwrap();
     assert_eq!(lock.packages.len(), 1);
     assert_eq!(lock.packages[0].name, "wal");
 }
@@ -336,10 +337,7 @@ fn install_reports_json() {
     // were rebuilt.
     let materialised = last["materialised"].as_array().unwrap();
     assert_eq!(materialised.len(), 1);
-    assert_eq!(
-        materialised[0].as_str().unwrap(),
-        "vibedeps/flow-wal/0.1.0"
-    );
+    assert_eq!(materialised[0].as_str().unwrap(), "vibedeps/flow-wal/0.1.0");
     assert_eq!(last["nodes_regenerated"].as_array().unwrap().len(), 1);
 }
 
@@ -478,8 +476,7 @@ fn install_preserves_explicit_constraint_in_vibe_toml() {
         .success();
 
     let toml_text = fs::read_to_string(project.path().join("vibe.toml")).unwrap();
-    let manifest =
-        vibe_core::manifest::Manifest::parse_str(&toml_text).unwrap();
+    let manifest = vibe_core::manifest::Manifest::parse_str(&toml_text).unwrap();
     assert_eq!(manifest.requires.packages.len(), 1);
     // CLI typed `^0.1`; manifest preserves `^0.1`. We do NOT tighten
     // to the resolved `^0.1.0` — the operator's wider declaration
@@ -508,8 +505,7 @@ fn install_with_exact_flag_pins_manifest_to_eq_resolved() {
         .success();
 
     let toml_text = fs::read_to_string(project.path().join("vibe.toml")).unwrap();
-    let manifest =
-        vibe_core::manifest::Manifest::parse_str(&toml_text).unwrap();
+    let manifest = vibe_core::manifest::Manifest::parse_str(&toml_text).unwrap();
     assert_eq!(manifest.requires.packages.len(), 1);
     assert_eq!(
         manifest.requires.packages[0].to_string(),
@@ -532,11 +528,11 @@ fn install_from_manifest_uses_requires() {
     // `vibe.toml` already declares the deps, but nothing has been resolved.
     let toml_path = project.path().join("vibe.toml");
     let toml_text = fs::read_to_string(&toml_path).unwrap();
-    let mut manifest =
-        vibe_core::manifest::Manifest::parse_str(&toml_text).unwrap();
-    manifest.requires.packages.push(
-        vibe_core::PackageRef::parse("flow:wal").unwrap(),
-    );
+    let mut manifest = vibe_core::manifest::Manifest::parse_str(&toml_text).unwrap();
+    manifest
+        .requires
+        .packages
+        .push(vibe_core::PackageRef::parse("flow:wal").unwrap());
     manifest.write(&toml_path).unwrap();
 
     // Run `vibe install` with no pkgref arguments — should pick up the
@@ -565,10 +561,7 @@ fn install_from_manifest_uses_requires() {
     assert_eq!(lock.packages.len(), 1);
     assert_eq!(lock.packages[0].name, "wal");
     assert_eq!(lock.meta.root_dependencies.len(), 1);
-    assert_eq!(
-        lock.meta.root_dependencies[0].qualified_name(),
-        "flow:wal"
-    );
+    assert_eq!(lock.meta.root_dependencies[0].qualified_name(), "flow:wal");
 
     // Because flow:wal was declared in `[requires]` before this
     // install, the boot computation sees it as a dependency of the
@@ -626,8 +619,7 @@ fn uninstall_drops_pkgref_from_vibe_toml() {
     // Manifest carries the pkgref after install (sanity check that the
     // earlier test's invariant still holds in this fresh tempdir).
     let toml_text = fs::read_to_string(project.path().join("vibe.toml")).unwrap();
-    let manifest =
-        vibe_core::manifest::Manifest::parse_str(&toml_text).unwrap();
+    let manifest = vibe_core::manifest::Manifest::parse_str(&toml_text).unwrap();
     assert_eq!(manifest.requires.packages.len(), 1);
 
     vibe()
@@ -641,8 +633,7 @@ fn uninstall_drops_pkgref_from_vibe_toml() {
 
     // Manifest now empty.
     let toml_text = fs::read_to_string(project.path().join("vibe.toml")).unwrap();
-    let manifest =
-        vibe_core::manifest::Manifest::parse_str(&toml_text).unwrap();
+    let manifest = vibe_core::manifest::Manifest::parse_str(&toml_text).unwrap();
     assert!(
         manifest.requires.packages.is_empty(),
         "[requires].packages should be empty after uninstall, got: {:#?}",
@@ -718,15 +709,24 @@ fn make_per_package_registry(root: &Path) -> PathBuf {
     run_git(&src, &["tag", "v0.1.0"]);
 
     let bare = root.join("flow-wal.git");
-    run_git(root, &[
-        "clone", "--bare", src.to_str().unwrap(), bare.to_str().unwrap(),
-    ]);
+    run_git(
+        root,
+        &[
+            "clone",
+            "--bare",
+            src.to_str().unwrap(),
+            bare.to_str().unwrap(),
+        ],
+    );
     run_git(&bare, &["symbolic-ref", "HEAD", "refs/heads/main"]);
     root.to_path_buf()
 }
 
 fn copy_tree(src: &Path, dst: &Path) {
-    for entry in walkdir::WalkDir::new(src).into_iter().filter_map(|e| e.ok()) {
+    for entry in walkdir::WalkDir::new(src)
+        .into_iter()
+        .filter_map(|e| e.ok())
+    {
         let rel = entry.path().strip_prefix(src).unwrap();
         let target = dst.join(rel);
         if entry.file_type().is_dir() {
@@ -775,7 +775,10 @@ fn install_from_git_registry() {
     // Cargo / pip convention recorded in lockfiles; the resolver strips
     // it before invoking `git`, so it works with both prefixed and bare
     // forms in `vibe.toml`.
-    let url = format!("git+file://{}", org_root.to_string_lossy().replace('\\', "/"));
+    let url = format!(
+        "git+file://{}",
+        org_root.to_string_lossy().replace('\\', "/")
+    );
     write_project_with_per_package_registry(project.path(), &url);
 
     vibe()
@@ -1169,11 +1172,7 @@ fn make_redirect_target_bare_repo(
     run_git(&src, &["init", "--initial-branch=main"]);
     run_git(&src, &["config", "user.email", "target@example.com"]);
     run_git(&src, &["config", "user.name", "Target"]);
-    fs::write(
-        src.join(".gitattributes"),
-        "* text=auto eol=lf\n",
-    )
-    .unwrap();
+    fs::write(src.join(".gitattributes"), "* text=auto eol=lf\n").unwrap();
 
     // Minimal valid package manifest. The package ships one content file
     // (`MANIFEST.md`), materialised verbatim into its vibedeps/ slot.
@@ -1192,7 +1191,10 @@ version = "{version}"
     )
     .unwrap();
     run_git(&src, &["add", "-A"]);
-    run_git(&src, &["commit", "-m", &format!("{pkg_kind}:{pkg_name}@{version}")]);
+    run_git(
+        &src,
+        &["commit", "-m", &format!("{pkg_kind}:{pkg_name}@{version}")],
+    );
     run_git(&src, &["tag", tag]);
 
     let bare = root.join(format!("{repo_name}.git"));
@@ -1233,7 +1235,10 @@ fn install_via_redirect_pass_through_tag() {
         "0.1.0",
         "v0.1.0",
     );
-    let target_url = format!("file://{}", target_bare.to_string_lossy().replace('\\', "/"));
+    let target_url = format!(
+        "file://{}",
+        target_bare.to_string_lossy().replace('\\', "/")
+    );
 
     // Stub lives at `<org_root>/flow-internal.git` so the resolver's
     // composed per-package URL hits it via the registry's naming
@@ -1344,7 +1349,10 @@ fn install_via_redirect_pinned_policy_uses_pinned_ref() {
         "1.0.0",
         "v1.0.0",
     );
-    let target_url = format!("file://{}", target_bare.to_string_lossy().replace('\\', "/"));
+    let target_url = format!(
+        "file://{}",
+        target_bare.to_string_lossy().replace('\\', "/")
+    );
 
     let org_root = outer_path.join("org-root");
     fs::create_dir_all(&org_root).unwrap();
@@ -1411,7 +1419,10 @@ fn install_via_redirect_identity_mismatch_rejected() {
         "0.1.0",
         "v0.1.0",
     );
-    let target_url = format!("file://{}", target_bare.to_string_lossy().replace('\\', "/"));
+    let target_url = format!(
+        "file://{}",
+        target_bare.to_string_lossy().replace('\\', "/")
+    );
 
     let org_root = outer_path.join("org-root");
     fs::create_dir_all(&org_root).unwrap();
@@ -1445,13 +1456,11 @@ fn install_via_redirect_identity_mismatch_rejected() {
 
     // No file landed; no lockfile entry created.
     assert!(
-        !project.path().join("vibe.lock").exists()
-            || {
-                let lock_text = fs::read_to_string(project.path().join("vibe.lock")).unwrap();
-                let lock: vibe_core::manifest::Lockfile =
-                    toml::from_str(&lock_text).unwrap();
-                lock.packages.is_empty()
-            },
+        !project.path().join("vibe.lock").exists() || {
+            let lock_text = fs::read_to_string(project.path().join("vibe.lock")).unwrap();
+            let lock: vibe_core::manifest::Lockfile = toml::from_str(&lock_text).unwrap();
+            lock.packages.is_empty()
+        },
         "lockfile must not record a mismatched-identity package"
     );
 }
@@ -1491,10 +1500,7 @@ fn install_via_redirect_chain_rejected_at_hop_two() {
         None,
         &["v1.0.0"],
     );
-    let hop2_stub_url = format!(
-        "file://{}",
-        hop2_stub.to_string_lossy().replace('\\', "/")
-    );
+    let hop2_stub_url = format!("file://{}", hop2_stub.to_string_lossy().replace('\\', "/"));
 
     // Hop 1 stub in the registry org. It points at hop2_stub_url
     // which is itself a stub. Hop limit = 1 — refuse.
@@ -1687,7 +1693,12 @@ fn uninstall_removes_git_source_from_manifest_and_lockfile() {
     assert!(lock.packages.is_empty());
 
     // Files removed from the project tree.
-    assert!(!project.path().join("spec/flows/wal/WAL-PROTOCOL.md").exists());
+    assert!(
+        !project
+            .path()
+            .join("spec/flows/wal/WAL-PROTOCOL.md")
+            .exists()
+    );
 }
 
 /// Build a per-package git registry where `flow-wal` carries TWO
@@ -1798,10 +1809,8 @@ fn update_bumps_to_new_version_and_remateralises() {
         .assert()
         .success();
 
-    let lock: vibe_core::manifest::Lockfile = toml::from_str(
-        &fs::read_to_string(project.path().join("vibe.lock")).unwrap(),
-    )
-    .unwrap();
+    let lock: vibe_core::manifest::Lockfile =
+        toml::from_str(&fs::read_to_string(project.path().join("vibe.lock")).unwrap()).unwrap();
     assert_eq!(lock.packages[0].version.to_string(), "0.1.0");
     assert!(
         project
@@ -1816,10 +1825,8 @@ fn update_bumps_to_new_version_and_remateralises() {
     // pin and then runs `vibe update`.
     let toml_path = project.path().join("vibe.toml");
     let mut manifest =
-        vibe_core::manifest::Manifest::parse_str(&fs::read_to_string(&toml_path).unwrap())
-            .unwrap();
-    manifest.requires.packages[0] =
-        vibe_core::PackageRef::parse("flow:wal@*").unwrap();
+        vibe_core::manifest::Manifest::parse_str(&fs::read_to_string(&toml_path).unwrap()).unwrap();
+    manifest.requires.packages[0] = vibe_core::PackageRef::parse("flow:wal@*").unwrap();
     manifest.write(&toml_path).unwrap();
 
     // `vibe update` re-resolves `[requires]` afresh and re-materialises
@@ -1836,10 +1843,8 @@ fn update_bumps_to_new_version_and_remateralises() {
 
     // Lockfile still records v0.2.0; its slot carries the v0.2.0
     // content (A modified, B removed, C added relative to v0.1.0).
-    let lock: vibe_core::manifest::Lockfile = toml::from_str(
-        &fs::read_to_string(project.path().join("vibe.lock")).unwrap(),
-    )
-    .unwrap();
+    let lock: vibe_core::manifest::Lockfile =
+        toml::from_str(&fs::read_to_string(project.path().join("vibe.lock")).unwrap()).unwrap();
     assert_eq!(lock.packages.len(), 1);
     let entry = &lock.packages[0];
     assert_eq!(entry.version.to_string(), "0.2.0");
@@ -1956,7 +1961,9 @@ fn user_config_promotes_vibe_registry_cache_into_runtime() {
     // install's per-package clone must land in the user-config-
     // pointed cache.
     if !git_available() {
-        eprintln!("skipping user_config_promotes_vibe_registry_cache_into_runtime: git not on PATH");
+        eprintln!(
+            "skipping user_config_promotes_vibe_registry_cache_into_runtime: git not on PATH"
+        );
         return;
     }
 
@@ -2050,8 +2057,7 @@ VIBE_LOG = "vibe_registry=info"
         "stderr: {}",
         String::from_utf8_lossy(&out.stderr)
     );
-    let payload: serde_json::Value =
-        serde_json::from_slice(&out.stdout).expect("valid JSON");
+    let payload: serde_json::Value = serde_json::from_slice(&out.stdout).expect("valid JSON");
     let env_arr = payload["env"].as_array().unwrap();
     let cache_entry = env_arr
         .iter()
@@ -2059,10 +2065,7 @@ VIBE_LOG = "vibe_registry=info"
         .unwrap();
     assert_eq!(cache_entry["provenance"], "user-config");
     assert_eq!(cache_entry["value"], "/from-user-config");
-    let log_entry = env_arr
-        .iter()
-        .find(|e| e["name"] == "VIBE_LOG")
-        .unwrap();
+    let log_entry = env_arr.iter().find(|e| e["name"] == "VIBE_LOG").unwrap();
     assert_eq!(log_entry["provenance"], "user-config");
     assert_eq!(log_entry["value"], "vibe_registry=info");
     // The user_config block reports loaded = true and the resolved path.
@@ -2095,8 +2098,7 @@ fn show_config_live_env_overrides_user_config() {
         .output()
         .unwrap();
     assert!(out.status.success());
-    let payload: serde_json::Value =
-        serde_json::from_slice(&out.stdout).expect("valid JSON");
+    let payload: serde_json::Value = serde_json::from_slice(&out.stdout).expect("valid JSON");
     let env_arr = payload["env"].as_array().unwrap();
     let cache_entry = env_arr
         .iter()
@@ -2140,18 +2142,14 @@ fn show_config_user_token_default_redacts_value() {
         !stdout.contains("secret-do-not-leak"),
         "token bytes leaked into stdout:\n{stdout}"
     );
-    let payload: serde_json::Value =
-        serde_json::from_str(&stdout).expect("valid JSON");
+    let payload: serde_json::Value = serde_json::from_str(&stdout).expect("valid JSON");
     let env_arr = payload["env"].as_array().unwrap();
     let token = env_arr
         .iter()
         .find(|e| e["name"] == "VIBEVM_PUBLISH_TOKEN")
         .unwrap();
     assert_eq!(token["provenance"], "redacted");
-    assert!(token["value"]
-        .as_str()
-        .unwrap()
-        .contains("redacted"));
+    assert!(token["value"].as_str().unwrap().contains("redacted"));
 }
 
 #[test]
@@ -2168,17 +2166,18 @@ fn show_config_emits_registry_block_with_provenance() {
         .output()
         .unwrap();
     assert!(out.status.success());
-    let payload: serde_json::Value =
-        serde_json::from_slice(&out.stdout).expect("valid JSON");
+    let payload: serde_json::Value = serde_json::from_slice(&out.stdout).expect("valid JSON");
     assert_eq!(payload["ok"], true);
     assert_eq!(payload["command"], "show:config");
     let registries = payload["registries"].as_array().unwrap();
-    assert!(!registries.is_empty(), "default `vibe init` configures a registry");
+    assert!(
+        !registries.is_empty(),
+        "default `vibe init` configures a registry"
+    );
     assert_eq!(registries[0]["provenance"], "vibe.toml");
     let env = payload["env"].as_array().unwrap();
     assert!(
-        env.iter()
-            .any(|e| e["name"] == "VIBEVM_PUBLISH_TOKEN"),
+        env.iter().any(|e| e["name"] == "VIBEVM_PUBLISH_TOKEN"),
         "VIBEVM_PUBLISH_TOKEN should appear in env block"
     );
     // Token entry must surface as either `default` (unset) or
@@ -2249,7 +2248,9 @@ fn check_emits_json_envelope() {
 #[test]
 fn update_keeps_pinned_version_when_constraint_excludes_newer() {
     if !git_available() {
-        eprintln!("skipping update_keeps_pinned_version_when_constraint_excludes_newer: git not on PATH");
+        eprintln!(
+            "skipping update_keeps_pinned_version_when_constraint_excludes_newer: git not on PATH"
+        );
         return;
     }
 
@@ -2327,7 +2328,10 @@ fn vendor_produces_bare_repo_per_lockfile_entry() {
 
     let project = tempfile::tempdir().unwrap();
     init_project(project.path());
-    let url = format!("git+file://{}", org_root.to_string_lossy().replace('\\', "/"));
+    let url = format!(
+        "git+file://{}",
+        org_root.to_string_lossy().replace('\\', "/")
+    );
     write_project_with_per_package_registry(project.path(), &url);
 
     vibe()
@@ -2434,7 +2438,10 @@ fn vendor_refuses_non_empty_out_dir_without_force() {
 
     let project = tempfile::tempdir().unwrap();
     init_project(project.path());
-    let url = format!("git+file://{}", org_root.to_string_lossy().replace('\\', "/"));
+    let url = format!(
+        "git+file://{}",
+        org_root.to_string_lossy().replace('\\', "/")
+    );
     write_project_with_per_package_registry(project.path(), &url);
 
     vibe()
@@ -2521,10 +2528,8 @@ fn make_features_fixture_registry(root: &Path) -> PathBuf {
     let pkg = registry.join("flow").join("feat-pkg").join("v0.1.0");
     fs::create_dir_all(pkg.join("spec/feats/feat-pkg")).unwrap();
     fs::create_dir_all(pkg.join("boot")).unwrap();
-    fs::create_dir_all(pkg.join("subskills/stack/rust/spec/feats/feat-pkg"))
-        .unwrap();
-    fs::create_dir_all(pkg.join("subskills/doc/extra/spec/feats/feat-pkg"))
-        .unwrap();
+    fs::create_dir_all(pkg.join("subskills/stack/rust/spec/feats/feat-pkg")).unwrap();
+    fs::create_dir_all(pkg.join("subskills/doc/extra/spec/feats/feat-pkg")).unwrap();
 
     fs::write(
         pkg.join("vibe.toml"),
@@ -2545,16 +2550,8 @@ with-rust = ["subskill:stack/rust"]
 "#,
     )
     .unwrap();
-    fs::write(
-        pkg.join("spec/feats/feat-pkg/CORE.md"),
-        "# CORE protocol",
-    )
-    .unwrap();
-    fs::write(
-        pkg.join("boot/10-feat-pkg.md"),
-        "# boot snippet",
-    )
-    .unwrap();
+    fs::write(pkg.join("spec/feats/feat-pkg/CORE.md"), "# CORE protocol").unwrap();
+    fs::write(pkg.join("boot/10-feat-pkg.md"), "# boot snippet").unwrap();
 
     fs::write(
         pkg.join("subskills/stack/rust/vibe-subskill.toml"),
@@ -2637,8 +2634,7 @@ fn install_with_features_records_active_features_in_lockfile() {
     assert!(slot.join("vibe.toml").is_file());
 
     // Lockfile records the active features and the `describes` PURL.
-    let lock_text =
-        fs::read_to_string(project.path().join("vibe.lock")).unwrap();
+    let lock_text = fs::read_to_string(project.path().join("vibe.lock")).unwrap();
     let lock: vibe_core::manifest::Lockfile = toml::from_str(&lock_text).unwrap();
     let entry = &lock.packages[0];
     assert!(
@@ -2652,10 +2648,7 @@ fn install_with_features_records_active_features_in_lockfile() {
         "expected default/base activation; got {:?}",
         entry.features
     );
-    assert_eq!(
-        entry.describes.as_deref(),
-        Some("pkg:cargo/sqlx@0.8.0")
-    );
+    assert_eq!(entry.describes.as_deref(), Some("pkg:cargo/sqlx@0.8.0"));
     // Subskill activation at install time is retired — `subskills_active`
     // stays empty under the loading model.
     assert!(entry.subskills_active.is_empty());
@@ -2695,10 +2688,8 @@ fn install_no_default_features_drops_default_feature_from_lockfile() {
             .join("vibedeps/flow-feat-pkg/0.1.0/spec/feats/feat-pkg/CORE.md")
             .is_file()
     );
-    let lock: vibe_core::manifest::Lockfile = toml::from_str(
-        &fs::read_to_string(project.path().join("vibe.lock")).unwrap(),
-    )
-    .unwrap();
+    let lock: vibe_core::manifest::Lockfile =
+        toml::from_str(&fs::read_to_string(project.path().join("vibe.lock")).unwrap()).unwrap();
     assert!(
         !lock.packages[0]
             .features
@@ -2752,7 +2743,10 @@ fn mcp_install_writes_claude_settings() {
         .success();
 
     let settings = project.path().join(".claude/settings.json");
-    assert!(settings.is_file(), "expected `.claude/settings.json` written");
+    assert!(
+        settings.is_file(),
+        "expected `.claude/settings.json` written"
+    );
     let v: serde_json::Value =
         serde_json::from_str(&fs::read_to_string(&settings).unwrap()).unwrap();
     assert_eq!(v["mcpServers"]["vibevm"]["command"], "vibe");
@@ -2802,8 +2796,7 @@ fn mcp_install_is_idempotent() {
         .output()
         .unwrap();
     assert!(out.status.success());
-    let v: serde_json::Value =
-        serde_json::from_slice(&out.stdout).expect("JSON envelope");
+    let v: serde_json::Value = serde_json::from_slice(&out.stdout).expect("JSON envelope");
     let claude_result = v["results"]
         .as_array()
         .unwrap()
@@ -2889,7 +2882,11 @@ fn mcp_install_what_both_writes_skill_md_for_claude() {
         .arg("both")
         .output()
         .unwrap();
-    assert!(out.status.success(), "stderr: {}", String::from_utf8_lossy(&out.stderr));
+    assert!(
+        out.status.success(),
+        "stderr: {}",
+        String::from_utf8_lossy(&out.stderr)
+    );
     let v: serde_json::Value = serde_json::from_slice(&out.stdout).unwrap();
     assert_eq!(v["what"], "both");
     assert_eq!(v["scope"], "project");
@@ -2933,8 +2930,7 @@ fn mcp_install_what_both_writes_skill_for_opencode() {
     // OpenCode JSON config in project root
     let config = project.path().join("opencode.json");
     assert!(config.is_file());
-    let v: serde_json::Value =
-        serde_json::from_str(&fs::read_to_string(&config).unwrap()).unwrap();
+    let v: serde_json::Value = serde_json::from_str(&fs::read_to_string(&config).unwrap()).unwrap();
     assert_eq!(v["mcp"]["vibevm"]["type"], "local");
     assert_eq!(v["mcp"]["vibevm"]["enabled"], true);
     assert!(v["mcp"]["vibevm"]["command"].is_array());
@@ -2998,7 +2994,10 @@ fn mcp_install_what_mcp_emits_empty_skill_results() {
     assert_eq!(v["what"], "mcp");
     assert!(v["skill_results"].as_array().unwrap().is_empty());
     assert!(
-        !project.path().join(".claude/skills/vibevm/SKILL.md").exists(),
+        !project
+            .path()
+            .join(".claude/skills/vibevm/SKILL.md")
+            .exists(),
         "what=mcp must not write SKILL.md"
     );
 }
@@ -3021,7 +3020,11 @@ fn mcp_install_auto_with_dry_run_previews_every_detected_agent() {
         .arg("--dry-run")
         .output()
         .unwrap();
-    assert!(out.status.success(), "stderr: {}", String::from_utf8_lossy(&out.stderr));
+    assert!(
+        out.status.success(),
+        "stderr: {}",
+        String::from_utf8_lossy(&out.stderr)
+    );
     let v: serde_json::Value = serde_json::from_slice(&out.stdout).unwrap();
     assert_eq!(v["mode"], "auto");
     assert_eq!(v["dry_run"], true);
@@ -3152,7 +3155,10 @@ fn mcp_install_scope_project_without_vibe_toml_errors() {
         .arg("--force")
         .output()
         .unwrap();
-    assert!(!out.status.success(), "expected failure when vibe.toml missing under scope=project");
+    assert!(
+        !out.status.success(),
+        "expected failure when vibe.toml missing under scope=project"
+    );
     let stderr = String::from_utf8_lossy(&out.stderr);
     assert!(
         stderr.contains("vibe.toml") && stderr.contains("--scope user"),
@@ -3194,7 +3200,10 @@ fn mcp_install_unattended_replaces_yes_for_provisioning_recipe() {
         String::from_utf8_lossy(&out.stderr)
     );
     let v: serde_json::Value = serde_json::from_slice(&out.stdout).unwrap();
-    assert_eq!(v["unattended"], true, "expected unattended:true stamped on envelope: {v}");
+    assert_eq!(
+        v["unattended"], true,
+        "expected unattended:true stamped on envelope: {v}"
+    );
     assert_eq!(v["scope"], "both");
     assert!(v["project"].is_null());
     let scopes: std::collections::HashSet<&str> = v["results"]
@@ -3225,7 +3234,11 @@ fn mcp_install_unattended_bails_when_wizard_dimensions_missing() {
         // Deliberately no --agent, no --what.
         .output()
         .unwrap();
-    assert!(!out.status.success(), "expected failure; stdout: {}", String::from_utf8_lossy(&out.stdout));
+    assert!(
+        !out.status.success(),
+        "expected failure; stdout: {}",
+        String::from_utf8_lossy(&out.stdout)
+    );
     let stderr = String::from_utf8_lossy(&out.stderr);
     assert!(
         stderr.contains("unattended") && stderr.contains("--agent") && stderr.contains("--what"),
@@ -3298,11 +3311,16 @@ fn mcp_install_scope_both_without_vibe_toml_does_user_leg_only() {
     let v: serde_json::Value = serde_json::from_slice(&out.stdout).unwrap();
     assert_eq!(v["scope"], "both");
     // No project resolved → envelope reports project as null.
-    assert!(v["project"].is_null(), "project should be null when vibe.toml absent: {v}");
+    assert!(
+        v["project"].is_null(),
+        "project should be null when vibe.toml absent: {v}"
+    );
     // Walker emitted only user-leg rows; project leg silently skipped.
     let results = v["results"].as_array().unwrap();
-    let scopes: std::collections::HashSet<&str> =
-        results.iter().map(|r| r["scope"].as_str().unwrap()).collect();
+    let scopes: std::collections::HashSet<&str> = results
+        .iter()
+        .map(|r| r["scope"].as_str().unwrap())
+        .collect();
     assert!(
         scopes.contains("user"),
         "expected at least one user-scope row in results: {results:#?}"
@@ -3313,8 +3331,10 @@ fn mcp_install_scope_both_without_vibe_toml_does_user_leg_only() {
     );
     // SKILL.md leg also walks user-only.
     let skills = v["skill_results"].as_array().unwrap();
-    let skill_scopes: std::collections::HashSet<&str> =
-        skills.iter().map(|r| r["scope"].as_str().unwrap()).collect();
+    let skill_scopes: std::collections::HashSet<&str> = skills
+        .iter()
+        .map(|r| r["scope"].as_str().unwrap())
+        .collect();
     assert!(
         !skill_scopes.contains("project"),
         "skill project-scope rows must NOT appear when vibe.toml is missing: {skills:#?}"
@@ -3342,11 +3362,18 @@ fn mcp_install_scope_both_writes_to_project_and_user_for_claude() {
         .arg("--dry-run")
         .output()
         .unwrap();
-    assert!(out.status.success(), "stderr: {}", String::from_utf8_lossy(&out.stderr));
+    assert!(
+        out.status.success(),
+        "stderr: {}",
+        String::from_utf8_lossy(&out.stderr)
+    );
     let v: serde_json::Value = serde_json::from_slice(&out.stdout).unwrap();
     assert_eq!(v["scope"], "both");
     let results = v["results"].as_array().unwrap();
-    let scopes: Vec<&str> = results.iter().map(|r| r["scope"].as_str().unwrap()).collect();
+    let scopes: Vec<&str> = results
+        .iter()
+        .map(|r| r["scope"].as_str().unwrap())
+        .collect();
     assert!(scopes.contains(&"project"));
     assert!(scopes.contains(&"user"));
 }
@@ -3372,7 +3399,11 @@ fn mcp_install_scope_both_collapses_to_user_for_user_only_agent() {
         .arg("--dry-run")
         .output()
         .unwrap();
-    assert!(out.status.success(), "stderr: {}", String::from_utf8_lossy(&out.stderr));
+    assert!(
+        out.status.success(),
+        "stderr: {}",
+        String::from_utf8_lossy(&out.stderr)
+    );
     let v: serde_json::Value = serde_json::from_slice(&out.stdout).unwrap();
     let results = v["results"].as_array().unwrap();
     // Both expands to two entries — but the project one is `skipped`
@@ -3402,7 +3433,10 @@ fn mcp_install_auto_conflicts_with_explicit_agent() {
         .arg("claude")
         .output()
         .unwrap();
-    assert!(!out.status.success(), "expected --auto + --agent to clap-fail");
+    assert!(
+        !out.status.success(),
+        "expected --auto + --agent to clap-fail"
+    );
     let stderr = String::from_utf8_lossy(&out.stderr);
     assert!(
         stderr.contains("conflict") || stderr.contains("cannot be used"),
@@ -3423,7 +3457,10 @@ fn mcp_install_no_args_in_non_tty_emits_error() {
         .arg(project.path())
         .output()
         .unwrap();
-    assert!(!out.status.success(), "expected failure in non-TTY interactive path");
+    assert!(
+        !out.status.success(),
+        "expected failure in non-TTY interactive path"
+    );
     let stderr = String::from_utf8_lossy(&out.stderr);
     assert!(
         stderr.contains("--scope") || stderr.contains("--auto"),
@@ -3477,7 +3514,11 @@ fn mcp_upgrade_reports_not_installed_when_block_absent() {
         .arg("--dry-run")
         .output()
         .unwrap();
-    assert!(out.status.success(), "stderr: {}", String::from_utf8_lossy(&out.stderr));
+    assert!(
+        out.status.success(),
+        "stderr: {}",
+        String::from_utf8_lossy(&out.stderr)
+    );
     let v: serde_json::Value = serde_json::from_slice(&out.stdout).unwrap();
     assert_eq!(v["command"], "mcp:upgrade");
     let claude = v["results"]
@@ -3523,7 +3564,11 @@ fn mcp_upgrade_reports_unchanged_after_fresh_install() {
         .arg("claude")
         .output()
         .unwrap();
-    assert!(out.status.success(), "stderr: {}", String::from_utf8_lossy(&out.stderr));
+    assert!(
+        out.status.success(),
+        "stderr: {}",
+        String::from_utf8_lossy(&out.stderr)
+    );
     let v: serde_json::Value = serde_json::from_slice(&out.stdout).unwrap();
     let claude_mcp = v["results"]
         .as_array()
@@ -3570,7 +3615,11 @@ fn mcp_upgrade_detects_drift_and_rewrites_to_current() {
         .arg("claude")
         .output()
         .unwrap();
-    assert!(out.status.success(), "stderr: {}", String::from_utf8_lossy(&out.stderr));
+    assert!(
+        out.status.success(),
+        "stderr: {}",
+        String::from_utf8_lossy(&out.stderr)
+    );
     let v: serde_json::Value = serde_json::from_slice(&out.stdout).unwrap();
 
     let claude_mcp = v["results"]
@@ -3647,7 +3696,10 @@ fn mcp_upgrade_skill_only_skips_mcp_results() {
     assert!(out.status.success());
     let v: serde_json::Value = serde_json::from_slice(&out.stdout).unwrap();
     assert_eq!(v["what"], "skill");
-    assert!(v["results"].as_array().unwrap().is_empty(), "skill-only must skip mcp");
+    assert!(
+        v["results"].as_array().unwrap().is_empty(),
+        "skill-only must skip mcp"
+    );
 }
 
 #[test]
@@ -3664,7 +3716,10 @@ fn mcp_upgrade_scope_project_without_vibe_toml_errors() {
         .unwrap();
     assert!(!out.status.success());
     let stderr = String::from_utf8_lossy(&out.stderr);
-    assert!(stderr.contains("--scope user"), "expected hint; got {stderr}");
+    assert!(
+        stderr.contains("--scope user"),
+        "expected hint; got {stderr}"
+    );
 }
 
 #[test]
@@ -3705,7 +3760,11 @@ fn mcp_uninstall_removes_vibevm_block_from_claude() {
         .arg("project")
         .output()
         .unwrap();
-    assert!(out.status.success(), "stderr: {}", String::from_utf8_lossy(&out.stderr));
+    assert!(
+        out.status.success(),
+        "stderr: {}",
+        String::from_utf8_lossy(&out.stderr)
+    );
     let v: serde_json::Value = serde_json::from_slice(&out.stdout).unwrap();
     assert_eq!(v["command"], "mcp:uninstall");
 
@@ -3725,7 +3784,10 @@ fn mcp_uninstall_removes_vibevm_block_from_claude() {
     assert_eq!(claude_skill["status"], "removed");
 
     // Verify on-disk state: vibevm-block gone, settings.json still exists.
-    assert!(settings.is_file(), "settings.json should remain (other keys preserved)");
+    assert!(
+        settings.is_file(),
+        "settings.json should remain (other keys preserved)"
+    );
     let parsed: serde_json::Value =
         serde_json::from_str(&fs::read_to_string(&settings).unwrap()).unwrap();
     assert!(
@@ -3888,7 +3950,12 @@ fn mcp_uninstall_skill_only_keeps_mcp_block() {
     // mcp block kept
     assert_eq!(parsed["mcpServers"]["vibevm"]["command"], "vibe");
     // skill file removed
-    assert!(!project.path().join(".claude/skills/vibevm/SKILL.md").exists());
+    assert!(
+        !project
+            .path()
+            .join(".claude/skills/vibevm/SKILL.md")
+            .exists()
+    );
 }
 
 #[test]
@@ -3927,7 +3994,10 @@ fn mcp_status_reports_per_agent_state() {
     );
     // skill_results must be present — skill drift is reported by
     // status now, not just install/upgrade.
-    assert!(v["skill_results"].is_array(), "expected skill_results in envelope");
+    assert!(
+        v["skill_results"].is_array(),
+        "expected skill_results in envelope"
+    );
 }
 
 #[test]
@@ -3997,7 +4067,10 @@ fn mcp_serve_responds_to_initialize_and_query_package() {
     // get full control.
     let bin = env!("CARGO_BIN_EXE_vibe");
     let mut cmd = std::process::Command::new(bin);
-    cmd.arg("mcp").arg("serve").arg("--path").arg(project.path());
+    cmd.arg("mcp")
+        .arg("serve")
+        .arg("--path")
+        .arg(project.path());
     let mut child = cmd
         .stdin(std::process::Stdio::piped())
         .stdout(std::process::Stdio::piped())
@@ -4109,10 +4182,8 @@ fn omnibus_install_exercises_every_prop003_surface() {
         .assert()
         .success();
 
-    let lock: vibe_core::manifest::Lockfile = toml::from_str(
-        &fs::read_to_string(project.path().join("vibe.lock")).unwrap(),
-    )
-    .unwrap();
+    let lock: vibe_core::manifest::Lockfile =
+        toml::from_str(&fs::read_to_string(project.path().join("vibe.lock")).unwrap()).unwrap();
     assert_eq!(lock.meta.schema_version, 4);
     assert_eq!(lock.meta.language_chain, vec!["ru", "en"]);
     // Three packages: the two CLI roots plus `flow:integration-beta`,
@@ -4172,11 +4243,15 @@ fn omnibus_install_exercises_every_prop003_surface() {
     let alpha_slot = project.path().join("vibedeps/flow-integration-alpha/0.1.0");
     assert!(alpha_slot.join("vibe.toml").is_file());
     assert!(
-        alpha_slot.join("spec/flows/integration-alpha/PROTOCOL.md").is_file(),
+        alpha_slot
+            .join("spec/flows/integration-alpha/PROTOCOL.md")
+            .is_file(),
         "alpha's base content lands in its slot"
     );
     assert!(
-        alpha_slot.join("spec/flows/integration-alpha/PROTOCOL.ru.md").is_file(),
+        alpha_slot
+            .join("spec/flows/integration-alpha/PROTOCOL.ru.md")
+            .is_file(),
         "the Russian i18n sidecar rides along verbatim in the slot"
     );
     assert!(
@@ -4290,8 +4365,7 @@ fn omnibus_show_features_and_purls_after_install() {
         .arg(project.path())
         .output()
         .unwrap();
-    let v: serde_json::Value =
-        serde_json::from_slice(&out.stdout).expect("JSON");
+    let v: serde_json::Value = serde_json::from_slice(&out.stdout).expect("JSON");
     assert_eq!(v["command"], "show:features");
     let pkgs: Vec<&str> = v["packages"]
         .as_array()
@@ -4322,15 +4396,13 @@ fn omnibus_show_features_and_purls_after_install() {
         .arg(project.path())
         .output()
         .unwrap();
-    let v: serde_json::Value =
-        serde_json::from_slice(&out.stdout).expect("JSON");
+    let v: serde_json::Value = serde_json::from_slice(&out.stdout).expect("JSON");
     assert_eq!(v["command"], "show:purls");
     let bindings = v["bindings"].as_array().unwrap();
     assert!(
-        bindings
-            .iter()
-            .any(|b| b["purl"] == "pkg:cargo/sqlx@0.8.0"
-                && b["package"] == "flow:integration-alpha"),
+        bindings.iter().any(
+            |b| b["purl"] == "pkg:cargo/sqlx@0.8.0" && b["package"] == "flow:integration-alpha"
+        ),
         "expected alpha→cargo/sqlx@0.8.0 binding; got {:?}",
         bindings
     );
@@ -4356,10 +4428,8 @@ fn omnibus_install_no_default_features_drops_default_subskill() {
         .assert()
         .success();
 
-    let lock: vibe_core::manifest::Lockfile = toml::from_str(
-        &fs::read_to_string(project.path().join("vibe.lock")).unwrap(),
-    )
-    .unwrap();
+    let lock: vibe_core::manifest::Lockfile =
+        toml::from_str(&fs::read_to_string(project.path().join("vibe.lock")).unwrap()).unwrap();
     let alpha = lock
         .packages
         .iter()
@@ -4435,12 +4505,15 @@ version = "{version}"
         run_git(&src, &["tag", &format!("v{version}")]);
 
         let bare = org_dir.join(format!("{kind}-{name}.git"));
-        run_git(out_root, &[
-            "clone",
-            "--bare",
-            src.to_str().unwrap(),
-            bare.to_str().unwrap(),
-        ]);
+        run_git(
+            out_root,
+            &[
+                "clone",
+                "--bare",
+                src.to_str().unwrap(),
+                bare.to_str().unwrap(),
+            ],
+        );
         run_git(&bare, &["symbolic-ref", "HEAD", "refs/heads/main"]);
     }
 
@@ -4516,10 +4589,8 @@ fn install_expands_conditional_dependencies_when_predicate_matches() {
 
     // The conditional dependency `flow:rust-helper` should have been
     // pulled in as well.
-    let lock_text =
-        fs::read_to_string(project.path().join("vibe.lock")).unwrap();
-    let lock: vibe_core::manifest::Lockfile =
-        toml::from_str(&lock_text).unwrap();
+    let lock_text = fs::read_to_string(project.path().join("vibe.lock")).unwrap();
+    let lock: vibe_core::manifest::Lockfile = toml::from_str(&lock_text).unwrap();
     let names: Vec<_> = lock
         .packages
         .iter()
@@ -4595,12 +4666,15 @@ version = "{version}"
         run_git(&src, &["tag", &format!("v{version}")]);
 
         let bare = org_dir.join(format!("{kind}-{name}.git"));
-        run_git(out_root, &[
-            "clone",
-            "--bare",
-            src.to_str().unwrap(),
-            bare.to_str().unwrap(),
-        ]);
+        run_git(
+            out_root,
+            &[
+                "clone",
+                "--bare",
+                src.to_str().unwrap(),
+                bare.to_str().unwrap(),
+            ],
+        );
         run_git(&bare, &["symbolic-ref", "HEAD", "refs/heads/main"]);
     }
 
@@ -4665,8 +4739,7 @@ fn install_expands_cascading_conditional_dependencies() {
         return;
     }
     let outer = tempfile::tempdir().unwrap();
-    let (_org, registry_url) =
-        make_cascading_conditional_registry(outer.path());
+    let (_org, registry_url) = make_cascading_conditional_registry(outer.path());
 
     let project = tempfile::tempdir().unwrap();
     init_project(project.path());
@@ -4685,10 +4758,8 @@ fn install_expands_cascading_conditional_dependencies() {
         .assert()
         .success();
 
-    let lock: vibe_core::manifest::Lockfile = toml::from_str(
-        &fs::read_to_string(project.path().join("vibe.lock")).unwrap(),
-    )
-    .unwrap();
+    let lock: vibe_core::manifest::Lockfile =
+        toml::from_str(&fs::read_to_string(project.path().join("vibe.lock")).unwrap()).unwrap();
     let names: Vec<_> = lock
         .packages
         .iter()
@@ -4736,10 +4807,8 @@ fn conditional_dependencies_dormant_when_predicate_misses() {
         .assert()
         .success();
 
-    let lock: vibe_core::manifest::Lockfile = toml::from_str(
-        &fs::read_to_string(project.path().join("vibe.lock")).unwrap(),
-    )
-    .unwrap();
+    let lock: vibe_core::manifest::Lockfile =
+        toml::from_str(&fs::read_to_string(project.path().join("vibe.lock")).unwrap()).unwrap();
     let names: Vec<_> = lock
         .packages
         .iter()
@@ -4778,11 +4847,7 @@ version = "0.1.0"
 "#,
     )
     .unwrap();
-    fs::write(
-        src.join("spec/flows/test-multi/PROTOCOL.md"),
-        "# v0.1.0",
-    )
-    .unwrap();
+    fs::write(src.join("spec/flows/test-multi/PROTOCOL.md"), "# v0.1.0").unwrap();
     run_git(&src, &["add", "-A"]);
     run_git(&src, &["commit", "-m", "v0.1.0"]);
     run_git(&src, &["tag", "v0.1.0"]);
@@ -4797,22 +4862,21 @@ version = "0.2.0"
 "#,
     )
     .unwrap();
-    fs::write(
-        src.join("spec/flows/test-multi/PROTOCOL.md"),
-        "# v0.2.0",
-    )
-    .unwrap();
+    fs::write(src.join("spec/flows/test-multi/PROTOCOL.md"), "# v0.2.0").unwrap();
     run_git(&src, &["add", "-A"]);
     run_git(&src, &["commit", "-m", "v0.2.0"]);
     run_git(&src, &["tag", "v0.2.0"]);
 
     let bare = org.join("flow-test-multi.git");
-    run_git(root, &[
-        "clone",
-        "--bare",
-        src.to_str().unwrap(),
-        bare.to_str().unwrap(),
-    ]);
+    run_git(
+        root,
+        &[
+            "clone",
+            "--bare",
+            src.to_str().unwrap(),
+            bare.to_str().unwrap(),
+        ],
+    );
     run_git(&bare, &["symbolic-ref", "HEAD", "refs/heads/main"]);
 
     let abs_org = org
@@ -4861,9 +4925,12 @@ fn outdated_reports_newer_version_available() {
         .arg(project.path())
         .output()
         .unwrap();
-    assert!(out.status.success(), "stderr: {}", String::from_utf8_lossy(&out.stderr));
-    let v: serde_json::Value =
-        serde_json::from_slice(&out.stdout).expect("stdout must be JSON");
+    assert!(
+        out.status.success(),
+        "stderr: {}",
+        String::from_utf8_lossy(&out.stderr)
+    );
+    let v: serde_json::Value = serde_json::from_slice(&out.stdout).expect("stdout must be JSON");
     assert_eq!(v["command"], "outdated");
     assert_eq!(v["update_available"], 1);
     let pkg = &v["packages"][0];
@@ -4903,8 +4970,7 @@ fn show_features_lists_active_features_after_install() {
         .output()
         .unwrap();
     assert!(out.status.success());
-    let v: serde_json::Value =
-        serde_json::from_slice(&out.stdout).expect("stdout must be JSON");
+    let v: serde_json::Value = serde_json::from_slice(&out.stdout).expect("stdout must be JSON");
     assert_eq!(v["command"], "show:features");
     let pkgs = v["packages"].as_array().unwrap();
     assert_eq!(pkgs.len(), 1);
@@ -5066,8 +5132,7 @@ version = "0.0.1"
         String::from_utf8_lossy(&out.stderr)
     );
 
-    let payload: serde_json::Value =
-        serde_json::from_slice(&out.stdout).expect("valid JSON");
+    let payload: serde_json::Value = serde_json::from_slice(&out.stdout).expect("valid JSON");
     assert_eq!(payload["ok"], false);
     assert_eq!(payload["command"], "registry:publish");
     assert_eq!(payload["stub"], true);
@@ -5161,8 +5226,7 @@ version = "0.0.1"
         String::from_utf8_lossy(&out.stderr)
     );
 
-    let payload: serde_json::Value =
-        serde_json::from_slice(&out.stdout).expect("valid JSON");
+    let payload: serde_json::Value = serde_json::from_slice(&out.stdout).expect("valid JSON");
     assert_eq!(payload["ok"], true);
     assert_eq!(payload["command"], "registry:publish");
     assert_eq!(payload["mode"], "direct-git");
@@ -5229,8 +5293,7 @@ version = "0.0.1"
         String::from_utf8_lossy(&out.stderr)
     );
 
-    let payload: serde_json::Value =
-        serde_json::from_slice(&out.stdout).expect("valid JSON");
+    let payload: serde_json::Value = serde_json::from_slice(&out.stdout).expect("valid JSON");
     assert_eq!(payload["ok"], true);
     assert_eq!(payload["mode"], "direct-git");
     assert_eq!(payload["dry_run"], true);
@@ -5295,7 +5358,7 @@ fn every_subcommand_renders_help() {
     // subcommand lands in `crates/vibe-cli/src/cli.rs`, add it here too —
     // the help-text contract is part of the user-facing surface.
     let subcommand_paths: &[&[&str]] = &[
-        &[],                            // top-level: `vibe --help`
+        &[], // top-level: `vibe --help`
         &["init"],
         &["install"],
         &["list"],
@@ -5314,7 +5377,7 @@ fn every_subcommand_renders_help() {
         &["show", "features"],
         &["show", "subskills"],
         &["show", "purls"],
-        &["registry"],                  // shows the registry subcommand enum
+        &["registry"], // shows the registry subcommand enum
         &["registry", "sync"],
         &["registry", "publish"],
         &["registry", "list"],
@@ -5331,12 +5394,9 @@ fn every_subcommand_renders_help() {
             cmd.arg(seg);
         }
         cmd.arg("--help");
-        let out = cmd.output().unwrap_or_else(|e| {
-            panic!(
-                "spawning `vibe {} --help` failed: {e}",
-                path.join(" ")
-            )
-        });
+        let out = cmd
+            .output()
+            .unwrap_or_else(|e| panic!("spawning `vibe {} --help` failed: {e}", path.join(" ")));
 
         let label = if path.is_empty() {
             "vibe --help".to_string()
@@ -5371,7 +5431,10 @@ fn version_subcommand_matches_version_flag() {
     // (see docs/commands/version.md). Drift between the two would confuse
     // any tooling that scrapes the version string.
     let sub = vibe().arg("version").output().expect("spawn vibe version");
-    let flag = vibe().arg("--version").output().expect("spawn vibe --version");
+    let flag = vibe()
+        .arg("--version")
+        .output()
+        .expect("spawn vibe --version");
     assert!(sub.status.success() && flag.status.success());
     let sub_out = String::from_utf8_lossy(&sub.stdout).trim().to_string();
     let flag_out = String::from_utf8_lossy(&flag.stdout).trim().to_string();
@@ -5458,8 +5521,14 @@ fn workspace_publish_dry_run_reports_plan() {
     );
     let stdout = String::from_utf8_lossy(&out.stdout);
     // Both members appear in the would-publish output.
-    assert!(stdout.contains("flow:a"), "stdout missing flow:a:\n{stdout}");
-    assert!(stdout.contains("feat:b"), "stdout missing feat:b:\n{stdout}");
+    assert!(
+        stdout.contains("flow:a"),
+        "stdout missing flow:a:\n{stdout}"
+    );
+    assert!(
+        stdout.contains("feat:b"),
+        "stdout missing feat:b:\n{stdout}"
+    );
     assert!(
         stdout.contains("dry-run"),
         "dry-run summary missing:\n{stdout}"
@@ -5636,10 +5705,7 @@ fn workspace_publish_errors_without_registry() {
         .arg(project.path())
         .output()
         .expect("spawn vibe workspace publish");
-    assert!(
-        !out.status.success(),
-        "no `[[registry]]` must be an error"
-    );
+    assert!(!out.status.success(), "no `[[registry]]` must be an error");
     let stderr = String::from_utf8_lossy(&out.stderr);
     assert!(
         stderr.contains("registry"),
@@ -5773,7 +5839,10 @@ fn reinstall_regenerates_deleted_boot_artifacts() {
         .success();
 
     assert!(index.is_file(), "INDEX.md must be regenerated");
-    assert!(claude.is_file(), "the CLAUDE.md redirect must be regenerated");
+    assert!(
+        claude.is_file(),
+        "the CLAUDE.md redirect must be regenerated"
+    );
     // The regenerated INDEX.md still names the installed dependency's boot
     // snippet — boot is recomputed from the materialised tree, not lost.
     let index_body = fs::read_to_string(&index).unwrap();
@@ -5891,7 +5960,10 @@ fn reinstall_force_refetches_corrupted_vibedeps() {
 
     let project = tempfile::tempdir().unwrap();
     init_project(project.path());
-    let url = format!("git+file://{}", org_root.to_string_lossy().replace('\\', "/"));
+    let url = format!(
+        "git+file://{}",
+        org_root.to_string_lossy().replace('\\', "/")
+    );
     write_project_with_per_package_registry(project.path(), &url);
 
     vibe()
@@ -5908,7 +5980,10 @@ fn reinstall_force_refetches_corrupted_vibedeps() {
     let corrupted = project
         .path()
         .join("vibedeps/flow-wal/0.1.0/spec/flows/wal/WAL-PROTOCOL.md");
-    assert!(corrupted.is_file(), "fixture flow:wal ships WAL-PROTOCOL.md");
+    assert!(
+        corrupted.is_file(),
+        "fixture flow:wal ships WAL-PROTOCOL.md"
+    );
     fs::write(&corrupted, "CORRUPTED — hand-edited garbage").unwrap();
 
     // `vibe reinstall --force` re-fetches from source and overwrites the
@@ -5930,8 +6005,7 @@ fn reinstall_force_refetches_corrupted_vibedeps() {
     // The boot artifacts are intact, and the version did not move.
     assert!(project.path().join("spec/boot/INDEX.md").is_file());
     let lock: vibe_core::manifest::Lockfile =
-        toml::from_str(&fs::read_to_string(project.path().join("vibe.lock")).unwrap())
-            .unwrap();
+        toml::from_str(&fs::read_to_string(project.path().join("vibe.lock")).unwrap()).unwrap();
     assert_eq!(lock.packages.len(), 1);
     assert_eq!(lock.packages[0].version.to_string(), "0.1.0");
 }

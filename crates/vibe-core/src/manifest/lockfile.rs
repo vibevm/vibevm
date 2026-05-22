@@ -58,11 +58,7 @@ fn is_false(b: &bool) -> bool {
 pub struct Lockfile {
     pub meta: LockfileMeta,
 
-    #[serde(
-        default,
-        rename = "package",
-        skip_serializing_if = "Vec::is_empty"
-    )]
+    #[serde(default, rename = "package", skip_serializing_if = "Vec::is_empty")]
     pub packages: Vec<LockedPackage>,
 }
 
@@ -333,7 +329,6 @@ impl Lockfile {
             .position(|p| p.kind == kind && p.name == name)?;
         Some(self.packages.remove(idx))
     }
-
 }
 
 impl LockedPackage {

@@ -160,12 +160,17 @@ fn fires_when_env_configured_and_index_returns_201() {
     assert_eq!(body["name"], "wal");
     assert_eq!(body["version"], "0.1.0");
     assert_eq!(body["registry"], "hooktesta");
-    assert_eq!(body["source_url"], "https://github.com/vibespecs/flow-wal.git");
+    assert_eq!(
+        body["source_url"],
+        "https://github.com/vibespecs/flow-wal.git"
+    );
     assert_eq!(body["source_ref"], "v0.1.0");
-    assert!(body["content_hash"]
-        .as_str()
-        .unwrap()
-        .starts_with("sha256:"));
+    assert!(
+        body["content_hash"]
+            .as_str()
+            .unwrap()
+            .starts_with("sha256:")
+    );
     assert_eq!(body["files_count"], 2);
     assert_eq!(body["i18n"]["default"], "en");
     assert!(body["indexed_at"].is_string());

@@ -238,14 +238,13 @@ impl RepoCreator for GitHubCreator {
             // SSH if HTTPS is missing. The token-credentialed push URL
             // is constructed separately by `push_url()` and never
             // appears in this user-facing struct.
-            let clone_url = parsed
-                .clone_url
-                .or(parsed.ssh_url)
-                .ok_or_else(|| PublishError::UnexpectedResponse {
+            let clone_url = parsed.clone_url.or(parsed.ssh_url).ok_or_else(|| {
+                PublishError::UnexpectedResponse {
                     host: self.host_name.clone(),
                     status: status.as_u16(),
                     body: "create-repo response missing both clone_url and ssh_url".to_string(),
-                })?;
+                }
+            })?;
             let html_url = parsed
                 .html_url
                 .unwrap_or_else(|| clone_url.trim_end_matches(".git").to_string());

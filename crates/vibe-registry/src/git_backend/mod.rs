@@ -127,12 +127,7 @@ pub trait GitBackend: Send + Sync {
     /// this; a private bare server may not. The `GitBackend` returns
     /// [`GitError::ArchiveUnsupported`] in that case so the caller can
     /// fall back to a shallow clone.
-    fn fetch_file_at_ref(
-        &self,
-        url: &str,
-        refname: &str,
-        path: &str,
-    ) -> Result<Vec<u8>, GitError>;
+    fn fetch_file_at_ref(&self, url: &str, refname: &str, path: &str) -> Result<Vec<u8>, GitError>;
 
     /// Rewrite the `<remote>` URL inside an existing clone at `dest`
     /// to `url`. Implemented via `git -C <dest> remote set-url

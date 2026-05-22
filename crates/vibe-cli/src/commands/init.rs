@@ -127,7 +127,11 @@ fn generate_boot_artifacts(ctx: &output::Context, path: &Path) -> Result<Vec<Out
         }
         outcomes.push(Outcome {
             path: (*artifact).to_string(),
-            action: if existed { Action::Kept } else { Action::Created },
+            action: if existed {
+                Action::Kept
+            } else {
+                Action::Created
+            },
             reason: "boot artifact",
         });
     }
@@ -378,7 +382,10 @@ fn report(
     display_root: &str,
     outcomes: &[Outcome],
 ) -> Result<()> {
-    let created = outcomes.iter().filter(|o| o.action == Action::Created).count();
+    let created = outcomes
+        .iter()
+        .filter(|o| o.action == Action::Created)
+        .count();
     let kept = outcomes.iter().filter(|o| o.action == Action::Kept).count();
 
     if ctx.is_json() {
@@ -489,4 +496,3 @@ desktop.ini
 .idea/
 .vscode/
 "#;
-

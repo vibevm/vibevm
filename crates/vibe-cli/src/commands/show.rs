@@ -27,8 +27,8 @@ use vibe_core::manifest::{Lockfile, Manifest};
 use vibe_core::user_config::UserConfig;
 
 use crate::cli::{
-    ShowArgs, ShowConfigArgs, ShowEffectiveArgs, ShowFeaturesArgs, ShowPurlsArgs,
-    ShowSubcommand, ShowSubskillsArgs,
+    ShowArgs, ShowConfigArgs, ShowEffectiveArgs, ShowFeaturesArgs, ShowPurlsArgs, ShowSubcommand,
+    ShowSubskillsArgs,
 };
 use crate::output;
 
@@ -72,9 +72,10 @@ fn run_effective(ctx: &output::Context, args: ShowEffectiveArgs) -> Result<()> {
     let project_root = resolve_project_root(&args.path)?;
     let lockfile_path = project_root.join(Lockfile::FILENAME);
     let lockfile = if lockfile_path.exists() {
-        Some(Lockfile::read(&lockfile_path).with_context(|| {
-            format!("reading `{}`", lockfile_path.display())
-        })?)
+        Some(
+            Lockfile::read(&lockfile_path)
+                .with_context(|| format!("reading `{}`", lockfile_path.display()))?,
+        )
     } else {
         None
     };
@@ -91,17 +92,9 @@ fn run_effective(ctx: &output::Context, args: ShowEffectiveArgs) -> Result<()> {
         let mut entries: Vec<PathBuf> = fs::read_dir(&boot_dir)
             .with_context(|| format!("reading `{}`", boot_dir.display()))?
             .filter_map(|e| e.ok())
-            .filter(|e| {
-                e.file_type()
-                    .map(|t| t.is_file())
-                    .unwrap_or(false)
-            })
+            .filter(|e| e.file_type().map(|t| t.is_file()).unwrap_or(false))
             .map(|e| e.path())
-            .filter(|p| {
-                p.extension()
-                    .map(|x| x == "md")
-                    .unwrap_or(false)
-            })
+            .filter(|p| p.extension().map(|x| x == "md").unwrap_or(false))
             .collect();
         entries.sort();
         for path in entries {
@@ -123,8 +116,8 @@ fn run_effective(ctx: &output::Context, args: ShowEffectiveArgs) -> Result<()> {
     // 2. WAL — always one section, distinct origin.
     let wal = project_root.join("spec/WAL.md");
     if wal.is_file() {
-        let body = fs::read_to_string(&wal)
-            .with_context(|| format!("reading `{}`", wal.display()))?;
+        let body =
+            fs::read_to_string(&wal).with_context(|| format!("reading `{}`", wal.display()))?;
         sections.push(EffectiveSection {
             spec_uri: "spec://project/WAL".to_string(),
             path: "spec/WAL.md".to_string(),
@@ -140,10 +133,7 @@ fn run_effective(ctx: &output::Context, args: ShowEffectiveArgs) -> Result<()> {
     // enough for cold-reader use.
     if let Some(lockfile) = &lockfile {
         for entry in &lockfile.packages {
-            let pkg_uri_root = format!(
-                "spec://{}/{}/{}",
-                entry.kind, entry.name, entry.version
-            );
+            let pkg_uri_root = format!("spec://{}/{}/{}", entry.kind, entry.name, entry.version);
             let mut paths: Vec<PathBuf> = entry
                 .files_written
                 .iter()
@@ -184,10 +174,7 @@ fn run_effective(ctx: &output::Context, args: ShowEffectiveArgs) -> Result<()> {
                 sections.push(EffectiveSection {
                     spec_uri: format!("{pkg_uri_root}/{suffix}"),
                     path: rel_str,
-                    origin: format!(
-                        "package:{}:{}@{}",
-                        entry.kind, entry.name, entry.version
-                    ),
+                    origin: format!("package:{}:{}@{}", entry.kind, entry.name, entry.version),
                     body,
                 });
             }
@@ -388,9 +375,8 @@ const CONFIG_ENV_VARS: &[(&str, &str, bool /* sensitive */)] = &[
 fn run_config(ctx: &output::Context, args: ShowConfigArgs) -> Result<()> {
     let project_root = resolve_project_root(&args.path)?;
     let manifest_path = project_root.join(Manifest::FILENAME);
-    let manifest = Manifest::read(&manifest_path).with_context(|| {
-        format!("reading `{}`", manifest_path.display())
-    })?;
+    let manifest = Manifest::read(&manifest_path)
+        .with_context(|| format!("reading `{}`", manifest_path.display()))?;
     let project = manifest
         .require_project()
         .with_context(|| format!("`{}` has no `[project]` table", manifest_path.display()))?;
@@ -554,10 +540,7 @@ fn run_config(ctx: &output::Context, args: ShowConfigArgs) -> Result<()> {
         project_root.display()
     );
     println!();
-    println!(
-        "Registries ({}; primary first):",
-        registries.len()
-    );
+    println!("Registries ({}; primary first):", registries.len());
     if registries.is_empty() {
         println!("  (none configured)");
     } else {
@@ -611,13 +594,25 @@ fn run_config(ctx: &output::Context, args: ShowConfigArgs) -> Result<()> {
     }
     println!();
     match &user_config_summary {
-        ConfigUserConfigSummary { path: Some(p), loaded: true, .. } => {
+        ConfigUserConfigSummary {
+            path: Some(p),
+            loaded: true,
+            ..
+        } => {
             println!("User config: {p}  (loaded)");
         }
-        ConfigUserConfigSummary { path: Some(p), loaded: false, error: Some(err) } => {
+        ConfigUserConfigSummary {
+            path: Some(p),
+            loaded: false,
+            error: Some(err),
+        } => {
             println!("User config: {p}  (parse error — {err})");
         }
-        ConfigUserConfigSummary { path: Some(p), loaded: false, error: None } => {
+        ConfigUserConfigSummary {
+            path: Some(p),
+            loaded: false,
+            error: None,
+        } => {
             println!("User config: {p}  (not present)");
         }
         ConfigUserConfigSummary { path: None, .. } => {

@@ -164,11 +164,10 @@ impl Workspace {
     pub fn discover(start: impl AsRef<Path>) -> Result<Workspace> {
         let start = start.as_ref();
         let start_abs = canonical(start)?;
-        let start_node = nearest_manifest_dir(&start_abs).ok_or_else(|| {
-            WorkspaceError::NoManifest {
+        let start_node =
+            nearest_manifest_dir(&start_abs).ok_or_else(|| WorkspaceError::NoManifest {
                 start: start.to_path_buf(),
-            }
-        })?;
+            })?;
 
         // Collect every ancestor (including the start node) whose vibe.toml
         // carries a `[workspace]` table. A malformed / unreadable ancestor
@@ -213,7 +212,15 @@ impl Workspace {
         if root_manifest.workspace.is_some() {
             let mut visited: HashSet<PathBuf> = HashSet::new();
             visited.insert(root.clone());
-            expand(&root, &root_manifest, None, &root, 0, &mut visited, &mut members)?;
+            expand(
+                &root,
+                &root_manifest,
+                None,
+                &root,
+                0,
+                &mut visited,
+                &mut members,
+            )?;
         }
         members.sort_by(|a, b| a.rel_path.cmp(&b.rel_path));
 
@@ -283,8 +290,11 @@ impl Workspace {
     /// then every member — paired with its manifest. The order after the
     /// root is `rel_path`-sorted.
     pub fn iter_nodes(&self) -> impl Iterator<Item = (&str, &Manifest)> {
-        std::iter::once((".", &self.root_manifest))
-            .chain(self.members.iter().map(|m| (m.rel_path.as_str(), &m.manifest)))
+        std::iter::once((".", &self.root_manifest)).chain(
+            self.members
+                .iter()
+                .map(|m| (m.rel_path.as_str(), &m.manifest)),
+        )
     }
 
     /// `true` iff `dir` is the root or one of the members.
@@ -292,9 +302,7 @@ impl Workspace {
         if dir == self.root {
             return true;
         }
-        self.members
-            .iter()
-            .any(|m| self.member_abs_path(m) == dir)
+        self.members.iter().any(|m| self.member_abs_path(m) == dir)
     }
 }
 
@@ -337,12 +345,13 @@ fn expand(
             }
             found_any = true;
 
-            let rel = member_dir.strip_prefix(root).map_err(|_| {
-                WorkspaceError::MemberOutsideRoot {
-                    path: member_dir.display().to_string(),
-                    root: root.display().to_string(),
-                }
-            })?;
+            let rel =
+                member_dir
+                    .strip_prefix(root)
+                    .map_err(|_| WorkspaceError::MemberOutsideRoot {
+                        path: member_dir.display().to_string(),
+                        root: root.display().to_string(),
+                    })?;
             let rel_path = path_to_slash(rel);
 
             if !visited.insert(member_dir.clone()) {
@@ -619,8 +628,16 @@ mod tests {
             "vibe.toml",
             &workspace_root("mono", &["packages/flow-wal", "packages/feat-auth"]),
         );
-        write(tmp.path(), "packages/flow-wal/vibe.toml", &package("wal", "flow"));
-        write(tmp.path(), "packages/feat-auth/vibe.toml", &package("auth", "feat"));
+        write(
+            tmp.path(),
+            "packages/flow-wal/vibe.toml",
+            &package("wal", "flow"),
+        );
+        write(
+            tmp.path(),
+            "packages/feat-auth/vibe.toml",
+            &package("auth", "feat"),
+        );
 
         let ws = Workspace::load(tmp.path()).unwrap();
         assert!(!ws.is_standalone());
@@ -643,9 +660,21 @@ mod tests {
     #[test]
     fn glob_members_expand_and_skip_non_packages() {
         let tmp = TempDir::new().unwrap();
-        write(tmp.path(), "vibe.toml", &workspace_root("mono", &["packages/*"]));
-        write(tmp.path(), "packages/flow-a/vibe.toml", &package("a", "flow"));
-        write(tmp.path(), "packages/flow-b/vibe.toml", &package("b", "flow"));
+        write(
+            tmp.path(),
+            "vibe.toml",
+            &workspace_root("mono", &["packages/*"]),
+        );
+        write(
+            tmp.path(),
+            "packages/flow-a/vibe.toml",
+            &package("a", "flow"),
+        );
+        write(
+            tmp.path(),
+            "packages/flow-b/vibe.toml",
+            &package("b", "flow"),
+        );
         // A directory under packages/ with no manifest — a glob match must
         // silently skip it.
         fs::create_dir_all(tmp.path().join("packages/scratch")).unwrap();
@@ -706,7 +735,11 @@ mod tests {
     fn discover_from_member_of_unrelated_workspace_picks_the_enclosing_one() {
         let tmp = TempDir::new().unwrap();
         // The outer [workspace] does NOT list `sub` — it lists `other`.
-        write(tmp.path(), "vibe.toml", &workspace_root("outer", &["other"]));
+        write(
+            tmp.path(),
+            "vibe.toml",
+            &workspace_root("outer", &["other"]),
+        );
         write(tmp.path(), "other/vibe.toml", &package("other", "flow"));
         // `sub` is its own [workspace], not reachable from `outer`.
         write(
@@ -732,7 +765,10 @@ mod tests {
             &workspace_root("mono", &["packages/ghost"]),
         );
         let err = Workspace::load(tmp.path()).unwrap_err();
-        assert!(matches!(err, WorkspaceError::MemberNotFound { .. }), "{err}");
+        assert!(
+            matches!(err, WorkspaceError::MemberNotFound { .. }),
+            "{err}"
+        );
     }
 
     #[test]
@@ -743,7 +779,10 @@ mod tests {
         write(
             tmp.path(),
             "sub/vibe.toml",
-            &format!("{}\n[workspace]\nmembers = [\"..\"]\n", package("sub", "flow")),
+            &format!(
+                "{}\n[workspace]\nmembers = [\"..\"]\n",
+                package("sub", "flow")
+            ),
         );
         let err = Workspace::load(tmp.path()).unwrap_err();
         assert!(matches!(err, WorkspaceError::NestingCycle { .. }), "{err}");

@@ -25,10 +25,7 @@ impl<'a> MultiRegistryProvider<'a> {
 }
 
 impl<'a> DepProvider for MultiRegistryProvider<'a> {
-    fn resolve_version(
-        &self,
-        pkgref: &PackageRef,
-    ) -> Result<semver::Version, DepProviderError> {
+    fn resolve_version(&self, pkgref: &PackageRef) -> Result<semver::Version, DepProviderError> {
         // `MultiRegistryResolver::resolve` returns a `MultiResolution`
         // already pinning the version (and tracking provenance). We
         // discard provenance here — the install pipeline still calls
@@ -38,15 +35,13 @@ impl<'a> DepProvider for MultiRegistryProvider<'a> {
             Err(RegistryError::UnknownPackage { kind, name }) => {
                 Err(DepProviderError::UnknownPackage { kind, name })
             }
-            Err(RegistryError::NoMatchingVersion {
-                kind,
-                name,
-                req,
-            }) => Err(DepProviderError::NoMatchingVersion {
-                kind,
-                name,
-                constraint: req,
-            }),
+            Err(RegistryError::NoMatchingVersion { kind, name, req }) => {
+                Err(DepProviderError::NoMatchingVersion {
+                    kind,
+                    name,
+                    constraint: req,
+                })
+            }
             // Preserve the structured per-registry attempts so the
             // downstream install-error JSON envelope can ship them
             // verbatim. The summary string carries the same data

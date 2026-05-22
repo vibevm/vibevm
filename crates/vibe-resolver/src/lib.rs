@@ -94,7 +94,9 @@ impl ResolvedGraph {
 
     /// Find a node by `(kind, name)` identity.
     pub fn find(&self, kind: PackageKind, name: &str) -> Option<&ResolvedNode> {
-        self.packages.iter().find(|n| n.kind == kind && n.name == name)
+        self.packages
+            .iter()
+            .find(|n| n.kind == kind && n.name == name)
     }
 }
 
@@ -108,10 +110,7 @@ pub trait DepProvider {
     /// available versions of `(pkgref.kind, pkgref.name)`. Implementors
     /// fan out to multi-registry / mirror / override resolution as
     /// needed; the solver treats this as a black box.
-    fn resolve_version(
-        &self,
-        pkgref: &PackageRef,
-    ) -> Result<semver::Version, DepProviderError>;
+    fn resolve_version(&self, pkgref: &PackageRef) -> Result<semver::Version, DepProviderError>;
 
     /// Read the package manifest at a specific version.
     fn fetch_manifest(
@@ -192,7 +191,10 @@ pub enum SolveError {
          any package in the resolved graph. Add a package whose `[provides].capabilities` \
          includes `{capability}`, or pin a concrete `[requires].packages` entry."
     )]
-    CapabilityUnmet { capability: String, requirer: String },
+    CapabilityUnmet {
+        capability: String,
+        requirer: String,
+    },
 
     #[error(
         "all alternatives in `[[requires_any]]` declared by `{requirer}` failed to \

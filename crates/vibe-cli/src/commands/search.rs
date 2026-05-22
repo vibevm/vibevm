@@ -22,13 +22,11 @@ use std::collections::HashMap;
 use std::path::Path;
 
 use anyhow::{Context, Result, bail};
-use serde::Serialize;
 use semver::Version;
+use serde::Serialize;
 use vibe_core::PackageKind;
 use vibe_core::manifest::Manifest;
-use vibe_registry::{
-    BindingSite, IndexClient, PurlLookupHit, SearchHit, index_url_for,
-};
+use vibe_registry::{BindingSite, IndexClient, PurlLookupHit, SearchHit, index_url_for};
 
 use crate::cli::SearchArgs;
 use crate::commands::search_cache::{self, CacheKey};
@@ -194,10 +192,7 @@ pub fn run(ctx: &output::Context, args: SearchArgs) -> Result<()> {
                             );
                         }
                         for hit in results.hits {
-                            insert_hit_keep_highest(
-                                &mut by_pkg,
-                                make_hit_row(&hit, &reg.name),
-                            );
+                            insert_hit_keep_highest(&mut by_pkg, make_hit_row(&hit, &reg.name));
                         }
                     }
                     Err(e) => {
@@ -208,25 +203,20 @@ pub fn run(ctx: &output::Context, args: SearchArgs) -> Result<()> {
                     }
                 }
             }
-            None if full_scan => {
-                match run_full_scan_for_registry(&query, kind_filter, reg) {
-                    Ok(hits) => {
-                        full_scanned.push(reg.name.clone());
-                        for h in hits {
-                            insert_hit_keep_highest(
-                                &mut by_pkg,
-                                make_full_scan_hit_row(&h, &reg.name),
-                            );
-                        }
-                    }
-                    Err(reason) => {
-                        full_scan_unsupported.push(UnreachableRegistry {
-                            name: reg.name.clone(),
-                            reason,
-                        });
+            None if full_scan => match run_full_scan_for_registry(&query, kind_filter, reg) {
+                Ok(hits) => {
+                    full_scanned.push(reg.name.clone());
+                    for h in hits {
+                        insert_hit_keep_highest(&mut by_pkg, make_full_scan_hit_row(&h, &reg.name));
                     }
                 }
-            }
+                Err(reason) => {
+                    full_scan_unsupported.push(UnreachableRegistry {
+                        name: reg.name.clone(),
+                        reason,
+                    });
+                }
+            },
             None => {
                 unconfigured.push(reg.name.clone());
             }
@@ -300,10 +290,7 @@ pub fn run(ctx: &output::Context, args: SearchArgs) -> Result<()> {
         println!("  full-scan unsupported: {} — {}", u.name, u.reason);
     }
     if !unconfigured.is_empty() {
-        println!(
-            "  no VIBEVM_INDEX_URL_<R> set: {}",
-            unconfigured.join(", "),
-        );
+        println!("  no VIBEVM_INDEX_URL_<R> set: {}", unconfigured.join(", "),);
     }
     println!();
 
@@ -380,10 +367,7 @@ fn make_full_scan_hit_row(hit: &FullScanHit, registry: &str) -> HitRow {
     }
 }
 
-fn insert_hit_keep_highest(
-    by_pkg: &mut HashMap<(PackageKind, String), HitRow>,
-    row: HitRow,
-) {
+fn insert_hit_keep_highest(by_pkg: &mut HashMap<(PackageKind, String), HitRow>, row: HitRow) {
     let kind: PackageKind = row.kind.parse().unwrap_or(PackageKind::Flow);
     let key = (kind, row.name.clone());
     match by_pkg.get_mut(&key) {
@@ -409,8 +393,8 @@ fn run_full_scan_for_registry(
             reg.url
         ));
     };
-    let api_base = std::env::var(GITHUB_API_BASE_ENV)
-        .unwrap_or_else(|_| "https://api.github.com".to_string());
+    let api_base =
+        std::env::var(GITHUB_API_BASE_ENV).unwrap_or_else(|_| "https://api.github.com".to_string());
     let token = vibe_publish::token::load_token_for_host("github.com")
         .ok()
         .map(|t| t.value().to_string());
@@ -478,7 +462,9 @@ fn run_purl_lookup(
                 searched.push(reg.name.clone());
                 for hit in results.hits {
                     let key = (hit.kind, hit.name.clone(), hit.version.clone());
-                    by_kvn.entry(key).or_insert_with(|| make_purl_row(&hit, &reg.name));
+                    by_kvn
+                        .entry(key)
+                        .or_insert_with(|| make_purl_row(&hit, &reg.name));
                 }
             }
             Err(e) => {
@@ -559,9 +545,7 @@ fn run_purl_lookup(
         return Ok(());
     }
 
-    println!(
-        "KIND    NAME                          VERSION       BINDING-SITE  REGISTRY"
-    );
+    println!("KIND    NAME                          VERSION       BINDING-SITE  REGISTRY");
     for h in &hits {
         println!(
             "{:<6}  {:<28}  {:<12}  {:<12}  {}",

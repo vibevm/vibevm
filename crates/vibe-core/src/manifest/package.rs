@@ -668,11 +668,13 @@ impl TryFrom<RequiresWire> for Requires {
                             inline_to_path_dep(kind, name, inline).map_err(|e| e.to_string())?,
                         );
                     } else if inline.git.is_some() {
-                        git_packages
-                            .push(inline_to_git_dep(kind, name, inline).map_err(|e| e.to_string())?);
+                        git_packages.push(
+                            inline_to_git_dep(kind, name, inline).map_err(|e| e.to_string())?,
+                        );
                     } else if matches!(inline.version, Some(VersionFieldWire::Var { .. })) {
-                        var_packages
-                            .push(inline_to_var_dep(kind, name, inline).map_err(|e| e.to_string())?);
+                        var_packages.push(
+                            inline_to_var_dep(kind, name, inline).map_err(|e| e.to_string())?,
+                        );
                     } else {
                         packages.push(
                             inline_to_registry_pkgref(kind, name, inline)
@@ -695,7 +697,9 @@ impl TryFrom<RequiresWire> for Requires {
             .chain(var_packages.iter().map(|v| (v.kind, v.name.clone())))
         {
             if !seen.insert((kind, name.clone())) {
-                return Err(format!("dependency `{kind}:{name}` declared more than once"));
+                return Err(format!(
+                    "dependency `{kind}:{name}` declared more than once"
+                ));
             }
         }
         Ok(Requires {
@@ -1037,8 +1041,9 @@ mod tests {
         let all: PublishPosture = toml::from_str("v = true").map(|w: Wrap| w.v).unwrap();
         assert!(all.is_default());
         // `publish = ["a", "b"]`
-        let some: PublishPosture =
-            toml::from_str("v = [\"a\", \"b\"]").map(|w: Wrap| w.v).unwrap();
+        let some: PublishPosture = toml::from_str("v = [\"a\", \"b\"]")
+            .map(|w: Wrap| w.v)
+            .unwrap();
         assert!(some.includes("a"));
         assert!(some.includes("b"));
         assert!(!some.includes("c"));
@@ -1172,7 +1177,10 @@ mod tests {
 "#,
         )
         .unwrap_err();
-        assert!(err.to_string().contains("must be the value, not part of the key"));
+        assert!(
+            err.to_string()
+                .contains("must be the value, not part of the key")
+        );
     }
 
     #[test]
@@ -1493,7 +1501,10 @@ stacks = ["rust-stack", "python-stack"]
         // Four declared links survive; the bare entry stays implicitly static.
         assert_eq!(back.links.len(), 4);
         assert_eq!(back.link_for(PackageKind::Flow, "wal"), LinkType::Inline);
-        assert_eq!(back.link_for(PackageKind::Flow, "internal"), LinkType::Dynamic);
+        assert_eq!(
+            back.link_for(PackageKind::Flow, "internal"),
+            LinkType::Dynamic
+        );
         assert_eq!(back.link_for(PackageKind::Feat, "auth"), LinkType::Dynamic);
         assert_eq!(back.link_for(PackageKind::Stack, "rust"), LinkType::Inline);
         assert_eq!(back.link_for(PackageKind::Flow, "plain"), LinkType::Static);

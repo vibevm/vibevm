@@ -38,11 +38,14 @@ use std::process::Command;
 use anyhow::{Context, Result, anyhow, bail};
 use serde::Serialize;
 use vibe_core::manifest::Manifest;
-use vibe_publish::{PublishConfig, Publisher, creator_for_url, extract_host_segment,
-    extract_org_segment, load_token_for_host};
-use vibe_workspace::publish::{OriginInfo, PublishNode, select_publishable_nodes, stage_node,
-    topo_order};
+use vibe_publish::{
+    PublishConfig, Publisher, creator_for_url, extract_host_segment, extract_org_segment,
+    load_token_for_host,
+};
 use vibe_workspace::Workspace;
+use vibe_workspace::publish::{
+    OriginInfo, PublishNode, select_publishable_nodes, stage_node, topo_order,
+};
 
 use crate::cli::{WorkspaceArgs, WorkspacePublishArgs, WorkspaceSubcommand};
 use crate::output;
@@ -135,9 +138,8 @@ fn run_publish(ctx: &output::Context, args: WorkspacePublishArgs) -> Result<()> 
 
     // Select the publishable nodes, honouring every `PublishPosture` shape
     // against the primary registry's name. `--member` narrows to one node.
-    let selection =
-        select_publishable_nodes(&workspace, &primary.name, args.member.as_deref())
-            .map_err(|e| anyhow!("{e}"))?;
+    let selection = select_publishable_nodes(&workspace, &primary.name, args.member.as_deref())
+        .map_err(|e| anyhow!("{e}"))?;
 
     // Order dependency-first. A cycle among the selected nodes is a hard
     // error (PROP-007 §2.7) — distributed publishing cannot break one.
@@ -216,8 +218,7 @@ fn run_publish(ctx: &output::Context, args: WorkspacePublishArgs) -> Result<()> 
     // so an operator can still inspect the plan against a GitVerse
     // registry without a usable publish path.
     let host_lower = host.to_ascii_lowercase();
-    let is_gitverse =
-        host_lower == "gitverse.ru" || host_lower.ends_with(".gitverse.ru");
+    let is_gitverse = host_lower == "gitverse.ru" || host_lower.ends_with(".gitverse.ru");
     if is_gitverse && !args.dry_run {
         bail!(
             "GitVerse publishing is not implemented yet — the GitVerse public API does not \
@@ -615,10 +616,7 @@ fn git_in(dir: &Path, args: &[&str]) -> Option<String> {
 /// its dry-run path). `created_repo` is reported `true` — a dry-run cannot
 /// probe repo presence without the host API, and "would create" is the
 /// honest default expectation for a node that has never been published.
-fn dry_run_outcome(
-    config: &PublishConfig,
-    org_url: &str,
-) -> Result<vibe_publish::PublishOutcome> {
+fn dry_run_outcome(config: &PublishConfig, org_url: &str) -> Result<vibe_publish::PublishOutcome> {
     let manifest_path = config.source_dir.join(Manifest::FILENAME);
     let manifest = Manifest::read(&manifest_path)
         .with_context(|| format!("reading staged manifest `{}`", manifest_path.display()))?;
@@ -897,12 +895,8 @@ mod tests {
         let src = tempfile::tempdir().unwrap();
         write(src.path(), "packages/a/vibe.toml", &package("a", "flow"));
         write(src.path(), "packages/a/README.md", "# upstream readme\n");
-        let staged = stage_node(
-            &src.path().join("packages/a"),
-            "packages/a",
-            &origin_info(),
-        )
-        .unwrap();
+        let staged =
+            stage_node(&src.path().join("packages/a"), "packages/a", &origin_info()).unwrap();
         // [origin] present and correct.
         let manifest = Manifest::read(staged.staging.path().join("vibe.toml")).unwrap();
         let origin = manifest.origin.as_ref().expect("[origin] present");
@@ -945,8 +939,8 @@ mod tests {
 
     #[test]
     fn root_identity_name_prefers_project_then_package() {
-        let proj = Manifest::parse_str("[project]\nname = \"mono\"\nversion = \"0.0.1\"\n")
-            .unwrap();
+        let proj =
+            Manifest::parse_str("[project]\nname = \"mono\"\nversion = \"0.0.1\"\n").unwrap();
         assert_eq!(root_identity_name(&proj), "mono");
         let pkg = Manifest::parse_str(&package("umbrella", "stack")).unwrap();
         assert_eq!(root_identity_name(&pkg), "umbrella");

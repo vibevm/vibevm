@@ -6,13 +6,13 @@ use std::collections::BTreeSet;
 use std::fs;
 use std::path::{Path, PathBuf};
 
+use crate::exit_code::InstallError;
 use anyhow::{Context, Result, anyhow, bail};
 use dialoguer::Confirm;
 use serde::Serialize;
-use vibe_core::{PackageRef, VersionSpec};
-use vibe_core::manifest::{Lockfile, LockedPackage, Manifest, SourceKind};
+use vibe_core::manifest::{LockedPackage, Lockfile, Manifest, SourceKind};
 use vibe_core::user_config::UserConfig;
-use crate::exit_code::InstallError;
+use vibe_core::{PackageRef, VersionSpec};
 use vibe_registry::{CachedPackage, LocalRegistry, MultiRegistryResolver};
 use vibe_resolver::{
     ActivationContext, DepSolver, FeatureExpansion, FeatureRequest, LocalRegistryProvider,
@@ -82,9 +82,7 @@ pub fn run(ctx: &output::Context, args: InstallArgs) -> Result<()> {
     let cli_roots: Vec<PackageRef> = args
         .packages
         .iter()
-        .map(|raw| {
-            PackageRef::parse(raw).with_context(|| format!("parsing `{raw}`"))
-        })
+        .map(|raw| PackageRef::parse(raw).with_context(|| format!("parsing `{raw}`")))
         .collect::<Result<_>>()?;
 
     let roots: Vec<PackageRef> = if cli_roots.is_empty() {
@@ -99,7 +97,11 @@ pub fn run(ctx: &output::Context, args: InstallArgs) -> Result<()> {
             ctx.step(&format!(
                 "Migrating [requires] from `vibe.lock` meta.root_dependencies ({} entry{})",
                 lockfile.meta.root_dependencies.len(),
-                if lockfile.meta.root_dependencies.len() == 1 { "" } else { "ies" },
+                if lockfile.meta.root_dependencies.len() == 1 {
+                    ""
+                } else {
+                    "ies"
+                },
             ));
             manifest
                 .requires
@@ -117,8 +119,7 @@ pub fn run(ctx: &output::Context, args: InstallArgs) -> Result<()> {
         let discovered = Workspace::discover(&project_root)
             .context("re-discovering the workspace to collect every member's [requires]")?;
         let mut all: Vec<PackageRef> = Vec::new();
-        let mut seen: std::collections::HashSet<(_, String)> =
-            std::collections::HashSet::new();
+        let mut seen: std::collections::HashSet<(_, String)> = std::collections::HashSet::new();
         for (_, node) in discovered.iter_nodes() {
             for p in &node.requires.packages {
                 if seen.insert((p.kind, p.name.clone())) {
@@ -127,7 +128,11 @@ pub fn run(ctx: &output::Context, args: InstallArgs) -> Result<()> {
             }
             for g in &node.requires.git_packages {
                 if seen.insert((g.kind, g.name.clone())) {
-                    all.push(PackageRef::new(g.kind, g.name.clone(), VersionSpec::Latest)?);
+                    all.push(PackageRef::new(
+                        g.kind,
+                        g.name.clone(),
+                        VersionSpec::Latest,
+                    )?);
                 }
             }
         }
@@ -223,8 +228,7 @@ pub fn run(ctx: &output::Context, args: InstallArgs) -> Result<()> {
         let expected = lockfile
             .find(node.kind, &node.name)
             .map(|p| p.content_hash.clone());
-        let cached =
-            resolver.resolve_and_fetch(&pkgref, &cache_root, expected.as_deref())?;
+        let cached = resolver.resolve_and_fetch(&pkgref, &cache_root, expected.as_deref())?;
         // Roots get the user-requested feature set, but features the
         // root doesn't declare are silently filtered out — multi-root
         // `vibe install A B --features X` should not fail just because
@@ -321,9 +325,9 @@ pub fn run(ctx: &output::Context, args: InstallArgs) -> Result<()> {
                                 let already = fetched.iter().any(|g| {
                                     g.cached.resolved.kind == r.kind
                                         && g.cached.resolved.name == r.name
-                                }) || extra.iter().any(|x| {
-                                    x.kind == r.kind && x.name == r.name
-                                });
+                                }) || extra
+                                    .iter()
+                                    .any(|x| x.kind == r.kind && x.name == r.name);
                                 if !already {
                                     extra.push(r.clone());
                                 }
@@ -348,10 +352,7 @@ pub fn run(ctx: &output::Context, args: InstallArgs) -> Result<()> {
         if iteration > COND_DEP_MAX_ITER {
             bail!(
                 "conditional-dep expansion exceeded {COND_DEP_MAX_ITER} iterations — cascading predicates may form a cycle or runaway chain. Pending extras at break: {extras:?}",
-                extras = extra
-                    .iter()
-                    .map(|r| r.qualified_name())
-                    .collect::<Vec<_>>()
+                extras = extra.iter().map(|r| r.qualified_name()).collect::<Vec<_>>()
             );
         }
         ctx.step(&format!(
@@ -361,42 +362,34 @@ pub fn run(ctx: &output::Context, args: InstallArgs) -> Result<()> {
             if extra.len() == 1 { "" } else { "s" }
         ));
         let mut combined = roots.clone();
-        combined.extend(
-            fetched
-                .iter()
-                .filter(|f| f.meta.is_root)
-                .map(|f| exact_pinned_pkgref(&ResolvedNode {
-                    kind: f.cached.resolved.kind,
-                    name: f.cached.resolved.name.clone(),
-                    version: f.cached.resolved.version.clone(),
-                    dependencies: Vec::new(),
-                    is_root: true,
-                })),
-        );
+        combined.extend(fetched.iter().filter(|f| f.meta.is_root).map(|f| {
+            exact_pinned_pkgref(&ResolvedNode {
+                kind: f.cached.resolved.kind,
+                name: f.cached.resolved.name.clone(),
+                version: f.cached.resolved.version.clone(),
+                dependencies: Vec::new(),
+                is_root: true,
+            })
+        }));
         combined.extend(extra.iter().cloned());
         // De-duplicate by (kind, name).
-        let mut seen: std::collections::HashSet<(_, String)> =
-            std::collections::HashSet::new();
+        let mut seen: std::collections::HashSet<(_, String)> = std::collections::HashSet::new();
         combined.retain(|r| seen.insert((r.kind, r.name.clone())));
-        let new_graph = resolver.solve(&combined).with_context(|| {
-            "dependency resolution failed during conditional expansion"
-        })?;
+        let new_graph = resolver
+            .solve(&combined)
+            .with_context(|| "dependency resolution failed during conditional expansion")?;
         for node in new_graph.iter() {
-            if fetched.iter().any(|g| {
-                g.cached.resolved.kind == node.kind
-                    && g.cached.resolved.name == node.name
-            }) {
+            if fetched
+                .iter()
+                .any(|g| g.cached.resolved.kind == node.kind && g.cached.resolved.name == node.name)
+            {
                 continue;
             }
             let pkgref = exact_pinned_pkgref(node);
             let expected = lockfile
                 .find(node.kind, &node.name)
                 .map(|p| p.content_hash.clone());
-            let cached = resolver.resolve_and_fetch(
-                &pkgref,
-                &cache_root,
-                expected.as_deref(),
-            )?;
+            let cached = resolver.resolve_and_fetch(&pkgref, &cache_root, expected.as_deref())?;
             let req = if node.is_root {
                 tailor_feature_request(&root_feature_request, &cached.manifest.features)
             } else {
@@ -406,9 +399,7 @@ pub fn run(ctx: &output::Context, args: InstallArgs) -> Result<()> {
                 expand_features(&cached.manifest.features, &req).with_context(|| {
                     format!(
                         "expanding features for `{}:{}@{}`",
-                        cached.resolved.kind,
-                        cached.resolved.name,
-                        cached.resolved.version
+                        cached.resolved.kind, cached.resolved.name, cached.resolved.version
                     )
                 })?;
             fetched.push(Fetched {
@@ -426,8 +417,7 @@ pub fn run(ctx: &output::Context, args: InstallArgs) -> Result<()> {
     //    the workspace orchestrator materialises. The loading model
     //    materialises a package's tree verbatim, so the per-file
     //    activation context is no longer consulted at install time.
-    let resolved_language: Option<String> =
-        language_chain.first().cloned().filter(|l| l != "en");
+    let resolved_language: Option<String> = language_chain.first().cloned().filter(|l| l != "en");
     let resolution: Vec<ResolvedDep> = fetched
         .iter()
         .map(|f| ResolvedDep {
@@ -644,10 +634,7 @@ fn finalize_pkgref_for_manifest(
 /// `apply_git_source_flag` (M1.15) and writing them again as
 /// registry-resolved would create a `(kind, name)` duplicate that
 /// `try_from = "RequiresWire"` rejects on the next parse.
-fn merge_manifest_requires(
-    manifest: &mut Manifest,
-    roots: &[PackageRef],
-) -> bool {
+fn merge_manifest_requires(manifest: &mut Manifest, roots: &[PackageRef]) -> bool {
     let mut changed = false;
     for r in roots {
         if manifest
@@ -795,13 +782,18 @@ fn apply_git_source_flag(
     use vibe_core::manifest::{AuthKind, GitPackageDep, GitRefKind};
 
     if args.exact {
-        bail!("--exact has no meaning with --git (constraint shape is registry-resolved); drop one of the two flags");
+        bail!(
+            "--exact has no meaning with --git (constraint shape is registry-resolved); drop one of the two flags"
+        );
     }
     if args.registry.is_some() {
         bail!("--git bypasses the registry layer; drop --registry or drop --git");
     }
     if args.packages.len() != 1 {
-        bail!("--git requires exactly one positional pkgref `<kind>:<name>`; got {}", args.packages.len());
+        bail!(
+            "--git requires exactly one positional pkgref `<kind>:<name>`; got {}",
+            args.packages.len()
+        );
     }
     // Allow user to type either `flow:internal` or `flow:internal@*` —
     // version is irrelevant for git-source (the ref decides), but we
@@ -809,16 +801,16 @@ fn apply_git_source_flag(
     let pr = PackageRef::parse(&args.packages[0])
         .with_context(|| format!("parsing `{}`", args.packages[0]))?;
     let url = args.git.clone().expect("caller checked args.git.is_some()");
-    let ref_kind = match (args.tag.as_deref(), args.branch.as_deref(), args.rev.as_deref()) {
+    let ref_kind = match (
+        args.tag.as_deref(),
+        args.branch.as_deref(),
+        args.rev.as_deref(),
+    ) {
         (Some(t), None, None) => GitRefKind::Tag(t.to_string()),
         (None, Some(b), None) => GitRefKind::Branch(b.to_string()),
         (None, None, Some(r)) => GitRefKind::Rev(r.to_string()),
-        (None, None, None) => bail!(
-            "--git requires exactly one of --tag, --branch, or --rev"
-        ),
-        _ => bail!(
-            "--git accepts exactly one of --tag, --branch, --rev — drop the extras"
-        ),
+        (None, None, None) => bail!("--git requires exactly one of --tag, --branch, or --rev"),
+        _ => bail!("--git accepts exactly one of --tag, --branch, --rev — drop the extras"),
     };
     let auth = match args.git_auth.as_deref() {
         None | Some("none") => AuthKind::None,
@@ -848,7 +840,10 @@ fn apply_git_source_flag(
     // Drop any prior registry-resolved entry for the same pkgref —
     // M1.15 forbids `(kind, name)` collision between
     // `requires.packages` and `requires.git_packages`.
-    manifest.requires.packages.retain(|p| !(p.kind == dep.kind && p.name == dep.name));
+    manifest
+        .requires
+        .packages
+        .retain(|p| !(p.kind == dep.kind && p.name == dep.name));
     // Replace any prior git-source entry for the same pkgref (same
     // shape as updating an existing constraint).
     manifest
@@ -889,14 +884,11 @@ pub(crate) fn build_install_resolver(
         );
     }
 
-    let mrr = MultiRegistryResolver::open(
-        &manifest.registries,
-        &manifest.mirrors,
-        &manifest.overrides,
-    )
-    .context("opening multi-registry resolver")?
-    .with_strict_auth(args.auth_required)
-    .with_git_packages(manifest.requires.git_packages.clone());
+    let mrr =
+        MultiRegistryResolver::open(&manifest.registries, &manifest.mirrors, &manifest.overrides)
+            .context("opening multi-registry resolver")?
+            .with_strict_auth(args.auth_required)
+            .with_git_packages(manifest.requires.git_packages.clone());
     Ok(InstallResolver::Multi(Box::new(mrr)))
 }
 
@@ -930,7 +922,12 @@ fn locked_package_from_fetched(f: &Fetched, language: Option<&str>) -> LockedPac
         overridden: c.overridden,
         source_kind: Some(source_kind),
         via_redirect: c.via_redirect.clone(),
-        features: f.feature_expansion.active_features.iter().cloned().collect(),
+        features: f
+            .feature_expansion
+            .active_features
+            .iter()
+            .cloned()
+            .collect(),
         subskills_active: Vec::new(),
         describes: c.package_meta().describes.as_ref().map(|p| p.to_string()),
         language: language.map(str::to_string),
@@ -987,16 +984,28 @@ fn emit_report(ctx: &output::Context, outcome: &InstallOutcome) -> Result<()> {
         ctx.summary(&format!(
             "vibe install: {} package{} materialised",
             outcome.materialised.len(),
-            if outcome.materialised.len() == 1 { "" } else { "s" },
+            if outcome.materialised.len() == 1 {
+                ""
+            } else {
+                "s"
+            },
         ));
         return Ok(());
     }
     ctx.summary(&format!(
         "\nMaterialised {} package{} into vibedeps/; regenerated boot artifacts for {} node{}.",
         outcome.materialised.len(),
-        if outcome.materialised.len() == 1 { "" } else { "s" },
+        if outcome.materialised.len() == 1 {
+            ""
+        } else {
+            "s"
+        },
         outcome.nodes_regenerated.len(),
-        if outcome.nodes_regenerated.len() == 1 { "" } else { "s" },
+        if outcome.nodes_regenerated.len() == 1 {
+            ""
+        } else {
+            "s"
+        },
     ));
     if !outcome.skipped.is_empty() {
         ctx.step(&format!(
@@ -1031,7 +1040,11 @@ fn emit_fresh_report(ctx: &output::Context, nodes_regenerated: &[String]) -> Res
     ctx.summary(&format!(
         "vibe install: vibe.lock unchanged — nothing to re-resolve ({} node{} up to date)",
         nodes_regenerated.len(),
-        if nodes_regenerated.len() == 1 { "" } else { "s" },
+        if nodes_regenerated.len() == 1 {
+            ""
+        } else {
+            "s"
+        },
     ));
     Ok(())
 }
@@ -1040,10 +1053,7 @@ fn emit_fresh_report(ctx: &output::Context, nodes_regenerated: &[String]) -> Res
 /// project's `[i18n]` declaration. The CLI flag is the head of the
 /// chain; project-level preference and fallback come next; canonical /
 /// registry-default `en` close the chain.
-fn build_language_chain(
-    cli_language: Option<&str>,
-    manifest: &Manifest,
-) -> Vec<String> {
+fn build_language_chain(cli_language: Option<&str>, manifest: &Manifest) -> Vec<String> {
     let mut effective = manifest.i18n.clone();
     if let Some(lang) = cli_language {
         effective.preferred = Some(lang.to_string());
@@ -1153,7 +1163,10 @@ mod tests {
         // Second call with the same pkgref must not duplicate the entry
         // and must not mark the manifest dirty.
         let changed_again = merge_manifest_requires(&mut m, std::slice::from_ref(&r));
-        assert!(!changed_again, "second merge of the same pkgref must be a no-op");
+        assert!(
+            !changed_again,
+            "second merge of the same pkgref must be a no-op"
+        );
         assert_eq!(m.requires.packages.len(), 1);
     }
 

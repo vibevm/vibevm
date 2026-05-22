@@ -99,7 +99,10 @@ fn run_codegen() -> Result<()> {
     let out_dir = root.join("crates/vibe-wire/src/generated");
 
     if !schemas_dir.exists() {
-        bail!("`schemas/` directory not found at {}", schemas_dir.display());
+        bail!(
+            "`schemas/` directory not found at {}",
+            schemas_dir.display()
+        );
     }
     std::fs::create_dir_all(&out_dir)
         .with_context(|| format!("creating output dir {}", out_dir.display()))?;
@@ -211,8 +214,7 @@ fn run_codegen() -> Result<()> {
         top.push_str(&format!("pub mod {name};\n"));
     }
     let top_path = out_dir.join("mod.rs");
-    std::fs::write(&top_path, top)
-        .with_context(|| format!("writing {}", top_path.display()))?;
+    std::fs::write(&top_path, top).with_context(|| format!("writing {}", top_path.display()))?;
 
     eprintln!("xtask codegen: ok ({} submodules).", module_names.len());
     Ok(())

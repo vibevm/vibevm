@@ -138,9 +138,7 @@ fn read_subskill_run(args: &Value, ctx: &ServerContext) -> Result<Value, ToolErr
     let subskill_path = args
         .get("subskill_path")
         .and_then(|v| v.as_str())
-        .ok_or_else(|| {
-            ToolError::InvalidArguments("`subskill_path` must be a string".into())
-        })?;
+        .ok_or_else(|| ToolError::InvalidArguments("`subskill_path` must be a string".into()))?;
     let (kind, pname) = parse_pkgref(package)?;
     let lockfile = ctx
         .load_lockfile()
@@ -268,13 +266,8 @@ fn materialise_subskill_run(args: &Value, ctx: &ServerContext) -> Result<Value, 
     let subskill_path = args
         .get("subskill_path")
         .and_then(|v| v.as_str())
-        .ok_or_else(|| {
-            ToolError::InvalidArguments("`subskill_path` must be a string".into())
-        })?;
-    let force = args
-        .get("force")
-        .and_then(|v| v.as_bool())
-        .unwrap_or(false);
+        .ok_or_else(|| ToolError::InvalidArguments("`subskill_path` must be a string".into()))?;
+    let force = args.get("force").and_then(|v| v.as_bool()).unwrap_or(false);
     let (kind, pname) = parse_pkgref(package)?;
     let lockfile = ctx
         .load_lockfile()
@@ -376,8 +369,11 @@ fn parse_pkgref(s: &str) -> Result<(PackageKind, String), ToolError> {
 /// project root and return the [`ServerContext`].
 #[doc(hidden)]
 pub fn _test_context_with_fixture(project_root: PathBuf, lockfile_text: &str) -> ServerContext {
-    std::fs::write(project_root.join("vibe.toml"), "[project]\nname=\"x\"\nversion=\"0.0.1\"\n")
-        .unwrap();
+    std::fs::write(
+        project_root.join("vibe.toml"),
+        "[project]\nname=\"x\"\nversion=\"0.0.1\"\n",
+    )
+    .unwrap();
     std::fs::write(project_root.join("vibe.lock"), lockfile_text).unwrap();
     ServerContext::new(project_root)
 }
@@ -617,9 +613,7 @@ cache_files = [
             .map(|p| p.as_str().unwrap())
             .collect();
         assert!(written.contains(&"spec/flows/wal/SQLX-NOTES.md"));
-        let materialised = dir
-            .path()
-            .join("spec/flows/wal/SQLX-NOTES.md");
+        let materialised = dir.path().join("spec/flows/wal/SQLX-NOTES.md");
         assert!(materialised.is_file());
         let body = std::fs::read_to_string(&materialised).unwrap();
         assert!(body.contains("sqlx 0.8.x"));
@@ -648,9 +642,7 @@ cache_files = [
         let resp = dispatch_one(ctx, &req).unwrap();
         let v: Value = serde_json::from_str(&resp).unwrap();
         assert_eq!(v["result"]["isError"], false);
-        assert_eq!(
-            v["result"]["structuredContent"]["status"], "no-op"
-        );
+        assert_eq!(v["result"]["structuredContent"]["status"], "no-op");
     }
 
     #[test]
@@ -690,8 +682,7 @@ cache_files = [
         let v: Value = serde_json::from_str(&resp).unwrap();
         let payload = &v["result"]["structuredContent"];
         assert_eq!(payload["status"], "skipped");
-        let body =
-            std::fs::read_to_string(target_dir.join("SQLX-NOTES.md")).unwrap();
+        let body = std::fs::read_to_string(target_dir.join("SQLX-NOTES.md")).unwrap();
         assert_eq!(
             body, "user-edit",
             "user file must survive when force is unset"

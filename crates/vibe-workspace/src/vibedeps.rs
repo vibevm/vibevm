@@ -225,7 +225,10 @@ mod tests {
             fs::read_to_string(slot.join("vibe.toml")).unwrap(),
             "[package]\nname = \"wal\"\n"
         );
-        assert_eq!(fs::read_to_string(slot.join("boot/10-flow-wal.md")).unwrap(), "# boot");
+        assert_eq!(
+            fs::read_to_string(slot.join("boot/10-flow-wal.md")).unwrap(),
+            "# boot"
+        );
         assert_eq!(
             fs::read_to_string(slot.join("spec/flows/wal/WAL.md")).unwrap(),
             "# protocol"
@@ -301,7 +304,10 @@ mod tests {
 
         let slot = ws.path().join("vibedeps/feat-auth/0.1.0");
         assert_eq!(fs::read_to_string(slot.join("vibe.toml")).unwrap(), "v2");
-        assert!(!slot.join("stale.md").exists(), "stale file must be cleared");
+        assert!(
+            !slot.join("stale.md").exists(),
+            "stale file must be cleared"
+        );
         assert_eq!(written, vec![PathBuf::from("vibe.toml")]);
     }
 
@@ -325,7 +331,12 @@ mod tests {
         let ws = TempDir::new().unwrap();
         let src = TempDir::new().unwrap();
         write(src.path(), "vibe.toml", "x");
-        assert!(!is_materialised(ws.path(), PackageKind::Tool, "fmt", &version("1.0.0")));
+        assert!(!is_materialised(
+            ws.path(),
+            PackageKind::Tool,
+            "fmt",
+            &version("1.0.0")
+        ));
         materialise(
             ws.path(),
             PackageKind::Tool,
@@ -334,7 +345,12 @@ mod tests {
             src.path(),
         )
         .unwrap();
-        assert!(is_materialised(ws.path(), PackageKind::Tool, "fmt", &version("1.0.0")));
+        assert!(is_materialised(
+            ws.path(),
+            PackageKind::Tool,
+            "fmt",
+            &version("1.0.0")
+        ));
     }
 
     #[test]
@@ -352,7 +368,12 @@ mod tests {
         .unwrap();
 
         assert!(remove_slot(ws.path(), PackageKind::Flow, "wal", &version("0.3.0")).unwrap());
-        assert!(!is_materialised(ws.path(), PackageKind::Flow, "wal", &version("0.3.0")));
+        assert!(!is_materialised(
+            ws.path(),
+            PackageKind::Flow,
+            "wal",
+            &version("0.3.0")
+        ));
         // A second removal finds nothing to do.
         assert!(!remove_slot(ws.path(), PackageKind::Flow, "wal", &version("0.3.0")).unwrap());
     }

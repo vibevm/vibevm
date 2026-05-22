@@ -63,10 +63,7 @@ impl IndexClient {
                 return None;
             }
         };
-        for candidate in [
-            format!("{trimmed}/v1/index"),
-            trimmed.to_string(),
-        ] {
+        for candidate in [format!("{trimmed}/v1/index"), trimmed.to_string()] {
             let url = format!("{candidate}/repomd.json");
             if let Ok(resp) = client.get(&url).send()
                 && resp.status().is_success()
@@ -115,11 +112,12 @@ impl IndexClient {
         name: &str,
     ) -> Result<Option<Vec<Version>>, IndexError> {
         let url = format!("{}/by-name/{}/{}.json", self.file_base, kind.as_str(), name);
-        let client = Self::build_client(Duration::from_secs(FETCH_TIMEOUT_SECS))
-            .map_err(|e| IndexError::Http {
+        let client = Self::build_client(Duration::from_secs(FETCH_TIMEOUT_SECS)).map_err(|e| {
+            IndexError::Http {
                 url: url.clone(),
                 message: e.to_string(),
-            })?;
+            }
+        })?;
         let resp = client.get(&url).send().map_err(|e| IndexError::Http {
             url: url.clone(),
             message: e.to_string(),
@@ -138,12 +136,11 @@ impl IndexClient {
             url: url.clone(),
             message: e.to_string(),
         })?;
-        let parsed: PackageEntryView = serde_json::from_slice(&body).map_err(|e| {
-            IndexError::Malformed {
+        let parsed: PackageEntryView =
+            serde_json::from_slice(&body).map_err(|e| IndexError::Malformed {
                 url: url.clone(),
                 message: e.to_string(),
-            }
-        })?;
+            })?;
         let mut versions: Vec<Version> = parsed.versions.into_iter().map(|v| v.version).collect();
         versions.sort();
         Ok(Some(versions))
@@ -176,11 +173,12 @@ impl IndexClient {
             .pop_if_empty()
             .push(purl);
         let url = parsed.to_string();
-        let client = Self::build_client(Duration::from_secs(FETCH_TIMEOUT_SECS))
-            .map_err(|e| IndexError::Http {
+        let client = Self::build_client(Duration::from_secs(FETCH_TIMEOUT_SECS)).map_err(|e| {
+            IndexError::Http {
                 url: url.clone(),
                 message: e.to_string(),
-            })?;
+            }
+        })?;
         let resp = client.get(&url).send().map_err(|e| IndexError::Http {
             url: url.clone(),
             message: e.to_string(),
@@ -196,12 +194,11 @@ impl IndexClient {
             url: url.clone(),
             message: e.to_string(),
         })?;
-        let parsed: PurlLookupResults = serde_json::from_slice(&body).map_err(|e| {
-            IndexError::Malformed {
+        let parsed: PurlLookupResults =
+            serde_json::from_slice(&body).map_err(|e| IndexError::Malformed {
                 url: url.clone(),
                 message: e.to_string(),
-            }
-        })?;
+            })?;
         Ok(parsed)
     }
 
@@ -225,11 +222,12 @@ impl IndexClient {
         limit: Option<usize>,
     ) -> Result<SearchResults, IndexError> {
         let url = format!("{}/v1/packages", self.server_base);
-        let client = Self::build_client(Duration::from_secs(FETCH_TIMEOUT_SECS))
-            .map_err(|e| IndexError::Http {
+        let client = Self::build_client(Duration::from_secs(FETCH_TIMEOUT_SECS)).map_err(|e| {
+            IndexError::Http {
                 url: url.clone(),
                 message: e.to_string(),
-            })?;
+            }
+        })?;
         let mut req = client.get(&url).query(&[("q", query)]);
         if let Some(k) = kind {
             req = req.query(&[("kind", k.as_str())]);
@@ -252,12 +250,11 @@ impl IndexClient {
             url: url.clone(),
             message: e.to_string(),
         })?;
-        let parsed: SearchResults = serde_json::from_slice(&body).map_err(|e| {
-            IndexError::Malformed {
+        let parsed: SearchResults =
+            serde_json::from_slice(&body).map_err(|e| IndexError::Malformed {
                 url: url.clone(),
                 message: e.to_string(),
-            }
-        })?;
+            })?;
         Ok(parsed)
     }
 
@@ -423,9 +420,15 @@ mod tests {
         assert_eq!(parsed.hits[0].kind, PackageKind::Flow);
         assert_eq!(parsed.hits[0].name, "wal");
         assert_eq!(parsed.hits[0].score, 3);
-        assert_eq!(parsed.hits[0].latest_stable.as_ref().unwrap().to_string(), "0.1.0");
+        assert_eq!(
+            parsed.hits[0].latest_stable.as_ref().unwrap().to_string(),
+            "0.1.0"
+        );
         assert_eq!(parsed.hits[0].matched_tokens, vec!["wal".to_string()]);
-        assert_eq!(parsed.hits[0].description.as_deref(), Some("Write-ahead log"));
+        assert_eq!(
+            parsed.hits[0].description.as_deref(),
+            Some("Write-ahead log")
+        );
     }
 
     #[test]

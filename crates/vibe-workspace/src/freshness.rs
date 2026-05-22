@@ -72,7 +72,9 @@ pub fn check(workspace: &Workspace, lockfile: &Lockfile) -> Freshness {
         // normally drains these into `packages`, so a non-empty one here
         // is unexpected; refuse to reason about it.
         if !req.var_packages.is_empty() {
-            return stale(format!("node `{rel}` carries unresolved version placeholders"));
+            return stale(format!(
+                "node `{rel}` carries unresolved version placeholders"
+            ));
         }
         // A git- or path-source dependency points at a source whose
         // content can change with no `[requires]` edit (a moving branch,

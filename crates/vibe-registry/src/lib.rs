@@ -51,10 +51,7 @@ pub enum RegistryError {
     MissingRoot(PathBuf),
 
     #[error("package `{kind}:{name}` is not in the registry")]
-    UnknownPackage {
-        kind: PackageKind,
-        name: String,
-    },
+    UnknownPackage { kind: PackageKind, name: String },
 
     #[error("no version of `{kind}:{name}` matches `{req}`")]
     NoMatchingVersion {
@@ -63,7 +60,9 @@ pub enum RegistryError {
         req: String,
     },
 
-    #[error("registry entry at `{path}` has an invalid directory name `{name}` — expected `v<semver>`")]
+    #[error(
+        "registry entry at `{path}` has an invalid directory name `{name}` — expected `v<semver>`"
+    )]
     BadVersionDir { path: PathBuf, name: String },
 
     #[error(transparent)]
@@ -88,10 +87,7 @@ pub enum RegistryError {
         "registry `{registry}` declares `auth = \"token-env\"` but env-var `{env_var}` is empty or unset; \
          set it to a personal access token with read access to the registry org"
     )]
-    MissingToken {
-        registry: String,
-        env_var: String,
-    },
+    MissingToken { registry: String, env_var: String },
 
     /// Aggregated walk-failure: every configured registry was tried,
     /// none had a satisfying answer, and at least one walked-past
@@ -105,9 +101,7 @@ pub enum RegistryError {
     /// registry was walked; the no-registries-at-all path still
     /// returns the simpler `UnknownPackage` variant for back-compat
     /// with downstream consumers that match on it.
-    #[error(
-        "package `{kind}:{name}` not found in any configured registry.\nTried:\n{summary}"
-    )]
+    #[error("package `{kind}:{name}` not found in any configured registry.\nTried:\n{summary}")]
     PackageNotFoundEverywhere {
         kind: PackageKind,
         name: String,

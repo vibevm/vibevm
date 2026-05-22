@@ -71,14 +71,11 @@ pub fn run(ctx: &output::Context, args: OutdatedArgs) -> Result<()> {
             "no registry configured. Add a `[[registry]]` entry to `vibe.toml` or run `vibe outdated` against a project that has one."
         );
     }
-    let mrr = MultiRegistryResolver::open(
-        &manifest.registries,
-        &manifest.mirrors,
-        &manifest.overrides,
-    )
-    .context("opening multi-registry resolver")?
-    .with_strict_auth(args.auth_required)
-    .with_git_packages(manifest.requires.git_packages.clone());
+    let mrr =
+        MultiRegistryResolver::open(&manifest.registries, &manifest.mirrors, &manifest.overrides)
+            .context("opening multi-registry resolver")?
+            .with_strict_auth(args.auth_required)
+            .with_git_packages(manifest.requires.git_packages.clone());
 
     let mut entries: Vec<OutdatedEntry> = Vec::with_capacity(lockfile.packages.len());
     let mut update_available = 0usize;
@@ -112,7 +109,9 @@ pub fn run(ctx: &output::Context, args: OutdatedArgs) -> Result<()> {
             status,
         });
     }
-    entries.sort_by(|a, b| (a.kind.as_str(), a.name.as_str()).cmp(&(b.kind.as_str(), b.name.as_str())));
+    entries.sort_by(|a, b| {
+        (a.kind.as_str(), a.name.as_str()).cmp(&(b.kind.as_str(), b.name.as_str()))
+    });
 
     if ctx.is_json() {
         ctx.emit_json(&OutdatedReport {
@@ -202,4 +201,3 @@ fn load_lockfile(root: &Path) -> Result<Lockfile> {
         Ok(Lockfile::read(&path)?)
     }
 }
-

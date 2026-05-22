@@ -90,9 +90,7 @@ impl UserConfig {
         if let Some(custom) = std::env::var_os("VIBEVM_USER_CONFIG") {
             return Some(PathBuf::from(custom));
         }
-        if let Some(xdg) = std::env::var_os("XDG_CONFIG_HOME")
-            .filter(|s| !s.is_empty())
-        {
+        if let Some(xdg) = std::env::var_os("XDG_CONFIG_HOME").filter(|s| !s.is_empty()) {
             return Some(PathBuf::from(xdg).join("vibe").join("config.toml"));
         }
         let home = home_dir()?;
@@ -100,9 +98,7 @@ impl UserConfig {
             // Windows precedence: %APPDATA% wins over ~/.config (which
             // is not the canonical Windows shape) when no XDG_CONFIG_HOME
             // is set.
-            if let Some(appdata) = std::env::var_os("APPDATA")
-                .filter(|s| !s.is_empty())
-            {
+            if let Some(appdata) = std::env::var_os("APPDATA").filter(|s| !s.is_empty()) {
                 return Some(PathBuf::from(appdata).join("vibe").join("config.toml"));
             }
         }
@@ -126,17 +122,14 @@ impl UserConfig {
         if !path.exists() {
             return Ok(UserConfig::default());
         }
-        let body = std::fs::read_to_string(path).map_err(|source| {
-            UserConfigError::Io {
-                path: path.to_path_buf(),
-                source,
-            }
+        let body = std::fs::read_to_string(path).map_err(|source| UserConfigError::Io {
+            path: path.to_path_buf(),
+            source,
         })?;
-        let cfg: UserConfig =
-            toml::from_str(&body).map_err(|source| UserConfigError::Parse {
-                path: path.to_path_buf(),
-                source,
-            })?;
+        let cfg: UserConfig = toml::from_str(&body).map_err(|source| UserConfigError::Parse {
+            path: path.to_path_buf(),
+            source,
+        })?;
         Ok(cfg)
     }
 }
@@ -269,7 +262,10 @@ VIBE_REGISTRY_CACHE = "/typo"
             ..Default::default()
         };
         let rendered = toml::to_string_pretty(&cfg).unwrap();
-        assert!(rendered.contains("slot_integrity = \"verify\""), "{rendered}");
+        assert!(
+            rendered.contains("slot_integrity = \"verify\""),
+            "{rendered}"
+        );
         let back: UserConfig = toml::from_str(&rendered).unwrap();
         assert_eq!(cfg, back);
     }

@@ -23,10 +23,7 @@ impl<'a> LocalRegistryProvider<'a> {
 }
 
 impl<'a> DepProvider for LocalRegistryProvider<'a> {
-    fn resolve_version(
-        &self,
-        pkgref: &PackageRef,
-    ) -> Result<semver::Version, DepProviderError> {
+    fn resolve_version(&self, pkgref: &PackageRef) -> Result<semver::Version, DepProviderError> {
         match self.registry.resolve(pkgref) {
             Ok(r) => Ok(r.version),
             Err(RegistryError::UnknownPackage { kind, name }) => {

@@ -53,9 +53,7 @@ impl Purl {
         // rsplit handles namespaces that themselves start with `@` (the
         // npm `@scope/name` pattern produces `pkg:npm/@scope/name@ver`).
         let (path, version) = match body.rsplit_once('@') {
-            Some((p, v)) if !v.is_empty() && !p.is_empty() => {
-                (p, Some(v.to_string()))
-            }
+            Some((p, v)) if !v.is_empty() && !p.is_empty() => (p, Some(v.to_string())),
             _ => (body, None),
         };
 

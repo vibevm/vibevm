@@ -330,8 +330,7 @@ impl Manifest {
     /// a plain project.
     pub fn require_project(&self) -> Result<&ProjectSection> {
         self.project.as_ref().ok_or_else(|| Error::InvalidManifest {
-            reason: "expected a [project] table — this manifest is not a plain project"
-                .to_string(),
+            reason: "expected a [project] table — this manifest is not a plain project".to_string(),
         })
     }
 
@@ -431,7 +430,10 @@ reason = "pending upstream PR"
         assert_eq!(m.requires.packages.len(), 2);
         assert_eq!(m.registries.len(), 2);
         assert_eq!(m.primary_registry().unwrap().name, "vibespecs");
-        assert_eq!(m.registry_by_name("corporate").unwrap().url, "git@internal:packages");
+        assert_eq!(
+            m.registry_by_name("corporate").unwrap().url,
+            "git@internal:packages"
+        );
         assert_eq!(m.mirrors.len(), 1);
         assert_eq!(m.overrides.len(), 1);
         let back = Manifest::parse_str(&toml::to_string_pretty(&m).unwrap()).unwrap();

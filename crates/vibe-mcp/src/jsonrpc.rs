@@ -251,10 +251,7 @@ mod tests {
 
     #[test]
     fn error_response_round_trips() {
-        let resp = JsonRpcResponse::error(
-            json!(2),
-            JsonRpcError::method_not_found("foo"),
-        );
+        let resp = JsonRpcResponse::error(json!(2), JsonRpcError::method_not_found("foo"));
         let s = serde_json::to_string(&resp).unwrap();
         assert!(s.contains(r#""error""#));
         assert!(s.contains("Method not found"));

@@ -187,9 +187,7 @@ pub struct SubskillRecommends {
 
 impl SubskillRecommends {
     pub fn is_empty(&self) -> bool {
-        self.subskills.is_empty()
-            && self.packages.is_empty()
-            && self.capabilities.is_empty()
+        self.subskills.is_empty() && self.packages.is_empty() && self.capabilities.is_empty()
     }
 }
 
@@ -238,9 +236,7 @@ impl SubskillManifest {
     /// check. Returns a list of diagnostics (empty = valid).
     pub fn validation_findings(&self) -> Vec<String> {
         let mut findings = Vec::new();
-        if self.subskill.delivery.requires_description()
-            && self.subskill.description.is_none()
-        {
+        if self.subskill.delivery.requires_description() && self.subskill.description.is_none() {
             findings.push(format!(
                 "subskill `{}`: delivery `{}` requires a non-empty `description`",
                 self.subskill.path,
@@ -248,9 +244,7 @@ impl SubskillManifest {
             ));
         }
         if self.subskill.path.is_empty() {
-            findings.push(
-                "subskill: `path` field must be non-empty".to_string(),
-            );
+            findings.push("subskill: `path` field must be non-empty".to_string());
         }
         for s in &self.subskill.path.split('/').collect::<Vec<_>>() {
             if s.is_empty() {
@@ -337,7 +331,11 @@ delivery = "lazy-push"
 "#;
         let m: SubskillManifest = toml::from_str(raw).unwrap();
         let findings = m.validation_findings();
-        assert!(findings.iter().any(|f| f.contains("requires a non-empty `description`")));
+        assert!(
+            findings
+                .iter()
+                .any(|f| f.contains("requires a non-empty `description`"))
+        );
     }
 
     #[test]

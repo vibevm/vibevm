@@ -280,11 +280,7 @@ pub fn post_to_index(config: &HookConfig, payload: &serde_json::Value) -> Result
 /// posts. Errors are converted to warnings + a `HookReport` with
 /// `error: Some(...)`. Caller decides whether to surface the report
 /// to the operator (e.g. via JSON envelope).
-pub fn fire(
-    outcome: &PublishOutcome,
-    source_dir: &Path,
-    registry: &str,
-) -> HookReport {
+pub fn fire(outcome: &PublishOutcome, source_dir: &Path, registry: &str) -> HookReport {
     let Some(config) = HookConfig::from_env(registry) else {
         return HookReport::dormant();
     };

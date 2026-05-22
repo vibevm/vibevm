@@ -43,9 +43,7 @@ use crate::git_backend::{GitBackend, GitError, ShellGit};
 use crate::git_registry::{
     DEFAULT_FRESHNESS_SECS, default_cache_root, normalize_url, strip_git_plus_prefix,
 };
-use crate::{
-    CachedPackage, Registry, RegistryError, ResolvedPackage, compute_content_hash,
-};
+use crate::{CachedPackage, Registry, RegistryError, ResolvedPackage, compute_content_hash};
 
 /// Per-package git registry — one organization URL, many package repos under it.
 pub struct GitPackageRegistry {
@@ -284,7 +282,11 @@ impl GitPackageRegistry {
                 .and_then(|var| std::env::var(&var).ok())
                 .and_then(|v| {
                     let trimmed = v.trim().to_string();
-                    if trimmed.is_empty() { None } else { Some(trimmed) }
+                    if trimmed.is_empty() {
+                        None
+                    } else {
+                        Some(trimmed)
+                    }
                 })
         } else {
             None
@@ -563,7 +565,9 @@ impl GitPackageRegistry {
 /// modern git auto-redacts passwords from its own stderr (≥ 2.31)
 /// as a second line of defence.
 pub fn inject_token(plain_url: &str, token: Option<&str>) -> String {
-    let Some(token) = token else { return plain_url.to_string() };
+    let Some(token) = token else {
+        return plain_url.to_string();
+    };
     if !plain_url.starts_with("https://") || plain_url.contains("x-access-token:") {
         return plain_url.to_string();
     }
@@ -640,7 +644,11 @@ impl GitPackageRegistry {
             repo_name
         ));
         for mirror in &self.mirror_urls {
-            urls.push(format!("{}/{}.git", mirror.trim_end_matches('/'), repo_name));
+            urls.push(format!(
+                "{}/{}.git",
+                mirror.trim_end_matches('/'),
+                repo_name
+            ));
         }
         urls
     }
@@ -656,12 +664,7 @@ impl GitPackageRegistry {
     /// `f` MUST be a pure read against the host (no cache writes, no
     /// per-package clone state) — the fetch / refresh paths use
     /// dedicated logic with content-hash verification across mirrors.
-    fn try_lookup<T, F>(
-        &self,
-        kind: PackageKind,
-        name: &str,
-        f: F,
-    ) -> Result<T, RegistryError>
+    fn try_lookup<T, F>(&self, kind: PackageKind, name: &str, f: F) -> Result<T, RegistryError>
     where
         F: Fn(&str) -> Result<T, RegistryError>,
     {
@@ -840,7 +843,10 @@ impl GitPackageRegistry {
     /// (which may have produced a different *URL*-side name).
     pub fn package_clone_dir(&self, kind: PackageKind, name: &str) -> PathBuf {
         let internal = format!("{}-{}", kind.as_str(), name);
-        self.cache_dir().join("packages").join(internal).join("clone")
+        self.cache_dir()
+            .join("packages")
+            .join(internal)
+            .join("clone")
     }
 
     /// Enumerate available versions for `<kind>:<name>` *without cloning*.
@@ -903,15 +909,13 @@ impl GitPackageRegistry {
         self.try_lookup(kind, name, move |url| {
             let plain = strip_git_plus_prefix(url);
             let fetch_url = inject_token(plain, token.as_deref());
-            let tags = backend
-                .list_tags(&fetch_url)
-                .map_err(|e| match e {
-                    GitError::RepoNotFound { .. } => RegistryError::UnknownPackage {
-                        kind,
-                        name: owned_name.clone(),
-                    },
-                    other => RegistryError::Git(other),
-                })?;
+            let tags = backend.list_tags(&fetch_url).map_err(|e| match e {
+                GitError::RepoNotFound { .. } => RegistryError::UnknownPackage {
+                    kind,
+                    name: owned_name.clone(),
+                },
+                other => RegistryError::Git(other),
+            })?;
             let mut versions: Vec<semver::Version> = tags
                 .iter()
                 .filter_map(|t| {
@@ -1149,8 +1153,7 @@ impl GitPackageRegistry {
             if manifest.package.is_none() {
                 return Err(RegistryError::MalformedMeta {
                     path: manifest_path.clone(),
-                    reason: "registry package manifest must carry a [package] table"
-                        .to_string(),
+                    reason: "registry package manifest must carry a [package] table".to_string(),
                 });
             }
             let content_hash = compute_content_hash(&dest_cache)?;
@@ -1419,8 +1422,7 @@ mod tests {
         }
         fn update(&self, dest: &Path, refname: &str) -> Result<(), GitError> {
             *self.update_calls.lock().unwrap() += 1;
-            let origin = fs::read_to_string(dest.join(".git/origin-url"))
-                .unwrap_or_default();
+            let origin = fs::read_to_string(dest.join(".git/origin-url")).unwrap_or_default();
             if self.update_fail_urls.lock().unwrap().contains(&origin) {
                 return Err(GitError::RefNotFound {
                     url: origin,
@@ -1446,13 +1448,16 @@ mod tests {
             path: &str,
         ) -> Result<Vec<u8>, GitError> {
             let key = (url.to_string(), refname.to_string(), path.to_string());
-            self.files.lock().unwrap().get(&key).cloned().ok_or_else(|| {
-                GitError::FileNotFoundInRef {
+            self.files
+                .lock()
+                .unwrap()
+                .get(&key)
+                .cloned()
+                .ok_or_else(|| GitError::FileNotFoundInRef {
                     url: url.to_string(),
                     refname: refname.to_string(),
                     path: path.to_string(),
-                }
-            })
+                })
         }
     }
 
@@ -1494,7 +1499,10 @@ mod tests {
     fn inject_token_returns_url_unchanged_when_no_token() {
         let url = "https://gitlab.company.com/vibespecs/flow-wal.git";
         assert_eq!(inject_token(url, None), url);
-        assert_eq!(inject_token(url, Some("")).len(), inject_token(url, Some("")).len()); // empty also no-op-ish
+        assert_eq!(
+            inject_token(url, Some("")).len(),
+            inject_token(url, Some("")).len()
+        ); // empty also no-op-ish
     }
 
     #[test]
@@ -1617,16 +1625,12 @@ mod tests {
             ) -> Result<Vec<u8>, GitError> {
                 self.inner.fetch_file_at_ref(url, refname, path)
             }
-            fn set_remote_url(
-                &self,
-                dest: &Path,
-                remote: &str,
-                url: &str,
-            ) -> Result<(), GitError> {
-                self.scrubs
-                    .lock()
-                    .unwrap()
-                    .push((dest.to_path_buf(), remote.to_string(), url.to_string()));
+            fn set_remote_url(&self, dest: &Path, remote: &str, url: &str) -> Result<(), GitError> {
+                self.scrubs.lock().unwrap().push((
+                    dest.to_path_buf(),
+                    remote.to_string(),
+                    url.to_string(),
+                ));
                 Ok(())
             }
         }
@@ -1774,7 +1778,11 @@ mod tests {
         )
         .unwrap();
         let urls = r.package_urls(PackageKind::Flow, "internal");
-        assert_eq!(urls.len(), 1, "single-package URL list should have one entry");
+        assert_eq!(
+            urls.len(),
+            1,
+            "single-package URL list should have one entry"
+        );
         assert_eq!(urls[0], "https://github.com/me/flow-internal");
     }
 
@@ -1782,12 +1790,7 @@ mod tests {
     fn package_repo_url_name_only_naming() {
         let cache = tempdir().unwrap();
         let fake = Arc::new(FakeBackend::default());
-        let r = registry_with(
-            cache.path(),
-            "git@host:org",
-            NamingConvention::Name,
-            fake,
-        );
+        let r = registry_with(cache.path(), "git@host:org", NamingConvention::Name, fake);
         assert_eq!(
             r.package_repo_url(PackageKind::Flow, "wal"),
             "git@host:org/wal.git"
@@ -2120,7 +2123,10 @@ mod tests {
         let v = semver::Version::parse("0.1.0").unwrap();
         let manifest = r.fetch_dep_manifest(PackageKind::Flow, "wal", &v).unwrap();
         assert_eq!(manifest.require_package().unwrap().name, "wal");
-        assert_eq!(manifest.require_package().unwrap().version.to_string(), "0.1.0");
+        assert_eq!(
+            manifest.require_package().unwrap().version.to_string(),
+            "0.1.0"
+        );
         // Critically: no clone was triggered for this manifest read.
         assert_eq!(fake.bootstrap_count(), 0);
         assert_eq!(fake.update_count(), 0);
@@ -2229,7 +2235,10 @@ mod tests {
 
         // Bootstrap was attempted twice: primary (fail) + mirror (ok).
         assert_eq!(fake.bootstrap_count(), 2);
-        assert_eq!(fake.bootstrap_urls(), vec![primary_url.to_string(), mirror_url.to_string()]);
+        assert_eq!(
+            fake.bootstrap_urls(),
+            vec![primary_url.to_string(), mirror_url.to_string()]
+        );
     }
 
     #[test]
@@ -2505,8 +2514,7 @@ mod tests {
             fake.clone(),
         );
 
-        let bogus_pin =
-            "sha256:0000000000000000000000000000000000000000000000000000000000000000";
+        let bogus_pin = "sha256:0000000000000000000000000000000000000000000000000000000000000000";
         let p = PackageRef::parse("flow:wal@0.1.0").unwrap();
         let resolved = r.resolve(&p).unwrap();
         let cached = r
@@ -2551,7 +2559,8 @@ mod tests {
             fake.clone(),
         );
 
-        r.refresh_package(PackageKind::Flow, "wal", "v0.1.0").unwrap();
+        r.refresh_package(PackageKind::Flow, "wal", "v0.1.0")
+            .unwrap();
 
         // Primary (fail) + mirror (succeed).
         assert_eq!(
@@ -2584,12 +2593,7 @@ mod tests {
         // ArchiveUnsupported. Build a dedicated backend variant.
         struct NoArchiveBackend(Arc<FakeBackend>);
         impl GitBackend for NoArchiveBackend {
-            fn bootstrap(
-                &self,
-                url: &str,
-                refname: &str,
-                dest: &Path,
-            ) -> Result<(), GitError> {
+            fn bootstrap(&self, url: &str, refname: &str, dest: &Path) -> Result<(), GitError> {
                 self.0.bootstrap(url, refname, dest)
             }
             fn update(&self, dest: &Path, refname: &str) -> Result<(), GitError> {

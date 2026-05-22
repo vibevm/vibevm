@@ -18,7 +18,7 @@ use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result, bail};
 use dialoguer::Confirm;
-use vibe_core::manifest::{Lockfile, LockedPackage, Manifest, SourceKind};
+use vibe_core::manifest::{LockedPackage, Lockfile, Manifest, SourceKind};
 use vibe_core::{PackageRef, VersionSpec};
 use vibe_registry::CachedPackage;
 use vibe_workspace::Workspace;
@@ -246,7 +246,11 @@ fn locked_package(
         via_redirect: cached.via_redirect.clone(),
         features: old.map(|o| o.features.clone()).unwrap_or_default(),
         subskills_active: old.map(|o| o.subskills_active.clone()).unwrap_or_default(),
-        describes: cached.package_meta().describes.as_ref().map(|p| p.to_string()),
+        describes: cached
+            .package_meta()
+            .describes
+            .as_ref()
+            .map(|p| p.to_string()),
         language: old.and_then(|o| o.language.clone()),
     }
 }

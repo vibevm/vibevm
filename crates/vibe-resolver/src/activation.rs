@@ -75,8 +75,7 @@ pub fn evaluate(
 ) -> ActivationOutcome {
     let mut channels: Vec<&'static str> = Vec::new();
 
-    if !rules.if_present.is_empty()
-        && rules.if_present.iter().any(|tag| ctx.present.contains(tag))
+    if !rules.if_present.is_empty() && rules.if_present.iter().any(|tag| ctx.present.contains(tag))
     {
         channels.push("if_present");
     }
@@ -94,11 +93,7 @@ pub fn evaluate(
     {
         channels.push("if_files");
     }
-    if !rules.if_command.is_empty()
-        && rules
-            .if_command
-            .iter()
-            .any(|c| command_resolves_on_path(c))
+    if !rules.if_command.is_empty() && rules.if_command.iter().any(|c| command_resolves_on_path(c))
     {
         channels.push("if_command");
     }
@@ -150,12 +145,7 @@ fn any_file_matches(root: &Path, patterns: &[String]) -> bool {
             let name = e.file_name().to_string_lossy();
             !matches!(
                 name.as_ref(),
-                ".git"
-                    | "node_modules"
-                    | "target"
-                    | ".tessl"
-                    | ".vibe"
-                    | "refs"
+                ".git" | "node_modules" | "target" | ".tessl" | ".vibe" | "refs"
             )
         })
     {
@@ -317,10 +307,7 @@ mod glob_match {
         fn matches_double_star_glob() {
             assert!(glob_match("**/Cargo.toml", "Cargo.toml"));
             assert!(glob_match("**/Cargo.toml", "subdir/Cargo.toml"));
-            assert!(glob_match(
-                "**/Cargo.toml",
-                "deep/nested/path/Cargo.toml"
-            ));
+            assert!(glob_match("**/Cargo.toml", "deep/nested/path/Cargo.toml"));
             assert!(!glob_match("**/Cargo.toml", "Cargo.lock"));
         }
 

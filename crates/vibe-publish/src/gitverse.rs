@@ -201,14 +201,13 @@ impl RepoCreator for GitVerseCreator {
             // Prefer SSH for clone URL since contributors typically have
             // SSH keys configured against the host. Fall back to HTTPS if
             // the host omitted SSH.
-            let clone_url = parsed
-                .ssh_url
-                .or(parsed.clone_url)
-                .ok_or_else(|| PublishError::UnexpectedResponse {
+            let clone_url = parsed.ssh_url.or(parsed.clone_url).ok_or_else(|| {
+                PublishError::UnexpectedResponse {
                     host: self.host_name.clone(),
                     status: status.as_u16(),
                     body: "create-repo response missing both ssh_url and clone_url".to_string(),
-                })?;
+                }
+            })?;
             let html_url = parsed
                 .html_url
                 .unwrap_or_else(|| clone_url.trim_end_matches(".git").to_string());

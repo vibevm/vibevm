@@ -80,7 +80,10 @@ fn emit_report(
             .map(|f| CheckJsonFinding {
                 check: f.check.as_str(),
                 severity: f.severity.as_str(),
-                path: f.path.as_ref().map(|p| p.to_string_lossy().replace('\\', "/")),
+                path: f
+                    .path
+                    .as_ref()
+                    .map(|p| p.to_string_lossy().replace('\\', "/")),
                 line: f.line,
                 message: f.message.as_str(),
             })
