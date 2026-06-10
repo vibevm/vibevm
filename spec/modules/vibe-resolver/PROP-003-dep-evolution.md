@@ -409,9 +409,9 @@ flow:migration-discipline = "^0.1"
 
 #### The predicate grammar {#req-conditional-grammar}
 
-`req r1`
+`req r2`
 
-The `context(...)` predicate accepts the same `if_present` / `if_provides` / `if_files` / `if_command` / `if_env` / `if_describes_match` / `if_language` probes from §2.5.2, plus boolean composition (`and`, `or`, `not`).
+The `context(...)` predicate accepts the same `if_present` / `if_provides` / `if_files` / `if_command` / `if_env` / `if_describes_match` / `if_language` probes from §2.5.2, plus boolean composition (`and`, `or`, `not`). Probe keys are matched case-sensitively.
 
 #### When to use which {#design-conditional-when-to-use}
 

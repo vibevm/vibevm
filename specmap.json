@@ -207,7 +207,7 @@
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-grammar",
       "verb": "implements",
-      "pinned_r": 1
+      "pinned_r": 2
     },
     {
       "file": "crates/vibe-resolver/src/conditional.rs",
@@ -225,7 +225,7 @@
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-grammar",
       "verb": "implements",
-      "pinned_r": 1
+      "pinned_r": 2
     },
     {
       "file": "crates/vibe-resolver/src/conditional.rs",
@@ -262,7 +262,7 @@
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-grammar",
       "verb": "verifies",
-      "pinned_r": 1
+      "pinned_r": 2
     },
     {
       "file": "crates/vibe-resolver/src/conditional.rs",
@@ -271,7 +271,7 @@
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-grammar",
       "verb": "verifies",
-      "pinned_r": 1
+      "pinned_r": 2
     },
     {
       "file": "crates/vibe-resolver/src/conditional.rs",
@@ -280,7 +280,7 @@
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-grammar",
       "verb": "verifies",
-      "pinned_r": 1
+      "pinned_r": 2
     },
     {
       "file": "crates/vibe-resolver/src/conditional.rs",
@@ -289,7 +289,7 @@
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-grammar",
       "verb": "verifies",
-      "pinned_r": 1
+      "pinned_r": 2
     }
   ],
   "schema": 2,
@@ -1914,7 +1914,7 @@
       "line": 410,
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-grammar",
       "kind": "req",
-      "revision": 1
+      "revision": 2
     },
     {
       "anchor": "design-conditional-when-to-use",

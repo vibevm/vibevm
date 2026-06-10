@@ -22,7 +22,7 @@ use crate::ActivationContext;
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[spec(
     implements = "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-grammar",
-    r = 1
+    r = 2
 )]
 pub enum ConditionalPredicate {
     /// `context(<key>)` — matches if `<key>` is in `ctx.present` (or
@@ -36,7 +36,7 @@ impl ConditionalPredicate {
     /// - leading / trailing whitespace
     #[spec(
         implements = "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-grammar",
-        r = 1
+        r = 2
     )]
     #[spec(
         deviates = "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-composition",
@@ -98,7 +98,7 @@ mod tests {
     #[test]
     #[verifies(
         "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-grammar",
-        r = 1
+        r = 2
     )]
     fn parses_simple_present_predicate() {
         let p = ConditionalPredicate::parse("context(stack:rust)").unwrap();
@@ -108,7 +108,7 @@ mod tests {
     #[test]
     #[verifies(
         "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-grammar",
-        r = 1
+        r = 2
     )]
     fn parses_with_whitespace() {
         let p = ConditionalPredicate::parse("  context( interface:foo )  ").unwrap();
@@ -118,7 +118,7 @@ mod tests {
     #[test]
     #[verifies(
         "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-grammar",
-        r = 1
+        r = 2
     )]
     fn rejects_malformed() {
         assert!(matches!(
@@ -134,7 +134,7 @@ mod tests {
     #[test]
     #[verifies(
         "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-grammar",
-        r = 1
+        r = 2
     )]
     fn flags_unsupported_richer_forms() {
         assert!(matches!(
