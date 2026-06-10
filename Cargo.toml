@@ -16,6 +16,8 @@ members = [
     "crates/specmark-grammar",
     "crates/specmark",
     "crates/specmap-core",
+    "crates/conform-core",
+    "crates/conform-frontend-rust",
     "xtask",
 ]
 default-members = [
@@ -64,9 +66,11 @@ vibe-workspace = { path = "crates/vibe-workspace", version = "0.1.0-dev" }
 specmark-grammar = { path = "crates/specmark-grammar", version = "0.1.0-dev" }
 specmark = { path = "crates/specmark", version = "0.1.0-dev" }
 specmap-core = { path = "crates/specmap-core", version = "0.1.0-dev" }
+conform-core = { path = "crates/conform-core", version = "0.1.0-dev" }
+conform-frontend-rust = { path = "crates/conform-frontend-rust", version = "0.1.0-dev" }
 
 # Third-party (all permissive licenses — PROP-000 §3)
-syn = { version = "2", features = ["full"] }
+syn = { version = "2", features = ["full", "visit"] }
 quote = "1"
 proc-macro2 = { version = "1", features = ["span-locations"] }
 anyhow = "1"

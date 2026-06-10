@@ -286,6 +286,31 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1d07550c9036bf2ae0c684c4297d503f838287c83c53686d05370d0e139ae570"
 
 [[package]]
+name = "conform-core"
+version = "0.1.0-dev"
+dependencies = [
+ "anyhow",
+ "serde",
+ "serde_json",
+ "sha2",
+ "specmark",
+ "tempfile",
+ "walkdir",
+]
+
+[[package]]
+name = "conform-frontend-rust"
+version = "0.1.0-dev"
+dependencies = [
+ "conform-core",
+ "proc-macro2",
+ "quote",
+ "specmark",
+ "syn",
+ "tempfile",
+]
+
+[[package]]
 name = "console"
 version = "0.16.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2750,6 +2775,8 @@ version = "0.1.0-dev"
 dependencies = [
  "anyhow",
  "clap",
+ "conform-core",
+ "conform-frontend-rust",
  "serde_json",
  "specmap-core",
  "walkdir",
