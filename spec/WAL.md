@@ -1,14 +1,87 @@
 # WAL — Project Continuation State
-_Updated: 2026-06-10, session-end checkpoint (the Big Refactoring on branch `new`: Phases −1 / 0 / 1 of the terraform playbook DONE incl. the drift drill; Phase 2 staged — mining done, the crate sweep deliberately left for a fresh context. Cold-resume: `CONTINUE.md`. Prior state: M1.19 qualified naming SHIPPED 2026-05-22; PROP-013 established.)_
+_Updated: 2026-06-10, terraform COMPLETE checkpoint (the Big Refactoring: ALL phases of PLAYBOOK-TERRAFORM-VIBEVM-v0.2 executed — −1/0/1/2/3/4/5/6 — owner-declared complete, `new` merged to `main`. Close-out report: [`terraform/REPORT.md`](../terraform/REPORT.md). Cold-resume: `CONTINUE.md`. Prior state: M1.19 qualified naming SHIPPED 2026-05-22; PROP-013 established.)_
 
 ## Current phase
 
-**BRANCH POLICY — the Big Refactoring lives on branch `new` (2026-06-10).**
-A large refactoring is underway. Branch **`new`** — cut from `main` @
-`99c63de` — carries every commit of that effort; `main` receives nothing
-until the refactoring is declared complete and `new` merges back. Any
-session that boots while this notice stands must `git checkout new` before
-touching code. Retire this block at the merge checkpoint.
+**THE BIG REFACTORING IS COMPLETE — branch policy retired (2026-06-10).**
+The owner declared the refactoring complete in-session («рефакторинг
+завершен, все фазы PLAYBOOK-TERRAFORM-VIBEVM выполнены»); `new` merged
+back to `main` with `--no-ff` at the merge checkpoint this entry
+records. The branch-isolation notice that stood here is retired per its
+own instruction; `new` is retained (merged, not deleted — the
+`m1.17-workspace` precedent).
+
+**The terraform in one breath.** Phases −1/0/1 (inventory, tooling
+skeleton, pilot + drift drill) closed earlier the same day — their
+detail stands below unedited. This checkpoint adds Phases 2–6:
+
+- **Phase 2 — backfill `vibe-resolver`: DONE.** 54 proposals
+  (`terraform/specmap-proposals.json`), every one owner-APPROVED in
+  conversation; six per-module affirmation commits; the freshly-built
+  **orphan ratchet** (`specmap-ratchet.json` + the gate inside
+  `cargo xtask specmap --check`) caught the one item the sweep missed
+  (PRP-0054, PredicateError). Three deviates edges record the honest
+  gaps at their seams: resolvo-primary absent (DBT-0011),
+  `pin_preferences` absent, `if_os` unprobed. Coverage of the crate's
+  ratified non-disputed req units: grammar + host-invariance
+  implemented-and-verified; fixpoint stays an explained zero from this
+  crate (the re-solve loop lives in workspace orchestration —
+  pilot judgment call 2, owner-upheld); `composition` is `planned` and
+  reported separately.
+- **Phase 3 — cells v0: DONE.** `#[cell(...)]` manifests (new
+  specmark attribute + shared grammar) on NaiveDepSolver and the real
+  DepProvider pair (local-registry / multi-registry — the playbook's
+  "next real seam pair", SatDepSolver not being in tree); the
+  cell-selection registry `crates/vibe-cli/src/registry.rs` (R-001 —
+  the ONLY module reading selection flags; flags are data with
+  provenance, birth, sunset); a **hermetic differential oracle**
+  driving both provider cells over real bare `file://` git
+  repositories to the same resolved graph — simultaneously the first
+  brick of the AUDIT P1 git harness; interim `conform-lite` lints.
+- **Phase 4 — conform engine MVP: DONE.** `conform-core` +
+  `conform-frontend-rust` (syn T-syn): fact model, content-addressed
+  store keyed `(file content-hash, producer)` under `target/conform/`
+  (a 1-file diff re-extracts exactly 1 file — proven by producer-log
+  test), rules-as-queries, byte-stable SARIF, ratchet baseline
+  `conform-baseline.json` (six pre-existing unsafe findings frozen;
+  the file may only shrink). Gate: `cargo xtask conform check
+  [--scope …]`; conform-lite retired. Scope `crates/vibe-resolver`:
+  0 findings.
+- **Phase 5 — ledger MVP: DONE, local only.** `.ledger/` (git-ignored)
+  holds the interpretations class; facts class = the conform store,
+  proven epoch-immune. `cargo xtask trace explain --prose`: epoch-keyed
+  cache (epoch = H(Cargo.lock, vibe.lock, wire schema, discipline
+  README, rustc)), provenance line on every render, telemetry counters.
+  Producer is a deterministic template — no LLM in the path.
+- **Phase 6 — expansion + reconciliation + report: DONE.** Scope-grade
+  backfill: 98 modules gained `specmark::scope!` edges sourced from
+  their own module-doc PROP citations; ratchet exemptions 15 → 8 (each
+  with a recorded reason), gated orphans 538 → 0 with 6 dispositioned
+  under the new **DBT-0019** (vibe-core error/timestamp/values have no
+  scannable home until `VIBEVM-SPEC.md` is unit-ified). Intent
+  reconciliation: **0 unaccounted** of 31 (3 done / 27 rescoped /
+  1 rejected — the CI matrix, no-CI being a standing Rule-4 owner
+  decision). Instrumented category-C audit appended to `AUDIT.md`
+  (AUD-0014..0017). **`terraform/REPORT.md` delivered** — phase
+  ledger, metrics vs BASELINE, the eight-item honest list feeding the
+  package v0.2.
+
+**Gate panel at the merge** (all green): `cargo xtask specmap --check`
+— 489 spec units / 170 tagged items / 177 edges / 0 suspects / six
+known pin-into-unmarked warnings; orphan ratchet 0 gated, 6
+dispositioned, 8 reasoned exemptions; `cargo xtask conform check` —
+0 new findings (6 frozen); `cargo xtask test-gate` — 1075 results,
+0 failed, 3 skipped, xfail-strict; golden characterization
+byte-identical; full `tools/self-check.sh` green (fmt, tests, clippy
+-D warnings, `vibe check` 0/0/0).
+
+**Owner inputs that remain open after the terraform:** the PROP-010
+design session (INT-0003); the SAT solver (DBT-0011 — now visible as
+deviates edges at the seam); the next full PROP-013 audit window
+(INT-0001); `VIBEVM-SPEC.md` unit-ification (DBT-0019 — unblocks
+vibe-cli's item-grain backfill); the discipline-package v0.2 revision
+fed by REPORT.md; the pending PROP-014 amendment for external
+read-only namespaces (`misra://`, spec/neworder/README).
 
 **The Big Refactoring = the Discipline terraform pilot (2026-06-10).** The
 owner directed execution of [`spec/neworder/PLAYBOOK-TERRAFORM-VIBEVM-v0.2.md`](neworder/PLAYBOOK-TERRAFORM-VIBEVM-v0.2.md)
@@ -87,21 +160,16 @@ full `self-check.sh` green. Tripwire on the change set: DBT-0011 fired
 (`touch:crates/vibe-resolver/**`) — addressed: tags only, solver debt
 untouched.
 
-**Phase 2 — backfill `vibe-resolver`: STARTED (2026-06-10), staged for
-the next session.** The latent-corpus mining is done (4 of 106
-`spec://`-citing commits touched the resolver) and the crate surface is
-surveyed — both results are written into `CONTINUE.md` §"Phase 2
-staging data" so the sweep does not redo them. The sweep itself
-(`terraform/specmap-proposals.json`, proposals only, ≤3 edges/item,
-evidence quotes from both sides) was deliberately left whole for a
-fresh context window. After the proposals: the owner APPROVE pass in
-conversation (hard gate per PROP-014 §2.7), then the affirmation
-commits, then the ratchet decision. Also this leg: the owner dropped
-three C++ guides + README updates into `spec/neworder/` — committed
-`630ba3b` (the DBT-0016 tripwire watch caught them again); README now
-records a pending PROP-014 amendment (external read-only `misra://`
-namespaces) for a later phase. Owner inputs still pending: the pilot's
-three judgment calls (PHASE1-PILOT.md §1) and the Phase 0 CI decision.
+**Phase 2 — backfill `vibe-resolver`: superseded by the COMPLETE
+checkpoint above.** (This slot held the "STARTED, staged for the next
+session" notice; the staged sweep ran and the phase closed the same
+day — see the Current-phase block and `terraform/REPORT.md`. The
+mid-session owner drops continued through the close-out: after the
+three C++ guides (`630ba3b`), the session committed Go, four Java
+guides, and Kotlin the moment the DBT-0016 watch surfaced them. The
+pilot's three judgment calls were upheld by the owner's blanket
+APPROVE; the CI decision stays with the owner — INT-0017 rejected
+accordingly.)
 
 **M1.19 — qualified package naming (PROP-008): SHIPPED 2026-05-22, under MFBT.** The qualified-naming refactor — [PROP-008](modules/vibe-registry/PROP-008-qualified-naming.md), design lore in [`spec/design/workspace-and-qualified-naming.md`](design/workspace-and-qualified-naming.md) — is **complete**: all eight phases on `main`, `bash tools/self-check.sh` green on all four steps. Exhaustive per-phase detail is in `CHANGELOG.md`'s M1.19 block and PROP-008 §7.
 
