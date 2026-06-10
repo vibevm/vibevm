@@ -54,13 +54,13 @@ Escape hatch for legitimate mirror-vs-upstream divergence (e.g. during an upstre
 name   = "vibespecs"
 url    = "git@gitverse.ru:vibespecs"
 ref    = "main"                              # registry-level metadata ref (reserved; not used today)
-naming = "kind-name"
+naming = "fqdn"
 ```
 
 - `name` — local alias, used in lockfile `registry` field and in `[[override]]` / `[[mirror]]` targeting.
 - `url` — **organization root URL**, not a package repo URL. A registry is a hosting-org; packages are children of it.
 - `ref` — reserved for a future registry-level metadata branch (e.g. capability index, trust policy). Not consumed today.
-- `naming` — convention for mapping a pkgref to a package repo name under this org. Values: `"kind-name"` (default — `flow:wal` → `<org>/flow-wal`), `"name"` (if kind-name collisions are impossible in a given registry), `"kind/name"` (for hosts supporting nested repos). Other registries may ship with different conventions; the setting is per-registry, not global.
+- `naming` — convention for mapping a pkgref to a package repo name under this org. Values: `"fqdn"` (**default** — `org.vibevm/wal` → `<org>/org.vibevm.wal`; introduced and made the default by [PROP-008 §2.5](PROP-008-qualified-naming.md#repo-naming), shipped M1.19), `"kind-name"` (legacy — `flow:wal` → `<org>/flow-wal`; the default this section originally declared, superseded by PROP-008), `"name"` (if name collisions are impossible in a given registry), `"kind/name"` (for hosts supporting nested repos). Other registries may ship with different conventions; the setting is per-registry, not global.
 
 Resolution: the solver iterates registries in array order; the first that has a satisfying match for a pkgref wins. Versions of the same pkgref are **not** unioned across registries — this prevents a lower-trust registry from influencing resolve when a higher-trust one already has a valid answer.
 
@@ -670,6 +670,6 @@ None blocking Phase A. Parking lot:
 
 - **Registry-level metadata ref.** `[[registry]] ref = "main"` is reserved for a future capability index / trust policy branch at the org level. Design deferred until use case emerges (likely Phase B or M2).
 - **Cross-registry content-hash cache.** Today each `(registry, kind, name, version)` gets its own cache entry. If two registries mirror the same content (same content_hash), the second fetch does redundant work. Optimization — Phase B.
-- **Registry-level naming beyond `kind-name` / `name` / `kind/name`.** Real-world adopters may want custom mappings (e.g. `pkg-<kind>-<name>`). If that arises, `naming` becomes a template string. Not speculative engineering today — react to first real request.
+- **Registry-level naming beyond `fqdn` / `kind-name` / `name` / `kind/name`.** Real-world adopters may want custom mappings (e.g. `pkg-<kind>-<name>`). If that arises, `naming` becomes a template string. Not speculative engineering today — react to first real request.
 - **Solver-level lockfile verification.** The lockfile records `solver = "resolvo-<ver>"`. Should `vibe install --verify-solver` re-run resolution and assert the graph matches the lockfile? Useful audit tool. Phase B.
 - **JTD codegen ergonomics on Windows.** `jtd-codegen` is a Go binary; we vendor it project-local. Whether the experience is clean enough to not require PATH tinkering will be answered during the tooling commit.
