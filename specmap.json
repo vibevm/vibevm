@@ -3323,6 +3323,96 @@
     {
       "anchor": "baseline",
       "content_hash": "",
+      "doc_path": "neworder/GUIDE-GO-v0.1",
+      "file": "spec/neworder/GUIDE-GO-v0.1.md",
+      "heading": "0. Language baseline",
+      "line": 11,
+      "uri": "spec://vibevm/neworder/GUIDE-GO-v0.1#baseline"
+    },
+    {
+      "anchor": "cells",
+      "content_hash": "",
+      "doc_path": "neworder/GUIDE-GO-v0.1",
+      "file": "spec/neworder/GUIDE-GO-v0.1.md",
+      "heading": "1. Cells",
+      "line": 21,
+      "uri": "spec://vibevm/neworder/GUIDE-GO-v0.1#cells"
+    },
+    {
+      "anchor": "seams",
+      "content_hash": "",
+      "doc_path": "neworder/GUIDE-GO-v0.1",
+      "file": "spec/neworder/GUIDE-GO-v0.1.md",
+      "heading": "2. Seams",
+      "line": 43,
+      "uri": "spec://vibevm/neworder/GUIDE-GO-v0.1#seams"
+    },
+    {
+      "anchor": "flags",
+      "content_hash": "",
+      "doc_path": "neworder/GUIDE-GO-v0.1",
+      "file": "spec/neworder/GUIDE-GO-v0.1.md",
+      "heading": "3. Registry and flags",
+      "line": 50,
+      "uri": "spec://vibevm/neworder/GUIDE-GO-v0.1#flags"
+    },
+    {
+      "anchor": "errors",
+      "content_hash": "",
+      "doc_path": "neworder/GUIDE-GO-v0.1",
+      "file": "spec/neworder/GUIDE-GO-v0.1.md",
+      "heading": "4. Errors as contract",
+      "line": 71,
+      "uri": "spec://vibevm/neworder/GUIDE-GO-v0.1#errors"
+    },
+    {
+      "anchor": "specmark",
+      "content_hash": "",
+      "doc_path": "neworder/GUIDE-GO-v0.1",
+      "file": "spec/neworder/GUIDE-GO-v0.1.md",
+      "heading": "5. specmark carrier",
+      "line": 102,
+      "uri": "spec://vibevm/neworder/GUIDE-GO-v0.1#specmark"
+    },
+    {
+      "anchor": "naming",
+      "content_hash": "",
+      "doc_path": "neworder/GUIDE-GO-v0.1",
+      "file": "spec/neworder/GUIDE-GO-v0.1.md",
+      "heading": "6. Naming (R-020/R-021 bindings)",
+      "line": 115,
+      "uri": "spec://vibevm/neworder/GUIDE-GO-v0.1#naming"
+    },
+    {
+      "anchor": "replacement",
+      "content_hash": "",
+      "doc_path": "neworder/GUIDE-GO-v0.1",
+      "file": "spec/neworder/GUIDE-GO-v0.1.md",
+      "heading": "7. Replacement protocol (R-040 binding)",
+      "line": 120,
+      "uri": "spec://vibevm/neworder/GUIDE-GO-v0.1#replacement"
+    },
+    {
+      "anchor": "risks",
+      "content_hash": "",
+      "doc_path": "neworder/GUIDE-GO-v0.1",
+      "file": "spec/neworder/GUIDE-GO-v0.1.md",
+      "heading": "8. Risk table (what conform must cover for Go)",
+      "line": 124,
+      "uri": "spec://vibevm/neworder/GUIDE-GO-v0.1#risks"
+    },
+    {
+      "anchor": "docs",
+      "content_hash": "",
+      "doc_path": "neworder/GUIDE-GO-v0.1",
+      "file": "spec/neworder/GUIDE-GO-v0.1.md",
+      "heading": "9. Doc layer",
+      "line": 145,
+      "uri": "spec://vibevm/neworder/GUIDE-GO-v0.1#docs"
+    },
+    {
+      "anchor": "baseline",
+      "content_hash": "",
       "doc_path": "neworder/GUIDE-PYTHON-v0.1",
       "file": "spec/neworder/GUIDE-PYTHON-v0.1.md",
       "heading": "0. Language baseline",

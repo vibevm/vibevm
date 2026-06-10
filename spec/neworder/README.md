@@ -20,6 +20,7 @@ The complete document set required to begin terraforming vibevm: turning an AI-a
 | `GUIDE-CPP-TRADITIONAL-v0.1.md` | product / T2 guide (profile) | C++14 old-believer subset: no exceptions/RTTI, ABC seams, vendored Result, `-Werror=switch` exhaustiveness | beta |
 | `GUIDE-CPP-MODERN-v0.1.md` | product / T2 guide (profile) | C++23 three-major subset: concept seams, `std::expected`, `constinit` import-purity, variant exhaustiveness | beta |
 | `GUIDE-CPP-MISRA2008-v0.1.md` | product / T2 guide (profile) | MISRA C++:2008 corpus + Compliance:2020 operationalized: GRP/GEP/deviations/permits/GCS via conform & registries | beta |
+| `GUIDE-GO-v0.1.md` | product / T2 guide | Go bindings: gap closure (closed error sets, loud conformance, owned goroutines, init ban), directive carrier, native buildinfo release map | beta |
 | `ENGINE-CONFORM-v0.1.md` | product / T3 | Cross-language conformance engine: escalation tiers, compiler frontends, fact store, SARIF | beta |
 | `LEDGER-INTENT-v0.1.md` | product / T3 mechanism | Intent ledger: memoized understanding, fact vs interpretation classes, epochs, release slice | beta |
 | `PLAYBOOK-TERRAFORM-VIBEVM-v0.2.md` | carrier-specific | The operative plan Claude Code executes inside the vibevm repo; inventory, phases, gates, stop conditions | beta |
