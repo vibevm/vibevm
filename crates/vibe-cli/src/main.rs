@@ -15,6 +15,7 @@ mod cli;
 mod commands;
 mod exit_code;
 mod output;
+mod registry;
 
 use cli::{Cli, Command};
 use exit_code::as_exit_code;
