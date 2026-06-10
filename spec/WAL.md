@@ -1,7 +1,15 @@
 # WAL — Project Continuation State
-_Updated: 2026-05-23 (M1.19 qualified naming SHIPPED 2026-05-22; the canonical GitHub `vibespecs` registry org migrated to the `fqdn` shape; PROP-013 — the periodic health audit — established, seed inventory in `AUDIT.md`. Next: the first full audit run + PROP-010 (local package cache).)_
+_Updated: 2026-06-10 (the Big Refactoring begins — all work moves to branch `new` until it completes. Prior state: M1.19 qualified naming SHIPPED 2026-05-22; the canonical GitHub `vibespecs` registry org migrated to the `fqdn` shape; PROP-013 — the periodic health audit — established, seed inventory in `AUDIT.md`.)_
 
 ## Current phase
+
+**BRANCH POLICY — the Big Refactoring lives on branch `new` (2026-06-10).**
+A large refactoring is underway (scope to be recorded here as it is
+designed). Branch **`new`** — cut from `main` @ `99c63de` — carries every
+commit of that effort; `main` receives nothing until the refactoring is
+declared complete and `new` merges back. Any session that boots while this
+notice stands must `git checkout new` before touching code. Retire this
+block at the merge checkpoint.
 
 **M1.19 — qualified package naming (PROP-008): SHIPPED 2026-05-22, under MFBT.** The qualified-naming refactor — [PROP-008](modules/vibe-registry/PROP-008-qualified-naming.md), design lore in [`spec/design/workspace-and-qualified-naming.md`](design/workspace-and-qualified-naming.md) — is **complete**: all eight phases on `main`, `bash tools/self-check.sh` green on all four steps. Exhaustive per-phase detail is in `CHANGELOG.md`'s M1.19 block and PROP-008 §7.
 
