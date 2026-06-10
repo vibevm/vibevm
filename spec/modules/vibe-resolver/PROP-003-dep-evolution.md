@@ -407,13 +407,35 @@ flow:container-best-practices = "^0.1"
 flow:migration-discipline = "^0.1"
 ```
 
+#### The predicate grammar {#req-conditional-grammar}
+
+`req r1`
+
 The `context(...)` predicate accepts the same `if_present` / `if_provides` / `if_files` / `if_command` / `if_env` / `if_describes_match` / `if_language` probes from §2.5.2, plus boolean composition (`and`, `or`, `not`).
+
+#### When to use which {#design-conditional-when-to-use}
+
+`design r1`
 
 **When to use which.** Subskills are *content shaped to context* — files inside a package. Conditional deps are *packages shaped to context* — entire packages added to the graph or not. Choose subskills when the content lives naturally inside an existing package; choose conditional deps when bringing in a separately-versioned, separately-authored package makes more sense.
 
+#### Conditional dependencies resolve to a fixed point {#req-conditional-fixpoint}
+
+`req r1`
+
 **Solver impact.** Conditional deps are evaluated **after** the static SAT solve has run on unconditional deps (otherwise the solver doesn't know which probes will fire). The flow: solve unconditional → evaluate `[target.<...>.dependencies]` predicates → add new requirements → re-solve. Convergence guaranteed in finite steps because each pass only adds requirements, never relaxes them; libsolv handles the incremental rule addition cleanly.
 
+#### Predicate evaluation is host-invariant {#req-conditional-host-invariance}
+
+`req r1`
+
 **Cargo's resolution-stability lesson.** Cargo's `cfg`-based conditional deps were originally per-target evaluated at solve time, which produced different lockfiles per host triple. vibevm's `context(...)` is evaluated against the **resolved project state**, not host state — so the lockfile is host-invariant for the same project state. Build-host machine differences (e.g. `cargo` available or not) are explicitly out of scope; if the user wants those, they declare project-level capabilities.
+
+#### Boolean composition over predicates {#req-conditional-composition}
+
+`req r1 planned`
+
+Predicates compose with `and` / `or` / `not` over the §2.5.2 probe set. Unbuilt today: the shipped parser surfaces every composition form as `PredicateError::Unsupported` rather than misparsing it — see the recorded `deviates` in `crates/vibe-resolver/src/conditional.rs`.
 
 ### 2.7 Internationalization (i18n) — multi-language package content {#i18n}
 

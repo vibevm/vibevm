@@ -204,13 +204,14 @@ pub fn classify_drift(old: &Specmap, new: &Specmap) -> Vec<String> {
             continue;
         };
         if old_rev == new_rev {
-            if old_hash != new_hash {
-                let rev = new_rev
-                    .map(|n| format!("r{n}"))
-                    .unwrap_or_else(|| "—".into());
+            // A unit with no revision line has no revision discipline
+            // to audit yet — hash movement there is plain text churn.
+            if old_hash != new_hash
+                && let Some(rev) = new_rev
+            {
                 lines.push(format!(
                     "unbumped-hash: `{uri}` content changed while the revision stayed \
-                     at {rev} — editorial, or forgot to bump? (bump `r`, or mark the \
+                     at r{rev} — editorial, or forgot to bump? (bump `r`, or mark the \
                      commit body `spec-editorial: {anchor}`)"
                 ));
             }

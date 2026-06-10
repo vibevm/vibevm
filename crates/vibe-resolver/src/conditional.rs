@@ -13,12 +13,17 @@
 //! slices and surface here as `PredicateError::Unsupported` so the
 //! manifest parses but the unmatched runtime form is loud.
 
+use specmark::spec;
 use thiserror::Error;
 
 use crate::ActivationContext;
 
 /// Parsed conditional-dep predicate.
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[spec(
+    implements = "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-grammar",
+    r = 1
+)]
 pub enum ConditionalPredicate {
     /// `context(<key>)` — matches if `<key>` is in `ctx.present` (or
     /// `ctx.provides` for `interface:` tags).
@@ -29,6 +34,17 @@ impl ConditionalPredicate {
     /// Parse a predicate string from the TOML key. Accepts:
     /// - `context(<key>)` exact match
     /// - leading / trailing whitespace
+    #[spec(
+        implements = "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-grammar",
+        r = 1
+    )]
+    #[spec(
+        deviates = "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-composition",
+        r = 1,
+        reason = "boolean composition (`and`/`or`/`not`) intentionally unimplemented; \
+                  every composition form surfaces as PredicateError::Unsupported, \
+                  pending the PROP-014 pilot decision"
+    )]
     pub fn parse(raw: &str) -> Result<Self, PredicateError> {
         let s = raw.trim();
         let inner = s
@@ -49,6 +65,10 @@ impl ConditionalPredicate {
 
     /// Evaluate against an activation context. Returns `true` if the
     /// predicate matches.
+    #[spec(
+        implements = "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-host-invariance",
+        r = 1
+    )]
     pub fn evaluate(&self, ctx: &ActivationContext) -> bool {
         match self {
             ConditionalPredicate::Present(key) => {
@@ -71,21 +91,35 @@ pub enum PredicateError {
 
 #[cfg(test)]
 mod tests {
+    use specmark::verifies;
+
     use super::*;
 
     #[test]
+    #[verifies(
+        "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-grammar",
+        r = 1
+    )]
     fn parses_simple_present_predicate() {
         let p = ConditionalPredicate::parse("context(stack:rust)").unwrap();
         assert_eq!(p, ConditionalPredicate::Present("stack:rust".into()));
     }
 
     #[test]
+    #[verifies(
+        "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-grammar",
+        r = 1
+    )]
     fn parses_with_whitespace() {
         let p = ConditionalPredicate::parse("  context( interface:foo )  ").unwrap();
         assert_eq!(p, ConditionalPredicate::Present("interface:foo".into()));
     }
 
     #[test]
+    #[verifies(
+        "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-grammar",
+        r = 1
+    )]
     fn rejects_malformed() {
         assert!(matches!(
             ConditionalPredicate::parse("stack:rust"),
@@ -98,6 +132,10 @@ mod tests {
     }
 
     #[test]
+    #[verifies(
+        "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-grammar",
+        r = 1
+    )]
     fn flags_unsupported_richer_forms() {
         assert!(matches!(
             ConditionalPredicate::parse("context(if_files = '**/Cargo.toml')"),
@@ -110,6 +148,10 @@ mod tests {
     }
 
     #[test]
+    #[verifies(
+        "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-host-invariance",
+        r = 1
+    )]
     fn evaluates_against_present() {
         let p = ConditionalPredicate::Present("stack:rust".into());
         let mut ctx = ActivationContext::default();
@@ -119,6 +161,10 @@ mod tests {
     }
 
     #[test]
+    #[verifies(
+        "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-host-invariance",
+        r = 1
+    )]
     fn evaluates_against_provides() {
         let p = ConditionalPredicate::Present("interface:build-system".into());
         let mut ctx = ActivationContext::default();

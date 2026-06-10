@@ -55,6 +55,69 @@
       "item_kind": "fn",
       "line": 61,
       "symbol": "specmark::tests::usage::verifies_without_pin_compiles_and_runs"
+    },
+    {
+      "crate_name": "vibe-resolver",
+      "file": "crates/vibe-resolver/src/conditional.rs",
+      "item_kind": "enum",
+      "line": 21,
+      "symbol": "vibe_resolver::conditional::ConditionalPredicate"
+    },
+    {
+      "crate_name": "vibe-resolver",
+      "file": "crates/vibe-resolver/src/conditional.rs",
+      "item_kind": "fn",
+      "line": 66,
+      "symbol": "vibe_resolver::conditional::ConditionalPredicate::evaluate"
+    },
+    {
+      "crate_name": "vibe-resolver",
+      "file": "crates/vibe-resolver/src/conditional.rs",
+      "item_kind": "fn",
+      "line": 34,
+      "symbol": "vibe_resolver::conditional::ConditionalPredicate::parse"
+    },
+    {
+      "crate_name": "vibe-resolver",
+      "file": "crates/vibe-resolver/src/conditional.rs",
+      "item_kind": "fn",
+      "line": 150,
+      "symbol": "vibe_resolver::conditional::tests::evaluates_against_present"
+    },
+    {
+      "crate_name": "vibe-resolver",
+      "file": "crates/vibe-resolver/src/conditional.rs",
+      "item_kind": "fn",
+      "line": 163,
+      "symbol": "vibe_resolver::conditional::tests::evaluates_against_provides"
+    },
+    {
+      "crate_name": "vibe-resolver",
+      "file": "crates/vibe-resolver/src/conditional.rs",
+      "item_kind": "fn",
+      "line": 134,
+      "symbol": "vibe_resolver::conditional::tests::flags_unsupported_richer_forms"
+    },
+    {
+      "crate_name": "vibe-resolver",
+      "file": "crates/vibe-resolver/src/conditional.rs",
+      "item_kind": "fn",
+      "line": 98,
+      "symbol": "vibe_resolver::conditional::tests::parses_simple_present_predicate"
+    },
+    {
+      "crate_name": "vibe-resolver",
+      "file": "crates/vibe-resolver/src/conditional.rs",
+      "item_kind": "fn",
+      "line": 108,
+      "symbol": "vibe_resolver::conditional::tests::parses_with_whitespace"
+    },
+    {
+      "crate_name": "vibe-resolver",
+      "file": "crates/vibe-resolver/src/conditional.rs",
+      "item_kind": "fn",
+      "line": 118,
+      "symbol": "vibe_resolver::conditional::tests::rejects_malformed"
     }
   ],
   "edges": [
@@ -136,6 +199,97 @@
       "provenance": "authored",
       "uri": "spec://vibevm/neworder/PROP-014#addressing-code",
       "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-resolver/src/conditional.rs",
+      "from_symbol": "vibe_resolver::conditional::ConditionalPredicate",
+      "line": 23,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-grammar",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-resolver/src/conditional.rs",
+      "from_symbol": "vibe_resolver::conditional::ConditionalPredicate::evaluate",
+      "line": 68,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-host-invariance",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-resolver/src/conditional.rs",
+      "from_symbol": "vibe_resolver::conditional::ConditionalPredicate::parse",
+      "line": 37,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-grammar",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-resolver/src/conditional.rs",
+      "from_symbol": "vibe_resolver::conditional::ConditionalPredicate::parse",
+      "line": 41,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-composition",
+      "verb": "deviates",
+      "pinned_r": 1,
+      "reason": "boolean composition (`and`/`or`/`not`) intentionally unimplemented; every composition form surfaces as PredicateError::Unsupported, pending the PROP-014 pilot decision"
+    },
+    {
+      "file": "crates/vibe-resolver/src/conditional.rs",
+      "from_symbol": "vibe_resolver::conditional::tests::evaluates_against_present",
+      "line": 151,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-host-invariance",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-resolver/src/conditional.rs",
+      "from_symbol": "vibe_resolver::conditional::tests::evaluates_against_provides",
+      "line": 164,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-host-invariance",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-resolver/src/conditional.rs",
+      "from_symbol": "vibe_resolver::conditional::tests::flags_unsupported_richer_forms",
+      "line": 135,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-grammar",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-resolver/src/conditional.rs",
+      "from_symbol": "vibe_resolver::conditional::tests::parses_simple_present_predicate",
+      "line": 99,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-grammar",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-resolver/src/conditional.rs",
+      "from_symbol": "vibe_resolver::conditional::tests::parses_with_whitespace",
+      "line": 109,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-grammar",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-resolver/src/conditional.rs",
+      "from_symbol": "vibe_resolver::conditional::tests::rejects_malformed",
+      "line": 119,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-grammar",
+      "verb": "verifies",
+      "pinned_r": 1
     }
   ],
   "schema": 2,
@@ -1752,12 +1906,68 @@
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#conditional-deps"
     },
     {
+      "anchor": "req-conditional-grammar",
+      "content_hash": "",
+      "doc_path": "modules/vibe-resolver/PROP-003",
+      "file": "spec/modules/vibe-resolver/PROP-003-dep-evolution.md",
+      "heading": "The predicate grammar",
+      "line": 410,
+      "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-grammar",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "design-conditional-when-to-use",
+      "content_hash": "",
+      "doc_path": "modules/vibe-resolver/PROP-003",
+      "file": "spec/modules/vibe-resolver/PROP-003-dep-evolution.md",
+      "heading": "When to use which",
+      "line": 416,
+      "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#design-conditional-when-to-use",
+      "kind": "design",
+      "revision": 1
+    },
+    {
+      "anchor": "req-conditional-fixpoint",
+      "content_hash": "",
+      "doc_path": "modules/vibe-resolver/PROP-003",
+      "file": "spec/modules/vibe-resolver/PROP-003-dep-evolution.md",
+      "heading": "Conditional dependencies resolve to a fixed point",
+      "line": 422,
+      "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-fixpoint",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "req-conditional-host-invariance",
+      "content_hash": "",
+      "doc_path": "modules/vibe-resolver/PROP-003",
+      "file": "spec/modules/vibe-resolver/PROP-003-dep-evolution.md",
+      "heading": "Predicate evaluation is host-invariant",
+      "line": 428,
+      "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-host-invariance",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "req-conditional-composition",
+      "content_hash": "",
+      "doc_path": "modules/vibe-resolver/PROP-003",
+      "file": "spec/modules/vibe-resolver/PROP-003-dep-evolution.md",
+      "heading": "Boolean composition over predicates",
+      "line": 434,
+      "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-composition",
+      "kind": "req",
+      "revision": 1,
+      "status": "planned"
+    },
+    {
       "anchor": "i18n",
       "content_hash": "",
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "spec/modules/vibe-resolver/PROP-003-dep-evolution.md",
       "heading": "2.7 Internationalization (i18n) — multi-language package content",
-      "line": 418,
+      "line": 440,
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#i18n"
     },
     {
@@ -1766,7 +1976,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "spec/modules/vibe-resolver/PROP-003-dep-evolution.md",
       "heading": "2.7.1 File naming — the chosen pattern",
-      "line": 422,
+      "line": 444,
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#i18n-naming"
     },
     {
@@ -1775,7 +1985,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "spec/modules/vibe-resolver/PROP-003-dep-evolution.md",
       "heading": "2.7.2 Language preference resolution — fallback chain",
-      "line": 451,
+      "line": 473,
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#i18n-fallback"
     },
     {
@@ -1784,7 +1994,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "spec/modules/vibe-resolver/PROP-003-dep-evolution.md",
       "heading": "2.7.3 Language preference declarations — three layers",
-      "line": 462,
+      "line": 484,
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#i18n-prefs"
     },
     {
@@ -1793,7 +2003,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "spec/modules/vibe-resolver/PROP-003-dep-evolution.md",
       "heading": "2.7.4 Manifest-field translation (short strings)",
-      "line": 484,
+      "line": 506,
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#i18n-fields"
     },
     {
@@ -1802,7 +2012,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "spec/modules/vibe-resolver/PROP-003-dep-evolution.md",
       "heading": "2.7.5 Lockfile impact",
-      "line": 519,
+      "line": 541,
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#i18n-lockfile"
     },
     {
@@ -1811,7 +2021,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "spec/modules/vibe-resolver/PROP-003-dep-evolution.md",
       "heading": "2.8 Manifest schema additions — the consolidated picture",
-      "line": 532,
+      "line": 554,
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#manifest"
     },
     {
@@ -1820,7 +2030,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "spec/modules/vibe-resolver/PROP-003-dep-evolution.md",
       "heading": "2.9 Lockfile schema impact (v3)",
-      "line": 601,
+      "line": 623,
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#lockfile-v3"
     },
     {
@@ -1829,7 +2039,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "spec/modules/vibe-resolver/PROP-003-dep-evolution.md",
       "heading": "2.10 CLI surface — additions and adjustments",
-      "line": 644,
+      "line": 666,
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#cli"
     },
     {
@@ -1838,7 +2048,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "spec/modules/vibe-resolver/PROP-003-dep-evolution.md",
       "heading": "2.11 Migration path from `NaiveDepSolver`",
-      "line": 664,
+      "line": 686,
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#migration"
     },
     {
@@ -1847,7 +2057,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "spec/modules/vibe-resolver/PROP-003-dep-evolution.md",
       "heading": "3. SAT solver algorithm details",
-      "line": 678,
+      "line": 700,
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#algorithm"
     },
     {
@@ -1856,7 +2066,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "spec/modules/vibe-resolver/PROP-003-dep-evolution.md",
       "heading": "3.1 Rule encoding — vibevm concepts → libsolv rules",
-      "line": 680,
+      "line": 702,
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#rule-encoding"
     },
     {
@@ -1865,7 +2075,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "spec/modules/vibe-resolver/PROP-003-dep-evolution.md",
       "heading": "3.2 Solver phases",
-      "line": 703,
+      "line": 725,
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#solver-phases"
     },
     {
@@ -1874,7 +2084,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "spec/modules/vibe-resolver/PROP-003-dep-evolution.md",
       "heading": "3.3 Determinism",
-      "line": 715,
+      "line": 737,
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#determinism"
     },
     {
@@ -1883,7 +2093,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "spec/modules/vibe-resolver/PROP-003-dep-evolution.md",
       "heading": "3.4 Performance envelope",
-      "line": 719,
+      "line": 741,
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#perf"
     },
     {
@@ -1892,7 +2102,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "spec/modules/vibe-resolver/PROP-003-dep-evolution.md",
       "heading": "4. Rejected alternatives",
-      "line": 725,
+      "line": 747,
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#rejected"
     },
     {
@@ -1901,7 +2111,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "spec/modules/vibe-resolver/PROP-003-dep-evolution.md",
       "heading": "5. Out of scope for this PROP",
-      "line": 761,
+      "line": 783,
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#out-of-scope"
     },
     {
@@ -1910,7 +2120,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "spec/modules/vibe-resolver/PROP-003-dep-evolution.md",
       "heading": "6. Phases / staging plan",
-      "line": 769,
+      "line": 791,
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#phases"
     },
     {
@@ -1919,7 +2129,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "spec/modules/vibe-resolver/PROP-003-dep-evolution.md",
       "heading": "7. Open questions",
-      "line": 820,
+      "line": 842,
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#open"
     },
     {
@@ -1928,7 +2138,7 @@
       "doc_path": "modules/vibe-resolver/PROP-003",
       "file": "spec/modules/vibe-resolver/PROP-003-dep-evolution.md",
       "heading": "8. References",
-      "line": 833,
+      "line": 855,
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#references"
     },
     {
