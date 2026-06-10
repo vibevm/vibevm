@@ -13,6 +13,9 @@ members = [
     "crates/vibe-publish",
     "crates/vibe-wire",
     "crates/vibe-workspace",
+    "crates/specmark-grammar",
+    "crates/specmark",
+    "crates/specmap-core",
     "xtask",
 ]
 default-members = [
@@ -28,6 +31,9 @@ default-members = [
     "crates/vibe-publish",
     "crates/vibe-wire",
     "crates/vibe-workspace",
+    "crates/specmark-grammar",
+    "crates/specmark",
+    "crates/specmap-core",
 ]
 
 [workspace.package]
@@ -55,8 +61,14 @@ vibe-check = { path = "crates/vibe-check", version = "0.1.0-dev" }
 vibe-publish = { path = "crates/vibe-publish", version = "0.1.0-dev" }
 vibe-wire = { path = "crates/vibe-wire", version = "0.1.0-dev" }
 vibe-workspace = { path = "crates/vibe-workspace", version = "0.1.0-dev" }
+specmark-grammar = { path = "crates/specmark-grammar", version = "0.1.0-dev" }
+specmark = { path = "crates/specmark", version = "0.1.0-dev" }
+specmap-core = { path = "crates/specmap-core", version = "0.1.0-dev" }
 
 # Third-party (all permissive licenses — PROP-000 §3)
+syn = { version = "2", features = ["full"] }
+quote = "1"
+proc-macro2 = { version = "1", features = ["span-locations"] }
 anyhow = "1"
 thiserror = "2"
 serde = { version = "1", features = ["derive"] }

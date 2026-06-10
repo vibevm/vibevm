@@ -1525,6 +1525,43 @@ dependencies = [
 ]
 
 [[package]]
+name = "specmap-core"
+version = "0.1.0-dev"
+dependencies = [
+ "anyhow",
+ "glob",
+ "proc-macro2",
+ "quote",
+ "serde",
+ "serde_json",
+ "sha2",
+ "specmark-grammar",
+ "syn",
+ "tempfile",
+ "vibe-wire",
+ "walkdir",
+]
+
+[[package]]
+name = "specmark"
+version = "0.1.0-dev"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "specmark-grammar",
+ "syn",
+]
+
+[[package]]
+name = "specmark-grammar"
+version = "0.1.0-dev"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
+]
+
+[[package]]
 name = "stable_deref_trait"
 version = "1.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2712,6 +2749,7 @@ version = "0.1.0-dev"
 dependencies = [
  "anyhow",
  "clap",
+ "specmap-core",
 ]
 
 [[package]]
