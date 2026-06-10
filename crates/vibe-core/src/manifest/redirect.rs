@@ -12,6 +12,8 @@
 //! the same repo at the same ref — both present is rejected as
 //! `AmbiguousStub`.
 
+specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-002#redirect");
+
 use std::path::Path;
 
 use serde::{Deserialize, Serialize};

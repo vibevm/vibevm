@@ -26,6 +26,7 @@
 //! duration of a filesystem walk.
 
 #![forbid(unsafe_code)]
+specmark::scope!("spec://vibevm/modules/vibe-workspace/PROP-007#nesting");
 
 use std::collections::{BTreeMap, HashMap, HashSet};
 use std::path::{Path, PathBuf};

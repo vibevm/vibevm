@@ -8,6 +8,8 @@
 //! Activation rules and a delivery mode (eager / lazy-push / lazy-pull)
 //! decide *whether* and *how* the subskill's content reaches the agent.
 
+specmark::scope!("spec://vibevm/modules/vibe-resolver/PROP-003#subskills");
+
 use std::path::{Path, PathBuf};
 
 use serde::{Deserialize, Serialize};

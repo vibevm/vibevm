@@ -10,6 +10,8 @@
 //! exists, and host-unreachable each produce a distinct
 //! [`crate::PublishError`] variant.
 
+specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-002#publish");
+
 use std::path::Path;
 use std::process::{Command, Output};
 

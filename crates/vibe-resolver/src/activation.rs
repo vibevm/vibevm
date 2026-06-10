@@ -16,12 +16,14 @@
 use std::collections::BTreeSet;
 use std::path::Path;
 
+use specmark::spec;
 use vibe_core::manifest::ActivationRules;
 
 /// Snapshot of project / machine state used to evaluate context probes.
 /// Built once per `vibe install` invocation; re-used across every
 /// candidate subskill.
 #[derive(Debug, Clone, Default)]
+#[spec(implements = "spec://vibevm/modules/vibe-resolver/PROP-003#subskill-activation")]
 pub struct ActivationContext {
     /// Capabilities and pkgrefs present in the resolved graph.
     /// Examples: `flow:wal`, `stack:rust`, `capability:wal-protocol`.
@@ -55,6 +57,7 @@ impl ActivationContext {
 /// Outcome of evaluating one subskill's activation rules. `Active`
 /// carries the channels that fired (for diagnostic output).
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[spec(implements = "spec://vibevm/modules/vibe-resolver/PROP-003#subskill-activation")]
 pub struct ActivationOutcome {
     pub active: bool,
     pub channels_matched: Vec<&'static str>,
@@ -68,6 +71,14 @@ pub struct ActivationOutcome {
 /// here. `subskill_describes_type` is the lowercased PURL type of the
 /// subskill's own `describes` field (if any) — used by
 /// `if_describes_match`.
+#[spec(implements = "spec://vibevm/modules/vibe-resolver/PROP-003#subskill-activation")]
+#[spec(
+    deviates = "spec://vibevm/modules/vibe-resolver/PROP-003#subskill-activation",
+    reason = "the §2.5.2 `if_os` channel is not probed here: the spec reserves it as \
+              schema-only, \"inert until the activation engine is built\" — the engine \
+              now exists and the probe is still unimplemented; recorded per the owner \
+              APPROVE of PRP-0042 so the gap stays visible"
+)]
 pub fn evaluate(
     rules: &ActivationRules,
     ctx: &ActivationContext,
@@ -335,9 +346,12 @@ mod glob_match {
 mod tests {
     use std::fs;
 
+    use specmark::verifies;
+
     use super::*;
 
     #[test]
+    #[verifies("spec://vibevm/modules/vibe-resolver/PROP-003#subskill-activation")]
     fn empty_rules_inactive() {
         let rules = ActivationRules::default();
         let ctx = ActivationContext::default();
@@ -347,6 +361,7 @@ mod tests {
     }
 
     #[test]
+    #[verifies("spec://vibevm/modules/vibe-resolver/PROP-003#subskill-activation")]
     fn if_present_match() {
         let rules = ActivationRules {
             if_present: vec!["stack:rust".into()],
@@ -371,6 +386,7 @@ mod tests {
     }
 
     #[test]
+    #[verifies("spec://vibevm/modules/vibe-resolver/PROP-003#subskill-activation")]
     fn if_provides_match() {
         let rules = ActivationRules {
             if_provides: vec!["interface:build-system".into()],
@@ -384,6 +400,7 @@ mod tests {
     }
 
     #[test]
+    #[verifies("spec://vibevm/modules/vibe-resolver/PROP-003#subskill-activation")]
     fn if_files_match_via_glob() {
         let tmp = tempfile::tempdir().unwrap();
         fs::create_dir_all(tmp.path().join("src")).unwrap();
@@ -418,6 +435,7 @@ mod tests {
     }
 
     #[test]
+    #[verifies("spec://vibevm/modules/vibe-resolver/PROP-003#subskill-activation")]
     fn if_describes_match_uses_subskill_type() {
         let rules = ActivationRules {
             if_describes_match: true,
@@ -442,6 +460,7 @@ mod tests {
     }
 
     #[test]
+    #[verifies("spec://vibevm/modules/vibe-resolver/PROP-003#subskill-activation")]
     fn if_language_match() {
         let rules = ActivationRules {
             if_language: vec!["ru".into()],
@@ -456,6 +475,7 @@ mod tests {
     }
 
     #[test]
+    #[verifies("spec://vibevm/modules/vibe-resolver/PROP-003#subskill-activation")]
     fn multiple_channels_compose() {
         let rules = ActivationRules {
             if_present: vec!["stack:rust".into()],

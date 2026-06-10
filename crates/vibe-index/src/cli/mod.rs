@@ -3,6 +3,8 @@
 //! against the full dispatch shape, so every subcommand renders help
 //! and parses its arguments whatever the caller does next.
 
+specmark::scope!("spec://vibevm/modules/vibe-index/PROP-005#root");
+
 use clap::{Parser, Subcommand};
 
 use crate::error::Result;

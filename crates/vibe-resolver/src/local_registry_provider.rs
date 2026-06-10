@@ -5,6 +5,7 @@
 
 use std::path::PathBuf;
 
+use specmark::{cell, spec};
 use vibe_core::manifest::Manifest;
 use vibe_core::{Group, PackageRef};
 use vibe_registry::{LocalRegistry, RegistryError};
@@ -12,6 +13,8 @@ use vibe_registry::{LocalRegistry, RegistryError};
 use crate::{DepProvider, DepProviderError};
 
 /// `DepProvider` impl backed by a [`LocalRegistry`].
+#[cell(seam = "DepProvider", variant = "local-registry", flag = "provider")]
+#[spec(implements = "spec://vibevm/modules/vibe-registry/PROP-002#solver")]
 pub struct LocalRegistryProvider<'a> {
     registry: &'a LocalRegistry,
 }

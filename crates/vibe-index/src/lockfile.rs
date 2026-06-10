@@ -3,6 +3,8 @@
 //! `[[package]]` is consumed (PROP-008 §2.2); every other field is
 //! parsed tolerantly via `#[serde(flatten)]` into a catch-all.
 
+specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-008#identity");
+
 use std::path::Path;
 
 use semver::Version;

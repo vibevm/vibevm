@@ -25,6 +25,8 @@
 //! `[conflicts]`, `[compatibility]`, `[boot_snippet]`, `[features]`,
 //! `[target.*]`) are meaningful only alongside `[package]`.
 
+specmark::scope!("spec://vibevm/modules/vibe-workspace/PROP-007#unified-manifest");
+
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 

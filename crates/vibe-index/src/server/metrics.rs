@@ -2,6 +2,8 @@
 //! prometheus crate for slice 5; the surface is small enough to roll
 //! by hand and keep the dep tree minimal.
 
+specmark::scope!("spec://vibevm/modules/vibe-index/PROP-005#root");
+
 use std::sync::atomic::Ordering;
 use std::time::Duration;
 

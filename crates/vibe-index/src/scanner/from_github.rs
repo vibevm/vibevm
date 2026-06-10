@@ -9,6 +9,8 @@
 //! (matches the discipline `vibe-publish::github` follows for HTTPS
 //! token-auth pushes — token never appears in logs or process output).
 
+specmark::scope!("spec://vibevm/modules/vibe-index/PROP-005#reindex");
+
 use std::path::PathBuf;
 use std::process::Command;
 use std::time::Duration;

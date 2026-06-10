@@ -3,6 +3,8 @@
 //! source (walks a local org-dir of git clones). `--from-github`
 //! lands in slice 8.
 
+specmark::scope!("spec://vibevm/modules/vibe-index/PROP-005#root");
+
 use std::path::PathBuf;
 
 use chrono::Utc;

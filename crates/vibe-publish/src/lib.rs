@@ -24,6 +24,7 @@
 //! to drive every branch without hitting the network.
 
 #![forbid(unsafe_code)]
+specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-002#publish");
 
 use std::path::PathBuf;
 

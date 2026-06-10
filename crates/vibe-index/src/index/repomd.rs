@@ -2,6 +2,8 @@
 //! batch update so a reader chasing hashes always sees consistent
 //! files.
 
+specmark::scope!("spec://vibevm/modules/vibe-index/PROP-005#root");
+
 use std::fs;
 use std::path::Path;
 

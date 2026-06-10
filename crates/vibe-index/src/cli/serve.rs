@@ -1,5 +1,7 @@
 //! `vibe-index serve <data-dir>` — boot the HTTP server.
 
+specmark::scope!("spec://vibevm/modules/vibe-index/PROP-005#root");
+
 use std::net::SocketAddr;
 use std::path::PathBuf;
 

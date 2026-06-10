@@ -15,6 +15,7 @@
 //! [prop]: ../../../spec/modules/vibe-index/PROP-005-package-index.md
 
 #![forbid(unsafe_code)]
+specmark::scope!("spec://vibevm/modules/vibe-index/PROP-005#root");
 
 pub mod cli;
 pub mod content_hash;

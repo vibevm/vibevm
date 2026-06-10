@@ -1,6 +1,8 @@
 //! `vibe-index init <data-dir>` — initialise an empty index data
 //! directory.
 
+specmark::scope!("spec://vibevm/modules/vibe-index/PROP-005#root");
+
 use std::path::PathBuf;
 
 use clap::Parser;

@@ -2,6 +2,8 @@
 //! server is the single writer; the on-disk shape stays consistent
 //! with the in-RAM state at every batch update.
 
+specmark::scope!("spec://vibevm/modules/vibe-index/PROP-005#root");
+
 use std::sync::Arc;
 
 use axum::body::Body;

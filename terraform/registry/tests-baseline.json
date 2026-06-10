@@ -1,0 +1,29 @@
+{
+  "schema": 1,
+  "scope": "cargo nextest run --workspace --no-fail-fast",
+  "semantics": "xfail-strict (BROWNFIELD-PROTOCOL v0.1 §4): a test absent from `entries` is expected to pass; `failing-known` entries are expected to fail (or stay quarantined); an unexpectedly-passing entry must be promoted via the explicit protocol (PLAYBOOK v0.2 §7.2), never silently.",
+  "note": "Run totals and runner version are recorded in terraform/BASELINE.md; this file carries only the exception list, so it stays byte-stable as passing tests are added.",
+  "entries": [
+    {
+      "test": "vibe-cli::cli_live_e2e install_github_smoke_alone",
+      "status": "failing-known",
+      "quarantine": "#[ignore = \"live: hits github.com\"] — excluded from the hermetic gate; red when run live against the partially-migrated test orgs",
+      "since": "2026-05-23",
+      "debt": "DBT-0002"
+    },
+    {
+      "test": "vibe-cli::cli_live_e2e install_gitverse_smoke_alone",
+      "status": "failing-known",
+      "quarantine": "#[ignore = \"live: hits gitverse.ru\"] — excluded from the hermetic gate; red when run live against the partially-migrated test orgs",
+      "since": "2026-05-23",
+      "debt": "DBT-0002"
+    },
+    {
+      "test": "vibe-cli::cli_live_e2e cross_registry_resolution_routes_each_package_to_correct_host",
+      "status": "failing-known",
+      "quarantine": "#[ignore = \"live: hits github.com + gitverse.ru\"] — excluded from the hermetic gate; red when run live against the partially-migrated test orgs",
+      "since": "2026-05-23",
+      "debt": "DBT-0002"
+    }
+  ]
+}

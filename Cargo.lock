@@ -286,6 +286,31 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1d07550c9036bf2ae0c684c4297d503f838287c83c53686d05370d0e139ae570"
 
 [[package]]
+name = "conform-core"
+version = "0.1.0-dev"
+dependencies = [
+ "anyhow",
+ "serde",
+ "serde_json",
+ "sha2",
+ "specmark",
+ "tempfile",
+ "walkdir",
+]
+
+[[package]]
+name = "conform-frontend-rust"
+version = "0.1.0-dev"
+dependencies = [
+ "conform-core",
+ "proc-macro2",
+ "quote",
+ "specmark",
+ "syn",
+ "tempfile",
+]
+
+[[package]]
 name = "console"
 version = "0.16.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1525,6 +1550,44 @@ dependencies = [
 ]
 
 [[package]]
+name = "specmap-core"
+version = "0.1.0-dev"
+dependencies = [
+ "anyhow",
+ "glob",
+ "proc-macro2",
+ "quote",
+ "serde",
+ "serde_json",
+ "sha2",
+ "specmark",
+ "specmark-grammar",
+ "syn",
+ "tempfile",
+ "vibe-wire",
+ "walkdir",
+]
+
+[[package]]
+name = "specmark"
+version = "0.1.0-dev"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "specmark-grammar",
+ "syn",
+]
+
+[[package]]
+name = "specmark-grammar"
+version = "0.1.0-dev"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
+]
+
+[[package]]
 name = "stable_deref_trait"
 version = "1.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1941,6 +2004,7 @@ name = "vibe-check"
 version = "0.1.0-dev"
 dependencies = [
  "anyhow",
+ "specmark",
  "tempfile",
  "thiserror 2.0.18",
  "vibe-core",
@@ -1993,6 +2057,7 @@ dependencies = [
  "serde",
  "serde_json",
  "sha2",
+ "specmark",
  "tempfile",
  "thiserror 2.0.18",
  "toml",
@@ -2026,6 +2091,7 @@ dependencies = [
  "serde",
  "serde_json",
  "sha2",
+ "specmark",
  "tempfile",
  "thiserror 2.0.18",
  "tokio",
@@ -2072,6 +2138,7 @@ dependencies = [
  "semver",
  "serde",
  "serde_json",
+ "specmark",
  "tempfile",
  "thiserror 2.0.18",
  "tokio",
@@ -2093,6 +2160,7 @@ dependencies = [
  "serde",
  "serde_json",
  "sha2",
+ "specmark",
  "tempfile",
  "thiserror 2.0.18",
  "tokio",
@@ -2107,6 +2175,7 @@ name = "vibe-resolver"
 version = "0.1.0-dev"
 dependencies = [
  "semver",
+ "specmark",
  "tempfile",
  "thiserror 2.0.18",
  "toml",
@@ -2131,6 +2200,7 @@ dependencies = [
  "glob",
  "semver",
  "serde",
+ "specmark",
  "tempfile",
  "thiserror 2.0.18",
  "toml",
@@ -2712,6 +2782,11 @@ version = "0.1.0-dev"
 dependencies = [
  "anyhow",
  "clap",
+ "conform-core",
+ "conform-frontend-rust",
+ "serde_json",
+ "specmap-core",
+ "walkdir",
 ]
 
 [[package]]

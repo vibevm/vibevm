@@ -11,6 +11,7 @@ homepage.workspace = true
 description = "Workspace discovery and the multi-package member model for vibevm"
 
 [dependencies]
+specmark.workspace = true
 thiserror.workspace = true
 glob.workspace = true
 semver.workspace = true

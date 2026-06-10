@@ -9,6 +9,8 @@
 //! enumerated, so a compromised index can at worst mislead the
 //! version selector — never substitute content.
 
+specmark::scope!("spec://vibevm/modules/vibe-index/PROP-005#http");
+
 use std::time::Duration;
 
 use semver::Version;

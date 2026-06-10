@@ -10,6 +10,8 @@
 //!
 //! [prop]: ../../../../../spec/modules/vibe-registry/PROP-001-git-backend.md
 
+specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-001#backend-trait");
+
 use std::path::Path;
 
 use thiserror::Error;

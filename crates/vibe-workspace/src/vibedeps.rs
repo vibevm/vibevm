@@ -19,6 +19,8 @@
 //! switch-over — a later PROP-009 phase — and removing the mirror path
 //! before `vibe install` is rebuilt on `vibedeps/` would break the build.
 
+specmark::scope!("spec://vibevm/modules/vibe-workspace/PROP-009#two-trees");
+
 use std::fs;
 use std::path::{Path, PathBuf};
 

@@ -2,6 +2,8 @@
 //! `RwLock`, a configuration snapshot, and per-process counters used
 //! by the `/metrics` endpoint.
 
+specmark::scope!("spec://vibevm/modules/vibe-index/PROP-005#root");
+
 use std::path::PathBuf;
 use std::sync::atomic::{AtomicU64, Ordering};
 use std::time::Instant;

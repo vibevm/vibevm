@@ -4,6 +4,8 @@
 //! §2.2): the path shape is `/v1/packages/{group}/{name}[/{version}]`.
 //! `kind` is metadata and never keys a route.
 
+specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-008#index-ext");
+
 use std::sync::Arc;
 
 use axum::Json;

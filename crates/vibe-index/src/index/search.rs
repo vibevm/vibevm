@@ -8,6 +8,8 @@
 //! lexicographic order. Good enough for the indexed scale targeted by
 //! slice 4 (≤ 10k packages); a tantivy-backed upgrade is a v1 lever.
 
+specmark::scope!("spec://vibevm/modules/vibe-index/PROP-005#root");
+
 use std::collections::{BTreeMap, BTreeSet};
 
 use vibe_core::Group;

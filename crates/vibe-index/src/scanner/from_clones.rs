@@ -9,6 +9,8 @@
 //! `tracing::warn!` but do not abort the scan — the operator gets a
 //! best-effort index even with one bad package in the mix.
 
+specmark::scope!("spec://vibevm/modules/vibe-index/PROP-005#root");
+
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 

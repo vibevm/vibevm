@@ -3,6 +3,8 @@
 //! Slice 5 lands the read surface; slice 6 adds the write surface
 //! (POST/DELETE) and bearer-token auth.
 
+specmark::scope!("spec://vibevm/modules/vibe-index/PROP-005#http");
+
 pub mod auth;
 pub mod error;
 pub mod lock;

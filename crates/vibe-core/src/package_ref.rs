@@ -3,6 +3,8 @@
 //!
 //! Spec: `VIBEVM-SPEC.md` §4.1, §7.1; PROP-008.
 
+specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-008#pkgref");
+
 use std::fmt;
 use std::str::FromStr;
 

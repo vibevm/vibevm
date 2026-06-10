@@ -3,6 +3,7 @@
 //! Single pass, no backtracking. See [`crate`] module docs for the
 //! pinned limitations and when to upgrade to a SAT-style solver.
 
+use specmark::{cell, spec};
 use vibe_core::manifest::Manifest;
 use vibe_core::{CapabilityRef, Group, PackageRef, VersionSpec};
 
@@ -26,6 +27,15 @@ fn require_group(pkgref: &PackageRef) -> Result<&Group, SolveError> {
 }
 
 /// DFS solver over a [`DepProvider`].
+#[cell(seam = "DepSolver", variant = "naive", flag = "solver")]
+#[spec(implements = "spec://vibevm/modules/vibe-resolver/PROP-003#solver-upgrade")]
+#[spec(
+    deviates = "spec://vibevm/modules/vibe-registry/PROP-002#solver",
+    reason = "PROP-002 §2.8 decides resolvo is the PRIMARY depsolver; no ResolvoSolver \
+              exists in tree and NaiveDepSolver is the only DepSolver impl — the known \
+              SAT/resolvo upgrade debt (DBT-0011), recorded honestly until the second \
+              impl lands"
+)]
 pub struct NaiveDepSolver<P: DepProvider> {
     provider: P,
 }
@@ -41,6 +51,8 @@ impl<P: DepProvider> NaiveDepSolver<P> {
 }
 
 impl<P: DepProvider> DepSolver for NaiveDepSolver<P> {
+    #[spec(implements = "spec://vibevm/modules/vibe-registry/PROP-002#lockfile")]
+    #[spec(implements = "spec://vibevm/modules/vibe-resolver/PROP-003#determinism")]
     fn solve(&self, roots: &[PackageRef]) -> Result<ResolvedGraph, SolveError> {
         let mut state = SolverState::new();
         let root_keys: Vec<(Group, String)> = roots
@@ -335,6 +347,8 @@ fn handle_disjunction(
 
 #[cfg(test)]
 mod tests {
+    use specmark::verifies;
+
     use super::*;
     use std::cell::RefCell;
     use std::collections::HashMap;
@@ -503,6 +517,7 @@ mod tests {
     }
 
     #[test]
+    #[verifies("spec://vibevm/modules/vibe-registry/PROP-002#capability")]
     fn detects_version_conflict_across_paths() {
         // Two roots: one wants ^0.1, the other wants ^0.2. Naive picks
         // the first root's version (0.1.5) and the second's constraint
@@ -527,6 +542,7 @@ mod tests {
     }
 
     #[test]
+    #[verifies("spec://vibevm/modules/vibe-registry/PROP-002#capability")]
     fn detects_conflicts_declaration() {
         // org.vibevm/ui declares conflicts with org.vibevm/legacy-wal; if
         // both are roots, solver refuses.
@@ -561,6 +577,7 @@ packages = ["org.vibevm/legacy-wal"]
     }
 
     #[test]
+    #[verifies("spec://vibevm/modules/vibe-registry/PROP-002#capability")]
     fn capability_requires_satisfied_by_already_seen_provider() {
         // Order matters: org.vibevm/rust provides ui:landing-page, then
         // org.vibevm/home requires it. Naive provider-then-consumer
@@ -600,6 +617,7 @@ capabilities = ["ui:landing-page@^0.3"]
     }
 
     #[test]
+    #[verifies("spec://vibevm/modules/vibe-registry/PROP-002#capability")]
     fn capability_requires_self_satisfaction() {
         // A package that both provides and requires the same capability
         // with the same exact version trivially satisfies itself.
@@ -626,6 +644,7 @@ capabilities = ["x:y@^0.1"]
     }
 
     #[test]
+    #[verifies("spec://vibevm/modules/vibe-registry/PROP-002#capability")]
     fn capability_requires_unmet_errors() {
         let m = r#"
 [package]
@@ -652,6 +671,7 @@ capabilities = ["ui:landing-page@^0.3"]
     }
 
     #[test]
+    #[verifies("spec://vibevm/modules/vibe-registry/PROP-002#failure-discriminator")]
     fn unknown_package_propagates() {
         let p = MapProvider::new();
         let solver = NaiveDepSolver::new(p);
@@ -665,6 +685,7 @@ capabilities = ["ui:landing-page@^0.3"]
     }
 
     #[test]
+    #[verifies("spec://vibevm/modules/vibe-registry/PROP-002#capability")]
     fn obsoletes_drops_obsolete_entry() {
         // root: org.vibevm/welcome-page that obsoletes
         // org.vibevm/welcome-page-legacy. legacy: standalone, also a root.
@@ -698,6 +719,7 @@ packages = ["org.vibevm/welcome-page-legacy"]
     }
 
     #[test]
+    #[verifies("spec://vibevm/modules/vibe-registry/PROP-002#capability")]
     fn requires_any_picks_first_alternative() {
         // org.vibevm/x requires_any [org.vibevm/a, org.vibevm/b]; only
         // org.vibevm/a available.
@@ -725,6 +747,7 @@ one_of = ["org.vibevm/a@^0.1", "org.vibevm/b@^0.1"]
     }
 
     #[test]
+    #[verifies("spec://vibevm/modules/vibe-registry/PROP-002#lockfile")]
     fn root_dependencies_marked() {
         let p = MapProvider::new();
         p.seed(
@@ -745,6 +768,7 @@ one_of = ["org.vibevm/a@^0.1", "org.vibevm/b@^0.1"]
     }
 
     #[test]
+    #[verifies("spec://vibevm/modules/vibe-registry/PROP-002#lockfile")]
     fn dependencies_are_exact_pinned_after_solve() {
         let p = MapProvider::new();
         p.seed(

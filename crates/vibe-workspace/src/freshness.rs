@@ -30,6 +30,8 @@
 //! slower). The fast path therefore triggers for the common case: a
 //! workspace whose `[requires]` is purely registry-resolved packages.
 
+specmark::scope!("spec://vibevm/modules/vibe-workspace/PROP-011#skip-resolution");
+
 use std::collections::HashSet;
 
 use vibe_core::manifest::{Lockfile, SourceKind};

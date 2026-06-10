@@ -4,6 +4,8 @@
 //! ScanResult<VersionEntry>>`] that the reindex command folds into
 //! the in-memory [`Index`](crate::index::Index).
 
+specmark::scope!("spec://vibevm/modules/vibe-index/PROP-005#root");
+
 pub mod from_clones;
 pub mod from_github;
 pub mod git_cli;

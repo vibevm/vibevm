@@ -10,4 +10,5 @@ pub mod install_report;
 pub mod list_report;
 pub mod registry_publish_report;
 pub mod registry_sync_report;
+pub mod specmap;
 pub mod uninstall_report;

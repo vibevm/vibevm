@@ -11,6 +11,8 @@
 //!    normalise `\` → `/`, hash `(rel || 0x00 || file_bytes || 0x00)`.
 //! 4. Final SHA-256, hex-encoded, prefixed with `"sha256:"`.
 
+specmark::scope!("spec://vibevm/modules/vibe-index/PROP-005#deps");
+
 use std::path::{Path, PathBuf};
 
 use sha2::{Digest, Sha256};

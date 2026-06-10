@@ -1,0 +1,40 @@
+{
+  "schema": 1,
+  "note": "The specmap orphan ratchet (PLAYBOOK #phase2, flipped 2026-06-10; expanded Phase 6 same day). A crate NOT listed in `exempt` is gated. Remaining exemptions and why: vibe-cli (half its modules have no PROP home until VIBEVM-SPEC.md is scanned/unit-ified \u2014 it lives at the repo root, outside spec/**), vibe-mcp (M1.7 surface, no module PROP), vibe-graph + vibe-llm (stub crates), vibe-wire (generated code \u2014 the JTD schema is the taggable unit), xtask (internal tooling binary), specmark + specmark-grammar (the tag bootstrap pair cannot depend on specmark to carry scope! markers \u2014 tagging them is a scanner-level feature, not a macro one).",
+  "exempt": [
+    "specmark",
+    "specmark-grammar",
+    "vibe-cli",
+    "vibe-graph",
+    "vibe-llm",
+    "vibe-mcp",
+    "vibe-wire",
+    "xtask"
+  ],
+  "dispositioned": [
+    {
+      "symbol": "vibe_core::error::Result",
+      "debt": "DBT-0019"
+    },
+    {
+      "symbol": "vibe_core::error::Error",
+      "debt": "DBT-0019"
+    },
+    {
+      "symbol": "vibe_core::timestamp::now_utc",
+      "debt": "DBT-0019"
+    },
+    {
+      "symbol": "vibe_core::timestamp::format_unix_utc",
+      "debt": "DBT-0019"
+    },
+    {
+      "symbol": "vibe_core::timestamp::parse_unix_utc",
+      "debt": "DBT-0019"
+    },
+    {
+      "symbol": "vibe_core::values::ValueTag",
+      "debt": "DBT-0019"
+    }
+  ]
+}

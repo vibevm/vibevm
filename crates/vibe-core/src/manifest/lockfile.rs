@@ -24,6 +24,8 @@
 //! One lockfile lives at the absolute root of a workspace (PROP-007 §2.4) —
 //! members never carry their own.
 
+specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-002#lockfile");
+
 use std::path::{Path, PathBuf};
 
 use serde::{Deserialize, Serialize};

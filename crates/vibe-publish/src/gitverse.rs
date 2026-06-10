@@ -29,6 +29,8 @@
 //! section. Recorded here for posterity — if GitVerse moves to a new
 //! major API version, this is the file to update first.
 
+specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-002#publish");
+
 use std::time::Duration;
 
 use serde::{Deserialize, Serialize};

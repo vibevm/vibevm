@@ -10,6 +10,7 @@
 //! Spec: `VIBEVM-SPEC.md` §4, §5.3, §7.
 
 #![forbid(unsafe_code)]
+specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-002#capability");
 
 pub mod capability_ref;
 pub mod error;

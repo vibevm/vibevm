@@ -34,6 +34,8 @@
 //! condition can only be honoured by the dynamic INCLUDE form, never by
 //! the verbatim `inline` lane or a direct `static` read.
 
+specmark::scope!("spec://vibevm/modules/vibe-workspace/PROP-009#effective-boot");
+
 use vibe_core::manifest::{BootCategory, LinkType, WhenCondition};
 use vibe_core::{Group, PackageKind};
 

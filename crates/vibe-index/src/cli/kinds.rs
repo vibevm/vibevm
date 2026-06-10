@@ -5,4 +5,6 @@
 //! cli-to-types import). CLI subcommand modules still reach for them
 //! through `crate::cli::kinds::*` for path-stability.
 
+specmark::scope!("spec://vibevm/modules/vibe-index/PROP-005#root");
+
 pub use crate::types::kinds::*;

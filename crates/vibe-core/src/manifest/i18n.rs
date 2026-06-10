@@ -17,6 +17,8 @@
 //! Resolution walks the fallback chain: exact tag → region-stripped tag →
 //! canonical (no language suffix) → hard error if even canonical missing.
 
+specmark::scope!("spec://vibevm/modules/vibe-resolver/PROP-003#i18n");
+
 use std::path::{Path, PathBuf};
 
 use serde::{Deserialize, Serialize};

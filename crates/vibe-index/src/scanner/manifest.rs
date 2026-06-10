@@ -15,6 +15,8 @@
 //! `vibe-core` originals do not derive. [`package_kind`] converts between
 //! the two with a total `match`.
 
+specmark::scope!("spec://vibevm/modules/vibe-index/PROP-005#root");
+
 use std::path::Path;
 
 use vibe_core::PackageKind as CorePackageKind;

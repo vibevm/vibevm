@@ -8,6 +8,8 @@
 //! workspace re-use, so we duplicate the relevant subset and let a
 //! parity test (slice 3) catch divergence at CI time.
 
+specmark::scope!("spec://vibevm/modules/vibe-index/PROP-005#root");
+
 pub mod entry;
 pub mod kinds;
 pub mod repomd;

@@ -38,6 +38,7 @@
 
 use std::collections::{HashMap, HashSet, VecDeque};
 
+use specmark::spec;
 use thiserror::Error;
 use vibe_core::manifest::Manifest;
 use vibe_core::{Group, PackageRef, VersionSpec};
@@ -64,6 +65,8 @@ pub use naive::NaiveDepSolver;
 
 /// One node in the resolved dependency graph.
 #[derive(Debug, Clone)]
+#[spec(implements = "spec://vibevm/modules/vibe-registry/PROP-008#identity")]
+#[spec(implements = "spec://vibevm/modules/vibe-registry/PROP-002#lockfile")]
 pub struct ResolvedNode {
     /// Reverse-FQDN group — half of the `(group, name)` identity tuple
     /// (PROP-008 §2.3). `kind` is pure metadata and is not carried here.
@@ -81,6 +84,7 @@ pub struct ResolvedNode {
 
 /// The full resolved graph for one solver invocation.
 #[derive(Debug, Clone, Default)]
+#[spec(implements = "spec://vibevm/modules/vibe-resolver/PROP-003#solver-upgrade")]
 pub struct ResolvedGraph {
     pub packages: Vec<ResolvedNode>,
 }
@@ -95,6 +99,7 @@ impl ResolvedGraph {
     }
 
     /// Find a node by `(group, name)` identity.
+    #[spec(implements = "spec://vibevm/modules/vibe-registry/PROP-008#identity")]
     pub fn find(&self, group: &Group, name: &str) -> Option<&ResolvedNode> {
         self.packages
             .iter()
@@ -107,6 +112,7 @@ impl ResolvedGraph {
 // ---------------------------------------------------------------------------
 
 /// What the solver needs to know about packages it's resolving over.
+#[spec(implements = "spec://vibevm/modules/vibe-registry/PROP-002#solver")]
 pub trait DepProvider {
     /// Pick a concrete version satisfying `pkgref.version` from the
     /// available versions of `(pkgref.kind, pkgref.name)`. Implementors
@@ -124,6 +130,14 @@ pub trait DepProvider {
 }
 
 /// What the install / update pipeline calls.
+#[spec(implements = "spec://vibevm/modules/vibe-registry/PROP-002#solver")]
+#[spec(
+    deviates = "spec://vibevm/modules/vibe-resolver/PROP-003#solver-upgrade",
+    reason = "PROP-003 §2.1 adds `pin_preferences(&mut self, pins)` to this trait for \
+              minimum-churn re-resolution; the method is absent — PROP-011 Phase 3 \
+              holds pins via constraint-tightening at the install layer instead, and \
+              SatDepSolver is not in tree (see DBT-0011)"
+)]
 pub trait DepSolver {
     /// Resolve `roots` into a transitive [`ResolvedGraph`].
     fn solve(&self, roots: &[PackageRef]) -> Result<ResolvedGraph, SolveError>;
@@ -134,6 +148,7 @@ pub trait DepSolver {
 // ---------------------------------------------------------------------------
 
 #[derive(Debug, Error)]
+#[spec(implements = "spec://vibevm/modules/vibe-registry/PROP-002#failure-discriminator")]
 pub enum DepProviderError {
     #[error("package `{group}/{name}` is not available in any configured registry")]
     UnknownPackage { group: Group, name: String },
@@ -167,6 +182,7 @@ pub enum DepProviderError {
 }
 
 #[derive(Debug, Error)]
+#[spec(implements = "spec://vibevm/modules/vibe-registry/PROP-002#capability")]
 pub enum SolveError {
     #[error(transparent)]
     Provider(#[from] DepProviderError),

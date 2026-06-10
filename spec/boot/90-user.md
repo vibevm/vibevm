@@ -11,7 +11,7 @@ User-owned boot snippet. `vibe install`/`uninstall` never touches this file. Add
 **Split-host posture (2026-04-29).** vibevm project source lives on GitVerse, the package registry organization lives on GitHub. The split is deliberate — see [PROP-000 §7](../common/PROP-000.md#registry) and [PROP-002 §2.10](../modules/vibe-registry/PROP-002-decentralized-registry.md#publish) for the full rationale (GitVerse's public API does not expose org-scoped repo creation; GitHub's does).
 
 - **vibevm source repo (this repository) — GitVerse:** `git@gitverse.ru:anarchic/vibevm.git`. Web: `https://gitverse.ru/anarchic/vibevm`. **Stays on GitVerse.** Не мигрируется.
-- **Package registry — GitHub organization `vibespecs`:** `https://github.com/vibespecs`. Per-package repos: `https://github.com/vibespecs/<kind>-<name>` (`NamingConvention::KindName` per PROP-002 §2.5). All publishing and consumption of v0.1.0+ packages goes through GitHub.
+- **Package registry — GitHub organization `vibespecs`:** `https://github.com/vibespecs`. Per-package repos: `https://github.com/vibespecs/<group>.<name>` (`NamingConvention::Fqdn` per [PROP-008 §2.5](../modules/vibe-registry/PROP-008-qualified-naming.md#repo-naming) — e.g. `org.vibevm.wal`; default since M1.19). The legacy `flow-*` repos are archived read-only. All publishing and consumption of v0.1.0+ packages goes through GitHub.
 - **Legacy package registry (read-only transition):** `git@gitverse.ru:anarchic/vibespecs.git` — three v0.1.0 flows in monorepo form, HEAD `2203239`, 2026-04-23. No new publishes here; kept readable for projects still on schema-v1 lockfiles.
 - **Local fixtures.** `fixtures/registry/` (M0 monorepo shape, hermetic) — used by `cargo test`, never goes near a real registry.
 

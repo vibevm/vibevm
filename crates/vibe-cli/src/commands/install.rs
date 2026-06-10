@@ -15,9 +15,8 @@ use vibe_core::user_config::UserConfig;
 use vibe_core::{Group, PackageRef, VersionSpec};
 use vibe_registry::{CachedPackage, LocalRegistry, MultiRegistryResolver};
 use vibe_resolver::{
-    ActivationContext, DepSolver, FeatureExpansion, FeatureRequest, LocalRegistryProvider,
-    MultiRegistryProvider, NaiveDepSolver, ResolvedNode, conditional::ConditionalPredicate,
-    expand_features,
+    ActivationContext, FeatureExpansion, FeatureRequest, ResolvedNode,
+    conditional::ConditionalPredicate, expand_features,
 };
 use vibe_workspace::Workspace;
 use vibe_workspace::install::{InstallOutcome, ResolvedDep, apply_resolution};
@@ -773,16 +772,18 @@ impl InstallResolver {
         &self,
         roots: &[PackageRef],
     ) -> Result<vibe_resolver::ResolvedGraph, vibe_resolver::SolveError> {
-        match self {
+        // Cell selection lives in the registry module (R-001); this
+        // match only routes the resource the caller already owns.
+        let flags = crate::registry::selection_flags(matches!(self, InstallResolver::Local(_)));
+        let solver = match self {
             InstallResolver::Local(r) => {
-                let provider = LocalRegistryProvider::new(r);
-                NaiveDepSolver::new(provider).solve(roots)
+                crate::registry::dep_solver(&flags, crate::registry::ProviderResource::Local(r))
             }
             InstallResolver::Multi(m) => {
-                let provider = MultiRegistryProvider::new(m);
-                NaiveDepSolver::new(provider).solve(roots)
+                crate::registry::dep_solver(&flags, crate::registry::ProviderResource::Multi(m))
             }
-        }
+        };
+        solver.solve(roots)
     }
 
     /// Enumerate every `group` that publishes a package of the bare

@@ -4,6 +4,8 @@
 //! local copy and parity-test it (slice 3) against `vibe-core` to
 //! catch divergence at CI time.
 
+specmark::scope!("spec://vibevm/modules/vibe-index/PROP-005#deps");
+
 use std::fmt;
 use std::str::FromStr;
 

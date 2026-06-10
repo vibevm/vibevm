@@ -1,5 +1,7 @@
 //! Lightweight RFC-7807 problem-details mapper for HTTP responses.
 
+specmark::scope!("spec://vibevm/modules/vibe-index/PROP-005#root");
+
 use axum::Json;
 use axum::http::StatusCode;
 use axum::response::{IntoResponse, Response};

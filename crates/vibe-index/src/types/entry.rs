@@ -4,6 +4,8 @@
 //! `versions[]` is one of these; every `POST /v1/packages` body is one
 //! of these.
 
+specmark::scope!("spec://vibevm/modules/vibe-index/PROP-005#entry");
+
 use std::collections::BTreeMap;
 
 use chrono::{DateTime, Utc};

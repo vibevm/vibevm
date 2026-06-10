@@ -14,6 +14,8 @@
 //! appear in stdout / stderr / log output. The Authorization header
 //! carries the bearer token to the index server only.
 
+specmark::scope!("spec://vibevm/modules/vibe-index/PROP-005#integration");
+
 use std::path::Path;
 use std::time::Duration;
 

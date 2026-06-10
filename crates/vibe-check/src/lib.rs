@@ -41,6 +41,7 @@
 //! `--fix` is a v1+ concern; v0 runs read-only inspection.
 
 #![forbid(unsafe_code)]
+specmark::scope!("spec://vibevm/modules/vibe-workspace/PROP-009#root");
 
 use std::fs;
 use std::path::{Path, PathBuf};

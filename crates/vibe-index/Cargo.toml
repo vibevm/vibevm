@@ -21,6 +21,7 @@ name = "vibe-index"
 path = "src/main.rs"
 
 [dependencies]
+specmark.workspace = true
 vibe-core = { workspace = true }
 clap = { workspace = true }
 thiserror = { workspace = true }

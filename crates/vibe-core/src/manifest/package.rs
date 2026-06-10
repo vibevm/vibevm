@@ -19,6 +19,8 @@
 //! inline-table value may also carry a `link` field — the dependency's
 //! inclusion type (PROP-009 §2.4).
 
+specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-002#git-source");
+
 use std::collections::BTreeMap;
 use std::path::PathBuf;
 

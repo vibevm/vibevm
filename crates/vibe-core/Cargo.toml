@@ -11,6 +11,7 @@ homepage.workspace = true
 description = "Core types, manifest schemas, and graph model for vibevm"
 
 [dependencies]
+specmark.workspace = true
 anyhow.workspace = true
 thiserror.workspace = true
 serde.workspace = true

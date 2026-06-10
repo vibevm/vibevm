@@ -11,6 +11,7 @@ homepage.workspace = true
 description = "Registry fetch, cache, and resolution for vibevm packages"
 
 [dependencies]
+specmark.workspace = true
 vibe-core.workspace = true
 anyhow.workspace = true
 thiserror.workspace = true

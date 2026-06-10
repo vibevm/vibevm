@@ -33,6 +33,8 @@
 //! time. A `dynamic` entry without `when` is an unconditional INCLUDE —
 //! still valid.
 
+specmark::scope!("spec://vibevm/modules/vibe-workspace/PROP-009#artifacts");
+
 use std::fs;
 use std::path::{Path, PathBuf};
 

@@ -11,6 +11,7 @@ homepage.workspace = true
 description = "Deterministic spec linter for vibevm projects (M1+)"
 
 [dependencies]
+specmark.workspace = true
 vibe-core.workspace = true
 vibe-resolver.workspace = true
 anyhow.workspace = true

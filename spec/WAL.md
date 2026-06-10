@@ -1,15 +1,175 @@
 # WAL — Project Continuation State
-_Updated: 2026-06-10 (the Big Refactoring begins — all work moves to branch `new` until it completes. Prior state: M1.19 qualified naming SHIPPED 2026-05-22; the canonical GitHub `vibespecs` registry org migrated to the `fqdn` shape; PROP-013 — the periodic health audit — established, seed inventory in `AUDIT.md`.)_
+_Updated: 2026-06-10, terraform COMPLETE checkpoint (the Big Refactoring: ALL phases of PLAYBOOK-TERRAFORM-VIBEVM-v0.2 executed — −1/0/1/2/3/4/5/6 — owner-declared complete, `new` merged to `main`. Close-out report: [`terraform/REPORT.md`](../terraform/REPORT.md). Cold-resume: `CONTINUE.md`. Prior state: M1.19 qualified naming SHIPPED 2026-05-22; PROP-013 established.)_
 
 ## Current phase
 
-**BRANCH POLICY — the Big Refactoring lives on branch `new` (2026-06-10).**
-A large refactoring is underway (scope to be recorded here as it is
-designed). Branch **`new`** — cut from `main` @ `99c63de` — carries every
-commit of that effort; `main` receives nothing until the refactoring is
-declared complete and `new` merges back. Any session that boots while this
-notice stands must `git checkout new` before touching code. Retire this
-block at the merge checkpoint.
+**THE BIG REFACTORING IS COMPLETE — branch policy retired (2026-06-10).**
+The owner declared the refactoring complete in-session («рефакторинг
+завершен, все фазы PLAYBOOK-TERRAFORM-VIBEVM выполнены»); `new` merged
+back to `main` with `--no-ff` at the merge checkpoint this entry
+records. The branch-isolation notice that stood here is retired per its
+own instruction; `new` is retained (merged, not deleted — the
+`m1.17-workspace` precedent).
+
+**The terraform in one breath.** Phases −1/0/1 (inventory, tooling
+skeleton, pilot + drift drill) closed earlier the same day — their
+detail stands below unedited. This checkpoint adds Phases 2–6:
+
+- **Phase 2 — backfill `vibe-resolver`: DONE.** 54 proposals
+  (`terraform/specmap-proposals.json`), every one owner-APPROVED in
+  conversation; six per-module affirmation commits; the freshly-built
+  **orphan ratchet** (`specmap-ratchet.json` + the gate inside
+  `cargo xtask specmap --check`) caught the one item the sweep missed
+  (PRP-0054, PredicateError). Three deviates edges record the honest
+  gaps at their seams: resolvo-primary absent (DBT-0011),
+  `pin_preferences` absent, `if_os` unprobed. Coverage of the crate's
+  ratified non-disputed req units: grammar + host-invariance
+  implemented-and-verified; fixpoint stays an explained zero from this
+  crate (the re-solve loop lives in workspace orchestration —
+  pilot judgment call 2, owner-upheld); `composition` is `planned` and
+  reported separately.
+- **Phase 3 — cells v0: DONE.** `#[cell(...)]` manifests (new
+  specmark attribute + shared grammar) on NaiveDepSolver and the real
+  DepProvider pair (local-registry / multi-registry — the playbook's
+  "next real seam pair", SatDepSolver not being in tree); the
+  cell-selection registry `crates/vibe-cli/src/registry.rs` (R-001 —
+  the ONLY module reading selection flags; flags are data with
+  provenance, birth, sunset); a **hermetic differential oracle**
+  driving both provider cells over real bare `file://` git
+  repositories to the same resolved graph — simultaneously the first
+  brick of the AUDIT P1 git harness; interim `conform-lite` lints.
+- **Phase 4 — conform engine MVP: DONE.** `conform-core` +
+  `conform-frontend-rust` (syn T-syn): fact model, content-addressed
+  store keyed `(file content-hash, producer)` under `target/conform/`
+  (a 1-file diff re-extracts exactly 1 file — proven by producer-log
+  test), rules-as-queries, byte-stable SARIF, ratchet baseline
+  `conform-baseline.json` (six pre-existing unsafe findings frozen;
+  the file may only shrink). Gate: `cargo xtask conform check
+  [--scope …]`; conform-lite retired. Scope `crates/vibe-resolver`:
+  0 findings.
+- **Phase 5 — ledger MVP: DONE, local only.** `.ledger/` (git-ignored)
+  holds the interpretations class; facts class = the conform store,
+  proven epoch-immune. `cargo xtask trace explain --prose`: epoch-keyed
+  cache (epoch = H(Cargo.lock, vibe.lock, wire schema, discipline
+  README, rustc)), provenance line on every render, telemetry counters.
+  Producer is a deterministic template — no LLM in the path.
+- **Phase 6 — expansion + reconciliation + report: DONE.** Scope-grade
+  backfill: 98 modules gained `specmark::scope!` edges sourced from
+  their own module-doc PROP citations; ratchet exemptions 15 → 8 (each
+  with a recorded reason), gated orphans 538 → 0 with 6 dispositioned
+  under the new **DBT-0019** (vibe-core error/timestamp/values have no
+  scannable home until `VIBEVM-SPEC.md` is unit-ified). Intent
+  reconciliation: **0 unaccounted** of 31 (3 done / 27 rescoped /
+  1 rejected — the CI matrix, no-CI being a standing Rule-4 owner
+  decision). Instrumented category-C audit appended to `AUDIT.md`
+  (AUD-0014..0017). **`terraform/REPORT.md` delivered** — phase
+  ledger, metrics vs BASELINE, the eight-item honest list feeding the
+  package v0.2.
+
+**Gate panel at the merge** (all green): `cargo xtask specmap --check`
+— 489 spec units / 170 tagged items / 177 edges / 0 suspects / six
+known pin-into-unmarked warnings; orphan ratchet 0 gated, 6
+dispositioned, 8 reasoned exemptions; `cargo xtask conform check` —
+0 new findings (6 frozen); `cargo xtask test-gate` — 1075 results,
+0 failed, 3 skipped, xfail-strict; golden characterization
+byte-identical; full `tools/self-check.sh` green (fmt, tests, clippy
+-D warnings, `vibe check` 0/0/0).
+
+**Owner inputs that remain open after the terraform:** the PROP-010
+design session (INT-0003); the SAT solver (DBT-0011 — now visible as
+deviates edges at the seam); the next full PROP-013 audit window
+(INT-0001); `VIBEVM-SPEC.md` unit-ification (DBT-0019 — unblocks
+vibe-cli's item-grain backfill); the discipline-package v0.2 revision
+fed by REPORT.md; the pending PROP-014 amendment for external
+read-only namespaces (`misra://`, spec/neworder/README).
+
+**The Big Refactoring = the Discipline terraform pilot (2026-06-10).** The
+owner directed execution of [`spec/neworder/PLAYBOOK-TERRAFORM-VIBEVM-v0.2.md`](neworder/PLAYBOOK-TERRAFORM-VIBEVM-v0.2.md)
+(the v0.2-beta discipline package in `spec/neworder/`). **Phase −1 —
+inventory: freeze reality — is executed.** Build gate exit 0; record-only
+test run nextest **998/998 passed + 3 skipped** (the `#[ignore]`d live trio
+— now the only entries in `terraform/registry/tests-baseline.json`, the
+xfail-strict baseline); **debt registry** seeded
+(`terraform/registry/debt.json` + `DEBT.md` — 18 entries: 1 P1 / 7 P2 /
+10 P3; the 11 non-fixed AUDIT findings imported 1:1, plus 5 conflict-scan
+disputes, plus 2 new from the inventory itself); **intent registry**
+harvested (`terraform/registry/intent.json` + `INTENT.md` — 31 aspirations
+from WAL / CONTINUE / ROADMAP; `TASKS.md` confirmed absent); **conflict
+scan** over `spec/**` recorded 5 disputed pairs, resolved none (DBT-0012
+PROP-002 vs PROP-008 naming default; DBT-0013 boot `00-core` vs `90-user`
+registry host; DBT-0014 `90-user` repo shape vs PROP-008 / live org;
+DBT-0015 PROP-003 duplicate `{#phases}` anchor — the Phase 1 pilot PROP;
+DBT-0016 PLAYBOOK vs BROWNFIELD marker homing); **characterization**
+captured (`terraform/golden/` — 5 hermetic flows / 12 steps, byte-
+deterministic across double runs via `capture.sh`); snapshot in
+`terraform/BASELINE.md`; session log in `terraform/LOG.md`.
+
+**Phase −1 acceptance closed (2026-06-10).** The owner confirmed the P1
+disposition and all five disputed-spec existences, and granted in-session
+sanction to edit frozen surfaces. **Four disputes adjudicated immediately**
+(all supersede): PROP-002 naming reconciled to PROP-008 fqdn (`aa54ab4`,
+DBT-0012); boot `00-core.md` / `90-user.md` reconciled to split-host +
+fqdn reality (`0e57f0f`, DBT-0013/0014); PROP-003's duplicate `{#phases}`
+anchor disambiguated — §3.2 is now `{#solver-phases}` (`d090cb0`,
+DBT-0015). DBT-0016 stays open by design (feeds the package v0.2).
+
+**Phase 0 — tooling skeleton: DONE (2026-06-10).** Three new crates —
+`specmark-grammar` (the single source of the PROP-014 §2.3 tag grammar),
+`specmark` (inert `#[spec]` / `#[verifies]` / `scope!` proc-macros:
+compile-time validation, rustdoc `Spec:` injection, item unchanged),
+`specmap-core` (markdown unit parser with kind/revision/status lines and
+CRLF-invariant hashes; syn-based attribute scanner; canonical index;
+xfail-strict test-gate engine; debt tripwires) — plus
+`schemas/specmap.jtd.json` → `vibe-wire` types, and three xtask
+subcommands: `specmap [--check]`, `test-gate`, `tripwire`. The first
+committed `specmap.json` inventories **408 spec units** (zero production
+edges yet — Phase 1 lands the first). Acceptance green: `specmap` +
+`--check` ×2 deterministic; `test-gate` 1044 parsed / 0 failed / 3
+skipped (the quarantined live trio), xfail-strict; `cargo test -p
+specmark` green; full `self-check.sh` green with `vibe check` 0/0/0.
+**The CI bullet is deferred with cause:** the repo has no CI
+infrastructure at all, so introducing it is a Rule 4 owner decision, not
+a playbook line item — acceptance commands run locally. Same-day field
+results: `tripwire` caught the owner-dropped `GUIDE-TYPESCRIPT` /
+`GUIDE-PYTHON` files via DBT-0016's watch (now committed, README map
+updated), and the unit parser gained fenced-block exclusion after two
+sample headings from `GUIDE-SPEC-AUTHORING` leaked into the inventory.
+
+**Phase 1 — pilot: EXECUTED (2026-06-10), review in-conversation.** Per
+the owner's live direction ("без отдельных PR, работаем в new, всё
+решаем здесь") the pilot landed directly on `new`; the full dossier is
+[`terraform/PHASE1-PILOT.md`](../terraform/PHASE1-PILOT.md). Engine prep
+first (`40077bf`, `dc79001`): canonical house-style URIs (the indexer's
+full-path URIs would never have joined the repo's citation style — caught
+before the pilot tripped on it), `spec_unit.file`, the suspects table,
+dangling-edge / pin-ahead / pin-into-unmarked warnings, drift
+classification on `specmap`/`--check` (revision bumps with their
+suspects; unbumped-hash with the `spec-editorial:` convention), and
+`cargo xtask trace explain <symbol|uri> [--text|--json]`. Then the pilot
+(`4395d3b`): PROP-003 §2.6.1 unit-ified additions-only — four `req`
+units (`grammar`, `fixpoint`, `host-invariance` ratified r1;
+`composition` **planned**) plus one `design` unit; `conditional.rs`
+carries the first production tags (implements ×3, the recorded
+`deviates` into the planned unit, `#[verifies]` ×6); index: **413 units,
+17 items, 19 edges, 0 suspects**. The drift drill ran end-to-end and
+stays in history (`b3a947c` bump → 6 suspects → re-affirm; `73b6e81`
+editorial → unbumped-hash → `spec-editorial:` marker; `4afe716` revert
+to byte-identical pilot state). Acceptance: `trace explain` renders the
+planned/deviates subgraph; `test-gate` green (1051 results, xfail-strict);
+full `self-check.sh` green. Tripwire on the change set: DBT-0011 fired
+(`touch:crates/vibe-resolver/**`) — addressed: tags only, solver debt
+untouched.
+
+**Phase 2 — backfill `vibe-resolver`: superseded by the COMPLETE
+checkpoint above.** (This slot held the "STARTED, staged for the next
+session" notice; the staged sweep ran and the phase closed the same
+day — see the Current-phase block and `terraform/REPORT.md`. The
+mid-session owner drops continued through the close-out: after the
+three C++ guides (`630ba3b`), the session committed Go, four Java
+guides, and Kotlin the moment the DBT-0016 watch surfaced them. The
+pilot's three judgment calls were upheld by the owner's blanket
+APPROVE; the CI decision stays with the owner — INT-0017 rejected
+accordingly.)
 
 **M1.19 — qualified package naming (PROP-008): SHIPPED 2026-05-22, under MFBT.** The qualified-naming refactor — [PROP-008](modules/vibe-registry/PROP-008-qualified-naming.md), design lore in [`spec/design/workspace-and-qualified-naming.md`](design/workspace-and-qualified-naming.md) — is **complete**: all eight phases on `main`, `bash tools/self-check.sh` green on all four steps. Exhaustive per-phase detail is in `CHANGELOG.md`'s M1.19 block and PROP-008 §7.
 

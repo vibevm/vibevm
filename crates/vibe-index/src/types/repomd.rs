@@ -1,6 +1,8 @@
 //! `repomd.json` — the per-index manifest. Modelled after RPM's
 //! `repomd.xml`. PROP-005 §2.4 pins the schema.
 
+specmark::scope!("spec://vibevm/modules/vibe-index/PROP-005#layout");
+
 use std::collections::BTreeMap;
 
 use chrono::{DateTime, Utc};

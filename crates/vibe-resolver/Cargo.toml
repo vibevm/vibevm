@@ -11,6 +11,7 @@ homepage.workspace = true
 description = "Dependency resolution for vibevm packages — capability-based, multi-registry-aware"
 
 [dependencies]
+specmark.workspace = true
 thiserror.workspace = true
 semver.workspace = true
 tracing.workspace = true

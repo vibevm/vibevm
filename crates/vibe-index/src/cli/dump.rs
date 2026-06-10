@@ -1,5 +1,7 @@
 //! `vibe-index dump <data-dir>` — emit the index contents to stdout.
 
+specmark::scope!("spec://vibevm/modules/vibe-index/PROP-005#root");
+
 use std::path::PathBuf;
 
 use clap::{Parser, ValueEnum};

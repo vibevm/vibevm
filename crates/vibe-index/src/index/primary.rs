@@ -5,6 +5,8 @@
 //! the header) so its sha256 stays stable across machines for
 //! identical input.
 
+specmark::scope!("spec://vibevm/modules/vibe-index/PROP-005#layout");
+
 use std::io::Write;
 use std::path::Path;
 

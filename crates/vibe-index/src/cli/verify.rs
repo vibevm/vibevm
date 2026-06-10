@@ -1,6 +1,8 @@
 //! `vibe-index verify <data-dir>` — recompute file hashes and check
 //! `repomd.json` integrity.
 
+specmark::scope!("spec://vibevm/modules/vibe-index/PROP-005#root");
+
 use std::path::PathBuf;
 
 use clap::Parser;

@@ -7,6 +7,8 @@
 //! `by-name/<kind>/<name>.json`. `by-cap/` and `by-purl/` join in
 //! later slices.
 
+specmark::scope!("spec://vibevm/modules/vibe-index/PROP-005#layout");
+
 pub mod by_name;
 pub mod checkpoint;
 pub mod inverted;

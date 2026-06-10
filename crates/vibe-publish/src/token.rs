@@ -28,6 +28,8 @@
 //! [PROP-000 §20](../../../spec/common/PROP-000.md#token-secrecy)
 //! for the full discipline.
 
+specmark::scope!("spec://vibevm/common/PROP-000#token-secrecy");
+
 use std::fmt;
 use std::fs;
 use std::path::PathBuf;

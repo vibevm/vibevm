@@ -1,6 +1,8 @@
 //! `vibe-index outdated <data-dir>` — diff a local `vibe.lock`
 //! against the index, report upgrade candidates.
 
+specmark::scope!("spec://vibevm/modules/vibe-index/PROP-005#root");
+
 use std::path::PathBuf;
 
 use clap::Parser;

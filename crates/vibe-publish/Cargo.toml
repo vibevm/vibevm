@@ -11,6 +11,7 @@ homepage.workspace = true
 description = "Maintainer-side package publishing — create per-package repos and push tagged releases"
 
 [dependencies]
+specmark.workspace = true
 anyhow.workspace = true
 thiserror.workspace = true
 serde.workspace = true

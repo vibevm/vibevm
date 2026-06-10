@@ -7,6 +7,8 @@
 //! logs; the Authorization header is treated as a [PROP-000 §20]-
 //! discipline secret.
 
+specmark::scope!("spec://vibevm/common/PROP-000#token-secrecy");
+
 use std::collections::BTreeSet;
 use std::path::Path;
 

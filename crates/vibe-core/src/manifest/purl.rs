@@ -17,6 +17,8 @@
 //! are not interpreted. `<version>` may be an exact SemVer string or a
 //! [`semver::VersionReq`] requirement (`^0.8`, `>=1, <2`, `*`).
 
+specmark::scope!("spec://vibevm/modules/vibe-resolver/PROP-003#subskill-describes");
+
 use std::fmt;
 
 use serde::{Deserialize, Deserializer, Serialize, Serializer};

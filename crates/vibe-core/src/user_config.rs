@@ -23,6 +23,8 @@
 //! Until then this module is informational; the operator must
 //! `export VIBE_REGISTRY_CACHE=…` for the value to actually apply.
 
+specmark::scope!("spec://vibevm/modules/vibe-workspace/PROP-011#materialise-diff");
+
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 

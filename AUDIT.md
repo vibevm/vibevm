@@ -147,3 +147,40 @@ solver (resolvo / libsolv) is unimplemented; `NaiveDepSolver` (DFS, no
 backtracking) handles the current scale. Several deferred items
 (`-11`) gate on the SAT solver. **Open** — architectural; not urgent
 at current package counts, but a known ceiling.
+
+---
+
+## Audit run — 2026-06-10 (terraform close-out, instrumented category C)
+
+Run during the terraform Phase 6 close-out, scoped to what the new
+machinery can feed the audit automatically — category **C (drift)**
+plus the gate panel. It is **not** the full §2.2 breadth sweep
+(INT-0001 stays rescoped to the next audit window); its value is that
+category C is now machine-fed, which PROP-013 never had before.
+
+**Specmap panel** (`cargo xtask specmap --check`): 489 spec units, 170
+tagged code items, 177 edges (79 item-grain — the pilot's 19 plus the
+Phase 2/3/4 affirmations — and 98 module-grain scope markers),
+**0 suspects**, 0 dangling
+edges, the six known `pin-into-unmarked-unit` warnings (specmark usage
+tests, retire with PROP-014 unit-ification).
+
+**Orphan ratchet**: 0 gated orphans across the ten gated crates; 6
+dispositioned under DBT-0019 (vibe-core error/timestamp/values — no
+scannable home until `VIBEVM-SPEC.md` is unit-ified); 8 crates exempt,
+each with its reason recorded in `specmap-ratchet.json`.
+
+**Disputes**: DBT-0016 (PLAYBOOK vs BROWNFIELD marker homing) remains
+the one open dispute, by design — it feeds the discipline package v0.2.
+
+**Conform panel** (`cargo xtask conform check`): 6 findings
+workspace-wide, all `unsafe-gate`, all frozen in
+`conform-baseline.json` (4× vibe-cli output/main, 1× more in output,
+1× vibe-index stop); scope `crates/vibe-resolver`: 0. New findings: 0.
+
+| id | cat | sev | finding | disposition |
+|---|---|---|---|---|
+| AUD-0014 | C | P3 | `expand_features` doc-string says cycles are "rejected"; the seen-set silently terminates them (test `cycles_terminate` pins the actual behaviour) | open — one-line doc fix, flagged in the Phase 2 proposals note |
+| AUD-0015 | C | P3 | `ResolvedNode` doc-comment cites "PROP-008 §2.3" where the identity tuple is §2.2 (#identity); §2.3 is #kind | open — same family as AUD-0014 |
+| AUD-0016 | C | P3 | six `unsafe` blocks live outside any designated audit crate; frozen in the conform baseline, no audit-crate list exists yet | filed — the audit-crate designation is an owner decision; baseline may only shrink |
+| AUD-0017 | D | P3 | vibe-core leaf trio without scannable spec home | filed — DBT-0019 |

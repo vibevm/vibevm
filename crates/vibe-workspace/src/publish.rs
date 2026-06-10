@@ -27,6 +27,8 @@
 //! credential ever reaches it. That machinery is `vibe-publish`'s, reused
 //! unchanged by the CLI.
 
+specmark::scope!("spec://vibevm/modules/vibe-workspace/PROP-007#selective-publish");
+
 use std::collections::{HashMap, HashSet};
 use std::path::{Path, PathBuf};
 

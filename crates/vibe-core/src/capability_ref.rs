@@ -23,6 +23,8 @@
 //! [prov]: crate::manifest::Provides
 //! [req]: crate::manifest::Requires
 
+specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-002#capability");
+
 use std::fmt;
 use std::str::FromStr;
 

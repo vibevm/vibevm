@@ -3,6 +3,8 @@
 //! subsequent `reindex --incremental` runs only re-walk repos whose
 //! state has changed.
 
+specmark::scope!("spec://vibevm/modules/vibe-index/PROP-005#root");
+
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 

@@ -5,6 +5,8 @@
 //! the process boundary, where all the operator needs is a clear
 //! message and a non-zero exit.
 
+specmark::scope!("spec://vibevm/modules/vibe-index/PROP-005#root");
+
 use std::path::PathBuf;
 
 use thiserror::Error;

@@ -1,5 +1,7 @@
 //! `vibe-index list <data-dir>` — list packages.
 
+specmark::scope!("spec://vibevm/modules/vibe-index/PROP-005#root");
+
 use std::path::PathBuf;
 
 use clap::Parser;

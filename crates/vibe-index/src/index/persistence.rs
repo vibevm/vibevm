@@ -4,6 +4,8 @@
 //! these out keeps the per-format code (primary.jsonl, by-name JSON,
 //! repomd.json) tightly focused on its own shape.
 
+specmark::scope!("spec://vibevm/modules/vibe-index/PROP-005#root");
+
 use std::fs;
 use std::io::Write;
 use std::path::{Path, PathBuf};

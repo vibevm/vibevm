@@ -22,6 +22,8 @@
 //! the PROP foresaw; v2 (per-route quotas, sliding window, dashmap
 //! sharding) lands when scale demands it.
 
+specmark::scope!("spec://vibevm/modules/vibe-index/PROP-005#open");
+
 use std::collections::HashMap;
 use std::net::IpAddr;
 use std::sync::Mutex;
