@@ -4,12 +4,42 @@ _Updated: 2026-06-10 (the Big Refactoring begins — all work moves to branch `n
 ## Current phase
 
 **BRANCH POLICY — the Big Refactoring lives on branch `new` (2026-06-10).**
-A large refactoring is underway (scope to be recorded here as it is
-designed). Branch **`new`** — cut from `main` @ `99c63de` — carries every
-commit of that effort; `main` receives nothing until the refactoring is
-declared complete and `new` merges back. Any session that boots while this
-notice stands must `git checkout new` before touching code. Retire this
-block at the merge checkpoint.
+A large refactoring is underway. Branch **`new`** — cut from `main` @
+`99c63de` — carries every commit of that effort; `main` receives nothing
+until the refactoring is declared complete and `new` merges back. Any
+session that boots while this notice stands must `git checkout new` before
+touching code. Retire this block at the merge checkpoint.
+
+**The Big Refactoring = the Discipline terraform pilot (2026-06-10).** The
+owner directed execution of [`spec/neworder/PLAYBOOK-TERRAFORM-VIBEVM-v0.2.md`](neworder/PLAYBOOK-TERRAFORM-VIBEVM-v0.2.md)
+(the v0.2-beta discipline package in `spec/neworder/`). **Phase −1 —
+inventory: freeze reality — is executed.** Build gate exit 0; record-only
+test run nextest **998/998 passed + 3 skipped** (the `#[ignore]`d live trio
+— now the only entries in `terraform/registry/tests-baseline.json`, the
+xfail-strict baseline); **debt registry** seeded
+(`terraform/registry/debt.json` + `DEBT.md` — 18 entries: 1 P1 / 7 P2 /
+10 P3; the 11 non-fixed AUDIT findings imported 1:1, plus 5 conflict-scan
+disputes, plus 2 new from the inventory itself); **intent registry**
+harvested (`terraform/registry/intent.json` + `INTENT.md` — 31 aspirations
+from WAL / CONTINUE / ROADMAP; `TASKS.md` confirmed absent); **conflict
+scan** over `spec/**` recorded 5 disputed pairs, resolved none (DBT-0012
+PROP-002 vs PROP-008 naming default; DBT-0013 boot `00-core` vs `90-user`
+registry host; DBT-0014 `90-user` repo shape vs PROP-008 / live org;
+DBT-0015 PROP-003 duplicate `{#phases}` anchor — the Phase 1 pilot PROP;
+DBT-0016 PLAYBOOK vs BROWNFIELD marker homing); **characterization**
+captured (`terraform/golden/` — 5 hermetic flows / 12 steps, byte-
+deterministic across double runs via `capture.sh`); snapshot in
+`terraform/BASELINE.md`; session log in `terraform/LOG.md`.
+
+**Phase −1 acceptance is pending the owner** (the playbook's own
+acceptance line): disposition of the P1's existence (DBT-0001 — the
+under-tested production git-registry path, already acknowledged via the
+AUDIT seed) and of the five disputed-spec entries' existence (adjudication
+itself can wait). After disposition: **Phase 0 — tooling skeleton**
+(`crates/specmark`, `xtask specmap` / `test-gate` / `tripwire`,
+`schemas/specmap.jtd.json`, CI jobs non-blocking). Note for Phase 0 entry:
+its CI additions sit inside Rule 4's stop-and-ask perimeter — sign-off
+will be requested alongside the Phase 0 plan.
 
 **M1.19 — qualified package naming (PROP-008): SHIPPED 2026-05-22, under MFBT.** The qualified-naming refactor — [PROP-008](modules/vibe-registry/PROP-008-qualified-naming.md), design lore in [`spec/design/workspace-and-qualified-naming.md`](design/workspace-and-qualified-naming.md) — is **complete**: all eight phases on `main`, `bash tools/self-check.sh` green on all four steps. Exhaustive per-phase detail is in `CHANGELOG.md`'s M1.19 block and PROP-008 §7.
 
