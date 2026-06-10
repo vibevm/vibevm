@@ -15,6 +15,8 @@ The complete document set required to begin terraforming vibevm: turning an AI-a
 | `PROP-014-specmap-bidirectional-traceability.md` | product mechanism (vibevm-hosted) | Bidirectional spec↔code traceability: anchors, revisions, tags, statuses, index, queries | beta |
 | `GUIDE-SPEC-AUTHORING-v0.1.md` | product / T1 guide | Writing specs with bidirectional binding; lifecycle statuses; checklists; importer contract | beta |
 | `GUIDE-RUST-v0.1.md` | product / T2 guide | Rust bindings: cells, seams, errors, flags, naming, risk table, conform checks | beta |
+| `GUIDE-TYPESCRIPT-v0.1.md` | product / T2 guide | TypeScript/JS bindings: subset selection, cells/seams, suppression policy, boundary modules | beta |
+| `GUIDE-PYTHON-v0.1.md` | product / T2 guide | Python bindings: pyright-strict gate, boundary parsing, import-time purity, dynamism bans | beta |
 | `ENGINE-CONFORM-v0.1.md` | product / T3 | Cross-language conformance engine: escalation tiers, compiler frontends, fact store, SARIF | beta |
 | `LEDGER-INTENT-v0.1.md` | product / T3 mechanism | Intent ledger: memoized understanding, fact vs interpretation classes, epochs, release slice | beta |
 | `PLAYBOOK-TERRAFORM-VIBEVM-v0.2.md` | carrier-specific | The operative plan Claude Code executes inside the vibevm repo; inventory, phases, gates, stop conditions | beta |
@@ -29,7 +31,7 @@ Placement after ratification: product docs → the Discipline's own repository (
 
 ## Known beta gaps (deliberate)
 
-- TypeScript/JavaScript, Python, C++ guides: not written; the Rust guide fixes the genre first.
+- C++ guide: not written. (The Rust guide fixed the genre; TypeScript/JavaScript and Python guides landed 2026-06-10.)
 - The legacy-spec importer and the conflict-scan heuristics exist as contracts (GUIDE-SPEC-AUTHORING §7, BROWNFIELD §5), not as tuned tools — precision is measured, then tuned, on the real corpus.
 - Signing of the release ledger slice: designed (LEDGER §7), not implemented; blocks public runtime exposure, not local work.
 - Cell granularity default (module vs crate) is provisional in GUIDE-RUST §1 and explicitly a pilot-measured decision.
