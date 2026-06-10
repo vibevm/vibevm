@@ -62,3 +62,15 @@ debt, single-homed in `debt.json`.
 | INT-0029 | Clippy lint promotion — partially overtaken (`-D warnings` already gates); residue: pedantic set, CI | open |
 | INT-0030 | `cargo deny` in CI | open |
 | INT-0031 | Docs site (mdBook/Zola) | open |
+
+---
+
+## Reconciliation — 2026-06-10 (terraform Phase 6)
+
+Every entry now carries a `resolution` in `intent.json` — the canonical
+status holder; this file keeps the prose inventory. Outcome: **3 done**
+(INT-0012 `vibe outdated`, INT-0016 private registries in substance,
+INT-0028 CHANGELOG), **1 rejected** (INT-0017 CI matrix — the no-CI
+posture is a standing Rule-4 owner decision), **27 rescoped** to their
+durable homes (ROADMAP milestones, AUDIT carries, DBT ids, PROP open
+sections). Unaccounted: **0** — the Phase 6 beta-exit requirement.
