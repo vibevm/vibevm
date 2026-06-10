@@ -13,3 +13,4 @@ description = "Project tooling — codegen, drift checks, and other build-time h
 [dependencies]
 anyhow.workspace = true
 clap.workspace = true
+specmap-core.workspace = true

@@ -1,0 +1,3409 @@
+{
+  "code_items": [
+    {
+      "crate_name": "specmark",
+      "file": "crates/specmark/tests/usage.rs",
+      "item_kind": "mod",
+      "line": 12,
+      "symbol": "specmark::tests::usage"
+    },
+    {
+      "crate_name": "specmark",
+      "file": "crates/specmark/tests/usage.rs",
+      "item_kind": "impl",
+      "line": 26,
+      "symbol": "specmark::tests::usage::<impl Tagged>"
+    },
+    {
+      "crate_name": "specmark",
+      "file": "crates/specmark/tests/usage.rs",
+      "item_kind": "enum",
+      "line": 19,
+      "symbol": "specmark::tests::usage::MultiTagged"
+    },
+    {
+      "crate_name": "specmark",
+      "file": "crates/specmark/tests/usage.rs",
+      "item_kind": "struct",
+      "line": 14,
+      "symbol": "specmark::tests::usage::Tagged"
+    },
+    {
+      "crate_name": "specmark",
+      "file": "crates/specmark/tests/usage.rs",
+      "item_kind": "fn",
+      "line": 37,
+      "symbol": "specmark::tests::usage::helper"
+    },
+    {
+      "crate_name": "specmark",
+      "file": "crates/specmark/tests/usage.rs",
+      "item_kind": "mod",
+      "line": 43,
+      "symbol": "specmark::tests::usage::inner"
+    },
+    {
+      "crate_name": "specmark",
+      "file": "crates/specmark/tests/usage.rs",
+      "item_kind": "fn",
+      "line": 50,
+      "symbol": "specmark::tests::usage::tags_are_inert"
+    },
+    {
+      "crate_name": "specmark",
+      "file": "crates/specmark/tests/usage.rs",
+      "item_kind": "fn",
+      "line": 61,
+      "symbol": "specmark::tests::usage::verifies_without_pin_compiles_and_runs"
+    }
+  ],
+  "edges": [
+    {
+      "file": "crates/specmark/tests/usage.rs",
+      "from_symbol": "specmark::tests::usage",
+      "line": 12,
+      "provenance": "authored",
+      "uri": "spec://vibevm/neworder/PROP-014#addressing-code",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/specmark/tests/usage.rs",
+      "from_symbol": "specmark::tests::usage::<impl Tagged>",
+      "line": 26,
+      "provenance": "authored",
+      "uri": "spec://vibevm/neworder/PROP-014#addressing-code",
+      "verb": "deviates",
+      "pinned_r": 1,
+      "reason": "test fixture exercising the deviates carrier form"
+    },
+    {
+      "file": "crates/specmark/tests/usage.rs",
+      "from_symbol": "specmark::tests::usage::MultiTagged",
+      "line": 19,
+      "provenance": "authored",
+      "uri": "spec://vibevm/neworder/PROP-014#addressing-code",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/specmark/tests/usage.rs",
+      "from_symbol": "specmark::tests::usage::MultiTagged",
+      "line": 20,
+      "provenance": "authored",
+      "uri": "spec://vibevm/neworder/PROP-014#addressing-spec",
+      "verb": "documents",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/specmark/tests/usage.rs",
+      "from_symbol": "specmark::tests::usage::Tagged",
+      "line": 14,
+      "provenance": "authored",
+      "uri": "spec://vibevm/neworder/PROP-014#addressing-code",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/specmark/tests/usage.rs",
+      "from_symbol": "specmark::tests::usage::helper",
+      "line": 37,
+      "provenance": "authored",
+      "uri": "spec://vibevm/neworder/PROP-014#edges",
+      "verb": "informs",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/specmark/tests/usage.rs",
+      "from_symbol": "specmark::tests::usage::inner",
+      "line": 43,
+      "provenance": "authored",
+      "uri": "spec://vibevm/neworder/PROP-014#addressing-code",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/specmark/tests/usage.rs",
+      "from_symbol": "specmark::tests::usage::tags_are_inert",
+      "line": 51,
+      "provenance": "authored",
+      "uri": "spec://vibevm/neworder/PROP-014#addressing-code",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/specmark/tests/usage.rs",
+      "from_symbol": "specmark::tests::usage::verifies_without_pin_compiles_and_runs",
+      "line": 62,
+      "provenance": "authored",
+      "uri": "spec://vibevm/neworder/PROP-014#addressing-code",
+      "verb": "verifies"
+    }
+  ],
+  "schema": 1,
+  "spec_units": [
+    {
+      "anchor": "root",
+      "content_hash": "",
+      "doc_path": "spec/common/PROP-000.md",
+      "heading": "PROP-000: Foundational technical decisions",
+      "line": 1,
+      "uri": "spec://vibevm/spec/common/PROP-000.md#root"
+    },
+    {
+      "anchor": "language",
+      "content_hash": "",
+      "doc_path": "spec/common/PROP-000.md",
+      "heading": "1. Language: Rust",
+      "line": 9,
+      "uri": "spec://vibevm/spec/common/PROP-000.md#language"
+    },
+    {
+      "anchor": "build",
+      "content_hash": "",
+      "doc_path": "spec/common/PROP-000.md",
+      "heading": "2. Build system: Cargo workspace",
+      "line": 21,
+      "uri": "spec://vibevm/spec/common/PROP-000.md#build"
+    },
+    {
+      "anchor": "license",
+      "content_hash": "",
+      "doc_path": "spec/common/PROP-000.md",
+      "heading": "3. License",
+      "line": 39,
+      "uri": "spec://vibevm/spec/common/PROP-000.md#license"
+    },
+    {
+      "anchor": "manifests",
+      "content_hash": "",
+      "doc_path": "spec/common/PROP-000.md",
+      "heading": "4. Manifest format: TOML",
+      "line": 51,
+      "uri": "spec://vibevm/spec/common/PROP-000.md#manifests"
+    },
+    {
+      "anchor": "layout",
+      "content_hash": "",
+      "doc_path": "spec/common/PROP-000.md",
+      "heading": "5. Directory layout",
+      "line": 64,
+      "uri": "spec://vibevm/spec/common/PROP-000.md#layout"
+    },
+    {
+      "anchor": "identity",
+      "content_hash": "",
+      "doc_path": "spec/common/PROP-000.md",
+      "heading": "6. Package identity",
+      "line": 70,
+      "uri": "spec://vibevm/spec/common/PROP-000.md#identity"
+    },
+    {
+      "anchor": "registry",
+      "content_hash": "",
+      "doc_path": "spec/common/PROP-000.md",
+      "heading": "7. Registry model (M0 vs M1)",
+      "line": 81,
+      "uri": "spec://vibevm/spec/common/PROP-000.md#registry"
+    },
+    {
+      "anchor": "graph",
+      "content_hash": "",
+      "doc_path": "spec/common/PROP-000.md",
+      "heading": "8. Task graph model",
+      "line": 98,
+      "uri": "spec://vibevm/spec/common/PROP-000.md#graph"
+    },
+    {
+      "anchor": "conflicts",
+      "content_hash": "",
+      "doc_path": "spec/common/PROP-000.md",
+      "heading": "9. Conflict resolution",
+      "line": 106,
+      "uri": "spec://vibevm/spec/common/PROP-000.md#conflicts"
+    },
+    {
+      "anchor": "observability",
+      "content_hash": "",
+      "doc_path": "spec/common/PROP-000.md",
+      "heading": "10. Observability",
+      "line": 112,
+      "uri": "spec://vibevm/spec/common/PROP-000.md#observability"
+    },
+    {
+      "anchor": "platforms",
+      "content_hash": "",
+      "doc_path": "spec/common/PROP-000.md",
+      "heading": "11. Cross-platform target",
+      "line": 118,
+      "uri": "spec://vibevm/spec/common/PROP-000.md#platforms"
+    },
+    {
+      "anchor": "commits",
+      "content_hash": "",
+      "doc_path": "spec/common/PROP-000.md",
+      "heading": "12. Commit and push discipline",
+      "line": 126,
+      "uri": "spec://vibevm/spec/common/PROP-000.md#commits"
+    },
+    {
+      "anchor": "conventional-commits",
+      "content_hash": "",
+      "doc_path": "spec/common/PROP-000.md",
+      "heading": "12.2 Conventional Commits",
+      "line": 138,
+      "uri": "spec://vibevm/spec/common/PROP-000.md#conventional-commits"
+    },
+    {
+      "anchor": "grouping",
+      "content_hash": "",
+      "doc_path": "spec/common/PROP-000.md",
+      "heading": "12.3 Group commits by meaning",
+      "line": 159,
+      "uri": "spec://vibevm/spec/common/PROP-000.md#grouping"
+    },
+    {
+      "anchor": "autonomy",
+      "content_hash": "",
+      "doc_path": "spec/common/PROP-000.md",
+      "heading": "12.4 Autonomy on routine changes",
+      "line": 163,
+      "uri": "spec://vibevm/spec/common/PROP-000.md#autonomy"
+    },
+    {
+      "anchor": "package-layout",
+      "content_hash": "",
+      "doc_path": "spec/common/PROP-000.md",
+      "heading": "13. Package layout convention",
+      "line": 169,
+      "uri": "spec://vibevm/spec/common/PROP-000.md#package-layout"
+    },
+    {
+      "anchor": "manual-tests",
+      "content_hash": "",
+      "doc_path": "spec/common/PROP-000.md",
+      "heading": "14. Manual-test protocol",
+      "line": 183,
+      "uri": "spec://vibevm/spec/common/PROP-000.md#manual-tests"
+    },
+    {
+      "anchor": "dep-weight",
+      "content_hash": "",
+      "doc_path": "spec/common/PROP-000.md",
+      "heading": "15. Dependency weight is not a decision factor",
+      "line": 202,
+      "uri": "spec://vibevm/spec/common/PROP-000.md#dep-weight"
+    },
+    {
+      "anchor": "jtd",
+      "content_hash": "",
+      "doc_path": "spec/common/PROP-000.md",
+      "heading": "16. JTD + codegen for wire contracts",
+      "line": 220,
+      "uri": "spec://vibevm/spec/common/PROP-000.md#jtd"
+    },
+    {
+      "anchor": "prod-arch",
+      "content_hash": "",
+      "doc_path": "spec/common/PROP-000.md",
+      "heading": "17. Production architecture in the prototype phase",
+      "line": 240,
+      "uri": "spec://vibevm/spec/common/PROP-000.md#prod-arch"
+    },
+    {
+      "anchor": "complexity",
+      "content_hash": "",
+      "doc_path": "spec/common/PROP-000.md",
+      "heading": "18. Complexity expectation: higher than RPM",
+      "line": 254,
+      "uri": "spec://vibevm/spec/common/PROP-000.md#complexity"
+    },
+    {
+      "anchor": "setup-docs",
+      "content_hash": "",
+      "doc_path": "spec/common/PROP-000.md",
+      "heading": "19. Load-bearing setup documentation",
+      "line": 264,
+      "uri": "spec://vibevm/spec/common/PROP-000.md#setup-docs"
+    },
+    {
+      "anchor": "token-secrecy",
+      "content_hash": "",
+      "doc_path": "spec/common/PROP-000.md",
+      "heading": "20. Token secrecy and adapter scope",
+      "line": 277,
+      "uri": "spec://vibevm/spec/common/PROP-000.md#token-secrecy"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "",
+      "doc_path": "spec/common/PROP-006-operating-modes.md",
+      "heading": "PROP-006: Operating modes — codeword-triggered work postures",
+      "line": 1,
+      "uri": "spec://vibevm/spec/common/PROP-006-operating-modes.md#root"
+    },
+    {
+      "anchor": "motivation",
+      "content_hash": "",
+      "doc_path": "spec/common/PROP-006-operating-modes.md",
+      "heading": "1. Motivation",
+      "line": 8,
+      "uri": "spec://vibevm/spec/common/PROP-006-operating-modes.md#motivation"
+    },
+    {
+      "anchor": "mfbt",
+      "content_hash": "",
+      "doc_path": "spec/common/PROP-006-operating-modes.md",
+      "heading": "2. Codeword: «move fast and break things»",
+      "line": 26,
+      "uri": "spec://vibevm/spec/common/PROP-006-operating-modes.md#mfbt"
+    },
+    {
+      "anchor": "mfbt-changes",
+      "content_hash": "",
+      "doc_path": "spec/common/PROP-006-operating-modes.md",
+      "heading": "2.1 What the codeword changes",
+      "line": 45,
+      "uri": "spec://vibevm/spec/common/PROP-006-operating-modes.md#mfbt-changes"
+    },
+    {
+      "anchor": "mfbt-limits",
+      "content_hash": "",
+      "doc_path": "spec/common/PROP-006-operating-modes.md",
+      "heading": "2.2 What the codeword does NOT change",
+      "line": 54,
+      "uri": "spec://vibevm/spec/common/PROP-006-operating-modes.md#mfbt-limits"
+    },
+    {
+      "anchor": "mfbt-lifecycle",
+      "content_hash": "",
+      "doc_path": "spec/common/PROP-006-operating-modes.md",
+      "heading": "2.3 Activation lifecycle",
+      "line": 67,
+      "uri": "spec://vibevm/spec/common/PROP-006-operating-modes.md#mfbt-lifecycle"
+    },
+    {
+      "anchor": "mfbt-reports",
+      "content_hash": "",
+      "doc_path": "spec/common/PROP-006-operating-modes.md",
+      "heading": "2.4 Reporting cadence under MFBT",
+      "line": 75,
+      "uri": "spec://vibevm/spec/common/PROP-006-operating-modes.md#mfbt-reports"
+    },
+    {
+      "anchor": "future",
+      "content_hash": "",
+      "doc_path": "spec/common/PROP-006-operating-modes.md",
+      "heading": "3. Future codewords",
+      "line": 88,
+      "uri": "spec://vibevm/spec/common/PROP-006-operating-modes.md#future"
+    },
+    {
+      "anchor": "history",
+      "content_hash": "",
+      "doc_path": "spec/common/PROP-006-operating-modes.md",
+      "heading": "4. Version history",
+      "line": 102,
+      "uri": "spec://vibevm/spec/common/PROP-006-operating-modes.md#history"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "",
+      "doc_path": "spec/common/PROP-013-periodic-health-audit.md",
+      "heading": "PROP-013: Periodic health audit — a recurring inventory of defects, rot, and drift",
+      "line": 1,
+      "uri": "spec://vibevm/spec/common/PROP-013-periodic-health-audit.md#root"
+    },
+    {
+      "anchor": "motivation",
+      "content_hash": "",
+      "doc_path": "spec/common/PROP-013-periodic-health-audit.md",
+      "heading": "1. Motivation",
+      "line": 8,
+      "uri": "spec://vibevm/spec/common/PROP-013-periodic-health-audit.md#motivation"
+    },
+    {
+      "anchor": "decisions",
+      "content_hash": "",
+      "doc_path": "spec/common/PROP-013-periodic-health-audit.md",
+      "heading": "2. Decisions",
+      "line": 23,
+      "uri": "spec://vibevm/spec/common/PROP-013-periodic-health-audit.md#decisions"
+    },
+    {
+      "anchor": "nature",
+      "content_hash": "",
+      "doc_path": "spec/common/PROP-013-periodic-health-audit.md",
+      "heading": "2.1 The audit is a deliberate periodic sweep, complementary to the gate",
+      "line": 25,
+      "uri": "spec://vibevm/spec/common/PROP-013-periodic-health-audit.md#nature"
+    },
+    {
+      "anchor": "checklist",
+      "content_hash": "",
+      "doc_path": "spec/common/PROP-013-periodic-health-audit.md",
+      "heading": "2.2 Audit scope — the category checklist",
+      "line": 29,
+      "uri": "spec://vibevm/spec/common/PROP-013-periodic-health-audit.md#checklist"
+    },
+    {
+      "anchor": "inventory",
+      "content_hash": "",
+      "doc_path": "spec/common/PROP-013-periodic-health-audit.md",
+      "heading": "2.3 The inventory — `AUDIT.md`",
+      "line": 58,
+      "uri": "spec://vibevm/spec/common/PROP-013-periodic-health-audit.md#inventory"
+    },
+    {
+      "anchor": "disposition",
+      "content_hash": "",
+      "doc_path": "spec/common/PROP-013-periodic-health-audit.md",
+      "heading": "2.4 Disposition and carry-forward",
+      "line": 76,
+      "uri": "spec://vibevm/spec/common/PROP-013-periodic-health-audit.md#disposition"
+    },
+    {
+      "anchor": "living",
+      "content_hash": "",
+      "doc_path": "spec/common/PROP-013-periodic-health-audit.md",
+      "heading": "2.5 The checklist is living; mechanical checks migrate to `vibe check`",
+      "line": 85,
+      "uri": "spec://vibevm/spec/common/PROP-013-periodic-health-audit.md#living"
+    },
+    {
+      "anchor": "cadence",
+      "content_hash": "",
+      "doc_path": "spec/common/PROP-013-periodic-health-audit.md",
+      "heading": "3. Cadence",
+      "line": 91,
+      "uri": "spec://vibevm/spec/common/PROP-013-periodic-health-audit.md#cadence"
+    },
+    {
+      "anchor": "running",
+      "content_hash": "",
+      "doc_path": "spec/common/PROP-013-periodic-health-audit.md",
+      "heading": "4. Running an audit",
+      "line": 99,
+      "uri": "spec://vibevm/spec/common/PROP-013-periodic-health-audit.md#running"
+    },
+    {
+      "anchor": "open",
+      "content_hash": "",
+      "doc_path": "spec/common/PROP-013-periodic-health-audit.md",
+      "heading": "5. Open questions",
+      "line": 115,
+      "uri": "spec://vibevm/spec/common/PROP-013-periodic-health-audit.md#open"
+    },
+    {
+      "anchor": "rejected",
+      "content_hash": "",
+      "doc_path": "spec/common/PROP-013-periodic-health-audit.md",
+      "heading": "6. Rejected alternatives",
+      "line": 123,
+      "uri": "spec://vibevm/spec/common/PROP-013-periodic-health-audit.md#rejected"
+    },
+    {
+      "anchor": "history",
+      "content_hash": "",
+      "doc_path": "spec/common/PROP-013-periodic-health-audit.md",
+      "heading": "7. Version history",
+      "line": 132,
+      "uri": "spec://vibevm/spec/common/PROP-013-periodic-health-audit.md#history"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-index/PROP-005-package-index.md",
+      "heading": "PROP-005: Optional package index — per-org metadata + standalone index server",
+      "line": 1,
+      "uri": "spec://vibevm/spec/modules/vibe-index/PROP-005-package-index.md#root"
+    },
+    {
+      "anchor": "motivation",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-index/PROP-005-package-index.md",
+      "heading": "1. Motivation",
+      "line": 11,
+      "uri": "spec://vibevm/spec/modules/vibe-index/PROP-005-package-index.md#motivation"
+    },
+    {
+      "anchor": "decisions",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-index/PROP-005-package-index.md",
+      "heading": "2. Decisions",
+      "line": 33,
+      "uri": "spec://vibevm/spec/modules/vibe-index/PROP-005-package-index.md#decisions"
+    },
+    {
+      "anchor": "optional",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-index/PROP-005-package-index.md",
+      "heading": "2.1 Index is OPTIONAL — zero impact when absent",
+      "line": 35,
+      "uri": "spec://vibevm/spec/modules/vibe-index/PROP-005-package-index.md#optional"
+    },
+    {
+      "anchor": "form-factor",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-index/PROP-005-package-index.md",
+      "heading": "2.2 Form factor: per-org **index** living in a separate git repository",
+      "line": 47,
+      "uri": "spec://vibevm/spec/modules/vibe-index/PROP-005-package-index.md#form-factor"
+    },
+    {
+      "anchor": "truth",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-index/PROP-005-package-index.md",
+      "heading": "2.3 Source of truth: package repos remain authoritative; index is a hot cache",
+      "line": 89,
+      "uri": "spec://vibevm/spec/modules/vibe-index/PROP-005-package-index.md#truth"
+    },
+    {
+      "anchor": "layout",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-index/PROP-005-package-index.md",
+      "heading": "2.4 File layout inside the index repo",
+      "line": 97,
+      "uri": "spec://vibevm/spec/modules/vibe-index/PROP-005-package-index.md#layout"
+    },
+    {
+      "anchor": "modes",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-index/PROP-005-package-index.md",
+      "heading": "2.5 Two modes: CLI tool and HTTP server",
+      "line": 202,
+      "uri": "spec://vibevm/spec/modules/vibe-index/PROP-005-package-index.md#modes"
+    },
+    {
+      "anchor": "entry",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-index/PROP-005-package-index.md",
+      "heading": "2.6 Index entry shape (the canonical record)",
+      "line": 213,
+      "uri": "spec://vibevm/spec/modules/vibe-index/PROP-005-package-index.md#entry"
+    },
+    {
+      "anchor": "trust",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-index/PROP-005-package-index.md",
+      "heading": "2.7 Identity and trust",
+      "line": 285,
+      "uri": "spec://vibevm/spec/modules/vibe-index/PROP-005-package-index.md#trust"
+    },
+    {
+      "anchor": "reindex",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-index/PROP-005-package-index.md",
+      "heading": "2.8 Reindexation: full and incremental",
+      "line": 293,
+      "uri": "spec://vibevm/spec/modules/vibe-index/PROP-005-package-index.md#reindex"
+    },
+    {
+      "anchor": "server-mode",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-index/PROP-005-package-index.md",
+      "heading": "2.9 Single-writer server mode",
+      "line": 319,
+      "uri": "spec://vibevm/spec/modules/vibe-index/PROP-005-package-index.md#server-mode"
+    },
+    {
+      "anchor": "http",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-index/PROP-005-package-index.md",
+      "heading": "2.10 HTTP API surface",
+      "line": 344,
+      "uri": "spec://vibevm/spec/modules/vibe-index/PROP-005-package-index.md#http"
+    },
+    {
+      "anchor": "cli",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-index/PROP-005-package-index.md",
+      "heading": "2.11 CLI surface",
+      "line": 390,
+      "uri": "spec://vibevm/spec/modules/vibe-index/PROP-005-package-index.md#cli"
+    },
+    {
+      "anchor": "types",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-index/PROP-005-package-index.md",
+      "heading": "2.12 Data structures",
+      "line": 424,
+      "uri": "spec://vibevm/spec/modules/vibe-index/PROP-005-package-index.md#types"
+    },
+    {
+      "anchor": "persistence",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-index/PROP-005-package-index.md",
+      "heading": "2.13 Persistence layer",
+      "line": 459,
+      "uri": "spec://vibevm/spec/modules/vibe-index/PROP-005-package-index.md#persistence"
+    },
+    {
+      "anchor": "integration",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-index/PROP-005-package-index.md",
+      "heading": "2.14 Integration with the rest of vibevm",
+      "line": 494,
+      "uri": "spec://vibevm/spec/modules/vibe-index/PROP-005-package-index.md#integration"
+    },
+    {
+      "anchor": "never",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-index/PROP-005-package-index.md",
+      "heading": "2.15 What index must NEVER do",
+      "line": 516,
+      "uri": "spec://vibevm/spec/modules/vibe-index/PROP-005-package-index.md#never"
+    },
+    {
+      "anchor": "architecture",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-index/PROP-005-package-index.md",
+      "heading": "3. Architecture",
+      "line": 526,
+      "uri": "spec://vibevm/spec/modules/vibe-index/PROP-005-package-index.md#architecture"
+    },
+    {
+      "anchor": "crate-layout",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-index/PROP-005-package-index.md",
+      "heading": "3.1 Crate layout",
+      "line": 528,
+      "uri": "spec://vibevm/spec/modules/vibe-index/PROP-005-package-index.md#crate-layout"
+    },
+    {
+      "anchor": "deps",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-index/PROP-005-package-index.md",
+      "heading": "3.2 Dependencies",
+      "line": 612,
+      "uri": "spec://vibevm/spec/modules/vibe-index/PROP-005-package-index.md#deps"
+    },
+    {
+      "anchor": "git-access",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-index/PROP-005-package-index.md",
+      "heading": "3.3 Git access in the scanner",
+      "line": 640,
+      "uri": "spec://vibevm/spec/modules/vibe-index/PROP-005-package-index.md#git-access"
+    },
+    {
+      "anchor": "threading",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-index/PROP-005-package-index.md",
+      "heading": "3.4 Threading model",
+      "line": 646,
+      "uri": "spec://vibevm/spec/modules/vibe-index/PROP-005-package-index.md#threading"
+    },
+    {
+      "anchor": "config",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-index/PROP-005-package-index.md",
+      "heading": "3.5 Configuration precedence",
+      "line": 652,
+      "uri": "spec://vibevm/spec/modules/vibe-index/PROP-005-package-index.md#config"
+    },
+    {
+      "anchor": "phases",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-index/PROP-005-package-index.md",
+      "heading": "4. Phase plan (slices)",
+      "line": 658,
+      "uri": "spec://vibevm/spec/modules/vibe-index/PROP-005-package-index.md#phases"
+    },
+    {
+      "anchor": "slice-1",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-index/PROP-005-package-index.md",
+      "heading": "4.1 Slice 1 — skeleton",
+      "line": 662,
+      "uri": "spec://vibevm/spec/modules/vibe-index/PROP-005-package-index.md#slice-1"
+    },
+    {
+      "anchor": "slice-2",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-index/PROP-005-package-index.md",
+      "heading": "4.2 Slice 2 — types + persistence",
+      "line": 668,
+      "uri": "spec://vibevm/spec/modules/vibe-index/PROP-005-package-index.md#slice-2"
+    },
+    {
+      "anchor": "slice-3",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-index/PROP-005-package-index.md",
+      "heading": "4.3 Slice 3 — scanner + reindex from clones",
+      "line": 677,
+      "uri": "spec://vibevm/spec/modules/vibe-index/PROP-005-package-index.md#slice-3"
+    },
+    {
+      "anchor": "slice-4",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-index/PROP-005-package-index.md",
+      "heading": "4.4 Slice 4 — read CLI subcommands",
+      "line": 686,
+      "uri": "spec://vibevm/spec/modules/vibe-index/PROP-005-package-index.md#slice-4"
+    },
+    {
+      "anchor": "slice-5",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-index/PROP-005-package-index.md",
+      "heading": "4.5 Slice 5 — HTTP server (read-only)",
+      "line": 695,
+      "uri": "spec://vibevm/spec/modules/vibe-index/PROP-005-package-index.md#slice-5"
+    },
+    {
+      "anchor": "slice-6",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-index/PROP-005-package-index.md",
+      "heading": "4.6 Slice 6 — write CLI + write HTTP + auth",
+      "line": 707,
+      "uri": "spec://vibevm/spec/modules/vibe-index/PROP-005-package-index.md#slice-6"
+    },
+    {
+      "anchor": "slice-7",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-index/PROP-005-package-index.md",
+      "heading": "4.7 Slice 7 — incremental reindex",
+      "line": 716,
+      "uri": "spec://vibevm/spec/modules/vibe-index/PROP-005-package-index.md#slice-7"
+    },
+    {
+      "anchor": "slice-8",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-index/PROP-005-package-index.md",
+      "heading": "4.8 Slice 8 — `--from-github` mode",
+      "line": 722,
+      "uri": "spec://vibevm/spec/modules/vibe-index/PROP-005-package-index.md#slice-8"
+    },
+    {
+      "anchor": "slice-9",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-index/PROP-005-package-index.md",
+      "heading": "4.9 Slice 9 — vibe-publish post-publish hook",
+      "line": 728,
+      "uri": "spec://vibevm/spec/modules/vibe-index/PROP-005-package-index.md#slice-9"
+    },
+    {
+      "anchor": "slice-10",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-index/PROP-005-package-index.md",
+      "heading": "4.10 Slice 10 — consumer-side integration",
+      "line": 734,
+      "uri": "spec://vibevm/spec/modules/vibe-index/PROP-005-package-index.md#slice-10"
+    },
+    {
+      "anchor": "slice-11",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-index/PROP-005-package-index.md",
+      "heading": "4.11 Slice 11 — docs + manual-test smoke",
+      "line": 740,
+      "uri": "spec://vibevm/spec/modules/vibe-index/PROP-005-package-index.md#slice-11"
+    },
+    {
+      "anchor": "tests",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-index/PROP-005-package-index.md",
+      "heading": "5. Test plan",
+      "line": 750,
+      "uri": "spec://vibevm/spec/modules/vibe-index/PROP-005-package-index.md#tests"
+    },
+    {
+      "anchor": "distribution",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-index/PROP-005-package-index.md",
+      "heading": "6. Distribution — a workspace crate",
+      "line": 763,
+      "uri": "spec://vibevm/spec/modules/vibe-index/PROP-005-package-index.md#distribution"
+    },
+    {
+      "anchor": "secrets",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-index/PROP-005-package-index.md",
+      "heading": "7. Auth, secrets, scope",
+      "line": 775,
+      "uri": "spec://vibevm/spec/modules/vibe-index/PROP-005-package-index.md#secrets"
+    },
+    {
+      "anchor": "ops",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-index/PROP-005-package-index.md",
+      "heading": "8. Operations",
+      "line": 787,
+      "uri": "spec://vibevm/spec/modules/vibe-index/PROP-005-package-index.md#ops"
+    },
+    {
+      "anchor": "open",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-index/PROP-005-package-index.md",
+      "heading": "9. Open questions",
+      "line": 814,
+      "uri": "spec://vibevm/spec/modules/vibe-index/PROP-005-package-index.md#open"
+    },
+    {
+      "anchor": "acceptance",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-index/PROP-005-package-index.md",
+      "heading": "10. Acceptance criteria",
+      "line": 831,
+      "uri": "spec://vibevm/spec/modules/vibe-index/PROP-005-package-index.md#acceptance"
+    },
+    {
+      "anchor": "wire-up",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-index/PROP-005-package-index.md",
+      "heading": "11. Wire-up scripts (informational, not shipped)",
+      "line": 846,
+      "uri": "spec://vibevm/spec/modules/vibe-index/PROP-005-package-index.md#wire-up"
+    },
+    {
+      "anchor": "history",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-index/PROP-005-package-index.md",
+      "heading": "12. Version history",
+      "line": 878,
+      "uri": "spec://vibevm/spec/modules/vibe-index/PROP-005-package-index.md#history"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-registry/PROP-001-git-backend.md",
+      "heading": "PROP-001: Git-backed registry for `vibe-registry`",
+      "line": 1,
+      "uri": "spec://vibevm/spec/modules/vibe-registry/PROP-001-git-backend.md#root"
+    },
+    {
+      "anchor": "motivation",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-registry/PROP-001-git-backend.md",
+      "heading": "1. Motivation",
+      "line": 22,
+      "uri": "spec://vibevm/spec/modules/vibe-registry/PROP-001-git-backend.md#motivation"
+    },
+    {
+      "anchor": "decisions",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-registry/PROP-001-git-backend.md",
+      "heading": "2. Decisions",
+      "line": 44,
+      "uri": "spec://vibevm/spec/modules/vibe-registry/PROP-001-git-backend.md#decisions"
+    },
+    {
+      "anchor": "backend",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-registry/PROP-001-git-backend.md",
+      "heading": "2.1 Backend: shell out to `git`, not `git2`",
+      "line": 46,
+      "uri": "spec://vibevm/spec/modules/vibe-registry/PROP-001-git-backend.md#backend"
+    },
+    {
+      "anchor": "backend-trait",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-registry/PROP-001-git-backend.md",
+      "heading": "2.2 `GitBackend` trait",
+      "line": 114,
+      "uri": "spec://vibevm/spec/modules/vibe-registry/PROP-001-git-backend.md#backend-trait"
+    },
+    {
+      "anchor": "registry-trait",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-registry/PROP-001-git-backend.md",
+      "heading": "2.3 `Registry` trait",
+      "line": 156,
+      "uri": "spec://vibevm/spec/modules/vibe-registry/PROP-001-git-backend.md#registry-trait"
+    },
+    {
+      "anchor": "cache-layout",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-registry/PROP-001-git-backend.md",
+      "heading": "2.4 Cache layout",
+      "line": 181,
+      "uri": "spec://vibevm/spec/modules/vibe-registry/PROP-001-git-backend.md#cache-layout"
+    },
+    {
+      "anchor": "freshness",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-registry/PROP-001-git-backend.md",
+      "heading": "2.5 Freshness policy",
+      "line": 212,
+      "uri": "spec://vibevm/spec/modules/vibe-registry/PROP-001-git-backend.md#freshness"
+    },
+    {
+      "anchor": "source-uri",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-registry/PROP-001-git-backend.md",
+      "heading": "2.6 Lockfile `source_uri` format",
+      "line": 228,
+      "uri": "spec://vibevm/spec/modules/vibe-registry/PROP-001-git-backend.md#source-uri"
+    },
+    {
+      "anchor": "windows-ux",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-registry/PROP-001-git-backend.md",
+      "heading": "2.7 Windows UX and stderr parsing",
+      "line": 246,
+      "uri": "spec://vibevm/spec/modules/vibe-registry/PROP-001-git-backend.md#windows-ux"
+    },
+    {
+      "anchor": "rejected",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-registry/PROP-001-git-backend.md",
+      "heading": "3. Rejected alternatives",
+      "line": 274,
+      "uri": "spec://vibevm/spec/modules/vibe-registry/PROP-001-git-backend.md#rejected"
+    },
+    {
+      "anchor": "out-of-scope",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-registry/PROP-001-git-backend.md",
+      "heading": "4. Out of scope for M1.1",
+      "line": 309,
+      "uri": "spec://vibevm/spec/modules/vibe-registry/PROP-001-git-backend.md#out-of-scope"
+    },
+    {
+      "anchor": "acceptance",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-registry/PROP-001-git-backend.md",
+      "heading": "5. Acceptance (for M1.1 implementation)",
+      "line": 321,
+      "uri": "spec://vibevm/spec/modules/vibe-registry/PROP-001-git-backend.md#acceptance"
+    },
+    {
+      "anchor": "open-questions",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-registry/PROP-001-git-backend.md",
+      "heading": "6. Open questions",
+      "line": 360,
+      "uri": "spec://vibevm/spec/modules/vibe-registry/PROP-001-git-backend.md#open-questions"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
+      "heading": "PROP-002: Decentralized, mirror-friendly registry with capability-based depsolver",
+      "line": 1,
+      "uri": "spec://vibevm/spec/modules/vibe-registry/PROP-002-decentralized-registry.md#root"
+    },
+    {
+      "anchor": "motivation",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
+      "heading": "1. Motivation",
+      "line": 10,
+      "uri": "spec://vibevm/spec/modules/vibe-registry/PROP-002-decentralized-registry.md#motivation"
+    },
+    {
+      "anchor": "decisions",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
+      "heading": "2. Decisions",
+      "line": 34,
+      "uri": "spec://vibevm/spec/modules/vibe-registry/PROP-002-decentralized-registry.md#decisions"
+    },
+    {
+      "anchor": "identity",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
+      "heading": "2.1 Identity: content-addressed, URL-orthogonal",
+      "line": 36,
+      "uri": "spec://vibevm/spec/modules/vibe-registry/PROP-002-decentralized-registry.md#identity"
+    },
+    {
+      "anchor": "registry-model",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
+      "heading": "2.2 Registry model: `[[registry]]` array, priority-ordered",
+      "line": 48,
+      "uri": "spec://vibevm/spec/modules/vibe-registry/PROP-002-decentralized-registry.md#registry-model"
+    },
+    {
+      "anchor": "registry-auth",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
+      "heading": "2.2.1 Per-registry authentication",
+      "line": 67,
+      "uri": "spec://vibevm/spec/modules/vibe-registry/PROP-002-decentralized-registry.md#registry-auth"
+    },
+    {
+      "anchor": "mirror",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
+      "heading": "2.3 Mirror layer: transparent, integrity-verified",
+      "line": 118,
+      "uri": "spec://vibevm/spec/modules/vibe-registry/PROP-002-decentralized-registry.md#mirror"
+    },
+    {
+      "anchor": "failure-discriminator",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
+      "heading": "2.3.1 Failure-mode discriminator: registry-walk vs mirror-walk",
+      "line": 137,
+      "uri": "spec://vibevm/spec/modules/vibe-registry/PROP-002-decentralized-registry.md#failure-discriminator"
+    },
+    {
+      "anchor": "override",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
+      "heading": "2.4 Overrides: surgical pin of source location",
+      "line": 152,
+      "uri": "spec://vibevm/spec/modules/vibe-registry/PROP-002-decentralized-registry.md#override"
+    },
+    {
+      "anchor": "git-source",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
+      "heading": "2.4.1 Git-source declarations: `[requires.packages]` table-form",
+      "line": 168,
+      "uri": "spec://vibevm/spec/modules/vibe-registry/PROP-002-decentralized-registry.md#git-source"
+    },
+    {
+      "anchor": "redirect",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
+      "heading": "2.4.2 Registry redirect: delegating package content to an external repo",
+      "line": 286,
+      "uri": "spec://vibevm/spec/modules/vibe-registry/PROP-002-decentralized-registry.md#redirect"
+    },
+    {
+      "anchor": "layout",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
+      "heading": "2.5 Per-package layout: flat, tag-based",
+      "line": 409,
+      "uri": "spec://vibevm/spec/modules/vibe-registry/PROP-002-decentralized-registry.md#layout"
+    },
+    {
+      "anchor": "cache",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
+      "heading": "2.6 Cache layout: organized by canonical registry URL",
+      "line": 430,
+      "uri": "spec://vibevm/spec/modules/vibe-registry/PROP-002-decentralized-registry.md#cache"
+    },
+    {
+      "anchor": "lockfile",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
+      "heading": "2.7 Lockfile schema v2",
+      "line": 451,
+      "uri": "spec://vibevm/spec/modules/vibe-registry/PROP-002-decentralized-registry.md#lockfile"
+    },
+    {
+      "anchor": "solver",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
+      "heading": "2.8 Depsolver: resolvo primary, DepSolver trait for fallback",
+      "line": 483,
+      "uri": "spec://vibevm/spec/modules/vibe-registry/PROP-002-decentralized-registry.md#solver"
+    },
+    {
+      "anchor": "capability",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
+      "heading": "2.9 Capability-based deps: `[provides]` / `[requires]` / `[[requires_any]]` / `[obsoletes]` / `[conflicts]`",
+      "line": 497,
+      "uri": "spec://vibevm/spec/modules/vibe-registry/PROP-002-decentralized-registry.md#capability"
+    },
+    {
+      "anchor": "publish",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
+      "heading": "2.10 Publish utility: `vibe registry publish <path>`",
+      "line": 512,
+      "uri": "spec://vibevm/spec/modules/vibe-registry/PROP-002-decentralized-registry.md#publish"
+    },
+    {
+      "anchor": "jtd",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
+      "heading": "2.11 JTD + codegen for wire contracts",
+      "line": 553,
+      "uri": "spec://vibevm/spec/modules/vibe-registry/PROP-002-decentralized-registry.md#jtd"
+    },
+    {
+      "anchor": "perf",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
+      "heading": "2.12 Performance and resolver I/O strategy",
+      "line": 566,
+      "uri": "spec://vibevm/spec/modules/vibe-registry/PROP-002-decentralized-registry.md#perf"
+    },
+    {
+      "anchor": "rejected",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
+      "heading": "3. Rejected alternatives",
+      "line": 583,
+      "uri": "spec://vibevm/spec/modules/vibe-registry/PROP-002-decentralized-registry.md#rejected"
+    },
+    {
+      "anchor": "out-of-scope",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
+      "heading": "4. Out of scope for Phase A",
+      "line": 619,
+      "uri": "spec://vibevm/spec/modules/vibe-registry/PROP-002-decentralized-registry.md#out-of-scope"
+    },
+    {
+      "anchor": "acceptance",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
+      "heading": "5. Acceptance (Phase A)",
+      "line": 632,
+      "uri": "spec://vibevm/spec/modules/vibe-registry/PROP-002-decentralized-registry.md#acceptance"
+    },
+    {
+      "anchor": "phase-b",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
+      "heading": "6. Phase B preview (M1.6)",
+      "line": 653,
+      "uri": "spec://vibevm/spec/modules/vibe-registry/PROP-002-decentralized-registry.md#phase-b"
+    },
+    {
+      "anchor": "open",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
+      "heading": "7. Open questions",
+      "line": 667,
+      "uri": "spec://vibevm/spec/modules/vibe-registry/PROP-002-decentralized-registry.md#open"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
+      "heading": "PROP-008: Qualified package naming — groups, short aliases, collision detection",
+      "line": 1,
+      "uri": "spec://vibevm/spec/modules/vibe-registry/PROP-008-qualified-naming.md#root"
+    },
+    {
+      "anchor": "motivation",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
+      "heading": "1. Motivation",
+      "line": 11,
+      "uri": "spec://vibevm/spec/modules/vibe-registry/PROP-008-qualified-naming.md#motivation"
+    },
+    {
+      "anchor": "decisions",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
+      "heading": "2. Decisions",
+      "line": 23,
+      "uri": "spec://vibevm/spec/modules/vibe-registry/PROP-008-qualified-naming.md#decisions"
+    },
+    {
+      "anchor": "group",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
+      "heading": "2.1 The `group` field",
+      "line": 25,
+      "uri": "spec://vibevm/spec/modules/vibe-registry/PROP-008-qualified-naming.md#group"
+    },
+    {
+      "anchor": "identity",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
+      "heading": "2.2 Identity tuple — `(group, name, version, content_hash)`",
+      "line": 41,
+      "uri": "spec://vibevm/spec/modules/vibe-registry/PROP-008-qualified-naming.md#identity"
+    },
+    {
+      "anchor": "kind",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
+      "heading": "2.3 `kind` becomes pure metadata",
+      "line": 49,
+      "uri": "spec://vibevm/spec/modules/vibe-registry/PROP-008-qualified-naming.md#kind"
+    },
+    {
+      "anchor": "pkgref",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
+      "heading": "2.4 pkgref grammar",
+      "line": 60,
+      "uri": "spec://vibevm/spec/modules/vibe-registry/PROP-008-qualified-naming.md#pkgref"
+    },
+    {
+      "anchor": "repo-naming",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
+      "heading": "2.5 Repository naming — `naming = \"fqdn\"`",
+      "line": 80,
+      "uri": "spec://vibevm/spec/modules/vibe-registry/PROP-008-qualified-naming.md#repo-naming"
+    },
+    {
+      "anchor": "short-name",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
+      "heading": "2.6 Short-name resolution",
+      "line": 95,
+      "uri": "spec://vibevm/spec/modules/vibe-registry/PROP-008-qualified-naming.md#short-name"
+    },
+    {
+      "anchor": "collision",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
+      "heading": "2.7 Collision vs conflict",
+      "line": 104,
+      "uri": "spec://vibevm/spec/modules/vibe-registry/PROP-008-qualified-naming.md#collision"
+    },
+    {
+      "anchor": "index-ext",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
+      "heading": "2.8 Index extension",
+      "line": 128,
+      "uri": "spec://vibevm/spec/modules/vibe-registry/PROP-008-qualified-naming.md#index-ext"
+    },
+    {
+      "anchor": "explorer",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
+      "heading": "2.9 Registry explorer",
+      "line": 132,
+      "uri": "spec://vibevm/spec/modules/vibe-registry/PROP-008-qualified-naming.md#explorer"
+    },
+    {
+      "anchor": "migration",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
+      "heading": "3. Migration",
+      "line": 143,
+      "uri": "spec://vibevm/spec/modules/vibe-registry/PROP-008-qualified-naming.md#migration"
+    },
+    {
+      "anchor": "rejected",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
+      "heading": "4. Rejected alternatives",
+      "line": 155,
+      "uri": "spec://vibevm/spec/modules/vibe-registry/PROP-008-qualified-naming.md#rejected"
+    },
+    {
+      "anchor": "open",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
+      "heading": "5. Open questions",
+      "line": 164,
+      "uri": "spec://vibevm/spec/modules/vibe-registry/PROP-008-qualified-naming.md#open"
+    },
+    {
+      "anchor": "phases",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
+      "heading": "6. Phase plan",
+      "line": 172,
+      "uri": "spec://vibevm/spec/modules/vibe-registry/PROP-008-qualified-naming.md#phases"
+    },
+    {
+      "anchor": "history",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
+      "heading": "7. Version history",
+      "line": 178,
+      "uri": "spec://vibevm/spec/modules/vibe-registry/PROP-008-qualified-naming.md#history"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
+      "heading": "PROP-010: The local package cache — a shared offline store",
+      "line": 1,
+      "uri": "spec://vibevm/spec/modules/vibe-registry/PROP-010-local-package-cache.md#root"
+    },
+    {
+      "anchor": "motivation",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
+      "heading": "1. Motivation",
+      "line": 10,
+      "uri": "spec://vibevm/spec/modules/vibe-registry/PROP-010-local-package-cache.md#motivation"
+    },
+    {
+      "anchor": "decisions",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
+      "heading": "2. Decisions",
+      "line": 20,
+      "uri": "spec://vibevm/spec/modules/vibe-registry/PROP-010-local-package-cache.md#decisions"
+    },
+    {
+      "anchor": "global",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
+      "heading": "2.1 The cache is a machine-global, accretive store",
+      "line": 22,
+      "uri": "spec://vibevm/spec/modules/vibe-registry/PROP-010-local-package-cache.md#global"
+    },
+    {
+      "anchor": "scaffolding",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
+      "heading": "2.2 The cache serves work that does not exist yet",
+      "line": 30,
+      "uri": "spec://vibevm/spec/modules/vibe-registry/PROP-010-local-package-cache.md#scaffolding"
+    },
+    {
+      "anchor": "identity",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
+      "heading": "2.3 The cache is keyed by package identity",
+      "line": 39,
+      "uri": "spec://vibevm/spec/modules/vibe-registry/PROP-010-local-package-cache.md#identity"
+    },
+    {
+      "anchor": "user-registries",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
+      "heading": "2.4 User-level default registry configuration",
+      "line": 47,
+      "uri": "spec://vibevm/spec/modules/vibe-registry/PROP-010-local-package-cache.md#user-registries"
+    },
+    {
+      "anchor": "offline",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
+      "heading": "2.5 `--offline` — the network-forbidden policy",
+      "line": 57,
+      "uri": "spec://vibevm/spec/modules/vibe-registry/PROP-010-local-package-cache.md#offline"
+    },
+    {
+      "anchor": "resolution",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
+      "heading": "2.6 Offline resolution",
+      "line": 65,
+      "uri": "spec://vibevm/spec/modules/vibe-registry/PROP-010-local-package-cache.md#resolution"
+    },
+    {
+      "anchor": "layout",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
+      "heading": "2.7 Cache layout and population",
+      "line": 73,
+      "uri": "spec://vibevm/spec/modules/vibe-registry/PROP-010-local-package-cache.md#layout"
+    },
+    {
+      "anchor": "management",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
+      "heading": "2.8 Cache management surface",
+      "line": 79,
+      "uri": "spec://vibevm/spec/modules/vibe-registry/PROP-010-local-package-cache.md#management"
+    },
+    {
+      "anchor": "layering",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
+      "heading": "2.9 Layering — the cache, `vibedeps/`, and the lockfile",
+      "line": 90,
+      "uri": "spec://vibevm/spec/modules/vibe-registry/PROP-010-local-package-cache.md#layering"
+    },
+    {
+      "anchor": "surface",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
+      "heading": "3. Command and crate surface",
+      "line": 102,
+      "uri": "spec://vibevm/spec/modules/vibe-registry/PROP-010-local-package-cache.md#surface"
+    },
+    {
+      "anchor": "migration",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
+      "heading": "4. Migration",
+      "line": 113,
+      "uri": "spec://vibevm/spec/modules/vibe-registry/PROP-010-local-package-cache.md#migration"
+    },
+    {
+      "anchor": "open",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
+      "heading": "5. Open questions",
+      "line": 121,
+      "uri": "spec://vibevm/spec/modules/vibe-registry/PROP-010-local-package-cache.md#open"
+    },
+    {
+      "anchor": "rejected",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
+      "heading": "6. Rejected / deferred alternatives",
+      "line": 133,
+      "uri": "spec://vibevm/spec/modules/vibe-registry/PROP-010-local-package-cache.md#rejected"
+    },
+    {
+      "anchor": "phases",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
+      "heading": "7. Phase plan",
+      "line": 142,
+      "uri": "spec://vibevm/spec/modules/vibe-registry/PROP-010-local-package-cache.md#phases"
+    },
+    {
+      "anchor": "history",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
+      "heading": "8. Version history",
+      "line": 155,
+      "uri": "spec://vibevm/spec/modules/vibe-registry/PROP-010-local-package-cache.md#history"
+    },
+    {
+      "anchor": "problem",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-resolver/PROP-003-dep-evolution.md",
+      "heading": "1. Problem statement",
+      "line": 31,
+      "uri": "spec://vibevm/spec/modules/vibe-resolver/PROP-003-dep-evolution.md#problem"
+    },
+    {
+      "anchor": "decisions",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-resolver/PROP-003-dep-evolution.md",
+      "heading": "2. Decisions",
+      "line": 47,
+      "uri": "spec://vibevm/spec/modules/vibe-resolver/PROP-003-dep-evolution.md#decisions"
+    },
+    {
+      "anchor": "solver-upgrade",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-resolver/PROP-003-dep-evolution.md",
+      "heading": "2.1 Solver upgrade path: SAT-class engine behind the existing `DepSolver` trait",
+      "line": 49,
+      "uri": "spec://vibevm/spec/modules/vibe-resolver/PROP-003-dep-evolution.md#solver-upgrade"
+    },
+    {
+      "anchor": "solver-backend",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-resolver/PROP-003-dep-evolution.md",
+      "heading": "2.2 SAT solver backend: libsolv (BSD-3-Clause), via thin Rust FFI",
+      "line": 73,
+      "uri": "spec://vibevm/spec/modules/vibe-resolver/PROP-003-dep-evolution.md#solver-backend"
+    },
+    {
+      "anchor": "solver-features",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-resolver/PROP-003-dep-evolution.md",
+      "heading": "2.3 SAT solver capabilities we rely on",
+      "line": 105,
+      "uri": "spec://vibevm/spec/modules/vibe-resolver/PROP-003-dep-evolution.md#solver-features"
+    },
+    {
+      "anchor": "features",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-resolver/PROP-003-dep-evolution.md",
+      "heading": "2.4 Optional components (features) — cargo-tradition with vibevm twists",
+      "line": 127,
+      "uri": "spec://vibevm/spec/modules/vibe-resolver/PROP-003-dep-evolution.md#features"
+    },
+    {
+      "anchor": "subskills",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-resolver/PROP-003-dep-evolution.md",
+      "heading": "2.5 Subskills — vibevm-native optional content units with three delivery modes",
+      "line": 170,
+      "uri": "spec://vibevm/spec/modules/vibe-resolver/PROP-003-dep-evolution.md#subskills"
+    },
+    {
+      "anchor": "delivery-modes",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-resolver/PROP-003-dep-evolution.md",
+      "heading": "2.5.0 Three delivery modes — eager, lazy-push, lazy-pull",
+      "line": 200,
+      "uri": "spec://vibevm/spec/modules/vibe-resolver/PROP-003-dep-evolution.md#delivery-modes"
+    },
+    {
+      "anchor": "subskill-manifest",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-resolver/PROP-003-dep-evolution.md",
+      "heading": "2.5.1 Subskill manifest (`vibe-subskill.toml`)",
+      "line": 214,
+      "uri": "spec://vibevm/spec/modules/vibe-resolver/PROP-003-dep-evolution.md#subskill-manifest"
+    },
+    {
+      "anchor": "subskill-activation",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-resolver/PROP-003-dep-evolution.md",
+      "heading": "2.5.2 Subskill activation channels — broader probe surface",
+      "line": 305,
+      "uri": "spec://vibevm/spec/modules/vibe-resolver/PROP-003-dep-evolution.md#subskill-activation"
+    },
+    {
+      "anchor": "llm-virtual-caps",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-resolver/PROP-003-dep-evolution.md",
+      "heading": "2.5.3 LLM-emitted virtual capabilities (post-M1.5) — refactor of \"LLM-inferred activation\"",
+      "line": 322,
+      "uri": "spec://vibevm/spec/modules/vibe-resolver/PROP-003-dep-evolution.md#llm-virtual-caps"
+    },
+    {
+      "anchor": "subskill-rationale",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-resolver/PROP-003-dep-evolution.md",
+      "heading": "2.5.4 Why subskills, not just more packages",
+      "line": 341,
+      "uri": "spec://vibevm/spec/modules/vibe-resolver/PROP-003-dep-evolution.md#subskill-rationale"
+    },
+    {
+      "anchor": "subskill-recursion",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-resolver/PROP-003-dep-evolution.md",
+      "heading": "2.5.5 Recursive subskills",
+      "line": 350,
+      "uri": "spec://vibevm/spec/modules/vibe-resolver/PROP-003-dep-evolution.md#subskill-recursion"
+    },
+    {
+      "anchor": "subskill-describes",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-resolver/PROP-003-dep-evolution.md",
+      "heading": "2.5.6 `describes` PURL on subskills",
+      "line": 354,
+      "uri": "spec://vibevm/spec/modules/vibe-resolver/PROP-003-dep-evolution.md#subskill-describes"
+    },
+    {
+      "anchor": "interface-tags",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-resolver/PROP-003-dep-evolution.md",
+      "heading": "2.6 Capability-based interface tags — the abstract layer",
+      "line": 362,
+      "uri": "spec://vibevm/spec/modules/vibe-resolver/PROP-003-dep-evolution.md#interface-tags"
+    },
+    {
+      "anchor": "conditional-deps",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-resolver/PROP-003-dep-evolution.md",
+      "heading": "2.6.1 Conditional dependencies — `[target.\"context(...)\".dependencies]`",
+      "line": 394,
+      "uri": "spec://vibevm/spec/modules/vibe-resolver/PROP-003-dep-evolution.md#conditional-deps"
+    },
+    {
+      "anchor": "i18n",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-resolver/PROP-003-dep-evolution.md",
+      "heading": "2.7 Internationalization (i18n) — multi-language package content",
+      "line": 418,
+      "uri": "spec://vibevm/spec/modules/vibe-resolver/PROP-003-dep-evolution.md#i18n"
+    },
+    {
+      "anchor": "i18n-naming",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-resolver/PROP-003-dep-evolution.md",
+      "heading": "2.7.1 File naming — the chosen pattern",
+      "line": 422,
+      "uri": "spec://vibevm/spec/modules/vibe-resolver/PROP-003-dep-evolution.md#i18n-naming"
+    },
+    {
+      "anchor": "i18n-fallback",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-resolver/PROP-003-dep-evolution.md",
+      "heading": "2.7.2 Language preference resolution — fallback chain",
+      "line": 451,
+      "uri": "spec://vibevm/spec/modules/vibe-resolver/PROP-003-dep-evolution.md#i18n-fallback"
+    },
+    {
+      "anchor": "i18n-prefs",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-resolver/PROP-003-dep-evolution.md",
+      "heading": "2.7.3 Language preference declarations — three layers",
+      "line": 462,
+      "uri": "spec://vibevm/spec/modules/vibe-resolver/PROP-003-dep-evolution.md#i18n-prefs"
+    },
+    {
+      "anchor": "i18n-fields",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-resolver/PROP-003-dep-evolution.md",
+      "heading": "2.7.4 Manifest-field translation (short strings)",
+      "line": 484,
+      "uri": "spec://vibevm/spec/modules/vibe-resolver/PROP-003-dep-evolution.md#i18n-fields"
+    },
+    {
+      "anchor": "i18n-lockfile",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-resolver/PROP-003-dep-evolution.md",
+      "heading": "2.7.5 Lockfile impact",
+      "line": 519,
+      "uri": "spec://vibevm/spec/modules/vibe-resolver/PROP-003-dep-evolution.md#i18n-lockfile"
+    },
+    {
+      "anchor": "manifest",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-resolver/PROP-003-dep-evolution.md",
+      "heading": "2.8 Manifest schema additions — the consolidated picture",
+      "line": 532,
+      "uri": "spec://vibevm/spec/modules/vibe-resolver/PROP-003-dep-evolution.md#manifest"
+    },
+    {
+      "anchor": "lockfile-v3",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-resolver/PROP-003-dep-evolution.md",
+      "heading": "2.9 Lockfile schema impact (v3)",
+      "line": 601,
+      "uri": "spec://vibevm/spec/modules/vibe-resolver/PROP-003-dep-evolution.md#lockfile-v3"
+    },
+    {
+      "anchor": "cli",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-resolver/PROP-003-dep-evolution.md",
+      "heading": "2.10 CLI surface — additions and adjustments",
+      "line": 644,
+      "uri": "spec://vibevm/spec/modules/vibe-resolver/PROP-003-dep-evolution.md#cli"
+    },
+    {
+      "anchor": "migration",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-resolver/PROP-003-dep-evolution.md",
+      "heading": "2.11 Migration path from `NaiveDepSolver`",
+      "line": 664,
+      "uri": "spec://vibevm/spec/modules/vibe-resolver/PROP-003-dep-evolution.md#migration"
+    },
+    {
+      "anchor": "algorithm",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-resolver/PROP-003-dep-evolution.md",
+      "heading": "3. SAT solver algorithm details",
+      "line": 678,
+      "uri": "spec://vibevm/spec/modules/vibe-resolver/PROP-003-dep-evolution.md#algorithm"
+    },
+    {
+      "anchor": "rule-encoding",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-resolver/PROP-003-dep-evolution.md",
+      "heading": "3.1 Rule encoding — vibevm concepts → libsolv rules",
+      "line": 680,
+      "uri": "spec://vibevm/spec/modules/vibe-resolver/PROP-003-dep-evolution.md#rule-encoding"
+    },
+    {
+      "anchor": "solver-phases",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-resolver/PROP-003-dep-evolution.md",
+      "heading": "3.2 Solver phases",
+      "line": 703,
+      "uri": "spec://vibevm/spec/modules/vibe-resolver/PROP-003-dep-evolution.md#solver-phases"
+    },
+    {
+      "anchor": "determinism",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-resolver/PROP-003-dep-evolution.md",
+      "heading": "3.3 Determinism",
+      "line": 715,
+      "uri": "spec://vibevm/spec/modules/vibe-resolver/PROP-003-dep-evolution.md#determinism"
+    },
+    {
+      "anchor": "perf",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-resolver/PROP-003-dep-evolution.md",
+      "heading": "3.4 Performance envelope",
+      "line": 719,
+      "uri": "spec://vibevm/spec/modules/vibe-resolver/PROP-003-dep-evolution.md#perf"
+    },
+    {
+      "anchor": "rejected",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-resolver/PROP-003-dep-evolution.md",
+      "heading": "4. Rejected alternatives",
+      "line": 725,
+      "uri": "spec://vibevm/spec/modules/vibe-resolver/PROP-003-dep-evolution.md#rejected"
+    },
+    {
+      "anchor": "out-of-scope",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-resolver/PROP-003-dep-evolution.md",
+      "heading": "5. Out of scope for this PROP",
+      "line": 761,
+      "uri": "spec://vibevm/spec/modules/vibe-resolver/PROP-003-dep-evolution.md#out-of-scope"
+    },
+    {
+      "anchor": "phases",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-resolver/PROP-003-dep-evolution.md",
+      "heading": "6. Phases / staging plan",
+      "line": 769,
+      "uri": "spec://vibevm/spec/modules/vibe-resolver/PROP-003-dep-evolution.md#phases"
+    },
+    {
+      "anchor": "open",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-resolver/PROP-003-dep-evolution.md",
+      "heading": "7. Open questions",
+      "line": 820,
+      "uri": "spec://vibevm/spec/modules/vibe-resolver/PROP-003-dep-evolution.md#open"
+    },
+    {
+      "anchor": "references",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-resolver/PROP-003-dep-evolution.md",
+      "heading": "8. References",
+      "line": 833,
+      "uri": "spec://vibevm/spec/modules/vibe-resolver/PROP-003-dep-evolution.md#references"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-workspace/PROP-007-workspace.md",
+      "heading": "PROP-007: Workspace — multi-package projects, recursive nesting, selective publish",
+      "line": 1,
+      "uri": "spec://vibevm/spec/modules/vibe-workspace/PROP-007-workspace.md#root"
+    },
+    {
+      "anchor": "motivation",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-workspace/PROP-007-workspace.md",
+      "heading": "1. Motivation",
+      "line": 11,
+      "uri": "spec://vibevm/spec/modules/vibe-workspace/PROP-007-workspace.md#motivation"
+    },
+    {
+      "anchor": "decisions",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-workspace/PROP-007-workspace.md",
+      "heading": "2. Decisions",
+      "line": 28,
+      "uri": "spec://vibevm/spec/modules/vibe-workspace/PROP-007-workspace.md#decisions"
+    },
+    {
+      "anchor": "workspace-section",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-workspace/PROP-007-workspace.md",
+      "heading": "2.1 The `[workspace]` section",
+      "line": 30,
+      "uri": "spec://vibevm/spec/modules/vibe-workspace/PROP-007-workspace.md#workspace-section"
+    },
+    {
+      "anchor": "unified-manifest",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-workspace/PROP-007-workspace.md",
+      "heading": "2.2 Unified manifest — one `vibe.toml`",
+      "line": 47,
+      "uri": "spec://vibevm/spec/modules/vibe-workspace/PROP-007-workspace.md#unified-manifest"
+    },
+    {
+      "anchor": "nesting",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-workspace/PROP-007-workspace.md",
+      "heading": "2.3 Recursive nesting",
+      "line": 67,
+      "uri": "spec://vibevm/spec/modules/vibe-workspace/PROP-007-workspace.md#nesting"
+    },
+    {
+      "anchor": "lockfile",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-workspace/PROP-007-workspace.md",
+      "heading": "2.4 Single lockfile at the absolute root",
+      "line": 81,
+      "uri": "spec://vibevm/spec/modules/vibe-workspace/PROP-007-workspace.md#lockfile"
+    },
+    {
+      "anchor": "path-source",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-workspace/PROP-007-workspace.md",
+      "heading": "2.5 Cross-member dependencies — the `path` source",
+      "line": 88,
+      "uri": "spec://vibevm/spec/modules/vibe-workspace/PROP-007-workspace.md#path-source"
+    },
+    {
+      "anchor": "versions",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-workspace/PROP-007-workspace.md",
+      "heading": "2.6 Version placeholders — `[workspace.versions]`",
+      "line": 104,
+      "uri": "spec://vibevm/spec/modules/vibe-workspace/PROP-007-workspace.md#versions"
+    },
+    {
+      "anchor": "selective-publish",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-workspace/PROP-007-workspace.md",
+      "heading": "2.7 Selective publish",
+      "line": 125,
+      "uri": "spec://vibevm/spec/modules/vibe-workspace/PROP-007-workspace.md#selective-publish"
+    },
+    {
+      "anchor": "published-repos",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-workspace/PROP-007-workspace.md",
+      "heading": "2.8 Published package repositories",
+      "line": 142,
+      "uri": "spec://vibevm/spec/modules/vibe-workspace/PROP-007-workspace.md#published-repos"
+    },
+    {
+      "anchor": "root-package",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-workspace/PROP-007-workspace.md",
+      "heading": "2.9 Root as a publishable package",
+      "line": 188,
+      "uri": "spec://vibevm/spec/modules/vibe-workspace/PROP-007-workspace.md#root-package"
+    },
+    {
+      "anchor": "surface",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-workspace/PROP-007-workspace.md",
+      "heading": "3. Command and crate surface",
+      "line": 194,
+      "uri": "spec://vibevm/spec/modules/vibe-workspace/PROP-007-workspace.md#surface"
+    },
+    {
+      "anchor": "vs-subskills",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-workspace/PROP-007-workspace.md",
+      "heading": "4. Workspace members vs subskills",
+      "line": 204,
+      "uri": "spec://vibevm/spec/modules/vibe-workspace/PROP-007-workspace.md#vs-subskills"
+    },
+    {
+      "anchor": "rejected",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-workspace/PROP-007-workspace.md",
+      "heading": "5. Rejected / deferred alternatives",
+      "line": 219,
+      "uri": "spec://vibevm/spec/modules/vibe-workspace/PROP-007-workspace.md#rejected"
+    },
+    {
+      "anchor": "open",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-workspace/PROP-007-workspace.md",
+      "heading": "6. Open questions",
+      "line": 228,
+      "uri": "spec://vibevm/spec/modules/vibe-workspace/PROP-007-workspace.md#open"
+    },
+    {
+      "anchor": "phases",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-workspace/PROP-007-workspace.md",
+      "heading": "7. Phase plan",
+      "line": 243,
+      "uri": "spec://vibevm/spec/modules/vibe-workspace/PROP-007-workspace.md#phases"
+    },
+    {
+      "anchor": "history",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-workspace/PROP-007-workspace.md",
+      "heading": "8. Version history",
+      "line": 251,
+      "uri": "spec://vibevm/spec/modules/vibe-workspace/PROP-007-workspace.md#history"
+    },
+    {
+      "anchor": "impl",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-workspace/PROP-007-workspace.md",
+      "heading": "9. Implementation record",
+      "line": 258,
+      "uri": "spec://vibevm/spec/modules/vibe-workspace/PROP-007-workspace.md#impl"
+    },
+    {
+      "anchor": "impl-phases",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-workspace/PROP-007-workspace.md",
+      "heading": "9.1 What each phase delivered",
+      "line": 262,
+      "uri": "spec://vibevm/spec/modules/vibe-workspace/PROP-007-workspace.md#impl-phases"
+    },
+    {
+      "anchor": "impl-decisions",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-workspace/PROP-007-workspace.md",
+      "heading": "9.2 Decisions pinned during implementation",
+      "line": 276,
+      "uri": "spec://vibevm/spec/modules/vibe-workspace/PROP-007-workspace.md#impl-decisions"
+    },
+    {
+      "anchor": "impl-deferred",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-workspace/PROP-007-workspace.md",
+      "heading": "9.3 Deferred work",
+      "line": 283,
+      "uri": "spec://vibevm/spec/modules/vibe-workspace/PROP-007-workspace.md#impl-deferred"
+    },
+    {
+      "anchor": "impl-map",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-workspace/PROP-007-workspace.md",
+      "heading": "9.4 Crate and module map",
+      "line": 289,
+      "uri": "spec://vibevm/spec/modules/vibe-workspace/PROP-007-workspace.md#impl-map"
+    },
+    {
+      "anchor": "impl-gates",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-workspace/PROP-007-workspace.md",
+      "heading": "9.5 Quality gates",
+      "line": 297,
+      "uri": "spec://vibevm/spec/modules/vibe-workspace/PROP-007-workspace.md#impl-gates"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-workspace/PROP-009-loading-model.md",
+      "heading": "PROP-009: Loading model — computed boot composition and the effective spec",
+      "line": 1,
+      "uri": "spec://vibevm/spec/modules/vibe-workspace/PROP-009-loading-model.md#root"
+    },
+    {
+      "anchor": "motivation",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-workspace/PROP-009-loading-model.md",
+      "heading": "1. Motivation",
+      "line": 11,
+      "uri": "spec://vibevm/spec/modules/vibe-workspace/PROP-009-loading-model.md#motivation"
+    },
+    {
+      "anchor": "decisions",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-workspace/PROP-009-loading-model.md",
+      "heading": "2. Decisions",
+      "line": 21,
+      "uri": "spec://vibevm/spec/modules/vibe-workspace/PROP-009-loading-model.md#decisions"
+    },
+    {
+      "anchor": "two-trees",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-workspace/PROP-009-loading-model.md",
+      "heading": "2.1 Two trees — authored spec and materialised dependencies",
+      "line": 23,
+      "uri": "spec://vibevm/spec/modules/vibe-workspace/PROP-009-loading-model.md#two-trees"
+    },
+    {
+      "anchor": "effective-boot",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-workspace/PROP-009-loading-model.md",
+      "heading": "2.2 The effective boot sequence",
+      "line": 33,
+      "uri": "spec://vibevm/spec/modules/vibe-workspace/PROP-009-loading-model.md#effective-boot"
+    },
+    {
+      "anchor": "artifacts",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-workspace/PROP-009-loading-model.md",
+      "heading": "2.3 Generated boot artifacts",
+      "line": 44,
+      "uri": "spec://vibevm/spec/modules/vibe-workspace/PROP-009-loading-model.md#artifacts"
+    },
+    {
+      "anchor": "inclusion-types",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-workspace/PROP-009-loading-model.md",
+      "heading": "2.4 Inclusion types — `inline`, `static`, `dynamic`",
+      "line": 72,
+      "uri": "spec://vibevm/spec/modules/vibe-workspace/PROP-009-loading-model.md#inclusion-types"
+    },
+    {
+      "anchor": "ordering",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-workspace/PROP-009-loading-model.md",
+      "heading": "2.5 Ordering by category — the `NN-` prefix is retired",
+      "line": 91,
+      "uri": "spec://vibevm/spec/modules/vibe-workspace/PROP-009-loading-model.md#ordering"
+    },
+    {
+      "anchor": "schema",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-workspace/PROP-009-loading-model.md",
+      "heading": "2.6 Manifest schema changes",
+      "line": 100,
+      "uri": "spec://vibevm/spec/modules/vibe-workspace/PROP-009-loading-model.md#schema"
+    },
+    {
+      "anchor": "install",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-workspace/PROP-009-loading-model.md",
+      "heading": "2.7 Workspace-aware `vibe install` / `vibe build`",
+      "line": 110,
+      "uri": "spec://vibevm/spec/modules/vibe-workspace/PROP-009-loading-model.md#install"
+    },
+    {
+      "anchor": "engine",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-workspace/PROP-009-loading-model.md",
+      "heading": "2.8 The computed-view engine — boot and the effective spec",
+      "line": 119,
+      "uri": "spec://vibevm/spec/modules/vibe-workspace/PROP-009-loading-model.md#engine"
+    },
+    {
+      "anchor": "uniform",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-workspace/PROP-009-loading-model.md",
+      "heading": "2.9 Uniform model — every project is a workspace",
+      "line": 129,
+      "uri": "spec://vibevm/spec/modules/vibe-workspace/PROP-009-loading-model.md#uniform"
+    },
+    {
+      "anchor": "regen",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-workspace/PROP-009-loading-model.md",
+      "heading": "2.10 Regeneration — `vibe reinstall`",
+      "line": 135,
+      "uri": "spec://vibevm/spec/modules/vibe-workspace/PROP-009-loading-model.md#regen"
+    },
+    {
+      "anchor": "publish",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-workspace/PROP-009-loading-model.md",
+      "heading": "2.11 Published-copy regeneration",
+      "line": 145,
+      "uri": "spec://vibevm/spec/modules/vibe-workspace/PROP-009-loading-model.md#publish"
+    },
+    {
+      "anchor": "surface",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-workspace/PROP-009-loading-model.md",
+      "heading": "3. Command and crate surface",
+      "line": 151,
+      "uri": "spec://vibevm/spec/modules/vibe-workspace/PROP-009-loading-model.md#surface"
+    },
+    {
+      "anchor": "migration",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-workspace/PROP-009-loading-model.md",
+      "heading": "4. Migration",
+      "line": 161,
+      "uri": "spec://vibevm/spec/modules/vibe-workspace/PROP-009-loading-model.md#migration"
+    },
+    {
+      "anchor": "open",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-workspace/PROP-009-loading-model.md",
+      "heading": "5. Resolved questions",
+      "line": 167,
+      "uri": "spec://vibevm/spec/modules/vibe-workspace/PROP-009-loading-model.md#open"
+    },
+    {
+      "anchor": "rejected",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-workspace/PROP-009-loading-model.md",
+      "heading": "6. Rejected / deferred alternatives",
+      "line": 185,
+      "uri": "spec://vibevm/spec/modules/vibe-workspace/PROP-009-loading-model.md#rejected"
+    },
+    {
+      "anchor": "phases",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-workspace/PROP-009-loading-model.md",
+      "heading": "7. Phase plan",
+      "line": 194,
+      "uri": "spec://vibevm/spec/modules/vibe-workspace/PROP-009-loading-model.md#phases"
+    },
+    {
+      "anchor": "history",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-workspace/PROP-009-loading-model.md",
+      "heading": "8. Version history",
+      "line": 209,
+      "uri": "spec://vibevm/spec/modules/vibe-workspace/PROP-009-loading-model.md#history"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-workspace/PROP-011-incremental-install.md",
+      "heading": "PROP-011: Incremental install — skip resolution when fresh, materialise only the diff",
+      "line": 1,
+      "uri": "spec://vibevm/spec/modules/vibe-workspace/PROP-011-incremental-install.md#root"
+    },
+    {
+      "anchor": "motivation",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-workspace/PROP-011-incremental-install.md",
+      "heading": "1. Motivation",
+      "line": 10,
+      "uri": "spec://vibevm/spec/modules/vibe-workspace/PROP-011-incremental-install.md#motivation"
+    },
+    {
+      "anchor": "decisions",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-workspace/PROP-011-incremental-install.md",
+      "heading": "2. Decisions",
+      "line": 22,
+      "uri": "spec://vibevm/spec/modules/vibe-workspace/PROP-011-incremental-install.md#decisions"
+    },
+    {
+      "anchor": "two-phases",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-workspace/PROP-011-incremental-install.md",
+      "heading": "2.1 Separate resolution from application",
+      "line": 24,
+      "uri": "spec://vibevm/spec/modules/vibe-workspace/PROP-011-incremental-install.md#two-phases"
+    },
+    {
+      "anchor": "skip-resolution",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-workspace/PROP-011-incremental-install.md",
+      "heading": "2.2 Skip resolution when the lockfile is fresh",
+      "line": 33,
+      "uri": "spec://vibevm/spec/modules/vibe-workspace/PROP-011-incremental-install.md#skip-resolution"
+    },
+    {
+      "anchor": "materialise-diff",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-workspace/PROP-011-incremental-install.md",
+      "heading": "2.3 Materialise only the diff",
+      "line": 43,
+      "uri": "spec://vibevm/spec/modules/vibe-workspace/PROP-011-incremental-install.md#materialise-diff"
+    },
+    {
+      "anchor": "boot-regen",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-workspace/PROP-011-incremental-install.md",
+      "heading": "2.4 Boot regeneration stays whole-tree — and why that is fine",
+      "line": 51,
+      "uri": "spec://vibevm/spec/modules/vibe-workspace/PROP-011-incremental-install.md#boot-regen"
+    },
+    {
+      "anchor": "force",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-workspace/PROP-011-incremental-install.md",
+      "heading": "2.5 Bypasses — no new flag",
+      "line": 61,
+      "uri": "spec://vibevm/spec/modules/vibe-workspace/PROP-011-incremental-install.md#force"
+    },
+    {
+      "anchor": "surface",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-workspace/PROP-011-incremental-install.md",
+      "heading": "3. Command and crate surface",
+      "line": 72,
+      "uri": "spec://vibevm/spec/modules/vibe-workspace/PROP-011-incremental-install.md#surface"
+    },
+    {
+      "anchor": "migration",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-workspace/PROP-011-incremental-install.md",
+      "heading": "4. Migration",
+      "line": 82,
+      "uri": "spec://vibevm/spec/modules/vibe-workspace/PROP-011-incremental-install.md#migration"
+    },
+    {
+      "anchor": "open",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-workspace/PROP-011-incremental-install.md",
+      "heading": "5. Resolved questions",
+      "line": 88,
+      "uri": "spec://vibevm/spec/modules/vibe-workspace/PROP-011-incremental-install.md#open"
+    },
+    {
+      "anchor": "rejected",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-workspace/PROP-011-incremental-install.md",
+      "heading": "6. Rejected / deferred alternatives",
+      "line": 100,
+      "uri": "spec://vibevm/spec/modules/vibe-workspace/PROP-011-incremental-install.md#rejected"
+    },
+    {
+      "anchor": "phases",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-workspace/PROP-011-incremental-install.md",
+      "heading": "7. Phase plan",
+      "line": 109,
+      "uri": "spec://vibevm/spec/modules/vibe-workspace/PROP-011-incremental-install.md#phases"
+    },
+    {
+      "anchor": "history",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-workspace/PROP-011-incremental-install.md",
+      "heading": "8. Version history",
+      "line": 120,
+      "uri": "spec://vibevm/spec/modules/vibe-workspace/PROP-011-incremental-install.md#history"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md",
+      "heading": "PROP-012: The managed redirect block — vibevm as a co-tenant of the agent instruction files",
+      "line": 1,
+      "uri": "spec://vibevm/spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md#root"
+    },
+    {
+      "anchor": "motivation",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md",
+      "heading": "1. Motivation",
+      "line": 10,
+      "uri": "spec://vibevm/spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md#motivation"
+    },
+    {
+      "anchor": "decisions",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md",
+      "heading": "2. Decisions",
+      "line": 28,
+      "uri": "spec://vibevm/spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md#decisions"
+    },
+    {
+      "anchor": "co-tenant",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md",
+      "heading": "2.1 vibevm owns one delimited block, nothing else",
+      "line": 30,
+      "uri": "spec://vibevm/spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md#co-tenant"
+    },
+    {
+      "anchor": "markers",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md",
+      "heading": "2.2 The markers, and well-formedness",
+      "line": 36,
+      "uri": "spec://vibevm/spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md#markers"
+    },
+    {
+      "anchor": "create",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md",
+      "heading": "2.3 Malformed → hard stop; absent → create; present → splice",
+      "line": 51,
+      "uri": "spec://vibevm/spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md#create"
+    },
+    {
+      "anchor": "placement",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md",
+      "heading": "2.4 Placement is the user's — vibevm never moves the block",
+      "line": 59,
+      "uri": "spec://vibevm/spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md#placement"
+    },
+    {
+      "anchor": "plan-time",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md",
+      "heading": "2.5 Validate before mutate",
+      "line": 72,
+      "uri": "spec://vibevm/spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md#plan-time"
+    },
+    {
+      "anchor": "content",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md",
+      "heading": "2.6 The block content is unchanged — this PROP changes the envelope, not the payload",
+      "line": 76,
+      "uri": "spec://vibevm/spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md#content"
+    },
+    {
+      "anchor": "surface",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md",
+      "heading": "3. Command and crate surface",
+      "line": 84,
+      "uri": "spec://vibevm/spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md#surface"
+    },
+    {
+      "anchor": "migration",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md",
+      "heading": "4. Migration",
+      "line": 94,
+      "uri": "spec://vibevm/spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md#migration"
+    },
+    {
+      "anchor": "open",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md",
+      "heading": "5. Open questions",
+      "line": 107,
+      "uri": "spec://vibevm/spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md#open"
+    },
+    {
+      "anchor": "rejected",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md",
+      "heading": "6. Rejected / deferred alternatives",
+      "line": 116,
+      "uri": "spec://vibevm/spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md#rejected"
+    },
+    {
+      "anchor": "phases",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md",
+      "heading": "7. Phase plan",
+      "line": 125,
+      "uri": "spec://vibevm/spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md#phases"
+    },
+    {
+      "anchor": "history",
+      "content_hash": "",
+      "doc_path": "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md",
+      "heading": "8. Version history",
+      "line": 136,
+      "uri": "spec://vibevm/spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md#history"
+    },
+    {
+      "anchor": "problem",
+      "content_hash": "",
+      "doc_path": "spec/neworder/BROWNFIELD-PROTOCOL-v0.1.md",
+      "heading": "1. The problem, stated precisely",
+      "line": 9,
+      "uri": "spec://vibevm/spec/neworder/BROWNFIELD-PROTOCOL-v0.1.md#problem"
+    },
+    {
+      "anchor": "principles",
+      "content_hash": "",
+      "doc_path": "spec/neworder/BROWNFIELD-PROTOCOL-v0.1.md",
+      "heading": "2. Principles",
+      "line": 13,
+      "uri": "spec://vibevm/spec/neworder/BROWNFIELD-PROTOCOL-v0.1.md#principles"
+    },
+    {
+      "anchor": "registries",
+      "content_hash": "",
+      "doc_path": "spec/neworder/BROWNFIELD-PROTOCOL-v0.1.md",
+      "heading": "3. The registries",
+      "line": 23,
+      "uri": "spec://vibevm/spec/neworder/BROWNFIELD-PROTOCOL-v0.1.md#registries"
+    },
+    {
+      "anchor": "test-gate",
+      "content_hash": "",
+      "doc_path": "spec/neworder/BROWNFIELD-PROTOCOL-v0.1.md",
+      "heading": "4. The test gate — xfail-strict semantics",
+      "line": 57,
+      "uri": "spec://vibevm/spec/neworder/BROWNFIELD-PROTOCOL-v0.1.md#test-gate"
+    },
+    {
+      "anchor": "spec-lifecycle",
+      "content_hash": "",
+      "doc_path": "spec/neworder/BROWNFIELD-PROTOCOL-v0.1.md",
+      "heading": "5. Spec lifecycle and the conflict protocol",
+      "line": 66,
+      "uri": "spec://vibevm/spec/neworder/BROWNFIELD-PROTOCOL-v0.1.md#spec-lifecycle"
+    },
+    {
+      "anchor": "characterization",
+      "content_hash": "",
+      "doc_path": "spec/neworder/BROWNFIELD-PROTOCOL-v0.1.md",
+      "heading": "6. Characterization of record",
+      "line": 75,
+      "uri": "spec://vibevm/spec/neworder/BROWNFIELD-PROTOCOL-v0.1.md#characterization"
+    },
+    {
+      "anchor": "frontier",
+      "content_hash": "",
+      "doc_path": "spec/neworder/BROWNFIELD-PROTOCOL-v0.1.md",
+      "heading": "7. Frontier and monotone utility",
+      "line": 79,
+      "uri": "spec://vibevm/spec/neworder/BROWNFIELD-PROTOCOL-v0.1.md#frontier"
+    },
+    {
+      "anchor": "carry-over",
+      "content_hash": "",
+      "doc_path": "spec/neworder/BROWNFIELD-PROTOCOL-v0.1.md",
+      "heading": "8. Carry-over guarantee and exit accounting",
+      "line": 83,
+      "uri": "spec://vibevm/spec/neworder/BROWNFIELD-PROTOCOL-v0.1.md#carry-over"
+    },
+    {
+      "anchor": "governance",
+      "content_hash": "",
+      "doc_path": "spec/neworder/BROWNFIELD-PROTOCOL-v0.1.md",
+      "heading": "9. Governance",
+      "line": 87,
+      "uri": "spec://vibevm/spec/neworder/BROWNFIELD-PROTOCOL-v0.1.md#governance"
+    },
+    {
+      "anchor": "prior-art",
+      "content_hash": "",
+      "doc_path": "spec/neworder/BROWNFIELD-PROTOCOL-v0.1.md",
+      "heading": "10. Prior art",
+      "line": 93,
+      "uri": "spec://vibevm/spec/neworder/BROWNFIELD-PROTOCOL-v0.1.md#prior-art"
+    },
+    {
+      "anchor": "open",
+      "content_hash": "",
+      "doc_path": "spec/neworder/BROWNFIELD-PROTOCOL-v0.1.md",
+      "heading": "11. Open questions",
+      "line": 97,
+      "uri": "spec://vibevm/spec/neworder/BROWNFIELD-PROTOCOL-v0.1.md#open"
+    },
+    {
+      "anchor": "axioms",
+      "content_hash": "",
+      "doc_path": "spec/neworder/DISCIPLINE-CHARTER-v0.1.md",
+      "heading": "0. Axioms",
+      "line": 11,
+      "uri": "spec://vibevm/spec/neworder/DISCIPLINE-CHARTER-v0.1.md#axioms"
+    },
+    {
+      "anchor": "architecture",
+      "content_hash": "",
+      "doc_path": "spec/neworder/DISCIPLINE-CHARTER-v0.1.md",
+      "heading": "1. Architecture of the discipline",
+      "line": 26,
+      "uri": "spec://vibevm/spec/neworder/DISCIPLINE-CHARTER-v0.1.md#architecture"
+    },
+    {
+      "anchor": "rule-schema",
+      "content_hash": "",
+      "doc_path": "spec/neworder/DISCIPLINE-CHARTER-v0.1.md",
+      "heading": "2. The rule record",
+      "line": 43,
+      "uri": "spec://vibevm/spec/neworder/DISCIPLINE-CHARTER-v0.1.md#rule-schema"
+    },
+    {
+      "anchor": "samples",
+      "content_hash": "",
+      "doc_path": "spec/neworder/DISCIPLINE-CHARTER-v0.1.md",
+      "heading": "2.1 Genre samples (normative once ratified)",
+      "line": 59,
+      "uri": "spec://vibevm/spec/neworder/DISCIPLINE-CHARTER-v0.1.md#samples"
+    },
+    {
+      "anchor": "naming",
+      "content_hash": "",
+      "doc_path": "spec/neworder/DISCIPLINE-CHARTER-v0.1.md",
+      "heading": "3. Naming grammar (T1 sketch)",
+      "line": 109,
+      "uri": "spec://vibevm/spec/neworder/DISCIPLINE-CHARTER-v0.1.md#naming"
+    },
+    {
+      "anchor": "languages",
+      "content_hash": "",
+      "doc_path": "spec/neworder/DISCIPLINE-CHARTER-v0.1.md",
+      "heading": "4. Language guides (T2) — template and translation",
+      "line": 118,
+      "uri": "spec://vibevm/spec/neworder/DISCIPLINE-CHARTER-v0.1.md#languages"
+    },
+    {
+      "anchor": "legacy-code",
+      "content_hash": "",
+      "doc_path": "spec/neworder/DISCIPLINE-CHARTER-v0.1.md",
+      "heading": "5. Importing legacy code (T1 pipeline)",
+      "line": 135,
+      "uri": "spec://vibevm/spec/neworder/DISCIPLINE-CHARTER-v0.1.md#legacy-code"
+    },
+    {
+      "anchor": "legacy-specs",
+      "content_hash": "",
+      "doc_path": "spec/neworder/DISCIPLINE-CHARTER-v0.1.md",
+      "heading": "6. Importing legacy specifications and skills (T1 pipeline)",
+      "line": 148,
+      "uri": "spec://vibevm/spec/neworder/DISCIPLINE-CHARTER-v0.1.md#legacy-specs"
+    },
+    {
+      "anchor": "metrics",
+      "content_hash": "",
+      "doc_path": "spec/neworder/DISCIPLINE-CHARTER-v0.1.md",
+      "heading": "7. Metrics and governance",
+      "line": 160,
+      "uri": "spec://vibevm/spec/neworder/DISCIPLINE-CHARTER-v0.1.md#metrics"
+    },
+    {
+      "anchor": "prior-art",
+      "content_hash": "",
+      "doc_path": "spec/neworder/DISCIPLINE-CHARTER-v0.1.md",
+      "heading": "8. Prior art and posture",
+      "line": 167,
+      "uri": "spec://vibevm/spec/neworder/DISCIPLINE-CHARTER-v0.1.md#prior-art"
+    },
+    {
+      "anchor": "open",
+      "content_hash": "",
+      "doc_path": "spec/neworder/DISCIPLINE-CHARTER-v0.1.md",
+      "heading": "9. Open questions",
+      "line": 171,
+      "uri": "spec://vibevm/spec/neworder/DISCIPLINE-CHARTER-v0.1.md#open"
+    },
+    {
+      "anchor": "tiers",
+      "content_hash": "",
+      "doc_path": "spec/neworder/ENGINE-CONFORM-v0.1.md",
+      "heading": "1. Escalation tiers",
+      "line": 9,
+      "uri": "spec://vibevm/spec/neworder/ENGINE-CONFORM-v0.1.md#tiers"
+    },
+    {
+      "anchor": "frontends",
+      "content_hash": "",
+      "doc_path": "spec/neworder/ENGINE-CONFORM-v0.1.md",
+      "heading": "2. Frontends — borrowed, behind one trait",
+      "line": 21,
+      "uri": "spec://vibevm/spec/neworder/ENGINE-CONFORM-v0.1.md#frontends"
+    },
+    {
+      "anchor": "facts",
+      "content_hash": "",
+      "doc_path": "spec/neworder/ENGINE-CONFORM-v0.1.md",
+      "heading": "3. The fact store",
+      "line": 42,
+      "uri": "spec://vibevm/spec/neworder/ENGINE-CONFORM-v0.1.md#facts"
+    },
+    {
+      "anchor": "rules",
+      "content_hash": "",
+      "doc_path": "spec/neworder/ENGINE-CONFORM-v0.1.md",
+      "heading": "4. Rules as queries",
+      "line": 57,
+      "uri": "spec://vibevm/spec/neworder/ENGINE-CONFORM-v0.1.md#rules"
+    },
+    {
+      "anchor": "determinism",
+      "content_hash": "",
+      "doc_path": "spec/neworder/ENGINE-CONFORM-v0.1.md",
+      "heading": "5. Determinism and gates",
+      "line": 63,
+      "uri": "spec://vibevm/spec/neworder/ENGINE-CONFORM-v0.1.md#determinism"
+    },
+    {
+      "anchor": "open",
+      "content_hash": "",
+      "doc_path": "spec/neworder/ENGINE-CONFORM-v0.1.md",
+      "heading": "6. Open questions",
+      "line": 67,
+      "uri": "spec://vibevm/spec/neworder/ENGINE-CONFORM-v0.1.md#open"
+    },
+    {
+      "anchor": "baseline",
+      "content_hash": "",
+      "doc_path": "spec/neworder/GUIDE-PYTHON-v0.1.md",
+      "heading": "0. Language baseline",
+      "line": 11,
+      "uri": "spec://vibevm/spec/neworder/GUIDE-PYTHON-v0.1.md#baseline"
+    },
+    {
+      "anchor": "cells",
+      "content_hash": "",
+      "doc_path": "spec/neworder/GUIDE-PYTHON-v0.1.md",
+      "heading": "1. Cells",
+      "line": 21,
+      "uri": "spec://vibevm/spec/neworder/GUIDE-PYTHON-v0.1.md#cells"
+    },
+    {
+      "anchor": "seams",
+      "content_hash": "",
+      "doc_path": "spec/neworder/GUIDE-PYTHON-v0.1.md",
+      "heading": "2. Seams",
+      "line": 40,
+      "uri": "spec://vibevm/spec/neworder/GUIDE-PYTHON-v0.1.md#seams"
+    },
+    {
+      "anchor": "flags",
+      "content_hash": "",
+      "doc_path": "spec/neworder/GUIDE-PYTHON-v0.1.md",
+      "heading": "3. Registry and flags",
+      "line": 47,
+      "uri": "spec://vibevm/spec/neworder/GUIDE-PYTHON-v0.1.md#flags"
+    },
+    {
+      "anchor": "errors",
+      "content_hash": "",
+      "doc_path": "spec/neworder/GUIDE-PYTHON-v0.1.md",
+      "heading": "4. Errors as contract",
+      "line": 67,
+      "uri": "spec://vibevm/spec/neworder/GUIDE-PYTHON-v0.1.md#errors"
+    },
+    {
+      "anchor": "specmark",
+      "content_hash": "",
+      "doc_path": "spec/neworder/GUIDE-PYTHON-v0.1.md",
+      "heading": "5. specmark carrier",
+      "line": 88,
+      "uri": "spec://vibevm/spec/neworder/GUIDE-PYTHON-v0.1.md#specmark"
+    },
+    {
+      "anchor": "naming",
+      "content_hash": "",
+      "doc_path": "spec/neworder/GUIDE-PYTHON-v0.1.md",
+      "heading": "6. Naming (R-020/R-021 bindings)",
+      "line": 102,
+      "uri": "spec://vibevm/spec/neworder/GUIDE-PYTHON-v0.1.md#naming"
+    },
+    {
+      "anchor": "replacement",
+      "content_hash": "",
+      "doc_path": "spec/neworder/GUIDE-PYTHON-v0.1.md",
+      "heading": "7. Replacement protocol (R-040 binding)",
+      "line": 107,
+      "uri": "spec://vibevm/spec/neworder/GUIDE-PYTHON-v0.1.md#replacement"
+    },
+    {
+      "anchor": "risks",
+      "content_hash": "",
+      "doc_path": "spec/neworder/GUIDE-PYTHON-v0.1.md",
+      "heading": "8. Risk table (what conform must cover for Python)",
+      "line": 111,
+      "uri": "spec://vibevm/spec/neworder/GUIDE-PYTHON-v0.1.md#risks"
+    },
+    {
+      "anchor": "docs",
+      "content_hash": "",
+      "doc_path": "spec/neworder/GUIDE-PYTHON-v0.1.md",
+      "heading": "9. Doc layer",
+      "line": 131,
+      "uri": "spec://vibevm/spec/neworder/GUIDE-PYTHON-v0.1.md#docs"
+    },
+    {
+      "anchor": "cells",
+      "content_hash": "",
+      "doc_path": "spec/neworder/GUIDE-RUST-v0.1.md",
+      "heading": "1. Cells",
+      "line": 9,
+      "uri": "spec://vibevm/spec/neworder/GUIDE-RUST-v0.1.md#cells"
+    },
+    {
+      "anchor": "seams",
+      "content_hash": "",
+      "doc_path": "spec/neworder/GUIDE-RUST-v0.1.md",
+      "heading": "2. Seams",
+      "line": 25,
+      "uri": "spec://vibevm/spec/neworder/GUIDE-RUST-v0.1.md#seams"
+    },
+    {
+      "anchor": "flags",
+      "content_hash": "",
+      "doc_path": "spec/neworder/GUIDE-RUST-v0.1.md",
+      "heading": "3. Registry and flags",
+      "line": 32,
+      "uri": "spec://vibevm/spec/neworder/GUIDE-RUST-v0.1.md#flags"
+    },
+    {
+      "anchor": "errors",
+      "content_hash": "",
+      "doc_path": "spec/neworder/GUIDE-RUST-v0.1.md",
+      "heading": "4. Errors as contract",
+      "line": 50,
+      "uri": "spec://vibevm/spec/neworder/GUIDE-RUST-v0.1.md#errors"
+    },
+    {
+      "anchor": "specmark",
+      "content_hash": "",
+      "doc_path": "spec/neworder/GUIDE-RUST-v0.1.md",
+      "heading": "5. specmark usage",
+      "line": 57,
+      "uri": "spec://vibevm/spec/neworder/GUIDE-RUST-v0.1.md#specmark"
+    },
+    {
+      "anchor": "naming",
+      "content_hash": "",
+      "doc_path": "spec/neworder/GUIDE-RUST-v0.1.md",
+      "heading": "6. Naming (R-020/R-021 bindings)",
+      "line": 61,
+      "uri": "spec://vibevm/spec/neworder/GUIDE-RUST-v0.1.md#naming"
+    },
+    {
+      "anchor": "replacement",
+      "content_hash": "",
+      "doc_path": "spec/neworder/GUIDE-RUST-v0.1.md",
+      "heading": "7. Replacement protocol (R-040 binding)",
+      "line": 67,
+      "uri": "spec://vibevm/spec/neworder/GUIDE-RUST-v0.1.md#replacement"
+    },
+    {
+      "anchor": "risks",
+      "content_hash": "",
+      "doc_path": "spec/neworder/GUIDE-RUST-v0.1.md",
+      "heading": "8. Risk table (what conform must cover for Rust)",
+      "line": 71,
+      "uri": "spec://vibevm/spec/neworder/GUIDE-RUST-v0.1.md#risks"
+    },
+    {
+      "anchor": "docs",
+      "content_hash": "",
+      "doc_path": "spec/neworder/GUIDE-RUST-v0.1.md",
+      "heading": "9. Doc layer",
+      "line": 86,
+      "uri": "spec://vibevm/spec/neworder/GUIDE-RUST-v0.1.md#docs"
+    },
+    {
+      "anchor": "unit",
+      "content_hash": "",
+      "doc_path": "spec/neworder/GUIDE-SPEC-AUTHORING-v0.1.md",
+      "heading": "1. The unit",
+      "line": 7,
+      "uri": "spec://vibevm/spec/neworder/GUIDE-SPEC-AUTHORING-v0.1.md#unit"
+    },
+    {
+      "anchor": "anchors",
+      "content_hash": "",
+      "doc_path": "spec/neworder/GUIDE-SPEC-AUTHORING-v0.1.md",
+      "heading": "2. Anchors and URIs",
+      "line": 30,
+      "uri": "spec://vibevm/spec/neworder/GUIDE-SPEC-AUTHORING-v0.1.md#anchors"
+    },
+    {
+      "anchor": "kinds",
+      "content_hash": "",
+      "doc_path": "spec/neworder/GUIDE-SPEC-AUTHORING-v0.1.md",
+      "heading": "3. Kinds and normativity",
+      "line": 37,
+      "uri": "spec://vibevm/spec/neworder/GUIDE-SPEC-AUTHORING-v0.1.md#kinds"
+    },
+    {
+      "anchor": "status",
+      "content_hash": "",
+      "doc_path": "spec/neworder/GUIDE-SPEC-AUTHORING-v0.1.md",
+      "heading": "3.1 Lifecycle status (brownfield amendment)",
+      "line": 48,
+      "uri": "spec://vibevm/spec/neworder/GUIDE-SPEC-AUTHORING-v0.1.md#status"
+    },
+    {
+      "anchor": "revisions",
+      "content_hash": "",
+      "doc_path": "spec/neworder/GUIDE-SPEC-AUTHORING-v0.1.md",
+      "heading": "4. The revision discipline",
+      "line": 52,
+      "uri": "spec://vibevm/spec/neworder/GUIDE-SPEC-AUTHORING-v0.1.md#revisions"
+    },
+    {
+      "anchor": "style",
+      "content_hash": "",
+      "doc_path": "spec/neworder/GUIDE-SPEC-AUTHORING-v0.1.md",
+      "heading": "5. Style rules",
+      "line": 59,
+      "uri": "spec://vibevm/spec/neworder/GUIDE-SPEC-AUTHORING-v0.1.md#style"
+    },
+    {
+      "anchor": "activation",
+      "content_hash": "",
+      "doc_path": "spec/neworder/GUIDE-SPEC-AUTHORING-v0.1.md",
+      "heading": "6. Activation descriptions (for distributable rule/spec packages)",
+      "line": 68,
+      "uri": "spec://vibevm/spec/neworder/GUIDE-SPEC-AUTHORING-v0.1.md#activation"
+    },
+    {
+      "anchor": "legacy",
+      "content_hash": "",
+      "doc_path": "spec/neworder/GUIDE-SPEC-AUTHORING-v0.1.md",
+      "heading": "7. Normalizing legacy specifications (importer output contract)",
+      "line": 77,
+      "uri": "spec://vibevm/spec/neworder/GUIDE-SPEC-AUTHORING-v0.1.md#legacy"
+    },
+    {
+      "anchor": "checklists",
+      "content_hash": "",
+      "doc_path": "spec/neworder/GUIDE-SPEC-AUTHORING-v0.1.md",
+      "heading": "8. Checklists",
+      "line": 85,
+      "uri": "spec://vibevm/spec/neworder/GUIDE-SPEC-AUTHORING-v0.1.md#checklists"
+    },
+    {
+      "anchor": "anti-patterns",
+      "content_hash": "",
+      "doc_path": "spec/neworder/GUIDE-SPEC-AUTHORING-v0.1.md",
+      "heading": "9. Anti-patterns",
+      "line": 91,
+      "uri": "spec://vibevm/spec/neworder/GUIDE-SPEC-AUTHORING-v0.1.md#anti-patterns"
+    },
+    {
+      "anchor": "baseline",
+      "content_hash": "",
+      "doc_path": "spec/neworder/GUIDE-TYPESCRIPT-v0.1.md",
+      "heading": "0. Language baseline",
+      "line": 9,
+      "uri": "spec://vibevm/spec/neworder/GUIDE-TYPESCRIPT-v0.1.md#baseline"
+    },
+    {
+      "anchor": "cells",
+      "content_hash": "",
+      "doc_path": "spec/neworder/GUIDE-TYPESCRIPT-v0.1.md",
+      "heading": "1. Cells",
+      "line": 19,
+      "uri": "spec://vibevm/spec/neworder/GUIDE-TYPESCRIPT-v0.1.md#cells"
+    },
+    {
+      "anchor": "seams",
+      "content_hash": "",
+      "doc_path": "spec/neworder/GUIDE-TYPESCRIPT-v0.1.md",
+      "heading": "2. Seams",
+      "line": 38,
+      "uri": "spec://vibevm/spec/neworder/GUIDE-TYPESCRIPT-v0.1.md#seams"
+    },
+    {
+      "anchor": "flags",
+      "content_hash": "",
+      "doc_path": "spec/neworder/GUIDE-TYPESCRIPT-v0.1.md",
+      "heading": "3. Registry and flags",
+      "line": 45,
+      "uri": "spec://vibevm/spec/neworder/GUIDE-TYPESCRIPT-v0.1.md#flags"
+    },
+    {
+      "anchor": "errors",
+      "content_hash": "",
+      "doc_path": "spec/neworder/GUIDE-TYPESCRIPT-v0.1.md",
+      "heading": "4. Errors as contract",
+      "line": 64,
+      "uri": "spec://vibevm/spec/neworder/GUIDE-TYPESCRIPT-v0.1.md#errors"
+    },
+    {
+      "anchor": "specmark",
+      "content_hash": "",
+      "doc_path": "spec/neworder/GUIDE-TYPESCRIPT-v0.1.md",
+      "heading": "5. specmark carrier",
+      "line": 80,
+      "uri": "spec://vibevm/spec/neworder/GUIDE-TYPESCRIPT-v0.1.md#specmark"
+    },
+    {
+      "anchor": "naming",
+      "content_hash": "",
+      "doc_path": "spec/neworder/GUIDE-TYPESCRIPT-v0.1.md",
+      "heading": "6. Naming (R-020/R-021 bindings)",
+      "line": 93,
+      "uri": "spec://vibevm/spec/neworder/GUIDE-TYPESCRIPT-v0.1.md#naming"
+    },
+    {
+      "anchor": "replacement",
+      "content_hash": "",
+      "doc_path": "spec/neworder/GUIDE-TYPESCRIPT-v0.1.md",
+      "heading": "7. Replacement protocol (R-040 binding)",
+      "line": 98,
+      "uri": "spec://vibevm/spec/neworder/GUIDE-TYPESCRIPT-v0.1.md#replacement"
+    },
+    {
+      "anchor": "risks",
+      "content_hash": "",
+      "doc_path": "spec/neworder/GUIDE-TYPESCRIPT-v0.1.md",
+      "heading": "8. Risk table (what conform must cover for TS/JS)",
+      "line": 102,
+      "uri": "spec://vibevm/spec/neworder/GUIDE-TYPESCRIPT-v0.1.md#risks"
+    },
+    {
+      "anchor": "docs",
+      "content_hash": "",
+      "doc_path": "spec/neworder/GUIDE-TYPESCRIPT-v0.1.md",
+      "heading": "9. Doc layer",
+      "line": 120,
+      "uri": "spec://vibevm/spec/neworder/GUIDE-TYPESCRIPT-v0.1.md#docs"
+    },
+    {
+      "anchor": "what",
+      "content_hash": "",
+      "doc_path": "spec/neworder/LEDGER-INTENT-v0.1.md",
+      "heading": "1. What the ledger is",
+      "line": 7,
+      "uri": "spec://vibevm/spec/neworder/LEDGER-INTENT-v0.1.md#what"
+    },
+    {
+      "anchor": "classes",
+      "content_hash": "",
+      "doc_path": "spec/neworder/LEDGER-INTENT-v0.1.md",
+      "heading": "2. Two storage classes — the load-bearing taxonomy",
+      "line": 13,
+      "uri": "spec://vibevm/spec/neworder/LEDGER-INTENT-v0.1.md#classes"
+    },
+    {
+      "anchor": "epochs",
+      "content_hash": "",
+      "doc_path": "spec/neworder/LEDGER-INTENT-v0.1.md",
+      "heading": "3. Epochs — contextual invalidation",
+      "line": 22,
+      "uri": "spec://vibevm/spec/neworder/LEDGER-INTENT-v0.1.md#epochs"
+    },
+    {
+      "anchor": "provenance",
+      "content_hash": "",
+      "doc_path": "spec/neworder/LEDGER-INTENT-v0.1.md",
+      "heading": "4. Provenance — every entry confesses its origin",
+      "line": 33,
+      "uri": "spec://vibevm/spec/neworder/LEDGER-INTENT-v0.1.md#provenance"
+    },
+    {
+      "anchor": "storage",
+      "content_hash": "",
+      "doc_path": "spec/neworder/LEDGER-INTENT-v0.1.md",
+      "heading": "5. Storage and lifecycle",
+      "line": 37,
+      "uri": "spec://vibevm/spec/neworder/LEDGER-INTENT-v0.1.md#storage"
+    },
+    {
+      "anchor": "queries",
+      "content_hash": "",
+      "doc_path": "spec/neworder/LEDGER-INTENT-v0.1.md",
+      "heading": "6. Query kinds shipped in v0.1",
+      "line": 44,
+      "uri": "spec://vibevm/spec/neworder/LEDGER-INTENT-v0.1.md#queries"
+    },
+    {
+      "anchor": "release-slice",
+      "content_hash": "",
+      "doc_path": "spec/neworder/LEDGER-INTENT-v0.1.md",
+      "heading": "7. The release slice",
+      "line": 53,
+      "uri": "spec://vibevm/spec/neworder/LEDGER-INTENT-v0.1.md#release-slice"
+    },
+    {
+      "anchor": "failures",
+      "content_hash": "",
+      "doc_path": "spec/neworder/LEDGER-INTENT-v0.1.md",
+      "heading": "8. Failure modes, named",
+      "line": 57,
+      "uri": "spec://vibevm/spec/neworder/LEDGER-INTENT-v0.1.md#failures"
+    },
+    {
+      "anchor": "boot",
+      "content_hash": "",
+      "doc_path": "spec/neworder/PLAYBOOK-TERRAFORM-VIBEVM-v0.2.md",
+      "heading": "0. Boot, precedence, and conduct",
+      "line": 9,
+      "uri": "spec://vibevm/spec/neworder/PLAYBOOK-TERRAFORM-VIBEVM-v0.2.md#boot"
+    },
+    {
+      "anchor": "inventory",
+      "content_hash": "",
+      "doc_path": "spec/neworder/PLAYBOOK-TERRAFORM-VIBEVM-v0.2.md",
+      "heading": "Phase −1 — Inventory: freeze reality",
+      "line": 19,
+      "uri": "spec://vibevm/spec/neworder/PLAYBOOK-TERRAFORM-VIBEVM-v0.2.md#inventory"
+    },
+    {
+      "anchor": "phase0",
+      "content_hash": "",
+      "doc_path": "spec/neworder/PLAYBOOK-TERRAFORM-VIBEVM-v0.2.md",
+      "heading": "Phase 0 — Tooling skeleton",
+      "line": 35,
+      "uri": "spec://vibevm/spec/neworder/PLAYBOOK-TERRAFORM-VIBEVM-v0.2.md#phase0"
+    },
+    {
+      "anchor": "phase1",
+      "content_hash": "",
+      "doc_path": "spec/neworder/PLAYBOOK-TERRAFORM-VIBEVM-v0.2.md",
+      "heading": "Phase 1 — Pilot: PROP-003 §2.6.1 × `vibe-resolver/src/conditional.rs`",
+      "line": 48,
+      "uri": "spec://vibevm/spec/neworder/PLAYBOOK-TERRAFORM-VIBEVM-v0.2.md#phase1"
+    },
+    {
+      "anchor": "phase2",
+      "content_hash": "",
+      "doc_path": "spec/neworder/PLAYBOOK-TERRAFORM-VIBEVM-v0.2.md",
+      "heading": "Phase 2 — Backfill `vibe-resolver`",
+      "line": 59,
+      "uri": "spec://vibevm/spec/neworder/PLAYBOOK-TERRAFORM-VIBEVM-v0.2.md#phase2"
+    },
+    {
+      "anchor": "phase3",
+      "content_hash": "",
+      "doc_path": "spec/neworder/PLAYBOOK-TERRAFORM-VIBEVM-v0.2.md",
+      "heading": "Phase 3 — Cells v0 on the canonical pair",
+      "line": 70,
+      "uri": "spec://vibevm/spec/neworder/PLAYBOOK-TERRAFORM-VIBEVM-v0.2.md#phase3"
+    },
+    {
+      "anchor": "phase4",
+      "content_hash": "",
+      "doc_path": "spec/neworder/PLAYBOOK-TERRAFORM-VIBEVM-v0.2.md",
+      "heading": "Phase 4 — conform engine MVP",
+      "line": 81,
+      "uri": "spec://vibevm/spec/neworder/PLAYBOOK-TERRAFORM-VIBEVM-v0.2.md#phase4"
+    },
+    {
+      "anchor": "phase5",
+      "content_hash": "",
+      "doc_path": "spec/neworder/PLAYBOOK-TERRAFORM-VIBEVM-v0.2.md",
+      "heading": "Phase 5 — Ledger MVP (local only)",
+      "line": 93,
+      "uri": "spec://vibevm/spec/neworder/PLAYBOOK-TERRAFORM-VIBEVM-v0.2.md#phase5"
+    },
+    {
+      "anchor": "phase6",
+      "content_hash": "",
+      "doc_path": "spec/neworder/PLAYBOOK-TERRAFORM-VIBEVM-v0.2.md",
+      "heading": "Phase 6 — Expansion, reconciliation, report",
+      "line": 103,
+      "uri": "spec://vibevm/spec/neworder/PLAYBOOK-TERRAFORM-VIBEVM-v0.2.md#phase6"
+    },
+    {
+      "anchor": "debt-ops",
+      "content_hash": "",
+      "doc_path": "spec/neworder/PLAYBOOK-TERRAFORM-VIBEVM-v0.2.md",
+      "heading": "7. Operating amid debt and dispute",
+      "line": 114,
+      "uri": "spec://vibevm/spec/neworder/PLAYBOOK-TERRAFORM-VIBEVM-v0.2.md#debt-ops"
+    },
+    {
+      "anchor": "failure",
+      "content_hash": "",
+      "doc_path": "spec/neworder/PLAYBOOK-TERRAFORM-VIBEVM-v0.2.md",
+      "heading": "8. Failure protocol",
+      "line": 122,
+      "uri": "spec://vibevm/spec/neworder/PLAYBOOK-TERRAFORM-VIBEVM-v0.2.md#failure"
+    },
+    {
+      "anchor": "problem",
+      "content_hash": "",
+      "doc_path": "spec/neworder/PROP-014-specmap-bidirectional-traceability.md",
+      "heading": "1. Problem statement",
+      "line": 11,
+      "uri": "spec://vibevm/spec/neworder/PROP-014-specmap-bidirectional-traceability.md#problem"
+    },
+    {
+      "anchor": "analogy",
+      "content_hash": "",
+      "doc_path": "spec/neworder/PROP-014-specmap-bidirectional-traceability.md",
+      "heading": "1.1 Where the source-map analogy holds, and where it breaks",
+      "line": 17,
+      "uri": "spec://vibevm/spec/neworder/PROP-014-specmap-bidirectional-traceability.md#analogy"
+    },
+    {
+      "anchor": "runtime-vision",
+      "content_hash": "",
+      "doc_path": "spec/neworder/PROP-014-specmap-bidirectional-traceability.md",
+      "heading": "1.2 The runtime vision (AI-native open source)",
+      "line": 28,
+      "uri": "spec://vibevm/spec/neworder/PROP-014-specmap-bidirectional-traceability.md#runtime-vision"
+    },
+    {
+      "anchor": "decisions",
+      "content_hash": "",
+      "doc_path": "spec/neworder/PROP-014-specmap-bidirectional-traceability.md",
+      "heading": "2. Decisions",
+      "line": 34,
+      "uri": "spec://vibevm/spec/neworder/PROP-014-specmap-bidirectional-traceability.md#decisions"
+    },
+    {
+      "anchor": "addressing-spec",
+      "content_hash": "",
+      "doc_path": "spec/neworder/PROP-014-specmap-bidirectional-traceability.md",
+      "heading": "2.1 Addressing: spec-side",
+      "line": 38,
+      "uri": "spec://vibevm/spec/neworder/PROP-014-specmap-bidirectional-traceability.md#addressing-spec"
+    },
+    {
+      "anchor": "spec-units",
+      "content_hash": "",
+      "doc_path": "spec/neworder/PROP-014-specmap-bidirectional-traceability.md",
+      "heading": "2.2 Spec units, normativity, and the two-tier revision discipline",
+      "line": 51,
+      "uri": "spec://vibevm/spec/neworder/PROP-014-specmap-bidirectional-traceability.md#spec-units"
+    },
+    {
+      "anchor": "addressing-code",
+      "content_hash": "",
+      "doc_path": "spec/neworder/PROP-014-specmap-bidirectional-traceability.md",
+      "heading": "2.3 Addressing: code-side — tags that travel",
+      "line": 80,
+      "uri": "spec://vibevm/spec/neworder/PROP-014-specmap-bidirectional-traceability.md#addressing-code"
+    },
+    {
+      "anchor": "edges",
+      "content_hash": "",
+      "doc_path": "spec/neworder/PROP-014-specmap-bidirectional-traceability.md",
+      "heading": "2.4 The edge model",
+      "line": 125,
+      "uri": "spec://vibevm/spec/neworder/PROP-014-specmap-bidirectional-traceability.md#edges"
+    },
+    {
+      "anchor": "index",
+      "content_hash": "",
+      "doc_path": "spec/neworder/PROP-014-specmap-bidirectional-traceability.md",
+      "heading": "2.5 The index: `specmap.json`",
+      "line": 133,
+      "uri": "spec://vibevm/spec/neworder/PROP-014-specmap-bidirectional-traceability.md#index"
+    },
+    {
+      "anchor": "queries",
+      "content_hash": "",
+      "doc_path": "spec/neworder/PROP-014-specmap-bidirectional-traceability.md",
+      "heading": "2.6 Query surface",
+      "line": 142,
+      "uri": "spec://vibevm/spec/neworder/PROP-014-specmap-bidirectional-traceability.md#queries"
+    },
+    {
+      "anchor": "llm-boundary",
+      "content_hash": "",
+      "doc_path": "spec/neworder/PROP-014-specmap-bidirectional-traceability.md",
+      "heading": "2.7 The LLM boundary",
+      "line": 156,
+      "uri": "spec://vibevm/spec/neworder/PROP-014-specmap-bidirectional-traceability.md#llm-boundary"
+    },
+    {
+      "anchor": "runtime",
+      "content_hash": "",
+      "doc_path": "spec/neworder/PROP-014-specmap-bidirectional-traceability.md",
+      "heading": "2.8 Runtime exposure — the AI-native OSS channel",
+      "line": 164,
+      "uri": "spec://vibevm/spec/neworder/PROP-014-specmap-bidirectional-traceability.md#runtime"
+    },
+    {
+      "anchor": "languages",
+      "content_hash": "",
+      "doc_path": "spec/neworder/PROP-014-specmap-bidirectional-traceability.md",
+      "heading": "2.9 Language neutrality",
+      "line": 171,
+      "uri": "spec://vibevm/spec/neworder/PROP-014-specmap-bidirectional-traceability.md#languages"
+    },
+    {
+      "anchor": "principles",
+      "content_hash": "",
+      "doc_path": "spec/neworder/PROP-014-specmap-bidirectional-traceability.md",
+      "heading": "3. Principles",
+      "line": 180,
+      "uri": "spec://vibevm/spec/neworder/PROP-014-specmap-bidirectional-traceability.md#principles"
+    },
+    {
+      "anchor": "spec-principles",
+      "content_hash": "",
+      "doc_path": "spec/neworder/PROP-014-specmap-bidirectional-traceability.md",
+      "heading": "3.1 (а) Writing specifications",
+      "line": 182,
+      "uri": "spec://vibevm/spec/neworder/PROP-014-specmap-bidirectional-traceability.md#spec-principles"
+    },
+    {
+      "anchor": "rust-principles",
+      "content_hash": "",
+      "doc_path": "spec/neworder/PROP-014-specmap-bidirectional-traceability.md",
+      "heading": "3.2 (б) Writing Rust under specmap",
+      "line": 195,
+      "uri": "spec://vibevm/spec/neworder/PROP-014-specmap-bidirectional-traceability.md#rust-principles"
+    },
+    {
+      "anchor": "binding-principles",
+      "content_hash": "",
+      "doc_path": "spec/neworder/PROP-014-specmap-bidirectional-traceability.md",
+      "heading": "3.3 (в) Binding principles",
+      "line": 208,
+      "uri": "spec://vibevm/spec/neworder/PROP-014-specmap-bidirectional-traceability.md#binding-principles"
+    },
+    {
+      "anchor": "migration",
+      "content_hash": "",
+      "doc_path": "spec/neworder/PROP-014-specmap-bidirectional-traceability.md",
+      "heading": "4. (г) Migration playbook — transforming vibevm with Claude Code",
+      "line": 214,
+      "uri": "spec://vibevm/spec/neworder/PROP-014-specmap-bidirectional-traceability.md#migration"
+    },
+    {
+      "anchor": "rejected",
+      "content_hash": "",
+      "doc_path": "spec/neworder/PROP-014-specmap-bidirectional-traceability.md",
+      "heading": "5. Rejected alternatives",
+      "line": 284,
+      "uri": "spec://vibevm/spec/neworder/PROP-014-specmap-bidirectional-traceability.md#rejected"
+    },
+    {
+      "anchor": "prior-art",
+      "content_hash": "",
+      "doc_path": "spec/neworder/PROP-014-specmap-bidirectional-traceability.md",
+      "heading": "6. Prior art and license posture",
+      "line": 293,
+      "uri": "spec://vibevm/spec/neworder/PROP-014-specmap-bidirectional-traceability.md#prior-art"
+    },
+    {
+      "anchor": "open",
+      "content_hash": "",
+      "doc_path": "spec/neworder/PROP-014-specmap-bidirectional-traceability.md",
+      "heading": "7. Open questions",
+      "line": 310,
+      "uri": "spec://vibevm/spec/neworder/PROP-014-specmap-bidirectional-traceability.md#open"
+    },
+    {
+      "anchor": "what-tessl-is",
+      "content_hash": "",
+      "doc_path": "spec/research/PROP-004-tessl-comparative-research.md",
+      "heading": "1. What Tessl is — in their own words",
+      "line": 13,
+      "uri": "spec://vibevm/spec/research/PROP-004-tessl-comparative-research.md#what-tessl-is"
+    },
+    {
+      "anchor": "primitives",
+      "content_hash": "",
+      "doc_path": "spec/research/PROP-004-tessl-comparative-research.md",
+      "heading": "2. Primitives — the Tessl object model",
+      "line": 37,
+      "uri": "spec://vibevm/spec/research/PROP-004-tessl-comparative-research.md#primitives"
+    },
+    {
+      "anchor": "tile",
+      "content_hash": "",
+      "doc_path": "spec/research/PROP-004-tessl-comparative-research.md",
+      "heading": "2.1 Tile",
+      "line": 41,
+      "uri": "spec://vibevm/spec/research/PROP-004-tessl-comparative-research.md#tile"
+    },
+    {
+      "anchor": "skill",
+      "content_hash": "",
+      "doc_path": "spec/research/PROP-004-tessl-comparative-research.md",
+      "heading": "2.2 Skill (`SKILL.md`)",
+      "line": 51,
+      "uri": "spec://vibevm/spec/research/PROP-004-tessl-comparative-research.md#skill"
+    },
+    {
+      "anchor": "rule",
+      "content_hash": "",
+      "doc_path": "spec/research/PROP-004-tessl-comparative-research.md",
+      "heading": "2.3 Rule",
+      "line": 77,
+      "uri": "spec://vibevm/spec/research/PROP-004-tessl-comparative-research.md#rule"
+    },
+    {
+      "anchor": "doc",
+      "content_hash": "",
+      "doc_path": "spec/research/PROP-004-tessl-comparative-research.md",
+      "heading": "2.4 Documentation (`docs/`)",
+      "line": 87,
+      "uri": "spec://vibevm/spec/research/PROP-004-tessl-comparative-research.md#doc"
+    },
+    {
+      "anchor": "scenario",
+      "content_hash": "",
+      "doc_path": "spec/research/PROP-004-tessl-comparative-research.md",
+      "heading": "2.5 Scenario (`scenario.json` + `task.md` + `criteria.json`)",
+      "line": 97,
+      "uri": "spec://vibevm/spec/research/PROP-004-tessl-comparative-research.md#scenario"
+    },
+    {
+      "anchor": "eval",
+      "content_hash": "",
+      "doc_path": "spec/research/PROP-004-tessl-comparative-research.md",
+      "heading": "2.6 Eval / Evaluation",
+      "line": 123,
+      "uri": "spec://vibevm/spec/research/PROP-004-tessl-comparative-research.md#eval"
+    },
+    {
+      "anchor": "purl",
+      "content_hash": "",
+      "doc_path": "spec/research/PROP-004-tessl-comparative-research.md",
+      "heading": "2.7 PURL (Package URL) and `describes` linkage",
+      "line": 151,
+      "uri": "spec://vibevm/spec/research/PROP-004-tessl-comparative-research.md#purl"
+    },
+    {
+      "anchor": "workspace",
+      "content_hash": "",
+      "doc_path": "spec/research/PROP-004-tessl-comparative-research.md",
+      "heading": "2.8 Workspace",
+      "line": 173,
+      "uri": "spec://vibevm/spec/research/PROP-004-tessl-comparative-research.md#workspace"
+    },
+    {
+      "anchor": "context",
+      "content_hash": "",
+      "doc_path": "spec/research/PROP-004-tessl-comparative-research.md",
+      "heading": "2.9 Context — the umbrella concept",
+      "line": 189,
+      "uri": "spec://vibevm/spec/research/PROP-004-tessl-comparative-research.md#context"
+    },
+    {
+      "anchor": "delivery-modes",
+      "content_hash": "",
+      "doc_path": "spec/research/PROP-004-tessl-comparative-research.md",
+      "heading": "2.10 Three context-delivery modes — the load-bearing distinction",
+      "line": 197,
+      "uri": "spec://vibevm/spec/research/PROP-004-tessl-comparative-research.md#delivery-modes"
+    },
+    {
+      "anchor": "review-rubric",
+      "content_hash": "",
+      "doc_path": "spec/research/PROP-004-tessl-comparative-research.md",
+      "heading": "2.11 Review scoring rubric (three axes)",
+      "line": 217,
+      "uri": "spec://vibevm/spec/research/PROP-004-tessl-comparative-research.md#review-rubric"
+    },
+    {
+      "anchor": "optimize",
+      "content_hash": "",
+      "doc_path": "spec/research/PROP-004-tessl-comparative-research.md",
+      "heading": "2.12 `--optimize` auto-improvement loop",
+      "line": 235,
+      "uri": "spec://vibevm/spec/research/PROP-004-tessl-comparative-research.md#optimize"
+    },
+    {
+      "anchor": "codebase-readiness",
+      "content_hash": "",
+      "doc_path": "spec/research/PROP-004-tessl-comparative-research.md",
+      "heading": "2.13 Codebase-readiness eval — eval from real commits",
+      "line": 251,
+      "uri": "spec://vibevm/spec/research/PROP-004-tessl-comparative-research.md#codebase-readiness"
+    },
+    {
+      "anchor": "multi-model",
+      "content_hash": "",
+      "doc_path": "spec/research/PROP-004-tessl-comparative-research.md",
+      "heading": "2.14 Multi-model A/B comparison",
+      "line": 274,
+      "uri": "spec://vibevm/spec/research/PROP-004-tessl-comparative-research.md#multi-model"
+    },
+    {
+      "anchor": "mcp",
+      "content_hash": "",
+      "doc_path": "spec/research/PROP-004-tessl-comparative-research.md",
+      "heading": "2.15 MCP server and `query_library_docs`",
+      "line": 288,
+      "uri": "spec://vibevm/spec/research/PROP-004-tessl-comparative-research.md#mcp"
+    },
+    {
+      "anchor": "snyk",
+      "content_hash": "",
+      "doc_path": "spec/research/PROP-004-tessl-comparative-research.md",
+      "heading": "2.16 Snyk-driven security gating",
+      "line": 302,
+      "uri": "spec://vibevm/spec/research/PROP-004-tessl-comparative-research.md#snyk"
+    },
+    {
+      "anchor": "auto-update",
+      "content_hash": "",
+      "doc_path": "spec/research/PROP-004-tessl-comparative-research.md",
+      "heading": "2.17 Auto-update",
+      "line": 313,
+      "uri": "spec://vibevm/spec/research/PROP-004-tessl-comparative-research.md#auto-update"
+    },
+    {
+      "anchor": "git-integration",
+      "content_hash": "",
+      "doc_path": "spec/research/PROP-004-tessl-comparative-research.md",
+      "heading": "2.18 GitHub / GitLab integration",
+      "line": 327,
+      "uri": "spec://vibevm/spec/research/PROP-004-tessl-comparative-research.md#git-integration"
+    },
+    {
+      "anchor": "spec-driven",
+      "content_hash": "",
+      "doc_path": "spec/research/PROP-004-tessl-comparative-research.md",
+      "heading": "2.19 Progressive enhancement: spec-driven development skill",
+      "line": 337,
+      "uri": "spec://vibevm/spec/research/PROP-004-tessl-comparative-research.md#spec-driven"
+    },
+    {
+      "anchor": "outdated",
+      "content_hash": "",
+      "doc_path": "spec/research/PROP-004-tessl-comparative-research.md",
+      "heading": "2.20 `tessl outdated` and update workflows",
+      "line": 347,
+      "uri": "spec://vibevm/spec/research/PROP-004-tessl-comparative-research.md#outdated"
+    },
+    {
+      "anchor": "cli",
+      "content_hash": "",
+      "doc_path": "spec/research/PROP-004-tessl-comparative-research.md",
+      "heading": "3. CLI surface — complete documented inventory",
+      "line": 357,
+      "uri": "spec://vibevm/spec/research/PROP-004-tessl-comparative-research.md#cli"
+    },
+    {
+      "anchor": "formats",
+      "content_hash": "",
+      "doc_path": "spec/research/PROP-004-tessl-comparative-research.md",
+      "heading": "4. File formats and on-disk shapes",
+      "line": 445,
+      "uri": "spec://vibevm/spec/research/PROP-004-tessl-comparative-research.md#formats"
+    },
+    {
+      "anchor": "gaps",
+      "content_hash": "",
+      "doc_path": "spec/research/PROP-004-tessl-comparative-research.md",
+      "heading": "5. The gap — what Tessl does that vibevm does not",
+      "line": 546,
+      "uri": "spec://vibevm/spec/research/PROP-004-tessl-comparative-research.md#gaps"
+    },
+    {
+      "anchor": "roadmap-deltas",
+      "content_hash": "",
+      "doc_path": "spec/research/PROP-004-tessl-comparative-research.md",
+      "heading": "6. Roadmap deltas",
+      "line": 774,
+      "uri": "spec://vibevm/spec/research/PROP-004-tessl-comparative-research.md#roadmap-deltas"
+    },
+    {
+      "anchor": "sources",
+      "content_hash": "",
+      "doc_path": "spec/research/PROP-004-tessl-comparative-research.md",
+      "heading": "7. Source URLs and re-fetch procedure",
+      "line": 869,
+      "uri": "spec://vibevm/spec/research/PROP-004-tessl-comparative-research.md#sources"
+    },
+    {
+      "anchor": "vibevm-leads",
+      "content_hash": "",
+      "doc_path": "spec/research/PROP-004-tessl-comparative-research.md",
+      "heading": "8. Where vibevm leads — Tessl gaps",
+      "line": 908,
+      "uri": "spec://vibevm/spec/research/PROP-004-tessl-comparative-research.md#vibevm-leads"
+    },
+    {
+      "anchor": "reading",
+      "content_hash": "",
+      "doc_path": "spec/research/PROP-004-tessl-comparative-research.md",
+      "heading": "9. Reading list — adjacent projects and concepts",
+      "line": 948,
+      "uri": "spec://vibevm/spec/research/PROP-004-tessl-comparative-research.md#reading"
+    }
+  ],
+  "warnings": []
+}

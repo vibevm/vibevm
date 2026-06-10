@@ -9,10 +9,19 @@
 //!   the binary is missing.
 //! - `check-codegen` — `codegen`, then run `git diff --exit-code` over
 //!   the generated dir. Used by CI to assert no schema drift.
+//! - `specmap` — regenerate the canonical `specmap.json` traceability
+//!   index (PROP-014 §2.5); `--check` regenerates and byte-diffs, the
+//!   `check-codegen` idiom.
+//! - `test-gate` — run the workspace tests through nextest and diff the
+//!   outcome against `terraform/registry/tests-baseline.json` with
+//!   xfail-strict semantics (BROWNFIELD §4). Replaces bare `cargo test`
+//!   in terraform acceptance lines.
+//! - `tripwire` — list debt-registry entries whose `touch:` tripwires
+//!   fire on the current change set. Warn-only.
 //!
 //! Entry shape follows the standard `xtask` pattern. Keep this
-//! crate dep-light: clap + anyhow + std. Anything heavier belongs in
-//! a regular workspace crate.
+//! crate dep-light: clap + anyhow + std; the heavy lifting lives in
+//! `specmap-core`.
 
 use std::path::{Path, PathBuf};
 use std::process::Command;
@@ -40,6 +49,38 @@ enum Cmd {
     /// generated tree matches what's checked in. CI runs this to catch
     /// schema drift.
     CheckCodegen,
+
+    /// Regenerate the canonical `specmap.json` traceability index
+    /// (PROP-014 §2.5).
+    Specmap {
+        /// Regenerate and byte-diff against the committed index instead
+        /// of writing; non-zero exit on drift.
+        #[arg(long)]
+        check: bool,
+    },
+
+    /// Run workspace tests via nextest and diff against the xfail-strict
+    /// baseline (BROWNFIELD §4). Fails on newly-failing and on
+    /// unexpectedly-passing-unpromoted.
+    TestGate {
+        /// Path to the baseline registry, repo-relative.
+        #[arg(long, default_value = "terraform/registry/tests-baseline.json")]
+        baseline: String,
+    },
+
+    /// List debt entries whose `touch:` tripwires fire on the current
+    /// change set (worktree + staged + untracked; or `--base <rev>`).
+    /// Warn-only: always exits 0.
+    Tripwire {
+        /// Diff against this revision (`<base>...HEAD`) instead of the
+        /// working-tree change set.
+        #[arg(long)]
+        base: Option<String>,
+
+        /// Path to the debt registry, repo-relative.
+        #[arg(long, default_value = "terraform/registry/debt.json")]
+        debt: String,
+    },
 }
 
 fn main() -> Result<()> {
@@ -47,7 +88,201 @@ fn main() -> Result<()> {
     match cli.command {
         Cmd::Codegen => run_codegen(),
         Cmd::CheckCodegen => run_check_codegen(),
+        Cmd::Specmap { check } => run_specmap(check),
+        Cmd::TestGate { baseline } => run_test_gate(&baseline),
+        Cmd::Tripwire { base, debt } => run_tripwire(base.as_deref(), &debt),
     }
+}
+
+fn run_specmap(check: bool) -> Result<()> {
+    let root = repo_root()?;
+    if check {
+        match specmap_core::index::check(&root)? {
+            Ok(summary) => {
+                eprintln!("xtask specmap --check: clean ({summary}).");
+                Ok(())
+            }
+            Err(msg) => bail!("{msg}"),
+        }
+    } else {
+        let (path, summary) = specmap_core::index::write(&root)?;
+        eprintln!("xtask specmap: wrote {} ({summary}).", path.display());
+        Ok(())
+    }
+}
+
+fn run_test_gate(baseline_rel: &str) -> Result<()> {
+    use specmap_core::testgate;
+
+    let root = repo_root()?;
+    let baseline_path = root.join(baseline_rel);
+    let baseline_json = std::fs::read_to_string(&baseline_path)
+        .with_context(|| format!("reading {}", baseline_path.display()))?;
+    let baseline = testgate::parse_baseline(&baseline_json)?;
+
+    eprintln!("xtask test-gate: running `cargo nextest run --workspace --no-fail-fast` …");
+    let out = Command::new("cargo")
+        .args([
+            "nextest",
+            "run",
+            "--workspace",
+            "--no-fail-fast",
+            "--status-level",
+            "all",
+            "--color",
+            "never",
+        ])
+        .current_dir(&root)
+        .output()
+        .context("spawning cargo nextest (install: `cargo install cargo-nextest --locked`)")?;
+
+    let mut combined = String::from_utf8_lossy(&out.stdout).into_owned();
+    combined.push('\n');
+    combined.push_str(&String::from_utf8_lossy(&out.stderr));
+    let results = testgate::parse_nextest_output(&combined);
+
+    // A gate that parsed nothing must never report green: that is how
+    // gates get gamed by accident (PLAYBOOK §8).
+    if results.is_empty() {
+        bail!(
+            "test-gate parsed zero test results out of the nextest run \
+             (nextest exit: {:?}); refusing to conclude anything",
+            out.status.code()
+        );
+    }
+
+    let report = testgate::evaluate(&baseline, &results);
+    let total = results.len();
+    let skipped = results
+        .values()
+        .filter(|s| **s == testgate::RunStatus::Skip)
+        .count();
+    let failed = results
+        .values()
+        .filter(|s| **s == testgate::RunStatus::Fail)
+        .count();
+    eprintln!(
+        "xtask test-gate: {total} results parsed ({failed} failed, {skipped} skipped), \
+         baseline entries: {}",
+        baseline.len()
+    );
+    for (test, status) in &report.flaky_observed {
+        eprintln!("  flaky (never gating): {test} — {status}");
+    }
+    for test in &report.missing_from_run {
+        eprintln!(
+            "  warning: baseline entry never appeared in the run \
+             (renamed or deleted? shrink the baseline via the promotion \
+             protocol): {test}"
+        );
+    }
+    if report.is_green() {
+        eprintln!("xtask test-gate: green (xfail-strict).");
+        return Ok(());
+    }
+    for test in &report.newly_failing {
+        eprintln!("  NEWLY FAILING: {test}");
+    }
+    for test in &report.unexpectedly_passing {
+        eprintln!("  UNEXPECTEDLY PASSING (unpromoted — see PLAYBOOK §7.2): {test}");
+    }
+    bail!(
+        "test-gate failed: {} newly failing, {} unexpectedly passing",
+        report.newly_failing.len(),
+        report.unexpectedly_passing.len()
+    );
+}
+
+/// Collect the change set as repo-relative forward-slash paths.
+fn changed_paths(root: &Path, base: Option<&str>) -> Result<Vec<String>> {
+    let mut args_sets: Vec<Vec<String>> = Vec::new();
+    match base {
+        Some(rev) => {
+            args_sets.push(vec![
+                "diff".into(),
+                "--name-only".into(),
+                format!("{rev}...HEAD"),
+            ]);
+            // Plus whatever is uncommitted right now.
+            args_sets.push(vec!["diff".into(), "--name-only".into(), "HEAD".into()]);
+        }
+        None => {
+            args_sets.push(vec!["diff".into(), "--name-only".into(), "HEAD".into()]);
+            args_sets.push(vec!["diff".into(), "--name-only".into(), "--cached".into()]);
+        }
+    }
+    args_sets.push(vec![
+        "ls-files".into(),
+        "--others".into(),
+        "--exclude-standard".into(),
+    ]);
+
+    let mut paths: Vec<String> = Vec::new();
+    for args in args_sets {
+        let out = Command::new("git")
+            .args(&args)
+            .current_dir(root)
+            .output()
+            .context("spawning git")?;
+        if !out.status.success() {
+            bail!(
+                "git {} failed: {}",
+                args.join(" "),
+                String::from_utf8_lossy(&out.stderr)
+            );
+        }
+        for line in String::from_utf8_lossy(&out.stdout).lines() {
+            let p = line.trim().replace('\\', "/");
+            if !p.is_empty() && !paths.contains(&p) {
+                paths.push(p);
+            }
+        }
+    }
+    paths.sort();
+    Ok(paths)
+}
+
+fn run_tripwire(base: Option<&str>, debt_rel: &str) -> Result<()> {
+    let root = repo_root()?;
+    let debt_path = root.join(debt_rel);
+    let debt_json = std::fs::read_to_string(&debt_path)
+        .with_context(|| format!("reading {}", debt_path.display()))?;
+    let changed = changed_paths(&root, base)?;
+    if changed.is_empty() {
+        eprintln!("xtask tripwire: change set is empty — nothing to match.");
+        return Ok(());
+    }
+    let fired = specmap_core::tripwire::evaluate(&debt_json, &changed)?;
+    if fired.is_empty() {
+        eprintln!(
+            "xtask tripwire: no debt tripwires fire on {} changed path(s).",
+            changed.len()
+        );
+        return Ok(());
+    }
+    eprintln!(
+        "xtask tripwire: {} debt entr{} fire on this change set — address \
+         each in the PR description: pulled-in, re-dispositioned, or \
+         consciously deferred (PLAYBOOK §7.5):",
+        fired.len(),
+        if fired.len() == 1 { "y" } else { "ies" }
+    );
+    for f in fired {
+        eprintln!(
+            "  [{}] {} — {} ({})",
+            f.severity, f.id, f.title, f.disposition
+        );
+        for (pattern, paths) in &f.hits {
+            for p in paths {
+                eprintln!("      {pattern}  ←  {p}");
+            }
+        }
+        for wire in &f.unevaluated {
+            eprintln!("      {wire}  (not yet evaluable — needs specmap revisions, Phase 1)");
+        }
+    }
+    // Warn-only by contract.
+    Ok(())
 }
 
 fn repo_root() -> Result<PathBuf> {
