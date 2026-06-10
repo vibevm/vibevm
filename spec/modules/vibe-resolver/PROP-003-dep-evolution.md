@@ -409,9 +409,9 @@ flow:migration-discipline = "^0.1"
 
 #### The predicate grammar {#req-conditional-grammar}
 
-`req r2`
+`req r1`
 
-The `context(...)` predicate accepts the same `if_present` / `if_provides` / `if_files` / `if_command` / `if_env` / `if_describes_match` / `if_language` probes from §2.5.2, plus boolean composition (`and`, `or`, `not`). Probe keys are matched case-sensitively.
+The `context(...)` predicate accepts the same `if_present` / `if_provides` / `if_files` / `if_command` / `if_env` / `if_describes_match` / `if_language` probes from §2.5.2, plus boolean composition (`and`, `or`, `not`).
 
 #### When to use which {#design-conditional-when-to-use}
 
@@ -429,7 +429,7 @@ The `context(...)` predicate accepts the same `if_present` / `if_provides` / `if
 
 `req r1`
 
-**Cargo's resolution-stability lesson.** Cargo's `cfg`-based conditional deps were originally per-target evaluated at solve time, which produced different lockfiles per host triple. vibevm's `context(...)` is evaluated against the **resolved project state**, not host state — so the lockfile is host-invariant for the same project state. Build-host machine differences (e.g., `cargo` available or not) are explicitly out of scope; if the user wants those, they declare project-level capabilities.
+**Cargo's resolution-stability lesson.** Cargo's `cfg`-based conditional deps were originally per-target evaluated at solve time, which produced different lockfiles per host triple. vibevm's `context(...)` is evaluated against the **resolved project state**, not host state — so the lockfile is host-invariant for the same project state. Build-host machine differences (e.g. `cargo` available or not) are explicitly out of scope; if the user wants those, they declare project-level capabilities.
 
 #### Boolean composition over predicates {#req-conditional-composition}
 
