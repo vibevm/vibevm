@@ -84,6 +84,17 @@ fn incremental_one_file_diff_reextracts_one_file() {
         "a 1-file diff re-extracts exactly 1 file"
     );
     assert_eq!(touched.cached, 3);
+
+    // Facts survive an epoch change (LEDGER §2): the store key is
+    // (file content-hash, producer) — lockfile/toolchain context plays
+    // no part, so touching Cargo.lock invalidates nothing here.
+    seed(repo, "Cargo.lock", "dep graph changed\n");
+    let mut after_epoch = ExtractionLog::default();
+    store
+        .extract_workspace(repo, &RustFrontend, &mut after_epoch)
+        .unwrap();
+    assert!(after_epoch.extracted.is_empty());
+    assert_eq!(after_epoch.cached, 4);
 }
 
 #[test]

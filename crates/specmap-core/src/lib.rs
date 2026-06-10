@@ -20,6 +20,7 @@
 
 pub mod explain;
 pub mod index;
+pub mod ledger;
 pub mod mdspec;
 pub mod ratchet;
 pub mod rscan;

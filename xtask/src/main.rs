@@ -129,6 +129,12 @@ enum TraceCmd {
         /// Raw subgraph as JSON (agent-friendly).
         #[arg(long, conflicts_with = "text")]
         json: bool,
+
+        /// Prose render through the local ledger (LEDGER §6 query
+        /// kind 2): template producer, epoch-keyed cache under
+        /// `.ledger/`, provenance line on every render.
+        #[arg(long, conflicts_with_all = ["text", "json"])]
+        prose: bool,
     },
 }
 
@@ -144,17 +150,38 @@ fn main() -> Result<()> {
             cmd: ConformCmd::Check { baseline, scope },
         } => run_conform_check(&baseline, scope.as_deref()),
         Cmd::Trace {
-            cmd: TraceCmd::Explain { target, json, .. },
-        } => run_trace_explain(&target, json),
+            cmd:
+                TraceCmd::Explain {
+                    target,
+                    json,
+                    prose,
+                    ..
+                },
+        } => run_trace_explain(&target, json, prose),
     }
 }
 
-fn run_trace_explain(target: &str, json: bool) -> Result<()> {
+fn run_trace_explain(target: &str, json: bool, prose: bool) -> Result<()> {
     let root = repo_root()?;
     // Build fresh in-memory: explain answers for the tree as it is,
     // never for a stale committed artefact.
     let map = specmap_core::index::build(&root);
-    if json {
+    if prose {
+        let render = specmap_core::ledger::prose_explain(&root, &map, target)?;
+        print!("{}", render.text);
+        let t = specmap_core::ledger::load_telemetry(&root);
+        eprintln!(
+            "xtask trace explain --prose: {} (epoch {}; ledger telemetry: {} hit(s), {} miss(es)).",
+            if render.cached {
+                "cache hit"
+            } else {
+                "computed fresh"
+            },
+            render.epoch.short(),
+            t.hits,
+            t.misses
+        );
+    } else if json {
         let v = specmap_core::explain::explain_json(&map, target)?;
         println!("{}", serde_json::to_string_pretty(&v)?);
     } else {

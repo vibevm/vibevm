@@ -26,3 +26,6 @@ desktop.ini
 
 # Local playgrounds for hand-testing M0 (not source of truth)
 /playground/
+
+# The local intent ledger (LEDGER-INTENT v0.1) — derived interpretations cache, never shipped.
+/.ledger/
