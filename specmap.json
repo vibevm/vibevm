@@ -345,6 +345,13 @@
     },
     {
       "crate_name": "vibe-resolver",
+      "file": "crates/vibe-resolver/src/local_registry_provider.rs",
+      "item_kind": "struct",
+      "line": 15,
+      "symbol": "vibe_resolver::local_registry_provider::LocalRegistryProvider"
+    },
+    {
+      "crate_name": "vibe-resolver",
       "file": "crates/vibe-resolver/src/naive.rs",
       "item_kind": "struct",
       "line": 29,
@@ -879,6 +886,14 @@
       "line": 248,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#features",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-resolver/src/local_registry_provider.rs",
+      "from_symbol": "vibe_resolver::local_registry_provider::LocalRegistryProvider",
+      "line": 16,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-002#solver",
       "verb": "implements"
     },
     {
