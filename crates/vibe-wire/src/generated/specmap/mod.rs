@@ -20,6 +20,9 @@ pub struct Specmap {
     #[serde(rename = "spec_units")]
     pub specUnits: Vec<SpecUnit>,
 
+    #[serde(rename = "suspects")]
+    pub suspects: Vec<Suspect>,
+
     #[serde(rename = "warnings")]
     pub warnings: Vec<Warning>,
 }
@@ -152,9 +155,17 @@ pub struct SpecUnit {
     #[serde(rename = "content_hash")]
     pub contentHash: String,
 
-    /// Forward-slash repo-relative markdown path.
+    /// The canonical citation path used inside the URI: relative to `spec/`,
+    /// extension stripped, the filename truncated to its document id when it
+    /// carries one (`PROP-003-dep-evolution.md` → `modules/vibe-resolver/PROP-
+    /// 003`) — the house `spec://` style every existing citation uses.
     #[serde(rename = "doc_path")]
     pub docPath: String,
+
+    /// Forward-slash repo-relative markdown path on disk (for file:line
+    /// navigation).
+    #[serde(rename = "file")]
+    pub file: String,
 
     /// Heading text without the `{#anchor}` suffix.
     #[serde(rename = "heading")]
@@ -189,6 +200,30 @@ pub struct SpecUnit {
     #[serde(rename = "status")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub status: Option<Box<SpecUnitStatus>>,
+}
+
+/// An edge pinned to an older revision than its target unit currently carries
+/// (PROP-014 §2.2, asymmetric invalidation): the spec moved, the affirmation
+/// did not. Cleared by re-affirming — updating the pin in code after review.
+#[derive(Serialize, Deserialize)]
+pub struct Suspect {
+    #[serde(rename = "current_r")]
+    pub currentR: u32,
+
+    #[serde(rename = "file")]
+    pub file: String,
+
+    #[serde(rename = "from_symbol")]
+    pub fromSymbol: String,
+
+    #[serde(rename = "line")]
+    pub line: u32,
+
+    #[serde(rename = "pinned_r")]
+    pub pinnedR: u32,
+
+    #[serde(rename = "uri")]
+    pub uri: String,
 }
 
 /// Non-fatal indexer findings (duplicate anchors, malformed kind lines,

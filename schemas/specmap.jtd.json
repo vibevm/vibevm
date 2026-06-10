@@ -20,7 +20,13 @@
                 "doc_path": {
                     "type": "string",
                     "metadata": {
-                        "description": "Forward-slash repo-relative markdown path."
+                        "description": "The canonical citation path used inside the URI: relative to `spec/`, extension stripped, the filename truncated to its document id when it carries one (`PROP-003-dep-evolution.md` → `modules/vibe-resolver/PROP-003`) — the house `spec://` style every existing citation uses."
+                    }
+                },
+                "file": {
+                    "type": "string",
+                    "metadata": {
+                        "description": "Forward-slash repo-relative markdown path on disk (for file:line navigation)."
                     }
                 },
                 "anchor": {
@@ -139,6 +145,31 @@
                 }
             }
         },
+        "suspect": {
+            "metadata": {
+                "description": "An edge pinned to an older revision than its target unit currently carries (PROP-014 §2.2, asymmetric invalidation): the spec moved, the affirmation did not. Cleared by re-affirming — updating the pin in code after review."
+            },
+            "properties": {
+                "from_symbol": {
+                    "type": "string"
+                },
+                "uri": {
+                    "type": "string"
+                },
+                "pinned_r": {
+                    "type": "uint32"
+                },
+                "current_r": {
+                    "type": "uint32"
+                },
+                "file": {
+                    "type": "string"
+                },
+                "line": {
+                    "type": "uint32"
+                }
+            }
+        },
         "warning": {
             "metadata": {
                 "description": "Non-fatal indexer findings (duplicate anchors, malformed kind lines, unparseable sources). B5: the indexer degrades, never errors, outside the migrated frontier."
@@ -176,6 +207,11 @@
         "edges": {
             "elements": {
                 "ref": "edge"
+            }
+        },
+        "suspects": {
+            "elements": {
+                "ref": "suspect"
             }
         },
         "warnings": {
