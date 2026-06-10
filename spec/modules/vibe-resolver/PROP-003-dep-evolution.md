@@ -700,7 +700,7 @@ libsolv's solver is rule-based: every constraint becomes a clause in the SAT pro
 
 This is the same encoding `dnf5` uses for RPM weak-deps; we just reuse the `RULE_*` constants from libsolv's public `solv/solver.h`.
 
-### 3.2 Solver phases {#phases}
+### 3.2 Solver phases {#solver-phases}
 
 For one `vibe install` invocation:
 
