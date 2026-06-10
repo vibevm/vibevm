@@ -170,6 +170,111 @@
     },
     {
       "crate_name": "vibe-resolver",
+      "file": "crates/vibe-resolver/src/features.rs",
+      "item_kind": "enum",
+      "line": 284,
+      "symbol": "vibe_resolver::features::FeatureError"
+    },
+    {
+      "crate_name": "vibe-resolver",
+      "file": "crates/vibe-resolver/src/features.rs",
+      "item_kind": "struct",
+      "line": 77,
+      "symbol": "vibe_resolver::features::FeatureExpansion"
+    },
+    {
+      "crate_name": "vibe-resolver",
+      "file": "crates/vibe-resolver/src/features.rs",
+      "item_kind": "struct",
+      "line": 121,
+      "symbol": "vibe_resolver::features::FeatureRequest"
+    },
+    {
+      "crate_name": "vibe-resolver",
+      "file": "crates/vibe-resolver/src/features.rs",
+      "item_kind": "enum",
+      "line": 20,
+      "symbol": "vibe_resolver::features::FeatureValue"
+    },
+    {
+      "crate_name": "vibe-resolver",
+      "file": "crates/vibe-resolver/src/features.rs",
+      "item_kind": "fn",
+      "line": 133,
+      "symbol": "vibe_resolver::features::expand_features"
+    },
+    {
+      "crate_name": "vibe-resolver",
+      "file": "crates/vibe-resolver/src/features.rs",
+      "item_kind": "fn",
+      "line": 392,
+      "symbol": "vibe_resolver::features::tests::all_features_skips_private"
+    },
+    {
+      "crate_name": "vibe-resolver",
+      "file": "crates/vibe-resolver/src/features.rs",
+      "item_kind": "fn",
+      "line": 356,
+      "symbol": "vibe_resolver::features::tests::defaults_activate_when_present"
+    },
+    {
+      "crate_name": "vibe-resolver",
+      "file": "crates/vibe-resolver/src/features.rs",
+      "item_kind": "fn",
+      "line": 495,
+      "symbol": "vibe_resolver::features::tests::exclusive_violation_detected"
+    },
+    {
+      "crate_name": "vibe-resolver",
+      "file": "crates/vibe-resolver/src/features.rs",
+      "item_kind": "fn",
+      "line": 553,
+      "symbol": "vibe_resolver::features::tests::merge_extends_all_subsets"
+    },
+    {
+      "crate_name": "vibe-resolver",
+      "file": "crates/vibe-resolver/src/features.rs",
+      "item_kind": "fn",
+      "line": 373,
+      "symbol": "vibe_resolver::features::tests::no_defaults_skips_default"
+    },
+    {
+      "crate_name": "vibe-resolver",
+      "file": "crates/vibe-resolver/src/features.rs",
+      "item_kind": "fn",
+      "line": 310,
+      "symbol": "vibe_resolver::features::tests::parses_feature_value_variants"
+    },
+    {
+      "crate_name": "vibe-resolver",
+      "file": "crates/vibe-resolver/src/features.rs",
+      "item_kind": "fn",
+      "line": 423,
+      "symbol": "vibe_resolver::features::tests::private_feature_explicit_rejected"
+    },
+    {
+      "crate_name": "vibe-resolver",
+      "file": "crates/vibe-resolver/src/features.rs",
+      "item_kind": "fn",
+      "line": 436,
+      "symbol": "vibe_resolver::features::tests::transitive_expansion"
+    },
+    {
+      "crate_name": "vibe-resolver",
+      "file": "crates/vibe-resolver/src/features.rs",
+      "item_kind": "fn",
+      "line": 458,
+      "symbol": "vibe_resolver::features::tests::weak_dep_feature_does_not_pull_dep"
+    },
+    {
+      "crate_name": "vibe-resolver",
+      "file": "crates/vibe-resolver/src/features.rs",
+      "item_kind": "fn",
+      "line": 245,
+      "symbol": "vibe_resolver::features::validate_features_table"
+    },
+    {
+      "crate_name": "vibe-resolver",
       "file": "crates/vibe-resolver/src/naive.rs",
       "item_kind": "struct",
       "line": 29,
@@ -496,6 +601,126 @@
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-grammar",
       "verb": "verifies",
       "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-resolver/src/features.rs",
+      "from_symbol": "vibe_resolver::features::FeatureError",
+      "line": 285,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#features",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-resolver/src/features.rs",
+      "from_symbol": "vibe_resolver::features::FeatureExpansion",
+      "line": 80,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#features",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-resolver/src/features.rs",
+      "from_symbol": "vibe_resolver::features::FeatureRequest",
+      "line": 123,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#features",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-resolver/src/features.rs",
+      "from_symbol": "vibe_resolver::features::FeatureValue",
+      "line": 22,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#features",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-resolver/src/features.rs",
+      "from_symbol": "vibe_resolver::features::expand_features",
+      "line": 140,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#features",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-resolver/src/features.rs",
+      "from_symbol": "vibe_resolver::features::tests::all_features_skips_private",
+      "line": 393,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#features",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-resolver/src/features.rs",
+      "from_symbol": "vibe_resolver::features::tests::defaults_activate_when_present",
+      "line": 357,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#features",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-resolver/src/features.rs",
+      "from_symbol": "vibe_resolver::features::tests::exclusive_violation_detected",
+      "line": 496,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#features",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-resolver/src/features.rs",
+      "from_symbol": "vibe_resolver::features::tests::merge_extends_all_subsets",
+      "line": 554,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#features",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-resolver/src/features.rs",
+      "from_symbol": "vibe_resolver::features::tests::no_defaults_skips_default",
+      "line": 374,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#features",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-resolver/src/features.rs",
+      "from_symbol": "vibe_resolver::features::tests::parses_feature_value_variants",
+      "line": 311,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#features",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-resolver/src/features.rs",
+      "from_symbol": "vibe_resolver::features::tests::private_feature_explicit_rejected",
+      "line": 424,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#features",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-resolver/src/features.rs",
+      "from_symbol": "vibe_resolver::features::tests::transitive_expansion",
+      "line": 437,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#features",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-resolver/src/features.rs",
+      "from_symbol": "vibe_resolver::features::tests::weak_dep_feature_does_not_pull_dep",
+      "line": 459,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#features",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-resolver/src/features.rs",
+      "from_symbol": "vibe_resolver::features::validate_features_table",
+      "line": 248,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#features",
+      "verb": "implements"
     },
     {
       "file": "crates/vibe-resolver/src/naive.rs",

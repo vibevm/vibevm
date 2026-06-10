@@ -13,11 +13,13 @@
 
 use std::collections::{BTreeMap, BTreeSet};
 
+use specmark::spec;
 use thiserror::Error;
 use vibe_core::manifest::FeaturesTable;
 
 /// One activation entry, parsed from a feature's activation list.
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
+#[spec(implements = "spec://vibevm/modules/vibe-resolver/PROP-003#features")]
 pub enum FeatureValue {
     /// `feat-A` — enabling A enables this feature.
     Feature(String),
@@ -75,6 +77,7 @@ impl FeatureValue {
 /// Resolved feature expansion: every feature, dep, dep-feature, and
 /// subskill-path that the requested feature set transitively pulls in.
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
+#[spec(implements = "spec://vibevm/modules/vibe-resolver/PROP-003#features")]
 pub struct FeatureExpansion {
     /// Names of features active in the package itself.
     pub active_features: BTreeSet<String>,
@@ -117,6 +120,7 @@ impl FeatureExpansion {
 
 /// Configuration controlling which features to start from.
 #[derive(Debug, Clone, Default)]
+#[spec(implements = "spec://vibevm/modules/vibe-resolver/PROP-003#features")]
 pub struct FeatureRequest {
     /// Features explicitly requested on the CLI (`vibe install --features`).
     pub explicit: Vec<String>,
@@ -133,6 +137,7 @@ pub struct FeatureRequest {
 /// Exclusive-group violations flag as `ExclusiveViolation`. The caller
 /// is expected to surface diagnostics actionably (e.g. through
 /// `vibe install` step lines).
+#[spec(implements = "spec://vibevm/modules/vibe-resolver/PROP-003#features")]
 pub fn expand_features(
     table: &FeaturesTable,
     request: &FeatureRequest,
@@ -240,6 +245,7 @@ pub fn expand_features(
 /// Static structural validation of a `[features]` table — runs at
 /// `vibe check` time. Returns a list of diagnostics
 /// (empty = valid).
+#[spec(implements = "spec://vibevm/modules/vibe-resolver/PROP-003#features")]
 pub fn validate_features_table(table: &FeaturesTable) -> Vec<String> {
     let mut findings = Vec::new();
     // Cycle detection by attempting an `--all-features` expansion.
@@ -276,6 +282,7 @@ pub fn validate_features_table(table: &FeaturesTable) -> Vec<String> {
 }
 
 #[derive(Debug, Error, PartialEq, Eq)]
+#[spec(implements = "spec://vibevm/modules/vibe-resolver/PROP-003#features")]
 pub enum FeatureError {
     #[error("unknown feature: {0}")]
     UnknownFeature(String),
@@ -292,6 +299,8 @@ pub enum FeatureError {
 
 #[cfg(test)]
 mod tests {
+    use specmark::verifies;
+
     use super::*;
 
     fn make_table(toml_src: &str) -> FeaturesTable {
@@ -299,6 +308,7 @@ mod tests {
     }
 
     #[test]
+    #[verifies("spec://vibevm/modules/vibe-resolver/PROP-003#features")]
     fn parses_feature_value_variants() {
         assert_eq!(
             FeatureValue::parse("foo").unwrap(),
@@ -344,6 +354,7 @@ mod tests {
     }
 
     #[test]
+    #[verifies("spec://vibevm/modules/vibe-resolver/PROP-003#features")]
     fn defaults_activate_when_present() {
         let t = make_table(
             r#"
@@ -360,6 +371,7 @@ optional-x = []
     }
 
     #[test]
+    #[verifies("spec://vibevm/modules/vibe-resolver/PROP-003#features")]
     fn no_defaults_skips_default() {
         let t = make_table(
             r#"
@@ -378,6 +390,7 @@ wal-protocol = []
     }
 
     #[test]
+    #[verifies("spec://vibevm/modules/vibe-resolver/PROP-003#features")]
     fn all_features_skips_private() {
         let t = make_table(
             r#"
@@ -408,6 +421,7 @@ _internal-helper = []
     }
 
     #[test]
+    #[verifies("spec://vibevm/modules/vibe-resolver/PROP-003#features")]
     fn private_feature_explicit_rejected() {
         let t = make_table(r#"_internal = []"#);
         let req = FeatureRequest {
@@ -420,6 +434,7 @@ _internal-helper = []
     }
 
     #[test]
+    #[verifies("spec://vibevm/modules/vibe-resolver/PROP-003#features")]
     fn transitive_expansion() {
         let t = make_table(
             r#"
@@ -441,6 +456,7 @@ d = []
     }
 
     #[test]
+    #[verifies("spec://vibevm/modules/vibe-resolver/PROP-003#features")]
     fn weak_dep_feature_does_not_pull_dep() {
         let t = make_table(
             r#"
@@ -477,6 +493,7 @@ b = ["a"]
     }
 
     #[test]
+    #[verifies("spec://vibevm/modules/vibe-resolver/PROP-003#features")]
     fn exclusive_violation_detected() {
         let t = make_table(
             r#"
@@ -534,6 +551,7 @@ b = []
     }
 
     #[test]
+    #[verifies("spec://vibevm/modules/vibe-resolver/PROP-003#features")]
     fn merge_extends_all_subsets() {
         let mut a = FeatureExpansion::default();
         a.active_features.insert("foo".into());
