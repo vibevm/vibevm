@@ -62,12 +62,37 @@ results: `tripwire` caught the owner-dropped `GUIDE-TYPESCRIPT` /
 updated), and the unit parser gained fenced-block exclusion after two
 sample headings from `GUIDE-SPEC-AUTHORING` leaked into the inventory.
 
-**Next: Phase 1 — pilot** (PROP-003 §2.6.1 × `vibe-resolver/src/conditional.rs`):
-additions-only `req` unit markers in PROP-003 (opened as a PR for owner
-review — not merged without approval), tags on `ConditionalPredicate` /
-`parse`, the recorded `deviates` for boolean composition, `#[verifies]`
-on tests, the drift drill (r-bump → suspect → re-affirm; typo → hash
-warning), and `xtask trace explain` over the pilot subgraph.
+**Phase 1 — pilot: EXECUTED (2026-06-10), review in-conversation.** Per
+the owner's live direction ("без отдельных PR, работаем в new, всё
+решаем здесь") the pilot landed directly on `new`; the full dossier is
+[`terraform/PHASE1-PILOT.md`](../terraform/PHASE1-PILOT.md). Engine prep
+first (`40077bf`, `dc79001`): canonical house-style URIs (the indexer's
+full-path URIs would never have joined the repo's citation style — caught
+before the pilot tripped on it), `spec_unit.file`, the suspects table,
+dangling-edge / pin-ahead / pin-into-unmarked warnings, drift
+classification on `specmap`/`--check` (revision bumps with their
+suspects; unbumped-hash with the `spec-editorial:` convention), and
+`cargo xtask trace explain <symbol|uri> [--text|--json]`. Then the pilot
+(`4395d3b`): PROP-003 §2.6.1 unit-ified additions-only — four `req`
+units (`grammar`, `fixpoint`, `host-invariance` ratified r1;
+`composition` **planned**) plus one `design` unit; `conditional.rs`
+carries the first production tags (implements ×3, the recorded
+`deviates` into the planned unit, `#[verifies]` ×6); index: **413 units,
+17 items, 19 edges, 0 suspects**. The drift drill ran end-to-end and
+stays in history (`b3a947c` bump → 6 suspects → re-affirm; `73b6e81`
+editorial → unbumped-hash → `spec-editorial:` marker; `4afe716` revert
+to byte-identical pilot state). Acceptance: `trace explain` renders the
+planned/deviates subgraph; `test-gate` green (1051 results, xfail-strict);
+full `self-check.sh` green. Tripwire on the change set: DBT-0011 fired
+(`touch:crates/vibe-resolver/**`) — addressed: tags only, solver debt
+untouched.
+
+**Next: Phase 2 — backfill `vibe-resolver`** (playbook §phase2): mine
+the latent `spec://` corpus from commit bodies, the bounded crate sweep
+producing `terraform/specmap-proposals.json` (proposals only, no source
+edits), owner-approved affirmation passes, then the ratchet flips
+blocking for `vibe-resolver`. Before it: the owner's in-chat
+confirmation of the pilot's three judgment calls (PHASE1-PILOT.md §1).
 
 **M1.19 — qualified package naming (PROP-008): SHIPPED 2026-05-22, under MFBT.** The qualified-naming refactor — [PROP-008](modules/vibe-registry/PROP-008-qualified-naming.md), design lore in [`spec/design/workspace-and-qualified-naming.md`](design/workspace-and-qualified-naming.md) — is **complete**: all eight phases on `main`, `bash tools/self-check.sh` green on all four steps. Exhaustive per-phase detail is in `CHANGELOG.md`'s M1.19 block and PROP-008 §7.
 
