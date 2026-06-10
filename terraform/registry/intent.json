@@ -1,0 +1,228 @@
+{
+  "schema": 1,
+  "note": "Aspiration inventory (BROWNFIELD-PROTOCOL v0.1 §3) — everything the project intends, harvested at Phase −1 from spec/WAL.md (Next / Known issues / decisions pending), CONTINUE.md next-steps, and ROADMAP.md open milestones. TASKS.md does not exist (recorded; its dangling ROADMAP pointer is DBT-0017). Carry-over guarantee (BROWNFIELD §8): at beta exit every entry reaches done | rescoped | rejected — unaccounted must be zero. States: open | done | rescoped | rejected.",
+  "entries": [
+    {
+      "id": "INT-0001",
+      "source": "spec/WAL.md (Test hardening, 2026-05-23) + CONTINUE.md next-steps 1 + PROP-013 §3",
+      "text": "Run the first full PROP-013 health audit (fresh breadth-first sweep of the §2.2 checklist — the seed run was not one); re-judge the 10 carried findings; reconcile AUDIT.md with terraform/registry/debt.json",
+      "links": ["spec/common/PROP-013-periodic-health-audit.md", "AUDIT.md", "terraform/registry/debt.json"],
+      "state": "open"
+    },
+    {
+      "id": "INT-0002",
+      "source": "spec/WAL.md (Test hardening) + CONTINUE.md next-steps 2 + AUDIT 2026-05-23-01",
+      "text": "Close the P1 coverage gap: hermetic harness driving GitPackageRegistry against real file:// git repositories named per the fqdn convention, plus a default-path `vibe init` → `vibe install` e2e (no --registry)",
+      "links": ["DBT-0001"],
+      "state": "open"
+    },
+    {
+      "id": "INT-0003",
+      "source": "spec/WAL.md (Next, item c) + ROADMAP.md M1.20",
+      "text": "PROP-010 — local package cache (M1.20): owner design session to close the five §5 open questions (cache layout, command namespace, staleness signalling, eviction, scaffolding UX), then implement",
+      "links": ["spec/modules/vibe-registry/PROP-010-local-package-cache.md"],
+      "state": "open"
+    },
+    {
+      "id": "INT-0004",
+      "source": "ROADMAP.md M1.5 + spec/WAL.md (owner deferral 2026-05-22)",
+      "text": "M1.5 Generation — deferred behind base-machinery-first: LLM provider abstraction (M1.5.1), tool-use loop (M1.5.2), vibe build (M1.5.3), vibe sync (M1.5.4), working example (M1.5.5), §16 acceptance",
+      "links": ["ROADMAP.md"],
+      "state": "open"
+    },
+    {
+      "id": "INT-0005",
+      "source": "ROADMAP.md M1.5-gate (last open box) + M1 acceptance (docs item)",
+      "text": "Docs completeness: docs/commands/*.md for every user-facing command (authoring-flow/feat/stack.md exist — verify command coverage, close the checklist)",
+      "links": ["docs/"],
+      "state": "open"
+    },
+    {
+      "id": "INT-0006",
+      "source": "ROADMAP.md M1.3 (v1+ defers) + M1 acceptance",
+      "text": "vibe check deferred checks: #2 dead spec:// references, #3 orphan anchors, #4 anchor uniqueness within a file, #10 implementation coverage; then vibe check --fix",
+      "links": ["DBT-0015"],
+      "state": "open",
+      "note": "check #4 would mechanically catch the DBT-0015 class; natural candidate for PROP-013 §2.5 migration of audit categories into vibe check"
+    },
+    {
+      "id": "INT-0007",
+      "source": "ROADMAP.md M1.4 (deferred subcommands)",
+      "text": "vibe show graph / node / plan — rides on the M1.5 task-graph runner",
+      "links": ["ROADMAP.md"],
+      "state": "open"
+    },
+    {
+      "id": "INT-0008",
+      "source": "ROADMAP.md M1.6 (open bullets)",
+      "text": "M1.6 residue: resolver performance (dep-graph cache, parallel ls-remote), supply-chain attestation (optional/ambitious), further publish adapters (Gitea/Forgejo) on adopter demand",
+      "links": ["ROADMAP.md"],
+      "state": "open"
+    },
+    {
+      "id": "INT-0009",
+      "source": "ROADMAP.md M1.7 (open follow-ups) + M1.11 (remaining)",
+      "text": "vibe-mcp follow-ups: plan-preview + apply-confirm before writes; query_capabilities / list_subskills discovery tools; Gemini + Copilot agent integrations; M1.7-mcp-claude-code-smoke.md recipe; toml_edit comment preservation for Codex config",
+      "links": ["ROADMAP.md"],
+      "state": "open"
+    },
+    {
+      "id": "INT-0010",
+      "source": "ROADMAP.md M1.8",
+      "text": "vibe review — static quality scoring (vibe-eval crate; three-axis 0-100 scoring; publish thresholds; --json)",
+      "links": ["ROADMAP.md"],
+      "state": "open"
+    },
+    {
+      "id": "INT-0011",
+      "source": "ROADMAP.md M1.9",
+      "text": "describes PURL linkage to upstream packages (optional [package].describes; PURL parser in vibe-core; lockfile records upstream; vibe check version-mismatch warning)",
+      "links": ["ROADMAP.md"],
+      "state": "open"
+    },
+    {
+      "id": "INT-0012",
+      "source": "ROADMAP.md M1.10",
+      "text": "vibe outdated (lockfile vs registry list_versions status table; --json; --upstream via describes)",
+      "links": ["ROADMAP.md"],
+      "state": "open"
+    },
+    {
+      "id": "INT-0013",
+      "source": "ROADMAP.md M1.1-revision (transitive depsolver bullet) + M1.21 deferred + PROP-003",
+      "text": "SAT depsolver: resolvo behind the DepSolver trait (libsolv documented fallback); pin_preferences; true incremental re-resolution that skips the registry walk for unchanged subtrees",
+      "links": ["DBT-0011", "DBT-0009", "spec/modules/vibe-resolver/PROP-003-dep-evolution.md"],
+      "state": "open"
+    },
+    {
+      "id": "INT-0014",
+      "source": "ROADMAP.md M2.1",
+      "text": "LLM-based install review (install:review stops being a no-op; semantic safety analysis before apply; --accept-review)",
+      "links": ["ROADMAP.md"],
+      "state": "open"
+    },
+    {
+      "id": "INT-0015",
+      "source": "ROADMAP.md M2.2",
+      "text": "Plugin contribution model v2 (packages contribute graph nodes; authoring/testing tooling; type-checked graph with EXIT 4)",
+      "links": ["ROADMAP.md"],
+      "state": "open"
+    },
+    {
+      "id": "INT-0016",
+      "source": "ROADMAP.md M2.3",
+      "text": "Private registries (token auth for [registry] URLs; per-registry cache keys)",
+      "links": ["ROADMAP.md"],
+      "state": "open",
+      "note": "likely subsumed by M1.14 (authenticated registries, SHIPPED 2026-05-08) — verify and disposition at reconciliation"
+    },
+    {
+      "id": "INT-0017",
+      "source": "ROADMAP.md M2.4",
+      "text": "Cross-platform CI (macOS/Ubuntu/Windows matrix), pre-built binaries per platform, Homebrew formula, Scoop manifest",
+      "links": ["ROADMAP.md"],
+      "state": "open"
+    },
+    {
+      "id": "INT-0018",
+      "source": "ROADMAP.md M2.5",
+      "text": "Error-message polish + vibe doctor (what/where/what-to-do per error; --no-color)",
+      "links": ["ROADMAP.md"],
+      "state": "open"
+    },
+    {
+      "id": "INT-0019",
+      "source": "ROADMAP.md M2.6",
+      "text": "Structured telemetry, opt-in (default off)",
+      "links": ["ROADMAP.md"],
+      "state": "open"
+    },
+    {
+      "id": "INT-0020",
+      "source": "ROADMAP.md M2.7",
+      "text": "vibe review --optimize + multi-model comparison (LLM-judge axes; --agents A/B)",
+      "links": ["ROADMAP.md"],
+      "state": "open"
+    },
+    {
+      "id": "INT-0021",
+      "source": "ROADMAP.md M2.8",
+      "text": "Lazy-push / lazy-pull runtime plumbing through vibe-mcp (schema landed in PROP-003 r2; runtime side open)",
+      "links": ["ROADMAP.md"],
+      "state": "open"
+    },
+    {
+      "id": "INT-0022",
+      "source": "ROADMAP.md M2.9",
+      "text": "Scenario generation from real commits (vibe scenario generate/download/view/list; Tessl-compatible layout; vibe eval run)",
+      "links": ["ROADMAP.md"],
+      "state": "open"
+    },
+    {
+      "id": "INT-0023",
+      "source": "ROADMAP.md M3+",
+      "text": "Speculative directions (unfunded, kept open): interpret mode; multi-stack composition; skill layer; hosted registry; registry explorer over the PROP-005 index",
+      "links": ["ROADMAP.md", "spec/modules/vibe-registry/PROP-008-qualified-naming.md"],
+      "state": "open"
+    },
+    {
+      "id": "INT-0024",
+      "source": "ROADMAP.md M3.1",
+      "text": "Security-review threat model (research-only; prompt-injection / capability-misrepresentation surface; parked until adoption surfaces real threats)",
+      "links": ["ROADMAP.md"],
+      "state": "open"
+    },
+    {
+      "id": "INT-0025",
+      "source": "ROADMAP.md side quests",
+      "text": ".gitattributes with `* text=auto eol=lf` — pin the line-ending policy",
+      "links": ["ROADMAP.md"],
+      "state": "open",
+      "note": "actively relevant: content-hash drift risk on Windows; the CRLF warning storm is visible in today's test logs"
+    },
+    {
+      "id": "INT-0026",
+      "source": "ROADMAP.md side quests",
+      "text": "git config gc.auto 0 + documented manual gc procedure",
+      "links": ["ROADMAP.md"],
+      "state": "open"
+    },
+    {
+      "id": "INT-0027",
+      "source": "ROADMAP.md side quests",
+      "text": "Workspace README.md for first-time visitors",
+      "links": ["ROADMAP.md"],
+      "state": "open"
+    },
+    {
+      "id": "INT-0028",
+      "source": "ROADMAP.md side quests",
+      "text": "CHANGELOG.md",
+      "links": ["CHANGELOG.md"],
+      "state": "done",
+      "note": "already exists and is maintained per milestone (M1.x blocks present at harvest time)"
+    },
+    {
+      "id": "INT-0029",
+      "source": "ROADMAP.md side quests",
+      "text": "Clippy lint-set promotion (pedantic selection for library crates; warnings-as-errors in CI)",
+      "links": ["tools/self-check.sh"],
+      "state": "open",
+      "note": "partially overtaken: clippy -D warnings is already a self-check gate step; residue is the pedantic set + CI wiring"
+    },
+    {
+      "id": "INT-0030",
+      "source": "ROADMAP.md side quests",
+      "text": "cargo deny in CI (automated license check per PROP-000 §3)",
+      "links": ["ROADMAP.md"],
+      "state": "open"
+    },
+    {
+      "id": "INT-0031",
+      "source": "ROADMAP.md side quests",
+      "text": "Docs site (mdBook/Zola render of docs/) once user-facing docs settle",
+      "links": ["ROADMAP.md"],
+      "state": "open"
+    }
+  ]
+}

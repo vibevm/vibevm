@@ -1,0 +1,353 @@
+{
+  "schema": 1,
+  "note": "Machine-readable deficiency record (BROWNFIELD-PROTOCOL v0.1 §3) — the mechanization of AUDIT.md. Human view: DEBT.md, generated from this file. Severity scale is PROP-013's (P1 blocker / P2 debt / P3 note); dispositions are fixed | filed | accepted | open.",
+  "kind_extensions": "`coverage-gap` and `external-drift` extend the BROWNFIELD §3 kind set (failing-test | unimplemented-req | disputed-spec | orphan-code | stale-doc), which has no bucket for untested-production-paths or external-state drift. Recorded as v0.2 package feedback in BASELINE.md.",
+  "entries": [
+    {
+      "id": "DBT-0001",
+      "kind": "coverage-gap",
+      "severity": "P1",
+      "title": "Production git-registry + naming path is under-tested",
+      "detail": "Install e2e drive LocalRegistry (`--registry <dir>`) almost exclusively; that path bypasses GitPackageRegistry::resolve (clone / ls-remote / archive / tags) and NamingConvention::repo_name — the code a real registry install runs. The `vibe init` default-config path (no --registry) has no e2e at all. This is the gap that let the M1.19 `vibe init` defect ship green through eight phases.",
+      "evidence": [
+        "AUDIT.md#2026-05-23-01",
+        "crates/vibe-registry/src/git_package_registry.rs",
+        "crates/vibe-cli/tests/cli_e2e.rs (LocalRegistry-driven suite; `install_from_git_registry` is the lone partial precedent)"
+      ],
+      "source": "AUDIT 2026-05-23-01",
+      "disposition": "filed",
+      "filed_as": "INT-0002 (the test-hardening work)",
+      "tripwires": [
+        "touch:crates/vibe-registry/src/**",
+        "touch:crates/vibe-cli/src/commands/short_name.rs",
+        "touch:crates/vibe-cli/src/commands/init.rs"
+      ],
+      "sunset": "re-disposition at the first full PROP-013 audit run (INT-0001)"
+    },
+    {
+      "id": "DBT-0002",
+      "kind": "failing-test",
+      "severity": "P2",
+      "title": "cli_live_e2e is #[ignore]d and red",
+      "detail": "Three live e2e tests against real GitHub / GitVerse are quarantined (not in the gate) and currently red against the partially-migrated test orgs. A quarantined-and-red test is neither a safety net nor a signal. Coupled to DBT-0005: the fixtures and the tests' expectations move together.",
+      "evidence": [
+        "AUDIT.md#2026-05-23-04",
+        "crates/vibe-cli/tests/cli_live_e2e.rs:95,140,186",
+        "terraform/registry/tests-baseline.json (all three entries)"
+      ],
+      "source": "AUDIT 2026-05-23-04",
+      "disposition": "open",
+      "tripwires": [
+        "touch:crates/vibe-cli/tests/cli_live_e2e.rs"
+      ],
+      "sunset": "re-disposition at the first full PROP-013 audit run"
+    },
+    {
+      "id": "DBT-0003",
+      "kind": "orphan-code",
+      "severity": "P3",
+      "title": "fixtures/manual-test-packages/ carries retired schema",
+      "detail": "flow-vibevm-github-smoke (and likely flow-vibevm-direct-push-smoke) still use [writes] and [boot_snippet].filename and carry no [package].group — all retired by M1.18 and PROP-008. No hermetic test parses these fixtures, so the gate stays green while they rot. De-rot or delete if the manual-test recipes no longer reference them.",
+      "evidence": [
+        "AUDIT.md#2026-05-23-05",
+        "fixtures/manual-test-packages/"
+      ],
+      "source": "AUDIT 2026-05-23-05",
+      "disposition": "open",
+      "tripwires": [
+        "touch:fixtures/manual-test-packages/**",
+        "touch:manual-tests/**"
+      ],
+      "sunset": "re-disposition at the first full PROP-013 audit run"
+    },
+    {
+      "id": "DBT-0004",
+      "kind": "external-drift",
+      "severity": "P2",
+      "title": "GitVerse registry side un-migrated to fqdn",
+      "detail": "vibespecs-gitverse and the vibespecstest3 GitVerse org still predate PROP-008. The GitHub publish token does not apply to GitVerse and GitVerse exposes no API DELETE — owner web-UI / owner-token work. Gates nothing in-repo.",
+      "evidence": [
+        "AUDIT.md#2026-05-23-06"
+      ],
+      "source": "AUDIT 2026-05-23-06",
+      "disposition": "open",
+      "owner_only": true,
+      "tripwires": [
+        "touch:crates/vibe-publish/src/**"
+      ],
+      "sunset": "re-disposition at the first full PROP-013 audit run"
+    },
+    {
+      "id": "DBT-0005",
+      "kind": "external-drift",
+      "severity": "P2",
+      "title": "GitHub test orgs vibespecstest1/2 un-migrated",
+      "detail": "Both orgs still carry kind-name-shaped fixture repos. Re-laying them out is coupled to the #[ignore]d cli_live_e2e tests (DBT-0002) — the fixtures and the tests' expectations are one unit of work.",
+      "evidence": [
+        "AUDIT.md#2026-05-23-07"
+      ],
+      "source": "AUDIT 2026-05-23-07",
+      "disposition": "open",
+      "tripwires": [
+        "touch:crates/vibe-cli/tests/cli_live_e2e.rs"
+      ],
+      "sunset": "re-disposition at the first full PROP-013 audit run"
+    },
+    {
+      "id": "DBT-0006",
+      "kind": "external-drift",
+      "severity": "P3",
+      "title": "Legacy vibespecs/flow-* repos archived, not deleted",
+      "detail": "The M1.19 migration archived flow-wal / flow-sync-from-code / flow-atomic-commits (read-only, reversible) rather than deleting. Accepted: archive is the reversible tidy; the owner can delete outright if a fully-clean org is wanted.",
+      "evidence": [
+        "AUDIT.md#2026-05-23-08"
+      ],
+      "source": "AUDIT 2026-05-23-08",
+      "disposition": "accepted",
+      "accepted_reason": "reversible tidy; deletion stays available to the owner",
+      "tripwires": [
+        "touch:fixtures/registry/**"
+      ],
+      "sunset": "re-judge at the first full PROP-013 audit run"
+    },
+    {
+      "id": "DBT-0007",
+      "kind": "stale-doc",
+      "severity": "P3",
+      "title": "PROP-005 references a non-existent schemas/ directory",
+      "detail": "PROP-005 §2.6 / §3.1 cite crates/vibe-index/schemas/index-entry.jtd.json, but no schemas/ directory exists under crates/vibe-index/ — the index wire types are hand-rolled serde structs. Reconcile the PROP to the implementation, or add the JTD schemas it describes.",
+      "evidence": [
+        "AUDIT.md#2026-05-23-09",
+        "spec/modules/vibe-index/PROP-005-package-index.md §2.6, §3.1"
+      ],
+      "source": "AUDIT 2026-05-23-09",
+      "disposition": "open",
+      "tripwires": [
+        "touch:crates/vibe-index/**",
+        "touch:spec/modules/vibe-index/PROP-005-package-index.md"
+      ],
+      "sunset": "re-disposition at the first full PROP-013 audit run"
+    },
+    {
+      "id": "DBT-0008",
+      "kind": "stale-doc",
+      "severity": "P3",
+      "title": "Residual doc requalification deferred from PROP-008 Phase 8",
+      "detail": "Phase 8 reconciled the identity-defining docs but deliberately left a cosmetic sweep — requalifying (kind, name) / <kind>:<name> example forms across ~15 peripheral command docs.",
+      "evidence": [
+        "AUDIT.md#2026-05-23-10",
+        "docs/commands/"
+      ],
+      "source": "AUDIT 2026-05-23-10",
+      "disposition": "open",
+      "tripwires": [
+        "touch:docs/commands/**"
+      ],
+      "sunset": "re-disposition at the first full PROP-013 audit run"
+    },
+    {
+      "id": "DBT-0009",
+      "kind": "unimplemented-req",
+      "severity": "P3",
+      "title": "Deferred PROP-011 refinements",
+      "detail": "Two recorded deferrals: a content_hash slot spot-check for slot_integrity = verify (needs compute_content_hash lowered out of vibe-registry), and true incremental re-resolution that skips the registry walk for an unchanged subtree (needs PROP-003's SAT pin_preferences). Both gate on other work.",
+      "evidence": [
+        "AUDIT.md#2026-05-23-11",
+        "spec/modules/vibe-workspace/PROP-011-incremental-install.md §5, §8"
+      ],
+      "source": "AUDIT 2026-05-23-11",
+      "disposition": "open",
+      "links": ["INT-0013"],
+      "tripwires": [
+        "touch:crates/vibe-workspace/src/freshness.rs"
+      ],
+      "sunset": "re-disposition at the first full PROP-013 audit run"
+    },
+    {
+      "id": "DBT-0010",
+      "kind": "unimplemented-req",
+      "severity": "P3",
+      "title": "Parked backlog: workspace version inheritance; publish-signalling polish",
+      "detail": "version = { workspace = true } member-version inheritance (PROP-007 §6 q4) and the publish-signalling polish (--archive, has_issues) were parked behind larger milestones. Re-judge whether either is still wanted.",
+      "evidence": [
+        "AUDIT.md#2026-05-23-12",
+        "spec/modules/vibe-workspace/PROP-007-workspace.md §6"
+      ],
+      "source": "AUDIT 2026-05-23-12",
+      "disposition": "open",
+      "tripwires": [
+        "touch:crates/vibe-workspace/src/**",
+        "touch:crates/vibe-publish/src/**"
+      ],
+      "sunset": "re-disposition at the first full PROP-013 audit run"
+    },
+    {
+      "id": "DBT-0011",
+      "kind": "unimplemented-req",
+      "severity": "P3",
+      "title": "NaiveDepSolver is still the only depsolver",
+      "detail": "PROP-003's SAT solver (resolvo / libsolv) is unimplemented; NaiveDepSolver (DFS, no backtracking) handles the current scale. Several deferred items (DBT-0009) gate on the SAT solver. Architectural ceiling, not urgent at current package counts.",
+      "evidence": [
+        "AUDIT.md#2026-05-23-13",
+        "crates/vibe-resolver/src/",
+        "spec/modules/vibe-resolver/PROP-003-dep-evolution.md"
+      ],
+      "source": "AUDIT 2026-05-23-13",
+      "disposition": "open",
+      "links": ["INT-0013"],
+      "tripwires": [
+        "touch:crates/vibe-resolver/**"
+      ],
+      "sunset": "re-disposition at the first full PROP-013 audit run"
+    },
+    {
+      "id": "DBT-0012",
+      "kind": "disputed-spec",
+      "severity": "P2",
+      "title": "PROP-002 §2.5 vs PROP-008 §2.5 — naming-convention default and value set",
+      "detail": "PROP-002 still declares kind-name the default repo-naming convention and lists a value set without fqdn; PROP-008 (SHIPPED 2026-05-22) titles fqdn as the convention, ships NamingConvention::Fqdn as the code default, and the canonical org is migrated to that shape. A reader implementing against PROP-002 today builds the wrong model. Recorded, not resolved — adjudication is the owner's act (BROWNFIELD §5: supersede / scope-split / stay-open).",
+      "conflicts_with": [
+        "spec/modules/vibe-registry/PROP-002-decentralized-registry.md:63",
+        "spec/modules/vibe-registry/PROP-008-qualified-naming.md:80-91"
+      ],
+      "evidence": [
+        "PROP-002:63 — \"`naming` — convention for mapping a pkgref to a package repo name under this org. Values: `\\\"kind-name\\\"` (default — `flow:wal` → `<org>/flow-wal`), `\\\"name\\\"` (...), `\\\"kind/name\\\"` (...)\"",
+        "PROP-008:80 — \"### 2.5 Repository naming — `naming = \\\"fqdn\\\"`\"; PROP-008:88 — \"naming = \\\"fqdn\\\"  # repo name = \\\"<group>.<name>\\\"  →  org.vibevm.wal\"",
+        "fix cc32d7e made `vibe init` / `vibe registry add` scaffold fqdn (the shipped default)"
+      ],
+      "source": "Phase −1 conflict scan (LLM-proposed)",
+      "disposition": "open",
+      "tripwires": [
+        "touch:spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
+        "touch:spec/modules/vibe-registry/PROP-008-qualified-naming.md"
+      ],
+      "sunset": "owner adjudication; re-listed every audit until then"
+    },
+    {
+      "id": "DBT-0013",
+      "kind": "disputed-spec",
+      "severity": "P2",
+      "title": "spec/boot/00-core.md vs spec/boot/90-user.md — where the package registry lives",
+      "detail": "00-core.md names GitVerse as the (future) package-registry home; 90-user.md records the deliberate split-host posture — registry on GitHub, only vibevm source on GitVerse — and all v0.1.0+ publishing/consumption goes through GitHub (live since 2026-04-29). Both files are frozen surfaces (owner-owned; PLAYBOOK §0.4), so even the trivial fix is owner-only. Recorded, not resolved.",
+      "conflicts_with": [
+        "spec/boot/00-core.md:40",
+        "spec/boot/90-user.md:11-15"
+      ],
+      "evidence": [
+        "00-core.md:40 — \"Package registry (future) = `git@gitverse.ru:anarchic/vibespecs.git`.\"",
+        "90-user.md:14 — \"Package registry — GitHub organization `vibespecs`: `https://github.com/vibespecs`. (...) All publishing and consumption of v0.1.0+ packages goes through GitHub.\""
+      ],
+      "source": "Phase −1 conflict scan (LLM-proposed)",
+      "disposition": "open",
+      "frozen_surface": true,
+      "tripwires": [
+        "touch:spec/boot/00-core.md",
+        "touch:spec/boot/90-user.md"
+      ],
+      "sunset": "owner adjudication; re-listed every audit until then"
+    },
+    {
+      "id": "DBT-0014",
+      "kind": "disputed-spec",
+      "severity": "P2",
+      "title": "spec/boot/90-user.md repo-shape line vs PROP-008 / live org reality",
+      "detail": "90-user.md still describes per-package repos as <kind>-<name> under NamingConvention::KindName \"per PROP-002 §2.5\"; PROP-008 shipped fqdn as the default and the canonical org was migrated 2026-05-22 to org.vibevm.* repos (legacy flow-* archived). Frozen surface — owner-only edit. Linked to DBT-0012 (same subject, different unit pair).",
+      "conflicts_with": [
+        "spec/boot/90-user.md:14",
+        "spec/modules/vibe-registry/PROP-008-qualified-naming.md:80-91,147"
+      ],
+      "evidence": [
+        "90-user.md:14 — \"Per-package repos: `https://github.com/vibespecs/<kind>-<name>` (`NamingConvention::KindName` per PROP-002 §2.5).\"",
+        "PROP-008:147 — \"Repositories rename to the `naming = \\\"fqdn\\\"` shape (`org.vibevm.wal`, …).\"",
+        "WAL 2026-05-23 — the canonical GitHub org hosts org.vibevm.{wal,sync-from-code,atomic-commits}; flow-* archived"
+      ],
+      "source": "Phase −1 conflict scan (LLM-proposed)",
+      "disposition": "open",
+      "frozen_surface": true,
+      "links": ["DBT-0012"],
+      "tripwires": [
+        "touch:spec/boot/90-user.md"
+      ],
+      "sunset": "owner adjudication; re-listed every audit until then"
+    },
+    {
+      "id": "DBT-0015",
+      "kind": "disputed-spec",
+      "severity": "P2",
+      "title": "PROP-003 carries a duplicate {#phases} anchor — spec:// URI ambiguity",
+      "detail": "Two sections of PROP-003 declare the same anchor, so spec://vibevm/modules/vibe-resolver/PROP-003#phases resolves ambiguously. Found by the Phase −1 heuristic scan (the only same-file duplicate in spec/**). Directly relevant: PROP-003 §2.6.1 is the Phase 1 pilot target, and Phase 1 adds anchored req units to this file — the anchor space should be adjudicated first. Note: not a semantic dispute between two claims; recorded under disputed-spec as an anchor-identity collision (both units claim the same address).",
+      "conflicts_with": [
+        "spec/modules/vibe-resolver/PROP-003-dep-evolution.md:703",
+        "spec/modules/vibe-resolver/PROP-003-dep-evolution.md:769"
+      ],
+      "evidence": [
+        "PROP-003:703 — \"### 3.2 Solver phases {#phases}\"",
+        "PROP-003:769 — \"## 6. Phases / staging plan {#phases}\""
+      ],
+      "source": "Phase −1 conflict scan (heuristic: duplicate anchors)",
+      "disposition": "open",
+      "links": ["INT-0006 (vibe check deferred check #4 — anchor uniqueness — would catch this class mechanically)"],
+      "tripwires": [
+        "touch:spec/modules/vibe-resolver/PROP-003-dep-evolution.md"
+      ],
+      "sunset": "owner adjudication (rename one anchor) — cheap; flagged for Phase 1 entry"
+    },
+    {
+      "id": "DBT-0016",
+      "kind": "disputed-spec",
+      "severity": "P3",
+      "title": "PLAYBOOK v0.2 vs BROWNFIELD §3 — where REVIEW/TODO markers are homed",
+      "detail": "The playbook's Phase −1 sends REVIEW markers and load-bearing TODO/FIXME into debt.json; BROWNFIELD §3 lists the same markers as intent.json harvest sources. For this run the playbook was followed (precedence §0.2: playbook > package documents on task content) — moot in practice this round, since the marker sweep found zero load-bearing instances. Recorded as package-internal contradiction for the v0.2 revision; not resolved here.",
+      "conflicts_with": [
+        "spec/neworder/PLAYBOOK-TERRAFORM-VIBEVM-v0.2.md:26",
+        "spec/neworder/BROWNFIELD-PROTOCOL-v0.1.md:47"
+      ],
+      "evidence": [
+        "PLAYBOOK:26 — \"Seed `terraform/registry/debt.json` (...): import all open AUDIT.md findings; add failing/flaky tests; add `<!-- REVIEW -->` markers and load-bearing TODO/FIXME\"",
+        "BROWNFIELD:47 — \"`intent.json` (+ `INTENT.md`) — the aspiration inventory, harvested from WAL \\\"Next\\\"/\\\"Known issues\\\", `TASKS.md`, ROADMAP open milestones, `<!-- REVIEW -->` markers, TODO/FIXME\""
+      ],
+      "source": "Phase −1 conflict scan (LLM-proposed; package-internal)",
+      "disposition": "open",
+      "tripwires": [
+        "touch:spec/neworder/**"
+      ],
+      "sunset": "feeds the discipline package v0.2 revision (README change protocol)"
+    },
+    {
+      "id": "DBT-0017",
+      "kind": "stale-doc",
+      "severity": "P3",
+      "title": "ROADMAP internal staleness",
+      "detail": "Four instances: (a) M1.1-revision points at TASKS.md \"at repo root\" — the file does not exist; (b) the \"M1 acceptance\" checklist still shows shipped items unticked (M1.2 diff display, M1.4 show output, …); (c) M1.9 scope references the retired vibe-package.toml filename; (d) the side-quest list is partially overtaken (CHANGELOG.md exists; clippy -D warnings already in the self-check gate) and M1.17's header still reads 🚧 although the remainder was subsumed by PROP-009. One reconciliation pass over ROADMAP.md fixes all four.",
+      "evidence": [
+        "ROADMAP.md:184 — \"Task breakdown lives in [`TASKS.md`](TASKS.md) at repo root.\" (file absent)",
+        "ROADMAP.md:284-296 — M1 acceptance boxes unticked for shipped work",
+        "ROADMAP.md:390 — M1.9 \"Optional `[package].describes` field in `vibe-package.toml`\" (filename retired by M1.17)",
+        "ROADMAP.md:536, 901-931"
+      ],
+      "source": "Phase −1 aspiration harvest (by-product)",
+      "disposition": "open",
+      "tripwires": [
+        "touch:ROADMAP.md"
+      ],
+      "sunset": "re-disposition at the first full PROP-013 audit run"
+    },
+    {
+      "id": "DBT-0018",
+      "kind": "stale-doc",
+      "severity": "P3",
+      "title": "vibe init next-steps hint still leads with the kind-qualified pkgref shape",
+      "detail": "The scaffold's closing hint reads \"install packages with `vibe install <kind>:<name>` (e.g. flow:wal)\" — the pre-PROP-008 emphasis. The kind: prefix is still legal pkgref grammar, but the canonical qualified form (org.vibevm/wal) and the short-name sugar are what PROP-008 documents lead with. Surfaced by the Phase −1 characterization capture.",
+      "evidence": [
+        "terraform/golden/init.transcript.md — \"install packages with `vibe install <kind>:<name>` (e.g. flow:wal)\"",
+        "crates/vibe-cli/src/commands/init.rs"
+      ],
+      "source": "Phase −1 characterization capture",
+      "disposition": "open",
+      "tripwires": [
+        "touch:crates/vibe-cli/src/commands/init.rs"
+      ],
+      "sunset": "re-disposition at the first full PROP-013 audit run"
+    }
+  ]
+}
