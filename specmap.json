@@ -3053,6 +3053,276 @@
     {
       "anchor": "baseline",
       "content_hash": "",
+      "doc_path": "neworder/GUIDE-CPP-MISRA2008-v0.1",
+      "file": "spec/neworder/GUIDE-CPP-MISRA2008-v0.1.md",
+      "heading": "0. Language baseline",
+      "line": 13,
+      "uri": "spec://vibevm/neworder/GUIDE-CPP-MISRA2008-v0.1#baseline"
+    },
+    {
+      "anchor": "cells",
+      "content_hash": "",
+      "doc_path": "neworder/GUIDE-CPP-MISRA2008-v0.1",
+      "file": "spec/neworder/GUIDE-CPP-MISRA2008-v0.1.md",
+      "heading": "1. Cells",
+      "line": 25,
+      "uri": "spec://vibevm/neworder/GUIDE-CPP-MISRA2008-v0.1#cells"
+    },
+    {
+      "anchor": "seams",
+      "content_hash": "",
+      "doc_path": "neworder/GUIDE-CPP-MISRA2008-v0.1",
+      "file": "spec/neworder/GUIDE-CPP-MISRA2008-v0.1.md",
+      "heading": "2. Seams",
+      "line": 34,
+      "uri": "spec://vibevm/neworder/GUIDE-CPP-MISRA2008-v0.1#seams"
+    },
+    {
+      "anchor": "flags",
+      "content_hash": "",
+      "doc_path": "neworder/GUIDE-CPP-MISRA2008-v0.1",
+      "file": "spec/neworder/GUIDE-CPP-MISRA2008-v0.1.md",
+      "heading": "3. Registry and flags",
+      "line": 41,
+      "uri": "spec://vibevm/neworder/GUIDE-CPP-MISRA2008-v0.1#flags"
+    },
+    {
+      "anchor": "errors",
+      "content_hash": "",
+      "doc_path": "neworder/GUIDE-CPP-MISRA2008-v0.1",
+      "file": "spec/neworder/GUIDE-CPP-MISRA2008-v0.1.md",
+      "heading": "4. Errors as contract",
+      "line": 59,
+      "uri": "spec://vibevm/neworder/GUIDE-CPP-MISRA2008-v0.1#errors"
+    },
+    {
+      "anchor": "specmark",
+      "content_hash": "",
+      "doc_path": "neworder/GUIDE-CPP-MISRA2008-v0.1",
+      "file": "spec/neworder/GUIDE-CPP-MISRA2008-v0.1.md",
+      "heading": "5. specmark carrier",
+      "line": 70,
+      "uri": "spec://vibevm/neworder/GUIDE-CPP-MISRA2008-v0.1#specmark"
+    },
+    {
+      "anchor": "naming",
+      "content_hash": "",
+      "doc_path": "neworder/GUIDE-CPP-MISRA2008-v0.1",
+      "file": "spec/neworder/GUIDE-CPP-MISRA2008-v0.1.md",
+      "heading": "6. Naming (R-020/R-021 bindings)",
+      "line": 83,
+      "uri": "spec://vibevm/neworder/GUIDE-CPP-MISRA2008-v0.1#naming"
+    },
+    {
+      "anchor": "replacement",
+      "content_hash": "",
+      "doc_path": "neworder/GUIDE-CPP-MISRA2008-v0.1",
+      "file": "spec/neworder/GUIDE-CPP-MISRA2008-v0.1.md",
+      "heading": "7. Replacement protocol (R-040 binding)",
+      "line": 88,
+      "uri": "spec://vibevm/neworder/GUIDE-CPP-MISRA2008-v0.1#replacement"
+    },
+    {
+      "anchor": "framework",
+      "content_hash": "",
+      "doc_path": "neworder/GUIDE-CPP-MISRA2008-v0.1",
+      "file": "spec/neworder/GUIDE-CPP-MISRA2008-v0.1.md",
+      "heading": "8. The Compliance:2020 framework, operationalized",
+      "line": 92,
+      "uri": "spec://vibevm/neworder/GUIDE-CPP-MISRA2008-v0.1#framework"
+    },
+    {
+      "anchor": "docs",
+      "content_hash": "",
+      "doc_path": "neworder/GUIDE-CPP-MISRA2008-v0.1",
+      "file": "spec/neworder/GUIDE-CPP-MISRA2008-v0.1.md",
+      "heading": "9. Doc layer",
+      "line": 107,
+      "uri": "spec://vibevm/neworder/GUIDE-CPP-MISRA2008-v0.1#docs"
+    },
+    {
+      "anchor": "baseline",
+      "content_hash": "",
+      "doc_path": "neworder/GUIDE-CPP-MODERN-v0.1",
+      "file": "spec/neworder/GUIDE-CPP-MODERN-v0.1.md",
+      "heading": "0. Language baseline",
+      "line": 11,
+      "uri": "spec://vibevm/neworder/GUIDE-CPP-MODERN-v0.1#baseline"
+    },
+    {
+      "anchor": "cells",
+      "content_hash": "",
+      "doc_path": "neworder/GUIDE-CPP-MODERN-v0.1",
+      "file": "spec/neworder/GUIDE-CPP-MODERN-v0.1.md",
+      "heading": "1. Cells",
+      "line": 20,
+      "uri": "spec://vibevm/neworder/GUIDE-CPP-MODERN-v0.1#cells"
+    },
+    {
+      "anchor": "seams",
+      "content_hash": "",
+      "doc_path": "neworder/GUIDE-CPP-MODERN-v0.1",
+      "file": "spec/neworder/GUIDE-CPP-MODERN-v0.1.md",
+      "heading": "2. Seams",
+      "line": 35,
+      "uri": "spec://vibevm/neworder/GUIDE-CPP-MODERN-v0.1#seams"
+    },
+    {
+      "anchor": "flags",
+      "content_hash": "",
+      "doc_path": "neworder/GUIDE-CPP-MODERN-v0.1",
+      "file": "spec/neworder/GUIDE-CPP-MODERN-v0.1.md",
+      "heading": "3. Registry and flags",
+      "line": 42,
+      "uri": "spec://vibevm/neworder/GUIDE-CPP-MODERN-v0.1#flags"
+    },
+    {
+      "anchor": "errors",
+      "content_hash": "",
+      "doc_path": "neworder/GUIDE-CPP-MODERN-v0.1",
+      "file": "spec/neworder/GUIDE-CPP-MODERN-v0.1.md",
+      "heading": "4. Errors as contract",
+      "line": 59,
+      "uri": "spec://vibevm/neworder/GUIDE-CPP-MODERN-v0.1#errors"
+    },
+    {
+      "anchor": "specmark",
+      "content_hash": "",
+      "doc_path": "neworder/GUIDE-CPP-MODERN-v0.1",
+      "file": "spec/neworder/GUIDE-CPP-MODERN-v0.1.md",
+      "heading": "5. specmark carrier",
+      "line": 67,
+      "uri": "spec://vibevm/neworder/GUIDE-CPP-MODERN-v0.1#specmark"
+    },
+    {
+      "anchor": "naming",
+      "content_hash": "",
+      "doc_path": "neworder/GUIDE-CPP-MODERN-v0.1",
+      "file": "spec/neworder/GUIDE-CPP-MODERN-v0.1.md",
+      "heading": "6. Naming (R-020/R-021 bindings)",
+      "line": 71,
+      "uri": "spec://vibevm/neworder/GUIDE-CPP-MODERN-v0.1#naming"
+    },
+    {
+      "anchor": "replacement",
+      "content_hash": "",
+      "doc_path": "neworder/GUIDE-CPP-MODERN-v0.1",
+      "file": "spec/neworder/GUIDE-CPP-MODERN-v0.1.md",
+      "heading": "7. Replacement protocol (R-040 binding)",
+      "line": 76,
+      "uri": "spec://vibevm/neworder/GUIDE-CPP-MODERN-v0.1#replacement"
+    },
+    {
+      "anchor": "risks",
+      "content_hash": "",
+      "doc_path": "neworder/GUIDE-CPP-MODERN-v0.1",
+      "file": "spec/neworder/GUIDE-CPP-MODERN-v0.1.md",
+      "heading": "8. Risk table (what conform must cover for this profile)",
+      "line": 80,
+      "uri": "spec://vibevm/neworder/GUIDE-CPP-MODERN-v0.1#risks"
+    },
+    {
+      "anchor": "docs",
+      "content_hash": "",
+      "doc_path": "neworder/GUIDE-CPP-MODERN-v0.1",
+      "file": "spec/neworder/GUIDE-CPP-MODERN-v0.1.md",
+      "heading": "9. Doc layer",
+      "line": 98,
+      "uri": "spec://vibevm/neworder/GUIDE-CPP-MODERN-v0.1#docs"
+    },
+    {
+      "anchor": "baseline",
+      "content_hash": "",
+      "doc_path": "neworder/GUIDE-CPP-TRADITIONAL-v0.1",
+      "file": "spec/neworder/GUIDE-CPP-TRADITIONAL-v0.1.md",
+      "heading": "0. Language baseline",
+      "line": 11,
+      "uri": "spec://vibevm/neworder/GUIDE-CPP-TRADITIONAL-v0.1#baseline"
+    },
+    {
+      "anchor": "cells",
+      "content_hash": "",
+      "doc_path": "neworder/GUIDE-CPP-TRADITIONAL-v0.1",
+      "file": "spec/neworder/GUIDE-CPP-TRADITIONAL-v0.1.md",
+      "heading": "1. Cells",
+      "line": 22,
+      "uri": "spec://vibevm/neworder/GUIDE-CPP-TRADITIONAL-v0.1#cells"
+    },
+    {
+      "anchor": "seams",
+      "content_hash": "",
+      "doc_path": "neworder/GUIDE-CPP-TRADITIONAL-v0.1",
+      "file": "spec/neworder/GUIDE-CPP-TRADITIONAL-v0.1.md",
+      "heading": "2. Seams",
+      "line": 40,
+      "uri": "spec://vibevm/neworder/GUIDE-CPP-TRADITIONAL-v0.1#seams"
+    },
+    {
+      "anchor": "flags",
+      "content_hash": "",
+      "doc_path": "neworder/GUIDE-CPP-TRADITIONAL-v0.1",
+      "file": "spec/neworder/GUIDE-CPP-TRADITIONAL-v0.1.md",
+      "heading": "3. Registry and flags",
+      "line": 47,
+      "uri": "spec://vibevm/neworder/GUIDE-CPP-TRADITIONAL-v0.1#flags"
+    },
+    {
+      "anchor": "errors",
+      "content_hash": "",
+      "doc_path": "neworder/GUIDE-CPP-TRADITIONAL-v0.1",
+      "file": "spec/neworder/GUIDE-CPP-TRADITIONAL-v0.1.md",
+      "heading": "4. Errors as contract",
+      "line": 65,
+      "uri": "spec://vibevm/neworder/GUIDE-CPP-TRADITIONAL-v0.1#errors"
+    },
+    {
+      "anchor": "specmark",
+      "content_hash": "",
+      "doc_path": "neworder/GUIDE-CPP-TRADITIONAL-v0.1",
+      "file": "spec/neworder/GUIDE-CPP-TRADITIONAL-v0.1.md",
+      "heading": "5. specmark carrier",
+      "line": 75,
+      "uri": "spec://vibevm/neworder/GUIDE-CPP-TRADITIONAL-v0.1#specmark"
+    },
+    {
+      "anchor": "naming",
+      "content_hash": "",
+      "doc_path": "neworder/GUIDE-CPP-TRADITIONAL-v0.1",
+      "file": "spec/neworder/GUIDE-CPP-TRADITIONAL-v0.1.md",
+      "heading": "6. Naming (R-020/R-021 bindings)",
+      "line": 88,
+      "uri": "spec://vibevm/neworder/GUIDE-CPP-TRADITIONAL-v0.1#naming"
+    },
+    {
+      "anchor": "replacement",
+      "content_hash": "",
+      "doc_path": "neworder/GUIDE-CPP-TRADITIONAL-v0.1",
+      "file": "spec/neworder/GUIDE-CPP-TRADITIONAL-v0.1.md",
+      "heading": "7. Replacement protocol (R-040 binding)",
+      "line": 93,
+      "uri": "spec://vibevm/neworder/GUIDE-CPP-TRADITIONAL-v0.1#replacement"
+    },
+    {
+      "anchor": "risks",
+      "content_hash": "",
+      "doc_path": "neworder/GUIDE-CPP-TRADITIONAL-v0.1",
+      "file": "spec/neworder/GUIDE-CPP-TRADITIONAL-v0.1.md",
+      "heading": "8. Risk table (what conform must cover for this profile)",
+      "line": 97,
+      "uri": "spec://vibevm/neworder/GUIDE-CPP-TRADITIONAL-v0.1#risks"
+    },
+    {
+      "anchor": "docs",
+      "content_hash": "",
+      "doc_path": "neworder/GUIDE-CPP-TRADITIONAL-v0.1",
+      "file": "spec/neworder/GUIDE-CPP-TRADITIONAL-v0.1.md",
+      "heading": "9. Doc layer",
+      "line": 116,
+      "uri": "spec://vibevm/neworder/GUIDE-CPP-TRADITIONAL-v0.1#docs"
+    },
+    {
+      "anchor": "baseline",
+      "content_hash": "",
       "doc_path": "neworder/GUIDE-PYTHON-v0.1",
       "file": "spec/neworder/GUIDE-PYTHON-v0.1.md",
       "heading": "0. Language baseline",
