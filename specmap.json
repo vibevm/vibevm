@@ -872,64 +872,85 @@
       "crate_name": "vibe-resolver",
       "file": "crates/vibe-resolver/src/conditional.rs",
       "item_kind": "fn",
-      "line": 66,
+      "line": 86,
       "symbol": "vibe_resolver::conditional::ConditionalPredicate::evaluate"
     },
     {
       "crate_name": "vibe-resolver",
       "file": "crates/vibe-resolver/src/conditional.rs",
       "item_kind": "fn",
-      "line": 34,
+      "line": 44,
       "symbol": "vibe_resolver::conditional::ConditionalPredicate::parse"
     },
     {
       "crate_name": "vibe-resolver",
       "file": "crates/vibe-resolver/src/conditional.rs",
       "item_kind": "enum",
-      "line": 81,
+      "line": 204,
       "symbol": "vibe_resolver::conditional::PredicateError"
     },
     {
       "crate_name": "vibe-resolver",
       "file": "crates/vibe-resolver/src/conditional.rs",
       "item_kind": "fn",
-      "line": 155,
+      "line": 344,
       "symbol": "vibe_resolver::conditional::tests::evaluates_against_present"
     },
     {
       "crate_name": "vibe-resolver",
       "file": "crates/vibe-resolver/src/conditional.rs",
       "item_kind": "fn",
-      "line": 168,
+      "line": 357,
       "symbol": "vibe_resolver::conditional::tests::evaluates_against_provides"
     },
     {
       "crate_name": "vibe-resolver",
       "file": "crates/vibe-resolver/src/conditional.rs",
       "item_kind": "fn",
-      "line": 139,
-      "symbol": "vibe_resolver::conditional::tests::flags_unsupported_richer_forms"
+      "line": 304,
+      "symbol": "vibe_resolver::conditional::tests::evaluates_composition"
     },
     {
       "crate_name": "vibe-resolver",
       "file": "crates/vibe-resolver/src/conditional.rs",
       "item_kind": "fn",
-      "line": 103,
+      "line": 262,
+      "symbol": "vibe_resolver::conditional::tests::flags_unsupported_probe_forms"
+    },
+    {
+      "crate_name": "vibe-resolver",
+      "file": "crates/vibe-resolver/src/conditional.rs",
+      "item_kind": "fn",
+      "line": 274,
+      "symbol": "vibe_resolver::conditional::tests::parses_composition_with_precedence"
+    },
+    {
+      "crate_name": "vibe-resolver",
+      "file": "crates/vibe-resolver/src/conditional.rs",
+      "item_kind": "fn",
+      "line": 226,
       "symbol": "vibe_resolver::conditional::tests::parses_simple_present_predicate"
     },
     {
       "crate_name": "vibe-resolver",
       "file": "crates/vibe-resolver/src/conditional.rs",
       "item_kind": "fn",
-      "line": 113,
+      "line": 236,
       "symbol": "vibe_resolver::conditional::tests::parses_with_whitespace"
     },
     {
       "crate_name": "vibe-resolver",
       "file": "crates/vibe-resolver/src/conditional.rs",
       "item_kind": "fn",
-      "line": 123,
+      "line": 246,
       "symbol": "vibe_resolver::conditional::tests::rejects_malformed"
+    },
+    {
+      "crate_name": "vibe-resolver",
+      "file": "crates/vibe-resolver/src/conditional.rs",
+      "item_kind": "fn",
+      "line": 320,
+      "symbol": "vibe_resolver::conditional::tests::rejects_malformed_composition"
     },
     {
       "crate_name": "vibe-resolver",
@@ -1179,8 +1200,15 @@
     {
       "crate_name": "vibe-resolver",
       "file": "crates/vibe-resolver/src/sat.rs",
+      "item_kind": "impl",
+      "line": 173,
+      "symbol": "vibe_resolver::sat::<impl DepSolver for Sat<P>>"
+    },
+    {
+      "crate_name": "vibe-resolver",
+      "file": "crates/vibe-resolver/src/sat.rs",
       "item_kind": "struct",
-      "line": 11,
+      "line": 93,
       "symbol": "vibe_resolver::sat::Sat"
     },
     {
@@ -2290,6 +2318,15 @@
     {
       "file": "crates/vibe-resolver/src/conditional.rs",
       "from_symbol": "vibe_resolver::conditional::ConditionalPredicate",
+      "line": 27,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-composition",
+      "verb": "implements",
+      "pinned_r": 2
+    },
+    {
+      "file": "crates/vibe-resolver/src/conditional.rs",
+      "from_symbol": "vibe_resolver::conditional::ConditionalPredicate",
       "line": 23,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-grammar",
@@ -2299,7 +2336,7 @@
     {
       "file": "crates/vibe-resolver/src/conditional.rs",
       "from_symbol": "vibe_resolver::conditional::ConditionalPredicate::evaluate",
-      "line": 68,
+      "line": 89,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-host-invariance",
       "verb": "implements",
@@ -2308,7 +2345,7 @@
     {
       "file": "crates/vibe-resolver/src/conditional.rs",
       "from_symbol": "vibe_resolver::conditional::ConditionalPredicate::parse",
-      "line": 37,
+      "line": 48,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-grammar",
       "verb": "implements",
@@ -2317,17 +2354,17 @@
     {
       "file": "crates/vibe-resolver/src/conditional.rs",
       "from_symbol": "vibe_resolver::conditional::ConditionalPredicate::parse",
-      "line": 41,
+      "line": 52,
       "provenance": "authored",
-      "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-composition",
+      "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-grammar",
       "verb": "deviates",
       "pinned_r": 1,
-      "reason": "boolean composition (`and`/`or`/`not`) intentionally unimplemented; every composition form surfaces as PredicateError::Unsupported, pending the PROP-014 pilot decision"
+      "reason": "the grammar unit names the full §2.5.2 probe set inside context(...); only present/provides keys (+ composition) are implemented — the `if_files = …` probe forms surface as PredicateError::Unsupported"
     },
     {
       "file": "crates/vibe-resolver/src/conditional.rs",
       "from_symbol": "vibe_resolver::conditional::PredicateError",
-      "line": 82,
+      "line": 205,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-grammar",
       "verb": "implements",
@@ -2336,7 +2373,7 @@
     {
       "file": "crates/vibe-resolver/src/conditional.rs",
       "from_symbol": "vibe_resolver::conditional::tests::evaluates_against_present",
-      "line": 156,
+      "line": 345,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-host-invariance",
       "verb": "verifies",
@@ -2345,7 +2382,7 @@
     {
       "file": "crates/vibe-resolver/src/conditional.rs",
       "from_symbol": "vibe_resolver::conditional::tests::evaluates_against_provides",
-      "line": 169,
+      "line": 358,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-host-invariance",
       "verb": "verifies",
@@ -2353,8 +2390,17 @@
     },
     {
       "file": "crates/vibe-resolver/src/conditional.rs",
-      "from_symbol": "vibe_resolver::conditional::tests::flags_unsupported_richer_forms",
-      "line": 140,
+      "from_symbol": "vibe_resolver::conditional::tests::evaluates_composition",
+      "line": 305,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-composition",
+      "verb": "verifies",
+      "pinned_r": 2
+    },
+    {
+      "file": "crates/vibe-resolver/src/conditional.rs",
+      "from_symbol": "vibe_resolver::conditional::tests::flags_unsupported_probe_forms",
+      "line": 263,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-grammar",
       "verb": "verifies",
@@ -2362,8 +2408,17 @@
     },
     {
       "file": "crates/vibe-resolver/src/conditional.rs",
+      "from_symbol": "vibe_resolver::conditional::tests::parses_composition_with_precedence",
+      "line": 275,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-composition",
+      "verb": "verifies",
+      "pinned_r": 2
+    },
+    {
+      "file": "crates/vibe-resolver/src/conditional.rs",
       "from_symbol": "vibe_resolver::conditional::tests::parses_simple_present_predicate",
-      "line": 104,
+      "line": 227,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-grammar",
       "verb": "verifies",
@@ -2372,7 +2427,7 @@
     {
       "file": "crates/vibe-resolver/src/conditional.rs",
       "from_symbol": "vibe_resolver::conditional::tests::parses_with_whitespace",
-      "line": 114,
+      "line": 237,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-grammar",
       "verb": "verifies",
@@ -2381,11 +2436,20 @@
     {
       "file": "crates/vibe-resolver/src/conditional.rs",
       "from_symbol": "vibe_resolver::conditional::tests::rejects_malformed",
-      "line": 124,
+      "line": 247,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-grammar",
       "verb": "verifies",
       "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-resolver/src/conditional.rs",
+      "from_symbol": "vibe_resolver::conditional::tests::rejects_malformed_composition",
+      "line": 321,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-composition",
+      "verb": "verifies",
+      "pinned_r": 2
     },
     {
       "file": "crates/vibe-resolver/src/features.rs",
@@ -2686,8 +2750,17 @@
     },
     {
       "file": "crates/vibe-resolver/src/sat.rs",
+      "from_symbol": "vibe_resolver::sat::<impl DepSolver for Sat<P>>",
+      "line": 173,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-002#solver",
+      "verb": "deviates",
+      "reason": "PROP-002 §2.8 names resolvo as the primary industrial solver; this cell implements chronological backtracking natively over the unmodified DepProvider trait instead, reusing the naive cell as its branch checker. The backtracking half of DBT-0011 retires here; adopting resolvo stays an owner decision the DepSolver seam keeps open"
+    },
+    {
+      "file": "crates/vibe-resolver/src/sat.rs",
       "from_symbol": "vibe_resolver::sat::Sat",
-      "line": 12,
+      "line": 124,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#solver-upgrade",
       "verb": "implements"
@@ -4861,8 +4934,7 @@
       "line": 434,
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-composition",
       "kind": "req",
-      "revision": 1,
-      "status": "planned"
+      "revision": 2
     },
     {
       "anchor": "i18n",

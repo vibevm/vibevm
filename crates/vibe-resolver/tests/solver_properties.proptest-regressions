@@ -1,0 +1,7 @@
+# Seeds for failure cases proptest has generated in the past. It is
+# automatically read and these particular cases re-run before any
+# novel cases are generated.
+#
+# It is recommended to check this file in to source control so that
+# everyone who runs the test benefits from these saved cases.
+cc 55bd846d340a7cf6a9f7322951bba97a47cfb759460628c89806e11e2645adb3 # shrinks to world = World { packages: [[(Version { major: 1, minor: 0, patch: 0 }, [1])], [(Version { major: 1, minor: 0, patch: 0 }, []), (Version { major: 2, minor: 0, patch: 0 }, [])]] }, picks = [2, 5]

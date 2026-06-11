@@ -195,14 +195,16 @@
     "spec/modules/vibe-resolver/PROP-003-dep-evolution.md"
    ],
    "source": "AUDIT 2026-05-23-13",
-   "disposition": "open",
+   "disposition": "fixed",
+   "fixed_in": "adopt-v0.3 Phase 7 (the Sat cell)",
+   "adjudication": "the backtracking half retires: crates/vibe-resolver/src/sat.rs implements chronological backtracking over version choices, reusing NaiveDepSolver as the branch checker (so feature/conditional/capability semantics cannot drift between the cells), pinned by the dominance differential in tests/solver_properties.rs (sat solves identically where naive solves; solves strictly more where naive's first-pick-wins traps — proven by the property suite finding such a world on its first run) plus four unit cases. The industrial-solver half (resolvo primary per PROP-002 §2.8) stays an owner option, recorded as the deviates edge on Sat's DepSolver impl; production solver selection (registry flag, R-001) is the remaining wiring, tracked by the cell sweep.",
    "links": [
     "INT-0013"
    ],
    "tripwires": [
     "touch:crates/vibe-resolver/**"
    ],
-   "sunset": "re-disposition at the first full PROP-013 audit run"
+   "sunset": "met — adopt-v0.3 Phase 7; resolvo adoption remains owner-gated"
   },
   {
    "id": "DBT-0012",

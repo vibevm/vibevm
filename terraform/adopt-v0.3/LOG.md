@@ -472,3 +472,64 @@ measurement — deferred with the other agent-run questions.
 mechanism proven both ways, capability half pending. The card's
 REPORT-gated graduation: checker exists and ran; [E-hyp] stays
 until the agent measurement.
+
+---
+
+## 2026-06-11 — Phase 7: the SAT solver (DBT-0011) + the fixpoint formalized
+
+**The Sat cell** (`crates/vibe-resolver/src/sat.rs`, born from the
+Phase-6 codemod skeleton). Design: chronological backtracking over
+version *bounds* with **the naive solver as the branch checker** —
+each attempt runs the full naive solve under a `BoundedProvider`
+that caps conflicting packages below their previous picks, entirely
+through the unmodified `DepProvider` trait (`resolve_version` with
+an intersected `<bound` constraint IS "next lower candidate").
+Features, conditional deps, capabilities, conflicts, obsoletes are
+evaluated by exactly the code the naive path runs, so the two cells
+cannot drift semantically. Termination: bounds strictly descend
+over finite version sets; `MAX_ATTEMPTS` backstops. Unsatisfiable
+worlds report the ORIGINAL conflict, never a backtracking artifact.
+
+**The oracle over-delivered.** The first differential draft
+asserted strict naive≡sat equality over generated worlds, on the
+belief the generator only made conflict-free worlds. proptest
+falsified that belief within seconds: it found a world where a root
+takes a dep's highest version and another path carets a lower
+major — naive's first-pick-wins trap, arising naturally. Sat
+solves it. The differential is now the **dominance contract**
+(naive-solvable ⇒ identical normalized graphs; naive-fail ⇒ sat may
+solve — its documented superiority; sat-fail-where-naive-solves ⇒
+always a bug), which is the card's "documented divergence list"
+done property-grade. Four unit cases pin the trap, chained
+backtracking, unsatisfiable reporting, and the conflict-free fast
+path.
+
+**DBT-0011 disposition: fixed (the backtracking half).** The
+resolvo-primary half of PROP-002 §2.8 stays an owner option,
+recorded as the `deviates` edge on Sat's impl. Production solver
+selection (a registry flag per R-001, with provenance/birth/sunset)
+is the remaining wiring — tracked by the cell sweep, deliberately
+not smuggled into this phase.
+
+**Composition formalized.** `context(...)` now parses `and` / `or`
+/ `not` with parentheses and standard precedence (recursive-descent
+over word-matched tokens — a key like `org.vibevm/x` can never be
+split). PROP-003 `#req-conditional-composition` ratified r1-planned
+→ r2; the old deviates edge became implements r2 (the asymmetric-
+invalidation path: the only r1 pin on that unit was the edge this
+change replaces, so the index stays suspect-free). The richer probe
+forms (`if_files = …` inside `context(...)`) stay loud-Unsupported,
+now recorded as a `deviates` on the grammar edge. The
+virtual-capability channel (§2.5.3) remains blocked on the
+owner-deferred M1.5 LLM layer; its monotone-lattice semantics are
+already executable in the Phase-5 model.
+
+**Cards on the new code:** B — Sat's choice state is
+private-by-construction (bounds map + stack, no protocol surface to
+mistype); C — the monotonicity witness lives in the model, the
+original-conflict guarantee in a unit contract; D — the dominance
+differential; G — the canonical doctest; H — the fixpoint model
+covers the loop the solver participates in.
+
+**Phase 7 exit: met.** P7-1 held (and the oracle found the naive
+trap before any human enumerated it).
