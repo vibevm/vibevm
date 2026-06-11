@@ -12,7 +12,8 @@ project's health trend.
 `filed` (became tracked work — WAL / `TASKS.md` / a PROP) · `accepted`
 (deliberate no-action, with the reason) · `open` (carries to the next
 run). **Categories** are PROP-013 §2.2: **A** test integrity, **B** rot
-outside the gate, **C** drift, **D** debt.
+outside the gate, **C** drift, **D** debt, **E** discipline depth
+(added 2026-06-12).
 
 ---
 
@@ -184,3 +185,200 @@ workspace-wide, all `unsafe-gate`, all frozen in
 | AUD-0015 | C | P3 | `ResolvedNode` doc-comment cites "PROP-008 §2.3" where the identity tuple is §2.2 (#identity); §2.3 is #kind | open — same family as AUD-0014 |
 | AUD-0016 | C | P3 | six `unsafe` blocks live outside any designated audit crate; frozen in the conform baseline, no audit-crate list exists yet | filed — the audit-crate designation is an owner decision; baseline may only shrink |
 | AUD-0017 | D | P3 | vibe-core leaf trio without scannable spec home | filed — DBT-0019 |
+
+---
+
+## Audit run — 2026-06-12 (discipline depth — the full AI-Native sweep)
+
+Owner-requested («полный аудит кода — насколько хорошо он соответствует
+идеалам AI-Native Rust»): the INT-0001 audit window, run under the new
+category **E (discipline depth)** this run adds to PROP-013 §2.2.
+Method: the measuring stick is the installed Discipline corpus
+(`GUIDE-AI-NATIVE-RUST` + the nine scaffold cards); mechanical censuses
+over `specmap.json`, the conform rule sources, and the full tree; three
+structural deep-reads (vibe-cli; vibe-registry; vibe-index/check/core);
+one empirical gate probe on a clean tree.
+
+**12 findings** — 1 P1 (fixed in-run), 7 P2 (filed), 4 P3. **Headline:
+the adoption is real but approximately one crate deep.** vibe-resolver
+carries nearly all of the discipline's mass (80 of 198 edges, 42 of 50
+`#[verifies]`, all 4 `#[cell]` manifests, the only differential
+oracle); the rest of the workspace is anchored, exempted, or gated by
+rules weaker than their cards — and the panel's first gate was silently
+red on `main` (-01).
+
+**Instrumented panel for this run** (after the -01 fix, on the live
+tree): `specmap --check` green — 352 units / 190 items / 198 edges /
+0 suspects / 6 known warnings; `conform check` green — 8 frozen (all
+`unsafe-gate`), 0 new; `test-gate` green (xfail-strict). `fast-loop`
+budget figures inherited from 2026-06-11 (no code changed this run;
+note the inherited panel predates the history rewrite, see -01).
+
+### 2026-06-12-01 · E4/B2 · P1 · fixed (`9f06fbf`)
+
+**`cargo xtask specmap --check` was red on a clean checkout of `main` —
+the committed index had lost every content hash.** All 352
+`content_hash` fields in `specmap.json` were empty while the scanner
+emits real hashes (`specmap-core/src/mdspec.rs:273`); gate #1 of the
+merge panel failed on an untouched tree ("out of date relative to the
+tree" + five unbumped-hash drift lines), and the cross-session
+editorial-drift audit had no stored baseline — the unbumped-hash
+detector was structurally blind. Trail: the post-session **history
+rewrite** of 2026-06-11 (every adoption-day commit re-hashed —
+`1792c14`→`3ab0986`, `09d0da5`→`f244a7a`, …; pre-rewrite objects gone)
+re-serialized `specmap.json` with hashes emptied; the close-out panel's
+green specmap verdict certified the *pre-rewrite* tree. Empirical
+probe: editing one revisioned unit fired drift on all five — the
+stored side was uniformly empty. **Fixed in-run** (`9f06fbf`,
+352-line hash-only diff); specmap/conform/test-gate re-run green on
+the actual tree. **Open rider (owner):** what produced the rewrite? A
+scrub/filter that re-serializes committed derived artifacts must
+regenerate them or leave them alone.
+
+### 2026-06-12-02 · E1 · P2 · filed
+
+**The spec tree is anchored, not typed: 347 of 352 units carry no
+kind/revision/status.** The entire formal REQ fabric is PROP-003's
+pilot five (4 `req` + 1 `design`). Untyped units cannot participate in
+revision discipline — asymmetric invalidation and the unbumped-hash
+audit (`specmap-core/src/index.rs:211` deliberately skips revisionless
+units) are dormant for 98.6 % of the spec. **Filed:** the unit-typing
+program — type the implemented modules' PROPs first
+(PROP-002/005/007/008/012), REQ grain, revision lines on.
+
+### 2026-06-12-03 · E1 · P2 · filed (DBT-0019, escalated P3→P2)
+
+**`VIBEVM-SPEC.md` (1190 lines) has zero units — and it is the only
+spec home for ~24 kLOC.** Chain: vibe-cli (21.4 kLOC), vibe-mcp,
+vibe-wire, xtask have no taggable spec → 8 crates ratchet-exempt → the
+depth program cannot start for half the workspace. Was AUD-0017 / P3;
+escalated: it now gates the remediation of every other E finding in
+those crates.
+
+### 2026-06-12-04 · E2 · P2 · filed
+
+**Edge coverage is resolver-shaped.** 198 edges: vibe-resolver 80,
+vibe-index 54 (all module-grain `scope!`), every other crate ≤ 13;
+57 / 352 units (16 %) have any inbound edge. Implemented-but-unmapped:
+**PROP-012** (15 units, 0 edges — yet shipped as
+`vibe-core::manifest::redirect`, `vibe-check::check_redirect_blocks`,
+the CLI `registry redirect*` commands, and the `<vibevm>` block in this
+repo's own CLAUDE.md); **PROP-007** (24 units / 3 edged, vibe-workspace
+4.7 kLOC); **PROP-005** (44 / 8, vibe-index 9.8 kLOC). PROP-010's 18/0
+is honest (DRAFT — design session pending). **Filed:** affirmation
+sweeps in the Phase-2 recipe; PROP-012 first (cheapest, fully shipped).
+
+### 2026-06-12-05 · E2 · P2 · filed
+
+**`#[verifies]` exists only around the resolver: 42 of 50 attributes
+repo-wide.** vibe-cli 269 tests, vibe-core 180, vibe-index 137,
+vibe-registry 123, vibe-workspace 103 — zero `#[verifies]` among them;
+"what verifies this requirement?" is machine-answerable only inside
+vibe-resolver. **Filed:** rides -02/-04 — once units are typed, tag the
+strongest *existing* tests; no new tests needed for the first pass.
+
+### 2026-06-12-06 · E3 · P2 · filed
+
+**Cells exist at exactly one seam pair.** 4 `#[cell]` manifests
+repo-wide (DepSolver naive/sat, DepProvider local/multi — all
+vibe-resolver). The workspace has 8 seam traits; uncelled: `Registry`
+(**3 production impls — a validated seam**: `LocalRegistry` lib.rs:574,
+`GitRegistry` git_registry.rs:172, `GitPackageRegistry`
+git_package_registry.rs:1275), `GitBackend` (1 impl — speculative until
+a second backend), `RepoCreator`, `Transport`, `Frontend`, `Rule`. The
+R-001 registry covers solver/provider flags only; `cell-has-oracle`
+self-scopes to `#[cell]` crates → gates only vibe-resolver. **Filed:**
+cell-ify `Registry` variants first — the seam is already proven.
+
+### 2026-06-12-07 · E3 · P2 · filed
+
+**God-files (R3-013) at the centers of gravity** — 23 src files over
+600 lines. Worst: `vibe-cli/src/commands/registry.rs` 3245 (14 handlers
+≈ 4 natural cells: sync / config / publish / redirect),
+`vibe-registry/src/multi_registry_resolver.rs` 2870 (≥ 5
+responsibilities), `vibe-registry/src/git_package_registry.rs` 2539
+(≥ 6), `vibe-cli/src/commands/mcp.rs` 2460 (MCP server + agent-config
+installer tangled), `vibe-check/src/lib.rs` 1913 (whole crate one file:
+11 checks, hardcoded dispatch, no `Check` seam),
+`vibe-core/src/manifest/package.rs` 1628 (19 types, wire conversions
+inline), `conform-core/src/lib.rs` 1486 (the discipline's own engine in
+one file), `xtask/src/main.rs` 1118; test-side `cli_e2e.rs` 5673 lines
+/ 109 flat tests. **Filed:** the decomposition backlog — CLI
+registry.rs and the two vibe-registry files first.
+
+### 2026-06-12-08 · E4 · P2 · filed
+
+**Two shipped conform rules are weaker than their cards; two
+guide-mandated checkers don't exist.** (a) `seam-has-doctest` audits
+`src/lib.rs` only (`conform-core/src/lib.rs:694`) — pub seams in
+submodules ungated (the `GitBackend` trait, the ~47 pub methods of the
+two registry god-files); (b) `error-enum-cites-req` checks for a
+`#[spec]` attribute on the enum (`:880`), not the Class-F *message*
+grammar — no product error Display text carries «violates REQ … fix
+surface …» (vibe-registry's three enums confirmed message-bare; only
+conform's own diagnostics speak the grammar); (c) guide §2 "position
+is a resource" mandates a file-length warn — no such rule exists (see
+-07); (d) guide §6's unwrap/expect-in-domain ban has no checker
+(src-side upper bounds incl. inline test mods: vibe-registry 406,
+vibe-workspace 257, vibe-index 222, vibe-core 218 — unmeasured, not
+adjudicated). By the discipline's own law these are WISHes. **Filed:**
+the conform rule backlog — widen (a) beyond lib.rs, grow (b) toward
+message grammar, add (c) and (d, with cfg(test) exclusion); each lands
+ratcheted (frozen baseline, shrink-only).
+
+### 2026-06-12-09 · E2/E3 · P3 · filed
+
+**vibe-index is structurally outside the discipline:** zero seam traits
+across 9.8 kLOC (scanner trio, rate limiter, persistence all concrete),
+zero item-grain tags (54 module `scope!` markers only), zero doctests,
+not in the doctest/error gates; all tests integration-grain (2.9 kLOC
+in tests/, none in-module). Natural first seam: `PackageScanner` over
+from_clones / from_github. vibe-mcp: same family (exempt, untagged,
+`Transport` seam bare). **Filed.**
+
+### 2026-06-12-10 · E3 · P3 · accepted
+
+**The fast-loop "cell" is the crate, not the discipline's module-grain
+cell** — the 18 budget cells are the 17 crates + xtask; only resolver
+modules carry true manifests. **Accepted** while every crate fits the
+60 s budget; revisit at the first breach or when vibe-cli decomposes.
+
+### 2026-06-12-11 · D · P3 · open
+
+Hygiene census for the record: `#[ignore]` 5 (vibe-cli live quartet +
+1 specmap-core); `#[allow]` 28 src-side (19 in vibe-cli); `anyhow`
+outside the binary edge: conform-core 2 / specmap-core 6
+(internal-tooling crates — borderline-legal, noted); TODO-family ≈ 17
+raw, of which 14 are vibe-check's own detector pattern strings (false
+positives). Nothing actionable beyond carried -04 (cli_live_e2e).
+
+### 2026-06-12-12 · C3 · P3 · fixed (this run's WAL/AUDIT commits)
+
+**WAL and CONTINUE cited commit hashes that no longer exist**
+(`e3f06ec` … `1792c14` — the pre-rewrite chain). Same root event as
+-01. Fixed: this run's WAL checkpoint records the live chain;
+CONTINUE.md is rewritten at the next session-end per protocol. Rider
+to -01 stands: owner to confirm the rewrite was intentional.
+
+### Carry-forward (2026-05-23 series + 2026-06-10), re-judged
+
+- **2026-05-23-01** (A1, git-registry path under-tested) — **reduced**:
+  the Phase-3 hermetic differential oracle drives both provider cells
+  over real bare `file://` git repos (fqdn-named), and cli_e2e carries
+  git-registry + redirect e2e; the `vibe init` default-path e2e remains
+  unverified this run. Re-judged P2 → P3, open.
+- **-04** (quarantined live e2e red) — open, unchanged (4 `#[ignore]`
+  sites in vibe-cli).
+- **-05** (manual-test fixture rot) — open. **-06 / -07** (registry-side
+  migrations) — open, owner-court. **-08** (archived legacy repos) —
+  accepted, stands. **-09** (PROP-005 `schemas/` dir) — open. **-10**
+  (doc requalification sweep) — open. **-11** (PROP-011 refinements) —
+  open, both still gated. **-12** (parked backlog) — open.
+- **-13** (NaiveDepSolver the only solver) — **superseded in
+  substance**: the `Sat` cell landed 2026-06-11 (DBT-0011 closed);
+  what remains is the production *selection* decision via the R-001
+  registry — owner-gated. Re-pointed, P3.
+- **AUD-0014 / AUD-0015** (doc-string one-liners) — open; cheap, fix on
+  next resolver touch. **AUD-0016** (no designated unsafe-audit crates;
+  now 8 frozen) — filed, owner decision. **AUD-0017** — folded into
+  **2026-06-12-03** (DBT-0019, escalated).
