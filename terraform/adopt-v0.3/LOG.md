@@ -533,3 +533,52 @@ covers the loop the solver participates in.
 
 **Phase 7 exit: met.** P7-1 held (and the oracle found the naive
 trap before any human enumerated it).
+
+---
+
+## 2026-06-11 — The priority-cell sweep (plan §4) and adoption close
+
+**Sweep, batched per crate (the raid skeleton's batch unit), the
+doctest/REQ work fanned out to four parallel authoring agents with
+identical briefs and verified centrally by the gates:**
+
+- `vibe-registry` — 6 root-seam doctests (LocalRegistry and
+  compute_content_hash `no_run` — they walk the disk; the Registry
+  trait shows the canonical minimal impl consumed as `&dyn`);
+  all three thiserror enums gained REQ edges (RegistryError,
+  GitError → PROP-002#failure-discriminator; IndexError →
+  PROP-005#http, the deliberate cross-PROP cite).
+- `vibe-workspace` — 3 doctests, all *runnable* (tempfile is a
+  regular dep there, so the Workspace::discover example builds a
+  real hermetic workspace — strictly stronger than `no_run`);
+  WorkspaceError → PROP-007#nesting.
+- `vibe-check` — 6 doctests (check_project `no_run`); no error
+  enums exist (failures are Finding data, not Err) — N/A recorded.
+- `vibe-publish` — 10 doctests (Publisher `no_run`; secrets
+  discipline held: dry-run paths, fictitious endpoints);
+  PublishError → PROP-002#publish.
+
+**The widened gate immediately out-scoped the agents:** turning the
+F rule on for vibe-publish flagged `HookError` (post_hook.rs) — a
+file the publish agent had deliberately left alone as outside its
+lib.rs brief. The rule reads the whole crate; the gap got its edge
+(PROP-005#integration) within minutes. Centralized checkers beat
+per-agent scope judgment — worth a line in the v0.3 raid playbook.
+
+**Gated sets now:** seam-has-doctest and error-enum-cites-req cover
+seven crates (engine three + registry/workspace/check/publish).
+vibe-core stays out of F deliberately: its error trio is
+DBT-0019-dispositioned and the rule has no disposition concept —
+gating it would re-flag adjudicated debt (the reason lives as a
+comment at the gate site).
+
+**Final gate panel (all green, statuses captured):**
+specmap --check clean — **352 units / 190 items / 198 edges /
+0 suspects** (the adoption added 20 items and 21 edges net);
+conform **8 frozen / 0 new** across six rules and seven gated
+crates; test-gate xfail-strict green; fast-loop --enforce-budget
+**18/18** with all 55+ doctests riding the loop; self-check all
+four steps.
+
+**Adoption exit criteria (plan §5): all four met.** The REPORT
+(`REPORT.md`) is the synthesis and the Discipline-v0.3 input.
