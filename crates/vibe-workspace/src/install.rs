@@ -21,6 +21,7 @@ use std::collections::{HashMap, HashSet, VecDeque};
 use std::fs;
 use std::path::{Path, PathBuf};
 
+use specmark::spec;
 use vibe_core::manifest::{BootCategory, Manifest};
 use vibe_core::user_config::SlotIntegrity;
 use vibe_core::{Group, PackageKind};
@@ -398,6 +399,10 @@ fn node_dependency_boot(
 /// here — ahead of materialisation or any boot-artifact write — so an
 /// install never half-applies. A missing instruction file is fine; it is
 /// created on write.
+#[spec(
+    implements = "spec://vibevm/modules/vibe-workspace/PROP-012#plan-time",
+    r = 1
+)]
 fn validate_redirect_blocks(workspace: &Workspace) -> Result<(), WorkspaceError> {
     for (rel, _) in workspace.iter_nodes() {
         let node_dir = workspace.node_abs_path(rel);

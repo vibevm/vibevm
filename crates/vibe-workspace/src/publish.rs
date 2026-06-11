@@ -32,6 +32,7 @@ specmark::scope!("spec://vibevm/modules/vibe-workspace/PROP-007#selective-publis
 use std::collections::{HashMap, HashSet};
 use std::path::{Path, PathBuf};
 
+use specmark::spec;
 use vibe_core::manifest::{Manifest, OriginSection};
 use vibe_core::{Group, PackageKind};
 
@@ -104,6 +105,10 @@ pub struct Selection {
 /// When it names no node at all, [`WorkspaceError::MemberNotFound`] is
 /// raised so a typo'd `--member` fails loudly rather than silently
 /// publishing nothing.
+#[spec(
+    implements = "spec://vibevm/modules/vibe-workspace/PROP-007#selective-publish",
+    r = 1
+)]
 pub fn select_publishable_nodes(
     workspace: &Workspace,
     primary_registry: &str,
@@ -170,6 +175,10 @@ pub fn select_publishable_nodes(
 /// dependency back to a node `rel_path`. A `path` dependency that resolves
 /// outside the selected set (an external sibling, a non-publishing member)
 /// is simply not an edge — it imposes no ordering constraint here.
+#[spec(
+    implements = "spec://vibevm/modules/vibe-workspace/PROP-007#selective-publish",
+    r = 1
+)]
 pub fn topo_order(workspace: &Workspace, nodes: &[PublishNode]) -> Result<Vec<PublishNode>> {
     // Index the selected nodes by rel_path for O(1) membership tests, and
     // pre-sort by rel_path so the output is deterministic when the graph
@@ -316,6 +325,10 @@ pub struct OriginInfo {
 ///
 /// The returned [`StagedNode`] owns the temp dir; keep it alive until the
 /// publish completes.
+#[spec(
+    implements = "spec://vibevm/modules/vibe-workspace/PROP-007#published-repos",
+    r = 1
+)]
 pub fn stage_node(
     source_dir: &Path,
     node_rel_path: &str,
@@ -616,6 +629,7 @@ fn copy_tree_excluding(src: &Path, dst: &Path) -> Result<()> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use specmark::verifies;
     use std::fs;
     use tempfile::TempDir;
 
@@ -661,6 +675,10 @@ mod tests {
     // ----- selection -----
 
     #[test]
+    #[verifies(
+        "spec://vibevm/modules/vibe-workspace/PROP-007#selective-publish",
+        r = 1
+    )]
     fn selection_includes_default_publish_and_skips_never() {
         let tmp = TempDir::new().unwrap();
         write(
@@ -805,6 +823,10 @@ mod tests {
     // ----- topological order -----
 
     #[test]
+    #[verifies(
+        "spec://vibevm/modules/vibe-workspace/PROP-007#selective-publish",
+        r = 1
+    )]
     fn topo_order_is_dependency_first() {
         // b depends on a via a path dep — a must publish before b.
         let tmp = TempDir::new().unwrap();

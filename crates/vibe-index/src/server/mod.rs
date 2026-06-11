@@ -29,6 +29,7 @@ use axum::http::{HeaderMap, HeaderValue, StatusCode, header};
 use axum::middleware::{self, Next};
 use axum::response::{IntoResponse, Response};
 use axum::routing::get;
+use specmark::spec;
 use tower_http::cors::{Any, CorsLayer};
 use tower_http::trace::TraceLayer;
 
@@ -36,6 +37,10 @@ use tower_http::trace::TraceLayer;
 /// extends the same builder with mutating routes behind a bearer-token
 /// guard. Rate-limit middleware runs first when the configured
 /// quotas are non-zero (slice 23, PROP-005 §9 Q10).
+#[spec(
+    implements = "spec://vibevm/modules/vibe-index/PROP-005#server-mode",
+    r = 1
+)]
 pub fn build_app(state: AppState) -> Router {
     let state = Arc::new(state);
     let cors = CorsLayer::new()

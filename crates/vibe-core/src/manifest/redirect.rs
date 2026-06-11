@@ -17,6 +17,7 @@ specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-002#redirect");
 use std::path::Path;
 
 use serde::{Deserialize, Serialize};
+use specmark::spec;
 
 use crate::error::{Error, Result};
 
@@ -72,6 +73,10 @@ impl RedirectFile {
 ///   any other auth regime it's a parse error.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(into = "RedirectSectionWire", try_from = "RedirectSectionWire")]
+#[spec(
+    implements = "spec://vibevm/modules/vibe-registry/PROP-002#redirect",
+    r = 1
+)]
 pub struct RedirectSection {
     pub target_url: String,
     pub ref_policy: RefPolicy,
@@ -186,6 +191,10 @@ impl TryFrom<RedirectSectionWire> for RedirectSection {
 /// registry resolver after a `git archive` of `vibe.toml` came up
 /// empty: the same archive call is re-run with `vibe-redirect.toml`
 /// and the result fed here.
+#[spec(
+    implements = "spec://vibevm/modules/vibe-registry/PROP-002#redirect",
+    r = 1
+)]
 pub fn parse_redirect_bytes(bytes: &[u8]) -> Result<RedirectFile> {
     let text = std::str::from_utf8(bytes).map_err(|e| Error::BadDependencyDecl {
         input: RedirectFile::FILENAME.to_string(),
@@ -200,6 +209,7 @@ pub fn parse_redirect_bytes(bytes: &[u8]) -> Result<RedirectFile> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use specmark::verifies;
 
     fn parse(raw: &str) -> Result<RedirectFile> {
         toml::from_str::<RedirectFile>(raw).map_err(|e| Error::BadDependencyDecl {
@@ -256,6 +266,7 @@ description = "Delegated to acme-corp"
     }
 
     #[test]
+    #[verifies("spec://vibevm/modules/vibe-registry/PROP-002#redirect", r = 1)]
     fn pinned_without_ref_rejected() {
         let raw = r#"
 [redirect]
@@ -325,6 +336,7 @@ secret_field = "..."
     }
 
     #[test]
+    #[verifies("spec://vibevm/modules/vibe-registry/PROP-002#redirect", r = 1)]
     fn round_trip_preserves_minimal_shape() {
         let r = RedirectFile::pass_through_tag("https://github.com/x/y");
         let rendered = toml::to_string_pretty(&r).unwrap();

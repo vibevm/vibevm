@@ -39,6 +39,7 @@ use std::fs;
 use std::path::{Path, PathBuf};
 
 use serde::Serialize;
+use specmark::spec;
 use vibe_core::manifest::LinkType;
 
 use crate::WorkspaceError;
@@ -202,6 +203,10 @@ pub fn render_inline(
 
 /// The body of vibevm's managed redirect block — the text between the
 /// `<vibevm>` markers (PROP-012 §2.5).
+#[spec(
+    implements = "spec://vibevm/modules/vibe-workspace/PROP-012#content",
+    r = 1
+)]
 pub fn render_redirect() -> &'static str {
     BLOCK_BODY
 }
@@ -216,6 +221,10 @@ fn render_block() -> String {
 /// Where vibevm's managed `<vibevm>` block sits in an instruction file
 /// (PROP-012 §2.2–§2.3).
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[spec(
+    implements = "spec://vibevm/modules/vibe-workspace/PROP-012#markers",
+    r = 1
+)]
 pub enum BlockLocation {
     /// No `<vibevm>` markers at all — the block is created on write (§2.3).
     Absent,
@@ -232,6 +241,10 @@ pub enum BlockLocation {
 /// line whose trimmed text equals `<vibevm>` / `</vibevm>` is a marker
 /// (PROP-012 §2.2). No markdown parse, no model — the detection that
 /// gates a mutating write must be deterministic and trivial.
+#[spec(
+    implements = "spec://vibevm/modules/vibe-workspace/PROP-012#markers",
+    r = 1
+)]
 pub fn locate_block(content: &str) -> BlockLocation {
     let mut open: Option<(usize, usize)> = None;
     let mut close: Option<(usize, usize)> = None;
@@ -284,6 +297,14 @@ pub fn locate_block(content: &str) -> BlockLocation {
 /// nothing outside them. Malformed → [`WorkspaceError::MalformedRedirectBlock`]
 /// without writing — callers validate at plan time (PROP-012 §2.4), so
 /// this is the defensive last line.
+#[spec(
+    implements = "spec://vibevm/modules/vibe-workspace/PROP-012#create",
+    r = 1
+)]
+#[spec(
+    implements = "spec://vibevm/modules/vibe-workspace/PROP-012#migration",
+    r = 1
+)]
 fn write_managed_block(path: &Path) -> Result<Option<PathBuf>, WorkspaceError> {
     let existing = match fs::read_to_string(path) {
         Ok(s) => Some(s),
@@ -372,6 +393,10 @@ pub struct WrittenArtifacts {
 /// workspace root, used to resolve the inline contributions' content. A
 /// stale `INLINE.md` from an earlier generation is removed when the node
 /// no longer has inline contributions, so it is never read by mistake.
+#[spec(
+    implements = "spec://vibevm/modules/vibe-workspace/PROP-012#co-tenant",
+    r = 1
+)]
 pub fn write_boot_artifacts(
     node_dir: &Path,
     workspace_root: &Path,
@@ -423,6 +448,7 @@ fn io_err(path: &Path, e: std::io::Error) -> WorkspaceError {
 mod tests {
     use super::*;
     use crate::boot::{BootBand, BootEntry};
+    use specmark::verifies;
     use tempfile::TempDir;
     use vibe_core::manifest::{TargetOs, WhenCondition};
 
@@ -677,6 +703,7 @@ mod tests {
     }
 
     #[test]
+    #[verifies("spec://vibevm/modules/vibe-workspace/PROP-012#markers", r = 1)]
     fn locate_block_well_formed_pair() {
         let content = "before\n<vibevm>\nbody\n</vibevm>\nafter\n";
         match locate_block(content) {
@@ -688,6 +715,7 @@ mod tests {
     }
 
     #[test]
+    #[verifies("spec://vibevm/modules/vibe-workspace/PROP-012#markers", r = 1)]
     fn locate_block_two_openers_is_malformed() {
         let content = "<vibevm>\na\n</vibevm>\n<vibevm>\nb\n</vibevm>\n";
         assert!(matches!(locate_block(content), BlockLocation::Malformed(_)));
@@ -726,6 +754,7 @@ mod tests {
     }
 
     #[test]
+    #[verifies("spec://vibevm/modules/vibe-workspace/PROP-012#create", r = 1)]
     fn write_managed_block_appends_preserving_co_tenant_content() {
         let dir = TempDir::new().unwrap();
         let path = dir.path().join("CLAUDE.md");
@@ -742,6 +771,7 @@ mod tests {
     }
 
     #[test]
+    #[verifies("spec://vibevm/modules/vibe-workspace/PROP-012#create", r = 1)]
     fn write_managed_block_splices_in_place_preserving_surroundings() {
         let dir = TempDir::new().unwrap();
         let path = dir.path().join("CLAUDE.md");

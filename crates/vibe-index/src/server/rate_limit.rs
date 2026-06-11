@@ -29,6 +29,8 @@ use std::net::IpAddr;
 use std::sync::Mutex;
 use std::time::Instant;
 
+use specmark::spec;
+
 /// Default maximum tracked unique keys per bucket pool. Caps memory
 /// at ~2 MB for the IP pool under sustained adversarial load.
 pub const DEFAULT_MAX_BUCKETS: usize = 10_000;
@@ -127,6 +129,7 @@ impl Bucket {
 }
 
 #[derive(Debug)]
+#[spec(implements = "spec://vibevm/modules/vibe-index/PROP-005#http", r = 1)]
 pub struct RateLimiter {
     config: RateLimitConfig,
     by_token: Mutex<HashMap<String, Bucket>>,

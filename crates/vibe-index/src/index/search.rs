@@ -12,6 +12,7 @@ specmark::scope!("spec://vibevm/modules/vibe-index/PROP-005#root");
 
 use std::collections::{BTreeMap, BTreeSet};
 
+use specmark::spec;
 use vibe_core::Group;
 
 use crate::index::Index;
@@ -60,6 +61,7 @@ fn push_if_keepable(out: &mut Vec<String>, tok: String) {
     out.push(tok);
 }
 
+#[spec(implements = "spec://vibevm/modules/vibe-index/PROP-005#cli", r = 1)]
 pub fn search(index: &Index, query: &str, kind_filter: Option<PackageKind>) -> Vec<SearchHit> {
     let query_tokens: BTreeSet<String> = tokenise(query).into_iter().collect();
     if query_tokens.is_empty() {

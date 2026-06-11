@@ -12,11 +12,16 @@ use std::path::{Path, PathBuf};
 use std::process;
 
 use sha2::{Digest, Sha256};
+use specmark::spec;
 
 use crate::error::{Error, Result};
 
 /// Write `bytes` to `path` atomically (tmp + fsync + rename). Creates
 /// the parent directory when missing.
+#[spec(
+    implements = "spec://vibevm/modules/vibe-index/PROP-005#persistence",
+    r = 1
+)]
 pub fn atomic_write(path: &Path, bytes: &[u8]) -> Result<()> {
     if let Some(parent) = path.parent() {
         fs::create_dir_all(parent).map_err(|e| io_err(parent, e))?;
@@ -69,6 +74,7 @@ pub fn compute_sha256_hex(bytes: &[u8]) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use specmark::verifies;
     use tempfile::tempdir;
 
     #[test]
@@ -81,6 +87,7 @@ mod tests {
     }
 
     #[test]
+    #[verifies("spec://vibevm/modules/vibe-index/PROP-005#persistence", r = 1)]
     fn atomic_write_replaces_existing() {
         let dir = tempdir().unwrap();
         let path = dir.path().join("file.json");
@@ -90,6 +97,7 @@ mod tests {
     }
 
     #[test]
+    #[verifies("spec://vibevm/modules/vibe-index/PROP-005#persistence", r = 1)]
     fn atomic_write_does_not_leave_tmp_behind() {
         let dir = tempdir().unwrap();
         let path = dir.path().join("file.json");

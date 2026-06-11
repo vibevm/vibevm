@@ -160,6 +160,10 @@ type Result<T> = std::result::Result<T, WorkspaceError>;
 /// assert_eq!(member.manifest.require_package().unwrap().name, "wal");
 /// ```
 #[derive(Debug, Clone)]
+#[spec(
+    implements = "spec://vibevm/modules/vibe-workspace/PROP-007#workspace-section",
+    r = 1
+)]
 pub struct WorkspaceMember {
     /// Path relative to the workspace's absolute root, forward-slashed.
     /// This is the member's portable identity — it is what the lockfile
@@ -206,6 +210,10 @@ pub struct WorkspaceMember {
 /// assert_eq!(ws.lockfile_path(), ws.root.join("vibe.lock"));
 /// ```
 #[derive(Debug, Clone)]
+#[spec(
+    implements = "spec://vibevm/modules/vibe-workspace/PROP-007#workspace-section",
+    r = 1
+)]
 pub struct Workspace {
     /// Absolute path of the workspace's root directory. In-memory only —
     /// never persisted; the portable identity of a node is its `rel_path`.
@@ -223,6 +231,10 @@ impl Workspace {
     /// Walks up from `start` to the topmost `[workspace]` that transitively
     /// includes the starting node (PROP-007 §2.3). A node with no enclosing
     /// `[workspace]` is its own root — a standalone workspace.
+    #[spec(
+        implements = "spec://vibevm/modules/vibe-workspace/PROP-007#nesting",
+        r = 1
+    )]
     pub fn discover(start: impl AsRef<Path>) -> Result<Workspace> {
         let start = start.as_ref();
         let start_abs = canonical(start)?;
@@ -460,6 +472,10 @@ fn expand(
 /// placeholder is looked up bottom-up: the node's own `[workspace.versions]`
 /// (when the node is itself a workspace), then its declaring workspace, on up
 /// to the absolute root — first hit wins. PROP-007 §2.6.
+#[spec(
+    implements = "spec://vibevm/modules/vibe-workspace/PROP-007#versions",
+    r = 1
+)]
 fn finalize_versions(root_manifest: &mut Manifest, members: &mut [WorkspaceMember]) -> Result<()> {
     // Snapshot each node's own [workspace.versions] table and its parent
     // link, keyed by rel_path ("." = the absolute root). The placeholder
@@ -644,6 +660,7 @@ fn rel_or_dot(root: &Path, dir: &Path) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use specmark::verifies;
     use std::fs;
     use tempfile::TempDir;
 
@@ -751,6 +768,7 @@ mod tests {
     }
 
     #[test]
+    #[verifies("spec://vibevm/modules/vibe-workspace/PROP-007#nesting", r = 1)]
     fn nested_workspace_recurses_with_depth() {
         let tmp = TempDir::new().unwrap();
         // Root lists a sub-workspace as a member.
@@ -775,6 +793,7 @@ mod tests {
     }
 
     #[test]
+    #[verifies("spec://vibevm/modules/vibe-workspace/PROP-007#nesting", r = 1)]
     fn discover_from_member_finds_absolute_root() {
         let tmp = TempDir::new().unwrap();
         write(tmp.path(), "vibe.toml", &workspace_root("mono", &["sub"]));
@@ -864,6 +883,7 @@ mod tests {
     }
 
     #[test]
+    #[verifies("spec://vibevm/modules/vibe-workspace/PROP-007#versions", r = 1)]
     fn version_var_resolves_from_root_workspace() {
         let tmp = TempDir::new().unwrap();
         write(
@@ -891,6 +911,7 @@ mod tests {
     }
 
     #[test]
+    #[verifies("spec://vibevm/modules/vibe-workspace/PROP-007#versions", r = 1)]
     fn version_var_matryoshka_nearest_wins() {
         let tmp = TempDir::new().unwrap();
         // Root defines core = ^0.1; a nested workspace overrides it to ^0.9.

@@ -11,6 +11,7 @@ use std::collections::BTreeMap;
 use chrono::{DateTime, Utc};
 use semver::Version;
 use serde::{Deserialize, Serialize};
+use specmark::spec;
 use vibe_core::Group;
 
 use super::kinds::PackageKind;
@@ -18,6 +19,7 @@ use super::kinds::PackageKind;
 /// Per-version index record. PROP-005 §2.6.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
+#[spec(implements = "spec://vibevm/modules/vibe-index/PROP-005#entry", r = 1)]
 pub struct VersionEntry {
     pub schema_version: u32,
 
@@ -279,6 +281,7 @@ pub struct BootSnippetEntry {
 /// every `PackageEntry` that shares one bare `name`.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
+#[spec(implements = "spec://vibevm/modules/vibe-index/PROP-005#entry", r = 1)]
 pub struct PackageEntry {
     pub group: Group,
     pub name: String,
@@ -318,6 +321,7 @@ impl PackageEntry {
 /// per registry and lets a collision (PROP-008 §2.7) be detected at once.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
+#[spec(implements = "spec://vibevm/modules/vibe-index/PROP-005#entry", r = 1)]
 pub struct NameEntry {
     pub name: String,
     pub indexed_at: DateTime<Utc>,
@@ -350,6 +354,7 @@ impl NameEntry {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use specmark::verifies;
 
     fn sample_entry() -> VersionEntry {
         VersionEntry {
@@ -392,6 +397,7 @@ mod tests {
     }
 
     #[test]
+    #[verifies("spec://vibevm/modules/vibe-index/PROP-005#entry", r = 1)]
     fn version_entry_round_trips_through_json() {
         let v = sample_entry();
         let json = serde_json::to_string(&v).unwrap();

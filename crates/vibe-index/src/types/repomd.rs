@@ -7,11 +7,13 @@ use std::collections::BTreeMap;
 
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
+use specmark::spec;
 
 use super::kinds::NamingConvention;
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
+#[spec(implements = "spec://vibevm/modules/vibe-index/PROP-005#layout", r = 1)]
 pub struct Repomd {
     pub schema_version: u32,
     pub registry: String,
@@ -74,6 +76,7 @@ pub enum DirectoryTag {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use specmark::verifies;
 
     fn sample_repomd() -> Repomd {
         let mut files = BTreeMap::new();
@@ -98,6 +101,7 @@ mod tests {
     }
 
     #[test]
+    #[verifies("spec://vibevm/modules/vibe-index/PROP-005#layout", r = 1)]
     fn repomd_round_trips() {
         let r = sample_repomd();
         let json = serde_json::to_string(&r).unwrap();
