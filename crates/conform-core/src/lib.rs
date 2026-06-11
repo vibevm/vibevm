@@ -84,6 +84,17 @@ pub enum Fact {
         /// Attributes of the OWNING enum (where the REQ edge lives).
         enum_attrs: Vec<String>,
     },
+    /// Whole-file metrics, one per parsed file — the guide §2
+    /// "position is a resource" signal (file-length budget).
+    FileMetrics { lines: u32 },
+    /// A `.unwrap()` / `.expect(...)` call site. `in_test` marks call
+    /// sites inside `#[cfg(test)]` modules or `#[test]` functions,
+    /// where the ban does not apply (GUIDE-AI-NATIVE-RUST §6).
+    UnwrapUse {
+        method: String,
+        line: u32,
+        in_test: bool,
+    },
 }
 
 /// Facts of one source file, with its repo-relative path.
@@ -652,10 +663,14 @@ pub mod rules {
     }
 
     /// Class G — `seam-has-doctest`: a public item declared at the
-    /// crate root (`src/lib.rs`) of a gated crate is a seam; every
-    /// seam carries at least one compiled doctest of canonical use
-    /// (card scaffold-g-doctests). Re-exports and impl blocks are not
-    /// item facts, so the rule sees exactly the declared surface.
+    /// crate root (`src/lib.rs`) of a gated crate is a seam, and so is
+    /// a public `trait` wherever it lives under `src/`; every seam
+    /// carries at least one compiled doctest of canonical use (card
+    /// scaffold-g-doctests). Re-exports and impl blocks are not item
+    /// facts, so the rule sees exactly the declared surface. (The
+    /// lib.rs-only scope was the original shape; audit 2026-06-12-08
+    /// recorded the submodule-trait gap — `GitBackend` and friends —
+    /// and the depth program widened the rule.)
     ///
     /// ```
     /// use conform_core::rules::SeamHasDoctest;
@@ -691,7 +706,8 @@ pub mod rules {
                 if !self.gated_crates.contains(&sf.crate_name.as_str()) {
                     continue;
                 }
-                if !sf.file.ends_with("/src/lib.rs") {
+                let is_lib_root = sf.file.ends_with("/src/lib.rs");
+                if !sf.file.contains("/src/") {
                     continue;
                 }
                 for f in &sf.facts {
@@ -707,6 +723,12 @@ pub mod rules {
                         continue;
                     };
                     if !is_pub || *has_doctest {
+                        continue;
+                    }
+                    // lib.rs: every pub item is a seam; elsewhere only
+                    // pub traits are (a trait is a seam wherever it
+                    // lives — the 2026-06-12 widening).
+                    if !is_lib_root && kind != "trait" {
                         continue;
                     }
                     let name = symbol.rsplit("::").next().unwrap_or(symbol);
@@ -725,6 +747,246 @@ pub mod rules {
                         why: self.why(),
                         fingerprint: format!("seam-has-doctest|{}|{symbol}", sf.file),
                     });
+                }
+            }
+            out.sort();
+            out
+        }
+    }
+
+    /// Class F (message grammar) — `error-message-cites-req`: a
+    /// thiserror variant's Display text in a gated crate itself
+    /// carries a `spec://` REQ URI, so a failing run is navigable
+    /// back to the requirement without source access. This is the
+    /// message half of Class F; `error-enum-cites-req` is the
+    /// attribute half (audit 2026-06-12-08 recorded the gap between
+    /// the two). Variants with no display template (`transparent`)
+    /// are out of scope.
+    ///
+    /// ```
+    /// use conform_core::rules::ErrorMessageCitesReq;
+    /// use conform_core::{Fact, Rule, SourceFacts};
+    ///
+    /// let rule = ErrorMessageCitesReq { gated_crates: &["x"] };
+    /// let bare = SourceFacts {
+    ///     file: "crates/x/src/error.rs".into(),
+    ///     crate_name: "x".into(),
+    ///     facts: vec![Fact::ErrorVariant {
+    ///         enum_symbol: "x::error::Error".into(),
+    ///         variant: "Bad".into(),
+    ///         message: "bad input".into(),
+    ///         line: 4,
+    ///         enum_attrs: vec!["spec(implements = \"spec://p/d#e\")".into()],
+    ///     }],
+    /// };
+    /// assert_eq!(rule.check(&[bare]).len(), 1);
+    /// ```
+    pub struct ErrorMessageCitesReq {
+        pub gated_crates: &'static [&'static str],
+    }
+
+    impl Rule for ErrorMessageCitesReq {
+        fn id(&self) -> &'static str {
+            "error-message-cites-req"
+        }
+        fn why(&self) -> &'static str {
+            "errors are agent food: the Display text itself carries the REQ \
+             URI, so a failing run is navigable back to the requirement \
+             without source access (card scaffold-f-structured-diagnostics; \
+             GUIDE-AI-NATIVE-RUST §4)"
+        }
+        fn check(&self, facts: &[SourceFacts]) -> Vec<Finding> {
+            let mut out = Vec::new();
+            for sf in facts {
+                if !self.gated_crates.contains(&sf.crate_name.as_str()) {
+                    continue;
+                }
+                for f in &sf.facts {
+                    let Fact::ErrorVariant {
+                        enum_symbol,
+                        variant,
+                        message,
+                        line,
+                        ..
+                    } = f
+                    else {
+                        continue;
+                    };
+                    if message.is_empty() || message.contains("spec://") {
+                        continue;
+                    }
+                    let name = enum_symbol.rsplit("::").next().unwrap_or(enum_symbol);
+                    out.push(Finding {
+                        rule: self.id(),
+                        file: sf.file.clone(),
+                        line: *line,
+                        message: req_message(
+                            "discipline://core/cards/scaffold-f-structured-diagnostics#ops",
+                            &format!(
+                                "`{name}::{variant}` display text cites no spec:// REQ"
+                            ),
+                            "embed the governing spec:// URI and a fix hint in the \
+                             #[error(\"...\")] template",
+                        ),
+                        why: self.why(),
+                        fingerprint: format!(
+                            "error-message-cites-req|{}|{name}::{variant}",
+                            sf.file
+                        ),
+                    });
+                }
+            }
+            out.sort();
+            out
+        }
+    }
+
+    /// Guide §2 — `file-length`: a source file over the line budget
+    /// pages badly and buries invariants in its middle third; prefer
+    /// more, smaller, single-purpose files at equal token mass
+    /// (R3-003 "position is a resource"). The audit's god-file
+    /// inventory (2026-06-12-07) is this rule's frozen baseline; the
+    /// decomposition backlog shrinks it.
+    ///
+    /// ```
+    /// use conform_core::rules::FileLength;
+    /// use conform_core::{Fact, Rule, SourceFacts};
+    ///
+    /// let rule = FileLength { max_lines: 600 };
+    /// let big = SourceFacts {
+    ///     file: "crates/x/src/big.rs".into(),
+    ///     crate_name: "x".into(),
+    ///     facts: vec![Fact::FileMetrics { lines: 1200 }],
+    /// };
+    /// assert_eq!(rule.check(&[big]).len(), 1);
+    /// ```
+    pub struct FileLength {
+        pub max_lines: u32,
+    }
+
+    impl Rule for FileLength {
+        fn id(&self) -> &'static str {
+            "file-length"
+        }
+        fn why(&self) -> &'static str {
+            "position is a resource: past the budget a file pages badly and \
+             its middle third buries invariants — prefer more, smaller, \
+             single-purpose files (GUIDE-AI-NATIVE-RUST §2, R3-003)"
+        }
+        fn check(&self, facts: &[SourceFacts]) -> Vec<Finding> {
+            let mut out = Vec::new();
+            for sf in facts {
+                if !sf.file.contains("/src/") {
+                    continue;
+                }
+                for f in &sf.facts {
+                    let Fact::FileMetrics { lines } = f else {
+                        continue;
+                    };
+                    if *lines <= self.max_lines {
+                        continue;
+                    }
+                    out.push(Finding {
+                        rule: self.id(),
+                        file: sf.file.clone(),
+                        line: 1,
+                        message: req_message(
+                            "discipline://rust-ai-native/guide#surface-form",
+                            &format!(
+                                "{lines} lines exceeds the {}-line file budget",
+                                self.max_lines
+                            ),
+                            "split along the file's responsibility seams into \
+                             module-grain cells",
+                        ),
+                        why: self.why(),
+                        fingerprint: format!("file-length|{}", sf.file),
+                    });
+                }
+            }
+            out.sort();
+            out
+        }
+    }
+
+    /// Guide §6 — `no-unwrap-in-domain`: `.unwrap()` / `.expect()` in
+    /// domain logic converts a contract violation into a panic. Call
+    /// sites inside `#[cfg(test)]` modules and `#[test]` functions are
+    /// exempt (the facts carry `in_test`); legitimate boundaries
+    /// record `#[spec(deviates, reason)]` and freeze in the baseline.
+    ///
+    /// ```
+    /// use conform_core::rules::NoUnwrapInDomain;
+    /// use conform_core::{Fact, Rule, SourceFacts};
+    ///
+    /// let rule = NoUnwrapInDomain { gated_crates: &["x"] };
+    /// let domain = SourceFacts {
+    ///     file: "crates/x/src/m.rs".into(),
+    ///     crate_name: "x".into(),
+    ///     facts: vec![
+    ///         Fact::UnwrapUse { method: "unwrap".into(), line: 9, in_test: false },
+    ///         Fact::UnwrapUse { method: "unwrap".into(), line: 90, in_test: true },
+    ///     ],
+    /// };
+    /// assert_eq!(rule.check(&[domain]).len(), 1);
+    /// ```
+    pub struct NoUnwrapInDomain {
+        pub gated_crates: &'static [&'static str],
+    }
+
+    impl Rule for NoUnwrapInDomain {
+        fn id(&self) -> &'static str {
+            "no-unwrap-in-domain"
+        }
+        fn why(&self) -> &'static str {
+            "unwrap/expect in domain logic is a panic wearing a contract's \
+             clothes: return through the layer's error enum, or mark the \
+             justified boundary with #[spec(deviates, reason)] \
+             (GUIDE-AI-NATIVE-RUST §6)"
+        }
+        fn check(&self, facts: &[SourceFacts]) -> Vec<Finding> {
+            let mut out = Vec::new();
+            for sf in facts {
+                if !self.gated_crates.contains(&sf.crate_name.as_str()) {
+                    continue;
+                }
+                if !sf.file.contains("/src/") {
+                    continue;
+                }
+                // Per-file per-method ordinal fingerprints, never line
+                // numbers (the stop.rs 33→35 lesson).
+                let mut seen: std::collections::BTreeMap<&str, u32> =
+                    std::collections::BTreeMap::new();
+                for f in &sf.facts {
+                    let Fact::UnwrapUse {
+                        method,
+                        line,
+                        in_test,
+                    } = f
+                    else {
+                        continue;
+                    };
+                    if *in_test {
+                        continue;
+                    }
+                    let ordinal = seen.entry(method.as_str()).or_insert(0);
+                    out.push(Finding {
+                        rule: self.id(),
+                        file: sf.file.clone(),
+                        line: *line,
+                        message: req_message(
+                            "discipline://rust-ai-native/guide#bans-and-escape-hatches",
+                            &format!("`.{method}()` in domain logic"),
+                            "return through the layer's error enum, or record \
+                             #[spec(deviates, reason)] at a justified boundary",
+                        ),
+                        why: self.why(),
+                        fingerprint: format!(
+                            "no-unwrap-in-domain|{}|{method}#{ordinal}",
+                            sf.file
+                        ),
+                    });
+                    *seen.get_mut(method.as_str()).unwrap() += 1;
                 }
             }
             out.sort();

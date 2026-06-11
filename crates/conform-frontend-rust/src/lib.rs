@@ -22,7 +22,8 @@ impl Frontend for RustFrontend {
         // Bump when extraction changes shape — the store key includes
         // it, so old cached facts are simply never read again.
         // v2: is_pub + has_doctest on Item; ErrorVariant facts.
-        "2"
+        // v3: FileMetrics per file; UnwrapUse with cfg(test) scoping.
+        "3"
     }
 
     fn extract(&self, _file: &str, _crate_name: &str, module: &str, text: &str) -> Vec<Fact> {
@@ -31,15 +32,20 @@ impl Frontend for RustFrontend {
         };
         let mut v = Extractor {
             module: module.to_string(),
-            facts: Vec::new(),
+            facts: vec![Fact::FileMetrics {
+                lines: text.lines().count() as u32,
+            }],
+            test_depth: 0,
         };
         v.visit_file(&ast);
         v.facts.sort_by_key(|f| match f {
+            Fact::FileMetrics { .. } => 0,
             Fact::Item { line, .. }
             | Fact::Import { line, .. }
             | Fact::Ctor { line, .. }
             | Fact::UnsafeUse { line, .. }
-            | Fact::ErrorVariant { line, .. } => *line,
+            | Fact::ErrorVariant { line, .. }
+            | Fact::UnwrapUse { line, .. } => *line,
         });
         v.facts
     }
@@ -48,6 +54,34 @@ impl Frontend for RustFrontend {
 struct Extractor {
     module: String,
     facts: Vec<Fact>,
+    /// > 0 while visiting a `#[cfg(test)]` module or `#[test]` fn —
+    /// `UnwrapUse` facts inside carry `in_test: true`.
+    test_depth: u32,
+}
+
+/// `#[cfg(test)]` / `#[cfg(any(test, ...))]` — the same shape the
+/// specmap ratchet skips.
+fn is_cfg_test(attrs: &[syn::Attribute]) -> bool {
+    attrs.iter().any(|a| {
+        if !a.path().is_ident("cfg") {
+            return false;
+        }
+        match &a.meta {
+            syn::Meta::List(list) => list.tokens.to_string().contains("test"),
+            _ => false,
+        }
+    })
+}
+
+/// `#[test]`, `#[tokio::test]`, and friends — the last path segment
+/// is `test`.
+fn is_test_fn(attrs: &[syn::Attribute]) -> bool {
+    attrs.iter().any(|a| {
+        a.path()
+            .segments
+            .last()
+            .is_some_and(|s| s.ident == "test")
+    })
 }
 
 fn attr_text(attrs: &[syn::Attribute]) -> Vec<String> {
@@ -109,7 +143,37 @@ impl<'ast> Visit<'ast> for Extractor {
                 line: line_of(&node.sig.ident),
             });
         }
+        let in_test = is_test_fn(&node.attrs) || is_cfg_test(&node.attrs);
+        if in_test {
+            self.test_depth += 1;
+        }
         syn::visit::visit_item_fn(self, node);
+        if in_test {
+            self.test_depth -= 1;
+        }
+    }
+
+    fn visit_item_mod(&mut self, node: &'ast syn::ItemMod) {
+        let in_test = is_cfg_test(&node.attrs);
+        if in_test {
+            self.test_depth += 1;
+        }
+        syn::visit::visit_item_mod(self, node);
+        if in_test {
+            self.test_depth -= 1;
+        }
+    }
+
+    fn visit_expr_method_call(&mut self, node: &'ast syn::ExprMethodCall) {
+        let m = node.method.to_string();
+        if m == "unwrap" || m == "expect" {
+            self.facts.push(Fact::UnwrapUse {
+                method: m,
+                line: line_of(&node.method),
+                in_test: self.test_depth > 0,
+            });
+        }
+        syn::visit::visit_expr_method_call(self, node);
     }
 
     fn visit_item_struct(&mut self, node: &'ast syn::ItemStruct) {
@@ -241,8 +305,10 @@ mod tests {
             pub struct Thing;
             "#,
         );
-        let Fact::Item { symbol, attrs, .. } = &facts[0] else {
-            panic!("expected item fact, got {facts:?}");
+        let Some(Fact::Item { symbol, attrs, .. }) =
+            facts.iter().find(|f| matches!(f, Fact::Item { .. }))
+        else {
+            panic!("expected an item fact, got {facts:?}");
         };
         assert_eq!(symbol, "x::m::Thing");
         assert!(attrs.iter().any(|a| a.starts_with("cell(")));
@@ -281,6 +347,52 @@ mod tests {
     #[test]
     fn unparseable_source_yields_no_facts() {
         assert!(extract("pub fn broken( {").is_empty());
+    }
+
+    #[test]
+    fn emits_file_metrics_for_parsed_files() {
+        let facts = extract("pub fn a() {}\npub fn b() {}\n");
+        assert!(
+            facts
+                .iter()
+                .any(|f| matches!(f, Fact::FileMetrics { lines: 2 })),
+            "{facts:?}"
+        );
+    }
+
+    #[test]
+    fn unwrap_in_domain_vs_test_scopes() {
+        let facts = extract(
+            r#"
+            pub fn domain() { Some(1).unwrap(); }
+            pub fn hinted() { std::fs::read("x").expect("io"); }
+            #[test]
+            fn in_test_fn() { Some(1).unwrap(); }
+            #[cfg(test)]
+            mod tests {
+                fn helper() { Some(2).unwrap(); }
+            }
+            "#,
+        );
+        let unwraps: Vec<(&str, bool)> = facts
+            .iter()
+            .filter_map(|f| match f {
+                Fact::UnwrapUse {
+                    method, in_test, ..
+                } => Some((method.as_str(), *in_test)),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(
+            unwraps,
+            vec![
+                ("unwrap", false),
+                ("expect", false),
+                ("unwrap", true),
+                ("unwrap", true),
+            ],
+            "{facts:?}"
+        );
     }
 
     #[test]

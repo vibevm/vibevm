@@ -183,6 +183,16 @@ enum ConformCmd {
         #[arg(long)]
         scope: Option<String>,
     },
+    /// Rewrite the baseline to the current finding set (sorted
+    /// fingerprints). Legal uses: freezing a NEW rule's pre-existing
+    /// findings when it first lands, and re-freezing after work that
+    /// shrank the set — verify with `git diff` that the file only
+    /// shrinks outside a new-rule landing.
+    Freeze {
+        /// Path to the baseline to rewrite, repo-relative.
+        #[arg(long, default_value = "conform-baseline.json")]
+        baseline: String,
+    },
 }
 
 #[derive(Subcommand, Debug)]
@@ -221,6 +231,9 @@ fn main() -> Result<()> {
         Cmd::Conform {
             cmd: ConformCmd::Check { baseline, scope },
         } => run_conform_check(&baseline, scope.as_deref()),
+        Cmd::Conform {
+            cmd: ConformCmd::Freeze { baseline },
+        } => run_conform_freeze(&baseline),
         Cmd::Trace {
             cmd:
                 TraceCmd::Explain {
@@ -724,9 +737,89 @@ fn run_ratchet_gate(root: &std::path::Path, blocking: bool) -> Result<()> {
 /// through the content-addressed store (incremental by file hash);
 /// findings are reported only inside `--scope`; new findings against
 /// the baseline fail the gate; SARIF lands under `target/conform/`.
+/// The crates under the Class-F/G conform gates (the
+/// expand-as-you-conform list — a crate enters when its seams are
+/// doctested and its error layer carries REQ edges). vibe-core stays
+/// out: its trio was DBT-0019-dispositioned; re-judge at the next
+/// audit window now that DBT-0019 is closed.
+const CONFORM_GATED: &[&str] = &[
+    "vibe-resolver",
+    "conform-core",
+    "specmap-core",
+    "vibe-registry",
+    "vibe-workspace",
+    "vibe-check",
+    "vibe-publish",
+];
+
+/// The standing rule set, constructed in one place so `conform check`
+/// and `conform freeze` can never drift apart.
+struct ConformRules {
+    flag_sites: conform_core::rules::FlagSites,
+    isolation: conform_core::rules::CellIsolation,
+    unsafe_gate: conform_core::rules::UnsafeGate,
+    seam_doctests: conform_core::rules::SeamHasDoctest,
+    err_req: conform_core::rules::ErrorEnumCitesReq,
+    cell_oracle: conform_core::rules::CellHasOracle,
+    err_msg: conform_core::rules::ErrorMessageCitesReq,
+    file_len: conform_core::rules::FileLength,
+    no_unwrap: conform_core::rules::NoUnwrapInDomain,
+}
+
+impl ConformRules {
+    fn new() -> Self {
+        use conform_core::rules;
+        Self {
+            flag_sites: rules::FlagSites {
+                registry_file: "crates/vibe-cli/src/registry.rs",
+                gated_crate: "vibe-cli",
+            },
+            isolation: rules::CellIsolation,
+            // No crate is a designated unsafe-audit crate today; the
+            // list grows by owner decision, not by accretion.
+            unsafe_gate: rules::UnsafeGate { audit_crates: &[] },
+            seam_doctests: rules::SeamHasDoctest {
+                gated_crates: CONFORM_GATED,
+            },
+            err_req: rules::ErrorEnumCitesReq {
+                gated_crates: CONFORM_GATED,
+            },
+            // Class D (adopt-v0.3 Phase 4): self-scoping — gates
+            // exactly the crates that declare #[cell] manifests.
+            cell_oracle: rules::CellHasOracle,
+            // The 2026-06-12 depth-program additions (audit finding
+            // 2026-06-12-08): the Class-F message-grammar half, the
+            // guide §2 file-length budget, and the §6 unwrap ban —
+            // each landed ratcheted (pre-existing findings frozen via
+            // `conform freeze`, shrink-only from there).
+            err_msg: rules::ErrorMessageCitesReq {
+                gated_crates: CONFORM_GATED,
+            },
+            file_len: rules::FileLength { max_lines: 600 },
+            no_unwrap: rules::NoUnwrapInDomain {
+                gated_crates: CONFORM_GATED,
+            },
+        }
+    }
+
+    fn refs(&self) -> Vec<&dyn conform_core::Rule> {
+        vec![
+            &self.flag_sites,
+            &self.isolation,
+            &self.unsafe_gate,
+            &self.seam_doctests,
+            &self.err_req,
+            &self.cell_oracle,
+            &self.err_msg,
+            &self.file_len,
+            &self.no_unwrap,
+        ]
+    }
+}
+
 fn run_conform_check(baseline_rel: &str, scope: Option<&str>) -> Result<()> {
     use conform_core::{
-        ExtractionLog, Frontend, Rule, Store, baseline, check, count_by_rule, rules, sarif,
+        ExtractionLog, Frontend, Rule, Store, baseline, check, count_by_rule, sarif,
     };
     use conform_frontend_rust::RustFrontend;
 
@@ -743,55 +836,8 @@ fn run_conform_check(baseline_rel: &str, scope: Option<&str>) -> Result<()> {
         Frontend::version(&frontend),
     );
 
-    let flag_sites = rules::FlagSites {
-        registry_file: "crates/vibe-cli/src/registry.rs",
-        gated_crate: "vibe-cli",
-    };
-    let isolation = rules::CellIsolation;
-    // No crate is a designated unsafe-audit crate today; the list grows
-    // by owner decision, not by accretion.
-    let unsafe_gate = rules::UnsafeGate { audit_crates: &[] };
-    // Classes G and F (adopt-v0.3 Phase 2). Gated crates grow with the
-    // cell sweep — a crate enters when its seams are doctested and its
-    // error layer carries REQ edges, the same expand-as-you-conform
-    // rhythm the orphan ratchet used.
-    let seam_doctests = rules::SeamHasDoctest {
-        gated_crates: &[
-            "vibe-resolver",
-            "conform-core",
-            "specmap-core",
-            "vibe-registry",
-            "vibe-workspace",
-            "vibe-check",
-            "vibe-publish",
-        ],
-    };
-    // vibe-core stays out of the F gate: its error/timestamp/values
-    // trio is DBT-0019-dispositioned (no scannable spec home until
-    // VIBEVM-SPEC.md is unit-ified) and the rule has no disposition
-    // concept — gating it would flag debt that is already adjudicated.
-    let err_req = rules::ErrorEnumCitesReq {
-        gated_crates: &[
-            "vibe-resolver",
-            "conform-core",
-            "specmap-core",
-            "vibe-registry",
-            "vibe-workspace",
-            "vibe-check",
-            "vibe-publish",
-        ],
-    };
-    // Class D (adopt-v0.3 Phase 4): self-scoping — gates exactly the
-    // crates that declare #[cell] manifests.
-    let cell_oracle = rules::CellHasOracle;
-    let rule_refs: Vec<&dyn Rule> = vec![
-        &flag_sites,
-        &isolation,
-        &unsafe_gate,
-        &seam_doctests,
-        &err_req,
-        &cell_oracle,
-    ];
+    let rules = ConformRules::new();
+    let rule_refs: Vec<&dyn Rule> = rules.refs();
 
     let findings = check(&rule_refs, &facts, scope);
     let report = sarif::render(&rule_refs, &findings);
@@ -828,6 +874,41 @@ fn run_conform_check(baseline_rel: &str, scope: Option<&str>) -> Result<()> {
     if !new.is_empty() {
         bail!("conform: {} new finding(s) against the baseline", new.len());
     }
+    Ok(())
+}
+
+/// `cargo xtask conform freeze` — rewrite the baseline to the current
+/// finding set. The legal moments: a NEW rule landing (its
+/// pre-existing findings freeze once), and a re-freeze after work
+/// that shrank the set. The diff review is the guard: outside a
+/// new-rule landing the file may only shrink.
+fn run_conform_freeze(baseline_rel: &str) -> Result<()> {
+    use conform_core::{ExtractionLog, Frontend, Rule, Store, check, count_by_rule};
+    use conform_frontend_rust::RustFrontend;
+
+    let root = repo_root()?;
+    let store = Store::at_repo(&root);
+    let mut log = ExtractionLog::default();
+    let frontend = RustFrontend;
+    let facts = store.extract_workspace(&root, &frontend, &mut log)?;
+    let rules = ConformRules::new();
+    let rule_refs: Vec<&dyn Rule> = rules.refs();
+    let findings = check(&rule_refs, &facts, None);
+    let counts = count_by_rule(&findings);
+    let mut fps: Vec<&str> = findings.iter().map(|f| f.fingerprint.as_str()).collect();
+    fps.sort_unstable();
+    fps.dedup();
+    let body = serde_json::json!({ "schema": 1, "findings": fps });
+    let mut text = serde_json::to_string_pretty(&body).context("serialising baseline")?;
+    text.push('\n');
+    let path = root.join(baseline_rel);
+    std::fs::write(&path, text).with_context(|| format!("writing {}", path.display()))?;
+    eprintln!(
+        "xtask conform freeze: {} fingerprint(s) frozen ({:?}) at {}.",
+        fps.len(),
+        counts,
+        baseline_rel
+    );
     Ok(())
 }
 
