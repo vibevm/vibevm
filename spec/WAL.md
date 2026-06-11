@@ -1,7 +1,72 @@
 # WAL — Project Continuation State
-_Updated: 2026-06-11, session-end checkpoint (the Big Refactoring: ALL phases of PLAYBOOK-TERRAFORM-VIBEVM-v0.2 executed 2026-06-10 — −1/0/1/2/3/4/5/6 — owner-declared complete, `new` merged to `main` at **`e1da0c4`** and pushed. Close-out report: [`terraform/REPORT.md`](../terraform/REPORT.md). Cold-resume: `CONTINUE.md`. Prior state: M1.19 qualified naming SHIPPED 2026-05-22; PROP-013 established.)_
+_Updated: 2026-06-11, the **Discipline v0.2 adoption (TERRAFORM-PLAN-v0.3) is COMPLETE** — all phases 0–7 plus the priority-cell sweep executed this day on `main` (commits `e3f06ec` … `09d0da5`, pushed). Close-out: [`terraform/adopt-v0.3/REPORT.md`](../terraform/adopt-v0.3/REPORT.md); raid log: [`terraform/adopt-v0.3/LOG.md`](../terraform/adopt-v0.3/LOG.md); prediction ledger: [`terraform/adopt-v0.3/PREDICTIONS.md`](../terraform/adopt-v0.3/PREDICTIONS.md). Prior state: the v0.2 terraform complete at `e1da0c4` (2026-06-10)._
 
 ## Current phase
+
+**THE v0.3 ADOPTION IS COMPLETE (2026-06-11).** The owner dropped the
+Discipline v0.2 package and TERRAFORM-PLAN-v0.3; the plan ran to its
+§5 exit criteria in one continuous effort:
+
+- **Phase 0** — self-hosting: the Discipline became two installed
+  vibevm packages (`flow:org.vibevm/discipline-core@0.2.0`,
+  `stack:org.vibevm/rust-ai-native@0.2.0`) resolved from the in-repo
+  `packages/` local registry (`vibe install … --registry ./packages`);
+  slots committed under `vibedeps/`; boot = 00-core → discipline-core
+  → rust-ai-native → 90-user; `vibevm.discipline.lock` pins the
+  pilot; the mechanisms (PROP-014, BROWNFIELD, ENGINE-CONFORM,
+  LEDGER-INTENT) relocated to `spec/discipline/` with URIs
+  re-anchored suspect-free; `spec/neworder/` is a shim.
+- **Phases 1–6** — the nine-card catalog applied: the fast-loop
+  checker (`cargo xtask fast-loop`, 18/18 cells <60s); the REQ-citing
+  diagnostics grammar + `seam-has-doctest` / `error-enum-cites-req`
+  rules; `CapabilityTag` types the activation seam (+trybuild
+  compile-fail); contracts witnessed at use sites (roots-first,
+  lockfile uniqueness; AUD-0014/0015 closed); the property net +
+  the differential socket + `cell-has-oracle`; the `fixpoint_model`
+  simulator with model-vs-production conformance; `cargo xtask
+  codemod add-cell` (atomic, rollback proven live on its own
+  template bug).
+- **Phase 7** — **DBT-0011 fixed**: the `Sat` cell (chronological
+  backtracking over version bounds, the naive solver as branch
+  checker so semantics cannot drift) passes the dominance
+  differential — the oracle found naive's first-pick trap in a
+  generated world before any human enumerated one; resolvo stays an
+  owner option behind the recorded deviates edge. Composition
+  predicates (`and`/`or`/`not`, parens, precedence) ratified
+  PROP-003 `#req-conditional-composition` r1-planned → r2.
+  DBT-0016 also closed (its subject dissolved with the v0.2
+  package).
+- **Sweep** — 25 seam doctests + REQ-edged error enums across
+  vibe-registry / vibe-workspace / vibe-check / vibe-publish
+  (authored by four parallel agents, verified centrally by the
+  widened gates — which immediately caught the one enum the agents'
+  briefs excluded).
+
+**Gate panel at close (all green):** `cargo xtask specmap --check` —
+352 units / 190 items / 198 edges / 0 suspects; `cargo xtask conform
+check` — 8 frozen / 0 new (six rules, seven gated crates);
+`cargo xtask test-gate` — xfail-strict green; `cargo xtask fast-loop
+--enforce-budget` — 18/18; `tools/self-check.sh` — all four steps.
+
+**Open after the adoption (owner- or measurement-gated):** publishing
+the two Discipline packages to the public `vibespecs` registry
+(token, outward-facing); resolvo adoption + production solver
+selection via the R-001 registry flag; the PROP-010 design session
+(new input: directory registries are `--registry`-flag-only);
+`VIBEVM-SPEC.md` unit-ification (DBT-0019); the PROP-014
+external-namespace amendment (new precedent: the `discipline://`
+citation namespace in conform diagnostics); the four open-instrument
+predictions (P2-1, P4-1, P5-1, P6-1) awaiting a measured weak-agent
+run; M1.23 (vibe-tcg Stage 1) gated on M1.5. The lockfile's
+machine-absolute `file:///` source_url for local-registry installs
+is a recorded debt candidate. The REPORT's eight-item honest list
+feeds Discipline v0.3 — the discipline content now lives in
+`packages/org.vibevm/*` (the owner's tree by the same convention
+that governed `spec/neworder/`).
+
+---
+
+## Prior phase (superseded 2026-06-11): the v0.2 terraform
 
 **THE BIG REFACTORING IS COMPLETE — branch policy retired (2026-06-10).**
 The owner declared the refactoring complete in-session («рефакторинг
