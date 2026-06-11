@@ -437,3 +437,38 @@ tests); self-check all four steps.
 **Phase 5 exit: met.** P5-1 standing (conformance keeps the model
 truthful; agent-behavior half deferred with P4-1), P5-2 held for
 the existing generator instance.
+
+---
+
+## 2026-06-11 — Phase 6: Codemods (I), pilot-gated
+
+**Scope.** Card `scaffold-i-codemods` ([E-hyp], WISH→prototype).
+One real recurring multi-file change of THIS repo, implemented as
+one checked atomic operation: **add-cell** — the module file with
+its `#[cell]` manifest, the alphabetical `pub mod` registration in
+lib.rs, and a smoke test referencing the cell so `cell-has-oracle`
+is satisfied from birth. `--spec-uri` is a required parameter: a
+cell without a REQ edge is an orphan the ratchet rejects, so the
+codemod makes A1 true by construction, not by follow-up.
+
+**The live demo demonstrated both arms.** The first invocation
+(the SAT-solver skeleton for Phase 7, using exactly the
+fixed-parameter shape from the command's help) hit a template bug —
+the generated module imported `spec` but not the `cell` attribute
+macro — and the post-check (`cargo check -p`) caught it and rolled
+all three writes back; the tree was byte-identical to before. After
+the one-line template fix the same invocation succeeded: skeleton
+in place, smoke test green, conform 8 frozen / 0 new with the new
+cell visible to the rules. Atomicity and the post-check are not
+theoretical properties; they both fired on real inputs within five
+minutes of the prototype existing.
+
+**Weakest-tier exposure** is the documented fixed-parameter
+invocation in the command help (the card's routine step 5). Free
+parameterization by weak agents is the R4 build/use-boundary
+measurement — deferred with the other agent-run questions.
+
+**Phase 6 exit: met (prototype-grade by design).** P6-1 recorded:
+mechanism proven both ways, capability half pending. The card's
+REPORT-gated graduation: checker exists and ran; [E-hyp] stays
+until the agent measurement.

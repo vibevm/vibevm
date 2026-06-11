@@ -50,6 +50,7 @@ pub mod fixpoint_model;
 pub mod local_registry_provider;
 pub mod multi_registry_provider;
 pub mod naive;
+pub mod sat;
 
 pub use activation::{ActivationContext, ActivationOutcome, CapabilityTag, TagError};
 pub use features::{
