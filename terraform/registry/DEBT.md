@@ -46,7 +46,7 @@ in the JSON entries._
 | DBT-0009 | unimplemented-req | PROP-011 deferrals: hash spot-check; true incremental re-resolve | open |
 | DBT-0010 | unimplemented-req | Parked: workspace version inheritance; publish-signalling polish | open |
 | DBT-0011 | unimplemented-req | `NaiveDepSolver` is the only depsolver (SAT solver unbuilt) | open |
-| DBT-0016 | disputed-spec | PLAYBOOK vs BROWNFIELD — REVIEW/TODO marker homing (package-internal) | open |
+| DBT-0016 | disputed-spec | PLAYBOOK vs BROWNFIELD — REVIEW/TODO marker homing (package-internal) | fixed (supersede — adopt-v0.3 Phase 0: the v0.2 package retired the PLAYBOOK side) |
 | DBT-0017 | stale-doc | ROADMAP internal staleness (TASKS.md pointer, unticked boxes, …) | open |
 | DBT-0018 | stale-doc | `vibe init` hint leads with the kind-qualified pkgref shape | open |
 | DBT-0019 | coverage-gap | vibe-core leaf modules (error/timestamp/values) lack a scannable spec home until `VIBEVM-SPEC.md` is unit-ified; six symbols dispositioned in `specmap-ratchet.json` | open |

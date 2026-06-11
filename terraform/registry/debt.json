@@ -323,11 +323,14 @@
     "BROWNFIELD:47 — \"`intent.json` (+ `INTENT.md`) — the aspiration inventory, harvested from WAL \\\"Next\\\"/\\\"Known issues\\\", `TASKS.md`, ROADMAP open milestones, `<!-- REVIEW -->` markers, TODO/FIXME\""
    ],
    "source": "Phase −1 conflict scan (LLM-proposed; package-internal)",
-   "disposition": "open",
+   "disposition": "fixed",
+   "fixed_in": "adopt-v0.3 Phase 0 (Discipline v0.2 package)",
+   "adjudication": "supersede — the v0.2 package dissolves the conflict's subject: PLAYBOOK-TERRAFORM-VIBEVM-v0.2 is superseded by the generalized RAID playbook (discipline-core/03-RAID-PLAYBOOK.md) + TERRAFORM-PLAN-v0.3, and BROWNFIELD relocated to spec/discipline/ unchanged; the marker-homing question is answered by the raid skeleton (the debt ledger is the raid's, the intent harvest stays BROWNFIELD §3). Sunset clause met: the v0.2 revision shipped.",
    "tripwires": [
-    "touch:spec/neworder/**"
+    "touch:spec/neworder/**",
+    "touch:spec/discipline/BROWNFIELD-PROTOCOL-v0.1.md"
    ],
-   "sunset": "feeds the discipline package v0.2 revision (README change protocol)"
+   "sunset": "met — the discipline package v0.2 shipped (adopt-v0.3 Phase 0)"
   },
   {
    "id": "DBT-0017",

@@ -658,6 +658,28 @@ PROP-009 Phase 4, so it was a prerequisite for the Phase-7 redirect
 rewrite and landed **inside M1.18 Phase 7**. The M1.22 number is
 nominal — the work is part of M1.18.
 
+### M1.23 — `vibe-tcg` Stage 1 (syntactic constrained generation) — PLANNED (adopt-v0.3)
+
+**Thesis.** LLM-emitted Rust fails to compile mostly on *type*
+errors (~94% per PLDI'25), but the syntactic ~6% is cheap to
+eliminate today: a Rust CFG mask via an existing permissively-licensed
+engine (XGrammar-2 / SynCode class) guarantees parseable output and
+validates the harness integration that the later, harder stages
+(scope/name constraining on rust-analyzer, type-valid continuations,
+discipline profiles) will reuse. Tool spec:
+`packages/org.vibevm/rust-ai-native/v0.2.0/rust/tools/vibe-tcg.md`
+(installed at `vibedeps/stack-rust-ai-native/0.2.0/rust/tools/vibe-tcg.md`).
+Entered into the roadmap by TERRAFORM-PLAN-v0.3 §2 (the Discipline
+v0.2 adoption); staged ambition and the honest risk register live in
+the spec, not here.
+
+**Scope guard.** Stage 1 only — the syntactic profile. Stages 2–4
+are explicitly gated on Stage-1/2 measurements (the 74.8%
+TypeScript result does not transfer for free), and the whole tool
+is capability-routed: on for the weak swarm, off for strong
+authors. Depends on the M1.5 generation harness existing; do not
+start before M1.5.1–M1.5.2.
+
 ---
 
 ## M1.5 — Generation
