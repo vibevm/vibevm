@@ -54,8 +54,8 @@ impl Frontend for RustFrontend {
 struct Extractor {
     module: String,
     facts: Vec<Fact>,
-    /// > 0 while visiting a `#[cfg(test)]` module or `#[test]` fn —
-    /// `UnwrapUse` facts inside carry `in_test: true`.
+    /// Nonzero while visiting a `#[cfg(test)]` module or `#[test]`
+    /// fn — `UnwrapUse` facts inside carry `in_test: true`.
     test_depth: u32,
 }
 
@@ -76,12 +76,9 @@ fn is_cfg_test(attrs: &[syn::Attribute]) -> bool {
 /// `#[test]`, `#[tokio::test]`, and friends — the last path segment
 /// is `test`.
 fn is_test_fn(attrs: &[syn::Attribute]) -> bool {
-    attrs.iter().any(|a| {
-        a.path()
-            .segments
-            .last()
-            .is_some_and(|s| s.ident == "test")
-    })
+    attrs
+        .iter()
+        .any(|a| a.path().segments.last().is_some_and(|s| s.ident == "test"))
 }
 
 fn attr_text(attrs: &[syn::Attribute]) -> Vec<String> {

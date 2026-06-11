@@ -883,7 +883,7 @@ fn run_conform_check(baseline_rel: &str, scope: Option<&str>) -> Result<()> {
 /// that shrank the set. The diff review is the guard: outside a
 /// new-rule landing the file may only shrink.
 fn run_conform_freeze(baseline_rel: &str) -> Result<()> {
-    use conform_core::{ExtractionLog, Frontend, Rule, Store, check, count_by_rule};
+    use conform_core::{ExtractionLog, Rule, Store, check, count_by_rule};
     use conform_frontend_rust::RustFrontend;
 
     let root = repo_root()?;
