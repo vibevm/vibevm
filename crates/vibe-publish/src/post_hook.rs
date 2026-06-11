@@ -29,6 +29,7 @@ use vibe_registry::compute_content_hash;
 use walkdir::WalkDir;
 
 use crate::PublishOutcome;
+use specmark::spec;
 
 /// Sanitise a registry name into the env-var suffix shape (uppercase
 /// ASCII alphanumeric + underscore). Mirrors the `<HOST>` munging
@@ -61,7 +62,10 @@ pub fn index_token_for(registry: &str) -> Option<String> {
     std::env::var(format!("VIBEVM_INDEX_TOKEN_{suffix}")).ok()
 }
 
+/// The hook's failure surface — warnings by contract, never publish
+/// failures (PROP-005 §2.14).
 #[derive(Debug, Error)]
+#[spec(implements = "spec://vibevm/modules/vibe-index/PROP-005#integration")]
 pub enum HookError {
     #[error("could not read manifest at `{path}`: {source}")]
     Manifest {

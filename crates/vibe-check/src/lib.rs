@@ -52,6 +52,13 @@ use vibe_core::manifest::{Lockfile, Manifest};
 /// Stable identifier for a single check. Used in [`Finding::check`]
 /// and surfaced verbatim under `--json` so downstream tooling can
 /// filter / route findings by check.
+///
+/// ```
+/// use vibe_check::CheckId;
+///
+/// assert_eq!(CheckId::WalFreshness.as_str(), "wal_freshness");
+/// assert!(CheckId::all().contains(&CheckId::WalFreshness));
+/// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum CheckId {
     ManifestValidity,
@@ -121,6 +128,15 @@ impl CheckId {
     }
 }
 
+/// Severity of a single [`Finding`]. `Error` findings flip
+/// [`CheckReport::has_errors`]; `Warning` and `Info` are advisory.
+///
+/// ```
+/// use vibe_check::Severity;
+///
+/// assert_eq!(Severity::Warning.as_str(), "warning");
+/// assert_ne!(Severity::Warning, Severity::Error);
+/// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Severity {
     Error,
@@ -138,6 +154,24 @@ impl Severity {
     }
 }
 
+/// One finding from one check: the originating [`CheckId`], a
+/// [`Severity`], the offending path / line when the finding is that
+/// specific, and a human-readable message.
+///
+/// ```
+/// use std::path::PathBuf;
+/// use vibe_check::{CheckId, Finding, Severity};
+///
+/// let finding = Finding {
+///     check: CheckId::ReviewAging,
+///     severity: Severity::Warning,
+///     path: Some(PathBuf::from("spec/notes/old-review.md")),
+///     line: Some(1),
+///     message: "REVIEW marker dated 2026-04-01 is 33 days old".to_string(),
+/// };
+/// assert_eq!(finding.check.as_str(), "review_aging");
+/// assert_eq!(finding.severity, Severity::Warning);
+/// ```
 #[derive(Debug, Clone)]
 pub struct Finding {
     pub check: CheckId,
@@ -151,6 +185,24 @@ pub struct Finding {
     pub message: String,
 }
 
+/// The aggregate outcome of one [`check_project`] run — every
+/// [`Finding`] in emission order, queryable by severity.
+///
+/// ```
+/// use vibe_check::{CheckId, CheckReport, Finding, Severity};
+///
+/// let mut report = CheckReport::default();
+/// report.push(Finding {
+///     check: CheckId::BootDirectory,
+///     severity: Severity::Error,
+///     path: None,
+///     line: None,
+///     message: "spec/boot/ is missing".to_string(),
+/// });
+/// assert!(report.has_errors());
+/// assert_eq!(report.count(Severity::Error), 1);
+/// assert_eq!(report.count(Severity::Warning), 0);
+/// ```
 #[derive(Debug, Default, Clone)]
 pub struct CheckReport {
     pub findings: Vec<Finding>,
@@ -201,6 +253,20 @@ impl CheckReport {
     }
 }
 
+/// Tunable thresholds for one [`check_project`] run. `Default` carries
+/// the canonical figures; tests freeze `now_unix_utc` so the freshness
+/// / aging math is deterministic.
+///
+/// ```
+/// use vibe_check::CheckOptions;
+///
+/// let opts = CheckOptions {
+///     now_unix_utc: Some(1_750_000_000),
+///     ..Default::default()
+/// };
+/// assert_eq!(opts.wal_max_age_hours, 24);
+/// assert_eq!(opts.review_max_age_days, 14);
+/// ```
 #[derive(Debug, Clone)]
 pub struct CheckOptions {
     /// WAL is "stale" past this age. Default 24h matches the boot
@@ -232,6 +298,20 @@ impl Default for CheckOptions {
 /// is surfaced as a [`Finding`]. Filesystem errors during traversal
 /// turn into Error-severity findings rather than aborting the run,
 /// so a partial project still gets a partial report.
+///
+/// The canonical use — point it at a project root, read the report:
+///
+/// ```no_run
+/// use std::path::Path;
+/// use vibe_check::{CheckOptions, Severity, check_project};
+///
+/// let report = check_project(Path::new("."), &CheckOptions::default());
+/// println!(
+///     "{} error(s), {} warning(s)",
+///     report.count(Severity::Error),
+///     report.count(Severity::Warning),
+/// );
+/// ```
 pub fn check_project(project_root: &Path, opts: &CheckOptions) -> CheckReport {
     let mut report = CheckReport::default();
     let now = opts.now_unix_utc.unwrap_or_else(unix_now_utc);

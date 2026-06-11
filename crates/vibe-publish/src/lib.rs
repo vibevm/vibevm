@@ -28,6 +28,7 @@ specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-002#publish");
 
 use std::path::PathBuf;
 
+use specmark::spec;
 use thiserror::Error;
 use vibe_core::PackageKind;
 use vibe_core::manifest::{Manifest, NamingConvention};
@@ -46,6 +47,19 @@ pub use post_hook::{HookConfig, HookError, HookReport, fire as fire_index_hook};
 pub use token::{Token, TokenSource, host_env_var, load_token, load_token_for_host};
 
 /// Information about a package repository on a host.
+///
+/// Returned by [`RepoCreator::create_repo`]; `clone_url` feeds the
+/// `git remote add` + push flow, `html_url` is for the operator:
+///
+/// ```
+/// use vibe_publish::RepoInfo;
+///
+/// let info = RepoInfo {
+///     html_url: "https://github.com/vibespecs/org.vibevm.wal".to_string(),
+///     clone_url: "https://github.com/vibespecs/org.vibevm.wal.git".to_string(),
+/// };
+/// assert!(info.clone_url.ends_with(".git"));
+/// ```
 #[derive(Debug, Clone)]
 pub struct RepoInfo {
     pub html_url: String,
@@ -53,6 +67,19 @@ pub struct RepoInfo {
 }
 
 /// Options carried into [`RepoCreator::create_repo`].
+///
+/// Fill what the manifest provides, default the rest:
+///
+/// ```
+/// use vibe_publish::CreateOpts;
+///
+/// let opts = CreateOpts {
+///     description: Some("WAL discipline flow".to_string()),
+///     default_branch: Some("main".to_string()),
+///     ..CreateOpts::default()
+/// };
+/// assert!(opts.homepage.is_none());
+/// ```
 #[derive(Debug, Clone, Default)]
 pub struct CreateOpts {
     pub description: Option<String>,
@@ -78,6 +105,51 @@ pub struct CreateOpts {
 /// a different org with [`PublishError::ScopeViolation`]. Adapters
 /// that opt out (return `None` from `expected_org()`) trust their
 /// caller for the boundary — useful for tests and mocks.
+///
+/// The canonical implementation shape — a host adapter scoped to one
+/// org; the default [`validate_scope`](RepoCreator::validate_scope)
+/// guard comes free:
+///
+/// ```
+/// use vibe_publish::{CreateOpts, PublishError, RepoCreator, RepoInfo};
+///
+/// struct StaticHost;
+///
+/// impl RepoCreator for StaticHost {
+///     fn host_name(&self) -> &str {
+///         "example.test"
+///     }
+///     fn repo_exists(&self, org: &str, _name: &str) -> Result<bool, PublishError> {
+///         self.validate_scope(org)?;
+///         Ok(false)
+///     }
+///     fn create_repo(
+///         &self,
+///         org: &str,
+///         name: &str,
+///         _opts: &CreateOpts,
+///     ) -> Result<RepoInfo, PublishError> {
+///         self.validate_scope(org)?;
+///         Ok(RepoInfo {
+///             html_url: format!("https://example.test/{org}/{name}"),
+///             clone_url: format!("https://example.test/{org}/{name}.git"),
+///         })
+///     }
+///     fn push_url(&self, org: &str, name: &str) -> String {
+///         format!("https://example.test/{org}/{name}.git")
+///     }
+///     fn expected_org(&self) -> Option<&str> {
+///         Some("vibespecs")
+///     }
+/// }
+///
+/// let host = StaticHost;
+/// assert!(host.validate_scope("vibespecs").is_ok());
+/// assert!(matches!(
+///     host.repo_exists("someone-else", "org.vibevm.wal"),
+///     Err(PublishError::ScopeViolation { .. })
+/// ));
+/// ```
 pub trait RepoCreator {
     /// Human-readable host name for error messages.
     fn host_name(&self) -> &str;
@@ -143,6 +215,22 @@ pub trait RepoCreator {
 }
 
 /// Inputs to a single publish run.
+///
+/// [`with_defaults`](PublishConfig::with_defaults) is the blessed
+/// constructor — `v` tag prefix, registry-default naming, real run.
+/// Flip `dry_run` to plan without touching the host:
+///
+/// ```
+/// use std::path::PathBuf;
+/// use vibe_publish::PublishConfig;
+///
+/// let mut config = PublishConfig::with_defaults(
+///     PathBuf::from("fixtures/registry/org.vibevm/wal/v0.1.0"),
+///     "https://github.com/vibespecs".to_string(),
+/// );
+/// config.dry_run = true; // describe the plan, change nothing
+/// assert_eq!(config.tag_prefix, "v");
+/// ```
 #[derive(Debug, Clone)]
 pub struct PublishConfig {
     /// Filesystem directory containing `vibe.toml` and the rest
@@ -179,6 +267,24 @@ impl PublishConfig {
 
 /// Outcome of a successful publish — what was done, on what host, with
 /// what URLs. CLI renders this for the operator.
+///
+/// ```
+/// use vibe_core::PackageKind;
+/// use vibe_publish::PublishOutcome;
+///
+/// let outcome = PublishOutcome {
+///     kind: PackageKind::Flow,
+///     name: "wal".to_string(),
+///     version: semver::Version::parse("0.1.0").unwrap(),
+///     repo_name: "org.vibevm.wal".to_string(),
+///     repo_url: "https://github.com/vibespecs/org.vibevm.wal.git".to_string(),
+///     tag: "v0.1.0".to_string(),
+///     created_repo: true,
+///     host: "github.com".to_string(),
+///     dry_run: false,
+/// };
+/// assert_eq!(outcome.tag, format!("v{}", outcome.version));
+/// ```
 #[derive(Debug, Clone)]
 pub struct PublishOutcome {
     pub kind: PackageKind,
@@ -193,6 +299,29 @@ pub struct PublishOutcome {
 }
 
 /// The publish orchestrator.
+///
+/// Canonical flow — pick a [`RepoCreator`], wrap it, call
+/// [`publish`](Publisher::publish), render the outcome. Shown here on
+/// the direct-git path against a stand-in local URL (`no_run`: the
+/// real call reads the package from disk and shells out to `git`):
+///
+/// ```no_run
+/// use std::path::PathBuf;
+/// use vibe_publish::{DirectGitCreator, PublishConfig, Publisher};
+///
+/// // Operator-provisioned repo: push with local git credentials.
+/// let creator = DirectGitCreator::new("file:///tmp/registry/org.vibevm.wal.git");
+/// let publisher = Publisher::new(&creator);
+///
+/// let mut config = PublishConfig::with_defaults(
+///     PathBuf::from("fixtures/registry/org.vibevm/wal/v0.1.0"),
+///     "file:///tmp/registry".to_string(),
+/// );
+/// config.dry_run = true; // plan only — no push, no tag
+///
+/// let outcome = publisher.publish(&config).unwrap();
+/// println!("would publish {} as {}", outcome.name, outcome.tag);
+/// ```
 pub struct Publisher<'c, C: RepoCreator + ?Sized> {
     creator: &'c C,
 }
@@ -344,6 +473,19 @@ impl<'c, C: RepoCreator + ?Sized> Publisher<'c, C> {
 /// - `https://github.com/vibespecs` → `vibespecs`
 /// - `ssh://git@gitverse.ru/vibespecs` → `vibespecs`
 /// - `git+https://...` → strips the `git+` first
+///
+/// ```
+/// use vibe_publish::extract_org_segment;
+///
+/// assert_eq!(
+///     extract_org_segment("https://github.com/vibespecs").unwrap(),
+///     "vibespecs",
+/// );
+/// assert_eq!(
+///     extract_org_segment("git@gitverse.ru:vibespecs").unwrap(),
+///     "vibespecs",
+/// );
+/// ```
 pub fn extract_org_segment(org_url: &str) -> Result<String, PublishError> {
     let url = org_url.trim().trim_end_matches('/');
     let url = url.strip_prefix("git+").unwrap_or(url);
@@ -368,7 +510,23 @@ pub fn extract_org_segment(org_url: &str) -> Result<String, PublishError> {
 // Errors — surface tuned for non-admin contributors per PROP-002 §2.10.
 // ---------------------------------------------------------------------------
 
+/// Publish failure surface, tuned for non-admin contributors per
+/// [PROP-002 §2.10](../../../spec/modules/vibe-registry/PROP-002-decentralized-registry.md#publish)
+/// — every refusal names the violated expectation and the fix surface:
+///
+/// ```
+/// use vibe_publish::PublishError;
+///
+/// let err = PublishError::TagCollision {
+///     repo: "vibespecs/org.vibevm.wal".to_string(),
+///     tag: "v0.1.0".to_string(),
+/// };
+/// let rendered = err.to_string();
+/// assert!(rendered.contains("tag `v0.1.0` already exists"));
+/// assert!(rendered.contains("does not force-push tags"));
+/// ```
 #[derive(Debug, Error)]
+#[spec(implements = "spec://vibevm/modules/vibe-registry/PROP-002#publish")]
 pub enum PublishError {
     #[error(
         "publish refused: source directory `{path}` does not look like a vibevm package — \
@@ -461,6 +619,19 @@ pub enum PublishError {
 /// - `https://github.com/vibespecs` → `github.com`
 /// - `ssh://git@github.com/vibespecs` → `github.com`
 /// - `git+https://github.com/vibespecs` → `github.com` (strips `git+` first)
+///
+/// ```
+/// use vibe_publish::extract_host_segment;
+///
+/// assert_eq!(
+///     extract_host_segment("git@github.com:vibespecs").unwrap(),
+///     "github.com",
+/// );
+/// assert_eq!(
+///     extract_host_segment("https://gitverse.ru/vibespecs").unwrap(),
+///     "gitverse.ru",
+/// );
+/// ```
 pub fn extract_host_segment(org_url: &str) -> Result<String, PublishError> {
     let url = org_url.trim().trim_end_matches('/');
     let url = url.strip_prefix("git+").unwrap_or(url);
@@ -500,6 +671,17 @@ pub fn extract_host_segment(org_url: &str) -> Result<String, PublishError> {
 /// scoped to (extracted from the same registry URL by the caller via
 /// [`extract_org_segment`]). Adapters refuse operations against any
 /// other org per [PROP-000 §20](../../../spec/common/PROP-000.md#token-secrecy).
+///
+/// ```
+/// use vibe_publish::{RepoCreator, Token, creator_for_url, extract_org_segment};
+///
+/// let org_url = "https://github.com/vibespecs";
+/// let org = extract_org_segment(org_url).unwrap();
+/// let token = Token::from_explicit("test-token-please-redact");
+/// let creator = creator_for_url(org_url, org, token).unwrap();
+/// assert_eq!(creator.host_name(), "github.com");
+/// assert_eq!(creator.expected_org(), Some("vibespecs"));
+/// ```
 pub fn creator_for_url(
     org_url: &str,
     expected_org: impl Into<String>,

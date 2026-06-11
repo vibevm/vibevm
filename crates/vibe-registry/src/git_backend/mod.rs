@@ -14,6 +14,7 @@ specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-001#backend-trait");
 
 use std::path::Path;
 
+use specmark::spec;
 use thiserror::Error;
 
 pub mod shell;
@@ -26,6 +27,7 @@ pub use shell::ShellGit;
 /// Anything unclassified surfaces as [`GitError::CommandFailed`] with the
 /// raw stderr attached.
 #[derive(Debug, Error)]
+#[spec(implements = "spec://vibevm/modules/vibe-registry/PROP-002#failure-discriminator")]
 pub enum GitError {
     #[error(
         "the `git` executable is not available on PATH; install git (https://git-scm.com/downloads) and retry"

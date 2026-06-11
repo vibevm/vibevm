@@ -15,6 +15,7 @@ use std::time::Duration;
 
 use semver::Version;
 use serde::Deserialize;
+use specmark::spec;
 use thiserror::Error;
 use vibe_core::{Group, PackageKind};
 
@@ -41,6 +42,7 @@ pub struct IndexClient {
 }
 
 #[derive(Debug, Error)]
+#[spec(implements = "spec://vibevm/modules/vibe-index/PROP-005#http")]
 pub enum IndexError {
     #[error("HTTP request to `{url}` failed: {message}")]
     Http { url: String, message: String },

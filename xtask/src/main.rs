@@ -756,10 +756,30 @@ fn run_conform_check(baseline_rel: &str, scope: Option<&str>) -> Result<()> {
     // error layer carries REQ edges, the same expand-as-you-conform
     // rhythm the orphan ratchet used.
     let seam_doctests = rules::SeamHasDoctest {
-        gated_crates: &["vibe-resolver", "conform-core", "specmap-core"],
+        gated_crates: &[
+            "vibe-resolver",
+            "conform-core",
+            "specmap-core",
+            "vibe-registry",
+            "vibe-workspace",
+            "vibe-check",
+            "vibe-publish",
+        ],
     };
+    // vibe-core stays out of the F gate: its error/timestamp/values
+    // trio is DBT-0019-dispositioned (no scannable spec home until
+    // VIBEVM-SPEC.md is unit-ified) and the rule has no disposition
+    // concept — gating it would flag debt that is already adjudicated.
     let err_req = rules::ErrorEnumCitesReq {
-        gated_crates: &["vibe-resolver", "conform-core", "specmap-core"],
+        gated_crates: &[
+            "vibe-resolver",
+            "conform-core",
+            "specmap-core",
+            "vibe-registry",
+            "vibe-workspace",
+            "vibe-check",
+            "vibe-publish",
+        ],
     };
     // Class D (adopt-v0.3 Phase 4): self-scoping — gates exactly the
     // crates that declare #[cell] manifests.

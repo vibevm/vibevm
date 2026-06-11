@@ -31,6 +31,7 @@ specmark::scope!("spec://vibevm/modules/vibe-workspace/PROP-007#nesting");
 use std::collections::{BTreeMap, HashMap, HashSet};
 use std::path::{Path, PathBuf};
 
+use specmark::spec;
 use thiserror::Error;
 use vibe_core::manifest::{Manifest, Requires};
 use vibe_core::{PackageKind, PackageRef, VersionSpec};
@@ -48,7 +49,23 @@ pub use publish::{
 };
 
 /// Errors raised while discovering or loading a workspace.
+///
+/// Messages carry the offending path or pattern, so the operator knows
+/// which manifest to repair:
+///
+/// ```
+/// use vibe_workspace::WorkspaceError;
+///
+/// let err = WorkspaceError::NestingCycle {
+///     path: "packages/a".to_string(),
+/// };
+/// assert_eq!(
+///     err.to_string(),
+///     "workspace nesting cycle: `packages/a` is reached more than once",
+/// );
+/// ```
 #[derive(Debug, Error)]
+#[spec(implements = "spec://vibevm/modules/vibe-workspace/PROP-007#nesting")]
 pub enum WorkspaceError {
     /// No `vibe.toml` exists at or above the starting directory.
     #[error("no `vibe.toml` found at or above `{}`", .start.display())]
@@ -122,6 +139,26 @@ type Result<T> = std::result::Result<T, WorkspaceError>;
 
 /// One member node of a workspace — a package directory carrying its own
 /// `vibe.toml`, reached transitively from the absolute root.
+///
+/// Members are produced by [`Workspace::load`]; the `rel_path` is the
+/// member's portable identity, never an absolute path:
+///
+/// ```
+/// use vibe_core::manifest::Manifest;
+/// use vibe_workspace::WorkspaceMember;
+///
+/// let manifest = Manifest::parse_str(
+///     "[package]\ngroup = \"org.vibevm\"\nname = \"wal\"\nkind = \"flow\"\nversion = \"0.1.0\"\n",
+/// ).unwrap();
+/// let member = WorkspaceMember {
+///     rel_path: "packages/flow-wal".to_string(),
+///     manifest,
+///     depth: 0,
+///     parent: None,
+/// };
+/// assert_eq!(member.rel_path, "packages/flow-wal");
+/// assert_eq!(member.manifest.require_package().unwrap().name, "wal");
+/// ```
 #[derive(Debug, Clone)]
 pub struct WorkspaceMember {
     /// Path relative to the workspace's absolute root, forward-slashed.
@@ -143,7 +180,31 @@ pub struct WorkspaceMember {
 /// A loaded workspace: an absolute root plus every member, transitively.
 ///
 /// Construct one with [`Workspace::discover`] (from anywhere inside the tree)
-/// or [`Workspace::load`] (from a known root directory).
+/// or [`Workspace::load`] (from a known root directory). Run from a member,
+/// discovery walks up to the absolute root — the node where the single
+/// `vibe.lock` lives:
+///
+/// ```
+/// use vibe_workspace::Workspace;
+///
+/// let tmp = tempfile::TempDir::new().unwrap();
+/// std::fs::write(
+///     tmp.path().join("vibe.toml"),
+///     "[project]\nname = \"mono\"\nversion = \"0.0.1\"\n\n\
+///      [workspace]\nmembers = [\"pkg\"]\n",
+/// ).unwrap();
+/// std::fs::create_dir(tmp.path().join("pkg")).unwrap();
+/// std::fs::write(
+///     tmp.path().join("pkg").join("vibe.toml"),
+///     "[package]\ngroup = \"org.vibevm\"\nname = \"pkg\"\nkind = \"flow\"\nversion = \"0.1.0\"\n",
+/// ).unwrap();
+///
+/// let ws = Workspace::discover(tmp.path().join("pkg")).unwrap();
+/// assert!(!ws.is_standalone());
+/// assert_eq!(ws.members.len(), 1);
+/// assert_eq!(ws.members[0].rel_path, "pkg");
+/// assert_eq!(ws.lockfile_path(), ws.root.join("vibe.lock"));
+/// ```
 #[derive(Debug, Clone)]
 pub struct Workspace {
     /// Absolute path of the workspace's root directory. In-memory only —

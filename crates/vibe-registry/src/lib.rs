@@ -23,6 +23,7 @@ use std::fs;
 use std::path::{Path, PathBuf};
 
 use sha2::{Digest, Sha256};
+use specmark::spec;
 use thiserror::Error;
 use vibe_core::manifest::Manifest;
 use vibe_core::{Group, PackageRef, VersionSpec};
@@ -46,7 +47,25 @@ pub use multi_registry_resolver::{
     RefreshedVia, RegistryWalkAttempt, ResolvedPathDep, SkippedEntry, WalkAttemptStatus,
 };
 
+/// Failure surface of registry resolution, discriminated so the
+/// multi-registry walk can route on it — `UnknownPackage` falls through
+/// to the next registry, anything else halts (PROP-002 §2.3.1):
+///
+/// ```
+/// use vibe_core::Group;
+/// use vibe_registry::RegistryError;
+///
+/// let err = RegistryError::UnknownPackage {
+///     group: Group::parse("org.vibevm").unwrap(),
+///     name: "nope".to_string(),
+/// };
+/// assert_eq!(
+///     err.to_string(),
+///     "package `org.vibevm/nope` is not in the registry",
+/// );
+/// ```
 #[derive(Debug, Error)]
+#[spec(implements = "spec://vibevm/modules/vibe-registry/PROP-002#failure-discriminator")]
 pub enum RegistryError {
     #[error("registry root `{0}` does not exist or is not a directory")]
     MissingRoot(PathBuf),
@@ -130,6 +149,57 @@ pub enum RegistryError {
 /// [`GitRegistry`] both implement this trait. `vibe-install` and
 /// `vibe-cli` consume registries exclusively through the trait so the
 /// concrete backend can be chosen at CLI-argument-parse time.
+///
+/// The canonical implementation shape — answer the three questions
+/// from whatever backing store you have (here: a registry that
+/// carries no packages at all), then consume it as `&dyn Registry`:
+///
+/// ```
+/// use std::path::Path;
+/// use vibe_core::{Group, PackageRef};
+/// use vibe_registry::{CachedPackage, Registry, RegistryError, ResolvedPackage};
+///
+/// struct EmptyRegistry;
+///
+/// impl Registry for EmptyRegistry {
+///     fn list_versions(
+///         &self,
+///         group: &Group,
+///         name: &str,
+///     ) -> Result<Vec<semver::Version>, RegistryError> {
+///         Err(RegistryError::UnknownPackage {
+///             group: group.clone(),
+///             name: name.to_owned(),
+///         })
+///     }
+///     fn resolve(&self, pkgref: &PackageRef) -> Result<ResolvedPackage, RegistryError> {
+///         let group = pkgref
+///             .group
+///             .clone()
+///             .ok_or_else(|| RegistryError::UnqualifiedPkgref(pkgref.to_string()))?;
+///         Err(RegistryError::UnknownPackage {
+///             group,
+///             name: pkgref.name.clone(),
+///         })
+///     }
+///     fn fetch(
+///         &self,
+///         resolved: &ResolvedPackage,
+///         _cache_root: &Path,
+///     ) -> Result<CachedPackage, RegistryError> {
+///         Err(RegistryError::UnknownPackage {
+///             group: resolved.group.clone(),
+///             name: resolved.name.clone(),
+///         })
+///     }
+/// }
+///
+/// let reg: &dyn Registry = &EmptyRegistry;
+/// let err = reg
+///     .resolve(&PackageRef::parse("org.vibevm/wal").unwrap())
+///     .unwrap_err();
+/// assert!(matches!(err, RegistryError::UnknownPackage { .. }));
+/// ```
 pub trait Registry {
     fn list_versions(
         &self,
@@ -147,6 +217,24 @@ pub trait Registry {
 }
 
 /// A package pinned to a concrete version, located in the registry on disk.
+///
+/// Built by [`Registry::resolve`]; constructible directly wherever the
+/// pinned `(group, name, version)` identity and its source directory
+/// are already known:
+///
+/// ```
+/// use std::path::PathBuf;
+/// use vibe_core::Group;
+/// use vibe_registry::ResolvedPackage;
+///
+/// let resolved = ResolvedPackage {
+///     group: Group::parse("org.vibevm").unwrap(),
+///     name: "wal".to_string(),
+///     version: semver::Version::parse("0.2.0").unwrap(),
+///     source_dir: PathBuf::from("registry/org.vibevm/wal/v0.2.0"),
+/// };
+/// assert_eq!(resolved.version.to_string(), "0.2.0");
+/// ```
 #[derive(Debug, Clone)]
 pub struct ResolvedPackage {
     /// Reverse-FQDN group — the identity qualifier (PROP-008 §2.2). With
@@ -160,6 +248,44 @@ pub struct ResolvedPackage {
 }
 
 /// A resolved package copied into the per-project cache.
+///
+/// Produced by [`Registry::fetch`]; the manifest comes off the cached
+/// copy and always carries a `[package]` table (guarded at every
+/// construction site, which is what makes [`CachedPackage::package_meta`]
+/// sound):
+///
+/// ```
+/// use std::path::PathBuf;
+/// use vibe_core::Group;
+/// use vibe_core::manifest::Manifest;
+/// use vibe_registry::{CachedPackage, ResolvedPackage};
+///
+/// let manifest = Manifest::parse_str(
+///     "[package]\ngroup = \"org.vibevm\"\nname = \"wal\"\nkind = \"flow\"\nversion = \"0.2.0\"\n",
+/// )
+/// .unwrap();
+/// let cached = CachedPackage {
+///     resolved: ResolvedPackage {
+///         group: Group::parse("org.vibevm").unwrap(),
+///         name: "wal".to_string(),
+///         version: semver::Version::parse("0.2.0").unwrap(),
+///         source_dir: PathBuf::from("registry/org.vibevm/wal/v0.2.0"),
+///     },
+///     cache_dir: PathBuf::from(".vibe/cache/org.vibevm/wal/v0.2.0"),
+///     manifest,
+///     content_hash: "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+///         .to_string(),
+///     source_uri: "file:///registry/org.vibevm/wal/v0.2.0".to_string(),
+///     registry_name: Some("main".to_string()),
+///     source_ref: Some("v0.2.0".to_string()),
+///     resolved_commit: None,
+///     overridden: false,
+///     is_git_source: false,
+///     is_path_source: false,
+///     via_redirect: None,
+/// };
+/// assert_eq!(cached.package_meta().version.to_string(), "0.2.0");
+/// ```
 #[derive(Debug, Clone)]
 pub struct CachedPackage {
     pub resolved: ResolvedPackage,
@@ -232,6 +358,23 @@ impl CachedPackage {
     }
 }
 
+/// The M0 local-directory registry backend, laid out
+/// `<root>/<group>/<name>/v<version>/` per `VIBEVM-SPEC.md` §8.2.
+///
+/// The blessed path — open the root, resolve a pkgref, fetch into the
+/// per-project cache (touches the filesystem at every step):
+///
+/// ```no_run
+/// use std::path::Path;
+/// use vibe_core::PackageRef;
+/// use vibe_registry::LocalRegistry;
+///
+/// let registry = LocalRegistry::new("path/to/registry").unwrap();
+/// let pkgref = PackageRef::parse("org.vibevm/wal@^0.1").unwrap();
+/// let resolved = registry.resolve(&pkgref).unwrap();
+/// let cached = registry.fetch(&resolved, Path::new(".vibe/cache")).unwrap();
+/// assert!(cached.content_hash.starts_with("sha256:"));
+/// ```
 pub struct LocalRegistry {
     root: PathBuf,
 }
@@ -489,6 +632,18 @@ pub(crate) fn copy_dir_recursive(src: &Path, dst: &Path) -> Result<(), RegistryE
 
 /// sha256 of concatenated (rel_path_bytes || 0x00 || file_bytes || 0x00) for
 /// every file in the package, traversed in sorted order for determinism.
+///
+/// This is the **identity** half of the `(group, name, version,
+/// content_hash)` tuple (PROP-002 §2.1). Reads every file under
+/// `pkg_dir`:
+///
+/// ```no_run
+/// use std::path::Path;
+/// use vibe_registry::compute_content_hash;
+///
+/// let hash = compute_content_hash(Path::new("path/to/package")).unwrap();
+/// assert!(hash.starts_with("sha256:"));
+/// ```
 pub fn compute_content_hash(pkg_dir: &Path) -> Result<String, RegistryError> {
     let mut files: Vec<PathBuf> = WalkDir::new(pkg_dir)
         .into_iter()

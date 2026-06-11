@@ -639,6 +639,13 @@
     },
     {
       "crate_name": "vibe-publish",
+      "file": "crates/vibe-publish/src/lib.rs",
+      "item_kind": "enum",
+      "line": 513,
+      "symbol": "vibe_publish::PublishError"
+    },
+    {
+      "crate_name": "vibe-publish",
       "file": "crates/vibe-publish/src/direct_git.rs",
       "item_kind": "mod",
       "line": 24,
@@ -674,6 +681,13 @@
     },
     {
       "crate_name": "vibe-publish",
+      "file": "crates/vibe-publish/src/post_hook.rs",
+      "item_kind": "enum",
+      "line": 65,
+      "symbol": "vibe_publish::post_hook::HookError"
+    },
+    {
+      "crate_name": "vibe-publish",
       "file": "crates/vibe-publish/src/token.rs",
       "item_kind": "mod",
       "line": 31,
@@ -688,10 +702,24 @@
     },
     {
       "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/lib.rs",
+      "item_kind": "enum",
+      "line": 50,
+      "symbol": "vibe_registry::RegistryError"
+    },
+    {
+      "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/src/git_backend/mod.rs",
       "item_kind": "mod",
       "line": 13,
       "symbol": "vibe_registry::git_backend"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/git_backend/mod.rs",
+      "item_kind": "enum",
+      "line": 24,
+      "symbol": "vibe_registry::git_backend::GitError"
     },
     {
       "crate_name": "vibe-registry",
@@ -720,6 +748,13 @@
       "item_kind": "mod",
       "line": 12,
       "symbol": "vibe_registry::index_client"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/index_client.rs",
+      "item_kind": "enum",
+      "line": 44,
+      "symbol": "vibe_registry::index_client::IndexError"
     },
     {
       "crate_name": "vibe-registry",
@@ -1245,6 +1280,13 @@
       "item_kind": "mod",
       "line": 29,
       "symbol": "vibe_workspace"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/lib.rs",
+      "item_kind": "enum",
+      "line": 51,
+      "symbol": "vibe_workspace::WorkspaceError"
     },
     {
       "crate_name": "vibe-workspace",
@@ -2034,6 +2076,14 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-publish/src/lib.rs",
+      "from_symbol": "vibe_publish::PublishError",
+      "line": 529,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-002#publish",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-publish/src/direct_git.rs",
       "from_symbol": "vibe_publish::direct_git",
       "line": 24,
@@ -2074,6 +2124,14 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-publish/src/post_hook.rs",
+      "from_symbol": "vibe_publish::post_hook::HookError",
+      "line": 68,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-index/PROP-005#integration",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-publish/src/token.rs",
       "from_symbol": "vibe_publish::token",
       "line": 31,
@@ -2090,11 +2148,27 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-registry/src/lib.rs",
+      "from_symbol": "vibe_registry::RegistryError",
+      "line": 68,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-002#failure-discriminator",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-registry/src/git_backend/mod.rs",
       "from_symbol": "vibe_registry::git_backend",
       "line": 13,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-registry/PROP-001#backend-trait",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-registry/src/git_backend/mod.rs",
+      "from_symbol": "vibe_registry::git_backend::GitError",
+      "line": 30,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-002#failure-discriminator",
       "verb": "implements"
     },
     {
@@ -2125,6 +2199,14 @@
       "file": "crates/vibe-registry/src/index_client.rs",
       "from_symbol": "vibe_registry::index_client",
       "line": 12,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-index/PROP-005#http",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-registry/src/index_client.rs",
+      "from_symbol": "vibe_registry::index_client::IndexError",
+      "line": 45,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-index/PROP-005#http",
       "verb": "implements"
@@ -2801,6 +2883,14 @@
       "file": "crates/vibe-workspace/src/lib.rs",
       "from_symbol": "vibe_workspace",
       "line": 29,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-007#nesting",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-workspace/src/lib.rs",
+      "from_symbol": "vibe_workspace::WorkspaceError",
+      "line": 68,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-007#nesting",
       "verb": "implements"
