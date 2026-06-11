@@ -1,11 +1,11 @@
 {
   "schema": 1,
   "findings": [
-    "unsafe-gate|crates/vibe-cli/src/main.rs|129",
-    "unsafe-gate|crates/vibe-cli/src/output.rs|375",
-    "unsafe-gate|crates/vibe-cli/src/output.rs|382",
-    "unsafe-gate|crates/vibe-cli/src/output.rs|497",
-    "unsafe-gate|crates/vibe-cli/src/output.rs|504",
-    "unsafe-gate|crates/vibe-index/src/cli/stop.rs|35"
+    "unsafe-gate|crates/vibe-cli/src/main.rs|block#0",
+    "unsafe-gate|crates/vibe-cli/src/output.rs|block#0",
+    "unsafe-gate|crates/vibe-cli/src/output.rs|block#1",
+    "unsafe-gate|crates/vibe-cli/src/output.rs|block#2",
+    "unsafe-gate|crates/vibe-cli/src/output.rs|block#3",
+    "unsafe-gate|crates/vibe-index/src/cli/stop.rs|block#0"
   ]
 }

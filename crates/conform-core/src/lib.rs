@@ -29,7 +29,23 @@ use serde::{Deserialize, Serialize};
 specmark::scope!("spec://vibevm/discipline/ENGINE-CONFORM-v0.1#facts");
 
 /// One normalized fact (ENGINE-CONFORM §3). Variants carry exactly
-/// what the Phase 4 checks consume; the schema grows with the rules.
+/// what the checks consume; the schema grows with the rules (adding
+/// a field or variant bumps the frontend version, which retires old
+/// cache slots wholesale — facts never deserialize across schemas).
+///
+/// ```
+/// use conform_core::Fact;
+///
+/// let fact = Fact::Item {
+///     kind: "fn".into(),
+///     symbol: "x::solve".into(),
+///     line: 4,
+///     attrs: vec![],
+///     is_pub: true,
+///     has_doctest: false,
+/// };
+/// assert!(matches!(fact, Fact::Item { is_pub: true, .. }));
+/// ```
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(tag = "fact", rename_all = "snake_case")]
 pub enum Fact {
@@ -39,6 +55,14 @@ pub enum Fact {
         symbol: String,
         line: u32,
         attrs: Vec<String>,
+        /// `pub` at the item itself (visibility of the declaration,
+        /// not reachability) — the seam signal for Class-G rules.
+        #[serde(default)]
+        is_pub: bool,
+        /// The item's doc comment carries at least one fenced code
+        /// block — a compiled doctest candidate (Class G).
+        #[serde(default)]
+        has_doctest: bool,
     },
     /// A `use` declaration: importing module → imported path.
     Import {
@@ -50,9 +74,30 @@ pub enum Fact {
     Ctor { type_name: String, line: u32 },
     /// An `unsafe` block or `unsafe fn` body.
     UnsafeUse { context: String, line: u32 },
+    /// A `#[error("...")]`-carrying enum variant (thiserror) with the
+    /// enum's own attribute text — the Class-F diagnostics signal.
+    ErrorVariant {
+        enum_symbol: String,
+        variant: String,
+        message: String,
+        line: u32,
+        /// Attributes of the OWNING enum (where the REQ edge lives).
+        enum_attrs: Vec<String>,
+    },
 }
 
 /// Facts of one source file, with its repo-relative path.
+///
+/// ```
+/// use conform_core::SourceFacts;
+///
+/// let sf = SourceFacts {
+///     file: "crates/x/src/lib.rs".into(),
+///     crate_name: "x".into(),
+///     facts: vec![],
+/// };
+/// assert_eq!(sf.crate_name, "x");
+/// ```
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SourceFacts {
     pub file: String,
@@ -64,6 +109,22 @@ pub struct SourceFacts {
 /// A fact producer for one language (ENGINE-CONFORM §2). T-syn for
 /// Phase 4; the trait carries id+version so the store key changes when
 /// the frontend does.
+///
+/// The canonical implementation shape:
+///
+/// ```
+/// use conform_core::{Fact, Frontend};
+///
+/// struct NullFrontend;
+/// impl Frontend for NullFrontend {
+///     fn id(&self) -> &'static str { "null" }
+///     fn version(&self) -> &'static str { "1" }
+///     fn extract(&self, _f: &str, _c: &str, _m: &str, _t: &str) -> Vec<Fact> {
+///         Vec::new()
+///     }
+/// }
+/// assert!(NullFrontend.extract("f.rs", "x", "x", "fn a() {}").is_empty());
+/// ```
 pub trait Frontend {
     fn id(&self) -> &'static str;
     fn version(&self) -> &'static str;
@@ -74,6 +135,12 @@ pub trait Frontend {
 
 /// What one extraction run did — the producer log the incremental
 /// acceptance test asserts on.
+///
+/// ```
+/// let log = conform_core::ExtractionLog::default();
+/// assert_eq!(log.cached, 0);
+/// assert!(log.extracted.is_empty());
+/// ```
 #[derive(Debug, Default)]
 pub struct ExtractionLog {
     /// Files actually re-extracted this run (cache misses).
@@ -83,6 +150,24 @@ pub struct ExtractionLog {
 }
 
 /// Content-addressed fact store under `<repo>/target/conform/facts/`.
+///
+/// ```no_run
+/// use conform_core::{ExtractionLog, Store};
+/// # use conform_core::{Fact, Frontend};
+/// # struct NullFrontend;
+/// # impl Frontend for NullFrontend {
+/// #     fn id(&self) -> &'static str { "null" }
+/// #     fn version(&self) -> &'static str { "1" }
+/// #     fn extract(&self, _f: &str, _c: &str, _m: &str, _t: &str) -> Vec<Fact> { Vec::new() }
+/// # }
+///
+/// let repo = std::path::Path::new(".");
+/// let store = Store::at_repo(repo);
+/// let mut log = ExtractionLog::default();
+/// let facts = store.extract_workspace(repo, &NullFrontend, &mut log).unwrap();
+/// println!("{} file(s) extracted, {} cached", log.extracted.len(), log.cached);
+/// # let _ = facts;
+/// ```
 pub struct Store {
     root: PathBuf,
 }
@@ -143,6 +228,13 @@ impl Store {
 
 /// `sha256:<hex>` over LF-normalised text — the same convention the
 /// rest of the project uses.
+///
+/// ```
+/// let lf = conform_core::content_hash("a\nb\n");
+/// let crlf = conform_core::content_hash("a\r\nb\r\n");
+/// assert_eq!(lf, crlf);
+/// assert!(lf.starts_with("sha256:"));
+/// ```
 pub fn content_hash(text: &str) -> String {
     use sha2::{Digest, Sha256};
     let normalised = text.replace("\r\n", "\n").replace('\r', "\n");
@@ -230,6 +322,24 @@ fn module_path(crate_ident: &str, rel_fwd: &str) -> String {
 }
 
 /// One finding with its A1 chain.
+///
+/// ```
+/// use conform_core::Finding;
+///
+/// let f = Finding {
+///     rule: "unsafe-gate",
+///     file: "crates/x/src/lib.rs".into(),
+///     line: 5,
+///     message: conform_core::rules::req_message(
+///         "discipline://rust-ai-native/guide#bans-and-escape-hatches",
+///         "`unsafe` (block) outside a designated audit crate",
+///         "move it or record the deviation",
+///     ),
+///     why: "unsafe is an audit boundary",
+///     fingerprint: "unsafe-gate|crates/x/src/lib.rs|block#0".into(),
+/// };
+/// assert!(conform_core::rules::matches_req_grammar(&f.message));
+/// ```
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Finding {
     pub rule: &'static str,
@@ -243,6 +353,20 @@ pub struct Finding {
 }
 
 /// A rule is a compiled query over facts (ENGINE-CONFORM §4).
+///
+/// The canonical implementation shape — pure query in, findings out:
+///
+/// ```
+/// use conform_core::{Finding, Rule, SourceFacts};
+///
+/// struct NoFindings;
+/// impl Rule for NoFindings {
+///     fn id(&self) -> &'static str { "no-findings" }
+///     fn why(&self) -> &'static str { "demonstrates the query shape" }
+///     fn check(&self, _facts: &[SourceFacts]) -> Vec<Finding> { Vec::new() }
+/// }
+/// assert!(NoFindings.check(&[]).is_empty());
+/// ```
 pub trait Rule {
     fn id(&self) -> &'static str;
     fn why(&self) -> &'static str;
@@ -253,6 +377,51 @@ pub mod rules {
     use super::{Fact, Finding, Rule, SourceFacts};
 
     specmark::scope!("spec://vibevm/discipline/ENGINE-CONFORM-v0.1#rules");
+
+    /// Render a finding message in the Class-F diagnostic grammar
+    /// (card scaffold-f-structured-diagnostics, Band 3):
+    /// `violates REQ <uri>: <why>; fix surface: <where>`. Every
+    /// conform rule speaks this grammar — tool output is the agent's
+    /// percept, and free text is wasted conditioning (R3-011).
+    /// `discipline://` URIs cite the installed Discipline package
+    /// (resolved against `vibevm.discipline.lock`); `spec://` URIs
+    /// cite vibevm-hosted units. The convention is recorded in
+    /// `spec/discipline/README.md`.
+    ///
+    /// ```
+    /// let msg = conform_core::rules::req_message(
+    ///     "spec://vibevm/discipline/ENGINE-CONFORM-v0.1#rules",
+    ///     "what went wrong",
+    ///     "where to fix it",
+    /// );
+    /// assert_eq!(
+    ///     msg,
+    ///     "violates REQ spec://vibevm/discipline/ENGINE-CONFORM-v0.1#rules: \
+    ///      what went wrong; fix surface: where to fix it",
+    /// );
+    /// ```
+    pub fn req_message(uri: &str, why: &str, fix_surface: &str) -> String {
+        format!("violates REQ {uri}: {why}; fix surface: {fix_surface}")
+    }
+
+    /// The grammar acceptor the `diagnostic-cites-req` family checks
+    /// against. Kept next to the renderer so they cannot drift.
+    ///
+    /// ```
+    /// use conform_core::rules::{matches_req_grammar, req_message};
+    ///
+    /// assert!(matches_req_grammar(&req_message("spec://p/d#a", "why", "where")));
+    /// assert!(!matches_req_grammar("Error: invalid configuration"));
+    /// ```
+    pub fn matches_req_grammar(message: &str) -> bool {
+        let Some(rest) = message.strip_prefix("violates REQ ") else {
+            return false;
+        };
+        let known_scheme = ["spec://", "discipline://", "misra://"]
+            .iter()
+            .any(|s| rest.starts_with(s));
+        known_scheme && rest.contains(": ") && rest.contains("; fix surface: ")
+    }
 
     /// The names of cell types, discovered from `#[cell(...)]`-carrying
     /// item facts, with the module (file) that declares each.
@@ -275,6 +444,18 @@ pub mod rules {
 
     /// R-001 — flag-sites: cell constructors appear only in the
     /// selection registry module.
+    ///
+    /// ```
+    /// use conform_core::rules::FlagSites;
+    /// use conform_core::Rule;
+    ///
+    /// let rule = FlagSites {
+    ///     registry_file: "crates/app/src/registry.rs",
+    ///     gated_crate: "app",
+    /// };
+    /// assert_eq!(rule.id(), "R-001");
+    /// assert!(rule.check(&[]).is_empty());
+    /// ```
     pub struct FlagSites {
         /// Repo-relative path of the one legal construction site.
         pub registry_file: &'static str,
@@ -305,10 +486,15 @@ pub mod rules {
                             rule: self.id(),
                             file: sf.file.clone(),
                             line: *line,
-                            message: format!(
-                                "cell `{type_name}` constructed outside the selection \
-                                 registry ({})",
-                                self.registry_file
+                            message: req_message(
+                                "discipline://rust-ai-native/guide#registry-and-flags",
+                                &format!(
+                                    "cell `{type_name}` constructed outside the selection registry"
+                                ),
+                                &format!(
+                                    "construct cells only in {}; thread the instance in",
+                                    self.registry_file
+                                ),
                             ),
                             why: self.why(),
                             fingerprint: format!("R-001|{}|{type_name}", sf.file),
@@ -323,6 +509,14 @@ pub mod rules {
 
     /// R-002 — cell isolation: a cell module imports seams and core
     /// only, never a sibling cell.
+    ///
+    /// ```
+    /// use conform_core::rules::CellIsolation;
+    /// use conform_core::Rule;
+    ///
+    /// assert_eq!(CellIsolation.id(), "R-002");
+    /// assert!(CellIsolation.check(&[]).is_empty());
+    /// ```
     pub struct CellIsolation;
 
     impl Rule for CellIsolation {
@@ -365,8 +559,13 @@ pub mod rules {
                                 rule: self.id(),
                                 file: sf.file.clone(),
                                 line: *line,
-                                message: format!(
-                                    "cell module imports sibling cell module `{other_stem}`"
+                                message: req_message(
+                                    "discipline://rust-ai-native/guide#cells",
+                                    &format!(
+                                        "cell module imports sibling cell module `{other_stem}`"
+                                    ),
+                                    "import the seam trait or core types instead; route \
+                                     cross-cell needs through the seam",
                                 ),
                                 why: self.why(),
                                 fingerprint: format!("R-002|{}|{other_stem}", sf.file),
@@ -383,6 +582,21 @@ pub mod rules {
 
     /// unsafe-gate: `unsafe` appears only inside designated audit
     /// crates.
+    ///
+    /// ```
+    /// use conform_core::rules::UnsafeGate;
+    /// use conform_core::{Fact, Rule, SourceFacts};
+    ///
+    /// let rule = UnsafeGate { audit_crates: &["audited"] };
+    /// let outside = SourceFacts {
+    ///     file: "crates/a/src/lib.rs".into(),
+    ///     crate_name: "a".into(),
+    ///     facts: vec![Fact::UnsafeUse { context: "block".into(), line: 5 }],
+    /// };
+    /// let findings = rule.check(&[outside]);
+    /// assert_eq!(findings.len(), 1);
+    /// assert!(conform_core::rules::matches_req_grammar(&findings[0].message));
+    /// ```
     pub struct UnsafeGate {
         pub audit_crates: &'static [&'static str],
     }
@@ -401,19 +615,197 @@ pub mod rules {
                 if self.audit_crates.contains(&sf.crate_name.as_str()) {
                     continue;
                 }
+                // Fingerprint by context + per-file ordinal, NOT by
+                // line: a line-keyed fingerprint goes stale on any
+                // edit above the block (the adopt-v0.3 Phase-0 lesson
+                // — the stop.rs 33→35 shift), and a baseline that
+                // rots on unrelated edits is a checker that lies.
+                let mut seen: std::collections::BTreeMap<String, u32> =
+                    std::collections::BTreeMap::new();
                 for f in &sf.facts {
                     if let Fact::UnsafeUse { context, line } = f {
+                        let ordinal = seen.entry(context.clone()).or_insert(0);
                         out.push(Finding {
                             rule: self.id(),
                             file: sf.file.clone(),
                             line: *line,
-                            message: format!(
-                                "`unsafe` ({context}) outside a designated audit crate"
+                            message: req_message(
+                                "discipline://rust-ai-native/guide#bans-and-escape-hatches",
+                                &format!("`unsafe` ({context}) outside a designated audit crate"),
+                                "move the unsafe into an audit crate, or record the \
+                                 deviation: #[spec(deviates, reason)] plus the wrapping \
+                                 machinery",
                             ),
                             why: self.why(),
-                            fingerprint: format!("unsafe-gate|{}|{line}", sf.file),
+                            fingerprint: format!("unsafe-gate|{}|{context}#{ordinal}", sf.file),
                         });
+                        *seen.get_mut(context).unwrap() += 1;
                     }
+                }
+            }
+            out.sort();
+            out
+        }
+    }
+
+    /// Class G — `seam-has-doctest`: a public item declared at the
+    /// crate root (`src/lib.rs`) of a gated crate is a seam; every
+    /// seam carries at least one compiled doctest of canonical use
+    /// (card scaffold-g-doctests). Re-exports and impl blocks are not
+    /// item facts, so the rule sees exactly the declared surface.
+    ///
+    /// ```
+    /// use conform_core::rules::SeamHasDoctest;
+    /// use conform_core::{Fact, Rule, SourceFacts};
+    ///
+    /// let rule = SeamHasDoctest { gated_crates: &["x"] };
+    /// let root = SourceFacts {
+    ///     file: "crates/x/src/lib.rs".into(),
+    ///     crate_name: "x".into(),
+    ///     facts: vec![Fact::Item {
+    ///         kind: "fn".into(), symbol: "x::solve".into(), line: 4,
+    ///         attrs: vec![], is_pub: true, has_doctest: false,
+    ///     }],
+    /// };
+    /// assert_eq!(rule.check(&[root]).len(), 1);
+    /// ```
+    pub struct SeamHasDoctest {
+        pub gated_crates: &'static [&'static str],
+    }
+
+    impl Rule for SeamHasDoctest {
+        fn id(&self) -> &'static str {
+            "seam-has-doctest"
+        }
+        fn why(&self) -> &'static str {
+            "the codebase is the few-shot prompt: a doctest that lies fails CI, \
+             a prose example that lies ships — every public seam shows its one \
+             canonical use as compiled code (card scaffold-g-doctests; R2C-008)"
+        }
+        fn check(&self, facts: &[SourceFacts]) -> Vec<Finding> {
+            let mut out = Vec::new();
+            for sf in facts {
+                if !self.gated_crates.contains(&sf.crate_name.as_str()) {
+                    continue;
+                }
+                if !sf.file.ends_with("/src/lib.rs") {
+                    continue;
+                }
+                for f in &sf.facts {
+                    let Fact::Item {
+                        kind,
+                        symbol,
+                        line,
+                        is_pub,
+                        has_doctest,
+                        ..
+                    } = f
+                    else {
+                        continue;
+                    };
+                    if !is_pub || *has_doctest {
+                        continue;
+                    }
+                    let name = symbol.rsplit("::").next().unwrap_or(symbol);
+                    out.push(Finding {
+                        rule: self.id(),
+                        file: sf.file.clone(),
+                        line: *line,
+                        message: req_message(
+                            "discipline://core/cards/scaffold-g-doctests#ops",
+                            &format!("public seam {kind} `{name}` has no compiled doctest"),
+                            &format!(
+                                "add one doctest on `{name}` showing the canonical \
+                                 construction and use"
+                            ),
+                        ),
+                        why: self.why(),
+                        fingerprint: format!("seam-has-doctest|{}|{symbol}", sf.file),
+                    });
+                }
+            }
+            out.sort();
+            out
+        }
+    }
+
+    /// Class F — `error-enum-cites-req`: a thiserror enum in a gated
+    /// crate carries a `#[spec(...)]` REQ edge (GUIDE §4: one error
+    /// enum per layer, variants are contract surface). The edge makes
+    /// the error layer navigable from the spec side; per-variant
+    /// fix-surface hints are the cell sweep's per-message work.
+    ///
+    /// ```
+    /// use conform_core::rules::ErrorEnumCitesReq;
+    /// use conform_core::{Fact, Rule, SourceFacts};
+    ///
+    /// let rule = ErrorEnumCitesReq { gated_crates: &["x"] };
+    /// let untagged = SourceFacts {
+    ///     file: "crates/x/src/error.rs".into(),
+    ///     crate_name: "x".into(),
+    ///     facts: vec![Fact::ErrorVariant {
+    ///         enum_symbol: "x::error::Error".into(),
+    ///         variant: "Bad".into(),
+    ///         message: "bad".into(),
+    ///         line: 4,
+    ///         enum_attrs: vec![],
+    ///     }],
+    /// };
+    /// assert_eq!(rule.check(&[untagged]).len(), 1);
+    /// ```
+    pub struct ErrorEnumCitesReq {
+        pub gated_crates: &'static [&'static str],
+    }
+
+    impl Rule for ErrorEnumCitesReq {
+        fn id(&self) -> &'static str {
+            "error-enum-cites-req"
+        }
+        fn why(&self) -> &'static str {
+            "errors are contract surface and agent food: the error layer \
+             carries a REQ edge so a failing run is navigable back to the \
+             requirement it serves (card scaffold-f-structured-diagnostics; \
+             GUIDE-AI-NATIVE-RUST §4)"
+        }
+        fn check(&self, facts: &[SourceFacts]) -> Vec<Finding> {
+            let mut out = Vec::new();
+            let mut flagged: std::collections::BTreeSet<String> = Default::default();
+            for sf in facts {
+                if !self.gated_crates.contains(&sf.crate_name.as_str()) {
+                    continue;
+                }
+                for f in &sf.facts {
+                    let Fact::ErrorVariant {
+                        enum_symbol,
+                        line,
+                        enum_attrs,
+                        ..
+                    } = f
+                    else {
+                        continue;
+                    };
+                    if enum_attrs.iter().any(|a| a.starts_with("spec(")) {
+                        continue;
+                    }
+                    if !flagged.insert(enum_symbol.clone()) {
+                        continue;
+                    }
+                    let name = enum_symbol.rsplit("::").next().unwrap_or(enum_symbol);
+                    out.push(Finding {
+                        rule: self.id(),
+                        file: sf.file.clone(),
+                        line: *line,
+                        message: req_message(
+                            "discipline://core/cards/scaffold-f-structured-diagnostics#ops",
+                            &format!("thiserror enum `{name}` carries no #[spec] REQ edge"),
+                            &format!(
+                                "add #[spec(implements = \"spec://…\")] on `{name}` citing \
+                                 the layer's error-contract unit"
+                            ),
+                        ),
+                        why: self.why(),
+                        fingerprint: format!("error-enum-cites-req|{}|{enum_symbol}", sf.file),
+                    });
                 }
             }
             out.sort();
@@ -429,6 +821,15 @@ pub mod sarif {
 
     /// Byte-stable minimal SARIF 2.1.0: stable ordering (findings are
     /// pre-sorted), no wall-clock, no absolute paths.
+    ///
+    /// ```
+    /// use conform_core::rules::CellIsolation;
+    /// use conform_core::sarif;
+    ///
+    /// let report = sarif::render(&[&CellIsolation], &[]);
+    /// assert!(report.contains("\"version\": \"2.1.0\""));
+    /// assert_eq!(report, sarif::render(&[&CellIsolation], &[]));
+    /// ```
     pub fn render(rules: &[&dyn Rule], findings: &[Finding]) -> String {
         let rule_objs: Vec<serde_json::Value> = rules
             .iter()
@@ -486,6 +887,16 @@ pub mod baseline {
 
     /// `conform-baseline.json`: frozen pre-existing findings, by
     /// fingerprint. The file only shrinks.
+    ///
+    /// ```
+    /// use conform_core::baseline::Baseline;
+    ///
+    /// let frozen = Baseline {
+    ///     schema: 1,
+    ///     findings: vec!["unsafe-gate|crates/x/src/lib.rs|block#0".into()],
+    /// };
+    /// assert_eq!(frozen.findings.len(), 1);
+    /// ```
     #[derive(Debug, Default, Serialize, Deserialize)]
     pub struct Baseline {
         pub schema: u32,
@@ -493,6 +904,15 @@ pub mod baseline {
         pub findings: Vec<String>,
     }
 
+    /// Load the baseline; an absent file is an empty baseline (the
+    /// gate is then "no findings allowed at all").
+    ///
+    /// ```no_run
+    /// let base = conform_core::baseline::load(
+    ///     std::path::Path::new("conform-baseline.json"),
+    /// ).unwrap();
+    /// println!("{} frozen", base.findings.len());
+    /// ```
     pub fn load(path: &Path) -> Result<Baseline> {
         if !path.exists() {
             return Ok(Baseline {
@@ -508,6 +928,15 @@ pub mod baseline {
     /// Diff findings against the baseline: `(new, stale)` — new ones
     /// fail the gate; stale entries are prune candidates (the file may
     /// only shrink, so pruning is the legal direction).
+    ///
+    /// ```
+    /// use conform_core::baseline::{Baseline, diff};
+    ///
+    /// let frozen = Baseline { schema: 1, findings: vec!["gone|x|0".into()] };
+    /// let (new, stale) = diff(&frozen, &[]);
+    /// assert!(new.is_empty());
+    /// assert_eq!(stale, vec![&"gone|x|0".to_string()]);
+    /// ```
     pub fn diff<'a>(
         baseline: &'a Baseline,
         findings: &'a [Finding],
@@ -528,6 +957,20 @@ pub mod baseline {
 /// Run every rule over the facts; report findings only inside `scope`
 /// (a repo-relative path prefix; `None` = whole workspace). Facts are
 /// already workspace-wide — the frontier rule (B5).
+///
+/// ```
+/// use conform_core::rules::UnsafeGate;
+/// use conform_core::{Fact, SourceFacts, check};
+///
+/// let gate = UnsafeGate { audit_crates: &[] };
+/// let facts = vec![SourceFacts {
+///     file: "crates/a/src/lib.rs".into(),
+///     crate_name: "a".into(),
+///     facts: vec![Fact::UnsafeUse { context: "block".into(), line: 5 }],
+/// }];
+/// assert_eq!(check(&[&gate], &facts, None).len(), 1);
+/// assert!(check(&[&gate], &facts, Some("crates/b/")).is_empty());
+/// ```
 pub fn check(rules: &[&dyn Rule], facts: &[SourceFacts], scope: Option<&str>) -> Vec<Finding> {
     let mut findings: Vec<Finding> = rules.iter().flat_map(|r| r.check(facts)).collect();
     if let Some(prefix) = scope {
@@ -539,12 +982,36 @@ pub fn check(rules: &[&dyn Rule], facts: &[SourceFacts], scope: Option<&str>) ->
 
 /// Order facts deterministically inside one file's record so cache
 /// files and SARIF stay byte-stable across runs.
+///
+/// ```
+/// use conform_core::{SourceFacts, sort_source_facts};
+///
+/// let sf = |file: &str| SourceFacts {
+///     file: file.into(), crate_name: "x".into(), facts: vec![],
+/// };
+/// let sorted = sort_source_facts(vec![sf("b.rs"), sf("a.rs")]);
+/// assert_eq!(sorted[0].file, "a.rs");
+/// ```
 pub fn sort_source_facts(mut all: Vec<SourceFacts>) -> Vec<SourceFacts> {
     all.sort_by(|a, b| a.file.cmp(&b.file));
     all
 }
 
 /// Group findings per rule for the human one-liner.
+///
+/// ```
+/// use conform_core::rules::UnsafeGate;
+/// use conform_core::{Fact, Rule, SourceFacts, count_by_rule};
+///
+/// let gate = UnsafeGate { audit_crates: &[] };
+/// let facts = vec![SourceFacts {
+///     file: "crates/a/src/lib.rs".into(),
+///     crate_name: "a".into(),
+///     facts: vec![Fact::UnsafeUse { context: "block".into(), line: 5 }],
+/// }];
+/// let counts = count_by_rule(&gate.check(&facts));
+/// assert_eq!(counts["unsafe-gate"], 1);
+/// ```
 pub fn count_by_rule(findings: &[Finding]) -> BTreeMap<&'static str, usize> {
     let mut map = BTreeMap::new();
     for f in findings {
@@ -571,6 +1038,8 @@ mod tests {
             symbol: symbol.into(),
             line: 1,
             attrs: vec!["cell(seam = \"S\", variant = \"v\")".into()],
+            is_pub: true,
+            has_doctest: false,
         }
     }
 
@@ -716,6 +1185,222 @@ mod tests {
         let (new, stale) = baseline::diff(&frozen, &findings);
         assert!(new.is_empty());
         assert_eq!(stale.len(), 1);
+    }
+
+    #[test]
+    fn req_grammar_renderer_and_acceptor_agree() {
+        let msg = rules::req_message(
+            "discipline://core/cards/scaffold-g-doctests#ops",
+            "public seam fn `solve` has no compiled doctest",
+            "add one doctest on `solve`",
+        );
+        assert!(rules::matches_req_grammar(&msg), "{msg}");
+        assert!(!rules::matches_req_grammar("free text error"));
+        assert!(!rules::matches_req_grammar(
+            "violates REQ http://nope: x; fix surface: y"
+        ));
+        assert!(!rules::matches_req_grammar(
+            "violates REQ spec://p/d#a: missing the fix surface"
+        ));
+    }
+
+    #[test]
+    fn every_rule_message_speaks_the_req_grammar() {
+        // Class F applied to conform itself: each rule's findings on a
+        // synthetic violating corpus must match the grammar.
+        let corpus = vec![
+            sf(
+                "crates/x/src/alpha.rs",
+                "x",
+                vec![
+                    cell_item("x::alpha::Alpha"),
+                    Fact::Import {
+                        from_module: "x::alpha".into(),
+                        to_path: "crate::beta::Beta".into(),
+                        line: 3,
+                    },
+                ],
+            ),
+            sf(
+                "crates/x/src/beta.rs",
+                "x",
+                vec![
+                    cell_item("x::beta::Beta"),
+                    Fact::Ctor {
+                        type_name: "Alpha".into(),
+                        line: 9,
+                    },
+                    Fact::UnsafeUse {
+                        context: "block".into(),
+                        line: 12,
+                    },
+                ],
+            ),
+            sf(
+                "crates/x/src/lib.rs",
+                "x",
+                vec![
+                    Fact::Item {
+                        kind: "fn".into(),
+                        symbol: "x::solve".into(),
+                        line: 4,
+                        attrs: vec![],
+                        is_pub: true,
+                        has_doctest: false,
+                    },
+                    Fact::ErrorVariant {
+                        enum_symbol: "x::Error".into(),
+                        variant: "Bad".into(),
+                        message: "bad thing".into(),
+                        line: 8,
+                        enum_attrs: vec![],
+                    },
+                ],
+            ),
+        ];
+        let flag_sites = rules::FlagSites {
+            registry_file: "crates/x/src/registry.rs",
+            gated_crate: "x",
+        };
+        let isolation = rules::CellIsolation;
+        let unsafe_gate = rules::UnsafeGate { audit_crates: &[] };
+        let doctests = rules::SeamHasDoctest {
+            gated_crates: &["x"],
+        };
+        let err_req = rules::ErrorEnumCitesReq {
+            gated_crates: &["x"],
+        };
+        let all: Vec<&dyn Rule> = vec![&flag_sites, &isolation, &unsafe_gate, &doctests, &err_req];
+        for rule in &all {
+            let found = rule.check(&corpus);
+            assert!(!found.is_empty(), "rule {} found nothing", rule.id());
+            for f in found {
+                assert!(
+                    rules::matches_req_grammar(&f.message),
+                    "rule {} message off-grammar: {}",
+                    rule.id(),
+                    f.message
+                );
+            }
+        }
+    }
+
+    #[test]
+    fn seam_has_doctest_gates_pub_root_items_only() {
+        let facts = vec![sf(
+            "crates/x/src/lib.rs",
+            "x",
+            vec![
+                Fact::Item {
+                    kind: "fn".into(),
+                    symbol: "x::documented".into(),
+                    line: 1,
+                    attrs: vec![],
+                    is_pub: true,
+                    has_doctest: true,
+                },
+                Fact::Item {
+                    kind: "fn".into(),
+                    symbol: "x::bare".into(),
+                    line: 5,
+                    attrs: vec![],
+                    is_pub: true,
+                    has_doctest: false,
+                },
+                Fact::Item {
+                    kind: "fn".into(),
+                    symbol: "x::private".into(),
+                    line: 9,
+                    attrs: vec![],
+                    is_pub: false,
+                    has_doctest: false,
+                },
+            ],
+        )];
+        let rule = rules::SeamHasDoctest {
+            gated_crates: &["x"],
+        };
+        let found = rule.check(&facts);
+        assert_eq!(found.len(), 1);
+        assert!(found[0].message.contains("`bare`"));
+        // Non-root files are not seams for this rule.
+        let nested = vec![sf(
+            "crates/x/src/inner.rs",
+            "x",
+            vec![Fact::Item {
+                kind: "fn".into(),
+                symbol: "x::inner::bare".into(),
+                line: 5,
+                attrs: vec![],
+                is_pub: true,
+                has_doctest: false,
+            }],
+        )];
+        assert!(rule.check(&nested).is_empty());
+    }
+
+    #[test]
+    fn error_enum_cites_req_flags_once_per_enum() {
+        let facts = vec![sf(
+            "crates/x/src/error.rs",
+            "x",
+            vec![
+                Fact::ErrorVariant {
+                    enum_symbol: "x::error::Error".into(),
+                    variant: "A".into(),
+                    message: "a".into(),
+                    line: 4,
+                    enum_attrs: vec![],
+                },
+                Fact::ErrorVariant {
+                    enum_symbol: "x::error::Error".into(),
+                    variant: "B".into(),
+                    message: "b".into(),
+                    line: 6,
+                    enum_attrs: vec![],
+                },
+                Fact::ErrorVariant {
+                    enum_symbol: "x::error::Tagged".into(),
+                    variant: "C".into(),
+                    message: "c".into(),
+                    line: 14,
+                    enum_attrs: vec!["spec(implements = \"spec://p/d#err\")".into()],
+                },
+            ],
+        )];
+        let rule = rules::ErrorEnumCitesReq {
+            gated_crates: &["x"],
+        };
+        let found = rule.check(&facts);
+        assert_eq!(found.len(), 1, "one finding per untagged enum: {found:?}");
+        assert!(found[0].message.contains("`Error`"));
+    }
+
+    #[test]
+    fn unsafe_gate_fingerprint_survives_line_shifts() {
+        let before = vec![sf(
+            "crates/a/src/lib.rs",
+            "a",
+            vec![Fact::UnsafeUse {
+                context: "block".into(),
+                line: 33,
+            }],
+        )];
+        let after = vec![sf(
+            "crates/a/src/lib.rs",
+            "a",
+            vec![Fact::UnsafeUse {
+                context: "block".into(),
+                line: 35,
+            }],
+        )];
+        let rule = rules::UnsafeGate { audit_crates: &[] };
+        let fp_before = rule.check(&before)[0].fingerprint.clone();
+        let fp_after = rule.check(&after)[0].fingerprint.clone();
+        assert_eq!(
+            fp_before, fp_after,
+            "a pure line shift must not change the fingerprint"
+        );
     }
 
     #[test]

@@ -21,7 +21,8 @@ impl Frontend for RustFrontend {
     fn version(&self) -> &'static str {
         // Bump when extraction changes shape — the store key includes
         // it, so old cached facts are simply never read again.
-        "1"
+        // v2: is_pub + has_doctest on Item; ErrorVariant facts.
+        "2"
     }
 
     fn extract(&self, _file: &str, _crate_name: &str, module: &str, text: &str) -> Vec<Fact> {
@@ -37,7 +38,8 @@ impl Frontend for RustFrontend {
             Fact::Item { line, .. }
             | Fact::Import { line, .. }
             | Fact::Ctor { line, .. }
-            | Fact::UnsafeUse { line, .. } => *line,
+            | Fact::UnsafeUse { line, .. }
+            | Fact::ErrorVariant { line, .. } => *line,
         });
         v.facts
     }
@@ -63,6 +65,30 @@ fn attr_text(attrs: &[syn::Attribute]) -> Vec<String> {
         .collect()
 }
 
+/// True when the item's doc comment carries a fenced code block — the
+/// compiled-doctest signal Class G consumes. rustdoc treats a fence
+/// with no language (or `rust`) as a doctest; `text`/`ignore` fences
+/// are prose, but distinguishing them is the rule's refinement, not
+/// the fact's — the fact records "a fence exists".
+fn has_doc_fence(attrs: &[syn::Attribute]) -> bool {
+    attrs.iter().any(|a| {
+        if !a.path().is_ident("doc") {
+            return false;
+        }
+        if let syn::Meta::NameValue(nv) = &a.meta
+            && let syn::Expr::Lit(lit) = &nv.value
+            && let syn::Lit::Str(s) = &lit.lit
+        {
+            return s.value().trim_start().starts_with("```");
+        }
+        false
+    })
+}
+
+fn is_pub(vis: &syn::Visibility) -> bool {
+    matches!(vis, syn::Visibility::Public(_))
+}
+
 fn line_of(spanned: &impl Spanned) -> u32 {
     spanned.span().start().line as u32
 }
@@ -74,6 +100,8 @@ impl<'ast> Visit<'ast> for Extractor {
             symbol: format!("{}::{}", self.module, node.sig.ident),
             line: line_of(&node.sig.ident),
             attrs: attr_text(&node.attrs),
+            is_pub: is_pub(&node.vis),
+            has_doctest: has_doc_fence(&node.attrs),
         });
         if node.sig.unsafety.is_some() {
             self.facts.push(Fact::UnsafeUse {
@@ -90,6 +118,8 @@ impl<'ast> Visit<'ast> for Extractor {
             symbol: format!("{}::{}", self.module, node.ident),
             line: line_of(&node.ident),
             attrs: attr_text(&node.attrs),
+            is_pub: is_pub(&node.vis),
+            has_doctest: has_doc_fence(&node.attrs),
         });
         syn::visit::visit_item_struct(self, node);
     }
@@ -100,7 +130,43 @@ impl<'ast> Visit<'ast> for Extractor {
             symbol: format!("{}::{}", self.module, node.ident),
             line: line_of(&node.ident),
             attrs: attr_text(&node.attrs),
+            is_pub: is_pub(&node.vis),
+            has_doctest: has_doc_fence(&node.attrs),
         });
+        // thiserror variants: #[error("...")] on each variant, the
+        // enum's own attrs travel with every variant fact (Class F).
+        let enum_attrs = attr_text(&node.attrs);
+        for v in &node.variants {
+            for a in &v.attrs {
+                if !a.path().is_ident("error") {
+                    continue;
+                }
+                let syn::Meta::List(list) = &a.meta else {
+                    continue;
+                };
+                // First string literal in the error(...) tokens is the
+                // display template; transparent variants have none.
+                let message = list
+                    .tokens
+                    .clone()
+                    .into_iter()
+                    .find_map(|t| match t {
+                        proc_macro2::TokenTree::Literal(l) => {
+                            let s = l.to_string();
+                            s.starts_with('"').then(|| s.trim_matches('"').to_string())
+                        }
+                        _ => None,
+                    })
+                    .unwrap_or_default();
+                self.facts.push(Fact::ErrorVariant {
+                    enum_symbol: format!("{}::{}", self.module, node.ident),
+                    variant: v.ident.to_string(),
+                    message,
+                    line: line_of(&v.ident),
+                    enum_attrs: enum_attrs.clone(),
+                });
+            }
+        }
         syn::visit::visit_item_enum(self, node);
     }
 
@@ -110,6 +176,8 @@ impl<'ast> Visit<'ast> for Extractor {
             symbol: format!("{}::{}", self.module, node.ident),
             line: line_of(&node.ident),
             attrs: attr_text(&node.attrs),
+            is_pub: is_pub(&node.vis),
+            has_doctest: has_doc_fence(&node.attrs),
         });
         syn::visit::visit_item_trait(self, node);
     }
@@ -213,5 +281,75 @@ mod tests {
     #[test]
     fn unparseable_source_yields_no_facts() {
         assert!(extract("pub fn broken( {").is_empty());
+    }
+
+    #[test]
+    fn extracts_visibility_and_doctest_presence() {
+        let facts = extract(
+            r#"
+            /// Canonical use:
+            ///
+            /// ```
+            /// assert_eq!(1, 1);
+            /// ```
+            pub fn documented() {}
+
+            /// Prose only.
+            pub fn bare() {}
+
+            fn private() {}
+            "#,
+        );
+        let item = |name: &str| {
+            facts
+                .iter()
+                .find_map(|f| match f {
+                    Fact::Item {
+                        symbol,
+                        is_pub,
+                        has_doctest,
+                        ..
+                    } if symbol.ends_with(name) => Some((*is_pub, *has_doctest)),
+                    _ => None,
+                })
+                .unwrap()
+        };
+        assert_eq!(item("documented"), (true, true));
+        assert_eq!(item("bare"), (true, false));
+        assert_eq!(item("private"), (false, false));
+    }
+
+    #[test]
+    fn extracts_thiserror_variants_with_enum_attrs() {
+        let facts = extract(
+            r#"
+            #[spec(implements = "spec://p/d#err")]
+            #[derive(Debug)]
+            pub enum Error {
+                #[error("file `{0}` missing")]
+                Missing(String),
+                #[error(transparent)]
+                Io(std::io::Error),
+            }
+            "#,
+        );
+        let variants: Vec<_> = facts
+            .iter()
+            .filter_map(|f| match f {
+                Fact::ErrorVariant {
+                    variant,
+                    message,
+                    enum_attrs,
+                    ..
+                } => Some((variant.clone(), message.clone(), enum_attrs.clone())),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(variants.len(), 2, "{facts:?}");
+        assert_eq!(variants[0].0, "Missing");
+        assert!(variants[0].1.contains("missing"));
+        assert!(variants[0].2.iter().any(|a| a.starts_with("spec(")));
+        // transparent carries no display template
+        assert_eq!(variants[1].1, "");
     }
 }

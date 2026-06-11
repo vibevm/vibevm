@@ -268,10 +268,22 @@ fn run_fast_loop(cell: Option<&str>, budget_secs: u64, enforce_budget: bool) -> 
             .values()
             .filter(|s| **s == testgate::RunStatus::Fail)
             .count();
+        // Doctests ride the same loop (card scaffold-g-doctests):
+        // nextest does not run them, so the loop would otherwise leave
+        // Class-G checks outside the cell's first signal.
+        let doc = Command::new("cargo")
+            .args(["test", "--doc", "-p", name, "--quiet"])
+            .current_dir(&root)
+            .output()
+            .context("spawning cargo test --doc")?;
+        // `cargo test --doc` fails on crates with no lib target; that
+        // is the no-tests case again, not a red cell.
+        let doc_failed =
+            !doc.status.success() && String::from_utf8_lossy(&doc.stderr).contains("test failed");
         // "No tests" is a legal cell state (stub crates); nextest exits
         // zero there. A non-zero exit with zero parsed results is a
         // build failure — isolation is broken, report it as red.
-        let passed = out.status.success() && failed == 0;
+        let passed = out.status.success() && failed == 0 && !doc_failed;
 
         let over = if seconds > budget { " OVER BUDGET" } else { "" };
         eprintln!(
@@ -437,17 +449,22 @@ fn run_ratchet_gate(root: &std::path::Path, blocking: bool) -> Result<()> {
 /// findings are reported only inside `--scope`; new findings against
 /// the baseline fail the gate; SARIF lands under `target/conform/`.
 fn run_conform_check(baseline_rel: &str, scope: Option<&str>) -> Result<()> {
-    use conform_core::{ExtractionLog, Rule, Store, baseline, check, count_by_rule, rules, sarif};
+    use conform_core::{
+        ExtractionLog, Frontend, Rule, Store, baseline, check, count_by_rule, rules, sarif,
+    };
     use conform_frontend_rust::RustFrontend;
 
     let root = repo_root()?;
     let store = Store::at_repo(&root);
     let mut log = ExtractionLog::default();
-    let facts = store.extract_workspace(&root, &RustFrontend, &mut log)?;
+    let frontend = RustFrontend;
+    let facts = store.extract_workspace(&root, &frontend, &mut log)?;
     eprintln!(
-        "xtask conform: extracted {} file(s), {} cached (producer rust-syn-1).",
+        "xtask conform: extracted {} file(s), {} cached (producer {}-{}).",
         log.extracted.len(),
-        log.cached
+        log.cached,
+        Frontend::id(&frontend),
+        Frontend::version(&frontend),
     );
 
     let flag_sites = rules::FlagSites {
@@ -458,7 +475,23 @@ fn run_conform_check(baseline_rel: &str, scope: Option<&str>) -> Result<()> {
     // No crate is a designated unsafe-audit crate today; the list grows
     // by owner decision, not by accretion.
     let unsafe_gate = rules::UnsafeGate { audit_crates: &[] };
-    let rule_refs: Vec<&dyn Rule> = vec![&flag_sites, &isolation, &unsafe_gate];
+    // Classes G and F (adopt-v0.3 Phase 2). Gated crates grow with the
+    // cell sweep — a crate enters when its seams are doctested and its
+    // error layer carries REQ edges, the same expand-as-you-conform
+    // rhythm the orphan ratchet used.
+    let seam_doctests = rules::SeamHasDoctest {
+        gated_crates: &["vibe-resolver", "conform-core", "specmap-core"],
+    };
+    let err_req = rules::ErrorEnumCitesReq {
+        gated_crates: &["vibe-resolver", "conform-core", "specmap-core"],
+    };
+    let rule_refs: Vec<&dyn Rule> = vec![
+        &flag_sites,
+        &isolation,
+        &unsafe_gate,
+        &seam_doctests,
+        &err_req,
+    ];
 
     let findings = check(&rule_refs, &facts, scope);
     let report = sarif::render(&rule_refs, &findings);
