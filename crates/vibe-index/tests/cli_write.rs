@@ -4,6 +4,7 @@
 use std::path::Path;
 
 use assert_cmd::Command;
+use specmark::verifies;
 
 fn cmd() -> Command {
     Command::cargo_bin("vibe-index").expect("vibe-index binary built")
@@ -47,6 +48,7 @@ description = "test {kind}:{name}@{version}"
 }
 
 #[test]
+#[verifies("spec://vibevm/modules/vibe-index/PROP-005#cli", r = 1)]
 fn add_inserts_entry_from_manifest() {
     let work = tempfile::tempdir().unwrap();
     let data = work.path().join("data");

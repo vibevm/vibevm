@@ -21,11 +21,13 @@
 
 use std::path::PathBuf;
 
+use specmark::verifies;
 use vibe_index::content_hash::compute_content_hash;
 
 const GOLDEN: &str = "sha256:865d47fb41fb8590ef6f0780f7fe98c716b897dea494769dd37a0e5280bc55a5";
 
 #[test]
+#[verifies("spec://vibevm/modules/vibe-index/PROP-005#trust", r = 1)]
 fn flow_wal_v0_1_0_matches_canonical_algorithm() {
     let fixture = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
         .join("fixtures")

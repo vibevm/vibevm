@@ -7,6 +7,7 @@ use std::path::Path;
 use std::process::Command;
 
 use assert_cmd::Command as AssertCommand;
+use specmark::verifies;
 
 fn cmd() -> AssertCommand {
     AssertCommand::cargo_bin("vibe-index").expect("vibe-index binary built")
@@ -61,6 +62,7 @@ fn fs_must_create(p: &Path) {
 }
 
 #[test]
+#[verifies("spec://vibevm/modules/vibe-index/PROP-005#reindex", r = 1)]
 fn reindex_from_clones_walks_three_packages() {
     if !git_available() {
         return;
@@ -254,6 +256,7 @@ fn reindex_text_output_lists_skipped_entries() {
 }
 
 #[test]
+#[verifies("spec://vibevm/modules/vibe-index/PROP-005#reindex", r = 1)]
 fn incremental_skips_unchanged_repos_and_picks_up_new_tags() {
     if !git_available() {
         return;

@@ -7,6 +7,7 @@ use std::path::PathBuf;
 use axum::body::{Body, to_bytes};
 use axum::http::{Method, Request, StatusCode, header};
 use chrono::{DateTime, Utc};
+use specmark::verifies;
 use tower::util::ServiceExt;
 
 use vibe_index::index::Index;
@@ -301,6 +302,7 @@ async fn by_name_route_404s_for_missing() {
 }
 
 #[tokio::test]
+#[verifies("spec://vibevm/modules/vibe-index/PROP-005#server-mode", r = 1)]
 async fn packages_list_returns_sorted_envelope() {
     let (_tmp, state) = populated_state();
     let app = build_app(state);

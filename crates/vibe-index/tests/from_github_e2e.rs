@@ -16,6 +16,7 @@ use axum::http::{HeaderMap, HeaderValue, header};
 use axum::response::IntoResponse;
 use axum::routing::get;
 use serde::Deserialize;
+use specmark::verifies;
 use tokio::net::TcpListener;
 
 fn cmd() -> AssertCommand {
@@ -154,6 +155,7 @@ fn local_clone_url(p: &Path) -> String {
 }
 
 #[test]
+#[verifies("spec://vibevm/modules/vibe-index/PROP-005#reindex", r = 1)]
 fn from_github_walks_mock_org_into_index() {
     if !git_available() {
         return;

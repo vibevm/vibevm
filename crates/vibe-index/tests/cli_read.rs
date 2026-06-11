@@ -5,6 +5,7 @@ use std::path::Path;
 use std::process::Command;
 
 use assert_cmd::Command as AssertCommand;
+use specmark::verifies;
 
 fn cmd() -> AssertCommand {
     AssertCommand::cargo_bin("vibe-index").expect("vibe-index binary built")
@@ -127,6 +128,7 @@ fn populated_index() -> Option<(tempfile::TempDir, std::path::PathBuf)> {
 }
 
 #[test]
+#[verifies("spec://vibevm/modules/vibe-index/PROP-005#cli", r = 1)]
 fn get_returns_versions_for_known_package() {
     let Some((_work, data)) = populated_index() else {
         return;

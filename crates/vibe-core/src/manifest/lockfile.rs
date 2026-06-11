@@ -370,6 +370,8 @@ impl LockedPackage {
 
 #[cfg(test)]
 mod tests {
+    use specmark::verifies;
+
     use super::*;
 
     /// The canonical group every fixture package in these tests belongs to.
@@ -417,6 +419,8 @@ source_kind = "registry"
 "#;
 
     #[test]
+    #[verifies("spec://vibevm/modules/vibe-workspace/PROP-007#lockfile", r = 1)]
+    #[verifies("spec://vibevm/modules/vibe-registry/PROP-008#identity", r = 1)]
     fn parses_fully() {
         let lf: Lockfile = toml::from_str(FIXTURE).unwrap();
         assert_eq!(lf.meta.schema_version, 5);
@@ -472,6 +476,7 @@ source_kind = "registry"
     }
 
     #[test]
+    #[verifies("spec://vibevm/modules/vibe-workspace/PROP-007#lockfile", r = 1)]
     fn read_rejects_non_current_version() {
         // A pre-v5 lockfile is rejected outright — no legacy reader, no
         // migration. The fix is to regenerate with `vibe install`.
@@ -496,6 +501,7 @@ source_kind = "registry"
     }
 
     #[test]
+    #[verifies("spec://vibevm/modules/vibe-workspace/PROP-007#lockfile", r = 1)]
     fn path_source_kind_round_trips() {
         // A path-source member: source_kind = "path", and source_url is the
         // workspace-root-relative path, not a URL. PROP-007 §2.5.

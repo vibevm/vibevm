@@ -31,6 +31,7 @@ use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 
 use serde::{Deserialize, Serialize};
+use specmark::spec;
 
 use crate::error::{Error, Result};
 use crate::package_ref::PackageRef;
@@ -46,6 +47,10 @@ use super::project::{
 use super::{read_toml, write_toml};
 
 /// The unified `vibe.toml` document. See the module docs for the role model.
+#[spec(
+    implements = "spec://vibevm/modules/vibe-workspace/PROP-007#unified-manifest",
+    r = 1
+)]
 #[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Manifest {
@@ -367,6 +372,8 @@ impl Manifest {
 
 #[cfg(test)]
 mod tests {
+    use specmark::verifies;
+
     use super::*;
     use crate::package_ref::PackageKind;
 
@@ -520,6 +527,7 @@ ui = "^0.3"
     }
 
     #[test]
+    #[verifies("spec://vibevm/modules/vibe-workspace/PROP-007#root-package", r = 1)]
     fn root_package_composes_workspace_and_package() {
         // cargo-style: the root crate is itself publishable. PROP-007 §2.9.
         let raw = r#"
@@ -547,6 +555,7 @@ members = ["packages/core"]
     }
 
     #[test]
+    #[verifies("spec://vibevm/modules/vibe-workspace/PROP-007#published-repos", r = 1)]
     fn origin_marker_parses() {
         let raw = r#"
 [package]
@@ -571,6 +580,10 @@ generated_at = "2026-05-20T00:00:00Z"
     }
 
     #[test]
+    #[verifies(
+        "spec://vibevm/modules/vibe-workspace/PROP-007#unified-manifest",
+        r = 1
+    )]
     fn rejects_project_and_package_together() {
         let raw = r#"
 [project]
@@ -588,12 +601,20 @@ version = "0.0.1"
     }
 
     #[test]
+    #[verifies(
+        "spec://vibevm/modules/vibe-workspace/PROP-007#unified-manifest",
+        r = 1
+    )]
     fn rejects_no_role_section() {
         let err = Manifest::parse_str("[active]\nstack = \"rust\"\n").unwrap_err();
         assert!(err.to_string().contains("declares no role"), "{err}");
     }
 
     #[test]
+    #[verifies(
+        "spec://vibevm/modules/vibe-workspace/PROP-007#unified-manifest",
+        r = 1
+    )]
     fn rejects_package_role_section_without_package() {
         let raw = r#"
 [project]

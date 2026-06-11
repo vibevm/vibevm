@@ -7,6 +7,7 @@ use std::net::{IpAddr, Ipv4Addr, SocketAddr};
 use axum::body::{Body, to_bytes};
 use axum::extract::ConnectInfo;
 use axum::http::{Method, Request, StatusCode, header};
+use specmark::verifies;
 use tower::util::ServiceExt;
 
 use vibe_index::index::Index;
@@ -89,6 +90,7 @@ async fn disabled_default_allows_unbounded_traffic() {
 }
 
 #[tokio::test]
+#[verifies("spec://vibevm/modules/vibe-index/PROP-005#http", r = 1)]
 async fn per_ip_quota_throttles_after_burst() {
     let cfg = RateLimitConfig {
         per_token_rpm: 0,

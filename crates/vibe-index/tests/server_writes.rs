@@ -4,6 +4,7 @@
 use axum::body::{Body, to_bytes};
 use axum::http::{Method, Request, StatusCode, header};
 use chrono::{DateTime, Utc};
+use specmark::verifies;
 use tower::util::ServiceExt;
 
 use vibe_index::index::Index;
@@ -104,6 +105,7 @@ fn req_delete(uri: &str, token: Option<&str>) -> Request<Body> {
 }
 
 #[tokio::test]
+#[verifies("spec://vibevm/modules/vibe-index/PROP-005#server-mode", r = 1)]
 async fn post_packages_inserts_entry() {
     let (_tmp, state) = fresh_state(false, Some("topsecret"));
     let app = build_app(state);

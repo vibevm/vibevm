@@ -381,6 +381,8 @@ pub(crate) fn validate_package_name(name: &str) -> Result<()> {
 
 #[cfg(test)]
 mod tests {
+    use specmark::verifies;
+
     use super::*;
 
     #[test]
@@ -425,6 +427,7 @@ mod tests {
     }
 
     #[test]
+    #[verifies("spec://vibevm/modules/vibe-registry/PROP-008#group", r = 1)]
     fn group_accepts_valid() {
         for g in [
             "org.vibevm",
@@ -440,6 +443,7 @@ mod tests {
     }
 
     #[test]
+    #[verifies("spec://vibevm/modules/vibe-registry/PROP-008#group", r = 1)]
     fn group_rejects_invalid() {
         for g in [
             "",
@@ -482,6 +486,7 @@ mod tests {
     }
 
     #[test]
+    #[verifies("spec://vibevm/modules/vibe-registry/PROP-008#pkgref", r = 1)]
     fn parse_short_bare() {
         let r = PackageRef::parse("wal").unwrap();
         assert_eq!(r.kind, None);
@@ -512,6 +517,7 @@ mod tests {
     }
 
     #[test]
+    #[verifies("spec://vibevm/modules/vibe-registry/PROP-008#pkgref", r = 1)]
     fn parse_qualified_with_kind() {
         let r = PackageRef::parse("flow:org.vibevm/wal").unwrap();
         assert_eq!(r.kind, Some(PackageKind::Flow));
@@ -521,6 +527,7 @@ mod tests {
     }
 
     #[test]
+    #[verifies("spec://vibevm/modules/vibe-registry/PROP-008#pkgref", r = 1)]
     fn parse_bare_semver_is_caret_per_cargo() {
         // Cargo / npm / Poetry semantics: a bare semver like `0.3.0` is
         // shorthand for `^0.3.0` (caret — compatible release). To pin
@@ -628,6 +635,7 @@ mod tests {
     }
 
     #[test]
+    #[verifies("spec://vibevm/modules/vibe-registry/PROP-008#pkgref", r = 1)]
     fn display_round_trips_every_form() {
         for s in [
             "wal",
@@ -644,6 +652,7 @@ mod tests {
     }
 
     #[test]
+    #[verifies("spec://vibevm/modules/vibe-registry/PROP-008#identity", r = 1)]
     fn qualified_name_is_the_identity_string() {
         // kind and version drop; `<group>/<name>` is the identity.
         let q = PackageRef::parse("flow:org.vibevm/wal@0.1.0").unwrap();
