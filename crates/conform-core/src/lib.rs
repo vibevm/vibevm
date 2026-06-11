@@ -250,8 +250,9 @@ pub fn content_hash(text: &str) -> String {
 }
 
 /// Enumerate workspace sources: `(repo-rel file, crate name, module
-/// path, absolute path)`. Same tree rscan walks: `crates/*/src` and
-/// `xtask/src`, generated code excluded.
+/// path, absolute path)`. The rscan tree (`crates/*/src`, `xtask/src`,
+/// generated code excluded) plus `crates/*/tests` — integration tests
+/// carry the oracle facts the Class-D rule consumes.
 fn workspace_sources(repo: &Path) -> Vec<(String, String, String, PathBuf)> {
     let mut crate_dirs: Vec<PathBuf> = Vec::new();
     if let Ok(rd) = std::fs::read_dir(repo.join("crates")) {
@@ -271,30 +272,32 @@ fn workspace_sources(repo: &Path) -> Vec<(String, String, String, PathBuf)> {
             .map(|n| n.to_string_lossy().to_string())
             .unwrap_or_default();
         let crate_ident = crate_name.replace('-', "_");
-        let src = crate_dir.join("src");
-        for entry in walkdir::WalkDir::new(&src)
-            .sort_by_file_name()
-            .into_iter()
-            .filter_map(Result::ok)
-        {
-            let path = entry.path();
-            if !entry.file_type().is_file()
-                || path.extension().and_then(|e| e.to_str()) != Some("rs")
+        for sub in ["src", "tests"] {
+            let dir = crate_dir.join(sub);
+            for entry in walkdir::WalkDir::new(&dir)
+                .sort_by_file_name()
+                .into_iter()
+                .filter_map(Result::ok)
             {
-                continue;
+                let path = entry.path();
+                if !entry.file_type().is_file()
+                    || path.extension().and_then(|e| e.to_str()) != Some("rs")
+                {
+                    continue;
+                }
+                let rel_in_crate = path.strip_prefix(&crate_dir).unwrap_or(path);
+                let rel_fwd = rel_in_crate.to_string_lossy().replace('\\', "/");
+                if rel_fwd.contains("/generated/") {
+                    continue;
+                }
+                let module = module_path(&crate_ident, &rel_fwd);
+                let file = path
+                    .strip_prefix(repo)
+                    .unwrap_or(path)
+                    .to_string_lossy()
+                    .replace('\\', "/");
+                out.push((file, crate_name.clone(), module, path.to_path_buf()));
             }
-            let rel_in_crate = path.strip_prefix(&crate_dir).unwrap_or(path);
-            let rel_fwd = rel_in_crate.to_string_lossy().replace('\\', "/");
-            if rel_fwd.contains("/generated/") {
-                continue;
-            }
-            let module = module_path(&crate_ident, &rel_fwd);
-            let file = path
-                .strip_prefix(repo)
-                .unwrap_or(path)
-                .to_string_lossy()
-                .replace('\\', "/");
-            out.push((file, crate_name.clone(), module, path.to_path_buf()));
         }
     }
     out
@@ -723,6 +726,96 @@ pub mod rules {
                         fingerprint: format!("seam-has-doctest|{}|{symbol}", sf.file),
                     });
                 }
+            }
+            out.sort();
+            out
+        }
+    }
+
+    /// Class D — `cell-has-oracle`: every `#[cell]`-manifested type
+    /// is referenced from at least one integration-test file of its
+    /// crate — the differential / characterization oracle the
+    /// replacement protocol requires (card scaffold-d, R-040). The
+    /// reference test is the static approximation of "an oracle
+    /// exists": a cell nobody's tests touch has no behavior net at
+    /// all, and replacing it merges blind.
+    ///
+    /// ```
+    /// use conform_core::rules::CellHasOracle;
+    /// use conform_core::{Fact, Rule, SourceFacts};
+    ///
+    /// let cell = SourceFacts {
+    ///     file: "crates/x/src/naive.rs".into(),
+    ///     crate_name: "x".into(),
+    ///     facts: vec![Fact::Item {
+    ///         kind: "struct".into(), symbol: "x::naive::Solver".into(), line: 3,
+    ///         attrs: vec!["cell(seam = \"S\", variant = \"naive\")".into()],
+    ///         is_pub: true, has_doctest: false,
+    ///     }],
+    /// };
+    /// assert_eq!(CellHasOracle.check(&[cell]).len(), 1);
+    /// ```
+    pub struct CellHasOracle;
+
+    impl Rule for CellHasOracle {
+        fn id(&self) -> &'static str {
+            "cell-has-oracle"
+        }
+        fn why(&self) -> &'static str {
+            "no replacement of a non-trivial cell merges without a differential \
+             or characterization oracle against prior behavior (R-040; card \
+             scaffold-d-differential-oracle) — a cell untouched by its crate's \
+             tests has no behavior net at all"
+        }
+        fn check(&self, facts: &[SourceFacts]) -> Vec<Finding> {
+            let mut out = Vec::new();
+            for (type_name, file, crate_name) in cell_types(facts) {
+                let tests_prefix = format!("crates/{crate_name}/tests/");
+                let referenced = facts
+                    .iter()
+                    .filter(|sf| sf.file.starts_with(&tests_prefix))
+                    .any(|sf| {
+                        sf.facts.iter().any(|f| match f {
+                            Fact::Import { to_path, .. } => to_path.contains(&type_name),
+                            Fact::Ctor { type_name: t, .. } => t == &type_name,
+                            _ => false,
+                        })
+                    });
+                if referenced {
+                    continue;
+                }
+                let line = facts
+                    .iter()
+                    .find(|sf| sf.file == file)
+                    .and_then(|sf| {
+                        sf.facts.iter().find_map(|f| match f {
+                            Fact::Item { symbol, line, .. }
+                                if symbol.ends_with(&format!("::{type_name}")) =>
+                            {
+                                Some(*line)
+                            }
+                            _ => None,
+                        })
+                    })
+                    .unwrap_or(1);
+                out.push(Finding {
+                    rule: self.id(),
+                    file: file.clone(),
+                    line,
+                    message: req_message(
+                        "discipline://core/cards/scaffold-d-differential-oracle#ops",
+                        &format!(
+                            "cell `{type_name}` is referenced by no integration test \
+                             in its crate — it has no behavior oracle"
+                        ),
+                        &format!(
+                            "add a differential or characterization test under \
+                             crates/{crate_name}/tests/ that drives `{type_name}`"
+                        ),
+                    ),
+                    why: self.why(),
+                    fingerprint: format!("cell-has-oracle|{file}|{type_name}"),
+                });
             }
             out.sort();
             out
@@ -1374,6 +1467,39 @@ mod tests {
         let found = rule.check(&facts);
         assert_eq!(found.len(), 1, "one finding per untagged enum: {found:?}");
         assert!(found[0].message.contains("`Error`"));
+    }
+
+    #[test]
+    fn cell_has_oracle_satisfied_by_test_reference() {
+        let cell = sf(
+            "crates/x/src/naive.rs",
+            "x",
+            vec![cell_item("x::naive::NaiveSolver")],
+        );
+        let rule = rules::CellHasOracle;
+        // No tests at all → finding.
+        assert_eq!(rule.check(std::slice::from_ref(&cell)).len(), 1);
+        // A test importing the cell type satisfies the rule.
+        let test_import = sf(
+            "crates/x/tests/oracle.rs",
+            "x",
+            vec![Fact::Import {
+                from_module: "x::oracle".into(),
+                to_path: "x::{DepSolver,NaiveSolver}".into(),
+                line: 5,
+            }],
+        );
+        assert!(rule.check(&[cell.clone(), test_import]).is_empty());
+        // A test constructing the cell also satisfies it.
+        let test_ctor = sf(
+            "crates/x/tests/props.rs",
+            "x",
+            vec![Fact::Ctor {
+                type_name: "NaiveSolver".into(),
+                line: 9,
+            }],
+        );
+        assert!(rule.check(&[cell, test_ctor]).is_empty());
     }
 
     #[test]

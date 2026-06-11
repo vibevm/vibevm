@@ -485,12 +485,16 @@ fn run_conform_check(baseline_rel: &str, scope: Option<&str>) -> Result<()> {
     let err_req = rules::ErrorEnumCitesReq {
         gated_crates: &["vibe-resolver", "conform-core", "specmap-core"],
     };
+    // Class D (adopt-v0.3 Phase 4): self-scoping — gates exactly the
+    // crates that declare #[cell] manifests.
+    let cell_oracle = rules::CellHasOracle;
     let rule_refs: Vec<&dyn Rule> = vec![
         &flag_sites,
         &isolation,
         &unsafe_gate,
         &seam_doctests,
         &err_req,
+        &cell_oracle,
     ];
 
     let findings = check(&rule_refs, &facts, scope);

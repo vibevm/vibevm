@@ -323,3 +323,57 @@ self-check all four steps.
 **Phase 3 exit: met.** P3-1 (compile-time error class) held and
 demonstrated live; P3-2 (loud witnesses) held with the
 counter-lesson recorded.
+
+---
+
+## 2026-06-11 — Phase 4: Differential oracles (D)
+
+**Scope.** Card `scaffold-d-differential-oracle` (gate) around the
+algorithmic core. The prior terraform left one fixed-case
+differential oracle (the DepProvider pair over hermetic `file://`
+git repos); this phase adds the property-based net and the rule.
+
+**The property net** (`crates/vibe-resolver/tests/solver_properties.rs`).
+proptest generates random acyclic package worlds (1–6 packages,
+1–2 versions each, forward-only deps — cycles unrepresentable by
+construction) over an in-memory `WorldProvider` (deliberately also
+a Class-H registry fake). Four properties pin the solver's
+observable contract, 64 cases each, milliseconds total —
+comfortably inside the fast-loop budget: determinism (double-solve
+byte-identity), dependency closure (every output edge lands on a
+node whose version satisfies the pin), roots-first prefix +
+marking, exact `=x.y.z` pinning (the lockfile reproducibility
+contract). These test behavior nobody enumerated case-by-case —
+the safety net a weak reader cannot derive.
+
+**The differential socket.** `assert_solvers_agree(a, b, roots)` —
+identical normalized graphs or identical error classes, anything
+else fails. Today it smoke-tests naive-vs-naive (proving the
+harness); Phase 7 swaps one side for the SAT solver. DBT-0011's
+landing pad is now built and green.
+
+**The rule** (`cell-has-oracle`, Class D, self-scoping). Every
+`#[cell]`-manifested type must be referenced from at least one
+integration test of its crate — the static approximation of "an
+oracle exists"; a cell nobody's tests touch has no behavior net at
+all, and replacing it merges blind. Implementing it required facts
+from `crates/*/tests/` — the engine's walk grew a `tests` limb,
+and that wider net immediately caught two previously-invisible
+`unsafe` blocks in `vibe-publish/tests/post_hook.rs` (the
+edition-2024 `env::set_var`/`remove_var` guards). Frozen into the
+baseline as pre-existing reality newly visible (6 → 8 frozen, the
+same legitimacy as the original six) — the context#ordinal
+fingerprints from Phase 2 made the freeze line-shift-proof from
+day one. 0 findings from the rule itself: all three existing cells
+were already oracle-covered.
+
+**Gate panel at phase close (all green):** specmap --check clean
+(352/173/180/0 — the +3 items/edges are the property suite's
+verifies tags); conform 8 frozen / 0 new with cell-has-oracle
+active; test-gate green xfail-strict (+5 property tests); fast-loop
+within budget; self-check all four steps.
+
+**Phase 4 exit: met.** P4-1 (the central C-7 transfer test)
+recorded as pending-with-instrumentation-ready — the first
+prediction whose falsification needs an actual weak-agent run;
+P4-2 holding from birth.

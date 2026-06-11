@@ -20,6 +20,7 @@ vibe-registry.workspace = true
 walkdir.workspace = true
 
 [dev-dependencies]
+proptest.workspace = true
 tempfile.workspace = true
 toml.workspace = true
 trybuild.workspace = true

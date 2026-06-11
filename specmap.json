@@ -11,21 +11,21 @@
       "crate_name": "conform-core",
       "file": "crates/conform-core/src/lib.rs",
       "item_kind": "mod",
-      "line": 886,
+      "line": 979,
       "symbol": "conform_core::baseline"
     },
     {
       "crate_name": "conform-core",
       "file": "crates/conform-core/src/lib.rs",
       "item_kind": "mod",
-      "line": 379,
+      "line": 382,
       "symbol": "conform_core::rules"
     },
     {
       "crate_name": "conform-core",
       "file": "crates/conform-core/src/lib.rs",
       "item_kind": "mod",
-      "line": 820,
+      "line": 913,
       "symbol": "conform_core::sarif"
     },
     {
@@ -1224,7 +1224,7 @@
     {
       "file": "crates/conform-core/src/lib.rs",
       "from_symbol": "conform_core::baseline",
-      "line": 886,
+      "line": 979,
       "provenance": "authored",
       "uri": "spec://vibevm/discipline/ENGINE-CONFORM-v0.1#rules",
       "verb": "implements"
@@ -1232,7 +1232,7 @@
     {
       "file": "crates/conform-core/src/lib.rs",
       "from_symbol": "conform_core::rules",
-      "line": 379,
+      "line": 382,
       "provenance": "authored",
       "uri": "spec://vibevm/discipline/ENGINE-CONFORM-v0.1#rules",
       "verb": "implements"
@@ -1240,7 +1240,7 @@
     {
       "file": "crates/conform-core/src/lib.rs",
       "from_symbol": "conform_core::sarif",
-      "line": 820,
+      "line": 913,
       "provenance": "authored",
       "uri": "spec://vibevm/discipline/ENGINE-CONFORM-v0.1#determinism",
       "verb": "implements"

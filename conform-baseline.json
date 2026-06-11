@@ -6,6 +6,8 @@
     "unsafe-gate|crates/vibe-cli/src/output.rs|block#1",
     "unsafe-gate|crates/vibe-cli/src/output.rs|block#2",
     "unsafe-gate|crates/vibe-cli/src/output.rs|block#3",
-    "unsafe-gate|crates/vibe-index/src/cli/stop.rs|block#0"
+    "unsafe-gate|crates/vibe-index/src/cli/stop.rs|block#0",
+    "unsafe-gate|crates/vibe-publish/tests/post_hook.rs|block#0",
+    "unsafe-gate|crates/vibe-publish/tests/post_hook.rs|block#1"
   ]
 }
