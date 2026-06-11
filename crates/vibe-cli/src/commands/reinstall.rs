@@ -26,6 +26,8 @@
 //!
 //! Spec: spec://vibevm/modules/vibe-workspace/PROP-009-loading-model §2.10.
 
+specmark::scope!("spec://vibevm/VIBEVM-SPEC#cli-surface");
+
 use std::fs;
 use std::path::{Path, PathBuf};
 

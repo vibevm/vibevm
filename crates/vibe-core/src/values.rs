@@ -6,6 +6,8 @@
 //! graph-build-time validation that an edge's input type matches the upstream
 //! output type.
 
+specmark::scope!("spec://vibevm/VIBEVM-SPEC#typed-value-system");
+
 use std::fmt;
 
 /// Names of the typed values from §5.3. Keep in sync with the spec table.

@@ -2,6 +2,8 @@
 //!
 //! Spec: `VIBEVM-SPEC.md` §9.1.
 
+specmark::scope!("spec://vibevm/VIBEVM-SPEC#command-summary");
+
 use std::path::{Path, PathBuf};
 use std::str::FromStr;
 

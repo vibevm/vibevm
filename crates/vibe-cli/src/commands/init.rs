@@ -4,6 +4,8 @@
 //! Acceptance: the produced tree matches §4.2; running twice does not destroy
 //! user-modified files (idempotent).
 
+specmark::scope!("spec://vibevm/VIBEVM-SPEC#project-initialization");
+
 use std::fs;
 use std::path::Path;
 

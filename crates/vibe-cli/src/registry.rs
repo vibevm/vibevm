@@ -11,6 +11,8 @@
 //! constructing `NaiveDepSolver` / `LocalRegistryProvider` /
 //! `MultiRegistryProvider` anywhere else in `vibe-cli` is a finding.
 
+specmark::scope!("spec://vibevm/VIBEVM-SPEC#configuration-sources-in-precedence-order");
+
 use vibe_registry::{LocalRegistry, MultiRegistryResolver};
 use vibe_resolver::{DepSolver, LocalRegistryProvider, MultiRegistryProvider, NaiveDepSolver};
 

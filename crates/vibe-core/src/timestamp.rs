@@ -6,6 +6,8 @@
 //! `YYYY-MM-DDTHH:MM:SSZ` — RFC 3339 without sub-seconds or offsets,
 //! which is all the spec-level consumers need.
 
+specmark::scope!("spec://vibevm/VIBEVM-SPEC#lockfile-schema");
+
 use std::time::{SystemTime, UNIX_EPOCH};
 
 /// Current wall-clock time in RFC 3339 UTC: `YYYY-MM-DDTHH:MM:SSZ`.

@@ -23,6 +23,8 @@
 //! Anonymous calls work but the GitHub rate limit drops to 60 req/h.
 //! The token bytes never enter logs, errors, or the JSON envelope.
 
+specmark::scope!("spec://vibevm/modules/vibe-index/PROP-005#root");
+
 use std::time::Duration;
 
 use serde::Deserialize;

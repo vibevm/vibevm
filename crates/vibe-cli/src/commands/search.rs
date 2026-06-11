@@ -18,6 +18,8 @@
 //! through `MultiRegistryResolver`, which re-verifies `content_hash`
 //! at fetch time per [PROP-002 §2.1].
 
+specmark::scope!("spec://vibevm/modules/vibe-index/PROP-005#root");
+
 use std::collections::HashMap;
 use std::path::Path;
 

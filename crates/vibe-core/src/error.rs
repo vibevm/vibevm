@@ -3,6 +3,9 @@
 //! Parsing, validation, and I/O errors surfaced from this crate. Concrete
 //! operational errors (e.g. network, git) live in the crates that perform them.
 
+specmark::scope!("spec://vibevm/VIBEVM-SPEC#package-identity");
+specmark::scope!("spec://vibevm/VIBEVM-SPEC#manifest-schema");
+
 use std::path::PathBuf;
 
 use thiserror::Error;

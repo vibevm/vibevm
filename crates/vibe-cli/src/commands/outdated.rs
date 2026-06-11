@@ -15,6 +15,8 @@
 //! HTTP probes and is queued for a follow-up slice once the
 //! threat-model question (PROP-004 §5.9) is settled.
 
+specmark::scope!("spec://vibevm/VIBEVM-SPEC#cli-surface");
+
 use std::path::Path;
 
 use anyhow::{Context, Result, bail};

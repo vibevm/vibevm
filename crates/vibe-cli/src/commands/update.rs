@@ -13,6 +13,8 @@
 //!
 //! Spec: spec://vibevm/modules/vibe-workspace/PROP-009-loading-model.
 
+specmark::scope!("spec://vibevm/VIBEVM-SPEC#command-summary");
+
 use std::fs;
 use std::path::{Path, PathBuf};
 

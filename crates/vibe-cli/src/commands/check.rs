@@ -2,6 +2,8 @@
 //!
 //! Spec: `VIBEVM-SPEC.md` §12 (the linter), ROADMAP §M1.3.
 
+specmark::scope!("spec://vibevm/VIBEVM-SPEC#linter");
+
 use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result, bail};

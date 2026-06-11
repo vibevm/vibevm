@@ -2,6 +2,8 @@
 //!
 //! Spec: `VIBEVM-SPEC.md` §5.6, §9.1, §11.1.
 
+specmark::scope!("spec://vibevm/VIBEVM-SPEC#install-workflow-in-detail");
+
 use std::collections::BTreeSet;
 use std::fs;
 use std::path::{Path, PathBuf};

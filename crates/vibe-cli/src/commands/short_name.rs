@@ -16,6 +16,8 @@
 //! walks each registry's index. Two groups under one bare name is a
 //! collision the resolver refuses to guess past (PROP-008 §2.7).
 
+specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-008#short-name");
+
 use anyhow::{Result, bail};
 use vibe_core::manifest::Lockfile;
 use vibe_core::{Group, PackageRef};

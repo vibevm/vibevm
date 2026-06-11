@@ -377,13 +377,33 @@
    "title": "vibe-core leaf modules have no scannable spec home until VIBEVM-SPEC.md is unit-ified",
    "detail": "error.rs, timestamp.rs, and values.rs carry public items whose governing text lives in VIBEVM-SPEC.md (values.rs cites §5.3 verbatim) — but the owner-frozen root spec sits outside spec/** and is not scanned by mdspec, so no spec:// unit exists to tag against. The six symbols are dispositioned in specmap-ratchet.json under this id. Resolution path: either extend the scanner to the root document (an owner decision — the file is frozen) or move the governing sections into spec/ units; both are out of terraform scope.",
    "source": "Phase 6 ratchet expansion (scope!-grade backfill, 2026-06-10)",
-   "disposition": "open",
+   "disposition": "fixed",
+   "fixed_by": "depth-program P1 (2026-06-12): mdspec scans VIBEVM-SPEC.md as an explicit root spec doc; 90 section anchors landed (additive only, per the owner's depth-program directive); the trio carries scope! edges into #typed-value-system / #lockfile-schema / #package-identity+#manifest-schema; the six ratchet dispositions are retired and vibe-cli left the exempt list",
    "tripwires": [
     "touch:crates/vibe-core/src/values.rs",
     "touch:crates/vibe-core/src/error.rs",
     "touch:crates/vibe-core/src/timestamp.rs"
    ],
    "sunset": "closes when VIBEVM-SPEC §5.3 (and the error/timestamp contracts) exist as scannable units"
+  },
+  {
+   "id": "DBT-0020",
+   "kind": "coverage-gap",
+   "severity": "P3",
+   "title": "The MCP surface has no spec home (no module PROP, no VIBEVM-SPEC section)",
+   "detail": "vibe-mcp (the M1.7 JSON-RPC server crate) and vibe-cli's commands/mcp.rs (agent detection, config-file install/upgrade/uninstall, the vendored skill template) implement a surface VIBEVM-SPEC.md predates and no PROP governs. The ten top-level pub items of commands/mcp.rs are dispositioned in specmap-ratchet.json under this id; the vibe-mcp crate stays ratchet-exempt for the same reason. Resolution path: author a FEAT/PROP for the MCP surface (or an owner amendment to VIBEVM-SPEC.md), then tag both crates and retire the dispositions.",
+   "evidence": [
+    "crates/vibe-cli/src/commands/mcp.rs (10 pub items, listed in specmap-ratchet.json)",
+    "crates/vibe-mcp/",
+    "specmap-ratchet.json (exempt: vibe-mcp; dispositioned: vibe_cli::commands::mcp::*)"
+   ],
+   "source": "depth-program P1 (2026-06-12) — surfaced when vibe-cli entered the orphan gate",
+   "disposition": "open",
+   "tripwires": [
+    "touch:crates/vibe-mcp/**",
+    "touch:crates/vibe-cli/src/commands/mcp.rs"
+   ],
+   "sunset": "closes when an MCP FEAT/PROP (or a VIBEVM-SPEC amendment) gives the surface scannable units"
   }
  ]
 }

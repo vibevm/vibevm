@@ -32,6 +32,8 @@
 //! the `[origin]` marker + README banner + PR-template already make a
 //! published copy unmistakably a generated read-only copy.
 
+specmark::scope!("spec://vibevm/modules/vibe-workspace/PROP-007#surface");
+
 use std::path::Path;
 use std::process::Command;
 

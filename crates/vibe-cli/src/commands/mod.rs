@@ -1,5 +1,7 @@
 //! Sub-command implementations. Each module keeps `pub fn run(&Context, args) -> anyhow::Result<()>`.
 
+specmark::scope!("spec://vibevm/VIBEVM-SPEC#cli-surface");
+
 pub mod check;
 pub mod init;
 pub mod install;

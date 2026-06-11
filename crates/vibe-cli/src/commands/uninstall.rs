@@ -7,6 +7,8 @@
 //!
 //! Spec: spec://vibevm/modules/vibe-workspace/PROP-009-loading-model.
 
+specmark::scope!("spec://vibevm/VIBEVM-SPEC#command-summary");
+
 use std::path::{Path, PathBuf};
 
 use crate::exit_code::InstallError;

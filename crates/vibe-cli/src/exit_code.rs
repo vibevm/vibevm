@@ -2,6 +2,8 @@
 //!
 //! Spec: `VIBEVM-SPEC.md` §9.4.
 
+specmark::scope!("spec://vibevm/VIBEVM-SPEC#exit-codes");
+
 use std::process::ExitCode;
 
 use thiserror::Error;

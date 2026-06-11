@@ -4,6 +4,8 @@
 
 #![deny(unsafe_code)]
 
+specmark::scope!("spec://vibevm/VIBEVM-SPEC#cli-surface");
+
 use std::collections::BTreeSet;
 use std::process::ExitCode;
 use std::sync::OnceLock;

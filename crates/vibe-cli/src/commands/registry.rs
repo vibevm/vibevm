@@ -12,6 +12,8 @@
 //! registries (`--registry <path>`) and legacy v1 entries are reported
 //! as skipped — there is no per-package clone to refresh for them.
 
+specmark::scope!("spec://vibevm/VIBEVM-SPEC#registry");
+
 use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result, anyhow, bail};

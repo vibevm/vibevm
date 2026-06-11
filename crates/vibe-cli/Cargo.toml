@@ -15,6 +15,7 @@ name = "vibe"
 path = "src/main.rs"
 
 [dependencies]
+specmark.workspace = true
 vibe-core.workspace = true
 vibe-graph.workspace = true
 vibe-registry.workspace = true
