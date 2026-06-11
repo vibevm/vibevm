@@ -1,7 +1,70 @@
 # WAL — Project Continuation State
-_Updated: 2026-06-12, the **PROP-013 discipline-depth audit (the INT-0001 window) ran to completion** — 12 findings (1 P1 fixed in-run, `9f06fbf`), category **E** added to PROP-013 §2.2, inventory in [`AUDIT.md`](../AUDIT.md). Prior state: the v0.3 adoption complete 2026-06-11 (below). **Note:** the adoption-day commit chain was re-hashed by a post-session history rewrite — older hash citations below (`e3f06ec` … `09d0da5`, `1792c14`) are pre-rewrite; the live chain runs `d0b28a5` … `d872832` and onward._
+_Updated: 2026-06-12 (second checkpoint), **THE DEPTH PROGRAM IS EXECUTED TO COMPLETION** — the owner goal «вся программа глубины должна быть выполнена до конца» ran the same day the audit filed it: all seven P2s closed, the panel green on the final tree. Earlier the same day: the PROP-013 discipline-depth audit (INT-0001 window) — 12 findings, category **E** added, the P1 specmap-hash wipe fixed (`9f06fbf`). Prior state: the v0.3 adoption complete 2026-06-11 (below). **Note:** the adoption-day commit chain was re-hashed by a post-session history rewrite — older hash citations below are pre-rewrite._
 
 ## Current phase
+
+**THE DEPTH PROGRAM — COMPLETE (2026-06-12, same-day execution).**
+Headline numbers, before → after: tagged items **190 → 337**, edges
+**198 → 347**, `#[verifies]` **40 → 104**, typed REQ fabric **5 → 72**
+units (59 req + 13 design), `#[cell]` manifests **4 → 18**, spec units
+**352 → 442** (the 90 VIBEVM-SPEC anchors). What landed, per program
+point:
+
+1. **DBT-0019 closed** — mdspec scans `VIBEVM-SPEC.md` (90 additive
+   anchors, `spec://vibevm/VIBEVM-SPEC#…`); vibe-core trio tagged;
+   vibe-cli left the ratchet exemption (21 module markers; 7 crates
+   exempt now); the MCP surface honestly filed as **DBT-0020** with 10
+   dispositions instead of a wrong edge.
+2. **Unit typing** — 67 kind lines across PROP-002/005/007/008/012;
+   PROP-008/PROP-012 stale DRAFT statuses corrected (Phases 5/6/8
+   shipped with M1.19 — back-filled into PROP-008 §7).
+3. **Affirmation sweep** — 27 `#[spec(implements)]` item-grain tags
+   (boot_artifacts → PROP-012 co-tenant/markers/create/plan-time/
+   content/migration; Workspace/publish → PROP-007; vibe-index types/
+   persistence/search/server → PROP-005; RedirectSection → PROP-002).
+4. **Verifies sweep** — 64 new `#[verifies]`, r-pinned, across the
+   strongest e2e and unit suites of six crates.
+5. **Registry seam cell-ified** — local / git-monorepo /
+   git-per-package manifests + oracle tests; R-002 fired live on a
+   sibling-import and was fixed by extracting `registry_cache.rs`.
+6. **Six god-file cuts** — CLI registry.rs → 6 modules; mrr → 5; gpr
+   → 4; vibe-check → root + 11 `Check`-seam cells (one `all_checks()`
+   registration point, oracle test, every file ≤ 600); package.rs →
+   597-line hub + when/deps/features/wire; conform-core → 7 modules;
+   cli_e2e.rs → 4 feature binaries + common (109/109 green; the
+   install cluster is `cli_pkg_cycle.rs` — Windows UAC blocks
+   *install*-named exes, the PROP-007 §9.5 lesson again).
+7. **Conform rule wave** — `error-message-cites-req` (68 frozen),
+   `file-length` 600 (28 frozen), `no-unwrap-in-domain` (24 frozen —
+   the honest domain count with real cfg(test) scoping; frontend v3),
+   `seam-has-doctest` widened past lib.rs (+`GitBackend`); new
+   `cargo xtask conform freeze`; baseline 130 entries, shrink-only.
+
+**Gate panel at close (run on the final tree, own exit codes):**
+`specmap --check` green — 442 units / 337 items / 347 edges /
+0 suspects / 0 gated orphans (10 dispositioned, 7 exempt); `conform
+check` green — 130 frozen / 0 new (9 rules); `test-gate` green —
+1120 results / 0 failed / 3 skipped, xfail-strict; `fast-loop
+--enforce-budget` — 18/18 cells within 60 s; `tools/self-check.sh` —
+all four steps (fmt, workspace tests, clippy -D warnings, `vibe
+check` 0/0/0). Specmap and conform re-certified after the final
+`cargo fmt` pass — the gate-invocation lesson applied.
+
+**Open after the program (the shrink backlog + owner items):**
+the 130-entry conform baseline is the work queue — 68 error messages
+to upgrade to the Class-F grammar, 28 files to shrink under 600, 24
+domain unwrap/expect sites to convert or `deviates`-mark, 1
+seam-doctest (`GitBackend`), 1 R-001 (`LocalRegistry` constructed in
+`commands/install.rs` — Registry-cell selection is config-driven, not
+yet R-001-wired); the `PackageScanner` seam for vibe-index (audit -09,
+open); DBT-0020 (MCP spec home — needs a FEAT/PROP or an owner
+VIBEVM-SPEC amendment); plus the pre-program owner items below
+(publishing, solver selection, PROP-010 session, predictions,
+PROP-014 amendment, Discipline v0.3).
+
+---
+
+## Prior phase (superseded same day): the audit window
 
 **AUDIT WINDOW 2026-06-12 — the discipline-depth sweep: COMPLETE.**
 The owner opened the INT-0001 window with the question «насколько
