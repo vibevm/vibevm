@@ -64,6 +64,24 @@ pub use naive::NaiveDepSolver;
 // ---------------------------------------------------------------------------
 
 /// One node in the resolved dependency graph.
+///
+/// Identity is the `(group, name)` tuple plus the solver-chosen exact
+/// `version`; `kind` is metadata and deliberately not carried here:
+///
+/// ```
+/// use vibe_core::Group;
+/// use vibe_resolver::ResolvedNode;
+///
+/// let node = ResolvedNode {
+///     group: Group::parse("org.vibevm").unwrap(),
+///     name: "wal".to_string(),
+///     version: semver::Version::parse("0.1.0").unwrap(),
+///     dependencies: vec![],
+///     is_root: true,
+/// };
+/// assert_eq!(node.group.as_str(), "org.vibevm");
+/// assert!(node.is_root);
+/// ```
 #[derive(Debug, Clone)]
 #[spec(implements = "spec://vibevm/modules/vibe-registry/PROP-008#identity")]
 #[spec(implements = "spec://vibevm/modules/vibe-registry/PROP-002#lockfile")]
@@ -83,6 +101,27 @@ pub struct ResolvedNode {
 }
 
 /// The full resolved graph for one solver invocation.
+///
+/// Query it by `(group, name)` identity; roots are the nodes the user
+/// asked for directly:
+///
+/// ```
+/// use vibe_core::Group;
+/// use vibe_resolver::{ResolvedGraph, ResolvedNode};
+///
+/// let org = Group::parse("org.vibevm").unwrap();
+/// let graph = ResolvedGraph {
+///     packages: vec![ResolvedNode {
+///         group: org.clone(),
+///         name: "wal".to_string(),
+///         version: semver::Version::parse("0.1.0").unwrap(),
+///         dependencies: vec![],
+///         is_root: true,
+///     }],
+/// };
+/// assert!(graph.find(&org, "wal").is_some());
+/// assert_eq!(graph.roots().count(), 1);
+/// ```
 #[derive(Debug, Clone, Default)]
 #[spec(implements = "spec://vibevm/modules/vibe-resolver/PROP-003#solver-upgrade")]
 pub struct ResolvedGraph {
@@ -112,6 +151,38 @@ impl ResolvedGraph {
 // ---------------------------------------------------------------------------
 
 /// What the solver needs to know about packages it's resolving over.
+///
+/// The canonical implementation shape — answer the two questions from
+/// whatever backing store you have:
+///
+/// ```
+/// use vibe_core::{Group, PackageRef, manifest::Manifest};
+/// use vibe_resolver::{DepProvider, DepProviderError};
+///
+/// struct OnePackage(Manifest);
+///
+/// impl DepProvider for OnePackage {
+///     fn resolve_version(&self, pkgref: &PackageRef)
+///         -> Result<semver::Version, DepProviderError>
+///     {
+///         Ok(self.0.require_package().unwrap().version.clone())
+///     }
+///     fn fetch_manifest(&self, _: &Group, _: &str, _: &semver::Version)
+///         -> Result<Manifest, DepProviderError>
+///     {
+///         Ok(self.0.clone())
+///     }
+/// }
+///
+/// let m = Manifest::parse_str(
+///     "[package]\ngroup = \"org.vibevm\"\nname = \"wal\"\nkind = \"flow\"\nversion = \"0.1.0\"\n",
+/// ).unwrap();
+/// let provider = OnePackage(m);
+/// let picked = provider
+///     .resolve_version(&PackageRef::parse("org.vibevm/wal").unwrap())
+///     .unwrap();
+/// assert_eq!(picked, semver::Version::parse("0.1.0").unwrap());
+/// ```
 #[spec(implements = "spec://vibevm/modules/vibe-registry/PROP-002#solver")]
 pub trait DepProvider {
     /// Pick a concrete version satisfying `pkgref.version` from the
@@ -130,6 +201,38 @@ pub trait DepProvider {
 }
 
 /// What the install / update pipeline calls.
+///
+/// The canonical use — pick a solver cell, hand it roots, get the
+/// transitive graph (here over a single self-contained package):
+///
+/// ```
+/// use vibe_core::{Group, PackageRef, manifest::Manifest};
+/// use vibe_resolver::{DepProvider, DepProviderError, DepSolver, NaiveDepSolver};
+///
+/// struct OnePackage(Manifest);
+/// impl DepProvider for OnePackage {
+///     fn resolve_version(&self, _: &PackageRef)
+///         -> Result<semver::Version, DepProviderError>
+///     {
+///         Ok(self.0.require_package().unwrap().version.clone())
+///     }
+///     fn fetch_manifest(&self, _: &Group, _: &str, _: &semver::Version)
+///         -> Result<Manifest, DepProviderError>
+///     {
+///         Ok(self.0.clone())
+///     }
+/// }
+///
+/// let m = Manifest::parse_str(
+///     "[package]\ngroup = \"org.vibevm\"\nname = \"wal\"\nkind = \"flow\"\nversion = \"0.1.0\"\n",
+/// ).unwrap();
+/// let solver = NaiveDepSolver::new(OnePackage(m));
+/// let graph = solver
+///     .solve(&[PackageRef::parse("org.vibevm/wal").unwrap()])
+///     .unwrap();
+/// assert_eq!(graph.packages.len(), 1);
+/// assert!(graph.packages[0].is_root);
+/// ```
 #[spec(implements = "spec://vibevm/modules/vibe-registry/PROP-002#solver")]
 #[spec(
     deviates = "spec://vibevm/modules/vibe-resolver/PROP-003#solver-upgrade",
@@ -147,6 +250,22 @@ pub trait DepSolver {
 // Errors
 // ---------------------------------------------------------------------------
 
+/// Provider-side failures, discriminated so the install layer can
+/// route them (PROP-002 §2.8 failure discriminator).
+///
+/// ```
+/// use vibe_core::Group;
+/// use vibe_resolver::DepProviderError;
+///
+/// let err = DepProviderError::UnknownPackage {
+///     group: Group::parse("org.vibevm").unwrap(),
+///     name: "nope".to_string(),
+/// };
+/// assert_eq!(
+///     err.to_string(),
+///     "package `org.vibevm/nope` is not available in any configured registry",
+/// );
+/// ```
 #[derive(Debug, Error)]
 #[spec(implements = "spec://vibevm/modules/vibe-registry/PROP-002#failure-discriminator")]
 pub enum DepProviderError {
@@ -181,6 +300,20 @@ pub enum DepProviderError {
     Other(String),
 }
 
+/// Solver-side failures. Messages name the conflict and the fix
+/// surface — they are agent food, not just human prose:
+///
+/// ```
+/// use vibe_resolver::SolveError;
+///
+/// let err = SolveError::VersionConflict {
+///     package: "org.vibevm/wal".to_string(),
+///     existing: "0.1.0".to_string(),
+///     new_constraint: "^0.2".to_string(),
+/// };
+/// assert!(err.to_string().contains("version conflict on `org.vibevm/wal`"));
+/// assert!(err.to_string().contains("[[override]]"));
+/// ```
 #[derive(Debug, Error)]
 #[spec(implements = "spec://vibevm/modules/vibe-registry/PROP-002#capability")]
 pub enum SolveError {

@@ -37,6 +37,13 @@ pub const SPEC_PACKAGE: &str = "vibevm";
 /// `sha256:<hex>` over the given text with line endings normalised to
 /// LF — the same content-hash format the lockfile uses, so hashes read
 /// uniformly across the project.
+///
+/// ```
+/// let lf = specmap_core::content_hash("alpha\nbeta\n");
+/// let crlf = specmap_core::content_hash("alpha\r\nbeta\r\n");
+/// assert_eq!(lf, crlf);
+/// assert!(lf.starts_with("sha256:"));
+/// ```
 pub fn content_hash(text: &str) -> String {
     use sha2::{Digest, Sha256};
     let normalised: String = text.replace("\r\n", "\n").replace('\r', "\n");
@@ -52,6 +59,11 @@ pub fn content_hash(text: &str) -> String {
 }
 
 /// Forward-slash form of a path, repo-relative paths everywhere.
+///
+/// ```
+/// let p = std::path::Path::new("spec").join("WAL.md");
+/// assert_eq!(specmap_core::fwd(&p), "spec/WAL.md");
+/// ```
 pub fn fwd(path: &std::path::Path) -> String {
     path.to_string_lossy().replace('\\', "/")
 }

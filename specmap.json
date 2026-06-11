@@ -11,21 +11,21 @@
       "crate_name": "conform-core",
       "file": "crates/conform-core/src/lib.rs",
       "item_kind": "mod",
-      "line": 485,
+      "line": 886,
       "symbol": "conform_core::baseline"
     },
     {
       "crate_name": "conform-core",
       "file": "crates/conform-core/src/lib.rs",
       "item_kind": "mod",
-      "line": 255,
+      "line": 379,
       "symbol": "conform_core::rules"
     },
     {
       "crate_name": "conform-core",
       "file": "crates/conform-core/src/lib.rs",
       "item_kind": "mod",
-      "line": 428,
+      "line": 820,
       "symbol": "conform_core::sarif"
     },
     {
@@ -732,35 +732,35 @@
       "crate_name": "vibe-resolver",
       "file": "crates/vibe-resolver/src/lib.rs",
       "item_kind": "trait",
-      "line": 114,
+      "line": 153,
       "symbol": "vibe_resolver::DepProvider"
     },
     {
       "crate_name": "vibe-resolver",
       "file": "crates/vibe-resolver/src/lib.rs",
       "item_kind": "enum",
-      "line": 150,
+      "line": 253,
       "symbol": "vibe_resolver::DepProviderError"
     },
     {
       "crate_name": "vibe-resolver",
       "file": "crates/vibe-resolver/src/lib.rs",
       "item_kind": "trait",
-      "line": 132,
+      "line": 203,
       "symbol": "vibe_resolver::DepSolver"
     },
     {
       "crate_name": "vibe-resolver",
       "file": "crates/vibe-resolver/src/lib.rs",
       "item_kind": "struct",
-      "line": 85,
+      "line": 103,
       "symbol": "vibe_resolver::ResolvedGraph"
     },
     {
       "crate_name": "vibe-resolver",
       "file": "crates/vibe-resolver/src/lib.rs",
       "item_kind": "fn",
-      "line": 101,
+      "line": 140,
       "symbol": "vibe_resolver::ResolvedGraph::find"
     },
     {
@@ -774,7 +774,7 @@
       "crate_name": "vibe-resolver",
       "file": "crates/vibe-resolver/src/lib.rs",
       "item_kind": "enum",
-      "line": 184,
+      "line": 303,
       "symbol": "vibe_resolver::SolveError"
     },
     {
@@ -1203,7 +1203,7 @@
     {
       "file": "crates/conform-core/src/lib.rs",
       "from_symbol": "conform_core::baseline",
-      "line": 485,
+      "line": 886,
       "provenance": "authored",
       "uri": "spec://vibevm/discipline/ENGINE-CONFORM-v0.1#rules",
       "verb": "implements"
@@ -1211,7 +1211,7 @@
     {
       "file": "crates/conform-core/src/lib.rs",
       "from_symbol": "conform_core::rules",
-      "line": 255,
+      "line": 379,
       "provenance": "authored",
       "uri": "spec://vibevm/discipline/ENGINE-CONFORM-v0.1#rules",
       "verb": "implements"
@@ -1219,7 +1219,7 @@
     {
       "file": "crates/conform-core/src/lib.rs",
       "from_symbol": "conform_core::sarif",
-      "line": 428,
+      "line": 820,
       "provenance": "authored",
       "uri": "spec://vibevm/discipline/ENGINE-CONFORM-v0.1#determinism",
       "verb": "implements"
@@ -2042,7 +2042,7 @@
     {
       "file": "crates/vibe-resolver/src/lib.rs",
       "from_symbol": "vibe_resolver::DepProvider",
-      "line": 115,
+      "line": 186,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#solver",
       "verb": "implements"
@@ -2050,7 +2050,7 @@
     {
       "file": "crates/vibe-resolver/src/lib.rs",
       "from_symbol": "vibe_resolver::DepProviderError",
-      "line": 151,
+      "line": 270,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#failure-discriminator",
       "verb": "implements"
@@ -2058,7 +2058,7 @@
     {
       "file": "crates/vibe-resolver/src/lib.rs",
       "from_symbol": "vibe_resolver::DepSolver",
-      "line": 133,
+      "line": 236,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#solver",
       "verb": "implements"
@@ -2066,7 +2066,7 @@
     {
       "file": "crates/vibe-resolver/src/lib.rs",
       "from_symbol": "vibe_resolver::DepSolver",
-      "line": 134,
+      "line": 237,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#solver-upgrade",
       "verb": "deviates",
@@ -2075,7 +2075,7 @@
     {
       "file": "crates/vibe-resolver/src/lib.rs",
       "from_symbol": "vibe_resolver::ResolvedGraph",
-      "line": 87,
+      "line": 126,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#solver-upgrade",
       "verb": "implements"
@@ -2083,7 +2083,7 @@
     {
       "file": "crates/vibe-resolver/src/lib.rs",
       "from_symbol": "vibe_resolver::ResolvedGraph::find",
-      "line": 102,
+      "line": 141,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-registry/PROP-008#identity",
       "verb": "implements"
@@ -2091,7 +2091,7 @@
     {
       "file": "crates/vibe-resolver/src/lib.rs",
       "from_symbol": "vibe_resolver::ResolvedNode",
-      "line": 69,
+      "line": 87,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#lockfile",
       "verb": "implements"
@@ -2099,7 +2099,7 @@
     {
       "file": "crates/vibe-resolver/src/lib.rs",
       "from_symbol": "vibe_resolver::ResolvedNode",
-      "line": 68,
+      "line": 86,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-registry/PROP-008#identity",
       "verb": "implements"
@@ -2107,7 +2107,7 @@
     {
       "file": "crates/vibe-resolver/src/lib.rs",
       "from_symbol": "vibe_resolver::SolveError",
-      "line": 185,
+      "line": 318,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#capability",
       "verb": "implements"

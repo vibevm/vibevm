@@ -172,3 +172,85 @@ card, which will wire `cargo test --doc -p <cell>` into fast-loop.
 **Phase 1 exit: met.** Every cell independently buildable +
 testable inside budget; checker implemented and green; P1-1
 recorded with verdict.
+
+---
+
+## 2026-06-11 — Phase 2: Diagnostics (F) + doctests (G)
+
+**Scope.** Cards `scaffold-f-structured-diagnostics` (inline) and
+`scaffold-g-doctests` (gate), engine-first: the conform engine
+learns the fact shapes and rules, then the gated crates conform.
+Gated set starts at the priority cells — vibe-resolver,
+conform-core, specmap-core — and grows with the cell sweep, the
+orphan-ratchet expansion rhythm.
+
+**Class F landed.**
+
+- Every conform finding now speaks the card's grammar:
+  `violates REQ <uri>: <why>; fix surface: <where>`. Renderer
+  (`rules::req_message`) and acceptor (`rules::matches_req_grammar`)
+  live side by side so they cannot drift, and a test walks every
+  rule over a violating corpus asserting grammar conformance —
+  Class F applied to conform itself.
+- REQ URIs cite two namespaces: `spec://vibevm/…` for
+  vibevm-hosted units and `discipline://<package>/<doc>#<anchor>`
+  for the installed Discipline package (version resolved against
+  `vibevm.discipline.lock`). The convention note lives in
+  `spec/discipline/README.md`; this is the practical first instance
+  of the pending PROP-014 external-namespace amendment, citation-only
+  (diagnostics cite; specmap edges still never point at package docs).
+- New rule `error-enum-cites-req` (Class F): a thiserror enum in a
+  gated crate must carry a `#[spec]` REQ edge. Zero findings on the
+  gated set — vibe-resolver's error layer was already fully tagged
+  by the prior terraform's item-grain backfill.
+- `Fact::ErrorVariant` joins the fact model (enum attrs travel with
+  every variant), and the frontend extracts thiserror `#[error]`
+  display templates.
+
+**Class G landed.**
+
+- New rule `seam-has-doctest`: a `pub` item declared at a gated
+  crate's root (`src/lib.rs`) is a seam and must carry a compiled
+  doctest. New fact fields `is_pub` + `has_doctest` (doc-fence
+  detection); frontend version bumped 1→2, which retired every old
+  cache slot wholesale — the producer-keyed store doing exactly
+  what it was built for.
+- First run found **30 undoctested seams** (16 conform-core,
+  8 more in its submodules, 2 specmap-core, 6 vibe-resolver — the
+  engine measuring its own author honestly). All 30 now carry
+  canonical doctests; `cargo test --doc` green on all three crates;
+  the resolver's doctests show the blessed paths (DepProvider impl
+  shape, NaiveDepSolver::solve over a one-package provider,
+  error-display contracts).
+- Doctests ride the loop: `fast-loop` now runs
+  `cargo test --doc -p <cell>` per cell (nextest alone skips them);
+  `tools/self-check.sh` already covers them via `cargo test
+  --workspace`.
+
+**Baseline correction (fingerprint hardening).** The unsafe-gate
+fingerprint moved from `rule|file|line` to `rule|file|context#ordinal`
+— the Phase-0 stop.rs lesson generalized: a line-keyed fingerprint
+rots on any edit above the block, and a baseline that rots on
+unrelated edits is a checker that lies. The six frozen findings were
+rewritten to the new shape (same set, same count); a regression test
+pins that a pure line shift no longer changes the fingerprint.
+
+**Cache-divergence note (correcting the Phase-0 entry).** With the
+engine now in hand: today's runs give identical results cached and
+clean, and the store key (content-hash + producer id-version) is
+sound — the v2 bump proved the producer half. The Phase-0 merge-time
+green therefore most likely came from the gate panel being run
+before the final backfill commit (`a9dc160` itself edited stop.rs),
+not from a store defect. Lesson stands, reworded: **the gate panel
+must re-run on the final tree of a series** — now standard raid
+checkpoint practice in this adoption.
+
+**Gate panel at phase close (all green):** specmap --check clean
+(352/170/177/0); conform check 6 frozen / 0 new — with the two new
+rules active; test-gate 1082 results / 0 failed / 3 skipped
+(xfail-strict; +7 new engine tests); fast-loop --enforce-budget
+18/18 within budget, doctests included; self-check all four steps.
+
+**Phase 2 exit: met.** P2-1 recorded (pending by design —
+measurement deferred), P2-2 standing; both cards' checkers
+implemented and green on the gated set.
