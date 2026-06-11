@@ -1,7 +1,7 @@
 # PROP-008: Qualified package naming — groups, short aliases, collision detection {#root}
 
 **Milestone:** design proposal; targets a new `M1.18` ([`ROADMAP.md`](../../../ROADMAP.md)). Not implementation-locked.
-**Status:** DRAFT 2026-05-20 — requirements locked in an owner design session; implementation pending.
+**Status:** IMPLEMENTED — Phases 1–4 + 7 landed 2026-05-22 (M1.18, see §7); Phases 5–6 + 8 landed with M1.19 (index-backed short-name resolution at the CLI boundary — `vibe-cli::commands::short_name`; collision detection with exit code `7` — `InstallError::AmbiguousPackage`; the live-registry fqdn migration). Decision units typed at REQ grain 2026-06-12 (the depth program).
 **Related:** [PROP-002 §2.1 / §3.4](PROP-002-decentralized-registry.md) (content-addressed identity; the rejection of *per-registry* identity — and why `group` does not violate it); [PROP-005](../vibe-index/PROP-005-package-index.md) (per-org index — **required** for short-name resolution); [PROP-007](../vibe-workspace/PROP-007-workspace.md) (workspace — companion document, same design session); [`VIBEVM-SPEC.md` §4.1 / §7.1](../../../VIBEVM-SPEC.md) (the four kinds; current `name`-uniqueness rule).
 **Design rationale:** [`spec/design/workspace-and-qualified-naming.md`](../../design/workspace-and-qualified-naming.md) — the *why* and the lore behind this PROP: the owner's mental model, the fork-by-fork decision record, the Cargo-vs-Maven precedents. Non-normative; this PROP is the contract.
 **Owner sanction:** the owner granted (2026-05-20) explicit sanction to edit any specification, including `VIBEVM-SPEC.md` §7.1. PROP-008 is the requirements record; the `VIBEVM-SPEC.md` edit lands at implementation time.
@@ -24,6 +24,8 @@ PROP-008 covers the naming axis. The companion [PROP-007](../vibe-workspace/PROP
 
 ### 2.1 The `group` field {#group}
 
+`req r1`
+
 **Decision.** `[package]` gains a **mandatory** `group` field:
 
 ```toml
@@ -40,6 +42,8 @@ version = "0.3.0"
 
 ### 2.2 Identity tuple — `(group, name, version, content_hash)` {#identity}
 
+`req r1`
+
 **Decision.** Package identity becomes `(group, name, version, content_hash)`. `kind` **leaves the identity tuple**.
 
 - `name` becomes unique **within a `group`** (was: within a `kind`, `VIBEVM-SPEC.md` §7.1). `(group, name)` is therefore unique on its own — `kind` is no longer needed to disambiguate.
@@ -47,6 +51,8 @@ version = "0.3.0"
 - Changing a package's `group` is a new package, not a rename — same discipline as changing `name`.
 
 ### 2.3 `kind` becomes pure metadata {#kind}
+
+`req r1`
 
 **Decision.** `kind` (`flow` / `feat` / `stack` / `tool`) stays a **mandatory `[package]` field** but is now a pure attribute — it identifies nothing and names nothing.
 
@@ -58,6 +64,8 @@ It is still needed for:
 The four-kinds taxonomy (`VIBEVM-SPEC.md` §4.1) is unchanged in importance — it simply stops being part of identity and repository naming.
 
 ### 2.4 pkgref grammar {#pkgref}
+
+`req r1`
 
 **Decision.** The pkgref grammar gains an optional `group` segment and makes the `kind` prefix optional:
 
@@ -79,6 +87,8 @@ The `group`↔`name` separator is `/` (`:` is taken by `kind`, `@` by version).
 
 ### 2.5 Repository naming — `naming = "fqdn"` {#repo-naming}
 
+`req r1`
+
 **Decision.** `kind` leaves the repository name. A new `[[registry]]` naming convention value:
 
 ```toml
@@ -94,6 +104,8 @@ naming = "fqdn"          # repo name = "<group>.<name>"  →  org.vibevm.wal
 
 ### 2.6 Short-name resolution {#short-name}
 
+`req r1`
+
 **Decision.** A short name (`wal`, `flow:wal`) is resolved **only at the CLI input boundary**, via the index. Manifests always store the qualified form.
 
 - `vibe install wal` resolves the collision once, at the top level, and writes `org.vibevm/wal` into `[requires]`. Manifests are therefore always qualified — exactly the cargo/npm pattern (`cargo add serde` on the CLI, `serde = "1"` in `Cargo.toml`).
@@ -102,6 +114,8 @@ naming = "fqdn"          # repo name = "<group>.<name>"  →  org.vibevm.wal
 - **Lockfile is authoritative.** If `vibe.lock` already pins `org.vibevm/wal`, a later `vibe install wal` resolves to the locked entry — the short name prefers what is already locked.
 
 ### 2.7 Collision vs conflict {#collision}
+
+`req r1`
 
 **Decision.** Two distinct failure classes, with distinct handling. This terminology is fixed by this PROP.
 
@@ -127,9 +141,13 @@ Conflict handling is unchanged: the install pipeline is already atomic (resolve 
 
 ### 2.8 Index extension {#index-ext}
 
+`req r1`
+
 **Decision.** [PROP-005](../vibe-index/PROP-005-package-index.md)'s entry schema (§2.6) gains two fields: `group` (mandatory, §2.1) and `workspace_origin` (optional — set when the package was published from a workspace, [PROP-007 §2.8](../vibe-workspace/PROP-007-workspace.md) `[origin]`). The `by-name/` layer indexes by `name` and returns the candidate set with each candidate's `group`, so §2.6 short-name resolution is one GET per registry. PROP-005 is currently a draft; these are edits to a draft, not a shipped contract.
 
 ### 2.9 Registry explorer {#explorer}
+
+`design r1`
 
 **Decision (forward-looking, out of implementation scope).** The index makes a Maven-Central-style browsable visualisation possible — and richer. A **vibevm registry explorer** is recorded here as a long-term direction (a `ROADMAP.md` M3+ entry):
 
@@ -141,6 +159,8 @@ The explorer is a separate, optional layer over the index — not part of PROP-0
 ---
 
 ## 3. Migration {#migration}
+
+`design r1`
 
 The breaking-change window is open: vibevm has no public release, no external users ([PROP-003](../vibe-resolver/PROP-003-dep-evolution.md) — "schema churn before v0.1.0 is free").
 
@@ -179,3 +199,5 @@ PROP-008 depends on [PROP-005](../vibe-index/PROP-005-package-index.md) being im
 
 - **2026-05-20 — draft 1.** Initial proposal. Requirements locked in an owner design session (decisions on `group`, identity tuple, `kind`-as-metadata, pkgref grammar, `fqdn` repo naming, index-backed short-name resolution, collision detection, exit code 7, registry explorer as a long-term direction). Open for review.
 - **2026-05-22 — Phases 1–4 + 7 implemented (under MFBT).** The identity core landed on `main`: the `Group` newtype and the mandatory `[package].group` (Phase 1); the `(group, name, version, content_hash)` identity refactor with `kind` demoted to metadata (Phase 2); the lockfile `group` field at schema v5 (Phase 3); the group-native registry with `NamingConvention::Fqdn` as the default (Phase 4). Phase 7 (§2.8) then made the package index group-native — the [PROP-005](../vibe-index/PROP-005-package-index.md) entry schema gained `group` + `workspace_origin`, the `by-name/` layer became the candidate-set file `by-name/<name>.json`, and the `vibe-registry` index client + `vibe-publish` post-publish hook were realigned. **Remaining:** Phase 5 (index-backed short-name resolution at the CLI boundary, §2.6), Phase 6 (collision detection + exit code `7`, §2.7), Phase 8 (canonical-package migration + the `VIBEVM-SPEC.md §7.1` edit + docs, §3).
+- **2026-05-23 — Phases 5 + 6 + 8 shipped with M1.19.** Short-name resolution at the CLI input boundary (`vibe-cli::commands::short_name` — index-backed candidate sets, lockfile-prefers-locked); collision detection with the dedicated exit code `7` (`InstallError::AmbiguousPackage`); the live-registry migration to `fqdn` naming and the `vibe init` default fix (`cc32d7e` — the M1.19 defect AUDIT 2026-05-23-02 records). This entry back-fills the record: the work shipped with M1.19 but the history was not updated at the time.
+- **2026-06-12 — unit typing (the depth program).** §2.1–2.8 typed `req r1`; §2.9 and §3 typed `design r1`; the Status line updated from the stale DRAFT to the shipped reality.

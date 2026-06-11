@@ -1,7 +1,7 @@
 # PROP-012: The managed redirect block — vibevm as a co-tenant of the agent instruction files {#root}
 
 **Milestone:** design proposal; it refines [PROP-009 §2.3](PROP-009-loading-model.md) (M1.18, Phases 1–6 shipped) and **corrects a destructive defect already in the shipped Phase-4 code** — so it is a prerequisite for PROP-009 §4 / the M1.18 Phase-7 redirect rewrite, not a far-future milestone. Owner to place in [`ROADMAP.md`](../../../ROADMAP.md). Not implementation-locked.
-**Status:** DRAFT — requirements captured and refined in owner discussions on 2026-05-22 during M1.18 Phase-7 planning; the marker syntax is settled (§2.2, draft 2). The two remaining §5 questions — the exit code and old-redirect detection — are implementation details with working answers and do not block implementation within M1.18 Phase 7.
+**Status:** IMPLEMENTED — shipped with M1.18 Phase 7 (the block engine in `vibe-workspace::boot_artifacts`, plan-time validation, the `vibe check` `RedirectBlock` finding, and the self-migration that put the `<vibevm>` block into this repository's own instruction files). Requirements were captured 2026-05-22 (drafts 1–2); decision units typed at REQ grain 2026-06-12 (the depth program).
 **Related:** [PROP-009](PROP-009-loading-model.md) (the loading model — §2.3 the redirect, §4 migration; the Phase-4 implementation `vibe-workspace::boot_artifacts::write_boot_artifacts` / `render_redirect` / `REDIRECT_FILES` this PROP reworks); [PROP-007](PROP-007-workspace.md) (workspaces — every entry-point node carries its own instruction files).
 **Owner sanction:** PROP-012 amends PROP-009 §2.3 (a PROP document — editable) and reshapes the redirect-file wording in `VIBEVM-SPEC.md` §6.1 / §4.2. Those `VIBEVM-SPEC.md` edits fall inside the M1.18 Phase-7 spec-consistency sanction already granted; PROP-012 adds no new owner-frozen surface.
 
@@ -29,11 +29,15 @@ The fix is the standard managed-block discipline — the shape `ssh`, shell-rc i
 
 ### 2.1 vibevm owns one delimited block, nothing else {#co-tenant}
 
+`req r1`
+
 **Decision.** `vibe` owns exactly one **managed block** inside each agent instruction file — a contiguous region bounded by an opening and a closing marker. `vibe` reads and rewrites only the content *between* the markers; every byte outside the block is treated as another tenant's property and preserved verbatim across every `vibe` operation.
 
 The instruction file ceases to be "a vibevm-generated file." It is a **shared file with a vibevm-managed block in it**. The set of instruction files is PROP-009's `REDIRECT_FILES` — today `CLAUDE.md`, `AGENTS.md`, `GEMINI.md`; the set is open.
 
 ### 2.2 The markers, and well-formedness {#markers}
+
+`req r1`
 
 **Decision.** The block is delimited by the literal **bare tags** `<vibevm>` and `</vibevm>` — opening and closing — each alone on its own line. Bare tags are chosen over HTML-comment delimiters (`<!-- vibevm:begin -->` …): they read unambiguously to an LLM, the file's primary consumer. A markdown renderer may display a bare non-standard tag oddly — an accepted cosmetic cost, addressed separately if it ever matters. The canonical block vibevm writes:
 
@@ -50,6 +54,8 @@ The instruction file ceases to be "a vibevm-generated file." It is a **shared fi
 
 ### 2.3 Malformed → hard stop; absent → create; present → splice {#create}
 
+`req r1`
+
 **Decision.** On every operation that would write the block, `vibe` first classifies each instruction file:
 
 - **Malformed** (§2.2) — `vibe` **aborts the whole operation** with an error naming the file and the exact defect, and changes nothing. It does not proceed until the user repairs the file by hand. vibevm **never guesses** which of two blocks is canonical and **never auto-deletes** a stray marker — a malformed managed block is always a human's call.
@@ -57,6 +63,8 @@ The instruction file ceases to be "a vibevm-generated file." It is a **shared fi
 - **Present** (one well-formed pair) — `vibe` replaces the content *between* the markers with freshly-generated content; the markers themselves and all text outside them are untouched. If the new inter-marker content is byte-identical to the old, `vibe` writes nothing — no git churn.
 
 ### 2.4 Placement is the user's — vibevm never moves the block {#placement}
+
+`req r1`
 
 **Decision.** vibevm decides the block's position **exactly once** — when it first creates the block (§2.3, absent → create) it is appended at the **end of the file**. From then on the position is the **user's**: `vibe` rewrites the content between the markers and **never relocates the markers**; whatever text precedes or follows the block stays exactly where it is, across every `vibe` operation.
 
@@ -71,9 +79,13 @@ It is a manual configuration the user makes by hand, once; vibevm supplies the p
 
 ### 2.5 Validate before mutate {#plan-time}
 
+`req r1`
+
 **Decision.** The well-formedness classification of §2.3 runs at **plan time** — before any `vibedeps/` materialisation or boot-artifact write. A malformed block fails the operation **fast and clean**: an install never gets half-applied, with a materialised `vibedeps/` tree and an unwritable redirect. This is the same plan-time-not-apply-time discipline vibevm already applies to its user-owned-path guards.
 
 ### 2.6 The block content is unchanged — this PROP changes the envelope, not the payload {#content}
+
+`design r1`
 
 **Decision.** What goes *between* the markers is exactly the redirect content PROP-009 §2.3 already specifies — an instruction to read `spec/boot/INLINE.md` (when present) and then `spec/boot/INDEX.md`. PROP-012 changes how that content is *delivered* — a fenced region of a possibly-shared file — not what it *says*.
 
@@ -82,6 +94,8 @@ Consequently this PROP **supersedes the "thin generated file" wording of PROP-00
 ---
 
 ## 3. Command and crate surface {#surface}
+
+`design r1`
 
 - **`vibe-workspace::boot_artifacts`** — the implementation site. `write_boot_artifacts`'s redirect loop changes from a whole-file `fs::write` to a locate-validate-splice. New helpers: locate the block, classify well-formedness, splice the body. `render_redirect` becomes the block-*body* renderer; `REDIRECT_BODY`'s "do not edit" framing moves inside the block.
 - **The install orchestration** (`apply_resolution` and the `vibe reinstall` path) — gains the §2.5 plan-time validation pass over every node's instruction files before any mutation.
@@ -92,6 +106,8 @@ Consequently this PROP **supersedes the "thin generated file" wording of PROP-00
 ---
 
 ## 4. Migration {#migration}
+
+`req r1`
 
 The one non-trivial case is an instruction file that is *wholly* the **old whole-file generated redirect** — written by the Phase-4 `fs::write`, recognisable by its generated header, and carrying no `<vibevm>` markers. For a file with no markers, `vibe`:
 
@@ -137,3 +153,4 @@ Closed in draft 2: the marker syntax — bare `<vibevm>` … `</vibevm>` tags (�
 
 - **2026-05-22 — draft 1.** Requirements captured in an owner discussion during M1.18 Phase-7 planning. The whole-file redirect overwrite shipped in PROP-009 Phase 4 is destructive to co-tenant content; vibevm must own only a `<vibevm>`-delimited block of each agent instruction file: exactly one block per file, a hard stop on a malformed file (the user repairs it by hand — vibevm never guesses), absent → create at end of file, present → splice, validated at plan time. The block's position is thereafter the user's — vibevm never relocates it, so the user can promote the block to a "First Prompt" or leave it a sidecar. Recorded as a separate PROP at the owner's request.
 - **2026-05-22 — draft 2.** Owner review settled the one substantive §5 question — the marker syntax: bare `<vibevm>` … `</vibevm>` tags (§2.2), chosen because they read unambiguously to an LLM, the file's primary consumer; the markdown-rendering cosmetics of a bare tag are an accepted, deferred cost. The two remaining §5 questions — the exit code and old-redirect detection — are implementation details with working answers. PROP-012 is ready for implementation within M1.18 Phase 7.
+- **2026-06-12 — unit typing (the depth program).** §2.1–2.5 and §4 typed `req r1`, §2.6 and §3 typed `design r1`; the Status line updated to reflect the shipped M1.18 Phase-7 implementation (the audit's finding 2026-06-12-04 recorded PROP-012 as implemented-with-zero-edges; the affirmation sweep tags the implementation against these units).

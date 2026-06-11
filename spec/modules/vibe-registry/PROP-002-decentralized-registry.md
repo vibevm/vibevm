@@ -35,6 +35,8 @@ This PROP locks those decisions. Implementation lands in two phases:
 
 ### 2.1 Identity: content-addressed, URL-orthogonal {#identity}
 
+`req r1`
+
 **Decision.** A package's identity is the tuple `(kind, name, version, content_hash)`. The `content_hash` is `sha256:<hex>` over the deterministically-ordered concatenation of `(rel_path_bytes || 0x00 || file_bytes || 0x00)` for every file in the package directory (the existing scheme from `compute_content_hash` in `vibe-registry`). The URL used to fetch the content is **informational** — recorded in the lockfile for debuggability, not for identity.
 
 **Consequence.** Fetching the same `(kind, name, version)` from two different URLs (canonical + mirror, original + fork, upstream + vendored copy) must produce the same `content_hash`. Mismatch is a fatal `IntegrityError`. The effect is:
@@ -46,6 +48,8 @@ This PROP locks those decisions. Implementation lands in two phases:
 Escape hatch for legitimate mirror-vs-upstream divergence (e.g. during an upstream outage): `--trust-mirror` flag on `vibe install` / `vibe update`. Never silent; always operator-initiated.
 
 ### 2.2 Registry model: `[[registry]]` array, priority-ordered {#registry-model}
+
+`req r1`
 
 **Decision.** `vibe.toml` carries an array of registries:
 
@@ -65,6 +69,8 @@ naming = "fqdn"
 Resolution: the solver iterates registries in array order; the first that has a satisfying match for a pkgref wins. Versions of the same pkgref are **not** unioned across registries — this prevents a lower-trust registry from influencing resolve when a higher-trust one already has a valid answer.
 
 ### 2.2.1 Per-registry authentication {#registry-auth}
+
+`req r1`
 
 **Decision.** Each `[[registry]]` declares its authentication regime via an `auth` field. Four variants:
 
@@ -117,6 +123,8 @@ This is what makes the `none` default safe in CI / opencode harnesses (no GUI po
 
 ### 2.3 Mirror layer: transparent, integrity-verified {#mirror}
 
+`req r1`
+
 **Decision.** `[[mirror]]` entries are parallel alternative URLs for a specific registry (or `*` for any). During fetch:
 
 1. For the target registry, try mirrors in `priority` ascending order.
@@ -136,6 +144,8 @@ Phase A: `[[mirror]]` parser and lockfile-canonical-URL invariant ship. Runtime 
 
 #### 2.3.1 Failure-mode discriminator: registry-walk vs mirror-walk {#failure-discriminator}
 
+`req r1`
+
 `[[registry]]` and `[[mirror]]` mean different things, and the resolver treats their failures differently. Confusing them produces either silent mis-config (treating typos in a primary URL as transient) or broken offline workflows (failing fast on a mirror that is supposed to absorb outages).
 
 - A `[[registry]]` is a **distinct package source** — its own naming convention, its own publishing identity, its own trust scope. The priority-ordered registry walk falls through on **`UnknownPackage` only**: a registry that confidently answers "I don't have this package" is free to defer to the next one. Any other primary failure — connect-failure (DNS / TCP), auth-failure on a registry that explicitly requires authentication, server error, malformed manifest — halts the install with an actionable error. This is the same policy Cargo and npm apply to a registry that errors out: the operator wants to know about a typo or an outage, not paper over it with a different registry that may carry a different version.
@@ -150,6 +160,8 @@ Phase A: `[[mirror]]` parser and lockfile-canonical-URL invariant ship. Runtime 
 **Implementation.** The error classifier (`crates/vibe-registry/src/git_backend/shell.rs::classify_stderr_message`) maps git's free-form stderr into a typed `GitError` variant. `GitPackageRegistry`'s mirror walk pattern-matches on the variant (`NetworkUnreachable` / `AuthFailed` / `CommandFailed` / mirror-side `RepoNotFound`) and falls through; the canonical primary's `UnknownPackage` is what `MultiRegistryResolver` translates into a registry-walk fall-through. The split lives in code at the trait-method boundary, not in a single switch.
 
 ### 2.4 Overrides: surgical pin of source location {#override}
+
+`req r1`
 
 **Decision.** `[[override]]` bypasses the registry layer for a named pkgref:
 
@@ -166,6 +178,8 @@ The resolver short-circuits: it does not consult `[[registry]]` for this pkgref 
 This is the vibevm analogue of Cargo's `[patch]` and Go's `replace`. Same shape, same use case: pinning a fork during an in-flight upstream PR, emergency hotfixes, internal forks of public packages.
 
 ### 2.4.1 Git-source declarations: `[requires.packages]` table-form {#git-source}
+
+`req r1`
 
 **Decision.** A dependency may be declared as a first-class git-source in `[requires.packages]` — fetching the package from an arbitrary git repository instead of resolving it through `[[registry]]`. This is the vibevm analogue of Cargo's `[dependencies] foo = { git = "..." }`, npm's `"foo": "git+https://..."`, Poetry's `foo = { git = "..." }`, Bundler's `gem 'foo', git: '...'`, Go modules' baseline behaviour. The use cases are:
 
@@ -284,6 +298,8 @@ A project may use both: declare `flow:internal` through `[requires.packages]` gi
 **Out of scope for this slice.** Multiple `git-source` entries against the same `(kind, name)` with different URLs (i.e. parallel forks of the same package): rejected as `DuplicateDeclaration`. There is no "first-priority" fallback chain for git-source — the operator picks one URL. If they need failover, that's `[[mirror]]` territory, which is registry-only by design (§2.3). `vibe registry test` does not currently probe git-source declarations; the diagnostic is registry-scoped because git-source has no fall-through walk to validate. May add a `vibe deps test` (or extend `registry test`) in a follow-up if operators ask.
 
 ### 2.4.2 Registry redirect: delegating package content to an external repo {#redirect}
+
+`req r1`
 
 **Decision.** A registry org may host a **stub repo** for a package — a normal `<org>/<kind>-<name>` repository whose content is **not** the package itself but a single file pointing at an external git repository where the package actually lives. The resolver, when fetching the package manifest, transparently follows the pointer; consumers `vibe install <pkgref>` see no difference from a direct registry-resolved package. The use case is **delegation**: an org owner wants the package to live in their namespace (so consumers find it via the org's `[[registry]]` walk without knowing about the external author) but offload the development, the PR queue, and the hosting platform's permission management to a different team or person who already has their own repo.
 
@@ -408,6 +424,8 @@ Creates `<org>/<kind>-<name>` stub repo via the registry's `RepoCreator` (PROP-0
 
 ### 2.5 Per-package layout: flat, tag-based {#layout}
 
+`req r1`
+
 **Decision.** A package repository contains the package content flat at the repository root:
 
 ```
@@ -429,6 +447,8 @@ tags: v0.1.0, v0.2.0, v1.3.0-rc.1
 
 ### 2.6 Cache layout: organized by canonical registry URL {#cache}
 
+`req r1`
+
 **Decision.** The per-user registry cache is rooted at the **canonical registry URL**, not the mirror URL — a transparent mirror does not invalidate the cache:
 
 ```
@@ -449,6 +469,8 @@ tags: v0.1.0, v0.2.0, v1.3.0-rc.1
 Freshness TTL per package repo is 1 hour (PROP-001 §2.5 carries over). `VIBE_REGISTRY_CACHE` env override applies.
 
 ### 2.7 Lockfile schema v2 {#lockfile}
+
+`req r1`
 
 **Decision.** `vibe.lock` gains `schema_version = 2` and the following record shape per package:
 
@@ -482,6 +504,8 @@ overridden      = false
 
 ### 2.8 Depsolver: resolvo primary, DepSolver trait for fallback {#solver}
 
+`req r1`
+
 **Decision.** The primary depsolver is the [`resolvo`](https://crates.io/crates/resolvo) crate (pure Rust, BSD-3-Clause-or-Apache-2.0, used by Pixi and Rattler at conda scale). Chosen for:
 
 - **Feature completeness for complexity ≥ RPM (PROP-000 §18):** virtual packages, disjunctions, obsoletes-driven upgrades, boolean-style constraints, custom constraint operators.
@@ -495,6 +519,8 @@ overridden      = false
 The `lockfile.meta.solver = "resolvo-<ver>"` field records the solver identity so a future lockfile produced by `libsolv` is distinguishable, and a lockfile produced by an older resolvo can be re-verified by the same solver version when integrity investigation matters.
 
 ### 2.9 Capability-based deps: `[provides]` / `[requires]` / `[[requires_any]]` / `[obsoletes]` / `[conflicts]` {#capability}
+
+`req r1`
 
 **Decision.** The package manifest gains the full capability-based dependency vocabulary, pinned in [`VIBEVM-SPEC.md` §7.3](../../../VIBEVM-SPEC.md). Summary:
 
@@ -510,6 +536,8 @@ The `lockfile.meta.solver = "resolvo-<ver>"` field records the solver identity s
 Semantic: the solver computes a satisfying assignment over the declared constraints. Conflict-detection renders through resolvo's native conflict-explanation surface — produced as a human-readable chain of incompatibilities, not a stack trace.
 
 ### 2.10 Publish utility: `vibe registry publish <path>` {#publish}
+
+`req r1`
 
 **Decision.** Ship a maintainer utility in v1. Scope: mechanical-only publish — **create repo, push contents, tag version**. Semantic review (LLM-backed safety analysis per `VIBEVM-SPEC.md` §8.5) remains v2+.
 
@@ -552,6 +580,8 @@ Never force-push. Never overwrite an existing tag. Never create a repo in a diff
 
 ### 2.11 JTD + codegen for wire contracts {#jtd}
 
+`req r1`
+
 **Decision.** Per [PROP-000 §16](../../common/PROP-000.md#jtd), wire-format contracts — here, the GitVerse API request/response shapes, the `vibe --json` CLI output event schema, and future LLM provider wire shapes — are defined in JTD and codegen'd into Rust types via `jtd-codegen`.
 
 Layout:
@@ -564,6 +594,8 @@ Layout:
 Manifests (`vibe.toml`, `vibe.lock`, `vibe-package.toml`) stay TOML and serde-driven — JTD is for wire, not for human configs.
 
 ### 2.12 Performance and resolver I/O strategy {#perf}
+
+`req r1`
 
 **Decision.** The resolver is driven by a `DependencyProvider` adapter that sits on top of `MultiRegistryResolver` and exposes only what resolvo needs:
 

@@ -4961,7 +4961,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:464fd2f6ea075897aee5d829871dc6f976e350a3dbab3042197390afeedb65f9",
+      "content_hash": "sha256:9e995e3decdd3929fa9946aeb6c5d339d004a7f831d018f7ead9a6e7b34b68fc",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "PROP-005: Optional package index — per-org metadata + standalone index server",
@@ -4979,7 +4979,7 @@
     },
     {
       "anchor": "decisions",
-      "content_hash": "sha256:e6bbd187983fac3c2027c379d43b06c929db56d47c39ced52a2c11b2e234fbe6",
+      "content_hash": "sha256:266a79a3b0a9457b8ac46f2bc8989b85713466e82c13bc8ee102863bf7af39e1",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "2. Decisions",
@@ -4988,192 +4988,232 @@
     },
     {
       "anchor": "optional",
-      "content_hash": "sha256:cb043dfe6281909e0f739ed6d9f07ac1b0636daeb38cd65352a55fb0a1e60711",
+      "content_hash": "sha256:16149650c7aa32ea826f6d9442b69e8d71e764e6897fa7db8604eef3e7ab1b7d",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "2.1 Index is OPTIONAL — zero impact when absent",
       "line": 35,
-      "uri": "spec://vibevm/modules/vibe-index/PROP-005#optional"
+      "uri": "spec://vibevm/modules/vibe-index/PROP-005#optional",
+      "kind": "req",
+      "revision": 1
     },
     {
       "anchor": "form-factor",
-      "content_hash": "sha256:76ae76de1997d38d98ea47825199e99f8797174f8f1dafa9a54ce2c581f17ddf",
+      "content_hash": "sha256:c1904782ece8e68da8c05e69d8c61e6e131b8cc3642b5df34bff2ef145f88277",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "2.2 Form factor: per-org **index** living in a separate git repository",
-      "line": 47,
-      "uri": "spec://vibevm/modules/vibe-index/PROP-005#form-factor"
+      "line": 49,
+      "uri": "spec://vibevm/modules/vibe-index/PROP-005#form-factor",
+      "kind": "req",
+      "revision": 1
     },
     {
       "anchor": "truth",
-      "content_hash": "sha256:081741c553784dc70edc09c7fc0befb1fd150843208aae29a8c0c3bb6aca869f",
+      "content_hash": "sha256:53d3f5c45e438c7801dfdca063a59ca21a7e5ac6e3b46db30027bcb4a8a22df7",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "2.3 Source of truth: package repos remain authoritative; index is a hot cache",
-      "line": 89,
-      "uri": "spec://vibevm/modules/vibe-index/PROP-005#truth"
+      "line": 93,
+      "uri": "spec://vibevm/modules/vibe-index/PROP-005#truth",
+      "kind": "req",
+      "revision": 1
     },
     {
       "anchor": "layout",
-      "content_hash": "sha256:30550fc716033f14bc6884cb6b0ceac47fc75ed786712e5ec3ec648cb3454a46",
+      "content_hash": "sha256:522503fbaa49ce689c1350bff5500fc4e5accb905b5c15a29bf6ee3729b98a3b",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "2.4 File layout inside the index repo",
-      "line": 97,
-      "uri": "spec://vibevm/modules/vibe-index/PROP-005#layout"
+      "line": 103,
+      "uri": "spec://vibevm/modules/vibe-index/PROP-005#layout",
+      "kind": "req",
+      "revision": 1
     },
     {
       "anchor": "modes",
-      "content_hash": "sha256:8ac7b1aa5bea8e4cdb2a5264a7d675f60d1cf1ab56c979793c9019c489cd3b99",
+      "content_hash": "sha256:15be97775e99b93a788840f0bbcbc4395376e741c3498ede672302e99c59435e",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "2.5 Two modes: CLI tool and HTTP server",
-      "line": 202,
-      "uri": "spec://vibevm/modules/vibe-index/PROP-005#modes"
+      "line": 210,
+      "uri": "spec://vibevm/modules/vibe-index/PROP-005#modes",
+      "kind": "req",
+      "revision": 1
     },
     {
       "anchor": "entry",
-      "content_hash": "sha256:01d02960f2cb629d102a21781ec9170d42ec217f2c2e7209c4fabc7eaa16dcad",
+      "content_hash": "sha256:b7399268075986827495e29e6576a44621444a0f3cac1e14fe972a4f7c69278b",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "2.6 Index entry shape (the canonical record)",
-      "line": 213,
-      "uri": "spec://vibevm/modules/vibe-index/PROP-005#entry"
+      "line": 223,
+      "uri": "spec://vibevm/modules/vibe-index/PROP-005#entry",
+      "kind": "req",
+      "revision": 1
     },
     {
       "anchor": "trust",
-      "content_hash": "sha256:0f00e444f092d63e9057d3e6ecff9faff323c39303dd322bae0dd9f6e380b5ca",
+      "content_hash": "sha256:4920264d410dcf3adc5e72e5cf053fb51eb2236bcc74ae9de1670c527a47b667",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "2.7 Identity and trust",
-      "line": 285,
-      "uri": "spec://vibevm/modules/vibe-index/PROP-005#trust"
+      "line": 297,
+      "uri": "spec://vibevm/modules/vibe-index/PROP-005#trust",
+      "kind": "req",
+      "revision": 1
     },
     {
       "anchor": "reindex",
-      "content_hash": "sha256:367b7df9d16dc7ee9ad0532414065a756aa08305201240b0c64d0e1bbd19cdfc",
+      "content_hash": "sha256:7e4814501087e0caa1cd0ff6fc316695304f8e2b011365ac4ea23ee98e7b0ccb",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "2.8 Reindexation: full and incremental",
-      "line": 293,
-      "uri": "spec://vibevm/modules/vibe-index/PROP-005#reindex"
+      "line": 307,
+      "uri": "spec://vibevm/modules/vibe-index/PROP-005#reindex",
+      "kind": "req",
+      "revision": 1
     },
     {
       "anchor": "server-mode",
-      "content_hash": "sha256:026fb308c3d2df6e9b5c8bf538168f39cbc78d60b15c211eb67bc1b431666c54",
+      "content_hash": "sha256:18cd0c050b63ca5d384302b44cb850af685e6b6ed877434b48772c300e396180",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "2.9 Single-writer server mode",
-      "line": 319,
-      "uri": "spec://vibevm/modules/vibe-index/PROP-005#server-mode"
+      "line": 335,
+      "uri": "spec://vibevm/modules/vibe-index/PROP-005#server-mode",
+      "kind": "req",
+      "revision": 1
     },
     {
       "anchor": "http",
-      "content_hash": "sha256:6941453505103deb040712d898831b32776012665066ee0c1a4fea5c40c81eda",
+      "content_hash": "sha256:8025e736e2623c6863e1926ae2097de517bec802364f8dce89213a7874cd0a51",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "2.10 HTTP API surface",
-      "line": 344,
-      "uri": "spec://vibevm/modules/vibe-index/PROP-005#http"
+      "line": 362,
+      "uri": "spec://vibevm/modules/vibe-index/PROP-005#http",
+      "kind": "req",
+      "revision": 1
     },
     {
       "anchor": "cli",
-      "content_hash": "sha256:299e3ee4d5e51a55c758098900c7e85ff218665837b053b807faab9fc92fdbf4",
+      "content_hash": "sha256:5e82adfc6c52b6e88eae8e1c4e90fe79efba83f07f9c46016007969c3ce01418",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "2.11 CLI surface",
-      "line": 390,
-      "uri": "spec://vibevm/modules/vibe-index/PROP-005#cli"
+      "line": 410,
+      "uri": "spec://vibevm/modules/vibe-index/PROP-005#cli",
+      "kind": "req",
+      "revision": 1
     },
     {
       "anchor": "types",
-      "content_hash": "sha256:cd0ead0d2cd3293225dd72164470bc216afa955900726b822a1d8239f68680fd",
+      "content_hash": "sha256:c97aa0b1c5a5f6f61017d1b2fa333d760aad9c4db097272d8c544228a59a9b83",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "2.12 Data structures",
-      "line": 424,
-      "uri": "spec://vibevm/modules/vibe-index/PROP-005#types"
+      "line": 446,
+      "uri": "spec://vibevm/modules/vibe-index/PROP-005#types",
+      "kind": "req",
+      "revision": 1
     },
     {
       "anchor": "persistence",
-      "content_hash": "sha256:c68f5496dcd61ec30a05f749f6210ac7b276eb2d354898b9c9dae3533c1e3553",
+      "content_hash": "sha256:a6b9dae583d9483a1d6ad50136c3d022fdb09c8056d1a186ed34664190d5761f",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "2.13 Persistence layer",
-      "line": 459,
-      "uri": "spec://vibevm/modules/vibe-index/PROP-005#persistence"
+      "line": 483,
+      "uri": "spec://vibevm/modules/vibe-index/PROP-005#persistence",
+      "kind": "req",
+      "revision": 1
     },
     {
       "anchor": "integration",
-      "content_hash": "sha256:7c72f469c6a5d540b4e91ff1a8f1964c9ed836300f6bad207e4f6f8dee53b2d7",
+      "content_hash": "sha256:037d308f18838feaab40581cf56359d82758354875e168bb1eddb8fadb97afc4",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "2.14 Integration with the rest of vibevm",
-      "line": 494,
-      "uri": "spec://vibevm/modules/vibe-index/PROP-005#integration"
+      "line": 520,
+      "uri": "spec://vibevm/modules/vibe-index/PROP-005#integration",
+      "kind": "req",
+      "revision": 1
     },
     {
       "anchor": "never",
-      "content_hash": "sha256:d3a9a572c428b8e8e51af059b10ee8948177d25a821a6f1ac5a51bff89a81d18",
+      "content_hash": "sha256:2eff0ed9bd58fde94ca57c2ab814ca3ae78069fad41a05ac907ee3539575bce9",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "2.15 What index must NEVER do",
-      "line": 516,
-      "uri": "spec://vibevm/modules/vibe-index/PROP-005#never"
+      "line": 544,
+      "uri": "spec://vibevm/modules/vibe-index/PROP-005#never",
+      "kind": "req",
+      "revision": 1
     },
     {
       "anchor": "architecture",
-      "content_hash": "sha256:18ca53cc9763f4c1d607ffe0569e74b9def94fecafeeeb0303ea3977c8479124",
+      "content_hash": "sha256:97ce0feee240f7a527bf00d437434f99986111988e58dcdb343bcbebc4d6efc6",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "3. Architecture",
-      "line": 526,
+      "line": 556,
       "uri": "spec://vibevm/modules/vibe-index/PROP-005#architecture"
     },
     {
       "anchor": "crate-layout",
-      "content_hash": "sha256:281782f49851c12a50358d08acdbe1935b4f01d88c71a246bbf761b863d5ea57",
+      "content_hash": "sha256:3c1469ffeb23dada58946f7449cf9c630b0a795181b91fa58f01577d6657938a",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "3.1 Crate layout",
-      "line": 528,
-      "uri": "spec://vibevm/modules/vibe-index/PROP-005#crate-layout"
+      "line": 558,
+      "uri": "spec://vibevm/modules/vibe-index/PROP-005#crate-layout",
+      "kind": "design",
+      "revision": 1
     },
     {
       "anchor": "deps",
-      "content_hash": "sha256:04f955f91be3531c5fa2652387b143d9aeff1a90d9663f3f73c4ea7ce6555db3",
+      "content_hash": "sha256:a7e1e27b4e532cb01941b4cb83312744ff4d730b4941776a278c50ee7f04dce1",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "3.2 Dependencies",
-      "line": 612,
-      "uri": "spec://vibevm/modules/vibe-index/PROP-005#deps"
+      "line": 644,
+      "uri": "spec://vibevm/modules/vibe-index/PROP-005#deps",
+      "kind": "design",
+      "revision": 1
     },
     {
       "anchor": "git-access",
-      "content_hash": "sha256:7f2039f14ea64242f1369caa880dd0b24fa314f59bd68a819b9ffe5cfc66dc49",
+      "content_hash": "sha256:4686827a87d4389defe17837b43a12373f92814a0264951a4bed815325ccfd32",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "3.3 Git access in the scanner",
-      "line": 640,
-      "uri": "spec://vibevm/modules/vibe-index/PROP-005#git-access"
+      "line": 674,
+      "uri": "spec://vibevm/modules/vibe-index/PROP-005#git-access",
+      "kind": "design",
+      "revision": 1
     },
     {
       "anchor": "threading",
-      "content_hash": "sha256:79a8221147ea8f04a457493cfc890801b14f3d86ba539f708ea75e76bb1e0b93",
+      "content_hash": "sha256:ae51bddd6be5f587dd20f1429385b612d71d4eda331f78b9108288ae2d58d9e7",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "3.4 Threading model",
-      "line": 646,
-      "uri": "spec://vibevm/modules/vibe-index/PROP-005#threading"
+      "line": 682,
+      "uri": "spec://vibevm/modules/vibe-index/PROP-005#threading",
+      "kind": "design",
+      "revision": 1
     },
     {
       "anchor": "config",
-      "content_hash": "sha256:24d77c70b788c244387a540bdaed6e47c7893421b897f883f6b30965acb9d5fc",
+      "content_hash": "sha256:884b0c7be00f650f84e50fb3c77d307eaf6a8e19dd9dc1f22499c044c6b457c1",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "3.5 Configuration precedence",
-      "line": 652,
-      "uri": "spec://vibevm/modules/vibe-index/PROP-005#config"
+      "line": 690,
+      "uri": "spec://vibevm/modules/vibe-index/PROP-005#config",
+      "kind": "design",
+      "revision": 1
     },
     {
       "anchor": "phases",
@@ -5181,7 +5221,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "4. Phase plan (slices)",
-      "line": 658,
+      "line": 698,
       "uri": "spec://vibevm/modules/vibe-index/PROP-005#phases"
     },
     {
@@ -5190,7 +5230,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "4.1 Slice 1 — skeleton",
-      "line": 662,
+      "line": 702,
       "uri": "spec://vibevm/modules/vibe-index/PROP-005#slice-1"
     },
     {
@@ -5199,7 +5239,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "4.2 Slice 2 — types + persistence",
-      "line": 668,
+      "line": 708,
       "uri": "spec://vibevm/modules/vibe-index/PROP-005#slice-2"
     },
     {
@@ -5208,7 +5248,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "4.3 Slice 3 — scanner + reindex from clones",
-      "line": 677,
+      "line": 717,
       "uri": "spec://vibevm/modules/vibe-index/PROP-005#slice-3"
     },
     {
@@ -5217,7 +5257,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "4.4 Slice 4 — read CLI subcommands",
-      "line": 686,
+      "line": 726,
       "uri": "spec://vibevm/modules/vibe-index/PROP-005#slice-4"
     },
     {
@@ -5226,7 +5266,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "4.5 Slice 5 — HTTP server (read-only)",
-      "line": 695,
+      "line": 735,
       "uri": "spec://vibevm/modules/vibe-index/PROP-005#slice-5"
     },
     {
@@ -5235,7 +5275,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "4.6 Slice 6 — write CLI + write HTTP + auth",
-      "line": 707,
+      "line": 747,
       "uri": "spec://vibevm/modules/vibe-index/PROP-005#slice-6"
     },
     {
@@ -5244,7 +5284,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "4.7 Slice 7 — incremental reindex",
-      "line": 716,
+      "line": 756,
       "uri": "spec://vibevm/modules/vibe-index/PROP-005#slice-7"
     },
     {
@@ -5253,7 +5293,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "4.8 Slice 8 — `--from-github` mode",
-      "line": 722,
+      "line": 762,
       "uri": "spec://vibevm/modules/vibe-index/PROP-005#slice-8"
     },
     {
@@ -5262,7 +5302,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "4.9 Slice 9 — vibe-publish post-publish hook",
-      "line": 728,
+      "line": 768,
       "uri": "spec://vibevm/modules/vibe-index/PROP-005#slice-9"
     },
     {
@@ -5271,7 +5311,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "4.10 Slice 10 — consumer-side integration",
-      "line": 734,
+      "line": 774,
       "uri": "spec://vibevm/modules/vibe-index/PROP-005#slice-10"
     },
     {
@@ -5280,7 +5320,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "4.11 Slice 11 — docs + manual-test smoke",
-      "line": 740,
+      "line": 780,
       "uri": "spec://vibevm/modules/vibe-index/PROP-005#slice-11"
     },
     {
@@ -5289,26 +5329,30 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "5. Test plan",
-      "line": 750,
+      "line": 790,
       "uri": "spec://vibevm/modules/vibe-index/PROP-005#tests"
     },
     {
       "anchor": "distribution",
-      "content_hash": "sha256:bb3201ebe595d4b0e517a9786b6dbde077c62c187c5a18381f1a49b34b8106db",
+      "content_hash": "sha256:fedf303a014debe3407f0c303dd18c851adf32487026050d0d65319e386edc99",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "6. Distribution — a workspace crate",
-      "line": 763,
-      "uri": "spec://vibevm/modules/vibe-index/PROP-005#distribution"
+      "line": 803,
+      "uri": "spec://vibevm/modules/vibe-index/PROP-005#distribution",
+      "kind": "design",
+      "revision": 1
     },
     {
       "anchor": "secrets",
-      "content_hash": "sha256:eb5c37c7dd2e0269f3c361f17ffa2ec27fae48f0df1e2159c39e9ab2ef531558",
+      "content_hash": "sha256:fa303b75cfa94e2a1ef0073514df3afe15e411ee9252e26377c21587eccb43ba",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "7. Auth, secrets, scope",
-      "line": 775,
-      "uri": "spec://vibevm/modules/vibe-index/PROP-005#secrets"
+      "line": 817,
+      "uri": "spec://vibevm/modules/vibe-index/PROP-005#secrets",
+      "kind": "req",
+      "revision": 1
     },
     {
       "anchor": "ops",
@@ -5316,7 +5360,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "8. Operations",
-      "line": 787,
+      "line": 831,
       "uri": "spec://vibevm/modules/vibe-index/PROP-005#ops"
     },
     {
@@ -5325,7 +5369,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "9. Open questions",
-      "line": 814,
+      "line": 858,
       "uri": "spec://vibevm/modules/vibe-index/PROP-005#open"
     },
     {
@@ -5334,7 +5378,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "10. Acceptance criteria",
-      "line": 831,
+      "line": 875,
       "uri": "spec://vibevm/modules/vibe-index/PROP-005#acceptance"
     },
     {
@@ -5343,7 +5387,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "11. Wire-up scripts (informational, not shipped)",
-      "line": 846,
+      "line": 890,
       "uri": "spec://vibevm/modules/vibe-index/PROP-005#wire-up"
     },
     {
@@ -5352,7 +5396,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "12. Version history",
-      "line": 878,
+      "line": 922,
       "uri": "spec://vibevm/modules/vibe-index/PROP-005#history"
     },
     {
@@ -5483,7 +5527,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:f9639506b7f8adf8583a5ef860dc16e5bf3a558882fd22eabf3e8c06c62e72e3",
+      "content_hash": "sha256:184df5952e55b30cdc54e23eb6b09c9e9b8c8a4083e4712a316b482b0faf3745",
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
       "heading": "PROP-002: Decentralized, mirror-friendly registry with capability-based depsolver",
@@ -5501,7 +5545,7 @@
     },
     {
       "anchor": "decisions",
-      "content_hash": "sha256:190e6ba32b2880fbaa935e6abbe0580f5bc69b5a8a50e473880733c317e31b27",
+      "content_hash": "sha256:1a73e7e9fb36ee44c8ec7fb24c09eb959f50c0ba5067a1b0cd52857a9cfef172",
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
       "heading": "2. Decisions",
@@ -5510,147 +5554,179 @@
     },
     {
       "anchor": "identity",
-      "content_hash": "sha256:815a5710c409dd87c5c557ef97957edd4e751879ef88eb19a98ade32fa5beca1",
+      "content_hash": "sha256:0b0160802953ffd4c4fa0a5cb0b4932438250f8862a722c1878214b894be9cf7",
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
       "heading": "2.1 Identity: content-addressed, URL-orthogonal",
       "line": 36,
-      "uri": "spec://vibevm/modules/vibe-registry/PROP-002#identity"
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-002#identity",
+      "kind": "req",
+      "revision": 1
     },
     {
       "anchor": "registry-model",
-      "content_hash": "sha256:db822c03e20056ccb48c826a3ef7de64c86321ab5f969640ccd9f8fcf7956275",
+      "content_hash": "sha256:e8595a7a2985ea6bc2d94d9a73ead21ae3c3c7a0cebebf9e4ed38c93ee0ad62c",
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
       "heading": "2.2 Registry model: `[[registry]]` array, priority-ordered",
-      "line": 48,
-      "uri": "spec://vibevm/modules/vibe-registry/PROP-002#registry-model"
+      "line": 50,
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-002#registry-model",
+      "kind": "req",
+      "revision": 1
     },
     {
       "anchor": "registry-auth",
-      "content_hash": "sha256:b440f8e4fbf9f54d2e4a4732eac57aacead2f32d58883a45d97073859873448c",
+      "content_hash": "sha256:c9af60d08096d83853785f5714c4ea67bf13201389aa4cc5e21a5f4906f6ead5",
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
       "heading": "2.2.1 Per-registry authentication",
-      "line": 67,
-      "uri": "spec://vibevm/modules/vibe-registry/PROP-002#registry-auth"
+      "line": 71,
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-002#registry-auth",
+      "kind": "req",
+      "revision": 1
     },
     {
       "anchor": "mirror",
-      "content_hash": "sha256:3d86f912e752e98cb3ee91c6fa7fb64a732510486f8f8085e143b7fd35a8ab51",
+      "content_hash": "sha256:86241c8a842ce42d1717d3e0dfed0c7cc7248744ddedbc510e07411782d7c640",
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
       "heading": "2.3 Mirror layer: transparent, integrity-verified",
-      "line": 118,
-      "uri": "spec://vibevm/modules/vibe-registry/PROP-002#mirror"
+      "line": 124,
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-002#mirror",
+      "kind": "req",
+      "revision": 1
     },
     {
       "anchor": "failure-discriminator",
-      "content_hash": "sha256:0fb51da33eed264d3c71572cd03e9aa8bb7e2758cd6571faf80068ff07277bae",
+      "content_hash": "sha256:4d81dea690bbb7cc0393fd1062c5fb12fdd2dd389246899bac28a68d4e214589",
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
       "heading": "2.3.1 Failure-mode discriminator: registry-walk vs mirror-walk",
-      "line": 137,
-      "uri": "spec://vibevm/modules/vibe-registry/PROP-002#failure-discriminator"
+      "line": 145,
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-002#failure-discriminator",
+      "kind": "req",
+      "revision": 1
     },
     {
       "anchor": "override",
-      "content_hash": "sha256:62cd4e5d66465f00b66ca6fdcec9d5693db67bac185f6086c4bb6b55ae9850ef",
+      "content_hash": "sha256:3338713b4ef76885a132d92f9f426ac1385790e306444b46489eed05151e149a",
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
       "heading": "2.4 Overrides: surgical pin of source location",
-      "line": 152,
-      "uri": "spec://vibevm/modules/vibe-registry/PROP-002#override"
+      "line": 162,
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-002#override",
+      "kind": "req",
+      "revision": 1
     },
     {
       "anchor": "git-source",
-      "content_hash": "sha256:deb02d6bce781a30174584662b3b289f64eb80666b8439c7ed5e367ce2d2b056",
+      "content_hash": "sha256:88ac8ebb2a2490d1ad5e1c0fce8da907a6269b442b32bbced88c4a681789143d",
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
       "heading": "2.4.1 Git-source declarations: `[requires.packages]` table-form",
-      "line": 168,
-      "uri": "spec://vibevm/modules/vibe-registry/PROP-002#git-source"
+      "line": 180,
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-002#git-source",
+      "kind": "req",
+      "revision": 1
     },
     {
       "anchor": "redirect",
-      "content_hash": "sha256:bdd96ba0a2d7061e36abf1b8e2184d9bfc6d1521c5b9c225b1a5ce841d8b22c7",
+      "content_hash": "sha256:6ad7678b06f72e291b13411eabc997793cf4398eedb6766c7183f2d16dda864e",
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
       "heading": "2.4.2 Registry redirect: delegating package content to an external repo",
-      "line": 286,
-      "uri": "spec://vibevm/modules/vibe-registry/PROP-002#redirect"
+      "line": 300,
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-002#redirect",
+      "kind": "req",
+      "revision": 1
     },
     {
       "anchor": "layout",
-      "content_hash": "sha256:d28aab9167298ee51d3a3e3e920dc4f567563ff826224705cddaab225d3c2a25",
+      "content_hash": "sha256:b5e3062e35e951c2b237821a07b21e2b7eec77e4a53a40b1e08eb9c295520c9d",
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
       "heading": "2.5 Per-package layout: flat, tag-based",
-      "line": 409,
-      "uri": "spec://vibevm/modules/vibe-registry/PROP-002#layout"
+      "line": 425,
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-002#layout",
+      "kind": "req",
+      "revision": 1
     },
     {
       "anchor": "cache",
-      "content_hash": "sha256:23f37d4a5907bf67959e772afcb10525519dcf0de5738e6099797c68743a2785",
+      "content_hash": "sha256:ab33bcdeaf3c8517c3aa9efc06f7424a1dad2f8779068307886ebb8257d6d093",
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
       "heading": "2.6 Cache layout: organized by canonical registry URL",
-      "line": 430,
-      "uri": "spec://vibevm/modules/vibe-registry/PROP-002#cache"
+      "line": 448,
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-002#cache",
+      "kind": "req",
+      "revision": 1
     },
     {
       "anchor": "lockfile",
-      "content_hash": "sha256:9eebf97a19fc9add4c88cf92de8a8cc6ada01a3f07ff63ee52758770abfa363b",
+      "content_hash": "sha256:a6ec447e26f44d4c5e940bea1e89bb4d6b709e6d33107c46a0c521c64c5c1667",
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
       "heading": "2.7 Lockfile schema v2",
-      "line": 451,
-      "uri": "spec://vibevm/modules/vibe-registry/PROP-002#lockfile"
+      "line": 471,
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-002#lockfile",
+      "kind": "req",
+      "revision": 1
     },
     {
       "anchor": "solver",
-      "content_hash": "sha256:b256f8a1e2ae8429c30399925a420847586babeb0ba056f70f2dd02300384f8d",
+      "content_hash": "sha256:bc175cdf9239ad44592612580a4c2be5043813508239a5d9802be2d79d5a1542",
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
       "heading": "2.8 Depsolver: resolvo primary, DepSolver trait for fallback",
-      "line": 483,
-      "uri": "spec://vibevm/modules/vibe-registry/PROP-002#solver"
+      "line": 505,
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-002#solver",
+      "kind": "req",
+      "revision": 1
     },
     {
       "anchor": "capability",
-      "content_hash": "sha256:351872867e629427542ec698a2d3e9aaf0324f9a2a028771ba77fb0bcb0c483c",
+      "content_hash": "sha256:335b4c99e100617a9598b91c3b204280e705f40def2a4b5b40b3010065d5e7f2",
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
       "heading": "2.9 Capability-based deps: `[provides]` / `[requires]` / `[[requires_any]]` / `[obsoletes]` / `[conflicts]`",
-      "line": 497,
-      "uri": "spec://vibevm/modules/vibe-registry/PROP-002#capability"
+      "line": 521,
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-002#capability",
+      "kind": "req",
+      "revision": 1
     },
     {
       "anchor": "publish",
-      "content_hash": "sha256:7d064ac9e7c5f819b5aab3284a817611fd2aca9e334ee9817dae28ff35aa693c",
+      "content_hash": "sha256:c46925f3c788265b411580bd3e314cb4b6d9df86c6d4263323b963e81ef634f0",
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
       "heading": "2.10 Publish utility: `vibe registry publish <path>`",
-      "line": 512,
-      "uri": "spec://vibevm/modules/vibe-registry/PROP-002#publish"
+      "line": 538,
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-002#publish",
+      "kind": "req",
+      "revision": 1
     },
     {
       "anchor": "jtd",
-      "content_hash": "sha256:aee7c14e309c77697c38810dab08ee30b648b860da19193188d47c0dcdb1be0a",
+      "content_hash": "sha256:003467e89f3a4b7c77ba3be9237cf04eeab738be789e12df06cf7c84ce02ac5e",
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
       "heading": "2.11 JTD + codegen for wire contracts",
-      "line": 553,
-      "uri": "spec://vibevm/modules/vibe-registry/PROP-002#jtd"
+      "line": 581,
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-002#jtd",
+      "kind": "req",
+      "revision": 1
     },
     {
       "anchor": "perf",
-      "content_hash": "sha256:f980b2574ad92cb8d39f7f093d500ab2e2111e09eab5506117b03e1626013709",
+      "content_hash": "sha256:abb4d51d2e304cf0e28b4a5425a962dd61eb998427715fc87e4c957b77e8ea8f",
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
       "heading": "2.12 Performance and resolver I/O strategy",
-      "line": 566,
-      "uri": "spec://vibevm/modules/vibe-registry/PROP-002#perf"
+      "line": 596,
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-002#perf",
+      "kind": "req",
+      "revision": 1
     },
     {
       "anchor": "rejected",
@@ -5658,7 +5734,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
       "heading": "3. Rejected alternatives",
-      "line": 583,
+      "line": 615,
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#rejected"
     },
     {
@@ -5667,7 +5743,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
       "heading": "4. Out of scope for Phase A",
-      "line": 619,
+      "line": 651,
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#out-of-scope"
     },
     {
@@ -5676,7 +5752,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
       "heading": "5. Acceptance (Phase A)",
-      "line": 632,
+      "line": 664,
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#acceptance"
     },
     {
@@ -5685,7 +5761,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
       "heading": "6. Phase B preview (M1.6)",
-      "line": 653,
+      "line": 685,
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#phase-b"
     },
     {
@@ -5694,12 +5770,12 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
       "heading": "7. Open questions",
-      "line": 667,
+      "line": 699,
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#open"
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:576e4ae2510ca50a3fe583dd0cfea780bafb0275fa2dfaa0784d37538eb40287",
+      "content_hash": "sha256:4560a8dee42f578143a63f7d7f75805317f891acb83008f6b8293172ac37a1e0",
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "PROP-008: Qualified package naming — groups, short aliases, collision detection",
@@ -5717,7 +5793,7 @@
     },
     {
       "anchor": "decisions",
-      "content_hash": "sha256:59443db529ca6bdf4c8a376d112576549f460e00146ebbc3189703b1777d615e",
+      "content_hash": "sha256:ded8d05d0bbd7c5c9ae681430710054fcf6a0343fe0925c19bdcfb19b07efc4b",
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "2. Decisions",
@@ -5726,93 +5802,113 @@
     },
     {
       "anchor": "group",
-      "content_hash": "sha256:b089355d2cbd41f1f56578cc9528b3099e5f09e85fb16833f71654b1bfc8eff3",
+      "content_hash": "sha256:b8f794d41a7fb79b9a8d2079022fb0b2e2a3ba789ec33435a4e1f054858f93ec",
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "2.1 The `group` field",
       "line": 25,
-      "uri": "spec://vibevm/modules/vibe-registry/PROP-008#group"
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-008#group",
+      "kind": "req",
+      "revision": 1
     },
     {
       "anchor": "identity",
-      "content_hash": "sha256:58d260b5ec8e30d086305655cbd0f01ca9a31fcf31459ec40cbe3b8106587207",
+      "content_hash": "sha256:5b11f6fbf694be0561b373514a3b6f866520aeb98dabe02cce665ca7d288c5bb",
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "2.2 Identity tuple — `(group, name, version, content_hash)`",
-      "line": 41,
-      "uri": "spec://vibevm/modules/vibe-registry/PROP-008#identity"
+      "line": 43,
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-008#identity",
+      "kind": "req",
+      "revision": 1
     },
     {
       "anchor": "kind",
-      "content_hash": "sha256:c2df632c959efe3c4f4322b7ae75d066f672442a41cc578b4d8bdd4208c96306",
+      "content_hash": "sha256:7e15e9bb62be196681abadf1b26c59598c105f140ff999d47667f4b0fa739c25",
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "2.3 `kind` becomes pure metadata",
-      "line": 49,
-      "uri": "spec://vibevm/modules/vibe-registry/PROP-008#kind"
+      "line": 53,
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-008#kind",
+      "kind": "req",
+      "revision": 1
     },
     {
       "anchor": "pkgref",
-      "content_hash": "sha256:840a5039fbf36835f05e4146ef2ee7e5a255befab36e725b96f99fe70ed5ab47",
+      "content_hash": "sha256:e91575baf6c8c0d553d0828f0cabed76dd75ec920cf8f8f00ac0b14249d3464d",
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "2.4 pkgref grammar",
-      "line": 60,
-      "uri": "spec://vibevm/modules/vibe-registry/PROP-008#pkgref"
+      "line": 66,
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-008#pkgref",
+      "kind": "req",
+      "revision": 1
     },
     {
       "anchor": "repo-naming",
-      "content_hash": "sha256:7fa43b37cfd43ad37228dc5387758406f974e385220afded819840ec11cc46b2",
+      "content_hash": "sha256:de241b5d493fea4626919ee7732aa63bcfa13dba66b3f71cbb7e2fc85265450b",
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "2.5 Repository naming — `naming = \"fqdn\"`",
-      "line": 80,
-      "uri": "spec://vibevm/modules/vibe-registry/PROP-008#repo-naming"
+      "line": 88,
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-008#repo-naming",
+      "kind": "req",
+      "revision": 1
     },
     {
       "anchor": "short-name",
-      "content_hash": "sha256:3f035dfe204a6d215c21b2c64c62c26e39a30fbe86714319ee64dcbabee72d68",
+      "content_hash": "sha256:03f941b086c8b011a2e4b3d4a7c5d687d2f89bbbc2967653799f44e3e141ac1b",
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "2.6 Short-name resolution",
-      "line": 95,
-      "uri": "spec://vibevm/modules/vibe-registry/PROP-008#short-name"
+      "line": 105,
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-008#short-name",
+      "kind": "req",
+      "revision": 1
     },
     {
       "anchor": "collision",
-      "content_hash": "sha256:bdab6b8664951330a2d592b057567a30054ef924ae9274f2d37faa3b33d34efa",
+      "content_hash": "sha256:5d75744d390ee4a3e09ba3c1175a6c97a73cbe3b47a9226c98169afb27ad12ae",
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "2.7 Collision vs conflict",
-      "line": 104,
-      "uri": "spec://vibevm/modules/vibe-registry/PROP-008#collision"
+      "line": 116,
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-008#collision",
+      "kind": "req",
+      "revision": 1
     },
     {
       "anchor": "index-ext",
-      "content_hash": "sha256:5987c4b855eb837c988004325a08f83fae84a5f68781f00f6107d3ded7f8814b",
+      "content_hash": "sha256:cb750d350bfb621b6cd7a9176d8b8debed9b1e7d54d4eaa8835af7c91b9391c9",
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "2.8 Index extension",
-      "line": 128,
-      "uri": "spec://vibevm/modules/vibe-registry/PROP-008#index-ext"
+      "line": 142,
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-008#index-ext",
+      "kind": "req",
+      "revision": 1
     },
     {
       "anchor": "explorer",
-      "content_hash": "sha256:d4ca04b5b1ced906e705ef37a4d360493b59faf182ff91c6e36a31d051c82501",
+      "content_hash": "sha256:967e482e7c90bbc76193bb6232720aba6ee665f962bd2dd072e1b6ba45412f93",
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "2.9 Registry explorer",
-      "line": 132,
-      "uri": "spec://vibevm/modules/vibe-registry/PROP-008#explorer"
+      "line": 148,
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-008#explorer",
+      "kind": "design",
+      "revision": 1
     },
     {
       "anchor": "migration",
-      "content_hash": "sha256:7eaf6879eceb081d189b4e2be4d2c2b557394474cae3c7dd4bc38e443e196ea8",
+      "content_hash": "sha256:5967b5c6e712daa15ba4b90bc4a7974bfd41105873ea1ae9152688bad1655c5f",
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "3. Migration",
-      "line": 143,
-      "uri": "spec://vibevm/modules/vibe-registry/PROP-008#migration"
+      "line": 161,
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-008#migration",
+      "kind": "design",
+      "revision": 1
     },
     {
       "anchor": "rejected",
@@ -5820,7 +5916,7 @@
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "4. Rejected alternatives",
-      "line": 155,
+      "line": 175,
       "uri": "spec://vibevm/modules/vibe-registry/PROP-008#rejected"
     },
     {
@@ -5829,7 +5925,7 @@
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "5. Open questions",
-      "line": 164,
+      "line": 184,
       "uri": "spec://vibevm/modules/vibe-registry/PROP-008#open"
     },
     {
@@ -5838,16 +5934,16 @@
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "6. Phase plan",
-      "line": 172,
+      "line": 192,
       "uri": "spec://vibevm/modules/vibe-registry/PROP-008#phases"
     },
     {
       "anchor": "history",
-      "content_hash": "sha256:b031c010350fd21df3f0781e318efeb50057aafab369ef1bf67f7992454fb043",
+      "content_hash": "sha256:80227b06931f62ca861164996db0dfde826db6ecad35f8908c205ebf33fcf2f2",
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "7. Version history",
-      "line": 178,
+      "line": 198,
       "uri": "spec://vibevm/modules/vibe-registry/PROP-008#history"
     },
     {
@@ -6393,7 +6489,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:b64b3865eabcca7b4e2a448260d49dfe0355bed2789f042a6fb323e42465efb3",
+      "content_hash": "sha256:3780c773af2561815e7d7612fb10ab92ee89be26aa7a4c43f1404bc8077370fa",
       "doc_path": "modules/vibe-workspace/PROP-007",
       "file": "spec/modules/vibe-workspace/PROP-007-workspace.md",
       "heading": "PROP-007: Workspace — multi-package projects, recursive nesting, selective publish",
@@ -6411,7 +6507,7 @@
     },
     {
       "anchor": "decisions",
-      "content_hash": "sha256:370dd163ebf6daf7e1c6c73603afac5220fd18384a1f20216ee7633dcc15bccf",
+      "content_hash": "sha256:f7860bf1035e13d2713a11c9ef2b11ba6dfd88d6e00362ddafe2a0afb25091f4",
       "doc_path": "modules/vibe-workspace/PROP-007",
       "file": "spec/modules/vibe-workspace/PROP-007-workspace.md",
       "heading": "2. Decisions",
@@ -6420,102 +6516,124 @@
     },
     {
       "anchor": "workspace-section",
-      "content_hash": "sha256:314e9fb6250ed14cb8e08c0ec4e2de4f12661b1c2cd076387a1199ffdff4eb82",
+      "content_hash": "sha256:6a300c0548cf3c69d5f48ac48a77789cbfb301bfda5a81deefff8e5ee4e22d8e",
       "doc_path": "modules/vibe-workspace/PROP-007",
       "file": "spec/modules/vibe-workspace/PROP-007-workspace.md",
       "heading": "2.1 The `[workspace]` section",
       "line": 30,
-      "uri": "spec://vibevm/modules/vibe-workspace/PROP-007#workspace-section"
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-007#workspace-section",
+      "kind": "req",
+      "revision": 1
     },
     {
       "anchor": "unified-manifest",
-      "content_hash": "sha256:30fb3564a0460ae49d8d343bcd698287a4219c923ef594f37d0e08e0aea48702",
+      "content_hash": "sha256:95009837702952deccd80204e6fb56e48cf98966556091742954f3e95deb0058",
       "doc_path": "modules/vibe-workspace/PROP-007",
       "file": "spec/modules/vibe-workspace/PROP-007-workspace.md",
       "heading": "2.2 Unified manifest — one `vibe.toml`",
-      "line": 47,
-      "uri": "spec://vibevm/modules/vibe-workspace/PROP-007#unified-manifest"
+      "line": 49,
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-007#unified-manifest",
+      "kind": "req",
+      "revision": 1
     },
     {
       "anchor": "nesting",
-      "content_hash": "sha256:7222ce9885d40a1dbee6e1b61421814d787a5b12f68976216c1950ef473acb23",
+      "content_hash": "sha256:4597e3b4b83f8aedaacb9d94802d53e6040be1d457f78febdcfea112ba7b243a",
       "doc_path": "modules/vibe-workspace/PROP-007",
       "file": "spec/modules/vibe-workspace/PROP-007-workspace.md",
       "heading": "2.3 Recursive nesting",
-      "line": 67,
-      "uri": "spec://vibevm/modules/vibe-workspace/PROP-007#nesting"
+      "line": 71,
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-007#nesting",
+      "kind": "req",
+      "revision": 1
     },
     {
       "anchor": "lockfile",
-      "content_hash": "sha256:0f25e9a8aa1d393cb712e55c2f150071109dbb7ae3678e89942cbed67cc6d549",
+      "content_hash": "sha256:21fe81def776ff97bae1671dd8f01b21a9770125db7c76ec98dd7041b6e09148",
       "doc_path": "modules/vibe-workspace/PROP-007",
       "file": "spec/modules/vibe-workspace/PROP-007-workspace.md",
       "heading": "2.4 Single lockfile at the absolute root",
-      "line": 81,
-      "uri": "spec://vibevm/modules/vibe-workspace/PROP-007#lockfile"
+      "line": 87,
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-007#lockfile",
+      "kind": "req",
+      "revision": 1
     },
     {
       "anchor": "path-source",
-      "content_hash": "sha256:0646390b210e8de0af759d59a78567c09cfe0452f1857e7c0cb755c666672d65",
+      "content_hash": "sha256:d358296ef02fdacaa1e44f7e5a8ab4226629f13921aa6a59dc0752a5a9a09125",
       "doc_path": "modules/vibe-workspace/PROP-007",
       "file": "spec/modules/vibe-workspace/PROP-007-workspace.md",
       "heading": "2.5 Cross-member dependencies — the `path` source",
-      "line": 88,
-      "uri": "spec://vibevm/modules/vibe-workspace/PROP-007#path-source"
+      "line": 96,
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-007#path-source",
+      "kind": "req",
+      "revision": 1
     },
     {
       "anchor": "versions",
-      "content_hash": "sha256:c425e24d42b20f8804e73143c528b525b270467b25b8e123acccbe7861288959",
+      "content_hash": "sha256:071037959aa2167968343afaac99d29b6147eac02553d22fc8f24fc444bcf4b8",
       "doc_path": "modules/vibe-workspace/PROP-007",
       "file": "spec/modules/vibe-workspace/PROP-007-workspace.md",
       "heading": "2.6 Version placeholders — `[workspace.versions]`",
-      "line": 104,
-      "uri": "spec://vibevm/modules/vibe-workspace/PROP-007#versions"
+      "line": 114,
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-007#versions",
+      "kind": "req",
+      "revision": 1
     },
     {
       "anchor": "selective-publish",
-      "content_hash": "sha256:7af37f89eefce21bf87f0de0bcb4425983fc58fe72a68c0b4ab41e1f71d5b56e",
+      "content_hash": "sha256:fa656c2a9a6b6a02ebf798a57d4a87454267e9c56990225eeb16dcf36683c71e",
       "doc_path": "modules/vibe-workspace/PROP-007",
       "file": "spec/modules/vibe-workspace/PROP-007-workspace.md",
       "heading": "2.7 Selective publish",
-      "line": 125,
-      "uri": "spec://vibevm/modules/vibe-workspace/PROP-007#selective-publish"
+      "line": 137,
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-007#selective-publish",
+      "kind": "req",
+      "revision": 1
     },
     {
       "anchor": "published-repos",
-      "content_hash": "sha256:63d6d18417d0079ff59c8853d8737dd4ec81d8973af4afb5c2ef3615be3f13f4",
+      "content_hash": "sha256:22b0cdb15200e642366455249b390f6836b50b800387d212e9d7742e862bda79",
       "doc_path": "modules/vibe-workspace/PROP-007",
       "file": "spec/modules/vibe-workspace/PROP-007-workspace.md",
       "heading": "2.8 Published package repositories",
-      "line": 142,
-      "uri": "spec://vibevm/modules/vibe-workspace/PROP-007#published-repos"
+      "line": 156,
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-007#published-repos",
+      "kind": "req",
+      "revision": 1
     },
     {
       "anchor": "root-package",
-      "content_hash": "sha256:3bc8975ad31d818165c8ee5b3130baf89c0fecefe06213d46b9f3677cc06cdbe",
+      "content_hash": "sha256:38b88e027c2508f5af8495c74214b218174e8ae55c7e7f2afd58863f06c06221",
       "doc_path": "modules/vibe-workspace/PROP-007",
       "file": "spec/modules/vibe-workspace/PROP-007-workspace.md",
       "heading": "2.9 Root as a publishable package",
-      "line": 188,
-      "uri": "spec://vibevm/modules/vibe-workspace/PROP-007#root-package"
+      "line": 204,
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-007#root-package",
+      "kind": "req",
+      "revision": 1
     },
     {
       "anchor": "surface",
-      "content_hash": "sha256:27b60f2bb79eaa19c69b38b7e7c9aa86b82729f6429731a510d8bde9e65b1bf8",
+      "content_hash": "sha256:1edff03229528f503c294fc6b66e568e4e0f3d114a8a625e041666d164f95287",
       "doc_path": "modules/vibe-workspace/PROP-007",
       "file": "spec/modules/vibe-workspace/PROP-007-workspace.md",
       "heading": "3. Command and crate surface",
-      "line": 194,
-      "uri": "spec://vibevm/modules/vibe-workspace/PROP-007#surface"
+      "line": 212,
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-007#surface",
+      "kind": "design",
+      "revision": 1
     },
     {
       "anchor": "vs-subskills",
-      "content_hash": "sha256:b254deacf38d8ec695a54726f9b967c43a38748df54db1c6cd5a4f92c6cf896c",
+      "content_hash": "sha256:70f3b2315f27244cadfeab46640ee5b93b2e73a6301762af38a815db6740660e",
       "doc_path": "modules/vibe-workspace/PROP-007",
       "file": "spec/modules/vibe-workspace/PROP-007-workspace.md",
       "heading": "4. Workspace members vs subskills",
-      "line": 204,
-      "uri": "spec://vibevm/modules/vibe-workspace/PROP-007#vs-subskills"
+      "line": 224,
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-007#vs-subskills",
+      "kind": "design",
+      "revision": 1
     },
     {
       "anchor": "rejected",
@@ -6523,7 +6641,7 @@
       "doc_path": "modules/vibe-workspace/PROP-007",
       "file": "spec/modules/vibe-workspace/PROP-007-workspace.md",
       "heading": "5. Rejected / deferred alternatives",
-      "line": 219,
+      "line": 241,
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-007#rejected"
     },
     {
@@ -6532,7 +6650,7 @@
       "doc_path": "modules/vibe-workspace/PROP-007",
       "file": "spec/modules/vibe-workspace/PROP-007-workspace.md",
       "heading": "6. Open questions",
-      "line": 228,
+      "line": 250,
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-007#open"
     },
     {
@@ -6541,7 +6659,7 @@
       "doc_path": "modules/vibe-workspace/PROP-007",
       "file": "spec/modules/vibe-workspace/PROP-007-workspace.md",
       "heading": "7. Phase plan",
-      "line": 243,
+      "line": 265,
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-007#phases"
     },
     {
@@ -6550,7 +6668,7 @@
       "doc_path": "modules/vibe-workspace/PROP-007",
       "file": "spec/modules/vibe-workspace/PROP-007-workspace.md",
       "heading": "8. Version history",
-      "line": 251,
+      "line": 273,
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-007#history"
     },
     {
@@ -6559,7 +6677,7 @@
       "doc_path": "modules/vibe-workspace/PROP-007",
       "file": "spec/modules/vibe-workspace/PROP-007-workspace.md",
       "heading": "9. Implementation record",
-      "line": 258,
+      "line": 280,
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-007#impl"
     },
     {
@@ -6568,7 +6686,7 @@
       "doc_path": "modules/vibe-workspace/PROP-007",
       "file": "spec/modules/vibe-workspace/PROP-007-workspace.md",
       "heading": "9.1 What each phase delivered",
-      "line": 262,
+      "line": 284,
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-007#impl-phases"
     },
     {
@@ -6577,7 +6695,7 @@
       "doc_path": "modules/vibe-workspace/PROP-007",
       "file": "spec/modules/vibe-workspace/PROP-007-workspace.md",
       "heading": "9.2 Decisions pinned during implementation",
-      "line": 276,
+      "line": 298,
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-007#impl-decisions"
     },
     {
@@ -6586,7 +6704,7 @@
       "doc_path": "modules/vibe-workspace/PROP-007",
       "file": "spec/modules/vibe-workspace/PROP-007-workspace.md",
       "heading": "9.3 Deferred work",
-      "line": 283,
+      "line": 305,
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-007#impl-deferred"
     },
     {
@@ -6595,7 +6713,7 @@
       "doc_path": "modules/vibe-workspace/PROP-007",
       "file": "spec/modules/vibe-workspace/PROP-007-workspace.md",
       "heading": "9.4 Crate and module map",
-      "line": 289,
+      "line": 311,
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-007#impl-map"
     },
     {
@@ -6604,7 +6722,7 @@
       "doc_path": "modules/vibe-workspace/PROP-007",
       "file": "spec/modules/vibe-workspace/PROP-007-workspace.md",
       "heading": "9.5 Quality gates",
-      "line": 297,
+      "line": 319,
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-007#impl-gates"
     },
     {
@@ -6915,7 +7033,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:86fbcc861086bb94b94125b7cf9a99aa104d7dc9bbf68db1536e51aaad45b4d2",
+      "content_hash": "sha256:f55994edf4c18a4c45db0fe28c589cc202faea35ccca98d45708967ed22f72cd",
       "doc_path": "modules/vibe-workspace/PROP-012",
       "file": "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md",
       "heading": "PROP-012: The managed redirect block — vibevm as a co-tenant of the agent instruction files",
@@ -6933,7 +7051,7 @@
     },
     {
       "anchor": "decisions",
-      "content_hash": "sha256:d57a423f09cbecbeb77cb19adf19c0a9d6302cff2ceab6201933f40f5a4238e4",
+      "content_hash": "sha256:da5fd5822b53f544d1a244c50fd7847b940c2049118c7325f7f157f4cf5cd043",
       "doc_path": "modules/vibe-workspace/PROP-012",
       "file": "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md",
       "heading": "2. Decisions",
@@ -6942,75 +7060,91 @@
     },
     {
       "anchor": "co-tenant",
-      "content_hash": "sha256:45545d1e281f22373fb2dcf3783877dc6bbd6bc8a0d41524ca5d28a109906abb",
+      "content_hash": "sha256:37827115031d5e166709f9486c15823832cdf87ca687e742a9eac931bb1b3d6f",
       "doc_path": "modules/vibe-workspace/PROP-012",
       "file": "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md",
       "heading": "2.1 vibevm owns one delimited block, nothing else",
       "line": 30,
-      "uri": "spec://vibevm/modules/vibe-workspace/PROP-012#co-tenant"
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-012#co-tenant",
+      "kind": "req",
+      "revision": 1
     },
     {
       "anchor": "markers",
-      "content_hash": "sha256:354adc69d8d3626d0bdbdfd5247ac575bda06b0b0f7050a9f3d02f9814ad76df",
+      "content_hash": "sha256:cbacc5cc77bdded01a6418e64fc1e8e2a5fc16fc5f0b765ca6fe7b70c87a3952",
       "doc_path": "modules/vibe-workspace/PROP-012",
       "file": "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md",
       "heading": "2.2 The markers, and well-formedness",
-      "line": 36,
-      "uri": "spec://vibevm/modules/vibe-workspace/PROP-012#markers"
+      "line": 38,
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-012#markers",
+      "kind": "req",
+      "revision": 1
     },
     {
       "anchor": "create",
-      "content_hash": "sha256:5ed96b2cb09c78658b9c37a68fd068e5a76ad6a138f917540449fad78e83787c",
+      "content_hash": "sha256:0e1367df3806184982d940ede1889c3c68a969c69eec31f20a487f4ee7a618ff",
       "doc_path": "modules/vibe-workspace/PROP-012",
       "file": "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md",
       "heading": "2.3 Malformed → hard stop; absent → create; present → splice",
-      "line": 51,
-      "uri": "spec://vibevm/modules/vibe-workspace/PROP-012#create"
+      "line": 55,
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-012#create",
+      "kind": "req",
+      "revision": 1
     },
     {
       "anchor": "placement",
-      "content_hash": "sha256:bbd8cdccfe973d27a5697bf47e03e30f045886ef1089e173a66c079827a036b7",
+      "content_hash": "sha256:32f213008730e2774c62f39c603aa1ed0ccc34e4dd06421114116d061a74c0bf",
       "doc_path": "modules/vibe-workspace/PROP-012",
       "file": "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md",
       "heading": "2.4 Placement is the user's — vibevm never moves the block",
-      "line": 59,
-      "uri": "spec://vibevm/modules/vibe-workspace/PROP-012#placement"
+      "line": 65,
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-012#placement",
+      "kind": "req",
+      "revision": 1
     },
     {
       "anchor": "plan-time",
-      "content_hash": "sha256:4abb46870098e62ee981401bb476bc87d16cab60a19cc22cb4ccf15df8153cdb",
+      "content_hash": "sha256:6db8c6d81a5cc35d14ca7db6d98de1305d5bdba155d9425ddf6c5dfa270153f6",
       "doc_path": "modules/vibe-workspace/PROP-012",
       "file": "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md",
       "heading": "2.5 Validate before mutate",
-      "line": 72,
-      "uri": "spec://vibevm/modules/vibe-workspace/PROP-012#plan-time"
+      "line": 80,
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-012#plan-time",
+      "kind": "req",
+      "revision": 1
     },
     {
       "anchor": "content",
-      "content_hash": "sha256:088b3166a2cbc5f9d44bcac97780fcf85c1bdbc82fa3da5a71362dee887c5408",
+      "content_hash": "sha256:15bca6a71cb389af50da232e869ce3fcef58873674ba6ce7092e187ece2a6423",
       "doc_path": "modules/vibe-workspace/PROP-012",
       "file": "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md",
       "heading": "2.6 The block content is unchanged — this PROP changes the envelope, not the payload",
-      "line": 76,
-      "uri": "spec://vibevm/modules/vibe-workspace/PROP-012#content"
+      "line": 86,
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-012#content",
+      "kind": "design",
+      "revision": 1
     },
     {
       "anchor": "surface",
-      "content_hash": "sha256:a5befdc957cf0ab767ffb0bb729d3da456ff00e3934435f5012ceb848c708a0d",
+      "content_hash": "sha256:2e6d88c47e04ece99b686efea68d6c57f9c08cd0f11f54c8c359c7c44068077b",
       "doc_path": "modules/vibe-workspace/PROP-012",
       "file": "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md",
       "heading": "3. Command and crate surface",
-      "line": 84,
-      "uri": "spec://vibevm/modules/vibe-workspace/PROP-012#surface"
+      "line": 96,
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-012#surface",
+      "kind": "design",
+      "revision": 1
     },
     {
       "anchor": "migration",
-      "content_hash": "sha256:16601a9cb4df8608386ae26b42631a78af13af9549df219f7fc13bd7b95b530f",
+      "content_hash": "sha256:fabe0bc77b83a1501aac4c29e0daddd5de535fc9ce0e6784eb8d64136d510f60",
       "doc_path": "modules/vibe-workspace/PROP-012",
       "file": "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md",
       "heading": "4. Migration",
-      "line": 94,
-      "uri": "spec://vibevm/modules/vibe-workspace/PROP-012#migration"
+      "line": 108,
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-012#migration",
+      "kind": "req",
+      "revision": 1
     },
     {
       "anchor": "open",
@@ -7018,7 +7152,7 @@
       "doc_path": "modules/vibe-workspace/PROP-012",
       "file": "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md",
       "heading": "5. Open questions",
-      "line": 107,
+      "line": 123,
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-012#open"
     },
     {
@@ -7027,7 +7161,7 @@
       "doc_path": "modules/vibe-workspace/PROP-012",
       "file": "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md",
       "heading": "6. Rejected / deferred alternatives",
-      "line": 116,
+      "line": 132,
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-012#rejected"
     },
     {
@@ -7036,16 +7170,16 @@
       "doc_path": "modules/vibe-workspace/PROP-012",
       "file": "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md",
       "heading": "7. Phase plan",
-      "line": 125,
+      "line": 141,
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-012#phases"
     },
     {
       "anchor": "history",
-      "content_hash": "sha256:bba0c16ba3f9b1c30d376d70ee90b3297e46c055b7189a97427783468a0e184b",
+      "content_hash": "sha256:f44990963f30859d6e1469656874dae7bd03b739bfa30f30b56a64e6168b5989",
       "doc_path": "modules/vibe-workspace/PROP-012",
       "file": "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md",
       "heading": "8. Version history",
-      "line": 136,
+      "line": 152,
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-012#history"
     },
     {

@@ -34,6 +34,8 @@ What every other production package manager does — and what vibevm now needs �
 
 ### 2.1 Index is OPTIONAL — zero impact when absent {#optional}
 
+`req r1`
+
 **Decision.** The index layer is **strictly additive**. Every existing vibevm code path keeps working exactly as today when no index is present. Consumers detect a registry's index by HTTP GET on a well-known path (`<index-base>/repomd.json`); 404 → fall back to the live `git ls-remote` path that exists today. No registry is required to have an index. No project is required to consume one.
 
 **Rationale.**
@@ -45,6 +47,8 @@ What every other production package manager does — and what vibevm now needs �
 **Consequence.** All optimisations the index unlocks (cold-cache install speed, `vibe search`, faster `vibe outdated`) are **opportunistic**. The integrity story (`content_hash` per [PROP-002 §2.1](../vibe-registry/PROP-002-decentralized-registry.md#identity)) does not change — content_hash is verified at fetch time regardless of whether the resolve path went through the index.
 
 ### 2.2 Form factor: per-org **index** living in a separate git repository {#form-factor}
+
+`req r1`
 
 **Decision.** Each vibevm registry org that opts in maintains a dedicated git repository named `index` (configurable; default name `index`) under the same org root:
 
@@ -88,6 +92,8 @@ Default: `<registry-url>/index`. Resolver tries the default location when `index
 
 ### 2.3 Source of truth: package repos remain authoritative; index is a hot cache {#truth}
 
+`req r1`
+
 **Decision.** Package repositories are the **source of truth** for content (manifests, files, tags). The index is a **derived hot cache**, regeneratable from the authoritative package state.
 
 This matters because it disambiguates the failure mode: if the index disagrees with reality, **reality wins**. A consumer that resolves a package through the index still verifies `content_hash` against the actually-fetched bytes per [PROP-002 §2.1](../vibe-registry/PROP-002-decentralized-registry.md#identity). A mismatch between an index-recorded `content_hash` and the actually-fetched one is a hard `IntegrityError`, surfaced with both values and a hint to refresh the index. No silent acceptance.
@@ -95,6 +101,8 @@ This matters because it disambiguates the failure mode: if the index disagrees w
 **Server-mode wrinkle.** The `vibe-index serve` mode (§2.5) is described in the prompt as "the only writer; source of truth". This is true *for the index data*. The server holds the canonical RAM copy, persists it to disk on every mutation, and refuses writes from other processes (file lock + mtime checks at startup). But the server's writes are **derived from package-repo state** — the ground truth for "is this version published?" is still the actual git tag in the actual package repo. A divergence (index says `v0.1.0` exists; the package repo's tag was force-deleted) surfaces at consumer install time as an integrity failure on cross-source `content_hash` verification, and the operator has the diagnostic clear: "your index lies; reindex".
 
 ### 2.4 File layout inside the index repo {#layout}
+
+`req r1`
 
 **Decision.** The index repo's working tree (and equivalently its raw-HTTP-served file tree) carries:
 
@@ -201,6 +209,8 @@ Determinism matters because the index repo lives in git: a non-deterministic ord
 
 ### 2.5 Two modes: CLI tool and HTTP server {#modes}
 
+`req r1`
+
 **Decision.** A single binary, `vibe-index`, ships in two modes selected by subcommand:
 
 - **CLI mode** (default, every subcommand except `serve`) — operates directly on a data directory of index files. Reads on-disk state, mutates, writes back atomically. Suited for: scripted `vibe-index reindex` invocations, manual operator commands, CI pipelines, post-publish hooks.
@@ -211,6 +221,8 @@ Determinism matters because the index repo lives in git: a non-deterministic ord
 **Distribution.** The utility lives in `crates/vibe-index/` at the repository root — outside the main Cargo workspace under `crates/`. This is deliberate: §6 explains the separate-workspace decision and what it buys for redistribution.
 
 ### 2.6 Index entry shape (the canonical record) {#entry}
+
+`req r1`
 
 **Decision.** Every `(group, name, version)` entry carries the following fields. This is the schema lines of `primary.jsonl` follow, and the elements each `by-name/<name>.json` candidate's `versions[]` carry. JTD schema lives in `crates/vibe-index/schemas/index-entry.jtd.json` (PROP-000 §16).
 
@@ -284,6 +296,8 @@ Determinism matters because the index repo lives in git: a non-deterministic ord
 
 ### 2.7 Identity and trust {#trust}
 
+`req r1`
+
 **Decision.** `content_hash` is the join key between the index and the lockfile. A consumer that fetches `flow:wal@0.1.0` via the index records the same `content_hash` in the lockfile that a no-index fetch would have produced. **Index entries are advisory; the bytes are authoritative.**
 
 The `repomd.json::files[*].sha256` covers integrity of the index files themselves. The per-entry `content_hash` covers integrity of the package content. The two are independent: a tampered index file fails its file-hash check; a tampered package repo (force-pushed tag) fails its content-hash check at fetch time.
@@ -291,6 +305,8 @@ The `repomd.json::files[*].sha256` covers integrity of the index files themselve
 **Out of scope for v0:** GPG-signed `repomd.json.asc`, Merkle-log audit trail (Go sumdb-style). [§9](#open) tracks both.
 
 ### 2.8 Reindexation: full and incremental {#reindex}
+
+`req r1`
 
 **Decision.** Two regeneration modes, both available via CLI (`vibe-index reindex`) and HTTP (`POST /v1/admin/reindex`):
 
@@ -318,6 +334,8 @@ Incremental is the default cadence target (one run per minute on an active org);
 
 ### 2.9 Single-writer server mode {#server-mode}
 
+`req r1`
+
 **Decision.** The HTTP server is the **only writer** when running. It locks the data directory via a PID file (`<data-dir>/state/server.lock`) at startup; refuses to start if the lock is held by another live process; refuses CLI mutations against the same data directory by detecting the lock from CLI side (CLI-mode `add` / `remove` / `reindex` errors with "server is running on this data dir; use the HTTP API").
 
 In-memory state model:
@@ -342,6 +360,8 @@ On every successful write, the server:
 **Process model.** Single process. No replication. An operator who needs HA runs the server behind a load balancer with N replicas and a shared filesystem — but that's outside v0. v0 expects one process per data directory.
 
 ### 2.10 HTTP API surface {#http}
+
+`req r1`
 
 **Decision.** REST API, JSON over HTTP. CORS open on read endpoints (so a future web UI can hit it from a browser). Routes:
 
@@ -389,6 +409,8 @@ GET    /metrics                                   # Prometheus text format
 
 ### 2.11 CLI surface {#cli}
 
+`req r1`
+
 **Decision.** `vibe-index <subcommand> [args]`. All subcommands accept `--data-dir <path>` (or use `$VIBE_INDEX_DATA_DIR`, default `./vibe-index-data`). All emit human-readable text by default; `--json` for machine-readable shape mirroring the HTTP API responses.
 
 ```
@@ -422,6 +444,8 @@ vibe-index stop <data-dir>                                       # graceful shut
 **Help-text smoke** lives under `crates/vibe-index/tests/help_smoke.rs`, mirroring `every_subcommand_renders_help` in `vibe-cli`.
 
 ### 2.12 Data structures {#types}
+
+`req r1`
 
 **Decision.** Rust types live in `crates/vibe-index/src/types/`, derived from the JTD schemas under `crates/vibe-index/schemas/`:
 
@@ -458,6 +482,8 @@ pub struct VersionEntry { /* §2.6 schema, one-to-one */ }
 
 ### 2.13 Persistence layer {#persistence}
 
+`req r1`
+
 **Decision.** `<data-dir>/` layout:
 
 ```
@@ -493,6 +519,8 @@ The data-dir doubles as a git working tree of the org's `index` repo. `state/` i
 
 ### 2.14 Integration with the rest of vibevm {#integration}
 
+`req r1`
+
 **Consumer side (`vibe-cli`, `vibe-registry`).**
 
 - `crates/vibe-registry/src/multi_registry_resolver.rs` gains an optional **index-aware fast path**. Before falling back to per-repo `git ls-remote`, it tries `HTTP GET <registry.index_url>/repomd.json`. On 200, it reads `by-name/<name>.json` for the pkgref, selects the candidate whose `group` matches, and picks the matching version locally — zero ls-remote calls. On 404 / connect failure, fall through to today's path.
@@ -515,6 +543,8 @@ Each integration point is a separate slice. v0 of `vibe-index` ships without any
 
 ### 2.15 What index must NEVER do {#never}
 
+`req r1`
+
 - **Never replace `vibe.toml` as the source of truth.** A package with a missing index entry still installs from git per the live path. A package with a divergent index entry triggers `IntegrityError`, never silent acceptance.
 - **Never modify package repos.** The index utility reads package repos (for the `--from-clones` walk) but never writes to them.
 - **Never echo tokens.** Same discipline as [PROP-000 §20](../../common/PROP-000.md#token-secrecy). Auth tokens for the server, GitHub API tokens for `--from-github`, publish tokens propagated through hooks — none ever appear in stdout / stderr / logs / JSON envelopes.
@@ -526,6 +556,8 @@ Each integration point is a separate slice. v0 of `vibe-index` ships without any
 ## 3. Architecture {#architecture}
 
 ### 3.1 Crate layout {#crate-layout}
+
+`design r1`
 
 ```
 crates/vibe-index/                          # a member of the vibevm workspace
@@ -611,6 +643,8 @@ crates/vibe-index/                          # a member of the vibevm workspace
 
 ### 3.2 Dependencies {#deps}
 
+`design r1`
+
 Minimal Rust crates to keep redistribution clean:
 
 - `clap` (derive) — CLI dispatch.
@@ -639,17 +673,23 @@ Minimal Rust crates to keep redistribution clean:
 
 ### 3.3 Git access in the scanner {#git-access}
 
+`design r1`
+
 **Decision.** Use shell-out to `git` via `std::process::Command` for the scanner's read paths (`git tag`, `git show <ref>:<path>`, `git rev-parse <tag>`). Same path `vibe-registry::shell.rs` already follows. Rationale matches PROP-001 §2.1: shell-out works on every platform git works on, no per-host bindings to maintain.
 
 **Not** `gix` for v0: smaller dep tree wins. v1 may switch if perf demands and gix's read API matures further.
 
 ### 3.4 Threading model {#threading}
 
+`design r1`
+
 - CLI mode: synchronous. tokio runtime is created only in `serve` subcommand.
 - Server mode: tokio multi-thread runtime. Routes are async; `Arc<RwLock<Index>>` is `tokio::sync::RwLock` (async lock).
 - Disk writes serialised through a single dedicated tokio task: `index_writer`. The server posts mutations to it via an mpsc channel; the writer applies them in order. This avoids fsync stalls blocking the request handlers.
 
 ### 3.5 Configuration precedence {#config}
+
+`design r1`
 
 For every flag with a default, precedence is: explicit CLI flag > env var (`VIBE_INDEX_*`) > on-disk config (`<data-dir>/state/config.toml`, optional) > built-in default. Same shape `vibe show config` already uses on the consumer side.
 
@@ -762,6 +802,8 @@ Per slice (specifics in §4); cumulative state at GA:
 
 ## 6. Distribution — a workspace crate {#distribution}
 
+`design r1`
+
 **Decision (revised 2026-05-22).** `vibe-index` lives at `crates/vibe-index/` as a member of the top-level vibevm workspace. It is built, tested, clippy-gated, and fmt-checked by the same `cargo … --workspace` invocations as every other crate, and it depends on `vibe-core` directly.
 
 **Why this reverses the original standalone-workspace decision.** The proposal first placed `vibe-index` in its own Cargo workspace under `services/`, outside `crates/`, so an org owner could vendor just that subdirectory. The cost was a hand-duplicated `vibe.toml` parser with nothing tying it to `vibe-core` — and, sitting outside `cargo test --workspace`, nothing routinely exercising it. It rotted silently against the M1.17 / M1.18 manifest-schema churn ([§9](#open) item 11). Folding the crate back in kills both failure modes at once: the scanner now parses through `vibe-core::Manifest` (one source of truth — the schema cannot drift), and the routine workspace gate covers it (drift is caught the moment it appears).
@@ -773,6 +815,8 @@ Per slice (specifics in §4); cumulative state at GA:
 ---
 
 ## 7. Auth, secrets, scope {#secrets}
+
+`req r1`
 
 [PROP-000 §20](../../common/PROP-000.md#token-secrecy) covers the token-secrecy invariant; PROP-005 inherits it verbatim. Specifically:
 

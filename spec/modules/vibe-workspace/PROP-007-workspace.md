@@ -29,6 +29,8 @@ PROP-007 covers the workspace axis. The companion [PROP-008](../vibe-registry/PR
 
 ### 2.1 The `[workspace]` section {#workspace-section}
 
+`req r1`
+
 **Decision.** A `vibe.toml` may carry a `[workspace]` table declaring member packages:
 
 ```toml
@@ -45,6 +47,8 @@ members = [
 - Membership is **explicit** — there is no auto-discovery of directories that happen to carry a `vibe.toml`. The structure is declared, per the owner's "the whole structure is in the project description" requirement.
 
 ### 2.2 Unified manifest — one `vibe.toml` {#unified-manifest}
+
+`req r1`
 
 **Decision.** `vibe-package.toml` is **retired as a distinct filename**. Every node — project root, workspace member, published package — carries a single `vibe.toml`; the role is expressed by which sections are present. This is the cargo model: one `Cargo.toml` carries `[package]` and/or `[workspace]`.
 
@@ -66,6 +70,8 @@ Section roles:
 
 ### 2.3 Recursive nesting {#nesting}
 
+`req r1`
+
 **Decision.** Nested workspaces are permitted to arbitrary depth — a member may itself carry a `[workspace]` section.
 
 The load-bearing principle that keeps this from becoming chaos:
@@ -80,12 +86,16 @@ The load-bearing principle that keeps this from becoming chaos:
 
 ### 2.4 Single lockfile at the absolute root {#lockfile}
 
+`req r1`
+
 **Decision.** One `vibe.lock`, at the absolute root of the workspace tree (§2.3). No per-member lockfiles.
 
 - **Unified resolution.** All members resolve together: one version of each external dependency across the whole workspace. A "diamond" inside a workspace is impossible by construction. This is the cargo model; Maven's nearest equivalent is `<dependencyManagement>` in the parent POM (Maven has no lockfile at all — a known reproducibility gap vibevm does not inherit, since the lockfile is already load-bearing for content-hash integrity per PROP-002 §2.1).
 - **Command bubbling.** A command (`vibe install`, `vibe build`) run inside a member's directory walks up to the absolute root, finds `vibe.lock`, and operates against it. The member "does not notice" it is part of something larger — this realises the owner's requirement that a developer can work inside a sub-project unaware of the surrounding workspace.
 
 ### 2.5 Cross-member dependencies — the `path` source {#path-source}
+
+`req r1`
 
 **Decision.** A third dependency source-kind joins registry-resolved (PROP-002 §2.2) and git-source (PROP-002 §2.4.1): **path-source**.
 
@@ -102,6 +112,8 @@ The load-bearing principle that keeps this from becoming chaos:
 - **path outside the workspace.** A `path` pointing at a directory that is not a member of this workspace is permitted, but a node depending on it via path-only (no `version`) is not publishable — the published copy would dangle.
 
 ### 2.6 Version placeholders — `[workspace.versions]` {#versions}
+
+`req r1`
 
 **Decision.** Named version placeholders, the equivalent of Maven `<properties>`:
 
@@ -124,6 +136,8 @@ ui   = "^0.3"
 
 ### 2.7 Selective publish {#selective-publish}
 
+`req r1`
+
 **Decision.** Each publishable node declares its publish posture in `[package]`:
 
 ```toml
@@ -140,6 +154,8 @@ publish = ["vibespecs"]         # only into these named registries
 - Extremes: every member `publish = false` → the project is entirely invisible, nothing leaves the machine. Every member `publish = true` → the whole project, root included (§2.9), is published.
 
 ### 2.8 Published package repositories {#published-repos}
+
+`req r1`
 
 **Decision.** The development tree is **one** source tree (one git repository, or not in git at all if the project is private). Workspace members are subdirectories; the split into packages is logical, at the vibevm resolver level. **Publishing is a separate operation that copies the content of a package's directory into a new, separate repository** in the registry org and tags the version — exactly what `vibe registry publish` does today for one package, repeated per self-published member by `vibe workspace publish`.
 
@@ -187,11 +203,15 @@ A `[workspace]`-level setting `published_repos = "read-only" | "open"` (default 
 
 ### 2.9 Root as a publishable package {#root-package}
 
+`req r1`
+
 **Decision.** The root `vibe.toml` may itself carry `[package]` alongside `[workspace]` — cargo-style. The workspace coordinator can also be a publishable artifact in its own right. (Maven's parent POM cannot; cargo's root crate can. vibevm follows cargo.)
 
 ---
 
 ## 3. Command and crate surface {#surface}
+
+`design r1`
 
 - `vibe workspace publish [--member <m>] [--archive]` — topological publish of self-publishing members (§2.7), origin-marker + signalling (§2.8).
 - `vibe install` / `vibe build` bubble up to the absolute root (§2.4); `-p <member>` targets one member; run inside a member's directory they address that member's `[requires]`.
@@ -202,6 +222,8 @@ A `[workspace]`-level setting `published_repos = "read-only" | "open"` (default 
 ---
 
 ## 4. Workspace members vs subskills {#vs-subskills}
+
+`design r1`
 
 These are easy to confuse; they are different objects.
 
