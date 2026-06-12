@@ -1348,15 +1348,22 @@
       "crate_name": "vibe-index",
       "file": "crates/vibe-index/src/scanner/mod.rs",
       "item_kind": "mod",
-      "line": 7,
+      "line": 11,
       "symbol": "vibe_index::scanner"
     },
     {
       "crate_name": "vibe-index",
       "file": "crates/vibe-index/src/scanner/from_clones.rs",
       "item_kind": "mod",
-      "line": 12,
+      "line": 6,
       "symbol": "vibe_index::scanner::from_clones"
+    },
+    {
+      "crate_name": "vibe-index",
+      "file": "crates/vibe-index/src/scanner/from_clones.rs",
+      "item_kind": "struct",
+      "line": 17,
+      "symbol": "vibe_index::scanner::from_clones::FromClonesScanner"
     },
     {
       "crate_name": "vibe-index",
@@ -1364,6 +1371,13 @@
       "item_kind": "mod",
       "line": 12,
       "symbol": "vibe_index::scanner::from_github"
+    },
+    {
+      "crate_name": "vibe-index",
+      "file": "crates/vibe-index/src/scanner/from_github.rs",
+      "item_kind": "struct",
+      "line": 57,
+      "symbol": "vibe_index::scanner::from_github::FromGithubScanner"
     },
     {
       "crate_name": "vibe-index",
@@ -1385,6 +1399,13 @@
       "item_kind": "fn",
       "line": 39,
       "symbol": "vibe_index::scanner::manifest::parse_manifest"
+    },
+    {
+      "crate_name": "vibe-index",
+      "file": "crates/vibe-index/src/scanner/org_walk.rs",
+      "item_kind": "mod",
+      "line": 12,
+      "symbol": "vibe_index::scanner::org_walk"
     },
     {
       "crate_name": "vibe-index",
@@ -1531,6 +1552,13 @@
       "file": "crates/vibe-index/tests/from_github_e2e.rs",
       "item_kind": "fn",
       "line": 157,
+      "symbol": "vibe_index::tests::from_github_e2e::from_github_cell_scans_through_the_seam"
+    },
+    {
+      "crate_name": "vibe-index",
+      "file": "crates/vibe-index/tests/from_github_e2e.rs",
+      "item_kind": "fn",
+      "line": 213,
       "symbol": "vibe_index::tests::from_github_e2e::from_github_walks_mock_org_into_index"
     },
     {
@@ -1544,14 +1572,21 @@
       "crate_name": "vibe-index",
       "file": "crates/vibe-index/tests/scanner_e2e.rs",
       "item_kind": "fn",
-      "line": 258,
+      "line": 64,
+      "symbol": "vibe_index::tests::scanner_e2e::from_clones_cell_scans_through_the_seam"
+    },
+    {
+      "crate_name": "vibe-index",
+      "file": "crates/vibe-index/tests/scanner_e2e.rs",
+      "item_kind": "fn",
+      "line": 307,
       "symbol": "vibe_index::tests::scanner_e2e::incremental_skips_unchanged_repos_and_picks_up_new_tags"
     },
     {
       "crate_name": "vibe-index",
       "file": "crates/vibe-index/tests/scanner_e2e.rs",
       "item_kind": "fn",
-      "line": 64,
+      "line": 113,
       "symbol": "vibe_index::tests::scanner_e2e::reindex_from_clones_walks_three_packages"
     },
     {
@@ -4328,7 +4363,7 @@
     {
       "file": "crates/vibe-index/src/scanner/mod.rs",
       "from_symbol": "vibe_index::scanner",
-      "line": 7,
+      "line": 11,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-index/PROP-005#root",
       "verb": "implements"
@@ -4336,15 +4371,31 @@
     {
       "file": "crates/vibe-index/src/scanner/from_clones.rs",
       "from_symbol": "vibe_index::scanner::from_clones",
-      "line": 12,
+      "line": 6,
       "provenance": "authored",
-      "uri": "spec://vibevm/modules/vibe-index/PROP-005#root",
+      "uri": "spec://vibevm/modules/vibe-index/PROP-005#reindex",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-index/src/scanner/from_clones.rs",
+      "from_symbol": "vibe_index::scanner::from_clones::FromClonesScanner",
+      "line": 21,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-index/PROP-005#reindex",
       "verb": "implements"
     },
     {
       "file": "crates/vibe-index/src/scanner/from_github.rs",
       "from_symbol": "vibe_index::scanner::from_github",
       "line": 12,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-index/PROP-005#reindex",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-index/src/scanner/from_github.rs",
+      "from_symbol": "vibe_index::scanner::from_github::FromGithubScanner",
+      "line": 63,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-index/PROP-005#reindex",
       "verb": "implements"
@@ -4373,6 +4424,14 @@
       "uri": "spec://vibevm/modules/vibe-index/PROP-005#entry",
       "verb": "implements",
       "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-index/src/scanner/org_walk.rs",
+      "from_symbol": "vibe_index::scanner::org_walk",
+      "line": 12,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-index/PROP-005#root",
+      "verb": "implements"
     },
     {
       "file": "crates/vibe-index/src/server/mod.rs",
@@ -4541,8 +4600,17 @@
     },
     {
       "file": "crates/vibe-index/tests/from_github_e2e.rs",
+      "from_symbol": "vibe_index::tests::from_github_e2e::from_github_cell_scans_through_the_seam",
+      "line": 162,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-index/PROP-005#reindex",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-index/tests/from_github_e2e.rs",
       "from_symbol": "vibe_index::tests::from_github_e2e::from_github_walks_mock_org_into_index",
-      "line": 158,
+      "line": 214,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-index/PROP-005#reindex",
       "verb": "verifies",
@@ -4559,8 +4627,17 @@
     },
     {
       "file": "crates/vibe-index/tests/scanner_e2e.rs",
+      "from_symbol": "vibe_index::tests::scanner_e2e::from_clones_cell_scans_through_the_seam",
+      "line": 69,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-index/PROP-005#reindex",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-index/tests/scanner_e2e.rs",
       "from_symbol": "vibe_index::tests::scanner_e2e::incremental_skips_unchanged_repos_and_picks_up_new_tags",
-      "line": 259,
+      "line": 308,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-index/PROP-005#reindex",
       "verb": "verifies",
@@ -4569,7 +4646,7 @@
     {
       "file": "crates/vibe-index/tests/scanner_e2e.rs",
       "from_symbol": "vibe_index::tests::scanner_e2e::reindex_from_clones_walks_three_packages",
-      "line": 65,
+      "line": 114,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-index/PROP-005#reindex",
       "verb": "verifies",

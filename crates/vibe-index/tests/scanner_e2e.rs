@@ -61,6 +61,55 @@ fn fs_must_create(p: &Path) {
     std::fs::create_dir_all(p).expect("can create dir");
 }
 
+/// Drives the `from-clones` cell directly through the `PackageScanner`
+/// seam — the characterization oracle a cell replacement diffs against
+/// (the binary-level reindex tests below exercise the same walk
+/// end-to-end through the composition root).
+#[test]
+#[verifies("spec://vibevm/modules/vibe-index/PROP-005#reindex", r = 1)]
+fn from_clones_cell_scans_through_the_seam() {
+    use vibe_index::scanner::{FromClonesOptions, FromClonesScanner, PackageScanner};
+    use vibe_index::types::NamingConvention;
+
+    if !git_available() {
+        return;
+    }
+    let work = tempfile::tempdir().unwrap();
+    let org = work.path().join("org");
+    fs_must_create(&org);
+    let wal = org.join("org.vibevm.wal");
+    init_repo(&wal);
+    commit_and_tag(
+        &wal,
+        &manifest_for("wal", "flow", "0.1.0", Some("EULA")),
+        "v0.1.0",
+    );
+
+    let scanner = FromClonesScanner {
+        org_dir: org.clone(),
+    };
+    let opts = FromClonesOptions {
+        registry: "vibespecs".into(),
+        registry_url: "https://github.com/vibespecs".into(),
+        naming: NamingConvention::Fqdn,
+        generator: "oracle".into(),
+        indexed_at: chrono::Utc::now(),
+    };
+    let seam: &dyn PackageScanner = &scanner;
+    let report = seam.scan(&opts, None).unwrap();
+
+    assert_eq!(report.entries.len(), 1, "{:?}", report.skipped);
+    let entry = &report.entries[0];
+    assert_eq!(entry.name, "wal");
+    assert_eq!(entry.group.to_string(), "org.vibevm");
+    assert_eq!(entry.version.to_string(), "0.1.0");
+    assert!(
+        report.snapshots.contains_key("org.vibevm.wal"),
+        "walked repos record a checkpoint snapshot: {:?}",
+        report.snapshots.keys().collect::<Vec<_>>()
+    );
+}
+
 #[test]
 #[verifies("spec://vibevm/modules/vibe-index/PROP-005#reindex", r = 1)]
 fn reindex_from_clones_walks_three_packages() {

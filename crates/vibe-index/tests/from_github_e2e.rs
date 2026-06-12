@@ -154,6 +154,62 @@ fn local_clone_url(p: &Path) -> String {
     p.to_string_lossy().replace('\\', "/")
 }
 
+/// Drives the `from-github` cell directly through the `PackageScanner`
+/// seam against the mock REST API — the characterization oracle a cell
+/// replacement diffs against (the binary-level test below exercises
+/// the same path end-to-end through the composition root).
+#[test]
+#[verifies("spec://vibevm/modules/vibe-index/PROP-005#reindex", r = 1)]
+fn from_github_cell_scans_through_the_seam() {
+    use vibe_index::scanner::{
+        FromClonesOptions, FromGithubOptions, FromGithubScanner, PackageScanner,
+    };
+    use vibe_index::types::NamingConvention;
+
+    if !git_available() {
+        return;
+    }
+    let work = tempfile::tempdir().unwrap();
+    let upstream = work.path().join("upstream");
+    std::fs::create_dir_all(&upstream).unwrap();
+    let wal = make_local_repo(
+        &upstream,
+        "org.vibevm.wal",
+        &[("v0.1.0", &manifest("wal", "flow", "0.1.0"))],
+    );
+    let mock = spawn_mock(vec![vec![CannedRepo {
+        name: "org.vibevm.wal".into(),
+        clone_url: local_clone_url(&wal),
+    }]]);
+
+    let clone_into = work.path().join("clones");
+    let scanner = FromGithubScanner {
+        opts: FromGithubOptions {
+            api_base: mock.base_url.clone(),
+            org: "vibespecs".into(),
+            token: None,
+            clone_into,
+            timeout: std::time::Duration::from_secs(30),
+            skip_forks: true,
+        },
+    };
+    let walk = FromClonesOptions {
+        registry: "vibespecs".into(),
+        registry_url: "https://github.com/vibespecs".into(),
+        naming: NamingConvention::Fqdn,
+        generator: "oracle".into(),
+        indexed_at: chrono::Utc::now(),
+    };
+    let seam: &dyn PackageScanner = &scanner;
+    let report = seam.scan(&walk, None).unwrap();
+
+    assert_eq!(report.entries.len(), 1, "{:?}", report.skipped);
+    let entry = &report.entries[0];
+    assert_eq!(entry.name, "wal");
+    assert_eq!(entry.version.to_string(), "0.1.0");
+    assert!(report.snapshots.contains_key("org.vibevm.wal"));
+}
+
 #[test]
 #[verifies("spec://vibevm/modules/vibe-index/PROP-005#reindex", r = 1)]
 fn from_github_walks_mock_org_into_index() {

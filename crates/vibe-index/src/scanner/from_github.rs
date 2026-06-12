@@ -17,9 +17,13 @@ use std::time::Duration;
 
 use reqwest::header::{ACCEPT, AUTHORIZATION, HeaderValue, LINK, USER_AGENT};
 use serde::Deserialize;
+use specmark::{cell, spec};
 
 use crate::error::{Error, Result};
+use crate::index::checkpoint::Checkpoint;
+use crate::scanner::PackageScanner;
 use crate::scanner::git_cli;
+use crate::scanner::org_walk::{FromClonesOptions, ScanReport, scan_org_dir_with_filter};
 
 const DEFAULT_API_BASE: &str = "https://api.github.com";
 const USER_AGENT_VAL: &str = concat!("vibe-index/", env!("CARGO_PKG_VERSION"));
@@ -47,6 +51,27 @@ impl FromGithubOptions {
             timeout: Duration::from_secs(30),
             skip_forks: true,
         }
+    }
+}
+
+/// The `from-github` scanner cell — the org is cloned via the REST
+/// API into `opts.clone_into` first, then walked exactly like a
+/// local org-dir. The composition root owns the clone directory's
+/// lifetime (a scratch temp dir or an operator-supplied warm cache);
+/// the cell only fills and walks it.
+#[cell(seam = "PackageScanner", variant = "from-github")]
+#[spec(implements = "spec://vibevm/modules/vibe-index/PROP-005#reindex")]
+pub struct FromGithubScanner {
+    /// API endpoint, org, auth, and clone destination for the fetch
+    /// half; the walk half shares [`FromClonesOptions`] through the
+    /// seam signature.
+    pub opts: FromGithubOptions,
+}
+
+impl PackageScanner for FromGithubScanner {
+    fn scan(&self, walk: &FromClonesOptions, prior: Option<&Checkpoint>) -> Result<ScanReport> {
+        let org_dir = clone_org(&self.opts)?;
+        scan_org_dir_with_filter(&org_dir, walk, prior)
     }
 }
 

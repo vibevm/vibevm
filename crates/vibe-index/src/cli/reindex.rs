@@ -14,10 +14,10 @@ use serde::Serialize;
 use crate::error::{Error, Result};
 use crate::index::Index;
 use crate::index::checkpoint::{self, Checkpoint};
-use crate::scanner::from_clones::{
-    FromClonesOptions, ScanReport, scan_org_dir, scan_org_dir_with_filter,
+use crate::scanner::{
+    FromClonesOptions, FromClonesScanner, FromGithubOptions, FromGithubScanner, PackageScanner,
+    ScanReport,
 };
-use crate::scanner::from_github::{FromGithubOptions, clone_org as github_clone_org};
 use crate::types::{NamingConvention, PackageKind, VersionEntry};
 
 #[derive(Debug, Parser)]
@@ -87,14 +87,16 @@ pub fn run(args: Args) -> Result<()> {
         other => other,
     })?;
 
-    // Resolve the org-dir for the scanner. --from-clones uses the
-    // path verbatim; --from-github clones the org first into a temp
-    // (or operator-supplied) directory and then proceeds as if we
-    // had been pointed at it directly. Hold the TempDir alive until
-    // the function returns so the directory survives the scan.
+    // Select and construct the scanner cell — the one construction
+    // site (the R-001 shape): the CLI source flag decides the variant
+    // here and nowhere else. --from-gitverse stays the error-returning
+    // stub above, not a cell. The scratch clone dir's lifetime is owned
+    // here at the composition root, not by the cell — hold the TempDir
+    // alive until the function returns so the directory survives the
+    // scan.
     let mut _temp_guard: Option<tempfile::TempDir> = None;
-    let org_dir: PathBuf = if let Some(path) = args.from_clones.clone() {
-        path
+    let scanner: Box<dyn PackageScanner> = if let Some(path) = args.from_clones.clone() {
+        Box::new(FromClonesScanner { org_dir: path })
     } else if let Some(org) = args.from_github.clone() {
         let token = match args.token_file.as_deref() {
             Some(path) => Some(read_token(path)?),
@@ -111,15 +113,16 @@ pub fn run(args: Args) -> Result<()> {
             _temp_guard = Some(dir);
             path
         };
-        let opts = FromGithubOptions {
-            api_base: args.api_base.clone(),
-            org: org.clone(),
-            token,
-            clone_into: clone_into.clone(),
-            timeout: std::time::Duration::from_secs(60),
-            skip_forks: true,
-        };
-        github_clone_org(&opts)?
+        Box::new(FromGithubScanner {
+            opts: FromGithubOptions {
+                api_base: args.api_base.clone(),
+                org,
+                token,
+                clone_into,
+                timeout: std::time::Duration::from_secs(60),
+                skip_forks: true,
+            },
+        })
     } else {
         return Err(Error::InvalidInput(
             "missing --from-clones / --from-github / --from-gitverse".into(),
@@ -140,11 +143,7 @@ pub fn run(args: Args) -> Result<()> {
         None
     };
 
-    let report = if args.incremental {
-        scan_org_dir_with_filter(&org_dir, &opts, prior.as_ref())?
-    } else {
-        scan_org_dir(&org_dir, &opts)?
-    };
+    let report = scanner.scan(&opts, prior.as_ref())?;
 
     // For incremental, retain entries for repos that the scanner
     // skipped due to "unchanged since last checkpoint". For full,
