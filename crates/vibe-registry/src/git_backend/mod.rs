@@ -91,6 +91,45 @@ pub enum GitError {
 /// `std::clone::Clone::clone` when the backend is held behind
 /// `Arc<dyn GitBackend>`, where `Arc::clone` would otherwise be
 /// ambiguous at the call site.
+///
+/// # Example
+///
+/// Consumers hold the seam as a trait object; any implementation
+/// slots in. Production code constructs [`ShellGit`]; a test fake
+/// needs only the four required methods (`set_remote_url` has a
+/// default impl).
+///
+/// ```
+/// use std::path::Path;
+/// use std::sync::Arc;
+/// use vibe_registry::{GitBackend, GitError};
+///
+/// struct StaticTags;
+///
+/// impl GitBackend for StaticTags {
+///     fn bootstrap(&self, _url: &str, _refname: &str, _dest: &Path) -> Result<(), GitError> {
+///         Ok(())
+///     }
+///     fn update(&self, _dest: &Path, _refname: &str) -> Result<(), GitError> {
+///         Ok(())
+///     }
+///     fn list_tags(&self, _url: &str) -> Result<Vec<String>, GitError> {
+///         Ok(vec!["v0.1.0".into(), "v0.2.0".into()])
+///     }
+///     fn fetch_file_at_ref(&self, url: &str, refname: &str, path: &str) -> Result<Vec<u8>, GitError> {
+///         Err(GitError::FileNotFoundInRef {
+///             url: url.into(),
+///             refname: refname.into(),
+///             path: path.into(),
+///         })
+///     }
+/// }
+///
+/// let backend: Arc<dyn GitBackend> = Arc::new(StaticTags);
+/// let tags = backend.list_tags("git@example.com:org/repo.git")?;
+/// assert_eq!(tags, ["v0.1.0", "v0.2.0"]);
+/// # Ok::<(), GitError>(())
+/// ```
 pub trait GitBackend: Send + Sync {
     /// Clone `url` (checked out at `refname`) into `dest`.
     ///

@@ -121,7 +121,6 @@
     "no-unwrap-in-domain|crates/vibe-workspace/src/publish.rs|expect#1",
     "no-unwrap-in-domain|crates/vibe-workspace/src/publish.rs|expect#2",
     "no-unwrap-in-domain|crates/vibe-workspace/src/vibedeps.rs|expect#0",
-    "seam-has-doctest|crates/vibe-registry/src/git_backend/mod.rs|vibe_registry::git_backend::GitBackend",
     "unsafe-gate|crates/vibe-cli/src/main.rs|block#0",
     "unsafe-gate|crates/vibe-cli/src/output.rs|block#0",
     "unsafe-gate|crates/vibe-cli/src/output.rs|block#1",
