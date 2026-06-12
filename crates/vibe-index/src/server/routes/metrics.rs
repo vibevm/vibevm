@@ -19,7 +19,7 @@ pub async fn prometheus(State(state): State<Arc<AppState>>) -> Response {
     let mut resp = body.into_response();
     resp.headers_mut().insert(
         header::CONTENT_TYPE,
-        "text/plain; version=0.0.4".parse().unwrap(),
+        header::HeaderValue::from_static("text/plain; version=0.0.4"),
     );
     resp
 }

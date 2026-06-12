@@ -52,8 +52,10 @@ pub async fn primary_jsonl_gz(State(state): State<Arc<AppState>>) -> Result<Resp
         .header(header::CONTENT_ENCODING, "gzip")
         .body(Body::from(bytes))
         .map_err(|e| ApiError::internal(format!("response build: {e}")))?;
-    resp.headers_mut()
-        .insert(header::CACHE_CONTROL, "no-cache".parse().unwrap());
+    resp.headers_mut().insert(
+        header::CACHE_CONTROL,
+        header::HeaderValue::from_static("no-cache"),
+    );
     Ok(resp.into_response())
 }
 
@@ -120,7 +122,9 @@ async fn serve_file(path: &std::path::Path, content_type: &str) -> Result<Respon
         .header(header::CONTENT_TYPE, content_type)
         .body(Body::from(bytes))
         .map_err(|e| ApiError::internal(format!("response build: {e}")))?;
-    resp.headers_mut()
-        .insert(header::CACHE_CONTROL, "no-cache".parse().unwrap());
+    resp.headers_mut().insert(
+        header::CACHE_CONTROL,
+        header::HeaderValue::from_static("no-cache"),
+    );
     Ok(resp.into_response())
 }

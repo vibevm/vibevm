@@ -863,6 +863,13 @@
     },
     {
       "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/error.rs",
+      "item_kind": "enum",
+      "line": 16,
+      "symbol": "vibe_core::error::Error"
+    },
+    {
+      "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/mod.rs",
       "item_kind": "mod",
       "line": 11,
@@ -933,23 +940,23 @@
     },
     {
       "crate_name": "vibe-core",
-      "file": "crates/vibe-core/src/manifest/lockfile.rs",
+      "file": "crates/vibe-core/src/manifest/lockfile/tests.rs",
       "item_kind": "fn",
-      "line": 421,
+      "line": 57,
       "symbol": "vibe_core::manifest::lockfile::tests::parses_fully"
     },
     {
       "crate_name": "vibe-core",
-      "file": "crates/vibe-core/src/manifest/lockfile.rs",
+      "file": "crates/vibe-core/src/manifest/lockfile/tests.rs",
       "item_kind": "fn",
-      "line": 503,
+      "line": 139,
       "symbol": "vibe_core::manifest::lockfile::tests::path_source_kind_round_trips"
     },
     {
       "crate_name": "vibe-core",
-      "file": "crates/vibe-core/src/manifest/lockfile.rs",
+      "file": "crates/vibe-core/src/manifest/lockfile/tests.rs",
       "item_kind": "fn",
-      "line": 478,
+      "line": 114,
       "symbol": "vibe_core::manifest::lockfile::tests::read_rejects_non_current_version"
     },
     {
@@ -1000,6 +1007,13 @@
       "item_kind": "mod",
       "line": 20,
       "symbol": "vibe_core::manifest::purl"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/purl.rs",
+      "item_kind": "enum",
+      "line": 124,
+      "symbol": "vibe_core::manifest::purl::PurlError"
     },
     {
       "crate_name": "vibe-core",
@@ -1112,6 +1126,13 @@
       "item_kind": "mod",
       "line": 26,
       "symbol": "vibe_core::user_config"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/user_config.rs",
+      "item_kind": "enum",
+      "line": 140,
+      "symbol": "vibe_core::user_config::UserConfigError"
     },
     {
       "crate_name": "vibe-core",
@@ -1266,6 +1287,13 @@
       "item_kind": "mod",
       "line": 8,
       "symbol": "vibe_index::error"
+    },
+    {
+      "crate_name": "vibe-index",
+      "file": "crates/vibe-index/src/error.rs",
+      "item_kind": "enum",
+      "line": 17,
+      "symbol": "vibe_index::error::Error"
     },
     {
       "crate_name": "vibe-index",
@@ -1481,7 +1509,7 @@
       "crate_name": "vibe-index",
       "file": "crates/vibe-index/src/server/rate_limit.rs",
       "item_kind": "struct",
-      "line": 131,
+      "line": 139,
       "symbol": "vibe_index::server::rate_limit::RateLimiter"
     },
     {
@@ -3798,6 +3826,14 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-core/src/error.rs",
+      "from_symbol": "vibe_core::error::Error",
+      "line": 17,
+      "provenance": "authored",
+      "uri": "spec://vibevm/VIBEVM-SPEC#package-identity",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-core/src/manifest/mod.rs",
       "from_symbol": "vibe_core::manifest",
       "line": 11,
@@ -3884,36 +3920,36 @@
       "verb": "implements"
     },
     {
-      "file": "crates/vibe-core/src/manifest/lockfile.rs",
+      "file": "crates/vibe-core/src/manifest/lockfile/tests.rs",
       "from_symbol": "vibe_core::manifest::lockfile::tests::parses_fully",
-      "line": 423,
+      "line": 59,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-registry/PROP-008#identity",
       "verb": "verifies",
       "pinned_r": 1
     },
     {
-      "file": "crates/vibe-core/src/manifest/lockfile.rs",
+      "file": "crates/vibe-core/src/manifest/lockfile/tests.rs",
       "from_symbol": "vibe_core::manifest::lockfile::tests::parses_fully",
-      "line": 422,
+      "line": 58,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-007#lockfile",
       "verb": "verifies",
       "pinned_r": 1
     },
     {
-      "file": "crates/vibe-core/src/manifest/lockfile.rs",
+      "file": "crates/vibe-core/src/manifest/lockfile/tests.rs",
       "from_symbol": "vibe_core::manifest::lockfile::tests::path_source_kind_round_trips",
-      "line": 504,
+      "line": 140,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-007#lockfile",
       "verb": "verifies",
       "pinned_r": 1
     },
     {
-      "file": "crates/vibe-core/src/manifest/lockfile.rs",
+      "file": "crates/vibe-core/src/manifest/lockfile/tests.rs",
       "from_symbol": "vibe_core::manifest::lockfile::tests::read_rejects_non_current_version",
-      "line": 479,
+      "line": 115,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-007#lockfile",
       "verb": "verifies",
@@ -3971,6 +4007,14 @@
       "file": "crates/vibe-core/src/manifest/purl.rs",
       "from_symbol": "vibe_core::manifest::purl",
       "line": 20,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#subskill-describes",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/purl.rs",
+      "from_symbol": "vibe_core::manifest::purl::PurlError",
+      "line": 125,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#subskill-describes",
       "verb": "implements"
@@ -4112,6 +4156,14 @@
       "line": 26,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-011#materialise-diff",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/user_config.rs",
+      "from_symbol": "vibe_core::user_config::UserConfigError",
+      "line": 141,
+      "provenance": "authored",
+      "uri": "spec://vibevm/VIBEVM-SPEC#configuration-sources-in-precedence-order",
       "verb": "implements"
     },
     {
@@ -4287,6 +4339,14 @@
       "file": "crates/vibe-index/src/error.rs",
       "from_symbol": "vibe_index::error",
       "line": 8,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-index/PROP-005#root",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-index/src/error.rs",
+      "from_symbol": "vibe_index::error::Error",
+      "line": 18,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-index/PROP-005#root",
       "verb": "implements"
@@ -4540,7 +4600,7 @@
     {
       "file": "crates/vibe-index/src/server/rate_limit.rs",
       "from_symbol": "vibe_index::server::rate_limit::RateLimiter",
-      "line": 132,
+      "line": 140,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-index/PROP-005#http",
       "verb": "implements",

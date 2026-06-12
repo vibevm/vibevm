@@ -62,10 +62,11 @@ pub fn render(state: &AppState, package_count: u64, version_count: u64) -> Strin
 }
 
 fn metric(out: &mut String, name: &str, help: &str, ty: &str, value: u64) {
-    use std::fmt::Write;
-    writeln!(out, "# HELP {name} {help}").unwrap();
-    writeln!(out, "# TYPE {name} {ty}").unwrap();
-    writeln!(out, "{name} {value}").unwrap();
+    // String concatenation, not fmt::Write — `format!` is infallible,
+    // so no Result to unwrap and nothing for the unwrap ban to flag.
+    out.push_str(&format!("# HELP {name} {help}\n"));
+    out.push_str(&format!("# TYPE {name} {ty}\n"));
+    out.push_str(&format!("{name} {value}\n"));
 }
 
 fn uptime_seconds(d: Duration) -> u64 {

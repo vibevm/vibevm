@@ -101,10 +101,10 @@ pub(super) fn inline_to_git_dep(
     kind: Option<PackageKind>,
     group: Group,
     name: String,
+    url: String,
     inline: InlinePackageDepWire,
 ) -> Result<GitPackageDep> {
     let key_for_err = link_key(&group, &name);
-    let url = inline.git.expect("caller checked git is Some");
     let ref_kind = match (inline.tag, inline.branch, inline.rev) {
         (Some(t), None, None) => GitRefKind::Tag(t),
         (None, Some(b), None) => GitRefKind::Branch(b),
@@ -140,10 +140,10 @@ pub(super) fn inline_to_path_dep(
     kind: Option<PackageKind>,
     group: Group,
     name: String,
+    path: String,
     inline: InlinePackageDepWire,
 ) -> Result<PathPackageDep> {
     let key_for_err = link_key(&group, &name);
-    let path = inline.path.expect("caller checked path is Some");
     if inline.git.is_some()
         || inline.tag.is_some()
         || inline.branch.is_some()

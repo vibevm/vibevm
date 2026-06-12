@@ -191,14 +191,18 @@ impl TryFrom<RequiresWire> for Requires {
                     // `[workspace.versions]` placeholder is held in var_packages
                     // for the workspace loader to resolve. Each `inline_to_*`
                     // rejects fields belonging to a different source-kind.
-                    if inline.path.is_some() {
+                    // The discriminating field is taken out of the wire form
+                    // and passed by value, so the callee never re-checks an
+                    // Option the dispatch already proved.
+                    let mut inline = inline;
+                    if let Some(path) = inline.path.take() {
                         path_packages.push(
-                            inline_to_path_dep(kind, group, name, inline)
+                            inline_to_path_dep(kind, group, name, path, inline)
                                 .map_err(|e| e.to_string())?,
                         );
-                    } else if inline.git.is_some() {
+                    } else if let Some(url) = inline.git.take() {
                         git_packages.push(
-                            inline_to_git_dep(kind, group, name, inline)
+                            inline_to_git_dep(kind, group, name, url, inline)
                                 .map_err(|e| e.to_string())?,
                         );
                     } else if matches!(inline.version, Some(VersionFieldWire::Var { .. })) {

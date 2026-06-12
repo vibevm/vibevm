@@ -26,10 +26,18 @@ specmark::scope!("spec://vibevm/modules/vibe-index/PROP-005#open");
 
 use std::collections::HashMap;
 use std::net::IpAddr;
-use std::sync::Mutex;
+use std::sync::{Mutex, MutexGuard, PoisonError};
 use std::time::Instant;
 
 use specmark::spec;
+
+/// Poison-recovering lock: a panicking holder leaves the bucket maps
+/// structurally intact (worst case an approximate token count), so
+/// recovering the guard beats poisoning every later request into a
+/// panic of its own.
+fn locked<K>(pool: &Mutex<HashMap<K, Bucket>>) -> MutexGuard<'_, HashMap<K, Bucket>> {
+    pool.lock().unwrap_or_else(PoisonError::into_inner)
+}
 
 /// Default maximum tracked unique keys per bucket pool. Caps memory
 /// at ~2 MB for the IP pool under sustained adversarial load.
@@ -170,7 +178,7 @@ impl RateLimiter {
                 }
                 let capacity = self.config.per_token_rpm as f64;
                 let rate = capacity / 60.0;
-                let mut buckets = self.by_token.lock().unwrap();
+                let mut buckets = locked(&self.by_token);
                 evict_if_full(&mut buckets, self.config.max_buckets, capacity);
                 let bucket = buckets.entry(token.to_string()).or_insert_with(|| Bucket {
                     tokens: capacity,
@@ -189,7 +197,7 @@ impl RateLimiter {
                 }
                 let capacity = self.config.per_ip_rpm as f64;
                 let rate = capacity / 60.0;
-                let mut buckets = self.by_ip.lock().unwrap();
+                let mut buckets = locked(&self.by_ip);
                 evict_if_full(&mut buckets, self.config.max_buckets, capacity);
                 let bucket = buckets.entry(ip).or_insert_with(|| Bucket {
                     tokens: capacity,
@@ -202,11 +210,11 @@ impl RateLimiter {
 
     /// Diagnostic accessor for tests.
     pub fn token_pool_size(&self) -> usize {
-        self.by_token.lock().unwrap().len()
+        locked(&self.by_token).len()
     }
 
     pub fn ip_pool_size(&self) -> usize {
-        self.by_ip.lock().unwrap().len()
+        locked(&self.by_ip).len()
     }
 }
 
@@ -228,10 +236,11 @@ fn evict_if_full<K: Eq + std::hash::Hash + Clone>(
         return;
     }
     // Still full — drop the most-replenished entry (it's been most
-    // recently quiescent).
+    // recently quiescent). total_cmp gives floats a total order, so
+    // no Option to unwrap even if a NaN ever crept into a bucket.
     if let Some(victim) = buckets
         .iter()
-        .max_by(|a, b| a.1.tokens.partial_cmp(&b.1.tokens).unwrap())
+        .max_by(|a, b| a.1.tokens.total_cmp(&b.1.tokens))
         .map(|(k, _)| k.clone())
     {
         buckets.remove(&victim);
