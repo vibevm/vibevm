@@ -149,29 +149,31 @@ impl<'a> Parser<'a> {
     }
 
     fn or_expr(&mut self) -> Result<ConditionalPredicate, PredicateError> {
-        let mut ops = vec![self.and_expr()?];
+        // The single-operand case returns the operand directly — no vec,
+        // no "len == 1 so pop succeeds" reasoning to carry.
+        let first = self.and_expr()?;
+        if !matches!(self.peek(), Some(Token::Or)) {
+            return Ok(first);
+        }
+        let mut ops = vec![first];
         while matches!(self.peek(), Some(Token::Or)) {
             self.pos += 1;
             ops.push(self.and_expr()?);
         }
-        Ok(if ops.len() == 1 {
-            ops.pop().expect("one element")
-        } else {
-            ConditionalPredicate::Or(ops)
-        })
+        Ok(ConditionalPredicate::Or(ops))
     }
 
     fn and_expr(&mut self) -> Result<ConditionalPredicate, PredicateError> {
-        let mut ops = vec![self.unary()?];
+        let first = self.unary()?;
+        if !matches!(self.peek(), Some(Token::And)) {
+            return Ok(first);
+        }
+        let mut ops = vec![first];
         while matches!(self.peek(), Some(Token::And)) {
             self.pos += 1;
             ops.push(self.unary()?);
         }
-        Ok(if ops.len() == 1 {
-            ops.pop().expect("one element")
-        } else {
-            ConditionalPredicate::And(ops)
-        })
+        Ok(ConditionalPredicate::And(ops))
     }
 
     fn unary(&mut self) -> Result<ConditionalPredicate, PredicateError> {

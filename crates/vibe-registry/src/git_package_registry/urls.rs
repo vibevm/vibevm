@@ -57,12 +57,14 @@ impl GitPackageRegistry {
         }
     }
 
-    /// All URLs to try for a `(group, name)` lookup, primary first.
-    /// Mirrors are composed using the same naming convention as the
-    /// primary, since the mirror is meant to be a transparent
-    /// alternative to the primary's content. Single-package registries
-    /// (PROP-002 §2.4.1) return a single-element vec with the verbatim
-    /// URL — mirrors do not apply.
+    /// The URLs to try for a `(group, name)` lookup — the primary, then
+    /// the mirrors in priority order. The split is structural so callers
+    /// never index into a "primary is element zero" convention: the
+    /// primary always exists by type. Mirrors are composed using the
+    /// same naming convention as the primary, since the mirror is meant
+    /// to be a transparent alternative to the primary's content.
+    /// Single-package registries (PROP-002 §2.4.1) return the verbatim
+    /// URL with no mirrors — mirrors do not apply.
     ///
     /// Group-native (PROP-008): `repo_name` is called with `kind = None`
     /// — the registry resolves by `(group, name)`. A legacy `kind-*`
@@ -71,28 +73,21 @@ impl GitPackageRegistry {
         &self,
         group: &Group,
         name: &str,
-    ) -> Result<Vec<String>, RegistryError> {
+    ) -> Result<(String, Vec<String>), RegistryError> {
         if let Some(url) = &self.single_package_url {
-            return Ok(vec![url.clone()]);
+            return Ok((url.clone(), Vec::new()));
         }
         let repo_name = self
             .naming
             .repo_name(None, group, name)
             .map_err(RegistryError::Core)?;
-        let mut urls = Vec::with_capacity(1 + self.mirror_urls.len());
-        urls.push(format!(
-            "{}/{}.git",
-            self.org_url.trim_end_matches('/'),
-            repo_name
-        ));
-        for mirror in &self.mirror_urls {
-            urls.push(format!(
-                "{}/{}.git",
-                mirror.trim_end_matches('/'),
-                repo_name
-            ));
-        }
-        Ok(urls)
+        let primary = format!("{}/{}.git", self.org_url.trim_end_matches('/'), repo_name);
+        let mirrors = self
+            .mirror_urls
+            .iter()
+            .map(|mirror| format!("{}/{}.git", mirror.trim_end_matches('/'), repo_name))
+            .collect();
+        Ok((primary, mirrors))
     }
 }
 
@@ -187,13 +182,12 @@ mod tests {
             None,
         )
         .unwrap();
-        let urls = r.package_urls(&org(), "internal").unwrap();
-        assert_eq!(
-            urls.len(),
-            1,
-            "single-package URL list should have one entry"
+        let (primary, mirrors) = r.package_urls(&org(), "internal").unwrap();
+        assert_eq!(primary, "https://github.com/me/flow-internal");
+        assert!(
+            mirrors.is_empty(),
+            "a single-package registry has no mirror chain"
         );
-        assert_eq!(urls[0], "https://github.com/me/flow-internal");
     }
 
     #[test]

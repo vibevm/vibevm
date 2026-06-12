@@ -87,11 +87,11 @@ pub fn parse_nextest_output(output: &str) -> BTreeMap<String, RunStatus> {
             "SKIP" => RunStatus::Skip,
             _ => continue,
         };
-        // `[   0.123s]` timing token.
-        match tokens.peek() {
-            Some(t) if t.starts_with('[') => {
+        // `[   0.123s]` timing token — consume-if-matches, so there is
+        // no peek-then-next gap to bridge.
+        match tokens.next_if(|t| t.starts_with('[')) {
+            Some(t0) => {
                 // Timing may split into two tokens: `[` + `0.123s]`.
-                let t0 = tokens.next().unwrap();
                 if !t0.ends_with(']') {
                     for t in tokens.by_ref() {
                         if t.ends_with(']') {
@@ -100,7 +100,7 @@ pub fn parse_nextest_output(output: &str) -> BTreeMap<String, RunStatus> {
                     }
                 }
             }
-            _ => continue, // a prose line that merely starts with PASS/…
+            None => continue, // a prose line that merely starts with PASS/…
         }
         // Optional `(i/n)` progress counter.
         if let Some(t) = tokens.peek()

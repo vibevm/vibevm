@@ -247,7 +247,11 @@ impl Rule for UnsafeGate {
                 std::collections::BTreeMap::new();
             for f in &sf.facts {
                 if let Fact::UnsafeUse { context, line } = f {
-                    let ordinal = seen.entry(context.clone()).or_insert(0);
+                    // One entry access: read the ordinal, then advance the
+                    // counter while the borrow is still live.
+                    let counter = seen.entry(context.clone()).or_insert(0);
+                    let ordinal = *counter;
+                    *counter += 1;
                     out.push(Finding {
                         rule: self.id(),
                         file: sf.file.clone(),
@@ -262,7 +266,6 @@ impl Rule for UnsafeGate {
                         why: self.why(),
                         fingerprint: format!("unsafe-gate|{}|{context}#{ordinal}", sf.file),
                     });
-                    *seen.get_mut(context).unwrap() += 1;
                 }
             }
         }
@@ -582,7 +585,9 @@ impl Rule for NoUnwrapInDomain {
                 if *in_test || *in_deviation {
                     continue;
                 }
-                let ordinal = seen.entry(method.as_str()).or_insert(0);
+                let counter = seen.entry(method.as_str()).or_insert(0);
+                let ordinal = *counter;
+                *counter += 1;
                 out.push(Finding {
                     rule: self.id(),
                     file: sf.file.clone(),
@@ -597,7 +602,6 @@ impl Rule for NoUnwrapInDomain {
                     why: self.why(),
                     fingerprint: format!("no-unwrap-in-domain|{}|{method}#{ordinal}", sf.file),
                 });
-                *seen.get_mut(method.as_str()).unwrap() += 1;
             }
         }
         out.sort();

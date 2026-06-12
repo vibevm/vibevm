@@ -37,6 +37,13 @@
     },
     {
       "crate_name": "conform-core",
+      "file": "crates/conform-core/src/sarif.rs",
+      "item_kind": "fn",
+      "line": 5,
+      "symbol": "conform_core::sarif::render"
+    },
+    {
+      "crate_name": "conform-core",
       "file": "crates/conform-core/src/store.rs",
       "item_kind": "mod",
       "line": 7,
@@ -1466,6 +1473,13 @@
     {
       "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/src/lib.rs",
+      "item_kind": "fn",
+      "line": 349,
+      "symbol": "vibe_registry::CachedPackage::package_meta"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/lib.rs",
       "item_kind": "enum",
       "line": 53,
       "symbol": "vibe_registry::RegistryError"
@@ -1511,6 +1525,13 @@
       "item_kind": "mod",
       "line": 6,
       "symbol": "vibe_registry::git_package_registry::fetch"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/git_package_registry/fetch.rs",
+      "item_kind": "fn",
+      "line": 472,
+      "symbol": "vibe_registry::git_package_registry::fetch::GitPackageRegistry::fetch_with_expected_hash"
     },
     {
       "crate_name": "vibe-registry",
@@ -1789,70 +1810,70 @@
       "crate_name": "vibe-resolver",
       "file": "crates/vibe-resolver/src/conditional.rs",
       "item_kind": "enum",
-      "line": 204,
+      "line": 206,
       "symbol": "vibe_resolver::conditional::PredicateError"
     },
     {
       "crate_name": "vibe-resolver",
       "file": "crates/vibe-resolver/src/conditional.rs",
       "item_kind": "fn",
-      "line": 344,
+      "line": 346,
       "symbol": "vibe_resolver::conditional::tests::evaluates_against_present"
     },
     {
       "crate_name": "vibe-resolver",
       "file": "crates/vibe-resolver/src/conditional.rs",
       "item_kind": "fn",
-      "line": 357,
+      "line": 359,
       "symbol": "vibe_resolver::conditional::tests::evaluates_against_provides"
     },
     {
       "crate_name": "vibe-resolver",
       "file": "crates/vibe-resolver/src/conditional.rs",
       "item_kind": "fn",
-      "line": 304,
+      "line": 306,
       "symbol": "vibe_resolver::conditional::tests::evaluates_composition"
     },
     {
       "crate_name": "vibe-resolver",
       "file": "crates/vibe-resolver/src/conditional.rs",
       "item_kind": "fn",
-      "line": 262,
+      "line": 264,
       "symbol": "vibe_resolver::conditional::tests::flags_unsupported_probe_forms"
     },
     {
       "crate_name": "vibe-resolver",
       "file": "crates/vibe-resolver/src/conditional.rs",
       "item_kind": "fn",
-      "line": 274,
+      "line": 276,
       "symbol": "vibe_resolver::conditional::tests::parses_composition_with_precedence"
     },
     {
       "crate_name": "vibe-resolver",
       "file": "crates/vibe-resolver/src/conditional.rs",
       "item_kind": "fn",
-      "line": 226,
+      "line": 228,
       "symbol": "vibe_resolver::conditional::tests::parses_simple_present_predicate"
     },
     {
       "crate_name": "vibe-resolver",
       "file": "crates/vibe-resolver/src/conditional.rs",
       "item_kind": "fn",
-      "line": 236,
+      "line": 238,
       "symbol": "vibe_resolver::conditional::tests::parses_with_whitespace"
     },
     {
       "crate_name": "vibe-resolver",
       "file": "crates/vibe-resolver/src/conditional.rs",
       "item_kind": "fn",
-      "line": 246,
+      "line": 248,
       "symbol": "vibe_resolver::conditional::tests::rejects_malformed"
     },
     {
       "crate_name": "vibe-resolver",
       "file": "crates/vibe-resolver/src/conditional.rs",
       "item_kind": "fn",
-      "line": 320,
+      "line": 322,
       "symbol": "vibe_resolver::conditional::tests::rejects_malformed_composition"
     },
     {
@@ -2034,70 +2055,70 @@
       "crate_name": "vibe-resolver",
       "file": "crates/vibe-resolver/src/naive.rs",
       "item_kind": "fn",
-      "line": 594,
+      "line": 595,
       "symbol": "vibe_resolver::naive::tests::capability_requires_satisfied_by_already_seen_provider"
     },
     {
       "crate_name": "vibe-resolver",
       "file": "crates/vibe-resolver/src/naive.rs",
       "item_kind": "fn",
-      "line": 634,
+      "line": 635,
       "symbol": "vibe_resolver::naive::tests::capability_requires_self_satisfaction"
     },
     {
       "crate_name": "vibe-resolver",
       "file": "crates/vibe-resolver/src/naive.rs",
       "item_kind": "fn",
-      "line": 661,
+      "line": 662,
       "symbol": "vibe_resolver::naive::tests::capability_requires_unmet_errors"
     },
     {
       "crate_name": "vibe-resolver",
       "file": "crates/vibe-resolver/src/naive.rs",
       "item_kind": "fn",
-      "line": 785,
+      "line": 786,
       "symbol": "vibe_resolver::naive::tests::dependencies_are_exact_pinned_after_solve"
     },
     {
       "crate_name": "vibe-resolver",
       "file": "crates/vibe-resolver/src/naive.rs",
       "item_kind": "fn",
-      "line": 559,
+      "line": 560,
       "symbol": "vibe_resolver::naive::tests::detects_conflicts_declaration"
     },
     {
       "crate_name": "vibe-resolver",
       "file": "crates/vibe-resolver/src/naive.rs",
       "item_kind": "fn",
-      "line": 534,
+      "line": 535,
       "symbol": "vibe_resolver::naive::tests::detects_version_conflict_across_paths"
     },
     {
       "crate_name": "vibe-resolver",
       "file": "crates/vibe-resolver/src/naive.rs",
       "item_kind": "fn",
-      "line": 702,
+      "line": 703,
       "symbol": "vibe_resolver::naive::tests::obsoletes_drops_obsolete_entry"
     },
     {
       "crate_name": "vibe-resolver",
       "file": "crates/vibe-resolver/src/naive.rs",
       "item_kind": "fn",
-      "line": 736,
+      "line": 737,
       "symbol": "vibe_resolver::naive::tests::requires_any_picks_first_alternative"
     },
     {
       "crate_name": "vibe-resolver",
       "file": "crates/vibe-resolver/src/naive.rs",
       "item_kind": "fn",
-      "line": 764,
+      "line": 765,
       "symbol": "vibe_resolver::naive::tests::root_dependencies_marked"
     },
     {
       "crate_name": "vibe-resolver",
       "file": "crates/vibe-resolver/src/naive.rs",
       "item_kind": "fn",
-      "line": 688,
+      "line": 689,
       "symbol": "vibe_resolver::naive::tests::unknown_package_propagates"
     },
     {
@@ -2400,6 +2421,15 @@
       "provenance": "authored",
       "uri": "spec://vibevm/discipline/ENGINE-CONFORM-v0.1#determinism",
       "verb": "implements"
+    },
+    {
+      "file": "crates/conform-core/src/sarif.rs",
+      "from_symbol": "conform_core::sarif::render",
+      "line": 16,
+      "provenance": "authored",
+      "uri": "spec://vibevm/discipline/ENGINE-CONFORM-v0.1#rules",
+      "verb": "deviates",
+      "reason": "no-unwrap-in-domain: serde_json::to_string_pretty over a serde_json::Value has no failure mode (Value's Serialize never errors, the sink is a String); a Result signature here would thread impossible-error plumbing through every gate caller of the byte-stable renderer"
     },
     {
       "file": "crates/conform-core/src/store.rs",
@@ -4116,6 +4146,15 @@
     },
     {
       "file": "crates/vibe-registry/src/lib.rs",
+      "from_symbol": "vibe_registry::CachedPackage::package_meta",
+      "line": 356,
+      "provenance": "authored",
+      "uri": "spec://vibevm/discipline/ENGINE-CONFORM-v0.1#rules",
+      "verb": "deviates",
+      "reason": "no-unwrap-in-domain: every CachedPackage construction site guards manifest.package.is_some() before building the struct, so the accessor's expect is a checked invariant; returning Result would force every reader of an already-validated package through error plumbing for a state the constructors exclude"
+    },
+    {
+      "file": "crates/vibe-registry/src/lib.rs",
       "from_symbol": "vibe_registry::RegistryError",
       "line": 71,
       "provenance": "authored",
@@ -4169,6 +4208,15 @@
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#registry-model",
       "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-registry/src/git_package_registry/fetch.rs",
+      "from_symbol": "vibe_registry::git_package_registry::fetch::GitPackageRegistry::fetch_with_expected_hash",
+      "line": 502,
+      "provenance": "authored",
+      "uri": "spec://vibevm/discipline/ENGINE-CONFORM-v0.1#rules",
+      "verb": "deviates",
+      "reason": "no-unwrap-in-domain: primary_err is Some whenever the source loop exhausts — the primary URL exists by package_urls' type and its failure is recorded before any continue; lifting the primary out of the loop (the try_lookup shape) would duplicate the three-step per-source body this fn shares between primary and mirrors"
     },
     {
       "file": "crates/vibe-registry/src/git_package_registry/urls.rs",
@@ -4536,7 +4584,7 @@
     {
       "file": "crates/vibe-resolver/src/conditional.rs",
       "from_symbol": "vibe_resolver::conditional::PredicateError",
-      "line": 205,
+      "line": 207,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-grammar",
       "verb": "implements",
@@ -4545,7 +4593,7 @@
     {
       "file": "crates/vibe-resolver/src/conditional.rs",
       "from_symbol": "vibe_resolver::conditional::tests::evaluates_against_present",
-      "line": 345,
+      "line": 347,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-host-invariance",
       "verb": "verifies",
@@ -4554,7 +4602,7 @@
     {
       "file": "crates/vibe-resolver/src/conditional.rs",
       "from_symbol": "vibe_resolver::conditional::tests::evaluates_against_provides",
-      "line": 358,
+      "line": 360,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-host-invariance",
       "verb": "verifies",
@@ -4563,7 +4611,7 @@
     {
       "file": "crates/vibe-resolver/src/conditional.rs",
       "from_symbol": "vibe_resolver::conditional::tests::evaluates_composition",
-      "line": 305,
+      "line": 307,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-composition",
       "verb": "verifies",
@@ -4572,7 +4620,7 @@
     {
       "file": "crates/vibe-resolver/src/conditional.rs",
       "from_symbol": "vibe_resolver::conditional::tests::flags_unsupported_probe_forms",
-      "line": 263,
+      "line": 265,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-grammar",
       "verb": "verifies",
@@ -4581,7 +4629,7 @@
     {
       "file": "crates/vibe-resolver/src/conditional.rs",
       "from_symbol": "vibe_resolver::conditional::tests::parses_composition_with_precedence",
-      "line": 275,
+      "line": 277,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-composition",
       "verb": "verifies",
@@ -4590,7 +4638,7 @@
     {
       "file": "crates/vibe-resolver/src/conditional.rs",
       "from_symbol": "vibe_resolver::conditional::tests::parses_simple_present_predicate",
-      "line": 227,
+      "line": 229,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-grammar",
       "verb": "verifies",
@@ -4599,7 +4647,7 @@
     {
       "file": "crates/vibe-resolver/src/conditional.rs",
       "from_symbol": "vibe_resolver::conditional::tests::parses_with_whitespace",
-      "line": 237,
+      "line": 239,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-grammar",
       "verb": "verifies",
@@ -4608,7 +4656,7 @@
     {
       "file": "crates/vibe-resolver/src/conditional.rs",
       "from_symbol": "vibe_resolver::conditional::tests::rejects_malformed",
-      "line": 247,
+      "line": 249,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-grammar",
       "verb": "verifies",
@@ -4617,7 +4665,7 @@
     {
       "file": "crates/vibe-resolver/src/conditional.rs",
       "from_symbol": "vibe_resolver::conditional::tests::rejects_malformed_composition",
-      "line": 321,
+      "line": 323,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-composition",
       "verb": "verifies",
@@ -4843,7 +4891,7 @@
     {
       "file": "crates/vibe-resolver/src/naive.rs",
       "from_symbol": "vibe_resolver::naive::tests::capability_requires_satisfied_by_already_seen_provider",
-      "line": 595,
+      "line": 596,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#capability",
       "verb": "verifies"
@@ -4851,7 +4899,7 @@
     {
       "file": "crates/vibe-resolver/src/naive.rs",
       "from_symbol": "vibe_resolver::naive::tests::capability_requires_self_satisfaction",
-      "line": 635,
+      "line": 636,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#capability",
       "verb": "verifies"
@@ -4859,7 +4907,7 @@
     {
       "file": "crates/vibe-resolver/src/naive.rs",
       "from_symbol": "vibe_resolver::naive::tests::capability_requires_unmet_errors",
-      "line": 662,
+      "line": 663,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#capability",
       "verb": "verifies"
@@ -4867,7 +4915,7 @@
     {
       "file": "crates/vibe-resolver/src/naive.rs",
       "from_symbol": "vibe_resolver::naive::tests::dependencies_are_exact_pinned_after_solve",
-      "line": 786,
+      "line": 787,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#lockfile",
       "verb": "verifies"
@@ -4875,7 +4923,7 @@
     {
       "file": "crates/vibe-resolver/src/naive.rs",
       "from_symbol": "vibe_resolver::naive::tests::detects_conflicts_declaration",
-      "line": 560,
+      "line": 561,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#capability",
       "verb": "verifies"
@@ -4883,7 +4931,7 @@
     {
       "file": "crates/vibe-resolver/src/naive.rs",
       "from_symbol": "vibe_resolver::naive::tests::detects_version_conflict_across_paths",
-      "line": 535,
+      "line": 536,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#capability",
       "verb": "verifies"
@@ -4891,7 +4939,7 @@
     {
       "file": "crates/vibe-resolver/src/naive.rs",
       "from_symbol": "vibe_resolver::naive::tests::obsoletes_drops_obsolete_entry",
-      "line": 703,
+      "line": 704,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#capability",
       "verb": "verifies"
@@ -4899,7 +4947,7 @@
     {
       "file": "crates/vibe-resolver/src/naive.rs",
       "from_symbol": "vibe_resolver::naive::tests::requires_any_picks_first_alternative",
-      "line": 737,
+      "line": 738,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#capability",
       "verb": "verifies"
@@ -4907,7 +4955,7 @@
     {
       "file": "crates/vibe-resolver/src/naive.rs",
       "from_symbol": "vibe_resolver::naive::tests::root_dependencies_marked",
-      "line": 765,
+      "line": 766,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#lockfile",
       "verb": "verifies"
@@ -4915,7 +4963,7 @@
     {
       "file": "crates/vibe-resolver/src/naive.rs",
       "from_symbol": "vibe_resolver::naive::tests::unknown_package_propagates",
-      "line": 689,
+      "line": 690,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#failure-discriminator",
       "verb": "verifies"

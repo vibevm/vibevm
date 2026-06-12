@@ -103,13 +103,21 @@ impl MultiRegistryResolver {
         stub_tag: &str,
     ) -> Result<MultiResolution, RegistryError> {
         let target_url = redirect.redirect.target_url.clone();
+        // The wire parser rejects pinned-without-pinned_ref, but a
+        // RedirectSection is also constructible programmatically (pub
+        // fields), so the mismatch is reachable — diagnose, don't panic.
         let target_ref = match redirect.redirect.ref_policy {
             RefPolicy::PassThroughTag => stub_tag.to_string(),
-            RefPolicy::Pinned => redirect
-                .redirect
-                .pinned_ref
-                .clone()
-                .expect("RedirectSection parser guarantees pinned_ref when ref_policy=pinned"),
+            RefPolicy::Pinned => redirect.redirect.pinned_ref.clone().ok_or_else(|| {
+                RegistryError::MalformedMeta {
+                    path: PathBuf::from("vibe-redirect.toml"),
+                    reason: format!(
+                        "registry stub for `{}/{}` declares ref_policy=pinned but \
+                         carries no pinned_ref",
+                        stub_resolved.group, pkgref.name
+                    ),
+                }
+            })?,
         };
         // Identity is `(group, name)`; the stub-resolved package carries
         // the group the registry resolved by (PROP-008).

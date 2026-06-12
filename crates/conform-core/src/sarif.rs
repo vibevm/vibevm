@@ -13,6 +13,13 @@ specmark::scope!("spec://vibevm/discipline/ENGINE-CONFORM-v0.1#determinism");
 /// assert!(report.contains("\"version\": \"2.1.0\""));
 /// assert_eq!(report, sarif::render(&[&CellIsolation], &[]));
 /// ```
+#[specmark::spec(
+    deviates = "spec://vibevm/discipline/ENGINE-CONFORM-v0.1#rules",
+    reason = "no-unwrap-in-domain: serde_json::to_string_pretty over a serde_json::Value \
+              has no failure mode (Value's Serialize never errors, the sink is a \
+              String); a Result signature here would thread impossible-error plumbing \
+              through every gate caller of the byte-stable renderer"
+)]
 pub fn render(rules: &[&dyn Rule], findings: &[Finding]) -> String {
     let rule_objs: Vec<serde_json::Value> = rules
         .iter()

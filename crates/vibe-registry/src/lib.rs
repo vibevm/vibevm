@@ -353,6 +353,14 @@ impl CachedPackage {
     /// before building the struct, so this accessor's `.expect()` is
     /// sound — a fetched registry package always carries a `[package]`
     /// table.
+    #[spec(
+        deviates = "spec://vibevm/discipline/ENGINE-CONFORM-v0.1#rules",
+        reason = "no-unwrap-in-domain: every CachedPackage construction site guards \
+                  manifest.package.is_some() before building the struct, so the \
+                  accessor's expect is a checked invariant; returning Result would \
+                  force every reader of an already-validated package through error \
+                  plumbing for a state the constructors exclude"
+    )]
     pub fn package_meta(&self) -> &vibe_core::manifest::PackageMeta {
         self.manifest
             .package

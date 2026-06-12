@@ -336,12 +336,14 @@ fn handle_disjunction(
     requirer: &PackageRef,
     disj: &vibe_core::manifest::RequiresAny,
 ) -> Result<(), SolveError> {
-    if disj.one_of.is_empty() {
+    // Binding the first alternative IS the emptiness check — the
+    // compiler carries the invariant from here to the enqueue below.
+    let Some(first) = disj.one_of.first() else {
         return Err(SolveError::DisjunctionUnsatisfiable {
             requirer: requirer.qualified_name(),
             alternatives: Vec::new(),
         });
-    }
+    };
     // If any alternative is already chosen, satisfied.
     for opt in &disj.one_of {
         let og = require_group(opt)?;
@@ -351,7 +353,6 @@ fn handle_disjunction(
     }
     // Otherwise: enqueue the first alternative. Naive — no backtracking
     // when downstream conflicts emerge.
-    let first = disj.one_of.first().expect("one_of non-empty above");
     state.queue.push_back(EnqueuedPkg {
         pkgref: first.clone(),
         via: Some(format!("[[requires_any]] of {}", requirer.qualified_name())),

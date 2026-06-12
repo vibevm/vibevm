@@ -212,20 +212,25 @@ impl<P: DepProvider> DepSolver for Sat<P> {
                             "internal: conflict version `{existing}` failed to parse: {e}"
                         )))
                     })?;
-                    if first_error.is_none() {
-                        first_error = Some(SolveError::VersionConflict {
-                            package,
-                            existing,
-                            new_constraint,
-                        });
-                    }
+                    let conflict = SolveError::VersionConflict {
+                        package,
+                        existing,
+                        new_constraint,
+                    };
                     let tightens = bounds.get(&key).is_none_or(|b| existing_v < *b);
                     if tightens {
                         // Narrow: try the world where this package is
                         // capped below its conflicting pick.
                         stack.push((key, existing_v));
+                        if first_error.is_none() {
+                            first_error = Some(conflict);
+                        }
                     } else if !backtrack(&mut stack, |k, b| self.next_lower(k, b)) {
-                        return Err(first_error.expect("set on first conflict"));
+                        // An earlier round's conflict if one was recorded;
+                        // otherwise this conflict IS the first.
+                        return Err(first_error.unwrap_or(conflict));
+                    } else if first_error.is_none() {
+                        first_error = Some(conflict);
                     }
                 }
                 Err(SolveError::Provider(DepProviderError::NoMatchingVersion {

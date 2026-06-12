@@ -76,43 +76,38 @@ impl GitPackageRegistry {
     where
         F: Fn(&str) -> Result<T, RegistryError>,
     {
-        let urls = self.package_urls(group, name)?;
-        let mut primary_err: Option<RegistryError> = None;
-        for (i, url) in urls.iter().enumerate() {
+        let (primary, mirrors) = self.package_urls(group, name)?;
+        // The primary attempt sits outside the mirror loop: its error
+        // is held as a plain value — THE diagnostic if nothing serves.
+        let primary_err = match f(&primary) {
+            Ok(v) => return Ok(v),
+            Err(e) => e,
+        };
+        for (i, url) in mirrors.iter().enumerate() {
             match f(url) {
                 Ok(v) => {
-                    if i > 0 {
-                        tracing::info!(
-                            target: "vibe_registry",
-                            registry = %self.name,
-                            primary = %urls[0],
-                            served_by = %url,
-                            mirror_index = i - 1,
-                            "lookup served by mirror"
-                        );
-                    }
+                    tracing::info!(
+                        target: "vibe_registry",
+                        registry = %self.name,
+                        primary = %primary,
+                        served_by = %url,
+                        mirror_index = i,
+                        "lookup served by mirror"
+                    );
                     return Ok(v);
                 }
                 Err(e) => {
-                    if i == 0 {
-                        primary_err = Some(e);
-                    } else {
-                        tracing::debug!(
-                            target: "vibe_registry",
-                            registry = %self.name,
-                            mirror = %url,
-                            error = %e,
-                            "mirror lookup failed; trying next"
-                        );
-                    }
+                    tracing::debug!(
+                        target: "vibe_registry",
+                        registry = %self.name,
+                        mirror = %url,
+                        error = %e,
+                        "mirror lookup failed; trying next"
+                    );
                 }
             }
         }
-        // Safety: urls always has at least one entry (primary), so the
-        // first iteration sets primary_err on Err. If primary returned
-        // Ok we'd have returned already; if it returned Err and no
-        // mirror saved us, primary_err is the right diagnostic.
-        Err(primary_err.expect("primary URL must exist"))
+        Err(primary_err)
     }
 
     /// Bootstrap (or refresh) the per-package clone at `clone_dir`
@@ -209,40 +204,38 @@ impl GitPackageRegistry {
         name: &str,
         refname: &str,
     ) -> Result<String, RegistryError> {
-        let urls = self.package_urls(group, name)?;
+        let (primary, mirrors) = self.package_urls(group, name)?;
         let clone_dir = self.package_clone_dir(group, name);
-        let mut primary_err: Option<RegistryError> = None;
-        for (i, url) in urls.iter().enumerate() {
+        // Primary outside the mirror loop — its error is a plain value.
+        let primary_err = match self.bootstrap_or_update_at(&primary, refname, &clone_dir) {
+            Ok(()) => return Ok(primary),
+            Err(e) => e,
+        };
+        for (i, url) in mirrors.iter().enumerate() {
             match self.bootstrap_or_update_at(url, refname, &clone_dir) {
                 Ok(()) => {
-                    if i > 0 {
-                        tracing::info!(
-                            target: "vibe_registry",
-                            registry = %self.name,
-                            primary = %urls[0],
-                            served_by = %url,
-                            mirror_index = i - 1,
-                            "fetch served by mirror"
-                        );
-                    }
+                    tracing::info!(
+                        target: "vibe_registry",
+                        registry = %self.name,
+                        primary = %primary,
+                        served_by = %url,
+                        mirror_index = i,
+                        "fetch served by mirror"
+                    );
                     return Ok(url.clone());
                 }
                 Err(e) => {
-                    if i == 0 {
-                        primary_err = Some(e);
-                    } else {
-                        tracing::debug!(
-                            target: "vibe_registry",
-                            registry = %self.name,
-                            mirror = %url,
-                            error = %e,
-                            "mirror fetch failed; trying next"
-                        );
-                    }
+                    tracing::debug!(
+                        target: "vibe_registry",
+                        registry = %self.name,
+                        mirror = %url,
+                        error = %e,
+                        "mirror fetch failed; trying next"
+                    );
                 }
             }
         }
-        Err(primary_err.expect("primary URL must exist"))
+        Err(primary_err)
     }
 
     /// Enumerate available versions for `<group>/<name>` *without cloning*.
@@ -506,6 +499,14 @@ impl GitPackageRegistry {
     /// any content), the **primary's** error is surfaced — same
     /// "primary is canonical and its diagnostic is most useful"
     /// semantics as [`Self::try_lookup`].
+    #[specmark::spec(
+        deviates = "spec://vibevm/discipline/ENGINE-CONFORM-v0.1#rules",
+        reason = "no-unwrap-in-domain: primary_err is Some whenever the source loop \
+                  exhausts — the primary URL exists by package_urls' type and its \
+                  failure is recorded before any continue; lifting the primary out \
+                  of the loop (the try_lookup shape) would duplicate the three-step \
+                  per-source body this fn shares between primary and mirrors"
+    )]
     pub fn fetch_with_expected_hash(
         &self,
         resolved: &ResolvedPackage,
@@ -518,7 +519,7 @@ impl GitPackageRegistry {
         self.ensure_token_loaded()?;
         let canonical_url = self.package_repo_url(&resolved.group, &resolved.name)?;
         let tag = format!("v{}", resolved.version);
-        let urls = self.package_urls(&resolved.group, &resolved.name)?;
+        let (primary, mirrors) = self.package_urls(&resolved.group, &resolved.name)?;
         let clone_dir = self.package_clone_dir(&resolved.group, &resolved.name);
         let dest_cache = cache_root
             .join(resolved.group.as_str())
@@ -528,7 +529,7 @@ impl GitPackageRegistry {
         let mut primary_err: Option<RegistryError> = None;
         let mut last_cached: Option<CachedPackage> = None;
 
-        for (i, url) in urls.iter().enumerate() {
+        for (i, url) in std::iter::once(&primary).chain(mirrors.iter()).enumerate() {
             // 1. Bring the local clone to `tag` from this URL.
             if let Err(e) = self.bootstrap_or_update_at(url, &tag, &clone_dir) {
                 if i == 0 {
@@ -585,7 +586,7 @@ impl GitPackageRegistry {
                         tracing::info!(
                             target: "vibe_registry",
                             registry = %self.name,
-                            primary = %urls[0],
+                            primary = %primary,
                             served_by = %url,
                             mirror_index = i - 1,
                             "fetch served by mirror"
@@ -598,7 +599,7 @@ impl GitPackageRegistry {
                         tracing::info!(
                             target: "vibe_registry",
                             registry = %self.name,
-                            primary = %urls[0],
+                            primary = %primary,
                             served_by = %url,
                             mirror_index = i - 1,
                             "fetch served by mirror; content_hash matches lockfile pin"
