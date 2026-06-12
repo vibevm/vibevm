@@ -33,7 +33,7 @@ use std::path::{Path, PathBuf};
 
 use specmark::spec;
 use thiserror::Error;
-use vibe_core::manifest::{Manifest, Requires};
+use vibe_core::manifest::{Manifest, Requires, WorkspaceSection};
 use vibe_core::{PackageKind, PackageRef, VersionSpec};
 
 pub mod boot;
@@ -121,6 +121,43 @@ pub enum WorkspaceError {
     /// A `[workspace.versions]` entry holds an unparseable version constraint.
     #[error("[workspace.versions] placeholder `{var}` has an invalid constraint `{constraint}`")]
     BadVersionVar { var: String, constraint: String },
+
+    /// A `version.var` dependency entry fails `PackageRef` validation when
+    /// its placeholder resolves (PROP-007 §2.6) — the `group/name` pair is
+    /// not a valid package reference.
+    #[error(
+        "var-dep for placeholder `{var}` in `{declared_in}` is not a valid \
+         package reference: {reason} \
+         (violates spec://vibevm/modules/vibe-workspace/PROP-007#versions; \
+         fix: use a kebab-case group/name in the [requires] var-dep entry)"
+    )]
+    BadVarDepRef {
+        var: String,
+        declared_in: String,
+        reason: String,
+    },
+
+    /// The generated `spec/boot/INDEX.md` TOML manifest failed to
+    /// serialise. Structurally unreachable with today's fixed manifest
+    /// shape; routed as an error so a future shape change degrades to a
+    /// diagnosis instead of a panic.
+    #[error(
+        "rendering spec/boot/INDEX.md failed: {reason} \
+         (violates spec://vibevm/modules/vibe-workspace/PROP-009#artifacts; \
+         fix: the IndexManifest shape no longer serialises as TOML — restore \
+         a serialisable shape)"
+    )]
+    IndexRender { reason: String },
+
+    /// A publish operation referenced a node `rel_path` that names no
+    /// node of this workspace — the selection and the loaded workspace
+    /// fell out of sync.
+    #[error(
+        "publish references `{rel_path}`, which is not a node of this workspace \
+         (violates spec://vibevm/modules/vibe-workspace/PROP-007#selective-publish; \
+         fix: pass a rel_path that names the root `.` or a listed member)"
+    )]
+    UnknownPublishNode { rel_path: String },
 
     /// The dependency boot graph handed to the computed-view engine
     /// contains a cycle — a package transitively requires itself.
@@ -283,18 +320,10 @@ impl Workspace {
         let mut root_manifest = read_manifest(&root)?;
 
         let mut members: Vec<WorkspaceMember> = Vec::new();
-        if root_manifest.workspace.is_some() {
+        if let Some(section) = &root_manifest.workspace {
             let mut visited: HashSet<PathBuf> = HashSet::new();
             visited.insert(root.clone());
-            expand(
-                &root,
-                &root_manifest,
-                None,
-                &root,
-                0,
-                &mut visited,
-                &mut members,
-            )?;
+            expand(&root, section, None, &root, 0, &mut visited, &mut members)?;
         }
         members.sort_by(|a, b| a.rel_path.cmp(&b.rel_path));
 
@@ -386,18 +415,13 @@ impl Workspace {
 
 fn expand(
     node_dir: &Path,
-    node_manifest: &Manifest,
+    workspace: &WorkspaceSection,
     node_rel: Option<&str>,
     root: &Path,
     depth: usize,
     visited: &mut HashSet<PathBuf>,
     out: &mut Vec<WorkspaceMember>,
 ) -> Result<()> {
-    let workspace = node_manifest
-        .workspace
-        .as_ref()
-        .expect("expand is only called for nodes carrying [workspace]");
-
     for pattern in &workspace.members {
         let is_glob = is_glob_pattern(pattern);
         let matched = glob_member_dirs(node_dir, pattern)?;
@@ -436,10 +460,10 @@ fn expand(
             // Recurse into a nested workspace before pushing — the recursion
             // borrows `manifest`, then the push moves it. `out` ends up
             // children-before-parent, which the caller's sort normalises.
-            if manifest.workspace.is_some() {
+            if let Some(section) = &manifest.workspace {
                 expand(
                     &member_dir,
-                    &manifest,
+                    section,
                     Some(&rel_path),
                     root,
                     depth + 1,
@@ -541,8 +565,13 @@ fn finalize_one(
             var: dep.var.clone(),
             constraint: constraint.clone(),
         })?;
-        let pkgref = PackageRef::new(dep.kind, Some(dep.group), dep.name, spec)
-            .expect("var-dep name was validated when the manifest was parsed");
+        let pkgref = PackageRef::new(dep.kind, Some(dep.group), dep.name, spec).map_err(|e| {
+            WorkspaceError::BadVarDepRef {
+                var: dep.var.clone(),
+                declared_in: declared_in.to_string(),
+                reason: e.to_string(),
+            }
+        })?;
         requires.packages.push(pkgref);
     }
     Ok(())

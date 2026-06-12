@@ -206,8 +206,20 @@ pub fn hold_pins(declared_roots: &[PackageRef], lockfile: &Lockfile) -> Vec<Pack
                     if locked.source_kind == Some(SourceKind::Registry)
                         && satisfies(&root.version, &locked.version) =>
                 {
-                    let req = semver::VersionReq::parse(&format!("={}", locked.version))
-                        .expect("`=<version>` always parses as a VersionReq");
+                    // The `=` pin built structurally rather than via a
+                    // string round-trip: `VersionReq::parse("={version}")`
+                    // rejects versions carrying build metadata (a req has
+                    // no build-metadata grammar), and build metadata never
+                    // participates in pinning anyway.
+                    let req = semver::VersionReq {
+                        comparators: vec![semver::Comparator {
+                            op: semver::Op::Exact,
+                            major: locked.version.major,
+                            minor: Some(locked.version.minor),
+                            patch: Some(locked.version.patch),
+                            pre: locked.version.pre.clone(),
+                        }],
+                    };
                     PackageRef {
                         kind: root.kind,
                         group: root.group.clone(),

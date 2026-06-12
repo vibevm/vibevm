@@ -152,7 +152,10 @@ fn copy_tree(
         } else if file_type.is_file() {
             let rel = path
                 .strip_prefix(src_root)
-                .expect("a descendant of src_root always strips its prefix");
+                .map_err(|_| WorkspaceError::Io {
+                    path: path.clone(),
+                    reason: format!("walked path escaped its copy root `{}`", src_root.display()),
+                })?;
             let dest = dest_root.join(rel);
             if let Some(parent) = dest.parent() {
                 fs::create_dir_all(parent).map_err(|e| io_err(parent, e))?;

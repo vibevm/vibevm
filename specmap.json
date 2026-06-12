@@ -2153,14 +2153,14 @@
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/lib.rs",
       "item_kind": "struct",
-      "line": 184,
+      "line": 221,
       "symbol": "vibe_workspace::Workspace"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/lib.rs",
       "item_kind": "fn",
-      "line": 229,
+      "line": 266,
       "symbol": "vibe_workspace::Workspace::discover"
     },
     {
@@ -2174,7 +2174,7 @@
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/lib.rs",
       "item_kind": "struct",
-      "line": 140,
+      "line": 177,
       "symbol": "vibe_workspace::WorkspaceMember"
     },
     {
@@ -2195,70 +2195,70 @@
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/boot_artifacts.rs",
       "item_kind": "enum",
-      "line": 221,
+      "line": 225,
       "symbol": "vibe_workspace::boot_artifacts::BlockLocation"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/boot_artifacts.rs",
       "item_kind": "fn",
-      "line": 240,
+      "line": 244,
       "symbol": "vibe_workspace::boot_artifacts::locate_block"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/boot_artifacts.rs",
       "item_kind": "fn",
-      "line": 204,
+      "line": 208,
       "symbol": "vibe_workspace::boot_artifacts::render_redirect"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/boot_artifacts.rs",
       "item_kind": "fn",
-      "line": 717,
+      "line": 724,
       "symbol": "vibe_workspace::boot_artifacts::tests::locate_block_two_openers_is_malformed"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/boot_artifacts.rs",
       "item_kind": "fn",
-      "line": 705,
+      "line": 712,
       "symbol": "vibe_workspace::boot_artifacts::tests::locate_block_well_formed_pair"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/boot_artifacts.rs",
       "item_kind": "fn",
-      "line": 756,
+      "line": 763,
       "symbol": "vibe_workspace::boot_artifacts::tests::write_managed_block_appends_preserving_co_tenant_content"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/boot_artifacts.rs",
       "item_kind": "fn",
-      "line": 773,
+      "line": 780,
       "symbol": "vibe_workspace::boot_artifacts::tests::write_managed_block_splices_in_place_preserving_surroundings"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/boot_artifacts.rs",
       "item_kind": "fn",
-      "line": 388,
+      "line": 393,
       "symbol": "vibe_workspace::boot_artifacts::write_boot_artifacts"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/boot_artifacts.rs",
       "item_kind": "fn",
-      "line": 289,
+      "line": 294,
       "symbol": "vibe_workspace::boot_artifacts::write_managed_block"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/lib.rs",
       "item_kind": "fn",
-      "line": 468,
+      "line": 492,
       "symbol": "vibe_workspace::finalize_versions"
     },
     {
@@ -2307,14 +2307,14 @@
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/publish.rs",
       "item_kind": "fn",
-      "line": 677,
+      "line": 684,
       "symbol": "vibe_workspace::publish::tests::selection_includes_default_publish_and_skips_never"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/publish.rs",
       "item_kind": "fn",
-      "line": 825,
+      "line": 832,
       "symbol": "vibe_workspace::publish::tests::topo_order_is_dependency_first"
     },
     {
@@ -2328,28 +2328,28 @@
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/lib.rs",
       "item_kind": "fn",
-      "line": 795,
+      "line": 824,
       "symbol": "vibe_workspace::tests::discover_from_member_finds_absolute_root"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/lib.rs",
       "item_kind": "fn",
-      "line": 770,
+      "line": 799,
       "symbol": "vibe_workspace::tests::nested_workspace_recurses_with_depth"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/lib.rs",
       "item_kind": "fn",
-      "line": 913,
+      "line": 942,
       "symbol": "vibe_workspace::tests::version_var_matryoshka_nearest_wins"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/lib.rs",
       "item_kind": "fn",
-      "line": 885,
+      "line": 914,
       "symbol": "vibe_workspace::tests::version_var_resolves_from_root_workspace"
     },
     {
@@ -4980,7 +4980,7 @@
     {
       "file": "crates/vibe-workspace/src/lib.rs",
       "from_symbol": "vibe_workspace::Workspace",
-      "line": 213,
+      "line": 250,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-007#workspace-section",
       "verb": "implements",
@@ -4989,7 +4989,7 @@
     {
       "file": "crates/vibe-workspace/src/lib.rs",
       "from_symbol": "vibe_workspace::Workspace::discover",
-      "line": 234,
+      "line": 271,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-007#nesting",
       "verb": "implements",
@@ -5006,7 +5006,7 @@
     {
       "file": "crates/vibe-workspace/src/lib.rs",
       "from_symbol": "vibe_workspace::WorkspaceMember",
-      "line": 163,
+      "line": 200,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-007#workspace-section",
       "verb": "implements",
@@ -5031,7 +5031,7 @@
     {
       "file": "crates/vibe-workspace/src/boot_artifacts.rs",
       "from_symbol": "vibe_workspace::boot_artifacts::BlockLocation",
-      "line": 224,
+      "line": 228,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-012#markers",
       "verb": "implements",
@@ -5040,7 +5040,7 @@
     {
       "file": "crates/vibe-workspace/src/boot_artifacts.rs",
       "from_symbol": "vibe_workspace::boot_artifacts::locate_block",
-      "line": 244,
+      "line": 248,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-012#markers",
       "verb": "implements",
@@ -5049,7 +5049,7 @@
     {
       "file": "crates/vibe-workspace/src/boot_artifacts.rs",
       "from_symbol": "vibe_workspace::boot_artifacts::render_redirect",
-      "line": 206,
+      "line": 210,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-012#content",
       "verb": "implements",
@@ -5058,7 +5058,7 @@
     {
       "file": "crates/vibe-workspace/src/boot_artifacts.rs",
       "from_symbol": "vibe_workspace::boot_artifacts::tests::locate_block_two_openers_is_malformed",
-      "line": 718,
+      "line": 725,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-012#markers",
       "verb": "verifies",
@@ -5067,7 +5067,7 @@
     {
       "file": "crates/vibe-workspace/src/boot_artifacts.rs",
       "from_symbol": "vibe_workspace::boot_artifacts::tests::locate_block_well_formed_pair",
-      "line": 706,
+      "line": 713,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-012#markers",
       "verb": "verifies",
@@ -5076,7 +5076,7 @@
     {
       "file": "crates/vibe-workspace/src/boot_artifacts.rs",
       "from_symbol": "vibe_workspace::boot_artifacts::tests::write_managed_block_appends_preserving_co_tenant_content",
-      "line": 757,
+      "line": 764,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-012#create",
       "verb": "verifies",
@@ -5085,7 +5085,7 @@
     {
       "file": "crates/vibe-workspace/src/boot_artifacts.rs",
       "from_symbol": "vibe_workspace::boot_artifacts::tests::write_managed_block_splices_in_place_preserving_surroundings",
-      "line": 774,
+      "line": 781,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-012#create",
       "verb": "verifies",
@@ -5094,7 +5094,7 @@
     {
       "file": "crates/vibe-workspace/src/boot_artifacts.rs",
       "from_symbol": "vibe_workspace::boot_artifacts::write_boot_artifacts",
-      "line": 396,
+      "line": 401,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-012#co-tenant",
       "verb": "implements",
@@ -5103,7 +5103,7 @@
     {
       "file": "crates/vibe-workspace/src/boot_artifacts.rs",
       "from_symbol": "vibe_workspace::boot_artifacts::write_managed_block",
-      "line": 300,
+      "line": 305,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-012#create",
       "verb": "implements",
@@ -5112,7 +5112,7 @@
     {
       "file": "crates/vibe-workspace/src/boot_artifacts.rs",
       "from_symbol": "vibe_workspace::boot_artifacts::write_managed_block",
-      "line": 304,
+      "line": 309,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-012#migration",
       "verb": "implements",
@@ -5121,7 +5121,7 @@
     {
       "file": "crates/vibe-workspace/src/lib.rs",
       "from_symbol": "vibe_workspace::finalize_versions",
-      "line": 475,
+      "line": 499,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-007#versions",
       "verb": "implements",
@@ -5181,7 +5181,7 @@
     {
       "file": "crates/vibe-workspace/src/publish.rs",
       "from_symbol": "vibe_workspace::publish::tests::selection_includes_default_publish_and_skips_never",
-      "line": 678,
+      "line": 685,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-007#selective-publish",
       "verb": "verifies",
@@ -5190,7 +5190,7 @@
     {
       "file": "crates/vibe-workspace/src/publish.rs",
       "from_symbol": "vibe_workspace::publish::tests::topo_order_is_dependency_first",
-      "line": 826,
+      "line": 833,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-007#selective-publish",
       "verb": "verifies",
@@ -5208,7 +5208,7 @@
     {
       "file": "crates/vibe-workspace/src/lib.rs",
       "from_symbol": "vibe_workspace::tests::discover_from_member_finds_absolute_root",
-      "line": 796,
+      "line": 825,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-007#nesting",
       "verb": "verifies",
@@ -5217,7 +5217,7 @@
     {
       "file": "crates/vibe-workspace/src/lib.rs",
       "from_symbol": "vibe_workspace::tests::nested_workspace_recurses_with_depth",
-      "line": 771,
+      "line": 800,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-007#nesting",
       "verb": "verifies",
@@ -5226,7 +5226,7 @@
     {
       "file": "crates/vibe-workspace/src/lib.rs",
       "from_symbol": "vibe_workspace::tests::version_var_matryoshka_nearest_wins",
-      "line": 914,
+      "line": 943,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-007#versions",
       "verb": "verifies",
@@ -5235,7 +5235,7 @@
     {
       "file": "crates/vibe-workspace/src/lib.rs",
       "from_symbol": "vibe_workspace::tests::version_var_resolves_from_root_workspace",
-      "line": 886,
+      "line": 915,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-007#versions",
       "verb": "verifies",

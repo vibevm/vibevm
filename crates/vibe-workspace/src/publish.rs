@@ -193,7 +193,7 @@ pub fn topo_order(workspace: &Workspace, nodes: &[PublishNode]) -> Result<Vec<Pu
     let mut dir_to_rel: HashMap<PathBuf, String> = HashMap::new();
     for node in &sorted {
         dir_to_rel.insert(
-            node_abs_dir(workspace, &node.rel_path),
+            node_abs_dir(workspace, &node.rel_path)?,
             node.rel_path.clone(),
         );
     }
@@ -205,8 +205,8 @@ pub fn topo_order(workspace: &Workspace, nodes: &[PublishNode]) -> Result<Vec<Pu
         deps.entry(node.rel_path.as_str()).or_default();
     }
     for node in &sorted {
-        let manifest = node_manifest(workspace, &node.rel_path);
-        let node_dir = node_abs_dir(workspace, &node.rel_path);
+        let manifest = node_manifest(workspace, &node.rel_path)?;
+        let node_dir = node_abs_dir(workspace, &node.rel_path)?;
         for pd in &manifest.requires.path_packages {
             // Resolve the path-dep directory relative to the depending
             // node's directory, then normalise it (`..` / `.` segments).
@@ -500,26 +500,30 @@ pub fn pull_request_template(pkgref: &str, upstream: &str) -> String {
 // ---------------------------------------------------------------------------
 
 /// The manifest of a node by its `rel_path` (`"."` = the root).
-fn node_manifest<'a>(workspace: &'a Workspace, rel_path: &str) -> &'a Manifest {
+fn node_manifest<'a>(workspace: &'a Workspace, rel_path: &str) -> Result<&'a Manifest> {
     if rel_path == "." {
-        &workspace.root_manifest
+        Ok(&workspace.root_manifest)
     } else {
         workspace
             .member_by_rel_path(rel_path)
             .map(|m| &m.manifest)
-            .expect("publish node rel_path always names a workspace node")
+            .ok_or_else(|| WorkspaceError::UnknownPublishNode {
+                rel_path: rel_path.to_string(),
+            })
     }
 }
 
 /// The absolute directory of a node by its `rel_path` (`"."` = the root).
-fn node_abs_dir(workspace: &Workspace, rel_path: &str) -> PathBuf {
+fn node_abs_dir(workspace: &Workspace, rel_path: &str) -> Result<PathBuf> {
     if rel_path == "." {
-        workspace.root.clone()
+        Ok(workspace.root.clone())
     } else {
-        let member = workspace
-            .member_by_rel_path(rel_path)
-            .expect("publish node rel_path always names a workspace node");
-        workspace.member_abs_path(member)
+        let member = workspace.member_by_rel_path(rel_path).ok_or_else(|| {
+            WorkspaceError::UnknownPublishNode {
+                rel_path: rel_path.to_string(),
+            }
+        })?;
+        Ok(workspace.member_abs_path(member))
     }
 }
 
@@ -587,7 +591,10 @@ fn copy_tree_excluding(src: &Path, dst: &Path) -> Result<()> {
                 reason: format!("read_dir entry: {e}"),
             })?;
             let path = entry.path();
-            let rel = path.strip_prefix(src).expect("walk yields paths under src");
+            let rel = path.strip_prefix(src).map_err(|_| WorkspaceError::Io {
+                path: path.clone(),
+                reason: format!("walked path escaped its copy root `{}`", src.display()),
+            })?;
             // Skip `.git/` and `.vibe/` at any depth — the published copy
             // is a clean repo; the dev cache must not travel.
             if rel

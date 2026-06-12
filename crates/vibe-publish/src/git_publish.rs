@@ -295,7 +295,10 @@ fn copy_dir(src: &Path, dst: &Path) -> Result<(), PublishError> {
         let path = entry;
         let rel = path
             .strip_prefix(src)
-            .expect("walk yields paths under src")
+            .map_err(|_| PublishError::Io {
+                path: path.clone(),
+                message: format!("walked path escaped its copy root `{}`", src.display()),
+            })?
             .to_path_buf();
         if rel
             .components()
