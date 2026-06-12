@@ -1,5 +1,7 @@
 # vibevm Shrink Plan v0.1 — drain the depth-program baseline
-**status: PLAN · vibevm-specific · the work queue behind `conform-baseline.json`**
+**status: EXECUTED 2026-06-12 (same day as authored) · vibevm-specific · the work queue behind `conform-baseline.json`**
+
+*Execution record: all six phases ran to the exit state in one session — baseline **130 → 10** (the owner-gated unsafe octet + the two MCP-parked files, exactly §0's arithmetic). 19 commits (`254b974` … `475fa75`). Three predictions falsified and recorded in place: the stale-trio premise (§0 correction), the ≥1/3 deviates rate (3/24 actual — restructures dominated), and nothing else; the Phase-1 ≤50-line, Phase-3 <10-expectations, Phase-4 tests-out ≥10, and Phase-5 zero-new-test-files predictions all held. The deviates testimony target settled on `spec://vibevm/discipline/ENGINE-CONFORM-v0.1#rules` (the grammar admits only resolvable spec:// units; the ban itself lives in the package guide outside the specmap). Cells 18 → 20. The WAL carries the full checkpoint.*
 
 *The 2026-06-12 depth program ended with a deliberate artifact: a 130-entry conform baseline that IS the remaining debt, enumerated and frozen shrink-only. This plan drains it. Owner scope decision recorded up front: the MCP debt (DBT-0020 and both MCP-owned files) is NOT touched by this plan — it waits for an MCP spec home. The unsafe-gate octet is likewise out of scope (AUD-0016 — the audit-crate designation is an owner decision).*
 

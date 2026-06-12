@@ -1,7 +1,74 @@
 # WAL — Project Continuation State
-_Updated: 2026-06-12 (session-end checkpoint), **THE DEPTH PROGRAM IS EXECUTED TO COMPLETION and the SHRINK PLAN is authored** — the owner goal «вся программа глубины должна быть выполнена до конца» ran the same day the audit filed it: all seven P2s closed (24 commits, `9f06fbf` … `99f1a62`), the five-gate panel green on the final tree, and [`spec/terraforms/SHRINK-PLAN-v0.1.md`](terraforms/SHRINK-PLAN-v0.1.md) is the next session's entry point (Phase 0). Earlier the same day: the PROP-013 discipline-depth audit (INT-0001 window) — 12 findings, category **E** added, the P1 specmap-hash wipe fixed. Cold-resume snapshot: `CONTINUE.md`. Prior state: the v0.3 adoption complete 2026-06-11 (below). **Note:** the adoption-day commit chain was re-hashed by a post-session history rewrite — older hash citations below are pre-rewrite; the owner question "what performed the rewrite" is still open (AUDIT 2026-06-12-01 rider)._
+_Updated: 2026-06-12 (second checkpoint of the day), **THE SHRINK PLAN IS EXECUTED TO COMPLETION** — the owner set «spec/terraforms/SHRINK-PLAN-v0.1.md должен быть выполнен до конца» and all six phases ran the same day the plan was authored: baseline **130 → 10** (the owner-gated unsafe octet + the two MCP-parked files — exactly the plan's §0 exit arithmetic), 19 commits (`254b974` … `475fa75`), the five-gate panel green on the final tree. The same session also recorded the **session-resume contract** in the `CLAUDE.md` trio («восстанови сессию» restores state and STOPS — the owner steers; rule born from this morning's misfire). Earlier the same day: the depth program (below). Cold-resume snapshot: `CONTINUE.md` (stale w.r.t. this checkpoint until the next session-end command). **Note:** the adoption-day commit chain was re-hashed by a post-session history rewrite — older hash citations below are pre-rewrite; the owner question "what performed the rewrite" is still open (AUDIT 2026-06-12-01 rider)._
 
 ## Current phase
+
+**THE SHRINK PLAN — EXECUTED TO COMPLETION (2026-06-12, same-day execution).**
+[`spec/terraforms/SHRINK-PLAN-v0.1.md`](terraforms/SHRINK-PLAN-v0.1.md) carries
+the execution record in its header. Per phase:
+
+0. **Phase 0** — the stale-trio premise **falsified** (566/556/554 were
+   non-blank counts; the rule counts physical lines — real sizes 609/612/608;
+   the trio moved to Phase 4, active set 26 not 23); the `GitBackend` seam
+   doctest landed (runs, not just compiles); **frontend v4** — `UnwrapUse`
+   gains fn-grain `in_deviation` via `#[spec(deviates = …, reason)]` on the
+   carrying fn (deliberately NOT impl/struct/mod grain: the live solver-choice
+   deviates edges on `Sat`/`NaiveDepSolver` must not grant unwrap amnesty).
+1. **Phase 1** — R-001 wiring: `registry.rs` owns `local_registry()`, the
+   Registry-cell construction site; install.rs threads the instance (+18/−6,
+   the ≤50-line prediction held).
+2. **Phase 2** — all 24 unwrap sites drained, `no-unwrap-in-domain` = 0.
+   Split: 18 restructures (types carry the invariants — split-first
+   `package_urls (primary, mirrors)`, let-else, `next_if`, read-then-advance
+   counters, parser early-returns), 3 honest (a)-conversions (two "invariants"
+   were NOT invariants: var-dep names are unvalidated at parse, pinned_ref is
+   reachable via pub construction; plus the latent `=<version>+build` panic in
+   `hold_pins` fixed by typed `Comparator`), 3 (b)-testimonies
+   (`fetch_with_expected_hash`, `package_meta`, `sarif::render`). **Prediction
+   "≥1/3 land as (b)" falsified — 3/24.** Deviates target settled:
+   `ENGINE-CONFORM-v0.1#rules` (the grammar admits only resolvable spec://
+   units; the ban itself lives in the package guide, outside the specmap).
+3. **Phase 3** — all 68 messages in the Class-F grammar «human text
+   (violates spec://…; fix: hint)», `error-message-cites-req` = 0; four
+   parallel agents, central gates; only 3 doctest expectations moved
+   (prediction <10 held); zero goldens coupled. One live error path eyeballed.
+4. **Phase 4** — all 26 active over-budget files ≤ 600 physical lines; six
+   parallel agents, ~40 new modules, every new production module carries its
+   parent's `scope!` URI; `file-length` = 2 (the MCP pair, parked). Lessons
+   now in the tree: the conform frontend parses files standalone, so
+   tests-out files wrap fixtures in `#[cfg(test)] mod fixtures`; output.rs's
+   frozen unsafe-gate ordinals pinned its env-guards in place; `pub(super)`
+   items cannot be re-exported wider (E0364).
+5. **Phase 5** — the `PackageScanner` seam: trait + doctest, `from-clones` /
+   `from-github` cells (`#[cell]` + `implements = PROP-005#reindex`), the
+   shared walk extracted to `org_walk.rs` so no cell imports a sibling (the
+   R-002 lesson applied at design time), selection at the reindex composition
+   root, GitVerse stays an error stub. Direct seam-driving oracles added
+   inside the existing e2e suites (zero new test files — prediction held).
+   **cell-has-oracle green at 20 cells.** Audit -09's seam half closed.
+
+**Gate panel at close (each gate's own exit code, on the final tree):**
+`specmap --check` clean — 442 units / 394 items / 404 edges / 0 suspects /
+0 gated orphans (10 dispositioned, 7 exempt); `conform check` — 10 frozen /
+0 new (9 rules; the residual ten = 8 unsafe-gate + 2 MCP file-length);
+`test-gate` — 1123 results / 0 failed / 3 skipped, xfail-strict;
+`fast-loop --enforce-budget` — 18/18 < 60s; `tools/self-check.sh` — fmt,
+workspace tests, clippy -D warnings, `vibe check` 0/0/0.
+
+**Open after the shrink (the owner court + the next plan):**
+`CONFORM_GATED` expansion to vibe-core / vibe-index is the NEXT plan's
+opening move (vibe-index now carries cells + a seam doctest ahead of its
+gate). Owner items unchanged: the history-rewrite question (audit -01 rider);
+publishing the two Discipline packages; production solver selection
+(`solver=sat` flag); PROP-010 design session; DBT-0020 (MCP spec home; the
+parked pair); the four open-instrument predictions; PROP-014
+external-namespace amendment (new input: the deviates-target compromise —
+unwrap testimonies cite ENGINE-CONFORM#rules because discipline:// is not
+addressable in specmark); Discipline v0.3 inputs.
+
+---
+
+## Prior phase (superseded same day): the depth program
 
 **THE DEPTH PROGRAM — COMPLETE (2026-06-12, same-day execution).**
 Headline numbers, before → after: tagged items **190 → 337**, edges
