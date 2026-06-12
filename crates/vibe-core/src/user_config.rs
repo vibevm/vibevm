@@ -29,6 +29,7 @@ use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 
 use serde::{Deserialize, Serialize};
+use specmark::spec;
 
 /// Parsed `~/.config/vibe/config.toml`.
 #[derive(Debug, Default, Clone, PartialEq, Eq, Deserialize, Serialize)]
@@ -137,14 +138,23 @@ impl UserConfig {
 }
 
 #[derive(Debug, thiserror::Error)]
+#[spec(implements = "spec://vibevm/VIBEVM-SPEC#configuration-sources-in-precedence-order")]
 pub enum UserConfigError {
-    #[error("could not read `{path}`: {source}")]
+    #[error(
+        "could not read `{path}`: {source} \
+         (violates spec://vibevm/VIBEVM-SPEC#configuration-sources-in-precedence-order; \
+          fix: check the file's permissions, or remove it to fall back to defaults)"
+    )]
     Io {
         path: PathBuf,
         #[source]
         source: std::io::Error,
     },
-    #[error("`{path}` is malformed: {source}")]
+    #[error(
+        "`{path}` is malformed: {source} \
+         (violates spec://vibevm/VIBEVM-SPEC#configuration-sources-in-precedence-order; \
+          fix: repair the TOML at the reported location)"
+    )]
     Parse {
         path: PathBuf,
         #[source]

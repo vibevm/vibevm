@@ -22,6 +22,7 @@ specmark::scope!("spec://vibevm/modules/vibe-resolver/PROP-003#subskill-describe
 use std::fmt;
 
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
+use specmark::spec;
 use thiserror::Error;
 
 /// A parsed Package URL.
@@ -121,10 +122,19 @@ impl<'de> Deserialize<'de> for Purl {
 }
 
 #[derive(Debug, Error, PartialEq, Eq)]
+#[spec(implements = "spec://vibevm/modules/vibe-resolver/PROP-003#subskill-describes")]
 pub enum PurlError {
-    #[error("invalid PURL `{0}`: missing `pkg:` scheme")]
+    #[error(
+        "invalid PURL `{0}`: missing `pkg:` scheme \
+         (violates spec://vibevm/modules/vibe-resolver/PROP-003#subskill-describes; \
+          fix: prefix the URL with `pkg:`)"
+    )]
     MissingScheme(String),
-    #[error("invalid PURL `{0}`: malformed structure (expected `pkg:<type>/<name>[@<version>]`)")]
+    #[error(
+        "invalid PURL `{0}`: malformed structure \
+         (violates spec://vibevm/modules/vibe-resolver/PROP-003#subskill-describes; \
+          fix: write it as `pkg:<type>/<name>[@<version>]`)"
+    )]
     Malformed(String),
 }
 
