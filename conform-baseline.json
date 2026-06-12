@@ -1,6 +1,5 @@
 {
   "findings": [
-    "R-001|crates/vibe-cli/src/commands/install.rs|LocalRegistry",
     "error-message-cites-req|crates/vibe-publish/src/lib.rs|PublishError::AuthForbidden",
     "error-message-cites-req|crates/vibe-publish/src/lib.rs|PublishError::AuthMissing",
     "error-message-cites-req|crates/vibe-publish/src/lib.rs|PublishError::Git",

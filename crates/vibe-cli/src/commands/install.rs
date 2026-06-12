@@ -915,7 +915,7 @@ pub(crate) fn build_install_resolver(
             .canonicalize()
             .with_context(|| format!("registry path `{}`", explicit.display()))?;
         let p = super::init::strip_unc_public(p);
-        let local = LocalRegistry::new(p.clone())
+        let local = crate::registry::local_registry(p.clone())
             .map_err(|e| anyhow!("failed to open registry at `{}`: {e}", p.display()))?;
         return Ok(InstallResolver::Local(local));
     }

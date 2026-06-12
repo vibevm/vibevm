@@ -7,13 +7,15 @@
 //! Two tiers, never confused: cargo features answer "is the code in
 //! the binary"; the runtime flags here answer "is the cell selected".
 //!
-//! Enforced by `cargo xtask conform-lite` (flag-reads-outside-registry):
-//! constructing `NaiveDepSolver` / `LocalRegistryProvider` /
-//! `MultiRegistryProvider` anywhere else in `vibe-cli` is a finding.
+//! Enforced by `cargo xtask conform check` (R-001): constructing any
+//! `#[cell]`-manifested type (`NaiveDepSolver`, the provider pair,
+//! `LocalRegistry`, …) anywhere else in `vibe-cli` is a finding.
 
 specmark::scope!("spec://vibevm/VIBEVM-SPEC#configuration-sources-in-precedence-order");
 
-use vibe_registry::{LocalRegistry, MultiRegistryResolver};
+use std::path::PathBuf;
+
+use vibe_registry::{LocalRegistry, MultiRegistryResolver, RegistryError};
 use vibe_resolver::{DepSolver, LocalRegistryProvider, MultiRegistryProvider, NaiveDepSolver};
 
 /// Where a selected value came from. The full chain is
@@ -108,6 +110,17 @@ pub fn selection_flags(registry_path_given: bool) -> SelectionFlags {
 pub enum ProviderResource<'a> {
     Local(&'a LocalRegistry),
     Multi(&'a MultiRegistryResolver),
+}
+
+/// Construct the `Registry/local` cell for `--registry <dir>` — the
+/// Registry-seam construction site (R-001). The caller resolves and
+/// canonicalises the path (a CLI concern); this module turns it into
+/// the selected cell and commands thread the instance in. No flag is
+/// read here: Registry selection is config-driven (`--registry` /
+/// `[[registry]]` decide), and the `provider` flag above mirrors the
+/// same decision for the DepProvider seam.
+pub fn local_registry(root: PathBuf) -> Result<LocalRegistry, RegistryError> {
+    LocalRegistry::new(root)
 }
 
 /// Construct the selected `DepSolver` cell over the selected
