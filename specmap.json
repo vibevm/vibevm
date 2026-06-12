@@ -85,6 +85,13 @@
       "symbol": "conform_frontend_rust"
     },
     {
+      "crate_name": "env-audit",
+      "file": "crates/env-audit/src/lib.rs",
+      "item_kind": "mod",
+      "line": 19,
+      "symbol": "env_audit"
+    },
+    {
       "crate_name": "specmap-core",
       "file": "crates/specmap-core/src/lib.rs",
       "item_kind": "mod",
@@ -695,6 +702,13 @@
     },
     {
       "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/main.rs",
+      "item_kind": "fn",
+      "line": 89,
+      "symbol": "vibe_cli::promote_user_config_env"
+    },
+    {
+      "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/registry.rs",
       "item_kind": "mod",
       "line": 14,
@@ -1224,6 +1238,13 @@
       "item_kind": "mod",
       "line": 10,
       "symbol": "vibe_index::cli::stop"
+    },
+    {
+      "crate_name": "vibe-index",
+      "file": "crates/vibe-index/src/cli/stop.rs",
+      "item_kind": "fn",
+      "line": 25,
+      "symbol": "vibe_index::cli::stop::run"
     },
     {
       "crate_name": "vibe-index",
@@ -2858,6 +2879,14 @@
       "verb": "implements"
     },
     {
+      "file": "crates/env-audit/src/lib.rs",
+      "from_symbol": "env_audit",
+      "line": 19,
+      "provenance": "authored",
+      "uri": "spec://vibevm/discipline/ENGINE-CONFORM-v0.1#rules",
+      "verb": "implements"
+    },
+    {
       "file": "crates/specmap-core/src/lib.rs",
       "from_symbol": "specmap_core",
       "line": 21,
@@ -3570,6 +3599,15 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-cli/src/main.rs",
+      "from_symbol": "vibe_cli::promote_user_config_env",
+      "line": 108,
+      "provenance": "authored",
+      "uri": "spec://vibevm/discipline/ENGINE-CONFORM-v0.1#rules",
+      "verb": "deviates",
+      "reason": "unsafe-gate: startup env promotion runs at the top of main, before the dispatcher and before any thread exists — set_var's race is with concurrent readers, and none can be observing yet; the env-audit crate is test infrastructure and a mutate-anytime safe production API would advertise soundness it cannot prove"
+    },
+    {
       "file": "crates/vibe-cli/src/registry.rs",
       "from_symbol": "vibe_cli::registry",
       "line": 14,
@@ -4219,6 +4257,15 @@
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-index/PROP-005#root",
       "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-index/src/cli/stop.rs",
+      "from_symbol": "vibe_index::cli::stop::run",
+      "line": 25,
+      "provenance": "authored",
+      "uri": "spec://vibevm/discipline/ENGINE-CONFORM-v0.1#rules",
+      "verb": "deviates",
+      "reason": "unsafe-gate: libc::kill is unsafe by FFI ABI, not by memory — a (pid, SIGTERM) value pair crosses the boundary, no pointers; the pid comes from the server lockfile and a stale one yields ESRCH, which the operator-facing message already covers"
     },
     {
       "file": "crates/vibe-index/src/cli/verify.rs",

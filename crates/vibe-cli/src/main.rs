@@ -105,6 +105,14 @@ fn main() -> ExitCode {
 /// layer would be the wrong UX. `vibe show config` is the
 /// authoritative path for surfacing that the layer is broken;
 /// every other command just runs.
+#[specmark::spec(
+    deviates = "spec://vibevm/discipline/ENGINE-CONFORM-v0.1#rules",
+    reason = "unsafe-gate: startup env promotion runs at the top of main, \
+              before the dispatcher and before any thread exists — set_var's \
+              race is with concurrent readers, and none can be observing yet; \
+              the env-audit crate is test infrastructure and a mutate-anytime \
+              safe production API would advertise soundness it cannot prove"
+)]
 fn promote_user_config_env() {
     let cfg = match UserConfig::load() {
         Ok(c) => c,

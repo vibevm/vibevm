@@ -44,9 +44,16 @@ impl ConformRules {
                 gated_crate: "vibe-cli",
             },
             isolation: rules::CellIsolation,
-            // No crate is a designated unsafe-audit crate today; the
-            // list grows by owner decision, not by accretion.
-            unsafe_gate: rules::UnsafeGate { audit_crates: &[] },
+            // The AUD-0016 posture (owner-directed via SHRINK-PLAN
+            // v0.2, 2026-06-12): env-audit is THE designated audit
+            // crate — it owns the workspace's env-mutation unsafety
+            // behind a safe serialized guard. Production boundaries
+            // that cannot move (startup promotion, FFI) testify via
+            // fn-grain #[spec(deviates, reason)], which the v5 facts
+            // see. The list still grows only by owner decision.
+            unsafe_gate: rules::UnsafeGate {
+                audit_crates: &["env-audit"],
+            },
             seam_doctests: rules::SeamHasDoctest {
                 gated_crates: CONFORM_GATED,
             },

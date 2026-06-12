@@ -22,6 +22,13 @@ pub struct Args {
     pub data_dir: PathBuf,
 }
 
+#[specmark::spec(
+    deviates = "spec://vibevm/discipline/ENGINE-CONFORM-v0.1#rules",
+    reason = "unsafe-gate: libc::kill is unsafe by FFI ABI, not by memory — \
+              a (pid, SIGTERM) value pair crosses the boundary, no pointers; \
+              the pid comes from the server lockfile and a stale one yields \
+              ESRCH, which the operator-facing message already covers"
+)]
 pub fn run(args: Args) -> Result<()> {
     let Some(pid) = ServerLock::read_pid(&args.data_dir) else {
         return Err(Error::InvalidInput(format!(
