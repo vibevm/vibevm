@@ -1,7 +1,79 @@
 # WAL — Project Continuation State
-_Updated: 2026-06-12 (session-end checkpoint, the day's second session), **THE SHRINK PLAN IS EXECUTED TO COMPLETION** — the owner set «spec/terraforms/SHRINK-PLAN-v0.1.md должен быть выполнен до конца» and all six phases ran the same day the plan was authored: baseline **130 → 10** (the owner-gated unsafe octet + the two MCP-parked files — exactly the plan's §0 exit arithmetic), 20 work commits (`254b974` … `d39769b`), the five-gate panel green on the final tree. The same session also recorded the **session-resume contract** in the `CLAUDE.md` trio («восстанови сессию» restores state, reports, and STOPS — the owner steers; rule born from this morning's misfire). Earlier the same day: the depth program (below). Cold-resume snapshot: `CONTINUE.md`, **refreshed at this checkpoint**. No self-running next unit remains — the natural candidate for the next session is authoring the gate-expansion plan (`CONFORM_GATED` → vibe-core / vibe-index); everything else is owner court. **Note:** the adoption-day commit chain was re-hashed by a post-session history rewrite — older hash citations below are pre-rewrite; the owner question "what performed the rewrite" is still open (AUDIT 2026-06-12-01 rider)._
+_Updated: 2026-06-12 (the day's third session), **SHRINK-PLAN v0.2 IS EXECUTED TO COMPLETION** — the owner set the goal «execute all the spec/terraforms/SHRINK-PLAN-v0.2.md» and all three reserved moves ran in one pass: the unsafe-gate posture redesigned (AUD-0016 → fixed; `env-audit` designated, frontend v5 testimony-aware, baseline **10 → 2** by pure drain), `CONFORM_GATED` expanded to vibe-core / vibe-index / vibe-install (**11 gated crates, zero new frozen entries** — the 40-finding entry queue was drained before the gate flipped), and the **`vibe-install` orchestrator crate** rebuilt from the CLI's pipeline (plan/confirm/apply over the `InstallSource` seam, born conforming). 10 work commits (`480a6fc` … `29775ee`), five-gate panel green on the final tree. Cold-resume snapshot: `CONTINUE.md` is one session stale (it describes the v0.1 close) — this WAL supersedes it until the next session-end checkpoint. The owner question "what performed the 2026-06-11 history rewrite" is still open (AUDIT 2026-06-12-01 rider)._
 
 ## Current phase
+
+**SHRINK-PLAN v0.2 — EXECUTED TO COMPLETION (2026-06-12, same-day execution).**
+[`spec/terraforms/SHRINK-PLAN-v0.2.md`](terraforms/SHRINK-PLAN-v0.2.md) carries
+the execution record in its header. Per move:
+
+1. **The unsafe-gate posture (AUD-0016 → fixed).** Frontend v5: `UnsafeUse`
+   gains `in_test` / `in_deviation` (the v4 `UnwrapUse` machinery applied to
+   unsafe; unsafe impl methods extracted at all — they were invisible), the
+   ordinal advances over testified uses so neighbour testimony never re-keys
+   a fingerprint. Rule v2 honors fn-grain `#[spec(deviates, reason)]` per
+   ENGINE-CONFORM §4; test-context unsafe is deliberately NOT exempt.
+   **`env-audit`** is the designated audit crate: one process-global
+   serialized, restoring `EnvGuard` behind a safe API replaced the three
+   hand-rolled guards (output.rs ×2 + post_hook.rs temp_set) whose own
+   SAFETY comment admitted a transient-observation race — the mutex closes
+   it. The two immovable production boundaries testify in place
+   (vibe-cli `promote_user_config_env` — pre-thread startup promotion;
+   vibe-index `stop.rs` — `libc::kill` FFI), citing
+   `ENGINE-CONFORM-v0.1#rules` per the settled deviates-target policy.
+   Baseline **10 → 2** (pure shrink; the residual = the DBT-0020 MCP pair).
+2. **`CONFORM_GATED` → vibe-core / vibe-index, then vibe-install — 11
+   crates.** The entry queue (4 `error-enum-cites-req`, 21
+   `error-message-cites-req`, 15 `no-unwrap-in-domain`; both crates'
+   seams were already doctested) was drained BEFORE the gate flipped, so
+   the baseline never widened: enum REQ edges landed with per-variant
+   refinement (PROP-008#pkgref, #four-installable-kinds,
+   PROP-002#capability/#git-source, VIBEVM-SPEC#lockfile-schema/#directory-layout,
+   PROP-005#cli/#persistence…); all 15 unwraps fell to restructures —
+   0 testimonies (two more latent `VersionReq::parse("={v}")`
+   build-metadata panics killed by structural `semver::Comparator`; the
+   rate limiter got one poison-recovering lock helper + `total_cmp`;
+   metrics went `format!`-infallible; headers `HeaderValue::from_static`).
+   Zero test expectations moved; one live error path eyeballed.
+3. **The `vibe-install` orchestrator crate** (the audit's sketch, named in
+   docs/architecture since M0, folded away by M1.18, now rebuilt): the CLI
+   pipeline split at its natural joint — `plan()` (root derivation +
+   case-c migration, PROP-011 freshness fast path, solve with held-pin
+   fallback, fetch + feature pinning, the PROP-003 §2.6.1 conditional
+   fixpoint) and `apply()` (manifest merge, materialisation, wholesale
+   lockfile rebuild) — with the caller's confirmation between them.
+   Cells arrive via the `InstallSource` seam (R-001 construction stays in
+   vibe-cli's registry module); progress crosses as typed `PlanEvent`s;
+   `PROP-003#req-conditional-fixpoint` carries its first implements edge
+   (PHASE1-PILOT's honest zero, filled). os-740 answered structurally:
+   `[lib] test = false`, integration tests under a safely named binary,
+   doctest runner verified green. The CLI's install command is now a thin
+   layer (mod/report/resolver); update/reinstall consume the seam trait;
+   the exit-code mapper sees through the orchestrator's transparent
+   envelope (MalformedRedirectBlock keeps exit 3). docs/architecture.md's
+   five-milestone-stale vibe-install row now tells today's truth.
+
+**Gate panel at close (each gate's own exit code, on the final tree):**
+`specmap --check` clean — 442 units / 407 items / 417 edges / 0 suspects /
+0 gated orphans (10 dispositioned, 7 exempt); `conform check` — 2 frozen /
+0 new (9 rules, **11 gated crates**; residual = the 2 MCP file-length);
+`test-gate` — 1132 results / 0 failed / 3 skipped, xfail-strict;
+`fast-loop --enforce-budget` — **20/20** < 60s (env-audit and vibe-install
+joined); `tools/self-check.sh` — fmt, workspace tests (doctests included),
+clippy -D warnings, `vibe check` 0/0/0.
+
+**Open after v0.2 (owner court, unchanged):** the history-rewrite question
+(audit -01 rider); publishing the two Discipline packages; production
+solver selection (`solver=sat`); the PROP-010 design session; DBT-0020
+(MCP spec home; the parked file-length pair is now the WHOLE baseline);
+the four open-instrument predictions; the PROP-014 external-namespace
+amendment; Discipline v0.3 inputs. New small candidates born this session:
+AUD-0014/0015 (the two doc-string one-liners) remain the cheapest open
+items; `CONTINUE.md` refresh rides the next session-end checkpoint.
+
+---
+
+## Prior phase (superseded same day): SHRINK-PLAN v0.1
 
 **THE SHRINK PLAN — EXECUTED TO COMPLETION (2026-06-12, same-day execution).**
 [`spec/terraforms/SHRINK-PLAN-v0.1.md`](terraforms/SHRINK-PLAN-v0.1.md) carries
