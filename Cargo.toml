@@ -18,6 +18,7 @@ members = [
     "crates/specmap-core",
     "crates/conform-core",
     "crates/conform-frontend-rust",
+    "crates/env-audit",
     "xtask",
 ]
 default-members = [
@@ -68,6 +69,7 @@ specmark = { path = "crates/specmark", version = "0.1.0-dev" }
 specmap-core = { path = "crates/specmap-core", version = "0.1.0-dev" }
 conform-core = { path = "crates/conform-core", version = "0.1.0-dev" }
 conform-frontend-rust = { path = "crates/conform-frontend-rust", version = "0.1.0-dev" }
+env-audit = { path = "crates/env-audit", version = "0.1.0-dev" }
 
 # Third-party (all permissive licenses — PROP-000 §3)
 syn = { version = "2", features = ["full", "visit"] }

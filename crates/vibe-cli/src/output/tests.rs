@@ -1,17 +1,18 @@
 //! Unit tests for the output context. Split out of `output.rs` so the
-//! production file stays inside the file-length budget. The env-var
-//! guards and their serialisation locks stay in `output.rs` next to
-//! the production code (the unsafe-gate baseline keys their `unsafe`
-//! blocks by file) and arrive here via `use super::*`.
+//! production file stays inside the file-length budget. Env mutation
+//! goes through `env_audit::EnvGuard` — the designated unsafe audit
+//! crate (AUD-0016 posture): one guard per test serializes all
+//! env-mutating tests process-wide and restores on drop.
 
 specmark::scope!("spec://vibevm/VIBEVM-SPEC#output-format");
 
 use super::*;
+use env_audit::EnvGuard;
 
 #[test]
 fn resolve_returns_default_when_neither_flag_nor_env() {
-    let _lock = INVOKED_BY_LOCK.lock().unwrap_or_else(|e| e.into_inner());
-    let _g = EnvGuard::new();
+    let mut env = EnvGuard::lock();
+    env.unset("VIBE_INVOKED_BY");
     let (v, p) = resolve_invoked_by(None);
     assert_eq!(v, None);
     assert_eq!(p, InvokedByProvenance::Default);
@@ -19,9 +20,8 @@ fn resolve_returns_default_when_neither_flag_nor_env() {
 
 #[test]
 fn resolve_uses_env_when_flag_absent() {
-    let _lock = INVOKED_BY_LOCK.lock().unwrap_or_else(|e| e.into_inner());
-    let _g = EnvGuard::new();
-    EnvGuard::set("opencode");
+    let mut env = EnvGuard::lock();
+    env.set("VIBE_INVOKED_BY", "opencode");
     let (v, p) = resolve_invoked_by(None);
     assert_eq!(v.as_deref(), Some("opencode"));
     assert_eq!(p, InvokedByProvenance::EnvVar);
@@ -29,9 +29,8 @@ fn resolve_uses_env_when_flag_absent() {
 
 #[test]
 fn resolve_flag_wins_over_env() {
-    let _lock = INVOKED_BY_LOCK.lock().unwrap_or_else(|e| e.into_inner());
-    let _g = EnvGuard::new();
-    EnvGuard::set("opencode");
+    let mut env = EnvGuard::lock();
+    env.set("VIBE_INVOKED_BY", "opencode");
     let (v, p) = resolve_invoked_by(Some("claude-code"));
     assert_eq!(v.as_deref(), Some("claude-code"));
     assert_eq!(p, InvokedByProvenance::CliFlag);
@@ -39,9 +38,8 @@ fn resolve_flag_wins_over_env() {
 
 #[test]
 fn resolve_treats_empty_flag_as_absent() {
-    let _lock = INVOKED_BY_LOCK.lock().unwrap_or_else(|e| e.into_inner());
-    let _g = EnvGuard::new();
-    EnvGuard::set("opencode");
+    let mut env = EnvGuard::lock();
+    env.set("VIBE_INVOKED_BY", "opencode");
     let (v, p) = resolve_invoked_by(Some("   "));
     assert_eq!(v.as_deref(), Some("opencode"));
     assert_eq!(p, InvokedByProvenance::EnvVar);
@@ -49,9 +47,8 @@ fn resolve_treats_empty_flag_as_absent() {
 
 #[test]
 fn resolve_treats_empty_env_as_absent() {
-    let _lock = INVOKED_BY_LOCK.lock().unwrap_or_else(|e| e.into_inner());
-    let _g = EnvGuard::new();
-    EnvGuard::set("");
+    let mut env = EnvGuard::lock();
+    env.set("VIBE_INVOKED_BY", "");
     let (v, p) = resolve_invoked_by(None);
     assert_eq!(v, None);
     assert_eq!(p, InvokedByProvenance::Default);
@@ -59,8 +56,8 @@ fn resolve_treats_empty_env_as_absent() {
 
 #[test]
 fn render_json_stamps_invoked_by_on_object_payloads() {
-    let _lock = INVOKED_BY_LOCK.lock().unwrap_or_else(|e| e.into_inner());
-    let _g = EnvGuard::new();
+    let mut env = EnvGuard::lock();
+    env.unset("VIBE_INVOKED_BY");
     let ctx = Context::from_flags(false, true, Some("codex"), false);
     let payload = serde_json::json!({ "ok": true, "command": "demo" });
     let rendered = ctx.render_json(&payload).unwrap();
@@ -72,8 +69,8 @@ fn render_json_stamps_invoked_by_on_object_payloads() {
 
 #[test]
 fn render_json_omits_invoked_by_when_unset() {
-    let _lock = INVOKED_BY_LOCK.lock().unwrap_or_else(|e| e.into_inner());
-    let _g = EnvGuard::new();
+    let mut env = EnvGuard::lock();
+    env.unset("VIBE_INVOKED_BY");
     let ctx = Context::from_flags(false, true, None, false);
     let payload = serde_json::json!({ "ok": true });
     let rendered = ctx.render_json(&payload).unwrap();
@@ -83,24 +80,23 @@ fn render_json_omits_invoked_by_when_unset() {
 
 #[test]
 fn unattended_default_false_with_no_flag_no_env() {
-    let _lock = UNATTENDED_LOCK.lock().unwrap_or_else(|e| e.into_inner());
-    let _g = UnattendedGuard::new();
+    let mut env = EnvGuard::lock();
+    env.unset("VIBE_UNATTENDED");
     assert!(!resolve_unattended(false));
 }
 
 #[test]
 fn unattended_cli_flag_true_wins() {
-    let _lock = UNATTENDED_LOCK.lock().unwrap_or_else(|e| e.into_inner());
-    let _g = UnattendedGuard::new();
+    let mut env = EnvGuard::lock();
+    env.unset("VIBE_UNATTENDED");
     assert!(resolve_unattended(true));
 }
 
 #[test]
 fn unattended_env_truthy_values() {
-    let _lock = UNATTENDED_LOCK.lock().unwrap_or_else(|e| e.into_inner());
+    let mut env = EnvGuard::lock();
     for raw in ["1", "true", "TRUE", " yes ", "On", "yes"] {
-        let _g = UnattendedGuard::new();
-        UnattendedGuard::set(raw);
+        env.set("VIBE_UNATTENDED", raw);
         assert!(
             resolve_unattended(false),
             "VIBE_UNATTENDED={raw:?} must resolve to true"
@@ -110,10 +106,9 @@ fn unattended_env_truthy_values() {
 
 #[test]
 fn unattended_env_falsy_values_or_empty_or_unset() {
-    let _lock = UNATTENDED_LOCK.lock().unwrap_or_else(|e| e.into_inner());
+    let mut env = EnvGuard::lock();
     for raw in ["", "0", "false", "no", "off", "garbage", "  "] {
-        let _g = UnattendedGuard::new();
-        UnattendedGuard::set(raw);
+        env.set("VIBE_UNATTENDED", raw);
         assert!(
             !resolve_unattended(false),
             "VIBE_UNATTENDED={raw:?} must resolve to false"
@@ -123,18 +118,17 @@ fn unattended_env_falsy_values_or_empty_or_unset() {
 
 #[test]
 fn unattended_cli_flag_overrides_falsy_env() {
-    let _lock = UNATTENDED_LOCK.lock().unwrap_or_else(|e| e.into_inner());
-    let _g = UnattendedGuard::new();
-    UnattendedGuard::set("0");
+    let mut env = EnvGuard::lock();
+    env.set("VIBE_UNATTENDED", "0");
     // Flag is true, env is falsy → resolved is true (flag wins by OR).
     assert!(resolve_unattended(true));
 }
 
 #[test]
 fn render_json_stamps_unattended_when_true() {
-    let _lock = UNATTENDED_LOCK.lock().unwrap_or_else(|e| e.into_inner());
-    let _g_inv = EnvGuard::new();
-    let _g_un = UnattendedGuard::new();
+    let mut env = EnvGuard::lock();
+    env.unset("VIBE_INVOKED_BY");
+    env.unset("VIBE_UNATTENDED");
     let ctx = Context::from_flags(false, true, None, true);
     let payload = serde_json::json!({ "ok": true, "command": "demo" });
     let rendered = ctx.render_json(&payload).unwrap();
@@ -145,9 +139,9 @@ fn render_json_stamps_unattended_when_true() {
 
 #[test]
 fn render_json_omits_unattended_when_false() {
-    let _lock = UNATTENDED_LOCK.lock().unwrap_or_else(|e| e.into_inner());
-    let _g_inv = EnvGuard::new();
-    let _g_un = UnattendedGuard::new();
+    let mut env = EnvGuard::lock();
+    env.unset("VIBE_INVOKED_BY");
+    env.unset("VIBE_UNATTENDED");
     let ctx = Context::from_flags(false, true, None, false);
     let payload = serde_json::json!({ "ok": true });
     let rendered = ctx.render_json(&payload).unwrap();
@@ -157,8 +151,8 @@ fn render_json_omits_unattended_when_false() {
 
 #[test]
 fn render_json_preserves_caller_supplied_invoked_by() {
-    let _lock = INVOKED_BY_LOCK.lock().unwrap_or_else(|e| e.into_inner());
-    let _g = EnvGuard::new();
+    let mut env = EnvGuard::lock();
+    env.unset("VIBE_INVOKED_BY");
     let ctx = Context::from_flags(false, true, Some("opencode"), false);
     let payload = serde_json::json!({
         "ok": true,

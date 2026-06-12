@@ -123,28 +123,12 @@ fn outcome() -> PublishOutcome {
     }
 }
 
-fn temp_set(key: &str, val: &str) -> EnvGuard {
-    unsafe { std::env::set_var(key, val) };
-    EnvGuard {
-        key: key.to_string(),
-    }
-}
-
-struct EnvGuard {
-    key: String,
-}
-
-impl Drop for EnvGuard {
-    fn drop(&mut self) {
-        unsafe { std::env::remove_var(&self.key) };
-    }
-}
-
 #[test]
 fn fires_when_env_configured_and_index_returns_201() {
     let mock = spawn_mock();
-    let _u = temp_set("VIBEVM_INDEX_URL_HOOKTESTA", &mock.base_url);
-    let _t = temp_set("VIBEVM_INDEX_TOKEN_HOOKTESTA", "alpha-token");
+    let mut env = env_audit::EnvGuard::lock();
+    env.set("VIBEVM_INDEX_URL_HOOKTESTA", &mock.base_url);
+    env.set("VIBEVM_INDEX_TOKEN_HOOKTESTA", "alpha-token");
     let work = tempfile::tempdir().unwrap();
     let pkg = work.path().join("pkg");
     std::fs::create_dir_all(&pkg).unwrap();
@@ -179,7 +163,8 @@ fn fires_when_env_configured_and_index_returns_201() {
 
 #[test]
 fn dormant_when_url_missing() {
-    let _t = temp_set("VIBEVM_INDEX_TOKEN_HOOKTESTB", "tok");
+    let mut env = env_audit::EnvGuard::lock();
+    env.set("VIBEVM_INDEX_TOKEN_HOOKTESTB", "tok");
     let work = tempfile::tempdir().unwrap();
     let pkg = work.path().join("pkg");
     std::fs::create_dir_all(&pkg).unwrap();
@@ -191,7 +176,8 @@ fn dormant_when_url_missing() {
 
 #[test]
 fn dormant_when_token_missing() {
-    let _u = temp_set("VIBEVM_INDEX_URL_HOOKTESTC", "https://example.invalid");
+    let mut env = env_audit::EnvGuard::lock();
+    env.set("VIBEVM_INDEX_URL_HOOKTESTC", "https://example.invalid");
     let work = tempfile::tempdir().unwrap();
     let pkg = work.path().join("pkg");
     std::fs::create_dir_all(&pkg).unwrap();
@@ -207,8 +193,9 @@ fn surfaces_error_on_unexpected_status() {
         let mut c = mock.captured.lock().unwrap();
         c.return_status = 500;
     }
-    let _u = temp_set("VIBEVM_INDEX_URL_HOOKTESTD", &mock.base_url);
-    let _t = temp_set("VIBEVM_INDEX_TOKEN_HOOKTESTD", "tok");
+    let mut env = env_audit::EnvGuard::lock();
+    env.set("VIBEVM_INDEX_URL_HOOKTESTD", &mock.base_url);
+    env.set("VIBEVM_INDEX_TOKEN_HOOKTESTD", "tok");
     let work = tempfile::tempdir().unwrap();
     let pkg = work.path().join("pkg");
     std::fs::create_dir_all(&pkg).unwrap();
@@ -222,8 +209,9 @@ fn surfaces_error_on_unexpected_status() {
 #[test]
 fn surfaces_error_when_manifest_missing() {
     let mock = spawn_mock();
-    let _u = temp_set("VIBEVM_INDEX_URL_HOOKTESTE", &mock.base_url);
-    let _t = temp_set("VIBEVM_INDEX_TOKEN_HOOKTESTE", "tok");
+    let mut env = env_audit::EnvGuard::lock();
+    env.set("VIBEVM_INDEX_URL_HOOKTESTE", &mock.base_url);
+    env.set("VIBEVM_INDEX_TOKEN_HOOKTESTE", "tok");
     let work = tempfile::tempdir().unwrap();
     // No vibe.toml in work.path() — the read should fail.
     let report = fire_index_hook(&outcome(), work.path(), "hookteste");
