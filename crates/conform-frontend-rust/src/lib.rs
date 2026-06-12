@@ -24,7 +24,9 @@ impl Frontend for RustFrontend {
         // v2: is_pub + has_doctest on Item; ErrorVariant facts.
         // v3: FileMetrics per file; UnwrapUse with cfg(test) scoping.
         // v4: UnwrapUse with fn-grain spec(deviates) scoping.
-        "4"
+        // v5: UnsafeUse with the same test/deviates scoping, and
+        //     unsafe impl methods extracted (they were invisible).
+        "5"
     }
 
     fn extract(&self, _file: &str, _crate_name: &str, module: &str, text: &str) -> Vec<Fact> {
@@ -60,11 +62,11 @@ struct Extractor {
     /// fn — `UnwrapUse` facts inside carry `in_test: true`.
     test_depth: u32,
     /// Nonzero while visiting a fn (free or impl method) whose attrs
-    /// carry `#[spec(deviates = …)]` — `UnwrapUse` facts inside carry
-    /// `in_deviation: true`. Fn-grain only: a deviates edge on an
-    /// impl, struct, or mod records a different deviation (the
-    /// solver-choice edges on `Sat` / `NaiveDepSolver` are the live
-    /// counter-examples) and grants no unwrap amnesty.
+    /// carry `#[spec(deviates = …)]` — `UnwrapUse` and `UnsafeUse`
+    /// facts inside carry `in_deviation: true`. Fn-grain only: a
+    /// deviates edge on an impl, struct, or mod records a different
+    /// deviation (the solver-choice edges on `Sat` / `NaiveDepSolver`
+    /// are the live counter-examples) and grants no amnesty.
     deviating_depth: u32,
 }
 
@@ -161,12 +163,6 @@ impl<'ast> Visit<'ast> for Extractor {
             is_pub: is_pub(&node.vis),
             has_doctest: has_doc_fence(&node.attrs),
         });
-        if node.sig.unsafety.is_some() {
-            self.facts.push(Fact::UnsafeUse {
-                context: format!("fn {}", node.sig.ident),
-                line: line_of(&node.sig.ident),
-            });
-        }
         let in_test = is_test_fn(&node.attrs) || is_cfg_test(&node.attrs);
         if in_test {
             self.test_depth += 1;
@@ -174,6 +170,16 @@ impl<'ast> Visit<'ast> for Extractor {
         let deviating = is_spec_deviates(&node.attrs);
         if deviating {
             self.deviating_depth += 1;
+        }
+        // The decl fact for an `unsafe fn` sees the fn's own test and
+        // deviates attrs — push after the depths account for them.
+        if node.sig.unsafety.is_some() {
+            self.facts.push(Fact::UnsafeUse {
+                context: format!("fn {}", node.sig.ident),
+                line: line_of(&node.sig.ident),
+                in_test: self.test_depth > 0,
+                in_deviation: self.deviating_depth > 0,
+            });
         }
         syn::visit::visit_item_fn(self, node);
         if deviating {
@@ -188,6 +194,16 @@ impl<'ast> Visit<'ast> for Extractor {
         let deviating = is_spec_deviates(&node.attrs);
         if deviating {
             self.deviating_depth += 1;
+        }
+        // v5: an `unsafe fn` in an impl block is an unsafe use too —
+        // until v4 these were invisible to the gate.
+        if node.sig.unsafety.is_some() {
+            self.facts.push(Fact::UnsafeUse {
+                context: format!("fn {}", node.sig.ident),
+                line: line_of(&node.sig.ident),
+                in_test: self.test_depth > 0,
+                in_deviation: self.deviating_depth > 0,
+            });
         }
         syn::visit::visit_impl_item_fn(self, node);
         if deviating {
@@ -326,224 +342,13 @@ impl<'ast> Visit<'ast> for Extractor {
         self.facts.push(Fact::UnsafeUse {
             context: "block".into(),
             line: line_of(node),
+            in_test: self.test_depth > 0,
+            in_deviation: self.deviating_depth > 0,
         });
         syn::visit::visit_expr_unsafe(self, node);
     }
 }
 
 #[cfg(test)]
-mod tests {
-    use super::*;
-
-    fn extract(src: &str) -> Vec<Fact> {
-        RustFrontend.extract("crates/x/src/m.rs", "x", "x::m", src)
-    }
-
-    #[test]
-    fn extracts_items_with_cell_and_spec_attrs() {
-        let facts = extract(
-            r#"
-            #[cell(seam = "S", variant = "v")]
-            #[spec(implements = "spec://p/d#a")]
-            pub struct Thing;
-            "#,
-        );
-        let Some(Fact::Item { symbol, attrs, .. }) =
-            facts.iter().find(|f| matches!(f, Fact::Item { .. }))
-        else {
-            panic!("expected an item fact, got {facts:?}");
-        };
-        assert_eq!(symbol, "x::m::Thing");
-        assert!(attrs.iter().any(|a| a.starts_with("cell(")));
-        assert!(attrs.iter().any(|a| a.starts_with("spec(")));
-    }
-
-    #[test]
-    fn extracts_imports_ctors_and_unsafe() {
-        let facts = extract(
-            r#"
-            use crate::beta::Beta;
-            pub fn build() {
-                let _x = Widget::new(1);
-                unsafe { core::hint::unreachable_unchecked() }
-            }
-            pub unsafe fn raw() {}
-            "#,
-        );
-        assert!(
-            facts.iter().any(
-                |f| matches!(f, Fact::Import { to_path, .. } if to_path == "crate::beta::Beta")
-            )
-        );
-        assert!(
-            facts
-                .iter()
-                .any(|f| matches!(f, Fact::Ctor { type_name, .. } if type_name == "Widget"))
-        );
-        let unsafes: Vec<_> = facts
-            .iter()
-            .filter(|f| matches!(f, Fact::UnsafeUse { .. }))
-            .collect();
-        assert_eq!(unsafes.len(), 2, "block + unsafe fn: {facts:?}");
-    }
-
-    #[test]
-    fn unparseable_source_yields_no_facts() {
-        assert!(extract("pub fn broken( {").is_empty());
-    }
-
-    #[test]
-    fn emits_file_metrics_for_parsed_files() {
-        let facts = extract("pub fn a() {}\npub fn b() {}\n");
-        assert!(
-            facts
-                .iter()
-                .any(|f| matches!(f, Fact::FileMetrics { lines: 2 })),
-            "{facts:?}"
-        );
-    }
-
-    #[test]
-    fn unwrap_in_domain_vs_test_scopes() {
-        let facts = extract(
-            r#"
-            pub fn domain() { Some(1).unwrap(); }
-            pub fn hinted() { std::fs::read("x").expect("io"); }
-            #[test]
-            fn in_test_fn() { Some(1).unwrap(); }
-            #[cfg(test)]
-            mod tests {
-                fn helper() { Some(2).unwrap(); }
-            }
-            "#,
-        );
-        let unwraps: Vec<(&str, bool)> = facts
-            .iter()
-            .filter_map(|f| match f {
-                Fact::UnwrapUse {
-                    method, in_test, ..
-                } => Some((method.as_str(), *in_test)),
-                _ => None,
-            })
-            .collect();
-        assert_eq!(
-            unwraps,
-            vec![
-                ("unwrap", false),
-                ("expect", false),
-                ("unwrap", true),
-                ("unwrap", true),
-            ],
-            "{facts:?}"
-        );
-    }
-
-    #[test]
-    fn unwrap_in_deviation_scopes_fn_grain_only() {
-        let facts = extract(
-            r#"
-            pub fn plain() { Some(1).unwrap(); }
-
-            #[spec(deviates = "spec://p/d#a", reason = "recorded boundary")]
-            pub fn testified() { Some(1).unwrap(); }
-
-            #[spec(implements = "spec://p/d#a")]
-            pub fn implementing() { Some(1).unwrap(); }
-
-            pub struct S;
-            impl S {
-                #[spec(deviates = "spec://p/d#a", reason = "method-grain testimony")]
-                fn method(&self) { Some(1).unwrap(); }
-                fn bare(&self) { Some(1).unwrap(); }
-            }
-
-            #[spec(deviates = "spec://p/d#other", reason = "about the impl, not unwraps")]
-            impl T for S {
-                fn no_amnesty(&self) { Some(1).unwrap(); }
-            }
-            "#,
-        );
-        let unwraps: Vec<bool> = facts
-            .iter()
-            .filter_map(|f| match f {
-                Fact::UnwrapUse { in_deviation, .. } => Some(*in_deviation),
-                _ => None,
-            })
-            .collect();
-        assert_eq!(
-            unwraps,
-            vec![false, true, false, true, false, false],
-            "{facts:?}"
-        );
-    }
-
-    #[test]
-    fn extracts_visibility_and_doctest_presence() {
-        let facts = extract(
-            r#"
-            /// Canonical use:
-            ///
-            /// ```
-            /// assert_eq!(1, 1);
-            /// ```
-            pub fn documented() {}
-
-            /// Prose only.
-            pub fn bare() {}
-
-            fn private() {}
-            "#,
-        );
-        let item = |name: &str| {
-            facts
-                .iter()
-                .find_map(|f| match f {
-                    Fact::Item {
-                        symbol,
-                        is_pub,
-                        has_doctest,
-                        ..
-                    } if symbol.ends_with(name) => Some((*is_pub, *has_doctest)),
-                    _ => None,
-                })
-                .unwrap()
-        };
-        assert_eq!(item("documented"), (true, true));
-        assert_eq!(item("bare"), (true, false));
-        assert_eq!(item("private"), (false, false));
-    }
-
-    #[test]
-    fn extracts_thiserror_variants_with_enum_attrs() {
-        let facts = extract(
-            r#"
-            #[spec(implements = "spec://p/d#err")]
-            #[derive(Debug)]
-            pub enum Error {
-                #[error("file `{0}` missing")]
-                Missing(String),
-                #[error(transparent)]
-                Io(std::io::Error),
-            }
-            "#,
-        );
-        let variants: Vec<_> = facts
-            .iter()
-            .filter_map(|f| match f {
-                Fact::ErrorVariant {
-                    variant,
-                    message,
-                    enum_attrs,
-                    ..
-                } => Some((variant.clone(), message.clone(), enum_attrs.clone())),
-                _ => None,
-            })
-            .collect();
-        assert_eq!(variants.len(), 2, "{facts:?}");
-        assert_eq!(variants[0].0, "Missing");
-        assert!(variants[0].1.contains("missing"));
-        assert!(variants[0].2.iter().any(|a| a.starts_with("spec(")));
-        // transparent carries no display template
-        assert_eq!(variants[1].1, "");
-    }
-}
+#[path = "lib/tests.rs"]
+mod tests;

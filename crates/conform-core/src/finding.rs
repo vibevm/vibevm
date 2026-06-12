@@ -68,7 +68,10 @@ pub trait Rule {
 /// let facts = vec![SourceFacts {
 ///     file: "crates/a/src/lib.rs".into(),
 ///     crate_name: "a".into(),
-///     facts: vec![Fact::UnsafeUse { context: "block".into(), line: 5 }],
+///     facts: vec![Fact::UnsafeUse {
+///         context: "block".into(), line: 5,
+///         in_test: false, in_deviation: false,
+///     }],
 /// }];
 /// assert_eq!(check(&[&gate], &facts, None).len(), 1);
 /// assert!(check(&[&gate], &facts, Some("crates/b/")).is_empty());
@@ -92,7 +95,10 @@ pub fn check(rules: &[&dyn Rule], facts: &[SourceFacts], scope: Option<&str>) ->
 /// let facts = vec![SourceFacts {
 ///     file: "crates/a/src/lib.rs".into(),
 ///     crate_name: "a".into(),
-///     facts: vec![Fact::UnsafeUse { context: "block".into(), line: 5 }],
+///     facts: vec![Fact::UnsafeUse {
+///         context: "block".into(), line: 5,
+///         in_test: false, in_deviation: false,
+///     }],
 /// }];
 /// let counts = count_by_rule(&gate.check(&facts));
 /// assert_eq!(counts["unsafe-gate"], 1);
@@ -127,6 +133,8 @@ mod tests {
                 vec![Fact::UnsafeUse {
                     context: "block".into(),
                     line: 5,
+                    in_test: false,
+                    in_deviation: false,
                 }],
             ),
             sf(
@@ -135,6 +143,8 @@ mod tests {
                 vec![Fact::UnsafeUse {
                     context: "block".into(),
                     line: 5,
+                    in_test: false,
+                    in_deviation: false,
                 }],
             ),
         ];

@@ -92,6 +92,8 @@ fn unsafe_gate_respects_audit_crates() {
             vec![Fact::UnsafeUse {
                 context: "block".into(),
                 line: 5,
+                in_test: false,
+                in_deviation: false,
             }],
         ),
         sf(
@@ -100,6 +102,8 @@ fn unsafe_gate_respects_audit_crates() {
             vec![Fact::UnsafeUse {
                 context: "fn".into(),
                 line: 6,
+                in_test: false,
+                in_deviation: false,
             }],
         ),
     ];
@@ -109,6 +113,51 @@ fn unsafe_gate_respects_audit_crates() {
     let found = rule.check(&facts);
     assert_eq!(found.len(), 1);
     assert_eq!(found[0].file, "crates/a/src/lib.rs");
+}
+
+#[test]
+fn unsafe_gate_honors_testimony_but_not_test_context() {
+    // Three uses in one file: a bare one, a testified one, a
+    // test-context one. The testimony is honored; the test context
+    // is not (unsoundness in tests is still unsoundness).
+    let facts = vec![sf(
+        "crates/a/src/lib.rs",
+        "a",
+        vec![
+            Fact::UnsafeUse {
+                context: "block".into(),
+                line: 5,
+                in_test: false,
+                in_deviation: false,
+            },
+            Fact::UnsafeUse {
+                context: "block".into(),
+                line: 9,
+                in_test: false,
+                in_deviation: true,
+            },
+            Fact::UnsafeUse {
+                context: "block".into(),
+                line: 40,
+                in_test: true,
+                in_deviation: false,
+            },
+        ],
+    )];
+    let rule = rules::UnsafeGate { audit_crates: &[] };
+    let found = rule.check(&facts);
+    assert_eq!(found.len(), 2, "{found:?}");
+    // The testified block still advances the ordinal: the bare block
+    // keys #0, the test-context block keys #2 — gaining or losing a
+    // neighbour's testimony never re-keys an existing fingerprint.
+    assert_eq!(
+        found[0].fingerprint,
+        "unsafe-gate|crates/a/src/lib.rs|block#0"
+    );
+    assert_eq!(
+        found[1].fingerprint,
+        "unsafe-gate|crates/a/src/lib.rs|block#2"
+    );
 }
 
 #[test]
@@ -157,6 +206,8 @@ fn every_rule_message_speaks_the_req_grammar() {
                 Fact::UnsafeUse {
                     context: "block".into(),
                     line: 12,
+                    in_test: false,
+                    in_deviation: false,
                 },
             ],
         ),
@@ -341,6 +392,8 @@ fn unsafe_gate_fingerprint_survives_line_shifts() {
         vec![Fact::UnsafeUse {
             context: "block".into(),
             line: 33,
+            in_test: false,
+            in_deviation: false,
         }],
     )];
     let after = vec![sf(
@@ -349,6 +402,8 @@ fn unsafe_gate_fingerprint_survives_line_shifts() {
         vec![Fact::UnsafeUse {
             context: "block".into(),
             line: 35,
+            in_test: false,
+            in_deviation: false,
         }],
     )];
     let rule = rules::UnsafeGate { audit_crates: &[] };

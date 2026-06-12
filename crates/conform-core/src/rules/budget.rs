@@ -11,7 +11,15 @@ use crate::finding::{Finding, Rule};
 use super::req_message;
 
 /// unsafe-gate: `unsafe` appears only inside designated audit
-/// crates.
+/// crates, or under a recorded fn-grain deviation. The posture
+/// (AUD-0016, redesigned 2026-06-12): an audit crate owns the
+/// unsafety behind a safe API and is exempt wholesale; everywhere
+/// else a justified boundary testifies via
+/// `#[spec(deviates = …, reason = …)]` on the carrying fn
+/// (`in_deviation`, frontend v5) and the rule honors it
+/// (ENGINE-CONFORM §4). Test-context unsafe (`in_test`) is
+/// deliberately NOT exempt — unsoundness in tests is still
+/// unsoundness; tests use the audit crate's safe API instead.
 ///
 /// ```
 /// use conform_core::rules::UnsafeGate;
@@ -21,10 +29,25 @@ use super::req_message;
 /// let outside = SourceFacts {
 ///     file: "crates/a/src/lib.rs".into(),
 ///     crate_name: "a".into(),
-///     facts: vec![Fact::UnsafeUse { context: "block".into(), line: 5 }],
+///     facts: vec![
+///         Fact::UnsafeUse {
+///             context: "block".into(), line: 5,
+///             in_test: false, in_deviation: false,
+///         },
+///         // Testified boundary — honored, not flagged.
+///         Fact::UnsafeUse {
+///             context: "block".into(), line: 9,
+///             in_test: false, in_deviation: true,
+///         },
+///         // Test context — still gated.
+///         Fact::UnsafeUse {
+///             context: "block".into(), line: 40,
+///             in_test: true, in_deviation: false,
+///         },
+///     ],
 /// };
 /// let findings = rule.check(&[outside]);
-/// assert_eq!(findings.len(), 1);
+/// assert_eq!(findings.len(), 2);
 /// assert!(conform_core::rules::matches_req_grammar(&findings[0].message));
 /// ```
 pub struct UnsafeGate {
@@ -53,12 +76,23 @@ impl Rule for UnsafeGate {
             let mut seen: std::collections::BTreeMap<String, u32> =
                 std::collections::BTreeMap::new();
             for f in &sf.facts {
-                if let Fact::UnsafeUse { context, line } = f {
-                    // One entry access: read the ordinal, then advance the
-                    // counter while the borrow is still live.
+                if let Fact::UnsafeUse {
+                    context,
+                    line,
+                    in_test: _,
+                    in_deviation,
+                } = f
+                {
+                    // The ordinal advances over every unsafe use —
+                    // testified or not — so an existing fingerprint
+                    // never silently re-keys when a NEIGHBOUR gains
+                    // or loses its testimony.
                     let counter = seen.entry(context.clone()).or_insert(0);
                     let ordinal = *counter;
                     *counter += 1;
+                    if *in_deviation {
+                        continue;
+                    }
                     out.push(Finding {
                         rule: self.id(),
                         file: sf.file.clone(),
@@ -66,9 +100,9 @@ impl Rule for UnsafeGate {
                         message: req_message(
                             "discipline://rust-ai-native/guide#bans-and-escape-hatches",
                             &format!("`unsafe` ({context}) outside a designated audit crate"),
-                            "move the unsafe into an audit crate, or record the \
-                             deviation: #[spec(deviates, reason)] plus the wrapping \
-                             machinery",
+                            "move the unsafe behind an audit crate's safe API, or \
+                             record #[spec(deviates = <uri>, reason = …)] on the \
+                             carrying fn",
                         ),
                         why: self.why(),
                         fingerprint: format!("unsafe-gate|{}|{context}#{ordinal}", sf.file),

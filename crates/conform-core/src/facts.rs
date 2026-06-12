@@ -46,8 +46,21 @@ pub enum Fact {
     },
     /// A `<Type>::new(...)` construction site — the R-001 signal.
     Ctor { type_name: String, line: u32 },
-    /// An `unsafe` block or `unsafe fn` body.
-    UnsafeUse { context: String, line: u32 },
+    /// An `unsafe` block, `unsafe fn`, or unsafe impl method.
+    /// `in_test` marks uses inside `#[cfg(test)]` modules or `#[test]`
+    /// functions — carried as data, but unsafe-gate deliberately does
+    /// NOT exempt them: unsoundness in tests is still unsoundness, and
+    /// the audit crate serves tests too. `in_deviation` marks uses
+    /// inside a fn carrying `#[spec(deviates = …, reason = …)]` — the
+    /// recorded testimony the rule honors (ENGINE-CONFORM §4:
+    /// a matching deviates record downgrades the finding). Fn-grain
+    /// only, same as `UnwrapUse`.
+    UnsafeUse {
+        context: String,
+        line: u32,
+        in_test: bool,
+        in_deviation: bool,
+    },
     /// A `#[error("...")]`-carrying enum variant (thiserror) with the
     /// enum's own attribute text — the Class-F diagnostics signal.
     ErrorVariant {

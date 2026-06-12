@@ -87,6 +87,8 @@ mod tests {
             vec![Fact::UnsafeUse {
                 context: "block".into(),
                 line: 5,
+                in_test: false,
+                in_deviation: false,
             }],
         )];
         let findings = check(&[&gate], &facts, None);
