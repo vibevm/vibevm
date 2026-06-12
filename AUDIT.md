@@ -380,8 +380,9 @@ to -01 stands: owner to confirm the rewrite was intentional.
   registry — owner-gated. Re-pointed, P3.
 - **AUD-0014 / AUD-0015** (doc-string one-liners) — open; cheap, fix on
   next resolver touch. **AUD-0016** (no designated unsafe-audit crates;
-  now 8 frozen) — filed, owner decision. **AUD-0017** — folded into
-  **2026-06-12-03** (DBT-0019, escalated).
+  now 8 frozen) — filed, owner decision → **fixed** (SHRINK-PLAN v0.2,
+  same day — see the second same-day update below). **AUD-0017** —
+  folded into **2026-06-12-03** (DBT-0019, escalated).
 
 ### Same-day disposition update — the depth program executed
 
@@ -434,3 +435,24 @@ filed P2s closed in one commit series (hashes in the WAL checkpoint):
   lives in `tests/cli_pkg_cycle.rs` — Windows UAC installer detection
   (os error 740) refuses unelevated exes whose names contain
   "install"/"update"/"setup"; the PROP-007 §9.5 lesson, met again.
+
+### Second same-day disposition update — SHRINK-PLAN v0.2
+
+The owner directed the three moves v0.1 §8 had reserved
+(«execute all the spec/terraforms/SHRINK-PLAN-v0.2.md»):
+
+- **AUD-0016 · fixed** (`be4aaef` and the two commits before it).
+  The unsafe-gate posture, redesigned: **`env-audit`** is the
+  designated audit crate — a process-global serialized, restoring
+  `EnvGuard` behind a safe API replaces the three hand-rolled test
+  guards (whose own SAFETY comment admitted a transient-observation
+  race; the mutex closes it). The two production boundaries that
+  cannot move — vibe-cli's startup env promotion, vibe-index's
+  `libc::kill` FFI — testify at fn grain via
+  `#[spec(deviates = ENGINE-CONFORM-v0.1#rules, reason)]`, which
+  frontend v5 now extracts (`UnsafeUse.in_test` / `.in_deviation`)
+  and the rule honors per ENGINE-CONFORM §4. Test-context unsafe is
+  deliberately NOT exempt (unsoundness in tests is still
+  unsoundness). Baseline 10 → 2: every unsafe-gate fingerprint left
+  by drain, none by freeze-widening; the residual 2 is the DBT-0020
+  MCP pair, untouched by owner instruction.
