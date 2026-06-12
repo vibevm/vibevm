@@ -44,11 +44,23 @@ pub struct IndexClient {
 #[derive(Debug, Error)]
 #[spec(implements = "spec://vibevm/modules/vibe-index/PROP-005#http")]
 pub enum IndexError {
-    #[error("HTTP request to `{url}` failed: {message}")]
+    #[error(
+        "HTTP request to `{url}` failed \
+         (violates spec://vibevm/modules/vibe-index/PROP-005#http; \
+          fix: check the index URL and network reachability): {message}"
+    )]
     Http { url: String, message: String },
-    #[error("index at `{url}` returned status {status}")]
+    #[error(
+        "index at `{url}` returned status {status} \
+         (violates spec://vibevm/modules/vibe-index/PROP-005#http; \
+          fix: check the index server health at that URL)"
+    )]
     Status { url: String, status: u16 },
-    #[error("index at `{url}` returned malformed JSON: {message}")]
+    #[error(
+        "index at `{url}` returned malformed JSON \
+         (violates spec://vibevm/modules/vibe-index/PROP-005#http; \
+          fix: regenerate the index via reindex): {message}"
+    )]
     Malformed { url: String, message: String },
 }
 

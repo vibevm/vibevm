@@ -30,23 +30,46 @@ pub use shell::ShellGit;
 #[spec(implements = "spec://vibevm/modules/vibe-registry/PROP-002#failure-discriminator")]
 pub enum GitError {
     #[error(
-        "the `git` executable is not available on PATH; install git (https://git-scm.com/downloads) and retry"
+        "the `git` executable is not available on PATH; install git \
+         (https://git-scm.com/downloads) and retry \
+         (violates spec://vibevm/modules/vibe-registry/PROP-001#backend; \
+          fix: install git and ensure it is on PATH)"
     )]
     NotInstalled,
 
-    #[error("remote repository `{url}` not found (does it exist? is access granted?)")]
+    #[error(
+        "remote repository `{url}` not found (does it exist? is access granted?) \
+         (violates spec://vibevm/modules/vibe-registry/PROP-002#failure-discriminator; \
+          fix: verify the repo URL and your read access)"
+    )]
     RepoNotFound { url: String },
 
-    #[error("ssh authentication failed for `{url}` — check your ssh-agent / keys")]
+    #[error(
+        "ssh authentication failed for `{url}` — check your ssh-agent / keys \
+         (violates spec://vibevm/modules/vibe-registry/PROP-002#registry-auth; \
+          fix: load your key into ssh-agent or fix the [[registry]] auth setting)"
+    )]
     AuthFailed { url: String },
 
-    #[error("unable to reach `{url}` (network or DNS error)")]
+    #[error(
+        "unable to reach `{url}` (network or DNS error) \
+         (violates spec://vibevm/modules/vibe-registry/PROP-002#failure-discriminator; \
+          fix: check connectivity and the host name)"
+    )]
     NetworkUnreachable { url: String },
 
-    #[error("branch / ref `{refname}` not found on `{url}`")]
+    #[error(
+        "branch / ref `{refname}` not found on `{url}` \
+         (violates spec://vibevm/modules/vibe-registry/PROP-001#backend-trait; \
+          fix: verify the ref with `git ls-remote`)"
+    )]
     RefNotFound { url: String, refname: String },
 
-    #[error("file `{path}` not found in `{url}` at ref `{refname}`")]
+    #[error(
+        "file `{path}` not found in `{url}` at ref `{refname}` \
+         (violates spec://vibevm/modules/vibe-registry/PROP-001#backend-trait; \
+          fix: ensure the file is committed at that ref)"
+    )]
     FileNotFoundInRef {
         url: String,
         refname: String,
@@ -55,18 +78,28 @@ pub enum GitError {
 
     #[error(
         "remote `{url}` does not support `git archive` for fetching individual files \
-         (uploadarch service refused). Caller should fall back to a clone."
+         (uploadarch service refused). Caller should fall back to a clone \
+         (violates spec://vibevm/modules/vibe-registry/PROP-001#backend-trait; \
+          fix: use the clone fallback or enable upload-archive on the host)"
     )]
     ArchiveUnsupported { url: String },
 
-    #[error("git `{cmd}` exited with status {status}:\n{stderr}")]
+    #[error(
+        "git `{cmd}` exited with status {status} \
+         (violates spec://vibevm/modules/vibe-registry/PROP-001#windows-ux; \
+          fix: re-run the command by hand and read the stderr below):\n{stderr}"
+    )]
     CommandFailed {
         cmd: String,
         status: i32,
         stderr: String,
     },
 
-    #[error("I/O error spawning git `{cmd}`: {source}")]
+    #[error(
+        "I/O error spawning git `{cmd}` \
+         (violates spec://vibevm/modules/vibe-registry/PROP-001#backend; \
+          fix: check the git installation and PATH): {source}"
+    )]
     Io {
         cmd: String,
         #[source]
