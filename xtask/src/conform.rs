@@ -8,10 +8,13 @@ use crate::repo_root;
 
 /// The crates under the Class-F/G conform gates (the
 /// expand-as-you-conform list — a crate enters when its seams are
-/// doctested and its error layer carries REQ edges). vibe-core stays
-/// out: its trio was DBT-0019-dispositioned; re-judge at the next
-/// audit window now that DBT-0019 is closed.
+/// doctested and its error layer carries REQ edges). vibe-core and
+/// vibe-index entered 2026-06-12 (SHRINK-PLAN v0.2's opening move,
+/// the re-judge the DBT-0019 closure unblocked); vibe-index was
+/// pre-paid by Phase 5's PackageScanner seam work.
 const CONFORM_GATED: &[&str] = &[
+    "vibe-core",
+    "vibe-index",
     "vibe-resolver",
     "conform-core",
     "specmap-core",
