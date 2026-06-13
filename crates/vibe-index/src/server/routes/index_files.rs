@@ -35,13 +35,17 @@ pub async fn primary_jsonl_gz(State(state): State<Arc<AppState>>) -> Result<Resp
         Ok(b) => b,
         Err(e) if e.kind() == std::io::ErrorKind::NotFound => {
             return Err(ApiError::not_found(format!(
-                "`{}` is not present in this index",
+                "`{}` is not present in this index \
+                 (violates spec://vibevm/modules/vibe-index/PROP-005#http; \
+                 fix: list the index files, or reindex if the package was just added)",
                 path.display()
             )));
         }
         Err(e) => {
             return Err(ApiError::internal(format!(
-                "could not read `{}`: {e}",
+                "could not read `{}`: {e} \
+                 (violates spec://vibevm/modules/vibe-index/PROP-005#http; \
+                 fix: check the data dir is readable, then retry)",
                 path.display()
             )));
         }
@@ -51,7 +55,12 @@ pub async fn primary_jsonl_gz(State(state): State<Arc<AppState>>) -> Result<Resp
         .header(header::CONTENT_TYPE, "application/x-ndjson")
         .header(header::CONTENT_ENCODING, "gzip")
         .body(Body::from(bytes))
-        .map_err(|e| ApiError::internal(format!("response build: {e}")))?;
+        .map_err(|e| {
+            ApiError::internal(format!(
+                "response build: {e} (violates spec://vibevm/modules/vibe-index/PROP-005#http; \
+                 fix: retry; if it persists the response shape changed and the route needs updating)"
+            ))
+        })?;
     resp.headers_mut().insert(
         header::CACHE_CONTROL,
         header::HeaderValue::from_static("no-cache"),
@@ -66,7 +75,9 @@ pub async fn by_cap_jsonl(
     state.stats.note_request();
     let slug = slug_with_ext.strip_suffix(".jsonl").ok_or_else(|| {
         ApiError::not_found(format!(
-            "expected `<slug>.jsonl` path segment, got `{slug_with_ext}`"
+            "expected `<slug>.jsonl` path segment, got `{slug_with_ext}` \
+             (violates spec://vibevm/modules/vibe-index/PROP-005#http; \
+             fix: request a `<slug>.jsonl` path such as `db.any.jsonl`)"
         ))
     })?;
     let path = state.data_dir.join("by-cap").join(format!("{slug}.jsonl"));
@@ -80,7 +91,9 @@ pub async fn by_purl_jsonl(
     state.stats.note_request();
     let slug = slug_with_ext.strip_suffix(".jsonl").ok_or_else(|| {
         ApiError::not_found(format!(
-            "expected `<slug>.jsonl` path segment, got `{slug_with_ext}`"
+            "expected `<slug>.jsonl` path segment, got `{slug_with_ext}` \
+             (violates spec://vibevm/modules/vibe-index/PROP-005#http; \
+             fix: request a `<slug>.jsonl` path such as `db.any.jsonl`)"
         ))
     })?;
     let path = state.data_dir.join("by-purl").join(format!("{slug}.jsonl"));
@@ -94,7 +107,9 @@ pub async fn by_name_json(
     state.stats.note_request();
     let name = name_with_ext.strip_suffix(".json").ok_or_else(|| {
         ApiError::not_found(format!(
-            "expected `<name>.json` path segment, got `{name_with_ext}`"
+            "expected `<name>.json` path segment, got `{name_with_ext}` \
+             (violates spec://vibevm/modules/vibe-index/PROP-005#http; \
+             fix: request a `<name>.json` path such as `wal.json`)"
         ))
     })?;
     let path = state.data_dir.join("by-name").join(format!("{name}.json"));
@@ -106,13 +121,17 @@ async fn serve_file(path: &std::path::Path, content_type: &str) -> Result<Respon
         Ok(b) => b,
         Err(e) if e.kind() == std::io::ErrorKind::NotFound => {
             return Err(ApiError::not_found(format!(
-                "`{}` is not present in this index",
+                "`{}` is not present in this index \
+                 (violates spec://vibevm/modules/vibe-index/PROP-005#http; \
+                 fix: list the index files, or reindex if the package was just added)",
                 path.display()
             )));
         }
         Err(e) => {
             return Err(ApiError::internal(format!(
-                "could not read `{}`: {e}",
+                "could not read `{}`: {e} \
+                 (violates spec://vibevm/modules/vibe-index/PROP-005#http; \
+                 fix: check the data dir is readable, then retry)",
                 path.display()
             )));
         }
@@ -121,7 +140,12 @@ async fn serve_file(path: &std::path::Path, content_type: &str) -> Result<Respon
         .status(StatusCode::OK)
         .header(header::CONTENT_TYPE, content_type)
         .body(Body::from(bytes))
-        .map_err(|e| ApiError::internal(format!("response build: {e}")))?;
+        .map_err(|e| {
+            ApiError::internal(format!(
+                "response build: {e} (violates spec://vibevm/modules/vibe-index/PROP-005#http; \
+                 fix: retry; if it persists the response shape changed and the route needs updating)"
+            ))
+        })?;
     resp.headers_mut().insert(
         header::CACHE_CONTROL,
         header::HeaderValue::from_static("no-cache"),

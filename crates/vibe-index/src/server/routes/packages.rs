@@ -73,7 +73,12 @@ pub struct SearchHit {
 /// Parse a `{group}` path segment into a validated [`Group`]. A
 /// malformed segment is a 400 — the URL itself is syntactically wrong.
 fn parse_group(s: &str) -> Result<Group, ApiError> {
-    Group::parse(s).map_err(|e| ApiError::bad_request(format!("invalid group `{s}`: {e}")))
+    Group::parse(s).map_err(|e| {
+        ApiError::bad_request(format!(
+            "invalid group `{s}`: {e} (violates spec://vibevm/modules/vibe-index/PROP-005#http; \
+             fix: use a reverse-FQDN group like `org.vibevm`)"
+        ))
+    })
 }
 
 /// The package's `kind` — metadata carried per version (PROP-008 §2.3).
@@ -158,7 +163,7 @@ pub async fn package_versions(
     let index = state.index.read().await;
     let pkg = index
         .get(&group, &name)
-        .ok_or_else(|| ApiError::not_found(format!("`{group}/{name}` is not in the index")))?;
+        .ok_or_else(|| ApiError::not_found(format!("`{group}/{name}` is not in the index (violates spec://vibevm/modules/vibe-index/PROP-005#http; fix: check the (group, name) identity, or publish the package first)")))?;
     Ok(Json(PackageVersionsResponse {
         command: "package",
         kind: package_kind(pkg),
@@ -187,18 +192,18 @@ pub async fn single_version(
     let group = parse_group(&group_str)?;
     let v: Version = version_str
         .parse()
-        .map_err(|e| ApiError::bad_request(format!("`{version_str}` is not valid semver: {e}")))?;
+        .map_err(|e| ApiError::bad_request(format!("`{version_str}` is not valid semver: {e} (violates spec://vibevm/modules/vibe-index/PROP-005#http; fix: request a semver version like `0.1.0`)")))?;
     let index = state.index.read().await;
     let pkg = index
         .get(&group, &name)
-        .ok_or_else(|| ApiError::not_found(format!("`{group}/{name}` is not in the index")))?;
+        .ok_or_else(|| ApiError::not_found(format!("`{group}/{name}` is not in the index (violates spec://vibevm/modules/vibe-index/PROP-005#http; fix: check the (group, name) identity, or publish the package first)")))?;
     let entry = pkg
         .versions
         .iter()
         .find(|e| e.version == v)
         .ok_or_else(|| {
             ApiError::not_found(format!(
-                "`{group}/{name}@{version_str}` is not in the index"
+                "`{group}/{name}@{version_str}` is not in the index (violates spec://vibevm/modules/vibe-index/PROP-005#http; fix: GET the package to list its versions, then request one that exists)"
             ))
         })?
         .clone();
@@ -229,7 +234,9 @@ pub async fn upsert(
     require_writeable(&state, &headers)?;
     if entry.registry != state.index.read().await.registry {
         return Err(ApiError::bad_request(format!(
-            "scope violation: entry.registry=`{}` differs from server registry=`{}`",
+            "scope violation: entry.registry=`{}` differs from server registry=`{}` \
+             (violates spec://vibevm/modules/vibe-index/PROP-005#http; \
+             fix: POST only entries whose `registry` matches this server's)",
             entry.registry,
             state.index.read().await.registry
         )));
@@ -247,7 +254,7 @@ pub async fn upsert(
             .unwrap_or(false);
         idx.upsert(entry);
         idx.write_to(&state.data_dir)
-            .map_err(|e| ApiError::internal(format!("could not persist index: {e}")))?;
+            .map_err(|e| ApiError::internal(format!("could not persist index: {e} (violates spec://vibevm/modules/vibe-index/PROP-005#http; fix: check the data dir is writable, then retry)")))?;
         !existed
     };
 
@@ -288,13 +295,13 @@ pub async fn delete_version(
     let group = parse_group(&group_str)?;
     let v: Version = version_str
         .parse()
-        .map_err(|e| ApiError::bad_request(format!("`{version_str}` is not valid semver: {e}")))?;
+        .map_err(|e| ApiError::bad_request(format!("`{version_str}` is not valid semver: {e} (violates spec://vibevm/modules/vibe-index/PROP-005#http; fix: request a semver version like `0.1.0`)")))?;
     let removed = {
         let mut idx = state.index.write().await;
         let r = idx.remove_version(&group, &name, &v);
         if r {
             idx.write_to(&state.data_dir)
-                .map_err(|e| ApiError::internal(format!("could not persist index: {e}")))?;
+                .map_err(|e| ApiError::internal(format!("could not persist index: {e} (violates spec://vibevm/modules/vibe-index/PROP-005#http; fix: check the data dir is writable, then retry)")))?;
         }
         r
     };
@@ -322,7 +329,7 @@ pub async fn delete_package(
         let r = idx.remove_package(&group, &name);
         if r {
             idx.write_to(&state.data_dir)
-                .map_err(|e| ApiError::internal(format!("could not persist index: {e}")))?;
+                .map_err(|e| ApiError::internal(format!("could not persist index: {e} (violates spec://vibevm/modules/vibe-index/PROP-005#http; fix: check the data dir is writable, then retry)")))?;
         }
         r
     };
@@ -340,11 +347,17 @@ pub async fn delete_package(
 
 fn require_writeable(state: &AppState, headers: &HeaderMap) -> Result<(), ApiError> {
     if state.read_only {
-        return Err(ApiError::forbidden("server is running in --read-only mode"));
+        return Err(ApiError::forbidden(
+            "server is running in --read-only mode \
+             (violates spec://vibevm/modules/vibe-index/PROP-005#http; \
+             fix: restart the server without --read-only to accept writes)",
+        ));
     }
     if !state.tokens.has_any() {
         return Err(ApiError::forbidden(
-            "server has no admin tokens configured (--auth-tokens-file required for writes)",
+            "server has no admin tokens configured \
+             (violates spec://vibevm/modules/vibe-index/PROP-005#http; \
+             fix: start the server with --auth-tokens-file to enable writes)",
         ));
     }
     let supplied = headers
