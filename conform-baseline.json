@@ -1,6 +1,5 @@
 {
   "findings": [
-    "file-length|crates/vibe-cli/src/commands/mcp.rs",
     "pub-doctest|crates/vibe-core/src/capability_ref.rs|vibe_core::capability_ref::CapabilityName",
     "pub-doctest|crates/vibe-core/src/capability_ref.rs|vibe_core::capability_ref::CapabilityNamespace",
     "pub-doctest|crates/vibe-core/src/error.rs|vibe_core::error::Error",
