@@ -529,7 +529,7 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/registry/vendor.rs",
       "item_kind": "mod",
-      "line": 4,
+      "line": 11,
       "symbol": "vibe_cli::commands::registry::vendor"
     },
     {
@@ -1922,14 +1922,14 @@
       "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/src/lib.rs",
       "item_kind": "fn",
-      "line": 389,
+      "line": 390,
       "symbol": "vibe_registry::CachedPackage::package_meta"
     },
     {
       "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/src/lib.rs",
       "item_kind": "enum",
-      "line": 54,
+      "line": 55,
       "symbol": "vibe_registry::RegistryError"
     },
     {
@@ -2204,6 +2204,20 @@
       "item_kind": "fn",
       "line": 42,
       "symbol": "vibe_registry::tests::registry_cells_oracle::local_registry_resolves_and_fetches_through_the_seam"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/vendor.rs",
+      "item_kind": "mod",
+      "line": 21,
+      "symbol": "vibe_registry::vendor"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/vendor.rs",
+      "item_kind": "enum",
+      "line": 31,
+      "symbol": "vibe_registry::vendor::VendorError"
     },
     {
       "crate_name": "vibe-resolver",
@@ -3569,7 +3583,7 @@
     {
       "file": "crates/vibe-cli/src/commands/registry/vendor.rs",
       "from_symbol": "vibe_cli::commands::registry::vendor",
-      "line": 4,
+      "line": 11,
       "provenance": "authored",
       "uri": "spec://vibevm/VIBEVM-SPEC#registry",
       "verb": "implements"
@@ -5241,7 +5255,7 @@
     {
       "file": "crates/vibe-registry/src/lib.rs",
       "from_symbol": "vibe_registry::CachedPackage::package_meta",
-      "line": 396,
+      "line": 397,
       "provenance": "authored",
       "uri": "spec://vibevm/discipline/ENGINE-CONFORM-v0.1#rules",
       "verb": "deviates",
@@ -5250,7 +5264,7 @@
     {
       "file": "crates/vibe-registry/src/lib.rs",
       "from_symbol": "vibe_registry::RegistryError",
-      "line": 74,
+      "line": 75,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#failure-discriminator",
       "verb": "implements"
@@ -5570,6 +5584,22 @@
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#registry-model",
       "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-registry/src/vendor.rs",
+      "from_symbol": "vibe_registry::vendor",
+      "line": 21,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-002#mirror",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-registry/src/vendor.rs",
+      "from_symbol": "vibe_registry::vendor::VendorError",
+      "line": 34,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-002#mirror",
+      "verb": "implements"
     },
     {
       "file": "crates/vibe-resolver/src/lib.rs",
