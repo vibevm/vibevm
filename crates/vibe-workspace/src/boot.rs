@@ -42,7 +42,14 @@ use vibe_core::{Group, PackageKind};
 use crate::WorkspaceError;
 
 /// The band a boot entry sorts into within the computed sequence
-/// (PROP-009 §2.5). Declaration order **is** the sort order.
+/// (PROP-009 §2.5). Declaration order **is** the sort order — the
+/// foundation leads, user overrides trail:
+///
+/// ```
+/// use vibe_workspace::boot::BootBand;
+/// assert!(BootBand::Foundation < BootBand::NodeOwn);
+/// assert!(BootBand::Dependency < BootBand::UserOverride);
+/// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub enum BootBand {
     /// Project-wide foundation — conventions, the four rules, technology
