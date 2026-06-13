@@ -1094,6 +1094,13 @@
     },
     {
       "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/rel_path.rs",
+      "item_kind": "mod",
+      "line": 5,
+      "symbol": "vibe_core::rel_path"
+    },
+    {
+      "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/timestamp.rs",
       "item_kind": "mod",
       "line": 9,
@@ -4159,6 +4166,14 @@
       "uri": "spec://vibevm/modules/vibe-registry/PROP-008#identity",
       "verb": "verifies",
       "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-core/src/rel_path.rs",
+      "from_symbol": "vibe_core::rel_path",
+      "line": 5,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-007#workspace-section",
+      "verb": "implements"
     },
     {
       "file": "crates/vibe-core/src/timestamp.rs",

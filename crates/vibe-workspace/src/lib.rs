@@ -33,8 +33,8 @@ use std::path::{Path, PathBuf};
 
 use specmark::spec;
 use thiserror::Error;
-use vibe_core::PackageKind;
 use vibe_core::manifest::Manifest;
+use vibe_core::{PackageKind, RelPath};
 
 pub mod boot;
 pub mod boot_artifacts;
@@ -243,7 +243,7 @@ type Result<T> = std::result::Result<T, WorkspaceError>;
 ///     "[package]\ngroup = \"org.vibevm\"\nname = \"wal\"\nkind = \"flow\"\nversion = \"0.1.0\"\n",
 /// ).unwrap();
 /// let member = WorkspaceMember {
-///     rel_path: "packages/flow-wal".to_string(),
+///     rel_path: "packages/flow-wal".into(),
 ///     manifest,
 ///     depth: 0,
 ///     parent: None,
@@ -260,7 +260,7 @@ pub struct WorkspaceMember {
     /// Path relative to the workspace's absolute root, forward-slashed.
     /// This is the member's portable identity — it is what the lockfile
     /// records, never an absolute path.
-    pub rel_path: String,
+    pub rel_path: RelPath,
     /// The member's parsed, validated manifest, with `[workspace.versions]`
     /// placeholders already resolved.
     pub manifest: Manifest,
@@ -270,7 +270,7 @@ pub struct WorkspaceMember {
     /// The `rel_path` of the workspace node that declared this member, or
     /// `None` if it was declared directly by the absolute root. Drives the
     /// recursive `[workspace.versions]` placeholder lookup. PROP-007 §2.6.
-    pub parent: Option<String>,
+    pub parent: Option<RelPath>,
 }
 
 /// A loaded workspace: an absolute root plus every member, transitively.
@@ -431,7 +431,7 @@ impl Workspace {
     /// The absolute on-disk path of a member — `root` joined with its
     /// `rel_path`. In-memory only; do not persist the result.
     pub fn member_abs_path(&self, member: &WorkspaceMember) -> PathBuf {
-        join_rel(&self.root, &member.rel_path)
+        join_rel(&self.root, member.rel_path.as_str())
     }
 
     /// The absolute on-disk path of a node by its `rel_path` — `"."` is

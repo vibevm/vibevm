@@ -13,7 +13,7 @@ use std::path::{Path, PathBuf};
 
 use specmark::spec;
 use vibe_core::manifest::{Manifest, Requires, WorkspaceSection};
-use vibe_core::{PackageRef, VersionSpec};
+use vibe_core::{PackageRef, RelPath, VersionSpec};
 
 use crate::{
     Result, WorkspaceError, WorkspaceMember, canonical, is_glob_pattern, path_to_slash,
@@ -81,10 +81,10 @@ pub(crate) fn expand(
                 )?;
             }
             out.push(WorkspaceMember {
-                rel_path,
+                rel_path: RelPath::new(rel_path),
                 manifest,
                 depth,
-                parent: node_rel.map(str::to_string),
+                parent: node_rel.map(RelPath::from),
             });
         }
 
@@ -124,12 +124,14 @@ pub(crate) fn finalize_versions(
     parent.insert(".".to_string(), None);
     for m in members.iter() {
         if let Some(ws) = &m.manifest.workspace {
-            own.insert(m.rel_path.clone(), ws.versions.clone());
+            own.insert(m.rel_path.to_string(), ws.versions.clone());
         }
-        parent.insert(
-            m.rel_path.clone(),
-            Some(m.parent.clone().unwrap_or_else(|| ".".to_string())),
-        );
+        let parent_key = m
+            .parent
+            .as_ref()
+            .map(|p| p.as_str().to_string())
+            .unwrap_or_else(|| ".".to_string());
+        parent.insert(m.rel_path.to_string(), Some(parent_key));
     }
 
     // Walk a node's enclosing chain, nearest first, for the placeholder.
@@ -146,7 +148,7 @@ pub(crate) fn finalize_versions(
 
     finalize_one(&mut root_manifest.requires, ".", &resolve)?;
     for m in members.iter_mut() {
-        let key = m.rel_path.clone();
+        let key = m.rel_path.to_string();
         finalize_one(&mut m.manifest.requires, &key, &resolve)?;
     }
     Ok(())
