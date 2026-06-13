@@ -40,6 +40,7 @@ use specmark::spec;
 use thiserror::Error;
 use vibe_core::manifest::Lockfile;
 
+pub mod agent_config;
 pub mod agents;
 pub mod jsonrpc;
 pub mod tools;

@@ -42,11 +42,13 @@ use std::fs;
 use std::io::IsTerminal;
 use std::path::{Path, PathBuf};
 
-use anyhow::{Context, Result, anyhow, bail};
+use anyhow::{Context, Result, bail};
 use dialoguer::Confirm;
 use serde::Serialize;
-use serde_json::{Map, Value as JsonValue};
 use vibe_core::manifest::Manifest;
+use vibe_mcp::agent_config::{
+    merge_json, merge_toml, read_json, read_toml, strip_json_entry, strip_toml_entry,
+};
 use vibe_mcp::agents::{Agent, ConfigFormat, ConfigPayload, Scope, What, detect_agents};
 use vibe_mcp::{Server, ServerContext};
 
@@ -1207,30 +1209,6 @@ fn uninstall_skill(
     }))
 }
 
-fn strip_json_entry(config_path: &Path, section_key: &str, server_name: &str) -> Result<JsonValue> {
-    let mut existing = read_json(config_path)?;
-    if let Some(obj) = existing.as_object_mut()
-        && let Some(servers) = obj.get_mut(section_key).and_then(|v| v.as_object_mut())
-    {
-        servers.remove(server_name);
-    }
-    Ok(existing)
-}
-
-fn strip_toml_entry(
-    config_path: &Path,
-    section_key: &str,
-    server_name: &str,
-) -> Result<toml::Value> {
-    let mut existing = read_toml(config_path)?;
-    if let Some(root) = existing.as_table_mut()
-        && let Some(servers) = root.get_mut(section_key).and_then(|v| v.as_table_mut())
-    {
-        servers.remove(server_name);
-    }
-    Ok(existing)
-}
-
 fn print_uninstall_results(
     ctx: &output::Context,
     dry_run: bool,
@@ -1490,74 +1468,6 @@ fn apply_install_mcp(
     })
 }
 
-fn read_json(path: &Path) -> Result<JsonValue> {
-    let text = fs::read_to_string(path).with_context(|| format!("reading `{}`", path.display()))?;
-    if text.trim().is_empty() {
-        return Ok(JsonValue::Object(Map::new()));
-    }
-    let v: JsonValue = serde_json::from_str(&text)
-        .with_context(|| format!("parsing JSON `{}`", path.display()))?;
-    Ok(v)
-}
-
-fn read_toml(path: &Path) -> Result<toml::Value> {
-    let text = fs::read_to_string(path).with_context(|| format!("reading `{}`", path.display()))?;
-    if text.trim().is_empty() {
-        return Ok(toml::Value::Table(toml::value::Table::new()));
-    }
-    let v: toml::Value =
-        toml::from_str(&text).with_context(|| format!("parsing TOML `{}`", path.display()))?;
-    Ok(v)
-}
-
-fn merge_json(
-    config_path: &Path,
-    section_key: &str,
-    server_name: &str,
-    new_entry: &JsonValue,
-) -> Result<JsonValue> {
-    let mut existing = if config_path.exists() {
-        read_json(config_path)?
-    } else {
-        JsonValue::Object(Map::new())
-    };
-    let obj = existing
-        .as_object_mut()
-        .ok_or_else(|| anyhow!("`{}` is not a JSON object", config_path.display()))?;
-    let servers = obj
-        .entry(section_key.to_string())
-        .or_insert_with(|| JsonValue::Object(Map::new()));
-    let servers_obj = servers
-        .as_object_mut()
-        .ok_or_else(|| anyhow!("`{section_key}` is not a JSON object"))?;
-    servers_obj.insert(server_name.to_string(), new_entry.clone());
-    Ok(existing)
-}
-
-fn merge_toml(
-    config_path: &Path,
-    section_key: &str,
-    server_name: &str,
-    new_entry: &toml::Value,
-) -> Result<toml::Value> {
-    let mut existing = if config_path.exists() {
-        read_toml(config_path)?
-    } else {
-        toml::Value::Table(toml::value::Table::new())
-    };
-    let root = existing
-        .as_table_mut()
-        .ok_or_else(|| anyhow!("`{}` root is not a TOML table", config_path.display()))?;
-    let servers = root
-        .entry(section_key.to_string())
-        .or_insert_with(|| toml::Value::Table(toml::value::Table::new()));
-    let servers_tbl = servers
-        .as_table_mut()
-        .ok_or_else(|| anyhow!("`[{section_key}]` is not a TOML table"))?;
-    servers_tbl.insert(server_name.to_string(), new_entry.clone());
-    Ok(existing)
-}
-
 // ---------------------------------------------------------------------------
 // project-root resolution
 // ---------------------------------------------------------------------------
@@ -1661,7 +1571,7 @@ fn decide_skill_action(path: &Path, body: &str) -> Result<&'static str> {
 mod tests {
     use super::*;
 
-    fn json_payload(agent: Agent, scope: Scope, project: Option<&Path>) -> JsonValue {
+    fn json_payload(agent: Agent, scope: Scope, project: Option<&Path>) -> serde_json::Value {
         match agent.build_mcp_entry(scope, project) {
             ConfigPayload::Json(v) => v,
             ConfigPayload::Toml(_) => panic!("expected JSON for {}", agent.as_str()),
@@ -1983,46 +1893,6 @@ mod tests {
         let r = install_skill(Agent::Cursor, Scope::Project, Some(dir.path()), false).unwrap();
         assert_eq!(r.status, "skipped");
         assert!(r.path.is_none());
-    }
-
-    // ---- JSON merger preserves foreign keys ----
-
-    #[test]
-    fn merge_json_preserves_foreign_keys() {
-        let dir = tempfile::tempdir().unwrap();
-        let path = dir.path().join("settings.json");
-        std::fs::write(
-            &path,
-            r#"{
-              "preexisting": "value",
-              "mcpServers": { "other-server": { "command": "x" } }
-            }"#,
-        )
-        .unwrap();
-        let entry = json_payload(Agent::ClaudeCode, Scope::Project, Some(dir.path()));
-        let merged = merge_json(&path, "mcpServers", SERVER_NAME, &entry).unwrap();
-        assert_eq!(merged["preexisting"], "value");
-        assert_eq!(merged["mcpServers"]["other-server"]["command"], "x");
-        assert_eq!(merged["mcpServers"]["vibevm"]["command"], "vibe");
-    }
-
-    // ---- TOML merger preserves foreign keys ----
-
-    #[test]
-    fn merge_toml_preserves_top_level() {
-        let dir = tempfile::tempdir().unwrap();
-        let path = dir.path().join("config.toml");
-        std::fs::write(&path, "model = \"gpt-5\"\n").unwrap();
-        let entry = toml_payload(Agent::Codex, Scope::User, None);
-        let merged = merge_toml(&path, "mcp_servers", SERVER_NAME, &entry).unwrap();
-        assert_eq!(merged.get("model").and_then(|x| x.as_str()), Some("gpt-5"));
-        assert!(
-            merged
-                .get("mcp_servers")
-                .and_then(|x| x.as_table())
-                .and_then(|t| t.get("vibevm"))
-                .is_some()
-        );
     }
 
     // ---- has_vibe_toml gate ----

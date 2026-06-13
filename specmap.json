@@ -1845,15 +1845,22 @@
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/lib.rs",
       "item_kind": "enum",
-      "line": 307,
+      "line": 308,
       "symbol": "vibe_mcp::ServerError"
     },
     {
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/lib.rs",
       "item_kind": "enum",
-      "line": 105,
+      "line": 106,
       "symbol": "vibe_mcp::ToolError"
+    },
+    {
+      "crate_name": "vibe-mcp",
+      "file": "crates/vibe-mcp/src/agent_config.rs",
+      "item_kind": "mod",
+      "line": 7,
+      "symbol": "vibe_mcp::agent_config"
     },
     {
       "crate_name": "vibe-mcp",
@@ -5280,7 +5287,7 @@
     {
       "file": "crates/vibe-mcp/src/lib.rs",
       "from_symbol": "vibe_mcp::ServerError",
-      "line": 308,
+      "line": 309,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-mcp/PROP-015#errors",
       "verb": "implements"
@@ -5288,9 +5295,17 @@
     {
       "file": "crates/vibe-mcp/src/lib.rs",
       "from_symbol": "vibe_mcp::ToolError",
-      "line": 110,
+      "line": 111,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-mcp/PROP-015#errors",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-mcp/src/agent_config.rs",
+      "from_symbol": "vibe_mcp::agent_config",
+      "line": 7,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-mcp/PROP-015#agent-config",
       "verb": "implements"
     },
     {
