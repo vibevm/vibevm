@@ -63,6 +63,16 @@ fn emit_error(err: syn::Error, item: TokenStream) -> TokenStream {
 ///
 /// One edge per attribute; repeat the attribute for multiple edges.
 /// `deviates` requires `reason`; `reason` is rejected on other verbs.
+/// The tag is inert — it injects a `Spec:` rustdoc line and expands to
+/// the item unchanged.
+///
+/// ```
+/// #[specmark::spec(
+///     implements = "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-fixpoint",
+///     r = 2
+/// )]
+/// pub struct ConditionalPredicate;
+/// ```
 #[proc_macro_attribute]
 pub fn spec(attr: TokenStream, item: TokenStream) -> TokenStream {
     match syn::parse::<SpecArgs>(attr) {
@@ -71,7 +81,13 @@ pub fn spec(attr: TokenStream, item: TokenStream) -> TokenStream {
     }
 }
 
-/// `#[verifies("<spec-uri>" [, r = N])]` — sugar for tests.
+/// `#[verifies("<spec-uri>" [, r = N])]` — sugar for tests; the edge
+/// verb is `verifies`.
+///
+/// ```
+/// #[specmark::verifies("spec://vibevm/common/PROP-000#token-secrecy")]
+/// fn redaction_is_total() {}
+/// ```
 #[proc_macro_attribute]
 pub fn verifies(attr: TokenStream, item: TokenStream) -> TokenStream {
     match syn::parse::<UriArgs>(attr) {
@@ -85,6 +101,10 @@ pub fn verifies(attr: TokenStream, item: TokenStream) -> TokenStream {
 /// unless it carries its own `#[spec]` (own tags replace the inherited
 /// set, PROP-014 §2.3). Expands to nothing; the scanner reads it from
 /// source.
+///
+/// ```
+/// specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-002#mirror");
+/// ```
 #[proc_macro]
 pub fn scope(input: TokenStream) -> TokenStream {
     match syn::parse::<UriArgs>(input) {
@@ -99,6 +119,11 @@ pub fn scope(input: TokenStream) -> TokenStream {
 /// `#[spec]`; consumers are `cargo xtask conform-lite`'s structure
 /// checks. A `replaces` key obliges a differential oracle against the
 /// named variant (GUIDE-RUST §7, R-040).
+///
+/// ```
+/// #[specmark::cell(seam = "RepoCreator", variant = "github")]
+/// pub struct GitHubCreator;
+/// ```
 #[proc_macro_attribute]
 pub fn cell(attr: TokenStream, item: TokenStream) -> TokenStream {
     match syn::parse::<CellArgs>(attr) {

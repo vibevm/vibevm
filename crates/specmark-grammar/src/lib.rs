@@ -26,6 +26,13 @@ use syn::parse::{Parse, ParseStream};
 use syn::{Ident, LitInt, LitStr, Token};
 
 /// The closed verb set (PROP-014 §2.3).
+///
+/// ```
+/// use specmark_grammar::Verb;
+/// assert_eq!(Verb::parse("implements"), Some(Verb::Implements));
+/// assert_eq!(Verb::Implements.as_str(), "implements");
+/// assert_eq!(Verb::parse("fulfills"), None); // the verb set is closed
+/// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub enum Verb {
     Implements,
@@ -59,6 +66,16 @@ impl Verb {
 }
 
 /// A parsed `spec://` URI (PROP-014 §2.1).
+///
+/// ```
+/// use specmark_grammar::parse_spec_uri;
+/// let uri = parse_spec_uri("spec://vibevm/common/PROP-000#commits~r2").unwrap();
+/// assert_eq!(uri.package, "vibevm");
+/// assert_eq!(uri.anchor, "commits");
+/// assert_eq!(uri.pinned_r, Some(2));
+/// // `without_pin` drops the `~rN` to recover the unit's canonical address.
+/// assert_eq!(uri.without_pin(), "spec://vibevm/common/PROP-000#commits");
+/// ```
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct SpecUri {
     /// The URI exactly as written, including any `~rN` pin.
@@ -78,6 +95,13 @@ impl SpecUri {
 }
 
 /// Validate a kebab-case anchor: `[a-z0-9]+(-[a-z0-9]+)*`.
+///
+/// ```
+/// use specmark_grammar::is_valid_anchor;
+/// assert!(is_valid_anchor("req-conditional-fixpoint"));
+/// assert!(!is_valid_anchor("Mixed-Case")); // uppercase rejected
+/// assert!(!is_valid_anchor("-leading")); // empty leading segment
+/// ```
 pub fn is_valid_anchor(anchor: &str) -> bool {
     if anchor.is_empty() {
         return false;
@@ -91,6 +115,15 @@ pub fn is_valid_anchor(anchor: &str) -> bool {
 }
 
 /// Parse and validate a `spec://` URI string.
+///
+/// ```
+/// use specmark_grammar::parse_spec_uri;
+/// let uri = parse_spec_uri("spec://vibevm/modules/vibe-registry/PROP-002#mirror").unwrap();
+/// assert_eq!(uri.doc_path, "modules/vibe-registry/PROP-002");
+/// assert_eq!(uri.anchor, "mirror");
+/// // A missing `#anchor` fragment is rejected.
+/// assert!(parse_spec_uri("spec://vibevm/x").is_err());
+/// ```
 pub fn parse_spec_uri(raw: &str) -> Result<SpecUri, String> {
     let rest = raw
         .strip_prefix("spec://")
@@ -144,6 +177,17 @@ pub fn parse_spec_uri(raw: &str) -> Result<SpecUri, String> {
 }
 
 /// One validated edge declaration, whatever carrier syntax it arrived in.
+///
+/// ```
+/// use specmark_grammar::{EdgeSpec, Verb, parse_spec_uri};
+/// let edge = EdgeSpec {
+///     verb: Verb::Implements,
+///     uri: parse_spec_uri("spec://vibevm/common/PROP-000#commits").unwrap(),
+///     r: None,
+///     reason: None,
+/// };
+/// assert_eq!(edge.verb.as_str(), "implements");
+/// ```
 #[derive(Debug, Clone)]
 pub struct EdgeSpec {
     pub verb: Verb,
@@ -178,7 +222,16 @@ fn reconcile_pins(uri: &SpecUri, attr_r: Option<u32>, err_span: Span) -> syn::Re
     }
 }
 
-/// Argument grammar of `#[spec(...)]`.
+/// Argument grammar of `#[spec(...)]` — parsed from the attribute's
+/// tokens; the validated [`EdgeSpec`] is the payload.
+///
+/// ```
+/// use specmark_grammar::{SpecArgs, Verb};
+/// let args: SpecArgs =
+///     syn::parse_str(r#"implements = "spec://vibevm/common/PROP-000#commits", r = 2"#).unwrap();
+/// assert_eq!(args.edge.verb, Verb::Implements);
+/// assert_eq!(args.edge.r, Some(2));
+/// ```
 #[derive(Debug)]
 pub struct SpecArgs {
     pub edge: EdgeSpec,
@@ -275,6 +328,13 @@ impl Parse for SpecArgs {
 
 /// Argument grammar shared by `#[verifies("uri", r = N)]` and
 /// `specmark::scope!("uri", r = N)`: a URI literal plus an optional pin.
+///
+/// ```
+/// use specmark_grammar::{UriArgs, Verb};
+/// let args: UriArgs = syn::parse_str(r#""spec://vibevm/common/PROP-000#commits""#).unwrap();
+/// // A `scope!` marker defaults its module edge to `implements`.
+/// assert_eq!(args.into_scope_edge().verb, Verb::Implements);
+/// ```
 #[derive(Debug)]
 pub struct UriArgs {
     pub uri: SpecUri,
@@ -342,6 +402,15 @@ impl UriArgs {
 /// are mandatory; `replaces` and `flag` are optional. `replaces`
 /// obliges a differential oracle against the named variant
 /// (GUIDE-RUST §7, R-040).
+///
+/// ```
+/// use specmark_grammar::CellArgs;
+/// let args: CellArgs =
+///     syn::parse_str(r#"seam = "DepSolver", variant = "sat", replaces = "naive""#).unwrap();
+/// assert_eq!(args.seam, "DepSolver");
+/// assert_eq!(args.variant, "sat");
+/// assert_eq!(args.replaces.as_deref(), Some("naive"));
+/// ```
 #[derive(Debug, Clone)]
 pub struct CellArgs {
     pub seam: String,
@@ -413,142 +482,5 @@ impl Parse for CellArgs {
 }
 
 #[cfg(test)]
-mod tests {
-    use super::*;
-    use quote::quote;
-
-    const URI: &str = "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-fixpoint";
-
-    #[test]
-    fn uri_parses_with_all_parts() {
-        let u = parse_spec_uri(URI).unwrap();
-        assert_eq!(u.package, "vibevm");
-        assert_eq!(u.doc_path, "modules/vibe-resolver/PROP-003");
-        assert_eq!(u.anchor, "req-conditional-fixpoint");
-        assert_eq!(u.pinned_r, None);
-        assert_eq!(u.without_pin(), URI);
-    }
-
-    #[test]
-    fn uri_parses_revision_pin() {
-        let u = parse_spec_uri(&format!("{URI}~r2")).unwrap();
-        assert_eq!(u.pinned_r, Some(2));
-        assert_eq!(u.without_pin(), URI);
-    }
-
-    #[test]
-    fn uri_rejections() {
-        for bad in [
-            "http://x/y#a",         // wrong scheme
-            "spec://vibevm#a",      // no doc-path
-            "spec://vibevm/x",      // no fragment
-            "spec://vibevm/x#A-b",  // uppercase anchor
-            "spec://vibevm/x#a b",  // whitespace
-            "spec://vibevm/x#a~rx", // non-integer pin
-            "spec://vibevm/x#a~r0", // r0
-            "spec://vibevm/x#a#b",  // two fragments
-            "spec://vibevm/x#-a",   // leading dash
-            "spec://vibevm/x#a-",   // trailing dash
-        ] {
-            assert!(parse_spec_uri(bad).is_err(), "should reject `{bad}`");
-        }
-    }
-
-    #[test]
-    fn spec_args_happy_path() {
-        let args: SpecArgs = syn::parse2(quote! { implements = #URI, r = 2 }).unwrap();
-        assert_eq!(args.edge.verb, Verb::Implements);
-        assert_eq!(args.edge.r, Some(2));
-        assert_eq!(args.edge.reason, None);
-    }
-
-    #[test]
-    fn spec_args_deviates_requires_reason() {
-        let err = syn::parse2::<SpecArgs>(quote! { deviates = #URI, r = 1 }).unwrap_err();
-        assert!(err.to_string().contains("requires `reason"), "{err}");
-        let ok: SpecArgs = syn::parse2(
-            quote! { deviates = #URI, r = 1, reason = "boolean composition unimplemented" },
-        )
-        .unwrap();
-        assert_eq!(
-            ok.edge.reason.as_deref(),
-            Some("boolean composition unimplemented")
-        );
-    }
-
-    #[test]
-    fn spec_args_reason_rejected_on_other_verbs() {
-        let err =
-            syn::parse2::<SpecArgs>(quote! { implements = #URI, reason = "nope" }).unwrap_err();
-        assert!(
-            err.to_string().contains("only meaningful on `deviates`"),
-            "{err}"
-        );
-    }
-
-    #[test]
-    fn spec_args_unknown_verb_and_key() {
-        let err = syn::parse2::<SpecArgs>(quote! { fulfills = #URI }).unwrap_err();
-        assert!(err.to_string().contains("unknown specmark verb"), "{err}");
-        let err = syn::parse2::<SpecArgs>(quote! { implements = #URI, rev = 2 }).unwrap_err();
-        assert!(err.to_string().contains("unknown specmark key"), "{err}");
-    }
-
-    #[test]
-    fn spec_args_pin_conflict_and_agreement() {
-        let pinned = format!("{URI}~r3");
-        let err = syn::parse2::<SpecArgs>(quote! { implements = #pinned, r = 2 }).unwrap_err();
-        assert!(err.to_string().contains("pinned twice"), "{err}");
-        let ok: SpecArgs = syn::parse2(quote! { implements = #pinned, r = 3 }).unwrap();
-        assert_eq!(ok.edge.r, Some(3));
-        let ok: SpecArgs = syn::parse2(quote! { implements = #pinned }).unwrap();
-        assert_eq!(ok.edge.r, Some(3));
-    }
-
-    #[test]
-    fn uri_args_for_verifies_and_scope() {
-        let v: UriArgs = syn::parse2(quote! { #URI, r = 2 }).unwrap();
-        let e = v.into_verifies_edge();
-        assert_eq!(e.verb, Verb::Verifies);
-        assert_eq!(e.r, Some(2));
-
-        let s: UriArgs = syn::parse2(quote! { #URI }).unwrap();
-        let e = s.into_scope_edge();
-        assert_eq!(e.verb, Verb::Implements);
-        assert_eq!(e.r, None);
-    }
-
-    #[test]
-    fn cell_args_happy_path_and_rejections() {
-        let ok: CellArgs = syn::parse2(
-            quote! { seam = "DepSolver", variant = "sat", replaces = "naive", flag = "solver" },
-        )
-        .unwrap();
-        assert_eq!(ok.seam, "DepSolver");
-        assert_eq!(ok.variant, "sat");
-        assert_eq!(ok.replaces.as_deref(), Some("naive"));
-        assert_eq!(ok.flag.as_deref(), Some("solver"));
-
-        let minimal: CellArgs =
-            syn::parse2(quote! { seam = "DepProvider", variant = "local" }).unwrap();
-        assert_eq!(minimal.replaces, None);
-        assert_eq!(minimal.flag, None);
-
-        let err = syn::parse2::<CellArgs>(quote! { variant = "sat" }).unwrap_err();
-        assert!(err.to_string().contains("requires `seam"), "{err}");
-        let err = syn::parse2::<CellArgs>(quote! { seam = "X", variant = "y", colour = "red" })
-            .unwrap_err();
-        assert!(err.to_string().contains("unknown cell key"), "{err}");
-        let err =
-            syn::parse2::<CellArgs>(quote! { seam = "X", variant = "y", seam = "Z" }).unwrap_err();
-        assert!(err.to_string().contains("duplicate"), "{err}");
-    }
-
-    #[test]
-    fn spec_args_rejects_zero_revision_and_empty_reason() {
-        let err = syn::parse2::<SpecArgs>(quote! { implements = #URI, r = 0 }).unwrap_err();
-        assert!(err.to_string().contains("start at r1"), "{err}");
-        let err = syn::parse2::<SpecArgs>(quote! { deviates = #URI, reason = "  " }).unwrap_err();
-        assert!(err.to_string().contains("must not be empty"), "{err}");
-    }
-}
+#[path = "lib/tests.rs"]
+mod tests;

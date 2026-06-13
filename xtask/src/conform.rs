@@ -32,6 +32,8 @@ const CONFORM_GATED: &[&str] = &[
     "vibe-publish",
     "env-audit",
     "vibe-cli",
+    "specmark",
+    "specmark-grammar",
 ];
 
 /// Crates deliberately *outside* `CONFORM_GATED`, each paired with the
@@ -62,16 +64,6 @@ const CONFORM_EXEMPT: &[(&str, &str)] = &[
         "vibe-wire",
         "generated code (JTD-schema codegen output), excluded by PROP-014 §2.3; the \
          generator input under schemas/ is the taggable unit instead",
-    ),
-    (
-        "specmark",
-        "the specmap scope! bootstrap cycle exempts it from specmap orphan checks (the \
-         tag pair cannot tag itself); the unwrap/file rules need no specmark dependency, \
-         so it flips in CONVERT-PLAN Phase 5 (5.1)",
-    ),
-    (
-        "specmark-grammar",
-        "same scope! bootstrap cycle as specmark; flips in CONVERT-PLAN Phase 5 (5.1)",
     ),
     (
         "xtask",
