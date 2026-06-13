@@ -33,6 +33,57 @@ const CONFORM_GATED: &[&str] = &[
     "env-audit",
 ];
 
+/// Crates deliberately *outside* `CONFORM_GATED`, each paired with the
+/// reason it has not (yet) flipped. Unlike `specmap-ratchet.json`,
+/// which records its dispositions, the conform gate kept its
+/// exemptions silent — and a silent exemption reads as a bug while a
+/// recorded one reads as a decision (CONVERT-PLAN v0.1 §1 item 0.1).
+/// This table is the checklist the remaining phases drain;
+/// `every_crate_is_gated_or_exempt` keeps it honest against the
+/// workspace so a new crate cannot slip in unclassified.
+const CONFORM_EXEMPT: &[(&str, &str)] = &[
+    (
+        "vibe-cli",
+        "pure binary, no [lib] target — rustdoc doctests cannot run there; its domain \
+         moves to gated lib crates and it flips in CONVERT-PLAN Phase 4 (4.6)",
+    ),
+    (
+        "vibe-mcp",
+        "parked behind DBT-0020 (the MCP spec home); flips in the owner-gated \
+         CONVERT-PLAN Phase 7 once the spec lands",
+    ),
+    (
+        "vibe-graph",
+        "M0 stub, no code yet — the task-graph runner per VIBEVM-SPEC §5 is unbuilt; \
+         nothing to gate until it lands",
+    ),
+    (
+        "vibe-llm",
+        "M0 stub, no code yet — providers land in the v1.5 LLM milestone per \
+         VIBEVM-SPEC §10.4; nothing to gate until then",
+    ),
+    (
+        "vibe-wire",
+        "generated code (JTD-schema codegen output), excluded by PROP-014 §2.3; the \
+         generator input under schemas/ is the taggable unit instead",
+    ),
+    (
+        "specmark",
+        "the specmap scope! bootstrap cycle exempts it from specmap orphan checks (the \
+         tag pair cannot tag itself); the unwrap/file rules need no specmark dependency, \
+         so it flips in CONVERT-PLAN Phase 5 (5.1)",
+    ),
+    (
+        "specmark-grammar",
+        "same scope! bootstrap cycle as specmark; flips in CONVERT-PLAN Phase 5 (5.1)",
+    ),
+    (
+        "xtask",
+        "internal developer tooling — panics are acceptable at the developer's own \
+         console; stays exempt on the record (CONVERT-PLAN Phase 5, 5.3)",
+    ),
+];
+
 /// The standing rule set, constructed in one place so `conform check`
 /// and `conform freeze` can never drift apart.
 struct ConformRules {
@@ -159,6 +210,11 @@ pub(crate) fn run_conform_check(baseline_rel: &str, scope: Option<&str>) -> Resu
             .unwrap_or(&sarif_path)
             .display()
     );
+    eprintln!(
+        "xtask conform: {} crate(s) gated, {} exempt — see CONFORM_EXEMPT for the why of each.",
+        CONFORM_GATED.len(),
+        CONFORM_EXEMPT.len(),
+    );
     if !new.is_empty() {
         bail!("conform: {} new finding(s) against the baseline", new.len());
     }
@@ -198,4 +254,75 @@ pub(crate) fn run_conform_freeze(baseline_rel: &str) -> Result<()> {
         baseline_rel
     );
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use std::collections::BTreeSet;
+
+    use super::{CONFORM_EXEMPT, CONFORM_GATED};
+
+    /// Every workspace crate is classified exactly once — gated by
+    /// `CONFORM_GATED` or exempt-with-a-reason by `CONFORM_EXEMPT`,
+    /// never both and never neither. This is the checker that turns
+    /// the exemption *table* into an enforced *invariant*: add a crate
+    /// and forget to place it, or delete one and leave a phantom entry,
+    /// and this fails (CONVERT-PLAN v0.1 §1 item 0.1).
+    #[test]
+    fn every_crate_is_gated_or_exempt() {
+        let gated: BTreeSet<&str> = CONFORM_GATED.iter().copied().collect();
+        let exempt: BTreeSet<&str> = CONFORM_EXEMPT.iter().map(|(c, _)| *c).collect();
+
+        assert_eq!(
+            gated.len(),
+            CONFORM_GATED.len(),
+            "CONFORM_GATED carries a duplicate crate name"
+        );
+        assert_eq!(
+            exempt.len(),
+            CONFORM_EXEMPT.len(),
+            "CONFORM_EXEMPT carries a duplicate crate name"
+        );
+
+        let both: Vec<&str> = gated.intersection(&exempt).copied().collect();
+        assert!(both.is_empty(), "crates both gated and exempt: {both:?}");
+
+        for (crate_name, reason) in CONFORM_EXEMPT {
+            assert!(
+                !reason.trim().is_empty(),
+                "{crate_name} is exempt without a recorded reason — the one thing this \
+                 table exists to forbid"
+            );
+        }
+
+        // Coverage against the real workspace: every crate dir under
+        // `crates/` is named in exactly one set, and every listed name
+        // except the workspace-root `xtask` is a real crate (no typos).
+        let root = crate::repo_root().expect("repo root");
+        let crates_dir = root.join("crates");
+        let mut on_disk: BTreeSet<String> = BTreeSet::new();
+        for entry in std::fs::read_dir(&crates_dir).expect("read crates/") {
+            let entry = entry.expect("dir entry");
+            if entry.file_type().expect("file type").is_dir()
+                && entry.path().join("Cargo.toml").exists()
+            {
+                on_disk.insert(entry.file_name().to_string_lossy().into_owned());
+            }
+        }
+        for c in &on_disk {
+            assert!(
+                gated.contains(c.as_str()) || exempt.contains(c.as_str()),
+                "crate `{c}` is neither gated nor exempt — classify it in conform.rs"
+            );
+        }
+        for c in gated.union(&exempt) {
+            if *c == "xtask" {
+                continue; // the tooling crate lives at the workspace root, not under crates/
+            }
+            assert!(
+                on_disk.contains(*c),
+                "`{c}` is listed in conform.rs but has no crates/{c} directory — typo?"
+            );
+        }
+    }
 }
