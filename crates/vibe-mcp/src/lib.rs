@@ -40,10 +40,12 @@ use specmark::spec;
 use thiserror::Error;
 use vibe_core::manifest::Lockfile;
 
+pub mod agents;
 pub mod jsonrpc;
 pub mod tools;
 pub mod transport;
 
+pub use agents::{Agent, ConfigFormat, ConfigPayload, SKILL_NAME, Scope, What, detect_agents};
 pub use jsonrpc::{JsonRpcError, JsonRpcMessage, JsonRpcRequest, JsonRpcResponse};
 pub use tools::{McpTool, default_tools};
 pub use transport::{MemoryTransport, StdioTransport, Transport};
