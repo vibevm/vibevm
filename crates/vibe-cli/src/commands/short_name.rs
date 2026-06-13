@@ -74,20 +74,20 @@ fn resolve(
     lockfile: &Lockfile,
 ) -> Result<ShortNameOutcome> {
     let locked = locked_groups(lockfile, name);
-    match locked.len() {
-        1 => {
-            return Ok(ShortNameOutcome::Resolved(
-                locked.into_iter().next().expect("len checked == 1"),
-            ));
-        }
-        n if n > 1 => return Ok(ShortNameOutcome::Ambiguous(locked)),
-        _ => {}
+    if let [only] = locked.as_slice() {
+        return Ok(ShortNameOutcome::Resolved(only.clone()));
+    }
+    if locked.len() > 1 {
+        return Ok(ShortNameOutcome::Ambiguous(locked));
     }
     let candidates = resolver.candidate_groups(name)?;
-    Ok(match candidates.len() {
-        0 => ShortNameOutcome::NotFound,
-        1 => ShortNameOutcome::Resolved(candidates.into_iter().next().expect("len checked == 1")),
-        _ => ShortNameOutcome::Ambiguous(candidates),
+    if let [only] = candidates.as_slice() {
+        return Ok(ShortNameOutcome::Resolved(only.clone()));
+    }
+    Ok(if candidates.is_empty() {
+        ShortNameOutcome::NotFound
+    } else {
+        ShortNameOutcome::Ambiguous(candidates)
     })
 }
 
