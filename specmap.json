@@ -1677,14 +1677,14 @@
       "crate_name": "vibe-index",
       "file": "crates/vibe-index/src/types/entry.rs",
       "item_kind": "struct",
-      "line": 317,
+      "line": 363,
       "symbol": "vibe_index::types::entry::NameEntry"
     },
     {
       "crate_name": "vibe-index",
       "file": "crates/vibe-index/src/types/entry.rs",
       "item_kind": "struct",
-      "line": 279,
+      "line": 325,
       "symbol": "vibe_index::types::entry::PackageEntry"
     },
     {
@@ -1698,7 +1698,7 @@
       "crate_name": "vibe-index",
       "file": "crates/vibe-index/src/types/entry.rs",
       "item_kind": "fn",
-      "line": 399,
+      "line": 445,
       "symbol": "vibe_index::types::entry::tests::version_entry_round_trips_through_json"
     },
     {
@@ -4896,7 +4896,7 @@
     {
       "file": "crates/vibe-index/src/types/entry.rs",
       "from_symbol": "vibe_index::types::entry::NameEntry",
-      "line": 324,
+      "line": 370,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-index/PROP-005#entry",
       "verb": "implements",
@@ -4905,7 +4905,7 @@
     {
       "file": "crates/vibe-index/src/types/entry.rs",
       "from_symbol": "vibe_index::types::entry::PackageEntry",
-      "line": 284,
+      "line": 330,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-index/PROP-005#entry",
       "verb": "implements",
@@ -4923,7 +4923,7 @@
     {
       "file": "crates/vibe-index/src/types/entry.rs",
       "from_symbol": "vibe_index::types::entry::tests::version_entry_round_trips_through_json",
-      "line": 400,
+      "line": 446,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-index/PROP-005#entry",
       "verb": "verifies",

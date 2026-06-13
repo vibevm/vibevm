@@ -31,21 +31,33 @@ const SCHEMA_VERSION: u32 = 1;
 /// loaded from disk on CLI invocation.
 ///
 /// The index is keyed on the `(group, name)` identity (PROP-008 §2.2);
-/// `kind` is metadata and keys nothing. A fresh index is empty, and
-/// lookups by identity miss until something is `upsert`ed:
+/// `kind` is metadata and keys nothing. A fresh index is empty; `upsert`
+/// adds a version, `get` finds it by identity, `remove_version` drops it:
 ///
 /// ```
 /// use vibe_index::index::Index;
-/// use vibe_index::types::NamingConvention;
+/// use vibe_index::types::{NamingConvention, PackageKind, VersionEntry};
 ///
-/// let idx = Index::new(
+/// let mut idx = Index::new(
 ///     "vibespecs",
 ///     "https://github.com/vibespecs",
 ///     NamingConvention::Fqdn,
 /// );
-/// assert_eq!(idx.package_count(), 0);
 /// let group = "org.vibevm".parse().unwrap();
 /// assert!(idx.get(&group, "wal").is_none());
+///
+/// idx.upsert(VersionEntry::minimal(
+///     PackageKind::Flow,
+///     "org.vibevm".parse().unwrap(),
+///     "wal",
+///     "0.1.0".parse().unwrap(),
+/// ));
+/// assert_eq!(idx.package_count(), 1);
+/// assert_eq!(idx.version_count(), 1);
+///
+/// let removed = idx.remove_version(&group, "wal", &"0.1.0".parse().unwrap());
+/// assert!(removed);
+/// assert_eq!(idx.version_count(), 0); // the version is gone; the row stays
 /// ```
 #[derive(Debug, Clone)]
 pub struct Index {

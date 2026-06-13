@@ -103,6 +103,52 @@ pub struct VersionEntry {
 impl VersionEntry {
     pub const SCHEMA_VERSION: u32 = 1;
 
+    /// An entry carrying just the `(kind, group, name, version)` identity,
+    /// every other field empty or placeholder — the shape index tests and
+    /// doctests reach for when only identity matters. Production entries
+    /// are built field-by-field from a manifest (`vibe-index add`); this
+    /// is the fixture builder, public so examples need not restate the
+    /// whole struct.
+    pub fn minimal(
+        kind: PackageKind,
+        group: Group,
+        name: impl Into<String>,
+        version: Version,
+    ) -> Self {
+        VersionEntry {
+            schema_version: Self::SCHEMA_VERSION,
+            kind,
+            group,
+            name: name.into(),
+            version,
+            content_hash: "sha256:0".to_string(),
+            source_url: String::new(),
+            source_ref: String::new(),
+            resolved_commit: None,
+            registry: String::new(),
+            workspace_origin: None,
+            license: None,
+            authors: Vec::new(),
+            description: None,
+            homepage: None,
+            keywords: Vec::new(),
+            describes: None,
+            compatibility: CompatibilityEntry::default(),
+            provides: ProvidesEntry::default(),
+            requires: RequiresEntry::default(),
+            requires_any: Vec::new(),
+            obsoletes: ObsoletesEntry::default(),
+            conflicts: ConflictsEntry::default(),
+            features: FeaturesEntry::default(),
+            subskills: Vec::new(),
+            i18n: I18nEntry::default(),
+            boot_snippet: None,
+            files_count: 0,
+            indexed_at: Utc::now(),
+            indexed_by: "vibe-index".to_string(),
+        }
+    }
+
     /// Stable sort key `(group, name, version)` — the PROP-008 §2.2
     /// identity ordering. `kind` left the key when it left identity.
     pub fn sort_key(&self) -> (&Group, &str, &Version) {
