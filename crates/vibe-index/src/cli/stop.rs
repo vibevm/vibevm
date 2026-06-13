@@ -14,7 +14,7 @@ use std::path::PathBuf;
 use clap::Parser;
 
 use crate::error::{Error, Result};
-use crate::server::lock::ServerLock;
+use crate::lock::ServerLock;
 
 #[derive(Debug, Parser)]
 #[command(about = "Gracefully stop a running server (PID-based).")]

@@ -9,8 +9,9 @@ use clap::Parser;
 
 use crate::error::{Error, Result};
 use crate::index::Index;
+use crate::lock::ServerLock;
 use crate::server::rate_limit::DEFAULT_MAX_BUCKETS;
-use crate::server::{AppState, RateLimitConfig, ServerLock, TokenStore, build_app};
+use crate::server::{AppState, RateLimitConfig, TokenStore, build_app};
 
 #[derive(Debug, Parser)]
 #[command(about = "Run the HTTP server.")]

@@ -7,7 +7,6 @@ specmark::scope!("spec://vibevm/modules/vibe-index/PROP-005#http");
 
 pub mod auth;
 pub mod error;
-pub mod lock;
 pub mod metrics;
 pub mod rate_limit;
 pub mod routes;
@@ -15,7 +14,6 @@ pub mod state;
 
 pub use auth::TokenStore;
 pub use error::ApiError;
-pub use lock::ServerLock;
 pub use rate_limit::{RateDecision, RateLimitConfig, RateLimitKey, RateLimiter};
 pub use state::AppState;
 

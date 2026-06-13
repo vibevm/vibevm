@@ -1367,6 +1367,13 @@
     },
     {
       "crate_name": "vibe-index",
+      "file": "crates/vibe-index/src/lock.rs",
+      "item_kind": "mod",
+      "line": 12,
+      "symbol": "vibe_index::lock"
+    },
+    {
+      "crate_name": "vibe-index",
       "file": "crates/vibe-index/src/lockfile.rs",
       "item_kind": "mod",
       "line": 6,
@@ -1453,7 +1460,7 @@
       "crate_name": "vibe-index",
       "file": "crates/vibe-index/src/server/mod.rs",
       "item_kind": "fn",
-      "line": 36,
+      "line": 34,
       "symbol": "vibe_index::server::build_app"
     },
     {
@@ -1462,13 +1469,6 @@
       "item_kind": "mod",
       "line": 3,
       "symbol": "vibe_index::server::error"
-    },
-    {
-      "crate_name": "vibe-index",
-      "file": "crates/vibe-index/src/server/lock.rs",
-      "item_kind": "mod",
-      "line": 12,
-      "symbol": "vibe_index::server::lock"
     },
     {
       "crate_name": "vibe-index",
@@ -4478,6 +4478,14 @@
       "pinned_r": 1
     },
     {
+      "file": "crates/vibe-index/src/lock.rs",
+      "from_symbol": "vibe_index::lock",
+      "line": 12,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-index/PROP-005#root",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-index/src/lockfile.rs",
       "from_symbol": "vibe_index::lockfile",
       "line": 6,
@@ -4577,7 +4585,7 @@
     {
       "file": "crates/vibe-index/src/server/mod.rs",
       "from_symbol": "vibe_index::server::build_app",
-      "line": 40,
+      "line": 38,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-index/PROP-005#server-mode",
       "verb": "implements",
@@ -4587,14 +4595,6 @@
       "file": "crates/vibe-index/src/server/error.rs",
       "from_symbol": "vibe_index::server::error",
       "line": 3,
-      "provenance": "authored",
-      "uri": "spec://vibevm/modules/vibe-index/PROP-005#root",
-      "verb": "implements"
-    },
-    {
-      "file": "crates/vibe-index/src/server/lock.rs",
-      "from_symbol": "vibe_index::server::lock",
-      "line": 12,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-index/PROP-005#root",
       "verb": "implements"

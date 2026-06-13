@@ -21,6 +21,7 @@ pub mod cli;
 pub mod content_hash;
 pub mod error;
 pub mod index;
+pub mod lock;
 pub mod lockfile;
 pub mod scanner;
 pub mod server;

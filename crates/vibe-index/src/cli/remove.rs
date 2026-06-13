@@ -11,7 +11,7 @@ use vibe_core::Group;
 
 use crate::error::{Error, Result};
 use crate::index::Index;
-use crate::server::lock::ServerLock;
+use crate::lock::ServerLock;
 
 #[derive(Debug, Parser)]
 #[command(about = "Remove one or all versions of a package from the index.")]

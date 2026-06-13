@@ -17,7 +17,7 @@ use crate::content_hash::compute_content_hash;
 use crate::error::{Error, Result};
 use crate::index::Index;
 use crate::scanner::manifest as mfst;
-use crate::server::lock::ServerLock;
+use crate::lock::ServerLock;
 use crate::types::{NamingConvention, PackageKind, VersionEntry};
 
 #[derive(Debug, Parser)]
