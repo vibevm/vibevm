@@ -7787,7 +7787,7 @@
     },
     {
       "anchor": "decisions",
-      "content_hash": "sha256:fa3544f45f5aa496244023c509a6004df8b6144723851e4529ab70c7710faf6e",
+      "content_hash": "sha256:aff21619c66ecddab59a6f4e4edc3f8b323b8974efa7ae090ebc152c80df4f09",
       "doc_path": "discipline/PROP-014",
       "file": "spec/discipline/PROP-014-specmap-bidirectional-traceability.md",
       "heading": "2. Decisions",
@@ -7796,57 +7796,69 @@
     },
     {
       "anchor": "addressing-spec",
-      "content_hash": "sha256:7680e4f6e9757962f07b66f0540bb42df4d45d41a13cec7e3af2a292c8461015",
+      "content_hash": "sha256:aaf726c36145cd187430dc2ef71ef134ca3103dc50ffedb3b096e5228f608797",
       "doc_path": "discipline/PROP-014",
       "file": "spec/discipline/PROP-014-specmap-bidirectional-traceability.md",
       "heading": "2.1 Addressing: spec-side",
       "line": 38,
-      "uri": "spec://vibevm/discipline/PROP-014#addressing-spec"
+      "uri": "spec://vibevm/discipline/PROP-014#addressing-spec",
+      "kind": "req",
+      "revision": 1
     },
     {
       "anchor": "spec-units",
-      "content_hash": "sha256:fa4eb4fb95f32128c59bf67e1c2947f8483efc0d00b55202ca4fae2ef1d13c70",
+      "content_hash": "sha256:264ee0cf8a6372a61853920b7ab69f9fb521ca0cdfc11612b02f4056ff4b9cc8",
       "doc_path": "discipline/PROP-014",
       "file": "spec/discipline/PROP-014-specmap-bidirectional-traceability.md",
       "heading": "2.2 Spec units, normativity, and the two-tier revision discipline",
-      "line": 51,
-      "uri": "spec://vibevm/discipline/PROP-014#spec-units"
+      "line": 53,
+      "uri": "spec://vibevm/discipline/PROP-014#spec-units",
+      "kind": "req",
+      "revision": 1
     },
     {
       "anchor": "addressing-code",
-      "content_hash": "sha256:1b4fbacfc9edf8025e68cc29c9399e837f38b7d512720dc277595811a50fbada",
+      "content_hash": "sha256:9b60f74aba4af210d035405a52acd3e5fa95e2d3af08089bf826d79897ef3876",
       "doc_path": "discipline/PROP-014",
       "file": "spec/discipline/PROP-014-specmap-bidirectional-traceability.md",
       "heading": "2.3 Addressing: code-side — tags that travel",
-      "line": 80,
-      "uri": "spec://vibevm/discipline/PROP-014#addressing-code"
+      "line": 84,
+      "uri": "spec://vibevm/discipline/PROP-014#addressing-code",
+      "kind": "req",
+      "revision": 1
     },
     {
       "anchor": "edges",
-      "content_hash": "sha256:0ab3c95846872fa61a5e4badb619a202439c86eaff46c9b4a28932cadbe6c49f",
+      "content_hash": "sha256:f1d222ccf4f9b5ad49f87530d3cd6e09f45d3b7c30e3596807def1af9bccbc0a",
       "doc_path": "discipline/PROP-014",
       "file": "spec/discipline/PROP-014-specmap-bidirectional-traceability.md",
       "heading": "2.4 The edge model",
-      "line": 125,
-      "uri": "spec://vibevm/discipline/PROP-014#edges"
+      "line": 131,
+      "uri": "spec://vibevm/discipline/PROP-014#edges",
+      "kind": "req",
+      "revision": 1
     },
     {
       "anchor": "index",
-      "content_hash": "sha256:cca4a317608879dda3ff08debea0b95881acb5cbfb90438f950d7c28676dea55",
+      "content_hash": "sha256:d6b2859abf4642da29d9198622fc3585907d9248c89b0b2ce8e5d576df09b8b8",
       "doc_path": "discipline/PROP-014",
       "file": "spec/discipline/PROP-014-specmap-bidirectional-traceability.md",
       "heading": "2.5 The index: `specmap.json`",
-      "line": 133,
-      "uri": "spec://vibevm/discipline/PROP-014#index"
+      "line": 141,
+      "uri": "spec://vibevm/discipline/PROP-014#index",
+      "kind": "req",
+      "revision": 1
     },
     {
       "anchor": "queries",
-      "content_hash": "sha256:786a7f17111d195cfc478243bee79e5c0cd5907a155882690fd6f7730de7e305",
+      "content_hash": "sha256:601c5d7694134d7867692f208cc1283173d51cc2256cbc54c7f609ac5c74df7d",
       "doc_path": "discipline/PROP-014",
       "file": "spec/discipline/PROP-014-specmap-bidirectional-traceability.md",
       "heading": "2.6 Query surface",
-      "line": 142,
-      "uri": "spec://vibevm/discipline/PROP-014#queries"
+      "line": 152,
+      "uri": "spec://vibevm/discipline/PROP-014#queries",
+      "kind": "req",
+      "revision": 1
     },
     {
       "anchor": "llm-boundary",
@@ -7854,7 +7866,7 @@
       "doc_path": "discipline/PROP-014",
       "file": "spec/discipline/PROP-014-specmap-bidirectional-traceability.md",
       "heading": "2.7 The LLM boundary",
-      "line": 156,
+      "line": 168,
       "uri": "spec://vibevm/discipline/PROP-014#llm-boundary"
     },
     {
@@ -7863,7 +7875,7 @@
       "doc_path": "discipline/PROP-014",
       "file": "spec/discipline/PROP-014-specmap-bidirectional-traceability.md",
       "heading": "2.8 Runtime exposure — the AI-native OSS channel",
-      "line": 164,
+      "line": 176,
       "uri": "spec://vibevm/discipline/PROP-014#runtime"
     },
     {
@@ -7872,7 +7884,7 @@
       "doc_path": "discipline/PROP-014",
       "file": "spec/discipline/PROP-014-specmap-bidirectional-traceability.md",
       "heading": "2.9 Language neutrality",
-      "line": 171,
+      "line": 183,
       "uri": "spec://vibevm/discipline/PROP-014#languages"
     },
     {
@@ -7881,7 +7893,7 @@
       "doc_path": "discipline/PROP-014",
       "file": "spec/discipline/PROP-014-specmap-bidirectional-traceability.md",
       "heading": "3. Principles",
-      "line": 180,
+      "line": 192,
       "uri": "spec://vibevm/discipline/PROP-014#principles"
     },
     {
@@ -7890,7 +7902,7 @@
       "doc_path": "discipline/PROP-014",
       "file": "spec/discipline/PROP-014-specmap-bidirectional-traceability.md",
       "heading": "3.1 (а) Writing specifications",
-      "line": 182,
+      "line": 194,
       "uri": "spec://vibevm/discipline/PROP-014#spec-principles"
     },
     {
@@ -7899,7 +7911,7 @@
       "doc_path": "discipline/PROP-014",
       "file": "spec/discipline/PROP-014-specmap-bidirectional-traceability.md",
       "heading": "3.2 (б) Writing Rust under specmap",
-      "line": 195,
+      "line": 207,
       "uri": "spec://vibevm/discipline/PROP-014#rust-principles"
     },
     {
@@ -7908,7 +7920,7 @@
       "doc_path": "discipline/PROP-014",
       "file": "spec/discipline/PROP-014-specmap-bidirectional-traceability.md",
       "heading": "3.3 (в) Binding principles",
-      "line": 208,
+      "line": 220,
       "uri": "spec://vibevm/discipline/PROP-014#binding-principles"
     },
     {
@@ -7917,7 +7929,7 @@
       "doc_path": "discipline/PROP-014",
       "file": "spec/discipline/PROP-014-specmap-bidirectional-traceability.md",
       "heading": "4. (г) Migration playbook — transforming vibevm with Claude Code",
-      "line": 214,
+      "line": 226,
       "uri": "spec://vibevm/discipline/PROP-014#migration"
     },
     {
@@ -7926,7 +7938,7 @@
       "doc_path": "discipline/PROP-014",
       "file": "spec/discipline/PROP-014-specmap-bidirectional-traceability.md",
       "heading": "5. Rejected alternatives",
-      "line": 284,
+      "line": 296,
       "uri": "spec://vibevm/discipline/PROP-014#rejected"
     },
     {
@@ -7935,7 +7947,7 @@
       "doc_path": "discipline/PROP-014",
       "file": "spec/discipline/PROP-014-specmap-bidirectional-traceability.md",
       "heading": "6. Prior art and license posture",
-      "line": 293,
+      "line": 305,
       "uri": "spec://vibevm/discipline/PROP-014#prior-art"
     },
     {
@@ -7944,7 +7956,7 @@
       "doc_path": "discipline/PROP-014",
       "file": "spec/discipline/PROP-014-specmap-bidirectional-traceability.md",
       "heading": "7. Open questions",
-      "line": 310,
+      "line": 322,
       "uri": "spec://vibevm/discipline/PROP-014#open"
     },
     {
@@ -10433,42 +10445,5 @@
     }
   ],
   "suspects": [],
-  "warnings": [
-    {
-      "code": "pin-into-unmarked-unit",
-      "file": "crates/specmark/tests/usage.rs",
-      "line": 14,
-      "message": "edge `specmark::tests::usage::Tagged` pins r1 but `spec://vibevm/discipline/PROP-014#addressing-code` carries no kind/revision line yet"
-    },
-    {
-      "code": "pin-into-unmarked-unit",
-      "file": "crates/specmark/tests/usage.rs",
-      "line": 23,
-      "message": "edge `specmark::tests::usage::MultiTagged` pins r1 but `spec://vibevm/discipline/PROP-014#addressing-spec` carries no kind/revision line yet"
-    },
-    {
-      "code": "pin-into-unmarked-unit",
-      "file": "crates/specmark/tests/usage.rs",
-      "line": 29,
-      "message": "edge `specmark::tests::usage::<impl Tagged>` pins r1 but `spec://vibevm/discipline/PROP-014#addressing-code` carries no kind/revision line yet"
-    },
-    {
-      "code": "pin-into-unmarked-unit",
-      "file": "crates/specmark/tests/usage.rs",
-      "line": 40,
-      "message": "edge `specmark::tests::usage::helper` pins r1 but `spec://vibevm/discipline/PROP-014#edges` carries no kind/revision line yet"
-    },
-    {
-      "code": "pin-into-unmarked-unit",
-      "file": "crates/specmark/tests/usage.rs",
-      "line": 46,
-      "message": "edge `specmark::tests::usage::inner` pins r1 but `spec://vibevm/discipline/PROP-014#addressing-code` carries no kind/revision line yet"
-    },
-    {
-      "code": "pin-into-unmarked-unit",
-      "file": "crates/specmark/tests/usage.rs",
-      "line": 54,
-      "message": "edge `specmark::tests::usage::tags_are_inert` pins r1 but `spec://vibevm/discipline/PROP-014#addressing-code` carries no kind/revision line yet"
-    }
-  ]
+  "warnings": []
 }
