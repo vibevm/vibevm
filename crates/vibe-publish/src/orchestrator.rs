@@ -134,7 +134,28 @@ impl<'c, C: RepoCreator + ?Sized> Publisher<'c, C> {
     }
 
     /// Publish the package at `config.source_dir` under the org named in
-    /// `config.org_url`.
+    /// `config.org_url`, returning a [`PublishOutcome`] describing what
+    /// landed.
+    ///
+    /// Contract:
+    /// - **Source.** `config.source_dir` MUST hold a `vibe.toml` with a
+    ///   `[package]` table; a project- or workspace-only manifest is
+    ///   refused as [`PublishError::SourceInvalid`].
+    /// - **Branch.** When the creator declares a
+    ///   [`direct_repo_url`](RepoCreator::direct_repo_url) the host-API
+    ///   dance is skipped entirely (no org extraction, no token); else
+    ///   the org is extracted from `config.org_url`, the repo is probed
+    ///   and created if absent, and the credentialed push URL is built.
+    /// - **Idempotence boundary.** A fresh commit + tag is always pushed;
+    ///   a pre-existing tag is a [`PublishError::TagCollision`] (publish
+    ///   never force-pushes tags). `config.dry_run` plans without any
+    ///   network or git side effect.
+    /// - **Errors.** Every failure is a typed [`PublishError`] naming the
+    ///   violated expectation and a fix surface — scope / auth / host
+    ///   problems before any push, git / IO problems during it; the
+    ///   token never appears in any of them (PROP-000 §20).
+    ///
+    /// The canonical call shape is the [`Publisher`] type's doctest above.
     pub fn publish(&self, config: &PublishConfig) -> Result<PublishOutcome, PublishError> {
         // Step 1: read the package manifest. `publish` only operates on
         // a publishable `[package]` manifest; a `[project]`-only or
