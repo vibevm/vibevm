@@ -37,8 +37,26 @@ use crate::output;
 mod purl;
 
 /// Override for the GitHub REST API root used by `--full-scan`. Set
-/// in tests to a local mock; defaults to the live API when unset.
-const GITHUB_API_BASE_ENV: &str = "VIBEVM_GITHUB_API_BASE";
+/// in tests to a local mock; defaults to the live API when unset. The
+/// env read happens at the composition root (`main.rs`); this const
+/// names the variable so main and the tests agree on it.
+pub const GITHUB_API_BASE_ENV: &str = "VIBEVM_GITHUB_API_BASE";
+
+/// The live GitHub REST API root, used when no override is supplied.
+const GITHUB_API_DEFAULT: &str = "https://api.github.com";
+
+/// Environment-derived configuration for `vibe search`, resolved once
+/// at the composition root and threaded in so the command's domain
+/// never reads the ambient environment itself (CONVERT-PLAN v0.1 §1
+/// item 0.4; the Phase-5 `ambient-env` rule). Each field carries the
+/// raw override or `None`; the defaults live here in the domain.
+#[derive(Debug, Default)]
+pub struct SearchEnv {
+    /// `VIBEVM_GITHUB_API_BASE` — GitHub REST root for `--full-scan`.
+    pub github_api_base: Option<String>,
+    /// `VIBEVM_SEARCH_CACHE_DIR` — overrides `~/.vibe/search-cache/`.
+    pub cache_dir: Option<String>,
+}
 
 #[derive(Debug, Serialize)]
 struct SearchReport {
@@ -83,7 +101,7 @@ struct HitRow {
     source: &'static str,
 }
 
-pub fn run(ctx: &output::Context, args: SearchArgs) -> Result<()> {
+pub fn run(ctx: &output::Context, args: SearchArgs, env: SearchEnv) -> Result<()> {
     let project_root = resolve_project_root(&args.path)?;
     let manifest = load_project_manifest(&project_root)?;
 
@@ -138,8 +156,11 @@ pub fn run(ctx: &output::Context, args: SearchArgs) -> Result<()> {
     let cache_root = if args.no_cache {
         None
     } else {
-        search_cache::cache_root()
+        search_cache::cache_root(env.cache_dir.as_deref())
     };
+    let github_api_base = env
+        .github_api_base
+        .unwrap_or_else(|| GITHUB_API_DEFAULT.to_string());
     let kind_str: Option<String> = kind_filter.map(|k| k.as_str().to_string());
 
     // Walk registries and aggregate. Track per-registry status so the
@@ -206,7 +227,12 @@ pub fn run(ctx: &output::Context, args: SearchArgs) -> Result<()> {
                     }
                 }
             }
-            None if full_scan => match run_full_scan_for_registry(&query, kind_filter, reg) {
+            None if full_scan => match run_full_scan_for_registry(
+                &query,
+                kind_filter,
+                reg,
+                &github_api_base,
+            ) {
                 Ok(hits) => {
                     full_scanned.push(reg.name.clone());
                     for h in hits {
@@ -389,6 +415,7 @@ fn run_full_scan_for_registry(
     query: &str,
     kind_filter: Option<PackageKind>,
     reg: &vibe_core::manifest::RegistrySection,
+    api_base: &str,
 ) -> std::result::Result<Vec<FullScanHit>, String> {
     let Some(org) = search_full_scan::detect_github_org(&reg.url) else {
         return Err(format!(
@@ -396,8 +423,6 @@ fn run_full_scan_for_registry(
             reg.url
         ));
     };
-    let api_base =
-        std::env::var(GITHUB_API_BASE_ENV).unwrap_or_else(|_| "https://api.github.com".to_string());
     let token = vibe_publish::token::load_token_for_host("github.com")
         .ok()
         .map(|t| t.value().to_string());
@@ -406,7 +431,7 @@ fn run_full_scan_for_registry(
     if query_tokens.is_empty() {
         return Err("query has no searchable tokens after stopword filtering".into());
     }
-    search_full_scan::full_scan_github_org(&org, &api_base, token_ref, &query_tokens, kind_filter)
+    search_full_scan::full_scan_github_org(&org, api_base, token_ref, &query_tokens, kind_filter)
         .map_err(|e| format!("{e}"))
 }
 

@@ -62,7 +62,16 @@ fn main() -> ExitCode {
         Command::List(args) => commands::list::run(&ctx, args),
         Command::Install(args) => commands::install::run(&ctx, args),
         Command::Outdated(args) => commands::outdated::run(&ctx, args),
-        Command::Search(args) => commands::search::run(&ctx, args),
+        Command::Search(args) => {
+            // The composition root reads the search command's
+            // environment overrides; the domain never touches the
+            // ambient env itself (CONVERT-PLAN v0.1 §1 item 0.4).
+            let search_env = commands::search::SearchEnv {
+                github_api_base: read_env_opt(commands::search::GITHUB_API_BASE_ENV),
+                cache_dir: read_env_opt(commands::search_cache::CACHE_ROOT_ENV),
+            };
+            commands::search::run(&ctx, args, search_env)
+        }
         Command::Mcp(args) => commands::mcp::run(&ctx, args),
         Command::Uninstall(args) => commands::uninstall::run(&ctx, args),
         Command::Update(args) => commands::update::run(&ctx, args),
@@ -154,4 +163,13 @@ fn init_tracing() {
         .with_target(false)
         .with_writer(std::io::stderr)
         .try_init();
+}
+
+/// Read an environment override at the composition root: `Some(value)`
+/// only when the variable is set and non-empty. vibe's domain commands
+/// never read the ambient environment themselves — reads live here in
+/// main and the value is threaded down (CONVERT-PLAN v0.1 §1 item 0.4;
+/// the Phase-5 `ambient-env` rule names `main.rs` a recorded root).
+fn read_env_opt(name: &str) -> Option<String> {
+    std::env::var(name).ok().filter(|s| !s.trim().is_empty())
 }

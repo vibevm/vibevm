@@ -68,12 +68,17 @@ struct CacheEntry {
     results: SearchResults,
 }
 
-/// Returns the cache root, honouring `VIBEVM_SEARCH_CACHE_DIR` first
+/// Returns the cache root, honouring an explicit `override_dir` first
 /// then falling back to `<home>/.vibe/search-cache`. `None` if no
-/// home directory is detectable and the env override is unset — the
-/// cache layer silently degrades to no-op in that case.
-pub fn cache_root() -> Option<PathBuf> {
-    if let Ok(s) = std::env::var(CACHE_ROOT_ENV)
+/// home directory is detectable and no override is given — the cache
+/// layer silently degrades to no-op in that case.
+///
+/// The override originates from `VIBEVM_SEARCH_CACHE_DIR`, but that env
+/// read happens at the composition root (`main.rs`) and the value is
+/// threaded in; this function never touches the ambient environment
+/// itself (CONVERT-PLAN v0.1 §1 item 0.4).
+pub fn cache_root(override_dir: Option<&str>) -> Option<PathBuf> {
+    if let Some(s) = override_dir
         && !s.trim().is_empty()
     {
         return Some(PathBuf::from(s));
