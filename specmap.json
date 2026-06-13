@@ -1668,37 +1668,58 @@
     },
     {
       "crate_name": "vibe-index",
-      "file": "crates/vibe-index/src/types/entry.rs",
+      "file": "crates/vibe-index/src/types/entry/mod.rs",
       "item_kind": "mod",
-      "line": 7,
+      "line": 13,
       "symbol": "vibe_index::types::entry"
     },
     {
       "crate_name": "vibe-index",
-      "file": "crates/vibe-index/src/types/entry.rs",
+      "file": "crates/vibe-index/src/types/entry/mod.rs",
       "item_kind": "struct",
-      "line": 363,
-      "symbol": "vibe_index::types::entry::NameEntry"
-    },
-    {
-      "crate_name": "vibe-index",
-      "file": "crates/vibe-index/src/types/entry.rs",
-      "item_kind": "struct",
-      "line": 325,
-      "symbol": "vibe_index::types::entry::PackageEntry"
-    },
-    {
-      "crate_name": "vibe-index",
-      "file": "crates/vibe-index/src/types/entry.rs",
-      "item_kind": "struct",
-      "line": 19,
+      "line": 36,
       "symbol": "vibe_index::types::entry::VersionEntry"
     },
     {
       "crate_name": "vibe-index",
-      "file": "crates/vibe-index/src/types/entry.rs",
+      "file": "crates/vibe-index/src/types/entry/aggregate.rs",
+      "item_kind": "mod",
+      "line": 7,
+      "symbol": "vibe_index::types::entry::aggregate"
+    },
+    {
+      "crate_name": "vibe-index",
+      "file": "crates/vibe-index/src/types/entry/aggregate.rs",
+      "item_kind": "struct",
+      "line": 55,
+      "symbol": "vibe_index::types::entry::aggregate::NameEntry"
+    },
+    {
+      "crate_name": "vibe-index",
+      "file": "crates/vibe-index/src/types/entry/aggregate.rs",
+      "item_kind": "struct",
+      "line": 17,
+      "symbol": "vibe_index::types::entry::aggregate::PackageEntry"
+    },
+    {
+      "crate_name": "vibe-index",
+      "file": "crates/vibe-index/src/types/entry/content.rs",
+      "item_kind": "mod",
+      "line": 6,
+      "symbol": "vibe_index::types::entry::content"
+    },
+    {
+      "crate_name": "vibe-index",
+      "file": "crates/vibe-index/src/types/entry/relations.rs",
+      "item_kind": "mod",
+      "line": 7,
+      "symbol": "vibe_index::types::entry::relations"
+    },
+    {
+      "crate_name": "vibe-index",
+      "file": "crates/vibe-index/src/types/entry/tests.rs",
       "item_kind": "fn",
-      "line": 445,
+      "line": 49,
       "symbol": "vibe_index::types::entry::tests::version_entry_round_trips_through_json"
     },
     {
@@ -4886,34 +4907,42 @@
       "verb": "implements"
     },
     {
-      "file": "crates/vibe-index/src/types/entry.rs",
+      "file": "crates/vibe-index/src/types/entry/mod.rs",
       "from_symbol": "vibe_index::types::entry",
+      "line": 13,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-index/PROP-005#entry",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-index/src/types/entry/mod.rs",
+      "from_symbol": "vibe_index::types::entry::VersionEntry",
+      "line": 39,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-index/PROP-005#entry",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-index/src/types/entry/aggregate.rs",
+      "from_symbol": "vibe_index::types::entry::aggregate",
       "line": 7,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-index/PROP-005#entry",
       "verb": "implements"
     },
     {
-      "file": "crates/vibe-index/src/types/entry.rs",
-      "from_symbol": "vibe_index::types::entry::NameEntry",
-      "line": 370,
+      "file": "crates/vibe-index/src/types/entry/aggregate.rs",
+      "from_symbol": "vibe_index::types::entry::aggregate::NameEntry",
+      "line": 62,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-index/PROP-005#entry",
       "verb": "implements",
       "pinned_r": 1
     },
     {
-      "file": "crates/vibe-index/src/types/entry.rs",
-      "from_symbol": "vibe_index::types::entry::PackageEntry",
-      "line": 330,
-      "provenance": "authored",
-      "uri": "spec://vibevm/modules/vibe-index/PROP-005#entry",
-      "verb": "implements",
-      "pinned_r": 1
-    },
-    {
-      "file": "crates/vibe-index/src/types/entry.rs",
-      "from_symbol": "vibe_index::types::entry::VersionEntry",
+      "file": "crates/vibe-index/src/types/entry/aggregate.rs",
+      "from_symbol": "vibe_index::types::entry::aggregate::PackageEntry",
       "line": 22,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-index/PROP-005#entry",
@@ -4921,9 +4950,25 @@
       "pinned_r": 1
     },
     {
-      "file": "crates/vibe-index/src/types/entry.rs",
+      "file": "crates/vibe-index/src/types/entry/content.rs",
+      "from_symbol": "vibe_index::types::entry::content",
+      "line": 6,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-index/PROP-005#entry",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-index/src/types/entry/relations.rs",
+      "from_symbol": "vibe_index::types::entry::relations",
+      "line": 7,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-index/PROP-005#entry",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-index/src/types/entry/tests.rs",
       "from_symbol": "vibe_index::types::entry::tests::version_entry_round_trips_through_json",
-      "line": 446,
+      "line": 50,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-index/PROP-005#entry",
       "verb": "verifies",
