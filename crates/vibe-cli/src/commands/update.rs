@@ -245,7 +245,7 @@ fn locked_package(
         source_url: cached.source_uri.clone(),
         source_ref: cached.source_ref.clone(),
         resolved_commit: cached.resolved_commit.clone(),
-        content_hash: cached.content_hash.clone(),
+        content_hash: vibe_core::ContentHash::from_validated(cached.content_hash.clone()),
         boot_snippet: None,
         files_written: Vec::new(),
         dependencies: dependencies.to_vec(),

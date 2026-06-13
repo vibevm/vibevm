@@ -13,6 +13,7 @@
 specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-002#capability");
 
 pub mod capability_ref;
+pub mod content_hash;
 pub mod error;
 pub mod manifest;
 pub mod package_ref;
@@ -22,6 +23,7 @@ pub mod user_config;
 pub mod values;
 
 pub use capability_ref::{CapabilityName, CapabilityNamespace, CapabilityRef};
+pub use content_hash::ContentHash;
 pub use error::{Error, Result};
 pub use package_ref::{Group, PackageKind, PackageName, PackageRef, VersionSpec};
 pub use rel_path::RelPath;

@@ -6,7 +6,7 @@
 specmark::scope!("spec://vibevm/VIBEVM-SPEC#install-workflow-in-detail");
 
 use vibe_core::manifest::{LockedPackage, Lockfile, Manifest, SourceKind};
-use vibe_core::{PackageName, PackageRef, VersionSpec};
+use vibe_core::{ContentHash, PackageName, PackageRef, VersionSpec};
 use vibe_resolver::ResolvedNode;
 
 use crate::fetched::Fetched;
@@ -159,7 +159,7 @@ pub(crate) fn locked_package_from_fetched(f: &Fetched, language: Option<&str>) -
         source_url: c.source_uri.clone(),
         source_ref: c.source_ref.clone(),
         resolved_commit: c.resolved_commit.clone(),
-        content_hash: c.content_hash.clone(),
+        content_hash: ContentHash::from_validated(c.content_hash.clone()),
         boot_snippet: None,
         files_written: Vec::new(),
         dependencies: f.meta.dependencies.clone(),

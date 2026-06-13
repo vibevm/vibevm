@@ -53,6 +53,13 @@ pub enum Error {
     BadCapabilityRef { input: String, reason: String },
 
     #[error(
+        "invalid content hash `{input}`: {reason} \
+         (violates spec://vibevm/modules/vibe-registry/PROP-008#identity; \
+          fix: use a `sha256:<hex>` digest as produced by the indexer)"
+    )]
+    BadContentHash { input: String, reason: String },
+
+    #[error(
         "invalid version spec `{input}` \
          (violates spec://vibevm/modules/vibe-registry/PROP-008#pkgref; \
           fix: use a Cargo-style requirement such as `^1.2`, `~1.2.3`, or `=1.2.3`)"

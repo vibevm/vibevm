@@ -30,6 +30,7 @@ use std::path::{Path, PathBuf};
 
 use serde::{Deserialize, Serialize};
 
+use crate::content_hash::ContentHash;
 use crate::error::Result;
 use crate::package_ref::{Group, PackageKind, PackageName, PackageRef, VersionSpec};
 
@@ -200,7 +201,7 @@ pub struct LockedPackage {
     /// `sha256:<hex>` content hash over the package tree. The
     /// **identity** component of the (group, name, version, content_hash)
     /// tuple. Present in every lockfile version.
-    pub content_hash: String,
+    pub content_hash: ContentHash,
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub boot_snippet: Option<String>,
