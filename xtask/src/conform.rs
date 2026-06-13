@@ -12,17 +12,25 @@ use crate::repo_root;
 /// vibe-index entered 2026-06-12 (SHRINK-PLAN v0.2's opening move,
 /// the re-judge the DBT-0019 closure unblocked); vibe-index was
 /// pre-paid by Phase 5's PackageScanner seam work.
+///
+/// conform-frontend-rust and env-audit joined via CONVERT-PLAN v0.1
+/// Phase 0 (0.7): both were audit-verified clean (the frontend's
+/// `unwrap` hits are `unwrap_or` combinators and test code; env-audit's
+/// two live only in tests), so each flip froze nothing — the v0.2
+/// invariant that a flip never widens the baseline holds.
 const CONFORM_GATED: &[&str] = &[
     "vibe-core",
     "vibe-index",
     "vibe-install",
     "vibe-resolver",
     "conform-core",
+    "conform-frontend-rust",
     "specmap-core",
     "vibe-registry",
     "vibe-workspace",
     "vibe-check",
     "vibe-publish",
+    "env-audit",
 ];
 
 /// The standing rule set, constructed in one place so `conform check`
