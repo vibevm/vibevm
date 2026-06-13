@@ -98,11 +98,37 @@ struct Bucket {
     last_refill: Instant,
 }
 
+/// The token-bucket refill model as a pure step a reader can run:
+/// `elapsed_secs × rate_per_sec` tokens accrue, capped at `capacity`,
+/// and a non-positive elapsed changes nothing. [`Bucket::refill`] is
+/// exactly this applied to wall-clock elapsed — pulled out so the
+/// math is checkable without a clock (the CRUXEval argument: execution
+/// prediction is where weak readers are weakest; give them a model to
+/// run, not a paragraph to simulate).
+///
+/// ```
+/// use vibe_index::server::rate_limit::refilled_tokens;
+///
+/// // 60 rpm = 1 token/sec: an empty bucket gains exactly one in a second.
+/// assert_eq!(refilled_tokens(0.0, 60.0, 1.0, 1.0), 1.0);
+/// // It tops out at capacity — a long idle never overflows the bucket.
+/// assert_eq!(refilled_tokens(59.0, 60.0, 1.0, 600.0), 60.0);
+/// // No time elapsed, no change.
+/// assert_eq!(refilled_tokens(30.0, 60.0, 1.0, 0.0), 30.0);
+/// ```
+pub fn refilled_tokens(tokens: f64, capacity: f64, rate_per_sec: f64, elapsed_secs: f64) -> f64 {
+    if elapsed_secs > 0.0 {
+        (tokens + elapsed_secs * rate_per_sec).min(capacity)
+    } else {
+        tokens
+    }
+}
+
 impl Bucket {
     fn refill(&mut self, capacity: f64, rate_per_sec: f64, now: Instant) {
         let elapsed = now.duration_since(self.last_refill).as_secs_f64();
         if elapsed > 0.0 {
-            self.tokens = (self.tokens + elapsed * rate_per_sec).min(capacity);
+            self.tokens = refilled_tokens(self.tokens, capacity, rate_per_sec, elapsed);
             self.last_refill = now;
         }
     }

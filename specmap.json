@@ -1516,7 +1516,7 @@
       "crate_name": "vibe-index",
       "file": "crates/vibe-index/src/server/rate_limit.rs",
       "item_kind": "struct",
-      "line": 139,
+      "line": 165,
       "symbol": "vibe_index::server::rate_limit::RateLimiter"
     },
     {
@@ -4700,7 +4700,7 @@
     {
       "file": "crates/vibe-index/src/server/rate_limit.rs",
       "from_symbol": "vibe_index::server::rate_limit::RateLimiter",
-      "line": 140,
+      "line": 166,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-index/PROP-005#http",
       "verb": "implements",
