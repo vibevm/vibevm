@@ -17,7 +17,7 @@ mod diagnostics;
 mod structure;
 
 pub use budget::{FileLength, NoUnwrapInDomain, UnsafeGate};
-pub use diagnostics::{ErrorEnumCitesReq, ErrorMessageCitesReq, SeamHasDoctest};
+pub use diagnostics::{ErrorEnumCitesReq, ErrorMessageCitesReq, PubDoctest, SeamHasDoctest};
 pub use structure::{CellHasOracle, CellIsolation, FlagSites};
 
 /// Render a finding message in the Class-F diagnostic grammar

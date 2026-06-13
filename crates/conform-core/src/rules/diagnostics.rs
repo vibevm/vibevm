@@ -102,6 +102,103 @@ impl Rule for SeamHasDoctest {
     }
 }
 
+/// Class G — `pub-doctest`: every public *type* seam (`struct`,
+/// `enum`, `trait`, `union`) declared under `src/` in a gated crate
+/// carries at least one compiled doc example, or a `#[spec(documents)]`
+/// edge to a guide unit. Where `seam-has-doctest` gates the crate-root
+/// surface plus traits, this widens the lens to the whole declared
+/// public type API — the foundation crate re-exports its types from
+/// submodules (and re-exports are not item facts), so those definitions
+/// were previously unseen. It activates on the foundation crate first,
+/// freezing its accumulated doc-debt and shrinking from there
+/// (card scaffold-g-doctests; CONVERT-PLAN v0.1 §2 item 1.4).
+///
+/// Scoped to type seams rather than every `pub` symbol deliberately:
+/// a type is the unit a reader pages in to learn the crate; a free
+/// `fn` or `const` is reached *through* a type and is covered where it
+/// matters by `seam-has-doctest`'s crate-root lens. This keeps the gate
+/// on the items that teach and off the trivia.
+///
+/// ```
+/// use conform_core::rules::PubDoctest;
+/// use conform_core::{Fact, Rule, SourceFacts};
+///
+/// let rule = PubDoctest { gated_crates: &["x"] };
+/// let sub = SourceFacts {
+///     file: "crates/x/src/types.rs".into(),
+///     crate_name: "x".into(),
+///     facts: vec![Fact::Item {
+///         kind: "struct".into(), symbol: "x::types::Entry".into(), line: 7,
+///         attrs: vec![], is_pub: true, has_doctest: false,
+///     }],
+/// };
+/// assert_eq!(rule.check(&[sub]).len(), 1);
+/// ```
+pub struct PubDoctest {
+    pub gated_crates: &'static [&'static str],
+}
+
+impl Rule for PubDoctest {
+    fn id(&self) -> &'static str {
+        "pub-doctest"
+    }
+    fn why(&self) -> &'static str {
+        "the foundation crate is the few-shot prompt a model copies first: \
+         every public type it pages in teaches by one compiled example, not \
+         prose alone (card scaffold-g-doctests; CONVERT-PLAN v0.1 §2.4)"
+    }
+    fn check(&self, facts: &[SourceFacts]) -> Vec<Finding> {
+        let mut out = Vec::new();
+        for sf in facts {
+            if !self.gated_crates.contains(&sf.crate_name.as_str()) || !sf.file.contains("/src/") {
+                continue;
+            }
+            for f in &sf.facts {
+                let Fact::Item {
+                    kind,
+                    symbol,
+                    line,
+                    attrs,
+                    is_pub,
+                    has_doctest,
+                } = f
+                else {
+                    continue;
+                };
+                if !is_pub || *has_doctest {
+                    continue;
+                }
+                if !matches!(kind.as_str(), "struct" | "enum" | "trait" | "union") {
+                    continue;
+                }
+                // A `#[spec(documents = …)]` edge is the prose-free alternative
+                // to a compiled example.
+                if attrs.iter().any(|a| a.contains("documents")) {
+                    continue;
+                }
+                let name = symbol.rsplit("::").next().unwrap_or(symbol);
+                out.push(Finding {
+                    rule: self.id(),
+                    file: sf.file.clone(),
+                    line: *line,
+                    message: req_message(
+                        "discipline://core/cards/scaffold-g-doctests#ops",
+                        &format!("public {kind} `{name}` has no compiled doctest"),
+                        &format!(
+                            "add one doctest on `{name}` showing canonical use, or a \
+                             #[spec(documents = \"…\")] edge"
+                        ),
+                    ),
+                    why: self.why(),
+                    fingerprint: format!("pub-doctest|{}|{symbol}", sf.file),
+                });
+            }
+        }
+        out.sort();
+        out
+    }
+}
+
 /// Class F (message grammar) — `error-message-cites-req`: a
 /// thiserror variant's Display text in a gated crate itself
 /// carries a `spec://` REQ URI, so a failing run is navigable

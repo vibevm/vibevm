@@ -84,6 +84,14 @@ const CONFORM_EXEMPT: &[(&str, &str)] = &[
     ),
 ];
 
+/// Class-G `pub-doctest` activates on the foundation crate first
+/// (CONVERT-PLAN v0.1 §2 item 1.4): vibe-core's whole public *type*
+/// surface is gated for compiled examples — its pre-existing doc-debt
+/// frozen and shrunk from there. This is a strictly wider lens than
+/// `seam-has-doctest` (which sees lib.rs items + traits), so it gets its
+/// own list and grows crate-by-crate as later phases convert each.
+const GATED_PUB_DOCTEST: &[&str] = &["vibe-core"];
+
 /// The standing rule set, constructed in one place so `conform check`
 /// and `conform freeze` can never drift apart.
 struct ConformRules {
@@ -91,6 +99,7 @@ struct ConformRules {
     isolation: conform_core::rules::CellIsolation,
     unsafe_gate: conform_core::rules::UnsafeGate,
     seam_doctests: conform_core::rules::SeamHasDoctest,
+    pub_doctest: conform_core::rules::PubDoctest,
     err_req: conform_core::rules::ErrorEnumCitesReq,
     cell_oracle: conform_core::rules::CellHasOracle,
     err_msg: conform_core::rules::ErrorMessageCitesReq,
@@ -120,6 +129,9 @@ impl ConformRules {
             seam_doctests: rules::SeamHasDoctest {
                 gated_crates: CONFORM_GATED,
             },
+            pub_doctest: rules::PubDoctest {
+                gated_crates: GATED_PUB_DOCTEST,
+            },
             err_req: rules::ErrorEnumCitesReq {
                 gated_crates: CONFORM_GATED,
             },
@@ -147,6 +159,7 @@ impl ConformRules {
             &self.isolation,
             &self.unsafe_gate,
             &self.seam_doctests,
+            &self.pub_doctest,
             &self.err_req,
             &self.cell_oracle,
             &self.err_msg,
