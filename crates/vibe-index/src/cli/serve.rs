@@ -11,7 +11,7 @@ use crate::error::{Error, Result};
 use crate::index::Index;
 use crate::lock::ServerLock;
 use crate::server::rate_limit::DEFAULT_MAX_BUCKETS;
-use crate::server::{AppState, RateLimitConfig, TokenStore, build_app};
+use crate::server::{AppState, FileTokenStore, RateLimitConfig, build_app};
 
 #[derive(Debug, Parser)]
 #[command(about = "Run the HTTP server.")]
@@ -69,8 +69,8 @@ pub fn run(args: Args) -> Result<()> {
     let lock = ServerLock::try_acquire(&args.data_dir)?;
 
     let tokens = match args.auth_tokens_file.as_deref() {
-        Some(path) => TokenStore::load_from_path(path)?,
-        None => TokenStore::load(&args.data_dir)?,
+        Some(path) => FileTokenStore::load_from_path(path)?,
+        None => FileTokenStore::load(&args.data_dir)?,
     };
 
     let rate_limit = RateLimitConfig {

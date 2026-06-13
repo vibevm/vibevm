@@ -12,7 +12,7 @@ use tower::util::ServiceExt;
 
 use vibe_index::index::Index;
 use vibe_index::server::rate_limit::DEFAULT_MAX_BUCKETS;
-use vibe_index::server::{AppState, RateLimitConfig, TokenStore, build_app};
+use vibe_index::server::{AppState, FileTokenStore, RateLimitConfig, build_app};
 use vibe_index::types::NamingConvention;
 
 fn fresh_state(
@@ -30,9 +30,9 @@ fn fresh_state(
         let state_dir = tmp.path().join("state");
         std::fs::create_dir_all(&state_dir).unwrap();
         std::fs::write(state_dir.join("admin.tokens"), t).unwrap();
-        TokenStore::load(tmp.path()).unwrap()
+        FileTokenStore::load(tmp.path()).unwrap()
     } else {
-        TokenStore::default()
+        FileTokenStore::default()
     };
     let idx2 = Index::load_from(tmp.path()).unwrap();
     let state = AppState::with_tokens_and_rate_limit(

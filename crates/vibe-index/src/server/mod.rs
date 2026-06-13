@@ -12,9 +12,11 @@ pub mod rate_limit;
 pub mod routes;
 pub mod state;
 
-pub use auth::TokenStore;
+pub use auth::{FileTokenStore, TokenStore};
 pub use error::ApiError;
-pub use rate_limit::{RateDecision, RateLimitConfig, RateLimitKey, RateLimiter};
+pub use rate_limit::{
+    RateDecision, RateLimitConfig, RateLimitKey, RateLimiter, TokenBucketRateLimiter,
+};
 pub use state::AppState;
 
 use std::net::{IpAddr, Ipv4Addr, SocketAddr};

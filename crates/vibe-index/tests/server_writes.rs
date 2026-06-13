@@ -8,7 +8,7 @@ use specmark::verifies;
 use tower::util::ServiceExt;
 
 use vibe_index::index::Index;
-use vibe_index::server::{AppState, TokenStore, build_app};
+use vibe_index::server::{AppState, FileTokenStore, build_app};
 use vibe_index::types::{
     BootSnippetEntry, Group, NamingConvention, PackageKind, ProvidesEntry, VersionEntry,
 };
@@ -69,9 +69,9 @@ fn fresh_state(read_only: bool, with_token: Option<&str>) -> (tempfile::TempDir,
         let state_dir = tmp.path().join("state");
         std::fs::create_dir_all(&state_dir).unwrap();
         std::fs::write(state_dir.join("admin.tokens"), t).unwrap();
-        TokenStore::load(tmp.path()).unwrap()
+        FileTokenStore::load(tmp.path()).unwrap()
     } else {
-        TokenStore::default()
+        FileTokenStore::default()
     };
     // Rebuild the index from disk so AppState owns a fresh copy.
     let idx2 = Index::load_from(tmp.path()).unwrap();

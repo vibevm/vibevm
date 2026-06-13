@@ -14,12 +14,40 @@ use std::path::Path;
 
 use crate::error::{Error, Result};
 
+/// The bearer-token authority a write request is checked against — the
+/// server's swappable auth seam. `AppState` holds one as `Box<dyn
+/// TokenStore>`, so the production [`FileTokenStore`] (tokens read from
+/// `<data-dir>/state/admin.tokens`) and any test double share one
+/// contract. A second production variant (an external auth service, a
+/// rotating-secret store) would land as another impl behind this trait
+/// without touching a handler.
+///
+/// ```
+/// use vibe_index::server::{FileTokenStore, TokenStore};
+///
+/// // The production store with no `admin.tokens` file behind it holds
+/// // no tokens, so it authorises no writes.
+/// let store = FileTokenStore::default();
+/// assert!(!store.has_any());
+/// assert!(!store.check("anything"));
+/// ```
+pub trait TokenStore: std::fmt::Debug + Send + Sync {
+    /// Returns `true` if at least one token is configured; `false` means
+    /// the server permits no mutations regardless of header presence.
+    fn has_any(&self) -> bool;
+
+    /// Returns `true` iff `supplied` is an accepted admin token.
+    fn check(&self, supplied: &str) -> bool;
+}
+
+/// File-backed [`TokenStore`] — the production variant, one token per
+/// line of `<data-dir>/state/admin.tokens`.
 #[derive(Debug, Default, Clone)]
-pub struct TokenStore {
+pub struct FileTokenStore {
     tokens: BTreeSet<String>,
 }
 
-impl TokenStore {
+impl FileTokenStore {
     pub fn load(data_dir: &Path) -> Result<Self> {
         Self::load_from_path(&data_dir.join("state").join("admin.tokens"))
     }
@@ -28,7 +56,7 @@ impl TokenStore {
         let bytes = match std::fs::read(path) {
             Ok(b) => b,
             Err(e) if e.kind() == std::io::ErrorKind::NotFound => {
-                return Ok(TokenStore::default());
+                return Ok(FileTokenStore::default());
             }
             Err(e) => {
                 return Err(Error::Io {
@@ -45,19 +73,19 @@ impl TokenStore {
             .filter(|l| !l.is_empty() && !l.starts_with('#'))
             .map(|l| l.to_string())
             .collect();
-        Ok(TokenStore { tokens })
+        Ok(FileTokenStore { tokens })
     }
+}
 
-    /// Returns `true` if at least one token is loaded; `false` means
-    /// the server permits no mutations regardless of header presence.
-    pub fn has_any(&self) -> bool {
-        !self.tokens.is_empty()
-    }
-
+impl TokenStore for FileTokenStore {
     /// Constant-time-ish check — iterates every token. Practical
     /// against the small file scale we target (<100 tokens).
-    pub fn check(&self, supplied: &str) -> bool {
+    fn check(&self, supplied: &str) -> bool {
         self.tokens.iter().any(|t| t == supplied)
+    }
+
+    fn has_any(&self) -> bool {
+        !self.tokens.is_empty()
     }
 }
 
@@ -69,7 +97,7 @@ mod tests {
     #[test]
     fn load_empty_when_file_missing() {
         let dir = tempfile::tempdir().unwrap();
-        let store = TokenStore::load(dir.path()).unwrap();
+        let store = FileTokenStore::load(dir.path()).unwrap();
         assert!(!store.has_any());
         assert!(!store.check("anything"));
     }
@@ -86,7 +114,7 @@ mod tests {
         writeln!(f).unwrap();
         writeln!(f, "  beta-gamma  ").unwrap();
         f.sync_all().unwrap();
-        let store = TokenStore::load(dir.path()).unwrap();
+        let store = FileTokenStore::load(dir.path()).unwrap();
         assert!(store.check("alpha"));
         assert!(store.check("beta-gamma"));
         assert!(!store.check("comment"));

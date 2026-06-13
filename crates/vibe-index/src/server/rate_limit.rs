@@ -162,35 +162,54 @@ impl Bucket {
     }
 }
 
+/// The rate-limiting seam the HTTP middleware consults on every
+/// non-exempt request. `AppState` holds one as `Box<dyn RateLimiter>`;
+/// the production [`TokenBucketRateLimiter`] is the v1 surface PROP-005
+/// §9 Q10 foresaw, and the v2 it foresees there (per-route quotas,
+/// sliding window, sharded maps) would land as a second impl behind
+/// this trait without touching the middleware.
+///
+/// ```
+/// use vibe_index::server::{
+///     RateLimitConfig, RateLimitKey, RateLimiter, TokenBucketRateLimiter,
+/// };
+///
+/// // A disabled limiter is open by default — every probe is allowed,
+/// // whatever key it carries, until a quota is configured.
+/// let limiter = TokenBucketRateLimiter::new(RateLimitConfig::disabled());
+/// assert!(!limiter.config().enabled());
+/// assert!(limiter.check(RateLimitKey::Token("anyone")).allowed);
+/// ```
+pub trait RateLimiter: std::fmt::Debug + Send + Sync {
+    /// The configured quota — lets the middleware skip the bucket math
+    /// entirely on a disabled limiter.
+    fn config(&self) -> &RateLimitConfig;
+
+    /// Probe `key` against its bucket. Always returns a decision —
+    /// `allowed = true` when the bucket is disabled (no quota
+    /// configured) or when a token was successfully consumed.
+    fn check(&self, key: RateLimitKey<'_>) -> RateDecision;
+}
+
 #[derive(Debug)]
 #[spec(implements = "spec://vibevm/modules/vibe-index/PROP-005#http", r = 1)]
-pub struct RateLimiter {
+pub struct TokenBucketRateLimiter {
     config: RateLimitConfig,
     by_token: Mutex<HashMap<String, Bucket>>,
     by_ip: Mutex<HashMap<IpAddr, Bucket>>,
 }
 
-impl RateLimiter {
+impl TokenBucketRateLimiter {
     pub fn new(config: RateLimitConfig) -> Self {
-        RateLimiter {
+        TokenBucketRateLimiter {
             config,
             by_token: Mutex::new(HashMap::new()),
             by_ip: Mutex::new(HashMap::new()),
         }
     }
 
-    pub fn config(&self) -> &RateLimitConfig {
-        &self.config
-    }
-
-    /// Probe `key` against its bucket. Always returns a decision —
-    /// `allowed = true` when the bucket is disabled (no quota
-    /// configured) or when a token was successfully consumed.
-    pub fn check(&self, key: RateLimitKey<'_>) -> RateDecision {
-        self.check_at(key, Instant::now())
-    }
-
-    /// Same as [`check`] but with an injectable clock for tests.
+    /// Same as [`RateLimiter::check`] but with an injectable clock for
+    /// tests.
     pub fn check_at(&self, key: RateLimitKey<'_>, now: Instant) -> RateDecision {
         match key {
             RateLimitKey::Token(token) => {
@@ -244,6 +263,16 @@ impl RateLimiter {
     }
 }
 
+impl RateLimiter for TokenBucketRateLimiter {
+    fn config(&self) -> &RateLimitConfig {
+        &self.config
+    }
+
+    fn check(&self, key: RateLimitKey<'_>) -> RateDecision {
+        self.check_at(key, Instant::now())
+    }
+}
+
 /// When the pool is at or above `max_buckets`, drop entries that
 /// are at >=99% capacity (idle since last activity). If still over
 /// the cap, drop the single most-replenished bucket. Cheap because
@@ -278,8 +307,8 @@ mod tests {
     use super::*;
     use std::time::Duration;
 
-    fn token_only(rpm: u32) -> RateLimiter {
-        RateLimiter::new(RateLimitConfig {
+    fn token_only(rpm: u32) -> TokenBucketRateLimiter {
+        TokenBucketRateLimiter::new(RateLimitConfig {
             per_token_rpm: rpm,
             per_ip_rpm: 0,
             max_buckets: DEFAULT_MAX_BUCKETS,
@@ -288,7 +317,7 @@ mod tests {
 
     #[test]
     fn disabled_allows_everything() {
-        let r = RateLimiter::new(RateLimitConfig::disabled());
+        let r = TokenBucketRateLimiter::new(RateLimitConfig::disabled());
         for _ in 0..100 {
             let d = r.check(RateLimitKey::Token("alpha"));
             assert!(d.allowed);
@@ -338,7 +367,7 @@ mod tests {
 
     #[test]
     fn ip_keys_track_separately_from_tokens() {
-        let r = RateLimiter::new(RateLimitConfig {
+        let r = TokenBucketRateLimiter::new(RateLimitConfig {
             per_token_rpm: 5,
             per_ip_rpm: 2,
             max_buckets: DEFAULT_MAX_BUCKETS,
@@ -374,7 +403,7 @@ mod tests {
 
     #[test]
     fn ip_pool_eviction_caps_memory() {
-        let r = RateLimiter::new(RateLimitConfig {
+        let r = TokenBucketRateLimiter::new(RateLimitConfig {
             per_token_rpm: 0,
             per_ip_rpm: 60,
             max_buckets: 4,

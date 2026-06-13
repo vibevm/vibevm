@@ -1488,7 +1488,7 @@
       "crate_name": "vibe-index",
       "file": "crates/vibe-index/src/server/mod.rs",
       "item_kind": "fn",
-      "line": 34,
+      "line": 36,
       "symbol": "vibe_index::server::build_app"
     },
     {
@@ -1516,8 +1516,8 @@
       "crate_name": "vibe-index",
       "file": "crates/vibe-index/src/server/rate_limit.rs",
       "item_kind": "struct",
-      "line": 165,
-      "symbol": "vibe_index::server::rate_limit::RateLimiter"
+      "line": 194,
+      "symbol": "vibe_index::server::rate_limit::TokenBucketRateLimiter"
     },
     {
       "crate_name": "vibe-index",
@@ -1579,7 +1579,7 @@
       "crate_name": "vibe-index",
       "file": "crates/vibe-index/src/server/state.rs",
       "item_kind": "mod",
-      "line": 5,
+      "line": 12,
       "symbol": "vibe_index::server::state"
     },
     {
@@ -1644,6 +1644,27 @@
       "item_kind": "fn",
       "line": 113,
       "symbol": "vibe_index::tests::scanner_e2e::reindex_from_clones_walks_three_packages"
+    },
+    {
+      "crate_name": "vibe-index",
+      "file": "crates/vibe-index/tests/seam_fakes.rs",
+      "item_kind": "fn",
+      "line": 153,
+      "symbol": "vibe_index::tests::seam_fakes::the_injected_rate_limiter_blocks_through_the_middleware"
+    },
+    {
+      "crate_name": "vibe-index",
+      "file": "crates/vibe-index/tests/seam_fakes.rs",
+      "item_kind": "fn",
+      "line": 122,
+      "symbol": "vibe_index::tests::seam_fakes::write_is_authorised_by_the_injected_token_store"
+    },
+    {
+      "crate_name": "vibe-index",
+      "file": "crates/vibe-index/tests/seam_fakes.rs",
+      "item_kind": "fn",
+      "line": 138,
+      "symbol": "vibe_index::tests::seam_fakes::write_is_refused_by_the_injected_token_store"
     },
     {
       "crate_name": "vibe-index",
@@ -4688,7 +4709,7 @@
     {
       "file": "crates/vibe-index/src/server/mod.rs",
       "from_symbol": "vibe_index::server::build_app",
-      "line": 38,
+      "line": 40,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-index/PROP-005#server-mode",
       "verb": "implements",
@@ -4720,8 +4741,8 @@
     },
     {
       "file": "crates/vibe-index/src/server/rate_limit.rs",
-      "from_symbol": "vibe_index::server::rate_limit::RateLimiter",
-      "line": 166,
+      "from_symbol": "vibe_index::server::rate_limit::TokenBucketRateLimiter",
+      "line": 195,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-index/PROP-005#http",
       "verb": "implements",
@@ -4794,7 +4815,7 @@
     {
       "file": "crates/vibe-index/src/server/state.rs",
       "from_symbol": "vibe_index::server::state",
-      "line": 5,
+      "line": 12,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-index/PROP-005#root",
       "verb": "implements"
@@ -4877,6 +4898,33 @@
       "line": 114,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-index/PROP-005#reindex",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-index/tests/seam_fakes.rs",
+      "from_symbol": "vibe_index::tests::seam_fakes::the_injected_rate_limiter_blocks_through_the_middleware",
+      "line": 154,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-index/PROP-005#http",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-index/tests/seam_fakes.rs",
+      "from_symbol": "vibe_index::tests::seam_fakes::write_is_authorised_by_the_injected_token_store",
+      "line": 123,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-index/PROP-005#server-mode",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-index/tests/seam_fakes.rs",
+      "from_symbol": "vibe_index::tests::seam_fakes::write_is_refused_by_the_injected_token_store",
+      "line": 139,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-index/PROP-005#server-mode",
       "verb": "verifies",
       "pinned_r": 1
     },
