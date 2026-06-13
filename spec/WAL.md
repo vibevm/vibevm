@@ -1,5 +1,109 @@
 # WAL — Project Continuation State
-_Updated: 2026-06-13 — **CONVERT-PLAN v0.1 IS IN PROGRESS** (owner goal: «выполнить CONVERT-PLAN-v0.1 до конца, фаза 7 тоже разгейчена» — execute the full-depth conversion plan, Phase 7 owner-un-gated). **Phase 0 complete** (8 commits `173bb15`…`616e9db`): PROP-014 self-marks its six units (specmap warnings 6→0), stub-status headers on vibe-graph/vibe-llm, ServerLock promoted to a crate-level `src/lock.rs` seam, `vibe search` reads its env at the composition root, short-name resolution drops its len-checked expects, and conform-frontend-rust + env-audit join the gate → **CONFORM_GATED 12** with a checked `CONFORM_EXEMPT` reasons table. **Phase 1 (vibe-core armor) partway**: **1.1 COMPLETE — all seven newtypes** (`RelPath`, `PackageName` [the 25-file compiler-led cascade, `7d4f041`], `CapabilityNamespace`, `CapabilityName`, `ContentHash` [`4c46eae`], `SourceUrl`, `TraceId` [`f99976e`]); all serde-transparent + `Deref<str>`-ergonomic — Deref collapses the read-site cascades so each lands as a handful of construction edits, with `from_validated`/`new` at trusted-reconstruction seams (the lockfile builders) and `parse` validating only at untrusted boundaries. **1.3 done** — nine vibe-core seam doctests (`0eac0cc`, `17f7344`: Group, VersionSpec, PackageRef, CapabilityRef, Manifest, Lockfile, UserConfig + PackageName, RelPath). 1.2's invariant witnesses are largely carried by the validating constructors plus those doctests. **Phase 1 COMPLETE** — 1.4 landed the `pub-doctest` Class-G rule (`647ce68`; it froze vibe-core's 55-entry type doc-debt shrink-only, the plan's single-digit-freeze prediction FALSIFIED — vibe-core carries 55 public types beyond the 9 primary seams 1.3 documented; the rule reads the `is_pub`/`has_doctest` facts the frontend has emitted since v2, no frontend bump), and 1.5 added Lockfile's explicit lockfile-schema edge (`00cf8c1`; the other foundation edges were already satisfied by `scope!` inheritance, so §10 left them). **Phase 2 COMPLETE** — vibe-publish's three RepoCreator adapters became `#[cell]`s with a seam-driving oracle and the R-001 construction moved to the registry module (`3bd4cfc`, cells 20→23); the token-redaction tests gained `#[verifies]` (`14ce2b0`); Publisher::publish got its error contract (`54446d0`); BootBand pins the effective-boot order (`8e65a1d`). vibe-install (2.4) was already full-depth from v0.2 (InstallSource + PlanObserver doctests + the conditional-fixpoint edge), so §10 left it untouched — no commit needed. **Phase 3 (vibe-index) COMPLETE.** **3.2** the rate-limiter's refill is a pure runnable model `refilled_tokens(...)` with a doctest, `Bucket::refill` applies it so the two can't drift (`e6c0ac1`); **3.4** the in-RAM Index teaches its full read/write lifecycle by doctest via a new public `VersionEntry::minimal(kind, group, name, version)` fixture builder (`eb85cbb`, `bc540db`); **3.5** the 21 RFC-7807 ApiError `detail` sites (routes/packages.rs + index_files.rs) gained the Class-F `(violates spec://…#http; fix:…)` tail where a spec unit exists, the clean 404 misses left bare (`4be55c6`; e2e does not assert on detail — no churn); **3.3** `types/entry.rs` (545 lines, 15 structs) split into a typed family — dependency relations / content+delivery / aggregate records by concern, VersionEntry kept in `entry/mod.rs`, tests-out, every child carrying the PROP-005#entry `scope!` (`38d6ae7`; all `crate::types::*` paths preserved by re-export, whole workspace builds untouched; gotcha — a non-`#[test]` helper in a standalone test file under `src/` needs its own `#[cfg(test)]` or its unwraps read as domain code, the idiom conform-frontend-rust documents on its own lib/tests.rs); **3.1** the server's two swappable deps became seams — `TokenStore`/`RateLimiter` traits, `AppState` holds each as `Box<dyn _>`, production variants renamed `FileTokenStore`/`TokenBucketRateLimiter` (the latter's docstring already names the foreseen v2), a new `AppState::with_seams` constructor and a fake oracle (tests/seam_fakes.rs) driving the write surface through injected fakes the e2e suites can't reach (a write authorised with no admin.tokens file on disk, a write refused, a read 429'd through the middleware); no `#[cell]` — one production variant each (§10); both new seam traits earned their Scaffold-G doctest (`73b43ca`). CONTINUE.md refreshed wholesale to the CONVERT-PLAN state (`e4919cf`). **Phase 4 (vibe-cli facade diet) STARTED — both independent small items landed.** 4.3: the manifest-mutation discipline `apply_git_source_flag` owned inline moved to vibe-install's pure `record_git_source(manifest, dep)`; the CLI now only validates the `--git*` flags, builds the typed `GitPackageDep`, and persists (`5a5833c`; 20 cli_pkg_cycle git-source tests unchanged). 4.4: `vibe init`'s three embedded templates became data files under `crates/vibe-cli/templates/` via `include_str!` (`97eae04`; the plan's ~300-line estimate FALSIFIED — ~55 lines across three; `.gitattributes` `eol=lf` keeps include_str! byte-stable, all 11 cli_init tests unchanged). **4.1 COMPLETE** — the search domain moved into a new gated `vibe-registry::search` family in three safe sub-steps, each panel-green: the TTL result cache (`c76537f`; was already gate-clean, froze nothing), the GitHub-org full-scan fallback with FullScanError converted to Class-F against PROP-002#registry-model — the same anchor the git_* registry code cites (`8ad4727`), and query tokenisation split into its own `query` module to stay under the 600-line budget, with doctests on the public query API (`1f2b3cd`). search.rs is now the thin CLI orchestration + render the plan wanted. (Finding: the plan's "scoring half of search.rs" was a misattribution — tokenise/score_manifest lived in search_full_scan.rs, so they moved with it; nothing scoring-related remained in search.rs to extract.) REMAINING: **4.2** the vendor (`commands/registry/vendor.rs` ~474) + redirect-sync (~310) domain → vibe-registry (the second big move; fresh-context work). **Key finding from this session's assessment: vendor is NOT a clean whole-file move like the search files.** `run_vendor`'s vendoring loop (vendor.rs:131-237) interleaves the clone domain (`refresh_package` → `bare_clone_from_clone` per lockfile entry) with `ctx.step`/`ctx.skipped` progressive output, so the extraction needs a **VendorObserver** (the vibe-install `PlanObserver` pattern from v0.2) to keep per-package progress, plus a typed `VendorError` (it is anyhow today) — closer in shape to the vibe-install orchestrator extraction than to 4.1's pure-domain search moves. The pure helpers (`bare_clone_from_clone`, `write_vendor_readme`, `file_url_for_dir`) move cleanly; the loop is the work. redirect-sync is a PARTIAL file split (the tag-sync half of sync.rs → beside `multi_registry_resolver::redirect_follow`). 4.1's template (git mv, intra-crate imports, Class-F, alias call sites, 600-line budget) still applies to the mechanics; **4.5** Class-F on the CLI's remaining thiserror enums, DEFERRED until after 4.2 carries the vendor error enums out; **4.6** the drain-then-flip of vibe-cli into CONFORM_GATED (→ 13) needs 4.1–4.5 done. Then Phases 5–7. Then Phases 4–7 (Phase 7 owner-un-gated): **4** vibe-cli facade diet (HUGE — move ~2.5k LOC search/vendor/sync domain to vibe-registry, then flip vibe-cli into CONFORM_GATED); **5** specmark/specmark-grammar gate flip (audit-verified zero-drain) + the new `ambient-env` rule (frontend EnvRead facts, gated, escape via fn-grain deviates); **6** spec layer truth pass (PROP kind audit + the implements edges the code already earns + PROP-010 [DEFERRED — M2] header — largely independent of 4/5, low code-risk, doable any time); **7** the MCP endgame (owner removed the DBT-0020 gate — spec home `spec/modules/vibe-mcp/PROP-0xx`, vibe-mcp tools.rs → McpTool trait + 3 cells, drain the 2638-line vibe-cli/commands/mcp.rs, baseline → 0, the parked file-length pair resolved). Each phase's commits cite their CONVERT-PLAN item; the git log is the authoritative per-item record. Per-commit detail lives in the git log (each commit cites its CONVERT-PLAN item) and the session task list; the plan is `spec/terraforms/CONVERT-PLAN-v0.1.md`. Five-gate panel green at every commit; full `self-check.sh` (fmt + workspace tests + doctests + clippy -D warnings + `vibe check`) green at the Phase-3-complete boundary (specmap --check clean 442 units / 419 items / 430 edges / 0 suspects / 0 warnings; conform 57 frozen [2 MCP file-length + 55 vibe-core pub-doctest] / 0 new). SHRINK-PLAN v0.2's record is retained below as superseded history. The 2026-06-11 history-rewrite question stays open (AUDIT 2026-06-12-01 rider). `CONTINUE.md` predates CONVERT-PLAN entirely — this WAL header supersedes it until the final session-end checkpoint._
+_Updated: 2026-06-13 — **CONVERT-PLAN v0.1: Phases 0-6 COMPLETE, Phase 7 in progress.** Owner goal: execute the full-depth conversion plan to the end, Phase 7 owner-un-gated. The entire main plan (Phases 0-6) landed this run; Phase 7 (the MCP endgame) is partway. Git log is the authoritative per-item record; every commit cites its CONVERT-PLAN item._
+
+## Current phase
+
+**CONVERT-PLAN v0.1 — Phase 7 (MCP endgame), mid-flight.** The plan is
+[`spec/terraforms/CONVERT-PLAN-v0.1.md`](terraforms/CONVERT-PLAN-v0.1.md).
+
+**Done this run (Phases 0-6 + Phase 7.1-7.3c), newest last — all on
+`origin/main`, panel green at every commit:**
+
+- **Phases 0-3** (`173bb15`…`73b43ca`): hygiene + `CONFORM_GATED` 12;
+  vibe-core armor (7 newtypes, `pub-doctest` froze 55); declare surfaces
+  (vibe-publish cells); vibe-index full depth. (Recorded in the prior WAL
+  header, retained below.)
+- **4.2a** `2020a72` vendor domain → gated `vibe_registry::vendor`
+  (VendorObserver + Class-F VendorError).
+- **4.2b** `138d38d` redirect-sync's tag-mirroring → `vibe_publish::redirect_sync`.
+  **Finding: the plan filed it under vibe-registry, but the dep graph
+  forbids it — vibe-publish depends on vibe-registry, so the tag-sync
+  (which needs git_publish) went to vibe-publish (its true home).**
+- **4.5+4.6** `5a267b7` drained InstallError to Class-F + 12 unwrap sites
+  (structural Comparator, let-else, fn-grain deviates, test cfg) and
+  flipped **vibe-cli into `CONFORM_GATED` → 13**.
+- **5.1** `ad73baf` specmark + specmark-grammar into the gate → **15**;
+  drained 12 seam-doctests (incl. proc-macro doctests that invoke the
+  macros), tests-out kept specmark-grammar/lib.rs ≤600.
+- **5.2** `cee4e1a` the **`ambient-env` rule** (frontend v6 `EnvRead`
+  facts + the rule). **Finding: ≤6 prediction FALSIFIED — ~13 env reads;
+  landed at ZERO freeze via an `ENV_ROOTS` allowlist (11 config-resolution
+  files) + 2 fn-grain deviates (activation PATH probe, redirect-sync
+  runtime token).**
+- **5.3** xtask exemption already recorded (no-op).
+- **6.1** `96ddcb7` PROP-000 kind audit — **#token-secrecy is the lone
+  code-traceable `req`; the other 23 sections are informative
+  (unmarked = informative under the specmark grammar).** 6.2/6.4 already
+  satisfied; 6.3 process docs already unmarked.
+- **7.1** `652f3fd` **PROP-015 spec home** for vibe-mcp (server / tools /
+  errors / agent-detection / agent-config / skill / lifecycle units).
+- **7.2** `4d2fdd6` tools.rs → **`McpTool` seam + 3 `#[cell]`s** + Class-F
+  on ToolError/ServerError + a `tests/tools_oracle.rs` cell oracle; this
+  drained tools.rs under 600 (one MCP file-length baseline entry pruned).
+- **7.3a** `108d07d` agent-profile domain → `vibe_mcp::agents` (Scope/
+  What/Agent/ConfigFormat/ConfigPayload/detect_agents).
+- **7.3b** `89c47d2` config-file I/O → `vibe_mcp::agent_config`
+  (read/merge/strip JSON+TOML, foreign-key preservation).
+- **7.3c** `02bb65b` skill writer + install reports → `vibe_mcp::install`
+  (install_skill, AgentInstallReport, SkillInstallReport, skill_template.md).
+
+**Gate panel (last verified, at 7.3c):** `conform check` — **56 frozen /
+0 new** (1 file-length = `vibe-cli/src/commands/mcp.rs`; 55 vibe-core
+pub-doctest); `specmap --check` — clean (454 units / 455 edges / 0
+suspects / 0 warnings); **`CONFORM_GATED` = 15**; **DBT-0020 dispositioned
+10 → 1** (only `vibe_cli::commands::mcp::run`, the dispatch fn, remains).
+mcp.rs is **1781 lines** (was 2639).
+
+**REMAINING — Phase 7 tail (resume here, in order):**
+
+1. **7.3d — get `vibe-cli/src/commands/mcp.rs` ≤600.** Two moves:
+   (a) **Relocate the moved-code tests.** mcp.rs still carries ~500 lines
+   of tests, most testing relocated code — the agent-profile tests
+   (Scope/What/Agent parse, config_path/skill_path resolution,
+   build_mcp_entry via the `json_payload`/`toml_payload` helpers,
+   detect_agents) belong in `vibe_mcp::agents`; the has_vibe_toml /
+   resolve-root / driver tests stay.
+   (b) **Either move the residual domain** (the walkers
+   `walk_install`/`walk_upgrade`/`walk_uninstall` + the MCP-entry ops
+   `decide_action`/`preview_install_mcp`/`apply_install_mcp`/
+   `upgrade_mcp_entry`/`uninstall_mcp_entry`/`uninstall_skill`) into
+   `vibe_mcp::install` (pure orchestration over the moved primitives — no
+   dialoguer/output dep), **and/or split** the remaining CLI driver
+   surface (run/run_serve/run_install/run_status/run_upgrade/run_uninstall
+   + the 3 interactive_* + the 4 print_* + the report envelopes) into a
+   `commands/mcp/` module family (mod = dispatch + resolve-root; install;
+   lifecycle = status/upgrade/uninstall; render = print_*), each ≤600.
+2. **7.4 — close the ledgers.** Add a `scope!("…PROP-015#lifecycle")` to
+   the CLI mcp module (resolves the last DBT-0020 orphan `run`); remove
+   `vibe-mcp` from `specmap-ratchet.json`'s exempt list AND its DBT-0020
+   dispositions; flip **`vibe-mcp` into `CONFORM_GATED` → 16** (remove its
+   `CONFORM_EXEMPT` line; drain-then-flip — verify 0 new); the
+   `vibe-cli/.../mcp.rs` file-length baseline entry drains once mcp.rs is
+   ≤600 → **file-length baseline 0** (re-freeze: baseline → 55, the
+   vibe-core pub-doctest ratchet only). Then full `self-check.sh`
+   (Git Bash, check `$?`).
+
+**Cadence (every batch):** per-crate gated batch → topic commit citing the
+CONVERT-PLAN item → build + crate tests + `cargo fmt --all` + `conform
+check` (0 new) + `specmap --check` (regen on tag/line move; `conform
+freeze` only on a reviewed shrink) → push. Any batch is a safe stop.
+
+**Non-obvious findings this run:** (1) `cell-has-oracle` needs the cell
+type referenced from an **integration test under `crates/<c>/tests/`**
+(import or ctor) — inline unit tests don't count. (2) The frontend parses
+files standalone, so a non-`#[test]` helper in an out-of-line `tests.rs`
+needs its OWN `#[cfg(test)]` (the lib/tests.rs idiom) OR its unwraps read
+as domain. (3) `attr_text` keys on the LAST path segment, so
+`#[specmark::spec(...)]` renders as `spec(...)` and satisfies
+error-enum-cites-req without a `use` import. (4) Machine quirks unchanged:
+PS5.1 corrupts UTF-8-no-BOM round-trips (edit via tools / Git Bash sed,
+never PowerShell Set-Content); `bash` in PowerShell = WSL so
+`self-check.sh` runs through Git Bash; `git commit` via `-F - <<'MSG'`
+heredoc only; Windows UAC blocks `*install*`-named test exes.
+
+**Owner court (carried, unchanged):** the 2026-06-11 history-rewrite
+question; publishing the two Discipline packages; production solver
+selection; PROP-010 design session; Discipline v0.3 inputs.
 
 ## Prior phase (superseded by CONVERT-PLAN v0.1, in progress — see the Updated summary above and the git log)
 
