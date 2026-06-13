@@ -70,6 +70,8 @@ fn is_false(b: &bool) -> bool {
 /// let group = vibe_core::Group::parse("org.vibevm").unwrap();
 /// assert!(lf.find(&group, "wal").is_none());
 /// ```
+#[specmark::spec(implements = "spec://vibevm/modules/vibe-registry/PROP-002#lockfile")]
+#[specmark::spec(implements = "spec://vibevm/VIBEVM-SPEC#lockfile-schema")]
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Lockfile {

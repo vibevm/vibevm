@@ -926,6 +926,13 @@
     },
     {
       "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/lockfile.rs",
+      "item_kind": "struct",
+      "line": 56,
+      "symbol": "vibe_core::manifest::lockfile::Lockfile"
+    },
+    {
+      "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/lockfile/tests.rs",
       "item_kind": "fn",
       "line": 57,
@@ -3962,6 +3969,22 @@
       "file": "crates/vibe-core/src/manifest/lockfile.rs",
       "from_symbol": "vibe_core::manifest::lockfile",
       "line": 27,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-002#lockfile",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/lockfile.rs",
+      "from_symbol": "vibe_core::manifest::lockfile::Lockfile",
+      "line": 74,
+      "provenance": "authored",
+      "uri": "spec://vibevm/VIBEVM-SPEC#lockfile-schema",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/lockfile.rs",
+      "from_symbol": "vibe_core::manifest::lockfile::Lockfile",
+      "line": 73,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#lockfile",
       "verb": "implements"
