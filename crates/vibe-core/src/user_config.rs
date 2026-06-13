@@ -32,6 +32,16 @@ use serde::{Deserialize, Serialize};
 use specmark::spec;
 
 /// Parsed `~/.config/vibe/config.toml`.
+///
+/// ```
+/// use vibe_core::user_config::UserConfig;
+///
+/// // The all-defaults config: no env fallbacks, default install
+/// // settings. This is what `load()` returns when no file exists.
+/// let cfg = UserConfig::default();
+/// assert!(cfg.env.is_empty());
+/// assert!(cfg.install.is_default());
+/// ```
 #[derive(Debug, Default, Clone, PartialEq, Eq, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 pub struct UserConfig {

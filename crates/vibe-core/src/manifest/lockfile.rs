@@ -56,6 +56,18 @@ fn is_false(b: &bool) -> bool {
 /// The on-disk TOML uses `[[package]]` array-of-tables. Serde's default
 /// behavior flattens this when the field is named `package` and typed as
 /// `Vec<LockedPackage>`.
+///
+/// ```
+/// use vibe_core::manifest::Lockfile;
+///
+/// // A fresh lockfile carries no packages and the current schema.
+/// let lf = Lockfile::empty("vibe 0.1.0", "2026-01-01T00:00:00Z");
+/// assert!(lf.packages.is_empty());
+/// assert_eq!(lf.meta.schema_version, vibe_core::manifest::CURRENT_SCHEMA_VERSION);
+/// // Lookups are by the (group, name) identity; nothing is locked yet.
+/// let group = vibe_core::Group::parse("org.vibevm").unwrap();
+/// assert!(lf.find(&group, "wal").is_none());
+/// ```
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Lockfile {

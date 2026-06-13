@@ -47,6 +47,16 @@ use super::project::{
 use super::{read_toml, write_toml};
 
 /// The unified `vibe.toml` document. See the module docs for the role model.
+///
+/// ```
+/// use vibe_core::manifest::Manifest;
+///
+/// let m = Manifest::parse_str(
+///     "[package]\ngroup = \"org.vibevm\"\nname = \"wal\"\nkind = \"flow\"\nversion = \"0.1.0\"\n",
+/// ).unwrap();
+/// m.validate().unwrap(); // the project XOR package rule holds
+/// assert_eq!(m.require_package().unwrap().name, "wal");
+/// ```
 #[spec(
     implements = "spec://vibevm/modules/vibe-workspace/PROP-007#unified-manifest",
     r = 1

@@ -1117,7 +1117,7 @@
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/user_config.rs",
       "item_kind": "enum",
-      "line": 140,
+      "line": 150,
       "symbol": "vibe_core::user_config::UserConfigError"
     },
     {
@@ -3877,7 +3877,7 @@
     {
       "file": "crates/vibe-core/src/manifest/document.rs",
       "from_symbol": "vibe_core::manifest::document::Manifest",
-      "line": 50,
+      "line": 60,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-007#unified-manifest",
       "verb": "implements",
@@ -4194,7 +4194,7 @@
     {
       "file": "crates/vibe-core/src/user_config.rs",
       "from_symbol": "vibe_core::user_config::UserConfigError",
-      "line": 141,
+      "line": 151,
       "provenance": "authored",
       "uri": "spec://vibevm/VIBEVM-SPEC#configuration-sources-in-precedence-order",
       "verb": "implements"
