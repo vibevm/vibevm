@@ -21,7 +21,7 @@ pub mod timestamp;
 pub mod user_config;
 pub mod values;
 
-pub use capability_ref::CapabilityRef;
+pub use capability_ref::{CapabilityName, CapabilityNamespace, CapabilityRef};
 pub use error::{Error, Result};
 pub use package_ref::{Group, PackageKind, PackageName, PackageRef, VersionSpec};
 pub use rel_path::RelPath;

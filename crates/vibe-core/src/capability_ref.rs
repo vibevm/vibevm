@@ -33,6 +33,91 @@ use serde::{Deserialize, Serialize};
 use crate::error::{Error, Result};
 use crate::package_ref::{VersionSpec, validate_package_name};
 
+/// The **namespace** half of a capability identifier — kebab-case
+/// (PROP-002 §2.9). A distinct type from [`CapabilityName`] so the two
+/// halves of a `<namespace>:<name>` tuple cannot be transposed by
+/// accident. `serde(transparent)`; the grammar is the shared kebab rule.
+#[derive(Debug, Clone, PartialEq, Eq, Hash, PartialOrd, Ord, Serialize, Deserialize)]
+#[serde(transparent)]
+pub struct CapabilityNamespace(String);
+
+/// The **name** half of a capability identifier — kebab-case
+/// (PROP-002 §2.9). Distinct from [`CapabilityNamespace`] for the same
+/// transposition-safety reason. `serde(transparent)`.
+#[derive(Debug, Clone, PartialEq, Eq, Hash, PartialOrd, Ord, Serialize, Deserialize)]
+#[serde(transparent)]
+pub struct CapabilityName(String);
+
+macro_rules! kebab_newtype {
+    ($ty:ident) => {
+        impl $ty {
+            /// Parse and validate against the shared kebab-case grammar.
+            pub fn parse(input: &str) -> Result<Self> {
+                validate_package_name(input)?;
+                Ok($ty(input.to_owned()))
+            }
+
+            /// Wrap a string already proven valid (reconstructed from a
+            /// validated [`CapabilityRef`]); skips the re-check.
+            pub fn from_validated(s: String) -> Self {
+                $ty(s)
+            }
+
+            /// The value as a string slice.
+            pub fn as_str(&self) -> &str {
+                &self.0
+            }
+        }
+
+        impl fmt::Display for $ty {
+            fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+                f.write_str(&self.0)
+            }
+        }
+
+        impl std::ops::Deref for $ty {
+            type Target = str;
+            fn deref(&self) -> &str {
+                &self.0
+            }
+        }
+
+        impl FromStr for $ty {
+            type Err = Error;
+            fn from_str(s: &str) -> Result<Self> {
+                $ty::parse(s)
+            }
+        }
+
+        impl From<$ty> for String {
+            fn from(v: $ty) -> String {
+                v.0
+            }
+        }
+
+        impl AsRef<str> for $ty {
+            fn as_ref(&self) -> &str {
+                &self.0
+            }
+        }
+
+        impl PartialEq<str> for $ty {
+            fn eq(&self, other: &str) -> bool {
+                self.0 == other
+            }
+        }
+
+        impl PartialEq<&str> for $ty {
+            fn eq(&self, other: &&str) -> bool {
+                self.0 == *other
+            }
+        }
+    };
+}
+
+kebab_newtype!(CapabilityNamespace);
+kebab_newtype!(CapabilityName);
+
 /// A capability identifier plus an optional version constraint.
 ///
 /// Semantics:
@@ -46,8 +131,8 @@ use crate::package_ref::{VersionSpec, validate_package_name};
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(try_from = "String", into = "String")]
 pub struct CapabilityRef {
-    pub namespace: String,
-    pub name: String,
+    pub namespace: CapabilityNamespace,
+    pub name: CapabilityName,
     pub version: VersionSpec,
 }
 
@@ -68,8 +153,8 @@ impl CapabilityRef {
             reason: "name is not a valid kebab-case identifier".into(),
         })?;
         Ok(Self {
-            namespace,
-            name,
+            namespace: CapabilityNamespace::from_validated(namespace),
+            name: CapabilityName::from_validated(name),
             version,
         })
     }
@@ -110,8 +195,8 @@ impl CapabilityRef {
         };
 
         Ok(Self {
-            namespace: ns.to_owned(),
-            name: name.to_owned(),
+            namespace: CapabilityNamespace::from_validated(ns.to_owned()),
+            name: CapabilityName::from_validated(name.to_owned()),
             version,
         })
     }
