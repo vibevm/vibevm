@@ -76,6 +76,15 @@ impl FromStr for PackageKind {
 /// `groupId` shape. Together with `name`, a group forms a package's
 /// identity: `name` is unique *within* a group (PROP-008 §2.2), so
 /// `(group, name)` identifies a package without `kind`.
+///
+/// ```
+/// use vibe_core::Group;
+///
+/// let g = Group::parse("org.vibevm").unwrap();
+/// assert_eq!(g.as_str(), "org.vibevm");
+/// assert!(Group::parse("Org.Vibevm").is_err());  // uppercase rejected
+/// assert!(Group::parse("org..vibevm").is_err()); // empty segment rejected
+/// ```
 #[derive(Debug, Clone, PartialEq, Eq, Hash, PartialOrd, Ord, Serialize, Deserialize)]
 #[serde(try_from = "String", into = "String")]
 pub struct Group(String);
@@ -284,6 +293,17 @@ impl PartialEq<PackageName> for &str {
 /// - `flow:wal@~0.3.1` → `Req(~0.3.1)` (tilde range).
 /// - `flow:wal@>=0.2, <1.0` → compound constraint (any
 ///   `semver::VersionReq` syntax).
+///
+/// ```
+/// use vibe_core::VersionSpec;
+///
+/// // Bare semver is caret — the Cargo / npm / Poetry default.
+/// let v = VersionSpec::parse("0.3.0").unwrap();
+/// assert!(v.matches(&"0.3.5".parse().unwrap()));
+/// assert!(!v.matches(&"0.4.0".parse().unwrap()));
+/// // Empty input resolves to the latest stable.
+/// assert_eq!(VersionSpec::parse("").unwrap(), VersionSpec::Latest);
+/// ```
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum VersionSpec {
     /// No version given — resolve to the latest stable.
@@ -348,6 +368,16 @@ impl fmt::Display for VersionSpec {
 /// Serde goes via the string wire form, so a `PackageRef` appears inline in
 /// TOML (e.g. as a `[requires.packages]` key) and the schema is
 /// self-documenting.
+///
+/// ```
+/// use vibe_core::PackageRef;
+///
+/// let r = PackageRef::parse("flow:org.vibevm/wal@^0.3").unwrap();
+/// assert_eq!(r.qualified_name(), "org.vibevm/wal");
+/// assert!(r.is_qualified());
+/// // Display round-trips the canonical wire form.
+/// assert_eq!(r.to_string(), "flow:org.vibevm/wal@^0.3");
+/// ```
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(try_from = "String", into = "String")]
 pub struct PackageRef {

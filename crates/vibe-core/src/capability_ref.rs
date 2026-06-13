@@ -128,6 +128,15 @@ kebab_newtype!(CapabilityName);
 ///   constraint the consumer accepts from any provider.
 ///
 /// The type does not distinguish the two roles at the Rust level — callers do.
+///
+/// ```
+/// use vibe_core::CapabilityRef;
+///
+/// let c = CapabilityRef::parse("ui:landing-page@^0.3").unwrap();
+/// assert_eq!(c.qualified(), "ui:landing-page");
+/// assert_eq!(c.namespace.as_str(), "ui");
+/// assert_eq!(c.name, "landing-page"); // CapabilityName compares to &str
+/// ```
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(try_from = "String", into = "String")]
 pub struct CapabilityRef {
