@@ -169,21 +169,12 @@ pub(super) fn apply_git_source_flag(
         token_env: args.git_token_env.clone(),
     };
 
-    // Drop any prior registry-resolved entry for the same pkgref —
-    // M1.15 forbids `(group, name)` collision between
-    // `requires.packages` and `requires.git_packages`.
-    manifest
-        .requires
-        .packages
-        .retain(|p| !(p.group.as_ref() == Some(&dep.group) && p.name == dep.name));
-    // Replace any prior git-source entry for the same pkgref (same
-    // shape as updating an existing constraint).
-    manifest
-        .requires
-        .git_packages
-        .retain(|g| !(g.group == dep.group && g.name == dep.name));
-    manifest.requires.git_packages.push(dep);
-
+    // The (group, name) dedup discipline across `requires.packages` /
+    // `requires.git_packages` lives in the orchestrator now — the CLI
+    // translates flags into the typed dep and hands it over, then
+    // persists before resolving so a panic mid-resolve cannot strand the
+    // declaration off disk.
+    vibe_install::record_git_source(manifest, dep);
     manifest.write(project_root.join(Manifest::FILENAME))?;
     Ok(())
 }

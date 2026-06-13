@@ -45,7 +45,7 @@ pub use fetched::{Fetched, NodeInstallMeta};
 pub use plan::{InstallRequest, Plan, PlannedInstall, plan};
 pub use record::{
     exact_pinned_pkgref, finalize_pkgref_for_manifest, merge_manifest_requires,
-    merge_root_dependencies,
+    merge_root_dependencies, record_git_source,
 };
 
 /// The package source an install runs against — the seam between the

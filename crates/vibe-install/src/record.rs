@@ -5,7 +5,7 @@
 
 specmark::scope!("spec://vibevm/VIBEVM-SPEC#install-workflow-in-detail");
 
-use vibe_core::manifest::{LockedPackage, Lockfile, Manifest, SourceKind};
+use vibe_core::manifest::{GitPackageDep, LockedPackage, Lockfile, Manifest, SourceKind};
 use vibe_core::{ContentHash, PackageName, PackageRef, SourceUrl, VersionSpec};
 use vibe_resolver::ResolvedNode;
 
@@ -132,6 +132,33 @@ pub fn merge_manifest_requires(manifest: &mut Manifest, roots: &[PackageRef]) ->
         }
     }
     changed
+}
+
+/// Record a `--git` source declaration into `manifest.requires`:
+/// replace any prior git-source entry for the same `(group, name)`
+/// (updating an existing declaration) and drop a conflicting
+/// registry-resolved entry from `requires.packages`, since M1.15 forbids
+/// a `(group, name)` collision between the two tables — the
+/// `RequiresWire` deserialiser rejects it on the next parse. Pure: it
+/// mutates in memory and the caller persists, exactly as
+/// [`merge_manifest_requires`] does (the CLI writes before it resolves,
+/// so a panic mid-resolve cannot strand the declaration off disk). This
+/// is the manifest-mutation discipline the CLI used to own inline; the
+/// CLI now translates the `--git*` flags into the [`GitPackageDep`] and
+/// hands it here.
+pub fn record_git_source(manifest: &mut Manifest, dep: GitPackageDep) {
+    // Drop any prior registry-resolved entry for the same pkgref.
+    manifest
+        .requires
+        .packages
+        .retain(|p| !(p.group.as_ref() == Some(&dep.group) && p.name == dep.name));
+    // Replace any prior git-source entry for the same pkgref (same shape
+    // as updating an existing constraint).
+    manifest
+        .requires
+        .git_packages
+        .retain(|g| !(g.group == dep.group && g.name == dep.name));
+    manifest.requires.git_packages.push(dep);
 }
 
 /// Build a [`LockedPackage`] from a fetched node. The lockfile records
