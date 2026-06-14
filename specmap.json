@@ -10483,7 +10483,7 @@
     },
     {
       "anchor": "prop-017",
-      "content_hash": "sha256:37a54f781097e03306861a40388689f7d60270384208beddbde27ba6d7867802",
+      "content_hash": "sha256:f928bdd5fe101ff1d8b55c3bdc490fe4f2ce996757e75727f7278eb6999edfa5",
       "doc_path": "modules/vibe-resolver/PROP-017",
       "file": "spec/modules/vibe-resolver/PROP-017-resolvo-resolver.md",
       "heading": "PROP-017 — Resolvo as the production resolver",
@@ -10590,12 +10590,21 @@
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-017#determinism"
     },
     {
-      "anchor": "references",
-      "content_hash": "sha256:723e27177a455f72aa07aa345a33b3b93f67d6469e0049a3a3e97bfd3079f765",
+      "anchor": "future-work",
+      "content_hash": "sha256:f0df846558294448cf997206e442ee91d47fc739e97bbe4d874aa79b91d9839e",
       "doc_path": "modules/vibe-resolver/PROP-017",
       "file": "spec/modules/vibe-resolver/PROP-017-resolvo-resolver.md",
-      "heading": "8. References",
+      "heading": "8. Future work",
       "line": 285,
+      "uri": "spec://vibevm/modules/vibe-resolver/PROP-017#future-work"
+    },
+    {
+      "anchor": "references",
+      "content_hash": "sha256:99b8d6c4a96fd345af3950d89b7776998f674c0530cfbc8c35f5cf05c7cb722e",
+      "doc_path": "modules/vibe-resolver/PROP-017",
+      "file": "spec/modules/vibe-resolver/PROP-017-resolvo-resolver.md",
+      "heading": "9. References",
+      "line": 302,
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-017#references"
     },
     {

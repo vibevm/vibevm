@@ -282,7 +282,24 @@ default solver becomes `resolvo` at S6.
 
 ---
 
-## 8. References {#references}
+## 8. Future work {#future-work}
+
+- **Capability resolution via a registry reverse-index.** The near-term
+  capability handling (§3) resolves `[requires.capabilities]` against a
+  pre-scan of the transitive package closure — correct, and strictly
+  stronger than naive's already-seen-graph matching, but it forgoes
+  laziness for capabilities and only finds providers reachable through
+  the package-dependency graph. A fuller design adds a real
+  `capability → providers` **reverse-index** to the registry (the
+  git-backed registry has none today): the resolver would then enumerate
+  capability providers *lazily*, exactly as it enumerates package
+  versions, and so find providers that no package edge references. This
+  is new registry infrastructure — an index format, a publish-time
+  emitter, and a query path — recorded here as the capability layer's
+  natural evolution. Not scheduled; the trigger is capability routing
+  across packages-not-yet-seen becoming load-bearing.
+
+## 9. References {#references}
 
 - resolvo: <https://github.com/prefix-dev/resolvo> (BSD-3-Clause), crate
   `resolvo 0.11` (MSRV 1.85.1); `Interner` + async `DependencyProvider`,
