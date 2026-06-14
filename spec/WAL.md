@@ -12,6 +12,21 @@ under `crates/vibe-core/src/` now teaches by one compiled doctest, and
 `conform-baseline.json` carries an empty `findings` array. vibe-core stays
 in `GATED_PUB_DOCTEST` (gate armed against new undocumented types).
 
+**Standing instrument — DISCIPLINE-SWEEP v0.1 (2026-06-14).** A recurring
+(daily/weekly) guardian now holds the tree inside the Discipline between
+campaigns:
+[`spec/terraforms/DISCIPLINE-SWEEP-v0.1.md`](terraforms/DISCIPLINE-SWEEP-v0.1.md),
+driven by `cargo xtask health` — a no-LLM fact collector
+(`xtask/src/health.rs`) that reuses the conform fact frontend and emits
+`terraform/health/latest.json`: per-crate public-type doctest coverage,
+the `file-length` danger band, the ranked `pub-doctest` drain/promotion
+backlog, and the deviation-debt census (deterministic given the tree —
+its git diff is the health delta). At authoring it flags `boot.rs` at the
+600 landmine (+13 in the danger band), four zero-gap promotion candidates
+(conform-core, conform-frontend-rust, env-audit, specmark-grammar), and a
+~260-type drain backlog led by vibe-install (9). The collector is the
+guide; the gates remain truth.
+
 **Prior — CONVERT-PLAN v0.1 — COMPLETE (Phases 0-7).** The plan is
 [`spec/terraforms/CONVERT-PLAN-v0.1.md`](terraforms/CONVERT-PLAN-v0.1.md);
 its full-depth conversion of strata B/C is done. No CONVERT-PLAN or
