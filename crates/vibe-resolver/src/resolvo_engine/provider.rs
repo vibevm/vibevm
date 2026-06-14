@@ -10,7 +10,7 @@
 //! the first provider error is stashed and surfaced after the solve.
 
 use std::cell::RefCell;
-use std::collections::HashMap;
+use std::collections::{BTreeSet, HashMap};
 
 use resolvo::utils::Pool;
 use resolvo::{
@@ -21,6 +21,7 @@ use resolvo::{
 use vibe_core::manifest::Manifest;
 use vibe_core::{Group, VersionSpec};
 
+use super::capabilities::CapIndex;
 use super::version_set::SemverVersionSet;
 use crate::{DepProviderError, VersionEnumerator};
 
@@ -30,6 +31,8 @@ type PkgName = String;
 /// resolvo adapter over a vibevm `VersionEnumerator`.
 pub(crate) struct VibevmResolvoProvider<'p, P: VersionEnumerator> {
     provider: &'p P,
+    /// capability → providers, pre-scanned from the package closure.
+    cap_providers: CapIndex,
     pool: Pool<SemverVersionSet, PkgName>,
     /// Candidate solvables per package name, enumerated on first ask.
     candidates: RefCell<HashMap<NameId, Vec<SolvableId>>>,
@@ -40,9 +43,10 @@ pub(crate) struct VibevmResolvoProvider<'p, P: VersionEnumerator> {
 }
 
 impl<'p, P: VersionEnumerator> VibevmResolvoProvider<'p, P> {
-    pub(crate) fn new(provider: &'p P) -> Self {
+    pub(crate) fn new(provider: &'p P, cap_providers: CapIndex) -> Self {
         VibevmResolvoProvider {
             provider,
+            cap_providers,
             pool: Pool::new(),
             candidates: RefCell::new(HashMap::new()),
             manifests: RefCell::new(HashMap::new()),
@@ -73,6 +77,19 @@ impl<'p, P: VersionEnumerator> VibevmResolvoProvider<'p, P> {
         let name_id = self.intern_name(group, name);
         self.pool
             .intern_version_set(name_id, SemverVersionSet::None)
+    }
+
+    /// Intern an explicit-version-set requirement — pins a capability
+    /// provider to exactly the versions of it that provide the capability.
+    fn intern_explicit(
+        &self,
+        group: &Group,
+        name: &str,
+        versions: BTreeSet<semver::Version>,
+    ) -> VersionSetId {
+        let name_id = self.intern_name(group, name);
+        self.pool
+            .intern_version_set(name_id, SemverVersionSet::Explicit(versions))
     }
 
     /// Parse a `NameId` back into `(group, name)`.
@@ -291,6 +308,41 @@ impl<'p, P: VersionEnumerator> DependencyProvider for VibevmResolvoProvider<'p, 
                     "`[[requires_any]]` declared by `{group}/{name}` has no \
                      group-qualified alternative"
                 ))),
+            }
+        }
+
+        // `[requires.capabilities]` → a Union over the pre-scanned
+        // providers whose advertised version matches the requirement,
+        // each pinned to exactly the versions that provide it (PROP-017
+        // §3). naive can only satisfy a capability from packages already
+        // pulled in; this pulls a provider in. No match → no requirement
+        // here; `capabilities::verify` yields CapabilityUnmet post-solve.
+        for cap_req in &manifest.requires.capabilities {
+            let mut by_provider: HashMap<(Group, String), BTreeSet<semver::Version>> =
+                HashMap::new();
+            if let Some(providers) = self.cap_providers.get(&cap_req.qualified()) {
+                for cp in providers {
+                    if cap_req.version.matches(&cp.provided_version) {
+                        by_provider
+                            .entry((cp.group.clone(), cp.name.clone()))
+                            .or_default()
+                            .insert(cp.version.clone());
+                    }
+                }
+            }
+            let mut sorted: Vec<((Group, String), BTreeSet<semver::Version>)> =
+                by_provider.into_iter().collect();
+            sorted.sort_by(|a, b| {
+                (a.0.0.as_str(), a.0.1.as_str()).cmp(&(b.0.0.as_str(), b.0.1.as_str()))
+            });
+            let vs_ids: Vec<VersionSetId> = sorted
+                .into_iter()
+                .map(|((pg, pn), versions)| self.intern_explicit(&pg, &pn, versions))
+                .collect();
+            let mut it = vs_ids.into_iter();
+            if let Some(first) = it.next() {
+                let union = self.pool.intern_version_set_union(first, it);
+                requirements.push(union.into());
             }
         }
 

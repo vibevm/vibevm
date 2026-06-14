@@ -12,6 +12,7 @@
 //! explored. The solver runs on the default `NowOrNeverRuntime`, so the
 //! synchronous vibevm provider drives it with no async runtime.
 
+mod capabilities;
 mod provider;
 mod version_set;
 
@@ -80,7 +81,10 @@ impl<P: VersionEnumerator> DepSolver for ResolvoDepSolver<P> {
     #[spec(implements = "spec://vibevm/modules/vibe-resolver/PROP-017#dominance")]
     #[spec(implements = "spec://vibevm/modules/vibe-registry/PROP-002#lockfile")]
     fn solve(&self, roots: &[PackageRef]) -> Result<ResolvedGraph, SolveError> {
-        let rp = VibevmResolvoProvider::new(&self.provider);
+        // Pre-scan the package closure for capability providers (PROP-017
+        // §3) before building the resolvo provider.
+        let cap_index = capabilities::prescan(&self.provider, roots);
+        let rp = VibevmResolvoProvider::new(&self.provider, cap_index);
 
         // Root requirements + the (group, name) root order (deduplicated,
         // input order preserved) the output builder needs.
@@ -127,6 +131,7 @@ impl<P: VersionEnumerator> DepSolver for ResolvoDepSolver<P> {
                 let rp = solver.provider();
                 let mut chosen: HashMap<(Group, String), Chosen> = HashMap::new();
                 let mut obsolete: HashSet<(Group, String)> = HashSet::new();
+                let mut selected = Vec::new();
                 for id in solvables {
                     let Some((group, name, version)) = rp.solvable_parts(id) else {
                         return Err(SolveError::Provider(DepProviderError::Other(
@@ -145,6 +150,7 @@ impl<P: VersionEnumerator> DepSolver for ResolvoDepSolver<P> {
                             obsolete.insert((g, ob.name.to_string()));
                         }
                     }
+                    selected.push((format!("{group}/{name}"), version.clone(), manifest));
                     chosen.insert(
                         (group, name),
                         Chosen {
@@ -154,6 +160,10 @@ impl<P: VersionEnumerator> DepSolver for ResolvoDepSolver<P> {
                         },
                     );
                 }
+                // Capability requirements of the selected packages are
+                // verified against the selected set — the clean
+                // CapabilityUnmet verdict (PROP-017 §3).
+                capabilities::verify(&selected)?;
                 Ok(build_resolved_graph(&root_order, chosen, &obsolete))
             }
             Err(UnsolvableOrCancelled::Unsolvable(conflict)) => Err(SolveError::Unsatisfiable {
@@ -480,5 +490,53 @@ mod tests {
             graph.find(&org(), "old").is_none(),
             "the obsoleted package is dropped from the output"
         );
+    }
+
+    /// Capabilities: `a` requires package `b` AND capability `capability:c`;
+    /// `b` provides it. naive checks the capability before `b` is processed
+    /// and fails (order-dependence); resolvo's pre-scan finds the provider
+    /// across the closure and the post-solve check passes.
+    #[test]
+    fn resolvo_satisfies_capability_via_required_package() {
+        let a = "[package]\ngroup = \"org.vibevm\"\nname = \"a\"\nkind = \"flow\"\nversion = \"1.0.0\"\n\n[requires.packages]\n\"org.vibevm/b\" = \"^1\"\n\n[requires]\ncapabilities = [\"capability:c@^1\"]\n";
+        let b = "[package]\ngroup = \"org.vibevm\"\nname = \"b\"\nkind = \"flow\"\nversion = \"1.0.0\"\n\n[provides]\ncapabilities = [\"capability:c@1.0.0\"]\n";
+        let seeds = [a.to_string(), b.to_string()];
+        let seeds: Vec<&str> = seeds.iter().map(String::as_str).collect();
+
+        let naive = NaiveDepSolver::new(MapProvider::new(&seeds));
+        assert!(
+            matches!(
+                naive.solve(&roots(&["a"])).unwrap_err(),
+                SolveError::CapabilityUnmet { .. }
+            ),
+            "naive's order-dependent capability check fails this world"
+        );
+
+        let resolvo = ResolvoDepSolver::new(MapProvider::new(&seeds));
+        let graph = resolvo.solve(&roots(&["a"])).unwrap();
+        assert!(
+            graph.find(&org(), "b").is_some(),
+            "the capability provider is pulled into the graph"
+        );
+    }
+
+    /// A required capability that nothing in the closure provides fails
+    /// with the clean `CapabilityUnmet` verdict, naming the requirer.
+    #[test]
+    fn resolvo_reports_unmet_capability() {
+        let a = "[package]\ngroup = \"org.vibevm\"\nname = \"a\"\nkind = \"flow\"\nversion = \"1.0.0\"\n\n[requires]\ncapabilities = [\"capability:c@^1\"]\n";
+        let seeds = [a.to_string()];
+        let seeds: Vec<&str> = seeds.iter().map(String::as_str).collect();
+        let resolvo = ResolvoDepSolver::new(MapProvider::new(&seeds));
+        match resolvo.solve(&roots(&["a"])).unwrap_err() {
+            SolveError::CapabilityUnmet {
+                capability,
+                requirer,
+            } => {
+                assert!(capability.contains("capability:c"));
+                assert_eq!(requirer, "org.vibevm/a");
+            }
+            other => panic!("expected CapabilityUnmet, got {other:?}"),
+        }
     }
 }

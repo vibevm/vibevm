@@ -277,7 +277,7 @@ fn verify_capability_requires(
 /// the same reading produces `1.0.0` which is a sensible anchor.
 /// `VersionSpec::Latest` (no version on the provides line) falls
 /// back to the providing package's resolved version.
-fn capability_version_for_provider(
+pub(crate) fn capability_version_for_provider(
     cap: &CapabilityRef,
     package_version: &semver::Version,
 ) -> semver::Version {

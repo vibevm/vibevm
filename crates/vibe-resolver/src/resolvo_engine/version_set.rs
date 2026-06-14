@@ -1,6 +1,7 @@
 //! `SemverVersionSet` — vibevm's version constraints expressed as a
 //! resolvo [`VersionSet`] over `semver::Version` (PROP-017 §2, §3).
 
+use std::collections::BTreeSet;
 use std::fmt;
 
 use resolvo::utils::VersionSet;
@@ -16,6 +17,10 @@ pub(crate) enum SemverVersionSet {
     Any,
     Req(semver::VersionReq),
     None,
+    /// An explicit set of versions — used to pin a capability provider to
+    /// exactly the versions of it that provide the required capability
+    /// (PROP-017 §3).
+    Explicit(BTreeSet<semver::Version>),
 }
 
 impl SemverVersionSet {
@@ -33,6 +38,7 @@ impl SemverVersionSet {
             SemverVersionSet::Any => true,
             SemverVersionSet::Req(req) => req.matches(version),
             SemverVersionSet::None => false,
+            SemverVersionSet::Explicit(set) => set.contains(version),
         }
     }
 }
@@ -47,6 +53,14 @@ impl fmt::Display for SemverVersionSet {
             SemverVersionSet::Any => f.write_str("*"),
             SemverVersionSet::Req(req) => write!(f, "{req}"),
             SemverVersionSet::None => f.write_str("(none)"),
+            SemverVersionSet::Explicit(set) => {
+                let joined = set
+                    .iter()
+                    .map(|v| v.to_string())
+                    .collect::<Vec<_>>()
+                    .join(" | ");
+                write!(f, "{{{joined}}}")
+            }
         }
     }
 }

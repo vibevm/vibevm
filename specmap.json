@@ -2874,14 +2874,14 @@
       "crate_name": "vibe-resolver",
       "file": "crates/vibe-resolver/src/resolvo_engine/mod.rs",
       "item_kind": "struct",
-      "line": 30,
+      "line": 31,
       "symbol": "vibe_resolver::resolvo_engine::ResolvoDepSolver"
     },
     {
       "crate_name": "vibe-resolver",
       "file": "crates/vibe-resolver/src/resolvo_engine/mod.rs",
       "item_kind": "fn",
-      "line": 80,
+      "line": 81,
       "symbol": "vibe_resolver::resolvo_engine::ResolvoDepSolver<P>::solve"
     },
     {
@@ -6630,7 +6630,7 @@
     {
       "file": "crates/vibe-resolver/src/resolvo_engine/mod.rs",
       "from_symbol": "vibe_resolver::resolvo_engine::ResolvoDepSolver",
-      "line": 64,
+      "line": 65,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-017#architecture",
       "verb": "implements"
@@ -6638,7 +6638,7 @@
     {
       "file": "crates/vibe-resolver/src/resolvo_engine/mod.rs",
       "from_symbol": "vibe_resolver::resolvo_engine::ResolvoDepSolver<P>::solve",
-      "line": 81,
+      "line": 82,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#lockfile",
       "verb": "implements"
@@ -6646,7 +6646,7 @@
     {
       "file": "crates/vibe-resolver/src/resolvo_engine/mod.rs",
       "from_symbol": "vibe_resolver::resolvo_engine::ResolvoDepSolver<P>::solve",
-      "line": 80,
+      "line": 81,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-017#dominance",
       "verb": "implements"
