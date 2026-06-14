@@ -17,7 +17,10 @@ use std::path::PathBuf;
 
 use vibe_publish::DirectGitCreator;
 use vibe_registry::{LocalRegistry, MultiRegistryResolver, RegistryError};
-use vibe_resolver::{DepSolver, LocalRegistryProvider, MultiRegistryProvider, NaiveDepSolver};
+use vibe_resolver::sat::Sat;
+use vibe_resolver::{
+    DepSolver, LocalRegistryProvider, MultiRegistryProvider, NaiveDepSolver, ResolvoDepSolver,
+};
 
 /// Where a selected value came from. The full chain is
 /// CLI > env > project file > built-in (GUIDE-RUST §3); v0 populates
@@ -43,9 +46,9 @@ pub struct Selected {
 /// them.
 #[derive(Debug, Clone, Copy)]
 pub struct SelectionFlags {
-    /// `solver` — which `DepSolver` cell solves. Today only `naive`
-    /// exists (DBT-0011 tracks the SAT upgrade); the flag is born so
-    /// the seam point is real before the second cell lands.
+    /// `solver` — which `DepSolver` cell solves. `resolvo` (CDCL SAT,
+    /// PROP-017) is the default since 2026-06-14; `naive` and `sat`
+    /// remain selectable fallbacks. The flag is the seam point.
     pub solver: Selected,
     /// `provider` — which `DepProvider` cell feeds the solver:
     /// `local-registry` when `--registry <path>` is given, else
@@ -69,10 +72,11 @@ pub struct FlagInfo {
 pub const FLAGS: &[FlagInfo] = &[
     FlagInfo {
         name: "solver",
-        default: "naive",
+        default: "resolvo",
         birth: "2026-06-10",
-        sunset: "when SatDepSolver lands and survives its oracle window, \
-                 naive demotes to the explicit fallback (PROP-003 §2.1)",
+        sunset: "none — resolvo is the default since 2026-06-14 (PROP-017, \
+                 it dominates naive on the differential oracle); naive and \
+                 sat stay as selectable fallbacks via the `solver` flag",
     },
     FlagInfo {
         name: "provider",
@@ -88,7 +92,7 @@ pub const FLAGS: &[FlagInfo] = &[
 pub fn selection_flags(registry_path_given: bool) -> SelectionFlags {
     SelectionFlags {
         solver: Selected {
-            value: "naive",
+            value: "resolvo",
             provenance: Provenance::BuiltIn,
         },
         provider: if registry_path_given {
@@ -142,11 +146,23 @@ pub fn dep_solver<'a>(
 ) -> Box<dyn DepSolver + 'a> {
     // recorded provenance: flags.solver / flags.provider carry it.
     match (flags.solver.value, flags.provider.value, resource) {
+        ("resolvo", "local-registry", ProviderResource::Local(r)) => {
+            Box::new(ResolvoDepSolver::new(LocalRegistryProvider::new(r)))
+        }
+        ("resolvo", "multi-registry", ProviderResource::Multi(m)) => {
+            Box::new(ResolvoDepSolver::new(MultiRegistryProvider::new(m)))
+        }
         ("naive", "local-registry", ProviderResource::Local(r)) => {
             Box::new(NaiveDepSolver::new(LocalRegistryProvider::new(r)))
         }
         ("naive", "multi-registry", ProviderResource::Multi(m)) => {
             Box::new(NaiveDepSolver::new(MultiRegistryProvider::new(m)))
+        }
+        ("sat", "local-registry", ProviderResource::Local(r)) => {
+            Box::new(Sat::new(LocalRegistryProvider::new(r)))
+        }
+        ("sat", "multi-registry", ProviderResource::Multi(m)) => {
+            Box::new(Sat::new(MultiRegistryProvider::new(m)))
         }
         (solver, provider, _) => unreachable!(
             "selection_flags is the only producer of flag values and never \
@@ -169,7 +185,7 @@ mod tests {
         let multi = selection_flags(false);
         assert_eq!(multi.provider.value, "multi-registry");
         assert_eq!(multi.provider.provenance, Provenance::BuiltIn);
-        assert_eq!(multi.solver.value, "naive");
+        assert_eq!(multi.solver.value, "resolvo");
         assert_eq!(multi.solver.provenance, Provenance::BuiltIn);
     }
 
