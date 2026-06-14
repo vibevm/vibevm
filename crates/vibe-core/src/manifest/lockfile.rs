@@ -81,6 +81,22 @@ pub struct Lockfile {
     pub packages: Vec<LockedPackage>,
 }
 
+/// `[meta]` — the lockfile's provenance header: who and when generated it,
+/// the schema version, and the resolution-wide records (solver, roots,
+/// language chain, active features, virtual capabilities).
+///
+/// ```
+/// use vibe_core::manifest::{LockfileMeta, CURRENT_SCHEMA_VERSION};
+///
+/// let m: LockfileMeta = toml::from_str(r#"
+///     generated_by = "vibe 0.1.0"
+///     generated_at = "2026-05-21T12:00:00Z"
+///     schema_version = 5
+///     solver = "resolvo-0.x"
+/// "#).unwrap();
+/// assert_eq!(m.schema_version, CURRENT_SCHEMA_VERSION);
+/// assert_eq!(m.solver.as_deref(), Some("resolvo-0.x"));
+/// ```
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct LockfileMeta {
@@ -128,6 +144,19 @@ pub struct LockfileMeta {
 }
 
 /// One LLM-emitted virtual capability record. PROP-003 §2.5.3.
+///
+/// ```
+/// use vibe_core::manifest::VirtualCapabilityRecord;
+///
+/// let v: VirtualCapabilityRecord = toml::from_str(r#"
+///     name = "interface:llm-coordinator"
+///     emitter = "anthropic:claude-opus-4-8"
+///     trace_id = "build-2026-05-21-abc"
+///     emitted_at = "2026-05-21T12:00:00Z"
+/// "#).unwrap();
+/// assert_eq!(v.name, "interface:llm-coordinator");
+/// assert_eq!(v.trace_id, "build-2026-05-21-abc");
+/// ```
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct VirtualCapabilityRecord {
@@ -147,6 +176,22 @@ pub struct VirtualCapabilityRecord {
 /// produced the entry. Maps onto the short-circuit branches in
 /// `MultiRegistryResolver::resolve`: `[[override]]` > path-source >
 /// git-source > registry-walk. PROP-002 §2.4.1, PROP-007 §2.5.
+///
+/// ```
+/// use vibe_core::manifest::{LockedPackage, SourceKind};
+///
+/// // The wire form is the lowercase name on a `[[package]].source_kind`:
+/// let p: LockedPackage = toml::from_str(r#"
+///     kind = "flow"
+///     name = "wal"
+///     group = "org.vibevm"
+///     version = "0.1.0"
+///     source_url = "packages/flow-wal"
+///     content_hash = "sha256:abc"
+///     source_kind = "path"
+/// "#).unwrap();
+/// assert_eq!(p.source_kind, Some(SourceKind::Path));
+/// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 pub enum SourceKind {
@@ -163,6 +208,28 @@ pub enum SourceKind {
 }
 
 /// One installed package, as it appears in the lockfile.
+///
+/// ```
+/// use vibe_core::manifest::{LockedPackage, SourceKind};
+/// use vibe_core::PackageKind;
+///
+/// let p: LockedPackage = toml::from_str(r#"
+///     kind = "flow"
+///     name = "wal"
+///     group = "org.vibevm"
+///     version = "0.3.0"
+///     registry = "vibespecs"
+///     source_url = "git@gitverse.ru:vibespecs/flow-wal.git"
+///     content_hash = "sha256:abc"
+///     source_kind = "registry"
+/// "#).unwrap();
+/// assert_eq!(p.kind, PackageKind::Flow);
+/// assert_eq!(p.name, "wal");
+/// assert_eq!(p.source_kind, Some(SourceKind::Registry));
+/// // Identity is (group, name, version, content_hash); `as_package_ref`
+/// // pins this exact installed version.
+/// assert_eq!(p.as_package_ref().unwrap().qualified_name(), "org.vibevm/wal");
+/// ```
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct LockedPackage {
@@ -263,6 +330,19 @@ pub struct LockedPackage {
 }
 
 /// One subskill entry under a package's `subskills_active` list.
+///
+/// ```
+/// use vibe_core::manifest::LockedSubskill;
+///
+/// let s: LockedSubskill = toml::from_str(r#"
+///     path = "stack/rust"
+///     delivery = "eager"
+///     files_written = ["spec/boot/15-flow-wal-rust.md"]
+/// "#).unwrap();
+/// assert_eq!(s.path, "stack/rust");
+/// assert_eq!(s.delivery, "eager");
+/// assert_eq!(s.files_written.len(), 1);
+/// ```
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct LockedSubskill {
