@@ -22,6 +22,17 @@ use crate::error::{Error, Result};
 /// A `vibe.toml` carrying this table is a plain project; one carrying
 /// `[package]` is a publishable artifact. The two are mutually exclusive —
 /// see [`Manifest::validate`](super::Manifest::validate).
+///
+/// ```
+/// use vibe_core::manifest::ProjectSection;
+///
+/// let p: ProjectSection = toml::from_str(r#"
+///     name = "my-app"
+///     version = "0.1.0"
+/// "#).unwrap();
+/// assert_eq!(p.name, "my-app");
+/// assert!(p.authors.is_empty()); // `authors` defaults to empty
+/// ```
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct ProjectSection {
@@ -31,6 +42,15 @@ pub struct ProjectSection {
     pub authors: Vec<String>,
 }
 
+/// `[active]` — the workspace's currently-selected stack, if any.
+///
+/// ```
+/// use vibe_core::manifest::ActiveSection;
+///
+/// let a: ActiveSection = toml::from_str(r#"stack = "rust-cli""#).unwrap();
+/// assert_eq!(a.stack.as_deref(), Some("rust-cli"));
+/// assert!(ActiveSection::default().stack.is_none());
+/// ```
 #[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct ActiveSection {
@@ -38,6 +58,18 @@ pub struct ActiveSection {
     pub stack: Option<String>,
 }
 
+/// `[llm]` — default provider and model for AI-assisted commands.
+///
+/// ```
+/// use vibe_core::manifest::LlmSection;
+///
+/// let l: LlmSection = toml::from_str(r#"
+///     default_provider = "anthropic"
+///     default_model = "claude-opus-4-8"
+/// "#).unwrap();
+/// assert_eq!(l.default_provider, "anthropic");
+/// assert!(l.api_key_env.is_none());
+/// ```
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct LlmSection {
@@ -50,6 +82,18 @@ pub struct LlmSection {
 /// A single entry in `[[registry]]` — an organization-root URL plus the
 /// naming convention that maps pkgrefs to per-package repos under it,
 /// plus the authentication regime to use when fetching from it.
+///
+/// ```
+/// use vibe_core::manifest::{RegistrySection, NamingConvention, AuthKind};
+///
+/// let r: RegistrySection = toml::from_str(r#"
+///     name = "vibespecs"
+///     url = "https://github.com/vibespecs"
+/// "#).unwrap();
+/// assert_eq!(r.name, "vibespecs");
+/// assert_eq!(r.naming, NamingConvention::Fqdn); // default convention
+/// assert_eq!(r.auth, AuthKind::None);           // default auth
+/// ```
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct RegistrySection {
@@ -89,6 +133,14 @@ pub struct RegistrySection {
 
 /// Authentication regime per `[[registry]]`. See PROP-002 §2.2.1 for
 /// the full semantics matrix; this enum is the schema-level encoding.
+///
+/// ```
+/// use vibe_core::manifest::AuthKind;
+///
+/// assert!(AuthKind::default().is_default()); // `none` — public read
+/// assert_eq!(AuthKind::TokenEnv.as_str(), "token-env");
+/// // The wire form is this kebab name on a `[[registry]].auth` field.
+/// ```
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Serialize, Deserialize)]
 pub enum AuthKind {
     /// Public read-only. No credentials sent. In non-TTY / `--unattended`
@@ -183,6 +235,19 @@ fn registry_host(url: &str) -> Option<&str> {
 /// Convention for mapping a pkgref to a package repository name under a
 /// registry's organization URL. The convention is a property of the
 /// registry, not a global rule.
+///
+/// ```
+/// use vibe_core::manifest::NamingConvention;
+/// use vibe_core::Group;
+///
+/// let org = Group::parse("org.vibevm").unwrap();
+/// // FQDN (the default) maps a (group, name) to a flat repo name.
+/// assert_eq!(
+///     NamingConvention::Fqdn.repo_name(None, &org, "wal").unwrap(),
+///     "org.vibevm.wal",
+/// );
+/// assert!(NamingConvention::default().is_default());
+/// ```
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Serialize, Deserialize)]
 pub enum NamingConvention {
     /// `org.vibevm/wal` → `<org>/org.vibevm.wal`. The reverse-FQDN
@@ -246,6 +311,17 @@ impl NamingConvention {
 
 /// A `[[mirror]]` entry: transparent alternative URL for a specific
 /// registry (or `*` for any).
+///
+/// ```
+/// use vibe_core::manifest::MirrorSection;
+///
+/// let m: MirrorSection = toml::from_str(r#"
+///     of = "vibespecs"
+///     url = "https://mirror.example/vibespecs"
+/// "#).unwrap();
+/// assert_eq!(m.of, "vibespecs");
+/// assert_eq!(m.priority, 0); // default priority
+/// ```
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct MirrorSection {
@@ -261,6 +337,18 @@ pub struct MirrorSection {
 }
 
 /// A `[[override]]` entry: direct source pin for a specific pkgref.
+///
+/// ```
+/// use vibe_core::manifest::OverrideSection;
+///
+/// let o: OverrideSection = toml::from_str(r#"
+///     pkgref = "feat:wal"
+///     source_url = "https://github.com/me/feat-wal"
+///     reason = "pinning a patched fork"
+/// "#).unwrap();
+/// assert_eq!(o.pkgref, "feat:wal");
+/// assert_eq!(o.reason.as_deref(), Some("pinning a patched fork"));
+/// ```
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct OverrideSection {
