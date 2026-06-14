@@ -1,8 +1,5 @@
 {
   "findings": [
-    "pub-doctest|crates/vibe-core/src/capability_ref.rs|vibe_core::capability_ref::CapabilityName",
-    "pub-doctest|crates/vibe-core/src/capability_ref.rs|vibe_core::capability_ref::CapabilityNamespace",
-    "pub-doctest|crates/vibe-core/src/error.rs|vibe_core::error::Error",
     "pub-doctest|crates/vibe-core/src/manifest/document.rs|vibe_core::manifest::document::BootSection",
     "pub-doctest|crates/vibe-core/src/manifest/document.rs|vibe_core::manifest::document::OriginSection",
     "pub-doctest|crates/vibe-core/src/manifest/document.rs|vibe_core::manifest::document::WorkspaceSection",
@@ -50,11 +47,9 @@
     "pub-doctest|crates/vibe-core/src/manifest/subskill.rs|vibe_core::manifest::subskill::SubskillManifest",
     "pub-doctest|crates/vibe-core/src/manifest/subskill.rs|vibe_core::manifest::subskill::SubskillMeta",
     "pub-doctest|crates/vibe-core/src/manifest/subskill.rs|vibe_core::manifest::subskill::SubskillRecommends",
-    "pub-doctest|crates/vibe-core/src/package_ref.rs|vibe_core::package_ref::PackageKind",
     "pub-doctest|crates/vibe-core/src/user_config.rs|vibe_core::user_config::InstallConfig",
     "pub-doctest|crates/vibe-core/src/user_config.rs|vibe_core::user_config::SlotIntegrity",
-    "pub-doctest|crates/vibe-core/src/user_config.rs|vibe_core::user_config::UserConfigError",
-    "pub-doctest|crates/vibe-core/src/values.rs|vibe_core::values::ValueTag"
+    "pub-doctest|crates/vibe-core/src/user_config.rs|vibe_core::user_config::UserConfigError"
   ],
   "schema": 1
 }

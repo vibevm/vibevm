@@ -13,6 +13,19 @@ use thiserror::Error;
 
 pub type Result<T, E = Error> = std::result::Result<T, E>;
 
+/// The crate's error type — one `thiserror` enum for the parse, validate,
+/// and I/O layer of `vibe-core`. Every variant's `Display` embeds the
+/// `spec://` REQ it guards plus a fix hint, so a failing run is navigable
+/// back to the requirement without source access.
+///
+/// ```
+/// use vibe_core::Error;
+///
+/// let e = Error::BadPackageKind("xml".into());
+/// let msg = e.to_string();
+/// assert!(msg.contains("must be one of: flow, feat, stack, tool"));
+/// assert!(msg.contains("spec://vibevm/VIBEVM-SPEC#four-installable-kinds"));
+/// ```
 #[derive(Debug, Error)]
 #[spec(implements = "spec://vibevm/VIBEVM-SPEC#package-identity")]
 pub enum Error {

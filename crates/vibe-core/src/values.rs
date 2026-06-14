@@ -11,6 +11,14 @@ specmark::scope!("spec://vibevm/VIBEVM-SPEC#typed-value-system");
 use std::fmt;
 
 /// Names of the typed values from §5.3. Keep in sync with the spec table.
+///
+/// ```
+/// use vibe_core::values::ValueTag;
+///
+/// // Each tag has a stable string name used in graph-build validation.
+/// assert_eq!(ValueTag::Lockfile.as_str(), "Lockfile");
+/// assert_eq!(ValueTag::Wal.to_string(), "WAL"); // Display mirrors as_str
+/// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum ValueTag {
     ProjectConfig,

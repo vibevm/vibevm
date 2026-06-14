@@ -16,6 +16,15 @@ use crate::error::{Error, Result};
 ///
 /// Spec: `VIBEVM-SPEC.md` §4.1. This enum is closed; adding a fifth kind is a
 /// spec change, not a code change.
+///
+/// ```
+/// use vibe_core::PackageKind;
+///
+/// let k: PackageKind = "feat".parse().unwrap();
+/// assert_eq!(k, PackageKind::Feat);
+/// assert_eq!(k.as_str(), "feat");
+/// assert!("widget".parse::<PackageKind>().is_err()); // closed set
+/// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 pub enum PackageKind {

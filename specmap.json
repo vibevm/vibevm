@@ -4150,7 +4150,7 @@
     {
       "file": "crates/vibe-core/src/error.rs",
       "from_symbol": "vibe_core::error::Error",
-      "line": 17,
+      "line": 30,
       "provenance": "authored",
       "uri": "spec://vibevm/VIBEVM-SPEC#package-identity",
       "verb": "implements"

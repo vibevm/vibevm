@@ -37,6 +37,14 @@ use crate::package_ref::{VersionSpec, validate_package_name};
 /// (PROP-002 §2.9). A distinct type from [`CapabilityName`] so the two
 /// halves of a `<namespace>:<name>` tuple cannot be transposed by
 /// accident. `serde(transparent)`; the grammar is the shared kebab rule.
+///
+/// ```
+/// use vibe_core::CapabilityNamespace;
+///
+/// let ns = CapabilityNamespace::parse("ui").unwrap();
+/// assert_eq!(ns, "ui"); // Deref to str + PartialEq<str>
+/// assert!(CapabilityNamespace::parse("UI").is_err()); // not kebab-case
+/// ```
 #[derive(Debug, Clone, PartialEq, Eq, Hash, PartialOrd, Ord, Serialize, Deserialize)]
 #[serde(transparent)]
 pub struct CapabilityNamespace(String);
@@ -44,6 +52,14 @@ pub struct CapabilityNamespace(String);
 /// The **name** half of a capability identifier — kebab-case
 /// (PROP-002 §2.9). Distinct from [`CapabilityNamespace`] for the same
 /// transposition-safety reason. `serde(transparent)`.
+///
+/// ```
+/// use vibe_core::CapabilityName;
+///
+/// let n = CapabilityName::parse("landing-page").unwrap();
+/// assert_eq!(n, "landing-page");
+/// assert!(CapabilityName::parse("-bad").is_err()); // leading hyphen rejected
+/// ```
 #[derive(Debug, Clone, PartialEq, Eq, Hash, PartialOrd, Ord, Serialize, Deserialize)]
 #[serde(transparent)]
 pub struct CapabilityName(String);
