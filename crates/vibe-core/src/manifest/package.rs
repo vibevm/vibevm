@@ -48,6 +48,21 @@ use wire::RequiresWire;
 /// A `vibe.toml` carrying this table is a package; one carrying `[project]`
 /// is a plain consumer. The two are mutually exclusive — see
 /// [`Manifest::validate`](super::Manifest::validate).
+///
+/// ```
+/// use vibe_core::manifest::PackageMeta;
+/// use vibe_core::PackageKind;
+///
+/// let p: PackageMeta = toml::from_str(r#"
+///     name = "wal"
+///     group = "org.vibevm"
+///     kind = "feat"
+///     version = "0.1.0"
+/// "#).unwrap();
+/// assert_eq!(p.name, "wal");
+/// assert_eq!(p.kind, PackageKind::Feat);
+/// assert!(p.publish.is_default()); // `publish` defaults to true
+/// ```
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct PackageMeta {
@@ -105,6 +120,18 @@ impl PackageMeta {
 
 /// `[package].publish` — whether and where `vibe workspace publish` ships a
 /// node. PROP-007 §2.7. Cargo's `publish` shape: a bool or a registry list.
+///
+/// ```
+/// use vibe_core::manifest::PublishPosture;
+///
+/// let everywhere = PublishPosture::default(); // `publish = true`
+/// assert!(everywhere.is_default());
+/// assert!(everywhere.includes("vibespecs"));
+///
+/// let only = PublishPosture::Registries(vec!["vibespecs".into()]);
+/// assert!(only.includes("vibespecs"));
+/// assert!(!only.includes("other"));
+/// ```
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum PublishPosture {
@@ -144,6 +171,20 @@ impl PublishPosture {
     }
 }
 
+/// `[compatibility]` — optional gates on the consuming toolchain: a minimum
+/// `vibe` version and the package kinds this one needs present.
+///
+/// ```
+/// use vibe_core::manifest::Compatibility;
+///
+/// let c: Compatibility = toml::from_str(r#"
+///     min_vibe_version = "0.2"
+///     requires_kinds = ["stack"]
+/// "#).unwrap();
+/// assert_eq!(c.min_vibe_version.as_deref(), Some("0.2"));
+/// assert!(!c.is_empty());
+/// assert!(Compatibility::default().is_empty());
+/// ```
 #[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Compatibility {
@@ -168,6 +209,14 @@ impl Compatibility {
 /// package may suggest a default on its own `[boot_snippet]`; a workspace
 /// may set a fallback in `[boot].default_link`. Absent everywhere, the
 /// type is [`LinkType::Static`].
+///
+/// ```
+/// use vibe_core::manifest::LinkType;
+///
+/// // Absent everywhere, a dependency links statically (PROP-009 §2.4); a
+/// // consumer overrides it per-dep with `link = "inline"` or `"dynamic"`.
+/// assert_eq!(LinkType::default(), LinkType::Static);
+/// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Default)]
 #[serde(rename_all = "lowercase")]
 pub enum LinkType {
@@ -190,6 +239,20 @@ pub enum LinkType {
 ///
 /// `vibe` composes the sequence `foundation` → the node's own boot →
 /// dependency boot → `user-override`.
+///
+/// ```
+/// use vibe_core::manifest::BootCategory;
+///
+/// // Four ordering bands; the wire form is the kebab-case name (e.g.
+/// // `category = "user-override"`), shown on `BootSnippet` below.
+/// let bands = [
+///     BootCategory::Foundation,
+///     BootCategory::Flow,
+///     BootCategory::Stack,
+///     BootCategory::UserOverride,
+/// ];
+/// assert_eq!(bands.len(), 4);
+/// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
 pub enum BootCategory {
@@ -206,6 +269,15 @@ pub enum BootCategory {
 
 /// An operating system a [`WhenCondition::Os`] gate can name. The values
 /// match Rust's `std::env::consts::OS`.
+///
+/// ```
+/// use vibe_core::manifest::TargetOs;
+///
+/// assert_eq!(TargetOs::Linux.as_str(), "linux");
+/// assert_eq!(TargetOs::Windows.to_string(), "windows");
+/// // `current()` maps the host to a variant, or `None` off the set.
+/// let _ = TargetOs::current();
+/// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum TargetOs {
     /// Microsoft Windows — `std::env::consts::OS == "windows"`.
@@ -245,6 +317,19 @@ impl std::fmt::Display for TargetOs {
 }
 
 /// `[boot_snippet]` — the boot contribution a package ships (package-role).
+///
+/// ```
+/// use vibe_core::manifest::{BootSnippet, BootCategory, LinkType};
+///
+/// let b: BootSnippet = toml::from_str(r#"
+///     source = "boot/10-flow-wal.md"
+///     category = "flow"
+///     link = "static"
+/// "#).unwrap();
+/// assert_eq!(b.source.to_str(), Some("boot/10-flow-wal.md"));
+/// assert_eq!(b.category, Some(BootCategory::Flow));
+/// assert_eq!(b.link, Some(LinkType::Static));
+/// ```
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct BootSnippet {
@@ -270,6 +355,15 @@ pub struct BootSnippet {
 }
 
 /// `[provides]` — capabilities this package advertises.
+///
+/// ```
+/// use vibe_core::manifest::Provides;
+///
+/// let p: Provides = toml::from_str(r#"capabilities = ["db:postgres@^15"]"#).unwrap();
+/// assert_eq!(p.capabilities.len(), 1);
+/// assert!(!p.is_empty());
+/// assert!(Provides::default().is_empty());
+/// ```
 #[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Provides {
@@ -294,6 +388,19 @@ impl Provides {
 ///   per PROP-002 §2.4.1).
 ///
 /// `capabilities` carries abstract requirements satisfied by any provider.
+///
+/// ```
+/// use vibe_core::manifest::Requires;
+///
+/// let r: Requires = toml::from_str(r#"
+///     capabilities = ["db:any@>=1.0"]
+///     [packages]
+///     "org.vibevm/wal" = "^0.3"
+///     "org.vibevm/rust" = { version = "^2.0", link = "dynamic" }
+/// "#).unwrap();
+/// assert_eq!(r.packages.len(), 2);
+/// assert_eq!(r.capabilities.len(), 1);
+/// ```
 #[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(into = "RequiresWire", try_from = "RequiresWire")]
 pub struct Requires {
@@ -394,6 +501,13 @@ fn link_key(group: &Group, name: &str) -> String {
 
 /// `[[requires_any]]` — one entry per independent disjunction; `one_of` must
 /// be satisfied by at least one of its alternatives.
+///
+/// ```
+/// use vibe_core::manifest::RequiresAny;
+///
+/// let any: RequiresAny = toml::from_str(r#"one_of = ["feat:wal", "feat:journal"]"#).unwrap();
+/// assert_eq!(any.one_of.len(), 2);
+/// ```
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct RequiresAny {
@@ -401,6 +515,14 @@ pub struct RequiresAny {
 }
 
 /// `[obsoletes]` — packages this one supersedes.
+///
+/// ```
+/// use vibe_core::manifest::Obsoletes;
+///
+/// let o: Obsoletes = toml::from_str(r#"packages = ["feat:old-wal"]"#).unwrap();
+/// assert_eq!(o.packages.len(), 1);
+/// assert!(!o.is_empty());
+/// ```
 #[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Obsoletes {
@@ -415,6 +537,14 @@ impl Obsoletes {
 }
 
 /// `[conflicts]` — packages that cannot coexist with this one.
+///
+/// ```
+/// use vibe_core::manifest::ConflictsList;
+///
+/// let c: ConflictsList = toml::from_str(r#"packages = ["feat:rival-wal"]"#).unwrap();
+/// assert!(!c.is_empty());
+/// assert!(ConflictsList::default().is_empty());
+/// ```
 #[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct ConflictsList {
@@ -430,6 +560,16 @@ impl ConflictsList {
 
 /// `[target."<predicate>"]` body — currently just `[dependencies]`,
 /// shaped like `[requires]`. PROP-003 §2.6.1.
+///
+/// ```
+/// use vibe_core::manifest::ConditionalTarget;
+///
+/// let t: ConditionalTarget = toml::from_str(r#"
+///     [dependencies.packages]
+///     "org.vibevm/wal" = "^0.3"
+/// "#).unwrap();
+/// assert_eq!(t.dependencies.packages.len(), 1);
+/// ```
 #[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct ConditionalTarget {
