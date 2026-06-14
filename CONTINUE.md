@@ -1,15 +1,19 @@
 # CONTINUE.md — cold-resume checkpoint
 
 > **LATEST (2026-06-14, after this snapshot): the resolvo resolver
-> (PROP-017) is IN PROGRESS — the production CDCL solver `ResolvoDepSolver`
-> + its `VibevmResolvoProvider` adapter + the `differential_naive_vs_resolvo_dominance`
-> oracle + `[[requires_any]]` disjunctions are built and gate-green on
-> local `main` (5 commits). Everything below describes the PRIOR
-> source-mirror session and is superseded by `spec/WAL.md` (current
-> resolvo state) and [`PROP-017`](spec/modules/vibe-resolver/PROP-017-resolvo-resolver.md).
-> Full `self-check.sh` green. Next: `[conflicts]`/`[obsoletes]`, the
-> capabilities design fork (registry has no capability→provider index),
-> weak-deps, then wiring resolvo as the default solver.**
+> (PROP-017) — the engine + the FULL existing dependency vocabulary are
+> built, oracle-proven to dominate naive, and gate-green on both mirrors
+> (9 resolvo commits): `ResolvoDepSolver` + `VibevmResolvoProvider`, the
+> `differential_naive_vs_resolvo_dominance` oracle, `[[requires_any]]`
+> disjunctions with backtracking, `[conflicts]`/`[obsoletes]`, and
+> capabilities via a closure pre-scan. Everything below describes the
+> PRIOR source-mirror session; `spec/WAL.md` has the current state and
+> supersedes it. Full `self-check.sh` green. Remaining to finish the
+> port: S1 (production version enumeration — `MultiRegistryResolver::list_versions`,
+> gated `vibe-registry`) then S6 (wire resolvo into `vibe-cli` + flip the
+> default). Weak-deps are a separate feature — the package
+> `[recommends]`/`[supplements]`/etc. manifest schema does not exist yet.
+> See [`PROP-017`](spec/modules/vibe-resolver/PROP-017-resolvo-resolver.md).**
 
 _Written 2026-06-14 at the close of a **source-mirror hardening** session.
 No campaign is in flight: CONVERT-PLAN v0.1 (Phases 0–7) and PUBDOC-DRAIN
