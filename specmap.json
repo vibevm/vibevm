@@ -2291,6 +2291,13 @@
     },
     {
       "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/multi_registry_resolver/walk.rs",
+      "item_kind": "fn",
+      "line": 92,
+      "symbol": "vibe_registry::multi_registry_resolver::walk::MultiRegistryResolver::list_versions"
+    },
+    {
+      "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/src/multi_registry_resolver/walk/tests.rs",
       "item_kind": "mod",
       "line": 5,
@@ -2767,6 +2774,13 @@
     },
     {
       "crate_name": "vibe-resolver",
+      "file": "crates/vibe-resolver/src/local_registry_provider.rs",
+      "item_kind": "fn",
+      "line": 69,
+      "symbol": "vibe_resolver::local_registry_provider::LocalRegistryProvider<'a>::list_versions"
+    },
+    {
+      "crate_name": "vibe-resolver",
       "file": "crates/vibe-resolver/src/multi_registry_provider.rs",
       "item_kind": "struct",
       "line": 17,
@@ -2778,6 +2792,13 @@
       "item_kind": "fn",
       "line": 68,
       "symbol": "vibe_resolver::multi_registry_provider::MultiRegistryProvider<'a>::fetch_manifest"
+    },
+    {
+      "crate_name": "vibe-resolver",
+      "file": "crates/vibe-resolver/src/multi_registry_provider.rs",
+      "item_kind": "fn",
+      "line": 99,
+      "symbol": "vibe_resolver::multi_registry_provider::MultiRegistryProvider<'a>::list_versions"
     },
     {
       "crate_name": "vibe-resolver",
@@ -2909,7 +2930,7 @@
       "crate_name": "vibe-resolver",
       "file": "crates/vibe-resolver/tests/differential_oracle.rs",
       "item_kind": "fn",
-      "line": 119,
+      "line": 120,
       "symbol": "vibe_resolver::tests::differential_oracle::provider_pair_agrees_on_solvable_inputs"
     },
     {
@@ -5877,6 +5898,14 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-registry/src/multi_registry_resolver/walk.rs",
+      "from_symbol": "vibe_registry::multi_registry_resolver::walk::MultiRegistryResolver::list_versions",
+      "line": 102,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-002#solver",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-registry/src/multi_registry_resolver/walk/tests.rs",
       "from_symbol": "vibe_registry::multi_registry_resolver::walk::tests",
       "line": 5,
@@ -6491,6 +6520,14 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-resolver/src/local_registry_provider.rs",
+      "from_symbol": "vibe_resolver::local_registry_provider::LocalRegistryProvider<'a>::list_versions",
+      "line": 69,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-resolver/PROP-017#provider-enrichment",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-resolver/src/multi_registry_provider.rs",
       "from_symbol": "vibe_resolver::multi_registry_provider::MultiRegistryProvider",
       "line": 19,
@@ -6504,6 +6541,14 @@
       "line": 68,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#redirect",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-resolver/src/multi_registry_provider.rs",
+      "from_symbol": "vibe_resolver::multi_registry_provider::MultiRegistryProvider<'a>::list_versions",
+      "line": 99,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-resolver/PROP-017#provider-enrichment",
       "verb": "implements"
     },
     {
@@ -6679,7 +6724,7 @@
     {
       "file": "crates/vibe-resolver/tests/differential_oracle.rs",
       "from_symbol": "vibe_resolver::tests::differential_oracle::provider_pair_agrees_on_solvable_inputs",
-      "line": 120,
+      "line": 121,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#solver",
       "verb": "verifies"

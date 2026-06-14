@@ -21,6 +21,7 @@ use vibe_core::PackageRef;
 use vibe_registry::{LocalRegistry, MultiRegistryResolver, ShellGit};
 use vibe_resolver::{
     DepSolver, LocalRegistryProvider, MultiRegistryProvider, NaiveDepSolver, ResolvedGraph,
+    ResolvoDepSolver,
 };
 
 fn git_available() -> bool {
@@ -194,4 +195,26 @@ fn provider_pair_agrees_on_solvable_inputs() {
         .find(&vibe_core::Group::parse("org.vibevm").unwrap(), "b")
         .expect("b in graph");
     assert_eq!(b.version.to_string(), "0.1.5");
+
+    // Resolvo over the very same real providers (S1 / PROP-017): the
+    // production `VersionEnumerator` path must drive resolvo to the same
+    // graph naive reaches on this conflict-free world — proving
+    // `MultiRegistryResolver::list_versions` and the provider impls feed
+    // candidates correctly off real `file://` git repos and local disk.
+    let local_resolvo = ResolvoDepSolver::new(LocalRegistryProvider::new(&local))
+        .solve(&roots)
+        .expect("local-registry resolvo arm must solve");
+    let multi_resolvo = ResolvoDepSolver::new(MultiRegistryProvider::new(&multi))
+        .solve(&roots)
+        .expect("multi-registry resolvo arm must solve");
+    assert_eq!(
+        normalize(&local_graph),
+        normalize(&local_resolvo),
+        "resolvo diverged from naive over the local-registry provider"
+    );
+    assert_eq!(
+        normalize(&multi_graph),
+        normalize(&multi_resolvo),
+        "resolvo diverged from naive over the multi-registry provider"
+    );
 }

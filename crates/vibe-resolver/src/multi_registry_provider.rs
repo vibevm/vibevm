@@ -12,7 +12,7 @@ use vibe_core::manifest::Manifest;
 use vibe_core::{Group, PackageRef};
 use vibe_registry::{MultiRegistryResolver, RegistryError};
 
-use crate::{DepProvider, DepProviderError};
+use crate::{DepProvider, DepProviderError, VersionEnumerator};
 
 /// `DepProvider` impl backed by a [`MultiRegistryResolver`].
 #[cell(seam = "DepProvider", variant = "multi-registry", flag = "provider")]
@@ -90,6 +90,41 @@ impl<'a> DepProvider for MultiRegistryProvider<'a> {
                     constraint: req,
                 })
             }
+            Err(other) => Err(DepProviderError::Other(other.to_string())),
+        }
+    }
+}
+
+impl<'a> VersionEnumerator for MultiRegistryProvider<'a> {
+    #[spec(implements = "spec://vibevm/modules/vibe-resolver/PROP-017#provider-enrichment")]
+    fn list_versions(
+        &self,
+        group: &Group,
+        name: &str,
+    ) -> Result<Vec<semver::Version>, DepProviderError> {
+        match self.resolver.list_versions(group, name) {
+            Ok(versions) => Ok(versions),
+            Err(RegistryError::UnknownPackage { group, name }) => {
+                Err(DepProviderError::UnknownPackage { group, name })
+            }
+            Err(RegistryError::NoMatchingVersion { group, name, req }) => {
+                Err(DepProviderError::NoMatchingVersion {
+                    group,
+                    name,
+                    constraint: req,
+                })
+            }
+            Err(RegistryError::PackageNotFoundEverywhere {
+                group,
+                name,
+                summary,
+                attempts,
+            }) => Err(DepProviderError::AggregateNotFound {
+                group,
+                name,
+                summary,
+                attempts,
+            }),
             Err(other) => Err(DepProviderError::Other(other.to_string())),
         }
     }

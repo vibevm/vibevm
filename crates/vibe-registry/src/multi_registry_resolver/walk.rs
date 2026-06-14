@@ -89,6 +89,61 @@ fn format_walk_attempts(attempts: &[RegistryWalkAttempt]) -> String {
 }
 
 impl MultiRegistryResolver {
+    /// All versions of `(group, name)` available to this resolver — the
+    /// candidate set a choosing solver (resolvo) enumerates. Override /
+    /// path-source / git-source pin a single version and win over any
+    /// registry copy; otherwise the priority-ordered registry walk
+    /// returns the first registry's version list (same §2.3.1
+    /// failure-mode discriminator as [`Self::resolve`]). A package found
+    /// only behind a redirect falls back to the single resolvable version
+    /// via the full `resolve` path — enumerating *every* version behind a
+    /// redirect is a follow-up; `resolve` / `fetch_manifest` already
+    /// follow redirects, so install never breaks on one.
+    #[specmark::spec(implements = "spec://vibevm/modules/vibe-registry/PROP-002#solver")]
+    pub fn list_versions(
+        &self,
+        group: &Group,
+        name: &str,
+    ) -> Result<Vec<semver::Version>, RegistryError> {
+        let qualified = format!("{group}/{name}");
+        let pinned = self.overrides.contains_key(&qualified)
+            || self.path_packages.contains_key(&qualified)
+            || self.git_packages.contains_key(&qualified);
+
+        if !pinned {
+            for reg in &self.registries {
+                match reg.list_versions(group, name) {
+                    Ok(versions) if !versions.is_empty() => return Ok(versions),
+                    Ok(_) => continue,
+                    Err(RegistryError::UnknownPackage { .. }) => continue,
+                    Err(RegistryError::Git(crate::git_backend::GitError::AuthFailed {
+                        ..
+                    })) if matches!(reg.auth_kind(), vibe_core::manifest::AuthKind::None)
+                        && !self.strict_auth =>
+                    {
+                        continue;
+                    }
+                    Err(other) => return Err(other),
+                }
+            }
+        }
+
+        // Pinned (override / path / git), redirect-only, or nothing from
+        // the raw walk: defer to the full resolve path for the single
+        // resolvable version, so every install mode yields a candidate.
+        let probe = PackageRef::new(
+            None,
+            Some(group.clone()),
+            name.to_string(),
+            vibe_core::VersionSpec::Latest,
+        )
+        .map_err(|_| RegistryError::UnknownPackage {
+            group: group.clone(),
+            name: name.to_string(),
+        })?;
+        Ok(vec![self.resolve(&probe)?.resolved.version])
+    }
+
     /// Resolve a pkgref through the override-then-registries decision tree.
     pub fn resolve(&self, pkgref: &PackageRef) -> Result<MultiResolution, RegistryError> {
         // Step 1: override short-circuit.
