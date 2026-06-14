@@ -55,7 +55,7 @@ A `self-pull` target (a host that mirrors itself, e.g. via its own CI or a built
 
 `xtask/src/mirror.rs`:
 
-- `cargo xtask mirror` — push mainline (`main` + tags) to every `push` target, **fast-forward-only, never `--force`**. A non-fast-forward means a target diverged → fail loud (§4.4), reconcile by hand. `self-pull` targets are verified, not pushed.
+- `cargo xtask mirror` — push mainline (`main` + tags) to every `push` target, **fast-forward-only, never `--force`**. A non-fast-forward means a target diverged → fail loud (§4.4), reconcile by hand. `self-pull` targets are verified, not pushed. After each successful branch push it refreshes the matching local remote-tracking ref (e.g. `origin/main`), so `git status` reflects the rollout without a manual `git fetch` (§4.3).
 - `cargo xtask mirror --check` — verify every target equals local mainline; push nothing. Read-only; non-zero exit on drift.
 - `cargo xtask mirror --from <name>` — fast-forward local mainline to a host's accepted-PR merge (`git fetch` + `git merge --ff-only`) before fanning out: the bridge for a PR merged via that host's web UI (§4.2).
 
@@ -94,6 +94,8 @@ cargo xtask mirror
 ```
 Pushes `main` + tags to every target, fast-forward-only. Output lists each target `ok`; a failure is loud and explained. This — not `git push origin` — is how a change reaches all hosts. (`origin` on this machine is a single-host convenience remote, GitVerse; fan-out is the manifest, not a multi-push remote, so the target set has one source of truth.)
 
+Because the fan-out pushes by **URL** (the manifest's form), git would normally leave the local remote-tracking refs untouched — a raw-URL push updates no `refs/remotes/<remote>/<branch>`. So `mirror` refreshes them itself: after each successful branch push it moves the tracking ref of any remote pointing at that target (e.g. `origin/main`) up to the just-pushed commit, printing a `track` line. A green fan-out therefore leaves `git status` clean, with no stray "ahead of origin/main" that a manual `git fetch` would otherwise be needed to clear. The refresh is best-effort and local — it never fails a rollout whose pushes already landed, and `git fetch <remote>` remains the fallback.
+
 ### 4.4 Checking sync and handling drift {#drift}
 
 ```sh
@@ -116,7 +118,7 @@ So `anarchic-pro/vibevm` (a source mirror) and `github.com/vibespecs/*` (the pac
 
 ## 6. Safety and limits {#safety}
 
-- **Never `--force`.** Fan-out and `--from` are fast-forward-only. The tool cannot silently lose a commit — a divergence fails loud (§4.4). This honours the `CLAUDE.md` Rule 4 force-push red line by construction.
+- **Never `--force`.** Fan-out and `--from` are fast-forward-only. The tool cannot silently lose a commit — a divergence fails loud (§4.4). This honours the `CLAUDE.md` Rule 4 force-push red line by construction. The fan-out's push command is built in one pure function (`push_args`) and the `push_args_never_force` unit test asserts it never emits `--force`, `-f`, or a `+`-prefixed force refspec for any ref shape — the invariant is **runnable capital**, not a prose promise (the Discipline's "a rule with no checker is a WISH"). `--from`'s `git merge --ff-only` enforces the same at runtime, bailing on anything but a clean fast-forward.
 - **Deletions do not auto-propagate.** Deleting a branch on one host does not delete it elsewhere — a safety choice (an accidental deletion must not cascade). Delete on each host deliberately.
 - **The fan-out hub is the maintainer's machine.** Server-side auto-mirroring (a GitHub Action, a GitVerse pull-mirror) is deliberately *not* required: because mainline is single-writer and the maintainer runs the fan-out, the rollout is a deliberate act, not a daemon. Server-side mirroring is an open option (§7) for the day a host originates writes the maintainer does not funnel.
 
@@ -129,3 +131,4 @@ So `anarchic-pro/vibevm` (a source mirror) and `github.com/vibespecs/*` (the pac
 ## 8. Version history {#history}
 
 - **2026-06-14 — authored, in force.** Owner decision: the source becomes multi-homed (GitVerse + GitHub `anarchic-pro/vibevm`, both public, canonical for reading; US↔GitHub, RU↔GitVerse), kept in sync always and automatically by the maintainer's fan-out. The benevolent-dictator / hub-and-spoke model (no primary, single-writer mainline), the `mirrors.toml` registry, and `cargo xtask mirror` (`--check`, `--from`) plus the off-by-default `health --mirrors` probe are defined here. Supersedes the interim multi-push-remote and the abandoned bidirectional-multi-master sketch.
+- **2026-06-14 — fan-out refreshes tracking refs (§3.2, §4.3).** `cargo xtask mirror` now updates the local remote-tracking ref of any remote matching a target after a successful branch push. Pushing by raw URL otherwise leaves `refs/remotes/<remote>/<branch>` stale, so `git status` falsely read "ahead of origin/main" right after a green rollout (the host was actually level — `mirror --check`, which queries the host, saw the truth). No model change: a local, best-effort convenience that makes the maintainer's working-tree view match the hosts without a manual `git fetch`.

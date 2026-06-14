@@ -8166,7 +8166,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:cfa6c15a41628377609854b3146d5b7bd29ea237b7cf43630afde6b0ec373b58",
+      "content_hash": "sha256:01b7e4bc3ba972c5ba98a7f3fbcb49ac05585e43a81d196d2585b88fe2f2a6aa",
       "doc_path": "common/PROP-016",
       "file": "spec/common/PROP-016-source-mirrors.md",
       "heading": "PROP-016: Decentralized source mirrors — the integration model",
@@ -8220,7 +8220,7 @@
     },
     {
       "anchor": "components",
-      "content_hash": "sha256:e5dbc4ded04c90e1c87a24f58dce7ac10556474788c9808d2dcc59e20ae3d7ec",
+      "content_hash": "sha256:67eb784a2ac196c46461088f4029d70c142365a8fca69ebc4fceae4d8b6be2b7",
       "doc_path": "common/PROP-016",
       "file": "spec/common/PROP-016-source-mirrors.md",
       "heading": "3. Components",
@@ -8238,7 +8238,7 @@
     },
     {
       "anchor": "engine",
-      "content_hash": "sha256:99235ae0339e43e73852c4bd0feffe1b5bc582beb7c3d4576e5b94ff111f6683",
+      "content_hash": "sha256:990e8497de630f7cffb205ad204fca46fda694c48e49badf529f63b30fabfd7d",
       "doc_path": "common/PROP-016",
       "file": "spec/common/PROP-016-source-mirrors.md",
       "heading": "3.2 `cargo xtask mirror` — the fan-out engine",
@@ -8256,7 +8256,7 @@
     },
     {
       "anchor": "usage",
-      "content_hash": "sha256:c4e1ed5715100f6d168d7f4bf6b4b62625fa339925f6ba6cd66eeb00a4b1a702",
+      "content_hash": "sha256:052e9ddfba516ba893bfa1c922c11e5d564c439716a4e15b48be046f53c292be",
       "doc_path": "common/PROP-016",
       "file": "spec/common/PROP-016-source-mirrors.md",
       "heading": "4. Usage — the maintainer's guide",
@@ -8283,7 +8283,7 @@
     },
     {
       "anchor": "rollout",
-      "content_hash": "sha256:50e55f5959c7e73d60e76a98fa921ca6615ba7faf1592abd45d15fd4fc617c14",
+      "content_hash": "sha256:59faae2b1b2222ab8037e82acc1c13ceb222070b9a837cd18b79689322f66467",
       "doc_path": "common/PROP-016",
       "file": "spec/common/PROP-016-source-mirrors.md",
       "heading": "4.3 Rolling out everywhere",
@@ -8296,7 +8296,7 @@
       "doc_path": "common/PROP-016",
       "file": "spec/common/PROP-016-source-mirrors.md",
       "heading": "4.4 Checking sync and handling drift",
-      "line": 97,
+      "line": 99,
       "uri": "spec://vibevm/common/PROP-016#drift"
     },
     {
@@ -8305,7 +8305,7 @@
       "doc_path": "common/PROP-016",
       "file": "spec/common/PROP-016-source-mirrors.md",
       "heading": "4.5 Adding a host",
-      "line": 104,
+      "line": 106,
       "uri": "spec://vibevm/common/PROP-016#adding"
     },
     {
@@ -8314,16 +8314,16 @@
       "doc_path": "common/PROP-016",
       "file": "spec/common/PROP-016-source-mirrors.md",
       "heading": "5. Relationship to the package-registry split-host",
-      "line": 108,
+      "line": 110,
       "uri": "spec://vibevm/common/PROP-016#registry"
     },
     {
       "anchor": "safety",
-      "content_hash": "sha256:16a6f93d2559f02867e655f39b036d39864554144dc911c2dc5b42ecee879946",
+      "content_hash": "sha256:670614b47cea660a1adb359628f709ebb8e6442f773aefac87697100e1597b61",
       "doc_path": "common/PROP-016",
       "file": "spec/common/PROP-016-source-mirrors.md",
       "heading": "6. Safety and limits",
-      "line": 117,
+      "line": 119,
       "uri": "spec://vibevm/common/PROP-016#safety"
     },
     {
@@ -8332,16 +8332,16 @@
       "doc_path": "common/PROP-016",
       "file": "spec/common/PROP-016-source-mirrors.md",
       "heading": "7. Open questions",
-      "line": 123,
+      "line": 125,
       "uri": "spec://vibevm/common/PROP-016#open"
     },
     {
       "anchor": "history",
-      "content_hash": "sha256:a6aa6e1c147dcdab658cadc81818b62ac4777f4f1558d39c16bde8fb6b7c91e9",
+      "content_hash": "sha256:af7b12300797643b483d6a0864ffb9dddba968f8fe9961c05c56d7e95f9b44a8",
       "doc_path": "common/PROP-016",
       "file": "spec/common/PROP-016-source-mirrors.md",
       "heading": "8. Version history",
-      "line": 129,
+      "line": 131,
       "uri": "spec://vibevm/common/PROP-016#history"
     },
     {
