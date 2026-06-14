@@ -1026,28 +1026,28 @@
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/redirect.rs",
       "item_kind": "struct",
-      "line": 64,
+      "line": 75,
       "symbol": "vibe_core::manifest::redirect::RedirectSection"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/redirect.rs",
       "item_kind": "fn",
-      "line": 190,
+      "line": 222,
       "symbol": "vibe_core::manifest::redirect::parse_redirect_bytes"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/redirect.rs",
       "item_kind": "fn",
-      "line": 268,
+      "line": 300,
       "symbol": "vibe_core::manifest::redirect::tests::pinned_without_ref_rejected"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/redirect.rs",
       "item_kind": "fn",
-      "line": 338,
+      "line": 370,
       "symbol": "vibe_core::manifest::redirect::tests::round_trip_preserves_minimal_shape"
     },
     {
@@ -4368,7 +4368,7 @@
     {
       "file": "crates/vibe-core/src/manifest/redirect.rs",
       "from_symbol": "vibe_core::manifest::redirect::RedirectSection",
-      "line": 76,
+      "line": 100,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#redirect",
       "verb": "implements",
@@ -4377,7 +4377,7 @@
     {
       "file": "crates/vibe-core/src/manifest/redirect.rs",
       "from_symbol": "vibe_core::manifest::redirect::parse_redirect_bytes",
-      "line": 194,
+      "line": 226,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#redirect",
       "verb": "implements",
@@ -4386,7 +4386,7 @@
     {
       "file": "crates/vibe-core/src/manifest/redirect.rs",
       "from_symbol": "vibe_core::manifest::redirect::tests::pinned_without_ref_rejected",
-      "line": 269,
+      "line": 301,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#redirect",
       "verb": "verifies",
@@ -4395,7 +4395,7 @@
     {
       "file": "crates/vibe-core/src/manifest/redirect.rs",
       "from_symbol": "vibe_core::manifest::redirect::tests::round_trip_preserves_minimal_shape",
-      "line": 339,
+      "line": 371,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#redirect",
       "verb": "verifies",

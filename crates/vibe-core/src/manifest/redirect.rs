@@ -28,6 +28,17 @@ use super::{read_toml, write_toml};
 ///
 /// `[redirect]` section is required; everything else is reserved for
 /// future expansion.
+///
+/// ```
+/// use vibe_core::manifest::{RedirectFile, RefPolicy};
+///
+/// let f: RedirectFile = toml::from_str(r#"
+///     [redirect]
+///     target_url = "https://github.com/external/flow-internal"
+/// "#).unwrap();
+/// assert_eq!(f.redirect.target_url, "https://github.com/external/flow-internal");
+/// assert_eq!(f.redirect.ref_policy, RefPolicy::PassThroughTag); // default
+/// ```
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct RedirectFile {
@@ -71,6 +82,19 @@ impl RedirectFile {
 ///   for `pass-through-tag`. Mismatch rejected at parse.
 /// - `token_env` is meaningful only when `auth = "token-env"`; with
 ///   any other auth regime it's a parse error.
+///
+/// ```
+/// use vibe_core::manifest::{RedirectSection, RefPolicy};
+///
+/// // A `pinned` policy requires `pinned_ref` — validated at parse time.
+/// let s: RedirectSection = toml::from_str(r#"
+///     target_url = "https://github.com/external/flow-internal"
+///     ref_policy = "pinned"
+///     pinned_ref = "v0.3.0"
+/// "#).unwrap();
+/// assert_eq!(s.ref_policy, RefPolicy::Pinned);
+/// assert_eq!(s.pinned_ref.as_deref(), Some("v0.3.0"));
+/// ```
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(into = "RedirectSectionWire", try_from = "RedirectSectionWire")]
 #[spec(
@@ -96,6 +120,14 @@ pub struct RedirectSection {
 /// - `Pinned` — every consumer resolves to `target_url@pinned_ref`
 ///   regardless of which stub tag they probed. Stub tags are
 ///   informational metadata only.
+///
+/// ```
+/// use vibe_core::manifest::RefPolicy;
+///
+/// // The default: a stub tag `T` resolves to `target_url@T`.
+/// assert_eq!(RefPolicy::default(), RefPolicy::PassThroughTag);
+/// // The wire form is the kebab name on `[redirect].ref_policy`.
+/// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Default)]
 #[serde(rename_all = "kebab-case")]
 pub enum RefPolicy {

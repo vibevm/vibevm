@@ -152,6 +152,16 @@ pub struct Manifest {
 /// PROP-007 §2.1. A `[workspace]` node owns the single `vibe.lock` at the
 /// absolute root of the workspace tree; members bubble commands up to it.
 /// Nested workspaces are permitted — a member may itself carry `[workspace]`.
+///
+/// ```
+/// use vibe_core::manifest::WorkspaceSection;
+///
+/// let w: WorkspaceSection = toml::from_str(r#"
+///     members = ["packages/flow-wal", "packages/stack-rust"]
+/// "#).unwrap();
+/// assert_eq!(w.members.len(), 2);
+/// assert!(w.versions.is_empty());
+/// ```
 #[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct WorkspaceSection {
@@ -175,6 +185,19 @@ pub struct WorkspaceSection {
 ///
 /// Lets a consumer (and the registry explorer) trace a published package
 /// repository back to the monorepo it was generated from.
+///
+/// ```
+/// use vibe_core::manifest::OriginSection;
+///
+/// let o: OriginSection = toml::from_str(r#"
+///     upstream = "https://github.com/me/monorepo"
+///     path = "packages/flow-wal"
+///     generated_by = "vibe 0.1.0"
+///     generated_at = "2026-05-21T12:00:00Z"
+/// "#).unwrap();
+/// assert_eq!(o.path, "packages/flow-wal");
+/// assert!(o.commit.is_none());
+/// ```
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct OriginSection {
@@ -198,6 +221,14 @@ pub struct OriginSection {
 /// table. For v1 it carries only a default inclusion type — the fallback
 /// `link` for dependencies that declare none of their own. Room to grow;
 /// nothing further is defined yet.
+///
+/// ```
+/// use vibe_core::manifest::{BootSection, LinkType};
+///
+/// let b: BootSection = toml::from_str(r#"default_link = "dynamic""#).unwrap();
+/// assert_eq!(b.default_link, Some(LinkType::Dynamic));
+/// assert!(BootSection::default().is_empty());
+/// ```
 #[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct BootSection {

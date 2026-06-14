@@ -1,14 +1,7 @@
 {
   "findings": [
-    "pub-doctest|crates/vibe-core/src/manifest/document.rs|vibe_core::manifest::document::BootSection",
-    "pub-doctest|crates/vibe-core/src/manifest/document.rs|vibe_core::manifest::document::OriginSection",
-    "pub-doctest|crates/vibe-core/src/manifest/document.rs|vibe_core::manifest::document::WorkspaceSection",
-    "pub-doctest|crates/vibe-core/src/manifest/i18n.rs|vibe_core::manifest::i18n::I18nDecl",
     "pub-doctest|crates/vibe-core/src/manifest/purl.rs|vibe_core::manifest::purl::Purl",
     "pub-doctest|crates/vibe-core/src/manifest/purl.rs|vibe_core::manifest::purl::PurlError",
-    "pub-doctest|crates/vibe-core/src/manifest/redirect.rs|vibe_core::manifest::redirect::RedirectFile",
-    "pub-doctest|crates/vibe-core/src/manifest/redirect.rs|vibe_core::manifest::redirect::RedirectSection",
-    "pub-doctest|crates/vibe-core/src/manifest/redirect.rs|vibe_core::manifest::redirect::RefPolicy",
     "pub-doctest|crates/vibe-core/src/user_config.rs|vibe_core::user_config::InstallConfig",
     "pub-doctest|crates/vibe-core/src/user_config.rs|vibe_core::user_config::SlotIntegrity",
     "pub-doctest|crates/vibe-core/src/user_config.rs|vibe_core::user_config::UserConfigError"

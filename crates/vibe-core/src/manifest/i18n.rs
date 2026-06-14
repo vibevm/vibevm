@@ -32,6 +32,18 @@ pub const DEFAULT_CANONICAL_LANGUAGE: &str = "en";
 /// At the package level: declares which languages this package ships
 /// translations for. At the project level: declares the consumer's
 /// preferred language and fallback chain.
+///
+/// ```
+/// use vibe_core::manifest::i18n::I18nDecl;
+///
+/// let d: I18nDecl = toml::from_str(r#"
+///     canonical = "en"
+///     available = ["en", "ru", "ja"]
+///     preferred = "ru"
+/// "#).unwrap();
+/// // The project's resolution chain puts the preference first, canonical last.
+/// assert_eq!(d.project_preference_chain(), vec!["ru", "en"]);
+/// ```
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct I18nDecl {
