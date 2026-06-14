@@ -1,10 +1,4 @@
 {
-  "findings": [
-    "pub-doctest|crates/vibe-core/src/manifest/purl.rs|vibe_core::manifest::purl::Purl",
-    "pub-doctest|crates/vibe-core/src/manifest/purl.rs|vibe_core::manifest::purl::PurlError",
-    "pub-doctest|crates/vibe-core/src/user_config.rs|vibe_core::user_config::InstallConfig",
-    "pub-doctest|crates/vibe-core/src/user_config.rs|vibe_core::user_config::SlotIntegrity",
-    "pub-doctest|crates/vibe-core/src/user_config.rs|vibe_core::user_config::UserConfigError"
-  ],
+  "findings": [],
   "schema": 1
 }

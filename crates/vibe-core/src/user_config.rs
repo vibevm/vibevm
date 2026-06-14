@@ -57,6 +57,14 @@ pub struct UserConfig {
 }
 
 /// `[install]` section — install-behaviour settings (PROP-011 §5.2).
+///
+/// ```
+/// use vibe_core::user_config::{InstallConfig, SlotIntegrity};
+///
+/// let c: InstallConfig = toml::from_str(r#"slot_integrity = "verify""#).unwrap();
+/// assert_eq!(c.slot_integrity, SlotIntegrity::Verify);
+/// assert!(InstallConfig::default().is_default());
+/// ```
 #[derive(Debug, Default, Clone, PartialEq, Eq, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 pub struct InstallConfig {
@@ -78,6 +86,14 @@ impl InstallConfig {
 /// `[install].slot_integrity` — the materialisation slot-skip strategy
 /// (PROP-011 §2.3 / §5.2). Chosen once in the user config; it persists
 /// across runs.
+///
+/// ```
+/// use vibe_core::user_config::SlotIntegrity;
+///
+/// // The default trusts a slot present for the resolved version (PROP-011 §2.3);
+/// // the wire form `slot_integrity = "verify"` is shown on `InstallConfig`.
+/// assert_eq!(SlotIntegrity::default(), SlotIntegrity::TrustPresence);
+/// ```
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq, Deserialize, Serialize)]
 #[serde(rename_all = "kebab-case")]
 pub enum SlotIntegrity {
@@ -147,6 +163,20 @@ impl UserConfig {
     }
 }
 
+/// Why loading the user config failed — an I/O error reading the file, or
+/// a TOML parse error. Missing-file is *not* an error (the layer is
+/// optional); each variant's `Display` cites the governing REQ.
+///
+/// ```
+/// use vibe_core::user_config::UserConfigError;
+///
+/// let e = UserConfigError::Io {
+///     path: "/etc/vibe/config.toml".into(),
+///     source: std::io::Error::new(std::io::ErrorKind::PermissionDenied, "denied"),
+/// };
+/// assert!(e.to_string().contains("could not read"));
+/// assert!(e.to_string().contains("configuration-sources-in-precedence-order"));
+/// ```
 #[derive(Debug, thiserror::Error)]
 #[spec(implements = "spec://vibevm/VIBEVM-SPEC#configuration-sources-in-precedence-order")]
 pub enum UserConfigError {

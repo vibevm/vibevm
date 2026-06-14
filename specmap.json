@@ -1012,7 +1012,7 @@
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/purl.rs",
       "item_kind": "enum",
-      "line": 124,
+      "line": 135,
       "symbol": "vibe_core::manifest::purl::PurlError"
     },
     {
@@ -1145,7 +1145,7 @@
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/user_config.rs",
       "item_kind": "enum",
-      "line": 150,
+      "line": 166,
       "symbol": "vibe_core::user_config::UserConfigError"
     },
     {
@@ -4352,7 +4352,7 @@
     {
       "file": "crates/vibe-core/src/manifest/purl.rs",
       "from_symbol": "vibe_core::manifest::purl::PurlError",
-      "line": 125,
+      "line": 147,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#subskill-describes",
       "verb": "implements"
@@ -4515,7 +4515,7 @@
     {
       "file": "crates/vibe-core/src/user_config.rs",
       "from_symbol": "vibe_core::user_config::UserConfigError",
-      "line": 151,
+      "line": 181,
       "provenance": "authored",
       "uri": "spec://vibevm/VIBEVM-SPEC#configuration-sources-in-precedence-order",
       "verb": "implements"

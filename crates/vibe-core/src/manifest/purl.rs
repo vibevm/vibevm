@@ -26,6 +26,17 @@ use specmark::spec;
 use thiserror::Error;
 
 /// A parsed Package URL.
+///
+/// ```
+/// use vibe_core::manifest::purl::Purl;
+///
+/// let p = Purl::parse("pkg:cargo/sqlx@^0.8").unwrap();
+/// assert_eq!(p.purl_type, "cargo");
+/// assert_eq!(p.name, "sqlx");
+/// assert_eq!(p.version.as_deref(), Some("^0.8"));
+/// // Display round-trips the canonical `pkg:` form.
+/// assert_eq!(p.to_string(), "pkg:cargo/sqlx@^0.8");
+/// ```
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct Purl {
     /// Lowercased ecosystem type — `npm`, `pypi`, `cargo`, etc.
@@ -121,6 +132,17 @@ impl<'de> Deserialize<'de> for Purl {
     }
 }
 
+/// Why a [`Purl::parse`] failed — the `pkg:` scheme was absent, or the
+/// structure was malformed. Each variant's `Display` cites the governing
+/// REQ, so a failing parse is navigable without source access.
+///
+/// ```
+/// use vibe_core::manifest::purl::{Purl, PurlError};
+///
+/// let err = Purl::parse("cargo/sqlx@0.8.0").unwrap_err();
+/// assert!(matches!(err, PurlError::MissingScheme(_)));
+/// assert!(err.to_string().contains("missing `pkg:` scheme"));
+/// ```
 #[derive(Debug, Error, PartialEq, Eq)]
 #[spec(implements = "spec://vibevm/modules/vibe-resolver/PROP-003#subskill-describes")]
 pub enum PurlError {
