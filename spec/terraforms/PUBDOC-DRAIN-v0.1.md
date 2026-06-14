@@ -1,5 +1,20 @@
 # vibevm Pub-Doctest Drain v0.1 — teach every public vibe-core type by one compiled example
-**status: AUTHORED 2026-06-14 · NOT STARTED · vibevm-specific · drains the 55-entry `pub-doctest` ratchet CONVERT-PLAN v0.1 §1.4 froze on vibe-core**
+**status: EXECUTED TO COMPLETION 2026-06-14 · all 8 batches (B1–B8) landed · conform baseline drained to ZERO · vibevm-specific**
+
+> **Execution record (2026-06-14).** All 55 `pub-doctest` entries drained
+> across eight file-cohesive commits on `origin/main` (`f0067cc` B1 →
+> `53021b6` B8), the panel green at every commit. Per-batch shrink:
+> 55 → 50 → 37 → 29 → 22 → 17 → 12 → 5 → **0**. Since this debt was the whole
+> residual conform baseline, `conform-baseline.json` now carries an empty
+> `findings` array — `cargo xtask conform check` reports 0 frozen / 0 new
+> for the first time in the project's history. vibe-core stays in
+> `GATED_PUB_DOCTEST`: the gate stays armed against new undocumented types.
+> No file crossed the 600 `file-length` budget (the heaviest, `package.rs`,
+> landed at 582); specmap stayed clean throughout (454 / 448 / 459,
+> 0 suspects); full `self-check.sh` green at close. The §5 predictions held:
+> no test expectation moved, every drain was a deletions-only freeze diff,
+> and the edge (b) `#[spec(documents)]` escape was used zero times — all 55
+> landed as compiled doctests.
 
 *Origin: CONVERT-PLAN v0.1 §1.4 landed the `pub-doctest` rule (Class G, commit `647ce68`,
 `crates/conform-core/src/rules/diagnostics.rs:137`) and froze vibe-core's accumulated
