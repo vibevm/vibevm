@@ -202,6 +202,51 @@ pub trait DepProvider {
     ) -> Result<Manifest, DepProviderError>;
 }
 
+/// A [`DepProvider`] that can also enumerate every available version of a
+/// package — the capability a candidate-choosing solver needs beyond the
+/// pull-one [`DepProvider::resolve_version`]. `NaiveDepSolver` and the
+/// [`sat`](crate::sat) cell select a version *inside* the provider;
+/// `ResolvoDepSolver` enumerates candidates and selects among them itself,
+/// so it takes `P: VersionEnumerator`.
+///
+/// ```
+/// use vibe_core::{Group, PackageRef, manifest::Manifest};
+/// use vibe_resolver::{DepProvider, DepProviderError, VersionEnumerator};
+///
+/// struct OnePackage(Manifest);
+/// impl DepProvider for OnePackage {
+///     fn resolve_version(&self, _: &PackageRef)
+///         -> Result<semver::Version, DepProviderError>
+///     { Ok(self.0.require_package().unwrap().version.clone()) }
+///     fn fetch_manifest(&self, _: &Group, _: &str, _: &semver::Version)
+///         -> Result<Manifest, DepProviderError>
+///     { Ok(self.0.clone()) }
+/// }
+/// impl VersionEnumerator for OnePackage {
+///     fn list_versions(&self, _: &Group, _: &str)
+///         -> Result<Vec<semver::Version>, DepProviderError>
+///     { Ok(vec![self.0.require_package().unwrap().version.clone()]) }
+/// }
+///
+/// let m = Manifest::parse_str(
+///     "[package]\ngroup = \"org.vibevm\"\nname = \"wal\"\nkind = \"flow\"\nversion = \"0.1.0\"\n",
+/// ).unwrap();
+/// let versions = OnePackage(m)
+///     .list_versions(&Group::parse("org.vibevm").unwrap(), "wal")
+///     .unwrap();
+/// assert_eq!(versions, vec![semver::Version::parse("0.1.0").unwrap()]);
+/// ```
+#[spec(implements = "spec://vibevm/modules/vibe-resolver/PROP-017#provider-enrichment")]
+pub trait VersionEnumerator: DepProvider {
+    /// All available versions of `(group, name)`, in any order — the
+    /// solver sorts. Backed by `Registry::list_versions` in production.
+    fn list_versions(
+        &self,
+        group: &Group,
+        name: &str,
+    ) -> Result<Vec<semver::Version>, DepProviderError>;
+}
+
 /// What the install / update pipeline calls.
 ///
 /// The canonical use — pick a solver cell, hand it roots, get the
@@ -336,6 +381,7 @@ pub enum DepProviderError {
 /// ```
 #[derive(Debug, Error)]
 #[spec(implements = "spec://vibevm/modules/vibe-registry/PROP-002#capability")]
+#[spec(implements = "spec://vibevm/modules/vibe-resolver/PROP-017#unsatisfiable")]
 pub enum SolveError {
     #[error(transparent)]
     Provider(#[from] DepProviderError),
@@ -383,6 +429,17 @@ pub enum SolveError {
         requirer: String,
         alternatives: Vec<String>,
     },
+
+    /// The engine proved the graph unsatisfiable and produced a
+    /// human-readable derivation. Carried verbatim from resolvo's
+    /// `Conflict::display_user_friendly` (PROP-017 §2.4) — the
+    /// "why did it fail" payload a raw UNSAT verdict cannot give.
+    #[error(
+        "dependency resolution is unsatisfiable:\n{explanation}\n\
+         (violates spec://vibevm/modules/vibe-resolver/PROP-017#unsatisfiable; \
+         fix: relax a version constraint, drop a conflicting package, or accept a downgrade)"
+    )]
+    Unsatisfiable { explanation: String },
 }
 
 // ---------------------------------------------------------------------------
@@ -428,4 +485,77 @@ impl SolverState {
 /// `true` iff the version satisfies the spec.
 pub(crate) fn version_satisfies(spec: &VersionSpec, version: &semver::Version) -> bool {
     spec.matches(version)
+}
+
+/// One solver-chosen package, reduced to what the output builder needs.
+/// Both `NaiveDepSolver` and `ResolvoDepSolver` collapse their internal
+/// state into this before calling [`build_resolved_graph`].
+pub(crate) struct Chosen {
+    pub version: semver::Version,
+    pub direct_deps: Vec<PackageRef>,
+    pub is_root: bool,
+}
+
+/// Build the final [`ResolvedGraph`] from a solver's choices — the single
+/// home of the output contract (PROP-017 §2.3): drop obsoleted entries,
+/// list roots first in input order then the rest sorted for determinism,
+/// and exact-pin every dependency edge to the version chosen for it. Both
+/// solver cells route through here, so they produce byte-identical graphs
+/// — which is exactly what the differential oracle asserts.
+pub(crate) fn build_resolved_graph(
+    root_order: &[(Group, String)],
+    mut chosen: HashMap<(Group, String), Chosen>,
+    obsolete: &HashSet<(Group, String)>,
+) -> ResolvedGraph {
+    for ob in obsolete {
+        chosen.remove(ob);
+    }
+
+    let mut packages: Vec<ResolvedNode> = Vec::with_capacity(chosen.len());
+    // Roots first, input order preserved.
+    for (group, name) in root_order {
+        if let Some(entry) = chosen.remove(&(group.clone(), name.clone())) {
+            packages.push(node_from_chosen(group.clone(), name.clone(), entry, true));
+        }
+    }
+    // The rest, sorted by (group, name) for a deterministic tail.
+    let mut rest: Vec<((Group, String), Chosen)> = chosen.into_iter().collect();
+    rest.sort_by(|a, b| (a.0.0.as_str(), a.0.1.as_str()).cmp(&(b.0.0.as_str(), b.0.1.as_str())));
+    for ((group, name), entry) in rest {
+        packages.push(node_from_chosen(group, name, entry, false));
+    }
+
+    // Exact-pin every dependency reference to the chosen version, so a
+    // later `vibe install` off this lockfile reproduces it bit-for-bit.
+    let resolved_versions: HashMap<(Group, String), semver::Version> = packages
+        .iter()
+        .map(|n| ((n.group.clone(), n.name.clone()), n.version.clone()))
+        .collect();
+    for node in packages.iter_mut() {
+        for dep in node.dependencies.iter_mut() {
+            if let Some(group) = dep.group.clone()
+                && let Some(version) = resolved_versions.get(&(group, dep.name.to_string()))
+                && let Ok(req) = semver::VersionReq::parse(&format!("={version}"))
+            {
+                *dep = PackageRef {
+                    kind: dep.kind,
+                    group: dep.group.clone(),
+                    name: dep.name.clone(),
+                    version: VersionSpec::Req(req),
+                };
+            }
+        }
+    }
+
+    ResolvedGraph { packages }
+}
+
+fn node_from_chosen(group: Group, name: String, entry: Chosen, is_root: bool) -> ResolvedNode {
+    ResolvedNode {
+        group,
+        name,
+        version: entry.version,
+        dependencies: entry.direct_deps,
+        is_root: is_root || entry.is_root,
+    }
 }

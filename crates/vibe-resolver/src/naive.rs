@@ -8,8 +8,8 @@ use vibe_core::manifest::Manifest;
 use vibe_core::{CapabilityRef, Group, PackageRef, VersionSpec};
 
 use crate::{
-    ChosenEntry, DepProvider, DepProviderError, DepSolver, EnqueuedPkg, ResolvedGraph,
-    ResolvedNode, SolveError, SolverState, version_satisfies,
+    ChosenEntry, DepProvider, DepProviderError, DepSolver, EnqueuedPkg, ResolvedGraph, SolveError,
+    SolverState, version_satisfies,
 };
 
 /// Extract the `(group, name)` identity from a pkgref. Solver-internal
@@ -83,71 +83,29 @@ impl<P: DepProvider> DepSolver for NaiveDepSolver<P> {
             self.process_one(&mut state, pkgref, via, is_root)?;
         }
 
-        // Drop obsoleted entries.
-        for ob in state.declared_obsolete.iter() {
-            state.chosen.remove(ob);
-        }
-
-        // Build the output graph. Order: roots first (input order
-        // preserved), then the rest sorted for determinism.
-        let mut packages: Vec<ResolvedNode> = Vec::with_capacity(state.chosen.len());
-        for (group, name) in &root_keys {
-            if let Some(entry) = state.chosen.remove(&(group.clone(), name.clone())) {
-                packages.push(node_from_entry(group.clone(), name.clone(), entry, true));
-            }
-        }
-        let mut rest: Vec<((Group, String), ChosenEntry)> = state.chosen.into_iter().collect();
-        rest.sort_by(|a, b| {
-            (a.0.0.as_str(), a.0.1.as_str()).cmp(&(b.0.0.as_str(), b.0.1.as_str()))
-        });
-        for ((group, name), entry) in rest {
-            // The roots-first pass above removed every root key from
-            // `chosen`; a root-flagged entry surviving into `rest`
-            // would break the "roots are a prefix" ordering contract
-            // the lockfile's `[meta].root_dependencies` is built from.
-            debug_assert!(
-                !entry.is_root,
-                "root-flagged entry escaped the roots-first pass: {group}/{name}"
-            );
-            packages.push(node_from_entry(group, name, entry, false));
-        }
-
-        // Pin every dependency reference to the exact version chosen for
-        // it in the graph. Lockfile `dependencies` per entry stores
-        // exact-pinned `group/name@=version` so a later `vibe install`
-        // off this lockfile reproduces the same install bit-for-bit.
-        let resolved_versions: std::collections::HashMap<(Group, String), semver::Version> =
-            packages
-                .iter()
-                .map(|n| ((n.group.clone(), n.name.clone()), n.version.clone()))
-                .collect();
-        for node in packages.iter_mut() {
-            for dep in node.dependencies.iter_mut() {
-                if let Some(group) = dep.group.clone()
-                    && let Some(version) = resolved_versions.get(&(group, dep.name.to_string()))
-                    && let Ok(req) = semver::VersionReq::parse(&format!("={version}"))
-                {
-                    *dep = PackageRef {
-                        kind: dep.kind,
-                        group: dep.group.clone(),
-                        name: dep.name.clone(),
-                        version: VersionSpec::Req(req),
-                    };
-                }
-            }
-        }
-
-        Ok(ResolvedGraph { packages })
-    }
-}
-
-fn node_from_entry(group: Group, name: String, entry: ChosenEntry, is_root: bool) -> ResolvedNode {
-    ResolvedNode {
-        group,
-        name,
-        version: entry.version,
-        dependencies: entry.direct_deps,
-        is_root: is_root || entry.is_root,
+        // Hand the accumulated choices to the shared output builder
+        // (PROP-017 §2.3): roots-first ordering, exact-version pinning,
+        // and obsolete-dropping live in one place so `ResolvoDepSolver`
+        // yields a byte-identical graph — the differential oracle pins it.
+        let chosen: std::collections::HashMap<(Group, String), crate::Chosen> = state
+            .chosen
+            .into_iter()
+            .map(|(k, e)| {
+                (
+                    k,
+                    crate::Chosen {
+                        version: e.version,
+                        direct_deps: e.direct_deps,
+                        is_root: e.is_root,
+                    },
+                )
+            })
+            .collect();
+        Ok(crate::build_resolved_graph(
+            &root_keys,
+            chosen,
+            &state.declared_obsolete,
+        ))
     }
 }
 
