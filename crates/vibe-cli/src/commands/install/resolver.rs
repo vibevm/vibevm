@@ -192,16 +192,8 @@ pub(super) fn apply_git_source_flag(
     Ok(())
 }
 
-/// Build the install resolver for this invocation.
-///
-/// Precedence (matches `VIBEVM-SPEC.md` §9.1):
-/// 1. `--registry <path>` — explicit local-directory registry (M0 shape,
-///    used by tests and offline workflows).
-/// 2. `[[registry]]` array in `vibe.toml` → [`MultiRegistryResolver`]
-///    covering priority order, mirrors, and overrides per
-///    [PROP-002](../../../../spec/modules/vibe-registry/PROP-002-decentralized-registry.md).
-/// Validate the `--solver` flag into the static cell name the R-001
-/// selection seam accepts. `None` keeps the built-in default (resolvo).
+/// Validate the `--solver` flag into the cell name the R-001 selection
+/// seam accepts; `None` keeps the built-in default (resolvo).
 fn validate_solver(flag: Option<&str>) -> Result<Option<&'static str>> {
     match flag {
         None => Ok(None),
@@ -214,6 +206,14 @@ fn validate_solver(flag: Option<&str>) -> Result<Option<&'static str>> {
     }
 }
 
+/// Build the install resolver for this invocation.
+///
+/// Precedence (matches `VIBEVM-SPEC.md` §9.1):
+/// 1. `--registry <path>` — explicit local-directory registry (M0 shape,
+///    used by tests and offline workflows).
+/// 2. `[[registry]]` array in `vibe.toml` → [`MultiRegistryResolver`]
+///    covering priority order, mirrors, and overrides per
+///    [PROP-002](../../../../spec/modules/vibe-registry/PROP-002-decentralized-registry.md).
 pub(crate) fn build_install_resolver(
     args: &InstallArgs,
     manifest: &Manifest,
