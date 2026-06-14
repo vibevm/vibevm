@@ -22,6 +22,23 @@ use super::purl::Purl;
 use super::{read_toml, write_toml};
 
 /// Top-level `vibe-subskill.toml`.
+///
+/// ```
+/// use vibe_core::manifest::SubskillManifest;
+///
+/// let m: SubskillManifest = toml::from_str(r#"
+///     [subskill]
+///     path = "stack/rust"
+///     description = "Rust + sqlx guidance"
+///     delivery = "lazy-push"
+///
+///     [activation]
+///     if_files = ["**/Cargo.toml"]
+/// "#).unwrap();
+/// assert_eq!(m.subskill.path, "stack/rust");
+/// // `lazy-push` is valid here because a description is present.
+/// assert!(m.validation_findings().is_empty());
+/// ```
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct SubskillManifest {
@@ -44,6 +61,18 @@ pub struct SubskillManifest {
     pub content: SubskillContent,
 }
 
+/// `[subskill]` — identity and delivery metadata for one subskill.
+///
+/// ```
+/// use vibe_core::manifest::{SubskillMeta, DeliveryMode};
+///
+/// let s: SubskillMeta = toml::from_str(r#"
+///     path = "stack/rust"
+///     delivery = "lazy-pull"
+/// "#).unwrap();
+/// assert_eq!(s.path, "stack/rust");
+/// assert_eq!(s.delivery, DeliveryMode::LazyPull);
+/// ```
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct SubskillMeta {
@@ -76,6 +105,16 @@ pub struct SubskillMeta {
 }
 
 /// Three delivery modes per PROP-003 §2.5.0.
+///
+/// ```
+/// use vibe_core::manifest::DeliveryMode;
+///
+/// assert_eq!(DeliveryMode::default(), DeliveryMode::Eager);
+/// assert_eq!(DeliveryMode::LazyPush.as_str(), "lazy-push");
+/// // The lazy modes match against the agent's task, so they need a description.
+/// assert!(DeliveryMode::LazyPull.requires_description());
+/// assert!(!DeliveryMode::Eager.requires_description());
+/// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
 pub enum DeliveryMode {
@@ -111,6 +150,17 @@ impl DeliveryMode {
 ///
 /// All fields are optional; an empty `[activation]` block means the
 /// subskill activates only manually (via parent `[features]` mapping).
+///
+/// ```
+/// use vibe_core::manifest::ActivationRules;
+///
+/// let a: ActivationRules = toml::from_str(r#"
+///     if_present = ["stack:rust"]
+///     if_files = ["**/Cargo.toml"]
+/// "#).unwrap();
+/// assert_eq!(a.if_present, vec!["stack:rust"]);
+/// assert!(a.allow_llm_emission); // defaults to true
+/// ```
 #[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct ActivationRules {
@@ -176,6 +226,19 @@ fn is_false(b: &bool) -> bool {
     !*b
 }
 
+/// `[recommends]` — soft preference: subskills, packages, or capabilities
+/// that should also activate alongside this one (libsolv-Recommends-style).
+///
+/// ```
+/// use vibe_core::manifest::SubskillRecommends;
+///
+/// let r: SubskillRecommends = toml::from_str(r#"
+///     subskills = ["feature/atomic-only"]
+/// "#).unwrap();
+/// assert_eq!(r.subskills, vec!["feature/atomic-only"]);
+/// assert!(!r.is_empty());
+/// assert!(SubskillRecommends::default().is_empty());
+/// ```
 #[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct SubskillRecommends {
@@ -193,6 +256,18 @@ impl SubskillRecommends {
     }
 }
 
+/// `[conflicts]` — hard exclusion: subskills or packages that must not
+/// activate alongside this one.
+///
+/// ```
+/// use vibe_core::manifest::SubskillConflicts;
+///
+/// let c: SubskillConflicts = toml::from_str(r#"
+///     subskills = ["stack/python"]
+/// "#).unwrap();
+/// assert!(!c.is_empty());
+/// assert!(SubskillConflicts::default().is_empty());
+/// ```
 #[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct SubskillConflicts {
@@ -208,6 +283,17 @@ impl SubskillConflicts {
     }
 }
 
+/// `[content]` — the files a subskill ships, relative to its own root.
+///
+/// ```
+/// use vibe_core::manifest::SubskillContent;
+///
+/// let c: SubskillContent = toml::from_str(r#"
+///     files_written = ["spec/boot/15-flow-wal-rust.md"]
+/// "#).unwrap();
+/// assert_eq!(c.files_written.len(), 1);
+/// assert!(SubskillContent::default().is_empty());
+/// ```
 #[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct SubskillContent {
