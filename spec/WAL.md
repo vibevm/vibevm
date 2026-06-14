@@ -1,9 +1,44 @@
 # WAL — Project Continuation State
-_Updated: 2026-06-14 — **PUBDOC-DRAIN v0.1 COMPLETE — vibe-core's 55-entry `pub-doctest` ratchet drained to ZERO; the conform baseline is now empty for the first time.** Eight file-cohesive batches (B1–B8) on `origin/main` (`f0067cc`…`53021b6`), panel green at every commit, full `self-check.sh` green at close. Prior: CONVERT-PLAN v0.1 complete (Phases 0–7). Git log is the authoritative per-item record; every commit cites its plan item._
+_Updated: 2026-06-14 — **SOURCE-MIRROR system in force and hardened.** PROP-016 made the source multi-homed (GitVerse + GitHub `anarchic-pro/vibevm`, hub-and-spoke, `cargo xtask mirror`); this session made the fan-out faithful to its spec — it now self-heals local tracking refs after a push (push-by-URL had left `origin/main` stale → false "ahead"), and the never-`--force` invariant became a unit test (`push_args_never_force`). Two commits `e4a9353`/`e3546ec` on BOTH mirrors (`origin/main` = `github/main` = `e3546ec`), panel green. Prior: PUBDOC-DRAIN v0.1 + CONVERT-PLAN v0.1 (Phases 0–7) both COMPLETE. Git log is the authoritative per-item record._
 
 ## Current phase
 
-**PUBDOC-DRAIN v0.1 — COMPLETE (2026-06-14).** The plan is
+**SOURCE MIRRORS (PROP-016) — IN FORCE; fan-out hardened (2026-06-14).**
+The source is multi-homed across GitVerse (`anarchic/vibevm`) and GitHub
+(`anarchic-pro/vibevm`), both public + canonical for reading, kept in step
+by `cargo xtask mirror` under the benevolent-dictator / hub-and-spoke model
+(single-writer local mainline; every host a downstream read-replica). Spec:
+[`PROP-016`](common/PROP-016-source-mirrors.md); registry
+[`mirrors.toml`](../mirrors.toml); engine `xtask/src/mirror.rs`. **Roll out
+with `cargo xtask mirror`, NOT `git push origin`** (origin only hits
+GitVerse). This session's two commits (`e4a9353` code, `e3546ec`
+spec+specmap):
+- **Tracking-ref self-heal.** Fan-out pushes by the URL in `mirrors.toml`,
+  so git left `refs/remotes/<remote>/<branch>` stale and `git status` read
+  "ahead of origin/main" after a green rollout. Fix: after each successful
+  branch push, `mirror` moves the matching remote's tracking ref up to the
+  pushed commit via `git update-ref` (no extra round-trip — the ff-only
+  push already guaranteed host == local). Tags skipped (no per-remote
+  tracking ref). Best-effort: a local hiccup warns, never fails a rollout.
+- **Never-`--force` is now runnable capital.** The push argv builds in one
+  pure `push_args`; `push_args_never_force` asserts no `--force`/`-f`/`+`
+  refspec for any ref shape (PROP-016 §6, the `CLAUDE.md` Rule 4 red line).
+  Closes the Discipline gap "a rule with no checker is a WISH."
+- **xtask stays gate-exempt by record** — no `scope!`/Class-F added (no
+  xtask module carries them; the pure-fn + unit-test is the right move for
+  exempt tooling). Verified: full `self-check.sh` green; `conform check`
+  0/0/0 (baseline empty); `specmap --check` clean (regen was line-shift
+  only — 0 units/edges added). Dogfooded: `cargo xtask mirror` printed the
+  `track origin/main -> e3546ec` lines and `git status` came back clean.
+
+**No campaign in flight. The next session picks the owner's next goal.**
+The standing instrument is DISCIPLINE-SWEEP (`cargo xtask health`); its last
+backlog: `boot.rs` at the 600 `file-length` landmine, four zero-gap
+`GATED_PUB_DOCTEST` promotion candidates (conform-core,
+conform-frontend-rust, env-audit, specmark-grammar), ~260-type drain
+backlog led by vibe-install.
+
+**Prior — PUBDOC-DRAIN v0.1 — COMPLETE (2026-06-14).** The plan is
 [`spec/terraforms/PUBDOC-DRAIN-v0.1.md`](terraforms/PUBDOC-DRAIN-v0.1.md)
 (it carries its own execution record). vibe-core's 55-entry `pub-doctest`
 ratchet — the whole residual conform baseline — drained to zero across
