@@ -37,6 +37,7 @@ mod codemod;
 mod conform;
 mod fast_loop;
 mod health;
+mod mirror;
 mod specmap;
 mod test_gate;
 mod trace;
@@ -47,6 +48,7 @@ use codemod::run_codemod_add_cell;
 use conform::{run_conform_check, run_conform_freeze};
 use fast_loop::run_fast_loop;
 use health::run_health;
+use mirror::run_mirror;
 use specmap::run_specmap;
 use test_gate::run_test_gate;
 use trace::run_trace_explain;
@@ -161,6 +163,23 @@ enum Cmd {
         /// Where to write the JSON snapshot, repo-relative.
         #[arg(long, default_value = "terraform/health/latest.json")]
         out: String,
+    },
+
+    /// Fan the local mainline out to every target in `mirrors.toml`
+    /// (the benevolent-dictator / hub-and-spoke mirror model, no primary):
+    /// push `main` + tags to every `push` target, fast-forward-only and
+    /// never `--force`. `--check` verifies sync without pushing; `--from
+    /// <name>` fast-forwards local mainline to a host's accepted-PR merge
+    /// before fanning out. Auth is the maintainer's per-host SSH keys.
+    Mirror {
+        /// Verify every target is in sync with local mainline; push nothing.
+        #[arg(long)]
+        check: bool,
+
+        /// Before fanning out, fast-forward local `main` to this target's
+        /// `main` (a PR accepted/merged via that host's web UI).
+        #[arg(long)]
+        from: Option<String>,
     },
 }
 
@@ -292,6 +311,7 @@ fn main() -> Result<()> {
                 },
         } => run_codemod_add_cell(&crate_dir, &cell, &seam, &variant, &spec_uri),
         Cmd::Health { out } => run_health(&out),
+        Cmd::Mirror { check, from } => run_mirror(check, from.as_deref()),
     }
 }
 

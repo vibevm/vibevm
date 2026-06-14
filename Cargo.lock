@@ -2942,6 +2942,7 @@ dependencies = [
  "conform-frontend-rust",
  "serde_json",
  "specmap-core",
+ "toml 0.9.12+spec-1.1.0",
  "walkdir",
 ]
 

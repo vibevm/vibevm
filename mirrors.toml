@@ -1,0 +1,36 @@
+# mirrors.toml — the source-mirror target registry (the fan-out manifest).
+#
+# Model: benevolent dictator / hub-and-spoke, no primary. Mainline is the
+# maintainer's integrated local `main` — single-writer, so there is no
+# multi-master conflict. Every target below is a downstream read-replica,
+# canonical for READING in its region; nobody writes a target directly.
+# Contributions arrive as PRs / branches / email patches on ANY host, are
+# integrated into local mainline, then fanned out from here.
+#
+#   cargo xtask mirror              fan mainline out to every push-target
+#                                   (fast-forward-only, fail-loud, never --force)
+#   cargo xtask mirror --check      verify every target is in sync (push nothing)
+#   cargo xtask mirror --from NAME  fast-forward local mainline to a host's
+#                                   accepted-PR merge, then fan out everywhere
+#
+# This file is the SHARED, committed target list — a machine-local git remote
+# can be neither shared nor verified. It carries NO credentials: auth is the
+# maintainer's per-host SSH keys in the agent. Add a target by appending a
+# [[target]] block; `mode = "self-pull"` marks a host that mirrors itself (we
+# only verify it keeps up, we do not push to it).
+
+schema = 1
+
+[[target]]
+name = "gitverse"
+url = "git@gitverse.ru:anarchic/vibevm.git"
+mode = "push"
+refs = ["main", "tags"]
+region = "ru"
+
+[[target]]
+name = "github"
+url = "git@github.com:anarchic-pro/vibevm.git"
+mode = "push"
+refs = ["main", "tags"]
+region = "us"
