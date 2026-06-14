@@ -163,6 +163,12 @@ enum Cmd {
         /// Where to write the JSON snapshot, repo-relative.
         #[arg(long, default_value = "terraform/health/latest.json")]
         out: String,
+
+        /// Also probe whether every `mirrors.toml` target is in sync with
+        /// local mainline. A network call — OFF by default, so the default
+        /// run stays deterministic and offline.
+        #[arg(long)]
+        mirrors: bool,
     },
 
     /// Fan the local mainline out to every target in `mirrors.toml`
@@ -310,7 +316,7 @@ fn main() -> Result<()> {
                     spec_uri,
                 },
         } => run_codemod_add_cell(&crate_dir, &cell, &seam, &variant, &spec_uri),
-        Cmd::Health { out } => run_health(&out),
+        Cmd::Health { out, mirrors } => run_health(&out, mirrors),
         Cmd::Mirror { check, from } => run_mirror(check, from.as_deref()),
     }
 }

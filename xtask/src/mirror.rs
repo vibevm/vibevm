@@ -44,6 +44,19 @@ struct Target {
     refs: Vec<String>,
 }
 
+/// One target's sync state relative to local mainline — the result both
+/// `mirror --check` and `health --mirrors` read.
+pub(crate) enum SyncState {
+    InSync,
+    Drift(String),
+    Missing,
+}
+
+pub(crate) struct TargetStatus {
+    pub name: String,
+    pub state: SyncState,
+}
+
 pub(crate) fn run_mirror(check: bool, from: Option<&str>) -> Result<()> {
     let root = repo_root()?;
     let targets = load_targets(&root)?;
@@ -190,20 +203,46 @@ fn fan_out(root: &Path, targets: &[Target]) -> Result<()> {
     Ok(())
 }
 
-fn verify(root: &Path, targets: &[Target]) -> Result<()> {
+/// Probe every target's `main` against local mainline. Shared by
+/// `mirror --check` (which fails on drift) and `health --mirrors` (advisory).
+fn probe(root: &Path, targets: &[Target]) -> Result<(String, Vec<TargetStatus>)> {
     let head = local_main(root)?;
+    let mut statuses = Vec::with_capacity(targets.len());
+    for t in targets {
+        let state = match remote_main(root, &t.url)? {
+            Some(sha) if sha == head => SyncState::InSync,
+            Some(sha) => SyncState::Drift(sha),
+            None => SyncState::Missing,
+        };
+        statuses.push(TargetStatus {
+            name: t.name.clone(),
+            state,
+        });
+    }
+    Ok((head, statuses))
+}
+
+/// Load the manifest and probe every target — the entry `health --mirrors`
+/// calls (it carries no loaded targets of its own).
+pub(crate) fn sync_report(root: &Path) -> Result<(String, Vec<TargetStatus>)> {
+    let targets = load_targets(root)?;
+    probe(root, &targets)
+}
+
+fn verify(root: &Path, targets: &[Target]) -> Result<()> {
+    let (head, statuses) = probe(root, targets)?;
     println!("mirror --check: local {MAINLINE} @ {}", short(&head));
     let mut drift = Vec::new();
-    for t in targets {
-        match remote_main(root, &t.url)? {
-            Some(sha) if sha == head => println!("  sync   {}", t.name),
-            Some(sha) => {
-                println!("  DRIFT  {} at {}", t.name, short(&sha));
-                drift.push(t.name.clone());
+    for s in &statuses {
+        match &s.state {
+            SyncState::InSync => println!("  sync   {}", s.name),
+            SyncState::Drift(sha) => {
+                println!("  DRIFT  {} at {}", s.name, short(sha));
+                drift.push(s.name.as_str());
             }
-            None => {
-                println!("  EMPTY  {} (no {MAINLINE})", t.name);
-                drift.push(t.name.clone());
+            SyncState::Missing => {
+                println!("  EMPTY  {} (no {MAINLINE})", s.name);
+                drift.push(s.name.as_str());
             }
         }
     }
