@@ -18,7 +18,7 @@ use crate::repo_root;
 /// `unwrap` hits are `unwrap_or` combinators and test code; env-audit's
 /// two live only in tests), so each flip froze nothing — the v0.2
 /// invariant that a flip never widens the baseline holds.
-const CONFORM_GATED: &[&str] = &[
+pub(crate) const CONFORM_GATED: &[&str] = &[
     "vibe-core",
     "vibe-index",
     "vibe-install",
@@ -45,7 +45,7 @@ const CONFORM_GATED: &[&str] = &[
 /// This table is the checklist the remaining phases drain;
 /// `every_crate_is_gated_or_exempt` keeps it honest against the
 /// workspace so a new crate cannot slip in unclassified.
-const CONFORM_EXEMPT: &[(&str, &str)] = &[
+pub(crate) const CONFORM_EXEMPT: &[(&str, &str)] = &[
     (
         "vibe-graph",
         "M0 stub, no code yet — the task-graph runner per VIBEVM-SPEC §5 is unbuilt; \
@@ -74,7 +74,7 @@ const CONFORM_EXEMPT: &[(&str, &str)] = &[
 /// frozen and shrunk from there. This is a strictly wider lens than
 /// `seam-has-doctest` (which sees lib.rs items + traits), so it gets its
 /// own list and grows crate-by-crate as later phases convert each.
-const GATED_PUB_DOCTEST: &[&str] = &["vibe-core"];
+pub(crate) const GATED_PUB_DOCTEST: &[&str] = &["vibe-core"];
 
 /// Files where reading the ambient environment is sanctioned (the
 /// `ambient-env` rule, R-001 projection — CONVERT-PLAN v0.1 §5.2): the
@@ -86,7 +86,7 @@ const GATED_PUB_DOCTEST: &[&str] = &["vibe-core"];
 /// `CONFORM_GATED`. The fn-grain `#[spec(deviates, reason)]` escape
 /// remains for an inherent-env domain read in a non-root file (e.g. the
 /// resolver's `[activation]` predicate evaluation).
-const ENV_ROOTS: &[&str] = &[
+pub(crate) const ENV_ROOTS: &[&str] = &[
     "crates/vibe-cli/src/main.rs",
     "crates/vibe-cli/src/output.rs",
     "crates/vibe-cli/src/commands/show/config.rs",

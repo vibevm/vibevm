@@ -36,6 +36,7 @@ mod codegen;
 mod codemod;
 mod conform;
 mod fast_loop;
+mod health;
 mod specmap;
 mod test_gate;
 mod trace;
@@ -45,6 +46,7 @@ use codegen::{run_check_codegen, run_codegen};
 use codemod::run_codemod_add_cell;
 use conform::{run_conform_check, run_conform_freeze};
 use fast_loop::run_fast_loop;
+use health::run_health;
 use specmap::run_specmap;
 use test_gate::run_test_gate;
 use trace::run_trace_explain;
@@ -146,6 +148,19 @@ enum Cmd {
         /// red tests. Off during Phase-1 remediation; the gate mode.
         #[arg(long)]
         enforce_budget: bool,
+    },
+
+    /// The Discipline health collector (DISCIPLINE-SWEEP v0.1's
+    /// fact-gatherer): advisory early-warning + coverage facts that sit
+    /// above the binary conform/specmap gates — per-crate public-type
+    /// doctest coverage, the file-length danger band, the pub-doctest
+    /// drain/promotion backlog, and the deviation-debt census. Reuses the
+    /// conform fact frontend so the numbers never drift from the gates.
+    /// Deterministic given the tree; never fails the build (the gates do).
+    Health {
+        /// Where to write the JSON snapshot, repo-relative.
+        #[arg(long, default_value = "terraform/health/latest.json")]
+        out: String,
     },
 }
 
@@ -276,6 +291,7 @@ fn main() -> Result<()> {
                     spec_uri,
                 },
         } => run_codemod_add_cell(&crate_dir, &cell, &seam, &variant, &spec_uri),
+        Cmd::Health { out } => run_health(&out),
     }
 }
 
