@@ -1,7 +1,62 @@
 # WAL — Project Continuation State
-_Updated: 2026-06-14 — **SOURCE-MIRROR system in force and hardened.** PROP-016 made the source multi-homed (GitVerse + GitHub `anarchic-pro/vibevm`, hub-and-spoke, `cargo xtask mirror`); this session made the fan-out faithful to its spec — it now self-heals local tracking refs after a push (push-by-URL had left `origin/main` stale → false "ahead"), and the never-`--force` invariant became a unit test (`push_args_never_force`). Two commits `e4a9353`/`e3546ec` on BOTH mirrors (`origin/main` = `github/main` = `e3546ec`), panel green. Prior: PUBDOC-DRAIN v0.1 + CONVERT-PLAN v0.1 (Phases 0–7) both COMPLETE. Git log is the authoritative per-item record._
+_Updated: 2026-06-14 — **RESOLVO RESOLVER (PROP-017) — IN PROGRESS.** The owner chose resolvo (pure-Rust, BSD-3-Clause, CDCL SAT) as the production dependency solver over PROP-003 §2.2's libsolv pick. Built + gate-green on local `main` (5 commits): the full `ResolvoDepSolver` engine + `VibevmResolvoProvider` adapter (resolvo `Interner` + async `DependencyProvider`, `NowOrNeverRuntime` → no async runtime) + a shared output builder + `SolveError::Unsatisfiable` + the `differential_naive_vs_resolvo_dominance` oracle + `[[requires_any]]`→`Union` disjunctions with backtracking. Remaining: conflicts/obsoletes/capabilities (one design fork — registry has no capability→provider index), weak-deps, then wiring resolvo as the default. Prior: SOURCE-MIRROR (PROP-016) in force; PUBDOC-DRAIN + CONVERT-PLAN complete. Git log is the authoritative per-item record._
 
 ## Current phase
+
+**RESOLVO RESOLVER (PROP-017) — IN PROGRESS (2026-06-14).** The owner
+chose resolvo (pure-Rust, BSD-3-Clause, CDCL SAT) as the production
+dependency solver, superseding PROP-003 §2.2's libsolv pick — its three
+deferral reasons for resolvo (younger, less battle-tested, no conflict
+introspection) decayed by 2026, while libsolv's C-FFI / `unsafe` /
+eager-pool / Windows costs are structural. Spec:
+[`PROP-017`](modules/vibe-resolver/PROP-017-resolvo-resolver.md); engine
+`crates/vibe-resolver/src/resolvo_engine/`.
+
+**Landed and proven — 5 commits, all gate-green, on local `main`:**
+
+- **`ResolvoDepSolver<P: VersionEnumerator>`** — a `#[cell]` `DepSolver`
+  behind the unchanged seam, over a `VibevmResolvoProvider` adapter
+  (resolvo `Interner` + async `DependencyProvider`, default
+  `NowOrNeverRuntime` → no async runtime / no tokio). `SemverVersionSet`
+  maps `VersionSpec` onto a resolvo `VersionSet`; `sort_candidates` desc
+  → newest-feasible first. Lazy: versions/manifests fetched only when the
+  search asks. Provider errors stashed and surfaced after the solve.
+- **Shared `build_resolved_graph`** extracted from `naive.rs` (roots-first
+  + exact-pin + obsolete-drop) so resolvo and naive emit byte-identical
+  graphs. **`SolveError::Unsatisfiable`** carries resolvo's
+  `display_user_friendly` derivation — a human "why", not a bare UNSAT.
+- **`differential_naive_vs_resolvo_dominance`** proptest: naive-solves ⟹
+  resolvo-identical; naive-fails ⟹ resolvo-may-solve; resolvo-fails-where-
+  naive-solves ⟹ bug. Holds across 64 generated worlds. Also satisfies
+  `cell-has-oracle`.
+- **`[[requires_any]]` → resolvo `Requirement::Union`** (native OR +
+  backtracking — the marquee win over naive's first-option). Absent
+  packages → empty candidates (so disjunctions fall back); roots
+  pre-validated for clean "not found" errors.
+
+**Remaining (PROP-017 §6; see the task list):**
+
+- **S4 rest** — `[conflicts]` (→ resolvo `constrains` to a match-nothing
+  set) and `[obsoletes]` (→ output-builder drop, mirroring naive).
+- **Capabilities** — the one open **DESIGN FORK**: the git-backed registry
+  has no "who provides capability X" reverse index, so resolvo cannot
+  enumerate capability providers lazily the way it does packages (naive
+  side-steps this by matching only against the already-seen graph).
+  Conservative path: pre-scan the transitive package closure to build a
+  capability→providers index before the solve (breaks laziness for
+  capabilities only). Owner input welcome before committing.
+- **S5** — weak-deps (`[recommends]`→soft; `[supplements]`/`[enhances]`/
+  `[suggests]`) + `[features.exclusive]`.
+- **S6** — `[meta].solver` + `--solver resolvo` + **flip the default to
+  resolvo** (today naive is still the only wired solver).
+- **S7** — full gates + WAL/CONTINUE rewrite + mirror rollout.
+
+Full `self-check.sh` green (whole workspace: fmt, tests, doctests, clippy
+-D, `vibe check` 0/0/0); conform 0/0/0; specmap clean (0 suspects /
+warnings / orphans). naive and sat stay in tree as the small-graph fast
+path and the oracle's reference cells.
+
+## Prior phase — source mirrors (PROP-016, in force)
 
 **SOURCE MIRRORS (PROP-016) — IN FORCE; fan-out hardened (2026-06-14).**
 The source is multi-homed across GitVerse (`anarchic/vibevm`) and GitHub
