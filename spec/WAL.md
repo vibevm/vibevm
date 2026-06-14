@@ -1,5 +1,5 @@
 # WAL — Project Continuation State
-_Updated: 2026-06-14 — **RESOLVO RESOLVER (PROP-017) — IN PROGRESS.** The owner chose resolvo (pure-Rust, BSD-3-Clause, CDCL SAT) as the production dependency solver over PROP-003 §2.2's libsolv pick. Built + gate-green on local `main` (5 commits): the full `ResolvoDepSolver` engine + `VibevmResolvoProvider` adapter (resolvo `Interner` + async `DependencyProvider`, `NowOrNeverRuntime` → no async runtime) + a shared output builder + `SolveError::Unsatisfiable` + the `differential_naive_vs_resolvo_dominance` oracle + `[[requires_any]]`→`Union` disjunctions with backtracking. Remaining: conflicts/obsoletes/capabilities (one design fork — registry has no capability→provider index), weak-deps, then wiring resolvo as the default. Prior: SOURCE-MIRROR (PROP-016) in force; PUBDOC-DRAIN + CONVERT-PLAN complete. Git log is the authoritative per-item record._
+_Updated: 2026-06-14 — **RESOLVO RESOLVER (PROP-017) — ENGINE + FULL EXISTING VOCABULARY COMPLETE; production-wiring next.** resolvo (pure-Rust, BSD-3-Clause, CDCL SAT) replaces PROP-003 §2.2's libsolv as the production solver. The engine + the entire existing dependency vocabulary are encoded and oracle-proven to dominate naive: `ResolvoDepSolver` + `VibevmResolvoProvider` (resolvo `Interner` + async `DependencyProvider`, `NowOrNeverRuntime` → no async runtime), a shared output builder, `SolveError::Unsatisfiable`, the `differential_naive_vs_resolvo_dominance` oracle, `[[requires_any]]`→`Union` disjunctions with backtracking, `[conflicts]`/`[obsoletes]`, and capabilities via a closure pre-scan. 9 resolvo commits on both mirrors. Remaining to FINISH THE PORT: S1 (production version enumeration — `MultiRegistryResolver::list_versions`, gated `vibe-registry`) then S6 (wire resolvo into `vibe-cli` + flip the default). Weak-deps are a SEPARATE feature — the package `[recommends]`/`[supplements]`/etc. manifest schema does not exist yet. Prior: SOURCE-MIRROR (PROP-016) in force; PUBDOC-DRAIN + CONVERT-PLAN complete. Git log is the authoritative per-item record._
 
 ## Current phase
 
@@ -12,7 +12,7 @@ eager-pool / Windows costs are structural. Spec:
 [`PROP-017`](modules/vibe-resolver/PROP-017-resolvo-resolver.md); engine
 `crates/vibe-resolver/src/resolvo_engine/`.
 
-**Landed and proven — 5 commits, all gate-green, on local `main`:**
+**Landed and proven — engine + full existing vocabulary, 9 commits, all gate-green, on both mirrors:**
 
 - **`ResolvoDepSolver<P: VersionEnumerator>`** — a `#[cell]` `DepSolver`
   behind the unchanged seam, over a `VibevmResolvoProvider` adapter
@@ -33,23 +33,43 @@ eager-pool / Windows costs are structural. Spec:
   backtracking — the marquee win over naive's first-option). Absent
   packages → empty candidates (so disjunctions fall back); roots
   pre-validated for clean "not found" errors.
+- **`[conflicts]` → `constrains` to a match-nothing set; `[obsoletes]` →
+  output-builder drop** (mirroring naive's whole-package semantics).
+- **Capabilities via a closure pre-scan** (`resolvo_engine/capabilities.rs`):
+  walk the transitive package closure, index `[provides]`, encode
+  `[requires.capabilities]` as a `Union` over matching providers
+  (`SemverVersionSet::Explicit`), and `capabilities::verify` post-solve
+  for the `CapabilityUnmet` verdict. Strictly stronger than naive
+  (order-independent; pulls a provider in). The fuller registry
+  reverse-index is recorded as PROP-017 §8 future work.
 
-**Remaining (PROP-017 §6; see the task list):**
+**Remaining to finish the port — the production-wiring phase:**
 
-- **S4 rest** — `[conflicts]` (→ resolvo `constrains` to a match-nothing
-  set) and `[obsoletes]` (→ output-builder drop, mirroring naive).
-- **Capabilities** — the one open **DESIGN FORK**: the git-backed registry
-  has no "who provides capability X" reverse index, so resolvo cannot
-  enumerate capability providers lazily the way it does packages (naive
-  side-steps this by matching only against the already-seen graph).
-  Conservative path: pre-scan the transitive package closure to build a
-  capability→providers index before the solve (breaks laziness for
-  capabilities only). Owner input welcome before committing.
-- **S5** — weak-deps (`[recommends]`→soft; `[supplements]`/`[enhances]`/
-  `[suggests]`) + `[features.exclusive]`.
-- **S6** — `[meta].solver` + `--solver resolvo` + **flip the default to
-  resolvo** (today naive is still the only wired solver).
-- **S7** — full gates + WAL/CONTINUE rewrite + mirror rollout.
+- **S1 — production version enumeration.** `ResolvoDepSolver` takes
+  `P: VersionEnumerator`; the real providers must implement it. Add
+  `MultiRegistryResolver::list_versions` (a priority-ordered registry
+  walk that honours overrides / redirects / path+git sources — subtle,
+  in the gated `vibe-registry` crate) and delegate from
+  `MultiRegistryProvider` / `LocalRegistryProvider`. Test providers
+  already implement it.
+- **S6 — wire resolvo as the default.** `vibe-cli/src/registry.rs::build_solver`
+  is the selection point (today always `NaiveDepSolver`). Add the
+  `resolvo` cell + a `--solver <naive|sat|resolvo>` override + the
+  `[meta].solver` key, then **flip the default to resolvo** — a
+  production behavioural change (naive's first-pick-wins and
+  order-dependent capability bugs are what it fixes), done with the full
+  suite green and naive/sat retained as fallback. Depends on S1.
+- **S7 — close.** Full gates + WAL/CONTINUE rewrite + mirror.
+
+**Deferred — weak-deps are a SEPARATE feature, not part of the port.**
+The package-level `[recommends]` / `[suggests]` / `[supplements]` /
+`[enhances]` manifest sections (PROP-003 §2.3.3) **do not exist in the
+`Manifest` schema** — only subskills carry `[recommends]` today. Adding
+them is a vibe-core schema change plus solver + tests; resolvo is ready
+to encode them (recommends→soft, supplements→a reverse-index like
+capabilities) once the schema lands. `[features.exclusive]` likewise
+lives in the `features.rs` layer above the solver. Track as a future
+PROP, not a resolvo slice.
 
 Full `self-check.sh` green (whole workspace: fmt, tests, doctests, clippy
 -D, `vibe check` 0/0/0); conform 0/0/0; specmap clean (0 suspects /
