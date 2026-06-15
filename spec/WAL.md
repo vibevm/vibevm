@@ -1,5 +1,5 @@
 # WAL — Project Continuation State
-_Updated: 2026-06-14 — **RESOLVO RESOLVER (PROP-017) — PORT COMPLETE; resolvo is the default production solver.** resolvo (pure-Rust, BSD-3-Clause, CDCL SAT) replaces PROP-003 §2.2's libsolv. The engine + the entire existing dependency vocabulary are encoded and oracle-proven to dominate naive (requires, `[[requires_any]]`→Union with backtracking, `[conflicts]`, `[obsoletes]`, capabilities via a closure pre-scan); production version enumeration (`MultiRegistryResolver::list_versions` + `VersionEnumerator` on the real providers) feeds it; and `vibe install/update/reinstall` now resolve with `ResolvoDepSolver` by default, with `--solver <naive|sat|resolvo>` as the fallback. ~15 resolvo commits on both mirrors; full `self-check.sh` green. Deferred (separate schema work, PROP-017 §8): weak-deps and the `[meta].solver` lockfile field. Prior: SOURCE-MIRROR (PROP-016) in force; PUBDOC-DRAIN + CONVERT-PLAN complete. Git log is the authoritative per-item record._
+_Updated: 2026-06-15 — **RESOLVO RESOLVER (PROP-017) — PORT COMPLETE; resolvo is the default + forward weak-deps done.** resolvo (pure-Rust, BSD-3-Clause, CDCL SAT) replaces PROP-003 §2.2's libsolv. The engine + the entire existing dependency vocabulary are encoded and oracle-proven to dominate naive (requires, `[[requires_any]]`→Union with backtracking, `[conflicts]`, `[obsoletes]`, capabilities via a closure pre-scan); production version enumeration (`MultiRegistryResolver::list_versions` + `VersionEnumerator` on the real providers) feeds it; and `vibe install/update/reinstall` now resolve with `ResolvoDepSolver` by default, with `--solver <naive|sat|resolvo>` as the fallback. ~18 resolvo commits on both mirrors; full `self-check.sh` green. The forward weak-deps are now done too — `[recommends]` (post-solve greedy best-effort) + `[suggests]` (never auto-installed); `[features.exclusive]` was already in `features.rs`. Far backlog (PROP-017 §8): the reverse weak-deps `[supplements]`/`[enhances]`, the capability reverse-index, and the `[meta].solver` lockfile field. Prior: SOURCE-MIRROR (PROP-016) in force; PUBDOC-DRAIN + CONVERT-PLAN complete. Git log is the authoritative per-item record._
 
 ## Current phase
 
@@ -58,17 +58,22 @@ eager-pool / Windows costs are structural. Spec:
   including the install / update / reinstall suites, which now drive
   resolvo — is green.
 
-**Deferred — schema work, separate from the engine port (PROP-017 §8).**
-Two items need a schema change before resolvo can honour them: the
-package-level weak-deps (`[recommends]` / `[suggests]` / `[supplements]`
-/ `[enhances]`) are absent from the `Manifest` schema (only subskills
-carry a `[recommends]`), and the lockfile `[meta]` block has no `solver`
-field (despite PROP-003 §2.1's note). resolvo is already shaped for both
-(recommends→`soft_requirements`, supplements→a reverse-index like
-capabilities, `[meta].solver`→record the selected cell for a
-reproducible re-resolve) once the `vibe-core` schema + lockfile
-schema-version bump land. `[features.exclusive]` lives in `features.rs`
-above the solver. Plus the capability reverse-index backlog (§8).
+**Forward weak-deps — DONE (2026-06-15).** `[recommends]` (a post-solve
+greedy best-effort expansion in `ResolvoDepSolver` — each recommend
+tried via a re-solve, kept as a non-root only if the graph stays
+satisfiable, else dropped) and `[suggests]` (parsed, never fed to the
+solver, so never auto-installed) gained a `vibe-core` `Manifest` schema
+(`package/weak_deps.rs`) and solver behaviour. `[features.exclusive]`
+was already validated intra-package in `features.rs`.
+
+**Far backlog — the reverse-index features (PROP-017 §8).** Held until
+the rest is ready: the reverse weak-deps `[supplements]` ("install me if
+Y is present") and `[enhances]` ("what enhances Y") — both reverse
+lookups needing a reverse index, the same shape as the capability
+reverse-index; capability routing across packages-not-yet-seen via a
+real registry capability→providers index; and the `[meta].solver`
+lockfile field (a lockfile schema-version bump for reproducible
+re-resolves).
 
 Full `self-check.sh` green (whole workspace: fmt, tests, doctests, clippy
 -D, `vibe check` 0/0/0); conform 0/0/0; specmap clean (0 suspects /
