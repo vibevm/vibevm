@@ -10543,7 +10543,7 @@
     },
     {
       "anchor": "prop-017",
-      "content_hash": "sha256:0d5a4b3298c2cacf5ee369f3225979654dc313780cd74adaabb74f889e113646",
+      "content_hash": "sha256:d706210bdc85c79ab8733afe6a610d228358e663147fa666d824f840ddb64f73",
       "doc_path": "modules/vibe-resolver/PROP-017",
       "file": "spec/modules/vibe-resolver/PROP-017-resolvo-resolver.md",
       "heading": "PROP-017 — Resolvo as the production resolver",
@@ -10606,7 +10606,7 @@
     },
     {
       "anchor": "encoding",
-      "content_hash": "sha256:1d51c92f22919d7cb84927065178e05eb2922072f23fca1e1f81724a0caebe94",
+      "content_hash": "sha256:54c55fdc574e2a0b7dff73a4bb6c711a305a94431442ad2bf898eb46e31a647a",
       "doc_path": "modules/vibe-resolver/PROP-017",
       "file": "spec/modules/vibe-resolver/PROP-017-resolvo-resolver.md",
       "heading": "3. Vocabulary → resolvo encoding",
@@ -10619,7 +10619,7 @@
       "doc_path": "modules/vibe-resolver/PROP-017",
       "file": "spec/modules/vibe-resolver/PROP-017-resolvo-resolver.md",
       "heading": "4. Correctness — the differential dominance contract",
-      "line": 195,
+      "line": 196,
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-017#dominance"
     },
     {
@@ -10628,16 +10628,16 @@
       "doc_path": "modules/vibe-resolver/PROP-017",
       "file": "spec/modules/vibe-resolver/PROP-017-resolvo-resolver.md",
       "heading": "5. Abstraction & the swap requirement",
-      "line": 229,
+      "line": 230,
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-017#swap"
     },
     {
       "anchor": "phases",
-      "content_hash": "sha256:0b8b037202b35aa3a1e6bba6c6c88abdace0ee397a20de73c892cbbb34fe56f6",
+      "content_hash": "sha256:1b322e5799b3102cc1a46378e03c6232a1900dcd24504073468ef34ea7cd93ee",
       "doc_path": "modules/vibe-resolver/PROP-017",
       "file": "spec/modules/vibe-resolver/PROP-017-resolvo-resolver.md",
       "heading": "6. Phases / staging",
-      "line": 247,
+      "line": 248,
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-017#phases"
     },
     {
@@ -10646,16 +10646,16 @@
       "doc_path": "modules/vibe-resolver/PROP-017",
       "file": "spec/modules/vibe-resolver/PROP-017-resolvo-resolver.md",
       "heading": "7. Determinism & performance",
-      "line": 279,
+      "line": 281,
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-017#determinism"
     },
     {
       "anchor": "future-work",
-      "content_hash": "sha256:fb127d85f3eb188529c935c236fc5893492c7910f3bada6741a41e0d6d0a274a",
+      "content_hash": "sha256:e0dba2b66072f5b7c2ddd182446be76f5a137904955de7c8d45b889077599d11",
       "doc_path": "modules/vibe-resolver/PROP-017",
       "file": "spec/modules/vibe-resolver/PROP-017-resolvo-resolver.md",
       "heading": "8. Future work",
-      "line": 295,
+      "line": 297,
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-017#future-work"
     },
     {
@@ -10664,7 +10664,7 @@
       "doc_path": "modules/vibe-resolver/PROP-017",
       "file": "spec/modules/vibe-resolver/PROP-017-resolvo-resolver.md",
       "heading": "9. References",
-      "line": 323,
+      "line": 326,
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-017#references"
     },
     {

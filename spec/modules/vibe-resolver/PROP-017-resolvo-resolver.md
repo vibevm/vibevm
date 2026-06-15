@@ -179,10 +179,11 @@ Single-version-per-name is enforced by resolvo automatically.
 | capability / interface (`provides` / `requires.capabilities`) | virtual `NameId`; `get_candidates(cap)` returns the providing packages' solvables (a reverse index the adapter builds); a `requires.capabilities` entry is a `Single(VersionSetId(cap, ^v))` | S4 |
 | `[conflicts]` (X conflicts Y) | `constrains += VersionSetId(Y, None)` in X's deps — if Y is forced in, the match-nothing set conflicts | S4 |
 | `[obsoletes]` (X obsoletes Y `< v`) | `constrains += VersionSetId(Y, complement(<v))`; obsoleted entries dropped by the shared output builder | S4 |
-| `[recommends]` (weak: prefer, don't fail) | `Problem::soft_requirements` (best-effort) — a missing recommend is a warning, never a solve failure | S5 |
-| `[supplements]` (install me if Y wants me) | resolved **above** the solver (reverse weak-dep): the adapter expands a satisfied supplement into a forward requirement before the solve | S5 |
-| `[suggests]` / `[enhances]` | UI surface only — never reach the solver | S5 |
-| `[features.exclusive]` (at-most-one group) | pairwise `constrains` between group members' activation markers | S5 |
+| `[recommends]` (weak forward: prefer, don't fail) | **DONE** — a post-solve greedy expansion: each recommend is tried via a re-solve, kept (as a non-root) only if the graph stays satisfiable, else silently dropped. `soft_requirements` is root-only, so per-package recommends ride the loop (batching them as soft is §8 future work) | done |
+| `[suggests]` (weak forward hint) | **DONE** — never fed to the solver, so never auto-installed (CLI surfacing is a thin follow-up) | done |
+| `[supplements]` (reverse: install me if Y is present) | far backlog (§8) — a reverse weak-dep needing a `who-supplements-Y` index | backlog |
+| `[enhances]` (reverse hint) | far backlog (§8) — `who-enhances-Y` is a reverse lookup | backlog |
+| `[features.exclusive]` (at-most-one group) | **DONE** — validated in `features.rs` (`expand_features`), intra-package, above the solver | done |
 | feature unification | stays in `features.rs` above the solver (already implemented); the solver sees the unified requirement set | — |
 
 Conditional dependencies ([PROP-003 §2.6.1](PROP-003-dep-evolution.md#conditional-deps))
@@ -262,13 +263,14 @@ production solver.** Each slice landed as a topic commit with green gates.
   provider impls).
 - **DONE** — `--solver <naive|sat|resolvo>` override + **the default
   flipped to resolvo** in the R-001 selection seam (`vibe-cli`).
-- **DEFERRED** (separate schema work — see §8) — weak-deps
-  (`[recommends]` / `[suggests]` / `[supplements]` / `[enhances]`) and
-  the `[meta].solver` lockfile recording; both need a schema change (the
-  package weak-dep manifest sections and the lockfile `[meta]` solver
-  field do not exist yet). resolvo is ready to honour them once the
-  schema lands. `[features.exclusive]` lives in the `features.rs` layer
-  above the solver.
+- **DONE (forward weak-deps)** — `[recommends]` (a post-solve greedy
+  best-effort expansion) and `[suggests]` (parsed, never auto-installed)
+  gained a `Manifest` schema and solver behaviour;
+  `[features.exclusive]` was already validated in `features.rs`.
+- **FAR BACKLOG (reverse weak-deps + lockfile, §8)** — `[supplements]`
+  and `[enhances]` (reverse-direction, need a reverse index) and the
+  `[meta].solver` lockfile recording (needs a lockfile schema-version
+  bump) wait until the rest is ready.
 
 naive and sat stay in tree: naive as the small-graph fast path and the
 oracle's reference cell; sat as a recorded pure-Rust backtracker — both
@@ -308,17 +310,18 @@ still selectable via `--solver`.
   emitter, and a query path — recorded here as the capability layer's
   natural evolution. Not scheduled; the trigger is capability routing
   across packages-not-yet-seen becoming load-bearing.
-- **Weak dependencies + the `[meta].solver` lockfile field.** Both are
-  schema work, not part of the engine port: the package-level
-  `[recommends]` / `[suggests]` / `[supplements]` / `[enhances]` sections
-  (PROP-003 §2.3.3) are absent from the `Manifest` schema (only subskills
-  carry a `[recommends]`), and the lockfile `[meta]` block has no `solver`
-  field (despite PROP-003 §2.1's note). resolvo is already shaped to
-  honour them — `[recommends]` → resolvo `soft_requirements`,
-  `[supplements]` → a reverse-index like capabilities, `[meta].solver` →
-  record the selected cell so a re-resolve off the lockfile is
-  reproducible — once the schema (a `vibe-core` change plus a lockfile
-  schema-version bump) lands.
+- **Reverse weak-deps + the `[meta].solver` lockfile field.** The forward
+  weak-deps (`[recommends]`, `[suggests]`) are implemented (PROP-003
+  §2.3.3) — schema in `vibe-core`, behaviour in `ResolvoDepSolver`
+  (recommends a greedy best-effort expansion, suggests never installed).
+  The reverse levels wait on a reverse index: `[supplements]` ("install
+  me if Y is present") and `[enhances]` ("what enhances Y") are
+  reverse-direction lookups, the same shape as the capability
+  reverse-index above. Folding the per-recommend loop into one
+  `soft_requirements`-batched solve is a perf optimisation that can land
+  any time. Separately, the lockfile `[meta]` block has no `solver` field
+  (despite PROP-003 §2.1's note); recording the selected cell for a
+  reproducible re-resolve needs a lockfile schema-version bump.
 
 ## 9. References {#references}
 
