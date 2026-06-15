@@ -1,6 +1,6 @@
 # CONTINUE.md — cold-resume checkpoint
 
-> **LATEST (2026-06-14, after this snapshot): the resolvo resolver
+> **LATEST (2026-06-15, after this snapshot): the resolvo resolver
 > (PROP-017) is COMPLETE — resolvo (pure-Rust CDCL SAT) is now the
 > default production solver. The engine + the full existing dependency
 > vocabulary (requires, `[[requires_any]]` disjunctions with
@@ -9,10 +9,14 @@
 > enumeration (`MultiRegistryResolver::list_versions`) feeds the real
 > providers; and `vibe install/update/reinstall` resolve with
 > `ResolvoDepSolver` by default, `--solver <naive|sat|resolvo>` the
-> fallback. ~15 resolvo commits on both mirrors; full `self-check.sh`
-> green. Everything below describes the PRIOR source-mirror session;
-> `spec/WAL.md` is current and supersedes it. Deferred (separate schema
-> work, PROP-017 §8): weak-deps and the `[meta].solver` lockfile field.
+> fallback. The forward weak-deps are done too — `[recommends]`
+> (post-solve greedy best-effort) and `[suggests]` (never auto-installed);
+> `[features.exclusive]` was already in `features.rs`. ~18 resolvo commits
+> on both mirrors; full `self-check.sh` green. Everything below describes
+> the PRIOR source-mirror session; `spec/WAL.md` is current and supersedes
+> it. Far backlog (PROP-017 §8): the reverse weak-deps
+> `[supplements]`/`[enhances]`, the capability reverse-index, and the
+> `[meta].solver` lockfile field.
 > See [`PROP-017`](spec/modules/vibe-resolver/PROP-017-resolvo-resolver.md).**
 
 _Written 2026-06-14 at the close of a **source-mirror hardening** session.
