@@ -8,13 +8,61 @@ use std::fs;
 use std::io::IsTerminal;
 use std::path::{Path, PathBuf};
 
-use anyhow::{Context, Result, anyhow, bail};
 use dialoguer::Select;
+use specmark::spec;
+use thiserror::Error;
 
 use super::builder::{ResolvedVersion, short_commit};
+use super::git::GitError;
 use super::model::{self, Kind, VersionId};
-use super::store::VersionStore;
+use super::store::{StoreError, VersionStore};
 use crate::output;
+
+/// The source-resolution layer's failure surface (PROP-019 §2.7, §2.16):
+/// an unknown mirror token, a selector that resolves to no ref, or a clone
+/// that cannot be prepared. Git and store failures pass through transparently
+/// (their own Class-F messages already cite the requirement).
+#[derive(Debug, Error)]
+#[spec(implements = "spec://vibevm/common/PROP-019#provenance")]
+pub(crate) enum ResolveError {
+    #[error(
+        "unknown source mirror `{token}` \
+         (violates spec://vibevm/common/PROP-019#provenance; \
+          fix: pass `gitverse` or `github`)"
+    )]
+    UnknownMirror { token: String },
+
+    #[error(
+        "{what} not found in the clone \
+         (violates spec://vibevm/common/PROP-019#selectors; \
+          fix: pass a selector that exists upstream — check `git ls-remote`)"
+    )]
+    RefNotFound { what: String },
+
+    #[error(
+        "no semantic-version tags in the clone \
+         (violates spec://vibevm/common/PROP-019#selectors; \
+          fix: install `latest` or an explicit branch/commit instead of `stable`)"
+    )]
+    NoSemverTags,
+
+    #[error(
+        "preparing the managed clone at `{path}` failed: {source} \
+         (violates spec://vibevm/common/PROP-019#provenance; \
+          fix: ensure the VVM source directory is writable)"
+    )]
+    Clone {
+        path: PathBuf,
+        #[source]
+        source: std::io::Error,
+    },
+
+    #[error(transparent)]
+    Git(#[from] GitError),
+
+    #[error(transparent)]
+    Store(#[from] StoreError),
+}
 
 /// Walk up from `start` to the vibevm source root — the dir carrying the
 /// workspace `Cargo.toml` and `crates/vibe-cli`. `None` when not inside a
@@ -30,9 +78,8 @@ pub(crate) fn find_source_root(start: &Path) -> Option<PathBuf> {
 
 /// Derive the version label + commit for an in-tree build from git HEAD
 /// (PROP-019 §2.7): the current branch when on one, else the commit.
-pub(crate) fn label_in_tree(root: &Path) -> Result<ResolvedVersion> {
-    let commit =
-        super::git::rev_parse(root, "HEAD").context("resolving HEAD in the source tree")?;
+pub(crate) fn label_in_tree(root: &Path) -> Result<ResolvedVersion, ResolveError> {
+    let commit = super::git::rev_parse(root, "HEAD")?;
     let id = match super::git::current_branch(root) {
         Some(branch) => VersionId::new(Kind::Branch, branch),
         None => VersionId::new(Kind::Commit, short_commit(&commit)),
@@ -69,17 +116,22 @@ impl Mirror {
     }
 
     /// Parse a `--mirror` selector token (PROP-019 §2.7).
-    pub(crate) fn parse(s: &str) -> Result<Mirror> {
+    pub(crate) fn parse(s: &str) -> Result<Mirror, ResolveError> {
         Mirror::ALL
             .into_iter()
             .find(|m| m.as_str() == s)
-            .ok_or_else(|| anyhow!("unknown mirror `{s}` (want gitverse|github)"))
+            .ok_or_else(|| ResolveError::UnknownMirror {
+                token: s.to_string(),
+            })
     }
 }
 
 /// Pick the source mirror: an explicit `--mirror`, an interactive choice on
 /// a TTY, else the GitVerse default (PROP-019 §2.7).
-pub(crate) fn choose_mirror(ctx: &output::Context, flag: Option<&str>) -> Result<Mirror> {
+pub(crate) fn choose_mirror(
+    ctx: &output::Context,
+    flag: Option<&str>,
+) -> Result<Mirror, ResolveError> {
     if let Some(f) = flag {
         return Mirror::parse(f);
     }
@@ -99,12 +151,17 @@ pub(crate) fn choose_mirror(ctx: &output::Context, flag: Option<&str>) -> Result
 /// Resolve a selector against a local clone to a concrete version id +
 /// commit (PROP-019 §2.3). A clone exposes branches as
 /// `refs/remotes/origin/*`.
-pub(crate) fn resolve_in_clone(repo: &Path, selector: &model::Selector) -> Result<ResolvedVersion> {
+pub(crate) fn resolve_in_clone(
+    repo: &Path,
+    selector: &model::Selector,
+) -> Result<ResolvedVersion, ResolveError> {
     match selector {
         model::Selector::Latest => {
             let commit = super::git::verify(repo, "refs/remotes/origin/main")
                 .or_else(|| super::git::verify(repo, "main"))
-                .ok_or_else(|| anyhow!("branch `main` not found in the clone"))?;
+                .ok_or_else(|| ResolveError::RefNotFound {
+                    what: "branch `main`".to_string(),
+                })?;
             Ok(ResolvedVersion {
                 id: VersionId::new(Kind::Branch, "main"),
                 commit,
@@ -121,12 +178,18 @@ pub(crate) fn resolve_in_clone(repo: &Path, selector: &model::Selector) -> Resul
             let commit = match v.kind {
                 Kind::Tag => super::git::verify(repo, &format!("refs/tags/{}", v.id))
                     .or_else(|| super::git::verify(repo, &format!("refs/tags/v{}", v.id)))
-                    .ok_or_else(|| anyhow!("tag `{}` not found in the clone", v.id))?,
+                    .ok_or_else(|| ResolveError::RefNotFound {
+                        what: format!("tag `{}`", v.id),
+                    })?,
                 Kind::Branch => super::git::verify(repo, &format!("refs/remotes/origin/{}", v.id))
                     .or_else(|| super::git::verify(repo, &v.id))
-                    .ok_or_else(|| anyhow!("branch `{}` not found in the clone", v.id))?,
+                    .ok_or_else(|| ResolveError::RefNotFound {
+                        what: format!("branch `{}`", v.id),
+                    })?,
                 Kind::Commit => super::git::verify(repo, &format!("{}^{{commit}}", v.id))
-                    .ok_or_else(|| anyhow!("commit `{}` not found in the clone", v.id))?,
+                    .ok_or_else(|| ResolveError::RefNotFound {
+                        what: format!("commit `{}`", v.id),
+                    })?,
             };
             let id = match v.kind {
                 Kind::Commit => VersionId::new(Kind::Commit, short_commit(&commit)),
@@ -153,12 +216,14 @@ pub(crate) fn resolve_in_clone(repo: &Path, selector: &model::Selector) -> Resul
                     commit,
                 });
             }
-            bail!("`{name}` is not a branch, tag, or commit in the clone")
+            Err(ResolveError::RefNotFound {
+                what: format!("`{name}` (as a branch, tag, or commit)"),
+            })
         }
     }
 }
 
-fn highest_semver_tag(repo: &Path) -> Result<(String, String)> {
+fn highest_semver_tag(repo: &Path) -> Result<(String, String), ResolveError> {
     let mut best: Option<(semver::Version, String)> = None;
     for tag in super::git::list_tags(repo)? {
         if let Ok(v) = semver::Version::parse(tag.strip_prefix('v').unwrap_or(&tag))
@@ -167,9 +232,12 @@ fn highest_semver_tag(repo: &Path) -> Result<(String, String)> {
             best = Some((v, tag));
         }
     }
-    let (_, tag) = best.ok_or_else(|| anyhow!("no semantic-version tags in the clone"))?;
-    let commit = super::git::verify(repo, &format!("refs/tags/{tag}"))
-        .ok_or_else(|| anyhow!("tag `{tag}` did not resolve"))?;
+    let (_, tag) = best.ok_or(ResolveError::NoSemverTags)?;
+    let commit = super::git::verify(repo, &format!("refs/tags/{tag}")).ok_or_else(|| {
+        ResolveError::RefNotFound {
+            what: format!("tag `{tag}`"),
+        }
+    })?;
     Ok((tag, commit))
 }
 
@@ -187,17 +255,22 @@ pub(crate) fn prepare_from_mirror(
     store: &VersionStore,
     mirror: &str,
     selector: &model::Selector,
-) -> Result<CloneOutcome> {
+) -> Result<CloneOutcome, ResolveError> {
     let dir = store.mirror_dir();
     if dir.join(".git").is_dir() {
         super::git::fetch(&dir)?;
     } else {
         if dir.exists() {
-            fs::remove_dir_all(&dir).with_context(|| format!("clearing `{}`", dir.display()))?;
+            fs::remove_dir_all(&dir).map_err(|source| ResolveError::Clone {
+                path: dir.clone(),
+                source,
+            })?;
         }
         if let Some(parent) = dir.parent() {
-            fs::create_dir_all(parent)
-                .with_context(|| format!("creating `{}`", parent.display()))?;
+            fs::create_dir_all(parent).map_err(|source| ResolveError::Clone {
+                path: parent.to_path_buf(),
+                source,
+            })?;
         }
         super::git::clone(mirror, &dir)?;
     }
@@ -225,7 +298,7 @@ pub(crate) fn linked_source(
     store: &VersionStore,
     selector: &model::Selector,
     raw: &str,
-) -> Result<Option<PathBuf>> {
+) -> Result<Option<PathBuf>, ResolveError> {
     let state = store.load_state()?;
     let Ok(rec) = super::resolve_installed(&state, selector, raw) else {
         return Ok(None);
