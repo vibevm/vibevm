@@ -18,9 +18,28 @@ specmark::scope!("spec://vibevm/common/PROP-018#relay");
 use std::fs;
 use std::path::{Path, PathBuf};
 
-use anyhow::{Context, Result};
+use anyhow::Result;
 use serde::Serialize;
 use specmark::spec;
+use thiserror::Error;
+
+/// The relay layer's failure surface (PROP-018 §2.7): a mailbox file
+/// operation under `.vibe/agentic/` failed. One enum for the layer, so a
+/// relay failure is navigable back to the requirement it serves.
+#[derive(Debug, Error)]
+#[spec(implements = "spec://vibevm/common/PROP-018#relay")]
+pub enum RelayError {
+    #[error(
+        "relay mailbox operation on `{path}` failed: {source} \
+         (violates spec://vibevm/common/PROP-018#relay; \
+          fix: ensure the project's `.vibe/agentic/` directory is writable)"
+    )]
+    Mailbox {
+        path: PathBuf,
+        #[source]
+        source: std::io::Error,
+    },
+}
 
 /// Which inference backend an operation can run on (PROP-018 §2.3).
 /// Affinity is a property of the *work*, not a user choice.
@@ -140,16 +159,21 @@ const ARCHIVE: &str = "command.done.md";
 /// state never reaches git even if the project has no `.vibe/.gitignore` —
 /// then writes `command.md`.
 #[spec(implements = "spec://vibevm/common/PROP-018#relay")]
-pub fn park_intent(dir: &Path, intent: &Intent) -> Result<PathBuf> {
-    fs::create_dir_all(dir).with_context(|| format!("creating relay dir `{}`", dir.display()))?;
+pub fn park_intent(dir: &Path, intent: &Intent) -> Result<PathBuf, RelayError> {
+    fs::create_dir_all(dir).map_err(|source| RelayError::Mailbox {
+        path: dir.to_path_buf(),
+        source,
+    })?;
     // A `*` here ignores every file in the dir, this `.gitignore` included.
     let ignore = dir.join(".gitignore");
     if !ignore.exists() {
         let _ = fs::write(&ignore, "*\n");
     }
     let path = dir.join(MAILBOX);
-    fs::write(&path, intent.to_markdown())
-        .with_context(|| format!("writing relay mailbox `{}`", path.display()))?;
+    fs::write(&path, intent.to_markdown()).map_err(|source| RelayError::Mailbox {
+        path: path.clone(),
+        source,
+    })?;
     Ok(path)
 }
 
@@ -157,18 +181,25 @@ pub fn park_intent(dir: &Path, intent: &Intent) -> Result<PathBuf> {
 /// it to `command.done.md` (status flipped to `done`), emptying the slot.
 /// `None` when nothing pends — re-running after a drain is a clean no-op.
 #[spec(implements = "spec://vibevm/common/PROP-018#relay")]
-pub fn drain_intent(dir: &Path) -> Result<Option<String>> {
+pub fn drain_intent(dir: &Path) -> Result<Option<String>, RelayError> {
     let path = dir.join(MAILBOX);
     if !path.exists() {
         return Ok(None);
     }
-    let content = fs::read_to_string(&path)
-        .with_context(|| format!("reading relay mailbox `{}`", path.display()))?;
+    let content = fs::read_to_string(&path).map_err(|source| RelayError::Mailbox {
+        path: path.clone(),
+        source,
+    })?;
     let archived = content.replacen("vibevm-intent: pending", "vibevm-intent: done", 1);
-    fs::write(dir.join(ARCHIVE), archived)
-        .with_context(|| format!("archiving relay intent in `{}`", dir.display()))?;
-    fs::remove_file(&path)
-        .with_context(|| format!("clearing relay mailbox `{}`", path.display()))?;
+    let archive_path = dir.join(ARCHIVE);
+    fs::write(&archive_path, archived).map_err(|source| RelayError::Mailbox {
+        path: archive_path,
+        source,
+    })?;
+    fs::remove_file(&path).map_err(|source| RelayError::Mailbox {
+        path: path.clone(),
+        source,
+    })?;
     Ok(Some(content))
 }
 
