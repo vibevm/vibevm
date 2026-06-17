@@ -7,9 +7,29 @@ specmark::scope!("spec://vibevm/common/PROP-019#layout");
 use std::fmt;
 use std::path::PathBuf;
 
-use anyhow::{Result, bail};
 use serde::{Deserialize, Serialize};
 use specmark::spec;
+use thiserror::Error;
+
+/// The version-model layer's parse failures (PROP-019 §2.3, §2.2): the two
+/// untrusted boundaries where a user-supplied string becomes a typed value.
+#[derive(Debug, Error)]
+#[spec(implements = "spec://vibevm/common/PROP-019#selectors")]
+pub enum ModelError {
+    #[error(
+        "empty version selector \
+         (violates spec://vibevm/common/PROP-019#selectors; \
+          fix: pass a selector like `latest`, `stable`, `1.2.3`, or `tag:1.2.3`)"
+    )]
+    EmptySelector,
+
+    #[error(
+        "unknown build profile `{0}` \
+         (violates spec://vibevm/common/PROP-019#build; \
+          fix: pass `debug` or `release`)"
+    )]
+    UnknownProfile(String),
+}
 
 /// What a version is pinned to (PROP-019 §2.4). The kind namespaces the
 /// on-disk layout so a tag `1.2.3` and a branch `1.2.3` never collide.
@@ -95,11 +115,11 @@ impl Profile {
         self.as_str()
     }
 
-    pub fn parse(s: &str) -> Result<Profile> {
+    pub fn parse(s: &str) -> Result<Profile, ModelError> {
         match s {
             "debug" => Ok(Profile::Debug),
             "release" => Ok(Profile::Release),
-            other => bail!("unknown build profile `{other}` (want debug|release)"),
+            other => Err(ModelError::UnknownProfile(other.to_string())),
         }
     }
 }
@@ -125,10 +145,10 @@ pub enum Selector {
 
 impl Selector {
     /// Parse a CLI selector plus an optional forced kind (PROP-019 §2.3).
-    pub fn parse(raw: &str, forced: Option<Kind>) -> Result<Selector> {
+    pub fn parse(raw: &str, forced: Option<Kind>) -> Result<Selector, ModelError> {
         let raw = raw.trim();
         if raw.is_empty() {
-            bail!("empty version selector");
+            return Err(ModelError::EmptySelector);
         }
         if let Some(kind) = forced {
             return Ok(Selector::Explicit(VersionId::new(kind, raw)));

@@ -241,7 +241,7 @@ fn run_install_cmd(ctx: &output::Context, env: &ManEnv, args: ManInstallArgs) ->
     install::perform_install(ctx, &store, &source_dir, &req, &builder::CargoBuilder)
 }
 
-fn resolve_profile(args: &ManInstallArgs) -> Result<model::Profile> {
+fn resolve_profile(args: &ManInstallArgs) -> Result<model::Profile, model::ModelError> {
     if args.release {
         return Ok(model::Profile::Release);
     }
