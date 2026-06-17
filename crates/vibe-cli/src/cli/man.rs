@@ -33,6 +33,14 @@ pub enum ManSubcommand {
     /// Verify the install and environment; `--fix` repairs PATH and shims.
     Doctor(ManDoctorArgs),
 
+    /// Remove installed version(s) — safe by default (no wipe without
+    /// `--all`; no selector opens an interactive picker).
+    #[command(visible_aliases = ["rm", "del", "uninstall"])]
+    Remove(ManRemoveArgs),
+
+    /// Reclaim disk: clean the Rust build cache, or prune old versions.
+    Gc(ManGcArgs),
+
     /// Print the shell line that activates a version in the current shell.
     Env(ManEnvArgs),
 }
@@ -123,6 +131,60 @@ pub struct ManDoctorArgs {
     pub fix: bool,
 
     /// Skip the confirmation prompt for `--fix`.
-    #[arg(long, alias = "assume-yes")]
+    #[arg(short = 'y', long, alias = "assume-yes")]
+    pub yes: bool,
+}
+
+#[derive(Debug, clap::Args)]
+pub struct ManRemoveArgs {
+    /// Version to remove. Omit to pick interactively; never wipes all
+    /// without `--all`.
+    pub selector: Option<String>,
+
+    /// Interpret the selector as a git tag.
+    #[arg(long, conflicts_with_all = ["branch", "commit"])]
+    pub tag: bool,
+
+    /// Interpret the selector as a git branch.
+    #[arg(long, conflicts_with_all = ["tag", "commit"])]
+    pub branch: bool,
+
+    /// Interpret the selector as a git commit.
+    #[arg(long, conflicts_with_all = ["tag", "branch"])]
+    pub commit: bool,
+
+    /// Remove every installed version (asks for confirmation).
+    #[arg(long)]
+    pub all: bool,
+
+    /// Remove only the built binary, keeping the source tree.
+    #[arg(long, conflicts_with = "src")]
+    pub bin: bool,
+
+    /// Remove only the source tree, keeping the built binary.
+    #[arg(long, conflicts_with = "bin")]
+    pub src: bool,
+
+    /// Remove even the active version.
+    #[arg(long)]
+    pub force: bool,
+
+    /// Skip confirmation prompts.
+    #[arg(short = 'y', long, alias = "assume-yes")]
+    pub yes: bool,
+}
+
+#[derive(Debug, clap::Args)]
+pub struct ManGcArgs {
+    /// Clean the Rust build cache (the shared `--target-dir`).
+    #[arg(long, conflicts_with = "prune_others")]
+    pub build: bool,
+
+    /// Remove all versions except the current, including their sources.
+    #[arg(long)]
+    pub prune_others: bool,
+
+    /// Skip the confirmation prompt for `--prune-others`.
+    #[arg(short = 'y', long, alias = "assume-yes")]
     pub yes: bool,
 }

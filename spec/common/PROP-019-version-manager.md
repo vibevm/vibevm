@@ -295,14 +295,20 @@ guessing.
 `man gc` reclaims the disk a Rust build tree eats. Interactively it offers,
 and via flags it exposes:
 
-- `--current` — `cargo clean` the **current** version's `src/.../target/`.
-- `--all-targets` — `cargo clean` **every** version's target tree.
+- `--build` — clean the **Rust build cache**. Because every build shares one
+  managed `--target-dir` (`build/`, §2.4 — the fix for the Windows
+  running-binary relink), the originally sketched per-version "current" vs
+  "all targets" distinction collapses to this single cache; clearing it
+  forces a rebuild on the next install but touches no installed binary.
 - `--prune-others` — remove all versions except the current, **including**
-  their sources and binaries; behind a re-confirmation ("точно?").
+  their sources and binaries (and the build cache); behind a
+  re-confirmation ("точно?").
 
-`man gc` operates **only** inside `$VIBEVM_ROOT`. It must never touch the
-shared `~/.cargo/registry` or `~/.cargo/git` caches — those belong to every
-Rust project on the machine, and cleaning them would damage unrelated work.
+With no flag, an interactive menu offers the two; a non-interactive run must
+pass one. `man gc` operates **only** inside `$VIBEVM_INSTALL_ROOT/opt`. It
+must never touch the shared `~/.cargo/registry` or `~/.cargo/git` caches —
+those belong to every Rust project on the machine, and cleaning them would
+damage unrelated work.
 
 ### 2.11 Introspection — `doctor`, `ls`, `current`, `which`, `env` {#introspection}
 

@@ -12,6 +12,7 @@ mod env;
 mod git;
 mod install;
 mod model;
+mod remove;
 mod store;
 mod tools;
 
@@ -76,6 +77,8 @@ pub fn run(ctx: &output::Context, args: ManArgs, env: ManEnv) -> Result<()> {
         ManSubcommand::Current => run_current(ctx, &env),
         ManSubcommand::Which => run_which(ctx, &env),
         ManSubcommand::Doctor(a) => run_doctor_cmd(ctx, &env, a),
+        ManSubcommand::Remove(a) => remove::run_remove_cmd(ctx, &env, a),
+        ManSubcommand::Gc(a) => remove::run_gc_cmd(ctx, &env, a),
         ManSubcommand::Env(a) => run_env_cmd(&env, a),
     }
 }
@@ -469,4 +472,57 @@ fn path_has_dir(path_var: Option<&str>, dir: &Path) -> bool {
     let target = dir.canonicalize();
     std::env::split_paths(pv)
         .any(|p| p == dir || matches!((p.canonicalize(), &target), (Ok(a), Ok(b)) if &a == b))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::commands::man::model::{InstallRecord, Kind, Selector, State, VersionId};
+    use specmark::verifies;
+
+    fn rec(kind: Kind, id: &str) -> InstallRecord {
+        InstallRecord {
+            kind,
+            id: id.into(),
+            commit: "c".into(),
+            toolchain: "t".into(),
+            profile: "debug".into(),
+            installed_at: "now".into(),
+        }
+    }
+
+    #[test]
+    #[verifies("spec://vibevm/common/PROP-019#selectors", r = 1)]
+    fn resolve_installed_handles_each_selector_kind() {
+        let state = State {
+            installs: vec![
+                rec(Kind::Branch, "main"),
+                rec(Kind::Tag, "1.2.0"),
+                rec(Kind::Tag, "1.10.0"),
+            ],
+        };
+        assert_eq!(
+            resolve_installed(&state, &Selector::Latest, "latest").unwrap(),
+            VersionId::new(Kind::Branch, "main")
+        );
+        // stable → highest semver tag (1.10.0 > 1.2.0).
+        assert_eq!(
+            resolve_installed(&state, &Selector::Stable, "stable").unwrap(),
+            VersionId::new(Kind::Tag, "1.10.0")
+        );
+        // a bare name → precedence (only a branch exists here).
+        assert_eq!(
+            resolve_installed(&state, &Selector::Ambiguous("main".into()), "main").unwrap(),
+            VersionId::new(Kind::Branch, "main")
+        );
+        // explicit but not installed → error.
+        assert!(
+            resolve_installed(
+                &state,
+                &Selector::Explicit(VersionId::new(Kind::Tag, "9.9.9")),
+                "9.9.9"
+            )
+            .is_err()
+        );
+    }
 }

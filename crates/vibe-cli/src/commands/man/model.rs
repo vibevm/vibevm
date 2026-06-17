@@ -30,6 +30,16 @@ impl Kind {
             Kind::Commit => "commit",
         }
     }
+
+    /// Parse a kind token (`tag` / `branch` / `commit`).
+    fn from_token(s: &str) -> Option<Kind> {
+        match s {
+            "tag" => Some(Kind::Tag),
+            "branch" => Some(Kind::Branch),
+            "commit" => Some(Kind::Commit),
+            _ => None,
+        }
+    }
 }
 
 /// The canonical identity of an installed version: `<kind>:<id>` (PROP-019
@@ -160,6 +170,13 @@ impl Selector {
         if let Some(kind) = forced {
             return Ok(Selector::Explicit(VersionId::new(kind, raw)));
         }
+        // The canonical `<kind>:<id>` form, as `man ls` prints it.
+        if let Some((k, rest)) = raw.split_once(':')
+            && let Some(kind) = Kind::from_token(k)
+            && !rest.is_empty()
+        {
+            return Ok(Selector::Explicit(VersionId::new(kind, rest)));
+        }
         Ok(match raw {
             "latest" => Selector::Latest,
             "stable" => Selector::Stable,
@@ -258,6 +275,15 @@ mod tests {
         assert_eq!(
             Selector::parse("feature", None).unwrap(),
             Ambiguous("feature".into())
+        );
+        // The canonical `<kind>:<id>` form (as `man ls` prints it).
+        assert_eq!(
+            Selector::parse("tag:1.2.3", None).unwrap(),
+            Explicit(VersionId::new(Kind::Tag, "1.2.3"))
+        );
+        assert_eq!(
+            Selector::parse("branch:main", None).unwrap(),
+            Explicit(VersionId::new(Kind::Branch, "main"))
         );
         assert!(Selector::parse("   ", None).is_err());
     }

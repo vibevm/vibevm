@@ -49,6 +49,23 @@ impl VersionStore {
         self.root.join("bin")
     }
 
+    /// `<root>/vibevm/src/<kind>/<id>` — a version's source tree (clone
+    /// path; gc-able, PROP-019 §2.4).
+    pub fn src_dir(&self, id: &VersionId) -> PathBuf {
+        self.data_dir().join("src").join(id.path_segment())
+    }
+
+    /// Drop a version from the inventory (no-op if absent, PROP-019 §2.9).
+    pub fn forget(&self, id: &VersionId) -> Result<()> {
+        let mut state = self.load_state()?;
+        let before = state.installs.len();
+        state.installs.retain(|r| &r.version_id() != id);
+        if state.installs.len() != before {
+            self.save_state(&state)?;
+        }
+        Ok(())
+    }
+
     /// `<root>/vibevm/versions/<kind>/<id>` — the prefix `VIBEVM_HOME`
     /// points at when this version is active (PROP-019 §2.5).
     pub fn version_prefix(&self, id: &VersionId) -> PathBuf {
