@@ -9028,6 +9028,265 @@
       "uri": "spec://vibevm/common/PROP-018#acceptance"
     },
     {
+      "anchor": "root",
+      "content_hash": "sha256:72d2dfedff374b40a3f1f2187f75eea00c02c8da1f85e1a4ed8403399b864ccc",
+      "doc_path": "common/PROP-019",
+      "file": "spec/common/PROP-019-version-manager.md",
+      "heading": "PROP-019 — VibeVM Version Manager (VVM)",
+      "line": 1,
+      "uri": "spec://vibevm/common/PROP-019#root"
+    },
+    {
+      "anchor": "motivation",
+      "content_hash": "sha256:4cefc06c49a64e6140affe25868ca3533270306cc21e75b8447076110cf80975",
+      "doc_path": "common/PROP-019",
+      "file": "spec/common/PROP-019-version-manager.md",
+      "heading": "1. Motivation",
+      "line": 22,
+      "uri": "spec://vibevm/common/PROP-019#motivation"
+    },
+    {
+      "anchor": "problem",
+      "content_hash": "sha256:d66b5d235bc75998572581d7fa85a6c28841a7dd50d210e52bde98ecc04f9901",
+      "doc_path": "common/PROP-019",
+      "file": "spec/common/PROP-019-version-manager.md",
+      "heading": "1.1 The problem — vibevm cannot install itself",
+      "line": 24,
+      "uri": "spec://vibevm/common/PROP-019#problem"
+    },
+    {
+      "anchor": "what",
+      "content_hash": "sha256:25326ffcfc4aa490c81b327d4bf7d8c67c70d4f99d32bd51d2c63726ce327887",
+      "doc_path": "common/PROP-019",
+      "file": "spec/common/PROP-019-version-manager.md",
+      "heading": "1.2 What VVM is — a self-distribution manager",
+      "line": 39,
+      "uri": "spec://vibevm/common/PROP-019#what"
+    },
+    {
+      "anchor": "not-install",
+      "content_hash": "sha256:4b7e054ff2237fba4f275473d2effe9607381971a5f444eefa321311f26547b5",
+      "doc_path": "common/PROP-019",
+      "file": "spec/common/PROP-019-version-manager.md",
+      "heading": "1.3 What this is NOT — not `vibe install`",
+      "line": 49,
+      "uri": "spec://vibevm/common/PROP-019#not-install",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "decisions",
+      "content_hash": "sha256:638d17a918b6adb76868b23f002f55845f36b79a81a1422922b53b3bbe890e9b",
+      "doc_path": "common/PROP-019",
+      "file": "spec/common/PROP-019-version-manager.md",
+      "heading": "2. Decisions",
+      "line": 61,
+      "uri": "spec://vibevm/common/PROP-019#decisions"
+    },
+    {
+      "anchor": "standalone",
+      "content_hash": "sha256:2cec80d04cd2f72ab647eafe453ff394ba215aa436e9bae72a55080fc9214970",
+      "doc_path": "common/PROP-019",
+      "file": "spec/common/PROP-019-version-manager.md",
+      "heading": "2.1 VVM is a standalone, algorithmic capability",
+      "line": 63,
+      "uri": "spec://vibevm/common/PROP-019#standalone",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "surface",
+      "content_hash": "sha256:119abe82580682356c6d50f5818cb019caa7f6b26f859960d7ff30dfaef00b2d",
+      "doc_path": "common/PROP-019",
+      "file": "spec/common/PROP-019-version-manager.md",
+      "heading": "2.2 Command surface — `vibe man`",
+      "line": 75,
+      "uri": "spec://vibevm/common/PROP-019#surface",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "selectors",
+      "content_hash": "sha256:f81b805e0520f14020a8763915cd6f35280244b98998dcfdae65a58878b2a834",
+      "doc_path": "common/PROP-019",
+      "file": "spec/common/PROP-019-version-manager.md",
+      "heading": "2.3 Version selectors and resolution",
+      "line": 103,
+      "uri": "spec://vibevm/common/PROP-019#selectors",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "layout",
+      "content_hash": "sha256:96507311516f0ac1d3a2d5eecf5c1c45a7d43289e51259213a5a22af8e079966",
+      "doc_path": "common/PROP-019",
+      "file": "spec/common/PROP-019-version-manager.md",
+      "heading": "2.4 On-disk layout and the canonical version id",
+      "line": 127,
+      "uri": "spec://vibevm/common/PROP-019#layout",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "activation",
+      "content_hash": "sha256:91be0a82de4231e76169bb5559b86ae8dc65ac831228aa68e0d864fa2b9fbaf7",
+      "doc_path": "common/PROP-019",
+      "file": "spec/common/PROP-019-version-manager.md",
+      "heading": "2.5 Activation — the shim plus the `VIBEVM_HOME` env var",
+      "line": 157,
+      "uri": "spec://vibevm/common/PROP-019#activation",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "path",
+      "content_hash": "sha256:daf23209a0f1df6d73b9df3c01f7cc8d52b616d31f08de921a30769163aa8954",
+      "doc_path": "common/PROP-019",
+      "file": "spec/common/PROP-019-version-manager.md",
+      "heading": "2.6 PATH and environment management",
+      "line": 188,
+      "uri": "spec://vibevm/common/PROP-019#path",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "build",
+      "content_hash": "sha256:646257747d2119fee9a438710006255a661c4cd01751bbc628b4f2c7b322311a",
+      "doc_path": "common/PROP-019",
+      "file": "spec/common/PROP-019-version-manager.md",
+      "heading": "2.7 The build pipeline",
+      "line": 212,
+      "uri": "spec://vibevm/common/PROP-019#build",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "tools",
+      "content_hash": "sha256:4c07a753d6d72dff16c49410366c96f7b5b404a561404abf887a89090a2f4596",
+      "doc_path": "common/PROP-019",
+      "file": "spec/common/PROP-019-version-manager.md",
+      "heading": "2.8 Required toolchain — a single source of truth",
+      "line": 242,
+      "uri": "spec://vibevm/common/PROP-019#tools",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "remove",
+      "content_hash": "sha256:90f4b3569a27d6957ebbbad4eabe9f1523331a26bd2fb85e1993b90827e2c6b9",
+      "doc_path": "common/PROP-019",
+      "file": "spec/common/PROP-019-version-manager.md",
+      "heading": "2.9 Removal — safe by default",
+      "line": 261,
+      "uri": "spec://vibevm/common/PROP-019#remove",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "gc",
+      "content_hash": "sha256:ea3534b6d75f7fedec3aa245ea367fa855a665520b5c9e176d71628b717a5e38",
+      "doc_path": "common/PROP-019",
+      "file": "spec/common/PROP-019-version-manager.md",
+      "heading": "2.10 Garbage collection — `man gc`",
+      "line": 283,
+      "uri": "spec://vibevm/common/PROP-019#gc",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "introspection",
+      "content_hash": "sha256:cdbea207fbb924aa007cd8e5ec772bfe4b4a32e7658aa1510cdf7666cc170f08",
+      "doc_path": "common/PROP-019",
+      "file": "spec/common/PROP-019-version-manager.md",
+      "heading": "2.11 Introspection — `doctor`, `ls`, `current`, `which`, `env`",
+      "line": 299,
+      "uri": "spec://vibevm/common/PROP-019#introspection",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "bootstrap",
+      "content_hash": "sha256:fab6516f6d038400dc12961328c1e146eda0b2148bfc23804e7aa40c56c81d13",
+      "doc_path": "common/PROP-019",
+      "file": "spec/common/PROP-019-version-manager.md",
+      "heading": "2.12 Cold-start (bootstrap)",
+      "line": 311,
+      "uri": "spec://vibevm/common/PROP-019#bootstrap",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "security",
+      "content_hash": "sha256:4594e7ab5cf02e4a894e7d5986af75d0fb8609de9ef79150257a7550f5b7c640",
+      "doc_path": "common/PROP-019",
+      "file": "spec/common/PROP-019-version-manager.md",
+      "heading": "2.13 Security and trust",
+      "line": 329,
+      "uri": "spec://vibevm/common/PROP-019#security",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "architecture",
+      "content_hash": "sha256:148f2858e1165169a6586e4dd42d68469b003d7ff1768df8d783a8f2c5659f34",
+      "doc_path": "common/PROP-019",
+      "file": "spec/common/PROP-019-version-manager.md",
+      "heading": "3. Architecture — seams and cells",
+      "line": 341,
+      "uri": "spec://vibevm/common/PROP-019#architecture",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "mvp",
+      "content_hash": "sha256:4691703f91da19cbab205c3148e70bb36752ec03a02ba69d0054a994ba2faca5",
+      "doc_path": "common/PROP-019",
+      "file": "spec/common/PROP-019-version-manager.md",
+      "heading": "4. MVP scope — what this PROP authorises now",
+      "line": 364,
+      "uri": "spec://vibevm/common/PROP-019#mvp"
+    },
+    {
+      "anchor": "out-of-scope",
+      "content_hash": "sha256:8a3e956d4f83c2921d4b92110d7140f130f7235498f7b9c487fca8b4814285ff",
+      "doc_path": "common/PROP-019",
+      "file": "spec/common/PROP-019-version-manager.md",
+      "heading": "5. Out of scope (now)",
+      "line": 374,
+      "uri": "spec://vibevm/common/PROP-019#out-of-scope"
+    },
+    {
+      "anchor": "far-backlog",
+      "content_hash": "sha256:3f95b0131c21e2c86dba24d0d60e0476e1c0b97e17040abf4a0450a73ec7a157",
+      "doc_path": "common/PROP-019",
+      "file": "spec/common/PROP-019-version-manager.md",
+      "heading": "6. Far backlog",
+      "line": 380,
+      "uri": "spec://vibevm/common/PROP-019#far-backlog"
+    },
+    {
+      "anchor": "maintenance",
+      "content_hash": "sha256:0e02b7ec471146b9da5d58eae3a9206610d5b375791bcb1c8e279e15f925579c",
+      "doc_path": "common/PROP-019",
+      "file": "spec/common/PROP-019-version-manager.md",
+      "heading": "7. Maintenance & evolution — updating the stack",
+      "line": 390,
+      "uri": "spec://vibevm/common/PROP-019#maintenance",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "acceptance",
+      "content_hash": "sha256:9e87c645a76d117967709536ee67246e1a5acd7c7fa7895ad0feb6f7bac9744e",
+      "doc_path": "common/PROP-019",
+      "file": "spec/common/PROP-019-version-manager.md",
+      "heading": "8. Acceptance",
+      "line": 409,
+      "uri": "spec://vibevm/common/PROP-019#acceptance",
+      "kind": "req",
+      "revision": 1
+    },
+    {
       "anchor": "problem",
       "content_hash": "sha256:51d81e2d52166e993280136ba6134889a6db3eb8f11d440c266bacf187e60158",
       "doc_path": "discipline/BROWNFIELD-PROTOCOL-v0.1",
