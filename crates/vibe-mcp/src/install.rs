@@ -161,5 +161,13 @@ mod tests {
         assert!(SKILL_TEMPLATE.contains("query_package"));
         assert!(SKILL_TEMPLATE.contains("read_subskill"));
         assert!(SKILL_TEMPLATE.contains("materialise_subskill"));
+        // PROP-018 §2.9: the skill teaches the agentic relay protocol (the
+        // two-step produce/`vibe command` drain, no auto write-back, the
+        // transport heuristic) and the standalone `vibe skill` command.
+        assert!(SKILL_TEMPLATE.contains("vibe agentic explain"));
+        assert!(SKILL_TEMPLATE.contains("vibe command"));
+        assert!(SKILL_TEMPLATE.contains("agentic_explain"));
+        assert!(SKILL_TEMPLATE.contains("no automatic write-back"));
+        assert!(SKILL_TEMPLATE.contains("vibe skill"));
     }
 }

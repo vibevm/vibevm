@@ -1,6 +1,6 @@
 ---
 name: vibevm
-description: Use whenever the user mentions vibevm, vibe install/update/check/show/outdated/registry/search/init/list/uninstall/mcp, packages, subskills, or the lockfile. Also when the user asks to create a new vibevm-managed project. The MCP server exposes lockfile-aware queries; query it before guessing about installed packages.
+description: Use whenever the user mentions vibevm, vibe install/update/check/show/outdated/registry/search/init/list/uninstall/mcp/skill/agentic/command, packages, skills, subskills, or the lockfile. Also when the user asks to create a new vibevm-managed project. The MCP server exposes lockfile-aware queries; query it before guessing about installed packages. `vibe skill` installs package-declared skills into agents; `vibe agentic …` + `vibe command` delegate reasoning tasks back to you to carry out.
 ---
 
 # vibevm
@@ -117,6 +117,56 @@ you don't recognise, references to a protocol in CLAUDE.md, etc.),
 follow what's documented there. This skill doesn't impose any
 particular workflow on the project.
 
+## Agentic commands — when vibevm hands a task back to you
+
+vibevm has no LLM of its own yet. A few operations need reasoning, so
+instead of doing them, vibevm **delegates them back to you**: it writes an
+instruction, and you carry it out on your own model. These are the
+`vibe agentic …` commands. The protocol is two steps:
+
+1. Run a producer, e.g. **`vibe agentic explain`**. It does NOT produce
+   the answer — it parks an instruction and tells you to fetch it. (It
+   writes only `.vibe/agentic/command.md`; nothing else.)
+2. Run **`vibe command`**. It prints the parked instruction to stdout and
+   clears the slot. **Read that instruction and carry it out yourself** —
+   it is a task *for you*, not a report to echo back verbatim. When the
+   slot is empty it prints `no pending command` and exits 0.
+
+Example: `vibe agentic explain` parks "explain this project in at most
+three paragraphs from README.md + vibe.toml". After `vibe command`, do
+exactly that and answer the user.
+
+There is **no automatic write-back** — vibevm does not see your result.
+If the result should reach vibevm, that is your call to arrange with a
+follow-up command; vibevm will not wait for one.
+
+### Two ways to reach these — pick by situation
+
+- **One-shot CLI** (`vibe agentic explain`, then `vibe command`):
+  stateless, one process per call. Best when you touch vibevm once and
+  move on — e.g. scanning a directory of many vibevm projects for a quick
+  fact. Per-call state does not survive.
+- **MCP server** (the `vibevm` server's `agentic_explain` tool): the
+  instruction comes back inline in the tool result — no file, zero
+  latency, session persists. Best when you are working inside one project
+  for a while. If the `vibevm` MCP server is registered, prefer its
+  `agentic_explain` tool over the CLI two-step.
+
+## Installing package skills into agents — `vibe skill`
+
+Packages can ship **skills** for coding agents (declared in a package's
+`[[skill]]` manifest table — separate from the package's kind, so a
+`tool`, `flow`, `feat`, or `stack` can all carry skills). `vibe skill`
+projects the skills declared by the project and its installed packages
+into agents' own skill directories (`.<agent>/skills/<name>/`). This is
+vibevm's **standalone mode** — no LLM required.
+
+- **`vibe skill list`** — what skills are declared and where they'd land.
+- **`vibe skill install [--agent <a>] [--scope project|user|both] [--skill <name>] --assume-yes`**
+  — project them. Default: every declared skill into every
+  skill-supporting agent (Claude Code, OpenCode, Codex). Idempotent.
+- **`vibe skill uninstall …`** — remove only vibevm-projected skills.
+
 ## Common — applies to both sections
 
 ### Non-interactive invocation: always pass `--assume-yes`
@@ -194,6 +244,12 @@ checking via `--help`):
 - `vibe mcp install | upgrade | uninstall | status | serve` —
   agent integration. Use `--scope project|user|both` and
   `--what mcp|skill|both` to control where and what.
+- `vibe skill list | install | uninstall` — project package-declared
+  skills into agents (standalone mode). `--assume-yes` in non-TTY runs;
+  `--agent` / `--scope` / `--skill` narrow the target.
+- `vibe agentic explain` then `vibe command` — delegated reasoning: the
+  first parks an instruction, the second prints it for you to carry out
+  (see the agentic-commands section above). No auto write-back.
 
 ### Pass `--invoked-by <agent>` (recommended)
 
