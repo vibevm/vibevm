@@ -1,162 +1,121 @@
 # CONTINUE.md — cold-resume checkpoint
 
-> **LATEST (2026-06-16): AGENTIC + STANDALONE MODES (PROP-018) — MVP
-> COMPLETE on local `main` (mirror rollout pending). Two product modes on
-> one axis — where an operation's reasoning happens. STANDALONE: `vibe
-> skill {list,install,uninstall}` projects package-declared `[[skill]]`
-> files into coding agents (Claude Code / OpenCode / Codex), reusing the
-> PROP-015 agent machinery — no LLM, works agent-present or not. AGENTIC:
-> vibevm composes a domain-grounded `Intent` and the calling agent
-> executes it — `vibe agentic explain` parks the instruction in
-> `.vibe/agentic/command.md`, `vibe command` drains it; the same op is also
-> the `agentic_explain` MCP tool (inline return, no mailbox), so one
-> operation serves both the one-shot CLI and the persistent MCP server.
-> Narrative (owner-reviewed): vibevm authors the trustworthy,
-> domain-grounded instruction; the agent is the better in-session executor
-> — division of labour by strength, not vibevm offloading for lack of an
-> engine. Eight gate-green commits (`27f511f` … `050b150`); full
-> `self-check.sh` green; conform 0/0/0; specmap clean. Far backlog
-> (PROP-018 §6): built-in `vibe-llm` backend, full conversations, an
-> OpenCode-style resumable console, `[[mcp]]` bundled-server install. See
-> [`PROP-018`](spec/common/PROP-018-agentic-standalone-modes.md).
-> `spec/WAL.md` is canonical and supersedes everything below.**
->
-> **PRIOR (2026-06-15): the resolvo resolver
-> (PROP-017) is COMPLETE — resolvo (pure-Rust CDCL SAT) is now the
-> default production solver. The engine + the full existing dependency
-> vocabulary (requires, `[[requires_any]]` disjunctions with
-> backtracking, `[conflicts]`, `[obsoletes]`, capabilities via a closure
-> pre-scan) are oracle-proven to dominate naive; production version
-> enumeration (`MultiRegistryResolver::list_versions`) feeds the real
-> providers; and `vibe install/update/reinstall` resolve with
-> `ResolvoDepSolver` by default, `--solver <naive|sat|resolvo>` the
-> fallback. The forward weak-deps are done too — `[recommends]`
-> (post-solve greedy best-effort) and `[suggests]` (never auto-installed);
-> `[features.exclusive]` was already in `features.rs`. ~18 resolvo commits
-> on both mirrors; full `self-check.sh` green. Everything below describes
-> the PRIOR source-mirror session; `spec/WAL.md` is current and supersedes
-> it. Far backlog (PROP-017 §8): the reverse weak-deps
-> `[supplements]`/`[enhances]`, the capability reverse-index, and the
-> `[meta].solver` lockfile field.
-> See [`PROP-017`](spec/modules/vibe-resolver/PROP-017-resolvo-resolver.md).**
+_Written 2026-06-16 at session save. Branch `main` @ `ee9c62e`. The
+PROP-018 agentic + standalone modes MVP is complete and on both mirrors
+(@ `bd26156`); this save's own commits (`ee9c62e` discovery prompt +
+the WAL/CONTINUE updates) roll out as the final step, leaving `main` ≡
+`gitverse` ≡ `github`. Working tree clean. Full gate panel green._
 
-_Written 2026-06-14 at the close of a **source-mirror hardening** session.
-No campaign is in flight: CONVERT-PLAN v0.1 (Phases 0–7) and PUBDOC-DRAIN
-v0.1 are both COMPLETE; the PROP-016 source-mirror system is in force and
-this session made `cargo xtask mirror` faithful to its spec. Branch `main`
-@ `e3546ec`, level with both mirrors (`origin/main` = `github/main` =
-`e3546ec`), working tree clean, full gate panel green._
-
-> **`spec/WAL.md` is the canonical living state and its header is current.**
-> If this snapshot and the WAL disagree, the WAL wins. Boot first
-> (`CLAUDE.md` → `spec/boot/INDEX.md` → its files incl. the two Discipline
-> snippets → `spec/WAL.md`), then read this. The **git log is the
-> authoritative per-item record** — every commit cites its reasoning.
+> **`spec/WAL.md` is the canonical living state and its header is
+> current.** If this snapshot and the WAL disagree, the WAL wins. Boot
+> first (`CLAUDE.md` → `spec/boot/INDEX.md` → its files incl. the two
+> Discipline snippets → `spec/WAL.md`), then read this. The **git log is
+> the authoritative per-item record** — every commit cites its reasoning.
 
 ---
 
 ## TL;DR
 
-This session did two things, both small and both verified end-to-end:
+This session designed and shipped the **PROP-018 agentic + standalone
+modes MVP** — vibevm's two product modes, turning on one axis: *where does
+an operation's reasoning happen?*
 
-1. **`cargo xtask mirror` now self-heals tracking refs after fan-out.**
-   Root cause: the fan-out pushes by the *URL* spelled in `mirrors.toml`,
-   not by a remote name, and git only advances a remote-tracking ref on a
-   push to a *named* remote — so `refs/remotes/origin/main` stayed stale
-   and `git status` falsely read "ahead of origin/main" right after a green
-   rollout (a manual `git fetch origin` was the cure). Fix: after each
-   successful branch push, `mirror` finds every configured remote whose URL
-   matches the target and moves its tracking ref up to the just-pushed
-   commit via `git update-ref` (no extra network round-trip — the ff-only
-   push already guaranteed the host equals local `main`).
-2. **The mirror system's marquee safety invariant became runnable
-   capital.** "Never `--force`, fast-forward-only" (PROP-016 §6, the
-   `CLAUDE.md` Rule 4 red line) was prose only — nothing *checked* it. The
-   fan-out's push command now builds in one pure `push_args`, and
-   `push_args_never_force` asserts it never emits `--force`/`-f`/a
-   `+`-refspec for any ref shape. A rule with no checker is a WISH; this
-   one now has a checker.
+- **standalone** — `vibe skill {list,install,uninstall}` projects
+  package-declared `[[skill]]` files into coding agents' skill dirs
+  (Claude Code / OpenCode / Codex), reusing the PROP-015 agent machinery.
+  **No LLM** — works agent-present or not.
+- **agentic** — vibevm composes a *domain-grounded* `Intent` and the
+  calling agent executes it: `vibe agentic explain` parks the instruction
+  in `.vibe/agentic/command.md`, `vibe command` drains it; the same op is
+  also the `agentic_explain` MCP tool (returns inline, no mailbox). One
+  core, two transports (CLI one-shot / persistent MCP).
 
-Two commits (`e4a9353` code, `e3546ec` spec+specmap), rolled out to both
-mirrors via the improved `cargo xtask mirror` itself (dogfooded — the
-`track origin/main -> e3546ec` lines appeared and `git status` came back
-clean with no manual fetch).
+The **narrative** was corrected mid-session by the owner and is now
+consistent across every surface: vibevm *authors* the trustworthy,
+domain-grounded instruction (its stable algorithmic domain knowledge makes
+the prompt better than improvisation); the agent is the better *in-session
+executor* (it holds the live context and tools). Division of labour by
+strength — **not** vibevm offloading because it lacks an engine.
+
+Eleven gate-green commits (`e7d5cbf` … `bd26156`) on both mirrors, plus
+`ee9c62e` (the General Discovery Prompt, this session's research-mode
+preamble).
 
 ## Where work stands
 
-- **Branch `main` @ `e3546ec`**, `0/0` vs `origin/main`; `github/main` also
-  `e3546ec`. Both source mirrors level. Working tree clean.
-- **No blocker. No campaign in flight.** The WAL says: "the next session
-  picks the owner's next goal." DISCIPLINE-SWEEP (`cargo xtask health`) is
-  the standing instrument that surfaces the next candidate work.
-- **Gate panel** (unchanged by this session — xtask is gate-exempt, the
-  PROP-016 edits were prose): `conform check` — **0 frozen / 0 new**
-  (baseline EMPTY); `specmap --check` — clean (474 units / 448 items / 459
-  edges / 0 suspects / 0 warnings / 0 orphans / 0 dispositioned);
-  `CONFORM_GATED = 16`, vibe-core in `GATED_PUB_DOCTEST`; `vibe check`
-  0/0/0; full `self-check.sh` green.
+- **Branch `main` @ `ee9c62e`.** After this save's rollout, both mirrors
+  (`gitverse` = `anarchic/vibevm`, `github` = `anarchic-pro/vibevm`) are
+  level with `main`. Working tree clean.
+- **No campaign in flight.** PROP-018 MVP is the last work; resolvo
+  (PROP-017) remains the default solver. The next session picks the
+  owner's next goal.
+- **Gate panel — green.** `self-check.sh` exit 0 (fmt, all tests,
+  doctests, clippy `-D warnings`, `vibe check`); `conform check` 0/0/0
+  (baseline EMPTY); `specmap --check` clean (509 units / 491 edges / 0
+  suspects / 0 warnings / 0 orphans); `vibe check` 0/0/0.
 
 ## Active blocker & the human action that clears it
 
-**None.** Panel green, tree clean, both mirrors synced. Nothing is waiting
-on a human action to proceed. (Standing owner-court items below are
-decisions the owner may take when they wish, not blockers.)
+**None.** Panel green, tree clean, mirrors synced after this save. Nothing
+waits on a human action. (One standing owner decision, not a blocker:
+whether to begin PROP-018 §6 far-backlog or a fresh goal — see below.)
 
 ## EXACT next-steps recipe (candidate work — the owner chooses)
 
-No plan is mid-execution, so these are *candidates*, not an authorised
-queue. Pick one with the owner:
+No plan is mid-execution. Candidates:
 
-1. **Run the standing sweep and act on its backlog.**
-   ```sh
-   cargo xtask health            # writes terraform/health/latest.json (offline, deterministic)
-   cargo xtask health --mirrors  # + a live mirror-sync probe (network; off by default)
-   ```
-   At last authoring the sweep flagged: `boot.rs` at the 600 `file-length`
-   landmine (+13 in the danger band); **four zero-gap promotion
-   candidates** ready to enter `GATED_PUB_DOCTEST` — `conform-core`,
-   `conform-frontend-rust`, `env-audit`, `specmark-grammar`; and a
-   ~260-type pub-doctest drain backlog led by `vibe-install` (9). Promoting
-   a zero-gap crate = append it to `GATED_PUB_DOCTEST`
-   (`xtask/src/conform.rs:77`), run `conform check` (expect 0 new), commit.
-2. **Take an owner-court decision** (see Standing items) — e.g. publish the
-   two Discipline packages, or open the PROP-010 design session.
-3. **A fresh owner goal** — boots from this checkpoint with no debt to pay
-   down first.
+1. **PROP-018 §6 far backlog** (the seams are already cut for these):
+   - `[[mcp]]` **bundled-server install** — the schema is reserved in
+     PROP-018 §2.4; smallest of the four, closes the vim-style
+     "tool + mcp + skill" package end to end. Extend `vibe skill` (or a
+     sibling) to install a package's declared MCP server into agents,
+     reusing `vibe-mcp::agent_config` (`merge_json`/`merge_toml`).
+   - **`BuiltinBackend`** over `vibe-llm` — standalone reasoning with no
+     agent present. The `InferenceBackend` trait
+     (`crates/vibe-mcp/src/agentic.rs`) is the slot; `vibe-llm` is still an
+     M0 stub (`VIBEVM-SPEC.md` §10.4).
+   - **Full vibevm↔agent conversations** — an OpenAI-Responses-shaped
+     protocol with write-back, multi-agency, and a fast context cache.
+     This is where the §2.7 relay grows a return channel and the §2.8 MCP
+     transport grows session state.
+   - **OpenCode-style resumable console** — a persistent vibevm session
+     with `--resume <id>`, from an agent and interactively.
+2. **DISCIPLINE-SWEEP** — `cargo xtask health` (offline) surfaces the
+   standing backlog (file-length danger band, pub-doctest drain /
+   promotion candidates, deviation-debt census).
+3. **A fresh owner goal** — boots from this checkpoint with no debt.
 
 ## Non-obvious findings (this session)
 
-- **`git push <url>` does NOT move tracking refs; `git push <remote>`
-  does.** This is the whole bug. Tracking refs follow the *fetch* config of
-  a *named* remote; a raw-URL push is invisible to them. The fix records
-  the post-push SHA with `git update-ref refs/remotes/<remote>/<branch>` —
-  equivalent to what a `git fetch` would write, minus the round-trip,
-  because an ff-only push that *succeeded* means the host now equals local.
-- **Tags need no tracking-ref refresh.** They land in `refs/tags/*`
-  directly (global, not per-remote), so only *branch* pushes leave a stale
-  `refs/remotes/<remote>/<branch>`. The refresh skips `tags`.
-- **xtask is a *recorded* gate exemption, and that is Discipline-compliant.**
-  `CONFORM_EXEMPT` (`xtask/src/conform.rs:48`) pairs every non-gated crate
-  with a reason; the Discipline's rule is "a deviation with no reason is a
-  defect" — xtask's reason ("dev tooling, panics acceptable at the
-  developer's console") makes it a decision, not a defect. So I did **not**
-  add `scope!`/`#[spec]`/Class-F machinery to `mirror.rs` — no xtask module
-  carries them, and adding them would break uniformity and contradict the
-  record. The *right* Discipline move for exempt tooling is the pure-fn +
-  unit-test (`push_args` + `push_args_never_force`), not gate ceremony.
-- **Two gates, not one — a crate can be gated by one and exempt the other.**
-  `specmark`/`specmark-grammar` are `CONFORM_GATED` (their code obeys
-  no-unwrap etc.) yet **specmap-ratchet EXEMPT** — they are the tagging
-  machinery itself and cannot depend on `specmark` to carry `scope!`
-  markers (a bootstrap problem). conform reports "4 exempt", specmap "6
-  exempt"; the delta is exactly this pair.
-- **Machine quirks (unchanged, still true):** PowerShell 5.1 corrupts
-  UTF-8-no-BOM round-trips → edit via the Edit/Write tools, never PS
-  `Set-Content`; `bash` in PowerShell is WSL, so `self-check.sh` must run
-  through **Git Bash** (the Bash tool here is Git Bash); `git commit` via
-  `-F - <<'MSG'` heredoc only (backtick `-m` double-corrupted messages
-  before); Windows UAC blocks test exes named `*install*`. When checking a
-  gate's exit code, read `$?` — a `| tail` pipe masks the real code.
+- **Editing PROP prose drifts the specmap content-hash even when the
+  `{#anchor}` is unchanged.** specmap tracks a content-hash per spec unit;
+  changing the prose under an anchor (without bumping `req rN`) raises an
+  `unbumped-hash` advisory at the next `cargo xtask specmap` regen. It is
+  **editorial**, resolved by regenerating + committing `specmap.json` (and
+  optionally a `spec-editorial: <anchor>` line in the commit body).
+  `specmap --check` is clean once `specmap.json` matches the tree. (Learnt
+  twice — once on the `.vibe/agentic` relay-dir rename, once on the
+  narrative reframe of `#pluggable-backend`.) **Lesson: regen specmap after
+  any PROP edit, not only after code-marker changes.**
+- **clippy `enum-variant-names` (under `-D warnings`) rejects an enum
+  variant whose name ends in the enum's own name.** `Command::AgenticCommand`
+  failed; renamed to `Command::Drain` with `#[command(name = "command")]`
+  to keep the user-facing `vibe command`.
+- **A new `#[cell]` `McpTool` needs a name-reference oracle** in
+  `crates/vibe-mcp/tests/tools_oracle.rs` (the `cell-has-oracle` net,
+  R-040) and **a new public seam trait needs a compiled doctest**
+  (`seam-has-doctest`). Both were caught by conform/self-check and added.
+- **PowerShell 5.1 quirks (re-confirmed):** `Get-Content` reads UTF-8-no-BOM
+  as ANSI, so `.vibe/agentic/command.md` *looked* mojibake'd in
+  `Get-Content -Raw` while the `vibe` binary read/wrote it correctly — the
+  file was never corrupted. And `2>&1` on a native exe wraps stderr as
+  `NativeCommandError` noise (cargo still succeeded) — don't redirect
+  stderr; it is captured separately.
+- **Machine quirks (unchanged, still true):** edit via Edit/Write tools,
+  never PS `Set-Content` (UTF-8 round-trip corruption); `git commit` via
+  `-F - <<'MSG'` heredoc only; `self-check.sh` runs through **Git Bash**
+  (the Bash tool here), never WSL; when reading a gate's exit code use
+  `$?` / a captured `EXIT=`, never a `| tail` pipe (it masks the code).
 
 ## Repository map
 
@@ -168,138 +127,129 @@ vibevm/                      Rust workspace; binary = `vibe`; tooling = `cargo x
 ├─ CONTINUE.md               this cold-resume snapshot
 ├─ mirrors.toml              PROP-016 source-mirror target registry (gitverse + github)
 ├─ conform-baseline.json     conform ratchet baseline — EMPTY (0 frozen)
-├─ specmap.json              traceability index (474 units / 448 items / 459 edges)
+├─ specmap.json              traceability index (509 units / 478 items / 491 edges)
 ├─ specmap-ratchet.json      orphan ratchet exempt list (6 exempt)
-├─ crates/                   19 library/bin crates (see gate split below)
+├─ crates/                   library/bin crates (see gate split below)
 ├─ xtask/                    project tooling crate (gate-EXEMPT), at workspace root
 ├─ spec/                     the spec tree — the source of truth
 │   ├─ boot/                 session-boot files (INDEX.md manifest, 00-core, 90-user)
-│   ├─ common/               PROP-000…016 (cross-cutting decisions)
+│   ├─ common/               PROP-000…018 (cross-cutting decisions; PROP-018 = modes)
 │   ├─ modules/              per-module PROP/FEAT (vibe-registry, vibe-mcp, …)
 │   ├─ discipline/           ENGINE-CONFORM, BROWNFIELD, the Discipline corpus
+│   ├─ research/             PROP-004 (tessl) + DISCOVERY_PROMPT.md (this session's mode)
 │   ├─ terraforms/           campaign plans (CONVERT-PLAN, PUBDOC-DRAIN, DISCIPLINE-SWEEP)
 │   └─ WAL.md                canonical living state (checkpoint, rewritten each session)
 ├─ vibedeps/                 installed packages (flow-discipline-core, stack-rust-ai-native)
 ├─ fixtures/registry/        hermetic test registry (never touches a real host)
 ├─ tools/                    self-check.sh, jtd-codegen
-├─ schemas/                  JTD schemas — the vibe-wire codegen INPUT (the taggable unit)
+├─ schemas/                  JTD schemas — the vibe-wire codegen INPUT
 ├─ refs/                     book/ (read-only owner reference) + src/ (cargo/uv/spec-kit)
 └─ terraform/                registry/ (test+debt baselines), health/ (sweep snapshot)
 ```
 
-**The crates and their gate status** (GATED = held to the full conform
-rule set with a zero-new-findings ratchet; see `xtask/src/conform.rs`):
+**PROP-018 lives in these files** (the MVP surface, for a cold reader):
+
+| Concern | File |
+|---|---|
+| Design | `spec/common/PROP-018-agentic-standalone-modes.md` |
+| `[[skill]]` manifest type | `crates/vibe-core/src/manifest/package/skill.rs` (+ wired in `document.rs`) |
+| Skill projection writer | `crates/vibe-mcp/src/pkgskill.rs`; `Agent::skills_root` in `agents.rs` |
+| `vibe skill` command | `crates/vibe-cli/src/commands/skill/mod.rs`, `cli/skill.rs` |
+| Agentic relay core | `crates/vibe-mcp/src/agentic.rs` (`Intent`, `InferenceBackend`, `RelayBackend`, `Affinity`, `explain_intent`) |
+| `vibe agentic` / `vibe command` | `crates/vibe-cli/src/commands/agentic/mod.rs`, `cli/agentic.rs` |
+| `agentic_explain` MCP tool | `crates/vibe-mcp/src/tools.rs` (+ oracle in `tests/tools_oracle.rs`) |
+| Agent-facing teaching | `crates/vibe-mcp/src/skill_template.md` |
+
+**Crate gate status** (GATED = held to the full conform rule set with a
+zero-new-findings ratchet):
 
 | Crate | Holds | Gate |
 |---|---|---|
-| `vibe-core` | foundation types: 7 newtypes (RelPath, PackageName, ContentHash…), Manifest, Lockfile, UserConfig | GATED + `GATED_PUB_DOCTEST` |
-| `vibe-index` | in-RAM index + registry server (TokenStore, RateLimiter, AppState) + scanner | GATED |
-| `vibe-install` | install orchestrator (plan → apply) | GATED |
-| `vibe-resolver` | dependency solver (NaiveDepSolver; SAT is a future cell) | GATED |
-| `conform-core` | conformance rules + fact store + ratchet baseline | GATED |
-| `conform-frontend-rust` | `syn`-based fact frontend | GATED |
-| `specmap-core` | traceability index generation (specmap.json) | GATED |
-| `vibe-registry` | registry domain (search, vendor, redirect-sync, git backends) | GATED |
-| `vibe-workspace` | workspace / manifest / boot model (BootBand) | GATED |
-| `vibe-check` | `vibe check` validation | GATED |
-| `vibe-publish` | publisher (RepoCreator adapters, token redaction, redirect_sync) | GATED |
-| `env-audit` | the designated env-mutation audit crate (serialized EnvGuard) | GATED |
-| `vibe-cli` | the `vibe` binary facade | GATED |
-| `specmark` | the `#[spec]`/`#[cell]`/`#[verifies]`/`scope!` proc-macros | GATED conform, EXEMPT specmap (bootstrap) |
-| `specmark-grammar` | the `spec://` URI grammar (Verb, SpecUri, EdgeSpec) | GATED conform, EXEMPT specmap (bootstrap) |
-| `vibe-mcp` | MCP server + tools + agent detection/config + skill install | GATED |
-| `vibe-graph` | M0 stub — task-graph runner, unbuilt | EXEMPT (stub) |
-| `vibe-llm` | M0 stub — LLM providers, land in v1.5 | EXEMPT (stub) |
-| `vibe-wire` | generated code (JTD codegen output) | EXEMPT (generated) |
-| `xtask` | project tooling (codegen, specmap, conform, mirror, health…) | EXEMPT (dev tooling) |
+| `vibe-core` | foundation types, Manifest (now incl. `[[skill]]`), Lockfile | GATED + `GATED_PUB_DOCTEST` |
+| `vibe-mcp` | MCP server + tools + agent config/skill install + **agentic relay + package-skill projection** | GATED |
+| `vibe-cli` | the `vibe` binary facade (now incl. `vibe skill` / `vibe agentic` / `vibe command`) | GATED |
+| `vibe-index` `vibe-install` `vibe-resolver` `conform-core` `conform-frontend-rust` `specmap-core` `vibe-registry` `vibe-workspace` `vibe-check` `vibe-publish` `env-audit` | (unchanged this session) | GATED |
+| `specmark` / `specmark-grammar` | proc-macros / `spec://` grammar | GATED conform, EXEMPT specmap (bootstrap) |
+| `vibe-graph` `vibe-llm` | M0 stubs | EXEMPT (stub) |
+| `vibe-wire` | JTD codegen output | EXEMPT (generated) |
+| `xtask` | project tooling | EXEMPT (dev tooling) |
 
 ## Architectural / policy decisions in force (long form)
 
-- **The four non-negotiable rules** (`CLAUDE.md`, PROP-000 §12): (1)
-  *attribution* — this repository is human-authored; never mark any
-  artefact as machine-authored (the rule's own paragraph is the only place
-  the topic is discussed). (2) *Conventional Commits* — short imperative
-  subject, body explaining *why*. (3) *Group commits by meaning* — one
-  logical unit per commit. (4) *Autonomy on routine changes only* — routine
-  work commits+pushes without asking; history rewrites, force-push, large
-  blobs, CI/signing/secrets changes stop and ask.
-- **Source is multi-homed (PROP-016, in force 2026-06-14).** GitVerse
-  `anarchic/vibevm` and GitHub `anarchic-pro/vibevm` are both public and
-  canonical for reading (RU↔GitVerse, US↔GitHub). Model: benevolent
-  dictator / hub-and-spoke — mainline is the maintainer's single-writer
-  local `main`; every host is a downstream read-replica. **Roll out with
-  `cargo xtask mirror` (reads `mirrors.toml`, ff-only, never `--force`),
-  NOT `git push origin`** (which only hits GitVerse). `--check` verifies
-  sync; `--from <host>` pulls a host's accepted-PR merge into mainline
-  first. After this session, fan-out also refreshes local tracking refs.
-- **The package registry is a *separate* split-host** (PROP-000 §7,
-  PROP-002 §2.10) — published packages live in the GitHub `vibespecs` org,
-  auth is `~/.vibevm/github.publish.token` used *only* by `vibe registry
-  publish`, scoped strictly to `vibespecs`. Source mirrors (SSH keys,
-  `anarchic-pro`) and the registry (publish token, `vibespecs`) are
-  orthogonal — different orgs, different creds. **Token discipline:** the
-  publish token is a surface-secret, never echoed anywhere.
-- **Two enforcement gates.** (a) The **conform gate** (`CONFORM_GATED`,
-  `xtask/src/conform.rs`) — gated crates obey the full rule set
-  (seam-doctests, error-enum/message-cites-req, no-unwrap-in-domain,
-  ambient-env; plus universal file-length≤600, cell-isolation,
-  cell-has-oracle, unsafe-gate). A new finding fails CI; the baseline only
-  shrinks. (b) The **specmap orphan ratchet** (`specmap-ratchet.json`) —
-  every tagged `#[cell]`/item must `scope!` to a spec unit; no orphans. A
-  crate not in a ratchet's `exempt` list is gated by it.
-- **DISCIPLINE-SWEEP v0.1 (standing instrument).** `cargo xtask health` is
-  a no-LLM, deterministic fact collector reusing the conform frontend;
-  emits `terraform/health/latest.json` (per-crate doctest coverage, the
-  file-length danger band, the pub-doctest drain/promotion backlog, the
-  deviation-debt census). It guides; the gates remain truth.
-- **The Discipline's two laws** (`vibedeps/flow-discipline-core`): (1)
-  idiomatic inside the file, engineered around the file — strictness lives
-  in types/contracts/metadata/verification, not in an invented dialect; (2)
-  explanation capital must be runnable capital — prose that could be a
-  checker/doctest/typed API is a WISH until it is one.
+- **The four non-negotiable rules** (`CLAUDE.md`, PROP-000 §12): attribution
+  (human-authored only), Conventional Commits, group-by-meaning, autonomy
+  on routine changes only.
+- **PROP-018 — agentic + standalone modes (NEW, in force 2026-06-16).** A
+  mode is a choice of *inference backend* (§2.1). agentic = vibevm authors
+  a domain-grounded `Intent`, the calling agent executes it (relay backend);
+  standalone = vibevm's own backend (algorithmic now, a built-in `vibe-llm`
+  engine in §6 far-backlog, for when no agent is present). Skills are
+  declared in `[[skill]]` **separately from the four package kinds** (§2.4)
+  and projected *out of* the workspace into agents (§2.5 — distinct from
+  PROP-003 subskill delivery into the project tree). The relay lives in
+  `.vibe/agentic/` (a subdir of the existing `.vibe/` cache, not a new
+  dot-dir — §3). Distinct from PROP-006 *session* postures (§1.3).
+- **Source is multi-homed (PROP-016).** GitVerse `anarchic/vibevm` + GitHub
+  `anarchic-pro/vibevm`, both public + canonical for reading. Roll out with
+  **`cargo xtask mirror`** (ff-only, never `--force`), NOT `git push
+  origin`. `--check` verifies sync.
+- **The package registry is a separate split-host** (PROP-000 §7) — GitHub
+  `vibespecs` org, auth `~/.vibevm/github.publish.token`, used only by
+  `vibe registry publish`. Orthogonal to source mirrors (different orgs,
+  different creds). Token is a surface-secret, never echoed.
+- **Two enforcement gates.** conform (`CONFORM_GATED`, a finding fails CI,
+  baseline only shrinks) + specmap orphan ratchet (every tagged item must
+  `scope!` to a spec unit). resolvo (PROP-017) is the default solver.
+- **The Discipline's two laws:** idiomatic inside the file / engineered
+  around it; explanation capital must be runnable capital (a rule with no
+  checker is a WISH).
 
 ## Recent commit chain (newest first)
 
 ```
-e3546ec docs(spec): PROP-016 records the tracking-ref refresh        (this session)
-e4a9353 feat(xtask): mirror refreshes tracking refs after fan-out    (this session)
-d1e62f8 docs(boot): 90-user.md — multi-homed source, GitHub SSH, mirror rollout
-3c0924e docs(spec): PROP-016 — decentralized source-mirror integration model
-141cdde feat(xtask): health gains an optional --mirrors sync probe
-5a1d313 feat(xtask): mirror — fan mainline out to all targets
-c3d2ad2 docs(wal): record the standing DISCIPLINE-SWEEP instrument
-9879321 docs(spec): DISCIPLINE-SWEEP v0.1 - the standing guardian
-e6f188f feat(xtask): health collector for the discipline sweep
-91bc763 docs(wal): pub-doctest debt drained — conform baseline at zero
-489df90 docs(spec): PUBDOC-DRAIN v0.1 carries its execution record
-53021b6 docs(core): B8 — purl and user-config types; baseline reaches zero
-dbe8415 docs(core): B7 — document, redirect, i18n types teach by doctest
-51b2e72 docs(core): B6 — non-registry dep declares teach by doctest
-a014232 docs(core): B5 — lockfile types teach by doctest
-eceabbc docs(core): B4 — subskill manifest types teach by doctest
-3f9707f docs(core): B3 — consumer-side sections teach by doctest
-873820b docs(core): B2 — package-role sections teach by doctest
-f0067cc docs(core): B1 — foundation types teach by doctest
-34d9fba docs(spec): PUBDOC-DRAIN v0.1 - drain the pub-doctest debt
-13bb61c docs(wal): CONVERT-PLAN v0.1 complete — Phases 0-7
-581d39f feat(mcp): vibe-mcp joins both gates — DBT-0020 closed (Phase 7.4)
-34c3517 refactor(cli): split mcp.rs into a commands/mcp/ module family
-fddc337 docs(wal): refine the 7.3d-ii split recipe (mcp.rs 1471)
-9da4e24 test(mcp): agent-profile tests relocate to vibe-mcp
+ee9c62e docs(spec): add the General Discovery Prompt v3            (this session)
+bd26156 docs(continue): PROP-018 MVP banner                        (this session)
+7d5aaaa docs(wal): PROP-018 agentic + standalone modes — MVP checkpoint
+050b150 docs(agentic): reframe — vibevm authors the instruction, agent executes
+911409e fix(cli): rename relay drain variant for clippy enum-variant-names
+aa8b66f docs(mcp): teach the agentic protocol in the vibevm skill
+4cbac6c feat(mcp): agentic_explain — the MCP face of the relay
+37a67b7 feat(agentic): the relay — vibe agentic explain + vibe command
+ae6585e feat(skill): vibe skill — project package skills into agents
+e9e17e4 docs(spec): PROP-018 — relay lives in .vibe/agentic, not a new dot-dir
+27f511f feat(core): [[skill]] manifest section for agent skills
+e7d5cbf docs(spec): PROP-018 — agentic and standalone modes
+e7f6a6a docs(continue): forward weak-deps in banner                (prior session)
+f1691d5 docs(wal): forward weak-deps done
+926ac55 docs(spec): PROP-017 — forward weak-deps done
+cf29ebc feat(resolver): recommends best-effort, suggests ignored
+dabec2b feat(core): [recommends] + [suggests] manifest schema
+3471cc5 docs(continue): port-complete banner
+b650075 docs(wal): resolvo port complete — it is the default solver
+be17eb7 docs(spec): PROP-017 — record the port complete
+f980a16 fix(cli): relocate validate_solver doc above build_install_resolver
+ee282e1 feat(cli): --solver override for the resolver fallback
+ebfdd94 feat(cli): flip the default solver to resolvo
+9b8bc22 feat(resolver): VersionEnumerator over real registries
+eafad22 docs(continue): refresh banner — vocabulary complete
 ```
 
 ## Quick-start
 
 ```sh
 cargo xtask specmap --check              # traceability index + orphan ratchet
-cargo xtask conform check                # facts → rules → SARIF → baseline (0 frozen / 0 new)
-cargo xtask conform freeze               # rewrite baseline (legal: new rule, or reviewed shrink)
+cargo xtask conform check                # facts → rules → SARIF → baseline (0/0/0)
 cargo xtask test-gate                    # nextest, xfail-strict
-cargo xtask fast-loop --enforce-budget   # per-cell first-signal < 60s
 cargo xtask health                       # DISCIPLINE-SWEEP snapshot (offline)
 cargo xtask mirror                       # fan main+tags to all source mirrors (ff-only)
 cargo xtask mirror --check               # verify every mirror is in sync (read-only)
 bash tools/self-check.sh                 # via Git Bash, NOT WSL — check $?, not a tail pipe
+
+# PROP-018 surface
+vibe skill list                          # skills declared by the project + installed packages
+vibe skill install --assume-yes          # project them into agents (--agent / --scope / --skill)
+vibe agentic explain                     # park an "explain this project" instruction
+vibe command                             # drain the relay: print the parked instruction
 ```
 
 Session-resume phrase: `восстанови сессию` — **restores state and reports,
