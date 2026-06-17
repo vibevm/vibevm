@@ -5,15 +5,65 @@
 specmark::scope!("spec://vibevm/common/PROP-019#instances");
 
 use std::fs;
+use std::io;
 use std::path::{Path, PathBuf};
 use std::time::UNIX_EPOCH;
 
-use anyhow::{Context, Result};
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
+use specmark::spec;
+use thiserror::Error;
 
 use super::model::VersionId;
 use super::store::VersionStore;
+
+/// The placement layer's failure surface (PROP-019 §2.15): statting a built
+/// file, copying it into the new instance, or preparing/publishing the
+/// instance layout.
+#[derive(Debug, Error)]
+#[spec(implements = "spec://vibevm/common/PROP-019#instances")]
+pub(crate) enum PlaceError {
+    #[error(
+        "statting distribution file `{path}` failed: {source} \
+         (violates spec://vibevm/common/PROP-019#instances; \
+          fix: ensure the freshly-built distribution is readable)"
+    )]
+    Stat {
+        path: PathBuf,
+        #[source]
+        source: io::Error,
+    },
+
+    #[error(
+        "copying `{from}` → `{to}` failed: {source} \
+         (violates spec://vibevm/common/PROP-019#instances; \
+          fix: ensure the instance root is writable and has free space)"
+    )]
+    Copy {
+        from: PathBuf,
+        to: PathBuf,
+        #[source]
+        source: io::Error,
+    },
+
+    #[error(
+        "preparing the instance layout at `{path}` failed: {source} \
+         (violates spec://vibevm/common/PROP-019#instances; \
+          fix: ensure the instance root is writable)"
+    )]
+    Layout {
+        path: PathBuf,
+        #[source]
+        source: io::Error,
+    },
+
+    #[error(
+        "serialising the instance manifest failed: {detail} \
+         (violates spec://vibevm/common/PROP-019#instances; \
+          fix: report this — the manifest is malformed)"
+    )]
+    Serialise { detail: String },
+}
 
 /// Files at or below this size are compared by content hash (cheap, robust);
 /// larger files are compared by `(size, mtime)` only — never read in bulk
@@ -61,8 +111,11 @@ fn small_file_hash(path: &Path) -> Option<String> {
 }
 
 /// Compute a manifest entry for a distribution file (PROP-019 §2.15).
-fn entry_for(src: &Path, rel: &str) -> Result<FileEntry> {
-    let meta = fs::metadata(src).with_context(|| format!("statting `{}`", src.display()))?;
+fn entry_for(src: &Path, rel: &str) -> Result<FileEntry, PlaceError> {
+    let meta = fs::metadata(src).map_err(|source| PlaceError::Stat {
+        path: src.to_path_buf(),
+        source,
+    })?;
     let size = meta.len();
     let hash = if size <= SMALL_FILE_MAX {
         small_file_hash(src)
@@ -78,7 +131,7 @@ fn entry_for(src: &Path, rel: &str) -> Result<FileEntry> {
 }
 
 /// The manifest of a freshly-built distribution (PROP-019 §2.15).
-pub(crate) fn manifest_for(dist: &[(PathBuf, String)]) -> Result<Manifest> {
+pub(crate) fn manifest_for(dist: &[(PathBuf, String)]) -> Result<Manifest, PlaceError> {
     let mut files = Vec::with_capacity(dist.len());
     for (src, rel) in dist {
         files.push(entry_for(src, rel)?);
@@ -121,18 +174,26 @@ pub(crate) fn place(
     dist: &[(PathBuf, String)],
     manifest: &Manifest,
     prev: Option<(&Path, &Manifest)>,
-) -> Result<()> {
+) -> Result<(), PlaceError> {
     let staging = store.version_id_dir(id).join(".staging");
     if staging.exists() {
-        fs::remove_dir_all(&staging)
-            .with_context(|| format!("clearing `{}`", staging.display()))?;
+        fs::remove_dir_all(&staging).map_err(|source| PlaceError::Layout {
+            path: staging.clone(),
+            source,
+        })?;
     }
-    fs::create_dir_all(&staging).with_context(|| format!("creating `{}`", staging.display()))?;
+    fs::create_dir_all(&staging).map_err(|source| PlaceError::Layout {
+        path: staging.clone(),
+        source,
+    })?;
 
     for (src, rel) in dist {
         let dest = staging.join(rel);
         if let Some(parent) = dest.parent() {
-            fs::create_dir_all(parent)?;
+            fs::create_dir_all(parent).map_err(|source| PlaceError::Layout {
+                path: parent.to_path_buf(),
+                source,
+            })?;
         }
         let reuse = prev.and_then(|(pdir, pman)| {
             let new_e = manifest.get(rel)?;
@@ -144,24 +205,40 @@ pub(crate) fn place(
             None => false,
         };
         if !hardlinked {
-            fs::copy(src, &dest)
-                .with_context(|| format!("copying `{}` → `{}`", src.display(), dest.display()))?;
+            fs::copy(src, &dest).map_err(|source| PlaceError::Copy {
+                from: src.clone(),
+                to: dest.clone(),
+                source,
+            })?;
         }
     }
 
-    let text = toml::to_string(manifest).context("serialising the instance manifest")?;
-    fs::write(staging.join(MANIFEST_NAME), text).context("writing the instance manifest")?;
+    let text = toml::to_string(manifest).map_err(|e| PlaceError::Serialise {
+        detail: e.to_string(),
+    })?;
+    let manifest_path = staging.join(MANIFEST_NAME);
+    fs::write(&manifest_path, text).map_err(|source| PlaceError::Layout {
+        path: manifest_path,
+        source,
+    })?;
 
     let final_dir = store.instance_dir(id, instance);
     if final_dir.exists() {
-        fs::remove_dir_all(&final_dir)
-            .with_context(|| format!("clearing `{}`", final_dir.display()))?;
+        fs::remove_dir_all(&final_dir).map_err(|source| PlaceError::Layout {
+            path: final_dir.clone(),
+            source,
+        })?;
     }
     if let Some(parent) = final_dir.parent() {
-        fs::create_dir_all(parent)?;
+        fs::create_dir_all(parent).map_err(|source| PlaceError::Layout {
+            path: parent.to_path_buf(),
+            source,
+        })?;
     }
-    fs::rename(&staging, &final_dir)
-        .with_context(|| format!("publishing instance at `{}`", final_dir.display()))?;
+    fs::rename(&staging, &final_dir).map_err(|source| PlaceError::Layout {
+        path: final_dir.clone(),
+        source,
+    })?;
     Ok(())
 }
 
