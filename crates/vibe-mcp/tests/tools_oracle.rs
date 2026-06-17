@@ -1,12 +1,12 @@
-//! Behavioural oracles for the `McpTool` cells (PROP-015 §2.2). Each
-//! cell is constructed and driven through the seam against a lockfile
-//! fixture — both directly (`tool.run(...)`) and end-to-end through the
-//! registered server (`dispatch_one`). This is the cell-has-oracle net
-//! the replacement protocol requires (R-040): the three tool cells are
-//! referenced here by name.
+//! Behavioural oracles for the `McpTool` cells (PROP-015 §2.2, PROP-018
+//! §2.8). Each cell is constructed and driven through the seam against a
+//! lockfile fixture — both directly (`tool.run(...)`) and end-to-end
+//! through the registered server (`dispatch_one`). This is the
+//! cell-has-oracle net the replacement protocol requires (R-040): the four
+//! tool cells are referenced here by name.
 
 use serde_json::{Value, json};
-use vibe_mcp::tools::{MaterialiseSubskill, McpTool, QueryPackage, ReadSubskill};
+use vibe_mcp::tools::{AgenticExplain, MaterialiseSubskill, McpTool, QueryPackage, ReadSubskill};
 use vibe_mcp::{ServerContext, dispatch_one};
 
 const LOCKFILE_FIXTURE: &str = r#"
@@ -76,6 +76,23 @@ fn each_cell_descriptor_names_itself() {
         MaterialiseSubskill.descriptor().name,
         "materialise_subskill"
     );
+    assert_eq!(AgenticExplain.descriptor().name, "agentic_explain");
+}
+
+// --- agentic_explain (PROP-018 §2.8 dual transport) ----------------------
+
+#[test]
+fn agentic_explain_cell_returns_inline_instruction() {
+    let (_dir, ctx) = project_with_locked(LOCKFILE_FIXTURE);
+    let out = AgenticExplain.run(&json!({}), &ctx).unwrap();
+    assert_eq!(out["source"], "agentic explain");
+    assert_eq!(out["delivery"], "inline");
+    let instruction = out["instruction"].as_str().unwrap();
+    assert!(instruction.contains("three"));
+    assert!(instruction.contains("vibe.toml"));
+    // The MCP transport returns the intent inline and writes no mailbox
+    // file (PROP-018 §2.8) — that is the CLI one-shot path's job.
+    assert!(!ctx.project_root.join(".vibe/agentic/command.md").exists());
 }
 
 // --- query_package -------------------------------------------------------
@@ -273,4 +290,5 @@ fn dispatch_tools_list_includes_every_cell() {
     assert!(names.contains(&"query_package"));
     assert!(names.contains(&"read_subskill"));
     assert!(names.contains(&"materialise_subskill"));
+    assert!(names.contains(&"agentic_explain"));
 }

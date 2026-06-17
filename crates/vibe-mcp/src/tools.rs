@@ -46,6 +46,7 @@ pub fn default_tools() -> Vec<Box<dyn McpTool>> {
         Box::new(QueryPackage),
         Box::new(ReadSubskill),
         Box::new(MaterialiseSubskill),
+        Box::new(AgenticExplain),
     ]
 }
 
@@ -383,6 +384,46 @@ impl McpTool for MaterialiseSubskill {
             },
             "written": written,
             "skipped": skipped,
+        }))
+    }
+}
+
+// ---------------------------------------------------------------------------
+// agentic_explain
+// ---------------------------------------------------------------------------
+
+/// Compose the "explain this project" instruction and return it inline —
+/// the MCP-transport face of `vibe agentic explain` (PROP-018 §2.8, §2.10).
+/// Shares the [`crate::agentic::explain_intent`] core with the CLI relay,
+/// but where the CLI one-shot parks the intent in `.vibe/agentic/`, the MCP
+/// path returns it synchronously and writes no mailbox file.
+#[cell(seam = "McpTool", variant = "agentic_explain")]
+#[spec(implements = "spec://vibevm/common/PROP-018#transports")]
+pub struct AgenticExplain;
+
+impl McpTool for AgenticExplain {
+    fn descriptor(&self) -> ToolDescriptor {
+        ToolDescriptor {
+            name: "agentic_explain".to_string(),
+            description:
+                "Return an instruction asking YOU to explain this vibevm project in at most three short paragraphs — summarising README.md and folding in what vibe.toml reveals. vibevm has no inference engine of its own, so it does not write the explanation; it hands the task back to you. Carry out the returned `instruction` field yourself, on your own model. This is the zero-latency MCP face of the CLI `vibe agentic explain` + `vibe command` relay: here the instruction is returned inline and nothing is written to disk."
+                    .to_string(),
+            input_schema: json!({
+                "type": "object",
+                "properties": {},
+                "additionalProperties": false
+            }),
+        }
+    }
+
+    fn run(&self, _args: &Value, ctx: &ServerContext) -> Result<Value, ToolError> {
+        let intent = crate::agentic::explain_intent(&ctx.project_root);
+        Ok(json!({
+            "source": intent.source,
+            "title": intent.title,
+            "instruction": intent.body,
+            "delivery": "inline",
+            "note": "Carry out this instruction yourself on your own model; nothing was written to disk.",
         }))
     }
 }

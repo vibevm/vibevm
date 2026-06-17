@@ -1950,49 +1950,49 @@
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/agentic.rs",
       "item_kind": "struct",
-      "line": 75,
+      "line": 93,
       "symbol": "vibe_mcp::agentic::RelayBackend"
     },
     {
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/agentic.rs",
       "item_kind": "fn",
-      "line": 131,
+      "line": 149,
       "symbol": "vibe_mcp::agentic::drain_intent"
     },
     {
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/agentic.rs",
       "item_kind": "fn",
-      "line": 154,
+      "line": 172,
       "symbol": "vibe_mcp::agentic::explain_intent"
     },
     {
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/agentic.rs",
       "item_kind": "fn",
-      "line": 113,
+      "line": 131,
       "symbol": "vibe_mcp::agentic::park_intent"
     },
     {
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/agentic.rs",
       "item_kind": "fn",
-      "line": 261,
+      "line": 279,
       "symbol": "vibe_mcp::agentic::tests::explain_intent_tailors_to_detected_sources"
     },
     {
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/agentic.rs",
       "item_kind": "fn",
-      "line": 220,
+      "line": 238,
       "symbol": "vibe_mcp::agentic::tests::park_then_drain_is_a_one_shot_mailbox"
     },
     {
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/agentic.rs",
       "item_kind": "fn",
-      "line": 248,
+      "line": 266,
       "symbol": "vibe_mcp::agentic::tests::relay_backend_delegates"
     },
     {
@@ -2097,7 +2097,14 @@
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/tools.rs",
       "item_kind": "struct",
-      "line": 263,
+      "line": 395,
+      "symbol": "vibe_mcp::tools::AgenticExplain"
+    },
+    {
+      "crate_name": "vibe-mcp",
+      "file": "crates/vibe-mcp/src/tools.rs",
+      "item_kind": "struct",
+      "line": 264,
       "symbol": "vibe_mcp::tools::MaterialiseSubskill"
     },
     {
@@ -2111,14 +2118,14 @@
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/tools.rs",
       "item_kind": "struct",
-      "line": 56,
+      "line": 57,
       "symbol": "vibe_mcp::tools::QueryPackage"
     },
     {
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/tools.rs",
       "item_kind": "struct",
-      "line": 138,
+      "line": 139,
       "symbol": "vibe_mcp::tools::ReadSubskill"
     },
     {
@@ -5668,7 +5675,7 @@
     {
       "file": "crates/vibe-mcp/src/agentic.rs",
       "from_symbol": "vibe_mcp::agentic::RelayBackend",
-      "line": 79,
+      "line": 97,
       "provenance": "authored",
       "uri": "spec://vibevm/common/PROP-018#pluggable-backend",
       "verb": "implements"
@@ -5676,7 +5683,7 @@
     {
       "file": "crates/vibe-mcp/src/agentic.rs",
       "from_symbol": "vibe_mcp::agentic::drain_intent",
-      "line": 134,
+      "line": 152,
       "provenance": "authored",
       "uri": "spec://vibevm/common/PROP-018#relay",
       "verb": "implements"
@@ -5684,7 +5691,7 @@
     {
       "file": "crates/vibe-mcp/src/agentic.rs",
       "from_symbol": "vibe_mcp::agentic::explain_intent",
-      "line": 158,
+      "line": 176,
       "provenance": "authored",
       "uri": "spec://vibevm/common/PROP-018#explain",
       "verb": "implements"
@@ -5692,7 +5699,7 @@
     {
       "file": "crates/vibe-mcp/src/agentic.rs",
       "from_symbol": "vibe_mcp::agentic::park_intent",
-      "line": 117,
+      "line": 135,
       "provenance": "authored",
       "uri": "spec://vibevm/common/PROP-018#relay",
       "verb": "implements"
@@ -5700,7 +5707,7 @@
     {
       "file": "crates/vibe-mcp/src/agentic.rs",
       "from_symbol": "vibe_mcp::agentic::tests::explain_intent_tailors_to_detected_sources",
-      "line": 262,
+      "line": 280,
       "provenance": "authored",
       "uri": "spec://vibevm/common/PROP-018#explain",
       "verb": "verifies",
@@ -5709,7 +5716,7 @@
     {
       "file": "crates/vibe-mcp/src/agentic.rs",
       "from_symbol": "vibe_mcp::agentic::tests::park_then_drain_is_a_one_shot_mailbox",
-      "line": 221,
+      "line": 239,
       "provenance": "authored",
       "uri": "spec://vibevm/common/PROP-018#relay",
       "verb": "verifies",
@@ -5718,7 +5725,7 @@
     {
       "file": "crates/vibe-mcp/src/agentic.rs",
       "from_symbol": "vibe_mcp::agentic::tests::relay_backend_delegates",
-      "line": 249,
+      "line": 267,
       "provenance": "authored",
       "uri": "spec://vibevm/common/PROP-018#pluggable-backend",
       "verb": "verifies",
@@ -5839,8 +5846,16 @@
     },
     {
       "file": "crates/vibe-mcp/src/tools.rs",
+      "from_symbol": "vibe_mcp::tools::AgenticExplain",
+      "line": 401,
+      "provenance": "authored",
+      "uri": "spec://vibevm/common/PROP-018#transports",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-mcp/src/tools.rs",
       "from_symbol": "vibe_mcp::tools::MaterialiseSubskill",
-      "line": 267,
+      "line": 268,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-mcp/PROP-015#tools",
       "verb": "implements"
@@ -5856,7 +5871,7 @@
     {
       "file": "crates/vibe-mcp/src/tools.rs",
       "from_symbol": "vibe_mcp::tools::QueryPackage",
-      "line": 59,
+      "line": 60,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-mcp/PROP-015#tools",
       "verb": "implements"
@@ -5864,7 +5879,7 @@
     {
       "file": "crates/vibe-mcp/src/tools.rs",
       "from_symbol": "vibe_mcp::tools::ReadSubskill",
-      "line": 141,
+      "line": 142,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-mcp/PROP-015#tools",
       "verb": "implements"
