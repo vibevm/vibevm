@@ -39,7 +39,7 @@ use crate::package_ref::PackageRef;
 use super::i18n::I18nDecl;
 use super::package::{
     BootSnippet, Compatibility, ConditionalTarget, ConflictsList, FeaturesTable, LinkType,
-    Obsoletes, PackageMeta, Provides, Recommends, Requires, RequiresAny, Suggests,
+    Obsoletes, PackageMeta, Provides, Recommends, Requires, RequiresAny, SkillDecl, Suggests,
 };
 use super::project::{
     ActiveSection, LlmSection, MirrorSection, OverrideSection, ProjectSection, RegistrySection,
@@ -109,6 +109,13 @@ pub struct Manifest {
     /// `[suggests]` — forward hints, never auto-installed (package-role).
     #[serde(default, skip_serializing_if = "Suggests::is_empty")]
     pub suggests: Suggests,
+
+    /// `[[skill]]` — agent-installable skills this package ships, projected
+    /// into coding agents by `vibe skill install` (PROP-018 §2.4). A skill
+    /// is declared separately from the package's `kind`, so a package of any
+    /// kind can carry skills (package-role).
+    #[serde(default, rename = "skill", skip_serializing_if = "Vec::is_empty")]
+    pub skills: Vec<SkillDecl>,
 
     /// `[compatibility]` — minimum vibe version, required kinds (package-role).
     #[serde(default, skip_serializing_if = "Compatibility::is_empty")]
@@ -346,6 +353,9 @@ impl Manifest {
             }
             if !self.suggests.is_empty() {
                 offenders.push("[suggests]");
+            }
+            if !self.skills.is_empty() {
+                offenders.push("[[skill]]");
             }
             if !self.compatibility.is_empty() {
                 offenders.push("[compatibility]");

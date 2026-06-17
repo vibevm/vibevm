@@ -256,6 +256,59 @@ source = "boot/x.md"
 }
 
 #[test]
+#[verifies("spec://vibevm/common/PROP-018#skill-decl", r = 3)]
+fn package_declares_skills_and_roundtrips() {
+    let raw = r#"
+[package]
+group = "org.vibevm"
+name = "vim"
+kind = "tool"
+version = "0.1.0"
+
+[[skill]]
+name = "vim"
+path = "skills/vim"
+description = "Drive vim from an agent"
+agents = ["claude", "opencode"]
+
+[[skill]]
+name = "vim-quickref"
+path = "skills/vim-quickref/SKILL.md"
+"#;
+    let m = Manifest::parse_str(raw).unwrap();
+    assert_eq!(m.skills.len(), 2);
+    assert_eq!(m.skills[0].name, "vim");
+    assert_eq!(m.skills[0].path.to_str(), Some("skills/vim"));
+    assert_eq!(m.skills[0].agents, ["claude", "opencode"]);
+    assert!(m.skills[1].description.is_none());
+    assert!(m.skills[1].agents.is_empty());
+
+    // A package-role section round-trips byte-stably through serde.
+    let rendered = toml::to_string_pretty(&m).unwrap();
+    let back = Manifest::parse_str(&rendered).unwrap();
+    assert_eq!(m, back);
+}
+
+#[test]
+#[verifies("spec://vibevm/common/PROP-018#skill-decl", r = 3)]
+fn rejects_skill_section_without_package() {
+    // `[[skill]]` is package-role: a package declares skills about its own
+    // files, so a plain `[project]` carrying it is a role error.
+    let raw = r#"
+[project]
+name = "demo"
+version = "0.0.1"
+
+[[skill]]
+name = "vim"
+path = "skills/vim"
+"#;
+    let err = Manifest::parse_str(raw).unwrap_err();
+    assert!(err.to_string().contains("[[skill]]"), "{err}");
+    assert!(err.to_string().contains("without a [package]"), "{err}");
+}
+
+#[test]
 fn require_package_and_project_error_clearly() {
     let proj = Manifest::new_project("demo", "0.0.1");
     assert!(proj.require_package().is_err());
