@@ -480,28 +480,28 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/man/env.rs",
       "item_kind": "fn",
-      "line": 461,
+      "line": 464,
       "symbol": "vibe_cli::commands::man::env::tests::path_with_prefix_moves_shim_dir_to_front"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/man/env.rs",
       "item_kind": "fn",
-      "line": 428,
+      "line": 431,
       "symbol": "vibe_cli::commands::man::env::tests::rc_persister_is_idempotent_and_repoints"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/man/env.rs",
       "item_kind": "fn",
-      "line": 385,
+      "line": 388,
       "symbol": "vibe_cli::commands::man::env::tests::shell_detect_and_export_line"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/man/env.rs",
       "item_kind": "fn",
-      "line": 409,
+      "line": 412,
       "symbol": "vibe_cli::commands::man::env::tests::shims_read_the_current_pointer"
     },
     {
@@ -669,8 +669,15 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/man/selfloc.rs",
       "item_kind": "fn",
-      "line": 53,
+      "line": 67,
       "symbol": "vibe_cli::commands::man::selfloc::tests::derive_self_parses_a_managed_layout"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/man/selfloc.rs",
+      "item_kind": "fn",
+      "line": 100,
+      "symbol": "vibe_cli::commands::man::selfloc::tests::strip_verbatim_drops_the_windows_prefix"
     },
     {
       "crate_name": "vibe-cli",
@@ -4283,7 +4290,7 @@
     {
       "file": "crates/vibe-cli/src/commands/man/env.rs",
       "from_symbol": "vibe_cli::commands::man::env::tests::path_with_prefix_moves_shim_dir_to_front",
-      "line": 462,
+      "line": 465,
       "provenance": "authored",
       "uri": "spec://vibevm/common/PROP-019#path",
       "verb": "verifies",
@@ -4292,7 +4299,7 @@
     {
       "file": "crates/vibe-cli/src/commands/man/env.rs",
       "from_symbol": "vibe_cli::commands::man::env::tests::rc_persister_is_idempotent_and_repoints",
-      "line": 429,
+      "line": 432,
       "provenance": "authored",
       "uri": "spec://vibevm/common/PROP-019#path",
       "verb": "verifies",
@@ -4301,7 +4308,7 @@
     {
       "file": "crates/vibe-cli/src/commands/man/env.rs",
       "from_symbol": "vibe_cli::commands::man::env::tests::shell_detect_and_export_line",
-      "line": 386,
+      "line": 389,
       "provenance": "authored",
       "uri": "spec://vibevm/common/PROP-019#activation",
       "verb": "verifies",
@@ -4310,7 +4317,7 @@
     {
       "file": "crates/vibe-cli/src/commands/man/env.rs",
       "from_symbol": "vibe_cli::commands::man::env::tests::shims_read_the_current_pointer",
-      "line": 410,
+      "line": 413,
       "provenance": "authored",
       "uri": "spec://vibevm/common/PROP-019#activation",
       "verb": "verifies",
@@ -4512,7 +4519,16 @@
     {
       "file": "crates/vibe-cli/src/commands/man/selfloc.rs",
       "from_symbol": "vibe_cli::commands::man::selfloc::tests::derive_self_parses_a_managed_layout",
-      "line": 54,
+      "line": 68,
+      "provenance": "authored",
+      "uri": "spec://vibevm/common/PROP-019#activation",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/man/selfloc.rs",
+      "from_symbol": "vibe_cli::commands::man::selfloc::tests::strip_verbatim_drops_the_windows_prefix",
+      "line": 101,
       "provenance": "authored",
       "uri": "spec://vibevm/common/PROP-019#activation",
       "verb": "verifies",
