@@ -116,6 +116,48 @@ fn main() -> ExitCode {
             };
             commands::man::run(&ctx, args, man_env)
         }
+        Command::Vars(args) => {
+            let install_base = self_loc
+                .as_ref()
+                .and_then(|l| l.root.parent().map(|p| p.display().to_string()))
+                .or_else(|| read_env_opt(commands::man::VIBEVM_INSTALL_ROOT_ENV))
+                .or_else(|| dirs::home_dir().map(|h| h.display().to_string()))
+                .unwrap_or_default();
+            let home_actual = self_loc
+                .as_ref()
+                .map(|l| l.home.display().to_string())
+                .or_else(|| read_env_opt(commands::man::VIBEVM_HOME_ENV))
+                .unwrap_or_else(|| "(none)".to_string());
+            let (invoked, _) = output::resolve_invoked_by(cli.invoked_by.as_deref());
+            let rows = vec![
+                commands::vars::VarRow {
+                    name: "VIBEVM_INSTALL_ROOT",
+                    actual: install_base,
+                    env: read_env_opt(commands::man::VIBEVM_INSTALL_ROOT_ENV),
+                },
+                commands::vars::VarRow {
+                    name: "VIBEVM_HOME",
+                    actual: home_actual,
+                    env: read_env_opt(commands::man::VIBEVM_HOME_ENV),
+                },
+                commands::vars::VarRow {
+                    name: "VIBE_INVOKED_BY",
+                    actual: invoked.unwrap_or_default(),
+                    env: read_env_opt("VIBE_INVOKED_BY"),
+                },
+                commands::vars::VarRow {
+                    name: "VIBE_UNATTENDED",
+                    actual: output::resolve_unattended(cli.unattended).to_string(),
+                    env: read_env_opt("VIBE_UNATTENDED"),
+                },
+                commands::vars::VarRow {
+                    name: "VIBE_LOG",
+                    actual: read_env_opt("VIBE_LOG").unwrap_or_else(|| "warn".to_string()),
+                    env: read_env_opt("VIBE_LOG"),
+                },
+            ];
+            commands::vars::run(args, rows)
+        }
         Command::Version => {
             println!("vibe {}", env!("CARGO_PKG_VERSION"));
             return ExitCode::SUCCESS;

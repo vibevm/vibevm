@@ -18,4 +18,5 @@ pub mod show;
 pub mod skill;
 pub mod uninstall;
 pub mod update;
+pub mod vars;
 pub mod workspace;

@@ -18,6 +18,7 @@ mod mcp;
 mod pkg;
 mod registry;
 mod skill;
+mod vars;
 mod workspace;
 
 pub use agentic::*;
@@ -27,6 +28,7 @@ pub use mcp::*;
 pub use pkg::*;
 pub use registry::*;
 pub use skill::*;
+pub use vars::*;
 pub use workspace::*;
 
 #[derive(Debug, Parser)]
@@ -163,6 +165,13 @@ pub enum Command {
     /// `vibe` binary manages its own versions.
     #[command(visible_alias = "manager")]
     Man(ManArgs),
+
+    /// Print the runtime variable context — the values vibevm actually uses
+    /// (derived from the running binary's location) versus the environment,
+    /// so scripts can reconcile a stale `$VIBEVM_HOME` (PROP-019 §2.14).
+    /// Modes: `vibe vars`, `vibe vars diff`, `vibe vars full`,
+    /// `vibe vars full diff`.
+    Vars(VarsArgs),
 
     /// Print version information.
     Version,

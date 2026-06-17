@@ -380,6 +380,13 @@
     },
     {
       "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/cli/vars.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_cli::cli::vars"
+    },
+    {
+      "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli/workspace.rs",
       "item_kind": "mod",
       "line": 6,
@@ -975,6 +982,34 @@
     },
     {
       "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/vars.rs",
+      "item_kind": "mod",
+      "line": 6,
+      "symbol": "vibe_cli::commands::vars"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/vars.rs",
+      "item_kind": "fn",
+      "line": 105,
+      "symbol": "vibe_cli::commands::vars::tests::diff_brackets_only_differences"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/vars.rs",
+      "item_kind": "fn",
+      "line": 115,
+      "symbol": "vibe_cli::commands::vars::tests::full_diff_has_two_tables_and_stars_differences"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/vars.rs",
+      "item_kind": "fn",
+      "line": 95,
+      "symbol": "vibe_cli::commands::vars::tests::plain_prints_actual_values"
+    },
+    {
+      "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/workspace/mod.rs",
       "item_kind": "mod",
       "line": 35,
@@ -1040,7 +1075,7 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/main.rs",
       "item_kind": "fn",
-      "line": 134,
+      "line": 176,
       "symbol": "vibe_cli::promote_user_config_env"
     },
     {
@@ -4120,6 +4155,14 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-cli/src/cli/vars.rs",
+      "from_symbol": "vibe_cli::cli::vars",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://vibevm/common/PROP-019#vars",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-cli/src/cli/workspace.rs",
       "from_symbol": "vibe_cli::cli::workspace",
       "line": 6,
@@ -4823,6 +4866,41 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-cli/src/commands/vars.rs",
+      "from_symbol": "vibe_cli::commands::vars",
+      "line": 6,
+      "provenance": "authored",
+      "uri": "spec://vibevm/common/PROP-019#vars",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/vars.rs",
+      "from_symbol": "vibe_cli::commands::vars::tests::diff_brackets_only_differences",
+      "line": 106,
+      "provenance": "authored",
+      "uri": "spec://vibevm/common/PROP-019#vars",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/vars.rs",
+      "from_symbol": "vibe_cli::commands::vars::tests::full_diff_has_two_tables_and_stars_differences",
+      "line": 116,
+      "provenance": "authored",
+      "uri": "spec://vibevm/common/PROP-019#vars",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/vars.rs",
+      "from_symbol": "vibe_cli::commands::vars::tests::plain_prints_actual_values",
+      "line": 96,
+      "provenance": "authored",
+      "uri": "spec://vibevm/common/PROP-019#vars",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
       "file": "crates/vibe-cli/src/commands/workspace/mod.rs",
       "from_symbol": "vibe_cli::commands::workspace",
       "line": 35,
@@ -4898,7 +4976,7 @@
     {
       "file": "crates/vibe-cli/src/main.rs",
       "from_symbol": "vibe_cli::promote_user_config_env",
-      "line": 153,
+      "line": 195,
       "provenance": "authored",
       "uri": "spec://vibevm/discipline/ENGINE-CONFORM-v0.1#rules",
       "verb": "deviates",
