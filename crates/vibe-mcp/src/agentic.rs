@@ -26,6 +26,15 @@ use thiserror::Error;
 /// The relay layer's failure surface (PROP-018 §2.7): a mailbox file
 /// operation under `.vibe/agentic/` failed. One enum for the layer, so a
 /// relay failure is navigable back to the requirement it serves.
+///
+/// ```
+/// use vibe_mcp::agentic::RelayError;
+/// let e = RelayError::Mailbox {
+///     path: "/p/.vibe/agentic".into(),
+///     source: std::io::Error::other("disk full"),
+/// };
+/// assert!(e.to_string().contains("spec://vibevm/common/PROP-018#relay"));
+/// ```
 #[derive(Debug, Error)]
 #[spec(implements = "spec://vibevm/common/PROP-018#relay")]
 pub enum RelayError {
@@ -43,6 +52,11 @@ pub enum RelayError {
 
 /// Which inference backend an operation can run on (PROP-018 §2.3).
 /// Affinity is a property of the *work*, not a user choice.
+///
+/// ```
+/// use vibe_mcp::agentic::Affinity;
+/// assert_ne!(Affinity::AgenticOnly, Affinity::StandaloneOnly);
+/// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
 #[spec(implements = "spec://vibevm/common/PROP-018#affinity")]
 pub enum Affinity {
@@ -57,6 +71,11 @@ pub enum Affinity {
 /// The inference backend live for the current invocation (PROP-018 §2.1).
 /// Mode is inferred per operation from how vibevm was reached and what
 /// backend is available — never a global flag the user sets.
+///
+/// ```
+/// use vibe_mcp::agentic::ActiveBackend;
+/// assert_ne!(ActiveBackend::Relay, ActiveBackend::None);
+/// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[spec(implements = "spec://vibevm/common/PROP-018#mode-is-backend")]
 pub enum ActiveBackend {
@@ -72,6 +91,11 @@ pub enum ActiveBackend {
 /// The affinity dispatcher's refusal (PROP-018 §2.3): an operation was
 /// reached through a backend it has no affinity for. The message names the
 /// backend the operation needs, so the caller knows how to re-invoke it.
+///
+/// ```
+/// use vibe_mcp::agentic::AffinityError;
+/// assert!(AffinityError::NeedsAgent.to_string().contains("spec://vibevm/common/PROP-018#affinity"));
+/// ```
 #[derive(Debug, Error)]
 #[spec(implements = "spec://vibevm/common/PROP-018#affinity")]
 pub enum AffinityError {
@@ -126,6 +150,16 @@ pub fn check_affinity(affinity: Affinity, active: ActiveBackend) -> Result<(), A
 /// A unit of reasoning vibevm hands back to the calling agent (PROP-018
 /// §2.7) — a prompt with light frontmatter, rendered to markdown for the
 /// `.vibe/agentic/command.md` mailbox.
+///
+/// ```
+/// use vibe_mcp::agentic::Intent;
+/// let i = Intent {
+///     source: "agentic explain".into(),
+///     title: "Explain this project".into(),
+///     body: "Summarise the README.".into(),
+/// };
+/// assert!(i.to_markdown().contains("vibevm-intent: pending"));
+/// ```
 #[derive(Debug, Clone, PartialEq, Eq, Serialize)]
 #[spec(implements = "spec://vibevm/common/PROP-018#relay")]
 pub struct Intent {
@@ -179,6 +213,12 @@ impl IntentStatus {
 }
 
 /// The outcome of submitting an [`Intent`] to a backend (PROP-018 §2.2).
+///
+/// ```
+/// use vibe_mcp::agentic::BackendOutcome;
+/// let o = BackendOutcome::Delegated { pointer: "run `vibe command`".into() };
+/// assert!(matches!(o, BackendOutcome::Delegated { .. }));
+/// ```
 #[derive(Debug, Clone)]
 pub enum BackendOutcome {
     /// Parked for the calling agent to execute; carries a human pointer.
@@ -223,6 +263,18 @@ pub trait InferenceBackend {
 /// The agentic relay backend: it does not reason — it parks the intent in
 /// the project's `.vibe/agentic/` mailbox for the calling agent to drain
 /// with `vibe command` (PROP-018 §2.7).
+///
+/// ```
+/// use vibe_mcp::agentic::{BackendOutcome, InferenceBackend, Intent, RelayBackend};
+/// let project = tempfile::tempdir().unwrap();
+/// let backend = RelayBackend::for_project(project.path());
+/// let intent = Intent {
+///     source: "agentic explain".into(),
+///     title: "T".into(),
+///     body: "do the thing".into(),
+/// };
+/// assert!(matches!(backend.submit(&intent).unwrap(), BackendOutcome::Delegated { .. }));
+/// ```
 #[derive(Debug, Clone)]
 #[spec(implements = "spec://vibevm/common/PROP-018#pluggable-backend")]
 pub struct RelayBackend {
@@ -255,6 +307,15 @@ impl InferenceBackend for RelayBackend {
 /// [`RelayBackend`]; the two are the §2.8 transports behind one
 /// [`InferenceBackend`] seam, so a reasoning op is written once and reached
 /// either way.
+///
+/// ```
+/// use vibe_mcp::agentic::{BackendOutcome, InferenceBackend, InlineBackend, Intent};
+/// let intent = Intent { source: "s".into(), title: "t".into(), body: "explain".into() };
+/// match InlineBackend.submit(&intent).unwrap() {
+///     BackendOutcome::Inline { intent } => assert_eq!(intent.body, "explain"),
+///     _ => unreachable!("the inline backend always returns Inline"),
+/// }
+/// ```
 #[derive(Debug, Clone)]
 #[spec(implements = "spec://vibevm/common/PROP-018#transports")]
 pub struct InlineBackend;
