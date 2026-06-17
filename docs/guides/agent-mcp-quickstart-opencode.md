@@ -234,7 +234,7 @@ type ~/.config/opencode/skills/vibevm/SKILL.md | findstr /i "name description Se
 
 Newer opencode versions activate skills via an explicit agent-side `skill` tool call, not auto by description match. In that case explicitly ask: *"Load the skill named `vibevm` and follow its instructions for the rest of this conversation."*
 
-**`vibe install flow:wal` fails inside the agent's run.** Read-only clone needs no token. Probe with `git ls-remote https://github.com/vibespecs/flow-wal`. If that fails, the issue is in your network / DNS, not in vibevm.
+**`vibe install flow:wal` fails inside the agent's run.** Read-only clone needs no token. Probe with `git ls-remote https://github.com/vibespecs/org.vibevm.wal` (the canonical repo `flow:wal` resolves to under `naming = "fqdn"`). If that fails, the issue is in your network / DNS, not in vibevm.
 
 **Reset and retry.** Bootstrap state lives at `~/.config/opencode/opencode.json` and `~/.config/opencode/skills/vibevm/`. To wipe:
 
