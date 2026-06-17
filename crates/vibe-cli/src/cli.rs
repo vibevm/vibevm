@@ -127,7 +127,7 @@ pub enum Command {
     /// empty. The calling agent runs this, then carries out the printed
     /// instruction.
     #[command(name = "command")]
-    AgenticCommand(CommandArgs),
+    Drain(CommandArgs),
 
     /// Remove an installed package from the current project.
     Uninstall(UninstallArgs),
