@@ -356,6 +356,49 @@ impl Agent {
         }
     }
 
+    /// The agent's skills *root* directory for a concrete scope — the
+    /// parent under which each skill gets its own `<name>/` subdir.
+    /// `Ok(None)` for agents with no filesystem skill loader (Cursor,
+    /// Claude Desktop). Generalises [`Agent::skill_path`] (which bakes in
+    /// the single `vibevm` skill + `SKILL.md`) for arbitrary package
+    /// skills (PROP-018 §2.5).
+    pub fn skills_root(self, scope: Scope, project_root: Option<&Path>) -> Result<Option<PathBuf>> {
+        if !self.supports_skill() {
+            return Ok(None);
+        }
+        match (self, scope) {
+            (_, Scope::Both) => {
+                bail!("internal: Agent::skills_root requires concrete scope; expand Both first")
+            }
+            (Agent::ClaudeCode, Scope::Project) => {
+                Ok(project_root.map(|p| p.join(".claude").join("skills")))
+            }
+            (Agent::OpenCode, Scope::Project) => {
+                Ok(project_root.map(|p| p.join(".opencode").join("skills")))
+            }
+            (Agent::Codex, Scope::Project) => {
+                Ok(project_root.map(|p| p.join(".agents").join("skills")))
+            }
+            (Agent::Cursor | Agent::ClaudeCodeDesktop, _) => Ok(None),
+            (Agent::ClaudeCode, Scope::User) => {
+                let home = dirs::home_dir()
+                    .ok_or_else(|| anyhow!("could not resolve home dir for Claude Code skills"))?;
+                Ok(Some(home.join(".claude").join("skills")))
+            }
+            (Agent::OpenCode, Scope::User) => {
+                // Same XDG-on-every-OS contract as Agent::skill_path.
+                let home = dirs::home_dir()
+                    .ok_or_else(|| anyhow!("could not resolve home dir for OpenCode skills"))?;
+                Ok(Some(home.join(".config").join("opencode").join("skills")))
+            }
+            (Agent::Codex, Scope::User) => {
+                let home = dirs::home_dir()
+                    .ok_or_else(|| anyhow!("could not resolve home dir for Codex skills"))?;
+                Ok(Some(home.join(".agents").join("skills")))
+            }
+        }
+    }
+
     /// Wire shape of the per-server entry. Three flavours, scope-aware:
     /// - User scope omits `--path`, so the server resolves CWD per
     ///   invocation. Lets one global config serve every project.

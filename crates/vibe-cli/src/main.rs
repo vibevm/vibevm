@@ -73,6 +73,7 @@ fn main() -> ExitCode {
             commands::search::run(&ctx, args, search_env)
         }
         Command::Mcp(args) => commands::mcp::run(&ctx, args),
+        Command::Skill(args) => commands::skill::run(&ctx, args),
         Command::Uninstall(args) => commands::uninstall::run(&ctx, args),
         Command::Update(args) => commands::update::run(&ctx, args),
         Command::Reinstall(args) => commands::reinstall::run(&ctx, args),

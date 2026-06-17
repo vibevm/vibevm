@@ -15,12 +15,14 @@ mod inspect;
 mod mcp;
 mod pkg;
 mod registry;
+mod skill;
 mod workspace;
 
 pub use inspect::*;
 pub use mcp::*;
 pub use pkg::*;
 pub use registry::*;
+pub use skill::*;
 pub use workspace::*;
 
 #[derive(Debug, Parser)]
@@ -102,6 +104,13 @@ pub enum Command {
     /// PROP-004 §5.1 / ROADMAP §M1.7. Reads JSON-RPC 2.0 requests
     /// line-by-line from stdin; writes responses to stdout.
     Mcp(McpArgs),
+
+    /// Project package-declared skills into coding agents — vibevm's
+    /// standalone mode (PROP-018 §2.6). `vibe skill list` shows what the
+    /// installed packages (and the project itself) declare via `[[skill]]`;
+    /// `vibe skill install` writes each into the target agents' skill
+    /// directories. No LLM required.
+    Skill(SkillArgs),
 
     /// Remove an installed package from the current project.
     Uninstall(UninstallArgs),

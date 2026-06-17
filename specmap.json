@@ -359,6 +359,13 @@
     },
     {
       "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/cli/skill.rs",
+      "item_kind": "mod",
+      "line": 8,
+      "symbol": "vibe_cli::cli::skill"
+    },
+    {
+      "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli/workspace.rs",
       "item_kind": "mod",
       "line": 6,
@@ -611,6 +618,13 @@
     },
     {
       "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/skill/mod.rs",
+      "item_kind": "mod",
+      "line": 12,
+      "symbol": "vibe_cli::commands::skill"
+    },
+    {
+      "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/uninstall.rs",
       "item_kind": "mod",
       "line": 10,
@@ -690,7 +704,7 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/main.rs",
       "item_kind": "fn",
-      "line": 98,
+      "line": 99,
       "symbol": "vibe_cli::promote_user_config_env"
     },
     {
@@ -1880,14 +1894,14 @@
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/lib.rs",
       "item_kind": "enum",
-      "line": 337,
+      "line": 338,
       "symbol": "vibe_mcp::ServerError"
     },
     {
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/lib.rs",
       "item_kind": "enum",
-      "line": 123,
+      "line": 124,
       "symbol": "vibe_mcp::ToolError"
     },
     {
@@ -1908,7 +1922,7 @@
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/agents.rs",
       "item_kind": "fn",
-      "line": 437,
+      "line": 480,
       "symbol": "vibe_mcp::agents::detect_agents"
     },
     {
@@ -1952,6 +1966,41 @@
       "item_kind": "enum",
       "line": 131,
       "symbol": "vibe_mcp::jsonrpc::ParseError"
+    },
+    {
+      "crate_name": "vibe-mcp",
+      "file": "crates/vibe-mcp/src/pkgskill.rs",
+      "item_kind": "mod",
+      "line": 12,
+      "symbol": "vibe_mcp::pkgskill"
+    },
+    {
+      "crate_name": "vibe-mcp",
+      "file": "crates/vibe-mcp/src/pkgskill.rs",
+      "item_kind": "struct",
+      "line": 24,
+      "symbol": "vibe_mcp::pkgskill::PackageSkillReport"
+    },
+    {
+      "crate_name": "vibe-mcp",
+      "file": "crates/vibe-mcp/src/pkgskill.rs",
+      "item_kind": "fn",
+      "line": 39,
+      "symbol": "vibe_mcp::pkgskill::install_package_skill"
+    },
+    {
+      "crate_name": "vibe-mcp",
+      "file": "crates/vibe-mcp/src/pkgskill.rs",
+      "item_kind": "fn",
+      "line": 242,
+      "symbol": "vibe_mcp::pkgskill::tests::projects_dir_skill_and_is_idempotent"
+    },
+    {
+      "crate_name": "vibe-mcp",
+      "file": "crates/vibe-mcp/src/pkgskill.rs",
+      "item_kind": "fn",
+      "line": 115,
+      "symbol": "vibe_mcp::pkgskill::uninstall_package_skill"
     },
     {
       "crate_name": "vibe-mcp",
@@ -3634,6 +3683,14 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-cli/src/cli/skill.rs",
+      "from_symbol": "vibe_cli::cli::skill",
+      "line": 8,
+      "provenance": "authored",
+      "uri": "spec://vibevm/common/PROP-018#vibe-skill",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-cli/src/cli/workspace.rs",
       "from_symbol": "vibe_cli::cli::workspace",
       "line": 6,
@@ -3922,6 +3979,14 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-cli/src/commands/skill/mod.rs",
+      "from_symbol": "vibe_cli::commands::skill",
+      "line": 12,
+      "provenance": "authored",
+      "uri": "spec://vibevm/common/PROP-018#vibe-skill",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-cli/src/commands/uninstall.rs",
       "from_symbol": "vibe_cli::commands::uninstall",
       "line": 10,
@@ -4013,7 +4078,7 @@
     {
       "file": "crates/vibe-cli/src/main.rs",
       "from_symbol": "vibe_cli::promote_user_config_env",
-      "line": 117,
+      "line": 118,
       "provenance": "authored",
       "uri": "spec://vibevm/discipline/ENGINE-CONFORM-v0.1#rules",
       "verb": "deviates",
@@ -5455,7 +5520,7 @@
     {
       "file": "crates/vibe-mcp/src/lib.rs",
       "from_symbol": "vibe_mcp::ServerError",
-      "line": 347,
+      "line": 348,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-mcp/PROP-015#errors",
       "verb": "implements"
@@ -5463,7 +5528,7 @@
     {
       "file": "crates/vibe-mcp/src/lib.rs",
       "from_symbol": "vibe_mcp::ToolError",
-      "line": 134,
+      "line": 135,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-mcp/PROP-015#errors",
       "verb": "implements"
@@ -5487,7 +5552,7 @@
     {
       "file": "crates/vibe-mcp/src/agents.rs",
       "from_symbol": "vibe_mcp::agents::detect_agents",
-      "line": 440,
+      "line": 483,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-mcp/PROP-015#agent-detection",
       "verb": "implements"
@@ -5538,6 +5603,47 @@
       "line": 132,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-mcp/PROP-015#server",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-mcp/src/pkgskill.rs",
+      "from_symbol": "vibe_mcp::pkgskill",
+      "line": 12,
+      "provenance": "authored",
+      "uri": "spec://vibevm/common/PROP-018#vibe-skill",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-mcp/src/pkgskill.rs",
+      "from_symbol": "vibe_mcp::pkgskill::PackageSkillReport",
+      "line": 27,
+      "provenance": "authored",
+      "uri": "spec://vibevm/common/PROP-018#vibe-skill",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-mcp/src/pkgskill.rs",
+      "from_symbol": "vibe_mcp::pkgskill::install_package_skill",
+      "line": 48,
+      "provenance": "authored",
+      "uri": "spec://vibevm/common/PROP-018#vibe-skill",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-mcp/src/pkgskill.rs",
+      "from_symbol": "vibe_mcp::pkgskill::tests::projects_dir_skill_and_is_idempotent",
+      "line": 243,
+      "provenance": "authored",
+      "uri": "spec://vibevm/common/PROP-018#vibe-skill",
+      "verb": "verifies",
+      "pinned_r": 3
+    },
+    {
+      "file": "crates/vibe-mcp/src/pkgskill.rs",
+      "from_symbol": "vibe_mcp::pkgskill::uninstall_package_skill",
+      "line": 119,
+      "provenance": "authored",
+      "uri": "spec://vibevm/common/PROP-018#vibe-skill",
       "verb": "implements"
     },
     {
@@ -8514,7 +8620,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:aa20949019c34816683f102f67fe755388526e89245c20df1b9d8bda6cefdb26",
+      "content_hash": "sha256:26842cfa2505a92b8a0e4c77d520e18e9984a1dd6cf162dea726a304a3659301",
       "doc_path": "common/PROP-018",
       "file": "spec/common/PROP-018-agentic-standalone-modes.md",
       "heading": "PROP-018 — Agentic and standalone modes",
@@ -8559,7 +8665,7 @@
     },
     {
       "anchor": "decisions",
-      "content_hash": "sha256:591c3e2d1569724e28ece8221d68eefe8d12c613ac957dbe3648d0abc3c9466e",
+      "content_hash": "sha256:0cc2796c8eb05f6a94000733ffb82dce70651d7ea137f237f9de7160ebbb0bdc",
       "doc_path": "common/PROP-018",
       "file": "spec/common/PROP-018-agentic-standalone-modes.md",
       "heading": "2. Decisions",
@@ -8634,7 +8740,7 @@
     },
     {
       "anchor": "relay",
-      "content_hash": "sha256:2c9de891ea418c316702b41fb5e7eca563ebf3a06581fb96ea8d39638fd38802",
+      "content_hash": "sha256:9a371221d56088fc13fb658828d7c626cfaeda3bc0c89395e3d63da5fbc29946",
       "doc_path": "common/PROP-018",
       "file": "spec/common/PROP-018-agentic-standalone-modes.md",
       "heading": "2.7 The agentic relay — delegate intent back to the caller",
@@ -8667,7 +8773,7 @@
     },
     {
       "anchor": "explain",
-      "content_hash": "sha256:3d07fc69d20e477bbac92373ca17fdc7f992c82e438b20381ad2f5b47a123c07",
+      "content_hash": "sha256:21e742be5321ca8a8b49c142205b9fc27f0bffdd6c4e37e4103ab2b517c8e28c",
       "doc_path": "common/PROP-018",
       "file": "spec/common/PROP-018-agentic-standalone-modes.md",
       "heading": "2.10 `vibe agentic explain` — the MVP demonstrator",
@@ -8678,10 +8784,10 @@
     },
     {
       "anchor": "vibevm-dir",
-      "content_hash": "sha256:00dc5090b325c24515ca161275eb92b07e097327d0ea6a35c681019da4d32751",
+      "content_hash": "sha256:88126bedca3596f0ed8453b35f00884818c6da6c2785a00b1b15efae6059400f",
       "doc_path": "common/PROP-018",
       "file": "spec/common/PROP-018-agentic-standalone-modes.md",
-      "heading": "3. The `.vibevm/` relay directory",
+      "heading": "3. The `.vibe/agentic/` relay directory",
       "line": 280,
       "uri": "spec://vibevm/common/PROP-018#vibevm-dir",
       "kind": "req",
@@ -8689,11 +8795,11 @@
     },
     {
       "anchor": "mvp",
-      "content_hash": "sha256:f45d6e2cb2f0046981e7815ddf890f9a129394632fe5751c37ec37708a05ca7e",
+      "content_hash": "sha256:2440884f1a881e082a8d2e5f6516dd96f0ca249aff19aa81b5e0618c86bfb660",
       "doc_path": "common/PROP-018",
       "file": "spec/common/PROP-018-agentic-standalone-modes.md",
       "heading": "4. MVP scope — what this PROP authorises now",
-      "line": 298,
+      "line": 304,
       "uri": "spec://vibevm/common/PROP-018#mvp"
     },
     {
@@ -8702,7 +8808,7 @@
       "doc_path": "common/PROP-018",
       "file": "spec/common/PROP-018-agentic-standalone-modes.md",
       "heading": "5. Out of scope (now)",
-      "line": 317,
+      "line": 323,
       "uri": "spec://vibevm/common/PROP-018#out-of-scope"
     },
     {
@@ -8711,16 +8817,16 @@
       "doc_path": "common/PROP-018",
       "file": "spec/common/PROP-018-agentic-standalone-modes.md",
       "heading": "6. Far backlog",
-      "line": 327,
+      "line": 333,
       "uri": "spec://vibevm/common/PROP-018#far-backlog"
     },
     {
       "anchor": "acceptance",
-      "content_hash": "sha256:05d6f4a256379969ce05b5b5a24631bd52488dc97570cebb9b943c392dbd0a58",
+      "content_hash": "sha256:555dad79bc9863d3cf0b77399ab9ab666081b08cf0b34f7ae7cbf49deef12644",
       "doc_path": "common/PROP-018",
       "file": "spec/common/PROP-018-agentic-standalone-modes.md",
       "heading": "7. Acceptance",
-      "line": 348,
+      "line": 354,
       "uri": "spec://vibevm/common/PROP-018#acceptance"
     },
     {

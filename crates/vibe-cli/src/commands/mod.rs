@@ -13,6 +13,7 @@ pub mod reinstall;
 pub mod search;
 pub mod short_name;
 pub mod show;
+pub mod skill;
 pub mod uninstall;
 pub mod update;
 pub mod workspace;

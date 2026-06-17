@@ -44,6 +44,7 @@ pub mod agent_config;
 pub mod agents;
 pub mod install;
 pub mod jsonrpc;
+pub mod pkgskill;
 pub mod tools;
 pub mod transport;
 
