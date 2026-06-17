@@ -54,6 +54,75 @@ pub enum Affinity {
     Both,
 }
 
+/// The inference backend live for the current invocation (PROP-018 §2.1).
+/// Mode is inferred per operation from how vibevm was reached and what
+/// backend is available — never a global flag the user sets.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[spec(implements = "spec://vibevm/common/PROP-018#mode-is-backend")]
+pub enum ActiveBackend {
+    /// Reached as a subprocess of an agent (CLI one-shot or MCP call): the
+    /// relay is available and reasoning delegates back to that agent.
+    Relay,
+    /// Standalone with the built-in `vibe-llm` engine (far backlog §6).
+    Builtin,
+    /// Standalone with no engine — reasoning cannot run here.
+    None,
+}
+
+/// The affinity dispatcher's refusal (PROP-018 §2.3): an operation was
+/// reached through a backend it has no affinity for. The message names the
+/// backend the operation needs, so the caller knows how to re-invoke it.
+#[derive(Debug, Error)]
+#[spec(implements = "spec://vibevm/common/PROP-018#affinity")]
+pub enum AffinityError {
+    #[error(
+        "this operation needs an agent to reason for it, but none is driving vibevm \
+         (violates spec://vibevm/common/PROP-018#affinity; \
+          fix: run it under a coding agent, or wait for the built-in inference engine)"
+    )]
+    NeedsAgent,
+
+    #[error(
+        "this operation runs standalone and does not delegate to an agent \
+         (violates spec://vibevm/common/PROP-018#affinity; \
+          fix: run it directly, not through the agentic relay)"
+    )]
+    NeedsStandalone,
+}
+
+/// The affinity dispatcher (PROP-018 §2.3): refuse an operation invoked
+/// through a backend it has no affinity for, naming the one it needs. An
+/// `agentic-only` op needs the relay (the agent's LLM); a `standalone-only`
+/// op never delegates to an agent; a `both` op runs on whatever is live.
+///
+/// ```
+/// use vibe_mcp::agentic::{check_affinity, ActiveBackend, Affinity};
+///
+/// // explain is agentic-only: fine under an agent, refused standalone.
+/// assert!(check_affinity(Affinity::AgenticOnly, ActiveBackend::Relay).is_ok());
+/// assert!(check_affinity(Affinity::AgenticOnly, ActiveBackend::None).is_err());
+/// // skill-install is standalone-only: never through the relay.
+/// assert!(check_affinity(Affinity::StandaloneOnly, ActiveBackend::Relay).is_err());
+/// assert!(check_affinity(Affinity::Both, ActiveBackend::Relay).is_ok());
+/// ```
+pub fn check_affinity(affinity: Affinity, active: ActiveBackend) -> Result<(), AffinityError> {
+    match affinity {
+        // Agentic-only needs an agent's LLM via the relay; no standalone
+        // backend can serve it in the MVP (the built-in engine is §6).
+        Affinity::AgenticOnly => match active {
+            ActiveBackend::Relay => Ok(()),
+            ActiveBackend::Builtin | ActiveBackend::None => Err(AffinityError::NeedsAgent),
+        },
+        // Standalone-only is pure algorithm (or the future engine); routing
+        // it through the relay would delegate work that needs no agent.
+        Affinity::StandaloneOnly => match active {
+            ActiveBackend::Relay => Err(AffinityError::NeedsStandalone),
+            ActiveBackend::Builtin | ActiveBackend::None => Ok(()),
+        },
+        Affinity::Both => Ok(()),
+    }
+}
+
 /// A unit of reasoning vibevm hands back to the calling agent (PROP-018
 /// §2.7) — a prompt with light frontmatter, rendered to markdown for the
 /// `.vibe/agentic/command.md` mailbox.
@@ -83,7 +152,11 @@ impl Intent {
 #[derive(Debug, Clone)]
 pub enum BackendOutcome {
     /// Parked for the calling agent to execute; carries a human pointer.
+    /// The file-relay transport (CLI one-shot) — PROP-018 §2.7.
     Delegated { pointer: String },
+    /// Returned to the caller inline for it to execute — the MCP transport,
+    /// which needs no mailbox (PROP-018 §2.8). Carries the composed intent.
+    Inline { intent: Intent },
     /// Executed in-process by a built-in engine; carries the result.
     /// Unreachable in the MVP (no engine) — present for forward-compat.
     Completed(String),
@@ -108,6 +181,7 @@ pub enum BackendOutcome {
 /// };
 /// match backend.submit(&intent).unwrap() {
 ///     BackendOutcome::Delegated { pointer } => assert!(pointer.contains("vibe command")),
+///     BackendOutcome::Inline { .. } => unreachable!("the relay parks, never inlines"),
 ///     BackendOutcome::Completed(_) => unreachable!("the relay never completes in-process"),
 /// }
 /// ```
@@ -141,6 +215,24 @@ impl InferenceBackend for RelayBackend {
         Ok(BackendOutcome::Delegated {
             pointer: "intent queued — run `vibe command` to fetch it, then carry it out"
                 .to_string(),
+        })
+    }
+}
+
+/// The MCP transport's backend: it returns the composed intent inline in the
+/// tool result rather than parking it, so no mailbox is written (PROP-018
+/// §2.8). The same `Intent`-producing op drives both this and the file-relay
+/// [`RelayBackend`]; the two are the §2.8 transports behind one
+/// [`InferenceBackend`] seam, so a reasoning op is written once and reached
+/// either way.
+#[derive(Debug, Clone)]
+#[spec(implements = "spec://vibevm/common/PROP-018#transports")]
+pub struct InlineBackend;
+
+impl InferenceBackend for InlineBackend {
+    fn submit(&self, intent: &Intent) -> Result<BackendOutcome> {
+        Ok(BackendOutcome::Inline {
+            intent: intent.clone(),
         })
     }
 }
@@ -309,9 +401,43 @@ mod tests {
         let intent = explain_intent(proj.path());
         match backend.submit(&intent).unwrap() {
             BackendOutcome::Delegated { pointer } => assert!(pointer.contains("vibe command")),
+            BackendOutcome::Inline { .. } => panic!("relay parks, never inlines"),
             BackendOutcome::Completed(_) => panic!("relay never completes in-process"),
         }
         assert!(relay_dir(proj.path()).join("command.md").is_file());
+    }
+
+    #[test]
+    #[verifies("spec://vibevm/common/PROP-018#transports", r = 5)]
+    fn inline_backend_returns_the_intent_for_inline_delivery() {
+        let intent = Intent {
+            source: "agentic explain".to_string(),
+            title: "T".to_string(),
+            body: "do the thing".to_string(),
+        };
+        match InlineBackend.submit(&intent).unwrap() {
+            BackendOutcome::Inline { intent } => assert_eq!(intent.body, "do the thing"),
+            other => panic!("inline backend must return Inline, got {other:?}"),
+        }
+    }
+
+    #[test]
+    #[verifies("spec://vibevm/common/PROP-018#affinity", r = 2)]
+    fn affinity_dispatcher_refuses_mismatched_backend() {
+        // agentic-only is fine under the relay, refused standalone.
+        assert!(check_affinity(Affinity::AgenticOnly, ActiveBackend::Relay).is_ok());
+        assert!(matches!(
+            check_affinity(Affinity::AgenticOnly, ActiveBackend::None),
+            Err(AffinityError::NeedsAgent)
+        ));
+        // standalone-only must not be delegated through the relay.
+        assert!(matches!(
+            check_affinity(Affinity::StandaloneOnly, ActiveBackend::Relay),
+            Err(AffinityError::NeedsStandalone)
+        ));
+        assert!(check_affinity(Affinity::StandaloneOnly, ActiveBackend::None).is_ok());
+        // both runs anywhere.
+        assert!(check_affinity(Affinity::Both, ActiveBackend::Builtin).is_ok());
     }
 
     #[test]

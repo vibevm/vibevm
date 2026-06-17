@@ -417,7 +417,27 @@ impl McpTool for AgenticExplain {
     }
 
     fn run(&self, _args: &Value, ctx: &ServerContext) -> Result<Value, ToolError> {
-        let intent = crate::agentic::explain_intent(&ctx.project_root);
+        use crate::agentic::{
+            ActiveBackend, BackendOutcome, EXPLAIN_AFFINITY, InferenceBackend, InlineBackend,
+            check_affinity, explain_intent,
+        };
+        // The MCP transport reaches vibevm as an agent subprocess, so the
+        // relay is the active backend; `explain` is agentic-only and passes
+        // the affinity dispatcher (PROP-018 §2.3).
+        check_affinity(EXPLAIN_AFFINITY, ActiveBackend::Relay)
+            .map_err(|e| ToolError::Internal(e.to_string()))?;
+        let intent = explain_intent(&ctx.project_root);
+        // The MCP path is the inline §2.8 transport — the same op as the CLI
+        // one-shot, behind the same InferenceBackend seam, but returned in the
+        // tool result with no mailbox written.
+        let outcome = InlineBackend
+            .submit(&intent)
+            .map_err(|e| ToolError::Internal(e.to_string()))?;
+        let BackendOutcome::Inline { intent } = outcome else {
+            return Err(ToolError::Internal(
+                "inline backend did not return an inline outcome".into(),
+            ));
+        };
         Ok(json!({
             "source": intent.source,
             "title": intent.title,
