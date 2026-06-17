@@ -30,6 +30,9 @@ pub enum ManSubcommand {
     /// Print the absolute path of the active `vibe` binary.
     Which,
 
+    /// Verify the install and environment; `--fix` repairs PATH and shims.
+    Doctor(ManDoctorArgs),
+
     /// Print the shell line that activates a version in the current shell.
     Env(ManEnvArgs),
 }
@@ -110,4 +113,16 @@ pub struct ManEnvArgs {
     /// detected shell.
     #[arg(long)]
     pub shell: Option<String>,
+}
+
+#[derive(Debug, clap::Args)]
+pub struct ManDoctorArgs {
+    /// Apply fixes: write the shims and put the shim dir on PATH (with
+    /// consent).
+    #[arg(long)]
+    pub fix: bool,
+
+    /// Skip the confirmation prompt for `--fix`.
+    #[arg(long, alias = "assume-yes")]
+    pub yes: bool,
 }

@@ -13,12 +13,15 @@ mod git;
 mod install;
 mod model;
 mod store;
+mod tools;
 
-use std::path::PathBuf;
+use std::io::IsTerminal;
+use std::path::{Path, PathBuf};
 
 use anyhow::{Result, bail};
+use dialoguer::Confirm;
 
-use crate::cli::{ManArgs, ManEnvArgs, ManInstallArgs, ManSubcommand, ManUseArgs};
+use crate::cli::{ManArgs, ManDoctorArgs, ManEnvArgs, ManInstallArgs, ManSubcommand, ManUseArgs};
 use crate::output;
 
 use store::VersionStore;
@@ -50,6 +53,8 @@ pub struct ManEnv {
     pub home: Option<PathBuf>,
     /// `$SHELL` — for shell detection (PROP-019 §2.6).
     pub shell: Option<String>,
+    /// `$PATH` — to check whether the shim dir is reachable (`doctor`).
+    pub path_var: Option<String>,
 }
 
 impl ManEnv {
@@ -70,6 +75,7 @@ pub fn run(ctx: &output::Context, args: ManArgs, env: ManEnv) -> Result<()> {
         ManSubcommand::Ls => run_ls(ctx, &env),
         ManSubcommand::Current => run_current(ctx, &env),
         ManSubcommand::Which => run_which(ctx, &env),
+        ManSubcommand::Doctor(a) => run_doctor_cmd(ctx, &env, a),
         ManSubcommand::Env(a) => run_env_cmd(&env, a),
     }
 }
@@ -357,4 +363,110 @@ fn make_persister(env: &ManEnv, shell: env::Shell) -> Result<Box<dyn env::EnvPer
             shell,
         )))
     }
+}
+
+fn run_doctor_cmd(ctx: &output::Context, env: &ManEnv, args: ManDoctorArgs) -> Result<()> {
+    let store = env.store()?;
+    let tools = tools::check_all();
+    let shim_dir = store.shim_dir();
+    let on_path = path_has_dir(env.path_var.as_deref(), &shim_dir);
+    let active = store.active(env.active_home.as_deref())?;
+    let active_missing = active
+        .as_ref()
+        .map(|r| !store.binary_path(&r.version_id()).is_file())
+        .unwrap_or(false);
+    let problems = tools.iter().filter(|t| !t.ok).count()
+        + usize::from(!on_path)
+        + usize::from(active_missing);
+
+    if ctx.is_json() {
+        return ctx.emit_json(&serde_json::json!({
+            "ok": problems == 0,
+            "command": "man:doctor",
+            "problems": problems,
+            "tools": tools.iter().map(|t| serde_json::json!({
+                "name": t.name, "version": t.version, "ok": t.ok,
+                "min": t.min_version, "help": t.help_url,
+            })).collect::<Vec<_>>(),
+            "shim_dir": shim_dir.display().to_string(),
+            "shim_dir_on_path": on_path,
+            "active": active.as_ref().map(|r| r.version_id().to_string()),
+            "active_binary_ok": !active_missing,
+        }));
+    }
+
+    ctx.heading("vibe man doctor");
+    for t in &tools {
+        match &t.version {
+            Some(v) if t.ok => ctx.step(&format!("ok   {} {}", t.name, v)),
+            Some(v) => ctx.step(&format!(
+                "MISS {} {} (need >= {}) — {}",
+                t.name, v, t.min_version, t.help_url
+            )),
+            None => ctx.step(&format!("MISS {} not found — {}", t.name, t.help_url)),
+        }
+    }
+    let (linker, lurl) = tools::linker_hint();
+    ctx.step(&format!("also {linker} — {lurl}"));
+    ctx.step(&format!(
+        "{} shim dir {} {}",
+        if on_path { "ok  " } else { "MISS" },
+        shim_dir.display(),
+        if on_path {
+            "(on PATH)"
+        } else {
+            "(NOT on PATH)"
+        }
+    ));
+    match &active {
+        Some(r) if !active_missing => ctx.step(&format!("ok   active {}", r.version_id())),
+        Some(r) => ctx.step(&format!(
+            "MISS active {} — its binary is gone",
+            r.version_id()
+        )),
+        None => ctx.step("—    no active version (set one with `vibe man use <selector>`)"),
+    }
+
+    if args.fix && confirm(ctx, args.yes, "Write shims and put the shim dir on PATH?")? {
+        env::write_shims(&shim_dir)?;
+        let shell = env::Shell::detect(env.shell.as_deref());
+        make_persister(env, shell)?.ensure_on_path(&shim_dir)?;
+        ctx.summary(
+            "fixed: shims written, shim dir ensured on PATH (open a new shell to pick it up).",
+        );
+    }
+
+    if problems == 0 {
+        ctx.summary("all good.");
+    } else {
+        ctx.summary(&format!("{problems} problem(s) — see above."));
+    }
+    Ok(())
+}
+
+/// Confirm a mutating action: `--yes`/unattended skip the prompt; a non-TTY
+/// without `--yes` is an error rather than a silent apply.
+fn confirm(ctx: &output::Context, yes: bool, prompt: &str) -> Result<bool> {
+    if yes || ctx.is_unattended() {
+        return Ok(true);
+    }
+    if !std::io::stdin().is_terminal() {
+        bail!("no TTY for confirmation; re-run with `--yes`");
+    }
+    Ok(Confirm::new()
+        .with_prompt(prompt)
+        .default(true)
+        .interact()
+        .unwrap_or(false))
+}
+
+/// Whether `dir` is present on the `PATH` value, comparing canonicalised
+/// paths when possible.
+fn path_has_dir(path_var: Option<&str>, dir: &Path) -> bool {
+    let Some(pv) = path_var else {
+        return false;
+    };
+    let target = dir.canonicalize();
+    std::env::split_paths(pv)
+        .any(|p| p == dir || matches!((p.canonicalize(), &target), (Ok(a), Ok(b)) if &a == b))
 }

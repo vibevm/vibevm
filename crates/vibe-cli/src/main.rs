@@ -97,6 +97,7 @@ fn main() -> ExitCode {
                 cwd: std::env::current_dir().ok(),
                 home: dirs::home_dir(),
                 shell: read_env_opt("SHELL"),
+                path_var: read_env_opt("PATH"),
             };
             commands::man::run(&ctx, args, man_env)
         }
