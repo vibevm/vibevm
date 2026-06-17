@@ -1,6 +1,27 @@
 # CONTINUE.md — cold-resume checkpoint
 
-> **LATEST (2026-06-15, after this snapshot): the resolvo resolver
+> **LATEST (2026-06-16): AGENTIC + STANDALONE MODES (PROP-018) — MVP
+> COMPLETE on local `main` (mirror rollout pending). Two product modes on
+> one axis — where an operation's reasoning happens. STANDALONE: `vibe
+> skill {list,install,uninstall}` projects package-declared `[[skill]]`
+> files into coding agents (Claude Code / OpenCode / Codex), reusing the
+> PROP-015 agent machinery — no LLM, works agent-present or not. AGENTIC:
+> vibevm composes a domain-grounded `Intent` and the calling agent
+> executes it — `vibe agentic explain` parks the instruction in
+> `.vibe/agentic/command.md`, `vibe command` drains it; the same op is also
+> the `agentic_explain` MCP tool (inline return, no mailbox), so one
+> operation serves both the one-shot CLI and the persistent MCP server.
+> Narrative (owner-reviewed): vibevm authors the trustworthy,
+> domain-grounded instruction; the agent is the better in-session executor
+> — division of labour by strength, not vibevm offloading for lack of an
+> engine. Eight gate-green commits (`27f511f` … `050b150`); full
+> `self-check.sh` green; conform 0/0/0; specmap clean. Far backlog
+> (PROP-018 §6): built-in `vibe-llm` backend, full conversations, an
+> OpenCode-style resumable console, `[[mcp]]` bundled-server install. See
+> [`PROP-018`](spec/common/PROP-018-agentic-standalone-modes.md).
+> `spec/WAL.md` is canonical and supersedes everything below.**
+>
+> **PRIOR (2026-06-15): the resolvo resolver
 > (PROP-017) is COMPLETE — resolvo (pure-Rust CDCL SAT) is now the
 > default production solver. The engine + the full existing dependency
 > vocabulary (requires, `[[requires_any]]` disjunctions with
