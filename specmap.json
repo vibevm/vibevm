@@ -331,6 +331,13 @@
     },
     {
       "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/cli/agentic.rs",
+      "item_kind": "mod",
+      "line": 9,
+      "symbol": "vibe_cli::cli::agentic"
+    },
+    {
+      "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli/inspect.rs",
       "item_kind": "mod",
       "line": 7,
@@ -377,6 +384,13 @@
       "item_kind": "mod",
       "line": 3,
       "symbol": "vibe_cli::commands"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/agentic/mod.rs",
+      "item_kind": "mod",
+      "line": 14,
+      "symbol": "vibe_cli::commands::agentic"
     },
     {
       "crate_name": "vibe-cli",
@@ -704,7 +718,7 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/main.rs",
       "item_kind": "fn",
-      "line": 99,
+      "line": 101,
       "symbol": "vibe_cli::promote_user_config_env"
     },
     {
@@ -1894,14 +1908,14 @@
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/lib.rs",
       "item_kind": "enum",
-      "line": 338,
+      "line": 339,
       "symbol": "vibe_mcp::ServerError"
     },
     {
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/lib.rs",
       "item_kind": "enum",
-      "line": 124,
+      "line": 125,
       "symbol": "vibe_mcp::ToolError"
     },
     {
@@ -1910,6 +1924,76 @@
       "item_kind": "mod",
       "line": 7,
       "symbol": "vibe_mcp::agent_config"
+    },
+    {
+      "crate_name": "vibe-mcp",
+      "file": "crates/vibe-mcp/src/agentic.rs",
+      "item_kind": "mod",
+      "line": 11,
+      "symbol": "vibe_mcp::agentic"
+    },
+    {
+      "crate_name": "vibe-mcp",
+      "file": "crates/vibe-mcp/src/agentic.rs",
+      "item_kind": "enum",
+      "line": 20,
+      "symbol": "vibe_mcp::agentic::Affinity"
+    },
+    {
+      "crate_name": "vibe-mcp",
+      "file": "crates/vibe-mcp/src/agentic.rs",
+      "item_kind": "struct",
+      "line": 33,
+      "symbol": "vibe_mcp::agentic::Intent"
+    },
+    {
+      "crate_name": "vibe-mcp",
+      "file": "crates/vibe-mcp/src/agentic.rs",
+      "item_kind": "struct",
+      "line": 75,
+      "symbol": "vibe_mcp::agentic::RelayBackend"
+    },
+    {
+      "crate_name": "vibe-mcp",
+      "file": "crates/vibe-mcp/src/agentic.rs",
+      "item_kind": "fn",
+      "line": 131,
+      "symbol": "vibe_mcp::agentic::drain_intent"
+    },
+    {
+      "crate_name": "vibe-mcp",
+      "file": "crates/vibe-mcp/src/agentic.rs",
+      "item_kind": "fn",
+      "line": 154,
+      "symbol": "vibe_mcp::agentic::explain_intent"
+    },
+    {
+      "crate_name": "vibe-mcp",
+      "file": "crates/vibe-mcp/src/agentic.rs",
+      "item_kind": "fn",
+      "line": 113,
+      "symbol": "vibe_mcp::agentic::park_intent"
+    },
+    {
+      "crate_name": "vibe-mcp",
+      "file": "crates/vibe-mcp/src/agentic.rs",
+      "item_kind": "fn",
+      "line": 261,
+      "symbol": "vibe_mcp::agentic::tests::explain_intent_tailors_to_detected_sources"
+    },
+    {
+      "crate_name": "vibe-mcp",
+      "file": "crates/vibe-mcp/src/agentic.rs",
+      "item_kind": "fn",
+      "line": 220,
+      "symbol": "vibe_mcp::agentic::tests::park_then_drain_is_a_one_shot_mailbox"
+    },
+    {
+      "crate_name": "vibe-mcp",
+      "file": "crates/vibe-mcp/src/agentic.rs",
+      "item_kind": "fn",
+      "line": 248,
+      "symbol": "vibe_mcp::agentic::tests::relay_backend_delegates"
     },
     {
       "crate_name": "vibe-mcp",
@@ -3651,6 +3735,14 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-cli/src/cli/agentic.rs",
+      "from_symbol": "vibe_cli::cli::agentic",
+      "line": 9,
+      "provenance": "authored",
+      "uri": "spec://vibevm/common/PROP-018#relay",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-cli/src/cli/inspect.rs",
       "from_symbol": "vibe_cli::cli::inspect",
       "line": 7,
@@ -3704,6 +3796,14 @@
       "line": 3,
       "provenance": "authored",
       "uri": "spec://vibevm/VIBEVM-SPEC#cli-surface",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/agentic/mod.rs",
+      "from_symbol": "vibe_cli::commands::agentic",
+      "line": 14,
+      "provenance": "authored",
+      "uri": "spec://vibevm/common/PROP-018#relay",
       "verb": "implements"
     },
     {
@@ -4078,7 +4178,7 @@
     {
       "file": "crates/vibe-cli/src/main.rs",
       "from_symbol": "vibe_cli::promote_user_config_env",
-      "line": 118,
+      "line": 120,
       "provenance": "authored",
       "uri": "spec://vibevm/discipline/ENGINE-CONFORM-v0.1#rules",
       "verb": "deviates",
@@ -5520,7 +5620,7 @@
     {
       "file": "crates/vibe-mcp/src/lib.rs",
       "from_symbol": "vibe_mcp::ServerError",
-      "line": 348,
+      "line": 349,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-mcp/PROP-015#errors",
       "verb": "implements"
@@ -5528,7 +5628,7 @@
     {
       "file": "crates/vibe-mcp/src/lib.rs",
       "from_symbol": "vibe_mcp::ToolError",
-      "line": 135,
+      "line": 136,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-mcp/PROP-015#errors",
       "verb": "implements"
@@ -5540,6 +5640,89 @@
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-mcp/PROP-015#agent-config",
       "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-mcp/src/agentic.rs",
+      "from_symbol": "vibe_mcp::agentic",
+      "line": 11,
+      "provenance": "authored",
+      "uri": "spec://vibevm/common/PROP-018#relay",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-mcp/src/agentic.rs",
+      "from_symbol": "vibe_mcp::agentic::Affinity",
+      "line": 23,
+      "provenance": "authored",
+      "uri": "spec://vibevm/common/PROP-018#affinity",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-mcp/src/agentic.rs",
+      "from_symbol": "vibe_mcp::agentic::Intent",
+      "line": 37,
+      "provenance": "authored",
+      "uri": "spec://vibevm/common/PROP-018#relay",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-mcp/src/agentic.rs",
+      "from_symbol": "vibe_mcp::agentic::RelayBackend",
+      "line": 79,
+      "provenance": "authored",
+      "uri": "spec://vibevm/common/PROP-018#pluggable-backend",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-mcp/src/agentic.rs",
+      "from_symbol": "vibe_mcp::agentic::drain_intent",
+      "line": 134,
+      "provenance": "authored",
+      "uri": "spec://vibevm/common/PROP-018#relay",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-mcp/src/agentic.rs",
+      "from_symbol": "vibe_mcp::agentic::explain_intent",
+      "line": 158,
+      "provenance": "authored",
+      "uri": "spec://vibevm/common/PROP-018#explain",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-mcp/src/agentic.rs",
+      "from_symbol": "vibe_mcp::agentic::park_intent",
+      "line": 117,
+      "provenance": "authored",
+      "uri": "spec://vibevm/common/PROP-018#relay",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-mcp/src/agentic.rs",
+      "from_symbol": "vibe_mcp::agentic::tests::explain_intent_tailors_to_detected_sources",
+      "line": 262,
+      "provenance": "authored",
+      "uri": "spec://vibevm/common/PROP-018#explain",
+      "verb": "verifies",
+      "pinned_r": 4
+    },
+    {
+      "file": "crates/vibe-mcp/src/agentic.rs",
+      "from_symbol": "vibe_mcp::agentic::tests::park_then_drain_is_a_one_shot_mailbox",
+      "line": 221,
+      "provenance": "authored",
+      "uri": "spec://vibevm/common/PROP-018#relay",
+      "verb": "verifies",
+      "pinned_r": 4
+    },
+    {
+      "file": "crates/vibe-mcp/src/agentic.rs",
+      "from_symbol": "vibe_mcp::agentic::tests::relay_backend_delegates",
+      "line": 249,
+      "provenance": "authored",
+      "uri": "spec://vibevm/common/PROP-018#pluggable-backend",
+      "verb": "verifies",
+      "pinned_r": 2
     },
     {
       "file": "crates/vibe-mcp/src/agents.rs",

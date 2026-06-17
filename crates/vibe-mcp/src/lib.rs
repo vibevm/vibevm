@@ -41,6 +41,7 @@ use thiserror::Error;
 use vibe_core::manifest::Lockfile;
 
 pub mod agent_config;
+pub mod agentic;
 pub mod agents;
 pub mod install;
 pub mod jsonrpc;

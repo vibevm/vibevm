@@ -11,6 +11,7 @@ specmark::scope!("spec://vibevm/VIBEVM-SPEC#command-summary");
 
 use clap::{Parser, Subcommand};
 
+mod agentic;
 mod inspect;
 mod mcp;
 mod pkg;
@@ -18,6 +19,7 @@ mod registry;
 mod skill;
 mod workspace;
 
+pub use agentic::*;
 pub use inspect::*;
 pub use mcp::*;
 pub use pkg::*;
@@ -111,6 +113,21 @@ pub enum Command {
     /// `vibe skill install` writes each into the target agents' skill
     /// directories. No LLM required.
     Skill(SkillArgs),
+
+    /// Compose an LLM instruction for the calling agent and park it in the
+    /// relay — vibevm's agentic mode (PROP-018 §2.7, §2.10). vibevm has no
+    /// inference engine yet, so `vibe agentic explain` does not act: it
+    /// queues a project-explanation task that the agent fetches with
+    /// `vibe command` and runs on its own LLM.
+    Agentic(AgenticArgs),
+
+    /// Drain the agentic relay: print the instruction a `vibe agentic …`
+    /// command parked in `.vibe/agentic/command.md` (PROP-018 §2.7) and
+    /// clear the slot. Prints "no pending command" when the mailbox is
+    /// empty. The calling agent runs this, then carries out the printed
+    /// instruction.
+    #[command(name = "command")]
+    AgenticCommand(CommandArgs),
 
     /// Remove an installed package from the current project.
     Uninstall(UninstallArgs),

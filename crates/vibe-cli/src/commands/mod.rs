@@ -2,6 +2,7 @@
 
 specmark::scope!("spec://vibevm/VIBEVM-SPEC#cli-surface");
 
+pub mod agentic;
 pub mod check;
 pub mod init;
 pub mod install;
