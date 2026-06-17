@@ -1,9 +1,65 @@
 # WAL — Project Continuation State
-_Updated: 2026-06-16 — **AGENTIC + STANDALONE MODES (PROP-018) — MVP COMPLETE; on both mirrors.** vibevm gains two product modes on one axis — where an operation's reasoning happens. **Standalone:** `vibe skill {list,install,uninstall}` projects package-declared `[[skill]]` files into coding agents' skill dirs (Claude Code / OpenCode / Codex), reusing the PROP-015 agent machinery — no LLM, works agent-present or not. **Agentic:** vibevm composes a domain-grounded `Intent` and the calling agent executes it — `vibe agentic explain` parks the instruction in `.vibe/agentic/command.md`, `vibe command` drains it; the same op is also the `agentic_explain` MCP tool (inline return, no mailbox), so one operation serves both the one-shot CLI and the persistent MCP server. The narrative is division-of-labour by strength (vibevm authors the trustworthy, domain-grounded instruction; the agent is the better in-session executor), NOT vibevm offloading because it lacks an engine. New manifest section `[[skill]]` in vibe-core; `InferenceBackend`/`RelayBackend`/`Affinity` seam in vibe-mcp leaves room for the far-backlog built-in `vibe-llm` backend (§6: standalone reasoning, full conversations, OpenCode-style resumable console, `[[mcp]]` bundled-server install). Spec: [PROP-018](common/PROP-018-agentic-standalone-modes.md). Full `self-check.sh` green; conform 0/0/0; specmap clean. Prior: RESOLVO RESOLVER (PROP-017) complete; resolvo is the default solver. Git log is the authoritative per-item record._
+_Updated: 2026-06-17 — **VVM v2 — VERSION MANAGER REBUILT; on both mirrors.** vibevm distributes itself via `vibe man` (the VibeVM Version Manager, PROP-019), which builds, installs, and switches vibevm's own versions on a machine. v2 reworks v1 after two design flaws surfaced — console-reload friction and self-replace locks. The install/switch unit is now a whole immutable **instance** (`versions/<kind>/<id>/<instance>/`); the active version is a live **`current`** pointer file, so `man install`/`man use` flip it and the next `vibe` in the same shell uses it with NO console reload, and nothing in use is ever overwritten (no locks, dll-safe). Distributions are placed by **diff-copy** (per-instance `.vvm-manifest.toml`: size/mtime + hash-for-small-files; hardlink unchanged, copy changed; byte-identical rebuild → no new instance). A managed `vibe` derives root/HOME from `current_exe` (env demoted to advisory; stale-`$VIBEVM_HOME` warning). Sources are referenced, never copied: managed = shared `src/.mirror` (git-fetch, no re-clone), external = the committer's checkout built in place + remembered path → **linked rebuild** from anywhere. New `vibe vars` reconciles actual-vs-environment; `tools/first-run.{sh,ps1}` + README bootstrap the first install. Spec: [PROP-019](common/PROP-019-version-manager.md). Full `self-check.sh` green; conform 0/0/0; specmap clean. Prior: PROP-018 agentic + standalone modes MVP. Git log is the authoritative per-item record._
 
 ## Current phase
 
-**AGENTIC + STANDALONE MODES (PROP-018) — MVP IN FORCE (2026-06-16).**
+**VVM v2 — VERSION MANAGER REBUILT (PROP-019), MVP IN FORCE (2026-06-17).**
+vibevm distributes itself: the `vibe` binary manages its own versions via
+`vibe man` (the VibeVM Version Manager). v2 is a near-total rebuild of the
+v1 slices after the owner found two design flaws — (a) switching a version
+forced a console reload; (b) reinstalling the running version locked the
+whole distribution (and would lock future DLLs). Spec:
+[`PROP-019`](common/PROP-019-version-manager.md).
+
+**Shipped — five gate-green commits, on both mirrors (@ `c6e65bf`):**
+
+- **v2 core** (`34c8250`) — the install/switch unit is a whole immutable
+  *instance* at `versions/<kind>/<id>/<instance>/`; the active version is a
+  live `current` pointer file. `man install`/`man use` rewrite it, so the
+  switch is instant (no console reload) and nothing in use is overwritten
+  (new instance + pointer flip → no locks, future-DLL-safe). Distributions
+  are placed by **diff-copy** (`placer`): a per-instance `.vvm-manifest.toml`
+  of (size, mtime, hash-for-small-files) hardlinks unchanged files and copies
+  only what changed — never hashing large files; a byte-identical rebuild
+  makes no new instance (the dedup-skip; `--force` overrides). Each instance
+  records provenance (`origin` + external `source_path`). The man module
+  split into `builder`/`source`/`placer`/`install`/`store`/`model`.
+- **current_exe truth** (`f70a922`) — a managed `vibe` derives its root and
+  home from its own path (`selfloc::derive_self`); `$VIBEVM_HOME` is
+  advisory, and a stale one earns a one-line startup warning.
+- **`vibe vars`** (`8910f8e`) — prints the values vibevm actually uses (from
+  `current_exe`) versus the environment, so scripts reconcile a stale
+  `$VIBEVM_HOME`. Modes: plain, `diff`, `full`, `full diff`. Never the
+  publish token.
+- **git-incremental + linked rebuild** (`f106683`) — the managed clone is a
+  single shared `src/.mirror`, updated by `git fetch` (never re-cloned).
+  External sources (a committer's checkout) are remembered by canonical path
+  (Windows `\\?\` stripped), so `man install <selector>` becomes a *linked
+  rebuild* from the remembered tree — from anywhere, without being in the
+  checkout, without copying sources.
+- **First-run onboarding** (`eecb46e`, `c6e65bf`) — `tools/first-run.sh` /
+  `first-run.ps1` bootstrap the first install (build → install → shims +
+  PATH) and a README "First run" section documents it.
+
+**Gate panel — all green.** Full `self-check.sh` exit 0 (fmt, all tests,
+doctests, clippy `-D warnings`, `vibe check`); conform 0/0/0; specmap clean
+(545 units / 543 edges / 0 suspects / 0 warnings / 0 orphans).
+
+**Far backlog (PROP-019 §6).** Binary-artifact install (`man install
+--binary`) + auto-prune-on-install (binary-only); reflink/CoW placement;
+signature verification. The `man use` full path + shim-exec-via-`current`
+loop is not smoke-tested on Windows (it writes the real registry PATH;
+covered by unit tests of the shim content + the `current` file).
+
+**Next.** PROP-019 v2 (through `c6e65bf`) is on both mirrors; this
+session-save's WAL/CONTINUE roll out with it, leaving `main` ≡ gitverse ≡
+github. Then the owner's next goal — the PROP-019 §6 far backlog
+(binary-artifact install is the natural next slice) or a fresh goal. No
+campaign in flight.
+
+## Prior phase — agentic + standalone modes (PROP-018)
+
+**AGENTIC + STANDALONE MODES (PROP-018) — MVP COMPLETE (2026-06-16).**
 The owner chose two product modes turning on one axis — *where does an
 operation's reasoning happen* (PROP-018 §1.2). Distinct from PROP-006
 *session* postures (§1.3). Spec:
@@ -54,12 +110,8 @@ fast context cache); an OpenCode-style resumable console (`--resume <id>`,
 reachable from an agent and interactively); `[[mcp]]` bundled-server
 projection (the schema is reserved in §2.4).
 
-**Next.** PROP-018 (through `bd26156`) is on both mirrors; the General
-Discovery Prompt (`ee9c62e`, this session's research-mode preamble) and
-this session-save's WAL/CONTINUE roll out with it, leaving `main` ≡
-gitverse ≡ github. Then the owner's next goal — candidates are the
-PROP-018 §6 far backlog (`[[mcp]]` install is the smallest) or a fresh
-goal. No campaign in flight.
+(Historical: this MVP and the General Discovery Prompt rolled out to both
+mirrors at `ee9c62e`; PROP-019 v2 above supersedes it as the current phase.)
 
 ## Prior phase — resolvo resolver (PROP-017)
 
