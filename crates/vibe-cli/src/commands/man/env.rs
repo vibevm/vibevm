@@ -92,25 +92,34 @@ impl Shell {
 // ---------------------------------------------------------------------------
 
 fn posix_shim() -> String {
+    // Read the live `current` pointer (instant switch, no reload); fall back
+    // to the advisory $VIBEVM_HOME (PROP-019 §2.5).
     format!(
         "#!/bin/sh\n\
-         # vibevm (VVM) shim — execs the active version named by $VIBEVM_HOME.\n\
-         if [ -z \"$VIBEVM_HOME\" ]; then\n\
+         # vibevm (VVM) shim — execs the active instance from ../vibevm/current.\n\
+         self=\"$(CDPATH= cd -- \"$(dirname -- \"$0\")\" && pwd)\"\n\
+         home=\"$(cat \"$self/../vibevm/current\" 2>/dev/null)\"\n\
+         [ -z \"$home\" ] && home=\"$VIBEVM_HOME\"\n\
+         if [ -z \"$home\" ]; then\n\
          \x20 echo 'vibe: no active version — run: vibe man use <selector>' >&2\n\
          \x20 exit 1\n\
          fi\n\
-         exec \"$VIBEVM_HOME/{BINARY_NAME}\" \"$@\"\n"
+         exec \"$home/{BINARY_NAME}\" \"$@\"\n"
     )
 }
 
 fn cmd_shim() -> String {
     format!(
         "@echo off\r\n\
-         if \"%VIBEVM_HOME%\"==\"\" (\r\n\
+         set \"VVM_CUR=%~dp0..\\vibevm\\current\"\r\n\
+         set \"VVM_HOME=\"\r\n\
+         if exist \"%VVM_CUR%\" set /p VVM_HOME=<\"%VVM_CUR%\"\r\n\
+         if \"%VVM_HOME%\"==\"\" set \"VVM_HOME=%VIBEVM_HOME%\"\r\n\
+         if \"%VVM_HOME%\"==\"\" (\r\n\
          echo vibe: no active version - run: vibe man use ^<selector^> 1>&2\r\n\
          exit /b 1\r\n\
          )\r\n\
-         \"%VIBEVM_HOME%\\{BINARY_NAME}\" %*\r\n"
+         \"%VVM_HOME%\\{BINARY_NAME}\" %*\r\n"
     )
 }
 
@@ -386,15 +395,20 @@ mod tests {
 
     #[test]
     #[verifies("spec://vibevm/common/PROP-019#activation", r = 1)]
-    fn shims_reference_vibevm_home() {
+    fn shims_read_the_current_pointer() {
         let tmp = tempfile::tempdir().unwrap();
         write_shims(tmp.path()).unwrap();
         let posix = fs::read_to_string(tmp.path().join("vibe")).unwrap();
-        assert!(posix.contains("$VIBEVM_HOME"));
+        assert!(posix.contains("vibevm/current"), "reads the live pointer");
+        assert!(
+            posix.contains("$VIBEVM_HOME"),
+            "falls back to the advisory env"
+        );
         assert!(posix.contains(BINARY_NAME));
         if cfg!(windows) {
             let cmd = fs::read_to_string(tmp.path().join("vibe.cmd")).unwrap();
-            assert!(cmd.contains("%VIBEVM_HOME%"));
+            assert!(cmd.contains("current"));
+            assert!(cmd.contains(BINARY_NAME));
         }
     }
 

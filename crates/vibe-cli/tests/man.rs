@@ -55,33 +55,27 @@ fn install_builds_publishes_and_records_under_the_temp_root() {
         .success()
         .stdout(predicates::str::contains("installed branch:main"));
 
-    // The binary landed under the temp root, not the real ~/opt.
-    let installed = base
-        .path()
-        .join("opt")
-        .join("vibevm")
-        .join("versions")
-        .join("branch")
-        .join("main")
-        .join(bin_name());
-    assert!(installed.is_file(), "binary published under the temp root");
+    // The active binary landed under the temp root, in an instance dir named
+    // by the live `current` pointer — not the real ~/opt.
+    let current =
+        std::fs::read_to_string(base.path().join("opt").join("vibevm").join("current")).unwrap();
+    let instance_dir = std::path::PathBuf::from(current.trim());
+    assert!(
+        instance_dir.starts_with(base.path()),
+        "instance is under the temp root"
+    );
+    assert!(
+        instance_dir.join(bin_name()).is_file(),
+        "binary published in the instance dir"
+    );
 
     let state =
         std::fs::read_to_string(base.path().join("opt").join("vibevm").join("state.toml")).unwrap();
     assert!(state.contains("kind = \"branch\""), "records the kind");
     assert!(state.contains("id = \"main\""), "records the id");
 
-    // ls marks it active when VIBEVM_HOME names its prefix.
+    // install flipped `current`, so ls marks it active with no extra env.
     vibe(base.path())
-        .env(
-            "VIBEVM_HOME",
-            base.path()
-                .join("opt")
-                .join("vibevm")
-                .join("versions")
-                .join("branch")
-                .join("main"),
-        )
         .args(["man", "ls"])
         .assert()
         .success()

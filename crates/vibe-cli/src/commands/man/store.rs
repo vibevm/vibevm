@@ -1,6 +1,7 @@
-//! The version store: the `$VIBEVM_ROOT` layout and the `state.toml`
-//! inventory (PROP-019 §2.4). The store reads no ambient environment — the
-//! root is resolved at the composition root and handed in (§2.1).
+//! The version store: the install-root layout, distribution instances, the
+//! live `current` pointer, and the `state.toml` inventory (PROP-019 §2.4,
+//! §2.5). The store reads no ambient environment — the root is resolved at
+//! the composition root and handed in.
 
 specmark::scope!("spec://vibevm/common/PROP-019#layout");
 
@@ -15,7 +16,7 @@ use super::model::{InstallRecord, State, VersionId};
 /// The `vibe` binary's file name on this platform.
 pub const BINARY_NAME: &str = if cfg!(windows) { "vibe.exe" } else { "vibe" };
 
-/// Owns the on-disk layout under `$VIBEVM_ROOT` (PROP-019 §2.4).
+/// Owns the on-disk layout under `$VIBEVM_INSTALL_ROOT/opt` (PROP-019 §2.4).
 #[derive(Debug, Clone)]
 #[spec(implements = "spec://vibevm/common/PROP-019#layout")]
 pub struct VersionStore {
@@ -27,7 +28,12 @@ impl VersionStore {
         VersionStore { root: root.into() }
     }
 
-    /// `<root>/vibevm` — the data root holding versions, sources, state.
+    /// `<root>/bin` — the shim directory that goes on PATH (PROP-019 §2.5).
+    pub fn shim_dir(&self) -> PathBuf {
+        self.root.join("bin")
+    }
+
+    /// `<root>/vibevm` — the data root.
     pub fn data_dir(&self) -> PathBuf {
         self.root.join("vibevm")
     }
@@ -37,44 +43,32 @@ impl VersionStore {
         self.data_dir().join("versions")
     }
 
-    /// `<root>/vibevm/build` — the shared cargo `--target-dir` for builds,
-    /// kept out of both the source tree's `target/` and the running binary's
-    /// path so a build never relinks a live `vibe.exe` (PROP-019 §2.7).
+    /// `<root>/vibevm/versions/<kind>/<id>` — the parent of a version's
+    /// instance dirs.
+    pub fn version_id_dir(&self, id: &VersionId) -> PathBuf {
+        self.versions_dir().join(id.path_segment())
+    }
+
+    /// `<root>/vibevm/versions/<kind>/<id>/<instance>` — one immutable
+    /// distribution instance (PROP-019 §2.4, §2.15).
+    pub fn instance_dir(&self, id: &VersionId, instance: u64) -> PathBuf {
+        self.version_id_dir(id).join(instance.to_string())
+    }
+
+    /// The `vibe` binary inside a specific instance.
+    pub fn binary_path(&self, id: &VersionId, instance: u64) -> PathBuf {
+        self.instance_dir(id, instance).join(BINARY_NAME)
+    }
+
+    /// `<root>/vibevm/build` — the shared cargo `--target-dir` (PROP-019
+    /// §2.7); never the source tree's own `target/`.
     pub fn build_dir(&self) -> PathBuf {
         self.data_dir().join("build")
     }
 
-    /// `<root>/bin` — the shim directory that goes on PATH (PROP-019 §2.5).
-    pub fn shim_dir(&self) -> PathBuf {
-        self.root.join("bin")
-    }
-
-    /// `<root>/vibevm/src/<kind>/<id>` — a version's source tree (clone
-    /// path; gc-able, PROP-019 §2.4).
+    /// `<root>/vibevm/src/<kind>/<id>` — a managed clone (PROP-019 §2.16).
     pub fn src_dir(&self, id: &VersionId) -> PathBuf {
         self.data_dir().join("src").join(id.path_segment())
-    }
-
-    /// Drop a version from the inventory (no-op if absent, PROP-019 §2.9).
-    pub fn forget(&self, id: &VersionId) -> Result<()> {
-        let mut state = self.load_state()?;
-        let before = state.installs.len();
-        state.installs.retain(|r| &r.version_id() != id);
-        if state.installs.len() != before {
-            self.save_state(&state)?;
-        }
-        Ok(())
-    }
-
-    /// `<root>/vibevm/versions/<kind>/<id>` — the prefix `VIBEVM_HOME`
-    /// points at when this version is active (PROP-019 §2.5).
-    pub fn version_prefix(&self, id: &VersionId) -> PathBuf {
-        self.versions_dir().join(id.path_segment())
-    }
-
-    /// The installed `vibe` binary for a version.
-    pub fn binary_path(&self, id: &VersionId) -> PathBuf {
-        self.version_prefix(id).join(BINARY_NAME)
     }
 
     /// `<root>/vibevm/state.toml`.
@@ -82,8 +76,13 @@ impl VersionStore {
         self.data_dir().join("state.toml")
     }
 
-    /// Load the inventory, returning the empty default when the file is
-    /// absent (a fresh machine).
+    /// `<root>/vibevm/current` — the live pointer to the active instance dir
+    /// (PROP-019 §2.5).
+    pub fn current_path(&self) -> PathBuf {
+        self.data_dir().join("current")
+    }
+
+    /// Load the inventory, defaulting to empty on a fresh machine.
     pub fn load_state(&self) -> Result<State> {
         let path = self.state_path();
         if !path.exists() {
@@ -94,37 +93,105 @@ impl VersionStore {
         toml::from_str(&text).with_context(|| format!("parsing `{}`", path.display()))
     }
 
-    /// Write the inventory atomically (tmp + rename) so a crash mid-write
-    /// never truncates `state.toml`.
+    /// Write the inventory atomically (tmp + rename).
     pub fn save_state(&self, state: &State) -> Result<()> {
         let dir = self.data_dir();
         fs::create_dir_all(&dir).with_context(|| format!("creating `{}`", dir.display()))?;
         let text = toml::to_string(state).context("serialising VVM state")?;
-        let path = self.state_path();
         let tmp = dir.join("state.toml.tmp");
         fs::write(&tmp, text).with_context(|| format!("writing `{}`", tmp.display()))?;
-        fs::rename(&tmp, &path).with_context(|| format!("renaming into `{}`", path.display()))?;
+        fs::rename(&tmp, self.state_path())
+            .with_context(|| format!("renaming into `{}`", self.state_path().display()))?;
         Ok(())
     }
 
-    /// Upsert an install record, replacing any existing entry with the same
-    /// canonical id (PROP-019 §2.7).
+    /// Allocate the next monotonic instance number (PROP-019 §9.4).
+    pub fn alloc_instance(&self) -> Result<u64> {
+        let mut state = self.load_state()?;
+        let n = state.next_instance.max(1);
+        state.next_instance = n + 1;
+        self.save_state(&state)?;
+        Ok(n)
+    }
+
+    /// Upsert an instance record (replacing any with the same id+instance).
     pub fn record_install(&self, record: InstallRecord) -> Result<()> {
         let mut state = self.load_state()?;
-        let id = record.version_id();
-        state.installs.retain(|r| r.version_id() != id);
+        state
+            .installs
+            .retain(|r| !(r.version_id() == record.version_id() && r.instance == record.instance));
         state.installs.push(record);
         self.save_state(&state)
     }
 
-    /// The installed version whose prefix matches `active_home` (the
-    /// `VIBEVM_HOME` value), if any (PROP-019 §2.5).
-    pub fn active(&self, active_home: Option<&Path>) -> Result<Option<InstallRecord>> {
-        let Some(home) = active_home else {
+    /// All recorded instances of a version id.
+    pub fn instances_of(&self, id: &VersionId) -> Result<Vec<InstallRecord>> {
+        Ok(self
+            .load_state()?
+            .installs
+            .into_iter()
+            .filter(|r| &r.version_id() == id)
+            .collect())
+    }
+
+    /// Drop every instance record of a version id from the inventory (no-op
+    /// if absent). Does not touch files.
+    pub fn forget_id(&self, id: &VersionId) -> Result<()> {
+        let mut state = self.load_state()?;
+        let before = state.installs.len();
+        state.installs.retain(|r| &r.version_id() != id);
+        if state.installs.len() != before {
+            self.save_state(&state)?;
+        }
+        Ok(())
+    }
+
+    /// Drop a single instance record from the inventory (no-op if absent).
+    pub fn forget_instance(&self, id: &VersionId, instance: u64) -> Result<()> {
+        let mut state = self.load_state()?;
+        let before = state.installs.len();
+        state
+            .installs
+            .retain(|r| !(&r.version_id() == id && r.instance == instance));
+        if state.installs.len() != before {
+            self.save_state(&state)?;
+        }
+        Ok(())
+    }
+
+    /// The active instance dir as named by the `current` file (PROP-019 §2.5).
+    pub fn read_current(&self) -> Option<PathBuf> {
+        let text = fs::read_to_string(self.current_path()).ok()?;
+        let trimmed = text.trim();
+        if trimmed.is_empty() {
+            None
+        } else {
+            Some(PathBuf::from(trimmed))
+        }
+    }
+
+    /// Repoint `current` at an instance dir, atomically (PROP-019 §2.5).
+    pub fn write_current(&self, instance_dir: &Path) -> Result<()> {
+        let dir = self.data_dir();
+        fs::create_dir_all(&dir).with_context(|| format!("creating `{}`", dir.display()))?;
+        let tmp = dir.join("current.tmp");
+        fs::write(&tmp, format!("{}\n", instance_dir.display()))
+            .with_context(|| format!("writing `{}`", tmp.display()))?;
+        fs::rename(&tmp, self.current_path())
+            .with_context(|| format!("renaming into `{}`", self.current_path().display()))?;
+        Ok(())
+    }
+
+    /// The installed instance the `current` file points at, if any.
+    pub fn active(&self) -> Result<Option<InstallRecord>> {
+        let Some(home) = self.read_current() else {
             return Ok(None);
         };
         for record in self.load_state()?.installs {
-            if same_path(&self.version_prefix(&record.version_id()), home) {
+            if same_path(
+                &self.instance_dir(&record.version_id(), record.instance),
+                &home,
+            ) {
                 return Ok(Some(record));
             }
         }
@@ -132,8 +199,7 @@ impl VersionStore {
     }
 }
 
-/// Compare two paths for identity, canonicalising when both exist so that
-/// separator, `.`, and symlink differences do not cause a false miss.
+/// Compare two paths for identity, canonicalising when both exist.
 fn same_path(a: &Path, b: &Path) -> bool {
     match (a.canonicalize(), b.canonicalize()) {
         (Ok(x), Ok(y)) => x == y,
@@ -144,68 +210,62 @@ fn same_path(a: &Path, b: &Path) -> bool {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::commands::man::model::{InstallRecord, Kind, State};
+    use crate::commands::man::model::{InstallRecord, Kind, Origin};
     use specmark::verifies;
 
-    fn write_state(store: &VersionStore, state: &State) {
-        fs::create_dir_all(store.data_dir()).unwrap();
-        fs::write(store.state_path(), toml::to_string(state).unwrap()).unwrap();
+    fn rec(kind: Kind, id: &str, instance: u64) -> InstallRecord {
+        InstallRecord {
+            kind,
+            id: id.into(),
+            instance,
+            commit: "c".into(),
+            toolchain: "t".into(),
+            profile: "debug".into(),
+            installed_at: "now".into(),
+            origin: Origin::Managed,
+            source_path: None,
+        }
     }
 
     #[test]
     #[verifies("spec://vibevm/common/PROP-019#layout", r = 1)]
-    fn layout_paths_are_namespaced_by_kind() {
+    fn instance_paths_nest_under_kind_id_instance() {
         let store = VersionStore::new("/opt");
-        let tag = VersionId::new(Kind::Tag, "1.2.3");
+        let id = VersionId::new(Kind::Tag, "1.2.3");
         let expect = PathBuf::from("/opt")
             .join("vibevm")
             .join("versions")
             .join("tag")
-            .join("1.2.3");
-        assert_eq!(store.version_prefix(&tag), expect);
-        assert_eq!(store.binary_path(&tag), expect.join(BINARY_NAME));
-        assert_eq!(
-            store.state_path(),
-            PathBuf::from("/opt").join("vibevm").join("state.toml")
-        );
+            .join("1.2.3")
+            .join("4");
+        assert_eq!(store.instance_dir(&id, 4), expect);
+        assert_eq!(store.binary_path(&id, 4), expect.join(BINARY_NAME));
     }
 
     #[test]
     #[verifies("spec://vibevm/common/PROP-019#layout", r = 1)]
-    fn load_state_defaults_when_absent() {
+    fn alloc_instance_is_monotonic_from_one() {
         let tmp = tempfile::tempdir().unwrap();
         let store = VersionStore::new(tmp.path());
-        assert!(store.load_state().unwrap().installs.is_empty());
+        assert_eq!(store.alloc_instance().unwrap(), 1);
+        assert_eq!(store.alloc_instance().unwrap(), 2);
+        assert_eq!(store.alloc_instance().unwrap(), 3);
     }
 
     #[test]
-    #[verifies("spec://vibevm/common/PROP-019#introspection", r = 1)]
-    fn active_matches_the_prefix_named_by_vibevm_home() {
+    #[verifies("spec://vibevm/common/PROP-019#activation", r = 1)]
+    fn active_follows_the_current_pointer() {
         let tmp = tempfile::tempdir().unwrap();
         let store = VersionStore::new(tmp.path());
         let id = VersionId::new(Kind::Branch, "main");
-        write_state(
-            &store,
-            &State {
-                installs: vec![InstallRecord {
-                    kind: Kind::Branch,
-                    id: "main".into(),
-                    commit: "abc".into(),
-                    toolchain: "rustc 1.93.0".into(),
-                    profile: "debug".into(),
-                    installed_at: "2026-06-17T00:00:00Z".into(),
-                }],
-            },
-        );
-        let prefix = store.version_prefix(&id);
-        fs::create_dir_all(&prefix).unwrap();
+        store.record_install(rec(Kind::Branch, "main", 1)).unwrap();
+        let inst = store.instance_dir(&id, 1);
+        fs::create_dir_all(&inst).unwrap();
 
-        // The prefix VIBEVM_HOME names is the active one.
-        let active = store.active(Some(&prefix)).unwrap().unwrap();
+        assert!(store.active().unwrap().is_none(), "no current → no active");
+        store.write_current(&inst).unwrap();
+        let active = store.active().unwrap().unwrap();
         assert_eq!(active.version_id(), id);
-        // A different prefix → no active match.
-        assert!(store.active(Some(tmp.path())).unwrap().is_none());
-        // No VIBEVM_HOME → nothing active.
-        assert!(store.active(None).unwrap().is_none());
+        assert_eq!(active.instance, 1);
     }
 }
