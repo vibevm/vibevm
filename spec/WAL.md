@@ -1,5 +1,5 @@
 # WAL — Project Continuation State
-_Updated: 2026-06-16 — **AGENTIC + STANDALONE MODES (PROP-018) — MVP COMPLETE (local; rollout pending).** vibevm gains two product modes on one axis — where an operation's reasoning happens. **Standalone:** `vibe skill {list,install,uninstall}` projects package-declared `[[skill]]` files into coding agents' skill dirs (Claude Code / OpenCode / Codex), reusing the PROP-015 agent machinery — no LLM, works agent-present or not. **Agentic:** vibevm composes a domain-grounded `Intent` and the calling agent executes it — `vibe agentic explain` parks the instruction in `.vibe/agentic/command.md`, `vibe command` drains it; the same op is also the `agentic_explain` MCP tool (inline return, no mailbox), so one operation serves both the one-shot CLI and the persistent MCP server. The narrative is division-of-labour by strength (vibevm authors the trustworthy, domain-grounded instruction; the agent is the better in-session executor), NOT vibevm offloading because it lacks an engine. New manifest section `[[skill]]` in vibe-core; `InferenceBackend`/`RelayBackend`/`Affinity` seam in vibe-mcp leaves room for the far-backlog built-in `vibe-llm` backend (§6: standalone reasoning, full conversations, OpenCode-style resumable console, `[[mcp]]` bundled-server install). Spec: [PROP-018](common/PROP-018-agentic-standalone-modes.md). Full `self-check.sh` green; conform 0/0/0; specmap clean. Prior: RESOLVO RESOLVER (PROP-017) complete; resolvo is the default solver. Git log is the authoritative per-item record._
+_Updated: 2026-06-16 — **AGENTIC + STANDALONE MODES (PROP-018) — MVP COMPLETE; on both mirrors.** vibevm gains two product modes on one axis — where an operation's reasoning happens. **Standalone:** `vibe skill {list,install,uninstall}` projects package-declared `[[skill]]` files into coding agents' skill dirs (Claude Code / OpenCode / Codex), reusing the PROP-015 agent machinery — no LLM, works agent-present or not. **Agentic:** vibevm composes a domain-grounded `Intent` and the calling agent executes it — `vibe agentic explain` parks the instruction in `.vibe/agentic/command.md`, `vibe command` drains it; the same op is also the `agentic_explain` MCP tool (inline return, no mailbox), so one operation serves both the one-shot CLI and the persistent MCP server. The narrative is division-of-labour by strength (vibevm authors the trustworthy, domain-grounded instruction; the agent is the better in-session executor), NOT vibevm offloading because it lacks an engine. New manifest section `[[skill]]` in vibe-core; `InferenceBackend`/`RelayBackend`/`Affinity` seam in vibe-mcp leaves room for the far-backlog built-in `vibe-llm` backend (§6: standalone reasoning, full conversations, OpenCode-style resumable console, `[[mcp]]` bundled-server install). Spec: [PROP-018](common/PROP-018-agentic-standalone-modes.md). Full `self-check.sh` green; conform 0/0/0; specmap clean. Prior: RESOLVO RESOLVER (PROP-017) complete; resolvo is the default solver. Git log is the authoritative per-item record._
 
 ## Current phase
 
@@ -9,7 +9,7 @@ operation's reasoning happen* (PROP-018 §1.2). Distinct from PROP-006
 *session* postures (§1.3). Spec:
 [`PROP-018`](common/PROP-018-agentic-standalone-modes.md).
 
-**Shipped — six gate-green slices, on local `main` (mirror rollout pending):**
+**Shipped — six gate-green slices, on both mirrors (@ `bd26156`):**
 
 - **`[[skill]]` manifest section** (`vibe-core`, `27f511f`) — a package of
   any kind declares which of its files are agent skills (name, path,
@@ -54,8 +54,12 @@ fast context cache); an OpenCode-style resumable console (`--resume <id>`,
 reachable from an agent and interactively); `[[mcp]]` bundled-server
 projection (the schema is reserved in §2.4).
 
-**Next.** Roll the PROP-018 commits out to both mirrors (`cargo xtask
-mirror`); then the owner's next goal. No campaign in flight.
+**Next.** PROP-018 (through `bd26156`) is on both mirrors; the General
+Discovery Prompt (`ee9c62e`, this session's research-mode preamble) and
+this session-save's WAL/CONTINUE roll out with it, leaving `main` ≡
+gitverse ≡ github. Then the owner's next goal — candidates are the
+PROP-018 §6 far backlog (`[[mcp]]` install is the smallest) or a fresh
+goal. No campaign in flight.
 
 ## Prior phase — resolvo resolver (PROP-017)
 
