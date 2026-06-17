@@ -1,5 +1,5 @@
 # WAL — Project Continuation State
-_Updated: 2026-06-17 — **VVM v2 — VERSION MANAGER REBUILT; on both mirrors.** vibevm distributes itself via `vibe man` (the VibeVM Version Manager, PROP-019), which builds, installs, and switches vibevm's own versions on a machine. v2 reworks v1 after two design flaws surfaced — console-reload friction and self-replace locks. The install/switch unit is now a whole immutable **instance** (`versions/<kind>/<id>/<instance>/`); the active version is a live **`current`** pointer file, so `man install`/`man use` flip it and the next `vibe` in the same shell uses it with NO console reload, and nothing in use is ever overwritten (no locks, dll-safe). Distributions are placed by **diff-copy** (per-instance `.vvm-manifest.toml`: size/mtime + hash-for-small-files; hardlink unchanged, copy changed; byte-identical rebuild → no new instance). A managed `vibe` derives root/HOME from `current_exe` (env demoted to advisory; stale-`$VIBEVM_HOME` warning). Sources are referenced, never copied: managed = shared `src/.mirror` (git-fetch, no re-clone), external = the committer's checkout built in place + remembered path → **linked rebuild** from anywhere. New `vibe vars` reconciles actual-vs-environment; `tools/first-run.{sh,ps1}` + README bootstrap the first install. Spec: [PROP-019](common/PROP-019-version-manager.md). Full `self-check.sh` green; conform 0/0/0; specmap clean. Prior: PROP-018 agentic + standalone modes MVP. Git log is the authoritative per-item record._
+_Updated: 2026-06-17 — **VVM v2 — VERSION MANAGER REBUILT; on both mirrors.** vibevm distributes itself via `vibe man` (the VibeVM Version Manager, PROP-019), which builds, installs, and switches vibevm's own versions on a machine. v2 reworks v1 after two design flaws surfaced — console-reload friction and self-replace locks. The install/switch unit is now a whole immutable **instance** (`versions/<kind>/<id>/<instance>/`); the active version is a live **`current`** pointer file, so `man install`/`man use` flip it and the next `vibe` in the same shell uses it with NO console reload, and nothing in use is ever overwritten (no locks, dll-safe). Distributions are placed by **diff-copy** (per-instance `.vvm-manifest.toml`: size/mtime + hash-for-small-files; hardlink unchanged, copy changed; byte-identical rebuild → no new instance). A managed `vibe` derives root/HOME from `current_exe` (env demoted to advisory; stale-`$VIBEVM_HOME` warning). Sources are referenced, never copied: managed = shared `src/.mirror` (git-fetch, no re-clone), external = the committer's checkout built in place + remembered path → **linked rebuild** from anywhere. New `vibe vars` reconciles actual-vs-environment; `tools/first-run.{sh,ps1}` + README bootstrap the first install. **Two real-machine shim fixes (`7550cde`) followed:** the shim dir is now *prepended* to PATH so the managed `vibe` beats a stale `~/.cargo/bin/vibe` (`b22edd9`), and `derive_self` strips the Windows `\\?\` verbatim prefix that `canonicalize()` adds and the cmd shim cannot exec (`7550cde`). Spec: [PROP-019](common/PROP-019-version-manager.md). Tip `7550cde`, level with both mirrors; full floor green — `self-check.sh`, conform 0/0/0, specmap clean (545 units / 545 edges / 0 orphans), test-gate xfail-strict, fast-loop in-budget. Prior: PROP-018 agentic + standalone modes MVP. Git log is the authoritative per-item record._
 
 ## Current phase
 
@@ -11,7 +11,7 @@ forced a console reload; (b) reinstalling the running version locked the
 whole distribution (and would lock future DLLs). Spec:
 [`PROP-019`](common/PROP-019-version-manager.md).
 
-**Shipped — five gate-green commits, on both mirrors (@ `c6e65bf`):**
+**Shipped — five v2 commits + two real-machine shim fixes, on both mirrors (@ `7550cde`):**
 
 - **v2 core** (`34c8250`) — the install/switch unit is a whole immutable
   *instance* at `versions/<kind>/<id>/<instance>/`; the active version is a
@@ -40,22 +40,39 @@ whole distribution (and would lock future DLLs). Spec:
 - **First-run onboarding** (`eecb46e`, `c6e65bf`) — `tools/first-run.sh` /
   `first-run.ps1` bootstrap the first install (build → install → shims +
   PATH) and a README "First run" section documents it.
+- **Real-machine shim fixes** (`b22edd9`, `7550cde`) — driving the first
+  install *through the shim* on Windows surfaced two bugs the unit tests had
+  not: the env persister *appended* the shim dir to PATH, so a stale
+  `~/.cargo/bin/vibe` shadowed the managed shim (`ensure_on_path` now
+  prepends, rustup/nvm-style, via the pure `path_with_prefix`); and
+  `derive_self` fed the `current` pointer a `\\?\` verbatim path from
+  `canonicalize()` that the cmd shim cannot exec (now stripped to
+  drive-letter form via `strip_verbatim`). Both are pure, unit-tested
+  helpers; verified on a real machine.
 
-**Gate panel — all green.** Full `self-check.sh` exit 0 (fmt, all tests,
-doctests, clippy `-D warnings`, `vibe check`); conform 0/0/0; specmap clean
-(545 units / 543 edges / 0 suspects / 0 warnings / 0 orphans).
+**Gate panel — all green at `7550cde`.** Full `self-check.sh` exit 0 (fmt,
+all tests, doctests, clippy `-D warnings`, `vibe check`); conform 0/0/0
+(0 frozen, 0 new; 16 gated / 4 exempt); specmap clean (545 units / 545 edges
+/ 532 tagged items / 0 suspects / 0 warnings / 0 orphans); test-gate green
+(1201 results, 0 failed, 3 skipped, xfail-strict); fast-loop in-budget.
 
 **Far backlog (PROP-019 §6).** Binary-artifact install (`man install
 --binary`) + auto-prune-on-install (binary-only); reflink/CoW placement;
 signature verification. The `man use` full path + shim-exec-via-`current`
-loop is not smoke-tested on Windows (it writes the real registry PATH;
-covered by unit tests of the shim content + the `current` file).
+loop was exercised on a real Windows machine this session — it surfaced and
+fixed `b22edd9` + `7550cde`; what remains is an *automated* end-to-end test
+with an isolated registry (today it writes the real HKCU PATH, so CI still
+covers only the shim content + the `current` file via unit tests).
 
-**Next.** PROP-019 v2 (through `c6e65bf`) is on both mirrors; this
-session-save's WAL/CONTINUE roll out with it, leaving `main` ≡ gitverse ≡
-github. Then the owner's next goal — the PROP-019 §6 far backlog
-(binary-artifact install is the natural next slice) or a fresh goal. No
-campaign in flight.
+**Next.** PROP-019 v2 + the two shim fixes (through `7550cde`) are on both
+mirrors, `main` ≡ gitverse ≡ github. **Active campaign (kicked off this
+session):** a deep, grammar-level refactoring of the new features (VVM v2 /
+PROP-019 and PROP-018) under the standing Discipline Sweep
+([`DISCIPLINE-SWEEP-v0.1`](terraforms/DISCIPLINE-SWEEP-v0.1.md)), run as a
+RAID — scope+freeze → per-layer phases → a green floor between each. First
+mechanical landmark on the work-list: `man/mod.rs` at 583 lines sits in the
+file-length danger band `[540, 600]`. The scoped RAID plan is owner-reviewed
+before any heavy refactor.
 
 ## Prior phase — agentic + standalone modes (PROP-018)
 
