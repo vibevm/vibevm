@@ -494,36 +494,57 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/man/install.rs",
       "item_kind": "struct",
-      "line": 44,
+      "line": 46,
       "symbol": "vibe_cli::commands::man::install::CargoBuilder"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/man/install.rs",
       "item_kind": "fn",
-      "line": 163,
+      "line": 165,
       "symbol": "vibe_cli::commands::man::install::perform_install"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/man/install.rs",
       "item_kind": "fn",
-      "line": 262,
+      "line": 419,
       "symbol": "vibe_cli::commands::man::install::tests::find_source_root_walks_up_to_the_workspace"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/man/install.rs",
       "item_kind": "fn",
-      "line": 279,
+      "line": 436,
       "symbol": "vibe_cli::commands::man::install::tests::label_in_tree_reads_branch_then_commit"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/man/install.rs",
       "item_kind": "fn",
-      "line": 292,
+      "line": 522,
+      "symbol": "vibe_cli::commands::man::install::tests::mirror_url_maps_names"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/man/install.rs",
+      "item_kind": "fn",
+      "line": 449,
       "symbol": "vibe_cli::commands::man::install::tests::perform_install_publishes_records_and_is_idempotent"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/man/install.rs",
+      "item_kind": "fn",
+      "line": 579,
+      "symbol": "vibe_cli::commands::man::install::tests::prepare_from_mirror_clones_resolves_and_places"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/man/install.rs",
+      "item_kind": "fn",
+      "line": 530,
+      "symbol": "vibe_cli::commands::man::install::tests::resolve_in_clone_against_a_local_clone"
     },
     {
       "crate_name": "vibe-cli",
@@ -669,7 +690,7 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/man/mod.rs",
       "item_kind": "fn",
-      "line": 494,
+      "line": 495,
       "symbol": "vibe_cli::commands::man::tests::resolve_installed_handles_each_selector_kind"
     },
     {
@@ -4197,7 +4218,7 @@
     {
       "file": "crates/vibe-cli/src/commands/man/install.rs",
       "from_symbol": "vibe_cli::commands::man::install::CargoBuilder",
-      "line": 46,
+      "line": 48,
       "provenance": "authored",
       "uri": "spec://vibevm/common/PROP-019#build",
       "verb": "implements"
@@ -4205,7 +4226,7 @@
     {
       "file": "crates/vibe-cli/src/commands/man/install.rs",
       "from_symbol": "vibe_cli::commands::man::install::perform_install",
-      "line": 166,
+      "line": 168,
       "provenance": "authored",
       "uri": "spec://vibevm/common/PROP-019#build",
       "verb": "implements"
@@ -4213,7 +4234,7 @@
     {
       "file": "crates/vibe-cli/src/commands/man/install.rs",
       "from_symbol": "vibe_cli::commands::man::install::tests::find_source_root_walks_up_to_the_workspace",
-      "line": 263,
+      "line": 420,
       "provenance": "authored",
       "uri": "spec://vibevm/common/PROP-019#build",
       "verb": "verifies",
@@ -4222,7 +4243,16 @@
     {
       "file": "crates/vibe-cli/src/commands/man/install.rs",
       "from_symbol": "vibe_cli::commands::man::install::tests::label_in_tree_reads_branch_then_commit",
-      "line": 280,
+      "line": 437,
+      "provenance": "authored",
+      "uri": "spec://vibevm/common/PROP-019#build",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/man/install.rs",
+      "from_symbol": "vibe_cli::commands::man::install::tests::mirror_url_maps_names",
+      "line": 523,
       "provenance": "authored",
       "uri": "spec://vibevm/common/PROP-019#build",
       "verb": "verifies",
@@ -4231,9 +4261,27 @@
     {
       "file": "crates/vibe-cli/src/commands/man/install.rs",
       "from_symbol": "vibe_cli::commands::man::install::tests::perform_install_publishes_records_and_is_idempotent",
-      "line": 293,
+      "line": 450,
       "provenance": "authored",
       "uri": "spec://vibevm/common/PROP-019#build",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/man/install.rs",
+      "from_symbol": "vibe_cli::commands::man::install::tests::prepare_from_mirror_clones_resolves_and_places",
+      "line": 580,
+      "provenance": "authored",
+      "uri": "spec://vibevm/common/PROP-019#build",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/man/install.rs",
+      "from_symbol": "vibe_cli::commands::man::install::tests::resolve_in_clone_against_a_local_clone",
+      "line": 531,
+      "provenance": "authored",
+      "uri": "spec://vibevm/common/PROP-019#selectors",
       "verb": "verifies",
       "pinned_r": 1
     },
@@ -4410,7 +4458,7 @@
     {
       "file": "crates/vibe-cli/src/commands/man/mod.rs",
       "from_symbol": "vibe_cli::commands::man::tests::resolve_installed_handles_each_selector_kind",
-      "line": 495,
+      "line": 496,
       "provenance": "authored",
       "uri": "spec://vibevm/common/PROP-019#selectors",
       "verb": "verifies",

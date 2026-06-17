@@ -2,9 +2,9 @@
 //! and remove vibevm's own versions on this machine (PROP-019). A
 //! standalone-mode capability — pure algorithm, no LLM (PROP-019 §2.1).
 //!
-//! This slice implements the read-only introspection verbs (`ls`,
-//! `current`, `which`) over the [`store::VersionStore`] inventory and the
-//! `VIBEVM_HOME`-named active version (PROP-019 §2.5, §2.11).
+//! Dispatches every `vibe man` verb — install / use / ls / current / which /
+//! doctor / remove / gc / env — over the [`store::VersionStore`] inventory
+//! and the `VIBEVM_HOME`-named active version (PROP-019).
 
 specmark::scope!("spec://vibevm/common/PROP-019#surface");
 
@@ -182,33 +182,34 @@ fn run_install_cmd(ctx: &output::Context, env: &ManEnv, args: ManInstallArgs) ->
         &args.selector,
         forced_kind(args.tag, args.branch, args.commit),
     )?;
-    if selector != model::Selector::Latest {
-        bail!(
-            "selecting a specific ref (`{}`) needs the clone path, which lands in a later \
-             slice; in-tree `vibe man install` builds the current checkout (selector `latest`)",
-            args.selector
-        );
-    }
-    let cwd = env
-        .cwd
-        .clone()
-        .ok_or_else(|| anyhow::anyhow!("cannot determine the current directory"))?;
-    let Some(root) = install::find_source_root(&cwd) else {
-        bail!(
-            "not inside a vibevm source tree.\nThe clone-based install lands in a later slice; \
-             for now, from a checkout:\n  git clone <mirror> && cd vibevm && \
-             cargo run -p vibe-cli -- man install"
-        );
-    };
-    let resolved = install::label_in_tree(&root)?;
     let now = chrono::Utc::now().to_rfc3339();
+
+    // In-tree fast path: build the current checkout as-is, but only for the
+    // default `latest` with no explicit mirror. A specific ref, or an
+    // out-of-tree run, goes through the clone path (PROP-019 §2.7).
+    let in_tree = env.cwd.as_deref().and_then(install::find_source_root);
+    let prefer_in_tree = matches!(selector, model::Selector::Latest) && args.mirror.is_none();
+
+    let (source_dir, resolved) = match (in_tree, prefer_in_tree) {
+        (Some(root), true) => {
+            let resolved = install::label_in_tree(&root)?;
+            (root, resolved)
+        }
+        _ => {
+            let mirror = install::choose_mirror(ctx, args.mirror.as_deref())?;
+            ctx.step(&format!("cloning {mirror}"));
+            let outcome = install::prepare_from_mirror(&store, mirror, &selector)?;
+            (outcome.src_dir, outcome.resolved)
+        }
+    };
+
     let req = install::InstallRequest {
         resolved: &resolved,
         profile,
         force: args.force,
         now: &now,
     };
-    install::perform_install(ctx, &store, &root, &req, &install::CargoBuilder)
+    install::perform_install(ctx, &store, &source_dir, &req, &install::CargoBuilder)
 }
 
 fn resolve_profile(args: &ManInstallArgs) -> Result<model::Profile> {

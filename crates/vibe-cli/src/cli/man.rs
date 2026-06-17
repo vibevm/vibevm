@@ -72,6 +72,11 @@ pub struct ManInstallArgs {
     #[arg(long, conflicts_with = "profile")]
     pub release: bool,
 
+    /// Source mirror to clone when not building from a source tree
+    /// (gitverse | github). Defaults to an interactive choice, else gitverse.
+    #[arg(long, value_name = "MIRROR")]
+    pub mirror: Option<String>,
+
     /// Rebuild even if this version is already installed.
     #[arg(long)]
     pub force: bool,

@@ -42,3 +42,37 @@ pub fn current_branch(dir: &Path) -> Option<String> {
         Some(name)
     }
 }
+
+/// Clone `url` into `dest` (a full clone, so any ref or commit resolves),
+/// recursing submodules for forward-safety (PROP-019 §2.7).
+pub fn clone(url: &str, dest: &Path) -> Result<()> {
+    let parent = dest.parent().unwrap_or_else(|| Path::new("."));
+    let dest_arg = dest.to_string_lossy();
+    run(
+        parent,
+        &["clone", "--recurse-submodules", url, dest_arg.as_ref()],
+    )?;
+    Ok(())
+}
+
+/// Check out a revision (detaching HEAD at a commit).
+pub fn checkout(dir: &Path, rev: &str) -> Result<()> {
+    run(dir, &["checkout", "--quiet", rev])?;
+    Ok(())
+}
+
+/// Every tag in the repo.
+pub fn list_tags(dir: &Path) -> Result<Vec<String>> {
+    Ok(run(dir, &["tag", "--list"])?
+        .lines()
+        .map(|s| s.trim().to_string())
+        .filter(|s| !s.is_empty())
+        .collect())
+}
+
+/// The full commit a revision resolves to, or `None` if it does not exist.
+pub fn verify(dir: &Path, rev: &str) -> Option<String> {
+    run(dir, &["rev-parse", "--verify", "--quiet", rev])
+        .ok()
+        .filter(|s| !s.is_empty())
+}
