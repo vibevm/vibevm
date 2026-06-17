@@ -42,6 +42,12 @@ pub trait Transport {
 /// Stdio transport — reads from `stdin`, writes to `stdout`. The
 /// server's lifetime ties to whatever process is wrapping it; on
 /// EOF the loop terminates.
+///
+/// ```
+/// use vibe_mcp::StdioTransport;
+/// // The production transport over the process's stdin/stdout.
+/// let _t = StdioTransport::new();
+/// ```
 pub struct StdioTransport {
     reader: BufReader<io::Stdin>,
     writer: io::Stdout,
@@ -84,6 +90,12 @@ impl Transport for StdioTransport {
 /// In-memory transport for tests. Construct with the input string;
 /// after `Server::run` returns, call [`MemoryTransport::take_output`]
 /// to read everything written.
+///
+/// ```
+/// use vibe_mcp::{MemoryTransport, Transport};
+/// let mut t = MemoryTransport::with_input("hello\n");
+/// assert_eq!(t.read_line().unwrap().as_deref(), Some("hello\n"));
+/// ```
 pub struct MemoryTransport {
     input: BufReader<std::io::Cursor<Vec<u8>>>,
     output: Mutex<Vec<u8>>,

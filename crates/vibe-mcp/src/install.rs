@@ -21,6 +21,18 @@ pub const SKILL_TEMPLATE: &str = include_str!("skill_template.md");
 
 /// Per-(agent, scope) outcome of writing (or previewing) an MCP config
 /// entry — the structured record the CLI renders or emits as JSON.
+///
+/// ```
+/// use vibe_mcp::install::AgentInstallReport;
+/// let r = AgentInstallReport {
+///     agent: "claude".into(),
+///     scope: "project",
+///     config_path: "/p/.mcp.json".into(),
+///     status: "created",
+///     note: None,
+/// };
+/// assert_eq!(r.status, "created");
+/// ```
 #[derive(Debug, Clone, Serialize)]
 #[spec(implements = "spec://vibevm/modules/vibe-mcp/PROP-015#lifecycle")]
 pub struct AgentInstallReport {
@@ -34,6 +46,18 @@ pub struct AgentInstallReport {
 }
 
 /// Per-(agent, scope) outcome of writing (or previewing) a SKILL.md.
+///
+/// ```
+/// use vibe_mcp::install::SkillInstallReport;
+/// let r = SkillInstallReport {
+///     agent: "claude".into(),
+///     scope: "project",
+///     path: None,
+///     status: "skipped",
+///     note: None,
+/// };
+/// assert_eq!(r.status, "skipped");
+/// ```
 #[derive(Debug, Clone, Serialize)]
 #[spec(implements = "spec://vibevm/modules/vibe-mcp/PROP-015#lifecycle")]
 pub struct SkillInstallReport {

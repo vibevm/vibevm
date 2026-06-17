@@ -14,6 +14,13 @@ use thiserror::Error;
 
 /// Wire form of a request (`id` present) or notification (`id` absent
 /// or null).
+///
+/// ```
+/// use vibe_mcp::jsonrpc::JsonRpcRequest;
+/// let r: JsonRpcRequest =
+///     serde_json::from_str(r#"{"jsonrpc":"2.0","id":1,"method":"ping"}"#).unwrap();
+/// assert_eq!(r.method, "ping");
+/// ```
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct JsonRpcRequest {
     pub jsonrpc: String,
@@ -29,6 +36,13 @@ pub struct JsonRpcRequest {
 /// Notifications carry no `id` — the JSON-RPC spec disallows
 /// responses to them. vibe-mcp slice 1 doesn't emit notifications;
 /// we accept inbound ones and silently ignore.
+///
+/// ```
+/// use vibe_mcp::jsonrpc::JsonRpcNotification;
+/// let n: JsonRpcNotification =
+///     serde_json::from_str(r#"{"jsonrpc":"2.0","method":"bar"}"#).unwrap();
+/// assert_eq!(n.method, "bar");
+/// ```
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct JsonRpcNotification {
     pub jsonrpc: String,
@@ -37,6 +51,14 @@ pub struct JsonRpcNotification {
     pub params: Option<Value>,
 }
 
+/// A parsed inbound message: a request (carries `id`) or a notification
+/// (no `id`). [`parse`] decides which.
+///
+/// ```
+/// use vibe_mcp::jsonrpc::{parse, JsonRpcMessage};
+/// let msg = parse(r#"{"jsonrpc":"2.0","id":1,"method":"ping"}"#).unwrap();
+/// assert!(matches!(msg, JsonRpcMessage::Request(_)));
+/// ```
 #[derive(Debug, Clone)]
 pub enum JsonRpcMessage {
     Request(JsonRpcRequest),
@@ -46,6 +68,12 @@ pub enum JsonRpcMessage {
 /// JSON-RPC error object — `code`, `message`, optional `data`. Codes
 /// follow the spec's reserved range (-32700 to -32603) plus any
 /// implementation-defined codes outside it.
+///
+/// ```
+/// use vibe_mcp::jsonrpc::JsonRpcError;
+/// let e = JsonRpcError::method_not_found("tools/foo");
+/// assert_eq!(e.code, -32601);
+/// ```
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct JsonRpcError {
     pub code: i32,
@@ -98,6 +126,13 @@ impl JsonRpcError {
 
 /// Wire form of a response. Exactly one of `result` / `error` is
 /// populated; the JSON-RPC spec disallows both at once.
+///
+/// ```
+/// use vibe_mcp::jsonrpc::JsonRpcResponse;
+/// let r = JsonRpcResponse::ok(serde_json::json!(1), serde_json::json!({ "ok": true }));
+/// assert_eq!(r.jsonrpc, "2.0");
+/// assert!(r.error.is_none());
+/// ```
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct JsonRpcResponse {
     pub jsonrpc: String,
@@ -128,6 +163,12 @@ impl JsonRpcResponse {
     }
 }
 
+/// Why a line failed to parse as a JSON-RPC 2.0 message (PROP-015 §server).
+///
+/// ```
+/// use vibe_mcp::jsonrpc::{parse, ParseError};
+/// assert!(matches!(parse("{not json").unwrap_err(), ParseError::Json(_)));
+/// ```
 #[derive(Debug, Error)]
 #[spec(implements = "spec://vibevm/modules/vibe-mcp/PROP-015#server")]
 pub enum ParseError {

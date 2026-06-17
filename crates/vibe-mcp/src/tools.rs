@@ -56,6 +56,11 @@ pub fn default_tools() -> Vec<Box<dyn McpTool>> {
 
 /// Look up an installed package in the lockfile and return its full
 /// entry. Read-only.
+///
+/// ```
+/// use vibe_mcp::tools::{McpTool, QueryPackage};
+/// assert_eq!(QueryPackage.descriptor().name, "query_package");
+/// ```
 #[cell(seam = "McpTool", variant = "query_package")]
 #[spec(implements = "spec://vibevm/modules/vibe-mcp/PROP-015#tools")]
 pub struct QueryPackage;
@@ -138,6 +143,11 @@ impl McpTool for QueryPackage {
 
 /// Read the materialised content of an active subskill — project tree
 /// for eager / lazy-push, package cache for lazy-pull. Read-only.
+///
+/// ```
+/// use vibe_mcp::tools::{McpTool, ReadSubskill};
+/// assert_eq!(ReadSubskill.descriptor().name, "read_subskill");
+/// ```
 #[cell(seam = "McpTool", variant = "read_subskill")]
 #[spec(implements = "spec://vibevm/modules/vibe-mcp/PROP-015#tools")]
 pub struct ReadSubskill;
@@ -264,6 +274,11 @@ impl McpTool for ReadSubskill {
 /// Copy a `lazy-pull` subskill's content into the project tree. No-op for
 /// eager / lazy-push; refuses to overwrite without `force`. The one
 /// writing tool.
+///
+/// ```
+/// use vibe_mcp::tools::{McpTool, MaterialiseSubskill};
+/// assert_eq!(MaterialiseSubskill.descriptor().name, "materialise_subskill");
+/// ```
 #[cell(seam = "McpTool", variant = "materialise_subskill")]
 #[spec(implements = "spec://vibevm/modules/vibe-mcp/PROP-015#tools")]
 pub struct MaterialiseSubskill;
@@ -397,6 +412,11 @@ impl McpTool for MaterialiseSubskill {
 /// Shares the [`crate::agentic::explain_intent`] core with the CLI relay,
 /// but where the CLI one-shot parks the intent in `.vibe/agentic/`, the MCP
 /// path returns it synchronously and writes no mailbox file.
+///
+/// ```
+/// use vibe_mcp::tools::{McpTool, AgenticExplain};
+/// assert_eq!(AgenticExplain.descriptor().name, "agentic_explain");
+/// ```
 #[cell(seam = "McpTool", variant = "agentic_explain")]
 #[spec(implements = "spec://vibevm/common/PROP-018#transports")]
 pub struct AgenticExplain;

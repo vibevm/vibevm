@@ -80,6 +80,12 @@ impl Scope {
 }
 
 /// What to install / uninstall — MCP server entry, SKILL.md, or both.
+///
+/// ```
+/// use vibe_mcp::agents::What;
+/// assert_eq!(What::parse("mcp").unwrap(), What::Mcp);
+/// assert!(What::Both.includes_skill());
+/// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum What {
     /// MCP server entry only.
@@ -140,6 +146,11 @@ pub enum Agent {
 }
 
 /// JSON or TOML — the config-file format an agent reads.
+///
+/// ```
+/// use vibe_mcp::agents::ConfigFormat;
+/// assert_ne!(ConfigFormat::Json, ConfigFormat::Toml);
+/// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum ConfigFormat {
     Json,
@@ -147,6 +158,12 @@ pub enum ConfigFormat {
 }
 
 /// A per-server config block, in whichever format the target agent uses.
+///
+/// ```
+/// use vibe_mcp::agents::ConfigPayload;
+/// let p = ConfigPayload::Json(serde_json::json!({ "command": "vibe" }));
+/// assert!(matches!(p, ConfigPayload::Json(_)));
+/// ```
 #[derive(Debug, Clone)]
 pub enum ConfigPayload {
     Json(JsonValue),

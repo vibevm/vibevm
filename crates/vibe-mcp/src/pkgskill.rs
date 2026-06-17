@@ -24,6 +24,12 @@ use crate::agents::{Agent, Scope};
 /// The vibe-skill projection layer's failure surface (PROP-018 §2.5):
 /// reading a skill source, writing the projection into an agent's skills
 /// directory, or resolving the agent's skills root. One enum for the layer.
+///
+/// ```
+/// use vibe_mcp::pkgskill::PackageSkillError;
+/// let e = PackageSkillError::SkillsRoot { detail: "no config dir".into() };
+/// assert!(e.to_string().contains("spec://vibevm/common/PROP-018#vibe-skill"));
+/// ```
 #[derive(Debug, Error)]
 #[spec(implements = "spec://vibevm/common/PROP-018#vibe-skill")]
 pub enum PackageSkillError {
@@ -59,6 +65,19 @@ pub enum PackageSkillError {
 
 /// Per-(skill, agent, scope) outcome of projecting a package skill — the
 /// structured record `vibe skill` renders or emits as JSON.
+///
+/// ```
+/// use vibe_mcp::pkgskill::PackageSkillReport;
+/// let r = PackageSkillReport {
+///     skill: "demo".into(),
+///     agent: "claude".into(),
+///     scope: "project",
+///     path: None,
+///     status: "skipped",
+///     note: None,
+/// };
+/// assert_eq!(r.skill, "demo");
+/// ```
 #[derive(Debug, Clone, Serialize)]
 #[spec(implements = "spec://vibevm/common/PROP-018#vibe-skill")]
 pub struct PackageSkillReport {
