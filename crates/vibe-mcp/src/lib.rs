@@ -3,17 +3,16 @@
 //! Spec: PROP-004 §5.1 + ROADMAP §M1.7. Targets the official protocol
 //! at <https://modelcontextprotocol.io>.
 //!
-//! ## What ships in slice 1
+//! ## What ships
 //!
 //! - JSON-RPC 2.0 over line-delimited stdin/stdout (the MCP wire form
 //!   for stdio servers).
 //! - MCP message shapes — `initialize` handshake, `tools/list`,
 //!   `tools/call` — modelled as plain Rust types serialised via serde.
-//! - One tool: `query_package(name)` — returns metadata about an
-//!   installed package from the project's lockfile.
-//! - One tool: `read_subskill(package, path)` — returns the textual
-//!   content of a subskill manifest's `[content].files_written` files
-//!   for an installed package whose subskill has activated.
+//! - Four tools (see [`tools::default_tools`]): `query_package` (lockfile
+//!   metadata), `read_subskill` and `materialise_subskill` (subskill
+//!   content for an activated package), and `agentic_explain` (the
+//!   PROP-018 in-project inference transport).
 //!
 //! ## Architecture
 //!
@@ -23,10 +22,10 @@
 //! production uses; tests inject a [`MemoryTransport`] for
 //! deterministic round-trip checks.
 //!
-//! Tools live behind a single registry. New tools land as new entries
-//! in [`Server::register_default_tools`]; each tool is a `Fn(args,
-//! ctx) -> Result<Value>` so the dispatcher does not care about the
-//! tool's identity beyond the registered name.
+//! Each tool is a [`tools::McpTool`] implementation (one `#[cell]` per
+//! tool); [`Server::register_default_tools`] installs the set returned by
+//! [`tools::default_tools`], and the dispatcher routes by each tool's
+//! declared name.
 
 #![forbid(unsafe_code)]
 specmark::scope!("spec://vibevm/modules/vibe-mcp/PROP-015#server");

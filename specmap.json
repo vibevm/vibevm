@@ -2279,21 +2279,21 @@
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/lib.rs",
       "item_kind": "mod",
-      "line": 32,
+      "line": 31,
       "symbol": "vibe_mcp"
     },
     {
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/lib.rs",
       "item_kind": "enum",
-      "line": 339,
+      "line": 338,
       "symbol": "vibe_mcp::ServerError"
     },
     {
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/lib.rs",
       "item_kind": "enum",
-      "line": 125,
+      "line": 124,
       "symbol": "vibe_mcp::ToolError"
     },
     {
@@ -6458,7 +6458,7 @@
     {
       "file": "crates/vibe-mcp/src/lib.rs",
       "from_symbol": "vibe_mcp",
-      "line": 32,
+      "line": 31,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-mcp/PROP-015#server",
       "verb": "implements"
@@ -6466,7 +6466,7 @@
     {
       "file": "crates/vibe-mcp/src/lib.rs",
       "from_symbol": "vibe_mcp::ServerError",
-      "line": 349,
+      "line": 348,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-mcp/PROP-015#errors",
       "verb": "implements"
@@ -6474,7 +6474,7 @@
     {
       "file": "crates/vibe-mcp/src/lib.rs",
       "from_symbol": "vibe_mcp::ToolError",
-      "line": 136,
+      "line": 135,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-mcp/PROP-015#errors",
       "verb": "implements"

@@ -1,6 +1,6 @@
 //! Argument structs for `vibe man …` — the VibeVM Version Manager
-//! (PROP-019 §2.2). Carries `install` plus the read-only introspection
-//! verbs; the switch / remove / gc / doctor verbs land in later slices.
+//! (PROP-019 §2.2). Carries the full verb set: `install`, activation
+//! (`use`/`env`), introspection (`ls`/`current`/`which`/`doctor`), `remove`/`gc`.
 
 specmark::scope!("spec://vibevm/common/PROP-019#surface");
 
