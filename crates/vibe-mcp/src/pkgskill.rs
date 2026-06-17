@@ -13,13 +13,49 @@ specmark::scope!("spec://vibevm/common/PROP-018#vibe-skill");
 
 use std::collections::BTreeMap;
 use std::fs;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
-use anyhow::{Context, Result};
 use serde::Serialize;
 use specmark::spec;
+use thiserror::Error;
 
 use crate::agents::{Agent, Scope};
+
+/// The vibe-skill projection layer's failure surface (PROP-018 §2.5):
+/// reading a skill source, writing the projection into an agent's skills
+/// directory, or resolving the agent's skills root. One enum for the layer.
+#[derive(Debug, Error)]
+#[spec(implements = "spec://vibevm/common/PROP-018#vibe-skill")]
+pub enum PackageSkillError {
+    #[error(
+        "reading skill content at `{path}` failed: {source} \
+         (violates spec://vibevm/common/PROP-018#vibe-skill; \
+          fix: ensure the package's declared skill source and the agent dirs are readable)"
+    )]
+    Read {
+        path: PathBuf,
+        #[source]
+        source: std::io::Error,
+    },
+
+    #[error(
+        "writing the projected skill at `{path}` failed: {source} \
+         (violates spec://vibevm/common/PROP-018#vibe-skill; \
+          fix: ensure the agent's skills directory is writable)"
+    )]
+    Write {
+        path: PathBuf,
+        #[source]
+        source: std::io::Error,
+    },
+
+    #[error(
+        "resolving the agent skills root failed: {detail} \
+         (violates spec://vibevm/common/PROP-018#vibe-skill; \
+          fix: act on the wrapped agent-config error)"
+    )]
+    SkillsRoot { detail: String },
+}
 
 /// Per-(skill, agent, scope) outcome of projecting a package skill — the
 /// structured record `vibe skill` renders or emits as JSON.
@@ -53,11 +89,16 @@ pub fn install_package_skill(
     skill_name: &str,
     source: &Path,
     dry_run: bool,
-) -> Result<PackageSkillReport> {
+) -> Result<PackageSkillReport, PackageSkillError> {
     let agent_str = agent.as_str().to_string();
     let scope_str = scope.as_str();
 
-    let Some(root) = agent.skills_root(scope, project_root)? else {
+    let Some(root) = agent
+        .skills_root(scope, project_root)
+        .map_err(|e| PackageSkillError::SkillsRoot {
+            detail: format!("{e:#}"),
+        })?
+    else {
         return Ok(skipped(skill_name, agent, scope_str));
     };
     let target = root.join(skill_name);
@@ -96,8 +137,10 @@ pub fn install_package_skill(
         // package's skill body exactly. Only the skill's own dir is
         // touched — foreign skill dirs are never read or removed.
         if target.exists() {
-            fs::remove_dir_all(&target)
-                .with_context(|| format!("clearing skill dir `{}`", target.display()))?;
+            fs::remove_dir_all(&target).map_err(|source| PackageSkillError::Write {
+                path: target.clone(),
+                source,
+            })?;
         }
         write_snapshot(&target, &desired)?;
     }
@@ -123,9 +166,14 @@ pub fn uninstall_package_skill(
     project_root: Option<&Path>,
     skill_name: &str,
     dry_run: bool,
-) -> Result<PackageSkillReport> {
+) -> Result<PackageSkillReport, PackageSkillError> {
     let scope_str = scope.as_str();
-    let Some(root) = agent.skills_root(scope, project_root)? else {
+    let Some(root) = agent
+        .skills_root(scope, project_root)
+        .map_err(|e| PackageSkillError::SkillsRoot {
+            detail: format!("{e:#}"),
+        })?
+    else {
         return Ok(skipped(skill_name, agent, scope_str));
     };
     let target = root.join(skill_name);
@@ -137,8 +185,10 @@ pub fn uninstall_package_skill(
         (true, false) => "removed",
     };
     if exists && !dry_run {
-        fs::remove_dir_all(&target)
-            .with_context(|| format!("removing skill dir `{}`", target.display()))?;
+        fs::remove_dir_all(&target).map_err(|source| PackageSkillError::Write {
+            path: target.clone(),
+            source,
+        })?;
     }
     Ok(PackageSkillReport {
         skill: skill_name.to_string(),
@@ -167,7 +217,7 @@ fn skipped(skill_name: &str, agent: Agent, scope_str: &'static str) -> PackageSk
 /// Snapshot a skill body source into a `relpath -> bytes` map. A directory
 /// is walked recursively (relpaths forward-slashed); a single file maps to
 /// its file name (so a bare `SKILL.md` source lands as `<name>/SKILL.md`).
-fn snapshot_source(source: &Path) -> Result<BTreeMap<String, Vec<u8>>> {
+fn snapshot_source(source: &Path) -> Result<BTreeMap<String, Vec<u8>>, PackageSkillError> {
     let mut out = BTreeMap::new();
     if source.is_dir() {
         collect_dir(source, source, &mut out)?;
@@ -176,15 +226,17 @@ fn snapshot_source(source: &Path) -> Result<BTreeMap<String, Vec<u8>>> {
             .file_name()
             .map(|n| n.to_string_lossy().to_string())
             .unwrap_or_else(|| "SKILL.md".to_string());
-        let bytes = fs::read(source)
-            .with_context(|| format!("reading skill file `{}`", source.display()))?;
+        let bytes = fs::read(source).map_err(|err| PackageSkillError::Read {
+            path: source.to_path_buf(),
+            source: err,
+        })?;
         out.insert(name, bytes);
     }
     Ok(out)
 }
 
 /// Snapshot an existing target dir, or `None` when it does not exist.
-fn snapshot_dir(dir: &Path) -> Result<Option<BTreeMap<String, Vec<u8>>>> {
+fn snapshot_dir(dir: &Path) -> Result<Option<BTreeMap<String, Vec<u8>>>, PackageSkillError> {
     if !dir.exists() {
         return Ok(None);
     }
@@ -193,9 +245,20 @@ fn snapshot_dir(dir: &Path) -> Result<Option<BTreeMap<String, Vec<u8>>>> {
     Ok(Some(out))
 }
 
-fn collect_dir(base: &Path, dir: &Path, out: &mut BTreeMap<String, Vec<u8>>) -> Result<()> {
-    for entry in fs::read_dir(dir).with_context(|| format!("reading dir `{}`", dir.display()))? {
-        let entry = entry.with_context(|| format!("reading entry in `{}`", dir.display()))?;
+fn collect_dir(
+    base: &Path,
+    dir: &Path,
+    out: &mut BTreeMap<String, Vec<u8>>,
+) -> Result<(), PackageSkillError> {
+    let entries = fs::read_dir(dir).map_err(|source| PackageSkillError::Read {
+        path: dir.to_path_buf(),
+        source,
+    })?;
+    for entry in entries {
+        let entry = entry.map_err(|source| PackageSkillError::Read {
+            path: dir.to_path_buf(),
+            source,
+        })?;
         let path = entry.path();
         if path.is_dir() {
             collect_dir(base, &path, out)?;
@@ -205,21 +268,32 @@ fn collect_dir(base: &Path, dir: &Path, out: &mut BTreeMap<String, Vec<u8>>) -> 
                 .unwrap_or(&path)
                 .to_string_lossy()
                 .replace('\\', "/");
-            let bytes = fs::read(&path).with_context(|| format!("reading `{}`", path.display()))?;
+            let bytes = fs::read(&path).map_err(|source| PackageSkillError::Read {
+                path: path.clone(),
+                source,
+            })?;
             out.insert(rel, bytes);
         }
     }
     Ok(())
 }
 
-fn write_snapshot(target_dir: &Path, snap: &BTreeMap<String, Vec<u8>>) -> Result<()> {
+fn write_snapshot(
+    target_dir: &Path,
+    snap: &BTreeMap<String, Vec<u8>>,
+) -> Result<(), PackageSkillError> {
     for (rel, bytes) in snap {
         let dest = target_dir.join(rel);
         if let Some(parent) = dest.parent() {
-            fs::create_dir_all(parent)
-                .with_context(|| format!("creating `{}`", parent.display()))?;
+            fs::create_dir_all(parent).map_err(|source| PackageSkillError::Write {
+                path: parent.to_path_buf(),
+                source,
+            })?;
         }
-        fs::write(&dest, bytes).with_context(|| format!("writing `{}`", dest.display()))?;
+        fs::write(&dest, bytes).map_err(|source| PackageSkillError::Write {
+            path: dest.clone(),
+            source,
+        })?;
     }
     Ok(())
 }
