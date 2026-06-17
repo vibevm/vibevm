@@ -396,10 +396,7 @@ fn by_precedence_record(state: &State, name: &str) -> Option<InstallRecord> {
 
 /// The durable-env persister for this OS (PROP-019 §2.6): the registry on
 /// Windows, the shell rc on POSIX.
-fn make_persister(
-    env: &ManEnv,
-    shell: env::Shell,
-) -> Result<Box<dyn env::EnvPersister>, ManError> {
+fn make_persister(env: &ManEnv, shell: env::Shell) -> Result<Box<dyn env::EnvPersister>, ManError> {
     if cfg!(windows) {
         Ok(Box::new(env::WindowsEnvPersister))
     } else {

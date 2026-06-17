@@ -93,11 +93,12 @@ pub fn install_package_skill(
     let agent_str = agent.as_str().to_string();
     let scope_str = scope.as_str();
 
-    let Some(root) = agent
-        .skills_root(scope, project_root)
-        .map_err(|e| PackageSkillError::SkillsRoot {
-            detail: format!("{e:#}"),
-        })?
+    let Some(root) =
+        agent
+            .skills_root(scope, project_root)
+            .map_err(|e| PackageSkillError::SkillsRoot {
+                detail: format!("{e:#}"),
+            })?
     else {
         return Ok(skipped(skill_name, agent, scope_str));
     };
@@ -168,11 +169,12 @@ pub fn uninstall_package_skill(
     dry_run: bool,
 ) -> Result<PackageSkillReport, PackageSkillError> {
     let scope_str = scope.as_str();
-    let Some(root) = agent
-        .skills_root(scope, project_root)
-        .map_err(|e| PackageSkillError::SkillsRoot {
-            detail: format!("{e:#}"),
-        })?
+    let Some(root) =
+        agent
+            .skills_root(scope, project_root)
+            .map_err(|e| PackageSkillError::SkillsRoot {
+                detail: format!("{e:#}"),
+            })?
     else {
         return Ok(skipped(skill_name, agent, scope_str));
     };
