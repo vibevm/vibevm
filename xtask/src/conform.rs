@@ -83,6 +83,15 @@ pub(crate) const GATED_PUB_DOCTEST: &[&str] = &[
     "conform-frontend-rust",
     "env-audit",
     "specmark-grammar",
+    // Drained and armed by the Discipline Sweep (P4): vibe-mcp's 27 public
+    // types each gained a compiled doctest, so the gate flips at zero gap
+    // (§1b/§1c). vibe-cli is deliberately NOT here — it is a bin crate with
+    // no lib target, so `cargo test --doc` cannot compile its examples;
+    // gating it would enforce uncompiled prose, the opposite of the rule's
+    // "teach by a compiled example" contract (Law 2). The fix for vibe-cli is
+    // a lib target or visibility tightening — an owner-level call, recorded
+    // in the sweep REPORT and terraform/registry/debt.json.
+    "vibe-mcp",
 ];
 
 /// Files where reading the ambient environment is sanctioned (the
