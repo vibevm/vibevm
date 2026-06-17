@@ -6,14 +6,13 @@
 specmark::scope!("spec://vibevm/common/PROP-019#remove");
 
 use std::fs;
-use std::io::IsTerminal;
 
-use anyhow::{Context, Result, bail};
+use anyhow::{Context, Result};
 use dialoguer::{MultiSelect, Select};
 
 use super::model::{self, VersionId};
 use super::store::VersionStore;
-use super::{ManEnv, confirm, forced_kind, resolve_installed};
+use super::{ManEnv, confirm, forced_kind, require_tty, resolve_installed};
 use crate::cli::{ManGcArgs, ManRemoveArgs};
 use crate::output;
 
@@ -147,9 +146,10 @@ fn pick_ids(ctx: &output::Context, state: &model::State) -> Result<Vec<VersionId
         ctx.summary("no versions installed.");
         return Ok(Vec::new());
     }
-    if ctx.is_unattended() || !std::io::stdin().is_terminal() {
-        bail!("no version selected: pass a selector (e.g. `vibe man remove tag:1.2.3`) or `--all`");
-    }
+    require_tty(
+        ctx,
+        "no version selected: pass a selector (e.g. `vibe man remove tag:1.2.3`) or `--all`",
+    )?;
     let labels: Vec<String> = ids.iter().map(|i| i.to_string()).collect();
     let chosen = MultiSelect::new()
         .with_prompt("Select versions to remove (space toggles, enter confirms)")
@@ -237,9 +237,10 @@ pub(super) fn run_gc_cmd(ctx: &output::Context, env: &ManEnv, args: ManGcArgs) -
 }
 
 fn gc_menu(ctx: &output::Context) -> Result<GcAction> {
-    if ctx.is_unattended() || !std::io::stdin().is_terminal() {
-        bail!("pass `--build` (clean the Rust build cache) or `--prune-others`");
-    }
+    require_tty(
+        ctx,
+        "pass `--build` (clean the Rust build cache) or `--prune-others`",
+    )?;
     let items = [
         "Clean the Rust build cache (the shared --target-dir)",
         "Prune all instances except the active",

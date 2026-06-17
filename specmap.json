@@ -648,14 +648,14 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/man/remove.rs",
       "item_kind": "fn",
-      "line": 284,
+      "line": 285,
       "symbol": "vibe_cli::commands::man::remove::tests::removal_scope_defaults_to_both"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/man/remove.rs",
       "item_kind": "fn",
-      "line": 292,
+      "line": 293,
       "symbol": "vibe_cli::commands::man::remove::tests::remove_id_drops_all_instances_and_forgets"
     },
     {
@@ -4500,7 +4500,7 @@
     {
       "file": "crates/vibe-cli/src/commands/man/remove.rs",
       "from_symbol": "vibe_cli::commands::man::remove::tests::removal_scope_defaults_to_both",
-      "line": 285,
+      "line": 286,
       "provenance": "authored",
       "uri": "spec://vibevm/common/PROP-019#remove",
       "verb": "verifies",
@@ -4509,7 +4509,7 @@
     {
       "file": "crates/vibe-cli/src/commands/man/remove.rs",
       "from_symbol": "vibe_cli::commands::man::remove::tests::remove_id_drops_all_instances_and_forgets",
-      "line": 293,
+      "line": 294,
       "provenance": "authored",
       "uri": "spec://vibevm/common/PROP-019#remove",
       "verb": "verifies",

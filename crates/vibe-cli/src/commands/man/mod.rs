@@ -195,10 +195,7 @@ fn run_which(ctx: &output::Context, env: &ManEnv) -> Result<()> {
 fn run_install_cmd(ctx: &output::Context, env: &ManEnv, args: ManInstallArgs) -> Result<()> {
     let store = env.store()?;
     let profile = resolve_profile(&args)?;
-    let selector = model::Selector::parse(
-        &args.selector,
-        forced_kind(&args.kind),
-    )?;
+    let selector = model::Selector::parse(&args.selector, forced_kind(&args.kind))?;
     let now = chrono::Utc::now().to_rfc3339();
 
     // Three source origins (PROP-019 §2.7, §2.16):
@@ -273,10 +270,7 @@ fn forced_kind(k: &ForcedKind) -> Option<model::Kind> {
 fn run_use_cmd(ctx: &output::Context, env: &ManEnv, args: ManUseArgs) -> Result<()> {
     let store = env.store()?;
     let state = store.load_state()?;
-    let selector = model::Selector::parse(
-        &args.selector,
-        forced_kind(&args.kind),
-    )?;
+    let selector = model::Selector::parse(&args.selector, forced_kind(&args.kind))?;
     let rec = resolve_installed(&state, &selector, &args.selector)?;
     let id = rec.version_id();
     let home = store.instance_dir(&id, rec.instance);
@@ -323,8 +317,7 @@ fn run_env_cmd(env: &ManEnv, args: ManEnvArgs) -> Result<()> {
     let home = match args.selector.as_deref() {
         Some(raw) => {
             let state = store.load_state()?;
-            let selector =
-                model::Selector::parse(raw, forced_kind(&args.kind))?;
+            let selector = model::Selector::parse(raw, forced_kind(&args.kind))?;
             let rec = resolve_installed(&state, &selector, raw)?;
             store.instance_dir(&rec.version_id(), rec.instance)
         }
@@ -510,6 +503,17 @@ fn confirm(ctx: &output::Context, yes: bool, prompt: &str) -> Result<bool> {
         .default(true)
         .interact()
         .unwrap_or(false))
+}
+
+/// Require an interactive TTY for a prompt that has no `--yes` bypass (the
+/// remove / gc pickers): an unattended or non-TTY run errors with `msg` —
+/// which names the explicit flags to pass — rather than silently doing
+/// nothing (PROP-019 §2.9).
+fn require_tty(ctx: &output::Context, msg: &str) -> Result<()> {
+    if ctx.is_unattended() || !std::io::stdin().is_terminal() {
+        bail!("{msg}");
+    }
+    Ok(())
 }
 
 /// Whether `dir` is on the `PATH` value, comparing canonicalised paths.
