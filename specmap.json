@@ -751,9 +751,16 @@
     },
     {
       "crate_name": "vibe-cli",
-      "file": "crates/vibe-cli/src/commands/man/mod.rs",
+      "file": "crates/vibe-cli/src/commands/man/tests.rs",
+      "item_kind": "mod",
+      "line": 5,
+      "symbol": "vibe_cli::commands::man::tests"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/man/tests.rs",
       "item_kind": "fn",
-      "line": 543,
+      "line": 25,
       "symbol": "vibe_cli::commands::man::tests::resolve_installed_picks_the_newest_instance_per_selector"
     },
     {
@@ -4622,9 +4629,17 @@
       "pinned_r": 1
     },
     {
-      "file": "crates/vibe-cli/src/commands/man/mod.rs",
+      "file": "crates/vibe-cli/src/commands/man/tests.rs",
+      "from_symbol": "vibe_cli::commands::man::tests",
+      "line": 5,
+      "provenance": "authored",
+      "uri": "spec://vibevm/common/PROP-019#surface",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/man/tests.rs",
       "from_symbol": "vibe_cli::commands::man::tests::resolve_installed_picks_the_newest_instance_per_selector",
-      "line": 544,
+      "line": 26,
       "provenance": "authored",
       "uri": "spec://vibevm/common/PROP-019#selectors",
       "verb": "verifies",
