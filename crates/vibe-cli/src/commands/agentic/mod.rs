@@ -15,8 +15,8 @@ specmark::scope!("spec://vibevm/common/PROP-018#relay");
 
 use anyhow::Result;
 use vibe_mcp::agentic::{
-    ActiveBackend, BackendOutcome, EXPLAIN_AFFINITY, InferenceBackend, RelayBackend, check_affinity,
-    drain_intent, explain_intent, relay_dir,
+    ActiveBackend, BackendOutcome, EXPLAIN_AFFINITY, InferenceBackend, RelayBackend,
+    check_affinity, drain_intent, explain_intent, relay_dir,
 };
 
 use crate::cli::{AgenticArgs, AgenticExplainArgs, AgenticSubcommand, CommandArgs};
@@ -125,4 +125,3 @@ pub fn run_command(ctx: &output::Context, args: CommandArgs) -> Result<()> {
     }
     Ok(())
 }
-
