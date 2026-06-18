@@ -79,7 +79,7 @@ vibe mcp uninstall --dry-run
 ### Human-readable
 
 ```
-would mcp     claude (project) → /home/dev/proj/.claude/settings.json (drop `vibevm` from mcpServers)
+would mcp     claude (project) → /home/dev/proj/.mcp.json (drop `vibevm` from mcpServers)
 would skill   claude (project) → /home/dev/proj/.claude/skills/vibevm/SKILL.md (delete SKILL.md and parent vibevm/ dir if empty)
 · mcp     cursor (project) → /home/dev/proj/.cursor/mcp.json (no `vibevm` entry in mcpServers)
 ```
@@ -94,7 +94,7 @@ would skill   claude (project) → /home/dev/proj/.claude/skills/vibevm/SKILL.md
   "scope": "project",
   "what": "both",
   "results": [
-    { "agent": "claude", "scope": "project", "config_path": ".../.claude/settings.json", "status": "removed", "note": "dropped `vibevm` from mcpServers" },
+    { "agent": "claude", "scope": "project", "config_path": ".../.mcp.json", "status": "removed", "note": "dropped `vibevm` from mcpServers" },
     { "agent": "cursor", "scope": "project", "config_path": ".../.cursor/mcp.json", "status": "not-installed", "note": "no `vibevm` entry in mcpServers" }
   ],
   "skill_results": [

@@ -72,7 +72,7 @@ vibe --json mcp upgrade --dry-run | jq -e '
 ### Human-readable
 
 ```
-✓ mcp     claude (user) → /home/dev/.claude/settings.json
+✓ mcp     claude (user) → /home/dev/.claude.json
 would mcp     opencode (user) → /home/dev/.config/opencode/opencode.json (mcp/vibevm differs)
 · mcp     codex (user) → /home/dev/.codex/config.toml (config file does not exist; use `vibe mcp install` to create)
 ✓ skill   claude (user) → /home/dev/.claude/skills/vibevm/SKILL.md
@@ -96,7 +96,7 @@ Sigil legend:
   "scope": "both",
   "what": "both",
   "results": [
-    { "agent": "claude",   "scope": "user",    "config_path": "~/.claude/settings.json", "status": "unchanged", "note": null },
+    { "agent": "claude",   "scope": "user",    "config_path": "~/.claude.json", "status": "unchanged", "note": null },
     { "agent": "opencode", "scope": "user",    "config_path": "~/.config/opencode/opencode.json", "status": "would-update", "note": "mcp/vibevm differs" },
     { "agent": "codex",    "scope": "user",    "config_path": "~/.codex/config.toml", "status": "not-installed", "note": "config file does not exist; use `vibe mcp install` to create" }
   ],

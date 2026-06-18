@@ -25,7 +25,7 @@ vibe mcp status [--path <dir>]
 
 ```
 Detected agents: claude, cursor, opencode
-would-create  claude  → /home/dev/proj/.claude/settings.json
+would-create  claude  → /home/dev/proj/.mcp.json
 would-create  cursor  → /home/dev/proj/.cursor/mcp.json
 would-create  opencode  → /home/dev/proj/opencode.json
 would-create  claude-desktop  → /home/dev/.config/Claude/claude_desktop_config.json
@@ -41,8 +41,8 @@ would-create  codex  → /home/dev/.codex/config.toml
   "project": "/home/dev/proj",
   "detected": ["claude", "cursor", "opencode"],
   "results": [
-    { "agent": "claude",         "scope": "project", "config_path": ".../.claude/settings.json", "status": "would-create", "note": "file does not exist yet" },
-    { "agent": "claude",         "scope": "user",    "config_path": "~/.claude/settings.json",   "status": "unchanged",    "note": null },
+    { "agent": "claude",         "scope": "project", "config_path": ".../.mcp.json", "status": "would-create", "note": "file does not exist yet" },
+    { "agent": "claude",         "scope": "user",    "config_path": "~/.claude.json",   "status": "unchanged",    "note": null },
     { "agent": "claude-desktop", "scope": "user",    "config_path": "~/.config/Claude/...",      "status": "would-create", "note": "file does not exist yet" },
     { "agent": "cursor",         "scope": "project", "config_path": ".../.cursor/mcp.json",      "status": "would-create", "note": "file does not exist yet" },
     { "agent": "opencode",       "scope": "project", "config_path": ".../opencode.json",         "status": "would-create", "note": "file does not exist yet" },

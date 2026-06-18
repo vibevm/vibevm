@@ -8,8 +8,8 @@ Spec: [PROP-004 §5.1](../../spec/research/PROP-004-tessl-comparative-research.m
 
 Every install can land at one of three places:
 
-- **`--scope project`** — files in the project tree (`<proj>/.<agent>/...`), committed to git, every clone gets the same setup. The MCP server entry hardcodes `--path <abs-project>` so the server always serves this project. Strictly requires `vibe.toml` in `--path` — bails out if absent.
-- **`--scope user`** — global home / config dirs (`~/.<agent>/...`), machine-local, works in every directory. The MCP server entry omits `--path` so the server resolves CWD per invocation. **Bootstrap-mode** — does NOT require `vibe.toml` in `--path`.
+- **`--scope project`** — files in the project tree (`<proj>/.<agent>/...`), committed to git, every clone gets the same setup. The MCP server entry no longer passes `--path`; it is byte-identical for every scope and resolves its project root from the launcher's CWD (an MCP client sets the server's CWD to the project directory for a project-scope `.mcp.json` server). That keeps a committed `.mcp.json` portable across machines — no absolute path is baked in. Strictly requires `vibe.toml` in `--path` — bails out if absent.
+- **`--scope user`** — global home / config dirs (`~/.<agent>/...`), machine-local, works in every directory. Same entry as project scope (no `--path`); the server resolves its root from CWD per invocation. **Bootstrap-mode** — does NOT require `vibe.toml` in `--path`.
 - **`--scope both`** — write to project AND user simultaneously. **Best-effort** for the project leg: when `vibe.toml` is missing in `--path`, the project leg is silently skipped (a `note:` line in text mode flags it) and the user leg runs as normal. Same model as `vibe mcp upgrade` / `vibe mcp uninstall` — designed so first-time-user provisioning scripts can run unattended on a fresh machine before any vibevm project exists. For agents with no project surface (Claude Desktop, Codex), Both collapses to user with a `skipped` row in the project results.
 
 Without `--scope`, the wizard asks. Default in wizard: `project` if `vibe.toml` is present in `--path`, else `user`.
@@ -26,13 +26,15 @@ Without `--scope`, the wizard asks. Default in wizard: `project` if `vibe.toml` 
 
 | Agent | Markers (project) | Project config | User config | Skill loader |
 | --- | --- | --- | --- | --- |
-| `claude` | `.claude/`, `CLAUDE.md` | `<proj>/.claude/settings.json` | `~/.claude/settings.json` | yes — `<proj>/.claude/skills/` and `~/.claude/skills/` |
+| `claude` | `.claude/`, `CLAUDE.md` | `<proj>/.mcp.json` | `~/.claude.json` | yes — `<proj>/.claude/skills/` and `~/.claude/skills/` |
 | `claude-desktop` | (user-only) `<config-dir>/Claude/` exists | (n/a) | `<config-dir>/Claude/claude_desktop_config.json` | no |
 | `cursor` | `.cursor/`, `.cursorrules` | `<proj>/.cursor/mcp.json` | `~/.cursor/mcp.json` | no |
 | `opencode` | `.opencode/`, `opencode.json`, `opencode.jsonc`, `AGENTS.md` | `<proj>/opencode.json` | `~/.config/opencode/opencode.json` (XDG path on every OS — see note) | yes — `<proj>/.opencode/skills/` and `~/.config/opencode/skills/` |
 | `codex` | (user-only) `~/.codex/` exists | (n/a) | `~/.codex/config.toml` (TOML) | yes — `<proj>/.agents/skills/` and `~/.agents/skills/` |
 
 `<config-dir>` resolves through `dirs::config_dir()` — `%APPDATA%` on Windows, `~/Library/Application Support` on macOS, `~/.config` on Linux. **Used by Claude Desktop only.**
+
+Claude Code reads MCP servers from `.mcp.json` (project) and the top-level `mcpServers` of `~/.claude.json` (user) — never from `settings.json`, which only *gates* `.mcp.json` servers via `enabledMcpjsonServers`.
 
 **Note on OpenCode user paths.** OpenCode is documented to read `~/.config/opencode/` on every platform — XDG-style cross-platform, even on Windows where `dirs::config_dir()` would point at `%APPDATA%\opencode\`. vibevm resolves OpenCode user-scope via `dirs::home_dir().join(".config").join("opencode")` to match what opencode actually reads, regardless of OS. (Pre-fix slice-5 versions mistakenly used `%APPDATA%\opencode\` on Windows — that location is silently ignored by opencode. If you ran an earlier slice-5 install, delete `%APPDATA%\Roaming\opencode\` by hand; the config and skill it created there have no effect.)
 
@@ -143,7 +145,7 @@ vibe mcp install --auto --dry-run
 ### Human-readable
 
 ```
-→ created mcp     claude (project) → /home/dev/proj/.claude/settings.json
+→ created mcp     claude (project) → /home/dev/proj/.mcp.json
 → created skill   claude (project) → /home/dev/proj/.claude/skills/vibevm/SKILL.md
 → unchanged mcp   opencode (project) → /home/dev/proj/opencode.json
 → skipped skill   cursor (project) → (no skill loader) (agent `cursor` does not load filesystem skills)
@@ -161,7 +163,7 @@ vibe mcp install --auto --dry-run
   "detected": ["claude", "cursor", "opencode"],
   "targeted": ["claude", "cursor", "opencode"],
   "results": [
-    { "agent": "claude",   "scope": "project", "config_path": ".../.claude/settings.json", "status": "created", "note": "file does not exist yet" },
+    { "agent": "claude",   "scope": "project", "config_path": ".../.mcp.json", "status": "created", "note": "file does not exist yet" },
     { "agent": "cursor",   "scope": "project", "config_path": ".../.cursor/mcp.json",      "status": "unchanged", "note": null },
     { "agent": "opencode", "scope": "project", "config_path": ".../opencode.json",         "status": "created", "note": "file does not exist yet" }
   ],
@@ -194,19 +196,7 @@ vibe mcp install --auto --dry-run
 
 ### Claude Code / Claude Desktop / Cursor (JSON, `mcpServers`)
 
-Project scope:
-```jsonc
-{
-  "mcpServers": {
-    "vibevm": {
-      "command": "vibe",
-      "args": ["mcp", "serve", "--path", "/home/dev/proj"]
-    }
-  }
-}
-```
-
-User scope (no `--path`):
+A single entry shape for every scope (no `--path` — the server resolves its root from the launcher's CWD):
 ```jsonc
 {
   "mcpServers": {
@@ -218,29 +208,41 @@ User scope (no `--path`):
 }
 ```
 
+On Windows the launcher is shim-wrapped, because `vibe` is a `vibe.cmd` batch shim and MCP clients can't spawn a `.cmd` directly — they exec the command without a shell. The entry runs it through `cmd /c` instead:
+```jsonc
+{
+  "mcpServers": {
+    "vibevm": {
+      "command": "cmd",
+      "args": ["/c", "vibe", "mcp", "serve"]
+    }
+  }
+}
+```
+
 ### OpenCode (JSON, `mcp`, command-array shape)
 
-Project scope:
+A single entry shape for every scope (no `--path` — the server resolves its root from the launcher's CWD):
 ```jsonc
 {
   "$schema": "https://opencode.ai/config.json",
   "mcp": {
     "vibevm": {
       "type": "local",
-      "command": ["vibe", "mcp", "serve", "--path", "/home/dev/proj"],
+      "command": ["vibe", "mcp", "serve"],
       "enabled": true
     }
   }
 }
 ```
 
-User scope:
+On Windows the command array is shim-wrapped, because `vibe` is a `vibe.cmd` batch shim that MCP clients can't spawn directly — it runs through `cmd /c` instead:
 ```jsonc
 {
   "mcp": {
     "vibevm": {
       "type": "local",
-      "command": ["vibe", "mcp", "serve"],
+      "command": ["cmd", "/c", "vibe", "mcp", "serve"],
       "enabled": true
     }
   }
@@ -252,7 +254,7 @@ User scope:
 ```toml
 [mcp_servers.vibevm]
 command = "vibe"
-args = ["mcp", "serve"]   # or ["mcp", "serve", "--path", "/home/dev/proj"] for project scope
+args = ["mcp", "serve"]
 ```
 
 ### SKILL.md (Claude Code, OpenCode, Codex)
