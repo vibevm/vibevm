@@ -107,7 +107,7 @@ an explicit agent filter.
 
 ### 2.5 Per-agent configuration {#agent-config}
 
-`req r1`
+`req r2`
 
 **Decision.** Each agent declares its config shape, and the writer is
 agent-aware but format-generic:
@@ -117,14 +117,28 @@ agent-aware but format-generic:
   `mcp`, `mcp_servers`).
 - **Scope** — project (`.<agent>/…` in the repo) and/or user (the host
   config dir). Some agents are user-only (Claude Code Desktop, Codex).
-- **Config path** — resolved per (agent, scope), cross-platform.
+- **Config path** — resolved per (agent, scope), cross-platform. The
+  path must be the file the agent actually reads for MCP *discovery*,
+  not merely a settings file it happens to own. For Claude Code that is
+  `<project>/.mcp.json` (project) and the top-level `mcpServers` of
+  `~/.claude.json` (user) — **never `settings.json`**, which only
+  *gates* `.mcp.json` servers (`enabledMcpjsonServers`) and does not
+  define them.
 - **Merge discipline** — installing upserts vibevm's one entry under the
-  section key and **preserves every foreign key**; uninstalling strips
-  only vibevm's entry and leaves the rest. The operator's other MCP
-  servers and unrelated config survive every operation.
+  section key and **preserves every foreign key, and their order**: the
+  JSON writer round-trips order-preserving (`serde_json/preserve_order`),
+  so a merge into a large `~/.claude.json` appends rather than
+  re-alphabetising the operator's whole file. Uninstalling strips only
+  vibevm's entry and leaves the rest. The operator's other MCP servers
+  and unrelated config survive every operation.
 
-The vibevm entry's command line is scope-aware: a project-scope entry
-passes `--path`, a user-scope entry omits it.
+The vibevm entry is **scope-independent**: `vibe mcp serve` with no
+`--path`, resolving its project root from the launcher's CWD (an MCP
+client sets CWD to the project directory for a project-scope server),
+so one shape serves every scope and a committed `.mcp.json` stays
+portable. On Windows the launcher is wrapped as `cmd /c vibe …` because
+`vibe` is a `vibe.cmd` shim that an MCP client's bare process-spawn
+cannot exec directly.
 
 ### 2.6 Skill materialisation {#skill}
 

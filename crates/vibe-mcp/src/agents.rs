@@ -249,7 +249,11 @@ impl Agent {
             }
             // ---- Project scope ----
             (Agent::ClaudeCode, Scope::Project) => {
-                Ok(project_root.map(|p| p.join(".claude").join("settings.json")))
+                // Claude Code discovers a project's MCP servers from the
+                // committed `<project>/.mcp.json` — NOT `.claude/settings.json`,
+                // which only *gates* servers (`enabledMcpjsonServers`) and
+                // never defines them.
+                Ok(project_root.map(|p| p.join(".mcp.json")))
             }
             (Agent::Cursor, Scope::Project) => {
                 Ok(project_root.map(|p| p.join(".cursor").join("mcp.json")))
@@ -258,9 +262,13 @@ impl Agent {
             (Agent::ClaudeCodeDesktop | Agent::Codex, Scope::Project) => Ok(None),
             // ---- User scope ----
             (Agent::ClaudeCode, Scope::User) => {
+                // User-scope MCP servers live in the top-level `mcpServers`
+                // of `~/.claude.json` (exactly what `claude mcp add --scope
+                // user` writes); Claude Code does not read server definitions
+                // from `~/.claude/settings.json`.
                 let home = dirs::home_dir()
                     .ok_or_else(|| anyhow!("could not resolve home dir for Claude Code"))?;
-                Ok(Some(home.join(".claude").join("settings.json")))
+                Ok(Some(home.join(".claude.json")))
             }
             (Agent::Cursor, Scope::User) => {
                 let home = dirs::home_dir()
@@ -416,44 +424,70 @@ impl Agent {
         }
     }
 
-    /// Wire shape of the per-server entry. Three flavours, scope-aware:
-    /// - User scope omits `--path`, so the server resolves CWD per
-    ///   invocation. Lets one global config serve every project.
-    /// - Project scope hardcodes `--path <abs-project>` so the server
-    ///   always serves the same project regardless of CWD.
-    pub fn build_mcp_entry(self, scope: Scope, project_root: Option<&Path>) -> ConfigPayload {
-        let args_array: Vec<String> = match scope {
-            Scope::User => vec!["mcp".into(), "serve".into()],
-            Scope::Project => {
-                let proj = project_root
-                    .map(|p| p.display().to_string().replace('\\', "/"))
-                    .unwrap_or_else(|| ".".to_string());
-                vec!["mcp".into(), "serve".into(), "--path".into(), proj]
-            }
-            Scope::Both => unreachable!("Both must be expanded before build_mcp_entry"),
+    /// Wire shape of the per-server entry. The same shape serves every
+    /// scope: `vibe mcp serve` with **no `--path`**, so the server
+    /// resolves its project root from the process CWD. An MCP client sets
+    /// that CWD to the project dir for a project-scope (`.mcp.json`)
+    /// server and to the operator's working dir for a user-scope one, so
+    /// one entry covers both — and a committed `.mcp.json` stays portable
+    /// (no machine-specific absolute path baked in).
+    ///
+    /// On Windows the launcher is the `vibe.cmd` shim, which an MCP
+    /// client's bare process-spawn cannot exec directly; the entry is
+    /// wrapped as `cmd /c vibe …` so every agent's stdio launcher starts
+    /// it. See [`Agent::build_mcp_entry_for`] for the OS-pure core.
+    pub fn build_mcp_entry(self) -> ConfigPayload {
+        self.build_mcp_entry_for(cfg!(windows))
+    }
+
+    /// OS-pure core of [`Agent::build_mcp_entry`]: `windows` selects the
+    /// `cmd /c` shim wrapper, so both launch shapes are unit-testable on
+    /// any host.
+    ///
+    /// ```
+    /// use vibe_mcp::agents::{Agent, ConfigPayload};
+    /// let ConfigPayload::Json(v) = Agent::ClaudeCode.build_mcp_entry_for(true) else {
+    ///     panic!("Claude Code uses JSON");
+    /// };
+    /// assert_eq!(v["command"], "cmd");
+    /// assert_eq!(v["args"][0], "/c");
+    /// assert_eq!(v["args"][1], "vibe");
+    /// ```
+    pub fn build_mcp_entry_for(self, windows: bool) -> ConfigPayload {
+        // The full launcher argv. On Windows the `.cmd` shim must be run
+        // through `cmd /c`; elsewhere `vibe` is a real executable.
+        let argv: Vec<String> = if windows {
+            ["cmd", "/c", "vibe", "mcp", "serve"]
+                .iter()
+                .map(|s| s.to_string())
+                .collect()
+        } else {
+            ["vibe", "mcp", "serve"]
+                .iter()
+                .map(|s| s.to_string())
+                .collect()
         };
+        // (command, args) split shape: head is the program, tail its args.
+        let command = argv[0].clone();
+        let args: Vec<String> = argv[1..].to_vec();
         match self {
             Agent::ClaudeCode | Agent::ClaudeCodeDesktop | Agent::Cursor => {
                 ConfigPayload::Json(serde_json::json!({
-                    "command": "vibe",
-                    "args": args_array,
-                }))
-            }
-            Agent::OpenCode => {
-                let mut command = vec!["vibe".to_string()];
-                command.extend(args_array);
-                ConfigPayload::Json(serde_json::json!({
-                    "type": "local",
                     "command": command,
-                    "enabled": true,
+                    "args": args,
                 }))
             }
+            Agent::OpenCode => ConfigPayload::Json(serde_json::json!({
+                "type": "local",
+                "command": argv,
+                "enabled": true,
+            })),
             Agent::Codex => {
                 let mut tbl = toml::value::Table::new();
-                tbl.insert("command".into(), toml::Value::String("vibe".into()));
+                tbl.insert("command".into(), toml::Value::String(command));
                 tbl.insert(
                     "args".into(),
-                    toml::Value::Array(args_array.into_iter().map(toml::Value::String).collect()),
+                    toml::Value::Array(args.into_iter().map(toml::Value::String).collect()),
                 );
                 ConfigPayload::Toml(toml::Value::Table(tbl))
             }
@@ -471,14 +505,29 @@ impl Agent {
         }
     }
 
-    /// Whether the agent's user-level config dir exists on this host.
-    /// Lets `--auto` and the wizard mark host-installed agents even
-    /// when the project tree has no markers.
+    /// Directory whose existence on this host marks the agent as
+    /// installed. For most agents it's the parent of the user config
+    /// file (`~/.cursor`, `~/.codex`, the Claude Desktop config dir, …).
+    /// Claude Code is special: its user MCP config is the top-level
+    /// `~/.claude.json`, whose parent (`~`) always exists — so we probe
+    /// the `~/.claude` data dir instead, the real "Claude Code has run
+    /// here" signal.
+    fn host_marker(self) -> Option<PathBuf> {
+        match self {
+            Agent::ClaudeCode => dirs::home_dir().map(|h| h.join(".claude")),
+            _ => self
+                .config_path(Scope::User, None)
+                .ok()
+                .flatten()
+                .and_then(|c| c.parent().map(Path::to_path_buf)),
+        }
+    }
+
+    /// Whether the agent is installed on this host — its marker dir
+    /// exists. Lets `--auto` and the wizard mark host-installed agents
+    /// even when the project tree has no markers.
     pub fn host_present(self) -> bool {
-        let Ok(Some(cfg)) = self.config_path(Scope::User, None) else {
-            return false;
-        };
-        cfg.parent().map(|p| p.exists()).unwrap_or(false)
+        self.host_marker().map(|p| p.exists()).unwrap_or(false)
     }
 
     /// Combined presence: project markers OR user-level dir exists.

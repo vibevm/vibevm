@@ -349,7 +349,7 @@ fn walk_install(
             if what.includes_mcp() {
                 let path = agent.config_path(concrete_scope, project_root)?;
                 if let Some(path) = path {
-                    let payload = agent.build_mcp_entry(concrete_scope, project_root);
+                    let payload = agent.build_mcp_entry();
                     let outcome = if dry_run {
                         preview_install_mcp(*agent, concrete_scope, &path, &payload)?
                     } else {

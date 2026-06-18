@@ -170,8 +170,7 @@ fn walk_upgrade(
             if what.includes_mcp() {
                 let path = agent.config_path(concrete_scope, project_root)?;
                 if let Some(path) = path {
-                    let outcome =
-                        upgrade_mcp_entry(*agent, concrete_scope, &path, project_root, dry_run)?;
+                    let outcome = upgrade_mcp_entry(*agent, concrete_scope, &path, dry_run)?;
                     results.push(outcome);
                 }
             }
@@ -191,13 +190,12 @@ fn upgrade_mcp_entry(
     agent: Agent,
     scope: Scope,
     config_path: &Path,
-    project_root: Option<&Path>,
     dry_run: bool,
 ) -> Result<AgentInstallReport> {
     // If the config file does not exist OR the vibevm block is absent,
     // upgrade is a no-op. We report `not-installed` rather than
     // creating it (that would be `install`'s job).
-    let payload = agent.build_mcp_entry(scope, project_root);
+    let payload = agent.build_mcp_entry();
     if !config_path.exists() {
         return Ok(AgentInstallReport {
             agent: agent.as_str().to_string(),

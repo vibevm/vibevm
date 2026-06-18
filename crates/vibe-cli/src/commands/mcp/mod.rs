@@ -12,31 +12,40 @@
 //! Library implementation lives in `vibe-mcp`; this module is the CLI
 //! dispatch + per-agent config writers.
 //!
-//! ## Scope axis (slice 5)
+//! ## Scope axis
 //!
 //! Every install touches one or two physical files per agent:
-//! - **Project scope** writes to `<project>/<agent-config-rel>` —
-//!   committed to git, every clone gets the same setup.
-//! - **User scope** writes to `<home>/<agent-config-rel>` — global,
-//!   works in every directory (the MCP server entry omits `--path`
-//!   so the server resolves CWD per invocation).
+//! - **Project scope** writes the agent's committed project config
+//!   (`<project>/.mcp.json` for Claude Code) — every clone gets the
+//!   same setup.
+//! - **User scope** writes the agent's home/global config
+//!   (`~/.claude.json` for Claude Code) — works in every directory.
 //! - **Both** writes to project AND user simultaneously, falling
 //!   into a single user-level entry for the two agents that have no
 //!   project surface (Claude Desktop, Codex).
 //!
-//! ## Agent matrix (slice 5)
+//! The MCP entry is identical for every scope — `vibe mcp serve` with
+//! no `--path`, resolving its root from the launcher's CWD — and on
+//! Windows it is wrapped as `cmd /c vibe …` so the `vibe.cmd` shim can
+//! be spawned. See `vibe_mcp::agents::Agent::build_mcp_entry`.
 //!
-//! | Agent          | section       | format | project file              | user file                                              |
-//! |----------------|---------------|--------|---------------------------|--------------------------------------------------------|
-//! | Claude Code    | `mcpServers`  | JSON   | `.claude/settings.json`   | `~/.claude/settings.json`                              |
-//! | Claude Desktop | `mcpServers`  | JSON   | (n/a — user-only)         | `<config-dir>/Claude/claude_desktop_config.json`       |
-//! | Cursor         | `mcpServers`  | JSON   | `.cursor/mcp.json`        | `~/.cursor/mcp.json`                                   |
-//! | OpenCode       | `mcp`         | JSON   | `opencode.json`           | `<config-dir>/opencode/opencode.json`                  |
-//! | Codex          | `mcp_servers` | TOML   | (n/a — user-only)         | `~/.codex/config.toml`                                 |
+//! ## Agent matrix
 //!
+//! | Agent          | section       | format | project file        | user file                                        |
+//! |----------------|---------------|--------|---------------------|--------------------------------------------------|
+//! | Claude Code    | `mcpServers`  | JSON   | `.mcp.json`         | `~/.claude.json`                                 |
+//! | Claude Desktop | `mcpServers`  | JSON   | (n/a — user-only)   | `<config-dir>/Claude/claude_desktop_config.json` |
+//! | Cursor         | `mcpServers`  | JSON   | `.cursor/mcp.json`  | `~/.cursor/mcp.json`                             |
+//! | OpenCode       | `mcp`         | JSON   | `opencode.json`     | `~/.config/opencode/opencode.json`               |
+//! | Codex          | `mcp_servers` | TOML   | (n/a — user-only)   | `~/.codex/config.toml`                           |
+//!
+//! Claude Code reads MCP servers from `.mcp.json` (project) and the
+//! top-level `mcpServers` of `~/.claude.json` (user) — NOT from
+//! `settings.json`, which only *gates* servers (`enabledMcpjsonServers`).
 //! `<config-dir>` resolves through `dirs::config_dir()` — `%APPDATA%`
 //! on Windows, `~/Library/Application Support` on macOS, `~/.config`
-//! on Linux. `<home>` is `dirs::home_dir()`.
+//! on Linux (used by Claude Desktop). OpenCode deliberately reads the
+//! XDG-style `~/.config/opencode/` on every OS.
 
 specmark::scope!("spec://vibevm/modules/vibe-mcp/PROP-015#lifecycle");
 
@@ -133,7 +142,7 @@ fn run_status(ctx: &output::Context, args: McpStatusArgs) -> Result<()> {
             }
             // MCP-config preview.
             if let Some(path) = agent.config_path(scope, project_root.as_deref())? {
-                let payload = agent.build_mcp_entry(scope, project_root.as_deref());
+                let payload = agent.build_mcp_entry();
                 results.push(preview_install_mcp(agent, scope, &path, &payload)?);
             }
             // Skill preview — only for agents that load skills + have
