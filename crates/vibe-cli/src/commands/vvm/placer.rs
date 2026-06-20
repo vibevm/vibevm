@@ -245,8 +245,8 @@ pub(crate) fn place(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::commands::man::model::Kind;
-    use crate::commands::man::store::BINARY_NAME;
+    use crate::commands::vvm::model::Kind;
+    use crate::commands::vvm::store::BINARY_NAME;
     use specmark::verifies;
 
     #[test]

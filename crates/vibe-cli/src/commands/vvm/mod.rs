@@ -1,8 +1,8 @@
-//! `vibe man` — the VibeVM Version Manager (VVM): build, install, switch,
+//! `vibe self` — the VibeVM Version Manager (VVM): build, install, switch,
 //! and remove vibevm's own versions on this machine (PROP-019). A
 //! standalone-mode capability — pure algorithm, no LLM (PROP-019 §2.1).
 //!
-//! Dispatches every `vibe man` verb over the instance layout and the live
+//! Dispatches every `vibe self` verb over the instance layout and the live
 //! `current` pointer (PROP-019 §2.4, §2.5).
 
 specmark::scope!("spec://vibevm/common/PROP-019#surface");
@@ -27,11 +27,12 @@ use anyhow::Result;
 use dialoguer::Confirm;
 
 use crate::cli::{
-    ForcedKind, ManArgs, ManDoctorArgs, ManEnvArgs, ManInstallArgs, ManSubcommand, ManUseArgs,
+    ForcedKind, VvmArgs, VvmDoctorArgs, VvmEnvArgs, VvmInstallArgs, VvmSubcommand, VvmUpdateArgs,
+    VvmUseArgs,
 };
 use crate::output;
 
-use error::ManError;
+use error::VvmError;
 use model::{InstallRecord, State, VersionId};
 use store::VersionStore;
 
@@ -51,12 +52,12 @@ pub const VIBEVM_HOME_ENV: &str = "VIBEVM_HOME";
 /// itself (PROP-019 §2.1). The *active* version is the `current` file, not
 /// an env var (PROP-019 §2.5).
 #[derive(Debug, Clone, Default)]
-pub struct ManEnv {
+pub struct VvmEnv {
     /// The resolved VVM root — `$VIBEVM_INSTALL_ROOT/opt`, defaulting to
     /// `~/opt`.
     pub root: Option<PathBuf>,
     /// The current working directory — for in-tree source detection on
-    /// `man install` (PROP-019 §2.7).
+    /// `self install` (PROP-019 §2.7).
     pub cwd: Option<PathBuf>,
     /// The user's real home directory — for locating the shell rc to edit on
     /// POSIX activation (PROP-019 §2.6).
@@ -67,24 +68,25 @@ pub struct ManEnv {
     pub path_var: Option<String>,
 }
 
-impl ManEnv {
-    fn store(&self) -> Result<VersionStore, ManError> {
-        let root = self.root.clone().ok_or(ManError::NoRoot)?;
+impl VvmEnv {
+    fn store(&self) -> Result<VersionStore, VvmError> {
+        let root = self.root.clone().ok_or(VvmError::NoRoot)?;
         Ok(VersionStore::new(root))
     }
 }
 
-pub fn run(ctx: &output::Context, args: ManArgs, env: ManEnv) -> Result<()> {
+pub fn run(ctx: &output::Context, args: VvmArgs, env: VvmEnv) -> Result<()> {
     match args.command {
-        ManSubcommand::Install(a) => run_install_cmd(ctx, &env, a),
-        ManSubcommand::Use(a) => run_use_cmd(ctx, &env, a),
-        ManSubcommand::Ls => run_ls(ctx, &env),
-        ManSubcommand::Current => run_current(ctx, &env),
-        ManSubcommand::Which => run_which(ctx, &env),
-        ManSubcommand::Doctor(a) => run_doctor_cmd(ctx, &env, a),
-        ManSubcommand::Remove(a) => remove::run_remove_cmd(ctx, &env, a),
-        ManSubcommand::Gc(a) => remove::run_gc_cmd(ctx, &env, a),
-        ManSubcommand::Env(a) => run_env_cmd(&env, a),
+        VvmSubcommand::Install(a) => run_install_cmd(ctx, &env, a),
+        VvmSubcommand::Update(a) => run_update_cmd(ctx, &env, a),
+        VvmSubcommand::Use(a) => run_use_cmd(ctx, &env, a),
+        VvmSubcommand::Ls => run_ls(ctx, &env),
+        VvmSubcommand::Current => run_current(ctx, &env),
+        VvmSubcommand::Which => run_which(ctx, &env),
+        VvmSubcommand::Doctor(a) => run_doctor_cmd(ctx, &env, a),
+        VvmSubcommand::Remove(a) => remove::run_remove_cmd(ctx, &env, a),
+        VvmSubcommand::Gc(a) => remove::run_gc_cmd(ctx, &env, a),
+        VvmSubcommand::Env(a) => run_env_cmd(&env, a),
     }
 }
 
@@ -92,7 +94,7 @@ fn same_record(a: &InstallRecord, b: &InstallRecord) -> bool {
     a.version_id() == b.version_id() && a.instance == b.instance
 }
 
-fn run_ls(ctx: &output::Context, env: &ManEnv) -> Result<()> {
+fn run_ls(ctx: &output::Context, env: &VvmEnv) -> Result<()> {
     let store = env.store()?;
     let mut state = store.load_state()?;
     state
@@ -120,7 +122,7 @@ fn run_ls(ctx: &output::Context, env: &ManEnv) -> Result<()> {
             .collect();
         return ctx.emit_json(&serde_json::json!({
             "ok": true,
-            "command": "man:ls",
+            "command": "self:ls",
             "active": active.as_ref().map(|a| a.version_id().to_string()),
             "count": installs.len(),
             "installs": installs,
@@ -128,7 +130,7 @@ fn run_ls(ctx: &output::Context, env: &ManEnv) -> Result<()> {
     }
 
     if state.installs.is_empty() {
-        ctx.summary("(no versions installed — run `vibe man install`)");
+        ctx.summary("(no versions installed — run `vibe self install`)");
         return Ok(());
     }
     for r in &state.installs {
@@ -150,13 +152,13 @@ fn run_ls(ctx: &output::Context, env: &ManEnv) -> Result<()> {
     Ok(())
 }
 
-fn run_current(ctx: &output::Context, env: &ManEnv) -> Result<()> {
+fn run_current(ctx: &output::Context, env: &VvmEnv) -> Result<()> {
     let store = env.store()?;
     let active = store.active()?;
     if ctx.is_json() {
         return ctx.emit_json(&serde_json::json!({
             "ok": true,
-            "command": "man:current",
+            "command": "self:current",
             "active": active.as_ref().map(|r| r.version_id().to_string()),
             "instance": active.as_ref().map(|r| r.instance),
         }));
@@ -168,16 +170,16 @@ fn run_current(ctx: &output::Context, env: &ManEnv) -> Result<()> {
     Ok(())
 }
 
-fn run_which(ctx: &output::Context, env: &ManEnv) -> Result<()> {
+fn run_which(ctx: &output::Context, env: &VvmEnv) -> Result<()> {
     let store = env.store()?;
     let Some(record) = store.active()? else {
-        return Err(ManError::NoActiveVersion.into());
+        return Err(VvmError::NoActiveVersion.into());
     };
     let path = store.binary_path(&record.version_id(), record.instance);
     if ctx.is_json() {
         return ctx.emit_json(&serde_json::json!({
             "ok": true,
-            "command": "man:which",
+            "command": "self:which",
             "path": path.display().to_string(),
         }));
     }
@@ -185,7 +187,7 @@ fn run_which(ctx: &output::Context, env: &ManEnv) -> Result<()> {
     Ok(())
 }
 
-fn run_install_cmd(ctx: &output::Context, env: &ManEnv, args: ManInstallArgs) -> Result<()> {
+fn run_install_cmd(ctx: &output::Context, env: &VvmEnv, args: VvmInstallArgs) -> Result<()> {
     let store = env.store()?;
     let profile = resolve_profile(&args)?;
     let selector = model::Selector::parse(&args.selector, forced_kind(&args.kind))?;
@@ -238,7 +240,29 @@ fn run_install_cmd(ctx: &output::Context, env: &ManEnv, args: ManInstallArgs) ->
     install::perform_install(ctx, &store, &source_dir, &req, &builder::CargoBuilder)
 }
 
-fn resolve_profile(args: &ManInstallArgs) -> Result<model::Profile, model::ModelError> {
+/// `self update` — rebuild and activate the latest in-tree version. A thin
+/// shorthand over `self install latest` (PROP-019 §2.2) that fixes the
+/// selector to `latest` and carries only the build knobs.
+fn run_update_cmd(ctx: &output::Context, env: &VvmEnv, args: VvmUpdateArgs) -> Result<()> {
+    run_install_cmd(
+        ctx,
+        env,
+        VvmInstallArgs {
+            selector: "latest".to_string(),
+            kind: ForcedKind {
+                tag: false,
+                branch: false,
+                commit: false,
+            },
+            profile: args.profile,
+            release: args.release,
+            mirror: None,
+            force: args.force,
+        },
+    )
+}
+
+fn resolve_profile(args: &VvmInstallArgs) -> Result<model::Profile, model::ModelError> {
     if args.release {
         return Ok(model::Profile::Release);
     }
@@ -260,7 +284,7 @@ fn forced_kind(k: &ForcedKind) -> Option<model::Kind> {
     }
 }
 
-fn run_use_cmd(ctx: &output::Context, env: &ManEnv, args: ManUseArgs) -> Result<()> {
+fn run_use_cmd(ctx: &output::Context, env: &VvmEnv, args: VvmUseArgs) -> Result<()> {
     let store = env.store()?;
     let state = store.load_state()?;
     let selector = model::Selector::parse(&args.selector, forced_kind(&args.kind))?;
@@ -286,7 +310,7 @@ fn run_use_cmd(ctx: &output::Context, env: &ManEnv, args: ManUseArgs) -> Result<
     if ctx.is_json() {
         return ctx.emit_json(&serde_json::json!({
             "ok": true,
-            "command": "man:use",
+            "command": "self:use",
             "active": id.to_string(),
             "instance": rec.instance,
             "home": home.display().to_string(),
@@ -301,7 +325,7 @@ fn run_use_cmd(ctx: &output::Context, env: &ManEnv, args: ManUseArgs) -> Result<
     Ok(())
 }
 
-fn run_env_cmd(env: &ManEnv, args: ManEnvArgs) -> Result<()> {
+fn run_env_cmd(env: &VvmEnv, args: VvmEnvArgs) -> Result<()> {
     let shell = match args.shell.as_deref() {
         Some(s) => env::Shell::parse(s)?,
         None => env::Shell::detect(env.shell.as_deref()),
@@ -315,7 +339,7 @@ fn run_env_cmd(env: &ManEnv, args: ManEnvArgs) -> Result<()> {
             store.instance_dir(&rec.version_id(), rec.instance)
         }
         None => {
-            let rec = store.active()?.ok_or(ManError::NoActiveVersion)?;
+            let rec = store.active()?.ok_or(VvmError::NoActiveVersion)?;
             store.instance_dir(&rec.version_id(), rec.instance)
         }
     };
@@ -329,24 +353,24 @@ fn resolve_installed(
     state: &State,
     selector: &model::Selector,
     raw: &str,
-) -> Result<InstallRecord, ManError> {
+) -> Result<InstallRecord, VvmError> {
     use model::{Kind, Selector, VersionId};
     match selector {
         Selector::Latest => {
             latest_of(state, &VersionId::new(Kind::Branch, "main")).ok_or_else(|| {
-                ManError::NotInstalled {
+                VvmError::NotInstalled {
                     detail: "`latest` is not installed".to_string(),
                 }
             })
         }
-        Selector::Explicit(id) => latest_of(state, id).ok_or_else(|| ManError::NotInstalled {
-            detail: format!("`{id}` is not installed (try `vibe man install {raw}`)"),
+        Selector::Explicit(id) => latest_of(state, id).ok_or_else(|| VvmError::NotInstalled {
+            detail: format!("`{id}` is not installed (try `vibe self install {raw}`)"),
         }),
-        Selector::Stable => highest_tag_record(state).ok_or_else(|| ManError::NotInstalled {
+        Selector::Stable => highest_tag_record(state).ok_or_else(|| VvmError::NotInstalled {
             detail: "no installed release tag satisfies `stable`".to_string(),
         }),
         Selector::Ambiguous(name) => {
-            by_precedence_record(state, name).ok_or_else(|| ManError::NotInstalled {
+            by_precedence_record(state, name).ok_or_else(|| VvmError::NotInstalled {
                 detail: format!("no installed version named `{name}`"),
             })
         }
@@ -396,11 +420,11 @@ fn by_precedence_record(state: &State, name: &str) -> Option<InstallRecord> {
 
 /// The durable-env persister for this OS (PROP-019 §2.6): the registry on
 /// Windows, the shell rc on POSIX.
-fn make_persister(env: &ManEnv, shell: env::Shell) -> Result<Box<dyn env::EnvPersister>, ManError> {
+fn make_persister(env: &VvmEnv, shell: env::Shell) -> Result<Box<dyn env::EnvPersister>, VvmError> {
     if cfg!(windows) {
         Ok(Box::new(env::WindowsEnvPersister))
     } else {
-        let home = env.home.clone().ok_or(ManError::NoHome)?;
+        let home = env.home.clone().ok_or(VvmError::NoHome)?;
         Ok(Box::new(env::RcFilePersister::new(
             shell.rc_path(&home),
             shell,
@@ -408,7 +432,7 @@ fn make_persister(env: &ManEnv, shell: env::Shell) -> Result<Box<dyn env::EnvPer
     }
 }
 
-fn run_doctor_cmd(ctx: &output::Context, env: &ManEnv, args: ManDoctorArgs) -> Result<()> {
+fn run_doctor_cmd(ctx: &output::Context, env: &VvmEnv, args: VvmDoctorArgs) -> Result<()> {
     let store = env.store()?;
     let tools = tools::check_all();
     let shim_dir = store.shim_dir();
@@ -425,7 +449,7 @@ fn run_doctor_cmd(ctx: &output::Context, env: &ManEnv, args: ManDoctorArgs) -> R
     if ctx.is_json() {
         return ctx.emit_json(&serde_json::json!({
             "ok": problems == 0,
-            "command": "man:doctor",
+            "command": "self:doctor",
             "problems": problems,
             "tools": tools.iter().map(|t| serde_json::json!({
                 "name": t.name, "version": t.version, "ok": t.ok,
@@ -438,7 +462,7 @@ fn run_doctor_cmd(ctx: &output::Context, env: &ManEnv, args: ManDoctorArgs) -> R
         }));
     }
 
-    ctx.heading("vibe man doctor");
+    ctx.heading("vibe self doctor");
     for t in &tools {
         match &t.version {
             Some(v) if t.ok => ctx.step(&format!("ok   {} {}", t.name, v)),
@@ -469,7 +493,7 @@ fn run_doctor_cmd(ctx: &output::Context, env: &ManEnv, args: ManDoctorArgs) -> R
             "MISS active {} — its binary is gone",
             r.version_id()
         )),
-        None => ctx.step("-    no active version (set one with `vibe man use <selector>`)"),
+        None => ctx.step("-    no active version (set one with `vibe self use <selector>`)"),
     }
 
     if args.fix && confirm(ctx, args.yes, "Write shims and put the shim dir on PATH?")? {
@@ -489,12 +513,12 @@ fn run_doctor_cmd(ctx: &output::Context, env: &ManEnv, args: ManDoctorArgs) -> R
 
 /// Confirm a mutating action: `--yes`/unattended skip the prompt; a non-TTY
 /// without `--yes` is an error rather than a silent apply.
-fn confirm(ctx: &output::Context, yes: bool, prompt: &str) -> Result<bool, ManError> {
+fn confirm(ctx: &output::Context, yes: bool, prompt: &str) -> Result<bool, VvmError> {
     if yes || ctx.is_unattended() {
         return Ok(true);
     }
     if !std::io::stdin().is_terminal() {
-        return Err(ManError::NoTty {
+        return Err(VvmError::NoTty {
             detail: "no TTY for confirmation; pass `--yes` to proceed unattended".to_string(),
         });
     }
@@ -509,9 +533,9 @@ fn confirm(ctx: &output::Context, yes: bool, prompt: &str) -> Result<bool, ManEr
 /// remove / gc pickers): an unattended or non-TTY run errors with `msg` —
 /// which names the explicit flags to pass — rather than silently doing
 /// nothing (PROP-019 §2.9).
-fn require_tty(ctx: &output::Context, msg: &str) -> Result<(), ManError> {
+fn require_tty(ctx: &output::Context, msg: &str) -> Result<(), VvmError> {
     if ctx.is_unattended() || !std::io::stdin().is_terminal() {
-        return Err(ManError::NoTty {
+        return Err(VvmError::NoTty {
             detail: msg.to_string(),
         });
     }

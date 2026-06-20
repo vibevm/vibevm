@@ -33,7 +33,7 @@ impl InstallLock {
         {
             Ok(_) => Ok(InstallLock { path }),
             Err(e) if e.kind() == std::io::ErrorKind::AlreadyExists => bail!(
-                "another `vibe man install` is in progress (remove `{}` if it is stale)",
+                "another `vibe self install` is in progress (remove `{}` if it is stale)",
                 path.display()
             ),
             Err(e) => Err(e).with_context(|| format!("creating lock `{}`", path.display())),
@@ -136,8 +136,8 @@ fn latest_instance(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::commands::man::builder::BuildOutput;
-    use crate::commands::man::model::Kind;
+    use crate::commands::vvm::builder::BuildOutput;
+    use crate::commands::vvm::model::Kind;
     use specmark::verifies;
 
     /// A builder that writes a chosen byte string into the managed target dir

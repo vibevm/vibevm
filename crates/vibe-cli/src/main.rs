@@ -53,14 +53,14 @@ fn main() -> ExitCode {
 
     // VVM: derive the running version from the binary's own path, and warn
     // when the inherited $VIBEVM_HOME is stale (PROP-019 §2.5).
-    let self_loc = commands::man::derive_self(std::env::current_exe().ok().as_deref());
+    let self_loc = commands::vvm::derive_self(std::env::current_exe().ok().as_deref());
     if let Some(loc) = &self_loc
-        && let Some(env_home) = read_env_opt(commands::man::VIBEVM_HOME_ENV)
-        && !commands::man::same_location(&env_home, &loc.home)
+        && let Some(env_home) = read_env_opt(commands::vvm::VIBEVM_HOME_ENV)
+        && !commands::vvm::same_location(&env_home, &loc.home)
     {
         eprintln!(
             "vibe: note: $VIBEVM_HOME is stale (env={env_home}); the running version is {} \
-             — open a new shell or `eval \"$(vibe man env)\"`",
+             — open a new shell or `eval \"$(vibe self env)\"`",
             loc.home.display()
         );
     }
@@ -98,13 +98,13 @@ fn main() -> ExitCode {
         Command::Show(args) => commands::show::run(&ctx, args),
         Command::Registry(args) => commands::registry::run(&ctx, args),
         Command::Workspace(args) => commands::workspace::run(&ctx, args),
-        Command::Man(args) => {
+        Command::Vvm(args) => {
             // The root is the running version's own (current_exe-derived)
             // when managed, else $VIBEVM_INSTALL_ROOT/opt, else ~/opt
             // (PROP-019 §2.5). Ambient reads live at the composition root.
-            let man_env = commands::man::ManEnv {
+            let vvm_env = commands::vvm::VvmEnv {
                 root: self_loc.as_ref().map(|l| l.root.clone()).or_else(|| {
-                    read_env_opt(commands::man::VIBEVM_INSTALL_ROOT_ENV)
+                    read_env_opt(commands::vvm::VIBEVM_INSTALL_ROOT_ENV)
                         .map(PathBuf::from)
                         .or_else(dirs::home_dir)
                         .map(|base| base.join("opt"))
@@ -114,31 +114,31 @@ fn main() -> ExitCode {
                 shell: read_env_opt("SHELL"),
                 path_var: read_env_opt("PATH"),
             };
-            commands::man::run(&ctx, args, man_env)
+            commands::vvm::run(&ctx, args, vvm_env)
         }
         Command::Vars(args) => {
             let install_base = self_loc
                 .as_ref()
                 .and_then(|l| l.root.parent().map(|p| p.display().to_string()))
-                .or_else(|| read_env_opt(commands::man::VIBEVM_INSTALL_ROOT_ENV))
+                .or_else(|| read_env_opt(commands::vvm::VIBEVM_INSTALL_ROOT_ENV))
                 .or_else(|| dirs::home_dir().map(|h| h.display().to_string()))
                 .unwrap_or_default();
             let home_actual = self_loc
                 .as_ref()
                 .map(|l| l.home.display().to_string())
-                .or_else(|| read_env_opt(commands::man::VIBEVM_HOME_ENV))
+                .or_else(|| read_env_opt(commands::vvm::VIBEVM_HOME_ENV))
                 .unwrap_or_else(|| "(none)".to_string());
             let (invoked, _) = output::resolve_invoked_by(cli.invoked_by.as_deref());
             let rows = vec![
                 commands::vars::VarRow {
                     name: "VIBEVM_INSTALL_ROOT",
                     actual: install_base,
-                    env: read_env_opt(commands::man::VIBEVM_INSTALL_ROOT_ENV),
+                    env: read_env_opt(commands::vvm::VIBEVM_INSTALL_ROOT_ENV),
                 },
                 commands::vars::VarRow {
                     name: "VIBEVM_HOME",
                     actual: home_actual,
-                    env: read_env_opt(commands::man::VIBEVM_HOME_ENV),
+                    env: read_env_opt(commands::vvm::VIBEVM_HOME_ENV),
                 },
                 commands::vars::VarRow {
                     name: "VIBE_INVOKED_BY",

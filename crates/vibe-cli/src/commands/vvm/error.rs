@@ -1,4 +1,4 @@
-//! The `vibe man` dispatch surface's user-facing decision errors (PROP-019
+//! The `vibe self` dispatch surface's user-facing decision errors (PROP-019
 //! §2.2). The domain layers carry their own typed errors (model / store /
 //! placer / source / git); this enum is the handful of decisions the command
 //! surface itself makes — no root, nothing active, not installed, no home, no
@@ -9,10 +9,10 @@ specmark::scope!("spec://vibevm/common/PROP-019#surface");
 use specmark::spec;
 use thiserror::Error;
 
-/// The `vibe man` command surface's decision failures (PROP-019 §2.2).
+/// The `vibe self` command surface's decision failures (PROP-019 §2.2).
 #[derive(Debug, Error)]
 #[spec(implements = "spec://vibevm/common/PROP-019#surface")]
-pub(crate) enum ManError {
+pub(crate) enum VvmError {
     #[error(
         "cannot determine the VVM root \
          (violates spec://vibevm/common/PROP-019#surface; \
@@ -23,14 +23,14 @@ pub(crate) enum ManError {
     #[error(
         "no active version \
          (violates spec://vibevm/common/PROP-019#surface; \
-          fix: select one with `vibe man use <selector>`, or pass an explicit selector)"
+          fix: select one with `vibe self use <selector>`, or pass an explicit selector)"
     )]
     NoActiveVersion,
 
     #[error(
         "{detail} \
          (violates spec://vibevm/common/PROP-019#surface; \
-          fix: install it first — see `vibe man install`)"
+          fix: install it first — see `vibe self install`)"
     )]
     NotInstalled { detail: String },
 

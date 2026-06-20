@@ -317,7 +317,7 @@ pub(crate) fn linked_source(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::commands::man::model::{Kind, Selector, VersionId};
+    use crate::commands::vvm::model::{Kind, Selector, VersionId};
     use specmark::verifies;
 
     fn make_source_repo(dir: &Path) {

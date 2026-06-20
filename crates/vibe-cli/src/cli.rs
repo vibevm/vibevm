@@ -13,22 +13,22 @@ use clap::{Parser, Subcommand};
 
 mod agentic;
 mod inspect;
-mod man;
 mod mcp;
 mod pkg;
 mod registry;
 mod skill;
 mod vars;
+mod vvm;
 mod workspace;
 
 pub use agentic::*;
 pub use inspect::*;
-pub use man::*;
 pub use mcp::*;
 pub use pkg::*;
 pub use registry::*;
 pub use skill::*;
 pub use vars::*;
+pub use vvm::*;
 pub use workspace::*;
 
 #[derive(Debug, Parser)]
@@ -159,12 +159,12 @@ pub enum Command {
     Workspace(WorkspaceArgs),
 
     /// Manage vibevm's own versions on this machine — the VibeVM Version
-    /// Manager (VVM, PROP-019). `vibe man install <selector>` builds and
-    /// installs a version from source; `vibe man use` switches the active
-    /// one; `vibe man ls` lists what is installed. Self-distribution: the
+    /// Manager (VVM, PROP-019). `vibe self install <selector>` builds and
+    /// installs a version from source; `vibe self use` switches the active
+    /// one; `vibe self ls` lists what is installed. Self-distribution: the
     /// `vibe` binary manages its own versions.
-    #[command(visible_alias = "manager")]
-    Man(ManArgs),
+    #[command(name = "self")]
+    Vvm(VvmArgs),
 
     /// Print the runtime variable context — the values vibevm actually uses
     /// (derived from the running binary's location) versus the environment,

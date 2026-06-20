@@ -15,9 +15,9 @@ pub(crate) struct ToolSpec {
     pub help_url: &'static str,
 }
 
-/// The tools a `vibe man install` build requires. The platform linker / C
+/// The tools a `vibe self install` build requires. The platform linker / C
 /// toolchain (MSVC Build Tools / Xcode CLT / build-essential) is also
-/// needed but is not version-checkable here — `man doctor` names it
+/// needed but is not version-checkable here — `self doctor` names it
 /// separately. OpenSSL is deliberately absent (vibevm uses rustls).
 pub(crate) const REQUIRED_TOOLS: &[ToolSpec] = &[
     ToolSpec {

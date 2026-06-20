@@ -20,7 +20,7 @@ pub(crate) enum GitError {
     #[error(
         "spawning `git {args}` failed: {source} \
          (violates spec://vibevm/common/PROP-019#build; \
-          fix: install git and put it on PATH — see `vibe man doctor`)"
+          fix: install git and put it on PATH — see `vibe self doctor`)"
     )]
     Spawn {
         args: String,

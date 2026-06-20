@@ -1,4 +1,4 @@
-//! Argument structs for `vibe man …` — the VibeVM Version Manager
+//! Argument structs for `vibe self …` — the VibeVM Version Manager
 //! (PROP-019 §2.2). Carries the full verb set: `install`, activation
 //! (`use`/`env`), introspection (`ls`/`current`/`which`/`doctor`), `remove`/`gc`.
 
@@ -7,18 +7,22 @@ specmark::scope!("spec://vibevm/common/PROP-019#surface");
 use clap::Subcommand;
 
 #[derive(Debug, clap::Args)]
-pub struct ManArgs {
+pub struct VvmArgs {
     #[command(subcommand)]
-    pub command: ManSubcommand,
+    pub command: VvmSubcommand,
 }
 
 #[derive(Debug, Subcommand)]
-pub enum ManSubcommand {
+pub enum VvmSubcommand {
     /// Build and install a version of vibevm from source.
-    Install(ManInstallArgs),
+    Install(VvmInstallArgs),
+
+    /// Rebuild and activate the latest in-tree version — a shorthand for
+    /// `self install latest`.
+    Update(VvmUpdateArgs),
 
     /// Switch the active version (repoints `VIBEVM_HOME`).
-    Use(ManUseArgs),
+    Use(VvmUseArgs),
 
     /// List installed versions, marking the active one (`*`).
     #[command(visible_alias = "list")]
@@ -31,18 +35,18 @@ pub enum ManSubcommand {
     Which,
 
     /// Verify the install and environment; `--fix` repairs PATH and shims.
-    Doctor(ManDoctorArgs),
+    Doctor(VvmDoctorArgs),
 
     /// Remove installed version(s) — safe by default (no wipe without
     /// `--all`; no selector opens an interactive picker).
     #[command(visible_aliases = ["rm", "del", "uninstall"])]
-    Remove(ManRemoveArgs),
+    Remove(VvmRemoveArgs),
 
     /// Reclaim disk: clean the Rust build cache, or prune old versions.
-    Gc(ManGcArgs),
+    Gc(VvmGcArgs),
 
     /// Print the shell line that activates a version in the current shell.
-    Env(ManEnvArgs),
+    Env(VvmEnvArgs),
 }
 
 /// The `--tag`/`--branch`/`--commit` triplet shared by the selector-taking
@@ -65,7 +69,7 @@ pub struct ForcedKind {
 }
 
 #[derive(Debug, clap::Args)]
-pub struct ManInstallArgs {
+pub struct VvmInstallArgs {
     /// Version selector: latest | stable | <X.Y.Z> | <commit> | <branch>.
     /// Defaults to `latest` (in-tree: the current checkout).
     #[arg(default_value = "latest")]
@@ -92,8 +96,25 @@ pub struct ManInstallArgs {
     pub force: bool,
 }
 
+/// Flags for `self update` — `self install latest` with only the build
+/// knobs (the selector is fixed to `latest`, no mirror: an in-tree rebuild).
 #[derive(Debug, clap::Args)]
-pub struct ManUseArgs {
+pub struct VvmUpdateArgs {
+    /// Build profile (`debug` | `release`). Defaults to `debug`.
+    #[arg(long, value_name = "PROFILE")]
+    pub profile: Option<String>,
+
+    /// Shorthand for `--profile release`.
+    #[arg(long, conflicts_with = "profile")]
+    pub release: bool,
+
+    /// Rebuild even if this version is already installed.
+    #[arg(long)]
+    pub force: bool,
+}
+
+#[derive(Debug, clap::Args)]
+pub struct VvmUseArgs {
     /// Version selector: latest | stable | <X.Y.Z> | <commit> | <branch>.
     pub selector: String,
 
@@ -107,7 +128,7 @@ pub struct ManUseArgs {
 }
 
 #[derive(Debug, clap::Args)]
-pub struct ManEnvArgs {
+pub struct VvmEnvArgs {
     /// Version to emit the activation line for. Defaults to the active one.
     pub selector: Option<String>,
 
@@ -121,7 +142,7 @@ pub struct ManEnvArgs {
 }
 
 #[derive(Debug, clap::Args)]
-pub struct ManDoctorArgs {
+pub struct VvmDoctorArgs {
     /// Apply fixes: write the shims and put the shim dir on PATH (with
     /// consent).
     #[arg(long)]
@@ -133,7 +154,7 @@ pub struct ManDoctorArgs {
 }
 
 #[derive(Debug, clap::Args)]
-pub struct ManRemoveArgs {
+pub struct VvmRemoveArgs {
     /// Version to remove. Omit to pick interactively; never wipes all
     /// without `--all`.
     pub selector: Option<String>,
@@ -163,7 +184,7 @@ pub struct ManRemoveArgs {
 }
 
 #[derive(Debug, clap::Args)]
-pub struct ManGcArgs {
+pub struct VvmGcArgs {
     /// Clean the Rust build cache (the shared `--target-dir`).
     #[arg(long, conflicts_with = "prune_others")]
     pub build: bool,

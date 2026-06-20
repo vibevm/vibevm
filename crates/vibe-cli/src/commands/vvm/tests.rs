@@ -1,11 +1,11 @@
-//! Unit tests for `vibe man` dispatch and selector resolution. Split out
+//! Unit tests for `vibe self` dispatch and selector resolution. Split out
 //! of `mod.rs` so the production file stays inside the file-length budget
 //! (DISCIPLINE-SWEEP §1a tests-out); included via `#[path]` from `mod.rs`.
 
 specmark::scope!("spec://vibevm/common/PROP-019#surface");
 
 use super::*;
-use crate::commands::man::model::{
+use crate::commands::vvm::model::{
     InstallRecord, Kind, Origin, Profile, Selector, State, VersionId,
 };
 use specmark::verifies;

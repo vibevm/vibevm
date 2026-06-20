@@ -101,7 +101,7 @@ fn posix_shim() -> String {
          home=\"$(cat \"$self/../vibevm/current\" 2>/dev/null)\"\n\
          [ -z \"$home\" ] && home=\"$VIBEVM_HOME\"\n\
          if [ -z \"$home\" ]; then\n\
-         \x20 echo 'vibe: no active version — run: vibe man use <selector>' >&2\n\
+         \x20 echo 'vibe: no active version — run: vibe self use <selector>' >&2\n\
          \x20 exit 1\n\
          fi\n\
          exec \"$home/{BINARY_NAME}\" \"$@\"\n"
@@ -116,7 +116,7 @@ fn cmd_shim() -> String {
          if exist \"%VVM_CUR%\" set /p VVM_HOME=<\"%VVM_CUR%\"\r\n\
          if \"%VVM_HOME%\"==\"\" set \"VVM_HOME=%VIBEVM_HOME%\"\r\n\
          if \"%VVM_HOME%\"==\"\" (\r\n\
-         echo vibe: no active version - run: vibe man use ^<selector^> 1>&2\r\n\
+         echo vibe: no active version - run: vibe self use ^<selector^> 1>&2\r\n\
          exit /b 1\r\n\
          )\r\n\
          \"%VVM_HOME%\\{BINARY_NAME}\" %*\r\n"

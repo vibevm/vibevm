@@ -1,4 +1,4 @@
-//! `vibe man remove` and `vibe man gc` (PROP-019 §2.9, §2.10) over the
+//! `vibe self remove` and `vibe self gc` (PROP-019 §2.9, §2.10) over the
 //! instance layout: removing a version drops all its instances and its
 //! managed source clone; gc prunes non-active instances. A committer's
 //! external tree is never touched.
@@ -12,11 +12,11 @@ use dialoguer::{MultiSelect, Select};
 
 use super::model::{self, VersionId};
 use super::store::VersionStore;
-use super::{ManEnv, confirm, forced_kind, require_tty, resolve_installed};
-use crate::cli::{ManGcArgs, ManRemoveArgs};
+use super::{VvmEnv, confirm, forced_kind, require_tty, resolve_installed};
+use crate::cli::{VvmGcArgs, VvmRemoveArgs};
 use crate::output;
 
-/// What `man remove` deletes for a version (PROP-019 §2.9).
+/// What `self remove` deletes for a version (PROP-019 §2.9).
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 enum RemoveScope {
     Bin,
@@ -86,8 +86,8 @@ fn remove_id(
 
 pub(super) fn run_remove_cmd(
     ctx: &output::Context,
-    env: &ManEnv,
-    args: ManRemoveArgs,
+    env: &VvmEnv,
+    args: VvmRemoveArgs,
 ) -> Result<()> {
     let store = env.store()?;
     let state = store.load_state()?;
@@ -148,7 +148,7 @@ fn pick_ids(ctx: &output::Context, state: &model::State) -> Result<Vec<VersionId
     }
     require_tty(
         ctx,
-        "no version selected: pass a selector (e.g. `vibe man remove tag:1.2.3`) or `--all`",
+        "no version selected: pass a selector (e.g. `vibe self remove tag:1.2.3`) or `--all`",
     )?;
     let labels: Vec<String> = ids.iter().map(|i| i.to_string()).collect();
     let chosen = MultiSelect::new()
@@ -165,7 +165,7 @@ enum GcAction {
     Cancel,
 }
 
-pub(super) fn run_gc_cmd(ctx: &output::Context, env: &ManEnv, args: ManGcArgs) -> Result<()> {
+pub(super) fn run_gc_cmd(ctx: &output::Context, env: &VvmEnv, args: VvmGcArgs) -> Result<()> {
     let store = env.store()?;
     let action = if args.build {
         GcAction::Build
@@ -246,7 +246,7 @@ fn gc_menu(ctx: &output::Context) -> Result<GcAction> {
         "Prune all instances except the active",
     ];
     let sel = Select::new()
-        .with_prompt("vibe man gc")
+        .with_prompt("vibe self gc")
         .items(items)
         .default(0)
         .interact()
@@ -261,7 +261,7 @@ fn gc_menu(ctx: &output::Context) -> Result<GcAction> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::commands::man::model::{InstallRecord, Kind, Origin, Profile};
+    use crate::commands::vvm::model::{InstallRecord, Kind, Origin, Profile};
     use specmark::verifies;
 
     fn rec(kind: Kind, id: &str, instance: u64) -> InstallRecord {

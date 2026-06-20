@@ -32,13 +32,13 @@ you built, switching between versions, reclaiming the disk a Rust build tree
 eats, or doing any of it on a clean machine.
 
 Two further forces shaped v2 (§9): the owner iterates fast and must not have
-to **reload the console** after each `man install`/`use`; and a distribution
+to **reload the console** after each `self install`/`use`; and a distribution
 is **more than one file** (today a `vibe.exe`, tomorrow DLLs and bundled
 assets), all of which lock while running.
 
 ### 1.2 What VVM is — a self-distribution manager {#what}
 
-VVM is a command group, `vibe man` (alias `vibe manager`), described as
+VVM is a command group, `vibe self`, described as
 **"VibeVM Version Manager / VVM"**. It builds a selected version of vibevm
 from git, installs the resulting *distribution* under a managed prefix,
 exposes it on `PATH` through a stable shim, and lets the user switch the
@@ -52,7 +52,7 @@ It runs on Windows, macOS, and Linux, across the shells those platforms use.
 `vibe install` is the **package** manager (PROP-003 / PROP-017): it resolves
 packages a *project* depends on into that project. VVM manages *the vibevm
 tool itself* on *the machine* — a user-global prefix, not a project's
-`vibedeps/`. The two never share code paths; `vibe man` is its own command
+`vibedeps/`. The two never share code paths; `vibe self` is its own command
 group so the package verbs stay uncontaminated.
 
 ## 2. Decisions {#decisions}
@@ -67,27 +67,31 @@ identically with or without an agent. It is fully scriptable: every
 interactive prompt has a non-interactive flag equivalent, so VVM works from
 a bare terminal, CI, or an agent transcript.
 
-### 2.2 Command surface — `vibe man` (+ `vibe vars`) {#surface}
+### 2.2 Command surface — `vibe self` (+ `vibe vars`) {#surface}
 
-`req r1`
+`req r2`
 
-`vibe man` (visible alias `vibe manager`):
+`vibe self` — named after rustup's `self` (a tool that manages its own
+versions), and unambiguous where `man` collided with the Unix manual page:
 
-- `man install <selector>` — build and install a version (§2.7). Flags:
+- `self install <selector>` — build and install a version (§2.7). Flags:
   `--release` / `--profile <debug|release>` (default **debug**, a single
   source-of-truth constant, §7); `--mirror <gitverse|github>` (clone path
   only, §2.7); `--force` (fresh instance, bypass the diff-copy dedup-skip);
   `-y`/`--yes`.
-- `man use <selector>` — make a version active by repointing the live
+- `self update` — rebuild and activate the latest in-tree version; a
+  shorthand for `self install latest` (§2.7), carrying `--release` /
+  `--profile` / `--force`.
+- `self use <selector>` — make a version active by repointing the live
   `current` file — **no console reload** (§2.5). `--eval` prints the shell
   line for the current shell instead of touching the durable environment.
-- `man ls` (alias `list`) — list installed versions, marking the active one.
-- `man current` / `man which` — the active selector / the active binary path.
-- `man remove <selector>` (aliases `rm`, `del`, `uninstall`) — safe by
+- `self ls` (alias `list`) — list installed versions, marking the active one.
+- `self current` / `self which` — the active selector / the active binary path.
+- `self remove <selector>` (aliases `rm`, `del`, `uninstall`) — safe by
   default (§2.9).
-- `man gc` — reclaim disk (§2.10).
-- `man doctor` (+ `--fix`) — verify the install and environment (§2.11).
-- `man env` — print activation lines for a shell.
+- `self gc` — reclaim disk (§2.10).
+- `self doctor` (+ `--fix`) — verify the install and environment (§2.11).
+- `self env` — print activation lines for a shell.
 
 Top-level **`vibe vars`** (§2.14) prints the runtime variable context —
 the values vibevm *actually* uses (derived from `current_exe`) versus what
@@ -103,7 +107,7 @@ A *selector* names what to install or use; resolution is deterministic:
 - `stable` → highest semantic-version git tag (the newest release).
 - `X.Y.Z` → a tag; tries `X.Y.Z` then `vX.Y.Z`.
 - a hex commit-ish → a commit.
-- the canonical `<kind>:<id>` form (as `man ls` prints) → that exact id.
+- the canonical `<kind>:<id>` form (as `self ls` prints) → that exact id.
 - any other bare name → branch, then tag, then commit (hex commits and
   `X.Y.Z` tags are classified before this point).
 
@@ -161,7 +165,7 @@ three layers:
    falls back to env, then defaults.
 2. **`current` file → the live active instance.** The shim reads
    `$shimdir/../vibevm/current` on **every** launch and execs that instance.
-   `man use` rewrites `current` → the **next** `vibe` in the **same shell**
+   `self use` rewrites `current` → the **next** `vibe` in the **same shell**
    uses it. No reload (the shim reads a file, not the shell's frozen env).
 3. **`$VIBEVM_HOME` / `$VIBEVM_INSTALL_ROOT` (env) → advisory.** Still set
    durably for external `JAVA_HOME`-style tools, but no longer the source of
@@ -172,7 +176,7 @@ three layers:
 
 The shims (`bin/{vibe,vibe.cmd}`) are minimal: resolve `current`, exec; if
 absent, fall back to `$VIBEVM_HOME`, else print "no active vibevm — run
-`vibe man use <selector>`". Both POSIX and `.cmd` shims exist (Git Bash
+`vibe self use <selector>`". Both POSIX and `.cmd` shims exist (Git Bash
 won't resolve `.cmd`; cmd/PowerShell won't run an extensionless script).
 
 ### 2.6 PATH and durable environment management {#path}
@@ -183,7 +187,7 @@ VVM detects OS and shell and manages durable settings under strict rules:
 
 - **The shim dir on `PATH`** (stable; set once).
 - **`VIBEVM_HOME` / `VIBEVM_INSTALL_ROOT`** as *advisory* env (§2.5) —
-  repointed on `man use` for external tools; truth lives in `current` +
+  repointed on `self use` for external tools; truth lives in `current` +
   `current_exe`.
 
 Rules: **idempotent** (a marker guards the edit; no duplicate lines/entries),
@@ -191,7 +195,7 @@ Rules: **idempotent** (a marker guards the edit; no duplicate lines/entries),
 preserved), **OS/shell-aware** (Windows: `HKCU\Environment` via PowerShell's
 `[Environment]` API, which broadcasts to new processes; POSIX: a marked
 block in the detected shell's rc — bash/zsh/fish/`.profile`), and **consent
-+ honesty** (mutating edits need a confirm / `-y` / `man doctor --fix`,
++ honesty** (mutating edits need a confirm / `-y` / `self doctor --fix`,
 print the diff, and say the change reaches only new shells). The durable
 writer is an injectable seam so tests exercise the POSIX rc path in a temp
 file and never mutate the real machine.
@@ -205,10 +209,10 @@ build it incrementally, place the distribution into a **new immutable
 instance** by diff-copy, record provenance, flip `current`.
 
 - **Locate source (§2.16).** Two origins, never bulk-copied:
-  - *external* — `man install` run inside a committer's own checkout
+  - *external* — `self install` run inside a committer's own checkout
     (outside the install root): build it **in place**, never touch its git
     state, and record its canonical absolute path as provenance so a later
-    `man install <id>` can rebuild from the remembered location (a *linked
+    `self install <id>` can rebuild from the remembered location (a *linked
     source*).
   - *managed* — a clone vibevm owns under `src/<kind>/<id>`: created once,
     then updated **incrementally** with `git fetch`/`checkout` (or
@@ -242,7 +246,7 @@ stable ≥ 1.93, edition 2024 — via rustup so the pin resolves), and a
 **system linker / C toolchain** (Windows: VS Build Tools; macOS: Xcode CLT;
 Linux: `build-essential`). OpenSSL is deliberately not required (rustls).
 The list lives once as a `REQUIRED_TOOLS` table — `(name, min_version,
-check_command, help_url)` — read by `man doctor` (§2.11) and asserted by a
+check_command, help_url)` — read by `self doctor` (§2.11) and asserted by a
 test; it is the runnable form of "how to update the stack" (§7). The publish
 token is **never** in this set (§2.13).
 
@@ -250,13 +254,13 @@ token is **never** in this set (§2.13).
 
 `req r1`
 
-`man remove` never silently wipes everything:
+`self remove` never silently wipes everything:
 
-- `man remove <selector>` — remove that version's instances (and, with
+- `self remove <selector>` — remove that version's instances (and, with
   `--src`, the managed source). `--bin`/`--src`/`--both` (default both).
-- `man remove` with no selector — an **interactive picker**; a non-
+- `self remove` with no selector — an **interactive picker**; a non-
   interactive context errors with a hint, never a wipe.
-- `man remove --all` — every version, behind the flag **and** a re-confirm.
+- `self remove --all` — every version, behind the flag **and** a re-confirm.
 - The **active** version and the **running** instance are protected:
   removing the active needs `--force`; a running instance's files are never
   deleted out from under it (best-effort, skipped if locked).
@@ -264,11 +268,11 @@ token is **never** in this set (§2.13).
 External sources (committer trees) are **never** removed — VVM only forgets
 their provenance record; managed `src/<kind>/<id>` clones are VVM's to drop.
 
-### 2.10 Garbage collection — `man gc` {#gc}
+### 2.10 Garbage collection — `self gc` {#gc}
 
 `req r1`
 
-`man gc` reclaims disk:
+`self gc` reclaims disk:
 
 - `--build` — clean the shared Rust build cache (`build/`); forces a rebuild
   next install but touches no installed instance.
@@ -281,27 +285,27 @@ succeeds and the inode lives until the process exits). Hardlinked files are
 refcount-safe — removing one instance never corrupts another that shares
 inodes (§2.15). **Auto-prune on install** is enabled **only for binary
 artifacts** (§9.5); source builds keep their instances until a manual `gc`
-(cheap once hardlink-sharing lands). `man gc` operates **only** inside the
+(cheap once hardlink-sharing lands). `self gc` operates **only** inside the
 install root and **never** touches the shared `~/.cargo` caches.
 
 ### 2.11 Introspection — `doctor`, `ls`, `current`, `which`, `env` {#introspection}
 
 `req r1`
 
-`man doctor` verifies end to end: the shim dir is on `PATH`; the
+`self doctor` verifies end to end: the shim dir is on `PATH`; the
 `REQUIRED_TOOLS` are present with adequate versions; `current` resolves to
 an installed instance whose binary exists. It prints a panel with
 remediation; `--fix` performs the PATH / env edits (§2.6) with consent.
-`man ls` / `current` / `which` read the **`current` file** for the active
-selection (not the env). `man env` prints shell-specific activation lines.
+`self ls` / `current` / `which` read the **`current` file** for the active
+selection (not the env). `self env` prints shell-specific activation lines.
 
 ### 2.12 Cold-start (bootstrap) {#bootstrap}
 
 `req r1`
 
-VVM installs `vibe`, so the first binary cannot come from `vibe man`. The
+VVM installs `vibe`, so the first binary cannot come from `vibe self`. The
 cold-start path is `git clone <mirror> && cd vibevm && cargo run -p vibe-cli
--- man install` — one `cargo run` from a fresh clone bootstraps the managed
+-- self install` — one `cargo run` from a fresh clone bootstraps the managed
 install (as nvm is installed by a script, not by node). A generated one-line
 bootstrap script is far-backlog (§6).
 
@@ -377,7 +381,7 @@ is tens of GB). Each instance records its **origin**:
   digest (computed once at publish, never re-hashed locally).
 
 The remembered `source_path` makes an external source a **linked source**:
-`man install <id>` can rebuild from the recorded location from anywhere,
+`self install <id>` can rebuild from the recorded location from anywhere,
 without being in the checkout and without copying it. The installed instance
 is self-contained (it runs without the source); the path is needed only to
 rebuild, and a clear error is given if it has moved.
@@ -400,17 +404,17 @@ mockable and unit tests never clone, build, or edit the real environment:
 - `vars` — the actual-vs-environment resolver (§2.14), `current_exe`-aware.
 
 A managed `vibe` resolves its root/active from `current_exe` + the `current`
-file; env is the fallback. The command lives as `cli/man.rs` + `cli` for
-`vibe vars`, with logic under `commands/man/` (split across module-grain
+file; env is the fallback. The command lives as `cli/vvm.rs` + `cli` for
+`vibe vars`, with logic under `commands/vvm/` (split across module-grain
 files to hold the file-length budget). conform and specmap stay green.
 
 ## 4. MVP scope {#mvp}
 
-The full verb set on all three platforms: `man install` (external in-place +
-managed clone paths, debug + release, diff-copy into instances), `man use`
-(live `current`, no reload), `man ls`/`current`/`which`, `man remove` (safe
-+ `--all`), `man gc` (build cache + prune), `man doctor` (+ `--fix`),
-`man env`, and `vibe vars`. Selector resolution per §2.3; durable
+The full verb set on all three platforms: `self install` (external in-place +
+managed clone paths, debug + release, diff-copy into instances), `self use`
+(live `current`, no reload), `self ls`/`current`/`which`, `self remove` (safe
++ `--all`), `self gc` (build cache + prune), `self doctor` (+ `--fix`),
+`self env`, and `vibe vars`. Selector resolution per §2.3; durable
 PATH/advisory-env per §2.6 across Windows (cmd/PowerShell/Git Bash), macOS
 (zsh/bash), Linux (bash/zsh/fish). diff-copy with hardlink sharing is in
 scope (§2.15). Linked sources (§2.16) are in scope (the `source_path`
@@ -424,7 +428,7 @@ portable choice). These are §6.
 
 ## 6. Far backlog {#far-backlog}
 
-- `man install --binary` — fetch a prebuilt artifact keyed by the
+- `self install --binary` — fetch a prebuilt artifact keyed by the
   publisher's digest (counter instance, full copy, auto-prune on, §9.5).
 - A generated one-line bootstrap script for cold-start (§2.12).
 - Offline builds via vendoring or a registry mirror.
@@ -444,10 +448,10 @@ profile** is one constant (§2.2); the **Rust pin** is `rust-toolchain.toml`
 
 `req r1`
 
-- From a fresh clone, `cargo run -p vibe-cli -- man install` produces a
+- From a fresh clone, `cargo run -p vibe-cli -- self install` produces a
   working managed install and a `vibe` on `PATH` (after the printed
   activation step) on Windows, macOS, Linux.
-- `man use` switches the active version and the **next** `vibe` in the
+- `self use` switches the active version and the **next** `vibe` in the
   **same shell** is the new one — no reload (`current` file).
 - Reinstalling the running version replaces no in-use file (new instance +
   pointer flip); the running process is unharmed.
@@ -456,7 +460,7 @@ profile** is one constant (§2.2); the **Rust pin** is `rust-toolchain.toml`
   bulk.
 - `vibe vars` reports actual vs environment; `vibe vars diff`/`full`/`full
   diff` per §2.14; the publish token never appears.
-- `man remove` never wipes without `--all` + reconfirm; `man gc` never
+- `self remove` never wipes without `--all` + reconfirm; `self gc` never
   touches `~/.cargo`; external sources are never modified or removed.
 - Full `self-check.sh` green; conform 0/0/0; specmap clean.
 
@@ -469,7 +473,7 @@ recording them so a cold reader sees *why*, not just *what*.
 
 v1 made `$VIBEVM_HOME` the single source of truth for the active version.
 Environment variables are inherited at process start, so a shell's
-`$VIBEVM_HOME` is frozen until the shell is reloaded — every `man use`/
+`$VIBEVM_HOME` is frozen until the shell is reloaded — every `self use`/
 reinstall forced "open a new terminal". The fix: the **shim reads a live
 `current` file** each launch (filesystem is live → instant switch in the
 same shell), and a running `vibe` derives its own identity from

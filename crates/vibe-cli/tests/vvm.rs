@@ -1,4 +1,4 @@
-//! Integration tests for `vibe man` (PROP-019), driven through the real
+//! Integration tests for `vibe self` (PROP-019), driven through the real
 //! binary. The install root is pinned inside a temp dir via
 //! `VIBEVM_INSTALL_ROOT`, so nothing here ever touches the developer's
 //! real `~/opt` (PROP-019 §2.4).
@@ -26,7 +26,7 @@ fn bin_name() -> &'static str {
 fn ls_is_empty_on_a_fresh_root() {
     let base = TempDir::new().unwrap();
     vibe(base.path())
-        .args(["man", "ls"])
+        .args(["self", "ls"])
         .assert()
         .success()
         .stdout(predicates::str::contains("no versions installed"));
@@ -36,7 +36,7 @@ fn ls_is_empty_on_a_fresh_root() {
 fn which_fails_without_an_active_version() {
     let base = TempDir::new().unwrap();
     vibe(base.path())
-        .args(["man", "which"])
+        .args(["self", "which"])
         .assert()
         .failure()
         .stderr(predicates::str::contains("no active version"));
@@ -50,7 +50,7 @@ fn install_builds_publishes_and_records_under_the_temp_root() {
 
     vibe(base.path())
         .current_dir(src.path())
-        .args(["man", "install"])
+        .args(["self", "install"])
         .assert()
         .success()
         .stdout(predicates::str::contains("installed branch:main"));
@@ -76,7 +76,29 @@ fn install_builds_publishes_and_records_under_the_temp_root() {
 
     // install flipped `current`, so ls marks it active with no extra env.
     vibe(base.path())
-        .args(["man", "ls"])
+        .args(["self", "ls"])
+        .assert()
+        .success()
+        .stdout(predicates::str::contains("* branch:main"));
+}
+
+#[test]
+fn update_builds_and_activates_latest_like_install() {
+    // `self update` is `self install latest`: from a tiny in-tree source on
+    // branch `main`, it builds, publishes, and flips `current` to it.
+    let base = TempDir::new().unwrap();
+    let src = TempDir::new().unwrap();
+    write_tiny_source(src.path());
+
+    vibe(base.path())
+        .current_dir(src.path())
+        .args(["self", "update"])
+        .assert()
+        .success()
+        .stdout(predicates::str::contains("installed branch:main"));
+
+    vibe(base.path())
+        .args(["self", "ls"])
         .assert()
         .success()
         .stdout(predicates::str::contains("* branch:main"));

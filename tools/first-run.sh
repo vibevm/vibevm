@@ -5,15 +5,15 @@
 # "First run" and `spec/common/PROP-019-version-manager.md`.
 #
 # What it does, in order:
-#   1. vibe man install         — build this checkout, publish it as
+#   1. vibe self install        — build this checkout, publish it as
 #                                 instance 1, make it the active version.
-#   2. vibe man doctor --fix    — write the shims into ~/opt/bin and put
+#   2. vibe self doctor --fix   — write the shims into ~/opt/bin and put
 #                                 ~/opt/bin on PATH (durable; new shells).
-#   3. vibe man ls              — show what is installed.
+#   3. vibe self ls             — show what is installed.
 #
 # This edits your durable PATH (the registry on Windows, the shell rc on
 # POSIX). To try VVM WITHOUT touching ~/opt or PATH, skip this script and run:
-#   VIBEVM_INSTALL_ROOT="$(mktemp -d)" cargo run -p vibe-cli -- man install
+#   VIBEVM_INSTALL_ROOT="$(mktemp -d)" cargo run -p vibe-cli -- self install
 set -euo pipefail
 
 script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
@@ -31,21 +31,21 @@ run() {
 }
 
 echo "first-run: building this checkout and installing it as your first version…"
-run man install
+run self install
 
 echo
 echo "first-run: writing shims and putting ~/opt/bin on PATH…"
-run man doctor --fix --yes
+run self doctor --fix --yes
 
 echo
-run man ls || true
+run self ls || true
 
 cat <<'EOF'
 
 first-run: done. Open a NEW terminal, then:
 
-    vibe man ls
+    vibe self ls
 
-From now on the loop is fast: `vibe man install` rebuilds, flips the active
+From now on the loop is fast: `vibe self install` rebuilds, flips the active
 version, and the next `vibe` in the same shell uses it — no console reload.
 EOF
