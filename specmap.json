@@ -3651,28 +3651,28 @@
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/lib.rs",
       "item_kind": "struct",
-      "line": 276,
+      "line": 277,
       "symbol": "vibe_workspace::Workspace"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/lib.rs",
       "item_kind": "fn",
-      "line": 321,
+      "line": 322,
       "symbol": "vibe_workspace::Workspace::discover"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/lib.rs",
       "item_kind": "enum",
-      "line": 53,
+      "line": 54,
       "symbol": "vibe_workspace::WorkspaceError"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/lib.rs",
       "item_kind": "struct",
-      "line": 232,
+      "line": 233,
       "symbol": "vibe_workspace::WorkspaceMember"
     },
     {
@@ -3772,6 +3772,97 @@
       "item_kind": "mod",
       "line": 33,
       "symbol": "vibe_workspace::freshness"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/hooks.rs",
+      "item_kind": "mod",
+      "line": 13,
+      "symbol": "vibe_workspace::hooks"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/hooks.rs",
+      "item_kind": "enum",
+      "line": 118,
+      "symbol": "vibe_workspace::hooks::HookError"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/hooks.rs",
+      "item_kind": "fn",
+      "line": 218,
+      "symbol": "vibe_workspace::hooks::decide_trust"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/hooks.rs",
+      "item_kind": "fn",
+      "line": 293,
+      "symbol": "vibe_workspace::hooks::run_package_hook"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/hooks.rs",
+      "item_kind": "fn",
+      "line": 241,
+      "symbol": "vibe_workspace::hooks::select_invocation"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/hooks/tests.rs",
+      "item_kind": "fn",
+      "line": 155,
+      "symbol": "vibe_workspace::hooks::tests::allowed_hook_runs_on_zero_exit"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/hooks/tests.rs",
+      "item_kind": "fn",
+      "line": 289,
+      "symbol": "vibe_workspace::hooks::tests::declared_but_no_interpreter_errors"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/hooks/tests.rs",
+      "item_kind": "fn",
+      "line": 209,
+      "symbol": "vibe_workspace::hooks::tests::post_install_nonzero_installs_but_flags"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/hooks/tests.rs",
+      "item_kind": "fn",
+      "line": 182,
+      "symbol": "vibe_workspace::hooks::tests::pre_install_nonzero_aborts"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/hooks/tests.rs",
+      "item_kind": "fn",
+      "line": 240,
+      "symbol": "vibe_workspace::hooks::tests::refused_trust_is_an_error"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/hooks/tests.rs",
+      "item_kind": "fn",
+      "line": 60,
+      "symbol": "vibe_workspace::hooks::tests::trust_matrix"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/hooks/tests.rs",
+      "item_kind": "fn",
+      "line": 88,
+      "symbol": "vibe_workspace::hooks::tests::unix_selects_sh_via_bash"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/hooks/tests.rs",
+      "item_kind": "fn",
+      "line": 106,
+      "symbol": "vibe_workspace::hooks::tests::windows_prefers_sh_then_falls_back_to_ps1"
     },
     {
       "crate_name": "vibe-workspace",
@@ -8282,7 +8373,7 @@
     {
       "file": "crates/vibe-workspace/src/lib.rs",
       "from_symbol": "vibe_workspace::Workspace",
-      "line": 305,
+      "line": 306,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-007#workspace-section",
       "verb": "implements",
@@ -8291,7 +8382,7 @@
     {
       "file": "crates/vibe-workspace/src/lib.rs",
       "from_symbol": "vibe_workspace::Workspace::discover",
-      "line": 326,
+      "line": 327,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-007#nesting",
       "verb": "implements",
@@ -8300,7 +8391,7 @@
     {
       "file": "crates/vibe-workspace/src/lib.rs",
       "from_symbol": "vibe_workspace::WorkspaceError",
-      "line": 74,
+      "line": 75,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-007#nesting",
       "verb": "implements"
@@ -8308,7 +8399,7 @@
     {
       "file": "crates/vibe-workspace/src/lib.rs",
       "from_symbol": "vibe_workspace::WorkspaceMember",
-      "line": 255,
+      "line": 256,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-007#workspace-section",
       "verb": "implements",
@@ -8444,6 +8535,121 @@
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-011#skip-resolution",
       "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-workspace/src/hooks.rs",
+      "from_symbol": "vibe_workspace::hooks",
+      "line": 13,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-020#phases",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-workspace/src/hooks.rs",
+      "from_symbol": "vibe_workspace::hooks::HookError",
+      "line": 121,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-020#phases",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-workspace/src/hooks.rs",
+      "from_symbol": "vibe_workspace::hooks::decide_trust",
+      "line": 222,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-020#trust-gate",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-workspace/src/hooks.rs",
+      "from_symbol": "vibe_workspace::hooks::run_package_hook",
+      "line": 304,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-020#phases",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-workspace/src/hooks.rs",
+      "from_symbol": "vibe_workspace::hooks::select_invocation",
+      "line": 245,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-020#script-selection",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-workspace/src/hooks/tests.rs",
+      "from_symbol": "vibe_workspace::hooks::tests::allowed_hook_runs_on_zero_exit",
+      "line": 156,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-020#phases",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-workspace/src/hooks/tests.rs",
+      "from_symbol": "vibe_workspace::hooks::tests::declared_but_no_interpreter_errors",
+      "line": 290,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-020#script-selection",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-workspace/src/hooks/tests.rs",
+      "from_symbol": "vibe_workspace::hooks::tests::post_install_nonzero_installs_but_flags",
+      "line": 210,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-020#failure",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-workspace/src/hooks/tests.rs",
+      "from_symbol": "vibe_workspace::hooks::tests::pre_install_nonzero_aborts",
+      "line": 183,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-020#failure",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-workspace/src/hooks/tests.rs",
+      "from_symbol": "vibe_workspace::hooks::tests::refused_trust_is_an_error",
+      "line": 241,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-020#trust-gate",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-workspace/src/hooks/tests.rs",
+      "from_symbol": "vibe_workspace::hooks::tests::trust_matrix",
+      "line": 61,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-020#trust-gate",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-workspace/src/hooks/tests.rs",
+      "from_symbol": "vibe_workspace::hooks::tests::unix_selects_sh_via_bash",
+      "line": 89,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-020#script-selection",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-workspace/src/hooks/tests.rs",
+      "from_symbol": "vibe_workspace::hooks::tests::windows_prefers_sh_then_falls_back_to_ps1",
+      "line": 107,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-020#script-selection",
+      "verb": "verifies",
+      "pinned_r": 1
     },
     {
       "file": "crates/vibe-workspace/src/install.rs",
