@@ -39,6 +39,7 @@ use vibe_core::{PackageKind, RelPath};
 pub mod boot;
 pub mod boot_artifacts;
 pub mod freshness;
+pub mod hooks;
 pub mod install;
 pub mod publish;
 pub mod vibedeps;
