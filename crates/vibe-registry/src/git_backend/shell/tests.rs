@@ -10,6 +10,7 @@ use std::path::PathBuf;
 use tempfile::tempdir;
 
 use fixtures::*;
+use specmark::verifies;
 
 macro_rules! skip_without_git {
     () => {
@@ -67,6 +68,29 @@ fn clone_then_update_against_bare_origin() {
 
     g.update(&dest, "main").expect("update should succeed");
     assert!(dest.join("new.md").exists());
+}
+
+#[test]
+#[verifies("spec://vibevm/modules/vibe-registry/PROP-021#fetch", r = 1)]
+fn submodule_step_is_a_noop_without_submodules() {
+    skip_without_git!();
+    let tmp = tempdir().unwrap();
+    let bare = make_bare_origin(tmp.path());
+    let dest = tmp.path().join("clone");
+
+    let g = ShellGit::new();
+    // `bootstrap` now passes `--recurse-submodules`; on a repo with none
+    // it clones exactly as before (PROP-021 §2.1).
+    g.bootstrap(&bare.to_string_lossy(), "main", &dest)
+        .expect("clone --recurse-submodules ok on a repo with no submodules");
+    assert!(dest.join("README.md").exists());
+
+    // `update` now runs `git submodule update --init --recursive`; on a
+    // repo with no submodules that step must succeed as a no-op rather
+    // than fail the update — the path every existing package takes.
+    g.update(&dest, "main")
+        .expect("update with the submodule step ok on a plain repo");
+    assert!(dest.join("README.md").exists());
 }
 
 #[test]

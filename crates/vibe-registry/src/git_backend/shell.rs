@@ -127,7 +127,19 @@ impl GitBackend for ShellGit {
     fn bootstrap(&self, url: &str, refname: &str, dest: &Path) -> Result<(), GitError> {
         self.preflight()?;
         let dest_s = dest.to_string_lossy();
-        let args = ["clone", "--branch", refname, "--", url, dest_s.as_ref()];
+        // `--recurse-submodules` clones and checks out any submodules the
+        // package repo declares in `.gitmodules` (PROP-021 §2.1). Harmless
+        // on a repo with none; the `--` / `--branch` markers stay in place
+        // so `classify_failure`'s url/refname extraction is unaffected.
+        let args = [
+            "clone",
+            "--recurse-submodules",
+            "--branch",
+            refname,
+            "--",
+            url,
+            dest_s.as_ref(),
+        ];
         self.run(&args, None).map(|_| ())
     }
 
@@ -150,12 +162,20 @@ impl GitBackend for ShellGit {
         // because a `vN.M.K`-shaped tag is what every per-package repo
         // ships under M1.1-revision.
         let tag_ref = format!("refs/tags/{refname}");
-        if self.run(&["reset", "--hard", &tag_ref], Some(dest)).is_ok() {
-            return Ok(());
+        let reset_ok = self.run(&["reset", "--hard", &tag_ref], Some(dest)).is_ok();
+        if !reset_ok {
+            let branch_ref = format!("origin/{refname}");
+            self.run(&["reset", "--hard", &branch_ref], Some(dest))?;
         }
-        let branch_ref = format!("origin/{refname}");
-        self.run(&["reset", "--hard", &branch_ref], Some(dest))
-            .map(|_| ())
+        // The working tree now matches the target ref; re-sync submodules
+        // to the gitlink commits that ref pins (PROP-021 §2.1). `--init`
+        // picks up newly-added submodules, `--recursive` handles nesting,
+        // and the whole step is a no-op on a repo with no submodules.
+        self.run(
+            &["submodule", "update", "--init", "--recursive"],
+            Some(dest),
+        )
+        .map(|_| ())
     }
 
     fn list_tags(&self, url: &str) -> Result<Vec<String>, GitError> {
