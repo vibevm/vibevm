@@ -2802,6 +2802,13 @@
     },
     {
       "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/git_backend/shell/tests.rs",
+      "item_kind": "fn",
+      "line": 73,
+      "symbol": "vibe_registry::git_backend::shell::tests::submodule_step_is_a_noop_without_submodules"
+    },
+    {
+      "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/src/git_package_registry/mod.rs",
       "item_kind": "mod",
       "line": 36,
@@ -7189,6 +7196,15 @@
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-registry/PROP-001#backend",
       "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-registry/src/git_backend/shell/tests.rs",
+      "from_symbol": "vibe_registry::git_backend::shell::tests::submodule_step_is_a_noop_without_submodules",
+      "line": 74,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-021#fetch",
+      "verb": "verifies",
+      "pinned_r": 1
     },
     {
       "file": "crates/vibe-registry/src/git_package_registry/mod.rs",
