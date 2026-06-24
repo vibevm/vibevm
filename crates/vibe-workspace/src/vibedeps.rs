@@ -88,6 +88,39 @@ pub fn materialise(
     version: &semver::Version,
     content_src: &Path,
 ) -> Result<Vec<PathBuf>, WorkspaceError> {
+    materialise_with(
+        workspace_root,
+        kind,
+        name,
+        version,
+        content_src,
+        CopyMode::Copy,
+    )
+}
+
+/// How [`materialise_with`] places each file into a slot (PROP-022 §2.2/§2.3).
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum CopyMode {
+    /// Full byte copy — the default `snapshot` materialisation (PROP-022 §2.2).
+    Copy,
+    /// Hardlink each file from the source, falling back to a copy when the
+    /// filesystem refuses (cross-volume / unsupported) — the `hardlink`
+    /// materialisation for packages big in bytes but modest in file count
+    /// (PROP-022 §2.3).
+    Hardlink,
+}
+
+/// Like [`materialise`] but selects how each file is placed (PROP-022
+/// §2.2/§2.3). The slot still presents a full tree and the returned
+/// footprint is identical — only the on-disk byte-sharing differs.
+pub fn materialise_with(
+    workspace_root: &Path,
+    kind: PackageKind,
+    name: &str,
+    version: &semver::Version,
+    content_src: &Path,
+    mode: CopyMode,
+) -> Result<Vec<PathBuf>, WorkspaceError> {
     let slot = slot_abs_path(workspace_root, kind, name, version);
     let slot_label = slot_rel_path(kind, name, version);
 
@@ -108,7 +141,7 @@ pub fn materialise(
     fs::create_dir_all(&slot).map_err(|e| io_err(&slot, e))?;
 
     let mut written: Vec<PathBuf> = Vec::new();
-    copy_tree(content_src, content_src, &slot, &mut written)?;
+    copy_tree(content_src, content_src, &slot, mode, &mut written)?;
     written.sort();
     Ok(written)
 }
@@ -136,6 +169,7 @@ fn copy_tree(
     dir: &Path,
     src_root: &Path,
     dest_root: &Path,
+    mode: CopyMode,
     written: &mut Vec<PathBuf>,
 ) -> Result<(), WorkspaceError> {
     for entry in fs::read_dir(dir).map_err(|e| io_err(dir, e))? {
@@ -148,7 +182,7 @@ fn copy_tree(
         let path = entry.path();
         let file_type = entry.file_type().map_err(|e| io_err(&path, e))?;
         if file_type.is_dir() {
-            copy_tree(&path, src_root, dest_root, written)?;
+            copy_tree(&path, src_root, dest_root, mode, written)?;
         } else if file_type.is_file() {
             let rel = path
                 .strip_prefix(src_root)
@@ -160,11 +194,28 @@ fn copy_tree(
             if let Some(parent) = dest.parent() {
                 fs::create_dir_all(parent).map_err(|e| io_err(parent, e))?;
             }
-            fs::copy(&path, &dest).map_err(|e| io_err(&dest, e))?;
+            place_file(&path, &dest, mode)?;
             written.push(PathBuf::from(crate::path_to_slash(rel)));
         }
         // A symlink is neither a dir nor a file via the non-following
         // `file_type` — it falls through and is skipped (see the docs).
+    }
+    Ok(())
+}
+
+/// Place one file into the slot per [`CopyMode`]. A `Hardlink` that the
+/// filesystem refuses (cross-volume, unsupported) falls back to a byte copy
+/// (PROP-022 §2.3), so the slot always materialises.
+fn place_file(src: &Path, dest: &Path, mode: CopyMode) -> Result<(), WorkspaceError> {
+    match mode {
+        CopyMode::Copy => {
+            fs::copy(src, dest).map_err(|e| io_err(dest, e))?;
+        }
+        CopyMode::Hardlink => {
+            if fs::hard_link(src, dest).is_err() {
+                fs::copy(src, dest).map_err(|e| io_err(dest, e))?;
+            }
+        }
     }
     Ok(())
 }
@@ -181,6 +232,7 @@ fn io_err(path: &Path, e: std::io::Error) -> WorkspaceError {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use specmark::verifies;
     use tempfile::TempDir;
 
     fn version(s: &str) -> semver::Version {
@@ -385,5 +437,32 @@ mod tests {
         ));
         // A second removal finds nothing to do.
         assert!(!remove_slot(ws.path(), PackageKind::Flow, "wal", &version("0.3.0")).unwrap());
+    }
+
+    #[test]
+    #[verifies("spec://vibevm/modules/vibe-workspace/PROP-022#hardlink", r = 1)]
+    fn materialise_hardlink_mode_places_the_full_tree() {
+        let ws = TempDir::new().unwrap();
+        let src = TempDir::new().unwrap();
+        write(src.path(), "vibe.toml", "x");
+        write(src.path(), "boot/s.md", "# s");
+        let written = materialise_with(
+            ws.path(),
+            PackageKind::Flow,
+            "w",
+            &version("1.0.0"),
+            src.path(),
+            CopyMode::Hardlink,
+        )
+        .unwrap();
+        let slot = ws.path().join("vibedeps/flow-w/1.0.0");
+        // Hardlinked (or copy-fallback) — either way the content is present
+        // and the footprint matches a copy materialisation.
+        assert_eq!(fs::read_to_string(slot.join("vibe.toml")).unwrap(), "x");
+        assert!(slot.join("boot/s.md").is_file());
+        assert_eq!(
+            written,
+            vec![PathBuf::from("boot/s.md"), PathBuf::from("vibe.toml")]
+        );
     }
 }

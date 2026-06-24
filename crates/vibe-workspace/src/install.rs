@@ -22,7 +22,7 @@ use std::fs;
 use std::path::{Path, PathBuf};
 
 use specmark::spec;
-use vibe_core::manifest::{BootCategory, Manifest};
+use vibe_core::manifest::{BootCategory, Manifest, Materialization};
 use vibe_core::user_config::SlotIntegrity;
 use vibe_core::{Group, PackageKind};
 
@@ -106,12 +106,13 @@ pub fn apply_resolution(
         if present && slot_integrity == SlotIntegrity::TrustPresence {
             skipped.push(slot);
         } else {
-            vibedeps::materialise(
+            vibedeps::materialise_with(
                 &workspace.root,
                 dep.kind,
                 &dep.name,
                 &dep.version,
                 &dep.content_dir,
+                copy_mode_for(&dep.manifest),
             )?;
             materialised.push(slot);
         }
@@ -133,6 +134,19 @@ pub fn apply_resolution(
         pruned,
         nodes_regenerated,
     })
+}
+
+/// The slot placement mode for a resolved package (PROP-022 §2.1).
+/// `hardlink` shares bytes with the cache by link; `snapshot` (the default)
+/// is a full copy. `in-place` would clone directly into the slot, but that
+/// pipeline (git + source URL in the install layer) is not yet wired — until
+/// it lands, an `in-place` package falls back to a snapshot copy, which is
+/// correct, just not yet optimised for giant repos.
+fn copy_mode_for(manifest: &Manifest) -> vibedeps::CopyMode {
+    match manifest.package.as_ref().map(|p| p.materialization) {
+        Some(Materialization::Hardlink) => vibedeps::CopyMode::Hardlink,
+        _ => vibedeps::CopyMode::Copy,
+    }
 }
 
 /// Remove every `vibedeps/` slot whose path is not in `kept`, returning
