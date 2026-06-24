@@ -1341,7 +1341,7 @@
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/document.rs",
       "item_kind": "struct",
-      "line": 49,
+      "line": 50,
       "symbol": "vibe_core::manifest::document::Manifest"
     },
     {
@@ -1444,6 +1444,13 @@
     },
     {
       "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/package.rs",
+      "item_kind": "enum",
+      "line": 201,
+      "symbol": "vibe_core::manifest::package::Materialization"
+    },
+    {
+      "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/package/deps.rs",
       "item_kind": "mod",
       "line": 6,
@@ -1455,6 +1462,13 @@
       "item_kind": "mod",
       "line": 4,
       "symbol": "vibe_core::manifest::package::features"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/package/hooks.rs",
+      "item_kind": "mod",
+      "line": 7,
+      "symbol": "vibe_core::manifest::package::hooks"
     },
     {
       "crate_name": "vibe-core",
@@ -5431,7 +5445,7 @@
     {
       "file": "crates/vibe-core/src/manifest/document.rs",
       "from_symbol": "vibe_core::manifest::document::Manifest",
-      "line": 60,
+      "line": 61,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-007#unified-manifest",
       "verb": "implements",
@@ -5577,6 +5591,15 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-core/src/manifest/package.rs",
+      "from_symbol": "vibe_core::manifest::package::Materialization",
+      "line": 224,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-022#modes",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
       "file": "crates/vibe-core/src/manifest/package/deps.rs",
       "from_symbol": "vibe_core::manifest::package::deps",
       "line": 6,
@@ -5590,6 +5613,14 @@
       "line": 4,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#git-source",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/package/hooks.rs",
+      "from_symbol": "vibe_core::manifest::package::hooks",
+      "line": 7,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-020#manifest",
       "verb": "implements"
     },
     {
@@ -11340,7 +11371,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:7c9b3f6e477e0f0ea78e177e7c8e90e94579f7bb14d0f7f7f2ec65d0cfd804bf",
+      "content_hash": "sha256:b39ba0f225eae8ea40bfcd4b0d0c2e651bcee23e4b5a5761e0f7409656cab698",
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "spec/modules/vibe-mcp/PROP-015-mcp-integration.md",
       "heading": "PROP-015 — MCP server and agent integration",
@@ -11353,16 +11384,16 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "spec/modules/vibe-mcp/PROP-015-mcp-integration.md",
       "heading": "1. Motivation",
-      "line": 21,
+      "line": 23,
       "uri": "spec://vibevm/modules/vibe-mcp/PROP-015#motivation"
     },
     {
       "anchor": "decisions",
-      "content_hash": "sha256:2aec5fff4ee3d317812be683b1a3c2dac4ac3931eb5f0b8cd44aac98e0628838",
+      "content_hash": "sha256:e7a4dc7d77e2240935e532da8003be1e7b5a78ffd0a81748242a0312376c8f64",
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "spec/modules/vibe-mcp/PROP-015-mcp-integration.md",
       "heading": "2. Decisions",
-      "line": 40,
+      "line": 42,
       "uri": "spec://vibevm/modules/vibe-mcp/PROP-015#decisions"
     },
     {
@@ -11371,7 +11402,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "spec/modules/vibe-mcp/PROP-015-mcp-integration.md",
       "heading": "2.1 The server: JSON-RPC 2.0 over stdio",
-      "line": 42,
+      "line": 44,
       "uri": "spec://vibevm/modules/vibe-mcp/PROP-015#server",
       "kind": "req",
       "revision": 1
@@ -11382,7 +11413,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "spec/modules/vibe-mcp/PROP-015-mcp-integration.md",
       "heading": "2.2 The tool surface: one seam, three tools",
-      "line": 59,
+      "line": 61,
       "uri": "spec://vibevm/modules/vibe-mcp/PROP-015#tools",
       "kind": "req",
       "revision": 1
@@ -11393,7 +11424,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "spec/modules/vibe-mcp/PROP-015-mcp-integration.md",
       "heading": "2.3 Tool and server errors cite their REQ",
-      "line": 87,
+      "line": 89,
       "uri": "spec://vibevm/modules/vibe-mcp/PROP-015#errors",
       "kind": "req",
       "revision": 1
@@ -11404,7 +11435,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "spec/modules/vibe-mcp/PROP-015-mcp-integration.md",
       "heading": "2.4 Agent detection",
-      "line": 96,
+      "line": 98,
       "uri": "spec://vibevm/modules/vibe-mcp/PROP-015#agent-detection",
       "kind": "req",
       "revision": 1
@@ -11415,7 +11446,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "spec/modules/vibe-mcp/PROP-015-mcp-integration.md",
       "heading": "2.5 Per-agent configuration",
-      "line": 108,
+      "line": 110,
       "uri": "spec://vibevm/modules/vibe-mcp/PROP-015#agent-config",
       "kind": "req",
       "revision": 2
@@ -11426,7 +11457,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "spec/modules/vibe-mcp/PROP-015-mcp-integration.md",
       "heading": "2.6 Skill materialisation",
-      "line": 143,
+      "line": 145,
       "uri": "spec://vibevm/modules/vibe-mcp/PROP-015#skill",
       "kind": "req",
       "revision": 1
@@ -11437,8 +11468,19 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "spec/modules/vibe-mcp/PROP-015-mcp-integration.md",
       "heading": "2.7 The integration lifecycle",
-      "line": 155,
+      "line": 157,
       "uri": "spec://vibevm/modules/vibe-mcp/PROP-015#lifecycle",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "skill-include",
+      "content_hash": "sha256:8e8a800ca7639904f2d25d819ec229f9b2cd391f1beb3d693e79b2143efc648f",
+      "doc_path": "modules/vibe-mcp/PROP-015",
+      "file": "spec/modules/vibe-mcp/PROP-015-mcp-integration.md",
+      "heading": "2.8 Selective skill projection",
+      "line": 176,
+      "uri": "spec://vibevm/modules/vibe-mcp/PROP-015#skill-include",
       "kind": "req",
       "revision": 1
     },
@@ -11448,7 +11490,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "spec/modules/vibe-mcp/PROP-015-mcp-integration.md",
       "heading": "3. Out of scope",
-      "line": 174,
+      "line": 202,
       "uri": "spec://vibevm/modules/vibe-mcp/PROP-015#out-of-scope"
     },
     {
@@ -11457,7 +11499,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "spec/modules/vibe-mcp/PROP-015-mcp-integration.md",
       "heading": "4. Acceptance",
-      "line": 185,
+      "line": 213,
       "uri": "spec://vibevm/modules/vibe-mcp/PROP-015#acceptance"
     },
     {
@@ -12168,6 +12210,238 @@
       "heading": "8. Version history",
       "line": 155,
       "uri": "spec://vibevm/modules/vibe-registry/PROP-010#history"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:97f60c2bdaf4c25cb0a6cd6b332d8c869700831440dd7bc4e5174843d0d889b0",
+      "doc_path": "modules/vibe-registry/PROP-021",
+      "file": "spec/modules/vibe-registry/PROP-021-submodule-sources.md",
+      "heading": "PROP-021 — Submodule sources",
+      "line": 1,
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-021#root"
+    },
+    {
+      "anchor": "motivation",
+      "content_hash": "sha256:e8a59db47d05174a5c9b8875bba4975d0dd50b134745f265299b8976a3142db5",
+      "doc_path": "modules/vibe-registry/PROP-021",
+      "file": "spec/modules/vibe-registry/PROP-021-submodule-sources.md",
+      "heading": "1. Motivation",
+      "line": 20,
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-021#motivation"
+    },
+    {
+      "anchor": "problem",
+      "content_hash": "sha256:32bf5724727df3c7fcd2db5bc7801f3930d9e93608c8e9c4125777a4a6db5971",
+      "doc_path": "modules/vibe-registry/PROP-021",
+      "file": "spec/modules/vibe-registry/PROP-021-submodule-sources.md",
+      "heading": "1.1 The problem — embedded repos do not come along",
+      "line": 22,
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-021#problem"
+    },
+    {
+      "anchor": "what",
+      "content_hash": "sha256:eef5fb632b691d64625a7c415815f1682b1259713ad62b59b795e242777f14b3",
+      "doc_path": "modules/vibe-registry/PROP-021",
+      "file": "spec/modules/vibe-registry/PROP-021-submodule-sources.md",
+      "heading": "1.2 What this is — submodule as a first-class embedded source",
+      "line": 37,
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-021#what"
+    },
+    {
+      "anchor": "decisions",
+      "content_hash": "sha256:6c03680e23da77d46ebb39382aa6ca11782670f8703e91d31727bbcadb0a136e",
+      "doc_path": "modules/vibe-registry/PROP-021",
+      "file": "spec/modules/vibe-registry/PROP-021-submodule-sources.md",
+      "heading": "2. Decisions",
+      "line": 45,
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-021#decisions"
+    },
+    {
+      "anchor": "fetch",
+      "content_hash": "sha256:8fbdeecffd4a1fa7e98589ff062c990f816252985c6460993613289354f0376c",
+      "doc_path": "modules/vibe-registry/PROP-021",
+      "file": "spec/modules/vibe-registry/PROP-021-submodule-sources.md",
+      "heading": "2.1 Fetch and update recurse into submodules",
+      "line": 47,
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-021#fetch",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "source-abstraction",
+      "content_hash": "sha256:7a75717bef25d48212593ce8cb9d5777cbb38ff546bd728c39555a428d698f2f",
+      "doc_path": "modules/vibe-registry/PROP-021",
+      "file": "spec/modules/vibe-registry/PROP-021-submodule-sources.md",
+      "heading": "2.2 Submodule is an abstract embedded source — git now, dependency later",
+      "line": 65,
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-021#source-abstraction",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "snapshot-embedding",
+      "content_hash": "sha256:6d3433be073df08c80f180edc9223ba1c30c5cd976eb4995a42e76fbd700b300",
+      "doc_path": "modules/vibe-registry/PROP-021",
+      "file": "spec/modules/vibe-registry/PROP-021-submodule-sources.md",
+      "heading": "2.3 Snapshot materialisation embeds the submodule content",
+      "line": 87,
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-021#snapshot-embedding",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "lock",
+      "content_hash": "sha256:f5ca4c46c42ea1f8f4b756b0232dc8620ff8f5eef0ae2aaace4827fff77f9e22",
+      "doc_path": "modules/vibe-registry/PROP-021",
+      "file": "spec/modules/vibe-registry/PROP-021-submodule-sources.md",
+      "heading": "2.4 The lockfile pins submodule state via the superproject commit",
+      "line": 102,
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-021#lock",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "rejected",
+      "content_hash": "sha256:7c33533041927c65e83cb995839b9ca092441dd0aba26ad1118ca3b0e2cf9a16",
+      "doc_path": "modules/vibe-registry/PROP-021",
+      "file": "spec/modules/vibe-registry/PROP-021-submodule-sources.md",
+      "heading": "3. Rejected alternatives",
+      "line": 113,
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-021#rejected"
+    },
+    {
+      "anchor": "out-of-scope",
+      "content_hash": "sha256:515b61feed562cc42ffdd6aa02f7740d4e3235582583a7fc814616cf877aebb2",
+      "doc_path": "modules/vibe-registry/PROP-021",
+      "file": "spec/modules/vibe-registry/PROP-021-submodule-sources.md",
+      "heading": "4. Out of scope",
+      "line": 126,
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-021#out-of-scope"
+    },
+    {
+      "anchor": "acceptance",
+      "content_hash": "sha256:bde6687aad5a42066d38d0ccf7b697f0f8835644f8ec30c5941381c6125a21b1",
+      "doc_path": "modules/vibe-registry/PROP-021",
+      "file": "spec/modules/vibe-registry/PROP-021-submodule-sources.md",
+      "heading": "5. Acceptance",
+      "line": 138,
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-021#acceptance"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:41fd792543f436f71d7a02a07c302866e1cd4e57649cb87bb858786d33fdbfdf",
+      "doc_path": "modules/vibe-registry/PROP-023",
+      "file": "spec/modules/vibe-registry/PROP-023-bridge-packages.md",
+      "heading": "PROP-023 — Bridge packages",
+      "line": 1,
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-023#root"
+    },
+    {
+      "anchor": "motivation",
+      "content_hash": "sha256:401dbfbbdac37d0cf3fbfffc8dd64b5be4e032c95bd67a258b20c11bb6d204e7",
+      "doc_path": "modules/vibe-registry/PROP-023",
+      "file": "spec/modules/vibe-registry/PROP-023-bridge-packages.md",
+      "heading": "1. Motivation",
+      "line": 21,
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-023#motivation"
+    },
+    {
+      "anchor": "problem",
+      "content_hash": "sha256:b6c5c151e10feba69fcab024387e685142a84d1e2fdeab3e007c23496bfefa41",
+      "doc_path": "modules/vibe-registry/PROP-023",
+      "file": "spec/modules/vibe-registry/PROP-023-bridge-packages.md",
+      "heading": "1.1 The problem — good work that nobody packaged",
+      "line": 23,
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-023#problem"
+    },
+    {
+      "anchor": "what",
+      "content_hash": "sha256:3d42db0b832866c4ec35d202d3352398933af92e43e1c76c906ff189079c20ad",
+      "doc_path": "modules/vibe-registry/PROP-023",
+      "file": "spec/modules/vibe-registry/PROP-023-bridge-packages.md",
+      "heading": "1.2 What this is — a thin convention over three mechanisms",
+      "line": 36,
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-023#what"
+    },
+    {
+      "anchor": "decisions",
+      "content_hash": "sha256:41cf479205ce7d3a4e4bd4254b0ec56b3670421509c69f2a56d51f2988d9b48b",
+      "doc_path": "modules/vibe-registry/PROP-023",
+      "file": "spec/modules/vibe-registry/PROP-023-bridge-packages.md",
+      "heading": "2. Decisions",
+      "line": 51,
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-023#decisions"
+    },
+    {
+      "anchor": "flag",
+      "content_hash": "sha256:1482d313f9ce89bcd9965f4204246bb7151cb275ac128a5017cf458fa98cb20d",
+      "doc_path": "modules/vibe-registry/PROP-023",
+      "file": "spec/modules/vibe-registry/PROP-023-bridge-packages.md",
+      "heading": "2.1 A bridge is marked by a flag, not a kind",
+      "line": 53,
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-023#flag",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "classes",
+      "content_hash": "sha256:5963d10685ae9d6e874c932320e2ad78fb16ec0425d1abee0c3e3dd2e951737a",
+      "doc_path": "modules/vibe-registry/PROP-023",
+      "file": "spec/modules/vibe-registry/PROP-023-bridge-packages.md",
+      "heading": "2.2 Two classes — vendored and submodule-backed",
+      "line": 64,
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-023#classes",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "composition",
+      "content_hash": "sha256:a98742edfbe3aafc9443f721c222b1281a487141fabcdc8e8ef3c45bd24b5bee",
+      "doc_path": "modules/vibe-registry/PROP-023",
+      "file": "spec/modules/vibe-registry/PROP-023-bridge-packages.md",
+      "heading": "2.3 Composition — every mechanism is optional",
+      "line": 81,
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-023#composition",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "maintainer-model",
+      "content_hash": "sha256:806aa76bab6e3a7a9a3d0ba2231306f7ca1e96d1e0f406c811568d003b670809",
+      "doc_path": "modules/vibe-registry/PROP-023",
+      "file": "spec/modules/vibe-registry/PROP-023-bridge-packages.md",
+      "heading": "2.4 The maintainer model",
+      "line": 98,
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-023#maintainer-model",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "rejected",
+      "content_hash": "sha256:f48ec55488a49cddbe4f1b1617c4caeb2dc159ae466cd1a2b57b038ce3f29b80",
+      "doc_path": "modules/vibe-registry/PROP-023",
+      "file": "spec/modules/vibe-registry/PROP-023-bridge-packages.md",
+      "heading": "3. Rejected alternatives",
+      "line": 113,
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-023#rejected"
+    },
+    {
+      "anchor": "out-of-scope",
+      "content_hash": "sha256:47d942df8bc4295d7750d6d7b6f9701720ef14179b516b8f2e773ffb6e9730ca",
+      "doc_path": "modules/vibe-registry/PROP-023",
+      "file": "spec/modules/vibe-registry/PROP-023-bridge-packages.md",
+      "heading": "4. Out of scope",
+      "line": 123,
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-023#out-of-scope"
+    },
+    {
+      "anchor": "acceptance",
+      "content_hash": "sha256:e2f9674831c74036fe9a79376c8914fce0234e6a537c49ecbff94272f3f994dc",
+      "doc_path": "modules/vibe-registry/PROP-023",
+      "file": "spec/modules/vibe-registry/PROP-023-bridge-packages.md",
+      "heading": "5. Acceptance",
+      "line": 135,
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-023#acceptance"
     },
     {
       "anchor": "problem",
@@ -13368,6 +13642,273 @@
       "heading": "8. Version history",
       "line": 152,
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-012#history"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:dc3a0dd954ed22101ee3a7e43c7c3afb24e2b003ec345c20747d6965e451c5b3",
+      "doc_path": "modules/vibe-workspace/PROP-020",
+      "file": "spec/modules/vibe-workspace/PROP-020-install-hooks.md",
+      "heading": "PROP-020 — Install hooks",
+      "line": 1,
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-020#root"
+    },
+    {
+      "anchor": "motivation",
+      "content_hash": "sha256:fd3232bbba5f68606ff8e9bbea9edf44044ce4a1c636c0b7257486219aa025d1",
+      "doc_path": "modules/vibe-workspace/PROP-020",
+      "file": "spec/modules/vibe-workspace/PROP-020-install-hooks.md",
+      "heading": "1. Motivation",
+      "line": 22,
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-020#motivation"
+    },
+    {
+      "anchor": "problem",
+      "content_hash": "sha256:461511bb55a49733fcddeca5a46f42dadcfa53694cbba3c4d1a2c07502eb3e38",
+      "doc_path": "modules/vibe-workspace/PROP-020",
+      "file": "spec/modules/vibe-workspace/PROP-020-install-hooks.md",
+      "heading": "1.1 The problem — install is pure file I/O, with no preparation step",
+      "line": 24,
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-020#problem"
+    },
+    {
+      "anchor": "what",
+      "content_hash": "sha256:34b5af03ff44133c7a9ec9480d4b0e6659d0976be8216cb33df6e1e007070071",
+      "doc_path": "modules/vibe-workspace/PROP-020",
+      "file": "spec/modules/vibe-workspace/PROP-020-install-hooks.md",
+      "heading": "1.2 What this is — declared lifecycle scripts, run per package",
+      "line": 39,
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-020#what"
+    },
+    {
+      "anchor": "decisions",
+      "content_hash": "sha256:f7605e70a94536114325fb96e0210ceed972e2fa4e4d7fd5b1d70e9cc1769384",
+      "doc_path": "modules/vibe-workspace/PROP-020",
+      "file": "spec/modules/vibe-workspace/PROP-020-install-hooks.md",
+      "heading": "2. Decisions",
+      "line": 49,
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-020#decisions"
+    },
+    {
+      "anchor": "phases",
+      "content_hash": "sha256:b0bae16ff43b760de653d047d8918483a203ccf0176889f0d8eb2c298cc6e4cc",
+      "doc_path": "modules/vibe-workspace/PROP-020",
+      "file": "spec/modules/vibe-workspace/PROP-020-install-hooks.md",
+      "heading": "2.1 Two phases, anchored to the materialise pipeline",
+      "line": 51,
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-020#phases",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "script-selection",
+      "content_hash": "sha256:f8e18fdf827a78d25cf7e2225a3dc731b235602779d1754091a22bd48a3c3fcb",
+      "doc_path": "modules/vibe-workspace/PROP-020",
+      "file": "spec/modules/vibe-workspace/PROP-020-install-hooks.md",
+      "heading": "2.2 Interpreter selection is OS-derived",
+      "line": 77,
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-020#script-selection",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "trust-gate",
+      "content_hash": "sha256:49afdd5499f31ccf294d1d24f164a30ab82e29d0b100b5c33f04d27d1aaa5528",
+      "doc_path": "modules/vibe-workspace/PROP-020",
+      "file": "spec/modules/vibe-workspace/PROP-020-install-hooks.md",
+      "heading": "2.3 Trust gate — allow-list of groups, plus first-run consent",
+      "line": 100,
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-020#trust-gate",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "manifest",
+      "content_hash": "sha256:73349ab385a7addafff2bd46ee2e67c7958a88134a887efdddf079846c37ea3e",
+      "doc_path": "modules/vibe-workspace/PROP-020",
+      "file": "spec/modules/vibe-workspace/PROP-020-install-hooks.md",
+      "heading": "2.4 Hooks are declared in the manifest",
+      "line": 122,
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-020#manifest",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "failure",
+      "content_hash": "sha256:dbac0327b2d8f829831eb744b047d933239c3b9749956c2ef1a8668a60c637ad",
+      "doc_path": "modules/vibe-workspace/PROP-020",
+      "file": "spec/modules/vibe-workspace/PROP-020-install-hooks.md",
+      "heading": "2.5 Failure semantics are phase-specific",
+      "line": 139,
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-020#failure",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "rejected",
+      "content_hash": "sha256:88cb65b81e592b6c034866066d1be698b1327c9c42a302c8f4c5dc061f6ff887",
+      "doc_path": "modules/vibe-workspace/PROP-020",
+      "file": "spec/modules/vibe-workspace/PROP-020-install-hooks.md",
+      "heading": "3. Rejected alternatives",
+      "line": 153,
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-020#rejected"
+    },
+    {
+      "anchor": "out-of-scope",
+      "content_hash": "sha256:156d5ba947f927708b64a9ac5aad6fc9b5acdff230f15bbef92ac117f4564f6e",
+      "doc_path": "modules/vibe-workspace/PROP-020",
+      "file": "spec/modules/vibe-workspace/PROP-020-install-hooks.md",
+      "heading": "4. Out of scope",
+      "line": 165,
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-020#out-of-scope"
+    },
+    {
+      "anchor": "acceptance",
+      "content_hash": "sha256:4a9e3ed082513bf8def68dbcd9ec3d26cabfd649da5769846f85aa3ee85fdb57",
+      "doc_path": "modules/vibe-workspace/PROP-020",
+      "file": "spec/modules/vibe-workspace/PROP-020-install-hooks.md",
+      "heading": "5. Acceptance",
+      "line": 179,
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-020#acceptance"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:953529663fb2eb2a8f0a40e42d23adfd79455f93810aebfa1917f67971d95949",
+      "doc_path": "modules/vibe-workspace/PROP-022",
+      "file": "spec/modules/vibe-workspace/PROP-022-materialization-modes.md",
+      "heading": "PROP-022 — Materialization modes",
+      "line": 1,
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-022#root"
+    },
+    {
+      "anchor": "motivation",
+      "content_hash": "sha256:48668b3e30470b35e7438287d1d4a98910de5963411f5566a2078a2cac6262af",
+      "doc_path": "modules/vibe-workspace/PROP-022",
+      "file": "spec/modules/vibe-workspace/PROP-022-materialization-modes.md",
+      "heading": "1. Motivation",
+      "line": 23,
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-022#motivation"
+    },
+    {
+      "anchor": "problem",
+      "content_hash": "sha256:51035ceeaf45346cc1d3f3af43d79af2596684661152da4fdfee34b9b848bf5c",
+      "doc_path": "modules/vibe-workspace/PROP-022",
+      "file": "spec/modules/vibe-workspace/PROP-022-materialization-modes.md",
+      "heading": "1.1 The problem — one materialisation policy does not fit every package",
+      "line": 25,
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-022#problem"
+    },
+    {
+      "anchor": "decisions",
+      "content_hash": "sha256:3a6270ee66b2bcd93cdb677a06dbdc060b069a9fa2e7a5b4deb63b7f21dda7eb",
+      "doc_path": "modules/vibe-workspace/PROP-022",
+      "file": "spec/modules/vibe-workspace/PROP-022-materialization-modes.md",
+      "heading": "2. Decisions",
+      "line": 47,
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-022#decisions"
+    },
+    {
+      "anchor": "modes",
+      "content_hash": "sha256:09d7c32210ad2438c80bae7928f3175754024829cd484f45c4a70959a55e5119",
+      "doc_path": "modules/vibe-workspace/PROP-022",
+      "file": "spec/modules/vibe-workspace/PROP-022-materialization-modes.md",
+      "heading": "2.1 Three modes, declared in the descriptor",
+      "line": 49,
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-022#modes",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "snapshot",
+      "content_hash": "sha256:446507dfa0553019931804a8e56c0bea134f1124948f26439d6b28a9a47960c5",
+      "doc_path": "modules/vibe-workspace/PROP-022",
+      "file": "spec/modules/vibe-workspace/PROP-022-materialization-modes.md",
+      "heading": "2.2 `snapshot` — the vendored full copy (default)",
+      "line": 64,
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-022#snapshot",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "hardlink",
+      "content_hash": "sha256:32c19958b3d3dd4ac8d6727fd98d0d7b994c04d968c33d94a430326d7ab5cc7d",
+      "doc_path": "modules/vibe-workspace/PROP-022",
+      "file": "spec/modules/vibe-workspace/PROP-022-materialization-modes.md",
+      "heading": "2.3 `hardlink` — per-file hardlink, copy on change",
+      "line": 76,
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-022#hardlink",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "in-place",
+      "content_hash": "sha256:bed967806c06bdf0fd77cab0e74a07174d36204d6930a1199d527245800e18f8",
+      "doc_path": "modules/vibe-workspace/PROP-022",
+      "file": "spec/modules/vibe-workspace/PROP-022-materialization-modes.md",
+      "heading": "2.4 `in-place` — git-native, project-local, no copy",
+      "line": 93,
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-022#in-place",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "identity",
+      "content_hash": "sha256:4c74c3609e15bf2c5529e2e7a741f6e7626a3bd0a625ace91957a482032f419a",
+      "doc_path": "modules/vibe-workspace/PROP-022",
+      "file": "spec/modules/vibe-workspace/PROP-022-materialization-modes.md",
+      "heading": "2.5 Identity follows the mode",
+      "line": 116,
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-022#identity",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "destructive-guard",
+      "content_hash": "sha256:735a725ece6eef338d4d8d5bdd1ae1b17258e6634bef84ed0be5d430e114ca9d",
+      "doc_path": "modules/vibe-workspace/PROP-022",
+      "file": "spec/modules/vibe-workspace/PROP-022-materialization-modes.md",
+      "heading": "2.6 Destructive operations on an `in-place` slot need confirmation",
+      "line": 127,
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-022#destructive-guard",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "vendoring",
+      "content_hash": "sha256:10bc649e4bfc74a62b3b1707510ab356b72dbe71d3468d0dc6a560e3735878a5",
+      "doc_path": "modules/vibe-workspace/PROP-022",
+      "file": "spec/modules/vibe-workspace/PROP-022-materialization-modes.md",
+      "heading": "2.7 Vendoring differs by mode",
+      "line": 140,
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-022#vendoring",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "rejected",
+      "content_hash": "sha256:2dc5d6ef94fd71fd1497c8846a8b995e7ad10f7ce6b1f4d476d03ac694fd124e",
+      "doc_path": "modules/vibe-workspace/PROP-022",
+      "file": "spec/modules/vibe-workspace/PROP-022-materialization-modes.md",
+      "heading": "3. Rejected alternatives",
+      "line": 152,
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-022#rejected"
+    },
+    {
+      "anchor": "out-of-scope",
+      "content_hash": "sha256:927b133a21f91b25045c1cc6554bcf387ea83c8438615a8d0aadbd24812845f6",
+      "doc_path": "modules/vibe-workspace/PROP-022",
+      "file": "spec/modules/vibe-workspace/PROP-022-materialization-modes.md",
+      "heading": "4. Out of scope",
+      "line": 167,
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-022#out-of-scope"
+    },
+    {
+      "anchor": "acceptance",
+      "content_hash": "sha256:828dfc5bdc900de6c1bd672ba6c318b31e80bd508200693cda92ea5f1fd1b696",
+      "doc_path": "modules/vibe-workspace/PROP-022",
+      "file": "spec/modules/vibe-workspace/PROP-022-materialization-modes.md",
+      "heading": "5. Acceptance",
+      "line": 176,
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-022#acceptance"
     },
     {
       "anchor": "what-tessl-is",
