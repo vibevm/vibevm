@@ -227,6 +227,15 @@ pub enum WorkspaceError {
         .path.display()
     )]
     MalformedRedirectBlock { path: PathBuf, reason: String },
+
+    /// A package's install hook (PROP-020) failed: no usable interpreter, a
+    /// spawn error, an untrusted run, or a `pre-install` non-zero exit. The
+    /// wrapped hook error already carries its own Class-F `(violates …;
+    /// fix: …)` tail, so this delegates its display transparently. For a
+    /// `pre-install` failure the materialised slot is rolled back before
+    /// this surfaces (PROP-020 §2.5).
+    #[error(transparent)]
+    Hook(#[from] crate::hooks::HookError),
 }
 
 type Result<T> = std::result::Result<T, WorkspaceError>;

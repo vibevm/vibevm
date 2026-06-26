@@ -27,6 +27,7 @@ use vibe_core::user_config::UserConfig;
 use vibe_install::{InstallRequest, Plan, PlanEvent, PlanObserver};
 use vibe_resolver::FeatureRequest;
 use vibe_workspace::Workspace;
+use vibe_workspace::hooks::{DEFAULT_ALLOWED_GROUPS, HookPolicy, HookTrust, decide_trust};
 
 use crate::cli::InstallArgs;
 use crate::commands::short_name;
@@ -186,10 +187,81 @@ pub fn run(ctx: &output::Context, args: InstallArgs) -> Result<()> {
                 return Err(InstallError::UserDeclined.into());
             }
 
-            let applied = vibe_install::apply(*planned, slot_integrity)?;
-            report::emit_report(ctx, &applied.outcome)
+            // PROP-020 §2.3 — resolve install-hook trust before applying:
+            // allow-listed groups (incl. `org.vibevm`) and `--allow-hooks`
+            // run silently, any other hook-declaring package prompts for
+            // consent interactively, and a non-interactive run aborts rather
+            // than run third-party code unseen.
+            let hook_policy = resolve_hook_policy(ctx, &args, &planned.resolution)?;
+
+            let applied = vibe_install::apply(*planned, slot_integrity, &hook_policy)?;
+            report::emit_report(ctx, &applied)
         }
     }
+}
+
+/// Resolve the install-hook trust policy for a planned resolution
+/// (PROP-020 §2.3). Allow-listed groups (`DEFAULT_ALLOWED_GROUPS`, including
+/// `org.vibevm`) and `--allow-hooks` run with no prompt; any other
+/// hook-declaring package's group is asked for consent once, interactively;
+/// a non-interactive run carrying such a package aborts unless `--allow-hooks`
+/// is set — a hook never runs unseen. A declined group is simply left out of
+/// the policy, so the pipeline skips-and-reports its hooks rather than failing.
+fn resolve_hook_policy(
+    ctx: &output::Context,
+    args: &InstallArgs,
+    resolution: &[vibe_workspace::install::ResolvedDep],
+) -> Result<HookPolicy> {
+    let allowed: Vec<String> = DEFAULT_ALLOWED_GROUPS
+        .iter()
+        .map(|s| s.to_string())
+        .collect();
+    // Hook consent is interactive only on an attended TTY in human mode;
+    // `--assume-yes`, `--json`, and `--unattended` are each non-interactive
+    // for the purpose of running third-party code (PROP-020 §2.3).
+    let interactive =
+        console::user_attended() && !ctx.is_json() && !ctx.is_unattended() && !args.assume_yes;
+    let mut consented: Vec<String> = Vec::new();
+    let mut decided: std::collections::BTreeSet<String> = std::collections::BTreeSet::new();
+    for dep in resolution {
+        if dep.manifest.hooks.is_empty() {
+            continue;
+        }
+        // One decision per group covers all its hook-declaring packages.
+        let group = dep.group.as_str().to_string();
+        if !decided.insert(group.clone()) {
+            continue;
+        }
+        match decide_trust(&dep.group, &allowed, interactive, args.allow_hooks) {
+            HookTrust::Allowed => {}
+            HookTrust::NeedsConsent => {
+                let ok = Confirm::new()
+                    .with_prompt(format!(
+                        "Package group `{group}` declares install hooks (PROP-020). \
+                         Run them during this install?"
+                    ))
+                    .default(false)
+                    .interact()
+                    .context("reading hook consent")?;
+                if ok {
+                    consented.push(group);
+                }
+            }
+            HookTrust::Refused => {
+                bail!(
+                    "package group `{group}` declares install hooks but is not trusted to run \
+                     them non-interactively (PROP-020 §2.3). Re-run interactively to consent, \
+                     allow-list `{group}`, or pass `--allow-hooks`."
+                );
+            }
+        }
+    }
+    let mut allowed_groups = allowed;
+    allowed_groups.extend(consented);
+    Ok(HookPolicy {
+        allowed_groups,
+        allow_hooks: args.allow_hooks,
+    })
 }
 
 /// The lockfile provenance stamp this binary writes.

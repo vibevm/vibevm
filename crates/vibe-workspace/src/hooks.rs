@@ -243,6 +243,41 @@ pub fn decide_trust(
     }
 }
 
+/// The hook-execution policy the install pipeline threads from the CLI — the
+/// groups whose hooks may run silently (the allow-list plus any group the
+/// operator consented to interactively) and the `--allow-hooks` force-all
+/// override (PROP-020 §2.3).
+///
+/// Trust is **already resolved** by the time this reaches the pipeline: the
+/// interactive consent prompt and the non-interactive abort both happen in
+/// the CLI, *before* apply. So [`HookPolicy::trust_for`] only distinguishes
+/// "run" from "skip" — a genuine `Refused` (the one case PROP-020 §2.3
+/// forbids running) never reaches the pipeline, because the CLI aborts on it.
+#[derive(Debug, Clone, Default)]
+pub struct HookPolicy {
+    /// Groups whose hooks run with no prompt — the static allow-list
+    /// (`DEFAULT_ALLOWED_GROUPS` plus config) unioned with the groups the
+    /// operator consented to for this run.
+    pub allowed_groups: Vec<String>,
+    /// `--allow-hooks` — run every package's hooks regardless of group.
+    pub allow_hooks: bool,
+}
+
+impl HookPolicy {
+    /// The trust under which `group`'s hooks run in the pipeline. An
+    /// allow-listed/consented group (or `--allow-hooks`) is [`HookTrust::Allowed`]
+    /// and runs; any other group is [`HookTrust::NeedsConsent`], which
+    /// [`run_package_hook`] reports as skipped — never silently run, never
+    /// fatal. The genuine refusal was already caught in the CLI.
+    pub fn trust_for(&self, group: &Group) -> HookTrust {
+        if self.allow_hooks || self.allowed_groups.iter().any(|g| g == group.as_str()) {
+            HookTrust::Allowed
+        } else {
+            HookTrust::NeedsConsent
+        }
+    }
+}
+
 /// Resolve the interpreter + script for a phase on a given platform
 /// (PROP-020 §2.2). `None` means a script was declared but no usable
 /// interpreter/script pair exists — the caller maps that to

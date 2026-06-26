@@ -184,6 +184,15 @@ pub struct InstallArgs {
     /// `VIBEVM_REGISTRY_TOKEN_GITLAB_ACME_EXAMPLE`).
     #[arg(long, value_name = "ENV_VAR", requires = "git")]
     pub git_token_env: Option<String>,
+
+    /// Run every installed package's declared install hooks (PROP-020 §2.3)
+    /// without an interactive consent prompt, even for groups that are not
+    /// allow-listed. This is the non-interactive opt-in: a hook-declaring
+    /// package whose group is not trusted otherwise aborts the install
+    /// (re-run interactively to consent, allow-list the group, or pass this
+    /// flag). `org.vibevm` is always allow-listed and runs regardless.
+    #[arg(long)]
+    pub allow_hooks: bool,
 }
 
 #[derive(Debug, clap::Args)]

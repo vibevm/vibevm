@@ -6,7 +6,9 @@ specmark::scope!("spec://vibevm/VIBEVM-SPEC#install-workflow-in-detail");
 
 use anyhow::Result;
 use serde::Serialize;
-use vibe_workspace::install::{InstallOutcome, ResolvedDep};
+use vibe_install::ApplyReport;
+use vibe_workspace::hooks::HookReport;
+use vibe_workspace::install::ResolvedDep;
 
 use crate::output;
 
@@ -44,8 +46,29 @@ pub(super) fn present_resolution(ctx: &output::Context, resolution: &[ResolvedDe
     println!();
 }
 
-pub(super) fn emit_report(ctx: &output::Context, outcome: &InstallOutcome) -> Result<()> {
+pub(super) fn emit_report(ctx: &output::Context, applied: &ApplyReport) -> Result<()> {
+    let outcome = &applied.outcome;
+    // Every install-hook report for this run — pre-install (gathered during
+    // the materialise pass) followed by post-install (after the lockfile
+    // write). Surfaced so a skipped or failed hook is never silent
+    // (PROP-020 §2.3/§2.5).
+    let hooks: Vec<&HookReport> = outcome
+        .hook_reports
+        .iter()
+        .chain(&applied.post_install_reports)
+        .collect();
+
     if ctx.is_json() {
+        let hooks_json: Vec<serde_json::Value> = hooks
+            .iter()
+            .map(|h| {
+                serde_json::json!({
+                    "phase": h.phase,
+                    "status": h.status,
+                    "note": h.note,
+                })
+            })
+            .collect();
         ctx.emit_json(&serde_json::json!({
             "ok": true,
             "command": "install",
@@ -53,6 +76,7 @@ pub(super) fn emit_report(ctx: &output::Context, outcome: &InstallOutcome) -> Re
             "skipped": outcome.skipped,
             "pruned": outcome.pruned,
             "nodes_regenerated": outcome.nodes_regenerated,
+            "hooks": hooks_json,
         }))?;
         return Ok(());
     }
@@ -97,7 +121,30 @@ pub(super) fn emit_report(ctx: &output::Context, outcome: &InstallOutcome) -> Re
             if outcome.pruned.len() == 1 { "" } else { "s" },
         ));
     }
+    render_hook_lines(ctx, &hooks);
     Ok(())
+}
+
+/// Surface every hook that ran, was skipped for want of consent, or failed
+/// (PROP-020 §2.3/§2.5). A `not-declared` report (a package that declares the
+/// other phase only) is silent — nothing happened for this phase.
+fn render_hook_lines(ctx: &output::Context, hooks: &[&HookReport]) {
+    for h in hooks {
+        let note = h
+            .note
+            .as_deref()
+            .map(|n| format!(" — {n}"))
+            .unwrap_or_default();
+        match h.status {
+            "ran" => ctx.step(&format!("{} hook ran", h.phase)),
+            "skipped-needs-consent" => ctx.step(&format!(
+                "{} hook skipped (consent withheld){note}",
+                h.phase
+            )),
+            "post-install-failed" => ctx.step(&format!("{} hook failed{note}", h.phase)),
+            _ => {}
+        }
+    }
 }
 
 /// Report the PROP-011 §2.2 fast path — `vibe.lock` was fresh, so no

@@ -86,6 +86,36 @@ fn trust_matrix() {
 }
 
 #[test]
+#[verifies("spec://vibevm/modules/vibe-workspace/PROP-020#trust-gate", r = 1)]
+fn hook_policy_maps_allowed_to_run_and_the_rest_to_skip() {
+    // The pipeline-side policy resolves only run-vs-skip; the CLI already
+    // turned a genuine refusal into an abort, so `Refused` never appears here.
+    let vibe = org("org.vibevm");
+    let other = org("org.other");
+
+    let allowlisted = HookPolicy {
+        allowed_groups: vec!["org.vibevm".to_string()],
+        allow_hooks: false,
+    };
+    assert_eq!(allowlisted.trust_for(&vibe), HookTrust::Allowed);
+    // A group absent from the policy is skipped — never silently run.
+    assert_eq!(allowlisted.trust_for(&other), HookTrust::NeedsConsent);
+
+    // `--allow-hooks` runs every group's hooks regardless of the list.
+    let force = HookPolicy {
+        allowed_groups: Vec::new(),
+        allow_hooks: true,
+    };
+    assert_eq!(force.trust_for(&other), HookTrust::Allowed);
+
+    // The default policy trusts nothing.
+    assert_eq!(
+        HookPolicy::default().trust_for(&vibe),
+        HookTrust::NeedsConsent
+    );
+}
+
+#[test]
 #[verifies(
     "spec://vibevm/modules/vibe-workspace/PROP-020#script-selection",
     r = 1

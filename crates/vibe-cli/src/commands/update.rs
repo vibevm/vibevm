@@ -216,6 +216,9 @@ fn install_args_from(args: &UpdateArgs) -> InstallArgs {
         rev: None,
         git_auth: None,
         git_token_env: None,
+        // `vibe update` carries no `--allow-hooks`; hook consent on the
+        // whole-graph path is resolved by the `vibe install` it delegates to.
+        allow_hooks: false,
     }
 }
 

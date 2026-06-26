@@ -10,7 +10,8 @@ use vibe_core::PackageRef;
 use vibe_core::manifest::Manifest;
 use vibe_core::user_config::SlotIntegrity;
 use vibe_workspace::Workspace;
-use vibe_workspace::install::{InstallOutcome, apply_resolution};
+use vibe_workspace::hooks::{HookPolicy, HookReport};
+use vibe_workspace::install::{InstallOutcome, apply_resolution, run_post_install_hooks};
 
 use crate::error::{Error, Result};
 use crate::plan::PlannedInstall;
@@ -22,15 +23,25 @@ use crate::record::{
 /// What [`apply`] did — the caller renders it.
 #[derive(Debug)]
 pub struct ApplyReport {
-    /// Materialised / skipped / pruned slots and the regenerated
-    /// nodes, straight from the workspace orchestrator.
+    /// Materialised / skipped / pruned slots, the regenerated nodes, and
+    /// the `pre-install` hook reports — straight from the workspace
+    /// orchestrator.
     pub outcome: InstallOutcome,
+    /// `post-install` hook reports (PROP-020 §2.1), gathered after the
+    /// lockfile was written. Empty when no materialised package declares a
+    /// `post-install` hook; the CLI renders them with the pre-install
+    /// reports carried on `outcome.hook_reports`.
+    pub post_install_reports: Vec<HookReport>,
 }
 
 /// Apply a confirmed plan. `slot_integrity` selects the PROP-011 §2.3
 /// materialise-diff strategy (the caller reads it from the user
 /// config, so a malformed config fails before resolution, not here).
-pub fn apply(planned: PlannedInstall, slot_integrity: SlotIntegrity) -> Result<ApplyReport> {
+pub fn apply(
+    planned: PlannedInstall,
+    slot_integrity: SlotIntegrity,
+    hooks: &HookPolicy,
+) -> Result<ApplyReport> {
     let PlannedInstall {
         project_root,
         request,
@@ -91,9 +102,10 @@ pub fn apply(planned: PlannedInstall, slot_integrity: SlotIntegrity) -> Result<A
     //    just-updated `[requires]` from disk.
     let workspace = Workspace::discover(&project_root)?;
 
-    // 8. Apply: materialise each package into vibedeps/ and regenerate
+    // 8. Apply: materialise each package into vibedeps/, run each freshly
+    //    populated slot's pre-install hook (PROP-020 §2.1), and regenerate
     //    every node's boot artifacts.
-    let outcome = apply_resolution(&workspace, &resolution, slot_integrity)?;
+    let outcome = apply_resolution(&workspace, &resolution, slot_integrity, Some(hooks))?;
 
     // 9. Rebuild the lockfile from the fresh resolution — an install
     //    re-resolves the whole graph, so the recorded package set is
@@ -131,5 +143,15 @@ pub fn apply(planned: PlannedInstall, slot_integrity: SlotIntegrity) -> Result<A
 
     lockfile.write(workspace.lockfile_path())?;
 
-    Ok(ApplyReport { outcome })
+    // 11. PROP-020 §2.1 — post-install hooks run once the package is durable
+    //     (lockfile written, boot regenerated). A non-zero exit is surfaced
+    //     as a flagged report, not fatal; a missing interpreter is a hard
+    //     error. Only the freshly-materialised slots run their hook.
+    let post_install_reports =
+        run_post_install_hooks(&workspace.root, &resolution, &outcome.materialised, hooks)?;
+
+    Ok(ApplyReport {
+        outcome,
+        post_install_reports,
+    })
 }

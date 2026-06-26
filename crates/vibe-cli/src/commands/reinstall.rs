@@ -126,8 +126,10 @@ fn run_force(
             return Err(InstallError::UserDeclined.into());
         }
         // `--force` always re-materialises — `SlotIntegrity::Verify` —
-        // though with an empty resolution there is nothing to copy.
-        let outcome = apply_resolution(workspace, &[], SlotIntegrity::Verify)
+        // though with an empty resolution there is nothing to copy. Hooks
+        // are not wired into `reinstall` yet (PROP-020 install path lands
+        // first); `None` skips hook running.
+        let outcome = apply_resolution(workspace, &[], SlotIntegrity::Verify, None)
             .context("regenerating the workspace")?;
         emit_report(ctx, true, &outcome.nodes_regenerated, &outcome.pruned);
         return Ok(());
@@ -213,7 +215,8 @@ fn run_force(
     // `--force` re-fetched every slot's content; `SlotIntegrity::Verify`
     // makes `apply_resolution` overwrite every slot rather than trust a
     // present one — re-materialisation is the whole point of `--force`.
-    let outcome = apply_resolution(workspace, &resolution, SlotIntegrity::Verify)
+    // Hooks are not wired into `reinstall` yet; `None` skips hook running.
+    let outcome = apply_resolution(workspace, &resolution, SlotIntegrity::Verify, None)
         .context("re-materialising the workspace")?;
     emit_report(ctx, true, &outcome.nodes_regenerated, &outcome.pruned);
     Ok(())
@@ -271,6 +274,7 @@ fn resolver_args() -> InstallArgs {
         rev: None,
         git_auth: None,
         git_token_env: None,
+        allow_hooks: false,
     }
 }
 
