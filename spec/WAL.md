@@ -1,5 +1,70 @@
 # WAL — Project Continuation State
-_Updated: 2026-06-24 — **BRIDGE PACKAGES — specs complete (PROP-020/021/022/023 + PROP-015 §2.8) and 6 implementation slices landed gate-green (9 commits `c768f90`→`48613e4`); the remaining in-place clone-path, hook pipeline-wiring + CLI consent, and destructive-guard + lockfile field are planned, not built. Details under "## This session (2026-06-24)" below.** Prior 2026-06-22: **MCP REGISTRATION FIXED + `vibe man` RENAMED TO `vibe self`; on both mirrors (@ `2311639`).** Two owner-driven fixes this session. (1) `vibe mcp install` for Claude Code was a silent no-op — it wrote the `mcpServers` block into `settings.json`, which Claude Code does not read for MCP discovery, instead of `.mcp.json` (project) / the top-level `mcpServers` of `~/.claude.json` (user); the launcher was a bare `command:"vibe"` that a `.cmd` shim can't spawn on Windows; and project scope hardcoded a non-portable `--path`. Fixed all three (Windows `cmd /c` wrap for every spawn-agent; `--path` dropped, CWD-resolved), plus `serde_json/preserve_order` so the merge appends rather than re-alphabetising the operator's file, plus a corrected host-presence marker. (2) Renamed the version-manager command `vibe man` → `vibe self` (the rustup idiom for a self-managing tool; `man` misread as the Unix manual page) — hard rename, no alias, module/types `man`→`vvm`, and a new `vibe self update` (= `self install latest`). The active managed binary was rebuilt to instance #7 (now speaks `self`). See "## This session (2026-06-22)" below. Prior checkpoint: **VVM v2 — VERSION MANAGER REBUILT.** vibevm distributes itself via `vibe man` (the VibeVM Version Manager, PROP-019), which builds, installs, and switches vibevm's own versions on a machine. v2 reworks v1 after two design flaws surfaced — console-reload friction and self-replace locks. The install/switch unit is now a whole immutable **instance** (`versions/<kind>/<id>/<instance>/`); the active version is a live **`current`** pointer file, so `man install`/`man use` flip it and the next `vibe` in the same shell uses it with NO console reload, and nothing in use is ever overwritten (no locks, dll-safe). Distributions are placed by **diff-copy** (per-instance `.vvm-manifest.toml`: size/mtime + hash-for-small-files; hardlink unchanged, copy changed; byte-identical rebuild → no new instance). A managed `vibe` derives root/HOME from `current_exe` (env demoted to advisory; stale-`$VIBEVM_HOME` warning). Sources are referenced, never copied: managed = shared `src/.mirror` (git-fetch, no re-clone), external = the committer's checkout built in place + remembered path → **linked rebuild** from anywhere. New `vibe vars` reconciles actual-vs-environment; `tools/first-run.{sh,ps1}` + README bootstrap the first install. **Two real-machine shim fixes (`7550cde`) followed:** the shim dir is now *prepended* to PATH so the managed `vibe` beats a stale `~/.cargo/bin/vibe` (`b22edd9`), and `derive_self` strips the Windows `\\?\` verbatim prefix that `canonicalize()` adds and the cmd shim cannot exec (`7550cde`). Spec: [PROP-019](common/PROP-019-version-manager.md). Base tip `7550cde`; the **grammar-refactor RAID is COMPLETE** — P0–P6 landed this session on top of `47dbd2a` (Class-F error enums across both crates, the PROP-018 affinity dispatcher + unified transports, the vibe-mcp pub-doctest drain + gate flip), see the "Active campaign" section and [`terraform/discipline-sweep/REPORT-2026-06-17-grammar-refactor.md`](../terraform/discipline-sweep/REPORT-2026-06-17-grammar-refactor.md). Floor green at close — `self-check.sh`, conform 0/0/0, specmap clean (545 units / 561 edges / 0 orphans), test-gate xfail-strict (1204), fast-loop 20/20. Prior: PROP-018 agentic + standalone modes MVP. Git log is the authoritative per-item record._
+_Updated: 2026-06-27 — **BRIDGE PACKAGES COMPLETE — all four mechanisms (PROP-020 hooks / PROP-021 submodules / PROP-022 materialization / PROP-023 bridge + PROP-015 §2.8 skill-include), their canonical compositions, and every acknowledged deferral land gate-green. Floor green: `self-check.sh` exit 0, specmap 597 units / 591 tagged / 604 edges / 0 suspects / 0 warnings / 0 orphans. This session finished the planned-not-built slices + deferrals (14 commits `a9fad47`→`ac1f2f1`; local, NOT mirrored): destructive-guard + lockfile `materialization` field (slice 3); hook pipeline-wiring + CLI consent (slice 2); `resolved_commit` population (slice 1 foundation, also closes PROP-021 §2.4); in-place clone-path materialization — the move-based one-copy design (slice 1); hooks-over-in-place (canonical PROP-023 §2.3 bridge); hooks on scoped `vibe update` (deferral #3, a real PROP-020 §2.1 gap); incremental in-place update — `git fetch` the slot instead of re-clone on a version bump (deferral #1). Deferral #2 (token-env in-place) was never broken — the move path re-clones through the auth-aware `bootstrap_or_update_at` every time. Details under "## This session (2026-06-27)" below.** Prior 2026-06-24: bridge-packages **specs (PROP-020/021/022/023 + PROP-015 §2.8) + 6 impl slices** landed gate-green (`c768f90`→`48613e4`) — schema, submodule fetch, skill projection, the hook *runner cell*, hardlink. Prior 2026-06-22: **MCP REGISTRATION FIXED + `vibe man` RENAMED TO `vibe self`; on both mirrors (@ `2311639`).** Two owner-driven fixes this session. (1) `vibe mcp install` for Claude Code was a silent no-op — it wrote the `mcpServers` block into `settings.json`, which Claude Code does not read for MCP discovery, instead of `.mcp.json` (project) / the top-level `mcpServers` of `~/.claude.json` (user); the launcher was a bare `command:"vibe"` that a `.cmd` shim can't spawn on Windows; and project scope hardcoded a non-portable `--path`. Fixed all three (Windows `cmd /c` wrap for every spawn-agent; `--path` dropped, CWD-resolved), plus `serde_json/preserve_order` so the merge appends rather than re-alphabetising the operator's file, plus a corrected host-presence marker. (2) Renamed the version-manager command `vibe man` → `vibe self` (the rustup idiom for a self-managing tool; `man` misread as the Unix manual page) — hard rename, no alias, module/types `man`→`vvm`, and a new `vibe self update` (= `self install latest`). The active managed binary was rebuilt to instance #7 (now speaks `self`). See "## This session (2026-06-22)" below. Prior checkpoint: **VVM v2 — VERSION MANAGER REBUILT.** vibevm distributes itself via `vibe man` (the VibeVM Version Manager, PROP-019), which builds, installs, and switches vibevm's own versions on a machine. v2 reworks v1 after two design flaws surfaced — console-reload friction and self-replace locks. The install/switch unit is now a whole immutable **instance** (`versions/<kind>/<id>/<instance>/`); the active version is a live **`current`** pointer file, so `man install`/`man use` flip it and the next `vibe` in the same shell uses it with NO console reload, and nothing in use is ever overwritten (no locks, dll-safe). Distributions are placed by **diff-copy** (per-instance `.vvm-manifest.toml`: size/mtime + hash-for-small-files; hardlink unchanged, copy changed; byte-identical rebuild → no new instance). A managed `vibe` derives root/HOME from `current_exe` (env demoted to advisory; stale-`$VIBEVM_HOME` warning). Sources are referenced, never copied: managed = shared `src/.mirror` (git-fetch, no re-clone), external = the committer's checkout built in place + remembered path → **linked rebuild** from anywhere. New `vibe vars` reconciles actual-vs-environment; `tools/first-run.{sh,ps1}` + README bootstrap the first install. **Two real-machine shim fixes (`7550cde`) followed:** the shim dir is now *prepended* to PATH so the managed `vibe` beats a stale `~/.cargo/bin/vibe` (`b22edd9`), and `derive_self` strips the Windows `\\?\` verbatim prefix that `canonicalize()` adds and the cmd shim cannot exec (`7550cde`). Spec: [PROP-019](common/PROP-019-version-manager.md). Base tip `7550cde`; the **grammar-refactor RAID is COMPLETE** — P0–P6 landed this session on top of `47dbd2a` (Class-F error enums across both crates, the PROP-018 affinity dispatcher + unified transports, the vibe-mcp pub-doctest drain + gate flip), see the "Active campaign" section and [`terraform/discipline-sweep/REPORT-2026-06-17-grammar-refactor.md`](../terraform/discipline-sweep/REPORT-2026-06-17-grammar-refactor.md). Floor green at close — `self-check.sh`, conform 0/0/0, specmap clean (545 units / 561 edges / 0 orphans), test-gate xfail-strict (1204), fast-loop 20/20. Prior: PROP-018 agentic + standalone modes MVP. Git log is the authoritative per-item record._
+
+## This session (2026-06-27) — bridge packages COMPLETE (slices + deferrals)
+
+Resumed at the 2026-06-24 checkpoint (specs + 6 slices; the in-place
+clone-path, hook wiring, and destructive-guard were planned-not-built). The
+owner directed `продолжай реализацию плана пока не сделаешь`, then
+`deferrals реализованы`. Both done — the bridge-packages feature is now whole.
+**14 commits gate-green, `a9fad47`→`ac1f2f1`** (local, NOT mirrored). The git
+log is the authoritative per-item record.
+
+**Slices finished:**
+
+- **Slice 3 — destructive guard + lockfile field** (`a9fad47`).
+  `LockedPackage.materialization` (serde-default snapshot); pure
+  `vibe-workspace::materialization::guard_destructive` (PROP-022 §2.6) wired
+  into `uninstall` — an in-place slot's removal aborts a non-interactive run
+  with no opt-in and forces a `y/n` `--json` cannot auto-answer.
+- **Slice 2 — hook pipeline-wiring + consent** (`1423754`). The runner cell
+  (built 2026-06-24) wired in: `apply_resolution` runs pre-install per freshly
+  materialised slot (rollback on failure); `vibe-install::apply` runs
+  post-install after the lockfile write; `resolve_hook_policy` + `--allow-hooks`
+  + interactive consent in `vibe-cli` (`org.vibevm` allow-listed silent; other
+  groups prompt, or abort non-interactively without `--allow-hooks`).
+- **Slice 1 foundation — `resolved_commit`** (`e8c353a`).
+  `GitBackend::head_commit` populates the lockfile field — closes the documented
+  "always None" gap and makes PROP-021 §2.4's submodule-pin claim real.
+- **Slice 1 — in-place clone-path** (`d554266`). Fetch skips the cache-copy +
+  tree-walk hash for in-place; `apply_resolution` MOVES the live clone (with
+  `.git`) into the unversioned `.gitignore`d slot — one copy same-volume; boot
+  uses the unversioned path; prune skips `.git`-bearing dirs; uninstall /
+  reinstall / scoped update all in-place-aware.
+
+**Compositions + deferrals:**
+
+- **Hooks-over-in-place** (`60bae76`). Pre/post-install run against the in-place
+  slot — the canonical PROP-023 §2.3 bridge (a git tree shaped by a hook).
+- **Hooks on scoped `vibe update`** (`7a2ad0c`, deferral #3). The scoped path
+  routes its subtree through the shared hook-bearing `materialise_subtree` (no
+  prune / no boot). `vibe update --all` already ran hooks via the install
+  delegation; scoped `<pkg>` did not — a real PROP-020 §2.1 gap, now closed.
+- **Incremental in-place update** (`653cd49`, deferral #1).
+  `registry::materialise_in_place` places a package directly into its slot —
+  fresh clone if absent, incremental `git fetch` if `.git` present — reusing
+  `bootstrap_or_update_at` (auth untouched). Scoped `vibe update <pkg>` uses it
+  for lockfile-recorded in-place packages, defers the slot mutation past the
+  confirm, and folds the result back as a `CachedPackage` whose `cache_dir` IS
+  the slot — the "already-placed" signal that makes the materialise pass run the
+  hook but skip the move.
+- **Deferral #2 (token-env in-place)** — re-examined, never broken: the move
+  path re-clones through the auth-aware path on every install/update.
+
+**Architecture in force:** Option B (registry-decoupling preserved — workspace
+never touches git/URL/auth); fresh in-place = move, update = incremental;
+in-place identity is `resolved_commit`, slot unversioned + `.gitignore`d +
+destruction-guarded.
+
+**Known residuals (documented, deliberate):** general `vibe install` re-resolve
+of an in-place package re-clones (the incremental path is `vibe update <pkg>`,
+which reads the lockfile materialization); `reinstall --force` re-clones
+in-place by design (`--force` IS "re-fetch from source").
+
+**Next:** mirror the 29 local commits (`cargo xtask mirror` — owner's call, not
+done automatically since publishing is outward-facing); optionally `/code-review`
+the bridge-packages diff; a live giant-repo in-place acceptance smoke
+(PROP-022 §5) remains a manual test, not yet in CI.
 
 ## This session (2026-06-24) — bridge packages (specs + 6 impl slices)
 
