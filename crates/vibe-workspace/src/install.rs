@@ -179,8 +179,7 @@ fn materialise_resolution(
         // PROP-022 §2.4 — an in-place package is a project-local git working
         // tree in an unversioned slot. Move the fetched clone (with its
         // `.git`) into the slot instead of the per-file snapshot copy, and
-        // `.gitignore` it (not vendored, §2.7). Hooks over an in-place slot
-        // are not yet wired (the copy-mode reset/re-run path differs).
+        // `.gitignore` it (not vendored, §2.7).
         if is_in_place(dep) {
             let rel = vibedeps::in_place_slot_rel_path(dep.kind, &dep.name);
             if vibedeps::is_in_place_slot(workspace_root, dep.kind, &dep.name)
@@ -195,6 +194,28 @@ fn materialise_resolution(
                     &dep.content_dir,
                 )?;
                 vibedeps::ensure_gitignored(workspace_root, &rel)?;
+                // PROP-020 §2.1 — run the pre-install hook against the fresh
+                // in-place working tree. The re-clone IS the §2.4 reset, so
+                // the hook stays a pure function of the upstream content; a
+                // failure rolls the slot back (PROP-020 §2.5).
+                if let Some(policy) = hooks {
+                    match run_dep_hook(
+                        HookPhase::PreInstall,
+                        dep,
+                        workspace_root,
+                        policy,
+                        probe,
+                        runner,
+                    ) {
+                        Ok(Some(report)) => hook_reports.push(report),
+                        Ok(None) => {}
+                        Err(err) => {
+                            let _ =
+                                vibedeps::remove_in_place_slot(workspace_root, dep.kind, &dep.name);
+                            return Err(WorkspaceError::from(err));
+                        }
+                    }
+                }
                 materialised.push(rel);
             }
             continue;
@@ -256,7 +277,13 @@ fn run_dep_hook(
     if dep.manifest.hooks.is_empty() {
         return Ok(None);
     }
-    let slot = vibedeps::slot_abs_path(workspace_root, dep.kind, &dep.name, &dep.version);
+    // The hook runs in the package's materialised slot — the unversioned
+    // in-place working tree (PROP-022 §2.4), or the versioned snapshot slot.
+    let slot = if is_in_place(dep) {
+        vibedeps::in_place_slot_abs_path(workspace_root, dep.kind, &dep.name)
+    } else {
+        vibedeps::slot_abs_path(workspace_root, dep.kind, &dep.name, &dep.version)
+    };
     let version = dep.version.to_string();
     let kind = dep.kind.to_string();
     let ctx = HookContext {
@@ -317,7 +344,13 @@ fn run_post_install_with(
     let fresh: HashSet<&str> = materialised_slots.iter().map(String::as_str).collect();
     let mut reports = Vec::new();
     for dep in resolution {
-        let slot = vibedeps::slot_rel_path(dep.kind, &dep.name, &dep.version);
+        // Match the slot label `apply_resolution` reported — the unversioned
+        // in-place path (PROP-022 §2.4) or the versioned snapshot path.
+        let slot = if is_in_place(dep) {
+            vibedeps::in_place_slot_rel_path(dep.kind, &dep.name)
+        } else {
+            vibedeps::slot_rel_path(dep.kind, &dep.name, &dep.version)
+        };
         if !fresh.contains(slot.as_str()) {
             continue;
         }

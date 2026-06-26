@@ -701,3 +701,83 @@ fn prune_leaves_an_in_place_slot_untouched() {
         "the in-place slot must survive a prune pass"
     );
 }
+
+/// An in-place `ResolvedDep` that also declares a `pre-install` hook — the
+/// canonical bridge composition (PROP-023 §2.3): a git working tree shaped by
+/// a hook. The clone carries `.git`, the in-place manifest, and the script.
+#[cfg(test)]
+fn dep_in_place_with_pre_hook(name: &str, version: &str) -> (ResolvedDep, TempDir) {
+    let pkg = TempDir::new().unwrap();
+    write(
+        pkg.path(),
+        "vibe.toml",
+        &format!(
+            "[package]\ngroup = \"org.vibevm\"\nname = \"{name}\"\nkind = \"feat\"\nversion = \"{version}\"\nmaterialization = \"in-place\"\n\n[hooks]\npre-install = \"hooks/prepare\"\n"
+        ),
+    );
+    write(pkg.path(), ".git/HEAD", "ref: refs/heads/main\n");
+    write(
+        pkg.path(),
+        "hooks/prepare.sh",
+        "#!/usr/bin/env bash\necho prep\n",
+    );
+    let manifest = Manifest::read(pkg.path().join("vibe.toml")).unwrap();
+    let dep = ResolvedDep {
+        kind: PackageKind::Feat,
+        group: Group::parse("org.vibevm").unwrap(),
+        name: name.to_string(),
+        version: ver(version),
+        content_dir: pkg.path().to_path_buf(),
+        manifest,
+        requires: vec![],
+    };
+    (dep, pkg)
+}
+
+#[test]
+#[verifies("spec://vibevm/modules/vibe-workspace/PROP-020#phases", r = 1)]
+fn pre_install_hook_runs_in_an_in_place_slot() {
+    let ws = TempDir::new().unwrap();
+    let (dep, _pkg) = dep_in_place_with_pre_hook("giant", "1.0.0");
+    let out = materialise_resolution(
+        ws.path(),
+        std::slice::from_ref(&dep),
+        SlotIntegrity::TrustPresence,
+        Some(&allow_vibevm()),
+        &FakeProbe(vec!["bash".to_string()]),
+        &FakeRunner(0),
+    )
+    .unwrap();
+    assert_eq!(out.materialised, vec!["vibedeps/feat-giant"]);
+    assert_eq!(out.hook_reports.len(), 1);
+    assert_eq!(out.hook_reports[0].status, "ran");
+    // The hook ran against the unversioned in-place slot, which exists.
+    assert!(vibedeps::is_in_place_slot(
+        ws.path(),
+        PackageKind::Feat,
+        "giant"
+    ));
+}
+
+#[test]
+#[verifies("spec://vibevm/modules/vibe-workspace/PROP-020#failure", r = 1)]
+fn pre_install_failure_rolls_back_an_in_place_slot() {
+    let ws = TempDir::new().unwrap();
+    let (dep, _pkg) = dep_in_place_with_pre_hook("giant", "1.0.0");
+    let err = materialise_resolution(
+        ws.path(),
+        std::slice::from_ref(&dep),
+        SlotIntegrity::TrustPresence,
+        Some(&allow_vibevm()),
+        &FakeProbe(vec!["bash".to_string()]),
+        &FakeRunner(1),
+    )
+    .unwrap_err();
+    assert!(matches!(err, WorkspaceError::Hook(_)), "{err}");
+    // PROP-020 §2.5 — the in-place slot is rolled back, not left half-prepared.
+    assert!(!vibedeps::is_in_place_slot(
+        ws.path(),
+        PackageKind::Feat,
+        "giant"
+    ));
+}
