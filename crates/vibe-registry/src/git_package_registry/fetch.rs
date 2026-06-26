@@ -103,15 +103,30 @@ impl GitPackageRegistry {
         name: &str,
         refname: &str,
     ) -> Result<String, RegistryError> {
-        let (primary, mirrors) = self.package_urls(group, name)?;
         let clone_dir = self.package_clone_dir(group, name);
+        self.bootstrap_chain_into(group, name, refname, &clone_dir)
+    }
+
+    /// Bootstrap (or incrementally update) `dest` against the package's source
+    /// chain — the primary URL first, then each mirror — returning the URL
+    /// that served it. The mirror-aware, auth-aware core shared by the cache
+    /// clone ([`ensure_clone_against_sources`]) and the direct in-place slot
+    /// placement ([`materialise_in_place`]); only the destination differs.
+    fn bootstrap_chain_into(
+        &self,
+        group: &Group,
+        name: &str,
+        refname: &str,
+        dest: &Path,
+    ) -> Result<String, RegistryError> {
+        let (primary, mirrors) = self.package_urls(group, name)?;
         // Primary outside the mirror loop — its error is a plain value.
-        let primary_err = match self.bootstrap_or_update_at(&primary, refname, &clone_dir) {
+        let primary_err = match self.bootstrap_or_update_at(&primary, refname, dest) {
             Ok(()) => return Ok(primary),
             Err(e) => e,
         };
         for (i, url) in mirrors.iter().enumerate() {
-            match self.bootstrap_or_update_at(url, refname, &clone_dir) {
+            match self.bootstrap_or_update_at(url, refname, dest) {
                 Ok(()) => {
                     tracing::info!(
                         target: "vibe_registry",
@@ -135,6 +150,45 @@ impl GitPackageRegistry {
             }
         }
         Err(primary_err)
+    }
+
+    /// Place an `in-place` package directly into its project slot (PROP-022
+    /// §2.4): a fresh `git clone --recurse-submodules` when `slot` is absent,
+    /// an incremental `git fetch` + checkout when it already carries `.git` —
+    /// so a version bump on a giant repo transfers only changed objects rather
+    /// than re-downloading the whole tree (the deferred incremental update the
+    /// move-based path could not do). Bypasses the `.git`-stripped cache copy
+    /// and the per-project cache clone entirely. Auth / mirror handling is the
+    /// same [`bootstrap_or_update_at`] the cache path uses — the token is
+    /// injected and stripped identically; only the working-tree destination
+    /// changes. Returns the canonical source URL, the version tag, the
+    /// resolved commit (the in-place identity, §2.5), and the slot's manifest.
+    pub fn materialise_in_place(
+        &self,
+        resolved: &ResolvedPackage,
+        slot: &Path,
+    ) -> Result<InPlaceMaterialised, RegistryError> {
+        self.ensure_token_loaded()?;
+        let canonical_url = self.package_repo_url(&resolved.group, &resolved.name)?;
+        let tag = format!("v{}", resolved.version);
+        self.bootstrap_chain_into(&resolved.group, &resolved.name, &tag, slot)?;
+        let manifest_path = slot.join(Manifest::FILENAME);
+        let manifest = Manifest::read(&manifest_path)?;
+        if manifest.package.is_none() {
+            return Err(RegistryError::MalformedMeta {
+                path: manifest_path,
+                reason: "in-place package manifest must carry a [package] table".to_string(),
+            });
+        }
+        let resolved_commit = self.backend.head_commit(slot).ok().flatten();
+        let content_hash = commit_content_hash(resolved_commit.as_deref().unwrap_or_default());
+        Ok(InPlaceMaterialised {
+            source_uri: canonical_url,
+            source_ref: tag,
+            resolved_commit,
+            content_hash,
+            manifest,
+        })
     }
 
     /// Refresh the per-package clone for `(group, name)` against `refname`

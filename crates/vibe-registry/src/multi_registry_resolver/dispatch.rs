@@ -74,6 +74,36 @@ impl MultiRegistryResolver {
         reg.fetch_with_expected_hash(&resolution.resolved, project_cache, expected_hash)
     }
 
+    /// Place a registry-served `in-place` package directly into its project
+    /// `slot` (PROP-022 §2.4) — a fresh clone, or an incremental `git fetch`
+    /// on an existing slot — bypassing the cache clone + snapshot copy. Routes
+    /// to the [`GitPackageRegistry`] that resolved the package. The special
+    /// source kinds (override / git-source / path-source / redirect) are not
+    /// in-place candidates; they keep the move-based snapshot path.
+    pub fn materialise_in_place(
+        &self,
+        resolution: &MultiResolution,
+        slot: &Path,
+    ) -> Result<InPlaceMaterialised, RegistryError> {
+        let registry_name =
+            resolution
+                .registry_name
+                .as_deref()
+                .ok_or_else(|| RegistryError::UnknownPackage {
+                    group: resolution.resolved.group.clone(),
+                    name: resolution.resolved.name.clone(),
+                })?;
+        let reg = self
+            .registries
+            .iter()
+            .find(|r| r.name() == registry_name)
+            .ok_or_else(|| RegistryError::UnknownPackage {
+                group: resolution.resolved.group.clone(),
+                name: resolution.resolved.name.clone(),
+            })?;
+        reg.materialise_in_place(&resolution.resolved, slot)
+    }
+
     fn fetch_override(
         &self,
         resolution: &MultiResolution,

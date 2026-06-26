@@ -22,9 +22,9 @@ use anyhow::{Context, Result, anyhow, bail};
 use dialoguer::Confirm;
 use vibe_core::manifest::{LockedPackage, Lockfile, Manifest, SourceKind};
 use vibe_core::user_config::SlotIntegrity;
-use vibe_core::{Group, PackageRef, VersionSpec};
+use vibe_core::{Group, PackageKind, PackageRef, VersionSpec};
 use vibe_install::InstallSource;
-use vibe_registry::CachedPackage;
+use vibe_registry::{CachedPackage, ResolvedPackage};
 use vibe_workspace::Workspace;
 use vibe_workspace::install::{
     ResolvedDep, materialise_subtree, regenerate_boot, run_post_install_hooks,
@@ -35,6 +35,20 @@ use crate::cli::{InstallArgs, UpdateArgs};
 use crate::commands::install::{build_install_resolver, exact_pinned_pkgref};
 use crate::exit_code::InstallError;
 use crate::output;
+
+/// A subtree node the scoped update will refresh **in place** rather than
+/// re-fetch: the lockfile already records it as `in-place` (PROP-022 §2.4) and
+/// its slot is present, so it is `git fetch`-ed onto its own `.git` after
+/// confirmation instead of re-cloned.
+struct PendingInPlace {
+    pkgref: PackageRef,
+    kind: PackageKind,
+    group: Group,
+    name: String,
+    version: semver::Version,
+    registry: Option<String>,
+    dependencies: Vec<PackageRef>,
+}
 
 pub fn run(ctx: &output::Context, args: UpdateArgs) -> Result<()> {
     // No arguments / `--all`: re-resolve the whole graph. That is the
@@ -115,14 +129,34 @@ pub fn run(ctx: &output::Context, args: UpdateArgs) -> Result<()> {
     fs::create_dir_all(&cache_root)
         .with_context(|| format!("creating cache dir `{}`", cache_root.display()))?;
 
-    // Fetch every node of the named subtree.
-    let mut updated: Vec<(CachedPackage, Vec<PackageRef>)> =
-        Vec::with_capacity(graph.packages.len());
+    // Fetch every node of the named subtree. A package the lockfile already
+    // records as in-place with a present slot is NOT re-fetched: it is updated
+    // incrementally on its own `.git` (PROP-022 §2.4) — a version bump on a
+    // giant transfers only changed objects rather than re-cloning the tree. We
+    // resolve those nodes here but defer the slot mutation past the confirm.
+    let mut updated: Vec<(CachedPackage, Vec<PackageRef>)> = Vec::new();
+    let mut pending_in_place: Vec<PendingInPlace> = Vec::new();
     for node in graph.iter() {
         let pkgref = exact_pinned_pkgref(node);
+        if let Some(old) = lockfile.find(&node.group, &node.name)
+            && old.materialization.is_in_place()
+            && vibedeps::is_in_place_slot(&workspace.root, old.kind, &node.name)
+        {
+            pending_in_place.push(PendingInPlace {
+                pkgref,
+                kind: old.kind,
+                group: node.group.clone(),
+                name: node.name.clone(),
+                version: node.version.clone(),
+                registry: old.registry.clone(),
+                dependencies: node.dependencies.clone(),
+            });
+            continue;
+        }
         let cached = resolver.resolve_and_fetch(&pkgref, &cache_root, None)?;
         updated.push((cached, node.dependencies.clone()));
     }
+    let total = updated.len() + pending_in_place.len();
 
     let approved = if args.assume_yes || ctx.is_unattended() || ctx.is_json() {
         true
@@ -134,8 +168,8 @@ pub fn run(ctx: &output::Context, args: UpdateArgs) -> Result<()> {
         Confirm::new()
             .with_prompt(format!(
                 "Re-materialise {} package{} into vibedeps/ and regenerate boot?",
-                updated.len(),
-                if updated.len() == 1 { "" } else { "s" },
+                total,
+                if total == 1 { "" } else { "s" },
             ))
             .default(false)
             .interact()
@@ -143,6 +177,43 @@ pub fn run(ctx: &output::Context, args: UpdateArgs) -> Result<()> {
     };
     if !approved {
         return Err(InstallError::UserDeclined.into());
+    }
+
+    // Confirmed — perform the deferred incremental in-place updates, then fold
+    // each into the same `updated` set so the resolution / lockfile / hook flow
+    // treats it uniformly. The built `CachedPackage`'s `cache_dir` IS the slot,
+    // which signals "already placed" to the materialise pass (it runs the hook
+    // but skips any move).
+    for p in pending_in_place {
+        let slot = vibedeps::in_place_slot_abs_path(&workspace.root, p.kind, &p.name);
+        let placed = resolver
+            .materialise_in_place(&p.pkgref, &slot)
+            .with_context(|| format!("updating in-place `{}/{}`", p.group, p.name))?;
+        vibedeps::ensure_gitignored(
+            &workspace.root,
+            &vibedeps::in_place_slot_rel_path(p.kind, &p.name),
+        )
+        .context("gitignoring the in-place slot")?;
+        let cached = CachedPackage {
+            resolved: ResolvedPackage {
+                group: p.group.clone(),
+                name: p.name.clone(),
+                version: p.version.clone(),
+                source_dir: slot.clone(),
+            },
+            cache_dir: slot,
+            manifest: placed.manifest,
+            content_hash: placed.content_hash,
+            source_uri: placed.source_uri,
+            registry_name: p.registry,
+            source_ref: Some(placed.source_ref),
+            resolved_commit: placed.resolved_commit,
+            overridden: false,
+            is_git_source: false,
+            is_path_source: false,
+            via_redirect: None,
+        };
+        updated.push((cached, p.dependencies));
     }
 
     // Build the partial resolution for the subtree — the form the shared

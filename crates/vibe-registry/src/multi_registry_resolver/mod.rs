@@ -49,7 +49,9 @@ use vibe_core::{Group, PackageKind, PackageRef, VersionSpec};
 use crate::git_backend::{GitBackend, GitError, ShellGit};
 use crate::git_package_registry::{GitPackageRegistry, copy_dir_excluding_git};
 use crate::registry_cache::{DEFAULT_FRESHNESS_SECS, default_cache_root, strip_git_plus_prefix};
-use crate::{CachedPackage, RegistryError, ResolvedPackage, compute_content_hash};
+use crate::{
+    CachedPackage, InPlaceMaterialised, RegistryError, ResolvedPackage, compute_content_hash,
+};
 
 mod dispatch;
 mod redirect_follow;

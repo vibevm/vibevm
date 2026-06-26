@@ -49,7 +49,10 @@ use crate::git_backend::{GitBackend, GitError, ShellGit};
 use crate::registry_cache::{
     DEFAULT_FRESHNESS_SECS, default_cache_root, normalize_url, strip_git_plus_prefix,
 };
-use crate::{CachedPackage, Registry, RegistryError, ResolvedPackage, compute_content_hash};
+use crate::{
+    CachedPackage, InPlaceMaterialised, Registry, RegistryError, ResolvedPackage,
+    compute_content_hash,
+};
 
 mod auth;
 mod fetch;

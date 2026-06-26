@@ -28,7 +28,7 @@ specmark::scope!("spec://vibevm/VIBEVM-SPEC#install-workflow-in-detail");
 use std::path::Path;
 
 use vibe_core::PackageRef;
-use vibe_registry::{CachedPackage, RegistryError};
+use vibe_registry::{CachedPackage, InPlaceMaterialised, RegistryError};
 use vibe_resolver::{ResolvedGraph, SolveError};
 
 mod apply;
@@ -80,6 +80,17 @@ pub use record::{
 ///         # let _ = roots;
 ///         # unimplemented!()
 ///     }
+///
+///     fn materialise_in_place(
+///         &self,
+///         pkgref: &PackageRef,
+///         slot: &Path,
+///     ) -> Result<vibe_registry::InPlaceMaterialised, RegistryError> {
+///         // A local-directory registry has no git backend; a git-backed
+///         // source clones / incrementally updates the slot here.
+///         # let _ = (pkgref, slot);
+///         unimplemented!()
+///     }
 /// }
 /// ```
 pub trait InstallSource {
@@ -96,4 +107,18 @@ pub trait InstallSource {
     /// Run the depsolver against this source, returning the full
     /// transitive graph the pipeline will fetch and materialise.
     fn solve(&self, roots: &[PackageRef]) -> Result<ResolvedGraph, SolveError>;
+
+    /// Place an `in-place` package (PROP-022 §2.4) directly into its project
+    /// `slot`: a fresh `git clone --recurse-submodules` when the slot is
+    /// absent, an incremental `git fetch` + checkout when it already carries
+    /// `.git`. Bypasses the cache clone + the `.git`-stripped snapshot copy,
+    /// so a version bump on a giant repo transfers only changed objects. Used
+    /// by scoped `vibe update <pkg>` for a package the lockfile records as
+    /// in-place. Returns the slot's manifest + provenance for the lockfile; a
+    /// source with no git backend (the local-directory registry) errors.
+    fn materialise_in_place(
+        &self,
+        pkgref: &PackageRef,
+        slot: &Path,
+    ) -> Result<InPlaceMaterialised, RegistryError>;
 }

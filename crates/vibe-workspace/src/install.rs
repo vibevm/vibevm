@@ -182,11 +182,21 @@ fn materialise_resolution(
         // `.gitignore` it (not vendored, §2.7).
         if is_in_place(dep) {
             let rel = vibedeps::in_place_slot_rel_path(dep.kind, &dep.name);
-            if vibedeps::is_in_place_slot(workspace_root, dep.kind, &dep.name)
+            let slot_abs = vibedeps::in_place_slot_abs_path(workspace_root, dep.kind, &dep.name);
+            // The install layer may have already placed the slot directly — an
+            // incremental in-place update (PROP-022 §2.4), `git fetch`-ed onto
+            // the existing `.git` rather than re-cloned — signalled by the
+            // dep's `content_dir` BEING the slot. Then there is no clone to
+            // move; the slot is already current and we only run the hook.
+            let already_placed = dep.content_dir == slot_abs;
+            if !already_placed
+                && vibedeps::is_in_place_slot(workspace_root, dep.kind, &dep.name)
                 && slot_integrity == SlotIntegrity::TrustPresence
             {
                 skipped.push(rel);
-            } else {
+                continue;
+            }
+            if !already_placed {
                 vibedeps::materialise_in_place(
                     workspace_root,
                     dep.kind,
@@ -194,30 +204,29 @@ fn materialise_resolution(
                     &dep.content_dir,
                 )?;
                 vibedeps::ensure_gitignored(workspace_root, &rel)?;
-                // PROP-020 §2.1 — run the pre-install hook against the fresh
-                // in-place working tree. The re-clone IS the §2.4 reset, so
-                // the hook stays a pure function of the upstream content; a
-                // failure rolls the slot back (PROP-020 §2.5).
-                if let Some(policy) = hooks {
-                    match run_dep_hook(
-                        HookPhase::PreInstall,
-                        dep,
-                        workspace_root,
-                        policy,
-                        probe,
-                        runner,
-                    ) {
-                        Ok(Some(report)) => hook_reports.push(report),
-                        Ok(None) => {}
-                        Err(err) => {
-                            let _ =
-                                vibedeps::remove_in_place_slot(workspace_root, dep.kind, &dep.name);
-                            return Err(WorkspaceError::from(err));
-                        }
+            }
+            // PROP-020 §2.1 — run the pre-install hook against the fresh
+            // in-place working tree. The re-clone / incremental update IS the
+            // §2.4 reset, so the hook stays a pure function of the upstream
+            // content; a failure rolls the slot back (PROP-020 §2.5).
+            if let Some(policy) = hooks {
+                match run_dep_hook(
+                    HookPhase::PreInstall,
+                    dep,
+                    workspace_root,
+                    policy,
+                    probe,
+                    runner,
+                ) {
+                    Ok(Some(report)) => hook_reports.push(report),
+                    Ok(None) => {}
+                    Err(err) => {
+                        let _ = vibedeps::remove_in_place_slot(workspace_root, dep.kind, &dep.name);
+                        return Err(WorkspaceError::from(err));
                     }
                 }
-                materialised.push(rel);
             }
+            materialised.push(rel);
             continue;
         }
         let slot = vibedeps::slot_rel_path(dep.kind, &dep.name, &dep.version);

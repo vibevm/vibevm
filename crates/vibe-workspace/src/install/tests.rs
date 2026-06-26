@@ -827,3 +827,58 @@ fn materialise_subtree_does_not_prune_unrelated_slots() {
         &ver("0.1.0")
     ));
 }
+
+#[test]
+#[verifies("spec://vibevm/modules/vibe-workspace/PROP-022#in-place", r = 1)]
+fn already_placed_in_place_slot_runs_hook_without_moving() {
+    // An incremental in-place update (PROP-022 §2.4) has the install layer
+    // git-fetch the slot directly, then hand it to the materialise pass with
+    // `content_dir` == the slot. The pass must NOT move/clear it — only run
+    // the hook against the freshly-updated tree.
+    let ws = TempDir::new().unwrap();
+    let kind = PackageKind::Feat;
+    let slot = vibedeps::in_place_slot_abs_path(ws.path(), kind, "giant");
+    write(&slot, ".git/HEAD", "ref: refs/heads/main\n");
+    write(
+        &slot,
+        "vibe.toml",
+        "[package]\ngroup = \"org.vibevm\"\nname = \"giant\"\nkind = \"feat\"\nversion = \"1.0.0\"\nmaterialization = \"in-place\"\n\n[hooks]\npre-install = \"hooks/prepare\"\n",
+    );
+    write(
+        &slot,
+        "hooks/prepare.sh",
+        "#!/usr/bin/env bash\necho prep\n",
+    );
+    write(&slot, "SENTINEL", "must survive");
+
+    let manifest = Manifest::read(slot.join("vibe.toml")).unwrap();
+    // `content_dir` IS the slot → the "already placed" signal.
+    let dep = ResolvedDep {
+        kind,
+        group: Group::parse("org.vibevm").unwrap(),
+        name: "giant".to_string(),
+        version: ver("1.0.0"),
+        content_dir: slot.clone(),
+        manifest,
+        requires: vec![],
+    };
+
+    let out = materialise_resolution(
+        ws.path(),
+        std::slice::from_ref(&dep),
+        // `Verify` would normally re-materialise — the already-placed signal
+        // overrides that for in-place.
+        SlotIntegrity::Verify,
+        Some(&allow_vibevm()),
+        &FakeProbe(vec!["bash".to_string()]),
+        &FakeRunner(0),
+    )
+    .unwrap();
+    assert_eq!(out.materialised, vec!["vibedeps/feat-giant"]);
+    assert_eq!(out.hook_reports[0].status, "ran");
+    // The slot was NOT moved/cleared — its sentinel survives.
+    assert!(
+        slot.join("SENTINEL").is_file(),
+        "an already-placed in-place slot must not be moved"
+    );
+}

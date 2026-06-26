@@ -81,6 +81,32 @@ impl InstallSource for InstallResolver {
         };
         solver.solve(roots)
     }
+
+    fn materialise_in_place(
+        &self,
+        pkgref: &PackageRef,
+        slot: &std::path::Path,
+    ) -> Result<vibe_registry::InPlaceMaterialised, RegistryError> {
+        match self {
+            // A local-directory registry has no git backend — in-place needs
+            // a real git source to clone and incrementally update (PROP-022
+            // §2.4).
+            InstallResolver::Local(..) => {
+                let group = pkgref
+                    .group
+                    .clone()
+                    .ok_or_else(|| RegistryError::UnqualifiedPkgref(pkgref.to_string()))?;
+                Err(RegistryError::InPlaceUnsupported {
+                    group,
+                    name: pkgref.name.to_string(),
+                })
+            }
+            InstallResolver::Multi(m, _) => {
+                let resolution = m.resolve(pkgref)?;
+                m.materialise_in_place(&resolution, slot)
+            }
+        }
+    }
 }
 
 impl InstallResolver {

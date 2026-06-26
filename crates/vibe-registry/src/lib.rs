@@ -187,6 +187,19 @@ pub enum RegistryError {
         #[source]
         source: std::io::Error,
     },
+
+    /// An `in-place` materialization (PROP-022 §2.4) was requested against a
+    /// registry with no git backend — the local-directory registry
+    /// (`--registry <path>`, the M0 shape). In-place needs a real git source
+    /// to clone and incrementally update; there is nothing to clone from a
+    /// directory tree.
+    #[error(
+        "package `{group}/{name}` declares in-place materialization but resolves through a \
+         local-directory registry with no git backend \
+         (violates spec://vibevm/modules/vibe-workspace/PROP-022#in-place; \
+          fix: serve it from a git `[[registry]]`, or drop `materialization = \"in-place\"`)"
+    )]
+    InPlaceUnsupported { group: Group, name: String },
 }
 
 /// Uniform surface over all registry backends — [`LocalRegistry`] and
@@ -413,6 +426,27 @@ impl CachedPackage {
             .as_ref()
             .expect("a fetched registry package always carries a [package] table")
     }
+}
+
+/// What [`GitPackageRegistry::materialise_in_place`](crate::GitPackageRegistry)
+/// produced: the in-place slot is already populated on disk (a fresh clone or
+/// an incremental `git fetch`), so these are the records the install layer
+/// needs to write the lockfile entry and compose boot (PROP-022 §2.4/§2.5).
+#[derive(Debug, Clone)]
+pub struct InPlaceMaterialised {
+    /// Canonical per-package source URL — the lockfile's `source_url`.
+    pub source_uri: String,
+    /// The version tag the slot was placed at (`v<version>`).
+    pub source_ref: String,
+    /// The commit the tag resolved to — the in-place identity (§2.5).
+    pub resolved_commit: Option<String>,
+    /// `sha256:<hex>` over the resolved commit — the lockfile `content_hash`
+    /// for an in-place slot (a cheap, stable commit-derived hash, never a tree
+    /// walk; identity is the commit). `sha256:` of the empty string when the
+    /// backend reported no commit.
+    pub content_hash: String,
+    /// The slot's manifest, read back after placement.
+    pub manifest: vibe_core::manifest::Manifest,
 }
 
 pub(crate) fn copy_dir_recursive(src: &Path, dst: &Path) -> Result<(), RegistryError> {
