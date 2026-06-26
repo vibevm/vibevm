@@ -178,6 +178,21 @@ impl GitBackend for ShellGit {
         .map(|_| ())
     }
 
+    fn head_commit(&self, dest: &Path) -> Result<Option<String>, GitError> {
+        self.preflight()?;
+        // `git -C <dest> rev-parse HEAD` — the resolved commit of the
+        // currently checked-out ref. The clone is already at the target ref
+        // when this is called (post-bootstrap / post-update), so HEAD is the
+        // version tag's commit. Trimmed of the trailing newline.
+        let output = self.run(&["rev-parse", "HEAD"], Some(dest))?;
+        let sha = String::from_utf8_lossy(&output.stdout).trim().to_string();
+        if sha.is_empty() {
+            Ok(None)
+        } else {
+            Ok(Some(sha))
+        }
+    }
+
     fn list_tags(&self, url: &str) -> Result<Vec<String>, GitError> {
         self.preflight()?;
         // `git ls-remote --tags <url>` outputs one line per ref:

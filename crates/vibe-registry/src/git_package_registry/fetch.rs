@@ -274,6 +274,12 @@ impl GitPackageRegistry {
                 });
             }
             let content_hash = compute_content_hash(&dest_cache)?;
+            // The commit the tag resolved to — recorded so a re-clone at this
+            // commit reconstructs identical content, including every
+            // submodule's gitlink (PROP-021 §2.4), and so an `in-place` slot's
+            // identity is its commit (PROP-022 §2.5). Read from the clone,
+            // which retains `.git`; the cache copy is `.git`-stripped.
+            let resolved_commit = self.backend.head_commit(&clone_dir)?;
 
             // 3. Cross-source content_hash gate.
             let cached = CachedPackage {
@@ -284,7 +290,7 @@ impl GitPackageRegistry {
                 source_uri: canonical_url.clone(),
                 registry_name: Some(self.name.clone()),
                 source_ref: Some(tag.clone()),
-                resolved_commit: None,
+                resolved_commit,
                 overridden: false,
                 is_git_source: false,
                 is_path_source: false,

@@ -354,9 +354,14 @@ pub struct CachedPackage {
     /// per-package registries; the override's ref for `[[override]]`-resolved
     /// packages. `None` for non-git sources (file://, M0 local-directory).
     pub source_ref: Option<String>,
-    /// Commit hash the ref resolved to at fetch time. Reserved for the
-    /// resolver-aware install pipeline; populated by [`GitPackageRegistry`]
-    /// in a follow-up commit. Always `None` here.
+    /// Commit hash the ref resolved to at fetch time — `git rev-parse HEAD`
+    /// of the clone at the requested tag, read via [`GitBackend::head_commit`].
+    /// Populated by the per-package registry fetch path and recorded in the
+    /// lockfile so a re-clone reconstructs identical content, including every
+    /// submodule's gitlink (PROP-021 §2.4), and an `in-place` slot's identity
+    /// is its commit (PROP-022 §2.5). `None` for non-git registries (file://,
+    /// M0 local-directory) and the legacy monorepo path — no upstream commit
+    /// to pin — and for any backend whose `head_commit` returns `None`.
     pub resolved_commit: Option<String>,
     /// `true` iff this package was resolved through a `[[override]]`
     /// entry rather than the registry layer.

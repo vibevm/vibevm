@@ -175,6 +175,20 @@ pub trait GitBackend: Send + Sync {
     /// repository previously populated by `bootstrap`.
     fn update(&self, dest: &Path, refname: &str) -> Result<(), GitError>;
 
+    /// The commit SHA the working tree at `dest` is checked out at —
+    /// `git -C <dest> rev-parse HEAD`. Recorded as the lockfile's
+    /// `resolved_commit` so a re-clone reconstructs byte-identical content,
+    /// including the exact gitlink commit of every submodule (PROP-021 §2.4),
+    /// and so an `in-place` slot's identity is its commit (PROP-022 §2.5).
+    ///
+    /// Returns `Ok(None)` from the default impl — a test backend that tracks
+    /// no real checkout has no commit to report, and a `None` keeps the
+    /// lockfile field absent exactly as before this method existed. The
+    /// production [`ShellGit`] overrides it to return the real SHA.
+    fn head_commit(&self, _dest: &Path) -> Result<Option<String>, GitError> {
+        Ok(None)
+    }
+
     /// List the tag names available on `url` without cloning. Implemented
     /// via `git ls-remote --tags`. Tags annotated with the
     /// `^{}` peeled-form suffix are stripped so the caller sees clean

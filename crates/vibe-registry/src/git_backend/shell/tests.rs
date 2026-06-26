@@ -71,6 +71,36 @@ fn clone_then_update_against_bare_origin() {
 }
 
 #[test]
+#[verifies("spec://vibevm/modules/vibe-registry/PROP-021#lock", r = 1)]
+fn head_commit_returns_the_checked_out_sha() {
+    skip_without_git!();
+    let tmp = tempdir().unwrap();
+    let bare = make_bare_origin(tmp.path());
+    let dest = tmp.path().join("clone");
+
+    let g = ShellGit::new();
+    g.bootstrap(&bare.to_string_lossy(), "main", &dest)
+        .expect("clone should succeed");
+
+    let sha = g
+        .head_commit(&dest)
+        .expect("head_commit ok")
+        .expect("a real checkout reports a commit");
+    // A full 40-hex SHA-1 — git's default object format.
+    assert_eq!(sha.len(), 40, "got: {sha}");
+    assert!(sha.chars().all(|c| c.is_ascii_hexdigit()), "got: {sha}");
+
+    // It matches what git itself reports for HEAD in the clone.
+    let mut cmd = Command::new("git");
+    apply_common_env(&mut cmd);
+    cmd.args(["rev-parse", "HEAD"]).current_dir(&dest);
+    let expected = String::from_utf8_lossy(&cmd.output().unwrap().stdout)
+        .trim()
+        .to_string();
+    assert_eq!(sha, expected);
+}
+
+#[test]
 #[verifies("spec://vibevm/modules/vibe-registry/PROP-021#fetch", r = 1)]
 fn submodule_step_is_a_noop_without_submodules() {
     skip_without_git!();
