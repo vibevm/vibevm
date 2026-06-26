@@ -1418,6 +1418,13 @@
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/lockfile/tests.rs",
       "item_kind": "fn",
+      "line": 217,
+      "symbol": "vibe_core::manifest::lockfile::tests::materialization_round_trips"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/lockfile/tests.rs",
+      "item_kind": "fn",
       "line": 57,
       "symbol": "vibe_core::manifest::lockfile::tests::parses_fully"
     },
@@ -3651,28 +3658,28 @@
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/lib.rs",
       "item_kind": "struct",
-      "line": 277,
+      "line": 278,
       "symbol": "vibe_workspace::Workspace"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/lib.rs",
       "item_kind": "fn",
-      "line": 322,
+      "line": 323,
       "symbol": "vibe_workspace::Workspace::discover"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/lib.rs",
       "item_kind": "enum",
-      "line": 54,
+      "line": 55,
       "symbol": "vibe_workspace::WorkspaceError"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/lib.rs",
       "item_kind": "struct",
-      "line": 233,
+      "line": 234,
       "symbol": "vibe_workspace::WorkspaceMember"
     },
     {
@@ -3905,6 +3912,48 @@
       "item_kind": "fn",
       "line": 235,
       "symbol": "vibe_workspace::lib::tests::version_var_resolves_from_root_workspace"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/materialization.rs",
+      "item_kind": "mod",
+      "line": 11,
+      "symbol": "vibe_workspace::materialization"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/materialization.rs",
+      "item_kind": "fn",
+      "line": 40,
+      "symbol": "vibe_workspace::materialization::guard_destructive"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/materialization.rs",
+      "item_kind": "fn",
+      "line": 125,
+      "symbol": "vibe_workspace::materialization::tests::in_place_aborts_only_when_non_interactive_and_not_opted_in"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/materialization.rs",
+      "item_kind": "fn",
+      "line": 156,
+      "symbol": "vibe_workspace::materialization::tests::in_place_interactive_without_opt_in_must_ask"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/materialization.rs",
+      "item_kind": "fn",
+      "line": 138,
+      "symbol": "vibe_workspace::materialization::tests::in_place_opt_in_proceeds_in_any_session"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/materialization.rs",
+      "item_kind": "fn",
+      "line": 104,
+      "symbol": "vibe_workspace::materialization::tests::snapshot_and_hardlink_are_never_guarded"
     },
     {
       "crate_name": "vibe-workspace",
@@ -5664,6 +5713,15 @@
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#lockfile",
       "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/lockfile/tests.rs",
+      "from_symbol": "vibe_core::manifest::lockfile::tests::materialization_round_trips",
+      "line": 218,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-022#destructive-guard",
+      "verb": "verifies",
+      "pinned_r": 1
     },
     {
       "file": "crates/vibe-core/src/manifest/lockfile/tests.rs",
@@ -8380,7 +8438,7 @@
     {
       "file": "crates/vibe-workspace/src/lib.rs",
       "from_symbol": "vibe_workspace::Workspace",
-      "line": 306,
+      "line": 307,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-007#workspace-section",
       "verb": "implements",
@@ -8389,7 +8447,7 @@
     {
       "file": "crates/vibe-workspace/src/lib.rs",
       "from_symbol": "vibe_workspace::Workspace::discover",
-      "line": 327,
+      "line": 328,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-007#nesting",
       "verb": "implements",
@@ -8398,7 +8456,7 @@
     {
       "file": "crates/vibe-workspace/src/lib.rs",
       "from_symbol": "vibe_workspace::WorkspaceError",
-      "line": 75,
+      "line": 76,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-007#nesting",
       "verb": "implements"
@@ -8406,7 +8464,7 @@
     {
       "file": "crates/vibe-workspace/src/lib.rs",
       "from_symbol": "vibe_workspace::WorkspaceMember",
-      "line": 256,
+      "line": 257,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-007#workspace-section",
       "verb": "implements",
@@ -8708,6 +8766,59 @@
       "line": 236,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-007#versions",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-workspace/src/materialization.rs",
+      "from_symbol": "vibe_workspace::materialization",
+      "line": 11,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-022#destructive-guard",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-workspace/src/materialization.rs",
+      "from_symbol": "vibe_workspace::materialization::guard_destructive",
+      "line": 81,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-022#destructive-guard",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-workspace/src/materialization.rs",
+      "from_symbol": "vibe_workspace::materialization::tests::in_place_aborts_only_when_non_interactive_and_not_opted_in",
+      "line": 126,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-022#destructive-guard",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-workspace/src/materialization.rs",
+      "from_symbol": "vibe_workspace::materialization::tests::in_place_interactive_without_opt_in_must_ask",
+      "line": 157,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-022#destructive-guard",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-workspace/src/materialization.rs",
+      "from_symbol": "vibe_workspace::materialization::tests::in_place_opt_in_proceeds_in_any_session",
+      "line": 139,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-022#destructive-guard",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-workspace/src/materialization.rs",
+      "from_symbol": "vibe_workspace::materialization::tests::snapshot_and_hardlink_are_never_guarded",
+      "line": 105,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-022#destructive-guard",
       "verb": "verifies",
       "pinned_r": 1
     },
