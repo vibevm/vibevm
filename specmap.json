@@ -9,6 +9,13 @@
     },
     {
       "crate_name": "conform-core",
+      "file": "crates/conform-core/src/config.rs",
+      "item_kind": "mod",
+      "line": 14,
+      "symbol": "conform_core::config"
+    },
+    {
+      "crate_name": "conform-core",
       "file": "crates/conform-core/src/facts.rs",
       "item_kind": "mod",
       "line": 3,
@@ -74,7 +81,7 @@
       "crate_name": "conform-core",
       "file": "crates/conform-core/src/store.rs",
       "item_kind": "mod",
-      "line": 7,
+      "line": 8,
       "symbol": "conform_core::store"
     },
     {
@@ -4183,6 +4190,14 @@
       "verb": "implements"
     },
     {
+      "file": "crates/conform-core/src/config.rs",
+      "from_symbol": "conform_core::config",
+      "line": 14,
+      "provenance": "authored",
+      "uri": "spec://vibevm/discipline/ENGINE-CONFORM-v0.1#facts",
+      "verb": "implements"
+    },
+    {
       "file": "crates/conform-core/src/facts.rs",
       "from_symbol": "conform_core::facts",
       "line": 3,
@@ -4258,7 +4273,7 @@
     {
       "file": "crates/conform-core/src/store.rs",
       "from_symbol": "conform_core::store",
-      "line": 7,
+      "line": 8,
       "provenance": "authored",
       "uri": "spec://vibevm/discipline/ENGINE-CONFORM-v0.1#facts",
       "verb": "implements"
