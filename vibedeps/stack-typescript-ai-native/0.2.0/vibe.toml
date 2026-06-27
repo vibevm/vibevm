@@ -16,5 +16,5 @@ requires_kinds = []
 packages = { "flow:org.vibevm/discipline-core" = "^0.2" }
 
 [boot_snippet]
-source = "boot/20-stack-typescript-ai-native.md"
+source = "spec/boot/20-stack-typescript-ai-native.md"
 category = "stack"
