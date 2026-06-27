@@ -15,9 +15,11 @@ so the specmap stays suspect-free.
 | `ENGINE-CONFORM-v0.1.md` | conformance engine: fact store, rules-as-queries, SARIF, ratchet baseline | `crates/conform-core`, `crates/conform-frontend-rust`, `cargo xtask conform` |
 | `LEDGER-INTENT-v0.1.md` | intent ledger: facts vs interpretations, epoch-keyed cache, provenance | `crates/specmap-core::ledger`, `.ledger/` (git-ignored) |
 
-The Discipline *product* (manifesto, cards, scaffold catalog, raid
-playbook) is not here — it is the installed package
-`flow:org.vibevm/discipline-core` (see `spec/neworder/README.md`, the
-shim). These four documents are referenced by the product (Guide §7
+The Discipline *product* is not here — its language-neutral core
+(manifesto, card format, scaffold catalog, raid playbook) is the
+installed package `flow:org.vibevm/discipline-core`, and the concrete
+per-language cards ship in each stack (`stack:org.vibevm/rust-ai-native`,
+`stack:org.vibevm/typescript-ai-native`); see `spec/neworder/README.md`,
+the shim. These four documents are referenced by the product (Guide §7
 cites PROP-014) but are hosted by vibevm because vibevm's code carries
 their `implements` edges.

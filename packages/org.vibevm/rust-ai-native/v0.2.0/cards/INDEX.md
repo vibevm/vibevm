@@ -1,7 +1,7 @@
-# Card Registry — INDEX
-**Discipline v0.2 · BETA**
+# Card Registry — INDEX (Rust projection)
+**Discipline v0.2 · BETA · T2 · Rust**
 
-*The navigable registry of all Discipline cards. The harness uses this to resolve a trigger to a card and to deliver the Band-3 extract. Generated/maintained as a derived index (A2/R-030); hand edits are a defect.*
+*The navigable registry of the Rust projection's cards. The harness uses this to resolve a trigger to a card and to deliver the Band-3 extract for a `.rs` edit. These are the Rust shape of the nine language-neutral scaffold patterns catalogued in the core `02-EXECUTABLE-SCAFFOLDS.md`; this stack ships its own `cards/` so the weak-reader runtime surface for Rust is a Rust Band-3 block, never another language's. Generated/maintained as a derived index (A2/R-030); hand edits are a defect.*
 
 ## Scaffold cards (the nine executable-scaffold patterns)
 

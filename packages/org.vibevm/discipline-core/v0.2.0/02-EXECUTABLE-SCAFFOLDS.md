@@ -1,7 +1,7 @@
 # Executable Scaffolds — The Runnable-Capital Catalog
 **Discipline v0.2 · status: BETA · T1**
 
-*The operational core of "explanation capital must be runnable capital" (Manifesto §5). Nine classes of artifact that carry a strong author's cognition in a form a weak reader CONSUMES rather than re-derives. Each pattern is also a card in `cards/`; this catalog is the overview and the build order.*
+*The operational core of "explanation capital must be runnable capital" (Manifesto §5). Nine classes of artifact that carry a strong author's cognition in a form a weak reader CONSUMES rather than re-derives. Each pattern is also a card, shipped per-language in each stack's `cards/`; this catalog is the language-neutral overview and the build order.*
 
 ## 0. Definition
 

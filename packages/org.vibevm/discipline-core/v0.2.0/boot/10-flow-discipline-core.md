@@ -1,11 +1,12 @@
 # Discipline v0.2 (BETA) — boot snippet
 
-This project follows the AI-Native Code Discipline. Full corpus lives in
-this package (`00-MANIFESTO.md`, `01-PATTERN-CARD-FORMAT.md`,
-`02-EXECUTABLE-SCAFFOLDS.md`, `03-RAID-PLAYBOOK.md`, `cards/`,
-`appendix/`). **Do not read it all at boot** — the Discipline's own
-delivery rule is minimal sufficiency: load a card's Band-3 ops block
-only when its trigger fires.
+This project follows the AI-Native Code Discipline. The language-neutral
+corpus lives in this package (`00-MANIFESTO.md`, `01-PATTERN-CARD-FORMAT.md`,
+`02-EXECUTABLE-SCAFFOLDS.md`, `03-RAID-PLAYBOOK.md`, `appendix/`); the
+concrete per-language `cards/` ship in each language stack, not here.
+**Do not read it all at boot** — the Discipline's own delivery rule is
+minimal sufficiency: load a card's Band-3 ops block only when its trigger
+fires.
 
 The two laws that always apply:
 
@@ -15,7 +16,8 @@ The two laws that always apply:
 2. **Explanation capital must be runnable capital.** Prose that could
    be a checker, doctest, or typed API is a WISH until it becomes one.
 
-Card registry: `cards/INDEX.md` (trigger → card; nine executable
-scaffolds A–I). Cross-cutting sweeps follow `03-RAID-PLAYBOOK.md`.
+Card registry: the active language stack's `cards/INDEX.md` (trigger →
+card; the nine executable scaffolds A–I in their per-language shape).
+Cross-cutting sweeps follow `03-RAID-PLAYBOOK.md`.
 A rule with no checker is a WISH; a deviation with no reason is a
 defect (`#[spec(deviates, reason)]`).
