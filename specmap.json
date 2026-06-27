@@ -2342,8 +2342,15 @@
       "crate_name": "vibe-install",
       "file": "crates/vibe-install/src/plan.rs",
       "item_kind": "fn",
-      "line": 365,
+      "line": 475,
       "symbol": "vibe_install::plan::expand_conditional_deps"
+    },
+    {
+      "crate_name": "vibe-install",
+      "file": "crates/vibe-install/src/plan.rs",
+      "item_kind": "fn",
+      "line": 391,
+      "symbol": "vibe_install::plan::try_in_place_incremental"
     },
     {
       "crate_name": "vibe-install",
@@ -6945,10 +6952,19 @@
     {
       "file": "crates/vibe-install/src/plan.rs",
       "from_symbol": "vibe_install::plan::expand_conditional_deps",
-      "line": 388,
+      "line": 498,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-fixpoint",
       "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-install/src/plan.rs",
+      "from_symbol": "vibe_install::plan::try_in_place_incremental",
+      "line": 406,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-022#in-place",
+      "verb": "implements",
+      "pinned_r": 1
     },
     {
       "file": "crates/vibe-install/src/record.rs",
