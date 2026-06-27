@@ -13,11 +13,13 @@ use std::path::{Path, PathBuf};
 use specmark::spec;
 use vibe_core::manifest::{Lockfile, Manifest};
 use vibe_core::{Group, PackageRef, VersionSpec};
+use vibe_registry::{CachedPackage, ResolvedPackage};
 use vibe_resolver::{
     FeatureRequest, ResolvedNode, conditional::ConditionalPredicate, expand_features,
 };
 use vibe_workspace::Workspace;
 use vibe_workspace::install::ResolvedDep;
+use vibe_workspace::vibedeps;
 
 use crate::error::{Error, Result};
 use crate::events::{PlanEvent, PlanObserver};
@@ -249,12 +251,13 @@ pub fn plan<S: InstallSource + ?Sized>(
     //    capabilities, interfaces, and PURLs across the graph.
     let mut fetched: Vec<Fetched> = Vec::with_capacity(graph.packages.len());
     for node in graph.iter() {
-        fetched.push(fetch_node(
+        fetched.push(fetch_or_defer(
             source,
             node,
             &lockfile,
             &cache_root,
             &request.features,
+            &workspace.root,
         )?);
     }
 
@@ -288,6 +291,7 @@ pub fn plan<S: InstallSource + ?Sized>(
         &lockfile,
         &cache_root,
         project_root,
+        &workspace.root,
         &language_chain,
         &request.features,
         &mut fetched,
@@ -359,7 +363,113 @@ fn fetch_node<S: InstallSource + ?Sized>(
             dependencies: node.dependencies.clone(),
             is_root: node.is_root,
         },
+        in_place_incremental: false,
     })
+}
+
+/// Fetch one solved node, OR — when it re-resolves an already-present
+/// `in-place` package (PROP-022 §2.4) — defer it: build its [`Fetched`] from
+/// the existing slot with NO network re-clone, leaving the incremental
+/// `git fetch` to [`apply`](crate::apply). This is what keeps a giant in-place
+/// repo (Chromium-scale) from being re-cloned on every full-pipeline install;
+/// only a *fresh* in-place package (no slot yet) clones, and every
+/// snapshot/hardlink package fetches exactly as before.
+fn fetch_or_defer<S: InstallSource + ?Sized>(
+    source: &S,
+    node: &ResolvedNode,
+    lockfile: &Lockfile,
+    cache_root: &Path,
+    root_features: &FeatureRequest,
+    workspace_root: &Path,
+) -> Result<Fetched> {
+    match try_in_place_incremental(node, lockfile, workspace_root, root_features)? {
+        Some(fetched) => Ok(fetched),
+        None => fetch_node(source, node, lockfile, cache_root, root_features),
+    }
+}
+
+/// If `node` re-resolves a package the lockfile already records as `in-place`
+/// (PROP-022 §2.4) whose project slot is present, build its [`Fetched`] from
+/// that slot WITHOUT a network re-clone — the deferred incremental update runs
+/// against the live `.git` in [`apply`](crate::apply), post-confirmation, so a
+/// declined plan never advances the slot's commit (the plan stays
+/// read-mostly). Returns `None` for anything else — a fresh in-place install
+/// (no slot yet; restored by a re-clone per §2.7), or any snapshot/hardlink
+/// package — so the caller fetches it normally.
+///
+/// The provisional `cached.cache_dir` IS the slot — the "already placed"
+/// signal `materialise_resolution` reads to run the hook and skip the move
+/// (§2.4). Reading the slot's manifest is local and network-free; its
+/// provenance is carried from the lockfile and overwritten by
+/// [`apply`](crate::apply) with the freshly-fetched values once the
+/// incremental `git fetch` has run.
+#[spec(
+    implements = "spec://vibevm/modules/vibe-workspace/PROP-022#in-place",
+    r = 1
+)]
+fn try_in_place_incremental(
+    node: &ResolvedNode,
+    lockfile: &Lockfile,
+    workspace_root: &Path,
+    root_features: &FeatureRequest,
+) -> Result<Option<Fetched>> {
+    let Some(old) = lockfile.find(&node.group, &node.name) else {
+        return Ok(None);
+    };
+    if !old.materialization.is_in_place() {
+        return Ok(None);
+    }
+    let kind = old.kind;
+    // A `.gitignore`d in-place slot that was deleted is restored by a re-clone
+    // (§2.7), not an incremental fetch — fall back to the normal path.
+    if !vibedeps::is_in_place_slot(workspace_root, kind, &node.name) {
+        return Ok(None);
+    }
+    let slot = vibedeps::in_place_slot_abs_path(workspace_root, kind, &node.name);
+    // Read the live slot's manifest locally (no network) for the resolution,
+    // conditional-dep, and feature passes. A slot with no readable `[package]`
+    // table is not a trustworthy incremental base — re-clone it instead.
+    let manifest = match Manifest::read(slot.join(Manifest::FILENAME)) {
+        Ok(m) if m.package.is_some() => m,
+        _ => return Ok(None),
+    };
+    let req = if node.is_root {
+        tailor_feature_request(root_features, &manifest.features)
+    } else {
+        FeatureRequest::default()
+    };
+    let feature_expansion = expand_features(&manifest.features, &req)?;
+    let cached = CachedPackage {
+        resolved: ResolvedPackage {
+            group: node.group.clone(),
+            name: node.name.clone(),
+            version: node.version.clone(),
+            source_dir: slot.clone(),
+        },
+        cache_dir: slot,
+        manifest,
+        // Carried from the lockfile so the provisional describes the *current*
+        // slot; apply overwrites all four once the incremental fetch lands the
+        // resolved commit (PROP-022 §2.5).
+        content_hash: old.content_hash.as_str().to_string(),
+        source_uri: old.source_url.as_str().to_string(),
+        registry_name: old.registry.clone(),
+        source_ref: old.source_ref.clone(),
+        resolved_commit: old.resolved_commit.clone(),
+        overridden: false,
+        is_git_source: false,
+        is_path_source: false,
+        via_redirect: None,
+    };
+    Ok(Some(Fetched {
+        cached,
+        feature_expansion,
+        meta: NodeInstallMeta {
+            dependencies: node.dependencies.clone(),
+            is_root: node.is_root,
+        },
+        in_place_incremental: true,
+    }))
 }
 
 /// The PROP-003 §2.6.1 conditional-dependency loop. Each pass: build
@@ -392,6 +502,7 @@ fn expand_conditional_deps<S: InstallSource + ?Sized>(
     lockfile: &Lockfile,
     cache_root: &Path,
     project_root: &Path,
+    workspace_root: &Path,
     language_chain: &[String],
     root_features: &FeatureRequest,
     fetched: &mut Vec<Fetched>,
@@ -472,12 +583,13 @@ fn expand_conditional_deps<S: InstallSource + ?Sized>(
             }) {
                 continue;
             }
-            fetched.push(fetch_node(
+            fetched.push(fetch_or_defer(
                 source,
                 node,
                 lockfile,
                 cache_root,
                 root_features,
+                workspace_root,
             )?);
         }
     }

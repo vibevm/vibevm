@@ -27,3 +27,6 @@ vibe-core.workspace = true
 vibe-registry.workspace = true
 vibe-resolver.workspace = true
 vibe-workspace.workspace = true
+
+[dev-dependencies]
+tempfile.workspace = true

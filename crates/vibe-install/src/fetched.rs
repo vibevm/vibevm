@@ -32,6 +32,14 @@ pub struct Fetched {
     pub cached: CachedPackage,
     pub feature_expansion: FeatureExpansion,
     pub meta: NodeInstallMeta,
+    /// `true` iff this is a re-resolve of an already-present `in-place`
+    /// package (PROP-022 §2.4) that the plan deferred rather than re-cloned:
+    /// `cached` was built from the existing slot (manifest read locally,
+    /// network-free), and [`apply`](crate::apply) performs the incremental
+    /// `git fetch` against the live `.git` post-confirmation. `false` for a
+    /// normally-fetched package — including a *fresh* in-place install, which
+    /// still clones once and moves the clone into the slot.
+    pub in_place_incremental: bool,
 }
 
 /// Load the workspace lockfile, or an empty one stamped with the

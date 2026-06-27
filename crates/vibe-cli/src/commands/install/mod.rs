@@ -194,7 +194,7 @@ pub fn run(ctx: &output::Context, args: InstallArgs) -> Result<()> {
             // than run third-party code unseen.
             let hook_policy = resolve_hook_policy(ctx, &args, &planned.resolution)?;
 
-            let applied = vibe_install::apply(*planned, slot_integrity, &hook_policy)?;
+            let applied = vibe_install::apply(&resolver, *planned, slot_integrity, &hook_policy)?;
             report::emit_report(ctx, &applied)
         }
     }

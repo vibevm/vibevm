@@ -9,15 +9,21 @@ use std::collections::BTreeSet;
 use vibe_core::PackageRef;
 use vibe_core::manifest::Manifest;
 use vibe_core::user_config::SlotIntegrity;
+use vibe_resolver::ResolvedNode;
 use vibe_workspace::Workspace;
 use vibe_workspace::hooks::{HookPolicy, HookReport};
-use vibe_workspace::install::{InstallOutcome, apply_resolution, run_post_install_hooks};
+use vibe_workspace::install::{
+    InstallOutcome, ResolvedDep, apply_resolution, run_post_install_hooks,
+};
+use vibe_workspace::vibedeps;
 
+use crate::InstallSource;
 use crate::error::{Error, Result};
+use crate::fetched::Fetched;
 use crate::plan::PlannedInstall;
 use crate::record::{
-    finalize_pkgref_for_manifest, locked_package_from_fetched, merge_manifest_requires,
-    merge_root_dependencies,
+    exact_pinned_pkgref, finalize_pkgref_for_manifest, locked_package_from_fetched,
+    merge_manifest_requires, merge_root_dependencies,
 };
 
 /// What [`apply`] did — the caller renders it.
@@ -37,7 +43,12 @@ pub struct ApplyReport {
 /// Apply a confirmed plan. `slot_integrity` selects the PROP-011 §2.3
 /// materialise-diff strategy (the caller reads it from the user
 /// config, so a malformed config fails before resolution, not here).
-pub fn apply(
+/// `source` is the same install source the plan ran against: the apply
+/// phase needs it to perform the deferred incremental `in-place` updates
+/// the plan held back from re-cloning (PROP-022 §2.4) — every other
+/// package is already fetched into `planned`.
+pub fn apply<S: InstallSource + ?Sized>(
+    source: &S,
     planned: PlannedInstall,
     slot_integrity: SlotIntegrity,
     hooks: &HookPolicy,
@@ -49,8 +60,8 @@ pub fn apply(
         mut lockfile,
         language_chain,
         roots,
-        fetched,
-        resolution,
+        mut fetched,
+        mut resolution,
     } = planned;
 
     // 6. Update `vibe.toml` `[requires].packages` with the requested
@@ -101,6 +112,19 @@ pub fn apply(
     // 7. Re-discover the workspace so the boot computation reads the
     //    just-updated `[requires]` from disk.
     let workspace = Workspace::discover(&project_root)?;
+
+    // 7a. PROP-022 §2.4 — perform the deferred incremental `in-place` updates
+    //     the plan held back (a re-resolve of an already-present in-place
+    //     package, which the plan refused to re-clone). Now past the operator's
+    //     confirmation, `git fetch` each live slot onto its own `.git` to the
+    //     resolved ref — transferring only changed objects rather than
+    //     re-downloading the giant — and fold the freshly-read manifest /
+    //     commit / hash back into the fetched set (→ lockfile) and the
+    //     resolution (→ boot + hooks). The slot stays the `content_dir`, so the
+    //     materialise pass reads the "already placed" signal and runs the hook
+    //     without moving anything. This extends the canonical incremental path
+    //     (`vibe update <pkg>`) to the general install re-resolve.
+    materialise_deferred_in_place(source, &workspace, &mut fetched, &mut resolution)?;
 
     // 8. Apply: materialise each package into vibedeps/, run each freshly
     //    populated slot's pre-install hook (PROP-020 §2.1), and regenerate
@@ -154,4 +178,55 @@ pub fn apply(
         outcome,
         post_install_reports,
     })
+}
+
+/// Run the deferred incremental `in-place` updates (PROP-022 §2.4) the plan
+/// held back. For each fetched node flagged `in_place_incremental`, the live
+/// slot is `git fetch`-ed onto its own `.git` to the resolved ref through the
+/// install `source` — only changed objects move, never a re-clone — and the
+/// freshly-read manifest / commit / hash are folded back into both the fetched
+/// node (so the rebuilt lockfile records the resolved commit, §2.5) and the
+/// matching resolution entry (so boot + hooks read the updated tree). The slot
+/// is the node's `content_dir`, so the subsequent materialise pass treats it as
+/// "already placed": it runs the hook and skips the move. A no-op when no node
+/// was deferred — every normal install and every fresh in-place clone.
+fn materialise_deferred_in_place<S: InstallSource + ?Sized>(
+    source: &S,
+    workspace: &Workspace,
+    fetched: &mut [Fetched],
+    resolution: &mut [ResolvedDep],
+) -> Result<()> {
+    for (i, f) in fetched.iter_mut().enumerate() {
+        if !f.in_place_incremental {
+            continue;
+        }
+        let pkgref = exact_pinned_pkgref(&ResolvedNode {
+            group: f.cached.resolved.group.clone(),
+            name: f.cached.resolved.name.clone(),
+            version: f.cached.resolved.version.clone(),
+            dependencies: Vec::new(),
+            is_root: false,
+        });
+        // The provisional `cache_dir` IS the unversioned in-place slot (the
+        // plan's deferral set it); the incremental fetch mutates it in place.
+        let slot = f.cached.cache_dir.clone();
+        let placed = source.materialise_in_place(&pkgref, &slot)?;
+        vibedeps::ensure_gitignored(
+            &workspace.root,
+            &vibedeps::in_place_slot_rel_path(
+                f.cached.package_meta().kind,
+                &f.cached.resolved.name,
+            ),
+        )?;
+        // Overwrite the lockfile-carried provenance with the freshly-fetched
+        // values; the resolution's manifest follows so boot / hook composition
+        // reads the updated tree. The version stays the solver's pick.
+        f.cached.manifest = placed.manifest.clone();
+        f.cached.content_hash = placed.content_hash;
+        f.cached.source_uri = placed.source_uri;
+        f.cached.source_ref = Some(placed.source_ref);
+        f.cached.resolved_commit = placed.resolved_commit;
+        resolution[i].manifest = placed.manifest;
+    }
+    Ok(())
 }
