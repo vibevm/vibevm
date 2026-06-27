@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# vibevm self-check — runs the four invariants every commit on `main`
+# vibevm self-check — runs the five invariants every commit on `main`
 # is supposed to satisfy. Designed to be cheap to invoke locally and
 # trivial to wire into a CI matrix later. See `DEV-GUIDE.md` §6.
 #
@@ -9,6 +9,12 @@
 #   3. `cargo clippy --workspace ...`     — zero warnings under `-D warnings`.
 #   4. `vibe check --path . --quiet`      — spec linter clean against the
 #                                          repo's own bootstrap manifest.
+#   5. `cargo xtask conform check`        — the discipline gate (Class-F/G
+#                                          doctests + REQ-citing errors,
+#                                          the file-length budget, the
+#                                          unwrap ban) clean vs. the
+#                                          baseline, so it cannot drift
+#                                          silently between commits.
 #
 # Each step prints a short header. On the first failure the script exits
 # non-zero; later steps are skipped (no "fix the next thing while broken"
@@ -78,6 +84,14 @@ run_step "cargo clippy --workspace --all-targets -- -D warnings" \
 # build cache.
 run_step "cargo run -p vibe-cli -- check --path . --quiet" \
   cargo run --quiet -p vibe-cli -- check --path . --quiet || OVERALL=$?
+
+# 5. The AI-Native discipline gate (conform). Runs last: it reuses the
+# build cache the steps above populated, and its content-addressed fact
+# store re-extracts only changed files. Wiring it here is what keeps the
+# Class-F/G + file-length + unwrap invariants from drifting unnoticed the
+# way they did across the bridge-packages sessions (the gate was green in
+# the RAID, then silently red until a sweep re-ran it).
+run_step "cargo xtask conform check" cargo xtask conform check || OVERALL=$?
 
 if [ "$QUIET" -eq 0 ]; then
   if [ "$OVERALL" -eq 0 ]; then
