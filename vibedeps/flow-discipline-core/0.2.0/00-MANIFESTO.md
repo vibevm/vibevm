@@ -81,13 +81,16 @@ A discipline that names its own failure modes is more trustworthy than one that 
 - `02-EXECUTABLE-SCAFFOLDS.md` — the nine scaffold classes; the runnable-capital catalog.
 - `03-RAID-PLAYBOOK.md` — layered, scheduled refactoring sweeps.
 
-**Rust projection (T2):**
-- `rust/GUIDE-AI-NATIVE-RUST.md` — the law and the scaffolds projected onto Rust; supersedes GUIDE-RUST-v0.1.
-- `rust/tools/vibe-tcg.md` — type-aware constrained generation tool spec.
+**Language projections (T2):**
+- `rust/GUIDE-AI-NATIVE-RUST.md` — the law and scaffolds projected onto Rust; supersedes GUIDE-RUST-v0.1. (Pilot language.)
+- `rust/tools/vibe-tcg.md` — type-aware constrained generation for Rust (a from-scratch, multi-year bet on rust-analyzer).
+- `typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md` — projected onto TypeScript (typed language only; JS guide separate). The language where the generation-time type oracle already exists and codemods are mature.
+- `typescript/tools/vibe-tcg-ts.md` — type-aware constrained generation for TypeScript (a wrap-and-extend of existing PLDI'25 work, not from scratch).
+- Other languages (Python, C++, Go, Java, Kotlin) projected after Rust + TypeScript are validated.
 
 **Cards (the patterns):**
 - `cards/INDEX.md` — registry, axes, trigger modes.
-- `cards/scaffold-{a..i}-*.md` — the nine scaffold patterns in card format.
+- `cards/scaffold-{a..i}-*.md` — the nine scaffold patterns in card format. The core ships the Rust pilot's reference cards; each language stack ships its own `cards/` projection, so the weak-reader runtime surface for an edit is a language-matched Band-3 block. A future symmetry pass may unify both languages' Band-3 in the core.
 
 **Appendix (synthesis provenance):**
 - `appendix/CONTRADICTION-MAP.md` — where sources and hypotheses conflict, and the resolutions.
