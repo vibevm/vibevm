@@ -18,6 +18,7 @@ use vibe_resolver::{
     FeatureRequest, ResolvedNode, conditional::ConditionalPredicate, expand_features,
 };
 use vibe_workspace::Workspace;
+use vibe_workspace::freshness::is_in_workspace_file_source;
 use vibe_workspace::install::ResolvedDep;
 use vibe_workspace::vibedeps;
 
@@ -320,6 +321,8 @@ pub fn plan<S: InstallSource + ?Sized>(
                 .iter()
                 .filter_map(|p| p.group.clone().map(|g| (g, p.name.to_string())))
                 .collect(),
+            // Mutable iff an in-workspace `file://` self-hosting source (§2.6).
+            source_mutable: is_in_workspace_file_source(&f.cached.source_uri, &workspace.root),
         })
         .collect();
 

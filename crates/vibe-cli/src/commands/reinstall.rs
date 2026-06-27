@@ -226,6 +226,13 @@ fn run_force(
                 .iter()
                 .filter_map(|p| p.group.clone().map(|g| (g, p.name.to_string())))
                 .collect(),
+            // `--force` materialises with `Verify` (below), so this flag does
+            // not change reinstall's behaviour; set from the source for
+            // consistency with `vibe install` (PROP-011 §2.6).
+            source_mutable: vibe_workspace::freshness::is_in_workspace_file_source(
+                &cached.source_uri,
+                &workspace.root,
+            ),
         });
     }
 

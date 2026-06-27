@@ -339,4 +339,57 @@ fn apply_resolution_rematerialises_a_present_slot_under_verify() {
     assert!(!sentinel.exists(), "Verify must re-materialise the slot");
 }
 
+#[test]
+fn apply_resolution_rematerialises_a_mutable_file_source_under_trust_presence() {
+    // A `source_mutable` (local `file://`) dependency is never presence-trusted
+    // (PROP-011 §2.6): even under the default TrustPresence its present slot is
+    // re-copied, so an in-place source edit lands in `vibedeps/`.
+    let ws_dir = TempDir::new().unwrap();
+    write(
+        ws_dir.path(),
+        "vibe.toml",
+        "[project]\nname = \"demo\"\nversion = \"0.1.0\"\n\n\
+         [requires.packages]\n\"org.vibevm/wal\" = \"^0.3\"\n",
+    );
+    write(ws_dir.path(), "spec/boot/00-core.md", "# core");
+    let (mut dep, _pkg) = dep_with_boot(
+        "wal",
+        "0.3.0",
+        "[boot_snippet]\nsource = \"boot/wal.md\"\n",
+        "boot/wal.md",
+        "# wal",
+    );
+    dep.source_mutable = true;
+    let ws = Workspace::load(ws_dir.path()).unwrap();
+
+    apply_resolution(
+        &ws,
+        std::slice::from_ref(&dep),
+        SlotIntegrity::TrustPresence,
+        None,
+    )
+    .unwrap();
+    let sentinel = ws_dir.path().join("vibedeps/flow-wal/0.3.0/SENTINEL");
+    fs::write(&sentinel, "doomed").unwrap();
+
+    // Second apply — TrustPresence would normally skip a present slot, but the
+    // mutable source overrides that, so the slot is re-materialised.
+    let second = apply_resolution(
+        &ws,
+        std::slice::from_ref(&dep),
+        SlotIntegrity::TrustPresence,
+        None,
+    )
+    .unwrap();
+    assert_eq!(second.materialised, vec!["vibedeps/flow-wal/0.3.0"]);
+    assert!(
+        second.skipped.is_empty(),
+        "a mutable file:// source must not be presence-trusted (§2.6)"
+    );
+    assert!(
+        !sentinel.exists(),
+        "the mutable source's slot must be re-materialised"
+    );
+}
+
 // --- PROP-020 2.1 — pre-install hooks ride the materialise pass ---------

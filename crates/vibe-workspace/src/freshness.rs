@@ -39,6 +39,9 @@ use vibe_core::{Group, PackageRef, VersionSpec};
 
 use crate::{Workspace, vibedeps};
 
+mod source;
+pub use source::is_in_workspace_file_source;
+
 /// The outcome of a freshness check.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Freshness {
@@ -121,6 +124,27 @@ pub fn check(workspace: &Workspace, lockfile: &Lockfile) -> Freshness {
                 return stale(format!(
                     "`{}/{}` is locked at {}, outside the constraint declared in `{rel}`",
                     group, pr.name, locked.version
+                ));
+            }
+            // A dependency resolved from a local `file://` source *inside the
+            // workspace* — the in-repo self-hosting registry (`packages/`,
+            // `--registry packages`) the author edits in place — points at a
+            // MUTABLE working tree: its content changes with no version or
+            // `[requires]` edit, so the satisfiability test above cannot prove
+            // the lock fresh. Treat it like a `path`/`git` source (above):
+            // `Stale`, re-resolve, so a source edit is picked up. An *external*
+            // local registry or mirror (a `file://` path outside the workspace)
+            // is left immutable and keeps the fast path. `in-place` (PROP-022)
+            // giants are excluded — re-hashing a giant tree every install is the
+            // cost `in-place` exists to avoid; they refresh through
+            // `vibe update`. PROP-011 §2.6.
+            if is_in_workspace_file_source(locked.source_url.as_str(), &workspace.root)
+                && !locked.materialization.is_in_place()
+            {
+                return stale(format!(
+                    "`{}/{}` resolves from an in-workspace file:// source (a mutable working \
+                     tree); re-resolving to pick up any source edit (PROP-011 §2.6)",
+                    group, pr.name
                 ));
             }
         }
@@ -296,6 +320,39 @@ mod tests {
         )
     }
 
+    /// Build a `file://` URL for `root`/`sub` — the shape a local-directory
+    /// registry records. Windows `C:\…` → `file:///C:/…`; Unix `/…` →
+    /// `file:///…`.
+    fn file_url_under(root: &Path, sub: &str) -> String {
+        let s = root.join(sub).to_string_lossy().replace('\\', "/");
+        if s.starts_with('/') {
+            format!("file://{s}")
+        } else {
+            format!("file:///{s}")
+        }
+    }
+
+    /// A `[[package]]` for a dependency resolved from a local `file://`
+    /// directory registry (`--registry <path>`) at `source_url` (§2.6).
+    fn local_pkg(kind: &str, name: &str, version: &str, source_url: &str) -> String {
+        format!(
+            "[[package]]\nkind = \"{kind}\"\ngroup = \"org.vibevm\"\nname = \"{name}\"\n\
+             version = \"{version}\"\nsource_url = \"{source_url}\"\n\
+             content_hash = \"sha256:x\"\nsource_kind = \"registry\"\n"
+        )
+    }
+
+    /// As [`local_pkg`] but `in-place` materialised — the §2.6 mutable rule
+    /// excludes it, so a PROP-022 giant keeps the §2.2 fast path.
+    fn local_in_place_pkg(kind: &str, name: &str, version: &str, source_url: &str) -> String {
+        format!(
+            "[[package]]\nkind = \"{kind}\"\ngroup = \"org.vibevm\"\nname = \"{name}\"\n\
+             version = \"{version}\"\nsource_url = \"{source_url}\"\n\
+             content_hash = \"sha256:x\"\nsource_kind = \"registry\"\n\
+             materialization = \"in-place\"\n"
+        )
+    }
+
     #[test]
     fn fresh_when_lock_satisfies_and_slots_present() {
         let (_t, ws) =
@@ -385,6 +442,62 @@ mod tests {
             Freshness::Stale(r) => assert!(r.contains("git-source"), "{r}"),
             other => panic!("expected Stale, got {other:?}"),
         }
+    }
+
+    #[test]
+    fn stale_when_a_dep_resolves_from_an_in_workspace_file_source() {
+        // The in-repo self-hosting registry (`--registry packages`) is a
+        // mutable working tree UNDER the workspace root — never version-
+        // immutable — so the lock cannot be proven fresh; it re-resolves to
+        // pick up any source edit (§2.6).
+        let (_t, ws) =
+            workspace_with_requires("[requires.packages]\n\"org.vibevm/wal\" = \"^0.3\"\n");
+        let src = file_url_under(&ws.root, "packages/wal");
+        let lf = lockfile(
+            &["org.vibevm/wal"],
+            &local_pkg("flow", "wal", "0.3.2", &src),
+        );
+        materialise_slot(&ws, PackageKind::Flow, "wal", "0.3.2");
+        match check(&ws, &lf) {
+            Freshness::Stale(r) => assert!(
+                r.contains("in-workspace file://") && r.contains("mutable working tree"),
+                "{r}"
+            ),
+            other => panic!("expected Stale, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn fresh_for_an_external_local_file_source_kept_immutable() {
+        // A `file://` source OUTSIDE the workspace (an external local registry
+        // or mirror, a test fixture) is left immutable and keeps the §2.2 fast
+        // path — only the in-repo self-hosting registry is mutable (§2.6).
+        let (_t, ws) =
+            workspace_with_requires("[requires.packages]\n\"org.vibevm/wal\" = \"^0.3\"\n");
+        let lf = lockfile(
+            &["org.vibevm/wal"],
+            &local_pkg("flow", "wal", "0.3.2", "file:///external/registry/wal"),
+        );
+        materialise_slot(&ws, PackageKind::Flow, "wal", "0.3.2");
+        assert!(check(&ws, &lf).is_fresh());
+    }
+
+    #[test]
+    fn fresh_for_an_in_place_file_source_the_mutable_rule_excludes_giants() {
+        // A `file://` source UNDER the workspace that is `in-place` (a PROP-022
+        // giant) keeps the fast path: §2.6 excludes it from the mutable
+        // treatment, so with the lock satisfying and the slot present it is
+        // Fresh. The source is in-workspace, so `in-place` is the *only* reason
+        // it is not mutable — isolating the §2.6 exclusion.
+        let (_t, ws) =
+            workspace_with_requires("[requires.packages]\n\"org.vibevm/giant\" = \"^1.0\"\n");
+        let src = file_url_under(&ws.root, "packages/giant");
+        let lf = lockfile(
+            &["org.vibevm/giant"],
+            &local_in_place_pkg("feat", "giant", "1.0.0", &src),
+        );
+        materialise_slot(&ws, PackageKind::Feat, "giant", "1.0.0");
+        assert!(check(&ws, &lf).is_fresh());
     }
 
     #[test]

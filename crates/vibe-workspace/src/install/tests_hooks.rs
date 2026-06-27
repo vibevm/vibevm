@@ -35,6 +35,7 @@ fn dep_with_pre_hook(name: &str, version: &str) -> (ResolvedDep, TempDir) {
         content_dir: pkg.path().to_path_buf(),
         manifest,
         requires: vec![],
+        source_mutable: false,
     };
     (dep, pkg)
 }
@@ -166,6 +167,7 @@ fn dep_with_post_hook(name: &str, version: &str) -> (ResolvedDep, TempDir) {
         content_dir: pkg.path().to_path_buf(),
         manifest,
         requires: vec![],
+        source_mutable: false,
     };
     (dep, pkg)
 }
@@ -259,6 +261,7 @@ fn apply_resolution_places_an_in_place_package_in_an_unversioned_slot() {
         content_dir: clone.path().to_path_buf(),
         manifest,
         requires: vec![],
+        source_mutable: false,
     };
 
     let ws = Workspace::load(ws_dir.path()).unwrap();
@@ -352,6 +355,7 @@ fn dep_in_place_with_pre_hook(name: &str, version: &str) -> (ResolvedDep, TempDi
         content_dir: pkg.path().to_path_buf(),
         manifest,
         requires: vec![],
+        source_mutable: false,
     };
     (dep, pkg)
 }
@@ -483,6 +487,7 @@ fn already_placed_in_place_slot_runs_hook_without_moving() {
         content_dir: slot.clone(),
         manifest,
         requires: vec![],
+        source_mutable: false,
     };
 
     let out = materialise_resolution(

@@ -57,6 +57,15 @@ pub struct ResolvedDep {
     /// `(group, name)` of every package this one directly requires — the
     /// edges of the dependency-boot topological order.
     pub requires: Vec<(Group, String)>,
+    /// `true` iff the package came from a mutable local `file://` source — an
+    /// in-repo / local-directory registry (`--registry <path>`, the
+    /// package-authoring shape). Such a source is a working tree the author
+    /// edits in place, so its `vibedeps/` slot is **never** presence-trusted by
+    /// the PROP-011 §2.3 fast path: it is re-materialised every install
+    /// (PROP-011 §2.6). `false` for immutable remote-registry sources and for
+    /// boot-only re-derivations from disk. `in-place` (PROP-022) packages take
+    /// the separate in-place branch and never reach the skip this flag guards.
+    pub source_mutable: bool,
 }
 
 /// What [`apply_resolution`] did — for the caller to report.
@@ -234,7 +243,11 @@ fn materialise_resolution(
         }
         let slot = vibedeps::slot_rel_path(dep.kind, &dep.name, &dep.version);
         let present = vibedeps::is_materialised(workspace_root, dep.kind, &dep.name, &dep.version);
-        if present && slot_integrity == SlotIntegrity::TrustPresence {
+        // A mutable local `file://` source (PROP-011 §2.6) is never
+        // presence-trusted: slot-present-for-a-version is not a proxy for
+        // correctness when the source is a working tree edited in place, so it
+        // falls through to re-materialise regardless of `slot_integrity`.
+        if present && slot_integrity == SlotIntegrity::TrustPresence && !dep.source_mutable {
             skipped.push(slot);
             continue;
         }
