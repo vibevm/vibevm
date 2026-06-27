@@ -9,7 +9,7 @@ use crate::error::{Error, Result};
 use crate::manifest::project::AuthKind;
 use crate::package_ref::{Group, PackageKind, VersionSpec};
 
-use super::link_key;
+use super::capabilities::link_key;
 use super::wire::{InlinePackageDepWire, VersionFieldWire};
 
 /// `[requires.packages.<pkgref>]` inline-table value when the package is

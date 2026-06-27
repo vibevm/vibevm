@@ -13,10 +13,9 @@ use crate::error::{Error, Result};
 use crate::manifest::project::AuthKind;
 use crate::package_ref::{Group, PackageKind, PackageRef, VersionSpec};
 
+use super::capabilities::{Requires, link_key};
 use super::deps::{inline_to_git_dep, inline_to_path_dep, inline_to_var_dep};
-use super::{
-    GitPackageDep, GitRefKind, LinkType, PathPackageDep, Requires, VarRegistryDep, link_key,
-};
+use super::{GitPackageDep, GitRefKind, LinkType, PathPackageDep, VarRegistryDep};
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
