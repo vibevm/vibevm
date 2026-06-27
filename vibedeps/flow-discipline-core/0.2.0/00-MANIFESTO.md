@@ -88,9 +88,9 @@ A discipline that names its own failure modes is more trustworthy than one that 
 - `typescript/tools/vibe-tcg-ts.md` — type-aware constrained generation for TypeScript (a wrap-and-extend of existing PLDI'25 work, not from scratch).
 - Other languages (Python, C++, Go, Java, Kotlin) projected after Rust + TypeScript are validated.
 
-**Cards (the patterns):**
-- `cards/INDEX.md` — registry, axes, trigger modes.
-- `cards/scaffold-{a..i}-*.md` — the nine scaffold patterns in card format. The core ships the Rust pilot's reference cards; each language stack ships its own `cards/` projection, so the weak-reader runtime surface for an edit is a language-matched Band-3 block. A future symmetry pass may unify both languages' Band-3 in the core.
+**Cards (the patterns) — shipped per-language by each stack:**
+- `cards/INDEX.md` — registry, axes, trigger modes (one per language stack).
+- `cards/scaffold-{a..i}-*.md` — the nine scaffold patterns in their per-language card shape. The core (T1) defines the card FORMAT (`01-PATTERN-CARD-FORMAT.md`) and the scaffold CATALOG (`02-EXECUTABLE-SCAFFOLDS.md`), both language-neutral; each language stack ships the concrete `cards/` (Rust cards in `stack-rust-ai-native`, TypeScript cards in `stack-typescript-ai-native`), so the weak-reader runtime surface for an edit is a language-matched Band-3 block.
 
 **Appendix (synthesis provenance):**
 - `appendix/CONTRADICTION-MAP.md` — where sources and hypotheses conflict, and the resolutions.

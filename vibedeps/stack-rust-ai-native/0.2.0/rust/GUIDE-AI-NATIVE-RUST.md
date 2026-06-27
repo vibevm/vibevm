@@ -32,7 +32,7 @@ Rust source under this discipline reads as *ordinary idiomatic Rust*. No invente
 
 ## 3. The nine scaffolds in Rust
 
-Each is a card in `cards/`; here is the Rust shape and the rule.
+Each is a card in this package's `cards/` (the Rust projection of the language-neutral scaffold catalog `02-EXECUTABLE-SCAFFOLDS.md`); here is the Rust shape and the rule.
 
 - **A — Generators / codegen** (`scaffold-a-generators`). `build.rs` codegen, declarative/proc generators emitting boilerplate cells, FFI bindings, serializers, state-machine transition tables, exhaustive match arms. Committed output is plain in-distribution Rust; the GENERATOR carries the structural decision. *Rule:* where an artifact is mechanically derivable from a smaller spec, ship generator + committed output + determinism check, not hand-maintained output (A3).
 - **B — Typed builders / typestate** (`scaffold-b-typed-builders`). Make the statistically-likely wrong call un-representable: typestate (phantom-typed state machines where illegal transitions don't compile), newtypes over primitives at every seam, builders with type-mandatory required fields, sealed traits, `#[must_use]`, no boolean/positional argument soups, no stringly-typed protocol surfaces. *Rule:* seam protocols are encoded in types, not docstrings; the wrong call fails `cargo check`, not a runtime assert (R3-008; 94% of compile errors are type-level).

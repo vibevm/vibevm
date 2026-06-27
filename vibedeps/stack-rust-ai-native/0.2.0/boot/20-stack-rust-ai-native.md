@@ -5,6 +5,11 @@ Rust code in this project follows the AI-Native Rust guide
 authoring or reviewing structure; per-edit work needs only the card
 whose trigger fires.
 
+Card registry for Rust: `cards/INDEX.md` in this package (trigger → card;
+the nine executable scaffolds A–I in their Rust shape). This stack ships
+its own `cards/` projection — the weak-reader runtime surface for a `.rs`
+edit is a Rust card's Band-3 ops block, never another language's.
+
 Standing rules at the surface level:
 
 - Ordinary idiomatic Rust at the token level — no invented dialect.
