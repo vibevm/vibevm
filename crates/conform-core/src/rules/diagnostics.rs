@@ -85,7 +85,7 @@ impl Rule for SeamHasDoctest {
                     file: sf.file.clone(),
                     line: *line,
                     message: req_message(
-                        "discipline://core/cards/scaffold-g-doctests#ops",
+                        "discipline://rust-ai-native/cards/scaffold-g-doctests#ops",
                         &format!("public seam {kind} `{name}` has no compiled doctest"),
                         &format!(
                             "add one doctest on `{name}` showing the canonical \
@@ -182,7 +182,7 @@ impl Rule for PubDoctest {
                     file: sf.file.clone(),
                     line: *line,
                     message: req_message(
-                        "discipline://core/cards/scaffold-g-doctests#ops",
+                        "discipline://rust-ai-native/cards/scaffold-g-doctests#ops",
                         &format!("public {kind} `{name}` has no compiled doctest"),
                         &format!(
                             "add one doctest on `{name}` showing canonical use, or a \
@@ -266,7 +266,7 @@ impl Rule for ErrorMessageCitesReq {
                     file: sf.file.clone(),
                     line: *line,
                     message: req_message(
-                        "discipline://core/cards/scaffold-f-structured-diagnostics#ops",
+                        "discipline://rust-ai-native/cards/scaffold-f-structured-diagnostics#ops",
                         &format!("`{name}::{variant}` display text cites no spec:// REQ"),
                         "embed the governing spec:// URI and a fix hint in the \
                          #[error(\"...\")] template",
@@ -348,7 +348,7 @@ impl Rule for ErrorEnumCitesReq {
                     file: sf.file.clone(),
                     line: *line,
                     message: req_message(
-                        "discipline://core/cards/scaffold-f-structured-diagnostics#ops",
+                        "discipline://rust-ai-native/cards/scaffold-f-structured-diagnostics#ops",
                         &format!("thiserror enum `{name}` carries no #[spec] REQ edge"),
                         &format!(
                             "add #[spec(implements = \"spec://…\")] on `{name}` citing \

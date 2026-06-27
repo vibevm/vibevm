@@ -216,7 +216,7 @@ impl Rule for CellHasOracle {
                 file: file.clone(),
                 line,
                 message: req_message(
-                    "discipline://core/cards/scaffold-d-differential-oracle#ops",
+                    "discipline://rust-ai-native/cards/scaffold-d-differential-oracle#ops",
                     &format!(
                         "cell `{type_name}` is referenced by no integration test \
                          in its crate — it has no behavior oracle"

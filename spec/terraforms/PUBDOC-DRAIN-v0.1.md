@@ -144,7 +144,7 @@ cover the 55; a fifth is the escape valve.
   used **only** when a compiled example would teach nothing, or when a file approaches the
   600 budget and a doctest body would push it over. The `documents` target must be a real
   resolvable spec/guide unit (e.g. the governing PROP section or
-  `discipline://core/cards/scaffold-g-doctests`), else specmap raises a
+  `discipline://rust-ai-native/cards/scaffold-g-doctests`), else specmap raises a
   pin-into-unmarked-unit warning (CONVERT-PLAN Phase 0.3 lesson). Default to a doctest;
   reserve (b) for the genuinely untestable.
 

@@ -163,7 +163,7 @@ fn unsafe_gate_honors_testimony_but_not_test_context() {
 #[test]
 fn req_grammar_renderer_and_acceptor_agree() {
     let msg = rules::req_message(
-        "discipline://core/cards/scaffold-g-doctests#ops",
+        "discipline://rust-ai-native/cards/scaffold-g-doctests#ops",
         "public seam fn `solve` has no compiled doctest",
         "add one doctest on `solve`",
     );
