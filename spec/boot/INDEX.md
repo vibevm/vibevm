@@ -22,5 +22,9 @@ path = "vibedeps/stack-rust-ai-native/0.2.0/boot/20-stack-rust-ai-native.md"
 kind = "static"
 
 [[entry]]
+path = "vibedeps/stack-typescript-ai-native/0.2.0/boot/20-stack-typescript-ai-native.md"
+kind = "static"
+
+[[entry]]
 path = "spec/boot/90-user.md"
 kind = "static"
