@@ -9253,7 +9253,7 @@
   "spec_units": [
     {
       "anchor": "root",
-      "content_hash": "sha256:24fc0c2c791a5e72ef0666c8dbb1995217fcbbcd6d5107ed833570755d9ed5b7",
+      "content_hash": "sha256:25ff9f956fee97d35d0f932f095516c3cb8b362722b27b27a75af354b263783f",
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "vibevm: A Software Project Manager for Spec-Driven Development with AI Agents",
@@ -9415,7 +9415,7 @@
     },
     {
       "anchor": "core-terminology",
-      "content_hash": "sha256:45f50a39e01daea56b9e49c34abb5831066c6a53fb29d2bcccf79a3ba607917b",
+      "content_hash": "sha256:03ed69b44276b2686c2057ae804b8dde8ce3dc64eb649dd0cd965ec38f664642",
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "Section 4. Core terminology",
@@ -9433,7 +9433,7 @@
     },
     {
       "anchor": "directory-layout",
-      "content_hash": "sha256:d39435a836fa5a2a7e2d0daffe9cb7c76aabdb77b8b3eca67a7911d2c6836e3c",
+      "content_hash": "sha256:800cde610ff5b0e33abf7a200a7c487238d0f9c2e9fe0bf9974af2f87e46ffca",
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "4.2 The directory layout",
@@ -9604,7 +9604,7 @@
     },
     {
       "anchor": "package-model",
-      "content_hash": "sha256:aa5d05947b6d6703dcad06633849e922aaabb89d1b8e12371a57e7d5c45214b5",
+      "content_hash": "sha256:282a785b86752ec992c9a3e5622079a56febc160931154a0d8c103a132bbc983",
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "Section 7. The package model",
@@ -9622,7 +9622,7 @@
     },
     {
       "anchor": "package-contents",
-      "content_hash": "sha256:ec493c87c85b0e529f17c69ae23c04d69d41419fd4ff1e6a5783a9999f29ea97",
+      "content_hash": "sha256:892b8e14299d58851c5990c625c287f7c57e75f8322d9d627199511e0bc9904e",
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "7.2 Package contents",
@@ -9631,20 +9631,20 @@
     },
     {
       "anchor": "manifest-schema",
-      "content_hash": "sha256:24720aaff20b55bd7f9330865179682ac4e4c6fe9ac89c69db85f0fae80b8dcc",
+      "content_hash": "sha256:5163b1586295a237df76a9b7013a35bc58365b96c2fc1967682bd8386ff1aaed",
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "7.3 The manifest schema",
-      "line": 569,
+      "line": 581,
       "uri": "spec://vibevm/VIBEVM-SPEC#manifest-schema"
     },
     {
       "anchor": "lockfile-schema",
-      "content_hash": "sha256:657e46db95d5ab93f3d45eef2747660ffc5d546f7add3f9aabf979b5aa676112",
+      "content_hash": "sha256:2c73e91647a7535d1a891e7c9b1dce0523b0dac78c9d26fadffa68e77d20356b",
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "7.4 Lockfile schema",
-      "line": 645,
+      "line": 658,
       "uri": "spec://vibevm/VIBEVM-SPEC#lockfile-schema"
     },
     {
@@ -9653,7 +9653,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "7.5 The manifest schema — consumer-project role",
-      "line": 687,
+      "line": 700,
       "uri": "spec://vibevm/VIBEVM-SPEC#manifest-schema-consumer-project-role"
     },
     {
@@ -9662,7 +9662,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "7.6 Workspaces — multi-package projects",
-      "line": 816,
+      "line": 829,
       "uri": "spec://vibevm/VIBEVM-SPEC#workspaces-multi-package-projects"
     },
     {
@@ -9671,7 +9671,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "Section 8. The registry",
-      "line": 890,
+      "line": 903,
       "uri": "spec://vibevm/VIBEVM-SPEC#registry"
     },
     {
@@ -9680,7 +9680,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "8.1 Registry model: decentralized, per-package repos",
-      "line": 892,
+      "line": 905,
       "uri": "spec://vibevm/VIBEVM-SPEC#registry-model-decentralized-per-package-repos"
     },
     {
@@ -9689,7 +9689,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "8.2 Registry layout",
-      "line": 904,
+      "line": 917,
       "uri": "spec://vibevm/VIBEVM-SPEC#registry-layout"
     },
     {
@@ -9698,7 +9698,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "8.3 Fetching strategy and cache layout",
-      "line": 931,
+      "line": 944,
       "uri": "spec://vibevm/VIBEVM-SPEC#fetching-strategy-and-cache-layout"
     },
     {
@@ -9707,7 +9707,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "8.4 Publishing",
-      "line": 956,
+      "line": 969,
       "uri": "spec://vibevm/VIBEVM-SPEC#publishing"
     },
     {
@@ -9716,7 +9716,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "8.5 Future: LLM-based censoring",
-      "line": 968,
+      "line": 981,
       "uri": "spec://vibevm/VIBEVM-SPEC#future-llm-based-censoring"
     },
     {
@@ -9725,7 +9725,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "8.6 Dependency resolver",
-      "line": 974,
+      "line": 987,
       "uri": "spec://vibevm/VIBEVM-SPEC#dependency-resolver"
     },
     {
@@ -9734,7 +9734,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "Section 9. The CLI surface",
-      "line": 992,
+      "line": 1005,
       "uri": "spec://vibevm/VIBEVM-SPEC#cli-surface"
     },
     {
@@ -9743,7 +9743,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "9.1 Command summary (v1)",
-      "line": 994,
+      "line": 1007,
       "uri": "spec://vibevm/VIBEVM-SPEC#command-summary"
     },
     {
@@ -9752,7 +9752,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "9.2 Commands deferred to v1.5",
-      "line": 1025,
+      "line": 1038,
       "uri": "spec://vibevm/VIBEVM-SPEC#commands-deferred-to-v1-5"
     },
     {
@@ -9761,7 +9761,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "9.3 Output format",
-      "line": 1033,
+      "line": 1046,
       "uri": "spec://vibevm/VIBEVM-SPEC#output-format"
     },
     {
@@ -9770,7 +9770,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "9.4 Exit codes",
-      "line": 1045,
+      "line": 1058,
       "uri": "spec://vibevm/VIBEVM-SPEC#exit-codes"
     },
     {
@@ -9779,7 +9779,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "9.5 Configuration sources, in precedence order",
-      "line": 1057,
+      "line": 1070,
       "uri": "spec://vibevm/VIBEVM-SPEC#configuration-sources-in-precedence-order"
     },
     {
@@ -9788,7 +9788,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "Section 10. Implementation language and dependencies",
-      "line": 1069,
+      "line": 1082,
       "uri": "spec://vibevm/VIBEVM-SPEC#implementation-language-and-dependencies"
     },
     {
@@ -9797,7 +9797,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "10.1 Language: Rust",
-      "line": 1071,
+      "line": 1084,
       "uri": "spec://vibevm/VIBEVM-SPEC#language-rust"
     },
     {
@@ -9806,7 +9806,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "10.2 Crate structure",
-      "line": 1082,
+      "line": 1095,
       "uri": "spec://vibevm/VIBEVM-SPEC#crate-structure"
     },
     {
@@ -9815,7 +9815,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "10.3 Required external dependencies (all permissive licenses)",
-      "line": 1107,
+      "line": 1120,
       "uri": "spec://vibevm/VIBEVM-SPEC#required-external-dependencies"
     },
     {
@@ -9824,7 +9824,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "10.4 LLM provider integration (for v1.5)",
-      "line": 1122,
+      "line": 1135,
       "uri": "spec://vibevm/VIBEVM-SPEC#llm-provider-integration"
     },
     {
@@ -9833,7 +9833,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "10.5 Spec-driven development of vibevm itself",
-      "line": 1163,
+      "line": 1176,
       "uri": "spec://vibevm/VIBEVM-SPEC#spec-driven-development-of-vibevm-itself"
     },
     {
@@ -9842,7 +9842,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "Section 11. Staging plan",
-      "line": 1169,
+      "line": 1182,
       "uri": "spec://vibevm/VIBEVM-SPEC#staging-plan"
     },
     {
@@ -9851,7 +9851,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "11.1 Milestone M0: Walking skeleton",
-      "line": 1173,
+      "line": 1186,
       "uri": "spec://vibevm/VIBEVM-SPEC#milestone-m0-walking-skeleton"
     },
     {
@@ -9860,7 +9860,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "11.2 Milestone M1: The package manager",
-      "line": 1189,
+      "line": 1202,
       "uri": "spec://vibevm/VIBEVM-SPEC#milestone-m1-the-package-manager"
     },
     {
@@ -9869,7 +9869,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "11.3 Milestone M1.5: Generation",
-      "line": 1211,
+      "line": 1224,
       "uri": "spec://vibevm/VIBEVM-SPEC#milestone-m1-5-generation"
     },
     {
@@ -9878,7 +9878,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "11.4 Milestone M2: Production-readiness",
-      "line": 1226,
+      "line": 1239,
       "uri": "spec://vibevm/VIBEVM-SPEC#milestone-m2-production-readiness"
     },
     {
@@ -9887,7 +9887,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "11.5 Milestone M3+: Speculative directions",
-      "line": 1240,
+      "line": 1253,
       "uri": "spec://vibevm/VIBEVM-SPEC#milestone-m3-speculative-directions"
     },
     {
@@ -9896,34 +9896,34 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "Section 12. The linter (vibe check)",
-      "line": 1252,
+      "line": 1265,
       "uri": "spec://vibevm/VIBEVM-SPEC#linter"
     },
     {
       "anchor": "hand-written-flow-wal-package",
-      "content_hash": "sha256:3bb8edce17efb27f99c242b9daefbcac3207ae08d3b7e4a1044af2f6e7953c14",
+      "content_hash": "sha256:f51bbf2cef0ba9c7b9f92601e5d2782d655350e55d8f732ea655c579fe8e3aad",
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "Section 13. The hand-written flow:wal package",
-      "line": 1277,
+      "line": 1290,
       "uri": "spec://vibevm/VIBEVM-SPEC#hand-written-flow-wal-package"
     },
     {
       "anchor": "wal-package-contents",
-      "content_hash": "sha256:bca0505b628ef3917ba0d821d8315588da291e9147896b04662eada30366cac9",
+      "content_hash": "sha256:7bbb473d5ea4fbca75e1dc1116ee748c9adb41d4de26bbe75546dfc8ff10d25e",
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "13.1 Package contents",
-      "line": 1281,
+      "line": 1294,
       "uri": "spec://vibevm/VIBEVM-SPEC#wal-package-contents"
     },
     {
       "anchor": "manifest",
-      "content_hash": "sha256:5888ec899ccbede37aaf2091aea954885eb2f00c6905e519fe262d2d838fa58b",
+      "content_hash": "sha256:9d0f3a75c3d32268cc1d154e2e877ebc719140ea39ace5dcde65675bc48bb5d5",
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "13.2 Manifest",
-      "line": 1301,
+      "line": 1319,
       "uri": "spec://vibevm/VIBEVM-SPEC#manifest"
     },
     {
@@ -9932,7 +9932,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "13.3 Boot snippet content",
-      "line": 1322,
+      "line": 1340,
       "uri": "spec://vibevm/VIBEVM-SPEC#boot-snippet-content"
     },
     {
@@ -9941,7 +9941,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "13.4 The protocol document",
-      "line": 1345,
+      "line": 1363,
       "uri": "spec://vibevm/VIBEVM-SPEC#protocol-document"
     },
     {
@@ -9950,7 +9950,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "Section 14. Development methodology",
-      "line": 1358,
+      "line": 1376,
       "uri": "spec://vibevm/VIBEVM-SPEC#development-methodology"
     },
     {
@@ -9959,7 +9959,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "14.1 Project initialization",
-      "line": 1362,
+      "line": 1380,
       "uri": "spec://vibevm/VIBEVM-SPEC#project-initialization"
     },
     {
@@ -9968,7 +9968,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "14.2 The discipline",
-      "line": 1373,
+      "line": 1391,
       "uri": "spec://vibevm/VIBEVM-SPEC#discipline"
     },
     {
@@ -9977,7 +9977,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "14.3 What to do when stuck",
-      "line": 1382,
+      "line": 1400,
       "uri": "spec://vibevm/VIBEVM-SPEC#what-to-do-when-stuck"
     },
     {
@@ -9986,7 +9986,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "14.4 Iteration order",
-      "line": 1392,
+      "line": 1410,
       "uri": "spec://vibevm/VIBEVM-SPEC#iteration-order"
     },
     {
@@ -9995,7 +9995,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "14.5 Testing strategy",
-      "line": 1426,
+      "line": 1444,
       "uri": "spec://vibevm/VIBEVM-SPEC#testing-strategy"
     },
     {
@@ -10004,7 +10004,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "14.6 Documentation discipline",
-      "line": 1435,
+      "line": 1453,
       "uri": "spec://vibevm/VIBEVM-SPEC#documentation-discipline"
     },
     {
@@ -10013,7 +10013,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "Section 15. Glossary",
-      "line": 1447,
+      "line": 1465,
       "uri": "spec://vibevm/VIBEVM-SPEC#glossary"
     },
     {
@@ -10022,7 +10022,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "Section 16. Acceptance checklist for v1",
-      "line": 1491,
+      "line": 1509,
       "uri": "spec://vibevm/VIBEVM-SPEC#acceptance-checklist-for-v1"
     },
     {
@@ -10031,7 +10031,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "M0 acceptance",
-      "line": 1495,
+      "line": 1513,
       "uri": "spec://vibevm/VIBEVM-SPEC#m0-acceptance"
     },
     {
@@ -10040,7 +10040,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "M1 acceptance (additive over M0)",
-      "line": 1513,
+      "line": 1531,
       "uri": "spec://vibevm/VIBEVM-SPEC#m1-acceptance"
     },
     {
@@ -10049,7 +10049,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "M1.5 acceptance (additive over M1)",
-      "line": 1534,
+      "line": 1552,
       "uri": "spec://vibevm/VIBEVM-SPEC#m1-5-acceptance"
     },
     {
@@ -10058,7 +10058,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "Section 17. Closing notes for the Reader",
-      "line": 1547,
+      "line": 1565,
       "uri": "spec://vibevm/VIBEVM-SPEC#closing-notes-for-the-reader"
     },
     {
@@ -11233,6 +11233,162 @@
       "uri": "spec://vibevm/common/PROP-019#rationale-warning"
     },
     {
+      "anchor": "root",
+      "content_hash": "sha256:3f294e7f3ddfc5007d4134b2edac693c806729d63778788b17d206c184ad5566",
+      "doc_path": "common/PROP-024",
+      "file": "spec/common/PROP-024-code-bearing-packages.md",
+      "heading": "PROP-024 — Code-bearing packages (a package is a project)",
+      "line": 1,
+      "uri": "spec://vibevm/common/PROP-024#root"
+    },
+    {
+      "anchor": "motivation",
+      "content_hash": "sha256:d252f77bb124a4a473d41abe9a2f8e54bf5a7c184c9fd2e0d8aaee6857772485",
+      "doc_path": "common/PROP-024",
+      "file": "spec/common/PROP-024-code-bearing-packages.md",
+      "heading": "1. Motivation",
+      "line": 30,
+      "uri": "spec://vibevm/common/PROP-024#motivation"
+    },
+    {
+      "anchor": "problem",
+      "content_hash": "sha256:9f7bae20e70a13d1bb0b17b76f4d0df5de591503d31093dd4446b82660e57c3c",
+      "doc_path": "common/PROP-024",
+      "file": "spec/common/PROP-024-code-bearing-packages.md",
+      "heading": "1.1 The problem — a package can describe a tool but not ship one",
+      "line": 32,
+      "uri": "spec://vibevm/common/PROP-024#problem"
+    },
+    {
+      "anchor": "shape",
+      "content_hash": "sha256:2d0a390109fc24908a78e4111738e50395167c0840727c1400141732cf1f84df",
+      "doc_path": "common/PROP-024",
+      "file": "spec/common/PROP-024-code-bearing-packages.md",
+      "heading": "1.2 The shape — a package is a project",
+      "line": 57,
+      "uri": "spec://vibevm/common/PROP-024#shape"
+    },
+    {
+      "anchor": "decisions",
+      "content_hash": "sha256:ed7ca89b76e8edfc506bc2eed1b4c5b117dbe4bcb24e39abf803c3a3b7047905",
+      "doc_path": "common/PROP-024",
+      "file": "spec/common/PROP-024-code-bearing-packages.md",
+      "heading": "2. Decisions",
+      "line": 74,
+      "uri": "spec://vibevm/common/PROP-024#decisions"
+    },
+    {
+      "anchor": "package-is-project",
+      "content_hash": "sha256:1f69bc687150703ae45bb372748f06f8a09944bf98214235276a6535d2824427",
+      "doc_path": "common/PROP-024",
+      "file": "spec/common/PROP-024-code-bearing-packages.md",
+      "heading": "2.1 A package is a project — `spec/` for prompts, the root for code",
+      "line": 76,
+      "uri": "spec://vibevm/common/PROP-024#package-is-project",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "shippable-tree",
+      "content_hash": "sha256:8051a5f49e4f81b2b212b6d2976f240a3d5a6911518f6be5044e20ebe700e7d8",
+      "doc_path": "common/PROP-024",
+      "file": "spec/common/PROP-024-code-bearing-packages.md",
+      "heading": "2.2 The shippable tree excludes build output",
+      "line": 101,
+      "uri": "spec://vibevm/common/PROP-024#shippable-tree",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "build",
+      "content_hash": "sha256:be2400fed288ac763359c28dbd615929524bce5611155e048ba95cd639aa81e5",
+      "doc_path": "common/PROP-024",
+      "file": "spec/common/PROP-024-code-bearing-packages.md",
+      "heading": "2.3 Code materialises, then builds consumer-side into a gitignored target",
+      "line": 131,
+      "uri": "spec://vibevm/common/PROP-024#build",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "consume",
+      "content_hash": "sha256:981453a1955f9b56232bce04b389b3108db40e8c5fe8a5fcb384c6e06d895315",
+      "doc_path": "common/PROP-024",
+      "file": "spec/common/PROP-024-code-bearing-packages.md",
+      "heading": "2.4 Consuming shipped code — external-path-dep, no nested workspace",
+      "line": 156,
+      "uri": "spec://vibevm/common/PROP-024#consume",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "bootstrap",
+      "content_hash": "sha256:33657cd37b26deccf28958fdf0e2d338eef7dd2698386333c15deefb6f3466ac",
+      "doc_path": "common/PROP-024",
+      "file": "spec/common/PROP-024-code-bearing-packages.md",
+      "heading": "2.5 Self-hosting bootstrap — the toolchain is vendored",
+      "line": 197,
+      "uri": "spec://vibevm/common/PROP-024#bootstrap",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "placement",
+      "content_hash": "sha256:cfd9531d148024ec84527f154336963d836d0e72b3e58ded4b6d46f5b6fc506b",
+      "doc_path": "common/PROP-024",
+      "file": "spec/common/PROP-024-code-bearing-packages.md",
+      "heading": "2.6 Placement follows the layer model; the engine split is a follow-up",
+      "line": 214,
+      "uri": "spec://vibevm/common/PROP-024#placement",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "surface",
+      "content_hash": "sha256:ab68d72cccc04bffe491120a0320900f016b8aeb98e091118462018f43052764",
+      "doc_path": "common/PROP-024",
+      "file": "spec/common/PROP-024-code-bearing-packages.md",
+      "heading": "3. Manifest / schema surface",
+      "line": 241,
+      "uri": "spec://vibevm/common/PROP-024#surface"
+    },
+    {
+      "anchor": "rejected",
+      "content_hash": "sha256:e8bfe7c1a00796b22df6c1106f5fe36651026ec911952c9fea77c5b9407b73e6",
+      "doc_path": "common/PROP-024",
+      "file": "spec/common/PROP-024-code-bearing-packages.md",
+      "heading": "4. Rejected / deferred alternatives",
+      "line": 255,
+      "uri": "spec://vibevm/common/PROP-024#rejected"
+    },
+    {
+      "anchor": "out-of-scope",
+      "content_hash": "sha256:eefbbd07b547edb1c08f279ffe25af172b268de998dae47578455f17e00c17de",
+      "doc_path": "common/PROP-024",
+      "file": "spec/common/PROP-024-code-bearing-packages.md",
+      "heading": "5. Out of scope",
+      "line": 282,
+      "uri": "spec://vibevm/common/PROP-024#out-of-scope"
+    },
+    {
+      "anchor": "acceptance",
+      "content_hash": "sha256:cf3b41a811367e234eb63e2e896549e06e3dd0a2d13aad337cbb0266664aacd6",
+      "doc_path": "common/PROP-024",
+      "file": "spec/common/PROP-024-code-bearing-packages.md",
+      "heading": "6. Acceptance",
+      "line": 295,
+      "uri": "spec://vibevm/common/PROP-024#acceptance"
+    },
+    {
+      "anchor": "history",
+      "content_hash": "sha256:5461e0c33116bff6b21ab9532793358dd5570cc957f25646288187dac488a1c5",
+      "doc_path": "common/PROP-024",
+      "file": "spec/common/PROP-024-code-bearing-packages.md",
+      "heading": "7. Version history",
+      "line": 313,
+      "uri": "spec://vibevm/common/PROP-024#history"
+    },
+    {
       "anchor": "problem",
       "content_hash": "sha256:51d81e2d52166e993280136ba6134889a6db3eb8f11d440c266bacf187e60158",
       "doc_path": "discipline/BROWNFIELD-PROTOCOL-v0.1",
@@ -12359,7 +12515,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:184df5952e55b30cdc54e23eb6b09c9e9b8c8a4083e4712a316b482b0faf3745",
+      "content_hash": "sha256:6eef31419e312705d4e311c3182b6336fe68e33d58133295826ded79bac07c8f",
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
       "heading": "PROP-002: Decentralized, mirror-friendly registry with capability-based depsolver",
@@ -12377,7 +12533,7 @@
     },
     {
       "anchor": "decisions",
-      "content_hash": "sha256:1a73e7e9fb36ee44c8ec7fb24c09eb959f50c0ba5067a1b0cd52857a9cfef172",
+      "content_hash": "sha256:9dffe4f0cb46af6d1b36d9a4d0c5508cf1c442e8133d6287d27e90b9a9de9a3d",
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
       "heading": "2. Decisions",
@@ -12386,7 +12542,7 @@
     },
     {
       "anchor": "identity",
-      "content_hash": "sha256:0b0160802953ffd4c4fa0a5cb0b4932438250f8862a722c1878214b894be9cf7",
+      "content_hash": "sha256:2618135131a73951500bcc391be08e24dfc28b22cc5c27182016bd589a58e091",
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
       "heading": "2.1 Identity: content-addressed, URL-orthogonal",
@@ -13917,7 +14073,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:93bb499e862799f02666bc3600a9236376595345bd4f52146a06a98df538a1fe",
+      "content_hash": "sha256:61e6066cd152d1b95a90d309d695313f28bba979010d13c23fca2d3e58fea76e",
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "spec/modules/vibe-workspace/PROP-009-loading-model.md",
       "heading": "PROP-009: Loading model — computed boot composition and the effective spec",
@@ -13935,7 +14091,7 @@
     },
     {
       "anchor": "decisions",
-      "content_hash": "sha256:c3f3fa75a9e2ef0cb6f2211e4411df22e51d39f6a6af2723e32c931d041b69fb",
+      "content_hash": "sha256:cf6d9df005101212854a5a0172c663f1028e1d718e0bf5a973b8b4399dc927f5",
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "spec/modules/vibe-workspace/PROP-009-loading-model.md",
       "heading": "2. Decisions",
@@ -13944,7 +14100,7 @@
     },
     {
       "anchor": "two-trees",
-      "content_hash": "sha256:42dcebfeb343635a8e9bdae35a75a53a8da64bc01c9fca96d4e7b2a0901e47df",
+      "content_hash": "sha256:3c0341fdc9a472d06ebc47196274d4420fb2950621d39987669e1b189c748a74",
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "spec/modules/vibe-workspace/PROP-009-loading-model.md",
       "heading": "2.1 Two trees — authored spec and materialised dependencies",
@@ -14383,7 +14539,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:dc3a0dd954ed22101ee3a7e43c7c3afb24e2b003ec345c20747d6965e451c5b3",
+      "content_hash": "sha256:c2bec506a81c285c1ceda86bb2d68d7187c7c3453522dc54d0a159030181f39d",
       "doc_path": "modules/vibe-workspace/PROP-020",
       "file": "spec/modules/vibe-workspace/PROP-020-install-hooks.md",
       "heading": "PROP-020 — Install hooks",
@@ -14419,7 +14575,7 @@
     },
     {
       "anchor": "decisions",
-      "content_hash": "sha256:f7605e70a94536114325fb96e0210ceed972e2fa4e4d7fd5b1d70e9cc1769384",
+      "content_hash": "sha256:8df72181c2eef9039bd1c0e891ad8f766b8057d2a1bc5a0e9bcbed4ed47879f2",
       "doc_path": "modules/vibe-workspace/PROP-020",
       "file": "spec/modules/vibe-workspace/PROP-020-install-hooks.md",
       "heading": "2. Decisions",
@@ -14439,7 +14595,7 @@
     },
     {
       "anchor": "script-selection",
-      "content_hash": "sha256:f8e18fdf827a78d25cf7e2225a3dc731b235602779d1754091a22bd48a3c3fcb",
+      "content_hash": "sha256:29256a9a3a05440e98f29c45fc1e9e7abcb024b7e5876dfa689ee6ba63696f5b",
       "doc_path": "modules/vibe-workspace/PROP-020",
       "file": "spec/modules/vibe-workspace/PROP-020-install-hooks.md",
       "heading": "2.2 Interpreter selection is OS-derived",
@@ -14454,7 +14610,7 @@
       "doc_path": "modules/vibe-workspace/PROP-020",
       "file": "spec/modules/vibe-workspace/PROP-020-install-hooks.md",
       "heading": "2.3 Trust gate — allow-list of groups, plus first-run consent",
-      "line": 100,
+      "line": 103,
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-020#trust-gate",
       "kind": "req",
       "revision": 1
@@ -14465,7 +14621,7 @@
       "doc_path": "modules/vibe-workspace/PROP-020",
       "file": "spec/modules/vibe-workspace/PROP-020-install-hooks.md",
       "heading": "2.4 Hooks are declared in the manifest",
-      "line": 122,
+      "line": 125,
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-020#manifest",
       "kind": "req",
       "revision": 1
@@ -14476,7 +14632,7 @@
       "doc_path": "modules/vibe-workspace/PROP-020",
       "file": "spec/modules/vibe-workspace/PROP-020-install-hooks.md",
       "heading": "2.5 Failure semantics are phase-specific",
-      "line": 139,
+      "line": 142,
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-020#failure",
       "kind": "req",
       "revision": 1
@@ -14487,7 +14643,7 @@
       "doc_path": "modules/vibe-workspace/PROP-020",
       "file": "spec/modules/vibe-workspace/PROP-020-install-hooks.md",
       "heading": "3. Rejected alternatives",
-      "line": 153,
+      "line": 156,
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-020#rejected"
     },
     {
@@ -14496,7 +14652,7 @@
       "doc_path": "modules/vibe-workspace/PROP-020",
       "file": "spec/modules/vibe-workspace/PROP-020-install-hooks.md",
       "heading": "4. Out of scope",
-      "line": 165,
+      "line": 168,
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-020#out-of-scope"
     },
     {
@@ -14505,12 +14661,12 @@
       "doc_path": "modules/vibe-workspace/PROP-020",
       "file": "spec/modules/vibe-workspace/PROP-020-install-hooks.md",
       "heading": "5. Acceptance",
-      "line": 179,
+      "line": 182,
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-020#acceptance"
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:953529663fb2eb2a8f0a40e42d23adfd79455f93810aebfa1917f67971d95949",
+      "content_hash": "sha256:7ffc48978e74f46c1084931084b51fc1bad694fdd325f0b98a24539dcfca9757",
       "doc_path": "modules/vibe-workspace/PROP-022",
       "file": "spec/modules/vibe-workspace/PROP-022-materialization-modes.md",
       "heading": "PROP-022 — Materialization modes",
@@ -14537,7 +14693,7 @@
     },
     {
       "anchor": "decisions",
-      "content_hash": "sha256:3a6270ee66b2bcd93cdb677a06dbdc060b069a9fa2e7a5b4deb63b7f21dda7eb",
+      "content_hash": "sha256:24bd4c43b0bfcee8a4bc98add2c41196fa8a24dc1d8f35186f49c75caf000860",
       "doc_path": "modules/vibe-workspace/PROP-022",
       "file": "spec/modules/vibe-workspace/PROP-022-materialization-modes.md",
       "heading": "2. Decisions",
@@ -14557,7 +14713,7 @@
     },
     {
       "anchor": "snapshot",
-      "content_hash": "sha256:446507dfa0553019931804a8e56c0bea134f1124948f26439d6b28a9a47960c5",
+      "content_hash": "sha256:7fc6af973a7a323bad9fbce1a6538b50b6dd8feabb88d9212bf7771d7150a623",
       "doc_path": "modules/vibe-workspace/PROP-022",
       "file": "spec/modules/vibe-workspace/PROP-022-materialization-modes.md",
       "heading": "2.2 `snapshot` — the vendored full copy (default)",
@@ -14572,7 +14728,7 @@
       "doc_path": "modules/vibe-workspace/PROP-022",
       "file": "spec/modules/vibe-workspace/PROP-022-materialization-modes.md",
       "heading": "2.3 `hardlink` — per-file hardlink, copy on change",
-      "line": 76,
+      "line": 79,
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-022#hardlink",
       "kind": "req",
       "revision": 1
@@ -14583,7 +14739,7 @@
       "doc_path": "modules/vibe-workspace/PROP-022",
       "file": "spec/modules/vibe-workspace/PROP-022-materialization-modes.md",
       "heading": "2.4 `in-place` — git-native, project-local, no copy",
-      "line": 93,
+      "line": 96,
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-022#in-place",
       "kind": "req",
       "revision": 1
@@ -14594,7 +14750,7 @@
       "doc_path": "modules/vibe-workspace/PROP-022",
       "file": "spec/modules/vibe-workspace/PROP-022-materialization-modes.md",
       "heading": "2.5 Identity follows the mode",
-      "line": 116,
+      "line": 119,
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-022#identity",
       "kind": "req",
       "revision": 1
@@ -14605,7 +14761,7 @@
       "doc_path": "modules/vibe-workspace/PROP-022",
       "file": "spec/modules/vibe-workspace/PROP-022-materialization-modes.md",
       "heading": "2.6 Destructive operations on an `in-place` slot need confirmation",
-      "line": 127,
+      "line": 130,
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-022#destructive-guard",
       "kind": "req",
       "revision": 1
@@ -14616,7 +14772,7 @@
       "doc_path": "modules/vibe-workspace/PROP-022",
       "file": "spec/modules/vibe-workspace/PROP-022-materialization-modes.md",
       "heading": "2.7 Vendoring differs by mode",
-      "line": 140,
+      "line": 143,
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-022#vendoring",
       "kind": "req",
       "revision": 1
@@ -14627,7 +14783,7 @@
       "doc_path": "modules/vibe-workspace/PROP-022",
       "file": "spec/modules/vibe-workspace/PROP-022-materialization-modes.md",
       "heading": "3. Rejected alternatives",
-      "line": 152,
+      "line": 155,
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-022#rejected"
     },
     {
@@ -14636,7 +14792,7 @@
       "doc_path": "modules/vibe-workspace/PROP-022",
       "file": "spec/modules/vibe-workspace/PROP-022-materialization-modes.md",
       "heading": "4. Out of scope",
-      "line": 167,
+      "line": 170,
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-022#out-of-scope"
     },
     {
@@ -14645,7 +14801,7 @@
       "doc_path": "modules/vibe-workspace/PROP-022",
       "file": "spec/modules/vibe-workspace/PROP-022-materialization-modes.md",
       "heading": "5. Acceptance",
-      "line": 176,
+      "line": 179,
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-022#acceptance"
     },
     {
