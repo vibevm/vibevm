@@ -13,5 +13,5 @@ min_vibe_version = "0.1.0"
 requires_kinds = []
 
 [boot_snippet]
-source = "boot/10-flow-discipline-core.md"
+source = "spec/boot/10-flow-discipline-core.md"
 category = "flow"
