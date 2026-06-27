@@ -49,8 +49,8 @@ fn r001_flags_ctor_outside_registry() {
         ),
     ];
     let rule = rules::FlagSites {
-        registry_file: "crates/vibe-cli/src/registry.rs",
-        gated_crate: "vibe-cli",
+        registry_file: "crates/vibe-cli/src/registry.rs".into(),
+        gated_crate: "vibe-cli".into(),
     };
     let found = rule.check(&facts);
     assert_eq!(found.len(), 1);
@@ -108,7 +108,7 @@ fn unsafe_gate_respects_audit_crates() {
         ),
     ];
     let rule = rules::UnsafeGate {
-        audit_crates: &["audited"],
+        audit_crates: vec!["audited".into()],
     };
     let found = rule.check(&facts);
     assert_eq!(found.len(), 1);
@@ -144,7 +144,9 @@ fn unsafe_gate_honors_testimony_but_not_test_context() {
             },
         ],
     )];
-    let rule = rules::UnsafeGate { audit_crates: &[] };
+    let rule = rules::UnsafeGate {
+        audit_crates: vec![],
+    };
     let found = rule.check(&facts);
     assert_eq!(found.len(), 2, "{found:?}");
     // The testified block still advances the ordinal: the bare block
@@ -234,16 +236,18 @@ fn every_rule_message_speaks_the_req_grammar() {
         ),
     ];
     let flag_sites = rules::FlagSites {
-        registry_file: "crates/x/src/registry.rs",
-        gated_crate: "x",
+        registry_file: "crates/x/src/registry.rs".into(),
+        gated_crate: "x".into(),
     };
     let isolation = rules::CellIsolation;
-    let unsafe_gate = rules::UnsafeGate { audit_crates: &[] };
+    let unsafe_gate = rules::UnsafeGate {
+        audit_crates: vec![],
+    };
     let doctests = rules::SeamHasDoctest {
-        gated_crates: &["x"],
+        gated_crates: vec!["x".into()],
     };
     let err_req = rules::ErrorEnumCitesReq {
-        gated_crates: &["x"],
+        gated_crates: vec!["x".into()],
     };
     let all: Vec<&dyn Rule> = vec![&flag_sites, &isolation, &unsafe_gate, &doctests, &err_req];
     for rule in &all {
@@ -293,7 +297,7 @@ fn seam_has_doctest_gates_pub_root_items_only() {
         ],
     )];
     let rule = rules::SeamHasDoctest {
-        gated_crates: &["x"],
+        gated_crates: vec!["x".into()],
     };
     let found = rule.check(&facts);
     assert_eq!(found.len(), 1);
@@ -344,7 +348,7 @@ fn error_enum_cites_req_flags_once_per_enum() {
         ],
     )];
     let rule = rules::ErrorEnumCitesReq {
-        gated_crates: &["x"],
+        gated_crates: vec!["x".into()],
     };
     let found = rule.check(&facts);
     assert_eq!(found.len(), 1, "one finding per untagged enum: {found:?}");
@@ -406,7 +410,9 @@ fn unsafe_gate_fingerprint_survives_line_shifts() {
             in_deviation: false,
         }],
     )];
-    let rule = rules::UnsafeGate { audit_crates: &[] };
+    let rule = rules::UnsafeGate {
+        audit_crates: vec![],
+    };
     let fp_before = rule.check(&before)[0].fingerprint.clone();
     let fp_after = rule.check(&after)[0].fingerprint.clone();
     assert_eq!(

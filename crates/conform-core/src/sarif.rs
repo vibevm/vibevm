@@ -80,7 +80,9 @@ mod tests {
 
     #[test]
     fn sarif_is_byte_stable() {
-        let gate = rules::UnsafeGate { audit_crates: &[] };
+        let gate = rules::UnsafeGate {
+            audit_crates: vec![],
+        };
         let facts = vec![sf(
             "crates/a/src/lib.rs",
             "a",

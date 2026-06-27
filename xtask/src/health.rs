@@ -22,7 +22,7 @@
 //!
 //! It reuses the conform fact frontend (`Store::extract_workspace`), so its
 //! numbers can never drift from what the gates see, and it reads the gating
-//! lists straight from `conform.rs` rather than hardcoding a count (the
+//! lists straight from `conform.toml` rather than hardcoding a count (the
 //! "instrument discipline — count the list, not the record" lesson,
 //! SHRINK-PLAN v0.1 §0). Pure function of the source tree: re-running on an
 //! unchanged tree writes a byte-identical file, so a committed snapshot's git
@@ -39,11 +39,10 @@ use std::collections::{BTreeMap, BTreeSet};
 use std::path::Path;
 
 use anyhow::{Context, Result};
-use conform_core::{ExtractionLog, Fact, Store};
+use conform_core::{Config, ExtractionLog, Fact, Store};
 use conform_frontend_rust::RustFrontend;
 use serde_json::{Value, json};
 
-use crate::conform::{CONFORM_EXEMPT, CONFORM_GATED, ENV_ROOTS, GATED_PUB_DOCTEST};
 use crate::mirror::{SyncState, sync_report};
 use crate::repo_root;
 
@@ -52,8 +51,6 @@ const BUDGET: u32 = 600;
 /// At or above this many lines a file is in the danger band — split it before
 /// an added line trips the budget. Keep in step with the rule's `BUDGET`.
 const DANGER_FLOOR: u32 = 540;
-/// The designated env-mutation audit crate (conform.rs `audit_crates`).
-const AUDIT_CRATE: &str = "env-audit";
 
 /// Per-crate coverage tallies, accumulated from the conform facts.
 #[derive(Default)]
@@ -83,14 +80,19 @@ impl CrateHealth {
 
 pub(crate) fn run_health(out_rel: &str, mirrors: bool) -> Result<()> {
     let root = repo_root()?;
-    let store = Store::at_repo(&root);
+    let config = crate::conform::load_config(&root)?;
+    let store = Store::at_repo(&root, &config);
     let mut log = ExtractionLog::default();
     let frontend = RustFrontend;
     let facts = store.extract_workspace(&root, &frontend, &mut log)?;
 
-    let gated: BTreeSet<&str> = CONFORM_GATED.iter().copied().collect();
-    let pub_doctest_gated: BTreeSet<&str> = GATED_PUB_DOCTEST.iter().copied().collect();
-    let env_roots: BTreeSet<&str> = ENV_ROOTS.iter().copied().collect();
+    let gated: BTreeSet<&str> = config.gated_crates.iter().map(|s| s.as_str()).collect();
+    let pub_doctest_gated: BTreeSet<&str> = config
+        .gated_pub_doctest
+        .iter()
+        .map(|s| s.as_str())
+        .collect();
+    let env_roots: BTreeSet<&str> = config.env_roots.iter().map(|s| s.as_str()).collect();
 
     let mut crates: BTreeMap<String, CrateHealth> = BTreeMap::new();
     for sf in &facts {
@@ -148,14 +150,14 @@ pub(crate) fn run_health(out_rel: &str, mirrors: bool) -> Result<()> {
                 } => {
                     if !in_test
                         && !in_deviation
-                        && sf.crate_name != AUDIT_CRATE
+                        && !config.audit_crates.contains(&sf.crate_name)
                         && !env_roots.contains(sf.file.as_str())
                     {
                         h.env_nonroot += 1;
                     }
                 }
                 Fact::UnsafeUse { in_deviation, .. } => {
-                    if !in_deviation && sf.crate_name != AUDIT_CRATE {
+                    if !in_deviation && !config.audit_crates.contains(&sf.crate_name) {
                         h.unsafe_nonaudit += 1;
                     }
                 }
@@ -238,9 +240,9 @@ pub(crate) fn run_health(out_rel: &str, mirrors: bool) -> Result<()> {
                  the health delta. No LLM.",
         "budget": { "file_length": BUDGET, "danger_floor": DANGER_FLOOR },
         "summary": {
-            "gated_crates": CONFORM_GATED.len(),
-            "exempt_crates": CONFORM_EXEMPT.len(),
-            "pub_doctest_gated": GATED_PUB_DOCTEST,
+            "gated_crates": config.gated_crates.len(),
+            "exempt_crates": config.exempt.len(),
+            "pub_doctest_gated": config.gated_pub_doctest,
             "conform_baseline_total": baseline_total,
             "conform_baseline_by_rule": baseline_by_rule,
             "files_over_budget": over_all.len(),
@@ -293,6 +295,7 @@ pub(crate) fn run_health(out_rel: &str, mirrors: bool) -> Result<()> {
     std::fs::write(&out_path, &text).with_context(|| format!("writing {}", out_path.display()))?;
 
     print_summary(
+        &config,
         baseline_total,
         &baseline_by_rule,
         &over_all,
@@ -335,6 +338,7 @@ fn baseline_by_rule(root: &Path) -> Result<BTreeMap<String, u32>> {
 
 #[allow(clippy::too_many_arguments)]
 fn print_summary(
+    config: &Config,
     baseline_total: u32,
     baseline_by_rule: &BTreeMap<String, u32>,
     over_all: &[(String, u32)],
@@ -347,9 +351,9 @@ fn print_summary(
     println!("=== vibevm Discipline health (cargo xtask health) ===");
     println!(
         "gated: {} | exempt: {} | pub-doctest-gated: {}",
-        CONFORM_GATED.len(),
-        CONFORM_EXEMPT.len(),
-        GATED_PUB_DOCTEST.len(),
+        config.gated_crates.len(),
+        config.exempt.len(),
+        config.gated_pub_doctest.len(),
     );
     print!("conform baseline: {baseline_total} frozen");
     if !baseline_by_rule.is_empty() {

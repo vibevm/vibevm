@@ -20,6 +20,7 @@
 //! whole workspace; **findings** are reported only inside the gate's
 //! `--scope`.
 
+mod config;
 mod facts;
 mod finding;
 mod store;
@@ -28,6 +29,7 @@ pub mod baseline;
 pub mod rules;
 pub mod sarif;
 
+pub use config::{Config, ExemptEntry};
 pub use facts::{Fact, Frontend, SourceFacts};
 pub use finding::{Finding, Rule, check, count_by_rule};
 pub use store::{ExtractionLog, Store, content_hash, sort_source_facts};

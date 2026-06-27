@@ -2,6 +2,7 @@ use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result};
 
+use crate::config::Config;
 use crate::facts::{Fact, Frontend, SourceFacts};
 
 specmark::scope!("spec://vibevm/discipline/ENGINE-CONFORM-v0.1#facts");
@@ -25,7 +26,7 @@ pub struct ExtractionLog {
 /// Content-addressed fact store under `<repo>/target/conform/facts/`.
 ///
 /// ```no_run
-/// use conform_core::{ExtractionLog, Store};
+/// use conform_core::{Config, ExtractionLog, Store};
 /// # use conform_core::{Fact, Frontend};
 /// # struct NullFrontend;
 /// # impl Frontend for NullFrontend {
@@ -35,7 +36,7 @@ pub struct ExtractionLog {
 /// # }
 ///
 /// let repo = std::path::Path::new(".");
-/// let store = Store::at_repo(repo);
+/// let store = Store::at_repo(repo, &Config::default());
 /// let mut log = ExtractionLog::default();
 /// let facts = store.extract_workspace(repo, &NullFrontend, &mut log).unwrap();
 /// println!("{} file(s) extracted, {} cached", log.extracted.len(), log.cached);
@@ -43,12 +44,16 @@ pub struct ExtractionLog {
 /// ```
 pub struct Store {
     root: PathBuf,
+    roots: Vec<String>,
+    exclude: Vec<String>,
 }
 
 impl Store {
-    pub fn at_repo(repo: &Path) -> Store {
+    pub fn at_repo(repo: &Path, config: &Config) -> Store {
         Store {
             root: repo.join("target").join("conform").join("facts"),
+            roots: config.roots.clone(),
+            exclude: config.exclude_substrings.clone(),
         }
     }
 
@@ -67,7 +72,8 @@ impl Store {
         log: &mut ExtractionLog,
     ) -> Result<Vec<SourceFacts>> {
         let mut out = Vec::new();
-        for (file, crate_name, module, path) in workspace_sources(repo) {
+        for (file, crate_name, module, path) in workspace_sources(repo, &self.roots, &self.exclude)
+        {
             let text = match std::fs::read_to_string(&path) {
                 Ok(t) => t,
                 Err(_) => continue,
@@ -122,21 +128,36 @@ pub fn content_hash(text: &str) -> String {
     hex
 }
 
-/// Enumerate workspace sources: `(repo-rel file, crate name, module
-/// path, absolute path)`. The rscan tree (`crates/*/src`, `xtask/src`,
-/// generated code excluded) plus `crates/*/tests` — integration tests
-/// carry the oracle facts the Class-D rule consumes.
-fn workspace_sources(repo: &Path) -> Vec<(String, String, String, PathBuf)> {
+/// Enumerate the configured source roots as `(repo-rel file, crate
+/// name, module path, absolute path)`. A `<dir>/*` root scans each
+/// subdirectory of `<dir>` as one crate; any other root is a literal
+/// crate dir. `src/` and `tests/` of each are walked (tests carry the
+/// Class-D oracle facts), and files whose path contains an `exclude`
+/// substring are skipped.
+fn workspace_sources(
+    repo: &Path,
+    roots: &[String],
+    exclude: &[String],
+) -> Vec<(String, String, String, PathBuf)> {
     let mut crate_dirs: Vec<PathBuf> = Vec::new();
-    if let Ok(rd) = std::fs::read_dir(repo.join("crates")) {
-        for entry in rd.filter_map(Result::ok) {
-            if entry.path().is_dir() {
-                crate_dirs.push(entry.path());
+    for root in roots {
+        if let Some(parent) = root.strip_suffix("/*") {
+            if let Ok(rd) = std::fs::read_dir(repo.join(parent)) {
+                for entry in rd.filter_map(Result::ok) {
+                    if entry.path().is_dir() {
+                        crate_dirs.push(entry.path());
+                    }
+                }
+            }
+        } else {
+            let dir = repo.join(root);
+            if dir.is_dir() {
+                crate_dirs.push(dir);
             }
         }
     }
-    crate_dirs.push(repo.join("xtask"));
     crate_dirs.sort();
+    crate_dirs.dedup();
 
     let mut out = Vec::new();
     for crate_dir in crate_dirs {
@@ -160,7 +181,7 @@ fn workspace_sources(repo: &Path) -> Vec<(String, String, String, PathBuf)> {
                 }
                 let rel_in_crate = path.strip_prefix(&crate_dir).unwrap_or(path);
                 let rel_fwd = rel_in_crate.to_string_lossy().replace('\\', "/");
-                if rel_fwd.contains("/generated/") {
+                if exclude.iter().any(|s| rel_fwd.contains(s.as_str())) {
                     continue;
                 }
                 let module = module_path(&crate_ident, &rel_fwd);

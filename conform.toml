@@ -1,0 +1,99 @@
+# conform.toml — vibevm's own AI-Native Rust discipline policy.
+#
+# The conform checker (ENGINE-CONFORM v0.1) is config-driven: this file is
+# the policy the gate enforces on THIS project. It is vibevm-specific — the
+# gated-crate list, the env-read roots, and the exempt table are all about
+# vibevm's own code, and TERRAFORM-PLAN-v0.3 §30 records conform.toml as
+# staying with the consumer, not moving into the discipline package. A
+# consumer of the rust-ai-native stack writes its own conform.toml for its
+# own layout. See PROP-024 and discipline://rust-ai-native.
+
+# Source roots to scan. A `<dir>/*` entry scans each subdir of <dir> as one
+# crate; any other entry is a literal crate dir.
+roots = ["crates/*", "xtask"]
+exclude_substrings = ["/generated/"]
+
+# R-001 flag-sites: cell constructors appear only in the selection registry.
+registry_file = "crates/vibe-cli/src/registry.rs"
+registry_gated_crate = "vibe-cli"
+
+# The designated env-mutation audit crate — exempt wholesale from the unsafe
+# and ambient-env gates (it owns the unsafety behind a safe serialized guard).
+audit_crates = ["env-audit"]
+
+# The per-file line budget (GUIDE-AI-NATIVE-RUST §2).
+max_file_lines = 600
+
+# Crates under the Class-F/G conform gates (the expand-as-you-conform list —
+# a crate enters when its seams are doctested and its error layer carries REQ
+# edges).
+gated_crates = [
+    "vibe-core",
+    "vibe-index",
+    "vibe-install",
+    "vibe-resolver",
+    "conform-core",
+    "conform-frontend-rust",
+    "specmap-core",
+    "vibe-registry",
+    "vibe-workspace",
+    "vibe-check",
+    "vibe-publish",
+    "env-audit",
+    "vibe-cli",
+    "specmark",
+    "specmark-grammar",
+    "vibe-mcp",
+]
+
+# Crates whose whole public TYPE surface is gated for compiled doctests (the
+# wider pub-doctest lens). vibe-cli is deliberately absent — it is a bin crate
+# with no lib target, so `cargo test --doc` cannot compile its examples;
+# gating it would enforce uncompiled prose, the opposite of the rule.
+gated_pub_doctest = [
+    "vibe-core",
+    "conform-core",
+    "conform-frontend-rust",
+    "env-audit",
+    "specmark-grammar",
+    "vibe-mcp",
+]
+
+# Files where reading the ambient environment is sanctioned: the env-promotion
+# composition root, the per-crate config-resolution points (user-config /
+# cache-root / token / git-binary / index-URL discovery), and the surfaces
+# whose job is to read or display env. A gated crate reading env in any OTHER
+# file fails the gate; extending this list is a deliberate, reviewed decision.
+env_roots = [
+    "crates/vibe-cli/src/main.rs",
+    "crates/vibe-cli/src/output.rs",
+    "crates/vibe-cli/src/commands/show/config.rs",
+    "crates/vibe-core/src/user_config.rs",
+    "crates/vibe-index/src/scanner/git_cli.rs",
+    "crates/vibe-publish/src/post_hook.rs",
+    "crates/vibe-publish/src/token.rs",
+    "crates/vibe-registry/src/git_backend/shell.rs",
+    "crates/vibe-registry/src/git_package_registry/mod.rs",
+    "crates/vibe-registry/src/index_client.rs",
+    "crates/vibe-registry/src/registry_cache.rs",
+]
+
+# Crates deliberately OUTSIDE gated_crates, each paired with the reason it has
+# not (yet) flipped — a silent exemption reads as a bug, a recorded one as a
+# decision. `every_crate_is_gated_or_exempt` keeps this honest against the
+# workspace so a new crate cannot slip in unclassified.
+[[exempt]]
+crate = "vibe-graph"
+reason = "M0 stub, no code yet — the task-graph runner per VIBEVM-SPEC §5 is unbuilt; nothing to gate until it lands"
+
+[[exempt]]
+crate = "vibe-llm"
+reason = "M0 stub, no code yet — providers land in the v1.5 LLM milestone per VIBEVM-SPEC §10.4; nothing to gate until then"
+
+[[exempt]]
+crate = "vibe-wire"
+reason = "generated code (JTD-schema codegen output), excluded by PROP-014 §2.3; the generator input under schemas/ is the taggable unit instead"
+
+[[exempt]]
+crate = "xtask"
+reason = "internal developer tooling — panics are acceptable at the developer's own console; stays exempt on the record (CONVERT-PLAN Phase 5, 5.3)"

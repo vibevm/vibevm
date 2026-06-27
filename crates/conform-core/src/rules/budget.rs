@@ -25,7 +25,7 @@ use super::req_message;
 /// use conform_core::rules::UnsafeGate;
 /// use conform_core::{Fact, Rule, SourceFacts};
 ///
-/// let rule = UnsafeGate { audit_crates: &["audited"] };
+/// let rule = UnsafeGate { audit_crates: vec!["audited".into()] };
 /// let outside = SourceFacts {
 ///     file: "crates/a/src/lib.rs".into(),
 ///     crate_name: "a".into(),
@@ -51,7 +51,7 @@ use super::req_message;
 /// assert!(conform_core::rules::matches_req_grammar(&findings[0].message));
 /// ```
 pub struct UnsafeGate {
-    pub audit_crates: &'static [&'static str],
+    pub audit_crates: Vec<String>,
 }
 
 impl Rule for UnsafeGate {
@@ -65,7 +65,7 @@ impl Rule for UnsafeGate {
     fn check(&self, facts: &[SourceFacts]) -> Vec<Finding> {
         let mut out = Vec::new();
         for sf in facts {
-            if self.audit_crates.contains(&sf.crate_name.as_str()) {
+            if self.audit_crates.contains(&sf.crate_name) {
                 continue;
             }
             // Fingerprint by context + per-file ordinal, NOT by
@@ -195,7 +195,7 @@ impl Rule for FileLength {
 /// use conform_core::rules::NoUnwrapInDomain;
 /// use conform_core::{Fact, Rule, SourceFacts};
 ///
-/// let rule = NoUnwrapInDomain { gated_crates: &["x"] };
+/// let rule = NoUnwrapInDomain { gated_crates: vec!["x".into()] };
 /// let domain = SourceFacts {
 ///     file: "crates/x/src/m.rs".into(),
 ///     crate_name: "x".into(),
@@ -214,7 +214,7 @@ impl Rule for FileLength {
 /// assert_eq!(rule.check(&[domain]).len(), 1);
 /// ```
 pub struct NoUnwrapInDomain {
-    pub gated_crates: &'static [&'static str],
+    pub gated_crates: Vec<String>,
 }
 
 impl Rule for NoUnwrapInDomain {
@@ -230,7 +230,7 @@ impl Rule for NoUnwrapInDomain {
     fn check(&self, facts: &[SourceFacts]) -> Vec<Finding> {
         let mut out = Vec::new();
         for sf in facts {
-            if !self.gated_crates.contains(&sf.crate_name.as_str()) {
+            if !self.gated_crates.contains(&sf.crate_name) {
                 continue;
             }
             if !sf.file.contains("/src/") {
@@ -292,9 +292,9 @@ impl Rule for NoUnwrapInDomain {
 /// use conform_core::{Fact, Rule, SourceFacts};
 ///
 /// let rule = AmbientEnv {
-///     gated_crates: &["x"],
-///     audit_crates: &["env-audit"],
-///     roots: &["crates/x/src/main.rs"],
+///     gated_crates: vec!["x".into()],
+///     audit_crates: vec!["env-audit".into()],
+///     roots: vec!["crates/x/src/main.rs".into()],
 /// };
 /// let domain = SourceFacts {
 ///     file: "crates/x/src/deep.rs".into(),
@@ -317,13 +317,13 @@ impl Rule for NoUnwrapInDomain {
 /// assert!(rule.check(&[root]).is_empty());
 /// ```
 pub struct AmbientEnv {
-    pub gated_crates: &'static [&'static str],
+    pub gated_crates: Vec<String>,
     /// The designated env-mutation crate(s) — exempt wholesale.
-    pub audit_crates: &'static [&'static str],
+    pub audit_crates: Vec<String>,
     /// Repo-relative paths of the recorded composition / config-resolution
     /// files where env access is sanctioned (R-001). Adding env access to
     /// a new file is a deliberate edit here, reviewed like `CONFORM_GATED`.
-    pub roots: &'static [&'static str],
+    pub roots: Vec<String>,
 }
 
 impl Rule for AmbientEnv {
@@ -339,17 +339,17 @@ impl Rule for AmbientEnv {
     fn check(&self, facts: &[SourceFacts]) -> Vec<Finding> {
         let mut out = Vec::new();
         for sf in facts {
-            if !self.gated_crates.contains(&sf.crate_name.as_str()) {
+            if !self.gated_crates.contains(&sf.crate_name) {
                 continue;
             }
-            if self.audit_crates.contains(&sf.crate_name.as_str()) {
+            if self.audit_crates.contains(&sf.crate_name) {
                 continue;
             }
             if !sf.file.contains("/src/") {
                 continue;
             }
             // A recorded composition root reads env by design.
-            if self.roots.iter().any(|r| sf.file == *r) {
+            if self.roots.contains(&sf.file) {
                 continue;
             }
             // Per-file per-method ordinal fingerprints, never line

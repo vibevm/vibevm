@@ -91,7 +91,9 @@ mod tests {
 
     #[test]
     fn baseline_diff_news_and_stales() {
-        let gate = rules::UnsafeGate { audit_crates: &[] };
+        let gate = rules::UnsafeGate {
+            audit_crates: vec![],
+        };
         let facts = vec![sf(
             "crates/a/src/lib.rs",
             "a",

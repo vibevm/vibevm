@@ -64,7 +64,7 @@ pub trait Rule {
 /// use conform_core::rules::UnsafeGate;
 /// use conform_core::{Fact, SourceFacts, check};
 ///
-/// let gate = UnsafeGate { audit_crates: &[] };
+/// let gate = UnsafeGate { audit_crates: vec![] };
 /// let facts = vec![SourceFacts {
 ///     file: "crates/a/src/lib.rs".into(),
 ///     crate_name: "a".into(),
@@ -91,7 +91,7 @@ pub fn check(rules: &[&dyn Rule], facts: &[SourceFacts], scope: Option<&str>) ->
 /// use conform_core::rules::UnsafeGate;
 /// use conform_core::{Fact, Rule, SourceFacts, count_by_rule};
 ///
-/// let gate = UnsafeGate { audit_crates: &[] };
+/// let gate = UnsafeGate { audit_crates: vec![] };
 /// let facts = vec![SourceFacts {
 ///     file: "crates/a/src/lib.rs".into(),
 ///     crate_name: "a".into(),
@@ -148,7 +148,9 @@ mod tests {
                 }],
             ),
         ];
-        let gate = rules::UnsafeGate { audit_crates: &[] };
+        let gate = rules::UnsafeGate {
+            audit_crates: vec![],
+        };
         let all = check(&[&gate], &facts, None);
         assert_eq!(all.len(), 2);
         let scoped = check(&[&gate], &facts, Some("crates/a/"));

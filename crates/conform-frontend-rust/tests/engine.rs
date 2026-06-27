@@ -5,7 +5,7 @@
 
 use std::path::Path;
 
-use conform_core::{ExtractionLog, Rule, Store, baseline, check, rules, sarif};
+use conform_core::{Config, ExtractionLog, Rule, Store, baseline, check, rules, sarif};
 use conform_frontend_rust::RustFrontend;
 
 fn seed(repo: &Path, rel: &str, text: &str) {
@@ -40,11 +40,13 @@ fn mini_workspace(repo: &Path) {
 fn engine_rules() -> (rules::FlagSites, rules::CellIsolation, rules::UnsafeGate) {
     (
         rules::FlagSites {
-            registry_file: "crates/cli/src/registry.rs",
-            gated_crate: "cli",
+            registry_file: "crates/cli/src/registry.rs".into(),
+            gated_crate: "cli".into(),
         },
         rules::CellIsolation,
-        rules::UnsafeGate { audit_crates: &[] },
+        rules::UnsafeGate {
+            audit_crates: vec![],
+        },
     )
 }
 
@@ -53,7 +55,7 @@ fn incremental_one_file_diff_reextracts_one_file() {
     let tmp = tempfile::tempdir().unwrap();
     let repo = tmp.path();
     mini_workspace(repo);
-    let store = Store::at_repo(repo);
+    let store = Store::at_repo(repo, &Config::default());
 
     let mut cold = ExtractionLog::default();
     store
@@ -102,7 +104,7 @@ fn findings_and_sarif_are_deterministic_and_baseline_gates() {
     let tmp = tempfile::tempdir().unwrap();
     let repo = tmp.path();
     mini_workspace(repo);
-    let store = Store::at_repo(repo);
+    let store = Store::at_repo(repo, &Config::default());
 
     let run = || {
         let mut log = ExtractionLog::default();

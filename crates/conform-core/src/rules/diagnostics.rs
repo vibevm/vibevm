@@ -24,7 +24,7 @@ use super::req_message;
 /// use conform_core::rules::SeamHasDoctest;
 /// use conform_core::{Fact, Rule, SourceFacts};
 ///
-/// let rule = SeamHasDoctest { gated_crates: &["x"] };
+/// let rule = SeamHasDoctest { gated_crates: vec!["x".into()] };
 /// let root = SourceFacts {
 ///     file: "crates/x/src/lib.rs".into(),
 ///     crate_name: "x".into(),
@@ -36,7 +36,7 @@ use super::req_message;
 /// assert_eq!(rule.check(&[root]).len(), 1);
 /// ```
 pub struct SeamHasDoctest {
-    pub gated_crates: &'static [&'static str],
+    pub gated_crates: Vec<String>,
 }
 
 impl Rule for SeamHasDoctest {
@@ -51,7 +51,7 @@ impl Rule for SeamHasDoctest {
     fn check(&self, facts: &[SourceFacts]) -> Vec<Finding> {
         let mut out = Vec::new();
         for sf in facts {
-            if !self.gated_crates.contains(&sf.crate_name.as_str()) {
+            if !self.gated_crates.contains(&sf.crate_name) {
                 continue;
             }
             let is_lib_root = sf.file.ends_with("/src/lib.rs");
@@ -123,7 +123,7 @@ impl Rule for SeamHasDoctest {
 /// use conform_core::rules::PubDoctest;
 /// use conform_core::{Fact, Rule, SourceFacts};
 ///
-/// let rule = PubDoctest { gated_crates: &["x"] };
+/// let rule = PubDoctest { gated_crates: vec!["x".into()] };
 /// let sub = SourceFacts {
 ///     file: "crates/x/src/types.rs".into(),
 ///     crate_name: "x".into(),
@@ -135,7 +135,7 @@ impl Rule for SeamHasDoctest {
 /// assert_eq!(rule.check(&[sub]).len(), 1);
 /// ```
 pub struct PubDoctest {
-    pub gated_crates: &'static [&'static str],
+    pub gated_crates: Vec<String>,
 }
 
 impl Rule for PubDoctest {
@@ -150,7 +150,7 @@ impl Rule for PubDoctest {
     fn check(&self, facts: &[SourceFacts]) -> Vec<Finding> {
         let mut out = Vec::new();
         for sf in facts {
-            if !self.gated_crates.contains(&sf.crate_name.as_str()) || !sf.file.contains("/src/") {
+            if !self.gated_crates.contains(&sf.crate_name) || !sf.file.contains("/src/") {
                 continue;
             }
             for f in &sf.facts {
@@ -212,7 +212,7 @@ impl Rule for PubDoctest {
 /// use conform_core::rules::ErrorMessageCitesReq;
 /// use conform_core::{Fact, Rule, SourceFacts};
 ///
-/// let rule = ErrorMessageCitesReq { gated_crates: &["x"] };
+/// let rule = ErrorMessageCitesReq { gated_crates: vec!["x".into()] };
 /// let bare = SourceFacts {
 ///     file: "crates/x/src/error.rs".into(),
 ///     crate_name: "x".into(),
@@ -227,7 +227,7 @@ impl Rule for PubDoctest {
 /// assert_eq!(rule.check(&[bare]).len(), 1);
 /// ```
 pub struct ErrorMessageCitesReq {
-    pub gated_crates: &'static [&'static str],
+    pub gated_crates: Vec<String>,
 }
 
 impl Rule for ErrorMessageCitesReq {
@@ -243,7 +243,7 @@ impl Rule for ErrorMessageCitesReq {
     fn check(&self, facts: &[SourceFacts]) -> Vec<Finding> {
         let mut out = Vec::new();
         for sf in facts {
-            if !self.gated_crates.contains(&sf.crate_name.as_str()) {
+            if !self.gated_crates.contains(&sf.crate_name) {
                 continue;
             }
             for f in &sf.facts {
@@ -291,7 +291,7 @@ impl Rule for ErrorMessageCitesReq {
 /// use conform_core::rules::ErrorEnumCitesReq;
 /// use conform_core::{Fact, Rule, SourceFacts};
 ///
-/// let rule = ErrorEnumCitesReq { gated_crates: &["x"] };
+/// let rule = ErrorEnumCitesReq { gated_crates: vec!["x".into()] };
 /// let untagged = SourceFacts {
 ///     file: "crates/x/src/error.rs".into(),
 ///     crate_name: "x".into(),
@@ -306,7 +306,7 @@ impl Rule for ErrorMessageCitesReq {
 /// assert_eq!(rule.check(&[untagged]).len(), 1);
 /// ```
 pub struct ErrorEnumCitesReq {
-    pub gated_crates: &'static [&'static str],
+    pub gated_crates: Vec<String>,
 }
 
 impl Rule for ErrorEnumCitesReq {
@@ -323,7 +323,7 @@ impl Rule for ErrorEnumCitesReq {
         let mut out = Vec::new();
         let mut flagged: std::collections::BTreeSet<String> = Default::default();
         for sf in facts {
-            if !self.gated_crates.contains(&sf.crate_name.as_str()) {
+            if !self.gated_crates.contains(&sf.crate_name) {
                 continue;
             }
             for f in &sf.facts {

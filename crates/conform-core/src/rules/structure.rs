@@ -17,17 +17,17 @@ use super::{cell_types, req_message};
 /// use conform_core::Rule;
 ///
 /// let rule = FlagSites {
-///     registry_file: "crates/app/src/registry.rs",
-///     gated_crate: "app",
+///     registry_file: "crates/app/src/registry.rs".into(),
+///     gated_crate: "app".into(),
 /// };
 /// assert_eq!(rule.id(), "R-001");
 /// assert!(rule.check(&[]).is_empty());
 /// ```
 pub struct FlagSites {
     /// Repo-relative path of the one legal construction site.
-    pub registry_file: &'static str,
+    pub registry_file: String,
     /// The crate whose construction sites are gated.
-    pub gated_crate: &'static str,
+    pub gated_crate: String,
 }
 
 impl Rule for FlagSites {
@@ -183,10 +183,9 @@ impl Rule for CellHasOracle {
     fn check(&self, facts: &[SourceFacts]) -> Vec<Finding> {
         let mut out = Vec::new();
         for (type_name, file, crate_name) in cell_types(facts) {
-            let tests_prefix = format!("crates/{crate_name}/tests/");
             let referenced = facts
                 .iter()
-                .filter(|sf| sf.file.starts_with(&tests_prefix))
+                .filter(|sf| sf.crate_name == crate_name && sf.file.contains("/tests/"))
                 .any(|sf| {
                     sf.facts.iter().any(|f| match f {
                         Fact::Import { to_path, .. } => to_path.contains(&type_name),
@@ -222,8 +221,8 @@ impl Rule for CellHasOracle {
                          in its crate — it has no behavior oracle"
                     ),
                     &format!(
-                        "add a differential or characterization test under \
-                         crates/{crate_name}/tests/ that drives `{type_name}`"
+                        "add a differential or characterization test in \
+                         `{crate_name}`'s tests/ that drives `{type_name}`"
                     ),
                 ),
                 why: self.why(),
