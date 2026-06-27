@@ -90,7 +90,10 @@ A package ships a phase script as `<base>.sh` (portable, POSIX shell) and/or
 
 The runner passes a documented environment: `VIBE_PACKAGE_GROUP`,
 `VIBE_PACKAGE_NAME`, `VIBE_PACKAGE_VERSION`, `VIBE_PACKAGE_KIND`,
-`VIBE_PACKAGE_DIR` (the slot, also CWD), `VIBE_HOOK_PHASE`. The publish token
+`VIBE_PACKAGE_DIR` (the slot, also CWD), `VIBE_HOOK_PHASE`.
+([PROP-024 §2.3](../../common/PROP-024-code-bearing-packages.md#build) adds
+`VIBE_PROJECT_ROOT`, the workspace absolute root, so a build hook can target a
+gitignored build dir *outside* the slot; it lands with that work.) The publish token
 ([PROP-000 §20](../../common/PROP-000.md#token-secrecy)) is **never** placed in
 a hook's environment.
 

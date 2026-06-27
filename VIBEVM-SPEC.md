@@ -222,7 +222,7 @@ project-root/
     └── effective.json              # Last computed effective spec (debugging)
 ```
 
-The `spec/` directory is *the* spec directory. Always. Do not allow this to be configurable in v1. Every other location can be conventional; this one is fixed.
+The `spec/` directory is *the* spec directory. Always. Do not allow this to be configurable in v1. Every other location can be conventional; this one is fixed. This holds for a **package** as much as a project: a package is a project made installable — its prompt/spec content lives under its own `spec/`, and (when it ships tools) its code lives at the root. See [PROP-024](spec/common/PROP-024-code-bearing-packages.md).
 
 A **multi-package project** — a workspace — nests member packages as subdirectories, each carrying its own `vibe.toml`; the single `vibe.lock` stays at the workspace's absolute root. The layout and the workspace model are specified in §7.6.
 
@@ -561,10 +561,22 @@ In CLI commands, version is optional and defaults to "latest stable". The versio
 
 ### 7.2 Package contents {#package-contents}
 
-A package is a directory containing:
+A package is a **project-shaped directory** — the same shape as a consumer
+project (§4.2), made installable. It contains:
 - `vibe.toml` — the manifest, carrying a `[package]` table (required).
 - `README.md` — human-readable description (required).
-- Other content files referenced by the manifest (e.g., boot snippets, spec files).
+- `spec/` — the package's authored prompt/spec content (boot snippets, cards,
+  guides, …), laid out exactly as an ordinary project's `spec/`. The
+  `[boot_snippet].source` path is `spec/`-relative.
+- Optionally, **arbitrary code at the root** (e.g. `Cargo.toml` + `crates/`)
+  when the package ships tools — a checker, a generator, a library. Such a
+  package is a self-contained project that also happens to be installable. See
+  [PROP-024](spec/common/PROP-024-code-bearing-packages.md).
+
+A package's **shippable tree** — what is hashed (§7.4), copied, and materialised
+into a consumer's `vibedeps/` slot — is its directory minus build output
+(`.git/`, `.vibe/`, `target/`, `node_modules/`, and any `.vibeignore` glob).
+Identity is the source, never build artifacts (PROP-024 §2.2).
 
 ### 7.3 The manifest schema {#manifest-schema}
 
@@ -599,12 +611,13 @@ min_vibe_version = "0.1.0"
 requires_kinds = []                 # e.g., a feat might require ["stack"]
 
 # A boot snippet — the package's contribution to a consuming node's boot
-# sequence. `source` is the path inside the package; `category` places it
-# in the computed order (foundation / flow / stack / user-override). A
-# package declares no per-file write list — its materialised footprint is
-# its verbatim tree under the consumer's `vibedeps/` slot (Section 6).
+# sequence. `source` is the `spec/`-relative path inside the package;
+# `category` places it in the computed order (foundation / flow / stack /
+# user-override). A package declares no per-file write list — its materialised
+# footprint is its shippable tree (source minus build output, PROP-024 §2.2)
+# under the consumer's `vibedeps/` slot (Section 6).
 [boot_snippet]
-source   = "boot/wal.md"
+source   = "spec/boot/wal.md"
 category = "flow"
 
 # What this package provides beyond its own identity — abstract capability names
@@ -663,7 +676,7 @@ registry        = "vibespecs"                                   # name from vibe
 source_url      = "git@gitverse.ru:vibespecs/flow-wal.git"     # WHERE it was fetched this time
 source_ref      = "v0.3.0"                                      # git ref (typically the tag)
 resolved_commit = "abc123…def"                                  # commit the ref pointed at
-content_hash    = "sha256:…"                                    # hash over the package tree — the IDENTITY
+content_hash    = "sha256:…"                                    # hash over the shippable tree (source minus build output, PROP-024 §2.2) — the IDENTITY
 source_kind     = "registry"                                    # registry | git | override | path
 dependencies    = []                                            # transitively resolved deps (group/name@=version)
 overridden      = false                                         # true iff resolved through [[override]]
@@ -1284,17 +1297,22 @@ This is the canonical demo package. Implementing it correctly is the v1 acceptan
 flow-wal-package/
 ├── vibe.toml
 ├── README.md
-├── spec/
-│   └── flows/
-│       └── wal/
-│           ├── WAL-PROTOCOL.md
-│           ├── session-end-hook.md
-│           └── morning-routine.md
-└── boot/
-    └── wal.md                        # the boot snippet — [boot_snippet].source
+└── spec/
+    ├── boot/
+    │   └── wal.md                    # the boot snippet — [boot_snippet].source
+    └── flows/
+        └── wal/
+            ├── WAL-PROTOCOL.md
+            ├── session-end-hook.md
+            └── morning-routine.md
 ```
 
-**A package is its own tree.** On install, `vibe` materialises the package's published tree verbatim into a slot under the consumer's `vibedeps/` — `vibedeps/<kind>-<name>/<version>/` — and never copies a file into the consumer's authored `spec/`. There is no per-file write list and no path rewriting: a human author inspecting a package directory sees exactly what will appear under the consumer's `vibedeps/` slot.
+A package that ships **tools** additionally carries code at its root
+(`Cargo.toml`, `crates/`, …), a sibling of `spec/`; that code is part of the
+shippable tree and materialises into the consumer's slot alongside `spec/`. See
+[PROP-024](spec/common/PROP-024-code-bearing-packages.md).
+
+**A package is its own tree.** On install, `vibe` materialises the package's shippable tree (its source, minus build output — PROP-024 §2.2) verbatim into a slot under the consumer's `vibedeps/` — `vibedeps/<kind>-<name>/<version>/` — and never copies a file into the consumer's authored `spec/`. There is no per-file write list and no path rewriting: a human author inspecting a package directory sees exactly what will appear under the consumer's `vibedeps/` slot.
 
 **The boot snippet is declared, not mirrored.** The `[boot_snippet]` table names the boot file's `source` path inside the package and its `category`; `vibe` composes it into the consumer's computed boot sequence (Section 6). The file is not copied to a fixed `spec/boot/` path.
 
@@ -1315,7 +1333,7 @@ min_vibe_version = "0.1.0"
 requires_kinds = []
 
 [boot_snippet]
-source   = "boot/wal.md"
+source   = "spec/boot/wal.md"
 category = "flow"
 ```
 

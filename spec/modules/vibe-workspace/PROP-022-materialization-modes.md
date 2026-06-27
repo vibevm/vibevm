@@ -66,7 +66,10 @@ a package will be placed.
 `req r1`
 
 The status quo: live-git cache → `.git`-stripped snapshot → full recursive
-copy into the slot. The slot is a self-contained tree, identified by
+copy into the slot. [PROP-024 §2.2](../../common/PROP-024-code-bearing-packages.md#shippable-tree)
+extends the `.git` strip to build output (`.vibe/`, `target/`, `node_modules/`,
+`.vibeignore` globs) for code-bearing packages, so such a package vendors its
+source, never its build artifacts. The slot is a self-contained tree, identified by
 `content_hash` (§2.5), vendored into the project's git (§2.7). Submodule
 content is embedded into the snapshot
 ([PROP-021 §2.3](../vibe-registry/PROP-021-submodule-sources.md#snapshot-embedding)).
