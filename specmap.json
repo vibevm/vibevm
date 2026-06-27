@@ -2349,14 +2349,14 @@
       "crate_name": "vibe-install",
       "file": "crates/vibe-install/src/plan.rs",
       "item_kind": "fn",
-      "line": 475,
+      "line": 478,
       "symbol": "vibe_install::plan::expand_conditional_deps"
     },
     {
       "crate_name": "vibe-install",
       "file": "crates/vibe-install/src/plan.rs",
       "item_kind": "fn",
-      "line": 391,
+      "line": 394,
       "symbol": "vibe_install::plan::try_in_place_incremental"
     },
     {
@@ -3824,6 +3824,13 @@
     },
     {
       "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/freshness/source.rs",
+      "item_kind": "mod",
+      "line": 6,
+      "symbol": "vibe_workspace::freshness::source"
+    },
+    {
+      "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/hooks.rs",
       "item_kind": "mod",
       "line": 13,
@@ -3938,70 +3945,70 @@
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/install/bootgen.rs",
       "item_kind": "fn",
-      "line": 249,
+      "line": 252,
       "symbol": "vibe_workspace::install::bootgen::validate_redirect_blocks"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/install/tests_hooks.rs",
       "item_kind": "fn",
-      "line": 453,
+      "line": 457,
       "symbol": "vibe_workspace::install::tests_hooks::already_placed_in_place_slot_runs_hook_without_moving"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/install/tests_hooks.rs",
       "item_kind": "fn",
-      "line": 231,
+      "line": 233,
       "symbol": "vibe_workspace::install::tests_hooks::apply_resolution_places_an_in_place_package_in_an_unversioned_slot"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/install/tests_hooks.rs",
       "item_kind": "fn",
-      "line": 173,
+      "line": 175,
       "symbol": "vibe_workspace::install::tests_hooks::post_install_runs_for_materialised_slots_and_flags_failure"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/install/tests_hooks.rs",
       "item_kind": "fn",
-      "line": 384,
+      "line": 388,
       "symbol": "vibe_workspace::install::tests_hooks::pre_install_failure_rolls_back_an_in_place_slot"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/install/tests_hooks.rs",
       "item_kind": "fn",
-      "line": 96,
+      "line": 97,
       "symbol": "vibe_workspace::install::tests_hooks::pre_install_failure_rolls_back_the_slot"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/install/tests_hooks.rs",
       "item_kind": "fn",
-      "line": 76,
+      "line": 77,
       "symbol": "vibe_workspace::install::tests_hooks::pre_install_hook_runs_for_an_allowed_group"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/install/tests_hooks.rs",
       "item_kind": "fn",
-      "line": 359,
+      "line": 363,
       "symbol": "vibe_workspace::install::tests_hooks::pre_install_hook_runs_in_an_in_place_slot"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/install/tests_hooks.rs",
       "item_kind": "fn",
-      "line": 296,
+      "line": 299,
       "symbol": "vibe_workspace::install::tests_hooks::prune_leaves_an_in_place_slot_untouched"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/install/tests_hooks.rs",
       "item_kind": "fn",
-      "line": 118,
+      "line": 119,
       "symbol": "vibe_workspace::install::tests_hooks::untrusted_group_skips_the_hook_without_running_it"
     },
     {
@@ -6981,7 +6988,7 @@
     {
       "file": "crates/vibe-install/src/plan.rs",
       "from_symbol": "vibe_install::plan::expand_conditional_deps",
-      "line": 498,
+      "line": 501,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-fixpoint",
       "verb": "implements"
@@ -6989,7 +6996,7 @@
     {
       "file": "crates/vibe-install/src/plan.rs",
       "from_symbol": "vibe_install::plan::try_in_place_incremental",
-      "line": 406,
+      "line": 409,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-022#in-place",
       "verb": "implements",
@@ -8801,6 +8808,14 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-workspace/src/freshness/source.rs",
+      "from_symbol": "vibe_workspace::freshness::source",
+      "line": 6,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-011#skip-resolution",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-workspace/src/hooks.rs",
       "from_symbol": "vibe_workspace::hooks",
       "line": 13,
@@ -8943,7 +8958,7 @@
     {
       "file": "crates/vibe-workspace/src/install/bootgen.rs",
       "from_symbol": "vibe_workspace::install::bootgen::validate_redirect_blocks",
-      "line": 254,
+      "line": 257,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-012#plan-time",
       "verb": "implements",
@@ -8952,7 +8967,7 @@
     {
       "file": "crates/vibe-workspace/src/install/tests_hooks.rs",
       "from_symbol": "vibe_workspace::install::tests_hooks::already_placed_in_place_slot_runs_hook_without_moving",
-      "line": 454,
+      "line": 458,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-022#in-place",
       "verb": "verifies",
@@ -8961,7 +8976,7 @@
     {
       "file": "crates/vibe-workspace/src/install/tests_hooks.rs",
       "from_symbol": "vibe_workspace::install::tests_hooks::apply_resolution_places_an_in_place_package_in_an_unversioned_slot",
-      "line": 232,
+      "line": 234,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-022#in-place",
       "verb": "verifies",
@@ -8970,7 +8985,7 @@
     {
       "file": "crates/vibe-workspace/src/install/tests_hooks.rs",
       "from_symbol": "vibe_workspace::install::tests_hooks::post_install_runs_for_materialised_slots_and_flags_failure",
-      "line": 174,
+      "line": 176,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-020#phases",
       "verb": "verifies",
@@ -8979,7 +8994,7 @@
     {
       "file": "crates/vibe-workspace/src/install/tests_hooks.rs",
       "from_symbol": "vibe_workspace::install::tests_hooks::pre_install_failure_rolls_back_an_in_place_slot",
-      "line": 385,
+      "line": 389,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-020#failure",
       "verb": "verifies",
@@ -8988,7 +9003,7 @@
     {
       "file": "crates/vibe-workspace/src/install/tests_hooks.rs",
       "from_symbol": "vibe_workspace::install::tests_hooks::pre_install_failure_rolls_back_the_slot",
-      "line": 97,
+      "line": 98,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-020#failure",
       "verb": "verifies",
@@ -8997,7 +9012,7 @@
     {
       "file": "crates/vibe-workspace/src/install/tests_hooks.rs",
       "from_symbol": "vibe_workspace::install::tests_hooks::pre_install_hook_runs_for_an_allowed_group",
-      "line": 77,
+      "line": 78,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-020#phases",
       "verb": "verifies",
@@ -9006,7 +9021,7 @@
     {
       "file": "crates/vibe-workspace/src/install/tests_hooks.rs",
       "from_symbol": "vibe_workspace::install::tests_hooks::pre_install_hook_runs_in_an_in_place_slot",
-      "line": 360,
+      "line": 364,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-020#phases",
       "verb": "verifies",
@@ -9015,7 +9030,7 @@
     {
       "file": "crates/vibe-workspace/src/install/tests_hooks.rs",
       "from_symbol": "vibe_workspace::install::tests_hooks::prune_leaves_an_in_place_slot_untouched",
-      "line": 297,
+      "line": 300,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-022#in-place",
       "verb": "verifies",
@@ -9024,7 +9039,7 @@
     {
       "file": "crates/vibe-workspace/src/install/tests_hooks.rs",
       "from_symbol": "vibe_workspace::install::tests_hooks::untrusted_group_skips_the_hook_without_running_it",
-      "line": 119,
+      "line": 120,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-020#trust-gate",
       "verb": "verifies",
@@ -14082,7 +14097,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:36ef81bfec51086d7753ceee5312cc2c0a53103324bbfd70ea0ed06556bea608",
+      "content_hash": "sha256:4fba278295218e7a8db9d431b1ef0ccdd3f3c53153a45184534a9dc4400fdc11",
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "spec/modules/vibe-workspace/PROP-011-incremental-install.md",
       "heading": "PROP-011: Incremental install — skip resolution when fresh, materialise only the diff",
@@ -14100,7 +14115,7 @@
     },
     {
       "anchor": "decisions",
-      "content_hash": "sha256:3191d56d3884b05ef02a608b55619925f3d0bb2e12937e2a1acc056cb76c92b6",
+      "content_hash": "sha256:dd748abc68b3a9fd01d622e2223e222b1b2ec25c7cb719af5b774a7a029d63e4",
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "spec/modules/vibe-workspace/PROP-011-incremental-install.md",
       "heading": "2. Decisions",
@@ -14145,7 +14160,7 @@
     },
     {
       "anchor": "force",
-      "content_hash": "sha256:2d852494e326900b5a6987937d1208388e451f4de8bf2a22f948fe6d22088e40",
+      "content_hash": "sha256:81dc326a1edc6cb635405b24f454a345a369e597ff6bdb3cd687eaf539a4386e",
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "spec/modules/vibe-workspace/PROP-011-incremental-install.md",
       "heading": "2.5 Bypasses — no new flag",
@@ -14153,12 +14168,21 @@
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-011#force"
     },
     {
+      "anchor": "local-mutable-source",
+      "content_hash": "sha256:a09ac3c5e43b808b991adeeeee76439e6e573742077e6b9910d32bfbdb8762f3",
+      "doc_path": "modules/vibe-workspace/PROP-011",
+      "file": "spec/modules/vibe-workspace/PROP-011-incremental-install.md",
+      "heading": "2.6 In-workspace `file://` sources are mutable",
+      "line": 70,
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-011#local-mutable-source"
+    },
+    {
       "anchor": "surface",
       "content_hash": "sha256:d0598eebbf9ec246131c820e3c206009debc72197fed4a6e4c9abfce4733dd2d",
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "spec/modules/vibe-workspace/PROP-011-incremental-install.md",
       "heading": "3. Command and crate surface",
-      "line": 72,
+      "line": 85,
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-011#surface"
     },
     {
@@ -14167,7 +14191,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "spec/modules/vibe-workspace/PROP-011-incremental-install.md",
       "heading": "4. Migration",
-      "line": 82,
+      "line": 95,
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-011#migration"
     },
     {
@@ -14176,7 +14200,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "spec/modules/vibe-workspace/PROP-011-incremental-install.md",
       "heading": "5. Resolved questions",
-      "line": 88,
+      "line": 101,
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-011#open"
     },
     {
@@ -14185,7 +14209,7 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "spec/modules/vibe-workspace/PROP-011-incremental-install.md",
       "heading": "6. Rejected / deferred alternatives",
-      "line": 100,
+      "line": 113,
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-011#rejected"
     },
     {
@@ -14194,16 +14218,16 @@
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "spec/modules/vibe-workspace/PROP-011-incremental-install.md",
       "heading": "7. Phase plan",
-      "line": 109,
+      "line": 122,
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-011#phases"
     },
     {
       "anchor": "history",
-      "content_hash": "sha256:251de6a9ba7573f663b56bfe7f6e707b918df29573e889c2eae1ce1964e658e4",
+      "content_hash": "sha256:c0f4ce13bf742d3030e11d18c9c6eb078657d9b337067862810a43ac5ec69877",
       "doc_path": "modules/vibe-workspace/PROP-011",
       "file": "spec/modules/vibe-workspace/PROP-011-incremental-install.md",
       "heading": "8. Version history",
-      "line": 120,
+      "line": 133,
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-011#history"
     },
     {
