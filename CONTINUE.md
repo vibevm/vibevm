@@ -5,8 +5,9 @@ green; Ф4 (conform relocation) is next, fully planned below.** This session
 opened on `восстанови сессию`, then the owner directed a large refactor: make
 the discipline packages self-sufficient by letting packages ship runnable code,
 and relocate the hardcoded discipline tooling out of the vibevm workspace into
-`stack:org.vibevm/rust-ai-native`. **6 commits this session (`b6f8132`→`cb05d16`),
-local on `main`, NOT mirrored.** Floor green at `cb05d16`: `self-check.sh` exit 0,
+`stack:org.vibevm/rust-ai-native`. **8 commits this session (`b6f8132`→`0b22b69`,
+incl. this checkpoint), local on `main`, NOT mirrored.** Floor green at the Ф3
+code tip `cb05d16`: `self-check.sh` exit 0,
 specmap 614/597/610/0/0/0._
 
 > **`spec/WAL.md` is the canonical living state**; if this snapshot and the WAL
@@ -41,10 +42,11 @@ is outward-facing).
 
 ## Where work stands
 
-- **Branch `main`**, tip `cb05d16` (before this checkpoint commit). **~18 commits
-  ahead of `origin/main`** (12 from the prior session + 6 this session), **NOT
-  mirrored** — held for the owner's explicit "mirror".
-- Working tree **clean** at `cb05d16` (the Ф4 crate-move spike was reverted).
+- **Branch `main`**, tip `0b22b69`. **20 commits ahead of `origin/main`** (12
+  from the prior session + 8 this session, incl. the two checkpoint commits),
+  **NOT mirrored** — held for the owner's explicit "mirror".
+- Working tree **clean** (the Ф4 crate-move spike was reverted; the floor was
+  last green at the Ф3 code tip `cb05d16`, the two commits after are docs-only).
 - Floor **green** at `cb05d16`: `bash tools/self-check.sh` exit 0 (fmt; all
   workspace tests + doctests; clippy `-D warnings`; `vibe check` 0/0/0;
   `cargo xtask conform check` 0 findings, 16 gated / 4 exempt). specmap clean:
@@ -236,6 +238,8 @@ vibevm/                      Rust workspace; binary = `vibe`; tooling = cargo xt
 ## Recent commit chain (newest first)
 
 ```
+0b22b69 docs(wal): checkpoint — Ф1-Ф3 landed, conform relocation next (checkpoint)
+c560e79 docs(continue): cold-resume — code-bearing packages Ф1-Ф3     (checkpoint)
 cb05d16 chore(specmap): regen for the conform Config seam            (Ф3)
 424ee17 refactor(conform): config-driven policy via conform.toml     (Ф3)
 8dc6e29 build(deps): re-materialise vibedeps for the spec/ layout    (Ф2)
