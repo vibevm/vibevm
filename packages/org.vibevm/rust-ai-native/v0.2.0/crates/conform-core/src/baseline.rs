@@ -1,3 +1,5 @@
+specmark::scope!("spec://vibevm/discipline/ENGINE-CONFORM-v0.1#rules");
+
 use std::path::Path;
 
 use anyhow::{Context, Result};

@@ -1,3 +1,5 @@
+specmark::scope!("spec://vibevm/discipline/ENGINE-CONFORM-v0.1#determinism");
+
 use crate::finding::{Finding, Rule};
 
 /// Byte-stable minimal SARIF 2.1.0: stable ordering (findings are

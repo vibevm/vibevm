@@ -353,6 +353,7 @@ dependencies = [
  "serde",
  "serde_json",
  "sha2",
+ "specmark",
  "toml 0.9.12+spec-1.1.0",
  "walkdir",
 ]
@@ -364,6 +365,7 @@ dependencies = [
  "conform-core",
  "proc-macro2",
  "quote",
+ "specmark",
  "syn",
 ]
 
@@ -503,6 +505,9 @@ checksum = "34aa73646ffb006b8f5147f3dc182bd4bcb190227ce861fc4a4844bf8e3cb2c0"
 [[package]]
 name = "env-audit"
 version = "0.2.0"
+dependencies = [
+ "specmark",
+]
 
 [[package]]
 name = "equivalent"

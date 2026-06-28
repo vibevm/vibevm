@@ -1,3 +1,5 @@
+specmark::scope!("spec://vibevm/discipline/ENGINE-CONFORM-v0.1#facts");
+
 use serde::{Deserialize, Serialize};
 
 /// One normalized fact (ENGINE-CONFORM §3). Variants carry exactly

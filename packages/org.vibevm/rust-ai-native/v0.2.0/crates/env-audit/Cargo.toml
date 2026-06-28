@@ -9,3 +9,6 @@ publish.workspace = true
 repository.workspace = true
 homepage.workspace = true
 description = "The designated unsafe audit crate for process-environment mutation: a serialized, restoring EnvGuard behind a safe API (AUD-0016 posture)"
+
+[dependencies]
+specmark.workspace = true

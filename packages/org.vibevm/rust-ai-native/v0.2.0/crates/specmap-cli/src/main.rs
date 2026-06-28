@@ -25,9 +25,18 @@ struct Cli {
     /// instead of rewriting it.
     #[arg(long)]
     check: bool,
+    /// Run only the orphan-coverage gate (no committed `specmap.json` needed).
+    /// For a package whose `scope!` targets are hosted in the consuming repo:
+    /// gates that the code is tagged, not that the targets resolve here.
+    #[arg(long, conflicts_with = "check")]
+    gate: bool,
 }
 
 fn main() -> Result<()> {
     let cli = Cli::parse();
-    specmap_cli::run_specmap(&cli.path, cli.check)
+    if cli.gate {
+        specmap_cli::run_gate(&cli.path)
+    } else {
+        specmap_cli::run_specmap(&cli.path, cli.check)
+    }
 }

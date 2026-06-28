@@ -21,6 +21,10 @@
 #                                          workspace (PROP-024) that steps
 #                                          1-5 build but cannot otherwise
 #                                          reach (its tests + doctests).
+#   7. the package traceability self-trace  — `specmap-rust --gate` over the
+#                                          package, so the discipline code it
+#                                          ships cannot drift untagged itself
+#                                          (PROP-014; Phase 4 of the move).
 #
 # Each step prints a short header. On the first failure the script exits
 # non-zero; later steps are skipped (no "fix the next thing while broken"
@@ -114,6 +118,17 @@ run_step "cargo test --workspace (rust-ai-native pkg)" \
   cargo test --manifest-path "$PKG_MANIFEST" --workspace --quiet || OVERALL=$?
 run_step "cargo clippy --all-targets (rust-ai-native pkg)" \
   cargo clippy --manifest-path "$PKG_MANIFEST" --workspace --all-targets --quiet -- -D warnings || OVERALL=$?
+
+# 7. The package's own traceability self-trace (Traceability Relocation Plan,
+# Phase 4). The package ships the specmap engine and now traces ITSELF: every
+# gated package crate's public surface must carry a scope!/#[spec] tag, so no
+# discipline code drifts untagged. Orphan-coverage gate only (`--gate`) — the
+# scope! targets are vibevm-hosted spec units, so a full index would be all
+# cross-repo "dangling"; coverage is what matters. The conform step-5 lesson
+# (a gate not in self-check drifts silently) applied to the package's own trace.
+PKG_DIR="packages/org.vibevm/rust-ai-native/v0.2.0"
+run_step "specmap-rust --gate (rust-ai-native pkg self-trace)" \
+  cargo run --quiet --manifest-path "$PKG_MANIFEST" -p specmap-cli --bin specmap-rust -- --gate --path "$PKG_DIR" || OVERALL=$?
 
 if [ "$QUIET" -eq 0 ]; then
   if [ "$OVERALL" -eq 0 ]; then
