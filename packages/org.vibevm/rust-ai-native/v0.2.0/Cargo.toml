@@ -13,6 +13,10 @@ members = [
     "crates/conform-frontend-rust",
     "crates/conform-cli",
     "crates/env-audit",
+    "crates/specmap-core",
+    "crates/specmap-cli",
+    "crates/specmark",
+    "crates/specmark-grammar",
 ]
 
 [workspace.package]
@@ -29,6 +33,9 @@ homepage = "https://gitverse.ru/anarchic/vibevm"
 # Internal crates — path-only (not published; consumed in-tree).
 conform-core = { path = "crates/conform-core" }
 conform-frontend-rust = { path = "crates/conform-frontend-rust" }
+specmap-core = { path = "crates/specmap-core" }
+specmark = { path = "crates/specmark" }
+specmark-grammar = { path = "crates/specmark-grammar" }
 
 # Third-party (all permissive licenses — PROP-000 §3). Feature sets match
 # vibevm's so the engine behaves identically wherever it is built.
@@ -38,6 +45,7 @@ serde_json = { version = "1", features = ["preserve_order"] }
 sha2 = "0.10"
 toml = "0.9"
 walkdir = "2"
+glob = "0.3"
 syn = { version = "2", features = ["full", "visit"] }
 quote = "1"
 proc-macro2 = { version = "1", features = ["span-locations"] }

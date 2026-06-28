@@ -19,9 +19,6 @@ members = [
     "crates/vibe-publish",
     "crates/vibe-wire",
     "crates/vibe-workspace",
-    "crates/specmark-grammar",
-    "crates/specmark",
-    "crates/specmap-core",
     "xtask",
 ]
 default-members = [
@@ -38,9 +35,6 @@ default-members = [
     "crates/vibe-publish",
     "crates/vibe-wire",
     "crates/vibe-workspace",
-    "crates/specmark-grammar",
-    "crates/specmark",
-    "crates/specmap-core",
 ]
 
 [workspace.package]
@@ -69,18 +63,21 @@ vibe-check = { path = "crates/vibe-check", version = "0.1.0-dev" }
 vibe-publish = { path = "crates/vibe-publish", version = "0.1.0-dev" }
 vibe-wire = { path = "crates/vibe-wire", version = "0.1.0-dev" }
 vibe-workspace = { path = "crates/vibe-workspace", version = "0.1.0-dev" }
-specmark-grammar = { path = "crates/specmark-grammar", version = "0.1.0-dev" }
-specmark = { path = "crates/specmark", version = "0.1.0-dev" }
-specmap-core = { path = "crates/specmap-core", version = "0.1.0-dev" }
 
-# Code-bearing package crates (PROP-024): the ENGINE-CONFORM toolchain lives in
-# stack:org.vibevm/rust-ai-native, consumed by external path-dep. The vibevm
-# root excludes packages/ + vibedeps/, so these resolve into the package's own
-# Cargo workspace. Path-only — the crate versions are the package's concern.
+# Code-bearing package crates (PROP-024): the ENGINE-CONFORM + specmap
+# traceability toolchains live in stack:org.vibevm/rust-ai-native, consumed by
+# external path-dep. The vibevm root excludes packages/ + vibedeps/, so these
+# resolve into the package's own Cargo workspace. Path-only — the crate
+# versions are the package's concern. The 10 specmark dogfooders + xtask inherit
+# the repointed specmark/specmap-core via `.workspace = true`; specmark-grammar
+# is consumed only inside the package now, so it leaves the vibevm root.
 conform-core = { path = "packages/org.vibevm/rust-ai-native/v0.2.0/crates/conform-core" }
 conform-frontend-rust = { path = "packages/org.vibevm/rust-ai-native/v0.2.0/crates/conform-frontend-rust" }
 conform-cli = { path = "packages/org.vibevm/rust-ai-native/v0.2.0/crates/conform-cli" }
 env-audit = { path = "packages/org.vibevm/rust-ai-native/v0.2.0/crates/env-audit" }
+specmap-core = { path = "packages/org.vibevm/rust-ai-native/v0.2.0/crates/specmap-core" }
+specmap-cli = { path = "packages/org.vibevm/rust-ai-native/v0.2.0/crates/specmap-cli" }
+specmark = { path = "packages/org.vibevm/rust-ai-native/v0.2.0/crates/specmark" }
 
 # Third-party (all permissive licenses — PROP-000 §3)
 syn = { version = "2", features = ["full", "visit"] }

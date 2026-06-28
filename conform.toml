@@ -34,14 +34,11 @@ gated_crates = [
     "vibe-index",
     "vibe-install",
     "vibe-resolver",
-    "specmap-core",
     "vibe-registry",
     "vibe-workspace",
     "vibe-check",
     "vibe-publish",
     "vibe-cli",
-    "specmark",
-    "specmark-grammar",
     "vibe-mcp",
 ]
 
@@ -51,7 +48,6 @@ gated_crates = [
 # gating it would enforce uncompiled prose, the opposite of the rule.
 gated_pub_doctest = [
     "vibe-core",
-    "specmark-grammar",
     "vibe-mcp",
 ]
 

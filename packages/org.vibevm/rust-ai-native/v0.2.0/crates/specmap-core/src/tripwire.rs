@@ -143,16 +143,17 @@ mod tests {
     }
 
     #[test]
-    fn real_registry_parses_and_evaluates() {
-        // Guard against the engine drifting from the real registry's
-        // shape: the committed debt.json must always parse.
-        let root = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
-            .parent()
-            .unwrap()
-            .parent()
-            .unwrap()
-            .to_path_buf();
-        let json = std::fs::read_to_string(root.join("terraform/registry/debt.json")).unwrap();
+    fn reads_a_debt_file_from_disk_and_evaluates() {
+        // The on-disk read + parse + evaluate path, end to end. Uses a
+        // synthetic registry written to a tempdir rather than a host-repo
+        // path: the engine ships in the rust-ai-native package now and must
+        // not assume any particular consumer's tree layout. The registry
+        // *shape* (extra fields like `kind`) is exercised by the `DEBT`
+        // const above.
+        let tmp = tempfile::tempdir().unwrap();
+        let path = tmp.path().join("debt.json");
+        std::fs::write(&path, DEBT).unwrap();
+        let json = std::fs::read_to_string(&path).unwrap();
         let fired = evaluate(&json, &paths(&["crates/vibe-registry/src/lib.rs"])).unwrap();
         // DBT-0001 watches crates/vibe-registry/src/** and is `filed`.
         assert!(fired.iter().any(|f| f.id == "DBT-0001"), "{fired:?}");

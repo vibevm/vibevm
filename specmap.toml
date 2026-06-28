@@ -24,14 +24,13 @@ root_spec_docs = ["VIBEVM-SPEC.md"]
 # Crates exempt from the orphan ratchet (PLAYBOOK #phase2, flipped 2026-06-10).
 # A crate NOT listed is gated: its pub items must carry an own edge or a
 # scope!-inherited module edge. Each exemption and why:
-#   vibe-graph, vibe-llm        — M0 stub crates, no code yet
-#   vibe-wire                   — generated code; the JTD schema is the taggable unit
-#   xtask                       — internal tooling binary (panics ok at the dev console)
-#   specmark, specmark-grammar  — the tag bootstrap pair cannot depend on specmark
-#                                 to carry scope! markers (a scanner-level feature, not a macro one)
+#   vibe-graph, vibe-llm  — M0 stub crates, no code yet
+#   vibe-wire             — generated code; the JTD schema is the taggable unit
+#   xtask                 — internal tooling binary (panics ok at the dev console)
+# (specmark + specmark-grammar relocated into stack:org.vibevm/rust-ai-native in
+#  the traceability move, so they are no longer vibevm crates to exempt here;
+#  the package will trace its own crates in a later phase.)
 exempt = [
-    "specmark",
-    "specmark-grammar",
     "vibe-graph",
     "vibe-llm",
     "vibe-wire",

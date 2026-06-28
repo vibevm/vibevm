@@ -1784,8 +1784,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "specmap-cli"
+version = "0.2.0"
+dependencies = [
+ "anyhow",
+ "clap",
+ "specmap-core",
+]
+
+[[package]]
 name = "specmap-core"
-version = "0.1.0-dev"
+version = "0.2.0"
 dependencies = [
  "anyhow",
  "glob",
@@ -1797,14 +1806,13 @@ dependencies = [
  "specmark",
  "specmark-grammar",
  "syn",
- "tempfile",
  "toml 0.9.12+spec-1.1.0",
  "walkdir",
 ]
 
 [[package]]
 name = "specmark"
-version = "0.1.0-dev"
+version = "0.2.0"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1814,10 +1822,9 @@ dependencies = [
 
 [[package]]
 name = "specmark-grammar"
-version = "0.1.0-dev"
+version = "0.2.0"
 dependencies = [
  "proc-macro2",
- "quote",
  "syn",
 ]
 
@@ -3120,6 +3127,7 @@ dependencies = [
  "conform-core",
  "conform-frontend-rust",
  "serde_json",
+ "specmap-cli",
  "specmap-core",
  "toml 0.9.12+spec-1.1.0",
  "walkdir",

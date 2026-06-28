@@ -353,35 +353,51 @@ impl std::fmt::Display for Summary {
 mod tests {
     use super::*;
 
-    fn repo_root() -> PathBuf {
-        Path::new(env!("CARGO_MANIFEST_DIR"))
-            .parent()
-            .unwrap()
-            .parent()
-            .unwrap()
-            .to_path_buf()
+    /// A small synthetic tree — several anchored units across two docs plus
+    /// one tagged code item. Enough to exercise the inventory, the ordering
+    /// invariant, and the edge-from-code path without assuming any particular
+    /// host repository: specmap-core ships in the rust-ai-native package now,
+    /// so `CARGO_MANIFEST_DIR` is no longer a substantial spec tree.
+    fn synthetic_tree() -> tempfile::TempDir {
+        let tmp = tempfile::tempdir().unwrap();
+        let root = tmp.path();
+        std::fs::create_dir_all(root.join("spec/modules")).unwrap();
+        std::fs::write(
+            root.join("spec/A.md"),
+            "## Alpha {#alpha}\n`prop r1`\n\nbody\n\n## Beta {#beta}\n\nbody\n",
+        )
+        .unwrap();
+        std::fs::write(
+            root.join("spec/modules/B.md"),
+            "## Gamma {#gamma}\n`req r1`\n\nbody\n",
+        )
+        .unwrap();
+        let src = root.join("crates/x/src");
+        std::fs::create_dir_all(&src).unwrap();
+        std::fs::write(
+            src.join("lib.rs"),
+            "#[spec(implements = \"spec://vibevm/A#alpha\", r = 1)]\npub fn f() {}\n",
+        )
+        .unwrap();
+        tmp
     }
 
-    /// PROP-014 §2.5: determinism is a tested property — index twice,
-    /// assert byte-identical. Runs over the real repository tree.
+    /// PROP-014 §2.5: determinism is a tested property — index twice, assert
+    /// byte-identical.
     #[test]
-    fn index_is_deterministic_over_the_real_tree() {
-        let root = repo_root();
-        let a = to_canonical_bytes(&build(&root, &Config::default())).unwrap();
-        let b = to_canonical_bytes(&build(&root, &Config::default())).unwrap();
+    fn index_is_deterministic() {
+        let tmp = synthetic_tree();
+        let a = to_canonical_bytes(&build(tmp.path(), &Config::default())).unwrap();
+        let b = to_canonical_bytes(&build(tmp.path(), &Config::default())).unwrap();
         assert_eq!(a, b);
         assert!(a.ends_with('\n'));
     }
 
     #[test]
-    fn real_tree_has_a_node_inventory() {
-        let root = repo_root();
-        let map = build(&root, &Config::default());
-        assert!(
-            map.specUnits.len() > 100,
-            "expected a substantial unit inventory, got {}",
-            map.specUnits.len()
-        );
+    fn node_inventory_is_ordered_and_house_style() {
+        let tmp = synthetic_tree();
+        let map = build(tmp.path(), &Config::default());
+        assert!(map.specUnits.len() >= 3, "got {}", map.specUnits.len());
         // Ordering invariant: (doc_path, line) non-decreasing.
         assert!(
             map.specUnits
@@ -393,6 +409,11 @@ mod tests {
             map.specUnits
                 .iter()
                 .all(|u| !u.uri.starts_with("spec://vibevm/spec/") && !u.uri.contains(".md#"))
+        );
+        // The tagged code item produced its edge into the spec unit.
+        assert!(
+            map.edges.iter().any(|e| e.uri == "spec://vibevm/A#alpha"),
+            "expected an edge into spec://vibevm/A#alpha"
         );
     }
 
