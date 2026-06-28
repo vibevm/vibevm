@@ -11,6 +11,7 @@ homepage.workspace = true
 description = "The conform engine core (ENGINE-CONFORM v0.1): fact model, content-addressed store, rules, SARIF, ratchet baseline"
 
 [dependencies]
+specmark.workspace = true
 anyhow.workspace = true
 serde.workspace = true
 serde_json.workspace = true

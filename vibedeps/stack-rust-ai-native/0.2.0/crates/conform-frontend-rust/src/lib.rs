@@ -4,6 +4,8 @@
 //! sites, and `unsafe` uses. B5: an unparseable file yields zero facts
 //! rather than an error; the rest of the tree still extracts.
 
+specmark::scope!("spec://vibevm/discipline/ENGINE-CONFORM-v0.1#frontends");
+
 use conform_core::{Fact, Frontend};
 use quote::ToTokens;
 use syn::spanned::Spanned;

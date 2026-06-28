@@ -8,6 +8,8 @@
 //! its public path `conform_core::rules::<RuleType>` via the
 //! re-exports below.
 
+specmark::scope!("spec://vibevm/discipline/ENGINE-CONFORM-v0.1#rules");
+
 use crate::facts::{Fact, SourceFacts};
 
 mod budget;

@@ -38,6 +38,21 @@ pub fn run_specmap(root: &Path, check: bool) -> Result<()> {
     }
 }
 
+/// Orphan-coverage gate only — build the index in memory to learn the tagged
+/// set, run the ratchet, and block on any orphan. No committed `specmap.json`
+/// is read or written. For a package whose `scope!` targets are hosted in the
+/// consuming repo (the discipline's spec lives in vibevm, not in the package
+/// that ships the engine), the full index is not meaningful here — every edge
+/// is cross-repo "dangling" — but "is every gated crate's public surface
+/// tagged" is exactly the self-discipline the package wants. An absent
+/// `specmap.toml` leaves the gate off.
+pub fn run_gate(root: &Path) -> Result<()> {
+    match Config::load(root)? {
+        Some(cfg) => run_ratchet_gate(root, &cfg, true),
+        None => Ok(()),
+    }
+}
+
 /// The Phase 2 ratchet: the orphan gate over non-exempt crates (PLAYBOOK
 /// `#phase2`). Reported in both modes; blocking only under `--check`. Only
 /// runs when a `specmap.toml` is present (an absent policy leaves it off).
