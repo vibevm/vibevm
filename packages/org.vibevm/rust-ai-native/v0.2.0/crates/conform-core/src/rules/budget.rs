@@ -320,7 +320,7 @@ pub struct AmbientEnv {
     pub audit_crates: Vec<String>,
     /// Repo-relative paths of the recorded composition / config-resolution
     /// files where env access is sanctioned (R-001). Adding env access to
-    /// a new file is a deliberate edit here, reviewed like `CONFORM_GATED`.
+    /// a new file is a deliberate edit here, reviewed like the gated-crate set.
     pub roots: Vec<String>,
 }
 
