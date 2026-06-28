@@ -1,11 +1,13 @@
 # CONTINUE.md — cold-resume checkpoint
 
-_Written 2026-06-27 (session save). Three pieces of owner-directed work landed
-this session, **11 commits** (`fc1915b`→`bdde0f2`) on `main`, **local and NOT
-mirrored**: (1) the **AI-Native TypeScript stack** at parity with Rust; (2) the
-**card migration** to full Rust↔TS symmetry; (3) a **`vibe install` fix** so
-in-repo `packages/` edits are picked up automatically (PROP-011 §2.6). Floor
-green: `self-check.sh` exit 0, specmap 598/596/609/0._
+_Written 2026-06-28. **Code-bearing packages refactor — Ф1–Ф3 of 7 landed
+green; Ф4 (conform relocation) is next, fully planned below.** This session
+opened on `восстанови сессию`, then the owner directed a large refactor: make
+the discipline packages self-sufficient by letting packages ship runnable code,
+and relocate the hardcoded discipline tooling out of the vibevm workspace into
+`stack:org.vibevm/rust-ai-native`. **6 commits this session (`b6f8132`→`cb05d16`),
+local on `main`, NOT mirrored.** Floor green at `cb05d16`: `self-check.sh` exit 0,
+specmap 614/597/610/0/0/0._
 
 > **`spec/WAL.md` is the canonical living state**; if this snapshot and the WAL
 > disagree, the WAL wins. The **git log is the authoritative per-item record**.
@@ -16,212 +18,257 @@ green: `self-check.sh` exit 0, specmap 598/596/609/0._
 
 ## TL;DR
 
-1. **AI-Native TypeScript stack** (`fc1915b`→`9445ef0`, 4 commits). New
-   `stack:org.vibevm/typescript-ai-native@0.2.0` at parity with the Rust stack:
-   a GUIDE that is a strict **superset** of the Rust guide (15 sections, every
-   Rust §0–12 mirrored + TS-specifics raised to top level), **nine TS cards +
-   INDEX** at line-for-line depth parity, packaged + installed + wired into the
-   project `vibe.toml` (boot now bilingual). The manifesto §8 package-map update
-   (the language-agnostic "Discipline update") landed separately. EXCLUDED per
-   owner: `vibe-tcg-ts` depth (carried as a conscious stub) and any
-   checker-implementation/measurement (the forthcoming VibeVM TS code is the
-   pilot; cards carry `specified` checkers).
+The owner's directive: *packages aren't self-sufficient — the discipline's
+verification tools (conform, specmap/specmark) are hardcoded inside vibevm, so a
+user who installs `stack-rust-ai-native` gets a description of checkers, not the
+checkers.* Fix: make a package a project (ship code, not only prompts) and move
+the toolchain in. Planned as **7 phases (Ф1–Ф7)**; **Ф1–Ф3 are done, green,
+committed.** Owner decisions taken this session (all locked):
 
-2. **Card migration — β full symmetry** (`f6ab191`→`bb666d4`, 4 commits). The
-   nine Rust cards + INDEX moved `flow-discipline-core/cards/` →
-   `stack-rust-ai-native/cards/`, so the core is now purely language-neutral
-   (manifesto, format, scaffold catalog, RAID, appendix) and **both** stacks own
-   their `cards/`. Conform's REQ citations re-namespaced
-   `discipline://core/cards/…` → `discipline://rust-ai-native/cards/…`.
+1. Prompt dir inside a package is **`spec/`** (singular, project-identical), not
+   `specs/`.
+2. Move **conform + specmap/specmark** — BUT after Ф4 started and the
+   traceability entanglement surfaced, the owner re-scoped to **conform first,
+   specmap/specmark as a follow-up** (see "The Ф4 plan" below).
+3. conform is **fully productised** (config-driven, runs on any project) — DONE
+   in Ф3.
+4. The owner **sanctioned editing the frozen `VIBEVM-SPEC.md`** package-model
+   sections — DONE in Ф1.
 
-3. **`vibe install` picks up in-repo `packages/` edits** (`97dd167`→`bdde0f2`,
-   3 commits, PROP-011 §2.6). Editing the self-hosting `packages/` registry was
-   not picked up — `vibe install` re-used the stale `vibedeps/` slot (a manual
-   `rm -rf` was the workaround). Now an **in-workspace `file://`** source (under
-   the workspace root, not `in-place`) is mutable: freshness returns `Stale`
-   (re-resolve) and its slot is re-materialised. e2e-proven on real Windows
-   paths.
-
-There is **no open blocker**. The one pending decision is the owner's: **mirror**
-the 11 commits (see below).
+**Resume at Ф4** (conform relocation) — the plan is spelled out below; nothing
+blocks it. The one standing owner decision is the **mirror** (held; publishing
+is outward-facing).
 
 ## Where work stands
 
-- **Branch `main`**, tip `bdde0f2`. **11 commits ahead of `origin/main`**,
-  **NOT pushed/mirrored** — held for the owner's word (publishing is
-  outward-facing; asked twice this session, awaiting an explicit "mirror").
-- Working tree **clean** (after this session-save's `CONTINUE.md` commit).
-- Floor **green**: `bash tools/self-check.sh` exit 0 (fmt, all tests + doctests,
-  clippy `-D warnings`, `vibe check` 0/0/0, `cargo xtask conform check` 0
-  findings). Specmap clean: **598 units / 596 tagged / 609 edges / 0 suspects /
-  0 warnings / 0 orphans**.
+- **Branch `main`**, tip `cb05d16` (before this checkpoint commit). **~18 commits
+  ahead of `origin/main`** (12 from the prior session + 6 this session), **NOT
+  mirrored** — held for the owner's explicit "mirror".
+- Working tree **clean** at `cb05d16` (the Ф4 crate-move spike was reverted).
+- Floor **green** at `cb05d16`: `bash tools/self-check.sh` exit 0 (fmt; all
+  workspace tests + doctests; clippy `-D warnings`; `vibe check` 0/0/0;
+  `cargo xtask conform check` 0 findings, 16 gated / 4 exempt). specmap clean:
+  **614 units / 597 tagged / 610 edges / 0 suspects / 0 warnings / 0 orphans**.
 
-## The one pending decision (owner)
+## What landed this session (Ф1–Ф3)
 
-**Mirror the 11 commits to both source hosts** (the PROP-016 rollout):
+- **Ф1 — code-bearing package model** (`b6f8132` docs + `5362b4f` specmap).
+  New normative spec **`spec/common/PROP-024-code-bearing-packages.md`**: a
+  package is a project — prompt content under its own `spec/`, arbitrary code at
+  the root, one `vibe.toml`; the **shippable tree** (what's hashed / copied /
+  materialised) excludes build output (`.git/`, `.vibe/`, `target/`,
+  `node_modules/`, `.vibeignore`); consumption via external-path-dep into the
+  materialised slot; the self-hosting bootstrap rides committed `vibedeps/`.
+  **Frozen `VIBEVM-SPEC.md` amended under owner sanction** (§4.2, §7.2–7.4, §12,
+  §13.1) — the same precedent as PROP-009. Four gating PROPs (002/009/020/022)
+  got forward-pointers to PROP-024 **without changing their r1 obligations** (the
+  real revision bumps ride with the implementing code later; the commit body
+  carries `spec-editorial:` markers for the tripwire).
+- **Ф2 — packages refactored to `spec/` layout** (`20190df` refactor +
+  `8dc6e29` build-deps). All three packages (`discipline-core`,
+  `rust-ai-native`, `typescript-ai-native`) moved their prompt content
+  (`boot/`, `cards/`, guides, manifesto, appendix, legacy-projections) under a
+  `spec/` subtree via `git mv` (100% renames, history kept); each `vibe.toml`
+  `[boot_snippet].source` repointed `spec/boot/…`. `vibe install` re-materialised
+  `vibedeps/` (the data-driven boot path-gen regenerated `INDEX.md` to
+  `vibedeps/<slot>/spec/boot/…` with no code change) and re-locked.
+- **Ф3 — conform productised** (`424ee17` refactor + `cb05d16` specmap). The
+  conform checker's policy left compile-time constants for a runtime
+  **`conform.toml`** parsed into a new **`conform_core::Config`**; the scan is
+  config-driven (`<dir>/*` root → each subdir a crate, else literal); the rules
+  own their gated lists (`&'static [&'static str]` → `Vec<String>`);
+  `cell-has-oracle` no longer assumes `crates/<c>/tests/`. vibevm ships its own
+  `conform.toml` capturing the former constants verbatim, so the gate is
+  **behaviourally identical** (0 findings, 16 gated, 4 exempt) — only now the
+  policy is data, and an external project can retune + run it.
 
-```sh
-cargo xtask mirror --check     # confirm GitVerse + GitHub are at 5f9688f (in sync)
-cargo xtask mirror             # ff-only push of main to both, never --force
-```
+## The Ф4 plan (conform-first relocation) — RESUME HERE
 
-The mirrors were in sync at `5f9688f` at session start; the 11 new commits
-fast-forward both. `git push origin main` hits **GitVerse only** — prefer
-`cargo xtask mirror` (memory: it is the standard rollout).
+**Goal:** move the conform checker out of the vibevm workspace and INTO
+`packages/org.vibevm/rust-ai-native/v0.2.0/`, so installing the package yields a
+working checker. specmap/specmark deferred (owner-chosen — see below).
 
-## Architecture / policy decisions in force (long form)
+**Validated foundation (spike, this session):** a member of the vibevm root
+workspace CAN depend, via path, on a crate inside a nested `[workspace]` under
+`vibedeps/`/`packages/` when the root excludes those dirs (`exclude =
+["packages","vibedeps"]`). Built green on Windows: `Adding spikelib → Compiling
+→ Finished`, no "two workspaces" error. So PROP-024 §2.4 (own-workspace package +
+external-path-dep) is the topology; the fallback (§4) is unneeded.
 
-- **The Discipline is four layers, not two.** An AI-Native language = **L1** T1
-  core (`flow:org.vibevm/discipline-core`: manifesto, card FORMAT, scaffold
-  CATALOG, RAID, appendix — language-neutral) + **L2** per-language GUIDE +
-  tcg (the strong-author artifact, in `stack:org.vibevm/<lang>-ai-native`) +
-  **L3** the per-language CARDS' Band-3 (`<stack>/cards/` — the weak-swarm
-  RUNTIME surface delivered per edit) + **L4** implemented checkers + a pilot
-  codebase. After the migration, **each stack owns its `cards/`** (L3) and the
-  core is purely L1.
-- **TS cards carry `specified` checkers, not implemented ones.** There is **no
-  TS pilot codebase yet** — the forthcoming VibeVM TypeScript surface (UI +
-  scripting, the second primary language) is the pilot, exactly the state the
-  Rust cards were in before the terraform implemented their checkers. The
-  standing open question (does scaffolding help *modification*, not just
-  *generation* — C-7) is inherited by TS.
-- **TS GUIDE = strict superset of Rust**, not a divergent doc: mirror Rust's
-  section spine for a consistent way to write code, then raise the TS-specific
-  levers (tsconfig-as-discipline, the erasure boundary + single-source runtime
-  validation, branding over structural typing, the `unsafe` set, type-level
-  testing) to the top level.
-- **PROP-011 §2.6 — in-workspace `file://` is mutable.** A registry dep whose
-  `source_url` is `file://` **under the workspace root** and **not `in-place`**
-  is never version-immutable-fast-pathed (freshness `Stale`) nor
-  presence-trusted (its slot re-materialised, gated by `ResolvedDep.source_mutable`).
-  **External/static local registries + mirrors (`file://` outside the
-  workspace) keep the §2.2/§2.3 fast path**; `in-place` (PROP-022) giants are
-  excluded (they refresh through `vibe update`). The discriminator is
-  `freshness::is_in_workspace_file_source` (own cell `freshness/source.rs`),
-  component-wise + case-insensitive on Windows. The scope is in-workspace, **not
-  all `file://`**, deliberately (the broad rule disabled the optimisation for
-  legitimately-immutable static local registries — see findings).
-- **Mirror, not `git push origin`** (PROP-016): both GitVerse
-  (`anarchic/vibevm`) and GitHub (`anarchic-pro/vibevm`) are canonical for
-  reading; `cargo xtask mirror` (ff-only, `mirrors.toml`) is the rollout.
-- **`/code-review` is never to be suggested** to this owner (recorded in
-  global memory this session). Offer manual review or plain git-review instead.
+**Crates that move (the clean set — zero product-crate deps after de-tag):**
+`conform-core`, `conform-frontend-rust`, `env-audit`. Plus a **new
+`conform-cli`** crate (lib + `conform` bin) extracting the driver currently in
+`xtask/src/conform.rs` (`load_config` + `build_rules` + `run_check` +
+`run_freeze`), so the package ships a runnable `conform` binary and vibevm's
+xtask calls the same library.
+
+**Step 4a — decouple conform from specmark (committable, green on its own).**
+`conform-core`/`conform-frontend-rust`/`env-audit` carry **inert** specmark tags
+that must go so the crates can move WITHOUT specmark (which stays in vibevm).
+Exact sites (grepped this session): **13 `specmark::scope!(…)`** lines —
+conform-core `{baseline,facts,config,finding,store,sarif,rules/mod,rules/budget,
+rules/diagnostics,rules/tests,rules/structure}.rs`, conform-frontend-rust
+`lib.rs:12`, env-audit `lib.rs:19` — **plus one `#[specmark::spec(…)]`** on
+`conform-core/src/sarif.rs:16`. Delete them all (they expand to nothing —
+zero behaviour change) and drop `specmark.workspace = true` from the three
+`Cargo.toml`s. Then `cargo build` + regen specmap.
+
+**The specmap/ENGINE-CONFORM wrinkle (the one thing to resolve empirically).**
+The scope! tags are the specmap edges binding the conform code to
+`spec://vibevm/discipline/ENGINE-CONFORM-v0.1`. Stripping them (and later moving
+the code out of `crates/*`) drops those edges, so the ENGINE-CONFORM spec units
+may become specmap orphans. **Recommended resolution: KEEP `ENGINE-CONFORM-v0.1.md`
+in vibevm's `spec/discipline/` and disposition the now-edgeless units in the
+specmap ratchet** (the ratchet already supports dispositions — "0 dispositioned
+(6 crates exempt)"). DO NOT move the spec file: **28 files reference
+`ENGINE-CONFORM`** (product code, specs, terraform reports — grepped this
+session), so relocating it triggers a dead-`spec://`-ref cascade that
+`vibe check` would fail. Investigate the ratchet/disposition mechanism in
+`crates/specmap-core` (`ratchet`, `ledger`) and `specmap-ratchet.json` /
+`terraform/registry/` first; add a disposition, not a spec move.
+
+**Step 4b — relocate.** `git mv crates/{conform-core,conform-frontend-rust,
+env-audit}` → `packages/org.vibevm/rust-ai-native/v0.2.0/crates/…`; create
+`conform-cli` there; write the package's root `Cargo.toml` (`[workspace]` +
+`[workspace.package]` mirroring the fields the crates inherit + `[workspace.dependencies]`
+for their third-party deps: anyhow, serde, serde_json, sha2, toml, walkdir,
+syn, quote, proc-macro2, clap, tempfile). Rewire the vibevm root `Cargo.toml`:
+remove the 3 from `members`/`default-members`, add `exclude =
+["packages","vibedeps"]`, repoint the 3 `[workspace.dependencies]` to
+`packages/org.vibevm/rust-ai-native/v0.2.0/crates/<c>` (consumers use
+`.workspace = true`, so only these lines change), add `conform-cli`. `xtask`:
+its `conform.rs` becomes a thin shim over `conform_cli`; `health.rs` keeps using
+`conform_core` (now path-dep'd). Then `vibe install` re-materialises (the package
+now ships code under its `crates/`), `self-check.sh` + `specmap --check` green,
+commit.
+
+**Consumers needing the repoint** (grepped): `env-audit` is used by `vibe-publish`
++ `vibe-cli`; `conform-core`/`conform-frontend-rust` only by `xtask` (+ each
+other). `specmark` is used by **10 product crates + specmap-core** — but specmark
+STAYS, so those are untouched this phase.
+
+**Why conform-first (owner decision):** moving specmap/specmark is materially
+harder — (1) **`specmap-core → vibe-wire`** is the one edge out of the discipline
+set; relocating specmap-core needs that severed first (move the generated
+`specmap` JTD types out of `vibe-wire`). (2) `specmark` is dogfooded by 10 crates.
+(3) **`PROP-014` is split-implemented** (specmark moves, specmap-core stays) so
+its spec can't cleanly co-move. conform implements ONLY ENGINE-CONFORM and has
+zero product-crate deps after de-tag, so it lifts cleanly.
+
+## Remaining phases (Ф5–Ф7)
+
+- **Ф5 — clean the spec tails:** `spec/discipline/README.md` (the mechanism→crate
+  table now names a moved `crates/conform-core`), `spec/discipline/ENGINE-CONFORM-v0.1.md`
+  (still vibevm-hosted by decision, but its crate refs change),
+  `spec/terraforms/DISCIPLINE-SWEEP-v0.1.md` (the Tier-0/1 operating manual),
+  PROP-013, and package cards/guides `checker:` fields. Honour TERRAFORM-PLAN-v0.3
+  §30's keep-list (`conform-baseline.json` + vibevm's own modules stay
+  vibevm-specific).
+- **Ф6 — TypeScript:** structural only — its prompts already moved under `spec/`
+  in Ф2; scaffold a code-root; checkers stay `specified` (no TS tool exists in
+  vibevm to move; verified empirically this session — zero `package.json`/
+  `tsconfig`/eslint config/`.ts`, only markdown). Document the future
+  `conform-frontend-typescript` atop the language-neutral `conform-core`.
+- **Ф7 — floor green, commits, checkpoint; mirror on the owner's explicit word.**
 
 ## Non-obvious findings (this session)
 
-- **vibe treats a package version as immutable content — so editing a local
-  registry in place is invisible to `vibe install`.** Both `vibe install` and
-  `vibe update` short-circuit on a "fresh lock" (the dependency graph is
-  unchanged), and PROP-011 §2.3 skips re-copying a *present* slot — neither
-  re-hashes the local source. Forcing a fresh materialisation before the §2.6
-  fix meant **removing the slot** (`rm -rf vibedeps/<slot>`) so it was absent.
-  This is now fixed for the in-workspace case.
-- **The fix's path logic is the fragile part — and it works on real Windows
-  paths** (e2e-verified): `workspace.root` is canonicalised + `\\?\`-stripped by
-  `Workspace::load`; the `file://` URL is decoded (drop the leading `/` before a
-  `DRIVE:`) and compared component-wise, **case-insensitively on Windows** (the
-  drive-letter case need not match). A `git+file://` URL does not match the
-  `file://` prefix (it is a content-addressed git source).
-- **A test breakage was the best design signal.** "All `file://` mutable" (the
-  literal first cut) compiled and passed unit tests, but broke two *deliberate*
-  §2.2/§2.3 fast-path CLI tests — they use a local `file://` fixture registry,
-  and the broad rule disabled the optimisation for ALL local registries,
-  including static fixtures/mirrors that are legitimately immutable. That
-  breakage drove the in-workspace refinement (which the owner chose via a
-  structured question).
-- **`vibe install <single-pkgref>` does a SCOPED install** — it resolves only
-  that pkgref's subtree and **prunes other `vibedeps/` slots**. Use a bare
-  `vibe install` (no args) to re-materialise every `[requires].packages` entry.
-- **The discipline's own gates caught my work.** Adding the §2.6 helper pushed
-  `freshness.rs` (653) and `plan.rs` (603) over the 600-line budget → split the
-  helper into its own cell `freshness/source.rs` and trimmed `plan.rs` (599).
-  The new pub seam added a specmap unit → regenerated (`cargo xtask specmap`).
+- **The discipline's traceability couples spec-location + code-location + tags.**
+  Moving discipline CODE out of vibevm's `crates/*` scan orphans the mechanism
+  SPECS it implements in specmap; moving the SPECS out triggers dead-`spec://`-ref
+  cascades (`vibe check`). This coupling is why Ф4 is conform-first and why the
+  recommendation is to keep ENGINE-CONFORM in place + disposition the orphan, not
+  move it (28-file blast radius).
+- **The Cargo nested-workspace topology works on Windows** (spike): root
+  `exclude = ["packages","vibedeps"]` + external-path-dep into a nested
+  `[workspace]` builds clean. No `\\?\` / drive-case issue surfaced.
+- **conform was nailed to the repo it compiled in** — `store::workspace_sources`
+  hardcoded `crates/*/{src,tests}+xtask` and ALL policy was `const` in
+  `xtask/src/conform.rs`. Now config-driven; an external project writes its own
+  `conform.toml`. The gate stayed at 0 findings because vibevm's `conform.toml`
+  replicates the old constants exactly.
+- **The specmark tags on the conform crates are inert** (Agent C confirmed +
+  verified: `scope!` expands to nothing, `#[spec]` injects a rustdoc line and
+  emits the item unchanged) — stripping them is a no-op for behaviour, only
+  dropping the build edge + the specmap edge.
+- **specmap "unbumped-hash" tripwire is warn-only** and offers two dispositions
+  on a req-section content change: bump `r`, or mark the commit body
+  `spec-editorial: <anchor>`. Used `spec-editorial:` in Ф1 (the gating-PROP edits
+  are forward-pointers preserving r1).
 - **Machine quirks (unchanged):** edit via Edit/Write, never PS `Set-Content`
   (UTF-8 corruption); `git commit` via `-F - <<'MSG'` heredoc; `self-check.sh`
-  through Git Bash. Recover an overwritten file from `git show HEAD:<path>`.
+  through Git Bash; don't `2>&1`-redirect native cargo in PowerShell (false
+  NativeCommandError — stderr is captured already).
 
-## Repository map
+## Repository map (deltas this session in **bold**)
 
 ```
 vibevm/                      Rust workspace; binary = `vibe`; tooling = cargo xtask
-├─ CLAUDE.md / AGENTS.md / GEMINI.md   the four rules + boot directives (kept identical)
-├─ MEMORY.md → spec/boot/90-user.md    user-owned boot snippet
-├─ VIBEVM-SPEC.md            owner-frozen spec (do not edit without the owner)
+├─ CLAUDE.md / AGENTS.md / GEMINI.md   the four rules + boot directives (identical)
+├─ VIBEVM-SPEC.md            owner-frozen spec — **§4.2/§7.2-7.4/§12/§13.1 amended (PROP-024, sanctioned)**
+├─ **conform.toml**          NEW — vibevm's conform policy (was consts in xtask/conform.rs)
+├─ conform-baseline.json     the conform ratchet baseline (empty / clean)
 ├─ spec/
-│   ├─ boot/                 00-core, 90-user (owned); INDEX.md (generated by `vibe`)
-│   ├─ WAL.md                CANONICAL living state (this session's 3 sections at top)
-│   ├─ common/               PROP-000.. (cross-cutting: registry, mirrors, modes…)
-│   ├─ modules/              per-subsystem PROPs (vibe-workspace/PROP-011 §2.6 NEW)
-│   ├─ discipline/           the 4 retained mechanism specs vibevm implements
-│   └─ research/             DISCOVERY_PROMPT.md (the research-mode user prompt)
-├─ packages/org.vibevm/      the in-repo authoring registry (`--registry packages`)
-│   ├─ discipline-core/v0.2.0/      L1: manifesto, 01-format, 02-scaffolds, 03-raid,
-│   │      appendix/, boot/10, legacy-projections/ (NO cards/ after the migration)
-│   ├─ rust-ai-native/v0.2.0/       L2+L3: rust/GUIDE + tools/vibe-tcg, cards/ (9+INDEX),
-│   │      boot/20  (cards migrated here this session)
-│   └─ typescript-ai-native/v0.2.0/ NEW L2+L3: typescript/GUIDE + tools/vibe-tcg-ts(stub),
-│          cards/ (9+INDEX), boot/20
-├─ vibedeps/                 the materialised install (git-TRACKED): flow-discipline-core,
-│      stack-rust-ai-native, stack-typescript-ai-native
+│   ├─ boot/                 00-core, 90-user (owned); INDEX.md (generated)
+│   ├─ WAL.md                CANONICAL living state (this session's section at top)
+│   ├─ common/               PROP-000.. + **PROP-024-code-bearing-packages.md (NEW)**
+│   ├─ modules/              per-subsystem PROPs (002/009/020/022 got PROP-024 pointers)
+│   ├─ discipline/           ENGINE-CONFORM, PROP-014, BROWNFIELD, LEDGER, README (Ф5 tails)
+│   └─ terraforms/           DISCIPLINE-SWEEP, TERRAFORM-PLAN-v0.3 (the move boundary), …
+├─ packages/org.vibevm/      in-repo authoring registry (`--registry packages`)
+│   ├─ discipline-core/v0.2.0/      **spec/** {00-MANIFESTO,01-format,02-scaffolds,03-raid,appendix,boot/10,legacy-projections} + vibe.toml + README
+│   ├─ rust-ai-native/v0.2.0/       **spec/** {boot/20,cards,rust/GUIDE,rust/tools/vibe-tcg} + vibe.toml  ← Ф4 ADDS crates/ + Cargo.toml here
+│   └─ typescript-ai-native/v0.2.0/ **spec/** {boot/20,cards,typescript/GUIDE,…} + vibe.toml
+├─ vibedeps/                 materialised install (git-TRACKED), now **spec/**-layout slots
 ├─ crates/
-│   ├─ vibe-core/            manifest/lockfile types (LockedPackage, SourceKind, Materialization)
-│   ├─ vibe-workspace/       Workspace; freshness.rs (§2.2/§2.6) + freshness/source.rs (NEW),
-│   │      install.rs (materialise + the §2.3 skip, ResolvedDep.source_mutable NEW), vibedeps.rs
-│   ├─ vibe-install/         plan.rs (builds ResolvedDep), apply.rs
-│   ├─ vibe-registry/        git backends, CachedPackage (source_uri)
-│   ├─ vibe-cli/             commands/{install,update,reinstall,…}; cli_pkg_cycle tests
-│   ├─ conform-core/         the discipline's Class-F/G + length + unwrap gate (cites cards)
-│   └─ … (vibe-resolver, vibe-mcp, specmap-core, specmark, …)
-├─ xtask/                    cargo xtask {conform, specmap, mirror, fast-loop, …}
-├─ tools/self-check.sh       the floor gate (5 steps incl. conform)
-├─ mirrors.toml              the source-mirror targets (GitVerse + GitHub)
-├─ vibe.toml / vibe.lock     project manifest (requires the 3 discipline packages) + lockfile
-├─ vibevm.discipline.lock    the pilot reproducibility anchor (Rust pilot pins)
-└─ specmap.json              traceability index (598 units / 609 edges)
+│   ├─ conform-core/         **config-driven; config.rs NEW; Config/ExemptEntry** — Ф4 MOVES to package
+│   ├─ conform-frontend-rust/  Rust syn frontend — Ф4 MOVES to package
+│   ├─ env-audit/            designated unsafe audit crate — Ф4 MOVES to package
+│   ├─ specmark / specmark-grammar   traceability macros — STAY (deferred follow-up)
+│   ├─ specmap-core/         traceability engine (→ vibe-wire edge) — STAYS (deferred)
+│   └─ vibe-* (core/cli/install/registry/resolver/workspace/mcp/check/publish/index/wire/graph/llm)
+├─ xtask/                    conform.rs (**config-driven; driver → conform-cli in Ф4**), health.rs (**config-driven**), specmap, mirror, …
+├─ tools/self-check.sh       the 5-step floor gate
+├─ mirrors.toml              source-mirror targets (GitVerse + GitHub)
+└─ specmap.json              traceability index (614 units / 610 edges)
 ```
 
 ## Recent commit chain (newest first)
 
 ```
-bdde0f2 docs(wal): checkpoint — in-workspace file:// sources are mutable
-ccc5b7a chore(specmap): regen for the §2.6 in-workspace-source helper
-97dd167 fix(install): re-resolve in-workspace file:// sources on every install
-bb666d4 docs(wal): checkpoint — full Rust↔TS card symmetry
-1bddcfc build(deps): re-materialise vibedeps + relock for the card migration
-688b349 refactor(conform): cite the cards in the rust-ai-native namespace
-f6ab191 refactor(discipline): move the cards into the language stacks
-9445ef0 docs(wal): checkpoint — AI-Native TypeScript stack at parity
-221f3bb build(deps): install the TypeScript stack into the project
-2632c52 feat(discipline): AI-Native TypeScript stack — guide, nine cards, tcg stub
-fc1915b docs(discipline): add TypeScript to the package map (§8)
-5f9688f docs(wal): checkpoint — general-install in-place + conform gate green  (mirror tip)
-df737a1 docs(continue): cold-resume — incremental in-place + discipline sweep  (prior)
-a68de7c chore(specmap): regen for the cell splits  (prior)
+cb05d16 chore(specmap): regen for the conform Config seam            (Ф3)
+424ee17 refactor(conform): config-driven policy via conform.toml     (Ф3)
+8dc6e29 build(deps): re-materialise vibedeps for the spec/ layout    (Ф2)
+20190df refactor(discipline): move package content under spec/       (Ф2)
+5362b4f chore(specmap): regen for PROP-024 + reconciliations         (Ф1)
+b6f8132 docs(spec): code-bearing packages — PROP-024 + frozen amend  (Ф1)
+3d9cb28 docs(continue): cold-resume — TS stack, card migration, §2.6 (prior session)
+bdde0f2 docs(wal): checkpoint — in-workspace file:// sources mutable  (prior)
 ```
 
 ## Quick-start
 
 ```sh
-bash tools/self-check.sh                 # the 5-step floor gate; check $?, currently green
-cargo xtask specmap --check              # clean (598 units / 609 edges)
-cargo test -p vibe-workspace             # freshness + install (incl. the §2.6 tests)
-cargo run -p vibe-cli -- install --registry packages --assume-yes   # bilingual install; §2.6 fires
-cargo xtask mirror --check               # confirm GitVerse + GitHub in sync (currently @ 5f9688f)
+bash tools/self-check.sh                 # the 5-step floor gate; currently exit 0
+cargo xtask specmap --check              # clean (614 units / 610 edges)
+cargo xtask conform check                # 0 findings, 16 gated / 4 exempt (config-driven)
+cargo run -q -p vibe-cli -- check --path .   # vibe check 0/0/0
+cargo run -p vibe-cli -- install --registry packages --assume-yes   # re-materialise vibedeps
+cargo xtask mirror --check               # confirm GitVerse + GitHub in sync (held; do not mirror without owner word)
 ```
 
 ## Next-steps recipe (whoever picks up)
 
-1. **Owner's call: mirror** the 11 commits (`cargo xtask mirror`) — the only
-   pending step; held for explicit approval.
-2. **TS pilot (future):** when VibeVM grows TS code (UI/scripting), implement
-   the card checkers (`@typescript-eslint` rules, `tsd`/`expectTypeOf`,
-   Twoslash, the `fast-check` harness) on it and validate the
-   generation→modification transfer. That is L4 — deliberately deferred (no TS
-   code yet).
-3. **Optional symmetry follow-up:** none outstanding — the card migration
-   already achieved full Rust↔TS symmetry; the core is language-neutral.
-4. **`vibe-tcg-ts`:** bring the conscious stub to Rust-brief parity when the tcg
-   line resumes (owner deferred it this session).
+1. **Resume Ф4** at "Step 4a" above: strip the 13 `specmark::scope!` + 1
+   `#[specmark::spec]` from `conform-core`/`conform-frontend-rust`/`env-audit`,
+   drop the specmark dep, build + regen specmap, **resolve the ENGINE-CONFORM
+   orphan via a ratchet disposition (do NOT move the spec)**. Commit Ф4a green.
+2. **Step 4b:** `git mv` the 3 crates + create `conform-cli` (extract the driver
+   from `xtask/src/conform.rs`) + package `Cargo.toml` + rewire the vibevm root
+   `Cargo.toml` (members/exclude/deps) + xtask shim. `vibe install`,
+   self-check + specmap green, commit.
+3. **Ф5/Ф6/Ф7** per "Remaining phases" above.
+4. **Mirror** only on the owner's explicit word (`cargo xtask mirror`).
 
 The WAL supersedes this snapshot wherever they diverge. Session-resume phrase:
 `восстанови сессию`. The candidate next work above is not a standing mandate.
