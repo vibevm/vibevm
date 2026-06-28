@@ -15,6 +15,7 @@ use specmark_grammar::{EdgeSpec, SpecArgs, UriArgs};
 use syn::spanned::Spanned;
 use walkdir::WalkDir;
 
+use crate::config::Config;
 use crate::fwd;
 
 fn verb_to_wire(v: specmark_grammar::Verb) -> EdgeVerb {
@@ -282,26 +283,15 @@ pub(crate) fn module_path(crate_ident: &str, rel_in_crate: &Path) -> Option<Stri
     Some(parts.join("::"))
 }
 
-/// Walk every workspace source tree: `crates/*/{src,tests}` and
-/// `xtask/src`. Generated code is excluded (PROP-014 §2.3: the
-/// generator *input* is the taggable unit).
-pub fn scan_workspace(root: &Path) -> (Vec<CodeItem>, Vec<Edge>, Vec<Warning>) {
+/// Walk every code root named by [`Config::scan_dirs`] (`crates/*/{src,tests}`
+/// and `xtask/src` by default). Generated code is excluded (PROP-014 §2.3:
+/// the generator *input* is the taggable unit).
+pub fn scan_workspace(root: &Path, cfg: &Config) -> (Vec<CodeItem>, Vec<Edge>, Vec<Warning>) {
     let mut items = Vec::new();
     let mut edges = Vec::new();
     let mut warnings = Vec::new();
 
-    let mut crate_dirs: Vec<std::path::PathBuf> = Vec::new();
-    if let Ok(rd) = std::fs::read_dir(root.join("crates")) {
-        for entry in rd.filter_map(Result::ok) {
-            if entry.path().is_dir() {
-                crate_dirs.push(entry.path());
-            }
-        }
-    }
-    crate_dirs.push(root.join("xtask"));
-    crate_dirs.sort();
-
-    for crate_dir in crate_dirs {
+    for crate_dir in cfg.scan_dirs(root) {
         let crate_name = crate_dir
             .file_name()
             .map(|n| n.to_string_lossy().to_string())

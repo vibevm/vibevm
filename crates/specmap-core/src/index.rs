@@ -18,6 +18,7 @@ use std::path::{Path, PathBuf};
 use crate::generated::specmap::{Specmap, Suspect, Warning};
 use anyhow::{Context, Result};
 
+use crate::config::Config;
 use crate::{mdspec, rscan};
 
 /// Repo-relative location of the committed index.
@@ -51,9 +52,9 @@ fn verb_key(e: &crate::generated::specmap::Edge) -> u8 {
 
 /// Build the index for the tree under `root`. Pure function of the
 /// tree: same tree → same value.
-pub fn build(root: &Path) -> Specmap {
-    let (mut spec_units, mut md_warnings) = mdspec::scan_spec_tree(root);
-    let (mut code_items, mut edges, mut rs_warnings) = rscan::scan_workspace(root);
+pub fn build(root: &Path, cfg: &Config) -> Specmap {
+    let (mut spec_units, mut md_warnings) = mdspec::scan_spec_tree(root, cfg);
+    let (mut code_items, mut edges, mut rs_warnings) = rscan::scan_workspace(root, cfg);
 
     let mut warnings = Vec::new();
     warnings.append(&mut md_warnings);
@@ -273,8 +274,8 @@ fn load_committed(root: &Path) -> Option<Specmap> {
 /// Regenerate and write `specmap.json`. Returns (path, summary).
 /// Emits the drift report against the previously-committed index to
 /// stderr before overwriting.
-pub fn write(root: &Path) -> Result<(PathBuf, Summary)> {
-    let map = build(root);
+pub fn write(root: &Path, cfg: &Config) -> Result<(PathBuf, Summary)> {
+    let map = build(root, cfg);
     let summary = Summary::of(&map);
     if let Some(old) = load_committed(root) {
         for line in classify_drift(&old, &map) {
@@ -291,8 +292,8 @@ pub fn write(root: &Path) -> Result<(PathBuf, Summary)> {
 /// On drift the error carries the classified report, so the drill
 /// signals (revision bumps → suspects; unbumped hashes) are visible at
 /// the gate itself.
-pub fn check(root: &Path) -> Result<std::result::Result<Summary, String>> {
-    let map = build(root);
+pub fn check(root: &Path, cfg: &Config) -> Result<std::result::Result<Summary, String>> {
+    let map = build(root, cfg);
     let summary = Summary::of(&map);
     let fresh = to_canonical_bytes(&map)?;
     let path = index_path(root);
@@ -366,8 +367,8 @@ mod tests {
     #[test]
     fn index_is_deterministic_over_the_real_tree() {
         let root = repo_root();
-        let a = to_canonical_bytes(&build(&root)).unwrap();
-        let b = to_canonical_bytes(&build(&root)).unwrap();
+        let a = to_canonical_bytes(&build(&root, &Config::default())).unwrap();
+        let b = to_canonical_bytes(&build(&root, &Config::default())).unwrap();
         assert_eq!(a, b);
         assert!(a.ends_with('\n'));
     }
@@ -375,7 +376,7 @@ mod tests {
     #[test]
     fn real_tree_has_a_node_inventory() {
         let root = repo_root();
-        let map = build(&root);
+        let map = build(&root, &Config::default());
         assert!(
             map.specUnits.len() > 100,
             "expected a substantial unit inventory, got {}",
@@ -427,7 +428,7 @@ pub fn dangling() {}
         )
         .unwrap();
 
-        let map = build(root);
+        let map = build(root, &Config::default());
         assert_eq!(map.specUnits.len(), 1);
         assert_eq!(map.specUnits[0].uri, "spec://vibevm/T#req-t");
         assert_eq!(map.edges.len(), 4);
@@ -458,7 +459,7 @@ pub fn dangling() {}
             "## C {#req-t}\n`req r1`\n\nIt MUST hold.\n",
         )
         .unwrap();
-        let old = build(root);
+        let old = build(root, &Config::default());
 
         // (b) editorial change, no bump → unbumped-hash.
         std::fs::write(
@@ -466,7 +467,7 @@ pub fn dangling() {}
             "## C {#req-t}\n`req r1`\n\nIt MUST always hold.\n",
         )
         .unwrap();
-        let edited = build(root);
+        let edited = build(root, &Config::default());
         let report = classify_drift(&old, &edited);
         assert!(
             report.iter().any(|l| l.starts_with("unbumped-hash:")),
@@ -479,7 +480,7 @@ pub fn dangling() {}
             "## C {#req-t}\n`req r2`\n\nIt MUST hold, monotonically.\n",
         )
         .unwrap();
-        let bumped = build(root);
+        let bumped = build(root, &Config::default());
         let report = classify_drift(&old, &bumped);
         assert!(
             report.iter().any(|l| l.starts_with("revision bump:")),

@@ -4,9 +4,10 @@
 //!
 //! v0 semantics:
 //!
-//! - `specmap-ratchet.json` at the workspace root lists the crates
-//!   **exempt** from the orphan gate; a crate not listed is gated.
-//!   Absent file = gate off everywhere (pre-flip behaviour).
+//! - `specmap.toml`'s `exempt` list (see [`crate::config::Config`]) names
+//!   the crates **exempt** from the orphan gate; a crate not listed is
+//!   gated. An absent `specmap.toml` turns the gate off everywhere
+//!   (pre-config behaviour) — the driver skips the gate when no config loads.
 //! - An **orphan** is a `pub` top-level item (`fn` / `struct` / `enum`
 //!   / `trait` / `type`) in a gated crate with no own edge and no
 //!   `scope!`-inherited module edge. Impl methods and
@@ -25,50 +26,14 @@
 specmark::scope!("spec://vibevm/discipline/PROP-014#index");
 
 use std::collections::HashSet;
-use std::path::{Path, PathBuf};
+use std::path::Path;
 
-use crate::generated::specmap::Specmap;
-use anyhow::{Context, Result};
-use serde::Deserialize;
 use syn::spanned::Spanned;
 use walkdir::WalkDir;
 
+use crate::config::Config;
 use crate::fwd;
-
-/// `specmap-ratchet.json`, deserialised.
-#[derive(Debug, Deserialize)]
-pub struct Ratchet {
-    pub schema: u32,
-    /// Crate directory names exempt from the orphan gate.
-    #[serde(default)]
-    pub exempt: Vec<String>,
-    /// Orphans allowed to stand, each carrying its debt id.
-    #[serde(default)]
-    pub dispositioned: Vec<Disposition>,
-}
-
-#[derive(Debug, Deserialize)]
-pub struct Disposition {
-    pub symbol: String,
-    pub debt: String,
-}
-
-pub fn ratchet_path(root: &Path) -> PathBuf {
-    root.join("specmap-ratchet.json")
-}
-
-/// Load the ratchet file; `None` when it does not exist (gate off).
-pub fn load(root: &Path) -> Result<Option<Ratchet>> {
-    let path = ratchet_path(root);
-    if !path.exists() {
-        return Ok(None);
-    }
-    let text =
-        std::fs::read_to_string(&path).with_context(|| format!("reading {}", path.display()))?;
-    let ratchet: Ratchet =
-        serde_json::from_str(&text).with_context(|| format!("parsing {}", path.display()))?;
-    Ok(Some(ratchet))
-}
+use crate::generated::specmap::Specmap;
 
 /// One untagged public item found by the gate.
 #[derive(Debug)]
@@ -78,33 +43,23 @@ pub struct Orphan {
     pub crate_name: String,
     pub file: String,
     pub line: u32,
-    /// `Some(debt-id)` when the ratchet file dispositions this symbol.
+    /// `Some(debt-id)` when the config dispositions this symbol.
     pub disposition: Option<String>,
 }
 
 /// Compute the orphan list for every gated (non-exempt) crate, checked
-/// against the already-built index `map`.
-pub fn orphans(root: &Path, map: &Specmap, ratchet: &Ratchet) -> Vec<Orphan> {
+/// against the already-built index `map`. Scans the same roots the index
+/// did ([`Config::scan_dirs`]); a crate in [`Config::exempt`] is skipped.
+pub fn orphans(root: &Path, map: &Specmap, cfg: &Config) -> Vec<Orphan> {
     let tagged: HashSet<&str> = map.edges.iter().map(|e| e.fromSymbol.as_str()).collect();
     let mut out = Vec::new();
 
-    let mut crate_dirs: Vec<PathBuf> = Vec::new();
-    if let Ok(rd) = std::fs::read_dir(root.join("crates")) {
-        for entry in rd.filter_map(Result::ok) {
-            if entry.path().is_dir() {
-                crate_dirs.push(entry.path());
-            }
-        }
-    }
-    crate_dirs.push(root.join("xtask"));
-    crate_dirs.sort();
-
-    for crate_dir in crate_dirs {
+    for crate_dir in cfg.scan_dirs(root) {
         let crate_name = crate_dir
             .file_name()
             .map(|n| n.to_string_lossy().to_string())
             .unwrap_or_default();
-        if ratchet.exempt.iter().any(|e| e == &crate_name) {
+        if cfg.exempt.iter().any(|e| e == &crate_name) {
             continue;
         }
         let crate_ident = crate_name.replace('-', "_");
@@ -146,7 +101,7 @@ pub fn orphans(root: &Path, map: &Specmap, ratchet: &Ratchet) -> Vec<Orphan> {
                 &crate_name,
                 &file,
                 &tagged,
-                ratchet,
+                cfg,
                 &mut out,
             );
         }
@@ -177,7 +132,7 @@ fn collect_orphans(
     crate_name: &str,
     file: &str,
     tagged: &HashSet<&str>,
-    ratchet: &Ratchet,
+    cfg: &Config,
     out: &mut Vec<Orphan>,
 ) {
     // A scope!-style edge on the module itself covers every item in it.
@@ -205,7 +160,7 @@ fn collect_orphans(
             syn::Item::Mod(m) if is_pub(&m.vis) && !is_cfg_test(&m.attrs) => {
                 if let Some((_, inner)) = &m.content {
                     let sub = format!("{module}::{}", m.ident);
-                    collect_orphans(inner, &sub, crate_name, file, tagged, ratchet, out);
+                    collect_orphans(inner, &sub, crate_name, file, tagged, cfg, out);
                 }
                 None
             }
@@ -217,7 +172,7 @@ fn collect_orphans(
         if tagged.contains(symbol.as_str()) {
             continue;
         }
-        let disposition = ratchet
+        let disposition = cfg
             .dispositioned
             .iter()
             .find(|d| d.symbol == symbol)
@@ -236,16 +191,16 @@ fn collect_orphans(
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::config::Disposition;
 
-    fn ratchet_with(exempt: &[&str]) -> Ratchet {
-        Ratchet {
-            schema: 1,
+    fn cfg_with(exempt: &[&str]) -> Config {
+        Config {
             exempt: exempt.iter().map(|s| s.to_string()).collect(),
-            dispositioned: Vec::new(),
+            ..Config::default()
         }
     }
 
-    fn scan_str(src: &str, tagged: &[&str], ratchet: &Ratchet) -> Vec<Orphan> {
+    fn scan_str(src: &str, tagged: &[&str], cfg: &Config) -> Vec<Orphan> {
         let ast = syn::parse_file(src).unwrap();
         let tagged: HashSet<&str> = tagged.iter().copied().collect();
         let mut out = Vec::new();
@@ -255,7 +210,7 @@ mod tests {
             "demo-crate",
             "crates/demo/src/lib.rs",
             &tagged,
-            ratchet,
+            cfg,
             &mut out,
         );
         out
@@ -263,52 +218,52 @@ mod tests {
 
     #[test]
     fn untagged_pub_item_is_orphan() {
-        let r = ratchet_with(&[]);
-        let o = scan_str("pub fn naked() {}", &[], &r);
+        let cfg = cfg_with(&[]);
+        let o = scan_str("pub fn naked() {}", &[], &cfg);
         assert_eq!(o.len(), 1);
         assert_eq!(o[0].symbol, "demo::naked");
     }
 
     #[test]
     fn tagged_item_is_not_orphan() {
-        let r = ratchet_with(&[]);
-        let o = scan_str("pub fn covered() {}", &["demo::covered"], &r);
+        let cfg = cfg_with(&[]);
+        let o = scan_str("pub fn covered() {}", &["demo::covered"], &cfg);
         assert!(o.is_empty());
     }
 
     #[test]
     fn private_and_pub_crate_items_are_ignored() {
-        let r = ratchet_with(&[]);
-        let o = scan_str("fn private() {}\npub(crate) fn internal() {}", &[], &r);
+        let cfg = cfg_with(&[]);
+        let o = scan_str("fn private() {}\npub(crate) fn internal() {}", &[], &cfg);
         assert!(o.is_empty());
     }
 
     #[test]
     fn scope_edge_on_module_covers_items() {
-        let r = ratchet_with(&[]);
-        let o = scan_str("pub fn helper() {}", &["demo"], &r);
+        let cfg = cfg_with(&[]);
+        let o = scan_str("pub fn helper() {}", &["demo"], &cfg);
         assert!(o.is_empty());
     }
 
     #[test]
     fn cfg_test_mod_is_skipped() {
-        let r = ratchet_with(&[]);
+        let cfg = cfg_with(&[]);
         let o = scan_str(
             "#[cfg(test)]\npub mod tests { pub fn helper() {} }",
             &[],
-            &r,
+            &cfg,
         );
         assert!(o.is_empty());
     }
 
     #[test]
     fn disposition_is_carried() {
-        let mut r = ratchet_with(&[]);
-        r.dispositioned.push(Disposition {
+        let mut cfg = cfg_with(&[]);
+        cfg.dispositioned.push(Disposition {
             symbol: "demo::naked".to_string(),
             debt: "DBT-9999".to_string(),
         });
-        let o = scan_str("pub fn naked() {}", &[], &r);
+        let o = scan_str("pub fn naked() {}", &[], &cfg);
         assert_eq!(o.len(), 1);
         assert_eq!(o[0].disposition.as_deref(), Some("DBT-9999"));
     }

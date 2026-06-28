@@ -9,6 +9,13 @@
     },
     {
       "crate_name": "specmap-core",
+      "file": "crates/specmap-core/src/config.rs",
+      "item_kind": "mod",
+      "line": 12,
+      "symbol": "specmap_core::config"
+    },
+    {
+      "crate_name": "specmap-core",
       "file": "crates/specmap-core/src/explain.rs",
       "item_kind": "mod",
       "line": 7,
@@ -39,7 +46,7 @@
       "crate_name": "specmap-core",
       "file": "crates/specmap-core/src/ratchet.rs",
       "item_kind": "mod",
-      "line": 25,
+      "line": 26,
       "symbol": "specmap_core::ratchet"
     },
     {
@@ -4092,6 +4099,14 @@
       "verb": "implements"
     },
     {
+      "file": "crates/specmap-core/src/config.rs",
+      "from_symbol": "specmap_core::config",
+      "line": 12,
+      "provenance": "authored",
+      "uri": "spec://vibevm/discipline/PROP-014#index",
+      "verb": "implements"
+    },
+    {
       "file": "crates/specmap-core/src/explain.rs",
       "from_symbol": "specmap_core::explain",
       "line": 7,
@@ -4126,7 +4141,7 @@
     {
       "file": "crates/specmap-core/src/ratchet.rs",
       "from_symbol": "specmap_core::ratchet",
-      "line": 25,
+      "line": 26,
       "provenance": "authored",
       "uri": "spec://vibevm/discipline/PROP-014#index",
       "verb": "implements"

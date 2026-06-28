@@ -16,6 +16,7 @@ use crate::generated::specmap::{SpecUnit, SpecUnitKind, SpecUnitStatus, Warning}
 use specmark_grammar::is_valid_anchor;
 use walkdir::WalkDir;
 
+use crate::config::Config;
 use crate::{SPEC_PACKAGE, content_hash, fwd};
 
 /// A heading line: 1–6 `#`, a space, text, trailing `{#anchor}`.
@@ -282,49 +283,43 @@ pub fn parse_units(file: &str, text: &str) -> (Vec<SpecUnit>, Vec<Warning>) {
     (units, warnings)
 }
 
-/// Root-level spec documents scanned in addition to `spec/**` — the
-/// owner-frozen implementation specification lives at the repo root
-/// (DBT-0019: until it is scanned, half the workspace has no taggable
-/// spec home). Listed explicitly: the repo root is full of *non-spec*
-/// markdown (README, CONTINUE, AUDIT) that must never enter the unit
-/// inventory.
-const ROOT_SPEC_DOCS: &[&str] = &["VIBEVM-SPEC.md"];
-
-/// Walk `spec/**/*.md` under the repo root, then the explicit
-/// [`ROOT_SPEC_DOCS`]. Deterministic order.
-pub fn scan_spec_tree(root: &Path) -> (Vec<SpecUnit>, Vec<Warning>) {
+/// Walk each `<spec_root>/**/*.md` under the repo root, then the explicit
+/// [`Config::root_spec_docs`]. Deterministic order.
+pub fn scan_spec_tree(root: &Path, cfg: &Config) -> (Vec<SpecUnit>, Vec<Warning>) {
     let mut units = Vec::new();
     let mut warnings = Vec::new();
-    let spec_root = root.join("spec");
-    for entry in WalkDir::new(&spec_root)
-        .sort_by_file_name()
-        .into_iter()
-        .filter_map(Result::ok)
-    {
-        if !entry.file_type().is_file() {
-            continue;
-        }
-        let path = entry.path();
-        if path.extension().and_then(|e| e.to_str()) != Some("md") {
-            continue;
-        }
-        let rel = path.strip_prefix(root).unwrap_or(path);
-        let file_rel = fwd(rel);
-        match std::fs::read_to_string(path) {
-            Ok(text) => {
-                let (mut u, mut w) = parse_units(&file_rel, &text);
-                units.append(&mut u);
-                warnings.append(&mut w);
+    for spec_root_rel in &cfg.spec_roots {
+        let spec_root = root.join(spec_root_rel);
+        for entry in WalkDir::new(&spec_root)
+            .sort_by_file_name()
+            .into_iter()
+            .filter_map(Result::ok)
+        {
+            if !entry.file_type().is_file() {
+                continue;
             }
-            Err(e) => warnings.push(Warning {
-                code: "unreadable-file".to_string(),
-                message: format!("could not read: {e}"),
-                file: file_rel,
-                line: 0,
-            }),
+            let path = entry.path();
+            if path.extension().and_then(|e| e.to_str()) != Some("md") {
+                continue;
+            }
+            let rel = path.strip_prefix(root).unwrap_or(path);
+            let file_rel = fwd(rel);
+            match std::fs::read_to_string(path) {
+                Ok(text) => {
+                    let (mut u, mut w) = parse_units(&file_rel, &text);
+                    units.append(&mut u);
+                    warnings.append(&mut w);
+                }
+                Err(e) => warnings.push(Warning {
+                    code: "unreadable-file".to_string(),
+                    message: format!("could not read: {e}"),
+                    file: file_rel,
+                    line: 0,
+                }),
+            }
         }
     }
-    for name in ROOT_SPEC_DOCS {
+    for name in &cfg.root_spec_docs {
         let path = root.join(name);
         if !path.exists() {
             continue;
@@ -338,7 +333,7 @@ pub fn scan_spec_tree(root: &Path) -> (Vec<SpecUnit>, Vec<Warning>) {
             Err(e) => warnings.push(Warning {
                 code: "unreadable-file".to_string(),
                 message: format!("could not read: {e}"),
-                file: (*name).to_string(),
+                file: name.clone(),
                 line: 0,
             }),
         }
@@ -460,7 +455,7 @@ mod tests {
         )
         .unwrap();
         std::fs::write(dir.path().join("README.md"), "# Readme {#root}\n").unwrap();
-        let (units, warnings) = scan_spec_tree(dir.path());
+        let (units, warnings) = scan_spec_tree(dir.path(), &Config::default());
         assert!(warnings.is_empty(), "{}", fmt_warnings(&warnings));
         let uris: Vec<&str> = units.iter().map(|u| u.uri.as_str()).collect();
         assert!(uris.contains(&"spec://vibevm/X#in-tree"));

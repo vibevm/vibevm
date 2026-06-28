@@ -10,7 +10,8 @@ pub(crate) fn run_trace_explain(target: &str, json: bool, prose: bool) -> Result
     let root = repo_root()?;
     // Build fresh in-memory: explain answers for the tree as it is,
     // never for a stale committed artefact.
-    let map = specmap_core::index::build(&root);
+    let cfg = specmap_core::config::Config::load(&root)?.unwrap_or_default();
+    let map = specmap_core::index::build(&root, &cfg);
     if prose {
         let render = specmap_core::ledger::prose_explain(&root, &map, target)?;
         print!("{}", render.text);

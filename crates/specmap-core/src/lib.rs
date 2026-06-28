@@ -28,6 +28,7 @@ specmark::scope!("spec://vibevm/discipline/PROP-014#index");
 #[allow(non_snake_case)]
 pub mod generated;
 
+pub mod config;
 pub mod explain;
 pub mod index;
 pub mod ledger;
