@@ -238,6 +238,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "glob"
+version = "0.3.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0cc23270f6e1808e30a928bdc84dea0b9b4136a8bc82338574f23baf47bbd280"
+
+[[package]]
 name = "hashbrown"
 version = "0.17.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -409,6 +415,53 @@ dependencies = [
  "cfg-if",
  "cpufeatures",
  "digest",
+]
+
+[[package]]
+name = "specmap-cli"
+version = "0.2.0"
+dependencies = [
+ "anyhow",
+ "clap",
+ "specmap-core",
+]
+
+[[package]]
+name = "specmap-core"
+version = "0.2.0"
+dependencies = [
+ "anyhow",
+ "glob",
+ "proc-macro2",
+ "quote",
+ "serde",
+ "serde_json",
+ "sha2",
+ "specmark",
+ "specmark-grammar",
+ "syn",
+ "tempfile",
+ "toml",
+ "walkdir",
+]
+
+[[package]]
+name = "specmark"
+version = "0.2.0"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "specmark-grammar",
+ "syn",
+]
+
+[[package]]
+name = "specmark-grammar"
+version = "0.2.0"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
 ]
 
 [[package]]
