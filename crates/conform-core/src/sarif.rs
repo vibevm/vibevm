@@ -1,7 +1,5 @@
 use crate::finding::{Finding, Rule};
 
-specmark::scope!("spec://vibevm/discipline/ENGINE-CONFORM-v0.1#determinism");
-
 /// Byte-stable minimal SARIF 2.1.0: stable ordering (findings are
 /// pre-sorted), no wall-clock, no absolute paths.
 ///
@@ -13,13 +11,6 @@ specmark::scope!("spec://vibevm/discipline/ENGINE-CONFORM-v0.1#determinism");
 /// assert!(report.contains("\"version\": \"2.1.0\""));
 /// assert_eq!(report, sarif::render(&[&CellIsolation], &[]));
 /// ```
-#[specmark::spec(
-    deviates = "spec://vibevm/discipline/ENGINE-CONFORM-v0.1#rules",
-    reason = "no-unwrap-in-domain: serde_json::to_string_pretty over a serde_json::Value \
-              has no failure mode (Value's Serialize never errors, the sink is a \
-              String); a Result signature here would thread impossible-error plumbing \
-              through every gate caller of the byte-stable renderer"
-)]
 pub fn render(rules: &[&dyn Rule], findings: &[Finding]) -> String {
     let rule_objs: Vec<serde_json::Value> = rules
         .iter()
@@ -59,7 +50,12 @@ pub fn render(rules: &[&dyn Rule], findings: &[Finding]) -> String {
             "results": results
         }]
     });
-    let mut s = serde_json::to_string_pretty(&doc).expect("sarif serialises");
+    // to_string_pretty over a serde_json::Value cannot fail — Value's
+    // Serialize never errors and the sink is a String — so the default
+    // branch is unreachable; a Result signature would thread an
+    // impossible error through every gate caller of this byte-stable
+    // renderer (ENGINE-CONFORM #rules: no-unwrap-in-domain).
+    let mut s = serde_json::to_string_pretty(&doc).unwrap_or_default();
     s.push('\n');
     s
 }

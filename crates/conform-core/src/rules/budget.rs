@@ -3,8 +3,6 @@
 //! within the line budget (file-length), and unwrap/expect stays out
 //! of domain logic (no-unwrap-in-domain).
 
-specmark::scope!("spec://vibevm/discipline/ENGINE-CONFORM-v0.1#rules");
-
 use crate::facts::{Fact, SourceFacts};
 use crate::finding::{Finding, Rule};
 

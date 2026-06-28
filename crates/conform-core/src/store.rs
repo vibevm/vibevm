@@ -5,8 +5,6 @@ use anyhow::{Context, Result};
 use crate::config::Config;
 use crate::facts::{Fact, Frontend, SourceFacts};
 
-specmark::scope!("spec://vibevm/discipline/ENGINE-CONFORM-v0.1#facts");
-
 /// What one extraction run did — the producer log the incremental
 /// acceptance test asserts on.
 ///

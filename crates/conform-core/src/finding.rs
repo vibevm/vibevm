@@ -2,8 +2,6 @@ use std::collections::BTreeMap;
 
 use crate::facts::SourceFacts;
 
-specmark::scope!("spec://vibevm/discipline/ENGINE-CONFORM-v0.1#rules");
-
 /// One finding with its A1 chain.
 ///
 /// ```

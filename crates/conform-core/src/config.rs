@@ -11,8 +11,6 @@ use std::path::Path;
 use anyhow::{Context, Result};
 use serde::Deserialize;
 
-specmark::scope!("spec://vibevm/discipline/ENGINE-CONFORM-v0.1#facts");
-
 /// The conform policy for one project: which source roots to scan, which
 /// crates the gates apply to, the sanctioned env-reading files, and the
 /// budgets. Loaded from a `conform.toml` at the project root; every

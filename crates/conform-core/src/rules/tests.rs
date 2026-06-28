@@ -1,5 +1,3 @@
-specmark::scope!("spec://vibevm/discipline/ENGINE-CONFORM-v0.1#rules");
-
 use super::*;
 use crate::Rule;
 use crate::rules;

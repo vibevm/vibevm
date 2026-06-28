@@ -10,8 +10,6 @@
 
 use crate::facts::{Fact, SourceFacts};
 
-specmark::scope!("spec://vibevm/discipline/ENGINE-CONFORM-v0.1#rules");
-
 mod budget;
 mod diagnostics;
 mod structure;

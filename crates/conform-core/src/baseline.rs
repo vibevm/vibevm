@@ -5,8 +5,6 @@ use serde::{Deserialize, Serialize};
 
 use crate::finding::Finding;
 
-specmark::scope!("spec://vibevm/discipline/ENGINE-CONFORM-v0.1#rules");
-
 /// `conform-baseline.json`: frozen pre-existing findings, by
 /// fingerprint. The file only shrinks.
 ///

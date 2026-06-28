@@ -1,7 +1,5 @@
 use serde::{Deserialize, Serialize};
 
-specmark::scope!("spec://vibevm/discipline/ENGINE-CONFORM-v0.1#facts");
-
 /// One normalized fact (ENGINE-CONFORM §3). Variants carry exactly
 /// what the checks consume; the schema grows with the rules (adding
 /// a field or variant bumps the frontend version, which retires old

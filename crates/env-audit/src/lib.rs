@@ -16,8 +16,6 @@
 //! place under recorded testimony instead; a safe mutate-anytime API
 //! for production would advertise soundness this crate cannot prove.
 
-specmark::scope!("spec://vibevm/discipline/ENGINE-CONFORM-v0.1#rules");
-
 use std::ffi::OsString;
 use std::sync::{Mutex, MutexGuard, PoisonError};
 

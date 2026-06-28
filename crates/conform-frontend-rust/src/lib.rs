@@ -9,8 +9,6 @@ use quote::ToTokens;
 use syn::spanned::Spanned;
 use syn::visit::Visit;
 
-specmark::scope!("spec://vibevm/discipline/ENGINE-CONFORM-v0.1#frontends");
-
 /// The Rust T-syn [`Frontend`](conform_core::Frontend): parse a source
 /// string into conform facts in-process.
 ///
