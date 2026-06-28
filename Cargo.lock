@@ -335,27 +335,36 @@ dependencies = [
 ]
 
 [[package]]
+name = "conform-cli"
+version = "0.2.0"
+dependencies = [
+ "anyhow",
+ "clap",
+ "conform-core",
+ "conform-frontend-rust",
+ "serde_json",
+]
+
+[[package]]
 name = "conform-core"
-version = "0.1.0-dev"
+version = "0.2.0"
 dependencies = [
  "anyhow",
  "serde",
  "serde_json",
  "sha2",
- "tempfile",
  "toml 0.9.12+spec-1.1.0",
  "walkdir",
 ]
 
 [[package]]
 name = "conform-frontend-rust"
-version = "0.1.0-dev"
+version = "0.2.0"
 dependencies = [
  "conform-core",
  "proc-macro2",
  "quote",
  "syn",
- "tempfile",
 ]
 
 [[package]]
@@ -493,7 +502,7 @@ checksum = "34aa73646ffb006b8f5147f3dc182bd4bcb190227ce861fc4a4844bf8e3cb2c0"
 
 [[package]]
 name = "env-audit"
-version = "0.1.0-dev"
+version = "0.2.0"
 
 [[package]]
 name = "equivalent"
@@ -3107,6 +3116,7 @@ version = "0.1.0-dev"
 dependencies = [
  "anyhow",
  "clap",
+ "conform-cli",
  "conform-core",
  "conform-frontend-rust",
  "serde_json",

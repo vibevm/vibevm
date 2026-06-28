@@ -17,9 +17,11 @@ exclude_substrings = ["/generated/"]
 registry_file = "crates/vibe-cli/src/registry.rs"
 registry_gated_crate = "vibe-cli"
 
-# The designated env-mutation audit crate — exempt wholesale from the unsafe
-# and ambient-env gates (it owns the unsafety behind a safe serialized guard).
-audit_crates = ["env-audit"]
+# Designated audit crates — exempt wholesale from the unsafe and ambient-env
+# gates. Empty now that env-audit (the env-mutation audit home) relocated into
+# stack:org.vibevm/rust-ai-native (PROP-024) and is no longer scanned here; the
+# remaining vibevm unsafe sites carry fn-grain #[spec(deviates)] testimony.
+audit_crates = []
 
 # The per-file line budget (GUIDE-AI-NATIVE-RUST §2).
 max_file_lines = 600
@@ -32,14 +34,11 @@ gated_crates = [
     "vibe-index",
     "vibe-install",
     "vibe-resolver",
-    "conform-core",
-    "conform-frontend-rust",
     "specmap-core",
     "vibe-registry",
     "vibe-workspace",
     "vibe-check",
     "vibe-publish",
-    "env-audit",
     "vibe-cli",
     "specmark",
     "specmark-grammar",
@@ -52,9 +51,6 @@ gated_crates = [
 # gating it would enforce uncompiled prose, the opposite of the rule.
 gated_pub_doctest = [
     "vibe-core",
-    "conform-core",
-    "conform-frontend-rust",
-    "env-audit",
     "specmark-grammar",
     "vibe-mcp",
 ]

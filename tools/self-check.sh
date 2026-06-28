@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# vibevm self-check — runs the five invariants every commit on `main`
+# vibevm self-check — runs the floor invariants every commit on `main`
 # is supposed to satisfy. Designed to be cheap to invoke locally and
 # trivial to wire into a CI matrix later. See `DEV-GUIDE.md` §6.
 #
@@ -15,10 +15,16 @@
 #                                          unwrap ban) clean vs. the
 #                                          baseline, so it cannot drift
 #                                          silently between commits.
+#   6. the rust-ai-native package gate     — fmt + test + clippy on the
+#                                          relocated conform engine, which
+#                                          ships in its own excluded Cargo
+#                                          workspace (PROP-024) that steps
+#                                          1-5 build but cannot otherwise
+#                                          reach (its tests + doctests).
 #
 # Each step prints a short header. On the first failure the script exits
 # non-zero; later steps are skipped (no "fix the next thing while broken"
-# slog). Pass `--keep-going` to run all four even if earlier ones fail.
+# slog). Pass `--keep-going` to run all steps even if earlier ones fail.
 
 set -u
 
@@ -92,6 +98,22 @@ run_step "cargo run -p vibe-cli -- check --path . --quiet" \
 # way they did across the bridge-packages sessions (the gate was green in
 # the RAID, then silently red until a sweep re-ran it).
 run_step "cargo xtask conform check" cargo xtask conform check || OVERALL=$?
+
+# 6. The AI-Native discipline toolchain — the conform engine itself — now ships
+# in stack:org.vibevm/rust-ai-native as its OWN Cargo workspace (PROP-024
+# code-bearing packages), excluded from the vibevm root. Steps 1-5 build it as a
+# dependency but never run its unit tests / doctests, and root fmt+clippy never
+# touch it. Run its fmt + test + clippy here against the package manifest so the
+# engine that powers the gate cannot itself drift outside the discipline unseen
+# (the same "a gate not in self-check drifts silently" lesson that wired conform
+# in as step 5).
+PKG_MANIFEST="packages/org.vibevm/rust-ai-native/v0.2.0/Cargo.toml"
+run_step "cargo fmt --all --check (rust-ai-native pkg)" \
+  cargo fmt --manifest-path "$PKG_MANIFEST" --all --check || OVERALL=$?
+run_step "cargo test --workspace (rust-ai-native pkg)" \
+  cargo test --manifest-path "$PKG_MANIFEST" --workspace --quiet || OVERALL=$?
+run_step "cargo clippy --all-targets (rust-ai-native pkg)" \
+  cargo clippy --manifest-path "$PKG_MANIFEST" --workspace --all-targets --quiet -- -D warnings || OVERALL=$?
 
 if [ "$QUIET" -eq 0 ]; then
   if [ "$OVERALL" -eq 0 ]; then

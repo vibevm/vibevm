@@ -1,167 +1,30 @@
-//! `cargo xtask conform …` — the Phase 4 conformance-engine gate
-//! (ENGINE-CONFORM §5): fact extraction through the content-addressed
-//! store, rules-as-queries, SARIF, and the ratchet baseline.
-//!
-//! The policy — which crates are gated, the file-length budget, the
-//! sanctioned env-read roots, the exempt table — lives in the project's
-//! `conform.toml`, not in this file. The checker is config-driven so it
-//! runs on any project (PROP-024), not only on vibevm itself.
+//! `cargo xtask conform …` — a thin shim over the `conform-cli` library,
+//! which now ships in stack:org.vibevm/rust-ai-native (PROP-024 code-bearing
+//! packages). The fact engine, the rule set, and the policy model all live in
+//! the package; this shim only resolves the vibevm repo root and delegates,
+//! and it keeps the vibevm-specific "every crate is gated or exempt" invariant
+//! test (which is about vibevm's own `crates/` + `conform.toml`, not the
+//! engine).
 
 use std::path::Path;
 
-use anyhow::{Context, Result, bail};
-use conform_core::{Config, Rule, rules};
+use anyhow::Result;
+use conform_core::Config;
 
 use crate::repo_root;
 
-/// Load the project's conform policy (`conform.toml` at the repo root).
+/// Load vibevm's conform policy (`conform.toml` at the repo root). Kept here so
+/// `health.rs` reads the policy through one path; delegates to the engine.
 pub(crate) fn load_config(root: &Path) -> Result<Config> {
-    Config::load(&root.join("conform.toml"))
-}
-
-/// Build the standing rule set from the policy, in one place so
-/// `conform check` and `conform freeze` can never drift apart. The order
-/// is the SARIF driver order the gate has always rendered.
-fn build_rules(config: &Config) -> Vec<Box<dyn Rule>> {
-    let mut out: Vec<Box<dyn Rule>> = Vec::new();
-    if let (Some(reg_file), Some(reg_crate)) = (
-        config.registry_file.as_ref(),
-        config.registry_gated_crate.as_ref(),
-    ) {
-        out.push(Box::new(rules::FlagSites {
-            registry_file: reg_file.clone(),
-            gated_crate: reg_crate.clone(),
-        }));
-    }
-    out.push(Box::new(rules::CellIsolation));
-    out.push(Box::new(rules::UnsafeGate {
-        audit_crates: config.audit_crates.clone(),
-    }));
-    out.push(Box::new(rules::SeamHasDoctest {
-        gated_crates: config.gated_crates.clone(),
-    }));
-    out.push(Box::new(rules::PubDoctest {
-        gated_crates: config.gated_pub_doctest.clone(),
-    }));
-    out.push(Box::new(rules::ErrorEnumCitesReq {
-        gated_crates: config.gated_crates.clone(),
-    }));
-    out.push(Box::new(rules::CellHasOracle));
-    out.push(Box::new(rules::ErrorMessageCitesReq {
-        gated_crates: config.gated_crates.clone(),
-    }));
-    out.push(Box::new(rules::FileLength {
-        max_lines: config.max_file_lines,
-    }));
-    out.push(Box::new(rules::NoUnwrapInDomain {
-        gated_crates: config.gated_crates.clone(),
-    }));
-    out.push(Box::new(rules::AmbientEnv {
-        gated_crates: config.gated_crates.clone(),
-        audit_crates: config.audit_crates.clone(),
-        roots: config.env_roots.clone(),
-    }));
-    out
+    conform_cli::load_config(root)
 }
 
 pub(crate) fn run_conform_check(baseline_rel: &str, scope: Option<&str>) -> Result<()> {
-    use conform_core::{ExtractionLog, Frontend, Store, baseline, check, count_by_rule, sarif};
-    use conform_frontend_rust::RustFrontend;
-
-    let root = repo_root()?;
-    let config = load_config(&root)?;
-    let store = Store::at_repo(&root, &config);
-    let mut log = ExtractionLog::default();
-    let frontend = RustFrontend;
-    let facts = store.extract_workspace(&root, &frontend, &mut log)?;
-    eprintln!(
-        "xtask conform: extracted {} file(s), {} cached (producer {}-{}).",
-        log.extracted.len(),
-        log.cached,
-        Frontend::id(&frontend),
-        Frontend::version(&frontend),
-    );
-
-    let owned = build_rules(&config);
-    let rule_refs: Vec<&dyn Rule> = owned.iter().map(|r| r.as_ref()).collect();
-
-    let findings = check(&rule_refs, &facts, scope);
-    let report = sarif::render(&rule_refs, &findings);
-    let sarif_path = root.join("target").join("conform").join("report.sarif");
-    if let Some(parent) = sarif_path.parent() {
-        std::fs::create_dir_all(parent)?;
-    }
-    std::fs::write(&sarif_path, &report)?;
-
-    let base = baseline::load(&root.join(baseline_rel))?;
-    let (new, stale) = baseline::diff(&base, &findings);
-    for f in &new {
-        eprintln!(
-            "  conform: NEW {} {}:{} — {}",
-            f.rule, f.file, f.line, f.message
-        );
-    }
-    for fp in &stale {
-        eprintln!("  conform: baseline entry no longer fires — prune it: {fp}");
-    }
-    let counts = count_by_rule(&findings);
-    eprintln!(
-        "xtask conform check: {} finding(s) in scope {} ({:?}), {} frozen in baseline, {} new; SARIF at {}.",
-        findings.len(),
-        scope.unwrap_or("<workspace>"),
-        counts,
-        base.findings.len(),
-        new.len(),
-        sarif_path
-            .strip_prefix(&root)
-            .unwrap_or(&sarif_path)
-            .display()
-    );
-    eprintln!(
-        "xtask conform: {} crate(s) gated, {} exempt — see conform.toml for the why of each.",
-        config.gated_crates.len(),
-        config.exempt.len(),
-    );
-    if !new.is_empty() {
-        bail!("conform: {} new finding(s) against the baseline", new.len());
-    }
-    Ok(())
+    conform_cli::run_check(&repo_root()?, baseline_rel, scope)
 }
 
-/// `cargo xtask conform freeze` — rewrite the baseline to the current
-/// finding set. The legal moments: a NEW rule landing (its pre-existing
-/// findings freeze once), and a re-freeze after work that shrank the set.
-/// The diff review is the guard: outside a new-rule landing the file may
-/// only shrink.
 pub(crate) fn run_conform_freeze(baseline_rel: &str) -> Result<()> {
-    use conform_core::{ExtractionLog, Store, check, count_by_rule};
-    use conform_frontend_rust::RustFrontend;
-
-    let root = repo_root()?;
-    let config = load_config(&root)?;
-    let store = Store::at_repo(&root, &config);
-    let mut log = ExtractionLog::default();
-    let frontend = RustFrontend;
-    let facts = store.extract_workspace(&root, &frontend, &mut log)?;
-    let owned = build_rules(&config);
-    let rule_refs: Vec<&dyn Rule> = owned.iter().map(|r| r.as_ref()).collect();
-    let findings = check(&rule_refs, &facts, None);
-    let counts = count_by_rule(&findings);
-    let mut fps: Vec<&str> = findings.iter().map(|f| f.fingerprint.as_str()).collect();
-    fps.sort_unstable();
-    fps.dedup();
-    let body = serde_json::json!({ "schema": 1, "findings": fps });
-    let mut text = serde_json::to_string_pretty(&body).context("serialising baseline")?;
-    text.push('\n');
-    let path = root.join(baseline_rel);
-    std::fs::write(&path, text).with_context(|| format!("writing {}", path.display()))?;
-    eprintln!(
-        "xtask conform freeze: {} fingerprint(s) frozen ({:?}) at {}.",
-        fps.len(),
-        counts,
-        baseline_rel
-    );
-    Ok(())
+    conform_cli::run_freeze(&repo_root()?, baseline_rel)
 }
 
 #[cfg(test)]

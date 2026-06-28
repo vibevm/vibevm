@@ -1,10 +1,7 @@
 {
   "schema": 1,
-  "note": "The specmap orphan ratchet (PLAYBOOK #phase2, flipped 2026-06-10; expanded Phase 6 same day; VIBEVM-SPEC.md scanned + vibe-cli gated 2026-06-12, closing DBT-0019; vibe-mcp gated 2026-06-13, closing DBT-0020 — the MCP server + agent surface now homes in spec://vibevm/modules/vibe-mcp/PROP-015, all items scope!-tagged). A crate NOT listed in `exempt` is gated. Remaining exemptions and why: vibe-graph + vibe-llm (stub crates), vibe-wire (generated code — the JTD schema is the taggable unit), xtask (internal tooling binary), specmark + specmark-grammar (the tag bootstrap pair cannot depend on specmark to carry scope! markers — tagging them is a scanner-level feature, not a macro one); conform-core + conform-frontend-rust + env-audit (the ENGINE-CONFORM toolchain, relocating into stack:org.vibevm/rust-ai-native per PROP-024 code-bearing-packages phase 4 — they shed their specmark scope! tags so they can move without specmark, leaving vibevm's traceability perimeter; ENGINE-CONFORM-v0.1.md stays vibevm-hosted and is now edge-less by design).",
+  "note": "The specmap orphan ratchet (PLAYBOOK #phase2, flipped 2026-06-10; expanded Phase 6 same day; VIBEVM-SPEC.md scanned + vibe-cli gated 2026-06-12, closing DBT-0019; vibe-mcp gated 2026-06-13, closing DBT-0020 — the MCP server + agent surface now homes in spec://vibevm/modules/vibe-mcp/PROP-015, all items scope!-tagged). A crate NOT listed in `exempt` is gated. Remaining exemptions and why: vibe-graph + vibe-llm (stub crates), vibe-wire (generated code — the JTD schema is the taggable unit), xtask (internal tooling binary), specmark + specmark-grammar (the tag bootstrap pair cannot depend on specmark to carry scope! markers — tagging them is a scanner-level feature, not a macro one).",
   "exempt": [
-    "conform-core",
-    "conform-frontend-rust",
-    "env-audit",
     "specmark",
     "specmark-grammar",
     "vibe-graph",
