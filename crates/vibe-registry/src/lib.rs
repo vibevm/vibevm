@@ -470,12 +470,31 @@ pub struct InPlaceMaterialised {
     pub manifest: vibe_core::manifest::Manifest,
 }
 
+/// Build-output dir/file names a package's shippable tree excludes (PROP-024
+/// §2.2): identity is the source, not artifacts. MUST stay in lockstep with
+/// the identical list in `vibe-index`'s content_hash port (PROP-005 §3.2).
+const SHIPPABLE_EXCLUDES: &[&str] = &[".git", ".vibe", "target", "node_modules", ".vibeignore"];
+
+/// Prune build output from a [`WalkDir`] walk so the hash and slot cover only
+/// the shippable tree — per-entry, so an excluded dir is skipped, not entered.
+fn is_shippable(entry: &walkdir::DirEntry) -> bool {
+    entry
+        .file_name()
+        .to_str()
+        .map(|name| !SHIPPABLE_EXCLUDES.contains(&name))
+        .unwrap_or(true)
+}
+
 pub(crate) fn copy_dir_recursive(src: &Path, dst: &Path) -> Result<(), RegistryError> {
     fs::create_dir_all(dst).map_err(|source| RegistryError::Io {
         path: dst.to_path_buf(),
         source,
     })?;
-    for entry in WalkDir::new(src).into_iter().filter_map(|e| e.ok()) {
+    for entry in WalkDir::new(src)
+        .into_iter()
+        .filter_entry(is_shippable)
+        .filter_map(|e| e.ok())
+    {
         let rel = entry.path().strip_prefix(src).unwrap_or(entry.path());
         let target = dst.join(rel);
         if entry.file_type().is_dir() {
@@ -516,6 +535,7 @@ pub(crate) fn copy_dir_recursive(src: &Path, dst: &Path) -> Result<(), RegistryE
 pub fn compute_content_hash(pkg_dir: &Path) -> Result<String, RegistryError> {
     let mut files: Vec<PathBuf> = WalkDir::new(pkg_dir)
         .into_iter()
+        .filter_entry(is_shippable)
         .filter_map(|e| e.ok())
         .filter(|e| e.file_type().is_file())
         .map(|e| e.path().to_path_buf())
@@ -542,4 +562,38 @@ pub fn compute_content_hash(pkg_dir: &Path) -> Result<String, RegistryError> {
         s
     });
     Ok(format!("sha256:{hex}"))
+}
+
+#[cfg(test)]
+mod shippable_tree_tests {
+    use super::*;
+    use tempfile::tempdir;
+
+    /// `copy_dir_recursive` and `compute_content_hash` both skip build output,
+    /// so neither the materialised slot nor the content hash carries `target/`
+    /// & friends (PROP-024 §2.2). Inline because `copy_dir_recursive` is
+    /// `pub(crate)` — a `tests/` target could not reach it.
+    #[test]
+    fn copy_and_hash_exclude_build_output() {
+        let src = tempdir().unwrap();
+        fs::write(src.path().join("vibe.toml"), b"x").unwrap();
+        fs::create_dir_all(src.path().join("target/debug")).unwrap();
+        fs::write(src.path().join("target/debug/x.bin"), b"ARTIFACT").unwrap();
+
+        let dst = tempdir().unwrap();
+        copy_dir_recursive(src.path(), dst.path()).unwrap();
+        assert!(dst.path().join("vibe.toml").exists());
+        assert!(
+            !dst.path().join("target").exists(),
+            "target/ must not be copied"
+        );
+
+        let clean = tempdir().unwrap();
+        fs::write(clean.path().join("vibe.toml"), b"x").unwrap();
+        assert_eq!(
+            compute_content_hash(src.path()).unwrap(),
+            compute_content_hash(clean.path()).unwrap(),
+            "build output must not affect the content hash"
+        );
+    }
 }

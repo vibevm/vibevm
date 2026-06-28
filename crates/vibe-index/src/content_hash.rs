@@ -20,9 +20,27 @@ use walkdir::WalkDir;
 
 use crate::error::{Error, Result};
 
+/// Build-output dir/file names a package's *shippable tree* excludes
+/// (PROP-024 §2.2): identity is the source, never artifacts. This list is
+/// duplicated verbatim in `vibe-registry`'s hasher — the two MUST stay in
+/// lockstep (PROP-005 §3.2's duplicate-rather-than-import port), or a package
+/// indexed here and materialised there would hash differently.
+const SHIPPABLE_EXCLUDES: &[&str] = &[".git", ".vibe", "target", "node_modules", ".vibeignore"];
+
+/// Prune build output from the walk so the hash covers only the shippable
+/// tree. Per-entry, so an excluded directory is skipped without descending.
+fn is_shippable(entry: &walkdir::DirEntry) -> bool {
+    entry
+        .file_name()
+        .to_str()
+        .map(|name| !SHIPPABLE_EXCLUDES.contains(&name))
+        .unwrap_or(true)
+}
+
 pub fn compute_content_hash(pkg_dir: &Path) -> Result<String> {
     let mut files: Vec<PathBuf> = WalkDir::new(pkg_dir)
         .into_iter()
+        .filter_entry(is_shippable)
         .filter_map(|e| e.ok())
         .filter(|e| e.file_type().is_file())
         .map(|e| e.path().to_path_buf())
@@ -124,5 +142,26 @@ mod tests {
         let h = compute_content_hash(dir.path()).unwrap();
         assert!(h.starts_with("sha256:"));
         assert_eq!(h.len(), 7 + 64); // "sha256:" + hex(32 bytes)
+    }
+
+    #[test]
+    fn build_output_is_excluded_from_the_hash() {
+        // A package with build output hashes identically to the same package
+        // without it — identity is the shippable source (PROP-024 §2.2).
+        let clean = tempdir().unwrap();
+        fs::write(clean.path().join("vibe.toml"), b"name = 'x'\n").unwrap();
+
+        let dirty = tempdir().unwrap();
+        fs::write(dirty.path().join("vibe.toml"), b"name = 'x'\n").unwrap();
+        fs::create_dir_all(dirty.path().join("target/debug")).unwrap();
+        fs::write(dirty.path().join("target/debug/x.bin"), b"ARTIFACT").unwrap();
+        fs::create_dir_all(dirty.path().join(".git")).unwrap();
+        fs::write(dirty.path().join(".git/HEAD"), b"ref: refs/heads/main\n").unwrap();
+
+        assert_eq!(
+            compute_content_hash(clean.path()).unwrap(),
+            compute_content_hash(dirty.path()).unwrap(),
+            "build output must not affect the content hash"
+        );
     }
 }
