@@ -11,8 +11,8 @@ use clap::{Parser, Subcommand};
 
 #[derive(Parser)]
 #[command(
-    name = "conform",
-    about = "The AI-Native discipline gate (ENGINE-CONFORM v0.1)"
+    name = "conform-rust",
+    about = "The AI-Native Rust discipline gate (ENGINE-CONFORM v0.1, Rust frontend)"
 )]
 struct Cli {
     /// Project root — where `conform.toml` lives. Defaults to the current dir.

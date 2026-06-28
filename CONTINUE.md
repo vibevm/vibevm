@@ -194,7 +194,7 @@ cargo run -p vibe-cli -- install --registry packages --assume-yes   # re-materia
 
 # Run the SHIPPED conform engine directly (the consumer surface):
 cargo run --manifest-path packages/org.vibevm/rust-ai-native/v0.2.0/Cargo.toml \
-  -p conform-cli --bin conform -- check --path .
+  -p conform-cli --bin conform-rust -- check --path .
 
 cargo xtask mirror --check               # confirm GitVerse + GitHub sync (HELD; do not mirror without owner word)
 ```

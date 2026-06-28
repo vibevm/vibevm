@@ -11,7 +11,7 @@ homepage.workspace = true
 description = "The conform engine driver and `conform` binary (ENGINE-CONFORM v0.1): load conform.toml, build the rule set, run check / freeze over a project tree"
 
 [[bin]]
-name = "conform"
+name = "conform-rust"
 path = "src/main.rs"
 
 [dependencies]

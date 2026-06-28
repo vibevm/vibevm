@@ -38,7 +38,7 @@ The rules, the content-addressed store, the SARIF, the baseline — all reused u
 
 ## 4. The code-root
 
-When implemented, `conform-frontend-typescript` ships **in this package** — `stack:org.vibevm/typescript-ai-native` — as the package's own code-root: the TypeScript mirror of how `rust-ai-native` now carries `crates/conform-frontend-rust`. Installing the stack would then yield a working `.ts` structural gate, not a description of one (the PROP-024 promise, applied to TypeScript). The shippable tree excludes build output (`node_modules/`, `dist/`, build caches) the same way it excludes `target/` for Rust (PROP-024 §2.2).
+When implemented, `conform-frontend-typescript` ships **in this package** — `stack:org.vibevm/typescript-ai-native` — as the package's own code-root: the TypeScript mirror of how `rust-ai-native` now carries `crates/conform-frontend-rust`. Installing the stack would then yield a working `.ts` structural gate, not a description of one (the PROP-024 promise, applied to TypeScript). The shippable tree excludes build output (`node_modules/`, `dist/`, build caches) the same way it excludes `target/` for Rust (PROP-024 §2.2). Its binary is **`conform-typescript`** — language-suffixed like the Rust stack's `conform-rust`, so several discipline checkers can share a `PATH` without shadowing one another.
 
 ## 5. The honest note
 
