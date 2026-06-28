@@ -44,6 +44,7 @@ refs/src/**             linguist-vendored=true
 # Generated code from JTD schemas is, well, generated — show it on the
 # repo page but exclude from language stats.
 crates/vibe-wire/src/generated/**    linguist-generated=true
+crates/specmap-core/src/generated/**    linguist-generated=true
 
 # Lockfile is structurally interesting but isn't human-authored
 # language. Keep it out of stats; tooling can still read it.

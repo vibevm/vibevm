@@ -15,8 +15,8 @@ specmark::scope!("spec://vibevm/discipline/PROP-014#index");
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 
+use crate::generated::specmap::{Specmap, Suspect, Warning};
 use anyhow::{Context, Result};
-use vibe_wire::generated::specmap::{Specmap, Suspect, Warning};
 
 use crate::{mdspec, rscan};
 
@@ -27,8 +27,8 @@ pub const INDEX_REL_PATH: &str = "specmap.json";
 /// doc-paths, `spec_unit.file`, the `suspects` table.
 pub const SCHEMA: u32 = 2;
 
-fn verb_str(e: &vibe_wire::generated::specmap::Edge) -> &'static str {
-    use vibe_wire::generated::specmap::EdgeVerb::*;
+fn verb_str(e: &crate::generated::specmap::Edge) -> &'static str {
+    use crate::generated::specmap::EdgeVerb::*;
     match e.verb {
         Implements => "implements",
         Verifies => "verifies",
@@ -38,8 +38,8 @@ fn verb_str(e: &vibe_wire::generated::specmap::Edge) -> &'static str {
     }
 }
 
-fn verb_key(e: &vibe_wire::generated::specmap::Edge) -> u8 {
-    use vibe_wire::generated::specmap::EdgeVerb::*;
+fn verb_key(e: &crate::generated::specmap::Edge) -> u8 {
+    use crate::generated::specmap::EdgeVerb::*;
     match e.verb {
         Implements => 0,
         Verifies => 1,
@@ -250,9 +250,8 @@ pub fn classify_drift(old: &Specmap, new: &Specmap) -> Vec<String> {
     if removed > 0 {
         lines.push(format!("units removed: {removed}"));
     }
-    let edge_key = |e: &vibe_wire::generated::specmap::Edge| {
-        format!("{}|{}|{}", e.fromSymbol, verb_str(e), e.uri)
-    };
+    let edge_key =
+        |e: &crate::generated::specmap::Edge| format!("{}|{}|{}", e.fromSymbol, verb_str(e), e.uri);
     let old_edges: std::collections::BTreeSet<String> = old.edges.iter().map(edge_key).collect();
     let new_edges: std::collections::BTreeSet<String> = new.edges.iter().map(edge_key).collect();
     let e_added = new_edges.difference(&old_edges).count();

@@ -21,9 +21,9 @@ specmark::scope!("spec://vibevm/discipline/LEDGER-INTENT-v0.1#classes");
 
 use std::path::{Path, PathBuf};
 
+use crate::generated::specmap::Specmap;
 use anyhow::{Context, Result};
 use serde::{Deserialize, Serialize};
-use vibe_wire::generated::specmap::Specmap;
 
 use crate::content_hash;
 
@@ -223,7 +223,7 @@ fn render_prose(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use vibe_wire::generated::specmap::{CodeItem, Edge, EdgeProvenance, EdgeVerb, Specmap};
+    use crate::generated::specmap::{CodeItem, Edge, EdgeProvenance, EdgeVerb, Specmap};
 
     fn mini_map() -> Specmap {
         Specmap {

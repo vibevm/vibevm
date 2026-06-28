@@ -27,10 +27,10 @@ specmark::scope!("spec://vibevm/discipline/PROP-014#index");
 use std::collections::HashSet;
 use std::path::{Path, PathBuf};
 
+use crate::generated::specmap::Specmap;
 use anyhow::{Context, Result};
 use serde::Deserialize;
 use syn::spanned::Spanned;
-use vibe_wire::generated::specmap::Specmap;
 use walkdir::WalkDir;
 
 use crate::fwd;

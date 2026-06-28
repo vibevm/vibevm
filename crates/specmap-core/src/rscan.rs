@@ -9,10 +9,10 @@ use std::path::Path;
 
 specmark::scope!("spec://vibevm/discipline/PROP-014#addressing-code");
 
+use crate::generated::specmap::{CodeItem, Edge, EdgeProvenance, EdgeVerb, Warning};
 use quote::ToTokens;
 use specmark_grammar::{EdgeSpec, SpecArgs, UriArgs};
 use syn::spanned::Spanned;
-use vibe_wire::generated::specmap::{CodeItem, Edge, EdgeProvenance, EdgeVerb, Warning};
 use walkdir::WalkDir;
 
 use crate::fwd;

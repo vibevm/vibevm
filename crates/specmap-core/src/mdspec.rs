@@ -12,8 +12,8 @@ specmark::scope!("spec://vibevm/discipline/PROP-014#spec-units");
 
 use std::path::Path;
 
+use crate::generated::specmap::{SpecUnit, SpecUnitKind, SpecUnitStatus, Warning};
 use specmark_grammar::is_valid_anchor;
-use vibe_wire::generated::specmap::{SpecUnit, SpecUnitKind, SpecUnitStatus, Warning};
 use walkdir::WalkDir;
 
 use crate::{SPEC_PACKAGE, content_hash, fwd};

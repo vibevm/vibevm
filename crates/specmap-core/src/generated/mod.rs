@@ -4,10 +4,4 @@
 // `*.jtd.json` schema under `schemas/` at the repo root. Editing
 // this file by hand will be overwritten on the next codegen run.
 
-pub mod init_report;
-pub mod install_plan;
-pub mod install_report;
-pub mod list_report;
-pub mod registry_publish_report;
-pub mod registry_sync_report;
-pub mod uninstall_report;
+pub mod specmap;

@@ -1,7 +1,8 @@
 //! `cargo xtask codegen` / `check-codegen` — regenerate the Rust types
-//! under `crates/vibe-wire/src/generated/` from the JTD schemas under
+//! under each owning crate's `src/generated/` from the JTD schemas under
 //! `schemas/`, and the CI drift check over the result.
 
+use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 use std::process::Command;
 
@@ -39,10 +40,31 @@ fn find_jtd_codegen(root: &Path) -> Result<PathBuf> {
     }
 }
 
+/// Per-schema output routing: a schema's generated types live in the crate
+/// that owns them. Most wire contracts live in `vibe-wire` (the shared
+/// wire-format crate); `specmap` owns its own data model in `specmap-core`, so
+/// the traceability engine carries its types and can relocate without a
+/// `specmap-core → vibe-wire` edge (Traceability Relocation Plan, Phase 1).
+fn generated_dir_for(stem: &str, root: &Path) -> PathBuf {
+    match stem {
+        "specmap" => root.join("crates/specmap-core/src/generated"),
+        _ => root.join("crates/vibe-wire/src/generated"),
+    }
+}
+
+/// `foo.jtd.json` → `foo`.
+fn schema_stem(schema: &Path) -> Result<String> {
+    schema
+        .file_name()
+        .and_then(|n| n.to_str())
+        .and_then(|n| n.strip_suffix(".jtd.json"))
+        .map(str::to_string)
+        .with_context(|| format!("schema name not `*.jtd.json`: {}", schema.display()))
+}
+
 pub(crate) fn run_codegen() -> Result<()> {
     let root = repo_root()?;
     let schemas_dir = root.join("schemas");
-    let out_dir = root.join("crates/vibe-wire/src/generated");
 
     if !schemas_dir.exists() {
         bail!(
@@ -50,8 +72,6 @@ pub(crate) fn run_codegen() -> Result<()> {
             schemas_dir.display()
         );
     }
-    std::fs::create_dir_all(&out_dir)
-        .with_context(|| format!("creating output dir {}", out_dir.display()))?;
 
     let binary = find_jtd_codegen(&root)?;
 
@@ -77,59 +97,71 @@ pub(crate) fn run_codegen() -> Result<()> {
         return Ok(());
     }
 
+    // Group schemas by their owning crate's generated dir, then regenerate
+    // each dir from scratch. A `BTreeMap` keeps per-dir processing order
+    // deterministic across platforms.
+    let mut by_dir: BTreeMap<PathBuf, Vec<PathBuf>> = BTreeMap::new();
+    for schema in schemas {
+        let dir = generated_dir_for(&schema_stem(&schema)?, &root);
+        by_dir.entry(dir).or_default().push(schema);
+    }
+
+    let total: usize = by_dir.values().map(Vec::len).sum();
     eprintln!(
-        "xtask codegen: {} schema{} → {}",
-        schemas.len(),
-        if schemas.len() == 1 { "" } else { "s" },
-        out_dir.display()
+        "xtask codegen: {} schema{} → {} generated tree{}",
+        total,
+        if total == 1 { "" } else { "s" },
+        by_dir.len(),
+        if by_dir.len() == 1 { "" } else { "s" },
     );
 
-    // Wipe everything under `out_dir` first so a removed schema doesn't
-    // leave a stale submodule that the synthesised top-level `mod.rs`
-    // would no longer reference. We rebuild from scratch each run; the
-    // codegen output is fast enough that this is fine, and it makes the
-    // `check-codegen` invariant exact: what's on disk matches what the
-    // generator would produce *only* from the current `schemas/`.
-    if out_dir.exists() {
-        for entry in std::fs::read_dir(&out_dir)
-            .with_context(|| format!("scanning {}", out_dir.display()))?
-        {
-            let entry = entry.context("reading entry under out_dir")?;
-            let path = entry.path();
-            // Preserve a `.gitkeep` if one is present so an empty
-            // (no-schema) state still leaves a tracked path; otherwise
-            // remove. Subdirs and `mod.rs` are codegen output.
-            if path.file_name().and_then(|n| n.to_str()) == Some(".gitkeep") {
-                continue;
-            }
-            if path.is_dir() {
-                std::fs::remove_dir_all(&path)
-                    .with_context(|| format!("removing stale {}", path.display()))?;
-            } else {
-                std::fs::remove_file(&path)
-                    .with_context(|| format!("removing stale {}", path.display()))?;
-            }
+    for (out_dir, group) in &by_dir {
+        generate_into(&binary, out_dir, group)?;
+    }
+    Ok(())
+}
+
+/// Wipe `out_dir` (preserving a `.gitkeep`) and regenerate `schemas` into it,
+/// each into its own `<stem>/` submodule, then synthesise the top-level
+/// `mod.rs` re-exporting the (alphabetically sorted) submodules. Wiping first
+/// keeps `check-codegen` exact: what's on disk is exactly what the generator
+/// would produce from *only* the schemas routed to this dir, so a removed or
+/// rerouted schema cannot leave a stale submodule behind.
+fn generate_into(binary: &Path, out_dir: &Path, schemas: &[PathBuf]) -> Result<()> {
+    std::fs::create_dir_all(out_dir)
+        .with_context(|| format!("creating output dir {}", out_dir.display()))?;
+
+    for entry in
+        std::fs::read_dir(out_dir).with_context(|| format!("scanning {}", out_dir.display()))?
+    {
+        let entry = entry.context("reading entry under out_dir")?;
+        let path = entry.path();
+        // Preserve a `.gitkeep` if present so an empty (no-schema) state still
+        // leaves a tracked path; everything else is codegen output.
+        if path.file_name().and_then(|n| n.to_str()) == Some(".gitkeep") {
+            continue;
+        }
+        if path.is_dir() {
+            std::fs::remove_dir_all(&path)
+                .with_context(|| format!("removing stale {}", path.display()))?;
+        } else {
+            std::fs::remove_file(&path)
+                .with_context(|| format!("removing stale {}", path.display()))?;
         }
     }
 
     // jtd-codegen 0.4.1 writes a single `mod.rs` per `--rust-out` and
-    // overwrites whatever is there. To keep all schemas in one tree
-    // without each one stomping the others, give each schema its own
-    // subdirectory and synthesise a top-level `mod.rs` that re-exports
-    // every per-schema submodule.
+    // overwrites whatever is there. To keep several schemas in one tree
+    // without each stomping the others, give every schema its own
+    // subdirectory and synthesise a top-level `mod.rs` re-exporting them.
     let mut module_names: Vec<String> = Vec::new();
-    for schema in &schemas {
-        let stem = schema
-            .file_name()
-            .and_then(|n| n.to_str())
-            .and_then(|n| n.strip_suffix(".jtd.json"))
-            .with_context(|| format!("schema name not `*.jtd.json`: {}", schema.display()))?
-            .to_string();
+    for schema in schemas {
+        let stem = schema_stem(schema)?;
         let sub_out = out_dir.join(&stem);
         std::fs::create_dir_all(&sub_out)
             .with_context(|| format!("creating per-schema dir {}", sub_out.display()))?;
-        eprintln!("  - {} → {}/", schema.display(), stem);
-        let status = Command::new(&binary)
+        eprintln!("  - {} → {}/", schema.display(), sub_out.display());
+        let status = Command::new(binary)
             .arg("--rust-out")
             .arg(&sub_out)
             .arg(schema)
@@ -145,10 +177,8 @@ pub(crate) fn run_codegen() -> Result<()> {
         module_names.push(stem);
     }
 
-    // Synthesise the top-level `mod.rs` that fans out to each per-schema
-    // submodule. Module names are sorted for determinism so `check-codegen`
-    // stays stable across platforms (filesystem read order is not
-    // guaranteed).
+    // Module names sorted for determinism so `check-codegen` stays stable
+    // across platforms (filesystem read order is not guaranteed).
     module_names.sort();
     let mut top = String::new();
     top.push_str("// Generated by `cargo xtask codegen`. DO NOT EDIT.\n");
@@ -162,27 +192,43 @@ pub(crate) fn run_codegen() -> Result<()> {
     let top_path = out_dir.join("mod.rs");
     std::fs::write(&top_path, top).with_context(|| format!("writing {}", top_path.display()))?;
 
-    eprintln!("xtask codegen: ok ({} submodules).", module_names.len());
+    eprintln!(
+        "xtask codegen: {} ({} submodule{}).",
+        out_dir.display(),
+        module_names.len(),
+        if module_names.len() == 1 { "" } else { "s" }
+    );
     Ok(())
 }
 
 pub(crate) fn run_check_codegen() -> Result<()> {
     run_codegen()?;
     let root = repo_root()?;
-    let out_dir = root.join("crates/vibe-wire/src/generated");
-    let status = Command::new("git")
-        .arg("diff")
-        .arg("--exit-code")
-        .arg("--")
-        .arg(&out_dir)
+    // Diff every generated tree codegen may write, so drift in any owning
+    // crate is caught (the routing fans `specmap` out to specmap-core, the
+    // rest to vibe-wire).
+    let out_dirs = [
+        root.join("crates/vibe-wire/src/generated"),
+        root.join("crates/specmap-core/src/generated"),
+    ];
+    let mut cmd = Command::new("git");
+    cmd.arg("diff").arg("--exit-code").arg("--");
+    for dir in &out_dirs {
+        cmd.arg(dir);
+    }
+    let status = cmd
         .current_dir(&root)
         .status()
         .context("spawning git diff")?;
     if !status.success() {
         bail!(
-            "generated code under `{}` is out of date relative to `schemas/`. \
+            "generated code under {} is out of date relative to `schemas/`. \
              Run `cargo xtask codegen` and commit the result.",
-            out_dir.display()
+            out_dirs
+                .iter()
+                .map(|d| d.display().to_string())
+                .collect::<Vec<_>>()
+                .join(" / ")
         );
     }
     eprintln!("xtask check-codegen: clean.");

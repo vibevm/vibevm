@@ -1798,7 +1798,6 @@ dependencies = [
  "specmark-grammar",
  "syn",
  "tempfile",
- "vibe-wire",
  "walkdir",
 ]
 

@@ -6,11 +6,11 @@
 
 specmark::scope!("spec://vibevm/discipline/PROP-014#queries");
 
+use crate::generated::specmap::{Edge, SpecUnit, Specmap};
 use anyhow::{Result, bail};
-use vibe_wire::generated::specmap::{Edge, SpecUnit, Specmap};
 
 fn verb_str(e: &Edge) -> &'static str {
-    use vibe_wire::generated::specmap::EdgeVerb::*;
+    use crate::generated::specmap::EdgeVerb::*;
     match e.verb {
         Implements => "implements",
         Verifies => "verifies",
@@ -25,7 +25,7 @@ fn unit_line(u: &SpecUnit) -> String {
         .kind
         .as_deref()
         .map(|k| {
-            use vibe_wire::generated::specmap::SpecUnitKind::*;
+            use crate::generated::specmap::SpecUnitKind::*;
             match k {
                 Prop => "prop",
                 Req => "req",
@@ -43,7 +43,7 @@ fn unit_line(u: &SpecUnit) -> String {
         .status
         .as_deref()
         .map(|s| {
-            use vibe_wire::generated::specmap::SpecUnitStatus::*;
+            use crate::generated::specmap::SpecUnitStatus::*;
             match s {
                 Planned => " [PLANNED]".to_string(),
                 Disputed => format!(
@@ -292,7 +292,7 @@ pub fn explain_json(map: &Specmap, target: &str) -> Result<serde_json::Value> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use vibe_wire::generated::specmap::{
+    use crate::generated::specmap::{
         CodeItem, EdgeProvenance, EdgeVerb, SpecUnitKind, SpecUnitStatus,
     };
 

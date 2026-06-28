@@ -2,13 +2,13 @@
 //!
 //! Subcommands:
 //!
-//! - `codegen` — regenerate every Rust file under
-//!   `crates/vibe-wire/src/generated/` from the JTD schemas under
-//!   `schemas/`. Calls the locally-vendored `jtd-codegen` binary
-//!   (see `tools/jtd-codegen/README.md`); errors actionably when
-//!   the binary is missing.
+//! - `codegen` — regenerate the Rust types under each owning crate's
+//!   `src/generated/` from the JTD schemas under `schemas/` (most in
+//!   `vibe-wire`; `specmap` in `specmap-core`). Calls the locally-vendored
+//!   `jtd-codegen` binary (see `tools/jtd-codegen/README.md`); errors
+//!   actionably when the binary is missing.
 //! - `check-codegen` — `codegen`, then run `git diff --exit-code` over
-//!   the generated dir. Used by CI to assert no schema drift.
+//!   the generated dirs. Used by CI to assert no schema drift.
 //! - `specmap` — regenerate the canonical `specmap.json` traceability
 //!   index (PROP-014 §2.5); `--check` regenerates and byte-diffs, the
 //!   `check-codegen` idiom.
@@ -66,7 +66,7 @@ struct Cli {
 
 #[derive(Subcommand, Debug)]
 enum Cmd {
-    /// Regenerate Rust types under `crates/vibe-wire/src/generated/`
+    /// Regenerate Rust types under each owning crate's `src/generated/`
     /// from JTD schemas under `schemas/`.
     Codegen,
 

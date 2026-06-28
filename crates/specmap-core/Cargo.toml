@@ -13,7 +13,6 @@ description = "The specmap engine (PROP-014 §2.5): markdown unit parser, source
 [dependencies]
 specmark-grammar.workspace = true
 specmark.workspace = true
-vibe-wire.workspace = true
 syn.workspace = true
 quote.workspace = true
 proc-macro2.workspace = true
