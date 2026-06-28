@@ -8,7 +8,7 @@
 //! inside the Discipline as it grows:
 //!
 //! - **Coverage beyond the gated set.** `pub-doctest` gates only
-//!   `GATED_PUB_DOCTEST` (vibe-core today); every other crate's public *types*
+//!   the crates in conform.toml's `gated_pub_doctest`; every other crate's *types*
 //!   are doctest-unchecked. This reports each crate's public-type doctest
 //!   coverage so the sweep can drain the smallest gap next and widen the gate
 //!   (the PUBDOC-DRAIN ratchet, generalised).
@@ -189,7 +189,7 @@ pub(crate) fn run_health(out_rel: &str, mirrors: bool) -> Result<()> {
     over_all.sort_by(|a, b| b.1.cmp(&a.1).then(a.0.cmp(&b.0)));
 
     // The pub-doctest ratchet drivers: a gated crate whose public types are
-    // fully documented is ready to join GATED_PUB_DOCTEST with zero drain; one
+    // fully documented is ready to join conform.toml's gated_pub_doctest with zero drain; one
     // with a gap is backlog, ranked smallest-first (cheapest to drain next).
     let mut promotion_candidates: Vec<&str> = Vec::new();
     let mut drain_backlog: Vec<(&str, u32)> = Vec::new();
