@@ -95,7 +95,11 @@ cross-package dep (deferred). Status: specified, not built.
 **Ф7 (this checkpoint).** Floor green: `self-check.sh` 8 steps exit 0, specmap
 614 units / 583 tagged / 596 edges / 0 suspects / 0 warnings / 0 orphans (6
 crates exempt), vibe check 0/0/0. 30 commits ahead of origin, NOT mirrored.
-**Next: mirror on the owner's explicit word** (`cargo xtask mirror`).
+**Next: mirror on the owner's explicit word** (`cargo xtask mirror`). **The
+traceability relocation (specmap/specmark → rust-ai-native, Option B,
+owner-confirmed) is now a PLANNED campaign** with a full cold-executable recipe
+in `spec/terraforms/TRACEABILITY-RELOCATION-PLAN-v0.1.md` — it completes
+PROP-024's discipline-ships-whole vision and pays the Ф4a specmark-free debt.
 
 **Standing findings this continuation:**
 - The conform engine is genuinely language-neutral (Fact model + rules +

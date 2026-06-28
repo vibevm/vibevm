@@ -91,10 +91,15 @@ verifies sync first.
 1. **Mirror on the owner's word**: `cargo xtask mirror --check` then `cargo xtask
    mirror`. This is the only pending item to close Ф4–Ф7.
 2. **Optional follow-ups, none blocking** (each is its own clean unit):
-   - **specmap/specmark relocation** — the deferred sibling of Ф4. Harder:
-     `specmap-core → vibe-wire` is the one edge out of the discipline set;
-     `specmark` is dogfooded by 10 crates; PROP-014 is split-implemented. Move the
-     generated `specmap` JTD types out of `vibe-wire` first.
+   - **Traceability relocation — PLANNED, the next campaign.** Option B is
+     owner-confirmed: `specmap-core` + `specmark` + `specmark-grammar` →
+     `rust-ai-native`, next to conform, so the package ships the *whole* Rust
+     verification stack and the conform crates re-acquire the tags Ф4a stripped
+     (the discipline disciplines itself again). The full cold-executable
+     phase-by-phase recipe — spike, sever the vibe-wire edge, productise,
+     relocate, re-tag, checkpoint — is in
+     **`spec/terraforms/TRACEABILITY-RELOCATION-PLAN-v0.1.md`**. Executes in a
+     fresh session.
    - **Promote `conform-core` to `flow:org.vibevm/discipline-core`** so the future
      `conform-frontend-typescript` can reuse it without a cross-package dep (the
      open question in `typescript/tools/conform-frontend-typescript.md`).
