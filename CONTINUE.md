@@ -1,14 +1,15 @@
 # CONTINUE.md — cold-resume checkpoint
 
-_Written 2026-06-28. **The conform half of the code-bearing-packages refactor
-(PROP-024 Ф1–Ф7) is COMPLETE, green, and the relocated checker is PROVEN to
-catch violations in its shipped form. The binary is now `conform-rust`. The
-NEXT campaign — relocating the traceability toolchain (specmap/specmark) into
-the same package — is fully PLANNED and ready for a fresh session.** Local on
-`main` at `c240fc7`, **2 commits ahead of the mirrored tip `c3fcf63`** (the
-`conform-rust` rename + the plan doc) plus this checkpoint, all NOT mirrored.
-Floor green: `self-check.sh` 8 steps exit 0, specmap 614/583/596/0/0/0, vibe
-check 0/0/0._
+_Written 2026-06-28. **The TRACEABILITY RELOCATION CAMPAIGN (PROP-024 follow-up)
+is COMPLETE and green.** `specmap-core` + `specmark` + `specmark-grammar` now
+live in `stack:org.vibevm/rust-ai-native` next to the conform toolchain, so the
+package ships the **whole** Rust verifier — `conform-rust` AND `specmap-rust` —
+and **traces + gates itself**. The Ф4a specmark-free debt is PAID: the conform
+crates carry their `scope!` tags again. Local on `main` at `f38d719`,
+**11 commits ahead of the origin/mirror tip `c3fcf63`, NONE mirrored — the
+mirror is HELD for the owner's explicit word.** Floor green: `self-check.sh`
+9 steps exit 0; vibevm `specmap --check` 614/566/578/0/0 (4 exempt, 0 orphans);
+package `specmap-rust --gate` 0 orphans; `vibe check` 0/0/0._
 
 > **`spec/WAL.md` is the canonical living state**; if this snapshot and the WAL
 > disagree, the WAL wins. The **git log is the authoritative per-item record**.
@@ -19,183 +20,171 @@ check 0/0/0._
 
 ## TL;DR
 
-PROP-024 makes a package a project that ships runnable code, so installing a
-discipline stack yields *working checkers*. **Ф1–Ф7 relocated the conform
-(structural-gate) half** into `stack:org.vibevm/rust-ai-native` and **proved it
-works**: the standalone `conform-rust` binary — and the binary built from the
-materialised consumer slot — runs against a real project, catches a planted
-violation, exits non-zero, frozen into a permanent integration test.
-
-That move was scoped **conform-first**: it stripped the conform crates of
-`specmark` so they could move without it (which stayed in vibevm). That left a
-debt — the relocated code is now *less* disciplined than the vibevm code it came
-from (no `scope!` tags, can't carry `#[spec(deviates)]`), and the package ships
-only *half* the verification stack. **The owner confirmed the fix (Option B):
-relocate specmap/specmark into the same package too.** That campaign is written
-up cold-executable and is the next session's work.
+PROP-024 makes a package a project that ships runnable code. The conform half
+relocated earlier (Ф1–Ф7, `conform-rust`); **this campaign relocated the
+traceability half** — specmap/specmark — so the package ships the verifier
+whole and disciplines its own code. Five phases, each green at its boundary,
+7 commits `ce4eaa1`→`f38d719`. The campaign plan
+(`spec/terraforms/TRACEABILITY-RELOCATION-PLAN-v0.1.md`) is fully executed.
 
 ## Where work stands
 
-- **Branch `main`**, tip `c240fc7`. **2 commits ahead of the mirrored tip
-  `c3fcf63`** (`2a2932a` conform-rust rename, `c240fc7` the plan doc) + this
-  checkpoint. Origin/the mirrors are at `c3fcf63` (the Ф4–Ф7 batch was mirrored
-  to GitVerse + GitHub mid-session on the owner's explicit word).
-- Floor **green** at the tip: `bash tools/self-check.sh` exit 0 (8 steps: 5
-  vibevm + 3 package gate); `cargo xtask specmap --check` 614/583/596/0/0/0;
-  `vibe check` 0/0/0.
-- Working tree clean (except this checkpoint commit).
+- **Branch `main`**, tip `f38d719`. **11 commits ahead of `origin/main`
+  (`c3fcf63`); NONE mirrored.** Working tree clean.
+- The 11 ahead = 4 from the prior session (`2a2932a`, `c240fc7`, `4d53ccf`,
+  `452a5dc` — the conform-rust rename + plan + its checkpoint) + the 7 this
+  campaign (`ce4eaa1` Ph1, `1456944` Ph2, `f532eab`+`97d0bef`+`d33ed84` Ph3,
+  `dee0321`+`f38d719` Ph4).
+- Floor **green** at the tip: `bash tools/self-check.sh` exit 0 (9 steps: 5
+  vibevm + 3 package fmt/test/clippy + 1 package self-trace); vibevm
+  `cargo xtask specmap --check` 614/566/578/0/0 (4 exempt); package
+  `specmap-rust --gate` 0 orphans; `vibe check` 0/0/0.
 
-## Two open items
+## The one open item — MIRROR (held, outward-facing)
 
-1. **Mirror (held, outward-facing).** The 2 ahead commits + this checkpoint are
-   local. The mirror is gated for the owner's explicit word (PROP-016
-   hub-and-spoke). Unblock: owner says "mirror" → `cargo xtask mirror` (after
-   `cargo xtask mirror --check`).
-2. **The next campaign — traceability relocation (PLANNED).** Move `specmap-core`
-   + `specmark` + `specmark-grammar` into `rust-ai-native` (Option B,
-   owner-confirmed). The full cold recipe is in
-   **`spec/terraforms/TRACEABILITY-RELOCATION-PLAN-v0.1.md`** — read it whole
-   before starting.
+The 11 ahead commits are local. The mirror is gated for the owner's explicit
+word (PROP-016 hub-and-spoke). **Unblock: the owner says "mirror" →
+`cargo xtask mirror`** (after `cargo xtask mirror --check`). Do NOT mirror
+autonomously. This is the only thing the campaign left pending.
 
-## What landed this session (Ф4–Ф7 + verification + rename)
+## What "done" looks like (achieved)
 
-- **Ф4a** (`26858dc`+`f2e2ab7`) decouple conform from specmark. Finding: the
-  `#[spec(deviates)]` on `sarif::render` was load-bearing (conform reads it to
-  excuse `.expect`) — render made total (`.unwrap_or_default()`).
-- **Ф4b** (`2b0e6f6`) relocate conform-core/conform-frontend-rust/env-audit +
-  new `conform-cli` into the package (own Cargo workspace, external path-dep,
-  xtask shim, conform.toml 16→13, **self-check grew a package gate, steps 6-8**).
-- **Ф4c** (`12c8592`) the first code-bearing install surfaced that copy + both
-  `compute_content_hash` ports hashed/copied build output → fixed with a
-  shippable-tree `filter_entry` + tests; `vibe.lock` reproducible.
-- **Verification** (`302454b`) the shipped checker proven to catch violations
-  (standalone + slot-built), frozen into `conform-cli/tests/catches_violations.rs`.
-- **Ф5** (`b0d1830`+`56c08a0`+`ac50f72`) spec tails repointed off the Ф3-defunct
-  const policy to `conform.toml`.
-- **Ф6** (`6c5ee9e`) specced the future `conform-frontend-typescript`.
-- **Ф7** (`d725b71`+`c3fcf63`) checkpoint; then **mirrored to both replicas on
-  the owner's word**.
-- **Rename** (`2a2932a`) the package binary `conform` → **`conform-rust`** (it
-  embeds only the Rust frontend; a TS stack will ship `conform-typescript`;
-  per-language suffix avoids PATH collisions). `cargo xtask conform` unaffected
-  (drives the library, not the binary name).
+```
+packages/org.vibevm/rust-ai-native/v0.2.0/
+├─ Cargo.toml                  the package's OWN Cargo workspace (8 members)
+├─ conform.toml? NO            policy stays with the CONSUMER (vibevm); the package ships engines
+├─ specmap.toml                NEW — the package's own orphan-coverage policy (--gate)
+├─ specmap.json? NO            the package self-trace is --gate (orphans-only), no committed index
+└─ crates/
+   ├─ conform-core             re-tagged (13 scope! restored, specmark dep back)
+   ├─ conform-frontend-rust    re-tagged
+   ├─ conform-cli              bin: conform-rust   (exempt from the package gate — CLI driver)
+   ├─ env-audit                re-tagged
+   ├─ specmap-core             owns the Specmap JTD types; config-driven; carries its scope! tags
+   ├─ specmap-cli              bin: specmap-rust   (NEW — exempt; CLI driver)
+   ├─ specmark                 proc-macro          (exempt — bootstrap pair)
+   └─ specmark-grammar         shared grammar      (exempt — bootstrap pair)
+```
+- The package builds **two binaries** (`conform-rust`, `specmap-rust`) and
+  **traces + gates itself** (self-check step 9: `specmap-rust --gate`).
+- vibevm consumes both engines by external path-dep; `cargo xtask conform` and
+  `cargo xtask specmap` are thin shims; the 10 specmark dogfooders are unchanged
+  and still tagged.
+- `vibe-wire` no longer owns the Specmap types; that edge is gone.
 
-## The next campaign — traceability relocation (read the plan)
+## Next-steps recipe (whoever picks up)
 
-**`spec/terraforms/TRACEABILITY-RELOCATION-PLAN-v0.1.md`** (committed `c240fc7`).
-Option B: specmap-core + specmark + specmark-grammar → rust-ai-native, so the
-package ships the *whole* Rust verifier and the conform crates re-acquire their
-tags (the discipline disciplines itself again). Phase shape mirrors the conform
-move: **spike (proc-macro path-dep, gating) → sever the specmap-core→vibe-wire
-JTD edge → productise (specmap.toml) → relocate + a `specmap-rust` binary →
-re-tag the conform crates + package self-trace → checkpoint.** Verified facts
-already baked in: 11 specmark dogfooders rewire via ~3 root Cargo.toml lines
-(they use `.workspace = true`); specmap-core is consumed only by xtask;
-`schemas/specmap.jtd.json` → `vibe-wire/src/generated/specmap/` is the one edge
-out (no other consumer); specmap-core keeps its specmark dep throughout (no
-decouple needed — specmark travels with it). Why NOT discipline-core now: a
-neutral package depending on a Rust proc-macro is a backwards edge — deferred
-until a second language needs the shared core.
+1. **Mirror the 11 ahead on the owner's word** (`cargo xtask mirror`). Nothing
+   in this campaign is mirrored yet.
+2. **Smaller follow-ups, none blocking:**
+   - `crates/vibe-registry/src/lib.rs` at the 600-line budget edge — split the
+     copy + hash into a module (a health-collector follow-up).
+   - `.vibeignore` glob support (PROP-024 §2.2 "optional", no consumer needs it).
+   - **discipline-core consolidation** (the deferred owner decision): promote the
+     neutral engines (conform-core + specmap-core) into
+     `flow:org.vibevm/discipline-core` for cross-language reuse — only worth it
+     once a SECOND language (TypeScript) actually needs the shared core. A
+     neutral package depending on a Rust proc-macro is a backwards edge; defer
+     until the decomposition pays.
+   - The package could also **conform-check ITSELF** (it only specmap-traces
+     itself today) — a symmetric follow-up if desired.
 
 ## Non-obvious findings (still in force)
 
-- **A discipline tag can be load-bearing for a GATE, not just for specmap.**
-  conform reads `#[spec(deviates)]` text (frontend `is_spec_deviates`) to excuse
-  unwrap/unsafe/env in domain code. Stripping such a tag without handling the
-  excused site turns the gate red — but self-check's `conform check` catches it
-  (self-guarded). Resolved for render (now total).
-- **specmark-free relocated crates are DEBT, not cleanliness.** The conform-first
-  scoping left the relocated code un-traced + unable to carry deviation
-  testimony. This is *the* reason the traceability relocation campaign exists —
-  the discipline must discipline itself, and the package must ship the whole
-  verifier.
-- **The package content_hash must be over the SHIPPABLE tree** (Ф4c). Build
-  output is volatile; hashing it makes `vibe.lock` non-reproducible. Fixed; the
-  two duplicated hashers' exclude lists are currently identical (verified) and a
-  drift would surface as a loud install-time integrity error, not silently.
-  `.vibeignore` glob support is the one spec-incomplete bit (PROP-024 §2.2,
-  "optional", no consumer needs it) — a noted follow-up.
-- **The Cargo nested-workspace topology works on Windows** for library
-  path-deps; the traceability campaign must spike the **proc-macro** path-dep
-  (specmark) before moving — that is Phase 0 of the plan.
-- **Machine quirks (unchanged):** Edit/Write only (PS `Set-Content` corrupts
-  UTF-8-no-BOM); `git commit -F - <<'MSG'`; `self-check.sh` via Git Bash; **check
-  the real exit code, never a `| tail`'d pipe** (it masks the script's exit);
-  don't `2>&1`-redirect native cargo in PowerShell.
+- **The `/generated/` path exclusion is crate-agnostic** (rscan + conform
+  `exclude_substrings = ["/generated/"]`). That is what let the JTD Specmap
+  types move into `specmap-core/src/generated/` without becoming orphans —
+  byte-identity in Ph1 rode on it.
+- **Dangling edges are WARNINGS, not failures; the ratchet gates orphans, not
+  resolution.** This is why the package self-trace is `specmap-rust --gate`
+  (orphans-only): the package's `scope!` tags cite vibevm-hosted
+  `spec://vibevm/discipline/…` units, so on the package tree every edge is
+  cross-repo dangling — a committed package `specmap.json` would be all-noise,
+  but "is every gated crate's public surface tagged" is the real self-discipline.
+- **A new tagged module grows the index by exactly +1 code_item +1 edge** (Ph2's
+  config.rs); the relocation removed specmap-core's ~18 modules (Ph3,
+  584→566 / 597→578). The drift classifier prints edge deltas, not code-item
+  deltas — read the summary line for code items.
+- **The generated `Specmap`/`Edge` derive only Serialize/Deserialize (no
+  `Debug`)** — test assertions cannot `{:?}` them.
+- **Machine quirk that bit twice this session: `bash … > "$VAR/file" 2>&1` with
+  an UNSET `$VAR`** writes to `/file` → Git-Bash permission-denied and the
+  command never runs (a background self-check reported "exit 0" that was the
+  failed redirect, not a real pass). Inline the scratchpad path, or set the var
+  on the SAME line. Unchanged: Edit/Write only (PS Set-Content corrupts
+  UTF-8-no-BOM); `git commit -F - <<'MSG'`; self-check via Git Bash; check the
+  REAL exit code, never a `| tail`'d pipe.
 
-## Repository map (conform relocated; specmap/specmark still in `crates/` pending the campaign)
+## Repository map (post-campaign)
 
 ```
 vibevm/                      Rust workspace; binary = `vibe`; tooling = cargo xtask
-├─ Cargo.toml                root: exclude=[packages,vibedeps]; conform deps → package; conform-cli
-├─ conform.toml              vibevm's conform policy — 13 gated / 4 exempt
+├─ Cargo.toml                root: exclude=[packages,vibedeps]; specmark/specmap-core/specmap-cli → package paths
+├─ conform.toml              vibevm's conform policy — 10 gated / 4 exempt (the 3 moved crates de-gated)
+├─ specmap.toml              vibevm's specmap policy — scan crates/*+xtask, 4 exempt (specmark/grammar dropped)
+├─ specmap.json              the traceability index — 614/566/578 (specmap-core's modules left)
+├─ schemas/specmap.jtd.json  the Specmap schema (generator INPUT; output routes to the PACKAGE now)
 ├─ spec/
 │   ├─ WAL.md                CANONICAL living state
 │   ├─ common/               PROP-000.. + PROP-024-code-bearing-packages.md
-│   ├─ discipline/           ENGINE-CONFORM, PROP-014, README (mechanism table → package)
-│   └─ terraforms/           DISCIPLINE-SWEEP, *-PLAN history, **TRACEABILITY-RELOCATION-PLAN-v0.1.md (the next campaign)**
-├─ schemas/specmap.jtd.json  the specmap type schema — moves with specmap-core in the campaign
+│   ├─ discipline/           ENGINE-CONFORM, PROP-014 (the spec units the package's tags cite — vibevm-hosted)
+│   └─ terraforms/           TRACEABILITY-RELOCATION-PLAN-v0.1.md (THIS campaign — now executed)
 ├─ packages/org.vibevm/rust-ai-native/v0.2.0/
-│   ├─ Cargo.toml + LICENSE.md      the package's own Cargo workspace
-│   └─ crates/{conform-core, conform-frontend-rust, conform-cli (bin conform-rust), env-audit}
-│                                   ← campaign ADDS specmap-core, specmark, specmark-grammar, specmap-cli (bin specmap-rust)
-├─ vibedeps/                 materialised install (git-TRACKED); rust-ai-native slot ships crates/ (no target/)
-├─ crates/
-│   ├─ specmap-core          → vibe-wire JTD edge; hardcoded crates/ scan — MOVES in the campaign
-│   ├─ specmark / specmark-grammar   proc-macro + grammar — MOVE in the campaign
-│   ├─ vibe-registry/lib.rs  shippable-tree filter (599 lines, at the budget edge — split is a follow-up)
-│   ├─ vibe-index/content_hash.rs    same filter (parity-duplicated)
-│   └─ vibe-* (core/cli/install/registry/resolver/workspace/mcp/check/publish/index/wire/graph/llm)
-├─ xtask/                    conform.rs + specmap.rs (shims/drivers), health.rs, mirror, codegen
-├─ tools/self-check.sh       8-step floor gate (5 vibevm + 3 package)
-└─ specmap.json / specmap-ratchet.json   the traceability index + orphan ratchet
+│   ├─ Cargo.toml + specmap.toml + LICENSE.md   the package's workspace + self-trace policy
+│   └─ crates/{conform-core, conform-frontend-rust, conform-cli (bin conform-rust), env-audit,
+│              specmap-core, specmap-cli (bin specmap-rust), specmark, specmark-grammar}
+├─ vibedeps/                 materialised install (git-TRACKED); rust-ai-native slot ships all 8 crates (no target/)
+├─ crates/                   vibe-{core,cli,install,registry,resolver,workspace,mcp,check,publish,index,wire,graph,llm}
+│                            (specmap-core / specmark / specmark-grammar NO LONGER HERE — moved to the package)
+├─ xtask/                    conform.rs + specmap.rs = thin shims over the package CLIs; codegen.rs routes specmap → package
+├─ tools/self-check.sh       9-step floor gate (5 vibevm + 3 package fmt/test/clippy + 1 package specmap self-trace)
+└─ specmap.json              the traceability index + (folded) ratchet now in specmap.toml
 ```
 
 ## Recent commit chain (newest first)
 
 ```
-c240fc7 docs(plan): traceability relocation campaign + resume pointers   (this session)
-2a2932a refactor(conform): name the binary conform-rust                   (this session)
-c3fcf63 docs(wal): checkpoint — Ф4-Ф6 landed green, verification proven   (← mirrored tip)
+f38d719 build(deps): re-materialise vibedeps for the package self-trace      (Ph4)
+dee0321 feat(specmap): re-tag the conform crates + trace the package itself   (Ph4 — the payoff)
+d33ed84 build(deps): re-materialise vibedeps for the traceability move        (Ph3)
+97d0bef chore(specmap): regen the index for the relocation                    (Ph3)
+f532eab refactor(specmap): relocate the traceability toolchain into the package (Ph3)
+1456944 refactor(specmap): config-driven scan via specmap.toml                (Ph2)
+ce4eaa1 refactor(specmap): own the Specmap types, sever the vibe-wire edge    (Ph1)
+452a5dc docs(wal): save session — Post-Ф7 rename + traceability plan, mirror held  (← origin/mirror tip is c3fcf63, 4 below)
+4d53ccf docs(continue): save session — conform relocation done, traceability next
+c240fc7 docs(plan): write the traceability relocation campaign + resume pointers
+2a2932a refactor(conform): name the binary conform-rust to avoid PATH collisions
+c3fcf63 docs(wal): checkpoint — Ф4-Ф6 landed green, verification proven        (← MIRRORED tip)
 d725b71 docs(continue): cold-resume checkpoint — code-bearing packages Ф4-Ф6
-6c5ee9e docs(typescript): spec the future conform-frontend-typescript     (Ф6)
-ac50f72 docs(conform): drop a stale CONFORM_GATED reference               (Ф5)
-56c08a0 docs(discipline): reflect the conform.toml policy in the sweep     (Ф5)
-302454b test(conform): prove the shipped gate catches violations e2e       (verification)
-b0d1830 docs(discipline): point the mechanism table at the relocated conform (Ф5)
-12c8592 fix(registry): exclude build output from the content hash and copy (Ф4c)
-2b0e6f6 refactor(conform): relocate the conform toolchain into the package (Ф4b)
-f2e2ab7 chore(specmap): regen + exempt the conform crates from the ratchet (Ф4a)
-26858dc refactor(conform): drop the specmark tags from the conform crates  (Ф4a)
+6c5ee9e docs(typescript): spec the future conform-frontend-typescript
+ac50f72 docs(conform): drop a stale CONFORM_GATED reference from the env rule
+56c08a0 docs(discipline): reflect the conform.toml policy in the sweep manual
+302454b test(conform): prove the shipped gate catches violations end-to-end
+b0d1830 docs(discipline): point the mechanism table at the relocated conform
+12c8592 fix(registry): exclude build output from the content hash and copy
+2b0e6f6 refactor(conform): relocate the conform toolchain into the package
+f2e2ab7 chore(specmap): regen + exempt the conform crates from the ratchet
+26858dc refactor(conform): drop the specmark tags from the conform crates      (the Ф4a strip Ph4 reversed)
 ```
 
 ## Quick-start
 
 ```sh
-bash tools/self-check.sh; echo "EXIT=$?"          # 8-step floor gate; must be 0 (real exit code)
-cargo xtask specmap --check                        # clean (614 / 583 / 596 / 0 / 0)
-cargo xtask conform check                          # 0 findings, 13 gated / 4 exempt (via the conform_cli shim)
+bash tools/self-check.sh; echo "EXIT=$?"          # 9-step floor gate; must be 0 (real exit code)
+cargo xtask specmap --check                        # vibevm index clean (614 / 566 / 578 / 0 / 0, 4 exempt)
+cargo xtask conform check                          # 0 findings, 10 gated / 4 exempt
 cargo run -q -p vibe-cli -- check --path .         # vibe check 0/0/0
 cargo run -p vibe-cli -- install --registry packages --assume-yes   # re-materialise vibedeps
 
-# The SHIPPED conform engine directly (consumer surface) — binary is conform-rust:
-cargo run --manifest-path packages/org.vibevm/rust-ai-native/v0.2.0/Cargo.toml \
-  -p conform-cli --bin conform-rust -- check --path .
+# The SHIPPED engines directly (consumer surface), from the package manifest:
+PKG=packages/org.vibevm/rust-ai-native/v0.2.0
+cargo run --manifest-path $PKG/Cargo.toml -p conform-cli  --bin conform-rust  -- check --path .
+cargo run --manifest-path $PKG/Cargo.toml -p specmap-cli  --bin specmap-rust  -- --check --path .
+cargo run --manifest-path $PKG/Cargo.toml -p specmap-cli  --bin specmap-rust  -- --gate  --path $PKG  # the package self-trace
 
 cargo xtask mirror --check                         # confirm GitVerse + GitHub sync (HELD; do not mirror without owner word)
 ```
-
-## Next-steps recipe (whoever picks up)
-
-1. **Mirror the 2 ahead + this checkpoint on the owner's word** (`cargo xtask
-   mirror`). The Ф4–Ф7 batch is already mirrored; only the rename + plan +
-   checkpoint are pending.
-2. **Execute the traceability relocation campaign** —
-   `spec/terraforms/TRACEABILITY-RELOCATION-PLAN-v0.1.md`, fresh session, phase
-   by phase (start with the gating proc-macro spike, Phase 0).
-3. **Smaller follow-ups, none blocking:** split `crates/vibe-registry/src/lib.rs`
-   (599 lines); `.vibeignore` glob support; eventually consolidate the neutral
-   engines into `discipline-core` (only when a second language needs it).
 
 The WAL supersedes this snapshot wherever they diverge. Session-resume phrase:
 `восстанови сессию` (boots into a status report and waits — the candidate next
