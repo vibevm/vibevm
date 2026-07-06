@@ -3,21 +3,39 @@
 //! (`run_check`) or rewrite the ratchet baseline (`run_freeze`) over a
 //! project tree.
 //!
-//! This was extracted out of vibevm's `xtask` so the rust-ai-native package
-//! ships a *runnable* engine, not a description of one (PROP-024 code-bearing
-//! packages). vibevm's `cargo xtask conform` is now a thin shim over this
-//! library, and the `conform` binary (`src/main.rs`) is what an installed
-//! consumer runs in its own project. The policy is data (`conform.toml`),
-//! never hardcoded here — the same engine runs on any layout (PROP-024 §2.2).
+//! The rust-ai-native package ships this as a *runnable* engine, not a
+//! description of one (PROP-024 code-bearing packages): the `conform-rust`
+//! binary (`src/main.rs`) is what an installed consumer runs in its own
+//! project, and a project-local wrapper (a dev-repo task runner, say) can
+//! drive the same library. The policy is data (`conform.toml`), never
+//! hardcoded here — the same engine runs on any layout (PROP-024 §2.2).
 
 use std::path::Path;
 
 use anyhow::{Context, Result, bail};
-use conform_core::{Config, Rule, rules};
+use conform_core::{Config, ConfigOrigin, Rule, rules};
 
 /// Load the project's conform policy (`conform.toml` at the tree root).
+/// Strict: an absent file is an error. The gate paths use
+/// [`load_config_or_default`] instead; this entry stays for callers that
+/// require a configured project (health collection, invariant tests).
 pub fn load_config(root: &Path) -> Result<Config> {
     Config::load(&root.join("conform.toml"))
+}
+
+/// Load the policy or fall back to the topology-detected default, and say
+/// which happened — a defaulted (nothing-gated) run announces itself so it
+/// can never masquerade as a configured green.
+pub fn load_config_or_default(root: &Path) -> Result<(Config, ConfigOrigin)> {
+    let (cfg, origin) = Config::load_or_default(root)?;
+    match origin {
+        ConfigOrigin::Loaded => eprintln!("conform: policy conform.toml (loaded)."),
+        ConfigOrigin::Defaulted => eprintln!(
+            "conform: NO conform.toml — topology default in force, nothing is gated; \
+             run `discipline-rust init` to write a starting policy."
+        ),
+    }
+    Ok((cfg, origin))
 }
 
 /// Build the standing rule set from the policy, in one place so `run_check`
@@ -73,7 +91,8 @@ pub fn run_check(root: &Path, baseline_rel: &str, scope: Option<&str>) -> Result
     use conform_core::{ExtractionLog, Frontend, Store, baseline, check, count_by_rule, sarif};
     use conform_frontend_rust::RustFrontend;
 
-    let config = load_config(root)?;
+    let (config, _origin) = load_config_or_default(root)?;
+    config.validate_against_tree(root)?;
     let store = Store::at_repo(root, &config);
     let mut log = ExtractionLog::default();
     let frontend = RustFrontend;
@@ -140,7 +159,8 @@ pub fn run_freeze(root: &Path, baseline_rel: &str) -> Result<()> {
     use conform_core::{ExtractionLog, Store, check, count_by_rule};
     use conform_frontend_rust::RustFrontend;
 
-    let config = load_config(root)?;
+    let (config, _origin) = load_config_or_default(root)?;
+    config.validate_against_tree(root)?;
     let store = Store::at_repo(root, &config);
     let mut log = ExtractionLog::default();
     let frontend = RustFrontend;
