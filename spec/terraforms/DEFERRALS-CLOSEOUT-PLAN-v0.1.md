@@ -5,9 +5,15 @@ _Status: ACCEPTED with owner amendments, 2026-07-07. Written against tree
 `spec/boot/90-user.md` is sanctioned ("меняй как хочешь"), (2) PROP-025 is
 spec PLUS implementation, not spec-only (D6 rewritten), (3) the TypeScript
 frontend is the full Compiler-API variant, not the lexical MVP (D2
-rewritten). vibe-tcg-ts is explicitly OUT — a separate plan (see
-non-goals). Cold-executable: any phase is a safe stop; the floor must be
-green at every phase boundary._
+rewritten). Two further owner directives the same day, both recorded in
+`spec/boot/90-user.md`: (4) **clean-room rule** — the PLDI'25 repository
+(`eth-sri/type-constrained-code-generation`) is inspiration-only, never a
+code source (binds the future vibe-tcg-ts plan); (5) **quality bar** — the
+TypeScript toolchain is production-grade work, not a sketch: full
+implementations, full subcommand parity, no stubs as shipped surface
+(D7 and Phase 4 rewritten accordingly). vibe-tcg-ts is explicitly OUT — a
+separate plan (see non-goals). Cold-executable: any phase is a safe stop;
+the floor must be green at every phase boundary._
 
 Mandate (owner, 2026-07-07): take everything listed in
 `SELF-SUFFICIENCY-PLAN-v0.1.md` §10 (plus the standing `vibe-registry`
@@ -41,9 +47,10 @@ Non-goals (named, stay deferred):
   Compiler-API extractor infrastructure (D2) and the demo project as a
   testbed — so the follow-up plan starts from a real seam, not from zero.
   Same disposition for its Rust twin (`vibe-tcg`, carried as a conscious
-  stub since the TS-stack session).
-- `test-gate`/`tripwire`/`health`/`fast-loop`/`codemod` TS twins;
-  prettier/eslint floor steps as gated defaults.
+  stub since the TS-stack session). **Clean-room rule (owner directive):**
+  that repository is inspiration-only — its code is never copied, adapted,
+  or ported; the future plan reimplements behavior in structurally
+  different code (`spec/boot/90-user.md` carries the binding text).
 - The full VibeVM TypeScript surface (the demo is the pilot-lite, not the
   pilot).
 - Cross-package path-dep rewriting at materialise time (PROP-025 §6 specs
@@ -202,11 +209,14 @@ floor (strict + noUncheckedIndexedAccess + exactOptionalPropertyTypes +
 erasableSyntaxOnly), 2–3 cells (branded type at a seam, Result-shaped
 error union, one runtime validator at an erasure boundary), `node:test`
 tests runnable via bare `node --test` (strip-types — no build step),
-a `package.json` whose one devDependency is `typescript` (serving BOTH
-the tsc floor step and the D2 extractor's `require.resolve`;
-`node_modules/` gitignored, `npm install` part of the bootstrap recipe),
-`spec/PROP-001.md` with anchors, JSDoc markers citing them, and its own
-`specmap.toml` (namespace `ts-demo`) + `conform.toml`. `research/` is
+a `package.json` with the FULL floor's devDependencies — `typescript`
+(also serving the D2 extractor's `require.resolve`), `prettier`,
+`eslint` + `typescript-eslint` (flat config at the cards' Band-3
+baseline) — `node_modules/` gitignored, `npm install` part of the
+bootstrap recipe; `spec/PROP-001.md` with anchors, JSDoc markers citing
+them, and its own `specmap.toml` (namespace `ts-demo`) + `conform.toml`.
+The demo exercises ALL SEVEN floor steps — it is the production shape a
+consumer copies, not a reduced sketch (owner quality bar). `research/` is
 inert to vibevm's own gates (scan roots are explicit: `crates/*`, `xtask`)
 — Phase 0 verifies.
 
@@ -255,18 +265,31 @@ here so Phase 9 executes cold:
 - `cargo install --path` remains the documented degraded path (no-vibe
   environments, CI).
 
-### D7 — the TS floor v1 composition
+### D7 — the TS floor: full Rust-floor parity (owner quality bar)
 
-`discipline-typescript floor` runs, in order: **typecheck** (`npx tsc
---noEmit`, resolved from the project's node_modules or the npm cache) →
-**tests** (`node --test`, the built-in runner — zero deps) → **conform**
-(`conform-typescript`) → **specmap** (`specmap-typescript --check`). Four
-steps, each with the per-policy origin line (the defaulted-policy
-announcement carried over from the Rust floor). prettier/eslint steps and
-a TS test-gate (junit/TAP parsing) are NAMED deferrals — absent tooling is
-a hard step failure, never a silent skip, so a consumer without
-`typescript` installed sees a red floor with the install recipe, not a
-green lie.
+`discipline-typescript floor` mirrors the Rust floor's whole shape —
+format → tests → lints → conform → specmap → test-gate — in TS tooling,
+in order:
+
+1. **format** — `prettier --check .` (resolved from the project's
+   node_modules);
+2. **typecheck** — `tsc --noEmit` (project-resolved — the compiler is
+   the TS analog of the type-checking half of `cargo test`'s compile);
+3. **tests** — the project's runner: `node --test` (built-in) or
+   `vitest run`, selected by project config/detection;
+4. **lint** — `eslint .` (project-resolved, flat config);
+5. **conform** — `conform-typescript`;
+6. **specmap** — `specmap-typescript --check`;
+7. **test-gate** — the xfail-strict diff against the tests baseline,
+   when a baseline registry exists (same condition as the Rust floor).
+
+Every step carries the per-policy origin line (the defaulted-policy
+announcement carried over from the Rust floor). Absent tooling is a hard
+step failure with the install recipe, never a silent skip. A project may
+disable a step ONLY explicitly in config with a recorded reason, and the
+floor prints that disablement every run — the Rust floor's
+"a defaulted nothing-gated run announces itself" posture, extended to
+step disablement.
 
 ### D8 — skills twins: adapt, not symlink
 
@@ -423,21 +446,46 @@ later phases:
 
 ## 7. Phase 4 — the `discipline-typescript` umbrella
 
-1. New TS-stack crate `discipline-cli-typescript` (bin
-   **`discipline-typescript`**): `init` (generates the six artifacts in
-   their TS shape — conform.toml `[typescript]`, specmap.toml with
-   discovered `[[external_specs]]`, both baselines, both registries — the
-   Rust init generalised, shared helpers vendored or duplicated-with-test,
-   NOT cross-linked to discipline-cli), `floor` (D7's four steps),
-   `conform` / `specmap` passthroughs, `trace` (same specmap-core explain —
-   works over the mixed index).
-2. `test-gate`/`tripwire`/`health`/`fast-loop`/`codemod` subcommands print
-   a named not-yet-shipped message citing this plan (visible deferral, not
-   absence).
-3. Acceptance: `discipline-typescript init && floor` green on a scratch TS
-   fixture (tsc step per Phase 0 probe result); package tests green.
-4. Commit: `feat(typescript-ai-native): ship the discipline-typescript
-   umbrella`.
+Owner quality bar: **full subcommand parity with `discipline-rust` — all
+ten, production-grade, no stubs as shipped surface.** Each twin mirrors
+the Rust original's contract over TS mechanics:
+
+1. `init` — generates the six artifacts in their TS shape (conform.toml
+   `[typescript]`, specmap.toml with discovered `[[external_specs]]`,
+   both baselines, both registries), plus TS-specific next-steps output;
+   round-trips its generated forms through the parsing engines in its own
+   test (the Rust init lesson).
+2. `floor` — D7's seven steps.
+3. `conform` / `specmap` — engine passthroughs (same policy files).
+4. `trace` — specmap-core explain over the mixed index (works verbatim;
+   the engine is language-neutral after Phase 3).
+5. `test-gate` — run the project's test runner with a machine-readable
+   reporter (node:test/vitest JSON or junit), diff xfail-strict against
+   `tests-baseline.json` (BROWNFIELD §4 semantics identical to the
+   nextest twin, including the trivially-green fresh-tree case).
+6. `tripwire` — debt-registry `touch:` tripwires against the current
+   change set; warn-only. (Registry + git mechanics — shared engine code
+   in the neutral core if extraction is clean, else a faithful twin.)
+7. `health` — the sweep fact-collector over ts-tsc facts: public-surface
+   doc/type-example coverage beyond the gated set, the [540,600) file
+   danger band, ranked drain backlog, deviation census (`@ts-expect-error`
+   + `@deviates`) — reusing the SAME fact store as the conform gate so
+   numbers cannot drift.
+8. `fast-loop` — per-cell isolation: `tsc --noEmit -p <cell>` + the
+   cell's tests inside the per-cell budget (scaffold-E, the card's
+   TS shape).
+9. `codemod` — the scaffold-I frame: parameterized, checked, atomic
+   multi-file operations, implemented over the Compiler-API
+   transformation side of the extractor toolchain; ships with the same
+   operation set the Rust twin carries (inspected at execution),
+   TS-projected.
+
+Acceptance: `discipline-typescript init && floor` green on a scratch TS
+fixture; every subcommand exercised by a package test (fixture-driven,
+node-gated where the extractor is involved); package tests green.
+Commits: `feat(typescript-ai-native): ship the discipline-typescript
+umbrella` (+ follow-up commits per subcommand group if the diff warrants
+splitting by Rule 3).
 
 ## 8. Phase 5 — skills twins, boot snippet, card statuses
 
@@ -642,8 +690,8 @@ vibe trace explain "spec://vibevm/common/PROP-000#commits"   # delegates, render
 vibe bin sync && vibe bin list                   # shims for all declared [[binary]] tools
 vibe bin exec discipline-rust -- floor --path .  # dispatch through the shim path: green
 cd research/ts-demo && vibe install --assume-yes # from the in-repo registry (builds bins, consented)
-npm install                                      # typescript devDep (tsc + the extractor)
-discipline-typescript floor                      # tsc → node --test → conform → specmap: green
+npm install                                      # typescript + prettier + eslint devDeps
+discipline-typescript floor                      # prettier → tsc → tests → eslint → conform → specmap → test-gate: green
 discipline-typescript trace explain "spec://ts-demo/PROP-001#req-…"
 # spec/modules/vibe-workspace/PROP-025-binary-delivery.md exists, anchors resolve
 # spec/boot/90-user.md carries the quirks; wc -l crates/vibe-registry/src/lib.rs < 550

@@ -35,6 +35,14 @@ User-owned boot snippet. `vibe install`/`uninstall` never touches this file. Add
 - Roll a change out to ALL source mirrors (GitVerse + GitHub), verified 2026-06-14: `cargo xtask mirror` — reads `mirrors.toml`, pushes `main` + tags to every target fast-forward-only, never `--force`. `cargo xtask mirror --check` verifies sync; `cargo xtask mirror --from <name>` pulls a host's accepted-PR merge into mainline first. This is the standard rollout, preferred over a bare `git push origin`. See [PROP-016](../common/PROP-016-source-mirrors.md).
 - Publish to GitHub (verified 2026-04-29): `vibe registry publish fixtures/registry/flow/<name>/v0.1.0` — публишер сам создаёт репо в `vibespecs` org через `POST /orgs/vibespecs/repos`, пушит контент, тэгает версию. Token считывается из `~/.vibevm/github.publish.token` без побочных эффектов.
 
+## Third-party research code — clean-room rule (owner directive, 2026-07-07)
+
+**`eth-sri/type-constrained-code-generation` (PLDI'25, https://github.com/eth-sri/type-constrained-code-generation) is inspiration-only — NEVER a code source.** Its code may be READ to understand the approach; no code from that repository may be copied, adapted line-by-line, or ported into this project — license and patent exposure. The working method is clean-room: study what their code achieves, then write STRUCTURALLY DIFFERENT code that reaches the same behavior (identical results are fine; borrowed expression is not). This binds any future `vibe-tcg` / `vibe-tcg-ts` work. Apply the same posture to any other research repository until the owner explicitly clears its license/patent status.
+
+## TypeScript toolchain — quality bar (owner directive, 2026-07-07)
+
+The TypeScript discipline toolchain (extractor, bridge, conform/specmap frontends, `discipline-typescript`, the demo) is **production-grade work, not a sketch**: it is the foundation for a much larger effort. No "MVP" framing, no stub subcommands left as the shipped surface, no skipped edge cases justified by scope. Full implementations at a level fit to show in production; spend whatever tokens/time that takes. (Recorded from the owner's words during the deferrals-closeout campaign; survives it.)
+
 ## Operating modes (codewords)
 
 Trigger phrases that switch the session into an alternate working posture are catalogued in [PROP-006](../common/PROP-006-operating-modes.md). Recognise a codeword when the owner invokes it; otherwise treat the session as default posture (the four rules from `CLAUDE.md` in their plain reading).
