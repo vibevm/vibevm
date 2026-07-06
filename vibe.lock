@@ -1,20 +1,20 @@
 [meta]
 generated_by = "vibe 0.1.0-dev"
-generated_at = "2026-07-06T22:04:46Z"
+generated_at = "2026-07-06T23:29:07Z"
 schema_version = 5
 root_dependencies = [
-    "flow:org.vibevm/discipline-core@^0.3.0",
-    "stack:org.vibevm/rust-ai-native@^0.3.0",
-    "stack:org.vibevm/typescript-ai-native@^0.2.0",
+    "flow:org.vibevm/discipline-core@^0.4.0",
+    "stack:org.vibevm/rust-ai-native@^0.4.0",
+    "stack:org.vibevm/typescript-ai-native@^0.3.0",
 ]
 
 [[package]]
 kind = "flow"
 name = "discipline-core"
 group = "org.vibevm"
-version = "0.3.0"
-source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/discipline-core/v0.3.0"
-content_hash = "sha256:bcfe8645e82c3f1ee1f1586ade497ade54948cc9334657b61940d37b53b9e979"
+version = "0.4.0"
+source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/discipline-core/v0.4.0"
+content_hash = "sha256:2a18e35daa75f3ac4ec4c89cc0ee6aeb753b0e441a6e663728c6514465055cf2"
 files_written = []
 source_kind = "registry"
 
@@ -22,20 +22,20 @@ source_kind = "registry"
 kind = "stack"
 name = "rust-ai-native"
 group = "org.vibevm"
-version = "0.3.0"
-source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/rust-ai-native/v0.3.0"
-content_hash = "sha256:166c7182e46b66e975f3e585912d80b44785e84817b5e4d2e8a60cbd5624ea05"
+version = "0.4.0"
+source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/rust-ai-native/v0.4.0"
+content_hash = "sha256:8200f0ee14891126a52d8ca4bb590f5cd857d9d28a94ee61f26185e94408d0da"
 files_written = []
-dependencies = ["flow:org.vibevm/discipline-core@=0.3.0"]
+dependencies = ["flow:org.vibevm/discipline-core@=0.4.0"]
 source_kind = "registry"
 
 [[package]]
 kind = "stack"
 name = "typescript-ai-native"
 group = "org.vibevm"
-version = "0.2.0"
-source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/typescript-ai-native/v0.2.0"
-content_hash = "sha256:59e80c48023f4da78279ff21554fcff4eb25bb0b714abc8a4c6fc97a41fe53b6"
+version = "0.3.0"
+source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/typescript-ai-native/v0.3.0"
+content_hash = "sha256:c38930d1864db4eea5252800d528840f9761f294ca3b09e7c1e69e7a59f4ae98"
 files_written = []
-dependencies = ["flow:org.vibevm/discipline-core@=0.3.0"]
+dependencies = ["flow:org.vibevm/discipline-core@=0.4.0"]
 source_kind = "registry"

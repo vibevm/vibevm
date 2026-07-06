@@ -1,0 +1,20 @@
+[package]
+name = "typescript-ai-native"
+group = "org.vibevm"
+kind = "stack"
+version = "0.3.0"
+authors = ["Oleg Chirukhin"]
+license = "EULA"
+description = "AI-Native TypeScript - the TypeScript projection of the Discipline v0.2: cells, branding over structural typing, contract-first ordering, the nine scaffolds in TypeScript, tsconfig-as-discipline, the erasure boundary, errors as discriminated unions, type-level testing, and the nine scaffold cards"
+keywords = ["typescript", "ai-native", "discipline", "stack"]
+
+[compatibility]
+min_vibe_version = "0.1.0"
+requires_kinds = []
+
+[requires]
+packages = { "flow:org.vibevm/discipline-core" = "^0.4" }
+
+[boot_snippet]
+source = "spec/boot/20-stack-typescript-ai-native.md"
+category = "stack"

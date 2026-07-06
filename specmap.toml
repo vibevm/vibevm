@@ -52,4 +52,4 @@ dispositioned = []
 # dangling. Units found here never enter the committed specmap.json.
 [[external_specs]]
 namespace = "discipline-core"
-root = "vibedeps/flow-discipline-core/0.3.0/spec"
+root = "vibedeps/flow-discipline-core/0.4.0/spec"

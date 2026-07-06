@@ -5,7 +5,7 @@
 one file — the portable sweep template, the Rust idioms, and vibevm's own
 numbers — and the first two now ship with the Discipline itself
 (SELF-SUFFICIENCY-PLAN Phase 5): the template is
-[`spec://discipline-core/04-SWEEP-PLAYBOOK`](../../vibedeps/flow-discipline-core/0.3.0/spec/04-SWEEP-PLAYBOOK.md)
+[`spec://discipline-core/04-SWEEP-PLAYBOOK`](../../vibedeps/flow-discipline-core/0.4.0/spec/04-SWEEP-PLAYBOOK.md)
 (tiers, cadence, collector contract, the WISH→census→Rule ladder), the Rust
 idioms are GUIDE §14 in the rust-ai-native stack, and the runnable surface
 is the shipped `discipline-rust` tool driven by the `/discipline-sweep`

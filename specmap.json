@@ -10768,7 +10768,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:aea5db205e646222e7a067a00c5a2be10db41d67a96b104000f2a527177be881",
+      "content_hash": "sha256:fe40345e182a70c2313d13ef3a492fe77efdd5d9251a51379c8fb404bb6d0448",
       "doc_path": "common/PROP-024",
       "file": "spec/common/PROP-024-code-bearing-packages.md",
       "heading": "PROP-024 — Code-bearing packages (a package is a project)",
@@ -14175,7 +14175,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:f03ceb3aeaeb59295c82c8dc6a2fe3e1ad0cc0c252f10352294cb7390d99b019",
+      "content_hash": "sha256:f88fcef6a267026d82ab6a0ed3763ca732245f9cf8cda0793052e628eacfe644",
       "doc_path": "terraforms/DISCIPLINE-SWEEP-v0.2",
       "file": "spec/terraforms/DISCIPLINE-SWEEP-v0.2.md",
       "heading": "vibevm Discipline Sweep v0.2 — the project instance",

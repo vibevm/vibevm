@@ -1,0 +1,18 @@
+[package]
+name = "specmark-grammar"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+license-file.workspace = true
+publish.workspace = true
+repository.workspace = true
+homepage.workspace = true
+description = "The specmark tag grammar (PROP-014 §2.3) — single source for the proc-macros and the specmap scanner"
+
+[dependencies]
+syn.workspace = true
+proc-macro2.workspace = true
+
+[dev-dependencies]
+quote.workspace = true
