@@ -5023,7 +5023,7 @@
       "from_symbol": "vibe_cli::commands::workspace::publish::node_abs_dir",
       "line": 492,
       "provenance": "authored",
-      "uri": "spec://vibevm/discipline/ENGINE-CONFORM-v0.1#rules",
+      "uri": "spec://discipline-core/mechanisms/ENGINE-CONFORM-v0.1#rules",
       "verb": "deviates",
       "reason": "no-unwrap-in-domain: a PublishNode is built from the workspace's own membership, so its rel_path always names a member; member_by_rel_path cannot miss here, and threading a Result would carry a None the plan construction excludes through every node_abs_dir caller"
     },
@@ -5072,7 +5072,7 @@
       "from_symbol": "vibe_cli::promote_user_config_env",
       "line": 195,
       "provenance": "authored",
-      "uri": "spec://vibevm/discipline/ENGINE-CONFORM-v0.1#rules",
+      "uri": "spec://discipline-core/mechanisms/ENGINE-CONFORM-v0.1#rules",
       "verb": "deviates",
       "reason": "unsafe-gate: startup env promotion runs at the top of main, before the dispatcher and before any thread exists — set_var's race is with concurrent readers, and none can be observing yet; the env-audit crate is test infrastructure and a mutate-anytime safe production API would advertise soundness it cannot prove"
     },
@@ -5864,7 +5864,7 @@
       "from_symbol": "vibe_index::cli::stop::run",
       "line": 25,
       "provenance": "authored",
-      "uri": "spec://vibevm/discipline/ENGINE-CONFORM-v0.1#rules",
+      "uri": "spec://discipline-core/mechanisms/ENGINE-CONFORM-v0.1#rules",
       "verb": "deviates",
       "reason": "unsafe-gate: libc::kill is unsafe by FFI ABI, not by memory — a (pid, SIGTERM) value pair crosses the boundary, no pointers; the pid comes from the server lockfile and a stale one yields ESRCH, which the operator-facing message already covers"
     },
@@ -7005,7 +7005,7 @@
       "from_symbol": "vibe_publish::redirect_sync::build_target_fetch_url",
       "line": 245,
       "provenance": "authored",
-      "uri": "spec://vibevm/discipline/ENGINE-CONFORM-v0.1#rules",
+      "uri": "spec://discipline-core/mechanisms/ENGINE-CONFORM-v0.1#rules",
       "verb": "deviates",
       "reason": "ambient-env: the target token env-var name is discovered at runtime from the stub's `vibe-redirect.toml` (`token_env`, or a host-derived default), so the read cannot move to a composition root that has not yet read the marker"
     },
@@ -7046,7 +7046,7 @@
       "from_symbol": "vibe_registry::CachedPackage::package_meta",
       "line": 415,
       "provenance": "authored",
-      "uri": "spec://vibevm/discipline/ENGINE-CONFORM-v0.1#rules",
+      "uri": "spec://discipline-core/mechanisms/ENGINE-CONFORM-v0.1#rules",
       "verb": "deviates",
       "reason": "no-unwrap-in-domain: every CachedPackage construction site guards manifest.package.is_some() before building the struct, so the accessor's expect is a checked invariant; returning Result would force every reader of an already-validated package through error plumbing for a state the constructors exclude"
     },
@@ -7145,7 +7145,7 @@
       "from_symbol": "vibe_registry::git_package_registry::fetch::GitPackageRegistry::fetch_with_expected_hash",
       "line": 266,
       "provenance": "authored",
-      "uri": "spec://vibevm/discipline/ENGINE-CONFORM-v0.1#rules",
+      "uri": "spec://discipline-core/mechanisms/ENGINE-CONFORM-v0.1#rules",
       "verb": "deviates",
       "reason": "no-unwrap-in-domain: primary_err is Some whenever the source loop exhausts — the primary URL exists by package_urls' type and its failure is recorded before any continue; lifting the primary out of the loop (the try_lookup shape) would duplicate the three-step per-source body this fn shares between primary and mirrors"
     },
@@ -7568,7 +7568,7 @@
       "from_symbol": "vibe_resolver::activation::command_resolves_on_path",
       "line": 260,
       "provenance": "authored",
-      "uri": "spec://vibevm/discipline/ENGINE-CONFORM-v0.1#rules",
+      "uri": "spec://discipline-core/mechanisms/ENGINE-CONFORM-v0.1#rules",
       "verb": "deviates",
       "reason": "ambient-env: the `if_command` activation channel (PROP-003 §2.5.2) resolves a command against PATH — reading `PATH` is the predicate's definition, inherent-env domain, not config a composition root could thread in ahead of the user's `[activation]` rule"
     },
@@ -10768,7 +10768,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:3f294e7f3ddfc5007d4134b2edac693c806729d63778788b17d206c184ad5566",
+      "content_hash": "sha256:aea5db205e646222e7a067a00c5a2be10db41d67a96b104000f2a527177be881",
       "doc_path": "common/PROP-024",
       "file": "spec/common/PROP-024-code-bearing-packages.md",
       "heading": "PROP-024 — Code-bearing packages (a package is a project)",
@@ -10781,7 +10781,7 @@
       "doc_path": "common/PROP-024",
       "file": "spec/common/PROP-024-code-bearing-packages.md",
       "heading": "1. Motivation",
-      "line": 30,
+      "line": 31,
       "uri": "spec://vibevm/common/PROP-024#motivation"
     },
     {
@@ -10790,7 +10790,7 @@
       "doc_path": "common/PROP-024",
       "file": "spec/common/PROP-024-code-bearing-packages.md",
       "heading": "1.1 The problem — a package can describe a tool but not ship one",
-      "line": 32,
+      "line": 33,
       "uri": "spec://vibevm/common/PROP-024#problem"
     },
     {
@@ -10799,7 +10799,7 @@
       "doc_path": "common/PROP-024",
       "file": "spec/common/PROP-024-code-bearing-packages.md",
       "heading": "1.2 The shape — a package is a project",
-      "line": 57,
+      "line": 58,
       "uri": "spec://vibevm/common/PROP-024#shape"
     },
     {
@@ -10808,7 +10808,7 @@
       "doc_path": "common/PROP-024",
       "file": "spec/common/PROP-024-code-bearing-packages.md",
       "heading": "2. Decisions",
-      "line": 74,
+      "line": 75,
       "uri": "spec://vibevm/common/PROP-024#decisions"
     },
     {
@@ -10817,7 +10817,7 @@
       "doc_path": "common/PROP-024",
       "file": "spec/common/PROP-024-code-bearing-packages.md",
       "heading": "2.1 A package is a project — `spec/` for prompts, the root for code",
-      "line": 76,
+      "line": 77,
       "uri": "spec://vibevm/common/PROP-024#package-is-project",
       "kind": "req",
       "revision": 1
@@ -10828,7 +10828,7 @@
       "doc_path": "common/PROP-024",
       "file": "spec/common/PROP-024-code-bearing-packages.md",
       "heading": "2.2 The shippable tree excludes build output",
-      "line": 101,
+      "line": 102,
       "uri": "spec://vibevm/common/PROP-024#shippable-tree",
       "kind": "req",
       "revision": 1
@@ -10839,7 +10839,7 @@
       "doc_path": "common/PROP-024",
       "file": "spec/common/PROP-024-code-bearing-packages.md",
       "heading": "2.3 Code materialises, then builds consumer-side into a gitignored target",
-      "line": 131,
+      "line": 132,
       "uri": "spec://vibevm/common/PROP-024#build",
       "kind": "req",
       "revision": 1
@@ -10850,7 +10850,7 @@
       "doc_path": "common/PROP-024",
       "file": "spec/common/PROP-024-code-bearing-packages.md",
       "heading": "2.4 Consuming shipped code — external-path-dep, no nested workspace",
-      "line": 156,
+      "line": 157,
       "uri": "spec://vibevm/common/PROP-024#consume",
       "kind": "req",
       "revision": 1
@@ -10861,7 +10861,7 @@
       "doc_path": "common/PROP-024",
       "file": "spec/common/PROP-024-code-bearing-packages.md",
       "heading": "2.5 Self-hosting bootstrap — the toolchain is vendored",
-      "line": 197,
+      "line": 198,
       "uri": "spec://vibevm/common/PROP-024#bootstrap",
       "kind": "req",
       "revision": 1
@@ -10872,7 +10872,7 @@
       "doc_path": "common/PROP-024",
       "file": "spec/common/PROP-024-code-bearing-packages.md",
       "heading": "2.6 Placement follows the layer model; the engine split is a follow-up",
-      "line": 214,
+      "line": 215,
       "uri": "spec://vibevm/common/PROP-024#placement",
       "kind": "req",
       "revision": 1
@@ -10883,7 +10883,7 @@
       "doc_path": "common/PROP-024",
       "file": "spec/common/PROP-024-code-bearing-packages.md",
       "heading": "3. Manifest / schema surface",
-      "line": 241,
+      "line": 242,
       "uri": "spec://vibevm/common/PROP-024#surface"
     },
     {
@@ -10892,7 +10892,7 @@
       "doc_path": "common/PROP-024",
       "file": "spec/common/PROP-024-code-bearing-packages.md",
       "heading": "4. Rejected / deferred alternatives",
-      "line": 255,
+      "line": 256,
       "uri": "spec://vibevm/common/PROP-024#rejected"
     },
     {
@@ -10901,7 +10901,7 @@
       "doc_path": "common/PROP-024",
       "file": "spec/common/PROP-024-code-bearing-packages.md",
       "heading": "5. Out of scope",
-      "line": 282,
+      "line": 283,
       "uri": "spec://vibevm/common/PROP-024#out-of-scope"
     },
     {
@@ -10910,7 +10910,7 @@
       "doc_path": "common/PROP-024",
       "file": "spec/common/PROP-024-code-bearing-packages.md",
       "heading": "6. Acceptance",
-      "line": 295,
+      "line": 296,
       "uri": "spec://vibevm/common/PROP-024#acceptance"
     },
     {
@@ -10919,434 +10919,8 @@
       "doc_path": "common/PROP-024",
       "file": "spec/common/PROP-024-code-bearing-packages.md",
       "heading": "7. Version history",
-      "line": 313,
+      "line": 314,
       "uri": "spec://vibevm/common/PROP-024#history"
-    },
-    {
-      "anchor": "problem",
-      "content_hash": "sha256:51d81e2d52166e993280136ba6134889a6db3eb8f11d440c266bacf187e60158",
-      "doc_path": "discipline/BROWNFIELD-PROTOCOL-v0.1",
-      "file": "spec/discipline/BROWNFIELD-PROTOCOL-v0.1.md",
-      "heading": "1. The problem, stated precisely",
-      "line": 9,
-      "uri": "spec://vibevm/discipline/BROWNFIELD-PROTOCOL-v0.1#problem"
-    },
-    {
-      "anchor": "principles",
-      "content_hash": "sha256:c3b4729250fa6ad316a267f4fa0f69340c4f84cf7158828c51befd1b7cdf28ee",
-      "doc_path": "discipline/BROWNFIELD-PROTOCOL-v0.1",
-      "file": "spec/discipline/BROWNFIELD-PROTOCOL-v0.1.md",
-      "heading": "2. Principles",
-      "line": 13,
-      "uri": "spec://vibevm/discipline/BROWNFIELD-PROTOCOL-v0.1#principles"
-    },
-    {
-      "anchor": "registries",
-      "content_hash": "sha256:9fa765f11f426912c979ba1b74221b3af6a5173f7e6a4183e0102f303bb5ad1d",
-      "doc_path": "discipline/BROWNFIELD-PROTOCOL-v0.1",
-      "file": "spec/discipline/BROWNFIELD-PROTOCOL-v0.1.md",
-      "heading": "3. The registries",
-      "line": 23,
-      "uri": "spec://vibevm/discipline/BROWNFIELD-PROTOCOL-v0.1#registries"
-    },
-    {
-      "anchor": "test-gate",
-      "content_hash": "sha256:9056f7cdfb27311d8f742500c2d174294e88362a0be16e5f1545cbb5ae24f7d7",
-      "doc_path": "discipline/BROWNFIELD-PROTOCOL-v0.1",
-      "file": "spec/discipline/BROWNFIELD-PROTOCOL-v0.1.md",
-      "heading": "4. The test gate — xfail-strict semantics",
-      "line": 57,
-      "uri": "spec://vibevm/discipline/BROWNFIELD-PROTOCOL-v0.1#test-gate"
-    },
-    {
-      "anchor": "spec-lifecycle",
-      "content_hash": "sha256:c21bb6fe37af4be0d3a524aed22b99ecf2b248c0b97fe7a153a3e05bc927e83c",
-      "doc_path": "discipline/BROWNFIELD-PROTOCOL-v0.1",
-      "file": "spec/discipline/BROWNFIELD-PROTOCOL-v0.1.md",
-      "heading": "5. Spec lifecycle and the conflict protocol",
-      "line": 66,
-      "uri": "spec://vibevm/discipline/BROWNFIELD-PROTOCOL-v0.1#spec-lifecycle"
-    },
-    {
-      "anchor": "characterization",
-      "content_hash": "sha256:fc1ec9ff6da0e3c7600a42db89260c2a6dfdfdeb715b752368c22ffd9e78b337",
-      "doc_path": "discipline/BROWNFIELD-PROTOCOL-v0.1",
-      "file": "spec/discipline/BROWNFIELD-PROTOCOL-v0.1.md",
-      "heading": "6. Characterization of record",
-      "line": 75,
-      "uri": "spec://vibevm/discipline/BROWNFIELD-PROTOCOL-v0.1#characterization"
-    },
-    {
-      "anchor": "frontier",
-      "content_hash": "sha256:603f570dcc051da1db09b4292e63f22b3a3b888a400f0fcaee313e0b2ae12c15",
-      "doc_path": "discipline/BROWNFIELD-PROTOCOL-v0.1",
-      "file": "spec/discipline/BROWNFIELD-PROTOCOL-v0.1.md",
-      "heading": "7. Frontier and monotone utility",
-      "line": 79,
-      "uri": "spec://vibevm/discipline/BROWNFIELD-PROTOCOL-v0.1#frontier"
-    },
-    {
-      "anchor": "carry-over",
-      "content_hash": "sha256:50b29e7e3845922759b1bc5825f1dfd2145deca77f686dd92d376d4e0a53d42d",
-      "doc_path": "discipline/BROWNFIELD-PROTOCOL-v0.1",
-      "file": "spec/discipline/BROWNFIELD-PROTOCOL-v0.1.md",
-      "heading": "8. Carry-over guarantee and exit accounting",
-      "line": 83,
-      "uri": "spec://vibevm/discipline/BROWNFIELD-PROTOCOL-v0.1#carry-over"
-    },
-    {
-      "anchor": "governance",
-      "content_hash": "sha256:b6996699a136619e60b7cfa32b217d86e8452c084b9170e45cc1a8377be39f3c",
-      "doc_path": "discipline/BROWNFIELD-PROTOCOL-v0.1",
-      "file": "spec/discipline/BROWNFIELD-PROTOCOL-v0.1.md",
-      "heading": "9. Governance",
-      "line": 87,
-      "uri": "spec://vibevm/discipline/BROWNFIELD-PROTOCOL-v0.1#governance"
-    },
-    {
-      "anchor": "prior-art",
-      "content_hash": "sha256:6007613fef55aed95b80a51ec10f48a00ad0f0423f8d32dc56912a924d19d423",
-      "doc_path": "discipline/BROWNFIELD-PROTOCOL-v0.1",
-      "file": "spec/discipline/BROWNFIELD-PROTOCOL-v0.1.md",
-      "heading": "10. Prior art",
-      "line": 93,
-      "uri": "spec://vibevm/discipline/BROWNFIELD-PROTOCOL-v0.1#prior-art"
-    },
-    {
-      "anchor": "open",
-      "content_hash": "sha256:bdf673542d5dda8ae63a417524081939a335d5ae0da013339ee259f02eda02af",
-      "doc_path": "discipline/BROWNFIELD-PROTOCOL-v0.1",
-      "file": "spec/discipline/BROWNFIELD-PROTOCOL-v0.1.md",
-      "heading": "11. Open questions",
-      "line": 97,
-      "uri": "spec://vibevm/discipline/BROWNFIELD-PROTOCOL-v0.1#open"
-    },
-    {
-      "anchor": "tiers",
-      "content_hash": "sha256:57e9b8d7a29c8583b95897679c5e4ec7525ff2678519f83972ffad87b3205b94",
-      "doc_path": "discipline/ENGINE-CONFORM-v0.1",
-      "file": "spec/discipline/ENGINE-CONFORM-v0.1.md",
-      "heading": "1. Escalation tiers",
-      "line": 9,
-      "uri": "spec://vibevm/discipline/ENGINE-CONFORM-v0.1#tiers"
-    },
-    {
-      "anchor": "frontends",
-      "content_hash": "sha256:71bb138546bb5b28ffe332f8a2d72b413cb608ff24fd66c002dd5891ee95c6d4",
-      "doc_path": "discipline/ENGINE-CONFORM-v0.1",
-      "file": "spec/discipline/ENGINE-CONFORM-v0.1.md",
-      "heading": "2. Frontends — borrowed, behind one trait",
-      "line": 21,
-      "uri": "spec://vibevm/discipline/ENGINE-CONFORM-v0.1#frontends"
-    },
-    {
-      "anchor": "facts",
-      "content_hash": "sha256:c1683099172e2ebbbb95e1b04fab684023decd5dba3be1b6b2932deed30ec5d5",
-      "doc_path": "discipline/ENGINE-CONFORM-v0.1",
-      "file": "spec/discipline/ENGINE-CONFORM-v0.1.md",
-      "heading": "3. The fact store",
-      "line": 42,
-      "uri": "spec://vibevm/discipline/ENGINE-CONFORM-v0.1#facts"
-    },
-    {
-      "anchor": "rules",
-      "content_hash": "sha256:5fa0ab406b7db7938ace3eba4a48614e70d1d3d1732cce0082ee44a6e802e53c",
-      "doc_path": "discipline/ENGINE-CONFORM-v0.1",
-      "file": "spec/discipline/ENGINE-CONFORM-v0.1.md",
-      "heading": "4. Rules as queries",
-      "line": 57,
-      "uri": "spec://vibevm/discipline/ENGINE-CONFORM-v0.1#rules"
-    },
-    {
-      "anchor": "determinism",
-      "content_hash": "sha256:7ce288e6cedb7d5ade842f8d3b9525fa285aba8ca0915deb357240374d2fc0f6",
-      "doc_path": "discipline/ENGINE-CONFORM-v0.1",
-      "file": "spec/discipline/ENGINE-CONFORM-v0.1.md",
-      "heading": "5. Determinism and gates",
-      "line": 63,
-      "uri": "spec://vibevm/discipline/ENGINE-CONFORM-v0.1#determinism"
-    },
-    {
-      "anchor": "open",
-      "content_hash": "sha256:f3af78da42cd86c8049958598e2cbd1e4d1bfc32b45803a3bb23e03d95efdaeb",
-      "doc_path": "discipline/ENGINE-CONFORM-v0.1",
-      "file": "spec/discipline/ENGINE-CONFORM-v0.1.md",
-      "heading": "6. Open questions",
-      "line": 67,
-      "uri": "spec://vibevm/discipline/ENGINE-CONFORM-v0.1#open"
-    },
-    {
-      "anchor": "what",
-      "content_hash": "sha256:329f185e15489c517d05b76e5cdfd846dd93f920e48f35260c672af6caf5915e",
-      "doc_path": "discipline/LEDGER-INTENT-v0.1",
-      "file": "spec/discipline/LEDGER-INTENT-v0.1.md",
-      "heading": "1. What the ledger is",
-      "line": 7,
-      "uri": "spec://vibevm/discipline/LEDGER-INTENT-v0.1#what"
-    },
-    {
-      "anchor": "classes",
-      "content_hash": "sha256:e0856698b959ec276b11e4671e87e280ee29748ae9936982b6a9c5fc11cfbb6b",
-      "doc_path": "discipline/LEDGER-INTENT-v0.1",
-      "file": "spec/discipline/LEDGER-INTENT-v0.1.md",
-      "heading": "2. Two storage classes — the load-bearing taxonomy",
-      "line": 13,
-      "uri": "spec://vibevm/discipline/LEDGER-INTENT-v0.1#classes"
-    },
-    {
-      "anchor": "epochs",
-      "content_hash": "sha256:4b9d10a1dd43b38fbf161ce5c76d2f9d12f2f33619cc470f2ff57d532dbe95f5",
-      "doc_path": "discipline/LEDGER-INTENT-v0.1",
-      "file": "spec/discipline/LEDGER-INTENT-v0.1.md",
-      "heading": "3. Epochs — contextual invalidation",
-      "line": 22,
-      "uri": "spec://vibevm/discipline/LEDGER-INTENT-v0.1#epochs"
-    },
-    {
-      "anchor": "provenance",
-      "content_hash": "sha256:53d48fd7e113b18c7ffba659b6257cdfc193a3fbae365b61e962e7880eeae308",
-      "doc_path": "discipline/LEDGER-INTENT-v0.1",
-      "file": "spec/discipline/LEDGER-INTENT-v0.1.md",
-      "heading": "4. Provenance — every entry confesses its origin",
-      "line": 33,
-      "uri": "spec://vibevm/discipline/LEDGER-INTENT-v0.1#provenance"
-    },
-    {
-      "anchor": "storage",
-      "content_hash": "sha256:af2eff43d77bc16b4d7749bf0b7f0b58619b023b27053bba77cb535b2ae36dde",
-      "doc_path": "discipline/LEDGER-INTENT-v0.1",
-      "file": "spec/discipline/LEDGER-INTENT-v0.1.md",
-      "heading": "5. Storage and lifecycle",
-      "line": 37,
-      "uri": "spec://vibevm/discipline/LEDGER-INTENT-v0.1#storage"
-    },
-    {
-      "anchor": "queries",
-      "content_hash": "sha256:f2fb81719e1716ab48587d9bbcfa82164baf81fd37cd927b2bd50a6a13c8259c",
-      "doc_path": "discipline/LEDGER-INTENT-v0.1",
-      "file": "spec/discipline/LEDGER-INTENT-v0.1.md",
-      "heading": "6. Query kinds shipped in v0.1",
-      "line": 44,
-      "uri": "spec://vibevm/discipline/LEDGER-INTENT-v0.1#queries"
-    },
-    {
-      "anchor": "release-slice",
-      "content_hash": "sha256:2a939fe00f3f7c792e002b52a45187ceda18b2b4ce8be395b53d0f0ab71c473a",
-      "doc_path": "discipline/LEDGER-INTENT-v0.1",
-      "file": "spec/discipline/LEDGER-INTENT-v0.1.md",
-      "heading": "7. The release slice",
-      "line": 53,
-      "uri": "spec://vibevm/discipline/LEDGER-INTENT-v0.1#release-slice"
-    },
-    {
-      "anchor": "failures",
-      "content_hash": "sha256:3f5489cd41b235c117f04416c8b18f729e9695ddd340caeb0a442b9dfab86eb3",
-      "doc_path": "discipline/LEDGER-INTENT-v0.1",
-      "file": "spec/discipline/LEDGER-INTENT-v0.1.md",
-      "heading": "8. Failure modes, named",
-      "line": 57,
-      "uri": "spec://vibevm/discipline/LEDGER-INTENT-v0.1#failures"
-    },
-    {
-      "anchor": "problem",
-      "content_hash": "sha256:f18e66ea68ce7f47390f87533faa3d13ef8930ed8dca0facc59d8d96ca05d637",
-      "doc_path": "discipline/PROP-014",
-      "file": "spec/discipline/PROP-014-specmap-bidirectional-traceability.md",
-      "heading": "1. Problem statement",
-      "line": 11,
-      "uri": "spec://vibevm/discipline/PROP-014#problem"
-    },
-    {
-      "anchor": "analogy",
-      "content_hash": "sha256:711bd7c4f422a1e0110152fce60849091985a6a80bec55260e8b9cd90c37e295",
-      "doc_path": "discipline/PROP-014",
-      "file": "spec/discipline/PROP-014-specmap-bidirectional-traceability.md",
-      "heading": "1.1 Where the source-map analogy holds, and where it breaks",
-      "line": 17,
-      "uri": "spec://vibevm/discipline/PROP-014#analogy"
-    },
-    {
-      "anchor": "runtime-vision",
-      "content_hash": "sha256:9433699e9bbd7ad2e693d788359429fa45f961d597b62a9c4eb1f1a333f437c9",
-      "doc_path": "discipline/PROP-014",
-      "file": "spec/discipline/PROP-014-specmap-bidirectional-traceability.md",
-      "heading": "1.2 The runtime vision (AI-native open source)",
-      "line": 28,
-      "uri": "spec://vibevm/discipline/PROP-014#runtime-vision"
-    },
-    {
-      "anchor": "decisions",
-      "content_hash": "sha256:aff21619c66ecddab59a6f4e4edc3f8b323b8974efa7ae090ebc152c80df4f09",
-      "doc_path": "discipline/PROP-014",
-      "file": "spec/discipline/PROP-014-specmap-bidirectional-traceability.md",
-      "heading": "2. Decisions",
-      "line": 34,
-      "uri": "spec://vibevm/discipline/PROP-014#decisions"
-    },
-    {
-      "anchor": "addressing-spec",
-      "content_hash": "sha256:aaf726c36145cd187430dc2ef71ef134ca3103dc50ffedb3b096e5228f608797",
-      "doc_path": "discipline/PROP-014",
-      "file": "spec/discipline/PROP-014-specmap-bidirectional-traceability.md",
-      "heading": "2.1 Addressing: spec-side",
-      "line": 38,
-      "uri": "spec://vibevm/discipline/PROP-014#addressing-spec",
-      "kind": "req",
-      "revision": 1
-    },
-    {
-      "anchor": "spec-units",
-      "content_hash": "sha256:264ee0cf8a6372a61853920b7ab69f9fb521ca0cdfc11612b02f4056ff4b9cc8",
-      "doc_path": "discipline/PROP-014",
-      "file": "spec/discipline/PROP-014-specmap-bidirectional-traceability.md",
-      "heading": "2.2 Spec units, normativity, and the two-tier revision discipline",
-      "line": 53,
-      "uri": "spec://vibevm/discipline/PROP-014#spec-units",
-      "kind": "req",
-      "revision": 1
-    },
-    {
-      "anchor": "addressing-code",
-      "content_hash": "sha256:9b60f74aba4af210d035405a52acd3e5fa95e2d3af08089bf826d79897ef3876",
-      "doc_path": "discipline/PROP-014",
-      "file": "spec/discipline/PROP-014-specmap-bidirectional-traceability.md",
-      "heading": "2.3 Addressing: code-side — tags that travel",
-      "line": 84,
-      "uri": "spec://vibevm/discipline/PROP-014#addressing-code",
-      "kind": "req",
-      "revision": 1
-    },
-    {
-      "anchor": "edges",
-      "content_hash": "sha256:f1d222ccf4f9b5ad49f87530d3cd6e09f45d3b7c30e3596807def1af9bccbc0a",
-      "doc_path": "discipline/PROP-014",
-      "file": "spec/discipline/PROP-014-specmap-bidirectional-traceability.md",
-      "heading": "2.4 The edge model",
-      "line": 131,
-      "uri": "spec://vibevm/discipline/PROP-014#edges",
-      "kind": "req",
-      "revision": 1
-    },
-    {
-      "anchor": "index",
-      "content_hash": "sha256:d6b2859abf4642da29d9198622fc3585907d9248c89b0b2ce8e5d576df09b8b8",
-      "doc_path": "discipline/PROP-014",
-      "file": "spec/discipline/PROP-014-specmap-bidirectional-traceability.md",
-      "heading": "2.5 The index: `specmap.json`",
-      "line": 141,
-      "uri": "spec://vibevm/discipline/PROP-014#index",
-      "kind": "req",
-      "revision": 1
-    },
-    {
-      "anchor": "queries",
-      "content_hash": "sha256:601c5d7694134d7867692f208cc1283173d51cc2256cbc54c7f609ac5c74df7d",
-      "doc_path": "discipline/PROP-014",
-      "file": "spec/discipline/PROP-014-specmap-bidirectional-traceability.md",
-      "heading": "2.6 Query surface",
-      "line": 152,
-      "uri": "spec://vibevm/discipline/PROP-014#queries",
-      "kind": "req",
-      "revision": 1
-    },
-    {
-      "anchor": "llm-boundary",
-      "content_hash": "sha256:9e20470bbb7ad621fc8983903e1305fd1f75f61729801ef5e8ae2ec237f8ed1f",
-      "doc_path": "discipline/PROP-014",
-      "file": "spec/discipline/PROP-014-specmap-bidirectional-traceability.md",
-      "heading": "2.7 The LLM boundary",
-      "line": 168,
-      "uri": "spec://vibevm/discipline/PROP-014#llm-boundary"
-    },
-    {
-      "anchor": "runtime",
-      "content_hash": "sha256:8c35b9c96b88d04c14e84fe0be60af60092a86976f3d6a73a79754a4ec519393",
-      "doc_path": "discipline/PROP-014",
-      "file": "spec/discipline/PROP-014-specmap-bidirectional-traceability.md",
-      "heading": "2.8 Runtime exposure — the AI-native OSS channel",
-      "line": 176,
-      "uri": "spec://vibevm/discipline/PROP-014#runtime"
-    },
-    {
-      "anchor": "languages",
-      "content_hash": "sha256:d16275708ef53a0b473c0ab481b064ce7b547816d15fafa11f7b9569d0d469bf",
-      "doc_path": "discipline/PROP-014",
-      "file": "spec/discipline/PROP-014-specmap-bidirectional-traceability.md",
-      "heading": "2.9 Language neutrality",
-      "line": 183,
-      "uri": "spec://vibevm/discipline/PROP-014#languages"
-    },
-    {
-      "anchor": "principles",
-      "content_hash": "sha256:815e041e54ba1b85784aab8873554cb44b7b9a44d14a8fd81468579266f41e83",
-      "doc_path": "discipline/PROP-014",
-      "file": "spec/discipline/PROP-014-specmap-bidirectional-traceability.md",
-      "heading": "3. Principles",
-      "line": 192,
-      "uri": "spec://vibevm/discipline/PROP-014#principles"
-    },
-    {
-      "anchor": "spec-principles",
-      "content_hash": "sha256:632f7a63ba34113838898bbb827a9e0ed36a0ad1559896a6171f9be36086474d",
-      "doc_path": "discipline/PROP-014",
-      "file": "spec/discipline/PROP-014-specmap-bidirectional-traceability.md",
-      "heading": "3.1 (а) Writing specifications",
-      "line": 194,
-      "uri": "spec://vibevm/discipline/PROP-014#spec-principles"
-    },
-    {
-      "anchor": "rust-principles",
-      "content_hash": "sha256:a02508f1486fd1b2dd5ce57e822918466702d3da204d814aefdb68402335546d",
-      "doc_path": "discipline/PROP-014",
-      "file": "spec/discipline/PROP-014-specmap-bidirectional-traceability.md",
-      "heading": "3.2 (б) Writing Rust under specmap",
-      "line": 207,
-      "uri": "spec://vibevm/discipline/PROP-014#rust-principles"
-    },
-    {
-      "anchor": "binding-principles",
-      "content_hash": "sha256:2345d8e316bce964986f2254b347ced0367ae6a8a4a1213c673c0b7fdc746c3e",
-      "doc_path": "discipline/PROP-014",
-      "file": "spec/discipline/PROP-014-specmap-bidirectional-traceability.md",
-      "heading": "3.3 (в) Binding principles",
-      "line": 220,
-      "uri": "spec://vibevm/discipline/PROP-014#binding-principles"
-    },
-    {
-      "anchor": "migration",
-      "content_hash": "sha256:d7cd1fa6d09d7b51a711c2797c521ec009db601ff3d658648479184847967467",
-      "doc_path": "discipline/PROP-014",
-      "file": "spec/discipline/PROP-014-specmap-bidirectional-traceability.md",
-      "heading": "4. (г) Migration playbook — transforming vibevm with Claude Code",
-      "line": 226,
-      "uri": "spec://vibevm/discipline/PROP-014#migration"
-    },
-    {
-      "anchor": "rejected",
-      "content_hash": "sha256:dd019ceaff1203833f9a88fff591a098c16d7c07602298dc90ad5cdeb3293cb9",
-      "doc_path": "discipline/PROP-014",
-      "file": "spec/discipline/PROP-014-specmap-bidirectional-traceability.md",
-      "heading": "5. Rejected alternatives",
-      "line": 296,
-      "uri": "spec://vibevm/discipline/PROP-014#rejected"
-    },
-    {
-      "anchor": "prior-art",
-      "content_hash": "sha256:f367901325fda8c2e075f6f0a60b4e5e98ad431797182b8650ad388e46c552f8",
-      "doc_path": "discipline/PROP-014",
-      "file": "spec/discipline/PROP-014-specmap-bidirectional-traceability.md",
-      "heading": "6. Prior art and license posture",
-      "line": 305,
-      "uri": "spec://vibevm/discipline/PROP-014#prior-art"
-    },
-    {
-      "anchor": "open",
-      "content_hash": "sha256:a70adead5c44759d2ebe60d94dc325d5fde5a7652c697f1d94a0782c4d3833af",
-      "doc_path": "discipline/PROP-014",
-      "file": "spec/discipline/PROP-014-specmap-bidirectional-traceability.md",
-      "heading": "7. Open questions",
-      "line": 322,
-      "uri": "spec://vibevm/discipline/PROP-014#open"
     },
     {
       "anchor": "root",
