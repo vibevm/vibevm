@@ -283,9 +283,9 @@ pub(crate) fn module_path(crate_ident: &str, rel_in_crate: &Path) -> Option<Stri
     Some(parts.join("::"))
 }
 
-/// Walk every code root named by [`Config::scan_dirs`] (`crates/*/{src,tests}`
-/// and `xtask/src` by default). Generated code is excluded (PROP-014 §2.3:
-/// the generator *input* is the taggable unit).
+/// Walk every code root named by [`Config::scan_dirs`] (`crates/*` by
+/// default — each crate's `src` and `tests`). Generated code is excluded
+/// (PROP-014 §2.3: the generator *input* is the taggable unit).
 pub fn scan_workspace(root: &Path, cfg: &Config) -> (Vec<CodeItem>, Vec<Edge>, Vec<Warning>) {
     let mut items = Vec::new();
     let mut edges = Vec::new();
@@ -342,7 +342,7 @@ pub fn scan_workspace(root: &Path, cfg: &Config) -> (Vec<CodeItem>, Vec<Edge>, V
 mod tests {
     use super::*;
 
-    const URI: &str = "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-fixpoint";
+    const URI: &str = "spec://project/modules/vibe-resolver/PROP-003#req-conditional-fixpoint";
 
     fn fmt_warnings(w: &[Warning]) -> String {
         w.iter()

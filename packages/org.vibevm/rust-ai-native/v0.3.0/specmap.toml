@@ -12,6 +12,9 @@
 # coverage: every gated crate's public surface carries a scope!/#[spec] tag, so
 # no discipline code drifts untagged.
 
+# The spec:// namespace for units under this package's own spec/ tree.
+namespace = "rust-ai-native"
+
 # Code roots scanned for tags. The package has no xtask — just its crates/.
 scan_roots = ["crates/*"]
 
