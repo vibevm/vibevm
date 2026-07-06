@@ -33,8 +33,10 @@ pub fn parse(s: &str) -> Option<i32> {
 }
 "#;
 
-/// A minimal project: a `conform.toml` gating one crate `myapp`, an empty
-/// baseline, and `crates/myapp/src/lib.rs` carrying `lib_body`.
+/// A minimal project: a `conform.toml` gating one crate `myapp` (with the
+/// `Cargo.toml` that makes it crate-shaped for the gated-or-exempt tree
+/// invariant), an empty baseline, and `crates/myapp/src/lib.rs` carrying
+/// `lib_body`.
 fn fixture(lib_body: &str) -> TempDir {
     let dir = tempdir().expect("tempdir");
     write(
@@ -46,6 +48,11 @@ fn fixture(lib_body: &str) -> TempDir {
         dir.path(),
         "conform-baseline.json",
         "{\"schema\":1,\"findings\":[]}\n",
+    );
+    write(
+        dir.path(),
+        "crates/myapp/Cargo.toml",
+        "[package]\nname = \"myapp\"\n",
     );
     write(dir.path(), "crates/myapp/src/lib.rs", lib_body);
     dir

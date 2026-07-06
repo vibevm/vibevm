@@ -5,7 +5,7 @@
 //! `(file content-hash, producer)` and survive every epoch change.
 //!
 //! One query kind ships: `explain.item` — the prose render behind
-//! `cargo xtask trace explain --prose`. The producer is a
+//! `discipline-rust trace explain --prose`. The producer is a
 //! deterministic template (the tool MUST be fully useful without an
 //! LLM; an LLM prose producer slots in later under its own producer
 //! id + model id). Interpretations are keyed by
@@ -17,7 +17,7 @@
 //! Local per checkout; never shipped, never signed, never exposed —
 //! `.ledger/` is git-ignored.
 
-specmark::scope!("spec://vibevm/discipline/LEDGER-INTENT-v0.1#classes");
+specmark::scope!("spec://discipline-core/mechanisms/LEDGER-INTENT-v0.1#classes");
 
 use std::path::{Path, PathBuf};
 

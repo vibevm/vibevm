@@ -6,7 +6,7 @@
 //! constructs the scan + the rule set from it; nothing about the policy
 //! is hardcoded in the engine.
 
-specmark::scope!("spec://vibevm/discipline/ENGINE-CONFORM-v0.1#facts");
+specmark::scope!("spec://discipline-core/mechanisms/ENGINE-CONFORM-v0.1#facts");
 
 use std::path::Path;
 
@@ -67,7 +67,7 @@ pub struct Config {
 impl Default for Config {
     fn default() -> Self {
         Config {
-            roots: vec!["crates/*".into(), "xtask".into()],
+            roots: vec!["crates/*".into()],
             exclude_substrings: vec!["/generated/".into()],
             gated_crates: Vec::new(),
             gated_pub_doctest: Vec::new(),
@@ -100,11 +100,189 @@ pub struct ExemptEntry {
     pub reason: String,
 }
 
+/// Where a [`Config`] came from — a real `conform.toml`, or the built-in
+/// default because none exists. The drivers print this so a defaulted
+/// (nothing-gated) run can never masquerade as a configured green.
+///
+/// ```
+/// assert_ne!(conform_core::ConfigOrigin::Loaded, conform_core::ConfigOrigin::Defaulted);
+/// ```
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ConfigOrigin {
+    /// Parsed from the project's `conform.toml`.
+    Loaded,
+    /// No `conform.toml` at the root — the topology-detected default
+    /// (nothing gated, everything advisory) is in force.
+    Defaulted,
+}
+
 impl Config {
     /// Parse a `conform.toml` from `path`.
     pub fn load(path: &Path) -> Result<Config> {
         let text = std::fs::read_to_string(path)
             .with_context(|| format!("reading conform config {}", path.display()))?;
         toml::from_str(&text).with_context(|| format!("parsing conform config {}", path.display()))
+    }
+
+    /// Load the project's `conform.toml`, or fall back to a usable default
+    /// when none exists (the doc-promised behaviour): scan roots detected
+    /// from the tree's topology — `crates/*` for a workspace layout, `.`
+    /// for a single-crate one — with nothing gated. The origin tells the
+    /// caller which case it got.
+    pub fn load_or_default(root: &Path) -> Result<(Config, ConfigOrigin)> {
+        let path = root.join("conform.toml");
+        if path.exists() {
+            return Ok((Config::load(&path)?, ConfigOrigin::Loaded));
+        }
+        let mut cfg = Config::default();
+        if !root.join("crates").is_dir() {
+            cfg.roots = vec![".".into()];
+        }
+        Ok((cfg, ConfigOrigin::Defaulted))
+    }
+
+    /// The gated-or-exempt tree invariant: every crate on disk under this
+    /// policy's roots is classified exactly once — gated or
+    /// exempt-with-a-reason, never both and never neither — and every
+    /// listed name matches a real crate directory. A silent exemption
+    /// reads as a bug, a phantom entry as a typo; this turns the
+    /// exemption *table* into an enforced *invariant* for every consumer
+    /// of the engine (it began life as a dev-repo-only test).
+    pub fn validate_against_tree(&self, root: &Path) -> Result<()> {
+        use std::collections::BTreeSet;
+
+        let gated: BTreeSet<&str> = self.gated_crates.iter().map(|s| s.as_str()).collect();
+        let exempt: BTreeSet<&str> = self.exempt.iter().map(|e| e.crate_name.as_str()).collect();
+        if gated.len() != self.gated_crates.len() {
+            anyhow::bail!("conform.toml: `gated_crates` carries a duplicate crate name");
+        }
+        if exempt.len() != self.exempt.len() {
+            anyhow::bail!("conform.toml: `[[exempt]]` carries a duplicate crate name");
+        }
+        let both: Vec<&str> = gated.intersection(&exempt).copied().collect();
+        if !both.is_empty() {
+            anyhow::bail!("conform.toml: crates both gated and exempt: {both:?}");
+        }
+        for e in &self.exempt {
+            if e.reason.trim().is_empty() {
+                anyhow::bail!(
+                    "conform.toml: `{}` is exempt without a recorded reason — the one \
+                     thing the exemption table exists to forbid",
+                    e.crate_name
+                );
+            }
+        }
+
+        // Expand the roots the way the scanner does: a `<dir>/*` glob names
+        // each crate-shaped subdir; a literal root names itself.
+        let mut on_disk: BTreeSet<String> = BTreeSet::new();
+        let mut literals: BTreeSet<String> = BTreeSet::new();
+        for entry in &self.roots {
+            if let Some(parent) = entry.strip_suffix("/*") {
+                if let Ok(rd) = std::fs::read_dir(root.join(parent)) {
+                    for e in rd.filter_map(std::result::Result::ok) {
+                        if e.path().is_dir() && e.path().join("Cargo.toml").exists() {
+                            on_disk.insert(e.file_name().to_string_lossy().into_owned());
+                        }
+                    }
+                }
+            } else if let Some(name) = Path::new(entry).file_name() {
+                literals.insert(name.to_string_lossy().into_owned());
+            }
+        }
+        for c in &on_disk {
+            if !gated.contains(c.as_str()) && !exempt.contains(c.as_str()) {
+                anyhow::bail!(
+                    "conform.toml: crate `{c}` is neither gated nor exempt — classify it"
+                );
+            }
+        }
+        for c in gated.union(&exempt) {
+            if !on_disk.contains(*c) && !literals.contains(*c) {
+                anyhow::bail!(
+                    "conform.toml: `{c}` is listed but no crate directory matches it — typo?"
+                );
+            }
+        }
+        Ok(())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn crate_dir(root: &Path, name: &str) {
+        let d = root.join("crates").join(name);
+        std::fs::create_dir_all(&d).unwrap();
+        std::fs::write(d.join("Cargo.toml"), "[package]\n").unwrap();
+    }
+
+    #[test]
+    fn load_or_default_detects_topology() {
+        let tmp = tempfile::tempdir().unwrap();
+        // Single-crate layout → scan the root itself.
+        let (cfg, origin) = Config::load_or_default(tmp.path()).unwrap();
+        assert_eq!(origin, ConfigOrigin::Defaulted);
+        assert_eq!(cfg.roots, ["."]);
+        // Workspace layout → scan crates/*.
+        std::fs::create_dir_all(tmp.path().join("crates")).unwrap();
+        let (cfg, _) = Config::load_or_default(tmp.path()).unwrap();
+        assert_eq!(cfg.roots, ["crates/*"]);
+        // A real file wins and reports Loaded.
+        std::fs::write(tmp.path().join("conform.toml"), "max_file_lines = 500\n").unwrap();
+        let (cfg, origin) = Config::load_or_default(tmp.path()).unwrap();
+        assert_eq!(origin, ConfigOrigin::Loaded);
+        assert_eq!(cfg.max_file_lines, 500);
+    }
+
+    #[test]
+    fn tree_invariant_catches_each_violation_class() {
+        let tmp = tempfile::tempdir().unwrap();
+        let root = tmp.path();
+        crate_dir(root, "app");
+        crate_dir(root, "helper");
+
+        // Unclassified on-disk crate.
+        let cfg: Config = toml::from_str("gated_crates = [\"app\"]\n").unwrap();
+        let err = cfg.validate_against_tree(root).unwrap_err().to_string();
+        assert!(
+            err.contains("`helper` is neither gated nor exempt"),
+            "{err}"
+        );
+
+        // Phantom listed crate.
+        let cfg: Config =
+            toml::from_str("gated_crates = [\"app\", \"helper\", \"ghost\"]\n").unwrap();
+        let err = cfg.validate_against_tree(root).unwrap_err().to_string();
+        assert!(err.contains("`ghost` is listed"), "{err}");
+
+        // Both gated and exempt.
+        let cfg: Config = toml::from_str(
+            "gated_crates = [\"app\", \"helper\"]\n\
+             [[exempt]]\ncrate = \"app\"\nreason = \"x\"\n",
+        )
+        .unwrap();
+        let err = cfg.validate_against_tree(root).unwrap_err().to_string();
+        assert!(err.contains("both gated and exempt"), "{err}");
+
+        // Empty reason.
+        let cfg: Config = toml::from_str(
+            "gated_crates = [\"app\"]\n[[exempt]]\ncrate = \"helper\"\nreason = \"  \"\n",
+        )
+        .unwrap();
+        let err = cfg.validate_against_tree(root).unwrap_err().to_string();
+        assert!(err.contains("without a recorded reason"), "{err}");
+
+        // A literal root (tooling crate outside crates/) satisfies the
+        // listed-name check without a crates/ directory.
+        std::fs::create_dir_all(root.join("tooling")).unwrap();
+        let cfg: Config = toml::from_str(
+            "roots = [\"crates/*\", \"tooling\"]\n\
+             gated_crates = [\"app\", \"helper\"]\n\
+             [[exempt]]\ncrate = \"tooling\"\nreason = \"dev tooling\"\n",
+        )
+        .unwrap();
+        cfg.validate_against_tree(root).unwrap();
     }
 }

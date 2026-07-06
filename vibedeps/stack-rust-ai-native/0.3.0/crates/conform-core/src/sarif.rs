@@ -1,4 +1,4 @@
-specmark::scope!("spec://vibevm/discipline/ENGINE-CONFORM-v0.1#determinism");
+specmark::scope!("spec://discipline-core/mechanisms/ENGINE-CONFORM-v0.1#determinism");
 
 use crate::finding::{Finding, Rule};
 

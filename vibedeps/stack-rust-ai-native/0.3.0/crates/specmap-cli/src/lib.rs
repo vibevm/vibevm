@@ -2,13 +2,12 @@
 //! canonical `specmap.json` traceability index over a project tree, plus the
 //! orphan ratchet gate that rides every run.
 //!
-//! This was extracted out of vibevm's `xtask` so the rust-ai-native package
-//! ships a *runnable* engine, not a description of one (PROP-024 code-bearing
-//! packages). vibevm's `cargo xtask specmap` is now a thin shim over this
-//! library, and the `specmap-rust` binary (`src/main.rs`) is what an installed
-//! consumer runs in its own project. The policy is data (`specmap.toml`),
-//! never hardcoded here — the same engine runs on any layout, exactly as
-//! `conform-cli` ships the conform gate.
+//! The rust-ai-native package ships this as a *runnable* engine, not a
+//! description of one (PROP-024 code-bearing packages): the `specmap-rust`
+//! binary (`src/main.rs`) is what an installed consumer runs in its own
+//! project, and a project-local wrapper can drive the same library. The
+//! policy is data (`specmap.toml`), never hardcoded here — the same engine
+//! runs on any layout, exactly as `conform-cli` ships the conform gate.
 
 use std::path::Path;
 
@@ -22,6 +21,12 @@ use specmap_core::config::Config;
 /// default scan and leaves the gate off.
 pub fn run_specmap(root: &Path, check: bool) -> Result<()> {
     let cfg = Config::load(root)?;
+    if cfg.is_none() {
+        eprintln!(
+            "specmap: NO specmap.toml — placeholder namespace `project` in force and the \
+             orphan gate is off; run `discipline-rust init` to write a starting policy."
+        );
+    }
     let scan_cfg = cfg.clone().unwrap_or_default();
     if check {
         match specmap_core::index::check(root, &scan_cfg)? {

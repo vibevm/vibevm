@@ -8,7 +8,7 @@
 //! line are legacy-unmarked and still inventoried (full node inventory,
 //! PROP-014 §4 Phase 0).
 
-specmark::scope!("spec://vibevm/discipline/PROP-014#spec-units");
+specmark::scope!("spec://discipline-core/mechanisms/PROP-014#spec-units");
 
 use std::path::Path;
 
@@ -17,7 +17,7 @@ use specmark_grammar::is_valid_anchor;
 use walkdir::WalkDir;
 
 use crate::config::Config;
-use crate::{SPEC_PACKAGE, content_hash, fwd};
+use crate::{content_hash, fwd};
 
 /// A heading line: 1–6 `#`, a space, text, trailing `{#anchor}`.
 fn parse_heading(line: &str) -> Option<(usize, String, String)> {
@@ -178,8 +178,12 @@ pub fn canonical_doc_path(file: &str) -> String {
 /// Parse one markdown document into units + warnings.
 ///
 /// `file` is the forward-slash repo-relative path on disk; the URI
-/// doc-path is derived via [`canonical_doc_path`].
-pub fn parse_units(file: &str, text: &str) -> (Vec<SpecUnit>, Vec<Warning>) {
+/// doc-path is derived via [`canonical_doc_path`], and `namespace` is
+/// the `spec://<namespace>/…` segment the units are minted under
+/// ([`Config::namespace`] for the project's own tree, an
+/// [`ExternalSpec`](crate::config::ExternalSpec)'s namespace for an
+/// installed package's tree).
+pub fn parse_units(file: &str, text: &str, namespace: &str) -> (Vec<SpecUnit>, Vec<Warning>) {
     let doc_path = canonical_doc_path(file);
     let lines: Vec<&str> = text.lines().collect();
     let fenced = fence_mask(&lines);
@@ -266,7 +270,7 @@ pub fn parse_units(file: &str, text: &str) -> (Vec<SpecUnit>, Vec<Warning>) {
         }
 
         units.push(SpecUnit {
-            uri: format!("spec://{SPEC_PACKAGE}/{doc_path}#{anchor}"),
+            uri: format!("spec://{namespace}/{doc_path}#{anchor}"),
             docPath: doc_path.clone(),
             file: file.to_string(),
             anchor,
@@ -306,7 +310,7 @@ pub fn scan_spec_tree(root: &Path, cfg: &Config) -> (Vec<SpecUnit>, Vec<Warning>
             let file_rel = fwd(rel);
             match std::fs::read_to_string(path) {
                 Ok(text) => {
-                    let (mut u, mut w) = parse_units(&file_rel, &text);
+                    let (mut u, mut w) = parse_units(&file_rel, &text, &cfg.namespace);
                     units.append(&mut u);
                     warnings.append(&mut w);
                 }
@@ -326,7 +330,7 @@ pub fn scan_spec_tree(root: &Path, cfg: &Config) -> (Vec<SpecUnit>, Vec<Warning>
         }
         match std::fs::read_to_string(&path) {
             Ok(text) => {
-                let (mut u, mut w) = parse_units(name, &text);
+                let (mut u, mut w) = parse_units(name, &text, &cfg.namespace);
                 units.append(&mut u);
                 warnings.append(&mut w);
             }
@@ -341,11 +345,55 @@ pub fn scan_spec_tree(root: &Path, cfg: &Config) -> (Vec<SpecUnit>, Vec<Warning>
     (units, warnings)
 }
 
+/// Scan each [`Config::external_specs`] tree — an installed package's spec
+/// directory — and mint its units under that package's namespace. These
+/// units participate in **resolution only** (dangling suppression, suspect
+/// revisions, queries); the caller never serialises them into the project's
+/// own index, and their parse warnings are the package's business, not this
+/// project's, so they are dropped. A missing root is reported to stderr and
+/// skipped (the package may simply not be installed yet), never a failure.
+pub fn scan_external_units(root: &Path, cfg: &Config) -> Vec<SpecUnit> {
+    let mut units = Vec::new();
+    for ext in &cfg.external_specs {
+        let base = root.join(&ext.root);
+        if !base.is_dir() {
+            eprintln!(
+                "specmap: external spec root `{}` (namespace `{}`) not found — \
+                 skipped; install the package to resolve its units",
+                ext.root, ext.namespace
+            );
+            continue;
+        }
+        for entry in WalkDir::new(&base)
+            .sort_by_file_name()
+            .into_iter()
+            .filter_map(Result::ok)
+        {
+            if !entry.file_type().is_file() {
+                continue;
+            }
+            let path = entry.path();
+            if path.extension().and_then(|e| e.to_str()) != Some("md") {
+                continue;
+            }
+            // Doc-paths are minted relative to the external tree itself, so
+            // `<ext.root>/mechanisms/X.md` reads `spec://<ns>/mechanisms/X#…`.
+            let rel = path.strip_prefix(&base).unwrap_or(path);
+            if let Ok(text) = std::fs::read_to_string(path) {
+                let (mut u, _w) = parse_units(&fwd(rel), &text, &ext.namespace);
+                units.append(&mut u);
+            }
+        }
+    }
+    units
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
 
     const DOC: &str = "spec/test/DOC.md";
+    const NS: &str = "project";
 
     fn fmt_warnings(w: &[Warning]) -> String {
         w.iter()
@@ -357,11 +405,11 @@ mod tests {
     #[test]
     fn anchored_heading_becomes_a_unit_with_span_hash() {
         let text = "# Title {#root}\n\nbody one\n\n## Sub {#sub-part}\n\nbody two\n\n## Next {#next-part}\nafter\n";
-        let (units, warnings) = parse_units(DOC, text);
+        let (units, warnings) = parse_units(DOC, text, NS);
         assert!(warnings.is_empty(), "{}", fmt_warnings(&warnings));
         assert_eq!(units.len(), 3);
         assert_eq!(units[0].anchor, "root");
-        assert_eq!(units[0].uri, "spec://vibevm/test/DOC#root");
+        assert_eq!(units[0].uri, "spec://project/test/DOC#root");
         assert_eq!(units[0].docPath, "test/DOC");
         assert_eq!(units[0].file, DOC);
         assert_eq!(units[0].line, 1);
@@ -375,18 +423,18 @@ mod tests {
     #[test]
     fn unanchored_heading_ends_a_span_but_is_not_a_unit() {
         let text = "## A {#a}\nbody\n## Plain heading\nmore\n## B {#b}\nbody b\n";
-        let (units, _) = parse_units(DOC, text);
+        let (units, _) = parse_units(DOC, text, NS);
         assert_eq!(units.len(), 2);
         // A's span must stop at `## Plain heading`.
         let a_hash = units[0].contentHash.clone();
-        let (units2, _) = parse_units(DOC, "## A {#a}\nbody\n");
+        let (units2, _) = parse_units(DOC, "## A {#a}\nbody\n", NS);
         assert_eq!(a_hash, units2[0].contentHash);
     }
 
     #[test]
     fn kind_line_parses_kind_revision_status() {
         let text = "### R {#req-x}\n`req r2`\n\nMUST hold.\n\n### P {#req-y}\n`req r1 planned`\n\n### D {#req-z}\n`req r3 disputed(#req-x)` — see the pair.\n";
-        let (units, warnings) = parse_units(DOC, text);
+        let (units, warnings) = parse_units(DOC, text, NS);
         assert!(warnings.is_empty(), "{}", fmt_warnings(&warnings));
         assert!(matches!(units[0].kind.as_deref(), Some(SpecUnitKind::Req)));
         assert_eq!(units[0].revision.as_deref(), Some(&2));
@@ -405,7 +453,7 @@ mod tests {
     #[test]
     fn ordinary_inline_code_is_not_a_kind_line() {
         let text = "### T {#t}\n`vibe install` does things.\n";
-        let (units, warnings) = parse_units(DOC, text);
+        let (units, warnings) = parse_units(DOC, text, NS);
         assert!(warnings.is_empty(), "{}", fmt_warnings(&warnings));
         assert!(units[0].kind.is_none());
     }
@@ -413,19 +461,19 @@ mod tests {
     #[test]
     fn malformed_kind_line_warns_but_keeps_the_unit() {
         let text = "### T {#t}\n`req rX`\n";
-        let (units, warnings) = parse_units(DOC, text);
+        let (units, warnings) = parse_units(DOC, text, NS);
         assert_eq!(units.len(), 1);
         assert_eq!(warnings.len(), 1);
         assert_eq!(warnings[0].code, "malformed-kind-line");
         let text = "### T {#t}\n`req r1 someday`\n";
-        let (_, warnings) = parse_units(DOC, text);
+        let (_, warnings) = parse_units(DOC, text, NS);
         assert_eq!(warnings[0].code, "malformed-kind-line");
     }
 
     #[test]
     fn duplicate_anchor_in_one_file_warns_and_keeps_both() {
         let text = "## A {#phases}\none\n## B {#phases}\ntwo\n";
-        let (units, warnings) = parse_units(DOC, text);
+        let (units, warnings) = parse_units(DOC, text, NS);
         assert_eq!(units.len(), 2);
         assert_eq!(warnings.len(), 1);
         assert_eq!(warnings[0].code, "duplicate-anchor");
@@ -435,7 +483,7 @@ mod tests {
     #[test]
     fn invalid_anchor_warns_and_skips() {
         let text = "## A {#Bad_Anchor}\nbody\n";
-        let (units, warnings) = parse_units(DOC, text);
+        let (units, warnings) = parse_units(DOC, text, NS);
         assert!(units.is_empty());
         assert_eq!(warnings[0].code, "invalid-anchor");
     }
@@ -450,25 +498,62 @@ mod tests {
         )
         .unwrap();
         std::fs::write(
-            dir.path().join("VIBEVM-SPEC.md"),
-            "# vibevm {#root}\n\n## Section 5. The task graph {#task-graph}\nbody\n",
+            dir.path().join("ROOT-SPEC.md"),
+            "# demo {#root}\n\n## Section 5. The task graph {#task-graph}\nbody\n",
         )
         .unwrap();
         std::fs::write(dir.path().join("README.md"), "# Readme {#root}\n").unwrap();
-        let (units, warnings) = scan_spec_tree(dir.path(), &Config::default());
+        let cfg = Config {
+            root_spec_docs: vec!["ROOT-SPEC.md".into()],
+            ..Config::default()
+        };
+        let (units, warnings) = scan_spec_tree(dir.path(), &cfg);
         assert!(warnings.is_empty(), "{}", fmt_warnings(&warnings));
         let uris: Vec<&str> = units.iter().map(|u| u.uri.as_str()).collect();
-        assert!(uris.contains(&"spec://vibevm/X#in-tree"));
-        assert!(uris.contains(&"spec://vibevm/VIBEVM-SPEC#root"));
-        assert!(uris.contains(&"spec://vibevm/VIBEVM-SPEC#task-graph"));
+        assert!(uris.contains(&"spec://project/X#in-tree"));
+        assert!(uris.contains(&"spec://project/ROOT-SPEC#root"));
+        assert!(uris.contains(&"spec://project/ROOT-SPEC#task-graph"));
         // README-class root markdown stays out of the inventory.
         assert_eq!(units.len(), 3);
     }
 
     #[test]
+    fn external_specs_resolve_under_their_own_namespace_and_are_skipped_when_absent() {
+        let dir = tempfile::tempdir().unwrap();
+        let ext = dir.path().join("vibedeps/some-flow/0.3.0/spec");
+        std::fs::create_dir_all(ext.join("mechanisms")).unwrap();
+        std::fs::write(
+            ext.join("mechanisms/ENGINE-X-v0.1.md"),
+            "## Rules {#rules}\n`req r1`\n\nbody\n",
+        )
+        .unwrap();
+        let cfg = Config {
+            external_specs: vec![
+                crate::config::ExternalSpec {
+                    namespace: "some-flow".into(),
+                    root: "vibedeps/some-flow/0.3.0/spec".into(),
+                },
+                // A not-yet-installed package: skipped, never fatal.
+                crate::config::ExternalSpec {
+                    namespace: "ghost".into(),
+                    root: "vibedeps/ghost/1.0.0/spec".into(),
+                },
+            ],
+            ..Config::default()
+        };
+        let units = scan_external_units(dir.path(), &cfg);
+        assert_eq!(units.len(), 1);
+        assert_eq!(
+            units[0].uri,
+            "spec://some-flow/mechanisms/ENGINE-X-v0.1#rules"
+        );
+        assert_eq!(units[0].revision.as_deref(), Some(&1));
+    }
+
+    #[test]
     fn fenced_sample_headings_are_not_units_and_do_not_cut_spans() {
         let text = "## Real {#real-unit}\nbody\n```markdown\n## Sample {#req-sample}\n`req r2`\n```\ntail\n## Next {#next-unit}\n";
-        let (units, warnings) = parse_units(DOC, text);
+        let (units, warnings) = parse_units(DOC, text, NS);
         assert!(warnings.is_empty(), "{}", fmt_warnings(&warnings));
         assert_eq!(units.len(), 2);
         assert_eq!(units[0].anchor, "real-unit");
@@ -478,6 +563,7 @@ mod tests {
         let (units2, _) = parse_units(
             DOC,
             "## Real {#real-unit}\nbody\ntail\n## Next {#next-unit}\n",
+            NS,
         );
         assert_ne!(units[0].contentHash, units2[0].contentHash);
     }
@@ -486,8 +572,8 @@ mod tests {
     fn hash_is_line_ending_invariant() {
         let lf = "## A {#a}\nbody\n";
         let crlf = "## A {#a}\r\nbody\r\n";
-        let (u1, _) = parse_units(DOC, lf);
-        let (u2, _) = parse_units(DOC, crlf);
+        let (u1, _) = parse_units(DOC, lf, NS);
+        let (u2, _) = parse_units(DOC, crlf, NS);
         assert_eq!(u1[0].contentHash, u2[0].contentHash);
     }
 }

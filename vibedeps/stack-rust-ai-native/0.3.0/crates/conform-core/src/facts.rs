@@ -1,4 +1,4 @@
-specmark::scope!("spec://vibevm/discipline/ENGINE-CONFORM-v0.1#facts");
+specmark::scope!("spec://discipline-core/mechanisms/ENGINE-CONFORM-v0.1#facts");
 
 use serde::{Deserialize, Serialize};
 
