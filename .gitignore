@@ -19,6 +19,12 @@ desktop.ini
 # Claude Code per-developer local settings — machine-scoped, not shared.
 .claude/settings.local.json
 
+# Agent skill projections — written by `vibe skill install` from the
+# installed packages' [[skill]] declarations; reproducible, per-developer.
+.claude/skills/
+.opencode/
+.agents/
+
 # Reference sources and author's book chapters — cloned/placed externally,
 # not part of the vibevm distribution. Kept out of git both to respect
 # upstream copyright and to keep the public repo lean.

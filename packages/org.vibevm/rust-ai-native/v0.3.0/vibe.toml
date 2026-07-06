@@ -18,3 +18,18 @@ packages = { "flow:org.vibevm/discipline-core" = "^0.3" }
 [boot_snippet]
 source = "spec/boot/20-stack-rust-ai-native.md"
 category = "stack"
+
+# The operating procedures, as agent-installable skills (PROP-018 §2.4;
+# projected by `vibe skill install`). The methods live in
+# flow:org.vibevm/discipline-core (04-SWEEP-PLAYBOOK, BROWNFIELD-PROTOCOL);
+# these skills are their Rust-stack instantiation over the shipped
+# discipline-rust toolchain.
+[[skill]]
+name = "discipline-sweep"
+path = "spec/skills/discipline-sweep"
+description = "The recurring AI-Native discipline sweep: floor gates, then the health collector's ratchet items; weekly drift + judgment tiers"
+
+[[skill]]
+name = "terraform-rust"
+path = "spec/skills/terraform-rust"
+description = "Adopt the AI-Native discipline on an existing Rust codebase: inventory-not-gate, the registries, characterization, then card raids crate by crate"
