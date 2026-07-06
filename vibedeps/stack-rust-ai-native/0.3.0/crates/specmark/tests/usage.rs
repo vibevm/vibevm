@@ -20,7 +20,10 @@ struct Tagged {
 }
 
 #[spec(implements = "spec://discipline-core/mechanisms/PROP-014#addressing-code")]
-#[spec(documents = "spec://discipline-core/mechanisms/PROP-014#addressing-spec", r = 1)]
+#[spec(
+    documents = "spec://discipline-core/mechanisms/PROP-014#addressing-spec",
+    r = 1
+)]
 enum MultiTagged {
     A,
     B,
@@ -43,7 +46,10 @@ fn helper(x: u8) -> u8 {
 }
 
 mod inner {
-    specmark::scope!("spec://discipline-core/mechanisms/PROP-014#addressing-code", r = 1);
+    specmark::scope!(
+        "spec://discipline-core/mechanisms/PROP-014#addressing-code",
+        r = 1
+    );
 
     pub fn inherited() -> &'static str {
         "covered by the module scope marker"

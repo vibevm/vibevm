@@ -12,6 +12,7 @@ members = [
     "crates/conform-core",
     "crates/conform-frontend-rust",
     "crates/conform-cli",
+    "crates/discipline-cli",
     "crates/env-audit",
     "crates/specmap-core",
     "crates/specmap-cli",
@@ -20,7 +21,7 @@ members = [
 ]
 
 [workspace.package]
-version = "0.2.0"
+version = "0.3.0"
 edition = "2024"
 rust-version = "1.93"
 authors = ["Oleg Chirukhin"]
@@ -33,7 +34,9 @@ homepage = "https://gitverse.ru/anarchic/vibevm"
 # Internal crates — path-only (not published; consumed in-tree).
 conform-core = { path = "crates/conform-core" }
 conform-frontend-rust = { path = "crates/conform-frontend-rust" }
+conform-cli = { path = "crates/conform-cli" }
 specmap-core = { path = "crates/specmap-core" }
+specmap-cli = { path = "crates/specmap-cli" }
 specmark = { path = "crates/specmark" }
 specmark-grammar = { path = "crates/specmark-grammar" }
 
