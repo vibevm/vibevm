@@ -1,0 +1,23 @@
+# sync-engines.toml — the vendor-sync manifest (`cargo xtask sync-engines`,
+# DEFERRALS-CLOSEOUT-PLAN v0.1 D1). The neutral engine crates are AUTHORED
+# in flow:org.vibevm/discipline-core; each language stack ships a
+# byte-identical vendored copy under its `crates/vendor/` so every package
+# slot stays a self-buildable Cargo workspace (PROP-024 §2.4 — a path-dep
+# cannot cross package slots). `--check` gates drift in self-check; the fix
+# surface is ALWAYS the authored copy, never a vendored one.
+#
+# A package version bump edits the paths below — data, not the tool.
+
+source_root = "packages/org.vibevm/discipline-core/v0.4.0/crates"
+
+crates = [
+    "conform-core",
+    "specmap-core",
+    "specmark",
+    "specmark-grammar",
+]
+
+targets = [
+    "packages/org.vibevm/rust-ai-native/v0.4.0/crates/vendor",
+    "packages/org.vibevm/typescript-ai-native/v0.3.0/crates/vendor",
+]

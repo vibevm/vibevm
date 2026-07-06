@@ -9,15 +9,15 @@
 [workspace]
 resolver = "3"
 members = [
-    "crates/conform-core",
     "crates/conform-frontend-rust",
     "crates/conform-cli",
     "crates/discipline-cli",
     "crates/env-audit",
-    "crates/specmap-core",
     "crates/specmap-cli",
-    "crates/specmark",
-    "crates/specmark-grammar",
+    "crates/vendor/conform-core",
+    "crates/vendor/specmap-core",
+    "crates/vendor/specmark",
+    "crates/vendor/specmark-grammar",
 ]
 
 [workspace.package]
@@ -31,14 +31,18 @@ repository = "https://gitverse.ru/anarchic/vibevm"
 homepage = "https://gitverse.ru/anarchic/vibevm"
 
 [workspace.dependencies]
-# Internal crates — path-only (not published; consumed in-tree).
-conform-core = { path = "crates/conform-core" }
+# Internal crates — path-only (not published; consumed in-tree). The four
+# neutral engine crates under crates/vendor/ are byte-identical vendored
+# copies of flow:org.vibevm/discipline-core's authored source (`cargo xtask
+# sync-engines`; the --check gate runs in self-check). Never edit them here —
+# the fix surface is the authored copy in discipline-core.
+conform-core = { path = "crates/vendor/conform-core" }
 conform-frontend-rust = { path = "crates/conform-frontend-rust" }
 conform-cli = { path = "crates/conform-cli" }
-specmap-core = { path = "crates/specmap-core" }
+specmap-core = { path = "crates/vendor/specmap-core" }
 specmap-cli = { path = "crates/specmap-cli" }
-specmark = { path = "crates/specmark" }
-specmark-grammar = { path = "crates/specmark-grammar" }
+specmark = { path = "crates/vendor/specmark" }
+specmark-grammar = { path = "crates/vendor/specmark-grammar" }
 
 # Third-party (all permissive licenses — PROP-000 §3). Feature sets match
 # vibevm's so the engine behaves identically wherever it is built.

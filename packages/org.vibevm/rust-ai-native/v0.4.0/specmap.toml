@@ -17,8 +17,18 @@
 # The spec:// namespace for units under this package's own spec/ tree.
 namespace = "rust-ai-native"
 
-# Code roots scanned for tags. The package has no xtask — just its crates/.
-scan_roots = ["crates/*"]
+# Code roots scanned for tags: the package's OWN crates, named explicitly.
+# crates/vendor/* is deliberately absent — those are byte-synced copies of
+# flow:org.vibevm/discipline-core's authored engine crates (`cargo xtask
+# sync-engines`), and the AUTHORED package self-traces them; gating the
+# copies here would double-count the same tags.
+scan_roots = [
+    "crates/conform-frontend-rust",
+    "crates/conform-cli",
+    "crates/discipline-cli",
+    "crates/env-audit",
+    "crates/specmap-cli",
+]
 
 # The package's prompt content (guides, cards, boot). Irrelevant to the orphan
 # gate (which reads code edges, not spec units), but named for completeness.
@@ -32,14 +42,13 @@ root_spec_docs = []
 #   discipline-cli             — CLI driver binaries (the `conform-rust` /
 #                                `specmap-rust` / `discipline-rust` entry
 #                                points): drivers, not discipline domain code
-#   specmark, specmark-grammar — the tag bootstrap pair: they cannot depend on
-#                                specmark to carry scope! markers on themselves
+# (specmark + specmark-grammar moved to flow:org.vibevm/discipline-core with
+#  the engine consolidation, DEFERRALS-CLOSEOUT Phase 1; the authored package
+#  exempts the bootstrap pair now.)
 exempt = [
     "conform-cli",
     "discipline-cli",
     "specmap-cli",
-    "specmark",
-    "specmark-grammar",
 ]
 
 dispositioned = []
