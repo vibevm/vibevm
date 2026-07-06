@@ -1,12 +1,10 @@
-//! `cargo xtask tripwire` — list debt-registry entries whose `touch:`
+//! `cargo tripwire` — list debt-registry entries whose `touch:`
 //! tripwires fire on the current change set. Warn-only by contract.
 
 use std::path::Path;
 use std::process::Command;
 
 use anyhow::{Context, Result, bail};
-
-use crate::repo_root;
 
 /// Collect the change set as repo-relative forward-slash paths.
 fn changed_paths(root: &Path, base: Option<&str>) -> Result<Vec<String>> {
@@ -57,26 +55,25 @@ fn changed_paths(root: &Path, base: Option<&str>) -> Result<Vec<String>> {
     Ok(paths)
 }
 
-pub(crate) fn run_tripwire(base: Option<&str>, debt_rel: &str) -> Result<()> {
-    let root = repo_root()?;
+pub fn run_tripwire(root: &Path, base: Option<&str>, debt_rel: &str) -> Result<()> {
     let debt_path = root.join(debt_rel);
     let debt_json = std::fs::read_to_string(&debt_path)
         .with_context(|| format!("reading {}", debt_path.display()))?;
-    let changed = changed_paths(&root, base)?;
+    let changed = changed_paths(root, base)?;
     if changed.is_empty() {
-        eprintln!("xtask tripwire: change set is empty — nothing to match.");
+        eprintln!("tripwire: change set is empty — nothing to match.");
         return Ok(());
     }
     let fired = specmap_core::tripwire::evaluate(&debt_json, &changed)?;
     if fired.is_empty() {
         eprintln!(
-            "xtask tripwire: no debt tripwires fire on {} changed path(s).",
+            "tripwire: no debt tripwires fire on {} changed path(s).",
             changed.len()
         );
         return Ok(());
     }
     eprintln!(
-        "xtask tripwire: {} debt entr{} fire on this change set — address \
+        "tripwire: {} debt entr{} fire on this change set — address \
          each in the PR description: pulled-in, re-dispositioned, or \
          consciously deferred (PLAYBOOK §7.5):",
         fired.len(),

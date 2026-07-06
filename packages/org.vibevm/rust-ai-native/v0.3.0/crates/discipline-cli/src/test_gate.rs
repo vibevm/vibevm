@@ -1,24 +1,22 @@
-//! `cargo xtask test-gate` — run the workspace tests through nextest
+//! `cargo test-gate` — run the workspace tests through nextest
 //! and diff the outcome against the xfail-strict baseline
 //! (BROWNFIELD §4). Replaces bare `cargo test` in terraform
 //! acceptance lines.
 
+use std::path::Path;
 use std::process::Command;
 
 use anyhow::{Context, Result, bail};
 
-use crate::repo_root;
-
-pub(crate) fn run_test_gate(baseline_rel: &str) -> Result<()> {
+pub fn run_test_gate(root: &Path, baseline_rel: &str) -> Result<()> {
     use specmap_core::testgate;
 
-    let root = repo_root()?;
     let baseline_path = root.join(baseline_rel);
     let baseline_json = std::fs::read_to_string(&baseline_path)
         .with_context(|| format!("reading {}", baseline_path.display()))?;
     let baseline = testgate::parse_baseline(&baseline_json)?;
 
-    eprintln!("xtask test-gate: running `cargo nextest run --workspace --no-fail-fast` …");
+    eprintln!("test-gate: running `cargo nextest run --workspace --no-fail-fast` …");
     let out = Command::new("cargo")
         .args([
             "nextest",
@@ -30,7 +28,7 @@ pub(crate) fn run_test_gate(baseline_rel: &str) -> Result<()> {
             "--color",
             "never",
         ])
-        .current_dir(&root)
+        .current_dir(root)
         .output()
         .context("spawning cargo nextest (install: `cargo install cargo-nextest --locked`)")?;
 
@@ -60,7 +58,7 @@ pub(crate) fn run_test_gate(baseline_rel: &str) -> Result<()> {
         .filter(|s| **s == testgate::RunStatus::Fail)
         .count();
     eprintln!(
-        "xtask test-gate: {total} results parsed ({failed} failed, {skipped} skipped), \
+        "test-gate: {total} results parsed ({failed} failed, {skipped} skipped), \
          baseline entries: {}",
         baseline.len()
     );
@@ -75,7 +73,7 @@ pub(crate) fn run_test_gate(baseline_rel: &str) -> Result<()> {
         );
     }
     if report.is_green() {
-        eprintln!("xtask test-gate: green (xfail-strict).");
+        eprintln!("test-gate: green (xfail-strict).");
         return Ok(());
     }
     for test in &report.newly_failing {

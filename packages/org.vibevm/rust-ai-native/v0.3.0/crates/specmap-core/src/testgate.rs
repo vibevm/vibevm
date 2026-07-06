@@ -1,6 +1,6 @@
 //! The xfail-strict test gate (BROWNFIELD-PROTOCOL §4).
 //!
-//! Diff a nextest run against `terraform/registry/tests-baseline.json`
+//! Diff a nextest run against the project's tests-baseline registry (`discipline/registry/tests-baseline.json` by convention)
 //! and fail on either of:
 //!
 //! 1. **newly failing** — a test absent from the baseline failed;

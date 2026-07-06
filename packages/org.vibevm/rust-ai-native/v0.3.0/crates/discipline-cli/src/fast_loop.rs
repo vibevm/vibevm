@@ -1,4 +1,4 @@
-//! `cargo xtask fast-loop` — the Class-E `cell-fast-loop-present`
+//! `cargo fast-loop` — the Class-E `cell-fast-loop-present`
 //! checker (discipline card scaffold-e-fast-loop, Band 3): every cell
 //! builds and tests in isolation inside the per-cell budget.
 
@@ -6,8 +6,6 @@ use std::path::Path;
 use std::process::Command;
 
 use anyhow::{Context, Result, bail};
-
-use crate::repo_root;
 
 /// One cell's fast-loop measurement.
 struct CellRun {
@@ -47,17 +45,17 @@ fn workspace_members(root: &Path) -> Result<Vec<String>> {
 /// (pass/fail + test count) comes from the same nextest output the
 /// test-gate parses, so the two gates cannot disagree on what a test
 /// result is.
-pub(crate) fn run_fast_loop(
+pub fn run_fast_loop(
+    root: &Path,
     cell: Option<&str>,
     budget_secs: u64,
     enforce_budget: bool,
 ) -> Result<()> {
     use specmap_core::testgate;
 
-    let root = repo_root()?;
     let cells = match cell {
         Some(one) => vec![one.to_string()],
-        None => workspace_members(&root)?,
+        None => workspace_members(root)?,
     };
     let budget = budget_secs as f64;
 
@@ -79,7 +77,7 @@ pub(crate) fn run_fast_loop(
                 "--color",
                 "never",
             ])
-            .current_dir(&root)
+            .current_dir(root)
             .output()
             .context("spawning cargo nextest (install: `cargo install cargo-nextest --locked`)")?;
         let seconds = started.elapsed().as_secs_f64();
@@ -97,7 +95,7 @@ pub(crate) fn run_fast_loop(
         // Class-G checks outside the cell's first signal.
         let doc = Command::new("cargo")
             .args(["test", "--doc", "-p", name, "--quiet"])
-            .current_dir(&root)
+            .current_dir(root)
             .output()
             .context("spawning cargo test --doc")?;
         // `cargo test --doc` fails on crates with no lib target; that
@@ -146,14 +144,14 @@ pub(crate) fn run_fast_loop(
     let over: Vec<&CellRun> = runs.iter().filter(|r| r.seconds > budget).collect();
     let within = runs.len() - over.len();
     eprintln!(
-        "xtask fast-loop: {}/{} cell(s) within the {budget_secs}s budget \
+        "fast-loop: {}/{} cell(s) within the {budget_secs}s budget \
          ({:.0}%), {} red; report at {}.",
         within,
         runs.len(),
         100.0 * within as f64 / runs.len().max(1) as f64,
         red.len(),
         report_path
-            .strip_prefix(&root)
+            .strip_prefix(root)
             .unwrap_or(&report_path)
             .display()
     );

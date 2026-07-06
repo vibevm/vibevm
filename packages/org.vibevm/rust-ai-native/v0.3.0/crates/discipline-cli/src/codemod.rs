@@ -1,12 +1,11 @@
-//! `cargo xtask codemod …` — scaffolded edit operations (discipline
+//! `discipline-rust codemod …` — scaffolded edit operations (discipline
 //! card scaffold-i-codemods): a recurring multi-file change offered as
 //! one parameterized, checked, atomic operation.
 
+use std::path::Path;
 use std::process::Command;
 
 use anyhow::{Context, Result, bail};
-
-use crate::repo_root;
 
 /// Pure content generation for `codemod add-cell` — split out so the
 /// templates are unit-testable without touching a filesystem.
@@ -30,7 +29,7 @@ mod add_cell {
         format!(
             "//! `{ty}` — the `{variant}` {seam} cell.\n\
              //!\n\
-             //! Scaffolded by `cargo xtask codemod add-cell`; the seam\n\
+             //! Scaffolded by `cargo codemod add-cell`; the seam\n\
              //! implementation is the author's next edit. The `#[cell]`\n\
              //! manifest and the REQ edge are present from birth so the\n\
              //! selection registry and the specmap see the cell\n\
@@ -133,18 +132,18 @@ mod add_cell {
     }
 }
 
-/// `cargo xtask codemod add-cell` — the card-I prototype: one checked,
+/// `cargo codemod add-cell` — the card-I prototype: one checked,
 /// atomic, multi-file operation. Writes the module, registers it in
 /// lib.rs, seeds the smoke test, then runs `cargo check -p <crate>`;
 /// any failure rolls every write back.
-pub(crate) fn run_codemod_add_cell(
+pub fn run_codemod_add_cell(
+    root: &Path,
     crate_dir_rel: &str,
     cell: &str,
     seam: &str,
     variant: &str,
     spec_uri: &str,
 ) -> Result<()> {
-    let root = repo_root()?;
     let crate_dir = root.join(crate_dir_rel);
     let crate_name = crate_dir
         .file_name()
@@ -194,19 +193,16 @@ pub(crate) fn run_codemod_add_cell(
     std::fs::write(&lib_path, &lib_after)?;
 
     eprintln!(
-        "xtask codemod add-cell: wrote {}, {}, registered in lib.rs — post-check…",
+        "codemod add-cell: wrote {}, {}, registered in lib.rs — post-check…",
         module_path
-            .strip_prefix(&root)
+            .strip_prefix(root)
             .unwrap_or(&module_path)
             .display(),
-        test_path
-            .strip_prefix(&root)
-            .unwrap_or(&test_path)
-            .display(),
+        test_path.strip_prefix(root).unwrap_or(&test_path).display(),
     );
     let check = Command::new("cargo")
         .args(["check", "-p", &crate_name, "--all-targets"])
-        .current_dir(&root)
+        .current_dir(root)
         .status()
         .context("spawning cargo check")?;
     if !check.success() {
@@ -217,9 +213,9 @@ pub(crate) fn run_codemod_add_cell(
         bail!("post-check failed — all three writes rolled back; the tree is as before");
     }
     eprintln!(
-        "xtask codemod add-cell: ok. Next edits: implement the seam on `{}`, replace the \
+        "codemod add-cell: ok. Next edits: implement the seam on `{}`, replace the \
          smoke test with the real oracle (card scaffold-d), and run \
-         `cargo xtask fast-loop --cell {crate_name}`.",
+         `cargo fast-loop --cell {crate_name}`.",
         add_cell::pascal(cell)
     );
     Ok(())
