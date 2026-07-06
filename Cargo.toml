@@ -71,14 +71,14 @@ vibe-workspace = { path = "crates/vibe-workspace", version = "0.1.0-dev" }
 # versions are the package's concern. The 10 specmark dogfooders + xtask inherit
 # the repointed specmark/specmap-core via `.workspace = true`; specmark-grammar
 # is consumed only inside the package now, so it leaves the vibevm root.
-conform-core = { path = "packages/org.vibevm/rust-ai-native/v0.3.0/crates/conform-core" }
-conform-frontend-rust = { path = "packages/org.vibevm/rust-ai-native/v0.3.0/crates/conform-frontend-rust" }
-conform-cli = { path = "packages/org.vibevm/rust-ai-native/v0.3.0/crates/conform-cli" }
-discipline-cli = { path = "packages/org.vibevm/rust-ai-native/v0.3.0/crates/discipline-cli" }
-env-audit = { path = "packages/org.vibevm/rust-ai-native/v0.3.0/crates/env-audit" }
-specmap-core = { path = "packages/org.vibevm/rust-ai-native/v0.3.0/crates/specmap-core" }
-specmap-cli = { path = "packages/org.vibevm/rust-ai-native/v0.3.0/crates/specmap-cli" }
-specmark = { path = "packages/org.vibevm/rust-ai-native/v0.3.0/crates/specmark" }
+conform-core = { path = "packages/org.vibevm/rust-ai-native/v0.4.0/crates/conform-core" }
+conform-frontend-rust = { path = "packages/org.vibevm/rust-ai-native/v0.4.0/crates/conform-frontend-rust" }
+conform-cli = { path = "packages/org.vibevm/rust-ai-native/v0.4.0/crates/conform-cli" }
+discipline-cli = { path = "packages/org.vibevm/rust-ai-native/v0.4.0/crates/discipline-cli" }
+env-audit = { path = "packages/org.vibevm/rust-ai-native/v0.4.0/crates/env-audit" }
+specmap-core = { path = "packages/org.vibevm/rust-ai-native/v0.4.0/crates/specmap-core" }
+specmap-cli = { path = "packages/org.vibevm/rust-ai-native/v0.4.0/crates/specmap-cli" }
+specmark = { path = "packages/org.vibevm/rust-ai-native/v0.4.0/crates/specmark" }
 
 # Third-party (all permissive licenses — PROP-000 §3)
 syn = { version = "2", features = ["full", "visit"] }

@@ -2,7 +2,7 @@
 name = "rust-ai-native"
 group = "org.vibevm"
 kind = "stack"
-version = "0.3.0"
+version = "0.4.0"
 authors = ["Oleg Chirukhin"]
 license = "EULA"
 description = "AI-Native Rust - the Rust projection of the Discipline v0.2: cells, naming, contract-first ordering, the nine scaffolds in Rust, errors as contract surface, and the vibe-tcg tool vision"
@@ -13,7 +13,7 @@ min_vibe_version = "0.1.0"
 requires_kinds = []
 
 [requires]
-packages = { "flow:org.vibevm/discipline-core" = "^0.3" }
+packages = { "flow:org.vibevm/discipline-core" = "^0.4" }
 
 [boot_snippet]
 source = "spec/boot/20-stack-rust-ai-native.md"

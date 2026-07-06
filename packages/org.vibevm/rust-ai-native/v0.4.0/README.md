@@ -41,7 +41,7 @@ cargo run --manifest-path vibedeps/<stack-slot>/Cargo.toml \
 ```
 
 `<stack-slot>` is this package's materialised directory (e.g.
-`stack-rust-ai-native/0.3.0` — check your `vibe.lock`). Building in the
+`stack-rust-ai-native/0.4.0` — check your `vibe.lock`). Building in the
 slot drops a `target/` there; add `vibedeps/**/target/` to your
 `.gitignore` (build output is already excluded from the package's content
 hash, PROP-024 §2.2).

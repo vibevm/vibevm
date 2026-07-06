@@ -336,7 +336,7 @@ dependencies = [
 
 [[package]]
 name = "conform-cli"
-version = "0.3.0"
+version = "0.4.0"
 dependencies = [
  "anyhow",
  "clap",
@@ -347,7 +347,7 @@ dependencies = [
 
 [[package]]
 name = "conform-core"
-version = "0.3.0"
+version = "0.4.0"
 dependencies = [
  "anyhow",
  "serde",
@@ -360,7 +360,7 @@ dependencies = [
 
 [[package]]
 name = "conform-frontend-rust"
-version = "0.3.0"
+version = "0.4.0"
 dependencies = [
  "conform-core",
  "proc-macro2",
@@ -472,7 +472,7 @@ dependencies = [
 
 [[package]]
 name = "discipline-cli"
-version = "0.3.0"
+version = "0.4.0"
 dependencies = [
  "anyhow",
  "clap",
@@ -519,7 +519,7 @@ checksum = "34aa73646ffb006b8f5147f3dc182bd4bcb190227ce861fc4a4844bf8e3cb2c0"
 
 [[package]]
 name = "env-audit"
-version = "0.3.0"
+version = "0.4.0"
 dependencies = [
  "specmark",
 ]
@@ -1805,7 +1805,7 @@ dependencies = [
 
 [[package]]
 name = "specmap-cli"
-version = "0.3.0"
+version = "0.4.0"
 dependencies = [
  "anyhow",
  "clap",
@@ -1814,7 +1814,7 @@ dependencies = [
 
 [[package]]
 name = "specmap-core"
-version = "0.3.0"
+version = "0.4.0"
 dependencies = [
  "anyhow",
  "glob",
@@ -1832,7 +1832,7 @@ dependencies = [
 
 [[package]]
 name = "specmark"
-version = "0.3.0"
+version = "0.4.0"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1842,7 +1842,7 @@ dependencies = [
 
 [[package]]
 name = "specmark-grammar"
-version = "0.3.0"
+version = "0.4.0"
 dependencies = [
  "proc-macro2",
  "syn",
