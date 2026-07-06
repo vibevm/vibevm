@@ -10,12 +10,12 @@
 | `scaffold-a-generators` | A+C | scaffold A | raid/gate | [E-strong] | specified |
 | `scaffold-b-typed-builders` | E | scaffold B | gate | [E-mid] | specified |
 | `scaffold-c-runnable-contracts` | E | scaffold C | inline | [E-mid] | specified |
-| `scaffold-d-differential-oracle` | E | scaffold D | gate | [E-mid] | specified (pilot) |
-| `scaffold-e-fast-loop` | E+H | scaffold E | gate | [E-strong] | specified |
-| `scaffold-f-structured-diagnostics` | E+C | scaffold F | inline | [E-mid] | specified |
-| `scaffold-g-doctests` | C+G | scaffold G | gate | [E-strong] | specified |
+| `scaffold-d-differential-oracle` | E | scaffold D | gate | [E-mid] | shipped: oracle-presence (`cell-has-oracle`, conform-rust); the oracle itself stays authored |
+| `scaffold-e-fast-loop` | E+H | scaffold E | gate | [E-strong] | shipped (`discipline-rust fast-loop`) |
+| `scaffold-f-structured-diagnostics` | E+C | scaffold F | inline | [E-mid] | shipped (`error-enum/message-cites-req`, conform-rust) |
+| `scaffold-g-doctests` | C+G | scaffold G | gate | [E-strong] | shipped (`seam-has-doctest` + `pub-doctest`, conform-rust) |
 | `scaffold-h-simulators` | E+H | scaffold H | gate | [E-strong] | specified |
-| `scaffold-i-codemods` | H+A | scaffold I | raid | **[E-hyp]** | WISH (pilot-gated) |
+| `scaffold-i-codemods` | H+A | scaffold I | raid | **[E-hyp]** | pilot prototype shipped (`discipline-rust codemod add-cell`); free parameterization stays the open R4 question |
 
 ## Trigger-mode delivery summary
 - **inline** (per-edit, lint-detectable): C, F. Most frequent; cheapest.
@@ -45,7 +45,8 @@
 These are deferred not because they are unimportant but to honor minimal sufficiency: the nine scaffold cards are the runnable-capital core; rule/anti-pattern cards are added as the pilot shows which triggers actually fire.
 
 ## Notes on status
-- **specified** = checker is defined but not necessarily implemented in the pilot.
+- **shipped** = the checker ships in this stack (conform-rust / discipline-rust) and runs on any consumer tree.
+- **specified** = checker is defined but not yet shipped.
 - **specified (pilot)** = checker defined; implementation is a named pilot task.
 - **WISH** = no checker yet (A5); the card is advisory until one exists.
 - A card graduates from BETA when its checker is implemented AND its evidence IDs are non-empty AND pilot evidence has not falsified it.
