@@ -106,12 +106,19 @@ Options considered:
   as a new self-check step. Stacks stay self-contained workspaces; no vibe
   changes; divergence is mechanically impossible while the gate holds.
 
-Crate disposition: `conform-core`, `specmap-core`, `specmark-grammar` →
-discipline-core (authored) + vendored into both stacks. `specmark`
-(proc-macro, Rust-tagging-specific), `conform-frontend-rust`, `env-audit`,
-`conform-cli`, `specmap-cli`, `discipline-cli` stay rust-stack-authored.
-vibevm root `Cargo.toml` repoints its `specmap-core` path-dep to the
-discipline-core authored copy (`specmark` stays pointed at the Rust stack).
+Crate disposition (corrected by the Phase 0 topology spike): the FOUR
+neutral-engine crates — `conform-core`, `specmap-core`, `specmark`,
+`specmark-grammar` — move to discipline-core (authored) and are vendored
+into both stacks. `specmark` moves WITH the engines because conform-core
+self-traces through its `scope!` markers (the Ф4b restoration) — leaving
+it rust-stack-authored would make the flow package depend on a stack
+package. (`specmark` is Rust-tagging machinery, but the engines are Rust
+wherever they run; "checkers ship in each language stack" governs the
+per-language FRONTENDS, not the neutral core.) `conform-frontend-rust`,
+`env-audit`, `conform-cli`, `specmap-cli`, `discipline-cli` stay
+rust-stack-authored. vibevm root `Cargo.toml` repoints BOTH its
+`specmap-core` and `specmark` path-deps to the discipline-core authored
+copies.
 Vendored dirs are excluded from conform scanning (the `/vendor/` substring,
 same mechanism as `/generated/`) and exempted in each stack's own
 `specmap.toml` — authored copies carry the tags.
@@ -296,6 +303,33 @@ established split).
    `cargo xtask specmap --check` + `conform check` — byte-stable.
 7. Acceptance: findings recorded in the WAL session section; any red probe
    downgrades its dependent step per the notes above (nothing else blocks).
+
+**EXECUTED 2026-07-07 — all six probes green.** Results, binding on the
+later phases:
+
+- Network: both SSH endpoints authenticate (same-day recovery from the
+  morning's refusals — reconfirmed per-step posture).
+- `npm install typescript` → **6.0.3** in ~1s; `tsc --version` runs.
+  Note the MAJOR: the extractor targets the stable API and the 6.x
+  surface used below is confirmed working.
+- `node --test` executes annotated `.ts` under v24 strip-types (pass 1).
+- Compiler-API spike: every D2 fact class proven on TS 6.0.3 —
+  `any` in type position (and NOT inside a string literal), cross-type
+  `as` vs `as const` discriminated, non-null assertion, imports, JSDoc
+  tags with lines, `@ts-expect-error -- reason` from the comment stream
+  (string-literal traps yield zero facts). **Finding:** `@implements`
+  is a PARSED JSDoc tag (`JSDocImplementsTag` — its "class expression"
+  eats `spec`, leaving `://…` in `.comment`); the extractor must read
+  the spec-URI from the tag's RAW TEXT for parsed tags, not from
+  `.comment`. Same caution for any tag name TypeScript recognises.
+- Vendor topology: conform-core + specmark + specmark-grammar copied
+  into a scratch stack-shaped workspace (`crates/vendor/*`,
+  workspace-inherited fields redeclared) + a consumer — `cargo check`
+  offline exit 0. **Finding:** conform-core depends on specmark (Ф4b
+  self-trace), so the D1 move set is the FOUR neutral crates (D1
+  corrected in place).
+- `research/` is inert to both gates (specmap 573/566/578/0/0, conform
+  0 — unchanged with the directory present).
 
 ## 4. Phase 1 — engine consolidation (discipline-core 0.4.0)
 
