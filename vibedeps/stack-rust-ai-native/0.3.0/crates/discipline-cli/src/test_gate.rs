@@ -37,9 +37,20 @@ pub fn run_test_gate(root: &Path, baseline_rel: &str) -> Result<()> {
     combined.push_str(&String::from_utf8_lossy(&out.stderr));
     let results = testgate::parse_nextest_output(&combined);
 
-    // A gate that parsed nothing must never report green: that is how
-    // gates get gamed by accident (PLAYBOOK §8).
+    // A gate that parsed nothing must never report green when it had
+    // expectations to check: that is how gates get gamed by accident
+    // (PLAYBOOK §8). The one legal zero: a FRESH tree — empty baseline AND
+    // nextest's own "no tests to run" exit (code 4) — where there is
+    // nothing to diff yet (doctests ride `cargo test` / the floor, not
+    // nextest). Any other zero-parsed outcome stays a refusal.
     if results.is_empty() {
+        if baseline.is_empty() && out.status.code() == Some(4) {
+            eprintln!(
+                "test-gate: no nextest tests found and the baseline is empty — \
+                 trivially green (a fresh tree)."
+            );
+            return Ok(());
+        }
         bail!(
             "test-gate parsed zero test results out of the nextest run \
              (nextest exit: {:?}); refusing to conclude anything",

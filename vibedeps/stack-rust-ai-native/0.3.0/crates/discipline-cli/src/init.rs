@@ -210,9 +210,10 @@ pub fn run_init(root: &Path, opts: &InitOptions) -> Result<()> {
         }
     }
 
-    // The BROWNFIELD §3 registries — empty valid forms; the terraform
-    // procedure fills them with reality.
-    let tests_baseline = "{ \"schema\": 1, \"tests\": [] }\n";
+    // The BROWNFIELD §3 registries — empty valid forms (top-level key is
+    // `entries` in all three, the shape testgate/tripwire parse); the
+    // terraform procedure fills them with reality.
+    let tests_baseline = "{ \"schema\": 1, \"entries\": [] }\n";
     let debt = "{ \"schema\": 1, \"entries\": [] }\n";
     let intent = "{ \"schema\": 1, \"entries\": [] }\n";
     let conform_baseline = "{\"schema\":1,\"findings\":[]}\n";
@@ -264,13 +265,15 @@ pub fn run_init(root: &Path, opts: &InitOptions) -> Result<()> {
 
     eprintln!(
         "discipline-rust init: done. Next steps:\n\
-         \x20 1. add the specmark tag dep to your workspace (GUIDE §13):\n\
+         \x20 1. wire your workspace Cargo.toml (GUIDE §13) — dep the tags AND exclude the slots:\n\
+         \x20    [workspace] exclude = [\"vibedeps\"]   # the packages are their own workspaces\n\
          \x20    [workspace.dependencies] specmark = {{ path = \"vibedeps/<stack-slot>/crates/specmark\" }}\n\
          \x20 2. write your first spec unit (spec/PROP-001.md with a {{#req-…}} anchor)\n\
          \x20    and tag the implementing module: specmark::scope!(\"spec://{namespace}/PROP-001#req-…\")\n\
          \x20 3. `discipline-rust specmap` to mint the index, then `discipline-rust floor`\n\
          \x20 4. adopt crate-by-crate: drain a crate, flip it into conform.toml's gated_crates\n\
-         \x20    (the sweep skill walks this: /discipline-sweep; brownfield: /terraform-rust)"
+         \x20    (the sweep skill walks this: /discipline-sweep; brownfield: /terraform-rust)\n\
+         (layout changed since init? re-run with --force to regenerate the topology-derived files)"
     );
     Ok(())
 }
@@ -307,6 +310,21 @@ mod tests {
         assert!(specmap.contains("scan_roots = [\".\"]"), "{specmap}");
         let conform = std::fs::read_to_string(root.join("conform.toml")).unwrap();
         assert!(conform.contains("crate = \"demo-app\""), "{conform}");
+
+        // The generated registries parse with the engines that read them —
+        // the format contract that once drifted (`tests` vs `entries`).
+        let baseline = std::fs::read_to_string(root.join(crate::DEFAULT_TESTS_BASELINE)).unwrap();
+        assert!(
+            specmap_core::testgate::parse_baseline(&baseline)
+                .unwrap()
+                .is_empty()
+        );
+        let debt = std::fs::read_to_string(root.join(crate::DEFAULT_DEBT_REGISTRY)).unwrap();
+        assert!(
+            specmap_core::tripwire::evaluate(&debt, &["x".into()])
+                .unwrap()
+                .is_empty()
+        );
 
         // Idempotence: a second run leaves user-owned files untouched.
         std::fs::write(root.join("conform.toml"), "# my edited policy\n").unwrap();
