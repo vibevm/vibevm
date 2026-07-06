@@ -89,10 +89,14 @@ The weak swarm does **not** read this guide. It receives, per edit, the Band-3 o
 The stack ships everything below; nothing requires the discipline's dev tree.
 
 1. **Install the toolchain.** `vibe install` materialises this package into `vibedeps/`. Then either put the umbrella binary on PATH once — `cargo install --path vibedeps/<stack-slot>/crates/discipline-cli` — or run it in place: `cargo run --manifest-path vibedeps/<stack-slot>/Cargo.toml -p discipline-cli --bin discipline-rust -- <args>`. Add `vibedeps/**/target/` to `.gitignore`.
-2. **Bootstrap.** `discipline-rust init` writes `conform.toml` (topology-detected roots; every crate exempt-with-a-reason — the pre-adoption posture), `specmap.toml` (your `namespace` + `[[external_specs]]` discovered from the installed packages, so citations of `spec://discipline-core/…` resolve), and the `discipline/registry/` files. Idempotent; `--force` to regenerate.
-3. **Take the tags.** Your crates dep the shipped proc-macro:
+2. **Bootstrap.** `discipline-rust init` writes `conform.toml` (topology-detected roots; every crate exempt-with-a-reason — the pre-adoption posture), `specmap.toml` (your `namespace` + `[[external_specs]]` discovered from the installed packages, so citations of `spec://discipline-core/…` resolve), and the `discipline/registry/` files. Idempotent; `--force` to regenerate. Run it after your workspace skeleton exists (topology is detected at init time); re-run with `--force` if the layout changes later.
+3. **Take the tags.** Your workspace deps the shipped proc-macro — and **excludes the slot tree** (the packages are their own Cargo workspaces; without the exclude, cargo binds their crates to YOUR workspace and manifest inheritance breaks — PROP-024 §2.4):
    ```toml
    # workspace Cargo.toml
+   [workspace]
+   members = ["crates/*"]
+   exclude = ["vibedeps"]
+
    [workspace.dependencies]
    specmark = { path = "vibedeps/<stack-slot>/crates/specmark" }
    ```
