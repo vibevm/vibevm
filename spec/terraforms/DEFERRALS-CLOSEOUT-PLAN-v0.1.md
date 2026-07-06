@@ -29,17 +29,24 @@ does not); `test-gate`/`tripwire`/`health`/`fast-loop`/`codemod` TS twins;
 prettier/eslint floor steps as gated defaults; an AST-grade TS parser (swc /
 TS Compiler API — upgrade path documented, not built); `vibe-tcg-ts`; the
 full VibeVM TypeScript surface (the demo is the pilot-lite, not the pilot);
-mirror/publish (owner-held, network-dead anyway).
+mirror/publish (owner-held; executable now that the network is back, but
+not part of this campaign's phases).
 
 ## 1. Standing constraints
 
-- **This box is offline** (gitverse:22, github:22 refused at plan time;
-  crates.io unverified). Therefore: **no new external crate dependencies**
-  anywhere in this campaign — every new crate uses the workspace's existing
-  dependency set (serde, toml, anyhow, regex if already present, std). The
-  npm cache DOES resolve `typescript` offline (probed 2026-07-07) and node
-  is v24.18.0 (type-stripping stable → `node --test` runs `.ts` natively).
-  Phase 0 re-probes both before relying on them.
+- **Network: present but flaky.** The first probe of 2026-07-07 got
+  connection-refused on both SSH endpoints; a re-probe the same day
+  authenticated against BOTH gitverse.ru:22 and github.com:22, with
+  api.github.com and registry.npmjs.org answering 200 (crates.io answers
+  403 to a bare curl — the usual anti-bot response, not an outage;
+  gitverse HTTPS timed out while its SSH works, and SSH is the push
+  path). Treat network as available but re-verify at the moment of any
+  network-dependent step. Consequences: the mirror and the registry
+  publish are now EXECUTABLE and held purely on the owner's word; new
+  crate dependencies are POSSIBLE but still minimised by policy (D2
+  weighs this as a real choice, not a forced one); npm resolves
+  `typescript` (also cached locally), and node is v24.18.0
+  (type-stripping stable → `node --test` runs `.ts` natively).
 - The four CLAUDE.md rules; floor green at every phase boundary
   (`bash tools/self-check.sh` exit 0, specmap `--check` clean 0 dangling,
   conform 0, package gates green).
@@ -90,22 +97,38 @@ Vendored dirs are excluded from conform scanning (the `/vendor/` substring,
 same mechanism as `/generated/`) and exempted in each stack's own
 `specmap.toml` — authored copies carry the tags.
 
-### D2 — TS fact source: hand-rolled lexical scanner (offline-safe)
+### D2 — TS fact source: hand-rolled lexical scanner (recommended), swc as the named alternative
 
 The Ф6 brief names the TypeScript Compiler API / ts-morph as the parser.
-Both need npm at runtime or a Node subprocess; swc needs new crates.io
-deps. All three are network-gated on this box and add consumer surface.
-**Chosen:** a small hand-rolled lexical scanner in Rust (comment/string/
-template-literal aware line lexer) extracting exactly the facts the v1
-rules need: import statements, the `unsafe`-set tokens (`any`, cross-type
-`as`, non-null `!`, `@ts-ignore`, `@ts-expect-error -- reason`), file
-metrics, JSDoc spec tags. Honest labelling: the frontend `id()` is
-`"ts-lexical"`, its `version()` starts at 1, and the Ф6 brief gets a
-status update naming the lexical MVP and the AST upgrade path (swc or
-Compiler API sidecar) as a follow-up that only bumps `version()` and
-retires cache slots — the exact mechanism the brief already specifies.
-Unparseable constructs degrade to zero facts for that region, never an
-error (the B5 rule).
+With the network back this is a real choice, not a forced one; the
+options and their costs:
+
+- **Node-side extractor (TS Compiler API / ts-morph)** — the richest
+  facts, but puts npm + a Node subprocess on the CONSUMER's critical
+  path for a structural gate that must run everywhere the floor runs.
+  Rejected for v1 (runtime surface, not build surface).
+- **swc_ecma_parser (Rust AST)** — real AST accuracy (cross-type `as`
+  vs `as const`, `any` in type position vs in a string), but a large
+  new dependency subtree compiled by every consumer who builds the
+  stack's tools, and the heaviest implementation. Viable now; still not
+  recommended for v1.
+- **Hand-rolled lexical scanner (chosen):** a small comment/string/
+  template-literal-aware lexer extracting exactly the facts the v1
+  rules need — import statements, the `unsafe`-set tokens (`any`,
+  cross-type `as`, non-null `!`, `@ts-ignore`,
+  `@ts-expect-error -- reason`), file metrics, JSDoc spec tags. The v1
+  fact set is lexically regular (JSDoc markers are comments — an AST
+  gives no advantage there); the risk is precision on exotic syntax,
+  bounded by the dirty-fixture suite and the B5 rule (unparseable
+  region → zero facts, never an error).
+
+Honest labelling either way: the frontend `id()` is `"ts-lexical"`, its
+`version()` starts at 1, and the Ф6 brief gets a status update naming
+the lexical MVP and the swc upgrade path as a follow-up that only bumps
+`version()` and retires cache slots — the exact mechanism the brief
+already specifies. If the owner prefers swc from the start, Phase 2
+absorbs it (add the dependency to the stack workspace, same Frontend
+seam, same fixtures) at the cost of consumer build weight.
 
 ### D3 — TS traceability markers: JSDoc tags, per GUIDE §9
 
@@ -180,11 +203,13 @@ established split).
 
 ## 3. Phase 0 — probes and spikes (no commits; gate for everything after)
 
-1. Re-probe network (ssh gitverse/github, crates.io HEAD) — informational.
-2. `npm install --prefer-offline typescript` in a scratch dir — REAL
-   install, not dry-run; record whether `npx tsc --version` runs. If the
-   cache misses, Phase 6's tsc step is authored but recorded red-pending-
-   network in the demo README and the WAL; everything else proceeds.
+1. Re-probe network at execution time (ssh gitverse/github; npm ping) —
+   the 2026-07-07 re-probe already authenticated on both SSH endpoints,
+   but the same morning saw both refuse connections, so treat
+   reachability as a per-step fact, not a session constant.
+2. `npm install typescript` in a scratch dir — REAL install, not
+   dry-run; record whether `npx tsc --version` runs. (Resolves offline
+   from the local npm cache too, probed 2026-07-07.)
 3. `node --test` on a scratch `.ts` with type annotations + an
    `erasableSyntaxOnly`-clean feature set — confirm v24 strip-types runs it.
 4. Vendor-sync build spike: copy `conform-core` into a scratch stack-shaped
@@ -407,8 +432,11 @@ review and this phase drops to a reminder in the checkpoint.)
 
 ## 15. Risks
 
-- **Offline npm/crates drift** — mitigated by D2 (no new crate deps) and
-  Phase 0's real-install probe; worst case the demo's tsc step is
+- **Network flakiness** — the box refused both SSH endpoints and later
+  authenticated on both within one day; mitigated by D2 (no new crate
+  deps by default, so nothing in the build path needs crates.io), the
+  local npm cache (typescript resolves offline), and per-step re-probes
+  for anything network-facing. Worst case the demo's tsc step is
   red-pending-network, recorded, everything else lands.
 - **Vendor drift** — impossible while `sync-engines --check` is in
   self-check (Phase 1.5); the gate is proven red once before trust.
@@ -443,4 +471,5 @@ discipline-typescript trace explain "spec://ts-demo/PROP-001#req-…"
 ```
 
 All commits local; mirror and registry publish stay held for the owner's
-word (network permitting).
+word. Both are EXECUTABLE now that the network is back (SSH to both hosts
+re-verified 2026-07-07) — the hold is policy, not capability.
