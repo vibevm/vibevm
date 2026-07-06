@@ -135,7 +135,7 @@ enum Cmd {
         enforce_budget: bool,
     },
 
-    /// The Discipline health collector (DISCIPLINE-SWEEP v0.1's
+    /// The Discipline health collector (the Sweep Playbook's
     /// fact-gatherer): advisory early-warning + coverage facts that sit
     /// above the binary conform/specmap gates — per-crate public-type
     /// doctest coverage, the file-length danger band, the pub-doctest
