@@ -22,7 +22,7 @@ These mechanize what vibevm's own AUDIT.md / PROP-013 already do socially: dated
 
 ## 3. The registries {#registries}
 
-Committed, human-diffable ground truth under `terraform/registry/` (distinct from the intent *ledger*, which is uncommitted derived cache):
+Committed, human-diffable ground truth under `discipline/registry/` (the shipped tools' default path — override by flag; distinct from the intent *ledger*, which is uncommitted derived cache):
 
 **`tests-baseline.json`** — exact-match input for the test gate:
 

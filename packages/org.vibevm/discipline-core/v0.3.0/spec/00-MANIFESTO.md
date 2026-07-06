@@ -79,7 +79,18 @@ A discipline that names its own failure modes is more trustworthy than one that 
 - `00-MANIFESTO.md` — this document.
 - `01-PATTERN-CARD-FORMAT.md` — the format every pattern is written in (GoF × JEP × operational layer).
 - `02-EXECUTABLE-SCAFFOLDS.md` — the nine scaffold classes; the runnable-capital catalog.
-- `03-RAID-PLAYBOOK.md` — layered, scheduled refactoring sweeps.
+- `03-RAID-PLAYBOOK.md` — layered, scheduled refactoring campaigns (raids).
+- `04-SWEEP-PLAYBOOK.md` — the standing sweep that holds a tree inside the Discipline between campaigns.
+- `05-CAMPAIGN-FORM.md` — the campaign paper trail: cold-executable plans, baselines, predictions, logs, reports.
+- `06-WAL-CONVENTION.md` — session-durable project state (optional but preferred).
+
+**Mechanisms (T1, language-independent; implemented per-stack):**
+- `mechanisms/ENGINE-CONFORM-v0.1.md` — the conformance engine: fact store, rules-as-queries, SARIF, ratchet baseline.
+- `mechanisms/PROP-014-specmap-bidirectional-traceability.md` — spec↔code traceability: anchors, revisions, tags, the index.
+- `mechanisms/BROWNFIELD-PROTOCOL-v0.1.md` — terraforming unfinished projects: inventory-not-gate, the registries, xfail-strict, characterization.
+- `mechanisms/LEDGER-INTENT-v0.1.md` — the intent ledger: facts vs interpretations, epoch-keyed cache.
+
+Spec-unit URIs for this package read `spec://discipline-core/<docpath>#<anchor>` (e.g. `spec://discipline-core/mechanisms/ENGINE-CONFORM-v0.1#rules`); the Rust implementations ship in `stack:org.vibevm/rust-ai-native` (`conform-rust`, `specmap-rust`, `discipline-rust`).
 
 **Language projections (T2):**
 - `rust/GUIDE-AI-NATIVE-RUST.md` — the law and scaffolds projected onto Rust; supersedes GUIDE-RUST-v0.1. (Pilot language.)

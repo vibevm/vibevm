@@ -2,9 +2,9 @@
 
 **Status.** Design proposal v0.1 — not implementation-locked. Drafted for review; every decision below is open to challenge until ratified.
 
-**Companions.** [PROP-000](PROP-000.md) (foundation, license policy §3), [PROP-003](../modules/vibe-resolver/PROP-003-dep-evolution.md) (the LLM-boundary philosophy this PROP extends), [PROP-009](../modules/vibe-workspace/PROP-009-loading-model.md) (boot/loading model — specmap becomes its intra-project counterpart), [PROP-013](PROP-013-periodic-health-audit.md) (category C "drift" — specmap mechanizes its detection), Red Book ch. 2 (files as IPC) and ch. 3 (Sync-from-Code — specmap is its instrumentation).
+**Companions** (vibevm-hosted, the pilot project's spec tree — cited as context, not shipped here): PROP-000 (foundation, license policy §3), PROP-003 (the LLM-boundary philosophy this PROP extends), PROP-009 (boot/loading model — specmap becomes its intra-project counterpart), PROP-013 (category C "drift" — specmap mechanizes its detection), Red Book ch. 2 (files as IPC) and ch. 3 (Sync-from-Code — specmap is its instrumentation).
 
-**Suggested location.** `spec/common/PROP-014-specmap.md`.
+**Home.** `flow:org.vibevm/discipline-core`, `spec/mechanisms/` — this mechanism ships with the Discipline (URIs `spec://discipline-core/mechanisms/PROP-014#…`); its Rust implementation ships in `stack:org.vibevm/rust-ai-native` (`specmap-core` + the `specmap-rust` binary). The tag *syntax* shown throughout (`#[spec]`, `scope!`) is the Rust projection; other language stacks ship their own projection of the same model.
 
 ---
 

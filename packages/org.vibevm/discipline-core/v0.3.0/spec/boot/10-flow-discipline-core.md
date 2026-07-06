@@ -1,12 +1,18 @@
 # Discipline v0.2 (BETA) — boot snippet
 
 This project follows the AI-Native Code Discipline. The language-neutral
-corpus lives in this package (`00-MANIFESTO.md`, `01-PATTERN-CARD-FORMAT.md`,
-`02-EXECUTABLE-SCAFFOLDS.md`, `03-RAID-PLAYBOOK.md`, `appendix/`); the
-concrete per-language `cards/` ship in each language stack, not here.
+corpus lives in this package: the guiding layer (`00-MANIFESTO.md`,
+`01-PATTERN-CARD-FORMAT.md`, `02-EXECUTABLE-SCAFFOLDS.md`), the operating
+playbooks (`03-RAID-PLAYBOOK.md` campaigns, `04-SWEEP-PLAYBOOK.md` the
+standing sweep, `05-CAMPAIGN-FORM.md` the campaign paper trail,
+`06-WAL-CONVENTION.md` session-durable state — optional but preferred), the
+mechanism specs under `mechanisms/` (ENGINE-CONFORM, PROP-014 specmap,
+BROWNFIELD-PROTOCOL, LEDGER-INTENT — the units `spec://discipline-core/…`
+tags cite), and `appendix/`. The concrete per-language `cards/` and the
+runnable checkers ship in each language stack, not here.
 **Do not read it all at boot** — the Discipline's own delivery rule is
 minimal sufficiency: load a card's Band-3 ops block only when its trigger
-fires.
+fires; open a playbook when you run its procedure.
 
 The two laws that always apply:
 
