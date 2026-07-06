@@ -48,7 +48,7 @@ fn find_jtd_codegen(root: &Path) -> Result<PathBuf> {
 fn generated_dir_for(stem: &str, root: &Path) -> PathBuf {
     match stem {
         "specmap" => {
-            root.join("packages/org.vibevm/rust-ai-native/v0.2.0/crates/specmap-core/src/generated")
+            root.join("packages/org.vibevm/rust-ai-native/v0.3.0/crates/specmap-core/src/generated")
         }
         _ => root.join("crates/vibe-wire/src/generated"),
     }
@@ -211,7 +211,7 @@ pub(crate) fn run_check_codegen() -> Result<()> {
     // rest to vibe-wire).
     let out_dirs = [
         root.join("crates/vibe-wire/src/generated"),
-        root.join("packages/org.vibevm/rust-ai-native/v0.2.0/crates/specmap-core/src/generated"),
+        root.join("packages/org.vibevm/rust-ai-native/v0.3.0/crates/specmap-core/src/generated"),
     ];
     let mut cmd = Command::new("git");
     cmd.arg("diff").arg("--exit-code").arg("--");

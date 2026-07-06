@@ -4,8 +4,8 @@ version = "0.1.0-dev"
 authors = ["Oleg Chirukhin"]
 
 [requires.packages]
-"flow:org.vibevm/discipline-core" = "^0.2.0"
-"stack:org.vibevm/rust-ai-native" = "^0.2.0"
+"flow:org.vibevm/discipline-core" = "^0.3.0"
+"stack:org.vibevm/rust-ai-native" = "^0.3.0"
 "stack:org.vibevm/typescript-ai-native" = "^0.2.0"
 
 # vibevm is its own bootstrap project — the tool itself, not yet a

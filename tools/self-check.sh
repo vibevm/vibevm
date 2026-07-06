@@ -111,7 +111,7 @@ run_step "cargo xtask conform check" cargo xtask conform check || OVERALL=$?
 # engine that powers the gate cannot itself drift outside the discipline unseen
 # (the same "a gate not in self-check drifts silently" lesson that wired conform
 # in as step 5).
-PKG_MANIFEST="packages/org.vibevm/rust-ai-native/v0.2.0/Cargo.toml"
+PKG_MANIFEST="packages/org.vibevm/rust-ai-native/v0.3.0/Cargo.toml"
 run_step "cargo fmt --all --check (rust-ai-native pkg)" \
   cargo fmt --manifest-path "$PKG_MANIFEST" --all --check || OVERALL=$?
 run_step "cargo test --workspace (rust-ai-native pkg)" \
@@ -126,7 +126,7 @@ run_step "cargo clippy --all-targets (rust-ai-native pkg)" \
 # scope! targets are vibevm-hosted spec units, so a full index would be all
 # cross-repo "dangling"; coverage is what matters. The conform step-5 lesson
 # (a gate not in self-check drifts silently) applied to the package's own trace.
-PKG_DIR="packages/org.vibevm/rust-ai-native/v0.2.0"
+PKG_DIR="packages/org.vibevm/rust-ai-native/v0.3.0"
 run_step "specmap-rust --gate (rust-ai-native pkg self-trace)" \
   cargo run --quiet --manifest-path "$PKG_MANIFEST" -p specmap-cli --bin specmap-rust -- --gate --path "$PKG_DIR" || OVERALL=$?
 
