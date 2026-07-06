@@ -1,10 +1,10 @@
 [meta]
 generated_by = "vibe 0.1.0-dev"
-generated_at = "2026-06-28T15:47:05Z"
+generated_at = "2026-07-06T21:06:09Z"
 schema_version = 5
 root_dependencies = [
-    "flow:org.vibevm/discipline-core@^0.2.0",
-    "stack:org.vibevm/rust-ai-native@^0.2.0",
+    "flow:org.vibevm/discipline-core@^0.3.0",
+    "stack:org.vibevm/rust-ai-native@^0.3.0",
     "stack:org.vibevm/typescript-ai-native@^0.2.0",
 ]
 
@@ -12,9 +12,9 @@ root_dependencies = [
 kind = "flow"
 name = "discipline-core"
 group = "org.vibevm"
-version = "0.2.0"
-source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/discipline-core/v0.2.0"
-content_hash = "sha256:c5b98647e8a0b197bff4072d1a32367f55eaa94d7a960ecd09696ad2217406d7"
+version = "0.3.0"
+source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/discipline-core/v0.3.0"
+content_hash = "sha256:496ddf9540413c287e254874a1462405e0c11bbdfa59e3ccc9cf068ebd34dcd0"
 files_written = []
 source_kind = "registry"
 
@@ -22,11 +22,11 @@ source_kind = "registry"
 kind = "stack"
 name = "rust-ai-native"
 group = "org.vibevm"
-version = "0.2.0"
-source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/rust-ai-native/v0.2.0"
-content_hash = "sha256:a11c01e6a55b85e367edab34624447abb8343dd5285ddcb17f1bfaafc5376235"
+version = "0.3.0"
+source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/rust-ai-native/v0.3.0"
+content_hash = "sha256:2c382a2b4cdb8e0c9f2be3ddcf1c9f5e6b78480e24faf48afbaee228e2d58df2"
 files_written = []
-dependencies = ["flow:org.vibevm/discipline-core@=0.2.0"]
+dependencies = ["flow:org.vibevm/discipline-core@=0.3.0"]
 source_kind = "registry"
 
 [[package]]
@@ -35,7 +35,7 @@ name = "typescript-ai-native"
 group = "org.vibevm"
 version = "0.2.0"
 source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/typescript-ai-native/v0.2.0"
-content_hash = "sha256:982ecdd8bf3bfdfd2bfa47edae503bf6e83c475f604bddb12caa8a71fa7eec14"
+content_hash = "sha256:59e80c48023f4da78279ff21554fcff4eb25bb0b714abc8a4c6fc97a41fe53b6"
 files_written = []
-dependencies = ["flow:org.vibevm/discipline-core@=0.2.0"]
+dependencies = ["flow:org.vibevm/discipline-core@=0.3.0"]
 source_kind = "registry"
