@@ -4,8 +4,8 @@
 //! grammar (URI shape, verb set, `r` integer, `reason` required for
 //! `deviates`), inject a rendered `Spec:` line into rustdoc, and expand
 //! to the item unchanged. Their real consumer is the source scanner
-//! behind `cargo xtask specmap`, which reads the attributes as AST —
-//! no macro expansion involved.
+//! behind `specmap-rust` (or the project's wrapper), which reads the
+//! attributes as AST — no macro expansion involved.
 //!
 //! ```rust,ignore
 //! use specmark::spec;
@@ -116,9 +116,9 @@ pub fn scope(input: TokenStream) -> TokenStream {
 /// `#[cell(seam = "…", variant = "…" [, replaces = "…"] [, flag = "…"])]`
 /// — the cell manifest (GUIDE-RUST §1): one module behind one seam,
 /// registered in one place, selected by at most one flag. Inert like
-/// `#[spec]`; consumers are `cargo xtask conform-lite`'s structure
-/// checks. A `replaces` key obliges a differential oracle against the
-/// named variant (GUIDE-RUST §7, R-040).
+/// `#[spec]`; consumers are the conform engine's structure checks
+/// (`conform-rust`). A `replaces` key obliges a differential oracle
+/// against the named variant (GUIDE-RUST §7, R-040).
 ///
 /// ```
 /// #[specmark::cell(seam = "RepoCreator", variant = "github")]
