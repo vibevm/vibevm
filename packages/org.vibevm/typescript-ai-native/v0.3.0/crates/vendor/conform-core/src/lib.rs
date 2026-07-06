@@ -29,7 +29,7 @@ pub mod baseline;
 pub mod rules;
 pub mod sarif;
 
-pub use config::{Config, ConfigOrigin, ExemptEntry};
+pub use config::{Config, ConfigOrigin, ExemptEntry, TsConfig};
 pub use facts::{Fact, Frontend, SourceFacts};
 pub use finding::{Finding, Rule, check, count_by_rule};
 pub use store::{ExtractionLog, Store, content_hash, sort_source_facts};

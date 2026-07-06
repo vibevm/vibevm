@@ -100,6 +100,22 @@ pub enum Fact {
         in_test: bool,
         in_deviation: bool,
     },
+    /// A TypeScript `unsafe`-set occurrence
+    /// (GUIDE-AI-NATIVE-TYPESCRIPT §8), produced by the `ts-tsc`
+    /// frontend: `kind` is one of `any_type` / `as_cross` / `non_null`
+    /// / `ts_ignore` / `ts_expect_error`. `reason` carries the
+    /// `@ts-expect-error -- reason` text — the TS shape of
+    /// `#[spec(deviates)]` testimony, honoured by `ts-unsafe-in-domain`
+    /// the way the Rust rules honour a deviation record. `in_test`
+    /// marks test files (`*.test.ts` / `*.spec.ts` / `__tests__/`),
+    /// where the domain ban does not apply — file-grain, because TS
+    /// test scoping is a file convention, not an attribute.
+    TsUnsafe {
+        kind: String,
+        line: u32,
+        in_test: bool,
+        reason: Option<String>,
+    },
 }
 
 /// Facts of one source file, with its repo-relative path.
@@ -147,4 +163,11 @@ pub trait Frontend {
     /// Extract facts from one file. `module` is the module path the
     /// engine computed for it.
     fn extract(&self, file: &str, crate_name: &str, module: &str, text: &str) -> Vec<Fact>;
+    /// Batch warm-up: the store calls this ONCE per run with every
+    /// repo-relative file whose facts are not already cached, before
+    /// any `extract` call. A frontend with per-invocation process
+    /// overhead (`ts-tsc` spawns node) extracts the whole pending set
+    /// here and serves `extract` from memory; in-process frontends
+    /// (rust-syn) keep the no-op default.
+    fn warm(&self, _pending_files: &[String]) {}
 }

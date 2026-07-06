@@ -63,23 +63,61 @@ impl Store {
             .join(format!("{content_hash}.json"))
     }
 
-    /// Extract facts for every workspace source file, reusing cached
-    /// facts when `(content-hash, producer)` already has them.
+    /// Extract facts for every workspace source file (Rust layout:
+    /// `src/` + `tests/` of each crate dir), reusing cached facts when
+    /// `(content-hash, producer)` already has them.
     pub fn extract_workspace(
         &self,
         repo: &Path,
         frontend: &dyn Frontend,
         log: &mut ExtractionLog,
     ) -> Result<Vec<SourceFacts>> {
-        let mut out = Vec::new();
-        for (file, crate_name, module, path) in workspace_sources(repo, &self.roots, &self.exclude)
-        {
+        let sources = workspace_sources(repo, &self.roots, &self.exclude);
+        self.extract_sources(sources, frontend, log)
+    }
+
+    /// Extract facts for every TypeScript source under the configured
+    /// roots (flat walk: `.ts`/`.tsx`/`.mts`/`.cts`, `.d.ts` and
+    /// `node_modules`-style trees skipped). Same cache, same log.
+    pub fn extract_typescript(
+        &self,
+        repo: &Path,
+        frontend: &dyn Frontend,
+        log: &mut ExtractionLog,
+    ) -> Result<Vec<SourceFacts>> {
+        let sources = typescript_sources(repo, &self.roots, &self.exclude);
+        self.extract_sources(sources, frontend, log)
+    }
+
+    /// The shared cache loop. Two passes: collect every cache miss and
+    /// hand the whole set to [`Frontend::warm`] (one batch — the
+    /// `ts-tsc` frontend turns this into a single node run), then serve
+    /// each file from cache or `extract`.
+    fn extract_sources(
+        &self,
+        sources: Vec<(String, String, String, PathBuf)>,
+        frontend: &dyn Frontend,
+        log: &mut ExtractionLog,
+    ) -> Result<Vec<SourceFacts>> {
+        let mut planned: Vec<(String, String, String, PathBuf, String, PathBuf)> = Vec::new();
+        let mut pending: Vec<String> = Vec::new();
+        for (file, crate_name, module, path) in sources {
             let text = match std::fs::read_to_string(&path) {
                 Ok(t) => t,
                 Err(_) => continue,
             };
             let hash = content_hash(&text);
             let slot = self.slot(frontend, &hash);
+            if !slot.exists() {
+                pending.push(file.clone());
+            }
+            planned.push((file, crate_name, module, path, text, slot));
+        }
+        if !pending.is_empty() {
+            frontend.warm(&pending);
+        }
+        let mut out = Vec::new();
+        for (file, crate_name, module, _path, text, slot) in planned {
             let facts: Vec<Fact> = if slot.exists() {
                 log.cached += 1;
                 let cached = std::fs::read_to_string(&slot)
@@ -192,6 +230,93 @@ fn workspace_sources(
                     .replace('\\', "/");
                 out.push((file, crate_name.clone(), module, path.to_path_buf()));
             }
+        }
+    }
+    out
+}
+
+/// TypeScript source extensions the flat walk accepts.
+const TS_EXTENSIONS: &[&str] = &["ts", "tsx", "mts", "cts"];
+/// Directory names the TypeScript walk never descends into — resolved
+/// installs and build output, mirroring the extractor's own skip list.
+const TS_SKIP_DIRS: &[&str] = &[
+    "node_modules",
+    "dist",
+    "build",
+    "coverage",
+    ".git",
+    "vibedeps",
+    "target",
+];
+
+/// Enumerate TypeScript sources as `(repo-rel file, root name, module,
+/// absolute path)`. Unlike the Rust walk there is no crate topology:
+/// each configured root (literal dir or `<dir>/*`) is walked whole,
+/// the "crate" is the root's directory name, and the module is the
+/// repo-relative path itself (TS modules ARE paths). `.d.ts` files are
+/// shapes, not code — skipped, matching the extractor.
+fn typescript_sources(
+    repo: &Path,
+    roots: &[String],
+    exclude: &[String],
+) -> Vec<(String, String, String, PathBuf)> {
+    let mut root_dirs: Vec<PathBuf> = Vec::new();
+    for root in roots {
+        if let Some(parent) = root.strip_suffix("/*") {
+            if let Ok(rd) = std::fs::read_dir(repo.join(parent)) {
+                for entry in rd.filter_map(Result::ok) {
+                    if entry.path().is_dir() {
+                        root_dirs.push(entry.path());
+                    }
+                }
+            }
+        } else {
+            let dir = repo.join(root);
+            if dir.is_dir() {
+                root_dirs.push(dir);
+            }
+        }
+    }
+    root_dirs.sort();
+    root_dirs.dedup();
+
+    let mut out = Vec::new();
+    for root_dir in root_dirs {
+        let root_name = root_dir
+            .file_name()
+            .map(|n| n.to_string_lossy().to_string())
+            .unwrap_or_default();
+        for entry in walkdir::WalkDir::new(&root_dir)
+            .sort_by_file_name()
+            .into_iter()
+            .filter_entry(|e| {
+                !e.file_type().is_dir()
+                    || e.file_name()
+                        .to_str()
+                        .map(|n| !TS_SKIP_DIRS.contains(&n) && !n.starts_with('.'))
+                        .unwrap_or(true)
+            })
+            .filter_map(Result::ok)
+        {
+            let path = entry.path();
+            let is_ts = entry.file_type().is_file()
+                && path
+                    .extension()
+                    .and_then(|e| e.to_str())
+                    .is_some_and(|e| TS_EXTENSIONS.contains(&e))
+                && !path.to_string_lossy().ends_with(".d.ts");
+            if !is_ts {
+                continue;
+            }
+            let file = path
+                .strip_prefix(repo)
+                .unwrap_or(path)
+                .to_string_lossy()
+                .replace('\\', "/");
+            if exclude.iter().any(|s| file.contains(s.as_str())) {
+                continue;
+            }
+            out.push((file.clone(), root_name.clone(), file, path.to_path_buf()));
         }
     }
     out
