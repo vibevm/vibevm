@@ -1,0 +1,26 @@
+[package]
+name = "conform-cli-typescript"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+license-file.workspace = true
+publish.workspace = true
+repository.workspace = true
+homepage.workspace = true
+description = "The conform-typescript gate driver: load the project's conform.toml [typescript] policy, run the ts-tsc frontend through the neutral engine, gate against the TS ratchet baseline"
+
+[[bin]]
+name = "conform-typescript"
+path = "src/main.rs"
+
+[dependencies]
+conform-core.workspace = true
+conform-frontend-typescript.workspace = true
+ts-extract-bridge.workspace = true
+anyhow.workspace = true
+clap.workspace = true
+serde_json.workspace = true
+
+[dev-dependencies]
+tempfile.workspace = true

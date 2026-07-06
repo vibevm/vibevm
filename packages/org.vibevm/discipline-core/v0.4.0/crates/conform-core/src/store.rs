@@ -57,6 +57,18 @@ impl Store {
         }
     }
 
+    /// The TypeScript-scan view of the same store: scan roots and
+    /// exclusions come from the `[typescript]` policy table, the cache
+    /// directory is shared (slots are keyed by frontend id+version, so
+    /// the two languages never collide).
+    pub fn for_typescript(repo: &Path, config: &Config) -> Store {
+        Store {
+            root: repo.join("target").join("conform").join("facts"),
+            roots: config.typescript.roots.clone(),
+            exclude: config.typescript.exclude_substrings.clone(),
+        }
+    }
+
     fn slot(&self, frontend: &dyn Frontend, content_hash: &str) -> PathBuf {
         self.root
             .join(format!("{}-{}", frontend.id(), frontend.version()))

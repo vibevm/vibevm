@@ -228,11 +228,7 @@ impl Rule for TsCellIsolation {
                         ),
                     ),
                     why: self.why(),
-                    fingerprint: format!(
-                        "{}|{}|{to_path}#{line}",
-                        self.id(),
-                        source.file
-                    ),
+                    fingerprint: format!("{}|{}|{to_path}#{line}", self.id(), source.file),
                 });
             }
         }
