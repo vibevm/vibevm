@@ -31,11 +31,13 @@ mod codegen;
 mod conform;
 mod mirror;
 mod specmap;
+mod sync_engines;
 
 use codegen::{run_check_codegen, run_codegen};
 use conform::{run_conform_check, run_conform_freeze};
 use mirror::run_mirror;
 use specmap::run_specmap;
+use sync_engines::run_sync_engines;
 
 #[derive(Parser, Debug)]
 #[command(
@@ -154,6 +156,18 @@ enum Cmd {
         mirrors: bool,
     },
 
+    /// Mirror the authored neutral engine crates
+    /// (flow:org.vibevm/discipline-core) into every stack's
+    /// `crates/vendor/` per `sync-engines.toml` (DEFERRALS-CLOSEOUT D1).
+    /// `--check` byte-compares instead of writing and exits non-zero on
+    /// drift; self-check runs it, so a vendored copy can never diverge
+    /// from the authored engine silently.
+    SyncEngines {
+        /// Compare instead of mirroring; non-zero exit on any drift.
+        #[arg(long)]
+        check: bool,
+    },
+
     /// Fan the local mainline out to every target in `mirrors.toml`
     /// (the benevolent-dictator / hub-and-spoke mirror model, no primary):
     /// push `main` + tags to every `push` target, fast-forward-only and
@@ -267,6 +281,7 @@ fn main() -> Result<()> {
         Cmd::Codegen => run_codegen(),
         Cmd::CheckCodegen => run_check_codegen(),
         Cmd::Specmap { check } => run_specmap(check),
+        Cmd::SyncEngines { check } => run_sync_engines(check),
         Cmd::TestGate { baseline } => discipline_cli::run_test_gate(&repo_root()?, &baseline),
         Cmd::Tripwire { base, debt } => {
             discipline_cli::run_tripwire(&repo_root()?, base.as_deref(), &debt)
