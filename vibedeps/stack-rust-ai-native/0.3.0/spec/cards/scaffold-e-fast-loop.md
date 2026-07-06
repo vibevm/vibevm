@@ -8,7 +8,7 @@ Also Known As: tight feedback loop; incremental check; per-package test; smoke l
 Applicability / Recognition: Apply when — a cell cannot be checked without building the whole repo; the only verification is a multi-minute CI run; an agent must wait minutes for a signal. *Detector seed:* `cargo test -p <cell>` fails to run in isolation, OR cell has no fast local check → recognition fires (verification locality beats capability, R3-007).
 
 ## Band 2 — Justification & Tradeoffs
-Motivation: A weak agent in a bounded loop gets one signal per 30-min CI run — useless. With `vibe conform --cell` + `cargo test -p <cell>` returning in seconds, the same agent iterates ten times in the budget that previously bought zero feedback. The interpreter-budget result confirms: more local runs help agents that can use feedback (Opus, Sonnet); the loop is the amplifier.
+Motivation: A weak agent in a bounded loop gets one signal per 30-min CI run — useless. With `discipline-rust fast-loop --cell <crate>` + `cargo test -p <cell>` returning in seconds, the same agent iterates ten times in the budget that previously bought zero feedback. The interpreter-budget result confirms: more local runs help agents that can use feedback (Opus, Sonnet); the loop is the amplifier.
 Structure & Participants: *Cell isolation* (independently buildable package) · *Fast checker* (conform tiers + per-cell tests) · *Structured error* (Class F) · *Budget guard* (first signal < ~60s).
 Collaborations: Runs Classes C/D/G checks; consumes Class B's compiler checks; emits Class F diagnostics. The raid executor runs this per batch.
 Goals / Non-Goals: *Goals:* sub-minute first signal per cell; make the loop the standard agent workflow. *Non-Goals:* NOT replacing full CI (still runs at merge); does NOT create capability — Haiku didn't improve with more runs (it amplifies, not creates).
@@ -23,7 +23,7 @@ trigger: WHEN a cell lacks a sub-minute isolated check, OR verification requires
 mode: gate            # a structural precondition, verified at merge
 routine:
   1. Make the cell an independently buildable unit (own package or test target).
-  2. Provide `vibe conform --cell` scope for it.
+  2. Provide `discipline-rust conform check --scope <crate>` + `discipline-rust fast-loop --cell <crate>` for it.
   3. Ensure `cargo test -p <cell>` runs in isolation, < ~60s.
   4. Wire the cell's Class C/D/G checks into that command.
   5. Confirm first-signal latency is within budget; if not, reduce test case counts.
