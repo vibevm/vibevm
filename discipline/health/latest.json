@@ -1,433 +1,69 @@
 {
-  "budget": {
-    "danger_floor": 540,
-    "file_length": 600
-  },
-  "crates": [
-    {
-      "cells": 0,
-      "crate": "conform-core",
-      "danger_files": [],
-      "deviations": 1,
-      "env_nonroot": 0,
-      "error_enums": 0,
-      "error_enums_missing_req": [],
-      "gated": true,
-      "over_budget": [],
-      "pub_doctest_gated": true,
-      "pub_types": 19,
-      "typed_doctested": 19,
-      "typed_gap": 0,
-      "unsafe_nonaudit": 0,
-      "unwrap_domain": 0
-    },
-    {
-      "cells": 0,
-      "crate": "conform-frontend-rust",
-      "danger_files": [],
-      "deviations": 0,
-      "env_nonroot": 0,
-      "error_enums": 0,
-      "error_enums_missing_req": [],
-      "gated": true,
-      "over_budget": [],
-      "pub_doctest_gated": true,
-      "pub_types": 1,
-      "typed_doctested": 1,
-      "typed_gap": 0,
-      "unsafe_nonaudit": 0,
-      "unwrap_domain": 0
-    },
-    {
-      "cells": 0,
-      "crate": "env-audit",
-      "danger_files": [],
-      "deviations": 0,
-      "env_nonroot": 0,
-      "error_enums": 0,
-      "error_enums_missing_req": [],
-      "gated": true,
-      "over_budget": [],
-      "pub_doctest_gated": true,
-      "pub_types": 1,
-      "typed_doctested": 1,
-      "typed_gap": 0,
-      "unsafe_nonaudit": 0,
-      "unwrap_domain": 0
-    },
-    {
-      "cells": 0,
-      "crate": "specmap-core",
-      "danger_files": [],
-      "deviations": 0,
-      "env_nonroot": 0,
-      "error_enums": 0,
-      "error_enums_missing_req": [],
-      "gated": true,
-      "over_budget": [],
-      "pub_doctest_gated": false,
-      "pub_types": 11,
-      "typed_doctested": 0,
-      "typed_gap": 11,
-      "unsafe_nonaudit": 0,
-      "unwrap_domain": 0
-    },
-    {
-      "cells": 0,
-      "crate": "specmark",
-      "danger_files": [],
-      "deviations": 0,
-      "env_nonroot": 0,
-      "error_enums": 0,
-      "error_enums_missing_req": [],
-      "gated": true,
-      "over_budget": [],
-      "pub_doctest_gated": false,
-      "pub_types": 0,
-      "typed_doctested": 0,
-      "typed_gap": 0,
-      "unsafe_nonaudit": 0,
-      "unwrap_domain": 0
-    },
-    {
-      "cells": 0,
-      "crate": "specmark-grammar",
-      "danger_files": [],
-      "deviations": 0,
-      "env_nonroot": 0,
-      "error_enums": 0,
-      "error_enums_missing_req": [],
-      "gated": true,
-      "over_budget": [],
-      "pub_doctest_gated": true,
-      "pub_types": 6,
-      "typed_doctested": 6,
-      "typed_gap": 0,
-      "unsafe_nonaudit": 0,
-      "unwrap_domain": 0
-    },
-    {
-      "cells": 11,
-      "crate": "vibe-check",
-      "danger_files": [],
-      "deviations": 0,
-      "env_nonroot": 0,
-      "error_enums": 0,
-      "error_enums_missing_req": [],
-      "gated": true,
-      "over_budget": [],
-      "pub_doctest_gated": false,
-      "pub_types": 17,
-      "typed_doctested": 6,
-      "typed_gap": 11,
-      "unsafe_nonaudit": 0,
-      "unwrap_domain": 0
-    },
-    {
-      "cells": 0,
-      "crate": "vibe-cli",
-      "danger_files": [
-        {
-          "file": "crates/vibe-cli/src/commands/workspace/publish.rs",
-          "lines": 544
-        }
-      ],
-      "deviations": 2,
-      "env_nonroot": 0,
-      "error_enums": 7,
-      "error_enums_missing_req": [],
-      "gated": true,
-      "over_budget": [],
-      "pub_doctest_gated": false,
-      "pub_types": 86,
-      "typed_doctested": 0,
-      "typed_gap": 86,
-      "unsafe_nonaudit": 0,
-      "unwrap_domain": 0
-    },
-    {
-      "cells": 0,
-      "crate": "vibe-core",
-      "danger_files": [
-        {
-          "file": "crates/vibe-core/src/manifest/package/wire.rs",
-          "lines": 560
-        },
-        {
-          "file": "crates/vibe-core/src/manifest/package.rs",
-          "lines": 586
-        },
-        {
-          "file": "crates/vibe-core/src/manifest/project.rs",
-          "lines": 572
-        },
-        {
-          "file": "crates/vibe-core/src/package_ref.rs",
-          "lines": 544
-        }
-      ],
-      "deviations": 0,
-      "env_nonroot": 0,
-      "error_enums": 3,
-      "error_enums_missing_req": [],
-      "gated": true,
-      "over_budget": [],
-      "pub_doctest_gated": true,
-      "pub_types": 69,
-      "typed_doctested": 69,
-      "typed_gap": 0,
-      "unsafe_nonaudit": 0,
-      "unwrap_domain": 0
-    },
-    {
-      "cells": 0,
-      "crate": "vibe-graph",
-      "danger_files": [],
-      "deviations": 0,
-      "env_nonroot": 0,
-      "error_enums": 0,
-      "error_enums_missing_req": [],
-      "gated": false,
-      "over_budget": [],
-      "pub_doctest_gated": false,
-      "pub_types": 0,
-      "typed_doctested": 0,
-      "typed_gap": 0,
-      "unsafe_nonaudit": 0,
-      "unwrap_domain": 0
-    },
-    {
-      "cells": 2,
-      "crate": "vibe-index",
-      "danger_files": [],
-      "deviations": 1,
-      "env_nonroot": 0,
-      "error_enums": 1,
-      "error_enums_missing_req": [],
-      "gated": true,
-      "over_budget": [],
-      "pub_doctest_gated": false,
-      "pub_types": 89,
-      "typed_doctested": 4,
-      "typed_gap": 85,
-      "unsafe_nonaudit": 0,
-      "unwrap_domain": 0
-    },
-    {
-      "cells": 0,
-      "crate": "vibe-install",
-      "danger_files": [],
-      "deviations": 0,
-      "env_nonroot": 0,
-      "error_enums": 1,
-      "error_enums_missing_req": [],
-      "gated": true,
-      "over_budget": [],
-      "pub_doctest_gated": false,
-      "pub_types": 11,
-      "typed_doctested": 2,
-      "typed_gap": 9,
-      "unsafe_nonaudit": 0,
-      "unwrap_domain": 0
-    },
-    {
-      "cells": 0,
-      "crate": "vibe-llm",
-      "danger_files": [],
-      "deviations": 0,
-      "env_nonroot": 0,
-      "error_enums": 0,
-      "error_enums_missing_req": [],
-      "gated": false,
-      "over_budget": [],
-      "pub_doctest_gated": false,
-      "pub_types": 0,
-      "typed_doctested": 0,
-      "typed_gap": 0,
-      "unsafe_nonaudit": 0,
-      "unwrap_domain": 0
-    },
-    {
-      "cells": 4,
-      "crate": "vibe-mcp",
-      "danger_files": [
-        {
-          "file": "crates/vibe-mcp/src/agentic.rs",
-          "lines": 554
-        }
-      ],
-      "deviations": 0,
-      "env_nonroot": 0,
-      "error_enums": 6,
-      "error_enums_missing_req": [],
-      "gated": true,
-      "over_budget": [],
-      "pub_doctest_gated": true,
-      "pub_types": 37,
-      "typed_doctested": 37,
-      "typed_gap": 0,
-      "unsafe_nonaudit": 0,
-      "unwrap_domain": 0
-    },
-    {
-      "cells": 3,
-      "crate": "vibe-publish",
-      "danger_files": [],
-      "deviations": 1,
-      "env_nonroot": 0,
-      "error_enums": 3,
-      "error_enums_missing_req": [],
-      "gated": true,
-      "over_budget": [],
-      "pub_doctest_gated": false,
-      "pub_types": 21,
-      "typed_doctested": 8,
-      "typed_gap": 13,
-      "unsafe_nonaudit": 0,
-      "unwrap_domain": 0
-    },
-    {
-      "cells": 3,
-      "crate": "vibe-registry",
-      "danger_files": [
-        {
-          "file": "crates/vibe-registry/src/git_backend/shell/tests.rs",
-          "lines": 569
-        },
-        {
-          "file": "crates/vibe-registry/src/git_backend/shell.rs",
-          "lines": 568
-        },
-        {
-          "file": "crates/vibe-registry/src/index_client.rs",
-          "lines": 590
-        },
-        {
-          "file": "crates/vibe-registry/src/multi_registry_resolver/walk.rs",
-          "lines": 540
-        },
-        {
-          "file": "crates/vibe-registry/src/search/full_scan.rs",
-          "lines": 551
-        },
-        {
-          "file": "crates/vibe-registry/src/vendor.rs",
-          "lines": 551
-        }
-      ],
-      "deviations": 0,
-      "env_nonroot": 0,
-      "error_enums": 5,
-      "error_enums_missing_req": [],
-      "gated": true,
-      "over_budget": [],
-      "pub_doctest_gated": false,
-      "pub_types": 37,
-      "typed_doctested": 7,
-      "typed_gap": 30,
-      "unsafe_nonaudit": 0,
-      "unwrap_domain": 0
-    },
-    {
-      "cells": 5,
-      "crate": "vibe-resolver",
-      "danger_files": [
-        {
-          "file": "crates/vibe-resolver/src/activation.rs",
-          "lines": 582
-        },
-        {
-          "file": "crates/vibe-resolver/src/features.rs",
-          "lines": 591
-        },
-        {
-          "file": "crates/vibe-resolver/src/lib.rs",
-          "lines": 563
-        }
-      ],
-      "deviations": 4,
-      "env_nonroot": 0,
-      "error_enums": 5,
-      "error_enums_missing_req": [],
-      "gated": true,
-      "over_budget": [],
-      "pub_doctest_gated": false,
-      "pub_types": 27,
-      "typed_doctested": 11,
-      "typed_gap": 16,
-      "unsafe_nonaudit": 0,
-      "unwrap_domain": 0
-    },
-    {
-      "cells": 0,
-      "crate": "vibe-wire",
-      "danger_files": [],
-      "deviations": 0,
-      "env_nonroot": 0,
-      "error_enums": 0,
-      "error_enums_missing_req": [],
-      "gated": false,
-      "over_budget": [],
-      "pub_doctest_gated": false,
-      "pub_types": 0,
-      "typed_doctested": 0,
-      "typed_gap": 0,
-      "unsafe_nonaudit": 0,
-      "unwrap_domain": 0
-    },
-    {
-      "cells": 0,
-      "crate": "vibe-workspace",
-      "danger_files": [
-        {
-          "file": "crates/vibe-workspace/src/boot.rs",
-          "lines": 600
-        },
-        {
-          "file": "crates/vibe-workspace/src/lib.rs",
-          "lines": 554
-        }
-      ],
-      "deviations": 0,
-      "env_nonroot": 0,
-      "error_enums": 1,
-      "error_enums_missing_req": [],
-      "gated": true,
-      "over_budget": [],
-      "pub_doctest_gated": false,
-      "pub_types": 19,
-      "typed_doctested": 4,
-      "typed_gap": 15,
-      "unsafe_nonaudit": 0,
-      "unwrap_domain": 0
-    },
-    {
-      "cells": 0,
-      "crate": "xtask",
-      "danger_files": [],
-      "deviations": 0,
-      "env_nonroot": 1,
-      "error_enums": 0,
-      "error_enums_missing_req": [],
-      "gated": false,
-      "over_budget": [],
-      "pub_doctest_gated": false,
-      "pub_types": 0,
-      "typed_doctested": 0,
-      "typed_gap": 0,
-      "unsafe_nonaudit": 0,
-      "unwrap_domain": 0
-    }
-  ],
-  "note": "Discipline health snapshot — generated by `cargo xtask health` (DISCIPLINE-SWEEP v0.1's fact-gatherer). Advisory early-warning / coverage facts that sit above the binary conform + specmap gates. Deterministic given the source tree; the git diff of this file is the health delta. No LLM.",
   "schema": 1,
+  "note": "Discipline health snapshot — generated by `discipline-rust health` (the Sweep Playbook's fact-gatherer). Advisory early-warning / coverage facts that sit above the binary conform + specmap gates. Deterministic given the source tree; the git diff of this file is the health delta. No LLM.",
+  "budget": {
+    "file_length": 600,
+    "danger_floor": 540
+  },
   "summary": {
-    "conform_baseline_by_rule": {},
+    "gated_crates": 10,
+    "exempt_crates": 4,
+    "pub_doctest_gated": [
+      "vibe-core",
+      "vibe-mcp"
+    ],
     "conform_baseline_total": 0,
+    "conform_baseline_by_rule": {},
+    "files_over_budget": 0,
+    "files_in_danger_band": 21,
+    "deviation_debt": 8,
+    "pub_doctest_promotion_candidates": [],
+    "pub_doctest_drain_backlog": [
+      {
+        "crate": "vibe-install",
+        "typed_gap": 9
+      },
+      {
+        "crate": "vibe-check",
+        "typed_gap": 11
+      },
+      {
+        "crate": "vibe-publish",
+        "typed_gap": 13
+      },
+      {
+        "crate": "vibe-resolver",
+        "typed_gap": 16
+      },
+      {
+        "crate": "vibe-workspace",
+        "typed_gap": 28
+      },
+      {
+        "crate": "vibe-registry",
+        "typed_gap": 30
+      },
+      {
+        "crate": "vibe-index",
+        "typed_gap": 85
+      },
+      {
+        "crate": "vibe-cli",
+        "typed_gap": 87
+      }
+    ],
     "danger_band_files": [
       {
         "file": "crates/vibe-workspace/src/boot.rs",
         "lines": 600
+      },
+      {
+        "file": "crates/vibe-install/src/plan.rs",
+        "lines": 599
+      },
+      {
+        "file": "crates/vibe-registry/src/lib.rs",
+        "lines": 599
       },
       {
         "file": "crates/vibe-resolver/src/features.rs",
@@ -438,8 +74,12 @@
         "lines": 590
       },
       {
-        "file": "crates/vibe-core/src/manifest/package.rs",
-        "lines": 586
+        "file": "crates/vibe-workspace/src/freshness.rs",
+        "lines": 588
+      },
+      {
+        "file": "crates/vibe-registry/src/git_package_registry/fetch/tests.rs",
+        "lines": 582
       },
       {
         "file": "crates/vibe-resolver/src/activation.rs",
@@ -450,12 +90,8 @@
         "lines": 572
       },
       {
-        "file": "crates/vibe-registry/src/git_backend/shell/tests.rs",
-        "lines": 569
-      },
-      {
-        "file": "crates/vibe-registry/src/git_backend/shell.rs",
-        "lines": 568
+        "file": "crates/vibe-workspace/src/lib.rs",
+        "lines": 565
       },
       {
         "file": "crates/vibe-resolver/src/lib.rs",
@@ -463,14 +99,18 @@
       },
       {
         "file": "crates/vibe-core/src/manifest/package/wire.rs",
-        "lines": 560
+        "lines": 559
+      },
+      {
+        "file": "crates/vibe-cli/src/commands/vvm/mod.rs",
+        "lines": 557
+      },
+      {
+        "file": "crates/vibe-mcp/src/agents.rs",
+        "lines": 556
       },
       {
         "file": "crates/vibe-mcp/src/agentic.rs",
-        "lines": 554
-      },
-      {
-        "file": "crates/vibe-workspace/src/lib.rs",
         "lines": 554
       },
       {
@@ -490,62 +130,345 @@
         "lines": 544
       },
       {
+        "file": "crates/vibe-registry/src/git_backend/shell.rs",
+        "lines": 542
+      },
+      {
         "file": "crates/vibe-registry/src/multi_registry_resolver/walk.rs",
         "lines": 540
       }
     ],
-    "deviation_debt": 9,
-    "exempt_crates": 4,
-    "files_in_danger_band": 17,
-    "files_over_budget": 0,
-    "gated_crates": 16,
-    "over_budget_files": [],
-    "pub_doctest_drain_backlog": [
-      {
-        "crate": "vibe-install",
-        "typed_gap": 9
-      },
-      {
-        "crate": "specmap-core",
-        "typed_gap": 11
-      },
-      {
-        "crate": "vibe-check",
-        "typed_gap": 11
-      },
-      {
-        "crate": "vibe-publish",
-        "typed_gap": 13
-      },
-      {
-        "crate": "vibe-workspace",
-        "typed_gap": 15
-      },
-      {
-        "crate": "vibe-resolver",
-        "typed_gap": 16
-      },
-      {
-        "crate": "vibe-registry",
-        "typed_gap": 30
-      },
-      {
-        "crate": "vibe-index",
-        "typed_gap": 85
-      },
-      {
-        "crate": "vibe-cli",
-        "typed_gap": 86
-      }
-    ],
-    "pub_doctest_gated": [
-      "vibe-core",
-      "conform-core",
-      "conform-frontend-rust",
-      "env-audit",
-      "specmark-grammar",
-      "vibe-mcp"
-    ],
-    "pub_doctest_promotion_candidates": []
-  }
+    "over_budget_files": []
+  },
+  "crates": [
+    {
+      "crate": "vibe-check",
+      "gated": true,
+      "pub_doctest_gated": false,
+      "pub_types": 17,
+      "typed_doctested": 6,
+      "typed_gap": 11,
+      "error_enums": 0,
+      "error_enums_missing_req": [],
+      "cells": 11,
+      "deviations": 0,
+      "unwrap_domain": 0,
+      "env_nonroot": 0,
+      "unsafe_nonaudit": 0,
+      "danger_files": [],
+      "over_budget": []
+    },
+    {
+      "crate": "vibe-cli",
+      "gated": true,
+      "pub_doctest_gated": false,
+      "pub_types": 87,
+      "typed_doctested": 0,
+      "typed_gap": 87,
+      "error_enums": 7,
+      "error_enums_missing_req": [],
+      "cells": 0,
+      "deviations": 2,
+      "unwrap_domain": 0,
+      "env_nonroot": 0,
+      "unsafe_nonaudit": 0,
+      "danger_files": [
+        {
+          "file": "crates/vibe-cli/src/commands/vvm/mod.rs",
+          "lines": 557
+        },
+        {
+          "file": "crates/vibe-cli/src/commands/workspace/publish.rs",
+          "lines": 544
+        }
+      ],
+      "over_budget": []
+    },
+    {
+      "crate": "vibe-core",
+      "gated": true,
+      "pub_doctest_gated": true,
+      "pub_types": 71,
+      "typed_doctested": 71,
+      "typed_gap": 0,
+      "error_enums": 3,
+      "error_enums_missing_req": [],
+      "cells": 0,
+      "deviations": 0,
+      "unwrap_domain": 0,
+      "env_nonroot": 0,
+      "unsafe_nonaudit": 0,
+      "danger_files": [
+        {
+          "file": "crates/vibe-core/src/manifest/package/wire.rs",
+          "lines": 559
+        },
+        {
+          "file": "crates/vibe-core/src/manifest/project.rs",
+          "lines": 572
+        },
+        {
+          "file": "crates/vibe-core/src/package_ref.rs",
+          "lines": 544
+        }
+      ],
+      "over_budget": []
+    },
+    {
+      "crate": "vibe-graph",
+      "gated": false,
+      "pub_doctest_gated": false,
+      "pub_types": 0,
+      "typed_doctested": 0,
+      "typed_gap": 0,
+      "error_enums": 0,
+      "error_enums_missing_req": [],
+      "cells": 0,
+      "deviations": 0,
+      "unwrap_domain": 0,
+      "env_nonroot": 0,
+      "unsafe_nonaudit": 0,
+      "danger_files": [],
+      "over_budget": []
+    },
+    {
+      "crate": "vibe-index",
+      "gated": true,
+      "pub_doctest_gated": false,
+      "pub_types": 89,
+      "typed_doctested": 4,
+      "typed_gap": 85,
+      "error_enums": 1,
+      "error_enums_missing_req": [],
+      "cells": 2,
+      "deviations": 1,
+      "unwrap_domain": 0,
+      "env_nonroot": 0,
+      "unsafe_nonaudit": 0,
+      "danger_files": [],
+      "over_budget": []
+    },
+    {
+      "crate": "vibe-install",
+      "gated": true,
+      "pub_doctest_gated": false,
+      "pub_types": 11,
+      "typed_doctested": 2,
+      "typed_gap": 9,
+      "error_enums": 1,
+      "error_enums_missing_req": [],
+      "cells": 0,
+      "deviations": 0,
+      "unwrap_domain": 0,
+      "env_nonroot": 0,
+      "unsafe_nonaudit": 0,
+      "danger_files": [
+        {
+          "file": "crates/vibe-install/src/plan.rs",
+          "lines": 599
+        }
+      ],
+      "over_budget": []
+    },
+    {
+      "crate": "vibe-llm",
+      "gated": false,
+      "pub_doctest_gated": false,
+      "pub_types": 0,
+      "typed_doctested": 0,
+      "typed_gap": 0,
+      "error_enums": 0,
+      "error_enums_missing_req": [],
+      "cells": 0,
+      "deviations": 0,
+      "unwrap_domain": 0,
+      "env_nonroot": 0,
+      "unsafe_nonaudit": 0,
+      "danger_files": [],
+      "over_budget": []
+    },
+    {
+      "crate": "vibe-mcp",
+      "gated": true,
+      "pub_doctest_gated": true,
+      "pub_types": 37,
+      "typed_doctested": 37,
+      "typed_gap": 0,
+      "error_enums": 6,
+      "error_enums_missing_req": [],
+      "cells": 4,
+      "deviations": 0,
+      "unwrap_domain": 0,
+      "env_nonroot": 0,
+      "unsafe_nonaudit": 0,
+      "danger_files": [
+        {
+          "file": "crates/vibe-mcp/src/agentic.rs",
+          "lines": 554
+        },
+        {
+          "file": "crates/vibe-mcp/src/agents.rs",
+          "lines": 556
+        }
+      ],
+      "over_budget": []
+    },
+    {
+      "crate": "vibe-publish",
+      "gated": true,
+      "pub_doctest_gated": false,
+      "pub_types": 21,
+      "typed_doctested": 8,
+      "typed_gap": 13,
+      "error_enums": 3,
+      "error_enums_missing_req": [],
+      "cells": 3,
+      "deviations": 1,
+      "unwrap_domain": 0,
+      "env_nonroot": 0,
+      "unsafe_nonaudit": 0,
+      "danger_files": [],
+      "over_budget": []
+    },
+    {
+      "crate": "vibe-registry",
+      "gated": true,
+      "pub_doctest_gated": false,
+      "pub_types": 38,
+      "typed_doctested": 8,
+      "typed_gap": 30,
+      "error_enums": 5,
+      "error_enums_missing_req": [],
+      "cells": 3,
+      "deviations": 0,
+      "unwrap_domain": 0,
+      "env_nonroot": 0,
+      "unsafe_nonaudit": 0,
+      "danger_files": [
+        {
+          "file": "crates/vibe-registry/src/git_backend/shell.rs",
+          "lines": 542
+        },
+        {
+          "file": "crates/vibe-registry/src/git_package_registry/fetch/tests.rs",
+          "lines": 582
+        },
+        {
+          "file": "crates/vibe-registry/src/index_client.rs",
+          "lines": 590
+        },
+        {
+          "file": "crates/vibe-registry/src/lib.rs",
+          "lines": 599
+        },
+        {
+          "file": "crates/vibe-registry/src/multi_registry_resolver/walk.rs",
+          "lines": 540
+        },
+        {
+          "file": "crates/vibe-registry/src/search/full_scan.rs",
+          "lines": 551
+        },
+        {
+          "file": "crates/vibe-registry/src/vendor.rs",
+          "lines": 551
+        }
+      ],
+      "over_budget": []
+    },
+    {
+      "crate": "vibe-resolver",
+      "gated": true,
+      "pub_doctest_gated": false,
+      "pub_types": 27,
+      "typed_doctested": 11,
+      "typed_gap": 16,
+      "error_enums": 5,
+      "error_enums_missing_req": [],
+      "cells": 5,
+      "deviations": 4,
+      "unwrap_domain": 0,
+      "env_nonroot": 0,
+      "unsafe_nonaudit": 0,
+      "danger_files": [
+        {
+          "file": "crates/vibe-resolver/src/activation.rs",
+          "lines": 582
+        },
+        {
+          "file": "crates/vibe-resolver/src/features.rs",
+          "lines": 591
+        },
+        {
+          "file": "crates/vibe-resolver/src/lib.rs",
+          "lines": 563
+        }
+      ],
+      "over_budget": []
+    },
+    {
+      "crate": "vibe-wire",
+      "gated": false,
+      "pub_doctest_gated": false,
+      "pub_types": 0,
+      "typed_doctested": 0,
+      "typed_gap": 0,
+      "error_enums": 0,
+      "error_enums_missing_req": [],
+      "cells": 0,
+      "deviations": 0,
+      "unwrap_domain": 0,
+      "env_nonroot": 0,
+      "unsafe_nonaudit": 0,
+      "danger_files": [],
+      "over_budget": []
+    },
+    {
+      "crate": "vibe-workspace",
+      "gated": true,
+      "pub_doctest_gated": false,
+      "pub_types": 34,
+      "typed_doctested": 6,
+      "typed_gap": 28,
+      "error_enums": 2,
+      "error_enums_missing_req": [],
+      "cells": 0,
+      "deviations": 0,
+      "unwrap_domain": 0,
+      "env_nonroot": 0,
+      "unsafe_nonaudit": 0,
+      "danger_files": [
+        {
+          "file": "crates/vibe-workspace/src/boot.rs",
+          "lines": 600
+        },
+        {
+          "file": "crates/vibe-workspace/src/freshness.rs",
+          "lines": 588
+        },
+        {
+          "file": "crates/vibe-workspace/src/lib.rs",
+          "lines": 565
+        }
+      ],
+      "over_budget": []
+    },
+    {
+      "crate": "xtask",
+      "gated": false,
+      "pub_doctest_gated": false,
+      "pub_types": 0,
+      "typed_doctested": 0,
+      "typed_gap": 0,
+      "error_enums": 0,
+      "error_enums_missing_req": [],
+      "cells": 0,
+      "deviations": 0,
+      "unwrap_domain": 0,
+      "env_nonroot": 1,
+      "unsafe_nonaudit": 0,
+      "danger_files": [],
+      "over_budget": []
+    }
+  ]
 }

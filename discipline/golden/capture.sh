@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# terraform/golden/capture.sh — Phase −1 characterization capture
+# discipline/golden/capture.sh — Phase −1 characterization capture
 # (PLAYBOOK-TERRAFORM-VIBEVM v0.2 Phase −1; BROWNFIELD-PROTOCOL §6).
 #
 # Regenerates every golden transcript deterministically from the current
-# tree. Run it twice; `git diff terraform/golden` must be empty — that is
+# tree. Run it twice; `git diff discipline/golden` must be empty — that is
 # the inventory's determinism check.
 #
 # Scope: hermetic fixture-driven flows only (no network, no live
@@ -24,7 +24,7 @@
 set -u
 
 REPO_SH="$(cd "$(dirname "$0")/../.." && pwd)"
-OUT="$REPO_SH/terraform/golden"
+OUT="$REPO_SH/discipline/golden"
 FIX_SH="$REPO_SH/fixtures/registry"
 
 if command -v cygpath >/dev/null 2>&1; then
