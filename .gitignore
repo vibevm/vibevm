@@ -4,6 +4,12 @@
 Cargo.lock.bak
 *.pdb
 
+# Node — the TypeScript toolchain's resolved installs (ts-extract dev
+# deps, the ts-demo's devDependencies). Lockfiles ARE committed; the
+# shippable-tree filter excludes node_modules from package hashes too
+# (PROP-024 §2.2).
+**/node_modules/
+
 # vibevm internal cache (per-project, gitignored per spec §4.2)
 .vibe/
 
