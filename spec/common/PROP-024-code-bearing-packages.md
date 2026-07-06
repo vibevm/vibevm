@@ -16,9 +16,10 @@ the working checkers, not a prose description of them.
 package source), [PROP-020](../modules/vibe-workspace/PROP-020-install-hooks.md)
 (the `post-install` build hook), [PROP-022 §2.2](../modules/vibe-workspace/PROP-022-materialization-modes.md#snapshot)
 (the snapshot copy — re-scoped here), the discipline mechanism specs
-[ENGINE-CONFORM](../discipline/ENGINE-CONFORM-v0.1.md) and
-[PROP-014](../discipline/PROP-014-specmap-bidirectional-traceability.md) (the
-tools that relocate).
+[ENGINE-CONFORM](../../vibedeps/flow-discipline-core/0.3.0/spec/mechanisms/ENGINE-CONFORM-v0.1.md) and
+[PROP-014](../../vibedeps/flow-discipline-core/0.3.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md)
+(the tools that relocate; the specs themselves now ship in
+`flow:org.vibevm/discipline-core` — `spec://discipline-core/mechanisms/…`).
 **Owner sanction:** PROP-024 reshapes the owner-frozen `VIBEVM-SPEC.md` (§4.2
 layout, §7.2 package contents, §7.3 manifest, §7.4 identity, §12 linter, §13.1
 package layout). The `VIBEVM-SPEC.md` edits required explicit owner sanction; it

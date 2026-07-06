@@ -4,7 +4,7 @@
 //! useful without an LLM by contract — prose rendering is a later,
 //! separate presentation layer.
 
-specmark::scope!("spec://vibevm/discipline/PROP-014#queries");
+specmark::scope!("spec://discipline-core/mechanisms/PROP-014#queries");
 
 use crate::generated::specmap::{Edge, SpecUnit, Specmap};
 use anyhow::{Result, bail};

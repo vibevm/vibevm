@@ -9,7 +9,7 @@
 //! An absent `specmap.toml` yields the default policy and turns the orphan
 //! ratchet off — the pre-config behaviour.
 
-specmark::scope!("spec://vibevm/discipline/PROP-014#index");
+specmark::scope!("spec://discipline-core/mechanisms/PROP-014#index");
 
 use std::path::{Path, PathBuf};
 

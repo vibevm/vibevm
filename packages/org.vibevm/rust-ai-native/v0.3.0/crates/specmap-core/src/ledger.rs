@@ -17,7 +17,7 @@
 //! Local per checkout; never shipped, never signed, never exposed —
 //! `.ledger/` is git-ignored.
 
-specmark::scope!("spec://vibevm/discipline/LEDGER-INTENT-v0.1#classes");
+specmark::scope!("spec://discipline-core/mechanisms/LEDGER-INTENT-v0.1#classes");
 
 use std::path::{Path, PathBuf};
 

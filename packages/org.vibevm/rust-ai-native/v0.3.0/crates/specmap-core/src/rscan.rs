@@ -7,7 +7,7 @@
 
 use std::path::Path;
 
-specmark::scope!("spec://vibevm/discipline/PROP-014#addressing-code");
+specmark::scope!("spec://discipline-core/mechanisms/PROP-014#addressing-code");
 
 use crate::generated::specmap::{CodeItem, Edge, EdgeProvenance, EdgeVerb, Warning};
 use quote::ToTokens;

@@ -2,7 +2,7 @@
 //! import: R-001 flag-sites, R-002 cell isolation, and the Class-D
 //! cell-has-oracle replacement net.
 
-specmark::scope!("spec://vibevm/discipline/ENGINE-CONFORM-v0.1#rules");
+specmark::scope!("spec://discipline-core/mechanisms/ENGINE-CONFORM-v0.1#rules");
 
 use crate::facts::{Fact, SourceFacts};
 use crate::finding::{Finding, Rule};

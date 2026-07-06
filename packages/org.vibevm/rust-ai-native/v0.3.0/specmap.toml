@@ -5,12 +5,14 @@
 # `specmap-rust --gate --path <this package>` — the orphan-coverage gate only.
 #
 # Why gate-only, not the full --check index: the `scope!` tags on these crates
-# cite spec://vibevm/discipline/{ENGINE-CONFORM,PROP-014} units that live in
-# the CONSUMING repo (vibevm), not in this package's spec/. On the package
-# tree every edge is therefore cross-repo "dangling", so a committed
-# specmap.json would be noise. What is meaningful — and what this gates — is
-# coverage: every gated crate's public surface carries a scope!/#[spec] tag, so
-# no discipline code drifts untagged.
+# cite spec://discipline-core/mechanisms/{ENGINE-CONFORM,PROP-014,…} units that
+# ship in flow:org.vibevm/discipline-core — a SIBLING package this tree cannot
+# see (a consumer resolves them via its own [[external_specs]] over the
+# materialised vibedeps/; the dev repo proves that). On the package tree alone
+# every edge is cross-package "dangling", so a committed specmap.json would be
+# noise. What is meaningful — and what this gates — is coverage: every gated
+# crate's public surface carries a scope!/#[spec] tag, so no discipline code
+# drifts untagged.
 
 # The spec:// namespace for units under this package's own spec/ tree.
 namespace = "rust-ai-native"

@@ -8,7 +8,7 @@
 //! its public path `conform_core::rules::<RuleType>` via the
 //! re-exports below.
 
-specmark::scope!("spec://vibevm/discipline/ENGINE-CONFORM-v0.1#rules");
+specmark::scope!("spec://discipline-core/mechanisms/ENGINE-CONFORM-v0.1#rules");
 
 use crate::facts::{Fact, SourceFacts};
 
@@ -32,13 +32,13 @@ pub use structure::{CellHasOracle, CellIsolation, FlagSites};
 ///
 /// ```
 /// let msg = conform_core::rules::req_message(
-///     "spec://vibevm/discipline/ENGINE-CONFORM-v0.1#rules",
+///     "spec://discipline-core/mechanisms/ENGINE-CONFORM-v0.1#rules",
 ///     "what went wrong",
 ///     "where to fix it",
 /// );
 /// assert_eq!(
 ///     msg,
-///     "violates REQ spec://vibevm/discipline/ENGINE-CONFORM-v0.1#rules: \
+///     "violates REQ spec://discipline-core/mechanisms/ENGINE-CONFORM-v0.1#rules: \
 ///      what went wrong; fix surface: where to fix it",
 /// );
 /// ```

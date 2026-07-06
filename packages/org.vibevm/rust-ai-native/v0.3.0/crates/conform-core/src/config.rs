@@ -6,7 +6,7 @@
 //! constructs the scan + the rule set from it; nothing about the policy
 //! is hardcoded in the engine.
 
-specmark::scope!("spec://vibevm/discipline/ENGINE-CONFORM-v0.1#facts");
+specmark::scope!("spec://discipline-core/mechanisms/ENGINE-CONFORM-v0.1#facts");
 
 use std::path::Path;
 
