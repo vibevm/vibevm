@@ -14172,6 +14172,51 @@
       "heading": "9. Reading list — adjacent projects and concepts",
       "line": 948,
       "uri": "spec://vibevm/research/PROP-004#reading"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:f03ceb3aeaeb59295c82c8dc6a2fe3e1ad0cc0c252f10352294cb7390d99b019",
+      "doc_path": "terraforms/DISCIPLINE-SWEEP-v0.2",
+      "file": "spec/terraforms/DISCIPLINE-SWEEP-v0.2.md",
+      "heading": "vibevm Discipline Sweep v0.2 — the project instance",
+      "line": 1,
+      "uri": "spec://vibevm/terraforms/DISCIPLINE-SWEEP-v0.2#root"
+    },
+    {
+      "anchor": "running",
+      "content_hash": "sha256:746fdc73f026695b2a6ace5c211a3e1acdc0aaa5bcdf41d56461c2d261863686",
+      "doc_path": "terraforms/DISCIPLINE-SWEEP-v0.2",
+      "file": "spec/terraforms/DISCIPLINE-SWEEP-v0.2.md",
+      "heading": "1. Running the sweep here",
+      "line": 16,
+      "uri": "spec://vibevm/terraforms/DISCIPLINE-SWEEP-v0.2#running"
+    },
+    {
+      "anchor": "facts",
+      "content_hash": "sha256:a188f2aea806a70cbe8e2666f77d13ca1496c445d967cbca83caa1dd8b045f00",
+      "doc_path": "terraforms/DISCIPLINE-SWEEP-v0.2",
+      "file": "spec/terraforms/DISCIPLINE-SWEEP-v0.2.md",
+      "heading": "2. Standing project facts (verify against the collector, never trust this list)",
+      "line": 37,
+      "uri": "spec://vibevm/terraforms/DISCIPLINE-SWEEP-v0.2#facts"
+    },
+    {
+      "anchor": "quirks",
+      "content_hash": "sha256:ef49cb81931211f7f371fd9e71a44f0c460535cd1745d6bf521ce4677e7f055d",
+      "doc_path": "terraforms/DISCIPLINE-SWEEP-v0.2",
+      "file": "spec/terraforms/DISCIPLINE-SWEEP-v0.2.md",
+      "heading": "3. Machine quirks (THIS box; machine-scoped, not project fact)",
+      "line": 51,
+      "uri": "spec://vibevm/terraforms/DISCIPLINE-SWEEP-v0.2#quirks"
+    },
+    {
+      "anchor": "history",
+      "content_hash": "sha256:866985102881a8f03241c02eeb8a3c68ccc463478c1de9f48564de27fd17038c",
+      "doc_path": "terraforms/DISCIPLINE-SWEEP-v0.2",
+      "file": "spec/terraforms/DISCIPLINE-SWEEP-v0.2.md",
+      "heading": "4. History",
+      "line": 66,
+      "uri": "spec://vibevm/terraforms/DISCIPLINE-SWEEP-v0.2#history"
     }
   ],
   "suspects": [],
