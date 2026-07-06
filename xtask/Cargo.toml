@@ -21,3 +21,4 @@ walkdir.workspace = true
 conform-cli.workspace = true
 conform-core.workspace = true
 conform-frontend-rust.workspace = true
+discipline-cli.workspace = true

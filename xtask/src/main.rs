@@ -12,20 +12,15 @@
 //! - `specmap` — regenerate the canonical `specmap.json` traceability
 //!   index (PROP-014 §2.5); `--check` regenerates and byte-diffs, the
 //!   `check-codegen` idiom.
-//! - `test-gate` — run the workspace tests through nextest and diff the
-//!   outcome against `terraform/registry/tests-baseline.json` with
-//!   xfail-strict semantics (BROWNFIELD §4). Replaces bare `cargo test`
-//!   in terraform acceptance lines.
-//! - `tripwire` — list debt-registry entries whose `touch:` tripwires
-//!   fire on the current change set. Warn-only.
-//! - `fast-loop` — the Class-E `cell-fast-loop-present` checker
-//!   (discipline card scaffold-e-fast-loop): every cell builds and
-//!   tests in isolation inside the per-cell budget.
+//! - `test-gate` / `tripwire` / `trace` / `health` / `fast-loop` /
+//!   `codemod` — thin shims over the packaged `discipline-cli` library
+//!   (stack:org.vibevm/rust-ai-native, PROP-024): the drivers ship with
+//!   the discipline; xtask keeps vibevm's flag-compatible surface and
+//!   composes the vibevm-only extras (the health `--mirrors` probe).
 //!
 //! Entry shape follows the standard `xtask` pattern: this file holds
-//! the clap surface and the dispatch; each subcommand's implementation
-//! lives in its own module. Keep this crate dep-light: clap + anyhow +
-//! std; the heavy lifting lives in `specmap-core`.
+//! the clap surface and the dispatch; the heavy lifting lives in the
+//! packaged engine crates.
 
 use std::path::PathBuf;
 
@@ -33,26 +28,14 @@ use anyhow::{Context, Result};
 use clap::{Parser, Subcommand};
 
 mod codegen;
-mod codemod;
 mod conform;
-mod fast_loop;
-mod health;
 mod mirror;
 mod specmap;
-mod test_gate;
-mod trace;
-mod tripwire;
 
 use codegen::{run_check_codegen, run_codegen};
-use codemod::run_codemod_add_cell;
 use conform::{run_conform_check, run_conform_freeze};
-use fast_loop::run_fast_loop;
-use health::run_health;
 use mirror::run_mirror;
 use specmap::run_specmap;
-use test_gate::run_test_gate;
-use trace::run_trace_explain;
-use tripwire::run_tripwire;
 
 #[derive(Parser, Debug)]
 #[command(
@@ -89,7 +72,7 @@ enum Cmd {
     /// unexpectedly-passing-unpromoted.
     TestGate {
         /// Path to the baseline registry, repo-relative.
-        #[arg(long, default_value = "terraform/registry/tests-baseline.json")]
+        #[arg(long, default_value = discipline_cli::DEFAULT_TESTS_BASELINE)]
         baseline: String,
     },
 
@@ -103,7 +86,7 @@ enum Cmd {
         base: Option<String>,
 
         /// Path to the debt registry, repo-relative.
-        #[arg(long, default_value = "terraform/registry/debt.json")]
+        #[arg(long, default_value = discipline_cli::DEFAULT_DEBT_REGISTRY)]
         debt: String,
     },
 
@@ -161,7 +144,7 @@ enum Cmd {
     /// Deterministic given the tree; never fails the build (the gates do).
     Health {
         /// Where to write the JSON snapshot, repo-relative.
-        #[arg(long, default_value = "terraform/health/latest.json")]
+        #[arg(long, default_value = discipline_cli::DEFAULT_HEALTH_OUT)]
         out: String,
 
         /// Also probe whether every `mirrors.toml` target is in sync with
@@ -284,8 +267,10 @@ fn main() -> Result<()> {
         Cmd::Codegen => run_codegen(),
         Cmd::CheckCodegen => run_check_codegen(),
         Cmd::Specmap { check } => run_specmap(check),
-        Cmd::TestGate { baseline } => run_test_gate(&baseline),
-        Cmd::Tripwire { base, debt } => run_tripwire(base.as_deref(), &debt),
+        Cmd::TestGate { baseline } => discipline_cli::run_test_gate(&repo_root()?, &baseline),
+        Cmd::Tripwire { base, debt } => {
+            discipline_cli::run_tripwire(&repo_root()?, base.as_deref(), &debt)
+        }
         Cmd::Conform {
             cmd: ConformCmd::Check { baseline, scope },
         } => run_conform_check(&baseline, scope.as_deref()),
@@ -300,12 +285,12 @@ fn main() -> Result<()> {
                     prose,
                     ..
                 },
-        } => run_trace_explain(&target, json, prose),
+        } => discipline_cli::run_trace_explain(&repo_root()?, &target, json, prose),
         Cmd::FastLoop {
             cell,
             budget,
             enforce_budget,
-        } => run_fast_loop(cell.as_deref(), budget, enforce_budget),
+        } => discipline_cli::run_fast_loop(&repo_root()?, cell.as_deref(), budget, enforce_budget),
         Cmd::Codemod {
             cmd:
                 CodemodCmd::AddCell {
@@ -315,10 +300,51 @@ fn main() -> Result<()> {
                     variant,
                     spec_uri,
                 },
-        } => run_codemod_add_cell(&crate_dir, &cell, &seam, &variant, &spec_uri),
-        Cmd::Health { out, mirrors } => run_health(&out, mirrors),
+        } => discipline_cli::run_codemod_add_cell(
+            &repo_root()?,
+            &crate_dir,
+            &cell,
+            &seam,
+            &variant,
+            &spec_uri,
+        ),
+        Cmd::Health { out, mirrors } => {
+            let root = repo_root()?;
+            // The packaged collector is offline by contract; the vibevm-only
+            // mirror-sync probe rides in as an extra section (PROP-016).
+            let extra = if mirrors {
+                vec![("mirrors".to_string(), mirror_health_section(&root)?)]
+            } else {
+                Vec::new()
+            };
+            discipline_cli::run_health(&root, &out, &extra)
+        }
         Cmd::Mirror { check, from } => run_mirror(check, from.as_deref()),
     }
+}
+
+/// The `--mirrors` extra section for `xtask health`: probe every
+/// `mirrors.toml` target against local mainline and render both the human
+/// lines and the JSON block the packaged collector appends verbatim.
+fn mirror_health_section(root: &std::path::Path) -> Result<serde_json::Value> {
+    use mirror::SyncState;
+    let (head, statuses) = mirror::sync_report(root)?;
+    println!(
+        "mirror sync vs local main @ {}:",
+        &head[..7.min(head.len())]
+    );
+    let mut target_rows = Vec::new();
+    for s in &statuses {
+        let (label, state, remote) = match &s.state {
+            SyncState::InSync => ("sync   ", "in_sync", serde_json::Value::Null),
+            SyncState::Drift(sha) => ("DRIFT  ", "drift", serde_json::json!(sha)),
+            SyncState::Missing => ("MISSING", "missing", serde_json::Value::Null),
+        };
+        println!("  {label}{}", s.name);
+        target_rows
+            .push(serde_json::json!({ "name": s.name, "state": state, "remote_main": remote }));
+    }
+    Ok(serde_json::json!({ "local_main": head, "targets": target_rows }))
 }
 
 fn repo_root() -> Result<PathBuf> {

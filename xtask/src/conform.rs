@@ -6,18 +6,9 @@
 //! test (which is about vibevm's own `crates/` + `conform.toml`, not the
 //! engine).
 
-use std::path::Path;
-
 use anyhow::Result;
-use conform_core::Config;
 
 use crate::repo_root;
-
-/// Load vibevm's conform policy (`conform.toml` at the repo root). Kept here so
-/// `health.rs` reads the policy through one path; delegates to the engine.
-pub(crate) fn load_config(root: &Path) -> Result<Config> {
-    conform_cli::load_config(root)
-}
 
 pub(crate) fn run_conform_check(baseline_rel: &str, scope: Option<&str>) -> Result<()> {
     conform_cli::run_check(&repo_root()?, baseline_rel, scope)
@@ -37,7 +28,7 @@ mod tests {
     #[test]
     fn every_crate_is_gated_or_exempt() {
         let root = crate::repo_root().expect("repo root");
-        let config = super::load_config(&root).expect("load conform.toml");
+        let config = conform_cli::load_config(&root).expect("load conform.toml");
         config
             .validate_against_tree(&root)
             .expect("vibevm's conform.toml violates the gated-or-exempt tree invariant");
