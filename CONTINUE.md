@@ -8,7 +8,7 @@ the persistent Rust bridge, the `tcg-typescript` slot binary with
 discipline enrichment, the portable `vibe-tcg` crate mounted by vibe-mcp
 as four `tcg_*` tools, full spec parity, and the automated two-arm
 battery with its honest null result. typescript-ai-native is **0.4.0**.
-Local on `main`, **~90 commits ahead of origin `c3fcf63`, NONE mirrored —
+Local on `main`, **29 campaign commits ahead of origin `f083f6b` (the owner mirrored the prior 69 himself mid-session), NONE of the campaign mirrored —
 the mirror stays HELD for the owner's explicit word.**_
 
 > **`spec/WAL.md` is the canonical living state**; if this snapshot and
@@ -34,7 +34,7 @@ re-dispositioned VERY-FAR-FUTURE in its own brief.
 ## Where work stands
 
 - **Branch `main`**, working tree clean after the checkpoint commits;
-  ~90 ahead of `origin/main` (`c3fcf63`), NOT mirrored (policy hold).
+  29 ahead of `origin/main` (`f083f6b` — the owner pushed the prior batch mid-session), campaign NOT mirrored (policy hold).
 - Versions: discipline-core 0.4.0, rust-ai-native 0.4.0,
   typescript-ai-native **0.4.0** (+2 crates `tcg-oracle-bridge` /
   `tcg-cli-typescript`, +1 tool `tools/ts-oracle`, +3 spec docs, 4th
@@ -49,7 +49,7 @@ re-dispositioned VERY-FAR-FUTURE in its own brief.
 
 ## The open items (owner-court)
 
-1. **Mirror ~90 commits** — `cargo xtask mirror --check` then
+1. **Mirror the 29 campaign commits** — `cargo xtask mirror --check` then
    `cargo xtask mirror`, on the owner's word only.
 2. **Publish 0.4.0/0.4.0/0.4.0** to the registry — owner call.
 3. **Stage-B delivery experiments** (the null's follow-up, in
