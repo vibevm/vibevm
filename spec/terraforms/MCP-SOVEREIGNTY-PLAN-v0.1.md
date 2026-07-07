@@ -1,16 +1,25 @@
-# MCP-SOVEREIGNTY-PLAN v0.1 — standalone discipline MCP servers, package-declared MCP delivery, and the vibevm demontage
+# MCP-SOVEREIGNTY-PLAN v0.1 — the `mcp` package kind, standalone discipline MCP servers, package-declared MCP delivery, and the vibevm demontage
 
-_Status: **DRAFT — awaiting owner review (2026-07-07).** Written against
-tree `5185bda` (the discipline-core mini-fix close: floor green,
-self-check 13 steps exit 0, conform 0 with 11 gated, specmap
-592/578/590 0/0, corpus 9/9, both live chains green, mirrors synced).
-Authored on the owner's commission of the same day; the four owner
-answers that shape the scope are quoted verbatim in §0. Cold-executable:
-every wave is a safe stop; the floor must be green at every phase
-boundary. Registry publish stays HELD for the owner's word throughout._
+_Status: **ACCEPTED WITH OWNER AMENDMENT — EXECUTION COMMISSIONED
+2026-07-07 («выполни план до конца»).** The owner reviewed the draft and
+REVERSED its D1: the four-kinds set is a terminology snapshot, not an
+architectural freeze — «расширь и сделай mcp чем-то отдельным (в
+дальнейшем возможно появится еще один kind — app, для запускаемых
+графических приложений)». This revision makes `mcp` a first-class
+package KIND, ships the discipline servers as SEPARATE `mcp:`-kind
+packages (exact-pinned to their stacks — the skew analysis in D1a is
+what the pin answers), and folds the executor's recorded
+recommendations for the remaining §12 points (resolutions ledger in
+§12). The VIBEVM-SPEC §4 amendment this requires is owner-sanctioned by
+the same directive (the 00-core.md escape hatch: «edits require the
+user»). Originally DRAFT the same day, written against tree `5185bda`
+(mini-fix close: floor green, corpus 9/9, mirrors synced).
+Cold-executable: every wave is a safe stop; the floor must be green at
+every phase boundary. Registry publish stays HELD for the owner's word
+throughout._
 
 Mandate (owner, 2026-07-07, four resolutions on the architecture
-discussion):
+discussion + the kind amendment):
 
 1. «Все команды должны быть доступны как MCP tools (не только четвёрка
    tcg)» — the per-language MCP server exposes the WHOLE discipline
@@ -25,7 +34,11 @@ discussion):
    its own PROP, composing with every existing package feature.
 4. vibe-tcg «по обстоятельствам»; every MCP-server function must ALSO
    be reachable as a plain command-line tool call («аналогично как и в
-   vibevm»), name/home/composition of that CLI to be thought through.
+   vibevm»), name/home/composition of that CLI thought through.
+5. (Amendment, post-draft) «расширь [kinds] и сделай mcp чем-то
+   отдельным (в дальнейшем возможно появится еще один kind — app, для
+   запускаемых графических приложений)» — the `mcp` KIND, with the
+   taxonomy left open for `app`.
 
 Production-grade quality bar applies (standing owner directive,
 `spec/boot/90-user.md`): no MVP framing, no stub subcommands as shipped
@@ -57,14 +70,16 @@ campaigns, the ONLY vibevm-side discipline code left is `crates/vibe-tcg`
 consent-gated builds, respawn-once, per-language recipe tables) and the
 83-line `crates/vibe-mcp/src/tcg.rs` adapter. Almost all of `vibe-tcg`
 exists ONLY because the MCP server lives outside the package slot and
-must find/build/spawn a foreign binary. A stack-resident MCP server
-links `tcg-oracle-bridge-rust` and `conform_cli_rust::build_rules`
-directly — the dispatch machinery evaporates, and «the gate and the
-oracle answer from one engine» becomes true by construction (one
-workspace), not by protocol.
+must find/build/spawn a foreign binary. A server built in the same
+dependency closure as the gate links `tcg-oracle-bridge-rust` and
+`conform_cli_rust::build_rules` directly — the dispatch machinery
+evaporates, and «the gate and the oracle answer from one engine» holds
+by construction of the build, not by protocol.
 
-After this campaign: the stacks serve themselves (one MCP server binary
-per language, full command surface, zero vibe in the runtime path);
+After this campaign: `mcp` is an installable package KIND; the
+discipline servers ship as `mcp:org.vibevm/discipline-rust` /
+`mcp:org.vibevm/discipline-typescript`, exact-pinned to their stacks,
+serving the full command surface with zero vibe in the runtime path;
 vibe remains the installer/wirer (`vibe mcp install` learns
 package-declared servers, with the PROP-025 consent posture); vibe-mcp
 keeps only its four product tools; `vibe-tcg` is deleted.
@@ -115,13 +130,22 @@ touches.
   slot-resident artifacts, consent-gated `vibe bin build/exec`
   (org.vibevm allow-listed, else `--assume-yes-or-refuse`), lockfile
   dispatch. Both stacks declare 4 binaries each today.
-- **F7 — the vendor-sync mechanism scales.** `sync-engines.toml` names
-  4 authored crates × 2 targets; `cargo xtask sync-engines --check` is
-  self-check step 6. Adding a crate = one manifest line + a mirror run.
-- **F8 — the four-kinds terminology rule.** `VIBEVM-SPEC.md` §4 /
-  `spec/boot/00-core.md`: only `flow`, `feat`, `stack`, `tool` are
-  installable kinds. PROP-024 (code-bearing) and PROP-025 (binaries)
-  both added SURFACES, not kinds — the precedent this plan follows.
+- **F7 — the vendor-sync mechanism scales, but is single-source today.**
+  `sync-engines.toml` names ONE `source_root` (discipline-core) ×
+  4 crates × 2 targets; `cargo xtask sync-engines --check` is
+  self-check step 6. This campaign needs MULTI-SOURCE sync (stack →
+  mcp-package projections) — a bounded tool extension (D3a).
+- **F8 — the kind set and its mechanics.** `VIBEVM-SPEC.md` §4 defines
+  `flow`, `feat`, `stack`, `tool`; `spec/boot/00-core.md` repeats it as
+  terminology discipline. Kind mechanics in code: manifest `kind`
+  parsing (vibe-core), slot naming `vibedeps/<kind>-<name>/<version>`,
+  boot-snippet categories/ordering, `requires_kinds` compatibility,
+  `vibe check` offender checks, registry naming (PROP-008 Fqdn).
+  Extending the enum touches each of these seams — enumerable, all
+  in-product. THE OWNER HAS SANCTIONED the §4 amendment (mandate 5);
+  the amendment text must leave the taxonomy explicitly open («the set
+  grows by owner amendment; `app` is anticipated») so the next kind
+  does not repeat this archaeology.
 - **F9 — the wire contracts in force.** TCG-PROTOCOL-RUST-v0.1 /
   TCG-PROTOCOL-v0.1 (TS): the NDJSON serve-relay protocol + one-shot
   exit contract (validate exits 1 on error diagnostic OR non-baselined
@@ -132,7 +156,7 @@ touches.
   (9/9, cold 2 534 ms / warm p95 63 ms), both live chains
   (`vibe-mcp/tests/tcg_tools.rs --ignored`), demo floors (rust ALL
   green; ts 7/7), the single-crate walk, self-check 13 steps. The live
-  chains currently drive THROUGH vibe-mcp — Wave 5 re-homes them.
+  chains currently drive THROUGH vibe-mcp — Wave 6 re-homes them.
 - **F11 — next free PROP number: 027** (026 is the last; checked
   `spec/common` + `spec/modules/*`).
 - **F12 — known machine/platform lessons that bind here.** node and
@@ -142,81 +166,102 @@ touches.
   `.mcp.json` merges must preserve key order. The servers this plan
   ships are real `.exe` artifacts — direct absolute (verbatim-free)
   paths avoid the shim class entirely.
+- **F13 — cross-slot Cargo path-deps are IMPOSSIBLE** (PROP-024 §2.4;
+  proven twice: the vendor-sync decision at deferrals-closeout, the
+  slot-layout disagreement). Any package whose crates need another
+  package's crates VENDORS them. This fact is what shapes D1a — a
+  standalone `mcp` package cannot path-dep into its stack's slot;
+  manifest rewriting that could change this is PROP-025 v2,
+  specified-only, NOT this campaign.
 
 ## 2. Target end-state (what done looks like)
 
 ```
-stack:org.vibevm/rust-ai-native (0.6.0)
-├─ crates/vendor/{conform-core, specmap-core, specmark, specmark-grammar,
-│                 mcp-core}                    ← NEW neutral cell, vendored
-├─ crates/{conform,specmap,discipline,tcg}-cli-rust   (unchanged entities)
-├─ crates/discipline-mcp-rust                  ← NEW: the stdio MCP server
-│    src/main.rs        (clap: --path, serve-on-stdio)
-│    src/server.rs      (mcp-core wiring: initialize, tools/list, tools/call)
-│    src/tools_discipline.rs  (11 tools → discipline_cli_rust lib fns)
-│    src/tools_tcg.rs         (5 tools → tcg oracle session + one-shots)
-└─ vibe.toml: [[binary]] discipline-mcp-rust + [[mcp_server]] entry
-
-stack:org.vibevm/typescript-ai-native (0.5.0)  — the same shape, 15 tools
-
 flow:org.vibevm/discipline-core (0.6.0)
-├─ crates/mcp-core                             ← AUTHORED here
-└─ spec/mechanisms/MCP-CORE-v0.1.md            ← the transport contract
+├─ crates/mcp-core                             ← AUTHORED here (neutral transport)
+└─ spec/mechanisms/MCP-CORE-v0.1.md
+
+stack:org.vibevm/rust-ai-native (0.6.0)        ← report seams + tcg session lib
+stack:org.vibevm/typescript-ai-native (0.5.0)     surface; NO server crates here
+
+mcp:org.vibevm/discipline-rust (0.6.0)         ← NEW PACKAGE, NEW KIND
+├─ vibe.toml   kind = "mcp"
+│              [requires] "stack:org.vibevm/rust-ai-native" = "=0.6.0"  (exact pin)
+│              [[binary]] discipline-mcp-rust
+│              [[mcp_server]] name="discipline-rust" binary="discipline-mcp-rust"
+├─ crates/discipline-mcp-rust                  ← the stdio MCP server (authored)
+│    src/main.rs / server.rs / tools_discipline.rs / tools_tcg.rs
+├─ crates/vendor/…                             ← synced projections (D3a):
+│    mcp-core, conform-core, specmap-core, specmark, specmark-grammar
+│      (source: discipline-core), conform-frontend-rust, conform-cli-rust,
+│    specmap-cli-rust, discipline-cli-rust, tcg-oracle-bridge-rust,
+│    tcg-session-rust (source: rust-ai-native)
+└─ specmap.toml (self-trace), README, spec/ (brief)
+
+mcp:org.vibevm/discipline-typescript (0.5.0)   — the same shape, 15 tools
 
 vibevm (product)
-├─ crates/vibe-mcp      — product tools ONLY (query_package, agentic_explain,
-│                         materialise_subskill, read_subskill); tcg.rs GONE
-├─ crates/vibe-tcg      — DELETED
-├─ vibe mcp install     — also registers package-declared [[mcp_server]]s
-│                         into agent configs (managed block, consent-gated)
-└─ .mcp.json            — mounts discipline-mcp-rust + discipline-mcp-typescript
-                          (dogfood: the operational cycle demonstrably broken)
+├─ vibe-core: Kind::Mcp (+ the seams of F8); McpServerDecl
+├─ vibe mcp install — registers package-declared servers (managed block,
+│                     consent-gated); status/uninstall lifecycle
+├─ crates/vibe-mcp — product tools ONLY; tcg.rs GONE
+├─ crates/vibe-tcg — DELETED
+└─ .mcp.json — mounts discipline-rust + discipline-typescript (dogfood)
 ```
 
-Runtime dependency directions after the campaign: stacks depend on
-discipline-core (vendored, build-time only); vibevm depends on stacks
-(as installed packages + registered servers); NOTHING depends on vibe at
-serving time. A consumer without vibe can vendor a stack package and
-`cargo build` its MCP server from the slot alone.
+Runtime dependency directions after the campaign: mcp packages
+exact-pin their stacks (resolver-enforced lockstep — the no-skew
+property moves from «same workspace» to «same resolved version set»);
+stacks depend on discipline-core (vendored, build-time only); vibevm
+depends on packages (installed + registered servers); NOTHING depends
+on vibe at serving time. A consumer without vibe can vendor an mcp
+package and `cargo build` its server from the slot alone.
 
-## 3. Decisions (D1–D15; ★ marks review points for §12)
+## 3. Decisions (D1–D15; §12 records the resolutions)
 
-### D1 — `[[mcp_server]]` is a manifest SURFACE, not a fifth kind ★
+### D1 — `mcp` is a package KIND (owner amendment; reverses the draft)
 
-An MCP server is a property a package HAS, not what a package IS — the
-same judgement PROP-024 made for code and PROP-025 for binaries. The
-four-kinds rule (F8) stands. `[[mcp_server]]` references a `[[binary]]`
-by name (the server IS a binary; delivery, consent, staleness, and slot
-residence come from PROP-025 wholesale):
+The kind set grows: `flow`, `feat`, `stack`, `tool`, **`mcp`**. An
+`mcp`-kind package's primary deliverable is one or more MCP servers; the
+`[[mcp_server]]` declaration table is VALID ONLY in `mcp`-kind packages
+(offender check — the taxonomy is enforced, not advisory). VIBEVM-SPEC
+§4 is amended under the owner's sanction (mandate 5), with the
+amendment text recording that the taxonomy grows by owner amendment and
+naming `app` as anticipated. `spec/boot/00-core.md` is user-owned — the
+owner updates its four-kinds line himself, or explicitly delegates the
+edit (execution NOTE: ask at the Wave-1 boundary; do not edit
+user-owned boot files silently).
 
-```toml
-[[mcp_server]]
-name = "discipline-rust"          # the agent-visible server name
-binary = "discipline-mcp-rust"    # must match a [[binary]] in this manifest
-description = "AI-Native Rust discipline + type oracle over MCP"
-args = ["--path", "{project_root}"]   # substitution vars, small closed set
-```
+### D1a — the discipline servers are SEPARATE `mcp:` packages,
+exact-pinned to their stacks
 
-Offender checks at manifest parse: `binary` must resolve, names unique,
-args substitution vars from the closed set only.
+Because cross-slot path-deps are impossible (F13), the server package
+VENDORS its dependency closure (D3a) — and vendoring re-opens the
+gate-vs-oracle version-skew the in-slot draft killed by construction.
+The pin closes it: `[requires] "stack:org.vibevm/rust-ai-native" =
+"=0.6.0"` (exact). Installing the mcp package forces the exact stack
+version; the resolver — not a runtime handshake — guarantees «one
+engine, one truth». Consequences accepted and priced: every stack
+campaign now syncs + bumps its mcp sibling (mechanical, sync-engines
+does the bytes); self-check grows two package gates; publish grows two
+packages. The pin is a REQ in PROP-027 with an offender check: an
+`mcp` package whose stack requirement is not exact is refused by
+`vibe check`.
 
-### D2 — one server binary per language, full command surface ★
+### D2 — one server binary per language, full command surface
 
-Owner answer 1 fixes the surface: ALL commands. That makes the honest
-name `discipline-mcp-rust` / `discipline-mcp-typescript` (D13 naming
-policy: cross-language analogs carry the language suffix; the
-`-mcp-` infix keeps it grep-distinct from the umbrella CLI). ONE server
-per language mounting BOTH entities (discipline gates + tcg oracle) as
-separate tool cells — operationally one process, structurally two cells
-(owner answer 2: different entities, different files; one server,
-because transport is not an entity boundary). Tool inventory:
+Owner answer 1 fixes the surface: ALL commands. ONE server per language
+mounting BOTH entities (discipline gates + tcg oracle) as separate tool
+cells — operationally one process, structurally two cells (owner
+answer 2: different entities, different files; one server, because
+transport is not an entity boundary). Tool inventory:
 
-- Rust (16): `init`, `floor`, `conform_check`, `conform_freeze`,
+- Rust (17): `init`, `floor`, `conform_check`, `conform_freeze`,
   `specmap_check`, `specmap_write`, `trace_explain`, `test_gate`,
   `tripwire`, `health`, `fast_loop`, `codemod_add_cell`,
-  `ledger_render`, and `tcg_validate`, `tcg_scope`, `tcg_complete`,
-  `tcg_type` (+ `tcg_bench` — see D9 for the count nuance).
-- TypeScript (15): the same minus `ledger_render`.
+  `ledger_render`, `tcg_validate`, `tcg_scope`, `tcg_complete`,
+  `tcg_type`, plus `tcg_bench` (heavy-budget description) — see D9.
+- TypeScript (16): the same minus `ledger_render`.
 
 Naming: snake_case tool ids; hosts namespace by server
 (`mcp__discipline-rust__floor`), so identical ids across the two
@@ -226,49 +271,77 @@ teaches them.
 
 ### D3 — `mcp-core`: the neutral transport, authored in discipline-core
 
-A minimal MCP stdio server cell: Content-Length framing (reuse the
-framing grammar the rust bridge already implements — but authored
-fresh and neutrally), `initialize` handshake, `tools/list`,
-`tools/call`, error grammar, a `ToolSet` registry seam
-(`name → schema + handler`). Authored in
-`flow:org.vibevm/discipline-core/crates/mcp-core`, vendored into both
-stacks by the EXISTING sync-engines mechanism (F7 — one manifest line).
-No async runtime, no third-party protocol crates: a blocking stdio loop
-exactly like vibe-mcp's, sized to what a discipline server needs.
-Protocol revision: the same MCP revision vibe-mcp speaks today (proven
-against the five Agent enum hosts). vibe-mcp is NOT rebased onto
-mcp-core in this campaign (named deferral, §10) — its transport carries
-PROP-018 mode machinery that must not be destabilised in a topology
-campaign.
+A minimal MCP stdio server cell: Content-Length framing, `initialize`
+handshake, `tools/list`, `tools/call`, error grammar, a `ToolSet`
+registry seam (`name → schema + handler`). Authored in
+`flow:org.vibevm/discipline-core/crates/mcp-core`, vendored wherever
+needed by sync-engines. No async runtime, no third-party protocol
+crates: a blocking stdio loop exactly like vibe-mcp's, sized to what a
+discipline server needs. Protocol revision: the same MCP revision
+vibe-mcp speaks today (proven against the five Agent enum hosts).
+vibe-mcp is NOT rebased onto mcp-core in this campaign (named deferral,
+§10).
+
+### D3a — multi-source vendor sync
+
+`sync-engines.toml` generalises from one `source_root` to `[[sync]]`
+blocks (`source_root` × `crates` × `targets` each); the check stays one
+command and one self-check step. Sync sets after this campaign:
+
+1. discipline-core → {rust stack, ts stack, mcp-rust pkg, mcp-ts pkg}:
+   the neutral five (conform-core, specmap-core, specmark,
+   specmark-grammar, mcp-core).
+2. rust-ai-native → {mcp-rust pkg}: conform-frontend-rust,
+   conform-cli-rust, specmap-cli-rust, discipline-cli-rust,
+   tcg-oracle-bridge-rust, tcg-session-rust.
+3. typescript-ai-native → {mcp-ts pkg}: the TS analogues
+   (conform-frontend-typescript, conform-cli-typescript,
+   specmap-cli-typescript, discipline-cli-typescript, ts-extract-bridge,
+   tcg-oracle-bridge, tcg-session-typescript — exact list verified at
+   Wave 4 against the tool handlers' real dependency closure).
+
+The fix surface is ALWAYS the authored copy; vendored trees are
+write-throughs — unchanged law, more edges.
+
+### D3b — the tcg session cell becomes a lib surface in each stack
+
+The enriching persistent-session logic (oracle spawn, quiescence law,
+respawn-once, enrichment through `build_rules`) lives inside
+`tcg-cli-rust`/`tcg-cli-typescript` serve cells today. Wave 2/4 extract
+it into a vendorable lib crate per stack (`tcg-session-rust`,
+`tcg-session-typescript`) that BOTH the CLI relay and the MCP server
+consume — one entity, one home (owner answer 2), two transports. The
+NDJSON relay's behaviour is pinned by its existing tests and must not
+move.
 
 ### D4 — tools are thin adapters over the SAME lib fns the CLIs call
 
 Parity by construction (F5), pinned by test (§4 P2). The known gap F5a
 (runners print to stderr, return `()`): each runner that a tool mounts
-gains a report-capturing form — the house pattern is a
-`&mut dyn io::Write` (or returned `Report` value) threaded through the
-existing fn, with the CLI passing stderr and the tool passing a buffer.
-This is a SEAM ADDITION to stack lib crates, not a behaviour change;
-CLI output stays byte-identical (gated by the existing suites).
+gains a report-capturing form — a `&mut dyn io::Write` (or returned
+`Report` value) threaded through the existing fn, with the CLI passing
+stderr and the tool passing a buffer. This is a SEAM ADDITION to stack
+lib crates, not a behaviour change; CLI output stays byte-identical
+(gated by the existing suites).
 
 ### D5 — the CLI story: the two entity-CLIs already ARE the parity
-surface; vibe-tcg is deleted ★
+surface; vibe-tcg is deleted
 
 Owner answer 4 asks that every MCP function be reachable as a plain CLI
 call. Verified inventory (F4): it already is — `discipline-rust` covers
-the 11 discipline families, `tcg-rust` the oracle ops. The two binaries
-map to the two ENTITIES (gates vs oracle), which is exactly the
-abstraction-level separation of owner answer 2 — so this plan ships NO
-new CLI utility and RENAMES nothing; the deliverable is the pinned
-parity MAP (tool id ↔ CLI invocation, one table in the brief + one
-enumeration test per stack) and the F5a report seams. `vibe-tcg` is
-deleted whole («по обстоятельствам» resolved: with in-slot serving
-there is no cross-package dispatch left for it to do); the shared
-`vibe_workspace::bins` cell stays — `vibe bin exec` needs it regardless.
+the 11 discipline families, `tcg-rust` the oracle ops; the two binaries
+map to the two ENTITIES (gates vs oracle) — exactly owner answer 2's
+separation. This plan ships NO new CLI utility and RENAMES nothing; the
+deliverable is the pinned parity MAP (tool id ↔ CLI invocation, one
+table in each brief + one enumeration test per server) and the F5a
+report seams. The CLIs stay in the STACKS (a stack without agents is
+still fully operable); the servers live in the mcp packages and vendor
+the same libs — parity holds across packages because the pin (D1a)
+holds the versions together. `vibe-tcg` is deleted whole.
 
 ### D6 — registration: direct artifact path in a vibevm-managed block
 
-`vibe mcp install` (extended, Wave 4) writes package servers into agent
+`vibe mcp install` (extended, Wave 5) writes package servers into agent
 configs the same way it writes vibevm's own server today (F3), with:
 
 - command = the ABSOLUTE, verbatim-free path to the slot-resident
@@ -291,14 +364,17 @@ REGISTERING a server is the same trust act as building (it schedules
 code execution at agent start), so registration inherits exactly the
 same consent gate and refusal recipe — one trust model, two verbs.
 
-### D7 — lockfile and resolution: mirror PROP-025's model exactly
+### D7 — lockfile and resolution: mirror PROP-025's model; the kind
+rides the existing schema
 
 `[[mcp_server]]` declarations are read from slot manifests at
 `vibe mcp install` time (the way `vibe bin list/exec` reads
-`[[binary]]`); no new lockfile schema field unless `[[binary]]`
-already records one — the executing phase verifies against
-`vibe-workspace`'s actual model and follows it byte-for-byte. Offender
-checks ride `vibe check`.
+`[[binary]]`); the `kind` field already travels manifest→lockfile→slot
+naming, so `mcp` needs enum + offender work, not schema work. The
+executing phase verifies against `vibe-core`/`vibe-workspace`'s actual
+model and follows it byte-for-byte. Offender checks ride `vibe check`
+(incl. D1's «[[mcp_server]] only in mcp-kind» and D1a's exact-pin
+rule).
 
 ### D8 — long-running and destructive tools: run-to-completion, honest
 reports, no hidden prompts
@@ -309,66 +385,62 @@ REQ-grammar text the CLI prints) plus a structured
 `{ok, steps?, findings?, …}` head. No interactive prompts exist in any
 mounted runner (verified F4/F5 — `codemod add-cell` has rollback,
 `init` never overwrites without `--force`); tools expose `force`-like
-flags as explicit parameters so the no-prompts-in-server rule (the
-PROP-026 posture) holds. Tool descriptions carry budget hints
-(«runs the full verification floor; expect minutes»).
+flags as explicit parameters so the no-prompts-in-server rule holds.
+Tool descriptions carry budget hints («runs the full verification
+floor; expect minutes»).
 
-### D9 — tcg tool semantics move in-process; `serve` and the NDJSON
-protocol remain CLI-side ★
+### D9 — tcg tool semantics in-process; `serve` and the NDJSON protocol
+remain CLI-side
 
 Inside the server, tcg tools hold the SAME persistent oracle session
-the `tcg-rust serve` relay holds today (bridge + enrichment linked
-directly — no subprocess, no NDJSON hop; respawn-once and the
-quiescence/deadline law port from the relay cell). The `tcg-rust serve`
-NDJSON relay REMAINS SHIPPED as the non-MCP embedding form (F9's
-protocol keeps its consumers: the one-shot exit contract and the bench
-harness). `tcg_bench` is mounted as a tool (it is a command — owner
-answer 1) with the heavy-budget description; the tool count is
-therefore 17/16, with `tcg_bench` the one tool whose primary home
-remains the CLI.
-`language` parameter (PROP-026 continuity): each server ACCEPTS the
-param, refuses a mismatch with its own language (grammar-compatible
-with every existing skill/transcript), and treats absence as «this
-server's language» — the enum-value bet re-reads as «a new language is
-a new stack shipping the SAME tool grammar» (D12).
+the relay holds today, through the extracted session lib (D3b) — no
+subprocess, no NDJSON hop. The `tcg-* serve` NDJSON relay REMAINS
+SHIPPED as the non-MCP embedding form (F9's protocol keeps its
+consumers). `tcg_bench` is mounted as a tool (it is a command — owner
+answer 1) with the heavy-budget description. `language` parameter
+(PROP-026 continuity): each server ACCEPTS the param, refuses a
+mismatch with its own language, treats absence as «this server's
+language» — the enum-value bet re-reads as «a new language is a new
+mcp package shipping the SAME tool grammar» (D12).
 
 ### D10 — version bumps at each wave's open (the standing ritual)
 
-discipline-core 0.5.0→**0.6.0** (Wave 1, mcp-core lands),
-rust-ai-native 0.5.0→**0.6.0** (Wave 2), typescript-ai-native
-0.4.0→**0.5.0** (Wave 3). Each bump follows the mini-fix campaign's
-exact move list (dir, workspace version, sync-engines.toml, self-check
-paths where applicable, requires lines, re-materialise, external-specs
-repoints in vibevm + demos). vibevm product stays 0.1.0-dev.
+discipline-core 0.5.0→**0.6.0** (Wave 2, mcp-core lands),
+rust-ai-native 0.5.0→**0.6.0** (Wave 3, seams + session lib),
+typescript-ai-native 0.4.0→**0.5.0** (Wave 4). The NEW mcp packages are
+BORN at their stack's pinned version (0.6.0 / 0.5.0) — birth, not bump.
+Each bump follows the mini-fix campaign's exact move list. vibevm
+product stays 0.1.0-dev.
 
 ### D11 — Stage-B synergy, recorded not scoped
 
 TCG-STAGE-B-DELIVERY-PLAN's «MCP-mounted arm» (backlogged) becomes
-runnable for free after Wave 3: the with-tools arm mounts
-`discipline-mcp-typescript` instead of prompt-naming a CLI. This plan
-does NOT run the experiment; the pointer lands in the Stage-B plan's §1
-re-verification notes during Wave 5.
+runnable for free after Wave 4: the with-tools arm mounts
+`discipline-typescript` instead of prompt-naming a CLI. This plan does
+NOT run the experiment; the pointer lands in the Stage-B plan's §1
+re-verification notes during Wave 6.
 
 ### D12 — PROP-026 amendment: the grammar is the invariant, the
 topology re-dispositions
 
-The four-op grammar (validate/scope/complete/type + their params and
-answer shapes) is unchanged — that is the bet that actually cashed. The
-TOPOLOGY half («one multiplexed server, language as a parameter»)
-re-dispositions to «one server per language stack, same grammar,
-`language` param validated». PROP-026 gains a §(next) recording the
-re-disposition, WHY (this plan's §0), and the transition map (which
-tool ids moved where). TCG-PROTOCOL-RUST/TS gain a scope note: the
-NDJSON protocol serves non-MCP embedders; MCP hosts speak MCP-CORE.
+The four-op grammar (validate/scope/complete/type + params + answer
+shapes) is unchanged — the bet that actually cashed. The TOPOLOGY half
+(«one multiplexed server, language as a parameter») re-dispositions to
+«one `mcp:` package per language, same grammar, `language` param
+validated». PROP-026 gains a §(next) recording the re-disposition, WHY
+(§0), and the transition map. TCG-PROTOCOL-RUST/TS gain a scope note:
+the NDJSON protocol serves non-MCP embedders; MCP hosts speak MCP-CORE.
 
 ### D13 — naming, per the standing language-suffix policy
 
-Crates `discipline-mcp-rust` / `discipline-mcp-typescript`; binaries
-the same; server names (agent-visible) `discipline-rust` /
-`discipline-typescript` — matching the umbrella CLI names agents
-already know from the skills. mcp-core is language-neutral (no suffix,
-like conform-core/specmap-core). ★ (the agent-visible name is taste —
-flag for review.)
+Packages `mcp:org.vibevm/discipline-rust` /
+`mcp:org.vibevm/discipline-typescript` (slots `vibedeps/mcp-discipline-rust/…`
+— no kind/name stutter). Server crates + binaries `discipline-mcp-rust`
+/ `discipline-mcp-typescript`; agent-visible server names
+`discipline-rust` / `discipline-typescript` — matching the umbrella CLI
+names agents already know. mcp-core and the session libs follow the
+suffix policy (`tcg-session-rust` / `tcg-session-typescript`; mcp-core
+is language-neutral, no suffix).
 
 ### D14 — trust posture, stated once
 
@@ -382,213 +454,235 @@ consent (`vibe mcp install --assume-yes …`).
 
 ### D15 — dogfood is the acceptance
 
-Wave 5 registers both stack servers into vibevm's own `.mcp.json`
-(managed block), the live chains re-home onto the stack servers, and
-vibe-mcp's suite shrinks to product tools. The operational cycle is
-broken when: an agent session on vibevm reaches every discipline tool
-without `vibe mcp serve` running, and `vibe-mcp` builds with zero
-references to tcg or the stacks.
+Wave 6 registers both mcp packages' servers into vibevm's own
+`.mcp.json` (managed block), the live chains re-home onto the mcp
+packages' suites, and vibe-mcp's suite shrinks to product tools. The
+operational cycle is broken when: an agent session on vibevm reaches
+every discipline tool without `vibe mcp serve` running, and `vibe-mcp`
+builds with zero references to tcg or the stacks.
 
 ## 4. Predictions (falsifiable; checked per wave and at close)
 
 - **P1** — mcp-core's replay suite (scripted transport, no real agent)
   covers handshake, tools/list, tools/call, error grammar, and
   malformed-frame refusal; green without node/r-a anywhere near it.
-- **P2** — parity: for each stack, an enumeration test pins
-  tools/list == the declared inventory (D2) AND each tool's answer on a
-  fixed fixture equals the corresponding CLI invocation's report
+- **P2** — parity: for each server, an enumeration test pins tools/list
+  == the declared inventory (D2) AND each tool's answer on a fixed
+  fixture equals the corresponding CLI invocation's report
   (existence-grain: same findings/fingerprints/exit class).
 - **P3** — live chain per server on the demos: `initialize` →
-  `tools/list` (16/15) → `tcg_validate` clean 0/0 → seeded E0308 (rust)
+  `tools/list` (17/16) → `tcg_validate` clean 0/0 → seeded E0308 (rust)
   / TS2322 (ts) through a pure overlay → `floor` tool green. Disk
   byte-identical after.
 - **P4** — the vibe-absent invariant: each server passes its live chain
   with `vibe` scrubbed from PATH and no vibevm process running.
 - **P5** — the corpus stays 9/9 (bench CLI form), and `tcg_bench`
   through the server reports the same agreement on the same corpus.
-- **P6** — after Wave 5, vibe-mcp's four product tools pass their suite
+- **P6** — after Wave 6, vibe-mcp's four product tools pass their suite
   unchanged; `grep -r "tcg" crates/vibe-mcp/src` is empty;
   `crates/vibe-tcg` does not exist; root workspace builds green.
-- **P7** — the fresh-consumer walk: `vibe install` + `vibe mcp install
-  --agent claude-code` on rust-demo yields a `.mcp.json` whose managed
-  entry launches the slot artifact directly; a scripted MCP handshake
-  over that exact command line lists 16 tools.
-- **P8** — no behaviour change outside the campaign's surfaces: vibevm's
+- **P7** — the fresh-consumer walk: `vibe install` (mcp package pulls
+  its stack via the exact pin) + `vibe mcp install --agent claude-code`
+  on rust-demo yields a `.mcp.json` whose managed entry launches the
+  slot artifact directly; a scripted MCP handshake over that exact
+  command line lists 17 tools.
+- **P8** — the exact-pin law holds mechanically: `vibe check` refuses
+  an mcp package with a non-exact stack requirement; resolving an mcp
+  package installs the pinned stack version even when a newer stack
+  exists in the registry (fixture-proven).
+- **P9** — no behaviour change outside the campaign's surfaces: vibevm's
   conform/specmap counts move only by the new crates' own gated/tagged
   items; demo baselines unchanged except where a wave explicitly
   re-teaches them.
 
 ## 5. Wave 0 — spikes (no commits; gates for everything after)
 
-- **S1 — bare-binary MCP handshake.** A 50-line throwaway binary using
-  the planned mcp-core loop shape answers a scripted
-  initialize/tools-list exchange AND a real `claude mcp`-style stdio
-  probe on this box. Proves the protocol revision + framing choices
-  before mcp-core is authored. (Claude Code is the probe host; the
-  other four agents' configs are write-only surfaces here — their
-  formats are already exercised by `vibe mcp install` today, F3.)
-- **S2 — long-call behaviour.** The spike binary exposes a `sleep`-like
-  tool (~90 s) and we observe the host's patience/timeout behaviour —
-  calibrates D8's budget notes (NOT a design gate: run-to-completion
-  stands regardless; this measures what to write in descriptions).
-- **S3 — report-capture seam shape.** Pick ONE runner
-  (`conform_cli_rust::run_check`) and thread the write seam (F5a) in a
-  scratch branch; confirm CLI byte-identity and buffer capture. This
-  fixes the idiom the Wave-2 sweep applies everywhere.
-- Exit gate: S1–S3 findings recorded in this plan's §11 ledger; no
-  tree changes survive the spike.
+- **S1 — bare-binary MCP handshake.** A throwaway binary using the
+  planned mcp-core loop shape answers a scripted initialize/tools-list
+  exchange AND a real Claude Code stdio probe on this box. Proves the
+  protocol revision + framing choices before mcp-core is authored.
+- **S2 — long-call behaviour.** The spike binary exposes a sleep-like
+  tool (~90 s); observe the host's patience/timeout — calibrates D8's
+  budget notes (run-to-completion stands regardless).
+- **S3 — report-capture seam shape.** Thread the write seam (F5a)
+  through ONE runner (`conform_cli_rust::run_check`) in a scratch
+  branch; confirm CLI byte-identity and buffer capture. Fixes the idiom
+  Wave 3 applies everywhere.
+- **S4 — kind-mechanics inventory.** Enumerate every `kind` seam in
+  vibe-core/vibe-workspace/vibe-check/vibe-mcp (F8's list verified
+  against code, with file:line), so Wave 1 lands as a sweep, not a
+  hunt. Also verify: the resolver honours `=X.Y.Z` exact requirements
+  (a unit-level probe against resolvo's semver handling).
+- Exit gate: S1–S4 findings recorded in §11; no tree changes survive
+  the spikes.
 
-## 6. Wave 1 — mcp-core in discipline-core (0.6.0)
+## 6. Wave 1 — the `mcp` kind in the product (+ VIBEVM-SPEC §4)
 
-1. **Bump** discipline-core 0.5.0→0.6.0 (D10 move list;
-   `build(packages)` + `build(deps)` pair).
+1. **VIBEVM-SPEC §4 amendment** (owner-sanctioned, mandate 5): the
+   `mcp` kind defined (deliverable = MCP servers; [[mcp_server]] valid
+   only here; exact-pin law D1a), the taxonomy recorded as
+   owner-extensible, `app` named as anticipated. Boot-snippet
+   category/ordering for `mcp` defined (no boot snippet by default —
+   agents learn servers via registration, not boot text; a
+   `[boot_snippet]` remains legal).
+2. **vibe-core**: `Kind::Mcp` through every S4-inventoried seam
+   (parse, display, slot naming, requires_kinds, registry naming);
+   `McpServerDecl` next to `BinaryDecl` (D1 offender checks: table only
+   in mcp-kind, binary reference resolves, names unique, args from the
+   closed substitution set; D1a exact-pin check).
+3. **vibe-check**: the new offender diagnostics (REQ-citing, Class-F
+   grammar).
+4. **Fixtures**: a hermetic `mcp`-kind fixture package (stub server
+   binary) in `fixtures/registry/` — install/resolve/check/slot-naming
+   e2e; the P8 exact-pin fixture pair (mcp@X pinning stack@X with
+   stack@Y present).
+5. Gates: full panel + WAL. Commit shape: `docs(spec): VIBEVM-SPEC §4 —
+   the mcp kind (owner-sanctioned)`, `feat(core): Kind::Mcp + [[mcp_server]]`,
+   `test(install): mcp-kind fixtures`, `build(deps)` if slots move.
+   NOTE (D1): ask the owner about the `00-core.md` four→five kinds line
+   at this wave's close — user-owned file, not edited silently.
+
+## 7. Wave 2 — mcp-core in discipline-core (0.6.0)
+
+1. **Bump** discipline-core 0.5.0→0.6.0 (D10 move list).
 2. **Author `crates/mcp-core`** (cells: `frame` — Content-Length IO;
    `wire` — request/response/error types + grammar; `server` — the
    blocking loop, initialize, tools/list, tools/call dispatch;
    `toolset` — the registry seam). Replay tests per P1; doctests on
-   every pub seam; scope! tags; conform/specmap self-gates of the
-   package extended to the new crate.
+   every pub seam; scope! tags; the package's conform/specmap
+   self-gates extended to the new crate.
 3. **Mechanism spec** `spec/mechanisms/MCP-CORE-v0.1.md` (REQ-grain
    units: framing, handshake, tool grammar, error grammar, the
-   no-prompts rule) — the `spec://discipline-core/mechanisms/MCP-CORE-v0.1#…`
-   units the code cites.
-4. **Vendor**: `sync-engines.toml` crates += `mcp-core`; mirror; both
-   stacks' vendor trees gain the crate (their workspaces list it as a
-   member only when Wave 2/3 consume it — verify cargo tolerates an
-   unreferenced vendored dir; if not, membership lands with this wave
-   behind a no-op).
+   no-prompts rule).
+4. **Vendor**: sync-engines gains the D3a multi-source shape (xtask
+   change rides this wave); set 1 grows mcp-core; both stacks receive
+   it (their workspaces reference it only when needed — verify cargo
+   tolerates an unreferenced vendored dir, else membership waits for
+   its consumer).
 5. Gates: package fmt/test/clippy, sync-engines --check, full
-   self-check, WAL.
-   Commit shape: `build(packages)`, `feat(discipline-core): mcp-core …`,
-   `docs(spec): MCP-CORE-v0.1 …`, `build(deps)`.
+   self-check, WAL. Commits: `build(packages)`, `feat(discipline-core):
+   mcp-core …`, `docs(spec): MCP-CORE-v0.1`, `refactor(xtask):
+   multi-source sync-engines`, `build(deps)`.
 
-## 7. Wave 2 — `discipline-mcp-rust` (rust-ai-native 0.6.0)
+## 8. Wave 3 — rust: seams, session lib, and `mcp:org.vibevm/discipline-rust`
 
-1. **Bump** rust stack 0.5.0→0.6.0 (D10).
-2. **Report seams (F5a)** across the mounted runners in
+1. **Bump** rust-ai-native 0.5.0→0.6.0 (D10).
+2. **Report seams (F5a/S3)** across the mounted runners in
    `conform-cli-rust`, `specmap-cli-rust`, `discipline-cli-rust`,
-   `tcg-cli-rust` — the S3 idiom, CLI output byte-identical (suites
-   green unchanged).
-3. **New crate `discipline-mcp-rust`** per §2's cell map: `server.rs`
-   wires mcp-core's ToolSet; `tools_discipline.rs` (11 tools → lib
-   fns); `tools_tcg.rs` (5 tools → an in-process oracle session cell
-   ported from the relay: same quiescence law, respawn-once, enrichment
-   through `build_rules`; the NDJSON relay in `tcg-cli-rust` is
-   untouched). `[[binary]]` declared; `[[mcp_server]]` entry AUTHORED
-   in vibe.toml now but consumed only from Wave 4 (dead manifest data
-   is refused by `vibe check` → gate the entry behind Wave 4's schema
-   landing — the executing session orders these two waves' manifest
-   edits accordingly; if Wave 4 executes later, the entry lands there
-   instead. Named ordering hazard, not a design hole).
-4. **Tests**: P2 parity enumeration + fixture parity; the finding-parity
-   posture (relay-vs-gate) extends to server-vs-gate
-   fingerprint-for-fingerprint; live chain P3 on rust-demo driven over
-   real stdio against the built artifact; P4 vibe-absent run; P5 bench
-   tool answer == bench CLI on the committed corpus.
-5. **Brief**: `spec/rust/tools/discipline-mcp-rust.md` (seven-section
-   house shape) incl. the parity MAP table (D5).
-6. Gates: stack fmt/test/clippy, self-check, demo floor, corpus 9/9,
-   WAL. Commit shape: `build(packages)`, `refactor(rust-ai-native):
-   report seams …`, `feat(rust-ai-native): discipline-mcp-rust …`,
-   `docs(rust-ai-native): brief …`, `build(deps)`.
+   `tcg-cli-rust` — CLI output byte-identical (suites green unchanged).
+3. **Extract `tcg-session-rust`** (D3b) from the relay's session cell;
+   the relay consumes it; relay tests unchanged.
+4. **Birth `mcp:org.vibevm/discipline-rust` (0.6.0)**: package skeleton
+   (vibe.toml with kind/pin/[[binary]]/[[mcp_server]], LICENSE, README,
+   spec/ brief with the D5 parity map), `crates/discipline-mcp-rust`
+   per §2's cell map, vendored closure per D3a set 2 (+ set 1), own
+   specmap.toml self-trace, package Cargo workspace green.
+5. **Tests**: P2 parity enumeration + fixture parity
+   (server-vs-gate fingerprint-for-fingerprint); live chain P3 on
+   rust-demo over real stdio against the built artifact; P4
+   vibe-absent run; P5 bench-tool agreement.
+6. **Wiring**: root vibe.toml requires the mcp package (vibevm is its
+   first consumer); re-materialise; self-check grows the package gate
+   (fmt/test/clippy + self-trace).
+7. Gates: full panel + demo floor + corpus + WAL. Commits:
+   `build(packages)` (bump), `refactor(rust-ai-native): report seams`,
+   `refactor(rust-ai-native): tcg-session-rust`, `feat(packages):
+   mcp:discipline-rust — the standalone server`, `test(...)`,
+   `build(deps)`.
 
-## 8. Wave 3 — `discipline-mcp-typescript` (typescript-ai-native 0.5.0)
+## 9. Wave 4 — typescript: the mirror (`mcp:org.vibevm/discipline-typescript`)
 
-Mirror of Wave 2 phase-for-phase (15 tools; the oracle session ports
-from `tcg-cli-typescript`'s relay; node-dependent tools keep the
-hard-fail-with-recipe posture on absent toolchain). Explicit
-asymmetries to state in the brief: no ledger tool; the TS oracle IS the
-compiler (no approximation caveat); `ts-demo` is the live-chain bed.
-The TS package gains a self-check presence question — see §10
-deferral D-e (the mini-fix campaign's standing finding).
+Mirror of Wave 3 phase-for-phase: ts stack 0.4.0→0.5.0, report seams,
+`tcg-session-typescript` extraction, the mcp package birth (0.5.0,
+exact-pinned), 16 tools, ts-demo live chain, vendored closure per D3a
+set 3 (verified against the real dependency closure at execution).
+Explicit asymmetries in the brief: no ledger tool; the TS oracle IS the
+compiler (no approximation caveat); node-dependent tools keep the
+hard-fail-with-recipe posture. Self-check grows the ts-side package
+gates it never had (closing the mini-fix campaign's D-e finding for the
+new package at least; the ts STACK gate remains a §10 deferral item
+unless trivially cheap here).
 
-## 9. Wave 4 — PROP-027: package-declared MCP servers in vibe
+## 10. Wave 5 — PROP-027: MCP delivery through vibe
 
-1. **PROP-027** (`spec/modules/vibe-mcp/PROP-027-package-mcp-servers.md`):
-   the `[[mcp_server]]` schema (D1), consent (D6/D14), lifecycle
-   (install/refresh/uninstall/status), the managed-block convention,
-   agent matrix (the five Agent hosts × Project/User scopes),
-   composition clauses with PROP-020 hooks, PROP-022 materialization
-   modes, PROP-023 bridges, PROP-024 code-bearing, PROP-025 binaries
-   («all other applicable package features» — owner answer 3 — becomes
-   a NORMATIVE composition table, each row with its test).
-2. **vibe-core**: `McpServerDecl` next to `BinaryDecl` (offender checks
-   per D1); **vibe-workspace/vibe-mcp**: discovery from slot manifests,
-   registration writes through the EXISTING agents.rs machinery with
-   the managed-block extension; `vibe mcp status` staleness reporting;
-   uninstall paths.
-3. **Tests**: schema offender tests; a hermetic fixture package with a
-   stub server binary exercising install/refresh/uninstall/status on
-   every agent-format writer; the REAL walk P7 on rust-demo; the
-   composition table's rows (one test each; reuse existing fixtures
-   where a feature pair is already proven).
-4. **Docs**: PROP-015 cross-pointer (the family it extends), README/
-   quick-start lines.
-5. Gates: full panel + WAL. Commit shape: `docs(spec): PROP-027 …`,
-   `feat(core): [[mcp_server]] manifest surface`, `feat(mcp): install
-   package-declared servers …`, `test(mcp): …`, `build(deps)` if slots
-   move.
+1. **PROP-027** (`spec/modules/vibe-mcp/PROP-027-mcp-packages.md`): the
+   kind's normative spec — D1/D1a laws, the `[[mcp_server]]` schema,
+   consent (D6/D14), lifecycle (install/refresh/uninstall/status), the
+   managed-block convention, agent matrix (five hosts × two scopes),
+   and the COMPOSITION TABLE with every package feature (PROP-020
+   hooks, PROP-021 submodules, PROP-022 materialization modes, PROP-023
+   bridges, PROP-024 code-bearing, PROP-025 binaries, PROP-015 §2.8
+   skill-include) — owner answer 3 made normative, each row with its
+   test.
+2. **vibe-mcp/vibe-workspace**: discovery from slot manifests,
+   registration through the EXISTING agents.rs machinery with the
+   managed-block extension, `vibe mcp status` staleness, uninstall
+   paths.
+3. **Tests**: the fixture package (Wave 1) exercised through every
+   agent-format writer; the REAL walk P7 on rust-demo; the composition
+   table's rows.
+4. Gates: full panel + WAL. Commits: `docs(spec): PROP-027 …`,
+   `feat(mcp): install package-declared servers`, `test(mcp): …`.
 
-## 10. Wave 5 — the demontage, the re-teach, the dogfood
+## 11. Wave 6 — the demontage, the re-teach, the dogfood
 
-1. **vibe-mcp**: delete `tcg.rs`, the `vibe-tcg` dep, the skill_template
-   tcg section (replaced by a pointer to the stack servers' briefs);
-   suite shrinks; product tools untouched (P6).
+1. **vibe-mcp**: delete `tcg.rs`, the `vibe-tcg` dep, the
+   skill_template tcg section (replaced by a pointer to the mcp
+   packages' briefs); product tools untouched (P6).
 2. **Delete `crates/vibe-tcg`** (root members/deps, conform.toml
-   de-gate, specmap de-list — index shrinks by its items; the WAL
-   records the count move).
-3. **Live chains re-home**: `tcg_tools.rs --ignored` tests move to the
-   stacks' own integration suites (they already exercise stack code);
-   vibe-mcp keeps a product-tools live smoke only.
-4. **Specs**: PROP-026 amendment (D12); TCG-PROTOCOL-RUST/TS scope
-   notes; GUIDE-AI-NATIVE-RUST §12/§13 + TS §14/§15 re-teach (server
-   names, parity map, `vibe mcp install` flow); boot snippets' toolchain
-   blocks; the two sweep/terraform skill pairs' generation-time
-   sections; ROADMAP milestone (M1.26 candidate: «MCP sovereignty»).
-5. **Dogfood (D15/P6)**: vibevm's `.mcp.json` mounts both stack servers
-   via `vibe mcp install`; rust-demo/ts-demo get managed entries too
-   (their READMEs teach it); Stage-B plan gets the D11 pointer.
-6. Full close panel: self-check, both demo floors, corpus, re-homed
-   live chains, the fresh-consumer walk, mirrors.
+   de-gate, specmap de-list — the WAL records the count move).
+3. **Live chains re-home** into the mcp packages' own suites; vibe-mcp
+   keeps a product-tools smoke.
+4. **Specs**: PROP-026 amendment (D12); TCG-PROTOCOL scope notes;
+   GUIDE-AI-NATIVE-RUST §12/§13 + TS §14/§15 re-teach; boot snippets'
+   toolchain blocks; the sweep/terraform skill pairs; ROADMAP milestone
+   (M1.26 «MCP sovereignty»); Stage-B pointer (D11).
+5. **Dogfood (D15)**: vibevm's `.mcp.json` + the demos' — managed
+   entries via `vibe mcp install`; READMEs teach it.
+6. Full close panel: self-check (grown), both demo floors, corpus,
+   re-homed live chains, the fresh-consumer walk, mirrors, WAL,
+   CONTINUE refresh if the owner winds down.
 
 Named deferrals (visible, not silent):
-- **D-a** vibe-mcp rebasing onto mcp-core (one MCP implementation
-  ecosystem-wide) — after the topology settles.
-- **D-b** stable artifact shims (PROP-025 v2) — would make `.mcp.json`
-  entries version-stable; today re-install rewrites the managed block.
-- **D-c** registry publish of 0.6.0/0.6.0/0.5.0 — owner call, as ever.
+- **D-a** vibe-mcp rebasing onto mcp-core — after the topology settles.
+- **D-b** stable artifact shims (PROP-025 v2) — would make managed
+  entries version-stable; today re-install rewrites them.
+- **D-c** registry publish of the grown package set — owner call.
 - **D-d** the Stage-B MCP-mounted arm (D11) — separate commission.
-- **D-e** a TS-package step in self-check + colon-free fact-store slot
-  names — the mini-fix campaign's two hygiene candidates, still open.
+- **D-e** the ts STACK self-check gate + colon-free fact-store slot
+  names — the mini-fix campaign's hygiene candidates, still open.
 - **D-f** MCP progress notifications for long tools — v1 is
   run-to-completion (D8).
+- **D-g** the `app` kind — anticipated by the §4 amendment text, not
+  designed here.
 
-## 11. Execution ledger (filled by the executing session)
+## 12. Review points — RESOLVED (owner amendment + recorded executor defaults, 2026-07-07)
 
-_Empty at authoring. Spike findings (S1–S3), per-wave commit maps, and
-prediction outcomes land here._
+1. **Naming** — packages `mcp:org.vibevm/discipline-rust` /
+   `-typescript`; binaries `discipline-mcp-rust` / `-typescript`;
+   agent-visible names `discipline-rust` / `discipline-typescript`
+   (executor default, D13).
+2. **Topology** — one server per language, both entities mounted
+   (executor default, D2).
+3. **Kind** — **OWNER RESOLUTION, reverses the draft**: `mcp` is a
+   package KIND; servers ship as separate packages; VIBEVM-SPEC §4
+   amendment sanctioned; `app` anticipated. (D1/D1a; the exact-pin +
+   vendor-projection consequences were surfaced to the owner in the
+   amendment discussion.)
+4. **`language` param** kept grammar-compatible; `tcg_bench` mounted
+   (executor default, D9).
+5. **vibe-tcg** deleted, no deprecation delegate (executor default,
+   D5).
+6. **Agent matrix v1** — all five hosts × both scopes (executor
+   default, D6; the machinery exists).
+7. **Wave order** — kind → transport → rust → ts → delivery →
+   demontage (restructured by resolution 3; servers still precede the
+   install feature).
+8. **Latency** — no new targets for MCP-served tools; corpus
+   regressions report, never cancel (executor default; §17.7
+   precedent).
 
-## 12. Review points — the owner's court (unresolved at authoring)
+## 13. Execution ledger (filled by the executing session)
 
-1. **D2/D13 naming**: binaries `discipline-mcp-rust`/`-typescript`,
-   agent-visible server names `discipline-rust`/`discipline-typescript`
-   — approve or rename.
-2. **D2 topology**: ONE server per language mounting both entities
-   (recommended), vs two servers (gates / oracle) per language.
-3. **D1**: `[[mcp_server]]` as a surface referencing `[[binary]]`, NOT
-   a fifth package kind — confirm the four-kinds reading.
-4. **D9**: `language` param kept grammar-compatible (validated, not
-   multiplexing) — confirm; and `tcg_bench` mounted as a tool despite
-   its weight — confirm or CLI-only.
-5. **D5**: no new CLI utility (the two entity-CLIs are the parity
-   surface); `vibe-tcg` deleted with NO deprecation delegate
-   (pre-publish, no external consumers) — confirm.
-6. **D6 agent matrix v1**: all five Agent hosts × both scopes
-   (recommended — the machinery exists), or Claude Code first.
-7. **Wave order**: servers before the install feature (Waves 2–3 before
-   4) — engineering order; the owner listed installation first, so
-   explicit sign-off requested.
-8. **Bench/latency**: no new latency targets are set for MCP-served
-   tools (the oracle budgets stay TCG-ORACLE's); a regression against
-   the corpus baseline reports, never cancels (§17.7 precedent) —
-   confirm.
+_Empty at commissioning. Spike findings (S1–S4), per-wave commit maps,
+and prediction outcomes land here._
