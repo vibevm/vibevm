@@ -1,7 +1,9 @@
 # MCP-CORE v0.1 — the neutral MCP server transport {#root}
 
 **Status:** SHIPPED with discipline-core 0.6.0 (MCP-SOVEREIGNTY-PLAN
-Wave 2). The transport every `mcp`-kind package's server builds on:
+Wave 2); the flow foundation is named core-ai-native since the
+package-family rename (PROP-028), and the crate ships as
+core-ai-native-mcp. The transport every `mcp`-kind package's server builds on:
 this package owns what no single language owns, and a JSON-RPC loop is
 exactly that. Consumers: the per-language discipline servers
 (`rust-ai-native-mcp`, `typescript-ai-native-mcp`) vendor this crate

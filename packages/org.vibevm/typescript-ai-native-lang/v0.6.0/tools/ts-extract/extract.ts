@@ -9,7 +9,7 @@
  * record carries (a) conform facts — imports, the §8 `unsafe`-set
  * occurrences with AST-accurate classification, exported items, whole-
  * file metrics — and (b) specmap markers — the §9 JSDoc spec tags. The
- * Rust bridge (`ts-extract-bridge`) parses the stream; `protocol`
+ * Rust bridge (`typescript-ai-native-extract-bridge`) parses the stream; `protocol`
  * versions the record shape, and a bump retires conform's cache slots
  * wholesale via the frontend version.
  *

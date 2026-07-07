@@ -72,6 +72,19 @@ The alias keeps one idiom repo-wide; the shipped identity (dir name,
   (PROP-011 §2.6) — the rm-and-reinstall refresh walked twice more
   (the rename, then the residual sweep). The root's `--registry
   packages` IS in-workspace and refreshed automatically both times.
+- **Verifier-residue close (post-review):** an independent adversarial
+  sweep caught bare-word forms the pattern greps missed — the vibevm
+  skill template still WIRING agents to `mcp:org.vibevm/discipline-
+  <language>` (fixed to the parametric `<language>-ai-native-mcp` form
+  + a new retired-identity guard test beside the tool-name pin), one
+  stale crate path in the Stage-B backlog, rust-demo's README family
+  version, a seven-file `discipline-core` prose cluster (current-home
+  statements re-pointed to core-ai-native; MCP-CORE-v0.1's status keeps
+  the shipping history and names the current home), and the ts-extract
+  header's bridge-crate name. One more editorial re-record (PROP-025
+  #cross-package); panel re-verified whole: self-check 22 exit 0
+  (synchronous), specmap 613/583/597 0/0/0, probe 18 tools, demo floor
+  green.
 
 ## This session (2026-07-07, seventh campaign) — the package-family rename
 

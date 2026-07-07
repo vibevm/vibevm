@@ -12,7 +12,7 @@ max_file_lines = 600
 # expand-as-you-conform flip happened at zero findings — there was
 # nothing to drain). The crates/ layout is deliberate: the tree
 # invariant cannot yet name a gated crate under a bare `.` root (a
-# recorded discipline-core defect; see the repo Cargo.toml note).
+# recorded core-ai-native defect; see the repo Cargo.toml note).
 gated_crates = ["rust-demo"]
 gated_pub_doctest = ["rust-demo"]
 audit_crates = []

@@ -1,4 +1,4 @@
-# org.vibevm/discipline-core — the language-neutral Discipline package,
+# org.vibevm/core-ai-native — the language-neutral Discipline package,
 # code-bearing since 0.4.0 (PROP-024; DEFERRALS-CLOSEOUT-PLAN v0.1 Phase 1).
 # It AUTHORS the neutral engine crates — the conform fact/rule engine, the
 # specmap traceability engine, and the specmark tag bootstrap pair — that

@@ -101,7 +101,7 @@ The discipline toolchain and the agentic type oracle no longer ride
 THIS server: each language ships its own standalone MCP server as an
 `mcp`-kind package — `mcp:org.vibevm/rust-ai-native-mcp` (18 tools) and
 `mcp:org.vibevm/typescript-ai-native-mcp` (17 tools): the whole
-`discipline-*` command surface (init, floor, the conform and specmap
+discipline command surface (init, floor, the conform and specmap
 gates, trace, test-gate, tripwire, health, fast-loop, codemod) plus
 `tcg_validate` / `tcg_scope` / `tcg_complete` / `tcg_type` /
 `tcg_bench` over a persistent language-service session. Consult
@@ -110,11 +110,11 @@ hypothetical overlay costs less than one red gate run, and the answer
 carries the gate's own findings flagged against the frozen ratchet.
 
 If those tools are not mounted in this session, the wiring is one
-command away: `vibe install mcp:org.vibevm/discipline-<language>`
-(the exact pin pulls the matching stack), `vibe bin build
-discipline-mcp-<language>`, then `vibe mcp install` — the server
-registers as a vibevm-managed entry launching the slot artifact
-directly; no vibe in the runtime path.
+command away: `vibe install mcp:org.vibevm/<language>-ai-native-mcp`
+(`<language>` = `rust` | `typescript`; the exact pin pulls the
+matching stack), `vibe bin build <language>-ai-native-mcp`, then
+`vibe mcp install` — the server registers as a vibevm-managed entry
+launching the slot artifact directly; no vibe in the runtime path.
 
 ### Project conventions are out of scope here
 

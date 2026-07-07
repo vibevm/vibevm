@@ -14482,7 +14482,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:ed5989d3a7464e590c16e51aac6551cc3d27f3983bb1ada589c76783665f2610",
+      "content_hash": "sha256:aba2e4000e48c2ae0a9a129f602ad8c189226c2af15e25c4d5fb557b9a6d80c4",
       "doc_path": "modules/vibe-workspace/PROP-025",
       "file": "spec/modules/vibe-workspace/PROP-025-binary-delivery.md",
       "heading": "PROP-025 — vibe-native binary delivery",
@@ -14546,7 +14546,7 @@
     },
     {
       "anchor": "cross-package",
-      "content_hash": "sha256:443cf8d693f6c02b9e7e0a0b1b35bd4833885d6c8d9f217d22fcd58e6458df58",
+      "content_hash": "sha256:e248a2949c82ea9dc1dd2e2b9fd5311a6faad27e6e7dde5fd31ea439f056998e",
       "doc_path": "modules/vibe-workspace/PROP-025",
       "file": "spec/modules/vibe-workspace/PROP-025-binary-delivery.md",
       "heading": "6. Cross-package path dependencies (v2, specified only)",

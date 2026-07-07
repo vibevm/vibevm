@@ -102,7 +102,7 @@ same network shape — there is no offline shortcut to a first build.
 
 `req r1`
 
-A stack crate cannot Cargo-`path`-dep on a discipline-core crate across
+A stack crate cannot Cargo-`path`-dep on a core-ai-native crate across
 slots: the authored layout (`packages/org.vibevm/<name>/v<ver>/`) and the
 materialised layout (`vibedeps/<kind>-<name>/<ver>/`) disagree on both
 directory naming and version prefix, and each slot must stay a

@@ -150,7 +150,7 @@ agent ──MCP (tcg_validate/tcg_scope/tcg_complete/tcg_type,
   component (we spawn, never link, never vendor).
 - LSP: an open specification; the client is in-house code.
 - The conform engines: in-house (this package + vendored
-  discipline-core copies).
+  core-ai-native copies).
 - The PLDI'25 reproduction package: **not a dependency, not opened**
   for the agentic line (the standing clean-room rule,
   `spec/boot/90-user.md`); this campaign's concept sources are our own

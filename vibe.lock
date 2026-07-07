@@ -1,6 +1,6 @@
 [meta]
 generated_by = "vibe 0.1.0-dev"
-generated_at = "2026-07-07T17:17:51Z"
+generated_at = "2026-07-07T17:47:52Z"
 schema_version = 5
 root_dependencies = [
     "stack:org.vibevm/rust-ai-native@^0.7.0",
@@ -41,7 +41,7 @@ name = "core-ai-native"
 group = "org.vibevm"
 version = "0.7.0"
 source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/core-ai-native/v0.7.0"
-content_hash = "sha256:c7fddd70dcdac51de778a666bab82b8370aa715de7a9b2ee3d2dc9f6277b06f9"
+content_hash = "sha256:da6fed3d56087cff53eebb8e1843c85b75cc500d08ac57785ab6a154367a84e0"
 files_written = []
 source_kind = "registry"
 
@@ -51,7 +51,7 @@ name = "rust-ai-native-lang"
 group = "org.vibevm"
 version = "0.7.0"
 source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/rust-ai-native-lang/v0.7.0"
-content_hash = "sha256:d5abd254625842766b15bcd2fd7d1c06a1cfb1fedac133102d7744993be7243d"
+content_hash = "sha256:e43b849732db548b25554309d67acd932d3006b4b053f472d8e16ec32dd8abaa"
 files_written = []
 dependencies = ["flow:org.vibevm/core-ai-native@=0.7.0"]
 source_kind = "registry"
@@ -73,7 +73,7 @@ name = "typescript-ai-native-lang"
 group = "org.vibevm"
 version = "0.6.0"
 source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/typescript-ai-native-lang/v0.6.0"
-content_hash = "sha256:c6622db29ac65540983bdec64e7553265ba6c5266cda07d6fcbabbc361078228"
+content_hash = "sha256:89710249edefcfe0bb89acb1b32a459ae0bd88e6100c49dcb0e5f35582fd4f35"
 files_written = []
 dependencies = ["flow:org.vibevm/core-ai-native@=0.7.0"]
 source_kind = "registry"
@@ -84,7 +84,7 @@ name = "typescript-ai-native-mcp"
 group = "org.vibevm"
 version = "0.6.0"
 source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/typescript-ai-native-mcp/v0.6.0"
-content_hash = "sha256:56e710bfda59fff606c0e2ed4d0f2cf8bda919dca84aa42df87885e5d2f6185e"
+content_hash = "sha256:f8e00982a4559e34162e92ac0575a29ef33e4f3eb5957c075a861de9192437e5"
 files_written = []
 dependencies = ["stack:org.vibevm/typescript-ai-native-lang@=0.6.0"]
 source_kind = "registry"

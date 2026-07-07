@@ -221,4 +221,32 @@ mod tests {
             );
         }
     }
+
+    /// The template has no substitution pass (it ships verbatim via
+    /// `include_str!`), so a retired identity in its prose becomes a recipe
+    /// agents follow into a resolution error. The wave-2 family rename
+    /// (PROP-028 §2.4) retired every `discipline-`-prefixed package, binary,
+    /// and skill name; pin their absence so the template cannot teach one
+    /// again. The bare word "discipline" (the concept) stays legal.
+    #[test]
+    fn skill_template_teaches_no_retired_identities() {
+        for retired in [
+            "discipline-", // covers discipline-rust/-typescript/-mcp-*/-cli-*/-sweep*/-core
+            "conform-rust",
+            "specmap-rust",
+            "tcg-rust",
+            "conform-typescript",
+            "specmap-typescript",
+            "tcg-typescript",
+            "terraform-rust",
+            "terraform-typescript",
+        ] {
+            assert!(
+                !SKILL_TEMPLATE.contains(retired),
+                "skill_template.md still teaches the retired identity \
+                 `{retired}` — the family rename (PROP-028 §2.4) replaced it; \
+                 update the recipe to the <family>-prefixed form"
+            );
+        }
+    }
 }

@@ -37,7 +37,7 @@ homepage = "https://gitverse.ru/anarchic/vibevm"
 # neutral engine crates under crates/vendor/ are byte-identical vendored
 # copies of flow:org.vibevm/core-ai-native's authored source (`cargo xtask
 # sync-engines`; the --check gate runs in self-check). Never edit them here —
-# the fix surface is the authored copy in discipline-core.
+# the fix surface is the authored copy in core-ai-native.
 conform-core = { package = "core-ai-native-conform", path = "crates/vendor/core-ai-native-conform" }
 rust-ai-native-conform-frontend = { path = "crates/rust-ai-native-conform-frontend" }
 rust-ai-native-conform = { path = "crates/rust-ai-native-conform" }

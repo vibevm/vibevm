@@ -100,7 +100,7 @@ experiment, not a promotion.
   command) — exact key shape is spike matter for the same reason.
 - **The one-shot surface the hook needs exists**: `typescript-ai-native-tcg
   validate <file> [--content-from -|<path>] [--json]`
-  (tcg-cli-typescript/src/main.rs:39 `content_from`; also on
+  (typescript-ai-native-tcg/src/main.rs:39 `content_from`; also on
   `complete`), exits 1 on an error diagnostic OR a non-baselined
   finding. Artifact: slot-resident
   `vibedeps/stack-typescript-ai-native-lang/0.6.0/target/release/

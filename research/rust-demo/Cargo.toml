@@ -8,7 +8,7 @@
 # deliberate. The conform engine's tree invariant cannot yet name a
 # gated crate under a bare `roots = ["."]` single-crate layout (the
 # validator derives no name from a `.` literal while the scanner does —
-# a recorded discipline-core defect, owner-court); the one-member
+# a recorded core-ai-native defect, owner-court); the one-member
 # workspace is the supported consumer shape and matches the package's
 # own fresh-project fixture.
 #
