@@ -1,11 +1,12 @@
 [meta]
 generated_by = "vibe 0.1.0-dev"
-generated_at = "2026-07-07T11:14:45Z"
+generated_at = "2026-07-07T11:32:15Z"
 schema_version = 5
 root_dependencies = [
     "flow:org.vibevm/discipline-core@^0.6.0",
     "stack:org.vibevm/rust-ai-native@^0.5.0",
     "stack:org.vibevm/typescript-ai-native@^0.4.0",
+    "mcp:org.vibevm/discipline-rust@^0.5.0",
 ]
 
 [[package]]
@@ -16,6 +17,17 @@ version = "0.6.0"
 source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/discipline-core/v0.6.0"
 content_hash = "sha256:10d5471838db959e7f968480166c4b9549fa7f64abc7df8255e72fa44c5cabd5"
 files_written = []
+source_kind = "registry"
+
+[[package]]
+kind = "mcp"
+name = "discipline-rust"
+group = "org.vibevm"
+version = "0.5.0"
+source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/discipline-rust/v0.5.0"
+content_hash = "sha256:992bd760d4feeae63f2876a2276975ba3b5e856ed82efba717245df80a3febb2"
+files_written = []
+dependencies = ["stack:org.vibevm/rust-ai-native@=0.5.0"]
 source_kind = "registry"
 
 [[package]]
