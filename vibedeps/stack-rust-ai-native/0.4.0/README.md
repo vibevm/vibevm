@@ -29,13 +29,19 @@ comes from its dependency `flow:org.vibevm/discipline-core`.
 
 ## Running the tools
 
-Two supported forms, from your project root (where `vibedeps/` is):
+Three supported forms, from your project root (where `vibedeps/` is):
 
 ```sh
-# (a) install once onto PATH — then just `discipline-rust …`
+# (a) vibe-native (PROP-025) — build once in the slot, dispatch through
+#     the project's lockfile (two projects on different versions get
+#     different binaries):
+vibe bin build            # or: vibe bin exec discipline-rust -- floor
+vibe bin exec discipline-rust -- floor
+
+# (b) install once onto PATH — then just `discipline-rust …`
 cargo install --path vibedeps/<stack-slot>/crates/discipline-cli
 
-# (b) zero-install, run in place
+# (c) zero-install, run in place
 cargo run --manifest-path vibedeps/<stack-slot>/Cargo.toml \
     -p discipline-cli --bin discipline-rust -- floor
 ```
