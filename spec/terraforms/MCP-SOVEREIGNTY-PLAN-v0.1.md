@@ -690,6 +690,29 @@ Named deferrals (visible, not silent):
 
 ## 13. Execution ledger (filled by the executing session)
 
+### Wave 1 — EXECUTED (2026-07-07); commit map
+
+- `4943ad4` docs(spec): VIBEVM-SPEC §4.1 (owner-sanctioned five-kind
+  register, `app` anticipated) + PROP-027 (kind law, manifest law,
+  exact-pin law normative; registration/consent/composition specified
+  for Waves 3–5).
+- `01280bd` feat(core): `Kind::Mcp` in both enums (ONE non-exhaustive
+  match total — the S4 prediction held), `McpServerDecl` +
+  `MCP_ARG_VARS` + `VersionSpec::is_exact_pin`, `validate_mcp_kind`
+  enforcing the five laws, six law tests, the pin-server/pin-stack
+  fixture pair, and the P8 e2e — the exact pin selected 0.1.0 with
+  0.2.0 deliberately on offer, slot `vibedeps/mcp-pin-server/0.1.0`,
+  lockfile kind recorded, `vibe check` green. First run.
+- `f2e9e51` docs: the five-kind wording sweep (owner-authorised
+  «правь всё что реально нужно по смыслу» — includes the user-owned
+  00-core.md terminology line and the PROP-018 §2.4 supersession note:
+  its MCP-as-section half is superseded by PROP-027, the skill law
+  untouched).
+- Panel at wave close: workspace tests green, full self-check 13 steps
+  exit 0, specmap 604/586/599 0 suspects/0 warnings, vibe check clean.
+- P8 CONFIRMED at wave grain. The Wave-1 D1 NOTE (00-core.md) resolved
+  by the same owner follow-up.
+
 ### Wave 0 — spike findings (2026-07-07, no tree changes)
 
 - **S1 — protocol shape.** The proven contract is vibe-mcp's own
