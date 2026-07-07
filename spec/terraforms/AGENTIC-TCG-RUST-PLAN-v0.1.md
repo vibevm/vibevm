@@ -1,6 +1,37 @@
 # AGENTIC-TCG-RUST-PLAN v0.1 — the agentic type oracle for Rust
 
-_Status: **ACCEPTED with owner amendments, 2026-07-07 (same day as
+_Status: **EXECUTED 2026-07-07 — Phases 0–7 complete on the owner's
+«выполни план до конца», floor green at close** (self-check 13 steps
+exit 0; conform 0 with 11 crates gated; specmap 592/578/590,
+0 suspects/warnings; rust-demo floor all green; ts-demo floor 7/7
+untouched; BOTH live chains green in 2.7 s; differential corpus
+agreement **9/9** at cold 2 535 ms / warm validate p50 < 1 ms / p95
+65 ms — every §4 prediction HELD, no target moved, nothing to escalate
+under §17.7). Shipped: the D13 rename sweep (three CLI crates →
+`-rust`), `research/rust-demo` (born conformant, EMPTY frozen baseline
+— §4.6 held), `tcg-oracle-bridge-rust` (LSP client over the consumer's
+rust-analyzer; live findings burned in: r-a does not echo
+serverStatusNotification so the bridge declares-and-trusts bounded by
+deadline, the progress-drain quiescence heuristic was FALSIFIED twice
+live and is deliberately absent, hover emits module path and signature
+as separate fences), bin `tcg-rust` (enriching serve relay + one-shot
+forms + the full bench harness; enrichment in-process through the
+exported `conform_cli_rust::build_rules` — finding-parity pinned
+fingerprint-for-fingerprint), the product's rust value (LANGUAGES +
+per-language recipe tables — no refusal names another language's fix
+surface; same four tools, PROP-026 §2 cashed), and the corpus with the
+documented-gap exhibit (privacy: r-a silent, cargo E0423/E0603 by
+reference shape). Per-phase commit map: `0c7ef8f` (draft) → `bd71d04`/
+`08e647f` (review fold + far backlog) → `94373be` (Phase-0 findings) →
+`df1b3ac`/`5dfdf55`/`c0ccb5e`/`8619edb`/`7ca61e4`/`53491ea` (Phase 1)
+→ `a3c76cc`/`7571844` (Phase 2) → `2a9dddc` (Phase 3) → `df1b3bb`/
+`b886715`/`b7537b1`/`ec19c93` (Phase 4) → `d338984`/`b35e436`/
+`035b692` (Phase 5) → `ba3bd14` (Phase 6) → the close pair (Phase 7);
+git log is the authoritative record. Previously: **ACCEPTED with owner
+amendments, 2026-07-07 (same day as authoring).**_
+
+_Original status paragraph (pre-execution), kept for the review
+trail:_ _**ACCEPTED with owner amendments, 2026-07-07 (same day as
 authoring; execution NOT yet commissioned — the plan waits for the
 owner's word).** Owner review resolved all seven §17 points: (1)
 substrate approved — with `ra_ap_*` library embedding recorded in
