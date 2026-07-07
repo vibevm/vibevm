@@ -16,6 +16,21 @@ mechanism specs `TCG-ORACLE-v0.1` / `TCG-PROTOCOL-v0.1` in
 `stack:org.vibevm/typescript-ai-native` plus `TCG-ORACLE-RUST-v0.1` /
 `TCG-PROTOCOL-RUST-v0.1` in `stack:org.vibevm/rust-ai-native` (the
 oracles ship THERE; vibevm ships only this thin product seam).
+**SUPERSEDED IN TOPOLOGY, 2026-07-07 (MCP-SOVEREIGNTY-PLAN v0.1, the
+owner's `mcp`-kind resolution):** the tool GRAMMAR this PROP defines —
+the four ops, their params, the answer shapes, the no-prompt rule —
+is unchanged and remains normative; the TOPOLOGY half (one multiplexed
+product server, `language` as the dispatch parameter, the `vibe-tcg`
+registry crate) is retired. The tools now ship in the per-language
+`mcp`-kind packages ([PROP-027](PROP-027-mcp-packages.md):
+`mcp:org.vibevm/discipline-rust`, `…/discipline-typescript`), each
+serving its own language over the vendored `mcp-core` transport; the
+§2 enum-value bet re-reads as «a new language is a new mcp package
+shipping the SAME tool grammar»; `language` survives as a validated
+compatibility parameter (a mismatch refuses with the recipe naming the
+right server). `vibe-tcg` and the vibe-mcp `tcg_*` adapters are
+DELETED; §3–§5 below describe the retired topology and stay as the
+design record.
 
 ## 1. Problem {#problem}
 

@@ -34,6 +34,7 @@ The shipped toolchain (this stack materialises it; no dev tree needed):
 (the sweep's fact collector), `test-gate` / `tripwire` / `trace` /
 `fast-loop` / `codemod` / `ledger`; plus the narrow `conform-rust` and
 `specmap-rust` engines, and the agentic type oracle `tcg-rust`
+(also served over MCP by `mcp:org.vibevm/discipline-rust` — PROP-027)
 (persistent enriching `serve` relay + one-shot
 `validate`/`scope`/`complete`/`type`/`bench`: check an edit against
 in-memory overlays BEFORE writing it, answered by the CONSUMER's own

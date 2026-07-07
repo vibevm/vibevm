@@ -658,6 +658,23 @@ PROP-009 Phase 4, so it was a prerequisite for the Phase-7 redirect
 rewrite and landed **inside M1.18 Phase 7**. The M1.22 number is
 nominal — the work is part of M1.18.
 
+### M1.26 — MCP sovereignty (the `mcp` kind + standalone discipline servers) — SHIPPED (2026-07-07)
+
+The owner's kind resolution executed whole (MCP-SOVEREIGNTY-PLAN v0.1,
+Waves 0–6): `mcp` joins the installable register (VIBEVM-SPEC §4.1
+amended under owner sanction; `app` anticipated); PROP-027 gives the
+kind its laws ([[mcp_server]] only-and-mandatory in the kind, the
+exact-pin rule, vibe-free serving, registration/consent through the
+PROP-025 trust model); discipline-core 0.6.0 ships the neutral
+`mcp-core` transport (line-delimited 2024-11-05 loop, ToolSet seam,
+the child-capturing stderr guard); the discipline serves standalone as
+`mcp:org.vibevm/discipline-rust` (18 tools) and
+`mcp:org.vibevm/discipline-typescript` (17 tools), both live-chained
+with vibe scrubbed from PATH; `vibe mcp install/uninstall/status`
+register package servers as managed entries launching slot artifacts
+directly; vibe-mcp returns to its four product tools and `vibe-tcg` is
+deleted — the vibevm-on-vibevm operational cycle is broken.
+
 ### M1.25 — the rust agentic twin (`vibe-agentic-tcg-rust`) — IN EXECUTION (2026-07-07)
 
 **Thesis.** PROP-026's central bet — the tcg family scales by language
