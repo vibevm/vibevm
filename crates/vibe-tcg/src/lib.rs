@@ -42,15 +42,18 @@ pub trait TcgHost {
 }
 
 /// The family's failure surface. Every variant is a recipe, not a dead
-/// end (PROP-026 §4), and every message cites its violated REQ.
+/// end (PROP-026 §4), and every message cites its violated REQ — and
+/// names ITS language's fix surface, never another's (the per-language
+/// table below feeds the fields).
 ///
 /// ```
 /// use vibe_tcg::TcgError;
 /// let e = TcgError::LanguageUnsupported {
-///     given: "rust".into(),
-///     supported: vec!["typescript"],
+///     given: "go".into(),
+///     supported: vec!["typescript", "rust"],
 /// };
 /// assert!(e.to_string().contains("PROP-026#tools"));
+/// assert!(e.to_string().contains("rust"));
 /// ```
 #[derive(Debug, thiserror::Error)]
 #[spec(implements = "spec://vibevm/modules/vibe-mcp/PROP-026#tools")]
@@ -58,8 +61,8 @@ pub enum TcgError {
     #[error(
         "violates spec://vibevm/modules/vibe-mcp/PROP-026#tools: language \
          `{given}` is not supported by the tcg tools yet (supported: \
-         {supported:?}); fix surface: the Rust twin arrives as a new \
-         language value, not new tools"
+         {supported:?}); fix surface: the next language arrives as a new \
+         value, not new tools"
     )]
     LanguageUnsupported {
         given: String,
@@ -69,10 +72,14 @@ pub enum TcgError {
     #[error(
         "violates spec://vibevm/modules/vibe-mcp/PROP-026#registry: no \
          installed package declares `{binary}` for language `{language}`; \
-         fix surface: add `\"stack:org.vibevm/typescript-ai-native\" = \
-         \"^0.4\"` to [requires.packages] and run `vibe install`"
+         fix surface: add `{requires}` to [requires.packages] and run \
+         `vibe install`"
     )]
-    StackNotInstalled { language: String, binary: String },
+    StackNotInstalled {
+        language: String,
+        binary: String,
+        requires: &'static str,
+    },
 
     #[error(
         "violates spec://vibevm/modules/vibe-mcp/PROP-026#consent: \
@@ -93,9 +100,13 @@ pub enum TcgError {
         "violates spec://vibevm/modules/vibe-mcp/PROP-026#registry: the \
          oracle relay for `{language}` is gone: {detail} — it was respawned \
          once already; fix surface: run the op one-shot \
-         (`vibe bin exec tcg-typescript -- validate ...`) to see stderr"
+         (`vibe bin exec {binary} -- validate ...`) to see stderr"
     )]
-    OracleGone { language: String, detail: String },
+    OracleGone {
+        language: String,
+        binary: &'static str,
+        detail: String,
+    },
 
     #[error(
         "violates spec://vibevm/modules/vibe-mcp/PROP-026#registry: tcg \
@@ -131,7 +142,7 @@ pub struct ToolSpec {
     pub input_schema: serde_json::Value,
 }
 
-const LANGUAGES: [&str; 1] = ["typescript"];
+const LANGUAGES: [&str; 2] = ["typescript", "rust"];
 
 fn language_schema() -> serde_json::Value {
     serde_json::json!({
@@ -249,15 +260,17 @@ fn oracle_op(tool_name: &str) -> Option<&'static str> {
 ///         &self.0
 ///     }
 /// }
-/// // an unsupported language is refused BEFORE any process work:
+/// // an unsupported language is refused BEFORE any process work
+/// // (rust joined the enum with its twin — PROP-026 §2 cashed):
 /// let err = run_tool(
 ///     "tcg_validate",
-///     &serde_json::json!({"language": "rust", "file": "src/a.rs"}),
+///     &serde_json::json!({"language": "go", "file": "src/a.go"}),
 ///     &Host(std::path::PathBuf::from(".")),
 ///     &OracleRegistry::default(),
 /// )
 /// .unwrap_err();
 /// assert!(err.to_string().contains("typescript"));
+/// assert!(err.to_string().contains("rust"));
 /// ```
 pub fn run_tool(
     name: &str,
@@ -323,13 +336,17 @@ mod tests {
         let registry = OracleRegistry::default();
         let err = run_tool(
             "tcg_validate",
-            &serde_json::json!({"language": "rust", "file": "src/a.rs"}),
+            &serde_json::json!({"language": "go", "file": "src/a.go"}),
             &host,
             &registry,
         )
         .expect_err("unsupported");
         assert!(matches!(err, TcgError::LanguageUnsupported { .. }));
         assert!(err.to_string().contains("typescript"));
+        assert!(
+            err.to_string().contains("rust"),
+            "both shipped languages named"
+        );
 
         let err = run_tool(
             "tcg_validate",

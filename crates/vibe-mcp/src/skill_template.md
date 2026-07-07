@@ -98,10 +98,13 @@ version, what features are active, what files a package contributed
 ### The type oracle (`tcg_*` — projects with a discipline stack installed)
 
 When the project's lockfile carries a language stack that ships the
-agentic type oracle (today: `stack:org.vibevm/typescript-ai-native`),
-four more tools answer type questions at millisecond latency from a
-persistent language-service process. Consult them BEFORE writing an
-edit — checking a hypothetical file costs less than one red gate run:
+agentic type oracle (`stack:org.vibevm/typescript-ai-native` for
+TypeScript, `stack:org.vibevm/rust-ai-native` for Rust — the latter
+answers through the consumer's own rust-analyzer and approximates:
+the floor stays the truth), four more tools answer type questions at
+millisecond latency from a persistent language-service process.
+Consult them BEFORE writing an edit — checking a hypothetical file
+costs less than one red gate run:
 
 - **`tcg_validate(language, file, content?)`** — type-check `file`
   through the project's own compiler; pass `content` to check an
@@ -118,10 +121,11 @@ edit — checking a hypothetical file costs less than one red gate run:
 - **`tcg_type(language, file, position, content?)`** — quick info
   (type display + docs) at a position.
 
-`language` is `"typescript"` today (more arrive as values, not new
-tools). The floor gates stay the truth — the oracle exists so your
-edit passes them on the first try. If the stack is not installed the
-tools answer with the exact `[requires]`/`vibe install` recipe.
+`language` is `"typescript"` or `"rust"` (more arrive as values, not
+new tools — the Rust twin proved it). The floor gates stay the truth —
+the oracle exists so your edit passes them on the first try. If the
+stack is not installed the tools answer with the exact
+`[requires]`/`vibe install` recipe naming THAT language's line.
 
 ### Project conventions are out of scope here
 

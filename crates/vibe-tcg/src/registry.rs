@@ -45,13 +45,27 @@ pub trait OracleLink: Send {
     fn request(&mut self, frame: serde_json::Value) -> Result<serde_json::Value, TcgError>;
 }
 
-/// Spawns a link for (artifact, project_root). Production spawns the
-/// slot binary; tests inject doubles.
-pub type Spawner = Box<dyn Fn(&Path, &Path) -> Result<Box<dyn OracleLink>, TcgError> + Send + Sync>;
+/// Spawns a link for (language, artifact, project_root). Production
+/// spawns the slot binary; tests inject doubles. The language rides
+/// along so every error the link raises names ITS fix surface.
+pub type Spawner =
+    Box<dyn Fn(&str, &Path, &Path) -> Result<Box<dyn OracleLink>, TcgError> + Send + Sync>;
 
+/// The per-language dispatch table (PROP-026 §4): the relay binary and
+/// the requires-line its not-installed recipe names. A NEW language is
+/// one row here plus one `LANGUAGES` entry — never new tools.
 fn language_binary(language: &str) -> &'static str {
     match language {
         "typescript" => "tcg-typescript",
+        "rust" => "tcg-rust",
+        _ => unreachable!("run_tool validates the language first"),
+    }
+}
+
+fn language_requires(language: &str) -> &'static str {
+    match language {
+        "typescript" => "\"stack:org.vibevm/typescript-ai-native\" = \"^0.4\"",
+        "rust" => "\"stack:org.vibevm/rust-ai-native\" = \"^0.5\"",
         _ => unreachable!("run_tool validates the language first"),
     }
 }
@@ -65,8 +79,8 @@ pub struct OracleRegistry {
 
 impl Default for OracleRegistry {
     fn default() -> Self {
-        Self::with_spawner(Box::new(|artifact, root| {
-            Ok(Box::new(ProcessLink::spawn(artifact, root)?) as Box<dyn OracleLink>)
+        Self::with_spawner(Box::new(|language, artifact, root| {
+            Ok(Box::new(ProcessLink::spawn(language, artifact, root)?) as Box<dyn OracleLink>)
         }))
     }
 }
@@ -97,6 +111,7 @@ impl OracleRegistry {
                 return Err(TcgError::StackNotInstalled {
                     language: language.to_string(),
                     binary: binary.to_string(),
+                    requires: language_requires(language),
                 });
             }
             Err(e) => {
@@ -135,7 +150,7 @@ impl OracleRegistry {
             std::collections::hash_map::Entry::Occupied(o) => o.into_mut(),
             std::collections::hash_map::Entry::Vacant(v) => {
                 let artifact = self.resolve_artifact(language, host.project_root())?;
-                v.insert((self.spawner)(&artifact, host.project_root())?)
+                v.insert((self.spawner)(language, &artifact, host.project_root())?)
             }
         };
         let outcome = link.request(frame.clone());
@@ -167,8 +182,13 @@ impl OracleRegistry {
                 // one transparent respawn, then surface
                 self.ensure_and_send(language, host, &frame)
                     .map_err(|e| match e {
-                        TcgError::OracleGone { language, detail } => TcgError::OracleGone {
+                        TcgError::OracleGone {
                             language,
+                            binary,
+                            detail,
+                        } => TcgError::OracleGone {
+                            language,
+                            binary,
                             detail: format!("{detail} (after one respawn)"),
                         },
                         other => other,
@@ -180,17 +200,27 @@ impl OracleRegistry {
 }
 
 /// The production link: the relay process with piped stdio and a
-/// reader thread (the same mechanics the package bridge proved).
+/// reader thread (the same mechanics the package bridges proved).
+/// Carries ITS language and binary so no error ever names another
+/// language's fix surface.
 struct ProcessLink {
     child: std::process::Child,
     stdin: std::process::ChildStdin,
     lines: Receiver<Result<String, std::io::Error>>,
     next_id: u64,
-    language_root: String,
+    language: String,
+    binary: &'static str,
+    root: String,
 }
 
 impl ProcessLink {
-    fn spawn(artifact: &Path, root: &Path) -> Result<Self, TcgError> {
+    fn spawn(language: &str, artifact: &Path, root: &Path) -> Result<Self, TcgError> {
+        let binary = language_binary(language);
+        let gone = |detail: String| TcgError::OracleGone {
+            language: language.to_string(),
+            binary,
+            detail,
+        };
         let mut child = std::process::Command::new(artifact)
             .arg("serve")
             .arg("--root")
@@ -199,18 +229,15 @@ impl ProcessLink {
             .stdout(std::process::Stdio::piped())
             .stderr(std::process::Stdio::null())
             .spawn()
-            .map_err(|e| TcgError::OracleGone {
-                language: "typescript".to_string(),
-                detail: format!("spawning {}: {e}", artifact.display()),
-            })?;
-        let stdin = child.stdin.take().ok_or_else(|| TcgError::OracleGone {
-            language: "typescript".to_string(),
-            detail: "relay stdin not piped".to_string(),
-        })?;
-        let stdout = child.stdout.take().ok_or_else(|| TcgError::OracleGone {
-            language: "typescript".to_string(),
-            detail: "relay stdout not piped".to_string(),
-        })?;
+            .map_err(|e| gone(format!("spawning {}: {e}", artifact.display())))?;
+        let stdin = child
+            .stdin
+            .take()
+            .ok_or_else(|| gone("relay stdin not piped".to_string()))?;
+        let stdout = child
+            .stdout
+            .take()
+            .ok_or_else(|| gone("relay stdout not piped".to_string()))?;
         let (tx, rx) = channel();
         std::thread::spawn(move || {
             let mut reader = BufReader::new(stdout);
@@ -235,13 +262,16 @@ impl ProcessLink {
             stdin,
             lines: rx,
             next_id: 1,
-            language_root: root.to_string_lossy().into_owned(),
+            language: language.to_string(),
+            binary,
+            root: root.to_string_lossy().into_owned(),
         })
     }
 
     fn gone(&self, detail: String) -> TcgError {
         TcgError::OracleGone {
-            language: format!("typescript ({})", self.language_root),
+            language: format!("{} ({})", self.language, self.root),
+            binary: self.binary,
             detail,
         }
     }
@@ -341,6 +371,7 @@ mod tests {
                 self.die_first = false;
                 return Err(TcgError::OracleGone {
                     language: "typescript".to_string(),
+                    binary: "tcg-typescript",
                     detail: "scripted death".to_string(),
                 });
             }
@@ -349,6 +380,71 @@ mod tests {
                 "echo_file": frame["params"]["file"],
             }))
         }
+    }
+
+    /// A fixture project whose lockfile declares the RUST stack with a
+    /// pre-"built" tcg-rust artifact — the twin of the TS fixture, so
+    /// dispatch is proven per language, not per accident.
+    fn fixture_rust_project_with_artifact() -> tempfile::TempDir {
+        let dir = tempfile::tempdir().expect("tempdir");
+        std::fs::write(
+            dir.path().join("vibe.toml"),
+            "[project]\nname=\"x\"\nversion=\"0.0.1\"\n",
+        )
+        .expect("vibe.toml");
+        std::fs::write(
+            dir.path().join("vibe.lock"),
+            r#"
+[meta]
+generated_by = "vibe-test"
+generated_at = "2026-07-07T00:00:00Z"
+schema_version = 5
+
+[[package]]
+kind = "stack"
+group = "org.vibevm"
+name = "rust-ai-native"
+version = "0.5.0"
+registry = "vibespecs"
+source_url = "file://packages"
+source_ref = "v0.5.0"
+content_hash = "sha256:deadbeef"
+files_written = []
+"#,
+        )
+        .expect("vibe.lock");
+        let slot = dir
+            .path()
+            .join("vibedeps")
+            .join("stack-rust-ai-native")
+            .join("0.5.0");
+        let release = slot.join("target").join("release");
+        std::fs::create_dir_all(&release).expect("release dir");
+        std::fs::write(
+            slot.join("vibe.toml"),
+            r#"[package]
+name = "rust-ai-native"
+group = "org.vibevm"
+kind = "stack"
+version = "0.5.0"
+authors = ["x"]
+license = "EULA"
+description = "fixture"
+keywords = []
+
+[[binary]]
+name = "tcg-rust"
+crate = "crates/tcg-cli-rust"
+"#,
+        )
+        .expect("slot manifest");
+        let artifact = release.join(if cfg!(windows) {
+            "tcg-rust.exe"
+        } else {
+            "tcg-rust"
+        });
+        std::fs::write(&artifact, b"fake").expect("artifact");
+        dir
     }
 
     fn fixture_project_with_artifact() -> tempfile::TempDir {
@@ -420,7 +516,7 @@ crate = "crates/tcg-cli-typescript"
         let host = H(dir.path().to_path_buf());
         let calls = Arc::new(AtomicUsize::new(0));
         let calls_in = calls.clone();
-        let registry = OracleRegistry::with_spawner(Box::new(move |_a, _r| {
+        let registry = OracleRegistry::with_spawner(Box::new(move |_l, _a, _r| {
             Ok(Box::new(DoubleLink {
                 die_first: false,
                 calls: calls_in.clone(),
@@ -454,7 +550,7 @@ crate = "crates/tcg-cli-typescript"
         let host = H(dir.path().to_path_buf());
         let spawns = Arc::new(AtomicUsize::new(0));
         let spawns_in = spawns.clone();
-        let registry = OracleRegistry::with_spawner(Box::new(move |_a, _r| {
+        let registry = OracleRegistry::with_spawner(Box::new(move |_l, _a, _r| {
             let n = spawns_in.fetch_add(1, Ordering::SeqCst);
             Ok(Box::new(DoubleLink {
                 die_first: n == 0, // the first link dies on its first request
@@ -474,6 +570,77 @@ crate = "crates/tcg-cli-typescript"
     }
 
     #[test]
+    fn rust_requests_dispatch_through_their_own_binary() {
+        let dir = fixture_rust_project_with_artifact();
+        let host = H(dir.path().to_path_buf());
+        let seen = Arc::new(Mutex::new(Vec::new()));
+        let seen_in = seen.clone();
+        let calls = Arc::new(AtomicUsize::new(0));
+        let calls_in = calls.clone();
+        let registry = OracleRegistry::with_spawner(Box::new(move |language, artifact, _r| {
+            seen_in
+                .lock()
+                .unwrap_or_else(std::sync::PoisonError::into_inner)
+                .push((language.to_string(), artifact.to_path_buf()));
+            Ok(Box::new(DoubleLink {
+                die_first: false,
+                calls: calls_in.clone(),
+            }) as Box<dyn OracleLink>)
+        }));
+        let out = registry
+            .request(
+                "rust",
+                &host,
+                "validate",
+                serde_json::json!({"file": "src/lib.rs"}),
+            )
+            .expect("relayed");
+        assert_eq!(out["echo_op"], "validate");
+        let seen = seen
+            .lock()
+            .unwrap_or_else(std::sync::PoisonError::into_inner);
+        assert_eq!(seen.len(), 1);
+        assert_eq!(seen[0].0, "rust");
+        assert!(
+            seen[0].1.to_string_lossy().contains("tcg-rust"),
+            "the rust row resolves ITS binary: {}",
+            seen[0].1.display()
+        );
+    }
+
+    #[test]
+    fn absent_stacks_name_their_own_language_recipe() {
+        let dir = tempfile::tempdir().expect("tempdir");
+        std::fs::write(
+            dir.path().join("vibe.toml"),
+            "[project]\nname=\"x\"\nversion=\"0.0.1\"\n",
+        )
+        .expect("vibe.toml");
+        let host = H(dir.path().to_path_buf());
+        let registry = OracleRegistry::with_spawner(Box::new(|_l, _a, _r| {
+            panic!("must not spawn without a resolved artifact")
+        }));
+        let ts_err = registry
+            .request("typescript", &host, "validate", serde_json::json!({}))
+            .expect_err("ts not installed");
+        assert!(
+            ts_err.to_string().contains("typescript-ai-native"),
+            "{ts_err}"
+        );
+        let rust_err = registry
+            .request("rust", &host, "validate", serde_json::json!({}))
+            .expect_err("rust not installed");
+        assert!(
+            rust_err.to_string().contains("rust-ai-native\" = \"^0.5"),
+            "the rust refusal names the RUST requires line: {rust_err}"
+        );
+        assert!(
+            !rust_err.to_string().contains("typescript-ai-native"),
+            "never another language's fix surface: {rust_err}"
+        );
+    }
+
+    #[test]
     fn stack_absent_names_the_requires_line() {
         let dir = tempfile::tempdir().expect("tempdir");
         std::fs::write(
@@ -482,7 +649,7 @@ crate = "crates/tcg-cli-typescript"
         )
         .expect("vibe.toml");
         let host = H(dir.path().to_path_buf());
-        let registry = OracleRegistry::with_spawner(Box::new(|_a, _r| {
+        let registry = OracleRegistry::with_spawner(Box::new(|_l, _a, _r| {
             panic!("must not spawn without a resolved artifact")
         }));
         let err = registry
@@ -527,7 +694,7 @@ crate = "crates/tcg-cli-typescript"
         .expect("rewrite lock");
 
         let host = H(dir.path().to_path_buf());
-        let registry = OracleRegistry::with_spawner(Box::new(|_a, _r| {
+        let registry = OracleRegistry::with_spawner(Box::new(|_l, _a, _r| {
             panic!("must not spawn an unbuilt third-party binary")
         }));
         let err = registry
