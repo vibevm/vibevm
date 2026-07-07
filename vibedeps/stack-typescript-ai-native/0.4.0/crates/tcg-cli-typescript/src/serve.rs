@@ -131,14 +131,13 @@ pub fn run_serve(root: &Path) -> Result<i32> {
             if params.get("root").is_none() {
                 params["root"] = serde_json::Value::String(root.to_string_lossy().into_owned());
             }
-            if params.get("cells_dir").is_none() {
-                if let Some(cd) = policy.config.typescript.cells_dir.as_deref() {
-                    params["cells_dir"] = serde_json::Value::String(cd.to_string());
-                }
+            if params.get("cells_dir").is_none()
+                && let Some(cd) = policy.config.typescript.cells_dir.as_deref()
+            {
+                params["cells_dir"] = serde_json::Value::String(cd.to_string());
             }
             if params.get("seam").is_none() {
-                params["seam"] =
-                    serde_json::Value::String(policy.config.typescript.seam.clone());
+                params["seam"] = serde_json::Value::String(policy.config.typescript.seam.clone());
             }
         }
 

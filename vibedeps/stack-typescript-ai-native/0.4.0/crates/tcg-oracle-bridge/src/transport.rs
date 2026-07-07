@@ -152,12 +152,18 @@ impl SystemOracle {
             .stderr(Stdio::null())
             .spawn()
             .map_err(|e| TcgBridgeError::NodeMissing { source: e })?;
-        let stdin = child.stdin.take().ok_or_else(|| TcgBridgeError::OracleCrashed {
-            detail: "child stdin not piped".to_string(),
-        })?;
-        let stdout = child.stdout.take().ok_or_else(|| TcgBridgeError::OracleCrashed {
-            detail: "child stdout not piped".to_string(),
-        })?;
+        let stdin = child
+            .stdin
+            .take()
+            .ok_or_else(|| TcgBridgeError::OracleCrashed {
+                detail: "child stdin not piped".to_string(),
+            })?;
+        let stdout = child
+            .stdout
+            .take()
+            .ok_or_else(|| TcgBridgeError::OracleCrashed {
+                detail: "child stdout not piped".to_string(),
+            })?;
         let (tx, rx): (Sender<Result<String, std::io::Error>>, _) = channel();
         std::thread::spawn(move || {
             let mut reader = BufReader::new(stdout);
@@ -235,9 +241,11 @@ impl OracleTransport for SystemOracle {
         writeln!(self.stdin, "{line}").map_err(|e| TcgBridgeError::OracleCrashed {
             detail: format!("writing request: {e}"),
         })?;
-        self.stdin.flush().map_err(|e| TcgBridgeError::OracleCrashed {
-            detail: format!("flushing request: {e}"),
-        })?;
+        self.stdin
+            .flush()
+            .map_err(|e| TcgBridgeError::OracleCrashed {
+                detail: format!("flushing request: {e}"),
+            })?;
 
         let deadline = std::time::Instant::now() + self.timeout;
         loop {
@@ -340,12 +348,17 @@ mod tests {
             .init(Path::new("/proj"), Some("src/cells"), "index")
             .expect("init");
         assert_eq!(init.ts_version, "6.0.3");
-        let v = t.validate("src/a.ts", Some("const x = 1;")).expect("validate");
+        let v = t
+            .validate("src/a.ts", Some("const x = 1;"))
+            .expect("validate");
         assert!(v.diagnostics.is_empty());
         let c = t
             .complete(
                 "src/a.ts",
-                Position { line: 3, character: 8 },
+                Position {
+                    line: 3,
+                    character: 8,
+                },
                 None,
                 Some("gre"),
                 10,

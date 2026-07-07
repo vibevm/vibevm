@@ -42,7 +42,8 @@ pub struct Capabilities {
 pub struct LspClient<T: Transport> {
     transport: T,
     next_id: u64,
-    /// Responses that arrived while pumping for something else.
+    /// Response frames (result or error) that arrived while pumping
+    /// for something else, whole, keyed by request id.
     parked: HashMap<u64, serde_json::Value>,
     quiescent: bool,
     /// uri → diagnostics from the push channel (kept for a future
@@ -71,29 +72,52 @@ impl<T: Transport> LspClient<T> {
         }))
     }
 
-    /// One request, answered or refused within `budget`.
+    /// One request, answered or refused within `budget`. A response
+    /// carrying LSP ServerCancelled (-32802) with `retriggerRequest:
+    /// true` is re-sent under the SAME deadline — the specified client
+    /// behaviour, not a failure: rust-analyzer cancels a request whose
+    /// salsa revision raced an overlay edit and asks the client to send
+    /// it again (live bench finding — the diagnostics pull for a fresh
+    /// overlay cancels nondeterministically). The deadline stays the
+    /// cap: a cancel storm ends as the op's timeout, never a spin.
     pub fn request(
         &mut self,
         method: &str,
         params: serde_json::Value,
         budget: Duration,
     ) -> Result<serde_json::Value, TcgBridgeError> {
-        self.next_id += 1;
-        let id = self.next_id;
-        self.transport.send(&serde_json::json!({
-            "jsonrpc": "2.0", "id": id, "method": method, "params": params,
-        }))?;
         let deadline = Instant::now() + budget;
         loop {
-            if let Some(result) = self.parked.remove(&id) {
-                return Ok(result);
-            }
-            let Some(msg) = self.pump_one(deadline, method)? else {
-                return Err(TcgBridgeError::OracleCrashed {
-                    detail: format!("stream ended while `{method}` was in flight"),
-                });
+            self.next_id += 1;
+            let id = self.next_id;
+            self.transport.send(&serde_json::json!({
+                "jsonrpc": "2.0", "id": id, "method": method, "params": params.clone(),
+            }))?;
+            let msg = loop {
+                if let Some(msg) = self.parked.remove(&id) {
+                    break msg;
+                }
+                let Some(msg) = self.pump_one(deadline, method)? else {
+                    return Err(TcgBridgeError::OracleCrashed {
+                        detail: format!("stream ended while `{method}` was in flight"),
+                    });
+                };
+                self.dispatch(msg)?;
             };
-            self.dispatch(msg)?;
+            let Some(err) = msg.get("error") else {
+                return Ok(msg.get("result").cloned().unwrap_or_default());
+            };
+            let cancelled = err.get("code").and_then(serde_json::Value::as_i64) == Some(-32802);
+            let retrigger = err
+                .pointer("/data/retriggerRequest")
+                .and_then(serde_json::Value::as_bool)
+                == Some(true);
+            if cancelled && retrigger {
+                continue;
+            }
+            return Err(TcgBridgeError::Protocol {
+                detail: format!("server error for request {id}: {err}"),
+            });
         }
     }
 
@@ -165,16 +189,12 @@ impl<T: Transport> LspClient<T> {
                     "jsonrpc": "2.0", "id": id, "result": result,
                 }))
             }
-            // Response: park it for the requester.
+            // Response: park the WHOLE frame — result or error — for the
+            // requester, which owns the retrigger/refuse decision (see
+            // `request`); an error frame must not kill the pump.
             (true, None) => {
                 if let Some(id) = msg["id"].as_u64() {
-                    if let Some(err) = msg.get("error") {
-                        return Err(TcgBridgeError::Protocol {
-                            detail: format!("server error for request {id}: {err}"),
-                        });
-                    }
-                    self.parked
-                        .insert(id, msg.get("result").cloned().unwrap_or_default());
+                    self.parked.insert(id, msg);
                 }
                 Ok(())
             }

@@ -94,16 +94,22 @@ fn workspace_crates(root: &Path) -> Vec<String> {
     names
 }
 
-/// The root crate's `[package] name` for a single-crate layout, falling
-/// back to the directory name the scanner will use.
+/// The single-crate label: the project directory's basename — the name
+/// the scanner attributes every scanned file to, and the name the tree
+/// invariant derives for a literal `.` root. The `[package] name` is
+/// deliberately NOT used: the engine never reads Cargo.toml for
+/// attribution, so a policy keyed by the manifest name stops matching
+/// the scan the moment the two differ — the gates then green by
+/// vacuity and the invariant refuses the entry as a phantom. A missing
+/// Cargo.toml still means "no root crate to classify".
 fn root_crate_name(root: &Path) -> Option<String> {
-    let manifest = std::fs::read_to_string(root.join("Cargo.toml")).ok()?;
-    let table = manifest.parse::<toml::Table>().ok()?;
-    table
-        .get("package")
-        .and_then(|p| p.get("name"))
-        .and_then(|n| n.as_str())
-        .map(str::to_string)
+    if !root.join("Cargo.toml").exists() {
+        return None;
+    }
+    let resolved = std::path::absolute(root).unwrap_or_else(|_| root.to_path_buf());
+    resolved
+        .file_name()
+        .map(|n| n.to_string_lossy().into_owned())
 }
 
 /// Write `path` unless it exists (or `force`); returns whether it wrote.
@@ -308,8 +314,20 @@ mod tests {
         let specmap = std::fs::read_to_string(root.join("specmap.toml")).unwrap();
         assert!(specmap.contains("namespace = \"demo\""));
         assert!(specmap.contains("scan_roots = [\".\"]"), "{specmap}");
+        // The single-crate exempt entry carries the DIRECTORY basename —
+        // the name the scanner attributes files to — never the manifest's
+        // `[package] name` (here deliberately different: "demo-app").
         let conform = std::fs::read_to_string(root.join("conform.toml")).unwrap();
-        assert!(conform.contains("crate = \"demo-app\""), "{conform}");
+        let label = root.file_name().unwrap().to_string_lossy().into_owned();
+        assert!(
+            conform.contains(&format!("crate = \"{label}\"")),
+            "{conform}"
+        );
+        assert!(!conform.contains("crate = \"demo-app\""), "{conform}");
+        // The generated policy satisfies the engine's tree invariant as-is
+        // (the acceptance the workspace-layout twin below always had).
+        let cfg = conform_core::Config::load(&root.join("conform.toml")).unwrap();
+        cfg.validate_against_tree(root).unwrap();
 
         // The generated registries parse with the engines that read them —
         // the format contract that once drifted (`tests` vs `entries`).

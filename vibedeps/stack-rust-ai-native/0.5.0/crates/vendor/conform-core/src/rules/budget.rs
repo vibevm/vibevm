@@ -150,7 +150,7 @@ impl Rule for FileLength {
     fn check(&self, facts: &[SourceFacts]) -> Vec<Finding> {
         let mut out = Vec::new();
         for sf in facts {
-            if !sf.file.contains("/src/") {
+            if !super::in_src(&sf.file) {
                 continue;
             }
             for f in &sf.facts {
@@ -233,7 +233,7 @@ impl Rule for NoUnwrapInDomain {
             if !self.gated_crates.contains(&sf.crate_name) {
                 continue;
             }
-            if !sf.file.contains("/src/") {
+            if !super::in_src(&sf.file) {
                 continue;
             }
             // Per-file per-method ordinal fingerprints, never line
@@ -345,7 +345,7 @@ impl Rule for AmbientEnv {
             if self.audit_crates.contains(&sf.crate_name) {
                 continue;
             }
-            if !sf.file.contains("/src/") {
+            if !super::in_src(&sf.file) {
                 continue;
             }
             // A recorded composition root reads env by design.

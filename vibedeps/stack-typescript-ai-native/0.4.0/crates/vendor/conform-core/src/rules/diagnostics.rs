@@ -54,8 +54,8 @@ impl Rule for SeamHasDoctest {
             if !self.gated_crates.contains(&sf.crate_name) {
                 continue;
             }
-            let is_lib_root = sf.file.ends_with("/src/lib.rs");
-            if !sf.file.contains("/src/") {
+            let is_lib_root = super::is_lib_root(&sf.file);
+            if !super::in_src(&sf.file) {
                 continue;
             }
             for f in &sf.facts {
@@ -150,7 +150,7 @@ impl Rule for PubDoctest {
     fn check(&self, facts: &[SourceFacts]) -> Vec<Finding> {
         let mut out = Vec::new();
         for sf in facts {
-            if !self.gated_crates.contains(&sf.crate_name) || !sf.file.contains("/src/") {
+            if !self.gated_crates.contains(&sf.crate_name) || !super::in_src(&sf.file) {
                 continue;
             }
             for f in &sf.facts {

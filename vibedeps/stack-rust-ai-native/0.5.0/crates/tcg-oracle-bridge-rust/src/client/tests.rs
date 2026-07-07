@@ -97,6 +97,45 @@ fn a_server_error_response_is_a_protocol_error() {
 }
 
 #[test]
+fn server_cancelled_with_retrigger_is_resent_and_answered() {
+    // LSP ServerCancelled + retriggerRequest: the client sends the
+    // request AGAIN under the same deadline (live bench finding: the
+    // diagnostics pull for a fresh overlay races r-a's own revision
+    // bump and cancels nondeterministically).
+    let script = vec![
+        serde_json::json!({"jsonrpc": "2.0", "id": 1,
+            "error": {"code": -32802, "message": "server cancelled the request",
+                      "data": {"retriggerRequest": true}}}),
+        serde_json::json!({"jsonrpc": "2.0", "id": 2, "result": {"answer": 7}}),
+    ];
+    let transport = Scripted::new(script);
+    let outbound = transport.outbound.clone();
+    let mut client = LspClient::new(transport);
+    let out = client
+        .request("x/op", serde_json::json!({"p": 1}), budget())
+        .expect("retriggered and answered");
+    assert_eq!(out["answer"], 7);
+    let sent = outbound
+        .lock()
+        .unwrap_or_else(std::sync::PoisonError::into_inner);
+    let sends: Vec<_> = sent.iter().filter(|f| f["method"] == "x/op").collect();
+    assert_eq!(sends.len(), 2, "the request was sent again");
+    assert_eq!(sends[1]["params"]["p"], 1, "same params ride the retrigger");
+    assert_eq!(sends[1]["id"], 2, "the retrigger carries a fresh id");
+}
+
+#[test]
+fn server_cancelled_without_retrigger_stays_a_protocol_error() {
+    let script = vec![serde_json::json!({"jsonrpc": "2.0", "id": 1,
+        "error": {"code": -32802, "message": "server cancelled the request"}})];
+    let mut client = LspClient::new(Scripted::new(script));
+    let err = client
+        .request("x/op", serde_json::json!({}), budget())
+        .expect_err("refused");
+    assert_eq!(err.wire_kind(), "protocol");
+}
+
+#[test]
 fn eof_mid_request_is_oracle_crashed() {
     let mut client = LspClient::new(Scripted::new(vec![]));
     let err = client

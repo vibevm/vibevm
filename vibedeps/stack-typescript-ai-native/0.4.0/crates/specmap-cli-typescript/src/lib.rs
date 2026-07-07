@@ -31,14 +31,27 @@ pub fn run_specmap_typescript(root: &Path, check: bool) -> Result<()> {
     let scan_cfg = cfg.clone().unwrap_or_default();
     let records = extract(root)?;
     let scanner = RecordsScanner::new(&records, "src");
-    if check {
+    let summary = if check {
         match specmap_core::index::check_with_scanner(root, &scan_cfg, &scanner)? {
-            Ok(summary) => eprintln!("specmap-typescript --check: clean ({summary})."),
+            Ok(summary) => {
+                eprintln!("specmap-typescript --check: clean ({summary}).");
+                summary
+            }
             Err(msg) => bail!("{msg}"),
         }
     } else {
         let (path, summary) = specmap_core::index::write_with_scanner(root, &scan_cfg, &scanner)?;
         eprintln!("specmap-typescript: wrote {} ({summary}).", path.display());
+        summary
+    };
+    // The vacuity warning rides only a CONFIGURED scan (mirroring the Rust
+    // driver, where it fires from the policy-gated ratchet path): an absent
+    // specmap.toml already announced itself above, and a default scan with
+    // nothing tagged is the normal pre-adoption state.
+    if cfg.is_some()
+        && let Some(w) = specmap_core::index::vacuity_warning(&summary)
+    {
+        eprintln!("specmap-typescript: WARNING — {w}.");
     }
     match cfg {
         Some(cfg) => run_gate_over(&records, &cfg, check),

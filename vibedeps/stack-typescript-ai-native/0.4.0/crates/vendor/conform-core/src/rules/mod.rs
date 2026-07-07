@@ -67,6 +67,26 @@ pub fn matches_req_grammar(message: &str) -> bool {
     known_scheme && rest.contains(": ") && rest.contains("; fix surface: ")
 }
 
+/// True when `file` (repo-relative, forward slashes) lies under a
+/// crate's `src/` tree — both the workspace shape (`crates/x/src/…`)
+/// and the bare single-crate shape (`src/…`, where the crate dir IS the
+/// project root under `roots = ["."]` and paths carry no crate prefix).
+/// Every path-scoped rule filters through this one predicate; an inline
+/// `contains("/src/")` silently skips the whole bare shape.
+pub(crate) fn in_src(file: &str) -> bool {
+    file.starts_with("src/") || file.contains("/src/")
+}
+
+/// The `tests/` twin of [`in_src`].
+pub(crate) fn in_tests(file: &str) -> bool {
+    file.starts_with("tests/") || file.contains("/tests/")
+}
+
+/// True when `file` is its crate's `src/lib.rs`, in either shape.
+pub(crate) fn is_lib_root(file: &str) -> bool {
+    file == "src/lib.rs" || file.ends_with("/src/lib.rs")
+}
+
 /// The names of cell types, discovered from `#[cell(...)]`-carrying
 /// item facts, with the module (file) that declares each.
 fn cell_types(facts: &[SourceFacts]) -> Vec<(String, String, String)> {

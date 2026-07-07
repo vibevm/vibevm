@@ -49,10 +49,7 @@ pub fn materialise_oracle(project_root: &Path) -> Result<PathBuf, TcgBridgeError
     hasher.update(ORACLE_SOURCE.as_bytes());
     let hash = hasher.finalize();
     let short: String = hash[..8].iter().map(|b| format!("{b:02x}")).collect();
-    let dir = project_root
-        .join("target")
-        .join("tcg")
-        .join("ts-oracle");
+    let dir = project_root.join("target").join("tcg").join("ts-oracle");
     let path = dir.join(format!("oracle-{short}.ts"));
     if !path.exists() {
         std::fs::create_dir_all(&dir).map_err(|e| TcgBridgeError::Io {
@@ -234,7 +231,10 @@ pub fn parse_response_line(line: &str) -> Result<ResponseFrame, TcgBridgeError> 
         })?;
     if frame.proto != ORACLE_PROTOCOL {
         return Err(TcgBridgeError::Protocol {
-            detail: format!("oracle speaks proto {}, bridge {}", frame.proto, ORACLE_PROTOCOL),
+            detail: format!(
+                "oracle speaks proto {}, bridge {}",
+                frame.proto, ORACLE_PROTOCOL
+            ),
         });
     }
     Ok(frame)
@@ -261,8 +261,7 @@ pub fn error_from_wire(e: WireError) -> TcgBridgeError {
 /// extractor records. `in_test` uses the extractor's file-name
 /// convention (the record field is file-grain there too).
 pub fn to_file_record(file: &str, v: &ValidateResult) -> FileRecord {
-    let in_test =
-        file.contains(".test.") || file.contains(".spec.") || file.contains("__tests__");
+    let in_test = file.contains(".test.") || file.contains(".spec.") || file.contains("__tests__");
     FileRecord {
         protocol: ts_extract_bridge::PROTOCOL,
         file: file.to_string(),
@@ -339,10 +338,12 @@ mod tests {
         assert_eq!(first, second);
         let text = std::fs::read_to_string(&first).expect("read");
         assert_eq!(text, ORACLE_SOURCE);
-        assert!(first
-            .file_name()
-            .and_then(|n| n.to_str())
-            .expect("name")
-            .starts_with("oracle-"));
+        assert!(
+            first
+                .file_name()
+                .and_then(|n| n.to_str())
+                .expect("name")
+                .starts_with("oracle-")
+        );
     }
 }

@@ -92,6 +92,21 @@ pub fn build_rules(config: &Config) -> Vec<Box<dyn Rule>> {
     out
 }
 
+/// Print the scan-vacuity warning for every gated crate the extraction
+/// attributed no sources to — a vacuously green gate announces itself,
+/// the same posture as the printed [`ConfigOrigin`]. Check and freeze
+/// both warn: freezing a vacuous gate writes an empty baseline that
+/// looks like a drained crate.
+fn warn_vacuously_gated(config: &Config, facts: &[conform_core::SourceFacts]) {
+    for c in config.vacuously_gated(facts) {
+        eprintln!(
+            "conform: WARNING — gated crate `{c}` matched no scanned sources; its gates \
+             are green by vacuity. Point `roots` in conform.toml at the crate dir (a \
+             literal entry) or its parent (`<dir>/*`)."
+        );
+    }
+}
+
 /// Run the conform gate over the tree at `root`, against the ratchet
 /// baseline at `baseline_rel` (a `root`-relative path), optionally scoped
 /// to one crate by name. Writes a SARIF report under `root/target/conform`
@@ -113,6 +128,7 @@ pub fn run_check(root: &Path, baseline_rel: &str, scope: Option<&str>) -> Result
         Frontend::id(&frontend),
         Frontend::version(&frontend),
     );
+    warn_vacuously_gated(&config, &facts);
 
     let owned = build_rules(&config);
     let rule_refs: Vec<&dyn Rule> = owned.iter().map(|r| r.as_ref()).collect();
@@ -174,6 +190,7 @@ pub fn run_freeze(root: &Path, baseline_rel: &str) -> Result<()> {
     let mut log = ExtractionLog::default();
     let frontend = RustFrontend;
     let facts = store.extract_workspace(root, &frontend, &mut log)?;
+    warn_vacuously_gated(&config, &facts);
     let owned = build_rules(&config);
     let rule_refs: Vec<&dyn Rule> = owned.iter().map(|r| r.as_ref()).collect();
     let findings = check(&rule_refs, &facts, None);

@@ -233,7 +233,10 @@ impl Config {
         }
 
         // Expand the roots the way the scanner does: a `<dir>/*` glob names
-        // each crate-shaped subdir; a literal root names itself.
+        // each crate-shaped subdir; a literal root names itself — resolved
+        // against the project root through the scanner's own derivation
+        // (`crate_dir_name`), so `.` names the project directory (the bare
+        // single-crate layout) instead of nothing.
         let mut on_disk: BTreeSet<String> = BTreeSet::new();
         let mut literals: BTreeSet<String> = BTreeSet::new();
         for entry in &self.roots {
@@ -245,8 +248,8 @@ impl Config {
                         }
                     }
                 }
-            } else if let Some(name) = Path::new(entry).file_name() {
-                literals.insert(name.to_string_lossy().into_owned());
+            } else if let Some(name) = crate::store::crate_dir_name(&root.join(entry)) {
+                literals.insert(name);
             }
         }
         for c in &on_disk {
@@ -264,6 +267,37 @@ impl Config {
             }
         }
         Ok(())
+    }
+
+    /// Gated crates the scan attributed NO sources to — each names a gate
+    /// that would pass by vacuity (nothing scanned means nothing findable),
+    /// the silent failure mode of a mis-shaped `roots` list. The drivers
+    /// print every entry as a warning on check and freeze, the same
+    /// announce-yourself posture as [`ConfigOrigin`]; an empty return means
+    /// every gated crate contributed at least one scanned file.
+    ///
+    /// ```
+    /// use conform_core::{Config, SourceFacts};
+    ///
+    /// let cfg: Config = toml::from_str("gated_crates = [\"app\"]").unwrap();
+    /// let nothing: Vec<SourceFacts> = Vec::new();
+    /// assert_eq!(cfg.vacuously_gated(&nothing), vec!["app".to_string()]);
+    ///
+    /// let scanned = vec![SourceFacts {
+    ///     file: "crates/app/src/lib.rs".into(),
+    ///     crate_name: "app".into(),
+    ///     facts: vec![],
+    /// }];
+    /// assert!(cfg.vacuously_gated(&scanned).is_empty());
+    /// ```
+    pub fn vacuously_gated(&self, facts: &[crate::facts::SourceFacts]) -> Vec<String> {
+        use std::collections::BTreeSet;
+        let scanned: BTreeSet<&str> = facts.iter().map(|f| f.crate_name.as_str()).collect();
+        self.gated_crates
+            .iter()
+            .filter(|c| !scanned.contains(c.as_str()))
+            .cloned()
+            .collect()
     }
 }
 
@@ -343,5 +377,37 @@ mod tests {
         )
         .unwrap();
         cfg.validate_against_tree(root).unwrap();
+    }
+
+    /// A bare single-crate layout (`roots = ["."]`) gates or exempts the
+    /// crate under the name the scanner attributes its files to — the
+    /// project directory's basename. `Path::new(".").file_name()` is
+    /// `None`, so deriving the name from the raw entry (the pre-fix
+    /// behaviour) left the crate unnameable: listing it as gated OR
+    /// exempt failed the invariant as a phantom entry.
+    #[test]
+    fn dot_root_names_the_project_directory() {
+        let tmp = tempfile::tempdir().unwrap();
+        let root = tmp.path();
+        std::fs::write(root.join("Cargo.toml"), "[package]\n").unwrap();
+        std::fs::create_dir_all(root.join("src")).unwrap();
+        let name = root.file_name().unwrap().to_string_lossy().into_owned();
+
+        let gated: Config =
+            toml::from_str(&format!("roots = [\".\"]\ngated_crates = [\"{name}\"]\n")).unwrap();
+        gated.validate_against_tree(root).unwrap();
+
+        let exempt: Config = toml::from_str(&format!(
+            "roots = [\".\"]\n[[exempt]]\ncrate = \"{name}\"\nreason = \"pre-adoption\"\n"
+        ))
+        .unwrap();
+        exempt.validate_against_tree(root).unwrap();
+
+        // The phantom check survives the fix: a name matching neither the
+        // directory nor any glob-expanded crate still refuses.
+        let ghost: Config =
+            toml::from_str("roots = [\".\"]\ngated_crates = [\"ghost\"]\n").unwrap();
+        let err = ghost.validate_against_tree(root).unwrap_err().to_string();
+        assert!(err.contains("`ghost` is listed"), "{err}");
     }
 }

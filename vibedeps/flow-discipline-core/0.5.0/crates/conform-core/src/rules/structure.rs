@@ -185,7 +185,7 @@ impl Rule for CellHasOracle {
         for (type_name, file, crate_name) in cell_types(facts) {
             let referenced = facts
                 .iter()
-                .filter(|sf| sf.crate_name == crate_name && sf.file.contains("/tests/"))
+                .filter(|sf| sf.crate_name == crate_name && super::in_tests(&sf.file))
                 .any(|sf| {
                     sf.facts.iter().any(|f| match f {
                         Fact::Import { to_path, .. } => to_path.contains(&type_name),
