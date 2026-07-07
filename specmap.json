@@ -8319,7 +8319,7 @@
     {
       "file": "crates/vibe-tcg/src/lib.rs",
       "from_symbol": "vibe_tcg::TcgError",
-      "line": 56,
+      "line": 59,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-mcp/PROP-026#tools",
       "verb": "implements"
