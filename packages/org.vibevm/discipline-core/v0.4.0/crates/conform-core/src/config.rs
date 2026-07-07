@@ -109,6 +109,23 @@ pub struct TsConfig {
     pub cells_dir: Option<String>,
     /// The seam module name a sibling cell may be imported through.
     pub seam: String,
+    /// Floor steps this project explicitly disables, each with a
+    /// recorded reason. The floor PRINTS every disablement every run —
+    /// the "a defaulted nothing-gated run announces itself" posture
+    /// extended to step disablement; absent tooling without an entry
+    /// here is a hard step failure, never a silent skip.
+    pub floor_disable: Vec<FloorDisable>,
+}
+
+/// One disabled floor step + why (`[[typescript.floor_disable]]`).
+#[derive(Debug, Clone, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct FloorDisable {
+    /// The step name (`prettier` / `tsc` / `tests` / `eslint` /
+    /// `conform` / `specmap` / `test-gate`).
+    pub step: String,
+    /// Why it is off — never empty.
+    pub reason: String,
 }
 
 impl Default for TsConfig {
@@ -118,6 +135,7 @@ impl Default for TsConfig {
             exclude_substrings: vec!["/fixtures/".into()],
             cells_dir: None,
             seam: "index".into(),
+            floor_disable: Vec::new(),
         }
     }
 }

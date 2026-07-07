@@ -193,6 +193,25 @@ dependencies = [
 ]
 
 [[package]]
+name = "discipline-cli-typescript"
+version = "0.3.0"
+dependencies = [
+ "anyhow",
+ "clap",
+ "conform-cli-typescript",
+ "conform-core",
+ "conform-frontend-typescript",
+ "serde_json",
+ "specmap-cli-typescript",
+ "specmap-core",
+ "specmap-scan-typescript",
+ "specmark-grammar",
+ "tempfile",
+ "toml",
+ "ts-extract-bridge",
+]
+
+[[package]]
 name = "equivalent"
 version = "1.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
