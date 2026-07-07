@@ -41,6 +41,11 @@ name = "specmap-typescript"
 crate = "crates/specmap-cli-typescript"
 description = "the standalone traceability index + orphan gate for TypeScript trees"
 
+[[binary]]
+name = "tcg-typescript"
+crate = "crates/tcg-cli-typescript"
+description = "the agentic type oracle: a persistent enriching relay (serve) over the language-service oracle, one-shot validate/scope/complete/type forms, and the bench harness"
+
 [[skill]]
 name = "discipline-sweep-typescript"
 path = "spec/skills/discipline-sweep-typescript"
