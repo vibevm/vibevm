@@ -1,7 +1,6 @@
 # MCP-SOVEREIGNTY-PLAN v0.1 — the `mcp` package kind, standalone discipline MCP servers, package-declared MCP delivery, and the vibevm demontage
 
-_Status: **ACCEPTED WITH OWNER AMENDMENT — EXECUTION COMMISSIONED
-2026-07-07 («выполни план до конца»).** The owner reviewed the draft and
+_Status: **EXECUTED 2026-07-07 — Waves 0–6 complete on the owner's «план должен быть выполнен до конца, все волны»; the full panel green at close (self-check 22 steps exit 0, corpus 9/9 at cold 2 538 ms / warm p95 60 ms, both mcp live chains vibe-free at 2.55 s / 0.82 s, vibevm's own .mcp.json serving 18+17 tools over the registered command lines). The per-wave commit maps live in §13; the Wave-6 close: `36461ba` (the demontage: vibe-tcg deleted whole, vibe-mcp back to four product tools), `7299e78` (PROP-026 superseded in topology, grammar kept normative; boot snippets re-taught; ROADMAP M1.26 SHIPPED), `1451954` (slots + both demos repinned at the 0.6.0 flow + the committed dogfood .mcp.json). Previously:** ACCEPTED WITH OWNER AMENDMENT — EXECUTION COMMISSIONED 2026-07-07 («выполни план до конца»).** The owner reviewed the draft and
 REVERSED its D1: the four-kinds set is a terminology snapshot, not an
 architectural freeze — «расширь и сделай mcp чем-то отдельным (в
 дальнейшем возможно появится еще один kind — app, для запускаемых
@@ -689,6 +688,32 @@ Named deferrals (visible, not silent):
    precedent).
 
 ## 13. Execution ledger (filled by the executing session)
+
+### Wave 6 — EXECUTED (2026-07-07); commit map — CAMPAIGN CLOSE
+
+- `36461ba` refactor(mcp)!: vibe-tcg deleted whole (~1082 lines whose
+  only reason was out-of-slot dispatch), the tcg adapter cell + tool
+  registrations + OracleRegistry field + the vibe-mcp live chain gone;
+  the skill template teaches the per-language servers; conform
+  de-gates the departed crate (10 gated now), the index drops its
+  items.
+- `7299e78` docs: PROP-026 superseded IN TOPOLOGY (grammar normative,
+  topology a design record; `language` = validated compatibility
+  param), both stacks' boot snippets point at their mcp packages,
+  ROADMAP M1.26 SHIPPED.
+- `1451954` build(deps): slots re-taught, both demos repinned at the
+  0.6.0 flow (the twice-deferred rm-and-reinstall paid), and vibevm's
+  own `.mcp.json` COMMITTED — the product entry + both discipline
+  servers as managed entries; both registered command lines answered
+  live (18 + 17 tools) pre-commit. D15/P6 CONFIRMED: the
+  vibevm-on-vibevm cycle is broken on vibevm itself.
+- Close panel: self-check 22 steps exit 0; corpus 9/9 (cold 2 538 ms,
+  warm p95 60 ms — no target moved); rust live chain 2.55 s, TS
+  0.82 s, both vibe-free; `grep -r tcg crates/vibe-mcp/src` names only
+  the servers' teaching text; `crates/vibe-tcg` does not exist.
+- Deferrals stand as named in §10 (vibe-mcp rebase onto mcp-core,
+  shims, publish — owner call, Stage-B arm, TS-stack self-check step,
+  colon-free fact-store slots, the `app` kind).
 
 ### Wave 5 — EXECUTED (2026-07-07); commit map
 
