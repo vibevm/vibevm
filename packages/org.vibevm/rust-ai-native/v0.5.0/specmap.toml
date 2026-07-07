@@ -28,6 +28,7 @@ scan_roots = [
     "crates/discipline-cli-rust",
     "crates/env-audit",
     "crates/specmap-cli-rust",
+    "crates/tcg-oracle-bridge-rust",
 ]
 
 # The package's prompt content (guides, cards, boot). Irrelevant to the orphan
