@@ -155,6 +155,22 @@ PKG_DIR="packages/org.vibevm/rust-ai-native/v0.5.0"
 run_step "specmap-rust --gate (rust-ai-native pkg self-trace)" \
   cargo run --quiet --manifest-path "$PKG_MANIFEST" -p specmap-cli-rust --bin specmap-rust -- --gate --path "$PKG_DIR" || OVERALL=$?
 
+# 10. The mcp packages (PROP-027; MCP-SOVEREIGNTY Wave 3+) — each is its
+# own excluded workspace authoring ONE server crate over a vendored
+# closure (sync-engines holds the copies byte-identical to their
+# authored homes, step 6). Same lesson as steps 7-8: nothing else runs
+# their authored tests; gate them here, self-trace included.
+MCPR_MANIFEST="packages/org.vibevm/discipline-rust/v0.5.0/Cargo.toml"
+run_step "cargo fmt --all --check (discipline-rust pkg)" \
+  cargo fmt --manifest-path "$MCPR_MANIFEST" --all --check || OVERALL=$?
+run_step "cargo test -p discipline-mcp-rust (discipline-rust pkg)" \
+  cargo test --manifest-path "$MCPR_MANIFEST" -p discipline-mcp-rust --quiet || OVERALL=$?
+run_step "cargo clippy --all-targets (discipline-rust pkg)" \
+  cargo clippy --manifest-path "$MCPR_MANIFEST" --workspace --all-targets --quiet -- -D warnings || OVERALL=$?
+MCPR_DIR="packages/org.vibevm/discipline-rust/v0.5.0"
+run_step "specmap-rust --gate (discipline-rust pkg self-trace)" \
+  cargo run --quiet --manifest-path "$PKG_MANIFEST" -p specmap-cli-rust --bin specmap-rust -- --gate --path "$MCPR_DIR" || OVERALL=$?
+
 if [ "$QUIET" -eq 0 ]; then
   if [ "$OVERALL" -eq 0 ]; then
     printf '\nself-check: all green\n' >&2

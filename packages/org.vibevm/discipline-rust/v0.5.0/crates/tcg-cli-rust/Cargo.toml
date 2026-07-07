@@ -1,0 +1,35 @@
+# tcg-cli-rust — bin `tcg-rust`: the persistent enriching relay
+# (`serve`) an MCP host drives, the one-shot validate/scope/complete/
+# type forms, and the differential/latency bench harness
+# (TCG-PROTOCOL-RUST v0.1; AGENTIC-TCG-RUST-PLAN D4–D6). Enrichment is
+# IN-PROCESS: the gate's own rule assembly over the gate's own fact
+# extractor — no second engine, no drift.
+[package]
+name = "tcg-cli-rust"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+license-file.workspace = true
+publish.workspace = true
+repository.workspace = true
+homepage.workspace = true
+
+[[bin]]
+name = "tcg-rust"
+path = "src/main.rs"
+
+[dependencies]
+anyhow.workspace = true
+clap.workspace = true
+conform-cli-rust.workspace = true
+conform-core.workspace = true
+conform-frontend-rust.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+specmark.workspace = true
+syn.workspace = true
+tcg-oracle-bridge-rust = { path = "../tcg-oracle-bridge-rust" }
+tempfile.workspace = true
+thiserror.workspace = true
+

@@ -1,0 +1,31 @@
+[package]
+name = "discipline-rust"
+group = "org.vibevm"
+kind = "mcp"
+version = "0.5.0"
+authors = ["Oleg Chirukhin"]
+license = "EULA"
+description = "The AI-Native Rust discipline over MCP: every discipline-rust command and the tcg type oracle as agent tools, served straight from the slot with no vibe in the runtime path"
+keywords = ["mcp", "rust", "ai-native", "discipline", "agent"]
+
+[compatibility]
+min_vibe_version = "0.1.0"
+requires_kinds = []
+
+# The exact-pin law (PROP-027 §2.3): this package vendors the stack's
+# toolchain crates byte-identically (sync-engines), and the pin holds
+# the vendored engines and the consumer's installed gates to ONE
+# resolved version set. Bumped in lockstep with the stack, always.
+[requires]
+packages = { "stack:org.vibevm/rust-ai-native" = "=0.5.0" }
+
+[[binary]]
+name = "discipline-mcp-rust"
+crate = "crates/discipline-mcp-rust"
+description = "the stdio MCP server: 18 tools - the discipline command surface + the tcg type oracle"
+
+[[mcp_server]]
+name = "discipline-rust"
+binary = "discipline-mcp-rust"
+description = "AI-Native Rust discipline gates + type oracle over MCP (PROP-027)"
+args = ["--path", "{project_root}"]
