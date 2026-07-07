@@ -173,9 +173,9 @@ git clone https://github.com/tessl-io/tessl-mcp refs/src/tessl-mcp  # if accessi
 
 Use these terms and only these terms in code, in documentation, in error messages, in commit messages. Consistency matters more than perfection.
 
-### 4.1 The four installable kinds {#four-installable-kinds}
+### 4.1 The installable kinds {#four-installable-kinds}
 
-vibevm packages come in four kinds. A user installs them with `vibe install <kind>:<name>`.
+vibevm packages come in five kinds. A user installs them with `vibe install <kind>:<name>`. The kind set is a closed register that grows only by an owner-sanctioned amendment to this section — it is terminology discipline, not an architectural ceiling (the `PackageKind` enum's own documentation records that extending it is a spec change, not a design change). `app` — installable, runnable graphical applications — is anticipated as a future kind and deliberately not yet specified.
 
 **`flow`** — A process discipline. Modifies how the human-AI development process works in this project. Examples: WAL discipline, sync-from-code reconciliation, conventional-commits enforcement, REVIEW marker conventions. A flow contributes content to `spec/flows/<name>/` and may register one or more snippets in `spec/boot/`.
 
@@ -184,6 +184,8 @@ vibevm packages come in four kinds. A user installs them with `vibe install <kin
 **`stack`** — A technology context. Provides the concrete mappings from abstract feat capabilities to a specific tech stack. Examples: rust-cli, electron-local, nextjs-postgres, tauri-rust. A stack contributes content to `spec/stacks/<name>/`. A project may have multiple stacks installed but typically one is active per build.
 
 **`tool`** — A reusable script, prompt, or utility that nodes in the build graph may invoke. Examples: a code formatter wrapper, a test runner adapter, a structured-output renderer. Tools are not workflows; they are *capabilities used by workflows*. (Tools are reserved as a kind for future use; v1 does not require them. Document the slot, do not implement.)
+
+**`mcp`** — An agent-server package. Its primary deliverable is one or more Model Context Protocol servers, declared in `[[mcp_server]]` tables (legal only in this kind) and delivered as [PROP-025](spec/modules/vibe-workspace/PROP-025-binary-delivery.md) binaries built in the package's own slot. An `mcp` package that serves another package's toolchain (a language stack's discipline tools, say) MUST require that package with an exact `=X.Y.Z` pin, so the served engines and the consumer's gates resolve to one version set — "one engine, one truth" enforced by the resolver, not by protocol. Examples: discipline-rust (the AI-Native Rust discipline gates + type oracle over MCP), discipline-typescript. Normative spec: PROP-027.
 
 ### 4.2 The directory layout {#directory-layout}
 
