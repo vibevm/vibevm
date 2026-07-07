@@ -11572,6 +11572,92 @@
     },
     {
       "anchor": "root",
+      "content_hash": "sha256:015f1f352bfef423f7d4d06669a35d219ed8be34ecabb900df4707a2977740f9",
+      "doc_path": "modules/vibe-mcp/PROP-026",
+      "file": "spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md",
+      "heading": "PROP-026 — the tcg tool family (the agentic type oracle's product seam)",
+      "line": 1,
+      "uri": "spec://vibevm/modules/vibe-mcp/PROP-026#root"
+    },
+    {
+      "anchor": "problem",
+      "content_hash": "sha256:804c7528d1020f3e0e20fa6b1a09251a72278bc571125b8f27f00e969661ac0b",
+      "doc_path": "modules/vibe-mcp/PROP-026",
+      "file": "spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md",
+      "heading": "1. Problem",
+      "line": 16,
+      "uri": "spec://vibevm/modules/vibe-mcp/PROP-026#problem",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "tools",
+      "content_hash": "sha256:2be0e7d5d19c9c316343ba573bb71c6a8ced9ce3ec65d35c53fc8241b1ce9d13",
+      "doc_path": "modules/vibe-mcp/PROP-026",
+      "file": "spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md",
+      "heading": "2. The four tools",
+      "line": 31,
+      "uri": "spec://vibevm/modules/vibe-mcp/PROP-026#tools",
+      "kind": "req",
+      "revision": 2
+    },
+    {
+      "anchor": "portability",
+      "content_hash": "sha256:d47cacaf9c8204c8dc551e6537b823cd5109ed4dce7163304d03458409d3d522",
+      "doc_path": "modules/vibe-mcp/PROP-026",
+      "file": "spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md",
+      "heading": "3. The portable family crate — the owner amendment",
+      "line": 49,
+      "uri": "spec://vibevm/modules/vibe-mcp/PROP-026#portability",
+      "kind": "req",
+      "revision": 3
+    },
+    {
+      "anchor": "registry",
+      "content_hash": "sha256:d1d87bf5a541e877d4e48b76aa9d7ed87327a72682a26a8da5c6f4e7ff6b6f4d",
+      "doc_path": "modules/vibe-mcp/PROP-026",
+      "file": "spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md",
+      "heading": "4. The oracle registry and child lifecycle",
+      "line": 71,
+      "uri": "spec://vibevm/modules/vibe-mcp/PROP-026#registry",
+      "kind": "req",
+      "revision": 4
+    },
+    {
+      "anchor": "consent",
+      "content_hash": "sha256:947886e8d3f00fe86f9de43c56420ef9df3d2e34e483afbe821c14415178fae8",
+      "doc_path": "modules/vibe-mcp/PROP-026",
+      "file": "spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md",
+      "heading": "5. Consent: the no-prompt rule",
+      "line": 97,
+      "uri": "spec://vibevm/modules/vibe-mcp/PROP-026#consent",
+      "kind": "req",
+      "revision": 5
+    },
+    {
+      "anchor": "non-goals",
+      "content_hash": "sha256:c09fa8441f9920c1cd9e852c80dd53cd8d016d947a71cf2f1671284dd215f868",
+      "doc_path": "modules/vibe-mcp/PROP-026",
+      "file": "spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md",
+      "heading": "6. Non-goals",
+      "line": 108,
+      "uri": "spec://vibevm/modules/vibe-mcp/PROP-026#non-goals",
+      "kind": "req",
+      "revision": 6
+    },
+    {
+      "anchor": "acceptance",
+      "content_hash": "sha256:9f9dfea85895156bbc042d96d83afaa54c56c3ed17dfc48eb3776c0ff57abc5c",
+      "doc_path": "modules/vibe-mcp/PROP-026",
+      "file": "spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md",
+      "heading": "7. Acceptance",
+      "line": 120,
+      "uri": "spec://vibevm/modules/vibe-mcp/PROP-026#acceptance",
+      "kind": "req",
+      "revision": 7
+    },
+    {
+      "anchor": "root",
       "content_hash": "sha256:6569face80f87b3d1a80c4320613f663a164e4c7f0ef738de3fb58938670ddb1",
       "doc_path": "modules/vibe-registry/PROP-001",
       "file": "spec/modules/vibe-registry/PROP-001-git-backend.md",
