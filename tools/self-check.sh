@@ -133,7 +133,7 @@ run_step "cargo clippy --all-targets (discipline-core pkg)" \
 
 # 8. The Rust stack — frontends + CLI drivers + its vendored engine copies —
 # is its own excluded workspace too (PROP-024). Same lesson as step 7.
-PKG_MANIFEST="packages/org.vibevm/rust-ai-native/v0.4.0/Cargo.toml"
+PKG_MANIFEST="packages/org.vibevm/rust-ai-native/v0.5.0/Cargo.toml"
 run_step "cargo fmt --all --check (rust-ai-native pkg)" \
   cargo fmt --manifest-path "$PKG_MANIFEST" --all --check || OVERALL=$?
 run_step "cargo test --workspace (rust-ai-native pkg)" \
@@ -151,7 +151,7 @@ run_step "cargo clippy --all-targets (rust-ai-native pkg)" \
 CORE_DIR="packages/org.vibevm/discipline-core/v0.4.0"
 run_step "specmap-rust --gate (discipline-core pkg self-trace)" \
   cargo run --quiet --manifest-path "$PKG_MANIFEST" -p specmap-cli --bin specmap-rust -- --gate --path "$CORE_DIR" || OVERALL=$?
-PKG_DIR="packages/org.vibevm/rust-ai-native/v0.4.0"
+PKG_DIR="packages/org.vibevm/rust-ai-native/v0.5.0"
 run_step "specmap-rust --gate (rust-ai-native pkg self-trace)" \
   cargo run --quiet --manifest-path "$PKG_MANIFEST" -p specmap-cli --bin specmap-rust -- --gate --path "$PKG_DIR" || OVERALL=$?
 
