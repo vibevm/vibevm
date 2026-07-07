@@ -118,13 +118,18 @@ pub fn run_floor(root: &Path, opts: &FloorOptions) -> Result<()> {
         }
     }
 
-    // 3. Tests — the project's script when it has one, `node --test`
-    // otherwise (strip-types runs .ts directly on node >= 22.6).
+    // 3. Tests — `node --test` scoped to the policy's TS roots
+    // (strip-types runs .ts directly on node >= 22.6). Unscoped, node
+    // would walk into vibedeps/ and run the installed packages' own
+    // fixtures — the demo walk caught exactly that.
     if !is_disabled("tests") {
         header(opts, "tests (node --test)");
         let ok = {
             let mut cmd = crate::tools::node_command(root);
             cmd.arg("--test");
+            for ts_root in &config.typescript.roots {
+                cmd.args(crate::tools::test_globs(ts_root));
+            }
             run_tool_step(cmd)?
         };
         if !record(&mut outcomes, "tests", ok) && !opts.keep_going {

@@ -90,7 +90,7 @@ pub fn run_fast_loop(
         let started = Instant::now();
         let mut cmd = crate::tools::node_command(root);
         cmd.args(["--test", "--test-reporter=tap"]);
-        cmd.arg(format!("{cells_dir}/{cell}/"));
+        cmd.args(crate::tools::test_globs(&format!("{cells_dir}/{cell}")));
         let out = cmd.output()?;
         let seconds = started.elapsed().as_secs_f64();
         let combined = format!(
