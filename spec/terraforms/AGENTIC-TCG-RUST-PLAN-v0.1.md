@@ -350,6 +350,22 @@ D13 language suffix — carrying its role with LSP mechanics inside:
   tokens to drain, bounded by a deadline; the first semantic answer
   before quiescence is legal but flagged `degraded: true` (B5) so
   callers can distinguish warm truth from cold best-effort.
+- **Config is load-bearing (Phase-0 spike finding, 2026-07-07)**: at
+  1.93.1 the native diagnostics that matter most (type-mismatch
+  E0308, unresolved-name E0425, …) sit behind r-a's DEFAULT-OFF
+  `diagnostics.experimental.enable` flag — with a null config the
+  oracle is nearly blind (iteration 1 saw only the arity error). The
+  bridge therefore (a) passes `initializationOptions` enabling
+  experimental diagnostics and (b) answers the server's
+  `workspace/configuration` requests with the same object (r-a reads
+  both); the deliberately-enabled experimental posture is documented
+  in TCG-ORACLE-RUST as part of the D2 approximation statement. The
+  bridge also answers the other server→client requests
+  (`window/workDoneProgress/create`, `client/registerCapability`)
+  with nulls. Pull diagnostics is the ONLY native channel in this
+  mode (zero `publishDiagnostics` without flycheck/save — verified),
+  so the pull backbone is confirmed and the publish fallback stays
+  capability-gated dead code until some r-a version needs it.
 - **Error taxonomy** (five kinds, mirroring the TS shape with two
   environment rows renamed): `RustAnalyzerMissing` /
   `WorkspaceUnloadable` (cargo metadata/project load failed — the
@@ -516,28 +532,41 @@ holds by construction and §4.4 pins it.
 
 ### D10 — the mechanics proof: differential corpus + bench, no battery
 
-`research/tcg-bench/corpus-rust/{cases,content}` — seven cases
-mirroring the TS corpus grammar (`{file, content_from?, expect}`):
+`research/tcg-bench/corpus-rust/{cases,content}` — NINE cases in the
+TS corpus grammar (`{file, content_from?, expect}`); the class list
+and code pairs are SPIKE-VERIFIED against r-a 1.93.1 with experimental
+diagnostics enabled (Phase 0, 2026-07-07):
 
 1. `01-clean-disk` — a demo file as-is: zero diagnostics.
 2. `02-clean-add` — a NEW file as overlay (never on disk): zero
    diagnostics, proving overlay-only analysis.
-3. `03-type-mismatch` — seeded `E0308`-class (r-a `type-mismatch`).
-4. `04-unresolved-name` — `E0425`-class (r-a `unresolved-ident`-
-   family).
-5. `05-wrong-arg-count` — `E0061`-class.
+3. `03-type-mismatch` — oracle `E0308` ↔ cargo `E0308` (exact). Its
+   content carries Cyrillic text to pin the position cell end-to-end.
+4. `04-unresolved-name` — oracle `E0425` ↔ cargo `E0425` (exact).
+5. `05-wrong-arity` — oracle **`E0107`** ↔ cargo **`E0061`** — the
+   first real mapping row: r-a and rustc disagree on the CODE for the
+   same defect; existence-grain agreement holds through the table.
 6. `06-newtype-privacy` — constructing `GuestName`'s private inner
-   from another cell: `E0603`/private-field-class — the discipline's
-   brand rule made COMPILER-checkable, which is exactly Rust's edge
-   over TS here.
+   from another cell. **THE DOCUMENTED-GAP EXHIBIT (spike finding):**
+   r-a 1.93.1 native diagnostics are SILENT on privacy (`E0603`)
+   even with experimental on, while cargo check reports it. The case
+   asserts the asymmetry AS the expectation (oracle: 0 diagnostics;
+   cargo: E0603) — pinning the D2 approximation honestly, and
+   flipping red the day a future r-a starts covering privacy, so the
+   gap list never rots. The discipline's brand rule stays
+   floor-checkable; the ORACLE is the layer with the gap, and the
+   corpus says so out loud.
 7. `07-unwrap-in-domain` — compiles clean; expects the ENRICHMENT
    finding (`no-unwrap-domain`, non-baselined) — pinning the D5 hop.
-   At least one case's content carries non-ASCII (Cyrillic) text to
-   pin the position cell end-to-end.
+8. `08-unknown-field` — oracle **`E0559`** ↔ cargo **`E0609`** — the
+   second real mapping row.
+9. `09-missing-fields` — oracle `E0063` ↔ cargo `E0063` (exact).
 
 Truth source: `cargo check --message-format=json` over a temp
-materialisation of each case; the committed r-a-id ↔ E-code mapping
-table (bench-owned, spec-referenced) translates. `tcg-rust bench`
+materialisation of each case; the committed r-a-code ↔ rustc-code
+mapping table (bench-owned, spec-referenced; today's rows: E0308↔
+E0308, E0425↔E0425, E0107↔E0061, E0559↔E0609, E0063↔E0063,
+E0599↔E0599 spare) translates. `tcg-rust bench`
 runs the corpus warm + cold, reports per-op p50/p95, cold-init time,
 agreement %; `REPORT-<date>-rust-baseline.md` commits the numbers.
 Posted expectations (REPORT is the ratchet, never CI): existence-grain
@@ -644,10 +673,15 @@ vibedeps slot and regenerated boot INDEX.
 
 ## 4. Predictions (falsifiable, checked by the REPORT and the diff)
 
-1. The differential corpus agrees 7/7 existence-grain on the curated
-   classes (position at ±1-line tolerance). ANY existence-grain miss
-   is a bug or a wrong class choice — it rewrites the corpus or the
-   bridge, never the tolerance.
+1. The differential corpus agrees existence-grain on ALL covered
+   compiler classes — five agreement classes (03/04/05/08/09), two
+   clean controls, the enrichment case — with position at ±1-line
+   tolerance; the privacy case (06) asserts the DOCUMENTED GAP
+   (oracle silent, cargo E0603) as its expectation. ANY
+   existence-grain miss on a covered class is a bug or a wrong class
+   choice — it rewrites the corpus or the bridge, never the
+   tolerance. (Rewritten per the Phase-0 spike, 2026-07-07: the
+   original blanket "7/7" predates the class curation data.)
 2. Warm `validate` p50 < 500 ms and cold init < 15 s on rust-demo;
    `complete` p50 < 300 ms. Falsified → the §13 R1 ladder, targets
    move only with a recorded reason in the REPORT — and per the
