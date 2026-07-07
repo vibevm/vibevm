@@ -123,7 +123,7 @@ run_step "cargo xtask sync-engines --check" cargo xtask sync-engines --check || 
 # workspace (PROP-024), excluded from the vibevm root. Steps 1-5 build the
 # VENDORED copies as dependencies but never run the authored tests/doctests,
 # and root fmt+clippy never touch them. Gate the authored source here.
-CORE_MANIFEST="packages/org.vibevm/discipline-core/v0.4.0/Cargo.toml"
+CORE_MANIFEST="packages/org.vibevm/discipline-core/v0.5.0/Cargo.toml"
 run_step "cargo fmt --all --check (discipline-core pkg)" \
   cargo fmt --manifest-path "$CORE_MANIFEST" --all --check || OVERALL=$?
 run_step "cargo test --workspace (discipline-core pkg)" \
@@ -148,7 +148,7 @@ run_step "cargo clippy --all-targets (rust-ai-native pkg)" \
 # scope! targets are cross-package spec units, so a full index would be all
 # cross-repo "dangling"; coverage is what matters. The conform step-5 lesson
 # (a gate not in self-check drifts silently) applied to the packages' traces.
-CORE_DIR="packages/org.vibevm/discipline-core/v0.4.0"
+CORE_DIR="packages/org.vibevm/discipline-core/v0.5.0"
 run_step "specmap-rust --gate (discipline-core pkg self-trace)" \
   cargo run --quiet --manifest-path "$PKG_MANIFEST" -p specmap-cli-rust --bin specmap-rust -- --gate --path "$CORE_DIR" || OVERALL=$?
 PKG_DIR="packages/org.vibevm/rust-ai-native/v0.5.0"

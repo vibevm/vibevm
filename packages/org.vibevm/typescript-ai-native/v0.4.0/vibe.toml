@@ -13,7 +13,7 @@ min_vibe_version = "0.1.0"
 requires_kinds = []
 
 [requires]
-packages = { "flow:org.vibevm/discipline-core" = "^0.4" }
+packages = { "flow:org.vibevm/discipline-core" = "^0.5" }
 
 [boot_snippet]
 source = "spec/boot/20-stack-typescript-ai-native.md"
