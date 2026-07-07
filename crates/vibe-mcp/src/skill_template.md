@@ -95,6 +95,34 @@ If the user asks about installed packages — what's installed, what
 version, what features are active, what files a package contributed
 — call `query_package` first. Don't infer.
 
+### The type oracle (`tcg_*` — projects with a discipline stack installed)
+
+When the project's lockfile carries a language stack that ships the
+agentic type oracle (today: `stack:org.vibevm/typescript-ai-native`),
+four more tools answer type questions at millisecond latency from a
+persistent language-service process. Consult them BEFORE writing an
+edit — checking a hypothetical file costs less than one red gate run:
+
+- **`tcg_validate(language, file, content?)`** — type-check `file`
+  through the project's own compiler; pass `content` to check an
+  UNWRITTEN edit (an in-memory overlay — disk is never touched).
+  Returns compiler diagnostics PLUS the discipline gate's findings,
+  each flagged `baselined` (sanctioned) or new, and advice strings.
+- **`tcg_scope(language, file, position?)`** — what is in scope:
+  symbols with kinds, the file's cell and seam, and the branded types
+  exported at reachable seams (heuristic-labelled).
+- **`tcg_complete(language, file, position, content?, prefix?, max?)`**
+  — type-valid completions at a position; entries carry type text and
+  an `unsafe` flag on any-typed candidates. Pass `prefix` — details
+  are computed after the cut.
+- **`tcg_type(language, file, position, content?)`** — quick info
+  (type display + docs) at a position.
+
+`language` is `"typescript"` today (more arrive as values, not new
+tools). The floor gates stay the truth — the oracle exists so your
+edit passes them on the first try. If the stack is not installed the
+tools answer with the exact `[requires]`/`vibe install` recipe.
+
 ### Project conventions are out of scope here
 
 A vibevm project may carry its own additional disciplines (write-

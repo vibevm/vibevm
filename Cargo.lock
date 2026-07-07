@@ -2472,6 +2472,7 @@ dependencies = [
  "toml 0.9.12+spec-1.1.0",
  "tracing",
  "vibe-core",
+ "vibe-tcg",
 ]
 
 [[package]]
@@ -2535,6 +2536,19 @@ dependencies = [
  "vibe-core",
  "vibe-registry",
  "walkdir",
+]
+
+[[package]]
+name = "vibe-tcg"
+version = "0.1.0-dev"
+dependencies = [
+ "serde",
+ "serde_json",
+ "specmark",
+ "tempfile",
+ "thiserror 2.0.18",
+ "vibe-core",
+ "vibe-workspace",
 ]
 
 [[package]]

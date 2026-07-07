@@ -45,6 +45,7 @@ pub mod agents;
 pub mod install;
 pub mod jsonrpc;
 pub mod pkgskill;
+pub mod tcg;
 pub mod tools;
 pub mod transport;
 
@@ -79,12 +80,17 @@ pub struct ServerContext {
     /// Project root — the directory containing `vibe.toml` and
     /// `vibe.lock`.
     pub project_root: PathBuf,
+    /// The tcg oracle registry (PROP-026 §4): per-language persistent
+    /// relay children, lazily spawned on first `tcg_*` use, killed with
+    /// the context. Interior-mutable — tools get `&ServerContext`.
+    pub tcg: vibe_tcg::OracleRegistry,
 }
 
 impl ServerContext {
     pub fn new(project_root: impl Into<PathBuf>) -> Self {
         ServerContext {
             project_root: project_root.into(),
+            tcg: vibe_tcg::OracleRegistry::default(),
         }
     }
 

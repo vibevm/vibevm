@@ -47,6 +47,10 @@ pub fn default_tools() -> Vec<Box<dyn McpTool>> {
         Box::new(ReadSubskill),
         Box::new(MaterialiseSubskill),
         Box::new(AgenticExplain),
+        Box::new(crate::tcg::TcgValidate),
+        Box::new(crate::tcg::TcgScope),
+        Box::new(crate::tcg::TcgComplete),
+        Box::new(crate::tcg::TcgType),
     ]
 }
 

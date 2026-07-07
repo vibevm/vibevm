@@ -13,6 +13,7 @@ description = "Model Context Protocol server for vibevm — exposes installed pa
 [dependencies]
 specmark.workspace = true
 vibe-core.workspace = true
+vibe-tcg.workspace = true
 serde.workspace = true
 serde_json.workspace = true
 toml.workspace = true
