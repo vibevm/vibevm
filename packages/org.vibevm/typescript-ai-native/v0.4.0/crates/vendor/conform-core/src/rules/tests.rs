@@ -420,3 +420,47 @@ fn unsafe_gate_fingerprint_survives_line_shifts() {
         "a pure line shift must not change the fingerprint"
     );
 }
+
+/// The bare single-crate shape: repo-relative paths carry NO crate
+/// prefix (`src/lib.rs`, `tests/t.rs`) because the crate dir IS the
+/// project root (`roots = ["."]`). Path-scoped rules must treat them
+/// exactly like `crates/x/src/…` — before the shared predicates every
+/// inline `contains("/src/")` silently skipped the whole shape.
+#[test]
+fn bare_single_crate_paths_are_in_scope() {
+    use super::{in_src, in_tests, is_lib_root};
+    for (file, src, tests, lib_root) in [
+        ("crates/x/src/m.rs", true, false, false),
+        ("crates/x/src/lib.rs", true, false, true),
+        ("crates/x/tests/t.rs", false, true, false),
+        ("src/m.rs", true, false, false),
+        ("src/lib.rs", true, false, true),
+        ("tests/t.rs", false, true, false),
+        ("benches/b.rs", false, false, false),
+        ("src/librs.rs", true, false, false),
+    ] {
+        assert_eq!(in_src(file), src, "in_src({file})");
+        assert_eq!(in_tests(file), tests, "in_tests({file})");
+        assert_eq!(is_lib_root(file), lib_root, "is_lib_root({file})");
+    }
+
+    // And through a real rule: a domain unwrap in a bare-shape file fires.
+    let rule = rules::NoUnwrapInDomain {
+        gated_crates: vec!["app".into()],
+    };
+    let facts = vec![sf(
+        "src/lib.rs",
+        "app",
+        vec![Fact::UnwrapUse {
+            method: "unwrap".into(),
+            line: 3,
+            in_test: false,
+            in_deviation: false,
+        }],
+    )];
+    assert_eq!(
+        rule.check(&facts).len(),
+        1,
+        "the gate must fire on the bare single-crate shape"
+    );
+}
