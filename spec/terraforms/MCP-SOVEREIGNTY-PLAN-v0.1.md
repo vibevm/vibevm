@@ -690,6 +690,29 @@ Named deferrals (visible, not silent):
 
 ## 13. Execution ledger (filled by the executing session)
 
+### Wave 2 — EXECUTED (2026-07-07); commit map
+
+- `28e6481` build(packages): discipline-core 0.5.0→0.6.0 (the ritual
+  move list; stacks widened `^0.6` in place).
+- `f922437` build(deps): the 0.6.0 slot + the three in-repo reference
+  repoints; demos deliberately deferred to the waves that touch them.
+- `ef018ee` feat(discipline-core): **mcp-core** — wire (line-delimited
+  2024-11-05), server loop (replayable, bad frames never kill it),
+  toolset (isError-result law, no prompts), capture (dup2 /
+  SetStdHandle into a FILE; child-process output captured — proven
+  live on this box; one sequential test because the redirect is
+  process-global and libtest diverts in-process eprintln — the rustdoc
+  example pins that path libtest-free).
+- `183bbf9` docs(spec): MCP-CORE-v0.1 (five REQ units).
+- `69fc129` refactor(xtask): multi-source `[[sync]]` sets; the ledger
+  law recorded in the manifest itself: an mcp package mirrors its
+  stack's crates/ LAYOUT (relative path-deps must hold) and mcp-core
+  targets only mcp packages.
+- `044ae86` build(deps): the flow slot gains mcp-core + the spec.
+- Panel at the boundary: self-check 13 steps exit 0, vibe check clean,
+  core-package suite 11 green incl. the capture end-to-end, self-trace
+  0 orphans with mcp-core covered.
+
 ### Wave 1 — EXECUTED (2026-07-07); commit map
 
 - `4943ad4` docs(spec): VIBEVM-SPEC §4.1 (owner-sanctioned five-kind
