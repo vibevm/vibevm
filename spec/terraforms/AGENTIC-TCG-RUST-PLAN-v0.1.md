@@ -1,7 +1,25 @@
 # AGENTIC-TCG-RUST-PLAN v0.1 — the agentic type oracle for Rust
 
-_Status: **DRAFT — awaiting owner review of §17 (2026-07-07)**; written
-against tree `77218b5` (floor green; local == origin + 1 plan commit).
+_Status: **ACCEPTED with owner amendments, 2026-07-07 (same day as
+authoring; execution NOT yet commissioned — the plan waits for the
+owner's word).** Owner review resolved all seven §17 points: (1)
+substrate approved — with `ra_ap_*` library embedding recorded in
+ROADMAP.md's **Far backlog** as a deliberately distant capability
+upgrade («сильно-сильно позже»), not a rejection forever (D1 carries
+the note); (2) fidelity posture approved; (3) **NAMING AMENDMENT — a
+standing policy**: every Rust artifact with a cross-language analog
+ends in `-rust` (crate and module names included; executables and
+externally visible libraries especially) — the bridge crate becomes
+`tcg-oracle-bridge-rust`, the brief `vibe-agentic-tcg-rust.md`, and
+the sweep of the package's existing unsuffixed CLI crates is
+commissioned into Phase 1 (NEW D13); (4) the `research/rust-demo`
+testbed approved — experiment there first; (5) rust-analyzer is a
+STACK PREREQUISITE — installing ai-native-rust obliges the machine to
+carry it; without the stack, skipping is clean (D11 reworded); (6) no
+battery — confirmed; (7) the latency targets stand as INITIAL targets,
+and a miss CANCELS NOTHING — it is reported to the owner (§4.2/R1
+carry the rule). Originally DRAFT the same day; written against tree
+`77218b5` (floor green; local == origin + 1 plan commit).
 Commissioned by the owner as owner-court item 3 of the agentic-tcg
 checkpoint: «напиши аналог vibe-agentic-tcg для Rust» — the Rust twin
 of the agentic delivery, over rust-analyzer, that PROP-026 §2 and the
@@ -9,9 +27,8 @@ of the agentic delivery, over rust-analyzer, that PROP-026 §2 and the
 value, not new tools»). Prior art:
 [AGENTIC-TCG-TS-PLAN-v0.1](AGENTIC-TCG-TS-PLAN-v0.1.md) (EXECUTED) —
 this plan mirrors its shape phase-for-phase where the languages agree
-and states explicitly where they cannot. Cold-executable after §17
-resolves: any phase is a safe stop; the floor must be green at every
-phase boundary. The Stage-B delivery experiments
+and states explicitly where they cannot. Cold-executable: any phase is
+a safe stop; the floor must be green at every phase boundary. The Stage-B delivery experiments
 ([TCG-STAGE-B-DELIVERY-PLAN-v0.1](TCG-STAGE-B-DELIVERY-PLAN-v0.1.md))
 are BACKLOGGED by the owner the same day — this campaign proves the
 Rust oracle's MECHANICS (corpus + bench), and explicitly does NOT run
@@ -187,7 +204,7 @@ vibevm/
 │   └─ reports/REPORT-<date>-rust-baseline.md          NEW: bench + agreement
 └─ packages/org.vibevm/rust-ai-native/v0.5.0/          (bumped from v0.4.0)
     ├─ vibe.toml                                       [[binary]] × 4 (+ tcg-rust)
-    ├─ crates/tcg-lsp-bridge/                          NEW: the LSP client seam
+    ├─ crates/tcg-oracle-bridge-rust/                  NEW: the LSP client seam
     │                                                   (framing, handshake,
     │                                                   overlays, pull-diags,
     │                                                   encoding cell, replay-
@@ -195,12 +212,20 @@ vibevm/
     ├─ crates/tcg-cli-rust/                            NEW: bin `tcg-rust`
     │                                                   (serve / validate / scope /
     │                                                    complete / type / bench)
-    ├─ crates/conform-cli/                             + pub build_rules seam
+    ├─ crates/conform-cli-rust/                        RENAMED (D13, was
+    ├─ crates/discipline-cli-rust/                      conform-cli / discipline-
+    ├─ crates/specmap-cli-rust/                         cli / specmap-cli);
+    │                                                   conform-cli-rust also
+    │                                                   gains the pub
+    │                                                   build_rules seam
     └─ spec/rust/
-        ├─ GUIDE-AI-NATIVE-RUST.md                     §13 wiring move + the
+        ├─ GUIDE-AI-NATIVE-RUST.md                     §2 naming policy (D13) +
+        │                                               §13 wiring move + the
         │                                               generation-time section
-        ├─ tools/vibe-tcg.md                           pointer to the sibling
-        ├─ tools/vibe-agentic-tcg.md                   NEW: the component brief
+        ├─ tools/vibe-tcg-rust.md                      RENAMED from vibe-tcg.md
+        │                                               (D13) + pointer to the
+        │                                               sibling brief
+        ├─ tools/vibe-agentic-tcg-rust.md              NEW: the component brief
         │                                               at FULL 7-section parity
         └─ mechanisms/
             ├─ TCG-ORACLE-RUST-v0.1.md                 NEW: the r-a process model
@@ -228,7 +253,7 @@ rust-analyzer                     (long-lived LSP child, the CONSUMER's
      completion)
 ```
 
-## 3. Decisions (D1–D12)
+## 3. Decisions (D1–D13)
 
 ### D1 — substrate: the consumer's rust-analyzer over LSP stdio
 
@@ -241,11 +266,19 @@ honoured; (2) `rust-analyzer` on PATH; (3) hard fail:
 `RustAnalyzerMissing` with `rustup component add rust-analyzer`. The
 resolved path and version land in the `init` result (the `ts_version`
 analog).
-*Rejected:* embedding rust-analyzer as a library (the `ra_ap_*`
-crates) — weekly-release API churn, an enormous dependency tree
-compiled into a slot binary, and it binds OUR r-a version instead of
-the consumer's toolchain, violating the consumer-resolution posture
-both stacks established. *Rejected:* `cargo check` as the oracle —
+*Rejected for v0.1 — but FAR-BACKLOGGED, not buried (owner
+disposition, §17.1):* embedding rust-analyzer as a library (the
+`ra_ap_*` crates — r-a ships its internals as versioned crates:
+`ra_ap_ide`, `ra_ap_hir`, `ra_ap_vfs`, …). In-process linking would
+give LSP-free access to the full semantic model — custom traversals,
+richer scope/brand answers, no child process — a real capability
+upgrade for a much later day. Today it loses on weekly-release API
+churn, an enormous dependency tree compiled into a slot binary, and
+binding OUR r-a version instead of the consumer's toolchain,
+violating the consumer-resolution posture both stacks established.
+Recorded in ROADMAP.md's **Far backlog** with the picking-up
+conditions; the brief's staged-ambition section (Phase 1) carries the
+same disposition. *Rejected:* `cargo check` as the oracle —
 disk-bound, seconds-grain, no completions/hover; that truth already
 exists as the floor, and the oracle's whole point is the latency
 class between keystroke and floor. *Rejected:* rustc internals —
@@ -274,10 +307,10 @@ This is the one place the Rust twin is structurally WEAKER than the
 TS original, and saying so in the spec is what keeps the tool
 trustworthy.
 
-### D3 — `tcg-lsp-bridge`: the LSP client as a seam, outer protocol unmoved
+### D3 — `tcg-oracle-bridge-rust`: the LSP client as a seam, outer protocol unmoved
 
-A new stack crate mirroring `tcg-oracle-bridge`'s role with LSP
-mechanics inside:
+A new stack crate — the TS twin's stem (`tcg-oracle-bridge`) plus the
+D13 language suffix — carrying its role with LSP mechanics inside:
 
 - **Framing cell**: `Content-Length` header framing (read/write),
   JSON-RPC 2.0 envelopes; requests correlate by our ids; server
@@ -347,8 +380,9 @@ D3 reasoning holds unchanged).
 ### D5 — enrichment is in-process: the frontend IS the fact source
 
 The relay reads the project's `conform.toml` once per init
-(`conform_cli::load_config_or_default`, origin printed); a NEW pub
-seam `conform_cli::build_rules(&Config) -> Vec<Box<dyn Rule>>`
+(`conform_cli_rust::load_config_or_default`, origin printed — the
+D13-renamed crate); a NEW pub
+seam `conform_cli_rust::build_rules(&Config) -> Vec<Box<dyn Rule>>`
 (mirroring the TS campaign's D5 export; today the assembly is private
 in run_check) hands it the gate's OWN rule set. On `validate`: the
 effective text (overlay or disk) goes through
@@ -419,16 +453,17 @@ smoke, not a gate).
 
 Package (`rust-ai-native`, all under `spec/rust/`):
 
-- `tools/vibe-agentic-tcg.md` — the component brief at FULL
+- `tools/vibe-agentic-tcg-rust.md` — the component brief at FULL
   seven-section parity (problem · design stance · component shape ·
   staged ambition · licensing · risk register · summary), stating the
   mask-value decomposition, the two-hop topology, the D2 fidelity
   posture, DR1-015 honesty (tools you can ignore do not distort — and
   the Stage-A null: they may also not help until delivery binds), and
   the shared-infrastructure claim toward the token-level far future.
-  The file name follows the package's local no-suffix convention
-  (`vibe-tcg.md` is the sibling; binaries carry the `-rust` suffix,
-  briefs do not).
+  The staged-ambition section also records the `ra_ap_*` embedding as
+  the owner's FAR-BACKLOG stage (D1) so the disposition lives in the
+  package, not only in vibevm's ROADMAP. The file name carries the
+  D13 suffix (the TS analog is `vibe-agentic-tcg-ts.md`).
 - `mechanisms/TCG-ORACLE-RUST-v0.1.md` (`req` units + anchors): the
   r-a process model — resolution order (D1), LSP lifecycle,
   capability negotiation, overlay/version semantics, quiescence and
@@ -444,9 +479,14 @@ Package (`rust-ai-native`, all under `spec/rust/`):
   product level (the same `vibe-tcg` client drives both relays in the
   live-chain tests) and by outer-frame replay goldens in each
   package; the restatement's drift risk is accepted and named.
-- Rewrites: `tools/vibe-tcg.md` gains the pointer paragraph (the
-  agentic sibling exists; the token-level line stays VERY-FAR-FUTURE
-  per the owner's standing disposition); GUIDE §13 gains the wiring
+- Rewrites: `tools/vibe-tcg.md` RENAMES to `tools/vibe-tcg-rust.md`
+  (D13 — the far-future token tool line itself becomes
+  `vibe-tcg-rust`, dissolving today's collision where the bare name
+  `vibe-tcg` means BOTH the Rust token brief and the language-generic
+  product crate) and gains the pointer paragraph (the agentic sibling
+  exists; the token-level line stays VERY-FAR-FUTURE per the owner's
+  standing disposition); GUIDE §2 gains the D13 naming-policy
+  paragraph; GUIDE §13 gains the wiring
   move (`tcg_*` tools + `vibe bin exec tcg-rust -- …` one-shot forms)
   and a generation-time-assistant subsection mirroring the TS §14
   posture (consult before you write; the floor stays the truth); both
@@ -513,17 +553,30 @@ Rust arm would re-measure the known Stage-A null at new cost. The
 demo ships battery-ready so the future cross-language Stage-B pays
 nothing extra.
 
-### D11 — package tests may require rust-analyzer, hard-fail-with-recipe
+### D11 — rust-analyzer is a stack prerequisite (owner resolution §17.5)
 
-The bridge's replay suite and every unit layer run r-a-free; the
-hermetic end-to-end tests (init on rust-demo-shaped fixtures, seeded
-overlay → diagnostic, enrichment merge) need a REAL rust-analyzer —
-and on a box without the component they FAIL with the
-`rustup component add rust-analyzer` recipe, never skip (the standing
-never-skip posture; node-based TS tests set the precedent). This is a
-new dev-box prerequisite for the package suite and self-check's
-package steps; the README and GUIDE §13 say so. (This box: installed
-during authoring, 1.93.1.)
+Installing `stack:org.vibevm/rust-ai-native` OBLIGES the machine to
+carry rust-analyzer — a declared stack prerequisite, exactly as
+node ≥ 22.6 is the TS stack's (README, GUIDE §13, and the boot
+snippet's toolchain block all say so; the recipe is `rustup component
+add rust-analyzer`). The boundary the owner drew: with the stack
+installed the obligation is hard; without the stack there is none and
+skipping is clean. Concretely:
+
+- INSIDE the stack's own suite (the bridge/CLI e2e tests, the corpus,
+  the demo floor) an absent rust-analyzer is a hard, recipe-carrying
+  FAILURE — a stack holder without the prerequisite is a broken
+  install, not an optional configuration (never-skip; the bridge's
+  replay suite and every unit layer stay r-a-free regardless).
+- OUTSIDE the stack nothing changes: a machine without ai-native-rust
+  owes nothing — the `tcg_*` tools answer `language: "rust"` with the
+  not-installed recipe, and the product-side live chain
+  (`live_chain_on_rust_demo`) stays ignored-by-default like its TS
+  twin. No vibevm-wide obligation is created.
+- The vibevm dev repo HOLDS the stack (vibedeps), so dev boxes and
+  self-check's package steps inherit the obligation. (This box: the
+  component was absent and was installed during plan authoring,
+  1.93.1 — the fresh-box failure mode is real.)
 
 ### D12 — version bump 0.4.0 → 0.5.0, one move at campaign open
 
@@ -539,6 +592,56 @@ specs name only discipline-core). rust-demo requires `^0.5` from
 birth. Registry publish stays owner-held (joins the standing
 publish-court item as 0.5.0/0.4.0/0.4.0).
 
+### D13 — the language-suffix naming policy + the rename sweep (owner amendment §17.3)
+
+A standing convention, set by the owner during this plan's review:
+**every Rust artifact that has an analog in another language ends in
+`-rust`** — crate and module names included; executable names and
+externally visible libraries especially. The TS package already
+complies (`discipline-cli-typescript`, `conform-cli-typescript`,
+`tcg-cli-typescript`); the Rust package's BINARIES already comply
+(`discipline-rust` / `conform-rust` / `specmap-rust`); its CLI crates
+do not («а не просто cli как сейчас» — the owner's words point exactly
+here), and the 0.5.0 boundary is the once-per-bump moment to fix them:
+
+- `crates/conform-cli` → `crates/conform-cli-rust` (ident
+  `conform_cli_rust`), `crates/discipline-cli` →
+  `crates/discipline-cli-rust`, `crates/specmap-cli` →
+  `crates/specmap-cli-rust`. Binary NAMES do not move.
+- `env-audit` KEEPS its name — no cross-language analog; the rule
+  binds analogs only.
+- The vendored engines (conform-core, specmap-core, specmark,
+  specmark-grammar) are language-NEUTRAL by design — outside the
+  rule's reach, untouched (§4.3 still gates them mechanically).
+- The new crates are born compliant: `tcg-oracle-bridge-rust` (the TS
+  twin's stem + the suffix), `tcg-cli-rust`.
+- Spec files with cross-language analogs follow too («всё, что
+  относится к Rust и имеет аналоги» — the owner's word is "everything"):
+  the new brief is `vibe-agentic-tcg-rust.md`, and the token-level
+  brief `vibe-tcg.md` renames to `vibe-tcg-rust.md` with the
+  far-future tool line becoming **`vibe-tcg-rust`** — dissolving a
+  real collision: today the bare name `vibe-tcg` means BOTH the Rust
+  token tool and the language-generic product crate
+  (`crates/vibe-tcg`). After the rename the bare name belongs to the
+  generic family alone. ROADMAP M1.23's mention updates alongside the
+  M1.25 addition.
+- `GUIDE-AI-NATIVE-RUST.md` §2 (naming) gains the policy paragraph so
+  the convention outlives this plan.
+- Deliberate boundary: cards and other prose under `spec/rust/` keep
+  their names — the rule targets ARTIFACTS with analog-collision
+  potential; a cards-wide rename would be churn without a consumer.
+  Named here so the boundary is a decision, not an omission.
+
+Ripple checklist (Phase 1 executes it as one commit): package
+Cargo.toml members + inter-crate path-deps; `[[binary]]` `crate =`
+paths in the package manifest; package specmap.toml
+scan_roots/exempt; the boot snippet's `cargo install --path
+…/crates/discipline-cli-rust` recipe; GUIDE §13 wiring texts; package
+README; vibevm root Cargo.toml path-deps and the xtask shim imports
+(`use conform_cli…` → `conform_cli_rust…`, the specmap shim alike);
+self-check.sh wherever a step names a crate path; the re-materialised
+vibedeps slot and regenerated boot INDEX.
+
 ## 4. Predictions (falsifiable, checked by the REPORT and the diff)
 
 1. The differential corpus agrees 7/7 existence-grain on the curated
@@ -547,7 +650,10 @@ publish-court item as 0.5.0/0.4.0/0.4.0).
    bridge, never the tolerance.
 2. Warm `validate` p50 < 500 ms and cold init < 15 s on rust-demo;
    `complete` p50 < 300 ms. Falsified → the §13 R1 ladder, targets
-   move only with a recorded reason in the REPORT.
+   move only with a recorded reason in the REPORT — and per the
+   owner's §17.7 resolution a miss CANCELS NOTHING: the campaign
+   proceeds, and the miss is reported to the owner prominently (the
+   REPORT, the WAL, and the campaign-close summary all carry it).
 3. NO vendored-engine edits (conform-core / specmap-core / specmark
    untouched; `sync-engines --check` green throughout): the only
    conform-side change is the pub `build_rules` assembly seam in
@@ -588,18 +694,30 @@ publish-court item as 0.5.0/0.4.0/0.4.0).
    Phase 1 commits anything; findings land in the WAL session
    section.
 
-## 6. Phase 1 — the version bump + all specs
+## 6. Phase 1 — the version bump + the D13 renames + all specs
 
 1. D12 ritual first (git mv, manifest, requires, sync-engines,
    re-materialise, INDEX regen).
-2. Author `vibe-agentic-tcg.md`, `TCG-ORACLE-RUST-v0.1.md`,
-   `TCG-PROTOCOL-RUST-v0.1.md`; the vibe-tcg.md pointer + GUIDE §13
-   move + generation-time subsection + SKILL twins + boot row +
-   README row; PROP-026 rust rows + history; ROADMAP M1.25.
-3. Acceptance: `bash tools/self-check.sh` exit 0 (13 steps, incl.
-   sync-engines over the renamed dir); `cargo xtask specmap --check`
-   0 dangling; `vibe check` clean; ts-demo floor untouched 7/7.
-4. Commits (Rule 3): `build(packages): bump rust-ai-native to 0.5.0`;
+2. The D13 rename sweep in the same boundary (its ripple checklist is
+   normative): the three CLI crates → `-rust` names + idents; the
+   token brief → `vibe-tcg-rust.md`; GUIDE §2 policy paragraph;
+   vibevm root path-deps + xtask shim imports; boot/GUIDE/README
+   recipe paths; package specmap.toml roots/exempt; binary NAMES and
+   behaviour unchanged.
+3. Author `vibe-agentic-tcg-rust.md`, `TCG-ORACLE-RUST-v0.1.md`,
+   `TCG-PROTOCOL-RUST-v0.1.md`; the vibe-tcg-rust.md pointer + GUIDE
+   §13 move + generation-time subsection + SKILL twins + boot row +
+   README row; PROP-026 rust rows + history; ROADMAP M1.25 (+ the
+   M1.23 tool-line mention updates to `vibe-tcg-rust`).
+4. Acceptance: `bash tools/self-check.sh` exit 0 (13 steps, incl.
+   sync-engines over the renamed dir AND the renamed crates — the
+   xtask shims compile against the new idents); `cargo run -q -p
+   vibe-cli -- bin list` still shows 7 binaries with UNCHANGED names;
+   `cargo xtask specmap --check` 0 dangling; `vibe check` clean;
+   ts-demo floor untouched 7/7.
+5. Commits (Rule 3): `build(packages): bump rust-ai-native to 0.5.0`;
+   `refactor(rust-ai-native): rename the cli crates to the -rust
+   convention` (body carries the D13 policy + the root-shim ripple);
    `docs(rust-ai-native): the agentic tcg brief + mechanisms`;
    `docs(spec): PROP-026 - the rust rows + roadmap M1.25`.
 
@@ -615,7 +733,7 @@ publish-court item as 0.5.0/0.4.0/0.4.0).
 3. Commit: `feat(research): rust-demo - the committed Rust consumer
    testbed`.
 
-## 8. Phase 3 — `tcg-lsp-bridge`
+## 8. Phase 3 — `tcg-oracle-bridge-rust`
 
 1. The D3 cells: framing, handshake, position, overlay, ops,
    quiescence, taxonomy; replay suite from the Phase-0 recorded
@@ -625,12 +743,12 @@ publish-court item as 0.5.0/0.4.0/0.4.0).
    FAIL).
 2. Acceptance: package tests green; no vendored-crate diffs
    (`sync-engines --check`); vibevm floor untouched.
-3. Commit: `feat(rust-ai-native): tcg-lsp-bridge - the rust-analyzer
-   client seam`.
+3. Commit: `feat(rust-ai-native): tcg-oracle-bridge-rust - the
+   rust-analyzer client seam`.
 
 ## 9. Phase 4 — the `build_rules` seam + bin `tcg-rust`
 
-1. `conform_cli::build_rules` pub seam + doctest (behaviour
+1. `conform_cli_rust::build_rules` pub seam + doctest (behaviour
    identical; the gate tests hold).
 2. `tcg-cli-rust` per D4/D5/D6: serve (self-init + boot stderr line;
    enrichment in-process; findings/baselined/advice), the four
@@ -697,7 +815,9 @@ publish-court item as 0.5.0/0.4.0/0.4.0).
   (the relay boots before the host's first frame); the degraded flag
   on pre-quiescent answers; targets move only with a recorded REPORT
   reason. The product's 60 s first-request cap is the hard ceiling —
-  documented in ORACLE-RUST for large-workspace consumers.
+  documented in ORACLE-RUST for large-workspace consumers. And per
+  §17.7: a missed target never cancels the campaign — it is carried
+  to the owner in the report, prominently.
 - **R2 — diagnostic fidelity** (r-a ≠ rustc). D2 is the posture; the
   curated corpus is the detector; the floor stays the truth; the
   mapping table makes the delta inspectable instead of vibes.
@@ -732,7 +852,9 @@ publish-court item as 0.5.0/0.4.0/0.4.0).
   battery-ready so the future cross-language Stage-B pays nothing.
 - Blanket rustc-parity claims (D2); borrow-checker/trait-solver
   completeness.
-- `ra_ap_*` library embedding (D1 rejection stands).
+- `ra_ap_*` library embedding — NOT here, but not dead: the owner's
+  FAR BACKLOG (ROADMAP.md carries the entry and the picking-up
+  conditions; D1 carries the note).
 - An LSP relay surface (R8), reasoning ops, affinity involvement.
 - Token-level TCG — VERY-FAR-FUTURE, owner disposition stands; the
   clean-room rule re-binds there.
@@ -772,28 +894,30 @@ cargo test -p vibe-mcp --test tcg_tools -- --ignored               # both live c
 All commits local; mirror and registry publish stay held for the
 owner's word, per standing policy.
 
-## 17. Review points — OPEN for the owner
+## 17. Review points — RESOLVED by the owner (2026-07-07)
 
-1. **Substrate** — the consumer's rust-analyzer over LSP (D1), with
-   the `ra_ap_*` embedding and cargo-check-as-oracle rejections as
-   argued. Approve?
-2. **The fidelity posture** (D2) — curated-class agreement instead of
-   blanket rustc parity, the approximation section in the spec, the
-   floor stays the truth. Approve the honesty framing?
-3. **Names** — bin `tcg-rust`; crates `tcg-lsp-bridge` /
-   `tcg-cli-rust`; brief `spec/rust/tools/vibe-agentic-tcg.md`
-   (package-local no-suffix convention); mechanisms
-   `TCG-ORACLE-RUST-v0.1` / `TCG-PROTOCOL-RUST-v0.1`. Fine as
-   proposed?
-4. **The testbed** — a NEW committed `research/rust-demo` (zero-dep
-   ts-demo mirror) rather than testing against vibevm itself.
-   Approve?
-5. **The dev-box prerequisite** (D11) — package e2e tests REQUIRE
-   rust-analyzer, hard-fail-with-recipe, never skip (self-check's
-   package steps inherit this). Accept?
-6. **No battery** (D10) — mechanics proof only; the delivery
-   experiments stay backlogged with Stage-B and will cover both
-   languages when commissioned. Confirm?
-7. **Latency targets** — warm validate p50 < 500 ms / cold < 15 s /
-   complete < 300 ms on the zero-dep demo, posted as REPORT-checked
-   expectations. Fine?
+1. **Substrate** — approved: the consumer's rust-analyzer over LSP.
+   Amendment: the `ra_ap_*` embedding goes to the FAR BACKLOG
+   («сильно-сильно позже») as a capability upgrade with a short
+   description of what it is — recorded in ROADMAP.md's Far backlog
+   section and in D1; the brief's staged ambition carries it too.
+2. **The fidelity posture** — approved as framed (D2).
+3. **Names** — superseded by a STANDING POLICY (the owner's words:
+   «всё, что относится к Rust и имеет аналоги в других языках,
+   заканчивалось на Rust … это касается и имен крейтов и модулей, но
+   в особенности — исполняемых файлов и внешне доступных библиотек»).
+   D13 codifies it: the bridge is `tcg-oracle-bridge-rust`, the brief
+   `vibe-agentic-tcg-rust.md`, the token brief renames to
+   `vibe-tcg-rust.md`, and the existing unsuffixed CLI crates
+   (`conform-cli` / `discipline-cli` / `specmap-cli` — «а не просто
+   cli как сейчас») are renamed in Phase 1.
+4. **The testbed** — approved: experiment on `research/rust-demo`
+   first.
+5. **The prerequisite** — resolved as a STACK obligation: whoever
+   installed ai-native-rust is obliged to have rust-analyzer on the
+   machine; without the stack there is no obligation and skipping is
+   clean. D11 reworded accordingly.
+6. **No battery** — confirmed.
+7. **Latency targets** — approved as INITIAL targets; a miss cancels
+   nothing — the campaign proceeds and the miss is reported to the
+   owner in the campaign report (§4.2 and R1 carry the rule).
