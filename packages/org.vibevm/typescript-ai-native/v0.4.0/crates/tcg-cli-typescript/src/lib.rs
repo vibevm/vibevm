@@ -13,9 +13,7 @@ use std::time::Duration;
 
 use anyhow::{Context, Result};
 use serde::Serialize;
-use tcg_oracle_bridge::{
-    OracleTransport, Position, SystemOracle, ValidateResult, to_file_record,
-};
+use tcg_oracle_bridge::{OracleTransport, Position, SystemOracle, ValidateResult, to_file_record};
 
 mod bench;
 mod serve;
@@ -140,7 +138,10 @@ pub fn parse_position(s: &str) -> Result<Position> {
         .with_context(|| format!("position `{s}` is not `line:character`"))?;
     Ok(Position {
         line: l.trim().parse().with_context(|| format!("line in `{s}`"))?,
-        character: c.trim().parse().with_context(|| format!("character in `{s}`"))?,
+        character: c
+            .trim()
+            .parse()
+            .with_context(|| format!("character in `{s}`"))?,
     })
 }
 
@@ -149,7 +150,9 @@ fn read_content(content_from: Option<&str>) -> Result<Option<String>> {
         None => Ok(None),
         Some("-") => {
             let mut buf = String::new();
-            std::io::stdin().read_to_string(&mut buf).context("reading stdin")?;
+            std::io::stdin()
+                .read_to_string(&mut buf)
+                .context("reading stdin")?;
             Ok(Some(buf))
         }
         Some(path) => Ok(Some(
@@ -196,7 +199,10 @@ pub fn run_validate(
         println!("{}", serde_json::to_string_pretty(&enriched)?);
     } else {
         for d in &enriched.raw.diagnostics {
-            println!("{}:{}:{} TS{} {}", file, d.line, d.character, d.code, d.message);
+            println!(
+                "{}:{}:{} TS{} {}",
+                file, d.line, d.character, d.code, d.message
+            );
         }
         for f in &enriched.conform_findings {
             println!(
@@ -224,12 +230,7 @@ pub fn run_validate(
 }
 
 /// One-shot scope.
-pub fn run_scope(
-    root: &Path,
-    file: &str,
-    position: Option<&str>,
-    json: bool,
-) -> Result<i32> {
+pub fn run_scope(root: &Path, file: &str, position: Option<&str>, json: bool) -> Result<i32> {
     let policy = Policy::load(root)?;
     let pos = position.map(parse_position).transpose()?;
     let mut oracle = spawn_ready(root, &policy)?;
@@ -243,7 +244,12 @@ pub fn run_scope(
             result.seam_file.as_deref().unwrap_or("-")
         );
         for b in &result.branded {
-            println!("branded: {} (at {}{})", b.name, b.seam, if b.heuristic { ", heuristic" } else { "" });
+            println!(
+                "branded: {} (at {}{})",
+                b.name,
+                b.seam,
+                if b.heuristic { ", heuristic" } else { "" }
+            );
         }
         println!("{} in-scope symbol(s); first 20:", result.symbols.len());
         for s in result.symbols.iter().take(20) {
@@ -278,8 +284,16 @@ pub fn run_complete(
                 "{} [{}]{}{}",
                 e.name,
                 e.kind,
-                if e.type_text.is_empty() { String::new() } else { format!(" — {}", e.type_text) },
-                if e.unsafe_ { "  [UNSAFE: any-typed]" } else { "" }
+                if e.type_text.is_empty() {
+                    String::new()
+                } else {
+                    format!(" — {}", e.type_text)
+                },
+                if e.unsafe_ {
+                    "  [UNSAFE: any-typed]"
+                } else {
+                    ""
+                }
             );
         }
         println!("{} entr(ies)", result.entries.len());
@@ -387,7 +401,10 @@ mod tests {
         let second = enrich_validate(&sanctioned, "src/cells/greeting/index.ts", raw);
         assert_eq!(second.conform_findings.len(), 1);
         assert!(second.conform_findings[0].baselined);
-        assert!(second.advice.is_empty(), "sanctioned findings advise nothing");
+        assert!(
+            second.advice.is_empty(),
+            "sanctioned findings advise nothing"
+        );
     }
 
     #[test]

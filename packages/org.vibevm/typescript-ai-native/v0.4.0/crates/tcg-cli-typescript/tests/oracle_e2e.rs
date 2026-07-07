@@ -120,15 +120,17 @@ fn the_real_chain_validates_enriches_scopes_and_completes() {
     assert!(enriched.advice.iter().any(|a| a.contains("guide s8")));
 
     // 2) a seeded type error in an overlay is caught without disk writes
-    let original =
-        std::fs::read_to_string(root.join("src/cells/greet/index.ts")).expect("read");
+    let original = std::fs::read_to_string(root.join("src/cells/greet/index.ts")).expect("read");
     let seeded = format!("{original}\nconst bad: number = \"oops\";\n");
     let v = oracle
         .validate("src/cells/greet/index.ts", Some(&seeded))
         .expect("validate seeded");
-    assert!(v.diagnostics.iter().any(|d| d.code == 2322), "{:?}", v.diagnostics);
-    let after =
-        std::fs::read_to_string(root.join("src/cells/greet/index.ts")).expect("re-read");
+    assert!(
+        v.diagnostics.iter().any(|d| d.code == 2322),
+        "{:?}",
+        v.diagnostics
+    );
+    let after = std::fs::read_to_string(root.join("src/cells/greet/index.ts")).expect("re-read");
     assert_eq!(after, original, "the overlay never reaches disk");
 
     // 3) scope: cell + seam + the branded heuristic
@@ -137,18 +139,29 @@ fn the_real_chain_validates_enriches_scopes_and_completes() {
         .expect("scope");
     assert_eq!(scope.cell.as_deref(), Some("greet"));
     assert_eq!(scope.seam_file.as_deref(), Some("src/cells/greet/index.ts"));
-    assert!(scope.branded.iter().any(|b| b.name == "GuestName" && b.heuristic));
+    assert!(
+        scope
+            .branded
+            .iter()
+            .any(|b| b.name == "GuestName" && b.heuristic)
+    );
 
     // 4) complete with a prefix carries type text; the any-typed entry
     // in the dirty cell is flagged unsafe
-    let dirty =
-        std::fs::read_to_string(root.join("src/cells/dirty/index.ts")).expect("dirty");
+    let dirty = std::fs::read_to_string(root.join("src/cells/dirty/index.ts")).expect("dirty");
     let probe = format!("{dirty}\nexport function p(): number {{\n  return anyTh\n}}\n");
-    let line = (probe.lines().position(|l| l.contains("return anyTh")).expect("probe line")
+    let line = (probe
+        .lines()
+        .position(|l| l.contains("return anyTh"))
+        .expect("probe line")
         + 1) as u64;
-    let character =
-        (probe.lines().nth(line as usize - 1).expect("line").find("anyTh").expect("col")
-            + "anyTh".len()) as u64;
+    let character = (probe
+        .lines()
+        .nth(line as usize - 1)
+        .expect("line")
+        .find("anyTh")
+        .expect("col")
+        + "anyTh".len()) as u64;
     let comp = oracle
         .complete(
             "src/cells/dirty/index.ts",

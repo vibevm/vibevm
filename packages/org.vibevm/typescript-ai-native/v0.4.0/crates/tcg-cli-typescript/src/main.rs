@@ -149,12 +149,7 @@ fn main() -> Result<()> {
             position,
             json,
             root,
-        } => tcg_cli_typescript::run_type(
-            std::path::Path::new(&root),
-            &file,
-            &position,
-            json,
-        )?,
+        } => tcg_cli_typescript::run_type(std::path::Path::new(&root), &file, &position, json)?,
         Cmd::Bench {
             corpus,
             report,
