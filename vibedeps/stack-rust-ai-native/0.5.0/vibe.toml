@@ -41,6 +41,11 @@ name = "specmap-rust"
 crate = "crates/specmap-cli-rust"
 description = "the standalone traceability index + orphan gate for Rust trees"
 
+[[binary]]
+name = "tcg-rust"
+crate = "crates/tcg-cli-rust"
+description = "the agentic type oracle: a persistent enriching relay (serve) over the consumer's rust-analyzer, one-shot validate/scope/complete/type forms, and the differential bench harness"
+
 [[skill]]
 name = "discipline-sweep"
 path = "spec/skills/discipline-sweep"

@@ -13,6 +13,8 @@ members = [
     "crates/conform-cli-rust",
     "crates/discipline-cli-rust",
     "crates/env-audit",
+    "crates/tcg-oracle-bridge-rust",
+    "crates/tcg-cli-rust",
     "crates/specmap-cli-rust",
     "crates/vendor/conform-core",
     "crates/vendor/specmap-core",
@@ -57,6 +59,8 @@ syn = { version = "2", features = ["full", "visit"] }
 quote = "1"
 proc-macro2 = { version = "1", features = ["span-locations"] }
 clap = { version = "4", features = ["derive"] }
+
+thiserror = "2"
 
 # Dev / test
 tempfile = "3"

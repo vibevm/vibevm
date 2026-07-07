@@ -120,11 +120,18 @@ Consequences, all normative:
 
 After `initialized`, the server loads the workspace (cargo metadata,
 cache priming). The bridge waits for `experimental/serverStatus` with
-`quiescent: true` (granted and observed at 1.93.1), bounded by a
-deadline; if the capability is absent it falls back to draining the
-initial `workDoneProgress` tokens. A semantic answer produced before
-quiescence is legal but carries `degraded: true`, so callers can
-distinguish warm truth from cold best-effort. B5 extends to the whole
+`quiescent: true`, bounded by a deadline — and that flag is the ONLY
+trusted signal. Two live-chain findings harden this (2026-07-07,
+Phase 3): (a) rust-analyzer does NOT echo `serverStatusNotification`
+in its InitializeResult even though it honours the declared client
+capability, so there is nothing to key a capability check off — the
+bridge declares and trusts the channel; (b) a progress-drain
+heuristic ("initial workDoneProgress tokens ended") was tried and
+FALSIFIED twice — a fast first token drains while indexing continues,
+yielding confident empty answers — so it is deliberately ABSENT, and
+a replay test pins that progress noise never satisfies the wait. A
+deadline pass degrades: answers carry `degraded: true`, so callers
+can distinguish warm truth from cold best-effort. B5 extends to the whole
 session: an op the relay does not know answers a protocol error naming
 the known set; an analyzer crash surfaces `oracle-crashed` op-grain
 and ends the session (the product registry owns respawn-once); no

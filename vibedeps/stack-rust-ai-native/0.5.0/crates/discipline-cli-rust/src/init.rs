@@ -267,7 +267,7 @@ pub fn run_init(root: &Path, opts: &InitOptions) -> Result<()> {
         "discipline-rust init: done. Next steps:\n\
          \x20 1. wire your workspace Cargo.toml (GUIDE §13) — dep the tags AND exclude the slots:\n\
          \x20    [workspace] exclude = [\"vibedeps\"]   # the packages are their own workspaces\n\
-         \x20    [workspace.dependencies] specmark = {{ path = \"vibedeps/<stack-slot>/crates/specmark\" }}\n\
+         \x20    [workspace.dependencies] specmark = {{ path = \"vibedeps/<stack-slot>/crates/vendor/specmark\" }}\n\
          \x20 2. write your first spec unit (spec/PROP-001.md with a {{#req-…}} anchor)\n\
          \x20    and tag the implementing module: specmark::scope!(\"spec://{namespace}/PROP-001#req-…\")\n\
          \x20 3. `discipline-rust specmap` to mint the index, then `discipline-rust floor`\n\

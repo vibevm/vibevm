@@ -38,10 +38,19 @@ pub fn load_config_or_default(root: &Path) -> Result<(Config, ConfigOrigin)> {
     Ok((cfg, origin))
 }
 
-/// Build the standing rule set from the policy, in one place so `run_check`
-/// and `run_freeze` can never drift apart. The order is the SARIF driver
-/// order the gate has always rendered.
-fn build_rules(config: &Config) -> Vec<Box<dyn Rule>> {
+/// Build the standing rule set from the policy, in one place so `run_check`,
+/// `run_freeze`, and every OTHER consumer of the gate's judgement can never
+/// drift apart — the tcg relay (`tcg-rust serve`) enriches oracle answers
+/// through exactly this assembly (TCG-PROTOCOL-RUST §3: one engine, one
+/// truth). The order is the SARIF driver order the gate has always rendered.
+///
+/// ```
+/// let dir = tempfile::tempdir().expect("tempdir");
+/// let (config, _origin) = conform_core::Config::load_or_default(dir.path()).expect("config");
+/// let rules = conform_cli_rust::build_rules(&config);
+/// assert!(!rules.is_empty(), "the standing set is never empty");
+/// ```
+pub fn build_rules(config: &Config) -> Vec<Box<dyn Rule>> {
     let mut out: Vec<Box<dyn Rule>> = Vec::new();
     if let (Some(reg_file), Some(reg_crate)) = (
         config.registry_file.as_ref(),

@@ -201,9 +201,10 @@ fn main() -> Result<()> {
     let cli = Cli::parse();
     let root = cli.path;
     match cli.command {
-        Command::Init { namespace, force } => {
-            discipline_cli_rust::run_init(&root, &discipline_cli_rust::InitOptions { namespace, force })
-        }
+        Command::Init { namespace, force } => discipline_cli_rust::run_init(
+            &root,
+            &discipline_cli_rust::InitOptions { namespace, force },
+        ),
         Command::Floor {
             keep_going,
             quiet,
