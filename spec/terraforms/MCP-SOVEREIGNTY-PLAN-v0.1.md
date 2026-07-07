@@ -690,6 +690,37 @@ Named deferrals (visible, not silent):
 
 ## 13. Execution ledger (filled by the executing session)
 
+### Wave 3 — EXECUTED (2026-07-07); commit map
+
+- `fdd6baf` feat(packages): **mcp:org.vibevm/discipline-rust v0.5.0** —
+  the kind's first real inhabitant. TWO PLAN SIMPLIFICATIONS recorded:
+  D3b's session-lib extraction proved unnecessary (`tcg-cli-rust`
+  already IS the lib; the respawn-once law lives in the server's
+  shared `TcgSession` cell), and the STACK BUMP FELL AWAY with it (no
+  stack content changed — the package is born at 0.5.0
+  version-mirroring the `=0.5.0` pin; D10 amended by execution:
+  bump only what changes).
+- `cf2e64c` build(deps): vibevm is the first consumer —
+  `vibedeps/mcp-discipline-rust/0.5.0` (kind-prefixed slot naming live).
+- The server: 18 tools (13 discipline adapters over the SAME lib fns
+  the CLIs call, capture-guarded so reports carry child-process
+  output; 5 tcg tools over ONE persistent r-a session, per-call policy
+  reload, language guard with the recipe). The vendored closure
+  mirrors the stack layout (6 stack crates + 5 neutral, 3 [[sync]]
+  sets, 19 pairs); the whole 35-suite closure builds and tests inside
+  the package.
+- Proof: the hermetic e2e drives the BUILT binary on a bare temp
+  project (init → conform green → the mini-fix vacuity warning seen
+  THROUGH MCP → a seeded unwrap turns the gate red as an isError
+  result → language refusal → protocol errors in-protocol; a fresh
+  project's untagged pub fn is an ORPHAN refusal — parity includes the
+  refusals, so the fixture carries no pub surface). The live chain:
+  the binary on rust-demo with **vibe scrubbed from PATH** — 18 tools,
+  clean validate, seeded E0308 via pure overlay (disk byte-identical),
+  conform green — **2.58 s**. P2/P3/P4 CONFIRMED; PROP-027 §2.6 live.
+- Panel: full self-check exit 0 with the mcp package's four new gate
+  steps (fmt / crate tests / workspace clippy / self-trace).
+
 ### Wave 2 — EXECUTED (2026-07-07); commit map
 
 - `28e6481` build(packages): discipline-core 0.5.0→0.6.0 (the ritual
