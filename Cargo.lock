@@ -335,8 +335,8 @@ dependencies = [
 ]
 
 [[package]]
-name = "conform-cli"
-version = "0.4.0"
+name = "conform-cli-rust"
+version = "0.5.0"
 dependencies = [
  "anyhow",
  "clap",
@@ -347,7 +347,7 @@ dependencies = [
 
 [[package]]
 name = "conform-core"
-version = "0.4.0"
+version = "0.5.0"
 dependencies = [
  "anyhow",
  "serde",
@@ -360,7 +360,7 @@ dependencies = [
 
 [[package]]
 name = "conform-frontend-rust"
-version = "0.4.0"
+version = "0.5.0"
 dependencies = [
  "conform-core",
  "proc-macro2",
@@ -471,16 +471,16 @@ dependencies = [
 ]
 
 [[package]]
-name = "discipline-cli"
-version = "0.4.0"
+name = "discipline-cli-rust"
+version = "0.5.0"
 dependencies = [
  "anyhow",
  "clap",
- "conform-cli",
+ "conform-cli-rust",
  "conform-core",
  "conform-frontend-rust",
  "serde_json",
- "specmap-cli",
+ "specmap-cli-rust",
  "specmap-core",
  "toml 0.9.12+spec-1.1.0",
 ]
@@ -519,7 +519,7 @@ checksum = "34aa73646ffb006b8f5147f3dc182bd4bcb190227ce861fc4a4844bf8e3cb2c0"
 
 [[package]]
 name = "env-audit"
-version = "0.4.0"
+version = "0.5.0"
 dependencies = [
  "specmark",
 ]
@@ -1804,8 +1804,8 @@ dependencies = [
 ]
 
 [[package]]
-name = "specmap-cli"
-version = "0.4.0"
+name = "specmap-cli-rust"
+version = "0.5.0"
 dependencies = [
  "anyhow",
  "clap",
@@ -1814,7 +1814,7 @@ dependencies = [
 
 [[package]]
 name = "specmap-core"
-version = "0.4.0"
+version = "0.5.0"
 dependencies = [
  "anyhow",
  "glob",
@@ -1832,7 +1832,7 @@ dependencies = [
 
 [[package]]
 name = "specmark"
-version = "0.4.0"
+version = "0.5.0"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1842,7 +1842,7 @@ dependencies = [
 
 [[package]]
 name = "specmark-grammar"
-version = "0.4.0"
+version = "0.5.0"
 dependencies = [
  "proc-macro2",
  "syn",
@@ -3157,13 +3157,13 @@ version = "0.1.0-dev"
 dependencies = [
  "anyhow",
  "clap",
- "conform-cli",
+ "conform-cli-rust",
  "conform-core",
  "conform-frontend-rust",
- "discipline-cli",
+ "discipline-cli-rust",
  "serde",
  "serde_json",
- "specmap-cli",
+ "specmap-cli-rust",
  "specmap-core",
  "tempfile",
  "toml 0.9.12+spec-1.1.0",

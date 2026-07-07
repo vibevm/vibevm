@@ -18,7 +18,7 @@ path = "vibedeps/flow-discipline-core/0.4.0/spec/boot/10-flow-discipline-core.md
 kind = "static"
 
 [[entry]]
-path = "vibedeps/stack-rust-ai-native/0.4.0/spec/boot/20-stack-rust-ai-native.md"
+path = "vibedeps/stack-rust-ai-native/0.5.0/spec/boot/20-stack-rust-ai-native.md"
 kind = "static"
 
 [[entry]]
