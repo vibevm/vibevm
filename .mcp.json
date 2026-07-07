@@ -10,14 +10,14 @@
       ]
     },
     "discipline-rust": {
-      "command": "C:/Users/olegc/gits/vibevm/vibedeps/mcp-discipline-rust/0.5.0/target/release/discipline-mcp-rust.exe",
+      "command": "C:/Users/olegc/gits/vibevm/vibedeps/mcp-rust-ai-native-mcp/0.5.0/target/release/discipline-mcp-rust.exe",
       "args": [
         "--path",
         "C:\\Users\\olegc\\gits\\vibevm"
       ]
     },
     "discipline-typescript": {
-      "command": "C:/Users/olegc/gits/vibevm/vibedeps/mcp-discipline-typescript/0.4.0/target/release/discipline-mcp-typescript.exe",
+      "command": "C:/Users/olegc/gits/vibevm/vibedeps/mcp-typescript-ai-native-mcp/0.4.0/target/release/discipline-mcp-typescript.exe",
       "args": [
         "--path",
         "C:\\Users\\olegc\\gits\\vibevm"
