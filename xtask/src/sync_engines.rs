@@ -74,16 +74,21 @@ fn load_manifest(root: &Path) -> Result<SyncManifest> {
     Ok(manifest)
 }
 
-/// Relative paths of every file under `dir`, sorted. Build output and VCS
-/// state never count as crate content.
+/// Relative paths of every file under `dir`, sorted. Build output,
+/// VCS state, and resolved installs never count as content — the same
+/// denylist as PROP-024 §2.2's shippable tree, so a mirrored dir can
+/// never smuggle what an install would exclude (node_modules bit once:
+/// the TS stack's embedded-source tools/ carries a local install for
+/// its own tests, and the first mirror copied it wholesale).
 fn file_set(dir: &Path) -> Result<BTreeSet<PathBuf>> {
+    const DENY: [&str; 4] = ["target", ".git", "node_modules", ".vibe"];
     let mut files = BTreeSet::new();
     if !dir.exists() {
         return Ok(files);
     }
     for entry in WalkDir::new(dir)
         .into_iter()
-        .filter_entry(|e| e.file_name() != "target" && e.file_name() != ".git")
+        .filter_entry(|e| !DENY.iter().any(|d| e.file_name() == *d))
     {
         let entry = entry.with_context(|| format!("sync-engines: walking `{}`", dir.display()))?;
         if entry.file_type().is_file() {

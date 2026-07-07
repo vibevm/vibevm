@@ -54,3 +54,39 @@ crates = [
     "tcg-cli-rust",
 ]
 targets = ["packages/org.vibevm/discipline-rust/v0.5.0/crates"]
+
+# The neutral engines + the MCP transport, into the typescript mcp package.
+[[sync]]
+source_root = "packages/org.vibevm/discipline-core/v0.6.0/crates"
+crates = [
+    "conform-core",
+    "specmap-core",
+    "specmark",
+    "specmark-grammar",
+    "mcp-core",
+]
+targets = ["packages/org.vibevm/discipline-typescript/v0.4.0/crates/vendor"]
+
+# The typescript stack's toolchain crates the server links, into the
+# typescript mcp package (pin `=0.4.0`).
+[[sync]]
+source_root = "packages/org.vibevm/typescript-ai-native/v0.4.0/crates"
+crates = [
+    "conform-frontend-typescript",
+    "conform-cli-typescript",
+    "specmap-scan-typescript",
+    "specmap-cli-typescript",
+    "discipline-cli-typescript",
+    "ts-extract-bridge",
+    "tcg-oracle-bridge",
+    "tcg-cli-typescript",
+]
+targets = ["packages/org.vibevm/discipline-typescript/v0.4.0/crates"]
+
+# The TS stack's embedded-source tools/ dir (ts-extract, ts-oracle) —
+# the bridge crates include_str! it from the package root, so the mcp
+# package mirrors it at the same relative place.
+[[sync]]
+source_root = "packages/org.vibevm/typescript-ai-native/v0.4.0"
+crates = ["tools"]
+targets = ["packages/org.vibevm/discipline-typescript/v0.4.0"]

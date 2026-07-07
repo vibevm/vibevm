@@ -170,6 +170,16 @@ run_step "cargo clippy --all-targets (discipline-rust pkg)" \
 MCPR_DIR="packages/org.vibevm/discipline-rust/v0.5.0"
 run_step "specmap-rust --gate (discipline-rust pkg self-trace)" \
   cargo run --quiet --manifest-path "$PKG_MANIFEST" -p specmap-cli-rust --bin specmap-rust -- --gate --path "$MCPR_DIR" || OVERALL=$?
+MCPT_MANIFEST="packages/org.vibevm/discipline-typescript/v0.4.0/Cargo.toml"
+run_step "cargo fmt --all --check (discipline-typescript pkg)" \
+  cargo fmt --manifest-path "$MCPT_MANIFEST" --all --check || OVERALL=$?
+run_step "cargo test -p discipline-mcp-typescript (discipline-typescript pkg)" \
+  cargo test --manifest-path "$MCPT_MANIFEST" -p discipline-mcp-typescript --quiet || OVERALL=$?
+run_step "cargo clippy --all-targets (discipline-typescript pkg)" \
+  cargo clippy --manifest-path "$MCPT_MANIFEST" --workspace --all-targets --quiet -- -D warnings || OVERALL=$?
+MCPT_DIR="packages/org.vibevm/discipline-typescript/v0.4.0"
+run_step "specmap-rust --gate (discipline-typescript pkg self-trace)" \
+  cargo run --quiet --manifest-path "$PKG_MANIFEST" -p specmap-cli-rust --bin specmap-rust -- --gate --path "$MCPT_DIR" || OVERALL=$?
 
 if [ "$QUIET" -eq 0 ]; then
   if [ "$OVERALL" -eq 0 ]; then
