@@ -1,0 +1,17 @@
+[package]
+name = "spec-genres"
+group = "org.vibevm"
+kind = "flow"
+version = "0.1.0"
+authors = ["Oleg Chirukhin"]
+license = "UPL-1.0"
+description = "Spec genres: contract vs lore vs research vs plans — what goes where, who wins, and the two-way links that survive a cold start"
+keywords = ["specs", "genres", "design-docs", "documentation", "taxonomy"]
+
+[compatibility]
+min_vibe_version = "0.1.0"
+requires_kinds = []
+
+[boot_snippet]
+source = "spec/boot/17-flow-spec-genres.md"
+category = "flow"
