@@ -198,6 +198,13 @@
     },
     {
       "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/bin.rs",
+      "item_kind": "mod",
+      "line": 15,
+      "symbol": "vibe_cli::commands::bin"
+    },
+    {
+      "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/check.rs",
       "item_kind": "mod",
       "line": 5,
@@ -440,6 +447,13 @@
       "item_kind": "mod",
       "line": 12,
       "symbol": "vibe_cli::commands::skill"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/trace.rs",
+      "item_kind": "mod",
+      "line": 9,
+      "symbol": "vibe_cli::commands::trace"
     },
     {
       "crate_name": "vibe-cli",
@@ -942,7 +956,7 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/main.rs",
       "item_kind": "fn",
-      "line": 176,
+      "line": 202,
       "symbol": "vibe_cli::promote_user_config_env"
     },
     {
@@ -1243,8 +1257,15 @@
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/package.rs",
       "item_kind": "enum",
-      "line": 197,
+      "line": 199,
       "symbol": "vibe_core::manifest::package::Materialization"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/manifest/package/binary.rs",
+      "item_kind": "mod",
+      "line": 6,
+      "symbol": "vibe_core::manifest::package::binary"
     },
     {
       "crate_name": "vibe-core",
@@ -2587,15 +2608,22 @@
       "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/src/lib.rs",
       "item_kind": "fn",
-      "line": 408,
+      "line": 254,
       "symbol": "vibe_registry::CachedPackage::package_meta"
     },
     {
       "crate_name": "vibe-registry",
-      "file": "crates/vibe-registry/src/lib.rs",
+      "file": "crates/vibe-registry/src/error.rs",
+      "item_kind": "mod",
+      "line": 5,
+      "symbol": "vibe_registry::error"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/error.rs",
       "item_kind": "enum",
-      "line": 55,
-      "symbol": "vibe_registry::RegistryError"
+      "line": 15,
+      "symbol": "vibe_registry::error::RegistryError"
     },
     {
       "crate_name": "vibe-registry",
@@ -2869,6 +2897,13 @@
       "item_kind": "mod",
       "line": 7,
       "symbol": "vibe_registry::search::query"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/shippable.rs",
+      "item_kind": "mod",
+      "line": 5,
+      "symbol": "vibe_registry::shippable"
     },
     {
       "crate_name": "vibe-registry",
@@ -4190,6 +4225,14 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-cli/src/commands/bin.rs",
+      "from_symbol": "vibe_cli::commands::bin",
+      "line": 15,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-025#dispatch",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-cli/src/commands/check.rs",
       "from_symbol": "vibe_cli::commands::check",
       "line": 5,
@@ -4467,6 +4510,14 @@
       "line": 12,
       "provenance": "authored",
       "uri": "spec://vibevm/common/PROP-018#vibe-skill",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/trace.rs",
+      "from_symbol": "vibe_cli::commands::trace",
+      "line": 9,
+      "provenance": "authored",
+      "uri": "spec://discipline-core/mechanisms/PROP-014#index",
       "verb": "implements"
     },
     {
@@ -5070,7 +5121,7 @@
     {
       "file": "crates/vibe-cli/src/main.rs",
       "from_symbol": "vibe_cli::promote_user_config_env",
-      "line": 195,
+      "line": 221,
       "provenance": "authored",
       "uri": "spec://discipline-core/mechanisms/ENGINE-CONFORM-v0.1#rules",
       "verb": "deviates",
@@ -5458,11 +5509,19 @@
     {
       "file": "crates/vibe-core/src/manifest/package.rs",
       "from_symbol": "vibe_core::manifest::package::Materialization",
-      "line": 220,
+      "line": 222,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-022#modes",
       "verb": "implements",
       "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-core/src/manifest/package/binary.rs",
+      "from_symbol": "vibe_core::manifest::package::binary",
+      "line": 6,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-025#manifest",
+      "verb": "implements"
     },
     {
       "file": "crates/vibe-core/src/manifest/package/capabilities.rs",
@@ -7044,16 +7103,24 @@
     {
       "file": "crates/vibe-registry/src/lib.rs",
       "from_symbol": "vibe_registry::CachedPackage::package_meta",
-      "line": 415,
+      "line": 261,
       "provenance": "authored",
       "uri": "spec://discipline-core/mechanisms/ENGINE-CONFORM-v0.1#rules",
       "verb": "deviates",
       "reason": "no-unwrap-in-domain: every CachedPackage construction site guards manifest.package.is_some() before building the struct, so the accessor's expect is a checked invariant; returning Result would force every reader of an already-validated package through error plumbing for a state the constructors exclude"
     },
     {
-      "file": "crates/vibe-registry/src/lib.rs",
-      "from_symbol": "vibe_registry::RegistryError",
-      "line": 75,
+      "file": "crates/vibe-registry/src/error.rs",
+      "from_symbol": "vibe_registry::error",
+      "line": 5,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-002#failure-discriminator",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-registry/src/error.rs",
+      "from_symbol": "vibe_registry::error::RegistryError",
+      "line": 35,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#failure-discriminator",
       "verb": "implements"
@@ -7373,6 +7440,14 @@
       "line": 7,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#registry-model",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-registry/src/shippable.rs",
+      "from_symbol": "vibe_registry::shippable",
+      "line": 5,
+      "provenance": "authored",
+      "uri": "spec://vibevm/common/PROP-024#shippable-tree",
       "verb": "implements"
     },
     {
@@ -13913,6 +13988,123 @@
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-022#acceptance"
     },
     {
+      "anchor": "root",
+      "content_hash": "sha256:d23ef49573e885707eeb6bc7e8bd44c7972ce1f14594d541e452ed070a8ba9d6",
+      "doc_path": "modules/vibe-workspace/PROP-025",
+      "file": "spec/modules/vibe-workspace/PROP-025-binary-delivery.md",
+      "heading": "PROP-025 — vibe-native binary delivery",
+      "line": 1,
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-025#root"
+    },
+    {
+      "anchor": "problem",
+      "content_hash": "sha256:2e933e2ea828a877cbee15546ff9fa7af203aa1e05832a5ed7527b5ab5fb70b7",
+      "doc_path": "modules/vibe-workspace/PROP-025",
+      "file": "spec/modules/vibe-workspace/PROP-025-binary-delivery.md",
+      "heading": "1. Problem",
+      "line": 6,
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-025#problem",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "manifest",
+      "content_hash": "sha256:f72fb28b4ef4be9c0e618e468ebe29fd9d49a507d69dde0f0f446ae48c85c066",
+      "doc_path": "modules/vibe-workspace/PROP-025",
+      "file": "spec/modules/vibe-workspace/PROP-025-binary-delivery.md",
+      "heading": "2. Manifest surface",
+      "line": 21,
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-025#manifest",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "build",
+      "content_hash": "sha256:d1a5445c9df6b71cbcb29bdaf12c8cf7044ac9fe2de1c21da20697dcfd301c99",
+      "doc_path": "modules/vibe-workspace/PROP-025",
+      "file": "spec/modules/vibe-workspace/PROP-025-binary-delivery.md",
+      "heading": "3. Install-time build",
+      "line": 42,
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-025#build",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "dispatch",
+      "content_hash": "sha256:441080bdf98bddb55c61c67549450499271c91ab0f3b080a3ed0ed059e51dd24",
+      "doc_path": "modules/vibe-workspace/PROP-025",
+      "file": "spec/modules/vibe-workspace/PROP-025-binary-delivery.md",
+      "heading": "4. The `vibe bin` family and dispatch",
+      "line": 62,
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-025#dispatch",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "staleness",
+      "content_hash": "sha256:f5e08df222f0e955c8acbb83f505c1f508fc4812f36fbcaf77f6037ae57b6a9d",
+      "doc_path": "modules/vibe-workspace/PROP-025",
+      "file": "spec/modules/vibe-workspace/PROP-025-binary-delivery.md",
+      "heading": "5. Staleness and offline honesty",
+      "line": 87,
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-025#staleness",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "cross-package",
+      "content_hash": "sha256:443cf8d693f6c02b9e7e0a0b1b35bd4833885d6c8d9f217d22fcd58e6458df58",
+      "doc_path": "modules/vibe-workspace/PROP-025",
+      "file": "spec/modules/vibe-workspace/PROP-025-binary-delivery.md",
+      "heading": "6. Cross-package path dependencies (v2, specified only)",
+      "line": 100,
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-025#cross-package",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "gc",
+      "content_hash": "sha256:11c915d84e61f4b44fbbc4fb799472384ed365694ff1daa15ebb49ee8eeb93ac",
+      "doc_path": "modules/vibe-workspace/PROP-025",
+      "file": "spec/modules/vibe-workspace/PROP-025-binary-delivery.md",
+      "heading": "7. Uninstall and GC (v2, specified only)",
+      "line": 119,
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-025#gc",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "security",
+      "content_hash": "sha256:84b799dadbad2989832674b89bd6160a453255cdc13c8bdb2f0230d86e59c8c6",
+      "doc_path": "modules/vibe-workspace/PROP-025",
+      "file": "spec/modules/vibe-workspace/PROP-025-binary-delivery.md",
+      "heading": "8. Security posture",
+      "line": 129,
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-025#security",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "v1-cut",
+      "content_hash": "sha256:805a8ae009ab8eb4c913f55a5ce574e4dcef7620eb4cea68bf5a499460581006",
+      "doc_path": "modules/vibe-workspace/PROP-025",
+      "file": "spec/modules/vibe-workspace/PROP-025-binary-delivery.md",
+      "heading": "9. The v1 cut",
+      "line": 140,
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-025#v1-cut",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "history",
+      "content_hash": "sha256:2c2f1f7d10184f625e071388ea630f76f71ee6791d2a661d22a3b6c227ad4cfd",
+      "doc_path": "modules/vibe-workspace/PROP-025",
+      "file": "spec/modules/vibe-workspace/PROP-025-binary-delivery.md",
+      "heading": "History",
+      "line": 150,
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-025#history"
+    },
+    {
       "anchor": "what-tessl-is",
       "content_hash": "sha256:7be077e2eba6a4f0408a16df42dcaa3b42c45b57ad5269f78c7564639be96f5a",
       "doc_path": "research/PROP-004",
@@ -14175,7 +14367,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:f88fcef6a267026d82ab6a0ed3763ca732245f9cf8cda0793052e628eacfe644",
+      "content_hash": "sha256:61638402f87154ee1598910250ae34e444384c52d605c1bfdf977f44adbfff73",
       "doc_path": "terraforms/DISCIPLINE-SWEEP-v0.2",
       "file": "spec/terraforms/DISCIPLINE-SWEEP-v0.2.md",
       "heading": "vibevm Discipline Sweep v0.2 — the project instance",
@@ -14202,7 +14394,7 @@
     },
     {
       "anchor": "quirks",
-      "content_hash": "sha256:ef49cb81931211f7f371fd9e71a44f0c460535cd1745d6bf521ce4677e7f055d",
+      "content_hash": "sha256:bdda6cb8fe3549f21333f493ed08f1dda0515be1f13e1e8156c65ac4b0df61be",
       "doc_path": "terraforms/DISCIPLINE-SWEEP-v0.2",
       "file": "spec/terraforms/DISCIPLINE-SWEEP-v0.2.md",
       "heading": "3. Machine quirks (THIS box; machine-scoped, not project fact)",
@@ -14215,7 +14407,7 @@
       "doc_path": "terraforms/DISCIPLINE-SWEEP-v0.2",
       "file": "spec/terraforms/DISCIPLINE-SWEEP-v0.2.md",
       "heading": "4. History",
-      "line": 66,
+      "line": 68,
       "uri": "spec://vibevm/terraforms/DISCIPLINE-SWEEP-v0.2#history"
     }
   ],
