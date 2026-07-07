@@ -9,5 +9,5 @@ use anyhow::Result;
 use crate::repo_root;
 
 pub(crate) fn run_specmap(check: bool) -> Result<()> {
-    specmap_cli_rust::run_specmap(&repo_root()?, check)
+    rust_ai_native_specmap::run_specmap(&repo_root()?, check)
 }

@@ -31,9 +31,10 @@ root_spec_docs = ["VIBEVM-SPEC.md"]
 #   vibe-graph, vibe-llm  — M0 stub crates, no code yet
 #   vibe-wire             — generated code; the JTD schema is the taggable unit
 #   xtask                 — internal tooling binary (panics ok at the dev console)
-# (specmark + specmark-grammar relocated into stack:org.vibevm/rust-ai-native in
-#  the traceability move, so they are no longer vibevm crates to exempt here;
-#  the package will trace its own crates in a later phase.)
+# (core-ai-native-specmark + core-ai-native-specmark-grammar relocated into
+#  flow:org.vibevm/core-ai-native in the traceability + engine-consolidation
+#  moves, so they are no longer vibevm crates to exempt here; the packages
+#  trace their own crates via the self-trace gate.)
 exempt = [
     "vibe-graph",
     "vibe-llm",
@@ -52,4 +53,4 @@ dispositioned = []
 # dangling. Units found here never enter the committed specmap.json.
 [[external_specs]]
 namespace = "core-ai-native"
-root = "vibedeps/flow-core-ai-native/0.6.0/spec"
+root = "vibedeps/flow-core-ai-native/0.7.0/spec"

@@ -46,7 +46,7 @@ walkdir.workspace = true
 
 [dev-dependencies]
 assert_cmd.workspace = true
-env-audit.workspace = true
+rust-ai-native-env-audit.workspace = true
 predicates.workspace = true
 toml.workspace = true
 vibe-core.workspace = true

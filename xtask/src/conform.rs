@@ -11,11 +11,11 @@ use anyhow::Result;
 use crate::repo_root;
 
 pub(crate) fn run_conform_check(baseline_rel: &str, scope: Option<&str>) -> Result<()> {
-    conform_cli_rust::run_check(&repo_root()?, baseline_rel, scope)
+    rust_ai_native_conform::run_check(&repo_root()?, baseline_rel, scope)
 }
 
 pub(crate) fn run_conform_freeze(baseline_rel: &str) -> Result<()> {
-    conform_cli_rust::run_freeze(&repo_root()?, baseline_rel)
+    rust_ai_native_conform::run_freeze(&repo_root()?, baseline_rel)
 }
 
 #[cfg(test)]
@@ -28,7 +28,7 @@ mod tests {
     #[test]
     fn every_crate_is_gated_or_exempt() {
         let root = crate::repo_root().expect("repo root");
-        let config = conform_cli_rust::load_config(&root).expect("load conform.toml");
+        let config = rust_ai_native_conform::load_config(&root).expect("load conform.toml");
         config
             .validate_against_tree(&root)
             .expect("vibevm's conform.toml violates the gated-or-exempt tree invariant");

@@ -466,12 +466,12 @@ description = "the AI-Native Rust discipline over MCP"
 {requires_line}
 
 [[binary]]
-name = "discipline-mcp-rust"
-crate = "crates/discipline-mcp-rust"
+name = "rust-ai-native-mcp"
+crate = "crates/rust-ai-native-mcp"
 
 [[mcp_server]]
-name = "discipline-rust"
-binary = "discipline-mcp-rust"
+name = "rust-ai-native"
+binary = "rust-ai-native-mcp"
 {server_tail}
 "#
     )
@@ -487,7 +487,7 @@ fn mcp_kind_manifest_parses_under_its_laws() {
     let m = Manifest::parse_str(&raw).unwrap();
     assert_eq!(m.require_package().unwrap().kind, PackageKind::Mcp);
     assert_eq!(m.mcp_servers.len(), 1);
-    assert_eq!(m.mcp_servers[0].binary, "discipline-mcp-rust");
+    assert_eq!(m.mcp_servers[0].binary, "rust-ai-native-mcp");
     // Round-trips through serialisation.
     let back = Manifest::parse_str(&toml::to_string_pretty(&m).unwrap()).unwrap();
     assert_eq!(m, back);
@@ -506,12 +506,12 @@ license = "EULA"
 description = "x"
 
 [[binary]]
-name = "discipline-mcp-rust"
-crate = "crates/discipline-mcp-rust"
+name = "rust-ai-native-mcp"
+crate = "crates/rust-ai-native-mcp"
 
 [[mcp_server]]
-name = "discipline-rust"
-binary = "discipline-mcp-rust"
+name = "rust-ai-native"
+binary = "rust-ai-native-mcp"
 "#;
     let err = Manifest::parse_str(raw).unwrap_err().to_string();
     assert!(err.contains("legal only in `mcp`-kind"), "{err}");
@@ -538,14 +538,14 @@ description = "x"
 fn mcp_server_binary_must_resolve_and_names_must_be_unique() {
     // Unresolved binary reference.
     let raw = mcp_manifest("\"stack:org.vibevm/rust-ai-native-lang\" = \"=0.6.0\"", "")
-        .replace("binary = \"discipline-mcp-rust\"", "binary = \"ghost\"");
+        .replace("binary = \"rust-ai-native-mcp\"", "binary = \"ghost\"");
     let err = Manifest::parse_str(&raw).unwrap_err().to_string();
     assert!(err.contains("no [[binary]] declares it"), "{err}");
 
     // Duplicate server names.
     let raw = mcp_manifest(
         "\"stack:org.vibevm/rust-ai-native-lang\" = \"=0.6.0\"",
-        "\n[[mcp_server]]\nname = \"discipline-rust\"\nbinary = \"discipline-mcp-rust\"\n",
+        "\n[[mcp_server]]\nname = \"rust-ai-native\"\nbinary = \"rust-ai-native-mcp\"\n",
     );
     let err = Manifest::parse_str(&raw).unwrap_err().to_string();
     assert!(err.contains("duplicate [[mcp_server]] name"), "{err}");

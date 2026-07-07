@@ -1,0 +1,21 @@
+[package]
+name = "typescript-ai-native"
+group = "org.vibevm"
+kind = "stack"
+version = "0.6.0"
+authors = ["Oleg Chirukhin"]
+license = "EULA"
+description = "AI-Native TypeScript - the family aggregator: one install pulls the language stack (typescript-ai-native-lang) and its MCP server (typescript-ai-native-mcp), and transitively the flow foundation core-ai-native. Content-minimal by design (PROP-028): no code, no boot snippet, no policy - it only names the family members at one resolved version set."
+keywords = ["typescript", "ai-native", "discipline", "stack", "aggregator"]
+
+[compatibility]
+min_vibe_version = "0.1.0"
+requires_kinds = []
+
+# The family aggregator (PROP-028 §2): exact pins hold the whole family to
+# ONE resolved version set. The `-lang` stack ships the guide, cards, and
+# toolchain; the `-mcp` package serves that toolchain over MCP (PROP-027)
+# and version-mirrors the stack. core-ai-native arrives transitively through
+# the -lang stack's own `[requires]`.
+[requires]
+packages = { "stack:org.vibevm/typescript-ai-native-lang" = "=0.6.0", "mcp:org.vibevm/typescript-ai-native-mcp" = "=0.6.0" }

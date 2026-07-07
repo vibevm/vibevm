@@ -18,8 +18,8 @@ registry_file = "crates/vibe-cli/src/registry.rs"
 registry_gated_crate = "vibe-cli"
 
 # Designated audit crates — exempt wholesale from the unsafe and ambient-env
-# gates. Empty now that env-audit (the env-mutation audit home) relocated into
-# stack:org.vibevm/rust-ai-native (PROP-024) and is no longer scanned here; the
+# gates. Empty now that rust-ai-native-env-audit (the env-mutation audit home)
+# relocated into stack:org.vibevm/rust-ai-native-lang (PROP-024) and is no longer scanned here; the
 # remaining vibevm unsafe sites carry fn-grain #[spec(deviates)] testimony.
 audit_crates = []
 

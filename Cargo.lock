@@ -335,41 +335,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "conform-cli-rust"
-version = "0.5.0"
-dependencies = [
- "anyhow",
- "clap",
- "conform-core",
- "conform-frontend-rust",
- "serde_json",
-]
-
-[[package]]
-name = "conform-core"
-version = "0.5.0"
-dependencies = [
- "anyhow",
- "serde",
- "serde_json",
- "sha2",
- "specmark",
- "toml 0.9.12+spec-1.1.0",
- "walkdir",
-]
-
-[[package]]
-name = "conform-frontend-rust"
-version = "0.5.0"
-dependencies = [
- "conform-core",
- "proc-macro2",
- "quote",
- "specmark",
- "syn",
-]
-
-[[package]]
 name = "console"
 version = "0.16.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -379,6 +344,55 @@ dependencies = [
  "libc",
  "unicode-width",
  "windows-sys 0.61.2",
+]
+
+[[package]]
+name = "core-ai-native-conform"
+version = "0.7.0"
+dependencies = [
+ "anyhow",
+ "core-ai-native-specmark",
+ "serde",
+ "serde_json",
+ "sha2",
+ "toml 0.9.12+spec-1.1.0",
+ "walkdir",
+]
+
+[[package]]
+name = "core-ai-native-specmap"
+version = "0.7.0"
+dependencies = [
+ "anyhow",
+ "core-ai-native-specmark",
+ "core-ai-native-specmark-grammar",
+ "glob",
+ "proc-macro2",
+ "quote",
+ "serde",
+ "serde_json",
+ "sha2",
+ "syn",
+ "toml 0.9.12+spec-1.1.0",
+ "walkdir",
+]
+
+[[package]]
+name = "core-ai-native-specmark"
+version = "0.7.0"
+dependencies = [
+ "core-ai-native-specmark-grammar",
+ "proc-macro2",
+ "quote",
+ "syn",
+]
+
+[[package]]
+name = "core-ai-native-specmark-grammar"
+version = "0.7.0"
+dependencies = [
+ "proc-macro2",
+ "syn",
 ]
 
 [[package]]
@@ -471,21 +485,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "discipline-cli-rust"
-version = "0.5.0"
-dependencies = [
- "anyhow",
- "clap",
- "conform-cli-rust",
- "conform-core",
- "conform-frontend-rust",
- "serde_json",
- "specmap-cli-rust",
- "specmap-core",
- "toml 0.9.12+spec-1.1.0",
-]
-
-[[package]]
 name = "displaydoc"
 version = "0.2.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -516,13 +515,6 @@ name = "encode_unicode"
 version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "34aa73646ffb006b8f5147f3dc182bd4bcb190227ce861fc4a4844bf8e3cb2c0"
-
-[[package]]
-name = "env-audit"
-version = "0.5.0"
-dependencies = [
- "specmark",
-]
 
 [[package]]
 name = "equivalent"
@@ -1561,6 +1553,59 @@ dependencies = [
 ]
 
 [[package]]
+name = "rust-ai-native-cli"
+version = "0.7.0"
+dependencies = [
+ "anyhow",
+ "clap",
+ "core-ai-native-conform",
+ "core-ai-native-specmap",
+ "rust-ai-native-conform",
+ "rust-ai-native-conform-frontend",
+ "rust-ai-native-specmap",
+ "serde_json",
+ "toml 0.9.12+spec-1.1.0",
+]
+
+[[package]]
+name = "rust-ai-native-conform"
+version = "0.7.0"
+dependencies = [
+ "anyhow",
+ "clap",
+ "core-ai-native-conform",
+ "rust-ai-native-conform-frontend",
+ "serde_json",
+]
+
+[[package]]
+name = "rust-ai-native-conform-frontend"
+version = "0.7.0"
+dependencies = [
+ "core-ai-native-conform",
+ "core-ai-native-specmark",
+ "proc-macro2",
+ "quote",
+ "syn",
+]
+
+[[package]]
+name = "rust-ai-native-env-audit"
+version = "0.7.0"
+dependencies = [
+ "core-ai-native-specmark",
+]
+
+[[package]]
+name = "rust-ai-native-specmap"
+version = "0.7.0"
+dependencies = [
+ "anyhow",
+ "clap",
+ "core-ai-native-specmap",
+]
+
+[[package]]
 name = "rustc-hash"
 version = "2.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1801,51 +1846,6 @@ checksum = "3a766e1110788c36f4fa1c2b71b387a7815aa65f88ce0229841826633d93723e"
 dependencies = [
  "libc",
  "windows-sys 0.61.2",
-]
-
-[[package]]
-name = "specmap-cli-rust"
-version = "0.5.0"
-dependencies = [
- "anyhow",
- "clap",
- "specmap-core",
-]
-
-[[package]]
-name = "specmap-core"
-version = "0.5.0"
-dependencies = [
- "anyhow",
- "glob",
- "proc-macro2",
- "quote",
- "serde",
- "serde_json",
- "sha2",
- "specmark",
- "specmark-grammar",
- "syn",
- "toml 0.9.12+spec-1.1.0",
- "walkdir",
-]
-
-[[package]]
-name = "specmark"
-version = "0.5.0"
-dependencies = [
- "proc-macro2",
- "quote",
- "specmark-grammar",
- "syn",
-]
-
-[[package]]
-name = "specmark-grammar"
-version = "0.5.0"
-dependencies = [
- "proc-macro2",
- "syn",
 ]
 
 [[package]]
@@ -2331,7 +2331,7 @@ name = "vibe-check"
 version = "0.1.0-dev"
 dependencies = [
  "anyhow",
- "specmark",
+ "core-ai-native-specmark",
  "tempfile",
  "thiserror 2.0.18",
  "vibe-core",
@@ -2349,16 +2349,16 @@ dependencies = [
  "chrono",
  "clap",
  "console",
+ "core-ai-native-specmark",
  "dialoguer",
  "dirs",
- "env-audit",
  "predicates",
  "reqwest",
+ "rust-ai-native-env-audit",
  "semver",
  "serde",
  "serde_json",
  "sha2",
- "specmark",
  "tempfile",
  "thiserror 2.0.18",
  "tokio",
@@ -2383,12 +2383,12 @@ name = "vibe-core"
 version = "0.1.0-dev"
 dependencies = [
  "anyhow",
+ "core-ai-native-specmark",
  "indexmap",
  "semver",
  "serde",
  "serde_json",
  "sha2",
- "specmark",
  "tempfile",
  "thiserror 2.0.18",
  "toml 0.9.12+spec-1.1.0",
@@ -2415,6 +2415,7 @@ dependencies = [
  "axum",
  "chrono",
  "clap",
+ "core-ai-native-specmark",
  "flate2",
  "predicates",
  "reqwest",
@@ -2422,7 +2423,6 @@ dependencies = [
  "serde",
  "serde_json",
  "sha2",
- "specmark",
  "tempfile",
  "thiserror 2.0.18",
  "tokio",
@@ -2439,8 +2439,8 @@ dependencies = [
 name = "vibe-install"
 version = "0.1.0-dev"
 dependencies = [
+ "core-ai-native-specmark",
  "semver",
- "specmark",
  "tempfile",
  "thiserror 2.0.18",
  "tracing",
@@ -2463,10 +2463,10 @@ name = "vibe-mcp"
 version = "0.1.0-dev"
 dependencies = [
  "anyhow",
+ "core-ai-native-specmark",
  "dirs",
  "serde",
  "serde_json",
- "specmark",
  "tempfile",
  "thiserror 2.0.18",
  "toml 0.9.12+spec-1.1.0",
@@ -2481,13 +2481,13 @@ dependencies = [
  "anyhow",
  "axum",
  "chrono",
+ "core-ai-native-specmark",
  "dirs",
- "env-audit",
  "reqwest",
+ "rust-ai-native-env-audit",
  "semver",
  "serde",
  "serde_json",
- "specmark",
  "tempfile",
  "thiserror 2.0.18",
  "tokio",
@@ -2503,13 +2503,13 @@ version = "0.1.0-dev"
 dependencies = [
  "anyhow",
  "axum",
+ "core-ai-native-specmark",
  "dirs",
  "reqwest",
  "semver",
  "serde",
  "serde_json",
  "sha2",
- "specmark",
  "tempfile",
  "thiserror 2.0.18",
  "tokio",
@@ -2523,10 +2523,10 @@ dependencies = [
 name = "vibe-resolver"
 version = "0.1.0-dev"
 dependencies = [
+ "core-ai-native-specmark",
  "proptest",
  "resolvo",
  "semver",
- "specmark",
  "tempfile",
  "thiserror 2.0.18",
  "toml 0.9.12+spec-1.1.0",
@@ -2549,10 +2549,10 @@ dependencies = [
 name = "vibe-workspace"
 version = "0.1.0-dev"
 dependencies = [
+ "core-ai-native-specmark",
  "glob",
  "semver",
  "serde",
- "specmark",
  "tempfile",
  "thiserror 2.0.18",
  "toml 0.9.12+spec-1.1.0",
@@ -3143,14 +3143,14 @@ version = "0.1.0-dev"
 dependencies = [
  "anyhow",
  "clap",
- "conform-cli-rust",
- "conform-core",
- "conform-frontend-rust",
- "discipline-cli-rust",
+ "core-ai-native-conform",
+ "core-ai-native-specmap",
+ "rust-ai-native-cli",
+ "rust-ai-native-conform",
+ "rust-ai-native-conform-frontend",
+ "rust-ai-native-specmap",
  "serde",
  "serde_json",
- "specmap-cli-rust",
- "specmap-core",
  "tempfile",
  "toml 0.9.12+spec-1.1.0",
  "walkdir",

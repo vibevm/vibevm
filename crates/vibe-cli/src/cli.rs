@@ -177,12 +177,12 @@ pub enum Command {
 
     /// Traceability queries over the project's specmap (PROP-014 §2.6) —
     /// a delegating alias: arguments pass through verbatim to the
-    /// installed `discipline-rust trace` (the engine ships with the
+    /// installed `rust-ai-native trace` (the engine ships with the
     /// discipline stack and versions with the project, not with vibe).
     /// Example: `vibe trace explain "spec://<ns>/<doc>#<anchor>"`.
     #[command(trailing_var_arg = true, allow_hyphen_values = true)]
     Trace {
-        /// Arguments handed to `discipline-rust trace` unchanged.
+        /// Arguments handed to `rust-ai-native trace` unchanged.
         args: Vec<String>,
     },
 

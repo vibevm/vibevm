@@ -1,4 +1,4 @@
-//! `vibe trace` — the product alias over `discipline-rust trace`
+//! `vibe trace` — the product alias over `rust-ai-native trace`
 //! (PROP-014 §2.6). A pure delegator: the traceability engine ships in
 //! `stack:org.vibevm/rust-ai-native-lang` and versions with the PROJECT's
 //! pinned stack, so embedding it into the product binary would let the
@@ -10,9 +10,9 @@ specmark::scope!("spec://core-ai-native/mechanisms/PROP-014#index");
 
 use anyhow::{Result, bail};
 
-/// Delegate `vibe trace <args…>` to `discipline-rust trace <args…>`.
+/// Delegate `vibe trace <args…>` to `rust-ai-native trace <args…>`.
 pub fn run(args: &[String]) -> Result<i32> {
-    run_with("discipline-rust", args)
+    run_with("rust-ai-native", args)
 }
 
 /// The delegation seam, binary-parameterised so the missing-binary path
@@ -25,14 +25,14 @@ fn run_with(binary: &str, args: &[String]) -> Result<i32> {
     match spawned {
         Ok(status) => Ok(status.code().unwrap_or(1)),
         Err(e) => bail!(
-            "vibe trace delegates to `discipline-rust` and could not spawn it ({e}).\n\
+            "vibe trace delegates to `rust-ai-native` and could not spawn it ({e}).\n\
              Install the discipline toolchain once:\n\
-             \x20 cargo install --path vibedeps/<stack-slot>/crates/discipline-cli\n\
+             \x20 cargo install --path vibedeps/<stack-slot>/crates/rust-ai-native-cli\n\
              or run it in place:\n\
              \x20 cargo run --manifest-path vibedeps/<stack-slot>/Cargo.toml \\\n\
-             \x20     -p discipline-cli --bin discipline-rust -- trace <args…>\n\
+             \x20     -p rust-ai-native-cli --bin rust-ai-native -- trace <args…>\n\
              (<stack-slot> is e.g. stack-rust-ai-native-lang/<version> — check vibe.lock; \
-             TypeScript trees use `discipline-typescript trace` from their stack)"
+             TypeScript trees use `typescript-ai-native trace` from their stack)"
         ),
     }
 }
@@ -50,6 +50,6 @@ mod tests {
         .expect_err("spawn must fail for a nonexistent binary");
         let text = err.to_string();
         assert!(text.contains("cargo install --path"), "{text}");
-        assert!(text.contains("discipline-rust"), "{text}");
+        assert!(text.contains("rust-ai-native"), "{text}");
     }
 }

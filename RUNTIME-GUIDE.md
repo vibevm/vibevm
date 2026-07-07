@@ -58,7 +58,7 @@ This scaffolds a project and installs a canonical flow package from the default 
 
 ### 4.1 `vibe trace` (needs the discipline toolchain)
 
-`vibe trace <args…>` is a delegating alias over the installed `discipline-rust trace` — the traceability engine ships with `stack:org.vibevm/rust-ai-native` and versions with the project's pinned stack, not with `vibe`. Install it once per machine: `cargo install --path vibedeps/<stack-slot>/crates/discipline-cli`. Without it, `vibe trace` prints exactly this recipe and exits non-zero. (TypeScript trees use `discipline-typescript trace` from their own stack.)
+`vibe trace <args…>` is a delegating alias over the installed `rust-ai-native trace` — the traceability engine ships with `stack:org.vibevm/rust-ai-native` and versions with the project's pinned stack, not with `vibe`. Install it once per machine: `cargo install --path vibedeps/<stack-slot>/crates/rust-ai-native-cli`. Without it, `vibe trace` prints exactly this recipe and exits non-zero. (TypeScript trees use `typescript-ai-native trace` from their own stack.)
 
 ## 5. Troubleshooting
 

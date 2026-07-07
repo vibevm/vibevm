@@ -1,13 +1,13 @@
 //! Unit tests for the output context. Split out of `output.rs` so the
 //! production file stays inside the file-length budget. Env mutation
-//! goes through `env_audit::EnvGuard` — the designated unsafe audit
+//! goes through `rust_ai_native_env_audit::EnvGuard` — the designated unsafe audit
 //! crate (AUD-0016 posture): one guard per test serializes all
 //! env-mutating tests process-wide and restores on drop.
 
 specmark::scope!("spec://vibevm/VIBEVM-SPEC#output-format");
 
 use super::*;
-use env_audit::EnvGuard;
+use rust_ai_native_env_audit::EnvGuard;
 
 #[test]
 fn resolve_returns_default_when_neither_flag_nor_env() {

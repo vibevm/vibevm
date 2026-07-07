@@ -28,7 +28,7 @@
 #   8. the rust-ai-native-lang package gate     — fmt + test + clippy on the Rust
 #                                          frontends/CLIs + the vendored
 #                                          engine copies they build against.
-#   9. the packages' traceability self-trace — `specmap-rust --gate` over
+#   9. the packages' traceability self-trace — `rust-ai-native-specmap --gate` over
 #                                          core-ai-native (the authored
 #                                          engines) and rust-ai-native-lang (the
 #                                          frontends), so no discipline code
@@ -123,7 +123,7 @@ run_step "cargo xtask sync-engines --check" cargo xtask sync-engines --check || 
 # workspace (PROP-024), excluded from the vibevm root. Steps 1-5 build the
 # VENDORED copies as dependencies but never run the authored tests/doctests,
 # and root fmt+clippy never touch them. Gate the authored source here.
-CORE_MANIFEST="packages/org.vibevm/core-ai-native/v0.6.0/Cargo.toml"
+CORE_MANIFEST="packages/org.vibevm/core-ai-native/v0.7.0/Cargo.toml"
 run_step "cargo fmt --all --check (core-ai-native pkg)" \
   cargo fmt --manifest-path "$CORE_MANIFEST" --all --check || OVERALL=$?
 run_step "cargo test --workspace (core-ai-native pkg)" \
@@ -133,7 +133,7 @@ run_step "cargo clippy --all-targets (core-ai-native pkg)" \
 
 # 8. The Rust stack — frontends + CLI drivers + its vendored engine copies —
 # is its own excluded workspace too (PROP-024). Same lesson as step 7.
-PKG_MANIFEST="packages/org.vibevm/rust-ai-native-lang/v0.5.0/Cargo.toml"
+PKG_MANIFEST="packages/org.vibevm/rust-ai-native-lang/v0.7.0/Cargo.toml"
 run_step "cargo fmt --all --check (rust-ai-native-lang pkg)" \
   cargo fmt --manifest-path "$PKG_MANIFEST" --all --check || OVERALL=$?
 run_step "cargo test --workspace (rust-ai-native-lang pkg)" \
@@ -148,38 +148,38 @@ run_step "cargo clippy --all-targets (rust-ai-native-lang pkg)" \
 # scope! targets are cross-package spec units, so a full index would be all
 # cross-repo "dangling"; coverage is what matters. The conform step-5 lesson
 # (a gate not in self-check drifts silently) applied to the packages' traces.
-CORE_DIR="packages/org.vibevm/core-ai-native/v0.6.0"
-run_step "specmap-rust --gate (core-ai-native pkg self-trace)" \
-  cargo run --quiet --manifest-path "$PKG_MANIFEST" -p specmap-cli-rust --bin specmap-rust -- --gate --path "$CORE_DIR" || OVERALL=$?
-PKG_DIR="packages/org.vibevm/rust-ai-native-lang/v0.5.0"
-run_step "specmap-rust --gate (rust-ai-native-lang pkg self-trace)" \
-  cargo run --quiet --manifest-path "$PKG_MANIFEST" -p specmap-cli-rust --bin specmap-rust -- --gate --path "$PKG_DIR" || OVERALL=$?
+CORE_DIR="packages/org.vibevm/core-ai-native/v0.7.0"
+run_step "rust-ai-native-specmap --gate (core-ai-native pkg self-trace)" \
+  cargo run --quiet --manifest-path "$PKG_MANIFEST" -p rust-ai-native-specmap --bin rust-ai-native-specmap -- --gate --path "$CORE_DIR" || OVERALL=$?
+PKG_DIR="packages/org.vibevm/rust-ai-native-lang/v0.7.0"
+run_step "rust-ai-native-specmap --gate (rust-ai-native-lang pkg self-trace)" \
+  cargo run --quiet --manifest-path "$PKG_MANIFEST" -p rust-ai-native-specmap --bin rust-ai-native-specmap -- --gate --path "$PKG_DIR" || OVERALL=$?
 
 # 10. The mcp packages (PROP-027; MCP-SOVEREIGNTY Wave 3+) — each is its
 # own excluded workspace authoring ONE server crate over a vendored
 # closure (sync-engines holds the copies byte-identical to their
 # authored homes, step 6). Same lesson as steps 7-8: nothing else runs
 # their authored tests; gate them here, self-trace included.
-MCPR_MANIFEST="packages/org.vibevm/rust-ai-native-mcp/v0.5.0/Cargo.toml"
+MCPR_MANIFEST="packages/org.vibevm/rust-ai-native-mcp/v0.7.0/Cargo.toml"
 run_step "cargo fmt --all --check (rust-ai-native-mcp pkg)" \
   cargo fmt --manifest-path "$MCPR_MANIFEST" --all --check || OVERALL=$?
-run_step "cargo test -p discipline-mcp-rust (rust-ai-native-mcp pkg)" \
-  cargo test --manifest-path "$MCPR_MANIFEST" -p discipline-mcp-rust --quiet || OVERALL=$?
+run_step "cargo test -p rust-ai-native-mcp (rust-ai-native-mcp pkg)" \
+  cargo test --manifest-path "$MCPR_MANIFEST" -p rust-ai-native-mcp --quiet || OVERALL=$?
 run_step "cargo clippy --all-targets (rust-ai-native-mcp pkg)" \
   cargo clippy --manifest-path "$MCPR_MANIFEST" --workspace --all-targets --quiet -- -D warnings || OVERALL=$?
-MCPR_DIR="packages/org.vibevm/rust-ai-native-mcp/v0.5.0"
-run_step "specmap-rust --gate (rust-ai-native-mcp pkg self-trace)" \
-  cargo run --quiet --manifest-path "$PKG_MANIFEST" -p specmap-cli-rust --bin specmap-rust -- --gate --path "$MCPR_DIR" || OVERALL=$?
-MCPT_MANIFEST="packages/org.vibevm/typescript-ai-native-mcp/v0.4.0/Cargo.toml"
+MCPR_DIR="packages/org.vibevm/rust-ai-native-mcp/v0.7.0"
+run_step "rust-ai-native-specmap --gate (rust-ai-native-mcp pkg self-trace)" \
+  cargo run --quiet --manifest-path "$PKG_MANIFEST" -p rust-ai-native-specmap --bin rust-ai-native-specmap -- --gate --path "$MCPR_DIR" || OVERALL=$?
+MCPT_MANIFEST="packages/org.vibevm/typescript-ai-native-mcp/v0.6.0/Cargo.toml"
 run_step "cargo fmt --all --check (typescript-ai-native-mcp pkg)" \
   cargo fmt --manifest-path "$MCPT_MANIFEST" --all --check || OVERALL=$?
-run_step "cargo test -p discipline-mcp-typescript (typescript-ai-native-mcp pkg)" \
-  cargo test --manifest-path "$MCPT_MANIFEST" -p discipline-mcp-typescript --quiet || OVERALL=$?
+run_step "cargo test -p typescript-ai-native-mcp (typescript-ai-native-mcp pkg)" \
+  cargo test --manifest-path "$MCPT_MANIFEST" -p typescript-ai-native-mcp --quiet || OVERALL=$?
 run_step "cargo clippy --all-targets (typescript-ai-native-mcp pkg)" \
   cargo clippy --manifest-path "$MCPT_MANIFEST" --workspace --all-targets --quiet -- -D warnings || OVERALL=$?
-MCPT_DIR="packages/org.vibevm/typescript-ai-native-mcp/v0.4.0"
-run_step "specmap-rust --gate (typescript-ai-native-mcp pkg self-trace)" \
-  cargo run --quiet --manifest-path "$PKG_MANIFEST" -p specmap-cli-rust --bin specmap-rust -- --gate --path "$MCPT_DIR" || OVERALL=$?
+MCPT_DIR="packages/org.vibevm/typescript-ai-native-mcp/v0.6.0"
+run_step "rust-ai-native-specmap --gate (typescript-ai-native-mcp pkg self-trace)" \
+  cargo run --quiet --manifest-path "$PKG_MANIFEST" -p rust-ai-native-specmap --bin rust-ai-native-specmap -- --gate --path "$MCPT_DIR" || OVERALL=$?
 
 if [ "$QUIET" -eq 0 ]; then
   if [ "$OVERALL" -eq 0 ]; then

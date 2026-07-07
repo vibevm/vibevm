@@ -126,7 +126,7 @@ fn outcome() -> PublishOutcome {
 #[test]
 fn fires_when_env_configured_and_index_returns_201() {
     let mock = spawn_mock();
-    let mut env = env_audit::EnvGuard::lock();
+    let mut env = rust_ai_native_env_audit::EnvGuard::lock();
     env.set("VIBEVM_INDEX_URL_HOOKTESTA", &mock.base_url);
     env.set("VIBEVM_INDEX_TOKEN_HOOKTESTA", "alpha-token");
     let work = tempfile::tempdir().unwrap();
@@ -163,7 +163,7 @@ fn fires_when_env_configured_and_index_returns_201() {
 
 #[test]
 fn dormant_when_url_missing() {
-    let mut env = env_audit::EnvGuard::lock();
+    let mut env = rust_ai_native_env_audit::EnvGuard::lock();
     env.set("VIBEVM_INDEX_TOKEN_HOOKTESTB", "tok");
     let work = tempfile::tempdir().unwrap();
     let pkg = work.path().join("pkg");
@@ -176,7 +176,7 @@ fn dormant_when_url_missing() {
 
 #[test]
 fn dormant_when_token_missing() {
-    let mut env = env_audit::EnvGuard::lock();
+    let mut env = rust_ai_native_env_audit::EnvGuard::lock();
     env.set("VIBEVM_INDEX_URL_HOOKTESTC", "https://example.invalid");
     let work = tempfile::tempdir().unwrap();
     let pkg = work.path().join("pkg");
@@ -193,7 +193,7 @@ fn surfaces_error_on_unexpected_status() {
         let mut c = mock.captured.lock().unwrap();
         c.return_status = 500;
     }
-    let mut env = env_audit::EnvGuard::lock();
+    let mut env = rust_ai_native_env_audit::EnvGuard::lock();
     env.set("VIBEVM_INDEX_URL_HOOKTESTD", &mock.base_url);
     env.set("VIBEVM_INDEX_TOKEN_HOOKTESTD", "tok");
     let work = tempfile::tempdir().unwrap();
@@ -209,7 +209,7 @@ fn surfaces_error_on_unexpected_status() {
 #[test]
 fn surfaces_error_when_manifest_missing() {
     let mock = spawn_mock();
-    let mut env = env_audit::EnvGuard::lock();
+    let mut env = rust_ai_native_env_audit::EnvGuard::lock();
     env.set("VIBEVM_INDEX_URL_HOOKTESTE", &mock.base_url);
     env.set("VIBEVM_INDEX_TOKEN_HOOKTESTE", "tok");
     let work = tempfile::tempdir().unwrap();

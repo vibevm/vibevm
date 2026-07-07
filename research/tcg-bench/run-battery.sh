@@ -3,14 +3,14 @@
 #
 # Drives the opencode CLI agent headlessly over the task set in tasks/,
 # one fresh throwaway copy of research/ts-demo per task, then verifies
-# the result MECHANICALLY (tsc / node --test / conform-typescript) and
+# the result MECHANICALLY (tsc / node --test / typescript-ai-native-conform) and
 # appends one JSON line per task to the results file. The agent under
 # test is the WEAK-model population the tcg line targets (DR1-015).
 #
 # Arms:
 #   control     — tools withheld (the pre-oracle baseline; runnable today)
 #   with-tools  — the tcg_* surface named in the prompt (requires the
-#                 Phase-3 tcg-typescript artifact; refuses until built)
+#                 Phase-3 typescript-ai-native-tcg artifact; refuses until built)
 #
 # Usage:
 #   bash run-battery.sh [--arm control|with-tools] [--model <id>]
@@ -67,11 +67,11 @@ command -v node >/dev/null 2>&1 || { echo "FATAL: node not on PATH" >&2; exit 3;
   exit 3
 }
 
-SLOT_CONFORM="$REPO_ROOT/vibedeps/stack-typescript-ai-native-lang/0.4.0/target/release/conform-typescript.exe"
+SLOT_CONFORM="$REPO_ROOT/vibedeps/stack-typescript-ai-native-lang/0.6.0/target/release/typescript-ai-native-conform.exe"
 if [ ! -x "$SLOT_CONFORM" ]; then
   echo "note: conform artifact missing; building via vibe bin build (org.vibevm, consented)" >&2
-  (cd "$REPO_ROOT" && cargo run -q -p vibe-cli -- bin build conform-typescript) || {
-    echo "FATAL: could not build conform-typescript" >&2
+  (cd "$REPO_ROOT" && cargo run -q -p vibe-cli -- bin build typescript-ai-native-conform) || {
+    echo "FATAL: could not build typescript-ai-native-conform" >&2
     exit 3
   }
 fi
@@ -79,15 +79,15 @@ fi
 # (vibe install) mid-run removes the slot's target/, and the battery
 # must not race it (learned the hard way: three conform=127 rows).
 mkdir -p "$SCRIPT_DIR/.toolcache"
-CONFORM_BIN="$SCRIPT_DIR/.toolcache/conform-typescript.exe"
+CONFORM_BIN="$SCRIPT_DIR/.toolcache/typescript-ai-native-conform.exe"
 cp -f "$SLOT_CONFORM" "$CONFORM_BIN"
 
-TCG_BIN="$REPO_ROOT/vibedeps/stack-typescript-ai-native-lang"/*/target/release/tcg-typescript.exe
+TCG_BIN="$REPO_ROOT/vibedeps/stack-typescript-ai-native-lang"/*/target/release/typescript-ai-native-tcg.exe
 if [ "$ARM" = "with-tools" ]; then
   # shellcheck disable=SC2086
   set -- $TCG_BIN
   [ -x "${1:-/nonexistent}" ] || {
-    echo "FATAL: --arm with-tools needs the Phase-3 tcg-typescript artifact (vibe bin build tcg-typescript)" >&2
+    echo "FATAL: --arm with-tools needs the Phase-3 typescript-ai-native-tcg artifact (vibe bin build typescript-ai-native-tcg)" >&2
     exit 3
   }
 fi
@@ -124,7 +124,7 @@ remove_work() { # <work dir>
 }
 
 TOOLS_BLOCK="Tools available for this task: run
-  \"$REPO_ROOT/vibedeps/stack-typescript-ai-native-lang/0.4.0/target/release/tcg-typescript.exe\" validate <file> --json
+  \"$REPO_ROOT/vibedeps/stack-typescript-ai-native-lang/0.6.0/target/release/typescript-ai-native-tcg.exe\" validate <file> --json
 to type-check a file (with discipline findings) BEFORE writing it to disk is final, and
   ... scope <file> / complete <file> --position L:C / type <file> --position L:C
 for in-scope symbols, type-valid completions, and expression types. Consult them before and after each edit."

@@ -74,7 +74,7 @@ enum Cmd {
     /// unexpectedly-passing-unpromoted.
     TestGate {
         /// Path to the baseline registry, repo-relative.
-        #[arg(long, default_value = discipline_cli_rust::DEFAULT_TESTS_BASELINE)]
+        #[arg(long, default_value = rust_ai_native_cli::DEFAULT_TESTS_BASELINE)]
         baseline: String,
     },
 
@@ -88,7 +88,7 @@ enum Cmd {
         base: Option<String>,
 
         /// Path to the debt registry, repo-relative.
-        #[arg(long, default_value = discipline_cli_rust::DEFAULT_DEBT_REGISTRY)]
+        #[arg(long, default_value = rust_ai_native_cli::DEFAULT_DEBT_REGISTRY)]
         debt: String,
     },
 
@@ -146,7 +146,7 @@ enum Cmd {
     /// Deterministic given the tree; never fails the build (the gates do).
     Health {
         /// Where to write the JSON snapshot, repo-relative.
-        #[arg(long, default_value = discipline_cli_rust::DEFAULT_HEALTH_OUT)]
+        #[arg(long, default_value = rust_ai_native_cli::DEFAULT_HEALTH_OUT)]
         out: String,
 
         /// Also probe whether every `mirrors.toml` target is in sync with
@@ -282,9 +282,9 @@ fn main() -> Result<()> {
         Cmd::CheckCodegen => run_check_codegen(),
         Cmd::Specmap { check } => run_specmap(check),
         Cmd::SyncEngines { check } => run_sync_engines(check),
-        Cmd::TestGate { baseline } => discipline_cli_rust::run_test_gate(&repo_root()?, &baseline),
+        Cmd::TestGate { baseline } => rust_ai_native_cli::run_test_gate(&repo_root()?, &baseline),
         Cmd::Tripwire { base, debt } => {
-            discipline_cli_rust::run_tripwire(&repo_root()?, base.as_deref(), &debt)
+            rust_ai_native_cli::run_tripwire(&repo_root()?, base.as_deref(), &debt)
         }
         Cmd::Conform {
             cmd: ConformCmd::Check { baseline, scope },
@@ -300,12 +300,12 @@ fn main() -> Result<()> {
                     prose,
                     ..
                 },
-        } => discipline_cli_rust::run_trace_explain(&repo_root()?, &target, json, prose),
+        } => rust_ai_native_cli::run_trace_explain(&repo_root()?, &target, json, prose),
         Cmd::FastLoop {
             cell,
             budget,
             enforce_budget,
-        } => discipline_cli_rust::run_fast_loop(
+        } => rust_ai_native_cli::run_fast_loop(
             &repo_root()?,
             cell.as_deref(),
             budget,
@@ -320,7 +320,7 @@ fn main() -> Result<()> {
                     variant,
                     spec_uri,
                 },
-        } => discipline_cli_rust::run_codemod_add_cell(
+        } => rust_ai_native_cli::run_codemod_add_cell(
             &repo_root()?,
             &crate_dir,
             &cell,
@@ -337,7 +337,7 @@ fn main() -> Result<()> {
             } else {
                 Vec::new()
             };
-            discipline_cli_rust::run_health(&root, &out, &extra)
+            rust_ai_native_cli::run_health(&root, &out, &extra)
         }
         Cmd::Mirror { check, from } => run_mirror(check, from.as_deref()),
     }

@@ -27,13 +27,13 @@ pub const MCP_ARG_VARS: &[&str] = &["{project_root}"];
 /// use vibe_core::manifest::McpServerDecl;
 ///
 /// let s: McpServerDecl = toml::from_str(r#"
-///     name = "discipline-rust"
-///     binary = "discipline-mcp-rust"
+///     name = "rust-ai-native"
+///     binary = "rust-ai-native-mcp"
 ///     description = "AI-Native Rust discipline + type oracle over MCP"
 ///     args = ["--path", "{project_root}"]
 /// "#).unwrap();
-/// assert_eq!(s.name, "discipline-rust");
-/// assert_eq!(s.binary, "discipline-mcp-rust");
+/// assert_eq!(s.name, "rust-ai-native");
+/// assert_eq!(s.binary, "rust-ai-native-mcp");
 /// assert!(s.unknown_arg_vars().is_empty());
 ///
 /// // `description` and `args` are optional.

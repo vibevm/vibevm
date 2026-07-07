@@ -11,8 +11,8 @@ use serde::{Deserialize, Serialize};
 
 /// `[[binary]]` — one shipped tool (PROP-025 §2).
 ///
-/// `name` is the PATH-facing binary name (language-suffixed per the
-/// collision convention — `conform-rust`, `conform-typescript`) and MUST
+/// `name` is the PATH-facing binary name (family-prefixed per PROP-028
+/// §2.4 — `rust-ai-native-conform`, `typescript-ai-native-conform`) and MUST
 /// match a `[[bin]]` target inside `crate`. `crate` is the
 /// package-relative directory of the Cargo package that builds it.
 ///
@@ -20,12 +20,12 @@ use serde::{Deserialize, Serialize};
 /// use vibe_core::manifest::BinaryDecl;
 ///
 /// let b: BinaryDecl = toml::from_str(r#"
-///     name = "discipline-rust"
-///     crate = "crates/discipline-cli"
+///     name = "rust-ai-native"
+///     crate = "crates/rust-ai-native-cli"
 ///     description = "the umbrella discipline tool"
 /// "#).unwrap();
-/// assert_eq!(b.name, "discipline-rust");
-/// assert_eq!(b.crate_dir.to_str(), Some("crates/discipline-cli"));
+/// assert_eq!(b.name, "rust-ai-native");
+/// assert_eq!(b.crate_dir.to_str(), Some("crates/rust-ai-native-cli"));
 ///
 /// // `description` is optional.
 /// let bare: BinaryDecl = toml::from_str(

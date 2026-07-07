@@ -118,10 +118,10 @@ pub fn entry_payload(agent: Agent, command: &str, args: &[String]) -> ConfigPayl
 ///
 /// ```
 /// let doc = serde_json::json!({
-///     "mcpServers": { "discipline-rust": {}, "mine": {} },
-///     "vibevm": { "managed": ["discipline-rust"] },
+///     "mcpServers": { "rust-ai-native": {}, "mine": {} },
+///     "vibevm": { "managed": ["rust-ai-native"] },
 /// });
-/// assert_eq!(vibe_mcp::pkg_servers::managed_entries(&doc), ["discipline-rust"]);
+/// assert_eq!(vibe_mcp::pkg_servers::managed_entries(&doc), ["rust-ai-native"]);
 /// assert!(vibe_mcp::pkg_servers::managed_entries(&serde_json::json!({})).is_empty());
 /// ```
 pub fn managed_entries(doc: &JsonValue) -> Vec<String> {
@@ -142,9 +142,9 @@ pub fn managed_entries(doc: &JsonValue) -> Vec<String> {
 ///
 /// ```
 /// let mut doc = serde_json::json!({});
-/// vibe_mcp::pkg_servers::mark_managed(&mut doc, "discipline-rust").unwrap();
-/// vibe_mcp::pkg_servers::mark_managed(&mut doc, "discipline-rust").unwrap();
-/// assert_eq!(vibe_mcp::pkg_servers::managed_entries(&doc), ["discipline-rust"]);
+/// vibe_mcp::pkg_servers::mark_managed(&mut doc, "rust-ai-native").unwrap();
+/// vibe_mcp::pkg_servers::mark_managed(&mut doc, "rust-ai-native").unwrap();
+/// assert_eq!(vibe_mcp::pkg_servers::managed_entries(&doc), ["rust-ai-native"]);
 /// ```
 pub fn mark_managed(doc: &mut JsonValue, name: &str) -> anyhow::Result<()> {
     let obj = doc

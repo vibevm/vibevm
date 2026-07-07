@@ -17,12 +17,12 @@ serde.workspace = true
 serde_json.workspace = true
 toml.workspace = true
 specmap-core.workspace = true
-specmap-cli-rust.workspace = true
+rust-ai-native-specmap.workspace = true
 walkdir.workspace = true
-conform-cli-rust.workspace = true
+rust-ai-native-conform.workspace = true
 conform-core.workspace = true
-conform-frontend-rust.workspace = true
-discipline-cli-rust.workspace = true
+rust-ai-native-conform-frontend.workspace = true
+rust-ai-native-cli.workspace = true
 
 [dev-dependencies]
 tempfile.workspace = true

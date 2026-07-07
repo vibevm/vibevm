@@ -31,8 +31,8 @@ that population).
 - **control** — tools withheld; the pre-oracle baseline. Runnable from
   plan acceptance (the oracle does not exist yet).
 - **with-tools** — the same tasks with the `tcg_*` surface named in the
-  prompt (the one-shot `tcg-typescript` forms). Refuses to run until
-  the Phase-3 artifact exists (`vibe bin build tcg-typescript`).
+  prompt (the one-shot `typescript-ai-native-tcg` forms). Refuses to run until
+  the Phase-3 artifact exists (`vibe bin build typescript-ai-native-tcg`).
 
 ## Running
 
@@ -59,7 +59,7 @@ verifies and appends one JSON line to `reports/<arm>-<stamp>.jsonl`.
 | `tsc_exit` / `tsc_errors` | `./node_modules/.bin/tsc --noEmit` on the result |
 | `tsc_hallucination` | count of TS2304/TS2552/TS2339 — the "invented identifier / member" classes |
 | `tests_exit` / `tests_pass` / `tests_fail` | `node --test` over the explicit `src/**/*.test.ts` file list (bare dirs are a known trap) |
-| `conform_exit` / `conform_new` | `conform-typescript check --path <work>` against the demo's committed ratchet baseline (the one frozen `as_cross` is sanctioned; anything new is the agent's) |
+| `conform_exit` / `conform_new` | `typescript-ai-native-conform check --path <work>` against the demo's committed ratchet baseline (the one frozen `as_cross` is sanctioned; anything new is the agent's) |
 
 Latency/quality targets live in the plan (§4 predictions); the REPORTs
 are the ratchet, not CI assertions.
