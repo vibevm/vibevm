@@ -48,10 +48,7 @@ fn unsupported_language_is_invalid_arguments_naming_the_supported_set() {
 fn missing_stack_is_not_found_with_the_requires_recipe() {
     let (_dir, ctx) = empty_project();
     let err = TcgValidate
-        .run(
-            &json!({"language": "typescript", "file": "src/a.ts"}),
-            &ctx,
-        )
+        .run(&json!({"language": "typescript", "file": "src/a.ts"}), &ctx)
         .expect_err("not installed");
     match err {
         ToolError::NotFound(msg) => {
@@ -65,11 +62,8 @@ fn missing_stack_is_not_found_with_the_requires_recipe() {
 #[test]
 fn tools_list_carries_the_family() {
     let (_dir, ctx) = empty_project();
-    let response = dispatch_one(
-        ctx,
-        r#"{"jsonrpc":"2.0","id":1,"method":"tools/list"}"#,
-    )
-    .expect("list");
+    let response =
+        dispatch_one(ctx, r#"{"jsonrpc":"2.0","id":1,"method":"tools/list"}"#).expect("list");
     for name in ["tcg_validate", "tcg_scope", "tcg_complete", "tcg_type"] {
         assert!(response.contains(name), "tools/list misses {name}");
     }

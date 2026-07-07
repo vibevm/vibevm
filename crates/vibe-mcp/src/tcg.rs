@@ -11,6 +11,7 @@ specmark::scope!("spec://vibevm/modules/vibe-mcp/PROP-026#tools");
 use std::path::Path;
 
 use serde_json::Value;
+use specmark::spec;
 
 use crate::{ServerContext, ToolDescriptor, ToolError, tools::McpTool};
 
@@ -36,6 +37,13 @@ fn map_error(e: vibe_tcg::TcgError) -> ToolError {
     }
 }
 
+#[spec(
+    deviates = "spec://vibevm/modules/vibe-mcp/PROP-026#tools",
+    reason = "compile-time invariant: the tcg_tool_cell! macro instantiates \
+              only the literal names vibe_tcg::tool_specs() declares; a miss \
+              is unreachable by construction and a panic here is a build \
+              defect, not a runtime input"
+)]
 fn descriptor_for(name: &str) -> ToolDescriptor {
     let spec = vibe_tcg::tool_specs()
         .into_iter()

@@ -10,31 +10,49 @@ specmark::scope!("spec://vibevm/modules/vibe-workspace/PROP-025#dispatch");
 
 use std::path::{Path, PathBuf};
 
+use specmark::spec;
 use vibe_core::manifest::{BinaryDecl, Lockfile, Manifest};
 
 use crate::Workspace;
 
-/// This cell's failure surface (one thiserror enum per layer; messages
-/// carry the fix surface).
+/// This cell's failure surface (one thiserror enum per layer; every
+/// message cites its violated REQ and a fix surface).
+///
+/// ```
+/// use vibe_workspace::bins::BinsError;
+/// let e = BinsError::UnknownBinary { name: "x".into(), known: vec![] };
+/// assert!(e.to_string().contains("vibe bin list"));
+/// ```
 #[derive(Debug, thiserror::Error)]
+#[spec(implements = "spec://vibevm/modules/vibe-workspace/PROP-025#dispatch")]
 pub enum BinsError {
-    #[error("loading workspace at `{path}`: {detail}")]
+    #[error(
+        "violates spec://vibevm/modules/vibe-workspace/PROP-025#dispatch: \
+         loading workspace at `{path}`: {detail}; fix surface: run inside a \
+         vibevm project (a `vibe.toml` above the cwd)"
+    )]
     Workspace { path: PathBuf, detail: String },
 
-    #[error("reading lockfile `{path}`: {detail}")]
+    #[error(
+        "violates spec://vibevm/modules/vibe-workspace/PROP-025#dispatch: \
+         reading lockfile `{path}`: {detail}; fix surface: re-run \
+         `vibe install` to regenerate it"
+    )]
     Lockfile { path: PathBuf, detail: String },
 
     #[error(
-        "no installed package declares a binary `{name}` (declared: {known:?}); \
-         `vibe bin list` shows the full table"
+        "violates spec://vibevm/modules/vibe-workspace/PROP-025#dispatch: \
+         no installed package declares a binary `{name}` (declared: \
+         {known:?}); fix surface: `vibe bin list` shows the full table"
     )]
     UnknownBinary { name: String, known: Vec<String> },
 
     #[error(
-        "building `{name}` runs `{package}`'s build scripts and proc-macros \
-         (arbitrary code). The group `{group}` is not allow-listed; consent \
-         explicitly (`vibe bin build {name} --assume-yes`) to proceed \
-         (PROP-025 s8, the PROP-020 posture)"
+        "violates spec://vibevm/modules/vibe-workspace/PROP-025#security: \
+         building `{name}` runs `{package}`'s build scripts and proc-macros \
+         (arbitrary code) and the group `{group}` is not allow-listed; fix \
+         surface: consent explicitly — `vibe bin build {name} --assume-yes` \
+         (the PROP-020 posture)"
     )]
     ConsentRequired {
         name: String,
@@ -43,20 +61,24 @@ pub enum BinsError {
     },
 
     #[error(
-        "spawning cargo for `{name}`: {detail} (a Rust toolchain is required \
-         to build package binaries)"
+        "violates spec://vibevm/modules/vibe-workspace/PROP-025#build: \
+         spawning cargo for `{name}`: {detail}; fix surface: install a Rust \
+         toolchain — package binaries build with the consumer's cargo"
     )]
     CargoSpawn { name: String, detail: String },
 
     #[error(
-        "cargo failed for `{name}` — the slot builds standalone (PROP-024 \
-         s2.4), so this is a real build error, not a topology one"
+        "violates spec://vibevm/modules/vibe-workspace/PROP-025#build: cargo \
+         failed for `{name}`; fix surface: the slot builds standalone \
+         (PROP-024 s2.4) — read cargo's own error, this is a real build \
+         error, not a topology one"
     )]
     BuildFailed { name: String },
 
     #[error(
-        "cargo succeeded but `{artifact}` is missing — the [[binary]] \
-         declaration's name must equal the crate's bin target (PROP-025 s2)"
+        "violates spec://vibevm/modules/vibe-workspace/PROP-025#manifest: \
+         cargo succeeded but `{artifact}` is missing; fix surface: the \
+         [[binary]] declaration's name must equal the crate's bin target"
     )]
     ArtifactMissing { artifact: PathBuf },
 }
@@ -288,7 +310,10 @@ crate = "crates/tcg-cli-typescript"
         let bins = collect_binaries(dir.path()).expect("collect");
         let err = find_binary(&bins, "nope").expect_err("unknown");
         let msg = err.to_string();
-        assert!(msg.contains("nope") && msg.contains("tcg-typescript"), "{msg}");
+        assert!(
+            msg.contains("nope") && msg.contains("tcg-typescript"),
+            "{msg}"
+        );
     }
 
     #[test]

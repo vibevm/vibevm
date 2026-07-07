@@ -200,7 +200,7 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/bin.rs",
       "item_kind": "mod",
-      "line": 15,
+      "line": 7,
       "symbol": "vibe_cli::commands::bin"
     },
     {
@@ -2188,14 +2188,14 @@
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/lib.rs",
       "item_kind": "enum",
-      "line": 338,
+      "line": 344,
       "symbol": "vibe_mcp::ServerError"
     },
     {
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/lib.rs",
       "item_kind": "enum",
-      "line": 124,
+      "line": 130,
       "symbol": "vibe_mcp::ToolError"
     },
     {
@@ -2438,6 +2438,20 @@
     },
     {
       "crate_name": "vibe-mcp",
+      "file": "crates/vibe-mcp/src/tcg.rs",
+      "item_kind": "mod",
+      "line": 9,
+      "symbol": "vibe_mcp::tcg"
+    },
+    {
+      "crate_name": "vibe-mcp",
+      "file": "crates/vibe-mcp/src/tcg.rs",
+      "item_kind": "fn",
+      "line": 40,
+      "symbol": "vibe_mcp::tcg::descriptor_for"
+    },
+    {
+      "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/tools.rs",
       "item_kind": "mod",
       "line": 11,
@@ -2447,14 +2461,14 @@
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/tools.rs",
       "item_kind": "struct",
-      "line": 410,
+      "line": 414,
       "symbol": "vibe_mcp::tools::AgenticExplain"
     },
     {
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/tools.rs",
       "item_kind": "struct",
-      "line": 274,
+      "line": 278,
       "symbol": "vibe_mcp::tools::MaterialiseSubskill"
     },
     {
@@ -2468,14 +2482,14 @@
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/tools.rs",
       "item_kind": "struct",
-      "line": 57,
+      "line": 61,
       "symbol": "vibe_mcp::tools::QueryPackage"
     },
     {
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/tools.rs",
       "item_kind": "struct",
-      "line": 144,
+      "line": 148,
       "symbol": "vibe_mcp::tools::ReadSubskill"
     },
     {
@@ -3515,6 +3529,27 @@
       "symbol": "vibe_resolver::tests::fixpoint_conformance::stack_trigger_world_conforms"
     },
     {
+      "crate_name": "vibe-tcg",
+      "file": "crates/vibe-tcg/src/lib.rs",
+      "item_kind": "mod",
+      "line": 16,
+      "symbol": "vibe_tcg"
+    },
+    {
+      "crate_name": "vibe-tcg",
+      "file": "crates/vibe-tcg/src/lib.rs",
+      "item_kind": "enum",
+      "line": 44,
+      "symbol": "vibe_tcg::TcgError"
+    },
+    {
+      "crate_name": "vibe-tcg",
+      "file": "crates/vibe-tcg/src/registry.rs",
+      "item_kind": "mod",
+      "line": 9,
+      "symbol": "vibe_tcg::registry"
+    },
+    {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/lib.rs",
       "item_kind": "mod",
@@ -3525,29 +3560,43 @@
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/lib.rs",
       "item_kind": "struct",
-      "line": 287,
+      "line": 288,
       "symbol": "vibe_workspace::Workspace"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/lib.rs",
       "item_kind": "fn",
-      "line": 332,
+      "line": 333,
       "symbol": "vibe_workspace::Workspace::discover"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/lib.rs",
       "item_kind": "enum",
-      "line": 55,
+      "line": 56,
       "symbol": "vibe_workspace::WorkspaceError"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/lib.rs",
       "item_kind": "struct",
-      "line": 243,
+      "line": 244,
       "symbol": "vibe_workspace::WorkspaceMember"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/bins.rs",
+      "item_kind": "mod",
+      "line": 9,
+      "symbol": "vibe_workspace::bins"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/bins.rs",
+      "item_kind": "enum",
+      "line": 18,
+      "symbol": "vibe_workspace::bins::BinsError"
     },
     {
       "crate_name": "vibe-workspace",
@@ -4227,7 +4276,7 @@
     {
       "file": "crates/vibe-cli/src/commands/bin.rs",
       "from_symbol": "vibe_cli::commands::bin",
-      "line": 15,
+      "line": 7,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-025#dispatch",
       "verb": "implements"
@@ -6614,7 +6663,7 @@
     {
       "file": "crates/vibe-mcp/src/lib.rs",
       "from_symbol": "vibe_mcp::ServerError",
-      "line": 348,
+      "line": 354,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-mcp/PROP-015#errors",
       "verb": "implements"
@@ -6622,7 +6671,7 @@
     {
       "file": "crates/vibe-mcp/src/lib.rs",
       "from_symbol": "vibe_mcp::ToolError",
-      "line": 135,
+      "line": 141,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-mcp/PROP-015#errors",
       "verb": "implements"
@@ -6908,6 +6957,23 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-mcp/src/tcg.rs",
+      "from_symbol": "vibe_mcp::tcg",
+      "line": 9,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-mcp/PROP-026#tools",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-mcp/src/tcg.rs",
+      "from_symbol": "vibe_mcp::tcg::descriptor_for",
+      "line": 40,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-mcp/PROP-026#tools",
+      "verb": "deviates",
+      "reason": "compile-time invariant: the tcg_tool_cell! macro instantiates only the literal names vibe_tcg::tool_specs() declares; a miss is unreachable by construction and a panic here is a build defect, not a runtime input"
+    },
+    {
       "file": "crates/vibe-mcp/src/tools.rs",
       "from_symbol": "vibe_mcp::tools",
       "line": 11,
@@ -6918,7 +6984,7 @@
     {
       "file": "crates/vibe-mcp/src/tools.rs",
       "from_symbol": "vibe_mcp::tools::AgenticExplain",
-      "line": 421,
+      "line": 425,
       "provenance": "authored",
       "uri": "spec://vibevm/common/PROP-018#transports",
       "verb": "implements"
@@ -6926,7 +6992,7 @@
     {
       "file": "crates/vibe-mcp/src/tools.rs",
       "from_symbol": "vibe_mcp::tools::MaterialiseSubskill",
-      "line": 283,
+      "line": 287,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-mcp/PROP-015#tools",
       "verb": "implements"
@@ -6942,7 +7008,7 @@
     {
       "file": "crates/vibe-mcp/src/tools.rs",
       "from_symbol": "vibe_mcp::tools::QueryPackage",
-      "line": 65,
+      "line": 69,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-mcp/PROP-015#tools",
       "verb": "implements"
@@ -6950,7 +7016,7 @@
     {
       "file": "crates/vibe-mcp/src/tools.rs",
       "from_symbol": "vibe_mcp::tools::ReadSubskill",
-      "line": 152,
+      "line": 156,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-mcp/PROP-015#tools",
       "verb": "implements"
@@ -8243,6 +8309,30 @@
       "verb": "verifies"
     },
     {
+      "file": "crates/vibe-tcg/src/lib.rs",
+      "from_symbol": "vibe_tcg",
+      "line": 16,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-mcp/PROP-026#root",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-tcg/src/lib.rs",
+      "from_symbol": "vibe_tcg::TcgError",
+      "line": 56,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-mcp/PROP-026#tools",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-tcg/src/registry.rs",
+      "from_symbol": "vibe_tcg::registry",
+      "line": 9,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-mcp/PROP-026#registry",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-workspace/src/lib.rs",
       "from_symbol": "vibe_workspace",
       "line": 29,
@@ -8253,7 +8343,7 @@
     {
       "file": "crates/vibe-workspace/src/lib.rs",
       "from_symbol": "vibe_workspace::Workspace",
-      "line": 316,
+      "line": 317,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-007#workspace-section",
       "verb": "implements",
@@ -8262,7 +8352,7 @@
     {
       "file": "crates/vibe-workspace/src/lib.rs",
       "from_symbol": "vibe_workspace::Workspace::discover",
-      "line": 337,
+      "line": 338,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-007#nesting",
       "verb": "implements",
@@ -8271,7 +8361,7 @@
     {
       "file": "crates/vibe-workspace/src/lib.rs",
       "from_symbol": "vibe_workspace::WorkspaceError",
-      "line": 76,
+      "line": 77,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-007#nesting",
       "verb": "implements"
@@ -8279,11 +8369,27 @@
     {
       "file": "crates/vibe-workspace/src/lib.rs",
       "from_symbol": "vibe_workspace::WorkspaceMember",
-      "line": 266,
+      "line": 267,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-007#workspace-section",
       "verb": "implements",
       "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-workspace/src/bins.rs",
+      "from_symbol": "vibe_workspace::bins",
+      "line": 9,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-025#dispatch",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-workspace/src/bins.rs",
+      "from_symbol": "vibe_workspace::bins::BinsError",
+      "line": 27,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-workspace/PROP-025#dispatch",
+      "verb": "implements"
     },
     {
       "file": "crates/vibe-workspace/src/boot.rs",

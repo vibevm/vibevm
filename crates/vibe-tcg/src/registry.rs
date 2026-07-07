@@ -25,14 +25,29 @@ const ORACLE_PROTOCOL: u64 = 1;
 const REQUEST_TIMEOUT: Duration = Duration::from_secs(60);
 
 /// One live relay link: send a frame, receive the matching frame.
+///
+/// ```
+/// use vibe_tcg::{OracleLink, TcgError};
+/// struct Echo;
+/// impl OracleLink for Echo {
+///     fn request(
+///         &mut self,
+///         frame: serde_json::Value,
+///     ) -> Result<serde_json::Value, TcgError> {
+///         Ok(serde_json::json!({ "echo": frame["op"] }))
+///     }
+/// }
+/// let mut link = Echo;
+/// let out = link.request(serde_json::json!({"op": "validate"})).unwrap();
+/// assert_eq!(out["echo"], "validate");
+/// ```
 pub trait OracleLink: Send {
     fn request(&mut self, frame: serde_json::Value) -> Result<serde_json::Value, TcgError>;
 }
 
 /// Spawns a link for (artifact, project_root). Production spawns the
 /// slot binary; tests inject doubles.
-pub type Spawner =
-    Box<dyn Fn(&Path, &Path) -> Result<Box<dyn OracleLink>, TcgError> + Send + Sync>;
+pub type Spawner = Box<dyn Fn(&Path, &Path) -> Result<Box<dyn OracleLink>, TcgError> + Send + Sync>;
 
 fn language_binary(language: &str) -> &'static str {
     match language {
@@ -116,14 +131,13 @@ impl OracleRegistry {
             .children
             .lock()
             .unwrap_or_else(std::sync::PoisonError::into_inner);
-        if !children.contains_key(language) {
-            let artifact = self.resolve_artifact(language, host.project_root())?;
-            let link = (self.spawner)(&artifact, host.project_root())?;
-            children.insert(language.to_string(), link);
-        }
-        let link = children
-            .get_mut(language)
-            .expect("inserted above when absent");
+        let link = match children.entry(language.to_string()) {
+            std::collections::hash_map::Entry::Occupied(o) => o.into_mut(),
+            std::collections::hash_map::Entry::Vacant(v) => {
+                let artifact = self.resolve_artifact(language, host.project_root())?;
+                v.insert((self.spawner)(&artifact, host.project_root())?)
+            }
+        };
         let outcome = link.request(frame.clone());
         if matches!(outcome, Err(TcgError::OracleGone { .. })) {
             children.remove(language);
@@ -280,7 +294,10 @@ impl OracleLink for ProcessLink {
                 continue; // stale frame from a previous request; skip
             }
             return if value.get("ok").and_then(|v| v.as_bool()) == Some(true) {
-                Ok(value.get("result").cloned().unwrap_or(serde_json::Value::Null))
+                Ok(value
+                    .get("result")
+                    .cloned()
+                    .unwrap_or(serde_json::Value::Null))
             } else {
                 let detail = value
                     .get("error")

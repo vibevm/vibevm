@@ -17,24 +17,49 @@ specmark::scope!("spec://vibevm/modules/vibe-mcp/PROP-026#root");
 
 use std::path::Path;
 
+use specmark::spec;
+
 mod registry;
 pub use registry::{OracleLink, OracleRegistry, Spawner};
 
 /// The narrow host abstraction (PROP-026 §3): everything the family
 /// needs from whoever mounts it. Deliberately tiny — a project root is
 /// the whole context; consent policy is fixed by §5 (no prompts).
+///
+/// ```
+/// use vibe_tcg::TcgHost;
+/// struct Host(std::path::PathBuf);
+/// impl TcgHost for Host {
+///     fn project_root(&self) -> &std::path::Path {
+///         &self.0
+///     }
+/// }
+/// let host = Host(std::path::PathBuf::from("."));
+/// assert!(host.project_root().exists());
+/// ```
 pub trait TcgHost {
     fn project_root(&self) -> &Path;
 }
 
 /// The family's failure surface. Every variant is a recipe, not a dead
-/// end (PROP-026 §4).
+/// end (PROP-026 §4), and every message cites its violated REQ.
+///
+/// ```
+/// use vibe_tcg::TcgError;
+/// let e = TcgError::LanguageUnsupported {
+///     given: "rust".into(),
+///     supported: vec!["typescript"],
+/// };
+/// assert!(e.to_string().contains("PROP-026#tools"));
+/// ```
 #[derive(Debug, thiserror::Error)]
+#[spec(implements = "spec://vibevm/modules/vibe-mcp/PROP-026#tools")]
 pub enum TcgError {
     #[error(
-        "language `{given}` is not supported by the tcg tools yet \
-         (supported: {supported:?}); the Rust twin arrives as a new \
-         language value (PROP-026 s2)"
+        "violates spec://vibevm/modules/vibe-mcp/PROP-026#tools: language \
+         `{given}` is not supported by the tcg tools yet (supported: \
+         {supported:?}); fix surface: the Rust twin arrives as a new \
+         language value, not new tools"
     )]
     LanguageUnsupported {
         given: String,
@@ -42,40 +67,64 @@ pub enum TcgError {
     },
 
     #[error(
-        "no installed package declares `{binary}` for language `{language}` — \
-         add `\"stack:org.vibevm/typescript-ai-native\" = \"^0.4\"` to \
-         [requires.packages] and run `vibe install` (PROP-026 s4)"
+        "violates spec://vibevm/modules/vibe-mcp/PROP-026#registry: no \
+         installed package declares `{binary}` for language `{language}`; \
+         fix surface: add `\"stack:org.vibevm/typescript-ai-native\" = \
+         \"^0.4\"` to [requires.packages] and run `vibe install`"
     )]
     StackNotInstalled { language: String, binary: String },
 
     #[error(
-        "`{binary}` ({package}) is declared by a non-allow-listed group and \
-         is not built; an MCP server never prompts — build it once in a \
-         terminal: `vibe bin build {binary} --assume-yes` (PROP-026 s5)"
+        "violates spec://vibevm/modules/vibe-mcp/PROP-026#consent: \
+         `{binary}` ({package}) is declared by a non-allow-listed group and \
+         is not built, and an MCP server never prompts; fix surface: build \
+         it once in a terminal — `vibe bin build {binary} --assume-yes`"
     )]
     NotBuiltThirdParty { binary: String, package: String },
 
-    #[error("building `{binary}` in its slot failed: {detail}")]
+    #[error(
+        "violates spec://vibevm/modules/vibe-mcp/PROP-026#registry: \
+         building `{binary}` in its slot failed: {detail}; fix surface: \
+         read the wrapped build error — the slot builds standalone"
+    )]
     BuildFailed { binary: String, detail: String },
 
     #[error(
-        "the oracle relay for `{language}` is gone: {detail} — it was \
-         respawned once already; run the op one-shot \
-         (`vibe bin exec tcg-typescript -- validate ...`) to see stderr \
-         (PROP-026 s4)"
+        "violates spec://vibevm/modules/vibe-mcp/PROP-026#registry: the \
+         oracle relay for `{language}` is gone: {detail} — it was respawned \
+         once already; fix surface: run the op one-shot \
+         (`vibe bin exec tcg-typescript -- validate ...`) to see stderr"
     )]
     OracleGone { language: String, detail: String },
 
-    #[error("tcg protocol violation: {detail}")]
+    #[error(
+        "violates spec://vibevm/modules/vibe-mcp/PROP-026#registry: tcg \
+         protocol violation: {detail}; fix surface: rebuild the slot binary \
+         so the relay and this host share one protocol"
+    )]
     Protocol { detail: String },
 
-    #[error("tool argument error: {detail}")]
+    #[error(
+        "violates spec://vibevm/modules/vibe-mcp/PROP-026#tools: tool \
+         argument error: {detail}; fix surface: pass arguments matching the \
+         tool's input schema"
+    )]
     BadArguments { detail: String },
 }
 
 /// One tool's static face: name, human description, JSON-schema for the
 /// arguments. The mounting server serialises this into its own
 /// descriptor shape.
+///
+/// ```
+/// use vibe_tcg::ToolSpec;
+/// let spec = ToolSpec {
+///     name: "tcg_validate",
+///     description: "…",
+///     input_schema: serde_json::json!({ "type": "object" }),
+/// };
+/// assert_eq!(spec.name, "tcg_validate");
+/// ```
 pub struct ToolSpec {
     pub name: &'static str,
     pub description: &'static str,
@@ -105,6 +154,11 @@ fn position_schema() -> serde_json::Value {
 }
 
 /// The four tool faces (PROP-026 §2).
+///
+/// ```
+/// let names: Vec<_> = vibe_tcg::tool_specs().iter().map(|s| s.name).collect();
+/// assert_eq!(names, ["tcg_validate", "tcg_scope", "tcg_complete", "tcg_type"]);
+/// ```
 pub fn tool_specs() -> Vec<ToolSpec> {
     vec![
         ToolSpec {
@@ -186,6 +240,25 @@ fn oracle_op(tool_name: &str) -> Option<&'static str> {
 /// params, relay the op to the (lazily spawned) enriching relay, and
 /// return its result verbatim — the relay already enriched it
 /// (TCG-PROTOCOL §3).
+///
+/// ```
+/// use vibe_tcg::{OracleRegistry, TcgHost, run_tool};
+/// struct Host(std::path::PathBuf);
+/// impl TcgHost for Host {
+///     fn project_root(&self) -> &std::path::Path {
+///         &self.0
+///     }
+/// }
+/// // an unsupported language is refused BEFORE any process work:
+/// let err = run_tool(
+///     "tcg_validate",
+///     &serde_json::json!({"language": "rust", "file": "src/a.rs"}),
+///     &Host(std::path::PathBuf::from(".")),
+///     &OracleRegistry::default(),
+/// )
+/// .unwrap_err();
+/// assert!(err.to_string().contains("typescript"));
+/// ```
 pub fn run_tool(
     name: &str,
     args: &serde_json::Value,
@@ -232,9 +305,7 @@ mod tests {
             ["tcg_validate", "tcg_scope", "tcg_complete", "tcg_type"]
         );
         for spec in &specs {
-            let required = spec.input_schema["required"]
-                .as_array()
-                .expect("required");
+            let required = spec.input_schema["required"].as_array().expect("required");
             assert!(required.iter().any(|r| r == "language"), "{}", spec.name);
             assert!(required.iter().any(|r| r == "file"), "{}", spec.name);
         }
