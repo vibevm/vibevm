@@ -178,6 +178,20 @@ pub fn content_hash(text: &str) -> String {
     hex
 }
 
+/// The crate name a scanned directory denotes: its basename, resolved
+/// through `std::path::absolute` first so a `.` root names the project
+/// directory itself instead of nothing (`Path::new(".").file_name()` is
+/// `None` — the bare single-crate layout). The config validator derives
+/// literal-root names through this same function, so the scanner and
+/// the gated-or-exempt tree invariant can never disagree on what a
+/// root is called.
+pub(crate) fn crate_dir_name(dir: &Path) -> Option<String> {
+    let resolved = std::path::absolute(dir).unwrap_or_else(|_| dir.to_path_buf());
+    resolved
+        .file_name()
+        .map(|n| n.to_string_lossy().into_owned())
+}
+
 /// Enumerate the configured source roots as `(repo-rel file, crate
 /// name, module path, absolute path)`. A `<dir>/*` root scans each
 /// subdirectory of `<dir>` as one crate; any other root is a literal
@@ -211,10 +225,7 @@ fn workspace_sources(
 
     let mut out = Vec::new();
     for crate_dir in crate_dirs {
-        let crate_name = crate_dir
-            .file_name()
-            .map(|n| n.to_string_lossy().to_string())
-            .unwrap_or_default();
+        let crate_name = crate_dir_name(&crate_dir).unwrap_or_default();
         let crate_ident = crate_name.replace('-', "_");
         for sub in ["src", "tests"] {
             let dir = crate_dir.join(sub);
@@ -294,10 +305,7 @@ fn typescript_sources(
 
     let mut out = Vec::new();
     for root_dir in root_dirs {
-        let root_name = root_dir
-            .file_name()
-            .map(|n| n.to_string_lossy().to_string())
-            .unwrap_or_default();
+        let root_name = crate_dir_name(&root_dir).unwrap_or_default();
         for entry in walkdir::WalkDir::new(&root_dir)
             .sort_by_file_name()
             .into_iter()
@@ -370,4 +378,47 @@ fn module_path(crate_ident: &str, rel_fwd: &str) -> String {
 pub fn sort_source_facts(mut all: Vec<SourceFacts>) -> Vec<SourceFacts> {
     all.sort_by(|a, b| a.file.cmp(&b.file));
     all
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::config::Config;
+
+    struct NullFrontend;
+    impl Frontend for NullFrontend {
+        fn id(&self) -> &'static str {
+            "null"
+        }
+        fn version(&self) -> &'static str {
+            "0"
+        }
+        fn extract(&self, _f: &str, _c: &str, _m: &str, _t: &str) -> Vec<Fact> {
+            Vec::new()
+        }
+    }
+
+    /// A `.` root attributes its files to the project directory's own
+    /// basename — the scanner half of the single-crate fix (the
+    /// validator half is pinned in `config.rs`). Before the shared
+    /// `crate_dir_name` derivation this came out as the empty string,
+    /// so every crate-keyed rule silently skipped the whole tree.
+    #[test]
+    fn dot_root_names_the_project_directory() {
+        let tmp = tempfile::tempdir().unwrap();
+        let root = tmp.path();
+        std::fs::create_dir_all(root.join("src")).unwrap();
+        std::fs::write(root.join("src").join("lib.rs"), "pub fn f() {}\n").unwrap();
+        let cfg: Config = toml::from_str("roots = [\".\"]").unwrap();
+
+        let store = Store::at_repo(root, &cfg);
+        let mut log = ExtractionLog::default();
+        let facts = store
+            .extract_workspace(root, &NullFrontend, &mut log)
+            .unwrap();
+
+        let expected = root.file_name().unwrap().to_string_lossy().into_owned();
+        assert_eq!(facts.len(), 1, "one source file scanned");
+        assert_eq!(facts[0].crate_name, expected);
+    }
 }
