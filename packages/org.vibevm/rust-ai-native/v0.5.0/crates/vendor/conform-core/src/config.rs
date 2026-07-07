@@ -268,6 +268,37 @@ impl Config {
         }
         Ok(())
     }
+
+    /// Gated crates the scan attributed NO sources to — each names a gate
+    /// that would pass by vacuity (nothing scanned means nothing findable),
+    /// the silent failure mode of a mis-shaped `roots` list. The drivers
+    /// print every entry as a warning on check and freeze, the same
+    /// announce-yourself posture as [`ConfigOrigin`]; an empty return means
+    /// every gated crate contributed at least one scanned file.
+    ///
+    /// ```
+    /// use conform_core::{Config, SourceFacts};
+    ///
+    /// let cfg: Config = toml::from_str("gated_crates = [\"app\"]").unwrap();
+    /// let nothing: Vec<SourceFacts> = Vec::new();
+    /// assert_eq!(cfg.vacuously_gated(&nothing), vec!["app".to_string()]);
+    ///
+    /// let scanned = vec![SourceFacts {
+    ///     file: "crates/app/src/lib.rs".into(),
+    ///     crate_name: "app".into(),
+    ///     facts: vec![],
+    /// }];
+    /// assert!(cfg.vacuously_gated(&scanned).is_empty());
+    /// ```
+    pub fn vacuously_gated(&self, facts: &[crate::facts::SourceFacts]) -> Vec<String> {
+        use std::collections::BTreeSet;
+        let scanned: BTreeSet<&str> = facts.iter().map(|f| f.crate_name.as_str()).collect();
+        self.gated_crates
+            .iter()
+            .filter(|c| !scanned.contains(c.as_str()))
+            .cloned()
+            .collect()
+    }
 }
 
 #[cfg(test)]

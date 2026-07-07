@@ -63,6 +63,10 @@ pub fn run_gate(root: &Path) -> Result<()> {
 /// runs when a `specmap.toml` is present (an absent policy leaves it off).
 fn run_ratchet_gate(root: &Path, cfg: &Config, blocking: bool) -> Result<()> {
     let map = specmap_core::index::build(root, cfg);
+    let summary = specmap_core::index::Summary::of(&map);
+    if let Some(w) = specmap_core::index::vacuity_warning(&summary) {
+        eprintln!("specmap: WARNING — {w}.");
+    }
     let orphans = specmap_core::ratchet::orphans(root, &map, cfg);
     let mut blockers = 0usize;
     for o in &orphans {

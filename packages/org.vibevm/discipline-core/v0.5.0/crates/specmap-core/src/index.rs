@@ -389,6 +389,35 @@ impl std::fmt::Display for Summary {
     }
 }
 
+/// The vacuous-scan warning, one wording for every driver: `Some(message)`
+/// when the scan produced no tagged code items at all, so the orphan
+/// ratchet and the suspects table pass on an empty set. That is the silent
+/// failure mode of `scan_roots` naming a parent directory instead of the
+/// crate dirs themselves — a parent dir scans nothing and the gate greens
+/// by vacuity (PROP-014 §2.5). Warning, not error: a freshly-initialised
+/// project legitimately has nothing tagged yet.
+///
+/// ```
+/// use specmap_core::index::{Summary, vacuity_warning};
+///
+/// let empty = Summary { spec_units: 3, code_items: 0, edges: 0, suspects: 0, warnings: 0 };
+/// assert!(vacuity_warning(&empty).is_some());
+///
+/// let tagged = Summary { code_items: 1, ..empty };
+/// assert!(vacuity_warning(&tagged).is_none());
+/// ```
+pub fn vacuity_warning(summary: &Summary) -> Option<String> {
+    if summary.code_items > 0 {
+        return None;
+    }
+    Some(
+        "the scan found 0 tagged code items — the orphan gate and the suspects table are \
+         green by vacuity; `scan_roots` entries must name crate dirs (or `<dir>/*` their \
+         parent): a bare parent directory scans nothing (PROP-014 §2.5)"
+            .to_string(),
+    )
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
