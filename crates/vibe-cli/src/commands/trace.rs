@@ -12,7 +12,13 @@ use anyhow::{Result, bail};
 
 /// Delegate `vibe trace <args…>` to `discipline-rust trace <args…>`.
 pub fn run(args: &[String]) -> Result<i32> {
-    let spawned = std::process::Command::new("discipline-rust")
+    run_with("discipline-rust", args)
+}
+
+/// The delegation seam, binary-parameterised so the missing-binary path
+/// is testable without mutating the process environment.
+fn run_with(binary: &str, args: &[String]) -> Result<i32> {
+    let spawned = std::process::Command::new(binary)
         .arg("trace")
         .args(args)
         .status();
@@ -33,22 +39,15 @@ pub fn run(args: &[String]) -> Result<i32> {
 
 #[cfg(test)]
 mod tests {
-    /// With PATH scrubbed the delegator cannot spawn, and the error is
-    /// the recipe, not a raw OS code.
+    /// A binary that cannot exist anywhere: the spawn fails and the
+    /// error is the recipe, not a raw OS code.
     #[test]
     fn missing_binary_yields_the_install_recipe() {
-        let orig = std::env::var_os("PATH");
-        // SAFETY / test-serial note: mutating PATH is process-global; this
-        // is the module's only test, so nothing races it.
-        unsafe { std::env::set_var("PATH", "") };
-        let err = super::run(&["explain".into(), "spec://x/Y#z".into()])
-            .expect_err("spawn must fail on an empty PATH");
-        unsafe {
-            match orig {
-                Some(p) => std::env::set_var("PATH", p),
-                None => std::env::remove_var("PATH"),
-            }
-        }
+        let err = super::run_with(
+            "vibe-trace-test-missing-binary-2f6e",
+            &["explain".into(), "spec://x/Y#z".into()],
+        )
+        .expect_err("spawn must fail for a nonexistent binary");
         let text = err.to_string();
         assert!(text.contains("cargo install --path"), "{text}");
         assert!(text.contains("discipline-rust"), "{text}");
