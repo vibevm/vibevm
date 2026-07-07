@@ -43,6 +43,22 @@ User-owned boot snippet. `vibe install`/`uninstall` never touches this file. Add
 
 The TypeScript discipline toolchain (extractor, bridge, conform/specmap frontends, `discipline-typescript`, the demo) is **production-grade work, not a sketch**: it is the foundation for a much larger effort. No "MVP" framing, no stub subcommands left as the shipped surface, no skipped edge cases justified by scope. Full implementations at a level fit to show in production; spend whatever tokens/time that takes. (Recorded from the owner's words during the deferrals-closeout campaign; survives it.)
 
+## Machine quirks (this box)
+
+Boot-resident since the deferrals-closeout campaign (owner-sanctioned; the
+sweep manual's §3 keeps a pointer here). These are machine facts, not
+project policy:
+
+- Edits through editor tools only — PowerShell 5.1 corrupts UTF-8-no-BOM
+  round-trips; recover with `git restore`.
+- `self-check.sh` through Git Bash, not WSL; check the REAL exit code
+  (`; echo "EXIT=$?"`), never a `| tail`'d pipe.
+- Commits via `git commit -F - <<'MSG'` heredoc only.
+- Windows UAC blocks test executables named `*install*` (os-740).
+- `bash … > "$VAR/file" 2>&1` with an unset `$VAR` writes to `/file` and
+  silently never runs the command — inline the path or set the var on the
+  same line.
+
 ## Operating modes (codewords)
 
 Trigger phrases that switch the session into an alternate working posture are catalogued in [PROP-006](../common/PROP-006-operating-modes.md). Recognise a codeword when the owner invokes it; otherwise treat the session as default posture (the four rules from `CLAUDE.md` in their plain reading).

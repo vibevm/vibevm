@@ -50,8 +50,10 @@ sit at `discipline/registry/`, goldens at `discipline/golden/`
 
 ## 3. Machine quirks (THIS box; machine-scoped, not project fact) {#quirks}
 
-Candidates for `spec/boot/90-user.md` (owner-owned — owner copies at
-will); kept here so the sweep never trips over them meanwhile:
+Boot-resident since the deferrals-closeout campaign: the canonical copy
+lives in [`spec/boot/90-user.md`](../boot/90-user.md) (owner-sanctioned)
+and loads at every session boot; this list stays as the sweep's local
+reference:
 
 - Edits through editor tools only — PowerShell 5.1 corrupts UTF-8-no-BOM
   round-trips; recover with `git restore`.
