@@ -1,0 +1,2 @@
+tryGreet	src/cells/greeting/index.ts
+tryGreet	src/cells/greeting/index.test.ts

@@ -1,0 +1,2 @@
+truncate	src/core/text.ts
+truncate	src/cells/farewell/index.ts

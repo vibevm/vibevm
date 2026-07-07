@@ -1,0 +1,2 @@
+greetRawInput	src/cells/greeting/index.ts
+greetRawInput	src/cells/greeting/index.test.ts

@@ -17,6 +17,12 @@ that population).
   "gpt-oss-20b (free)"; the `:free` suffix is what the picker renders
   as "(free)"). OpenRouter credentials must be configured in opencode
   (`opencode auth list`).
+- **Fallback model (owner directive, 2026-07-07):** if gpt-oss-20b
+  stops answering (e.g. the OpenRouter free-tier limit), switch to
+  **"GLM-5-Turbo" from the "Z.AI Coding Plan" provider** — find its
+  exact id via `opencode models | grep -i glm` and pass it with
+  `--model`. Record the model actually used in the run's REPORT; arms
+  compared against each other must use the SAME model.
 - The demo's own `AGENTS.md` rides into every work copy — the agent
   gets the same discipline instructions a real consumer session gets.
 

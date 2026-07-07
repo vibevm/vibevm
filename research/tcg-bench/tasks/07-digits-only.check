@@ -1,0 +1,2 @@
+digits-only	src/cells/greeting/index.ts
+digits	src/cells/greeting/index.test.ts

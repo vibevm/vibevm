@@ -1,0 +1,2 @@
+greetMany	src/cells/greeting/index.ts
+greetMany	src/cells/greeting/index.test.ts

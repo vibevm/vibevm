@@ -67,14 +67,20 @@ command -v node >/dev/null 2>&1 || { echo "FATAL: node not on PATH" >&2; exit 3;
   exit 3
 }
 
-CONFORM_BIN="$REPO_ROOT/vibedeps/stack-typescript-ai-native/0.3.0/target/release/conform-typescript.exe"
-if [ ! -x "$CONFORM_BIN" ]; then
+SLOT_CONFORM="$REPO_ROOT/vibedeps/stack-typescript-ai-native/0.4.0/target/release/conform-typescript.exe"
+if [ ! -x "$SLOT_CONFORM" ]; then
   echo "note: conform artifact missing; building via vibe bin build (org.vibevm, consented)" >&2
   (cd "$REPO_ROOT" && cargo run -q -p vibe-cli -- bin build conform-typescript) || {
     echo "FATAL: could not build conform-typescript" >&2
     exit 3
   }
 fi
+# Copy the gate binary into a battery-local toolcache: a slot refresh
+# (vibe install) mid-run removes the slot's target/, and the battery
+# must not race it (learned the hard way: three conform=127 rows).
+mkdir -p "$SCRIPT_DIR/.toolcache"
+CONFORM_BIN="$SCRIPT_DIR/.toolcache/conform-typescript.exe"
+cp -f "$SLOT_CONFORM" "$CONFORM_BIN"
 
 TCG_BIN="$REPO_ROOT/vibedeps/stack-typescript-ai-native"/*/target/release/tcg-typescript.exe
 if [ "$ARM" = "with-tools" ]; then
@@ -190,24 +196,38 @@ $TOOLS_BLOCK"
   conform_exit=$?
   conform_new=$(grep -ciE "new finding|not in the baseline" "$work/conform.out" || true)
 
-  # a task PASSES mechanically when: agent finished, types are clean,
-  # all tests pass, and conform introduced nothing new
+  # completion check: every "pattern<TAB>file" line of tasks/<id>.check
+  # must grep in the work copy — a do-nothing agent run must not PASS on
+  # the strength of the pre-existing green tree (the 0541-run lesson:
+  # five "PASS" rows had steps=1, tool_calls=0)
+  task_done=1
+  check_file="$TASKS_DIR/$task_id.check"
+  if [ -f "$check_file" ]; then
+    while IFS=$'\t' read -r pat rel; do
+      [ -n "$pat" ] || continue
+      grep -q "$pat" "$work/$rel" 2>/dev/null || { task_done=0; break; }
+    done < "$check_file"
+  fi
+
+  # a task PASSES mechanically when: agent finished, the asked-for
+  # change EXISTS, types are clean, all tests pass, and conform
+  # introduced nothing new
   verdict="FAIL"
-  if [ "$agent_exit" -eq 0 ] && [ "$tsc_exit" -eq 0 ] && [ "$tests_exit" -eq 0 ] \
-     && [ "$conform_exit" -eq 0 ]; then
+  if [ "$agent_exit" -eq 0 ] && [ "$task_done" -eq 1 ] && [ "$tsc_exit" -eq 0 ] \
+     && [ "$tests_exit" -eq 0 ] && [ "$conform_exit" -eq 0 ]; then
     verdict="PASS"; pass_n=$((pass_n + 1))
   else
     fail_n=$((fail_n + 1))
   fi
 
-  printf '{"task":"%s","arm":"%s","model":"%s","verdict":"%s","agent_exit":%d,"wall_s":%d,"steps":%s,"tool_calls":%s,"tsc_exit":%d,"tsc_errors":%s,"tsc_hallucination":%s,"tests_exit":%d,"tests_pass":%s,"tests_fail":%s,"conform_exit":%d,"conform_new":%s}\n' \
+  printf '{"task":"%s","arm":"%s","model":"%s","verdict":"%s","task_done":%d,"agent_exit":%d,"wall_s":%d,"steps":%s,"tool_calls":%s,"tsc_exit":%d,"tsc_errors":%s,"tsc_hallucination":%s,"tests_exit":%d,"tests_pass":%s,"tests_fail":%s,"conform_exit":%d,"conform_new":%s}\n' \
     "$(json_escape "$task_id")" "$ARM" "$(json_escape "$MODEL")" "$verdict" \
-    "$agent_exit" "$wall" "${steps:-0}" "${tool_calls:-0}" \
+    "$task_done" "$agent_exit" "$wall" "${steps:-0}" "${tool_calls:-0}" \
     "$tsc_exit" "${tsc_errors:-0}" "${tsc_halluc:-0}" \
     "$tests_exit" "${tests_pass:-0}" "${tests_fail:-0}" \
     "$conform_exit" "${conform_new:-0}" >> "$RESULTS"
 
-  echo "[$task_id] $verdict (agent=$agent_exit wall=${wall}s tsc=$tsc_errors errs/${tsc_halluc} halluc tests=${tests_pass:-0}p/${tests_fail:-0}f conform=$conform_exit)"
+  echo "[$task_id] $verdict (done=$task_done agent=$agent_exit wall=${wall}s tsc=$tsc_errors errs/${tsc_halluc} halluc tests=${tests_pass:-0}p/${tests_fail:-0}f conform=$conform_exit)"
 
   [ "$KEEP_WORK" -eq 1 ] || remove_work "$work"
   sleep 3   # be polite to the free tier
