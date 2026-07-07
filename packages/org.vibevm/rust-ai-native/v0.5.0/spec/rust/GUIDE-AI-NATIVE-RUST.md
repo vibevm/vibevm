@@ -99,7 +99,7 @@ The stack ships everything below; nothing requires the discipline's dev tree.
    exclude = ["vibedeps"]
 
    [workspace.dependencies]
-   specmark = { path = "vibedeps/<stack-slot>/crates/specmark" }
+   specmark = { path = "vibedeps/<stack-slot>/crates/vendor/specmark" }
    ```
    then per crate `specmark.workspace = true`, and modules carry `specmark::scope!("spec://<your-ns>/<doc>#<anchor>")` (§7).
 4. **First unit, first index.** Write `spec/PROP-001.md` with an anchored req (`## X {#req-…}` + `` `req r1` ``), tag the implementing module, run `discipline-rust specmap` to mint `specmap.json`, commit it.
