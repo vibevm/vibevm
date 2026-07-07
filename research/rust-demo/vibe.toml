@@ -4,7 +4,7 @@ version = "0.1.0"
 authors = ["Oleg Chirukhin"]
 
 [requires.packages]
-"stack:org.vibevm/rust-ai-native" = "^0.5.0"
+"stack:org.vibevm/rust-ai-native" = "^0.6.0"
 
 # Install from the in-repo registry:
 #   vibe install --registry ../../packages --assume-yes

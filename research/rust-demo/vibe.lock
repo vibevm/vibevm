@@ -1,26 +1,51 @@
 [meta]
 generated_by = "vibe 0.1.0-dev"
-generated_at = "2026-07-07T12:07:50Z"
+generated_at = "2026-07-07T15:06:49Z"
 schema_version = 5
-root_dependencies = ["stack:org.vibevm/rust-ai-native@^0.5.0"]
+root_dependencies = ["stack:org.vibevm/rust-ai-native@^0.6.0"]
 
 [[package]]
 kind = "stack"
 name = "rust-ai-native"
 group = "org.vibevm"
-version = "0.5.0"
-source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/rust-ai-native/v0.5.0"
-content_hash = "sha256:fdca87622f713428a913a806844d67eec13e261c41b32d684c2e03cb0c05f2b5"
+version = "0.6.0"
+source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/rust-ai-native/v0.6.0"
+content_hash = "sha256:a589ff11134f26ebf31180036ee0e21b4919aa333996bd8df80ef604ce5d2040"
 files_written = []
-dependencies = ["flow:org.vibevm/discipline-core@=0.6.0"]
+dependencies = [
+    "mcp:org.vibevm/rust-ai-native-mcp@=0.5.0",
+    "stack:org.vibevm/rust-ai-native-lang@=0.5.0",
+]
 source_kind = "registry"
 
 [[package]]
 kind = "flow"
-name = "discipline-core"
+name = "core-ai-native"
 group = "org.vibevm"
 version = "0.6.0"
-source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/discipline-core/v0.6.0"
-content_hash = "sha256:10d5471838db959e7f968480166c4b9549fa7f64abc7df8255e72fa44c5cabd5"
+source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/core-ai-native/v0.6.0"
+content_hash = "sha256:f5d865780d6be9676919404b98fbc3e92456a2730f3b7e6568843f7958c60aca"
 files_written = []
+source_kind = "registry"
+
+[[package]]
+kind = "stack"
+name = "rust-ai-native-lang"
+group = "org.vibevm"
+version = "0.5.0"
+source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/rust-ai-native-lang/v0.5.0"
+content_hash = "sha256:2cacc9470ab4ff5e0fa026a0ca74402703283e11dbc5ef5b480fa8cc704ebd7a"
+files_written = []
+dependencies = ["flow:org.vibevm/core-ai-native@=0.6.0"]
+source_kind = "registry"
+
+[[package]]
+kind = "mcp"
+name = "rust-ai-native-mcp"
+group = "org.vibevm"
+version = "0.5.0"
+source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/rust-ai-native-mcp/v0.5.0"
+content_hash = "sha256:948f877ddc60b25353d96f22dcf3931995ec60922693bdd0b805e5cbe252915e"
+files_written = []
+dependencies = ["stack:org.vibevm/rust-ai-native-lang@=0.5.0"]
 source_kind = "registry"

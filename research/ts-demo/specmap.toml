@@ -13,10 +13,10 @@ dispositioned = []
 # Installed packages' spec trees, read for URI RESOLUTION only
 # (PROP-014 §7.1) — discovered from vibedeps/ at init time.
 [[external_specs]]
-namespace = "discipline-core"
-root = "vibedeps/flow-discipline-core/0.6.0/spec"
+namespace = "core-ai-native"
+root = "vibedeps/flow-core-ai-native/0.6.0/spec"
 
 [[external_specs]]
-namespace = "typescript-ai-native"
-root = "vibedeps/stack-typescript-ai-native/0.4.0/spec"
+namespace = "typescript-ai-native-lang"
+root = "vibedeps/stack-typescript-ai-native-lang/0.4.0/spec"
 

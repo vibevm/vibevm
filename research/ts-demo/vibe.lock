@@ -1,26 +1,51 @@
 [meta]
 generated_by = "vibe 0.1.0-dev"
-generated_at = "2026-07-07T12:07:51Z"
+generated_at = "2026-07-07T15:07:03Z"
 schema_version = 5
-root_dependencies = ["stack:org.vibevm/typescript-ai-native@^0.4.0"]
+root_dependencies = ["stack:org.vibevm/typescript-ai-native@^0.5.0"]
 
 [[package]]
 kind = "stack"
 name = "typescript-ai-native"
 group = "org.vibevm"
-version = "0.4.0"
-source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/typescript-ai-native/v0.4.0"
-content_hash = "sha256:23cda0c0241e28e7e2631e172bfb7cf2be52c16fa30958560340d830bb3fa582"
+version = "0.5.0"
+source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/typescript-ai-native/v0.5.0"
+content_hash = "sha256:302a718ac2511ca5b0332bf9c20381aeafd880b56c199342e98746047e351012"
 files_written = []
-dependencies = ["flow:org.vibevm/discipline-core@=0.6.0"]
+dependencies = [
+    "mcp:org.vibevm/typescript-ai-native-mcp@=0.4.0",
+    "stack:org.vibevm/typescript-ai-native-lang@=0.4.0",
+]
 source_kind = "registry"
 
 [[package]]
 kind = "flow"
-name = "discipline-core"
+name = "core-ai-native"
 group = "org.vibevm"
 version = "0.6.0"
-source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/discipline-core/v0.6.0"
-content_hash = "sha256:10d5471838db959e7f968480166c4b9549fa7f64abc7df8255e72fa44c5cabd5"
+source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/core-ai-native/v0.6.0"
+content_hash = "sha256:f5d865780d6be9676919404b98fbc3e92456a2730f3b7e6568843f7958c60aca"
 files_written = []
+source_kind = "registry"
+
+[[package]]
+kind = "stack"
+name = "typescript-ai-native-lang"
+group = "org.vibevm"
+version = "0.4.0"
+source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/typescript-ai-native-lang/v0.4.0"
+content_hash = "sha256:f4008a81b8bcd7f3daae95f8ec0eb776505b46baa7d961557bcd75a951c543eb"
+files_written = []
+dependencies = ["flow:org.vibevm/core-ai-native@=0.6.0"]
+source_kind = "registry"
+
+[[package]]
+kind = "mcp"
+name = "typescript-ai-native-mcp"
+group = "org.vibevm"
+version = "0.4.0"
+source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/typescript-ai-native-mcp/v0.4.0"
+content_hash = "sha256:8c55f4fe59fb9cb7c744558c0cc47904f67589e76f186e32b82284241d77cde1"
+files_written = []
+dependencies = ["stack:org.vibevm/typescript-ai-native-lang@=0.4.0"]
 source_kind = "registry"

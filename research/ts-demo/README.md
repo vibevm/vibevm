@@ -16,7 +16,7 @@ cargo run --manifest-path ../../Cargo.toml -p vibe-cli -- \
 # 2. The npm toolchain (node >= 22.6).
 npm install
 # 3. The floor, via the materialised slot.
-cargo run --manifest-path vibedeps/stack-typescript-ai-native/0.3.0/Cargo.toml \
+cargo run --manifest-path vibedeps/stack-typescript-ai-native-lang/0.4.0/Cargo.toml \
     -p discipline-cli-typescript --bin discipline-typescript -- floor
 ```
 

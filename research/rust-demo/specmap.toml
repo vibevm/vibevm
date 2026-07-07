@@ -15,10 +15,10 @@ dispositioned = []
 # Installed packages' spec trees, read for URI RESOLUTION only
 # (PROP-014 §7.1) — discovered from vibedeps/ at init time.
 [[external_specs]]
-namespace = "discipline-core"
-root = "vibedeps/flow-discipline-core/0.6.0/spec"
+namespace = "core-ai-native"
+root = "vibedeps/flow-core-ai-native/0.6.0/spec"
 
 [[external_specs]]
-namespace = "rust-ai-native"
-root = "vibedeps/stack-rust-ai-native/0.5.0/spec"
+namespace = "rust-ai-native-lang"
+root = "vibedeps/stack-rust-ai-native-lang/0.5.0/spec"
 
