@@ -690,6 +690,21 @@ Named deferrals (visible, not silent):
 
 ## 13. Execution ledger (filled by the executing session)
 
+### Wave 5 — EXECUTED (2026-07-07); commit map
+
+- `3caa986` feat(mcp): the delivery surface. Discovery =
+  `collect_mcp_servers` on the binaries' lockfile walk; pure halves in
+  `vibe_mcp::pkg_servers` (direct-artifact payloads, `{project_root}`
+  substitution, the top-level `"vibevm"` managed sidecar — NEVER a key
+  inside a server entry, hosts validate shapes); install's
+  project-scope package leg with the PROP-025 consent gate verbatim
+  (one trust model, two verbs); uninstall strips managed entries + the
+  emptied sidecar; status reports artifact state with the `vibe bin
+  build` recipe. P7 first-run green on the pin-server fixture.
+  PROP-027 §2.4–§2.5 → IMPLEMENTED (registration is project-scope only
+  ⇒ JSON-only by construction); §2.7 rows inherit the kind-agnostic
+  feature suites.
+
 ### Wave 4 — EXECUTED (2026-07-07); commit map
 
 - `07af178` refactor(typescript-ai-native): `pub mod bench` (in-place,
