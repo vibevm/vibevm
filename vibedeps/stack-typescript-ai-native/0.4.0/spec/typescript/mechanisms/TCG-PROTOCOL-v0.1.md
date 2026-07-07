@@ -44,9 +44,13 @@ Positions are `{line, character}`, 1-based line, 0-based character (the
 TypeScript convention surfaced honestly). Paths are project-root-
 relative with forward slashes.
 
-- **`init`** `{root}` → `{ts_version, config_file, root_files}` —
-  builds the service (ORACLE §2–3). Re-`init` on a live oracle rebuilds
-  config and policy; overlays are cleared.
+- **`init`** `{root, cells_dir?, seam?}` →
+  `{ts_version, config_file, root_files}` — builds the service (ORACLE
+  §2–3). `cells_dir`/`seam` are policy-derived DATA the Rust layer
+  passes down (the node side never reads `conform.toml` itself); they
+  feed the `scope` op's cell/seam/branded context and default to
+  none/`"index"`. Re-`init` on a live oracle rebuilds config and
+  policy; overlays are cleared.
 - **`update`** `{file, content | null}` → `{version}` — set/clear an
   overlay (ORACLE §3).
 - **`validate`** `{file, content?}` →
@@ -59,8 +63,13 @@ relative with forward slashes.
 - **`scope`** `{file, position?}` →
   `{symbols: [{name, kind, type_text}], cell, seam_file,
     branded: [{name, seam, heuristic}]}`.
-- **`complete`** `{file, position, content?}` →
-  `{entries: [{name, kind, type_text, unsafe}]}`.
+- **`complete`** `{file, position, content?, prefix?, max?}` →
+  `{entries: [{name, kind, type_text, unsafe}]}` — `prefix` filters by
+  name prefix and `max` caps the set (default 50) BEFORE the per-entry
+  checker details are computed: type text and the `unsafe` flag are
+  entry-grain checker work, affordable only after the cut. A caller
+  that wants the raw thousand-entry universe passes no prefix and a
+  large `max`, and pays for it knowingly.
 - **`type`** `{file, position, content?}` →
   `{display, documentation}`.
 - **`shutdown`** `{}` → `{}` then exit 0.

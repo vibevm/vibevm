@@ -1,0 +1,12 @@
+{
+  "name": "@org.vibevm/ts-oracle",
+  "private": true,
+  "type": "module",
+  "description": "Long-lived TypeScript language-service oracle for the agentic tcg line (TCG-ORACLE-v0.1 / TCG-PROTOCOL-v0.1): NDJSON duplex over stdio, in-memory overlays, consumer-resolved typescript. Run directly with node >= 22.6 (type stripping).",
+  "scripts": {
+    "test": "node --test \"test/*.test.ts\""
+  },
+  "devDependencies": {
+    "typescript": "^6.0.0"
+  }
+}

@@ -34,9 +34,18 @@ fn load_config(root: &Path) -> Result<Config> {
     Ok(cfg)
 }
 
-/// The standing TypeScript rule set, built from the policy in one place
-/// so `run_check` and `run_freeze` cannot drift apart.
-fn build_rules(config: &Config) -> Vec<Box<dyn Rule>> {
+/// The standing TypeScript rule set, built from the policy in ONE place
+/// so `run_check`, `run_freeze`, and the agentic oracle's enrichment
+/// layer (`tcg-cli-typescript`, TCG-PROTOCOL-v0.1 §3) cannot drift
+/// apart — the gate and the oracle answer from the same rules.
+///
+/// ```
+/// let (config, _) =
+///     conform_core::Config::load_or_default(std::path::Path::new(".")).unwrap();
+/// let rules = conform_cli_typescript::build_rules(&config);
+/// assert!(!rules.is_empty());
+/// ```
+pub fn build_rules(config: &Config) -> Vec<Box<dyn Rule>> {
     let mut out: Vec<Box<dyn Rule>> = Vec::new();
     out.push(Box::new(rules::TsUnsafeInDomain));
     if let Some(cells_dir) = &config.typescript.cells_dir {

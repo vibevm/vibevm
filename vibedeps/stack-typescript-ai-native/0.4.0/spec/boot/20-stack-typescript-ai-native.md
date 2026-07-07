@@ -56,7 +56,11 @@ The shipped toolchain (this stack materialises it; no dev tree needed):
 `floor` (prettier→tsc→tests→eslint→conform→specmap→test-gate, one exit
 code), `health` (the sweep's fact collector), `test-gate` (xfail-strict
 over node's TAP) / `tripwire` / `trace` / `fast-loop` / `codemod`; plus
-the narrow `conform-typescript` and `specmap-typescript` engines. The
+the narrow `conform-typescript` and `specmap-typescript` engines, and
+the agentic type oracle `tcg-typescript` (persistent enriching `serve`
+relay + one-shot `validate`/`scope`/`complete`/`type`/`bench`: check an
+edit against in-memory overlays BEFORE writing it, with the SAME
+conform rules as the gate — GUIDE §14, §15 move 5). The
 structural gate parses through the PROJECT's own `typescript` install
 (node ≥ 22.6; the same devDependency the tsc floor step needs). Run
 vibe-natively (`vibe bin exec discipline-typescript -- <args>` —
