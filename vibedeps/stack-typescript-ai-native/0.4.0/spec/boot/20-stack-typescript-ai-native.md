@@ -57,7 +57,9 @@ The shipped toolchain (this stack materialises it; no dev tree needed):
 code), `health` (the sweep's fact collector), `test-gate` (xfail-strict
 over node's TAP) / `tripwire` / `trace` / `fast-loop` / `codemod`; plus
 the narrow `conform-typescript` and `specmap-typescript` engines, and
-the agentic type oracle `tcg-typescript` (persistent enriching `serve`
+the agentic type oracle `tcg-typescript`
+(also served over MCP by `mcp:org.vibevm/discipline-typescript` —
+PROP-027; persistent enriching `serve`
 relay + one-shot `validate`/`scope`/`complete`/`type`/`bench`: check an
 edit against in-memory overlays BEFORE writing it, with the SAME
 conform rules as the gate — GUIDE §14, §15 move 5). The

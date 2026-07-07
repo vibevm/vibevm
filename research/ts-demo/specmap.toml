@@ -14,7 +14,7 @@ dispositioned = []
 # (PROP-014 §7.1) — discovered from vibedeps/ at init time.
 [[external_specs]]
 namespace = "discipline-core"
-root = "vibedeps/flow-discipline-core/0.5.0/spec"
+root = "vibedeps/flow-discipline-core/0.6.0/spec"
 
 [[external_specs]]
 namespace = "typescript-ai-native"

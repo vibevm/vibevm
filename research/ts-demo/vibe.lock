@@ -1,6 +1,6 @@
 [meta]
 generated_by = "vibe 0.1.0-dev"
-generated_at = "2026-07-07T08:50:20Z"
+generated_at = "2026-07-07T12:07:51Z"
 schema_version = 5
 root_dependencies = ["stack:org.vibevm/typescript-ai-native@^0.4.0"]
 
@@ -10,17 +10,17 @@ name = "typescript-ai-native"
 group = "org.vibevm"
 version = "0.4.0"
 source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/typescript-ai-native/v0.4.0"
-content_hash = "sha256:9062b3a2057e09c367a016cb245d2c65bd685117da011d0a2ae862b1e57f1606"
+content_hash = "sha256:23cda0c0241e28e7e2631e172bfb7cf2be52c16fa30958560340d830bb3fa582"
 files_written = []
-dependencies = ["flow:org.vibevm/discipline-core@=0.5.0"]
+dependencies = ["flow:org.vibevm/discipline-core@=0.6.0"]
 source_kind = "registry"
 
 [[package]]
 kind = "flow"
 name = "discipline-core"
 group = "org.vibevm"
-version = "0.5.0"
-source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/discipline-core/v0.5.0"
-content_hash = "sha256:07f069be4cefda2869be3c2e6d9733483e204ee506fbe0670db04f08a8e220f3"
+version = "0.6.0"
+source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/discipline-core/v0.6.0"
+content_hash = "sha256:10d5471838db959e7f968480166c4b9549fa7f64abc7df8255e72fa44c5cabd5"
 files_written = []
 source_kind = "registry"
