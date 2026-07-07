@@ -37,6 +37,7 @@ pub mod ledger;
 pub mod mdspec;
 pub mod ratchet;
 pub mod rscan;
+pub mod scanner;
 pub mod testgate;
 pub mod tripwire;
 
