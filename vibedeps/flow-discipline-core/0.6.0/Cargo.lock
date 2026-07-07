@@ -31,7 +31,7 @@ checksum = "9330f8b2ff13f34540b44e946ef35111825727b38d33286ef986142615121801"
 
 [[package]]
 name = "conform-core"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "anyhow",
  "serde",
@@ -279,7 +279,7 @@ dependencies = [
 
 [[package]]
 name = "specmap-core"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "anyhow",
  "glob",
@@ -298,7 +298,7 @@ dependencies = [
 
 [[package]]
 name = "specmark"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -308,7 +308,7 @@ dependencies = [
 
 [[package]]
 name = "specmark-grammar"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "proc-macro2",
  "quote",

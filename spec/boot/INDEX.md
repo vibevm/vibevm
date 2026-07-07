@@ -14,7 +14,7 @@ path = "spec/boot/00-core.md"
 kind = "static"
 
 [[entry]]
-path = "vibedeps/flow-discipline-core/0.5.0/spec/boot/10-flow-discipline-core.md"
+path = "vibedeps/flow-discipline-core/0.6.0/spec/boot/10-flow-discipline-core.md"
 kind = "static"
 
 [[entry]]
