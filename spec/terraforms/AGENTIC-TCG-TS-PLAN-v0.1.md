@@ -1,6 +1,18 @@
 # AGENTIC-TCG-TS-PLAN v0.1 — the agentic type oracle for TypeScript
 
-_Status: ACCEPTED with owner amendments, 2026-07-07 (same day as
+_Status: **EXECUTED 2026-07-07 — Phases 0–7 complete, floor green at
+close** (self-check 13 steps exit 0; conform 0 with 11 crates gated;
+specmap 592/578/590, 0 orphans/0 warnings; demo floor 7/7;
+fresh_ts_project + the live MCP chain green; corpus agreement 100% at
+p50 19.3 ms). Every deliverable of the mandate shipped: the oracle,
+the bridge + `tcg-typescript` slot binary, the portable `vibe-tcg`
+crate mounted by vibe-mcp as four `tcg_*` tools, the spec set, and the
+automated two-arm battery — whose §4.3 prediction was FALSIFIED in its
+opt-in delivery form and recorded honestly (see §4.3 OUTCOME and the
+with-tools REPORT; the Stage-B delivery backlog is the owner's next
+call). Per-phase commit map: the `docs(plan)`→`build(deps)` chain of
+2026-07-07 (`00fd17e`…), git log is the authoritative record.
+Previously: ACCEPTED with owner amendments, 2026-07-07 (same day as
 authoring). Owner review resolved the three §17 points: (1) the names
 (`tcg_*` tools, bin `tcg-typescript`) are approved as proposed; (2)
 PROP-026 stays vibevm-hosted BUT the product-side seam must be
@@ -554,6 +566,17 @@ repository's own engines. Any future need to consult that repository
    floor-red rate and retry count than withheld (direction, not
    magnitude, is the claim at n≈12 tasks; magnitude needs more runs
    than v0.1 commissions).
+   **OUTCOME (2026-07-07): DID NOT HOLD in the tested delivery form.**
+   With opt-in one-shot CLI tools named in the prompt, GLM-5-Turbo
+   scored 10/2 on BOTH arms with the identical two discipline
+   regressions — the weak model never spontaneously consults a tool it
+   is not forced to. The oracle's mechanics are proven separately
+   (corpus 7/7, live MCP chain); the gap is DELIVERY. Stage-B backlog
+   recorded in `research/tcg-bench/reports/REPORT-2026-07-07-with-tools.md`:
+   forced-loop (write-path hook), an MCP-mounted battery arm, and an
+   uptake metric. This is the §0 honesty note materialised: a tool you
+   may ignore does not distort — and may also not help until the loop
+   requires it.
 4. No phase requires touching conform-core / specmap-core / vendored
    engines (the campaign is additive to the neutral core) — if
    falsified, the vendor-sync gate + a discipline-core version bump
