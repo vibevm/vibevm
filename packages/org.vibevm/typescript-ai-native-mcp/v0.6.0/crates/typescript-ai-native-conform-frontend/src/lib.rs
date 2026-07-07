@@ -1,7 +1,7 @@
-//! `conform-frontend-typescript` — the `ts-tsc` frontend the Ф6 brief
+//! `typescript-ai-native-conform-frontend` — the `ts-tsc` frontend the Ф6 brief
 //! specified: a [`conform_core::Frontend`] whose facts come from the
 //! TypeScript Compiler API, via the packaged `tools/ts-extract`
-//! extractor and the `ts-extract-bridge` protocol.
+//! extractor and the `typescript-ai-native-extract-bridge` protocol.
 //!
 //! The extractor script is EMBEDDED in this crate (`include_str!`) and
 //! written content-addressed under the consumer's

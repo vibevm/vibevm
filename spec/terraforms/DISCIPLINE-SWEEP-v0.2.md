@@ -5,24 +5,24 @@
 one file — the portable sweep template, the Rust idioms, and vibevm's own
 numbers — and the first two now ship with the Discipline itself
 (SELF-SUFFICIENCY-PLAN Phase 5): the template is
-[`spec://core-ai-native/04-SWEEP-PLAYBOOK`](../../vibedeps/flow-core-ai-native/0.6.0/spec/04-SWEEP-PLAYBOOK.md)
+[`spec://core-ai-native/04-SWEEP-PLAYBOOK`](../../vibedeps/flow-core-ai-native/0.7.0/spec/04-SWEEP-PLAYBOOK.md)
 (tiers, cadence, collector contract, the WISH→census→Rule ladder), the Rust
 idioms are GUIDE §14 in the rust-ai-native stack, and the runnable surface
-is the shipped `discipline-rust` tool driven by the `/discipline-sweep`
+is the shipped `rust-ai-native` tool driven by the `/rust-ai-native-sweep`
 agent skill. This file is only what remains genuinely vibevm's: the local
 wrapper surface, the project's standing numbers, and this machine's
 quirks.*
 
 ## 1. Running the sweep here {#running}
 
-The skill (`/discipline-sweep`) walks the shipped playbook. On this repo
+The skill (`/rust-ai-native-sweep`) walks the shipped playbook. On this repo
 the flag-compatible wrappers remain first-class:
 
 ```sh
 bash tools/self-check.sh                 # the repo floor (adds the package gates, steps 6-9)
-cargo xtask health                        # = discipline-rust health (+ optional --mirrors probe)
-cargo xtask conform check                 # = conform-rust over vibevm's conform.toml
-cargo xtask specmap --check               # = specmap-rust over vibevm's specmap.toml
+cargo xtask health                        # = rust-ai-native health (+ optional --mirrors probe)
+cargo xtask conform check                 # = rust-ai-native-conform over vibevm's conform.toml
+cargo xtask specmap --check               # = rust-ai-native-specmap over vibevm's specmap.toml
 cargo xtask test-gate                     # xfail-strict vs discipline/registry/tests-baseline.json
 cargo xtask tripwire                      # debt tripwires vs discipline/registry/debt.json
 cargo xtask fast-loop --enforce-budget    # per-cell 60s first-signal budget

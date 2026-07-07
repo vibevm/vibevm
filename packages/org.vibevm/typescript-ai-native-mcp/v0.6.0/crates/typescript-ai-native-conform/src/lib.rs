@@ -36,7 +36,7 @@ fn load_config(root: &Path) -> Result<Config> {
 
 /// The standing TypeScript rule set, built from the policy in ONE place
 /// so `run_check`, `run_freeze`, and the agentic oracle's enrichment
-/// layer (`tcg-cli-typescript`, TCG-PROTOCOL-v0.1 §3) cannot drift
+/// layer (`typescript-ai-native-tcg`, TCG-PROTOCOL-v0.1 §3) cannot drift
 /// apart — the gate and the oracle answer from the same rules.
 ///
 /// ```

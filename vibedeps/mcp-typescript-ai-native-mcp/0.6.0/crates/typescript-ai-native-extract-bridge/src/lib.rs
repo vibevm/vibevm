@@ -63,7 +63,7 @@ pub enum BridgeError {
 
 /// One `ts_unsafe` / `import` / `item` / `file_metrics` record, exactly
 /// as the extractor emits it (serde-tagged on `fact`). `Serialize` is
-/// symmetric so the oracle relay (tcg-oracle-bridge) can re-emit the
+/// symmetric so the oracle relay (typescript-ai-native-tcg-bridge) can re-emit the
 /// same vocabulary it received (TCG-PROTOCOL §2).
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 #[serde(tag = "fact", rename_all = "snake_case")]

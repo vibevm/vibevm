@@ -1,4 +1,4 @@
-//! tcg-cli-typescript — the enrichment layer and the delivery surface
+//! typescript-ai-native-tcg — the enrichment layer and the delivery surface
 //! of the agentic type oracle (TCG-PROTOCOL-v0.1 §3).
 //!
 //! ALL policy interpretation lives here, once: `conform.toml` loading,

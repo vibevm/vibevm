@@ -1,4 +1,4 @@
-//! tcg-oracle-bridge-rust — the LSP client seam over the CONSUMER's
+//! rust-ai-native-tcg-bridge — the LSP client seam over the CONSUMER's
 //! own rust-analyzer (TCG-ORACLE-RUST v0.1): resolution, framing,
 //! positions, the correlated client, and the oracle's op surface.
 //!

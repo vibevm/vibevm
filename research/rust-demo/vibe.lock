@@ -1,6 +1,6 @@
 [meta]
 generated_by = "vibe 0.1.0-dev"
-generated_at = "2026-07-07T16:53:31Z"
+generated_at = "2026-07-07T17:06:36Z"
 schema_version = 5
 root_dependencies = ["stack:org.vibevm/rust-ai-native@^0.7.0"]
 
@@ -24,7 +24,7 @@ name = "core-ai-native"
 group = "org.vibevm"
 version = "0.7.0"
 source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/core-ai-native/v0.7.0"
-content_hash = "sha256:82d4da92a57aef454eaf9d827c3e42cb6afef94758128f1bce81d4b13ffe52e8"
+content_hash = "sha256:370ea1f5a2106dea65590647f2802fda98b6a3c5c9e0ef2a00027255485a9c02"
 files_written = []
 source_kind = "registry"
 
@@ -34,7 +34,7 @@ name = "rust-ai-native-lang"
 group = "org.vibevm"
 version = "0.7.0"
 source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/rust-ai-native-lang/v0.7.0"
-content_hash = "sha256:f59cee101fdd3e7eb37b002bf9a1c50b9a6b7a405a9862ff94488bbabcd136b2"
+content_hash = "sha256:a4120895a2f19ce367bc5cff1af7427e229590916e3848f529bdfdbe9c805cfb"
 files_written = []
 dependencies = ["flow:org.vibevm/core-ai-native@=0.7.0"]
 source_kind = "registry"
@@ -45,7 +45,7 @@ name = "rust-ai-native-mcp"
 group = "org.vibevm"
 version = "0.7.0"
 source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/rust-ai-native-mcp/v0.7.0"
-content_hash = "sha256:adb0a7e8fc8ed8038faf0b65d3ab109994d69e49bc9ba3617577aea9dd3071ad"
+content_hash = "sha256:4e14b0b25211b5799129cb41e6ebcb86277301169be1ed0c44e166de4b28be97"
 files_written = []
 dependencies = ["stack:org.vibevm/rust-ai-native-lang@=0.7.0"]
 source_kind = "registry"

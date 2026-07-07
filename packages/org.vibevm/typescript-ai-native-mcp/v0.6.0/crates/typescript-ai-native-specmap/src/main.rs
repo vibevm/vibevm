@@ -1,6 +1,6 @@
 //! `typescript-ai-native-specmap` — mint/`--check` the PROP-014 index over a
 //! TypeScript tree, `--gate` for orphan-coverage-only. Flag-compatible
-//! with `specmap-rust` so wrappers treat the two uniformly.
+//! with `rust-ai-native-specmap` so wrappers treat the two uniformly.
 
 use std::path::PathBuf;
 

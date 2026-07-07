@@ -1,9 +1,9 @@
-//! tcg-oracle-bridge — the Rust side of the agentic type oracle
+//! typescript-ai-native-tcg-bridge — the Rust side of the agentic type oracle
 //! (TCG-PROTOCOL-v0.1 / TCG-ORACLE-v0.1): the embedded oracle source and
 //! its content-addressed materialisation, the protocol's message types,
 //! and a persistent correlation-id transport over a spawned node child.
 //!
-//! The fact/marker vocabulary is `ts-extract-bridge`'s VERBATIM
+//! The fact/marker vocabulary is `typescript-ai-native-extract-bridge`'s VERBATIM
 //! (`RawFact` / `RawMarker`) — one serde vocabulary serves both tools,
 //! so `conform_facts` lowers oracle responses exactly like extractor
 //! records (TCG-PROTOCOL §2).

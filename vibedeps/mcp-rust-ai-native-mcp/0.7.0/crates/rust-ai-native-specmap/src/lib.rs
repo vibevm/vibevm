@@ -7,7 +7,7 @@
 //! binary (`src/main.rs`) is what an installed consumer runs in its own
 //! project, and a project-local wrapper can drive the same library. The
 //! policy is data (`specmap.toml`), never hardcoded here — the same engine
-//! runs on any layout, exactly as `conform-cli-rust` ships the conform gate.
+//! runs on any layout, exactly as `rust-ai-native-conform` ships the conform gate.
 
 use std::path::Path;
 

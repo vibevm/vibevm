@@ -3,8 +3,8 @@
 //! `specmap.json` over the project in the current directory (or `--path`),
 //! driven by that project's `specmap.toml`. Installing the rust-ai-native
 //! stack yields this binary, so a consumer gets the traceability engine, not a
-//! description of it. Per-language suffix (`-rust`) mirrors `rust-ai-native-conform`: a
-//! future TypeScript frontend ships `specmap-typescript`.
+//! description of it. The family prefix mirrors `rust-ai-native-conform`: the
+//! TypeScript stack ships `typescript-ai-native-specmap`.
 
 use std::path::PathBuf;
 

@@ -1,5 +1,5 @@
 //! `typescript-ai-native` — the umbrella discipline tool for
-//! TypeScript trees: full subcommand parity with `discipline-rust`.
+//! TypeScript trees: full subcommand parity with `rust-ai-native`.
 
 use anyhow::Result;
 use clap::{Parser, Subcommand};

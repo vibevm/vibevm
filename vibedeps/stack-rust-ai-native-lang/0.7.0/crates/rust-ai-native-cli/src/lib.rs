@@ -1,8 +1,8 @@
-//! `discipline-cli-rust` — the umbrella library behind the `rust-ai-native`
+//! `rust-ai-native-cli` — the umbrella library behind the `rust-ai-native`
 //! binary: bootstrap (`init`), the portable verification floor (`floor`),
 //! and the sweep/brownfield drivers (`test-gate`, `tripwire`, `trace`,
 //! `health`, `fast-loop`, `codemod`) over the engines the sibling crates
-//! ship (`conform-cli-rust`, `specmap-cli-rust`).
+//! ship (`rust-ai-native-conform`, `rust-ai-native-specmap`).
 //!
 //! Everything is `root: &Path`-parameterised — no dev-repo assumption
 //! anywhere: the same functions run from the shipped binary in a consumer

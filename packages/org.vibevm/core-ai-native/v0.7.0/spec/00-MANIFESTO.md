@@ -94,9 +94,9 @@ Spec-unit URIs for this package read `spec://core-ai-native/<docpath>#<anchor>` 
 
 **Language projections (T2):**
 - `rust/GUIDE-AI-NATIVE-RUST.md` — the law and scaffolds projected onto Rust; supersedes GUIDE-RUST-v0.1. (Pilot language.)
-- `rust/tools/vibe-tcg-rust.md` — token-level type-aware constrained generation for Rust (very-far-future; renamed under the rust stack’s language-suffix rule). The AGENTIC delivery shipped first: `rust/tools/vibe-agentic-tcg-rust.md` — the consultation oracle over rust-analyzer.
+- `rust/tools/rust-ai-native-tcg.md` — token-level type-aware constrained generation for Rust (very-far-future; carries the family prefix per PROP-028 §2.4). The AGENTIC delivery shipped first: `rust/tools/vibe-agentic-tcg-rust.md` — the consultation oracle over rust-analyzer.
 - `typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md` — projected onto TypeScript (typed language only; JS guide separate). The language where the generation-time type oracle already exists and codemods are mature.
-- `typescript/tools/vibe-tcg-ts.md` — type-aware constrained generation for TypeScript (a wrap-and-extend of existing PLDI'25 work, not from scratch).
+- `typescript/tools/typescript-ai-native-tcg.md` — type-aware constrained generation for TypeScript (a wrap-and-extend of existing PLDI'25 work, not from scratch).
 - Other languages (Python, C++, Go, Java, Kotlin) projected after Rust + TypeScript are validated.
 
 **Cards (the patterns) — shipped per-language by each stack:**

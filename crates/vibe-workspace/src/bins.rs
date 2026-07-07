@@ -103,8 +103,8 @@ impl DeclaredBinary {
     /// # use vibe_core::manifest::BinaryDecl;
     /// let bin = DeclaredBinary {
     ///     decl: BinaryDecl {
-    ///         name: "tcg-typescript".into(),
-    ///         crate_dir: "crates/tcg-cli-typescript".into(),
+    ///         name: "typescript-ai-native-tcg".into(),
+    ///         crate_dir: "crates/typescript-ai-native-tcg".into(),
     ///         description: None,
     ///     },
     ///     package: "org.vibevm/typescript-ai-native-lang".into(),
@@ -338,8 +338,8 @@ description = "fixture"
 keywords = []
 
 [[binary]]
-name = "tcg-typescript"
-crate = "crates/tcg-cli-typescript"
+name = "typescript-ai-native-tcg"
+crate = "crates/typescript-ai-native-tcg"
 "#,
         )
         .expect("slot manifest");
@@ -351,7 +351,7 @@ crate = "crates/tcg-cli-typescript"
         let dir = fixture_project();
         let bins = collect_binaries(dir.path()).expect("collect");
         assert_eq!(bins.len(), 1);
-        assert_eq!(bins[0].decl.name, "tcg-typescript");
+        assert_eq!(bins[0].decl.name, "typescript-ai-native-tcg");
         assert_eq!(bins[0].group, "org.vibevm");
         assert!(bins[0].artifact().to_string_lossy().contains("release"));
     }
@@ -374,7 +374,7 @@ crate = "crates/tcg-cli-typescript"
         let err = find_binary(&bins, "nope").expect_err("unknown");
         let msg = err.to_string();
         assert!(
-            msg.contains("nope") && msg.contains("tcg-typescript"),
+            msg.contains("nope") && msg.contains("typescript-ai-native-tcg"),
             "{msg}"
         );
     }

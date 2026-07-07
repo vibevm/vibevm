@@ -285,7 +285,7 @@ impl OracleTransport for SystemOracle {
             // and skipped rather than mis-delivered.
             if frame.id != Some(id) {
                 eprintln!(
-                    "tcg-oracle-bridge: skipping response for id {:?} while waiting for {id}",
+                    "typescript-ai-native-tcg-bridge: skipping response for id {:?} while waiting for {id}",
                     frame.id
                 );
                 continue;

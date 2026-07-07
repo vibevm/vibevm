@@ -1,4 +1,4 @@
-//! `cargo xtask conform …` — a thin shim over the `conform-cli-rust` library,
+//! `cargo xtask conform …` — a thin shim over the `rust-ai-native-conform` library,
 //! which now ships in stack:org.vibevm/rust-ai-native-lang (PROP-024 code-bearing
 //! packages). The fact engine, the rule set, and the policy model all live in
 //! the package; this shim only resolves the vibevm repo root and delegates,
@@ -23,7 +23,7 @@ mod tests {
     /// Every workspace crate is classified exactly once — gated or
     /// exempt-with-a-reason, never both and never neither. The invariant
     /// itself now lives in the engine (`Config::validate_against_tree`,
-    /// enforced on every `conform-rust check` for every consumer); this
+    /// enforced on every `rust-ai-native-conform check` for every consumer); this
     /// test keeps vibevm's own policy honest at `cargo test` time too.
     #[test]
     fn every_crate_is_gated_or_exempt() {

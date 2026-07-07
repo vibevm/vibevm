@@ -278,7 +278,7 @@ pub fn run_init(root: &Path, opts: &InitOptions) -> Result<()> {
          \x20    and tag the implementing module: specmark::scope!(\"spec://{namespace}/PROP-001#req-…\")\n\
          \x20 3. `rust-ai-native specmap` to mint the index, then `rust-ai-native floor`\n\
          \x20 4. adopt crate-by-crate: drain a crate, flip it into conform.toml's gated_crates\n\
-         \x20    (the sweep skill walks this: /discipline-sweep; brownfield: /terraform-rust)\n\
+         \x20    (the sweep skill walks this: /rust-ai-native-sweep; brownfield: /rust-ai-native-terraform)\n\
          (layout changed since init? re-run with --force to regenerate the topology-derived files)"
     );
     Ok(())

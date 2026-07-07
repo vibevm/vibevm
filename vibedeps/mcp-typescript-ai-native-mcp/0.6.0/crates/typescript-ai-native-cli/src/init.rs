@@ -1,5 +1,5 @@
 //! `typescript-ai-native init` — bootstrap the six discipline
-//! artifacts in their TypeScript shape (the `discipline-rust init`
+//! artifacts in their TypeScript shape (the `rust-ai-native init`
 //! twin): conform.toml with a `[typescript]` table, specmap.toml with
 //! the discovered `[[external_specs]]`, both ratchet baselines, and
 //! the two BROWNFIELD registries. Everything is written once (never

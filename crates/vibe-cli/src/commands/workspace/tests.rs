@@ -22,7 +22,7 @@ fn git_available() -> bool {
 
 // Non-`#[test]` helpers carry `#[cfg(test)]` so the file-grain conform
 // frontend scopes their `unwrap`s as test code (the idiom documented on
-// conform-frontend-rust's own lib/tests.rs).
+// rust-ai-native-conform-frontend's own lib/tests.rs).
 #[cfg(test)]
 fn write(dir: &Path, rel: &str, body: &str) {
     let path = dir.join(rel);

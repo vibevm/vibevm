@@ -13,7 +13,7 @@
 //!   index (PROP-014 §2.5); `--check` regenerates and byte-diffs, the
 //!   `check-codegen` idiom.
 //! - `test-gate` / `tripwire` / `trace` / `health` / `fast-loop` /
-//!   `codemod` — thin shims over the packaged `discipline-cli-rust` library
+//!   `codemod` — thin shims over the packaged `rust-ai-native-cli` library
 //!   (stack:org.vibevm/rust-ai-native-lang, PROP-024): the drivers ship with
 //!   the discipline; xtask keeps vibevm's flag-compatible surface and
 //!   composes the vibevm-only extras (the health `--mirrors` probe).

@@ -129,7 +129,7 @@ fn init_then_gates_catch_violations_and_the_tagged_tree_passes() {
 
     // 3. The index mints (the ratchet is warn-only on a mint), then
     // `--check` blocks on the naked export (the scoped file passes
-    // whole — mirroring `specmap-rust`).
+    // whole — mirroring `rust-ai-native-specmap`).
     typescript_ai_native_specmap::run_specmap_typescript(root, false).expect("mint warns only");
     let err = typescript_ai_native_specmap::run_specmap_typescript(root, true)
         .expect_err("one naked export must block the check");

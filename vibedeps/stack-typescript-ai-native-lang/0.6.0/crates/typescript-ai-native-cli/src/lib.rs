@@ -1,5 +1,5 @@
 //! `typescript-ai-native` — the TypeScript umbrella tool, full
-//! subcommand parity with `discipline-rust` (DEFERRALS-CLOSEOUT
+//! subcommand parity with `rust-ai-native` (DEFERRALS-CLOSEOUT
 //! Phase 4, owner quality bar): init / floor / conform / specmap /
 //! trace / test-gate / tripwire / health / fast-loop / codemod.
 //!

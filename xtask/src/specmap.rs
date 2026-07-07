@@ -1,8 +1,8 @@
 //! `cargo xtask specmap` — regenerate (or `--check`) the canonical
 //! `specmap.json` traceability index (PROP-014 §2.5), plus the orphan ratchet
-//! gate. A thin shim over the `specmap-cli-rust` library, which ships in
+//! gate. A thin shim over the `rust-ai-native-specmap` library, which ships in
 //! stack:org.vibevm/rust-ai-native-lang (PROP-024 code-bearing packages) — the same
-//! relationship `cargo xtask conform` has with `conform-cli-rust`.
+//! relationship `cargo xtask conform` has with `rust-ai-native-conform`.
 
 use anyhow::Result;
 

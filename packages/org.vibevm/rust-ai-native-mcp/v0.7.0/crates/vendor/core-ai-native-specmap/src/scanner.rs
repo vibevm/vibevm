@@ -2,7 +2,7 @@
 //! of conform's `Frontend` trait. The index builder consumes scanners
 //! through this trait; `RustScanner` (rscan over specmark tags) is the
 //! built-in implementation, and per-language stacks ship their own
-//! (`specmap-scan-typescript` reads the §9 JSDoc markers through the
+//! (`typescript-ai-native-specmap-scan` reads the §9 JSDoc markers through the
 //! ts-extract bridge). The neutral core never learns about node.
 //!
 //! `CompositeScanner` is the canonical mixed-tree shape: one index,

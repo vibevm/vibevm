@@ -1,4 +1,4 @@
-//! tcg-cli-rust — the enrichment layer and op surface behind bin
+//! rust-ai-native-tcg — the enrichment layer and op surface behind bin
 //! `rust-ai-native-tcg` (TCG-PROTOCOL-RUST §2–§3): policy loading, the gate's
 //! own rules run in-process over the gate's own fact extractor,
 //! REQ-citing advice, and the scope semantics (module cells, newtype
@@ -22,7 +22,7 @@ pub mod serve;
 
 /// The ratchet baseline's conventional filename — the same file
 /// `rust-ai-native init` writes and `rust-ai-native-conform check` reads
-/// (pointer: discipline-cli-rust's DEFAULT_CONFORM_BASELINE; the two
+/// (pointer: rust-ai-native-cli's DEFAULT_CONFORM_BASELINE; the two
 /// constants are held equal by the finding-parity test).
 pub const DEFAULT_CONFORM_BASELINE: &str = "conform-baseline.json";
 
@@ -389,7 +389,7 @@ pub fn read_content_from(spec: &str) -> Result<String> {
     }
 }
 
-/// The one-shot exit contract (mirrors tcg-typescript): exit 1 on an
+/// The one-shot exit contract (mirrors typescript-ai-native-tcg): exit 1 on an
 /// error-grade diagnostic OR a non-baselined finding.
 pub fn validate_exit_code(enriched: &EnrichedValidate) -> i32 {
     let has_error = enriched.diagnostics.iter().any(|d| d.category == "error");

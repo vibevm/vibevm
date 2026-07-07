@@ -1,6 +1,7 @@
 //! `typescript-ai-native-conform` — the TypeScript structural gate, standalone.
-//! Language-suffixed like `conform-rust` so several discipline checkers
-//! share a PATH without shadowing one another (the Ф6 brief §4).
+//! Family-prefixed like `rust-ai-native-conform` so several discipline checkers
+//! share a PATH without shadowing one another (the Ф6 brief §4;
+//! PROP-028 §2.4 supersedes the old language-suffix form).
 
 use anyhow::Result;
 use clap::{Parser, Subcommand};

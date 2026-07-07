@@ -2,7 +2,7 @@
 #
 # Since 0.4.0 this package AUTHORS the neutral engine crates (the vendor-sync
 # consolidation, DEFERRALS-CLOSEOUT-PLAN v0.1 D1/Phase 1), so the self-trace
-# duty moves here with them: run `specmap-rust --gate --path <this package>`
+# duty moves here with them: run `rust-ai-native-specmap --gate --path <this package>`
 # (the binary ships in stack:org.vibevm/rust-ai-native-lang; the gate is engine
 # code, which lives HERE). Orphan-coverage gate only — the scope! tags on
 # these crates cite this package's own spec/mechanisms/ units AND

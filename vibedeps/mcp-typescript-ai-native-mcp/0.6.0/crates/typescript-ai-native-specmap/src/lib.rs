@@ -1,4 +1,4 @@
-//! The specmap driver for TypeScript trees (the `specmap-rust` twin):
+//! The specmap driver for TypeScript trees (the `rust-ai-native-specmap` twin):
 //! build (or `--check`) the canonical `specmap.json` through the
 //! `ts-tsc` scanner, then run the TS orphan gate. One extractor run
 //! feeds both halves — the index's markers and the gate's export
@@ -17,7 +17,7 @@ fn extract(root: &Path) -> Result<Vec<typescript_ai_native_extract_bridge::FileR
 }
 
 /// Build (or `--check`) the index, then the orphan gate — blocking
-/// only under `check`, mirroring `specmap-rust`. An absent
+/// only under `check`, mirroring `rust-ai-native-specmap`. An absent
 /// `specmap.toml` yields the default scan and leaves the gate off.
 pub fn run_specmap_typescript(root: &Path, check: bool) -> Result<()> {
     let cfg = Config::load(root)?;
@@ -63,7 +63,7 @@ pub fn run_specmap_typescript(root: &Path, check: bool) -> Result<()> {
 }
 
 /// Orphan-coverage gate only (`--gate`), no committed index read or
-/// written — the package-self-trace twin of `specmap-rust --gate`.
+/// written — the package-self-trace twin of `rust-ai-native-specmap --gate`.
 pub fn run_gate(root: &Path) -> Result<()> {
     match Config::load(root)? {
         Some(cfg) => {

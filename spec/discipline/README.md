@@ -9,10 +9,10 @@ vibevm's dev tree.
 
 | Mechanism | Shipped spec unit (cite these) | Implemented by |
 |---|---|---|
-| spec↔code traceability (anchors, revisions, tags, index, queries) | `spec://core-ai-native/mechanisms/PROP-014#…` | `stack:org.vibevm/rust-ai-native-lang` (`specmap-core`, `specmap-rust`) |
-| brownfield terraforming (registries, xfail-strict gate, tripwires) | `spec://core-ai-native/mechanisms/BROWNFIELD-PROTOCOL-v0.1#…` | `specmap-core::{testgate,tripwire}` + the `terraform-rust` skill |
-| conformance engine (fact store, rules-as-queries, SARIF, ratchet) | `spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#…` | `stack:org.vibevm/rust-ai-native-lang` (`conform-core`, `conform-rust`) |
-| intent ledger (facts vs interpretations, epoch-keyed cache) | `spec://core-ai-native/mechanisms/LEDGER-INTENT-v0.1#…` | `specmap-core::ledger`, `.ledger/` (git-ignored) |
+| spec↔code traceability (anchors, revisions, tags, index, queries) | `spec://core-ai-native/mechanisms/PROP-014#…` | `stack:org.vibevm/rust-ai-native-lang` (`core-ai-native-specmap`, bin `rust-ai-native-specmap`) |
+| brownfield terraforming (registries, xfail-strict gate, tripwires) | `spec://core-ai-native/mechanisms/BROWNFIELD-PROTOCOL-v0.1#…` | `core-ai-native-specmap::{testgate,tripwire}` + the `rust-ai-native-terraform` skill |
+| conformance engine (fact store, rules-as-queries, SARIF, ratchet) | `spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#…` | `stack:org.vibevm/rust-ai-native-lang` (`core-ai-native-conform`, bin `rust-ai-native-conform`) |
+| intent ledger (facts vs interpretations, epoch-keyed cache) | `spec://core-ai-native/mechanisms/LEDGER-INTENT-v0.1#…` | `core-ai-native-specmap::ledger`, `.ledger/` (git-ignored) |
 
 In this repository the shipped copies live at
 `vibedeps/flow-core-ai-native/<version>/spec/mechanisms/` (and the editable
