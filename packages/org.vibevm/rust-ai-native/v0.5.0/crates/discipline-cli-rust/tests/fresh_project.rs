@@ -188,8 +188,9 @@ pub fn parse(s: &str) -> i32 {
     );
     let _ = std::fs::remove_file(root.join("crates/app/src/orphan.rs"));
     let _ = std::fs::remove_file(root.join("crates/app/src/uses_mechanism.rs"));
-    let err = conform_cli_rust::run_check(root, discipline_cli_rust::DEFAULT_CONFORM_BASELINE, None)
-        .expect_err("a domain unwrap in a gated crate must fail the gate");
+    let err =
+        conform_cli_rust::run_check(root, discipline_cli_rust::DEFAULT_CONFORM_BASELINE, None)
+            .expect_err("a domain unwrap in a gated crate must fail the gate");
     assert!(
         err.to_string().contains("new finding"),
         "expected a new-finding failure, got: {err}"

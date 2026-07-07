@@ -305,7 +305,12 @@ fn main() -> Result<()> {
             cell,
             budget,
             enforce_budget,
-        } => discipline_cli_rust::run_fast_loop(&repo_root()?, cell.as_deref(), budget, enforce_budget),
+        } => discipline_cli_rust::run_fast_loop(
+            &repo_root()?,
+            cell.as_deref(),
+            budget,
+            enforce_budget,
+        ),
         Cmd::Codemod {
             cmd:
                 CodemodCmd::AddCell {
