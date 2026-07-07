@@ -690,6 +690,30 @@ Named deferrals (visible, not silent):
 
 ## 13. Execution ledger (filled by the executing session)
 
+### Wave 4 — EXECUTED (2026-07-07); commit map
+
+- `07af178` refactor(typescript-ai-native): `pub mod bench` (in-place,
+  the rust build_rules-export precedent).
+- `e19d57d` feat(packages): **mcp:org.vibevm/discipline-typescript
+  v0.4.0** — 17 tools (no ledger in the TS umbrella), pin `=0.4.0`,
+  the closure + the stack's embedded-source `tools/` dir (six [[sync]]
+  sets). TWO TOOLCHAIN FIXES surfaced by the mirror: sync-engines'
+  walker now speaks PROP-024 §2.2's FULL denylist (it had copied
+  ts-extract's local node_modules wholesale — strays purged; note the
+  filter HIDES denylisted files from the differ, so pre-existing
+  strays need a manual purge once), and the TS API differences
+  (u64 Position, root-level bridge re-exports, 3-arg codemod,
+  Display-only bridge errors) are spoken natively.
+- `e81b882` build(deps): `vibedeps/mcp-discipline-typescript/0.4.0`.
+- Proof: the hermetic e2e pins the ABSENT-TOOLCHAIN posture through
+  MCP (a bare project's conform_check answers isError WITH the install
+  recipe); the live chain on ts-demo with vibe scrubbed from PATH —
+  17 tools, clean validate, seeded TS2322 via pure overlay (disk
+  byte-identical), conform green with the frozen brand-cast finding —
+  **0.85 s**. Both language servers now serve vibe-free.
+- Panel: full self-check exit 0 with the TS mcp package's four gate
+  steps (22 steps total).
+
 ### Wave 3 — EXECUTED (2026-07-07); commit map
 
 - `fdd6baf` feat(packages): **mcp:org.vibevm/discipline-rust v0.5.0** —
