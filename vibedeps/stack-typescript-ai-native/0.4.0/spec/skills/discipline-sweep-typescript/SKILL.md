@@ -72,3 +72,22 @@ End every sweep with the outcome table the Playbook §5 specifies: per tier,
 what ran, what was found, the ONE ratchet item taken, and what was
 deliberately left (with why). A sweep that only reports green gates did the
 floor's job, not the sweep's.
+
+## The generation-time assistant (before you edit, not instead of the floor)
+
+The stack ships an agentic type oracle. Before writing a nontrivial `.ts`
+edit, check the HYPOTHETICAL content instead of paying a red floor
+iteration:
+
+```sh
+vibe bin exec tcg-typescript -- validate src/cells/<cell>/index.ts \
+    --content-from - --root .   # the edit on stdin; exit 1 = would fail
+```
+
+or, when the vibevm MCP server is mounted, call `tcg_validate` with the
+`content` argument (plus `tcg_scope` / `tcg_complete` / `tcg_type` for
+in-scope symbols, type-valid completions, and quick info). Responses
+carry the SAME conform findings as the gate, flagged `baselined` or new,
+with guide-citing advice — a new finding in the answer means the floor
+WILL go red if you write that edit. The floor stays the truth; the
+oracle exists so you reach it green on the first try.

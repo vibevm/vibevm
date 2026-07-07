@@ -28,7 +28,7 @@
  * op failure is an {ok:false} response and the loop continues.
  */
 
-import { readFileSync, existsSync, readdirSync } from "node:fs";
+import { readFileSync, existsSync, readdirSync, statSync } from "node:fs";
 import { createRequire } from "node:module";
 import { join, resolve, dirname } from "node:path";
 import { pathToFileURL } from "node:url";
@@ -565,6 +565,13 @@ class OracleSession {
     string,
     { content: string; version: number }
   >();
+  /** Session-monotonic script version. NEVER derived from the current
+   * overlay: an ephemeral overlay is removed after its query, and a
+   * later overlay of the same file would otherwise REUSE the version
+   * number while carrying different text — the language service then
+   * serves the cached program state (caught by the differential
+   * corpus: five seeded cases answered from the clean-disk cache). */
+  private nextVersion = 1;
   private readonly service: LanguageService;
   private cellsDir: string | null;
   private seamName: string;
@@ -592,8 +599,18 @@ class OracleSession {
         for (const k of overlays.keys()) if (!names.includes(k)) names.push(k);
         return names;
       },
-      getScriptVersion: (f: string): string =>
-        String(overlays.get(norm(f))?.version ?? 1),
+      getScriptVersion: (f: string): string => {
+        const o = overlays.get(norm(f));
+        if (o !== undefined) return `o${o.version}`;
+        // Disk files version by mtime, or an agent that WRITES between
+        // queries would keep getting the cached program (same class as
+        // the ephemeral-overlay bug the corpus caught).
+        try {
+          return `m${statSync(f).mtimeMs}`;
+        } catch {
+          return "absent";
+        }
+      },
       getScriptSnapshot: (f: string): unknown => {
         const o = overlays.get(norm(f));
         if (o !== undefined) return ts.ScriptSnapshot.fromString(o.content);
@@ -633,12 +650,14 @@ class OracleSession {
     const key = this.abs(rel);
     if (content === null) {
       this.overlays.delete(key);
-      return 1;
+      // Deleting still moves the session clock: the next read of this
+      // file (disk state) must not collide with a stale cached version.
+      this.nextVersion += 1;
+      return this.nextVersion;
     }
-    const prev = this.overlays.get(key);
-    const version = (prev?.version ?? 1) + 1;
-    this.overlays.set(key, { content, version });
-    return version;
+    this.nextVersion += 1;
+    this.overlays.set(key, { content, version: this.nextVersion });
+    return this.nextVersion;
   }
 
   /** Run `body` with a one-shot overlay when `content` is given. */
@@ -650,13 +669,18 @@ class OracleSession {
     if (content === undefined) return body();
     const key = this.abs(rel);
     const prev = this.overlays.get(key);
-    const version = (prev?.version ?? 1) + 1;
-    this.overlays.set(key, { content, version });
+    this.nextVersion += 1;
+    this.overlays.set(key, { content, version: this.nextVersion });
     try {
       return body();
     } finally {
+      this.nextVersion += 1;
       if (prev === undefined) this.overlays.delete(key);
-      else this.overlays.set(key, { content: prev.content, version: version + 1 });
+      else
+        this.overlays.set(key, {
+          content: prev.content,
+          version: this.nextVersion,
+        });
     }
   }
 
