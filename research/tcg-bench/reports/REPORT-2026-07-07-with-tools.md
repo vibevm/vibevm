@@ -6,7 +6,7 @@ _Recorded 2026-07-07, same box, same model
 **with-tools** — the task prompt named the one-shot oracle forms
 (`tcg-typescript validate/scope/complete/type`, full artifact path)
 and asked the agent to consult them before and after each edit. Raw
-rows: `with-tools-2026-07-07-0723.jsonl`._
+rows: `with-tools-2026-07-07-0701.jsonl`._
 
 ## Result: 10 PASS / 2 FAIL — NO DELTA against control
 
