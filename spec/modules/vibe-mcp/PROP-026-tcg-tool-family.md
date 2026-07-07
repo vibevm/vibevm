@@ -4,7 +4,7 @@
 accepted the same day, with the §3 portability amendment); implemented
 by its Phase 4. History: 2026-07-07 (same day, AGENTIC-TCG-RUST-PLAN
 v0.1) — the §2 promise cashed: `language: "rust"` lands as an enum
-value dispatching to the rust stack's `tcg-rust` relay; no new tools,
+value dispatching to the rust stack's `rust-ai-native-tcg` relay; no new tools,
 no schema shape change.** Module: `vibe-tcg` (new) + `vibe-mcp`
 (adapter) + `vibe-workspace` (binary resolution).
 **Related:** [PROP-015](PROP-015-mcp-integration.md) (the MCP server
@@ -23,7 +23,7 @@ is unchanged and remains normative; the TOPOLOGY half (one multiplexed
 product server, `language` as the dispatch parameter, the `vibe-tcg`
 registry crate) is retired. The tools now ship in the per-language
 `mcp`-kind packages ([PROP-027](PROP-027-mcp-packages.md):
-`mcp:org.vibevm/rust-ai-native-mcp`, `…/discipline-typescript`), each
+`mcp:org.vibevm/rust-ai-native-mcp`, `…/typescript-ai-native-mcp`), each
 serving its own language over the vendored `mcp-core` transport; the
 §2 enum-value bet re-reads as «a new language is a new mcp package
 shipping the SAME tool grammar»; `language` survives as a validated
@@ -36,10 +36,10 @@ design record.
 
 `req r1`
 
-The typescript-ai-native stack ships a type oracle (`tcg-typescript
+The typescript-ai-native stack ships a type oracle (`typescript-ai-native-tcg
 serve`) that answers validate/scope/complete/type queries over in-memory
 overlays at millisecond latency. An agent can already reach it the
-degraded way (`vibe bin exec tcg-typescript -- <op> …`, one cold spawn
+degraded way (`vibe bin exec typescript-ai-native-tcg -- <op> …`, one cold spawn
 per question). What is missing is the WARM path: a persistent oracle
 per language behind the agent's MCP session, so consultation costs
 milliseconds, not process startups. That is product surface — lockfile
@@ -97,8 +97,8 @@ refs), lazily populated per language on first use, dropped with the
 host session:
 
 1. resolve the CURRENT project's lockfile → the stack slot that
-   declares the language's oracle binary (`tcg-typescript` for
-   TypeScript, `tcg-rust` for Rust; the per-language table also
+   declares the language's oracle binary (`typescript-ai-native-tcg` for
+   TypeScript, `rust-ai-native-tcg` for Rust; the per-language table also
    carries the requires-line and one-shot recipes so every refusal
    names ITS language's fix surface, not another's) — the PROP-025
    `[[binary]]` walk, through the SHARED `vibe-workspace`

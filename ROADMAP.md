@@ -681,12 +681,12 @@ deleted — the vibevm-on-vibevm operational cycle is broken.
 VALUE, not by parallel tool families — cashed on its second language,
 the project's primary one. The campaign
 (spec/terraforms/AGENTIC-TCG-RUST-PLAN-v0.1.md, owner-accepted with
-amendments the same day) ships: `tcg-oracle-bridge-rust` (the LSP
+amendments the same day) ships: `rust-ai-native-tcg-bridge` (the LSP
 client seam over the CONSUMER's own rust-analyzer — rustup-resolved,
 capability-gated, overlays via LSP document law, pull diagnostics,
-r-a's experimental diagnostics deliberately enabled), the `tcg-rust`
+r-a's experimental diagnostics deliberately enabled), the `rust-ai-native-tcg`
 slot binary (the enriching serve relay + one-shot forms + bench;
-enrichment IN-PROCESS through conform_cli_rust::build_rules — no
+enrichment IN-PROCESS through rust_ai_native_conform::build_rules — no
 third process), `research/rust-demo` (the committed zero-dep consumer
 testbed with a GuestName newtype mirroring ts-demo), the D13
 language-suffix rename sweep (conform-/discipline-/specmap-cli →
@@ -697,7 +697,7 @@ flips red when r-a catches up), and the honest fidelity posture
 throughout: rust-analyzer is NOT rustc, the oracle approximates, the
 floor stays the truth. Briefs:
 `packages/org.vibevm/rust-ai-native-lang/v0.5.0/spec/rust/tools/vibe-agentic-tcg-rust.md`
-(shipped line) and `vibe-tcg-rust.md` (token-level, VERY-FAR-FUTURE);
+(shipped line) and `rust-ai-native-tcg.md` (token-level, VERY-FAR-FUTURE);
 mechanisms: TCG-ORACLE-RUST-v0.1 / TCG-PROTOCOL-RUST-v0.1 (same tree).
 The `ra_ap_*` embedding is the Far backlog's first entry. No agent
 battery here — delivery experiments are backlogged with
@@ -713,7 +713,7 @@ discipline, all deliverable TODAY as tools the agent consults. The
 campaign (spec/terraforms/AGENTIC-TCG-TS-PLAN-v0.1.md, owner-accepted
 with amendments 2026-07-07) ships: the `tools/ts-oracle` language-
 service oracle (overlays, NDJSON duplex) in the TS stack, the
-`tcg-oracle-bridge` + `tcg-typescript` slot binary (discipline
+`typescript-ai-native-tcg-bridge` + `typescript-ai-native-tcg` slot binary (discipline
 enrichment through the same conform engine as the gate), the portable
 `vibe-tcg` product crate mounted by vibe-mcp as four `tcg_*` tools
 (PROP-026; liftable into a standalone MCP server per the owner's
@@ -733,9 +733,9 @@ engine (XGrammar-2 / SynCode class) guarantees parseable output and
 validates the harness integration that the later, harder stages
 (scope/name constraining on rust-analyzer, type-valid continuations,
 discipline profiles) will reuse. Tool spec:
-`packages/org.vibevm/rust-ai-native-lang/v0.5.0/spec/rust/tools/vibe-tcg-rust.md`
-(the tool line renamed vibe-tcg → vibe-tcg-rust under the D13
-language-suffix policy, 2026-07-07 — the bare name now belongs to the
+`packages/org.vibevm/rust-ai-native-lang/v0.5.0/spec/rust/tools/rust-ai-native-tcg.md`
+(the tool brief, renamed vibe-tcg → vibe-tcg-rust → rust-ai-native-tcg
+across the D13 suffix policy and its PROP-028 §2.4 supersession — the bare name belongs to the
 generic product crate; M1.25's agentic twin is this milestone's
 Stage 2 made consultable, and the decode-loop stages stay gated on an
 inference substrate).

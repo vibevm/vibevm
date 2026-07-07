@@ -4,7 +4,7 @@
 [MCP-SOVEREIGNTY-PLAN-v0.1](../../terraforms/MCP-SOVEREIGNTY-PLAN-v0.1.md)).
 **Status:** IMPLEMENTED — the kind and the manifest laws (§2.1–§2.3)
 shipped with the plan's Wave 1; the servers themselves (Waves 3–4:
-`mcp:org.vibevm/rust-ai-native-mcp`, `…/discipline-typescript`, both
+`mcp:org.vibevm/rust-ai-native-mcp`, `…/typescript-ai-native-mcp`, both
 live-chained vibe-free); the registration lifecycle (§2.4–§2.5) with
 Wave 5 (`vibe mcp install/uninstall/status` speak package servers; the
 pin-server fixture e2e pins the walk). §2.7's composition rows inherit
@@ -54,8 +54,8 @@ kind promises a server.
 
 ```toml
 [[mcp_server]]
-name = "discipline-rust"          # agent-visible server name, unique in the package
-binary = "discipline-mcp-rust"    # must match a [[binary]] in this manifest
+name = "rust-ai-native"           # agent-visible server name = the family (PROP-028 §2.4)
+binary = "rust-ai-native-mcp"     # must match a [[binary]] in this manifest
 description = "AI-Native Rust discipline + type oracle over MCP"
 args = ["--path", "{project_root}"]
 ```

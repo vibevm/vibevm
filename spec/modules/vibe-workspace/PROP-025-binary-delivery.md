@@ -8,9 +8,10 @@ specified v2 surface.** Module: `vibe-workspace` / `vibe-install` / `vibe-cli`.
 `req r1`
 
 Code-bearing packages (PROP-024) ship runnable tools — the discipline
-stacks alone ship six binaries (`discipline-rust`, `conform-rust`,
-`specmap-rust`, `discipline-typescript`, `conform-typescript`,
-`specmap-typescript`) — but `vibe install` stops at materialising source
+stacks alone ship the umbrella + gate binaries (`rust-ai-native`,
+`rust-ai-native-conform`, `rust-ai-native-specmap`, `typescript-ai-native`,
+`typescript-ai-native-conform`, `typescript-ai-native-specmap`) — but
+`vibe install` stops at materialising source
 into `vibedeps/`. Getting from a slot to a tool on PATH is a manual,
 documented step (`cargo install --path vibedeps/<slot>/crates/<cli>`,
 GUIDE §13), repeated per machine and re-repeated per version bump: n
@@ -26,13 +27,13 @@ A code-bearing package declares each shipped tool in its `vibe.toml`:
 
 ```toml
 [[binary]]
-name = "discipline-rust"        # the PATH-facing name (language-suffixed
-                                # per the collision convention)
-crate = "crates/discipline-cli" # package-relative crate directory
+name = "rust-ai-native"             # the PATH-facing name (the family
+                                    # prefix keeps it collision-safe)
+crate = "crates/rust-ai-native-cli" # package-relative crate directory
 ```
 
 Constraints: `name` MUST be unique within the package and SHOULD be
-globally collision-safe (the per-language suffix convention);
+globally collision-safe (the family-prefix convention, PROP-028 §2.4);
 `crate` MUST name a directory inside the shippable tree carrying a
 `[[bin]]`-bearing (or default-bin) Cargo package whose bin name equals
 `name`. The linter (`vibe check`) validates both. Absent `[[binary]]`

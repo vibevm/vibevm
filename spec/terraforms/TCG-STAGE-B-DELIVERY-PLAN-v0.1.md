@@ -98,13 +98,13 @@ experiment, not a promotion.
   Phase-0 spike matter, not assumption. MCP servers are configured via
   a project-local `opencode.json` (`mcp.<name>` with a local
   command) — exact key shape is spike matter for the same reason.
-- **The one-shot surface the hook needs exists**: `tcg-typescript
+- **The one-shot surface the hook needs exists**: `typescript-ai-native-tcg
   validate <file> [--content-from -|<path>] [--json]`
   (tcg-cli-typescript/src/main.rs:39 `content_from`; also on
   `complete`), exits 1 on an error diagnostic OR a non-baselined
   finding. Artifact: slot-resident
-  `vibedeps/stack-typescript-ai-native-lang/0.4.0/target/release/
-  tcg-typescript.exe` (repo slot, built).
+  `vibedeps/stack-typescript-ai-native-lang/0.6.0/target/release/
+  typescript-ai-native-tcg.exe` (repo slot, built).
 - **The MCP surface the mounted arm needs exists**: `vibe mcp serve
   --path <dir>` (commands/mcp/mod.rs:98) lists the four `tcg_*` tools;
   the OracleRegistry resolves lockfile → slot → artifact from the
@@ -115,7 +115,7 @@ experiment, not a promotion.
 - **ts-demo has its own materialised `vibedeps/`**
   (`research/ts-demo/vibedeps`, stack 0.4.0 by content identical to
   the repo slot) — the junction source for D2. Whether ITS
-  `target/release/tcg-typescript.exe` is pre-built is a Phase-0 check
+  `target/release/typescript-ai-native-tcg.exe` is pre-built is a Phase-0 check
   (one `vibe bin build` from the demo root warms it; org.vibevm is
   consent-allow-listed).
 - **MCP-held `vibe.exe` blocks workspace rebuilds** (standing finding)
@@ -186,7 +186,7 @@ stay comparable:
   server-prefixed name form is spike matter; the grep matches the
   suffix either way);
 - `oracle_bash_calls` — bash/tool invocations whose text contains
-  `tcg-typescript`;
+  `typescript-ai-native-tcg`;
 - `oracle_ops` — per-op breakdown string (`validate:3,scope:1`);
 - `first_oracle_step` — when in the run the first consultation
   happened (0 = never);
@@ -244,7 +244,7 @@ running `mcp serve --path <work>`. Consequences, each deliberate:
 An opencode plugin (`plugins/tcg-guard.js`, copied into
 `<work>/.opencode/plugin/`) intercepts the file-writing tools (`write`,
 `edit`) in `tool.execute.before`: it runs the toolcached one-shot
-`tcg-typescript validate <file> --content-from - --json` on the
+`typescript-ai-native-tcg validate <file> --content-from - --json` on the
 HYPOTHETICAL content (the overlay path — the file need not be written),
 and when the result carries an error-grade diagnostic or a
 non-baselined finding it THROWS — the write is refused and the findings
@@ -366,13 +366,13 @@ direction, not magnitude.
    intact) BEFORE the real loop ever runs.
 4. **Event-stream anatomy for D1**: from spikes 1–2's `agent.jsonl`,
    pin the JSON shapes the uptake parser greps (tool events with
-   names/args; bash text) and confirm `tcg_`/`tcg-typescript` are
+   names/args; bash text) and confirm `tcg_`/`typescript-ai-native-tcg` are
    recoverable.
 5. **Demo-slot artifact check**: does `research/ts-demo/vibedeps/
-   stack-typescript-ai-native-lang/0.4.0/target/release/tcg-typescript.exe`
-   exist? If not: one `vibe bin build tcg-typescript` from the demo
+   stack-typescript-ai-native-lang/0.6.0/target/release/typescript-ai-native-tcg.exe`
+   exist? If not: one `vibe bin build typescript-ai-native-tcg` from the demo
    root (org.vibevm, consented), record the build time — that is the
-   probe-section budget. Also: toolcache `tcg-typescript.exe` next to
+   probe-section budget. Also: toolcache `typescript-ai-native-tcg.exe` next to
    the conform copy (the slot-refresh 127 lesson covers the hook arm's
    one-shot too).
 6. Findings land in the WAL session section.
@@ -491,7 +491,7 @@ direction, not magnitude.
 ```sh
 bash tools/self-check.sh; echo "EXIT=$?"     # 13 steps, 0 — before anything
 opencode --version                            # 1.17.14 at authoring; note drift
-ls vibedeps/stack-typescript-ai-native-lang/0.4.0/target/release/tcg-typescript.exe
+ls vibedeps/stack-typescript-ai-native-lang/0.6.0/target/release/typescript-ai-native-tcg.exe
 ls research/ts-demo/vibedeps                  # the D2 junction source
 ls target/debug/vibe.exe                      # the D2 toolcache source
 # then Phase 0 in order; findings → WAL; a red spike rewrites the
