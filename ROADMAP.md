@@ -658,7 +658,36 @@ PROP-009 Phase 4, so it was a prerequisite for the Phase-7 redirect
 rewrite and landed **inside M1.18 Phase 7**. The M1.22 number is
 nominal — the work is part of M1.18.
 
-### M1.24 — the agentic tcg line (`vibe-agentic-tcg-ts`) — IN EXECUTION (2026-07-07)
+### M1.25 — the rust agentic twin (`vibe-agentic-tcg-rust`) — IN EXECUTION (2026-07-07)
+
+**Thesis.** PROP-026's central bet — the tcg family scales by language
+VALUE, not by parallel tool families — cashed on its second language,
+the project's primary one. The campaign
+(spec/terraforms/AGENTIC-TCG-RUST-PLAN-v0.1.md, owner-accepted with
+amendments the same day) ships: `tcg-oracle-bridge-rust` (the LSP
+client seam over the CONSUMER's own rust-analyzer — rustup-resolved,
+capability-gated, overlays via LSP document law, pull diagnostics,
+r-a's experimental diagnostics deliberately enabled), the `tcg-rust`
+slot binary (the enriching serve relay + one-shot forms + bench;
+enrichment IN-PROCESS through conform_cli_rust::build_rules — no
+third process), `research/rust-demo` (the committed zero-dep consumer
+testbed with a GuestName newtype mirroring ts-demo), the D13
+language-suffix rename sweep (conform-/discipline-/specmap-cli →
+*-cli-rust), the differential corpus with a committed r-a↔rustc
+code-mapping table AND a documented-gap case (privacy E0603 — r-a
+native diagnostics are silent; the corpus asserts the asymmetry so it
+flips red when r-a catches up), and the honest fidelity posture
+throughout: rust-analyzer is NOT rustc, the oracle approximates, the
+floor stays the truth. Briefs:
+`packages/org.vibevm/rust-ai-native/v0.5.0/spec/rust/tools/vibe-agentic-tcg-rust.md`
+(shipped line) and `vibe-tcg-rust.md` (token-level, VERY-FAR-FUTURE);
+mechanisms: TCG-ORACLE-RUST-v0.1 / TCG-PROTOCOL-RUST-v0.1 (same tree).
+The `ra_ap_*` embedding is the Far backlog's first entry. No agent
+battery here — delivery experiments are backlogged with
+TCG-STAGE-B-DELIVERY-PLAN and will cover both languages when
+commissioned.
+
+### M1.24 — the agentic tcg line (`vibe-agentic-tcg-ts`) — SHIPPED (2026-07-07)
 
 **Thesis.** Token-level TCG waits on an inference substrate (hosted
 agent APIs never expose logits; `vibe-llm` is an M0 stub) — but most of
@@ -687,8 +716,12 @@ engine (XGrammar-2 / SynCode class) guarantees parseable output and
 validates the harness integration that the later, harder stages
 (scope/name constraining on rust-analyzer, type-valid continuations,
 discipline profiles) will reuse. Tool spec:
-`packages/org.vibevm/rust-ai-native/v0.2.0/rust/tools/vibe-tcg.md`
-(installed at `vibedeps/stack-rust-ai-native/0.2.0/rust/tools/vibe-tcg.md`).
+`packages/org.vibevm/rust-ai-native/v0.5.0/spec/rust/tools/vibe-tcg-rust.md`
+(the tool line renamed vibe-tcg → vibe-tcg-rust under the D13
+language-suffix policy, 2026-07-07 — the bare name now belongs to the
+generic product crate; M1.25's agentic twin is this milestone's
+Stage 2 made consultable, and the decode-loop stages stay gated on an
+inference substrate).
 Entered into the roadmap by TERRAFORM-PLAN-v0.3 §2 (the Discipline
 v0.2 adoption); staged ambition and the honest risk register live in
 the spec, not here.

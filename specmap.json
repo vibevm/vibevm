@@ -11678,7 +11678,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:015f1f352bfef423f7d4d06669a35d219ed8be34ecabb900df4707a2977740f9",
+      "content_hash": "sha256:58ae9bc919857cb2be622d7749f0097ae8aae6ea29e3a58ec8cdad8e9ab9caec",
       "doc_path": "modules/vibe-mcp/PROP-026",
       "file": "spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md",
       "heading": "PROP-026 — the tcg tool family (the agentic type oracle's product seam)",
@@ -11691,21 +11691,21 @@
       "doc_path": "modules/vibe-mcp/PROP-026",
       "file": "spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md",
       "heading": "1. Problem",
-      "line": 16,
+      "line": 20,
       "uri": "spec://vibevm/modules/vibe-mcp/PROP-026#problem",
       "kind": "req",
       "revision": 1
     },
     {
       "anchor": "tools",
-      "content_hash": "sha256:2be0e7d5d19c9c316343ba573bb71c6a8ced9ce3ec65d35c53fc8241b1ce9d13",
+      "content_hash": "sha256:d3c180c45b7d42f797675b7d5779b0e819ba220eee7c8162f921f68648fba42e",
       "doc_path": "modules/vibe-mcp/PROP-026",
       "file": "spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md",
       "heading": "2. The four tools",
-      "line": 31,
+      "line": 35,
       "uri": "spec://vibevm/modules/vibe-mcp/PROP-026#tools",
       "kind": "req",
-      "revision": 2
+      "revision": 3
     },
     {
       "anchor": "portability",
@@ -11713,21 +11713,21 @@
       "doc_path": "modules/vibe-mcp/PROP-026",
       "file": "spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md",
       "heading": "3. The portable family crate — the owner amendment",
-      "line": 49,
+      "line": 54,
       "uri": "spec://vibevm/modules/vibe-mcp/PROP-026#portability",
       "kind": "req",
       "revision": 3
     },
     {
       "anchor": "registry",
-      "content_hash": "sha256:d1d87bf5a541e877d4e48b76aa9d7ed87327a72682a26a8da5c6f4e7ff6b6f4d",
+      "content_hash": "sha256:9b428e42d9c843232f9e24bac171c9950fc9619a2d90a1ea0ff68cd743d364cc",
       "doc_path": "modules/vibe-mcp/PROP-026",
       "file": "spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md",
       "heading": "4. The oracle registry and child lifecycle",
-      "line": 71,
+      "line": 76,
       "uri": "spec://vibevm/modules/vibe-mcp/PROP-026#registry",
       "kind": "req",
-      "revision": 4
+      "revision": 5
     },
     {
       "anchor": "consent",
@@ -11735,7 +11735,7 @@
       "doc_path": "modules/vibe-mcp/PROP-026",
       "file": "spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md",
       "heading": "5. Consent: the no-prompt rule",
-      "line": 97,
+      "line": 105,
       "uri": "spec://vibevm/modules/vibe-mcp/PROP-026#consent",
       "kind": "req",
       "revision": 5
@@ -11746,18 +11746,18 @@
       "doc_path": "modules/vibe-mcp/PROP-026",
       "file": "spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md",
       "heading": "6. Non-goals",
-      "line": 108,
+      "line": 116,
       "uri": "spec://vibevm/modules/vibe-mcp/PROP-026#non-goals",
       "kind": "req",
       "revision": 6
     },
     {
       "anchor": "acceptance",
-      "content_hash": "sha256:9f9dfea85895156bbc042d96d83afaa54c56c3ed17dfc48eb3776c0ff57abc5c",
+      "content_hash": "sha256:7abd1bf04e8392e55be5b43d16521543b1e14f7d1bb60b0ab6a8737c0af04652",
       "doc_path": "modules/vibe-mcp/PROP-026",
       "file": "spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md",
       "heading": "7. Acceptance",
-      "line": 120,
+      "line": 128,
       "uri": "spec://vibevm/modules/vibe-mcp/PROP-026#acceptance",
       "kind": "req",
       "revision": 7
