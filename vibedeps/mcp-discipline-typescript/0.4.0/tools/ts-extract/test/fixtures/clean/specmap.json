@@ -1,0 +1,98 @@
+{
+  "code_items": [
+    {
+      "crate_name": "src",
+      "file": "src/cells/greet/index.ts",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "src/cells/greet/index.ts"
+    },
+    {
+      "crate_name": "src",
+      "file": "src/cells/parse/index.ts",
+      "item_kind": "export",
+      "line": 4,
+      "symbol": "src/cells/parse/index.ts::parseAndGreet"
+    },
+    {
+      "crate_name": "src",
+      "file": "src/core/text.ts",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "src/core/text.ts"
+    }
+  ],
+  "edges": [
+    {
+      "file": "src/cells/greet/index.ts",
+      "from_symbol": "src/cells/greet/index.ts",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://fixture/PROP-001#cell-greet",
+      "verb": "implements"
+    },
+    {
+      "file": "src/cells/parse/index.ts",
+      "from_symbol": "src/cells/parse/index.ts::parseAndGreet",
+      "line": 4,
+      "provenance": "authored",
+      "uri": "spec://fixture/PROP-001#req-parse",
+      "verb": "implements"
+    },
+    {
+      "file": "src/core/text.ts",
+      "from_symbol": "src/core/text.ts",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://fixture/PROP-001#cell-text",
+      "verb": "implements"
+    }
+  ],
+  "schema": 2,
+  "spec_units": [
+    {
+      "anchor": "root",
+      "content_hash": "sha256:3f0c75c6ebed71f0bb90f422d664c35225981153393f483f11382f70cc683226",
+      "doc_path": "PROP-001",
+      "file": "spec/PROP-001.md",
+      "heading": "PROP-001 — the fixture spec",
+      "line": 1,
+      "uri": "spec://fixture/PROP-001#root"
+    },
+    {
+      "anchor": "req-parse",
+      "content_hash": "sha256:2d914183710de9ca129dafb30d279095926465c1c0ebcfbc03ef7c098f5a531a",
+      "doc_path": "PROP-001",
+      "file": "spec/PROP-001.md",
+      "heading": "Parse",
+      "line": 3,
+      "uri": "spec://fixture/PROP-001#req-parse",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "cell-greet",
+      "content_hash": "sha256:8c3c37cde19fe203ce9b84b3b7732346cf2d581db6670ff73c68f96cf00cbe20",
+      "doc_path": "PROP-001",
+      "file": "spec/PROP-001.md",
+      "heading": "The greet cell",
+      "line": 8,
+      "uri": "spec://fixture/PROP-001#cell-greet",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "cell-text",
+      "content_hash": "sha256:a23987d045b18589c24003f4cd0c1d6f3d1ea604905f7a0396cabee6422b9524",
+      "doc_path": "PROP-001",
+      "file": "spec/PROP-001.md",
+      "heading": "Core text utilities",
+      "line": 13,
+      "uri": "spec://fixture/PROP-001#cell-text",
+      "kind": "req",
+      "revision": 1
+    }
+  ],
+  "suspects": [],
+  "warnings": []
+}

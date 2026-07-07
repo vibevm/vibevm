@@ -1,0 +1,27 @@
+[package]
+name = "discipline-mcp-typescript"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+license-file.workspace = true
+publish.workspace = true
+repository.workspace = true
+homepage.workspace = true
+description = "The AI-Native TypeScript discipline over MCP: the discipline-typescript command surface + the tcg type oracle as agent tools (PROP-027)"
+
+[dependencies]
+mcp-core.workspace = true
+specmark.workspace = true
+anyhow.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+clap.workspace = true
+conform-cli-typescript.workspace = true
+specmap-cli-typescript.workspace = true
+discipline-cli-typescript.workspace = true
+tcg-cli-typescript.workspace = true
+tcg-oracle-bridge.workspace = true
+
+[dev-dependencies]
+tempfile.workspace = true

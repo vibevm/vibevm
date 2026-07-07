@@ -1,0 +1,21 @@
+# specmap.toml — discipline-typescript's own traceability policy.
+#
+# Self-trace duty covers the ONE authored crate (the server); every
+# other crate here is a byte-identical vendored copy gated in its
+# authored home (discipline-core / typescript-ai-native — sync-engines
+# holds the bytes equal). Orphan-coverage gate only
+# (`specmap-rust --gate`): the scope! targets include cross-package
+# units, so a committed index would be part-dangling noise; what
+# matters is that no server code drifts untagged.
+
+namespace = "discipline-typescript"
+
+scan_roots = ["crates/discipline-mcp-typescript"]
+
+spec_roots = ["spec"]
+
+root_spec_docs = []
+
+exempt = []
+
+dispositioned = []

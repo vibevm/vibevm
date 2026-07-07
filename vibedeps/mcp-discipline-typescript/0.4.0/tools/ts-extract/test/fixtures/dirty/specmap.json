@@ -1,0 +1,88 @@
+{
+  "code_items": [
+    {
+      "crate_name": "src",
+      "file": "src/cells/greet/index.ts",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "src/cells/greet/index.ts"
+    },
+    {
+      "crate_name": "src",
+      "file": "src/cells/parse/logic.ts",
+      "item_kind": "export",
+      "line": 21,
+      "symbol": "src/cells/parse/logic.ts::DEVIANT"
+    },
+    {
+      "crate_name": "src",
+      "file": "src/cells/parse/logic.ts",
+      "item_kind": "export",
+      "line": 4,
+      "symbol": "src/cells/parse/logic.ts::parse"
+    }
+  ],
+  "edges": [
+    {
+      "file": "src/cells/greet/index.ts",
+      "from_symbol": "src/cells/greet/index.ts",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://fixture/PROP-001#cell-greet",
+      "verb": "implements"
+    },
+    {
+      "file": "src/cells/parse/logic.ts",
+      "from_symbol": "src/cells/parse/logic.ts::DEVIANT",
+      "line": 21,
+      "provenance": "authored",
+      "uri": "spec://fixture/PROP-001#req-parse",
+      "verb": "deviates",
+      "reason": "fixture-recorded deviation"
+    },
+    {
+      "file": "src/cells/parse/logic.ts",
+      "from_symbol": "src/cells/parse/logic.ts::parse",
+      "line": 4,
+      "provenance": "authored",
+      "uri": "spec://fixture/PROP-001#req-parse",
+      "verb": "implements"
+    }
+  ],
+  "schema": 2,
+  "spec_units": [
+    {
+      "anchor": "root",
+      "content_hash": "sha256:0309f092cbfb21c8835a6e89a7d47347f1adbee7627d9125239902441b101d0f",
+      "doc_path": "PROP-001",
+      "file": "spec/PROP-001.md",
+      "heading": "PROP-001 — the fixture spec",
+      "line": 1,
+      "uri": "spec://fixture/PROP-001#root"
+    },
+    {
+      "anchor": "req-parse",
+      "content_hash": "sha256:a71911c94b515a8e41d68bfe386f21b38e3348382d00462a8ccfa256e093c5fc",
+      "doc_path": "PROP-001",
+      "file": "spec/PROP-001.md",
+      "heading": "Parse",
+      "line": 3,
+      "uri": "spec://fixture/PROP-001#req-parse",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "cell-greet",
+      "content_hash": "sha256:3998b91f679c5ab913ecaf083eeee49b87cb97761b29a6d3f5b306bceca49b2b",
+      "doc_path": "PROP-001",
+      "file": "spec/PROP-001.md",
+      "heading": "The greet cell",
+      "line": 8,
+      "uri": "spec://fixture/PROP-001#cell-greet",
+      "kind": "req",
+      "revision": 1
+    }
+  ],
+  "suspects": [],
+  "warnings": []
+}

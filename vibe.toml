@@ -8,6 +8,7 @@ authors = ["Oleg Chirukhin"]
 "stack:org.vibevm/rust-ai-native" = "^0.5.0"
 "stack:org.vibevm/typescript-ai-native" = "^0.4.0"
 "mcp:org.vibevm/discipline-rust" = "^0.5.0"
+"mcp:org.vibevm/discipline-typescript" = "^0.4.0"
 
 # vibevm is its own bootstrap project — the tool itself, not yet a
 # consumer of any other vibevm registry. The `[[registry]]` blocks
