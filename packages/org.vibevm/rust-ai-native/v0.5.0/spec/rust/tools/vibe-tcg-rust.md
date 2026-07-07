@@ -1,23 +1,25 @@
-# Tool Spec (high-level): `vibe-tcg` — Type-Aware Constrained Generation for Rust
-*Status: vision / component brief for the vibevm tool suite. NOT an implementation plan. Derived from R2C-005 (type-constrained decoding is per-language manual work; no Rust impl exists), DR2-012/DR1-014 (the 74.8% compile-error reduction in TypeScript), and the constrained-decoding ecosystem scan (SynCode, XGrammar-2, IterGen, Mündler PLDI'25).*
+# Tool Spec (high-level): `vibe-tcg-rust` — Type-Aware Constrained Generation for Rust
+*Status: vision / component brief for the vibevm tool suite. NOT an implementation plan. VERY-FAR-FUTURE per the owner's standing disposition (2026-07-07): the decode-loop stages below wait on `vibe-llm` and a local inference substrate, exactly like the TypeScript token-level sibling. Renamed from `vibe-tcg.md` under the D13 language-suffix policy (AGENTIC-TCG-RUST-PLAN v0.1) — the bare name `vibe-tcg` now belongs solely to vibevm's language-generic product crate. Derived from R2C-005 (type-constrained decoding is per-language manual work; no Rust impl exists), DR2-012/DR1-014 (the 74.8% compile-error reduction in TypeScript), and the constrained-decoding ecosystem scan (SynCode, XGrammar-2, IterGen, Mündler PLDI'25).*
 
-> **The agentic precedent (2026-07-07).** The tcg line's AGENTIC delivery
-> shipped first, on TypeScript: a consultation oracle (validate / scope /
-> type-valid completions / quick info over in-memory overlays,
-> discipline-enriched) behind language-parameterised `tcg_*` MCP tools —
-> see the TS stack's `typescript/tools/vibe-agentic-tcg-ts.md` and
-> vibevm's PROP-026. When THIS tool is commissioned, its Stage 2
-> (scope/name constraining on rust-analyzer) has the same agentic
-> analogue — rust-analyzer as the oracle behind the SAME tool family
-> (a new `language` value, not new surface) — and the decode-loop
-> stages below remain gated on an inference substrate, exactly like the
-> TypeScript token-level sibling.
+> **The agentic sibling SHIPPED (2026-07-07).** The tcg line's AGENTIC
+> delivery exists for BOTH languages: TypeScript first
+> (`typescript/tools/vibe-agentic-tcg-ts.md` in the TS stack), and now
+> Rust — a consultation oracle over the consumer's own rust-analyzer
+> (validate / scope / type-valid completions / quick info over LSP
+> overlays, discipline-enriched in-process by the same conform engine
+> as the gate) behind the SAME language-parameterised `tcg_*` MCP
+> tools — see [`vibe-agentic-tcg-rust.md`](vibe-agentic-tcg-rust.md)
+> and vibevm's PROP-026. That delivery is this brief's Stage 2 made
+> consultable instead of masking; the decode-loop stages below remain
+> gated on an inference substrate. The far-backlogged `ra_ap_*`
+> embedding (vibevm ROADMAP.md, Far backlog) is the capability upgrade
+> both the agentic line and a future masker would share.
 
 ## 1. What problem it solves
 
-LLMs emit Rust that fails to compile; per the PLDI'25 evidence, ~94% of compile errors are TYPE errors, not syntax — and only ~6% are syntactic. Pure grammar/CFG constraining (mature: SynCode, XGrammar-2) catches the 6% and leaves the 94%. The gap for Rust specifically: no type-aware constrained-generation tool exists (the PLDI'25 authors built it only for a TypeScript subset and state plainly it must be re-implemented per language). `vibe-tcg` is that missing tool for Rust, delivered as a vibevm component so the swarm's weak agents generate well-typed Rust by construction rather than by retry.
+LLMs emit Rust that fails to compile; per the PLDI'25 evidence, ~94% of compile errors are TYPE errors, not syntax — and only ~6% are syntactic. Pure grammar/CFG constraining (mature: SynCode, XGrammar-2) catches the 6% and leaves the 94%. The gap for Rust specifically: no type-aware constrained-generation tool exists (the PLDI'25 authors built it only for a TypeScript subset and state plainly it must be re-implemented per language). `vibe-tcg-rust` is that missing tool for Rust, delivered as a vibevm component so the swarm's weak agents generate well-typed Rust by construction rather than by retry.
 
-**Strategic placement in the scaffold catalog:** this is the generation-time complement to the post-generation `cargo check` loop (Class E). The loop catches errors AFTER a full generation; `vibe-tcg` prevents a class of them DURING generation. Both are wanted; the loop is buildable today, `vibe-tcg` is the harder, higher-leverage bet for the weak-agent swarm (DR1-015: constraints help weak models most).
+**Strategic placement in the scaffold catalog:** this is the generation-time complement to the post-generation `cargo check` loop (Class E). The loop catches errors AFTER a full generation; `vibe-tcg-rust` prevents a class of them DURING generation. Both are wanted; the loop is buildable today, `vibe-tcg-rust` is the harder, higher-leverage bet for the weak-agent swarm (DR1-015: constraints help weak models most).
 
 ## 2. Design stance (consequences of what we read)
 
@@ -57,7 +59,7 @@ LLMs emit Rust that fails to compile; per the PLDI'25 evidence, ~94% of compile 
 - **Transfer unproven:** the 74.8% is TypeScript. Rust's richer types may yield smaller gains, or the per-completion analyzer latency may make Stage 3 impractical for interactive generation. Measure at Stage 2 before committing to Stage 3.
 - **rust-analyzer was built for IDEs, not decoding loops:** query latency and partial-file analysis under a half-written buffer may need work; rust-analyzer's tolerance for incomplete code is an asset here but its per-query cost in a tight decode loop is the open engineering risk.
 - **Over-constraint can hurt strong models (DR1-015: Hermes-4-405B dropped 92.5%→35.0%).** The tool must be CAPABILITY-ROUTED: on for the weak swarm, optional/off for strong authors. A profile that helps Qwen-32B may distort Opus.
-- **It does not fix semantics, only well-typedness:** well-typed wrong code still compiles. `vibe-tcg` is necessary-not-sufficient; it pairs with Class C/D oracles (contracts, differential tests) that check INTENT, not just types. (The CITYWALK false-positive trap, DR2-012 caveat.)
+- **It does not fix semantics, only well-typedness:** well-typed wrong code still compiles. `vibe-tcg-rust` is necessary-not-sufficient; it pairs with Class C/D oracles (contracts, differential tests) that check INTENT, not just types. (The CITYWALK false-positive trap, DR2-012 caveat.)
 
 ## 7. One-line summary
-`vibe-tcg` makes a weak agent generate well-typed, discipline-conformant Rust *by construction* — by masking each completion to rust-analyzer-validated continuations under a constraint profile compiled from the AI-Native Rust guide — standing on rust-analyzer rather than reimplementing the type system, and routed by capability so it lifts the swarm without distorting strong authors.
+`vibe-tcg-rust` makes a weak agent generate well-typed, discipline-conformant Rust *by construction* — by masking each completion to rust-analyzer-validated continuations under a constraint profile compiled from the AI-Native Rust guide — standing on rust-analyzer rather than reimplementing the type system, and routed by capability so it lifts the swarm without distorting strong authors.

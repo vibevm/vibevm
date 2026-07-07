@@ -8,13 +8,24 @@ comes from its dependency `flow:org.vibevm/discipline-core`.
 
 ## What ships
 
-- **Three binaries** (this package's own Cargo workspace, `crates/`):
+- **Four binaries** (this package's own Cargo workspace, `crates/`;
+  crate names carry the `-rust` suffix per the GUIDE §2 language-suffix
+  rule):
   - `discipline-rust` — the umbrella tool: `init` (bootstrap policies +
     registries), `floor` (the portable verification floor), `conform`,
     `specmap`, `trace`, `test-gate`, `tripwire`, `health`, `fast-loop`,
     `codemod`.
   - `conform-rust` — the conformance gate alone (ENGINE-CONFORM).
   - `specmap-rust` — the traceability engine alone (PROP-014).
+  - `tcg-rust` — the agentic type oracle (TCG-ORACLE-RUST /
+    TCG-PROTOCOL-RUST): a persistent enriching `serve` relay for MCP
+    hosts plus one-shot `validate` / `scope` / `complete` / `type` /
+    `bench`, answered by the CONSUMER's own rust-analyzer over
+    in-memory overlays with the gate's own conform rules merged in.
+    **Prerequisite:** installing this stack obliges the machine to
+    carry rust-analyzer (`rustup component add rust-analyzer`).
+    Honesty: rust-analyzer is not rustc — the oracle shortens the
+    distance to green; `discipline-rust floor` stays the truth.
 - **The Rust guide and cards** (`spec/rust/GUIDE-AI-NATIVE-RUST.md`,
   `spec/cards/` — the nine scaffolds in their Rust shape, Band-3 ops
   blocks for weak readers).
@@ -47,7 +58,7 @@ cargo run --manifest-path vibedeps/<stack-slot>/Cargo.toml \
 ```
 
 `<stack-slot>` is this package's materialised directory (e.g.
-`stack-rust-ai-native/0.4.0` — check your `vibe.lock`). Building in the
+`stack-rust-ai-native/0.5.0` — check your `vibe.lock`). Building in the
 slot drops a `target/` there; add `vibedeps/**/target/` to your
 `.gitignore` (build output is already excluded from the package's content
 hash, PROP-024 §2.2).

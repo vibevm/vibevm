@@ -93,3 +93,25 @@ Resume pointer: **with a WAL** — bump its standing line at any milestone
 move; **without** — the closing commit message carries the summary (floor
 state, items taken, next candidate). Never leave the sweep's state only in
 this conversation.
+
+## The generation-time assistant (before you edit, not instead of the floor)
+
+The stack ships an agentic type oracle. Before writing a nontrivial `.rs`
+edit, check the HYPOTHETICAL content instead of paying a red floor
+iteration:
+
+```sh
+vibe bin exec tcg-rust -- validate src/cells/<cell>.rs \
+    --content-from - --root .   # the edit on stdin; exit 1 = would fail
+```
+
+or, when the vibevm MCP server is mounted, call `tcg_validate` with
+`language: "rust"` and the `content` argument (plus `tcg_scope` /
+`tcg_complete` / `tcg_type` for in-scope symbols, type-valid
+completions, and quick info). Responses carry the SAME conform findings
+as the gate, flagged `baselined` or new, with guide-citing advice — a
+new finding in the answer means the floor WILL go red if you write that
+edit. Prerequisite: rust-analyzer on the machine (`rustup component add
+rust-analyzer` — a stack obligation). Honesty: the oracle is
+rust-analyzer, not rustc; a clean answer shortens the distance to
+green, and the floor stays the truth (TCG-ORACLE-RUST §5).
