@@ -66,6 +66,7 @@ pub fn package_kind(kind: CorePackageKind) -> PackageKind {
         CorePackageKind::Feat => PackageKind::Feat,
         CorePackageKind::Stack => PackageKind::Stack,
         CorePackageKind::Tool => PackageKind::Tool,
+        CorePackageKind::Mcp => PackageKind::Mcp,
     }
 }
 

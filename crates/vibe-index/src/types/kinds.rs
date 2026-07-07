@@ -23,6 +23,10 @@ pub enum PackageKind {
     Feat,
     Stack,
     Tool,
+    /// The agent-server kind (VIBEVM-SPEC §4.1, PROP-027) — mirrored
+    /// from `vibe-core` like the other four; the parity test below
+    /// keeps the copies honest.
+    Mcp,
 }
 
 impl PackageKind {
@@ -32,6 +36,7 @@ impl PackageKind {
             PackageKind::Feat => "feat",
             PackageKind::Stack => "stack",
             PackageKind::Tool => "tool",
+            PackageKind::Mcp => "mcp",
         }
     }
 
@@ -41,6 +46,7 @@ impl PackageKind {
             PackageKind::Feat,
             PackageKind::Stack,
             PackageKind::Tool,
+            PackageKind::Mcp,
         ]
     }
 }
@@ -59,8 +65,9 @@ impl FromStr for PackageKind {
             "feat" => Ok(PackageKind::Feat),
             "stack" => Ok(PackageKind::Stack),
             "tool" => Ok(PackageKind::Tool),
+            "mcp" => Ok(PackageKind::Mcp),
             other => Err(format!(
-                "unknown package kind `{other}` — expected one of: flow, feat, stack, tool"
+                "unknown package kind `{other}` — expected one of: flow, feat, stack, tool, mcp"
             )),
         }
     }

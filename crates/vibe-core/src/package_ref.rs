@@ -32,6 +32,11 @@ pub enum PackageKind {
     Feat,
     Stack,
     Tool,
+    /// An agent-server package: its primary deliverable is one or more
+    /// MCP servers (`[[mcp_server]]`, legal only in this kind),
+    /// delivered as PROP-025 binaries and exact-pinned to the package
+    /// whose toolchain they serve (VIBEVM-SPEC §4.1, PROP-027).
+    Mcp,
 }
 
 impl PackageKind {
@@ -41,14 +46,16 @@ impl PackageKind {
             PackageKind::Feat => "feat",
             PackageKind::Stack => "stack",
             PackageKind::Tool => "tool",
+            PackageKind::Mcp => "mcp",
         }
     }
 
-    pub const ALL: [PackageKind; 4] = [
+    pub const ALL: [PackageKind; 5] = [
         PackageKind::Flow,
         PackageKind::Feat,
         PackageKind::Stack,
         PackageKind::Tool,
+        PackageKind::Mcp,
     ];
 }
 
@@ -67,6 +74,7 @@ impl FromStr for PackageKind {
             "feat" => Ok(PackageKind::Feat),
             "stack" => Ok(PackageKind::Stack),
             "tool" => Ok(PackageKind::Tool),
+            "mcp" => Ok(PackageKind::Mcp),
             other => Err(Error::BadPackageKind(other.to_owned())),
         }
     }
@@ -341,6 +349,32 @@ impl VersionSpec {
         match self {
             VersionSpec::Latest => true,
             VersionSpec::Req(req) => req.matches(version),
+        }
+    }
+
+    /// `true` iff this spec pins one exact `major.minor.patch` version
+    /// (`=X.Y.Z`) — the only requirement shape an `mcp`-kind package may
+    /// place on its package dependencies (PROP-027; VIBEVM-SPEC §4.1):
+    /// the served engines and the consumer's gates must resolve to ONE
+    /// version set, held by the resolver rather than a runtime
+    /// handshake.
+    ///
+    /// ```
+    /// use vibe_core::VersionSpec;
+    ///
+    /// assert!(VersionSpec::parse("=0.6.0").unwrap().is_exact_pin());
+    /// assert!(!VersionSpec::parse("0.6.0").unwrap().is_exact_pin()); // caret
+    /// assert!(!VersionSpec::parse("=0.6").unwrap().is_exact_pin()); // partial
+    /// assert!(!VersionSpec::parse(">=0.6.0, <0.7").unwrap().is_exact_pin());
+    /// assert!(!VersionSpec::Latest.is_exact_pin());
+    /// ```
+    pub fn is_exact_pin(&self) -> bool {
+        let VersionSpec::Req(req) = self else {
+            return false;
+        };
+        req.comparators.len() == 1 && {
+            let c = &req.comparators[0];
+            c.op == semver::Op::Exact && c.minor.is_some() && c.patch.is_some()
         }
     }
 }

@@ -1,0 +1,23 @@
+[package]
+name = "pin-server"
+group = "org.vibevm"
+kind = "mcp"
+version = "0.1.0"
+authors = ["vibevm test fixtures"]
+license = "EULA"
+description = "The mcp-kind fixture: one stub server, exact-pinned to pin-stack (PROP-027)"
+keywords = ["test", "fixture", "mcp"]
+
+[requires.packages]
+"stack:org.vibevm/pin-stack" = "=0.1.0"
+
+[[binary]]
+name = "pin-server-mcp"
+crate = "crates/pin-server-mcp"
+description = "stub stdio server for hermetic mcp-kind tests"
+
+[[mcp_server]]
+name = "pin-server"
+binary = "pin-server-mcp"
+description = "the fixture server (never actually spoken to in hermetic tests)"
+args = ["--path", "{project_root}"]

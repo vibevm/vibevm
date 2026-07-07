@@ -48,7 +48,7 @@ pub struct InitArgs {
 
 #[derive(Debug, clap::Args)]
 pub struct ListArgs {
-    /// Filter by package kind (flow, feat, stack, tool).
+    /// Filter by package kind (flow, feat, stack, tool, mcp).
     #[arg(long)]
     pub kind: Option<String>,
 

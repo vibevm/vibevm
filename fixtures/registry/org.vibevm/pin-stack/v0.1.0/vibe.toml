@@ -1,0 +1,9 @@
+[package]
+name = "pin-stack"
+group = "org.vibevm"
+kind = "stack"
+version = "0.1.0"
+authors = ["vibevm test fixtures"]
+license = "EULA"
+description = "Stack fixture served by the pin-server mcp fixture; the version its =0.1.0 pin must select"
+keywords = ["test", "fixture", "mcp", "pin"]
