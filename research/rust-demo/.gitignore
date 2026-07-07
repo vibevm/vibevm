@@ -1,0 +1,8 @@
+# Materialised package slots — reproducible from vibe.toml:
+#   vibe install --registry ../../packages --assume-yes
+vibedeps/
+.vibe/
+
+# Build output (also the conform fact cache and the tcg oracle's
+# materialised artifacts live under target/).
+target/

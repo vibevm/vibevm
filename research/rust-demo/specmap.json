@@ -1,0 +1,255 @@
+{
+  "code_items": [
+    {
+      "crate_name": "rust-demo",
+      "file": "crates/rust-demo/src/lib.rs",
+      "item_kind": "mod",
+      "line": 6,
+      "symbol": "rust_demo"
+    },
+    {
+      "crate_name": "rust-demo",
+      "file": "crates/rust-demo/src/cells.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "rust_demo::cells"
+    },
+    {
+      "crate_name": "rust-demo",
+      "file": "crates/rust-demo/src/cells/farewell.rs",
+      "item_kind": "mod",
+      "line": 4,
+      "symbol": "rust_demo::cells::farewell"
+    },
+    {
+      "crate_name": "rust-demo",
+      "file": "crates/rust-demo/src/cells/farewell.rs",
+      "item_kind": "fn",
+      "line": 10,
+      "symbol": "rust_demo::cells::farewell::farewell"
+    },
+    {
+      "crate_name": "rust-demo",
+      "file": "crates/rust-demo/src/cells/greeting.rs",
+      "item_kind": "mod",
+      "line": 5,
+      "symbol": "rust_demo::cells::greeting"
+    },
+    {
+      "crate_name": "rust-demo",
+      "file": "crates/rust-demo/src/cells/greeting.rs",
+      "item_kind": "struct",
+      "line": 13,
+      "symbol": "rust_demo::cells::greeting::GuestName"
+    },
+    {
+      "crate_name": "rust-demo",
+      "file": "crates/rust-demo/src/cells/greeting.rs",
+      "item_kind": "enum",
+      "line": 34,
+      "symbol": "rust_demo::cells::greeting::ParseError"
+    },
+    {
+      "crate_name": "rust-demo",
+      "file": "crates/rust-demo/src/cells/greeting.rs",
+      "item_kind": "fn",
+      "line": 87,
+      "symbol": "rust_demo::cells::greeting::greet"
+    },
+    {
+      "crate_name": "rust-demo",
+      "file": "crates/rust-demo/src/cells/greeting.rs",
+      "item_kind": "fn",
+      "line": 63,
+      "symbol": "rust_demo::cells::greeting::parse_guest_name"
+    },
+    {
+      "crate_name": "rust-demo",
+      "file": "crates/rust-demo/src/core.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "rust_demo::core"
+    },
+    {
+      "crate_name": "rust-demo",
+      "file": "crates/rust-demo/src/core/text.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "rust_demo::core::text"
+    },
+    {
+      "crate_name": "rust-demo",
+      "file": "crates/rust-demo/src/core/text.rs",
+      "item_kind": "fn",
+      "line": 7,
+      "symbol": "rust_demo::core::text::normalise"
+    }
+  ],
+  "edges": [
+    {
+      "file": "crates/rust-demo/src/lib.rs",
+      "from_symbol": "rust_demo",
+      "line": 6,
+      "provenance": "authored",
+      "uri": "spec://rust-demo/PROP-001#root",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/rust-demo/src/cells.rs",
+      "from_symbol": "rust_demo::cells",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://rust-demo/PROP-001#root",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/rust-demo/src/cells/farewell.rs",
+      "from_symbol": "rust_demo::cells::farewell",
+      "line": 4,
+      "provenance": "authored",
+      "uri": "spec://rust-demo/PROP-001#cell-farewell",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/rust-demo/src/cells/farewell.rs",
+      "from_symbol": "rust_demo::cells::farewell::farewell",
+      "line": 18,
+      "provenance": "authored",
+      "uri": "spec://rust-demo/PROP-001#cell-farewell",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/rust-demo/src/cells/greeting.rs",
+      "from_symbol": "rust_demo::cells::greeting",
+      "line": 5,
+      "provenance": "authored",
+      "uri": "spec://rust-demo/PROP-001#cell-greeting",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/rust-demo/src/cells/greeting.rs",
+      "from_symbol": "rust_demo::cells::greeting::GuestName",
+      "line": 25,
+      "provenance": "authored",
+      "uri": "spec://rust-demo/PROP-001#req-guest-name",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/rust-demo/src/cells/greeting.rs",
+      "from_symbol": "rust_demo::cells::greeting::ParseError",
+      "line": 42,
+      "provenance": "authored",
+      "uri": "spec://rust-demo/PROP-001#req-guest-name",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/rust-demo/src/cells/greeting.rs",
+      "from_symbol": "rust_demo::cells::greeting::greet",
+      "line": 95,
+      "provenance": "authored",
+      "uri": "spec://rust-demo/PROP-001#req-greet",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/rust-demo/src/cells/greeting.rs",
+      "from_symbol": "rust_demo::cells::greeting::parse_guest_name",
+      "line": 71,
+      "provenance": "authored",
+      "uri": "spec://rust-demo/PROP-001#req-guest-name",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/rust-demo/src/core.rs",
+      "from_symbol": "rust_demo::core",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://rust-demo/PROP-001#cell-text",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/rust-demo/src/core/text.rs",
+      "from_symbol": "rust_demo::core::text",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://rust-demo/PROP-001#cell-text",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/rust-demo/src/core/text.rs",
+      "from_symbol": "rust_demo::core::text::normalise",
+      "line": 15,
+      "provenance": "authored",
+      "uri": "spec://rust-demo/PROP-001#cell-text",
+      "verb": "implements"
+    }
+  ],
+  "schema": 2,
+  "spec_units": [
+    {
+      "anchor": "root",
+      "content_hash": "sha256:417f1a288e4f29fb19342b93274d0854af14e8ab49371fc9ebd68dbbf58f7f86",
+      "doc_path": "PROP-001",
+      "file": "spec/PROP-001.md",
+      "heading": "PROP-001 — the demo contract",
+      "line": 1,
+      "uri": "spec://rust-demo/PROP-001#root"
+    },
+    {
+      "anchor": "req-guest-name",
+      "content_hash": "sha256:5c40cd41f3fded0f77dc30f7ac7d7e85396def1418343c3068a0bee0cb515ef5",
+      "doc_path": "PROP-001",
+      "file": "spec/PROP-001.md",
+      "heading": "A guest name is a validated newtype",
+      "line": 9,
+      "uri": "spec://rust-demo/PROP-001#req-guest-name",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "req-greet",
+      "content_hash": "sha256:eae599dc810bcb4cbffa539358327310b1586c39a3b93c62b1d98a8c528463bd",
+      "doc_path": "PROP-001",
+      "file": "spec/PROP-001.md",
+      "heading": "Greeting is total over valid names",
+      "line": 23,
+      "uri": "spec://rust-demo/PROP-001#req-greet",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "cell-greeting",
+      "content_hash": "sha256:20dd1924c3877138bd8d83d92976e059db5143fe64d49a7be75eb9eb0c85200b",
+      "doc_path": "PROP-001",
+      "file": "spec/PROP-001.md",
+      "heading": "The greeting cell",
+      "line": 32,
+      "uri": "spec://rust-demo/PROP-001#cell-greeting",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "cell-farewell",
+      "content_hash": "sha256:c80d620731c16748f82dbf8e959e1816654ca5086c9708c156289cd0fd5d1a9d",
+      "doc_path": "PROP-001",
+      "file": "spec/PROP-001.md",
+      "heading": "The farewell cell",
+      "line": 41,
+      "uri": "spec://rust-demo/PROP-001#cell-farewell",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "cell-text",
+      "content_hash": "sha256:2d3219025037eb6a55f831e2aecfe4b21f39a8b669102e1ba98c1d3d33f2ccd6",
+      "doc_path": "PROP-001",
+      "file": "spec/PROP-001.md",
+      "heading": "Core text utilities",
+      "line": 48,
+      "uri": "spec://rust-demo/PROP-001#cell-text",
+      "kind": "req",
+      "revision": 1
+    }
+  ],
+  "suspects": [],
+  "warnings": []
+}

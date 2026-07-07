@@ -1,0 +1,21 @@
+[project]
+name = "rust-demo"
+version = "0.1.0"
+authors = ["Oleg Chirukhin"]
+
+[requires.packages]
+"stack:org.vibevm/rust-ai-native" = "^0.5.0"
+
+# Install from the in-repo registry:
+#   vibe install --registry ../../packages --assume-yes
+# The [[registry]] blocks below are the standard defaults; the local
+# --registry flag overrides them for the offline dev walk.
+
+[[registry]]
+name = "vibespecs"
+url = "https://github.com/vibespecs"
+
+[[registry]]
+name = "vibespecs-gitverse"
+url = "https://gitverse.ru/vibespecs"
+naming = "name"

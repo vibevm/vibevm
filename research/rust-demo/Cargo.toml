@@ -1,0 +1,28 @@
+# rust-demo — the committed Rust consumer testbed (AGENTIC-TCG-RUST-PLAN
+# v0.1, Phase 2): a real vibe project that installs the rust-ai-native
+# stack from the in-repo registry and keeps the full discipline floor
+# green. Deliberately dependency-light so rust-analyzer's cold init on
+# this tree stays in the seconds class (TCG-ORACLE-RUST §8).
+#
+# Layout note (a Phase-2 walk finding): the crates/ workspace shape is
+# deliberate. The conform engine's tree invariant cannot yet name a
+# gated crate under a bare `roots = ["."]` single-crate layout (the
+# validator derives no name from a `.` literal while the scanner does —
+# a recorded discipline-core defect, owner-court); the one-member
+# workspace is the supported consumer shape and matches the package's
+# own fresh-project fixture.
+#
+# The exclude keeps cargo out of the materialised slot tree: the
+# packages are their own Cargo workspaces (PROP-024 §2.4 — the standing
+# consumer lesson).
+[workspace]
+resolver = "3"
+members = ["crates/rust-demo"]
+exclude = ["vibedeps"]
+
+[workspace.dependencies]
+# The inert #[spec]/scope! tags this project's code carries (GUIDE §13
+# move 3) — the shipped proc-macro, consumed from the materialised slot.
+specmark = { path = "vibedeps/stack-rust-ai-native/0.5.0/crates/vendor/specmark" }
+# One thiserror enum per layer; messages cite the violated REQ (GUIDE §4).
+thiserror = "2"
