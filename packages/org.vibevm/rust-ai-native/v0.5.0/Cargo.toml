@@ -10,10 +10,10 @@
 resolver = "3"
 members = [
     "crates/conform-frontend-rust",
-    "crates/conform-cli",
-    "crates/discipline-cli",
+    "crates/conform-cli-rust",
+    "crates/discipline-cli-rust",
     "crates/env-audit",
-    "crates/specmap-cli",
+    "crates/specmap-cli-rust",
     "crates/vendor/conform-core",
     "crates/vendor/specmap-core",
     "crates/vendor/specmark",
@@ -38,9 +38,9 @@ homepage = "https://gitverse.ru/anarchic/vibevm"
 # the fix surface is the authored copy in discipline-core.
 conform-core = { path = "crates/vendor/conform-core" }
 conform-frontend-rust = { path = "crates/conform-frontend-rust" }
-conform-cli = { path = "crates/conform-cli" }
+conform-cli-rust = { path = "crates/conform-cli-rust" }
 specmap-core = { path = "crates/vendor/specmap-core" }
-specmap-cli = { path = "crates/specmap-cli" }
+specmap-cli-rust = { path = "crates/specmap-cli-rust" }
 specmark = { path = "crates/vendor/specmark" }
 specmark-grammar = { path = "crates/vendor/specmark-grammar" }
 

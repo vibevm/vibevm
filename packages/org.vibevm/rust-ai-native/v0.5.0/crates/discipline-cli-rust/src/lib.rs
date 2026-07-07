@@ -1,8 +1,8 @@
-//! `discipline-cli` — the umbrella library behind the `discipline-rust`
+//! `discipline-cli-rust` — the umbrella library behind the `discipline-rust`
 //! binary: bootstrap (`init`), the portable verification floor (`floor`),
 //! and the sweep/brownfield drivers (`test-gate`, `tripwire`, `trace`,
 //! `health`, `fast-loop`, `codemod`) over the engines the sibling crates
-//! ship (`conform-cli`, `specmap-cli`).
+//! ship (`conform-cli-rust`, `specmap-cli-rust`).
 //!
 //! Everything is `root: &Path`-parameterised — no dev-repo assumption
 //! anywhere: the same functions run from the shipped binary in a consumer

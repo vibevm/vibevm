@@ -15,9 +15,9 @@ memory.
 
 All commands below are the shipped toolchain. If `discipline-rust` is not
 on PATH, either install it once —
-`cargo install --path vibedeps/<stack-slot>/crates/discipline-cli` — or run
+`cargo install --path vibedeps/<stack-slot>/crates/discipline-cli-rust` — or run
 it in place: `cargo run --manifest-path vibedeps/<stack-slot>/Cargo.toml -p
-discipline-cli --bin discipline-rust -- <args>`. (A project may also keep
+discipline-cli-rust --bin discipline-rust -- <args>`. (A project may also keep
 its own wrapper, e.g. a dev repo's `cargo xtask` — same engine, either way.)
 
 ## Tier 0 — the hard floor (ALWAYS first)

@@ -150,10 +150,10 @@ run_step "cargo clippy --all-targets (rust-ai-native pkg)" \
 # (a gate not in self-check drifts silently) applied to the packages' traces.
 CORE_DIR="packages/org.vibevm/discipline-core/v0.4.0"
 run_step "specmap-rust --gate (discipline-core pkg self-trace)" \
-  cargo run --quiet --manifest-path "$PKG_MANIFEST" -p specmap-cli --bin specmap-rust -- --gate --path "$CORE_DIR" || OVERALL=$?
+  cargo run --quiet --manifest-path "$PKG_MANIFEST" -p specmap-cli-rust --bin specmap-rust -- --gate --path "$CORE_DIR" || OVERALL=$?
 PKG_DIR="packages/org.vibevm/rust-ai-native/v0.5.0"
 run_step "specmap-rust --gate (rust-ai-native pkg self-trace)" \
-  cargo run --quiet --manifest-path "$PKG_MANIFEST" -p specmap-cli --bin specmap-rust -- --gate --path "$PKG_DIR" || OVERALL=$?
+  cargo run --quiet --manifest-path "$PKG_MANIFEST" -p specmap-cli-rust --bin specmap-rust -- --gate --path "$PKG_DIR" || OVERALL=$?
 
 if [ "$QUIET" -eq 0 ]; then
   if [ "$OVERALL" -eq 0 ]; then

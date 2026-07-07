@@ -35,8 +35,8 @@ struct Cli {
 fn main() -> Result<()> {
     let cli = Cli::parse();
     if cli.gate {
-        specmap_cli::run_gate(&cli.path)
+        specmap_cli_rust::run_gate(&cli.path)
     } else {
-        specmap_cli::run_specmap(&cli.path, cli.check)
+        specmap_cli_rust::run_specmap(&cli.path, cli.check)
     }
 }

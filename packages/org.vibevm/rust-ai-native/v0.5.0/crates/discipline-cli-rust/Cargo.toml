@@ -1,4 +1,4 @@
-# discipline-cli — the umbrella `discipline-rust` binary (PROP-024
+# discipline-cli-rust — the umbrella `discipline-rust` binary (PROP-024
 # code-bearing packages; SELF-SUFFICIENCY-PLAN Phase 3): one shipped entry
 # point for everything the Discipline's procedures run — bootstrap (init),
 # the portable verification floor, the two engines (conform/specmap), and
@@ -6,7 +6,7 @@
 # fast-loop, codemod). The library half is what a project-local wrapper
 # (e.g. a dev repo's task runner) delegates to.
 [package]
-name = "discipline-cli"
+name = "discipline-cli-rust"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -27,9 +27,9 @@ serde_json.workspace = true
 toml.workspace = true
 conform-core.workspace = true
 conform-frontend-rust.workspace = true
-conform-cli.workspace = true
+conform-cli-rust.workspace = true
 specmap-core.workspace = true
-specmap-cli.workspace = true
+specmap-cli-rust.workspace = true
 
 [dev-dependencies]
 tempfile.workspace = true

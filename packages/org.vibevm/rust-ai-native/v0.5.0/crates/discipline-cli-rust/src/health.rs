@@ -77,7 +77,7 @@ impl CrateHealth {
 }
 
 pub fn run_health(root: &Path, out_rel: &str, extra_sections: &[(String, Value)]) -> Result<()> {
-    let (config, _origin) = conform_cli::load_config_or_default(root)?;
+    let (config, _origin) = conform_cli_rust::load_config_or_default(root)?;
     let store = Store::at_repo(root, &config);
     let mut log = ExtractionLog::default();
     let frontend = RustFrontend;

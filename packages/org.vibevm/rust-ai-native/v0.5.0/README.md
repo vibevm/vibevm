@@ -39,11 +39,11 @@ vibe bin build            # or: vibe bin exec discipline-rust -- floor
 vibe bin exec discipline-rust -- floor
 
 # (b) install once onto PATH — then just `discipline-rust …`
-cargo install --path vibedeps/<stack-slot>/crates/discipline-cli
+cargo install --path vibedeps/<stack-slot>/crates/discipline-cli-rust
 
 # (c) zero-install, run in place
 cargo run --manifest-path vibedeps/<stack-slot>/Cargo.toml \
-    -p discipline-cli --bin discipline-rust -- floor
+    -p discipline-cli-rust --bin discipline-rust -- floor
 ```
 
 `<stack-slot>` is this package's materialised directory (e.g.

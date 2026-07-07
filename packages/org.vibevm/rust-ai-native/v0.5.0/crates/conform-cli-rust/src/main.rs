@@ -42,8 +42,8 @@ fn main() -> Result<()> {
     let cli = Cli::parse();
     match cli.command {
         Command::Check { scope } => {
-            conform_cli::run_check(&cli.path, &cli.baseline, scope.as_deref())
+            conform_cli_rust::run_check(&cli.path, &cli.baseline, scope.as_deref())
         }
-        Command::Freeze => conform_cli::run_freeze(&cli.path, &cli.baseline),
+        Command::Freeze => conform_cli_rust::run_freeze(&cli.path, &cli.baseline),
     }
 }

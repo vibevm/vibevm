@@ -73,7 +73,7 @@ enum Command {
     /// (BROWNFIELD §4).
     TestGate {
         /// Path to the baseline registry, project-relative.
-        #[arg(long, default_value = discipline_cli::DEFAULT_TESTS_BASELINE)]
+        #[arg(long, default_value = discipline_cli_rust::DEFAULT_TESTS_BASELINE)]
         baseline: String,
     },
     /// List debt entries whose `touch:` tripwires fire on the current
@@ -84,14 +84,14 @@ enum Command {
         #[arg(long)]
         base: Option<String>,
         /// Path to the debt registry, project-relative.
-        #[arg(long, default_value = discipline_cli::DEFAULT_DEBT_REGISTRY)]
+        #[arg(long, default_value = discipline_cli_rust::DEFAULT_DEBT_REGISTRY)]
         debt: String,
     },
     /// The Discipline health collector (Sweep Playbook §2): advisory
     /// coverage/danger/backlog facts above the binary gates.
     Health {
         /// Where to write the JSON snapshot, project-relative.
-        #[arg(long, default_value = discipline_cli::DEFAULT_HEALTH_OUT)]
+        #[arg(long, default_value = discipline_cli_rust::DEFAULT_HEALTH_OUT)]
         out: String,
     },
     /// The Class-E fast-loop checker: every cell builds and tests in
@@ -130,10 +130,10 @@ enum LedgerCmd {
         #[arg(long)]
         check: bool,
         /// The debt registry, project-relative.
-        #[arg(long, default_value = discipline_cli::DEFAULT_DEBT_REGISTRY)]
+        #[arg(long, default_value = discipline_cli_rust::DEFAULT_DEBT_REGISTRY)]
         debt: String,
         /// The intent registry, project-relative.
-        #[arg(long, default_value = discipline_cli::DEFAULT_INTENT_REGISTRY)]
+        #[arg(long, default_value = discipline_cli_rust::DEFAULT_INTENT_REGISTRY)]
         intent: String,
     },
 }
@@ -147,13 +147,13 @@ enum ConformCmd {
         #[arg(long)]
         scope: Option<String>,
         /// The ratchet baseline file, project-relative.
-        #[arg(long, default_value = discipline_cli::DEFAULT_CONFORM_BASELINE)]
+        #[arg(long, default_value = discipline_cli_rust::DEFAULT_CONFORM_BASELINE)]
         baseline: String,
     },
     /// Rewrite the baseline to the current finding set.
     Freeze {
         /// The ratchet baseline file, project-relative.
-        #[arg(long, default_value = discipline_cli::DEFAULT_CONFORM_BASELINE)]
+        #[arg(long, default_value = discipline_cli_rust::DEFAULT_CONFORM_BASELINE)]
         baseline: String,
     },
 }
@@ -202,15 +202,15 @@ fn main() -> Result<()> {
     let root = cli.path;
     match cli.command {
         Command::Init { namespace, force } => {
-            discipline_cli::run_init(&root, &discipline_cli::InitOptions { namespace, force })
+            discipline_cli_rust::run_init(&root, &discipline_cli_rust::InitOptions { namespace, force })
         }
         Command::Floor {
             keep_going,
             quiet,
             fast_loop,
-        } => discipline_cli::run_floor(
+        } => discipline_cli_rust::run_floor(
             &root,
-            &discipline_cli::FloorOptions {
+            &discipline_cli_rust::FloorOptions {
                 keep_going,
                 quiet,
                 fast_loop,
@@ -218,15 +218,15 @@ fn main() -> Result<()> {
         ),
         Command::Conform { cmd } => match cmd {
             ConformCmd::Check { scope, baseline } => {
-                conform_cli::run_check(&root, &baseline, scope.as_deref())
+                conform_cli_rust::run_check(&root, &baseline, scope.as_deref())
             }
-            ConformCmd::Freeze { baseline } => conform_cli::run_freeze(&root, &baseline),
+            ConformCmd::Freeze { baseline } => conform_cli_rust::run_freeze(&root, &baseline),
         },
         Command::Specmap { check, gate } => {
             if gate {
-                specmap_cli::run_gate(&root)
+                specmap_cli_rust::run_gate(&root)
             } else {
-                specmap_cli::run_specmap(&root, check)
+                specmap_cli_rust::run_specmap(&root, check)
             }
         }
         Command::Trace { cmd } => match cmd {
@@ -234,18 +234,18 @@ fn main() -> Result<()> {
                 target,
                 json,
                 prose,
-            } => discipline_cli::run_trace_explain(&root, &target, json, prose),
+            } => discipline_cli_rust::run_trace_explain(&root, &target, json, prose),
         },
-        Command::TestGate { baseline } => discipline_cli::run_test_gate(&root, &baseline),
+        Command::TestGate { baseline } => discipline_cli_rust::run_test_gate(&root, &baseline),
         Command::Tripwire { base, debt } => {
-            discipline_cli::run_tripwire(&root, base.as_deref(), &debt)
+            discipline_cli_rust::run_tripwire(&root, base.as_deref(), &debt)
         }
-        Command::Health { out } => discipline_cli::run_health(&root, &out, &[]),
+        Command::Health { out } => discipline_cli_rust::run_health(&root, &out, &[]),
         Command::FastLoop {
             cell,
             budget,
             enforce_budget,
-        } => discipline_cli::run_fast_loop(&root, cell.as_deref(), budget, enforce_budget),
+        } => discipline_cli_rust::run_fast_loop(&root, cell.as_deref(), budget, enforce_budget),
         Command::Codemod { cmd } => match cmd {
             CodemodCmd::AddCell {
                 crate_dir,
@@ -253,7 +253,7 @@ fn main() -> Result<()> {
                 seam,
                 variant,
                 spec_uri,
-            } => discipline_cli::run_codemod_add_cell(
+            } => discipline_cli_rust::run_codemod_add_cell(
                 &root, &crate_dir, &cell, &seam, &variant, &spec_uri,
             ),
         },
@@ -262,7 +262,7 @@ fn main() -> Result<()> {
                 check,
                 debt,
                 intent,
-            } => discipline_cli::run_ledger_render(&root, &debt, &intent, check),
+            } => discipline_cli_rust::run_ledger_render(&root, &debt, &intent, check),
         },
     }
 }

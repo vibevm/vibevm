@@ -28,17 +28,17 @@ category = "stack"
 # slot; `vibe bin exec <name>` dispatches through the project's lockfile.
 [[binary]]
 name = "discipline-rust"
-crate = "crates/discipline-cli"
+crate = "crates/discipline-cli-rust"
 description = "the umbrella discipline tool: init / floor / conform / specmap / trace / test-gate / tripwire / health / fast-loop / codemod / ledger"
 
 [[binary]]
 name = "conform-rust"
-crate = "crates/conform-cli"
+crate = "crates/conform-cli-rust"
 description = "the standalone conform gate for Rust trees"
 
 [[binary]]
 name = "specmap-rust"
-crate = "crates/specmap-cli"
+crate = "crates/specmap-cli-rust"
 description = "the standalone traceability index + orphan gate for Rust trees"
 
 [[skill]]

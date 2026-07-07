@@ -9,7 +9,7 @@
 
 use std::path::Path;
 
-use discipline_cli::{InitOptions, run_init};
+use discipline_cli_rust::{InitOptions, run_init};
 
 fn write(root: &Path, rel: &str, body: &str) {
     let path = root.join(rel);
@@ -188,7 +188,7 @@ pub fn parse(s: &str) -> i32 {
     );
     let _ = std::fs::remove_file(root.join("crates/app/src/orphan.rs"));
     let _ = std::fs::remove_file(root.join("crates/app/src/uses_mechanism.rs"));
-    let err = conform_cli::run_check(root, discipline_cli::DEFAULT_CONFORM_BASELINE, None)
+    let err = conform_cli_rust::run_check(root, discipline_cli_rust::DEFAULT_CONFORM_BASELINE, None)
         .expect_err("a domain unwrap in a gated crate must fail the gate");
     assert!(
         err.to_string().contains("new finding"),

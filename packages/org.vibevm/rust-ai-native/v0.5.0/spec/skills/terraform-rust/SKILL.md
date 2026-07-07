@@ -16,9 +16,9 @@ data**; **characterization is the truth-of-record**; **monotone utility**.
 Do not bulldoze an inhabited world.
 
 Toolchain: `discipline-rust` (install once:
-`cargo install --path vibedeps/<stack-slot>/crates/discipline-cli`, or run
+`cargo install --path vibedeps/<stack-slot>/crates/discipline-cli-rust`, or run
 via `cargo run --manifest-path vibedeps/<stack-slot>/Cargo.toml -p
-discipline-cli --bin discipline-rust -- <args>`).
+discipline-cli-rust --bin discipline-rust -- <args>`).
 
 ## Phase −1 — inventory (record reality; change nothing)
 

@@ -1,5 +1,5 @@
 [package]
-name = "specmap-cli"
+name = "specmap-cli-rust"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true

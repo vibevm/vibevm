@@ -24,10 +24,10 @@ namespace = "rust-ai-native"
 # copies here would double-count the same tags.
 scan_roots = [
     "crates/conform-frontend-rust",
-    "crates/conform-cli",
-    "crates/discipline-cli",
+    "crates/conform-cli-rust",
+    "crates/discipline-cli-rust",
     "crates/env-audit",
-    "crates/specmap-cli",
+    "crates/specmap-cli-rust",
 ]
 
 # The package's prompt content (guides, cards, boot). Irrelevant to the orphan
@@ -38,17 +38,17 @@ spec_roots = ["spec"]
 root_spec_docs = []
 
 # Crates exempt from the orphan gate:
-#   conform-cli, specmap-cli,
-#   discipline-cli             — CLI driver binaries (the `conform-rust` /
+#   conform-cli-rust, specmap-cli-rust,
+#   discipline-cli-rust             — CLI driver binaries (the `conform-rust` /
 #                                `specmap-rust` / `discipline-rust` entry
 #                                points): drivers, not discipline domain code
 # (specmark + specmark-grammar moved to flow:org.vibevm/discipline-core with
 #  the engine consolidation, DEFERRALS-CLOSEOUT Phase 1; the authored package
 #  exempts the bootstrap pair now.)
 exempt = [
-    "conform-cli",
-    "discipline-cli",
-    "specmap-cli",
+    "conform-cli-rust",
+    "discipline-cli-rust",
+    "specmap-cli-rust",
 ]
 
 dispositioned = []

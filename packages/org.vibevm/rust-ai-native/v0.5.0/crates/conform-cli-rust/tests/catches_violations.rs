@@ -67,7 +67,7 @@ fn write(root: &Path, rel: &str, body: &str) {
 #[test]
 fn catches_a_no_unwrap_violation() {
     let dir = fixture(DIRTY);
-    let err = conform_cli::run_check(dir.path(), "conform-baseline.json", None)
+    let err = conform_cli_rust::run_check(dir.path(), "conform-baseline.json", None)
         .expect_err("a domain unwrap in a gated crate must fail the gate");
     assert!(
         err.to_string().contains("new finding"),
@@ -78,6 +78,6 @@ fn catches_a_no_unwrap_violation() {
 #[test]
 fn passes_a_clean_gated_crate() {
     let dir = fixture(CLEAN);
-    conform_cli::run_check(dir.path(), "conform-baseline.json", None)
+    conform_cli_rust::run_check(dir.path(), "conform-baseline.json", None)
         .expect("a clean gated crate must pass the gate");
 }

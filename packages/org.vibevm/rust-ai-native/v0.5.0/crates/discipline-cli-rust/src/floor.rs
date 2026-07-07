@@ -90,14 +90,14 @@ pub fn run_floor(root: &Path, opts: &FloorOptions) -> Result<()> {
 
     // 4. The conform gate (prints its own policy-origin line).
     header(opts, "conform check");
-    let ok = conform_cli::run_check(root, crate::DEFAULT_CONFORM_BASELINE, None).is_ok();
+    let ok = conform_cli_rust::run_check(root, crate::DEFAULT_CONFORM_BASELINE, None).is_ok();
     if !record(&mut outcomes, "conform", ok) && !opts.keep_going {
         bail!("floor: `conform` failed");
     }
 
     // 5. The specmap check (prints its own policy note when defaulted).
     header(opts, "specmap --check");
-    let ok = specmap_cli::run_specmap(root, true).is_ok();
+    let ok = specmap_cli_rust::run_specmap(root, true).is_ok();
     if !record(&mut outcomes, "specmap", ok) && !opts.keep_going {
         bail!(
             "floor: `specmap` failed (fresh project? run `discipline-rust specmap` once to mint the index)"

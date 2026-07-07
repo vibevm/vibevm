@@ -126,7 +126,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1d07550c9036bf2ae0c684c4297d503f838287c83c53686d05370d0e139ae570"
 
 [[package]]
-name = "conform-cli"
+name = "conform-cli-rust"
 version = "0.5.0"
 dependencies = [
  "anyhow",
@@ -193,16 +193,16 @@ dependencies = [
 ]
 
 [[package]]
-name = "discipline-cli"
+name = "discipline-cli-rust"
 version = "0.5.0"
 dependencies = [
  "anyhow",
  "clap",
- "conform-cli",
+ "conform-cli-rust",
  "conform-core",
  "conform-frontend-rust",
  "serde_json",
- "specmap-cli",
+ "specmap-cli-rust",
  "specmap-core",
  "tempfile",
  "toml",
@@ -439,7 +439,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "specmap-cli"
+name = "specmap-cli-rust"
 version = "0.5.0"
 dependencies = [
  "anyhow",
