@@ -166,6 +166,15 @@ pub enum Command {
     #[command(name = "self")]
     Vvm(VvmArgs),
 
+    /// Build and dispatch the tools installed packages declare via
+    /// `[[binary]]` (PROP-025): `list` the table, `build` (consent-gated)
+    /// into the slot, `path` an artifact, `exec` through the project's
+    /// lockfile — the rustup dispatch model.
+    Bin {
+        #[command(subcommand)]
+        cmd: BinCmd,
+    },
+
     /// Traceability queries over the project's specmap (PROP-014 §2.6) —
     /// a delegating alias: arguments pass through verbatim to the
     /// installed `discipline-rust trace` (the engine ships with the
@@ -186,4 +195,39 @@ pub enum Command {
 
     /// Print version information.
     Version,
+}
+
+/// `vibe bin` subcommands (PROP-025 §4).
+#[derive(clap::Subcommand, Debug)]
+pub enum BinCmd {
+    /// Every `[[binary]]` declared by the project's installed packages,
+    /// with build state and description.
+    List,
+    /// Build the named tools (default: all declared) release-mode in
+    /// their slots. Consent-gated: a non-`org.vibevm` group requires
+    /// `--assume-yes` (the build runs the package's build scripts).
+    Build {
+        /// Binary names; empty builds everything declared.
+        names: Vec<String>,
+        /// Consent to build non-allow-listed groups' code.
+        #[arg(long)]
+        assume_yes: bool,
+    },
+    /// Print the artifact path (non-zero exit when not built).
+    Path {
+        /// The declared binary name.
+        name: String,
+    },
+    /// Resolve through THIS project's lockfile and run the tool,
+    /// building it first if absent. The exit code passes through.
+    #[command(trailing_var_arg = true, allow_hyphen_values = true)]
+    Exec {
+        /// The declared binary name.
+        name: String,
+        /// Consent to build non-allow-listed groups' code.
+        #[arg(long)]
+        assume_yes: bool,
+        /// Arguments handed to the tool unchanged.
+        args: Vec<String>,
+    },
 }

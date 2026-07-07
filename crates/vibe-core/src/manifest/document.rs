@@ -38,9 +38,9 @@ use crate::package_ref::PackageRef;
 
 use super::i18n::I18nDecl;
 use super::package::{
-    BootSnippet, Compatibility, ConditionalTarget, ConflictsList, FeaturesTable, HooksDecl,
-    LinkType, Obsoletes, PackageMeta, Provides, Recommends, Requires, RequiresAny, SkillDecl,
-    Suggests,
+    BinaryDecl, BootSnippet, Compatibility, ConditionalTarget, ConflictsList, FeaturesTable,
+    HooksDecl, LinkType, Obsoletes, PackageMeta, Provides, Recommends, Requires, RequiresAny,
+    SkillDecl, Suggests,
 };
 use super::project::{
     ActiveSection, LlmSection, MirrorSection, OverrideSection, ProjectSection, RegistrySection,
@@ -117,6 +117,13 @@ pub struct Manifest {
     /// kind can carry skills (package-role).
     #[serde(default, rename = "skill", skip_serializing_if = "Vec::is_empty")]
     pub skills: Vec<SkillDecl>,
+
+    /// `[[binary]]` — runnable tools this code-bearing package ships,
+    /// built in the slot and dispatched by `vibe bin` (PROP-025).
+    /// Package-role; any kind may carry them (PROP-024 applies to flows
+    /// as it does to stacks).
+    #[serde(default, rename = "binary", skip_serializing_if = "Vec::is_empty")]
+    pub binaries: Vec<BinaryDecl>,
 
     /// `[hooks]` — pre/post-install scripts this package runs in its slot
     /// (PROP-020). Universal, not bridge-only (package-role).
@@ -362,6 +369,9 @@ impl Manifest {
             }
             if !self.skills.is_empty() {
                 offenders.push("[[skill]]");
+            }
+            if !self.binaries.is_empty() {
+                offenders.push("[[binary]]");
             }
             if !self.hooks.is_empty() {
                 offenders.push("[hooks]");

@@ -158,6 +158,26 @@ fn main() -> ExitCode {
             ];
             commands::vars::run(args, rows)
         }
+        Command::Bin { cmd } => {
+            let cwd = std::env::current_dir().unwrap_or_else(|_| ".".into());
+            match cmd {
+                cli::BinCmd::List => commands::bin::run_list(&cwd),
+                cli::BinCmd::Build { names, assume_yes } => {
+                    commands::bin::run_build(&cwd, &names, assume_yes)
+                }
+                cli::BinCmd::Path { name } => commands::bin::run_path(&cwd, &name),
+                cli::BinCmd::Exec {
+                    name,
+                    assume_yes,
+                    args,
+                } => match commands::bin::run_exec(&cwd, &name, &args, assume_yes) {
+                    Ok(code) => {
+                        return ExitCode::from(u8::try_from(code.clamp(0, 255)).unwrap_or(1));
+                    }
+                    Err(err) => Err(err),
+                },
+            }
+        }
         Command::Trace { args } => match commands::trace::run(&args) {
             Ok(code) => {
                 return ExitCode::from(u8::try_from(code.clamp(0, 255)).unwrap_or(1));

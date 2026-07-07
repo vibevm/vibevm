@@ -31,6 +31,7 @@ use crate::package_ref::{Group, PackageKind, PackageRef, VersionSpec};
 
 use super::purl::Purl;
 
+mod binary;
 mod deps;
 mod features;
 mod hooks;
@@ -39,6 +40,7 @@ mod weak_deps;
 mod when;
 mod wire;
 
+pub use binary::BinaryDecl;
 pub use deps::{GitPackageDep, GitRefKind, PathPackageDep, VarRegistryDep};
 pub use features::FeaturesTable;
 pub use hooks::HooksDecl;
