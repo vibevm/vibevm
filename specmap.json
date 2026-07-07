@@ -4601,7 +4601,7 @@
       "from_symbol": "vibe_cli::commands::trace",
       "line": 9,
       "provenance": "authored",
-      "uri": "spec://discipline-core/mechanisms/PROP-014#index",
+      "uri": "spec://core-ai-native/mechanisms/PROP-014#index",
       "verb": "implements"
     },
     {
@@ -5158,7 +5158,7 @@
       "from_symbol": "vibe_cli::commands::workspace::publish::node_abs_dir",
       "line": 492,
       "provenance": "authored",
-      "uri": "spec://discipline-core/mechanisms/ENGINE-CONFORM-v0.1#rules",
+      "uri": "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
       "verb": "deviates",
       "reason": "no-unwrap-in-domain: a PublishNode is built from the workspace's own membership, so its rel_path always names a member; member_by_rel_path cannot miss here, and threading a Result would carry a None the plan construction excludes through every node_abs_dir caller"
     },
@@ -5207,7 +5207,7 @@
       "from_symbol": "vibe_cli::promote_user_config_env",
       "line": 221,
       "provenance": "authored",
-      "uri": "spec://discipline-core/mechanisms/ENGINE-CONFORM-v0.1#rules",
+      "uri": "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
       "verb": "deviates",
       "reason": "unsafe-gate: startup env promotion runs at the top of main, before the dispatcher and before any thread exists — set_var's race is with concurrent readers, and none can be observing yet; the env-audit crate is test infrastructure and a mutate-anytime safe production API would advertise soundness it cannot prove"
     },
@@ -6095,7 +6095,7 @@
       "from_symbol": "vibe_index::cli::stop::run",
       "line": 25,
       "provenance": "authored",
-      "uri": "spec://discipline-core/mechanisms/ENGINE-CONFORM-v0.1#rules",
+      "uri": "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
       "verb": "deviates",
       "reason": "unsafe-gate: libc::kill is unsafe by FFI ABI, not by memory — a (pid, SIGTERM) value pair crosses the boundary, no pointers; the pid comes from the server lockfile and a stale one yields ESRCH, which the operator-facing message already covers"
     },
@@ -7244,7 +7244,7 @@
       "from_symbol": "vibe_publish::redirect_sync::build_target_fetch_url",
       "line": 245,
       "provenance": "authored",
-      "uri": "spec://discipline-core/mechanisms/ENGINE-CONFORM-v0.1#rules",
+      "uri": "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
       "verb": "deviates",
       "reason": "ambient-env: the target token env-var name is discovered at runtime from the stub's `vibe-redirect.toml` (`token_env`, or a host-derived default), so the read cannot move to a composition root that has not yet read the marker"
     },
@@ -7285,7 +7285,7 @@
       "from_symbol": "vibe_registry::CachedPackage::package_meta",
       "line": 261,
       "provenance": "authored",
-      "uri": "spec://discipline-core/mechanisms/ENGINE-CONFORM-v0.1#rules",
+      "uri": "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
       "verb": "deviates",
       "reason": "no-unwrap-in-domain: every CachedPackage construction site guards manifest.package.is_some() before building the struct, so the accessor's expect is a checked invariant; returning Result would force every reader of an already-validated package through error plumbing for a state the constructors exclude"
     },
@@ -7392,7 +7392,7 @@
       "from_symbol": "vibe_registry::git_package_registry::fetch::GitPackageRegistry::fetch_with_expected_hash",
       "line": 266,
       "provenance": "authored",
-      "uri": "spec://discipline-core/mechanisms/ENGINE-CONFORM-v0.1#rules",
+      "uri": "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
       "verb": "deviates",
       "reason": "no-unwrap-in-domain: primary_err is Some whenever the source loop exhausts — the primary URL exists by package_urls' type and its failure is recorded before any continue; lifting the primary out of the loop (the try_lookup shape) would duplicate the three-step per-source body this fn shares between primary and mirrors"
     },
@@ -7823,7 +7823,7 @@
       "from_symbol": "vibe_resolver::activation::command_resolves_on_path",
       "line": 260,
       "provenance": "authored",
-      "uri": "spec://discipline-core/mechanisms/ENGINE-CONFORM-v0.1#rules",
+      "uri": "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
       "verb": "deviates",
       "reason": "ambient-env: the `if_command` activation channel (PROP-003 §2.5.2) resolves a command against PATH — reading `PATH` is the predicate's definition, inherent-env domain, not config a composition root could thread in ahead of the user's `[activation]` rule"
     },
@@ -9058,7 +9058,7 @@
   "spec_units": [
     {
       "anchor": "root",
-      "content_hash": "sha256:4a7ea451fc5da9dc0ff16f31b3b5be0bbff613cae2cddf22b51ad3164646a574",
+      "content_hash": "sha256:1d93010434353ca6fd804eca1c66565328739966584ba1ae3919bf5688440b64",
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "vibevm: A Software Project Manager for Spec-Driven Development with AI Agents",
@@ -9220,7 +9220,7 @@
     },
     {
       "anchor": "core-terminology",
-      "content_hash": "sha256:6bea1b196f665bfa21eb17dd23c9951e6a8e4646463e985ab7f36d2e6132bcf9",
+      "content_hash": "sha256:138a1b2d6c8bf0352705baedc75d44460c57f3c5cf8a129efaae47986a8a125c",
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "Section 4. Core terminology",
@@ -9229,7 +9229,7 @@
     },
     {
       "anchor": "four-installable-kinds",
-      "content_hash": "sha256:d682c3f48f21853134c3d1f323f1cb4074ac4f750f8ef2db1e1d81ae0ade43a3",
+      "content_hash": "sha256:ed1bf7bfca7dbdac7eba968b50d4a1dc5e29722ed25f42009344f3250920878b",
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "4.1 The installable kinds",
@@ -11039,7 +11039,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:3563ba2e48109be44c07cdeab406c108721987c8c2be55a78ecf02a6757fb374",
+      "content_hash": "sha256:af7f82699757a1197040903e4a7fbcb45c4da2872c9f9f297c870fc6b6fae84d",
       "doc_path": "common/PROP-024",
       "file": "spec/common/PROP-024-code-bearing-packages.md",
       "heading": "PROP-024 — Code-bearing packages (a package is a project)",
@@ -11048,7 +11048,7 @@
     },
     {
       "anchor": "motivation",
-      "content_hash": "sha256:d252f77bb124a4a473d41abe9a2f8e54bf5a7c184c9fd2e0d8aaee6857772485",
+      "content_hash": "sha256:05876f73531a23a50ed919f4765cd5392c31faa7fee0c8b463e4eb5dab9cd61b",
       "doc_path": "common/PROP-024",
       "file": "spec/common/PROP-024-code-bearing-packages.md",
       "heading": "1. Motivation",
@@ -11057,7 +11057,7 @@
     },
     {
       "anchor": "problem",
-      "content_hash": "sha256:9f7bae20e70a13d1bb0b17b76f4d0df5de591503d31093dd4446b82660e57c3c",
+      "content_hash": "sha256:83a751b9f7b17a33bba599ce3533a6d838bda6b650a1b010af47438a05104109",
       "doc_path": "common/PROP-024",
       "file": "spec/common/PROP-024-code-bearing-packages.md",
       "heading": "1.1 The problem — a package can describe a tool but not ship one",
@@ -11075,7 +11075,7 @@
     },
     {
       "anchor": "decisions",
-      "content_hash": "sha256:ed7ca89b76e8edfc506bc2eed1b4c5b117dbe4bcb24e39abf803c3a3b7047905",
+      "content_hash": "sha256:d31ee365d09b9f9345045b8b893e477313d151d7fea94eb2ea9b98aa2ec74b90",
       "doc_path": "common/PROP-024",
       "file": "spec/common/PROP-024-code-bearing-packages.md",
       "heading": "2. Decisions",
@@ -11117,7 +11117,7 @@
     },
     {
       "anchor": "consume",
-      "content_hash": "sha256:981453a1955f9b56232bce04b389b3108db40e8c5fe8a5fcb384c6e06d895315",
+      "content_hash": "sha256:e44249ab2da319421b57dc601da5593aaf93c59b2414380bc3cb971caacaba98",
       "doc_path": "common/PROP-024",
       "file": "spec/common/PROP-024-code-bearing-packages.md",
       "heading": "2.4 Consuming shipped code — external-path-dep, no nested workspace",
@@ -11128,7 +11128,7 @@
     },
     {
       "anchor": "bootstrap",
-      "content_hash": "sha256:33657cd37b26deccf28958fdf0e2d338eef7dd2698386333c15deefb6f3466ac",
+      "content_hash": "sha256:d79f2b458bb7f562d8d1d1615401a59a71b0bcc52be0982f185f81feb36dbb4e",
       "doc_path": "common/PROP-024",
       "file": "spec/common/PROP-024-code-bearing-packages.md",
       "heading": "2.5 Self-hosting bootstrap — the toolchain is vendored",
@@ -11139,7 +11139,7 @@
     },
     {
       "anchor": "placement",
-      "content_hash": "sha256:cfd9531d148024ec84527f154336963d836d0e72b3e58ded4b6d46f5b6fc506b",
+      "content_hash": "sha256:d9ae5951b7094d1c51b2a2d87681f7f500e349bbb7a3518e6ba4fde5d3006b91",
       "doc_path": "common/PROP-024",
       "file": "spec/common/PROP-024-code-bearing-packages.md",
       "heading": "2.6 Placement follows the layer model; the engine split is a follow-up",
@@ -11177,7 +11177,7 @@
     },
     {
       "anchor": "acceptance",
-      "content_hash": "sha256:cf3b41a811367e234eb63e2e896549e06e3dd0a2d13aad337cbb0266664aacd6",
+      "content_hash": "sha256:05f543ff6f8d8d6ecc938514a1049feb0e78260529207a2946640755b38054e1",
       "doc_path": "common/PROP-024",
       "file": "spec/common/PROP-024-code-bearing-packages.md",
       "heading": "6. Acceptance",
@@ -11186,12 +11186,90 @@
     },
     {
       "anchor": "history",
-      "content_hash": "sha256:5461e0c33116bff6b21ab9532793358dd5570cc957f25646288187dac488a1c5",
+      "content_hash": "sha256:dd6df7c83a0a132c38e634fcb93d7746cfca121ffbbbf1470e04394af7b931b2",
       "doc_path": "common/PROP-024",
       "file": "spec/common/PROP-024-code-bearing-packages.md",
       "heading": "7. Version history",
       "line": 314,
       "uri": "spec://vibevm/common/PROP-024#history"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:b56957423d3da5df02a643dc906f6fa689091b2459091172c02466eeea16c8ba",
+      "doc_path": "common/PROP-028",
+      "file": "spec/common/PROP-028-package-families.md",
+      "heading": "PROP-028 — Package families: `<family>` / `-lang` / `-mcp`",
+      "line": 1,
+      "uri": "spec://vibevm/common/PROP-028#root"
+    },
+    {
+      "anchor": "context",
+      "content_hash": "sha256:8fb199d24884c2a587c5d36309153d1a4e0c7c96f1091d50e123e63f4d0685bf",
+      "doc_path": "common/PROP-028",
+      "file": "spec/common/PROP-028-package-families.md",
+      "heading": "1. Context",
+      "line": 19,
+      "uri": "spec://vibevm/common/PROP-028#context"
+    },
+    {
+      "anchor": "decision",
+      "content_hash": "sha256:b943415c40620ddfbddf5679f521c0de83ffc63823745a3a22e2049371c29625",
+      "doc_path": "common/PROP-028",
+      "file": "spec/common/PROP-028-package-families.md",
+      "heading": "2. Decision",
+      "line": 31,
+      "uri": "spec://vibevm/common/PROP-028#decision"
+    },
+    {
+      "anchor": "roles",
+      "content_hash": "sha256:9cf7db8f1235bbdb197dfebc4ac1295240280a90d370a504ab2c727cae790367",
+      "doc_path": "common/PROP-028",
+      "file": "spec/common/PROP-028-package-families.md",
+      "heading": "2.1 Three roles, one family stem",
+      "line": 33,
+      "uri": "spec://vibevm/common/PROP-028#roles",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "versioning",
+      "content_hash": "sha256:dc63239281a24d55092c553752ed349b52b1b921763f4bb63b04354682cbcee5",
+      "doc_path": "common/PROP-028",
+      "file": "spec/common/PROP-028-package-families.md",
+      "heading": "2.2 The version line follows the name, not the role",
+      "line": 57,
+      "uri": "spec://vibevm/common/PROP-028#versioning",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "families",
+      "content_hash": "sha256:be46890fede943d46d6ca45c135c3dcb16e3839b187b6f2747a11ad0cda2bfc6",
+      "doc_path": "common/PROP-028",
+      "file": "spec/common/PROP-028-package-families.md",
+      "heading": "2.3 The families in force",
+      "line": 71,
+      "uri": "spec://vibevm/common/PROP-028#families",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "rejected",
+      "content_hash": "sha256:5c6444dd53d11bb27fdd0d8bc900105009c65064acbd5e95b35088aa05c489f1",
+      "doc_path": "common/PROP-028",
+      "file": "spec/common/PROP-028-package-families.md",
+      "heading": "3. Rejected alternatives",
+      "line": 84,
+      "uri": "spec://vibevm/common/PROP-028#rejected"
+    },
+    {
+      "anchor": "open",
+      "content_hash": "sha256:32f0767f9b80fef42e4343535c5d5ec05e904d5033265e09066882c0aa952898",
+      "doc_path": "common/PROP-028",
+      "file": "spec/common/PROP-028-package-families.md",
+      "heading": "4. Open questions",
+      "line": 98,
+      "uri": "spec://vibevm/common/PROP-028#open"
     },
     {
       "anchor": "root",
@@ -11768,7 +11846,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:ae167ad499727d430132e500f79d4239d8cd190638d7813453056412657b7398",
+      "content_hash": "sha256:601171ba2e38427e0652a652a4258150fca9d9b641a2fe1a139f8ab229bb11a7",
       "doc_path": "modules/vibe-mcp/PROP-026",
       "file": "spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md",
       "heading": "PROP-026 — the tcg tool family (the agentic type oracle's product seam)",
@@ -11854,7 +11932,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:07c226aca04548388ce62e38b14bb9083b1d63924262668f0569c87d4c7cb2b8",
+      "content_hash": "sha256:9d41d8819ad52d1abf767ec3d6f2b238f175fca052e3841154d15439031520f0",
       "doc_path": "modules/vibe-mcp/PROP-027",
       "file": "spec/modules/vibe-mcp/PROP-027-mcp-packages.md",
       "heading": "PROP-027 — `mcp` packages: the agent-server kind and its delivery",
@@ -14771,7 +14849,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:c76cd4baac86058cb6f5fb2b597859130e83d222a14d50641fdfeff137ef79fa",
+      "content_hash": "sha256:bce0e6062f3682f1e1a4e9cc5b7fc60fcaf005f2676085452ba0b3afbf4183e8",
       "doc_path": "terraforms/DISCIPLINE-SWEEP-v0.2",
       "file": "spec/terraforms/DISCIPLINE-SWEEP-v0.2.md",
       "heading": "vibevm Discipline Sweep v0.2 — the project instance",
@@ -14789,7 +14867,7 @@
     },
     {
       "anchor": "facts",
-      "content_hash": "sha256:a188f2aea806a70cbe8e2666f77d13ca1496c445d967cbca83caa1dd8b045f00",
+      "content_hash": "sha256:85e79039d78adb37efb78dbf59e854247eacd41becf9a6ed22be343422ebb383",
       "doc_path": "terraforms/DISCIPLINE-SWEEP-v0.2",
       "file": "spec/terraforms/DISCIPLINE-SWEEP-v0.2.md",
       "heading": "2. Standing project facts (verify against the collector, never trust this list)",
