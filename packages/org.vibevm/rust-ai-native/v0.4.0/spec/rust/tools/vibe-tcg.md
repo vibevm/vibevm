@@ -1,6 +1,18 @@
 # Tool Spec (high-level): `vibe-tcg` — Type-Aware Constrained Generation for Rust
 *Status: vision / component brief for the vibevm tool suite. NOT an implementation plan. Derived from R2C-005 (type-constrained decoding is per-language manual work; no Rust impl exists), DR2-012/DR1-014 (the 74.8% compile-error reduction in TypeScript), and the constrained-decoding ecosystem scan (SynCode, XGrammar-2, IterGen, Mündler PLDI'25).*
 
+> **The agentic precedent (2026-07-07).** The tcg line's AGENTIC delivery
+> shipped first, on TypeScript: a consultation oracle (validate / scope /
+> type-valid completions / quick info over in-memory overlays,
+> discipline-enriched) behind language-parameterised `tcg_*` MCP tools —
+> see the TS stack's `typescript/tools/vibe-agentic-tcg-ts.md` and
+> vibevm's PROP-026. When THIS tool is commissioned, its Stage 2
+> (scope/name constraining on rust-analyzer) has the same agentic
+> analogue — rust-analyzer as the oracle behind the SAME tool family
+> (a new `language` value, not new surface) — and the decode-loop
+> stages below remain gated on an inference substrate, exactly like the
+> TypeScript token-level sibling.
+
 ## 1. What problem it solves
 
 LLMs emit Rust that fails to compile; per the PLDI'25 evidence, ~94% of compile errors are TYPE errors, not syntax — and only ~6% are syntactic. Pure grammar/CFG constraining (mature: SynCode, XGrammar-2) catches the 6% and leaves the 94%. The gap for Rust specifically: no type-aware constrained-generation tool exists (the PLDI'25 authors built it only for a TypeScript subset and state plainly it must be re-implemented per language). `vibe-tcg` is that missing tool for Rust, delivered as a vibevm component so the swarm's weak agents generate well-typed Rust by construction rather than by retry.
