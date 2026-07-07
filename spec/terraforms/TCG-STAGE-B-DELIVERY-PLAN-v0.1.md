@@ -1,6 +1,11 @@
 # TCG-STAGE-B-DELIVERY-PLAN v0.1 — delivery experiments for the agentic oracle
 
-_Status: **DRAFT — awaiting owner review (2026-07-07)**; written against
+_Status: **BACKLOGGED (owner, 2026-07-07, same day as authoring)** —
+the owner deferred commissioning; the §14 review points stay OPEN for
+whenever this campaign is picked up, and the §1 facts must be
+re-verified then (they age). Successor focus the same day: the Rust
+agentic twin ([AGENTIC-TCG-RUST-PLAN-v0.1](AGENTIC-TCG-RUST-PLAN-v0.1.md)).
+Originally DRAFT — awaiting owner review (2026-07-07); written against
 tree `40eaca6` (the agentic-tcg session-end checkpoint; floor green,
 local == origin). Commissioned by the owner as the realisation plan for
 owner-court item 2 of that checkpoint: the Stage-B delivery backlog
