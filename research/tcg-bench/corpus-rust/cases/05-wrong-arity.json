@@ -1,0 +1,6 @@
+{
+  "name": "05-wrong-arity",
+  "file": "crates/rust-demo/src/cells/greeting.rs",
+  "content_from": "content/arity.rs.txt",
+  "expect": { "cargo_codes": ["E0061"], "conform_rules": [] }
+}

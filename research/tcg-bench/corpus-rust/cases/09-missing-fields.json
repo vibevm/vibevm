@@ -1,0 +1,6 @@
+{
+  "name": "09-missing-fields",
+  "file": "crates/rust-demo/src/cells/greeting.rs",
+  "content_from": "content/missing-fields.rs.txt",
+  "expect": { "cargo_codes": ["E0063"], "conform_rules": [] }
+}

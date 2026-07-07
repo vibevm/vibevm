@@ -1,0 +1,6 @@
+{
+  "name": "02-clean-add",
+  "file": "crates/rust-demo/src/cells/announce.rs",
+  "content_from": "content/clean-add.rs.txt",
+  "expect": { "cargo_codes": [], "conform_rules": [] }
+}

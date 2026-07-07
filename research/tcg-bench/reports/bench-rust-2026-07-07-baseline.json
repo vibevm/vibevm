@@ -1,0 +1,203 @@
+{
+  "cold_init_ms": 2535,
+  "validate_p50_ms": 0,
+  "validate_p95_ms": 65,
+  "agreement": "9/9",
+  "code_map": [
+    [
+      "E0308",
+      "E0308"
+    ],
+    [
+      "E0425",
+      "E0425"
+    ],
+    [
+      "E0107",
+      "E0061"
+    ],
+    [
+      "E0559",
+      "E0609"
+    ],
+    [
+      "E0063",
+      "E0063"
+    ],
+    [
+      "E0599",
+      "E0599"
+    ]
+  ],
+  "cases": [
+    {
+      "name": "01-clean-disk",
+      "pass": true,
+      "known_gap": false,
+      "oracle_codes": [],
+      "mapped_codes": [],
+      "cargo_codes": [],
+      "conform_rules": [],
+      "warm_ms": [
+        42,
+        0,
+        0
+      ],
+      "detail": "existence-grain agreement"
+    },
+    {
+      "name": "02-clean-add",
+      "pass": true,
+      "known_gap": false,
+      "oracle_codes": [],
+      "mapped_codes": [],
+      "cargo_codes": [],
+      "conform_rules": [],
+      "warm_ms": [
+        182,
+        0,
+        0
+      ],
+      "detail": "existence-grain agreement"
+    },
+    {
+      "name": "03-type-mismatch",
+      "pass": true,
+      "known_gap": false,
+      "oracle_codes": [
+        "E0308"
+      ],
+      "mapped_codes": [
+        "E0308"
+      ],
+      "cargo_codes": [
+        "E0308"
+      ],
+      "conform_rules": [],
+      "warm_ms": [
+        65,
+        0,
+        0
+      ],
+      "detail": "existence-grain agreement"
+    },
+    {
+      "name": "04-unresolved-name",
+      "pass": true,
+      "known_gap": false,
+      "oracle_codes": [
+        "E0425"
+      ],
+      "mapped_codes": [
+        "E0425"
+      ],
+      "cargo_codes": [
+        "E0425"
+      ],
+      "conform_rules": [],
+      "warm_ms": [
+        8,
+        0,
+        0
+      ],
+      "detail": "existence-grain agreement"
+    },
+    {
+      "name": "05-wrong-arity",
+      "pass": true,
+      "known_gap": false,
+      "oracle_codes": [
+        "E0107"
+      ],
+      "mapped_codes": [
+        "E0061"
+      ],
+      "cargo_codes": [
+        "E0061"
+      ],
+      "conform_rules": [],
+      "warm_ms": [
+        8,
+        0,
+        0
+      ],
+      "detail": "existence-grain agreement"
+    },
+    {
+      "name": "06-newtype-privacy",
+      "pass": true,
+      "known_gap": true,
+      "oracle_codes": [],
+      "mapped_codes": [],
+      "cargo_codes": [
+        "E0423"
+      ],
+      "conform_rules": [],
+      "warm_ms": [
+        3,
+        0,
+        0
+      ],
+      "detail": "documented gap holds: oracle silent, cargo speaks"
+    },
+    {
+      "name": "07-unwrap-in-domain",
+      "pass": true,
+      "known_gap": false,
+      "oracle_codes": [],
+      "mapped_codes": [],
+      "cargo_codes": [],
+      "conform_rules": [
+        "no-unwrap-in-domain"
+      ],
+      "warm_ms": [
+        3,
+        0,
+        0
+      ],
+      "detail": "existence-grain agreement"
+    },
+    {
+      "name": "08-unknown-field",
+      "pass": true,
+      "known_gap": false,
+      "oracle_codes": [
+        "E0559"
+      ],
+      "mapped_codes": [
+        "E0609"
+      ],
+      "cargo_codes": [
+        "E0609"
+      ],
+      "conform_rules": [],
+      "warm_ms": [
+        9,
+        0,
+        0
+      ],
+      "detail": "existence-grain agreement"
+    },
+    {
+      "name": "09-missing-fields",
+      "pass": true,
+      "known_gap": false,
+      "oracle_codes": [
+        "E0063"
+      ],
+      "mapped_codes": [
+        "E0063"
+      ],
+      "cargo_codes": [
+        "E0063"
+      ],
+      "conform_rules": [],
+      "warm_ms": [
+        9,
+        0,
+        0
+      ],
+      "detail": "existence-grain agreement"
+    }
+  ]
+}

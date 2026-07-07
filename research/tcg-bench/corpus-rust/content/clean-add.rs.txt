@@ -1,0 +1,8 @@
+//! A hypothetical new cell that composes strictly through the seam.
+
+use crate::cells::greeting::{GuestName, greet};
+
+/// Announce a validated guest by name.
+pub fn announce(name: &GuestName) -> String {
+    format!("announcing: {}", greet(name))
+}

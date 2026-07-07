@@ -1,0 +1,6 @@
+{
+  "name": "07-unwrap-in-domain",
+  "file": "crates/rust-demo/src/cells/farewell.rs",
+  "content_from": "content/unwrap-domain.rs.txt",
+  "expect": { "cargo_codes": [], "conform_rules": ["no-unwrap-in-domain"] }
+}

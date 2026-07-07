@@ -269,13 +269,19 @@ pub fn run_bench(corpus: &Path, report: &Path, root: &Path) -> Result<i32> {
             .collect();
 
         // Cargo truth: write the case content into the scratch copy,
-        // check, restore.
+        // check, restore — a NEW file (the overlay-only case) is
+        // created and deleted instead.
         let scratch_file = scratch.path().join(&case.file);
-        let original = std::fs::read_to_string(&scratch_file)
-            .with_context(|| format!("case {}: scratch {}", case.name, case.file))?;
+        let original = std::fs::read_to_string(&scratch_file).ok();
+        if let Some(parent) = scratch_file.parent() {
+            std::fs::create_dir_all(parent)?;
+        }
         std::fs::write(&scratch_file, &effective)?;
         let cargo = cargo_codes(scratch.path(), &root)?;
-        std::fs::write(&scratch_file, original)?;
+        match &original {
+            Some(text) => std::fs::write(&scratch_file, text)?,
+            None => std::fs::remove_file(&scratch_file)?,
+        }
 
         let expect_cargo: BTreeSet<String> = case.expect.cargo_codes.iter().cloned().collect();
         let expect_rules: BTreeSet<String> = case.expect.conform_rules.iter().cloned().collect();

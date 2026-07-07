@@ -1,0 +1,6 @@
+{
+  "name": "06-newtype-privacy",
+  "file": "crates/rust-demo/src/cells/farewell.rs",
+  "content_from": "content/newtype-privacy.rs.txt",
+  "expect": { "cargo_codes": ["E0423"], "conform_rules": [], "known_gap": true }
+}

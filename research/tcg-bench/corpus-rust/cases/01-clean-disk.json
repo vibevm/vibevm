@@ -1,0 +1,5 @@
+{
+  "name": "01-clean-disk",
+  "file": "crates/rust-demo/src/cells/greeting.rs",
+  "expect": { "cargo_codes": [], "conform_rules": [] }
+}

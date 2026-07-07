@@ -1,0 +1,6 @@
+{
+  "name": "08-unknown-field",
+  "file": "crates/rust-demo/src/cells/greeting.rs",
+  "content_from": "content/unknown-field.rs.txt",
+  "expect": { "cargo_codes": ["E0609"], "conform_rules": [] }
+}

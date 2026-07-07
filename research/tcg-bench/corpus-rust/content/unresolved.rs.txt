@@ -1,0 +1,133 @@
+//! The greeting cell: naming + greeting. The seam is this module's
+//! public surface; the newtype's private inner makes the internals
+//! unreachable by construction.
+
+specmark::scope!("spec://rust-demo/PROP-001#cell-greeting");
+
+use specmark::spec;
+
+use crate::core::text::normalise;
+
+const MAX_LENGTH: usize = 80;
+
+/// A validated guest name. The inner field is PRIVATE:
+/// [`parse_guest_name`] is the only constructor, so the compiler
+/// itself (E0603) refuses a raw construction from outside this cell —
+/// what TypeScript recovers with a brand, Rust enforces with
+/// visibility.
+///
+/// ```
+/// use rust_demo::cells::greeting::{greet, parse_guest_name};
+/// let name = parse_guest_name("  Ada   Lovelace ").expect("valid");
+/// assert_eq!(greet(&name), "hello, Ada Lovelace");
+/// ```
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[spec(implements = "spec://rust-demo/PROP-001#req-guest-name")]
+pub struct GuestName(String);
+
+impl std::fmt::Display for GuestName {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(&self.0)
+    }
+}
+
+/// Failure as a value; every message cites the governing REQ.
+///
+/// ```
+/// use rust_demo::cells::greeting::ParseError;
+/// let e = ParseError::Empty;
+/// assert!(e.to_string().contains("spec://rust-demo/PROP-001#req-guest-name"));
+/// ```
+#[derive(Debug, Clone, PartialEq, Eq, thiserror::Error)]
+#[spec(implements = "spec://rust-demo/PROP-001#req-guest-name")]
+pub enum ParseError {
+    #[error(
+        "violates spec://rust-demo/PROP-001#req-guest-name: a guest name \
+         cannot be empty; fix surface: pass at least one printable character"
+    )]
+    Empty,
+
+    #[error(
+        "violates spec://rust-demo/PROP-001#req-guest-name: {len} chars \
+         exceeds {MAX_LENGTH}; fix surface: shorten the name"
+    )]
+    TooLong { len: usize },
+
+    #[error(
+        "violates spec://rust-demo/PROP-001#req-guest-name: control \
+         characters are not printable; fix surface: strip them before parsing"
+    )]
+    Unprintable,
+}
+
+/// The validation boundary: untrusted text in, validated name out —
+/// the ONLY constructor of [`GuestName`].
+///
+/// ```
+/// use rust_demo::cells::greeting::{parse_guest_name, ParseError};
+/// assert!(parse_guest_name("Ada").is_ok());
+/// assert_eq!(parse_guest_name("   "), Err(ParseError::Empty));
+/// ```
+#[spec(implements = "spec://rust-demo/PROP-001#req-guest-name")]
+pub fn parse_guest_name(input: &str) -> Result<GuestName, ParseError> {
+    let cleaned = normalise(input);
+    if cleaned.is_empty() {
+        return Err(ParseError::Empty);
+    }
+    let len = cleaned.chars().count();
+    if len > MAX_LENGTH {
+        return Err(ParseError::TooLong { len });
+    }
+    if cleaned.chars().any(char::is_control) {
+        return Err(ParseError::Unprintable);
+    }
+    Ok(GuestName(cleaned))
+}
+
+/// Greeting is total over valid names — no panic, no unwrap; failure
+/// cannot reach it (the type admits no unvalidated name).
+///
+/// ```
+/// use rust_demo::cells::greeting::{greet, parse_guest_name};
+/// let name = parse_guest_name("Grace").expect("valid");
+/// assert_eq!(greet(&name), "hello, Grace");
+/// ```
+#[spec(implements = "spec://rust-demo/PROP-001#req-greet")]
+pub fn greet(name: &GuestName) -> String {
+    format!("hello, {name}")
+}
+
+#[cfg(test)]
+mod tests {
+    use super::{GuestName, MAX_LENGTH, ParseError, greet, parse_guest_name};
+
+    #[test]
+    fn normalises_before_validating() {
+        let name = parse_guest_name("  Ada   Lovelace ").expect("valid");
+        assert_eq!(name, GuestName("Ada Lovelace".to_string()));
+    }
+
+    #[test]
+    fn refuses_the_three_invariant_breaches() {
+        assert_eq!(parse_guest_name(""), Err(ParseError::Empty));
+        let long = "x".repeat(MAX_LENGTH + 1);
+        assert_eq!(
+            parse_guest_name(&long),
+            Err(ParseError::TooLong {
+                len: MAX_LENGTH + 1
+            })
+        );
+        assert_eq!(parse_guest_name("a\u{7}b"), Err(ParseError::Unprintable));
+    }
+
+    #[test]
+    fn greeting_carries_the_display_form() {
+        let name = parse_guest_name("Grace Hopper").expect("valid");
+        assert_eq!(greet(&name), "hello, Grace Hopper");
+        assert_eq!(name.to_string(), "Grace Hopper");
+    }
+}
+
+pub fn broken_unresolved() -> String {
+    gret("world")
+}

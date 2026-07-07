@@ -1,0 +1,6 @@
+{
+  "name": "03-type-mismatch",
+  "file": "crates/rust-demo/src/cells/greeting.rs",
+  "content_from": "content/type-mismatch.rs.txt",
+  "expect": { "cargo_codes": ["E0308"], "conform_rules": [] }
+}

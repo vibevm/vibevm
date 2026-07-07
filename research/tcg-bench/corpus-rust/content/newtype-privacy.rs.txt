@@ -1,0 +1,37 @@
+//! The farewell cell: seam-only composition — it consumes `greeting`
+//! strictly through the seam types, never internals.
+
+specmark::scope!("spec://rust-demo/PROP-001#cell-farewell");
+
+use specmark::spec;
+
+use crate::cells::greeting::GuestName;
+
+/// Say goodbye to a validated guest.
+///
+/// ```
+/// use rust_demo::cells::farewell::farewell;
+/// use rust_demo::cells::greeting::parse_guest_name;
+/// let name = parse_guest_name("Ada").expect("valid");
+/// assert_eq!(farewell(&name), "goodbye, Ada");
+/// ```
+#[spec(implements = "spec://rust-demo/PROP-001#cell-farewell")]
+pub fn farewell(name: &GuestName) -> String {
+    format!("goodbye, {name}")
+}
+
+#[cfg(test)]
+mod tests {
+    use super::farewell;
+    use crate::cells::greeting::parse_guest_name;
+
+    #[test]
+    fn composes_through_the_seam_only() {
+        let name = parse_guest_name("  Alan   Turing ").expect("valid");
+        assert_eq!(farewell(&name), "goodbye, Alan Turing");
+    }
+}
+
+pub fn smuggle() -> GuestName {
+    GuestName("unvalidated".to_string())
+}

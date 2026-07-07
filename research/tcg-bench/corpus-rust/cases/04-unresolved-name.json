@@ -1,0 +1,6 @@
+{
+  "name": "04-unresolved-name",
+  "file": "crates/rust-demo/src/cells/greeting.rs",
+  "content_from": "content/unresolved.rs.txt",
+  "expect": { "cargo_codes": ["E0425"], "conform_rules": [] }
+}
