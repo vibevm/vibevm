@@ -972,6 +972,28 @@ and you want to close a loop that's bugging you.
   enough — but once user-facing docs exist under `docs/`, render them
   through mdBook or Zola so URIs are clickable.
 
+## Far backlog (deliberately distant — enters planning only by the owner's word)
+
+Items the owner has explicitly pushed far out: real capability
+upgrades, not rejected ideas. Each entry says what it is and why it
+waits, so a future session can pick it up without archaeology.
+
+- **`ra_ap_*` embedding — rust-analyzer as a library** (owner
+  disposition 2026-07-07, recorded from the AGENTIC-TCG-RUST plan
+  review). rust-analyzer publishes its internals as versioned
+  `ra_ap_*` crates (`ra_ap_ide`, `ra_ap_hir`, `ra_ap_vfs`, …); linking
+  them directly into our oracle binary would replace the LSP child
+  process with IN-PROCESS access to the full semantic model — custom
+  traversals, richer scope/brand answers, no protocol hop, no child
+  lifecycle. The v0.1 agentic line deliberately spawns the CONSUMER's
+  own rust-analyzer over LSP instead (consumer-toolchain posture, tiny
+  dependency surface, weekly-release API churn avoided) — see
+  [AGENTIC-TCG-RUST-PLAN-v0.1 D1](spec/terraforms/AGENTIC-TCG-RUST-PLAN-v0.1.md).
+  The embedding is «сильно-сильно позже»: it re-enters planning only
+  when the oracle's answer quality is limited by what LSP can express,
+  and it costs pinning our own r-a version against the consumer's
+  toolchain — that trade needs its own plan.
+
 ## Known outstanding review items
 
 Nothing active. Historical:
