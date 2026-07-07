@@ -14,6 +14,7 @@ members = [
     "crates/discipline-cli-rust",
     "crates/env-audit",
     "crates/tcg-oracle-bridge-rust",
+    "crates/tcg-cli-rust",
     "crates/specmap-cli-rust",
     "crates/vendor/conform-core",
     "crates/vendor/specmap-core",

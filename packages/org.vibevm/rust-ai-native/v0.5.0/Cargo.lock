@@ -503,6 +503,24 @@ dependencies = [
 ]
 
 [[package]]
+name = "tcg-cli-rust"
+version = "0.5.0"
+dependencies = [
+ "anyhow",
+ "clap",
+ "conform-cli-rust",
+ "conform-core",
+ "conform-frontend-rust",
+ "serde",
+ "serde_json",
+ "specmark",
+ "syn",
+ "tcg-oracle-bridge-rust",
+ "tempfile",
+ "thiserror",
+]
+
+[[package]]
 name = "tcg-oracle-bridge-rust"
 version = "0.5.0"
 dependencies = [
