@@ -36,6 +36,7 @@ use thiserror::Error;
 use vibe_core::manifest::Manifest;
 use vibe_core::{PackageKind, RelPath};
 
+pub mod bins;
 pub mod boot;
 pub mod boot_artifacts;
 pub mod freshness;

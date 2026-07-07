@@ -1,0 +1,307 @@
+//! Declared-binary resolution and slot builds (PROP-025 §§3–4) — the
+//! shared cell behind `vibe bin` AND the tcg oracle registry
+//! (PROP-026 §4): lockfile → slot → `[[binary]]` declarations →
+//! slot-resident artifact, plus the consent-gated release build.
+//! Extracted from vibe-cli so the CLI and any tool host resolve
+//! through ONE implementation — dispatch-invariant logic must not
+//! exist twice.
+
+specmark::scope!("spec://vibevm/modules/vibe-workspace/PROP-025#dispatch");
+
+use std::path::{Path, PathBuf};
+
+use vibe_core::manifest::{BinaryDecl, Lockfile, Manifest};
+
+use crate::Workspace;
+
+/// This cell's failure surface (one thiserror enum per layer; messages
+/// carry the fix surface).
+#[derive(Debug, thiserror::Error)]
+pub enum BinsError {
+    #[error("loading workspace at `{path}`: {detail}")]
+    Workspace { path: PathBuf, detail: String },
+
+    #[error("reading lockfile `{path}`: {detail}")]
+    Lockfile { path: PathBuf, detail: String },
+
+    #[error(
+        "no installed package declares a binary `{name}` (declared: {known:?}); \
+         `vibe bin list` shows the full table"
+    )]
+    UnknownBinary { name: String, known: Vec<String> },
+
+    #[error(
+        "building `{name}` runs `{package}`'s build scripts and proc-macros \
+         (arbitrary code). The group `{group}` is not allow-listed; consent \
+         explicitly (`vibe bin build {name} --assume-yes`) to proceed \
+         (PROP-025 s8, the PROP-020 posture)"
+    )]
+    ConsentRequired {
+        name: String,
+        package: String,
+        group: String,
+    },
+
+    #[error(
+        "spawning cargo for `{name}`: {detail} (a Rust toolchain is required \
+         to build package binaries)"
+    )]
+    CargoSpawn { name: String, detail: String },
+
+    #[error(
+        "cargo failed for `{name}` — the slot builds standalone (PROP-024 \
+         s2.4), so this is a real build error, not a topology one"
+    )]
+    BuildFailed { name: String },
+
+    #[error(
+        "cargo succeeded but `{artifact}` is missing — the [[binary]] \
+         declaration's name must equal the crate's bin target (PROP-025 s2)"
+    )]
+    ArtifactMissing { artifact: PathBuf },
+}
+
+/// One declared binary, resolved against its installed slot.
+#[derive(Debug, Clone)]
+pub struct DeclaredBinary {
+    pub decl: BinaryDecl,
+    /// `<group>/<name>` of the declaring package.
+    pub package: String,
+    /// The declaring package's group (consent allow-listing).
+    pub group: String,
+    /// Absolute slot directory.
+    pub slot: PathBuf,
+}
+
+impl DeclaredBinary {
+    /// The slot-resident release artifact (PROP-025 §3).
+    ///
+    /// ```
+    /// # use vibe_workspace::bins::DeclaredBinary;
+    /// # use vibe_core::manifest::BinaryDecl;
+    /// let bin = DeclaredBinary {
+    ///     decl: BinaryDecl {
+    ///         name: "tcg-typescript".into(),
+    ///         crate_dir: "crates/tcg-cli-typescript".into(),
+    ///         description: None,
+    ///     },
+    ///     package: "org.vibevm/typescript-ai-native".into(),
+    ///     group: "org.vibevm".into(),
+    ///     slot: std::path::PathBuf::from("vibedeps/stack-typescript-ai-native/0.4.0"),
+    /// };
+    /// let artifact = bin.artifact();
+    /// assert!(artifact.starts_with(&bin.slot));
+    /// assert!(artifact.to_string_lossy().contains("release"));
+    /// ```
+    pub fn artifact(&self) -> PathBuf {
+        let file = if cfg!(windows) {
+            format!("{}.exe", self.decl.name)
+        } else {
+            self.decl.name.clone()
+        };
+        self.slot.join("target").join("release").join(file)
+    }
+}
+
+/// Every `[[binary]]` reachable from the project's lockfile slots,
+/// sorted by name. A missing lockfile is an empty set, not an error
+/// (a fresh project has nothing installed yet).
+pub fn collect_binaries(project_root: &Path) -> Result<Vec<DeclaredBinary>, BinsError> {
+    let ws = Workspace::discover(project_root).map_err(|e| BinsError::Workspace {
+        path: project_root.to_path_buf(),
+        detail: e.to_string(),
+    })?;
+    let mut out = Vec::new();
+    let lock_path = ws.lockfile_path();
+    if !lock_path.exists() {
+        return Ok(out);
+    }
+    let lockfile = Lockfile::read(&lock_path).map_err(|e| BinsError::Lockfile {
+        path: lock_path.clone(),
+        detail: e.to_string(),
+    })?;
+    for pkg in &lockfile.packages {
+        let slot = ws.vibedeps_slot(pkg.kind, &pkg.name, &pkg.version);
+        let manifest_path = slot.join(Manifest::FILENAME);
+        if !manifest_path.exists() {
+            continue;
+        }
+        let Ok(manifest) = Manifest::read(&manifest_path) else {
+            continue;
+        };
+        for decl in &manifest.binaries {
+            out.push(DeclaredBinary {
+                decl: decl.clone(),
+                package: format!("{}/{}", pkg.group, pkg.name),
+                group: pkg.group.to_string(),
+                slot: slot.clone(),
+            });
+        }
+    }
+    out.sort_by(|a, b| a.decl.name.cmp(&b.decl.name));
+    Ok(out)
+}
+
+/// Find one declared binary by its PATH-facing name.
+pub fn find_binary<'a>(
+    bins: &'a [DeclaredBinary],
+    name: &str,
+) -> Result<&'a DeclaredBinary, BinsError> {
+    bins.iter()
+        .find(|b| b.decl.name == name)
+        .ok_or_else(|| BinsError::UnknownBinary {
+            name: name.to_string(),
+            known: bins.iter().map(|b| b.decl.name.clone()).collect(),
+        })
+}
+
+/// The PROP-020-shaped consent gate for a build (PROP-025 §8):
+/// `org.vibevm` is allow-listed; anything else needs explicit consent —
+/// there is no prompt at this layer, callers refuse with the recipe.
+pub fn consent_to_build(bin: &DeclaredBinary, assume_yes: bool) -> Result<(), BinsError> {
+    if bin.group == "org.vibevm" || assume_yes {
+        return Ok(());
+    }
+    Err(BinsError::ConsentRequired {
+        name: bin.decl.name.clone(),
+        package: bin.package.clone(),
+        group: bin.group.clone(),
+    })
+}
+
+/// Consent-gated `cargo build --release` of one declared binary in its
+/// slot; verifies the artifact landed where dispatch will look.
+pub fn build_binary(bin: &DeclaredBinary, assume_yes: bool) -> Result<(), BinsError> {
+    consent_to_build(bin, assume_yes)?;
+    eprintln!(
+        "bin build: `{}` ({}) — cargo build --release in {}",
+        bin.decl.name,
+        bin.package,
+        bin.slot.display()
+    );
+    let status = std::process::Command::new("cargo")
+        .arg("build")
+        .arg("--release")
+        .arg("--manifest-path")
+        .arg(bin.slot.join("Cargo.toml"))
+        .arg("--bin")
+        .arg(&bin.decl.name)
+        .status()
+        .map_err(|e| BinsError::CargoSpawn {
+            name: bin.decl.name.clone(),
+            detail: e.to_string(),
+        })?;
+    if !status.success() {
+        return Err(BinsError::BuildFailed {
+            name: bin.decl.name.clone(),
+        });
+    }
+    if !bin.artifact().exists() {
+        return Err(BinsError::ArtifactMissing {
+            artifact: bin.artifact(),
+        });
+    }
+    Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    const LOCK: &str = r#"
+[meta]
+generated_by = "vibe-test"
+generated_at = "2026-07-07T00:00:00Z"
+schema_version = 5
+
+[[package]]
+kind = "stack"
+group = "org.vibevm"
+name = "typescript-ai-native"
+version = "0.4.0"
+registry = "vibespecs"
+source_url = "file://packages"
+source_ref = "v0.4.0"
+content_hash = "sha256:deadbeef"
+files_written = []
+"#;
+
+    fn fixture_project() -> tempfile::TempDir {
+        let dir = tempfile::tempdir().expect("tempdir");
+        std::fs::write(
+            dir.path().join("vibe.toml"),
+            "[project]\nname=\"x\"\nversion=\"0.0.1\"\n",
+        )
+        .expect("vibe.toml");
+        std::fs::write(dir.path().join("vibe.lock"), LOCK).expect("vibe.lock");
+        let slot = dir
+            .path()
+            .join("vibedeps")
+            .join("stack-typescript-ai-native")
+            .join("0.4.0");
+        std::fs::create_dir_all(&slot).expect("slot");
+        std::fs::write(
+            slot.join("vibe.toml"),
+            r#"[package]
+name = "typescript-ai-native"
+group = "org.vibevm"
+kind = "stack"
+version = "0.4.0"
+authors = ["x"]
+license = "EULA"
+description = "fixture"
+keywords = []
+
+[[binary]]
+name = "tcg-typescript"
+crate = "crates/tcg-cli-typescript"
+"#,
+        )
+        .expect("slot manifest");
+        dir
+    }
+
+    #[test]
+    fn collect_walks_lockfile_slots_and_sorts() {
+        let dir = fixture_project();
+        let bins = collect_binaries(dir.path()).expect("collect");
+        assert_eq!(bins.len(), 1);
+        assert_eq!(bins[0].decl.name, "tcg-typescript");
+        assert_eq!(bins[0].group, "org.vibevm");
+        assert!(bins[0].artifact().to_string_lossy().contains("release"));
+    }
+
+    #[test]
+    fn missing_lockfile_is_an_empty_set() {
+        let dir = tempfile::tempdir().expect("tempdir");
+        std::fs::write(
+            dir.path().join("vibe.toml"),
+            "[project]\nname=\"x\"\nversion=\"0.0.1\"\n",
+        )
+        .expect("vibe.toml");
+        assert!(collect_binaries(dir.path()).expect("collect").is_empty());
+    }
+
+    #[test]
+    fn unknown_binary_names_the_known_set() {
+        let dir = fixture_project();
+        let bins = collect_binaries(dir.path()).expect("collect");
+        let err = find_binary(&bins, "nope").expect_err("unknown");
+        let msg = err.to_string();
+        assert!(msg.contains("nope") && msg.contains("tcg-typescript"), "{msg}");
+    }
+
+    #[test]
+    fn consent_allowlists_org_vibevm_and_refuses_with_recipe() {
+        let dir = fixture_project();
+        let bins = collect_binaries(dir.path()).expect("collect");
+        assert!(consent_to_build(&bins[0], false).is_ok(), "allow-listed");
+
+        let mut foreign = bins[0].clone();
+        foreign.group = "com.example".to_string();
+        foreign.package = "com.example/thing".to_string();
+        let err = consent_to_build(&foreign, false).expect_err("refused");
+        assert!(err.to_string().contains("--assume-yes"), "{err}");
+        assert!(consent_to_build(&foreign, true).is_ok(), "explicit consent");
+    }
+}
