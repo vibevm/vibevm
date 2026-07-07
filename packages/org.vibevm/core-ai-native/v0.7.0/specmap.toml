@@ -23,12 +23,13 @@ spec_roots = ["spec"]
 root_spec_docs = []
 
 # Crates exempt from the orphan gate:
-#   specmark, specmark-grammar — the tag bootstrap pair: they cannot depend
-#                                on specmark to carry scope! markers on
+#   core-ai-native-specmark, core-ai-native-specmark-grammar — the tag
+#                                bootstrap pair: they cannot depend on
+#                                specmark to carry scope! markers on
 #                                themselves
 exempt = [
-    "specmark",
-    "specmark-grammar",
+    "core-ai-native-specmark",
+    "core-ai-native-specmark-grammar",
 ]
 
 dispositioned = []
