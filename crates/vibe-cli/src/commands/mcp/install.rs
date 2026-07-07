@@ -172,6 +172,7 @@ pub(super) fn run_install(ctx: &output::Context, args: McpInstallArgs) -> Result
         scope,
         project_root.as_deref(),
         what,
+        args.yes || ctx.is_unattended(),
         args.force,
         true,
     )?;
@@ -231,6 +232,7 @@ pub(super) fn run_install(ctx: &output::Context, args: McpInstallArgs) -> Result
             scope,
             project_root.as_deref(),
             what,
+            args.yes || ctx.is_unattended(),
             args.force,
             false,
         )?
@@ -333,6 +335,7 @@ fn walk_install(
     scope: Scope,
     project_root: Option<&Path>,
     what: What,
+    assume_yes: bool,
     _force: bool,
     dry_run: bool,
 ) -> Result<(Vec<AgentInstallReport>, Vec<SkillInstallReport>)> {
@@ -356,6 +359,24 @@ fn walk_install(
                         apply_install_mcp(*agent, concrete_scope, &path, &payload)?
                     };
                     results.push(outcome);
+                    // ---- Package-declared servers (PROP-027 §2.4) ----
+                    // Project scope only: the {project_root} substitution
+                    // demands a project, and the committed project config
+                    // is where its servers belong. Registration inherits
+                    // the PROP-025 consent gate — the same trust act as
+                    // building the binary.
+                    if concrete_scope == Scope::Project
+                        && let Some(root) = project_root
+                    {
+                        walk_install_pkg_servers(
+                            *agent,
+                            root,
+                            &path,
+                            assume_yes,
+                            dry_run,
+                            &mut results,
+                        )?;
+                    }
                 } else if scope == Scope::Both {
                     results.push(AgentInstallReport {
                         agent: agent.as_str().to_string(),
@@ -378,6 +399,60 @@ fn walk_install(
         }
     }
     Ok((results, skill_results))
+}
+
+/// The package-declared-servers leg of one (agent × project) walk
+/// (PROP-027 §2.4): discover `[[mcp_server]]`s from the lockfile slots,
+/// gate each on the SAME consent as building its binary, and register a
+/// direct slot-artifact launch entry plus the vibevm-managed sidecar
+/// mark. Nothing is built here — `vibe mcp status` reports an unbuilt
+/// artifact with the `vibe bin build` recipe.
+fn walk_install_pkg_servers(
+    agent: Agent,
+    project_root: &Path,
+    config_path: &Path,
+    assume_yes: bool,
+    dry_run: bool,
+    results: &mut Vec<AgentInstallReport>,
+) -> Result<()> {
+    let servers = vibe_workspace::bins::collect_mcp_servers(project_root)
+        .map_err(|e| anyhow::anyhow!("{e}"))?;
+    for s in servers {
+        if let Err(refusal) = vibe_workspace::bins::consent_to_build(&s.binary, assume_yes) {
+            results.push(AgentInstallReport {
+                agent: agent.as_str().to_string(),
+                scope: "project",
+                config_path: config_path.display().to_string().replace('\\', "/"),
+                status: "refused",
+                note: Some(format!("pkg server `{}` — {refusal}", s.decl.name)),
+            });
+            continue;
+        }
+        let artifact = {
+            let a = s.binary.artifact();
+            let abs = if a.is_absolute() {
+                a
+            } else {
+                project_root.join(a)
+            };
+            vibe_mcp::pkg_servers::verbatim_free(&abs)
+        };
+        let command = artifact.to_string_lossy().replace('\\', "/");
+        let args = vibe_mcp::pkg_servers::substituted_args(&s.decl.args, project_root);
+        let payload = vibe_mcp::pkg_servers::entry_payload(agent, &command, &args);
+        let ConfigPayload::Json(entry) = payload else {
+            // Unreachable by construction: project-scope agents are all
+            // JSON-configured; a TOML agent has no project surface.
+            continue;
+        };
+        let outcome = if dry_run {
+            preview_install_pkg_server(agent, config_path, &s.decl.name, &entry)?
+        } else {
+            apply_install_pkg_server(agent, config_path, &s.decl.name, &entry)?
+        };
+        results.push(outcome);
+    }
+    Ok(())
 }
 
 // ---------------------------------------------------------------------------

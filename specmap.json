@@ -970,6 +970,13 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/tests/cli_mcp_kind.rs",
       "item_kind": "fn",
+      "line": 78,
+      "symbol": "vibe_cli::tests::cli_mcp_kind::mcp_install_registers_and_uninstall_removes_package_servers"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/cli_mcp_kind.rs",
+      "item_kind": "fn",
       "line": 17,
       "symbol": "vibe_cli::tests::cli_mcp_kind::mcp_kind_installs_and_its_exact_pin_selects_the_pinned_stack"
     },
@@ -2244,14 +2251,14 @@
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/lib.rs",
       "item_kind": "enum",
-      "line": 344,
+      "line": 345,
       "symbol": "vibe_mcp::ServerError"
     },
     {
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/lib.rs",
       "item_kind": "enum",
-      "line": 130,
+      "line": 131,
       "symbol": "vibe_mcp::ToolError"
     },
     {
@@ -2435,6 +2442,13 @@
       "item_kind": "enum",
       "line": 166,
       "symbol": "vibe_mcp::jsonrpc::ParseError"
+    },
+    {
+      "crate_name": "vibe-mcp",
+      "file": "crates/vibe-mcp/src/pkg_servers.rs",
+      "item_kind": "mod",
+      "line": 12,
+      "symbol": "vibe_mcp::pkg_servers"
     },
     {
       "crate_name": "vibe-mcp",
@@ -5242,6 +5256,22 @@
     },
     {
       "file": "crates/vibe-cli/tests/cli_mcp_kind.rs",
+      "from_symbol": "vibe_cli::tests::cli_mcp_kind::mcp_install_registers_and_uninstall_removes_package_servers",
+      "line": 80,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-mcp/PROP-027#consent",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-cli/tests/cli_mcp_kind.rs",
+      "from_symbol": "vibe_cli::tests::cli_mcp_kind::mcp_install_registers_and_uninstall_removes_package_servers",
+      "line": 79,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-mcp/PROP-027#registration",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-cli/tests/cli_mcp_kind.rs",
       "from_symbol": "vibe_cli::tests::cli_mcp_kind::mcp_kind_installs_and_its_exact_pin_selects_the_pinned_stack",
       "line": 19,
       "provenance": "authored",
@@ -6791,7 +6821,7 @@
     {
       "file": "crates/vibe-mcp/src/lib.rs",
       "from_symbol": "vibe_mcp::ServerError",
-      "line": 354,
+      "line": 355,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-mcp/PROP-015#errors",
       "verb": "implements"
@@ -6799,7 +6829,7 @@
     {
       "file": "crates/vibe-mcp/src/lib.rs",
       "from_symbol": "vibe_mcp::ToolError",
-      "line": 141,
+      "line": 142,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-mcp/PROP-015#errors",
       "verb": "implements"
@@ -7015,6 +7045,14 @@
       "line": 173,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-mcp/PROP-015#server",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-mcp/src/pkg_servers.rs",
+      "from_symbol": "vibe_mcp::pkg_servers",
+      "line": 12,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-mcp/PROP-027#registration",
       "verb": "implements"
     },
     {
@@ -11892,7 +11930,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:038a2639ad4963f26229ce9cb3063337d7bd104965dff0a17eaf1afd792ad771",
+      "content_hash": "sha256:07c226aca04548388ce62e38b14bb9083b1d63924262668f0569c87d4c7cb2b8",
       "doc_path": "modules/vibe-mcp/PROP-027",
       "file": "spec/modules/vibe-mcp/PROP-027-mcp-packages.md",
       "heading": "PROP-027 — `mcp` packages: the agent-server kind and its delivery",
@@ -11905,16 +11943,16 @@
       "doc_path": "modules/vibe-mcp/PROP-027",
       "file": "spec/modules/vibe-mcp/PROP-027-mcp-packages.md",
       "heading": "1. Motivation",
-      "line": 20,
+      "line": 24,
       "uri": "spec://vibevm/modules/vibe-mcp/PROP-027#motivation"
     },
     {
       "anchor": "decisions",
-      "content_hash": "sha256:da253c1daca2c3e9d9b0a9921f471902829dfb2c58dc771489baf3f513495bd6",
+      "content_hash": "sha256:b76309dd87af21319e377c235bbefa77afd0c1ce7e56a09028de1ec5675b173e",
       "doc_path": "modules/vibe-mcp/PROP-027",
       "file": "spec/modules/vibe-mcp/PROP-027-mcp-packages.md",
       "heading": "2. Decisions",
-      "line": 32,
+      "line": 36,
       "uri": "spec://vibevm/modules/vibe-mcp/PROP-027#decisions"
     },
     {
@@ -11923,7 +11961,7 @@
       "doc_path": "modules/vibe-mcp/PROP-027",
       "file": "spec/modules/vibe-mcp/PROP-027-mcp-packages.md",
       "heading": "2.1 The `mcp` kind",
-      "line": 34,
+      "line": 38,
       "uri": "spec://vibevm/modules/vibe-mcp/PROP-027#kind",
       "kind": "req",
       "revision": 1
@@ -11934,7 +11972,7 @@
       "doc_path": "modules/vibe-mcp/PROP-027",
       "file": "spec/modules/vibe-mcp/PROP-027-mcp-packages.md",
       "heading": "2.2 The `[[mcp_server]]` declaration",
-      "line": 47,
+      "line": 51,
       "uri": "spec://vibevm/modules/vibe-mcp/PROP-027#manifest",
       "kind": "req",
       "revision": 1
@@ -11945,29 +11983,29 @@
       "doc_path": "modules/vibe-mcp/PROP-027",
       "file": "spec/modules/vibe-mcp/PROP-027-mcp-packages.md",
       "heading": "2.3 The exact-pin law",
-      "line": 68,
+      "line": 72,
       "uri": "spec://vibevm/modules/vibe-mcp/PROP-027#exact-pin",
       "kind": "req",
       "revision": 1
     },
     {
       "anchor": "registration",
-      "content_hash": "sha256:46290a5eb8e1e7d024b41c0b55641a9f54200602f67617fb7e49a7bd9028225f",
+      "content_hash": "sha256:051d6a05c27149739ff1fe5b08e0e062dce5e302447391ceb4a4dea89d931678",
       "doc_path": "modules/vibe-mcp/PROP-027",
       "file": "spec/modules/vibe-mcp/PROP-027-mcp-packages.md",
       "heading": "2.4 Registration: `vibe mcp install` learns packages",
-      "line": 86,
+      "line": 90,
       "uri": "spec://vibevm/modules/vibe-mcp/PROP-027#registration",
       "kind": "req",
       "revision": 1
     },
     {
       "anchor": "consent",
-      "content_hash": "sha256:7861d3f9e4913c30c5467daa97f3ac628e0fc072e98919ee411d6acd90c1d53e",
+      "content_hash": "sha256:f8472cd61605e4a1f7825bc7656863e5ed21ebcdd8133c1e089775e718a8a26a",
       "doc_path": "modules/vibe-mcp/PROP-027",
       "file": "spec/modules/vibe-mcp/PROP-027-mcp-packages.md",
       "heading": "2.5 Consent: registration is the same trust act as building",
-      "line": 109,
+      "line": 117,
       "uri": "spec://vibevm/modules/vibe-mcp/PROP-027#consent",
       "kind": "req",
       "revision": 1
@@ -11978,18 +12016,18 @@
       "doc_path": "modules/vibe-mcp/PROP-027",
       "file": "spec/modules/vibe-mcp/PROP-027-mcp-packages.md",
       "heading": "2.6 Serving is vibe-free",
-      "line": 122,
+      "line": 130,
       "uri": "spec://vibevm/modules/vibe-mcp/PROP-027#vibe-free",
       "kind": "req",
       "revision": 1
     },
     {
       "anchor": "composition",
-      "content_hash": "sha256:5586a79b32337caecee735f52f5564818d2696ca732bcb980f161cb6c85f6a7c",
+      "content_hash": "sha256:99eb45f79c1c94076a7e51cca1a7bd1b261d130fae2bfe487572f4dcc178bb9e",
       "doc_path": "modules/vibe-mcp/PROP-027",
       "file": "spec/modules/vibe-mcp/PROP-027-mcp-packages.md",
       "heading": "2.7 Composition: an mcp package is a full package",
-      "line": 133,
+      "line": 141,
       "uri": "spec://vibevm/modules/vibe-mcp/PROP-027#composition",
       "kind": "req",
       "revision": 1
@@ -12000,7 +12038,7 @@
       "doc_path": "modules/vibe-mcp/PROP-027",
       "file": "spec/modules/vibe-mcp/PROP-027-mcp-packages.md",
       "heading": "3. Rejected alternatives",
-      "line": 152,
+      "line": 162,
       "uri": "spec://vibevm/modules/vibe-mcp/PROP-027#rejected"
     },
     {
@@ -12009,7 +12047,7 @@
       "doc_path": "modules/vibe-mcp/PROP-027",
       "file": "spec/modules/vibe-mcp/PROP-027-mcp-packages.md",
       "heading": "4. Open questions",
-      "line": 168,
+      "line": 178,
       "uri": "spec://vibevm/modules/vibe-mcp/PROP-027#open"
     },
     {

@@ -44,6 +44,7 @@ pub mod agentic;
 pub mod agents;
 pub mod install;
 pub mod jsonrpc;
+pub mod pkg_servers;
 pub mod pkgskill;
 pub mod tcg;
 pub mod tools;

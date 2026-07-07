@@ -74,3 +74,90 @@ fn mcp_kind_installs_and_its_exact_pin_selects_the_pinned_stack() {
         .assert()
         .success();
 }
+
+#[test]
+#[verifies("spec://vibevm/modules/vibe-mcp/PROP-027#registration")]
+#[verifies("spec://vibevm/modules/vibe-mcp/PROP-027#consent")]
+fn mcp_install_registers_and_uninstall_removes_package_servers() {
+    let project = tempfile::tempdir().unwrap();
+    init_project(project.path());
+    vibe()
+        .arg("install")
+        .arg("mcp:org.vibevm/pin-server")
+        .arg("--path")
+        .arg(project.path())
+        .arg("--registry")
+        .arg(fixture_registry())
+        .arg("--assume-yes")
+        .assert()
+        .success();
+
+    // Registration: the fixture's server lands in the project's
+    // .mcp.json as a DIRECT slot-artifact launch entry (no vibe in the
+    // command line), args substituted, marked vibevm-managed. The
+    // org.vibevm group rides the consent allowlist.
+    vibe()
+        .arg("mcp")
+        .arg("install")
+        .arg("--path")
+        .arg(project.path())
+        .arg("--agent")
+        .arg("claude")
+        .arg("--scope")
+        .arg("project")
+        .arg("--what")
+        .arg("mcp")
+        .arg("--yes")
+        .arg("--force")
+        .assert()
+        .success();
+    let cfg_path = project.path().join(".mcp.json");
+    let doc: serde_json::Value =
+        serde_json::from_str(&fs::read_to_string(&cfg_path).unwrap()).unwrap();
+    let entry = &doc["mcpServers"]["pin-server"];
+    let command = entry["command"].as_str().expect("command string");
+    assert!(
+        command.contains("vibedeps/mcp-pin-server/0.1.0")
+            || command.contains("vibedeps\\mcp-pin-server\\0.1.0"),
+        "command launches the slot artifact directly: {command}"
+    );
+    assert!(
+        !command.contains("vibe.exe") && !command.ends_with("vibe"),
+        "no vibe in the runtime path: {command}"
+    );
+    assert_eq!(entry["args"][0], "--path");
+    assert_eq!(
+        entry["args"][1].as_str().expect("substituted root"),
+        doc["mcpServers"]["pin-server"]["args"][1].as_str().unwrap(),
+    );
+    assert!(
+        entry["args"][1]
+            .as_str()
+            .unwrap()
+            .contains(&*project.path().file_name().unwrap().to_string_lossy()),
+        "{{project_root}} substituted to the real root"
+    );
+    assert_eq!(doc["vibevm"]["managed"][0], "pin-server");
+    // vibevm's own product entry rides the same install.
+    assert!(doc["mcpServers"]["vibevm"].is_object());
+
+    // Uninstall removes the managed entry AND the sidecar, leaving
+    // operator-owned keys (none here beyond vibevm's own) intact.
+    vibe()
+        .arg("mcp")
+        .arg("uninstall")
+        .arg("--path")
+        .arg(project.path())
+        .arg("--agent")
+        .arg("claude")
+        .arg("--scope")
+        .arg("project")
+        .arg("--config-only")
+        .arg("--yes")
+        .assert()
+        .success();
+    let doc: serde_json::Value =
+        serde_json::from_str(&fs::read_to_string(&cfg_path).unwrap()).unwrap();
+    assert!(doc["mcpServers"].get("pin-server").is_none());
+    assert!(doc.get("vibevm").is_none(), "sidecar removed whole");
+}

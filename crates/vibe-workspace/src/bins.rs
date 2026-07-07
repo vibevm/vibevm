@@ -177,6 +177,69 @@ pub fn find_binary<'a>(
         })
 }
 
+/// One `[[mcp_server]]` reachable from the project's lockfile slots
+/// (PROP-027 §2.4): the declaration plus the resolved `[[binary]]` that
+/// serves it — the artifact path, consent group, and slot all come from
+/// the binary half.
+#[derive(Debug, Clone)]
+pub struct DeclaredMcpServer {
+    /// The `[[mcp_server]]` table as declared in the slot manifest.
+    pub decl: vibe_core::manifest::McpServerDecl,
+    /// The `[[binary]]` the declaration references, fully resolved.
+    pub binary: DeclaredBinary,
+    /// The declaring package's version (registration reports carry it).
+    pub version: String,
+}
+
+/// Every `[[mcp_server]]` reachable from the project's lockfile slots,
+/// sorted by server name. Only `mcp`-kind packages may declare them
+/// (`Manifest::validate`), so this is exactly the registerable set; a
+/// missing lockfile is an empty set. A declaration whose binary does
+/// not resolve is skipped here — the manifest validator refuses such
+/// packages at install time, so a slot cannot normally carry one.
+pub fn collect_mcp_servers(project_root: &Path) -> Result<Vec<DeclaredMcpServer>, BinsError> {
+    let ws = Workspace::discover(project_root).map_err(|e| BinsError::Workspace {
+        path: project_root.to_path_buf(),
+        detail: e.to_string(),
+    })?;
+    let mut out = Vec::new();
+    let lock_path = ws.lockfile_path();
+    if !lock_path.exists() {
+        return Ok(out);
+    }
+    let lockfile = Lockfile::read(&lock_path).map_err(|e| BinsError::Lockfile {
+        path: lock_path.clone(),
+        detail: e.to_string(),
+    })?;
+    for pkg in &lockfile.packages {
+        let slot = ws.vibedeps_slot(pkg.kind, &pkg.name, &pkg.version);
+        let manifest_path = slot.join(Manifest::FILENAME);
+        if !manifest_path.exists() {
+            continue;
+        }
+        let Ok(manifest) = Manifest::read(&manifest_path) else {
+            continue;
+        };
+        for decl in &manifest.mcp_servers {
+            let Some(bin_decl) = manifest.binaries.iter().find(|b| b.name == decl.binary) else {
+                continue;
+            };
+            out.push(DeclaredMcpServer {
+                decl: decl.clone(),
+                binary: DeclaredBinary {
+                    decl: bin_decl.clone(),
+                    package: format!("{}/{}", pkg.group, pkg.name),
+                    group: pkg.group.to_string(),
+                    slot: slot.clone(),
+                },
+                version: pkg.version.to_string(),
+            });
+        }
+    }
+    out.sort_by(|a, b| a.decl.name.cmp(&b.decl.name));
+    Ok(out)
+}
+
 /// The PROP-020-shaped consent gate for a build (PROP-025 §8):
 /// `org.vibevm` is allow-listed; anything else needs explicit consent —
 /// there is no prompt at this layer, callers refuse with the recipe.

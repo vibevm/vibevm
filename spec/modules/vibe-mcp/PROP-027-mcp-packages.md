@@ -2,10 +2,14 @@
 
 **Milestone:** M1.26 candidate («MCP sovereignty» —
 [MCP-SOVEREIGNTY-PLAN-v0.1](../../terraforms/MCP-SOVEREIGNTY-PLAN-v0.1.md)).
-**Status:** PARTIALLY IMPLEMENTED — the kind and the manifest laws
-(§2.1–§2.3) shipped with the plan's Wave 1; the registration lifecycle
-(§2.4–§2.6) and the composition table (§2.7) are SPECIFIED here and land
-with Waves 3–5. Units typed at REQ grain; the code carries the matching
+**Status:** IMPLEMENTED — the kind and the manifest laws (§2.1–§2.3)
+shipped with the plan's Wave 1; the servers themselves (Waves 3–4:
+`mcp:org.vibevm/discipline-rust`, `…/discipline-typescript`, both
+live-chained vibe-free); the registration lifecycle (§2.4–§2.5) with
+Wave 5 (`vibe mcp install/uninstall/status` speak package servers; the
+pin-server fixture e2e pins the walk). §2.7's composition rows inherit
+the kind-agnostic feature suites — no feature branches on `kind`, and
+the mcp e2e exercises code-bearing + binaries + the pin end to end. Units typed at REQ grain; the code carries the matching
 `scope!` / `#[spec(implements)]` / `#[verifies]` edges.
 **Related:** [PROP-015](PROP-015-mcp-integration.md) (the product MCP
 server + the agent-integration command family this PROP extends),
@@ -85,7 +89,7 @@ the mcp package bumps in lockstep with the package it serves.
 
 ### 2.4 Registration: `vibe mcp install` learns packages {#registration}
 
-`req r1` — SPECIFIED; implementation lands with the plan's Wave 5.
+`req r1`
 
 `vibe mcp install` today writes vibevm's own server into agent configs
 (PROP-015). It grows package discovery: every installed package of kind
@@ -95,20 +99,24 @@ agents' configs with
 - `command` = the absolute, **verbatim-free** path to the slot-resident
   built artifact (a real executable — no shim, no `cmd /c` wrapper
   class), `args` with the closed-set substitutions resolved;
-- a **managed marker** per entry (JSON configs: a `"_vibevm"` sidecar
-  key; TOML configs: a comment fence), so re-installs rewrite ONLY
-  vibevm-managed entries and operator-owned servers are never touched —
-  the `<vibevm>` block convention of the boot files, applied to agent
-  configs;
+- a **managed sidecar**: a top-level `"vibevm": { "managed": [...] }`
+  object in the JSON config names the entries vibevm owns (never a key
+  INSIDE a server entry — hosts validate entry shapes), so re-installs
+  rewrite ONLY vibevm-managed entries and operator-owned servers are
+  never touched — the `<vibevm>` block convention of the boot files,
+  applied to agent configs. Registration is PROJECT-scope only (the
+  `{project_root}` substitution demands a project, and a project's
+  servers belong in its committed config), and every project-scope
+  agent config is JSON — so no TOML sidecar form exists;
 - lifecycle: `vibe mcp install` re-run refreshes paths after a slot
-  move; `vibe mcp status` reports managed entries whose artifact is
-  missing (recipe: `vibe bin build <name>`) or whose slot is gone;
-  `vibe mcp uninstall` (and package uninstall) removes managed entries
-  and nothing else.
+  move; `vibe mcp status` reports each declared server's artifact state
+  (an unbuilt artifact registers fine and fails at agent launch — the
+  recipe names `vibe bin build <name>`); `vibe mcp uninstall` removes
+  managed entries plus the emptied sidecar, and nothing else.
 
 ### 2.5 Consent: registration is the same trust act as building {#consent}
 
-`req r1` — SPECIFIED; implementation lands with the plan's Wave 5.
+`req r1`
 
 Registering a server schedules package code execution at agent-session
 start; building its binary compiles package code. One trust model, two
@@ -132,10 +140,12 @@ running.
 
 ### 2.7 Composition: an mcp package is a full package {#composition}
 
-`req r1` — SPECIFIED; the composition tests land with the plan's Wave 5.
+`req r1`
 
 Every package-role feature applies to `mcp` packages exactly as to the
-other kinds, and each row carries a test when Wave 5 lands:
+other kinds; no feature branches on `kind`, so each row inherits its
+feature's own kind-agnostic suite (the mcp-kind e2e adds the
+code-bearing + binaries + exact-pin composition end to end):
 
 | Feature | Spec | Composition rule |
 |---|---|---|

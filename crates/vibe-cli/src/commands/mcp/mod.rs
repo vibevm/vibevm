@@ -120,6 +120,55 @@ struct StatusReport {
     /// (Cursor, Claude Desktop). Status is `would-create` /
     /// `would-update` / `unchanged`.
     skill_results: Vec<SkillInstallReport>,
+    /// Package-declared servers (PROP-027 §2.4) and their lifecycle
+    /// state: registered where, artifact built or the build recipe.
+    pkg_servers: Vec<PkgServerStatus>,
+}
+
+#[derive(Debug, Clone, Serialize)]
+struct PkgServerStatus {
+    name: String,
+    package: String,
+    version: String,
+    artifact: String,
+    /// `built` / `unbuilt` — an unbuilt artifact registers fine and
+    /// fails at agent-launch time, so status names the recipe.
+    artifact_state: &'static str,
+    /// The recipe when unbuilt.
+    note: Option<String>,
+}
+
+/// Collect the PROP-027 lifecycle rows for `vibe mcp status`.
+fn pkg_server_status(project_root: Option<&Path>) -> Vec<PkgServerStatus> {
+    let Some(root) = project_root else {
+        return Vec::new();
+    };
+    let Ok(servers) = vibe_workspace::bins::collect_mcp_servers(root) else {
+        return Vec::new();
+    };
+    servers
+        .into_iter()
+        .map(|s| {
+            let artifact = {
+                let a = s.binary.artifact();
+                if a.is_absolute() { a } else { root.join(a) }
+            };
+            let built = artifact.exists();
+            PkgServerStatus {
+                name: s.decl.name.clone(),
+                package: s.binary.package.clone(),
+                version: s.version.clone(),
+                artifact: artifact.display().to_string().replace('\\', "/"),
+                artifact_state: if built { "built" } else { "unbuilt" },
+                note: (!built).then(|| {
+                    format!(
+                        "run `vibe bin build {}` before an agent launches it",
+                        s.binary.decl.name
+                    )
+                }),
+            }
+        })
+        .collect()
 }
 
 fn run_status(ctx: &output::Context, args: McpStatusArgs) -> Result<()> {
@@ -156,6 +205,7 @@ fn run_status(ctx: &output::Context, args: McpStatusArgs) -> Result<()> {
             }
         }
     }
+    let pkg_servers = pkg_server_status(project_root.as_deref());
     let report = StatusReport {
         ok: true,
         command: "mcp:status",
@@ -163,6 +213,7 @@ fn run_status(ctx: &output::Context, args: McpStatusArgs) -> Result<()> {
         detected: detected.iter().map(|a| a.as_str().to_string()).collect(),
         results: results.clone(),
         skill_results: skill_results.clone(),
+        pkg_servers: pkg_servers.clone(),
     };
     if ctx.is_json() {
         ctx.emit_json(&report)?;
@@ -201,6 +252,17 @@ fn run_status(ctx: &output::Context, args: McpStatusArgs) -> Result<()> {
         ctx.step(&format!(
             "{} skill   {} ({}) → {}{note}",
             r.status, r.agent, r.scope, path_str
+        ));
+    }
+    for s in &pkg_servers {
+        let note = s
+            .note
+            .as_deref()
+            .map(|n| format!(" ({n})"))
+            .unwrap_or_default();
+        ctx.step(&format!(
+            "{} server  {} ({}@{}) → {}{note}",
+            s.artifact_state, s.name, s.package, s.version, s.artifact
         ));
     }
     Ok(())
@@ -319,6 +381,86 @@ pub(super) fn apply_install_mcp(
         config_path: config_path.display().to_string().replace('\\', "/"),
         status,
         note,
+    })
+}
+
+// ---------------------------------------------------------------------------
+// package-declared servers (PROP-027 §2.4) — JSON-only by construction:
+// registration is project-scope (the {project_root} substitution demands
+// a project), and every project-scope agent config is JSON.
+// ---------------------------------------------------------------------------
+
+fn decide_pkg_action(
+    config_path: &Path,
+    section: &str,
+    name: &str,
+    entry: &serde_json::Value,
+) -> Result<(&'static str, Option<String>)> {
+    if !config_path.exists() {
+        return Ok(("created", Some("file does not exist yet".into())));
+    }
+    let existing = read_json(config_path)?;
+    match existing.get(section).and_then(|v| v.get(name)) {
+        Some(e) if e == entry => Ok(("unchanged", None)),
+        Some(_) => Ok(("updated", Some(format!("`{section}.{name}` differs")))),
+        None => Ok(("created", Some(format!("`{section}.{name}` absent")))),
+    }
+}
+
+pub(super) fn preview_install_pkg_server(
+    agent: Agent,
+    config_path: &Path,
+    name: &str,
+    entry: &serde_json::Value,
+) -> Result<AgentInstallReport> {
+    let (status, note) = decide_pkg_action(config_path, agent.mcp_section_key(), name, entry)?;
+    let dry = match status {
+        "unchanged" => "unchanged",
+        "created" => "would-create",
+        "updated" => "would-update",
+        other => other,
+    };
+    Ok(AgentInstallReport {
+        agent: agent.as_str().to_string(),
+        scope: "project",
+        config_path: config_path.display().to_string().replace('\\', "/"),
+        status: dry,
+        note: Some(match note {
+            Some(n) => format!("pkg server `{name}` — {n}"),
+            None => format!("pkg server `{name}`"),
+        }),
+    })
+}
+
+pub(super) fn apply_install_pkg_server(
+    agent: Agent,
+    config_path: &Path,
+    name: &str,
+    entry: &serde_json::Value,
+) -> Result<AgentInstallReport> {
+    let section = agent.mcp_section_key();
+    let (status, note) = decide_pkg_action(config_path, section, name, entry)?;
+    if status != "unchanged" {
+        if let Some(parent) = config_path.parent() {
+            fs::create_dir_all(parent)
+                .with_context(|| format!("creating dir `{}`", parent.display()))?;
+        }
+        let mut merged = merge_json(config_path, section, name, entry)?;
+        vibe_mcp::pkg_servers::mark_managed(&mut merged, name)?;
+        let serialized = serde_json::to_string_pretty(&merged)
+            .with_context(|| "serializing merged JSON config")?;
+        fs::write(config_path, serialized + "\n")
+            .with_context(|| format!("writing `{}`", config_path.display()))?;
+    }
+    Ok(AgentInstallReport {
+        agent: agent.as_str().to_string(),
+        scope: "project",
+        config_path: config_path.display().to_string().replace('\\', "/"),
+        status,
+        note: Some(match note {
+            Some(n) => format!("pkg server `{name}` — {n}"),
+            None => format!("pkg server `{name}`"),
+        }),
     })
 }
 

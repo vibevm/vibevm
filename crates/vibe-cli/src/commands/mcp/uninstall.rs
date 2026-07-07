@@ -159,6 +159,16 @@ fn walk_uninstall(
                 if let Some(path) = path {
                     let outcome = uninstall_mcp_entry(*agent, concrete_scope, &path, dry_run)?;
                     results.push(outcome);
+                    // Package-declared servers (PROP-027 §2.4): every
+                    // entry the vibevm sidecar marks as managed goes
+                    // too; operator-owned servers stay untouched.
+                    uninstall_managed_entries(
+                        *agent,
+                        concrete_scope,
+                        &path,
+                        dry_run,
+                        &mut results,
+                    )?;
                 }
             }
             if what.includes_skill() {
@@ -246,6 +256,61 @@ fn uninstall_mcp_entry(
         status: "removed",
         note: Some(format!("dropped `{SERVER_NAME}` from {section}")),
     })
+}
+
+/// Remove every entry the vibevm-managed sidecar names (PROP-027
+/// §2.4) — the package-declared servers `vibe mcp install` registered.
+/// JSON-only by construction (the sidecar exists only where package
+/// servers register); a config without a sidecar is a no-op.
+fn uninstall_managed_entries(
+    agent: Agent,
+    scope: Scope,
+    config_path: &Path,
+    dry_run: bool,
+    results: &mut Vec<AgentInstallReport>,
+) -> Result<()> {
+    if agent.config_format() != ConfigFormat::Json || !config_path.exists() {
+        return Ok(());
+    }
+    let doc = read_json(config_path)?;
+    let managed = vibe_mcp::pkg_servers::managed_entries(&doc);
+    if managed.is_empty() {
+        return Ok(());
+    }
+    let section = agent.mcp_section_key();
+    if dry_run {
+        for name in &managed {
+            results.push(AgentInstallReport {
+                agent: agent.as_str().to_string(),
+                scope: scope.as_str(),
+                config_path: config_path.display().to_string().replace('\\', "/"),
+                status: "would-remove",
+                note: Some(format!("drop managed pkg server `{name}` from {section}")),
+            });
+        }
+        return Ok(());
+    }
+    let mut doc = doc;
+    for name in &managed {
+        if let Some(servers) = doc.get_mut(section).and_then(|v| v.as_object_mut()) {
+            servers.remove(name);
+        }
+        vibe_mcp::pkg_servers::unmark_managed(&mut doc, name);
+        results.push(AgentInstallReport {
+            agent: agent.as_str().to_string(),
+            scope: scope.as_str(),
+            config_path: config_path.display().to_string().replace('\\', "/"),
+            status: "removed",
+            note: Some(format!(
+                "dropped managed pkg server `{name}` from {section}"
+            )),
+        });
+    }
+    let serialized =
+        serde_json::to_string_pretty(&doc).with_context(|| "serializing stripped JSON config")?;
+    fs::write(config_path, serialized + "\n")
+        .with_context(|| format!("writing `{}`", config_path.display()))?;
+    Ok(())
 }
 
 fn uninstall_skill(
