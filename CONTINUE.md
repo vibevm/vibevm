@@ -1,220 +1,238 @@
 # CONTINUE.md — cold-resume checkpoint
 
-_Written 2026-07-07 (the FOURTH campaign of the day). **The
-AGENTIC-TCG-RUST CAMPAIGN (`spec/terraforms/AGENTIC-TCG-RUST-PLAN-v0.1.md`)
-is COMPLETE — Phases 0–7 executed end to end on the owner's goal
-«выполни план до конца», EXECUTED status in the plan, the full panel
-green at close.** The tcg family is BILINGUAL: the same four `tcg_*`
-tools now answer `language: "rust"` through the consumer's own
-rust-analyzer — PROP-026's central bet (a new language is an enum
-value, not new tools) is cashed. rust-ai-native is **0.5.0** with the
-owner's D13 language-suffix renames executed. The session's ~28
-commits (incl. this checkpoint pair) are PUSHED to the source mirrors
-at session close per the wind-down contract._
+_Written 2026-07-07, session close. This session ran TWO campaigns to
+completion: (1) the **discipline-core mini-fix** (CONTINUE item 1 of
+the previous checkpoint — the single-crate defect turned out
+three-faced, plus a bonus LSP-retrigger fix the bench surfaced), and
+(2) the **MCP-SOVEREIGNTY campaign whole**
+(`spec/terraforms/MCP-SOVEREIGNTY-PLAN-v0.1.md`, Waves 0–6, EXECUTED
+on the owner's «план должен быть выполнен до конца, все волны»). The
+`mcp` package KIND exists end to end; the discipline serves itself
+over MCP with no vibe in the runtime path; `crates/vibe-tcg` is
+deleted; vibevm dogfoods its own `.mcp.json`. Everything is PUSHED to
+both mirrors (`d7c3fe2`); the tree is clean; the full panel was green
+at close._
 
 > **`spec/WAL.md` is the canonical living state**; if this snapshot
 > and the WAL disagree, the WAL wins. The **git log is the
-> authoritative per-item record**. Boot first (`CLAUDE.md` →
-> `spec/boot/INDEX.md` → its files → `spec/WAL.md`), then read this.
+> authoritative per-item record**; the plan's §13 carries per-wave
+> commit maps. Boot first (`CLAUDE.md` → `spec/boot/INDEX.md` → its
+> files → `spec/WAL.md`), then read this.
 
 ---
 
 ## TL;DR
 
-The session opened on `восстанови сессию`, drafted the Stage-B
-delivery plan for the TS null's follow-up (the owner BACKLOGGED it the
-same hour — its five §14 review points stay open), then took the real
-commission: the Rust twin of the agentic type oracle. The plan was
-authored against verified tree facts, owner-amended (seven §17
-resolutions — the D13 language-suffix policy is now a STANDING
-convention in GUIDE §2), and executed whole: LSP bridge over the
-consumer's rustup-resolved rust-analyzer, the `tcg-rust` enriching
-relay with IN-PROCESS conform enrichment, `research/rust-demo`, the
-product's per-language dispatch, both live chains green, and a 9/9
-differential corpus with the privacy gap DOCUMENTED as an expectation.
-Every §4 prediction held; no latency target moved (cold 2 535 ms vs
-15 s budget; warm validate p50 < 1 ms vs 500 ms). After close the
-owner reviewed the WAL's standing findings; the answer (recorded in
-the WAL too): six are paid lessons, one is the designed approximation
-posture, and exactly TWO items await owner decisions.
+The session opened on `восстанови сессию`, executed the commissioned
+discipline-core mini-fix (validator/scanner naming unified through
+`store::crate_dir_name`; the path-scope predicates `in_src`/`in_tests`
+/`is_lib_root` — the live walk caught that naming alone left the gate
+silent; init's single-crate label switched to the directory basename;
+scan-vacuity warnings in both engines; and the acceptance bench caught
+rust-analyzer's ServerCancelled/-32802 race — the bridge now
+retriggers under the same deadline). Then the owner opened the
+architecture discussion that became MCP-SOVEREIGNTY: kinds are
+owner-extensible, `mcp` is the fifth KIND (`app` anticipated), the
+discipline servers ship as SEPARATE exact-pinned packages, all
+commands (not just tcg) serve over MCP, and vibe delivers but never
+serves. Six waves later that is all real, tested, and dogfooded.
 
 ## Where work stands
 
-- **Branch `main`**, working tree clean after the checkpoint pair;
-  the session (~28 commits `77218b5`→HEAD) pushed to the mirrors at
-  close — local == origin at this checkpoint.
-- Versions: discipline-core 0.4.0, rust-ai-native **0.5.0** (+2
-  crates `tcg-oracle-bridge-rust` / `tcg-cli-rust`, 4th `[[binary]]`
-  `tcg-rust`, 3 spec docs, the D13 crate renames), typescript-ai-native
-  0.4.0 (untouched — §4.5 held). vibevm product: `vibe-tcg` gained the
-  rust language value + per-language recipe tables; vibe-mcp adapter
-  untouched by construction.
-- Floor at close: `self-check.sh` 13 steps exit 0; conform 0 (11
-  gated / 4 exempt); specmap 592/578/590, 0 suspects/0 warnings;
-  rust-demo floor ALL green; ts-demo floor 7/7; `vibe check` clean;
-  `vibe bin list` = **8 binaries**; both `live_chain_on_*` green in
-  2.7 s; corpus agreement 9/9.
+- **Branch `main`**, tree clean, local == origin == github @
+  `d7c3fe2` (mirrored at campaign close per Rule 4 — the work was
+  owner-commissioned).
+- Package versions: discipline-core **0.6.0** (+ `mcp-core`),
+  rust-ai-native **0.5.0** (bench module exported; boot snippet
+  re-taught), typescript-ai-native **0.4.0** (same),
+  **mcp:org.vibevm/discipline-rust 0.5.0** (NEW: 18 tools),
+  **mcp:org.vibevm/discipline-typescript 0.4.0** (NEW: 17 tools).
+  vibevm product: `Kind::Mcp` + `McpServerDecl` + the delivery surface
+  in vibe-mcp/vibe-workspace; `vibe-tcg` DELETED; vibe-mcp back to its
+  four product tools.
+- Close panel: self-check **22 steps exit 0** (grew both mcp-package
+  gates); conform 0 findings (**10 gated** after vibe-tcg's departure
+  / 4 exempt); specmap **604/583/597, 0 suspects/0 warnings**; `vibe
+  check` clean; `vibe bin list` = **10 binaries**; corpus **9/9**
+  (cold 2 538 ms, warm p95 60 ms); live chains **2.55 s (rust) /
+  0.82 s (ts), both with vibe scrubbed from PATH**; both demos
+  repinned at the 0.6.0 flow; `.mcp.json` answered live (18+17 tools)
+  over the registered command lines.
 
 ## The open items (owner-court)
 
-1. **Commission the discipline-core mini-fix** (RECOMMENDED at the
-   post-close review): (a) the validator/scanner disagreement —
-   `validate_against_tree` derives no name from a literal `"."` root
-   (`Path::new(".").file_name() == None`) while the scanner uses the
-   dir basename, so a bare single-crate consumer cannot gate its
-   crate. Fix surface: the AUTHORED engine in
-   `packages/org.vibevm/discipline-core/v0.4.0/crates/conform-core/src/config.rs`
-   (the vendored twin I read is
-   `packages/org.vibevm/rust-ai-native/v0.5.0/crates/vendor/conform-core/src/config.rs:248`)
-   — resolve the literal against the root and take the basename,
-   exactly as the scanner does; (b) optional in the same bump: a
-   vacuity warning when gated crates exist but the scan found 0
-   tagged items. Ritual: discipline-core version bump → `cargo xtask
-   sync-engines` → both stacks re-vendored → re-materialise. ~Half a
-   day with gates.
-2. **Registry publish 0.5.0/0.4.0/0.4.0** — owner call, unchanged.
-3. **Stage-B delivery experiments** — BACKLOGGED
-   (`spec/terraforms/TCG-STAGE-B-DELIVERY-PLAN-v0.1.md`, five open §14
-   review points; re-verify its §1 facts at pickup — they age).
-4. **`vibe install --refresh <pkg>` ergonomics** (optional): a
-   consumer's local-dir registry (`--registry ../../packages`) is NOT
-   in-workspace for PROP-011 §2.6, so upstream package edits need the
-   documented rm-and-reinstall of the demo's slot. Live-able;
-   commission only if it starts to annoy.
-5. `ra_ap_*` embedding — ROADMAP.md **Far backlog** (first entry);
-   token-level TCG — VERY-FAR-FUTURE; PROP-025 v2 surfaces unchanged.
+1. **Registry publish** — the set grew to FIVE packages:
+   discipline-core 0.6.0, rust-ai-native 0.5.0, typescript-ai-native
+   0.4.0, discipline-rust 0.5.0, discipline-typescript 0.4.0. Owner
+   call, unchanged posture (never published without the word).
+2. **Stage-B delivery experiments** — still BACKLOGGED
+   (`spec/terraforms/TCG-STAGE-B-DELIVERY-PLAN-v0.1.md`); note its
+   «MCP-mounted arm» is now FREE to run — mount
+   `discipline-typescript` instead of prompt-naming a CLI. Re-verify
+   its §1 facts at pickup; they predate two campaigns.
+3. **vibe-mcp rebase onto mcp-core** (named deferral D-a) — one MCP
+   implementation ecosystem-wide; only after the topology has settled
+   in use.
+4. **PROP-025 v2 shims** (D-b) — would make `.mcp.json` managed
+   entries survive version bumps without a re-register.
+5. **Hygiene pair from the mini-fix campaign** (still open): a
+   TS-STACK step in self-check (the 1.93.1 toolchain drift sat latent
+   there; the mcp-TS package IS gated now, the stack itself is not),
+   and colon-free fact-store slot names (today `sha256:<hex>.json`
+   lands as an NTFS alternate data stream — works by accident).
+6. **`vibe install --refresh <pkg>` ergonomics** — the demo
+   rm-and-reinstall recipe was walked twice more this session; still
+   live-able, friction is real.
+7. **The `app` kind** — anticipated by VIBEVM-SPEC §4.1's amendment
+   text; not designed.
 
 ## Quick-start (verify the tree)
 
 ```sh
-bash tools/self-check.sh; echo "EXIT=$?"        # 13 steps, must be 0
-cargo run -q -p vibe-cli -- bin list             # 8 binaries; tcg-rust listed
-cd research/rust-demo && cargo run -q --manifest-path ../../Cargo.toml -p vibe-cli -- \
-    bin exec tcg-rust -- validate crates/rust-demo/src/cells/greeting.rs --root .
-                                # 0 diagnostics; 0 findings; exit 0
-cargo run -q -p vibe-cli -- bin exec tcg-rust -- \
-    bench --corpus research/tcg-bench/corpus-rust \
-    --report /tmp/r.json --root research/rust-demo   # agreement 9/9
-cargo test -p vibe-mcp --test tcg_tools -- --ignored  # BOTH live chains
+bash tools/self-check.sh; echo "EXIT=$?"      # 22 steps, must be 0
+cargo run -q -p vibe-cli -- bin list           # 10 binaries incl. discipline-mcp-*
+cargo run -q -p vibe-cli -- mcp status --path . # both servers built + managed
+# the registered servers answer over their exact command lines:
 printf '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{}}\n{"jsonrpc":"2.0","id":2,"method":"tools/list"}\n' \
-  | cargo run -q -p vibe-cli -- mcp serve --path research/rust-demo
-                                # four tcg_* tools; language enum = [typescript, rust]
+  | ./vibedeps/mcp-discipline-rust/0.5.0/target/release/discipline-mcp-rust.exe --path .
+# live chains (need rust-analyzer / node):
+cargo test --manifest-path packages/org.vibevm/discipline-rust/v0.5.0/Cargo.toml \
+  -p discipline-mcp-rust --test live_chain -- --ignored
+cargo test --manifest-path packages/org.vibevm/discipline-typescript/v0.4.0/Cargo.toml \
+  -p discipline-mcp-typescript --test live_chain -- --ignored
+cargo run -q -p vibe-cli -- bin exec tcg-rust -- bench \
+  --corpus research/tcg-bench/corpus-rust --report /tmp/r.json \
+  --root research/rust-demo                   # agreement 9/9
 ```
 
-## Non-obvious findings (this campaign; the WAL section carries all eight in full)
+## Non-obvious findings (this session; the WAL carries the full set)
 
-The post-close review's framing, worth keeping: the WAL writes
-findings BLUNTLY by design (FALSE / impossible / load-bearing) so the
-next session trips over the words — the tone is the genre, not an
-alarm. Status of the eight: five are paid-and-tested lessons
-(serverStatus declare-and-trust; the progress-drain heuristic
-falsified twice and deliberately ABSENT with a pinning replay test;
-r-a's default-off experimental diagnostics shipped via BOTH config
-channels; multi-fence hover; vacuous-green scan_roots), one is the
-designed D2 approximation (privacy: r-a silent, cargo E0423/E0603 by
-reference shape — corpus case 06 asserts the asymmetry and flips red
-when r-a catches up; the floor stays the truth), and two are the
-owner-court items above (#1, #4).
+- **rust-analyzer ServerCancelled (-32802 + `retriggerRequest:true`)
+  is a retry instruction, not an error** — the diagnostics pull races
+  r-a's own overlay revision bump nondeterministically (9/9 one day,
+  deterministic-red the next). The bridge resends with a fresh id
+  under the SAME deadline; replay-pinned.
+- **A path-scope predicate inlined six times is six bugs** — the bare
+  single-crate shape (`src/lib.rs`, no crate prefix) never matched
+  `contains("/src/")`; the tree was scanned, attributed, validated,
+  and every rule silently declined it. Only an end-to-end walk that
+  EXPECTS a finding catches a rule-scope hole; vacuity warnings
+  cannot (the files WERE attributed).
+- **Writer-threading can never capture a tool run's whole story** —
+  floor's cargo/node children write fd 2 directly. The mcp-core
+  capture guard redirects the PROCESS stderr (dup2 / SetStdHandle)
+  into a FILE (a pipe would deadlock a chatty floor). libtest diverts
+  the test thread's own eprintln! before the std handle — so unit
+  suites pin the child path and rustdoc examples (libtest-free) pin
+  the in-process path.
+- **Cross-slot Cargo path-deps stay impossible** (PROP-024 §2.4), so
+  an mcp package VENDORS its closure and the **exact `=X.Y.Z` pin**
+  (enforced by `Manifest::validate`) is what holds the vendored
+  engines and the consumer's gates to one version set. The vendored
+  layout must MIRROR the stack's crates/ layout or relative path-deps
+  break; `mcp-core` targets only mcp packages.
+- **sync-engines' walker now filters PROP-024's full denylist** —
+  node_modules leaked into the first TS mirror; NOTE the filter hides
+  denylisted strays from the differ, so pre-existing strays need one
+  manual purge when adding a set.
+- **The TS stack's crates embed `tools/` sources via include_str!
+  from the package root** — any vendored copy must mirror `tools/`
+  too (the sixth [[sync]] set).
+- **Package servers register PROJECT-scope only** — `{project_root}`
+  demands a project; every project-scope agent config is JSON, so the
+  managed sidecar (top-level `"vibevm": {"managed": [...]}`, never a
+  key inside a server entry — hosts validate entry shapes) has no
+  TOML form.
+- **Execution simplifications recorded in the plan ledger**: D3b's
+  session-lib extraction proved unnecessary (tcg-cli crates already
+  ARE the libs) and the stack bumps fell away (bump only what
+  changes; the pin + version-mirroring carry the law).
 
-Mechanical specifics a future session needs:
-
-- The r-a↔rustc CODE_MAP rows (bench-owned): E0308↔E0308,
-  E0425↔E0425, **E0107↔E0061** (arity), **E0559↔E0609**
-  (unknown-field), E0063↔E0063, E0599↔E0599.
-- Corpus content must EXTEND the real demo file, never restate its
-  imports (a duplicate `use` added E0252 noise once).
-- specmap `scan_roots` are CRATE DIRS named explicitly; a parent dir
-  scans nothing and the gate greens by vacuity.
-- The tests-out split's conform gotcha bit again: non-`#[test]`
-  helpers in a `#[path]` tests file need their own `#[cfg(test)]` or
-  their expects read as domain.
-- rust-analyzer is a STACK PREREQUISITE (`rustup component add
-  rust-analyzer`; 1.93.1 on this box, installed during plan
-  authoring); package e2e tests hard-fail with that recipe, never
-  skip.
-
-## Repository map (delta over the agentic-tcg map)
+## Repository map (delta over the previous checkpoint)
 
 ```
 vibevm/
-├─ crates/vibe-tcg/                LANGUAGES += rust; per-language recipe
-│   └─ src/registry/tests.rs        tables; tests-out split (351-line cell)
-├─ research/rust-demo/             NEW: the committed Rust consumer testbed
-│   └─ crates/rust-demo/src/cells/  (GuestName newtype, empty frozen baseline,
-│                                    floor green via the slot toolchain)
-├─ research/tcg-bench/
-│   ├─ corpus-rust/{cases,content}/ NEW: 9 differential cases incl. the
-│   │                                documented privacy gap + Cyrillic pin
-│   └─ reports/REPORT-2026-07-07-rust-baseline.md   agreement 9/9 + latency
-├─ spec/terraforms/
-│   ├─ AGENTIC-TCG-RUST-PLAN-v0.1.md   EXECUTED (commit map inside)
-│   └─ TCG-STAGE-B-DELIVERY-PLAN-v0.1.md  BACKLOGGED (owner)
-├─ ROADMAP.md                      M1.25 (in execution → shipped with this);
-│                                   NEW "Far backlog" section (ra_ap entry)
-└─ packages/org.vibevm/rust-ai-native/v0.5.0/   (bumped from v0.4.0)
-    ├─ crates/{conform,discipline,specmap}-cli-rust/   D13 RENAMES
-    ├─ crates/tcg-oracle-bridge-rust/  NEW: the LSP client seam (frame/
-    │                                   position/client/oracle cells)
-    ├─ crates/tcg-cli-rust/            NEW: bin tcg-rust (serve/one-shot/bench)
-    └─ spec/rust/
-        ├─ tools/vibe-agentic-tcg-rust.md   NEW seven-section brief
-        ├─ tools/vibe-tcg-rust.md           RENAMED from vibe-tcg.md (D13)
-        └─ mechanisms/TCG-ORACLE-RUST-v0.1.md, TCG-PROTOCOL-RUST-v0.1.md  NEW
+├─ .mcp.json                        NEW, COMMITTED: vibevm product entry +
+│                                    both discipline servers (managed sidecar)
+├─ crates/
+│   ├─ vibe-tcg/                    DELETED (the whole dispatch layer)
+│   ├─ vibe-mcp/                    product tools only; + pkg_servers cell
+│   │                                (payloads, substitution, managed sidecar)
+│   └─ vibe-workspace/src/bins.rs   + DeclaredMcpServer, collect_mcp_servers
+├─ packages/org.vibevm/
+│   ├─ discipline-core/v0.6.0/      + crates/mcp-core (wire/server/toolset/
+│   │                                capture) + spec/mechanisms/MCP-CORE-v0.1
+│   ├─ discipline-rust/v0.5.0/      NEW mcp-kind package: server crate +
+│   │                                11-crate vendored closure, pin =0.5.0
+│   ├─ discipline-typescript/v0.4.0/ NEW: server + 13-crate closure + tools/,
+│   │                                pin =0.4.0
+│   └─ (both stacks)                boot snippets re-taught; ts bench pub
+├─ fixtures/registry/org.vibevm/
+│   ├─ pin-server/ pin-stack/       the exact-pin + registration fixtures
+├─ spec/
+│   ├─ modules/vibe-mcp/PROP-027-mcp-packages.md   NEW, IMPLEMENTED
+│   ├─ modules/vibe-mcp/PROP-026-…  superseded-in-topology block
+│   └─ terraforms/MCP-SOVEREIGNTY-PLAN-v0.1.md     EXECUTED (+§13 maps)
+├─ sync-engines.toml                multi-source [[sync]] sets (6)
+└─ VIBEVM-SPEC.md §4.1              five kinds, owner-extensible register
 ```
 
 ## Standing policies in force (long form)
 
-- **D13 language-suffix rule (owner, 2026-07-07, GUIDE §2)**: every
-  Rust artifact with a cross-language analog ends in `-rust` — crates
-  and modules included, executables and externally visible libraries
-  especially; no-analog artifacts (`env-audit`) and language-neutral
-  ones (vendored engines, the generic `vibe-tcg` crate) are outside
-  the rule.
-- **The fidelity posture (D2)**: the Rust oracle is an honest
-  APPROXIMATION — r-a is not rustc; curated-class agreement through
-  the mapping table, documented gaps as corpus expectations, the
-  floor is the truth. Consumer docs repeat it everywhere.
-- **rust-analyzer is a stack obligation (D11)**: installing
-  ai-native-rust obliges the machine; inside the stack's suite
-  absence is a recipe-carrying FAILURE; outside — no obligation.
-- **Latency misses report, never cancel (§17.7)** — none occurred.
+- **The five-kind register** (owner-sanctioned 2026-07-07): flow,
+  feat, stack, tool, **mcp**; grows only by owner amendment to
+  VIBEVM-SPEC §4.1; `app` anticipated. `[[mcp_server]]` is legal ONLY
+  in mcp-kind packages and mandatory there.
+- **The exact-pin law (PROP-027 §2.3)**: every package requirement of
+  an mcp package is `=X.Y.Z`; mcp packages bump in lockstep with what
+  they serve; version-mirroring is the naming convention.
+- **Vibe-free serving (PROP-027 §2.6)**: agent hosts launch slot
+  artifacts directly; vibe installs, builds, registers — never
+  serves. The live chains enforce this with a scrubbed PATH.
+- **One trust model, two verbs (PROP-027 §2.5)**: registering a
+  server inherits PROP-025's consent gate (org.vibevm allow-listed;
+  third parties need the explicit flag, refused with the recipe).
+- **PROP-026's grammar survives its topology**: the four tcg ops'
+  params/answers/no-prompt law are normative; `language` is a
+  validated compatibility param (mismatch refuses naming the right
+  server).
 - Clean-room (PLDI'25 repo untouched), production-grade/no-MVP, the
-  four CLAUDE.md rules, mirror/publish held for the owner's word —
-  all unchanged.
+  four CLAUDE.md rules, D13 language-suffix naming, publish held for
+  the owner's word — all unchanged.
 
-## Recent commit chain (campaign, newest first — see git log for all)
+## Recent commit chain (this session, newest first)
 
 ```
-docs(wal)/docs(continue)      session-end checkpoint pair (this push)
-docs(wal)                     the agentic-tcg-rust campaign complete
-docs(plan)                    flip the rust agentic campaign to executed
-build(deps)                   re-materialise vibedeps - campaign close
-test(research)                the rust differential corpus + bench baseline (9/9)
-style(tcg)                    tests-out split for the grown registry cell
-test(mcp)                     the rust live chain + absent-stack recipes
-feat(tcg)                     the rust language value across the family
-build(deps)                   re-materialise vibedeps with the tcg toolchain
-docs(packages)                declare the tcg-rust binary + self-trace roots
-feat(rust-ai-native)          tcg-rust - serve, one-shot ops, bench
-refactor(conform)             export the rust rule-set assembly seam
-feat(rust-ai-native)          tcg-oracle-bridge-rust - the r-a client seam
-feat(research)                rust-demo - the committed Rust consumer testbed
-fix(rust-ai-native)           correct the stale specmark path in init + guide
-build(deps)                   re-materialise vibedeps at rust-ai-native 0.5.0
-style(rust-ai-native)         reflow after the -rust renames
-docs(spec)                    PROP-026 - the rust rows + roadmap M1.25
-docs(rust-ai-native)          the agentic tcg brief + mechanisms
-refactor(rust-ai-native)      rename the cli crates to the -rust convention
-build(packages)               bump rust-ai-native to 0.5.0
-docs(plan)                    phase-0 spike findings rewrite D3/D10/s4.1
-docs(plan)                    fold the owner review into the rust tcg campaign
-docs                          roadmap far backlog - ra_ap embedding option
-docs(plan)                    draft the rust agentic oracle campaign
-docs(plan)                    backlog the stage-b delivery campaign
-docs(plan)                    draft the tcg stage-b delivery campaign
+d7c3fe2 docs(wal): the mcp sovereignty campaign complete - all six waves
+1451954 build(deps): campaign close - slots, demos, and the dogfood config
+7299e78 docs: the sovereignty re-teach - PROP-026 superseded in topology
+36461ba refactor(mcp)!: retire the tcg adapters and delete vibe-tcg
+cc6c3a4 docs(wal): mcp sovereignty wave 5 - vibe delivers, never serves
+3caa986 feat(mcp): vibe delivers package-declared servers (PROP-027 s2.4-2.5)
+d9e8c5e docs(wal): mcp sovereignty wave 4 - both language servers vibe-free
+e81b882 build(deps): materialise the mcp:discipline-typescript slot
+e19d57d feat(packages): mcp:discipline-typescript - the TS mirror
+07af178 refactor(typescript-ai-native): export the bench module
+fc848a8 docs(wal): mcp sovereignty wave 3 - the rust server ships standalone
+cf2e64c build(deps): materialise the mcp:discipline-rust slot
+fdd6baf feat(packages): mcp:discipline-rust - the discipline served standalone
+7b7f4c6 docs(wal): mcp sovereignty wave 2 - the neutral transport ships
+044ae86 build(deps): re-materialise the flow slot with mcp-core
+69fc129 refactor(xtask): multi-source sync-engines
+183bbf9 docs(spec): MCP-CORE-v0.1 - the transport mechanism
+ef018ee feat(discipline-core): mcp-core - the neutral MCP transport
+f922437 build(deps): re-materialise vibedeps at discipline-core 0.6.0
+28e6481 build(packages): bump discipline-core to 0.6.0
+7271dc9 docs(wal): mcp sovereignty waves 0-1 - the kind lands
+f2e9e51 docs: sweep the four-kind wording to the five-kind register
+01280bd feat(core): Kind::Mcp across the product + the [[mcp_server]] laws
+4943ad4 docs(spec): the mcp kind - VIBEVM-SPEC s4.1 + PROP-027
+257ae55 docs(plan): wave-0 spike findings - framing, capture, kind inventory
 ```
+
+(Before these: the mini-fix campaign `0bce3b2`…`5185bda` — see the WAL
+fifth-campaign section.)
 
 The WAL supersedes this snapshot wherever they diverge. Session-resume
 phrase: `восстанови сессию` (boots into a status report and waits —
-the open items above are the owner's call, not a standing mandate;
-item 1's recommendation awaits the owner's yes/no, not execution).
+the open items above are the owner's call, not a standing mandate).
