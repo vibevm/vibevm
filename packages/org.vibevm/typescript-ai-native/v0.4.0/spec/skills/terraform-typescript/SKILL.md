@@ -83,3 +83,15 @@ The BROWNFIELD §8 carry-over reconciliation (zero unaccounted intent),
 the floor green with every step armed (an empty `floor_disable`), and
 the sweep skill (`/discipline-sweep-typescript`) taking over as the
 recurring posture.
+
+## The generation-time assistant during raids
+
+Card raids rewrite cells wholesale — exactly where the oracle pays for
+itself. While drafting a cell replacement, validate the draft BEFORE it
+lands: `vibe bin exec tcg-typescript -- validate <file> --content-from -`
+(or the `tcg_validate` MCP tool with `content`). A non-baselined
+`ts-unsafe-in-domain` or `ts-cell-isolation` finding in the answer is
+the ratchet telling you early; `tcg_scope` lists the branded types at
+the seams you are about to cross. The raid's safe-stop invariant is
+unchanged — the floor gates the landing; the oracle just makes the
+landing green on the first attempt.
