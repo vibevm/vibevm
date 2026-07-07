@@ -16,9 +16,13 @@ pub fn run_test_gate(root: &Path, baseline_rel: &str) -> Result<()> {
         .with_context(|| format!("reading {}", baseline_path.display()))?;
     let baseline = testgate::parse_baseline(&baseline_json)?;
 
-    eprintln!("test-gate: running `node --test --test-reporter=tap` …");
+    eprintln!("test-gate: running `node --test --test-reporter=tap` over the policy's TS roots …");
+    let (config, _origin) = conform_core::Config::load_or_default(root)?;
     let mut cmd = crate::tools::node_command(root);
     cmd.args(["--test", "--test-reporter=tap"]);
+    for ts_root in &config.typescript.roots {
+        cmd.args(crate::tools::test_globs(ts_root));
+    }
     let out = cmd
         .output()
         .context("spawning node (install node >= 22.6 — strip-types runs .ts natively)")?;

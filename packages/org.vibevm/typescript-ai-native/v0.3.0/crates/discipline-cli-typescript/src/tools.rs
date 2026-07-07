@@ -10,7 +10,11 @@ use std::path::{Path, PathBuf};
 use std::process::Command;
 
 /// The project-local path of an npm-installed tool, if present.
+/// Absolute (via `std::path::absolute`, which never adds the `\\?\`
+/// prefix `cmd.exe` cannot exec) — a relative root combined with
+/// `current_dir` would otherwise double the path.
 pub(crate) fn local_tool(root: &Path, tool: &str) -> Option<PathBuf> {
+    let root = std::path::absolute(root).unwrap_or_else(|_| root.to_path_buf());
     let bin = root.join("node_modules").join(".bin");
     if cfg!(windows) {
         let cmd = bin.join(format!("{tool}.cmd"));
@@ -42,4 +46,12 @@ pub(crate) fn node_command(root: &Path) -> Command {
     let mut cmd = Command::new("node");
     cmd.current_dir(root);
     cmd
+}
+
+/// The `node --test` glob arguments for a scan root: node treats a bare
+/// directory argument as a module to load (and fails), so test
+/// discovery is expressed as explicit globs.
+pub(crate) fn test_globs(scan_root: &str) -> [String; 2] {
+    let dir = scan_root.trim_end_matches("/*").trim_end_matches('/');
+    [format!("{dir}/**/*.test.ts"), format!("{dir}/**/*.spec.ts")]
 }

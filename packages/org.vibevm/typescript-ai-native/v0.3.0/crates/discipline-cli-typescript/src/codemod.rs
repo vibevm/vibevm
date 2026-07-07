@@ -76,7 +76,7 @@ pub fn run_codemod_add_cell(root: &Path, cell: &str, spec_uri: &str) -> Result<(
     // Post-check: the new cell's own fast loop must be green from birth.
     let mut cmd = crate::tools::node_command(root);
     cmd.args(["--test", "--test-reporter=tap"]);
-    cmd.arg(format!("{cells_dir}/{cell}/"));
+    cmd.args(crate::tools::test_globs(&format!("{cells_dir}/{cell}")));
     let out = cmd.output()?;
     if !out.status.success() {
         let _ = std::fs::remove_dir_all(&dir);

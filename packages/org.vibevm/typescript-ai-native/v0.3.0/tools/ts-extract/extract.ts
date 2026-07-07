@@ -451,13 +451,30 @@ function extractFile(ts: TsModule, absPath: string, relPath: string): FileRecord
       const start = scanner.getTokenStart();
       if (!seenCommentStarts.has(start)) {
         seenCommentStarts.add(start);
-        const match = SUPPRESSION.exec(scanner.getTokenText());
+        const commentText = scanner.getTokenText();
+        const match = SUPPRESSION.exec(commentText);
         if (match !== null) {
           record.facts.push({
             fact: "ts_unsafe",
             kind: match[1] === "ignore" ? "ts_ignore" : "ts_expect_error",
             line: lineOf(sf, start),
             reason: match[2]?.trim() ?? null,
+          });
+        }
+        // A file-level `@scope` block is module-grain by definition and
+        // may sit detached from any declaration (e.g. followed by a
+        // second JSDoc block — TypeScript then attaches only the
+        // nearest block to the node, orphaning the first). Catch it in
+        // the comment stream; the marker dedup collapses the doubled
+        // case where the AST DID attach it.
+        const scopeMatch = /@scope\s+(\S+)/u.exec(commentText);
+        if (scopeMatch !== null && scopeMatch[1] !== undefined) {
+          record.markers.push({
+            tag: "scope",
+            uri: scopeMatch[1],
+            reason: null,
+            symbol: null,
+            line: lineOf(sf, start),
           });
         }
       }
