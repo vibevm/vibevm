@@ -129,6 +129,30 @@ pub fn parse_ndjson(text: &str) -> Result<Vec<FileRecord>, BridgeError> {
     Ok(out)
 }
 
+/// The extractor source, compiled into every consumer of this bridge
+/// from the package's own `tools/ts-extract/extract.ts` — the binary is
+/// self-contained, and extractor/bridge version skew is impossible
+/// because they build from one tree.
+pub const EXTRACTOR_SOURCE: &str = include_str!("../../../tools/ts-extract/extract.ts");
+
+/// Materialise the embedded extractor under
+/// `<project>/target/conform/ts-extract/` (content-addressed: re-runs
+/// are no-ops, concurrent runs agree) and return its path.
+pub fn materialise_extractor(project_root: &Path) -> std::io::Result<std::path::PathBuf> {
+    let digest = conform_core::content_hash(EXTRACTOR_SOURCE);
+    let short = digest.trim_start_matches("sha256:");
+    let dir = project_root
+        .join("target")
+        .join("conform")
+        .join("ts-extract");
+    let path = dir.join(format!("extract-{}.ts", &short[..16.min(short.len())]));
+    if !path.exists() {
+        std::fs::create_dir_all(&dir)?;
+        std::fs::write(&path, EXTRACTOR_SOURCE)?;
+    }
+    Ok(path)
+}
+
 /// Run the extractor over `project_root` (optionally narrowed to
 /// `files`, repo-relative) and parse its stream.
 pub fn extract_tree(

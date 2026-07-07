@@ -21,10 +21,6 @@ use std::sync::Mutex;
 use anyhow::{Context, Result};
 use conform_core::{Fact, Frontend};
 
-/// The extractor source, compiled into the binary from the package's
-/// own `tools/ts-extract/extract.ts`.
-const EXTRACTOR_SOURCE: &str = include_str!("../../../tools/ts-extract/extract.ts");
-
 /// The `ts-tsc` frontend (Ф6 brief §2). Construct once per run.
 pub struct TsTscFrontend {
     project_root: PathBuf,
@@ -33,23 +29,12 @@ pub struct TsTscFrontend {
 }
 
 impl TsTscFrontend {
-    /// Materialise the embedded extractor under
-    /// `<project>/target/conform/ts-extract/` (content-addressed, so
-    /// re-runs are no-ops and concurrent runs agree) and return the
+    /// Materialise the bridge's embedded extractor and return the
     /// frontend.
     pub fn new(project_root: &Path) -> Result<TsTscFrontend> {
-        let digest = conform_core::content_hash(EXTRACTOR_SOURCE);
-        let short = digest.trim_start_matches("sha256:");
-        let dir = project_root
-            .join("target")
-            .join("conform")
-            .join("ts-extract");
-        let path = dir.join(format!("extract-{}.ts", &short[..16.min(short.len())]));
-        if !path.exists() {
-            std::fs::create_dir_all(&dir).with_context(|| format!("creating {}", dir.display()))?;
-            std::fs::write(&path, EXTRACTOR_SOURCE)
-                .with_context(|| format!("writing {}", path.display()))?;
-        }
+        let path = ts_extract_bridge::materialise_extractor(project_root).with_context(|| {
+            format!("materialising ts-extract under {}", project_root.display())
+        })?;
         Ok(TsTscFrontend {
             project_root: project_root.to_path_buf(),
             extractor: path,
@@ -137,6 +122,6 @@ mod tests {
         let again = TsTscFrontend::new(tmp.path()).expect("frontend again");
         assert_eq!(first, again.extractor);
         let body = std::fs::read_to_string(&first).expect("read back");
-        assert_eq!(body, EXTRACTOR_SOURCE);
+        assert_eq!(body, ts_extract_bridge::EXTRACTOR_SOURCE);
     }
 }

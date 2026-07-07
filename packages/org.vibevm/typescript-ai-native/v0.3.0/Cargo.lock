@@ -416,6 +416,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "specmap-cli-typescript"
+version = "0.3.0"
+dependencies = [
+ "anyhow",
+ "specmap-core",
+ "specmap-scan-typescript",
+ "ts-extract-bridge",
+]
+
+[[package]]
 name = "specmap-core"
 version = "0.3.0"
 dependencies = [
@@ -432,6 +442,15 @@ dependencies = [
  "tempfile",
  "toml",
  "walkdir",
+]
+
+[[package]]
+name = "specmap-scan-typescript"
+version = "0.3.0"
+dependencies = [
+ "specmap-core",
+ "specmark-grammar",
+ "ts-extract-bridge",
 ]
 
 [[package]]

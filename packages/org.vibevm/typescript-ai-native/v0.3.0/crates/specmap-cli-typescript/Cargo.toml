@@ -1,0 +1,21 @@
+[package]
+name = "specmap-cli-typescript"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+license-file.workspace = true
+publish.workspace = true
+repository.workspace = true
+homepage.workspace = true
+description = "The specmap-typescript driver: build/--check the PROP-014 index over a TypeScript tree via the ts-tsc scanner, plus the TS orphan gate (--gate)"
+
+[[bin]]
+name = "specmap-typescript"
+path = "src/main.rs"
+
+[dependencies]
+specmap-core.workspace = true
+specmap-scan-typescript.workspace = true
+ts-extract-bridge.workspace = true
+anyhow.workspace = true
