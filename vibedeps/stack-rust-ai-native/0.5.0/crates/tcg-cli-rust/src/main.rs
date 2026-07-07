@@ -90,8 +90,10 @@ enum Cmd {
     },
 }
 
-fn resolve_root(root: &PathBuf) -> PathBuf {
-    tcg_oracle_bridge_rust::verbatim_free(&root.canonicalize().unwrap_or_else(|_| root.clone()))
+fn resolve_root(root: &std::path::Path) -> PathBuf {
+    tcg_oracle_bridge_rust::verbatim_free(
+        &root.canonicalize().unwrap_or_else(|_| root.to_path_buf()),
+    )
 }
 
 fn main() -> Result<()> {

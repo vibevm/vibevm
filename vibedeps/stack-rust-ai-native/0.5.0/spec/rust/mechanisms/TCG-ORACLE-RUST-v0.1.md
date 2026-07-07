@@ -107,10 +107,12 @@ Consequences, all normative:
   E0599↔E0599). Diagnostic CODES may differ for the same defect;
   existence-grain agreement is the claim, through the table.
 - Known silences are DOCUMENTED-GAP corpus cases, not omissions:
-  privacy (E0603) at 1.93.1 is the standing exhibit — the oracle
-  answers nothing, cargo check answers E0603, and the case asserts
-  exactly that so a future r-a flips it red and the gap list never
-  rots.
+  privacy at 1.93.1 is the standing exhibit — the oracle answers
+  nothing while cargo check speaks (rustc's code depends on the
+  reference shape: E0423 for a use-imported tuple constructor, E0603
+  for the module-path form — one defect class, two codes; the corpus
+  pins the E0423 shape). The case asserts exactly that asymmetry so a
+  future r-a flips it red and the gap list never rots.
 - Borrow-check subtleties, trait-solver edges, and macro-heavy code
   are named as the open delta class; no corpus case claims them.
 

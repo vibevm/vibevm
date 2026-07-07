@@ -1,6 +1,6 @@
 [meta]
 generated_by = "vibe 0.1.0-dev"
-generated_at = "2026-07-07T07:08:49Z"
+generated_at = "2026-07-07T07:25:38Z"
 schema_version = 5
 root_dependencies = [
     "flow:org.vibevm/discipline-core@^0.4.0",
@@ -24,7 +24,7 @@ name = "rust-ai-native"
 group = "org.vibevm"
 version = "0.5.0"
 source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/rust-ai-native/v0.5.0"
-content_hash = "sha256:0c6f75e32f867829ab39e6cd61e112ac06423feaf16ed86c80bc01fba055b4bf"
+content_hash = "sha256:a13459248870e0eda1b702d59c3e569e73a1b8ad0b1f206c16e50620874c16e9"
 files_written = []
 dependencies = ["flow:org.vibevm/discipline-core@=0.4.0"]
 source_kind = "registry"
