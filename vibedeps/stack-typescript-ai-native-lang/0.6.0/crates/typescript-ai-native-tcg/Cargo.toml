@@ -1,0 +1,28 @@
+[package]
+name = "typescript-ai-native-tcg"
+description = "The typescript-ai-native-tcg binary: the enriching serve relay an MCP host drives, one-shot validate/scope/complete/type forms, and the bench harness -- discipline enrichment through the same conform rules as the gate"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+license-file.workspace = true
+publish.workspace = true
+repository.workspace = true
+homepage.workspace = true
+
+[[bin]]
+name = "typescript-ai-native-tcg"
+path = "src/main.rs"
+
+[dependencies]
+anyhow = { workspace = true }
+clap = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+conform-core = { workspace = true }
+typescript-ai-native-conform = { workspace = true }
+typescript-ai-native-extract-bridge = { workspace = true }
+typescript-ai-native-tcg-bridge = { workspace = true }
+
+[dev-dependencies]
+tempfile = { workspace = true }

@@ -1,23 +1,23 @@
 [meta]
 generated_by = "vibe 0.1.0-dev"
-generated_at = "2026-07-07T15:04:04Z"
+generated_at = "2026-07-07T16:49:57Z"
 schema_version = 5
 root_dependencies = [
-    "stack:org.vibevm/rust-ai-native@^0.6.0",
-    "stack:org.vibevm/typescript-ai-native@^0.5.0",
+    "stack:org.vibevm/rust-ai-native@^0.7.0",
+    "stack:org.vibevm/typescript-ai-native@^0.6.0",
 ]
 
 [[package]]
 kind = "stack"
 name = "rust-ai-native"
 group = "org.vibevm"
-version = "0.6.0"
-source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/rust-ai-native/v0.6.0"
-content_hash = "sha256:a589ff11134f26ebf31180036ee0e21b4919aa333996bd8df80ef604ce5d2040"
+version = "0.7.0"
+source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/rust-ai-native/v0.7.0"
+content_hash = "sha256:08f6495e5d9eec5b1a94c704d336d2da84ba2c0af8fe0be273952386aed55e9d"
 files_written = []
 dependencies = [
-    "mcp:org.vibevm/rust-ai-native-mcp@=0.5.0",
-    "stack:org.vibevm/rust-ai-native-lang@=0.5.0",
+    "mcp:org.vibevm/rust-ai-native-mcp@=0.7.0",
+    "stack:org.vibevm/rust-ai-native-lang@=0.7.0",
 ]
 source_kind = "registry"
 
@@ -25,13 +25,13 @@ source_kind = "registry"
 kind = "stack"
 name = "typescript-ai-native"
 group = "org.vibevm"
-version = "0.5.0"
-source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/typescript-ai-native/v0.5.0"
-content_hash = "sha256:302a718ac2511ca5b0332bf9c20381aeafd880b56c199342e98746047e351012"
+version = "0.6.0"
+source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/typescript-ai-native/v0.6.0"
+content_hash = "sha256:8f78a8d5e8bf4e5065d813838b8c4827db694d65b7eb2f19bda65e7db5697bb3"
 files_written = []
 dependencies = [
-    "mcp:org.vibevm/typescript-ai-native-mcp@=0.4.0",
-    "stack:org.vibevm/typescript-ai-native-lang@=0.4.0",
+    "mcp:org.vibevm/typescript-ai-native-mcp@=0.6.0",
+    "stack:org.vibevm/typescript-ai-native-lang@=0.6.0",
 ]
 source_kind = "registry"
 
@@ -39,9 +39,9 @@ source_kind = "registry"
 kind = "flow"
 name = "core-ai-native"
 group = "org.vibevm"
-version = "0.6.0"
-source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/core-ai-native/v0.6.0"
-content_hash = "sha256:f5d865780d6be9676919404b98fbc3e92456a2730f3b7e6568843f7958c60aca"
+version = "0.7.0"
+source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/core-ai-native/v0.7.0"
+content_hash = "sha256:82d4da92a57aef454eaf9d827c3e42cb6afef94758128f1bce81d4b13ffe52e8"
 files_written = []
 source_kind = "registry"
 
@@ -49,42 +49,42 @@ source_kind = "registry"
 kind = "stack"
 name = "rust-ai-native-lang"
 group = "org.vibevm"
-version = "0.5.0"
-source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/rust-ai-native-lang/v0.5.0"
-content_hash = "sha256:2cacc9470ab4ff5e0fa026a0ca74402703283e11dbc5ef5b480fa8cc704ebd7a"
+version = "0.7.0"
+source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/rust-ai-native-lang/v0.7.0"
+content_hash = "sha256:f59cee101fdd3e7eb37b002bf9a1c50b9a6b7a405a9862ff94488bbabcd136b2"
 files_written = []
-dependencies = ["flow:org.vibevm/core-ai-native@=0.6.0"]
+dependencies = ["flow:org.vibevm/core-ai-native@=0.7.0"]
 source_kind = "registry"
 
 [[package]]
 kind = "mcp"
 name = "rust-ai-native-mcp"
 group = "org.vibevm"
-version = "0.5.0"
-source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/rust-ai-native-mcp/v0.5.0"
-content_hash = "sha256:948f877ddc60b25353d96f22dcf3931995ec60922693bdd0b805e5cbe252915e"
+version = "0.7.0"
+source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/rust-ai-native-mcp/v0.7.0"
+content_hash = "sha256:adb0a7e8fc8ed8038faf0b65d3ab109994d69e49bc9ba3617577aea9dd3071ad"
 files_written = []
-dependencies = ["stack:org.vibevm/rust-ai-native-lang@=0.5.0"]
+dependencies = ["stack:org.vibevm/rust-ai-native-lang@=0.7.0"]
 source_kind = "registry"
 
 [[package]]
 kind = "stack"
 name = "typescript-ai-native-lang"
 group = "org.vibevm"
-version = "0.4.0"
-source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/typescript-ai-native-lang/v0.4.0"
-content_hash = "sha256:f4008a81b8bcd7f3daae95f8ec0eb776505b46baa7d961557bcd75a951c543eb"
+version = "0.6.0"
+source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/typescript-ai-native-lang/v0.6.0"
+content_hash = "sha256:cf25a6b4fc8303a98a499852a2b7735010cc49fa6438540797abfd154cf47053"
 files_written = []
-dependencies = ["flow:org.vibevm/core-ai-native@=0.6.0"]
+dependencies = ["flow:org.vibevm/core-ai-native@=0.7.0"]
 source_kind = "registry"
 
 [[package]]
 kind = "mcp"
 name = "typescript-ai-native-mcp"
 group = "org.vibevm"
-version = "0.4.0"
-source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/typescript-ai-native-mcp/v0.4.0"
-content_hash = "sha256:8c55f4fe59fb9cb7c744558c0cc47904f67589e76f186e32b82284241d77cde1"
+version = "0.6.0"
+source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/typescript-ai-native-mcp/v0.6.0"
+content_hash = "sha256:ee452fe28e0bb3db507235dc9784dc160c0bfb898eb0f353cbf3cadccb9f9a1b"
 files_written = []
-dependencies = ["stack:org.vibevm/typescript-ai-native-lang@=0.4.0"]
+dependencies = ["stack:org.vibevm/typescript-ai-native-lang@=0.6.0"]
 source_kind = "registry"

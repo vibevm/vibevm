@@ -14,15 +14,15 @@ path = "spec/boot/00-core.md"
 kind = "static"
 
 [[entry]]
-path = "vibedeps/flow-core-ai-native/0.6.0/spec/boot/10-flow-core-ai-native.md"
+path = "vibedeps/flow-core-ai-native/0.7.0/spec/boot/10-flow-core-ai-native.md"
 kind = "static"
 
 [[entry]]
-path = "vibedeps/stack-rust-ai-native-lang/0.5.0/spec/boot/20-stack-rust-ai-native-lang.md"
+path = "vibedeps/stack-rust-ai-native-lang/0.7.0/spec/boot/20-stack-rust-ai-native-lang.md"
 kind = "static"
 
 [[entry]]
-path = "vibedeps/stack-typescript-ai-native-lang/0.4.0/spec/boot/20-stack-typescript-ai-native-lang.md"
+path = "vibedeps/stack-typescript-ai-native-lang/0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md"
 kind = "static"
 
 [[entry]]

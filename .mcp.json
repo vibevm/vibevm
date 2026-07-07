@@ -9,15 +9,15 @@
         "serve"
       ]
     },
-    "discipline-rust": {
-      "command": "C:/Users/olegc/gits/vibevm/vibedeps/mcp-rust-ai-native-mcp/0.5.0/target/release/discipline-mcp-rust.exe",
+    "rust-ai-native": {
+      "command": "C:/Users/olegc/gits/vibevm/vibedeps/mcp-rust-ai-native-mcp/0.7.0/target/release/rust-ai-native-mcp.exe",
       "args": [
         "--path",
         "C:\\Users\\olegc\\gits\\vibevm"
       ]
     },
-    "discipline-typescript": {
-      "command": "C:/Users/olegc/gits/vibevm/vibedeps/mcp-typescript-ai-native-mcp/0.4.0/target/release/discipline-mcp-typescript.exe",
+    "typescript-ai-native": {
+      "command": "C:/Users/olegc/gits/vibevm/vibedeps/mcp-typescript-ai-native-mcp/0.6.0/target/release/typescript-ai-native-mcp.exe",
       "args": [
         "--path",
         "C:\\Users\\olegc\\gits\\vibevm"
@@ -26,8 +26,8 @@
   },
   "vibevm": {
     "managed": [
-      "discipline-rust",
-      "discipline-typescript"
+      "rust-ai-native",
+      "typescript-ai-native"
     ]
   }
 }

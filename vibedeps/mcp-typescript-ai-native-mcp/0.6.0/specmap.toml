@@ -1,0 +1,21 @@
+# specmap.toml — typescript-ai-native-mcp's own traceability policy.
+#
+# Self-trace duty covers the ONE authored crate (the server); every
+# other crate here is a byte-identical vendored copy gated in its
+# authored home (core-ai-native / typescript-ai-native-lang — sync-engines
+# holds the bytes equal). Orphan-coverage gate only
+# (`rust-ai-native-specmap --gate`): the scope! targets include cross-package
+# units, so a committed index would be part-dangling noise; what
+# matters is that no server code drifts untagged.
+
+namespace = "typescript-ai-native-mcp"
+
+scan_roots = ["crates/typescript-ai-native-mcp"]
+
+spec_roots = ["spec"]
+
+root_spec_docs = []
+
+exempt = []
+
+dispositioned = []
