@@ -50,3 +50,19 @@ Standing rules at the surface level:
   requires a differential oracle (`fast-check`).
 - Uniformity is load-bearing: one idiom per operation; exceptions are
   marked, or they propagate as false training signal.
+
+The shipped toolchain (this stack materialises it; no dev tree needed):
+`discipline-typescript` — `init` (bootstrap policies + registries),
+`floor` (prettier→tsc→tests→eslint→conform→specmap→test-gate, one exit
+code), `health` (the sweep's fact collector), `test-gate` (xfail-strict
+over node's TAP) / `tripwire` / `trace` / `fast-loop` / `codemod`; plus
+the narrow `conform-typescript` and `specmap-typescript` engines. The
+structural gate parses through the PROJECT's own `typescript` install
+(node ≥ 22.6; the same devDependency the tsc floor step needs). Run from
+PATH (`cargo install --path
+vibedeps/<stack-slot>/crates/discipline-cli-typescript`) or in place via
+`cargo run --manifest-path vibedeps/<stack-slot>/Cargo.toml -p
+discipline-cli-typescript --bin discipline-typescript -- <args>`.
+Procedures as agent skills: `/discipline-sweep-typescript` (recurring),
+`/terraform-typescript` (brownfield adoption) — `vibe skill install`
+projects them.

@@ -15,10 +15,12 @@ use crate::facts::{Fact, SourceFacts};
 mod budget;
 mod diagnostics;
 mod structure;
+mod typescript;
 
 pub use budget::{AmbientEnv, FileLength, NoUnwrapInDomain, UnsafeGate};
 pub use diagnostics::{ErrorEnumCitesReq, ErrorMessageCitesReq, PubDoctest, SeamHasDoctest};
 pub use structure::{CellHasOracle, CellIsolation, FlagSites};
+pub use typescript::{TsCellIsolation, TsUnsafeInDomain};
 
 /// Render a finding message in the Class-F diagnostic grammar
 /// (card scaffold-f-structured-diagnostics, Band 3):

@@ -19,7 +19,7 @@ use crate::generated::specmap::{Specmap, Suspect, Warning};
 use anyhow::{Context, Result};
 
 use crate::config::Config;
-use crate::{mdspec, rscan};
+use crate::mdspec;
 
 /// Repo-relative location of the committed index.
 pub const INDEX_REL_PATH: &str = "specmap.json";
@@ -50,11 +50,24 @@ fn verb_key(e: &crate::generated::specmap::Edge) -> u8 {
     }
 }
 
-/// Build the index for the tree under `root`. Pure function of the
-/// tree: same tree → same value.
+/// Build the index for the tree under `root` with the built-in Rust
+/// scanner. Pure function of the tree: same tree → same value.
 pub fn build(root: &Path, cfg: &Config) -> Specmap {
+    build_with_scanner(root, cfg, &crate::scanner::RustScanner)
+}
+
+/// Build the index with an explicit code scanner (the D3 seam): the
+/// TypeScript stack injects its JSDoc scanner here, and a mixed tree
+/// composes several through [`crate::scanner::CompositeScanner`]. The
+/// markdown side, external-spec resolution, suspects, and ordering are
+/// identical whichever scanner feeds the code half.
+pub fn build_with_scanner(
+    root: &Path,
+    cfg: &Config,
+    scanner: &dyn crate::scanner::CodeScanner,
+) -> Specmap {
     let (mut spec_units, mut md_warnings) = mdspec::scan_spec_tree(root, cfg);
-    let (mut code_items, mut edges, mut rs_warnings) = rscan::scan_workspace(root, cfg);
+    let (mut code_items, mut edges, mut rs_warnings) = scanner.scan(root, cfg);
     // Installed packages' spec trees participate in RESOLUTION only
     // (PROP-014 §7.1): their units feed the revision map below — so an
     // edge into `spec://<pkg>/…` resolves instead of dangling, and its
@@ -282,7 +295,16 @@ fn load_committed(root: &Path) -> Option<Specmap> {
 /// Emits the drift report against the previously-committed index to
 /// stderr before overwriting.
 pub fn write(root: &Path, cfg: &Config) -> Result<(PathBuf, Summary)> {
-    let map = build(root, cfg);
+    write_with_scanner(root, cfg, &crate::scanner::RustScanner)
+}
+
+/// [`write`] with an explicit code scanner (the D3 seam).
+pub fn write_with_scanner(
+    root: &Path,
+    cfg: &Config,
+    scanner: &dyn crate::scanner::CodeScanner,
+) -> Result<(PathBuf, Summary)> {
+    let map = build_with_scanner(root, cfg, scanner);
     let summary = Summary::of(&map);
     if let Some(old) = load_committed(root) {
         for line in classify_drift(&old, &map) {
@@ -300,7 +322,16 @@ pub fn write(root: &Path, cfg: &Config) -> Result<(PathBuf, Summary)> {
 /// signals (revision bumps → suspects; unbumped hashes) are visible at
 /// the gate itself.
 pub fn check(root: &Path, cfg: &Config) -> Result<std::result::Result<Summary, String>> {
-    let map = build(root, cfg);
+    check_with_scanner(root, cfg, &crate::scanner::RustScanner)
+}
+
+/// [`check`] with an explicit code scanner (the D3 seam).
+pub fn check_with_scanner(
+    root: &Path,
+    cfg: &Config,
+    scanner: &dyn crate::scanner::CodeScanner,
+) -> Result<std::result::Result<Summary, String>> {
+    let map = build_with_scanner(root, cfg, scanner);
     let summary = Summary::of(&map);
     let fresh = to_canonical_bytes(&map)?;
     let path = index_path(root);

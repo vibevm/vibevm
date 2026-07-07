@@ -165,7 +165,10 @@ pub fn run_health(root: &Path, out_rel: &str, extra_sections: &[(String, Value)]
                         h.danger_files.push((sf.file.clone(), *lines));
                     }
                 }
-                Fact::Import { .. } | Fact::Ctor { .. } => {}
+                // TsUnsafe is the ts-tsc frontend's fact; this collector
+                // runs over rust-syn facts, so it never appears here —
+                // its census belongs to the TypeScript health twin.
+                Fact::Import { .. } | Fact::Ctor { .. } | Fact::TsUnsafe { .. } => {}
             }
         }
     }

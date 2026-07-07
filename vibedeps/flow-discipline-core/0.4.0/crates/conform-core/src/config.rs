@@ -62,6 +62,10 @@ pub struct Config {
     /// reason it has not (yet) flipped — a silent exemption reads as a
     /// bug, a recorded one as a decision.
     pub exempt: Vec<ExemptEntry>,
+    /// The TypeScript half of the policy (`[typescript]`), consumed by
+    /// `conform-typescript` (the `ts-tsc` frontend). Absent for
+    /// Rust-only projects; the Rust rules never read it.
+    pub typescript: TsConfig,
 }
 
 impl Default for Config {
@@ -77,6 +81,61 @@ impl Default for Config {
             registry_gated_crate: None,
             max_file_lines: 600,
             exempt: Vec::new(),
+            typescript: TsConfig::default(),
+        }
+    }
+}
+
+/// The `[typescript]` policy table (GUIDE-AI-NATIVE-TYPESCRIPT §3, §8).
+///
+/// ```
+/// let cfg: conform_core::Config = toml::from_str(
+///     "[typescript]\nroots = [\"src\"]\ncells_dir = \"src/cells\"\n",
+/// )
+/// .unwrap();
+/// assert_eq!(cfg.typescript.roots, vec!["src".to_string()]);
+/// assert_eq!(cfg.typescript.seam, "index");
+/// ```
+#[derive(Debug, Clone, Deserialize)]
+#[serde(default, deny_unknown_fields)]
+pub struct TsConfig {
+    /// TypeScript source roots (flat walk; `<dir>/*` scans subdirs).
+    pub roots: Vec<String>,
+    /// A `.ts` file whose repo-relative path contains any of these
+    /// substrings is skipped (fixtures, generated output).
+    pub exclude_substrings: Vec<String>,
+    /// The directory whose immediate subdirectories are cells
+    /// (`ts-cell-isolation`); `None` disables the isolation rule.
+    pub cells_dir: Option<String>,
+    /// The seam module name a sibling cell may be imported through.
+    pub seam: String,
+    /// Floor steps this project explicitly disables, each with a
+    /// recorded reason. The floor PRINTS every disablement every run —
+    /// the "a defaulted nothing-gated run announces itself" posture
+    /// extended to step disablement; absent tooling without an entry
+    /// here is a hard step failure, never a silent skip.
+    pub floor_disable: Vec<FloorDisable>,
+}
+
+/// One disabled floor step + why (`[[typescript.floor_disable]]`).
+#[derive(Debug, Clone, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct FloorDisable {
+    /// The step name (`prettier` / `tsc` / `tests` / `eslint` /
+    /// `conform` / `specmap` / `test-gate`).
+    pub step: String,
+    /// Why it is off — never empty.
+    pub reason: String,
+}
+
+impl Default for TsConfig {
+    fn default() -> Self {
+        TsConfig {
+            roots: vec!["src".into()],
+            exclude_substrings: vec!["/fixtures/".into()],
+            cells_dir: None,
+            seam: "index".into(),
+            floor_disable: Vec::new(),
         }
     }
 }

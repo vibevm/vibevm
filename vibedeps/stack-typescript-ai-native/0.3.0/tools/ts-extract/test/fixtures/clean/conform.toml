@@ -1,0 +1,9 @@
+# The clean fixture: seam-only imports, zero unsafe-set tokens — the
+# e2e test's green half.
+roots = []
+
+[typescript]
+roots = ["src"]
+exclude_substrings = []
+cells_dir = "src/cells"
+seam = "index"

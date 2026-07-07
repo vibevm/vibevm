@@ -12,6 +12,12 @@
 [workspace]
 resolver = "3"
 members = [
+    "crates/conform-cli-typescript",
+    "crates/conform-frontend-typescript",
+    "crates/discipline-cli-typescript",
+    "crates/specmap-cli-typescript",
+    "crates/specmap-scan-typescript",
+    "crates/ts-extract-bridge",
     "crates/vendor/conform-core",
     "crates/vendor/specmap-core",
     "crates/vendor/specmark",
@@ -34,10 +40,18 @@ conform-core = { path = "crates/vendor/conform-core" }
 specmap-core = { path = "crates/vendor/specmap-core" }
 specmark = { path = "crates/vendor/specmark" }
 specmark-grammar = { path = "crates/vendor/specmark-grammar" }
+ts-extract-bridge = { path = "crates/ts-extract-bridge" }
+conform-frontend-typescript = { path = "crates/conform-frontend-typescript" }
+conform-cli-typescript = { path = "crates/conform-cli-typescript" }
+specmap-scan-typescript = { path = "crates/specmap-scan-typescript" }
+specmap-cli-typescript = { path = "crates/specmap-cli-typescript" }
+discipline-cli-typescript = { path = "crates/discipline-cli-typescript" }
 
 # Third-party (all permissive licenses — PROP-000 §3). Feature sets match
 # vibevm's so the engines behave identically wherever they are built.
 anyhow = "1"
+thiserror = "2"
+clap = { version = "4", features = ["derive"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = { version = "1", features = ["preserve_order"] }
 sha2 = "0.10"
