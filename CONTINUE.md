@@ -8,8 +8,10 @@ the persistent Rust bridge, the `tcg-typescript` slot binary with
 discipline enrichment, the portable `vibe-tcg` crate mounted by vibe-mcp
 as four `tcg_*` tools, full spec parity, and the automated two-arm
 battery with its honest null result. typescript-ai-native is **0.4.0**.
-Local on `main`, **29 campaign commits ahead of origin `f083f6b` (the owner mirrored the prior 69 himself mid-session), NONE of the campaign mirrored —
-the mirror stays HELD for the owner's explicit word.**_
+**32 campaign commits (incl. this checkpoint pair) PUSHED to the source
+mirrors at session close** per the wind-down contract; the owner had
+mirrored the prior 69 himself mid-session, so origin now carries the
+whole day._
 
 > **`spec/WAL.md` is the canonical living state**; if this snapshot and
 > the WAL disagree, the WAL wins. The **git log is the authoritative
@@ -34,7 +36,8 @@ re-dispositioned VERY-FAR-FUTURE in its own brief.
 ## Where work stands
 
 - **Branch `main`**, working tree clean after the checkpoint commits;
-  29 ahead of `origin/main` (`f083f6b` — the owner pushed the prior batch mid-session), campaign NOT mirrored (policy hold).
+  the campaign (32 commits) pushed to the mirrors at session close —
+  local and origin agree at this checkpoint.
 - Versions: discipline-core 0.4.0, rust-ai-native 0.4.0,
   typescript-ai-native **0.4.0** (+2 crates `tcg-oracle-bridge` /
   `tcg-cli-typescript`, +1 tool `tools/ts-oracle`, +3 spec docs, 4th
@@ -49,19 +52,17 @@ re-dispositioned VERY-FAR-FUTURE in its own brief.
 
 ## The open items (owner-court)
 
-1. **Mirror the 29 campaign commits** — `cargo xtask mirror --check` then
-   `cargo xtask mirror`, on the owner's word only.
-2. **Publish 0.4.0/0.4.0/0.4.0** to the registry — owner call.
-3. **Stage-B delivery experiments** (the null's follow-up, in
+1. **Publish 0.4.0/0.4.0/0.4.0** to the registry — owner call.
+2. **Stage-B delivery experiments** (the null's follow-up, in
    `research/tcg-bench/reports/REPORT-2026-07-07-with-tools.md`):
    forced-loop write-path hook; an MCP-mounted battery arm (register
    vibevm's MCP in the opencode runner config); an uptake metric
    (count actual oracle calls per run). Commission separately.
-4. **The Rust agentic twin** (`tcg_rust` over rust-analyzer) — the
+3. **The Rust agentic twin** (`tcg_rust` over rust-analyzer) — the
    language parameter and PROP-026 are cut to admit it; separate plan.
-5. Token-level TCG — VERY-FAR-FUTURE (owner disposition in
+4. Token-level TCG — VERY-FAR-FUTURE (owner disposition in
    `…/tools/vibe-tcg-ts.md`); waits on `vibe-llm` + local inference.
-6. PROP-025 v2 surfaces unchanged (shims, §6 rewriting, GC).
+5. PROP-025 v2 surfaces unchanged (shims, §6 rewriting, GC).
 
 ## Quick-start (verify the tree)
 
@@ -131,8 +132,8 @@ vibevm/
 ## Recent commit chain (campaign, newest first — see git log for all)
 
 ```
-docs(wal)/docs(continue)      this checkpoint
-docs(plan)+feat(research)     EXECUTED status, s4.3 outcome, with-tools report
+docs(wal)/docs(continue)      session-end checkpoint pair (this push)
+feat(research)+docs(plan)     EXECUTED status, s4.3 outcome, with-tools report
 build(deps)                   re-materialise with the oracle version fix
 test(research)                differential corpus + bench baseline (100%)
 fix(typescript-ai-native)     session-monotonic script versions (corpus catch)
