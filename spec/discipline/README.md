@@ -2,28 +2,28 @@
 
 The four mechanism specs that lived here — the Discipline's normative
 mechanism layer — now **ship with the Discipline itself**, in
-`flow:org.vibevm/discipline-core` under `spec/mechanisms/`
+`flow:org.vibevm/core-ai-native` under `spec/mechanisms/`
 (SELF-SUFFICIENCY-PLAN Phase 2, 2026-07-07): a consumer of the discipline
 stacks receives the documents its code tags cite, instead of needing
 vibevm's dev tree.
 
 | Mechanism | Shipped spec unit (cite these) | Implemented by |
 |---|---|---|
-| spec↔code traceability (anchors, revisions, tags, index, queries) | `spec://discipline-core/mechanisms/PROP-014#…` | `stack:org.vibevm/rust-ai-native` (`specmap-core`, `specmap-rust`) |
-| brownfield terraforming (registries, xfail-strict gate, tripwires) | `spec://discipline-core/mechanisms/BROWNFIELD-PROTOCOL-v0.1#…` | `specmap-core::{testgate,tripwire}` + the `terraform-rust` skill |
-| conformance engine (fact store, rules-as-queries, SARIF, ratchet) | `spec://discipline-core/mechanisms/ENGINE-CONFORM-v0.1#…` | `stack:org.vibevm/rust-ai-native` (`conform-core`, `conform-rust`) |
-| intent ledger (facts vs interpretations, epoch-keyed cache) | `spec://discipline-core/mechanisms/LEDGER-INTENT-v0.1#…` | `specmap-core::ledger`, `.ledger/` (git-ignored) |
+| spec↔code traceability (anchors, revisions, tags, index, queries) | `spec://core-ai-native/mechanisms/PROP-014#…` | `stack:org.vibevm/rust-ai-native-lang` (`specmap-core`, `specmap-rust`) |
+| brownfield terraforming (registries, xfail-strict gate, tripwires) | `spec://core-ai-native/mechanisms/BROWNFIELD-PROTOCOL-v0.1#…` | `specmap-core::{testgate,tripwire}` + the `terraform-rust` skill |
+| conformance engine (fact store, rules-as-queries, SARIF, ratchet) | `spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#…` | `stack:org.vibevm/rust-ai-native-lang` (`conform-core`, `conform-rust`) |
+| intent ledger (facts vs interpretations, epoch-keyed cache) | `spec://core-ai-native/mechanisms/LEDGER-INTENT-v0.1#…` | `specmap-core::ledger`, `.ledger/` (git-ignored) |
 
 In this repository the shipped copies live at
-`vibedeps/flow-discipline-core/<version>/spec/mechanisms/` (and the editable
-sources at `packages/org.vibevm/discipline-core/<version>/spec/mechanisms/` —
+`vibedeps/flow-core-ai-native/<version>/spec/mechanisms/` (and the editable
+sources at `packages/org.vibevm/core-ai-native/<version>/spec/mechanisms/` —
 vibevm is the packages' dev repo). vibevm's `specmap.toml` resolves the
-`spec://discipline-core/…` URIs through its `[[external_specs]]` entry, so
+`spec://core-ai-native/…` URIs through its `[[external_specs]]` entry, so
 the in-repo tags into these units are fully resolved, not dangling.
 
 Historical note: vibevm-hosted URIs of the form
 `spec://vibevm/discipline/<DOC>#<anchor>` map 1:1 to
-`spec://discipline-core/mechanisms/<DOC>#<anchor>` (anchors unchanged).
+`spec://core-ai-native/mechanisms/<DOC>#<anchor>` (anchors unchanged).
 Occurrences in historical documents (the WAL's prior tail, past terraform
 plans and reports, old commit bodies) are records of their time and were
 deliberately not rewritten. All live code and living documents cite the
@@ -34,5 +34,5 @@ implementing crates carry `scope!` edges into it again.)
 
 The Discipline *product* is not here and never was: the language-neutral
 core (manifesto, card format, scaffold catalog, the raid/sweep/campaign/WAL
-playbooks) is the installed package `flow:org.vibevm/discipline-core`, and
+playbooks) is the installed package `flow:org.vibevm/core-ai-native`, and
 the concrete per-language cards + checkers ship in each stack.

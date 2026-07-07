@@ -4,7 +4,7 @@
 [MCP-SOVEREIGNTY-PLAN-v0.1](../../terraforms/MCP-SOVEREIGNTY-PLAN-v0.1.md)).
 **Status:** IMPLEMENTED — the kind and the manifest laws (§2.1–§2.3)
 shipped with the plan's Wave 1; the servers themselves (Waves 3–4:
-`mcp:org.vibevm/discipline-rust`, `…/discipline-typescript`, both
+`mcp:org.vibevm/rust-ai-native-mcp`, `…/discipline-typescript`, both
 live-chained vibe-free); the registration lifecycle (§2.4–§2.5) with
 Wave 5 (`vibe mcp install/uninstall/status` speak package servers; the
 pin-server fixture e2e pins the walk). §2.7's composition rows inherit

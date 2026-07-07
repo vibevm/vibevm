@@ -103,7 +103,7 @@ experiment, not a promotion.
   (tcg-cli-typescript/src/main.rs:39 `content_from`; also on
   `complete`), exits 1 on an error diagnostic OR a non-baselined
   finding. Artifact: slot-resident
-  `vibedeps/stack-typescript-ai-native/0.4.0/target/release/
+  `vibedeps/stack-typescript-ai-native-lang/0.4.0/target/release/
   tcg-typescript.exe` (repo slot, built).
 - **The MCP surface the mounted arm needs exists**: `vibe mcp serve
   --path <dir>` (commands/mcp/mod.rs:98) lists the four `tcg_*` tools;
@@ -369,7 +369,7 @@ direction, not magnitude.
    names/args; bash text) and confirm `tcg_`/`tcg-typescript` are
    recoverable.
 5. **Demo-slot artifact check**: does `research/ts-demo/vibedeps/
-   stack-typescript-ai-native/0.4.0/target/release/tcg-typescript.exe`
+   stack-typescript-ai-native-lang/0.4.0/target/release/tcg-typescript.exe`
    exist? If not: one `vibe bin build tcg-typescript` from the demo
    root (org.vibevm, consented), record the build time — that is the
    probe-section budget. Also: toolcache `tcg-typescript.exe` next to
@@ -491,7 +491,7 @@ direction, not magnitude.
 ```sh
 bash tools/self-check.sh; echo "EXIT=$?"     # 13 steps, 0 — before anything
 opencode --version                            # 1.17.14 at authoring; note drift
-ls vibedeps/stack-typescript-ai-native/0.4.0/target/release/tcg-typescript.exe
+ls vibedeps/stack-typescript-ai-native-lang/0.4.0/target/release/tcg-typescript.exe
 ls research/ts-demo/vibedeps                  # the D2 junction source
 ls target/debug/vibe.exe                      # the D2 toolcache source
 # then Phase 0 in order; findings → WAL; a red spike rewrites the

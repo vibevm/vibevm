@@ -665,11 +665,11 @@ Waves 0–6): `mcp` joins the installable register (VIBEVM-SPEC §4.1
 amended under owner sanction; `app` anticipated); PROP-027 gives the
 kind its laws ([[mcp_server]] only-and-mandatory in the kind, the
 exact-pin rule, vibe-free serving, registration/consent through the
-PROP-025 trust model); discipline-core 0.6.0 ships the neutral
+PROP-025 trust model); core-ai-native 0.6.0 (then discipline-core) ships the neutral
 `mcp-core` transport (line-delimited 2024-11-05 loop, ToolSet seam,
 the child-capturing stderr guard); the discipline serves standalone as
-`mcp:org.vibevm/discipline-rust` (18 tools) and
-`mcp:org.vibevm/discipline-typescript` (17 tools), both live-chained
+`mcp:org.vibevm/rust-ai-native-mcp` (18 tools) and
+`mcp:org.vibevm/typescript-ai-native-mcp` (17 tools), both live-chained
 with vibe scrubbed from PATH; `vibe mcp install/uninstall/status`
 register package servers as managed entries launching slot artifacts
 directly; vibe-mcp returns to its four product tools and `vibe-tcg` is
@@ -696,7 +696,7 @@ native diagnostics are silent; the corpus asserts the asymmetry so it
 flips red when r-a catches up), and the honest fidelity posture
 throughout: rust-analyzer is NOT rustc, the oracle approximates, the
 floor stays the truth. Briefs:
-`packages/org.vibevm/rust-ai-native/v0.5.0/spec/rust/tools/vibe-agentic-tcg-rust.md`
+`packages/org.vibevm/rust-ai-native-lang/v0.5.0/spec/rust/tools/vibe-agentic-tcg-rust.md`
 (shipped line) and `vibe-tcg-rust.md` (token-level, VERY-FAR-FUTURE);
 mechanisms: TCG-ORACLE-RUST-v0.1 / TCG-PROTOCOL-RUST-v0.1 (same tree).
 The `ra_ap_*` embedding is the Far backlog's first entry. No agent
@@ -719,7 +719,7 @@ enrichment through the same conform engine as the gate), the portable
 (PROP-026; liftable into a standalone MCP server per the owner's
 portability amendment), and the automated two-arm opencode battery
 (gpt-oss-20b (free)) in research/tcg-bench. Component brief:
-`packages/org.vibevm/typescript-ai-native/v0.4.0/spec/typescript/tools/vibe-agentic-tcg-ts.md`;
+`packages/org.vibevm/typescript-ai-native-lang/v0.4.0/spec/typescript/tools/vibe-agentic-tcg-ts.md`;
 mechanisms: TCG-ORACLE-v0.1 / TCG-PROTOCOL-v0.1 (same tree). Token-level
 TCG for TypeScript is re-dispositioned VERY-FAR-FUTURE in its own brief;
 M1.23 below keeps the Rust token-level line as was.
@@ -733,7 +733,7 @@ engine (XGrammar-2 / SynCode class) guarantees parseable output and
 validates the harness integration that the later, harder stages
 (scope/name constraining on rust-analyzer, type-valid continuations,
 discipline profiles) will reuse. Tool spec:
-`packages/org.vibevm/rust-ai-native/v0.5.0/spec/rust/tools/vibe-tcg-rust.md`
+`packages/org.vibevm/rust-ai-native-lang/v0.5.0/spec/rust/tools/vibe-tcg-rust.md`
 (the tool line renamed vibe-tcg → vibe-tcg-rust under the D13
 language-suffix policy, 2026-07-07 — the bare name now belongs to the
 generic product crate; M1.25's agentic twin is this milestone's
