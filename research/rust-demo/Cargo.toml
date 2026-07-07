@@ -23,6 +23,6 @@ exclude = ["vibedeps"]
 [workspace.dependencies]
 # The inert #[spec]/scope! tags this project's code carries (GUIDE §13
 # move 3) — the shipped proc-macro, consumed from the materialised slot.
-specmark = { path = "vibedeps/stack-rust-ai-native-lang/0.5.0/crates/vendor/specmark" }
+specmark = { package = "core-ai-native-specmark", path = "vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmark" }
 # One thiserror enum per layer; messages cite the violated REQ (GUIDE §4).
 thiserror = "2"

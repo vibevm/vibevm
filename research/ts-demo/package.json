@@ -9,7 +9,7 @@
   },
   "scripts": {
     "test": "node --test",
-    "floor": "discipline-typescript floor"
+    "floor": "typescript-ai-native floor"
   },
   "devDependencies": {
     "@types/node": "^26.1.0",

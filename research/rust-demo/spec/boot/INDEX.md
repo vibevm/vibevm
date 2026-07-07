@@ -10,9 +10,9 @@
 schema = 1
 
 [[entry]]
-path = "vibedeps/flow-core-ai-native/0.6.0/spec/boot/10-flow-core-ai-native.md"
+path = "vibedeps/flow-core-ai-native/0.7.0/spec/boot/10-flow-core-ai-native.md"
 kind = "static"
 
 [[entry]]
-path = "vibedeps/stack-rust-ai-native-lang/0.5.0/spec/boot/20-stack-rust-ai-native-lang.md"
+path = "vibedeps/stack-rust-ai-native-lang/0.7.0/spec/boot/20-stack-rust-ai-native-lang.md"
 kind = "static"

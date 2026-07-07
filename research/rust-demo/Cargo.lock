@@ -3,6 +3,24 @@
 version = 4
 
 [[package]]
+name = "core-ai-native-specmark"
+version = "0.7.0"
+dependencies = [
+ "core-ai-native-specmark-grammar",
+ "proc-macro2",
+ "quote",
+ "syn",
+]
+
+[[package]]
+name = "core-ai-native-specmark-grammar"
+version = "0.7.0"
+dependencies = [
+ "proc-macro2",
+ "syn",
+]
+
+[[package]]
 name = "proc-macro2"
 version = "1.0.106"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -24,26 +42,8 @@ dependencies = [
 name = "rust-demo"
 version = "0.1.0"
 dependencies = [
- "specmark",
+ "core-ai-native-specmark",
  "thiserror",
-]
-
-[[package]]
-name = "specmark"
-version = "0.5.0"
-dependencies = [
- "proc-macro2",
- "quote",
- "specmark-grammar",
- "syn",
-]
-
-[[package]]
-name = "specmark-grammar"
-version = "0.5.0"
-dependencies = [
- "proc-macro2",
- "syn",
 ]
 
 [[package]]

@@ -16,15 +16,15 @@ cargo run --manifest-path ../../Cargo.toml -p vibe-cli -- \
 # 2. The npm toolchain (node >= 22.6).
 npm install
 # 3. The floor, via the materialised slot.
-cargo run --manifest-path vibedeps/stack-typescript-ai-native-lang/0.4.0/Cargo.toml \
-    -p discipline-cli-typescript --bin discipline-typescript -- floor
+cargo run --manifest-path vibedeps/stack-typescript-ai-native-lang/0.6.0/Cargo.toml \
+    -p typescript-ai-native-cli --bin typescript-ai-native -- floor
 ```
 
 ## What green means here
 
 All seven floor steps: prettier → tsc → `node --test` (strip-types runs
-the `.ts` tests directly) → eslint → `conform-typescript`
-(`ts-unsafe-in-domain` + `ts-cell-isolation`) → `specmap-typescript
+the `.ts` tests directly) → eslint → `typescript-ai-native-conform`
+(`ts-unsafe-in-domain` + `ts-cell-isolation`) → `typescript-ai-native-specmap
 --check` (the committed `specmap.json` byte-reproduces; 0 orphans) →
 the xfail-strict test-gate.
 
@@ -42,4 +42,4 @@ hold at one; anything new fails the gate.
   `parseGuestName` (the erasure boundary), `greet`.
 - `src/cells/farewell/` — seam-only composition over `greeting`.
 - `specmap.json` — the committed traceability index (`--check` gates it).
-- `conform-typescript-baseline.json` — the ratchet (see above).
+- `typescript-ai-native-conform-baseline.json` — the ratchet (see above).
