@@ -1,8 +1,23 @@
 # AGENTIC-TCG-TS-PLAN v0.1 — the agentic type oracle for TypeScript
 
-_Status: DRAFT for owner review, written 2026-07-07 against tree `f083f6b`
-(the deferrals-closeout checkpoint; floor green, 69 local commits ahead of
-origin, mirror held). Commissioned by the owner the same day: build the
+_Status: ACCEPTED with owner amendments, 2026-07-07 (same day as
+authoring). Owner review resolved the three §17 points: (1) the names
+(`tcg_*` tools, bin `tcg-typescript`) are approved as proposed; (2)
+PROP-026 stays vibevm-hosted BUT the product-side seam must be
+**maximally abstract and detached** — the tcg tool family lands in a
+dedicated product crate (`vibe-tcg`) with zero vibe-mcp dependency, so a
+future decision to extract it into a SEPARATE standalone MCP server is a
+new thin binary, not a surgery (D4/D6/D9 amended, §2 tree updated); (3)
+the agent battery is **automated, not manual**: the opencode CLI agent
+(on PATH; fallback `C:\opt\nvm\v24.18.0\node_modules\opencode-ai\bin\
+opencode.exe`) with model "gpt-oss-20b (free)" is the weak-agent test
+subject; the harness script is written and its CONTROL arm (tools
+withheld — the oracle does not exist yet) executed at acceptance time,
+so Phase 6 starts from a working harness and a recorded pre-oracle
+baseline (D7 rewritten). Originally written as DRAFT against tree
+`f083f6b` (the deferrals-closeout checkpoint; floor green, 69 local
+commits ahead of origin, mirror held). Commissioned by the owner the
+same day: build the
 AGENTIC delivery of the vibe-tcg-ts line — the oracle, the vibe-mcp tool
 family, discipline-aware answers, and the quantitative battery — and put
 full specifications for every feature into `typescript-ai-native`.
@@ -156,11 +171,20 @@ vibevm/
 ├─ crates/vibe-workspace/src/bins.rs                      NEW cell: DeclaredBinary +
 │                                                          collect_binaries (extracted
 │                                                          from vibe-cli, shared)
-├─ crates/vibe-mcp/src/tcg.rs                             NEW cell: OracleRegistry +
-│                                                          the four tcg_* McpTools
-├─ research/tcg-bench/                                    NEW: task battery, bench
-│                                                          corpus, baseline REPORT,
-│                                                          agent protocol doc
+├─ crates/vibe-tcg/                                       NEW product crate: the tool
+│                                                          family (descriptors, schemas,
+│                                                          run logic, OracleRegistry)
+│                                                          behind `trait TcgHost`; NO
+│                                                          vibe-mcp dependency (owner
+│                                                          amendment: liftable into a
+│                                                          standalone MCP server)
+├─ crates/vibe-mcp/src/tcg.rs                             NEW cell: THIN adapter only —
+│                                                          McpTool impls delegating to
+│                                                          vibe-tcg
+├─ research/tcg-bench/                                    NEW: the automated opencode
+│                                                          battery (harness + tasks),
+│                                                          bench corpus, baseline
+│                                                          REPORTs, runbook
 ├─ research/ts-demo/                                      unchanged (requires ^0.4)
 └─ packages/org.vibevm/typescript-ai-native/v0.4.0/       (bumped from v0.3.0)
     ├─ vibe.toml                                          [[binary]] × 4 (+ tcg-typescript)
@@ -327,8 +351,24 @@ future Rust twin adds a language value, not four more tools.
 `structuredContent` carries the enriched response verbatim; the text
 content renders a compact human summary (findings first).
 
-Lifecycle: `ServerContext` gains `tcg: OracleRegistry` —
-`Mutex<HashMap<Language, OracleHandle>>`, lazily populated on first use:
+**Owner amendment (portability): the family lives in a dedicated
+product crate `crates/vibe-tcg`, not inside vibe-mcp.** The crate
+defines: the tool descriptors/JSON schemas, the run logic, the
+`OracleRegistry`, and a NARROW host abstraction (`trait TcgHost`:
+`project_root()` + the no-prompt consent policy) — and depends on
+`vibe-workspace`/`vibe-core` only, NEVER on vibe-mcp. vibe-mcp gains a
+thin adapter cell (`src/tcg.rs`): newtype wrappers implementing
+`McpTool` by delegating to `vibe-tcg` and mapping its typed errors into
+`ToolError`. Extracting the family into a standalone MCP server later =
+one new binary crate reusing `vibe-tcg` + a JSON-RPC loop (vibe-mcp's
+`Server<T: Transport>` is already generic); zero changes inside the
+family. PROP-026 specifies the tools server-agnostically (operations
+over a host context) with the MCP binding as one explicit adapter
+section.
+
+Lifecycle: the `vibe-tcg` `OracleRegistry` —
+`Mutex<HashMap<Language, OracleHandle>>` (held by the adapter layer in
+`ServerContext`), lazily populated on first use:
 resolve the CURRENT project's lockfile → the typescript-ai-native slot →
 the `tcg-typescript` artifact (`collect_binaries` shape); if the artifact
 is missing and the group is `org.vibevm`, build it (the PROP-025 §3
@@ -406,11 +446,16 @@ product-side seam (this is deliberately vibevm-hosted, a deviation from
 the letter of "everything into the package" for a layering reason: the
 MCP tool family, the OracleRegistry lifecycle, and the slot-dispatch
 consent posture are PRODUCT surface, versioned with vibevm, citable by
-vibe-mcp code without new `[[external_specs]]` wiring; the owner
-reviews this split). Sections: problem, tool schemas, registry
-lifecycle, PROP-025 dispatch + consent (no-prompt rule), language
-dispatch, failure surfaces, non-goals (no LSP relay, no reasoning ops,
-no affinity involvement), acceptance. ROADMAP gains M1.24.
+product code without new `[[external_specs]]` wiring; approved by the
+owner WITH the portability amendment). Sections: problem, the
+server-agnostic tool operations over `TcgHost` (the D4 amendment: the
+family is a crate any server binary can mount; vibe-mcp is ITS FIRST
+HOST, not its home), tool schemas, registry lifecycle, PROP-025
+dispatch + consent (no-prompt rule), language dispatch, failure
+surfaces, the standalone-server extraction path (named explicitly so
+the future move is a documented follow-up, not a redesign), non-goals
+(no LSP relay, no reasoning ops, no affinity involvement), acceptance.
+ROADMAP gains M1.24.
 
 ### D7 — the quantitative battery: hermetic correctness in the package, measurement in `research/tcg-bench`
 
@@ -427,21 +472,34 @@ Two distinct natures, two homes:
   hops, node-free); (d) the D1 extract/oracle fact-parity fixture. All
   node-dependent tests hard-fail with a recipe when node is absent
   (never skip), reusing the junction pattern for offline `typescript`.
-- **Measurement (recorded, not gated):** `research/tcg-bench/` —
-  `corpus/` (the seeded fragments, shared with (a) via the package
-  fixtures where practical), `tasks/` (the agent task battery: 10–15
-  written tasks over ts-demo of the shape "add a farewell variant that
-  takes GuestName", "call greeting from a new cell through the seam"),
-  `AGENT-PROTOCOL.md` (the repeatable manual procedure: run the battery
-  with tools available vs withheld; record floor-red rate, retry count,
-  hallucinated identifiers, wall time), and `REPORT-<date>-baseline.md`
-  (the first recorded run: `tcg-typescript bench` output — per-op p50/p95
-  warm latency, cold-init time, differential agreement % — plus the
-  machine facts). Latency targets are POSTED as expectations (validate
-  p50 warm < 150 ms on ts-demo-class trees; cold init < 5 s; complete
-  p50 < 200 ms) and verified by the report, not by CI assertions —
-  timing gates on shared boxes are flake generators; the REPORT is the
-  ratchet.
+- **Measurement (recorded, not gated) — AUTOMATED per the owner
+  amendment:** `research/tcg-bench/` — `corpus/` (the seeded fragments,
+  shared with (a) via the package fixtures where practical), `tasks/`
+  (the agent task battery: 10–15 written tasks over ts-demo of the
+  shape "add a farewell variant that takes GuestName", "call greeting
+  from a new cell through the seam"), and the **opencode harness**:
+  `run-battery.sh` drives the opencode CLI (`opencode run`, model
+  **gpt-oss-20b (free)**; binary from PATH, fallback
+  `C:\opt\nvm\v24.18.0\node_modules\opencode-ai\bin\opencode.exe`) —
+  per task: a fresh throwaway work copy of ts-demo, one headless agent
+  run with the task prompt, then MECHANICAL verification and metric
+  capture: agent exit code, wall time, `tsc --noEmit` error count +
+  hallucination-class codes (TS2304/TS2552/TS2339), demo tests
+  (`node --test`), conform findings delta, unsafe-set introductions.
+  Two arms: **control** (tools withheld — executed at plan acceptance,
+  before the oracle exists: the pre-oracle baseline) and
+  **with-tools** (after Phase 5; the same tasks with the `tcg_*`
+  MCP tools / one-shot CLI available and the prompt naming them).
+  `RUNBOOK.md` documents invocation + metric definitions;
+  `REPORT-<date>-*.md` records each run (plus, after Phase 6,
+  `tcg-typescript bench` output — per-op p50/p95 warm latency,
+  cold-init time, differential agreement %). Latency targets are POSTED
+  as expectations (validate p50 warm < 150 ms on ts-demo-class trees;
+  cold init < 5 s; complete p50 < 200 ms) and verified by the report,
+  not by CI assertions — timing gates on shared boxes are flake
+  generators; the REPORT is the ratchet. The weak-model choice is the
+  point: DR1-015 says constraints/help lift weak models most — the
+  battery measures exactly that population, mechanically.
 
 ### D8 — package version: 0.3.0 → 0.4.0, one bump at campaign open
 
@@ -613,30 +671,37 @@ repository's own engines. Any future need to consult that repository
 1. D9 extraction: `vibe-workspace/src/bins.rs` (+ doctest on the seam);
    `vibe-cli/commands/bin.rs` re-imports; existing bin tests green
    unchanged.
-2. vibe-mcp: `vibe-workspace` dependency; `ServerContext` gains the
-   `OracleRegistry` (interior-mutable, lazy, kill-on-drop); new
-   `src/tcg.rs` cell — the four `McpTool`s (schemas per PROP-026), the
+2. NEW crate `crates/vibe-tcg` (the owner-amended home): `trait
+   TcgHost`, the four tool operations with their JSON schemas, the
+   `OracleRegistry` (interior-mutable, lazy, kill-on-drop), the
    language dispatch, the failure surfaces (not-installed / not-built-
-   third-party / oracle-gone recipes); `default_tools()` grows four
-   entries; `#[spec]`/`scope!` tags citing PROP-026 (vibevm self-trace:
-   the new units join the 0-dangling index).
-3. Tests (`tests/tools_oracle.rs` model + a new `tests/tcg_tools.rs`):
-   an `OracleClient` test double behind the registry seam (no node in
-   unit tests); schema/dispatch/error-surface coverage; a lockfile
-   fixture WITHOUT the TS stack → the not-installed recipe; `tools/list`
-   includes the four; one ignored-by-default integration test that runs
-   the real chain end-to-end on this box (node + built artifact) for
-   manual/pre-release runs.
-4. Acceptance: vibe-mcp + vibe-workspace + vibe-cli tests green;
-   `vibe mcp serve` manual probe on vibevm root — `tools/list` carries
-   `tcg_*`, `tcg_validate` on a ts-demo file returns the enriched
-   payload (recorded in the WAL; NOTE: the live agent session sees the
-   new tools only after its MCP server restarts — owner-visible step);
-   specmap 0 dangling; floor green.
-5. Commits:
+   third-party / oracle-gone recipes) — deps: vibe-core +
+   vibe-workspace + the serde stack; ZERO vibe-mcp imports.
+   `#[spec]`/`scope!` tags citing PROP-026 (vibevm self-trace: the new
+   units join the 0-dangling index).
+3. vibe-mcp: `vibe-tcg` dependency; `ServerContext` holds the registry
+   handle; new `src/tcg.rs` ADAPTER cell — four newtypes implementing
+   `McpTool` by delegation, typed-error → `ToolError` mapping;
+   `default_tools()` grows four entries.
+4. Tests: vibe-tcg unit suite with an `OracleClient` test double behind
+   the registry seam (no node, no vibe-mcp); vibe-mcp
+   `tests/tcg_tools.rs` on the `tools_oracle.rs` model —
+   schema/dispatch/error-surface coverage through the adapter, a
+   lockfile fixture WITHOUT the TS stack → the not-installed recipe,
+   `tools/list` includes the four; one ignored-by-default integration
+   test that runs the real chain end-to-end on this box (node + built
+   artifact) for manual/pre-release runs.
+5. Acceptance: vibe-tcg + vibe-mcp + vibe-workspace + vibe-cli tests
+   green; `vibe mcp serve` manual probe on vibevm root — `tools/list`
+   carries `tcg_*`, `tcg_validate` on a ts-demo file returns the
+   enriched payload (recorded in the WAL; NOTE: the live agent session
+   sees the new tools only after its MCP server restarts —
+   owner-visible step); specmap 0 dangling; floor green.
+6. Commits:
    - `refactor(workspace): extract declared-binary resolution into a
      shared cell`
-   - `feat(mcp): the tcg tool family over the stack oracle (PROP-026)`
+   - `feat(tcg): the portable tcg tool family crate (PROP-026)`
+   - `feat(mcp): mount the tcg family as MCP tools`
 
 ## 10. Phase 5 — enrichment polish + consumer front door
 
@@ -662,18 +727,22 @@ repository's own engines. Any future need to consult that repository
 2. `tcg-typescript bench --corpus … --report …` fills in: runs the
    corpus warm + cold, captures per-op latency distribution +
    agreement %, writes JSON + a human table.
-3. `research/tcg-bench/`: the task battery (10–15 tasks over ts-demo),
-   `AGENT-PROTOCOL.md` (with-tools vs withheld procedure + metric
-   definitions: floor-red rate, retries, hallucinated identifiers),
-   `REPORT-2026-07-XX-baseline.md` — the first recorded bench run on
-   this box + the predictions-vs-facts check (§4).
-4. Acceptance: corpus tests green in the package suite; the baseline
-   REPORT committed with real numbers; predictions §4.1/§4.2 checked
-   (falsified predictions rewrite the affected decision here + a WAL
-   note, per the campaign form's honesty rule); floor green.
+3. `research/tcg-bench/` (the harness and the control-arm baseline
+   EXIST since plan acceptance — the D7 amendment): add the
+   **with-tools arm** — the same tasks re-run with the `tcg_*` surface
+   available (the one-shot `vibe bin exec tcg-typescript -- …` forms
+   named in the prompt, and/or the MCP tools when the runner agent
+   mounts them), plus the oracle-latency section of
+   `tcg-typescript bench`; write `REPORT-2026-07-XX-with-tools.md`
+   comparing arms metric-by-metric against the control baseline + the
+   predictions-vs-facts check (§4).
+4. Acceptance: corpus tests green in the package suite; both arms'
+   REPORTs committed with real numbers; predictions §4.1/§4.2/§4.3
+   checked (falsified predictions rewrite the affected decision here +
+   a WAL note, per the campaign form's honesty rule); floor green.
 5. Commits: `test(typescript-ai-native): the differential validate
    corpus + completions goldens`, `feat(research): tcg-bench - the
-   battery, protocol, and baseline report`.
+   with-tools arm + comparison report`.
 
 ## 12. Phase 7 — campaign close
 
@@ -776,15 +845,19 @@ cargo run -q -p vibe-cli -- bin exec tcg-typescript -- \
 All commits local; mirror and registry publish stay held for the owner's
 word, per standing policy.
 
-## 17. Review points for the owner (pre-execution)
+## 17. Review points — RESOLVED by the owner (2026-07-07)
 
-1. **Names**: MCP tools `tcg_validate/tcg_scope/tcg_complete/tcg_type`
-   (language-parameterised) and the bin `tcg-typescript` (D3/D4) — veto
-   window before they land in specs.
-2. **PROP-026 placement** (vibevm-hosted product spec vs everything-in-
-   package) — the D6 layering argument; the owner may overrule toward a
-   package-hosted copy with an `[[external_specs]]` wiring cost.
-3. **The battery's agent protocol** is manual-by-design in v0.1 (a
-   documented repeatable procedure + recorded baseline, not CI) — D7's
-   honesty trade; confirm this matches the "батарея количественных
-   тестов" intent.
+1. **Names** — approved as proposed (`tcg_*` tools, bin
+   `tcg-typescript`).
+2. **PROP-026 placement** — approved vibevm-hosted, WITH the
+   portability amendment: the family is a dedicated `vibe-tcg` crate
+   behind `TcgHost`, zero vibe-mcp dependency, so extracting a
+   standalone MCP server later is a new thin binary (D4/D6/§2 carry
+   the amendment).
+3. **The battery** — superseded: automated, not manual. The opencode
+   CLI (model gpt-oss-20b (free); PATH, fallback
+   `C:\opt\nvm\v24.18.0\node_modules\opencode-ai\bin\opencode.exe`)
+   drives the task battery headlessly; the harness was written and the
+   control arm executed at acceptance time (D7 carries the full
+   design; `research/tcg-bench/RUNBOOK.md` + the control REPORT are
+   the acceptance artifacts).
