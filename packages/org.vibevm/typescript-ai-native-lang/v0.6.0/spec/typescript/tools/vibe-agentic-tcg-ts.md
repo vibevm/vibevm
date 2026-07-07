@@ -2,7 +2,7 @@
 *Status: component brief at FULL seven-section parity (problem · design
 stance · component shape · staged ambition · licensing · risk register ·
 summary). Commissioned 2026-07-07 as the AGENTIC delivery of the tcg line —
-the sibling of `vibe-tcg-ts.md` (token-level, VERY-FAR-future) — and
+the sibling of `typescript-ai-native-tcg.md` (token-level, VERY-FAR-future) — and
 implemented by AGENTIC-TCG-TS-PLAN v0.1. Mechanism specs:
 [`TCG-ORACLE-v0.1`](../mechanisms/TCG-ORACLE-v0.1.md),
 [`TCG-PROTOCOL-v0.1`](../mechanisms/TCG-PROTOCOL-v0.1.md); the product-side

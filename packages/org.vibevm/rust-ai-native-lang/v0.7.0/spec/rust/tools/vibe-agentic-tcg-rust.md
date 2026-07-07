@@ -2,7 +2,7 @@
 *Status: component brief at FULL seven-section parity (problem · design
 stance · component shape · staged ambition · licensing · risk register ·
 summary). Commissioned 2026-07-07 as the Rust twin of the agentic tcg
-line — the sibling of `vibe-tcg-rust.md` (token-level, VERY-FAR-future)
+line — the sibling of `rust-ai-native-tcg.md` (token-level, VERY-FAR-future)
 and of the TS stack's `vibe-agentic-tcg-ts.md` — and implemented by
 AGENTIC-TCG-RUST-PLAN v0.1. Mechanism specs:
 [`TCG-ORACLE-RUST-v0.1`](../mechanisms/TCG-ORACLE-RUST-v0.1.md),
@@ -139,7 +139,7 @@ agent ──MCP (tcg_validate/tcg_scope/tcg_complete/tcg_type,
   LSP child — richer scope/brand answers, custom traversals — at the
   cost of pinning our r-a version. Re-enters planning only by the
   owner's word; recorded in vibevm ROADMAP.md's Far backlog.
-- **Stage E — token-level TCG** (`vibe-tcg-rust.md`, VERY-FAR-future):
+- **Stage E — token-level TCG** (`rust-ai-native-tcg.md`, VERY-FAR-future):
   the same oracle answers a logit-masker inside a decode loop when
   `vibe-llm` exists. Nothing here is thrown away; the consumer of the
   answers changes.

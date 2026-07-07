@@ -228,13 +228,13 @@ mod tests {
     fn opencode_entry_carries_the_local_argv_shape() {
         let ConfigPayload::Json(v) = entry_payload(
             Agent::OpenCode,
-            "/slot/target/release/discipline-mcp-rust",
+            "/slot/target/release/rust-ai-native-mcp",
             &["--path".to_string(), "/proj".to_string()],
         ) else {
             panic!("OpenCode uses JSON");
         };
         assert_eq!(v["type"], "local");
-        assert_eq!(v["command"][0], "/slot/target/release/discipline-mcp-rust");
+        assert_eq!(v["command"][0], "/slot/target/release/rust-ai-native-mcp");
         assert_eq!(v["command"][2], "/proj");
         assert_eq!(v["enabled"], true);
     }
