@@ -30,16 +30,23 @@ fn descriptors_mount_the_family_faces() {
     assert_eq!(TcgType.descriptor().name, "tcg_type");
     let schema = TcgValidate.descriptor().input_schema;
     assert_eq!(schema["properties"]["language"]["enum"][0], "typescript");
+    assert_eq!(
+        schema["properties"]["language"]["enum"][1], "rust",
+        "the rust value rides the SAME four tools (PROP-026 §2 cashed)"
+    );
 }
 
 #[test]
 fn unsupported_language_is_invalid_arguments_naming_the_supported_set() {
     let (_dir, ctx) = empty_project();
     let err = TcgValidate
-        .run(&json!({"language": "rust", "file": "src/a.rs"}), &ctx)
+        .run(&json!({"language": "go", "file": "src/a.go"}), &ctx)
         .expect_err("unsupported");
     match err {
-        ToolError::InvalidArguments(msg) => assert!(msg.contains("typescript"), "{msg}"),
+        ToolError::InvalidArguments(msg) => {
+            assert!(msg.contains("typescript"), "{msg}");
+            assert!(msg.contains("rust"), "both shipped languages named: {msg}");
+        }
         other => panic!("wrong class: {other}"),
     }
 }
@@ -54,6 +61,24 @@ fn missing_stack_is_not_found_with_the_requires_recipe() {
         ToolError::NotFound(msg) => {
             assert!(msg.contains("vibe install"), "{msg}");
             assert!(msg.contains("typescript-ai-native"), "{msg}");
+        }
+        other => panic!("wrong class: {other}"),
+    }
+}
+
+#[test]
+fn missing_rust_stack_names_its_own_requires_line() {
+    let (_dir, ctx) = empty_project();
+    let err = TcgValidate
+        .run(&json!({"language": "rust", "file": "src/a.rs"}), &ctx)
+        .expect_err("not installed");
+    match err {
+        ToolError::NotFound(msg) => {
+            assert!(msg.contains("rust-ai-native\" = \"^0.5"), "{msg}");
+            assert!(
+                !msg.contains("typescript-ai-native"),
+                "never another language's fix surface: {msg}"
+            );
         }
         other => panic!("wrong class: {other}"),
     }
@@ -131,4 +156,78 @@ fn live_chain_on_ts_demo() {
         diags2.iter().any(|d| d["code"] == 2322),
         "seeded TS2322 expected: {out2}"
     );
+}
+
+/// The RUST twin's real chain: registry → slot artifact → `tcg-rust
+/// serve` → the consumer's rust-analyzer → enriched answer, against
+/// research/rust-demo. Needs the slot artifact built (`vibe bin build
+/// tcg-rust` from the demo) and the rust-analyzer component — the
+/// stack prerequisite (ORACLE-RUST §1).
+#[test]
+#[ignore = "spawns the real slot binary + rust-analyzer; run with --ignored on a prepared box"]
+fn live_chain_on_rust_demo() {
+    let repo_root = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+        .join("..")
+        .join("..");
+    let demo = repo_root.join("research").join("rust-demo");
+    let ctx = ServerContext::new(demo.clone());
+
+    // The clean file: zero diagnostics, zero findings (the demo's
+    // baseline froze EMPTY — prediction §4.6).
+    let out = TcgValidate
+        .run(
+            &json!({"language": "rust", "file": "crates/rust-demo/src/cells/greeting.rs"}),
+            &ctx,
+        )
+        .expect("live validate");
+    assert_eq!(out["degraded"], false, "{out}");
+    let findings = out["conform_findings"].as_array().expect("findings");
+    assert!(findings.is_empty(), "the demo is born conformant: {out}");
+    let diags = out["diagnostics"].as_array().expect("diags");
+    assert!(diags.iter().all(|d| d["category"] != "error"), "{out}");
+
+    // A hypothetical broken edit through the SAME persistent relay —
+    // caught without touching disk.
+    let original = std::fs::read_to_string(demo.join("crates/rust-demo/src/cells/greeting.rs"))
+        .expect("read demo file");
+    let seeded = format!("{original}\npub const BAD: i32 = \"oops\";\n");
+    let out2 = TcgValidate
+        .run(
+            &json!({
+                "language": "rust",
+                "file": "crates/rust-demo/src/cells/greeting.rs",
+                "content": seeded,
+            }),
+            &ctx,
+        )
+        .expect("live overlay validate");
+    let diags2 = out2["diagnostics"].as_array().expect("diags");
+    assert!(
+        diags2.iter().any(|d| d["code"] == "E0308"),
+        "seeded E0308 expected: {out2}"
+    );
+
+    // And a discipline breach the compiler cannot see: the enrichment
+    // hop reports it non-baselined, with advice.
+    let unwrappy = format!("{original}\npub fn bad(v: Option<u32>) -> u32 {{ v.unwrap() }}\n");
+    let out3 = TcgValidate
+        .run(
+            &json!({
+                "language": "rust",
+                "file": "crates/rust-demo/src/cells/greeting.rs",
+                "content": unwrappy,
+            }),
+            &ctx,
+        )
+        .expect("live unwrap validate");
+    let findings3 = out3["conform_findings"].as_array().expect("findings");
+    assert!(
+        findings3
+            .iter()
+            .any(|f| f["rule"] == "no-unwrap-in-domain" && f["baselined"] == false),
+        "the gate's own rule answers at generation time: {out3}"
+    );
+    let disk = std::fs::read_to_string(demo.join("crates/rust-demo/src/cells/greeting.rs"))
+        .expect("re-read");
+    assert_eq!(disk, original, "overlays never touched the demo");
 }
