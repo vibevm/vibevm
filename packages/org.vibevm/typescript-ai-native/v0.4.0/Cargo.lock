@@ -509,6 +509,33 @@ dependencies = [
 ]
 
 [[package]]
+name = "tcg-cli-typescript"
+version = "0.4.0"
+dependencies = [
+ "anyhow",
+ "clap",
+ "conform-cli-typescript",
+ "conform-core",
+ "serde",
+ "serde_json",
+ "tcg-oracle-bridge",
+ "tempfile",
+ "ts-extract-bridge",
+]
+
+[[package]]
+name = "tcg-oracle-bridge"
+version = "0.4.0"
+dependencies = [
+ "serde",
+ "serde_json",
+ "sha2",
+ "tempfile",
+ "thiserror",
+ "ts-extract-bridge",
+]
+
+[[package]]
 name = "tempfile"
 version = "3.27.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
