@@ -1,6 +1,6 @@
 [meta]
 generated_by = "vibe 0.1.0-dev"
-generated_at = "2026-07-07T03:03:15Z"
+generated_at = "2026-07-07T03:46:06Z"
 schema_version = 5
 root_dependencies = ["stack:org.vibevm/typescript-ai-native@^0.4.0"]
 
@@ -10,7 +10,7 @@ name = "typescript-ai-native"
 group = "org.vibevm"
 version = "0.4.0"
 source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/typescript-ai-native/v0.4.0"
-content_hash = "sha256:38e2bed71116b90c863f3b8da7e518756ba3ecab69fa958db94482c1005975d6"
+content_hash = "sha256:2cc2cfd88db119ebb3050b692a767a08229930d80f3aaf1a265e5e049a6ee532"
 files_written = []
 dependencies = ["flow:org.vibevm/discipline-core@=0.4.0"]
 source_kind = "registry"

@@ -28,6 +28,18 @@ pub const ORACLE_PROTOCOL: u64 = 1;
 /// `tools/ts-oracle/oracle.ts` (TCG-ORACLE §1: one self-contained file).
 pub const ORACLE_SOURCE: &str = include_str!("../../../tools/ts-oracle/oracle.ts");
 
+/// Strip Windows' verbatim prefix (`\\?\`): node cannot load an entry
+/// script through it, and `canonicalize()` adds it — the same lesson
+/// PROP-019's `derive_self` and the junction helpers learned. A no-op
+/// on non-verbatim paths and non-Windows.
+pub fn verbatim_free(path: &Path) -> PathBuf {
+    let s = path.to_string_lossy();
+    match s.strip_prefix(r"\\?\") {
+        Some(stripped) => PathBuf::from(stripped),
+        None => path.to_path_buf(),
+    }
+}
+
 /// Materialise the embedded oracle content-addressed under
 /// `<root>/target/tcg/ts-oracle/oracle-<hash16>.ts`; idempotent, and a
 /// source change lands at a new path (stale copies are inert).

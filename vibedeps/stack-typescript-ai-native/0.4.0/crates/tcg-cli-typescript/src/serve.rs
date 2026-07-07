@@ -55,11 +55,29 @@ fn error_frame(id: Option<u64>, kind: &str, detail: String) -> serde_json::Value
 
 /// The relay loop. Returns the process exit code.
 pub fn run_serve(root: &Path) -> Result<i32> {
-    let root = root
-        .canonicalize()
-        .unwrap_or_else(|_| root.to_path_buf());
+    // canonicalize for stability, then strip the \\?\ verbatim prefix —
+    // the root rides into node-side URLs (pathToFileURL) where verbatim
+    // paths break (the standing Windows lesson).
+    let root = tcg_oracle_bridge::verbatim_free(
+        &root.canonicalize().unwrap_or_else(|_| root.to_path_buf()),
+    );
     let policy = Policy::load(&root)?;
     let mut oracle = SystemOracle::spawn(&root, ORACLE_TIMEOUT)?;
+    // The relay owns the session: init the oracle up front with the
+    // policy's topology, so a host's FIRST op can be validate/scope/…
+    // without any init dance (PROP-026 §4 — the registry never init's;
+    // client-sent init frames still pass through as re-init).
+    let boot = oracle.init(
+        &root,
+        policy.config.typescript.cells_dir.as_deref(),
+        &policy.config.typescript.seam,
+    )?;
+    eprintln!(
+        "tcg-typescript serve: oracle up — typescript {}, {} root file(s), {}",
+        boot.ts_version,
+        boot.root_files,
+        root.display()
+    );
 
     let stdin = std::io::stdin();
     let mut stdout = std::io::stdout();

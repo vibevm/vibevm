@@ -142,7 +142,9 @@ impl SystemOracle {
     /// typescript-resolution outcome as a typed error instead of an
     /// exit code race.
     pub fn spawn(project_root: &Path, timeout: Duration) -> Result<Self, TcgBridgeError> {
-        let script = materialise_oracle(project_root)?;
+        // node refuses a \\?\-verbatim entry path (the canonicalize
+        // artefact); hand it a plain absolute path always.
+        let script = crate::verbatim_free(&materialise_oracle(project_root)?);
         let mut child = Command::new("node")
             .arg(&script)
             .stdin(Stdio::piped())
