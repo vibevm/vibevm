@@ -166,6 +166,17 @@ pub enum Command {
     #[command(name = "self")]
     Vvm(VvmArgs),
 
+    /// Traceability queries over the project's specmap (PROP-014 §2.6) —
+    /// a delegating alias: arguments pass through verbatim to the
+    /// installed `discipline-rust trace` (the engine ships with the
+    /// discipline stack and versions with the project, not with vibe).
+    /// Example: `vibe trace explain "spec://<ns>/<doc>#<anchor>"`.
+    #[command(trailing_var_arg = true, allow_hyphen_values = true)]
+    Trace {
+        /// Arguments handed to `discipline-rust trace` unchanged.
+        args: Vec<String>,
+    },
+
     /// Print the runtime variable context — the values vibevm actually uses
     /// (derived from the running binary's location) versus the environment,
     /// so scripts can reconcile a stale `$VIBEVM_HOME` (PROP-019 §2.14).

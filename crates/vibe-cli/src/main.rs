@@ -158,6 +158,12 @@ fn main() -> ExitCode {
             ];
             commands::vars::run(args, rows)
         }
+        Command::Trace { args } => match commands::trace::run(&args) {
+            Ok(code) => {
+                return ExitCode::from(u8::try_from(code.clamp(0, 255)).unwrap_or(1));
+            }
+            Err(err) => Err(err),
+        },
         Command::Version => {
             println!("vibe {}", env!("CARGO_PKG_VERSION"));
             return ExitCode::SUCCESS;
