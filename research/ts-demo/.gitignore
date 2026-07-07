@@ -1,0 +1,10 @@
+# Materialised package slots — reproducible from vibe.toml:
+#   vibe install --registry ../../packages --assume-yes
+vibedeps/
+.vibe/
+
+# Resolved npm installs — reproducible from package-lock.json.
+node_modules/
+
+# Build output (the conform fact cache, the materialised extractor).
+target/

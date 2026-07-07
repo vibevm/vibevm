@@ -1,0 +1,197 @@
+{
+  "code_items": [
+    {
+      "crate_name": "src",
+      "file": "src/cells/farewell/index.test.ts",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "src/cells/farewell/index.test.ts"
+    },
+    {
+      "crate_name": "src",
+      "file": "src/cells/farewell/index.ts",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "src/cells/farewell/index.ts"
+    },
+    {
+      "crate_name": "src",
+      "file": "src/cells/farewell/index.ts",
+      "item_kind": "export",
+      "line": 9,
+      "symbol": "src/cells/farewell/index.ts::sendOff"
+    },
+    {
+      "crate_name": "src",
+      "file": "src/cells/greeting/index.test.ts",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "src/cells/greeting/index.test.ts"
+    },
+    {
+      "crate_name": "src",
+      "file": "src/cells/greeting/index.ts",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "src/cells/greeting/index.ts"
+    },
+    {
+      "crate_name": "src",
+      "file": "src/cells/greeting/index.ts",
+      "item_kind": "export",
+      "line": 67,
+      "symbol": "src/cells/greeting/index.ts::greet"
+    },
+    {
+      "crate_name": "src",
+      "file": "src/cells/greeting/index.ts",
+      "item_kind": "export",
+      "line": 41,
+      "symbol": "src/cells/greeting/index.ts::parseGuestName"
+    },
+    {
+      "crate_name": "src",
+      "file": "src/core/text.ts",
+      "item_kind": "module",
+      "line": 1,
+      "symbol": "src/core/text.ts"
+    }
+  ],
+  "edges": [
+    {
+      "file": "src/cells/farewell/index.test.ts",
+      "from_symbol": "src/cells/farewell/index.test.ts",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://ts-demo/PROP-001#cell-farewell",
+      "verb": "implements"
+    },
+    {
+      "file": "src/cells/farewell/index.ts",
+      "from_symbol": "src/cells/farewell/index.ts",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://ts-demo/PROP-001#cell-farewell",
+      "verb": "implements"
+    },
+    {
+      "file": "src/cells/farewell/index.ts",
+      "from_symbol": "src/cells/farewell/index.ts::sendOff",
+      "line": 9,
+      "provenance": "authored",
+      "uri": "spec://ts-demo/PROP-001#cell-farewell",
+      "verb": "implements",
+      "reason": "*"
+    },
+    {
+      "file": "src/cells/greeting/index.test.ts",
+      "from_symbol": "src/cells/greeting/index.test.ts",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://ts-demo/PROP-001#cell-greeting",
+      "verb": "implements"
+    },
+    {
+      "file": "src/cells/greeting/index.ts",
+      "from_symbol": "src/cells/greeting/index.ts",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://ts-demo/PROP-001#cell-greeting",
+      "verb": "implements"
+    },
+    {
+      "file": "src/cells/greeting/index.ts",
+      "from_symbol": "src/cells/greeting/index.ts::greet",
+      "line": 67,
+      "provenance": "authored",
+      "uri": "spec://ts-demo/PROP-001#req-greet",
+      "verb": "implements"
+    },
+    {
+      "file": "src/cells/greeting/index.ts",
+      "from_symbol": "src/cells/greeting/index.ts::parseGuestName",
+      "line": 41,
+      "provenance": "authored",
+      "uri": "spec://ts-demo/PROP-001#req-guest-name",
+      "verb": "implements",
+      "reason": "*"
+    },
+    {
+      "file": "src/core/text.ts",
+      "from_symbol": "src/core/text.ts",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://ts-demo/PROP-001#cell-text",
+      "verb": "implements"
+    }
+  ],
+  "schema": 2,
+  "spec_units": [
+    {
+      "anchor": "root",
+      "content_hash": "sha256:9e506a7161be5b11d8df0f5a09b43b46d86a6967cb1ead5752651844885c88aa",
+      "doc_path": "PROP-001",
+      "file": "spec/PROP-001.md",
+      "heading": "PROP-001 — the demo contract",
+      "line": 1,
+      "uri": "spec://ts-demo/PROP-001#root"
+    },
+    {
+      "anchor": "req-guest-name",
+      "content_hash": "sha256:c81b66fea016b846c76a6fc92bb50e079bfd93198049e27d2b201d06baeb5edd",
+      "doc_path": "PROP-001",
+      "file": "spec/PROP-001.md",
+      "heading": "A guest name is branded and validated",
+      "line": 6,
+      "uri": "spec://ts-demo/PROP-001#req-guest-name",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "req-greet",
+      "content_hash": "sha256:a8097fea08a51f1367bb705378be392ac0dd7f690cc7d680e50f241742b9e03e",
+      "doc_path": "PROP-001",
+      "file": "spec/PROP-001.md",
+      "heading": "Greeting is total over valid names",
+      "line": 16,
+      "uri": "spec://ts-demo/PROP-001#req-greet",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "cell-greeting",
+      "content_hash": "sha256:952461d65455fbab0879cf612a96f593d7f0710416a3e8091f3307174ab263a3",
+      "doc_path": "PROP-001",
+      "file": "spec/PROP-001.md",
+      "heading": "The greeting cell",
+      "line": 24,
+      "uri": "spec://ts-demo/PROP-001#cell-greeting",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "cell-farewell",
+      "content_hash": "sha256:dcbc3f56478e9d6230a5e37c1f634178caa6f4d38a3ec42f9c212e64ba7d91fd",
+      "doc_path": "PROP-001",
+      "file": "spec/PROP-001.md",
+      "heading": "The farewell cell",
+      "line": 31,
+      "uri": "spec://ts-demo/PROP-001#cell-farewell",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "cell-text",
+      "content_hash": "sha256:8190b8d77449253ca526ce567aa21fce961f07e33a21724bde0d78667d3c4eb6",
+      "doc_path": "PROP-001",
+      "file": "spec/PROP-001.md",
+      "heading": "Core text utilities",
+      "line": 38,
+      "uri": "spec://ts-demo/PROP-001#cell-text",
+      "kind": "req",
+      "revision": 1
+    }
+  ],
+  "suspects": [],
+  "warnings": []
+}

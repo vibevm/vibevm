@@ -1,0 +1,4 @@
+{
+  "schema": 1,
+  "findings": ["ts-unsafe-in-domain|src/cells/greeting/index.ts|as_cross#64"]
+}

@@ -1,0 +1,12 @@
+vibedeps/
+.vibe/
+node_modules/
+target/
+specmap.json
+package-lock.json
+discipline/
+# vibe-generated boot artifacts (rewritten on every install).
+spec/boot/
+CLAUDE.md
+AGENTS.md
+GEMINI.md

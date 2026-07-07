@@ -1,0 +1,21 @@
+{
+  "name": "ts-demo",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Walking skeleton for the AI-Native TypeScript discipline stack: branded seams, Result-shaped errors, a validated erasure boundary, and the full seven-step floor.",
+  "engines": {
+    "node": ">=22.6"
+  },
+  "scripts": {
+    "test": "node --test",
+    "floor": "discipline-typescript floor"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.0",
+    "eslint": "^9.39.0",
+    "prettier": "^3.6.0",
+    "typescript": "^6.0.0",
+    "typescript-eslint": "^8.46.0"
+  }
+}
