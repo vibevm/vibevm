@@ -456,7 +456,7 @@ fn mcp_manifest(requires_line: &str, server_tail: &str) -> String {
         r#"
 [package]
 group = "org.vibevm"
-name = "discipline-rust"
+name = "rust-ai-native-mcp"
 kind = "mcp"
 version = "0.6.0"
 license = "EULA"
@@ -481,7 +481,7 @@ binary = "discipline-mcp-rust"
 #[verifies("spec://vibevm/modules/vibe-mcp/PROP-027#manifest")]
 fn mcp_kind_manifest_parses_under_its_laws() {
     let raw = mcp_manifest(
-        "\"stack:org.vibevm/rust-ai-native\" = \"=0.6.0\"",
+        "\"stack:org.vibevm/rust-ai-native-lang\" = \"=0.6.0\"",
         "args = [\"--path\", \"{project_root}\"]\n",
     );
     let m = Manifest::parse_str(&raw).unwrap();
@@ -499,7 +499,7 @@ fn mcp_server_table_is_refused_outside_the_mcp_kind() {
     let raw = r#"
 [package]
 group = "org.vibevm"
-name = "rust-ai-native"
+name = "rust-ai-native-lang"
 kind = "stack"
 version = "0.6.0"
 license = "EULA"
@@ -523,7 +523,7 @@ fn mcp_kind_without_a_server_is_refused() {
     let raw = r#"
 [package]
 group = "org.vibevm"
-name = "discipline-rust"
+name = "rust-ai-native-mcp"
 kind = "mcp"
 version = "0.6.0"
 license = "EULA"
@@ -537,14 +537,14 @@ description = "x"
 #[verifies("spec://vibevm/modules/vibe-mcp/PROP-027#manifest")]
 fn mcp_server_binary_must_resolve_and_names_must_be_unique() {
     // Unresolved binary reference.
-    let raw = mcp_manifest("\"stack:org.vibevm/rust-ai-native\" = \"=0.6.0\"", "")
+    let raw = mcp_manifest("\"stack:org.vibevm/rust-ai-native-lang\" = \"=0.6.0\"", "")
         .replace("binary = \"discipline-mcp-rust\"", "binary = \"ghost\"");
     let err = Manifest::parse_str(&raw).unwrap_err().to_string();
     assert!(err.contains("no [[binary]] declares it"), "{err}");
 
     // Duplicate server names.
     let raw = mcp_manifest(
-        "\"stack:org.vibevm/rust-ai-native\" = \"=0.6.0\"",
+        "\"stack:org.vibevm/rust-ai-native-lang\" = \"=0.6.0\"",
         "\n[[mcp_server]]\nname = \"discipline-rust\"\nbinary = \"discipline-mcp-rust\"\n",
     );
     let err = Manifest::parse_str(&raw).unwrap_err().to_string();
@@ -555,7 +555,7 @@ fn mcp_server_binary_must_resolve_and_names_must_be_unique() {
 #[verifies("spec://vibevm/modules/vibe-mcp/PROP-027#manifest")]
 fn mcp_server_args_substitute_only_the_closed_set() {
     let raw = mcp_manifest(
-        "\"stack:org.vibevm/rust-ai-native\" = \"=0.6.0\"",
+        "\"stack:org.vibevm/rust-ai-native-lang\" = \"=0.6.0\"",
         "args = [\"--token\", \"{secret}\"]\n",
     );
     let err = Manifest::parse_str(&raw).unwrap_err().to_string();
@@ -567,7 +567,10 @@ fn mcp_server_args_substitute_only_the_closed_set() {
 #[verifies("spec://vibevm/modules/vibe-mcp/PROP-027#exact-pin")]
 fn mcp_kind_requires_exact_pins() {
     for bad in ["\"^0.6\"", "\"0.6.0\"", "\"=0.6\"", "\">=0.6.0, <0.7\""] {
-        let raw = mcp_manifest(&format!("\"stack:org.vibevm/rust-ai-native\" = {bad}"), "");
+        let raw = mcp_manifest(
+            &format!("\"stack:org.vibevm/rust-ai-native-lang\" = {bad}"),
+            "",
+        );
         let err = Manifest::parse_str(&raw).unwrap_err().to_string();
         assert!(
             err.contains("pin every package requirement exactly"),
@@ -575,6 +578,6 @@ fn mcp_kind_requires_exact_pins() {
         );
     }
     // The exact form passes.
-    let raw = mcp_manifest("\"stack:org.vibevm/rust-ai-native\" = \"=0.6.0\"", "");
+    let raw = mcp_manifest("\"stack:org.vibevm/rust-ai-native-lang\" = \"=0.6.0\"", "");
     Manifest::parse_str(&raw).unwrap();
 }

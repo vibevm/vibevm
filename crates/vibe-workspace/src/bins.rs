@@ -107,9 +107,9 @@ impl DeclaredBinary {
     ///         crate_dir: "crates/tcg-cli-typescript".into(),
     ///         description: None,
     ///     },
-    ///     package: "org.vibevm/typescript-ai-native".into(),
+    ///     package: "org.vibevm/typescript-ai-native-lang".into(),
     ///     group: "org.vibevm".into(),
-    ///     slot: std::path::PathBuf::from("vibedeps/stack-typescript-ai-native/0.4.0"),
+    ///     slot: std::path::PathBuf::from("vibedeps/stack-typescript-ai-native-lang/0.4.0"),
     /// };
     /// let artifact = bin.artifact();
     /// assert!(artifact.starts_with(&bin.slot));
@@ -302,7 +302,7 @@ schema_version = 5
 [[package]]
 kind = "stack"
 group = "org.vibevm"
-name = "typescript-ai-native"
+name = "typescript-ai-native-lang"
 version = "0.4.0"
 registry = "vibespecs"
 source_url = "file://packages"
@@ -322,13 +322,13 @@ files_written = []
         let slot = dir
             .path()
             .join("vibedeps")
-            .join("stack-typescript-ai-native")
+            .join("stack-typescript-ai-native-lang")
             .join("0.4.0");
         std::fs::create_dir_all(&slot).expect("slot");
         std::fs::write(
             slot.join("vibe.toml"),
             r#"[package]
-name = "typescript-ai-native"
+name = "typescript-ai-native-lang"
 group = "org.vibevm"
 kind = "stack"
 version = "0.4.0"

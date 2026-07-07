@@ -1,5 +1,5 @@
 //! `cargo xtask conform …` — a thin shim over the `conform-cli-rust` library,
-//! which now ships in stack:org.vibevm/rust-ai-native (PROP-024 code-bearing
+//! which now ships in stack:org.vibevm/rust-ai-native-lang (PROP-024 code-bearing
 //! packages). The fact engine, the rule set, and the policy model all live in
 //! the package; this shim only resolves the vibevm repo root and delegates,
 //! and it keeps the vibevm-specific "every crate is gated or exempt" invariant

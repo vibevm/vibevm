@@ -14,7 +14,7 @@
 //!   `check-codegen` idiom.
 //! - `test-gate` / `tripwire` / `trace` / `health` / `fast-loop` /
 //!   `codemod` — thin shims over the packaged `discipline-cli-rust` library
-//!   (stack:org.vibevm/rust-ai-native, PROP-024): the drivers ship with
+//!   (stack:org.vibevm/rust-ai-native-lang, PROP-024): the drivers ship with
 //!   the discipline; xtask keeps vibevm's flag-compatible surface and
 //!   composes the vibevm-only extras (the health `--mirrors` probe).
 //!
@@ -157,7 +157,7 @@ enum Cmd {
     },
 
     /// Mirror the authored neutral engine crates
-    /// (flow:org.vibevm/discipline-core) into every stack's
+    /// (flow:org.vibevm/core-ai-native) into every stack's
     /// `crates/vendor/` per `sync-engines.toml` (DEFERRALS-CLOSEOUT D1).
     /// `--check` byte-compares instead of writing and exits non-zero on
     /// drift; self-check runs it, so a vendored copy can never diverge

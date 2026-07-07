@@ -1,12 +1,12 @@
 //! `vibe trace` — the product alias over `discipline-rust trace`
 //! (PROP-014 §2.6). A pure delegator: the traceability engine ships in
-//! `stack:org.vibevm/rust-ai-native` and versions with the PROJECT's
+//! `stack:org.vibevm/rust-ai-native-lang` and versions with the PROJECT's
 //! pinned stack, so embedding it into the product binary would let the
 //! two skew; spawning the installed binary keeps `vibe trace` exactly
 //! as new as the discipline the project actually uses. Arguments pass
 //! through verbatim; the exit code passes back.
 
-specmark::scope!("spec://discipline-core/mechanisms/PROP-014#index");
+specmark::scope!("spec://core-ai-native/mechanisms/PROP-014#index");
 
 use anyhow::{Result, bail};
 
@@ -31,7 +31,7 @@ fn run_with(binary: &str, args: &[String]) -> Result<i32> {
              or run it in place:\n\
              \x20 cargo run --manifest-path vibedeps/<stack-slot>/Cargo.toml \\\n\
              \x20     -p discipline-cli --bin discipline-rust -- trace <args…>\n\
-             (<stack-slot> is e.g. stack-rust-ai-native/<version> — check vibe.lock; \
+             (<stack-slot> is e.g. stack-rust-ai-native-lang/<version> — check vibe.lock; \
              TypeScript trees use `discipline-typescript trace` from their stack)"
         ),
     }

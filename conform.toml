@@ -6,7 +6,7 @@
 # vibevm's own code, and TERRAFORM-PLAN-v0.3 §30 records conform.toml as
 # staying with the consumer, not moving into the discipline package. A
 # consumer of the rust-ai-native stack writes its own conform.toml for its
-# own layout. See PROP-024 and discipline://rust-ai-native.
+# own layout. See PROP-024 and discipline://rust-ai-native-lang.
 
 # Source roots to scan. A `<dir>/*` entry scans each subdir of <dir> as one
 # crate; any other entry is a literal crate dir.

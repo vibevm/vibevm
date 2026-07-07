@@ -1,0 +1,70 @@
+# org.vibevm/typescript-ai-native — a code-bearing package (PROP-024) since
+# 0.3.0: it ships the TypeScript projection's runnable checkers, not only
+# prompts. This is the package's OWN Cargo workspace; a consumer's root
+# excludes vibedeps/ and the slot builds standalone (PROP-024 §2.4).
+#
+# The crates under crates/vendor/ are byte-identical vendored copies of the
+# neutral engine crates AUTHORED in flow:org.vibevm/core-ai-native
+# (`cargo xtask sync-engines` in the dev tree mirrors them; `--check` gates
+# drift). Never edit vendored copies — the fix surface is the authored crate.
+# The TypeScript-specific frontends and CLI drivers land as sibling members
+# (DEFERRALS-CLOSEOUT-PLAN v0.1, Phases 2–4).
+[workspace]
+resolver = "3"
+members = [
+    "crates/conform-cli-typescript",
+    "crates/conform-frontend-typescript",
+    "crates/discipline-cli-typescript",
+    "crates/specmap-cli-typescript",
+    "crates/specmap-scan-typescript",
+    "crates/tcg-cli-typescript",
+    "crates/tcg-oracle-bridge",
+    "crates/ts-extract-bridge",
+    "crates/vendor/conform-core",
+    "crates/vendor/specmap-core",
+    "crates/vendor/specmark",
+    "crates/vendor/specmark-grammar",
+]
+
+[workspace.package]
+version = "0.4.0"
+edition = "2024"
+rust-version = "1.93"
+authors = ["Oleg Chirukhin"]
+license-file = "LICENSE.md"
+publish = false
+repository = "https://gitverse.ru/anarchic/vibevm"
+homepage = "https://gitverse.ru/anarchic/vibevm"
+
+[workspace.dependencies]
+# Internal crates — path-only (not published; consumed in-tree).
+conform-core = { path = "crates/vendor/conform-core" }
+specmap-core = { path = "crates/vendor/specmap-core" }
+specmark = { path = "crates/vendor/specmark" }
+specmark-grammar = { path = "crates/vendor/specmark-grammar" }
+ts-extract-bridge = { path = "crates/ts-extract-bridge" }
+conform-frontend-typescript = { path = "crates/conform-frontend-typescript" }
+conform-cli-typescript = { path = "crates/conform-cli-typescript" }
+specmap-scan-typescript = { path = "crates/specmap-scan-typescript" }
+specmap-cli-typescript = { path = "crates/specmap-cli-typescript" }
+discipline-cli-typescript = { path = "crates/discipline-cli-typescript" }
+tcg-oracle-bridge = { path = "crates/tcg-oracle-bridge" }
+tcg-cli-typescript = { path = "crates/tcg-cli-typescript" }
+
+# Third-party (all permissive licenses — PROP-000 §3). Feature sets match
+# vibevm's so the engines behave identically wherever they are built.
+anyhow = "1"
+thiserror = "2"
+clap = { version = "4", features = ["derive"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = { version = "1", features = ["preserve_order"] }
+sha2 = "0.10"
+toml = "0.9"
+walkdir = "2"
+glob = "0.3"
+syn = { version = "2", features = ["full", "visit"] }
+quote = "1"
+proc-macro2 = { version = "1", features = ["span-locations"] }
+
+# Dev / test
+tempfile = "3"

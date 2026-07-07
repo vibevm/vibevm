@@ -47,9 +47,9 @@ exempt = [
 dispositioned = []
 
 # Installed packages' spec trees, read for URI RESOLUTION only (PROP-014
-# §7.1): edges into `spec://discipline-core/…` — the shipped mechanism specs
+# §7.1): edges into `spec://core-ai-native/…` — the shipped mechanism specs
 # this repo's tags cite — resolve through the materialised slot instead of
 # dangling. Units found here never enter the committed specmap.json.
 [[external_specs]]
-namespace = "discipline-core"
-root = "vibedeps/flow-discipline-core/0.6.0/spec"
+namespace = "core-ai-native"
+root = "vibedeps/flow-core-ai-native/0.6.0/spec"

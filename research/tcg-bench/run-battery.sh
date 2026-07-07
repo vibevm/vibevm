@@ -67,7 +67,7 @@ command -v node >/dev/null 2>&1 || { echo "FATAL: node not on PATH" >&2; exit 3;
   exit 3
 }
 
-SLOT_CONFORM="$REPO_ROOT/vibedeps/stack-typescript-ai-native/0.4.0/target/release/conform-typescript.exe"
+SLOT_CONFORM="$REPO_ROOT/vibedeps/stack-typescript-ai-native-lang/0.4.0/target/release/conform-typescript.exe"
 if [ ! -x "$SLOT_CONFORM" ]; then
   echo "note: conform artifact missing; building via vibe bin build (org.vibevm, consented)" >&2
   (cd "$REPO_ROOT" && cargo run -q -p vibe-cli -- bin build conform-typescript) || {
@@ -82,7 +82,7 @@ mkdir -p "$SCRIPT_DIR/.toolcache"
 CONFORM_BIN="$SCRIPT_DIR/.toolcache/conform-typescript.exe"
 cp -f "$SLOT_CONFORM" "$CONFORM_BIN"
 
-TCG_BIN="$REPO_ROOT/vibedeps/stack-typescript-ai-native"/*/target/release/tcg-typescript.exe
+TCG_BIN="$REPO_ROOT/vibedeps/stack-typescript-ai-native-lang"/*/target/release/tcg-typescript.exe
 if [ "$ARM" = "with-tools" ]; then
   # shellcheck disable=SC2086
   set -- $TCG_BIN
@@ -124,7 +124,7 @@ remove_work() { # <work dir>
 }
 
 TOOLS_BLOCK="Tools available for this task: run
-  \"$REPO_ROOT/vibedeps/stack-typescript-ai-native/0.4.0/target/release/tcg-typescript.exe\" validate <file> --json
+  \"$REPO_ROOT/vibedeps/stack-typescript-ai-native-lang/0.4.0/target/release/tcg-typescript.exe\" validate <file> --json
 to type-check a file (with discipline findings) BEFORE writing it to disk is final, and
   ... scope <file> / complete <file> --position L:C / type <file> --position L:C
 for in-scope symbols, type-valid completions, and expression types. Consult them before and after each edit."

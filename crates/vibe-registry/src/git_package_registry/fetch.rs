@@ -264,7 +264,7 @@ impl GitPackageRegistry {
     /// "primary is canonical and its diagnostic is most useful"
     /// semantics as [`Self::try_lookup`].
     #[specmark::spec(
-        deviates = "spec://discipline-core/mechanisms/ENGINE-CONFORM-v0.1#rules",
+        deviates = "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
         reason = "no-unwrap-in-domain: primary_err is Some whenever the source loop \
                   exhausts — the primary URL exists by package_urls' type and its \
                   failure is recorded before any continue; lifting the primary out \

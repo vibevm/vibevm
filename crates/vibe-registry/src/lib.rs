@@ -259,7 +259,7 @@ impl CachedPackage {
     /// sound — a fetched registry package always carries a `[package]`
     /// table.
     #[spec(
-        deviates = "spec://discipline-core/mechanisms/ENGINE-CONFORM-v0.1#rules",
+        deviates = "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
         reason = "no-unwrap-in-domain: every CachedPackage construction site guards \
                   manifest.package.is_some() before building the struct, so the \
                   accessor's expect is a checked invariant; returning Result would \
