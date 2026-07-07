@@ -2,7 +2,7 @@
 name = "typescript-ai-native"
 group = "org.vibevm"
 kind = "stack"
-version = "0.3.0"
+version = "0.4.0"
 authors = ["Oleg Chirukhin"]
 license = "EULA"
 description = "AI-Native TypeScript - the TypeScript projection of the Discipline v0.2: cells, branding over structural typing, contract-first ordering, the nine scaffolds in TypeScript, tsconfig-as-discipline, the erasure boundary, errors as discriminated unions, type-level testing, and the nine scaffold cards"

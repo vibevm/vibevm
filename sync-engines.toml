@@ -19,5 +19,5 @@ crates = [
 
 targets = [
     "packages/org.vibevm/rust-ai-native/v0.4.0/crates/vendor",
-    "packages/org.vibevm/typescript-ai-native/v0.3.0/crates/vendor",
+    "packages/org.vibevm/typescript-ai-native/v0.4.0/crates/vendor",
 ]

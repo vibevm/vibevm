@@ -127,7 +127,7 @@ checksum = "1d07550c9036bf2ae0c684c4297d503f838287c83c53686d05370d0e139ae570"
 
 [[package]]
 name = "conform-cli-typescript"
-version = "0.3.0"
+version = "0.4.0"
 dependencies = [
  "anyhow",
  "clap",
@@ -140,7 +140,7 @@ dependencies = [
 
 [[package]]
 name = "conform-core"
-version = "0.3.0"
+version = "0.4.0"
 dependencies = [
  "anyhow",
  "serde",
@@ -154,7 +154,7 @@ dependencies = [
 
 [[package]]
 name = "conform-frontend-typescript"
-version = "0.3.0"
+version = "0.4.0"
 dependencies = [
  "anyhow",
  "conform-core",
@@ -194,7 +194,7 @@ dependencies = [
 
 [[package]]
 name = "discipline-cli-typescript"
-version = "0.3.0"
+version = "0.4.0"
 dependencies = [
  "anyhow",
  "clap",
@@ -436,7 +436,7 @@ dependencies = [
 
 [[package]]
 name = "specmap-cli-typescript"
-version = "0.3.0"
+version = "0.4.0"
 dependencies = [
  "anyhow",
  "specmap-core",
@@ -446,7 +446,7 @@ dependencies = [
 
 [[package]]
 name = "specmap-core"
-version = "0.3.0"
+version = "0.4.0"
 dependencies = [
  "anyhow",
  "glob",
@@ -465,7 +465,7 @@ dependencies = [
 
 [[package]]
 name = "specmap-scan-typescript"
-version = "0.3.0"
+version = "0.4.0"
 dependencies = [
  "specmap-core",
  "specmark-grammar",
@@ -474,7 +474,7 @@ dependencies = [
 
 [[package]]
 name = "specmark"
-version = "0.3.0"
+version = "0.4.0"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -484,7 +484,7 @@ dependencies = [
 
 [[package]]
 name = "specmark-grammar"
-version = "0.3.0"
+version = "0.4.0"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -582,7 +582,7 @@ checksum = "756daf9b1013ebe47a8776667b466417e2d4c5679d441c26230efd9ef78692db"
 
 [[package]]
 name = "ts-extract-bridge"
-version = "0.3.0"
+version = "0.4.0"
 dependencies = [
  "conform-core",
  "serde",

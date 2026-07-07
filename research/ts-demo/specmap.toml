@@ -18,5 +18,5 @@ root = "vibedeps/flow-discipline-core/0.4.0/spec"
 
 [[external_specs]]
 namespace = "typescript-ai-native"
-root = "vibedeps/stack-typescript-ai-native/0.3.0/spec"
+root = "vibedeps/stack-typescript-ai-native/0.4.0/spec"
 

@@ -6,7 +6,7 @@ authors = ["Oleg Chirukhin"]
 [requires.packages]
 "flow:org.vibevm/discipline-core" = "^0.4.0"
 "stack:org.vibevm/rust-ai-native" = "^0.4.0"
-"stack:org.vibevm/typescript-ai-native" = "^0.3.0"
+"stack:org.vibevm/typescript-ai-native" = "^0.4.0"
 
 # vibevm is its own bootstrap project — the tool itself, not yet a
 # consumer of any other vibevm registry. The `[[registry]]` blocks
