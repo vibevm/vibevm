@@ -112,6 +112,30 @@ enum Command {
         #[command(subcommand)]
         cmd: CodemodCmd,
     },
+    /// Human views over the BROWNFIELD registries.
+    Ledger {
+        #[command(subcommand)]
+        cmd: LedgerCmd,
+    },
+}
+
+#[derive(Subcommand)]
+enum LedgerCmd {
+    /// Render `discipline/DEBT.md` + `discipline/INTENT.md` from the
+    /// debt and intent registries (deterministic; a generated-by
+    /// banner names the regen command). `--check` regenerates and
+    /// byte-compares, failing on drift.
+    Render {
+        /// Compare instead of writing; non-zero exit on stale views.
+        #[arg(long)]
+        check: bool,
+        /// The debt registry, project-relative.
+        #[arg(long, default_value = discipline_cli::DEFAULT_DEBT_REGISTRY)]
+        debt: String,
+        /// The intent registry, project-relative.
+        #[arg(long, default_value = discipline_cli::DEFAULT_INTENT_REGISTRY)]
+        intent: String,
+    },
 }
 
 #[derive(Subcommand)]
@@ -232,6 +256,13 @@ fn main() -> Result<()> {
             } => discipline_cli::run_codemod_add_cell(
                 &root, &crate_dir, &cell, &seam, &variant, &spec_uri,
             ),
+        },
+        Command::Ledger { cmd } => match cmd {
+            LedgerCmd::Render {
+                check,
+                debt,
+                intent,
+            } => discipline_cli::run_ledger_render(&root, &debt, &intent, check),
         },
     }
 }

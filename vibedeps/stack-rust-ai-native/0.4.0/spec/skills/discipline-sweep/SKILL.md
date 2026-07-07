@@ -64,6 +64,10 @@ this order:
 - `discipline-rust tripwire` — re-disposition every touched-and-open debt
   entry; file new deficiencies into `discipline/registry/debt.json`, never
   leave them as prose.
+- `discipline-rust ledger render --check` — the human views
+  (`discipline/DEBT.md` / `INTENT.md`) match their registries; stale →
+  re-render and commit (a registry edit without a re-render is exactly
+  the drift this catches).
 - Doc/code drift: WAL freshness (if the project keeps one — see
   `06-WAL-CONVENTION`), architecture docs vs the real tree, roadmap
   staleness. File `stale-doc` debt.

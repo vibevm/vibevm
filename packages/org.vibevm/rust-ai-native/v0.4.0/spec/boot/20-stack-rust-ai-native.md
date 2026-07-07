@@ -32,9 +32,11 @@ The shipped toolchain (this stack materialises it; no dev tree needed):
 `discipline-rust` — `init` (bootstrap policies + registries), `floor`
 (fmt→test→clippy→conform→specmap→test-gate, one exit code), `health`
 (the sweep's fact collector), `test-gate` / `tripwire` / `trace` /
-`fast-loop` / `codemod`; plus the narrow `conform-rust` and
-`specmap-rust` engines. Run from PATH (`cargo install --path
-vibedeps/<stack-slot>/crates/discipline-cli`) or in place via
+`fast-loop` / `codemod` / `ledger`; plus the narrow `conform-rust` and
+`specmap-rust` engines. Run vibe-natively (`vibe bin exec
+discipline-rust -- <args>` — PROP-025 lockfile dispatch; `vibe bin
+build` pre-builds), from PATH (`cargo install --path
+vibedeps/<stack-slot>/crates/discipline-cli`), or in place via
 `cargo run --manifest-path vibedeps/<stack-slot>/Cargo.toml -p
 discipline-cli --bin discipline-rust -- <args>`. Wiring recipe: GUIDE
 §13; sweep idioms: GUIDE §14. Procedures as agent skills:

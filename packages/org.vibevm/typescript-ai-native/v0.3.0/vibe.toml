@@ -24,6 +24,23 @@ category = "stack"
 # flow:org.vibevm/discipline-core (04-SWEEP-PLAYBOOK, BROWNFIELD-PROTOCOL);
 # these skills are their TypeScript-stack instantiation over the shipped
 # discipline-typescript toolchain.
+# The shipped tools (PROP-025): `vibe bin build` compiles them in the
+# slot; `vibe bin exec <name>` dispatches through the project's lockfile.
+[[binary]]
+name = "discipline-typescript"
+crate = "crates/discipline-cli-typescript"
+description = "the umbrella discipline tool for TypeScript: init / floor / conform / specmap / trace / test-gate / tripwire / health / fast-loop / codemod"
+
+[[binary]]
+name = "conform-typescript"
+crate = "crates/conform-cli-typescript"
+description = "the standalone ts-tsc conform gate for TypeScript trees"
+
+[[binary]]
+name = "specmap-typescript"
+crate = "crates/specmap-cli-typescript"
+description = "the standalone traceability index + orphan gate for TypeScript trees"
+
 [[skill]]
 name = "discipline-sweep-typescript"
 path = "spec/skills/discipline-sweep-typescript"

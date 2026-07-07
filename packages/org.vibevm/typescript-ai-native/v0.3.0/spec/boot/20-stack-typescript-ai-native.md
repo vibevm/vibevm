@@ -58,9 +58,11 @@ code), `health` (the sweep's fact collector), `test-gate` (xfail-strict
 over node's TAP) / `tripwire` / `trace` / `fast-loop` / `codemod`; plus
 the narrow `conform-typescript` and `specmap-typescript` engines. The
 structural gate parses through the PROJECT's own `typescript` install
-(node ≥ 22.6; the same devDependency the tsc floor step needs). Run from
-PATH (`cargo install --path
-vibedeps/<stack-slot>/crates/discipline-cli-typescript`) or in place via
+(node ≥ 22.6; the same devDependency the tsc floor step needs). Run
+vibe-natively (`vibe bin exec discipline-typescript -- <args>` —
+PROP-025 lockfile dispatch; `vibe bin build` pre-builds), from PATH
+(`cargo install --path
+vibedeps/<stack-slot>/crates/discipline-cli-typescript`), or in place via
 `cargo run --manifest-path vibedeps/<stack-slot>/Cargo.toml -p
 discipline-cli-typescript --bin discipline-typescript -- <args>`.
 Procedures as agent skills: `/discipline-sweep-typescript` (recurring),
