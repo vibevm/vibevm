@@ -36,7 +36,7 @@ Information flows top-down. If code changes first, reconcile up via the Sync-fro
 
 - **Language:** Rust. See [spec://vibevm/common/PROP-000#language](../common/PROP-000.md#language).
 - **Manifests:** TOML. One `vibe.toml` per node — the role is set by section (`[project]` ⊕ `[package]`, optionally `[workspace]`); lockfile = `vibe.lock`.
-- **Terminology:** only four installable kinds — `flow`, `feat`, `stack`, `tool`. Never say "lifecycle", "phase", "goal", "plugin" (except that "plugin" == "package" in passing context). See `VIBEVM-SPEC.md` §4.
+- **Terminology:** only five installable kinds — `flow`, `feat`, `stack`, `tool`, `mcp` (the register grows only by owner amendment to `VIBEVM-SPEC.md` §4.1; `app` is anticipated). Never say "lifecycle", "phase", "goal", "plugin" (except that "plugin" == "package" in passing context). See `VIBEVM-SPEC.md` §4.
 - **Repository URLs:** vibevm source = `git@gitverse.ru:anarchic/vibevm.git` / `https://gitverse.ru/anarchic/vibevm`. Package registry = the GitHub organization `https://github.com/vibespecs` (deliberate split-host posture — see `spec/boot/90-user.md` and [PROP-000 §7](../common/PROP-000.md#registry)). The legacy GitVerse monorepo `git@gitverse.ru:anarchic/vibespecs.git` is read-only transition state.
 
 ## Uncertainty protocol

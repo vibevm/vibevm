@@ -13,7 +13,7 @@ maintainer's group, distinct from the upstream author),
 [PROP-015 §2.6](../vibe-mcp/PROP-015-mcp-integration.md#skill) +
 [PROP-015 #skill-include](../vibe-mcp/PROP-015-mcp-integration.md#skill-include)
 (projecting a skill out of the bridged subtree, selectively),
-[PROP-000 §16](../../common/PROP-000.md) (the four installable kinds a bridge
+[PROP-000 §16](../../common/PROP-000.md) (the installable kinds a bridge
 still belongs to).
 
 ---
@@ -112,10 +112,11 @@ to pick the relevant files out of an upstream tree full of unrelated content.
 
 ## 3. Rejected alternatives {#rejected}
 
-- **A `bridge` package kind** (a fifth kind beside flow/feat/stack/tool) —
-  rejected: the four kinds describe *what the package is for*; "bridge"
+- **A `bridge` package kind** (a kind of its own beside the §4.1 register) —
+  rejected: the kinds describe *what the package is for*; "bridge"
   describes *where its content came from*. They are orthogonal axes, so bridge
-  is a flag, not a kind.
+  is a flag, not a kind. (The reasoning survives the register later growing
+  `mcp` — that kind, too, says what a package is FOR.)
 - **Auto-importing a foreign repo with no maintainer** — rejected: someone must
   take responsibility for shaping, updating, and vouching for the wrapped code;
   an unowned auto-bridge has no one to fix it when upstream moves or breaks.

@@ -295,7 +295,7 @@ The obligation is pinned here (rather than only in the guides themselves) so tha
 
 (These restate the most load-bearing rules from the spec and the book. If anything below seems violated in practice, stop and reconcile before proceeding.)
 
-1. **Vocabulary lock.** Never use Maven's "lifecycle/phase/goal" or Bazel's internal terminology in user-facing or internal code. The four kinds are `flow`, `feat`, `stack`, `tool`. The canonical process discipline vocabulary is the one in `VIBEVM-SPEC.md` §4 and the book.
+1. **Vocabulary lock.** Never use Maven's "lifecycle/phase/goal" or Bazel's internal terminology in user-facing or internal code. The installable kinds are `flow`, `feat`, `stack`, `tool`, `mcp` — the register grows only by owner amendment to `VIBEVM-SPEC.md` §4.1 (`app` is anticipated). The canonical process discipline vocabulary is the one in `VIBEVM-SPEC.md` §4 and the book.
 2. **`spec/` is fixed.** The directory name and role cannot be configured away in v1.
 3. **User-owned files are never written by `vibe`.** `spec/boot/00-core.md` and `spec/boot/90-user.md` are off-limits to install/uninstall/update.
 4. **One commit = one logical unit.** Commit messages follow Conventional Commits (see §12) and reference `spec://…` URIs where relevant.

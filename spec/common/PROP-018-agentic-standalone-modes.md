@@ -138,15 +138,19 @@ message naming the right one.
 
 `req r3`
 
-**Decision.** A package declares which of its files are **skills** (and,
-near-term, **MCP servers**) for agents in a dedicated manifest section —
-**not** by introducing a fifth package kind. The four kinds
-(`flow`/`feat`/`stack`/`tool`) stay closed (`package_ref.rs`,
-`VIBEVM-SPEC.md` §4.1). Rationale: skills can live inside a package of
-*any* kind and be structured any way. A `tool` package `vim` can ship the
-tool itself **plus** an MCP for vim **plus** a skill for driving vim — one
-self-contained package, three artefact classes. Kind answers "what is this
-package"; the new section answers "what does it project into an agent."
+**Decision.** A package declares which of its files are **skills** for
+agents in a dedicated manifest section — **not** by introducing a
+package kind of its own. The kind register (`package_ref.rs`,
+`VIBEVM-SPEC.md` §4.1) stays closed to skills. Rationale: skills can
+live inside a package of *any* kind and be structured any way. A `tool`
+package `vim` can ship the tool itself **plus** a skill for driving vim
+— one self-contained package, two artefact classes. Kind answers "what
+is this package"; the new section answers "what does it project into an
+agent." (This unit's original text sketched MCP servers as a second
+any-kind section; that half is SUPERSEDED — MCP servers became their own
+`mcp` kind with their own laws, owner resolution 2026-07-07:
+[PROP-027](../modules/vibe-mcp/PROP-027-mcp-packages.md). The skill law
+here is unchanged.)
 
 The MVP section is an array-of-tables, matching the manifest's existing
 `[[requires_any]]` / `[[registry]]` / `[[mirror]]` shape:

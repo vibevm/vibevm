@@ -102,7 +102,7 @@ Already built the binary (`cargo build --release --workspace`)? Use it directly 
 | [`spec/WAL.md`](spec/WAL.md) | active contributors | Project-state checkpoint; rewritten each session, not appended. |
 | [`CHANGELOG.md`](CHANGELOG.md) | everyone | Curated milestone-by-milestone history of what landed when. |
 
-## The four kinds
+## The five kinds
 
 Every installable artefact in vibevm is exactly one of:
 
@@ -110,6 +110,9 @@ Every installable artefact in vibevm is exactly one of:
 - **`feat`** — a functional feature. The *what* of a project, expressed as specification — purpose, behaviour rules, acceptance criteria. Stack-agnostic at authoring time. [Authoring](docs/authoring-feat.md).
 - **`stack`** — a language / framework target. The *how* a feat becomes real software — language, framework, conventions, capabilities provided. [Authoring](docs/authoring-stack.md).
 - **`tool`** — utilities. Reserved for v2+; not yet authorable.
+- **`mcp`** — an agent-server package: Model Context Protocol servers built from the package's own code (PROP-025 binaries), exact-pinned to the toolchain they serve, launched by agent hosts straight from the slot — no `vibe` in the runtime path (PROP-027).
+
+The register grows only by owner amendment (`VIBEVM-SPEC.md` §4.1); `app` — runnable graphical applications — is anticipated next.
 
 ## Workspace layout
 

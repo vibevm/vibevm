@@ -1487,7 +1487,7 @@ Terms used throughout this document, in alphabetical order. When in doubt, refer
 - **Manifest.** `vibe.toml` — one file per node, carrying `[project]` or `[package]` (and optionally `[workspace]`). The role is set by which sections are present.
 - **Milestone (M0/M1/...)** A release stage with a defined feature set. See Section 11.
 - **Node.** A unit of work in the task graph.
-- **Package.** A named, versioned installable artifact of one of the four kinds.
+- **Package.** A named, versioned installable artifact of one of the installable kinds (§4.1).
 - **PackageRef.** A package reference — `[<kind>:][<group>/]<name>[@<version-constraint>]`. Manifests store the qualified `<group>/<name>` form; the short `<name>` form is CLI-only sugar resolved via the package index. See §7.1.
 - **Plugin.** Synonym for "package" in some contexts; "package" is preferred in user-facing text.
 - **Project manifest.** A `vibe.toml` in the `[project]` role — a non-publishable consumer node.
