@@ -1,0 +1,32 @@
+[package]
+name = "redbook"
+group = "org.vibevm"
+kind = "flow"
+version = "0.1.0"
+authors = ["Oleg Chirukhin"]
+license = "UPL-1.0"
+description = "The redbook collection: the AI-native development practices, distilled from the book into installable flows — one edition, one tested set"
+keywords = ["collection", "practices", "ai-native", "spec-driven", "book"]
+
+[compatibility]
+min_vibe_version = "0.1.0"
+requires_kinds = []
+
+[boot_snippet]
+source = "spec/boot/03-flow-redbook.md"
+category = "flow"
+
+# Edition 0.1.0 — the first edition. An edition is a tested set:
+# members are pinned exactly, and the umbrella's version is the
+# edition number. Members evolve on their own lines between editions.
+[requires.packages]
+"flow:org.vibevm/two-process-model" = "=0.1.0"
+"flow:org.vibevm/wal" = "=0.2.0"
+"flow:org.vibevm/sync-from-code" = "=0.1.0"
+"flow:org.vibevm/atomic-commits" = "=0.1.0"
+"flow:org.vibevm/addressable-specs" = "=0.1.0"
+"flow:org.vibevm/decision-records" = "=0.1.0"
+"flow:org.vibevm/conflict-protocol" = "=0.1.0"
+"flow:org.vibevm/campaign-plans" = "=0.1.0"
+"flow:org.vibevm/discovery-prompt" = "=0.1.0"
+"flow:org.vibevm/attribution-policy" = "=0.1.0"
