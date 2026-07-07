@@ -41,7 +41,7 @@ User-owned boot snippet. `vibe install`/`uninstall` never touches this file. Add
 
 ## TypeScript toolchain — quality bar (owner directive, 2026-07-07)
 
-The TypeScript discipline toolchain (extractor, bridge, conform/specmap frontends, `discipline-typescript`, the demo) is **production-grade work, not a sketch**: it is the foundation for a much larger effort. No "MVP" framing, no stub subcommands left as the shipped surface, no skipped edge cases justified by scope. Full implementations at a level fit to show in production; spend whatever tokens/time that takes. (Recorded from the owner's words during the deferrals-closeout campaign; survives it.)
+The TypeScript discipline toolchain (extractor, bridge, conform/specmap frontends, `typescript-ai-native`, the demo) is **production-grade work, not a sketch**: it is the foundation for a much larger effort. No "MVP" framing, no stub subcommands left as the shipped surface, no skipped edge cases justified by scope. Full implementations at a level fit to show in production; spend whatever tokens/time that takes. (Recorded from the owner's words during the deferrals-closeout campaign; survives it.)
 
 ## Machine quirks (this box)
 
