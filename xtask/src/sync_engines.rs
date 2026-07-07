@@ -29,12 +29,22 @@ use walkdir::WalkDir;
 use crate::repo_root;
 
 /// `sync-engines.toml` at the repo root — which crates flow from where
-/// to where. Version-bearing paths live here (not in code) so a package
+/// to where, as `[[sync]]` sets (MCP-SOVEREIGNTY D3a: the mcp packages
+/// vendor stack-authored crates too, so one source_root stopped being
+/// enough). Version-bearing paths live here (not in code) so a package
 /// version bump edits data, not the tool.
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub(crate) struct SyncManifest {
-    /// Directory holding the AUTHORED engine crates, repo-relative.
+    /// The sync sets, each mirrored independently.
+    pub sync: Vec<SyncSet>,
+}
+
+/// One authored-source → vendored-targets set.
+#[derive(Debug, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub(crate) struct SyncSet {
+    /// Directory holding the AUTHORED crates, repo-relative.
     pub source_root: String,
     /// Crate directory names under `source_root` to mirror.
     pub crates: Vec<String>,
@@ -50,8 +60,16 @@ fn load_manifest(root: &Path) -> Result<SyncManifest> {
         .with_context(|| format!("sync-engines: reading `{}`", path.display()))?;
     let manifest: SyncManifest =
         toml::from_str(&text).with_context(|| format!("sync-engines: parsing `{MANIFEST}`"))?;
-    if manifest.crates.is_empty() || manifest.targets.is_empty() {
-        bail!("sync-engines: `{MANIFEST}` names no crates or no targets");
+    if manifest.sync.is_empty() {
+        bail!("sync-engines: `{MANIFEST}` declares no [[sync]] sets");
+    }
+    for set in &manifest.sync {
+        if set.crates.is_empty() || set.targets.is_empty() {
+            bail!(
+                "sync-engines: the `{}` set names no crates or no targets",
+                set.source_root
+            );
+        }
     }
     Ok(manifest)
 }
@@ -141,53 +159,67 @@ fn mirror_crate(src: &Path, dst: &Path) -> Result<usize> {
 }
 
 /// The engine shared by the CLI entry and the tests: check or mirror
-/// every (target × crate) pair of `manifest` under `root`.
+/// every (target × crate) pair of every set of `manifest` under `root`.
 fn sync_all(root: &Path, manifest: &SyncManifest, check: bool) -> Result<(usize, Vec<String>)> {
     let mut ops = 0usize;
     let mut drift_lines = Vec::new();
-    for target in &manifest.targets {
-        for krate in &manifest.crates {
-            let src = root.join(&manifest.source_root).join(krate);
-            if !src.is_dir() {
-                bail!(
-                    "sync-engines: authored crate `{krate}` missing under `{}`",
-                    manifest.source_root
-                );
-            }
-            let dst = root.join(target).join(krate);
-            if check {
-                let drift = diff_crate(&src, &dst)?;
-                if !drift.is_clean() {
-                    for rel in &drift.missing {
-                        drift_lines.push(format!("{target}/{krate}: missing `{}`", rel.display()));
-                    }
-                    for rel in &drift.extra {
-                        drift_lines.push(format!("{target}/{krate}: extra `{}`", rel.display()));
-                    }
-                    for rel in &drift.changed {
-                        drift_lines.push(format!("{target}/{krate}: differs `{}`", rel.display()));
-                    }
+    for set in &manifest.sync {
+        for target in &set.targets {
+            for krate in &set.crates {
+                let src = root.join(&set.source_root).join(krate);
+                if !src.is_dir() {
+                    bail!(
+                        "sync-engines: authored crate `{krate}` missing under `{}`",
+                        set.source_root
+                    );
                 }
-            } else {
-                ops += mirror_crate(&src, &dst)?;
+                let dst = root.join(target).join(krate);
+                if check {
+                    let drift = diff_crate(&src, &dst)?;
+                    if !drift.is_clean() {
+                        for rel in &drift.missing {
+                            drift_lines
+                                .push(format!("{target}/{krate}: missing `{}`", rel.display()));
+                        }
+                        for rel in &drift.extra {
+                            drift_lines
+                                .push(format!("{target}/{krate}: extra `{}`", rel.display()));
+                        }
+                        for rel in &drift.changed {
+                            drift_lines
+                                .push(format!("{target}/{krate}: differs `{}`", rel.display()));
+                        }
+                    }
+                } else {
+                    ops += mirror_crate(&src, &dst)?;
+                }
             }
         }
     }
     Ok((ops, drift_lines))
 }
 
+/// Total (target × crate) pairs across all sets — the count the CLI
+/// reports.
+fn pair_count(manifest: &SyncManifest) -> usize {
+    manifest
+        .sync
+        .iter()
+        .map(|s| s.crates.len() * s.targets.len())
+        .sum()
+}
+
 pub(crate) fn run_sync_engines(check: bool) -> Result<()> {
     let root = repo_root()?;
     let manifest = load_manifest(&root)?;
     let (ops, drift) = sync_all(&root, &manifest, check)?;
-    let pairs = manifest.crates.len() * manifest.targets.len();
+    let pairs = pair_count(&manifest);
+    let sets = manifest.sync.len();
     if check {
         if drift.is_empty() {
             println!(
-                "sync-engines --check: every vendored engine matches the authored source \
-                 ({} crate(s) x {} target(s)).",
-                manifest.crates.len(),
-                manifest.targets.len()
+                "sync-engines --check: every vendored crate matches its authored source \
+                 ({pairs} pair(s) across {sets} sync set(s))."
             );
             return Ok(());
         }
@@ -195,17 +227,16 @@ pub(crate) fn run_sync_engines(check: bool) -> Result<()> {
             eprintln!("sync-engines: {line}");
         }
         bail!(
-            "sync-engines --check: {} drift item(s) across {pairs} vendored crate(s). \
-             Edit the AUTHORED copy under `{}`, then run `cargo xtask sync-engines`; \
-             vendored copies are write-throughs, never a fix surface.",
+            "sync-engines --check: {} drift item(s) across {pairs} vendored pair(s). \
+             Edit the AUTHORED copy under the set's source_root, then run \
+             `cargo xtask sync-engines`; vendored copies are write-throughs, \
+             never a fix surface.",
             drift.len(),
-            manifest.source_root
         );
     }
     println!(
-        "sync-engines: {ops} file operation(s); {pairs} vendored crate(s) mirror the \
-         authored source under `{}`.",
-        manifest.source_root
+        "sync-engines: {ops} file operation(s); {pairs} vendored pair(s) across {sets} \
+         sync set(s) mirror their authored sources."
     );
     Ok(())
 }
@@ -222,12 +253,14 @@ mod tests {
 
     fn manifest() -> SyncManifest {
         SyncManifest {
-            source_root: "core/crates".into(),
-            crates: vec!["engine".into()],
-            targets: vec![
-                "stack-a/crates/vendor".into(),
-                "stack-b/crates/vendor".into(),
-            ],
+            sync: vec![SyncSet {
+                source_root: "core/crates".into(),
+                crates: vec!["engine".into()],
+                targets: vec![
+                    "stack-a/crates/vendor".into(),
+                    "stack-b/crates/vendor".into(),
+                ],
+            }],
         }
     }
 

@@ -1,23 +1,31 @@
 # sync-engines.toml — the vendor-sync manifest (`cargo xtask sync-engines`,
-# DEFERRALS-CLOSEOUT-PLAN v0.1 D1). The neutral engine crates are AUTHORED
-# in flow:org.vibevm/discipline-core; each language stack ships a
-# byte-identical vendored copy under its `crates/vendor/` so every package
-# slot stays a self-buildable Cargo workspace (PROP-024 §2.4 — a path-dep
-# cannot cross package slots). `--check` gates drift in self-check; the fix
+# DEFERRALS-CLOSEOUT-PLAN v0.1 D1; multi-source [[sync]] sets since
+# MCP-SOVEREIGNTY-PLAN Wave 2 / D3a). Crates are AUTHORED once and every
+# other home is a byte-identical vendored copy, because a Cargo path-dep
+# cannot cross package slots (PROP-024 §2.4) and every slot must stay a
+# self-buildable workspace. `--check` gates drift in self-check; the fix
 # surface is ALWAYS the authored copy, never a vendored one.
 #
 # A package version bump edits the paths below — data, not the tool.
 
+# The neutral engines: authored in flow:org.vibevm/discipline-core,
+# vendored into each language stack.
+[[sync]]
 source_root = "packages/org.vibevm/discipline-core/v0.6.0/crates"
-
 crates = [
     "conform-core",
     "specmap-core",
     "specmark",
     "specmark-grammar",
 ]
-
 targets = [
     "packages/org.vibevm/rust-ai-native/v0.5.0/crates/vendor",
     "packages/org.vibevm/typescript-ai-native/v0.4.0/crates/vendor",
 ]
+
+# mcp-core (the neutral MCP transport) and the stack-authored toolchain
+# crates gain their [[sync]] sets when the mcp packages are born
+# (MCP-SOVEREIGNTY Waves 3-4): mcp-core targets ONLY the mcp packages —
+# the stacks do not serve MCP — and each mcp package mirrors its stack's
+# crates/ LAYOUT (stack crates at crates/<name>, engines at
+# crates/vendor/<name>) so the vendored crates' relative path-deps hold.
