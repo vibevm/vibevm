@@ -658,6 +658,26 @@ PROP-009 Phase 4, so it was a prerequisite for the Phase-7 redirect
 rewrite and landed **inside M1.18 Phase 7**. The M1.22 number is
 nominal — the work is part of M1.18.
 
+### M1.24 — the agentic tcg line (`vibe-agentic-tcg-ts`) — IN EXECUTION (2026-07-07)
+
+**Thesis.** Token-level TCG waits on an inference substrate (hosted
+agent APIs never expose logits; `vibe-llm` is an M0 stub) — but most of
+the mask's value is information, feedback latency, and generation-time
+discipline, all deliverable TODAY as tools the agent consults. The
+campaign (spec/terraforms/AGENTIC-TCG-TS-PLAN-v0.1.md, owner-accepted
+with amendments 2026-07-07) ships: the `tools/ts-oracle` language-
+service oracle (overlays, NDJSON duplex) in the TS stack, the
+`tcg-oracle-bridge` + `tcg-typescript` slot binary (discipline
+enrichment through the same conform engine as the gate), the portable
+`vibe-tcg` product crate mounted by vibe-mcp as four `tcg_*` tools
+(PROP-026; liftable into a standalone MCP server per the owner's
+portability amendment), and the automated two-arm opencode battery
+(gpt-oss-20b (free)) in research/tcg-bench. Component brief:
+`packages/org.vibevm/typescript-ai-native/v0.4.0/spec/typescript/tools/vibe-agentic-tcg-ts.md`;
+mechanisms: TCG-ORACLE-v0.1 / TCG-PROTOCOL-v0.1 (same tree). Token-level
+TCG for TypeScript is re-dispositioned VERY-FAR-FUTURE in its own brief;
+M1.23 below keeps the Rust token-level line as was.
+
 ### M1.23 — `vibe-tcg` Stage 1 (syntactic constrained generation) — PLANNED (adopt-v0.3)
 
 **Thesis.** LLM-emitted Rust fails to compile mostly on *type*
