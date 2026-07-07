@@ -317,12 +317,14 @@ move.
 ### D4 — tools are thin adapters over the SAME lib fns the CLIs call
 
 Parity by construction (F5), pinned by test (§4 P2). The known gap F5a
-(runners print to stderr, return `()`): each runner that a tool mounts
-gains a report-capturing form — a `&mut dyn io::Write` (or returned
-`Report` value) threaded through the existing fn, with the CLI passing
-stderr and the tool passing a buffer. This is a SEAM ADDITION to stack
-lib crates, not a behaviour change; CLI output stays byte-identical
-(gated by the existing suites).
+(runners print to stderr, return `()`) is resolved by the S3 spike
+finding (§13): a **process-level stderr capture guard** in mcp-core's
+`capture` cell wraps each tool dispatch — child-process output (floor's
+cargo/prettier/node) is captured too, which writer-threading could
+never do. The stacks' lib and CLI signatures are NOT touched; CLI
+output stays byte-identical because nothing CLI-side changes. The
+guard is Drop-restoring (panic-safe) and legal because the server
+dispatches tools sequentially.
 
 ### D5 — the CLI story: the two entity-CLIs already ARE the parity
 surface; vibe-tcg is deleted
@@ -545,12 +547,16 @@ builds with zero references to tcg or the stacks.
 ## 7. Wave 2 — mcp-core in discipline-core (0.6.0)
 
 1. **Bump** discipline-core 0.5.0→0.6.0 (D10 move list).
-2. **Author `crates/mcp-core`** (cells: `frame` — Content-Length IO;
-   `wire` — request/response/error types + grammar; `server` — the
-   blocking loop, initialize, tools/list, tools/call dispatch;
-   `toolset` — the registry seam). Replay tests per P1; doctests on
-   every pub seam; scope! tags; the package's conform/specmap
-   self-gates extended to the new crate.
+2. **Author `crates/mcp-core`** (cells: `wire` — line-delimited
+   JSON-RPC request/response/error types + grammar, protocol
+   "2024-11-05" — the S1-proven shape; `server` — the blocking loop,
+   initialize, tools/list, tools/call, ping; `toolset` — the registry
+   seam; `capture` — the S3 process-level stderr guard, dup2-based,
+   Windows CRT-fd aware, Drop-restoring). Replay tests per P1 incl.
+   capture-guard tests (child-process output captured; nested guard
+   refused; restore-on-panic); doctests on every pub seam; scope!
+   tags; the package's conform/specmap self-gates extended to the new
+   crate.
 3. **Mechanism spec** `spec/mechanisms/MCP-CORE-v0.1.md` (REQ-grain
    units: framing, handshake, tool grammar, error grammar, the
    no-prompts rule).
@@ -567,11 +573,10 @@ builds with zero references to tcg or the stacks.
 ## 8. Wave 3 — rust: seams, session lib, and `mcp:org.vibevm/discipline-rust`
 
 1. **Bump** rust-ai-native 0.5.0→0.6.0 (D10).
-2. **Report seams (F5a/S3)** across the mounted runners in
-   `conform-cli-rust`, `specmap-cli-rust`, `discipline-cli-rust`,
-   `tcg-cli-rust` — CLI output byte-identical (suites green unchanged).
-3. **Extract `tcg-session-rust`** (D3b) from the relay's session cell;
-   the relay consumes it; relay tests unchanged.
+2. **Extract `tcg-session-rust`** (D3b) from the relay's session cell;
+   the relay consumes it; relay tests unchanged. (The draft's «report
+   seams» step is DELETED per the S3 spike finding — fd-capture in the
+   server replaces it; no stack lib signatures move.)
 4. **Birth `mcp:org.vibevm/discipline-rust` (0.6.0)**: package skeleton
    (vibe.toml with kind/pin/[[binary]]/[[mcp_server]], LICENSE, README,
    spec/ brief with the D5 parity map), `crates/discipline-mcp-rust`
@@ -592,10 +597,11 @@ builds with zero references to tcg or the stacks.
 
 ## 9. Wave 4 — typescript: the mirror (`mcp:org.vibevm/discipline-typescript`)
 
-Mirror of Wave 3 phase-for-phase: ts stack 0.4.0→0.5.0, report seams,
-`tcg-session-typescript` extraction, the mcp package birth (0.5.0,
-exact-pinned), 16 tools, ts-demo live chain, vendored closure per D3a
-set 3 (verified against the real dependency closure at execution).
+Mirror of Wave 3 phase-for-phase: ts stack 0.4.0→0.5.0,
+`tcg-session-typescript` extraction (no report seams — S3), the mcp
+package birth (0.5.0, exact-pinned), 16 tools, ts-demo live chain,
+vendored closure per D3a set 3 (verified against the real dependency
+closure at execution).
 Explicit asymmetries in the brief: no ledger tool; the TS oracle IS the
 compiler (no approximation caveat); node-dependent tools keep the
 hard-fail-with-recipe posture. Self-check grows the ts-side package
@@ -684,5 +690,47 @@ Named deferrals (visible, not silent):
 
 ## 13. Execution ledger (filled by the executing session)
 
-_Empty at commissioning. Spike findings (S1–S4), per-wave commit maps,
-and prediction outcomes land here._
+### Wave 0 — spike findings (2026-07-07, no tree changes)
+
+- **S1 — protocol shape.** The proven contract is vibe-mcp's own
+  production shape: JSON-RPC 2.0, **line-delimited** stdio (NOT
+  Content-Length framing — the draft's D3 said LSP-style framing and
+  was WRONG; only the tcg bridge speaks LSP), `PROTOCOL_VERSION =
+  "2024-11-05"` (`vibe-mcp/src/lib.rs:61`), methods
+  initialize/tools-list/tools-call/ping, notifications absorbed
+  without response, `McpTool { descriptor(), run() }` + `Transport
+  { read_line, write_line }` seams (`lib.rs:188-311`). mcp-core mirrors
+  this exactly; the real-host probe rides Wave 3's live chain (the
+  shape is already proven daily against Claude Code by the tcg tools).
+- **S2 — long-call behaviour**: deferred to Wave 3's live chain
+  against the real host (no scripted probe can answer host patience);
+  run-to-completion stands regardless, budget hints in descriptions.
+- **S3 — F5a RESOLVED BY ANALYSIS, plan amended.** Writer-threading is
+  REJECTED: `floor`'s child processes (cargo, prettier, node) write to
+  fd 2 directly — a threaded `&mut dyn Write` captures NONE of their
+  output, so the reports would be hollow exactly for the heaviest
+  tools. F5a resolves as a **process-level stderr capture guard**
+  (dup2 dance, Windows via the CRT fd layer; Drop restores on unwind;
+  legal because tool dispatch is sequential) living in mcp-core as its
+  own `capture` cell. Consequence: the «report seams» sweeps vanish
+  from Waves 3/4 — the stacks' lib/CLI signatures are NOT touched at
+  all, and CLI byte-identity is trivially preserved. D4 is amended
+  accordingly.
+- **S4 — kind-mechanics inventory.** Canonical enum:
+  `vibe-core/src/package_ref.rs:30` (`PackageKind` + `ALL: [_; 4]` +
+  `FromStr` closed set + `Error::BadPackageKind`; its own doc already
+  says extension is «a spec change, not a code change»). A DELIBERATE
+  duplicate lives in `vibe-index/src/types/kinds.rs` (PROP-005 §3.2
+  standalone-redistribution trade-off; parity-tested against
+  vibe-core; carries `clap::ValueEnum` + its own FromStr error text
+  naming the four kinds). `requires_kinds: Vec<PackageKind>`
+  (`manifest/package.rs:280`) extends automatically with the enum.
+  `NamingConvention::{KindName, KindSlashName}` compose via `Display`
+  — auto-extend. **Exact `=` pins are ALREADY first-class**: structural
+  pin construction at `manifest/package.rs:126` and
+  `manifest/lockfile.rs:469`, resolver-side `={version}` parsing at
+  `vibe-resolver/src/lib.rs:540` — D1a's law rides existing machinery;
+  the Wave-1 fixture proves it end-to-end. 38 files reference
+  `PackageKind::` (the sweep list is `grep -rl "PackageKind::"
+  crates/`); the compiler drives the sweep once the variant lands
+  (match exhaustiveness).
