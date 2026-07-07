@@ -1,0 +1,78 @@
+{
+  "ts_version": "6.0.3",
+  "cases": [
+    {
+      "name": "clean-disk",
+      "agree": true,
+      "expected": [],
+      "got": [],
+      "ms": 4.8414
+    },
+    {
+      "name": "clean-overlay-add",
+      "agree": true,
+      "expected": [],
+      "got": [],
+      "ms": 19.9812
+    },
+    {
+      "name": "seeded-2322",
+      "agree": true,
+      "expected": [
+        2322
+      ],
+      "got": [
+        2322
+      ],
+      "ms": 21.171200000000002
+    },
+    {
+      "name": "hallucinated-fn-2304",
+      "agree": true,
+      "expected": [
+        2304
+      ],
+      "got": [
+        2304
+      ],
+      "ms": 19.4456
+    },
+    {
+      "name": "wrong-arg-2345",
+      "agree": true,
+      "expected": [
+        2345
+      ],
+      "got": [
+        2345
+      ],
+      "ms": 19.3182
+    },
+    {
+      "name": "bare-string-across-brand-2345",
+      "agree": true,
+      "expected": [
+        2345
+      ],
+      "got": [
+        2345
+      ],
+      "ms": 17.806800000000003
+    },
+    {
+      "name": "unnarrowed-union-2339",
+      "agree": true,
+      "expected": [
+        2339
+      ],
+      "got": [
+        2339
+      ],
+      "ms": 17.853399999999997
+    }
+  ],
+  "agreement_pct": 100.0,
+  "cold_init_ms": 561.8097,
+  "validate_p50_ms": 19.3182,
+  "validate_p95_ms": 21.171200000000002
+}

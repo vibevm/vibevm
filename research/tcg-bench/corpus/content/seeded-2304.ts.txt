@@ -1,0 +1,71 @@
+/** @scope spec://ts-demo/PROP-001#cell-greeting */
+
+import { normalise } from "../../core/text.ts";
+
+/**
+ * A validated guest name. The brand recovers nominal safety from
+ * structural typing: a raw `string` cannot flow in.
+ */
+export type GuestName = string & { readonly __brand: "GuestName" };
+
+/** Failure as a value; the reason cites the governing spec unit. */
+export type ParseError = {
+  readonly kind: "empty" | "too-long" | "unprintable";
+  readonly reason: string;
+};
+
+export type Result<T, E> =
+  | { readonly ok: true; readonly value: T }
+  | { readonly ok: false; readonly error: E };
+
+const MAX_LENGTH = 80;
+const PRINTABLE = /^[\p{L}\p{N}\p{P}\p{Zs}]+$/u;
+
+function fail(
+  kind: ParseError["kind"],
+  detail: string,
+): Result<GuestName, ParseError> {
+  return {
+    ok: false,
+    error: {
+      kind,
+      reason: `violates REQ spec://ts-demo/PROP-001#req-guest-name: ${detail}`,
+    },
+  };
+}
+
+/**
+ * The erasure boundary: `unknown` in, branded name out — the ONLY
+ * constructor of `GuestName`.
+ *
+ * @implements spec://ts-demo/PROP-001#req-guest-name
+ * @example
+ * ```ts
+ * const parsed = parseGuestName("  Ada   Lovelace ");
+ * parsed.ok && greet(parsed.value) === "hello, Ada Lovelace";
+ * ```
+ */
+export function parseGuestName(input: unknown): Result<GuestName, ParseError> {
+  if (typeof input !== "string") {
+    return fail("unprintable", `expected a string, got ${typeof input}`);
+  }
+  const cleaned = normalise(input);
+  if (cleaned.length === 0) {
+    return fail("empty", "a guest name cannot be empty");
+  }
+  if (cleaned.length > MAX_LENGTH) {
+    return fail("too-long", `${cleaned.length} chars exceeds ${MAX_LENGTH}`);
+  }
+  if (!PRINTABLE.test(cleaned)) {
+    return fail("unprintable", "control or unassigned characters");
+  }
+  // Sound by construction: every invariant above has been checked, so
+  // the assertion cannot introduce a lie the validator did not check.
+  return { ok: true, value: cleaned as GuestName };
+}
+
+/** @implements spec://ts-demo/PROP-001#req-greet */
+export function greet(name: GuestName): string {
+  return `hello, ${name}`;
+}
+export function corpusFn(): string { return frobnicate("x"); }
