@@ -263,6 +263,48 @@ test("complete: a clean typed candidate is not flagged", async () => {
   assert.match(String(hit["type_text"]), /GuestName/);
 });
 
+test("consecutive DIFFERENT overlays of one file each get fresh answers (the corpus cache bug)", async () => {
+  const original = readFileSync(
+    join(FIXTURE, "src/cells/greet/index.ts"),
+    "utf8",
+  );
+  // first ephemeral overlay: type error A
+  const a = expectOk(
+    await oracle.send("validate", {
+      file: "src/cells/greet/index.ts",
+      content: `${original}\nconst a: number = "A";\n`,
+    }),
+  );
+  assert.ok(
+    (a["diagnostics"] as Array<Record<string, unknown>>).some(
+      (d) => d["code"] === 2322,
+    ),
+  );
+  // second ephemeral overlay, same file, DIFFERENT error class — the
+  // language service must not serve the previous program state
+  const b = expectOk(
+    await oracle.send("validate", {
+      file: "src/cells/greet/index.ts",
+      content: `${original}\nexport const c = frobnicate("x");\n`,
+    }),
+  );
+  const codes = (b["diagnostics"] as Array<Record<string, unknown>>).map(
+    (d) => d["code"],
+  );
+  assert.ok(codes.includes(2304), `expected TS2304, got ${codes}`);
+  assert.ok(!codes.includes(2322), "the previous overlay's error must be gone");
+  // and back to clean disk
+  const clean = expectOk(
+    await oracle.send("validate", { file: "src/cells/greet/index.ts" }),
+  );
+  assert.equal(
+    (clean["diagnostics"] as Array<Record<string, unknown>>).filter(
+      (d) => d["category"] === "error",
+    ).length,
+    0,
+  );
+});
+
 test("type: quick info renders the signature", async () => {
   const original = readFileSync(
     join(FIXTURE, "src/cells/greet/index.ts"),
