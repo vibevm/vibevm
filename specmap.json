@@ -2251,14 +2251,14 @@
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/lib.rs",
       "item_kind": "enum",
-      "line": 345,
+      "line": 339,
       "symbol": "vibe_mcp::ServerError"
     },
     {
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/lib.rs",
       "item_kind": "enum",
-      "line": 131,
+      "line": 125,
       "symbol": "vibe_mcp::ToolError"
     },
     {
@@ -2508,20 +2508,6 @@
     },
     {
       "crate_name": "vibe-mcp",
-      "file": "crates/vibe-mcp/src/tcg.rs",
-      "item_kind": "mod",
-      "line": 9,
-      "symbol": "vibe_mcp::tcg"
-    },
-    {
-      "crate_name": "vibe-mcp",
-      "file": "crates/vibe-mcp/src/tcg.rs",
-      "item_kind": "fn",
-      "line": 40,
-      "symbol": "vibe_mcp::tcg::descriptor_for"
-    },
-    {
-      "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/tools.rs",
       "item_kind": "mod",
       "line": 11,
@@ -2531,14 +2517,14 @@
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/tools.rs",
       "item_kind": "struct",
-      "line": 414,
+      "line": 410,
       "symbol": "vibe_mcp::tools::AgenticExplain"
     },
     {
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/tools.rs",
       "item_kind": "struct",
-      "line": 278,
+      "line": 274,
       "symbol": "vibe_mcp::tools::MaterialiseSubskill"
     },
     {
@@ -2552,14 +2538,14 @@
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/tools.rs",
       "item_kind": "struct",
-      "line": 61,
+      "line": 57,
       "symbol": "vibe_mcp::tools::QueryPackage"
     },
     {
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/tools.rs",
       "item_kind": "struct",
-      "line": 148,
+      "line": 144,
       "symbol": "vibe_mcp::tools::ReadSubskill"
     },
     {
@@ -3597,27 +3583,6 @@
       "item_kind": "fn",
       "line": 113,
       "symbol": "vibe_resolver::tests::fixpoint_conformance::stack_trigger_world_conforms"
-    },
-    {
-      "crate_name": "vibe-tcg",
-      "file": "crates/vibe-tcg/src/lib.rs",
-      "item_kind": "mod",
-      "line": 16,
-      "symbol": "vibe_tcg"
-    },
-    {
-      "crate_name": "vibe-tcg",
-      "file": "crates/vibe-tcg/src/lib.rs",
-      "item_kind": "enum",
-      "line": 44,
-      "symbol": "vibe_tcg::TcgError"
-    },
-    {
-      "crate_name": "vibe-tcg",
-      "file": "crates/vibe-tcg/src/registry.rs",
-      "item_kind": "mod",
-      "line": 9,
-      "symbol": "vibe_tcg::registry"
     },
     {
       "crate_name": "vibe-workspace",
@@ -6821,7 +6786,7 @@
     {
       "file": "crates/vibe-mcp/src/lib.rs",
       "from_symbol": "vibe_mcp::ServerError",
-      "line": 355,
+      "line": 349,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-mcp/PROP-015#errors",
       "verb": "implements"
@@ -6829,7 +6794,7 @@
     {
       "file": "crates/vibe-mcp/src/lib.rs",
       "from_symbol": "vibe_mcp::ToolError",
-      "line": 142,
+      "line": 136,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-mcp/PROP-015#errors",
       "verb": "implements"
@@ -7123,23 +7088,6 @@
       "verb": "implements"
     },
     {
-      "file": "crates/vibe-mcp/src/tcg.rs",
-      "from_symbol": "vibe_mcp::tcg",
-      "line": 9,
-      "provenance": "authored",
-      "uri": "spec://vibevm/modules/vibe-mcp/PROP-026#tools",
-      "verb": "implements"
-    },
-    {
-      "file": "crates/vibe-mcp/src/tcg.rs",
-      "from_symbol": "vibe_mcp::tcg::descriptor_for",
-      "line": 40,
-      "provenance": "authored",
-      "uri": "spec://vibevm/modules/vibe-mcp/PROP-026#tools",
-      "verb": "deviates",
-      "reason": "compile-time invariant: the tcg_tool_cell! macro instantiates only the literal names vibe_tcg::tool_specs() declares; a miss is unreachable by construction and a panic here is a build defect, not a runtime input"
-    },
-    {
       "file": "crates/vibe-mcp/src/tools.rs",
       "from_symbol": "vibe_mcp::tools",
       "line": 11,
@@ -7150,7 +7098,7 @@
     {
       "file": "crates/vibe-mcp/src/tools.rs",
       "from_symbol": "vibe_mcp::tools::AgenticExplain",
-      "line": 425,
+      "line": 421,
       "provenance": "authored",
       "uri": "spec://vibevm/common/PROP-018#transports",
       "verb": "implements"
@@ -7158,7 +7106,7 @@
     {
       "file": "crates/vibe-mcp/src/tools.rs",
       "from_symbol": "vibe_mcp::tools::MaterialiseSubskill",
-      "line": 287,
+      "line": 283,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-mcp/PROP-015#tools",
       "verb": "implements"
@@ -7174,7 +7122,7 @@
     {
       "file": "crates/vibe-mcp/src/tools.rs",
       "from_symbol": "vibe_mcp::tools::QueryPackage",
-      "line": 69,
+      "line": 65,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-mcp/PROP-015#tools",
       "verb": "implements"
@@ -7182,7 +7130,7 @@
     {
       "file": "crates/vibe-mcp/src/tools.rs",
       "from_symbol": "vibe_mcp::tools::ReadSubskill",
-      "line": 156,
+      "line": 152,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-mcp/PROP-015#tools",
       "verb": "implements"
@@ -8473,30 +8421,6 @@
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#conditional-deps",
       "verb": "verifies"
-    },
-    {
-      "file": "crates/vibe-tcg/src/lib.rs",
-      "from_symbol": "vibe_tcg",
-      "line": 16,
-      "provenance": "authored",
-      "uri": "spec://vibevm/modules/vibe-mcp/PROP-026#root",
-      "verb": "implements"
-    },
-    {
-      "file": "crates/vibe-tcg/src/lib.rs",
-      "from_symbol": "vibe_tcg::TcgError",
-      "line": 59,
-      "provenance": "authored",
-      "uri": "spec://vibevm/modules/vibe-mcp/PROP-026#tools",
-      "verb": "implements"
-    },
-    {
-      "file": "crates/vibe-tcg/src/registry.rs",
-      "from_symbol": "vibe_tcg::registry",
-      "line": 9,
-      "provenance": "authored",
-      "uri": "spec://vibevm/modules/vibe-mcp/PROP-026#registry",
-      "verb": "implements"
     },
     {
       "file": "crates/vibe-workspace/src/lib.rs",
@@ -11844,7 +11768,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:58ae9bc919857cb2be622d7749f0097ae8aae6ea29e3a58ec8cdad8e9ab9caec",
+      "content_hash": "sha256:ae167ad499727d430132e500f79d4239d8cd190638d7813453056412657b7398",
       "doc_path": "modules/vibe-mcp/PROP-026",
       "file": "spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md",
       "heading": "PROP-026 — the tcg tool family (the agentic type oracle's product seam)",
@@ -11857,7 +11781,7 @@
       "doc_path": "modules/vibe-mcp/PROP-026",
       "file": "spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md",
       "heading": "1. Problem",
-      "line": 20,
+      "line": 35,
       "uri": "spec://vibevm/modules/vibe-mcp/PROP-026#problem",
       "kind": "req",
       "revision": 1
@@ -11868,7 +11792,7 @@
       "doc_path": "modules/vibe-mcp/PROP-026",
       "file": "spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md",
       "heading": "2. The four tools",
-      "line": 35,
+      "line": 50,
       "uri": "spec://vibevm/modules/vibe-mcp/PROP-026#tools",
       "kind": "req",
       "revision": 3
@@ -11879,7 +11803,7 @@
       "doc_path": "modules/vibe-mcp/PROP-026",
       "file": "spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md",
       "heading": "3. The portable family crate — the owner amendment",
-      "line": 54,
+      "line": 69,
       "uri": "spec://vibevm/modules/vibe-mcp/PROP-026#portability",
       "kind": "req",
       "revision": 3
@@ -11890,7 +11814,7 @@
       "doc_path": "modules/vibe-mcp/PROP-026",
       "file": "spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md",
       "heading": "4. The oracle registry and child lifecycle",
-      "line": 76,
+      "line": 91,
       "uri": "spec://vibevm/modules/vibe-mcp/PROP-026#registry",
       "kind": "req",
       "revision": 5
@@ -11901,7 +11825,7 @@
       "doc_path": "modules/vibe-mcp/PROP-026",
       "file": "spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md",
       "heading": "5. Consent: the no-prompt rule",
-      "line": 105,
+      "line": 120,
       "uri": "spec://vibevm/modules/vibe-mcp/PROP-026#consent",
       "kind": "req",
       "revision": 5
@@ -11912,7 +11836,7 @@
       "doc_path": "modules/vibe-mcp/PROP-026",
       "file": "spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md",
       "heading": "6. Non-goals",
-      "line": 116,
+      "line": 131,
       "uri": "spec://vibevm/modules/vibe-mcp/PROP-026#non-goals",
       "kind": "req",
       "revision": 6
@@ -11923,7 +11847,7 @@
       "doc_path": "modules/vibe-mcp/PROP-026",
       "file": "spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md",
       "heading": "7. Acceptance",
-      "line": 128,
+      "line": 143,
       "uri": "spec://vibevm/modules/vibe-mcp/PROP-026#acceptance",
       "kind": "req",
       "revision": 7

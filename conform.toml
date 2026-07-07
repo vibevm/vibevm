@@ -40,7 +40,6 @@ gated_crates = [
     "vibe-publish",
     "vibe-cli",
     "vibe-mcp",
-    "vibe-tcg",
 ]
 
 # Crates whose whole public TYPE surface is gated for compiled doctests (the
