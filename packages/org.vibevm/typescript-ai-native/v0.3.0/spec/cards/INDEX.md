@@ -11,11 +11,11 @@
 | `scaffold-b-typed-builders` | E | scaffold B | gate | [E-mid] | specified |
 | `scaffold-c-runnable-contracts` | E | scaffold C | inline | [E-mid] | specified |
 | `scaffold-d-differential-oracle` | E | scaffold D | gate | [E-mid] | specified (pilot) |
-| `scaffold-e-fast-loop` | E+H | scaffold E | gate | [E-strong] | specified |
-| `scaffold-f-structured-diagnostics` | E+C | scaffold F | inline | [E-mid] | specified |
-| `scaffold-g-doctests` | C+G | scaffold G | gate | [E-strong] | specified |
+| `scaffold-e-fast-loop` | E+H | scaffold E | gate | [E-strong] | shipped (`discipline-typescript fast-loop`; the tsc half stays a whole-tree floor step — no per-cell project mode without references) |
+| `scaffold-f-structured-diagnostics` | E+C | scaffold F | inline | [E-mid] | shipped (`ts-unsafe-in-domain` / `ts-cell-isolation` speak the Class-F grammar, conform-typescript) |
+| `scaffold-g-doctests` | C+G | scaffold G | gate | [E-strong] | specified (the health collector counts export `@example` coverage; the gate lands with Twoslash wiring) |
 | `scaffold-h-simulators` | E+H | scaffold H | gate | [E-strong] | specified |
-| `scaffold-i-codemods` | H+A | scaffold I | raid | **[E-hyp]** | WISH (pilot-gated) |
+| `scaffold-i-codemods` | H+A | scaffold I | raid | **[E-hyp]** | pilot prototype shipped (`discipline-typescript codemod add-cell`); free parameterization stays the open R4 question |
 
 The classification axes (layer, mechanism, trigger mode, transfer tag) are language-neutral and carried verbatim from the core catalog so the Rust and TypeScript projections stay comparable. What differs per row is the **checker** (a TypeScript tool, not a Rust one) and the per-language Band-3 routine.
 

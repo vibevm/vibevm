@@ -18,3 +18,18 @@ packages = { "flow:org.vibevm/discipline-core" = "^0.4" }
 [boot_snippet]
 source = "spec/boot/20-stack-typescript-ai-native.md"
 category = "stack"
+
+# The operating procedures, as agent-installable skills (PROP-018 §2.4;
+# projected by `vibe skill install`). The methods live in
+# flow:org.vibevm/discipline-core (04-SWEEP-PLAYBOOK, BROWNFIELD-PROTOCOL);
+# these skills are their TypeScript-stack instantiation over the shipped
+# discipline-typescript toolchain.
+[[skill]]
+name = "discipline-sweep-typescript"
+path = "spec/skills/discipline-sweep-typescript"
+description = "The recurring AI-Native discipline sweep for TypeScript: the seven-step floor, then the health collector's ratchet items"
+
+[[skill]]
+name = "terraform-typescript"
+path = "spec/skills/terraform-typescript"
+description = "Adopt the AI-Native discipline on an existing TypeScript codebase: inventory-not-gate, the registries, characterization, then card raids cell by cell"

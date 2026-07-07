@@ -131,3 +131,23 @@ The weak swarm does **not** read this guide. It receives, per edit, the Band-3 o
 **The honest counterweight.** TypeScript's erasure and structural typing mean its *default* safety is *lower* than Rust's — more must be done manually (branding, runtime validation, banning `as`/`any`) to reach the same floor. TypeScript gives more tooling leverage and more expressiveness, but it also gives more rope. The Discipline's TypeScript projection is heavier on *bans and boundary validation* (§2, §8) than the Rust projection precisely for this reason — and that asymmetry, not a failure of mirroring, is the genuine T2 content.
 
 **The standing open question (shared with Rust).** The 74.8% / type-constrained-decoding result is a *generation*-time result; the Discipline's central unproven bet is whether scaffolds help *comprehension and modification* of in-distribution code, not just generation. `vibe-tcg-ts` makes a weak agent *write* well-typed TypeScript by construction; whether it then *modifies* existing TypeScript safely is still the pilot's job — and erasure means well-typed code can still lie at runtime if an `as` slipped through, which is why the §8 ban on `as` matters even with the type oracle on. This transfer is the primary thing the forthcoming VibeVM TypeScript pilot must validate.
+
+## 15. Wiring a consumer (the shipped toolchain) *(≈ Rust §13)*
+
+The stack ships the toolchain as runnable code (PROP-024); a consumer wires it in four moves:
+
+1. **Install the stack** — `vibe install` with `stack:org.vibevm/typescript-ai-native` in `[requires].packages` materialises the slot under `vibedeps/` (the neutral engines ride along as vendored copies; the slot is its own Cargo workspace and builds standalone).
+2. **Get the binaries** — `cargo install --path vibedeps/<stack-slot>/crates/discipline-cli-typescript` (plus `conform-cli-typescript` / `specmap-cli-typescript` if you want the narrow engines on PATH), or run in place: `cargo run --manifest-path vibedeps/<stack-slot>/Cargo.toml -p discipline-cli-typescript --bin discipline-typescript -- <args>`.
+3. **Project toolchain** — node ≥ 22.6 (strip-types runs `.ts` directly; `node --test` is the default runner) and `npm install -D typescript prettier eslint typescript-eslint`. The structural gate parses through the PROJECT's own `typescript` — the same install the `tsc` floor step uses, so the gate adds no new dependency.
+4. **Bootstrap** — `discipline-typescript init` writes conform.toml (`[typescript]`: roots, `cells_dir`, seam), specmap.toml (namespace + discovered `[[external_specs]]`), both ratchet baselines, and the BROWNFIELD registries; then `discipline-typescript specmap` mints the index and `discipline-typescript floor` runs the seven steps. Adoption on a brownfield tree: the `/terraform-typescript` skill.
+
+Gotchas the fresh walks caught: a repo that also carries Rust keeps `[workspace] exclude = ["vibedeps"]`; `node_modules/` is gitignored but lockfiles are committed; the extractor materialises content-addressed under `target/conform/ts-extract/` — clean builds re-materialise it automatically.
+
+## 16. Sweep idioms *(≈ Rust §14)*
+
+The recurring posture is the shipped Sweep Playbook driven by `/discipline-sweep-typescript`; the TypeScript-specific idioms:
+
+- **Danger-band splits** keep traceability: the new module gets its own file-level `@scope` (or carries the moved exports' `@implements` tags) so the orphan ratchet never regresses on a refactor.
+- **Suppression drains**: `@ts-ignore` → `@ts-expect-error -- reason` is always a strict improvement (it fails when the error goes); an unreasoned `@ts-expect-error` in the health census is unrecorded testimony — reason it or fix it.
+- **Unsafe-set drains** go type-first: `any` → `unknown` + one narrowing helper reused everywhere (uniformity is load-bearing); a cross-type `as` at an erasure boundary becomes a schema parse; `!` becomes an `asserts` function.
+- **Floor disablement is debt**: every `[[typescript.floor_disable]]` entry prints on every run — re-question the reasons weekly; an empty list is the exit criterion the terraform aims at.
