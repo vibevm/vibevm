@@ -1,8 +1,8 @@
 # FRACTALITY-IGNITION-PLAN v0.1 — from zero to a metered GLM swarm under mission-control
 
-_Status: **EXECUTING** (Phases 0–2 landed 2026-07-09/10, floor green —
-Phase 2's exit E2E proven on a live GLM worker — next: Phase 3 —
-collect-back) · written 2026-07-09
+_Status: **EXECUTING** (Phases 0–3 landed 2026-07-09/10, floor green —
+collect-back proven live end to end, manual-test #1 recorded — next:
+Phase 4 — swarm) · written 2026-07-09
 against host tree `05d3b1c` plus the same-day ignition bootstrap commits ·
 cold-executable: any phase boundary is a safe stop; the fractality floor
 (§11) is green at every boundary. Format: `flow:org.vibevm/campaign-plans`
@@ -1224,6 +1224,55 @@ prediction (P2 on real transcripts) held.
 - `show`'s usage line reads zeros — correct at this phase: transcript
   parsing IS Phase 3, and this E2E's transcript is its first golden
   fixture.
+
+### Phase 3 — EXECUTED (2026-07-10); commit map
+
+- `799dba3` feat(fractality): result collection, metering, sync run
+  (the tolerant stream parser; the pod's tee pump + watch-channel live
+  metering + `PodEvent::Usage` snapshots; result provenance
+  worker/extracted/none; usage.json; `run`/`show` usage+cost+result
+  lines).
+- `1fb9517` test(fractality): stream-json goldens from live fixtures
+  (the frozen Phase-2 transcript pins the parser to reality: full
+  event-count map, authoritative result-event totals, tolerance
+  contract).
+- `01b22d3` feat(fractality): acceptance runner + exit-code families
+  (pod-side `task.acceptance` execution with verdicts + evidence log;
+  the `collect` cell split out of the pod main at the 600-line budget;
+  killed(pod_lost) → exit 2, policy kills keep 3).
+- `eb8e7d9` docs(fractality): manual-test #1 — sync delegation
+  collect-back.
+
+**Boundary evidence.** MT-01 pre-run (scratch `--home`, live GLM-5.2):
+run `01KX4JRBNQ774N0G9VYG218TKD` — 36 s wall, exit 0; summary printed
+usage in=15165 out=1772 cache_r=26880 **events=599**, cost 0.133565,
+`result: …work\result.md (worker)`, `acceptance: 1/1 ok — cargo test
+exit=0` over the worker's own four green unit tests (366 ms);
+`classify` correct on inspection. Floor: all green; specmap 11 units /
+38 items / 38 edges / 0 orphans. Metering agreed across planes on the
+verification rerun of hello-glm (`01KX4J7BNX5J7NK8CB86H77RPM`):
+usage.json ≡ bus record field for field, `show` lights up from
+journal replay. **P3 running count: 3/3** (hello-glm ×2, MT-01) —
+keeps counting toward the 10-packet measurement. Phase prediction
+(P3 measured over the first 10) remains open by design.
+
+**Findings folded into code/design:**
+
+- **F16 (profiles are home-scoped).** `--home` isolation isolates
+  profiles too — a scratch home needs its own `profiles.toml`. Found
+  by MT-01's first pre-run; the D14 error contract earned its keep in
+  the field: mission-control refused the run with a 400 naming the
+  spec anchor and the exact fix. MT-01 step 1 carries the copy.
+- **Verdicts live on the plane, the bus promotion is named.** The
+  acceptance verdicts and result pointer ride status.json/usage.json
+  (deliberate D17 last-resort reads by the CLI, same box); a
+  `Collected` pod event folding into `RunRecord` is Phase 4 work —
+  the swarm's remote reads need it, the sync loop does not. The same
+  Phase 4 slice renders the result as a FileRef (D19) — the plan's
+  step-3 rendering half, deferred by name.
+- **P7 drift, recorded:** Phase 3 planned 2 commits, landed 4 — the
+  extras are the conform-driven cell split + the manual-test document
+  (the flow requires the procedure committed with its recorded run).
 
 _(Later phases fill their own maps at each boundary.)_
 

@@ -1,37 +1,39 @@
 # fractality — WAL (project continuation state)
 
-_Updated: 2026-07-10 late (Phase 3 FIRST SLICE LANDED — collection +
-metering live) — the backend gained the tolerant incremental
-stream-json parser (D14/R2: unknown kinds counted, malformed counted,
-never fatal; the result event is authoritative for totals — assistant
-events under-report on this provider); the pod's transcript pump is now
-a tee (file + parser + `watch`-channel live totals sampled by the
-heartbeat → `PodEvent::Usage` snapshots — MC meters a run mid-flight);
-at exit the pod settles the result contract (worker | extracted | none,
-with the path) and writes `usage.json`; `run`/`show` print usage, cost,
-and the result pointer with provenance. Live proof: run
-`01KX4J7BNX5J7NK8CB86H77RPM` — summary printed in=16692 out=238
-cache_r=23616 events=56, cost 0.101218, result (worker); usage.json ≡
-bus record field for field. Commits: `799dba3` (feat: collection,
-metering, sync run), `1fb9517` (test: goldens from the frozen Phase-2
-transcript — event map, authoritative totals, tolerance pins). Floor:
-**all green** (specmap now 11 units / 37 items / 37 edges / 0 orphans).
-**Remaining for the Phase 3 boundary:** acceptance-command runner
-(packet `acceptance` array → verdicts), result-as-FileRef in the
-summary (D19), the pod_lost exit-code polish (3 → infra 2, D17 table),
-and the Phase 3 exit E2E (real Rust-function packet on GLM-5.2 with
-`cargo test` acceptance → manual-test #1). Ledger entry waits for that
-boundary. Delegation scoreboard this session: **delegated 2,
-delivered 2** — (1) worktree integration tests (scenario 1, cwd
+_Updated: 2026-07-10 late (Phase 3 EXECUTED — collect-back proven live,
+manual-test #1 recorded) — the full loop now closes: tolerant
+stream-json parser (D14/R2; the result event is authoritative — this
+provider's assistant events under-report), pod tee pump with
+watch-channel live metering (`PodEvent::Usage` snapshots — MC meters a
+run mid-flight), result provenance (worker | extracted | none, with
+path) + `usage.json`, pod-side **acceptance runner** (packet
+`task.acceptance` → per-command verdicts in status.json + evidence in
+acceptance.log; 600 s per-command cap; skipped-with-reason on failed
+workers), exit-code families (killed(pod_lost) → 2 infra; policy kills
+keep 3), and `run`/`show` rendering usage + cost + result + acceptance.
+**MT-01 pre-run green** (scratch home, live GLM-5.2): run
+`01KX4JRBNQ774N0G9VYG218TKD`, 36 s, events=599, cost 0.1336, result
+(worker), acceptance 1/1 — the worker's four unit tests green in
+366 ms; human sign-off pending per the manual-tests law. Phase 3
+commits: `799dba3`, `1fb9517`, `01b22d3`, `eb8e7d9`; ledger entry in
+plan §14 (findings F16 — profiles are home-scoped, D14 error contract
+field-proven; the Collected-event bus promotion + FileRef rendering
+deferred by name to Phase 4). Floor: **all green** (specmap 11/38/38/0;
+conform forced the pod's `collect` cell split at the 600-line budget).
+P3 running count 3/3. Delegation scoreboard this session: **delegated
+2, delivered 2** — (1) worktree integration tests (scenario 1, cwd
 pinned): green first landing, caught a factual error in the compiled
-context (nonexistent constructor) by verifying the source, killed the
-lock-holding daemon it collided with (F15); (2) the stream parser +
-goldens (scenario 1, exact API + semantics + golden numbers compiled
-in): green first landing, zero corrections needed beyond one
-misleading doc sentence. Kept boss-side with reasons: E2E runs +
-triage, the F14 fix, pod tee + collection + CLI (cross-crate seam
-design), boundary docs. Campaign tally: delegated 4, delivered 3.
-Prior status follows._
+context by verifying the source, killed the lock-holding daemon it
+collided with (F15); (2) the stream parser + goldens (scenario 1,
+exact API + golden numbers compiled in): green first landing, one
+misleading doc sentence fixed at review. Deferred delegable work,
+recorded per the law: acceptance-runner unit tests (fixture commands
+with known exit codes — scenario 1, glm-5-turbo candidate; the live
+MT-01 exercised the runner end to end meanwhile). Kept boss-side with
+reasons: E2E runs + triage, the F14 fix, pod tee + collection + CLI
+(cross-crate seam design), the Exit-vs-Collected seam decision,
+boundary docs. Campaign tally: delegated 4, delivered 3. Prior status
+follows._
 _Prior: 2026-07-10 (Phase 2 EXECUTED — exit E2E green on a live GLM
 worker) — run `01KX4H4KESV9ADN6S0AJMWQHFW`, exit 0 in 29 s, hello.txt
 byte-exact, worker-authored result.md, transcript with usage fields
@@ -66,8 +68,9 @@ into the plan; interim opencode+GLM paradigm verified live._
 
 - **The plan (canonical for campaign detail):**
   [`fractality/v0.1.0/spec/plans/FRACTALITY-IGNITION-PLAN-v0.1.md`](fractality/v0.1.0/spec/plans/FRACTALITY-IGNITION-PLAN-v0.1.md)
-  — status `EXECUTING`; **Phases 0–2 in the §14 ledger with the E2E
-  evidence.** Remaining: Phases 3 (collect-back), 4, 4b, 5, 6.
+  — status `EXECUTING`; **Phases 0–3 in the §14 ledger with live
+  evidence; manual-test #1 recorded.** Remaining: Phases 4 (swarm),
+  4b (interaction layer), 5 (delegation-rules), 6 (boss integration).
 - **Code:** six crates, three binaries; the delegate-out path is proven
   live end to end (MC autostart → spawn → worktree/dir provisioning →
   pod → resolver → clean-slate env → stdin prompt → GLM worker →
@@ -104,29 +107,28 @@ into the plan; interim opencode+GLM paradigm verified live._
 - **F15 dev law:** stop the MC daemon before any build that touches its
   binary (`fractality mc stop`); a running daemon holds the .exe lock.
 
-## Next (the cold-start recipe — Phase 3 remainder)
+## Next (the cold-start recipe — Phase 4, swarm)
 
-1. **Acceptance runner (plan Phase 3 step 2 tail):** after worker exit,
-   the pod runs each `packet.acceptance` command in the workspace
-   (shell form: `cmd /C` on Windows, `sh -c` on POSIX; pod's own env,
-   worker's cwd), records per-command verdict + duration into
-   status.json (and the exit report — decide: extend `PodEvent::Exit`
-   vs a new `Collected` event; the boss holds this seam decision).
-2. **Result as FileRef (D19)** in the `run` summary / `show` output,
-   scope-relative — the rendering half; the FileRef type already lives
-   in core.
-3. **Exit-code polish:** `killed(pod_lost)` → infra family (2), not
-   killed family (3); review the whole D17 table while there
-   (`crates/fractality-cli`, exit-code mapping).
-4. **Phase 3 exit E2E → manual-test #1:** packet "implement a small
-   Rust function + test in a scratch repo", GLM-5.2 (`model = "big"`),
-   acceptance `cargo test` green; record procedure + output under
-   `fractality/v0.1.0/spec/manual-tests/`. P3 counting continues
-   (currently 2/2 across live runs).
-5. Then the Phase 3 ledger entry + WAL/WORKSPACES refresh, and on to
-   Phase 4 (swarm).
-6. Delegation candidates (law: delegate or record why not): the
-   acceptance-runner unit tests (scenario 1 — fixture commands with
-   known exit codes), the manual-test document draft from the run
-   artifacts. Boss keeps: the Exit-vs-Collected API seam decision,
-   exit-code semantics, the E2E itself.
+1. Re-read plan §8 Phase 4 (async verbs, budgets, nesting, kill-tree,
+   metrics) and §14's Phase 3 deferred items — the `Collected` pod
+   event (verdicts + result FileRef onto the bus / `RunRecord`) slots
+   naturally into Phase 4's metrics/record work.
+2. **Async verbs:** `spawn` (register + return id), `wait <id>…`
+   (shell semantics), `tree`; per-profile `max_concurrent` admission +
+   queueing MC-side.
+3. **Budget enforcement in MC:** wall-clock watchdog, `--max-turns`
+   passthrough exists, cumulative token cap → `killed(budget)`; the
+   live Usage snapshots (already flowing) are the input.
+4. **Nesting:** `FRACTALITY_RUN_ID`/`FRACTALITY_DEPTH` already ride
+   the worker env; a worker calling `fractality spawn` registers a
+   child — depth-2 tree demo (P4 target: 3-worker swarm, manual-test
+   #2; recursive kill, manual-test #3).
+5. **Kill:** `kill --tree` delegated to the pod (F5 Job Objects);
+   orphan-sweep assertion; pod-loss fallback MC-side.
+6. Delegation candidates: acceptance-runner unit tests (deferred from
+   Phase 3, scenario 1, glm-5-turbo), admission-queue unit tests,
+   `wait` verb CLI plumbing (scenario 1 with exact API). Boss keeps:
+   budget semantics, tree/kill correctness, the Collected event
+   design.
+7. Machine note: stop the MC daemon before builds (F15); profiles are
+   home-scoped (F16) — scratch homes need their own copy.
