@@ -244,6 +244,11 @@ fractality exists to kill. Hand-run today what the pod will automate:
    wait for completion to discover a derailment.
 5. Completion is the background-task notification, never a blind
    timeout.
+6. **Pin the cwd in the launch command itself** (`cd <workspace> &&
+   opencode run …`), and use absolute paths in the watcher. The shell's
+   inherited cwd is poisoned by any earlier `cd` (a delegate once ran
+   12 minutes against the host root chasing paths that exist only in
+   the workspace — caught 2026-07-10).
 
 (This protocol is the manual prototype of the pod's telemetry:
 streamed transcript + heartbeats + stall watchdog on the MC bus.)
