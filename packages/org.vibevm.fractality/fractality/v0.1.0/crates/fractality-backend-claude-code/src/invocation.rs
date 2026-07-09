@@ -4,9 +4,13 @@
 //! `--disallowed-tools <tools...>`).
 //!
 //! The prompt is the packet's goal plus the output contract (D4/D7):
-//! the worker's final report lands in the packet-named result file. The
-//! variadic `--disallowed-tools` flag comes last so it cannot swallow
-//! the prompt positional.
+//! the worker's final report lands in the packet-named result file. In
+//! print mode CC reads the prompt from **stdin** (smoke-verified on
+//! 2.1.202), so the prompt rides [`WorkerSpec::stdin`], never argv:
+//! Windows command lines cap at 32 KiB and `.cmd`-shim spawns forbid
+//! newline-carrying arguments — both fatal to big one-shot goals (F14).
+//!
+//! [`WorkerSpec::stdin`]: fractality_core::worker::WorkerSpec
 
 use fractality_core::Packet;
 use fractality_core::profile::Profile;
@@ -14,7 +18,10 @@ use fractality_core::profile::Profile;
 specmark::scope!("spec://fractality/PROP-001#architecture");
 
 /// The worker-facing task text: the goal, verbatim, plus the output
-/// contract the collection phase relies on.
+/// contract the collection phase relies on. Fed to the worker's stdin
+/// ([`WorkerSpec::stdin`]), never passed as an argument.
+///
+/// [`WorkerSpec::stdin`]: fractality_core::worker::WorkerSpec
 ///
 /// ```
 /// use fractality_backend_claude_code::invocation::build_prompt;
@@ -59,6 +66,7 @@ pub fn build_prompt(packet: &Packet) -> String {
 /// let argv = build_argv(&packet, profile, "m-small");
 /// assert_eq!(argv[0], "claude");
 /// assert_eq!(argv[1], "--print");
+/// assert_eq!(argv[2], "--output-format", "no prompt positional — the prompt rides stdin");
 /// assert!(argv.contains(&"stream-json".to_owned()));
 /// assert!(argv.ends_with(&["--disallowed-tools".to_owned(), "WebFetch".to_owned(), "WebSearch".to_owned()]));
 /// ```
@@ -66,7 +74,6 @@ pub fn build_argv(packet: &Packet, profile: &Profile, model_id: &str) -> Vec<Str
     let mut argv = vec![
         profile.claude_binary.clone(),
         "--print".to_owned(),
-        build_prompt(packet),
         "--output-format".to_owned(),
         "stream-json".to_owned(),
         // stream-json requires --verbose in print mode (F4).
@@ -142,13 +149,16 @@ mod tests {
     }
 
     #[test]
-    fn prompt_rides_as_one_positional_right_after_print() {
+    fn no_argument_carries_the_prompt() {
         let profiles = profiles();
         let profile = profiles.get("glm").expect("glm");
         let argv = build_argv(&packet(), profile, "m-small");
         assert_eq!(argv[1], "--print");
-        assert!(argv[2].starts_with("Write hello."));
-        assert!(argv[2].contains("Output contract"));
+        assert_eq!(argv[2], "--output-format");
+        assert!(
+            !argv.iter().any(|a| a.contains("Write hello.")),
+            "the goal must ride stdin, never argv (F14)"
+        );
     }
 
     #[test]

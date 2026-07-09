@@ -72,6 +72,7 @@ impl WorkerBackend for ClaudeCodeBackend {
         Ok(WorkerSpec {
             argv,
             cwd: ctx.workspace_dir.clone(),
+            stdin: Some(invocation::build_prompt(packet)),
             env,
         })
     }
@@ -120,6 +121,13 @@ mod tests {
             .expect("spec builds");
         assert_eq!(spec.cwd, camino::Utf8PathBuf::from("runs/x/work"));
         assert!(spec.argv.contains(&"m-small".to_owned()));
+        let stdin = spec.stdin.as_deref().expect("prompt rides stdin (F14)");
+        assert!(stdin.starts_with('g'), "the goal opens the prompt");
+        assert!(stdin.contains("Output contract"));
+        assert!(
+            !spec.argv.iter().any(|a| a.contains("Output contract")),
+            "no argv copy of the prompt"
+        );
         // Compare via join: the separator is the platform's business.
         assert_eq!(
             spec.env.get("CLAUDE_CONFIG_DIR").map(String::as_str),

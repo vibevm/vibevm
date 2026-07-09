@@ -30,14 +30,20 @@ pub struct SupervisedChild {
     child: command_group::AsyncGroupChild,
 }
 
-/// Builds the command from a spec: clean-slate env, piped stdio.
+/// Builds the command from a spec: clean-slate env, piped stdio. Stdin
+/// is piped only when the spec carries a payload (the pod feeds it and
+/// closes the pipe — F14), otherwise null so no child ever waits on us.
 fn build_command(spec: &WorkerSpec) -> tokio::process::Command {
     let mut cmd = tokio::process::Command::new(&spec.argv[0]);
     cmd.args(&spec.argv[1..])
         .env_clear()
         .envs(&spec.env)
         .current_dir(spec.cwd.as_std_path())
-        .stdin(Stdio::null())
+        .stdin(if spec.stdin.is_some() {
+            Stdio::piped()
+        } else {
+            Stdio::null()
+        })
         .stdout(Stdio::piped())
         .stderr(Stdio::piped())
         .kill_on_drop(false);
@@ -91,6 +97,17 @@ impl SupervisedChild {
         #[cfg(unix)]
         {
             self.child.inner().id()
+        }
+    }
+
+    pub fn take_stdin(&mut self) -> Option<tokio::process::ChildStdin> {
+        #[cfg(windows)]
+        {
+            self.child.stdin.take()
+        }
+        #[cfg(unix)]
+        {
+            self.child.inner_mut().stdin.take()
         }
     }
 
@@ -158,6 +175,7 @@ mod tests {
             argv: vec!["worker.exe".into()],
             env,
             cwd: "C:/tmp".into(),
+            stdin: None,
         };
         let cmd = build_command(&spec);
         let std_cmd = cmd.as_std();

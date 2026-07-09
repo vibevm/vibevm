@@ -77,7 +77,20 @@ pub fn build_worker_env(
         OS_WHITELIST_POSIX
     };
     for name in whitelist {
-        if let Some(value) = os_env.get(*name) {
+        // Windows env names are case-insensitive and the OS block carries
+        // mixed casings (`Path`, `ComSpec` on a stock install) — match
+        // accordingly and copy under the whitelist's canonical name, or a
+        // PowerShell-launched pod silently hands its worker no PATH (F14).
+        // POSIX names are case-sensitive identifiers; match exactly.
+        let value = if cfg!(windows) {
+            os_env
+                .iter()
+                .find(|(k, _)| k.eq_ignore_ascii_case(name))
+                .map(|(_, v)| v)
+        } else {
+            os_env.get(*name)
+        };
+        if let Some(value) = value {
             env.insert((*name).to_owned(), value.clone());
         }
     }
@@ -202,6 +215,37 @@ mod tests {
                 assert!(injected, "unexpected poison-prefixed name: {name}");
             }
         }
+    }
+
+    /// F14 regression pin: a stock Windows environment spells the two
+    /// load-bearing names `Path` and `ComSpec`; the whitelist copy must
+    /// match case-insensitively and canonicalize, or the worker loses its
+    /// PATH whenever the pod is launched outside bash.
+    #[cfg(windows)]
+    #[test]
+    fn windows_env_casing_is_matched_and_canonicalized() {
+        let profiles = fixture_profile();
+        let profile = profiles.get("glm").expect("glm");
+        let mut os_env = BTreeMap::new();
+        os_env.insert("Path".to_owned(), "C:/real/bin".to_owned());
+        os_env.insert(
+            "ComSpec".to_owned(),
+            "C:/Windows/system32/cmd.exe".to_owned(),
+        );
+
+        let env = build_worker_env(
+            &os_env,
+            profile,
+            &BackendSecrets::new("t".into()),
+            Utf8Path::new("cc"),
+            &fixture_ctx(),
+        );
+        assert_eq!(env.get("PATH").map(String::as_str), Some("C:/real/bin"));
+        assert_eq!(
+            env.get("COMSPEC").map(String::as_str),
+            Some("C:/Windows/system32/cmd.exe")
+        );
+        assert_eq!(env.get("Path"), None, "canonical name only — no duplicates");
     }
 
     #[test]

@@ -2,10 +2,10 @@
 //! produces it (plan D2/D3).
 //!
 //! A [`WorkerSpec`] is a **complete** description of the child process —
-//! argv, the *entire* environment, cwd. The pod spawns with
-//! `env_clear()` + exactly this map, so invariant I1 (a worker never
-//! inherits `ANTHROPIC_*` / `CLAUDE_*` from the parent) holds
-//! structurally: there is no inherit-and-override path to forget.
+//! argv, the *entire* environment, cwd, and an optional stdin payload.
+//! The pod spawns with `env_clear()` + exactly this map, so invariant I1
+//! (a worker never inherits `ANTHROPIC_*` / `CLAUDE_*` from the parent)
+//! holds structurally: there is no inherit-and-override path to forget.
 //!
 //! The packet — not this trait — is the future-proof seam (D7): backends
 //! for other tools consume packets unchanged.
@@ -29,6 +29,13 @@ pub struct WorkerSpec {
     pub argv: Vec<String>,
     /// Working directory of the child.
     pub cwd: Utf8PathBuf,
+    /// Payload the pod writes to the child's stdin, then closes the pipe
+    /// (`None` = stdin is null). The claude-code backend feeds the prompt
+    /// here rather than as a positional argument: Windows command lines
+    /// cap at 32 KiB, and `.cmd`-shim spawns forbid newlines in arguments
+    /// — both fatal to big one-shot task texts (F14).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub stdin: Option<String>,
     /// The whole environment. Nothing else reaches the child (I1).
     /// Declared last: TOML wants scalars before tables.
     #[serde(default)]
@@ -172,6 +179,7 @@ pub struct RunContext {
 ///         Ok(WorkerSpec {
 ///             argv: vec!["echo".into(), ctx.run_id.to_string()],
 ///             cwd: ctx.workspace_dir.clone(),
+///             stdin: None,
 ///             env: Default::default(),
 ///         })
 ///     }
@@ -222,17 +230,30 @@ mod tests {
     #[test]
     fn worker_spec_round_trips_and_validates() {
         let text = r#"
-            argv = ["claude", "-p", "hello"]
+            argv = ["claude", "--print"]
             cwd = "C:/work/run-1"
+            stdin = "multi\nline\nprompt"
             [env]
             PATH = "C:/bin"
         "#;
         let spec = WorkerSpec::from_toml_str(text).expect("parses");
         assert_eq!(spec.argv[0], "claude");
+        assert_eq!(spec.stdin.as_deref(), Some("multi\nline\nprompt"));
         assert_eq!(spec.env.get("PATH").map(String::as_str), Some("C:/bin"));
         let back =
             WorkerSpec::from_toml_str(&spec.to_toml_string().expect("renders")).expect("re-parses");
         assert_eq!(spec, back);
+    }
+
+    #[test]
+    fn stdin_is_optional_and_defaults_to_none() {
+        let text = "argv = [\"x\"]\ncwd = \"w\"\n";
+        let spec = WorkerSpec::from_toml_str(text).expect("parses");
+        assert_eq!(spec.stdin, None);
+        assert!(
+            !spec.to_toml_string().expect("renders").contains("stdin"),
+            "absent stdin never serializes"
+        );
     }
 
     #[test]

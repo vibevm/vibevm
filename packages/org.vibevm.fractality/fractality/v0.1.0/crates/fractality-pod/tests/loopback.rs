@@ -57,6 +57,7 @@ fn stub_spec(run_dir: &Utf8Path, sleep_secs: u32) -> WorkerSpec {
         ],
         env,
         cwd: run_dir.to_owned(),
+        stdin: None,
     }
 }
 

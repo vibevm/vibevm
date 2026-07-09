@@ -25,7 +25,7 @@
       "crate_name": "fractality-backend-claude-code",
       "file": "crates/fractality-backend-claude-code/src/invocation.rs",
       "item_kind": "mod",
-      "line": 14,
+      "line": 18,
       "symbol": "fractality_backend_claude_code::invocation"
     },
     {
@@ -235,8 +235,15 @@
       "crate_name": "fractality-pod",
       "file": "crates/fractality-pod/src/main.rs",
       "item_kind": "mod",
-      "line": 27,
+      "line": 28,
       "symbol": "fractality_pod"
+    },
+    {
+      "crate_name": "fractality-pod",
+      "file": "crates/fractality-pod/src/resolve.rs",
+      "item_kind": "mod",
+      "line": 14,
+      "symbol": "fractality_pod::resolve"
     },
     {
       "crate_name": "fractality-pod",
@@ -274,7 +281,7 @@
     {
       "file": "crates/fractality-backend-claude-code/src/invocation.rs",
       "from_symbol": "fractality_backend_claude_code::invocation",
-      "line": 14,
+      "line": 18,
       "provenance": "authored",
       "uri": "spec://fractality/PROP-001#architecture",
       "verb": "implements"
@@ -514,7 +521,15 @@
     {
       "file": "crates/fractality-pod/src/main.rs",
       "from_symbol": "fractality_pod",
-      "line": 27,
+      "line": 28,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-pod/src/resolve.rs",
+      "from_symbol": "fractality_pod::resolve",
+      "line": 14,
       "provenance": "authored",
       "uri": "spec://fractality/PROP-001#architecture",
       "verb": "implements"

@@ -8,6 +8,7 @@
 //! pod keeps supervising, re-registers when the new daemon appears, and
 //! delivers its exit report to whichever daemon generation is alive.
 
+mod resolve;
 mod supervise;
 
 use camino::Utf8PathBuf;
@@ -123,9 +124,16 @@ fn resolve_inputs(args: &Args) -> Result<(RunId, Utf8PathBuf, WorkerSpec), Strin
         // The composition-root snapshot: the one ambient read, handed to
         // the pure constructor (and to its poisoned-parent test).
         let os_env: std::collections::BTreeMap<String, String> = std::env::vars().collect();
-        let spec = ClaudeCodeBackend
+        let mut spec = ClaudeCodeBackend
             .build_spec(&packet, profile, &BackendSecrets::new(token), &os_env, &ctx)
             .map_err(|e| e.to_string())?;
+
+        // F14: resolve the program against the PATH the worker will see —
+        // a bare `claude` must find npm's `.cmd` shim, which CreateProcess
+        // alone never does. Product mode only: the raw `--spec` seam
+        // states explicit paths and stays untouched.
+        spec.argv[0] =
+            resolve::resolve_program(&spec.argv[0], spec.env.get("PATH").map(String::as_str))?;
 
         // Generic provisioning: whatever config dir the backend chose
         // must exist before spawn (F4: a fresh dir onboards headless).
@@ -212,6 +220,7 @@ async fn run(args: Args) -> Result<(), String> {
 
     let stdout_pump = pump(child.take_stdout(), run_dir.join(STDOUT_FILE));
     let stderr_pump = pump(child.take_stderr(), run_dir.join(STDERR_FILE));
+    let stdin_feed = feed_stdin(child.take_stdin(), spec.stdin.clone());
 
     report(
         &mut client,
@@ -252,6 +261,7 @@ async fn run(args: Args) -> Result<(), String> {
     };
 
     // Pumps end at EOF once the child is gone.
+    let _ = stdin_feed.await;
     let _ = stdout_pump.await;
     let _ = stderr_pump.await;
 
@@ -338,6 +348,27 @@ async fn reconnect_and_register(
             Some(client)
         }
     }
+}
+
+/// Writes the spec's stdin payload to the child and closes the pipe —
+/// EOF is part of the contract (CC's print mode reads stdin to EOF, F14).
+/// A payload can exceed the pipe buffer, so this runs as its own task
+/// alongside the pumps rather than blocking the supervision loop.
+fn feed_stdin(
+    stdin: Option<tokio::process::ChildStdin>,
+    payload: Option<String>,
+) -> tokio::task::JoinHandle<()> {
+    tokio::spawn(async move {
+        let (Some(mut stdin), Some(payload)) = (stdin, payload) else {
+            return;
+        };
+        if let Err(e) = stdin.write_all(payload.as_bytes()).await {
+            // A worker that exits before reading its prompt surfaces its
+            // own error; the broken pipe here is the symptom, not the story.
+            tracing::warn!(error = %e, "stdin feed ended early");
+        }
+        let _ = stdin.shutdown().await;
+    })
 }
 
 /// Streams a child pipe into a run-dir file.
