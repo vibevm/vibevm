@@ -1059,7 +1059,7 @@ ls spec/manual-tests/                                                # 5 recorde
 
 ### Phase 0 — EXECUTED (2026-07-09); commit map
 
-- `<pending>` docs(fractality): plan v0.1 amended with Phase 0 findings.
+- `6317cff` docs(fractality): plan v0.1 amended with Phase 0 findings.
   Single amendment commit per the phase-gates law (Phase 0 commits no
   tree changes — only findings into the plan, the study note, the
   landscape note, and the inventory). Flips the status line to
