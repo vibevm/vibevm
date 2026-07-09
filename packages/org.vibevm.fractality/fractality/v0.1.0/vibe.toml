@@ -1,0 +1,16 @@
+[package]
+name = "fractality"
+group = "org.vibevm.fractality"
+kind = "tool"
+version = "0.1.0"
+authors = ["Oleg Chirukhin"]
+license = "UPL-1.0"
+description = "An agent operating system in its earliest form: fractality-mission-control (a scheduler daemon holding the agent roster, call tree, and usage metering) plus the fractality CLI, which lets an expensive boss agent delegate tasks to swarms of cheap worker agents running in isolated Claude Code processes under other model providers, exchanging everything through files on disk"
+keywords = ["agents", "orchestration", "delegation", "swarm", "scheduler", "mission-control"]
+
+[compatibility]
+min_vibe_version = "0.1.0"
+requires_kinds = []
+
+# No boot_snippet yet: the boss-side boot snippet and skills land in the
+# IGNITION campaign's Phase 6 (spec/plans/FRACTALITY-IGNITION-PLAN-v0.1.md).
