@@ -311,6 +311,7 @@ dependencies = [
  "camino",
  "core-ai-native-specmark",
  "fractality-core",
+ "serde_json",
 ]
 
 [[package]]
