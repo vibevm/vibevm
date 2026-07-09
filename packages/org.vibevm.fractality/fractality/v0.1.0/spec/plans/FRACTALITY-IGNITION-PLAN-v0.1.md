@@ -13,9 +13,10 @@ the non-yolo interaction stack (D18) added; RP1, RP2, and RP4 RESOLVED
 carries the owner's RLM hypothesis; DEF-11 and DEF-12 (the Entire.io-like
 checkpoints horizon) added; I2 re-scoped — mission-control is the command
 bus, files are the persistence plane, never the medium (D4/D10/D18
-aligned); the interim opencode+GLM paradigm recorded in the workspace
-contract and verified live. Only RP3 (publish) remains open; Phase 0 is
-fully unblocked._
+aligned); D19 added — claim-check FileRefs + beacon-proven filesystem
+identity + node identity as the bulk-data law; the interim opencode+GLM
+paradigm recorded in the workspace contract and verified live. Only RP3
+(publish) remains open; Phase 0 is fully unblocked._
 
 ## 2. Execution record
 
@@ -152,6 +153,22 @@ Refinement (owner, 2026-07-09, third message):
 > персистенса, потенциально распределённого между нодами (если положить
 > на nfs или ceph), но это не средство коммуникации.»
 > [→ I2 re-scoped; D4/D10/D18 aligned]
+
+Optimization directive (owner, 2026-07-09, fourth message):
+
+> «чтобы не передавать какие-то большие данные, мы можем как способ
+> оптимизации сохранять временный файл, а через командный интерфейс
+> передавать не весь результат текстом, а только путь до файла и
+> смещение/длину (или смещение с начала и с конца для супербольших
+> данных непонятной длины) […] только если оба агента которые общаются,
+> или агент и босс, используют одну и ту же файловую систему. Поэтому
+> наверное нужно везде выставить супер важный параметр — у агента должно
+> быть каким-то образом возможно узнать на каком компьютере он работает
+> сам, и откуда взялась его файловая система […] для NFS IP тоже имеет
+> смысл — если разные ноды подключились к одному и тому же NAS у них
+> будут разные свои IP но один и тот же IP файловой системы. Хотя
+> возможно, ты придумаешь какие-то более крутые средства идентификации.»
+> [→ D19, I7]
 
 ### 3b. Programme map — owner phases → campaigns
 
@@ -398,7 +415,8 @@ SQLite (dep + migrations before the schema has settled), in-memory-only
 ### D10 — mission-control API: versioned localhost HTTP
 Bind `127.0.0.1:0` (ephemeral); lockfile `~/.fractality/mc.lock` = `{port,
 pid, bearer}` (0600); bearer required on every call (defense against other
-local users). Endpoints v0: `GET /v0/health` · `POST /v0/runs` (spawn from
+local users). Endpoints v0: `GET /v0/health` · `GET /v0/node` (node identity +
+attached fs scopes, D19) · `POST /v0/runs` (spawn from
 packet) · `GET /v0/runs` (filters) · `GET /v0/runs/:id` ·
 `GET /v0/runs/:id/tree` · `POST /v0/runs/:id/kill` (`recursive` flag) ·
 `GET /v0/runs/:id/question` · `POST /v0/runs/:id/answer` (D18) ·
@@ -434,6 +452,7 @@ mirrors worker outcome; prints run-dir path + one-screen summary) · `spawn`
 kept as alias) · `show <id>` · `tree [<id>]` · `logs <id> [-f]` (tail the
 transcript/stderr) · `kill <id> [--tree]` · `questions` (pending
 `waiting_on_boss` items) · `answer <id> [<text>|--file <f>]` · `stats` ·
+`node` (machine + fs-scope identity, D19) ·
 `fetch <url> --out <path>` · `packet new [--template <name>]`.
 Human-drivable first: every flow debuggable from a terminal without any
 boss involved. Ergonomics law: D17.
@@ -502,6 +521,49 @@ channel: stdin stream-json injection — the pod owns stdin so it stays
 available as a fallback (structured-output injection included), but
 tool-call semantics are in-distribution for models, atomic, and
 file-recordable; raw stream surgery is neither.
+
+### D19 — claim-check references and filesystem identity
+Owner directive (2026-07-09, §3): don't haul bulk data over the bus —
+pass a temp-file reference (path + offset/length, or head/tail offsets
+for data of unknown length), valid only when both parties share a
+filesystem; and give every agent a way to know its machine and where
+its filesystem comes from.
+- **FileRef v1** (core DTO, baked into the API from Phase 1):
+  `{fs: <scope-id>, path: <scope-relative, forward-slash>, range:
+  whole | {offset, len} | {skip_head, skip_tail}, sha256?}`. The
+  head/tail form serves growing files (live logs); length pins at stat
+  time, non-atomicity for still-growing files documented. Bus messages
+  inline payloads up to a threshold (default 64 KiB, configurable) and
+  switch to FileRef above it.
+- **Scope identity — the rendezvous beacon (authoritative):** MC stamps
+  `<scope-root>/.fractality-fsid` with a random UUID + issuing-MC id +
+  timestamp, rotated periodically. Two parties share a scope **iff they
+  read the same live beacon** — a behavioral proof that sidesteps every
+  platform quirk. Mount metadata is recorded as corroboration and
+  diagnostics: volume serial / volume GUID (Windows), fsid/UUID (Unix),
+  and for network mounts the **server identity + export** — the owner's
+  NAS-IP intuition, generalized (NFS `server:/export`, SMB
+  `\\server\share`, Ceph cluster fsid). Copy-staleness is the named
+  caveat: a byte-copied tree carries a beacon copy; beacon rotation
+  plus MC authority (scope-id ↔ current nonce) bounds the window; on
+  the v0.1 single box it is moot.
+- **Node identity:** stable machine id (`/etc/machine-id` Linux /
+  `MachineGuid` Windows / `IOPlatformUUID` macOS) + hostname +
+  addresses, captured at registration, exposed as `FRACTALITY_NODE_ID`
+  in run envs and by `fractality node`. Raw IPs are **labels, not
+  identity** (DHCP, multiple NICs, VPNs) — rejected as the primary key,
+  kept in metadata for humans.
+- **Dereference rule:** scope match proven → read locally (the
+  zero-copy fast path); no match → fetch the same range over the bus
+  (`GET /v0/runs/:id/files?path&range` — shape reserved now, built with
+  federation under DEF-6). **A reference is an optimization, never a
+  requirement** — I2's bus law survives intact.
+- Rejected: absolute paths inside references (the same NAS mounts at
+  different points on different nodes; separators differ per OS —
+  scope-relative forward-slash paths only); IP-as-identity (see above);
+  content-addressing everything (hashing bulk on every hop costs more
+  than it buys at v0.1 scale; `sha256` stays optional for immutable
+  payloads).
 
 ## 7. Predictions (checked one by one at close)
 
@@ -592,11 +654,12 @@ findings` — which also flips the status line to `EXECUTING`.
    crates; wire the floor; add `spec/examples/hello-glm.toml` (packet).
 2. `fractality-core`: ULID run ids, `RunState` machine (incl.
    `waiting_on_boss`), packet schema (serde + goldens), journal event
-   types, API DTOs (client and pod legs), `WorkerBackend` trait.
+   types, API DTOs (client and pod legs), `FileRef` / fs-scope / node
+   types (D19), `WorkerBackend` trait.
 3. `fractality-mission-control`: journal append + replay + pod
    reconciliation (D9), run registry, lockfile + bearer, `GET /v0/health`,
-   run CRUD minus spawn, pod register/heartbeat endpoints, graceful
-   shutdown.
+   run CRUD minus spawn, pod register/heartbeat endpoints, node identity +
+   the runs-root scope beacon (D19), graceful shutdown.
 4. `fractality-pod` skeleton: spawn a child from a spec, stream its stdio
    to files, heartbeat + exit report to MC (loopback-tested with a stub
    child process, no Claude Code yet).
@@ -645,8 +708,8 @@ poisoned-env test is green**.
    `usage.json`, `status.json`; acceptance commands from the packet run in
    the workspace, pass/fail recorded.
 3. `fractality run` prints the one-screen summary (state, wall time,
-   tokens, result path, branch, acceptance verdicts); `show` renders any
-   historical run the same way.
+   tokens, the result as a FileRef (D19), branch, acceptance verdicts);
+   `show` renders any historical run the same way.
 
 *Exit:* E2E — packet "implement a small Rust function + test in a scratch
 repo", GLM-5.2 worker, acceptance `cargo test` green, boss-side artifact =

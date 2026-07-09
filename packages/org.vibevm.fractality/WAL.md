@@ -17,7 +17,13 @@ checkpoints layer (à la Entire.io Checkpoints) is recorded as DEF-12 /
 PROP-001 §7 / inventory S8. I2 re-scoped by the owner's same-day
 refinement: mission-control is the command bus for ALL boss↔worker
 interface; files are the guaranteed persistence plane (NFS/Ceph-able in
-the federation era), never the medium — D4/D10/D18 aligned. The
+the federation era), never the medium — D4/D10/D18 aligned. D19 added
+same day: bulk data rides the bus as claim-check FileRefs
+(scope-relative path + range, incl. a head/tail form for growing
+files); filesystem scopes prove identity by a rendezvous beacon (mount
+metadata + node identity as corroboration; `FRACTALITY_NODE_ID` +
+`fractality node` expose where an agent runs); dereference locally only
+on proven scope match, else the bus serves the bytes. The
 **interim opencode+GLM delegation paradigm** is live, verified
 (`opencode run -m zai-coding-plan/glm-5.2 …` → OK) and recorded in the
 contract. No code yet by design: Phase 0 (spikes, no commits) is the next

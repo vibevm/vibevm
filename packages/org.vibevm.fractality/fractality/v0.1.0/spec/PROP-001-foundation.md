@@ -69,6 +69,14 @@ pattern (Campaign 3) is this same shape applied to *context* instead of
   kill, the registry, the journal, and the metrics API.
 - **swarm** — N runs fanned out over a task decomposition, bounded by
   profile concurrency and budgets.
+- **node** — the machine a process runs on: stable machine id +
+  hostname + addresses, recorded by MC at registration and exposed to
+  every run (`FRACTALITY_NODE_ID`, `fractality node`).
+- **filesystem scope** — a registered storage area (e.g. the runs root)
+  with proven identity: a rendezvous beacon file plus mount metadata.
+  Two parties share a scope iff they read the same live beacon.
+- **FileRef** — the claim-check: (scope, scope-relative path, byte
+  range) — how bulk data rides the bus without riding the bus.
 
 ## 3. Architecture {#architecture}
 
@@ -136,6 +144,17 @@ cross-run accounting.
 - **I6 — secrets never surface.** Token files are referenced by path,
   read at spawn, never logged, never echoed, never committed. Existence
   checks only in diagnostics.
+- **I7 — locality is proven, never assumed.** Bulk payloads cross the
+  bus as **claim-check references** — (filesystem scope, scope-relative
+  path, byte range) — not as inlined bytes. A reference is dereferenced
+  locally only under a **proven** scope match (the rendezvous beacon —
+  plan D19); otherwise the bus serves the bytes itself. Every agent can
+  learn where it runs (node identity: machine id, hostname, addresses)
+  and where its filesystem comes from (scope identity: beacon + mount
+  metadata — for network mounts that includes the server identity and
+  export, the NFS/NAS case). Paths inside references are always
+  scope-relative: the same NAS mounts at different points on different
+  nodes. (Owner directive, 2026-07-09.)
 
 ## 5. Usage & terms-of-service posture {#tos}
 
