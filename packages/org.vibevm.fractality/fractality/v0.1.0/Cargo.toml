@@ -6,6 +6,9 @@
 resolver = "3"
 members = [
     "crates/fractality-core",
+    "crates/fractality-mission-control",
+    "crates/fractality-mc-client",
+    "crates/fractality-cli",
 ]
 # vibedeps packages are their own Cargo workspaces; without the exclude,
 # cargo would bind their crates to THIS workspace and manifest inheritance
@@ -25,6 +28,8 @@ publish = false
 [workspace.dependencies]
 # Intra-workspace seams
 fractality-core = { path = "crates/fractality-core" }
+fractality-mc-client = { path = "crates/fractality-mc-client" }
+fractality-mission-control = { path = "crates/fractality-mission-control" }
 
 # Async runtime + HTTP (D11)
 tokio = { version = "1.52", features = [

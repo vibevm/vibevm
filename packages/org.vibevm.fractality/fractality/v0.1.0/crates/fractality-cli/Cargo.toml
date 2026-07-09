@@ -1,0 +1,27 @@
+[package]
+name = "fractality-cli"
+description = "The fractality CLI: UNIX-grammar verbs over the mission-control bus (D13/D17)"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+publish.workspace = true
+
+[[bin]]
+name = "fractality"
+path = "src/main.rs"
+
+[dependencies]
+camino = { workspace = true }
+clap = { workspace = true }
+fractality-core = { workspace = true }
+fractality-mc-client = { workspace = true }
+serde_json = { workspace = true }
+specmark = { workspace = true }
+tokio = { workspace = true }
+
+[dev-dependencies]
+fractality-mission-control = { workspace = true }
+tracing-subscriber = { workspace = true }
+ulid = { workspace = true }
