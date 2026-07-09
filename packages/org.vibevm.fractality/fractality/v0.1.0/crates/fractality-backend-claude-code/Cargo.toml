@@ -1,0 +1,15 @@
+[package]
+name = "fractality-backend-claude-code"
+description = "Claude Code worker backend: provider-facing constants and (from Phase 2) the headless invocation builder implementing fractality-core's WorkerBackend"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+publish.workspace = true
+
+[dependencies]
+fractality-core = { workspace = true }
+specmark = { workspace = true }
+
+[dev-dependencies]

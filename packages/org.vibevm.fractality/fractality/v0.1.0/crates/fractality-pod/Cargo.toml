@@ -1,0 +1,36 @@
+[package]
+name = "fractality-pod"
+description = "Per-run worker supervisor: owns the child's stdio, Job Object / process group, and the pod leg of the mission-control bus; survives daemon restarts"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+publish.workspace = true
+
+[[bin]]
+name = "fractality-pod"
+path = "src/main.rs"
+
+[dependencies]
+camino = { workspace = true }
+clap = { workspace = true }
+fractality-core = { workspace = true }
+fractality-mc-client = { workspace = true }
+serde_json = { workspace = true }
+specmark = { workspace = true }
+tokio = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
+
+[target.'cfg(windows)'.dependencies]
+win32job = { workspace = true }
+
+[target.'cfg(unix)'.dependencies]
+command-group = { workspace = true }
+
+[dev-dependencies]
+fractality-backend-claude-code = { workspace = true }
+fractality-mission-control = { workspace = true }
+sysinfo = { workspace = true }
+ulid = { workspace = true }
