@@ -13,10 +13,19 @@ refs/INVENTORY.md}`. Host-side, the session added the workspace machinery:
 grammar + boot-scoping law; slot 11; requires wal =0.2.0 — publish-order
 note recorded in its manifest) and the root `WORKSPACES.md` + §Workspaces
 in the three identical contracts. Per the workspaces protocol, the
-fractality campaign detail lives in the workspace WAL, not here. Open
-owner decisions live in the plan §13 (RP1 dogfood target, RP2 redbook
-0.3.0 membership for wal-workspaces, RP3 publish, RP4 worker permission
-posture). Nothing else in the host moved.
+fractality campaign detail lives in the workspace WAL, not here.
+Same-day owner rulings, recorded in the plan: the supervision topology
+gained a per-worker **pod** layer (plan D3/D18, new Phase 4b — the
+non-yolo interaction stack), the CLI follows a UNIX-ergonomics law
+(D17), RP1 RESOLVED (dogfood = EULA→UPL-1.0 relicensing of the host's
+straggler manifests, with minimal acceptance: diff review + grep-zero +
+self-check green before merge), RP2 RESOLVED — **wal-workspaces joins
+redbook**, riding the next edition (0.3.0; plan DEF-11, a future
+redbook-side wave), and an interim opencode+GLM delegation paradigm is
+recorded in the workspace contract (verified live:
+`opencode run -m zai-coding-plan/glm-5.2` — the `zai-coding-plan/*`
+provider is the only working route on this box). Still open: RP3
+publish, RP4 worker permission posture. Nothing else in the host moved.
 
 ## This session (2026-07-07, ninth campaign, wave 2) — the project-practice wave
 
