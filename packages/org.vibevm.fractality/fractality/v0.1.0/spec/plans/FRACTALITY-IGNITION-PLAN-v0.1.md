@@ -8,10 +8,14 @@ a safe stop; the fractality floor (§11) is green at every boundary. Format:
 _ACCEPTED with owner amendments, 2026-07-09 (same day): supervision
 topology is now MC → **pod** → worker (D3 rewritten; sixth crate;
 Phase 4b inserted; §4 arithmetic updated); a UNIX-ergonomics law (D17) and
-the non-yolo interaction stack (D18) added; RP1 and RP2 RESOLVED; DEF-2
-carries the owner's RLM hypothesis; DEF-11 added; the interim
-opencode+GLM paradigm recorded in the workspace contract and verified
-live._
+the non-yolo interaction stack (D18) added; RP1, RP2, and RP4 RESOLVED
+(RP4: yolo de-scoped from v0.1 — the D18 stack is the way of life); DEF-2
+carries the owner's RLM hypothesis; DEF-11 and DEF-12 (the Entire.io-like
+checkpoints horizon) added; I2 re-scoped — mission-control is the command
+bus, files are the persistence plane, never the medium (D4/D10/D18
+aligned); the interim opencode+GLM paradigm recorded in the workspace
+contract and verified live. Only RP3 (publish) remains open; Phase 0 is
+fully unblocked._
 
 ## 2. Execution record
 
@@ -139,6 +143,15 @@ Clarifications (owner, 2026-07-09, second message; operative fragments):
 > не убивая процесса на уровне mission control — это такие безопасные
 > контейнеры, которые если что могут перезапустить нативно упавшего
 > агента, поменять ему параметры или ещё что-то.» [→ D3, D18, Phase 4b]
+
+Refinement (owner, 2026-07-09, third message):
+
+> «Если у нас босс общается с агентом (через прослойку из mission control
+> и pod) я хочу чтобы весь командный интерфейс проходил через mission
+> control. Файлы — это просто форма гарантированного, ультимативного
+> персистенса, потенциально распределённого между нодами (если положить
+> на nfs или ceph), но это не средство коммуникации.»
+> [→ I2 re-scoped; D4/D10/D18 aligned]
 
 ### 3b. Programme map — owner phases → campaigns
 
@@ -279,15 +292,23 @@ Reconciliation: crates/binaries rise in Phases 1–4b; proofs in 2–4b and
   Phase 0 s5 validates the pod-side kill mechanism; fallback stays
   `taskkill /PID /T /F` + `sysinfo` sweep.
 
-### D4 — content channel: files on disk, run dirs under `~/.fractality`
-Owner ruling (I2). Run dir: `~/.fractality/runs/<ulid>/` holding
+### D4 — two planes: mission-control is the bus, files are persistence
+Owner rulings (I2, both 2026-07-09): results are *delivered* as files,
+but files are **not the communication medium** — «весь командный
+интерфейс проходит через mission control»; the run dir is the
+guaranteed, ultimate persistence of what flowed (federation era: shared
+storage such as NFS/Ceph). Run dir: `~/.fractality/runs/<ulid>/` holding
 `packet.toml`, `worker-stdout.jsonl` (raw stream-json), `result.md`
 (worker-authored final report), `files/` (non-code artifacts),
-`usage.json`, `status.json`. Code deliverables travel as **git branches in
-worktrees** (D8), not file copies. MC state holds pointers only. Rejected:
-per-project run dirs (scatters the journal; MC is machine-global), sockets
-or stdout as content channels (owner ruling; transcripts are *records*, not
-channels).
+`usage.json`, `status.json`, `question.md`/`answer.md` (D18). Code
+deliverables travel as **git branches in worktrees** (D8). Every CLI
+verb resolves through MC's API — summaries, questions, answers, and
+result metadata ride the bus inline; bulk artifacts are referenced by
+path (same box in v0.1; a file-serving endpoint is the named federation
+extension under DEF-6). Rejected: files-as-mailbox polling (fragile,
+slow, unobservable — the bus carries events), per-project run dirs
+(scatters the journal; MC is machine-global), sockets or stdout as
+content channels (transcripts are *records*, not channels).
 
 ### D5 — worker environment: clean-slate whitelist (invariant I1)
 Construct from scratch: minimal OS set (`PATH`, `HOME`/`USERPROFILE`,
@@ -381,6 +402,7 @@ local users). Endpoints v0: `GET /v0/health` · `POST /v0/runs` (spawn from
 packet) · `GET /v0/runs` (filters) · `GET /v0/runs/:id` ·
 `GET /v0/runs/:id/tree` · `POST /v0/runs/:id/kill` (`recursive` flag) ·
 `GET /v0/runs/:id/question` · `POST /v0/runs/:id/answer` (D18) ·
+`GET /v0/runs/:id/result` (I2: read verbs resolve through the bus) ·
 `GET /v0/metrics` (aggregates by profile/model/day). Pod leg:
 `POST /v0/pods/register` · `POST /v0/pods/:id/heartbeat` ·
 `POST /v0/pods/:id/event` (state/usage/question/exit). Run states gain
@@ -464,20 +486,22 @@ VERIFY item. The stack, layered:
 2. **Pod permission broker:** the worker's permission requests route to a
    broker the pod serves; profile policy auto-decides allow/deny
    patterns; anything else escalates — pod → MC event → run state
-   `waiting_on_boss` + `question.md` in the run dir (I2). The worker
-   stays alive, blocked on that one tool result.
+   `waiting_on_boss`: the question rides the bus and is persisted as
+   `question.md` in the run dir (I2). The worker stays alive, blocked on
+   that one tool result.
 3. **`ask_boss` guidance channel:** the same broker exposes an explicit
    question tool; the packet preamble instructs the worker to use it when
    genuinely stuck instead of guessing — especially before anything
    destructive. The boss (or a human) triages with `questions` and
    replies with `answer`; the reply returns as the tool result and the
    run resumes. Wait bounded by the packet budget.
-`yolo` (skip-permissions) remains an explicit per-profile opt-in for
-worktree-isolated bulk work — never the default (RP4). Rejected as the
-primary channel: stdin stream-json injection — the pod owns stdin so it
-stays available as a fallback, but tool-call semantics are
-in-distribution for models, atomic, and file-recordable; raw stream
-surgery is neither.
+`yolo` (skip-permissions) is **de-scoped from v0.1 by RP4's ruling** —
+the D18 stack is the way of life; if yolo ever returns, it returns as
+explicitly named, worktree-restricted profiles. Rejected as the primary
+channel: stdin stream-json injection — the pod owns stdin so it stays
+available as a fallback (structured-output injection included), but
+tool-call semantics are in-distribution for models, atomic, and
+file-recordable; raw stream surgery is neither.
 
 ## 7. Predictions (checked one by one at close)
 
@@ -657,7 +681,8 @@ repo", GLM-5.2 worker, acceptance `cargo test` green, boss-side artifact =
    Ф0.s3 plus the explicit `ask_boss` tool; profile policy auto-decides
    allow/deny patterns; everything else escalates to MC.
 2. MC + core: `waiting_on_boss` transitions, question/answer endpoints
-   (D10), `question.md` / `answer.md` in the run dir (I2).
+   (D10) — the bus carries them; `question.md` / `answer.md` persist
+   them in the run dir (I2).
 3. CLI: `questions`, `answer`, the exit-code-4 path (D17); `run` prints a
    loud one-liner when its worker parks on a question.
 4. The packet preamble gains the question protocol: use `ask_boss` when
@@ -814,11 +839,15 @@ ls spec/manual-tests/                                                # 5 recorde
    (DEF-11).
 3. **RP3 — publish timing** for anything in `org.vibevm.fractality`. OPEN,
    standing hold; §10.
-4. **RP4 — default worker permission posture.** OPEN. Executor
-   recommendation, updated for D18: default = per-profile allowlist +
-   pod-broker escalation (`waiting_on_boss`) — the worker never hangs and
-   never oversteps; `yolo` only in explicitly named profiles restricted
-   to worktree workspaces. Ratify or amend; D6/D18 carry the draft.
+4. **RP4 — default worker permission posture.** RESOLVED (owner,
+   2026-07-09): «RP4 зависел от того как мы будем жить без yolo. Мы
+   изобрели поды, ask_boss и инъекцию structured output в stdin, так что
+   мы вполне справимся на некоторое время без yolo, пока не работаем в
+   worktree.» Applied reading: the D18 stack (allowlist + pod broker +
+   `ask_boss`) is the way of life; **`yolo` is de-scoped from v0.1
+   entirely** — if it ever returns, it returns as explicitly named,
+   worktree-restricted profiles. D18's closing paragraph amended in
+   place.
 
 ## 14. Execution ledger
 
@@ -860,3 +889,11 @@ planned subject, what it confirmed or falsified. Empty at authoring.)_
   0600-equivalent ACL on `~/.vibevm/*.token`, MC lockfile ACL audit).
 - **DEF-11 — redbook edition 0.3.0** pinning `wal-workspaces` (RP2
   resolved): host-side redbook wave, not this campaign.
+- **DEF-12 — the checkpoints layer** (owner, 2026-07-09, verbatim): «в
+  будущем мы будем использовать систему, похожую на Checkpoints от
+  Entire.io и наш контроль за областью выполнения и историей будет ещё
+  лучше. […] система уже есть, я просто не хочу её пока здесь
+  использовать по причине того, что она слишком молодая и сырая».
+  Per-turn workspace + history checkpointing with rewind/audit over
+  runs; deliberately unadopted in v0.1; enters via its own future
+  campaign once the system matures. Inventory row S8.

@@ -10,7 +10,14 @@ permission broker + `ask_boss` + `waiting_on_boss` + `fractality
 questions/answer`, D18), the CLI obeys a UNIX-ergonomics law (D17: `ps`,
 `wait`, `logs -f`, semantic exit codes, `--json` everywhere). RP1
 RESOLVED (dogfood = EULA→UPL-1.0 relicensing with minimal acceptance),
-RP2 RESOLVED (wal-workspaces joins redbook — DEF-11, host-side). The
+RP2 RESOLVED (wal-workspaces joins redbook — DEF-11, host-side), RP4
+RESOLVED (no yolo in v0.1 — the D18 stack is the way of life; if yolo
+ever returns, worktree-restricted profiles only); the future
+checkpoints layer (à la Entire.io Checkpoints) is recorded as DEF-12 /
+PROP-001 §7 / inventory S8. I2 re-scoped by the owner's same-day
+refinement: mission-control is the command bus for ALL boss↔worker
+interface; files are the guaranteed persistence plane (NFS/Ceph-able in
+the federation era), never the medium — D4/D10/D18 aligned. The
 **interim opencode+GLM delegation paradigm** is live, verified
 (`opencode run -m zai-coding-plan/glm-5.2 …` → OK) and recorded in the
 contract. No code yet by design: Phase 0 (spikes, no commits) is the next

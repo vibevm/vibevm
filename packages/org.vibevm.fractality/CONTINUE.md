@@ -31,8 +31,8 @@ The IGNITION campaign plan is authored and `PLANNED`; nothing is built yet.
 ## Active blocker
 
 None. The next work needs no owner input until Phase 0 findings arrive
-(open owner decisions: RP3 publish, RP4 permission posture; neither
-blocks Phase 0. RP1 and RP2 are RESOLVED — see the plan §13).
+(the only open owner decision is RP3 publish, and it blocks nothing;
+RP1/RP2/RP4 are RESOLVED — see the plan §13).
 
 ## Next-steps recipe (cold start)
 

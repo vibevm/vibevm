@@ -32,6 +32,7 @@ LICENSE + README (IGNITION plan, Phase 0 s6)._
 | S5 | z.ai GLM coding-plan + Claude Code integration docs (base URL, model ids, env vars, quotas, pricing) | src/zai-docs/ | snapshot date | vendor docs — facts only, no text reuse | facts source | folded into plan §5 / D6 / D12 (Ф0.s3) | pending intake |
 | S6 | Anthropic Claude Code docs — headless mode, settings/env, hooks (paved-road surface) | src/cc-docs/ | snapshot date | vendor docs — facts only, no text reuse | facts source | folded into plan §5 / D6 (Ф0.s3) | pending intake |
 | S7 | Landscape scan: claude-code-router, claude_swarm, claude-squad, and whatever Ф0.s3 surfaces | src/landscape/ (shallow, optional) | Ф0.s7 | per repo | positioning only — never studied for implementation | notes/landscape.md (Ф0.s7) | pending intake |
+| S8 | Entire.io — Checkpoints (agent execution checkpointing: scope + history control, rewind/audit) | src/entire-checkpoints/ (future) | future campaign | future | inspiration-only | notes/checkpoints-study.md (future campaign) | named, not intaken — DEF-12: owner ruling 2026-07-09, too young to adopt now |
 
 ## Log
 

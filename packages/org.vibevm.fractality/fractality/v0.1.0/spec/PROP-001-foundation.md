@@ -17,7 +17,7 @@ agentic counterpart, and the product grows by filling this table honestly:
 | scheduler / init | **mission-control**: spawns, supervises, adopts, reaps |
 | process table, `/proc` | the run registry + call tree + metrics API |
 | fork / call stack | runs spawning child runs; the tree is first-class |
-| pipes / IPC | **files on disk** — packets in, results out |
+| pipes / IPC | mission-control messages — the bus; files persist what flowed |
 | ulimits / quotas | budgets: wall clock, turns, tokens, spend |
 | users / credentials | **profiles**: provider, models, auth, permissions |
 | kill, process groups | recursive kill of whole worker process trees |
@@ -85,8 +85,9 @@ pattern (Campaign 3) is this same shape applied to *context* instead of
                             cwd: git worktree / scratch dir
                                       │
                                       ▼
-                    run dir on disk: packet.toml · worker-stdout.jsonl
-                    result.md · files/ · usage.json · status.json
+                    run dir on disk (persistence plane, I2):
+                    packet.toml · worker-stdout.jsonl · result.md
+                    files/ · usage.json · status.json
 ```
 
 Crate decomposition (one Cargo workspace inside this package, PROP-024
@@ -106,9 +107,19 @@ cross-run accounting.
   This is what makes "the swarm cannot silently bill or impersonate the
   boss's subscription" a property, not a hope. Unit-tested; weakening it is
   an owner-level review point.
-- **I2 — files are the only content channel.** Boss↔worker content moves
-  through the run directory (and git branches for code). MC state carries
-  pointers and counters, never payloads. (Owner ruling, 2026-07-09.)
+- **I2 — two planes: mission-control is the bus, files are the
+  persistence.** Every command and every boss↔worker exchange flows
+  through mission-control's API (boss ↔ MC ↔ pod ↔ worker). Files are the
+  guaranteed, ultimate persistence of everything that flowed — run dirs
+  as the durable record, potentially on distributed storage (NFS/Ceph) in
+  the federation era — but **not the communication medium**. (Owner
+  rulings, 2026-07-09: results are *delivered* as files — «передачу всех
+  результатов нужно делать ТОЛЬКО через файлы на диске» — refined the
+  same day: «весь командный интерфейс проходил через mission control.
+  Файлы — это просто форма гарантированного, ультимативного персистенса
+  […] но это не средство коммуникации».) Consequence: every CLI verb
+  resolves through MC, so nothing breaks when MC moves off-box; humans
+  may still open run dirs directly — the escape hatch stays literal.
 - **I3 — one telemetry store.** MC's journal is the single accumulator of
   runs, events, usage, and profiling metadata; every consumer — `stats`,
   scoreboards, the future initiative system, GUIs, meta-cognition — reads
@@ -160,6 +171,10 @@ Named so nobody mistakes their absence for oversight: async-rich lifecycle
 mission-control package split and API stabilization, GUI/analytics over the
 journal, multi-machine federation, further backends (Codex; **VibeVM
 Pixel** — the owner's planned Opus-native agent), the initiative system
-(Campaign 2), the RLM protocol (Campaign 3), and vibe-native distribution
-(`vibe bin exec` dispatch). Each enters through a campaign with its own
-plan; none is licensed to complicate v0.1.
+(Campaign 2), the RLM protocol (Campaign 3), an execution-checkpointing
+layer in the spirit of Entire.io's Checkpoints — per-turn workspace +
+history snapshots with rewind and audit over runs; the owner tracks an
+existing system, deliberately unadopted while it is young (plan DEF-12) —
+and vibe-native distribution (`vibe bin exec` dispatch). Each enters
+through a campaign with its own plan; none is licensed to complicate
+v0.1.
