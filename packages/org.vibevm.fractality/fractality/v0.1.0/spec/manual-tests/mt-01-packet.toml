@@ -1,0 +1,41 @@
+# MT-01 packet — sync delegation with collect-back (Phase 3 exit E2E).
+# Fired by spec/manual-tests/MT-01-sync-delegation-collect-back.md.
+# The goal writes files ONLY: headless workers run under acceptEdits
+# (D18's broker is Phase 4b), so commands stay pod-side — the
+# acceptance below is what runs `cargo test`.
+
+schema = 1
+
+[task]
+title = "mt-01-classify"
+goal = """
+Create a Rust library crate by writing exactly two source files in the
+working directory, plus the report:
+
+1. `Cargo.toml` — `[package]` with `name = "mt01"`, `version = "0.1.0"`,
+   `edition = "2021"`. Nothing else.
+2. `src/lib.rs` — a public function `pub fn classify(n: u32) -> String`
+   returning "fizzbuzz" for multiples of both 3 and 5, "fizz" for
+   multiples of 3, "buzz" for multiples of 5, and the decimal form of
+   `n` otherwise; plus a `#[cfg(test)]` module with unit tests covering
+   all four classes.
+
+Do not run any commands and do not create any other files —
+verification runs externally after you finish.
+"""
+acceptance = ["cargo test"]
+
+[workspace]
+mode = "dir"
+
+[output]
+result = "result.md"
+
+[budget]
+wall_secs = 900
+max_turns = 25
+max_output_tokens = 100000
+
+[routing]
+profile = "glm"
+model = "big"
