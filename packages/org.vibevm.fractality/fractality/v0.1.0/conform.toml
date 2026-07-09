@@ -35,4 +35,7 @@ env_roots = [
     "crates/fractality-mc-client/src/home.rs",
     "crates/fractality-mc-client/src/lib.rs",
     "crates/fractality-mission-control/src/identity.rs",
+    # The pod's main is the I1 composition root: it snapshots the ambient
+    # env ONCE (std::env::vars) and feeds the pure D5 constructor.
+    "crates/fractality-pod/src/main.rs",
 ]

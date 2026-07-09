@@ -9,6 +9,7 @@ authors.workspace = true
 publish.workspace = true
 
 [dependencies]
+camino = { workspace = true }
 fractality-core = { workspace = true }
 specmark = { workspace = true }
 

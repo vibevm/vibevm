@@ -57,25 +57,102 @@ impl WorkerSpec {
     }
 }
 
-/// Per-run facts a backend needs beyond the packet. Phase 2 extends this
-/// with the resolved profile (D6); the shape is additive by design.
-#[derive(Debug, Clone, PartialEq)]
-pub struct RunContext {
+/// The pod's product-path input (Phase 2): where the run lives and how
+/// deep it nests. Deliberately tiny — the packet stays in the run dir's
+/// own `packet.toml` (D4) and profiles stay in the home's
+/// `profiles.toml`, so nothing here duplicates and nothing here is
+/// secret.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct RunSpec {
+    /// Spec schema; this build writes and reads `1`.
+    pub schema: u32,
     pub run_id: RunId,
     pub run_dir: Utf8PathBuf,
-    /// Nesting depth (0 = boss-spawned); rides into the worker env as
-    /// `FRACTALITY_DEPTH` (Phase 4).
+    /// Where the worker works (worktree, scratch dir, or the run dir).
+    pub workspace_dir: Utf8PathBuf,
+    /// Nesting depth (0 = boss-spawned).
     pub depth: u32,
     pub node_id: String,
 }
 
-/// Turns a task packet plus run context into a concrete worker spec.
-/// The first implementation is the `claude-code` backend (Phase 2).
+impl RunSpec {
+    pub const FILE_NAME: &'static str = "run-spec.toml";
+
+    pub fn from_toml_str(text: &str) -> Result<Self, CoreError> {
+        let spec: RunSpec = toml::from_str(text)?;
+        if spec.schema != 1 {
+            return Err(CoreError::WorkerSpec {
+                message: format!(
+                    "run-spec schema {} is not supported (this build speaks 1)",
+                    spec.schema
+                ),
+            });
+        }
+        Ok(spec)
+    }
+
+    pub fn to_toml_string(&self) -> Result<String, CoreError> {
+        Ok(toml::to_string_pretty(self)?)
+    }
+}
+
+/// A worker credential in transit. Wrapped so it cannot leak through
+/// `Debug`/`Display` formatting — the one place a token becomes text is
+/// the env map the backend constructs (secrets hygiene, workspace
+/// contract).
+#[derive(Clone)]
+pub struct BackendSecrets {
+    token: String,
+}
+
+impl BackendSecrets {
+    pub fn new(token: String) -> Self {
+        Self { token }
+    }
+
+    /// The raw bearer. Callers write it into the worker env and nowhere
+    /// else — never into logs, specs on disk, or error messages.
+    pub fn token(&self) -> &str {
+        &self.token
+    }
+}
+
+impl std::fmt::Debug for BackendSecrets {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str("BackendSecrets([redacted])")
+    }
+}
+
+/// Per-run facts a backend needs beyond the packet and the profile.
+#[derive(Debug, Clone, PartialEq)]
+pub struct RunContext {
+    pub run_id: RunId,
+    pub run_dir: Utf8PathBuf,
+    /// The worker's working directory (worktree / scratch dir / run dir).
+    pub workspace_dir: Utf8PathBuf,
+    /// Nesting depth (0 = boss-spawned); rides into the worker env as
+    /// `FRACTALITY_DEPTH`.
+    pub depth: u32,
+    pub node_id: String,
+}
+
+/// Turns a task packet plus profile, credentials, and run context into a
+/// concrete worker spec. The first implementation is the `claude-code`
+/// backend.
+///
+/// The `os_env` parameter is a snapshot captured at the caller's
+/// composition root — backends stay pure functions over it (no ambient
+/// reads), which is also what makes the I1 poisoned-parent test a plain
+/// unit test.
 ///
 /// The canonical implementation shape:
 ///
 /// ```
-/// use fractality_core::worker::{RunContext, WorkerBackend, WorkerSpec};
+/// use std::collections::BTreeMap;
+///
+/// use fractality_core::profile::{Profile, ProfilesFile};
+/// use fractality_core::worker::{BackendSecrets, RunContext, WorkerBackend, WorkerSpec};
 /// use fractality_core::{CoreError, Packet};
 ///
 /// struct EchoBackend;
@@ -84,18 +161,31 @@ pub struct RunContext {
 ///     fn id(&self) -> &'static str {
 ///         "echo"
 ///     }
-///     fn build_spec(&self, _packet: &Packet, ctx: &RunContext) -> Result<WorkerSpec, CoreError> {
+///     fn build_spec(
+///         &self,
+///         _packet: &Packet,
+///         _profile: &Profile,
+///         _secrets: &BackendSecrets,
+///         _os_env: &BTreeMap<String, String>,
+///         ctx: &RunContext,
+///     ) -> Result<WorkerSpec, CoreError> {
 ///         Ok(WorkerSpec {
 ///             argv: vec!["echo".into(), ctx.run_id.to_string()],
-///             cwd: ctx.run_dir.clone(),
+///             cwd: ctx.workspace_dir.clone(),
 ///             env: Default::default(),
 ///         })
 ///     }
 /// }
 ///
+/// let profiles = ProfilesFile::from_toml_str(
+///     "schema = 1\n[profile.glm]\nbackend = \"claude-code\"\nbase_url = \"http://x\"\ntoken_file = \"t\"\n[profile.glm.models]\nbig = \"m1\"\nsmall = \"m2\"\nhaiku_slot = \"m2\"\n",
+/// )
+/// .expect("profiles parse");
+/// let profile = profiles.get("glm").expect("glm exists");
 /// let ctx = RunContext {
 ///     run_id: "01ARZ3NDEKTSV4RRFFQ69G5FAV".parse().expect("fixed ulid"),
 ///     run_dir: "runs/x".into(),
+///     workspace_dir: "runs/x/work".into(),
 ///     depth: 0,
 ///     node_id: "node-1".into(),
 /// };
@@ -103,15 +193,26 @@ pub struct RunContext {
 ///     "schema = 1\n[task]\ntitle = \"t\"\ngoal = \"g\"\n[routing]\nprofile = \"glm\"\n",
 /// )
 /// .expect("packet parses");
-/// let spec = EchoBackend.build_spec(&packet, &ctx).expect("spec builds");
+/// let secrets = BackendSecrets::new("bearer".into());
+/// let spec = EchoBackend
+///     .build_spec(&packet, profile, &secrets, &BTreeMap::new(), &ctx)
+///     .expect("spec builds");
 /// assert_eq!(spec.argv[0], "echo");
+/// assert_eq!(format!("{secrets:?}"), "BackendSecrets([redacted])");
 /// ```
 pub trait WorkerBackend: Send + Sync {
     /// Stable backend id (`"claude-code"`, …); recorded per run.
     fn id(&self) -> &'static str;
 
     /// Builds the complete child-process spec for one run.
-    fn build_spec(&self, packet: &Packet, ctx: &RunContext) -> Result<WorkerSpec, CoreError>;
+    fn build_spec(
+        &self,
+        packet: &Packet,
+        profile: &crate::profile::Profile,
+        secrets: &BackendSecrets,
+        os_env: &BTreeMap<String, String>,
+        ctx: &RunContext,
+    ) -> Result<WorkerSpec, CoreError>;
 }
 
 #[cfg(test)]

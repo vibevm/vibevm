@@ -60,4 +60,47 @@ pub enum CoreError {
         "JSON (de)serialization failed: {0} (violates spec://fractality/PROP-001#model; fix: provide JSON-compliant input)"
     )]
     Json(#[from] serde_json::Error),
+
+    /// The profiles file declares a schema this build does not speak (D6).
+    #[error(
+        "profiles schema {found} is not supported: this build speaks schema 1 (violates spec://fractality/PROP-001#architecture; fix: update profiles.toml or the fractality binaries)"
+    )]
+    ProfilesSchema { found: u32 },
+
+    /// No profiles file at the expected location.
+    #[error(
+        "profiles file `{path}` does not exist (violates spec://fractality/PROP-001#architecture; fix: create it with a [profile.glm] entry — base_url, token_file, [profile.glm.models]; see spec/examples/profiles.sample.toml)"
+    )]
+    ProfilesMissing { path: camino::Utf8PathBuf },
+
+    /// The profiles file exists but cannot be read.
+    #[error(
+        "profiles file `{path}` is unreadable: {message} (violates spec://fractality/PROP-001#architecture; fix: check permissions and encoding)"
+    )]
+    ProfilesIo {
+        path: camino::Utf8PathBuf,
+        message: String,
+    },
+
+    /// A packet routed to a profile that is not defined.
+    #[error(
+        "profile `{name}` is not defined (available: {available}) (violates spec://fractality/PROP-001#architecture; fix: add it to profiles.toml or route the packet to an existing profile)"
+    )]
+    ProfileUnknown { name: String, available: String },
+
+    /// A required profile field is empty.
+    #[error(
+        "profile field `{profile}.{field}` must not be empty (violates spec://fractality/PROP-001#architecture; fix: {hint})"
+    )]
+    ProfileField {
+        profile: String,
+        field: &'static str,
+        hint: &'static str,
+    },
+
+    /// A packet's routing slot is not part of the D7 vocabulary.
+    #[error(
+        "model slot `{slot}` is not a routing slot (violates spec://fractality/PROP-001#model; fix: use `big` or `small` in [routing].model)"
+    )]
+    ModelSlot { slot: String },
 }

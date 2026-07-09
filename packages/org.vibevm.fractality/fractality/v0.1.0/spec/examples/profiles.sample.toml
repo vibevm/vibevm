@@ -1,0 +1,35 @@
+# profiles.toml — sample (plan D6, resolved by the Phase 0 findings).
+# Copy to <fractality-home>/profiles.toml (default ~/.fractality/) and
+# adjust. Tokens are referenced by PATH — never inlined here; only the
+# pod reads the file, at spawn time.
+
+schema = 1
+
+[profile.glm]
+backend = "claude-code"
+base_url = "https://api.z.ai/api/anthropic"   # F3: the z.ai Anthropic-compatible gateway
+token_file = "~/.vibevm/zai.api.token"
+claude_binary = "claude"
+config_dir = "auto"        # fresh per-run CLAUDE_CONFIG_DIR; onboards headless (F4/R5)
+
+[profile.glm.models]
+# F3: model mapping rides ANTHROPIC_DEFAULT_{OPUS,SONNET,HAIKU}_MODEL;
+# the [1m] suffix selects the 1M-context variant.
+big = "glm-5.2[1m]"
+small = "glm-5-turbo"
+haiku_slot = "glm-5-turbo" # CC-internal small-model traffic → cheap model
+
+[profile.glm.env]          # extra provider env, injected verbatim (D5 layer 3)
+API_TIMEOUT_MS = "3000000"                     # z.ai-recommended for long turns
+CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC = "1" # cut telemetry chatter to the gateway
+
+[profile.glm.limits]
+max_concurrent = 4         # ≤ the tier's 5-hour prompt budget (D12)
+
+[profile.glm.permissions]
+mode = "acceptEdits"       # RP4: no yolo; the D18 stack is the way of life
+deny_tools = ["WebFetch", "WebSearch"]   # tariff hygiene (D12)
+
+[profile.glm.pricing]      # metrics only; flat = subscription plan
+flat = true
+plan = "max"               # informs the quota metric: 1600 prompts/5h, 4000 MCP/mo
