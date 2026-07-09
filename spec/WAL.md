@@ -24,8 +24,12 @@ redbook**, riding the next edition (0.3.0; plan DEF-11, a future
 redbook-side wave), and an interim opencode+GLM delegation paradigm is
 recorded in the workspace contract (verified live:
 `opencode run -m zai-coding-plan/glm-5.2` — the `zai-coding-plan/*`
-provider is the only working route on this box). Still open: RP3
-publish, RP4 worker permission posture. Nothing else in the host moved.
+provider is the only working route on this box). RP4 resolved same day:
+no yolo in v0.1 — the pod-broker + ask_boss stack is the way of life;
+a future Entire.io-like checkpoints layer is recorded in the plan
+(DEF-12), and I2 was re-scoped — mission-control is the command bus,
+files are the persistence plane, never the medium. Still open: RP3
+publish only. Nothing else in the host moved.
 
 ## This session (2026-07-07, ninth campaign, wave 2) — the project-practice wave
 
