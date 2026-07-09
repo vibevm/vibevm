@@ -1,0 +1,575 @@
+{
+  "code_items": [
+    {
+      "crate_name": "fractality-backend-claude-code",
+      "file": "crates/fractality-backend-claude-code/src/lib.rs",
+      "item_kind": "mod",
+      "line": 12,
+      "symbol": "fractality_backend_claude_code"
+    },
+    {
+      "crate_name": "fractality-backend-claude-code",
+      "file": "crates/fractality-backend-claude-code/src/env.rs",
+      "item_kind": "mod",
+      "line": 8,
+      "symbol": "fractality_backend_claude_code::env"
+    },
+    {
+      "crate_name": "fractality-cli",
+      "file": "crates/fractality-cli/src/main.rs",
+      "item_kind": "mod",
+      "line": 21,
+      "symbol": "fractality_cli"
+    },
+    {
+      "crate_name": "fractality-cli",
+      "file": "crates/fractality-cli/src/out.rs",
+      "item_kind": "mod",
+      "line": 7,
+      "symbol": "fractality_cli::out"
+    },
+    {
+      "crate_name": "fractality-core",
+      "file": "crates/fractality-core/src/api.rs",
+      "item_kind": "mod",
+      "line": 20,
+      "symbol": "fractality_core::api"
+    },
+    {
+      "crate_name": "fractality-core",
+      "file": "crates/fractality-core/src/error.rs",
+      "item_kind": "mod",
+      "line": 9,
+      "symbol": "fractality_core::error"
+    },
+    {
+      "crate_name": "fractality-core",
+      "file": "crates/fractality-core/src/error.rs",
+      "item_kind": "enum",
+      "line": 11,
+      "symbol": "fractality_core::error::CoreError"
+    },
+    {
+      "crate_name": "fractality-core",
+      "file": "crates/fractality-core/src/fileref.rs",
+      "item_kind": "mod",
+      "line": 20,
+      "symbol": "fractality_core::fileref"
+    },
+    {
+      "crate_name": "fractality-core",
+      "file": "crates/fractality-core/src/ids.rs",
+      "item_kind": "mod",
+      "line": 11,
+      "symbol": "fractality_core::ids"
+    },
+    {
+      "crate_name": "fractality-core",
+      "file": "crates/fractality-core/src/journal.rs",
+      "item_kind": "mod",
+      "line": 22,
+      "symbol": "fractality_core::journal"
+    },
+    {
+      "crate_name": "fractality-core",
+      "file": "crates/fractality-core/src/node.rs",
+      "item_kind": "mod",
+      "line": 22,
+      "symbol": "fractality_core::node"
+    },
+    {
+      "crate_name": "fractality-core",
+      "file": "crates/fractality-core/src/packet.rs",
+      "item_kind": "mod",
+      "line": 18,
+      "symbol": "fractality_core::packet"
+    },
+    {
+      "crate_name": "fractality-core",
+      "file": "crates/fractality-core/src/run.rs",
+      "item_kind": "mod",
+      "line": 14,
+      "symbol": "fractality_core::run"
+    },
+    {
+      "crate_name": "fractality-core",
+      "file": "crates/fractality-core/src/time.rs",
+      "item_kind": "mod",
+      "line": 10,
+      "symbol": "fractality_core::time"
+    },
+    {
+      "crate_name": "fractality-core",
+      "file": "crates/fractality-core/src/worker.rs",
+      "item_kind": "mod",
+      "line": 22,
+      "symbol": "fractality_core::worker"
+    },
+    {
+      "crate_name": "fractality-mc-client",
+      "file": "crates/fractality-mc-client/src/lib.rs",
+      "item_kind": "mod",
+      "line": 25,
+      "symbol": "fractality_mc_client"
+    },
+    {
+      "crate_name": "fractality-mc-client",
+      "file": "crates/fractality-mc-client/src/lib.rs",
+      "item_kind": "enum",
+      "line": 27,
+      "symbol": "fractality_mc_client::ClientError"
+    },
+    {
+      "crate_name": "fractality-mc-client",
+      "file": "crates/fractality-mc-client/src/home.rs",
+      "item_kind": "mod",
+      "line": 10,
+      "symbol": "fractality_mc_client::home"
+    },
+    {
+      "crate_name": "fractality-mc-client",
+      "file": "crates/fractality-mc-client/src/lock.rs",
+      "item_kind": "mod",
+      "line": 12,
+      "symbol": "fractality_mc_client::lock"
+    },
+    {
+      "crate_name": "fractality-mission-control",
+      "file": "crates/fractality-mission-control/src/lib.rs",
+      "item_kind": "mod",
+      "line": 29,
+      "symbol": "fractality_mission_control"
+    },
+    {
+      "crate_name": "fractality-mission-control",
+      "file": "crates/fractality-mission-control/src/main.rs",
+      "item_kind": "mod",
+      "line": 6,
+      "symbol": "fractality_mission_control"
+    },
+    {
+      "crate_name": "fractality-mission-control",
+      "file": "crates/fractality-mission-control/src/lib.rs",
+      "item_kind": "enum",
+      "line": 59,
+      "symbol": "fractality_mission_control::ServerError"
+    },
+    {
+      "crate_name": "fractality-mission-control",
+      "file": "crates/fractality-mission-control/src/http.rs",
+      "item_kind": "mod",
+      "line": 25,
+      "symbol": "fractality_mission_control::http"
+    },
+    {
+      "crate_name": "fractality-mission-control",
+      "file": "crates/fractality-mission-control/src/identity.rs",
+      "item_kind": "mod",
+      "line": 10,
+      "symbol": "fractality_mission_control::identity"
+    },
+    {
+      "crate_name": "fractality-mission-control",
+      "file": "crates/fractality-mission-control/src/journal_store.rs",
+      "item_kind": "mod",
+      "line": 22,
+      "symbol": "fractality_mission_control::journal_store"
+    },
+    {
+      "crate_name": "fractality-mission-control",
+      "file": "crates/fractality-mission-control/src/registry.rs",
+      "item_kind": "mod",
+      "line": 20,
+      "symbol": "fractality_mission_control::registry"
+    },
+    {
+      "crate_name": "fractality-mission-control",
+      "file": "crates/fractality-mission-control/src/scopes.rs",
+      "item_kind": "mod",
+      "line": 17,
+      "symbol": "fractality_mission_control::scopes"
+    },
+    {
+      "crate_name": "fractality-mission-control",
+      "file": "crates/fractality-mission-control/src/state.rs",
+      "item_kind": "mod",
+      "line": 22,
+      "symbol": "fractality_mission_control::state"
+    },
+    {
+      "crate_name": "fractality-mission-control",
+      "file": "crates/fractality-mission-control/src/state.rs",
+      "item_kind": "enum",
+      "line": 52,
+      "symbol": "fractality_mission_control::state::RecordError"
+    },
+    {
+      "crate_name": "fractality-pod",
+      "file": "crates/fractality-pod/src/main.rs",
+      "item_kind": "mod",
+      "line": 24,
+      "symbol": "fractality_pod"
+    },
+    {
+      "crate_name": "fractality-pod",
+      "file": "crates/fractality-pod/src/supervise.rs",
+      "item_kind": "mod",
+      "line": 20,
+      "symbol": "fractality_pod::supervise"
+    }
+  ],
+  "edges": [
+    {
+      "file": "crates/fractality-backend-claude-code/src/lib.rs",
+      "from_symbol": "fractality_backend_claude_code",
+      "line": 12,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-backend-claude-code/src/env.rs",
+      "from_symbol": "fractality_backend_claude_code::env",
+      "line": 8,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#invariants",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-cli/src/main.rs",
+      "from_symbol": "fractality_cli",
+      "line": 21,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-cli/src/out.rs",
+      "from_symbol": "fractality_cli::out",
+      "line": 7,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-core/src/api.rs",
+      "from_symbol": "fractality_core::api",
+      "line": 20,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-core/src/error.rs",
+      "from_symbol": "fractality_core::error",
+      "line": 9,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-core/src/error.rs",
+      "from_symbol": "fractality_core::error::CoreError",
+      "line": 13,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#model",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-core/src/fileref.rs",
+      "from_symbol": "fractality_core::fileref",
+      "line": 20,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#invariants",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-core/src/ids.rs",
+      "from_symbol": "fractality_core::ids",
+      "line": 11,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#model",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-core/src/journal.rs",
+      "from_symbol": "fractality_core::journal",
+      "line": 22,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-core/src/node.rs",
+      "from_symbol": "fractality_core::node",
+      "line": 22,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#invariants",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-core/src/packet.rs",
+      "from_symbol": "fractality_core::packet",
+      "line": 18,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#model",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-core/src/run.rs",
+      "from_symbol": "fractality_core::run",
+      "line": 14,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#model",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-core/src/time.rs",
+      "from_symbol": "fractality_core::time",
+      "line": 10,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#model",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-core/src/worker.rs",
+      "from_symbol": "fractality_core::worker",
+      "line": 22,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-mc-client/src/lib.rs",
+      "from_symbol": "fractality_mc_client",
+      "line": 25,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-mc-client/src/lib.rs",
+      "from_symbol": "fractality_mc_client::ClientError",
+      "line": 39,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-mc-client/src/home.rs",
+      "from_symbol": "fractality_mc_client::home",
+      "line": 10,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-mc-client/src/lock.rs",
+      "from_symbol": "fractality_mc_client::lock",
+      "line": 12,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-mission-control/src/lib.rs",
+      "from_symbol": "fractality_mission_control",
+      "line": 29,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-mission-control/src/main.rs",
+      "from_symbol": "fractality_mission_control",
+      "line": 6,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-mission-control/src/lib.rs",
+      "from_symbol": "fractality_mission_control::ServerError",
+      "line": 69,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-mission-control/src/http.rs",
+      "from_symbol": "fractality_mission_control::http",
+      "line": 25,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-mission-control/src/identity.rs",
+      "from_symbol": "fractality_mission_control::identity",
+      "line": 10,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#invariants",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-mission-control/src/journal_store.rs",
+      "from_symbol": "fractality_mission_control::journal_store",
+      "line": 22,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-mission-control/src/registry.rs",
+      "from_symbol": "fractality_mission_control::registry",
+      "line": 20,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-mission-control/src/scopes.rs",
+      "from_symbol": "fractality_mission_control::scopes",
+      "line": 17,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#invariants",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-mission-control/src/state.rs",
+      "from_symbol": "fractality_mission_control::state",
+      "line": 22,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-mission-control/src/state.rs",
+      "from_symbol": "fractality_mission_control::state::RecordError",
+      "line": 54,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-pod/src/main.rs",
+      "from_symbol": "fractality_pod",
+      "line": 24,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-pod/src/supervise.rs",
+      "from_symbol": "fractality_pod::supervise",
+      "line": 20,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#invariants",
+      "verb": "implements"
+    }
+  ],
+  "schema": 2,
+  "spec_units": [
+    {
+      "anchor": "root",
+      "content_hash": "sha256:87ebad4ac14a61b8996c2ed12681124d5b1133f6abc5c6af9e6fd5da39080cfa",
+      "doc_path": "PROP-001",
+      "file": "spec/PROP-001-foundation.md",
+      "heading": "PROP-001 — fractality: foundation",
+      "line": 1,
+      "uri": "spec://fractality/PROP-001#root"
+    },
+    {
+      "anchor": "vision",
+      "content_hash": "sha256:eab1dcacf9dc9927a8e5c131161a0134eab5db6c789e3a30a5b74feb15a89864",
+      "doc_path": "PROP-001",
+      "file": "spec/PROP-001-foundation.md",
+      "heading": "1. Vision",
+      "line": 8,
+      "uri": "spec://fractality/PROP-001#vision"
+    },
+    {
+      "anchor": "model",
+      "content_hash": "sha256:29e5cbf5afba3cb2393367bf1a2783f0728a5ef864dcf61452930afb5a997701",
+      "doc_path": "PROP-001",
+      "file": "spec/PROP-001-foundation.md",
+      "heading": "2. System model and glossary",
+      "line": 47,
+      "uri": "spec://fractality/PROP-001#model"
+    },
+    {
+      "anchor": "architecture",
+      "content_hash": "sha256:fd083119a2b89ec69dce7f8024088f3258914d7ca94f723a6728a1f6e8a94b59",
+      "doc_path": "PROP-001",
+      "file": "spec/PROP-001-foundation.md",
+      "heading": "3. Architecture",
+      "line": 81,
+      "uri": "spec://fractality/PROP-001#architecture"
+    },
+    {
+      "anchor": "invariants",
+      "content_hash": "sha256:cab9eb0e6159a06c3f2f5f767d7a4fb153cef55f209c6f7504795f72f17e223a",
+      "doc_path": "PROP-001",
+      "file": "spec/PROP-001-foundation.md",
+      "heading": "4. Invariants",
+      "line": 110,
+      "uri": "spec://fractality/PROP-001#invariants"
+    },
+    {
+      "anchor": "tos",
+      "content_hash": "sha256:d3010ed139fe30a2e3ea5575885301062b1927f5a7eb1eac156f4f869f69881a",
+      "doc_path": "PROP-001",
+      "file": "spec/PROP-001-foundation.md",
+      "heading": "5. Usage & terms-of-service posture",
+      "line": 159,
+      "uri": "spec://fractality/PROP-001#tos"
+    },
+    {
+      "anchor": "host",
+      "content_hash": "sha256:1f1ea93641bdfec116a41dbfd8bd9e733bfe009555ceaef01146e63af96f62db",
+      "doc_path": "PROP-001",
+      "file": "spec/PROP-001-foundation.md",
+      "heading": "6. Relationship to the host repository",
+      "line": 176,
+      "uri": "spec://fractality/PROP-001#host"
+    },
+    {
+      "anchor": "horizons",
+      "content_hash": "sha256:306c312b5219f3737862d3c2a3bc10a65365835bc91b4f469f502f0d9deb9a58",
+      "doc_path": "PROP-001",
+      "file": "spec/PROP-001-foundation.md",
+      "heading": "7. Evolution horizons (designed-for, not built)",
+      "line": 186,
+      "uri": "spec://fractality/PROP-001#horizons"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:887bde0fd74c8afa6b971197e3dad45cdbd78f808a0a73b7f1d814a9a8de8d38",
+      "doc_path": "refs/INVENTORY",
+      "file": "spec/refs/INVENTORY.md",
+      "heading": "Reference-source inventory (clean-room register)",
+      "line": 1,
+      "uri": "spec://fractality/refs/INVENTORY#root"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:2d0a109c020c6573b1d861098a39374d31c19b01841f0526d0782cef16ab2e2b",
+      "doc_path": "refs/notes/codex-first-study",
+      "file": "spec/refs/notes/codex-first-study.md",
+      "heading": "Study note — codex-first (clean-room)",
+      "line": 1,
+      "uri": "spec://fractality/refs/notes/codex-first-study#root"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:eeb8cb6ee35544689cb75de6e1bf048351111a7ea4d2bb4955d7263831e9392f",
+      "doc_path": "refs/notes/landscape",
+      "file": "spec/refs/notes/landscape.md",
+      "heading": "Landscape note — where fractality sits",
+      "line": 1,
+      "uri": "spec://fractality/refs/notes/landscape#root"
+    }
+  ],
+  "suspects": [],
+  "warnings": []
+}

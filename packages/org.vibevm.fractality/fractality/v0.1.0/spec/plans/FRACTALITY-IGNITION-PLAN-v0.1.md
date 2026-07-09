@@ -465,7 +465,14 @@ the toolchain — recorded as a Phase 1 opening step. Rejected: actix (no
 advantage), async-std (tokio gravity), heavyweight config frameworks
 (plain serde+toml), `taskkill` shelling as the *primary* mechanism
 (kept only as the pod-loss fallback — Job Objects are cleaner and were
-proven).
+proven). **Phase 1 deltas (executed 2026-07-09):** `winreg` 0.55 added
+cfg(windows)-only for D19's MachineGuid (the one identity fact the
+pinned set could not read); `specmark` taken from the workspace's own
+vibedeps slot (D15); reqwest 0.13 deliberately built with **no TLS
+feature** — the bus is localhost HTTP (D10), a rustls feature joins
+with `fractality fetch` in Phase 4 (reqwest 0.13 renamed its TLS
+features, which is how this surfaced); `rust-version = "1.93"` floor
+set and `sysinfo =0.37.2` pinned exactly as F9 prescribed.
 
 ### D12 — tariff hygiene is mechanism, not prose
 Workers get `WebFetch`/`WebSearch` (and web MCP tools) denied via profile;
@@ -502,12 +509,36 @@ recorded outputs under `spec/manual-tests/`, never wired into CI. The
 stream-json parser is tolerant: unknown event kinds are preserved as
 `Other` and logged, never fatal (VERIFY drift risk R2).
 
-### D15 — discipline level for this workspace
-Floor-lite (fmt + clippy `-D warnings` + tests) as the campaign gate;
-full AI-Native machinery (conform/specmap/tcg) is DEF-9, adopted when the
-tree is worth gating. Production-grade bar still applies: no stub
-subcommands in the shipped surface, no skipped edge cases justified by
-scope (owner's standing quality directive, 2026-07-07).
+### D15 — discipline level: full AI-Native from birth (rewritten in place 2026-07-09, owner directive)
+Owner directive mid-Phase-1 («можешь сразу начать применять
+rust-ai-native и практики redbook … Пакеты у тебя есть») — **DEF-9
+resolved early**, superseding the floor-lite posture this plan shipped
+with. Concretely:
+- The workspace `vibe.toml` requires `flow:org.vibevm/redbook` (^0.2.0)
+  and `stack:org.vibevm/rust-ai-native` (^0.7.0); a **standing rule for
+  every future fractality package** (workspace contract, Hard
+  conventions). Materialised into the workspace-local `vibedeps/` (26
+  packages); the redbook + discipline boot lane is generated at
+  `spec/boot/INDEX.md` and bound as boot step 6 in the workspace
+  contract.
+- **The floor is `rust-ai-native floor`** (fmt → test → clippy → conform
+  → specmap → test-gate), replacing the raw three-command panel
+  everywhere it was named (§11, §12, the contract's floor bullet).
+- Every module carries `specmark::scope!` into `spec://fractality/…`
+  (PROP-001 anchors, namespace `fractality`); conform gates all six
+  crates from birth — greenfield code is written conformant and flipped
+  to gated at zero findings (the expand-as-you-conform rhythm collapsed
+  to its endpoint).
+- Pilot rider (same directive family): fractality doubles as the vibevm
+  pilot — host/package defects surfaced here are fixed in the host at
+  once when blocking, else recorded in the workspace
+  `VIBEVM-BACKLOG.md` with a non-destructive verification recipe per
+  entry.
+Production-grade bar unchanged: no stub subcommands in the shipped
+surface, no skipped edge cases justified by scope (owner's standing
+quality directive, 2026-07-07). Rejected now as then: a hand-rolled
+self-check script (the floor engine ships in the stack; the policy
+files stay with this workspace per PROP-024).
 
 ### D16 — telemetry consumers read MC, full stop (I3)
 `fractality stats` (Phase 6) is a thin client over `GET /v0/metrics`; the
@@ -1012,16 +1043,19 @@ verdict every prediction; update the workspace WAL/CONTINUE and the host
 cd packages/org.vibevm.fractality
 git log --oneline -5          # expect the ignition bootstrap commits
 head -20 WAL.md               # PLANNED/EXECUTING + next phase pointer
-# Floor, from Phase 1 on (before crates exist: host self-check instead):
+# Floor, from Phase 1 on (D15: the AI-Native floor; before crates existed
+# the floor was the host self-check):
 cd fractality/v0.1.0
-cargo fmt --check && cargo clippy --workspace --all-targets -- -D warnings && cargo test --workspace
+rust-ai-native floor        # fmt → test → clippy → conform → specmap → test-gate
+# Zero-install form while the slot is unbuilt (workspace CLAUDE.md, "Driving vibevm here"):
+#   <host>/packages/org.vibevm/rust-ai-native-lang/v0.7.0/target/debug/rust-ai-native.exe floor
 ```
 
 ## 12. Whole-campaign acceptance
 
 ```sh
 cd packages/org.vibevm.fractality/fractality/v0.1.0
-cargo fmt --check && cargo clippy --workspace --all-targets -- -D warnings && cargo test --workspace   # exit 0
+rust-ai-native floor                                                 # exit 0 (D15)
 fractality mc start && fractality mc status                          # healthy
 fractality run --packet spec/examples/hello-glm.toml                 # exit 0
 test -s ~/.fractality/runs/<that-run>/result.md                      # non-empty result
