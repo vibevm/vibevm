@@ -1,35 +1,49 @@
 # fractality — WAL (project continuation state)
 
-_Updated: 2026-07-10 (Phase 2 EXECUTED — the exit E2E ran green on a
-live GLM worker) — `fractality run --packet spec/examples/hello-glm.toml`
-completed end to end: run `01KX4H4KESV9ADN6S0AJMWQHFW`, exit 0 in 29 s,
-`work/hello.txt` byte-exact, worker-authored `result.md`, transcript
-with usage fields (**P2 CONFIRMED** on a real product transcript:
-usage ×6, result/success, num_turns 3, model glm-5-turbo; **P3 opens
-1/1**). The first E2E firing (`01KX4GD3C5RQ54YREHPRES6N2F`, kept as
-autopsy) exposed the three-defect Windows spawn seam, fixed as **F14**
-(`38d78bc`): PATHEXT resolver against the worker's PATH (npm ships only
-`claude.cmd`; CreateProcess finds only `.exe`), prompt moved from argv
-to `WorkerSpec::stdin` (cmd.exe escaping rejects newline args; 32 KiB
-command-line cap — fatal to big one-shot goals), case-insensitive D5
-whitelist matching canonicalized to the whitelist spelling (a stock
-Windows env spells `Path`/`ComSpec`; a PowerShell-launched pod handed
-its worker no PATH). **F15**: a running MC daemon holds the .exe lock
-and blocks `cargo test` rebuilds — stop the daemon before builds that
-touch its binary (the arbitration class fractality exists to own).
-Worktree-manager integration tests landed (`9996f74`, five tests, real
-scratch repo). Floor: **all green** (fmt · tests · clippy -D warnings ·
-conform 0 findings 6/6 gated · specmap 11 units / 36 items / 36 edges /
-0 orphans · test-gate). Delegation scoreboard this session:
-**delegated 1, delivered 1** — the worktree tests ran as a scenario-1
-one-shot (discipline compiled into the task, cwd pinned, live-observed
-by log+file telemetry): delivered green on first landing, self-verified
-(test/fmt/clippy), caught a factual error in the compiled context
-(a nonexistent constructor) by verifying against the source, and killed
-the locked daemon it collided with (F15). Kept boss-side with reasons:
-the E2E run + triage and the F14 fix (spawn-seam correctness discovered
-in triage; the tree already carried an active delegate writer).
-Campaign tally: delegated 3, delivered 2. Prior status follows._
+_Updated: 2026-07-10 late (Phase 3 FIRST SLICE LANDED — collection +
+metering live) — the backend gained the tolerant incremental
+stream-json parser (D14/R2: unknown kinds counted, malformed counted,
+never fatal; the result event is authoritative for totals — assistant
+events under-report on this provider); the pod's transcript pump is now
+a tee (file + parser + `watch`-channel live totals sampled by the
+heartbeat → `PodEvent::Usage` snapshots — MC meters a run mid-flight);
+at exit the pod settles the result contract (worker | extracted | none,
+with the path) and writes `usage.json`; `run`/`show` print usage, cost,
+and the result pointer with provenance. Live proof: run
+`01KX4J7BNX5J7NK8CB86H77RPM` — summary printed in=16692 out=238
+cache_r=23616 events=56, cost 0.101218, result (worker); usage.json ≡
+bus record field for field. Commits: `799dba3` (feat: collection,
+metering, sync run), `1fb9517` (test: goldens from the frozen Phase-2
+transcript — event map, authoritative totals, tolerance pins). Floor:
+**all green** (specmap now 11 units / 37 items / 37 edges / 0 orphans).
+**Remaining for the Phase 3 boundary:** acceptance-command runner
+(packet `acceptance` array → verdicts), result-as-FileRef in the
+summary (D19), the pod_lost exit-code polish (3 → infra 2, D17 table),
+and the Phase 3 exit E2E (real Rust-function packet on GLM-5.2 with
+`cargo test` acceptance → manual-test #1). Ledger entry waits for that
+boundary. Delegation scoreboard this session: **delegated 2,
+delivered 2** — (1) worktree integration tests (scenario 1, cwd
+pinned): green first landing, caught a factual error in the compiled
+context (nonexistent constructor) by verifying the source, killed the
+lock-holding daemon it collided with (F15); (2) the stream parser +
+goldens (scenario 1, exact API + semantics + golden numbers compiled
+in): green first landing, zero corrections needed beyond one
+misleading doc sentence. Kept boss-side with reasons: E2E runs +
+triage, the F14 fix, pod tee + collection + CLI (cross-crate seam
+design), boundary docs. Campaign tally: delegated 4, delivered 3.
+Prior status follows._
+_Prior: 2026-07-10 (Phase 2 EXECUTED — exit E2E green on a live GLM
+worker) — run `01KX4H4KESV9ADN6S0AJMWQHFW`, exit 0 in 29 s, hello.txt
+byte-exact, worker-authored result.md, transcript with usage fields
+(**P2 CONFIRMED**; **P3 opens 1/1**). The first firing
+(`01KX4GD3C5RQ54YREHPRES6N2F`, kept as autopsy) exposed the
+three-defect Windows spawn seam, fixed as **F14** (`38d78bc`): PATHEXT
+resolver against the worker's PATH (npm ships only `claude.cmd`),
+prompt moved from argv to `WorkerSpec::stdin` (cmd.exe escaping rejects
+newline args; 32 KiB cap), case-insensitive D5 whitelist canonicalized
+(stock Windows spells `Path`/`ComSpec`). **F15**: a running MC daemon
+holds the .exe lock against cargo rebuilds. Worktree tests `9996f74`;
+boundary docs `784fbda`._
 _Prior: 2026-07-10 (Phase 2 CODE LANDED, floor green) — profiles (D6),
 D5 clean-slate env as a pure function (I1 as a unit test), headless
 invocation builder (flags pinned on CC 2.1.202), RunSpec +
@@ -90,27 +104,29 @@ into the plan; interim opencode+GLM paradigm verified live._
 - **F15 dev law:** stop the MC daemon before any build that touches its
   binary (`fractality mc stop`); a running daemon holds the .exe lock.
 
-## Next (the cold-start recipe — Phase 3, collect-back)
+## Next (the cold-start recipe — Phase 3 remainder)
 
-1. **First golden fixture:** copy the green run's transcript into the
-   repo — `~/.fractality/runs/01KX4H4KESV9ADN6S0AJMWQHFW/worker-stdout.jsonl`
-   → `fractality/v0.1.0/crates/fractality-core/tests/fixtures/` (or the
-   crate the parser lands in). 16.8 KB, 20 stream events, usage ×6.
-2. Stream-json incremental parser (plan Phase 3 step 1; tolerant per
-   D14 — unknown event kinds preserved as `Other`, never fatal): state
-   transitions, usage accumulation, final-result extraction.
-3. Collection (step 2): `result.md` (fall back to final-message
-   extraction, record which happened), `usage.json`, `status.json`;
-   packet acceptance commands run in the workspace, verdicts recorded.
-4. `run` one-screen summary upgrade + `show` parity (step 3): state,
-   wall, tokens, result as a FileRef (D19), branch, acceptance
-   verdicts. Fold in the exit-code polish (pod_lost → infra family 2,
-   not killed family 3 — D17 table review).
-5. E2E exit for Phase 3: packet "implement a small Rust function + test
-   in a scratch repo", GLM-5.2 worker, acceptance `cargo test` green;
-   recorded as manual-test #1 (house manual-tests flow).
-6. Delegation candidates for this phase (law: delegate or record why
-   not): parser skeleton from the frozen fixture (scenario 1 — compile
-   the event-shape table into the task), fixture sanitization, golden
-   assertions. Boss keeps: parser tolerance semantics (D14 judgment),
-   collection state machine, anything touching run-dir layout.
+1. **Acceptance runner (plan Phase 3 step 2 tail):** after worker exit,
+   the pod runs each `packet.acceptance` command in the workspace
+   (shell form: `cmd /C` on Windows, `sh -c` on POSIX; pod's own env,
+   worker's cwd), records per-command verdict + duration into
+   status.json (and the exit report — decide: extend `PodEvent::Exit`
+   vs a new `Collected` event; the boss holds this seam decision).
+2. **Result as FileRef (D19)** in the `run` summary / `show` output,
+   scope-relative — the rendering half; the FileRef type already lives
+   in core.
+3. **Exit-code polish:** `killed(pod_lost)` → infra family (2), not
+   killed family (3); review the whole D17 table while there
+   (`crates/fractality-cli`, exit-code mapping).
+4. **Phase 3 exit E2E → manual-test #1:** packet "implement a small
+   Rust function + test in a scratch repo", GLM-5.2 (`model = "big"`),
+   acceptance `cargo test` green; record procedure + output under
+   `fractality/v0.1.0/spec/manual-tests/`. P3 counting continues
+   (currently 2/2 across live runs).
+5. Then the Phase 3 ledger entry + WAL/WORKSPACES refresh, and on to
+   Phase 4 (swarm).
+6. Delegation candidates (law: delegate or record why not): the
+   acceptance-runner unit tests (scenario 1 — fixture commands with
+   known exit codes), the manual-test document draft from the run
+   artifacts. Boss keeps: the Exit-vs-Collected API seam decision,
+   exit-code semantics, the E2E itself.
