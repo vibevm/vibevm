@@ -12,5 +12,30 @@ keywords = ["agents", "orchestration", "delegation", "swarm", "scheduler", "miss
 min_vibe_version = "0.1.0"
 requires_kinds = []
 
+# Owner directive (2026-07-09, Phase 1): every fractality package adopts the
+# redbook practices and the AI-Native Rust discipline from birth — this
+# workspace and all its future sub-packages carry both requires (standing
+# rule, recorded in the workspace CLAUDE.md). The redbook umbrella pins the
+# practice edition; the rust-ai-native aggregator pulls the -lang stack, the
+# -mcp server, and (transitively) core-ai-native at one version set.
+[requires.packages]
+"flow:org.vibevm/redbook" = "^0.2.0"
+"stack:org.vibevm/rust-ai-native" = "^0.7.0"
+
 # No boot_snippet yet: the boss-side boot snippet and skills land in the
 # IGNITION campaign's Phase 6 (spec/plans/FRACTALITY-IGNITION-PLAN-v0.1.md).
+
+# The default registry pair every vibevm project carries (same blocks the
+# host root and `vibe init` use). In-repo packages resolve from the local
+# packages/ directory (passed as `--registry` on install); these two cover
+# the redbook members published only on vibespecs (e.g. atomic-commits,
+# sync-from-code). GitHub is the canonical publish target; GitVerse is the
+# resolve fall-through.
+[[registry]]
+name = "vibespecs"
+url = "https://github.com/vibespecs"
+
+[[registry]]
+name = "vibespecs-gitverse"
+url = "https://gitverse.ru/vibespecs"
+naming = "name"
