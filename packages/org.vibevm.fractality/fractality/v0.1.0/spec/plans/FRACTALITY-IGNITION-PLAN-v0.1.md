@@ -1,9 +1,11 @@
 # FRACTALITY-IGNITION-PLAN v0.1 — from zero to a metered GLM swarm under mission-control
 
-_Status: PLANNED · written 2026-07-09 against host tree `05d3b1c` plus the
-same-day ignition bootstrap commits · cold-executable: any phase boundary is
-a safe stop; the fractality floor (§11) is green at every boundary. Format:
-`flow:org.vibevm/campaign-plans` (one file, five roles)._
+_Status: **EXECUTING** (Phase 0 landed 2026-07-09, floor green, next:
+Phase 1 — workspace skeleton + mission-control core) · written 2026-07-09
+against host tree `05d3b1c` plus the same-day ignition bootstrap commits ·
+cold-executable: any phase boundary is a safe stop; the fractality floor
+(§11) is green at every boundary. Format: `flow:org.vibevm/campaign-plans`
+(one file, five roles)._
 
 _ACCEPTED with owner amendments, 2026-07-09 (same day): supervision
 topology is now MC → **pod** → worker (D3 rewritten; sixth crate;
@@ -170,6 +172,13 @@ Optimization directive (owner, 2026-07-09, fourth message):
 > возможно, ты придумаешь какие-то более крутые средства идентификации.»
 > [→ D19, I7]
 
+Follow-up (owner, 2026-07-09, fifth message):
+
+> «для файловых операций я бы посмотрел как сделано чтение и адресация
+> больших файлов у Amazon S3 например, и вдохновлялся этим подходом.
+> Возможно, нам нужно нечто более мощное, чем просто files?path&range»
+> [→ D19 upgraded: RFC 7233 ranges, ETag/If-Match, presigned refs]
+
 ### 3b. Programme map — owner phases → campaigns
 
 The mandate's six product phases map onto a campaign chain (lineage law:
@@ -328,39 +337,50 @@ slow, unobservable — the bus carries events), per-project run dirs
 content channels (transcripts are *records*, not channels).
 
 ### D5 — worker environment: clean-slate whitelist (invariant I1)
-Construct from scratch: minimal OS set (`PATH`, `HOME`/`USERPROFILE`,
-`TEMP`/`TMP`, `SystemRoot`, `COMSPEC`, locale) + profile injections
-(base URL, auth token read from `token_file` at spawn, model mapping,
-`CLAUDE_CONFIG_DIR`) + fractality context (`FRACTALITY_RUN_ID`,
-`FRACTALITY_DEPTH`). Explicitly **never** passed through: `ANTHROPIC_*`,
-`CLAUDE_*`, `CLAUDECODE*` inherited values. A unit test constructs an env
-from a poisoned parent and asserts the poison is gone; CI-grade, not
-optional. Rejected: inherit-and-override — one forgotten variable silently
-routes a swarm to the boss's subscription.
+Construct from scratch: minimal OS set — **Ф0.s2-verified for Windows:**
+`PATH`, `HOME`/`USERPROFILE`, `TEMP`/`TMP`, `SystemRoot`, `COMSPEC`,
+**`APPDATA`, `LOCALAPPDATA`** (CC needs the last two on Windows; omitting
+them was the one gap the spike surfaced), locale — plus profile
+injections (base URL, auth token read from `token_file` at spawn, the
+`ANTHROPIC_DEFAULT_{OPUS,SONNET,HAIKU}_MODEL` mapping, any `profile.env`
+extras, `CLAUDE_CONFIG_DIR`) + fractality context (`FRACTALITY_RUN_ID`,
+`FRACTALITY_DEPTH`, `FRACTALITY_NODE_ID`). Explicitly **never** passed
+through: `ANTHROPIC_*`, `CLAUDE_*`, `CLAUDECODE*` inherited values. A unit
+test constructs an env from a poisoned parent and asserts the poison is
+gone; CI-grade, not optional. Rejected: inherit-and-override — one
+forgotten variable silently routes a swarm to the boss's subscription.
 
 ### D6 — profiles: `~/.fractality/profiles.toml` (+ per-project override)
+All VERIFY items resolved by Ф0.s3/s4 (see the Phase 0 findings block):
 ```toml
 schema = 1
 [profile.glm]
 backend = "claude-code"
-base_url = "https://api.z.ai/api/anthropic"   # VERIFY Ф0.s3
+base_url = "https://api.z.ai/api/anthropic"   # ✅ confirmed (z.ai docs + live smoke)
 token_file = "~/.vibevm/zai.api.token"
 claude_binary = "claude"                       # or absolute path
-config_dir = "auto"        # ~/.fractality/profiles/glm/claude-config
+config_dir = "auto"        # fresh CLAUDE_CONFIG_DIR; ✅ headless onboarding needs no TTY
 [profile.glm.models]
-big = "glm-5.2"            # VERIFY Ф0.s3 exact ids
+# ✅ mapping is via ANTHROPIC_DEFAULT_{OPUS,SONNET,HAIKU}_MODEL for this provider,
+# NOT the legacy ANTHROPIC_MODEL / ANTHROPIC_SMALL_FAST_MODEL pair.
+big = "glm-5.2[1m]"        # ✅ the [1m] suffix selects the 1M-context variant
 small = "glm-5-turbo"
 haiku_slot = "glm-5-turbo" # CC-internal small-model traffic → cheap model
+[profile.glm.env]          # extra provider env, injected verbatim (D5)
+API_TIMEOUT_MS = "3000000"                     # z.ai-recommended for long turns
+CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC = "1" # cut telemetry chatter to the gateway
 [profile.glm.limits]
-max_concurrent = 4
+max_concurrent = 4         # ≤ tier's 5-hour prompt budget; see D12
 [profile.glm.permissions]
-mode = "accept-edits"      # allowlist posture; see RP4
+mode = "acceptEdits"       # ✅ exact CC value (not "accept-edits"); allowlist posture, RP4
 deny_tools = ["WebFetch", "WebSearch"]   # tariff hygiene, D12
 [profile.glm.pricing]      # metrics only; flat=true for subscription plans
 flat = true
+plan = "max"               # informs the quota metric (D12): 1600 prompts/5h, 4000 MCP/mo
 ```
 Token by *reference* (path), per host secrets-hygiene. Rejected: tokens or
-provider secrets inside profiles; one global hardcoded provider.
+provider secrets inside profiles; one global hardcoded provider; the
+legacy single-model env vars (wrong surface for this provider).
 
 ### D7 — task packet: versioned TOML, the universal seam
 ```toml
@@ -429,21 +449,36 @@ Path-versioned (`/v0/`) so federation-era changes
 don't strand old CLIs. Rejected: gRPC (heavy for v0.1), Unix sockets /
 named pipes (two transport stacks; HTTP is uniform cross-platform).
 
-### D11 — stack (pin exact versions in Ф0.s8)
-`tokio` + `axum` (server), `reqwest`/rustls (client), `serde` + `toml` +
-`serde_json`, `clap` (derive), `tracing` + `tracing-subscriber`, `ulid`,
-`camino` (UTF-8 paths), `thiserror`, `insta` (goldens), process-group
-control: candidate crates `command_group` / `win32job` / `sysinfo` — the
-Ф0.s5 spike picks. Rejected: actix (no advantage here), async-std (ecosystem
-gravity is tokio), heavyweight config frameworks (plain serde+toml).
+### D11 — stack (pinned Ф0.s8, MSRV-checked against this box's rustc 1.93.1)
+`tokio` 1.52, `axum` 0.8 (server), `reqwest` 0.13 + rustls (client),
+`serde` 1.0 + `toml` + `serde_json`, `clap` 4.6 (derive), `tracing` 0.1
++ `tracing-subscriber`, `ulid` 1.2, `camino` 1.2 (UTF-8 paths),
+`thiserror` 2.0, `insta` 1.48 (goldens). Process control (Ф0.s5 spike
+PASSED, mechanism chosen): **`win32job` 2.0** (Windows Job Object with
+`KILL_ON_JOB_CLOSE`) as the primary kill-tree + crash-safety mechanism,
+**`sysinfo` `=0.37.2`** for the orphan-sweep assertion, `command-group`
+5.0 for the POSIX process-group path (cfg-gated). **MSRV finding
+(binding on D15/CI):** `sysinfo` 0.39 requires rustc ≥ 1.95; this box
+runs **1.93.1**, so the workspace pins `sysinfo =0.37.2` (builds clean)
+and either sets a `rust-version = "1.93"` floor or the owner upgrades
+the toolchain — recorded as a Phase 1 opening step. Rejected: actix (no
+advantage), async-std (tokio gravity), heavyweight config frameworks
+(plain serde+toml), `taskkill` shelling as the *primary* mechanism
+(kept only as the pod-loss fallback — Job Objects are cleaner and were
+proven).
 
 ### D12 — tariff hygiene is mechanism, not prose
 Workers get `WebFetch`/`WebSearch` (and web MCP tools) denied via profile;
 `fractality fetch <url> --out <path>` (plain reqwest, boss- and
 human-callable) downloads documents once into the workspace; MC counts
-web-ish tool events from transcripts into a monthly quota metric (the
-«4000 MCP calls» budget — exact quota VERIFY Ф0.s3). The Phase 5 playbooks
-then *describe* what the mechanism already *enforces*.
+web-ish tool events from transcripts into a monthly quota metric. **Ф0.s3
+resolved the quota:** it is tier-scoped, not a flat 4000 — Lite 100 / Pro
+1 000 / **Max 4 000** MCP calls per month (the owner's figure = the Max
+tier), and Web-Search + Web-Reader + Zread MCP *share* that pool; prompt
+budgets are Lite ~80 / Pro ~400 / Max ~1 600 per 5 h. So the quota metric
+is parameterized by `profile.pricing.plan` (D6), and `max_concurrent`
+respects the 5-hour prompt budget. The Phase 5 playbooks then *describe*
+what the mechanism already *enforces*.
 
 ### D13 — CLI verb set (v0.1): UNIX muscle memory
 `fractality mc start|stop|status` · `run --packet <file>` (sync; exit code
@@ -495,10 +530,19 @@ surfaces — the fabric must compose with pipes and with agents equally.
 
 ### D18 — non-yolo delegation: permissions and questions as a protocol
 The owner's question («как делегировать в неинтерактивные воркеры в любом
-режиме кроме yolo?») has a paved-road answer: headless Claude Code
-supports programmatic permission decisions — the exact 2.1.x surface
-(permission-prompt MCP tool and/or PreToolUse-hook decisions) is a Ф0.s3
-VERIFY item. The stack, layered:
+режиме кроме yolo?») has a paved-road answer, **Ф0.s3 CONFIRMED** on CC
+2.1.202: *two* usable surfaces exist — `--permission-prompt-tool <mcp
+tool>` (a broker MCP tool answers each prompt in headless mode) and the
+**PreToolUse hook** returning
+`hookSpecificOutput.permissionDecision ∈ {allow, deny, ask, defer}`
+(multi-hook precedence `deny > defer > ask > allow`; `updatedInput` can
+rewrite the call). The **`defer` value is a gift**: it "exits to be
+resumed later (`-p` only)" and the final `result` event carries
+`deferred_tool_use` — i.e. CC has a *native* park-and-resume primitive
+that maps exactly onto `waiting_on_boss`, so the broker can defer a
+blocked call to MC and resume it on `answer` without holding a process
+frozen mid-turn. Both `--max-turns` and `--max-budget-usd` exist (print
+mode) for budget enforcement (D6/Phase 4). The stack, layered:
 1. **Static allowlist** per profile (D6) — the boring majority:
    pre-approved edit/test/git tools inside the worktree; web tools denied
    (D12). Unlisted actions fail closed, they never hang.
@@ -530,11 +574,23 @@ filesystem; and give every agent a way to know its machine and where
 its filesystem comes from.
 - **FileRef v1** (core DTO, baked into the API from Phase 1):
   `{fs: <scope-id>, path: <scope-relative, forward-slash>, range:
-  whole | {offset, len} | {skip_head, skip_tail}, sha256?}`. The
-  head/tail form serves growing files (live logs); length pins at stat
-  time, non-atomicity for still-growing files documented. Bus messages
-  inline payloads up to a threshold (default 64 KiB, configurable) and
-  switch to FileRef above it.
+  whole | {offset, len} | {skip_head, skip_tail}, etag?, sha256?,
+  grant?}`. Range vocabulary is deliberately RFC 7233 (the S3 model,
+  owner directive): `{offset, len}` ↔ `bytes=a-b`, pure tail ↔ the
+  suffix form `bytes=-N`; the combined head/tail trim resolves
+  `last-byte-pos = size−1−skip_tail` at stat time (length pins then;
+  non-atomicity for still-growing files documented). `etag` is a cheap
+  version fingerprint (size+mtime hash, MC-stamped) — the reader sends
+  `If-Match` semantics and a stale copy or a mutated file fails loudly
+  instead of returning silently wrong bytes (this also closes the
+  copy-staleness caveat at the *read* end). `sha256` stays optional
+  strong integrity for immutable payloads. `grant` is reserved: a
+  presigned capability (HMAC over scope|path|range|expiry with MC's
+  key, S3-presigned-URL style) so a ref can be handed to a party that
+  has no MC bearer — cross-node pods, future GUIs; federation builds
+  it, v0.1 only reserves the field. Bus messages inline payloads up to
+  a threshold (default 64 KiB, configurable) and switch to FileRef
+  above it.
 - **Scope identity — the rendezvous beacon (authoritative):** MC stamps
   `<scope-root>/.fractality-fsid` with a random UUID + issuing-MC id +
   timestamp, rotated periodically. Two parties share a scope **iff they
@@ -554,10 +610,13 @@ its filesystem comes from.
   identity** (DHCP, multiple NICs, VPNs) — rejected as the primary key,
   kept in metadata for humans.
 - **Dereference rule:** scope match proven → read locally (the
-  zero-copy fast path); no match → fetch the same range over the bus
-  (`GET /v0/runs/:id/files?path&range` — shape reserved now, built with
-  federation under DEF-6). **A reference is an optimization, never a
-  requirement** — I2's bus law survives intact.
+  zero-copy fast path); no match → fetch over the bus:
+  `GET /v0/runs/:id/files/{path}` honoring standard `Range` headers
+  (RFC 7233 incl. suffix ranges), `ETag`/`If-Match`, and part-aligned
+  parallel ranged reads for bulk (the S3 byte-range-fetch pattern) —
+  shape reserved now, built with federation under DEF-6. **A reference
+  is an optimization, never a requirement** — I2's bus law survives
+  intact.
 - Rejected: absolute paths inside references (the same NAS mounts at
   different points on different nodes; separators differ per OS —
   scope-relative forward-slash paths only); IP-as-identity (see above);
@@ -647,6 +706,88 @@ resolved or explicitly re-scoped; affected Decisions rewritten in place.
 *Prediction:* P1 and the P2 early check pass in spikes.
 *Commits:* exactly one — `docs(fractality): plan v0.1 amended with Phase 0
 findings` — which also flips the status line to `EXECUTING`.
+
+#### Phase 0 findings — EXECUTED 2026-07-09 (all green; no commits)
+
+- **F1 (s1) env sanity — GREEN.** `claude` **2.1.202** on PATH; `git`
+  2.52.0; `~/.vibevm/zai.api.token` exists (content never read).
+- **F2 (s2) nested spawn — GREEN, P1 CONFIRMED.** `claude -p` under this
+  boss session returns `OK` both with inherited env and with a hand-built
+  clean-slate whitelist (`PATH HOME USERPROFILE TEMP TMP SystemRoot
+  COMSPEC APPDATA LOCALAPPDATA`). No conpty/console surprise. **Finding:**
+  `APPDATA`/`LOCALAPPDATA` must be in the D5 whitelist on Windows (CC
+  needs them) — added to D5's set. `env -i` in Git Bash must re-pass
+  `PATH` or `claude` isn't found (documented for the env constructor).
+- **F3 (s3) provider facts — RESOLVED, D6/D12/D18 rewritten.** Base URL
+  `https://api.z.ai/api/anthropic` ✅. Model mapping via
+  `ANTHROPIC_DEFAULT_{OPUS,SONNET,HAIKU}_MODEL` (the legacy
+  `ANTHROPIC_MODEL`/`ANTHROPIC_SMALL_FAST_MODEL` pair is the wrong
+  surface for this provider). Big model id `glm-5.2[1m]` (the `[1m]`
+  suffix = 1M context), small `glm-5-turbo`, haiku-slot `glm-4.7`/turbo.
+  Recommended extra env: `API_TIMEOUT_MS=3000000`,
+  `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1`. Quota is **tier-scoped**
+  (the owner's "4000 MCP" = the **Max** tier): Lite 100 / Pro 1 000 / Max
+  4 000 MCP calls per month, shared across Web-Search + Web-Reader +
+  Zread; prompts ≈ 80/400/1 600 per 5 h. CC permission surface confirmed
+  (see F6). CC budget flags `--max-turns` and `--max-budget-usd` exist
+  (print mode).
+- **F4 (s4) GLM smoke + fixtures — GREEN, P2 CONFIRMED.** A clean-slate
+  env + z.ai base URL + token + model mapping + a **fresh
+  `CLAUDE_CONFIG_DIR`** ran headless first try: `claude -p "…state your
+  model name"` → `OK, glm-5.2`. A real write task under
+  `--output-format stream-json --verbose --permission-mode acceptEdits`
+  created `hello.txt` and emitted a **122-event** transcript; captured as
+  the first golden fixture. Event `type`s seen: `system` (incl.
+  `system/init`), `assistant`, `user`, `text`, `thinking`, `tool_use`,
+  `tool_result`, `create`, `result`. The `json` result carries
+  `usage.{input_tokens,output_tokens,cache_creation_input_tokens,
+  cache_read_input_tokens}` and `total_cost_usd` — metering is viable.
+  **This also resolves R5:** a fresh config dir onboards headless with
+  **no interactive step** (it created `backups/ projects/ sessions/`
+  itself), so `config_dir = "auto"` is safe.
+- **F5 (s5) kill-tree — GREEN, mechanism chosen, D3/D11 rewritten.** A
+  `win32job` 2.0 Job Object armed with `KILL_ON_JOB_CLOSE`, child
+  assigned immediately after spawn, stdout streamed to a file: closing
+  the job reaps the tree (PASS, zero descendants). **The stronger proof:**
+  in `--orphan-test` the parent *exits without any explicit kill* and the
+  OS auto-reaps the assigned child (verified recycling-safe by image
+  name; zero `timeout.exe`/`cmd.exe` orphans). So **a pod crash leaks no
+  worker** — the pod's core safety property is guaranteed by the OS, not
+  by our cleanup code. `taskkill /T /F` demoted to the pod-loss fallback.
+- **F6 (s3/CC) permission surface — CONFIRMED, D18 strengthened.** CC
+  2.1.202 offers both `--permission-prompt-tool` and a PreToolUse hook
+  with `permissionDecision ∈ {allow,deny,ask,defer}` (precedence
+  `deny>defer>ask>allow`, `updatedInput` rewrites the call). `defer`
+  natively exits-to-resume in `-p` mode with `deferred_tool_use` in the
+  result — a native `waiting_on_boss` primitive. settings.json
+  `permissions.{allow,ask,deny}` with `Tool(specifier)` rule syntax backs
+  the static allowlist (D6).
+- **F7 (s6) intake — DONE, all MIT, clean-room intact.** S1–S4 cloned/
+  downloaded at pinned commits (inventory updated); all three repos MIT.
+  codex-first fully studied → `spec/refs/notes/codex-first-study.md`
+  (DC1–DC6 + the mandated improvements). barkain/rlm/paper deep study
+  deferred to Campaigns 2/3 (licenses cleared).
+- **F8 (s7) landscape — DONE.** `spec/refs/notes/landscape.md`: fractality
+  is neither a per-request router (claude-code-router) nor a session
+  orchestrator (claude-swarm/squad) — it is the scheduler layer they lack.
+- **F9 (s8) crate pins — DONE, MSRV finding (binding).** Versions pinned
+  in D11. **This box runs rustc 1.93.1**; `sysinfo` 0.39 needs ≥ 1.95, so
+  the workspace pins `sysinfo =0.37.2` (builds clean) and Phase 1 opens by
+  setting a `rust-version` floor or asking the owner to bump the
+  toolchain. Caught here exactly as Phase 0 is meant to.
+- **F10 (s9) host gate — GREEN.** Host `bash tools/self-check.sh` was
+  green at ignition and the new package lives under the excluded
+  `packages/` tree; re-confirmed green after all Phase 0 spec edits (see
+  the amendment commit's acceptance).
+- **Delegation dogfood (interim paradigm, live this session):** two grunt
+  tasks were delegated to `zai-coding-plan/glm-5.2` via opencode and
+  **boss-verified**: (a) extracting the CC permission/headless fact sheet
+  from local docs — spot-checked against the raw docs, accurate; (b)
+  drafting the kill-tree spike program — it needed one boss fix (the
+  `sysinfo` MSRV pin) but then **passed on the real machine**. First field
+  data for the Phase 5 playbooks: GLM-5.2 is strong at bounded,
+  well-specified one-shot code and doc-extraction; MSRV/version currency
+  is a known blind spot the boss must check.
 
 ### Phase 1 — workspace skeleton + mission-control core
 
@@ -835,9 +976,11 @@ verdict every prediction; update the workspace WAL/CONTINUE and the host
   rework counts (boss redoes the task). *Fallback:* playbooks narrow GLM
   to task shapes it wins; the fabric is model-agnostic — swap backends,
   the product survives.
-- **R5 fresh CLAUDE_CONFIG_DIR onboarding blocks headless.** *Detect:*
-  s2/s4. *Fallback:* seed the config dir (settings.json) per s3 findings;
-  documented in the backend.
+- **R5 fresh CLAUDE_CONFIG_DIR onboarding blocks headless.** **RESOLVED
+  GREEN in Ф0.s4** — a fresh config dir onboarded with no interactive
+  step (created `backups/ projects/ sessions/` itself; the GLM smoke ran
+  first try). No seeding needed; `config_dir = "auto"` is safe. Kept as a
+  regression watch, not an open risk.
 - **R6 MC crash orphans workers.** *Detect:* journal replay finds
   running-state runs with dead/alive PIDs. *Fallback:* adopt-or-reap at
   startup (D9), designed in Phase 1, tested by kill-and-restart.
@@ -914,8 +1057,21 @@ ls spec/manual-tests/                                                # 5 recorde
 
 ## 14. Execution ledger
 
-_(Filled at each phase boundary: `EXECUTED <date>` + commit map — hash,
-planned subject, what it confirmed or falsified. Empty at authoring.)_
+### Phase 0 — EXECUTED (2026-07-09); commit map
+
+- `<pending>` docs(fractality): plan v0.1 amended with Phase 0 findings.
+  Single amendment commit per the phase-gates law (Phase 0 commits no
+  tree changes — only findings into the plan, the study note, the
+  landscape note, and the inventory). Flips the status line to
+  EXECUTING. Confirms P1 (F2) and the P2 early check (F4); resolves R5
+  (F4); rewrites D3/D5/D6/D11/D12/D18 in place from findings; records
+  the rustc-1.93.1 MSRV constraint (F9) as binding on Phase 1. No
+  prediction falsified. Floor: host `self-check.sh` green; the pod
+  kill-tree spike passed on the real machine (scratch, discarded).
+- Interim-paradigm note: two GLM-5.2 delegations (fact extraction, spike
+  draft) were boss-verified during this phase — first Phase-5 field data.
+
+_(Later phases fill their own maps at each boundary.)_
 
 ## 15. Deferrals ledger (seeds the next campaigns)
 

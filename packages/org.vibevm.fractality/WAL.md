@@ -1,6 +1,28 @@
 # fractality — WAL (project continuation state)
 
-_Updated: 2026-07-09 (ignition; same day — owner amendments accepted) —
+_Updated: 2026-07-09 (Phase 0 EXECUTED — plan now EXECUTING) — the
+IGNITION plan's Phase 0 spikes all landed GREEN with no code committed
+(spikes commit nothing; findings F1–F10 fold into the plan). Highlights:
+nested spawn works with a clean-slate env (P1 ✅; Windows needs APPDATA/
+LOCALAPPDATA in the whitelist — D5 updated); z.ai facts resolved (base
+URL `https://api.z.ai/api/anthropic`, model mapping via
+`ANTHROPIC_DEFAULT_{OPUS,SONNET,HAIKU}_MODEL`, big=`glm-5.2[1m]`,
+small=`glm-5-turbo`; quota is tier-scoped — the "4000 MCP" figure is the
+Max tier — D6/D12 rewritten); GLM smoke ran headless first try on a fresh
+CLAUDE_CONFIG_DIR (P2 ✅, R5 resolved), stream-json fixture captured with
+usage fields; the pod kill-tree mechanism is proven (`win32job`
+KILL_ON_JOB_CLOSE reaps the worker even when the pod exits without killing
+— a pod crash leaks nothing; D3/D11 fixed); CC permission surface
+confirmed incl. the `defer` native park-and-resume that maps onto
+`waiting_on_boss` (D18 strengthened). MSRV finding: this box is rustc
+1.93.1, so `sysinfo` pins to `=0.37.2` (Phase 1 sets a rust-version floor
+or the owner bumps the toolchain). Refs intake done — all three studied
+repos MIT, clean-room intact; codex-first study note + landscape note
+written. Two grunt tasks were delegated to GLM-5.2 via opencode and
+boss-verified (first Phase-5 field data). Next: the single Phase-0
+amendment commit, then **Phase 1** (Cargo workspace + core + MC +
+pod skeleton). Prior status follows._
+_Prior: 2026-07-09 (ignition; same day — owner amendments accepted) —
 the IGNITION plan is **PLANNED · ACCEPTED with owner amendments**: the
 supervision topology is now MC → **pod** → worker (D3; `fractality-pod`
 is the sixth crate — pods own stdio/job-objects/watchdogs, talk HTTP to

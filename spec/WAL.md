@@ -31,7 +31,7 @@ a future Entire.io-like checkpoints layer is recorded in the plan
 files are the persistence plane, never the medium; plan D19 adds
 claim-check file references (scope-relative path + byte range) with
 beacon-proven filesystem identity and node identity for bulk data.
-Still open: RP3 publish only. Nothing else in the host moved.
+Still open: RP3 publish only. **Phase 0 of the plan then EXECUTED (all spikes green, no code — spikes commit nothing): provider facts resolved, GLM smoke ran headless first try, the pod kill-tree mechanism (win32job KILL_ON_JOB_CLOSE) proven to survive even a pod crash, CC permission `defer` surface confirmed, refs intake done (all MIT, clean-room intact). MSRV finding: this box is rustc 1.93.1 → sysinfo pinned =0.37.2. Plan status is now EXECUTING; next is Phase 1 (crates).** The refs intake used the gitignored host `/refs/` (clones + PDF + docs, none committed). Nothing else in the host moved.
 
 ## This session (2026-07-07, ninth campaign, wave 2) — the project-practice wave
 
