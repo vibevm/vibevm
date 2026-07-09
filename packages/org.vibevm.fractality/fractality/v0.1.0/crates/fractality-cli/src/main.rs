@@ -185,7 +185,13 @@ async fn run_packet(home: &camino::Utf8Path, packet_path: &camino::Utf8Path, jso
     }
     match final_run.state {
         RunState::Completed => EXIT_OK,
-        RunState::Killed => 3,
+        // D17 exit families: 3 is the *policy* kill (budget, manual);
+        // a vanished pod is an infrastructure fault, not a verdict on
+        // the task — it exits 2 so scripts can retry it as such.
+        RunState::Killed => match final_run.kill_reason {
+            Some(fractality_core::run::KillReason::PodLost) => EXIT_INFRA,
+            _ => 3,
+        },
         _ => EXIT_NEGATIVE,
     }
 }

@@ -242,8 +242,15 @@
       "crate_name": "fractality-pod",
       "file": "crates/fractality-pod/src/main.rs",
       "item_kind": "mod",
-      "line": 29,
+      "line": 31,
       "symbol": "fractality_pod"
+    },
+    {
+      "crate_name": "fractality-pod",
+      "file": "crates/fractality-pod/src/collect.rs",
+      "item_kind": "mod",
+      "line": 20,
+      "symbol": "fractality_pod::collect"
     },
     {
       "crate_name": "fractality-pod",
@@ -536,7 +543,15 @@
     {
       "file": "crates/fractality-pod/src/main.rs",
       "from_symbol": "fractality_pod",
-      "line": 29,
+      "line": 31,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-pod/src/collect.rs",
+      "from_symbol": "fractality_pod::collect",
+      "line": 20,
       "provenance": "authored",
       "uri": "spec://fractality/PROP-001#architecture",
       "verb": "implements"

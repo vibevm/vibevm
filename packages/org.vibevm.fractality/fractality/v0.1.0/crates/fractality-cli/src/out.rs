@@ -39,6 +39,47 @@ fn print_usage_lines(r: &RunRecord) {
     if let Some(result) = result_line(&r.run_dir) {
         println!("result:     {result}");
     }
+    print_acceptance(&r.run_dir);
+}
+
+/// Acceptance verdicts from the run dir's `status.json` — the same
+/// deliberate persistence-plane read as [`result_line`]; the bus
+/// promotion is Phase 4 work.
+fn print_acceptance(run_dir: &Utf8Path) {
+    let Ok(raw) = std::fs::read_to_string(run_dir.join("status.json").as_std_path()) else {
+        return;
+    };
+    let Ok(v) = serde_json::from_str::<serde_json::Value>(&raw) else {
+        return;
+    };
+    if let Some(reason) = v.get("acceptance_skipped").and_then(|s| s.as_str()) {
+        println!("acceptance: skipped ({reason})");
+        return;
+    }
+    let Some(items) = v.get("acceptance").and_then(|a| a.as_array()) else {
+        return;
+    };
+    if items.is_empty() {
+        return;
+    }
+    let ok = items
+        .iter()
+        .filter(|i| i.get("ok").and_then(|b| b.as_bool()).unwrap_or(false))
+        .count();
+    println!("acceptance: {ok}/{} ok", items.len());
+    for i in items {
+        let command = i.get("command").and_then(|c| c.as_str()).unwrap_or("?");
+        let passed = i.get("ok").and_then(|b| b.as_bool()).unwrap_or(false);
+        let code = i
+            .get("exit_code")
+            .and_then(|c| c.as_i64())
+            .map(|c| c.to_string())
+            .unwrap_or_else(|| "-".into());
+        println!(
+            "  {} exit={code} {command}",
+            if passed { "ok  " } else { "FAIL" }
+        );
+    }
 }
 
 pub fn print_runs(runs: &[RunRecord], quiet: bool) {

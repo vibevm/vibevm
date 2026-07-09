@@ -8,8 +8,11 @@
 //! pod keeps supervising, re-registers when the new daemon appears, and
 //! delivers its exit report to whichever daemon generation is alive.
 
+mod collect;
 mod resolve;
 mod supervise;
+
+use collect::Collection;
 
 use camino::Utf8PathBuf;
 use clap::Parser;
@@ -20,7 +23,6 @@ use fractality_core::api::{PodEvent, PodEventRequest, PodHeartbeat, PodRegisterR
 use fractality_core::ids::{PodId, RunId};
 use fractality_core::profile::ProfilesFile;
 use fractality_core::run::{RunState, UsageTotals};
-use fractality_core::time::now_ms;
 use fractality_core::worker::{BackendSecrets, RunContext, RunSpec, WorkerBackend, WorkerSpec};
 use fractality_mc_client::McClient;
 use tokio::io::{AsyncBufReadExt, AsyncWriteExt, BufReader};
@@ -30,8 +32,6 @@ specmark::scope!("spec://fractality/PROP-001#architecture");
 
 const STDOUT_FILE: &str = "worker-stdout.jsonl";
 const STDERR_FILE: &str = "worker-stderr.log";
-const STATUS_FILE: &str = "status.json";
-const USAGE_FILE: &str = "usage.json";
 /// How long the pod keeps trying to deliver the exit report.
 const EXIT_DELIVERY_BUDGET: std::time::Duration = std::time::Duration::from_secs(30);
 
@@ -74,14 +74,6 @@ async fn main() -> std::process::ExitCode {
             std::process::ExitCode::from(2)
         }
     }
-}
-
-/// The Phase 3 collection contract: where the worker's result file must
-/// land and what it is called (packet `output.result`). Product mode
-/// only — the raw `--spec` seam has no packet and no result contract.
-struct Collection {
-    workspace_dir: Utf8PathBuf,
-    result_file: String,
 }
 
 /// Resolves the two input modes into (run_id, run_dir, worker spec,
@@ -160,6 +152,7 @@ fn resolve_inputs(
         let collection = Collection {
             workspace_dir: run_spec.workspace_dir.clone(),
             result_file: packet.output.result.clone(),
+            acceptance: packet.task.acceptance.clone(),
         };
         return Ok((run_spec.run_id, run_spec.run_dir, spec, Some(collection)));
     }
@@ -302,14 +295,36 @@ async fn run(args: Args) -> Result<(), String> {
 
     // Phase 3 collection: settle the run dir's derived records and ship
     // the authoritative usage totals before the exit report.
-    let (result_source, result_path) = collect_result(collection.as_ref(), summary.as_ref());
-    write_usage_json(
+    let (result_source, result_path) =
+        collect::collect_result(collection.as_ref(), summary.as_ref());
+    collect::write_usage_json(
         &run_dir,
         run_id,
         summary.as_ref(),
         result_source,
         result_path.as_deref(),
     )?;
+    // Acceptance proves the deliverable (D7): run only over a worker
+    // that exited 0 — verifying a known-failed run wastes its budget.
+    let (acceptance, acceptance_skipped) = match collection.as_ref() {
+        Some(c) if !c.acceptance.is_empty() => {
+            if exit_code == Some(0) {
+                (
+                    collect::run_acceptance(
+                        &run_dir,
+                        &c.workspace_dir,
+                        &c.acceptance,
+                        collect::ACCEPTANCE_CAP,
+                    )
+                    .await,
+                    None,
+                )
+            } else {
+                (Vec::new(), Some("worker failed; acceptance not run"))
+            }
+        }
+        _ => (Vec::new(), None),
+    };
     if let Some(s) = &summary
         && s.totals.events > 0
     {
@@ -325,7 +340,15 @@ async fn run(args: Args) -> Result<(), String> {
         .await;
     }
 
-    write_status(&run_dir, run_id, exit_code, worker_pid, result_source)?;
+    collect::write_status(
+        &run_dir,
+        run_id,
+        exit_code,
+        worker_pid,
+        result_source,
+        &acceptance,
+        acceptance_skipped,
+    )?;
 
     // The exit report is the one message that must not be lost quietly:
     // retry across daemon restarts within the budget.
@@ -484,73 +507,6 @@ fn pump_transcript(
     })
 }
 
-/// Settles the result-file contract (D4/D7): the worker was told to
-/// write `result_file` in its workspace; when it did not, fall back to
-/// the transcript's final message — and always record which happened
-/// (and where, so readers need no packet to find it).
-fn collect_result(
-    collection: Option<&Collection>,
-    summary: Option<&StreamSummary>,
-) -> (&'static str, Option<Utf8PathBuf>) {
-    let Some(c) = collection else {
-        // Raw --spec seam: no packet, no contract to settle.
-        return ("none", None);
-    };
-    let path = c.workspace_dir.join(&c.result_file);
-    match std::fs::metadata(path.as_std_path()) {
-        Ok(m) if m.len() > 0 => ("worker", Some(path)),
-        _ => {
-            let text = summary.and_then(|s| s.final_text.as_deref());
-            match text.filter(|t| !t.trim().is_empty()) {
-                Some(text) => match std::fs::write(path.as_std_path(), text) {
-                    Ok(()) => {
-                        tracing::info!(%path, "result extracted from the final message");
-                        ("extracted", Some(path))
-                    }
-                    Err(e) => {
-                        tracing::error!(%path, error = %e, "result extraction failed");
-                        ("none", None)
-                    }
-                },
-                None => ("none", None),
-            }
-        }
-    }
-}
-
-/// `usage.json` — the metering record of the persistence plane (D4),
-/// flat fields for grep-ability (D17).
-fn write_usage_json(
-    run_dir: &camino::Utf8Path,
-    run_id: RunId,
-    summary: Option<&StreamSummary>,
-    result_source: &str,
-    result_path: Option<&camino::Utf8Path>,
-) -> Result<(), String> {
-    let usage = serde_json::json!({
-        "schema": 1,
-        "run_id": run_id,
-        "model": summary.and_then(|s| s.model.clone()),
-        "result_path": result_path.map(|p| p.to_string()),
-        "input_tokens": summary.map_or(0, |s| s.totals.input_tokens),
-        "output_tokens": summary.map_or(0, |s| s.totals.output_tokens),
-        "cache_creation_input_tokens": summary.map_or(0, |s| s.totals.cache_creation_input_tokens),
-        "cache_read_input_tokens": summary.map_or(0, |s| s.totals.cache_read_input_tokens),
-        "total_cost_usd": summary.map_or(0.0, |s| s.totals.total_cost_usd),
-        "events": summary.map_or(0, |s| s.totals.events),
-        "malformed_lines": summary.map_or(0, |s| s.malformed_lines),
-        "num_turns": summary.and_then(|s| s.num_turns),
-        "is_error": summary.is_some_and(|s| s.is_error),
-        "result_source": result_source,
-        "event_counts": summary.map(|s| s.event_counts.clone()).unwrap_or_default(),
-        "ts_ms": now_ms(),
-    });
-    let path = run_dir.join(USAGE_FILE);
-    let body =
-        serde_json::to_string_pretty(&usage).map_err(|e| format!("encoding usage.json: {e}"))?;
-    std::fs::write(path.as_std_path(), body).map_err(|e| format!("writing `{path}`: {e}"))
-}
-
 /// Streams a child pipe into a run-dir file.
 fn pump<R>(reader: Option<R>, path: Utf8PathBuf) -> tokio::task::JoinHandle<()>
 where
@@ -570,27 +526,4 @@ where
         }
         let _ = file.flush().await;
     })
-}
-
-/// `status.json` — the run dir's persistence-plane record (D4).
-fn write_status(
-    run_dir: &camino::Utf8Path,
-    run_id: RunId,
-    exit_code: Option<i32>,
-    worker_pid: u32,
-    result_source: &str,
-) -> Result<(), String> {
-    let status = serde_json::json!({
-        "schema": 1,
-        "run_id": run_id,
-        "state": if exit_code == Some(0) { "completed" } else { "failed" },
-        "exit_code": exit_code,
-        "worker_pid": worker_pid,
-        "result_source": result_source,
-        "ts_ms": now_ms(),
-    });
-    let path = run_dir.join(STATUS_FILE);
-    let body =
-        serde_json::to_string_pretty(&status).map_err(|e| format!("encoding status.json: {e}"))?;
-    std::fs::write(path.as_std_path(), body).map_err(|e| format!("writing `{path}`: {e}"))
 }
