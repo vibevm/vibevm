@@ -1,7 +1,8 @@
 # FRACTALITY-IGNITION-PLAN v0.1 — from zero to a metered GLM swarm under mission-control
 
-_Status: **EXECUTING** (Phase 0 landed 2026-07-09, floor green, next:
-Phase 1 — workspace skeleton + mission-control core) · written 2026-07-09
+_Status: **EXECUTING** (Phases 0–1 landed 2026-07-09/10, floor green —
+the full AI-Native floor from Phase 1 on (D15) — next: Phase 2 —
+delegate-out) · written 2026-07-09
 against host tree `05d3b1c` plus the same-day ignition bootstrap commits ·
 cold-executable: any phase boundary is a safe stop; the fractality floor
 (§11) is green at every boundary. Format: `flow:org.vibevm/campaign-plans`
@@ -1104,6 +1105,61 @@ ls spec/manual-tests/                                                # 5 recorde
   kill-tree spike passed on the real machine (scratch, discarded).
 - Interim-paradigm note: two GLM-5.2 delegations (fact extraction, spike
   draft) were boss-verified during this phase — first Phase-5 field data.
+
+### Phase 1 — EXECUTED (2026-07-09/10); commit map
+
+- `2502f68` chore(packages): vendor atomic-commits + sync-from-code
+  0.1.0 (host-side; unblocked the redbook closure for the first real
+  consumer — backlog items 1–2 carry the structural fix).
+- `ddeea95` feat(fractality): adopt redbook + rust-ai-native via vibe
+  (owner directive; 26 packages into the workspace's own vibedeps/,
+  boot lane generated and bound as contract boot step 6).
+- `bd1e65d` feat(fractality): cargo workspace + core model.
+- `bd4d78c` feat(fractality): mission-control — journal, registry,
+  lifecycle (MC + mc-client + CLI: one lifecycle, one commit; CLI/client
+  fold into the planned MC subject rather than a fourth code commit).
+- `04cb292` feat(fractality): pod — child supervision skeleton (+ the
+  backend crate's provider-fact constants).
+- `e7eb608` feat(fractality): AI-Native gates — conform + specmap wired
+  (D15 executed: 6/6 crates gated at an empty baseline after a 51-finding
+  one-pass drain; 31 traceability edges, 0 orphans).
+- `dd895d0` docs(fractality): owner directives — pilot posture,
+  delegation law (contract + VIBEVM-BACKLOG with verification recipes).
+
+**Boundary evidence.** Floor: `rust-ai-native floor` → all green (fmt,
+test — 55 tests incl. 10 doctests, clippy -D warnings, conform 0/6
+gated, specmap 31 edges 0 orphans, test-gate). Exit criteria: real-binary
+`mc start` → `status` healthy → `ps` → `stop` clean on this box
+(detached daemon, lockfile lifecycle, exit codes per D17); the P8 early
+signal CONFIRMED by killing a real daemon process mid-run — the pod
+re-registered with the new generation and the run completed with zero
+manual repair. Phase prediction (replay + re-registration cover restart)
+CONFIRMED.
+
+**Findings folded into code/design:**
+- **F11 (shutdown):** `Notify::notify_waiters` loses the wakeup if it
+  fires before a waiter's first poll — a zero-CPU permanent hang, hit
+  live. Shutdown signals are *state* now (`watch` channel); rule: prefer
+  level-triggered signals over edge-triggered for lifecycle.
+- **F12 (crash-test honesty):** aborting an embedded server's accept
+  loop does NOT sever pooled keep-alive connections (hyper's per-conn
+  tasks live on); a pod once delivered its exit to a "dead" generation
+  through one. True crash semantics in tests require killing a
+  process. `kill_for_test`'s doc carries the caveat; the design note
+  (zombie-generation split-brain, MC generation ids in responses) is
+  Phase 2+ material.
+- **F13 (delegation field data, Phase-5 grade):** two more GLM-5.2
+  one-shots boss-verified (27-site URI swap; the 4-enum error-contract
+  drain with self-verify) — scenario-1 tasks (discipline compiled into
+  the prompt) work; delegate context measured at ~15k cached prefix,
+  targets-only reads; stdout end-buffers under redirection → telemetry
+  rides file mtimes + worker-printed PROGRESS markers; the
+  live-observation protocol and the two-scenario rule are now contract
+  law.
+- **P7 drift, recorded:** Phase 1 planned 3 commits, landed 7 (+1
+  boundary docs commit) — the extras are owner-directive scope
+  (discipline adoption, pilot posture, vendoring) folded mid-phase, not
+  silent absorption.
 
 _(Later phases fill their own maps at each boundary.)_
 

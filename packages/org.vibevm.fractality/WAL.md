@@ -1,97 +1,95 @@
 # fractality — WAL (project continuation state)
 
-_Updated: 2026-07-09 (Phase 0 EXECUTED — plan now EXECUTING) — the
-IGNITION plan's Phase 0 spikes all landed GREEN with no code committed
-(spikes commit nothing; findings F1–F10 fold into the plan). Highlights:
-nested spawn works with a clean-slate env (P1 ✅; Windows needs APPDATA/
-LOCALAPPDATA in the whitelist — D5 updated); z.ai facts resolved (base
-URL `https://api.z.ai/api/anthropic`, model mapping via
-`ANTHROPIC_DEFAULT_{OPUS,SONNET,HAIKU}_MODEL`, big=`glm-5.2[1m]`,
-small=`glm-5-turbo`; quota is tier-scoped — the "4000 MCP" figure is the
-Max tier — D6/D12 rewritten); GLM smoke ran headless first try on a fresh
-CLAUDE_CONFIG_DIR (P2 ✅, R5 resolved), stream-json fixture captured with
-usage fields; the pod kill-tree mechanism is proven (`win32job`
-KILL_ON_JOB_CLOSE reaps the worker even when the pod exits without killing
-— a pod crash leaks nothing; D3/D11 fixed); CC permission surface
-confirmed incl. the `defer` native park-and-resume that maps onto
-`waiting_on_boss` (D18 strengthened). MSRV finding: this box is rustc
-1.93.1, so `sysinfo` pins to `=0.37.2` (Phase 1 sets a rust-version floor
-or the owner bumps the toolchain). Refs intake done — all three studied
-repos MIT, clean-room intact; codex-first study note + landscape note
-written. Two grunt tasks were delegated to GLM-5.2 via opencode and
-boss-verified (first Phase-5 field data). Next: the single Phase-0
-amendment commit, then **Phase 1** (Cargo workspace + core + MC +
-pod skeleton). Prior status follows._
-_Prior: 2026-07-09 (ignition; same day — owner amendments accepted) —
-the IGNITION plan is **PLANNED · ACCEPTED with owner amendments**: the
-supervision topology is now MC → **pod** → worker (D3; `fractality-pod`
-is the sixth crate — pods own stdio/job-objects/watchdogs, talk HTTP to
-MC, survive MC restarts, and are the future federation seam), a non-yolo
-interaction layer exists as **Phase 4b** (profile allowlists + pod
-permission broker + `ask_boss` + `waiting_on_boss` + `fractality
-questions/answer`, D18), the CLI obeys a UNIX-ergonomics law (D17: `ps`,
-`wait`, `logs -f`, semantic exit codes, `--json` everywhere). RP1
-RESOLVED (dogfood = EULA→UPL-1.0 relicensing with minimal acceptance),
-RP2 RESOLVED (wal-workspaces joins redbook — DEF-11, host-side), RP4
-RESOLVED (no yolo in v0.1 — the D18 stack is the way of life; if yolo
-ever returns, worktree-restricted profiles only); the future
-checkpoints layer (à la Entire.io Checkpoints) is recorded as DEF-12 /
-PROP-001 §7 / inventory S8. I2 re-scoped by the owner's same-day
-refinement: mission-control is the command bus for ALL boss↔worker
-interface; files are the guaranteed persistence plane (NFS/Ceph-able in
-the federation era), never the medium — D4/D10/D18 aligned. D19 added
-same day: bulk data rides the bus as claim-check FileRefs
-(scope-relative path + range, incl. a head/tail form for growing
-files); filesystem scopes prove identity by a rendezvous beacon (mount
-metadata + node identity as corroboration; `FRACTALITY_NODE_ID` +
-`fractality node` expose where an agent runs); dereference locally only
-on proven scope match, else the bus serves the bytes. The
-**interim opencode+GLM delegation paradigm** is live, verified
-(`opencode run -m zai-coding-plan/glm-5.2 …` → OK) and recorded in the
-contract. No code yet by design: Phase 0 (spikes, no commits) is the next
-work; its findings rewrite Decisions in place before Phase 1 lands
-anything._
+_Updated: 2026-07-10 (Phase 1 EXECUTED — workspace skeleton +
+mission-control core live) — the six-crate Cargo workspace exists and the
+whole Phase 1 surface is proven on this box: `fractality mc
+start|stop|status`, `ps`, `show` over the versioned localhost bus
+(lockfile + rotating bearer), append-only JSONL journal with tolerant
+replay, pod skeleton with the Job-Object kill guarantee (F5), and the P8
+early signal CONFIRMED by killing a real daemon process mid-run — the pod
+re-registered with the new generation and the run completed with zero
+manual repair. Floor is the full AI-Native panel (D15 rewritten by owner
+directive: DEF-9 resolved early) and it is GREEN: fmt · 55 tests (incl.
+10 doctests) · clippy -D warnings · conform 6/6 crates gated at an empty
+baseline (51 findings drained in one pass) · specmap 31 edges / 0
+orphans · test-gate. The workspace is now a real vibe consumer: redbook
+^0.2.0 + rust-ai-native ^0.7.0 in vibe.toml, 26 packages materialised
+into the workspace-local vibedeps/, the generated boot lane bound as
+contract boot step 6 (a standing rule for every future fractality
+package). Session rulings now in the contract: the vibevm **pilot
+posture** (host defects fixed at once when blocking, else
+VIBEVM-BACKLOG.md with per-item non-destructive verification recipes;
+working-tree vibe only), the **delegation law** (mandatory GLM routing +
+hand-run scoreboard), the **live-observation protocol** (logged
+delegates, PROGRESS/TASK-DONE heartbeats, stall alarms, react on first
+signal), and the **two context scenarios** (small task = discipline
+compiled into the prompt; big task = delegate boots the corpus first).
+Delegation scoreboard this session: **delegated 2** (27-site scope!-URI
+swap; the 4-enum error-contract drain with self-verify — both
+boss-verified, conform-accepted), **kept**: architecture/design,
+policy edits, lifecycle doctests (judgment per the matrix), plus two
+found-live bugs — F11 lost-wakeup shutdown hang (Notify → watch) and
+F12 in-process "crash" that doesn't sever pooled connections (restart
+test now kills a real process). Ledger + hashes: plan §14 Phase 1 map.
+Next: **Phase 2 — delegate-out** (profiles D6, the D5 env constructor
+with the poisoned-parent test, worktree manager D8, the claude-code
+backend invocation, the spawn path through pods). Prior status follows._
+_Prior: 2026-07-09 (Phase 0 EXECUTED — plan EXECUTING) — spikes all
+green, findings F1–F10 folded into the plan (z.ai facts, headless fresh
+CLAUDE_CONFIG_DIR, win32job KILL_ON_JOB_CLOSE proven, CC permission
+surface incl. native `defer`, rustc 1.93.1 → sysinfo =0.37.2, refs
+intake MIT + clean-room, landscape note); interim opencode+GLM paradigm
+verified live and recorded in the contract._
 
 ## Current state
 
 - **The plan (canonical for all campaign detail):**
   [`fractality/v0.1.0/spec/plans/FRACTALITY-IGNITION-PLAN-v0.1.md`](fractality/v0.1.0/spec/plans/FRACTALITY-IGNITION-PLAN-v0.1.md)
-  — status `PLANNED`. Covers Phases 0–6: spikes → workspace + mission-control
-  core → delegate-out → collect-back → swarm → policy layer (delegation
-  rules + model playbooks) → boss integration + stats. Campaigns 2
-  (initiative system) and 3 (RLM) are seeded in its deferrals ledger.
-- **Foundation:**
-  [`fractality/v0.1.0/spec/PROP-001-foundation.md`](fractality/v0.1.0/spec/PROP-001-foundation.md)
-  — vision (agent OS), system model and glossary, architecture, invariants
-  I1–I6, usage & ToS posture, naming, evolution horizons.
-- **Tree:** spec corpus only. The Cargo workspace and crates are created by
-  Phase 1, not before.
-- **Refs intake:** not started. Sources and clean-room rules:
-  [`fractality/v0.1.0/spec/refs/INVENTORY.md`](fractality/v0.1.0/spec/refs/INVENTORY.md).
-  Clones land under the host `/refs/src/` (gitignored); only notes and the
-  inventory are committed.
-- **Host wiring:** registered in the host `WORKSPACES.md`; the workspace
-  grammar (`восстанови/заверши сессию fractality`) is live in the host
-  contracts; `flow:org.vibevm/wal-workspaces` 0.1.0 canonizes it.
+  — status `EXECUTING`, Phases 0–1 landed (ledger §14 carries both
+  commit maps + findings F1–F13). Remaining: Phases 2, 3, 4, 4b, 5, 6.
+- **Code:** `fractality/v0.1.0/` is its own Cargo workspace — six crates
+  (`fractality-core`, `fractality-mission-control`, `fractality-pod`,
+  `fractality-mc-client`, `fractality-backend-claude-code`,
+  `fractality-cli`), three binaries (`fractality`,
+  `fractality-mission-control`, `fractality-pod`), rust-version 1.93,
+  `sysinfo =0.37.2` pinned (F9). Floor: `rust-ai-native floor` from the
+  workspace root (zero-install recipe in the contract until `vibe bin
+  build` lands — backlog item 6).
+- **Discipline:** conform gates all six crates (empty baseline);
+  specmap namespace `fractality` (31 edges, 0 orphans); pub-doctest
+  gate is the named next ratchet.
+- **vibe wiring:** workspace vibe.toml requires redbook ^0.2.0 +
+  rust-ai-native ^0.7.0; vibedeps/ (26 pkgs) and spec/boot/INDEX.md are
+  generated, committed, and bound as boot step 6. Install recipe (the
+  working recipe, incl. why `--registry` is exclusive today):
+  contract §"Driving vibevm here". Pilot findings + fix-list +
+  verification plan: [`VIBEVM-BACKLOG.md`](VIBEVM-BACKLOG.md).
+- **Host wiring:** registered in the host `WORKSPACES.md`; two redbook
+  members (`atomic-commits`, `sync-from-code` 0.1.0) are vendored into
+  the host `packages/org.vibevm/` (tag-pinned mirrors; do not edit).
 
 ## Constraints (do not violate without discussion)
 
-- Do not scan or load the host vibevm project context; host facts live in
-  the plan §5. (Owner directive, 2026-07-09.)
-- Clean-room law binds all reference sources — inspiration-only, study-note
-  → implement, no line porting. (Host directive 2026-07-07, extended to
-  this workspace 2026-07-09.)
-- Worker env never inherits `ANTHROPIC_*` / `CLAUDE_*` (invariant I1).
+- Host Rules 1–4 bind every commit (human-authored surface, Conventional
+  Commits, topic-grouped, autonomy on routine only).
+- The delegation law + live-observation protocol + two context scenarios
+  (contract §"THE DELEGATION LAW") — mandatory, scoreboard in every WAL
+  checkpoint.
+- Clean-room law for every source in `fractality/v0.1.0/spec/refs/INVENTORY.md`.
+- Worker env never inherits `ANTHROPIC_*` / `CLAUDE_*` (I1 — structural
+  in the pod, poisoned-parent test pins it).
 - Never read/print token file contents; existence checks only.
-- All boss↔worker data exchange goes through files on disk (owner ruling
-  2026-07-09) — no result passing through process stdout contracts beyond
-  the recorded transcript, no shared memory, no sockets for *content*.
+- MC is the bus; files are the persistence plane, never the medium (I2).
 - Publish (any registry) is owner-word-only.
+- Floor green at every phase boundary; never wait blind on long runs
+  (background + polled verdict markers).
 
 ## Next
 
-Execute plan **Phase 0** (spikes s1–s9: provider facts, nested-spawn spike,
-stream-json fixtures, kill-tree probe, refs intake + licenses, landscape
-one-pager, crate pins, host-gate probe). Then: rewrite affected Decisions in
-place, flip the plan status to `EXECUTING` on the amendment commit, proceed
-to Phase 1.
+**Phase 2 — delegate-out** (plan §8): profile loading + validation (D6),
+the D5 clean-slate env constructor with the poisoned-parent test at the
+backend level, the worktree manager (D8), the claude-code headless
+invocation builder, and the spawn path — `POST /v0/runs` provisions the
+workspace and launches the pod; `fractality run` drives a GLM worker
+end to end with the transcript on disk. Exit: a real GLM worker executes
+`spec/examples/hello-glm.toml`; P2 confirmed on live transcripts.
