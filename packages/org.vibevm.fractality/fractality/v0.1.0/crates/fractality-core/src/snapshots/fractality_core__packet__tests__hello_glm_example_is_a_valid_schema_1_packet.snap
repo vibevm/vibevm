@@ -1,0 +1,34 @@
+---
+source: crates/fractality-core/src/packet.rs
+expression: p
+---
+Packet {
+    schema: 1,
+    task: TaskSpec {
+        title: "hello-glm",
+        goal: "Create a file named hello.txt in the working directory containing exactly\none line: `hello from glm`. Then write result.md with a one-paragraph\nsummary of what you did.\n",
+        acceptance: [],
+    },
+    context: ContextSpec {
+        files: [],
+        notes: None,
+    },
+    workspace: WorkspaceSpec {
+        mode: Dir,
+        repo: ".",
+        base: "main",
+    },
+    output: OutputSpec {
+        result: "result.md",
+        branch: None,
+    },
+    budget: BudgetSpec {
+        wall_secs: 300,
+        max_turns: 10,
+        max_output_tokens: 50000,
+    },
+    routing: RoutingSpec {
+        profile: "glm",
+        model: "small",
+    },
+}

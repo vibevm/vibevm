@@ -1,0 +1,78 @@
+# fractality v0.1.0 — Cargo workspace (six crates, plan §4 / D1).
+# This version dir is its own workspace; the host root excludes `packages/`.
+# Floor: cargo fmt --check && cargo clippy --workspace --all-targets -- -D warnings && cargo test --workspace
+
+[workspace]
+resolver = "3"
+members = [
+    "crates/fractality-core",
+]
+# vibedeps packages are their own Cargo workspaces; without the exclude,
+# cargo would bind their crates to THIS workspace and manifest inheritance
+# breaks (GUIDE-AI-NATIVE-RUST §13.3, PROP-024 §2.4).
+exclude = ["vibedeps"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+# Floor pinned to this box's toolchain (plan F9): sysinfo is pinned =0.37.2
+# because 0.38+ needs a newer rustc than 1.93.
+rust-version = "1.93"
+license = "UPL-1.0"
+authors = ["Oleg Chirukhin"]
+publish = false
+
+[workspace.dependencies]
+# Intra-workspace seams
+fractality-core = { path = "crates/fractality-core" }
+
+# Async runtime + HTTP (D11)
+tokio = { version = "1.52", features = [
+    "rt-multi-thread",
+    "macros",
+    "time",
+    "sync",
+    "fs",
+    "io-util",
+    "net",
+    "process",
+    "signal",
+] }
+axum = "0.8"
+# No TLS backend on purpose: the bus is localhost HTTP (D10). The boss-side
+# `fractality fetch` (Phase 4, D12) will add a rustls feature when it lands.
+reqwest = { version = "0.13", default-features = false, features = [
+    "json",
+] }
+
+# Serialization (house style: TOML for human-authored files, JSONL for journals)
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+toml = "0.9"
+
+# CLI + diagnostics
+clap = { version = "4.6", features = ["derive"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+# Domain
+ulid = { version = "1.2", features = ["serde"] }
+camino = { version = "1.2", features = ["serde1"] }
+thiserror = "2.0"
+
+# The AI-Native discipline's inert traceability tags (GUIDE §7/§13). The
+# crate is served from this workspace's own vibedeps slot; `package =`
+# renames it so sources say `specmark::scope!(…)` like every other
+# discipline consumer.
+specmark = { package = "core-ai-native-specmark", path = "vibedeps/stack-rust-ai-native-lang/0.7.0/crates/vendor/core-ai-native-specmark" }
+
+# Process control (D11). sysinfo pinned: rustc 1.93.1 on this box (plan F9).
+sysinfo = "=0.37.2"
+win32job = "2.0"
+command-group = { version = "5.0", features = ["with-tokio"] }
+# Windows machine identity (MachineGuid) for D19 node identity; a small,
+# cfg(windows)-only addition on top of the D11 set — recorded in the ledger.
+winreg = "0.55"
+
+# Test-only
+insta = "1.48"

@@ -1,0 +1,29 @@
+# hello-glm — the canonical smallest task packet (plan D7, schema 1).
+# This exact file is a golden fixture: fractality-core parses it in tests.
+# Fire it (from Phase 2 on): fractality run --packet spec/examples/hello-glm.toml
+
+schema = 1
+
+[task]
+title = "hello-glm"
+goal = """
+Create a file named hello.txt in the working directory containing exactly
+one line: `hello from glm`. Then write result.md with a one-paragraph
+summary of what you did.
+"""
+acceptance = []
+
+[workspace]
+mode = "dir"
+
+[output]
+result = "result.md"
+
+[budget]
+wall_secs = 300
+max_turns = 10
+max_output_tokens = 50000
+
+[routing]
+profile = "glm"
+model = "small"
