@@ -5,6 +5,14 @@ same-day ignition bootstrap commits · cold-executable: any phase boundary is
 a safe stop; the fractality floor (§11) is green at every boundary. Format:
 `flow:org.vibevm/campaign-plans` (one file, five roles)._
 
+_ACCEPTED with owner amendments, 2026-07-09 (same day): supervision
+topology is now MC → **pod** → worker (D3 rewritten; sixth crate;
+Phase 4b inserted; §4 arithmetic updated); a UNIX-ergonomics law (D17) and
+the non-yolo interaction stack (D18) added; RP1 and RP2 RESOLVED; DEF-2
+carries the owner's RLM hypothesis; DEF-11 added; the interim
+opencode+GLM paradigm recorded in the workspace contract and verified
+live._
+
 ## 2. Execution record
 
 _(Empty at authoring. Prepended at close: commit range, per-phase deltas
@@ -102,6 +110,36 @@ Addenda, same day:
 > профилировки и ориентироваться по ним, и отдавать эти метаданные всем,
 > кому нужно.»
 
+Clarifications (owner, 2026-07-09, second message; operative fragments):
+
+> «Кажется, в RLE основная фишка в том, что каждый раз у нас новый свежий
+> контекст и это означает спавн нового агента с чистого листа. Но это моё
+> поверхностное представление, это надо проверять.» [→ DEF-2]
+> «То что мы делаем в mission-control — подумай сразу, чтобы этим было
+> удобно пользоваться, эргономично. Например, как удобно пользоваться
+> командной строкой Linux и утилитами GNU — что агентам, что людям. […]
+> позаимствовать у них часть UNIX вайба.» [→ D17]
+> «Ты можешь уже сейчас экономить контекст с помощью GLM-5.2, у тебя в
+> PATH есть opencode […] всякий шлак типа рефакторингов отправлять в GLM
+> […] Ты можешь эту парадигму где-нибудь зафиксировать, например, в
+> Claude.md в текущем Workspace и пользоваться ей.» [→ workspace contract]
+> «Да, в качестве догфуд задачи можно переколбасить все наши EULA на
+> UPL-1.0 […] если что-то меняется в самом корневом VibeVM, верифицируй
+> это, на случай если воркер сойдёт с ума. Должна быть хотя бы минимальная
+> приемка.» [→ RP1, Phase 6]
+> «wal-workspaces можно включить в redbook» [→ RP2, DEF-11]
+> «я не понимаю, как мы будем делегировать в неинтерактивные задачи
+> воркеры в любом режиме кроме как yolo? можем ли мы сделать какой-то
+> протокол обмена ответами не останавливая запущенный воркер […] Агент у
+> тебя спавнится не напрямую, а вначале стартует отдельное приложение —
+> "под", и этот под хранит на себе управление вещами типа
+> stdout/stderr/stdin. Именно pod общается с mission control. […] потоки
+> ввода-вывода очень хрупкие, и они совершенно точно не работают сквозь
+> сетевые соединения […] Плюс […] мы можем работать с зависшими агентами,
+> не убивая процесса на уровне mission control — это такие безопасные
+> контейнеры, которые если что могут перезапустить нативно упавшего
+> агента, поменять ему параметры или ещё что-то.» [→ D3, D18, Phase 4b]
+
 ### 3b. Programme map — owner phases → campaigns
 
 The mandate's six product phases map onto a campaign chain (lineage law:
@@ -126,22 +164,25 @@ proofs = **0**; mission-control = does not exist.
 
 Exit state of this campaign:
 
-- **1 code-bearing package** `fractality` v0.1.0 with exactly **5 crates**
-  (`fractality-core`, `fractality-mission-control`, `fractality-mc-client`,
-  `fractality-backend-claude-code`, `fractality-cli`) and **2 binaries**
-  (`fractality`, `fractality-mission-control`).
+- **1 code-bearing package** `fractality` v0.1.0 with exactly **6 crates**
+  (`fractality-core`, `fractality-mission-control`, `fractality-pod`,
+  `fractality-mc-client`, `fractality-backend-claude-code`,
+  `fractality-cli`) and **3 binaries** (`fractality`,
+  `fractality-mission-control`, `fractality-pod`).
 - **1 policy flow package** `org.vibevm.fractality/delegation-rules` v0.1.0
   with ≥ 3 playbooks (`glm-5.2`, `glm-5-turbo`, `_template`).
 - **1 boss boot snippet + ≥ 1 skill** in the fractality package (Phase 6).
-- **4 recorded E2E proofs** (manual-tests style, outputs saved under
+- **5 recorded E2E proofs** (manual-tests style, outputs saved under
   `spec/manual-tests/`): single sync delegation; a 3-worker swarm; a
-  recursive kill; a stats readout that reconciles with transcripts.
+  recursive kill; a permission/question round-trip on a live parked
+  worker; the dogfood relicensing run with a stats readout that
+  reconciles with transcripts.
 - Floor green (§11), host self-check green, **0 clean-room violations**
   (every studied source has license + study note in the inventory before
   any implementation that draws on it).
 
-Reconciliation: crates/binaries rise in Phases 1–4; proofs in 2–4 and 6;
-the policy package in 5; boss-side artifacts in 6. Nothing else moves.
+Reconciliation: crates/binaries rise in Phases 1–4b; proofs in 2–4b and
+6; the policy package in 5; boss-side artifacts in 6. Nothing else moves.
 
 ## 5. Current-state facts (verified 2026-07-09; do not re-discover)
 
@@ -162,6 +203,15 @@ the policy package in 5; boss-side artifacts in 6. Nothing else moves.
   62,65,67,70 (+ 20/30 reserved); `wal-workspaces` took **11** in the
   bootstrap. The fractality boss snippet (Phase 6) will use **75** —
   outside the redbook grid, no collision.
+- `opencode` **1.17.14** on PATH with the owner's z.ai credentials in its
+  auth store (`Z.AI` + `Z.AI Coding Plan` entries). **Verified live
+  2026-07-09:** `opencode run -m zai-coding-plan/glm-5.2 "Reply with
+  exactly: OK"` → `OK`. The catalog also carries
+  `zai-coding-plan/glm-5-turbo`. The `opencode/*` (Zen gateway) route is
+  blocked — no payment method; the default model (lmstudio, local) is
+  down unless LM Studio runs. **Use `zai-coding-plan/*` only.** This
+  confirms `glm-5.2` / `glm-5-turbo` as live z.ai catalog names; the
+  CC-side env mapping still needs Ф0.s3.
 - **NOT verified (authoring-model knowledge ends 2026-01):** the z.ai
   Anthropic-compatible base URL; exact model ids for GLM 5.2 / GLM-5-Turbo;
   which env vars Claude Code 2.1.x honors for model-slot mapping
@@ -182,7 +232,8 @@ the policy package in 5; boss-side artifacts in 6. Nothing else moves.
   cross-package path-deps break PROP-024 self-containment, and
   contract-first type duplication is dead weight at this stage.
 - (γ) **CHOSEN:** one code-bearing package `fractality` v0.1.0 whose Cargo
-  workspace holds 5 well-cut crates (§4); `mission-control` splits into its
+  workspace holds 6 well-cut crates (§4, incl. `fractality-pod` — the
+  per-worker supervisor, D3); `mission-control` splits into its
   own package at the API-stability milestone (deferral DEF-4). Policy
   content ships as a separate sibling flow package from day one (Phase 5),
   because *its* boundary (prose vs code) is already stable. Consequence:
@@ -201,18 +252,32 @@ the policy package in 5; boss-side artifacts in 6. Nothing else moves.
   `CLAUDE_CONFIG_DIR`. The documented enterprise-gateway surface — the
   paved road.
 
-### D3 — spawner locus: mission-control owns the children
+### D3 — supervision topology: mission-control → pod → worker
 - (α) CLI spawns, MC only registers — rejected: kill-tree handles and pipe
   ownership scatter across short-lived CLI processes; adoption after a CLI
   death is impossible; federation dead-end.
-- (β) **CHOSEN:** the CLI is a thin client; MC spawns every worker, owns
-  its process group / Windows Job Object, captures stdout to the run dir,
-  enforces budgets, performs kills (recursive by tree), adopts-or-reaps on
-  restart via journal replay. CLI auto-starts the daemon when absent
-  (lockfile probe). Phase 0 s5 validates the mechanism; if Job-Object
-  inheritance under nested `claude → node → shell` trees fails, fallback is
-  MC-side `taskkill /PID /T /F` (+ `sysinfo` sweep assert) — the decision
-  point is *which mechanism*, not *which process owns it*.
+- (β) MC spawns workers directly — the plan's original choice, **rejected
+  by owner amendment (2026-07-09)**: stdio is process-local and fragile,
+  while every other leg (boss↔MC, MC↔runner) is message-shaped HTTP that
+  must survive a network hop someday; direct spawn also couples MC
+  restarts to worker lifetimes and pushes per-platform process mess into
+  the daemon.
+- (γ) **CHOSEN (owner amendment):** MC spawns a **pod**
+  (`fractality-pod`, one per run); the pod spawns the worker and owns what
+  only a local parent can own — the child's stdin/stdout/stderr (streamed
+  to run-dir files), the Job Object / process group, budget watchdogs,
+  kill, and later native restart of a crashed worker with amended
+  parameters. The pod speaks to MC over the same localhost HTTP (register,
+  heartbeat, events, exit report), so an MC restart strands nobody: pods
+  keep supervising and re-register on reconnect — adoption is a protocol
+  feature, not journal archaeology. This is the containerd-shim /
+  systemd-per-service shape, and it is the federation seam: tomorrow MC is
+  remote and pods are the machine-local runners, zero rearchitecture. The
+  CLI stays a thin MC client; MC auto-starts on first call (lockfile
+  probe). Cost accepted: one more binary and one protocol leg — bought
+  back by simpler adoption (R6 shrinks) and a platform-clean daemon.
+  Phase 0 s5 validates the pod-side kill mechanism; fallback stays
+  `taskkill /PID /T /F` + `sysinfo` sweep.
 
 ### D4 — content channel: files on disk, run dirs under `~/.fractality`
 Owner ruling (I2). Run dir: `~/.fractality/runs/<ulid>/` holding
@@ -301,8 +366,10 @@ repo copies (slow, fat).
 ### D9 — mission-control storage: append-only JSONL journal
 `~/.fractality/journal/events.jsonl` (rotated by size): every event —
 `registered`, `spawned`, `state`, `usage`, `completed`, `killed`, `error` —
-one line, serde-typed. In-memory state = replay at startup (adopt-or-reap
-for runs whose PIDs died). This journal **is** the profiling-metadata store
+one line, serde-typed. In-memory state = replay at startup, reconciled
+against live pod re-registrations (D3): a run whose pod returns is adopted
+live; a run whose pod is gone is reaped from journal evidence. This
+journal **is** the profiling-metadata store
 of I3 (owner addendum); `GET /v0/metrics` aggregates from it. Rejected:
 SQLite (dep + migrations before the schema has settled), in-memory-only
 (loses the telemetry that the whole initiative system feeds on).
@@ -313,8 +380,12 @@ pid, bearer}` (0600); bearer required on every call (defense against other
 local users). Endpoints v0: `GET /v0/health` · `POST /v0/runs` (spawn from
 packet) · `GET /v0/runs` (filters) · `GET /v0/runs/:id` ·
 `GET /v0/runs/:id/tree` · `POST /v0/runs/:id/kill` (`recursive` flag) ·
-`GET /v0/metrics` (aggregates by profile/model/day). Sync `run` = spawn +
-long-poll (SSE is DEF-6). Path-versioned (`/v0/`) so federation-era changes
+`GET /v0/runs/:id/question` · `POST /v0/runs/:id/answer` (D18) ·
+`GET /v0/metrics` (aggregates by profile/model/day). Pod leg:
+`POST /v0/pods/register` · `POST /v0/pods/:id/heartbeat` ·
+`POST /v0/pods/:id/event` (state/usage/question/exit). Run states gain
+`waiting_on_boss`. Sync `run` = spawn + long-poll (SSE is DEF-6).
+Path-versioned (`/v0/`) so federation-era changes
 don't strand old CLIs. Rejected: gRPC (heavy for v0.1), Unix sockets /
 named pipes (two transport stacks; HTTP is uniform cross-platform).
 
@@ -334,13 +405,16 @@ web-ish tool events from transcripts into a monthly quota metric (the
 «4000 MCP calls» budget — exact quota VERIFY Ф0.s3). The Phase 5 playbooks
 then *describe* what the mechanism already *enforces*.
 
-### D13 — CLI verb set (v0.1)
+### D13 — CLI verb set (v0.1): UNIX muscle memory
 `fractality mc start|stop|status` · `run --packet <file>` (sync; exit code
 mirrors worker outcome; prints run-dir path + one-screen summary) · `spawn`
-(async) · `await <id>` · `ls` · `show <id>` · `tree [<id>]` ·
-`kill <id> [--tree]` · `stats` · `fetch <url> --out <path>` ·
-`packet new [--template <name>]`. Human-drivable first: every flow
-debuggable from a terminal without any boss involved.
+(async) · `wait <id>…` (shell-`wait` semantics) · `ps` (list runs; `ls`
+kept as alias) · `show <id>` · `tree [<id>]` · `logs <id> [-f]` (tail the
+transcript/stderr) · `kill <id> [--tree]` · `questions` (pending
+`waiting_on_boss` items) · `answer <id> [<text>|--file <f>]` · `stats` ·
+`fetch <url> --out <path>` · `packet new [--template <name>]`.
+Human-drivable first: every flow debuggable from a terminal without any
+boss involved. Ergonomics law: D17.
 
 ### D14 — error surface and testing
 One `thiserror` enum per crate layer; messages carry the violated invariant
@@ -365,6 +439,46 @@ Campaign-2 initiative system, future GUIs, and meta-cognition tooling read
 the same API. No shadow accounting anywhere — including in the boss's own
 notes. Owner addendum, 2026-07-09, verbatim in §3.
 
+### D17 — ergonomics law: GNU/UNIX grammar for humans and agents
+Owner amendment (2026-07-09): the toolchain must feel like the classic
+userland, «что агентам, что людям». Concretely: verbs mirror coreutils
+muscle memory (`ps`, `kill`, `wait`, `logs -f`, `tree`); default output is
+quiet, plain-text, one-record-per-line, stable-ordered — grep/awk-able by
+construction; `--json` on every read verb for agents; exit codes are
+semantic (0 ok · 1 worker failed · 2 infra error · 3 budget-killed ·
+4 parked on a question past its wait) and documented per verb; color only
+on a TTY and never under `NO_COLOR`; everything-is-a-file stays literal —
+run dirs are the API of last resort, `show`/`logs` are conveniences over
+them; `--help` at man-page quality. Rejected: TUI-first or JSON-only
+surfaces — the fabric must compose with pipes and with agents equally.
+
+### D18 — non-yolo delegation: permissions and questions as a protocol
+The owner's question («как делегировать в неинтерактивные воркеры в любом
+режиме кроме yolo?») has a paved-road answer: headless Claude Code
+supports programmatic permission decisions — the exact 2.1.x surface
+(permission-prompt MCP tool and/or PreToolUse-hook decisions) is a Ф0.s3
+VERIFY item. The stack, layered:
+1. **Static allowlist** per profile (D6) — the boring majority:
+   pre-approved edit/test/git tools inside the worktree; web tools denied
+   (D12). Unlisted actions fail closed, they never hang.
+2. **Pod permission broker:** the worker's permission requests route to a
+   broker the pod serves; profile policy auto-decides allow/deny
+   patterns; anything else escalates — pod → MC event → run state
+   `waiting_on_boss` + `question.md` in the run dir (I2). The worker
+   stays alive, blocked on that one tool result.
+3. **`ask_boss` guidance channel:** the same broker exposes an explicit
+   question tool; the packet preamble instructs the worker to use it when
+   genuinely stuck instead of guessing — especially before anything
+   destructive. The boss (or a human) triages with `questions` and
+   replies with `answer`; the reply returns as the tool result and the
+   run resumes. Wait bounded by the packet budget.
+`yolo` (skip-permissions) remains an explicit per-profile opt-in for
+worktree-isolated bulk work — never the default (RP4). Rejected as the
+primary channel: stdin stream-json injection — the pod owns stdin so it
+stays available as a fallback, but tool-call semantics are
+in-distribution for models, atomic, and file-recordable; raw stream
+surgery is neither.
+
 ## 7. Predictions (checked one by one at close)
 
 - **P1** — nested headless spawn works on this box: a `claude -p` child
@@ -388,8 +502,12 @@ notes. Owner addendum, 2026-07-09, verbatim in §3.
   yet), a live boss session delegates ≥ 50% of eligible grunt tasks in the
   dogfood exercise. This is the *baseline* Campaign 2 must beat; recording
   it honestly matters more than it being high.
-- **P7** — the campaign lands in ≤ 14 commits matching the planned
-  subjects (drift recorded in the ledger, not silently absorbed).
+- **P7** — the campaign lands in ≤ 17 commits (15 planned) matching the
+  planned subjects (drift recorded in the ledger, not silently absorbed).
+- **P8** — the pod layer costs < 1 s of spawn overhead per worker, and an
+  MC kill-and-restart during a live run loses nothing: the pod
+  re-registers and the run completes (zero orphans, zero lost
+  transcripts).
 
 ## 8. Phases
 
@@ -408,17 +526,21 @@ notes. Owner addendum, 2026-07-09, verbatim in §3.
    flags, into `/refs/src/zai-docs/` and `/refs/src/cc-docs/`; extract:
    base URL, model ids, env var names honored by CC 2.1.x, onboarding
    behavior of a fresh `CLAUDE_CONFIG_DIR`, plan quotas (the 4000-MCP
-   figure), prices, and any documented one-shot-strength guidance for GLM.
-   **Rewrite D6/D7/D12 in place**; note findings under this phase.
+   figure), prices, any documented one-shot-strength guidance for GLM,
+   and the headless permission surface (permission-prompt tool /
+   PreToolUse decision shape) that D18 leans on.
+   **Rewrite D6/D7/D12/D18 in place**; note findings under this phase.
 4. **s4 GLM smoke + stream-json fixtures:** repeat s2(b) with the GLM env
    (base URL + token file + model mapping): expect a GLM-authored "OK".
    Then one small real task with `--output-format stream-json` captured to
    a fixture file — the golden corpus for the Phase 3 parser. Early P2
    check.
-5. **s5 kill-tree spike:** scratch Rust bin (uncommitted) spawns a
-   long-running `claude -p`, enumerates the child tree, kills via the D11
-   candidate crates; pick the mechanism (Job Objects vs taskkill-sweep);
-   assert no orphans via `sysinfo`. **Rewrite D3/D11 in place.**
+5. **s5 kill-tree spike:** scratch Rust bin (uncommitted) plays the pod:
+   spawns a long-running `claude -p`, owns its Job Object / process
+   group, streams stdout to a file, kills the tree via the D11 candidate
+   crates; assert no orphans via `sysinfo`; verify a dying parent
+   (mock-MC) takes down neither pod nor worker. **Rewrite D3/D11 in
+   place.**
 6. **s6 refs intake + licenses:** shallow-clone the three repos
    (steipete/agent-scripts; barkain/claude-code-workflow-orchestration;
    alexzhang13/rlm) into `/refs/src/`, download arXiv 2512.24601 into
@@ -442,21 +564,30 @@ findings` — which also flips the status line to `EXECUTING`.
 
 ### Phase 1 — workspace skeleton + mission-control core
 
-1. Create the Cargo workspace in `fractality/v0.1.0/` with the five D1
+1. Create the Cargo workspace in `fractality/v0.1.0/` with the six D1
    crates; wire the floor; add `spec/examples/hello-glm.toml` (packet).
-2. `fractality-core`: ULID run ids, `RunState` machine, packet schema
-   (serde + goldens), journal event types, API DTOs, `WorkerBackend` trait.
-3. `fractality-mission-control`: journal append + replay (adopt-or-reap),
-   run registry, lockfile + bearer, `GET /v0/health`, run CRUD minus spawn,
-   graceful shutdown.
-4. `fractality-cli` + `fractality-mc-client`: `mc start|stop|status`,
-   auto-start on first client call, `ls`, `show`.
+2. `fractality-core`: ULID run ids, `RunState` machine (incl.
+   `waiting_on_boss`), packet schema (serde + goldens), journal event
+   types, API DTOs (client and pod legs), `WorkerBackend` trait.
+3. `fractality-mission-control`: journal append + replay + pod
+   reconciliation (D9), run registry, lockfile + bearer, `GET /v0/health`,
+   run CRUD minus spawn, pod register/heartbeat endpoints, graceful
+   shutdown.
+4. `fractality-pod` skeleton: spawn a child from a spec, stream its stdio
+   to files, heartbeat + exit report to MC (loopback-tested with a stub
+   child process, no Claude Code yet).
+5. `fractality-cli` + `fractality-mc-client`: `mc start|stop|status`,
+   auto-start on first client call, `ps`, `show` (D17 output rules from
+   day one).
 
 *Exit:* floor green; `mc start` → `status` healthy → `stop` clean on this
-box; journal survives a kill-and-restart cycle with state intact.
-*Prediction:* journal replay covers restart with zero manual repair.
+box; a stub run driven through pod → MC survives an MC kill-and-restart
+with state intact (early P8 signal).
+*Prediction:* journal replay + pod re-registration cover restart with
+zero manual repair.
 *Commits:* `feat(fractality): cargo workspace + core model` ·
-`feat(fractality): mission-control — journal, registry, lifecycle`.
+`feat(fractality): mission-control — journal, registry, lifecycle` ·
+`feat(fractality): pod — child supervision skeleton`.
 
 ### Phase 2 — delegate-out (fire a worker, results land on disk)
 
@@ -467,10 +598,12 @@ box; journal survives a kill-and-restart cycle with state intact.
 4. Backend `claude-code`: build headless invocation (prompt from packet
    goal + output contract preamble; flags per s3: output format, max
    turns, permission posture, tool denies).
-5. MC spawn path: `POST /v0/runs` accepts a packet, spawns owned child,
-   streams stdout to `worker-stdout.jsonl`, tracks state; `fractality run`
-   drives it sync end-to-end (spawn → wait → exit code), collection still
-   minimal (exit code + transcript on disk).
+5. Spawn path: `POST /v0/runs` accepts a packet; MC provisions the
+   worktree (D8) and launches the pod with the run spec; the pod builds
+   the D5 env, spawns the worker, streams stdout to
+   `worker-stdout.jsonl`, heartbeats state; `fractality run` drives it
+   sync end-to-end (spawn → wait → exit code), collection still minimal
+   (exit code + transcript on disk).
 
 *Exit:* E2E — a GLM worker executes a trivial file-producing packet; run
 dir holds packet + transcript; run visible in `ls`/`show`; **the
@@ -507,7 +640,8 @@ repo", GLM-5.2 worker, acceptance `cargo test` green, boss-side artifact =
 3. Nesting: `FRACTALITY_RUN_ID` / `FRACTALITY_DEPTH` in worker env; a
    worker calling `fractality spawn` registers a **child** run — the tree
    becomes real (fractal property demonstrated with a depth-2 run).
-4. `kill --tree` per the s5 mechanism; orphan sweep assertion.
+4. `kill --tree` delegated to the pod (s5 mechanism); orphan sweep
+   assertion; pod-loss fallback: MC tree-kills the pod's process group.
 5. `GET /v0/metrics` v0 aggregates (runs by state/profile/model/day;
    tokens; wall time; web-tool-quota counter per D12).
 
@@ -516,6 +650,26 @@ repo", GLM-5.2 worker, acceptance `cargo test` green, boss-side artifact =
 *Prediction:* P4 and P5, measured.
 *Commits:* `feat(fractality): swarm — async lifecycle, budgets, kill-tree`
 · `feat(fractality): mission-control call tree + metrics`.
+
+### Phase 4b — the interaction layer (delegation without yolo)
+
+1. Broker in the pod per D18: serve the permission surface verified in
+   Ф0.s3 plus the explicit `ask_boss` tool; profile policy auto-decides
+   allow/deny patterns; everything else escalates to MC.
+2. MC + core: `waiting_on_boss` transitions, question/answer endpoints
+   (D10), `question.md` / `answer.md` in the run dir (I2).
+3. CLI: `questions`, `answer`, the exit-code-4 path (D17); `run` prints a
+   loud one-liner when its worker parks on a question.
+4. The packet preamble gains the question protocol: use `ask_boss` when
+   genuinely stuck, always before anything destructive; never guess.
+
+*Exit:* E2E — a worker hits a non-allowlisted action, parks in
+`waiting_on_boss`, the boss answers via `fractality answer`, the run
+resumes and completes. Recorded as manual-test #4.
+*Prediction:* a parked worker survives ≥ 10 minutes idle and resumes
+cleanly (no worker-side session timeout at v0.1 scale).
+*Commits:* `feat(fractality): pod broker — permissions and questions` ·
+`feat(fractality): waiting-on-boss lifecycle + answer verbs`.
 
 ### Phase 5 — the policy layer (delegation-rules package)
 
@@ -556,9 +710,13 @@ prose, not policy; rewrite until it decides.
 3. `fractality stats`: thin client over `/v0/metrics` (D16) — tokens by
    model/profile, delegated-run counts, quota counters, boss-minutes saved
    estimate (declared as an estimate).
-4. Dogfood: one real grunt task from the host repo executed through the
-   swarm end-to-end (RP1 names the candidate; owner picks), recorded as
-   manual-test #4 and as the P6 baseline measurement.
+4. Dogfood (RP1 RESOLVED): relicense the host's straggler manifests
+   (`license = "EULA"` → `"UPL-1.0"`) through the swarm, in worktrees.
+   Acceptance, per the owner's «минимальная приемка»: the boss reviews
+   the diff; `grep -r 'license = "EULA"'` over the target set returns
+   zero; `git diff --stat` touches only the intended manifests; host
+   `bash tools/self-check.sh` green **before** merge. Recorded as
+   manual-test #5 and as the P6 baseline measurement.
 
 *Exit:* a live boss session (this harness) delegates the dogfood task via
 the skill without hand-holding; stats reconcile with the run transcripts.
@@ -636,26 +794,31 @@ cargo fmt --check && cargo clippy --workspace --all-targets -- -D warnings && ca
 fractality mc start && fractality mc status                          # healthy
 fractality run --packet spec/examples/hello-glm.toml                 # exit 0
 test -s ~/.fractality/runs/<that-run>/result.md                      # non-empty result
-fractality stats                                                     # ≥4 completed runs, ≥1 swarm parent w/ 3 children
-ls spec/manual-tests/                                                # 4 recorded procedures with outputs
+fractality stats                                                     # ≥5 completed runs, ≥1 swarm parent w/ 3 children
+fractality questions                                                 # empty at close
+ls spec/manual-tests/                                                # 5 recorded procedures with outputs
 (cd ../../../.. && bash tools/self-check.sh); echo "EXIT=$?"          # host floor green
 ```
 
 ## 13. Review points
 
-1. **RP1 — dogfood target for Phase 6.** OPEN. Candidate: the host's
-   license-straggler alignment (old fixture manifests `EULA` → `UPL-1.0`) —
-   real, boring, parallelizable, host-visible. Executor recommends it;
-   needs the owner's word because workers would edit host-repo files (in
-   worktrees, boss-reviewed).
-2. **RP2 — does `wal-workspaces` join redbook edition 0.3.0?** OPEN, owner
-   court; no phase depends on it.
+1. **RP1 — dogfood target for Phase 6.** RESOLVED (owner, 2026-07-09):
+   «Да, в качестве догфуд задачи можно переколбасить все наши EULA на
+   UPL-1.0, это кажется супер простой задачей. Но пожалуйста, если что-то
+   меняется в самом корневом VibeVM, верифицируй это, на случай если
+   воркер сойдёт с ума. Должна быть хотя бы минимальная приемка.» —
+   Phase 6 step 4 carries the acceptance recipe.
+2. **RP2 — does `wal-workspaces` join redbook?** RESOLVED (owner,
+   2026-07-09): «wal-workspaces можно включить в redbook» — rides the
+   next redbook edition (0.3.0), host-side work outside this campaign
+   (DEF-11).
 3. **RP3 — publish timing** for anything in `org.vibevm.fractality`. OPEN,
    standing hold; §10.
-4. **RP4 — default worker permission posture.** OPEN. Executor recommends:
-   allowlist/accept-edits default; `--dangerously-skip-permissions`-class
-   modes only in explicitly named `yolo` profiles restricted to worktree
-   workspaces. Ratify or amend; D6 carries the current draft.
+4. **RP4 — default worker permission posture.** OPEN. Executor
+   recommendation, updated for D18: default = per-profile allowlist +
+   pod-broker escalation (`waiting_on_boss`) — the worker never hangs and
+   never oversteps; `yolo` only in explicitly named profiles restricted
+   to worktree workspaces. Ratify or amend; D6/D18 carry the draft.
 
 ## 14. Execution ledger
 
@@ -678,7 +841,11 @@ planned subject, what it confirmed or falsified. Empty at authoring.)_
   `FRACTALITY_DEPTH` + MC call tree) + an `rlm` packet template, with an
   embedded-scripting variant (Rhai/Lua) as the ADR alternative. Trigger
   rule: only when the task's context shape warrants it (owner: «только
-  тогда, когда задача тому способствует»).
+  тогда, когда задача тому способствует»). Owner hypothesis to check
+  against the paper first (2026-07-09, verbatim): «Кажется, в RLE
+  основная фишка в том, что каждый раз у нас новый свежий контекст и это
+  означает спавн нового агента с чистого листа. Но это моё поверхностное
+  представление, это надо проверять.»
 - **DEF-3 — publish** anything (owner-gated; includes wal 0.2.0 ordering
   constraint noted in wal-workspaces' manifest).
 - **DEF-4 — mission-control package split** at API stability (D1).
@@ -691,3 +858,5 @@ planned subject, what it confirmed or falsified. Empty at authoring.)_
   (conform/specmap/tcg) once the tree is worth gating.
 - **DEF-10 — token-file permissions hardening** (owner machine policy:
   0600-equivalent ACL on `~/.vibevm/*.token`, MC lockfile ACL audit).
+- **DEF-11 — redbook edition 0.3.0** pinning `wal-workspaces` (RP2
+  resolved): host-side redbook wave, not this campaign.

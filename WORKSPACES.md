@@ -8,4 +8,4 @@ grammar lives in `CLAUDE.md` §Workspaces.
 
 | name | root | wal | continue | status |
 |---|---|---|---|---|
-| fractality | packages/org.vibevm.fractality/ | WAL.md | CONTINUE.md | 2026-07-09 — IGNITION campaign PLANNED; next: execute Phase 0 (spikes) per fractality/v0.1.0/spec/plans/FRACTALITY-IGNITION-PLAN-v0.1.md |
+| fractality | packages/org.vibevm.fractality/ | WAL.md | CONTINUE.md | 2026-07-09 — IGNITION PLANNED, accepted with owner amendments (pods, Phase 4b interaction layer, UNIX ergonomics); next: execute Phase 0 (spikes) per fractality/v0.1.0/spec/plans/FRACTALITY-IGNITION-PLAN-v0.1.md |

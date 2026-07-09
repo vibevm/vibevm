@@ -63,6 +63,35 @@ the host project, say so before touching host files.
   `git commit -F - <<'MSG'` heredoc only; bash through Git Bash, not WSL;
   never name a test binary `*install*` (Windows UAC blocks it).
 
+## Interim delegation paradigm — opencode + GLM (until fractality replaces it)
+
+Verified live on this box 2026-07-09 (opencode 1.17.14; the owner's z.ai
+credentials sit in its auth store):
+
+```sh
+opencode run -m zai-coding-plan/glm-5.2 "<task>"       # big one-shot work
+opencode run -m zai-coding-plan/glm-5-turbo "<task>"   # small / mechanical
+```
+
+While fractality does not yet exist, sessions here (and on this box
+generally) SHOULD already delegate grunt work to GLM through opencode,
+to conserve the boss's scarce smart tokens (owner directive, 2026-07-09):
+refactorings, bulk mechanical edits, boilerplate, format conversions,
+first-draft summaries of long local documents — the shapes the future
+delegation-rules matrix will encode. Keep for the boss: architecture,
+judgment, plan/spec authoring, anything touching secrets or irreversible
+state — and **review of everything delegated**: verification is the
+boss's half of the bargain (minimal acceptance always — diff review plus
+the relevant gate).
+
+Rules of the road: use **only** `zai-coding-plan/*` models (the
+`opencode/*` Zen gateway is unpaid on this box and errors out; the
+default model points at a local LM Studio that is usually down). Give
+self-contained one-shot tasks with explicit output paths; run from the
+narrowest useful cwd; never hand over secrets; never give host-repo
+write scope without a branch/worktree and boss review. Every delegation
+is field data for Phase 5's playbooks — record surprises in `WAL.md`.
+
 ## End of session
 
 Rewrite `WAL.md` to the current state (checkpoint, not journal). On a

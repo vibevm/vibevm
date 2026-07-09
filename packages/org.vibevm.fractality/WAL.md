@@ -1,9 +1,21 @@
 # fractality — WAL (project continuation state)
 
-_Updated: 2026-07-09 (ignition) — workspace bootstrapped; the IGNITION
-campaign is **PLANNED, not yet executing**. No code exists yet by design:
-Phase 0 (spikes and probes, no commits) is the next work, and its findings
-rewrite the plan's Decisions in place before Phase 1 lands anything._
+_Updated: 2026-07-09 (ignition; same day — owner amendments accepted) —
+the IGNITION plan is **PLANNED · ACCEPTED with owner amendments**: the
+supervision topology is now MC → **pod** → worker (D3; `fractality-pod`
+is the sixth crate — pods own stdio/job-objects/watchdogs, talk HTTP to
+MC, survive MC restarts, and are the future federation seam), a non-yolo
+interaction layer exists as **Phase 4b** (profile allowlists + pod
+permission broker + `ask_boss` + `waiting_on_boss` + `fractality
+questions/answer`, D18), the CLI obeys a UNIX-ergonomics law (D17: `ps`,
+`wait`, `logs -f`, semantic exit codes, `--json` everywhere). RP1
+RESOLVED (dogfood = EULA→UPL-1.0 relicensing with minimal acceptance),
+RP2 RESOLVED (wal-workspaces joins redbook — DEF-11, host-side). The
+**interim opencode+GLM delegation paradigm** is live, verified
+(`opencode run -m zai-coding-plan/glm-5.2 …` → OK) and recorded in the
+contract. No code yet by design: Phase 0 (spikes, no commits) is the next
+work; its findings rewrite Decisions in place before Phase 1 lands
+anything._
 
 ## Current state
 
