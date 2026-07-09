@@ -69,6 +69,17 @@ enum Cmd {
         #[arg(long)]
         json: bool,
     },
+    /// Run a packet synchronously: register, spawn, wait for a terminal
+    /// state, print the one-screen summary. Exit: 0 completed, 1 failed
+    /// (or invalid packet), 3 killed, 2 infrastructure.
+    Run {
+        /// Task packet (TOML, plan D7).
+        #[arg(long, value_name = "FILE")]
+        packet: Utf8PathBuf,
+        /// Machine-readable output (the final run record).
+        #[arg(long)]
+        json: bool,
+    },
 }
 
 #[derive(Subcommand)]
@@ -105,8 +116,78 @@ async fn main() -> std::process::ExitCode {
             json,
         } => ps(&home, state, limit, quiet, json).await,
         Cmd::Show { id, json } => show(&home, &id, json).await,
+        Cmd::Run { packet, json } => run_packet(&home, &packet, json).await,
     };
     std::process::ExitCode::from(code)
+}
+
+/// `fractality run --packet <file>`: the sync delegation loop (D13).
+async fn run_packet(home: &camino::Utf8Path, packet_path: &camino::Utf8Path, json: bool) -> u8 {
+    let text = match std::fs::read_to_string(packet_path.as_std_path()) {
+        Ok(t) => t,
+        Err(e) => return fail_code(EXIT_NEGATIVE, &format!("reading `{packet_path}`: {e}")),
+    };
+    let packet = match fractality_core::Packet::from_toml_str(&text) {
+        Ok(p) => p,
+        Err(e) => return fail_code(EXIT_NEGATIVE, &e.to_string()),
+    };
+    // Client-side wait cap: the packet's wall budget plus grace. Budget
+    // enforcement (the kill) is Phase 4; until then an overrun stops the
+    // WAIT loudly, never silently.
+    let wait_cap = std::time::Duration::from_secs(packet.budget.wall_secs + 60);
+
+    let client = match connect_or_start(home).await {
+        Ok(c) => c,
+        Err(e) => return fail_code(err_code(&e), &e.to_string()),
+    };
+    let started = std::time::Instant::now();
+    let run = match client
+        .register_run(&fractality_core::api::RegisterRunRequest {
+            packet,
+            parent: None,
+            spawn: true,
+        })
+        .await
+    {
+        Ok(r) => r,
+        Err(e) => return fail_code(err_code(&e), &e.to_string()),
+    };
+    eprintln!("run {} spawned (dir {})", run.run_id, run.run_dir);
+
+    let final_run = loop {
+        tokio::time::sleep(std::time::Duration::from_millis(500)).await;
+        match client.run(run.run_id).await {
+            Ok(r) if r.state.is_terminal() => break r,
+            Ok(_) if started.elapsed() > wait_cap => {
+                return fail_code(
+                    EXIT_INFRA,
+                    &format!(
+                        "run {} exceeded its wall budget and is still not terminal; \
+                         it keeps running — inspect with `fractality show {}` \
+                         (budget kills land in Phase 4)",
+                        run.run_id, run.run_id
+                    ),
+                );
+            }
+            Ok(_) => continue,
+            Err(e) => return fail_code(err_code(&e), &e.to_string()),
+        }
+    };
+
+    if json {
+        println!(
+            "{}",
+            serde_json::to_string_pretty(&final_run)
+                .unwrap_or_else(|e| format!("{{\"error\":\"json: {e}\"}}"))
+        );
+    } else {
+        out::print_run_summary(&final_run, started.elapsed());
+    }
+    match final_run.state {
+        RunState::Completed => EXIT_OK,
+        RunState::Killed => 3,
+        _ => EXIT_NEGATIVE,
+    }
 }
 
 fn fail(code: u8, message: &str) -> std::process::ExitCode {

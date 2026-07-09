@@ -308,6 +308,7 @@ dependencies = [
 name = "fractality-backend-claude-code"
 version = "0.1.0"
 dependencies = [
+ "camino",
  "core-ai-native-specmark",
  "fractality-core",
 ]

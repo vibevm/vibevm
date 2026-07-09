@@ -15,6 +15,7 @@ path = "src/main.rs"
 [dependencies]
 camino = { workspace = true }
 clap = { workspace = true }
+fractality-backend-claude-code = { workspace = true }
 fractality-core = { workspace = true }
 fractality-mc-client = { workspace = true }
 serde_json = { workspace = true }
@@ -30,7 +31,6 @@ win32job = { workspace = true }
 command-group = { workspace = true }
 
 [dev-dependencies]
-fractality-backend-claude-code = { workspace = true }
 fractality-mission-control = { workspace = true }
 sysinfo = { workspace = true }
 ulid = { workspace = true }

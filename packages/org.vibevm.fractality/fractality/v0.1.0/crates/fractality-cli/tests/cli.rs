@@ -77,6 +77,7 @@ async fn the_read_verbs_speak_d17() {
             )
             .expect("packet parses"),
             parent: None,
+            spawn: false,
         })
         .await
         .expect("registers");

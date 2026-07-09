@@ -4,7 +4,7 @@
       "crate_name": "fractality-backend-claude-code",
       "file": "crates/fractality-backend-claude-code/src/lib.rs",
       "item_kind": "mod",
-      "line": 12,
+      "line": 24,
       "symbol": "fractality_backend_claude_code"
     },
     {
@@ -13,6 +13,20 @@
       "item_kind": "mod",
       "line": 8,
       "symbol": "fractality_backend_claude_code::env"
+    },
+    {
+      "crate_name": "fractality-backend-claude-code",
+      "file": "crates/fractality-backend-claude-code/src/envbuild.rs",
+      "item_kind": "mod",
+      "line": 22,
+      "symbol": "fractality_backend_claude_code::envbuild"
+    },
+    {
+      "crate_name": "fractality-backend-claude-code",
+      "file": "crates/fractality-backend-claude-code/src/invocation.rs",
+      "item_kind": "mod",
+      "line": 14,
+      "symbol": "fractality_backend_claude_code::invocation"
     },
     {
       "crate_name": "fractality-cli",
@@ -86,6 +100,13 @@
     },
     {
       "crate_name": "fractality-core",
+      "file": "crates/fractality-core/src/profile.rs",
+      "item_kind": "mod",
+      "line": 16,
+      "symbol": "fractality_core::profile"
+    },
+    {
+      "crate_name": "fractality-core",
       "file": "crates/fractality-core/src/run.rs",
       "item_kind": "mod",
       "line": 14,
@@ -137,7 +158,7 @@
       "crate_name": "fractality-mission-control",
       "file": "crates/fractality-mission-control/src/lib.rs",
       "item_kind": "mod",
-      "line": 29,
+      "line": 30,
       "symbol": "fractality_mission_control"
     },
     {
@@ -151,7 +172,7 @@
       "crate_name": "fractality-mission-control",
       "file": "crates/fractality-mission-control/src/lib.rs",
       "item_kind": "enum",
-      "line": 59,
+      "line": 60,
       "symbol": "fractality_mission_control::ServerError"
     },
     {
@@ -204,10 +225,17 @@
       "symbol": "fractality_mission_control::state::RecordError"
     },
     {
+      "crate_name": "fractality-mission-control",
+      "file": "crates/fractality-mission-control/src/workspace.rs",
+      "item_kind": "mod",
+      "line": 14,
+      "symbol": "fractality_mission_control::workspace"
+    },
+    {
       "crate_name": "fractality-pod",
       "file": "crates/fractality-pod/src/main.rs",
       "item_kind": "mod",
-      "line": 24,
+      "line": 27,
       "symbol": "fractality_pod"
     },
     {
@@ -222,7 +250,7 @@
     {
       "file": "crates/fractality-backend-claude-code/src/lib.rs",
       "from_symbol": "fractality_backend_claude_code",
-      "line": 12,
+      "line": 24,
       "provenance": "authored",
       "uri": "spec://fractality/PROP-001#architecture",
       "verb": "implements"
@@ -233,6 +261,22 @@
       "line": 8,
       "provenance": "authored",
       "uri": "spec://fractality/PROP-001#invariants",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-backend-claude-code/src/envbuild.rs",
+      "from_symbol": "fractality_backend_claude_code::envbuild",
+      "line": 22,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#invariants",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-backend-claude-code/src/invocation.rs",
+      "from_symbol": "fractality_backend_claude_code::invocation",
+      "line": 14,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
       "verb": "implements"
     },
     {
@@ -316,6 +360,14 @@
       "verb": "implements"
     },
     {
+      "file": "crates/fractality-core/src/profile.rs",
+      "from_symbol": "fractality_core::profile",
+      "line": 16,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
       "file": "crates/fractality-core/src/run.rs",
       "from_symbol": "fractality_core::run",
       "line": 14,
@@ -374,7 +426,7 @@
     {
       "file": "crates/fractality-mission-control/src/lib.rs",
       "from_symbol": "fractality_mission_control",
-      "line": 29,
+      "line": 30,
       "provenance": "authored",
       "uri": "spec://fractality/PROP-001#architecture",
       "verb": "implements"
@@ -390,7 +442,7 @@
     {
       "file": "crates/fractality-mission-control/src/lib.rs",
       "from_symbol": "fractality_mission_control::ServerError",
-      "line": 69,
+      "line": 70,
       "provenance": "authored",
       "uri": "spec://fractality/PROP-001#architecture",
       "verb": "implements"
@@ -452,9 +504,17 @@
       "verb": "implements"
     },
     {
+      "file": "crates/fractality-mission-control/src/workspace.rs",
+      "from_symbol": "fractality_mission_control::workspace",
+      "line": 14,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
       "file": "crates/fractality-pod/src/main.rs",
       "from_symbol": "fractality_pod",
-      "line": 24,
+      "line": 27,
       "provenance": "authored",
       "uri": "spec://fractality/PROP-001#architecture",
       "verb": "implements"

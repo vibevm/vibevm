@@ -204,7 +204,108 @@ async fn register_run(
     let stored = state.record(Event::Registered {
         run: Box::new(record),
     })?;
+
+    // The product path (D3/D8): provision the workspace, write the run
+    // spec, launch the pod. A spawn failure fails the run loudly — it is
+    // journaled terminal and reported to the caller in one move.
+    if req.spawn
+        && let Err(message) = spawn_run(&state, &stored, &req.packet)
+    {
+        let _ = state.record(Event::Error {
+            run_id: stored.run_id,
+            message: message.clone(),
+            terminal: true,
+        });
+        return Err(ApiError::new(StatusCode::BAD_REQUEST, message)
+            .hint("the run is recorded as failed; fix the cause and register a new run"));
+    }
     Ok((StatusCode::CREATED, Json(stored)))
+}
+
+/// Everything between "registered" and "a pod is supervising": profile
+/// validation (token by existence only — content is the pod's business,
+/// at spawn time), workspace provisioning (D8), the run spec, the pod
+/// launch (detached: pods outlive the daemon by design, D3).
+fn spawn_run(
+    state: &AppState,
+    record: &RunRecord,
+    packet: &fractality_core::Packet,
+) -> Result<(), String> {
+    let profiles =
+        fractality_core::profile::ProfilesFile::load(&state.cfg.home).map_err(|e| e.to_string())?;
+    let profile = profiles
+        .get(&packet.routing.profile)
+        .map_err(|e| e.to_string())?;
+    profile
+        .resolve_model(&packet.routing.model)
+        .map_err(|e| e.to_string())?;
+    if profile.backend != "claude-code" {
+        return Err(format!(
+            "backend `{}` is not available in this build (only `claude-code`); \
+             fix profiles.toml",
+            profile.backend
+        ));
+    }
+    let user_home = fractality_mc_client::home::user_home()?;
+    let token_path = fractality_mc_client::home::expand_user(&profile.token_file, &user_home);
+    if !token_path.as_std_path().is_file() {
+        return Err(format!(
+            "token file `{token_path}` does not exist; create it or fix \
+             profiles.toml (existence is checked here; only the pod reads it)"
+        ));
+    }
+
+    let workspace_dir =
+        crate::workspace::provision(&packet.workspace, record.run_id, &record.run_dir)?;
+
+    let run_spec = fractality_core::worker::RunSpec {
+        schema: 1,
+        run_id: record.run_id,
+        run_dir: record.run_dir.clone(),
+        workspace_dir,
+        // Nested delegation stamps real depths in Phase 4; boss-spawned
+        // runs are depth 0.
+        depth: 0,
+        node_id: state.node.node_id.clone(),
+    };
+    let spec_path = record
+        .run_dir
+        .join(fractality_core::worker::RunSpec::FILE_NAME);
+    std::fs::write(
+        spec_path.as_std_path(),
+        run_spec.to_toml_string().map_err(|e| e.to_string())?,
+    )
+    .map_err(|e| format!("writing `{spec_path}`: {e}"))?;
+
+    let pod_bin = fractality_mc_client::resolve_pod_binary().map_err(|e| e.to_string())?;
+    let pod_log = std::fs::File::create(record.run_dir.join("pod.log").as_std_path())
+        .map_err(|e| format!("creating pod.log: {e}"))?;
+    let pod_log_err = pod_log
+        .try_clone()
+        .map_err(|e| format!("cloning pod.log handle: {e}"))?;
+    let mut cmd = std::process::Command::new(&pod_bin);
+    cmd.arg("--home")
+        .arg(state.cfg.home.as_str())
+        .arg("--run-spec")
+        .arg(spec_path.as_str())
+        .stdin(std::process::Stdio::null())
+        .stdout(pod_log)
+        .stderr(pod_log_err);
+    #[cfg(windows)]
+    {
+        use std::os::windows::process::CommandExt;
+        // Detached, no console: the pod must survive a daemon exit (D3).
+        cmd.creation_flags(0x0000_0200 | 0x0800_0000);
+    }
+    let child = cmd
+        .spawn()
+        .map_err(|e| format!("spawning pod `{}`: {e}", pod_bin.display()))?;
+    tracing::info!(
+        run_id = %record.run_id,
+        pod_launcher_pid = child.id(),
+        "pod launched"
+    );
+    Ok(())
 }
 
 #[derive(Debug, Deserialize)]

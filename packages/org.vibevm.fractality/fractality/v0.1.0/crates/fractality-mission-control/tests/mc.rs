@@ -64,6 +64,7 @@ async fn register_read_and_tree_work_over_the_bus() {
         .register_run(&RegisterRunRequest {
             packet: packet("parent"),
             parent: None,
+            spawn: false,
         })
         .await
         .expect("registers");
@@ -77,6 +78,7 @@ async fn register_read_and_tree_work_over_the_bus() {
         .register_run(&RegisterRunRequest {
             packet: packet("child"),
             parent: Some(parent.run_id),
+            spawn: false,
         })
         .await
         .expect("registers child");
@@ -119,6 +121,7 @@ async fn registry_survives_a_daemon_restart_via_replay() {
         .register_run(&RegisterRunRequest {
             packet: packet("survivor"),
             parent: None,
+            spawn: false,
         })
         .await
         .expect("registers");
@@ -153,6 +156,7 @@ async fn torn_journal_tail_does_not_block_startup() {
         .register_run(&RegisterRunRequest {
             packet: packet("kept"),
             parent: None,
+            spawn: false,
         })
         .await
         .expect("registers");

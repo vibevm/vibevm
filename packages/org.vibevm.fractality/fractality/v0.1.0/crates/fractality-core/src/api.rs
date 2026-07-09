@@ -53,14 +53,20 @@ pub struct NodeResponse {
     pub scopes: Vec<ScopeInfo>,
 }
 
-/// `POST /v0/runs` — register a run from a packet. Spawning is a separate
-/// concern (Phase 2 wires it); registration is the primitive underneath.
+/// `POST /v0/runs` — register a run from a packet; with `spawn = true`
+/// mission-control also provisions the workspace (D8) and launches the
+/// pod (D3). Registration-only is the primitive underneath — it is what
+/// tests and manual pod driving use.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct RegisterRunRequest {
     pub packet: Packet,
     /// Parent run for nested delegation (Phase 4 populates it).
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub parent: Option<RunId>,
+    /// Provision + launch the pod (the product path; `fractality run`
+    /// sets it). Defaults to false so raw registration stays available.
+    #[serde(default)]
+    pub spawn: bool,
 }
 
 /// `GET /v0/runs` — the list, newest last (tail-friendly, D17).

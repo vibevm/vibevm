@@ -70,6 +70,7 @@ async fn register_and_launch_pod(
         .register_run(&RegisterRunRequest {
             packet: stub_packet(title),
             parent: None,
+            spawn: false,
         })
         .await
         .expect("run registers");

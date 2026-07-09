@@ -16,6 +16,7 @@ pub mod journal_store;
 pub mod registry;
 pub mod scopes;
 pub mod state;
+pub mod workspace;
 
 use std::sync::Arc;
 

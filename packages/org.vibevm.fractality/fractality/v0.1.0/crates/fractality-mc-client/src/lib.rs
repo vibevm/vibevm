@@ -297,27 +297,52 @@ pub async fn connect_or_start(home: &camino::Utf8Path) -> Result<McClient, Clien
 /// Resolves the daemon binary: `FRACTALITY_MC_BIN` override → sibling of
 /// the current executable → PATH lookup.
 fn resolve_mc_binary() -> Result<std::path::PathBuf, ClientError> {
-    if let Some(explicit) = std::env::var_os("FRACTALITY_MC_BIN") {
+    resolve_fractality_binary("FRACTALITY_MC_BIN", "fractality-mission-control")
+}
+
+/// Resolves the pod binary the daemon launches per run (D3):
+/// `FRACTALITY_POD_BIN` override → sibling of the current executable →
+/// PATH lookup. Lives beside the other process-discovery seams because
+/// this file is the recorded composition surface for those env reads.
+///
+/// ```
+/// let pod = fractality_mc_client::resolve_pod_binary().expect("resolves");
+/// // Worst case is the PATH fallback: the name is always fractality-pod.
+/// assert!(
+///     pod.file_name()
+///         .and_then(|n| n.to_str())
+///         .is_some_and(|n| n.starts_with("fractality-pod"))
+/// );
+/// ```
+pub fn resolve_pod_binary() -> Result<std::path::PathBuf, ClientError> {
+    resolve_fractality_binary("FRACTALITY_POD_BIN", "fractality-pod")
+}
+
+fn resolve_fractality_binary(
+    env_override: &str,
+    stem: &str,
+) -> Result<std::path::PathBuf, ClientError> {
+    if let Some(explicit) = std::env::var_os(env_override) {
         let p = std::path::PathBuf::from(explicit);
         if p.is_file() {
             return Ok(p);
         }
         return Err(ClientError::AutoStart {
             message: format!(
-                "FRACTALITY_MC_BIN points at `{}` which is not a file",
+                "{env_override} points at `{}` which is not a file",
                 p.display()
             ),
         });
     }
     let name = if cfg!(windows) {
-        "fractality-mission-control.exe"
+        format!("{stem}.exe")
     } else {
-        "fractality-mission-control"
+        stem.to_owned()
     };
     if let Ok(me) = std::env::current_exe()
         && let Some(dir) = me.parent()
     {
-        let sibling = dir.join(name);
+        let sibling = dir.join(&name);
         if sibling.is_file() {
             return Ok(sibling);
         }

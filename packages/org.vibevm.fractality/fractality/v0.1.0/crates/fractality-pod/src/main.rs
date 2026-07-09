@@ -12,11 +12,14 @@ mod supervise;
 
 use camino::Utf8PathBuf;
 use clap::Parser;
+use fractality_backend_claude_code::ClaudeCodeBackend;
+use fractality_core::Packet;
 use fractality_core::api::{PodEvent, PodEventRequest, PodHeartbeat, PodRegisterRequest};
 use fractality_core::ids::{PodId, RunId};
+use fractality_core::profile::ProfilesFile;
 use fractality_core::run::RunState;
 use fractality_core::time::now_ms;
-use fractality_core::worker::WorkerSpec;
+use fractality_core::worker::{BackendSecrets, RunContext, RunSpec, WorkerBackend, WorkerSpec};
 use fractality_mc_client::McClient;
 use tokio::io::AsyncWriteExt;
 use tracing_subscriber::EnvFilter;
@@ -35,15 +38,21 @@ struct Args {
     /// Fractality home (lockfile discovery root).
     #[arg(long)]
     home: Utf8PathBuf,
-    /// The run this pod supervises.
+    /// Product path: a run spec written by mission-control
+    /// (fractality-core::worker::RunSpec). The pod resolves the packet,
+    /// the profile, and the token itself — secrets never transit specs.
+    #[arg(long, conflicts_with_all = ["run_id", "run_dir", "spec"])]
+    run_spec: Option<Utf8PathBuf>,
+    /// Test/manual seam: the run this pod supervises.
+    #[arg(long, requires_all = ["run_dir", "spec"])]
+    run_id: Option<RunId>,
+    /// Test/manual seam: the run directory.
     #[arg(long)]
-    run_id: RunId,
-    /// The run directory (transcript + status land here).
+    run_dir: Option<Utf8PathBuf>,
+    /// Test/manual seam: a complete raw worker spec
+    /// (fractality-core::worker::WorkerSpec) — no profile resolution.
     #[arg(long)]
-    run_dir: Utf8PathBuf,
-    /// Worker spec (TOML, fractality-core::worker::WorkerSpec).
-    #[arg(long)]
-    spec: Utf8PathBuf,
+    spec: Option<Utf8PathBuf>,
 }
 
 #[tokio::main]
@@ -64,12 +73,89 @@ async fn main() -> std::process::ExitCode {
     }
 }
 
+/// Resolves the two input modes into (run_id, run_dir, worker spec).
+///
+/// Product mode (`--run-spec`) is where invariant I1's composition root
+/// lives: the ambient env snapshot, the token-file read (at spawn time,
+/// content never logged), and the config-dir provisioning all happen
+/// here, feeding the pure backend constructor.
+fn resolve_inputs(args: &Args) -> Result<(RunId, Utf8PathBuf, WorkerSpec), String> {
+    if let Some(run_spec_path) = &args.run_spec {
+        let text = std::fs::read_to_string(run_spec_path.as_std_path())
+            .map_err(|e| format!("reading run spec `{run_spec_path}`: {e}"))?;
+        let run_spec = RunSpec::from_toml_str(&text).map_err(|e| e.to_string())?;
+
+        let packet_path = run_spec.run_dir.join("packet.toml");
+        let packet_text = std::fs::read_to_string(packet_path.as_std_path())
+            .map_err(|e| format!("reading packet `{packet_path}`: {e}"))?;
+        let packet = Packet::from_toml_str(&packet_text).map_err(|e| e.to_string())?;
+
+        let profiles = ProfilesFile::load(&args.home).map_err(|e| e.to_string())?;
+        let profile = profiles
+            .get(&packet.routing.profile)
+            .map_err(|e| e.to_string())?;
+        if profile.backend != ClaudeCodeBackend::ID {
+            return Err(format!(
+                "backend `{}` is not available in this build (only `{}`); \
+                 fix profiles.toml or route the packet elsewhere",
+                profile.backend,
+                ClaudeCodeBackend::ID
+            ));
+        }
+
+        let user_home = fractality_mc_client::home::user_home()?;
+        let token_path = fractality_mc_client::home::expand_user(&profile.token_file, &user_home);
+        let token = std::fs::read_to_string(token_path.as_std_path())
+            .map_err(|e| format!("reading token file `{token_path}`: {e}"))?
+            .trim()
+            .to_owned();
+        if token.is_empty() {
+            return Err(format!("token file `{token_path}` is empty"));
+        }
+
+        let ctx = RunContext {
+            run_id: run_spec.run_id,
+            run_dir: run_spec.run_dir.clone(),
+            workspace_dir: run_spec.workspace_dir.clone(),
+            depth: run_spec.depth,
+            node_id: run_spec.node_id.clone(),
+        };
+        // The composition-root snapshot: the one ambient read, handed to
+        // the pure constructor (and to its poisoned-parent test).
+        let os_env: std::collections::BTreeMap<String, String> = std::env::vars().collect();
+        let spec = ClaudeCodeBackend
+            .build_spec(&packet, profile, &BackendSecrets::new(token), &os_env, &ctx)
+            .map_err(|e| e.to_string())?;
+
+        // Generic provisioning: whatever config dir the backend chose
+        // must exist before spawn (F4: a fresh dir onboards headless).
+        if let Some(config_dir) = spec.env.get("CLAUDE_CONFIG_DIR") {
+            std::fs::create_dir_all(config_dir)
+                .map_err(|e| format!("creating config dir `{config_dir}`: {e}"))?;
+        }
+        std::fs::create_dir_all(run_spec.workspace_dir.as_std_path())
+            .map_err(|e| format!("creating workspace `{}`: {e}", run_spec.workspace_dir))?;
+
+        return Ok((run_spec.run_id, run_spec.run_dir, spec));
+    }
+
+    match (&args.run_id, &args.run_dir, &args.spec) {
+        (Some(run_id), Some(run_dir), Some(spec_path)) => {
+            let spec_text = std::fs::read_to_string(spec_path.as_std_path())
+                .map_err(|e| format!("reading spec `{spec_path}`: {e}"))?;
+            let spec = WorkerSpec::from_toml_str(&spec_text).map_err(|e| e.to_string())?;
+            Ok((*run_id, run_dir.clone(), spec))
+        }
+        _ => Err("pass either --run-spec <file> (product path) or all of \
+             --run-id/--run-dir/--spec (raw seam)"
+            .to_owned()),
+    }
+}
+
 async fn run(args: Args) -> Result<(), String> {
-    let spec_text = std::fs::read_to_string(args.spec.as_std_path())
-        .map_err(|e| format!("reading spec `{}`: {e}", args.spec))?;
-    let spec = WorkerSpec::from_toml_str(&spec_text).map_err(|e| e.to_string())?;
-    std::fs::create_dir_all(args.run_dir.as_std_path())
-        .map_err(|e| format!("creating run dir `{}`: {e}", args.run_dir))?;
+    let (run_id, run_dir, spec) = resolve_inputs(&args)?;
+    std::fs::create_dir_all(run_dir.as_std_path())
+        .map_err(|e| format!("creating run dir `{run_dir}`: {e}"))?;
 
     let pod_id = PodId::generate();
     let pod_pid = std::process::id();
@@ -82,7 +168,7 @@ async fn run(args: Args) -> Result<(), String> {
                 .pod_register(&PodRegisterRequest {
                     pod_id,
                     pod_pid,
-                    run_id: args.run_id,
+                    run_id,
                 })
                 .await
             {
@@ -97,7 +183,7 @@ async fn run(args: Args) -> Result<(), String> {
                     return Err(format!(
                         "run {} is unknown to mission-control ({message}); \
                          register the run first",
-                        args.run_id
+                        run_id
                     ));
                 }
                 Err(fractality_mc_client::ClientError::Api {
@@ -105,7 +191,7 @@ async fn run(args: Args) -> Result<(), String> {
                     message,
                     ..
                 }) => {
-                    return Err(format!("run {} is not adoptable: {message}", args.run_id));
+                    return Err(format!("run {} is not adoptable: {message}", run_id));
                 }
                 Err(e) => {
                     tracing::warn!(error = %e, "registration failed; retrying");
@@ -122,17 +208,17 @@ async fn run(args: Args) -> Result<(), String> {
     // Spawn under the OS-level kill guarantee (F5).
     let mut child = supervise::spawn(&spec)?;
     let worker_pid = child.pid().unwrap_or(0);
-    tracing::info!(run_id = %args.run_id, worker_pid, "worker spawned");
+    tracing::info!(run_id = %run_id, worker_pid, "worker spawned");
 
-    let stdout_pump = pump(child.take_stdout(), args.run_dir.join(STDOUT_FILE));
-    let stderr_pump = pump(child.take_stderr(), args.run_dir.join(STDERR_FILE));
+    let stdout_pump = pump(child.take_stdout(), run_dir.join(STDOUT_FILE));
+    let stderr_pump = pump(child.take_stderr(), run_dir.join(STDERR_FILE));
 
     report(
         &mut client,
         &args.home,
         pod_id,
         &PodEventRequest {
-            run_id: args.run_id,
+            run_id,
             event: PodEvent::Spawned { worker_pid },
         },
     )
@@ -146,7 +232,7 @@ async fn run(args: Args) -> Result<(), String> {
             exit = child.wait() => break exit?,
             _ = tick => {
                 let hb = PodHeartbeat {
-                    run_id: args.run_id,
+                    run_id,
                     state: RunState::Running,
                     worker_pid: Some(worker_pid),
                 };
@@ -155,7 +241,7 @@ async fn run(args: Args) -> Result<(), String> {
                     Err(e) => {
                         tracing::warn!(error = %e, "heartbeat failed; rediscovering daemon");
                         if let Some(fresh) = reconnect_and_register(
-                            &args.home, pod_id, pod_pid, args.run_id,
+                            &args.home, pod_id, pod_pid, run_id,
                         ).await {
                             client = fresh;
                         }
@@ -169,13 +255,13 @@ async fn run(args: Args) -> Result<(), String> {
     let _ = stdout_pump.await;
     let _ = stderr_pump.await;
 
-    write_status(&args.run_dir, args.run_id, exit_code, worker_pid)?;
+    write_status(&run_dir, run_id, exit_code, worker_pid)?;
 
     // The exit report is the one message that must not be lost quietly:
     // retry across daemon restarts within the budget.
     let deadline = std::time::Instant::now() + EXIT_DELIVERY_BUDGET;
     let event = PodEventRequest {
-        run_id: args.run_id,
+        run_id,
         event: PodEvent::Exit { exit_code },
     };
     loop {
@@ -184,20 +270,19 @@ async fn run(args: Args) -> Result<(), String> {
         }
         if std::time::Instant::now() >= deadline {
             tracing::error!(
-                run_id = %args.run_id,
+                run_id = %run_id,
                 "exit report undelivered within {}s; status.json on disk is the record",
                 EXIT_DELIVERY_BUDGET.as_secs()
             );
             return Err("exit report undelivered".to_owned());
         }
         tokio::time::sleep(std::time::Duration::from_millis(500)).await;
-        if let Some(fresh) = reconnect_and_register(&args.home, pod_id, pod_pid, args.run_id).await
-        {
+        if let Some(fresh) = reconnect_and_register(&args.home, pod_id, pod_pid, run_id).await {
             client = fresh;
         }
     }
 
-    tracing::info!(run_id = %args.run_id, ?exit_code, "worker exited; pod done");
+    tracing::info!(run_id = %run_id, ?exit_code, "worker exited; pod done");
     Ok(())
 }
 

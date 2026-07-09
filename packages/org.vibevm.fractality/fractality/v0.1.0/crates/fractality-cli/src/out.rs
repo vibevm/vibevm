@@ -31,6 +31,29 @@ pub fn print_runs(runs: &[RunRecord], quiet: bool) {
     }
 }
 
+/// The one-screen summary `fractality run` prints at the end (D13).
+pub fn print_run_summary(r: &RunRecord, waited: std::time::Duration) {
+    println!("state:      {}", r.state);
+    println!(
+        "exit_code:  {}",
+        r.exit_code
+            .map(|c| c.to_string())
+            .unwrap_or_else(|| "-".into())
+    );
+    if let Some(f) = &r.failure {
+        println!("failure:    {f}");
+    }
+    if let Some(k) = r.kill_reason {
+        println!("killed:     {k}");
+    }
+    println!(
+        "waited:     {}",
+        format_duration_ms(waited.as_millis() as u64)
+    );
+    println!("run_dir:    {}", r.run_dir);
+    println!("transcript: {}", r.run_dir.join("worker-stdout.jsonl"));
+}
+
 pub fn print_run_detail(r: &RunRecord) {
     let now = now_ms();
     println!("run_id:     {}", r.run_id);
