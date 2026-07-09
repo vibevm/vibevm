@@ -4,7 +4,7 @@
       "crate_name": "fractality-backend-claude-code",
       "file": "crates/fractality-backend-claude-code/src/lib.rs",
       "item_kind": "mod",
-      "line": 24,
+      "line": 25,
       "symbol": "fractality_backend_claude_code"
     },
     {
@@ -29,6 +29,13 @@
       "symbol": "fractality_backend_claude_code::invocation"
     },
     {
+      "crate_name": "fractality-backend-claude-code",
+      "file": "crates/fractality-backend-claude-code/src/stream.rs",
+      "item_kind": "mod",
+      "line": 26,
+      "symbol": "fractality_backend_claude_code::stream"
+    },
+    {
       "crate_name": "fractality-cli",
       "file": "crates/fractality-cli/src/main.rs",
       "item_kind": "mod",
@@ -39,7 +46,7 @@
       "crate_name": "fractality-cli",
       "file": "crates/fractality-cli/src/out.rs",
       "item_kind": "mod",
-      "line": 7,
+      "line": 8,
       "symbol": "fractality_cli::out"
     },
     {
@@ -235,7 +242,7 @@
       "crate_name": "fractality-pod",
       "file": "crates/fractality-pod/src/main.rs",
       "item_kind": "mod",
-      "line": 28,
+      "line": 29,
       "symbol": "fractality_pod"
     },
     {
@@ -257,7 +264,7 @@
     {
       "file": "crates/fractality-backend-claude-code/src/lib.rs",
       "from_symbol": "fractality_backend_claude_code",
-      "line": 24,
+      "line": 25,
       "provenance": "authored",
       "uri": "spec://fractality/PROP-001#architecture",
       "verb": "implements"
@@ -287,6 +294,14 @@
       "verb": "implements"
     },
     {
+      "file": "crates/fractality-backend-claude-code/src/stream.rs",
+      "from_symbol": "fractality_backend_claude_code::stream",
+      "line": 26,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
       "file": "crates/fractality-cli/src/main.rs",
       "from_symbol": "fractality_cli",
       "line": 21,
@@ -297,7 +312,7 @@
     {
       "file": "crates/fractality-cli/src/out.rs",
       "from_symbol": "fractality_cli::out",
-      "line": 7,
+      "line": 8,
       "provenance": "authored",
       "uri": "spec://fractality/PROP-001#architecture",
       "verb": "implements"
@@ -521,7 +536,7 @@
     {
       "file": "crates/fractality-pod/src/main.rs",
       "from_symbol": "fractality_pod",
-      "line": 28,
+      "line": 29,
       "provenance": "authored",
       "uri": "spec://fractality/PROP-001#architecture",
       "verb": "implements"

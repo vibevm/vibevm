@@ -14,6 +14,7 @@
 pub mod env;
 pub mod envbuild;
 pub mod invocation;
+pub mod stream;
 
 use std::collections::BTreeMap;
 
