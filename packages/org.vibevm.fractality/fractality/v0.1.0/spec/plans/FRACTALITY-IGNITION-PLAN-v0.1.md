@@ -1,8 +1,8 @@
 # FRACTALITY-IGNITION-PLAN v0.1 — from zero to a metered GLM swarm under mission-control
 
-_Status: **EXECUTING** (Phases 0–1 landed 2026-07-09/10, floor green —
-the full AI-Native floor from Phase 1 on (D15) — next: Phase 2 —
-delegate-out) · written 2026-07-09
+_Status: **EXECUTING** (Phases 0–2 landed 2026-07-09/10, floor green —
+Phase 2's exit E2E proven on a live GLM worker — next: Phase 3 —
+collect-back) · written 2026-07-09
 against host tree `05d3b1c` plus the same-day ignition bootstrap commits ·
 cold-executable: any phase boundary is a safe stop; the fractality floor
 (§11) is green at every boundary. Format: `flow:org.vibevm/campaign-plans`
@@ -1160,6 +1160,70 @@ CONFIRMED.
   boundary docs commit) — the extras are owner-directive scope
   (discipline adoption, pilot posture, vendoring) folded mid-phase, not
   silent absorption.
+
+### Phase 2 — EXECUTED (2026-07-10); commit map
+
+- `b15bd02` feat(fractality): profiles + clean-slate worker env.
+- `10bc4b9` feat(fractality): spawn path — mc-owned workers and
+  worktrees. (Both landed the prior session; the exit E2E deliberately
+  waited for this one.)
+- `38d78bc` fix(fractality): worker spawn — resolve, stdin, env casing
+  (F14 below — the E2E's very first firing found all three defects).
+- `9996f74` test(fractality): worktree provisioning integration tests
+  (the D8 gap queued at the prior boundary; five tests against a real
+  scratch repo).
+
+**Boundary evidence.** The exit E2E: `fractality run --packet
+spec/examples/hello-glm.toml` → run `01KX4H4KESV9ADN6S0AJMWQHFW`,
+exit 0 in 29 s wall. Run dir holds packet.toml, run-spec.toml,
+worker-stdout.jsonl (16.8 KB), worker-stderr.log (empty), status.json
+(`completed`/0), pod.log, cc-config/ (fresh dir onboarded headless —
+R5 reconfirmed in the product path); `work/` holds `hello.txt`
+(`hello from glm`, byte-exact) and a worker-authored `result.md`.
+`ps` lists the run; `show` renders it from an id prefix (D17).
+Floor: all green (fmt · tests incl. the resolver, env-casing, and
+stdin pins plus the five D8 integration tests · clippy -D warnings ·
+conform 0 findings 6/6 gated · specmap 11 units / 36 items / 36 edges
+/ 0 orphans · test-gate). **P2 CONFIRMED on the product transcript**:
+usage fields ×6 (output_tokens 236 on the work turn), final
+`result`/`success`, num_turns 3, model `glm-5-turbo`. **P3 counting
+opens at 1/1** (result.md written without a nudge turn). Phase
+prediction (P2 on real transcripts) held.
+
+**Findings folded into code/design:**
+
+- **F14 (the Windows spawn seam — three defects, one E2E).**
+  (a) CreateProcess resolves bare names to `.exe` only; an
+  npm-installed CC ships nothing but a `claude.cmd` shim — the pod now
+  resolves the program PATHEXT-style (.exe > .cmd > .bat, PATH order
+  first) against the **worker's** PATH at the composition root;
+  product mode only, the raw `--spec` seam keeps explicit paths.
+  (b) The prompt rode argv — Rust spawns `.cmd` through cmd.exe with
+  escaping that rightly rejects newline arguments, and command lines
+  cap at 32 KiB, fatal to the big one-shot goals the mandate wants
+  delegated — the prompt now rides `WorkerSpec::stdin`; the pod feeds
+  and closes the pipe; CC 2.1.202 print mode reads stdin to EOF
+  (smoke-verified live before landing). (c) The D5 whitelist matched
+  env names case-sensitively while a stock Windows block spells
+  `Path`/`ComSpec` — a pod launched outside bash handed its worker no
+  PATH; the constructor now matches case-insensitively on Windows and
+  canonicalizes to the whitelist spelling. The failed run
+  `01KX4GD3C5RQ54YREHPRES6N2F` (`killed: pod_lost`, pod.log
+  `spawning claude: program not found`) stays on disk as the autopsy.
+- **F15 (arbitration is our own domain).** `cargo test` rebuilding the
+  MC bin collides with a *running* daemon holding the .exe lock
+  (Windows denies write-while-execute). Dev law until MC mediates it:
+  stop the daemon before any build touching its binary. Discovered
+  live when a build stalled against the daemon the E2E had
+  auto-started — the exact resource-arbitration class fractality
+  exists to own.
+- Exit-code polish queued for Phase 3: `killed(pod_lost)` currently
+  maps to exit 3 (the killed family); semantically pod-loss is closer
+  to infra (2). The D17 table gets reviewed with the Phase 3 `run`
+  summary upgrade.
+- `show`'s usage line reads zeros — correct at this phase: transcript
+  parsing IS Phase 3, and this E2E's transcript is its first golden
+  fixture.
 
 _(Later phases fill their own maps at each boundary.)_
 

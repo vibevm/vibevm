@@ -8,4 +8,4 @@ grammar lives in `CLAUDE.md` §Workspaces.
 
 | name | root | wal | continue | status |
 |---|---|---|---|---|
-| fractality | packages/org.vibevm.fractality/ | WAL.md | CONTINUE.md | 2026-07-10 — IGNITION **EXECUTING**: Phases 0–1 executed; Phase 2 (delegate-out) CODE LANDED, floor all-green — profiles → clean-slate env → invocation → pod run-spec → MC spawn → `fractality run`; open exit criterion: the live GLM E2E (hello-glm), queued as the next session's opening step per CONTINUE.md; plan: fractality/v0.1.0/spec/plans/FRACTALITY-IGNITION-PLAN-v0.1.md |
+| fractality | packages/org.vibevm.fractality/ | WAL.md | CONTINUE.md | 2026-07-10 — IGNITION **EXECUTING**: Phases 0–2 executed, floor all-green; the delegate-out exit E2E ran live (GLM-5-turbo worker, exit 0, P2 confirmed on the product transcript) after fixing the three-defect Windows spawn seam (F14: PATHEXT resolver, prompt via stdin, env-name casing); worktree-manager tests landed; next: Phase 3 (collect-back) — first golden = the E2E transcript; plan: fractality/v0.1.0/spec/plans/FRACTALITY-IGNITION-PLAN-v0.1.md |
