@@ -73,7 +73,10 @@ _(Agent pre-run output is appended below on each execution; the pass is
 signed by a human — the pre-run only flags divergence.)_
 
 ### Pre-run 2026-07-10 — GREEN on firing #2; findings folded back
-(human sign-off pending)
+
+**PASS — signed off by the owner, 2026-07-10** (firing #2 + the
+phase-2 merge block accepted; F19 disposition and the review findings
+acknowledged).
 
 Firing #1 failed before any worker ran: `git worktree add` of the host
 repository into a run dir overflowed Windows MAX_PATH (`Filename too

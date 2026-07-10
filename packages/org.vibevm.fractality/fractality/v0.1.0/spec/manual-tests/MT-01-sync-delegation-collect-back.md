@@ -88,7 +88,10 @@ own copy in step 1, and mission-control refuses the run with a loud
 _(Agent pre-run output is appended below on each execution; the pass is
 signed by a human — the pre-run only flags divergence.)_
 
-### Pre-run 2026-07-10 — GREEN, no divergence (human sign-off pending)
+### Pre-run 2026-07-10 — GREEN, no divergence
+
+**PASS — signed off by the owner, 2026-07-10** (the recorded pre-run
+below accepted as the pass).
 
 Step 1 summary (scratch home under the session temp dir; run
 `01KX4JRBNQ774N0G9VYG218TKD`):

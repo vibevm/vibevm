@@ -33,8 +33,9 @@ file._
 - **Boss integration**: boot snippet 75, the fractality-delegate
   skill, [[binary]] declarations.
 - **5 manual tests** recorded with live outputs (MT-01…MT-05), all
-  green on their final firings, human sign-offs pending (the
-  manual-tests law reserves the pass for the owner).
+  green on their final firings and **signed off by the owner
+  (2026-07-10)** — the index required for the shipped features is
+  fully executed and passed.
 - **Dogfood delivered**: the seven EULA straggler manifests (+ licence
   texts) relicensed to UPL-1.0 through the fabric itself, reviewed and
   merged per RP1's acceptance.

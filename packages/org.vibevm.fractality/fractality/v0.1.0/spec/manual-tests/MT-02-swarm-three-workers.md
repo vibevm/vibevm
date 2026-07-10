@@ -145,7 +145,9 @@ _(Agent pre-run output is appended below on each execution; the pass is
 signed by a human — the pre-run only flags divergence.)_
 
 ### Pre-run 2026-07-10 — GREEN on firing #3; two findings folded back
-(human sign-off pending)
+
+**PASS — signed off by the owner, 2026-07-10** (firing #3's recorded
+run accepted as the pass; F17/F18 dispositions reviewed).
 
 Firing #1 hung in step 2: `A=$(fractality spawn …)` never returned —
 the first CLI call auto-started the daemon, and on Windows the detached

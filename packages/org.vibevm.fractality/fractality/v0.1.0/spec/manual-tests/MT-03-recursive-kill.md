@@ -157,7 +157,8 @@ _(Agent pre-run output is appended below on each execution; the pass is
 signed by a human — the pre-run only flags divergence.)_
 
 ### Pre-run 2026-07-10 — GREEN first firing, no divergence
-(human sign-off pending)
+
+**PASS — signed off by the owner, 2026-07-10.**
 
 ```text
 MT03-PARENT=01KX4Q5FV7B5A1HQFKNDY7V3PD

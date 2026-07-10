@@ -3,7 +3,8 @@
 _Status: **CLOSED** (Phases 0–6 executed 2026-07-09/10; §2 carries the
 execution record and the verdict on every prediction — P1–P6, P8
 confirmed, P7 falsified with ledgered drift; the RP1 dogfood is merged;
-manual tests MT-01…MT-05 recorded green, human sign-offs pending) ·
+manual tests MT-01…MT-05 recorded green and **signed off by the owner
+2026-07-10**) ·
 written 2026-07-09 against host tree `05d3b1c` plus the same-day
 ignition bootstrap commits · Format: `flow:org.vibevm/campaign-plans`
 (one file, five roles). Campaigns 2–3 draw their mandates from §15._
@@ -33,8 +34,8 @@ exactly 6 crates / 3 binaries ✅ · 1 policy package `delegation-rules`
 v0.1.0 with matrix + 3 playbooks ✅ · boss boot snippet + 1 skill ✅ ·
 **5 recorded E2E proofs** (MT-01 sync collect-back · MT-02 3-worker
 swarm · MT-03 recursive kill · MT-04 question round-trip incl. the
-11-minute park · MT-05 dogfood relicense with live merges) ✅ — human
-sign-offs pending per the manual-tests law · floor green, host
+11-minute park · MT-05 dogfood relicense with live merges) ✅ — all
+five signed off by the owner 2026-07-10 · floor green, host
 self-check green, 0 clean-room violations ✅.
 
 **Prediction verdicts (§7):**
