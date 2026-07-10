@@ -55,6 +55,17 @@ if [ "$ARM" = "b" ]; then
   "$EXE" harness status claude-code --target "$PROJ" | tee "$OUT/harness-status.txt"
 fi
 
+# --- Rust toolchain passthrough (DEF-C2-2a, F24; verified 2026-07-10).
+# Without these, env -i breaks the boss's AND the workers' cargo twice
+# over: the rustup shim cannot resolve a toolchain under the scratch
+# USERPROFILE, and rustc's MSVC auto-detect (vswhere lives under
+# ProgramFiles(x86)) silently falls back to Git's GNU link.exe, which
+# cannot link test binaries. The trial measured both bites; values are
+# paths only, never secrets. Other boxes may need more — extend here.
+RUSTUP_HOME_W="$(cygpath -w "$HOME/.rustup")"
+CARGO_HOME_W="$(cygpath -w "$HOME/.cargo")"
+PF86="$(printenv 'ProgramFiles(x86)' || echo 'C:\Program Files (x86)')"
+
 # --- the cold boss: worker-shaped clean env (I1 style), menu on stdin
 echo "arm=$ARM run=$N boss=$BIG_ID proj=$PROJ home=$HOME_DIR" | tee "$OUT/run-info.txt"
 START_TS=$(date +%s)
@@ -66,6 +77,15 @@ set +e
     TEMP="$SCRATCH" TMP="$SCRATCH" \
     USERPROFILE="$(cygpath -w "$SCRATCH/userhome")" \
     HOME="$SCRATCH/userhome" \
+    RUSTUP_HOME="$RUSTUP_HOME_W" \
+    CARGO_HOME="$CARGO_HOME_W" \
+    PROGRAMFILES="${PROGRAMFILES:-C:\\Program Files}" \
+    "ProgramFiles(x86)=$PF86" \
+    PROGRAMDATA="${PROGRAMDATA:-C:\\ProgramData}" \
+    SYSTEMDRIVE="${SYSTEMDRIVE:-C:}" \
+    PROCESSOR_ARCHITECTURE="${PROCESSOR_ARCHITECTURE:-AMD64}" \
+    NUMBER_OF_PROCESSORS="${NUMBER_OF_PROCESSORS:-8}" \
+    windir="${WINDIR:-C:\\Windows}" \
     CLAUDE_CONFIG_DIR="$(cygpath -w "$SCRATCH/cc-config")" \
     ANTHROPIC_BASE_URL="$BASE_URL" \
     ANTHROPIC_AUTH_TOKEN="$TOKEN" \
