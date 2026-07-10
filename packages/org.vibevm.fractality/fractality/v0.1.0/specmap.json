@@ -1431,7 +1431,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:911ce4c5ccbaea175f7cee786577e3891df600f583ce23cf2adb98ac9868563f",
+      "content_hash": "sha256:f44786e1e19451e389b1e03e2391e1f744ae1a458e37b84ee2e67aeadc1be807",
       "doc_path": "refs/INVENTORY",
       "file": "spec/refs/INVENTORY.md",
       "heading": "Reference-source inventory (clean-room register)",
@@ -1464,6 +1464,60 @@
       "heading": "Landscape note — where fractality sits",
       "line": 1,
       "uri": "spec://fractality/refs/notes/landscape#root"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:82b0273d9ffd91e914a4a8ff9ce7f81e1435e820233fe1ba97ddcf862f23dd85",
+      "doc_path": "refs/notes/rlm-source-selection",
+      "file": "spec/refs/notes/rlm-source-selection.md",
+      "heading": "RLM source selection — the Wave 3 merge verdict",
+      "line": 1,
+      "uri": "spec://fractality/refs/notes/rlm-source-selection#root"
+    },
+    {
+      "anchor": "repos",
+      "content_hash": "sha256:f603c14cbd1dc1f2d0dbb0c1d8cba4ef30211cb42f07329f6b1b52180cbcb253",
+      "doc_path": "refs/notes/rlm-source-selection",
+      "file": "spec/refs/notes/rlm-source-selection.md",
+      "heading": "The 5 repositories (recursion load-bearing)",
+      "line": 15,
+      "uri": "spec://fractality/refs/notes/rlm-source-selection#repos"
+    },
+    {
+      "anchor": "papers",
+      "content_hash": "sha256:c56a7fe33a18dac3f015c379f98c2a6225fd79bbcf3ab2d667fa1807e911603d",
+      "doc_path": "refs/notes/rlm-source-selection",
+      "file": "spec/refs/notes/rlm-source-selection.md",
+      "heading": "The 5 papers",
+      "line": 40,
+      "uri": "spec://fractality/refs/notes/rlm-source-selection#papers"
+    },
+    {
+      "anchor": "articles",
+      "content_hash": "sha256:6253a09a258df1fc4e0eebee32c5b64e4cbaa149c2b02bf79f638c42e90e7fa5",
+      "doc_path": "refs/notes/rlm-source-selection",
+      "file": "spec/refs/notes/rlm-source-selection.md",
+      "heading": "The 5 articles",
+      "line": 67,
+      "uri": "spec://fractality/refs/notes/rlm-source-selection#articles"
+    },
+    {
+      "anchor": "overlap",
+      "content_hash": "sha256:bea1a759f16f84ecff4576590d51d3defdf4559d681daf91eeee4272d7d4aae9",
+      "doc_path": "refs/notes/rlm-source-selection",
+      "file": "spec/refs/notes/rlm-source-selection.md",
+      "heading": "Wave-disagreement notes (for P-R2's verdict at close)",
+      "line": 85,
+      "uri": "spec://fractality/refs/notes/rlm-source-selection#overlap"
+    },
+    {
+      "anchor": "intake-map",
+      "content_hash": "sha256:8ac1343f491b270b5428143363cc721fcdc74a05323a9d84ee26775d97ede0f7",
+      "doc_path": "refs/notes/rlm-source-selection",
+      "file": "spec/refs/notes/rlm-source-selection.md",
+      "heading": "Intake map (Ф3)",
+      "line": 98,
+      "uri": "spec://fractality/refs/notes/rlm-source-selection#intake-map"
     }
   ],
   "suspects": [],
