@@ -1,13 +1,11 @@
 # FRACTALITY-INITIATIVE-PLAN v0.1 — Campaign 2: the initiative system (scoreboard-driven delegation for a cold boss)
 
-_Status: **EXECUTING, PAUSED at the Ф6 boundary (2026-07-10): Ф0–Ф5
-landed + the trial fully pre-registered and committed; the paid arms
-(RP1 resolved: GLM boss, 3+3, cap 8) are the next session's first
-move**
+_Status: **CLOSED 2026-07-10 (all seven phases executed; both trial
+arms run and scored; predictions ruled — P1 confirmed, P3 falsified
+with channel analysis; owner sign-off on the MT index pending)**
 (commissioned 2026-07-10: «Начинай Campaign 2» + «Goal set: сделать
-Campaign 2» — the owner ordered execution, not just authoring; phases
-land autonomously per host Rule 4, review points below still gate what
-only the owner can rule) · written
+Campaign 2»; resumed and closed under the owner goal «campaign 2
+должен быть завершен», 2026-07-10) · written
 2026-07-10 against host tree `a7695ab` (clean, mirrors synced) ·
 Format: `flow:org.vibevm/campaign-plans` (one file, five roles) ·
 cold-executable: any phase boundary is a safe stop; the floor is green at
@@ -16,8 +14,65 @@ from [`FRACTALITY-IGNITION-PLAN-v0.1.md`](FRACTALITY-IGNITION-PLAN-v0.1.md) §15
 
 ## 2. Execution record — (prepended at close)
 
-_Empty at authoring. The executing session prepends commit range,
-per-phase deltas, and the verdict on every prediction at close._
+**Commit range:** `47412ad` (campaign open) → the close commits,
+19 fractality-scoped commits total (15 planned; see P7). Executed
+across two sessions on 2026-07-10: Ф0–Ф5 + the Ф6 pre-registration
+in the first; the paid arms, scoring, and Ф7 in the second (resumed
+under the owner goal «campaign 2 должен быть завершен»).
+
+**Per-phase deltas vs plan:** Ф1/Ф3/Ф4 each folded their planned
+multi-commit shape into one feat commit (compile-coupled cells;
+ledgered per phase, never absorbed). Ф2 gained one discovered split
+(`mc_cmd.rs`, the conform 600-line budget). Ф5 deliberately dropped
+the `answer --rule` config-writing flag (hand-editing profiles.toml
+is the honest v1 surface; ledgered). Ф6 ran with a GLM-served cold
+boss per RP1 (3+3 runs, cap 8 untouched — zero technical repeats);
+the runner, staging, menu, and scoring were committed and frozen
+BEFORE any run. Ф7 closed same-day.
+
+**The trial's headline numbers (frozen scoring, MT-C2-01/-04):**
+Arm A (snippet only) pooled **3/18 ≈ 16.7%** (runs: 1/6 · 2/6 · 0/6);
+Arm B (+ initiative hooks) pooled **0/18 = 0%** (0/6 × 3). Distractor
+delegations: 0 in both arms. Boss work quality stayed high in both
+arms (6/6 attempted everywhere; artifacts complete in clean-finish
+runs).
+
+**Verdict on every prediction:**
+
+- **P1 CONFIRMED** — 16.7% < 50%: the cold-delegation gap is real.
+- **P2 CONFIRMED** (Ф0, 4/4 live seam facts on CC 2.1.202).
+- **P3 FALSIFIED** on both clauses (0% < 80%; 0 < A+30). Channel
+  analysis (the falsifier's obligation): the SessionStart scoreboard
+  DELIVERED but showed an empty board (fresh home — zero social
+  proof); the UserPromptSubmit nudge is STRUCTURALLY SILENT in
+  single-prompt `-p` sessions (the only prompt arrives at slate=0;
+  thresholds crossed at 34/44/45 with no later prompt to inject
+  into); Stop push correctly silent (nothing parked). Shared
+  confound: the scratch env breaks MSVC auto-detect, so bosses in
+  BOTH arms hand-fixed the linker and cited "workers can't
+  self-verify" as a rational keep reason. Iteration belongs to a
+  follow-up campaign (see §15).
+- **P4 CONFIRMED** — hook bench MC-warm, n=20: post-tool-use
+  P95 = 51 ms (< 100); user-prompt-submit P95 = 49 ms (< 200).
+  RP2's recommendation (counter default-ON) stands on data.
+- **P5 CONFIRMED** (Ф4, matrix goldens 10/10).
+- **P6 CONFIRMED** — statusline P95 = 58 ms (< 150), MC warm.
+- **P7 CONFIRMED** — 19 commits ≤ 26, every fold/split ledgered.
+- **P8 CONFIRMED** — close-time grep audit: the initiative crate has
+  zero fs writes; the only initiative-path writes are the sanctioned
+  `CLAUDE_ENV_FILE` append (hook.rs `export_session_env`) and the
+  owned settings entries at install time. I3 survived its first
+  consumer.
+
+**What the campaign actually proved:** the fabric's mechanics work
+end to end under a cold boss (hooks fire, sessions attribute,
+counters count, workers spawn/complete when chosen), and the
+scoreboard-first posture is honest — but *visibility alone does not
+move cold propensity in headless single-prompt sessions*. The two
+strongest observed levers on delegation were (a) the boss's belief
+that workers can self-verify (broken sandbox ⇒ no delegation), and
+(b) prompt seams that actually fire mid-work. Both are named,
+actionable deltas in §15.
 
 ## 3. The mandate (owner, verbatim)
 
@@ -714,30 +769,116 @@ what each commit confirmed or falsified, drift notes._
   - Next: Ф6 — the trial (RP1 RESOLVED: GLM-served cold boss, 3 runs
     per arm, cap 8) + boss surface v2.
 
-- **Ф6 — IN PROGRESS (pre-registration EXECUTED 2026-07-10; the paid
-  arms are the next session's first move).** Landed at this boundary:
-  the staging fixture (`spec/manual-tests/trial/staging/` — the
+- **Ф6 — EXECUTED 2026-07-10 (pre-registration in the first session;
+  the paid arms fired and scored in the resumed session).**
+  Pre-registration landed committed and frozen BEFORE any run: the
+  staging fixture (`spec/manual-tests/trial/staging/` — the
   standalone `mini_logfmt` crate with the eight tasks baked in), the
   neutral menu (no delegation words anywhere — discovery rides the
   snippet), the runner (`trial/run-arm.sh`: worker-shaped clean boss
   env, per-run scratch home + git-initialized project copy, secrets
   never echoed, arm `b` = `harness install`), MT-C2-01/-04 with the
-  scoring FROZEN before any run (eligible set, attempted/delegated
-  definitions, pooled metric, P1/P3 thresholds), and boss surface v2
-  (snippet 75: the `route` verb + the scoreboard section; the skill:
-  route-as-verb + bus-side counters). Session paused here by the
-  owner's word — a deliberate safe stop: everything about the trial
-  is committed and frozen, nothing paid has fired.
+  scoring FROZEN (eligible set, attempted/delegated definitions,
+  pooled metric, P1/P3 thresholds), and boss surface v2 (snippet 75:
+  the `route` verb + the scoreboard section; the skill: route-as-verb
+  + bus-side counters).
+  - **The arms:** six paid GLM-boss runs (3+3), zero technical
+    repeats (cap 8 untouched), all under the live-observation law
+    (20 s telemetry polls; two near-stall GLM turns, no derailments).
+    Wall ≈ 2 h 10 m total; per-run 18–25 min; two runs hit the 1500 s
+    wall, two hit max-turns, two finished clean.
+  - **Numbers (frozen scoring):** Arm A pooled **3/18 ≈ 16.7%**
+    (1/6 · 2/6 · 0/6); Arm B pooled **0/18 = 0%**. Distractor
+    delegations 0 in both arms. **P1 CONFIRMED; P3 FALSIFIED** —
+    full channel analysis in §2 and MT-C2-04.
+  - **The adapter proved itself live in `-p`:** every arm-B run
+    installed 5 hooks + statusLine, registered a session, counted
+    work-tools (slates 34/45/44), injected the scoreboard
+    (text verified in the transcript), and exited 0 into a working
+    boss session — the availability law held; hook records in
+    `sessions.txt`; no boss session was ever broken by the fabric.
+  - **Discovered facts:** (F23) the UserPromptSubmit nudge channel
+    is structurally silent in single-prompt `-p` sessions — the only
+    prompt arrives at slate=0; (F24) the scratch `env -i` breaks
+    rustc's MSVC toolchain auto-detect — every boss hand-fixed the
+    linker (vcvars wrapper) and two bosses cited worker
+    self-verification doubt as a keep reason (a staging defect,
+    shared by both arms); (F25) a fresh-home scoreboard is an EMPTY
+    scoreboard — zero social proof at exactly the moment the
+    injection fires.
+  - Run artifacts under `target/trial-results/arm-{a,b}-run-{1..3}/`
+    (transcripts, runs.json, sessions.txt, proj-final trees) —
+    uncommitted by design (target/ is build state; the recorded
+    facts live in the MTs).
+  - P4/P6 benches (MC warm, n=20): post-tool-use P95 51 ms;
+    user-prompt-submit P95 49 ms; statusline P95 58 ms — all under
+    budget; **P4 and P6 CONFIRMED**.
+  - Floor at the boundary: green (run pinned to the workspace cwd —
+    one boss-side cwd violation on the first floor attempt, caught
+    by the specmap error and relaunched pinned; the cwd law's second
+    strike this campaign, both ledgered).
+  - Owner sign-off on the MT index: **pending** (the one close item
+    only the owner can perform).
+
+- **Ф7 — EXECUTED 2026-07-10 (the close).** §2 execution record
+  prepended; every prediction ruled (P1/P2/P4/P5/P6/P7/P8 confirmed,
+  P3 falsified with channel analysis); P8's shadow-state grep audit
+  run at close (initiative crate: zero fs writes; sanctioned writes
+  only); §15 deferrals extended with the trial's actionable deltas +
+  the standing leftovers; reports: Ф6 trial narrative +
+  campaign-close report + completed-plan dashboard; WAL / CONTINUE /
+  WORKSPACES refreshed. Planned close commit shape adapted: two
+  commits (trial records; campaign close), ledgered.
 
 ## 15. Deferrals ledger (seeds Campaign 3+)
 
+_From the trial's falsifier analysis (the P3 levers, in priority
+order — these are the initiative system's actual next moves):_
+
+- **DEF-C2-1 — a mid-work injection seam that actually fires in
+  headless sessions (F23).** UserPromptSubmit never re-fires in
+  single-prompt `-p`; the threshold nudge needs a channel that
+  exists mid-turn: PostToolBatch additionalContext (already deferred
+  once — now with field data), or a Stop-hook continue-feedback
+  nudge tier (bounded like the question push), or per-tool
+  additionalContext on threshold crossing. Needs its own fatigue
+  measurement; this is the follow-up campaign's core.
+- **DEF-C2-2 — worker self-verification credibility (F24).** The
+  strongest observed keep-reason was "workers can't verify here".
+  Two halves: (a) staging must ship a working toolchain (the trial
+  sandbox's MSVC auto-detect broke under `env -i` — fix the fixture
+  before any re-run); (b) the product half: `route`/scoreboard
+  should surface *verification capability* facts ("workers run
+  cargo test green in this repo: yes/no, last proven <when>"), so
+  the boss's doubt is answered by data, not assumption.
+- **DEF-C2-3 — the empty-board cold-start problem (F25).** A fresh
+  home renders "0 runs all-time" at the exact moment the SessionStart
+  injection fires — zero social proof. Options to study: seed the
+  board with fleet-wide (not home-local) facts, or reshape the
+  cold-board template to lead with the route verb + a worked example
+  instead of zero counters.
+- **DEF-C2-4 — trial re-run design.** Multi-prompt (interactive or
+  scripted multi-turn) sessions so the nudge channel exists; fixed
+  toolchain; consider N>3 and an Opus-class boss when budget allows
+  (the RP1 validity caveat).
+
+_Standing (pre-trial) deferrals:_
+
 - Savings-estimation methodology (honest "what delegation saved") —
   needs its own measurement design (D7).
-- PostToolBatch as a second mid-turn injection channel — after nudge
-  fatigue data exists.
+- PostToolBatch as a second mid-turn injection channel — folded into
+  DEF-C2-1 above.
 - Learned auto-answer policy suggestions (full D18 layer 2) — after the
   Ф5 slice generates field data.
 - Cross-harness adapters (VibeVM Pixel, Codex boss) — after I4's core
   proves out on CC.
 - RLM protocol — Campaign 3 (DEF-2, unchanged).
 - Output-compression flow study — only on its own mandate (§10).
+
+_IGNITION-era leftovers carried by the Ф5/Ф4 reports (named here so
+the next mandate can drain them):_ a hook debug channel (availability
+law currently swallows failures silently — fine for the boss, blind
+for the developer), session TTL reaping (open sessions never expire),
+per-packet answer rules (Ф5 shipped profile-level only), an
+`auto_answered` counter in `stats`, quota plan limits (the rollup
+reports burn; nothing enforces a ceiling).

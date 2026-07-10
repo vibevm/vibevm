@@ -1,99 +1,81 @@
 # fractality — WAL (project continuation state)
 
-_Updated: 2026-07-10 ~14:10 (**Campaign 2 EXECUTING, paused at the Ф6
-boundary** — owner: «сохранить и перезапустить сессию, дойди до
-стабильной точки и остановись». Ф0–Ф5 executed and ledgered in one
-session; the Ф6 trial is fully pre-registered and committed; the paid
-arms have NOT fired — they are the next session's first move. Plan:
+_Updated: 2026-07-10 ~16:45 (**Campaign 2 CLOSED** — resumed under the
+owner goal «campaign 2 должен быть завершен», fired the Ф6 arms,
+scored, closed Ф7. Plan:
 [`fractality/v0.1.0/spec/plans/FRACTALITY-INITIATIVE-PLAN-v0.1.md`](fractality/v0.1.0/spec/plans/FRACTALITY-INITIATIVE-PLAN-v0.1.md)
-(§14 ledger per phase); owner dashboards in
-[`reports/`](reports/): started/state/paused plan files + per-phase
-narratives Ф0–Ф5)._
-_Prior: 2026-07-10 (IGNITION **CLOSED** — Phases 0–6, MT-01…05 signed
-off, P1–P6/P8 confirmed, P7 falsified; reports in `reports/`)._
+— §2 execution record, §14 ledger, §15 deferrals; reports in
+[`reports/`](reports/): Ф6 trial narrative + campaign-close +
+completed-plan dashboard)._
+_Prior: 2026-07-10 (IGNITION CLOSED — MT-01…05 signed off)._
 
 ## Current state
 
-- **Campaign 2 (initiative system): Ф0–Ф5 landed, floor green at
-  every boundary.** Live surface added this campaign: boss sessions
-  in MC (sibling `sessions.jsonl`, idempotent begin, initiative
-  counters), run attribution via `FRACTALITY_BOSS_SESSION`
-  (CLAUDE_ENV_FILE seam; I1-pinned out of workers), the pure
-  `fractality-initiative` engine (scoreboard render, nudge policy,
-  route calculus — strictly factual, D7), CLI verbs `session ·
-  scoreboard · route · hook · statusline · harness · fetch`, the CC
-  adapter (availability law: hooks exit 0 on any failure;
-  connect-only, never autostart), threshold nudges + cooldown,
-  stop-time parked-question alerts (once per question, folded acks),
-  profile answer_rules (auto-answers with journaled provenance),
-  matrix-as-data with 10/10 §worked goldens (P5 ✅), monthly quota
-  rollup in `stats` (IGNITION leftover closed).
-- **Ф6 pre-registered and frozen** (committed BEFORE any run):
-  staging crate `spec/manual-tests/trial/staging/` (mini_logfmt, 8
-  tasks), neutral `menu.md`, `run-arm.sh` (worker-shaped clean boss
-  env, per-run scratch homes, secrets never echoed), MT-C2-01/-04
-  with the scoring rules; snippet 75 v2 + skill v2 (route verb +
-  scoreboard). **RP1 RESOLVED (owner verbatim in plan §13): GLM-served
-  cold boss, 3 runs per arm, technical cap 8.** RP2/RP3 still open
-  (recommendations recorded).
-- Floor at the pause: conform 0 (7/7 gated), specmap 18 units / 63
-  items / 63 edges / 0 orphans / 0 warnings, test-gate xfail-strict,
-  ~155 tests. MC daemon **stopped**; real `~/.fractality` untouched
-  (scratch homes throughout).
-- Commit chain this session: `5242bd6` (contract: delegate cwd law) →
-  `36c09aa` (barkain note) → `47412ad` (plan) → `a63a219` (language
-  law) → `4f5bc04` (Ф0) → `1c9757b`+`ea6ed83` (Ф1) → `6f5788a`+
-  `6d8397e`+`a979ea6` (Ф2) → `4e2c71c`+`5f7dd3b`+`82771bb` (Ф3 +
-  reports practice) → `2b24288`+`09845de` (Ф4 + dashboards) →
-  `337ea86` (Ф5) → the wind-down commits (boss surface v2, trial
-  pre-registration, this checkpoint).
+- **Campaign 2 executed Ф0–Ф7, floor green at every boundary**
+  (final: conform 0 — 7/7 gated, specmap 19 units / 63 items / 63
+  edges / 0 orphans / 0 warnings, test-gate xfail-strict, 159
+  tests). Surface: boss sessions + attribution, the pure initiative
+  engine, 7 new verbs, the CC adapter (availability law
+  field-proven), nudges + question push, answer rules,
+  matrix-as-data.
+- **The trial (Ф6): six GLM cold-boss runs, 0 technical repeats.**
+  Frozen scoring: **arm A 3/18 ≈ 16.7% · arm B 0/18 = 0%**;
+  distractor delegations 0. **P1 CONFIRMED, P3 FALSIFIED**; P2/P4/
+  P5/P6/P7/P8 confirmed (P4: 51/49 ms P95; P6: 58 ms; P7: 19
+  commits; P8: audit clean). Falsifier mechanics, recorded as
+  F23–F25: the nudge channel never fires in single-prompt `-p`; a
+  fresh home renders an empty (unpersuasive) board; the staging
+  `env -i` broke MSVC auto-detect and handed every boss a rational
+  "workers can't self-verify" keep-reason (both arms equally — the
+  delta survives).
+- **Open items:** owner sign-off on MT-C2-01…04 (pre-run records
+  filled; the pass is the owner's). RP2/RP3 owner-open with
+  data-backed recommendations (counter ON; settings.local target).
+  Next-campaign seeds: **DEF-C2-1…4** in plan §15 (mid-work
+  injection seam for headless; worker-credibility facts + staging
+  toolchain fix; cold-board reshape; re-run design).
+- MC daemon stopped; real `~/.fractality` untouched (scratch homes
+  throughout). Trial artifacts in `target/trial-results/`
+  (uncommitted build state by design).
 
 ## Constraints (do not violate without discussion)
 
 - Host Rules 1–4; the delegation law + live-observation protocol +
   two context scenarios (scoreboard in every checkpoint); clean-room
-  law; I1 worker-env (now also pins FRACTALITY_BOSS_SESSION); I2 bus /
-  files-as-persistence; I3 one telemetry store (the initiative engine
-  is a consumer, never an accumulator); publish owner-word-only (RP3
-  host). **Language law (owner, 2026-07-10): no Python in the shipped
-  codebase** — Rust/TS + thin PS/Bash launchers; Python only in
-  throwaway spikes/tests and named exceptional cases.
-- **F15 + corollary (this session):** stop MC daemons before builds;
-  hook smokes rebuild `--workspace` — hooks talk to the SIBLING
-  daemon binary, a stale one folds session events with old rules.
-- **Cwd law binds every launch:** pin the working directory inside
-  the command itself — gates AND delegate launches (violated once
-  this session on a delegate launch; killed and relaunched pinned).
-- **opencode delegate law:** inputs must live UNDER the launch cwd
-  (external_directory auto-rejects); heartbeats are `echo` commands.
-- **Reports law (owner, 2026-07-10):** every phase ends with an
-  owner-facing report in `reports/` (дата-время-кампания-фаза name);
-  big plans mirror as stage-suffixed dashboards (drafted/started/
-  changed/paused/resumed/completed/rejected + one -state-plan.md);
-  specs/WAL stay the source of truth.
+  law; I1 worker-env (pins FRACTALITY_BOSS_SESSION out); I2 bus /
+  files-as-persistence; I3 one telemetry store; publish
+  owner-word-only. **Language law: no Python in the shipped
+  codebase** (tests/prototypes OK).
+- **F15 + corollary:** stop MC daemons before builds; hook smokes
+  rebuild `--workspace`.
+- **Cwd law binds every launch — now with TWO strikes** (a delegate
+  launch in the first session; a floor launch from the host root in
+  the close session, caught by specmap). Pin cwd inside the command,
+  every time; candidate future fix: a mechanical guard.
+- **opencode delegate law:** inputs under the launch cwd; heartbeats
+  are `echo` commands.
+- **Reports law:** phase reports + plan-lifecycle dashboards in
+  `reports/` (дата in год-число-месяц order).
+- **Specmap drift note:** editing anchored spec docs (e.g. snippet
+  75) requires re-minting `specmap.json` before the next floor —
+  the wind-down that adds an anchor must carry the re-mint.
 
-## Delegation scoreboard (session total)
+## Delegation scoreboard (this session)
 
-Delegated 5 / delivered 5: barkain survey (5.2) · cc-docs hooks
-extraction (5.2) · MC session integration tests (5.2) · fetch.rs
-(turbo) · the route slice (5.2; one relaunch after the boss's own cwd
-slip). Kept with cause: seam design, nudge policy, ownership
-semantics, experiment design, every review (the never-delegate set).
+Delegated 6 / delivered 6: the six trial boss-runs (GLM-5.2 executed
+the full 8-task menu six times — the experiment itself was the
+delegation). Kept with cause: scoring (frozen-protocol
+interpretation), P4/P6 benches (20-iteration one-shots, smaller than
+a packet round-trip), close authoring (plan/reports/WAL — the
+never-delegate set), every review.
 
-## Next (the resumed session's recipe)
+## Next (candidates for the owner)
 
-1. `cd packages/org.vibevm.fractality/fractality/v0.1.0 && cargo
-   build --workspace` (one build for CLI + daemon + hooks).
-2. **Fire the arms** (paid, RP1-authorized):
-   `for n in 1 2 3; do bash spec/manual-tests/trial/run-arm.sh a $n; done`
-   then the same with `b`. Watch per the live-observation law
-   (`target/trial-results/arm-*/boss-stderr.log`, run-info.txt).
-   Expect env-nit friction on the first run — the runner has never
-   fired live; the cap 8 covers technical repeats.
-3. Score per MT-C2-01's frozen rules; fill both MTs' Recorded runs;
-   verdicts for P1/P3 (+ P4 hook-latency bench if convenient).
-4. Ф7: close the campaign — §2 execution record, P1–P8 verdicts,
-   campaign-close report, completed-plan dashboard, WAL/CONTINUE/
-   WORKSPACES, backlog entries (leftovers named in the reports:
-   hook debug channel, session TTL reaping, per-packet answer rules,
-   auto-answered counter in metrics, quota plan limits).
+1. **Sign off MT-C2-01…04** (read `Recorded runs` in both files;
+   the Ф6 trial report is the narrative companion).
+2. Rule RP2 (recommend: counter default-ON, P95 51 ms) and RP3
+   (recommend: keep `.claude/settings.local.json` default).
+3. Commission the follow-up from §15 DEF-C2-1…4 (headless-capable
+   injection seam; staging toolchain fix + credibility facts;
+   cold-board reshape; interactive-arena re-run).
+4. Or: pivot to Campaign 3 (RLM, DEF-2) — the deferrals ledger holds.

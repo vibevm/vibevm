@@ -1035,7 +1035,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:e02896793613c3492e4dd2e813b08d440f28507e08243839336a71ba1ed874ea",
+      "content_hash": "sha256:964c03befa0316d90bffb0e3c90580f68225f1ec3130fb34571a8ba25885f16c",
       "doc_path": "boot/75-tool-fractality",
       "file": "spec/boot/75-tool-fractality.md",
       "heading": "Tool: fractality",
@@ -1044,7 +1044,7 @@
     },
     {
       "anchor": "trigger",
-      "content_hash": "sha256:3aa3d6f331f37d6be7fec1acbc175bed903f413335580eab2c9b57f206a3cca1",
+      "content_hash": "sha256:6e34f47376fffc88a8c2f3a29bbb5e5135f4f533ec90df571de2b0eb4c672cf4",
       "doc_path": "boot/75-tool-fractality",
       "file": "spec/boot/75-tool-fractality.md",
       "heading": "When a task smells delegable",
@@ -1052,12 +1052,21 @@
       "uri": "spec://fractality/boot/75-tool-fractality#trigger"
     },
     {
+      "anchor": "scoreboard",
+      "content_hash": "sha256:11023eb7505b59f8c7fa483d330311f486204108225bfaebb0cf4a176b5df559",
+      "doc_path": "boot/75-tool-fractality",
+      "file": "spec/boot/75-tool-fractality.md",
+      "heading": "Your scoreboard",
+      "line": 30,
+      "uri": "spec://fractality/boot/75-tool-fractality#scoreboard"
+    },
+    {
       "anchor": "commands",
       "content_hash": "sha256:8fded1e9632ca2a82f428ee1f381db7b8b9de5c8ab8cbe2760c3f66dd902f13d",
       "doc_path": "boot/75-tool-fractality",
       "file": "spec/boot/75-tool-fractality.md",
       "heading": "One command per shape",
-      "line": 22,
+      "line": 42,
       "uri": "spec://fractality/boot/75-tool-fractality#commands"
     },
     {
@@ -1066,7 +1075,7 @@
       "doc_path": "boot/75-tool-fractality",
       "file": "spec/boot/75-tool-fractality.md",
       "heading": "The packet is the work order",
-      "line": 37,
+      "line": 57,
       "uri": "spec://fractality/boot/75-tool-fractality#packet"
     },
     {
@@ -1075,7 +1084,7 @@
       "doc_path": "boot/75-tool-fractality",
       "file": "spec/boot/75-tool-fractality.md",
       "heading": "Never",
-      "line": 47,
+      "line": 67,
       "uri": "spec://fractality/boot/75-tool-fractality#never"
     },
     {
