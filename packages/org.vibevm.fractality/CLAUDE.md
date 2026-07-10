@@ -117,8 +117,19 @@ delete the backlog entry.
 
 - **Language:** Rust. Each code-bearing package version dir is its **own
   Cargo workspace** (the host root workspace excludes `packages/`), starting
-  with `fractality/v0.1.0/`. No Python, no Node; shell only as thin
-  launchers when unavoidable.
+  with `fractality/v0.1.0/`. **No Python in the shipped codebase** (owner
+  directive, 2026-07-10, verbatim): «в финальной версии я не хочу видеть у
+  себя в кодовой базе никакого python. Можно использовать python для тестов
+  и прототипов, но результат в идеале должен быть на Rust/Typescript с
+  прослойкой запускалок на PowerShell и Bash при необходимости. Python
+  должен использоваться в исключительных случаях, когда инфраструктура для
+  остальных языков программирования слишком плоха — например, какие-то
+  уникальные расширения для библиотек TensorFlow и прочего машинного
+  обучения. Или например, расширения для Ansible.» Operationally: product
+  code is Rust (this project) / TypeScript (where a package is
+  TS-native); PowerShell/Bash only as thin launchers; Python appears only
+  in throwaway spikes/prototypes (never committed to the shipped surface)
+  or the named exceptional infrastructure cases.
 - **Artifacts in English** (code, specs, docs, commit messages); chat with
   the owner in Russian.
 - **Commit scope:** `fractality` (e.g. `feat(fractality): …`), regardless of
