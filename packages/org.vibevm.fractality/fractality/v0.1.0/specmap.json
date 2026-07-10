@@ -1206,6 +1206,96 @@
     },
     {
       "anchor": "root",
+      "content_hash": "sha256:09b17630a7e0df3ffd5049d9a1d68b61063857778482761033b507f370ca9050",
+      "doc_path": "plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1.md",
+      "heading": "FRACTALITY-FUGU-RESEARCH-PLAN v0.1 — Campaign 3 · Stage A2: the Sakana Fugu research",
+      "line": 1,
+      "uri": "spec://fractality/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1#root"
+    },
+    {
+      "anchor": "mandate",
+      "content_hash": "sha256:f7807eed9c9b4533f0944feaa879730baaa81c90a5bcc700f9c66ec9877bf1c7",
+      "doc_path": "plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1.md",
+      "heading": "1. The mandate (owner, 2026-07-11, verbatim)",
+      "line": 13,
+      "uri": "spec://fractality/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1#mandate"
+    },
+    {
+      "anchor": "goal",
+      "content_hash": "sha256:2a97d52db5c0c07eabecf499154a803afed22d8153ddeef732274a4017725730",
+      "doc_path": "plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1.md",
+      "heading": "2. Goal and deliverables",
+      "line": 29,
+      "uri": "spec://fractality/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1#goal"
+    },
+    {
+      "anchor": "deviations",
+      "content_hash": "sha256:2185f4024cd6d5ac6180885e3ef9fa662adb720b695afc3579c8ff89936271f9",
+      "doc_path": "plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1.md",
+      "heading": "3. Deviations from the Stage A method",
+      "line": 47,
+      "uri": "spec://fractality/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1#deviations"
+    },
+    {
+      "anchor": "waves",
+      "content_hash": "sha256:76685aeb16699cbb442988fbd0492b3a0b343a5209c1dfd197dc62d6f4780ff2",
+      "doc_path": "plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1.md",
+      "heading": "4. The waves (frozen)",
+      "line": 60,
+      "uri": "spec://fractality/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1#waves"
+    },
+    {
+      "anchor": "phases",
+      "content_hash": "sha256:d35ca0530aec424b3fd6167875dda8971ecc05030938ddeeedaf81516a6a91d6",
+      "doc_path": "plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1.md",
+      "heading": "5. Phases",
+      "line": 101,
+      "uri": "spec://fractality/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1#phases"
+    },
+    {
+      "anchor": "predictions",
+      "content_hash": "sha256:7f98c79a3e285d1795d11e314a38fb499bfbcc516a3feb05e40951d017e24269",
+      "doc_path": "plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1.md",
+      "heading": "6. Predictions",
+      "line": 116,
+      "uri": "spec://fractality/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1#predictions"
+    },
+    {
+      "anchor": "review-points",
+      "content_hash": "sha256:3f9c292272ea221fa37db88e51fa9ffd9b7449f607d6a5f61839c0d5247f5728",
+      "doc_path": "plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1.md",
+      "heading": "7. Review points",
+      "line": 133,
+      "uri": "spec://fractality/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1#review-points"
+    },
+    {
+      "anchor": "ledger",
+      "content_hash": "sha256:4f38e71acc08f50c5863c8187e724977400eb89fabc81749365f1654549747ec",
+      "doc_path": "plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1.md",
+      "heading": "8. Ledger",
+      "line": 139,
+      "uri": "spec://fractality/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1#ledger"
+    },
+    {
+      "anchor": "log",
+      "content_hash": "sha256:af3ee146978d368332fb50f55e4d765396023615d4e480ade1627704912cee22",
+      "doc_path": "plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1.md",
+      "heading": "9. Log",
+      "line": 145,
+      "uri": "spec://fractality/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1#log"
+    },
+    {
+      "anchor": "root",
       "content_hash": "sha256:f26754e3bf338f027805adcf6a819ebe708c5d74acfb5dcb72534f9488470293",
       "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
       "file": "spec/plans/FRACTALITY-RLM-PLAN-v0.1.md",
