@@ -87,4 +87,13 @@ touched.
 
 ## Recorded runs
 
-- _(pending — agent pre-run + owner sign-off land with the Ф6 index)_
+- 2026-07-10 (agent pre-run, Ф3 close): PASS — full cycle on a
+  scratch project + scratch home: install (5 events + statusLine),
+  live SessionStart scoreboard injection observed, remove leaves
+  `{}` (foreign entries untouched — unit-pinned), fetch-over-TLS.
+- 2026-07-10 (agent pre-run, the Ф6 trial, ×3): every arm-B run's
+  `harness-status.txt` reported all five events + statusLine
+  `installed`; sessions registered and counted (slates 34/45/44);
+  hooks exited 0 throughout — the availability law held live.
+- **Owner sign-off: RECORDED 2026-07-10** (verbatim: «подписываю
+  MT-C2-01…04»).

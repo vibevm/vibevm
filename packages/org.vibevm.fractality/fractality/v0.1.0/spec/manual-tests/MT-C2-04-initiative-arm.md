@@ -90,4 +90,6 @@ either (6/6 across all runs, work quality high).
   a rational keep reason; it suppresses B the same way it
   suppresses A.
 
-- _(owner sign-off with the Ф6 index: pending)_
+- **Owner sign-off: RECORDED 2026-07-10** (verbatim: «подписываю
+  MT-C2-01…04») — the recorded runs above stand as the accepted
+  result of this test.

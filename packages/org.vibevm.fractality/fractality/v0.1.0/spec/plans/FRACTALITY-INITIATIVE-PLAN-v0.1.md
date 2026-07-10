@@ -2,7 +2,8 @@
 
 _Status: **CLOSED 2026-07-10 (all seven phases executed; both trial
 arms run and scored; predictions ruled — P1 confirmed, P3 falsified
-with channel analysis; owner sign-off on the MT index pending)**
+with channel analysis; MT-C2-01…04 owner-signed; RP1–RP4 all
+RESOLVED)**
 (commissioned 2026-07-10: «Начинай Campaign 2» + «Goal set: сделать
 Campaign 2»; resumed and closed under the owner goal «campaign 2
 должен быть завершен», 2026-07-10) · written
@@ -579,13 +580,20 @@ grep -rn "FRACTALITY_BOSS_SESSION" crates/fractality-pod/src/worker_env.rs  # wh
   hand-spawned with the I1-style clean env, fractality on PATH, its
   own scratch home; arm B additionally gets `harness install` +
   FRACTALITY_HOME exported into the session env).
-- **RP2 — post-tool-use counter default (OPEN).** Recommend ON with the
-  5-tool matcher + kill switch, GATED on P4's measurement (< 100 ms
-  P95); if P4 falsifies, ships OFF with the prompt-time fallback.
-- **RP3 — settings write target default (OPEN).** Recommend
-  `.claude/settings.local.json` (machine-scoped, no repo pollution);
-  `--project` flag for committed team config. Owner may flip the
-  default.
+- **RP2 — post-tool-use counter default (RESOLVED 2026-07-10, owner
+  verbatim: «RP2 сделай ON»).** The counter ships ON with the 5-tool
+  matcher + kill switch — exactly as recommended and as already
+  implemented (`harness install` writes the PostToolUse entry).
+  P4's gate held: P95 51 ms MC-warm, half the 100 ms budget. No code
+  change needed; this ruling pins the default against future
+  re-litigation (revisit trigger: P95 > 100 ms on a future bench, or
+  field reports of per-call lag).
+- **RP3 — settings write target default (RESOLVED 2026-07-10, owner
+  verbatim: «КЗ3 сделай settings.local.json» [RP3]).** The default
+  stays `.claude/settings.local.json` (machine-scoped, gitignored);
+  `--project` remains the opt-in for committed team config — as
+  recommended and as already implemented. No code change needed
+  (revisit trigger: a team asks for committed-by-default install).
 - **RP4 — execution mode (RESOLVED 2026-07-10, owner verbatim: «Goal
   set: сделать Campaign 2»).** The campaign executes in-session;
   phases land autonomously per host Rule 4; RP1–RP3 still stop for the
@@ -817,8 +825,9 @@ what each commit confirmed or falsified, drift notes._
     one boss-side cwd violation on the first floor attempt, caught
     by the specmap error and relaunched pinned; the cwd law's second
     strike this campaign, both ledgered).
-  - Owner sign-off on the MT index: **pending** (the one close item
-    only the owner can perform).
+  - Owner sign-off on the MT index: **RECORDED 2026-07-10**
+    («подписываю MT-C2-01…04») — all four MTs carry the sign-off
+    line with their recorded runs.
 
 - **Ф7 — EXECUTED 2026-07-10 (the close).** §2 execution record
   prepended; every prediction ruled (P1/P2/P4/P5/P6/P7/P8 confirmed,

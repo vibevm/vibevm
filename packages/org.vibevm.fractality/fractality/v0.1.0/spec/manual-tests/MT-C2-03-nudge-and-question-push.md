@@ -75,4 +75,10 @@ slot). **Isolated:** scratch `--home` + scratch project; the real
 
 - 2026-07-10 (agent pre-run, nudge half, steps 1–3): PASS — threshold
   text exact, cooldown quiet, kill switch silent. Question half:
-  pending the Ф6 paid window (RP1).
+  pre-ran in the Ф4 staged smoke (parked question interrupted exactly
+  one stop; ack folded; `stop_hook_active` respected — Ф4 ledger).
+  The Ф6 paid trial produced no parked questions (arm B delegated
+  nothing — MT-C2-04), so the staged pre-run remains the recorded
+  evidence for the question half.
+- **Owner sign-off: RECORDED 2026-07-10** (verbatim: «подписываю
+  MT-C2-01…04»).

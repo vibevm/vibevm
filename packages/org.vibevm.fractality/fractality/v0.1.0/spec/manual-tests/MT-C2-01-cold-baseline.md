@@ -90,4 +90,6 @@ that depresses delegation in BOTH arms equally (the A↔B delta stays
 interpretable); (b) GLM-5.2 proxies the Opus-class boss (RP1 caveat,
 pre-registered); (c) N=3 per arm by owner ruling.
 
-- _(owner sign-off with the Ф6 index: pending)_
+- **Owner sign-off: RECORDED 2026-07-10** (verbatim: «подписываю
+  MT-C2-01…04») — the recorded runs above stand as the accepted
+  result of this test.
