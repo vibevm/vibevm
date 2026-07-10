@@ -28,7 +28,15 @@ max_concurrent = 4         # ≤ the tier's 5-hour prompt budget (D12)
 
 [profile.glm.permissions]
 mode = "acceptEdits"       # RP4: no yolo; the D18 stack is the way of life
+# allow_tools pre-approves tools for headless runs (the static-allowlist
+# layer of D18). Example: ["Bash"] lets a worker call `fractality spawn`
+# itself — the Phase 4 nesting seam. Off by default.
+# allow_tools = ["Bash"]
 deny_tools = ["WebFetch", "WebSearch"]   # tariff hygiene (D12)
+# ask_boss serves the D18 question broker: the worker gets an MCP tool
+# that parks the run on a question (`fractality questions` / `answer`)
+# and resumes with the boss's reply. Off by default.
+# ask_boss = true
 
 [profile.glm.pricing]      # metrics only; flat = subscription plan
 flat = true
