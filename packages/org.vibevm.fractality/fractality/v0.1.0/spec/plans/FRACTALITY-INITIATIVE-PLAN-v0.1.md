@@ -517,7 +517,49 @@ grep -rn "FRACTALITY_BOSS_SESSION" crates/fractality-pod/src/worker_env.rs  # wh
 _Filled at each phase boundary: commit map (hash → planned subject),
 what each commit confirmed or falsified, drift notes._
 
-- **Ф0 — (pending)**
+- **Ф0 — EXECUTED 2026-07-10, all spikes green, no commits (as
+  planned).**
+  - **s1 (hook live-probe, CC 2.1.202, haiku `-p`, scratch project):
+    P2 CONFIRMED 4/4** — SessionStart `additionalContext` reached the
+    model; UserPromptSubmit `additionalContext` reached the model;
+    `CLAUDE_ENV_FILE` export persisted into a later Bash call
+    (`PROBE_ENV=fractality-probe-42` echoed); hooks loaded from
+    `.claude/settings.local.json` in `-p` (s5 co-proven). Captured
+    stdin schemas: SessionStart `{cwd, hook_event_name, session_id,
+    source, transcript_path}`; UserPromptSubmit adds `{prompt,
+    prompt_id, permission_mode}`; PostToolUse adds `{tool_name,
+    tool_input, tool_response, tool_use_id, duration_ms}` (**F21:
+    `duration_ms` is served on a plate** — the work-tool counter can
+    weigh events by duration, not just count); Stop adds
+    `{stop_hook_active, last_assistant_message, background_tasks,
+    session_crons}`. **F20: the statusline command does NOT run in
+    `-p` mode** (no capture despite configuration) — statusline is an
+    interactive-session surface; the trial arms won't see it, the live
+    boss will. Probe turn: 11.4 s wall, 2 turns, $0.026.
+  - **s1-latency (P4 proxy): warm `fractality.exe` spawn ≈ 6 ms**
+    (5.7–12 ms over 5 runs) — the per-tool-call hook budget (<100 ms)
+    holds with an order of magnitude to spare before the engine + one
+    localhost RTT are added (**F22**).
+  - **s2 (statusline contract):** `/en/statusline` captured to
+    `refs/src/cc-docs/statusline.md` (plain curl this once — the
+    `fetch` verb lands Ф3). Facts: stdin JSON carries
+    `model.display_name`, `workspace.current_dir/project_dir`,
+    `cost.total_cost_usd`, `context_window.used_percentage` (+ sizes),
+    `session_id`, `exceeds_200k_tokens`; updates are event-driven and
+    go quiet when idle — `refreshInterval` (min 1 s) re-runs on a
+    timer, exactly what parked-question ages need; ANSI colors
+    supported; `padding` exists. D5's statusline design stands.
+  - **s3 (trial skeleton):** menu shape (E1–E6 eligible + D1–D2
+    distractors), staging, run mechanics, and pre-registered scoring
+    drafted (session scratch; binding MT texts land in Ф6 as planned).
+  - **s4 (attribution seam):** `worker_env.rs` audit — the worker env
+    is clean-slate + two deliberate injections (`FRACTALITY_HOME`,
+    PATH head); `FRACTALITY_BOSS_SESSION` cannot leak by construction;
+    the Ф1 test pins its absence. Concurrent-session behavior:
+    env-file export is per-session by construction
+    (`~/.claude/session-env/<session-id>/…` observed), so R6's env
+    path is per-session-correct.
+  - **Verdict:** no decision rewrites needed; Ф1 opens.
 
 ## 15. Deferrals ledger (seeds Campaign 3+)
 
