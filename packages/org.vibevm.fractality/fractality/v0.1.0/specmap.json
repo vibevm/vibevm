@@ -1206,6 +1206,231 @@
     },
     {
       "anchor": "root",
+      "content_hash": "sha256:c8f68cb455586c212744d7842c845ebd7aec281b25d8c3d1917e019e79738af3",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md",
+      "heading": "FRACTALITY-RLM-RESEARCH-PLAN v0.1 — Campaign 3 · Stage A: the RLM research",
+      "line": 1,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#root"
+    },
+    {
+      "anchor": "mandate",
+      "content_hash": "sha256:aade4351f7431e3708274b59a44da03185fc9768eadf713fb92cd6bd0a49083d",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md",
+      "heading": "1. The mandate (owner, 2026-07-10, verbatim)",
+      "line": 10,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#mandate"
+    },
+    {
+      "anchor": "goal",
+      "content_hash": "sha256:83cdd430ad45819229a2663de8068186877445c3f96f6b7d2c42abb1766ff16c",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md",
+      "heading": "2. Goal and non-goals",
+      "line": 46,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#goal"
+    },
+    {
+      "anchor": "facts",
+      "content_hash": "sha256:bfdedfb59e2f2c2752249b8a9a84c8afdb21aad84056de454504275c7186af99",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md",
+      "heading": "3. Current-state facts (verified 2026-07-10; do not re-discover)",
+      "line": 62,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#facts"
+    },
+    {
+      "anchor": "decisions",
+      "content_hash": "sha256:9d4d018581b9d1b5288c873998e05b8927a5309cd6760096885b154d20df24fa",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md",
+      "heading": "4. Decisions",
+      "line": 103,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#decisions"
+    },
+    {
+      "anchor": "d-r1",
+      "content_hash": "sha256:b5438aa96fe0b0dbd9766c6fbc4618fbd4a497afc365e98eb898201d66d6f1ee",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md",
+      "heading": "D-R1 — a new staged plan; Stage B is the exit deliverable",
+      "line": 105,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#d-r1"
+    },
+    {
+      "anchor": "d-r2",
+      "content_hash": "sha256:64d08d1913d72c73cc71a38851449de83d224901f875820b4c2c1193ed9db7c2",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md",
+      "heading": "D-R2 — three waves, first two independent",
+      "line": 119,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#d-r2"
+    },
+    {
+      "anchor": "d-r3",
+      "content_hash": "sha256:cfa42dc0bf3484ddf66ce7b39cac658e1f9a0eccc069ac376fb447654845fe6a",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md",
+      "heading": "D-R3 — what \"most important\" means (selection criteria)",
+      "line": 131,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#d-r3"
+    },
+    {
+      "anchor": "d-r4",
+      "content_hash": "sha256:444a2816d972839d47e5a06cc14c1b41f618eb73d13578a928b0a9eb705066e5",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md",
+      "heading": "D-R4 — the intake pipeline (clean-room, verbatim law)",
+      "line": 154,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#d-r4"
+    },
+    {
+      "anchor": "d-r5",
+      "content_hash": "sha256:05e5edca0a6d598c039ffcd98e13c58c93224ac33052d3f18d8cb32b1ccfe331",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md",
+      "heading": "D-R5 — tiered study depth + delegation posture",
+      "line": 171,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#d-r5"
+    },
+    {
+      "anchor": "d-r6",
+      "content_hash": "sha256:144dc2c1be9d1f7dfa87db401660f6ecc59dec02b376725e8ea2346b917f2c28",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md",
+      "heading": "D-R6 — note and synthesis formats",
+      "line": 188,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#d-r6"
+    },
+    {
+      "anchor": "d-r7",
+      "content_hash": "sha256:84c83b57331f71404e8a6236dac055ed17783b22d7e51d4f9e140ce3b90ee54d",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md",
+      "heading": "D-R7 — one project, one note",
+      "line": 203,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#d-r7"
+    },
+    {
+      "anchor": "waves",
+      "content_hash": "sha256:ef898bac177166308903163be6d97324ccf7f7a46e7f8f33dbe7f733fb1bf148",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md",
+      "heading": "5. The three waves — frozen protocol",
+      "line": 212,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#waves"
+    },
+    {
+      "anchor": "wave-1",
+      "content_hash": "sha256:265eb117d34d746071b7e76f1eb0afddfc1adff852c12b5e35fcf1a93eb5f82f",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md",
+      "heading": "Wave 1 — deep research",
+      "line": 214,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#wave-1"
+    },
+    {
+      "anchor": "wave-2",
+      "content_hash": "sha256:18fd53c7672a72b9d6815c657991ff0dc5b063e23394aa35adf18794a28afc66",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md",
+      "heading": "Wave 2 — plain web search, independent",
+      "line": 242,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#wave-2"
+    },
+    {
+      "anchor": "wave-3",
+      "content_hash": "sha256:152820ac745856e523d6f60f77e250f5f61f88539ede21d789de0c329b8169b4",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md",
+      "heading": "Wave 3 — the merge",
+      "line": 268,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#wave-3"
+    },
+    {
+      "anchor": "phases",
+      "content_hash": "sha256:222c34d85978adbc2c2ed68743ceb18d69e3c40743cd354ed89def01198e284d",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md",
+      "heading": "6. Phases and gates",
+      "line": 279,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#phases"
+    },
+    {
+      "anchor": "predictions",
+      "content_hash": "sha256:9694408ba61974b8235ad0008d1e7985a5a2f4d8e75d30228dd17676858e5047",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md",
+      "heading": "7. Predictions (checked at close)",
+      "line": 310,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#predictions"
+    },
+    {
+      "anchor": "baseline",
+      "content_hash": "sha256:ff9d8cf14dab8bf45b1198be0ea1bc9a3cb307962263a4bd7f72ba6c800e29f9",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md",
+      "heading": "8. Baseline and exit state",
+      "line": 326,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#baseline"
+    },
+    {
+      "anchor": "risks",
+      "content_hash": "sha256:a19f97a121cea02eb16e44c346c175905fb8d322f3356ffeeb3403f5b9d19b3a",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md",
+      "heading": "9. Risks and fallbacks",
+      "line": 342,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#risks"
+    },
+    {
+      "anchor": "review-points",
+      "content_hash": "sha256:93a2ccdb8fb50bdd91c229713b313e4396f7f9230ac8ea6844bba0ca5a8d3a90",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md",
+      "heading": "10. Review points",
+      "line": 369,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#review-points"
+    },
+    {
+      "anchor": "quick-start",
+      "content_hash": "sha256:e5e6a538d8ae19bce81b76152bef32e0128c339591d7e98a0479c5ebaabe8e2e",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md",
+      "heading": "11. Quick-start for the executing session",
+      "line": 382,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#quick-start"
+    },
+    {
+      "anchor": "acceptance",
+      "content_hash": "sha256:8b8dfb77a52d7351db3b73432db3e532b7c851d10c2cbc6f2de698f203cfc095",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md",
+      "heading": "12. Whole-stage acceptance",
+      "line": 403,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#acceptance"
+    },
+    {
+      "anchor": "ledger",
+      "content_hash": "sha256:ef7a11aac90df6559542af1f35bf170027de7f58a597eb86b2764e036b07998d",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md",
+      "heading": "13. Execution ledger",
+      "line": 417,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#ledger"
+    },
+    {
+      "anchor": "log",
+      "content_hash": "sha256:aacc7b358868c29ca2f9dc4cd60dc60635fad979bd63a25a7c988ddab1bc78b6",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md",
+      "heading": "14. Log",
+      "line": 425,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#log"
+    },
+    {
+      "anchor": "root",
       "content_hash": "sha256:911ce4c5ccbaea175f7cee786577e3891df600f583ce23cf2adb98ac9868563f",
       "doc_path": "refs/INVENTORY",
       "file": "spec/refs/INVENTORY.md",
