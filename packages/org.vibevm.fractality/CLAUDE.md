@@ -367,6 +367,24 @@ from the directive (recorded in full in git; the essentials):
   wins.
 - The agent decides itself when a stage document is warranted.
 
+### Postponed-work registry (owner directive, 2026-07-10)
+
+Anything we decided, for a stated reason, not to do — a deferred
+task, an unfired protocol, dropped scope, a parked idea — is filed
+in [`plans/postponed.md`](plans/postponed.md): one index line there,
+plus a **self-contained markdown document per item** under
+`plans/postponed/` (stable `PP-NNN` id in the filename). File the
+entry **in the same session the postponement is decided**, and
+write it cold — a session with no other context must be able to
+plan from it alone: the full task description, why it was
+postponed, what unblocks it, first steps when unblocked, pointers
+to the canonical spec/plan sections. Keep the registry
+current-state, not a journal: picking an item up flips its status;
+a drained item is pruned (git keeps history); a superseded item
+names what superseded it. Like the dashboards above, this is an
+owner-facing surface — the spec tree (plan deferral ledgers, MT
+files, WAL) stays the source of truth and wins on divergence.
+
 ## End of session
 
 Rewrite `WAL.md` to the current state (checkpoint, not journal). On a
