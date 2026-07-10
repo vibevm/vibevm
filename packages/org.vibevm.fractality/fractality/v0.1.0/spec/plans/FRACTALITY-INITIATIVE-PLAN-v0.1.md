@@ -1,9 +1,10 @@
 # FRACTALITY-INITIATIVE-PLAN v0.1 — Campaign 2: the initiative system (scoreboard-driven delegation for a cold boss)
 
-_Status: **PLANNED → EXECUTING** (commissioned 2026-07-10: «Начинай
-Campaign 2» + «Goal set: сделать Campaign 2» — the owner ordered
-execution, not just authoring; phases land autonomously per host Rule 4,
-review points below still gate what only the owner can rule) · written
+_Status: **EXECUTING — Ф0 and Ф1 landed, floor green; next: Ф2**
+(commissioned 2026-07-10: «Начинай Campaign 2» + «Goal set: сделать
+Campaign 2» — the owner ordered execution, not just authoring; phases
+land autonomously per host Rule 4, review points below still gate what
+only the owner can rule) · written
 2026-07-10 against host tree `a7695ab` (clean, mirrors synced) ·
 Format: `flow:org.vibevm/campaign-plans` (one file, five roles) ·
 cold-executable: any phase boundary is a safe stop; the floor is green at
@@ -560,6 +561,31 @@ what each commit confirmed or falsified, drift notes._
     (`~/.claude/session-env/<session-id>/…` observed), so R6's env
     path is per-session-correct.
   - **Verdict:** no decision rewrites needed; Ф1 opens.
+
+- **Ф1 — EXECUTED 2026-07-10. Commit map:**
+  - `1c9757b` — `feat(fractality): sessions — the attribution spine
+    (C2 Ф1)`. **Drift vs plan: one feat commit instead of the two
+    planned** — the field addition, the MC subsystem, and the CLI
+    attribution surface compile only together; splitting them would
+    have manufactured a non-building intermediate commit for
+    ceremony's sake. Ledgered, not absorbed (P7 bookkeeping).
+  - Confirmed: D2 (env-var attribution composes — `session begin`
+    prints one id; the I1 pin holds: the var never enters a worker
+    env), D3 (facts-only counters fold deterministically; the sibling
+    sessions.jsonl replays with the run journal untouched — restart
+    test green), the BD1 slate-clean rule (a Delegated note zeroes
+    `work_tools_since_delegation`, history survives).
+  - Floor at the boundary: **all green** — 118 tests (7 new session
+    integration tests, delegated to the big slot and verified by the
+    boss), conform 0 findings (6/6 gated), specmap 18 units / 52
+    items / 52 edges / 0 orphans, clippy `-D warnings`, test-gate
+    xfail-strict. Live smoke through the built binary on a scratch
+    home (F16): begin → ls → show → end → mc stop.
+  - Session delegation scoreboard so far: delegated 3 (barkain
+    survey; cc-docs extraction; the Ф1 session-test suite — all
+    GLM-5.2, all delivered first landing), kept with cause: seam
+    design, spec/plan prose, the http.rs budget split, reviews.
+  - Next: Ф2 (scoreboard engine + verbs).
 
 ## 15. Deferrals ledger (seeds Campaign 3+)
 
