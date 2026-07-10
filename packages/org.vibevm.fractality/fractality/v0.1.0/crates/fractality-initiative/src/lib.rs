@@ -11,5 +11,5 @@ pub mod nudge;
 pub mod route;
 pub mod scoreboard;
 
-pub use nudge::{Nudge, NudgeConfig, decide_prompt_nudge, decide_stop_alert};
+pub use nudge::{Nudge, NudgeConfig, decide_midwork_nudge, decide_prompt_nudge, decide_stop_alert};
 pub use scoreboard::{month_web_calls, render_board, render_line};

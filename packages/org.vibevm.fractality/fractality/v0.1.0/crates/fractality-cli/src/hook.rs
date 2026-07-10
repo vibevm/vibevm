@@ -119,6 +119,37 @@ pub(crate) async fn hook(home: &camino::Utf8Path, event: &str) -> u8 {
                         },
                     )
                     .await;
+                // The mid-work channel (DEF-C2-1, F23): single-prompt
+                // sessions never re-enter UserPromptSubmit, so the
+                // threshold nudge rides PostToolUse additionalContext.
+                // The WorkTool note above is folded before this read,
+                // so the slate the decision sees is current. The
+                // config pre-check keeps the off-path at one MC call.
+                let cfg = load_config(home);
+                if cfg.midwork_nudges
+                    && let Ok(session) = client.session_metrics(sid).await
+                {
+                    let now = fractality_core::time::now_ms();
+                    if let Some(nudge) =
+                        fractality_initiative::decide_midwork_nudge(&cfg, &session, now)
+                    {
+                        let out = serde_json::json!({
+                            "hookSpecificOutput": {
+                                "hookEventName": "PostToolUse",
+                                "additionalContext": nudge.text,
+                            }
+                        });
+                        println!("{out}");
+                        let _ = client
+                            .session_note(
+                                sid,
+                                SessionNote::NudgeSent {
+                                    reason: nudge.reason,
+                                },
+                            )
+                            .await;
+                    }
+                }
             }
         }
         "session-end" => {

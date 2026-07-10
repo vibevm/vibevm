@@ -305,9 +305,22 @@ blast radius).
   facts + the verb to run (`fractality questions` / the skill). 30 s
   timeout budget means: one MC round-trip, no retries.
 - **PostToolUse** (matcher `Bash|Edit|Write|MultiEdit|NotebookEdit`):
-  counter event to MC, **no output** (BD1: reads never count; the
-  counter zeroes on a fractality spawn in the session). Latency budget
-  P4 gates this hook's default-on status (RP2).
+  counter event to MC (BD1: reads never count; the counter zeroes on
+  a fractality spawn in the session). Latency budget P4 gates this
+  hook's default-on status (RP2 — RESOLVED ON).
+  _(rewritten in place post-close, 2026-07-10, DEF-C2-1 executed on
+  the owner's order «доделай DEF-C2-1…4» — the original said **no
+  output**; the trial falsified that posture: F23 proved the
+  prompt-time channel never re-fires in single-prompt headless
+  sessions, so the threshold nudge was structurally mute exactly
+  where the cold boss lives.)_ On a threshold crossing this hook now
+  ALSO emits the nudge as `additionalContext` — same threshold, same
+  session-level cooldown anchor (one nudge per window across ALL
+  channels — the R3 fatigue bound is unchanged), a distinct journal
+  reason (`work-tool-threshold-midwork`) so MT-C2-05 can measure the
+  channels apart, and its own `midwork_nudges` config switch under
+  the same kill switch. Fatigue for the new channel is pre-registered
+  as an MT-C2-05 measurement, not assumed.
 - **Stop**: normally silent accounting (turn end). Emits
   continue-feedback ONLY for an unacknowledged parked question
   (once per question — MC ack event dedupes; respects
@@ -841,35 +854,33 @@ what each commit confirmed or falsified, drift notes._
 
 ## 15. Deferrals ledger (seeds Campaign 3+)
 
-_From the trial's falsifier analysis (the P3 levers, in priority
-order — these are the initiative system's actual next moves):_
+_From the trial's falsifier analysis (the P3 levers). **Disposition
+update 2026-07-10: the DEF-C2 slice executed 1 / 2a / 3 / 4 the same
+day on the owner's direct order («…вначале доделать DEF-C2-1…4»);
+record + verification in
+`reports/2026-10-07-21-30-defc2slice-report.md`.**_
 
-- **DEF-C2-1 — a mid-work injection seam that actually fires in
-  headless sessions (F23).** UserPromptSubmit never re-fires in
-  single-prompt `-p`; the threshold nudge needs a channel that
-  exists mid-turn: PostToolBatch additionalContext (already deferred
-  once — now with field data), or a Stop-hook continue-feedback
-  nudge tier (bounded like the question push), or per-tool
-  additionalContext on threshold crossing. Needs its own fatigue
-  measurement; this is the follow-up campaign's core.
-- **DEF-C2-2 — worker self-verification credibility (F24).** The
-  strongest observed keep-reason was "workers can't verify here".
-  Two halves: (a) staging must ship a working toolchain (the trial
-  sandbox's MSVC auto-detect broke under `env -i` — fix the fixture
-  before any re-run); (b) the product half: `route`/scoreboard
-  should surface *verification capability* facts ("workers run
-  cargo test green in this repo: yes/no, last proven <when>"), so
-  the boss's doubt is answered by data, not assumption.
-- **DEF-C2-3 — the empty-board cold-start problem (F25).** A fresh
-  home renders "0 runs all-time" at the exact moment the SessionStart
-  injection fires — zero social proof. Options to study: seed the
-  board with fleet-wide (not home-local) facts, or reshape the
-  cold-board template to lead with the route verb + a worked example
-  instead of zero counters.
-- **DEF-C2-4 — trial re-run design.** Multi-prompt (interactive or
-  scripted multi-turn) sessions so the nudge channel exists; fixed
-  toolchain; consider N>3 and an Opus-class boss when budget allows
-  (the RP1 validity caveat).
+- **DEF-C2-1 — a mid-work injection seam for headless sessions
+  (F23). EXECUTED:** per-tool `additionalContext` on threshold
+  crossing (PostToolUse), shared cooldown anchor, distinct journal
+  reason, `midwork_nudges` switch; D5 rewritten in place. Fatigue
+  measurement pre-registered in MT-C2-05 (not assumed).
+- **DEF-C2-2 — worker self-verification credibility (F24).
+  (a) EXECUTED:** the trial runner passes the rustup homes + the
+  ProgramFiles family; repro-verified (link-fail → link-clean on
+  `cargo test --no-run`). **(b) OPEN (next campaign):** acceptance-
+  backed capability facts on the boss surface ("workers run cargo
+  test green here, last proven <when>") need acceptance-schema
+  plumbing MC does not have; the cold board's honest "fabric ready"
+  line is the thin slice that shipped.
+- **DEF-C2-3 — the empty-board cold-start problem (F25).
+  EXECUTED:** at zero all-time runs the board states the fact and
+  leads with the route verb + spawn pointer + skill — never zero
+  counters; engine tests pin the text.
+- **DEF-C2-4 — trial re-run design. EXECUTED as protocol:**
+  MT-C2-05 pre-registered (arms A′/B′, PR1–PR3, fatigue facts,
+  frozen scoring inherited from MT-C2-01). **Paid runs remain
+  RP5-gated (OPEN) — nothing fired.**
 
 _Standing (pre-trial) deferrals:_
 

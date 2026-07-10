@@ -17,3 +17,10 @@ cooldown_secs = 300
 # Interrupt one Stop per parked worker question (never more than once
 # per question; never when the stop is already a hook continuation).
 question_alerts = true
+
+# Surface the threshold nudge mid-turn through PostToolUse
+# additionalContext (DEF-C2-1). Headless single-prompt sessions never
+# re-enter the prompt channel, so this is the seam that exists there.
+# Shares the session cooldown anchor: at most one nudge per
+# cooldown_secs window across ALL channels.
+midwork_nudges = true

@@ -25,6 +25,12 @@ pub struct NudgeConfig {
     pub cooldown_secs: u64,
     /// Emit Stop-time parked-question alerts (once per question).
     pub question_alerts: bool,
+    /// Emit the threshold nudge mid-turn through PostToolUse
+    /// (DEF-C2-1, F23: single-prompt headless sessions have no second
+    /// prompt for the prompt-time channel; this is the seam that
+    /// exists there). Shares the session cooldown anchor, so the
+    /// fatigue bound stays one nudge per window across ALL channels.
+    pub midwork_nudges: bool,
 }
 
 impl Default for NudgeConfig {
@@ -34,6 +40,7 @@ impl Default for NudgeConfig {
             work_tool_threshold: 7,
             cooldown_secs: 300,
             question_alerts: true,
+            midwork_nudges: true,
         }
     }
 }
@@ -96,6 +103,39 @@ pub fn decide_prompt_nudge(
             reason: "work-tool-threshold".to_owned(),
             text: format!(
                 "fractality: {slate} work-tool calls since your last delegation. If the task is a work order, score it (`fractality route --error-cost ... --context ... --verify ... --size ...`) and delegate per the matrix.",
+            ),
+        });
+    }
+    None
+}
+
+/// The mid-work decision (DEF-C2-1): the slate threshold surfaced
+/// through PostToolUse `additionalContext`, for sessions whose prompt
+/// channel never re-fires (F23). Slate only — parked questions keep
+/// their two dedicated channels (prompt + stop). Same threshold, same
+/// shared cooldown anchor; a distinct journal reason so channel
+/// fatigue can be told apart in the field data (MT-C2-05 measures it).
+pub fn decide_midwork_nudge(
+    cfg: &NudgeConfig,
+    session: &SessionMetricsResponse,
+    now_ms: u64,
+) -> Option<Nudge> {
+    if !cfg.enabled || !cfg.midwork_nudges {
+        return None;
+    }
+    let cooling = session
+        .session
+        .last_nudge_ts_ms
+        .is_some_and(|t| now_ms.saturating_sub(t) < cfg.cooldown_secs.saturating_mul(1000));
+    if cooling {
+        return None;
+    }
+    let slate = session.session.counters.work_tools_since_delegation;
+    if slate >= cfg.work_tool_threshold {
+        return Some(Nudge {
+            reason: "work-tool-threshold-midwork".to_owned(),
+            text: format!(
+                "fractality: {slate} work-tool calls since your last delegation. If the current chunk is a work order, score it (`fractality route --error-cost ... --context ... --verify ... --size ...`) and delegate per the matrix.",
             ),
         });
     }
@@ -244,9 +284,53 @@ mod tests {
         let cfg = NudgeConfig::from_toml_str("work_tool_threshold = 3\n");
         assert_eq!(cfg.work_tool_threshold, 3);
         assert!(cfg.enabled, "unset fields keep defaults");
+        assert!(cfg.midwork_nudges, "the mid-work channel defaults on");
         assert_eq!(
             NudgeConfig::from_toml_str("not toml ["),
             NudgeConfig::default()
+        );
+    }
+
+    #[test]
+    fn the_midwork_nudge_fires_at_the_threshold_with_its_own_reason() {
+        let cfg = NudgeConfig::default();
+        assert_eq!(
+            decide_midwork_nudge(&cfg, &fixture(6, vec![]), 1_000_000),
+            None,
+            "below threshold"
+        );
+        let n = decide_midwork_nudge(&cfg, &fixture(7, vec![]), 1_000_000).expect("fires");
+        assert_eq!(n.reason, "work-tool-threshold-midwork");
+        assert!(n.text.contains("7 work-tool calls"));
+        assert!(n.text.contains("fractality route"));
+    }
+
+    #[test]
+    fn the_midwork_nudge_shares_the_cooldown_anchor() {
+        let cfg = NudgeConfig::default();
+        let mut s = fixture(9, vec![]);
+        s.session.last_nudge_ts_ms = Some(1_000_000);
+        assert_eq!(
+            decide_midwork_nudge(&cfg, &s, 1_000_000 + 299_999),
+            None,
+            "one nudge per window across channels"
+        );
+        assert!(decide_midwork_nudge(&cfg, &s, 1_000_000 + 300_000).is_some());
+    }
+
+    #[test]
+    fn the_midwork_channel_has_its_own_switch_and_ignores_parked() {
+        let off = NudgeConfig {
+            midwork_nudges: false,
+            ..Default::default()
+        };
+        assert_eq!(decide_midwork_nudge(&off, &fixture(50, vec![]), 1), None);
+        let cfg = NudgeConfig::default();
+        let n = decide_midwork_nudge(&cfg, &fixture(9, vec![parked(60_000)]), 1_000_000)
+            .expect("slate fires");
+        assert_eq!(
+            n.reason, "work-tool-threshold-midwork",
+            "parked questions belong to the prompt/stop channels"
         );
     }
 }
