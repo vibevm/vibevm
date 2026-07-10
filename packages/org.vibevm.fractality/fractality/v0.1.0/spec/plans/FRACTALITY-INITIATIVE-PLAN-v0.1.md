@@ -1,6 +1,6 @@
 # FRACTALITY-INITIATIVE-PLAN v0.1 — Campaign 2: the initiative system (scoreboard-driven delegation for a cold boss)
 
-_Status: **EXECUTING — Ф0–Ф3 landed, floor green; next: Ф4 (nudges + routing-as-data)**
+_Status: **EXECUTING — Ф0–Ф4 landed, floor green; next: Ф5 (answer rules), then Ф6 (the trial — RP1 gates the paid arms)**
 (commissioned 2026-07-10: «Начинай Campaign 2» + «Goal set: сделать
 Campaign 2» — the owner ordered execution, not just authoring; phases
 land autonomously per host Rule 4, review points below still gate what
@@ -263,18 +263,27 @@ own notifications, not external events — useless for MC pushes);
 SessionStart `initialUserMessage` outside the trial harness.
 
 ### D6 — nudge/scoreboard content is data; routing becomes data
+_(rewritten in place mid-Ф4, 2026-07-10 — the original said the
+machine-readable matrix lives in the delegation-rules package; that
+splits one fact across two artifacts that WILL drift. Single-source
+wins.)_
 Texts are templates in the engine filled from MC facts; thresholds and
 cooldowns in `~/.fractality/initiative.toml` (machine-scoped, like
-profiles; env `FRACTALITY_INITIATIVE=off` is the kill switch). The
-delegation matrix's axes/verdict procedure gains a machine-readable
-`matrix.toml` in the delegation-rules package; `fractality route
---error-cost … --context … --verify … --size …` prints verdict + slot +
-playbook budget defaults (`--json` for machines). The MD stays the
-normative prose; the TOML is its executable form; **a golden test pins
-the TOML to the MD's 10 worked verdicts** — drift fails the floor.
+profiles; env `FRACTALITY_INITIATIVE=off` is the kill switch; sample:
+`spec/examples/initiative.sample.toml`). The delegation matrix's
+axes/verdict procedure gains a machine-readable form that ships
+**inside the engine crate** (`fractality-initiative/src/matrix.toml`,
+embedded via include_str!, with a Rust constant table as its parsed
+form and a drift tripwire between the two); the delegation-rules MD
+stays the normative prose and CITES the executable form. `fractality
+route --error-cost … --context … --verify … --size …` prints verdict +
+slot + scenario (`--json` for machines). **The engine's tests pin the
+calculus to the MD's worked-verdicts table** — drift fails the floor.
 Rejected: NL task classification in the engine (an LLM call per prompt
 — cost, latency, and a second brain to argue with; the boss IS the
-classifier, the engine hands it the procedure).
+classifier, the engine hands it the procedure); a package-shipped TOML
++ an embedded copy (two sources, one truth — the exact drift disease
+this campaign exists to kill).
 
 ### D7 — the scoreboard is strictly factual
 v1 renders only measured facts: delegated runs (session/day/week),
@@ -639,6 +648,38 @@ what each commit confirmed or falsified, drift notes._
     kept: hook/statusline/harness cells (seam design + the
     availability and ownership laws), wiring, smoke.
   - Next: Ф4 (nudges + routing-as-data + question push).
+
+- **Ф4 — EXECUTED 2026-07-10. Commit map:**
+  - `2b24288` — `feat(fractality): initiative live — nudges, question
+    push, routing-as-data (C2 Ф4)`. Drift: one feat commit instead of
+    the three planned (the shared hook cell + engine surface; the
+    Ф1/Ф3 precedent), ledgered.
+  - Confirmed: **P5 (the §worked table 10/10 as goldens)**; the BD1
+    slate + cooldown semantics (fold-stamped anchor, deterministic on
+    replay); the bounded question push (once per question, ack folded,
+    `stop_hook_active` respected); D6 as rewritten (single-source
+    matrix inside the engine; the DECISION-MATRIX spec cites its
+    executable form; specmap resolves the new namespace via an
+    external_specs sibling root — 0 warnings).
+  - Mid-phase decision rewrite: **D6** (matrix location) — in place,
+    with the reason (two artifacts would drift); the delegation-rules
+    MD edit rides the feat commit.
+  - Findings: the stale-daemon-binary smoke trap (hooks talk to the
+    sibling MC exe — hook smokes rebuild `--workspace`; the F15
+    family grows a corollary, recorded in MT-C2-03); a boss-side cwd
+    violation on a delegate launch (killed, relaunched pinned — the
+    live-observation protocol did its job).
+  - Floor at the boundary: **all green** — conform 0 (7/7; the
+    delegate's domain `.expect` was restructured into total matches,
+    and route.rs split its goldens to tests/route_goldens.rs along
+    the 600-line budget), specmap 18 units / 62 items / 62 edges / 0
+    orphans / 0 warnings, test-gate xfail-strict.
+  - Delegation scoreboard this phase: delegated 1 (the route slice →
+    GLM-5.2 over a sandboxed spec copy; one relaunch after the cwd
+    slip; accepted after review with two boss-side fixes), kept:
+    nudge policy, core fold fields, hook wiring, the specmap
+    namespace decision.
+  - Next: Ф5 (the answer-rules slice).
 
 ## 15. Deferrals ledger (seeds Campaign 3+)
 

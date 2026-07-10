@@ -337,6 +337,36 @@ IGNITION narratives, now a standing rule. Owner's words (verbatim):
 - The plan's §14 ledger stays the canonical commit map; reports are
   the narrative the owner reads.
 
+### Plan-lifecycle dashboards (owner directive, 2026-07-10, second)
+
+Before executing any big planned task, the plan itself also lands in
+`reports/` — a **user-facing dashboard** so the owner can watch a big
+plan's state from a text editor, not the agent UI. Rules distilled
+from the directive (recorded in full in git; the essentials):
+
+- **Stages, by filename suffix** — one stable **plan identifier** in
+  the name across all stages (many plans may coexist):
+  `-drafted-plan.md` (just written) → `-started-plan.md` (launched —
+  may differ from the draft!) → `-changed-plan.md` (any plan change)
+  → `-paused-plan.md` (session ends mid-plan: what got done, the
+  schematic checklist with ✅ marks, and the exact item execution
+  stopped on) → `-resumed-plan.md` (after a session resume) →
+  `-completed-plan.md` (the closing report) or `-rejected-plan.md`
+  (with the why). Dated like every report:
+  `2026-10-07-12-58-campaign2-paused-plan.md`.
+- **Body:** schematic — Claude-Code-style Markdown checklists (items
+  and sub-items), plus the key decisions taken while planning, plus a
+  **mandatory section of risks, problems, and uncertainties**.
+- **Big plans keep the bulk out of the status files:** all detailed
+  state lives in one `-state-plan.md` updated between status
+  documents — never drag megabytes from stage to stage. The state
+  file may double as the agent's own quick tracker («where are we»)
+  without re-reading the whole project.
+- **The source of truth stays the specs/WAL/plan documents** — these
+  dashboards are for the user first; on any divergence the spec tree
+  wins.
+- The agent decides itself when a stage document is warranted.
+
 ## End of session
 
 Rewrite `WAL.md` to the current state (checkpoint, not journal). On a
