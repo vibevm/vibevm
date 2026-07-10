@@ -76,6 +76,17 @@ pub fn render_board(
             ));
         }
     }
+    if global.totals.runs == 0 {
+        // The cold start (DEF-C2-3, F25): an all-zero counter block is
+        // anti-proof at the one moment the injection speaks. Still
+        // strictly factual (D7): "no runs yet" IS the measured fact;
+        // the rest is the verb to run, not an invented number.
+        out.push_str(
+            "fabric ready — no delegated runs on this box yet.\n\
+             first delegation: score the task (`fractality route --error-cost reversible --context compilable --verify mechanical --size S` → delegate/small), then `fractality spawn`; discovery: the fractality-delegate skill.\n",
+        );
+        return out;
+    }
     let today_bucket = global.by_day.get(today);
     let (t_runs, t_done) = today_bucket.map_or((0, 0), |b| (b.runs, b.completed));
     out.push_str(&format!(
@@ -214,10 +225,45 @@ mod tests {
     }
 
     #[test]
-    fn the_board_without_a_session_is_global_only() {
+    fn a_zero_run_box_renders_the_cold_start_board_not_zero_counters() {
         let global = MetricsResponse::default();
         let board = render_board(&global, None, "2026-07-10", "2026-07");
+        let lines: Vec<&str> = board.lines().collect();
+        assert_eq!(
+            lines[0],
+            "fabric ready — no delegated runs on this box yet."
+        );
+        assert!(lines[1].contains("fractality route"), "leads with the verb");
+        assert!(lines[1].contains("fractality spawn"));
+        assert!(lines[1].contains("fractality-delegate skill"));
+        assert!(
+            !board.contains("all-time: 0 runs"),
+            "zero counters must not render (F25 anti-proof)"
+        );
+        assert_eq!(lines.len(), 2);
+    }
+
+    #[test]
+    fn the_cold_board_keeps_the_live_session_line() {
+        let global = MetricsResponse::default();
+        let s = session_fixture(0, 3, 0, 0, vec![]);
+        let board = render_board(&global, Some(&s), "2026-07-10", "2026-07");
+        let lines: Vec<&str> = board.lines().collect();
+        assert!(lines[0].starts_with("session 01ARZ3NDEKTSV4RRFFQ69G5FAV"));
+        assert_eq!(
+            lines[1],
+            "fabric ready — no delegated runs on this box yet."
+        );
+    }
+
+    #[test]
+    fn one_recorded_run_switches_the_board_back_to_counters() {
+        let mut global = MetricsResponse::default();
+        global.totals.runs = 1;
+        global.totals.completed = 1;
+        let board = render_board(&global, None, "2026-07-10", "2026-07");
         assert!(board.starts_with("today: 0 runs"));
-        assert_eq!(board.lines().count(), 2);
+        assert!(board.contains("all-time: 1 runs · 1 completed"));
+        assert!(!board.contains("fabric ready"));
     }
 }
