@@ -6,8 +6,8 @@ final verdicts). The delegate-out / collect-back loop, the swarm with
 budgets and recursive kill, the ask_boss interaction layer, the
 delegation-rules policy package, and the boss integration are all
 live and proven on paid GLM workers. Manual tests MT-01…MT-05 recorded
-green (human sign-offs pending — the manual-tests law reserves the
-pass for the owner). The RP1 dogfood merged: the host's seven EULA
+green and **signed off by the owner (2026-07-10)** — the required
+index is fully passed. The RP1 dogfood merged: the host's seven EULA
 straggler manifests are UPL-1.0, relicensed THROUGH the fabric.
 Campaign findings this session: **F17** (detached daemon inherited the
 caller's `$()` pipe — `HANDLE_FLAG_INHERIT` stripped around autostart,
@@ -74,15 +74,13 @@ economics). Prior: 2026-07-09 Phase 0 EXECUTED (F1–F10)._
 
 ## Next (candidates for the owner to choose from — not authorisation)
 
-1. **Human sign-offs** on MT-01…MT-05 (the recorded pre-runs are
-   green; only the owner's eyes can convert them to passes).
-2. **Campaign 2 — the initiative system** (plan §15 DEF-1): scoreboard
+1. **Campaign 2 — the initiative system** (plan §15 DEF-1): scoreboard
    -driven delegation nudges for a cold boss; the P6=100%-warm number
    is the floor to beat; routing-as-data + question push-notifications
    + D18 layer 2 (dynamic permission brokering) are its natural cargo.
-3. **Campaign 3 — RLM** (DEF-2, owner hypothesis recorded in the
+2. **Campaign 3 — RLM** (DEF-2, owner hypothesis recorded in the
    plan).
-4. Small named leftovers: server-side long-poll wait, F18 result-path
+3. Small named leftovers: server-side long-poll wait, F18 result-path
    knob, monthly quota rollup in `stats`, `wait --verbose`, POSIX
    fallback kill semantics (DEF-8), `vibe skill install` projection of
    fractality-delegate on this box.

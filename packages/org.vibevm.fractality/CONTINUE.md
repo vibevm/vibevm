@@ -16,8 +16,8 @@ integration (boot snippet + skill + stats) closed the loop by pushing
 a REAL host chore (the RP1 relicense) through the fabric itself.
 Predictions: P1–P6, P8 confirmed (swarm ratio 1.00; kill-tree
 1 025 ms; 11-minute park survived; matrix 10/10 decidable); P7
-(commit count) falsified with every drift ledgered. Five manual tests
-recorded green — **human sign-offs pending**.
+(commit count) falsified with every drift ledgered. All five manual
+tests recorded green and **signed off by the owner (2026-07-10)**.
 
 ## Where work stands
 
@@ -40,23 +40,21 @@ recorded green — **human sign-offs pending**.
 
 ## The active blocker
 
-None. The one human action pending: **sign off MT-01…MT-05** (open
-each `fractality/v0.1.0/spec/manual-tests/MT-0*.md`, read the recorded
-pre-run, convert to a pass or flag divergence).
+None. The campaign is closed, the manual-test index is signed off,
+both mirrors are synced.
 
 ## Next-steps recipe (cold start)
 
 1. Read `WAL.md` → this file → the plan's §2/§14
    (`fractality/v0.1.0/spec/plans/FRACTALITY-IGNITION-PLAN-v0.1.md`) →
    the per-phase narratives in [`reports/`](reports/).
-2. The owner signs off the manual tests (above).
-3. Campaign 2 (initiative system) is seeded in the plan's §15 DEF-1:
+2. Campaign 2 (initiative system) is seeded in the plan's §15 DEF-1:
    scoreboard-driven delegation nudges; the warm P6=100% is the floor
    a COLD session must be measured against; natural cargo:
    routing-as-data, question push-notifications, D18 layer 2 (dynamic
    permission brokering). Campaign 3 (RLM): DEF-2 with the owner's
    hypothesis quoted in §3.
-4. Small named leftovers (§15 extension): server-side long-poll wait,
+3. Small named leftovers (§15 extension): server-side long-poll wait,
    F18 result-path knob, monthly quota rollup in stats, `wait
    --verbose`, POSIX fallback kill semantics, `vibe skill install`
    projection of fractality-delegate on this box.
