@@ -1,12 +1,15 @@
 # FRACTALITY-RLM-RESEARCH-PLAN v0.1 — Campaign 3 · Stage A: the RLM research {#root}
 
-_Status: **EXECUTING since 2026-07-10 22:27 — RP-R1 RESOLVED**
-(«План одобряю, начинай исследование!» + goal ruling «Goal set:
-довести исследование до конца» — the stage runs autonomously
-through Ф5). Drafted 2026-07-10 22:15. Genre: campaign plan
-(flow:campaign-plans — PLAN + BASELINE + PREDICTIONS + LOG +
-REPORT in one document). Runs cold: any session executes this with
-no memory of the planning conversation._
+_Status: **CLOSED 2026-07-11 00:59 — all phases complete, all
+four predictions CONFIRMED** (P-R2 at the exact 60% boundary;
+verdicts: [`RLM-SYNTHESIS.md §5`](../refs/notes/RLM-SYNTHESIS.md)).
+Deliverables: `rlm-source-selection.md` (5/5/5 + runners-up), 11
+study notes, `RLM-SYNTHESIS.md` (RD-1…21), and the Stage B draft
+[`FRACTALITY-RLM-PLAN-v0.1.md`](FRACTALITY-RLM-PLAN-v0.1.md)
+(RP-C3-1 OPEN — not commissioned). Executed 2026-07-10 22:27 →
+2026-07-11 00:59, one session. Drafted 2026-07-10 22:15; RP-R1
+resolved 22:27 («План одобряю, начинай исследование!» + «Goal
+set: довести исследование до конца»)._
 
 ## 1. The mandate (owner, 2026-07-10, verbatim) {#mandate}
 
@@ -433,6 +436,7 @@ _(filled per phase; empty at draft)_
 | Ф2 | `a4c9611` | overlap exactly 60% (9/15; membership = name in wave record) — P-R2 verdict at close | 5/5/5 cut + runners-up ledgered in `notes/rlm-source-selection.md`; INVENTORY S10–S26 with license verdicts BEFORE study (rule 1). W1-only finds: ROMA, 2506.16411, SRLM; W2-only: ReDel, RAO, minRLM + the practitioner shelf. |
 | Ф3 | INVENTORY pin commit | — | Clones @depth-1 with pins: roma `a6e3bb4`, fast-rlm `f25f310`, redel `79eb988`, recursive-llm `cc7a826`. 7 PDFs valid (incl. anchor v3 9.9 MB). 6 article snapshots + ACCESS-DATES in `refs/articles/`. Real `~` untouched; all downloads gitignored. |
 | Ф4 | T1 commit + T2 commit + T3 commit | — | 11 notes / 15 sources + 4 runners-up. Boss read all 7 papers (pdftotext; PDF-render absent on box) + anchor repo; 5 GLM survey delegates over sandboxed copies (2 stalled silently ≥14 min — killed and relaunched per the live-observation law; relaunches clean); boss spot-checked load-bearing claims verbatim before authoring notes. Delegated 7 (5 surveys + 2 relaunches count as re-delegation) / kept: papers (judgment), all note authorship, spot-checks. |
+| Ф5 | synthesis+draft commit; close commit | **P-R1 ✓, P-R2 ✓ (exactly 60%), P-R3 ✓, P-R4 ✓** | `RLM-SYNTHESIS.md`: two-way gaps + RD-1…21 (6×P1, 8×P2, 7×P3) + VISION §5 answers. Stage B draft authored with scope options A/B/C, decisions D-C3-1…9 citing deltas, RP-C3-1 OPEN. Acceptance §12: (1)–(9) all hold; zero product-code changes in the stage. |
 
 ## 14. Log {#log}
 
@@ -443,3 +447,9 @@ _(filled per phase; empty at draft)_
   исследование до конца»); Ф1 fired: Wave 1 (deep research,
   background) + Wave 2 (independent web search); dashboard
   `reports/2026-10-07-22-27-rlmresearch-started-plan.md`.
+- 2026-07-11 00:59 — CLOSED. W1: 103 agents / 3.74M tokens /
+  31 min / 24 claims verified 3-0. W2: 12 queries. Merge 60%
+  overlap. Intake: 4 clones pinned, 7 PDFs, 6 snapshots. Study:
+  11 notes, 2 delegate stalls killed+relaunched. Synthesis
+  RD-1…21; Stage B drafted (RP-C3-1 OPEN). Dashboard
+  `reports/2026-11-07-00-59-rlmresearch-completed-plan.md`.
