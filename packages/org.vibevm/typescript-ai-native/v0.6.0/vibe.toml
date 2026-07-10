@@ -4,7 +4,7 @@ group = "org.vibevm"
 kind = "stack"
 version = "0.6.0"
 authors = ["Oleg Chirukhin"]
-license = "EULA"
+license = "UPL-1.0"
 description = "AI-Native TypeScript - the family aggregator: one install pulls the language stack (typescript-ai-native-lang) and its MCP server (typescript-ai-native-mcp), and transitively the flow foundation core-ai-native. Content-minimal by design (PROP-028): no code, no boot snippet, no policy - it only names the family members at one resolved version set."
 keywords = ["typescript", "ai-native", "discipline", "stack", "aggregator"]
 
