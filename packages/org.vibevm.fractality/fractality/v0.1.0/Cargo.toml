@@ -11,6 +11,7 @@ members = [
     "crates/fractality-mc-client",
     "crates/fractality-backend-claude-code",
     "crates/fractality-cli",
+    "crates/fractality-initiative",
 ]
 # vibedeps packages are their own Cargo workspaces; without the exclude,
 # cargo would bind their crates to THIS workspace and manifest inheritance
@@ -33,6 +34,7 @@ fractality-core = { path = "crates/fractality-core" }
 fractality-mc-client = { path = "crates/fractality-mc-client" }
 fractality-mission-control = { path = "crates/fractality-mission-control" }
 fractality-backend-claude-code = { path = "crates/fractality-backend-claude-code" }
+fractality-initiative = { path = "crates/fractality-initiative" }
 
 # Async runtime + HTTP (D11)
 tokio = { version = "1.52", features = [

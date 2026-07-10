@@ -1,0 +1,13 @@
+[package]
+name = "fractality-initiative"
+description = "The initiative engine (Campaign 2): pure scoreboard rendering, nudge policy, and routing calculus over mission-control facts — no I/O, no clock, no shadow state"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+publish.workspace = true
+
+[dependencies]
+fractality-core = { workspace = true }
+specmark = { workspace = true }

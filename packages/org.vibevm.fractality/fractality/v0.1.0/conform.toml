@@ -16,6 +16,7 @@ gated_crates = [
     "fractality-backend-claude-code",
     "fractality-cli",
     "fractality-core",
+    "fractality-initiative",
     "fractality-mc-client",
     "fractality-mission-control",
     "fractality-pod",

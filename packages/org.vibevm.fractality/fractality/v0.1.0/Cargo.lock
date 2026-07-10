@@ -345,6 +345,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "fractality-initiative"
+version = "0.1.0"
+dependencies = [
+ "core-ai-native-specmark",
+ "fractality-core",
+]
+
+[[package]]
 name = "fractality-mc-client"
 version = "0.1.0"
 dependencies = [
