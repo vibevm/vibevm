@@ -1,108 +1,114 @@
 # fractality — cold-resume checkpoint
 
-_Written 2026-07-10 at the Phase-2-code wind-down. `WAL.md` (same
+_Written 2026-07-10 at the IGNITION campaign close. `WAL.md` (same
 directory) is the canonical living state and supersedes this snapshot
 wherever they diverge._
 
 ## TL;DR
 
-fractality is an agent OS incubated in the vibevm repo as a workspace:
-an expensive boss delegates to swarms of cheap Claude Code workers
-(GLM via z.ai) supervised by pods under a mission-control daemon; all
-content exchange rides files + the localhost bus. **Phases 0–1 are
-executed and ledgered; Phase 2 (delegate-out) code is fully landed and
-floor-green — the one open exit criterion is the live GLM E2E, which
-deliberately opens the next session.** The workspace runs the full
-AI-Native discipline (conform 6/6 gated, specmap 0 orphans) and is a
-real vibe consumer (redbook + rust-ai-native in its own vibedeps).
+**The IGNITION campaign is CLOSED — all seven phases (0–6) executed
+and ledgered.** fractality is now a working agent OS seed: a boss
+delegates packets to isolated GLM workers under mission-control;
+swarms run in parallel worktrees with budgets and recursive kill; a
+parked worker can ask the boss a question and resume on the answer;
+a decidable policy matrix routes what gets delegated; and the boss
+integration (boot snippet + skill + stats) closed the loop by pushing
+a REAL host chore (the RP1 relicense) through the fabric itself.
+Predictions: P1–P6, P8 confirmed (swarm ratio 1.00; kill-tree
+1 025 ms; 11-minute park survived; matrix 10/10 decidable); P7
+(commit count) falsified with every drift ledgered. Five manual tests
+recorded green — **human sign-offs pending**.
 
 ## Where work stands
 
-- Branch `main`, synced to both mirrors after the wind-down push; tree
-  clean. Last code commits: `b15bd02` (profiles + clean-slate worker
-  env), `10bc4b9` (spawn path — mc-owned workers and worktrees).
-- Floor `rust-ai-native floor`: **all green** (fmt · tests incl. the D6
-  profile goldens and the I1 poisoned-parent test · clippy -D warnings ·
-  conform 0 findings · specmap 0 orphans · test-gate).
-- What exists in code: profiles (D6) → env constructor (D5, pure over an
-  os-env snapshot) → invocation builder (CC 2.1.202 flags pinned live) →
-  pod `--run-spec` product mode (token read pod-side at spawn; plaintext
-  only in pod memory) → MC spawn path (validation, D8 workspaces incl.
-  git worktrees, run-spec, detached pod launch, pod.log) →
-  `fractality run --packet` sync loop with the one-screen summary.
-- **NOT done:** the live E2E (hello-glm through a real GLM worker) — the
-  Phase 2 exit criterion; the Phase 2 ledger entry (waits for that
-  evidence); worktree-manager integration tests (queued for GLM);
-  pub-doctest ratchet.
+- Branch `main`; the campaign landed as: dogfood worktree commits
+  `c502a08`/`425ed3e` → merges `893e314`/`79938ab` → the feature
+  series `d363405` (swarm/budgets/kill/metrics + F17/F19 hardening),
+  `13f201c` (ask_boss broker + boss verbs), `c4dcdaf` (MT docs #2–#5),
+  `cbc3c9a` (delegation-rules package), `cc69af6` (boss boot snippet +
+  skill) → the close docs commit (ledgers §14, §2 execution record,
+  reports/, WAL, this file, WORKSPACES row, backlog entries).
+- Floor at close: **all green** — fmt · ~120 tests · clippy -D
+  warnings · conform 0 findings (6/6 gated; two recorded
+  `#[spec(deviates)]` testimonies on the F17 kernel32 FFI) · specmap
+  16 units / 47 items / 47 edges / 0 orphans · test-gate.
+- §12 whole-campaign acceptance ran green at close (live hello-glm on
+  the real home rendering the D19 FileRef line; questions empty;
+  stats; 5 MT procedures; host self-check).
+- Real `~/.fractality` untouched by MTs (scratch homes); it now holds
+  the Phase-2/3 runs + the acceptance run. **MC daemon: stopped.**
 
-## Active blocker
+## The active blocker
 
-None. The E2E needs only: `~/.fractality/profiles.toml` (copy the
-sample, step 1 below) and one paid GLM-5-turbo worker turn.
+None. The one human action pending: **sign off MT-01…MT-05** (open
+each `fractality/v0.1.0/spec/manual-tests/MT-0*.md`, read the recorded
+pre-run, convert to a pass or flag divergence).
 
 ## Next-steps recipe (cold start)
 
-1. `cp fractality/v0.1.0/spec/examples/profiles.sample.toml ~/.fractality/profiles.toml`
-   (values already match this box; `~/.vibevm/zai.api.token` exists).
-2. From `fractality/v0.1.0/`: `cargo build --workspace`, then
-   `target/debug/fractality.exe run --packet spec/examples/hello-glm.toml`.
-   Green looks like: exit 0; run dir (`~/.fractality/runs/<ulid>/`)
-   holds packet.toml, run-spec.toml, worker-stdout.jsonl (stream-json
-   WITH usage fields → that's the P2 verdict), status.json, pod.log;
-   `work/` holds hello.txt + result.md. Watch with `fractality ps` /
-   `show <prefix>`. Debug surfaces: pod.log (pod-side), mc.log
-   (daemon), worker-stderr.log.
-3. Write the plan §14 Phase 2 ledger entry (commit map b15bd02/10bc4b9 +
-   the E2E evidence + P2 verdict), refresh WAL + WORKSPACES row, commit
-   `docs(fractality): phase 2 ledger — E2E evidence`, push via
-   `cargo xtask mirror`.
-4. Delegate worktree-manager tests to GLM (scenario 1; PIN THE CWD in
-   the launch command — see the contract's live-observation protocol):
-   `crates/fractality-mission-control/tests/workspace.rs`, scratch git
-   repo fixture, assertions on provision (branch `fractality/<id>`, wt
-   dir, base) / remove_worktree / dir / none.
-5. Phase 3 (collect-back) per the plan: tolerant stream-json parser
-   (first golden = the E2E transcript), collection
-   (result.md/usage.json/status.json + acceptance commands), `run`
-   summary upgrade + `show` parity. Manual-test #1 records there.
+1. Read `WAL.md` → this file → the plan's §2/§14
+   (`fractality/v0.1.0/spec/plans/FRACTALITY-IGNITION-PLAN-v0.1.md`) →
+   the per-phase narratives in [`reports/`](reports/).
+2. The owner signs off the manual tests (above).
+3. Campaign 2 (initiative system) is seeded in the plan's §15 DEF-1:
+   scoreboard-driven delegation nudges; the warm P6=100% is the floor
+   a COLD session must be measured against; natural cargo:
+   routing-as-data, question push-notifications, D18 layer 2 (dynamic
+   permission brokering). Campaign 3 (RLM): DEF-2 with the owner's
+   hypothesis quoted in §3.
+4. Small named leftovers (§15 extension): server-side long-poll wait,
+   F18 result-path knob, monthly quota rollup in stats, `wait
+   --verbose`, POSIX fallback kill semantics, `vibe skill install`
+   projection of fractality-delegate on this box.
 
-## Non-obvious findings this session (do not rediscover)
+## Non-obvious findings this campaign (do not rediscover)
 
-- **Delegates:** opencode inherits the SHELL's cwd — pin it in the
-  launch command or the worker roams the wrong tree (it happened: 12
-  minutes against the host root). opencode end-buffers stdout under
-  redirection → telemetry = file mtimes + worker-printed `PROGRESS:`
-  markers (+ `--print-logs` streams to stderr if needed). A delegate
-  reads only its target files (~15k cached prefix; the discipline
-  corpus is NOT auto-ingested) — hence the contract's two context
-  scenarios.
-- **tokio:** `Notify::notify_waiters` loses wakeups vs not-yet-polled
-  waiters — lifecycle signals must be state (`watch`); an in-process
-  `abort()` is NOT a crash (hyper per-connection tasks keep serving
-  pooled connections) — crash tests kill real processes.
-- **Windows:** `Utf8PathBuf::join` yields backslashes — compare paths
-  via join, never string literals; `taskkill //IM x.exe //T //F` (Git
-  Bash needs the double slashes).
-- **conform:** `env_roots` is the sanctioned home for deliberate
-  ambient-env readers (home resolution, binary discovery, identity
-  fallbacks, the pod's snapshot root).
+- **F17:** a detached daemon auto-started from inside `$( … )` command
+  substitution inherits the substitution pipe's write end on Windows
+  (CreateProcess copies EVERY inheritable handle) — the shell hangs
+  forever. Fixed by stripping `HANDLE_FLAG_INHERIT` from the client's
+  std handles around the spawn; pinned by
+  `autostart_does_not_capture_the_callers_pipes`.
+- **F19:** `git worktree add` of a deep repo into a run dir overflows
+  Windows MAX_PATH — provisioning passes `-c core.longpaths=true`.
+- **F18:** every worktree worker writes `result.md` per the output
+  contract → N branches collide at one path on merge; commit only the
+  intended module (procedure), result-path knob deferred (product).
+- **The cwd law binds the boss:** a floor run from a wrong directory
+  silently gated the HOST tree and reported green (baselines differ:
+  host 3, fractality 0). Pin cwd in every gate invocation.
+- Acceptance predicates must assert what CHANGED (the EULA placeholder
+  itself mentions the UPL — `findstr Universal` passed either way).
+- A parked (waiting_on_boss) worker burns zero tokens — the CC process
+  blocks on one MCP tool result; an 11-minute park resumed cleanly.
+- Kill delivery rides the 1 s heartbeat answer; `taskkill` exit 128 =
+  "already gone" = the goal state.
+- vibe pilot: vendored files materialise CRLF on Windows; no
+  re-materialise path for in-place content edits (both in
+  `VIBEVM-BACKLOG.md`, 2026-07-10).
 
 ## Repository map (workspace)
 
 `packages/org.vibevm.fractality/` — contract (CLAUDE.md), WAL.md, this
-file, VIBEVM-BACKLOG.md (pilot findings + verification recipes);
-`fractality/v0.1.0/` — the Cargo workspace: `crates/{fractality-core,
--mission-control, -pod, -mc-client, -backend-claude-code, -cli}`,
-`spec/` (PROP-001, the campaign plan, refs, examples), `vibedeps/` +
-`spec/boot/INDEX.md` (the vibe-generated practice lane), conform.toml /
-specmap.toml / specmap.json / discipline/ (the gates).
+file, VIBEVM-BACKLOG.md, **reports/** (per-phase + campaign-close
+narratives); `fractality/v0.1.0/` — the Cargo workspace: crates/
+{core, mission-control (admission/kill/metrics cells), pod
+(worker_env cell), mc-client (F17 guard), backend-claude-code, cli
+(swarm/boss/broker cells)}, spec/ (PROP-001, the CLOSED plan,
+manual-tests MT-01…05, examples, boot incl. snippet 75, skills/
+fractality-delegate), vibedeps/ + discipline configs;
+`delegation-rules/v0.1.0/` — the policy package (DECISION-MATRIX,
+playbooks, boot snippet 77, its own vibedeps).
 
 ## Quick-start
 
 ```sh
 cd packages/org.vibevm.fractality && head -40 WAL.md
 cd fractality/v0.1.0
-rust-ai-native floor   # or: <host>/packages/org.vibevm/rust-ai-native-lang/v0.7.0/target/debug/rust-ai-native.exe floor
+# the floor (cwd matters — see the cwd law above):
+/c/Users/olegc/gits/vibevm/packages/org.vibevm/rust-ai-native-lang/v0.7.0/target/debug/rust-ai-native.exe floor
+# a live smoke (paid, one turbo turn):
+./target/debug/fractality.exe run --packet spec/examples/hello-glm.toml
 ```
 
 Resume phrase: `восстанови сессию fractality` (report-then-wait).

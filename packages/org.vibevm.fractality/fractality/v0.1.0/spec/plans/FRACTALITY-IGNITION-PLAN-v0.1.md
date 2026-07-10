@@ -1,12 +1,12 @@
 # FRACTALITY-IGNITION-PLAN v0.1 — from zero to a metered GLM swarm under mission-control
 
-_Status: **EXECUTING** (Phases 0–3 landed 2026-07-09/10, floor green —
-collect-back proven live end to end, manual-test #1 recorded — next:
-Phase 4 — swarm) · written 2026-07-09
-against host tree `05d3b1c` plus the same-day ignition bootstrap commits ·
-cold-executable: any phase boundary is a safe stop; the fractality floor
-(§11) is green at every boundary. Format: `flow:org.vibevm/campaign-plans`
-(one file, five roles)._
+_Status: **CLOSED** (Phases 0–6 executed 2026-07-09/10; §2 carries the
+execution record and the verdict on every prediction — P1–P6, P8
+confirmed, P7 falsified with ledgered drift; the RP1 dogfood is merged;
+manual tests MT-01…MT-05 recorded green, human sign-offs pending) ·
+written 2026-07-09 against host tree `05d3b1c` plus the same-day
+ignition bootstrap commits · Format: `flow:org.vibevm/campaign-plans`
+(one file, five roles). Campaigns 2–3 draw their mandates from §15._
 
 _ACCEPTED with owner amendments, 2026-07-09 (same day): supervision
 topology is now MC → **pod** → worker (D3 rewritten; sixth crate;
@@ -21,10 +21,55 @@ identity + node identity as the bulk-data law; the interim opencode+GLM
 paradigm recorded in the workspace contract and verified live. Only RP3
 (publish) remains open; Phase 0 is fully unblocked._
 
-## 2. Execution record
+## 2. Execution record — CLOSED 2026-07-10
 
-_(Empty at authoring. Prepended at close: commit range, per-phase deltas
-against §4, a verdict on every §7 prediction.)_
+**Commit range:** `6317cff` (Phase 0 amendment) → `cc69af6` (boss
+integration) + the dogfood merges `893e314`/`79938ab`; the boundary
+docs commit follows this record. Roughly 30 commits against the 15
+planned / 17 allowed — P7's verdict below.
+
+**§4 exit state, reconciled:** 1 code package `fractality` v0.1.0 with
+exactly 6 crates / 3 binaries ✅ · 1 policy package `delegation-rules`
+v0.1.0 with matrix + 3 playbooks ✅ · boss boot snippet + 1 skill ✅ ·
+**5 recorded E2E proofs** (MT-01 sync collect-back · MT-02 3-worker
+swarm · MT-03 recursive kill · MT-04 question round-trip incl. the
+11-minute park · MT-05 dogfood relicense with live merges) ✅ — human
+sign-offs pending per the manual-tests law · floor green, host
+self-check green, 0 clean-room violations ✅.
+
+**Prediction verdicts (§7):**
+
+- **P1 CONFIRMED** — nested headless spawn (Ф0.s2; the product path
+  every day since).
+- **P2 CONFIRMED** — metering-complete stream-json (Ф0.s4; product
+  transcripts from Phase 2 on; the result event is authoritative,
+  folded into D14).
+- **P3 CONFIRMED 10/10** — every completed packet through MT-02
+  firing #3 produced a worker-provenance result.md unnudged (killed
+  runs excluded as deliberate interruptions).
+- **P4 CONFIRMED** — MT-02: swarm wall == slowest single (ratio 1.00
+  < 1.6), zero worktree conflicts (the one merge conflict was F18's
+  report-file collision — procedure-fixed).
+- **P5 CONFIRMED** — MT-03: depth-2 live tree dead in 1 025 ms
+  (< 2 000), orphan sweeps clean, both records killed/manual.
+- **P6 CONFIRMED with caveat** — 2/2 eligible dogfood batches
+  delegated (100% ≥ 50%); the measuring session built the fabric, so
+  the cold-boss propensity remains Campaign 2's baseline question.
+- **P7 FALSIFIED** — ~2× the commit estimate. Causes, each ledgered at
+  its boundary: owner-directive scope folds (full discipline adoption,
+  pilot posture, vendoring), found-work fixes (F14–F19), and house
+  flows that demand their own docs commits. The drift *mechanism*
+  worked; the estimate did not. Lesson: predict subjects, not counts.
+- **P8 CONFIRMED** — pod spawn overhead well under 1 s; a real daemon
+  kill mid-run lost nothing (Phase 1), and adoption held through every
+  scratch-daemon generation the campaign minted.
+
+**Findings F1–F19** live in their phase ledgers (§14); the campaign's
+narrative reports (one per phase + close) in the workspace
+[`reports/`](../../../reports/) directory. Deferrals: §15, extended at
+close with the execution-born items (server-side long-poll wait, F18
+result-path knob, monthly quota rollup, D18 layer 2, POSIX fallback
+kill semantics, `wait --verbose`).
 
 ## 3. The mandate (owner, 2026-07-09, verbatim)
 
@@ -1273,6 +1318,157 @@ keeps counting toward the 10-packet measurement. Phase prediction
 - **P7 drift, recorded:** Phase 3 planned 2 commits, landed 4 — the
   extras are the conform-driven cell split + the manual-test document
   (the flow requires the procedure committed with its recorded run).
+
+### Phase 4 — EXECUTED (2026-07-10); commit map
+
+_(Commit hashes recorded at the boundary commit series; subjects:)_
+`feat(fractality): swarm — lifecycle, budgets, kill-tree, metrics` ·
+`docs(fractality): manual-tests #2/#3 — swarm and recursive kill` —
+the two planned subjects merged into one feat commit (P7 drift,
+recorded: metrics DTOs and lifecycle DTOs share the api/http cells; a
+file-honest split would have grouped by file, violating Rule 3's
+group-by-meaning).
+
+**Boundary evidence.** Floor: all green (fmt · tests 100+ incl. two
+delegated suites · clippy -D warnings · conform 0 findings 6/6 gated —
+after three cell splits at the 600-line budget (cli `swarm.rs`, pod
+`worker_env.rs`, MC tests → integration file) and one new recorded
+env-root (`swarm.rs`: FRACTALITY_RUN_ID is the worker-context seam) ·
+specmap 11 units / 43 items / 43 edges / 0 orphans · test-gate).
+**MT-02** (manual-test #2, firing #3 green): three async spawns
+returned instantly, three GLM-turbo workers in parallel worktrees,
+`MERGES_OK=1`, **P4 CONFIRMED — swarm/slowest ratio 1.00 < 1.6**.
+**MT-03** (manual-test #3, first firing green): the GLM parent spawned
+its own child through `fractality spawn` (depth-2 tree real on the
+record), `kill --tree` → **TREE_DEAD_IN=1025 ms < 2000 — P5
+CONFIRMED**, orphan sweeps clean in both pods, both status.json
+`killed`.
+
+**Findings folded into code/design:**
+
+- **F17 (Windows handle leak into the detached daemon).**
+  `id=$(fractality spawn …)` hung forever: CreateProcess with
+  redirected stdio inherits EVERY inheritable handle, so the
+  auto-started daemon captured the shell's command-substitution pipe
+  write end — EOF could never come. Fixed in `fractality-mc-client`
+  (strip `HANDLE_FLAG_INHERIT` from the caller's std handles around
+  the detached spawn, restore after; ~40 lines of scoped kernel32
+  FFI); pinned by the `autostart_does_not_capture_the_callers_pipes`
+  test. Found by MT-02's first firing — the exact D17 composition the
+  verb advertises.
+- **F18 (worktree-mode reports collide at merge).** Every worker
+  writes `result.md` (the output contract) into its worktree; N
+  branches then carry N different reports at one path and conflict at
+  merge. Procedure fix in MT-02 (commit only the intended module);
+  product knob (report path outside the workspace) deferred by name.
+- **Admission double-claim race** (found in self-review before it
+  fired): `record()`'s idempotent same-state path would let two
+  concurrent admission ticks both claim one queued run → atomic
+  `claim_queued` (check + journal under one lock) + a per-tick
+  attempted-set against journal-fault spins.
+- **Acceptance runner leaked timed-out commands** (kill_on_drop was
+  unset — a capped command outlived its verdict); fixed before the
+  delegated suite pinned the behavior.
+- Heartbeat interval 2 s → 1 s: the heartbeat answer is the
+  kill-delivery channel; P5's 2-second bound needed the headroom.
+- `allow_tools` (D18's static-allowlist layer) pulled forward from
+  Phase 4b — MT-03's nesting demo needed a worker allowed to call
+  `fractality spawn` via Bash.
+- **P7 drift, recorded:** planned 2 commits, landed as one feat + the
+  MT docs commit + the shared-file additions rolled into the 4b/5/6
+  boundary series (this session executed Phases 4→6 continuously; the
+  ledger, not the commit count, carries the phase boundaries).
+
+### Phase 4b — EXECUTED (2026-07-10); commit map
+
+_(Subjects:)_ `feat(fractality): ask_boss broker — questions on the
+bus` (the planned two subjects folded: the broker IS the
+waiting-on-boss lifecycle's client; one meaning, one commit).
+
+**Boundary evidence.** Floor: all green (the same panel; broker
+protocol edges unit-pinned — initialize version echo, tools/list
+shape, error codes, notification silence). **MT-04** (manual-test #4,
+first firing green): a live GLM-turbo worker called `ask_boss` ~6 s
+after boot; `questions` listed the run; `question.md` carried the
+text; `fractality answer` resumed it; `greeting.txt` = the answer
+**verbatim**; completed exit 0. **Phase prediction CONFIRMED** by a
+dedicated firing: 11 minutes of deliberate silence while parked, then
+the answer — clean resume, `completed exit=0` (a parked worker burns
+no tokens; the CC process blocks on one MCP tool result).
+
+**Scope honesty:** D18 layers 1 (static allowlist) + 3 (ask_boss
+broker as an MCP stdio server inside the CLI binary, hidden
+subcommand) shipped; layer 2 (dynamic per-call permission brokering
+via PreToolUse `defer` / permission-prompt-tool) **deferred by name**
+— RP4's ruling made 1+3 the way of life, and no real packet has yet
+shown which permission patterns recur. `run` gained the PARKED notice
+and the D17 exit-4 path (parked past the wall cap; the run keeps
+waiting). Question/Answer are journal events with strict transition
+validation (answer to a non-parked run = 409; re-ask updates text; a
+fresh question clears any stale answer).
+
+**Findings:** F15 corollary — a long-running manual test (the 11-min
+park) holds the MC binary against the floor's rebuild; long manual
+tests and floors do not share a timeline. tokio `io-std` feature
+required for stdio MCP serving. The broker's stderr lands in CC's MCP
+log, not the pod transcript.
+
+### Phase 5 — EXECUTED (2026-07-10); commit map
+
+_(Subject:)_ `feat(fractality): delegation-rules — matrix + model
+playbooks`.
+
+**Boundary evidence.** Package
+`org.vibevm.fractality/delegation-rules` v0.1.0 (kind=flow, UPL-1.0,
+boot snippet slot 77) authored **clean-room from the codex-first study
+note (DC1–DC6) + this campaign's field data**; the standing
+requires-rule honored (redbook ^0.2.0 + rust-ai-native ^0.7.0
+materialised — 26 packages, boot artifacts generated; the manifest
+parsed and resolved first try against the local registry).
+DECISION-MATRIX: the one law (delegate when verification is cheaper
+than generation), four flat-valued axes, a five-step first-match
+verdict, the never-delegate set, bounded retries (small → big → boss
+reclaims), the boss-as-reviewer loop. Playbooks glm-5.2 / glm-5-turbo
+(blind spots are paid-for only, each citing a campaign incident) +
+`_template`. **Phase prediction PASS: 10/10 recent real tasks decided
+with no judgment call** (bar 8/10) — and the two DELEGATE verdicts are
+exactly the two tasks that were delegated in the field, both green
+first landing. Honest caveat: the validation stream and the authoring
+experience overlap; Phase 6's dogfood and Campaign 2 are the foreign
+test.
+
+### Phase 6 — EXECUTED (2026-07-10); commit map
+
+- `cc69af6` feat(fractality): boss boot snippet + delegation skill
+  (slot 75 + fractality-delegate + [[binary]] decls; the stats verb
+  itself rode the swarm commit).
+- `893e314` / `79938ab` chore(packages): the RP1 dogfood merges
+  (worktree commits `c502a08`/`425ed3e` in their histories) — seven
+  EULA manifests + placeholder licence texts → UPL-1.0, performed by
+  two GLM-turbo workers in host-repo worktrees, boss-reviewed,
+  grep-to-zero verified, host self-check green pre-merge.
+
+**Boundary evidence.** MT-05 recorded (two firings: #1 found **F19** —
+host-repo worktrees overflow Windows MAX_PATH from under a run dir;
+fixed with `core.longpaths=true` in provisioning/removal — #2 green
+end to end). **P6 measured: 2/2 eligible batches delegated = 100%**
+(≥ 50% bar; the cold-session caveat recorded — this session built the
+fabric). Review findings the loop caught: weak acceptance predicates
+(the placeholder text itself mentions the UPL — acceptance must assert
+what CHANGED), a pre-existing manifest/licence-text mismatch in two
+packages (closed by the field edit), one unexplained single acceptance
+miss with artifacts correct at review (observation, no F-number).
+Vendored vibedeps/.vibe mirrors deliberately not force-refreshed
+(vibe correctly refuses unchanged versions; noted qualified-naming
+tension of the in-place relicense, surfaced to the owner). §12
+acceptance run at close: hello-glm live green on the real home (19 s,
+result worker-provenance **with the D19 ref+etag line rendered**),
+`questions` empty, `stats` aggregating four runs incl. the replayed
+Phase-2/3 journal (old lines parsed through the new serde fields —
+compatibility proven live), 5 manual-test procedures on disk, floor
+all green, host self-check green; the "≥5 completed + swarm parent"
+stats clause is satisfied by the MT-02/MT-03 records since scratch
+homes are torn down by design.
 
 _(Later phases fill their own maps at each boundary.)_
 

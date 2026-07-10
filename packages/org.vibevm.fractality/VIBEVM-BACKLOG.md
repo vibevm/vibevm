@@ -129,6 +129,39 @@ here — the backlog holds only open items.
 
 ---
 
+## 2026-07-10 — vendored files materialise with CRLF on Windows
+
+- **What:** `vibe install` writes `vibedeps/` (and `.vibe/cache/`)
+  file contents with CRLF line endings on Windows even when the source
+  registry packages are LF — committing a freshly materialised tree
+  produces a wall of git "CRLF will be replaced by LF" warnings and a
+  normalize-on-next-touch diff.
+- **Why:** byte-stable vendoring (write exactly the source bytes, or
+  honor `.gitattributes`) keeps `vibedeps/` diffs meaningful and
+  re-installs idempotent for consumers who commit their deps.
+- **Where it bit us:** committing
+  `packages/org.vibevm.fractality/delegation-rules/v0.1.0/vibedeps/**`
+  (IGNITION Phase 5) — sixteen warnings on `git add`.
+- **Severity:** paper-cut.
+
+## 2026-07-10 — no re-materialise path for in-place content changes
+
+- **What:** after the RP1 relicense edited published-shape packages in
+  place (same versions, new licence text), `vibe install` correctly
+  reports "vibe.lock unchanged — nothing to re-resolve" — but there is
+  no sanctioned verb to force re-materialising vendored copies from
+  the (mutated) sources short of deleting `vibedeps/` slots by hand.
+- **Why:** authoring repos DO mutate unpublished coordinates in place;
+  a `vibe reinstall --refresh` (or content-hash awareness) would keep
+  mirrors honest. Related tension, surfaced to the owner: the
+  qualified-naming law says a `name@version` coordinate must never
+  mean different content — in-place edits of registry-shaped packages
+  sit uneasily with it even locally.
+- **Where it bit us:** MT-05's post-merge refresh (IGNITION Phase 6):
+  19 stale EULA mirror lines remain in vendored/cache copies until the
+  next version bump.
+- **Severity:** wish.
+
 ## 2026-07-09 — `vibe registry test` probes with an unqualified pkgref
 
 - **What:** `vibe registry test` builds its probe reference as

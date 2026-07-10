@@ -1,134 +1,88 @@
 # fractality — WAL (project continuation state)
 
-_Updated: 2026-07-10 late (Phase 3 EXECUTED — collect-back proven live,
-manual-test #1 recorded) — the full loop now closes: tolerant
-stream-json parser (D14/R2; the result event is authoritative — this
-provider's assistant events under-report), pod tee pump with
-watch-channel live metering (`PodEvent::Usage` snapshots — MC meters a
-run mid-flight), result provenance (worker | extracted | none, with
-path) + `usage.json`, pod-side **acceptance runner** (packet
-`task.acceptance` → per-command verdicts in status.json + evidence in
-acceptance.log; 600 s per-command cap; skipped-with-reason on failed
-workers), exit-code families (killed(pod_lost) → 2 infra; policy kills
-keep 3), and `run`/`show` rendering usage + cost + result + acceptance.
-**MT-01 pre-run green** (scratch home, live GLM-5.2): run
-`01KX4JRBNQ774N0G9VYG218TKD`, 36 s, events=599, cost 0.1336, result
-(worker), acceptance 1/1 — the worker's four unit tests green in
-366 ms; human sign-off pending per the manual-tests law. Phase 3
-commits: `799dba3`, `1fb9517`, `01b22d3`, `eb8e7d9`; ledger entry in
-plan §14 (findings F16 — profiles are home-scoped, D14 error contract
-field-proven; the Collected-event bus promotion + FileRef rendering
-deferred by name to Phase 4). Floor: **all green** (specmap 11/38/38/0;
-conform forced the pod's `collect` cell split at the 600-line budget).
-P3 running count 3/3. Delegation scoreboard this session: **delegated
-2, delivered 2** — (1) worktree integration tests (scenario 1, cwd
-pinned): green first landing, caught a factual error in the compiled
-context by verifying the source, killed the lock-holding daemon it
-collided with (F15); (2) the stream parser + goldens (scenario 1,
-exact API + golden numbers compiled in): green first landing, one
-misleading doc sentence fixed at review. Deferred delegable work,
-recorded per the law: acceptance-runner unit tests (fixture commands
-with known exit codes — scenario 1, glm-5-turbo candidate; the live
-MT-01 exercised the runner end to end meanwhile). Kept boss-side with
-reasons: E2E runs + triage, the F14 fix, pod tee + collection + CLI
-(cross-crate seam design), the Exit-vs-Collected seam decision,
-boundary docs. Campaign tally: delegated 4, delivered 3. Prior status
-follows._
-_Prior: 2026-07-10 (Phase 2 EXECUTED — exit E2E green on a live GLM
-worker) — run `01KX4H4KESV9ADN6S0AJMWQHFW`, exit 0 in 29 s, hello.txt
-byte-exact, worker-authored result.md, transcript with usage fields
-(**P2 CONFIRMED**; **P3 opens 1/1**). The first firing
-(`01KX4GD3C5RQ54YREHPRES6N2F`, kept as autopsy) exposed the
-three-defect Windows spawn seam, fixed as **F14** (`38d78bc`): PATHEXT
-resolver against the worker's PATH (npm ships only `claude.cmd`),
-prompt moved from argv to `WorkerSpec::stdin` (cmd.exe escaping rejects
-newline args; 32 KiB cap), case-insensitive D5 whitelist canonicalized
-(stock Windows spells `Path`/`ComSpec`). **F15**: a running MC daemon
-holds the .exe lock against cargo rebuilds. Worktree tests `9996f74`;
-boundary docs `784fbda`._
-_Prior: 2026-07-10 (Phase 2 CODE LANDED, floor green) — profiles (D6),
-D5 clean-slate env as a pure function (I1 as a unit test), headless
-invocation builder (flags pinned on CC 2.1.202), RunSpec +
-BackendSecrets ([redacted] Debug) + widened WorkerBackend seam, pod
-`--run-spec` product mode (token read pod-side at spawn), MC spawn path
-(validation → D8 workspaces incl. git worktrees → run-spec → detached
-pod launch), `fractality run --packet` sync loop; commits `b15bd02`,
-`10bc4b9`. Delegation field data: profiles module failed twice at GLM
-(poisoned cwd; silent planning) — cwd pinning + two context scenarios
-entered the contract._
-_Prior: 2026-07-10 (Phase 1 EXECUTED) — six-crate workspace + MC + pod
-skeleton; P8 restart-survival proven with a real process kill;
-AI-Native floor from birth; workspace became a vibe consumer (redbook
-^0.2.0 + rust-ai-native ^0.7.0, 26 pkgs); findings F11 (Notify
-lost-wakeup → watch) and F12 (in-process abort ≠ crash)._
-_Prior: 2026-07-09 (Phase 0 EXECUTED) — spikes green, F1–F10 folded
-into the plan; interim opencode+GLM paradigm verified live._
+_Updated: 2026-07-10 (IGNITION **CLOSED** — Phases 0–6 executed and
+ledgered in one campaign; the plan's §2 execution record carries the
+final verdicts). The delegate-out / collect-back loop, the swarm with
+budgets and recursive kill, the ask_boss interaction layer, the
+delegation-rules policy package, and the boss integration are all
+live and proven on paid GLM workers. Manual tests MT-01…MT-05 recorded
+green (human sign-offs pending — the manual-tests law reserves the
+pass for the owner). The RP1 dogfood merged: the host's seven EULA
+straggler manifests are UPL-1.0, relicensed THROUGH the fabric.
+Campaign findings this session: **F17** (detached daemon inherited the
+caller's `$()` pipe — `HANDLE_FLAG_INHERIT` stripped around autostart,
+regression-pinned), **F18** (worktree workers' `result.md` collides at
+multi-branch merge — procedure fix, product knob deferred), **F19**
+(host-repo worktrees overflow Windows MAX_PATH — `core.longpaths=true`
+in provisioning). Predictions: P1–P6, P8 CONFIRMED (P4 ratio 1.00;
+P5 tree-dead 1025 ms; P6 2/2 with the cold-session caveat);
+**P7 FALSIFIED** (~2× the commit estimate; every drift ledgered at its
+boundary). Delegation scoreboard this session: **delegated 4,
+delivered 4** (acceptance-runner tests turbo; admission-primitive
+tests 5.2; two dogfood batches turbo) / kept with reasons (seam
+design, spec/policy authoring, review, the F17/F19 fixes). Campaign
+tally: delegated 8, delivered 7 (one Phase-2-era GLM failure was
+re-landed by the boss). Reports for every phase + the campaign close:
+[`reports/`](reports/)._
+_Prior: 2026-07-10 late (Phase 3 EXECUTED — collect-back proven live,
+MT-01 recorded; F16 profiles home-scoped). Prior: Phase 2 EXECUTED
+(F14 Windows spawn seam, F15 exe-lock dev law). Prior: Phase 1
+EXECUTED (F11 watch-not-Notify, F12 abort≠crash, F13 delegate context
+economics). Prior: 2026-07-09 Phase 0 EXECUTED (F1–F10)._
 
 ## Current state
 
-- **The plan (canonical for campaign detail):**
+- **The campaign is CLOSED.** Plan:
   [`fractality/v0.1.0/spec/plans/FRACTALITY-IGNITION-PLAN-v0.1.md`](fractality/v0.1.0/spec/plans/FRACTALITY-IGNITION-PLAN-v0.1.md)
-  — status `EXECUTING`; **Phases 0–3 in the §14 ledger with live
-  evidence; manual-test #1 recorded.** Remaining: Phases 4 (swarm),
-  4b (interaction layer), 5 (delegation-rules), 6 (boss integration).
-- **Code:** six crates, three binaries; the delegate-out path is proven
-  live end to end (MC autostart → spawn → worktree/dir provisioning →
-  pod → resolver → clean-slate env → stdin prompt → GLM worker →
-  artifacts on disk). Floor all green at this checkpoint; conform 6/6
-  gated, empty baseline; specmap 11/36/36/0 (namespace `fractality`);
-  pub-doctest gate = next ratchet.
-- **This box:** `~/.fractality/profiles.toml` installed (copy of
-  `spec/examples/profiles.sample.toml`); two runs on disk under
-  `~/.fractality/runs/` — the green `01KX4H4KESV9ADN6S0AJMWQHFW` (the
-  Phase 3 golden-fixture source) and the F14 autopsy
-  `01KX4GD3C5RQ54YREHPRES6N2F`. MC daemon **stopped** (F15: stop it
-  before builds).
-- **vibe wiring:** workspace requires redbook ^0.2.0 + rust-ai-native
-  ^0.7.0 (standing rule for every future fractality package); own
-  vibedeps/ (26 pkgs); boot lane = contract boot step 6. Pilot
-  findings: [`VIBEVM-BACKLOG.md`](VIBEVM-BACKLOG.md).
-- **Host side:** two redbook members vendored at
-  `packages/org.vibevm/{atomic-commits,sync-from-code}/v0.1.0/`
-  (tag-pinned mirrors — do not edit).
+  — §2 execution record + §14 per-phase ledgers are the canonical
+  history; [`reports/`](reports/) carries the owner-facing narratives
+  (one per phase + campaign-close).
+- **Code:** six crates, three binaries. Live surface: `run` / `spawn`
+  / `wait` / `ps` / `show` / `tree` / `kill [--tree]` / `questions` /
+  `answer` / `stats` / hidden `mcp-broker`; admission (per-profile
+  `max_concurrent`, FIFO, atomic claim); budgets (wall + tokens →
+  `killed(budget)`, 1 s heartbeat kill delivery, taskkill fallback);
+  Collected on the bus with D19 FileRefs (MC-minted etags); the
+  ask_boss park/resume loop; `--allowed-tools`/`ask_boss` profile
+  knobs; F17/F19 hardening.
+- **Floor at close: all green** — conform 0 findings (6/6 gated; two
+  recorded `#[spec(deviates)]` testimonies on the F17 kernel32 FFI),
+  specmap 16 units / 47 items / 47 edges / 0 orphans, test-gate
+  xfail-strict, ~120 tests.
+- **Packages:** `org.vibevm.fractality/fractality` v0.1.0 (boot
+  snippet 75, `fractality-delegate` skill, 3 [[binary]] decls) +
+  `org.vibevm.fractality/delegation-rules` v0.1.0 (matrix, playbooks,
+  boot snippet 77) — both vibe consumers with their own vibedeps.
+- **This box:** real `~/.fractality` untouched by the MTs (scratch
+  homes throughout). MC daemon **stopped**. Host repo carries the two
+  dogfood merge commits; vendored vibedeps mirrors refreshed after the
+  merge.
 
 ## Constraints (do not violate without discussion)
 
-- Host Rules 1–4 bind every commit.
-- The delegation law + live-observation protocol (incl. cwd pinning) +
-  two context scenarios (contract §"THE DELEGATION LAW"); scoreboard in
-  every WAL checkpoint.
-- Clean-room law for refs; worker env never inherits
-  `ANTHROPIC_*`/`CLAUDE_*` (I1 — structural + tested); token files:
-  existence checks MC-side, content pod-side at spawn only, never
-  logged.
-- MC is the bus; files are the persistence plane (I2). Publish is
-  owner-word-only. Floor green at phase boundaries; never wait blind on
-  long runs.
-- **F15 dev law:** stop the MC daemon before any build that touches its
-  binary (`fractality mc stop`); a running daemon holds the .exe lock.
+- Host Rules 1–4 bind every commit. The delegation law +
+  live-observation protocol + two context scenarios; scoreboard in
+  every WAL checkpoint. Clean-room law for refs. Worker env never
+  inherits `ANTHROPIC_*`/`CLAUDE_*` (I1). MC is the bus; files are the
+  persistence plane (I2). Publish is owner-word-only (RP3 still OPEN).
+- **F15 dev law:** stop MC daemons before builds; corollary from this
+  session — long-running manual tests and floors do not share a
+  timeline.
+- **Cwd law now binds the boss too:** pin the working directory in
+  every gate/tool invocation — a misplaced floor once gated the HOST
+  tree and reported green while five fractality findings sat unseen.
 
-## Next (the cold-start recipe — Phase 4, swarm)
+## Next (candidates for the owner to choose from — not authorisation)
 
-1. Re-read plan §8 Phase 4 (async verbs, budgets, nesting, kill-tree,
-   metrics) and §14's Phase 3 deferred items — the `Collected` pod
-   event (verdicts + result FileRef onto the bus / `RunRecord`) slots
-   naturally into Phase 4's metrics/record work.
-2. **Async verbs:** `spawn` (register + return id), `wait <id>…`
-   (shell semantics), `tree`; per-profile `max_concurrent` admission +
-   queueing MC-side.
-3. **Budget enforcement in MC:** wall-clock watchdog, `--max-turns`
-   passthrough exists, cumulative token cap → `killed(budget)`; the
-   live Usage snapshots (already flowing) are the input.
-4. **Nesting:** `FRACTALITY_RUN_ID`/`FRACTALITY_DEPTH` already ride
-   the worker env; a worker calling `fractality spawn` registers a
-   child — depth-2 tree demo (P4 target: 3-worker swarm, manual-test
-   #2; recursive kill, manual-test #3).
-5. **Kill:** `kill --tree` delegated to the pod (F5 Job Objects);
-   orphan-sweep assertion; pod-loss fallback MC-side.
-6. Delegation candidates: acceptance-runner unit tests (deferred from
-   Phase 3, scenario 1, glm-5-turbo), admission-queue unit tests,
-   `wait` verb CLI plumbing (scenario 1 with exact API). Boss keeps:
-   budget semantics, tree/kill correctness, the Collected event
-   design.
-7. Machine note: stop the MC daemon before builds (F15); profiles are
-   home-scoped (F16) — scratch homes need their own copy.
+1. **Human sign-offs** on MT-01…MT-05 (the recorded pre-runs are
+   green; only the owner's eyes can convert them to passes).
+2. **Campaign 2 — the initiative system** (plan §15 DEF-1): scoreboard
+   -driven delegation nudges for a cold boss; the P6=100%-warm number
+   is the floor to beat; routing-as-data + question push-notifications
+   + D18 layer 2 (dynamic permission brokering) are its natural cargo.
+3. **Campaign 3 — RLM** (DEF-2, owner hypothesis recorded in the
+   plan).
+4. Small named leftovers: server-side long-poll wait, F18 result-path
+   knob, monthly quota rollup in `stats`, `wait --verbose`, POSIX
+   fallback kill semantics (DEF-8), `vibe skill install` projection of
+   fractality-delegate on this box.
