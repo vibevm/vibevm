@@ -1,0 +1,69 @@
+# mcp:org.vibevm/rust-ai-native-mcp — the AI-Native Rust discipline served
+# over MCP (PROP-027; MCP-SOVEREIGNTY-PLAN Wave 3). This workspace
+# AUTHORS one crate — the server — and vendors its whole dependency
+# closure byte-identically (`cargo xtask sync-engines`): the stack's
+# toolchain crates mirror the stack's own crates/ LAYOUT (stack crates
+# at crates/<name>, neutral engines at crates/vendor/<name>) so their
+# relative path-deps hold verbatim, and the vibe.toml `=0.5.0` pin
+# holds these copies and the consumer's installed stack to ONE resolved
+# version set. Never edit a vendored crate here — the fix surface is
+# its authored home (core-ai-native / rust-ai-native-lang).
+[workspace]
+resolver = "3"
+members = [
+    "crates/rust-ai-native-mcp",
+    "crates/rust-ai-native-conform-frontend",
+    "crates/rust-ai-native-conform",
+    "crates/rust-ai-native-cli",
+    "crates/rust-ai-native-specmap",
+    "crates/rust-ai-native-tcg-bridge",
+    "crates/rust-ai-native-tcg",
+    "crates/vendor/core-ai-native-conform",
+    "crates/vendor/core-ai-native-mcp",
+    "crates/vendor/core-ai-native-specmap",
+    "crates/vendor/core-ai-native-specmark",
+    "crates/vendor/core-ai-native-specmark-grammar",
+]
+
+[workspace.package]
+version = "0.7.0"
+edition = "2024"
+rust-version = "1.93"
+authors = ["Oleg Chirukhin"]
+license-file = "LICENSE.md"
+publish = false
+repository = "https://gitverse.ru/anarchic/vibevm"
+homepage = "https://gitverse.ru/anarchic/vibevm"
+
+[workspace.dependencies]
+# Internal crates — path-only; every one below is a vendored
+# write-through (see the workspace header).
+conform-core = { package = "core-ai-native-conform", path = "crates/vendor/core-ai-native-conform" }
+rust-ai-native-conform-frontend = { path = "crates/rust-ai-native-conform-frontend" }
+rust-ai-native-conform = { path = "crates/rust-ai-native-conform" }
+rust-ai-native-cli = { path = "crates/rust-ai-native-cli" }
+mcp-core = { package = "core-ai-native-mcp", path = "crates/vendor/core-ai-native-mcp" }
+specmap-core = { package = "core-ai-native-specmap", path = "crates/vendor/core-ai-native-specmap" }
+rust-ai-native-specmap = { path = "crates/rust-ai-native-specmap" }
+specmark = { package = "core-ai-native-specmark", path = "crates/vendor/core-ai-native-specmark" }
+specmark-grammar = { package = "core-ai-native-specmark-grammar", path = "crates/vendor/core-ai-native-specmark-grammar" }
+rust-ai-native-tcg-bridge = { path = "crates/rust-ai-native-tcg-bridge" }
+rust-ai-native-tcg = { path = "crates/rust-ai-native-tcg" }
+
+# Third-party (all permissive licenses — PROP-000 §3). Feature sets
+# match the stack's so the vendored crates build identically here.
+anyhow = "1"
+thiserror = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = { version = "1", features = ["preserve_order"] }
+sha2 = "0.10"
+toml = "0.9"
+walkdir = "2"
+glob = "0.3"
+syn = { version = "2", features = ["full", "visit"] }
+quote = "1"
+proc-macro2 = { version = "1", features = ["span-locations"] }
+clap = { version = "4", features = ["derive"] }
+
+# Dev / test
+tempfile = "3"

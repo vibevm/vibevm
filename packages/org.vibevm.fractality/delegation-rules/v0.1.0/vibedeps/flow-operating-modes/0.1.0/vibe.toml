@@ -1,0 +1,17 @@
+[package]
+name = "operating-modes"
+group = "org.vibevm"
+kind = "flow"
+version = "0.1.0"
+authors = ["Oleg Chirukhin"]
+license = "UPL-1.0"
+description = "Codeword-triggered operating modes: one safe default posture, explicit opt-in postures, and red lines that survive any mode"
+keywords = ["codewords", "autonomy", "modes", "posture", "safety"]
+
+[compatibility]
+min_vibe_version = "0.1.0"
+requires_kinds = []
+
+[boot_snippet]
+source = "spec/boot/45-flow-operating-modes.md"
+category = "flow"

@@ -1,0 +1,17 @@
+[package]
+name = "attribution-policy"
+group = "org.vibevm"
+kind = "flow"
+version = "0.1.0"
+authors = ["Oleg Chirukhin"]
+license = "UPL-1.0"
+description = "A deliberate authorship-attribution posture for AI-assisted repositories: human-authored surface by default, with the disclosure alternative documented"
+keywords = ["attribution", "authorship", "policy", "git", "compliance"]
+
+[compatibility]
+min_vibe_version = "0.1.0"
+requires_kinds = []
+
+[boot_snippet]
+source = "spec/boot/55-flow-attribution-policy.md"
+category = "flow"

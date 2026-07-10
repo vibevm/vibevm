@@ -1,0 +1,20 @@
+[package]
+name = "rust-ai-native-specmap"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+license-file.workspace = true
+publish.workspace = true
+repository.workspace = true
+homepage.workspace = true
+description = "The specmap engine driver and `rust-ai-native-specmap` binary (PROP-014 §2.5): build / --check the canonical specmap.json traceability index + orphan ratchet over a project tree"
+
+[[bin]]
+name = "rust-ai-native-specmap"
+path = "src/main.rs"
+
+[dependencies]
+specmap-core.workspace = true
+anyhow.workspace = true
+clap.workspace = true
