@@ -37,4 +37,57 @@ delegations and/or nudges).
 
 ## Recorded runs
 
-- _(filled at execution; owner sign-off with the Ф6 index)_
+_Executed 2026-07-10, same session/runner/build as MT-C2-01. Every
+run's `harness-status.txt` reported all five events + statusLine
+`installed`; every run's `sessions.txt` carries a session record —
+the adapter demonstrably worked end to end in `-p`._
+
+- **Run 1** — `boss_exit=0` (subtype `success`, 81 turns), mc_runs=0.
+  Session `01KX5ZSA…` ended, **deleg=0 slate=34** (PostToolUse
+  counted 34 work-tools). SessionStart scoreboard injection reached
+  the model (board text present in the transcript). Attempted: all 8
+  (E: 6/6), all completed by the boss (18 parse tests; every
+  artifact). **Delegated: 0.** The boss explicitly argued delegation
+  DOWN: "small, judgment-heavy edits where the delegation+review
+  overhead exceeds the work" — citing the matrix's own never-delegate
+  vocabulary. **Run metric: 0/6.**
+- **Run 2** — `boss_exit=124` (wall), mc_runs=0. Session `01KX60V8…`
+  open at collection, **deleg=0 slate=45**. Attempted: all 8
+  (E: 6/6). **Delegated: 0.** The boss consulted matrix + scoreboard
+  proactively, then discovered the sandbox linker defect and
+  reasoned: workers cannot self-verify (`cargo test` broken without
+  the hand-built vcvars wrapper) → the delegation premise fails →
+  keep everything. **Run metric: 0/6.**
+- **Run 3** — `boss_exit=1` (`error_max_turns`, 51 turns), mc_runs=0.
+  Session `01KX629S…` ended, **deleg=0 slate=44**. Attempted: all 8
+  (E: 6/6; max-turns hit during final review). **Delegated: 0.** The
+  boss ran `route` ("it returns 'delegate' for small mechanical
+  work") and overrode it: coupling via the Task-2 rename + per-task
+  packet/review overhead. **Run metric: 0/6.**
+
+**Arm B pooled metric: 0/18 = 0%.** Distractor delegations: 0.
+
+**P3 verdict: FALSIFIED** on both clauses — 0% < 80% and
+0% < A (16.7%) + 30. The initiative surface as exercised in `-p`
+did not raise cold delegation; it did not lower attempted coverage
+either (6/6 across all runs, work quality high).
+
+**Channel analysis (P3's falsifier obligation):**
+- **SessionStart scoreboard: delivered, ineffective.** Every run
+  greeted the boss with an EMPTY board ("0 runs · 0 completed
+  all-time" — fresh scratch home). A zero board carries no social
+  proof; it may even read as "nobody uses this here".
+- **UserPromptSubmit nudge: structurally silent in `-p`.** The only
+  user prompt is the menu itself, arriving at slate=0 — below every
+  threshold. The threshold crossings (slates 34/44/45 ≫ 7) all
+  happened AFTER the last prompt; no second prompt ever came, so the
+  nudge teeth never engaged. MT pre-registered the channel as
+  present; the trial proves it never fires in single-prompt
+  headless sessions — a design fact, not a bug in the hook.
+- **Stop question-push: correctly silent** (no parked questions —
+  nothing was delegated).
+- **Confound shared with arm A:** the broken MSVC auto-detect gave
+  a rational keep reason; it suppresses B the same way it
+  suppresses A.
+
+- _(owner sign-off with the Ф6 index: pending)_

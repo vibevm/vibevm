@@ -51,4 +51,43 @@ checks.
 
 ## Recorded runs
 
-- _(filled at execution; owner sign-off with the Ф6 index)_
+_Executed 2026-07-10 (session resuming the paused Ф6; runner + build
+as specified above; boss `glm-5.2[1m]`, workers `small` where
+spawned). Per-run facts from `target/trial-results/arm-a-run-<n>/`
+(run-info.txt, runs.json, boss-transcript.jsonl, proj-final/)._
+
+- **Run 1** — `boss_exit=1` (`error_max_turns`, 51 turns),
+  wall 1281 s, mc_runs=1. Attempted: all 8 (E: 6/6). **Delegated: 1**
+  — Task 3 → worker `facts-md` (small, completed; the boss reviewed
+  its 1/2 acceptance state but ran out of turns before merging
+  FACTS.md). Distractors delegated: 0. Boss triaged via the matrix
+  explicitly; kept 1/4/5/6 citing cargo-test verification coupling +
+  MSVC-linker friction it had just hand-fixed. **Run metric: 1/6.**
+- **Run 2** — `boss_exit=124` (wall timeout), 1500 s, mc_runs=2.
+  Attempted: all 8 (E: 6/6). **Delegated: 2** — Task 1 → worker
+  `parse_line-test-suite`, Task 3 → worker `facts-table-extract`
+  (both small, both completed; collect/merge not landed before the
+  wall). Distractors delegated: 0. Explicit matrix triage in the
+  transcript (delegate 1+3; keep 2/4/5/6 with named reasons; 7/8
+  never-delegate). **Run metric: 2/6.**
+- **Run 3** — `boss_exit=0` (clean finish under both caps),
+  mc_runs=0. Attempted: all 8, all completed by the boss itself
+  (every artifact present incl. FACTS.md; 12+3 tests green).
+  **Delegated: 0.** Distractors delegated: 0. **Run metric: 0/6.**
+
+**Arm A pooled metric: (1+2+0)/(6+6+6) = 3/18 ≈ 16.7%.**
+Distractor delegations: 0/6 run-opportunities — the matrix's KEEP
+verdicts on 7/8 were respected in all runs.
+
+**P1 verdict: CONFIRMED** — 16.7% < 50%. The cold-boss delegation
+gap is real and measured (variance across runs: 17% / 33% / 0%).
+
+**Validity notes (recorded, not excuses):** (a) the scratch env
+(`env -i`) breaks rustc's MSVC toolchain auto-detection; every boss
+hand-fixed the linker and two of three cited "workers can't
+self-verify via cargo test here" as a keep reason — a staging defect
+that depresses delegation in BOTH arms equally (the A↔B delta stays
+interpretable); (b) GLM-5.2 proxies the Opus-class boss (RP1 caveat,
+pre-registered); (c) N=3 per arm by owner ruling.
+
+- _(owner sign-off with the Ф6 index: pending)_
