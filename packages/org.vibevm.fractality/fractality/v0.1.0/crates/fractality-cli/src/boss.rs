@@ -97,6 +97,16 @@ pub(crate) async fn stats(home: &camino::Utf8Path, json: bool) -> u8 {
                 );
             } else {
                 out::print_metrics(&m);
+                // The D12 monthly quota rollup (IGNITION §15 leftover,
+                // absorbed by C2 Ф2): one consumer sum, engine-rendered.
+                let month = fractality_core::time::utc_date_string(fractality_core::time::now_ms())
+                    [..7]
+                    .to_owned();
+                println!(
+                    "month {}: {} web-tool calls",
+                    month,
+                    fractality_initiative::month_web_calls(&m, &month),
+                );
             }
             EXIT_OK
         }

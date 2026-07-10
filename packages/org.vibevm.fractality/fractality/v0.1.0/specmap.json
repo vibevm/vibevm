@@ -39,7 +39,7 @@
       "crate_name": "fractality-cli",
       "file": "crates/fractality-cli/src/main.rs",
       "item_kind": "mod",
-      "line": 25,
+      "line": 28,
       "symbol": "fractality_cli"
     },
     {
@@ -58,10 +58,24 @@
     },
     {
       "crate_name": "fractality-cli",
+      "file": "crates/fractality-cli/src/mc_cmd.rs",
+      "item_kind": "mod",
+      "line": 11,
+      "symbol": "fractality_cli::mc_cmd"
+    },
+    {
+      "crate_name": "fractality-cli",
       "file": "crates/fractality-cli/src/out.rs",
       "item_kind": "mod",
       "line": 9,
       "symbol": "fractality_cli::out"
+    },
+    {
+      "crate_name": "fractality-cli",
+      "file": "crates/fractality-cli/src/scoreboard.rs",
+      "item_kind": "mod",
+      "line": 11,
+      "symbol": "fractality_cli::scoreboard"
     },
     {
       "crate_name": "fractality-cli",
@@ -167,6 +181,13 @@
       "item_kind": "mod",
       "line": 22,
       "symbol": "fractality_core::worker"
+    },
+    {
+      "crate_name": "fractality-initiative",
+      "file": "crates/fractality-initiative/src/scoreboard.rs",
+      "item_kind": "mod",
+      "line": 12,
+      "symbol": "fractality_initiative::scoreboard"
     },
     {
       "crate_name": "fractality-mc-client",
@@ -409,7 +430,7 @@
     {
       "file": "crates/fractality-cli/src/main.rs",
       "from_symbol": "fractality_cli",
-      "line": 25,
+      "line": 28,
       "provenance": "authored",
       "uri": "spec://fractality/PROP-001#architecture",
       "verb": "implements"
@@ -431,11 +452,27 @@
       "verb": "implements"
     },
     {
+      "file": "crates/fractality-cli/src/mc_cmd.rs",
+      "from_symbol": "fractality_cli::mc_cmd",
+      "line": 11,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
       "file": "crates/fractality-cli/src/out.rs",
       "from_symbol": "fractality_cli::out",
       "line": 9,
       "provenance": "authored",
       "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-cli/src/scoreboard.rs",
+      "from_symbol": "fractality_cli::scoreboard",
+      "line": 11,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#sessions",
       "verb": "implements"
     },
     {
@@ -556,6 +593,14 @@
       "line": 22,
       "provenance": "authored",
       "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-initiative/src/scoreboard.rs",
+      "from_symbol": "fractality_initiative::scoreboard",
+      "line": 12,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#sessions",
       "verb": "implements"
     },
     {

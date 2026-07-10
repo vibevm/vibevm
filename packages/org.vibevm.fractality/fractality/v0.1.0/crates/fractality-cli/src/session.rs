@@ -179,7 +179,10 @@ pub(crate) async fn ls(home: &camino::Utf8Path, open_only: bool, json: bool) -> 
 }
 
 /// Exact ULID or unique prefix, the run-resolution muscle memory.
-async fn resolve_session(client: &McClient, raw: &str) -> Result<SessionRecord, (u8, String)> {
+pub(crate) async fn resolve_session(
+    client: &McClient,
+    raw: &str,
+) -> Result<SessionRecord, (u8, String)> {
     if let Ok(id) = raw.parse::<SessionId>() {
         return match client.session(id).await {
             Ok(s) => Ok(s),

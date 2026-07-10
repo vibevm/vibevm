@@ -12,14 +12,17 @@
 
 mod boss;
 mod broker;
+mod mc_cmd;
 mod out;
+mod scoreboard;
 mod session;
 mod swarm;
+
+use mc_cmd::McCmd;
 
 use camino::Utf8PathBuf;
 use clap::{Parser, Subcommand};
 use fractality_core::run::{RunRecord, RunState};
-use fractality_mc_client::lock::Lockfile;
 use fractality_mc_client::{ClientError, McClient, connect_or_start};
 
 specmark::scope!("spec://fractality/PROP-001#architecture");
@@ -159,6 +162,21 @@ enum Cmd {
         #[command(subcommand)]
         cmd: SessionCmd,
     },
+    /// The initiative scoreboard (Campaign 2): session facts, parked
+    /// questions, today/month lines — strictly measured, never
+    /// invented. Session pick: --session, else FRACTALITY_BOSS_SESSION,
+    /// else global only.
+    Scoreboard {
+        /// Session id (or unique prefix) to show.
+        #[arg(long, value_name = "ID")]
+        session: Option<String>,
+        /// One-line strip (statusline shape).
+        #[arg(long, conflicts_with = "json")]
+        line: bool,
+        /// Machine-readable output.
+        #[arg(long)]
+        json: bool,
+    },
     /// The ask_boss MCP stdio server (plumbing: Claude Code launches
     /// this inside workers; not for human use).
     #[command(hide = true)]
@@ -208,20 +226,6 @@ enum SessionCmd {
     },
 }
 
-#[derive(Subcommand)]
-enum McCmd {
-    /// Start the daemon (idempotent; exit 0 when already running).
-    Start,
-    /// Stop the daemon gracefully (idempotent; exit 0 when not running).
-    Stop,
-    /// Report daemon state. Exit 0 running, 1 stopped, 2 error.
-    Status {
-        /// Machine-readable output.
-        #[arg(long)]
-        json: bool,
-    },
-}
-
 #[tokio::main]
 async fn main() -> std::process::ExitCode {
     let cli = Cli::parse();
@@ -231,9 +235,9 @@ async fn main() -> std::process::ExitCode {
     };
     let code = match cli.cmd {
         Cmd::Mc { cmd } => match cmd {
-            McCmd::Start => mc_start(&home).await,
-            McCmd::Stop => mc_stop(&home).await,
-            McCmd::Status { json } => mc_status(&home, json).await,
+            McCmd::Start => mc_cmd::mc_start(&home).await,
+            McCmd::Stop => mc_cmd::mc_stop(&home).await,
+            McCmd::Status { json } => mc_cmd::mc_status(&home, json).await,
         },
         Cmd::Ps {
             state,
@@ -256,6 +260,11 @@ async fn main() -> std::process::ExitCode {
             boss::answer(&home, &id, text.as_deref(), file.as_deref()).await
         }
         Cmd::Stats { json } => boss::stats(&home, json).await,
+        Cmd::Scoreboard {
+            session,
+            line,
+            json,
+        } => scoreboard::scoreboard(&home, session.as_deref(), line, json).await,
         Cmd::Session { cmd } => match cmd {
             SessionCmd::Begin {
                 harness,
@@ -378,123 +387,6 @@ fn err_code(e: &ClientError) -> u8 {
     match e {
         ClientError::NotRunning { .. } => EXIT_NEGATIVE,
         _ => EXIT_INFRA,
-    }
-}
-
-async fn mc_start(home: &camino::Utf8Path) -> u8 {
-    match connect_or_start(home).await {
-        Ok(client) => match (client.health().await, Lockfile::read(home)) {
-            (Ok(health), Ok(Some(lock))) => {
-                println!(
-                    "mc running pid={} port={} uptime={} runs_open={}",
-                    health.pid,
-                    lock.port,
-                    fractality_core::time::format_duration_ms(
-                        fractality_core::time::now_ms().saturating_sub(health.started_ts_ms)
-                    ),
-                    health.runs_open,
-                );
-                EXIT_OK
-            }
-            (Err(e), _) => {
-                eprintln!("fractality: daemon started but health failed: {e}");
-                EXIT_INFRA
-            }
-            (_, lock) => {
-                eprintln!("fractality: daemon healthy but lockfile unreadable: {lock:?}");
-                EXIT_INFRA
-            }
-        },
-        Err(e) => {
-            eprintln!("fractality: {e}");
-            EXIT_INFRA
-        }
-    }
-}
-
-async fn mc_stop(home: &camino::Utf8Path) -> u8 {
-    match McClient::connect(home).await {
-        Ok(None) => {
-            println!("mc is not running");
-            EXIT_OK
-        }
-        Ok(Some(client)) => {
-            if let Err(e) = client.shutdown().await {
-                eprintln!("fractality: shutdown call failed: {e}");
-                return EXIT_INFRA;
-            }
-            let deadline = std::time::Instant::now() + std::time::Duration::from_secs(10);
-            loop {
-                tokio::time::sleep(std::time::Duration::from_millis(100)).await;
-                match McClient::connect(home).await {
-                    Ok(None) => {
-                        println!("mc stopped");
-                        return EXIT_OK;
-                    }
-                    Ok(Some(_)) if std::time::Instant::now() < deadline => continue,
-                    Ok(Some(_)) => {
-                        eprintln!("fractality: daemon still answering after 10s");
-                        return EXIT_INFRA;
-                    }
-                    Err(e) => {
-                        eprintln!("fractality: {e}");
-                        return EXIT_INFRA;
-                    }
-                }
-            }
-        }
-        Err(e) => {
-            eprintln!("fractality: {e}");
-            EXIT_INFRA
-        }
-    }
-}
-
-async fn mc_status(home: &camino::Utf8Path, json: bool) -> u8 {
-    match McClient::connect(home).await {
-        Ok(Some(client)) => match client.health().await {
-            Ok(health) => {
-                if json {
-                    println!(
-                        "{}",
-                        serde_json::to_string_pretty(&health).expect("health serializes")
-                    );
-                } else {
-                    let port = Lockfile::read(home)
-                        .ok()
-                        .flatten()
-                        .map(|l| l.port.to_string())
-                        .unwrap_or_else(|| "?".to_owned());
-                    println!(
-                        "running pid={} port={} uptime={} runs={}/{}",
-                        health.pid,
-                        port,
-                        fractality_core::time::format_duration_ms(
-                            fractality_core::time::now_ms().saturating_sub(health.started_ts_ms)
-                        ),
-                        health.runs_open,
-                        health.runs_total,
-                    );
-                }
-                EXIT_OK
-            }
-            Err(e) => {
-                eprintln!("fractality: {e}");
-                EXIT_INFRA
-            }
-        },
-        Ok(None) => {
-            if json {
-                println!("{{\"status\":\"stopped\"}}");
-            } else {
-                println!("stopped");
-            }
-            EXIT_NEGATIVE
-        }
-        Err(e) => {
-            eprintln!("fractality: {e}");
-            EXIT_INFRA
-        }
     }
 }
 
