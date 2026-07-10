@@ -1,6 +1,9 @@
 # FRACTALITY-INITIATIVE-PLAN v0.1 — Campaign 2: the initiative system (scoreboard-driven delegation for a cold boss)
 
-_Status: **EXECUTING — Ф0–Ф4 landed, floor green; next: Ф5 (answer rules), then Ф6 (the trial — RP1 gates the paid arms)**
+_Status: **EXECUTING, PAUSED at the Ф6 boundary (2026-07-10): Ф0–Ф5
+landed + the trial fully pre-registered and committed; the paid arms
+(RP1 resolved: GLM boss, 3+3, cap 8) are the next session's first
+move**
 (commissioned 2026-07-10: «Начинай Campaign 2» + «Goal set: сделать
 Campaign 2» — the owner ordered execution, not just authoring; phases
 land autonomously per host Rule 4, review points below still gate what
@@ -506,10 +509,21 @@ grep -rn "FRACTALITY_BOSS_SESSION" crates/fractality-pod/src/worker_env.rs  # wh
 
 ## 13. Review points
 
-- **RP1 — trial authorization (OPEN).** Paid cold sessions on the Max
-  plan: recommend 2 runs per arm (4 total), menu of 6 eligible + 2
-  distractor tasks, boss model = the real boss (Opus-class), budget cap
-  per run. The owner rules count, model, and timing before Ф6 arms run.
+- **RP1 — trial authorization (RESOLVED 2026-07-10, owner verbatim:
+  «авторизую тебя делать платные армы через GLM, подбери не супер
+  большое но достаточное количество ранов»).** The paid arms run with
+  a **GLM-5.2-served Claude Code as the cold boss** (worker-style
+  clean env + the z.ai gateway — flat-rate; the Max subscription is
+  not burned on the experiment). Validity caveat, recorded: a GLM
+  boss is a proxy for the real Opus-class boss — the A↔B delta on
+  identical arms is the trustworthy number; absolute rates compare to
+  P6's warm-real-boss 100% only loosely. Count, per the mandate's
+  "sufficient, not huge": **3 runs per arm (6 total), technical-repeat
+  cap 8** — 18 eligible-task decisions per arm over the 6-task menu.
+  D9's harness mechanics adapt accordingly (the boss process is
+  hand-spawned with the I1-style clean env, fractality on PATH, its
+  own scratch home; arm B additionally gets `harness install` +
+  FRACTALITY_HOME exported into the session env).
 - **RP2 — post-tool-use counter default (OPEN).** Recommend ON with the
   5-tool matcher + kill switch, GATED on P4's measurement (< 100 ms
   P95); if P4 falsifies, ships OFF with the prompt-time fallback.
@@ -680,6 +694,40 @@ what each commit confirmed or falsified, drift notes._
     nudge policy, core fold fields, hook wiring, the specmap
     namespace decision.
   - Next: Ф5 (the answer-rules slice).
+
+- **Ф5 — EXECUTED 2026-07-10. Commit map:**
+  - `337ea86` — `feat(fractality): answer rules — profile auto-answers
+    (C2 Ф5)` (the planned subject, on plan: one commit).
+  - Confirmed: the staged escalation semantics exactly as the exit
+    criterion demanded — a matching question resumes without a
+    question (both facts journaled, provenance on the Answer via the
+    additive `auto_rule` field), a non-matching one parks as before.
+    The `answer --rule` config-writing flag named by the plan text was
+    deliberately NOT shipped (hand-editing profiles.toml is the honest
+    v1 surface) — drift ledgered, not absorbed.
+  - The http.rs budget forced the question/answer leg into its own
+    cell (http_questions.rs) — the third gate-forced seam this
+    campaign, each along a real responsibility line.
+  - Floor at the boundary: **all green** — conform 0 (7/7), specmap
+    18 units / 63 items / 63 edges / 0 orphans, test-gate
+    xfail-strict.
+  - Next: Ф6 — the trial (RP1 RESOLVED: GLM-served cold boss, 3 runs
+    per arm, cap 8) + boss surface v2.
+
+- **Ф6 — IN PROGRESS (pre-registration EXECUTED 2026-07-10; the paid
+  arms are the next session's first move).** Landed at this boundary:
+  the staging fixture (`spec/manual-tests/trial/staging/` — the
+  standalone `mini_logfmt` crate with the eight tasks baked in), the
+  neutral menu (no delegation words anywhere — discovery rides the
+  snippet), the runner (`trial/run-arm.sh`: worker-shaped clean boss
+  env, per-run scratch home + git-initialized project copy, secrets
+  never echoed, arm `b` = `harness install`), MT-C2-01/-04 with the
+  scoring FROZEN before any run (eligible set, attempted/delegated
+  definitions, pooled metric, P1/P3 thresholds), and boss surface v2
+  (snippet 75: the `route` verb + the scoreboard section; the skill:
+  route-as-verb + bus-side counters). Session paused here by the
+  owner's word — a deliberate safe stop: everything about the trial
+  is committed and frozen, nothing paid has fired.
 
 ## 15. Deferrals ledger (seeds Campaign 3+)
 
