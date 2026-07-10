@@ -1,6 +1,24 @@
 # fractality — WAL (project continuation state)
 
-_Updated: 2026-07-10 (IGNITION **CLOSED** — Phases 0–6 executed and
+_Updated: 2026-07-10 later (**Campaign 2 OPEN and EXECUTING** — owner:
+«Начинай Campaign 2» + «Goal set: сделать Campaign 2». The plan is
+authored and committed:
+[`fractality/v0.1.0/spec/plans/FRACTALITY-INITIATIVE-PLAN-v0.1.md`](fractality/v0.1.0/spec/plans/FRACTALITY-INITIATIVE-PLAN-v0.1.md)
+— initiative system per DEF-1: sessions+attribution → scoreboard → CC
+hook adapter → nudges+routing-as-data → answer-rules slice → measured
+cold trial (RP1 owner-gated). Prerequisite done: barkain deep-studied →
+`spec/refs/notes/barkain-study.md` (BD1–BD6; survey delegated to GLM
+over a sandboxed copy, boss spot-checked). New field law (measured
+twice): opencode `run` auto-rejects reads outside launch cwd — delegate
+inputs must be copied under the scratch cwd; heartbeats must be `echo`
+commands (contract updated). Drift found: `fractality fetch` is
+referenced by playbook/D12 but absent from the binary — repaired in
+plan Ф3. Session scoreboard so far: delegated 2 (barkain survey 5.2;
+cc-docs hooks extraction 5.2), kept: contract fix, spot-check reviews,
+note decisions, plan authoring (never-delegate set). Next in-session:
+Ф0 spikes (hook live-probes, statusline doc capture, trial menu,
+attribution seam, settings ownership)._
+_Prior: 2026-07-10 (IGNITION **CLOSED** — Phases 0–6 executed and
 ledgered in one campaign; the plan's §2 execution record carries the
 final verdicts). The delegate-out / collect-back loop, the swarm with
 budgets and recursive kill, the ask_boss interaction layer, the
@@ -32,7 +50,9 @@ economics). Prior: 2026-07-09 Phase 0 EXECUTED (F1–F10)._
 
 ## Current state
 
-- **The campaign is CLOSED.** Plan:
+- **Campaign 2 (initiative system) is EXECUTING** — plan above; Ф0
+  (spikes, no commits) is the current phase. IGNITION remains the
+  closed prior campaign:
   [`fractality/v0.1.0/spec/plans/FRACTALITY-IGNITION-PLAN-v0.1.md`](fractality/v0.1.0/spec/plans/FRACTALITY-IGNITION-PLAN-v0.1.md)
   — §2 execution record + §14 per-phase ledgers are the canonical
   history; [`reports/`](reports/) carries the owner-facing narratives
@@ -72,15 +92,16 @@ economics). Prior: 2026-07-09 Phase 0 EXECUTED (F1–F10)._
   every gate/tool invocation — a misplaced floor once gated the HOST
   tree and reported green while five fractality findings sat unseen.
 
-## Next (candidates for the owner to choose from — not authorisation)
+## Next (Campaign 2 is authorized and running)
 
-1. **Campaign 2 — the initiative system** (plan §15 DEF-1): scoreboard
-   -driven delegation nudges for a cold boss; the P6=100%-warm number
-   is the floor to beat; routing-as-data + question push-notifications
-   + D18 layer 2 (dynamic permission brokering) are its natural cargo.
-2. **Campaign 3 — RLM** (DEF-2, owner hypothesis recorded in the
-   plan).
-3. Small named leftovers: server-side long-poll wait, F18 result-path
-   knob, monthly quota rollup in `stats`, `wait --verbose`, POSIX
-   fallback kill semantics (DEF-8), `vibe skill install` projection of
-   fractality-delegate on this box.
+1. **Execute Campaign 2 phases in order** (plan §8): Ф0 spikes →
+   Ф1 sessions/attribution → Ф2 scoreboard → Ф3 CC adapter (+ `fetch`
+   repair) → Ф4 nudges/routing-as-data/question push → Ф5 answer-rules
+   slice → Ф6 trial (**RP1: owner must authorize the paid arms before
+   they run**) → Ф7 close. RP2/RP3 defaults recommended in plan §13.
+2. **Campaign 3 — RLM** (DEF-2) — unchanged, after C2.
+3. Leftovers not absorbed by C2: server-side long-poll wait, F18
+   result-path knob, `wait --verbose`, POSIX fallback kill semantics
+   (DEF-8), `vibe skill install` projection on this box. (The `stats`
+   monthly quota rollup and `fractality fetch` ARE absorbed — plan
+   Ф2/Ф3.)
