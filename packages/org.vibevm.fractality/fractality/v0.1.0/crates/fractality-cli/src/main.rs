@@ -12,10 +12,14 @@
 
 mod boss;
 mod broker;
+mod fetch;
+mod harness;
+mod hook;
 mod mc_cmd;
 mod out;
 mod scoreboard;
 mod session;
+mod statusline;
 mod swarm;
 
 use mc_cmd::McCmd;
@@ -177,10 +181,73 @@ enum Cmd {
         #[arg(long)]
         json: bool,
     },
+    /// Download a document once, locally (D12 tariff hygiene: workers
+    /// have web tools denied; the boss fetches, the corpus is shared).
+    Fetch {
+        /// http(s) URL to download.
+        url: String,
+        /// Destination file path.
+        #[arg(long, value_name = "FILE")]
+        out: Utf8PathBuf,
+        /// Overwrite an existing file.
+        #[arg(long)]
+        force: bool,
+    },
+    /// Install, inspect, or remove the harness integration (hooks +
+    /// statusline entries owned by their command string).
+    Harness {
+        #[command(subcommand)]
+        cmd: HarnessCmd,
+    },
+    /// A harness hook target (plumbing: Claude Code invokes this with
+    /// the event's JSON on stdin; never errors, per the availability
+    /// law).
+    #[command(hide = true)]
+    Hook {
+        /// Event verb: session-start | user-prompt-submit |
+        /// post-tool-use | stop | session-end.
+        event: String,
+    },
+    /// The statusline command (plumbing: Claude Code pipes session
+    /// JSON on stdin; prints one line).
+    #[command(hide = true)]
+    Statusline,
     /// The ask_boss MCP stdio server (plumbing: Claude Code launches
     /// this inside workers; not for human use).
     #[command(hide = true)]
     McpBroker,
+}
+
+#[derive(Subcommand)]
+enum HarnessCmd {
+    /// Write our hook + statusline entries (default target:
+    /// .claude/settings.local.json — machine-scoped; RP3).
+    Install {
+        /// Harness name (only `claude-code` today).
+        harness: String,
+        /// Write the committed .claude/settings.json instead.
+        #[arg(long)]
+        project: bool,
+        /// Project directory (defaults to the current one).
+        #[arg(long, value_name = "DIR")]
+        target: Option<Utf8PathBuf>,
+    },
+    /// Report what is installed, stale, foreign, or absent.
+    Status {
+        harness: String,
+        #[arg(long)]
+        project: bool,
+        #[arg(long, value_name = "DIR")]
+        target: Option<Utf8PathBuf>,
+    },
+    /// Remove exactly our entries; foreign configuration survives.
+    Remove {
+        harness: String,
+        #[arg(long)]
+        project: bool,
+        #[arg(long, value_name = "DIR")]
+        target: Option<Utf8PathBuf>,
+    },
 }
 
 #[derive(Subcommand)]
@@ -276,9 +343,42 @@ async fn main() -> std::process::ExitCode {
             SessionCmd::Show { id, json } => session::show(&home, &id, json).await,
             SessionCmd::Ls { open, json } => session::ls(&home, open, json).await,
         },
+        Cmd::Fetch { url, out, force } => fetch::fetch(&url, &out, force).await,
+        Cmd::Harness { cmd } => match cmd {
+            HarnessCmd::Install {
+                harness,
+                project,
+                target,
+            } => harness_dispatch(&harness, || harness::install(target.as_deref(), project)),
+            HarnessCmd::Status {
+                harness,
+                project,
+                target,
+            } => harness_dispatch(&harness, || harness::status(target.as_deref(), project)),
+            HarnessCmd::Remove {
+                harness,
+                project,
+                target,
+            } => harness_dispatch(&harness, || harness::remove(target.as_deref(), project)),
+        },
+        Cmd::Hook { event } => hook::hook(&home, &event).await,
+        Cmd::Statusline => statusline::statusline(&home).await,
         Cmd::McpBroker => broker::serve(&home).await,
     };
     std::process::ExitCode::from(code)
+}
+
+/// Only one harness exists today; naming it keeps the CLI grammar
+/// stable for the day a second adapter lands (I4).
+fn harness_dispatch(name: &str, run: impl FnOnce() -> u8) -> u8 {
+    if name == "claude-code" {
+        run()
+    } else {
+        fail_code(
+            EXIT_NEGATIVE,
+            &format!("unknown harness `{name}` (only `claude-code` is supported today)"),
+        )
+    }
 }
 
 /// `fractality run --packet <file>`: the sync delegation loop (D13).

@@ -17,7 +17,9 @@ camino = { workspace = true }
 clap = { workspace = true }
 fractality-core = { workspace = true }
 fractality-initiative = { workspace = true }
+reqwest = { workspace = true }
 fractality-mc-client = { workspace = true }
+serde = { workspace = true }
 serde_json = { workspace = true }
 specmark = { workspace = true }
 tokio = { workspace = true }

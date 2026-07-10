@@ -46,4 +46,8 @@ env_roots = [
     # Same seam, the D18 broker: the MCP server discovers its run from
     # the pod-injected env (FRACTALITY_RUN_ID) — by design.
     "crates/fractality-cli/src/broker.rs",
+    # The C2 hook adapter: CLAUDE_ENV_FILE is the harness's own seam
+    # for persisting the session export into later Bash calls — the
+    # environment IS the protocol here (plan D2/D4).
+    "crates/fractality-cli/src/hook.rs",
 ]

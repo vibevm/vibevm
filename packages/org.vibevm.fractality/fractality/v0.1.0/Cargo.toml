@@ -51,10 +51,13 @@ tokio = { version = "1.52", features = [
     "signal",
 ] }
 axum = "0.8"
-# No TLS backend on purpose: the bus is localhost HTTP (D10). The boss-side
-# `fractality fetch` (Phase 4, D12) will add a rustls feature when it lands.
+# rustls joined with `fractality fetch` (C2 Ф3, D12) exactly as D11
+# anticipated; the bus itself stays localhost HTTP (D10).
+# The 0.13 feature name is plain `rustls` (the 0.12-era `rustls-tls`
+# is gone — the rename D11 recorded when the TLS-less build first hit it).
 reqwest = { version = "0.13", default-features = false, features = [
     "json",
+    "rustls",
 ] }
 
 # Serialization (house style: TOML for human-authored files, JSONL for journals)
