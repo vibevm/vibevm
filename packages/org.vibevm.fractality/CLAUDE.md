@@ -260,10 +260,17 @@ system prompt + the AGENTS.md chain: workspace block 0.8 KB + host root
 12 KB + task text). Multi-minute silences are GLM turn latency (stdout
 is end-buffered under redirection — hence the file-mtime telemetry),
 not context loading. Hygiene: surgical tasks may run from a scratch cwd
-with absolute paths to shave the host AGENTS.md (~3k tok of cache);
-tasks that self-verify with cargo/conform keep cwd in the workspace.
-`opencode run --print-logs` streams logs to stderr — capture it next
-time telemetry needs more than mtimes.
+to shave the host AGENTS.md (~3k tok of cache) — **but the delegate's
+inputs must live UNDER the launch cwd** (measured 2026-07-10, twice):
+non-interactive `opencode run` auto-rejects any file read outside the
+cwd (`permission requested: external_directory … auto-rejecting`), so
+absolute paths into another tree fail closed — copy the inputs into the
+scratch cwd first (and strip `.git`/assets from copies). Tasks that
+self-verify with cargo/conform keep cwd in the workspace. Heartbeats in
+the work order must be shell commands (`echo "PROGRESS: …"`) — a bare
+`PROGRESS:` line gets executed as a command and errors (measured same
+day). `opencode run --print-logs` streams logs to stderr — capture it
+next time telemetry needs more than mtimes.
 
 ## Interim delegation paradigm — opencode + GLM (mechanics)
 
