@@ -26,7 +26,7 @@ LICENSE + README (IGNITION plan, Phase 0 s6)._
 | id | source | local path (host /refs/) | pin | license | class | study note | status |
 |---|---|---|---|---|---|---|---|
 | S1 | github.com/steipete/agent-scripts — `skills/codex-first/SKILL.md` (delegation-first rules) | src/agent-scripts/ | `d6ed98c` (2026-07-09) | **MIT** (Peter Steinberger) | inspiration-only | notes/codex-first-study.md ✅ | **studied; note on file; clean** |
-| S2 | github.com/barkain/claude-code-workflow-orchestration (initiative/orchestration prototype; owner: early prototype, do not imitate the implementation) | src/claude-code-workflow-orchestration/ | `175311b` (2026-06-20) | **MIT** (Nadav Barkai) | inspiration-only | notes/barkain-study.md (Campaign 2) | cloned, license cleared; deep study deferred to Campaign 2 |
+| S2 | github.com/barkain/claude-code-workflow-orchestration (initiative/orchestration prototype; owner: early prototype, do not imitate the implementation) | src/claude-code-workflow-orchestration/ | `175311b` (2026-06-20) | **MIT** (Nadav Barkai) | inspiration-only | notes/barkain-study.md ✅ | **studied 2026-07-10 (Campaign 2 open); note on file; clean** |
 | S3 | github.com/alexzhang13/rlm (RLM reference implementation, Python) | src/rlm/ | `72d6940` (2026-06-25) | **MIT** (Alex Zhang) | inspiration-only | notes/rlm-study.md (Campaign 3) | cloned, license cleared; deep study deferred to Campaign 3 |
 | S4 | arXiv 2512.24601 — Recursive Language Models (paper, open access) | papers/2512.24601.pdf (9.9 MB) | downloaded 2026-07-09 | arXiv (record exact variant at read) | method: free to implement; text: cite, never copy | notes/rlm-study.md (Campaign 3) | downloaded; read deferred to Campaign 3 |
 | S5 | z.ai GLM coding-plan + Claude Code integration docs (base URL, model ids, env vars, quotas, pricing) | src/zai-docs/ | snapshot 2026-07-09 | vendor docs — facts only, no text reuse | facts source | folded into plan §5 / D6 / D12 ✅ | **facts extracted (Ф0.s3)** |
@@ -39,6 +39,11 @@ LICENSE + README (IGNITION plan, Phase 0 s6)._
 
 - 2026-07-09 — inventory created at ignition; all rows pending intake
   (IGNITION Phase 0 s6/s7 fills pins, licenses, and the S1 study note).
+- 2026-07-10 — Campaign 2 open: S2 deep-studied → `barkain-study.md`
+  (BD1–BD6 keeps + named non-adoptions). Survey delegated to the big
+  slot over a sandboxed copy; boss spot-checked the load-bearing claims
+  against the source. Clean-room posture held (concept-level note, no
+  text/code carried).
 - 2026-07-09 — Ф0 intake: S1–S4 cloned/downloaded at pinned commits,
   **all three repos MIT** (clean-room posture holds regardless — no
   code ported). S1 codex-first fully studied → `codex-first-study.md`
