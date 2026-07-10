@@ -1,6 +1,6 @@
 # FRACTALITY-INITIATIVE-PLAN v0.1 — Campaign 2: the initiative system (scoreboard-driven delegation for a cold boss)
 
-_Status: **EXECUTING — Ф0 and Ф1 landed, floor green; next: Ф2**
+_Status: **EXECUTING — Ф0–Ф2 landed, floor green; next: Ф3 (CC adapter)**
 (commissioned 2026-07-10: «Начинай Campaign 2» + «Goal set: сделать
 Campaign 2» — the owner ordered execution, not just authoring; phases
 land autonomously per host Rule 4, review points below still gate what
@@ -586,6 +586,28 @@ what each commit confirmed or falsified, drift notes._
     GLM-5.2, all delivered first landing), kept with cause: seam
     design, spec/plan prose, the http.rs budget split, reviews.
   - Next: Ф2 (scoreboard engine + verbs).
+
+- **Ф2 — EXECUTED 2026-07-10. Commit map:**
+  - `6f5788a` — `feat(fractality): initiative engine — scoreboard
+    render (C2 Ф2)` (planned subject #1: the seventh crate, pure and
+    clock-free; render_line / render_board / month_web_calls; gated
+    in conform from birth).
+  - `6d8397e` — `feat(fractality): scoreboard verb + stats month
+    rollup (C2 Ф2)` (planned subject #2 + a discovered split: main.rs
+    crossed the 600-line budget with the new verb surface and the
+    conform gate caught it — the mc verb family moved to its own
+    `mc_cmd.rs` cell; ledgered as in-phase discovered work, not
+    silent).
+  - Confirmed: D7 (the board renders only measured facts — the test
+    pins exact strings), the engine/shell separation (D8: five unit
+    tests, zero I/O in the crate), the quota-rollup absorption
+    (IGNITION §15 leftover closed).
+  - Floor at the boundary: **all green** — conform 0 findings (7/7
+    gated), specmap 18 units / 55 items / 55 edges / 0 orphans,
+    test-gate xfail-strict (123 tests). Live smoke: `scoreboard`,
+    `scoreboard --line`, and the `stats` month line against a scratch
+    home with an env-attributed session.
+  - Next: Ф3 (the Claude Code adapter).
 
 ## 15. Deferrals ledger (seeds Campaign 3+)
 
