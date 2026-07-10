@@ -76,8 +76,15 @@ pub enum Event {
     /// waiting_on_boss`, the question rides the record.
     Question { run_id: RunId, question: String },
     /// The boss answered: `waiting_on_boss -> running`, the answer rides
-    /// the record for the broker to collect.
-    Answer { run_id: RunId, answer: String },
+    /// the record for the broker to collect. `auto_rule` names the
+    /// profile rule when mission-control answered without parking the
+    /// boss (Ф5 — the D18 layer-2 slice); `None` is a human/boss answer.
+    Answer {
+        run_id: RunId,
+        answer: String,
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        auto_rule: Option<String>,
+    },
     /// The worker exited. `Some(0)` completes the run; any other code —
     /// or a signal death (`None`) — fails it.
     Completed {
@@ -209,7 +216,7 @@ pub fn apply(runs: &mut BTreeMap<RunId, RunRecord>, envelope: &Envelope) -> Appl
             r.updated_ts_ms = ts;
             ApplyOutcome::Applied
         }),
-        Event::Answer { run_id, answer } => with_run(runs, *run_id, |r| {
+        Event::Answer { run_id, answer, .. } => with_run(runs, *run_id, |r| {
             if !r.state.can_transition_to(RunState::Running) {
                 return ApplyOutcome::IllegalTransition {
                     run_id: *run_id,

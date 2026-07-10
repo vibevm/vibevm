@@ -39,8 +39,14 @@ pub fn router(state: Arc<AppState>) -> Router {
         .route("/runs/{id}", get(get_run))
         .route("/runs/{id}/tree", get(get_tree))
         .route("/runs/{id}/kill", post(kill_run_endpoint))
-        .route("/runs/{id}/question", post(post_question))
-        .route("/runs/{id}/answer", post(post_answer))
+        .route(
+            "/runs/{id}/question",
+            post(crate::http_questions::post_question),
+        )
+        .route(
+            "/runs/{id}/answer",
+            post(crate::http_questions::post_answer),
+        )
         .route("/metrics", get(metrics))
         .route("/sessions", post(hs::session_begin).get(hs::session_list))
         .route("/sessions/{id}", get(hs::session_get))
@@ -128,7 +134,7 @@ async fn auth(
     next.run(req).await
 }
 
-fn parse_run_id(raw: &str) -> Result<RunId, ApiError> {
+pub(crate) fn parse_run_id(raw: &str) -> Result<RunId, ApiError> {
     raw.parse().map_err(|_| {
         ApiError::new(StatusCode::BAD_REQUEST, format!("`{raw}` is not a run id"))
             .hint("run ids are 26-char ULIDs; see `fractality ps`")
@@ -282,51 +288,6 @@ async fn kill_run_endpoint(
 /// `GET /v0/metrics` — the scoreboard aggregates (I3/D16).
 async fn metrics(State(state): State<Arc<AppState>>) -> Json<MetricsResponse> {
     Json(crate::metrics::compute(&state.list_runs(None, None)))
-}
-
-/// `POST /v0/runs/:id/question` — the worker (via its broker) parks on
-/// a question (D18): `running -> waiting_on_boss`, question.md persists
-/// the text on the plane (I2: the bus carries it, the file records it).
-async fn post_question(
-    State(state): State<Arc<AppState>>,
-    Path(id): Path<String>,
-    Json(req): Json<fractality_core::api::QuestionRequest>,
-) -> Result<Json<RunRecord>, ApiError> {
-    let id = parse_run_id(&id)?;
-    if req.question.trim().is_empty() {
-        return Err(
-            ApiError::new(StatusCode::BAD_REQUEST, "an empty question cannot be asked")
-                .hint("send a precise, answerable question"),
-        );
-    }
-    let stored = state.record(Event::Question {
-        run_id: id,
-        question: req.question.clone(),
-    })?;
-    let path = stored.run_dir.join("question.md");
-    if let Err(e) = std::fs::write(path.as_std_path(), &req.question) {
-        tracing::warn!(%path, error = %e, "question.md write failed (bus record stands)");
-    }
-    Ok(Json(stored))
-}
-
-/// `POST /v0/runs/:id/answer` — the boss answers; the run resumes and
-/// the broker returns the text as the worker's tool result.
-async fn post_answer(
-    State(state): State<Arc<AppState>>,
-    Path(id): Path<String>,
-    Json(req): Json<fractality_core::api::AnswerRequest>,
-) -> Result<Json<RunRecord>, ApiError> {
-    let id = parse_run_id(&id)?;
-    let stored = state.record(Event::Answer {
-        run_id: id,
-        answer: req.answer.clone(),
-    })?;
-    let path = stored.run_dir.join("answer.md");
-    if let Err(e) = std::fs::write(path.as_std_path(), &req.answer) {
-        tracing::warn!(%path, error = %e, "answer.md write failed (bus record stands)");
-    }
-    Ok(Json(stored))
 }
 
 #[derive(Debug, Deserialize)]

@@ -112,6 +112,13 @@ pub struct Permissions {
     /// and resumes with the boss's answer.
     #[serde(default)]
     pub ask_boss: bool,
+    /// Auto-answer rules (Campaign 2 Ф5 — the D18 layer-2 slice):
+    /// consulted by mission-control when a question arrives; the first
+    /// match answers immediately instead of parking, journaled with
+    /// the rule's name as provenance. Empty by default — escalations
+    /// park for the boss exactly as before.
+    #[serde(default)]
+    pub answer_rules: Vec<AnswerRule>,
 }
 
 impl Default for Permissions {
@@ -121,7 +128,33 @@ impl Default for Permissions {
             allow_tools: Vec::new(),
             deny_tools: Vec::new(),
             ask_boss: false,
+            answer_rules: Vec::new(),
         }
+    }
+}
+
+/// One auto-answer rule (Campaign 2 Ф5): a case-insensitive substring
+/// match over the worker's question, answered without parking.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct AnswerRule {
+    /// Rule name — journaled as the answer's provenance.
+    pub name: String,
+    /// Case-insensitive substring the question must contain. An empty
+    /// pattern never matches (a rule must say something).
+    pub contains: String,
+    /// The reply returned as the worker's tool result.
+    pub answer: String,
+}
+
+impl Permissions {
+    /// The first rule matching `question`, if any (Ф5: first match
+    /// wins — rule order in profiles.toml is the priority order).
+    pub fn auto_answer(&self, question: &str) -> Option<&AnswerRule> {
+        let q = question.to_lowercase();
+        self.answer_rules
+            .iter()
+            .find(|r| !r.contains.is_empty() && q.contains(&r.contains.to_lowercase()))
     }
 }
 

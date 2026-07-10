@@ -12,6 +12,7 @@
 
 pub mod admission;
 pub mod http;
+pub mod http_questions;
 pub mod http_sessions;
 pub mod identity;
 pub mod journal_store;

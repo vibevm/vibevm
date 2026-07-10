@@ -37,6 +37,16 @@ deny_tools = ["WebFetch", "WebSearch"]   # tariff hygiene (D12)
 # that parks the run on a question (`fractality questions` / `answer`)
 # and resumes with the boss's reply. Off by default.
 # ask_boss = true
+#
+# answer_rules (Campaign 2 Ф5, the D18 layer-2 slice): mission-control
+# consults these when a question arrives; the FIRST rule whose
+# `contains` substring (case-insensitive) matches answers immediately
+# instead of parking — journaled with the rule name as provenance.
+# Order in this file is priority order. None by default.
+# [[profile.glm.permissions.answer_rules]]
+# name = "push-work-branches"
+# contains = "may i push"
+# answer = "Yes — push to your fractality/* work branch; never to main."
 
 [profile.glm.pricing]      # metrics only; flat = subscription plan
 flat = true
