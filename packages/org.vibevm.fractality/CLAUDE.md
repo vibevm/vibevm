@@ -312,6 +312,31 @@ narrowest useful cwd; never hand over secrets; never give host-repo
 write scope without a branch/worktree and boss review. Every delegation
 is field data for Phase 5's playbooks — record surprises in `WAL.md`.
 
+## Phase reports (owner directive, 2026-07-10)
+
+Every campaign phase ends with an owner-facing report in
+[`reports/`](reports/) at this workspace root — same habit as the
+IGNITION narratives, now a standing rule. Owner's words (verbatim):
+«внутри — что было сделано, какие у тебя на этот счет идеи и
+размышления, главное: какие решения были приняты!!! что осталось
+недоделанным, какие баги не пофикшены, какие вещи нужно сделать
+глобально и стратегически чтобы стало лучше — короче, все косяки и
+висяки».
+
+- **Filename:** `<дата>-<время>-<кампания>-<фаза>-<краткое описание>.md`,
+  the date in the owner-specified reverse order **год-число-месяц**
+  (verbatim: «дата - в обратном порядке год число месяц», example
+  `2026-02-01-13:42-…`), time 24h. NTFS forbids `:` in filenames, so
+  the time separator is `-` on disk (e.g. `2026-10-07-13-25-campaign2-f3-cc-adapter.md`).
+  <!-- REVIEW: if ISO год-месяц-число was actually intended (the
+  spoken order says число before месяц), flipping this line is the
+  only edit needed. -->
+- **Body:** what was done · ideas and reflections · **the decisions
+  taken** (the main thing) · what is left undone · unfixed bugs ·
+  global/strategic improvements — every косяк and висяк, honestly.
+- The plan's §14 ledger stays the canonical commit map; reports are
+  the narrative the owner reads.
+
 ## End of session
 
 Rewrite `WAL.md` to the current state (checkpoint, not journal). On a
