@@ -63,6 +63,14 @@ pub struct SessionRecord {
     pub ended_ts_ms: Option<u64>,
     #[serde(default)]
     pub counters: InitiativeCounters,
+    /// When the last nudge was injected (the engine's cooldown anchor,
+    /// D5). Envelope time via the fold — deterministic on replay.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub last_nudge_ts_ms: Option<u64>,
+    /// Runs whose parked question was already alerted at a Stop (D5:
+    /// once per question). Bounded by the number of parked runs.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub alerted_runs: Vec<RunId>,
 }
 
 impl SessionRecord {
@@ -170,8 +178,16 @@ pub fn apply_session(
                     // BD1: choosing the right path cleans the slate.
                     c.work_tools_since_delegation = 0;
                 }
-                SessionNote::NudgeSent { .. } => c.nudges_sent += 1,
-                SessionNote::QuestionAlert { .. } => c.question_alerts += 1,
+                SessionNote::NudgeSent { .. } => {
+                    c.nudges_sent += 1;
+                    s.last_nudge_ts_ms = Some(ts);
+                }
+                SessionNote::QuestionAlert { run_id } => {
+                    c.question_alerts += 1;
+                    if !s.alerted_runs.contains(run_id) {
+                        s.alerted_runs.push(*run_id);
+                    }
+                }
             }
             s.updated_ts_ms = ts;
             SessionApplyOutcome::Applied
@@ -208,6 +224,8 @@ mod tests {
             started_ts_ms: 1,
             updated_ts_ms: 1,
             ended_ts_ms: None,
+            last_nudge_ts_ms: None,
+            alerted_runs: Vec::new(),
             counters: InitiativeCounters::default(),
         }
     }

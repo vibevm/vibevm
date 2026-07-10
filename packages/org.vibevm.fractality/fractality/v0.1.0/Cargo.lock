@@ -446,6 +446,8 @@ version = "0.1.0"
 dependencies = [
  "core-ai-native-specmark",
  "fractality-core",
+ "serde",
+ "toml",
 ]
 
 [[package]]

@@ -7,6 +7,9 @@
 //! every behavior is a plain unit test. The CLI verbs and the harness
 //! hooks are thin shells around this crate.
 
+pub mod nudge;
+pub mod route;
 pub mod scoreboard;
 
+pub use nudge::{Nudge, NudgeConfig, decide_prompt_nudge, decide_stop_alert};
 pub use scoreboard::{month_web_calls, render_board, render_line};

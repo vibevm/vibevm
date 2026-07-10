@@ -115,6 +115,8 @@ mod tests {
                 started_ts_ms: 1,
                 updated_ts_ms: 1,
                 ended_ts_ms: None,
+                last_nudge_ts_ms: None,
+                alerted_runs: Vec::new(),
                 counters: InitiativeCounters {
                     work_tools_since_delegation: slate,
                     work_tools_total: slate + 3,

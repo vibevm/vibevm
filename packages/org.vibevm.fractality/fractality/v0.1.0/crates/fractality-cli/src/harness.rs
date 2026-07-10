@@ -12,11 +12,46 @@
 //! `~/.fractality/profiles.toml`); `--project` opts into the committed
 //! `.claude/settings.json` (RP3).
 
+use camino::Utf8PathBuf;
+use clap::Subcommand;
 use serde_json::{Value, json};
 
 use crate::{EXIT_INFRA, EXIT_NEGATIVE, EXIT_OK, fail_code};
 
 specmark::scope!("spec://fractality/PROP-001#sessions");
+
+/// The `fractality harness <verb>` grammar (lives with its cell).
+#[derive(Subcommand)]
+pub(crate) enum HarnessCmd {
+    /// Write our hook + statusline entries (default target:
+    /// .claude/settings.local.json — machine-scoped; RP3).
+    Install {
+        /// Harness name (only `claude-code` today).
+        harness: String,
+        /// Write the committed .claude/settings.json instead.
+        #[arg(long)]
+        project: bool,
+        /// Project directory (defaults to the current one).
+        #[arg(long, value_name = "DIR")]
+        target: Option<Utf8PathBuf>,
+    },
+    /// Report what is installed, stale, foreign, or absent.
+    Status {
+        harness: String,
+        #[arg(long)]
+        project: bool,
+        #[arg(long, value_name = "DIR")]
+        target: Option<Utf8PathBuf>,
+    },
+    /// Remove exactly our entries; foreign configuration survives.
+    Remove {
+        harness: String,
+        #[arg(long)]
+        project: bool,
+        #[arg(long, value_name = "DIR")]
+        target: Option<Utf8PathBuf>,
+    },
+}
 
 /// The hook events the adapter owns, with their matchers and timeouts
 /// (seconds; every budget is far above the measured ~6 ms exe spawn,

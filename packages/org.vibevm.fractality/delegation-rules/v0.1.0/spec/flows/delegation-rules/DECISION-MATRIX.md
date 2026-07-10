@@ -143,6 +143,15 @@ Delegated output is advisory until proven (DC5):
 
 ## Routing is data {#routing}
 
+This procedure has an **executable form**: the fractality initiative
+engine ships it as data + calculus
+(`fractality-initiative/src/matrix.toml` + `route.rs`; surfaced as
+`fractality route --error-cost … --context … --verify … --size …`),
+and its tests pin the calculus to this document's worked-verdicts
+table — the two cannot drift without failing the floor. This markdown
+stays the normative prose; the engine is its projection (Campaign 2
+D6).
+
 The matrix names *slots*, not vendors: `model = "big"` / `"small"`
 resolve through the run's profile (D6), so the same policy governs GLM
 today and any future backend. Per-model behavior — strengths, budget

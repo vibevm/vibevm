@@ -10,4 +10,6 @@ publish.workspace = true
 
 [dependencies]
 fractality-core = { workspace = true }
+serde = { workspace = true }
 specmark = { workspace = true }
+toml = { workspace = true }

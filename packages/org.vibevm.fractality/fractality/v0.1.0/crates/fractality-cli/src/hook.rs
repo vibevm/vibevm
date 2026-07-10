@@ -39,11 +39,23 @@ struct HookInput {
     /// PostToolUse serves the tool's wall time (finding F21).
     #[serde(default)]
     duration_ms: Option<u64>,
+    /// True when this Stop already continues from a prior stop hook —
+    /// the loop guard the harness documents; we never alert into it.
+    #[serde(default)]
+    stop_hook_active: bool,
 }
 
 /// Entry point for every `fractality hook <event>` verb. Never fails:
 /// see the availability law above.
 pub(crate) async fn hook(home: &camino::Utf8Path, event: &str) -> u8 {
+    // The kill switch (D6): one env var silences the whole initiative
+    // layer without touching any settings file.
+    if matches!(
+        std::env::var("FRACTALITY_INITIATIVE").as_deref(),
+        Ok("off") | Ok("0") | Ok("false")
+    ) {
+        return EXIT_OK;
+    }
     let mut raw = String::new();
     if std::io::Read::read_to_string(&mut std::io::stdin(), &mut raw).is_err() {
         return EXIT_OK;
@@ -112,12 +124,67 @@ pub(crate) async fn hook(home: &camino::Utf8Path, event: &str) -> u8 {
         "session-end" => {
             let _ = client.session_end(sid).await;
         }
-        // user-prompt-submit and stop resolve the session (above) and
-        // say nothing in Ф3; the nudge policy and the parked-question
-        // alert wire them in Ф4.
+        "user-prompt-submit" => {
+            let cfg = load_config(home);
+            let Ok(session) = client.session_metrics(sid).await else {
+                return EXIT_OK;
+            };
+            let now = fractality_core::time::now_ms();
+            if let Some(nudge) = fractality_initiative::decide_prompt_nudge(&cfg, &session, now) {
+                let out = serde_json::json!({
+                    "hookSpecificOutput": {
+                        "hookEventName": "UserPromptSubmit",
+                        "additionalContext": nudge.text,
+                    }
+                });
+                println!("{out}");
+                let _ = client
+                    .session_note(
+                        sid,
+                        SessionNote::NudgeSent {
+                            reason: nudge.reason,
+                        },
+                    )
+                    .await;
+            }
+        }
+        "stop" => {
+            if input.stop_hook_active {
+                return EXIT_OK;
+            }
+            let cfg = load_config(home);
+            let Ok(session) = client.session_metrics(sid).await else {
+                return EXIT_OK;
+            };
+            if let Some((run_id, text)) = fractality_initiative::decide_stop_alert(&cfg, &session) {
+                // Stop-time additionalContext is continue-feedback by
+                // the harness's contract: the turn keeps going exactly
+                // once per unanswered question (the ack below dedupes).
+                let out = serde_json::json!({
+                    "hookSpecificOutput": {
+                        "hookEventName": "Stop",
+                        "additionalContext": text,
+                    }
+                });
+                println!("{out}");
+                let _ = client
+                    .session_note(sid, SessionNote::QuestionAlert { run_id })
+                    .await;
+            }
+        }
         _ => {}
     }
     EXIT_OK
+}
+
+/// `<home>/initiative.toml`, absent or malformed → the default posture
+/// (availability law: configuration can tune the initiative layer, it
+/// can never break a session).
+fn load_config(home: &camino::Utf8Path) -> fractality_initiative::NudgeConfig {
+    match std::fs::read_to_string(home.join("initiative.toml").as_std_path()) {
+        Ok(text) => fractality_initiative::NudgeConfig::from_toml_str(&text),
+        Err(_) => fractality_initiative::NudgeConfig::default(),
+    }
 }
 
 /// Persists the session export for later Bash calls via the harness's

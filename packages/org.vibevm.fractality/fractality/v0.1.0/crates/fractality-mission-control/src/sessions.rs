@@ -66,6 +66,8 @@ impl AppState {
             started_ts_ms: now,
             updated_ts_ms: now,
             ended_ts_ms: None,
+            last_nudge_ts_ms: None,
+            alerted_runs: Vec::new(),
             counters: InitiativeCounters::default(),
         };
         let envelope = SessionEnvelope::now(SessionEvent::SessionBegan {

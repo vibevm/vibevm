@@ -5,6 +5,8 @@
 //! it and exports the id as `FRACTALITY_BOSS_SESSION` for the rest of
 //! the session. Everything else is D17 read-verb grammar.
 
+use camino::Utf8PathBuf;
+use clap::Subcommand;
 use fractality_core::SessionRecord;
 use fractality_core::ids::SessionId;
 use fractality_mc_client::{McClient, connect_or_start};
@@ -12,6 +14,50 @@ use fractality_mc_client::{McClient, connect_or_start};
 use crate::{EXIT_NEGATIVE, EXIT_OK, err_code, fail_code};
 
 specmark::scope!("spec://fractality/PROP-001#architecture");
+
+/// The `fractality session <verb>` grammar (lives with its cell).
+#[derive(Subcommand)]
+pub(crate) enum SessionCmd {
+    /// Begin (or resume) a session; prints the session id on stdout —
+    /// compose: `export FRACTALITY_BOSS_SESSION=$(fractality session
+    /// begin --harness claude-code --external-id <uuid>)`.
+    Begin {
+        /// Harness label, e.g. `claude-code`.
+        #[arg(long)]
+        harness: String,
+        /// The harness's own session identifier.
+        #[arg(long, value_name = "ID")]
+        external_id: String,
+        /// Session working directory (defaults to the current one).
+        #[arg(long, value_name = "DIR")]
+        cwd: Option<Utf8PathBuf>,
+        /// Machine-readable output.
+        #[arg(long)]
+        json: bool,
+    },
+    /// Mark a session ended (idempotent).
+    End {
+        /// Session id (or unique prefix).
+        id: String,
+    },
+    /// Show one session: record, counters, runs bucket, parked questions.
+    Show {
+        /// Session id (or unique prefix).
+        id: String,
+        /// Machine-readable output.
+        #[arg(long)]
+        json: bool,
+    },
+    /// List sessions, newest last.
+    Ls {
+        /// Only sessions still open.
+        #[arg(long)]
+        open: bool,
+        /// Machine-readable output.
+        #[arg(long)]
+        json: bool,
+    },
+}
 
 /// `fractality session begin --harness <h> --external-id <id>`.
 pub(crate) async fn begin(

@@ -12,6 +12,14 @@ dispositioned = []
 
 # Installed packages' spec trees, read for URI RESOLUTION only
 # (PROP-014 §7.1) — discovered from vibedeps/ at init time.
+
+# The sibling policy package (C2 D6): the routing calculus in
+# fractality-initiative implements ITS contract, so its anchors must
+# resolve here. A sibling path, not a vibedeps slot — this gate runs
+# only inside the monorepo, where the layout is guaranteed.
+[[external_specs]]
+namespace = "delegation-rules"
+root = "../../delegation-rules/v0.1.0/spec/flows/delegation-rules"
 [[external_specs]]
 namespace = "addressable-specs"
 root = "vibedeps/flow-addressable-specs/0.1.0/spec"

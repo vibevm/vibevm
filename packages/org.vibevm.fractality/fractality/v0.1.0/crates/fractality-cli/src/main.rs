@@ -17,12 +17,15 @@ mod harness;
 mod hook;
 mod mc_cmd;
 mod out;
+mod route_cmd;
 mod scoreboard;
 mod session;
 mod statusline;
 mod swarm;
 
+use harness::HarnessCmd;
 use mc_cmd::McCmd;
+use session::SessionCmd;
 
 use camino::Utf8PathBuf;
 use clap::{Parser, Subcommand};
@@ -181,6 +184,26 @@ enum Cmd {
         #[arg(long)]
         json: bool,
     },
+    /// Score a task on the delegation matrix's four axes and print the
+    /// verdict (the §verdict procedure as data). Exit: 0 delegate,
+    /// 1 keep, 2 bad axes.
+    Route {
+        /// reversible | irreversible
+        #[arg(long, value_name = "V")]
+        error_cost: String,
+        /// compilable | boot-loadable | untransferable
+        #[arg(long, value_name = "V")]
+        context: String,
+        /// mechanical | judgment
+        #[arg(long, value_name = "V")]
+        verify: String,
+        /// S | M | L
+        #[arg(long, value_name = "V")]
+        size: String,
+        /// Machine-readable output.
+        #[arg(long)]
+        json: bool,
+    },
     /// Download a document once, locally (D12 tariff hygiene: workers
     /// have web tools denied; the boss fetches, the corpus is shared).
     Fetch {
@@ -216,81 +239,6 @@ enum Cmd {
     /// this inside workers; not for human use).
     #[command(hide = true)]
     McpBroker,
-}
-
-#[derive(Subcommand)]
-enum HarnessCmd {
-    /// Write our hook + statusline entries (default target:
-    /// .claude/settings.local.json — machine-scoped; RP3).
-    Install {
-        /// Harness name (only `claude-code` today).
-        harness: String,
-        /// Write the committed .claude/settings.json instead.
-        #[arg(long)]
-        project: bool,
-        /// Project directory (defaults to the current one).
-        #[arg(long, value_name = "DIR")]
-        target: Option<Utf8PathBuf>,
-    },
-    /// Report what is installed, stale, foreign, or absent.
-    Status {
-        harness: String,
-        #[arg(long)]
-        project: bool,
-        #[arg(long, value_name = "DIR")]
-        target: Option<Utf8PathBuf>,
-    },
-    /// Remove exactly our entries; foreign configuration survives.
-    Remove {
-        harness: String,
-        #[arg(long)]
-        project: bool,
-        #[arg(long, value_name = "DIR")]
-        target: Option<Utf8PathBuf>,
-    },
-}
-
-#[derive(Subcommand)]
-enum SessionCmd {
-    /// Begin (or resume) a session; prints the session id on stdout —
-    /// compose: `export FRACTALITY_BOSS_SESSION=$(fractality session
-    /// begin --harness claude-code --external-id <uuid>)`.
-    Begin {
-        /// Harness label, e.g. `claude-code`.
-        #[arg(long)]
-        harness: String,
-        /// The harness's own session identifier.
-        #[arg(long, value_name = "ID")]
-        external_id: String,
-        /// Session working directory (defaults to the current one).
-        #[arg(long, value_name = "DIR")]
-        cwd: Option<Utf8PathBuf>,
-        /// Machine-readable output.
-        #[arg(long)]
-        json: bool,
-    },
-    /// Mark a session ended (idempotent).
-    End {
-        /// Session id (or unique prefix).
-        id: String,
-    },
-    /// Show one session: record, counters, runs bucket, parked questions.
-    Show {
-        /// Session id (or unique prefix).
-        id: String,
-        /// Machine-readable output.
-        #[arg(long)]
-        json: bool,
-    },
-    /// List sessions, newest last.
-    Ls {
-        /// Only sessions still open.
-        #[arg(long)]
-        open: bool,
-        /// Machine-readable output.
-        #[arg(long)]
-        json: bool,
-    },
 }
 
 #[tokio::main]
@@ -343,6 +291,13 @@ async fn main() -> std::process::ExitCode {
             SessionCmd::Show { id, json } => session::show(&home, &id, json).await,
             SessionCmd::Ls { open, json } => session::ls(&home, open, json).await,
         },
+        Cmd::Route {
+            error_cost,
+            context,
+            verify,
+            size,
+            json,
+        } => route_cmd::route(&error_cost, &context, &verify, &size, json),
         Cmd::Fetch { url, out, force } => fetch::fetch(&url, &out, force).await,
         Cmd::Harness { cmd } => match cmd {
             HarnessCmd::Install {

@@ -39,7 +39,7 @@
       "crate_name": "fractality-cli",
       "file": "crates/fractality-cli/src/main.rs",
       "item_kind": "mod",
-      "line": 32,
+      "line": 35,
       "symbol": "fractality_cli"
     },
     {
@@ -67,7 +67,7 @@
       "crate_name": "fractality-cli",
       "file": "crates/fractality-cli/src/harness.rs",
       "item_kind": "mod",
-      "line": 19,
+      "line": 21,
       "symbol": "fractality_cli::harness"
     },
     {
@@ -93,6 +93,13 @@
     },
     {
       "crate_name": "fractality-cli",
+      "file": "crates/fractality-cli/src/route_cmd.rs",
+      "item_kind": "mod",
+      "line": 10,
+      "symbol": "fractality_cli::route_cmd"
+    },
+    {
+      "crate_name": "fractality-cli",
       "file": "crates/fractality-cli/src/scoreboard.rs",
       "item_kind": "mod",
       "line": 11,
@@ -102,7 +109,7 @@
       "crate_name": "fractality-cli",
       "file": "crates/fractality-cli/src/session.rs",
       "item_kind": "mod",
-      "line": 14,
+      "line": 16,
       "symbol": "fractality_cli::session"
     },
     {
@@ -209,6 +216,20 @@
       "item_kind": "mod",
       "line": 22,
       "symbol": "fractality_core::worker"
+    },
+    {
+      "crate_name": "fractality-initiative",
+      "file": "crates/fractality-initiative/src/nudge.rs",
+      "item_kind": "mod",
+      "line": 10,
+      "symbol": "fractality_initiative::nudge"
+    },
+    {
+      "crate_name": "fractality-initiative",
+      "file": "crates/fractality-initiative/src/route.rs",
+      "item_kind": "mod",
+      "line": 20,
+      "symbol": "fractality_initiative::route"
     },
     {
       "crate_name": "fractality-initiative",
@@ -458,7 +479,7 @@
     {
       "file": "crates/fractality-cli/src/main.rs",
       "from_symbol": "fractality_cli",
-      "line": 32,
+      "line": 35,
       "provenance": "authored",
       "uri": "spec://fractality/PROP-001#architecture",
       "verb": "implements"
@@ -490,7 +511,7 @@
     {
       "file": "crates/fractality-cli/src/harness.rs",
       "from_symbol": "fractality_cli::harness",
-      "line": 19,
+      "line": 21,
       "provenance": "authored",
       "uri": "spec://fractality/PROP-001#sessions",
       "verb": "implements"
@@ -520,6 +541,14 @@
       "verb": "implements"
     },
     {
+      "file": "crates/fractality-cli/src/route_cmd.rs",
+      "from_symbol": "fractality_cli::route_cmd",
+      "line": 10,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#sessions",
+      "verb": "implements"
+    },
+    {
       "file": "crates/fractality-cli/src/scoreboard.rs",
       "from_symbol": "fractality_cli::scoreboard",
       "line": 11,
@@ -530,7 +559,7 @@
     {
       "file": "crates/fractality-cli/src/session.rs",
       "from_symbol": "fractality_cli::session",
-      "line": 14,
+      "line": 16,
       "provenance": "authored",
       "uri": "spec://fractality/PROP-001#architecture",
       "verb": "implements"
@@ -653,6 +682,22 @@
       "line": 22,
       "provenance": "authored",
       "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-initiative/src/nudge.rs",
+      "from_symbol": "fractality_initiative::nudge",
+      "line": 10,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#sessions",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-initiative/src/route.rs",
+      "from_symbol": "fractality_initiative::route",
+      "line": 20,
+      "provenance": "authored",
+      "uri": "spec://delegation-rules/DECISION-MATRIX#verdict",
       "verb": "implements"
     },
     {

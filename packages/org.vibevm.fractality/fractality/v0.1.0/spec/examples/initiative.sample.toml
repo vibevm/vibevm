@@ -1,0 +1,19 @@
+# fractality initiative configuration (Campaign 2 D6/D8).
+# Copy to <home>/initiative.toml (default home: ~/.fractality).
+# Every field is optional; an absent or malformed file means the
+# defaults below. The hard kill switch is the environment variable
+# FRACTALITY_INITIATIVE=off (no file edit needed).
+
+# Master switch for nudges and alerts.
+enabled = true
+
+# Work-shaped tool calls (Bash/Edit/Write/MultiEdit/NotebookEdit)
+# since the last delegation before a prompt-time nudge fires.
+work_tool_threshold = 7
+
+# Minimum seconds between prompt-time nudges (anti-fatigue).
+cooldown_secs = 300
+
+# Interrupt one Stop per parked worker question (never more than once
+# per question; never when the stop is already a hook continuation).
+question_alerts = true
