@@ -428,7 +428,10 @@ _(filled per phase; empty at draft)_
 
 | phase | commits | confirmed / falsified | notes |
 |---|---|---|---|
-| Ф0 | `82dc31c` + the RP-R1 commit | — | plan drafted 22:15; RP-R1 RESOLVED 22:27 (approve + goal ruling); execution begins |
+| Ф0 | `82dc31c`, `12f02da` | — | plan drafted 22:15; RP-R1 RESOLVED 22:27 (approve + goal ruling); execution begins |
+| Ф1 | — (gitignored artifacts) | P-R1 CONFIRMED: ≥16 qualifying repos, ≥17 papers before the cut | W1: deep-research, 103 agents / 710 tool calls / 24 claims verified 3-0, 31 min (raw: `refs/study/rlm-waves/wave1-deep-research.md`). W2: 12 frozen queries, executed before reading W1 (raw: `wave2-web-search.md`). Independence held. |
+| Ф2 | `a4c9611` | overlap exactly 60% (9/15; membership = name in wave record) — P-R2 verdict at close | 5/5/5 cut + runners-up ledgered in `notes/rlm-source-selection.md`; INVENTORY S10–S26 with license verdicts BEFORE study (rule 1). W1-only finds: ROMA, 2506.16411, SRLM; W2-only: ReDel, RAO, minRLM + the practitioner shelf. |
+| Ф3 | INVENTORY pin commit | — | Clones @depth-1 with pins: roma `a6e3bb4`, fast-rlm `f25f310`, redel `79eb988`, recursive-llm `cc7a826`. 7 PDFs valid (incl. anchor v3 9.9 MB). 6 article snapshots + ACCESS-DATES in `refs/articles/`. Real `~` untouched; all downloads gitignored. |
 
 ## 14. Log {#log}
 
