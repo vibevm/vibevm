@@ -42,7 +42,23 @@ purpose, verbatim: «сквозь него стоит посмотреть на 
 numbered them 1/2/3/3. Two reference schematics accompanied the
 mandate — reproduced in §2.)
 
-## 1. The four pillars {#pillars}
+### Addendum — attachable terminals (owner, 2026-07-10, later the same session, verbatim) {#mandate-addendum}
+
+> Один из важных апгрейдов в будущем: возможность запускать
+> отдельные агенты не просто как процессы, а как полноценные
+> виртуальные headless-терминалы. К которым потом можно
+> подключиться через GUI и посмотреть, что там внутри. Структуру с
+> mission control и подами это не отменяет, это её апгрейд — под
+> будет запускать headless-терминалы. Которые будут полноценными
+> терминалами, с которыми потом можно будет подключиться, например,
+> из Gnome Terminal или Warp, и работать интерактивно. Этот факт
+> может оказать важное влияние на какие-то последующие технические
+> решения организации общения mission-control, pod, агентов, и так
+> далее.
+
+(Recorded as pillar V5 below.)
+
+## 1. The pillars {#pillars}
 
 ### V1 — any agent can become a boss {#v1-promotion}
 
@@ -121,6 +137,40 @@ Mythos > Fable > Opus > GLM 5.2 > Sonnet > GLM-5-Turbo > Haiku
   names, and availability drift per box and per month; the
   `delegation-rules` matrix and profiles decide which rungs exist
   here (PROP-001 §2 profiles make the fabric model-agnostic).
+
+### V5 — attachable headless terminals (the runtime upgrade) {#v5-terminals}
+
+**Workers upgrade from bare processes to attachable terminal
+sessions.** A future fabric launches each agent not as a headless
+process with piped stdio, but as a **full virtual terminal running
+headless** — a real PTY-backed session a human can later *attach
+to* from a GUI terminal (Gnome Terminal, Warp, …) and work in
+interactively, seeing everything that happened inside.
+
+- **Nothing about MC/pods is displaced** — owner verbatim: this is
+  an upgrade of the structure, not a replacement; *the pod launches
+  the headless terminals*. The pod stays the launcher; the launched
+  unit gains a terminal identity on top of its run identity.
+- **Design-shaping now, build later.** The owner flags this may
+  importantly influence upcoming decisions about MC ↔ pod ↔ agent
+  communication. Near-term designs must not foreclose it:
+  - **The transport seam:** never bake in "a worker's stdio is a
+    private pipe owned by MC alone". The capture path
+    (`worker-stdout.jsonl`) must tolerate the stream source being a
+    PTY with **multiple readers** — and, once a human attaches,
+    **keystrokes arriving mid-run** from outside the fabric.
+  - **Files stay the persistence plane (I2):** attach is a live
+    *view*; the durable record still lands in the run dir
+    regardless of who is watching.
+  - **Attach is an access surface:** authenticated, and journaled
+    like any other event (I3) — who attached, when, to which run.
+- **Synergies with the other pillars:**
+  - **V1 interactive promotion gets its natural mechanism** —
+    attach to a running subordinate, judge it live, re-launch it
+    wearing the boss surface.
+  - **The live-observation law gets its product form** — today it
+    is hand-run (log files + watchers + heartbeat markers); an
+    attachable terminal replaces tailing with looking.
 
 ## 2. The two reference schematics {#schematics}
 
@@ -202,6 +252,11 @@ pods, MC, files — not as a green-field diagram:
 - **`delegation-rules`:** the ladder (§1 V4), the promotion
   criteria (§1 V1), and escalation/advice policy are matrix
   columns — data, versioned in the policy package, per D6.
+- **MC ↔ pod ↔ agent transport decisions:** any upcoming protocol
+  work (C3's RLM plumbing, PP-002's acceptance schema, bus/stream
+  changes) treats worker I/O as *terminal-session-shaped*, not
+  pipe-shaped — or at minimum keeps the seam where a PTY-hosted,
+  attachable worker (V5) slots in without a rewrite.
 
 ## 5. Open questions (for the Campaign 3 mandate) {#open-questions}
 
@@ -217,3 +272,13 @@ pods, MC, files — not as a green-field diagram:
 - Cross-family advisors (GPT-5.5/5.6) require new backend adapters
   — sequencing vs the Codex/VibeVM-Pixel backends PROP-001 §7
   already names.
+- Terminal-session substrate (V5): what hosts the PTY — a
+  multiplexer we own (tmux/screen-shaped), an SSH-served session,
+  or an OS facility (ConPTY on Windows vs Unix pty — the named GUI
+  clients are Linux/macOS-first, this dev box is Windows)? And what
+  do Gnome Terminal / Warp actually speak to attach — most likely a
+  client command the run exposes (`fractality attach <run>`), not a
+  bespoke protocol?
+- Does an attached human's interactive turn burn the run's budget,
+  and how does attach interact with kill-trees (may MC reap a run a
+  human is sitting in)?

@@ -210,7 +210,8 @@ journal, multi-machine federation, further backends (Codex; **VibeVM
 Pixel** — the owner's planned Opus-native agent), the initiative system
 (Campaign 2), the RLM protocol (Campaign 3) — and, around it, the
 owner's recursive-fabric vision (recursive boss promotion,
-escalation up the hierarchy, advisor calls:
+escalation up the hierarchy, advisor calls, attachable headless
+worker terminals:
 [`VISION-RECURSIVE-FABRIC.md`](VISION-RECURSIVE-FABRIC.md)), an execution-checkpointing
 layer in the spirit of Entire.io's Checkpoints — per-turn workspace +
 history snapshots with rewind and audit over runs; the owner tracks an
