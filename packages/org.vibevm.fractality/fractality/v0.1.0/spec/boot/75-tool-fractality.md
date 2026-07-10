@@ -12,12 +12,32 @@ pods under a mission-control daemon. Everything below assumes the
 Before doing bulk, mechanical, or read-and-summarize work yourself,
 consult the delegation matrix (`flow:org.vibevm.fractality/
 delegation-rules`, boot snippet 77): **delegate when verification is
-cheaper than generation.** Typical delegable shapes: templated test
+cheaper than generation.** The matrix is executable — score the task
+and read the verdict:
+
+```sh
+fractality route --error-cost reversible --context compilable \
+    --verify mechanical --size M        # exit 0 delegate · 1 keep
+```
+
+Typical delegable shapes: templated test
 suites, bounded refactors and sweeps, fixture/boilerplate generation,
 module drafts against exact APIs, doc extraction and first-draft
 summaries. The never-delegate set (secrets, irreversible ops,
 architecture/spec authoring, ambiguity-as-design, review of delegated
 output, tiny edits) stays with you — always.
+
+## Your scoreboard {#scoreboard}
+
+`fractality scoreboard` shows measured facts for your session and the
+fabric: delegations, outcomes, parked questions with ages, the
+monthly web-quota burn (`--line` is the one-line strip). Where the
+Claude Code integration is installed (`fractality harness install
+claude-code`), the scoreboard greets the session automatically, a
+parked worker question interrupts one stop with the exact `answer`
+command, and a threshold nudge fires when you grind work tools
+without delegating — all facts, never blocking, config in
+`<home>/initiative.toml`, kill switch `FRACTALITY_INITIATIVE=off`.
 
 ## One command per shape {#commands}
 

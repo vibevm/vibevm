@@ -13,7 +13,14 @@ yourself.
 ## 1. Route
 
 Score the task: error cost / context transferability / verifiability /
-size (matrix §axes, §verdict). Survivors route: small × mechanical →
+size (matrix §axes, §verdict) — the calculus is a verb:
+
+```sh
+fractality route --error-cost reversible --context boot-loadable \
+    --verify mechanical --size L      # → delegate · slot=big · scenario=2
+```
+
+Survivors route: small × mechanical →
 `model = "small"`; bigger → `model = "big"` as a coarse one-shot. Pick
 scenario 1 (compile exact files, APIs, patterns, commands into the
 goal) or scenario 2 (order the worker to read named corpus files
@@ -61,6 +68,7 @@ model = "big"              # or "small" per the matrix
    contributor PR — does it do the work order, nothing else?
 3. Run the project's own gates; green gates + read diff = merge;
    anything else → one bounded retry (small → big) or reclaim.
-4. Record surprises in the producing model's playbook, and the
-   delegation in the session's scoreboard (delegated N / kept M with
-   reasons).
+4. Record surprises in the producing model's playbook. The session's
+   delegation counters accumulate on the bus automatically
+   (`fractality scoreboard` shows them); keep the "kept: why" half in
+   your session notes — the scoreboard can only measure what you DID.
