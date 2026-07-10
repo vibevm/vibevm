@@ -51,6 +51,13 @@ impl ClaudeCodeBackend {
             camino::Utf8PathBuf::from(&profile.config_dir)
         }
     }
+
+    /// Where the ask_boss MCP config lands when the profile serves the
+    /// broker (D18): in the run dir, beside the packet — the pod writes
+    /// it, the invocation names it.
+    pub fn mcp_config_path(ctx: &RunContext) -> camino::Utf8PathBuf {
+        ctx.run_dir.join("mcp-broker.json")
+    }
 }
 
 impl WorkerBackend for ClaudeCodeBackend {
@@ -69,11 +76,20 @@ impl WorkerBackend for ClaudeCodeBackend {
         let model_id = profile.resolve_model(&packet.routing.model)?;
         let config_dir = Self::config_dir(profile, ctx);
         let env = envbuild::build_worker_env(os_env, profile, secrets, &config_dir, ctx);
-        let argv = invocation::build_argv(packet, profile, model_id);
+        // D18 layer 3: when the profile serves ask_boss, the invocation
+        // names an MCP config the pod materializes next to the packet.
+        let mcp_config = profile
+            .permissions
+            .ask_boss
+            .then(|| Self::mcp_config_path(ctx));
+        let argv = invocation::build_argv(packet, profile, model_id, mcp_config.as_deref());
         Ok(WorkerSpec {
             argv,
             cwd: ctx.workspace_dir.clone(),
-            stdin: Some(invocation::build_prompt(packet)),
+            stdin: Some(invocation::build_prompt(
+                packet,
+                profile.permissions.ask_boss,
+            )),
             env,
         })
     }

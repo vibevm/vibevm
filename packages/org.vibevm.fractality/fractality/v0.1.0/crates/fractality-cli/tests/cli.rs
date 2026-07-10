@@ -143,6 +143,51 @@ async fn the_read_verbs_speak_d17() {
     std::fs::remove_dir_all(home.as_std_path()).ok();
 }
 
+/// F17 regression pin: auto-starting the daemon must NOT capture the
+/// caller's stdio pipes. `.output()` reads our piped stdout to EOF —
+/// with the leak, the detached daemon inherits the pipe's write end and
+/// EOF never arrives (`id=$(fractality spawn …)` hung exactly so).
+#[tokio::test]
+async fn autostart_does_not_capture_the_callers_pipes() {
+    let home = scratch_home("f17");
+    let worker = std::thread::spawn({
+        let home = home.clone();
+        move || {
+            std::process::Command::new(env!("CARGO_BIN_EXE_fractality"))
+                .arg("--home")
+                .arg(home.as_str())
+                .args(["mc", "start"])
+                .output()
+        }
+    });
+    let started = std::time::Instant::now();
+    while !worker.is_finished() {
+        assert!(
+            started.elapsed() < std::time::Duration::from_secs(30),
+            "mc start's stdout never reached EOF — the auto-started daemon \
+             captured the caller's pipe (F17 regressed)"
+        );
+        tokio::time::sleep(std::time::Duration::from_millis(200)).await;
+    }
+    let out = worker.join().expect("thread joins").expect("mc start runs");
+    assert_eq!(
+        out.status.code(),
+        Some(0),
+        "stderr: {}",
+        String::from_utf8_lossy(&out.stderr)
+    );
+
+    // Teardown: stop the daemon this test started.
+    let stop = std::process::Command::new(env!("CARGO_BIN_EXE_fractality"))
+        .arg("--home")
+        .arg(home.as_str())
+        .args(["mc", "stop"])
+        .output()
+        .expect("mc stop runs");
+    assert_eq!(stop.status.code(), Some(0));
+    std::fs::remove_dir_all(home.as_std_path()).ok();
+}
+
 #[tokio::test]
 async fn mc_stop_drains_the_daemon_and_status_reports_stopped() {
     let home = scratch_home("stop");

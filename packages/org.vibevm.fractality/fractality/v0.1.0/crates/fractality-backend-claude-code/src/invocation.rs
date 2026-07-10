@@ -31,16 +31,28 @@ specmark::scope!("spec://fractality/PROP-001#architecture");
 ///     "schema = 1\n[task]\ntitle = \"t\"\ngoal = \"Do the thing.\"\n[routing]\nprofile = \"glm\"\n",
 /// )
 /// .expect("packet parses");
-/// let prompt = build_prompt(&packet);
+/// let prompt = build_prompt(&packet, false);
 /// assert!(prompt.starts_with("Do the thing."));
 /// assert!(prompt.contains("result.md"), "output contract rides the prompt");
+/// assert!(!prompt.contains("ask_boss"), "no question protocol unless served");
+/// assert!(build_prompt(&packet, true).contains("ask_boss"));
 /// ```
-pub fn build_prompt(packet: &Packet) -> String {
+pub fn build_prompt(packet: &Packet, ask_boss: bool) -> String {
+    let question_protocol = if ask_boss {
+        "\nQuestion protocol: you have an `ask_boss` tool. When you are genuinely \
+         stuck, missing a decision only your supervisor can make, or about to do \
+         anything destructive or irreversible — call ask_boss with ONE precise, \
+         answerable question and wait for the reply instead of guessing. Do not \
+         use it for things you can decide yourself."
+    } else {
+        ""
+    };
     format!(
         "{goal}\n\n---\nOutput contract (mandatory): when you are done, write your final \
          report to `{result}`, relative to your working directory. Create the file even if \
          the task failed or was only partially done — state plainly what happened, what you \
-         changed, and what remains. Do not ask for confirmation; this is a non-interactive run.",
+         changed, and what remains. Do not ask for confirmation; this is a non-interactive \
+         run.{question_protocol}",
         goal = packet.task.goal.trim_end(),
         result = packet.output.result,
     )
@@ -63,14 +75,19 @@ pub fn build_prompt(packet: &Packet) -> String {
 /// )
 /// .expect("packet parses");
 ///
-/// let argv = build_argv(&packet, profile, "m-small");
+/// let argv = build_argv(&packet, profile, "m-small", None);
 /// assert_eq!(argv[0], "claude");
 /// assert_eq!(argv[1], "--print");
 /// assert_eq!(argv[2], "--output-format", "no prompt positional — the prompt rides stdin");
 /// assert!(argv.contains(&"stream-json".to_owned()));
 /// assert!(argv.ends_with(&["--disallowed-tools".to_owned(), "WebFetch".to_owned(), "WebSearch".to_owned()]));
 /// ```
-pub fn build_argv(packet: &Packet, profile: &Profile, model_id: &str) -> Vec<String> {
+pub fn build_argv(
+    packet: &Packet,
+    profile: &Profile,
+    model_id: &str,
+    mcp_config: Option<&camino::Utf8Path>,
+) -> Vec<String> {
     let mut argv = vec![
         profile.claude_binary.clone(),
         "--print".to_owned(),
@@ -85,8 +102,19 @@ pub fn build_argv(packet: &Packet, profile: &Profile, model_id: &str) -> Vec<Str
         "--max-turns".to_owned(),
         packet.budget.max_turns.to_string(),
     ];
+    if let Some(path) = mcp_config {
+        argv.push("--mcp-config".to_owned());
+        argv.push(path.to_string());
+    }
+    let broker_allow = mcp_config.map(|_| "mcp__fractality__ask_boss".to_owned());
+    if !profile.permissions.allow_tools.is_empty() || broker_allow.is_some() {
+        // Variadic flags: each list ends at the next `--flag`, so the
+        // allow list rides first and the deny list stays the final tail.
+        argv.push("--allowed-tools".to_owned());
+        argv.extend(profile.permissions.allow_tools.iter().cloned());
+        argv.extend(broker_allow);
+    }
     if !profile.permissions.deny_tools.is_empty() {
-        // Variadic flag: keep it last so it cannot swallow later args.
         argv.push("--disallowed-tools".to_owned());
         argv.extend(profile.permissions.deny_tools.iter().cloned());
     }
@@ -133,11 +161,28 @@ mod tests {
         .expect("profiles parse")
     }
 
+    /// The broker wiring (D18): --mcp-config names the pod-written file
+    /// and the ask_boss tool joins the allow list, before the deny tail.
+    #[test]
+    fn mcp_config_rides_with_its_allow_entry() {
+        let profiles = profiles();
+        let profile = profiles.get("glm").expect("glm");
+        let path = camino::Utf8PathBuf::from("runs/x/mcp-broker.json");
+        let argv = build_argv(&packet(), profile, "m-small", Some(&path));
+        let joined = argv.join(" ");
+        assert!(joined.contains("--mcp-config runs/x/mcp-broker.json"));
+        assert!(joined.contains("--allowed-tools mcp__fractality__ask_boss"));
+        assert!(
+            joined.ends_with("--disallowed-tools WebFetch WebSearch"),
+            "deny list stays the final tail: {joined}"
+        );
+    }
+
     #[test]
     fn argv_carries_the_pinned_headless_surface() {
         let profiles = profiles();
         let profile = profiles.get("glm").expect("glm");
-        let argv = build_argv(&packet(), profile, "m-small");
+        let argv = build_argv(&packet(), profile, "m-small", None);
         let joined = argv.join(" ");
         assert!(joined.contains("--print"));
         assert!(joined.contains("--output-format stream-json"));
@@ -152,7 +197,7 @@ mod tests {
     fn no_argument_carries_the_prompt() {
         let profiles = profiles();
         let profile = profiles.get("glm").expect("glm");
-        let argv = build_argv(&packet(), profile, "m-small");
+        let argv = build_argv(&packet(), profile, "m-small", None);
         assert_eq!(argv[1], "--print");
         assert_eq!(argv[2], "--output-format");
         assert!(
@@ -178,7 +223,7 @@ mod tests {
         )
         .expect("profiles parse");
         let profile = profiles.get("p").expect("p");
-        let argv = build_argv(&packet(), profile, "b");
+        let argv = build_argv(&packet(), profile, "b", None);
         assert!(!argv.contains(&"--disallowed-tools".to_owned()));
     }
 }

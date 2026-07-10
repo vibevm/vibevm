@@ -10,13 +10,13 @@ use axum::response::{IntoResponse, Response};
 use axum::routing::{get, post};
 use axum::{Json, Router};
 use fractality_core::api::{
-    Ack, ErrorResponse, HealthResponse, NodeResponse, PodEvent, PodEventRequest, PodHeartbeat,
-    PodHeartbeatResponse, PodRegisterRequest, PodRegisterResponse, RegisterRunRequest,
-    RunListResponse, ShutdownResponse, TreeNode,
+    Ack, ErrorResponse, HealthResponse, KillRequest, KillResponse, MetricsResponse, NodeResponse,
+    PodCommand, PodEvent, PodEventRequest, PodHeartbeat, PodHeartbeatResponse, PodRegisterRequest,
+    PodRegisterResponse, RegisterRunRequest, RunListResponse, ShutdownResponse, TreeNode,
 };
 use fractality_core::ids::{PodId, RunId};
 use fractality_core::journal::Event;
-use fractality_core::run::{RunRecord, RunState, UsageTotals};
+use fractality_core::run::{Collected, KillReason, RunRecord, RunState, UsageTotals};
 use fractality_core::time::now_ms;
 use serde::Deserialize;
 
@@ -24,7 +24,10 @@ use crate::state::{AppState, PodRuntime, RecordError};
 
 specmark::scope!("spec://fractality/PROP-001#architecture");
 
-const HEARTBEAT_INTERVAL_MS: u64 = 2_000;
+// 1 s (was 2 s): the heartbeat answer is also the kill-delivery channel
+// (Phase 4) — P5 wants a tree dead in under two seconds, and worst-case
+// delivery is one full interval. Localhost chatter is a non-cost.
+const HEARTBEAT_INTERVAL_MS: u64 = 1_000;
 
 /// Builds the versioned router with the bearer gate in front.
 pub fn router(state: Arc<AppState>) -> Router {
@@ -34,6 +37,10 @@ pub fn router(state: Arc<AppState>) -> Router {
         .route("/runs", post(register_run).get(list_runs))
         .route("/runs/{id}", get(get_run))
         .route("/runs/{id}/tree", get(get_tree))
+        .route("/runs/{id}/kill", post(kill_run_endpoint))
+        .route("/runs/{id}/question", post(post_question))
+        .route("/runs/{id}/answer", post(post_answer))
+        .route("/metrics", get(metrics))
         .route("/shutdown", post(shutdown))
         .route("/pods/register", post(pod_register))
         .route("/pods/{id}/heartbeat", post(pod_heartbeat))
@@ -148,14 +155,32 @@ async fn register_run(
     req.packet
         .validate()
         .map_err(|e| ApiError::new(StatusCode::BAD_REQUEST, e.to_string()))?;
-    if let Some(parent) = req.parent
-        && state.get_run(parent).is_none()
+    let depth = match req.parent {
+        None => 0,
+        Some(parent) => match state.get_run(parent) {
+            None => {
+                return Err(ApiError::new(
+                    StatusCode::BAD_REQUEST,
+                    format!("parent run {parent} is unknown"),
+                )
+                .hint("register the parent first, or drop the parent field"));
+            }
+            Some(p) if p.state.is_terminal() => {
+                return Err(ApiError::new(
+                    StatusCode::BAD_REQUEST,
+                    format!("parent run {parent} is already {}", p.state),
+                )
+                .hint("a terminal run cannot adopt children; drop the parent field"));
+            }
+            Some(p) => p.depth + 1,
+        },
+    };
+    // The product path validates at the door (D14/F16: the 400 names the
+    // exact fix surface) — admission re-checks cheaply at launch time.
+    if req.spawn
+        && let Err(message) = crate::admission::preflight(&state, &req.packet)
     {
-        return Err(ApiError::new(
-            StatusCode::BAD_REQUEST,
-            format!("parent run {parent} is unknown"),
-        )
-        .hint("register the parent first, or drop the parent field"));
+        return Err(ApiError::new(StatusCode::BAD_REQUEST, message));
     }
 
     let run_id = RunId::generate();
@@ -190,122 +215,106 @@ async fn register_run(
         model: req.packet.routing.model.clone(),
         workspace_mode: req.packet.workspace.mode,
         parent: req.parent,
+        depth,
+        spawn_requested: req.spawn,
+        budget: req.packet.budget,
         node_id: state.node.node_id.clone(),
         run_dir,
         created_ts_ms: now,
         updated_ts_ms: now,
+        started_ts_ms: None,
         pod: None,
         worker_pid: None,
         exit_code: None,
         failure: None,
         kill_reason: None,
         usage: UsageTotals::default(),
+        collected: None,
+        question: None,
+        answer: None,
     };
     let stored = state.record(Event::Registered {
         run: Box::new(record),
     })?;
 
-    // The product path (D3/D8): provision the workspace, write the run
-    // spec, launch the pod. A spawn failure fails the run loudly — it is
-    // journaled terminal and reported to the caller in one move.
-    if req.spawn
-        && let Err(message) = spawn_run(&state, &stored, &req.packet)
-    {
-        let _ = state.record(Event::Error {
-            run_id: stored.run_id,
-            message: message.clone(),
-            terminal: true,
-        });
-        return Err(ApiError::new(StatusCode::BAD_REQUEST, message)
-            .hint("the run is recorded as failed; fix the cause and register a new run"));
+    // Admission decides whether the run launches now or queues for a
+    // slot (Phase 4). Either way registration succeeded — the caller
+    // reads the fresh state (queued | starting | failed-at-launch).
+    if req.spawn {
+        crate::admission::tick(&state);
     }
-    Ok((StatusCode::CREATED, Json(stored)))
+    let fresh = state.get_run(stored.run_id).unwrap_or(stored);
+    Ok((StatusCode::CREATED, Json(fresh)))
 }
 
-/// Everything between "registered" and "a pod is supervising": profile
-/// validation (token by existence only — content is the pod's business,
-/// at spawn time), workspace provisioning (D8), the run spec, the pod
-/// launch (detached: pods outlive the daemon by design, D3).
-fn spawn_run(
-    state: &AppState,
-    record: &RunRecord,
-    packet: &fractality_core::Packet,
-) -> Result<(), String> {
-    let profiles =
-        fractality_core::profile::ProfilesFile::load(&state.cfg.home).map_err(|e| e.to_string())?;
-    let profile = profiles
-        .get(&packet.routing.profile)
-        .map_err(|e| e.to_string())?;
-    profile
-        .resolve_model(&packet.routing.model)
-        .map_err(|e| e.to_string())?;
-    if profile.backend != "claude-code" {
-        return Err(format!(
-            "backend `{}` is not available in this build (only `claude-code`); \
-             fix profiles.toml",
-            profile.backend
-        ));
+/// `POST /v0/runs/:id/kill` — the operator kill (D13), recursive over
+/// the call tree when asked (Phase 4).
+async fn kill_run_endpoint(
+    State(state): State<Arc<AppState>>,
+    Path(id): Path<String>,
+    Json(req): Json<KillRequest>,
+) -> Result<Json<KillResponse>, ApiError> {
+    let id = parse_run_id(&id)?;
+    if state.get_run(id).is_none() {
+        return Err(
+            ApiError::new(StatusCode::NOT_FOUND, format!("run {id} is not registered"))
+                .hint("list known runs with GET /v0/runs"),
+        );
     }
-    let user_home = fractality_mc_client::home::user_home()?;
-    let token_path = fractality_mc_client::home::expand_user(&profile.token_file, &user_home);
-    if !token_path.as_std_path().is_file() {
-        return Err(format!(
-            "token file `{token_path}` does not exist; create it or fix \
-             profiles.toml (existence is checked here; only the pod reads it)"
-        ));
+    let results = crate::kill::kill(&state, id, KillReason::Manual, req.recursive);
+    // Freed slots admit the next queued runs immediately.
+    crate::admission::tick(&state);
+    Ok(Json(KillResponse { results }))
+}
+
+/// `GET /v0/metrics` — the scoreboard aggregates (I3/D16).
+async fn metrics(State(state): State<Arc<AppState>>) -> Json<MetricsResponse> {
+    Json(crate::metrics::compute(&state.list_runs(None, None)))
+}
+
+/// `POST /v0/runs/:id/question` — the worker (via its broker) parks on
+/// a question (D18): `running -> waiting_on_boss`, question.md persists
+/// the text on the plane (I2: the bus carries it, the file records it).
+async fn post_question(
+    State(state): State<Arc<AppState>>,
+    Path(id): Path<String>,
+    Json(req): Json<fractality_core::api::QuestionRequest>,
+) -> Result<Json<RunRecord>, ApiError> {
+    let id = parse_run_id(&id)?;
+    if req.question.trim().is_empty() {
+        return Err(
+            ApiError::new(StatusCode::BAD_REQUEST, "an empty question cannot be asked")
+                .hint("send a precise, answerable question"),
+        );
     }
-
-    let workspace_dir =
-        crate::workspace::provision(&packet.workspace, record.run_id, &record.run_dir)?;
-
-    let run_spec = fractality_core::worker::RunSpec {
-        schema: 1,
-        run_id: record.run_id,
-        run_dir: record.run_dir.clone(),
-        workspace_dir,
-        // Nested delegation stamps real depths in Phase 4; boss-spawned
-        // runs are depth 0.
-        depth: 0,
-        node_id: state.node.node_id.clone(),
-    };
-    let spec_path = record
-        .run_dir
-        .join(fractality_core::worker::RunSpec::FILE_NAME);
-    std::fs::write(
-        spec_path.as_std_path(),
-        run_spec.to_toml_string().map_err(|e| e.to_string())?,
-    )
-    .map_err(|e| format!("writing `{spec_path}`: {e}"))?;
-
-    let pod_bin = fractality_mc_client::resolve_pod_binary().map_err(|e| e.to_string())?;
-    let pod_log = std::fs::File::create(record.run_dir.join("pod.log").as_std_path())
-        .map_err(|e| format!("creating pod.log: {e}"))?;
-    let pod_log_err = pod_log
-        .try_clone()
-        .map_err(|e| format!("cloning pod.log handle: {e}"))?;
-    let mut cmd = std::process::Command::new(&pod_bin);
-    cmd.arg("--home")
-        .arg(state.cfg.home.as_str())
-        .arg("--run-spec")
-        .arg(spec_path.as_str())
-        .stdin(std::process::Stdio::null())
-        .stdout(pod_log)
-        .stderr(pod_log_err);
-    #[cfg(windows)]
-    {
-        use std::os::windows::process::CommandExt;
-        // Detached, no console: the pod must survive a daemon exit (D3).
-        cmd.creation_flags(0x0000_0200 | 0x0800_0000);
+    let stored = state.record(Event::Question {
+        run_id: id,
+        question: req.question.clone(),
+    })?;
+    let path = stored.run_dir.join("question.md");
+    if let Err(e) = std::fs::write(path.as_std_path(), &req.question) {
+        tracing::warn!(%path, error = %e, "question.md write failed (bus record stands)");
     }
-    let child = cmd
-        .spawn()
-        .map_err(|e| format!("spawning pod `{}`: {e}", pod_bin.display()))?;
-    tracing::info!(
-        run_id = %record.run_id,
-        pod_launcher_pid = child.id(),
-        "pod launched"
-    );
-    Ok(())
+    Ok(Json(stored))
+}
+
+/// `POST /v0/runs/:id/answer` — the boss answers; the run resumes and
+/// the broker returns the text as the worker's tool result.
+async fn post_answer(
+    State(state): State<Arc<AppState>>,
+    Path(id): Path<String>,
+    Json(req): Json<fractality_core::api::AnswerRequest>,
+) -> Result<Json<RunRecord>, ApiError> {
+    let id = parse_run_id(&id)?;
+    let stored = state.record(Event::Answer {
+        run_id: id,
+        answer: req.answer.clone(),
+    })?;
+    let path = stored.run_dir.join("answer.md");
+    if let Err(e) = std::fs::write(path.as_std_path(), &req.answer) {
+        tracing::warn!(%path, error = %e, "answer.md write failed (bus record stands)");
+    }
+    Ok(Json(stored))
 }
 
 #[derive(Debug, Deserialize)]
@@ -396,6 +405,7 @@ async fn pod_register(
             run_id: req.run_id,
             pod_pid: req.pod_pid,
             last_heartbeat_ms: now_ms(),
+            pending_kill: None,
         },
     );
     tracing::info!(run_id = %req.run_id, pod_id = %req.pod_id, pod_pid = req.pod_pid, "pod registered");
@@ -423,9 +433,15 @@ async fn pod_heartbeat(
         )
         .hint("re-register with POST /v0/pods/register (expected after a daemon restart)"));
     }
-    Ok(Json(PodHeartbeatResponse {
-        command: fractality_core::api::PodCommand::None,
-    }))
+    // The heartbeat answer is the pod's command channel (D3): an armed
+    // kill rides back here. If this response is lost in flight, the
+    // sweeper re-arms it — delivery is at-least-once, the pod's kill is
+    // idempotent.
+    let command = match state.take_pending_kill(pod_id) {
+        Some(reason) => PodCommand::Kill { reason },
+        None => PodCommand::None,
+    };
+    Ok(Json(PodHeartbeatResponse { command }))
 }
 
 async fn pod_event(
@@ -440,43 +456,133 @@ async fn pod_event(
         )
     })?;
     let run_id = req.run_id;
+    let run = state
+        .get_run(run_id)
+        .ok_or(RecordError::UnknownRun(run_id))?;
+    // A pod reporting on a run mission-control already closed (killed by
+    // operator or budget) is the normal tail of a kill, not a protocol
+    // violation: state-machine events become acks, usage and collection
+    // still land as facts.
+    let already_terminal = run.state.is_terminal();
     match req.event {
         PodEvent::Spawned { worker_pid } => {
-            state.record(Event::Spawned { run_id, worker_pid })?;
-            // A fast worker can exit before anyone observes `running`;
-            // the transition is still Starting -> Running -> …, asserted
-            // here where the spawn fact arrives.
-            let run = state
-                .get_run(run_id)
-                .ok_or(RecordError::UnknownRun(run_id))?;
-            if run.state == RunState::Starting {
-                state.record(Event::State {
-                    run_id,
-                    state: RunState::Running,
-                    detail: None,
-                })?;
+            if !already_terminal {
+                state.record(Event::Spawned { run_id, worker_pid })?;
+                // A fast worker can exit before anyone observes `running`;
+                // the transition is still Starting -> Running -> …,
+                // asserted here where the spawn fact arrives.
+                let run = state
+                    .get_run(run_id)
+                    .ok_or(RecordError::UnknownRun(run_id))?;
+                if run.state == RunState::Starting {
+                    state.record(Event::State {
+                        run_id,
+                        state: RunState::Running,
+                        detail: None,
+                    })?;
+                }
             }
         }
         PodEvent::State { state: s, detail } => {
-            state.record(Event::State {
-                run_id,
-                state: s,
-                detail,
-            })?;
+            if !already_terminal {
+                state.record(Event::State {
+                    run_id,
+                    state: s,
+                    detail,
+                })?;
+            }
         }
         PodEvent::Usage { usage } => {
             state.record(Event::Usage { run_id, usage })?;
+            // Budget fast path (Phase 4): the token cap fires the moment
+            // the snapshot crosses it — the sweeper is only the backstop.
+            if !already_terminal
+                && run.budget.max_output_tokens > 0
+                && usage.output_tokens > run.budget.max_output_tokens
+            {
+                tracing::warn!(
+                    %run_id,
+                    output_tokens = usage.output_tokens,
+                    cap = run.budget.max_output_tokens,
+                    "output-token budget exceeded; killing"
+                );
+                crate::kill::kill_one(&state, run_id, KillReason::Budget);
+            }
+        }
+        PodEvent::Collected {
+            result_source,
+            result_path,
+            acceptance_passed,
+            acceptance_total,
+            acceptance_skipped,
+        } => {
+            // Terminal-tolerant by design: a killed worker's partial
+            // collection is still a fact worth folding.
+            let result = result_path
+                .as_deref()
+                .and_then(|p| mint_file_ref(&state, p));
+            state.record(Event::Collected {
+                run_id,
+                collected: Box::new(Collected {
+                    result_source,
+                    result,
+                    result_path,
+                    acceptance_passed,
+                    acceptance_total,
+                    acceptance_skipped,
+                }),
+            })?;
         }
         PodEvent::Exit { exit_code } => {
-            state.record(Event::Completed { run_id, exit_code })?;
+            if already_terminal {
+                tracing::info!(
+                    %run_id,
+                    ?exit_code,
+                    "exit report on a closed run acknowledged (kill tail)"
+                );
+            } else {
+                state.record(Event::Completed { run_id, exit_code })?;
+                // A freed slot admits the next queued run.
+                crate::admission::tick(&state);
+            }
         }
         PodEvent::Fault { message, terminal } => {
-            state.record(Event::Error {
-                run_id,
-                message,
-                terminal,
-            })?;
+            if already_terminal {
+                tracing::warn!(%run_id, %message, "fault reported on a closed run");
+            } else {
+                state.record(Event::Error {
+                    run_id,
+                    message,
+                    terminal,
+                })?;
+                if terminal {
+                    crate::admission::tick(&state);
+                }
+            }
         }
     }
     Ok(Json(Ack { ok: true }))
+}
+
+/// Mints the claim-check reference for a collected result (D19): the
+/// path must lie inside a known scope; the etag is the cheap size+mtime
+/// fingerprint readers use as `If-Match`.
+fn mint_file_ref(state: &AppState, path: &camino::Utf8Path) -> Option<fractality_core::FileRef> {
+    let scope = state.scopes.first()?;
+    let rel = path.strip_prefix(&scope.root).ok()?;
+    let meta = std::fs::metadata(path.as_std_path()).ok()?;
+    let mtime_ms = meta
+        .modified()
+        .ok()
+        .and_then(|t| t.duration_since(std::time::UNIX_EPOCH).ok())
+        .map(|d| d.as_millis() as u64)
+        .unwrap_or(0);
+    Some(fractality_core::FileRef {
+        fs: scope.id.clone(),
+        path: rel.as_str().replace('\\', "/"),
+        range: fractality_core::fileref::RefRange::whole(),
+        etag: Some(format!("{:x}-{:x}", meta.len(), mtime_ms)),
+        sha256: None,
+        grant: None,
+    })
 }

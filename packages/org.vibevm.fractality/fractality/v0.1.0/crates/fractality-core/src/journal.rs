@@ -16,7 +16,7 @@ use std::collections::BTreeMap;
 use serde::{Deserialize, Serialize};
 
 use crate::ids::{PodId, RunId};
-use crate::run::{KillReason, PodBinding, RunRecord, RunState, UsageTotals};
+use crate::run::{Collected, KillReason, PodBinding, RunRecord, RunState, UsageTotals};
 use crate::time::now_ms;
 
 specmark::scope!("spec://fractality/PROP-001#architecture");
@@ -65,6 +65,19 @@ pub enum Event {
     },
     /// Cumulative usage snapshot (idempotent on replay).
     Usage { run_id: RunId, usage: UsageTotals },
+    /// Collection settled: result provenance + acceptance verdicts
+    /// (idempotent — the latest collection wins). Applies to terminal
+    /// runs too: a killed worker's partial collection is still a fact.
+    Collected {
+        run_id: RunId,
+        collected: Box<Collected>,
+    },
+    /// The worker parked on a question (D18): `running ->
+    /// waiting_on_boss`, the question rides the record.
+    Question { run_id: RunId, question: String },
+    /// The boss answered: `waiting_on_boss -> running`, the answer rides
+    /// the record for the broker to collect.
+    Answer { run_id: RunId, answer: String },
     /// The worker exited. `Some(0)` completes the run; any other code —
     /// or a signal death (`None`) — fails it.
     Completed {
@@ -91,6 +104,9 @@ impl Event {
             | Event::Spawned { run_id, .. }
             | Event::State { run_id, .. }
             | Event::Usage { run_id, .. }
+            | Event::Collected { run_id, .. }
+            | Event::Question { run_id, .. }
+            | Event::Answer { run_id, .. }
             | Event::Completed { run_id, .. }
             | Event::Killed { run_id, .. }
             | Event::Error { run_id, .. } => *run_id,
@@ -155,11 +171,55 @@ pub fn apply(runs: &mut BTreeMap<RunId, RunRecord>, envelope: &Envelope) -> Appl
                 };
             }
             r.state = *state;
+            if *state == RunState::Starting && r.started_ts_ms.is_none() {
+                // The budget wall-clock anchor: when the run left the
+                // queue. Envelope time, so replay stays deterministic.
+                r.started_ts_ms = Some(ts);
+            }
             r.updated_ts_ms = ts;
             ApplyOutcome::Applied
         }),
         Event::Usage { run_id, usage } => with_run(runs, *run_id, |r| {
             r.usage = *usage;
+            r.updated_ts_ms = ts;
+            ApplyOutcome::Applied
+        }),
+        Event::Collected { run_id, collected } => with_run(runs, *run_id, |r| {
+            r.collected = Some((**collected).clone());
+            r.updated_ts_ms = ts;
+            ApplyOutcome::Applied
+        }),
+        Event::Question { run_id, question } => with_run(runs, *run_id, |r| {
+            // Idempotent re-ask while already parked updates the text;
+            // otherwise the transition must be legal.
+            if r.state != RunState::WaitingOnBoss
+                && !r.state.can_transition_to(RunState::WaitingOnBoss)
+            {
+                return ApplyOutcome::IllegalTransition {
+                    run_id: *run_id,
+                    from: r.state,
+                    to: RunState::WaitingOnBoss,
+                };
+            }
+            r.state = RunState::WaitingOnBoss;
+            r.question = Some(question.clone());
+            // A fresh question invalidates any previous answer: the
+            // broker must never read a stale reply.
+            r.answer = None;
+            r.updated_ts_ms = ts;
+            ApplyOutcome::Applied
+        }),
+        Event::Answer { run_id, answer } => with_run(runs, *run_id, |r| {
+            if !r.state.can_transition_to(RunState::Running) {
+                return ApplyOutcome::IllegalTransition {
+                    run_id: *run_id,
+                    from: r.state,
+                    to: RunState::Running,
+                };
+            }
+            r.state = RunState::Running;
+            r.question = None;
+            r.answer = Some(answer.clone());
             r.updated_ts_ms = ts;
             ApplyOutcome::Applied
         }),
@@ -246,16 +306,23 @@ mod tests {
             model: "big".into(),
             workspace_mode: WorkspaceMode::Dir,
             parent: None,
+            depth: 0,
+            spawn_requested: false,
+            budget: crate::packet::BudgetSpec::default(),
             node_id: "node-1".into(),
             run_dir: "runs/x".into(),
             created_ts_ms: 1,
             updated_ts_ms: 1,
+            started_ts_ms: None,
             pod: None,
             worker_pid: None,
             exit_code: None,
             failure: None,
             kill_reason: None,
             usage: UsageTotals::default(),
+            collected: None,
+            question: None,
+            answer: None,
         }
     }
 

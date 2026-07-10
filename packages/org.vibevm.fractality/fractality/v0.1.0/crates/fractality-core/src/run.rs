@@ -8,8 +8,9 @@
 use camino::Utf8PathBuf;
 use serde::{Deserialize, Serialize};
 
+use crate::fileref::FileRef;
 use crate::ids::{PodId, RunId};
-use crate::packet::WorkspaceMode;
+use crate::packet::{BudgetSpec, WorkspaceMode};
 
 specmark::scope!("spec://fractality/PROP-001#model");
 
@@ -134,6 +135,10 @@ pub struct UsageTotals {
     pub total_cost_usd: f64,
     /// Stream events observed (the D14 fallback metric when usage is absent).
     pub events: u64,
+    /// Web-ish tool calls observed in the transcript (the D12 quota
+    /// counter; the parser classifies by tool name).
+    #[serde(default)]
+    pub web_tool_calls: u64,
 }
 
 /// The pod currently bound to a run (D3: one pod per run).
@@ -141,6 +146,28 @@ pub struct UsageTotals {
 pub struct PodBinding {
     pub pod_id: PodId,
     pub pod_pid: u32,
+}
+
+/// What collection settled for a finished run (Phase 4: the verdicts ride
+/// the bus and fold into the record — remote readers never need the run
+/// dir; the plane files stay the D17 last resort).
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct Collected {
+    /// How the result file came to be: `worker` | `extracted` | `none`.
+    pub result_source: String,
+    /// Claim-check reference to the result (D19), minted by
+    /// mission-control when the path lies inside a known scope.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub result: Option<FileRef>,
+    /// Absolute result path on the executing node (same-box convenience;
+    /// the FileRef is the portable form).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub result_path: Option<Utf8PathBuf>,
+    pub acceptance_passed: u32,
+    pub acceptance_total: u32,
+    /// Why acceptance did not run, when it did not.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub acceptance_skipped: Option<String>,
 }
 
 /// Everything mission-control knows about one run. This is both the
@@ -158,12 +185,27 @@ pub struct RunRecord {
     pub workspace_mode: WorkspaceMode,
     /// Parent run for nested delegation (Phase 4); the call tree edges.
     pub parent: Option<RunId>,
+    /// Nesting depth (0 = boss-spawned; parent's depth + 1 otherwise).
+    #[serde(default)]
+    pub depth: u32,
+    /// True when the caller asked mission-control to provision + launch
+    /// (the product path). Only such runs pass through admission; raw
+    /// registrations stay a driving primitive for tests and manual pods.
+    #[serde(default)]
+    pub spawn_requested: bool,
+    /// The packet's hard budget, denormalized for the watchdog (a value
+    /// of 0 in any field means "unlimited" for that axis).
+    #[serde(default)]
+    pub budget: BudgetSpec,
     /// Node the run executes on (D19).
     pub node_id: String,
     /// The run directory — the persistence plane for this run (D4).
     pub run_dir: Utf8PathBuf,
     pub created_ts_ms: u64,
     pub updated_ts_ms: u64,
+    /// When the run left the queue (the budget wall-clock anchor).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub started_ts_ms: Option<u64>,
     pub pod: Option<PodBinding>,
     pub worker_pid: Option<u32>,
     pub exit_code: Option<i32>,
@@ -171,6 +213,17 @@ pub struct RunRecord {
     pub failure: Option<String>,
     pub kill_reason: Option<KillReason>,
     pub usage: UsageTotals,
+    /// Collection outcome (result + acceptance), once the pod reports it.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub collected: Option<Collected>,
+    /// The open question while `waiting_on_boss` (D18); cleared by the
+    /// answer.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub question: Option<String>,
+    /// The most recent answer (what the broker returns to the worker);
+    /// cleared when a new question parks the run again.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub answer: Option<String>,
 }
 
 #[cfg(test)]

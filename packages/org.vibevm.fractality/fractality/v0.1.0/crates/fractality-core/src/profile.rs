@@ -99,16 +99,28 @@ pub struct Permissions {
     /// Exact Claude Code `--permission-mode` value.
     #[serde(default = "default_permission_mode")]
     pub mode: String,
+    /// Tools pre-approved for headless runs (the static-allowlist layer
+    /// of D18; e.g. `Bash(fractality *)` lets a worker delegate further
+    /// — the Phase 4 nesting seam).
+    #[serde(default)]
+    pub allow_tools: Vec<String>,
     /// Tools denied outright (tariff hygiene, D12).
     #[serde(default)]
     pub deny_tools: Vec<String>,
+    /// Serve the ask_boss broker to this profile's workers (D18 layer
+    /// 3): the worker gets an MCP tool that parks the run on a question
+    /// and resumes with the boss's answer.
+    #[serde(default)]
+    pub ask_boss: bool,
 }
 
 impl Default for Permissions {
     fn default() -> Self {
         Self {
             mode: default_permission_mode(),
+            allow_tools: Vec::new(),
             deny_tools: Vec::new(),
+            ask_boss: false,
         }
     }
 }

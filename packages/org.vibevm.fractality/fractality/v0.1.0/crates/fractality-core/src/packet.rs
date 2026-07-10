@@ -128,7 +128,10 @@ impl Default for OutputSpec {
     }
 }
 
-/// Hard budget; exceeding it kills the run with `killed(budget)` (Phase 4).
+/// Hard budget; exceeding it kills the run with `killed(budget)` —
+/// the wall clock and token cap are enforced by mission-control's
+/// watchdog (Phase 4), `max_turns` rides the worker invocation. A
+/// value of 0 on any axis means "unlimited" for that axis.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct BudgetSpec {

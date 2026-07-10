@@ -108,6 +108,10 @@ pub(crate) async fn run_acceptance(
             c
         };
         cmd.current_dir(workspace_dir.as_std_path());
+        // A capped command must die with its verdict: when the timeout
+        // drops the output future, the child is reaped rather than left
+        // running unsupervised (tokio's default keeps it alive).
+        cmd.kill_on_drop(true);
         let outcome = tokio::time::timeout(cap, cmd.output()).await;
         let duration_ms = started.elapsed().as_millis() as u64;
         let (exit_code, ok, evidence) = match outcome {
@@ -171,11 +175,13 @@ pub(crate) fn write_usage_json(
         "cache_read_input_tokens": summary.map_or(0, |s| s.totals.cache_read_input_tokens),
         "total_cost_usd": summary.map_or(0.0, |s| s.totals.total_cost_usd),
         "events": summary.map_or(0, |s| s.totals.events),
+        "web_tool_calls": summary.map_or(0, |s| s.totals.web_tool_calls),
         "malformed_lines": summary.map_or(0, |s| s.malformed_lines),
         "num_turns": summary.and_then(|s| s.num_turns),
         "is_error": summary.is_some_and(|s| s.is_error),
         "result_source": result_source,
         "event_counts": summary.map(|s| s.event_counts.clone()).unwrap_or_default(),
+        "tool_counts": summary.map(|s| s.tool_counts.clone()).unwrap_or_default(),
         "ts_ms": now_ms(),
     });
     let path = run_dir.join(USAGE_FILE);
@@ -184,17 +190,29 @@ pub(crate) fn write_usage_json(
     std::fs::write(path.as_std_path(), body).map_err(|e| format!("writing `{path}`: {e}"))
 }
 
-/// `status.json` — the run dir's persistence-plane record (D4).
+/// Everything `status.json` records about how the run ended — one
+/// bundle so the call site reads as a record, not an argument train.
+pub(crate) struct StatusRecord<'a> {
+    pub(crate) exit_code: Option<i32>,
+    pub(crate) worker_pid: u32,
+    pub(crate) result_source: &'a str,
+    pub(crate) acceptance: &'a [AcceptanceVerdict],
+    pub(crate) acceptance_skipped: Option<&'a str>,
+    /// Set when the pod itself killed the worker; outranks the exit code.
+    pub(crate) killed_reason: Option<&'a str>,
+}
+
+/// `status.json` — the run dir's persistence-plane record (D4). The
+/// state is `completed`/`failed` from the exit code — unless the pod
+/// itself killed the worker (`killed_reason`), which outranks whatever
+/// exit code the terminated tree happened to produce.
 pub(crate) fn write_status(
     run_dir: &Utf8Path,
     run_id: RunId,
-    exit_code: Option<i32>,
-    worker_pid: u32,
-    result_source: &str,
-    acceptance: &[AcceptanceVerdict],
-    acceptance_skipped: Option<&str>,
+    record: StatusRecord<'_>,
 ) -> Result<(), String> {
-    let acceptance: Vec<serde_json::Value> = acceptance
+    let acceptance: Vec<serde_json::Value> = record
+        .acceptance
         .iter()
         .map(|v| {
             serde_json::json!({
@@ -205,19 +223,141 @@ pub(crate) fn write_status(
             })
         })
         .collect();
+    let state = match (record.killed_reason, record.exit_code) {
+        (Some(_), _) => "killed",
+        (None, Some(0)) => "completed",
+        _ => "failed",
+    };
     let status = serde_json::json!({
         "schema": 1,
         "run_id": run_id,
-        "state": if exit_code == Some(0) { "completed" } else { "failed" },
-        "exit_code": exit_code,
-        "worker_pid": worker_pid,
-        "result_source": result_source,
+        "state": state,
+        "exit_code": record.exit_code,
+        "worker_pid": record.worker_pid,
+        "result_source": record.result_source,
         "acceptance": acceptance,
-        "acceptance_skipped": acceptance_skipped,
+        "acceptance_skipped": record.acceptance_skipped,
+        "kill_reason": record.killed_reason,
         "ts_ms": now_ms(),
     });
     let path = run_dir.join(STATUS_FILE);
     let body =
         serde_json::to_string_pretty(&status).map_err(|e| format!("encoding status.json: {e}"))?;
     std::fs::write(path.as_std_path(), body).map_err(|e| format!("writing `{path}`: {e}"))
+}
+
+#[cfg(test)]
+mod acceptance_tests {
+    use camino::Utf8PathBuf;
+    use std::time::Duration;
+
+    use super::run_acceptance;
+
+    fn make_dirs(tag: &str) -> (Utf8PathBuf, Utf8PathBuf) {
+        let base =
+            std::env::temp_dir().join(format!("fractality-acc-{}-{}", std::process::id(), tag));
+        let run_dir = Utf8PathBuf::from_path_buf(base.clone()).expect("utf-8 temp dir");
+        let work_dir = run_dir.join("work");
+        std::fs::create_dir_all(work_dir.as_std_path()).expect("create work dir");
+        (run_dir, work_dir)
+    }
+
+    /// A command that exits zero produces a passing verdict.
+    #[tokio::test]
+    async fn exit_zero_command_passes() {
+        let (run_dir, work_dir) = make_dirs("exit-zero");
+        let cmds = vec!["exit 0".to_string()];
+        let verdicts = run_acceptance(&run_dir, &work_dir, &cmds, Duration::from_secs(10)).await;
+        assert_eq!(verdicts.len(), 1);
+        let v = &verdicts[0];
+        assert_eq!(v.command, "exit 0");
+        assert!(v.ok, "exit 0 must be ok");
+        assert_eq!(v.exit_code, Some(0));
+        std::fs::remove_dir_all(run_dir.as_std_path()).ok();
+    }
+
+    /// A non-zero exit is recorded as a failure with the exact code.
+    #[tokio::test]
+    async fn nonzero_exit_fails_with_the_code() {
+        let (run_dir, work_dir) = make_dirs("nonzero");
+        let cmds = vec!["exit 7".to_string()];
+        let verdicts = run_acceptance(&run_dir, &work_dir, &cmds, Duration::from_secs(10)).await;
+        assert_eq!(verdicts.len(), 1);
+        let v = &verdicts[0];
+        assert!(!v.ok, "exit 7 must not be ok");
+        assert_eq!(v.exit_code, Some(7));
+        std::fs::remove_dir_all(run_dir.as_std_path()).ok();
+    }
+
+    /// Multiple commands produce verdicts in submission order; the log
+    /// preserves that order too.
+    #[tokio::test]
+    async fn verdicts_keep_command_order() {
+        let (run_dir, work_dir) = make_dirs("order");
+        let cmds = vec!["echo alpha".to_string(), "exit 3".to_string()];
+        let verdicts = run_acceptance(&run_dir, &work_dir, &cmds, Duration::from_secs(10)).await;
+        assert_eq!(verdicts.len(), 2);
+        assert!(verdicts[0].ok, "echo alpha must be ok");
+        assert!(!verdicts[1].ok, "exit 3 must not be ok");
+        let log =
+            std::fs::read_to_string(run_dir.join("acceptance.log").as_std_path()).expect("log");
+        let idx_alpha = log.find("=== echo alpha").expect("alpha header in log");
+        let idx_exit = log.find("=== exit 3").expect("exit 3 header in log");
+        assert!(
+            idx_alpha < idx_exit,
+            "alpha header must appear before exit 3 header in the log"
+        );
+        std::fs::remove_dir_all(run_dir.as_std_path()).ok();
+    }
+
+    /// A hung command is killed when the cap expires, yielding no exit
+    /// code and a failure verdict.
+    #[tokio::test]
+    async fn cap_kills_a_hung_command() {
+        let (run_dir, work_dir) = make_dirs("cap-kill");
+        let cmd = if cfg!(windows) {
+            "ping -n 30 127.0.0.1 -w 1000 >nul"
+        } else {
+            "sleep 30"
+        };
+        let cmds = vec![cmd.to_string()];
+        let cap = Duration::from_millis(400);
+        let verdicts = run_acceptance(&run_dir, &work_dir, &cmds, cap).await;
+        assert_eq!(verdicts.len(), 1);
+        let v = &verdicts[0];
+        assert_eq!(
+            v.exit_code, None,
+            "timed-out command must have exit_code None"
+        );
+        assert!(!v.ok, "timed-out command must not be ok");
+        assert!(
+            v.duration_ms < 5000,
+            "verdict duration_ms ({}) must be well below 5 s -- the cap did not bite",
+            v.duration_ms
+        );
+        let log =
+            std::fs::read_to_string(run_dir.join("acceptance.log").as_std_path()).expect("log");
+        assert!(
+            log.contains("killed: exceeded"),
+            "log must mention kill reason"
+        );
+        std::fs::remove_dir_all(run_dir.as_std_path()).ok();
+    }
+
+    /// Evidence from a command is written into acceptance.log and is
+    /// greppable.
+    #[tokio::test]
+    async fn evidence_lands_in_the_log() {
+        let (run_dir, work_dir) = make_dirs("evidence");
+        let cmds = vec!["echo fractality-evidence-marker".to_string()];
+        let verdicts = run_acceptance(&run_dir, &work_dir, &cmds, Duration::from_secs(10)).await;
+        assert_eq!(verdicts.len(), 1);
+        let log =
+            std::fs::read_to_string(run_dir.join("acceptance.log").as_std_path()).expect("log");
+        assert!(
+            log.contains("fractality-evidence-marker"),
+            "log must contain the echoed marker"
+        );
+        std::fs::remove_dir_all(run_dir.as_std_path()).ok();
+    }
 }

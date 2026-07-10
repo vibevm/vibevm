@@ -20,6 +20,9 @@ fractality-core = { workspace = true }
 fractality-mc-client = { workspace = true }
 serde_json = { workspace = true }
 specmark = { workspace = true }
+# Runtime since Phase 4: the post-kill orphan sweep probes the process
+# table (P5 evidence).
+sysinfo = { workspace = true }
 tokio = { workspace = true }
 tracing = { workspace = true }
 tracing-subscriber = { workspace = true }
@@ -32,5 +35,4 @@ command-group = { workspace = true }
 
 [dev-dependencies]
 fractality-mission-control = { workspace = true }
-sysinfo = { workspace = true }
 ulid = { workspace = true }

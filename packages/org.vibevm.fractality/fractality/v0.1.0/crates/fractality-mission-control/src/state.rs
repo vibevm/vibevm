@@ -28,6 +28,11 @@ pub struct PodRuntime {
     pub run_id: RunId,
     pub pod_pid: u32,
     pub last_heartbeat_ms: u64,
+    /// A kill directive awaiting the pod's next heartbeat, with the
+    /// moment it was armed (the sweeper escalates unclaimed kills to the
+    /// pod-loss fallback). Never journaled — the authoritative `killed`
+    /// record is; this is delivery bookkeeping.
+    pub pending_kill: Option<(fractality_core::run::KillReason, u64)>,
 }
 
 pub struct Inner {
@@ -131,8 +136,32 @@ impl AppState {
     /// The single write path: validate → journal → fold.
     pub fn record(&self, event: Event) -> Result<RunRecord, RecordError> {
         let mut inner = self.lock_inner();
-        let inner = &mut *inner;
+        Self::record_under_lock(&mut inner, event)
+    }
 
+    /// Atomically claims a queued run for launch (`queued -> starting`).
+    /// The check and the journal write share one lock acquisition, so
+    /// two concurrent admission ticks can never both claim the same run
+    /// (the idempotent same-state path of `record` would let them).
+    pub fn claim_queued(&self, run_id: RunId) -> bool {
+        let mut inner = self.lock_inner();
+        if inner.runs.get(&run_id).map(|r| r.state) != Some(RunState::Queued) {
+            return false;
+        }
+        Self::record_under_lock(
+            &mut inner,
+            Event::State {
+                run_id,
+                state: RunState::Starting,
+                detail: Some("admitted".to_owned()),
+            },
+        )
+        .is_ok()
+    }
+
+    /// The write path body; callers hold the lock (directly or through
+    /// [`Self::record`]).
+    fn record_under_lock(inner: &mut Inner, event: Event) -> Result<RunRecord, RecordError> {
         // Validation happens against current state BEFORE the journal
         // sees the event — replay therefore only ever folds legal lines.
         if let Event::Registered { .. } = &event {
@@ -151,8 +180,20 @@ impl AppState {
                 }),
                 Event::Killed { .. } => Some(RunState::Killed),
                 Event::Error { terminal: true, .. } => Some(RunState::Failed),
+                Event::Question { .. } => Some(RunState::WaitingOnBoss),
+                Event::Answer { .. } => Some(RunState::Running),
                 _ => None,
             };
+            // An answer strictly requires a parked run — the same-state
+            // leniency below would otherwise let an answer land on a
+            // running run and desynchronize validation from the fold.
+            if matches!(&event, Event::Answer { .. }) && run.state != RunState::WaitingOnBoss {
+                return Err(RecordError::IllegalTransition {
+                    run_id,
+                    from: run.state,
+                    to: RunState::Running,
+                });
+            }
             if let Some(to) = target
                 && run.state != to
                 && !run.state.can_transition_to(to)
@@ -248,5 +289,75 @@ impl AppState {
 
     pub fn remove_pod(&self, pod_id: PodId) {
         self.lock_inner().pods.remove(&pod_id);
+    }
+
+    /// Arms a kill directive on the pod supervising `run_id`; the next
+    /// heartbeat delivers it. Returns false when no live pod runtime is
+    /// bound to that run (the caller escalates to the fallback).
+    pub fn pend_kill(&self, run_id: RunId, reason: fractality_core::run::KillReason) -> bool {
+        let mut inner = self.lock_inner();
+        for rt in inner.pods.values_mut() {
+            if rt.run_id == run_id {
+                // First reason wins: a manual kill racing a budget kill
+                // is still exactly one kill.
+                if rt.pending_kill.is_none() {
+                    rt.pending_kill = Some((reason, now_ms()));
+                }
+                return true;
+            }
+        }
+        false
+    }
+
+    /// Takes the pending kill for delivery on a heartbeat answer.
+    pub fn take_pending_kill(&self, pod_id: PodId) -> Option<fractality_core::run::KillReason> {
+        self.lock_inner()
+            .pods
+            .get_mut(&pod_id)
+            .and_then(|rt| rt.pending_kill.take().map(|(reason, _)| reason))
+    }
+
+    /// The call-tree ids rooted at `root`, root first (BFS). Used by the
+    /// recursive kill; missing root yields an empty list.
+    pub fn subtree_ids(&self, root: RunId) -> Vec<RunId> {
+        let inner = self.lock_inner();
+        if !inner.runs.contains_key(&root) {
+            return Vec::new();
+        }
+        let mut out = vec![root];
+        let mut frontier = vec![root];
+        while let Some(parent) = frontier.pop() {
+            for r in inner.runs.values() {
+                if r.parent == Some(parent) {
+                    out.push(r.run_id);
+                    frontier.push(r.run_id);
+                }
+            }
+        }
+        out
+    }
+
+    /// Runs of a profile currently holding an admission slot: launched
+    /// and not yet terminal (queued runs hold no slot).
+    pub fn active_count(&self, profile: &str) -> usize {
+        let inner = self.lock_inner();
+        inner
+            .runs
+            .values()
+            .filter(|r| r.profile == profile)
+            .filter(|r| !r.state.is_terminal() && r.state != RunState::Queued)
+            .count()
+    }
+
+    /// Queued spawn-requested runs in creation order (ULID order is
+    /// admission FIFO).
+    pub fn queued_candidates(&self) -> Vec<RunRecord> {
+        let inner = self.lock_inner();
+        inner
+            .runs
+            .values()
+            .filter(|r| r.state == RunState::Queued && r.spawn_requested)
+            .cloned()
+            .collect()
     }
 }

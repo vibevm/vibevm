@@ -27,8 +27,9 @@ pub mod time;
 pub mod worker;
 
 pub use error::CoreError;
+pub use fileref::FileRef;
 pub use ids::{PodId, RunId, ScopeId};
 pub use packet::{Packet, WorkspaceMode};
 pub use profile::{Profile, ProfilesFile};
-pub use run::{KillReason, RunRecord, RunState, UsageTotals};
+pub use run::{Collected, KillReason, RunRecord, RunState, UsageTotals};
 pub use worker::{RunContext, WorkerBackend, WorkerSpec};

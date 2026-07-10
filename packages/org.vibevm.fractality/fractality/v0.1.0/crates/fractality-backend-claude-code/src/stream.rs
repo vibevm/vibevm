@@ -51,7 +51,24 @@ pub struct StreamParser {
     final_text: Option<String>,
     is_error: bool,
     event_counts: BTreeMap<String, u64>,
+    tool_counts: BTreeMap<String, u64>,
     malformed_lines: u64,
+}
+
+/// The D12 web-tool classifier: which tool names count against the
+/// provider's web/MCP quota. Deliberately a v0 heuristic — exact CC
+/// names plus the provider's shared-quota MCP surfaces (Web-Search,
+/// Web-Reader, Zread ride one monthly pool on z.ai, Ф0.s3).
+pub fn is_web_tool(name: &str) -> bool {
+    if name == "WebFetch" || name == "WebSearch" {
+        return true;
+    }
+    let lower = name.to_ascii_lowercase();
+    lower.contains("web_search")
+        || lower.contains("web-search")
+        || lower.contains("web_reader")
+        || lower.contains("web-reader")
+        || lower.contains("zread")
 }
 
 impl StreamParser {
@@ -109,6 +126,7 @@ impl StreamParser {
             final_text: self.final_text,
             is_error: self.is_error,
             event_counts: self.event_counts,
+            tool_counts: self.tool_counts,
             malformed_lines: self.malformed_lines,
         }
     }
@@ -116,7 +134,8 @@ impl StreamParser {
     /// Accumulates an assistant event's usage into the running totals.
     /// Each missing field contributes zero; `message.model` is recorded
     /// only when no earlier event (usually `system/init`) already set it
-    /// — first-set wins.
+    /// — first-set wins. Tool calls in the content blocks are counted by
+    /// name (the D12 quota counter classifies web-ish ones).
     fn absorb_assistant(&mut self, obj: &serde_json::Map<String, Value>) {
         let Some(message) = obj.get("message") else {
             return;
@@ -132,6 +151,18 @@ impl StreamParser {
             && let Some(m) = message.get("model").and_then(Value::as_str)
         {
             self.model = Some(m.to_owned());
+        }
+        if let Some(blocks) = message.get("content").and_then(Value::as_array) {
+            for block in blocks {
+                if block.get("type").and_then(Value::as_str) == Some("tool_use")
+                    && let Some(name) = block.get("name").and_then(Value::as_str)
+                {
+                    *self.tool_counts.entry(name.to_owned()).or_default() += 1;
+                    if is_web_tool(name) {
+                        self.totals.web_tool_calls += 1;
+                    }
+                }
+            }
         }
     }
 
@@ -204,6 +235,8 @@ pub struct StreamSummary {
     pub is_error: bool,
     /// Counts per event kind; system events count under `system/<subtype>`.
     pub event_counts: BTreeMap<String, u64>,
+    /// Counts per tool name across the transcript's `tool_use` blocks.
+    pub tool_counts: BTreeMap<String, u64>,
     /// Lines that failed to parse or parsed to a non-object.
     pub malformed_lines: u64,
 }

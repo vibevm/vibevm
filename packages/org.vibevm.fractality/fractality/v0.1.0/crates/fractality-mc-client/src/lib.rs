@@ -12,9 +12,9 @@ pub mod home;
 pub mod lock;
 
 use fractality_core::api::{
-    Ack, ErrorResponse, HealthResponse, NodeResponse, PodEventRequest, PodHeartbeat,
-    PodHeartbeatResponse, PodRegisterRequest, PodRegisterResponse, RegisterRunRequest,
-    RunListResponse, ShutdownResponse, TreeNode,
+    Ack, ErrorResponse, HealthResponse, KillRequest, KillResponse, MetricsResponse, NodeResponse,
+    PodEventRequest, PodHeartbeat, PodHeartbeatResponse, PodRegisterRequest, PodRegisterResponse,
+    RegisterRunRequest, RunListResponse, ShutdownResponse, TreeNode,
 };
 use fractality_core::ids::{PodId, RunId};
 use fractality_core::run::{RunRecord, RunState};
@@ -215,6 +215,47 @@ impl McClient {
         .await
     }
 
+    pub async fn kill(&self, id: RunId, recursive: bool) -> Result<KillResponse, ClientError> {
+        self.request(
+            "POST /v0/runs/:id/kill",
+            self.http
+                .post(self.url(&format!("/runs/{id}/kill")))
+                .json(&KillRequest { recursive }),
+        )
+        .await
+    }
+
+    pub async fn metrics(&self) -> Result<MetricsResponse, ClientError> {
+        self.request("GET /v0/metrics", self.http.get(self.url("/metrics")))
+            .await
+    }
+
+    /// Parks a run on a question (D18); called by the ask_boss broker.
+    pub async fn question(&self, id: RunId, question: &str) -> Result<RunRecord, ClientError> {
+        self.request(
+            "POST /v0/runs/:id/question",
+            self.http
+                .post(self.url(&format!("/runs/{id}/question")))
+                .json(&fractality_core::api::QuestionRequest {
+                    question: question.to_owned(),
+                }),
+        )
+        .await
+    }
+
+    /// Answers a parked run (D18); the run resumes.
+    pub async fn answer(&self, id: RunId, answer: &str) -> Result<RunRecord, ClientError> {
+        self.request(
+            "POST /v0/runs/:id/answer",
+            self.http
+                .post(self.url(&format!("/runs/{id}/answer")))
+                .json(&fractality_core::api::AnswerRequest {
+                    answer: answer.to_owned(),
+                }),
+        )
+        .await
+    }
+
     pub async fn shutdown(&self) -> Result<ShutdownResponse, ClientError> {
         self.request("POST /v0/shutdown", self.http.post(self.url("/shutdown")))
             .await
@@ -351,6 +392,90 @@ fn resolve_fractality_binary(
     Ok(std::path::PathBuf::from(name))
 }
 
+/// Strips `HANDLE_FLAG_INHERIT` from this process's own std handles for
+/// the duration of a detached spawn, restoring the flags on drop (F17).
+///
+/// Why this exists: on Windows, `CreateProcess(bInheritHandles=TRUE)` —
+/// which Rust std uses whenever stdio is redirected — copies EVERY
+/// inheritable handle in our table into the child, not just the three
+/// stdio slots. When a shell runs `id=$(fractality spawn …)`, our stdout
+/// IS the substitution pipe's write end, marked inheritable by the
+/// shell; the freshly auto-started daemon would inherit that write end
+/// and, being a daemon, never close it — the shell then waits for an
+/// EOF that cannot come and the substitution hangs forever. Observed
+/// live in MT-02's first firing.
+#[cfg(windows)]
+mod inherit_guard {
+    // Minimal kernel32 FFI — no new dependency for three calls at one
+    // recorded OS seam.
+    unsafe extern "system" {
+        fn GetStdHandle(nstdhandle: u32) -> isize;
+        fn GetHandleInformation(handle: isize, flags: *mut u32) -> i32;
+        fn SetHandleInformation(handle: isize, mask: u32, flags: u32) -> i32;
+    }
+    const STD_INPUT_HANDLE: u32 = -10i32 as u32;
+    const STD_OUTPUT_HANDLE: u32 = -11i32 as u32;
+    const STD_ERROR_HANDLE: u32 = -12i32 as u32;
+    const HANDLE_FLAG_INHERIT: u32 = 1;
+    const INVALID_HANDLE_VALUE: isize = -1;
+
+    /// RAII: strip on construction, restore on drop.
+    pub(crate) struct Guard {
+        restore: Vec<isize>,
+    }
+
+    impl Guard {
+        /// SAFETY envelope: queries/toggles one documented flag on our
+        /// own std handles; no memory is transferred, failures are
+        /// ignored (worst case the old hang persists for that slot).
+        #[specmark::spec(
+            deviates = "spec://fractality/PROP-001#architecture",
+            reason = "three kernel32 calls at one recorded OS seam (F17): stripping HANDLE_FLAG_INHERIT from our own std handles around a detached spawn; an audit crate for this would be pure ceremony"
+        )]
+        pub(crate) fn strip_std_handles() -> Self {
+            let mut restore = Vec::new();
+            for slot in [STD_INPUT_HANDLE, STD_OUTPUT_HANDLE, STD_ERROR_HANDLE] {
+                unsafe {
+                    let handle = GetStdHandle(slot);
+                    if handle == 0 || handle == INVALID_HANDLE_VALUE {
+                        continue;
+                    }
+                    let mut flags = 0u32;
+                    if GetHandleInformation(handle, &mut flags) == 0 {
+                        continue;
+                    }
+                    if flags & HANDLE_FLAG_INHERIT != 0
+                        && SetHandleInformation(handle, HANDLE_FLAG_INHERIT, 0) != 0
+                    {
+                        restore.push(handle);
+                    }
+                }
+            }
+            Self { restore }
+        }
+
+        /// SAFETY envelope: restores the exact flag [`Self::strip_std_handles`]
+        /// cleared, on the same handles.
+        #[specmark::spec(
+            deviates = "spec://fractality/PROP-001#architecture",
+            reason = "the restore half of the F17 guard: one SetHandleInformation call re-arming the flag strip_std_handles removed"
+        )]
+        fn restore_inherit(handle: isize) {
+            unsafe {
+                SetHandleInformation(handle, HANDLE_FLAG_INHERIT, HANDLE_FLAG_INHERIT);
+            }
+        }
+    }
+
+    impl Drop for Guard {
+        fn drop(&mut self) {
+            for handle in &self.restore {
+                Guard::restore_inherit(*handle);
+            }
+        }
+    }
+}
+
 /// Spawns the daemon detached, stdout/stderr appended to `<home>/mc.log`.
 fn start_daemon(home: &camino::Utf8Path) -> Result<(), ClientError> {
     let bin = resolve_mc_binary()?;
@@ -380,6 +505,10 @@ fn start_daemon(home: &camino::Utf8Path) -> Result<(), ClientError> {
         // from this console and survives the caller's exit.
         cmd.creation_flags(0x0000_0200 | 0x0800_0000);
     }
+    // F17: never let the detached daemon capture our caller's pipes —
+    // `id=$(fractality spawn …)` must reach EOF the moment we exit.
+    #[cfg(windows)]
+    let _inherit_guard = inherit_guard::Guard::strip_std_handles();
     cmd.spawn().map_err(|e| ClientError::AutoStart {
         message: format!("spawning `{}`: {e}", bin.display()),
     })?;

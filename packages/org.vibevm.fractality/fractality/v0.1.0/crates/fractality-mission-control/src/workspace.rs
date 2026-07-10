@@ -36,6 +36,13 @@ pub fn provision(
             let wt = run_dir.join("wt");
             let branch = branch_name(run_id);
             let output = std::process::Command::new("git")
+                // F19: a worktree rooted in a run dir inherits the
+                // consumer repo's full depth on top of the runs-root
+                // prefix — deep trees overflow Windows MAX_PATH without
+                // long-path support (`Filename too long`, found live by
+                // MT-05 against the host repo). Harmless elsewhere.
+                .arg("-c")
+                .arg("core.longpaths=true")
                 .arg("-C")
                 .arg(spec.repo.as_str())
                 .arg("worktree")
@@ -63,6 +70,8 @@ pub fn provision(
 /// failures keep the worktree for autopsy — DEF-7 owns richer policy).
 pub fn remove_worktree(repo: &str, worktree_dir: &Utf8Path) -> Result<(), String> {
     let output = std::process::Command::new("git")
+        .arg("-c")
+        .arg("core.longpaths=true")
         .arg("-C")
         .arg(repo)
         .arg("worktree")

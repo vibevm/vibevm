@@ -11,18 +11,22 @@
 mod collect;
 mod resolve;
 mod supervise;
+mod worker_env;
 
 use collect::Collection;
+use worker_env::{augment_worker_env, sweep_for_orphan};
 
 use camino::Utf8PathBuf;
 use clap::Parser;
 use fractality_backend_claude_code::ClaudeCodeBackend;
 use fractality_backend_claude_code::stream::{StreamParser, StreamSummary};
 use fractality_core::Packet;
-use fractality_core::api::{PodEvent, PodEventRequest, PodHeartbeat, PodRegisterRequest};
+use fractality_core::api::{
+    PodCommand, PodEvent, PodEventRequest, PodHeartbeat, PodRegisterRequest,
+};
 use fractality_core::ids::{PodId, RunId};
 use fractality_core::profile::ProfilesFile;
-use fractality_core::run::{RunState, UsageTotals};
+use fractality_core::run::{KillReason, RunState, UsageTotals};
 use fractality_core::worker::{BackendSecrets, RunContext, RunSpec, WorkerBackend, WorkerSpec};
 use fractality_mc_client::McClient;
 use tokio::io::{AsyncBufReadExt, AsyncWriteExt, BufReader};
@@ -149,6 +153,23 @@ fn resolve_inputs(
         std::fs::create_dir_all(run_spec.workspace_dir.as_std_path())
             .map_err(|e| format!("creating workspace `{}`: {e}", run_spec.workspace_dir))?;
 
+        // Phase 4 nesting seam: give the worker the means to delegate
+        // further (I1 stays intact — these are deliberate injections at
+        // the composition root, not inheritance).
+        let pod_exe_dir = std::env::current_exe()
+            .ok()
+            .and_then(|p| p.parent().map(std::path::Path::to_path_buf));
+        augment_worker_env(&mut spec.env, &args.home, pod_exe_dir.as_deref());
+
+        // D18 layer 3: materialize the ask_boss MCP config the invocation
+        // already names. The broker is this build's own CLI binary.
+        if profile.permissions.ask_boss {
+            worker_env::write_mcp_config(
+                &ClaudeCodeBackend::mcp_config_path(&ctx),
+                pod_exe_dir.as_deref(),
+            )?;
+        }
+
         let collection = Collection {
             workspace_dir: run_spec.workspace_dir.clone(),
             result_file: packet.output.result.clone(),
@@ -250,8 +271,10 @@ async fn run(args: Args) -> Result<(), String> {
     // Supervision loop: wait for exit, heartbeat on the interval,
     // rediscover the daemon whenever the bus drops. Each tick also
     // ships the parser's usage snapshot when it moved — `show` meters
-    // a run while it is still running (D16: telemetry reads MC).
+    // a run while it is still running (D16: telemetry reads MC) — and
+    // executes kill commands riding the heartbeat answer (Phase 4).
     let mut last_usage_sent = UsageTotals::default();
+    let mut killed_reason: Option<KillReason> = None;
     let exit_code = loop {
         let tick = tokio::time::sleep(std::time::Duration::from_millis(heartbeat_ms));
         tokio::select! {
@@ -263,7 +286,20 @@ async fn run(args: Args) -> Result<(), String> {
                     worker_pid: Some(worker_pid),
                 };
                 match client.pod_heartbeat(pod_id, &hb).await {
-                    Ok(_) => {}
+                    Ok(resp) => {
+                        if let PodCommand::Kill { reason } = resp.command
+                            && killed_reason.is_none()
+                        {
+                            tracing::warn!(
+                                run_id = %run_id, %reason,
+                                "kill command received; terminating worker tree"
+                            );
+                            killed_reason = Some(reason);
+                            child.kill_tree();
+                            // The loop keeps running: child.wait() harvests
+                            // the exit on the next poll.
+                        }
+                    }
                     Err(e) => {
                         tracing::warn!(error = %e, "heartbeat failed; rediscovering daemon");
                         if let Some(fresh) = reconnect_and_register(
@@ -288,6 +324,12 @@ async fn run(args: Args) -> Result<(), String> {
         }
     };
 
+    // P5 evidence: after a kill, the worker tree must be gone — the Job
+    // Object guarantee (F5) is asserted, not assumed.
+    if killed_reason.is_some() {
+        sweep_for_orphan(worker_pid);
+    }
+
     // Pumps end at EOF once the child is gone.
     let _ = stdin_feed.await;
     let summary = stdout_pump.await.ok().flatten();
@@ -305,10 +347,13 @@ async fn run(args: Args) -> Result<(), String> {
         result_path.as_deref(),
     )?;
     // Acceptance proves the deliverable (D7): run only over a worker
-    // that exited 0 — verifying a known-failed run wastes its budget.
+    // that exited 0 — verifying a known-failed (or just-killed) run
+    // wastes its budget.
     let (acceptance, acceptance_skipped) = match collection.as_ref() {
         Some(c) if !c.acceptance.is_empty() => {
-            if exit_code == Some(0) {
+            if killed_reason.is_some() {
+                (Vec::new(), Some("worker killed; acceptance not run"))
+            } else if exit_code == Some(0) {
                 (
                     collect::run_acceptance(
                         &run_dir,
@@ -340,15 +385,40 @@ async fn run(args: Args) -> Result<(), String> {
         .await;
     }
 
+    let kill_reason_str = killed_reason.map(|r| r.to_string());
     collect::write_status(
         &run_dir,
         run_id,
-        exit_code,
-        worker_pid,
-        result_source,
-        &acceptance,
-        acceptance_skipped,
+        collect::StatusRecord {
+            exit_code,
+            worker_pid,
+            result_source,
+            acceptance: &acceptance,
+            acceptance_skipped,
+            killed_reason: kill_reason_str.as_deref(),
+        },
     )?;
+
+    // Collection rides the bus (Phase 4): result provenance + acceptance
+    // verdicts fold into the run record so remote readers never need the
+    // run dir. Non-critical delivery — the plane files above are the
+    // D17 fallback; mission-control mints the FileRef (D19).
+    report(
+        &mut client,
+        &args.home,
+        pod_id,
+        &PodEventRequest {
+            run_id,
+            event: PodEvent::Collected {
+                result_source: result_source.to_owned(),
+                result_path: result_path.clone(),
+                acceptance_passed: acceptance.iter().filter(|v| v.ok).count() as u32,
+                acceptance_total: acceptance.len() as u32,
+                acceptance_skipped: acceptance_skipped.map(str::to_owned),
+            },
+        },
+    )
+    .await;
 
     // The exit report is the one message that must not be lost quietly:
     // retry across daemon restarts within the budget.

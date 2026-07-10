@@ -42,6 +42,8 @@ tokio = { version = "1.52", features = [
     "sync",
     "fs",
     "io-util",
+    # io-std: the ask_boss MCP broker is a stdio JSON-RPC server (D18).
+    "io-std",
     "net",
     "process",
     "signal",

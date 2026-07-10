@@ -10,12 +10,14 @@
 //! pod register/heartbeat/event. Spawn, kill, questions, results, and
 //! metrics join in Phases 2–4b; their DTOs arrive with them.
 
+use std::collections::BTreeMap;
+
 use serde::{Deserialize, Serialize};
 
 use crate::ids::{PodId, RunId};
 use crate::node::{NodeIdentity, ScopeInfo};
 use crate::packet::Packet;
-use crate::run::{RunRecord, RunState, UsageTotals};
+use crate::run::{KillReason, RunRecord, RunState, UsageTotals};
 
 specmark::scope!("spec://fractality/PROP-001#architecture");
 
@@ -83,6 +85,84 @@ pub struct TreeNode {
     pub children: Vec<TreeNode>,
 }
 
+/// `POST /v0/runs/:id/kill` — kill one run, optionally its whole subtree.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Serialize, Deserialize)]
+pub struct KillRequest {
+    /// Kill the call tree rooted at the run (depth-first from the root).
+    #[serde(default)]
+    pub recursive: bool,
+}
+
+/// What happened to one run of a kill request.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum KillOutcome {
+    /// The run transitioned to `killed`; its pod is being signaled.
+    Killed,
+    /// The run was already terminal — nothing to do.
+    AlreadyTerminal,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct KillResult {
+    pub run_id: RunId,
+    pub outcome: KillOutcome,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct KillResponse {
+    /// Root first, then descendants in tree order (recursive mode).
+    pub results: Vec<KillResult>,
+}
+
+/// `POST /v0/runs/:id/question` — park the run on a question (D18).
+/// Called by the ask_boss broker from inside the worker's MCP server.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct QuestionRequest {
+    pub question: String,
+}
+
+/// `POST /v0/runs/:id/answer` — answer and resume (D18). The broker
+/// collects the answer from the run record and returns it as the
+/// worker's tool result.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct AnswerRequest {
+    pub answer: String,
+}
+
+/// `GET /v0/metrics` — aggregates over the whole registry (D16: every
+/// telemetry consumer reads exactly this; no shadow accounting).
+#[derive(Debug, Clone, PartialEq, Default, Serialize, Deserialize)]
+pub struct MetricsResponse {
+    pub totals: MetricsBucket,
+    /// Runs per lifecycle state (all seven states, present when nonzero).
+    pub by_state: BTreeMap<String, u64>,
+    pub by_profile: BTreeMap<String, MetricsBucket>,
+    pub by_model: BTreeMap<String, MetricsBucket>,
+    /// UTC day (`YYYY-MM-DD`) of run creation.
+    pub by_day: BTreeMap<String, MetricsBucket>,
+}
+
+/// One aggregate bucket of the metrics answer.
+#[derive(Debug, Clone, PartialEq, Default, Serialize, Deserialize)]
+pub struct MetricsBucket {
+    pub runs: u64,
+    pub completed: u64,
+    pub failed: u64,
+    pub killed: u64,
+    /// Non-terminal runs (queued through waiting_on_boss).
+    pub open: u64,
+    pub input_tokens: u64,
+    pub output_tokens: u64,
+    pub cache_creation_input_tokens: u64,
+    pub cache_read_input_tokens: u64,
+    pub total_cost_usd: f64,
+    /// Wall time of terminal runs (start → last update), milliseconds.
+    pub wall_ms: u64,
+    /// The D12 quota counter, summed from run usage.
+    pub web_tool_calls: u64,
+}
+
 /// `POST /v0/shutdown`
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct ShutdownResponse {
@@ -118,12 +198,18 @@ pub struct PodHeartbeat {
     pub worker_pid: Option<u32>,
 }
 
-/// Heartbeat answer — the pod's command channel. Phase 1 always answers
-/// `none`; kill and restart directives ride here from Phase 4 on.
+/// Heartbeat answer — the pod's command channel. Kill directives ride
+/// here (Phase 4); restart directives are future work.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum PodCommand {
     None,
+    /// Kill the worker tree now. The reason is informational for the
+    /// pod's log — the authoritative `killed` record is journaled by
+    /// mission-control at decision time.
+    Kill {
+        reason: KillReason,
+    },
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -152,6 +238,18 @@ pub enum PodEvent {
     },
     /// Cumulative usage snapshot parsed from the worker stream.
     Usage { usage: UsageTotals },
+    /// Collection settled (Phase 4): result provenance + acceptance
+    /// verdicts. The pod ships the node-local path; mission-control
+    /// mints the FileRef (it owns scopes and stamps etags, D19).
+    Collected {
+        result_source: String,
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        result_path: Option<camino::Utf8PathBuf>,
+        acceptance_passed: u32,
+        acceptance_total: u32,
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        acceptance_skipped: Option<String>,
+    },
     /// The worker exited (`None` = killed by signal).
     Exit { exit_code: Option<i32> },
     /// A pod-side fault; `terminal` says whether the run dies of it.

@@ -23,9 +23,11 @@ specmark::scope!("spec://fractality/PROP-001#invariants");
 pub struct SupervisedChild {
     #[cfg(windows)]
     child: tokio::process::Child,
-    /// Held for its `Drop`: closing the job handle kills the tree.
+    /// Held for its `Drop`: closing the job handle kills the tree. An
+    /// explicit [`Self::kill_tree`] takes and drops it early — same
+    /// mechanism, deliberate timing (Phase 4 kill).
     #[cfg(windows)]
-    _job: win32job::Job,
+    job: Option<win32job::Job>,
     #[cfg(unix)]
     child: command_group::AsyncGroupChild,
 }
@@ -75,7 +77,10 @@ pub fn spawn(spec: &WorkerSpec) -> Result<SupervisedChild, String> {
             .ok_or_else(|| "child has no handle (exited during spawn?)".to_owned())?;
         job.assign_process(handle as isize)
             .map_err(|e| format!("assigning child to job: {e}"))?;
-        Ok(SupervisedChild { child, _job: job })
+        Ok(SupervisedChild {
+            child,
+            job: Some(job),
+        })
     }
 
     #[cfg(unix)]
@@ -152,6 +157,27 @@ impl SupervisedChild {
                 .await
                 .map_err(|e| format!("waiting for worker: {e}"))?;
             Ok(status.code())
+        }
+    }
+
+    /// Kills the whole worker tree now (Phase 4 `kill`). Windows: drop
+    /// the Job Object — `KILL_ON_JOB_CLOSE` reaps every descendant, the
+    /// exact mechanism F5 proved. POSIX: signal the process group. The
+    /// caller still `wait()`s to harvest the exit.
+    pub fn kill_tree(&mut self) {
+        #[cfg(windows)]
+        {
+            if let Some(job) = self.job.take() {
+                drop(job);
+            } else {
+                tracing::warn!("kill_tree called twice; job already closed");
+            }
+        }
+        #[cfg(unix)]
+        {
+            if let Err(e) = self.child.kill() {
+                tracing::warn!(error = %e, "process-group kill failed");
+            }
         }
     }
 }

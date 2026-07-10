@@ -2,6 +2,7 @@
 //! so every other column splits on whitespace.
 
 use camino::Utf8Path;
+use fractality_core::api::TreeNode;
 use fractality_core::run::RunRecord;
 use fractality_core::time::{format_duration_ms, now_ms};
 
@@ -33,13 +34,128 @@ fn print_usage_lines(r: &RunRecord) {
         r.usage.cache_read_input_tokens,
         r.usage.events,
     );
+    if r.usage.web_tool_calls > 0 {
+        println!("web_tools:  {} (D12 quota counter)", r.usage.web_tool_calls);
+    }
     if r.usage.total_cost_usd > 0.0 {
         println!("cost_usd:   {:.6}", r.usage.total_cost_usd);
+    }
+    // Phase 4: collection rides the bus and folds into the record — the
+    // record is authoritative; the plane files remain the fallback for
+    // runs that predate the Collected event.
+    if let Some(c) = &r.collected {
+        if c.result_source != "none" {
+            let path = c
+                .result_path
+                .as_ref()
+                .map(|p| p.as_str())
+                .unwrap_or("<collected>");
+            println!("result:     {path} ({})", c.result_source);
+        }
+        if let Some(fref) = &c.result {
+            println!(
+                "ref:        {}:{}{}",
+                fref.fs,
+                fref.path,
+                fref.etag
+                    .as_deref()
+                    .map(|e| format!(" etag={e}"))
+                    .unwrap_or_default()
+            );
+        }
+        if let Some(reason) = &c.acceptance_skipped {
+            println!("acceptance: skipped ({reason})");
+        } else if c.acceptance_total > 0 {
+            println!(
+                "acceptance: {}/{} ok",
+                c.acceptance_passed, c.acceptance_total
+            );
+        }
+        return;
     }
     if let Some(result) = result_line(&r.run_dir) {
         println!("result:     {result}");
     }
     print_acceptance(&r.run_dir);
+}
+
+/// The scoreboard (D16): one totals block, then per-profile and
+/// per-model tables — stable columns, greppable, cost explicit.
+pub fn print_metrics(m: &fractality_core::api::MetricsResponse) {
+    println!(
+        "runs:       {} total = {} completed + {} failed + {} killed + {} open",
+        m.totals.runs, m.totals.completed, m.totals.failed, m.totals.killed, m.totals.open
+    );
+    println!(
+        "tokens:     in={} out={} cache_w={} cache_r={}",
+        m.totals.input_tokens,
+        m.totals.output_tokens,
+        m.totals.cache_creation_input_tokens,
+        m.totals.cache_read_input_tokens
+    );
+    println!("cost_usd:   {:.6}", m.totals.total_cost_usd);
+    println!(
+        "wall:       {} across terminal runs",
+        format_duration_ms(m.totals.wall_ms)
+    );
+    if m.totals.web_tool_calls > 0 {
+        println!(
+            "web_tools:  {} (D12 quota counter; per-day split below)",
+            m.totals.web_tool_calls
+        );
+    }
+    for (title, map) in [("profile", &m.by_profile), ("model", &m.by_model)] {
+        if map.is_empty() {
+            continue;
+        }
+        println!(
+            "{:<10} {:>5} {:>5} {:>5} {:>5} {:>5} {:>12} {:>10}  # by {title}",
+            "NAME", "RUNS", "OK", "FAIL", "KILL", "OPEN", "OUT_TOKENS", "COST_USD"
+        );
+        for (name, b) in map {
+            println!(
+                "{:<10} {:>5} {:>5} {:>5} {:>5} {:>5} {:>12} {:>10.4}",
+                name,
+                b.runs,
+                b.completed,
+                b.failed,
+                b.killed,
+                b.open,
+                b.output_tokens,
+                b.total_cost_usd
+            );
+        }
+    }
+    if !m.by_day.is_empty() {
+        println!(
+            "{:<12} {:>5} {:>12} {:>10} {:>10}  # by day (UTC)",
+            "DAY", "RUNS", "OUT_TOKENS", "COST_USD", "WEB_TOOLS"
+        );
+        for (day, b) in &m.by_day {
+            println!(
+                "{:<12} {:>5} {:>12} {:>10.4} {:>10}",
+                day, b.runs, b.output_tokens, b.total_cost_usd, b.web_tool_calls
+            );
+        }
+    }
+}
+
+/// One call tree, ASCII-rendered: two spaces per depth, id first so the
+/// output stays xargs-able even indented (D17).
+pub fn print_tree(node: &TreeNode, indent: usize) {
+    let r = &node.run;
+    println!(
+        "{:indent$}{} {} {} {}",
+        "",
+        r.run_id,
+        r.state,
+        r.profile,
+        r.title,
+        indent = indent * 2
+    );
+    for child in &node.children {
+        print_tree(child, indent + 1);
+    }
 }
 
 /// Acceptance verdicts from the run dir's `status.json` — the same
@@ -173,6 +289,9 @@ pub fn print_run_detail(r: &RunRecord) {
     }
     if let Some(k) = r.kill_reason {
         println!("killed:     {k}");
+    }
+    if let Some(q) = &r.question {
+        println!("question:   {q}");
     }
     print_usage_lines(r);
 }

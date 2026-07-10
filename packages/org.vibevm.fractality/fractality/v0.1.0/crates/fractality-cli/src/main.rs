@@ -10,7 +10,10 @@
 //! - `2` — infrastructure error: no daemon and it could not be started,
 //!   transport failure, unusable home.
 
+mod boss;
+mod broker;
 mod out;
+mod swarm;
 
 use camino::Utf8PathBuf;
 use clap::{Parser, Subcommand};
@@ -80,6 +83,79 @@ enum Cmd {
         #[arg(long)]
         json: bool,
     },
+    /// Register + launch a packet asynchronously; prints the run id and
+    /// returns immediately (compose with `wait`). Inside a worker the
+    /// parent is taken from FRACTALITY_RUN_ID — the call tree builds
+    /// itself. Exit: 0 spawned/queued, 1 invalid packet, 2 infra.
+    Spawn {
+        /// Task packet (TOML, plan D7).
+        #[arg(long, value_name = "FILE")]
+        packet: Utf8PathBuf,
+        /// Explicit parent run (defaults to $FRACTALITY_RUN_ID).
+        #[arg(long, value_name = "RUN_ID")]
+        parent: Option<String>,
+        /// Machine-readable output (the registered run record).
+        #[arg(long)]
+        json: bool,
+    },
+    /// Wait for runs to reach a terminal state (shell `wait` semantics:
+    /// blocks on all, exit code mirrors the LAST id's outcome — 0
+    /// completed, 1 failed, 3 killed, 2 pod lost/infra). Prints one line
+    /// per run as it settles.
+    Wait {
+        /// Run ids (or unique prefixes).
+        #[arg(required = true)]
+        ids: Vec<String>,
+        /// Give up after this many seconds (0 = wait forever).
+        #[arg(long, default_value_t = 0)]
+        timeout: u64,
+    },
+    /// Show the call tree rooted at a run, or the whole forest.
+    Tree {
+        /// Root run id (or unique prefix); omit for all roots.
+        id: Option<String>,
+        /// Machine-readable output.
+        #[arg(long)]
+        json: bool,
+    },
+    /// Kill a run (optionally its whole subtree). Exit: 0 killed, 1 the
+    /// run was already terminal, 2 infra.
+    Kill {
+        /// Run id (or unique prefix).
+        id: String,
+        /// Kill the whole call tree rooted here.
+        #[arg(long)]
+        tree: bool,
+    },
+    /// List runs parked on a question (D18). Exit: 0 (even when empty).
+    Questions {
+        /// Machine-readable output.
+        #[arg(long)]
+        json: bool,
+    },
+    /// Answer a parked run; it resumes with the text as its tool result.
+    /// Exit: 0 answered, 1 the run is not waiting, 2 infra.
+    Answer {
+        /// Run id (or unique prefix).
+        id: String,
+        /// The answer text (or use --file).
+        #[arg(conflicts_with = "file")]
+        text: Option<String>,
+        /// Read the answer from a file.
+        #[arg(long, value_name = "FILE")]
+        file: Option<Utf8PathBuf>,
+    },
+    /// The mission-control scoreboard (D16): outcomes, tokens, cost,
+    /// wall time — totals and by profile/model/day.
+    Stats {
+        /// Machine-readable output (the raw metrics document).
+        #[arg(long)]
+        json: bool,
+    },
+    /// The ask_boss MCP stdio server (plumbing: Claude Code launches
+    /// this inside workers; not for human use).
+    #[command(hide = true)]
+    McpBroker,
 }
 
 #[derive(Subcommand)]
@@ -117,6 +193,20 @@ async fn main() -> std::process::ExitCode {
         } => ps(&home, state, limit, quiet, json).await,
         Cmd::Show { id, json } => show(&home, &id, json).await,
         Cmd::Run { packet, json } => run_packet(&home, &packet, json).await,
+        Cmd::Spawn {
+            packet,
+            parent,
+            json,
+        } => swarm::spawn(&home, &packet, parent.as_deref(), json).await,
+        Cmd::Wait { ids, timeout } => swarm::wait(&home, &ids, timeout).await,
+        Cmd::Tree { id, json } => swarm::tree(&home, id.as_deref(), json).await,
+        Cmd::Kill { id, tree } => swarm::kill(&home, &id, tree).await,
+        Cmd::Questions { json } => boss::questions(&home, json).await,
+        Cmd::Answer { id, text, file } => {
+            boss::answer(&home, &id, text.as_deref(), file.as_deref()).await
+        }
+        Cmd::Stats { json } => boss::stats(&home, json).await,
+        Cmd::McpBroker => broker::serve(&home).await,
     };
     std::process::ExitCode::from(code)
 }
@@ -140,11 +230,15 @@ async fn run_packet(home: &camino::Utf8Path, packet_path: &camino::Utf8Path, jso
         Ok(c) => c,
         Err(e) => return fail_code(err_code(&e), &e.to_string()),
     };
+    let parent = match swarm::resolve_parent(&client, None).await {
+        Ok(p) => p,
+        Err((code, message)) => return fail_code(code, &message),
+    };
     let started = std::time::Instant::now();
     let run = match client
         .register_run(&fractality_core::api::RegisterRunRequest {
             packet,
-            parent: None,
+            parent,
             spawn: true,
         })
         .await
@@ -154,17 +248,41 @@ async fn run_packet(home: &camino::Utf8Path, packet_path: &camino::Utf8Path, jso
     };
     eprintln!("run {} spawned (dir {})", run.run_id, run.run_dir);
 
+    let mut parked_notice = false;
     let final_run = loop {
         tokio::time::sleep(std::time::Duration::from_millis(500)).await;
         match client.run(run.run_id).await {
             Ok(r) if r.state.is_terminal() => break r,
+            Ok(r) if r.state == RunState::WaitingOnBoss => {
+                if !parked_notice {
+                    parked_notice = true;
+                    eprintln!(
+                        "run {} PARKED on a question: {}\n  answer with: fractality answer {} \"<text>\"",
+                        r.run_id,
+                        r.question.as_deref().unwrap_or("-"),
+                        r.run_id,
+                    );
+                }
+                if started.elapsed() > wait_cap {
+                    // D17 exit family 4: parked past its wait — the run
+                    // stays alive for a later answer; this loop stops.
+                    return fail_code(
+                        4,
+                        &format!(
+                            "run {} is still parked on its question past the wall budget; \
+                             it keeps waiting — `fractality questions` to triage",
+                            run.run_id
+                        ),
+                    );
+                }
+            }
             Ok(_) if started.elapsed() > wait_cap => {
                 return fail_code(
                     EXIT_INFRA,
                     &format!(
-                        "run {} exceeded its wall budget and is still not terminal; \
-                         it keeps running — inspect with `fractality show {}` \
-                         (budget kills land in Phase 4)",
+                        "run {} outlived its wall budget plus grace and is still not \
+                         terminal — the mission-control watchdog should have killed it; \
+                         inspect with `fractality show {}` and `mc.log`",
                         run.run_id, run.run_id
                     ),
                 );
@@ -173,6 +291,9 @@ async fn run_packet(home: &camino::Utf8Path, packet_path: &camino::Utf8Path, jso
             Err(e) => return fail_code(err_code(&e), &e.to_string()),
         }
     };
+    if parked_notice {
+        eprintln!("run {} resumed and finished", run.run_id);
+    }
 
     if json {
         println!(
@@ -183,17 +304,7 @@ async fn run_packet(home: &camino::Utf8Path, packet_path: &camino::Utf8Path, jso
     } else {
         out::print_run_summary(&final_run, started.elapsed());
     }
-    match final_run.state {
-        RunState::Completed => EXIT_OK,
-        // D17 exit families: 3 is the *policy* kill (budget, manual);
-        // a vanished pod is an infrastructure fault, not a verdict on
-        // the task — it exits 2 so scripts can retry it as such.
-        RunState::Killed => match final_run.kill_reason {
-            Some(fractality_core::run::KillReason::PodLost) => EXIT_INFRA,
-            _ => 3,
-        },
-        _ => EXIT_NEGATIVE,
-    }
+    swarm::state_code(&final_run)
 }
 
 fn fail(code: u8, message: &str) -> std::process::ExitCode {

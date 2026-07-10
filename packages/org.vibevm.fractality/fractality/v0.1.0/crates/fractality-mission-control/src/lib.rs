@@ -10,9 +10,12 @@
 //! The crate is a library so tests (and the pod crate's loopback tests)
 //! can embed a real daemon in-process; `src/main.rs` is the thin binary.
 
+pub mod admission;
 pub mod http;
 pub mod identity;
 pub mod journal_store;
+pub mod kill;
+pub mod metrics;
 pub mod registry;
 pub mod scopes;
 pub mod state;
