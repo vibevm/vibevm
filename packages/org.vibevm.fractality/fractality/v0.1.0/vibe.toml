@@ -22,8 +22,31 @@ requires_kinds = []
 "flow:org.vibevm/redbook" = "^0.2.0"
 "stack:org.vibevm/rust-ai-native" = "^0.7.0"
 
-# No boot_snippet yet: the boss-side boot snippet and skills land in the
-# IGNITION campaign's Phase 6 (spec/plans/FRACTALITY-IGNITION-PLAN-v0.1.md).
+# The boss-side integration (IGNITION Phase 6): the boot snippet a
+# consuming boss loads at session start (slot 75 — outside the redbook
+# grid, no collision), and the guided delegation loop as a skill.
+[boot_snippet]
+source = "spec/boot/75-tool-fractality.md"
+category = "tool"
+
+[[skill]]
+name = "fractality-delegate"
+path = "spec/skills/fractality-delegate"
+description = "Delegate a task to a fractality worker or swarm: matrix routing, packet authoring, spawn/observe, and the boss review loop"
+
+# The shipped binaries (PROP-025): `vibe bin build` compiles them in the
+# slot; `vibe bin exec <name>` dispatches through the consumer lockfile.
+[[binary]]
+name = "fractality"
+crate = "crates/fractality-cli"
+
+[[binary]]
+name = "fractality-mission-control"
+crate = "crates/fractality-mission-control"
+
+[[binary]]
+name = "fractality-pod"
+crate = "crates/fractality-pod"
 
 # The default registry pair every vibevm project carries (same blocks the
 # host root and `vibe init` use). In-repo packages resolve from the local
