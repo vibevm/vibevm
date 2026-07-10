@@ -1,6 +1,6 @@
 # FRACTALITY-INITIATIVE-PLAN v0.1 — Campaign 2: the initiative system (scoreboard-driven delegation for a cold boss)
 
-_Status: **EXECUTING — Ф0–Ф2 landed, floor green; next: Ф3 (CC adapter)**
+_Status: **EXECUTING — Ф0–Ф3 landed, floor green; next: Ф4 (nudges + routing-as-data)**
 (commissioned 2026-07-10: «Начинай Campaign 2» + «Goal set: сделать
 Campaign 2» — the owner ordered execution, not just authoring; phases
 land autonomously per host Rule 4, review points below still gate what
@@ -608,6 +608,37 @@ what each commit confirmed or falsified, drift notes._
     `scoreboard --line`, and the `stats` month line against a scratch
     home with an env-attributed session.
   - Next: Ф3 (the Claude Code adapter).
+
+- **Ф3 — EXECUTED 2026-07-10. Commit map:**
+  - `4e2c71c` — `feat(fractality): cc adapter — hooks, statusline,
+    harness, fetch (C2 Ф3)`. **Drift: one feat commit instead of the
+    four planned** (one wiring file interleaves every verb; the Ф1
+    precedent applies) — ledgered.
+  - Confirmed: D4 (availability law — hooks exit 0 on every failure;
+    connect-only, never an autostart), D5's SessionStart shape (live
+    board injected + CLAUDE_ENV_FILE export written), BD2 (the
+    statusline strip), the JSON-adapted managed-blocks ownership
+    (foreign entries and a foreign statusLine survive install AND
+    remove — unit-pinned), the D12 repair (`fetch` exists; reqwest's
+    0.13 TLS feature rename caught exactly as D11 anticipated).
+  - The conform gate earned its keep twice mid-phase: the main.rs
+    600-line budget (split → `mc_cmd.rs`, landed with Ф2's second
+    commit) and two domain `.expect()`s in harness.rs (fixed through
+    the error path, not deviated).
+  - Floor at the boundary: **all green** — conform 0 (7/7 gated),
+    specmap 18 units / 59 items / 59 edges / 0 orphans, test-gate
+    xfail-strict. Live smoke: the full install → hooks → remove →
+    `{}` → fetch-over-TLS cycle on a scratch project + scratch home.
+  - MT-C2-02 authored (recorded runs land with the Ф6 index).
+  - **Owner directive landed mid-phase (recorded verbatim in the
+    workspace contract):** per-phase reports in `reports/` with the
+    dated filename convention; Ф0–Ф3 reports written retroactively
+    in this phase's close.
+  - Delegation scoreboard this phase: delegated 1 (fetch.rs cell →
+    glm-5-turbo, delivered; one clippy collapse-if fixed at review),
+    kept: hook/statusline/harness cells (seam design + the
+    availability and ownership laws), wiring, smoke.
+  - Next: Ф4 (nudges + routing-as-data + question push).
 
 ## 15. Deferrals ledger (seeds Campaign 3+)
 
