@@ -432,6 +432,7 @@ _(filled per phase; empty at draft)_
 | Ф1 | — (gitignored artifacts) | P-R1 CONFIRMED: ≥16 qualifying repos, ≥17 papers before the cut | W1: deep-research, 103 agents / 710 tool calls / 24 claims verified 3-0, 31 min (raw: `refs/study/rlm-waves/wave1-deep-research.md`). W2: 12 frozen queries, executed before reading W1 (raw: `wave2-web-search.md`). Independence held. |
 | Ф2 | `a4c9611` | overlap exactly 60% (9/15; membership = name in wave record) — P-R2 verdict at close | 5/5/5 cut + runners-up ledgered in `notes/rlm-source-selection.md`; INVENTORY S10–S26 with license verdicts BEFORE study (rule 1). W1-only finds: ROMA, 2506.16411, SRLM; W2-only: ReDel, RAO, minRLM + the practitioner shelf. |
 | Ф3 | INVENTORY pin commit | — | Clones @depth-1 with pins: roma `a6e3bb4`, fast-rlm `f25f310`, redel `79eb988`, recursive-llm `cc7a826`. 7 PDFs valid (incl. anchor v3 9.9 MB). 6 article snapshots + ACCESS-DATES in `refs/articles/`. Real `~` untouched; all downloads gitignored. |
+| Ф4 | T1 commit + T2 commit + T3 commit | — | 11 notes / 15 sources + 4 runners-up. Boss read all 7 papers (pdftotext; PDF-render absent on box) + anchor repo; 5 GLM survey delegates over sandboxed copies (2 stalled silently ≥14 min — killed and relaunched per the live-observation law; relaunches clean); boss spot-checked load-bearing claims verbatim before authoring notes. Delegated 7 (5 surveys + 2 relaunches count as re-delegation) / kept: papers (judgment), all note authorship, spot-checks. |
 
 ## 14. Log {#log}
 

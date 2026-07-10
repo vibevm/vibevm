@@ -27,7 +27,7 @@ LICENSE + README (IGNITION plan, Phase 0 s6)._
 |---|---|---|---|---|---|---|---|
 | S1 | github.com/steipete/agent-scripts — `skills/codex-first/SKILL.md` (delegation-first rules) | src/agent-scripts/ | `d6ed98c` (2026-07-09) | **MIT** (Peter Steinberger) | inspiration-only | notes/codex-first-study.md ✅ | **studied; note on file; clean** |
 | S2 | github.com/barkain/claude-code-workflow-orchestration (initiative/orchestration prototype; owner: early prototype, do not imitate the implementation) | src/claude-code-workflow-orchestration/ | `175311b` (2026-06-20) | **MIT** (Nadav Barkai) | inspiration-only | notes/barkain-study.md ✅ | **studied 2026-07-10 (Campaign 2 open); note on file; clean** |
-| S3 | github.com/alexzhang13/rlm (RLM reference implementation, Python) | src/rlm/ | `72d6940` (2026-06-25) | **MIT** (Alex Zhang) | inspiration-only | notes/rlm-study.md (Campaign 3) | cloned, license cleared; deep study deferred to Campaign 3 |
+| S3 | github.com/alexzhang13/rlm (RLM reference implementation, Python) | src/rlm/ | `72d6940` (2026-06-25) | **MIT** (Alex Zhang) | inspiration-only | notes/rlm-study.md (T1) ✅ | **studied 2026-07-11 (RLM research Ф4 T1); note on file; clean** |
 | S4 | arXiv 2512.24601 — Recursive Language Models (paper, open access) | papers/2512.24601.pdf (v1) + papers/2512.24601v3.pdf (**v3**, 2026-05-11) | v3 fetched 2026-07-10 | arXiv (variant recorded: v3) | method: free to implement; text: cite, never copy | notes/rlm-study.md (T1) | v1+v3 downloaded; T1 study — RLM research Ф4 |
 | S5 | z.ai GLM coding-plan + Claude Code integration docs (base URL, model ids, env vars, quotas, pricing) | src/zai-docs/ | snapshot 2026-07-09 | vendor docs — facts only, no text reuse | facts source | folded into plan §5 / D6 / D12 ✅ | **facts extracted (Ф0.s3)** |
 | S6 | Anthropic Claude Code docs — headless mode, settings/env, hooks (paved-road surface) | src/cc-docs/ | snapshot 2026-07-09 | vendor docs — facts only, no text reuse | facts source | folded into plan §5 / D6 / D18 ✅ | **facts extracted (Ф0.s3)** |
@@ -54,6 +54,16 @@ LICENSE + README (IGNITION plan, Phase 0 s6)._
 
 ## Log
 
+- 2026-07-11 — RLM research Ф4 COMPLETE: every adopted source
+  studied, 11 notes on file (T1 `rlm-study.md`; T2 `roma-`,
+  `fast-rlm-`, `redel-`, `recursive-llm-`, `dnc-noise-`,
+  `context-folding-`, `srlm-`, `rao-study.md`; T3 grouped
+  `rlm-runners-up-t3.md`, `rlm-articles-t3.md`). S4 read at v3;
+  S3 status flipped to studied. Clean-room held: repo surveys ran
+  on sandboxed copies via GLM under live observation; the boss
+  spot-checked load-bearing claims verbatim (recursive-llm, redel,
+  fast-rlm — all held; ROMA structure-level) and authored every
+  note; no code shapes carried.
 - 2026-07-10 (late) — RLM research Ф2: S10–S26 registered from the
   three-wave selection (`notes/rlm-source-selection.md`); every row
   carries its license verdict BEFORE study per rule 1. S4 note: the
