@@ -1,9 +1,10 @@
 # FRACTALITY-RLM-RESEARCH-PLAN v0.1 — Campaign 3 · Stage A: the RLM research {#root}
 
-_Status: **DRAFTED 2026-07-10 22:15. NOT EXECUTING — RP-R1 (owner
-review of this plan) is OPEN**, per the owner's order verbatim: «Не
-исполняй план, вначале дай посмотреть на него». Genre: campaign
-plan (flow:campaign-plans — PLAN + BASELINE + PREDICTIONS + LOG +
+_Status: **EXECUTING since 2026-07-10 22:27 — RP-R1 RESOLVED**
+(«План одобряю, начинай исследование!» + goal ruling «Goal set:
+довести исследование до конца» — the stage runs autonomously
+through Ф5). Drafted 2026-07-10 22:15. Genre: campaign plan
+(flow:campaign-plans — PLAN + BASELINE + PREDICTIONS + LOG +
 REPORT in one document). Runs cold: any session executes this with
 no memory of the planning conversation._
 
@@ -368,14 +369,21 @@ current.
 
 ## 10. Review points {#review-points}
 
-- **RP-R1 — plan review (OPEN).** Owner order verbatim: «Не
-  исполняй план, вначале дай посмотреть на него». Nothing past Ф0
-  executes until the owner rules here. Ruling recorded verbatim on
-  resolution.
-- **RP-R2 — the 5/5/5 cut (opens at Ф2).** The verdict table is
-  shown in chat; the owner may swap items before heavy study. T1
-  study never waits (the owner already named the anchor project
-  primary in the mandate).
+- **RP-R1 — plan review (RESOLVED 2026-07-10 22:27, owner verbatim:
+  «План одобряю, начинай исследование!», followed the same minute
+  by the execution ruling «Goal set: довести исследование до
+  конца»).** The gate order («Не исполняй план, вначале дай
+  посмотреть на него») was honored: the plan landed at `82dc31c`,
+  the owner reviewed it (asked where cloning/study lives — §6
+  Ф3/Ф4, D-R4, §11 — and what preparation remained: none), then
+  launched. Posture per the goal ruling: the stage executes
+  autonomously through Ф5; RP-R2 becomes show-and-proceed; RP-R3
+  still blocks Stage B *execution*.
+- **RP-R2 — the 5/5/5 cut (opens at Ф2; show-and-proceed under the
+  goal ruling).** The verdict table is shown in chat; the owner may
+  swap items at any time and the cut is rearranged — but study does
+  not block on a reply. T1 study never waits (the owner already
+  named the anchor project primary in the mandate).
 - **RP-R3 — Stage B launch (opens at Ф5).** Drafting the Stage B
   plan is in scope; executing it is not — separate owner word.
 
@@ -420,10 +428,14 @@ _(filled per phase; empty at draft)_
 
 | phase | commits | confirmed / falsified | notes |
 |---|---|---|---|
-| Ф0 | — | — | plan drafted; RP-R1 OPEN |
+| Ф0 | `82dc31c` + the RP-R1 commit | — | plan drafted 22:15; RP-R1 RESOLVED 22:27 (approve + goal ruling); execution begins |
 
 ## 14. Log {#log}
 
 - 2026-07-10 22:15 — drafted in-session from the owner's three
   messages (mandate, plan order, execution gate); RP-R1 OPEN;
   dashboard `reports/2026-10-07-22-15-rlmresearch-drafted-plan.md`.
+- 2026-07-10 22:27 — RP-R1 RESOLVED (approve + «Goal set: довести
+  исследование до конца»); Ф1 fired: Wave 1 (deep research,
+  background) + Wave 2 (independent web search); dashboard
+  `reports/2026-10-07-22-27-rlmresearch-started-plan.md`.
