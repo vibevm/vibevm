@@ -954,7 +954,7 @@
   "spec_units": [
     {
       "anchor": "root",
-      "content_hash": "sha256:3444280f195286dbc197fefb8a2160ae6955898ab7c002ab7565fe4dadcd748e",
+      "content_hash": "sha256:07a31b83f2adff624e8286202131462f68e67793b41d204529f3d599a6b5a285",
       "doc_path": "PROP-001",
       "file": "spec/PROP-001-foundation.md",
       "heading": "PROP-001 — fractality: foundation",
@@ -1026,12 +1026,111 @@
     },
     {
       "anchor": "horizons",
-      "content_hash": "sha256:306c312b5219f3737862d3c2a3bc10a65365835bc91b4f469f502f0d9deb9a58",
+      "content_hash": "sha256:ba41d3262eeaf6f7be97bcce91c6dec90287aeff3b1ffadf8a7c3eaee8b87df8",
       "doc_path": "PROP-001",
       "file": "spec/PROP-001-foundation.md",
       "heading": "7. Evolution horizons (designed-for, not built)",
       "line": 204,
       "uri": "spec://fractality/PROP-001#horizons"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:d3a121585794a61049d0162149fbbf406e895708741adcb2092f37713558907b",
+      "doc_path": "VISION-RECURSIVE-FABRIC",
+      "file": "spec/VISION-RECURSIVE-FABRIC.md",
+      "heading": "VISION — the recursive fabric",
+      "line": 1,
+      "uri": "spec://fractality/VISION-RECURSIVE-FABRIC#root"
+    },
+    {
+      "anchor": "mandate",
+      "content_hash": "sha256:b63182dfc4ebbbddcbcd0fa7bfb5d01cff238848f7fcd24ab5c5f472ae6e4630",
+      "doc_path": "VISION-RECURSIVE-FABRIC",
+      "file": "spec/VISION-RECURSIVE-FABRIC.md",
+      "heading": "0. The mandate (owner, 2026-07-10, verbatim)",
+      "line": 12,
+      "uri": "spec://fractality/VISION-RECURSIVE-FABRIC#mandate"
+    },
+    {
+      "anchor": "pillars",
+      "content_hash": "sha256:e41a85a175c06bdb71509e232f522dac1368fb5ebd6b2b1153754a645ae7b34e",
+      "doc_path": "VISION-RECURSIVE-FABRIC",
+      "file": "spec/VISION-RECURSIVE-FABRIC.md",
+      "heading": "1. The four pillars",
+      "line": 45,
+      "uri": "spec://fractality/VISION-RECURSIVE-FABRIC#pillars"
+    },
+    {
+      "anchor": "v1-promotion",
+      "content_hash": "sha256:09796f50eaa97c0201231cc39274b17eb415f7ec7fd3941692e0a7dcb2aa8d93",
+      "doc_path": "VISION-RECURSIVE-FABRIC",
+      "file": "spec/VISION-RECURSIVE-FABRIC.md",
+      "heading": "V1 — any agent can become a boss",
+      "line": 47,
+      "uri": "spec://fractality/VISION-RECURSIVE-FABRIC#v1-promotion"
+    },
+    {
+      "anchor": "v2-rlm",
+      "content_hash": "sha256:b12f98d443569e3f4e26cb1401715367663d7928d67ab98da828ffb9dd0d59fa",
+      "doc_path": "VISION-RECURSIVE-FABRIC",
+      "file": "spec/VISION-RECURSIVE-FABRIC.md",
+      "heading": "V2 — the RLM procedure, whole",
+      "line": 71,
+      "uri": "spec://fractality/VISION-RECURSIVE-FABRIC#v2-rlm"
+    },
+    {
+      "anchor": "v3-escalation",
+      "content_hash": "sha256:747e6fbf83dfde8ea0b3a2ff5334e5036ba6dc14c6450dce4d8c5feeaf83241d",
+      "doc_path": "VISION-RECURSIVE-FABRIC",
+      "file": "spec/VISION-RECURSIVE-FABRIC.md",
+      "heading": "V3 — escalation up the hierarchy",
+      "line": 88,
+      "uri": "spec://fractality/VISION-RECURSIVE-FABRIC#v3-escalation"
+    },
+    {
+      "anchor": "v4-advisor",
+      "content_hash": "sha256:ce8f68304af2d32ad3a9582d71f0195e5aad2335cfe0a3159f006620b6cddb97",
+      "doc_path": "VISION-RECURSIVE-FABRIC",
+      "file": "spec/VISION-RECURSIVE-FABRIC.md",
+      "heading": "V4 — advisor instead of escalation",
+      "line": 102,
+      "uri": "spec://fractality/VISION-RECURSIVE-FABRIC#v4-advisor"
+    },
+    {
+      "anchor": "schematics",
+      "content_hash": "sha256:38b3735d5897cf62ffba74ebc0b9dfdb0be41dfe4cbb8cae066a9d99ce37a1bc",
+      "doc_path": "VISION-RECURSIVE-FABRIC",
+      "file": "spec/VISION-RECURSIVE-FABRIC.md",
+      "heading": "2. The two reference schematics",
+      "line": 125,
+      "uri": "spec://fractality/VISION-RECURSIVE-FABRIC#schematics"
+    },
+    {
+      "anchor": "specifics",
+      "content_hash": "sha256:effea2519ea927f4e08defbaf90948b951ed02c9e4b5ebed41c57fd09f01b9d1",
+      "doc_path": "VISION-RECURSIVE-FABRIC",
+      "file": "spec/VISION-RECURSIVE-FABRIC.md",
+      "heading": "3. Fractality specifics the vision must respect",
+      "line": 156,
+      "uri": "spec://fractality/VISION-RECURSIVE-FABRIC#specifics"
+    },
+    {
+      "anchor": "near-term",
+      "content_hash": "sha256:5f0b22a19d3222eb4119d4e3336973b750f714e1e0f8b3814653f12d92a92a29",
+      "doc_path": "VISION-RECURSIVE-FABRIC",
+      "file": "spec/VISION-RECURSIVE-FABRIC.md",
+      "heading": "4. Near-term steps through this lens",
+      "line": 184,
+      "uri": "spec://fractality/VISION-RECURSIVE-FABRIC#near-term"
+    },
+    {
+      "anchor": "open-questions",
+      "content_hash": "sha256:e91e7cdf9c38c61c9f2e25449c19f5df3ca81a440a731d5a92ad22ddaa1bf3f4",
+      "doc_path": "VISION-RECURSIVE-FABRIC",
+      "file": "spec/VISION-RECURSIVE-FABRIC.md",
+      "heading": "5. Open questions (for the Campaign 3 mandate)",
+      "line": 206,
+      "uri": "spec://fractality/VISION-RECURSIVE-FABRIC#open-questions"
     },
     {
       "anchor": "root",
