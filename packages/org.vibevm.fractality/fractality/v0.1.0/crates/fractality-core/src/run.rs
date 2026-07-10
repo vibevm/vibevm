@@ -185,6 +185,11 @@ pub struct RunRecord {
     pub workspace_mode: WorkspaceMode,
     /// Parent run for nested delegation (Phase 4); the call tree edges.
     pub parent: Option<RunId>,
+    /// Boss session that originated this run (Campaign 2 D2). A label
+    /// for attribution and per-session metrics — never a reference:
+    /// a dangling id is harmless and never invalidates the run.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub origin_session: Option<crate::ids::SessionId>,
     /// Nesting depth (0 = boss-spawned; parent's depth + 1 otherwise).
     #[serde(default)]
     pub depth: u32,

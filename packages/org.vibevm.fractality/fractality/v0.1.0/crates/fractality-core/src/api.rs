@@ -14,10 +14,11 @@ use std::collections::BTreeMap;
 
 use serde::{Deserialize, Serialize};
 
-use crate::ids::{PodId, RunId};
+use crate::ids::{PodId, RunId, SessionId};
 use crate::node::{NodeIdentity, ScopeInfo};
 use crate::packet::Packet;
 use crate::run::{KillReason, RunRecord, RunState, UsageTotals};
+use crate::session::{SessionNote, SessionRecord};
 
 specmark::scope!("spec://fractality/PROP-001#architecture");
 
@@ -69,6 +70,11 @@ pub struct RegisterRunRequest {
     /// sets it). Defaults to false so raw registration stays available.
     #[serde(default)]
     pub spawn: bool,
+    /// Boss session this run is attributed to (Campaign 2 D2: the CLI
+    /// reads `FRACTALITY_BOSS_SESSION` and stamps it here). A label —
+    /// an unknown session id never fails the registration.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub origin_session: Option<SessionId>,
 }
 
 /// `GET /v0/runs` — the list, newest last (tail-friendly, D17).
@@ -161,6 +167,61 @@ pub struct MetricsBucket {
     pub wall_ms: u64,
     /// The D12 quota counter, summed from run usage.
     pub web_tool_calls: u64,
+}
+
+/// `POST /v0/sessions` — register (or resume) a boss session
+/// (Campaign 2 D2/D3). Idempotent per `(harness, external_id)`: while
+/// such a session is open, begin returns it instead of minting a twin —
+/// Claude Code fires SessionStart on `startup|resume|clear|compact`,
+/// and all four must land on one record.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct SessionBeginRequest {
+    /// Harness label, e.g. `claude-code` (I4: data, not a code path).
+    pub harness: String,
+    /// The harness's own session identifier (CC session UUID).
+    pub external_id: String,
+    pub cwd: camino::Utf8PathBuf,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct SessionBeginResponse {
+    pub session: SessionRecord,
+    /// True when an open session matched and was returned as-is.
+    pub resumed: bool,
+}
+
+/// `POST /v0/sessions/:id/events` — record one initiative fact.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct SessionEventRequest {
+    pub note: SessionNote,
+}
+
+/// `GET /v0/sessions` — newest last (D17), optional `?open=true`.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct SessionListResponse {
+    pub sessions: Vec<SessionRecord>,
+}
+
+/// `GET /v0/sessions/:id/metrics` — the session-scoped scoreboard
+/// facts: the record (with its initiative counters) plus the metrics
+/// bucket folded over the runs this session originated.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct SessionMetricsResponse {
+    pub session: SessionRecord,
+    pub runs: MetricsBucket,
+    /// Open questions on runs of this session (id + age), the D5
+    /// injection facts.
+    #[serde(default)]
+    pub parked: Vec<ParkedQuestion>,
+}
+
+/// One parked worker question, as the scoreboard shows it.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct ParkedQuestion {
+    pub run_id: RunId,
+    pub question: String,
+    /// Milliseconds the run has been waiting.
+    pub waiting_ms: u64,
 }
 
 /// `POST /v0/shutdown`

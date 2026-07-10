@@ -230,6 +230,85 @@ impl McClient {
             .await
     }
 
+    // -------------------------------------------------- sessions (Campaign 2)
+
+    /// Begins (or resumes) a boss session (D2/D3).
+    pub async fn session_begin(
+        &self,
+        req: &fractality_core::api::SessionBeginRequest,
+    ) -> Result<fractality_core::api::SessionBeginResponse, ClientError> {
+        self.request(
+            "POST /v0/sessions",
+            self.http.post(self.url("/sessions")).json(req),
+        )
+        .await
+    }
+
+    /// Records one initiative fact on a session.
+    pub async fn session_note(
+        &self,
+        id: fractality_core::ids::SessionId,
+        note: fractality_core::session::SessionNote,
+    ) -> Result<fractality_core::SessionRecord, ClientError> {
+        self.request(
+            "POST /v0/sessions/:id/events",
+            self.http
+                .post(self.url(&format!("/sessions/{id}/events")))
+                .json(&fractality_core::api::SessionEventRequest { note }),
+        )
+        .await
+    }
+
+    /// Marks the session ended (idempotent).
+    pub async fn session_end(
+        &self,
+        id: fractality_core::ids::SessionId,
+    ) -> Result<fractality_core::SessionRecord, ClientError> {
+        self.request(
+            "POST /v0/sessions/:id/end",
+            self.http.post(self.url(&format!("/sessions/{id}/end"))),
+        )
+        .await
+    }
+
+    pub async fn session(
+        &self,
+        id: fractality_core::ids::SessionId,
+    ) -> Result<fractality_core::SessionRecord, ClientError> {
+        self.request(
+            "GET /v0/sessions/:id",
+            self.http.get(self.url(&format!("/sessions/{id}"))),
+        )
+        .await
+    }
+
+    pub async fn sessions(
+        &self,
+        open_only: bool,
+    ) -> Result<Vec<fractality_core::SessionRecord>, ClientError> {
+        let path = if open_only {
+            "/sessions?open=true"
+        } else {
+            "/sessions"
+        };
+        let resp: fractality_core::api::SessionListResponse = self
+            .request("GET /v0/sessions", self.http.get(self.url(path)))
+            .await?;
+        Ok(resp.sessions)
+    }
+
+    /// The session-scoped scoreboard facts.
+    pub async fn session_metrics(
+        &self,
+        id: fractality_core::ids::SessionId,
+    ) -> Result<fractality_core::api::SessionMetricsResponse, ClientError> {
+        self.request(
+            "GET /v0/sessions/:id/metrics",
+            self.http.get(self.url(&format!("/sessions/{id}/metrics"))),
+        )
+        .await
+    }
+
     /// Parks a run on a question (D18); called by the ask_boss broker.
     pub async fn question(&self, id: RunId, question: &str) -> Result<RunRecord, ClientError> {
         self.request(

@@ -13,6 +13,7 @@
 mod boss;
 mod broker;
 mod out;
+mod session;
 mod swarm;
 
 use camino::Utf8PathBuf;
@@ -152,10 +153,59 @@ enum Cmd {
         #[arg(long)]
         json: bool,
     },
+    /// Boss sessions (Campaign 2): register, close, and inspect the
+    /// attribution unit the scoreboard aggregates by.
+    Session {
+        #[command(subcommand)]
+        cmd: SessionCmd,
+    },
     /// The ask_boss MCP stdio server (plumbing: Claude Code launches
     /// this inside workers; not for human use).
     #[command(hide = true)]
     McpBroker,
+}
+
+#[derive(Subcommand)]
+enum SessionCmd {
+    /// Begin (or resume) a session; prints the session id on stdout —
+    /// compose: `export FRACTALITY_BOSS_SESSION=$(fractality session
+    /// begin --harness claude-code --external-id <uuid>)`.
+    Begin {
+        /// Harness label, e.g. `claude-code`.
+        #[arg(long)]
+        harness: String,
+        /// The harness's own session identifier.
+        #[arg(long, value_name = "ID")]
+        external_id: String,
+        /// Session working directory (defaults to the current one).
+        #[arg(long, value_name = "DIR")]
+        cwd: Option<Utf8PathBuf>,
+        /// Machine-readable output.
+        #[arg(long)]
+        json: bool,
+    },
+    /// Mark a session ended (idempotent).
+    End {
+        /// Session id (or unique prefix).
+        id: String,
+    },
+    /// Show one session: record, counters, runs bucket, parked questions.
+    Show {
+        /// Session id (or unique prefix).
+        id: String,
+        /// Machine-readable output.
+        #[arg(long)]
+        json: bool,
+    },
+    /// List sessions, newest last.
+    Ls {
+        /// Only sessions still open.
+        #[arg(long)]
+        open: bool,
+        /// Machine-readable output.
+        #[arg(long)]
+        json: bool,
+    },
 }
 
 #[derive(Subcommand)]
@@ -206,6 +256,17 @@ async fn main() -> std::process::ExitCode {
             boss::answer(&home, &id, text.as_deref(), file.as_deref()).await
         }
         Cmd::Stats { json } => boss::stats(&home, json).await,
+        Cmd::Session { cmd } => match cmd {
+            SessionCmd::Begin {
+                harness,
+                external_id,
+                cwd,
+                json,
+            } => session::begin(&home, &harness, &external_id, cwd.as_deref(), json).await,
+            SessionCmd::End { id } => session::end(&home, &id).await,
+            SessionCmd::Show { id, json } => session::show(&home, &id, json).await,
+            SessionCmd::Ls { open, json } => session::ls(&home, open, json).await,
+        },
         Cmd::McpBroker => broker::serve(&home).await,
     };
     std::process::ExitCode::from(code)
@@ -240,6 +301,7 @@ async fn run_packet(home: &camino::Utf8Path, packet_path: &camino::Utf8Path, jso
             packet,
             parent,
             spawn: true,
+            origin_session: swarm::origin_session_from_env(),
         })
         .await
     {

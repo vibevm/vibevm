@@ -23,13 +23,15 @@ pub mod node;
 pub mod packet;
 pub mod profile;
 pub mod run;
+pub mod session;
 pub mod time;
 pub mod worker;
 
 pub use error::CoreError;
 pub use fileref::FileRef;
-pub use ids::{PodId, RunId, ScopeId};
+pub use ids::{PodId, RunId, ScopeId, SessionId};
 pub use packet::{Packet, WorkspaceMode};
 pub use profile::{Profile, ProfilesFile};
 pub use run::{Collected, KillReason, RunRecord, RunState, UsageTotals};
+pub use session::{InitiativeCounters, SessionRecord};
 pub use worker::{RunContext, WorkerBackend, WorkerSpec};

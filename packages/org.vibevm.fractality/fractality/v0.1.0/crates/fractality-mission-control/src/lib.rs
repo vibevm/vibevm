@@ -12,12 +12,14 @@
 
 pub mod admission;
 pub mod http;
+pub mod http_sessions;
 pub mod identity;
 pub mod journal_store;
 pub mod kill;
 pub mod metrics;
 pub mod registry;
 pub mod scopes;
+pub mod sessions;
 pub mod state;
 pub mod workspace;
 

@@ -21,12 +21,16 @@ use fractality_core::time::now_ms;
 
 specmark::scope!("spec://fractality/PROP-001#architecture");
 
-const LIVE_FILE: &str = "events.jsonl";
+/// The run journal's file stem (`events.jsonl` + rotations). Sessions
+/// ride a sibling stem (`sessions`, Campaign 2 D3) through the same
+/// writer/replay machinery — one store, two files, two folds.
+const RUN_STEM: &str = "events";
 const DEFAULT_MAX_BYTES: u64 = 64 * 1024 * 1024;
 
-/// Appending writer over the live journal file.
+/// Appending writer over one journal stem's live file.
 pub struct JournalWriter {
     dir: Utf8PathBuf,
+    stem: String,
     file: std::fs::File,
     bytes: u64,
     max_bytes: u64,
@@ -34,13 +38,22 @@ pub struct JournalWriter {
 
 impl JournalWriter {
     pub fn open(dir: &Utf8Path) -> Result<Self, String> {
-        Self::open_with_max(dir, DEFAULT_MAX_BYTES)
+        Self::open_stem_with_max(dir, RUN_STEM, DEFAULT_MAX_BYTES)
+    }
+
+    /// A writer over a sibling stem (e.g. `sessions`).
+    pub fn open_stem(dir: &Utf8Path, stem: &str) -> Result<Self, String> {
+        Self::open_stem_with_max(dir, stem, DEFAULT_MAX_BYTES)
     }
 
     /// Test seam: a tiny `max_bytes` exercises rotation cheaply.
     pub fn open_with_max(dir: &Utf8Path, max_bytes: u64) -> Result<Self, String> {
+        Self::open_stem_with_max(dir, RUN_STEM, max_bytes)
+    }
+
+    pub fn open_stem_with_max(dir: &Utf8Path, stem: &str, max_bytes: u64) -> Result<Self, String> {
         std::fs::create_dir_all(dir.as_std_path()).map_err(|e| format!("creating `{dir}`: {e}"))?;
-        let path = dir.join(LIVE_FILE);
+        let path = dir.join(format!("{stem}.jsonl"));
         let file = std::fs::OpenOptions::new()
             .create(true)
             .append(true)
@@ -49,15 +62,16 @@ impl JournalWriter {
         let bytes = file.metadata().map(|m| m.len()).unwrap_or(0);
         Ok(Self {
             dir: dir.to_owned(),
+            stem: stem.to_owned(),
             file,
             bytes,
             max_bytes,
         })
     }
 
-    /// Appends one envelope and flushes. Rotates first when the live file
-    /// is already over budget.
-    pub fn append(&mut self, envelope: &Envelope) -> Result<(), String> {
+    /// Appends one line (any serde-serializable envelope type) and
+    /// flushes. Rotates first when the live file is already over budget.
+    pub fn append<T: serde::Serialize>(&mut self, envelope: &T) -> Result<(), String> {
         if self.bytes >= self.max_bytes {
             self.rotate()?;
         }
@@ -73,14 +87,16 @@ impl JournalWriter {
     }
 
     fn rotate(&mut self) -> Result<(), String> {
-        let live = self.dir.join(LIVE_FILE);
+        let live = self.dir.join(format!("{}.jsonl", self.stem));
         // Two rotations inside one millisecond must not collide: a
         // sequence suffix keeps names unique AND lexicographically
         // time-ordered within the same stamp.
         let ms = now_ms();
         let mut rotated = None;
         for n in 0u32..=9999 {
-            let candidate = self.dir.join(format!("events-{ms:020}-{n:04}.jsonl"));
+            let candidate = self
+                .dir
+                .join(format!("{}-{ms:020}-{n:04}.jsonl", self.stem));
             if !candidate.as_std_path().exists() {
                 rotated = Some(candidate);
                 break;
@@ -97,7 +113,7 @@ impl JournalWriter {
         let file = std::fs::OpenOptions::new()
             .create(true)
             .append(true)
-            .open(self.dir.join(LIVE_FILE).as_std_path())
+            .open(self.dir.join(format!("{}.jsonl", self.stem)).as_std_path())
             .map_err(|e| format!("reopening live journal: {e}"))?;
         self.file = file;
         self.bytes = 0;
@@ -116,15 +132,28 @@ pub struct ReplayReport {
     pub torn_tail: bool,
 }
 
-/// Reads every journal file in order and parses line by line.
+/// Reads every run-journal file in order and parses line by line.
 pub fn replay(dir: &Utf8Path) -> Result<(Vec<Envelope>, ReplayReport), String> {
+    replay_stem::<Envelope>(dir, RUN_STEM)
+}
+
+/// Stem-generic replay: the same walk, tolerance, and reporting for any
+/// envelope type (the session journal reuses every rule).
+pub fn replay_stem<T: serde::de::DeserializeOwned>(
+    dir: &Utf8Path,
+    stem: &str,
+) -> Result<(Vec<T>, ReplayReport), String> {
     let mut names: Vec<String> = Vec::new();
     match std::fs::read_dir(dir.as_std_path()) {
         Ok(entries) => {
             for entry in entries {
                 let entry = entry.map_err(|e| format!("listing `{dir}`: {e}"))?;
                 let name = entry.file_name().to_string_lossy().into_owned();
-                if name.starts_with("events") && name.ends_with(".jsonl") {
+                // `<stem>.jsonl` (live) and `<stem>-…` (rotations); the
+                // exact-prefix check keeps sibling stems apart.
+                if name.ends_with(".jsonl")
+                    && (name == format!("{stem}.jsonl") || name.starts_with(&format!("{stem}-")))
+                {
                     names.push(name);
                 }
             }
@@ -150,7 +179,7 @@ pub fn replay(dir: &Utf8Path) -> Result<(Vec<Envelope>, ReplayReport), String> {
                 continue;
             }
             report.lines += 1;
-            match serde_json::from_str::<Envelope>(line) {
+            match serde_json::from_str::<T>(line) {
                 Ok(env) => envelopes.push(env),
                 Err(e) => {
                     if fi == last_file && li == last_line {
@@ -215,7 +244,7 @@ mod tests {
             use std::io::Write;
             let mut f = std::fs::OpenOptions::new()
                 .append(true)
-                .open(dir.join(LIVE_FILE).as_std_path())
+                .open(dir.join("events.jsonl").as_std_path())
                 .expect("open live");
             f.write_all(b"{\"ts_ms\":2,\"event\":\"spaw")
                 .expect("write torn");
@@ -236,7 +265,7 @@ mod tests {
             use std::io::Write;
             let mut f = std::fs::OpenOptions::new()
                 .append(true)
-                .open(dir.join(LIVE_FILE).as_std_path())
+                .open(dir.join("events.jsonl").as_std_path())
                 .expect("open live");
             f.write_all(b"garbage-line\n").expect("write garbage");
         }

@@ -39,6 +39,11 @@ pub struct Inner {
     pub journal: JournalWriter,
     pub runs: std::collections::BTreeMap<RunId, RunRecord>,
     pub pods: HashMap<PodId, PodRuntime>,
+    /// The session journal (Campaign 2 D3): sibling stem, own fold —
+    /// the run journal's replay stays byte-for-byte untouched.
+    pub session_journal: JournalWriter,
+    pub sessions:
+        std::collections::BTreeMap<fractality_core::ids::SessionId, fractality_core::SessionRecord>,
 }
 
 pub struct AppState {
@@ -106,7 +111,32 @@ impl AppState {
             tracing::info!(lines = report.lines, runs = runs.len(), "journal replayed");
         }
 
+        // The session journal replays with the same tolerance rules
+        // (Campaign 2 D3); anomalies warn, they never block startup.
+        let (session_envelopes, session_report) = crate::journal_store::replay_stem::<
+            fractality_core::session::SessionEnvelope,
+        >(&cfg.journal_dir(), "sessions")?;
+        let mut sessions = std::collections::BTreeMap::new();
+        let mut session_refused = 0u64;
+        for env in &session_envelopes {
+            if fractality_core::session::apply_session(&mut sessions, env)
+                != fractality_core::session::SessionApplyOutcome::Applied
+            {
+                session_refused += 1;
+            }
+        }
+        if session_report.skipped > 0 || session_refused > 0 || session_report.torn_tail {
+            tracing::warn!(
+                lines = session_report.lines,
+                skipped = session_report.skipped,
+                refused = session_refused,
+                torn_tail = session_report.torn_tail,
+                "session journal replay finished with anomalies"
+            );
+        }
+
         let journal = JournalWriter::open(&cfg.journal_dir())?;
+        let session_journal = JournalWriter::open_stem(&cfg.journal_dir(), "sessions")?;
         Ok(Self {
             cfg,
             bearer: fractality_mc_client::lock::mint_bearer(),
@@ -118,6 +148,8 @@ impl AppState {
                 journal,
                 runs,
                 pods: HashMap::new(),
+                session_journal,
+                sessions,
             }),
             shutdown: tokio::sync::watch::channel(false).0,
         })

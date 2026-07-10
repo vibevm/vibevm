@@ -171,6 +171,13 @@ mod tests {
         os_env.insert("CLAUDE_CONFIG_DIR".to_owned(), "poison-dir".to_owned());
         os_env.insert("CLAUDECODE_FLAG".to_owned(), "poison-flag".to_owned());
         os_env.insert("SOME_RANDOM_VAR".to_owned(), "not-whitelisted".to_owned());
+        // Campaign 2 D2: the boss-session attribution var must never
+        // reach a worker — a worker's own spawns attribute through
+        // FRACTALITY_RUN_ID parenting, not the boss's session.
+        os_env.insert(
+            fractality_core::session::BOSS_SESSION_ENV.to_owned(),
+            "poison-session".to_owned(),
+        );
 
         let env = build_worker_env(
             &os_env,
@@ -183,6 +190,11 @@ mod tests {
         // Whitelisted OS vars pass; non-whitelisted never do.
         assert_eq!(env.get("PATH").map(String::as_str), Some("C:/bin"));
         assert_eq!(env.get("SOME_RANDOM_VAR"), None);
+        assert_eq!(
+            env.get(fractality_core::session::BOSS_SESSION_ENV),
+            None,
+            "I1: the boss-session var never enters a worker env"
+        );
 
         // Every provider-shaped value comes from the profile/secrets,
         // never from the parent.

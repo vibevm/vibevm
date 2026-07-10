@@ -65,6 +65,13 @@ ulid_id!(
     PodId
 );
 
+ulid_id!(
+    /// Identity of one boss session observed by mission-control
+    /// (Campaign 2 D2/D3): the attribution unit the scoreboard and the
+    /// initiative engine aggregate by.
+    SessionId
+);
+
 /// Identity of a filesystem scope (D19). Minted and persisted by
 /// mission-control; proven live by the rendezvous beacon, never by the
 /// string alone.

@@ -71,6 +71,7 @@ async fn register_and_launch_pod(
         .register_run(&RegisterRunRequest {
             packet: stub_packet(title),
             parent: None,
+            origin_session: None,
             spawn: false,
         })
         .await

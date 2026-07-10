@@ -18,6 +18,7 @@ fn record(id: &str, profile: &str, spawn: bool, parent: Option<RunId>) -> RunRec
         model: "big".into(),
         workspace_mode: WorkspaceMode::Dir,
         parent,
+        origin_session: None,
         depth: 0,
         spawn_requested: spawn,
         budget: BudgetSpec::default(),

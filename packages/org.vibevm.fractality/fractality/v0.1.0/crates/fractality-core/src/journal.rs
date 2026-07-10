@@ -306,6 +306,7 @@ mod tests {
             model: "big".into(),
             workspace_mode: WorkspaceMode::Dir,
             parent: None,
+            origin_session: None,
             depth: 0,
             spawn_requested: false,
             budget: crate::packet::BudgetSpec::default(),

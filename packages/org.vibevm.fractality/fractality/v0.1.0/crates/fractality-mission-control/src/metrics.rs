@@ -35,6 +35,12 @@ fn bucket<'a>(map: &'a mut BTreeMap<String, MetricsBucket>, key: &str) -> &'a mu
     map.entry(key.to_owned()).or_default()
 }
 
+/// Folds one run into a bucket — the one aggregation rule, shared by
+/// the global answer and the session-scoped one (Campaign 2 D16).
+pub(crate) fn fold_into(b: &mut MetricsBucket, run: &RunRecord) {
+    fold(b, run);
+}
+
 fn fold(b: &mut MetricsBucket, run: &RunRecord) {
     b.runs += 1;
     match run.state {
@@ -79,6 +85,7 @@ mod tests {
             model: model.into(),
             workspace_mode: WorkspaceMode::Dir,
             parent: None,
+            origin_session: None,
             depth: 0,
             spawn_requested: true,
             budget: BudgetSpec::default(),

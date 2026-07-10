@@ -39,7 +39,7 @@
       "crate_name": "fractality-cli",
       "file": "crates/fractality-cli/src/main.rs",
       "item_kind": "mod",
-      "line": 24,
+      "line": 25,
       "symbol": "fractality_cli"
     },
     {
@@ -65,6 +65,13 @@
     },
     {
       "crate_name": "fractality-cli",
+      "file": "crates/fractality-cli/src/session.rs",
+      "item_kind": "mod",
+      "line": 14,
+      "symbol": "fractality_cli::session"
+    },
+    {
+      "crate_name": "fractality-cli",
       "file": "crates/fractality-cli/src/swarm.rs",
       "item_kind": "mod",
       "line": 10,
@@ -74,7 +81,7 @@
       "crate_name": "fractality-core",
       "file": "crates/fractality-core/src/api.rs",
       "item_kind": "mod",
-      "line": 22,
+      "line": 23,
       "symbol": "fractality_core::api"
     },
     {
@@ -142,6 +149,13 @@
     },
     {
       "crate_name": "fractality-core",
+      "file": "crates/fractality-core/src/session.rs",
+      "item_kind": "mod",
+      "line": 19,
+      "symbol": "fractality_core::session"
+    },
+    {
+      "crate_name": "fractality-core",
       "file": "crates/fractality-core/src/time.rs",
       "item_kind": "mod",
       "line": 10,
@@ -179,14 +193,14 @@
       "crate_name": "fractality-mc-client",
       "file": "crates/fractality-mc-client/src/lib.rs",
       "item_kind": "fn",
-      "line": 457,
+      "line": 536,
       "symbol": "fractality_mc_client::inherit_guard::Guard::restore_inherit"
     },
     {
       "crate_name": "fractality-mc-client",
       "file": "crates/fractality-mc-client/src/lib.rs",
       "item_kind": "fn",
-      "line": 428,
+      "line": 507,
       "symbol": "fractality_mc_client::inherit_guard::Guard::strip_std_handles"
     },
     {
@@ -200,7 +214,7 @@
       "crate_name": "fractality-mission-control",
       "file": "crates/fractality-mission-control/src/lib.rs",
       "item_kind": "mod",
-      "line": 33,
+      "line": 35,
       "symbol": "fractality_mission_control"
     },
     {
@@ -214,7 +228,7 @@
       "crate_name": "fractality-mission-control",
       "file": "crates/fractality-mission-control/src/lib.rs",
       "item_kind": "enum",
-      "line": 63,
+      "line": 65,
       "symbol": "fractality_mission_control::ServerError"
     },
     {
@@ -228,8 +242,15 @@
       "crate_name": "fractality-mission-control",
       "file": "crates/fractality-mission-control/src/http.rs",
       "item_kind": "mod",
-      "line": 25,
+      "line": 26,
       "symbol": "fractality_mission_control::http"
+    },
+    {
+      "crate_name": "fractality-mission-control",
+      "file": "crates/fractality-mission-control/src/http_sessions.rs",
+      "item_kind": "mod",
+      "line": 22,
+      "symbol": "fractality_mission_control::http_sessions"
     },
     {
       "crate_name": "fractality-mission-control",
@@ -275,6 +296,20 @@
     },
     {
       "crate_name": "fractality-mission-control",
+      "file": "crates/fractality-mission-control/src/sessions.rs",
+      "item_kind": "mod",
+      "line": 22,
+      "symbol": "fractality_mission_control::sessions"
+    },
+    {
+      "crate_name": "fractality-mission-control",
+      "file": "crates/fractality-mission-control/src/sessions.rs",
+      "item_kind": "enum",
+      "line": 24,
+      "symbol": "fractality_mission_control::sessions::SessionError"
+    },
+    {
+      "crate_name": "fractality-mission-control",
       "file": "crates/fractality-mission-control/src/state.rs",
       "item_kind": "mod",
       "line": 22,
@@ -284,7 +319,7 @@
       "crate_name": "fractality-mission-control",
       "file": "crates/fractality-mission-control/src/state.rs",
       "item_kind": "enum",
-      "line": 57,
+      "line": 62,
       "symbol": "fractality_mission_control::state::RecordError"
     },
     {
@@ -374,7 +409,7 @@
     {
       "file": "crates/fractality-cli/src/main.rs",
       "from_symbol": "fractality_cli",
-      "line": 24,
+      "line": 25,
       "provenance": "authored",
       "uri": "spec://fractality/PROP-001#architecture",
       "verb": "implements"
@@ -404,6 +439,14 @@
       "verb": "implements"
     },
     {
+      "file": "crates/fractality-cli/src/session.rs",
+      "from_symbol": "fractality_cli::session",
+      "line": 14,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
       "file": "crates/fractality-cli/src/swarm.rs",
       "from_symbol": "fractality_cli::swarm",
       "line": 10,
@@ -414,7 +457,7 @@
     {
       "file": "crates/fractality-core/src/api.rs",
       "from_symbol": "fractality_core::api",
-      "line": 22,
+      "line": 23,
       "provenance": "authored",
       "uri": "spec://fractality/PROP-001#architecture",
       "verb": "implements"
@@ -492,6 +535,14 @@
       "verb": "implements"
     },
     {
+      "file": "crates/fractality-core/src/session.rs",
+      "from_symbol": "fractality_core::session",
+      "line": 19,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#model",
+      "verb": "implements"
+    },
+    {
       "file": "crates/fractality-core/src/time.rs",
       "from_symbol": "fractality_core::time",
       "line": 10,
@@ -534,7 +585,7 @@
     {
       "file": "crates/fractality-mc-client/src/lib.rs",
       "from_symbol": "fractality_mc_client::inherit_guard::Guard::restore_inherit",
-      "line": 459,
+      "line": 538,
       "provenance": "authored",
       "uri": "spec://fractality/PROP-001#architecture",
       "verb": "deviates",
@@ -543,7 +594,7 @@
     {
       "file": "crates/fractality-mc-client/src/lib.rs",
       "from_symbol": "fractality_mc_client::inherit_guard::Guard::strip_std_handles",
-      "line": 431,
+      "line": 510,
       "provenance": "authored",
       "uri": "spec://fractality/PROP-001#architecture",
       "verb": "deviates",
@@ -560,7 +611,7 @@
     {
       "file": "crates/fractality-mission-control/src/lib.rs",
       "from_symbol": "fractality_mission_control",
-      "line": 33,
+      "line": 35,
       "provenance": "authored",
       "uri": "spec://fractality/PROP-001#architecture",
       "verb": "implements"
@@ -576,7 +627,7 @@
     {
       "file": "crates/fractality-mission-control/src/lib.rs",
       "from_symbol": "fractality_mission_control::ServerError",
-      "line": 73,
+      "line": 75,
       "provenance": "authored",
       "uri": "spec://fractality/PROP-001#architecture",
       "verb": "implements"
@@ -592,9 +643,17 @@
     {
       "file": "crates/fractality-mission-control/src/http.rs",
       "from_symbol": "fractality_mission_control::http",
-      "line": 25,
+      "line": 26,
       "provenance": "authored",
       "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-mission-control/src/http_sessions.rs",
+      "from_symbol": "fractality_mission_control::http_sessions",
+      "line": 22,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#sessions",
       "verb": "implements"
     },
     {
@@ -646,6 +705,22 @@
       "verb": "implements"
     },
     {
+      "file": "crates/fractality-mission-control/src/sessions.rs",
+      "from_symbol": "fractality_mission_control::sessions",
+      "line": 22,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-mission-control/src/sessions.rs",
+      "from_symbol": "fractality_mission_control::sessions::SessionError",
+      "line": 26,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
       "file": "crates/fractality-mission-control/src/state.rs",
       "from_symbol": "fractality_mission_control::state",
       "line": 22,
@@ -656,7 +731,7 @@
     {
       "file": "crates/fractality-mission-control/src/state.rs",
       "from_symbol": "fractality_mission_control::state::RecordError",
-      "line": 59,
+      "line": 64,
       "provenance": "authored",
       "uri": "spec://fractality/PROP-001#architecture",
       "verb": "implements"
@@ -714,7 +789,7 @@
   "spec_units": [
     {
       "anchor": "root",
-      "content_hash": "sha256:87ebad4ac14a61b8996c2ed12681124d5b1133f6abc5c6af9e6fd5da39080cfa",
+      "content_hash": "sha256:3444280f195286dbc197fefb8a2160ae6955898ab7c002ab7565fe4dadcd748e",
       "doc_path": "PROP-001",
       "file": "spec/PROP-001-foundation.md",
       "heading": "PROP-001 — fractality: foundation",
@@ -741,7 +816,7 @@
     },
     {
       "anchor": "architecture",
-      "content_hash": "sha256:fd083119a2b89ec69dce7f8024088f3258914d7ca94f723a6728a1f6e8a94b59",
+      "content_hash": "sha256:d542bffcb8d8a5bdf3035bf6fcc6bfb362dbec1032b1a422ae9cff44e081a4a0",
       "doc_path": "PROP-001",
       "file": "spec/PROP-001-foundation.md",
       "heading": "3. Architecture",
@@ -749,12 +824,21 @@
       "uri": "spec://fractality/PROP-001#architecture"
     },
     {
+      "anchor": "sessions",
+      "content_hash": "sha256:139f21a7306c73f1559bef791ccd3ed1c02fd2bbc835d5fa40a5d8bd7a0e39c9",
+      "doc_path": "PROP-001",
+      "file": "spec/PROP-001-foundation.md",
+      "heading": "3b. Boss sessions",
+      "line": 110,
+      "uri": "spec://fractality/PROP-001#sessions"
+    },
+    {
       "anchor": "invariants",
       "content_hash": "sha256:cab9eb0e6159a06c3f2f5f767d7a4fb153cef55f209c6f7504795f72f17e223a",
       "doc_path": "PROP-001",
       "file": "spec/PROP-001-foundation.md",
       "heading": "4. Invariants",
-      "line": 110,
+      "line": 128,
       "uri": "spec://fractality/PROP-001#invariants"
     },
     {
@@ -763,7 +847,7 @@
       "doc_path": "PROP-001",
       "file": "spec/PROP-001-foundation.md",
       "heading": "5. Usage & terms-of-service posture",
-      "line": 159,
+      "line": 177,
       "uri": "spec://fractality/PROP-001#tos"
     },
     {
@@ -772,7 +856,7 @@
       "doc_path": "PROP-001",
       "file": "spec/PROP-001-foundation.md",
       "heading": "6. Relationship to the host repository",
-      "line": 176,
+      "line": 194,
       "uri": "spec://fractality/PROP-001#host"
     },
     {
@@ -781,7 +865,7 @@
       "doc_path": "PROP-001",
       "file": "spec/PROP-001-foundation.md",
       "heading": "7. Evolution horizons (designed-for, not built)",
-      "line": 186,
+      "line": 204,
       "uri": "spec://fractality/PROP-001#horizons"
     },
     {
@@ -831,12 +915,21 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:887bde0fd74c8afa6b971197e3dad45cdbd78f808a0a73b7f1d814a9a8de8d38",
+      "content_hash": "sha256:911ce4c5ccbaea175f7cee786577e3891df600f583ce23cf2adb98ac9868563f",
       "doc_path": "refs/INVENTORY",
       "file": "spec/refs/INVENTORY.md",
       "heading": "Reference-source inventory (clean-room register)",
       "line": 1,
       "uri": "spec://fractality/refs/INVENTORY#root"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:ec219cb95f287e1154a89553b945deec5a04ab57c6d68b1e6b9193fe473710bc",
+      "doc_path": "refs/notes/barkain-study",
+      "file": "spec/refs/notes/barkain-study.md",
+      "heading": "Study note — barkain workflow-orchestration (clean-room)",
+      "line": 1,
+      "uri": "spec://fractality/refs/notes/barkain-study#root"
     },
     {
       "anchor": "root",

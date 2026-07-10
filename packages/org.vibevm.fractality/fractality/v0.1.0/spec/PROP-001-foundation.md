@@ -107,6 +107,24 @@ process ownership, and metering live in MC, because only a single
 long-lived supervisor can own kill-trees, adoption after crashes, and
 cross-run accounting.
 
+### 3b. Boss sessions {#sessions}
+
+Mission-control also records **boss sessions** (Campaign 2 — the
+initiative system): one record per boss conversation in some harness,
+registered by that harness's adapter at session start and closed at its
+end. The harness name is a label (I4), never a code path. Runs carry an
+optional `origin_session` — a best-effort attribution label exported
+into the boss's environment at session start (`FRACTALITY_BOSS_SESSION`)
+and read by the CLI at spawn time; a dangling label never invalidates a
+run. Session events ride a sibling journal file (`sessions.jsonl`) with
+its own replay fold, leaving the run journal untouched; the record
+accumulates **facts only** (work-tool events, delegations — which zero
+the work-tool slate, nudges sent, question alerts). All initiative
+*policy* — thresholds, cooldowns, texts — lives in the client-side
+engine, so MC stays the one telemetry store (I3) and never a policy
+brain. The variable never enters a worker environment (I1): worker-side
+spawns attribute through `FRACTALITY_RUN_ID` parenting.
+
 ## 4. Invariants {#invariants}
 
 - **I1 — worker-env hygiene (security).** A worker's environment is

@@ -20,6 +20,7 @@ use fractality_core::run::{Collected, KillReason, RunRecord, RunState, UsageTota
 use fractality_core::time::now_ms;
 use serde::Deserialize;
 
+use crate::http_sessions as hs;
 use crate::state::{AppState, PodRuntime, RecordError};
 
 specmark::scope!("spec://fractality/PROP-001#architecture");
@@ -41,6 +42,11 @@ pub fn router(state: Arc<AppState>) -> Router {
         .route("/runs/{id}/question", post(post_question))
         .route("/runs/{id}/answer", post(post_answer))
         .route("/metrics", get(metrics))
+        .route("/sessions", post(hs::session_begin).get(hs::session_list))
+        .route("/sessions/{id}", get(hs::session_get))
+        .route("/sessions/{id}/events", post(hs::session_event))
+        .route("/sessions/{id}/end", post(hs::session_end))
+        .route("/sessions/{id}/metrics", get(hs::session_metrics))
         .route("/shutdown", post(shutdown))
         .route("/pods/register", post(pod_register))
         .route("/pods/{id}/heartbeat", post(pod_heartbeat))
@@ -50,15 +56,16 @@ pub fn router(state: Arc<AppState>) -> Router {
     Router::new().nest(fractality_core::api::API_PREFIX, api)
 }
 
-/// Uniform API error: status + message + fix-surface hint.
-struct ApiError {
+/// Uniform API error: status + message + fix-surface hint (shared with
+/// the session leg, hence crate-visible).
+pub(crate) struct ApiError {
     status: StatusCode,
     error: String,
     hint: Option<String>,
 }
 
 impl ApiError {
-    fn new(status: StatusCode, error: impl Into<String>) -> Self {
+    pub(crate) fn new(status: StatusCode, error: impl Into<String>) -> Self {
         Self {
             status,
             error: error.into(),
@@ -66,7 +73,7 @@ impl ApiError {
         }
     }
 
-    fn hint(mut self, hint: impl Into<String>) -> Self {
+    pub(crate) fn hint(mut self, hint: impl Into<String>) -> Self {
         self.hint = Some(hint.into());
         self
     }
@@ -215,6 +222,7 @@ async fn register_run(
         model: req.packet.routing.model.clone(),
         workspace_mode: req.packet.workspace.mode,
         parent: req.parent,
+        origin_session: req.origin_session,
         depth,
         spawn_requested: req.spawn,
         budget: req.packet.budget,
@@ -236,6 +244,10 @@ async fn register_run(
     let stored = state.record(Event::Registered {
         run: Box::new(record),
     })?;
+
+    // Attribution note (Campaign 2 D2): best-effort by design — an
+    // unknown session id never fails the registration.
+    state.note_delegation_best_effort(req.origin_session, stored.run_id);
 
     // Admission decides whether the run launches now or queues for a
     // slot (Phase 4). Either way registration succeeded — the caller

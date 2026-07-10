@@ -30,6 +30,27 @@ fn parent_from_env() -> Option<String> {
         .filter(|v| !v.is_empty())
 }
 
+/// The attribution default (Campaign 2 D2): a boss session's spawns
+/// carry its id via the env the harness adapter exported at
+/// SessionStart. Same worker-context seam as `FRACTALITY_RUN_ID` —
+/// this file is the recorded env root for both. A malformed value is
+/// dropped with a warning, never fatal (attribution is a label).
+pub(crate) fn origin_session_from_env() -> Option<fractality_core::ids::SessionId> {
+    let raw = std::env::var(fractality_core::session::BOSS_SESSION_ENV)
+        .ok()
+        .filter(|v| !v.is_empty())?;
+    match raw.parse() {
+        Ok(id) => Some(id),
+        Err(_) => {
+            eprintln!(
+                "fractality: {} `{raw}` is not a session id; run not attributed",
+                fractality_core::session::BOSS_SESSION_ENV
+            );
+            None
+        }
+    }
+}
+
 /// Resolves the parent for a new run: explicit flag wins, then the
 /// worker-context env (FRACTALITY_RUN_ID), then none. An explicit value
 /// may be a unique prefix; the env value must be exact (the pod wrote it).
@@ -82,6 +103,7 @@ pub(crate) async fn spawn(
             packet,
             parent,
             spawn: true,
+            origin_session: origin_session_from_env(),
         })
         .await
     {
