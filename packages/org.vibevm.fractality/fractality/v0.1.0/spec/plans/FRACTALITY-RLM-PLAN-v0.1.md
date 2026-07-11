@@ -1,11 +1,12 @@
 # FRACTALITY-RLM-PLAN v0.1 — Campaign 3 · Stage B: the descent core (DRAFT) {#root}
 
-_Status: **DRAFT 2026-07-11 — NOT COMMISSIONED.** Authored by
-Stage A's Ф5 as its exit deliverable (research plan D-R7/RP-R3):
-drafting is in scope, execution is a separate owner decision.
-Every §4 decision cites the RD-deltas of
+_Status: **COMMISSIONED 2026-07-11 — Option B (descent + ascent).**
+The owner ruled RP-C3-1 on 2026-07-11 (verbatim in §1 and §8);
+drafting was Stage A's Ф5 exit deliverable (research plan
+D-R7/RP-R3), execution begins now under Option B. Every §4 decision
+cites the RD-deltas of
 [`RLM-SYNTHESIS.md`](../refs/notes/RLM-SYNTHESIS.md); the mandate
-slot below is empty until the owner speaks. Genre: campaign plan.
+slot below (§1) now carries the ruling. Genre: campaign plan.
 **Revised same day by Stage A2 (the Fugu research): three changes
 and one new decision applied per
 [`FUGU-FRACTALITY-MAPPING.md`](../refs/notes/FUGU-FRACTALITY-MAPPING.md)
@@ -13,8 +14,29 @@ and one new decision applied per
 
 ## 1. The mandate {#mandate}
 
-_(empty — RP-C3-1. The owner rules: scope cut, budget posture,
-timing. The three cut options are §3.)_
+**RP-C3-1 ruled 2026-07-11 — Option B (descent + ascent).** Owner
+verbatim: «Вариант 1. Вариант плана - B (нисхождение + эскалация).
+Вариант C с адвайзором - отдельная задача, запланируй.»
+
+The ruling settles:
+
+- **Scope = Option B (§3):** the descent core plus the escalation
+  (ascent) channel — V2+V3. RD-6's Silo theorem makes ascent part
+  of descent's correctness, so the advisor (V4) is the single piece
+  cut, not a plane left half-built.
+- **Option C (the advisor, V4) becomes a separate future task** at
+  the owner's explicit order («отдельная задача, запланируй»),
+  registered as
+  [PP-003](../../../../plans/postponed/PP-003-option-c-advisor-slice.md).
+  D-C3-7 (§4) stays drafted but is OUT of this campaign's build
+  scope; it fires only when the owner commissions Stage C.
+- **Budget posture & timing:** commissioning is now; Ф0–Ф5 cost
+  nothing beyond the standing GLM plan (local floors + already-paid
+  delegates). The only paid, budget-matched surface is Ф6's trial,
+  which stays gated behind **RP-C3-2**. Left for the owner there:
+  trial budget posture and — since RP5 (PP-001) is not yet ruled —
+  the MT-C2-05-vs-MT-C3-01 firing order (today MT-C3-01 is the
+  first and only trial this campaign fires).
 
 Standing context the mandate lands on: VISION §V2 («Должна быть
 реализация RLM-спуска и всего RLM-процесса») + §V1/V3/V4 pillars;
@@ -166,8 +188,13 @@ license-cleared; refs tree local and pinned.
 
 ## 8. Review points {#review-points}
 
-- **RP-C3-1 — mandate & scope cut (OPEN):** owner picks Option
-  A/B/C, budget posture, timing; ruling verbatim here.
+- **RP-C3-1 — mandate & scope cut (RULED 2026-07-11 → Option B):**
+  owner verbatim «Вариант 1. Вариант плана - B (нисхождение +
+  эскалация). Вариант C с адвайзором - отдельная задача,
+  запланируй.» Scope = descent + ascent (V2+V3); the advisor (V4)
+  is cut to [PP-003](../../../../plans/postponed/PP-003-option-c-advisor-slice.md).
+  Budget posture + timing → §1; paid trial arms remain behind
+  RP-C3-2.
 - **RP-C3-2 — trial arms authorization (opens at Ф6):** paid arms
   gated like RP1/RP5.
 - Standing: PP-001's RP5 remains independent; firing order of
