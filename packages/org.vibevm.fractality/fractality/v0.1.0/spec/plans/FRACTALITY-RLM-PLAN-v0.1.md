@@ -219,6 +219,7 @@ Commit map (Stage B execution, Campaign 3):
 - Ф2.2 routing policy — capability-class table (`011ef6c`).
 - Ф2.3 profile capability_class (`14f97b8`).
 - Ф3.1 spawn depth-guard — D-C3-3 enforcement (`b23f3f1`).
+- Ф3.2 gate invocation — `fractality gate` + `can_spawn` fix (`3b0b2d2`).
 
 **Scoping decision — retry-on-violation (D-C3-2).** The validation seam
 produces the retry-feedback report (Ф1.2b), but the automatic one-retry
@@ -270,8 +271,12 @@ stays bounded regardless of the advisory. The gate-invocation slice
 (D-C3-8) must translate a class's policy cap into `GateInputs` so a
 no-spawn class never reaches the spawn arm (e.g. gate on a `can_spawn`
 signal derived from `cap > 0`) rather than passing `0` through as
-"unlimited". `decide`'s pure semantics and its golden stay unchanged
-until then; revisit trigger: the D-C3-8 wiring.
+"unlimited". **RESOLVED in Ф3.2 (`3b0b2d2`):** `GateInputs` gained a
+`can_spawn` field (the gate CLI derives it from `cap > 0`); `decide`'s
+spawn arm gates on it, so a no-spawn class folds instead of spawning.
+`max_depth = 0` keeps its "unlimited" meaning only when `can_spawn` is
+true, so the existing pure-procedure semantics and every prior spawn test
+stand unchanged.
 
 ## 10. Executor's guide — read this before any code {#executor-guide}
 

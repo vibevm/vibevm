@@ -4,8 +4,9 @@ _Campaign 3 Stage B execution tracker. Updated in place between status
 documents (big-plan dashboard rule — bulk stays out of status files).
 Source of truth is the spec tree (plan, syntheses, WAL); this is the
 owner-facing surface + the agent's own quick tracker. Last updated:
-2026-07-12 00:20 (Ф3 IN PROGRESS — Ф3.1 depth-guard landed `b23f3f1`,
-floor green; next the gate invocation + masking + descent verbs)._
+2026-07-12 00:33 (Ф3 IN PROGRESS — Ф3.1 depth-guard + Ф3.2a gate
+invocation landed, floor green; next Ф3.2b decision journal, then
+masking + descent verbs)._
 
 ## Goal & operating contract (owner, 2026-07-11)
 
@@ -97,7 +98,9 @@ nudge (RD-12 settings-writes precedent), mc-client, cli surfaces.
       routing policy + profile class; goldens); gate wiring → Ф3
 - [~] Ф3 gate wiring + descent verbs — IN PROGRESS
   - [x] Ф3.1 depth-guard — D-C3-3 spawn-past-cap refusal (`b23f3f1`)
-  - [ ] Ф3.2 gate invocation + decision journal (D-C3-8)
+  - [~] Ф3.2 gate invocation (D-C3-8)
+    - [x] Ф3.2a `fractality gate` CLI + `can_spawn` overload fix (`3b0b2d2`)
+    - [ ] Ф3.2b decision journal — separate stem (soft-label table)
   - [ ] Ф3.3 availability masking (FD-8)
   - [ ] Ф3.4 descent verbs — await any|all|named (D-C3-4/5)
   - [ ] Ф3.5 sibling isolation + merge node + refuse-near-duplicate
@@ -159,17 +162,22 @@ core `state.rs`/`admission.rs`/`http.rs`/`needgate.rs`/`routing.rs`/
 `profile.rs`/`packet.rs`/`journal.rs`/`lib.rs`, cli `route_cmd.rs`,
 delegation-rules `routing-policy.toml`. Seams for the rest are mapped.
 
-**Next: Ф3.2 — gate invocation + decision journal (D-C3-8).** A
-`fractality gate` CLI (pattern: `route_cmd.rs` — pure calculus + print +
-exit codes) surfacing `needgate::decide`, plus journaling the decision
-tuple. **Journal design (found this session):** the run journal folds
-every event into a `RunRecord` (each event carries a `run_id`); a gate
-decision (inline/escalate → no run) does NOT fit that fold. Use a
+**Ф3.2a DONE (`3b0b2d2`):** `fractality gate` CLI surfaces
+`needgate::decide` (pattern: `route_cmd.rs`), and the `max_depth=0`
+overload is resolved — `GateInputs.can_spawn` (derived from `cap > 0`)
+gates the spawn arm, so a no-spawn class folds instead of spawning.
+
+**Next: Ф3.2b — the decision journal (soft-label table half of D-C3-8).**
+**Journal design (found this session, NOT yet built):** the run journal
+folds every event into a `RunRecord` (each event carries a `run_id`); a
+gate decision (inline/escalate → no run) does NOT fit that fold. Use a
 **separate journal stem** — the pattern `state.rs` already uses for the
-session journal (`open_stem`/`replay_stem`, sibling fold). **Resolve the
-`max_depth=0` overload at this seam** (routing 0=no-spawn vs need-gate
-0=unlimited — plan §9 finding): translate a class's policy cap into
-`GateInputs` so a weak/no-spawn class never reaches decide's spawn arm.
+session journal (`open_stem`/`replay_stem`, sibling fold). Open design
+question for the next session: WHERE decisions are recorded — the offline
+`gate` CLI only prints (like `route`), so the soft-label table needs the
+decision captured at the real action point (spawn/route in MC), or a
+`POST /v0/decisions` the CLI/boss calls. Read `journal_store.rs` +
+`http_sessions.rs` (the session-stem precedent) first.
 Then Ф3.3 masking (FD-8, `registry.rs`), Ф3.4/3.5 descent verbs
 (read `mc-client/lib.rs`, cli `mc_cmd.rs`/`swarm.rs`/`broker.rs` first),
 Ф3.6 retry-on-violation. Each = one commit, floor green after each.
