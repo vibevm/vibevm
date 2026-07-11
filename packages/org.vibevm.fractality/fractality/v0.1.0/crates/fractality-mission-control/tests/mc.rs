@@ -30,6 +30,25 @@ fn packet(title: &str) -> Packet {
     .expect("fixture packet parses")
 }
 
+/// A fixture packet designated as the run tree's merge node (D-C3-4/5).
+fn merge_packet(title: &str) -> Packet {
+    Packet::from_toml_str(&format!(
+        r#"
+            schema = 1
+            [task]
+            title = "{title}"
+            goal = "integration fixture"
+            [workspace]
+            mode = "dir"
+            [output]
+            merge = true
+            [routing]
+            profile = "test"
+        "#
+    ))
+    .expect("merge fixture packet parses")
+}
+
 #[tokio::test]
 async fn bus_requires_the_bearer() {
     let home = scratch_home("auth");
@@ -266,6 +285,61 @@ async fn near_duplicate_child_spec_is_refused() {
 
     let listed = client.runs(None, None).await.expect("lists");
     assert_eq!(listed.len(), 2, "the refused duplicate created no run");
+
+    server.stop().await;
+    std::fs::remove_dir_all(home.as_std_path()).ok();
+}
+
+/// MC allows at most one merge node per parent (D-C3-4/5): a second child
+/// with `output.merge` under the same parent is refused at the door (a
+/// fan-out has one designated answer).
+#[tokio::test]
+async fn a_second_merge_node_under_a_parent_is_refused() {
+    let home = scratch_home("merge");
+    let server = start(Config::new(home.clone())).await.expect("starts");
+    let client = McClient::connect(&home)
+        .await
+        .expect("connect works")
+        .expect("daemon is live");
+
+    let root = client
+        .register_run(&RegisterRunRequest {
+            packet: packet("root"),
+            parent: None,
+            origin_session: None,
+            spawn: false,
+        })
+        .await
+        .expect("registers root");
+    // The first, active merge child.
+    client
+        .register_run(&RegisterRunRequest {
+            packet: merge_packet("merge-a"),
+            parent: Some(root.run_id),
+            origin_session: None,
+            spawn: false,
+        })
+        .await
+        .expect("registers first merge child");
+
+    // A second merge child — a DISTINCT task, so not a near-duplicate;
+    // refused for the merge invariant alone.
+    let second = client
+        .register_run(&RegisterRunRequest {
+            packet: merge_packet("merge-b"),
+            parent: Some(root.run_id),
+            origin_session: None,
+            spawn: true,
+        })
+        .await;
+    assert!(second.is_err(), "a second merge node must be refused");
+
+    let listed = client.runs(None, None).await.expect("lists");
+    assert_eq!(
+        listed.len(),
+        2,
+        "root + the first merge node; the second left no run"
+    );
 
     server.stop().await;
     std::fs::remove_dir_all(home.as_std_path()).ok();

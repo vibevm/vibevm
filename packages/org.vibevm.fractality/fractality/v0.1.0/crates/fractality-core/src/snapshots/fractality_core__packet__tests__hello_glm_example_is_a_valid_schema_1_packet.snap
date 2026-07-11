@@ -23,6 +23,7 @@ Packet {
         result: "result.md",
         branch: None,
         output_schema: None,
+        merge: false,
     },
     budget: BudgetSpec {
         wall_secs: 300,

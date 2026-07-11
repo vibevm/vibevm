@@ -216,14 +216,14 @@ async fn register_run(
         }
     }
 
-    // Refuse a near-duplicate child (D-C3-4/5): a spawn whose task matches
-    // an active sibling's is orchestration collapse (logic in admission).
+    // Sibling invariants (D-C3-4/5): no near-duplicate, one merge node max.
     if req.spawn
         && let Some(parent) = req.parent
-        && let Err(message) = crate::admission::check_not_duplicate(&state, &req.packet, parent)
+        && let Err(message) =
+            crate::admission::check_sibling_invariants(&state, &req.packet, parent)
     {
         return Err(ApiError::new(StatusCode::CONFLICT, message)
-            .hint("await or reuse the sibling's result via context_from, or vary the task"));
+            .hint("vary the task, or keep at most one output.merge child per parent"));
     }
 
     // The product path validates at the door (D14/F16: the 400 names the

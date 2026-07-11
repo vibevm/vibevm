@@ -118,32 +118,53 @@ pub fn check_spawn_depth(
     Ok(())
 }
 
-/// The near-duplicate guard (D-C3-4/5): refuse a spawn whose task matches
-/// an active sibling's — orchestration collapse, where the siblings do the
-/// same work. Matched by [`Packet::task_fingerprint`] (task + inputs, NOT
-/// execution params, so a legitimate fan-out of the same-titled task over
-/// different chunks still passes) against non-terminal siblings, read from
-/// their run dirs. Best-effort under concurrency: two simultaneous
-/// identical spawns can race past this (it is not atomic with the record)
-/// — an acceptable v1. A sibling whose packet cannot be read is skipped,
-/// never treated as a match.
+/// The sibling invariants a spawn must satisfy (D-C3-4/5), checked in one
+/// pass over the parent's non-terminal children (read from their run dirs):
+///
+///   - **no near-duplicate** — its task must not match an active sibling's
+///     ([`Packet::task_fingerprint`]: task + inputs, NOT execution params,
+///     so a legitimate fan-out of the same-titled task over different
+///     chunks still passes). Two siblings doing the same work is
+///     orchestration collapse.
+///   - **at most one merge node** — if the spawn sets `output.merge`, no
+///     active sibling may already be the merge node: a fan-out has ONE
+///     designated answer, not two.
+///
+/// Best-effort under concurrency: two simultaneous spawns can race past
+/// this (it is not atomic with the record) — an acceptable v1. A sibling
+/// whose packet cannot be read is skipped.
 ///
 /// [`Packet::task_fingerprint`]: fractality_core::Packet::task_fingerprint
-pub fn check_not_duplicate(state: &AppState, packet: &Packet, parent: RunId) -> Result<(), String> {
+pub fn check_sibling_invariants(
+    state: &AppState,
+    packet: &Packet,
+    parent: RunId,
+) -> Result<(), String> {
     let new_fp = packet.task_fingerprint();
-    let twin = state.active_children(parent).into_iter().find(|sib| {
-        std::fs::read_to_string(sib.run_dir.join("packet.toml").as_std_path())
-            .ok()
-            .and_then(|t| Packet::from_toml_str(&t).ok())
-            .is_some_and(|p| p.task_fingerprint() == new_fp)
-    });
-    match twin {
-        Some(sib) => Err(format!(
-            "near-duplicate of active sibling {} (same task under the same parent)",
-            sib.run_id
-        )),
-        None => Ok(()),
+    let is_merge = packet.output.merge;
+    for sib in state.active_children(parent) {
+        let Some(sib_packet) =
+            std::fs::read_to_string(sib.run_dir.join("packet.toml").as_std_path())
+                .ok()
+                .and_then(|t| Packet::from_toml_str(&t).ok())
+        else {
+            continue;
+        };
+        if sib_packet.task_fingerprint() == new_fp {
+            return Err(format!(
+                "near-duplicate of active sibling {} (same task under the same parent)",
+                sib.run_id
+            ));
+        }
+        if is_merge && sib_packet.output.merge {
+            return Err(format!(
+                "a merge node already exists under this parent (sibling {}); \
+                 a fan-out has one designated answer",
+                sib.run_id
+            ));
+        }
     }
+    Ok(())
 }
 
 /// Whether a profile's bearer-token file is present — the availability

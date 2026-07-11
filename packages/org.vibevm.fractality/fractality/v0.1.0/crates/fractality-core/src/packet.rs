@@ -135,6 +135,22 @@ pub struct OutputSpec {
     /// format first, quality second (FD-15).
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub output_schema: Option<String>,
+    /// D-C3-4/5: this child is the run tree's MERGE NODE — the one that
+    /// combines its siblings' results (read via `context.context_from`)
+    /// into the parent's answer. At most one merge node per parent, which
+    /// mission-control enforces at registration. Default false.
+    ///
+    /// REVIEW: v1 is the marker + the at-most-one invariant; the
+    /// await/collect integration that makes a parent's result BE the merge
+    /// node's is a later slice.
+    #[serde(default, skip_serializing_if = "is_false")]
+    pub merge: bool,
+}
+
+/// serde `skip_serializing_if` for a plain bool: omit it from the wire
+/// when false, so a default packet's `output` block stays unchanged.
+fn is_false(b: &bool) -> bool {
+    !*b
 }
 
 impl Default for OutputSpec {
@@ -143,6 +159,7 @@ impl Default for OutputSpec {
             result: default_result(),
             branch: None,
             output_schema: None,
+            merge: false,
         }
     }
 }
@@ -352,6 +369,19 @@ mod tests {
             other_goal.task_fingerprint(),
             "the goal is part of task identity"
         );
+    }
+
+    /// The merge-node marker defaults off and round-trips when set.
+    #[test]
+    fn output_merge_defaults_off_and_parses() {
+        let plain = Packet::from_toml_str(minimal_packet_toml()).expect("parses");
+        assert!(!plain.output.merge, "merge is off by default");
+        let merge = Packet::from_toml_str(
+            "schema = 1\n[task]\ntitle = \"t\"\ngoal = \"g\"\n\
+             [output]\nmerge = true\n[routing]\nprofile = \"glm\"\n",
+        )
+        .expect("parses");
+        assert!(merge.output.merge, "merge = true parses");
     }
 
     #[test]
