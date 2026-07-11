@@ -9,9 +9,11 @@ gate` surfaces `decide` (`3b0b2d2`, also resolving the `max_depth=0`
 overload via `GateInputs.can_spawn`), and `gate --record` journals the
 `DecisionRecord` to a `/v0/decisions` stem end-to-end (`2c0a128` storage
 + `8d8960a` producer); **Ф3.4a** `fractality wait --any` descent
-await-any race (`a1479f1`; `all`/`named` already existed). **Remaining
-Ф3:** the descent SEMANTICS (3.5 sibling isolation / merge node /
-refuse-near-duplicate), masking (FD-8, maybe defer), retry (3.6).
+await-any race (`a1479f1`; `all`/`named` already existed); **Ф3.5a**
+refuse near-duplicate child — `Packet::task_fingerprint` +
+`admission::check_not_duplicate` (`1189b3c`, full-spec match so fan-out
+passes). **Remaining Ф3:** Ф3.5b merge node (design-laden) + the
+sibling-isolation pinning test, masking (FD-8, maybe defer), retry (3.6).
 Per-slice status + design notes in the state-plan tracker._
 
 ## Current state

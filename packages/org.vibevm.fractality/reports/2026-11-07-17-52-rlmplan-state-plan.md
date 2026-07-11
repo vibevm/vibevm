@@ -4,12 +4,11 @@ _Campaign 3 Stage B execution tracker. Updated in place between status
 documents (big-plan dashboard rule — bulk stays out of status files).
 Source of truth is the spec tree (plan, syntheses, WAL); this is the
 owner-facing surface + the agent's own quick tracker. Last updated:
-2026-07-12 01:25 (Ф3 IN PROGRESS — the WHOLE gate wiring is in: Ф3.1
-depth-guard + Ф3.2 gate invocation & decision journal (**D-C3-8
-COMPLETE**, end-to-end over the bus) + Ф3.4a await `--any`, all floor
-green + pushed. Remaining Ф3: the descent SEMANTICS (3.5 sibling
-isolation / merge node / refuse-near-duplicate), masking (FD-8, maybe
-defer), retry (3.6))._
+2026-07-12 01:45 (Ф3 IN PROGRESS — gate wiring complete (D-C3-3 +
+D-C3-8), await `--any` (3.4a), and refuse-near-duplicate (3.5a) all in,
+each floor green + pushed. Remaining Ф3: Ф3.5b merge node (design-laden)
++ the sibling-isolation pinning test, masking (FD-8, maybe defer), retry
+(3.6))._
 
 ## Goal & operating contract (owner, 2026-07-11)
 
@@ -113,7 +112,13 @@ nudge (RD-12 settings-writes precedent), mc-client, cli surfaces.
     - [x] Ф3.4a `fractality wait --any` race (`a1479f1`); `all`/`named`
           already existed (default-join / passing ids)
     - [ ] Ф3.4b parallel-spawn idiom + mid-task profile alternation
-  - [ ] Ф3.5 sibling isolation + merge node + refuse-near-duplicate
+  - [~] Ф3.5 sibling isolation + merge node + refuse-near-duplicate
+    - [x] Ф3.5a refuse-near-duplicate — `Packet::task_fingerprint` +
+          `admission::check_not_duplicate` (`1189b3c`); full-spec match,
+          not title-only, so fan-out passes
+    - [ ] Ф3.5b merge node (design-laden — what it IS / how designated)
+          + sibling-isolation pinning test (isolation already true by
+          construction; the test would document, not enforce)
   - [ ] Ф3.6 retry-on-violation re-dispatch (deferred from Ф1.2b)
 - [ ] Ф4 escalation (D-C3-6)
 - [ ] Ф5 acceptance / PP-002 (RD-11, FD-9)
