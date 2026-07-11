@@ -120,6 +120,16 @@ nudge (RD-12 settings-writes precedent), mc-client, cli surfaces.
           + sibling-isolation pinning test (isolation already true by
           construction; the test would document, not enforce)
   - [ ] Ф3.6 retry-on-violation re-dispatch (deferred from Ф1.2b)
+        **SEAM FINDING (this session, verified):** the schema-gate result
+        does NOT reach MC — `core::run::Collected` (and the `PodEvent::
+        Collected` it rides) carry only result + acceptance, never the
+        schema verdict; the pod writes `schema_gate` to `status.json`
+        locally (Ф1.2b). So retry needs the schema result PLUMBED first:
+        either add `schema_valid`/violations to `Collected` (pod→MC
+        protocol change) OR have MC read `status.json` in the Collected
+        handler. Then re-dispatch once with the violation report in the
+        retry child's `context.notes`, bounded by a retry marker to
+        prevent loops. Protocol-touching + multi-crate → best fresh.
 - [ ] Ф4 escalation (D-C3-6)
 - [ ] Ф5 acceptance / PP-002 (RD-11, FD-9)
 - [ ] Ф6 trial (D-C3-9) — STOP at RP-C3-2
