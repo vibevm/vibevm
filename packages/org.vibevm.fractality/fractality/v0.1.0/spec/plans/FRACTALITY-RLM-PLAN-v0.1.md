@@ -221,6 +221,20 @@ Commit map (Stage B execution, Campaign 3):
 - Ф3.1 spawn depth-guard — D-C3-3 enforcement (`b23f3f1`).
 - Ф3.2 gate invocation — `fractality gate` + `can_spawn` fix (`3b0b2d2`).
 - Ф3.4a await `--any` (D-C3-4) + run-verb relocation (`a1479f1`).
+- Ф3.2b-i decision journal storage — stem + records (`2c0a128`).
+
+**Scoping decision — decision-journal producer (D-C3-8).** The journal
+must record REAL need-gate decisions, so the producer cannot be MC
+re-deriving one at `register_run` — MC lacks the boss's task-shape
+signals (`GateInputs`), and a synthesized record would be a false entry.
+The producer is therefore the `fractality gate --record` path (it holds
+the real signals): the gate verb, when a daemon is reachable, POSTs its
+`DecisionRecord` to a new `/v0/decisions` endpoint. That makes `gate`
+async + daemon-aware (today it is pure/offline like `route`), so it lands
+as its own sub-slice (Ф3.2b-ii) rather than being rushed onto the storage
+layer. Until then nothing writes decisions at runtime; the stem +
+`record_decision`/`decisions` (`2c0a128`) are exercised only by tests
+(the Ф2 precedent: ship the tested library, then its caller).
 
 **Scoping decision — retry-on-violation (D-C3-2).** The validation seam
 produces the retry-feedback report (Ф1.2b), but the automatic one-retry

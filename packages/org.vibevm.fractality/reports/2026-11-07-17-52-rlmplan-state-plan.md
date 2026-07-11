@@ -4,9 +4,10 @@ _Campaign 3 Stage B execution tracker. Updated in place between status
 documents (big-plan dashboard rule — bulk stays out of status files).
 Source of truth is the spec tree (plan, syntheses, WAL); this is the
 owner-facing surface + the agent's own quick tracker. Last updated:
-2026-07-12 00:50 (Ф3 IN PROGRESS — Ф3.1 depth-guard, Ф3.2a gate
-invocation, Ф3.4a await `--any` landed, all floor green; remaining:
-3.2b decision journal, 3.4b/3.5 descent, masking (maybe defer), retry)._
+2026-07-12 01:05 (Ф3 IN PROGRESS — Ф3.1 depth-guard, Ф3.2a gate
+invocation, Ф3.4a await `--any`, Ф3.2b-i decision-journal storage
+landed, all floor green + pushed; remaining: 3.2b-ii producer (async
+gate), 3.4b/3.5 descent verbs, masking (maybe defer), retry)._
 
 ## Goal & operating contract (owner, 2026-07-11)
 
@@ -98,9 +99,14 @@ nudge (RD-12 settings-writes precedent), mc-client, cli surfaces.
       routing policy + profile class; goldens); gate wiring → Ф3
 - [~] Ф3 gate wiring + descent verbs — IN PROGRESS
   - [x] Ф3.1 depth-guard — D-C3-3 spawn-past-cap refusal (`b23f3f1`)
-  - [~] Ф3.2 gate invocation (D-C3-8)
+  - [~] Ф3.2 gate invocation + decision journal (D-C3-8)
     - [x] Ф3.2a `fractality gate` CLI + `can_spawn` overload fix (`3b0b2d2`)
-    - [ ] Ф3.2b decision journal — separate stem (soft-label table)
+    - [~] Ф3.2b decision journal — separate stem (soft-label table)
+      - [x] Ф3.2b-i storage: `DecisionRecord`/`Envelope` + decisions
+            stem (`record_decision`/`decisions`), tested (`2c0a128`)
+      - [ ] Ф3.2b-ii producer: `gate --record` → `POST /v0/decisions`
+            (makes `gate` async + daemon-aware); read `http_sessions.rs`
+            + mc-client session verbs for the endpoint/client pattern
   - [ ] Ф3.3 availability masking (FD-8) — dead-surface risk, may defer
   - [~] Ф3.4 descent verbs — await any|all|named (D-C3-4/5)
     - [x] Ф3.4a `fractality wait --any` race (`a1479f1`); `all`/`named`
@@ -170,17 +176,23 @@ delegation-rules `routing-policy.toml`. Seams for the rest are mapped.
 overload is resolved — `GateInputs.can_spawn` (derived from `cap > 0`)
 gates the spawn arm, so a no-spawn class folds instead of spawning.
 
-**Next: Ф3.2b — the decision journal (soft-label table half of D-C3-8).**
-**Journal design (found this session, NOT yet built):** the run journal
-folds every event into a `RunRecord` (each event carries a `run_id`); a
-gate decision (inline/escalate → no run) does NOT fit that fold. Use a
-**separate journal stem** — the pattern `state.rs` already uses for the
-session journal (`open_stem`/`replay_stem`, sibling fold). Open design
-question for the next session: WHERE decisions are recorded — the offline
-`gate` CLI only prints (like `route`), so the soft-label table needs the
-decision captured at the real action point (spawn/route in MC), or a
-`POST /v0/decisions` the CLI/boss calls. Read `journal_store.rs` +
-`http_sessions.rs` (the session-stem precedent) first.
+**Ф3.2b-i DONE (`2c0a128`):** the decision-journal STORAGE — core
+`DecisionRecord`/`DecisionEnvelope` (owned, serde-flat one line) + a third
+`decisions` sibling stem in `state.rs` (`open_stem`/`replay_stem`, no fold),
+`record_decision`/`decisions`, tested. Design resolved: decisions ride
+their own stem (a gate decision may have no run), NOT the run fold.
+
+**Next: Ф3.2b-ii — the producer.** The journal must record REAL decisions,
+so MC cannot re-derive one at `register_run` (it lacks the boss's
+task-shape `GateInputs` — a synthesized record would be false). The
+producer is `fractality gate --record`: when a daemon is reachable, the
+gate verb POSTs its `DecisionRecord` to a new `POST /v0/decisions`. This
+makes `gate` async + daemon-aware (today pure/offline). Files: core
+`api.rs` (request DTO), mc `http.rs` (route → `state.record_decision`) +
+`GET /v0/decisions`, `mc-client/lib.rs` (client verbs), `gate_cmd.rs`
+(`--record` → connect + POST) + `main.rs` (flag, async dispatch). Read
+`http_sessions.rs` + the mc-client session verbs for the endpoint/client
+pattern. Test at the http level (mc.rs) like the run CRUD test.
 Then Ф3.3 masking (FD-8, `registry.rs`), Ф3.4/3.5 descent verbs
 (read `mc-client/lib.rs`, cli `mc_cmd.rs`/`swarm.rs`/`broker.rs` first),
 Ф3.6 retry-on-violation. Each = one commit, floor green after each.
