@@ -1,90 +1,91 @@
 # fractality — WAL (project continuation state)
 
-_Updated: 2026-07-10 ~21:40 (**Campaign 2 CLOSED + owner rulings
-recorded + the DEF-C2 slice landed**, one session: the Ф6 arms fired
-and scored, Ф7 closed, MT-C2-01…04 owner-signed, RP2/RP3 resolved,
-then the owner's direct order «…вначале доделать DEF-C2-1…4» executed
-as a post-close slice. Plan:
-[`fractality/v0.1.0/spec/plans/FRACTALITY-INITIATIVE-PLAN-v0.1.md`](fractality/v0.1.0/spec/plans/FRACTALITY-INITIATIVE-PLAN-v0.1.md)
-— §2 record, §14 ledger, §15 dispositions; reports in
-[`reports/`](reports/): Ф6 trial + campaign close + defc2slice
-started/report/completed)._
-_Prior: 2026-07-10 (IGNITION CLOSED — MT-01…05 signed off)._
+_Updated: 2026-07-11 ~12:40 (**two research stages CLOSED + Stage B
+draft revised + executor handoff**, one long session: RLM research
+Stage A (waves → 15 sources → 11 notes → RD-1…21 → Stage B draft),
+Fugu research Stage A2 (anchors → 4 notes → FD-1…16 → mapping →
+3 changes + D-C3-10 into the draft), the postponed-work registry,
+the recursive-fabric VISION (V1–V5), and — the owner's farewell
+order — the §10 executor guide: **all further execution moves to
+Opus-class/cheaper models; Fable's implicit context is written
+down as law**. Prior: 2026-07-10 (Campaign 2 CLOSED, DEF-C2 slice
+landed)._
 
 ## Current state
 
-- **Campaign 2: CLOSED, all rulings in.** Trial numbers (frozen
-  scoring): arm A 3/18 ≈ 16.7%, arm B 0/18 = 0%; P1 confirmed, P3
-  falsified (mechanics F23/F24/F25), P2/P4–P8 confirmed. MT-C2-01…04
-  **owner-signed** («подписываю MT-C2-01…04»). **RP1–RP4 all
-  RESOLVED** (RP2: counter ON, P95 51 ms; RP3: settings.local.json
-  default).
-- **The DEF-C2 slice (post-close, owner-ordered): landed and
-  verified.** DEF-C2-2a — the trial runner passes rustup homes + the
-  ProgramFiles family (repro: `cargo test --no-run` link-fail →
-  link-clean). DEF-C2-3 — cold-start board (zero counters never
-  render; route verb first; tests pin the text). DEF-C2-1 — the
-  mid-work nudge: PostToolUse additionalContext on threshold
-  crossing, shared cooldown anchor (one nudge per window per session
-  across ALL channels), journal reason
-  `work-tool-threshold-midwork`, `midwork_nudges` switch; D5
-  rewritten in place; staged smoke green (fires at event 7, cooldown
-  at 8, switches silent); P4 re-bench P95 50 ms. DEF-C2-4 —
-  **MT-C2-05 pre-registered, UNFIRED, RP5-gated**: arms A′/B′,
-  PR1–PR3 frozen, fatigue facts defined.
-- **Floor at the checkpoint: all green** — 164 tests, conform 0
-  (7/7 gated), specmap 19 units / 63 items / 63 edges / 0 orphans,
-  test-gate xfail-strict. MC daemon stopped; real `~/.fractality`
-  untouched (scratch homes throughout).
-- Commit chain this session: `3409de1` (trial records) → `375b2d1`
-  (campaign close) → `7a49159` (owner rulings) → `0b5b68c` (runner
-  fix) → `356d252` (cold board) → `6d20af2` (mid-work nudge) →
-  `4fae0de` (MT-C2-05 + slice record) → the wind-down commit.
+- **Campaign 3 · Stage A (RLM research): CLOSED.** Plan
+  `FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md`; P-R1…4 all CONFIRMED
+  (overlap exactly 60%). 11 notes + `RLM-SYNTHESIS.md` (RD-1…21)
+  in `spec/refs/notes/`; INVENTORY S10–S26.
+- **Campaign 3 · Stage A2 (Sakana Fugu): CLOSED.** Plan
+  `FRACTALITY-FUGU-RESEARCH-PLAN-v0.1.md`; P-F1 ✓, P-F2 NOT
+  EVALUATED (W1 deep-research stopped in the owner's token pause —
+  recorded deviation), P-F3 ✓, P-F4 ✓. 4 notes + `FUGU-SYNTHESIS.md`
+  (FD-1…16) + `FUGU-FRACTALITY-MAPPING.md`; INVENTORY S27–S30.
+  Headline: Fugu IS the fractality thesis shipped (10/11
+  benchmarks) minus our planes — runtime budgets/cost accounting,
+  transparency, escalation-to-human; its MRCRv2 loss argues FOR
+  the descent core.
+- **Stage B draft ready and revised:**
+  `spec/plans/FRACTALITY-RLM-PLAN-v0.1.md` — scope options A/B/C
+  (B recommended), D-C3-1…10 (Fugu revision: `route` verdict,
+  `context_from` access-lists, sibling isolation by default +
+  chosen merge profile + collapse probe, D-C3-10 routing policy
+  data), **§10 executor guide (BINDING for the executing
+  session)**. Execution gated on **RP-C3-1 (OPEN)**.
+- **Postponed registry live:** `plans/postponed.md` — PP-001
+  (rule RP5, fire MT-C2-05; recipe in the PP file), PP-002
+  (DEF-C2-2b credibility facts; weight raised by RD/FD synergies).
+- **VISION recorded:** `fractality/v0.1.0/spec/VISION-RECURSIVE-FABRIC.md`
+  — V1 promotion, V2 RLM, V3 escalation, V4 advisor ladder, V5
+  attachable terminals; §5 questions now carry field answers
+  (synthesis §4).
+- **Floor at checkpoint: green** — 164 tests, conform 0, specmap
+  **170 units** / 63 items / 63 edges / 0 orphans. Docs-only
+  session: zero product-code changes. Real `~/.fractality`
+  untouched.
+- Commit chain this session: `0af23db` PP registry → `fd05356`
+  vision → `73035b2` V5 → `82dc31c`+`12f02da` Stage A plan+launch
+  → `a4c9611` Ф2 → `4e2cfde` Ф3 → `47a95a6`/`0bd4d7d`/`6c4ca62`
+  Ф4 → `c1cf57a` Ф5+draft → `f22a1fa` A close → `1852fb6` A2 plan
+  → `c9bfdf1` A2 intake+notes → `d0cf6e9` A2 synthesis+mapping+
+  revision → `2c5bbdf` A2 close → `4ccb7af` executor guide →
+  wind-down commit.
 
 ## Constraints (do not violate without discussion)
 
-- Host Rules 1–4; the delegation law + live-observation protocol +
-  two context scenarios (scoreboard in every checkpoint); clean-room
-  law; I1 worker-env (pins FRACTALITY_BOSS_SESSION out); I2 bus /
-  files-as-persistence; I3 one telemetry store; publish
-  owner-word-only. **Language law: no Python in the shipped
-  codebase** (tests/prototypes OK).
-- **F15 + corollary:** stop MC daemons before builds; hook smokes
-  rebuild `--workspace`.
-- **Cwd law binds every launch — two strikes on record** (a delegate
-  launch; a floor from the host root). Pin cwd inside the command,
-  every time.
-- **opencode delegate law:** inputs under the launch cwd; heartbeats
-  are `echo` commands.
-- **Reports law:** phase reports + plan-lifecycle dashboards in
-  `reports/` (дата in год-число-месяц order).
-- **Specmap drift law:** a commit that adds an anchored spec section
-  re-mints `specmap.json` in the same commit, or the next floor
-  fails with a misleading "fresh project?" error.
-- **MT-C2-05 is RP5-gated:** no paid re-run arms without the owner's
-  explicit word recorded in that file.
+- Host Rules 1–4; delegation law + live-observation (now with
+  **first-output timeout ≤3 min** — two silent-stall strikes on
+  record); clean-room law (**executors: never open refs/src or
+  papers during implementation — Stage B plan §10.4**); I1/I2/I3;
+  D7 factual surfaces; no Python in shipped code; cwd law; commit
+  heredoc; editor-tool edits; specmap re-mint law; scratch homes;
+  no `*install*` test binaries; F15 (stop MC before builds).
+- **Stage B plan §10 is binding reading for any executing
+  session** — it overrides executor judgment, the owner overrides
+  it.
+- MT-C2-05 stays RP5-gated; MT-C3-01 (Stage B) needs its own
+  pre-registration; firing order = part of RP-C3-1.
+- Fugu benchmark numbers are Sakana-reported — mechanism evidence
+  only, never absolutes.
 
 ## Delegation scoreboard (session total)
 
-Delegated 6 / delivered 6: the six Ф6 trial boss-runs (GLM-5.2
-executed the full 8-task menu six times — the experiment WAS the
-delegation; ~2 h 10 m of GLM wall bought the campaign's headline
-numbers). Kept with cause: trial scoring (frozen-protocol
-interpretation), the P4/P6 benches and repro builds (each smaller
-than a packet round-trip), the DEF-C2 slice (seam design in
-hook/engine + spec/report authoring — the never-delegate set), every
-review.
+Delegated 8: the deep-research workflow (103 agents — Stage A W1),
+5 GLM repo/article surveys + 2 relaunches (Stage A Ф4), 1 GLM
+OpenFugu survey (Stage A2). Kept with cause: all papers
+(judgment), every note/synthesis/mapping/plan (never-delegate
+set), spot-checks, both W2 waves (search+triage tooling lives
+boss-side). Field data: opencode delegates stall silently at
+launch (~0-byte logs ≥14 min) — kill-and-relaunch cures; stall
+watchdog needs first-OUTPUT timeout, not just mid-run silence.
 
-## Next (candidates for the owner)
+## Next (candidates for the owner — executor is Opus now)
 
-1. **Rule RP5** (MT-C2-05): authorize the re-run arms — recommend
-   3+3 GLM (Ф6-comparable), cap 8; an Opus-class arm is a separate
-   ask. Firing + scoring is one session's work with the fixed
-   toolchain.
-2. Or commission DEF-C2-2b-full (acceptance-backed worker-credibility
-   facts on the boss surface) — needs acceptance-schema plumbing in
-   MC.
-3. Or pivot to Campaign 3 (RLM, DEF-2) — §15 holds the standing
-   deferrals (savings methodology, cross-harness adapters, hook
-   debug channel, session TTL reaping, per-packet answer rules,
-   `auto_answered` counter, quota ceilings).
+1. **Rule RP-C3-1** — commission Stage B from the revised draft
+   (scope A / B-recommended / C; budget; timing; MT firing
+   order). The executing session starts at plan §10.1's reading
+   order.
+2. **Rule RP5** — fire MT-C2-05 per PP-001's recipe.
+3. Anything else: `plans/postponed.md` + INITIATIVE §15 hold the
+   deferrals.
