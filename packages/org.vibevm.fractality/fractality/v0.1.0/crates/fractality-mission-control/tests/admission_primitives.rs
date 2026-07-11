@@ -334,3 +334,38 @@ fn depth_guard_budget_tightens_but_never_loosens() {
     let default_policy = RoutingPolicy::default();
     assert!(check_spawn_depth(CapabilityClass::Strong, 5, &default_policy, 2).is_err());
 }
+
+/// The decisions journal (D-C3-8) records need-gate verdicts on a sibling
+/// stem and replays them on demand — append-only, never folded into runs.
+#[test]
+fn decisions_journal_records_and_replays() {
+    let (state, home) = scratch_state("decisions");
+    assert!(state.decisions().is_empty(), "empty before any record");
+
+    let inputs = fractality_core::GateInputs {
+        o1_lookup: false,
+        needs_absent_tool: false,
+        fits_window: false,
+        single_skill: false,
+        cross_chunk_dominant: false,
+        large_window_available: false,
+        decomposable: true,
+        depth: 0,
+        max_depth: 1,
+        can_spawn: true,
+    };
+    let decision = fractality_core::needgate::decide(&inputs);
+    let record =
+        fractality_core::DecisionRecord::from_decision(&decision, CapabilityClass::Medium, inputs);
+    state.record_decision(record.clone()).expect("records");
+    state
+        .record_decision(record.clone())
+        .expect("records again");
+
+    let back = state.decisions();
+    assert_eq!(back.len(), 2, "both decisions replay from the stem");
+    assert_eq!(back[0], record);
+    assert_eq!(back[0].verdict, fractality_core::Verdict::Spawn);
+
+    std::fs::remove_dir_all(home.as_std_path()).ok();
+}

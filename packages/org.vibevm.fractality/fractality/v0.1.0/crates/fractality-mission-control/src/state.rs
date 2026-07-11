@@ -44,6 +44,10 @@ pub struct Inner {
     pub session_journal: JournalWriter,
     pub sessions:
         std::collections::BTreeMap<fractality_core::ids::SessionId, fractality_core::SessionRecord>,
+    /// The decisions journal (D-C3-8): a third sibling stem for need-gate
+    /// verdicts. Append-only — no fold; the soft-label table replays it on
+    /// demand, so a decision never enters live daemon state.
+    pub decisions_journal: JournalWriter,
 }
 
 pub struct AppState {
@@ -137,6 +141,7 @@ impl AppState {
 
         let journal = JournalWriter::open(&cfg.journal_dir())?;
         let session_journal = JournalWriter::open_stem(&cfg.journal_dir(), "sessions")?;
+        let decisions_journal = JournalWriter::open_stem(&cfg.journal_dir(), "decisions")?;
         Ok(Self {
             cfg,
             bearer: fractality_mc_client::lock::mint_bearer(),
@@ -150,6 +155,7 @@ impl AppState {
                 pods: HashMap::new(),
                 session_journal,
                 sessions,
+                decisions_journal,
             }),
             shutdown: tokio::sync::watch::channel(false).0,
         })
@@ -169,6 +175,31 @@ impl AppState {
     pub fn record(&self, event: Event) -> Result<RunRecord, RecordError> {
         let mut inner = self.lock_inner();
         Self::record_under_lock(&mut inner, event)
+    }
+
+    /// Appends a need-gate decision to the decisions journal (D-C3-8).
+    /// Append-only under the write lock; it never folds into run state —
+    /// the soft-label table replays the stem on demand.
+    pub fn record_decision(&self, record: fractality_core::DecisionRecord) -> Result<(), String> {
+        let envelope = fractality_core::DecisionEnvelope::now(record);
+        self.lock_inner().decisions_journal.append(&envelope)
+    }
+
+    /// Replays the decisions journal from disk — the soft-label table's
+    /// raw rows (D-C3-8). Read on demand; decisions are never held in
+    /// memory. A replay error degrades to an empty list with a warning,
+    /// never a daemon fault.
+    pub fn decisions(&self) -> Vec<fractality_core::DecisionRecord> {
+        match crate::journal_store::replay_stem::<fractality_core::DecisionEnvelope>(
+            &self.cfg.journal_dir(),
+            "decisions",
+        ) {
+            Ok((envelopes, _report)) => envelopes.into_iter().map(|e| e.record).collect(),
+            Err(e) => {
+                tracing::warn!(error = %e, "decisions journal replay failed");
+                Vec::new()
+            }
+        }
     }
 
     /// Atomically claims a queued run for launch (`queued -> starting`).

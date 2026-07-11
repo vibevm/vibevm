@@ -32,7 +32,7 @@ pub mod worker;
 pub use error::CoreError;
 pub use fileref::FileRef;
 pub use ids::{PodId, RunId, ScopeId, SessionId};
-pub use needgate::{Decision, GateInputs, Verdict};
+pub use needgate::{Decision, DecisionEnvelope, DecisionRecord, GateInputs, Verdict};
 pub use packet::{Packet, WorkspaceMode};
 pub use profile::{Profile, ProfilesFile};
 pub use routing::{CapabilityClass, ClassPolicy, RoutingPolicy};

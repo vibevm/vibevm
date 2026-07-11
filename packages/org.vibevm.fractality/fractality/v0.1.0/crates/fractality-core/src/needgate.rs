@@ -74,7 +74,7 @@ impl Decision {
 /// the caps from `delegation-rules`. Booleans keep the *procedure* pure
 /// and total; how each signal is measured is the caller's (and the
 /// policy table's) concern.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub struct GateInputs {
     /// An O(1) lookup / single fact.
     pub o1_lookup: bool,
@@ -108,6 +108,58 @@ pub struct GateInputs {
     /// `decide` total: a no-spawn class folds its decomposable work
     /// instead of opening a tree (resolves the D-C3-8 overload).
     pub can_spawn: bool,
+}
+
+/// A journaled need-gate decision (D-C3-8): the verdict, its reason, the
+/// candidate worker's capability class, and the signals that produced it
+/// — owned and round-trippable, unlike [`Decision`] whose `reason` is a
+/// `&'static str`. One row per gate invocation; the soft-label table (per
+/// worker-class × task shape, §10.2) is a replay-and-aggregate over these.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct DecisionRecord {
+    pub verdict: Verdict,
+    pub reason: String,
+    /// The candidate worker's capability class this verdict was made for.
+    pub class: crate::routing::CapabilityClass,
+    /// The gate inputs, so the table can slice by task shape.
+    pub inputs: GateInputs,
+}
+
+impl DecisionRecord {
+    /// Builds a record from a live [`Decision`]; the `&'static` reason is
+    /// copied into an owned `String` for the journal.
+    pub fn from_decision(
+        decision: &Decision,
+        class: crate::routing::CapabilityClass,
+        inputs: GateInputs,
+    ) -> Self {
+        Self {
+            verdict: decision.verdict,
+            reason: decision.reason.to_owned(),
+            class,
+            inputs,
+        }
+    }
+}
+
+/// One decisions-journal line: a timestamp plus the record. Rides the
+/// sibling-stem machinery (`open_stem`/`replay_stem`) like the session
+/// journal — its own file, no fold into run state (D-C3-8).
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct DecisionEnvelope {
+    pub ts_ms: u64,
+    #[serde(flatten)]
+    pub record: DecisionRecord,
+}
+
+impl DecisionEnvelope {
+    /// Wraps a record with the current wall clock.
+    pub fn now(record: DecisionRecord) -> Self {
+        Self {
+            ts_ms: crate::time::now_ms(),
+            record,
+        }
+    }
 }
 
 /// The fixed-order decision procedure (plan §10.3). Evaluate top-down;
@@ -324,5 +376,34 @@ mod tests {
             ..base()
         };
         assert_eq!(decide(&i).verdict, Verdict::Inline);
+    }
+
+    /// A decision journals as one flat line: `ts_ms` plus the verdict,
+    /// reason, class, and inputs, round-tripping intact (D-C3-8).
+    #[test]
+    fn decision_record_round_trips_as_a_flat_line() {
+        let inputs = GateInputs {
+            decomposable: true,
+            can_spawn: true,
+            ..base()
+        };
+        let decision = decide(&inputs);
+        assert_eq!(decision.verdict, Verdict::Spawn);
+        let record = DecisionRecord::from_decision(
+            &decision,
+            crate::routing::CapabilityClass::Medium,
+            inputs,
+        );
+        let env = DecisionEnvelope {
+            ts_ms: 42,
+            record: record.clone(),
+        };
+        let json = serde_json::to_string(&env).expect("serializes");
+        assert!(json.contains("\"ts_ms\":42"), "{json}");
+        assert!(json.contains("\"verdict\":\"spawn\""), "{json}");
+        assert!(json.contains("\"class\":\"medium\""), "{json}");
+        let back: DecisionEnvelope = serde_json::from_str(&json).expect("parses");
+        assert_eq!(back.ts_ms, 42);
+        assert_eq!(back.record, record);
     }
 }

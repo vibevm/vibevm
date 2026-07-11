@@ -417,7 +417,7 @@
       "crate_name": "fractality-mission-control",
       "file": "crates/fractality-mission-control/src/state.rs",
       "item_kind": "enum",
-      "line": 62,
+      "line": 66,
       "symbol": "fractality_mission_control::state::RecordError"
     },
     {
@@ -948,7 +948,7 @@
     {
       "file": "crates/fractality-mission-control/src/state.rs",
       "from_symbol": "fractality_mission_control::state::RecordError",
-      "line": 64,
+      "line": 68,
       "provenance": "authored",
       "uri": "spec://fractality/PROP-001#architecture",
       "verb": "implements"
@@ -1356,7 +1356,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:8b355cdd0d219b39ff6675338010d294b120e2ea12e0400ddd62c374a534cb7b",
+      "content_hash": "sha256:0d0be4ba70d9dd18aec21db1dd7f016d145cbe42f71823114482791c200f1ef1",
       "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
       "file": "spec/plans/FRACTALITY-RLM-PLAN-v0.1.md",
       "heading": "FRACTALITY-RLM-PLAN v0.1 — Campaign 3 · Stage B: the descent core (DRAFT)",
@@ -1437,7 +1437,7 @@
     },
     {
       "anchor": "ledger",
-      "content_hash": "sha256:513be24d245d23c348ea54224f7151219b3aee617f4c7d09169fe65871234088",
+      "content_hash": "sha256:da62e15ed57dece6096de02a0bd342c40c6f5b8798e469a1a623afd4a3b0126c",
       "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
       "file": "spec/plans/FRACTALITY-RLM-PLAN-v0.1.md",
       "heading": "9. Ledger",
@@ -1450,7 +1450,7 @@
       "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
       "file": "spec/plans/FRACTALITY-RLM-PLAN-v0.1.md",
       "heading": "10. Executor's guide — read this before any code",
-      "line": 281,
+      "line": 282,
       "uri": "spec://fractality/plans/FRACTALITY-RLM-PLAN-v0.1#executor-guide"
     },
     {
@@ -1459,7 +1459,7 @@
       "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
       "file": "spec/plans/FRACTALITY-RLM-PLAN-v0.1.md",
       "heading": "10.1 Reading order for the executing session",
-      "line": 290,
+      "line": 291,
       "uri": "spec://fractality/plans/FRACTALITY-RLM-PLAN-v0.1#eg-reading"
     },
     {
@@ -1468,7 +1468,7 @@
       "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
       "file": "spec/plans/FRACTALITY-RLM-PLAN-v0.1.md",
       "heading": "10.2 Glossary — our words, exact meanings",
-      "line": 305,
+      "line": 306,
       "uri": "spec://fractality/plans/FRACTALITY-RLM-PLAN-v0.1#eg-glossary"
     },
     {
@@ -1477,7 +1477,7 @@
       "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
       "file": "spec/plans/FRACTALITY-RLM-PLAN-v0.1.md",
       "heading": "10.3 The need-gate decision procedure (v1, fixed order)",
-      "line": 357,
+      "line": 358,
       "uri": "spec://fractality/plans/FRACTALITY-RLM-PLAN-v0.1#eg-needgate"
     },
     {
@@ -1486,7 +1486,7 @@
       "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
       "file": "spec/plans/FRACTALITY-RLM-PLAN-v0.1.md",
       "heading": "10.4 Clean-room rules for executors — legally load-bearing",
-      "line": 384,
+      "line": 385,
       "uri": "spec://fractality/plans/FRACTALITY-RLM-PLAN-v0.1#eg-cleanroom"
     },
     {
@@ -1495,7 +1495,7 @@
       "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
       "file": "spec/plans/FRACTALITY-RLM-PLAN-v0.1.md",
       "heading": "10.5 v1 minimalism — things you must NOT build",
-      "line": 398,
+      "line": 399,
       "uri": "spec://fractality/plans/FRACTALITY-RLM-PLAN-v0.1#eg-minimalism"
     },
     {
@@ -1504,7 +1504,7 @@
       "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
       "file": "spec/plans/FRACTALITY-RLM-PLAN-v0.1.md",
       "heading": "10.6 Where code lands",
-      "line": 409,
+      "line": 410,
       "uri": "spec://fractality/plans/FRACTALITY-RLM-PLAN-v0.1#eg-crates"
     },
     {
@@ -1513,7 +1513,7 @@
       "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
       "file": "spec/plans/FRACTALITY-RLM-PLAN-v0.1.md",
       "heading": "10.7 Process laws, restated for you",
-      "line": 420,
+      "line": 421,
       "uri": "spec://fractality/plans/FRACTALITY-RLM-PLAN-v0.1#eg-process"
     },
     {
@@ -1522,7 +1522,7 @@
       "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
       "file": "spec/plans/FRACTALITY-RLM-PLAN-v0.1.md",
       "heading": "10.8 When you are unsure",
-      "line": 448,
+      "line": 449,
       "uri": "spec://fractality/plans/FRACTALITY-RLM-PLAN-v0.1#eg-unsure"
     },
     {
