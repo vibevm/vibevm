@@ -214,6 +214,7 @@ Commit map (Stage B execution, Campaign 3):
 - Ф1.1 `context_from` access-list (`35a378c`).
 - Ф1.2a packet `output_schema` field (`d91780d`).
 - Ф1.2b output_schema validation at the collect seam (`12b9824`).
+- Ф1.3 budget lattice — six axes + wall-clock (`19c33e9`).
 
 **Scoping decision — retry-on-violation (D-C3-2).** The validation seam
 produces the retry-feedback report (Ф1.2b), but the automatic one-retry
@@ -224,6 +225,18 @@ task once with the violation report in the child's context — landing
 with the descent verbs (Ф3). Until then a schema-violating result is
 recorded (`status.json` `schema_gate.valid=false` + violations) for the
 boss to act on. Revisit trigger: Ф3 spawn orchestration.
+
+**Scoping decision — D-C3-3 boundary behaviors → Ф2.** D-C3-3's
+per-verb cap behaviors (spawn-past-cap → structured refusal, child
+profile at cap → capability removal + leaf surface, work packet at cap
+→ force-execute) enforce against the need-gate's verbs and the budget
+caps, neither of which exists until Ф2 (D-C3-1 + delegation-rules).
+Shipping profile config for them in Ф1 without the gate would be dead
+surface (the output_schema lesson). D-C3-3 therefore lands in Ф2
+alongside the need-gate and the depth guard, checking against the
+budget lattice (Ф1.3) it now has. Ф1 closes having shipped D-C3-2 —
+the packet + budget surface (`context_from`, `output_schema`, the
+six-axis lattice).
 
 ## 10. Executor's guide — read this before any code {#executor-guide}
 

@@ -4,8 +4,8 @@ _Campaign 3 Stage B execution tracker. Updated in place between status
 documents (big-plan dashboard rule — bulk stays out of status files).
 Source of truth is the spec tree (plan, syntheses, WAL); this is the
 owner-facing surface + the agent's own quick tracker. Last updated:
-2026-07-11 18:20 (70%-context checkpoint — Ф1.1 landed, paused for
-restart)._
+2026-07-11 18:54 (Ф1 CLOSED on D-C3-2; continuing into Ф2 — the 70%
+pause was rescinded, context budget is fine)._
 
 ## Goal & operating contract (owner, 2026-07-11)
 
@@ -91,7 +91,8 @@ nudge (RD-12 settings-writes precedent), mc-client, cli surfaces.
         channel + AnswerRule). Open Q for Ф4: worker expresses escalation
         via an ask_boss-style MCP tool vs result status. Seam viability
         proven; no new daemon.
-- [ ] Ф1 packets & budgets (D-C3-2, D-C3-3)
+- [x] Ф1 packets & budgets — CLOSED on D-C3-2 (context_from,
+      output_schema + validation, budget lattice); D-C3-3 → Ф2
 - [ ] Ф2 need-gate + delegation-rules (D-C3-1, D-C3-10)
 - [ ] Ф3 descent verbs (D-C3-4, D-C3-5)
 - [ ] Ф4 escalation (D-C3-6)
@@ -125,8 +126,14 @@ floor green after each):
   Ф1.2b validation at collect seam (`12b9824`, jsonschema 0.47.0, verdict
   → `status.json schema_gate`). Auto-retry deferred to Ф3 re-dispatch
   (plan §9); pumps extracted to `pump.rs` for the file budget.
-- **Ф1.3** `BudgetSpec` six axes + wall-clock (RD-4): depth /
-  per_agent_calls / per_call_token_ceiling / cumulative_tokens /
-  currency / global_calls (0 = unlimited holds)
-- **Ф1.4** D-C3-3 boundary behaviors per verb (MC + profiles)
+- **Ф1.3** budget lattice — ✅ LANDED (`19c33e9`, six axes + wall-clock;
+  new axes 0=unlimited, enforcement in Ф2/Ф4)
+- **Ф1.4** D-C3-3 boundary behaviors → DEFERRED to Ф2 (needs the gate's
+  verbs + caps; §9 ledger). **Ф1 CLOSED on D-C3-2.**
+
+**Next phase: Ф2** — need-gate (D-C3-1, §10.3 procedure) + delegation-rules
+(own Cargo workspace: policy columns, availability masking, capability-
+class rows, depth guard) + D-C3-10 routing data + D-C3-3 boundary
+behaviors + budget-axis enforcement (admission). Report:
+`2026-11-07-18-54-campaign3-f1-packets-budgets.md`.
 Floor runs = backgrounded cargo (opencode unreliable today, Ф0 field data).
