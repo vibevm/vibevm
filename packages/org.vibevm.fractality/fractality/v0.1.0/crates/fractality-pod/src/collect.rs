@@ -31,6 +31,9 @@ pub(crate) struct Collection {
     pub(crate) workspace_dir: Utf8PathBuf,
     pub(crate) result_file: String,
     pub(crate) acceptance: Vec<String>,
+    /// D-C3-2: raw JSON Schema the result is validated against at this
+    /// seam. `None` = no schema gate (the historical behavior).
+    pub(crate) output_schema: Option<String>,
 }
 
 /// Settles the result-file contract (D4/D7): the worker was told to
@@ -64,6 +67,82 @@ pub(crate) fn collect_result(
                 None => ("none", None),
             }
         }
+    }
+}
+
+/// D-C3-2 schema-validation verdict for a worker's result. `checked` is
+/// false when the packet declared no `output_schema`; otherwise `valid`
+/// says whether the result conformed, and `violations` carries the
+/// retry-feedback message (the Ф0 s1 shape: `at <JSON-Pointer>:
+/// <message>`).
+pub(crate) struct SchemaVerdict {
+    pub(crate) checked: bool,
+    pub(crate) valid: bool,
+    pub(crate) violations: Vec<String>,
+}
+
+impl SchemaVerdict {
+    fn no_gate() -> Self {
+        Self {
+            checked: false,
+            valid: true,
+            violations: Vec::new(),
+        }
+    }
+    fn fail(violation: String) -> Self {
+        Self {
+            checked: true,
+            valid: false,
+            violations: vec![violation],
+        }
+    }
+}
+
+/// Validates the collected result against the packet's `output_schema`
+/// (D-C3-2). Format-gate-then-quality (FD-15): a malformed schema, a
+/// missing result, or a non-JSON result is itself a violation — the
+/// worker is told exactly what to fix on its one retry (Ф1.2c). A `None`
+/// schema means no gate: always valid, `checked = false`.
+pub(crate) fn validate_output_schema(
+    result_path: Option<&Utf8Path>,
+    schema_json: Option<&str>,
+) -> SchemaVerdict {
+    let Some(schema_json) = schema_json else {
+        return SchemaVerdict::no_gate();
+    };
+    let schema: serde_json::Value = match serde_json::from_str(schema_json) {
+        Ok(v) => v,
+        Err(e) => return SchemaVerdict::fail(format!("output_schema is not valid JSON: {e}")),
+    };
+    let validator = match jsonschema::validator_for(&schema) {
+        Ok(v) => v,
+        Err(e) => {
+            return SchemaVerdict::fail(format!("output_schema is not a valid JSON Schema: {e}"));
+        }
+    };
+    let Some(path) = result_path else {
+        return SchemaVerdict::fail("no result file to validate against output_schema".to_owned());
+    };
+    let text = match std::fs::read_to_string(path.as_std_path()) {
+        Ok(t) => t,
+        Err(e) => return SchemaVerdict::fail(format!("cannot read result `{path}`: {e}")),
+    };
+    let instance: serde_json::Value = match serde_json::from_str(&text) {
+        Ok(v) => v,
+        Err(e) => {
+            return SchemaVerdict::fail(format!(
+                "result is not valid JSON (an output_schema gate requires a JSON result): {e}"
+            ));
+        }
+    };
+    let violations: Vec<String> = validator
+        .iter_errors(&instance)
+        .map(|err| format!("at `{}`: {}", err.instance_path(), err))
+        .collect();
+    SchemaVerdict {
+        checked: true,
+        valid: violations.is_empty(),
+        violations,
     }
 }
 
@@ -200,6 +279,9 @@ pub(crate) struct StatusRecord<'a> {
     pub(crate) acceptance_skipped: Option<&'a str>,
     /// Set when the pod itself killed the worker; outranks the exit code.
     pub(crate) killed_reason: Option<&'a str>,
+    /// D-C3-2 output_schema verdict for the result (no gate when the
+    /// packet declared no schema).
+    pub(crate) schema: &'a SchemaVerdict,
 }
 
 /// `status.json` — the run dir's persistence-plane record (D4). The
@@ -238,6 +320,11 @@ pub(crate) fn write_status(
         "acceptance": acceptance,
         "acceptance_skipped": record.acceptance_skipped,
         "kill_reason": record.killed_reason,
+        "schema_gate": {
+            "checked": record.schema.checked,
+            "valid": record.schema.valid,
+            "violations": record.schema.violations,
+        },
         "ts_ms": now_ms(),
     });
     let path = run_dir.join(STATUS_FILE);
@@ -359,5 +446,83 @@ mod acceptance_tests {
             "log must contain the echoed marker"
         );
         std::fs::remove_dir_all(run_dir.as_std_path()).ok();
+    }
+}
+
+#[cfg(test)]
+mod schema_tests {
+    use camino::Utf8PathBuf;
+
+    use super::validate_output_schema;
+
+    fn write_result(tag: &str, body: &str) -> Utf8PathBuf {
+        let base =
+            std::env::temp_dir().join(format!("fractality-schema-{}-{}", std::process::id(), tag));
+        std::fs::create_dir_all(&base).expect("mkdir");
+        let path = Utf8PathBuf::from_path_buf(base)
+            .expect("utf-8 temp dir")
+            .join("result.json");
+        std::fs::write(path.as_std_path(), body).expect("write result");
+        path
+    }
+
+    const SCHEMA: &str = r#"{
+        "type": "object",
+        "required": ["summary", "status"],
+        "properties": {
+            "summary": { "type": "string" },
+            "status": { "type": "string", "enum": ["ok", "failed"] }
+        }
+    }"#;
+
+    /// No output_schema means no gate — always valid, never checked.
+    #[test]
+    fn no_schema_is_no_gate() {
+        let v = validate_output_schema(None, None);
+        assert!(!v.checked, "no schema declared → gate did not run");
+        assert!(v.valid);
+        assert!(v.violations.is_empty());
+    }
+
+    /// A conforming JSON result passes the gate.
+    #[test]
+    fn conforming_result_passes() {
+        let path = write_result("ok", r#"{"summary":"did it","status":"ok"}"#);
+        let v = validate_output_schema(Some(&path), Some(SCHEMA));
+        assert!(v.checked);
+        assert!(v.valid, "unexpected violations: {:?}", v.violations);
+        std::fs::remove_dir_all(path.parent().unwrap().as_std_path()).ok();
+    }
+
+    /// A violating result fails and the report names the failing field —
+    /// the retry-feedback message a worker gets for its one retry.
+    #[test]
+    fn violating_result_reports_each_failure() {
+        let path = write_result("bad", r#"{"summary":"did it"}"#); // status missing
+        let v = validate_output_schema(Some(&path), Some(SCHEMA));
+        assert!(v.checked);
+        assert!(!v.valid);
+        assert!(
+            v.violations.iter().any(|s| s.contains("status")),
+            "expected a status violation, got {:?}",
+            v.violations
+        );
+        std::fs::remove_dir_all(path.parent().unwrap().as_std_path()).ok();
+    }
+
+    /// A non-JSON result (e.g. a markdown report) fails the format gate
+    /// first (FD-15) — an output_schema gate requires a JSON result.
+    #[test]
+    fn non_json_result_is_a_violation() {
+        let path = write_result("md", "# just markdown, not JSON\n");
+        let v = validate_output_schema(Some(&path), Some(SCHEMA));
+        assert!(v.checked);
+        assert!(!v.valid);
+        assert!(
+            v.violations.iter().any(|s| s.contains("not valid JSON")),
+            "got {:?}",
+            v.violations
+        );
+        std::fs::remove_dir_all(path.parent().unwrap().as_std_path()).ok();
     }
 }

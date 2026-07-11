@@ -9,17 +9,18 @@
 //! delivers its exit report to whichever daemon generation is alive.
 
 mod collect;
+mod pump;
 mod resolve;
 mod supervise;
 mod worker_env;
 
 use collect::Collection;
+use pump::{feed_stdin, pump, pump_transcript};
 use worker_env::{augment_worker_env, sweep_for_orphan};
 
 use camino::Utf8PathBuf;
 use clap::Parser;
 use fractality_backend_claude_code::ClaudeCodeBackend;
-use fractality_backend_claude_code::stream::{StreamParser, StreamSummary};
 use fractality_core::Packet;
 use fractality_core::api::{
     PodCommand, PodEvent, PodEventRequest, PodHeartbeat, PodRegisterRequest,
@@ -29,7 +30,6 @@ use fractality_core::profile::ProfilesFile;
 use fractality_core::run::{KillReason, RunState, UsageTotals};
 use fractality_core::worker::{BackendSecrets, RunContext, RunSpec, WorkerBackend, WorkerSpec};
 use fractality_mc_client::McClient;
-use tokio::io::{AsyncBufReadExt, AsyncWriteExt, BufReader};
 use tracing_subscriber::EnvFilter;
 
 specmark::scope!("spec://fractality/PROP-001#architecture");
@@ -174,6 +174,7 @@ fn resolve_inputs(
             workspace_dir: run_spec.workspace_dir.clone(),
             result_file: packet.output.result.clone(),
             acceptance: packet.task.acceptance.clone(),
+            output_schema: packet.output.output_schema.clone(),
         };
         return Ok((run_spec.run_id, run_spec.run_dir, spec, Some(collection)));
     }
@@ -346,6 +347,20 @@ async fn run(args: Args) -> Result<(), String> {
         result_source,
         result_path.as_deref(),
     )?;
+    // D-C3-2: validate the result against the packet's output_schema at
+    // this seam. Ф1.2b records the verdict into status.json; the one
+    // retry-on-violation is Ф1.2c. No schema declared = no gate.
+    let schema_verdict = collect::validate_output_schema(
+        result_path.as_deref(),
+        collection.as_ref().and_then(|c| c.output_schema.as_deref()),
+    );
+    if schema_verdict.checked && !schema_verdict.valid {
+        tracing::warn!(
+            run_id = %run_id,
+            violations = schema_verdict.violations.len(),
+            "result violated output_schema (retry lands in Ф1.2c)"
+        );
+    }
     // Acceptance proves the deliverable (D7): run only over a worker
     // that exited 0 — verifying a known-failed (or just-killed) run
     // wastes its budget.
@@ -396,6 +411,7 @@ async fn run(args: Args) -> Result<(), String> {
             acceptance: &acceptance,
             acceptance_skipped,
             killed_reason: kill_reason_str.as_deref(),
+            schema: &schema_verdict,
         },
     )?;
 
@@ -501,99 +517,4 @@ async fn reconnect_and_register(
             Some(client)
         }
     }
-}
-
-/// Writes the spec's stdin payload to the child and closes the pipe —
-/// EOF is part of the contract (CC's print mode reads stdin to EOF, F14).
-/// A payload can exceed the pipe buffer, so this runs as its own task
-/// alongside the pumps rather than blocking the supervision loop.
-fn feed_stdin(
-    stdin: Option<tokio::process::ChildStdin>,
-    payload: Option<String>,
-) -> tokio::task::JoinHandle<()> {
-    tokio::spawn(async move {
-        let (Some(mut stdin), Some(payload)) = (stdin, payload) else {
-            return;
-        };
-        if let Err(e) = stdin.write_all(payload.as_bytes()).await {
-            // A worker that exits before reading its prompt surfaces its
-            // own error; the broken pipe here is the symptom, not the story.
-            tracing::warn!(error = %e, "stdin feed ended early");
-        }
-        let _ = stdin.shutdown().await;
-    })
-}
-
-/// Streams the worker's stdout into the transcript file while teeing
-/// every line through the stream parser (Phase 3 metering, D14 tolerant
-/// — a malformed line is counted, never fatal). File-write failures are
-/// loud but do not stop parsing: losing the transcript must not also
-/// lose the metering, and vice versa. Publishes running totals into the
-/// watch channel; returns the end-of-stream summary.
-fn pump_transcript(
-    reader: Option<tokio::process::ChildStdout>,
-    path: Utf8PathBuf,
-    usage_tx: tokio::sync::watch::Sender<UsageTotals>,
-) -> tokio::task::JoinHandle<Option<StreamSummary>> {
-    tokio::spawn(async move {
-        let reader = reader?;
-        let mut parser = StreamParser::new();
-        let mut file = match tokio::fs::File::create(path.as_std_path()).await {
-            Ok(f) => Some(f),
-            Err(e) => {
-                tracing::error!(%path, error = %e, "cannot open transcript file");
-                None
-            }
-        };
-        let mut lines = BufReader::new(reader).lines();
-        loop {
-            match lines.next_line().await {
-                Ok(Some(line)) => {
-                    if let Some(f) = file.as_mut() {
-                        let wrote = async {
-                            f.write_all(line.as_bytes()).await?;
-                            f.write_all(b"\n").await
-                        }
-                        .await;
-                        if let Err(e) = wrote {
-                            tracing::error!(%path, error = %e, "transcript write failed; parsing continues");
-                            file = None;
-                        }
-                    }
-                    parser.feed_line(&line);
-                    usage_tx.send_replace(parser.totals());
-                }
-                Ok(None) => break,
-                Err(e) => {
-                    tracing::warn!(%path, error = %e, "transcript stream ended with an error");
-                    break;
-                }
-            }
-        }
-        if let Some(mut f) = file {
-            let _ = f.flush().await;
-        }
-        Some(parser.finish())
-    })
-}
-
-/// Streams a child pipe into a run-dir file.
-fn pump<R>(reader: Option<R>, path: Utf8PathBuf) -> tokio::task::JoinHandle<()>
-where
-    R: tokio::io::AsyncRead + Unpin + Send + 'static,
-{
-    tokio::spawn(async move {
-        let Some(mut reader) = reader else { return };
-        let mut file = match tokio::fs::File::create(path.as_std_path()).await {
-            Ok(f) => f,
-            Err(e) => {
-                tracing::error!(%path, error = %e, "cannot open transcript file");
-                return;
-            }
-        };
-        if let Err(e) = tokio::io::copy(&mut reader, &mut file).await {
-            tracing::warn!(%path, error = %e, "transcript pump ended with an error");
-        }
-        let _ = file.flush().await;
-    })
 }

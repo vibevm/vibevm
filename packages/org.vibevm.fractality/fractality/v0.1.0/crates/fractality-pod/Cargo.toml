@@ -18,6 +18,7 @@ clap = { workspace = true }
 fractality-backend-claude-code = { workspace = true }
 fractality-core = { workspace = true }
 fractality-mc-client = { workspace = true }
+jsonschema = { workspace = true }
 serde_json = { workspace = true }
 specmark = { workspace = true }
 # Runtime since Phase 4: the post-kill orphan sweep probes the process
