@@ -158,9 +158,35 @@ pub struct BudgetSpec {
     pub wall_secs: u64,
     #[serde(default = "default_max_turns")]
     pub max_turns: u32,
-    /// Cumulative output tokens across the run.
+    /// Cumulative output tokens across the run (the RD-4 cumulative-tokens
+    /// axis).
     #[serde(default = "default_max_output_tokens")]
     pub max_output_tokens: u64,
+    /// RD-4 depth axis: max nesting depth of the run tree below this
+    /// packet. `0` = unlimited. The regime guard lives in
+    /// `delegation-rules` (Ф2, default `max_depth = 1`); this is the
+    /// packet-level cap MC admission checks against `RunRecord.depth`.
+    #[serde(default)]
+    pub max_depth: u32,
+    /// RD-4 per-agent-calls axis: how many worker calls this run may make.
+    /// `0` = unlimited.
+    #[serde(default)]
+    pub max_agent_calls: u32,
+    /// RD-4 per-call token ceiling: max output tokens any single call may
+    /// spend (distinct from the cumulative `max_output_tokens`). `0` =
+    /// unlimited.
+    #[serde(default)]
+    pub max_call_tokens: u64,
+    /// RD-4 global-calls axis: total worker calls across the whole run
+    /// tree rooted here. `0` = unlimited.
+    #[serde(default)]
+    pub max_global_calls: u32,
+    /// RD-4 currency axis: cumulative spend cap in micro-USD (1e-6 USD) —
+    /// an integer to stay `Eq`-comparable and never store money in a
+    /// float. `0` = unlimited. With `wall_secs`, the axis no other system
+    /// in the field enforces — our differentiator (RD-4, gaps §2).
+    #[serde(default)]
+    pub max_spend_micros: u64,
 }
 
 impl Default for BudgetSpec {
@@ -169,6 +195,11 @@ impl Default for BudgetSpec {
             wall_secs: default_wall_secs(),
             max_turns: default_max_turns(),
             max_output_tokens: default_max_output_tokens(),
+            max_depth: 0,
+            max_agent_calls: 0,
+            max_call_tokens: 0,
+            max_global_calls: 0,
+            max_spend_micros: 0,
         }
     }
 }
@@ -367,5 +398,30 @@ mod tests {
             p.output.output_schema.as_deref(),
             Some("{\"type\":\"object\"}")
         );
+    }
+
+    /// D-C3-2 / RD-4: the budget lattice's new axes default to 0
+    /// (unlimited) and parse when authored.
+    #[test]
+    fn budget_lattice_axes_default_unlimited_and_parse() {
+        let p = Packet::from_toml_str(minimal_packet_toml()).expect("parses");
+        assert_eq!(p.budget.max_depth, 0);
+        assert_eq!(p.budget.max_agent_calls, 0);
+        assert_eq!(p.budget.max_call_tokens, 0);
+        assert_eq!(p.budget.max_global_calls, 0);
+        assert_eq!(p.budget.max_spend_micros, 0);
+
+        let text = format!(
+            "{}\n[budget]\nmax_depth = 2\nmax_agent_calls = 5\n\
+             max_call_tokens = 40000\nmax_global_calls = 12\n\
+             max_spend_micros = 250000\n",
+            minimal_packet_toml()
+        );
+        let p = Packet::from_toml_str(&text).expect("parses the lattice");
+        assert_eq!(p.budget.max_depth, 2);
+        assert_eq!(p.budget.max_agent_calls, 5);
+        assert_eq!(p.budget.max_call_tokens, 40_000);
+        assert_eq!(p.budget.max_global_calls, 12);
+        assert_eq!(p.budget.max_spend_micros, 250_000);
     }
 }

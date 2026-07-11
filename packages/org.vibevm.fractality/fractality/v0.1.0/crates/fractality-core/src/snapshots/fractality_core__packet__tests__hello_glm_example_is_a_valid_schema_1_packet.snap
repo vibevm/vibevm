@@ -28,6 +28,11 @@ Packet {
         wall_secs: 300,
         max_turns: 10,
         max_output_tokens: 50000,
+        max_depth: 0,
+        max_agent_calls: 0,
+        max_call_tokens: 0,
+        max_global_calls: 0,
+        max_spend_micros: 0,
     },
     routing: RoutingSpec {
         profile: "glm",
