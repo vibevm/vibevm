@@ -1296,7 +1296,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:650d9c209309e9da6c1ff56bd7d0c7347639060c285763d735a91936b6c5e26d",
+      "content_hash": "sha256:615ef374de5d008ebf01f76cb46e056248ce75171eea40c33e65aa1f765a67e6",
       "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
       "file": "spec/plans/FRACTALITY-RLM-PLAN-v0.1.md",
       "heading": "FRACTALITY-RLM-PLAN v0.1 — Campaign 3 · Stage B: the descent core (DRAFT)",
@@ -1377,12 +1377,93 @@
     },
     {
       "anchor": "ledger",
-      "content_hash": "sha256:2c58734995e007beeb07f8d8bff322d70ce96881f9204c3c34c6d68064efa6c5",
+      "content_hash": "sha256:a071c7b0005a1eb4fc196843e0cb38cd2466a8c38d5e82e3a94383e486bf13e7",
       "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
       "file": "spec/plans/FRACTALITY-RLM-PLAN-v0.1.md",
       "heading": "9. Ledger",
       "line": 176,
       "uri": "spec://fractality/plans/FRACTALITY-RLM-PLAN-v0.1#ledger"
+    },
+    {
+      "anchor": "executor-guide",
+      "content_hash": "sha256:30be00a50cf981f4b9881439f439d67c4f6eadcf17096778aa6b49c8fb2e4fe2",
+      "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-PLAN-v0.1.md",
+      "heading": "10. Executor's guide — read this before any code",
+      "line": 180,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-PLAN-v0.1#executor-guide"
+    },
+    {
+      "anchor": "eg-reading",
+      "content_hash": "sha256:22a5666be5848d685192fe38927a2411ec1e06ad87d94af7ca48f162d44ddf6f",
+      "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-PLAN-v0.1.md",
+      "heading": "10.1 Reading order for the executing session",
+      "line": 189,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-PLAN-v0.1#eg-reading"
+    },
+    {
+      "anchor": "eg-glossary",
+      "content_hash": "sha256:43a40e1fe53792936264dd25536c09e7543bb25f1b22f7f997bd19b8dfb0928b",
+      "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-PLAN-v0.1.md",
+      "heading": "10.2 Glossary — our words, exact meanings",
+      "line": 204,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-PLAN-v0.1#eg-glossary"
+    },
+    {
+      "anchor": "eg-needgate",
+      "content_hash": "sha256:c5039e5c4ec6fa83ee5fcb849b33ef6c21bb5de8f939989b6481b031be9a5e48",
+      "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-PLAN-v0.1.md",
+      "heading": "10.3 The need-gate decision procedure (v1, fixed order)",
+      "line": 256,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-PLAN-v0.1#eg-needgate"
+    },
+    {
+      "anchor": "eg-cleanroom",
+      "content_hash": "sha256:785c1b622179a5790205cdee4bcb7ee451c61897364a16647fb8c7afe9c0cd1c",
+      "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-PLAN-v0.1.md",
+      "heading": "10.4 Clean-room rules for executors — legally load-bearing",
+      "line": 283,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-PLAN-v0.1#eg-cleanroom"
+    },
+    {
+      "anchor": "eg-minimalism",
+      "content_hash": "sha256:397d16a8a67e8f942e6215706eb2572b7465767953f8a5d82f21742e6452491c",
+      "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-PLAN-v0.1.md",
+      "heading": "10.5 v1 minimalism — things you must NOT build",
+      "line": 297,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-PLAN-v0.1#eg-minimalism"
+    },
+    {
+      "anchor": "eg-crates",
+      "content_hash": "sha256:49c5c8f55c9419c0d62ece07c3bceda57623428859837bb171d0a82cc1c08fdf",
+      "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-PLAN-v0.1.md",
+      "heading": "10.6 Where code lands",
+      "line": 308,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-PLAN-v0.1#eg-crates"
+    },
+    {
+      "anchor": "eg-process",
+      "content_hash": "sha256:e0414dd27483c68e6efc9532dc0cbd43934910f455e8d1ec378f6b692bcf156c",
+      "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-PLAN-v0.1.md",
+      "heading": "10.7 Process laws, restated for you",
+      "line": 319,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-PLAN-v0.1#eg-process"
+    },
+    {
+      "anchor": "eg-unsure",
+      "content_hash": "sha256:fc133d34ce6b050c0ea994fa9a6df2b40942c40ab74d10286b5366227aff3133",
+      "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-PLAN-v0.1.md",
+      "heading": "10.8 When you are unsure",
+      "line": 347,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-PLAN-v0.1#eg-unsure"
     },
     {
       "anchor": "root",

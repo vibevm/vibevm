@@ -176,3 +176,180 @@ license-cleared; refs tree local and pinned.
 ## 9. Ledger {#ledger}
 
 _(empty — DRAFT)_
+
+## 10. Executor's guide — read this before any code {#executor-guide}
+
+_Added 2026-07-11 at the owner's order, for the sessions that will
+execute this plan on non-Fable models (Opus-class boss, GPT/GLM
+workers). Everything here was implicit context for the authoring
+model; for you it is LAW. When this section and your own judgment
+disagree, this section wins; when it and the owner disagree, the
+owner wins._
+
+### 10.1 Reading order for the executing session {#eg-reading}
+
+1. The workspace `CLAUDE.md`, end to end (its laws bind every
+   commit, especially the delegation law and machine quirks).
+2. This plan, whole.
+3. [`RLM-SYNTHESIS.md §3`](../refs/notes/RLM-SYNTHESIS.md) and
+   [`FUGU-SYNTHESIS.md §3`](../refs/notes/FUGU-SYNTHESIS.md) —
+   every `RD-n`/`FD-n` cited in §4 resolves THERE, nowhere else.
+4. A study note under `spec/refs/notes/` ONLY when the decision
+   you are implementing cites it — never the whole shelf.
+5. `PROP-001-foundation.md` §2–§4 (the system model you extend).
+
+Do not boot the host repo tree. Do not re-read the research
+papers or reference repos — see 10.4.
+
+### 10.2 Glossary — our words, exact meanings {#eg-glossary}
+
+- **packet** — a TOML task contract (goal, context refs, output
+  contract, budgets, routing). **run** — one packet executed by
+  one worker. **run tree** — runs spawned from within runs.
+- **The five need-gate verdicts** (D-C3-1), operationally:
+  - `inline` — the boss does it itself. No worker, no packet.
+  - `route` — ONE worker call with the task as-is. No
+    decomposition, no child tree, parent blocks. (Fugu-standard's
+    entire business. Cheap. Default for single-skill tasks that
+    fit the worker's window.)
+  - `fold-local` — a bounded sub-session in the boss's OWN
+    context space (e.g. a nested headless CC call) that returns
+    a summary; no pod, no isolation. For context-heavy subtasks
+    that need neither parallelism nor a fresh environment.
+  - `spawn` — child packet(s) through MC, each with its own
+    budgets, env, and run identity. The only verdict that
+    creates a run tree.
+  - `escalate` — return the task UP, annotated with
+    `escalated(reason, needs)`. This is a first-class OUTCOME,
+    not a failure. The top of every chain is the human.
+- **context_from** — a packet field: a list of run-ids whose
+  RESULT files become readable FileRefs for this child. Default
+  `[]`. There is deliberately NO mechanism for a child to see a
+  parent's or sibling's transcript — only named results.
+- **the fold law** — worker transcripts never enter any parent
+  context, ever. Parents consume `result.md` + `status.json`.
+- **orchestration collapse** — when parallel siblings can see
+  each other's early actions, the first mover steers everyone
+  into one trajectory and the fan-out is wasted. Prevention:
+  isolation is the default; visibility only via `context_from`.
+- **cold verifier** — an acceptance/verification packet issued
+  over a tree with no work output. Refuse it mechanically.
+- **availability mask** — routing considers only profiles that
+  are currently usable (credentials present, quota not
+  exhausted); absent profiles are excluded before scoring.
+- **soft-label table** — the journal query "per (worker-class ×
+  task-class): attempts, successes, mean cost" (D-C3-8). It is
+  DATA for delegation-rules, not a trained model.
+- **Silo / Brain-Fog / trivial regimes** (RD-6) — task-noise
+  dominant (cross-chunk reasoning dies under any split) /
+  model-noise dominant (long input degrades one model) / O(1)
+  lookup. Silo ⇒ escalate or route-to-biggest-window; Brain-Fog
+  ⇒ spawn; trivial ⇒ inline or route.
+- **boss surface / promotion** — capability grants written into
+  the child's OWN harness config at spawn (settings/permissions
+  injection). Promotion = spawning (or re-launching) a child
+  WITH spawn rights + initiative hooks; the default child has
+  none. There is no in-place promotion in v1.
+- **floor** — the whole gate panel (`rust-ai-native floor`),
+  run FROM `fractality/v0.1.0/`. Green = all six stages pass.
+
+### 10.3 The need-gate decision procedure (v1, fixed order) {#eg-needgate}
+
+Evaluate top-down; first match wins; journal the verdict + a
+one-line reason verbatim:
+
+1. Task is an O(1) lookup / single fact → `inline` (or `route`
+   if it needs a tool the boss lacks). Never spawn for these.
+2. Task + its context fit the candidate worker's window with
+   ≥ 30% margin AND the task is single-skill → `route`. Do NOT
+   decompose what fits — evidence says wrapping natively-capable
+   models makes them WORSE (RD-2's guards; three independent
+   sources).
+3. Cross-chunk dependence dominates (the answer needs global
+   reasoning over the whole context; chunking destroys it) →
+   `escalate` — or `route` to the largest-window available
+   profile if one exists. Do not fan out; it saturates below
+   optimal regardless of worker quality (Silo theorem).
+4. Decomposable, sub-results composable (you can write per-child
+   goals whose outputs merge mechanically or via one designated
+   merge node) → `spawn`. Depth cap from delegation-rules —
+   default `max_depth = 1`; depth 2 exists only behind the
+   experimental flag and only for provably super-linear tasks.
+   When writing child goals, REWRITE them for composition (the
+   "2nd smallest → per-chunk two smallest" planner trick, RD-8).
+5. Otherwise (context-heavy, sequential, no isolation need) →
+   `fold-local`.
+
+### 10.4 Clean-room rules for executors — legally load-bearing {#eg-cleanroom}
+
+- Implement ONLY from: this plan, the syntheses, the study notes,
+  PROP-001. **Never open `refs/src/*`, `refs/papers/*`, or
+  `refs/articles/*` during an implementation session.** Not to
+  "check how they did it", not for a function name, not once.
+- If a note under-specifies something you need — STOP that slice,
+  write the question into this plan's §9 ledger, and ask the
+  owner. Re-reading a source is a separate STUDY act with its
+  own INVENTORY discipline, never part of coding.
+- Never copy code from anywhere; never paraphrase code
+  structure file-by-file. Ideas from the notes, expression
+  entirely yours. One violation contaminates the codebase.
+
+### 10.5 v1 minimalism — things you must NOT build {#eg-minimalism}
+
+No learned router (no ES, no RL, no hidden-state features — the
+routing policy is a TOML table in delegation-rules). No Python
+REPL surface. No natural-language workflow grammar (packets are
+TOML; the Conductor's NL plans are explicitly non-adopted). No
+new daemons beyond mission-control. No string sentinels
+(`FINAL()`-style) anywhere — outcomes are files + status.json.
+No global rewrite of existing crates: every D-C3 lands as an
+extension at named seams.
+
+### 10.6 Where code lands {#eg-crates}
+
+Packet/type/budget extensions → `fractality-core`. Enforcement,
+spawn, await-verbs, kill, journal events → `fractality-mission-
+control`. Client verbs + CLI surface → `fractality-mc-client` /
+`fractality-cli`. Claude-Code specifics (settings injection,
+promotion grants) → `fractality-backend-claude-code`. Nudge/board
+text changes → `fractality-initiative`. Policy tables → the
+`delegation-rules` package (its OWN version dir and Cargo
+workspace — not inside `fractality/v0.1.0`).
+
+### 10.7 Process laws, restated for you {#eg-process}
+
+- One D-C3 decision = one commit-sized slice. Never batch two
+  decisions into one commit. After every slice: run the floor
+  (from `fractality/v0.1.0/`, cwd law). If the floor stays red
+  longer than ~30 minutes of fixing: revert the slice, record
+  what broke in the ledger, ask.
+- Any commit that adds/renames an anchored spec section re-mints
+  `specmap.json` IN THE SAME COMMIT (`rust-ai-native specmap`).
+- Long runs (tests, builds, trials): background + log file +
+  watcher; **first-output timeout ≤ 3 min** (a silent delegate
+  is dead — kill and relaunch); never filter a live pipe through
+  `head`; completion = notification, never a blind timeout.
+- Git: commit messages via `git commit -F - <<'MSG'` heredoc
+  only; Conventional Commits, scope `fractality`; NEVER any
+  AI-attribution trailer (host Rule 1 — absolute).
+- File edits via editor tools only (PowerShell 5.1 corrupts
+  UTF-8-no-BOM round-trips on this box).
+- Tests/trials NEVER touch the real `~/.fractality` — scratch
+  homes always; never name a test binary `*install*` (Windows
+  UAC). Stop MC daemons before workspace builds (F15).
+- Paid trial arms fire only after pre-registration is committed
+  AND the owner's RP word is recorded verbatim. No exceptions.
+- Delegate mechanical work to GLM (`opencode run -m
+  zai-coding-plan/glm-5.2 …`) per the workspace delegation law;
+  the boss reviews every delegated diff. Never delegate: spec or
+  plan authorship, seam design, anything touching secrets.
+
+### 10.8 When you are unsure {#eg-unsure}
+
+Follow the conflict-protocol ladder: re-read the governing spec
+section → find the closest analog in the codebase → choose the
+CONSERVATIVE interpretation (cheapest to reverse) → mark it
+`<!-- REVIEW: ... -->` → proceed and report. Never invent
+semantics silently; never "improve" a recorded decision without
+naming its revisit trigger. The authority order is Human > Spec >
+Tests > Code > WAL — recency is not authority.
