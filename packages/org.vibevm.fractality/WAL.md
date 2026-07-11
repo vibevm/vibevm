@@ -74,10 +74,11 @@ cargo** (opencode unreliable today — see below).
   shipped code; cwd law; commit heredoc; editor-tool edits; specmap
   re-mint law; scratch homes; no `*install*` test binaries; F15 (stop
   MC before builds).
-- **Ф6 paid trial arms HARD-STOP:** fire only after MT-C3-01
-  pre-registration is committed AND owner's verbatim RP-C3-2 word +
-  budget (§10.7, no exceptions). MT-C2-05 stays RP5-gated (unruled) —
-  MT-C3-01 is this campaign's first trial.
+- **Ф6 paid trial arms — RP-C3-2 PRE-AUTHORIZED 2026-07-11** (owner:
+  «я прямо сейчас разрешаю делать эти платные прогоны»). Arms fire
+  after MT-C3-01 pre-registration is committed (§10.7 still binds the
+  pre-reg-first order); budget posture confirmed at Ф6. MT-C2-05 stays
+  RP5-gated (unruled) — MT-C3-01 is this campaign's first trial.
 - Fugu benchmark numbers are Sakana-reported — mechanism evidence
   only.
 

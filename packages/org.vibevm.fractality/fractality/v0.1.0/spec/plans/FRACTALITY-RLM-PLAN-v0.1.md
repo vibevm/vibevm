@@ -195,8 +195,14 @@ license-cleared; refs tree local and pinned.
   is cut to [PP-003](../../../../plans/postponed/PP-003-option-c-advisor-slice.md).
   Budget posture + timing → §1; paid trial arms remain behind
   RP-C3-2.
-- **RP-C3-2 — trial arms authorization (opens at Ф6):** paid arms
-  gated like RP1/RP5.
+- **RP-C3-2 — trial arms authorization (PRE-AUTHORIZED 2026-07-11):**
+  owner verbatim «я прямо сейчас разрешаю делать эти платные
+  прогоны». Paid Ф6 trial arms are authorized. §10.7 still binds:
+  MT-C3-01 pre-registration must be committed BEFORE arms fire; the
+  budget posture (arm count, spend cap) is confirmed at Ф6
+  commissioning (recommendation: budget-matched arms, GLM cold boss,
+  cap per the RP1/RP5 precedent). No second word needed to fire once
+  the pre-registration lands.
 - Standing: PP-001's RP5 remains independent; firing order of
   MT-C2-05 vs MT-C3-01 is part of RP-C3-1.
 
