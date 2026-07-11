@@ -110,14 +110,19 @@ enum Cmd {
         #[arg(long)]
         json: bool,
     },
-    /// Wait for runs to reach a terminal state (shell `wait` semantics:
-    /// blocks on all, exit code mirrors the LAST id's outcome — 0
-    /// completed, 1 failed, 3 killed, 2 pod lost/infra). Prints one line
-    /// per run as it settles.
+    /// Wait for runs to reach a terminal state (shell `wait` semantics).
+    /// Default joins on ALL ids (blocks until every one is terminal, exit
+    /// mirrors the LAST — 0 completed, 1 failed, 3 killed, 2 pod
+    /// lost/infra), printing one line per run as it settles. `--any`
+    /// races them and returns on the FIRST to settle (the descent
+    /// await-any verb, D-C3-4).
     Wait {
         /// Run ids (or unique prefixes).
         #[arg(required = true)]
         ids: Vec<String>,
+        /// Return as soon as ANY awaited run is terminal, not all.
+        #[arg(long)]
+        any: bool,
         /// Give up after this many seconds (0 = wait forever).
         #[arg(long, default_value_t = 0)]
         timeout: u64,
@@ -298,13 +303,13 @@ async fn main() -> std::process::ExitCode {
             json,
         } => ps(&home, state, limit, quiet, json).await,
         Cmd::Show { id, json } => show(&home, &id, json).await,
-        Cmd::Run { packet, json } => run_packet(&home, &packet, json).await,
+        Cmd::Run { packet, json } => swarm::run_packet(&home, &packet, json).await,
         Cmd::Spawn {
             packet,
             parent,
             json,
         } => swarm::spawn(&home, &packet, parent.as_deref(), json).await,
-        Cmd::Wait { ids, timeout } => swarm::wait(&home, &ids, timeout).await,
+        Cmd::Wait { ids, any, timeout } => swarm::wait(&home, &ids, timeout, any).await,
         Cmd::Tree { id, json } => swarm::tree(&home, id.as_deref(), json).await,
         Cmd::Kill { id, tree } => swarm::kill(&home, &id, tree).await,
         Cmd::Questions { json } => boss::questions(&home, json).await,
@@ -394,103 +399,6 @@ fn harness_dispatch(name: &str, run: impl FnOnce() -> u8) -> u8 {
             &format!("unknown harness `{name}` (only `claude-code` is supported today)"),
         )
     }
-}
-
-/// `fractality run --packet <file>`: the sync delegation loop (D13).
-async fn run_packet(home: &camino::Utf8Path, packet_path: &camino::Utf8Path, json: bool) -> u8 {
-    let text = match std::fs::read_to_string(packet_path.as_std_path()) {
-        Ok(t) => t,
-        Err(e) => return fail_code(EXIT_NEGATIVE, &format!("reading `{packet_path}`: {e}")),
-    };
-    let packet = match fractality_core::Packet::from_toml_str(&text) {
-        Ok(p) => p,
-        Err(e) => return fail_code(EXIT_NEGATIVE, &e.to_string()),
-    };
-    // Client-side wait cap: the packet's wall budget plus grace. Budget
-    // enforcement (the kill) is Phase 4; until then an overrun stops the
-    // WAIT loudly, never silently.
-    let wait_cap = std::time::Duration::from_secs(packet.budget.wall_secs + 60);
-
-    let client = match connect_or_start(home).await {
-        Ok(c) => c,
-        Err(e) => return fail_code(err_code(&e), &e.to_string()),
-    };
-    let parent = match swarm::resolve_parent(&client, None).await {
-        Ok(p) => p,
-        Err((code, message)) => return fail_code(code, &message),
-    };
-    let started = std::time::Instant::now();
-    let run = match client
-        .register_run(&fractality_core::api::RegisterRunRequest {
-            packet,
-            parent,
-            spawn: true,
-            origin_session: swarm::origin_session_from_env(),
-        })
-        .await
-    {
-        Ok(r) => r,
-        Err(e) => return fail_code(err_code(&e), &e.to_string()),
-    };
-    eprintln!("run {} spawned (dir {})", run.run_id, run.run_dir);
-
-    let mut parked_notice = false;
-    let final_run = loop {
-        tokio::time::sleep(std::time::Duration::from_millis(500)).await;
-        match client.run(run.run_id).await {
-            Ok(r) if r.state.is_terminal() => break r,
-            Ok(r) if r.state == RunState::WaitingOnBoss => {
-                if !parked_notice {
-                    parked_notice = true;
-                    eprintln!(
-                        "run {} PARKED on a question: {}\n  answer with: fractality answer {} \"<text>\"",
-                        r.run_id,
-                        r.question.as_deref().unwrap_or("-"),
-                        r.run_id,
-                    );
-                }
-                if started.elapsed() > wait_cap {
-                    // D17 exit family 4: parked past its wait — the run
-                    // stays alive for a later answer; this loop stops.
-                    return fail_code(
-                        4,
-                        &format!(
-                            "run {} is still parked on its question past the wall budget; \
-                             it keeps waiting — `fractality questions` to triage",
-                            run.run_id
-                        ),
-                    );
-                }
-            }
-            Ok(_) if started.elapsed() > wait_cap => {
-                return fail_code(
-                    EXIT_INFRA,
-                    &format!(
-                        "run {} outlived its wall budget plus grace and is still not \
-                         terminal — the mission-control watchdog should have killed it; \
-                         inspect with `fractality show {}` and `mc.log`",
-                        run.run_id, run.run_id
-                    ),
-                );
-            }
-            Ok(_) => continue,
-            Err(e) => return fail_code(err_code(&e), &e.to_string()),
-        }
-    };
-    if parked_notice {
-        eprintln!("run {} resumed and finished", run.run_id);
-    }
-
-    if json {
-        println!(
-            "{}",
-            serde_json::to_string_pretty(&final_run)
-                .unwrap_or_else(|e| format!("{{\"error\":\"json: {e}\"}}"))
-        );
-    } else {
-        out::print_run_summary(&final_run, started.elapsed());
-    }
-    swarm::state_code(&final_run)
 }
 
 fn fail(code: u8, message: &str) -> std::process::ExitCode {
