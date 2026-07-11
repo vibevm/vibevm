@@ -229,6 +229,8 @@ Commit map (Stage B execution, Campaign 3):
   `admission::check_not_duplicate` (`1189b3c`, D-C3-4/5).
 - Ф3.3 availability masking — `usable_profiles`/`token_present`
   (`b21a4c6`, FD-8; pure query, router-consumer later).
+- Ф3.6 retry-on-violation — sync-loop re-dispatch once (`867afc2`,
+  D-C3-2; `run_once`/`retry_report` in `swarm.rs`, no protocol change).
 
 **Scoping decision — decision-journal producer (D-C3-8).** The journal
 must record REAL need-gate decisions, so the producer cannot be MC

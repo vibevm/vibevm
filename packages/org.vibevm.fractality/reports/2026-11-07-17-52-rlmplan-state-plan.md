@@ -4,11 +4,11 @@ _Campaign 3 Stage B execution tracker. Updated in place between status
 documents (big-plan dashboard rule — bulk stays out of status files).
 Source of truth is the spec tree (plan, syntheses, WAL); this is the
 owner-facing surface + the agent's own quick tracker. Last updated:
-2026-07-12 01:45 (Ф3 IN PROGRESS — gate wiring complete (D-C3-3 +
-D-C3-8), await `--any` (3.4a), and refuse-near-duplicate (3.5a) all in,
-each floor green + pushed. Remaining Ф3: Ф3.5b merge node (design-laden)
-+ the sibling-isolation pinning test, masking (FD-8, maybe defer), retry
-(3.6))._
+2026-07-12 02:10 (Ф3 NEARLY COMPLETE — gate wiring (D-C3-3 + D-C3-8),
+await `--any` (3.4a), refuse-near-duplicate (3.5a), masking (3.3, FD-8),
+retry (3.6, D-C3-2) all in, each floor green + pushed. **ONLY Ф3.5b merge
+node remains** — the one genuinely design-laden piece (what a merge node
+IS + its await/collect integration; dead-surface without it))._
 
 ## Goal & operating contract (owner, 2026-07-11)
 
@@ -121,17 +121,13 @@ nudge (RD-12 settings-writes precedent), mc-client, cli surfaces.
     - [ ] Ф3.5b merge node (design-laden — what it IS / how designated)
           + sibling-isolation pinning test (isolation already true by
           construction; the test would document, not enforce)
-  - [ ] Ф3.6 retry-on-violation re-dispatch (deferred from Ф1.2b)
-        **SEAM FINDING (this session, verified):** the schema-gate result
-        does NOT reach MC — `core::run::Collected` (and the `PodEvent::
-        Collected` it rides) carry only result + acceptance, never the
-        schema verdict; the pod writes `schema_gate` to `status.json`
-        locally (Ф1.2b). So retry needs the schema result PLUMBED first:
-        either add `schema_valid`/violations to `Collected` (pod→MC
-        protocol change) OR have MC read `status.json` in the Collected
-        handler. Then re-dispatch once with the violation report in the
-        retry child's `context.notes`, bounded by a retry marker to
-        prevent loops. Protocol-touching + multi-crate → best fresh.
+  - [x] Ф3.6 retry-on-violation re-dispatch (`867afc2`, D-C3-2) — the
+        sync `fractality run` loop re-dispatches ONCE on a schema
+        violation, reading `status.json` directly (no pod→MC protocol
+        change, resolving the seam finding): `run_once` + `retry_report`
+        in `swarm.rs`, violations folded into the retry's `context.notes`,
+        bounded (gate checked only on the first attempt). `fractality
+        spawn` has no wait point so no retry — correct.
 - [ ] Ф4 escalation (D-C3-6)
 - [ ] Ф5 acceptance / PP-002 (RD-11, FD-9)
 - [ ] Ф6 trial (D-C3-9) — STOP at RP-C3-2
