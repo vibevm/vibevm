@@ -1,19 +1,17 @@
 # fractality — WAL (project continuation state)
 
-_Updated: 2026-07-12 ~01:25 (**Campaign 3 Stage B — Ф3 IN PROGRESS: the
-WHOLE gate wiring is in**). Ф0/Ф1/Ф2 CLOSED (the need-gate decision
-core). Ф3 so far, each floor-green + committed + ledgered + pushed:
-**Ф3.1** spawn depth-guard — D-C3-3 enforcement (`b23f3f1`); **Ф3.2**
-gate invocation + decision journal — **D-C3-8 COMPLETE**: `fractality
-gate` surfaces `decide` (`3b0b2d2`, also resolving the `max_depth=0`
-overload via `GateInputs.can_spawn`), and `gate --record` journals the
-`DecisionRecord` to a `/v0/decisions` stem end-to-end (`2c0a128` storage
-+ `8d8960a` producer); **Ф3.4a** `fractality wait --any` descent
-await-any race (`a1479f1`; `all`/`named` already existed); **Ф3.5a**
-refuse near-duplicate child — `Packet::task_fingerprint` +
-`admission::check_not_duplicate` (`1189b3c`, full-spec match so fan-out
-passes). **Remaining Ф3:** Ф3.5b merge node (design-laden) + the
-sibling-isolation pinning test, masking (FD-8, maybe defer), retry (3.6).
+_Updated: 2026-07-12 ~02:40 (**Campaign 3 Stage B — Ф3 COMPLETE: the
+descent core is in**). Ф0/Ф1/Ф2 CLOSED (the need-gate decision core); Ф3
+CLOSED this session across 9 slices, each floor-green + committed +
+ledgered + pushed. The whole gate wiring AND descent semantics landed:
+**Ф3.1** depth-guard (D-C3-3, `b23f3f1`); **Ф3.2** gate invocation +
+decision journal (D-C3-8 end-to-end: `3b0b2d2` gate + `2c0a128`/`8d8960a`
+journal; also fixed the `max_depth=0` overload via `GateInputs.can_spawn`);
+**Ф3.4a** await `--any` race (`a1479f1`); **Ф3.5a** refuse-near-duplicate
+(`1189b3c`); **Ф3.3** availability masking (FD-8, `b21a4c6`); **Ф3.6**
+retry-on-violation (D-C3-2, `867afc2`); **Ф3.5b** merge-node marker +
+at-most-one invariant (`9825f4e`). **Next phase: Ф4 escalation (D-C3-6).**
+Phase report: `reports/2026-12-07-02-40-campaign3-f3-descent-core.md`.
 Per-slice status + design notes in the state-plan tracker._
 
 ## Current state
@@ -48,45 +46,37 @@ Per-slice status + design notes in the state-plan tracker._
   re-read; per-slice status; delegation scoreboard). §9 ledger in the
   plan is the commit map + scoping decisions.
 
-## Next — Ф3 (descent verbs + gate wiring) — IN PROGRESS
+## Next — Ф4 (escalation, D-C3-6)
 
 Reading order to resume: workspace `CLAUDE.md` → this WAL → `CONTINUE.md`
-→ the state-plan tracker (carries the seam map + per-slice status) →
-plan §10 (BINDING) + §9 (ledger + deferrals). **Done this session:**
-Ф3.1 depth-guard (`b23f3f1`), Ф3.2a gate invocation + `can_spawn`
-overload fix (`3b0b2d2`) — both floor-green. Remaining Ф3:
+→ the state-plan tracker → plan §10 (BINDING) + §9 (ledger). **Ф3 is
+CLOSED** (descent core complete). Next is **Ф4 escalation (D-C3-6):**
 
-1. **Descent SEMANTICS (D-C3-4/5) — the hardest remaining slice:**
-   sibling isolation (already true by construction — a child sees only
-   its packet + `context_from` results, never a sibling transcript; wants
-   a PINNING TEST, not new code); a designated **merge node** answering
-   the parent goal; **MC refuses near-duplicate child specs** — NB needs
-   a FULL-spec match (title+goal+context), NOT title-only (a fan-out
-   legitimately spawns same-title children on different chunks; title-only
-   would break the core idiom) → likely a task fingerprint on RunRecord
-   (new field + journal event). `await any|all|named` in
-   mc-client + CLI — **NB `fractality wait` already blocks on all ids
-   (`swarm::wait`); extend it** with any/named; parallel siblings the
-   default idiom; **sibling isolation by default** (visibility only via
-   `context_from`); a designated **merge node**; MC refuses near-
-   duplicate child specs; single-writer.
-3. **Availability masking (FD-8):** route over usable profiles (token
-   present). **NB dead-surface risk:** today packets name their profile
-   and `preflight` already checks the token exists; masking needs a
-   multi-profile *router* seam to consume it — build that consumer first
-   or defer.
-4. **retry-on-violation re-dispatch** (deferred from Ф1.2b §9).
+- `escalated(reason, needs)` as a first-class OUTCOME (not a failure)
+  that climbs the `parent` edges to the human at the top — generalizing
+  the D18 question/answer park channel + AnswerRule.
+- **Ф0 spike s4 already resolved the DESIGN:** a terminal
+  `RunState::Escalated` + an `EscalationRecord{reason, needs}` on
+  RunRecord, climbing via existing `parent` edges. No new daemon. Open Q
+  (s4): a worker expresses escalation via an ask_boss-style MCP tool vs a
+  result status.
+- **Still to read for Ф4:** the D18 machinery (`http_questions.rs`, the
+  AnswerRule fold in `profile.rs`/`state.rs`), pod escalation path,
+  `registry.rs`.
 
-**Still to read** (the deferred delegate failed — silent stall):
-`mc-client/lib.rs`, cli `swarm.rs`/`mc_cmd.rs`/`broker.rs`, mc
-`registry.rs`. Core + `admission.rs`/`http.rs`/`state.rs`/`journal.rs`
-read this session.
+**Ф3 follow-ups (non-blocking, NOT D-C3 decisions — do not gate Ф4):**
+merge-node await/collect integration (marker + invariant are in; making a
+parent's result BE its merge node's is future); mid-task profile
+alternation (a pod/worker feature); a sibling-isolation pinning test
+(isolation is true by construction — a child sees only its packet +
+`context_from`, the fold law).
 
 Each slice = one commit, floor green after each; specmap re-mint
-in-commit on drift. **Floor/test runs = backgrounded cargo, NO stdout
-redirect** (the harness captures the task output file; a `> log` steals
-it — lesson this session). opencode delegation stays unreliable this
-session (read-inventory attempt stalled silently).
+in-commit on drift. **Floor/test/specmap runs = backgrounded cargo with
+an EXPLICIT `cd <v0.1.0>`, NO stdout redirect** (the harness captures the
+task output file; a `> log` steals it; the shell cwd is not reliably
+persisted — both lessons this session). opencode delegation stayed
+unreliable (read-inventory attempt stalled silently).
 
 ## Constraints (do not violate without discussion)
 

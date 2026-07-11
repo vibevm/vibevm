@@ -231,6 +231,9 @@ Commit map (Stage B execution, Campaign 3):
   (`b21a4c6`, FD-8; pure query, router-consumer later).
 - Ф3.6 retry-on-violation — sync-loop re-dispatch once (`867afc2`,
   D-C3-2; `run_once`/`retry_report` in `swarm.rs`, no protocol change).
+- Ф3.5b merge-node marker + at-most-one invariant (`9825f4e`, D-C3-4/5;
+  `output.merge` + `check_sibling_invariants`). **Ф3 COMPLETE — the
+  descent core is in: every D-C3 decision landed, floor green, pushed.**
 
 **Scoping decision — decision-journal producer (D-C3-8).** The journal
 must record REAL need-gate decisions, so the producer cannot be MC

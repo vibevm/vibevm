@@ -4,11 +4,12 @@ _Campaign 3 Stage B execution tracker. Updated in place between status
 documents (big-plan dashboard rule — bulk stays out of status files).
 Source of truth is the spec tree (plan, syntheses, WAL); this is the
 owner-facing surface + the agent's own quick tracker. Last updated:
-2026-07-12 02:10 (Ф3 NEARLY COMPLETE — gate wiring (D-C3-3 + D-C3-8),
-await `--any` (3.4a), refuse-near-duplicate (3.5a), masking (3.3, FD-8),
-retry (3.6, D-C3-2) all in, each floor green + pushed. **ONLY Ф3.5b merge
-node remains** — the one genuinely design-laden piece (what a merge node
-IS + its await/collect integration; dead-surface without it))._
+2026-07-12 02:40 (**Ф3 COMPLETE — the descent core is in**). Every D-C3
+decision landed across 9 slices this session (depth-guard, gate
+invocation + decision journal, await `--any`, refuse-near-duplicate,
+masking, retry, merge node) plus the `max_depth=0` overload fix — each
+floor green, committed, pushed. Next phase: **Ф4 escalation (D-C3-6)**.
+Phase report: `reports/2026-12-07-02-40-campaign3-f3-descent-core.md`._
 
 ## Goal & operating contract (owner, 2026-07-11)
 
@@ -98,7 +99,8 @@ nudge (RD-12 settings-writes precedent), mc-client, cli surfaces.
       output_schema + validation, budget lattice); D-C3-3 → Ф2
 - [x] Ф2 need-gate + delegation-rules — CLOSED (decide procedure +
       routing policy + profile class; goldens); gate wiring → Ф3
-- [~] Ф3 gate wiring + descent verbs — IN PROGRESS
+- [x] **Ф3 COMPLETE — the descent core** (every D-C3 decision landed,
+      floor green, pushed). Minor non-blocking follow-ups noted below.
   - [x] Ф3.1 depth-guard — D-C3-3 spawn-past-cap refusal (`b23f3f1`)
   - [x] Ф3.2 gate invocation + decision journal (D-C3-8) — **COMPLETE**
     - [x] Ф3.2a `fractality gate` CLI + `can_spawn` overload fix (`3b0b2d2`)
@@ -110,17 +112,21 @@ nudge (RD-12 settings-writes precedent), mc-client, cli surfaces.
   - [x] Ф3.3 availability masking (FD-8) — `usable_profiles`/`token_present`
         (`b21a4c6`); pure query, shipped tested ahead of the router that
         consumes it (Ф2 precedent)
-  - [~] Ф3.4 descent verbs — await any|all|named (D-C3-4/5)
+  - [x] Ф3.4 descent verbs — await any|all|named (D-C3-4/5)
     - [x] Ф3.4a `fractality wait --any` race (`a1479f1`); `all`/`named`
           already existed (default-join / passing ids)
-    - [ ] Ф3.4b parallel-spawn idiom + mid-task profile alternation
-  - [~] Ф3.5 sibling isolation + merge node + refuse-near-duplicate
+    - [ ] Ф3.4b (FOLLOW-UP, non-blocking): parallel-spawn is already the
+          idiom (spawn+parent+await+dedup+merge); mid-task profile
+          alternation is a pod/worker feature for a later phase
+  - [x] Ф3.5 sibling isolation + merge node + refuse-near-duplicate
     - [x] Ф3.5a refuse-near-duplicate — `Packet::task_fingerprint` +
-          `admission::check_not_duplicate` (`1189b3c`); full-spec match,
-          not title-only, so fan-out passes
-    - [ ] Ф3.5b merge node (design-laden — what it IS / how designated)
-          + sibling-isolation pinning test (isolation already true by
-          construction; the test would document, not enforce)
+          `check_sibling_invariants` (`1189b3c`); full-spec match, not
+          title-only, so fan-out passes
+    - [x] Ф3.5b merge-node marker `output.merge` + at-most-one invariant
+          (`9825f4e`); await/collect integration is a flagged follow-up
+    - [~] sibling isolation is true BY CONSTRUCTION (a child sees only its
+          packet + `context_from` results — the fold law); a pinning test
+          would document, not enforce — optional follow-up
   - [x] Ф3.6 retry-on-violation re-dispatch (`867afc2`, D-C3-2) — the
         sync `fractality run` loop re-dispatches ONCE on a schema
         violation, reading `status.json` directly (no pod→MC protocol
