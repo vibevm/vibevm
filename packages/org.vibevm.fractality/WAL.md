@@ -1,16 +1,18 @@
 # fractality — WAL (project continuation state)
 
-_Updated: 2026-07-12 ~00:55 (**Campaign 3 Stage B — Ф3 IN PROGRESS:
-the gate has teeth + a caller, and await races**). Ф0/Ф1/Ф2 CLOSED (the
-need-gate decision core). Ф3 so far, each floor-green + committed +
-ledgered + pushed: **Ф3.1** spawn depth-guard — D-C3-3 enforcement
-(`b23f3f1`); **Ф3.2a** `fractality gate` invocation — D-C3-8 (`3b0b2d2`),
-which also resolved the `max_depth=0` overload via `GateInputs.can_spawn`
-(routing 0=no-spawn vs need-gate 0=unlimited); **Ф3.4a** `fractality wait
---any` — the descent await-any race (`a1479f1`; `all`/`named` already
-existed). Next: Ф3.2b decision journal, Ф3.4b/3.5 the rest of the descent
-verbs (sibling isolation, merge node, refuse-near-duplicate), masking
-(maybe defer), retry. Per-slice status in the state-plan tracker._
+_Updated: 2026-07-12 ~01:25 (**Campaign 3 Stage B — Ф3 IN PROGRESS: the
+WHOLE gate wiring is in**). Ф0/Ф1/Ф2 CLOSED (the need-gate decision
+core). Ф3 so far, each floor-green + committed + ledgered + pushed:
+**Ф3.1** spawn depth-guard — D-C3-3 enforcement (`b23f3f1`); **Ф3.2**
+gate invocation + decision journal — **D-C3-8 COMPLETE**: `fractality
+gate` surfaces `decide` (`3b0b2d2`, also resolving the `max_depth=0`
+overload via `GateInputs.can_spawn`), and `gate --record` journals the
+`DecisionRecord` to a `/v0/decisions` stem end-to-end (`2c0a128` storage
++ `8d8960a` producer); **Ф3.4a** `fractality wait --any` descent
+await-any race (`a1479f1`; `all`/`named` already existed). **Remaining
+Ф3:** the descent SEMANTICS (3.5 sibling isolation / merge node /
+refuse-near-duplicate), masking (FD-8, maybe defer), retry (3.6).
+Per-slice status + design notes in the state-plan tracker._
 
 ## Current state
 
@@ -52,15 +54,15 @@ plan §10 (BINDING) + §9 (ledger + deferrals). **Done this session:**
 Ф3.1 depth-guard (`b23f3f1`), Ф3.2a gate invocation + `can_spawn`
 overload fix (`3b0b2d2`) — both floor-green. Remaining Ф3:
 
-1. **Ф3.2b decision journal (D-C3-8, next):** journal the decision tuple
-   for the soft-label table. Design found this session: a **separate
-   journal stem** (like the session journal — `open_stem`/`replay_stem`
-   in `state.rs`), NOT the run fold (a gate decision may have no run).
-   **Open Q:** WHERE decisions are recorded — the offline `gate` CLI only
-   prints (like `route`), so capture at the spawn/route action point in
-   MC, or add `POST /v0/decisions`. Read `journal_store.rs` +
-   `http_sessions.rs` (the session-stem precedent) first.
-2. **Descent verbs (D-C3-4, D-C3-5):** `await any|all|named` in
+1. **Descent SEMANTICS (D-C3-4/5) — the hardest remaining slice:**
+   sibling isolation (already true by construction — a child sees only
+   its packet + `context_from` results, never a sibling transcript; wants
+   a PINNING TEST, not new code); a designated **merge node** answering
+   the parent goal; **MC refuses near-duplicate child specs** — NB needs
+   a FULL-spec match (title+goal+context), NOT title-only (a fan-out
+   legitimately spawns same-title children on different chunks; title-only
+   would break the core idiom) → likely a task fingerprint on RunRecord
+   (new field + journal event). `await any|all|named` in
    mc-client + CLI — **NB `fractality wait` already blocks on all ids
    (`swarm::wait`); extend it** with any/named; parallel siblings the
    default idiom; **sibling isolation by default** (visibility only via

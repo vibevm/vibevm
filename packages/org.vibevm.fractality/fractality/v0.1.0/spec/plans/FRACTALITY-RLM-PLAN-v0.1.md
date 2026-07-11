@@ -222,6 +222,9 @@ Commit map (Stage B execution, Campaign 3):
 - Ф3.2 gate invocation — `fractality gate` + `can_spawn` fix (`3b0b2d2`).
 - Ф3.4a await `--any` (D-C3-4) + run-verb relocation (`a1479f1`).
 - Ф3.2b-i decision journal storage — stem + records (`2c0a128`).
+- Ф3.2b-ii decision journal producer — `gate --record` → `/v0/decisions`
+  + module splits (`8d8960a`). **D-C3-8 COMPLETE** (gate invocation +
+  decision journal, end to end).
 
 **Scoping decision — decision-journal producer (D-C3-8).** The journal
 must record REAL need-gate decisions, so the producer cannot be MC
