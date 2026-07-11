@@ -107,7 +107,9 @@ nudge (RD-12 settings-writes precedent), mc-client, cli surfaces.
             stem (`record_decision`/`decisions`), tested (`2c0a128`)
       - [x] Ф3.2b-ii producer: `gate --record` → `/v0/decisions` +
             module splits (`8d8960a`) — end to end over the bus
-  - [ ] Ф3.3 availability masking (FD-8) — dead-surface risk, may defer
+  - [x] Ф3.3 availability masking (FD-8) — `usable_profiles`/`token_present`
+        (`b21a4c6`); pure query, shipped tested ahead of the router that
+        consumes it (Ф2 precedent)
   - [~] Ф3.4 descent verbs — await any|all|named (D-C3-4/5)
     - [x] Ф3.4a `fractality wait --any` race (`a1479f1`); `all`/`named`
           already existed (default-join / passing ids)

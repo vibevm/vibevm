@@ -227,6 +227,8 @@ Commit map (Stage B execution, Campaign 3):
   decision journal, end to end).
 - Ф3.5a refuse near-duplicate child — `Packet::task_fingerprint` +
   `admission::check_not_duplicate` (`1189b3c`, D-C3-4/5).
+- Ф3.3 availability masking — `usable_profiles`/`token_present`
+  (`b21a4c6`, FD-8; pure query, router-consumer later).
 
 **Scoping decision — decision-journal producer (D-C3-8).** The journal
 must record REAL need-gate decisions, so the producer cannot be MC
