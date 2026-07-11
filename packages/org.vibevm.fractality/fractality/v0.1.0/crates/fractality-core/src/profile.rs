@@ -12,6 +12,7 @@ use camino::{Utf8Path, Utf8PathBuf};
 use serde::{Deserialize, Serialize};
 
 use crate::error::CoreError;
+use crate::routing::CapabilityClass;
 
 specmark::scope!("spec://fractality/PROP-001#architecture");
 
@@ -62,6 +63,14 @@ pub struct Profile {
     pub permissions: Permissions,
     #[serde(default)]
     pub pricing: Pricing,
+    /// The capability class this profile's workers present to the
+    /// need-gate's routing policy (D-C3-10). A CLASS, not the model name,
+    /// so the policy survives pool churn (FD-16). Defaults to `medium` —
+    /// the conservative middle: decomposes one level, clears the advisor
+    /// bar. A weak tier (turbo) must declare `weak` to be kept off
+    /// spawning roots.
+    #[serde(default = "default_capability_class")]
+    pub capability_class: CapabilityClass,
 }
 
 /// The model slots a packet's `routing.model` resolves through.
@@ -181,6 +190,9 @@ fn default_max_concurrent() -> u32 {
 }
 fn default_permission_mode() -> String {
     "acceptEdits".to_owned()
+}
+fn default_capability_class() -> CapabilityClass {
+    CapabilityClass::Medium
 }
 
 impl ProfilesFile {
@@ -319,6 +331,20 @@ mod tests {
         assert!(glm.permissions.deny_tools.is_empty());
         assert!(!glm.pricing.flat);
         assert_eq!(glm.pricing.plan, None);
+        assert_eq!(glm.capability_class, CapabilityClass::Medium);
+    }
+
+    #[test]
+    fn a_profile_may_declare_its_capability_class() {
+        let text = D6_SAMPLE.replace(
+            "[profile.glm.models]",
+            "capability_class = \"strong\"\n[profile.glm.models]",
+        );
+        let file = ProfilesFile::from_toml_str(&text).expect("parses");
+        assert_eq!(
+            file.get("glm").expect("glm").capability_class,
+            CapabilityClass::Strong
+        );
     }
 
     #[test]
