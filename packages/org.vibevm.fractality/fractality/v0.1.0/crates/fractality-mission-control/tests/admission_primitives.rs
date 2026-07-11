@@ -5,8 +5,10 @@
 use fractality_core::ids::{PodId, RunId};
 use fractality_core::journal::Event;
 use fractality_core::packet::{BudgetSpec, WorkspaceMode};
+use fractality_core::routing::{CapabilityClass, RoutingPolicy};
 use fractality_core::run::{KillReason, RunRecord, RunState, UsageTotals};
 use fractality_mission_control::Config;
+use fractality_mission_control::admission::check_spawn_depth;
 use fractality_mission_control::state::{AppState, PodRuntime};
 
 fn record(id: &str, profile: &str, spawn: bool, parent: Option<RunId>) -> RunRecord {
@@ -273,4 +275,62 @@ fn first_kill_reason_wins() {
     );
 
     std::fs::remove_dir_all(home.as_std_path()).ok();
+}
+
+/// The depth guard (D-C3-3) charges a spawn against the parent class's
+/// policy cap. Medium (default cap 1): a first-level child is admitted, a
+/// second level is refused with a message naming the depth and the cap.
+#[test]
+fn depth_guard_medium_admits_one_level_and_refuses_two() {
+    let policy = RoutingPolicy::default();
+    assert!(
+        check_spawn_depth(CapabilityClass::Medium, 0, &policy, 1).is_ok(),
+        "a first-level child (depth 1) fits the medium cap"
+    );
+    let err = check_spawn_depth(CapabilityClass::Medium, 0, &policy, 2)
+        .expect_err("depth 2 is past the medium cap");
+    assert!(err.contains("depth 2"), "names the offending depth: {err}");
+    assert!(err.contains("cap 1"), "names the cap: {err}");
+}
+
+/// Weak class (policy cap 0) is never a spawning root: any child is
+/// refused, routing semantics — `max_depth = 0` means "no spawning", not
+/// "unlimited" (the overload the wiring must keep straight).
+#[test]
+fn depth_guard_weak_never_spawns() {
+    let policy = RoutingPolicy::default();
+    let err = check_spawn_depth(CapabilityClass::Weak, 0, &policy, 1)
+        .expect_err("weak may not spawn at all");
+    assert!(err.contains("may not spawn"), "{err}");
+}
+
+/// Strong matches medium at the default cap (1); depth 2 needs the
+/// experimental flag (a later slice) and is refused here.
+#[test]
+fn depth_guard_strong_default_cap_is_one() {
+    let policy = RoutingPolicy::default();
+    assert!(check_spawn_depth(CapabilityClass::Strong, 0, &policy, 1).is_ok());
+    assert!(check_spawn_depth(CapabilityClass::Strong, 0, &policy, 2).is_err());
+}
+
+/// The parent's own `budget.max_depth` tightens the class ceiling but
+/// never loosens it: an authored strong cap of 2 is clamped to 1 by a
+/// budget of 1, and the message names the tightening bound.
+#[test]
+fn depth_guard_budget_tightens_but_never_loosens() {
+    let strong_two = RoutingPolicy::from_toml_str(
+        "schema = 1\n[class.strong]\nmax_depth = 2\n\
+         allow_experimental_depth2 = true\nadvisor_enabled = true\n",
+    )
+    .expect("policy parses");
+    // Without a budget, the authored table lets strong reach depth 2.
+    assert!(check_spawn_depth(CapabilityClass::Strong, 0, &strong_two, 2).is_ok());
+    // budget.max_depth = 1 clamps it back to one level.
+    let err = check_spawn_depth(CapabilityClass::Strong, 1, &strong_two, 2)
+        .expect_err("budget 1 tightens the cap to 1");
+    assert!(err.contains("budget.max_depth = 1"), "{err}");
+    // A budget looser than the class ceiling cannot raise it: default
+    // strong cap is 1, so depth 2 is still refused with budget 5.
+    let default_policy = RoutingPolicy::default();
+    assert!(check_spawn_depth(CapabilityClass::Strong, 5, &default_policy, 2).is_err());
 }

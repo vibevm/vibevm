@@ -168,8 +168,8 @@ async fn register_run(
     req.packet
         .validate()
         .map_err(|e| ApiError::new(StatusCode::BAD_REQUEST, e.to_string()))?;
-    let depth = match req.parent {
-        None => 0,
+    let parent_record = match req.parent {
+        None => None,
         Some(parent) => match state.get_run(parent) {
             None => {
                 return Err(ApiError::new(
@@ -185,9 +185,33 @@ async fn register_run(
                 )
                 .hint("a terminal run cannot adopt children; drop the parent field"));
             }
-            Some(p) => p.depth + 1,
+            Some(p) => Some(p),
         },
     };
+    let depth = parent_record.as_ref().map_or(0, |p| p.depth + 1);
+
+    // The depth guard (D-C3-3): a spawn may not nest past the cap for the
+    // parent's capability class — refused here at the door, before any pod
+    // is provisioned, and independent of the need-gate's advisory
+    // fold-at-cap so a caller that bypassed the gate still cannot open an
+    // unbounded tree. The compiled-in routing policy is the v1 table (its
+    // authored form in delegation-rules mirrors it; a home-relative
+    // override is a later slice).
+    if req.spawn
+        && let Some(parent) = parent_record.as_ref()
+    {
+        let parent_class = crate::admission::parent_capability_class(&state, &parent.profile);
+        if let Err(message) = crate::admission::check_spawn_depth(
+            parent_class,
+            parent.budget.max_depth,
+            &fractality_core::RoutingPolicy::default(),
+            depth,
+        ) {
+            return Err(ApiError::new(StatusCode::BAD_REQUEST, message)
+                .hint("route this task, or fold it into the caller, instead of spawning deeper"));
+        }
+    }
+
     // The product path validates at the door (D14/F16: the 400 names the
     // exact fix surface) — admission re-checks cheaply at launch time.
     if req.spawn

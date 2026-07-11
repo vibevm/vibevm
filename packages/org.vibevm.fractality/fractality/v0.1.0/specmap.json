@@ -319,7 +319,7 @@
       "crate_name": "fractality-mission-control",
       "file": "crates/fractality-mission-control/src/admission.rs",
       "item_kind": "mod",
-      "line": 22,
+      "line": 23,
       "symbol": "fractality_mission_control::admission"
     },
     {
@@ -829,7 +829,7 @@
     {
       "file": "crates/fractality-mission-control/src/admission.rs",
       "from_symbol": "fractality_mission_control::admission",
-      "line": 22,
+      "line": 23,
       "provenance": "authored",
       "uri": "spec://fractality/PROP-001#architecture",
       "verb": "implements"

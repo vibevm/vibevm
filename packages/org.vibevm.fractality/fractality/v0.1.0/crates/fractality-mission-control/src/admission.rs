@@ -15,6 +15,7 @@ use camino::Utf8Path;
 use fractality_core::Packet;
 use fractality_core::journal::Event;
 use fractality_core::profile::ProfilesFile;
+use fractality_core::routing::{CapabilityClass, RoutingPolicy};
 use fractality_core::run::RunRecord;
 
 use crate::state::AppState;
@@ -46,6 +47,71 @@ pub fn preflight(state: &AppState, packet: &Packet) -> Result<(), String> {
         return Err(format!(
             "token file `{token_path}` does not exist; create it or fix \
              profiles.toml (existence is checked here; only the pod reads it)"
+        ));
+    }
+    Ok(())
+}
+
+/// The capability class the depth guard should charge a spawn against: the
+/// class the parent's profile declares, or the conservative `medium`
+/// default when profiles are unreadable or the profile is gone. Profile
+/// *validity* is [`preflight`]'s job (it turns a broken profile into a
+/// 400); the guard only needs a class to derive a depth cap, so it must
+/// never fail the registration on its own — it degrades to `medium`.
+pub fn parent_capability_class(state: &AppState, profile_name: &str) -> CapabilityClass {
+    match ProfilesFile::load(&state.cfg.home) {
+        Ok(profiles) => profiles
+            .get(profile_name)
+            .map(|p| p.capability_class)
+            .unwrap_or(CapabilityClass::Medium),
+        Err(_) => CapabilityClass::Medium,
+    }
+}
+
+/// The depth guard (D-C3-3): may a spawn nesting to `child_depth` under a
+/// parent of `parent_class` be admitted? The cap is the routing policy's
+/// per-class `max_depth` — routing semantics, where `0` means *no
+/// spawning* (a weak-class worker is never a spawning root, D-C3-10) —
+/// tightened by the parent's own `budget.max_depth` axis when it declares
+/// one (`0` = unlimited on that axis, the six-axis convention). Pure and
+/// total; the caller maps `Err` to a door refusal.
+///
+/// This enforcement is deliberately independent of [`needgate::decide`]'s
+/// advisory fold-at-cap: the gate *recommends* folding at the cap, this
+/// *refuses* a spawn that ignored the recommendation — defense in depth
+/// so a caller that bypasses the gate still cannot open an unbounded tree.
+///
+/// [`needgate::decide`]: fractality_core::needgate::decide
+pub fn check_spawn_depth(
+    parent_class: CapabilityClass,
+    parent_budget_max_depth: u32,
+    policy: &RoutingPolicy,
+    child_depth: u32,
+) -> Result<(), String> {
+    let policy_cap = policy.for_class(parent_class).max_depth;
+    if policy_cap == 0 {
+        return Err(format!(
+            "a `{}`-class worker may not spawn children (routing policy \
+             max_depth = 0 for this class: route or fold the task instead)",
+            parent_class.as_str()
+        ));
+    }
+    // The effective cap is the tightest active bound: the class ceiling
+    // and the parent's declared subtree budget (budget `0` = unlimited).
+    let effective = match parent_budget_max_depth {
+        0 => policy_cap,
+        budget => policy_cap.min(budget),
+    };
+    if child_depth > effective {
+        let budget_note = if parent_budget_max_depth != 0 && parent_budget_max_depth < policy_cap {
+            format!(", parent budget.max_depth = {parent_budget_max_depth}")
+        } else {
+            String::new()
+        };
+        return Err(format!(
+            "spawn would nest to depth {child_depth}, past the cap {effective} for \
+             `{}`-class workers (policy max_depth = {policy_cap}{budget_note})",
+            parent_class.as_str()
         ));
     }
     Ok(())

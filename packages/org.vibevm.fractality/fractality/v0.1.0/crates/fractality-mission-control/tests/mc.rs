@@ -110,6 +110,67 @@ async fn register_read_and_tree_work_over_the_bus() {
     std::fs::remove_dir_all(home.as_std_path()).ok();
 }
 
+/// The depth guard (D-C3-3) refuses a spawn that would nest past the cap,
+/// at the door — before preflight or any pod is provisioned. A grandchild
+/// registered with `spawn = true` sits at depth 2, past the default medium
+/// cap of 1 (no profiles.toml here, so the guard charges the conservative
+/// `medium` fallback), and the request is refused with no fourth run left
+/// behind.
+#[tokio::test]
+async fn spawn_past_the_depth_cap_is_refused_at_the_door() {
+    let home = scratch_home("depthcap");
+    let server = start(Config::new(home.clone())).await.expect("starts");
+    let client = McClient::connect(&home)
+        .await
+        .expect("connect works")
+        .expect("daemon is live");
+
+    // root (depth 0) → child (depth 1): plain registrations, no pods.
+    let root = client
+        .register_run(&RegisterRunRequest {
+            packet: packet("root"),
+            parent: None,
+            origin_session: None,
+            spawn: false,
+        })
+        .await
+        .expect("registers root");
+    let child = client
+        .register_run(&RegisterRunRequest {
+            packet: packet("child"),
+            parent: Some(root.run_id),
+            origin_session: None,
+            spawn: false,
+        })
+        .await
+        .expect("registers child");
+
+    // grandchild at depth 2 with spawn = true: the guard fires first.
+    let refused = client
+        .register_run(&RegisterRunRequest {
+            packet: packet("grandchild"),
+            parent: Some(child.run_id),
+            origin_session: None,
+            spawn: true,
+        })
+        .await;
+    assert!(
+        refused.is_err(),
+        "a grandchild spawn past the cap must be refused"
+    );
+
+    // The refusal is at the door: no fourth run was ever created.
+    let listed = client.runs(None, None).await.expect("lists");
+    assert_eq!(
+        listed.len(),
+        2,
+        "only root and child exist after the refusal"
+    );
+
+    server.stop().await;
+    std::fs::remove_dir_all(home.as_std_path()).ok();
+}
+
 #[tokio::test]
 async fn registry_survives_a_daemon_restart_via_replay() {
     let home = scratch_home("replay");
