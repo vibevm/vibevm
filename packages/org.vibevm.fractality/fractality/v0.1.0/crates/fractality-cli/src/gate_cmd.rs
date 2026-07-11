@@ -13,8 +13,10 @@
 //! need-gate "unlimited") — a weak class never reaches `decide`'s spawn
 //! arm.
 
-use fractality_core::needgate::{GateInputs, decide};
+use fractality_core::DecisionRecord;
+use fractality_core::needgate::{Decision, GateInputs, decide};
 use fractality_core::routing::{CapabilityClass, RoutingPolicy};
+use fractality_mc_client::McClient;
 
 use crate::{EXIT_OK, fail_code};
 
@@ -25,7 +27,8 @@ specmark::scope!("spec://fractality/PROP-001#model");
 const EXIT_BAD_AXES: u8 = 2;
 
 #[allow(clippy::too_many_arguments)]
-pub(crate) fn gate(
+pub(crate) async fn gate(
+    home: &camino::Utf8Path,
     class: &str,
     depth: u32,
     o1_lookup: bool,
@@ -35,6 +38,7 @@ pub(crate) fn gate(
     cross_chunk_dominant: bool,
     large_window_available: bool,
     decomposable: bool,
+    record: bool,
     json: bool,
 ) -> u8 {
     let class = match parse_class(class) {
@@ -74,7 +78,39 @@ pub(crate) fn gate(
             decision.reason
         );
     }
+    // `--record` journals the decision to a running daemon (D-C3-8, the
+    // soft-label table's producer). Best-effort telemetry: a missing
+    // daemon or a failed post warns but never changes the verdict or the
+    // exit code — the decision itself already stands.
+    if record {
+        record_to_daemon(home, &decision, class, inputs).await;
+    }
     EXIT_OK
+}
+
+/// Posts the decision to the mission-control daemon if one is running.
+/// Never fatal: recording is telemetry, the verdict is the product.
+async fn record_to_daemon(
+    home: &camino::Utf8Path,
+    decision: &Decision,
+    class: CapabilityClass,
+    inputs: GateInputs,
+) {
+    let record = DecisionRecord::from_decision(decision, class, inputs);
+    match McClient::connect(home).await {
+        Ok(Some(client)) => {
+            if let Err(e) = client.record_decision(&record).await {
+                eprintln!("fractality: decision not recorded: {e}");
+            }
+        }
+        Ok(None) => {
+            eprintln!(
+                "fractality: no mission-control running; decision not recorded \
+                 (start one with `fractality mc start`)"
+            );
+        }
+        Err(e) => eprintln!("fractality: decision not recorded: {e}"),
+    }
 }
 
 /// Builds the gate inputs for a candidate `class`: the task signals verbatim,

@@ -15,6 +15,7 @@ use std::collections::BTreeMap;
 use serde::{Deserialize, Serialize};
 
 use crate::ids::{PodId, RunId, SessionId};
+use crate::needgate::DecisionRecord;
 use crate::node::{NodeIdentity, ScopeInfo};
 use crate::packet::Packet;
 use crate::run::{KillReason, RunRecord, RunState, UsageTotals};
@@ -81,6 +82,14 @@ pub struct RegisterRunRequest {
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct RunListResponse {
     pub runs: Vec<RunRecord>,
+}
+
+/// `GET /v0/decisions` — the need-gate decision log (D-C3-8): the
+/// soft-label table's raw rows in journal (append) order, oldest first.
+/// `POST /v0/decisions` takes a bare [`DecisionRecord`] and answers `Ack`.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct DecisionListResponse {
+    pub decisions: Vec<DecisionRecord>,
 }
 
 /// `GET /v0/runs/:id/tree` — the call tree rooted at a run.

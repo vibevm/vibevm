@@ -48,6 +48,10 @@ pub fn router(state: Arc<AppState>) -> Router {
             post(crate::http_questions::post_answer),
         )
         .route("/metrics", get(metrics))
+        .route(
+            "/decisions",
+            post(crate::http_decisions::post_decision).get(crate::http_decisions::list_decisions),
+        )
         .route("/sessions", post(hs::session_begin).get(hs::session_list))
         .route("/sessions/{id}", get(hs::session_get))
         .route("/sessions/{id}/events", post(hs::session_event))

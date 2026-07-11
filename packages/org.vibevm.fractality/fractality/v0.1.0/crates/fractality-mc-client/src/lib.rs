@@ -8,6 +8,7 @@
 //! the lockfile on every (re)connect, which is exactly how a pod finds a
 //! *restarted* daemon on its new port with its new bearer (D3 adoption).
 
+mod decisions;
 pub mod home;
 pub mod lock;
 

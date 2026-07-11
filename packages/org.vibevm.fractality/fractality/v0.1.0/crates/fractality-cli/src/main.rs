@@ -222,6 +222,10 @@ enum Cmd {
         /// Decomposable into composable sub-results.
         #[arg(long)]
         decomposable: bool,
+        /// Journal the decision to a running mission-control (D-C3-8);
+        /// best-effort — a missing daemon warns, never fails.
+        #[arg(long)]
+        record: bool,
         /// Machine-readable output.
         #[arg(long)]
         json: bool,
@@ -343,19 +347,25 @@ async fn main() -> std::process::ExitCode {
             cross_chunk_dominant,
             large_window_available,
             decomposable,
+            record,
             json,
-        } => gate_cmd::gate(
-            &class,
-            depth,
-            o1_lookup,
-            needs_absent_tool,
-            fits_window,
-            single_skill,
-            cross_chunk_dominant,
-            large_window_available,
-            decomposable,
-            json,
-        ),
+        } => {
+            gate_cmd::gate(
+                &home,
+                &class,
+                depth,
+                o1_lookup,
+                needs_absent_tool,
+                fits_window,
+                single_skill,
+                cross_chunk_dominant,
+                large_window_available,
+                decomposable,
+                record,
+                json,
+            )
+            .await
+        }
         Cmd::Route {
             error_cost,
             context,

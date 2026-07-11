@@ -67,7 +67,7 @@
       "crate_name": "fractality-cli",
       "file": "crates/fractality-cli/src/gate_cmd.rs",
       "item_kind": "mod",
-      "line": 21,
+      "line": 23,
       "symbol": "fractality_cli::gate_cmd"
     },
     {
@@ -137,7 +137,7 @@
       "crate_name": "fractality-core",
       "file": "crates/fractality-core/src/api.rs",
       "item_kind": "mod",
-      "line": 23,
+      "line": 24,
       "symbol": "fractality_core::api"
     },
     {
@@ -263,15 +263,22 @@
       "crate_name": "fractality-mc-client",
       "file": "crates/fractality-mc-client/src/lib.rs",
       "item_kind": "mod",
-      "line": 25,
+      "line": 26,
       "symbol": "fractality_mc_client"
     },
     {
       "crate_name": "fractality-mc-client",
       "file": "crates/fractality-mc-client/src/lib.rs",
       "item_kind": "enum",
-      "line": 27,
+      "line": 28,
       "symbol": "fractality_mc_client::ClientError"
+    },
+    {
+      "crate_name": "fractality-mc-client",
+      "file": "crates/fractality-mc-client/src/decisions.rs",
+      "item_kind": "mod",
+      "line": 8,
+      "symbol": "fractality_mc_client::decisions"
     },
     {
       "crate_name": "fractality-mc-client",
@@ -284,14 +291,14 @@
       "crate_name": "fractality-mc-client",
       "file": "crates/fractality-mc-client/src/lib.rs",
       "item_kind": "fn",
-      "line": 536,
+      "line": 537,
       "symbol": "fractality_mc_client::inherit_guard::Guard::restore_inherit"
     },
     {
       "crate_name": "fractality-mc-client",
       "file": "crates/fractality-mc-client/src/lib.rs",
       "item_kind": "fn",
-      "line": 507,
+      "line": 508,
       "symbol": "fractality_mc_client::inherit_guard::Guard::strip_std_handles"
     },
     {
@@ -305,7 +312,7 @@
       "crate_name": "fractality-mission-control",
       "file": "crates/fractality-mission-control/src/lib.rs",
       "item_kind": "mod",
-      "line": 36,
+      "line": 37,
       "symbol": "fractality_mission_control"
     },
     {
@@ -319,7 +326,7 @@
       "crate_name": "fractality-mission-control",
       "file": "crates/fractality-mission-control/src/lib.rs",
       "item_kind": "enum",
-      "line": 66,
+      "line": 67,
       "symbol": "fractality_mission_control::ServerError"
     },
     {
@@ -335,6 +342,13 @@
       "item_kind": "mod",
       "line": 26,
       "symbol": "fractality_mission_control::http"
+    },
+    {
+      "crate_name": "fractality-mission-control",
+      "file": "crates/fractality-mission-control/src/http_decisions.rs",
+      "item_kind": "mod",
+      "line": 15,
+      "symbol": "fractality_mission_control::http_decisions"
     },
     {
       "crate_name": "fractality-mission-control",
@@ -546,7 +560,7 @@
     {
       "file": "crates/fractality-cli/src/gate_cmd.rs",
       "from_symbol": "fractality_cli::gate_cmd",
-      "line": 21,
+      "line": 23,
       "provenance": "authored",
       "uri": "spec://fractality/PROP-001#model",
       "verb": "implements"
@@ -626,7 +640,7 @@
     {
       "file": "crates/fractality-core/src/api.rs",
       "from_symbol": "fractality_core::api",
-      "line": 23,
+      "line": 24,
       "provenance": "authored",
       "uri": "spec://fractality/PROP-001#architecture",
       "verb": "implements"
@@ -770,7 +784,7 @@
     {
       "file": "crates/fractality-mc-client/src/lib.rs",
       "from_symbol": "fractality_mc_client",
-      "line": 25,
+      "line": 26,
       "provenance": "authored",
       "uri": "spec://fractality/PROP-001#architecture",
       "verb": "implements"
@@ -778,7 +792,15 @@
     {
       "file": "crates/fractality-mc-client/src/lib.rs",
       "from_symbol": "fractality_mc_client::ClientError",
-      "line": 39,
+      "line": 40,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-mc-client/src/decisions.rs",
+      "from_symbol": "fractality_mc_client::decisions",
+      "line": 8,
       "provenance": "authored",
       "uri": "spec://fractality/PROP-001#architecture",
       "verb": "implements"
@@ -794,7 +816,7 @@
     {
       "file": "crates/fractality-mc-client/src/lib.rs",
       "from_symbol": "fractality_mc_client::inherit_guard::Guard::restore_inherit",
-      "line": 538,
+      "line": 539,
       "provenance": "authored",
       "uri": "spec://fractality/PROP-001#architecture",
       "verb": "deviates",
@@ -803,7 +825,7 @@
     {
       "file": "crates/fractality-mc-client/src/lib.rs",
       "from_symbol": "fractality_mc_client::inherit_guard::Guard::strip_std_handles",
-      "line": 510,
+      "line": 511,
       "provenance": "authored",
       "uri": "spec://fractality/PROP-001#architecture",
       "verb": "deviates",
@@ -820,7 +842,7 @@
     {
       "file": "crates/fractality-mission-control/src/lib.rs",
       "from_symbol": "fractality_mission_control",
-      "line": 36,
+      "line": 37,
       "provenance": "authored",
       "uri": "spec://fractality/PROP-001#architecture",
       "verb": "implements"
@@ -836,7 +858,7 @@
     {
       "file": "crates/fractality-mission-control/src/lib.rs",
       "from_symbol": "fractality_mission_control::ServerError",
-      "line": 76,
+      "line": 77,
       "provenance": "authored",
       "uri": "spec://fractality/PROP-001#architecture",
       "verb": "implements"
@@ -853,6 +875,14 @@
       "file": "crates/fractality-mission-control/src/http.rs",
       "from_symbol": "fractality_mission_control::http",
       "line": 26,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-mission-control/src/http_decisions.rs",
+      "from_symbol": "fractality_mission_control::http_decisions",
+      "line": 15,
       "provenance": "authored",
       "uri": "spec://fractality/PROP-001#architecture",
       "verb": "implements"
@@ -1356,7 +1386,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:0d0be4ba70d9dd18aec21db1dd7f016d145cbe42f71823114482791c200f1ef1",
+      "content_hash": "sha256:06a70eeb87a68c757a559b51e62bec51f12c64d98c84f121d2a19b69878d1758",
       "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
       "file": "spec/plans/FRACTALITY-RLM-PLAN-v0.1.md",
       "heading": "FRACTALITY-RLM-PLAN v0.1 — Campaign 3 · Stage B: the descent core (DRAFT)",
@@ -1437,7 +1467,7 @@
     },
     {
       "anchor": "ledger",
-      "content_hash": "sha256:da62e15ed57dece6096de02a0bd342c40c6f5b8798e469a1a623afd4a3b0126c",
+      "content_hash": "sha256:359cf488a043c20cb4e9d24e59f01b923db03d6d0aa2c098544c22cc52e9ba29",
       "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
       "file": "spec/plans/FRACTALITY-RLM-PLAN-v0.1.md",
       "heading": "9. Ledger",
@@ -1450,7 +1480,7 @@
       "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
       "file": "spec/plans/FRACTALITY-RLM-PLAN-v0.1.md",
       "heading": "10. Executor's guide — read this before any code",
-      "line": 282,
+      "line": 296,
       "uri": "spec://fractality/plans/FRACTALITY-RLM-PLAN-v0.1#executor-guide"
     },
     {
@@ -1459,7 +1489,7 @@
       "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
       "file": "spec/plans/FRACTALITY-RLM-PLAN-v0.1.md",
       "heading": "10.1 Reading order for the executing session",
-      "line": 291,
+      "line": 305,
       "uri": "spec://fractality/plans/FRACTALITY-RLM-PLAN-v0.1#eg-reading"
     },
     {
@@ -1468,7 +1498,7 @@
       "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
       "file": "spec/plans/FRACTALITY-RLM-PLAN-v0.1.md",
       "heading": "10.2 Glossary — our words, exact meanings",
-      "line": 306,
+      "line": 320,
       "uri": "spec://fractality/plans/FRACTALITY-RLM-PLAN-v0.1#eg-glossary"
     },
     {
@@ -1477,7 +1507,7 @@
       "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
       "file": "spec/plans/FRACTALITY-RLM-PLAN-v0.1.md",
       "heading": "10.3 The need-gate decision procedure (v1, fixed order)",
-      "line": 358,
+      "line": 372,
       "uri": "spec://fractality/plans/FRACTALITY-RLM-PLAN-v0.1#eg-needgate"
     },
     {
@@ -1486,7 +1516,7 @@
       "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
       "file": "spec/plans/FRACTALITY-RLM-PLAN-v0.1.md",
       "heading": "10.4 Clean-room rules for executors — legally load-bearing",
-      "line": 385,
+      "line": 399,
       "uri": "spec://fractality/plans/FRACTALITY-RLM-PLAN-v0.1#eg-cleanroom"
     },
     {
@@ -1495,7 +1525,7 @@
       "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
       "file": "spec/plans/FRACTALITY-RLM-PLAN-v0.1.md",
       "heading": "10.5 v1 minimalism — things you must NOT build",
-      "line": 399,
+      "line": 413,
       "uri": "spec://fractality/plans/FRACTALITY-RLM-PLAN-v0.1#eg-minimalism"
     },
     {
@@ -1504,7 +1534,7 @@
       "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
       "file": "spec/plans/FRACTALITY-RLM-PLAN-v0.1.md",
       "heading": "10.6 Where code lands",
-      "line": 410,
+      "line": 424,
       "uri": "spec://fractality/plans/FRACTALITY-RLM-PLAN-v0.1#eg-crates"
     },
     {
@@ -1513,7 +1543,7 @@
       "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
       "file": "spec/plans/FRACTALITY-RLM-PLAN-v0.1.md",
       "heading": "10.7 Process laws, restated for you",
-      "line": 421,
+      "line": 435,
       "uri": "spec://fractality/plans/FRACTALITY-RLM-PLAN-v0.1#eg-process"
     },
     {
@@ -1522,7 +1552,7 @@
       "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
       "file": "spec/plans/FRACTALITY-RLM-PLAN-v0.1.md",
       "heading": "10.8 When you are unsure",
-      "line": 449,
+      "line": 463,
       "uri": "spec://fractality/plans/FRACTALITY-RLM-PLAN-v0.1#eg-unsure"
     },
     {

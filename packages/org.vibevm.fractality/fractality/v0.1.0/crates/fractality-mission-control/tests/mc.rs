@@ -171,6 +171,52 @@ async fn spawn_past_the_depth_cap_is_refused_at_the_door() {
     std::fs::remove_dir_all(home.as_std_path()).ok();
 }
 
+/// The decisions endpoint (D-C3-8) records a need-gate decision and reads
+/// it back over the bus — the soft-label table's producer and consumer.
+#[tokio::test]
+async fn decisions_record_and_list_over_the_bus() {
+    let home = scratch_home("decisions");
+    let server = start(Config::new(home.clone())).await.expect("starts");
+    let client = McClient::connect(&home)
+        .await
+        .expect("connect works")
+        .expect("daemon is live");
+
+    assert!(
+        client.decisions().await.expect("lists").is_empty(),
+        "no decisions before any record"
+    );
+
+    let inputs = fractality_core::GateInputs {
+        o1_lookup: false,
+        needs_absent_tool: false,
+        fits_window: false,
+        single_skill: false,
+        cross_chunk_dominant: false,
+        large_window_available: false,
+        decomposable: true,
+        depth: 0,
+        max_depth: 1,
+        can_spawn: true,
+    };
+    let decision = fractality_core::needgate::decide(&inputs);
+    let record = fractality_core::DecisionRecord::from_decision(
+        &decision,
+        fractality_core::CapabilityClass::Medium,
+        inputs,
+    );
+    let ack = client.record_decision(&record).await.expect("records");
+    assert!(ack.ok, "the post is acked");
+
+    let back = client.decisions().await.expect("lists");
+    assert_eq!(back.len(), 1, "the decision reads back");
+    assert_eq!(back[0], record);
+    assert_eq!(back[0].verdict, fractality_core::Verdict::Spawn);
+
+    server.stop().await;
+    std::fs::remove_dir_all(home.as_std_path()).ok();
+}
+
 #[tokio::test]
 async fn registry_survives_a_daemon_restart_via_replay() {
     let home = scratch_home("replay");
