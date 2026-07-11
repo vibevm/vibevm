@@ -218,6 +218,7 @@ Commit map (Stage B execution, Campaign 3):
 - Ф2.1 need-gate decision procedure (`5adcceb`).
 - Ф2.2 routing policy — capability-class table (`011ef6c`).
 - Ф2.3 profile capability_class (`14f97b8`).
+- Ф3.1 spawn depth-guard — D-C3-3 enforcement (`b23f3f1`).
 
 **Scoping decision — retry-on-violation (D-C3-2).** The validation seam
 produces the retry-feedback report (Ф1.2b), but the automatic one-retry
@@ -250,6 +251,27 @@ tuple, D-C3-8), its ENFORCEMENT (admission's spawn-past-cap depth guard —
 the D-C3-3 boundary), and availability masking (FD-8) land in Ф3, where
 the spawn/route verbs actually USE the gate. The gate is a pure, tested
 library now; Ф3 gives it a caller and teeth.
+
+**Ф3.1 landed — the depth guard (D-C3-3 enforcement).** `register_run`
+refuses a spawn nesting past the routing policy's per-class cap
+(`check_spawn_depth`, `b23f3f1`) — the enforcement the WIRING note above
+promised, at the door, before any pod. The gate's INVOCATION
+(`fractality gate` + decision journal, D-C3-8) and availability masking
+(FD-8) remain for the next slices, plus the descent verbs (D-C3-4/5).
+
+**Finding — `max_depth = 0` is overloaded (surfaced by Ф3.1).**
+`routing::ClassPolicy.max_depth = 0` means *no spawning* (the weak-class
+default), but `needgate::GateInputs.max_depth = 0` means *unlimited*
+(`decide`'s arm 4: `at_cap = max_depth != 0 && depth >= max_depth`).
+Feeding a weak class's policy cap (`0`) straight into `GateInputs` would
+make `decide` spawn without bound — the opposite of intent. The Ф3.1
+enforcement reads the routing semantics (cap `0` ⇒ refuse), so the tree
+stays bounded regardless of the advisory. The gate-invocation slice
+(D-C3-8) must translate a class's policy cap into `GateInputs` so a
+no-spawn class never reaches the spawn arm (e.g. gate on a `can_spawn`
+signal derived from `cap > 0`) rather than passing `0` through as
+"unlimited". `decide`'s pure semantics and its golden stay unchanged
+until then; revisit trigger: the D-C3-8 wiring.
 
 ## 10. Executor's guide — read this before any code {#executor-guide}
 

@@ -4,8 +4,8 @@ _Campaign 3 Stage B execution tracker. Updated in place between status
 documents (big-plan dashboard rule — bulk stays out of status files).
 Source of truth is the spec tree (plan, syntheses, WAL); this is the
 owner-facing surface + the agent's own quick tracker. Last updated:
-2026-07-11 19:17 (Ф2 CLOSED — need-gate machinery + policy; into Ф3
-next, the descent verbs + gate wiring)._
+2026-07-12 00:20 (Ф3 IN PROGRESS — Ф3.1 depth-guard landed `b23f3f1`,
+floor green; next the gate invocation + masking + descent verbs)._
 
 ## Goal & operating contract (owner, 2026-07-11)
 
@@ -95,7 +95,13 @@ nudge (RD-12 settings-writes precedent), mc-client, cli surfaces.
       output_schema + validation, budget lattice); D-C3-3 → Ф2
 - [x] Ф2 need-gate + delegation-rules — CLOSED (decide procedure +
       routing policy + profile class; goldens); gate wiring → Ф3
-- [ ] Ф3 descent verbs (D-C3-4, D-C3-5)
+- [~] Ф3 gate wiring + descent verbs — IN PROGRESS
+  - [x] Ф3.1 depth-guard — D-C3-3 spawn-past-cap refusal (`b23f3f1`)
+  - [ ] Ф3.2 gate invocation + decision journal (D-C3-8)
+  - [ ] Ф3.3 availability masking (FD-8)
+  - [ ] Ф3.4 descent verbs — await any|all|named (D-C3-4/5)
+  - [ ] Ф3.5 sibling isolation + merge node + refuse-near-duplicate
+  - [ ] Ф3.6 retry-on-violation re-dispatch (deferred from Ф1.2b)
 - [ ] Ф4 escalation (D-C3-6)
 - [ ] Ф5 acceptance / PP-002 (RD-11, FD-9)
 - [ ] Ф6 trial (D-C3-9) — STOP at RP-C3-2
@@ -113,6 +119,15 @@ nudge (RD-12 settings-writes precedent), mc-client, cli surfaces.
   `cargo build` inside a nested cargo project that owns its own `.git`
   (external_directory) — delegate cargo spikes IN-PLACE in the launch
   cwd with `cargo init --vcs none .`, never a subdir.
+- **Ф3 attempt (2026-07-12):** the 12-file mc/cli seam inventory →
+  GLM glm-5.2, live-observed (`--print-logs`, background, cwd pinned).
+  **FAILED** — silent stall, 0-byte log, exit 0 after ~70 s (matches the
+  prior-session field data: opencode read-delegation stalls silently on
+  this box this session). Law honored (attempt made), then boss-read the
+  seams itself — legitimate boss-keep (seam reconnaissance anchors phase
+  design). **Field data:** opencode remains unreliable for reads this
+  session; keep floor/test on backgrounded cargo. When it stabilizes,
+  the seam-inventory read is the first thing to hand back.
 
 ## Next action
 
@@ -137,11 +152,26 @@ floor green after each):
 profile class (Ф2.3 `14f97b8`). Report:
 `2026-11-07-19-17-campaign3-f2-needgate.md`.
 
-**Next phase: Ф3** — descent verbs (D-C3-4, D-C3-5): await any/all/named,
-parallel siblings + mid-task profile alternation, sibling isolation
-(visibility only via `context_from`), a merge node, refuse-near-duplicate.
-PLUS the deferred gate wiring (§9): the `fractality gate` invocation +
-decision journal (D-C3-8), admission depth-guard enforcement (D-C3-3),
-availability masking (FD-8). Read for Ф3: mc admission.rs / http.rs /
-registry.rs / journal_store.rs, mc-client, cli mc_cmd/swarm.
-Floor runs = backgrounded cargo (opencode unreliable today, Ф0 field data).
+**Ф3 IN PROGRESS.** Ф3.1 depth-guard landed (`b23f3f1`, floor green):
+`register_run` refuses spawn-past-cap using the routing policy per parent
+class (0=no-spawn), tightened by `budget.max_depth`. Read this session:
+core `state.rs`/`admission.rs`/`http.rs`/`needgate.rs`/`routing.rs`/
+`profile.rs`/`packet.rs`/`journal.rs`/`lib.rs`, cli `route_cmd.rs`,
+delegation-rules `routing-policy.toml`. Seams for the rest are mapped.
+
+**Next: Ф3.2 — gate invocation + decision journal (D-C3-8).** A
+`fractality gate` CLI (pattern: `route_cmd.rs` — pure calculus + print +
+exit codes) surfacing `needgate::decide`, plus journaling the decision
+tuple. **Journal design (found this session):** the run journal folds
+every event into a `RunRecord` (each event carries a `run_id`); a gate
+decision (inline/escalate → no run) does NOT fit that fold. Use a
+**separate journal stem** — the pattern `state.rs` already uses for the
+session journal (`open_stem`/`replay_stem`, sibling fold). **Resolve the
+`max_depth=0` overload at this seam** (routing 0=no-spawn vs need-gate
+0=unlimited — plan §9 finding): translate a class's policy cap into
+`GateInputs` so a weak/no-spawn class never reaches decide's spawn arm.
+Then Ф3.3 masking (FD-8, `registry.rs`), Ф3.4/3.5 descent verbs
+(read `mc-client/lib.rs`, cli `mc_cmd.rs`/`swarm.rs`/`broker.rs` first),
+Ф3.6 retry-on-violation. Each = one commit, floor green after each.
+Floor runs = backgrounded cargo, NO redirect (harness captures the task
+output file; a `> log` steals it — lesson this session).
