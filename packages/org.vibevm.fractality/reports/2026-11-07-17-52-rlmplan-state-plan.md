@@ -4,9 +4,9 @@ _Campaign 3 Stage B execution tracker. Updated in place between status
 documents (big-plan dashboard rule — bulk stays out of status files).
 Source of truth is the spec tree (plan, syntheses, WAL); this is the
 owner-facing surface + the agent's own quick tracker. Last updated:
-2026-07-12 00:33 (Ф3 IN PROGRESS — Ф3.1 depth-guard + Ф3.2a gate
-invocation landed, floor green; next Ф3.2b decision journal, then
-masking + descent verbs)._
+2026-07-12 00:50 (Ф3 IN PROGRESS — Ф3.1 depth-guard, Ф3.2a gate
+invocation, Ф3.4a await `--any` landed, all floor green; remaining:
+3.2b decision journal, 3.4b/3.5 descent, masking (maybe defer), retry)._
 
 ## Goal & operating contract (owner, 2026-07-11)
 
@@ -101,8 +101,11 @@ nudge (RD-12 settings-writes precedent), mc-client, cli surfaces.
   - [~] Ф3.2 gate invocation (D-C3-8)
     - [x] Ф3.2a `fractality gate` CLI + `can_spawn` overload fix (`3b0b2d2`)
     - [ ] Ф3.2b decision journal — separate stem (soft-label table)
-  - [ ] Ф3.3 availability masking (FD-8)
-  - [ ] Ф3.4 descent verbs — await any|all|named (D-C3-4/5)
+  - [ ] Ф3.3 availability masking (FD-8) — dead-surface risk, may defer
+  - [~] Ф3.4 descent verbs — await any|all|named (D-C3-4/5)
+    - [x] Ф3.4a `fractality wait --any` race (`a1479f1`); `all`/`named`
+          already existed (default-join / passing ids)
+    - [ ] Ф3.4b parallel-spawn idiom + mid-task profile alternation
   - [ ] Ф3.5 sibling isolation + merge node + refuse-near-duplicate
   - [ ] Ф3.6 retry-on-violation re-dispatch (deferred from Ф1.2b)
 - [ ] Ф4 escalation (D-C3-6)

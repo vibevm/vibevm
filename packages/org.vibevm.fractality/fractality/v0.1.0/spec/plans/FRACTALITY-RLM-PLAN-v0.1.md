@@ -220,6 +220,7 @@ Commit map (Stage B execution, Campaign 3):
 - Ф2.3 profile capability_class (`14f97b8`).
 - Ф3.1 spawn depth-guard — D-C3-3 enforcement (`b23f3f1`).
 - Ф3.2 gate invocation — `fractality gate` + `can_spawn` fix (`3b0b2d2`).
+- Ф3.4a await `--any` (D-C3-4) + run-verb relocation (`a1479f1`).
 
 **Scoping decision — retry-on-violation (D-C3-2).** The validation seam
 produces the retry-feedback report (Ф1.2b), but the automatic one-retry
