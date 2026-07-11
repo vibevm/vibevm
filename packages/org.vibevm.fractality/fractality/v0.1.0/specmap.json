@@ -179,7 +179,7 @@
       "crate_name": "fractality-core",
       "file": "crates/fractality-core/src/packet.rs",
       "item_kind": "mod",
-      "line": 18,
+      "line": 19,
       "symbol": "fractality_core::packet"
     },
     {
@@ -646,7 +646,7 @@
     {
       "file": "crates/fractality-core/src/packet.rs",
       "from_symbol": "fractality_core::packet",
-      "line": 18,
+      "line": 19,
       "provenance": "authored",
       "uri": "spec://fractality/PROP-001#model",
       "verb": "implements"

@@ -14,6 +14,7 @@
 use serde::{Deserialize, Serialize};
 
 use crate::error::CoreError;
+use crate::ids::RunId;
 
 specmark::scope!("spec://fractality/PROP-001#model");
 
@@ -57,6 +58,14 @@ pub struct ContextSpec {
     pub files: Vec<String>,
     #[serde(default)]
     pub notes: Option<String>,
+    /// D-C3-2 access-list: run-ids whose RESULT files become readable
+    /// FileRefs for this child. Default `[]` — a child sees a prior
+    /// result **only** when explicitly granted here (the
+    /// anti-orchestration-collapse contract, FD-2/FD-3). There is
+    /// deliberately no field for a parent's or sibling's transcript:
+    /// only named results ever cross the seam (the fold law, RD-5).
+    #[serde(default)]
+    pub context_from: Vec<RunId>,
 }
 
 /// Where the worker works (D8: worktree by default).
@@ -303,5 +312,28 @@ mod tests {
         let text = std::fs::read_to_string(path).expect("example packet exists");
         let p = Packet::from_toml_str(&text).expect("example packet parses");
         insta::assert_debug_snapshot!(p);
+    }
+
+    /// D-C3-2 access-list: absent means empty (a child sees no prior
+    /// result unless explicitly granted); an explicit list of run-ids
+    /// parses into `context_from`.
+    #[test]
+    fn context_from_access_list_parses_and_defaults_empty() {
+        let p = Packet::from_toml_str(minimal_packet_toml()).expect("parses");
+        assert!(
+            p.context.context_from.is_empty(),
+            "no access-list by default — isolation is the default"
+        );
+
+        let text = format!(
+            "{}\n[context]\ncontext_from = [\"01ARZ3NDEKTSV4RRFFQ69G5FAV\"]\n",
+            minimal_packet_toml()
+        );
+        let p = Packet::from_toml_str(&text).expect("parses with context_from");
+        assert_eq!(p.context.context_from.len(), 1);
+        assert_eq!(
+            p.context.context_from[0].to_string(),
+            "01ARZ3NDEKTSV4RRFFQ69G5FAV"
+        );
     }
 }

@@ -12,6 +12,7 @@ Packet {
     context: ContextSpec {
         files: [],
         notes: None,
+        context_from: [],
     },
     workspace: WorkspaceSpec {
         mode: Dir,
