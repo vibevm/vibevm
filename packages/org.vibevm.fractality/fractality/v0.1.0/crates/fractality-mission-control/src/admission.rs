@@ -13,6 +13,7 @@ use std::sync::Arc;
 
 use camino::Utf8Path;
 use fractality_core::Packet;
+use fractality_core::ids::RunId;
 use fractality_core::journal::Event;
 use fractality_core::profile::ProfilesFile;
 use fractality_core::routing::{CapabilityClass, RoutingPolicy};
@@ -115,6 +116,34 @@ pub fn check_spawn_depth(
         ));
     }
     Ok(())
+}
+
+/// The near-duplicate guard (D-C3-4/5): refuse a spawn whose task matches
+/// an active sibling's — orchestration collapse, where the siblings do the
+/// same work. Matched by [`Packet::task_fingerprint`] (task + inputs, NOT
+/// execution params, so a legitimate fan-out of the same-titled task over
+/// different chunks still passes) against non-terminal siblings, read from
+/// their run dirs. Best-effort under concurrency: two simultaneous
+/// identical spawns can race past this (it is not atomic with the record)
+/// — an acceptable v1. A sibling whose packet cannot be read is skipped,
+/// never treated as a match.
+///
+/// [`Packet::task_fingerprint`]: fractality_core::Packet::task_fingerprint
+pub fn check_not_duplicate(state: &AppState, packet: &Packet, parent: RunId) -> Result<(), String> {
+    let new_fp = packet.task_fingerprint();
+    let twin = state.active_children(parent).into_iter().find(|sib| {
+        std::fs::read_to_string(sib.run_dir.join("packet.toml").as_std_path())
+            .ok()
+            .and_then(|t| Packet::from_toml_str(&t).ok())
+            .is_some_and(|p| p.task_fingerprint() == new_fp)
+    });
+    match twin {
+        Some(sib) => Err(format!(
+            "near-duplicate of active sibling {} (same task under the same parent)",
+            sib.run_id
+        )),
+        None => Ok(()),
+    }
 }
 
 /// One admission pass: launch queued runs while their profiles have free

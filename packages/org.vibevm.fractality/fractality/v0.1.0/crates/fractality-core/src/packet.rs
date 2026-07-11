@@ -275,6 +275,40 @@ impl Packet {
         }
         Ok(())
     }
+
+    /// A canonical equality key for near-duplicate detection (D-C3-4/5):
+    /// the task's identity — what it does (title, goal, acceptance) and on
+    /// what inputs (context files, notes, granted results, workspace
+    /// target) — but NOT the execution params (routing, budget, output
+    /// branch), so two siblings doing the same work on the same inputs
+    /// collide even when their models or budgets differ. Lists are sorted
+    /// so field order never changes the key. Not for display: an internal
+    /// key, field-labelled with control separators (`\u{1f}` between
+    /// fields, `\u{1e}` within lists) so ordinary text cannot forge a
+    /// field boundary.
+    pub fn task_fingerprint(&self) -> String {
+        let mut files = self.context.files.clone();
+        files.sort();
+        let mut froms: Vec<String> = self
+            .context
+            .context_from
+            .iter()
+            .map(|r| r.to_string())
+            .collect();
+        froms.sort();
+        format!(
+            "t={}\u{1f}g={}\u{1f}a={}\u{1f}f={}\u{1f}cf={}\u{1f}n={}\u{1f}wm={}\u{1f}wr={}\u{1f}wb={}",
+            self.task.title,
+            self.task.goal,
+            self.task.acceptance.join("\u{1e}"),
+            files.join("\u{1e}"),
+            froms.join("\u{1e}"),
+            self.context.notes.as_deref().unwrap_or(""),
+            self.workspace.mode.as_str(),
+            self.workspace.repo,
+            self.workspace.base,
+        )
+    }
 }
 
 #[cfg(test)]
@@ -290,6 +324,34 @@ mod tests {
             [routing]
             profile = "glm"
         "#
+    }
+
+    /// The task fingerprint keys near-duplicate detection on task identity,
+    /// not execution params: same task + different routing collide; a
+    /// changed goal does not.
+    #[test]
+    fn task_fingerprint_keys_on_task_identity_not_execution_params() {
+        let base = Packet::from_toml_str(minimal_packet_toml()).expect("parses");
+        // Same task, different profile → same fingerprint.
+        let other_profile = Packet::from_toml_str(
+            "schema = 1\n[task]\ntitle = \"t\"\ngoal = \"g\"\n[routing]\nprofile = \"other\"\n",
+        )
+        .expect("parses");
+        assert_eq!(
+            base.task_fingerprint(),
+            other_profile.task_fingerprint(),
+            "routing is not part of task identity"
+        );
+        // Different goal → different fingerprint.
+        let other_goal = Packet::from_toml_str(
+            "schema = 1\n[task]\ntitle = \"t\"\ngoal = \"DIFFERENT\"\n[routing]\nprofile = \"glm\"\n",
+        )
+        .expect("parses");
+        assert_ne!(
+            base.task_fingerprint(),
+            other_goal.task_fingerprint(),
+            "the goal is part of task identity"
+        );
     }
 
     #[test]

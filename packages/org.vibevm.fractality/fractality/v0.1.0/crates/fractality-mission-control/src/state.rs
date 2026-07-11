@@ -412,6 +412,20 @@ impl AppState {
             .count()
     }
 
+    /// Non-terminal children of `parent`, for near-duplicate detection
+    /// (D-C3-4/5): the siblings a new spawn must not clone. A terminal
+    /// sibling is excluded — its work is done and may legitimately be
+    /// retried.
+    pub fn active_children(&self, parent: RunId) -> Vec<RunRecord> {
+        let inner = self.lock_inner();
+        inner
+            .runs
+            .values()
+            .filter(|r| r.parent == Some(parent) && !r.state.is_terminal())
+            .cloned()
+            .collect()
+    }
+
     /// Queued spawn-requested runs in creation order (ULID order is
     /// admission FIFO).
     pub fn queued_candidates(&self) -> Vec<RunRecord> {

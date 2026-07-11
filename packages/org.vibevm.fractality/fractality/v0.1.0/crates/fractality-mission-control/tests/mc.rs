@@ -217,6 +217,60 @@ async fn decisions_record_and_list_over_the_bus() {
     std::fs::remove_dir_all(home.as_std_path()).ok();
 }
 
+/// MC refuses a near-duplicate child spec (D-C3-4/5): a spawn whose task
+/// matches an active sibling's is orchestration collapse. Refused at the
+/// door, before preflight or any pod, leaving no run behind.
+#[tokio::test]
+async fn near_duplicate_child_spec_is_refused() {
+    let home = scratch_home("dup");
+    let server = start(Config::new(home.clone())).await.expect("starts");
+    let client = McClient::connect(&home)
+        .await
+        .expect("connect works")
+        .expect("daemon is live");
+
+    let root = client
+        .register_run(&RegisterRunRequest {
+            packet: packet("root"),
+            parent: None,
+            origin_session: None,
+            spawn: false,
+        })
+        .await
+        .expect("registers root");
+    // An active first child with task "worker" (its packet.toml lands in
+    // the run dir at registration, D4).
+    client
+        .register_run(&RegisterRunRequest {
+            packet: packet("worker"),
+            parent: Some(root.run_id),
+            origin_session: None,
+            spawn: false,
+        })
+        .await
+        .expect("registers first child");
+
+    // A spawn of the SAME task under the same parent is a near-duplicate.
+    let dup = client
+        .register_run(&RegisterRunRequest {
+            packet: packet("worker"),
+            parent: Some(root.run_id),
+            origin_session: None,
+            spawn: true,
+        })
+        .await;
+    assert!(
+        dup.is_err(),
+        "a near-duplicate sibling spawn must be refused"
+    );
+
+    let listed = client.runs(None, None).await.expect("lists");
+    assert_eq!(listed.len(), 2, "the refused duplicate created no run");
+
+    server.stop().await;
+    std::fs::remove_dir_all(home.as_std_path()).ok();
+}
+
 #[tokio::test]
 async fn registry_survives_a_daemon_restart_via_replay() {
     let home = scratch_home("replay");
