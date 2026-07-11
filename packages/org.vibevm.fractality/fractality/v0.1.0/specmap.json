@@ -1206,7 +1206,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:cc3751b3a651c0f7a8fabdf306859bccb1fa0f6b6937acbae40a244b45288dfe",
+      "content_hash": "sha256:3f485eb959e8c1170834355aa27d20a43d37dfca410f91509033de00f187388c",
       "doc_path": "plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1",
       "file": "spec/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1.md",
       "heading": "FRACTALITY-FUGU-RESEARCH-PLAN v0.1 — Campaign 3 · Stage A2: the Sakana Fugu research",
@@ -1219,7 +1219,7 @@
       "doc_path": "plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1",
       "file": "spec/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1.md",
       "heading": "1. The mandate (owner, 2026-07-11, verbatim)",
-      "line": 13,
+      "line": 18,
       "uri": "spec://fractality/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1#mandate"
     },
     {
@@ -1228,7 +1228,7 @@
       "doc_path": "plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1",
       "file": "spec/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1.md",
       "heading": "2. Goal and deliverables",
-      "line": 29,
+      "line": 34,
       "uri": "spec://fractality/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1#goal"
     },
     {
@@ -1237,7 +1237,7 @@
       "doc_path": "plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1",
       "file": "spec/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1.md",
       "heading": "3. Deviations from the Stage A method",
-      "line": 47,
+      "line": 52,
       "uri": "spec://fractality/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1#deviations"
     },
     {
@@ -1246,7 +1246,7 @@
       "doc_path": "plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1",
       "file": "spec/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1.md",
       "heading": "4. The waves (frozen)",
-      "line": 60,
+      "line": 65,
       "uri": "spec://fractality/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1#waves"
     },
     {
@@ -1255,7 +1255,7 @@
       "doc_path": "plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1",
       "file": "spec/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1.md",
       "heading": "5. Phases",
-      "line": 101,
+      "line": 106,
       "uri": "spec://fractality/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1#phases"
     },
     {
@@ -1264,7 +1264,7 @@
       "doc_path": "plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1",
       "file": "spec/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1.md",
       "heading": "6. Predictions",
-      "line": 116,
+      "line": 121,
       "uri": "spec://fractality/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1#predictions"
     },
     {
@@ -1273,16 +1273,16 @@
       "doc_path": "plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1",
       "file": "spec/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1.md",
       "heading": "7. Review points",
-      "line": 133,
+      "line": 138,
       "uri": "spec://fractality/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1#review-points"
     },
     {
       "anchor": "ledger",
-      "content_hash": "sha256:4f38e71acc08f50c5863c8187e724977400eb89fabc81749365f1654549747ec",
+      "content_hash": "sha256:c3c4eec58e2a14c1f9e82e4b799dd9f013aeaffa266fe1f17cd8211fb2026ae0",
       "doc_path": "plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1",
       "file": "spec/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1.md",
       "heading": "8. Ledger",
-      "line": 139,
+      "line": 144,
       "uri": "spec://fractality/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1#ledger"
     },
     {
@@ -1291,12 +1291,12 @@
       "doc_path": "plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1",
       "file": "spec/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1.md",
       "heading": "9. Log",
-      "line": 145,
+      "line": 155,
       "uri": "spec://fractality/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1#log"
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:f26754e3bf338f027805adcf6a819ebe708c5d74acfb5dcb72534f9488470293",
+      "content_hash": "sha256:650d9c209309e9da6c1ff56bd7d0c7347639060c285763d735a91936b6c5e26d",
       "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
       "file": "spec/plans/FRACTALITY-RLM-PLAN-v0.1.md",
       "heading": "FRACTALITY-RLM-PLAN v0.1 — Campaign 3 · Stage B: the descent core (DRAFT)",
@@ -1309,7 +1309,7 @@
       "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
       "file": "spec/plans/FRACTALITY-RLM-PLAN-v0.1.md",
       "heading": "1. The mandate",
-      "line": 10,
+      "line": 14,
       "uri": "spec://fractality/plans/FRACTALITY-RLM-PLAN-v0.1#mandate"
     },
     {
@@ -1318,7 +1318,7 @@
       "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
       "file": "spec/plans/FRACTALITY-RLM-PLAN-v0.1.md",
       "heading": "2. Goal",
-      "line": 20,
+      "line": 24,
       "uri": "spec://fractality/plans/FRACTALITY-RLM-PLAN-v0.1#goal"
     },
     {
@@ -1327,16 +1327,16 @@
       "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
       "file": "spec/plans/FRACTALITY-RLM-PLAN-v0.1.md",
       "heading": "3. Scope options for the mandate (pick one)",
-      "line": 30,
+      "line": 34,
       "uri": "spec://fractality/plans/FRACTALITY-RLM-PLAN-v0.1#scope"
     },
     {
       "anchor": "decisions",
-      "content_hash": "sha256:fd6b1b8ebfb6cb7914838b0facfd57814b928530732dc06dde53b021b8ee0ef5",
+      "content_hash": "sha256:ec89862b7722340f851ff039ba55eb493466566f58eaa3d7f788f4f46266cc0d",
       "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
       "file": "spec/plans/FRACTALITY-RLM-PLAN-v0.1.md",
       "heading": "4. Decisions (seeded from synthesis; finalized at commissioning)",
-      "line": 46,
+      "line": 50,
       "uri": "spec://fractality/plans/FRACTALITY-RLM-PLAN-v0.1#decisions"
     },
     {
@@ -1345,16 +1345,16 @@
       "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
       "file": "spec/plans/FRACTALITY-RLM-PLAN-v0.1.md",
       "heading": "5. Current-state facts (verified at draft time)",
-      "line": 89,
+      "line": 122,
       "uri": "spec://fractality/plans/FRACTALITY-RLM-PLAN-v0.1#facts"
     },
     {
       "anchor": "phases",
-      "content_hash": "sha256:061e9e97e1475490575c96faaa7149b39cc1cd4e3f9d339b2106cfeb90b203e1",
+      "content_hash": "sha256:e24192a7534a59c80a1b83258843f2f153eb4771364bd3cb2a72e6b98c1b1a13",
       "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
       "file": "spec/plans/FRACTALITY-RLM-PLAN-v0.1.md",
       "heading": "6. Phases (shape; final counts at commissioning)",
-      "line": 102,
+      "line": 135,
       "uri": "spec://fractality/plans/FRACTALITY-RLM-PLAN-v0.1#phases"
     },
     {
@@ -1363,7 +1363,7 @@
       "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
       "file": "spec/plans/FRACTALITY-RLM-PLAN-v0.1.md",
       "heading": "7. Prediction candidates (frozen at commissioning)",
-      "line": 120,
+      "line": 156,
       "uri": "spec://fractality/plans/FRACTALITY-RLM-PLAN-v0.1#predictions"
     },
     {
@@ -1372,7 +1372,7 @@
       "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
       "file": "spec/plans/FRACTALITY-RLM-PLAN-v0.1.md",
       "heading": "8. Review points",
-      "line": 131,
+      "line": 167,
       "uri": "spec://fractality/plans/FRACTALITY-RLM-PLAN-v0.1#review-points"
     },
     {
@@ -1381,7 +1381,7 @@
       "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
       "file": "spec/plans/FRACTALITY-RLM-PLAN-v0.1.md",
       "heading": "9. Ledger",
-      "line": 140,
+      "line": 176,
       "uri": "spec://fractality/plans/FRACTALITY-RLM-PLAN-v0.1#ledger"
     },
     {
@@ -1617,6 +1617,105 @@
       "heading": "Reference-source inventory (clean-room register)",
       "line": 1,
       "uri": "spec://fractality/refs/INVENTORY#root"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:adebcd768bd8352e5df1094c3d240a596b26a9b95291f0c7b52f83fdf8a12927",
+      "doc_path": "refs/notes/FUGU-FRACTALITY-MAPPING",
+      "file": "spec/refs/notes/FUGU-FRACTALITY-MAPPING.md",
+      "heading": "FUGU ↔ FRACTALITY — the mapping analysis",
+      "line": 1,
+      "uri": "spec://fractality/refs/notes/FUGU-FRACTALITY-MAPPING#root"
+    },
+    {
+      "anchor": "verdict",
+      "content_hash": "sha256:d2ffad0e3e9c08b0068d902cacd6d3a07f8bbb4dc6b024bc4f24ea1571aa7e57",
+      "doc_path": "refs/notes/FUGU-FRACTALITY-MAPPING",
+      "file": "spec/refs/notes/FUGU-FRACTALITY-MAPPING.md",
+      "heading": "1. The verdict in one paragraph",
+      "line": 15,
+      "uri": "spec://fractality/refs/notes/FUGU-FRACTALITY-MAPPING#verdict"
+    },
+    {
+      "anchor": "table",
+      "content_hash": "sha256:4a5f5c32cf7495bb65dd2685205346d7f6fbfa32e607b035e1f1c25c5b366425",
+      "doc_path": "refs/notes/FUGU-FRACTALITY-MAPPING",
+      "file": "spec/refs/notes/FUGU-FRACTALITY-MAPPING.md",
+      "heading": "2. The mapping table",
+      "line": 33,
+      "uri": "spec://fractality/refs/notes/FUGU-FRACTALITY-MAPPING#table"
+    },
+    {
+      "anchor": "changes",
+      "content_hash": "sha256:6d7816adf880bc7842a2408e6ad49fe5d75902096744037796107ffa7a3eab9c",
+      "doc_path": "refs/notes/FUGU-FRACTALITY-MAPPING",
+      "file": "spec/refs/notes/FUGU-FRACTALITY-MAPPING.md",
+      "heading": "3. Changes applied to the Stage B draft",
+      "line": 54,
+      "uri": "spec://fractality/refs/notes/FUGU-FRACTALITY-MAPPING#changes"
+    },
+    {
+      "anchor": "moats",
+      "content_hash": "sha256:35a1ceaa03209d8e966938bbe708ada759e6b1705579f319ecc5928712a142b1",
+      "doc_path": "refs/notes/FUGU-FRACTALITY-MAPPING",
+      "file": "spec/refs/notes/FUGU-FRACTALITY-MAPPING.md",
+      "heading": "4. What Fugu does not change",
+      "line": 78,
+      "uri": "spec://fractality/refs/notes/FUGU-FRACTALITY-MAPPING#moats"
+    },
+    {
+      "anchor": "pf4",
+      "content_hash": "sha256:d7da7a5413c8bb120afae4fb1d7fc346fe3449bb0a450a248f957fd7969bf68f",
+      "doc_path": "refs/notes/FUGU-FRACTALITY-MAPPING",
+      "file": "spec/refs/notes/FUGU-FRACTALITY-MAPPING.md",
+      "heading": "5. P-F4 verdict",
+      "line": 88,
+      "uri": "spec://fractality/refs/notes/FUGU-FRACTALITY-MAPPING#pf4"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:30a82840b59e5736c2a49c28cb13ca71f021a397785d2267dc258e5898627d4c",
+      "doc_path": "refs/notes/FUGU-SYNTHESIS",
+      "file": "spec/refs/notes/FUGU-SYNTHESIS.md",
+      "heading": "FUGU-SYNTHESIS — what Sakana's orchestrator teaches the fabric",
+      "line": 1,
+      "uri": "spec://fractality/refs/notes/FUGU-SYNTHESIS#root"
+    },
+    {
+      "anchor": "state",
+      "content_hash": "sha256:4dc12eac617bf98f1e17d9ca16afe1189a8d394fbadd750cb3a2f1fb4a677080",
+      "doc_path": "refs/notes/FUGU-SYNTHESIS",
+      "file": "spec/refs/notes/FUGU-SYNTHESIS.md",
+      "heading": "1. The state of the thing in one paragraph",
+      "line": 12,
+      "uri": "spec://fractality/refs/notes/FUGU-SYNTHESIS#state"
+    },
+    {
+      "anchor": "gaps",
+      "content_hash": "sha256:24c003ee40e6db4faab8b9ae326705fa8f7db2e201ef581d0f58d497f41c551a",
+      "doc_path": "refs/notes/FUGU-SYNTHESIS",
+      "file": "spec/refs/notes/FUGU-SYNTHESIS.md",
+      "heading": "2. Two-way gaps",
+      "line": 34,
+      "uri": "spec://fractality/refs/notes/FUGU-SYNTHESIS#gaps"
+    },
+    {
+      "anchor": "deltas",
+      "content_hash": "sha256:62e01a3b6914c067e40bcd4ba24155d72b8543318126b8a7bcf5b56dd28fe207",
+      "doc_path": "refs/notes/FUGU-SYNTHESIS",
+      "file": "spec/refs/notes/FUGU-SYNTHESIS.md",
+      "heading": "3. The deltas (FD-1 … FD-16)",
+      "line": 54,
+      "uri": "spec://fractality/refs/notes/FUGU-SYNTHESIS#deltas"
+    },
+    {
+      "anchor": "verdicts",
+      "content_hash": "sha256:a62441ba5f50795c51c829122437dd7ce359f5a5bf304bb96961e75ab49e0cd9",
+      "doc_path": "refs/notes/FUGU-SYNTHESIS",
+      "file": "spec/refs/notes/FUGU-SYNTHESIS.md",
+      "heading": "4. Prediction verdicts",
+      "line": 106,
+      "uri": "spec://fractality/refs/notes/FUGU-SYNTHESIS#verdicts"
     },
     {
       "anchor": "root",
