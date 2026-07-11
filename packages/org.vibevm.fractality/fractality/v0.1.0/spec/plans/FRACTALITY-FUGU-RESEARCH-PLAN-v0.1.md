@@ -147,3 +147,16 @@ commissioning) remains OPEN and untouched by this stage; Stage B
 - 2026-07-11 ~01:10 — drafted and launched in one act (owner:
   «Напиши план и выполни»); dashboard
   `reports/2026-11-07-01-10-fuguresearch-started-plan.md`.
+- 2026-07-11 — **mandate revision (owner, verbatim):** «не нужно
+  ждать deep research. Возьми только pdf и скачанные страницы (все
+  пейперы по Fugu), и возможно репозитории (анализ репозиториев
+  обязательно делегировать в GLM, PDF анализируй сама) и проведи
+  изучение и остальные части вплоть до правок черновика и
+  закрытие». Context: the owner's token budget paused the session
+  mid-Ф1; the W1 workflow (`wf_9315022c-7aa`) was stopped by the
+  harness and is abandoned as a deviation. Scope narrows to: the
+  four anchors (3 PDFs boss-read + Sakana page snapshots) + repos
+  (OpenFugu via GLM delegate; SakanaAI/fugu README-level only —
+  no license on the official repo). The W2-articles shelf is cut.
+  P-F2 becomes NOT EVALUATED; other predictions judged on the
+  narrowed evidence.

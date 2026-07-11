@@ -51,6 +51,10 @@ LICENSE + README (IGNITION plan, Phase 0 s6)._
 | S24 | arXiv 2603.02615 — Think, But Don't Overthink (RLM reproduction; counterpoint numbers) | papers/2603.02615.pdf | — | arXiv — method free, cite-only | method source | notes/rlm-runners-up-t3.md | runner-up (T3 paragraph mandatory) |
 | S25 | github.com/brainqub3/claude_code_RLM (RLM scaffold on Claude Code) | — (web README level only, no clone) | n/a | **MIT** (API-verified 2026-07-10) | inspiration-only | notes/rlm-runners-up-t3.md | runner-up |
 | S26 | github.com/tinyhumansai/tinyagents (Rust RLM harness; run-tree/cost-rollup telemetry) | — (web README level only, no clone) | n/a | **GPL-3.0** (API-verified 2026-07-10; study-only, code never adopted) | inspiration-only | notes/rlm-runners-up-t3.md | runner-up |
+| S27 | Sakana Fugu — arXiv 2606.21228 (tech report, read at v2) + sakana.ai/fugu,/fugu-release,/fugu-beta + github.com/SakanaAI/fugu (official) | papers/2606.21228.pdf; articles/sakana-fugu*.html | PDFs+snapshots 2026-07-11 | arXiv method-free/cite-only; pages cite-only; **official repo: NO license** → web README-level only, never cloned | method/facts source | notes/fugu-study.md (T1) ✅ | **studied 2026-07-11 (Fugu research Ф4)** |
+| S28 | arXiv 2512.04695 — TRINITY (ICLR 2026, read at v3) + sakana.ai/trinity | papers/2512.04695.pdf; articles/sakana-trinity.html | 2026-07-11 | arXiv — method free, cite-only | method source | notes/trinity-study.md (T2) ✅ | studied 2026-07-11 |
+| S29 | arXiv 2512.04388 — Learning to Orchestrate / the Conductor (ICLR 2026, read at v5) + sakana.ai/learning-to-orchestrate | papers/2512.04388.pdf; articles/sakana-learning-to-orchestrate.html | 2026-07-11 | arXiv — method free, cite-only | method source | notes/conductor-study.md (T2) ✅ | studied 2026-07-11 |
+| S30 | github.com/trotsky1997/OpenFugu (open Fugu reimplementation; reverse-engineered mechanics, evidence-graded) | src/openfugu/ | `7ad7ccf` (2026-07-11, depth-1) | **Apache-2.0** (API-verified 2026-07-11) | inspiration-only | notes/openfugu-study.md (T2) ✅ | studied 2026-07-11 (GLM survey + boss spot-checks) |
 
 ## Log
 

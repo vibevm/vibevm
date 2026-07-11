@@ -1206,7 +1206,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:09b17630a7e0df3ffd5049d9a1d68b61063857778482761033b507f370ca9050",
+      "content_hash": "sha256:cc3751b3a651c0f7a8fabdf306859bccb1fa0f6b6937acbae40a244b45288dfe",
       "doc_path": "plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1",
       "file": "spec/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1.md",
       "heading": "FRACTALITY-FUGU-RESEARCH-PLAN v0.1 — Campaign 3 · Stage A2: the Sakana Fugu research",
@@ -1287,7 +1287,7 @@
     },
     {
       "anchor": "log",
-      "content_hash": "sha256:af3ee146978d368332fb50f55e4d765396023615d4e480ade1627704912cee22",
+      "content_hash": "sha256:1572a1d192e2f33b0a78c497330b8be8c4ed4c13122c231a3e6dbb427f827d47",
       "doc_path": "plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1",
       "file": "spec/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1.md",
       "heading": "9. Log",
@@ -1611,7 +1611,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:7b7a1848b21e96c0b5dbefffbed36f94db4d2554a841499a7814ad57467d03ba",
+      "content_hash": "sha256:fb49ab9badeabf490f3ac4ef7178796676d743be7d4072acf28a77a0e575f98b",
       "doc_path": "refs/INVENTORY",
       "file": "spec/refs/INVENTORY.md",
       "heading": "Reference-source inventory (clean-room register)",
@@ -1689,6 +1689,42 @@
       "heading": "Study note — codex-first (clean-room)",
       "line": 1,
       "uri": "spec://fractality/refs/notes/codex-first-study#root"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:17d43ae0f650b2910f33db021fb0661099555458ba201e1166cc6abd3bbddcbf",
+      "doc_path": "refs/notes/conductor-study",
+      "file": "spec/refs/notes/conductor-study.md",
+      "heading": "Study note — Learning to Orchestrate (the Conductor)",
+      "line": 1,
+      "uri": "spec://fractality/refs/notes/conductor-study#root"
+    },
+    {
+      "anchor": "what",
+      "content_hash": "sha256:b352a3599e0869bff095ae89a587288e1faa3b7e8d9f6ec786a36f340ba1d186",
+      "doc_path": "refs/notes/conductor-study",
+      "file": "spec/refs/notes/conductor-study.md",
+      "heading": "What it is",
+      "line": 8,
+      "uri": "spec://fractality/refs/notes/conductor-study#what"
+    },
+    {
+      "anchor": "facts",
+      "content_hash": "sha256:440474e753f1cb8ac6dea3e170731bf333e1a4f55999592d72334b7cb018d0d3",
+      "doc_path": "refs/notes/conductor-study",
+      "file": "spec/refs/notes/conductor-study.md",
+      "heading": "Facts",
+      "line": 24,
+      "uri": "spec://fractality/refs/notes/conductor-study#facts"
+    },
+    {
+      "anchor": "decisions",
+      "content_hash": "sha256:022bb467b8da08556aa58f57430bbafdef4c04b555b1ec02068707ffa6be9e27",
+      "doc_path": "refs/notes/conductor-study",
+      "file": "spec/refs/notes/conductor-study.md",
+      "heading": "Decisions we take",
+      "line": 38,
+      "uri": "spec://fractality/refs/notes/conductor-study#decisions"
     },
     {
       "anchor": "root",
@@ -1782,12 +1818,84 @@
     },
     {
       "anchor": "root",
+      "content_hash": "sha256:574ea4b94c77dd5b06ad4db8de22fe1020d2f43d9f479532a24944843bda3152",
+      "doc_path": "refs/notes/fugu-study",
+      "file": "spec/refs/notes/fugu-study.md",
+      "heading": "Study note — Sakana Fugu (the anchor project)",
+      "line": 1,
+      "uri": "spec://fractality/refs/notes/fugu-study#root"
+    },
+    {
+      "anchor": "what",
+      "content_hash": "sha256:ee7fc157ab856802beea779b2ce1d02c9bd9134e842e749ddfb1ce0d5eaabcfc",
+      "doc_path": "refs/notes/fugu-study",
+      "file": "spec/refs/notes/fugu-study.md",
+      "heading": "What it is",
+      "line": 11,
+      "uri": "spec://fractality/refs/notes/fugu-study#what"
+    },
+    {
+      "anchor": "architecture",
+      "content_hash": "sha256:c1ac9d4d85e764a9e4899d876965b888000110b40e912a5bf81a19944211aee8",
+      "doc_path": "refs/notes/fugu-study",
+      "file": "spec/refs/notes/fugu-study.md",
+      "heading": "Architecture facts",
+      "line": 27,
+      "uri": "spec://fractality/refs/notes/fugu-study#architecture"
+    },
+    {
+      "anchor": "results",
+      "content_hash": "sha256:31be0f651979a4b3ed8800325d39f54b589552b0011a82be05e9844819320ae3",
+      "doc_path": "refs/notes/fugu-study",
+      "file": "spec/refs/notes/fugu-study.md",
+      "heading": "Results facts",
+      "line": 71,
+      "uri": "spec://fractality/refs/notes/fugu-study#results"
+    },
+    {
+      "anchor": "decisions",
+      "content_hash": "sha256:59467fd81ae3b01e98137e9b0b92c601831b986ee32173f7b8859b11d300a477",
+      "doc_path": "refs/notes/fugu-study",
+      "file": "spec/refs/notes/fugu-study.md",
+      "heading": "Decisions we take",
+      "line": 100,
+      "uri": "spec://fractality/refs/notes/fugu-study#decisions"
+    },
+    {
+      "anchor": "root",
       "content_hash": "sha256:eeb8cb6ee35544689cb75de6e1bf048351111a7ea4d2bb4955d7263831e9392f",
       "doc_path": "refs/notes/landscape",
       "file": "spec/refs/notes/landscape.md",
       "heading": "Landscape note — where fractality sits",
       "line": 1,
       "uri": "spec://fractality/refs/notes/landscape#root"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:045f013d2027aa02c343675b87437f66057a80307094464fda2b39b797973fcc",
+      "doc_path": "refs/notes/openfugu-study",
+      "file": "spec/refs/notes/openfugu-study.md",
+      "heading": "Study note — OpenFugu (open reimplementation of Fugu)",
+      "line": 1,
+      "uri": "spec://fractality/refs/notes/openfugu-study#root"
+    },
+    {
+      "anchor": "facts",
+      "content_hash": "sha256:f54ad7055eca1a84d5eb73ea1028c5aa6d63f597998dffcf206e34fc3fba3bc4",
+      "doc_path": "refs/notes/openfugu-study",
+      "file": "spec/refs/notes/openfugu-study.md",
+      "heading": "Facts the API hides",
+      "line": 11,
+      "uri": "spec://fractality/refs/notes/openfugu-study#facts"
+    },
+    {
+      "anchor": "decisions",
+      "content_hash": "sha256:7151c35bdf2ba66eaf655dedc47f1be8da7d47392e28c9c6c133e195f011a23f",
+      "doc_path": "refs/notes/openfugu-study",
+      "file": "spec/refs/notes/openfugu-study.md",
+      "heading": "Decisions we take",
+      "line": 47,
+      "uri": "spec://fractality/refs/notes/openfugu-study#decisions"
     },
     {
       "anchor": "root",
@@ -2157,6 +2265,42 @@
       "heading": "Decisions we take",
       "line": 31,
       "uri": "spec://fractality/refs/notes/srlm-study#decisions"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:a8aad7ee6540cc2e98ba95a8035676597d92114cb6bca1837c42fc9d103d7d13",
+      "doc_path": "refs/notes/trinity-study",
+      "file": "spec/refs/notes/trinity-study.md",
+      "heading": "Study note — TRINITY: An Evolved LLM Coordinator",
+      "line": 1,
+      "uri": "spec://fractality/refs/notes/trinity-study#root"
+    },
+    {
+      "anchor": "what",
+      "content_hash": "sha256:f3c14894012918f5de9a9511a5960ab68657fdc4ce0c6866cc79440448950f15",
+      "doc_path": "refs/notes/trinity-study",
+      "file": "spec/refs/notes/trinity-study.md",
+      "heading": "What it is",
+      "line": 8,
+      "uri": "spec://fractality/refs/notes/trinity-study#what"
+    },
+    {
+      "anchor": "facts",
+      "content_hash": "sha256:033da36d6b618f0f201eb8c238f9ab302097cfd802a6e5e8ea95a9413d34ab6e",
+      "doc_path": "refs/notes/trinity-study",
+      "file": "spec/refs/notes/trinity-study.md",
+      "heading": "Facts",
+      "line": 21,
+      "uri": "spec://fractality/refs/notes/trinity-study#facts"
+    },
+    {
+      "anchor": "decisions",
+      "content_hash": "sha256:58128b30eef3af0dadcc0ddb68fe889a17c86a468ed5161ac8c4b3897b68161b",
+      "doc_path": "refs/notes/trinity-study",
+      "file": "spec/refs/notes/trinity-study.md",
+      "heading": "Decisions we take",
+      "line": 38,
+      "uri": "spec://fractality/refs/notes/trinity-study#decisions"
     }
   ],
   "suspects": [],
