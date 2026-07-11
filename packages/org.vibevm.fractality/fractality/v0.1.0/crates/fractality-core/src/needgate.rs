@@ -1,0 +1,291 @@
+//! The need-gate (D-C3-1): the one auditable decision that turns a task
+//! into a verdict — `inline | route | fold-local | spawn | escalate` —
+//! with a journaled reason. This module is the pure decision *procedure*
+//! (plan §10.3, fixed order, first match wins); the *policy* it reads
+//! (depth caps, window margins, capability classes) is tabular data in
+//! the `delegation-rules` package, passed in as [`GateInputs`]. Keeping
+//! the procedure pure makes every verdict a unit test, and keeps the
+//! boss/MC call site a thin wrapper that gathers the signals and records
+//! the result.
+//!
+//! Why a gate at all: the evidence (RD-1, RD-2, RD-6) says routing must be
+//! auditable data, not prompt-embedded vibes — and that wrapping a
+//! natively-capable model in machinery makes it *worse*, so "does this fit
+//! as-is?" is asked before "how do I decompose it?".
+
+use serde::{Deserialize, Serialize};
+
+specmark::scope!("spec://fractality/PROP-001#model");
+
+/// The five need-gate verdicts (plan §10.2 glossary). Serialized
+/// kebab-case so `fold-local` round-trips as the journal reads it.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum Verdict {
+    /// The boss does it itself. No worker, no packet.
+    Inline,
+    /// ONE worker call with the task as-is — no decomposition, no child
+    /// tree (Fugu-standard's whole business; the cheap default for
+    /// single-skill tasks that fit the worker's window).
+    Route,
+    /// A bounded sub-session in the boss's OWN context space; returns a
+    /// summary, no pod, no isolation.
+    FoldLocal,
+    /// Child packet(s) through MC, each with its own budgets, env, and run
+    /// identity — the only verdict that creates a run tree.
+    Spawn,
+    /// Return the task UP, annotated `escalated(reason, needs)`. A
+    /// first-class outcome, not a failure; the top of every chain is the
+    /// human.
+    Escalate,
+}
+
+impl Verdict {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Verdict::Inline => "inline",
+            Verdict::Route => "route",
+            Verdict::FoldLocal => "fold-local",
+            Verdict::Spawn => "spawn",
+            Verdict::Escalate => "escalate",
+        }
+    }
+}
+
+/// A verdict plus its one-line journaled reason (D-C3-1: every decision is
+/// recorded verbatim, never inferred later). Serialize-only: the reason is
+/// a `&'static str` literal from the procedure, which journals (Serialize)
+/// but cannot be borrowed back as `'static` on read — a journal reader
+/// uses a `String`-carrying DTO.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
+pub struct Decision {
+    pub verdict: Verdict,
+    pub reason: &'static str,
+}
+
+impl Decision {
+    fn new(verdict: Verdict, reason: &'static str) -> Self {
+        Self { verdict, reason }
+    }
+}
+
+/// The signals the decision procedure evaluates (plan §10.3). The boss/MC
+/// gathers these — most from the task and the candidate worker's profile,
+/// the caps from `delegation-rules`. Booleans keep the *procedure* pure
+/// and total; how each signal is measured is the caller's (and the
+/// policy table's) concern.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct GateInputs {
+    /// An O(1) lookup / single fact.
+    pub o1_lookup: bool,
+    /// The boss lacks a tool the (O(1)) task needs — routes instead of
+    /// doing it inline.
+    pub needs_absent_tool: bool,
+    /// Task + its context fit the candidate worker's window with ≥30%
+    /// margin (RD-2's window-fit guard).
+    pub fits_window: bool,
+    /// The task draws on a single skill (do not decompose what fits).
+    pub single_skill: bool,
+    /// Cross-chunk dependence dominates: the answer needs global reasoning
+    /// over the whole context and chunking destroys it (Silo regime).
+    pub cross_chunk_dominant: bool,
+    /// A largest-window profile is available to route a Silo task to,
+    /// instead of escalating.
+    pub large_window_available: bool,
+    /// Decomposable into sub-results that compose (mechanically or via one
+    /// merge node).
+    pub decomposable: bool,
+    /// The caller's current nesting depth.
+    pub depth: u32,
+    /// The depth cap from `delegation-rules` (0 = unlimited; default
+    /// policy is 1 — depth 2 only behind the experimental flag).
+    pub max_depth: u32,
+}
+
+/// The fixed-order decision procedure (plan §10.3). Evaluate top-down;
+/// first match wins. Every arm returns the verdict AND the reason to
+/// journal — no silent verdicts.
+pub fn decide(i: &GateInputs) -> Decision {
+    // 1. O(1) lookup / single fact → inline (route only if it needs a
+    //    tool the boss lacks). Never spawn for these.
+    if i.o1_lookup {
+        return if i.needs_absent_tool {
+            Decision::new(
+                Verdict::Route,
+                "O(1) lookup needs a tool the boss lacks — route, never spawn",
+            )
+        } else {
+            Decision::new(
+                Verdict::Inline,
+                "O(1) lookup / single fact — the boss does it inline",
+            )
+        };
+    }
+    // 2. Fits the worker window with margin AND single-skill → route. Do
+    //    NOT decompose what fits — wrapping natively-capable models makes
+    //    them worse (RD-2, three independent sources).
+    if i.fits_window && i.single_skill {
+        return Decision::new(
+            Verdict::Route,
+            "fits the worker window (>=30% margin), single-skill — route as-is, do not decompose",
+        );
+    }
+    // 3. Cross-chunk dependence dominates → escalate, or route to the
+    //    largest-window profile if one exists. Never fan out (Silo
+    //    theorem: fan-out saturates below optimal regardless of quality).
+    if i.cross_chunk_dominant {
+        return if i.large_window_available {
+            Decision::new(
+                Verdict::Route,
+                "cross-chunk (Silo): route to the largest-window profile, never fan out",
+            )
+        } else {
+            Decision::new(
+                Verdict::Escalate,
+                "cross-chunk dependence dominates (Silo theorem) — escalate up, do not fan out",
+            )
+        };
+    }
+    // 4. Decomposable with composable sub-results → spawn, under the depth
+    //    cap. At the cap, force-execute in-context (fold-local) rather
+    //    than opening a deeper tree (D-C3-3 at-cap boundary).
+    if i.decomposable {
+        let at_cap = i.max_depth != 0 && i.depth >= i.max_depth;
+        return if at_cap {
+            Decision::new(
+                Verdict::FoldLocal,
+                "decomposable but at the depth cap — force-execute locally, do not spawn deeper",
+            )
+        } else {
+            Decision::new(
+                Verdict::Spawn,
+                "decomposable into composable sub-results — spawn under the depth cap",
+            )
+        };
+    }
+    // 5. Otherwise (context-heavy, sequential, no isolation need) →
+    //    fold-local: a bounded sub-session, no pod.
+    Decision::new(
+        Verdict::FoldLocal,
+        "context-heavy, sequential, no isolation need — fold locally",
+    )
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// A baseline that reaches the final fold-local arm; each test flips
+    /// exactly the signals its branch needs.
+    fn base() -> GateInputs {
+        GateInputs {
+            o1_lookup: false,
+            needs_absent_tool: false,
+            fits_window: false,
+            single_skill: false,
+            cross_chunk_dominant: false,
+            large_window_available: false,
+            decomposable: false,
+            depth: 0,
+            max_depth: 1,
+        }
+    }
+
+    #[test]
+    fn o1_lookup_is_inline_unless_a_tool_is_missing() {
+        let i = GateInputs {
+            o1_lookup: true,
+            ..base()
+        };
+        assert_eq!(decide(&i).verdict, Verdict::Inline);
+
+        let i = GateInputs {
+            o1_lookup: true,
+            needs_absent_tool: true,
+            ..base()
+        };
+        assert_eq!(decide(&i).verdict, Verdict::Route);
+    }
+
+    #[test]
+    fn fits_window_single_skill_routes_not_spawns() {
+        let i = GateInputs {
+            fits_window: true,
+            single_skill: true,
+            // Even if it looks decomposable, fitting wins first (do not
+            // decompose what fits).
+            decomposable: true,
+            ..base()
+        };
+        assert_eq!(decide(&i).verdict, Verdict::Route);
+    }
+
+    #[test]
+    fn silo_escalates_or_routes_to_the_biggest_window() {
+        let i = GateInputs {
+            cross_chunk_dominant: true,
+            ..base()
+        };
+        assert_eq!(decide(&i).verdict, Verdict::Escalate);
+
+        let i = GateInputs {
+            cross_chunk_dominant: true,
+            large_window_available: true,
+            ..base()
+        };
+        assert_eq!(decide(&i).verdict, Verdict::Route);
+    }
+
+    #[test]
+    fn decomposable_spawns_under_the_cap_and_folds_at_it() {
+        let i = GateInputs {
+            decomposable: true,
+            depth: 0,
+            max_depth: 1,
+            ..base()
+        };
+        assert_eq!(decide(&i).verdict, Verdict::Spawn);
+
+        // At the cap: force-execute locally, never spawn deeper.
+        let i = GateInputs {
+            decomposable: true,
+            depth: 1,
+            max_depth: 1,
+            ..base()
+        };
+        assert_eq!(decide(&i).verdict, Verdict::FoldLocal);
+
+        // max_depth = 0 means unlimited: spawn regardless of depth.
+        let i = GateInputs {
+            decomposable: true,
+            depth: 9,
+            max_depth: 0,
+            ..base()
+        };
+        assert_eq!(decide(&i).verdict, Verdict::Spawn);
+    }
+
+    #[test]
+    fn everything_else_folds_local() {
+        assert_eq!(decide(&base()).verdict, Verdict::FoldLocal);
+    }
+
+    #[test]
+    fn verdicts_serialize_kebab_case() {
+        let json = serde_json::to_string(&Verdict::FoldLocal).expect("serializes");
+        assert_eq!(json, "\"fold-local\"");
+    }
+
+    /// First match wins: an O(1) task that also fits the window is inline,
+    /// not route — the order in §10.3 is load-bearing.
+    #[test]
+    fn first_match_wins_in_declared_order() {
+        let i = GateInputs {
+            o1_lookup: true,
+            fits_window: true,
+            single_skill: true,
+            ..base()
+        };
+        assert_eq!(decide(&i).verdict, Verdict::Inline);
+    }
+}

@@ -170,6 +170,13 @@
     },
     {
       "crate_name": "fractality-core",
+      "file": "crates/fractality-core/src/needgate.rs",
+      "item_kind": "mod",
+      "line": 18,
+      "symbol": "fractality_core::needgate"
+    },
+    {
+      "crate_name": "fractality-core",
       "file": "crates/fractality-core/src/node.rs",
       "item_kind": "mod",
       "line": 22,
@@ -640,6 +647,14 @@
       "line": 22,
       "provenance": "authored",
       "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-core/src/needgate.rs",
+      "from_symbol": "fractality_core::needgate",
+      "line": 18,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#model",
       "verb": "implements"
     },
     {
