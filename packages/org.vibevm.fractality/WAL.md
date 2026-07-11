@@ -1,13 +1,16 @@
 # fractality — WAL (project continuation state)
 
-_Updated: 2026-07-12 ~00:35 (**Campaign 3 Stage B — Ф3 IN PROGRESS:
-the gate now has teeth and a caller**). Ф0/Ф1/Ф2 CLOSED (the need-gate
-decision core). Ф3 so far, each floor-green + committed + ledgered:
-**Ф3.1** spawn depth-guard — D-C3-3 enforcement (`b23f3f1`); **Ф3.2a**
-`fractality gate` invocation — D-C3-8 (`3b0b2d2`), which also resolved
-the `max_depth=0` overload via `GateInputs.can_spawn` (routing 0=no-spawn
-vs need-gate 0=unlimited). Next: Ф3.2b decision journal, then the descent
-verbs (await) + masking. Per-slice status in the state-plan tracker._
+_Updated: 2026-07-12 ~00:55 (**Campaign 3 Stage B — Ф3 IN PROGRESS:
+the gate has teeth + a caller, and await races**). Ф0/Ф1/Ф2 CLOSED (the
+need-gate decision core). Ф3 so far, each floor-green + committed +
+ledgered + pushed: **Ф3.1** spawn depth-guard — D-C3-3 enforcement
+(`b23f3f1`); **Ф3.2a** `fractality gate` invocation — D-C3-8 (`3b0b2d2`),
+which also resolved the `max_depth=0` overload via `GateInputs.can_spawn`
+(routing 0=no-spawn vs need-gate 0=unlimited); **Ф3.4a** `fractality wait
+--any` — the descent await-any race (`a1479f1`; `all`/`named` already
+existed). Next: Ф3.2b decision journal, Ф3.4b/3.5 the rest of the descent
+verbs (sibling isolation, merge node, refuse-near-duplicate), masking
+(maybe defer), retry. Per-slice status in the state-plan tracker._
 
 ## Current state
 
