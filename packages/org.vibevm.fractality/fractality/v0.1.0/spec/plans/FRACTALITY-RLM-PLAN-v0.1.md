@@ -208,7 +208,22 @@ license-cleared; refs tree local and pinned.
 
 ## 9. Ledger {#ledger}
 
-_(empty — DRAFT)_
+Commit map (Stage B execution, Campaign 3):
+
+- Ф0 spikes closed (`c1151bb`) — no product commits (spikes throwaway).
+- Ф1.1 `context_from` access-list (`35a378c`).
+- Ф1.2a packet `output_schema` field (`d91780d`).
+- Ф1.2b output_schema validation at the collect seam (`12b9824`).
+
+**Scoping decision — retry-on-violation (D-C3-2).** The validation seam
+produces the retry-feedback report (Ф1.2b), but the automatic one-retry
+is NOT pod-local: a re-invoke loop inside the pod would rewrite its
+lifecycle, which §10.5 forbids ("extension at named seams"). The retry
+is re-dispatch at the orchestration layer — the need-gate re-spawns the
+task once with the violation report in the child's context — landing
+with the descent verbs (Ф3). Until then a schema-violating result is
+recorded (`status.json` `schema_gate.valid=false` + violations) for the
+boss to act on. Revisit trigger: Ф3 spawn orchestration.
 
 ## 10. Executor's guide — read this before any code {#executor-guide}
 

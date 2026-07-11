@@ -121,8 +121,10 @@ hello_glm golden snapshot (insta accept). Slice plan (each = one commit,
 floor green after each):
 - **Ф1.1** `ContextSpec.context_from: Vec<RunId>` (access-list; default [])
   — ✅ LANDED (`35a378c`, floor green 165/0, specmap 170/63/63/0)
-- **Ф1.2** `OutputSpec.output_schema` (raw JSON string in dep-light core;
-  validated at pod/collect with jsonschema 0.47.0 + one retry)
+- **Ф1.2** `OutputSpec.output_schema` — ✅ Ф1.2a field (`d91780d`) +
+  Ф1.2b validation at collect seam (`12b9824`, jsonschema 0.47.0, verdict
+  → `status.json schema_gate`). Auto-retry deferred to Ф3 re-dispatch
+  (plan §9); pumps extracted to `pump.rs` for the file budget.
 - **Ф1.3** `BudgetSpec` six axes + wall-clock (RD-4): depth /
   per_agent_calls / per_call_token_ceiling / cumulative_tokens /
   currency / global_calls (0 = unlimited holds)
