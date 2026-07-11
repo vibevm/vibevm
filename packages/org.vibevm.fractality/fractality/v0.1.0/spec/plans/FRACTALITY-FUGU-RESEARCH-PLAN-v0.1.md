@@ -1,8 +1,13 @@
 # FRACTALITY-FUGU-RESEARCH-PLAN v0.1 — Campaign 3 · Stage A2: the Sakana Fugu research {#root}
 
-_Status: **EXECUTING from birth 2026-07-11 ~01:10** — the owner's
-order is «Напиши план и выполни»; no review gate on execution
-(unlike Stage A's RP-R1). Genre: campaign plan. Method: inherits
+_Status: **CLOSED 2026-07-11 ~12:20 — P-F1 ✓, P-F2 not evaluated
+(W1 abandoned in the token-pause deviation), P-F3 ✓, P-F4 ✓ (3
+changes + 1 new decision applied to the Stage B draft).**
+Deliverables: 4 study notes (S27–S30), `FUGU-SYNTHESIS.md`
+(FD-1…16), `FUGU-FRACTALITY-MAPPING.md`, and the revised
+`FRACTALITY-RLM-PLAN-v0.1.md` (still RP-C3-1-gated). Launched at
+birth 2026-07-11 ~01:10 («Напиши план и выполни»). Genre:
+campaign plan. Method: inherits
 [`FRACTALITY-RLM-RESEARCH-PLAN-v0.1`](FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md)
 wholesale — the three-wave protocol (D-R2), selection criteria
 (D-R3), clean-room intake pipeline (D-R4), tiered study +
@@ -140,7 +145,12 @@ commissioning) remains OPEN and untouched by this stage; Stage B
 
 | phase | commits | confirmed / falsified | notes |
 |---|---|---|---|
-| Ф0 | this commit | — | plan lands; execution immediate per mandate |
+| Ф0 | `1852fb6` | — | plan lands; execution immediate per mandate |
+| Ф1 | — | P-F1 ✓ on W2 alone | W2: 12/12 frozen queries (raw `refs/study/fugu-waves/`). W1 fired (`wf_9315022c-7aa`) but stopped by the harness during the owner's token pause; abandoned per the mandate revision — **the stage's deviation**; P-F2 NOT EVALUATED. |
+| Ф2–Ф3 | `c9bfdf1` | P-F3 ✓ (report §3.1/§3.2 name Trinity/Conductor as the components) | Anchors intaken: 3 PDFs (v2/v3/v5 recorded) + 4 Sakana snapshots; official repo README-level only (**no license**); OpenFugu cloned `7ad7ccf` (Apache-2.0); squat repo excluded. INVENTORY S27–S30, licenses before study. |
+| Ф4 | `c9bfdf1` | — | Papers boss-read (owner order: «PDF анализируй сама»); OpenFugu surveyed by GLM (owner order: делегировать) with boss spot-checks verbatim — all held. 4 notes. Delegated 1 / kept: papers, notes, checks. |
+| Ф5–Ф6 | synthesis+mapping commit | P-F4 ✓ (6 confirm / 7 strengthen / 3 change / 1 new) | FD-1…16; mapping applied to the Stage B draft: `route` verdict, `context_from` access-lists, isolation-by-default + chosen merge profile + collapse probe, new D-C3-10 routing-policy-data. |
+| Ф7 | close commit | — | verdicts recorded; dashboard `reports/2026-11-07-12-20-fuguresearch-completed-plan.md`. |
 
 ## 9. Log {#log}
 
