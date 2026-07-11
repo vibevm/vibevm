@@ -198,6 +198,13 @@
     },
     {
       "crate_name": "fractality-core",
+      "file": "crates/fractality-core/src/routing.rs",
+      "item_kind": "mod",
+      "line": 20,
+      "symbol": "fractality_core::routing"
+    },
+    {
+      "crate_name": "fractality-core",
       "file": "crates/fractality-core/src/run.rs",
       "item_kind": "mod",
       "line": 15,
@@ -679,6 +686,14 @@
       "line": 16,
       "provenance": "authored",
       "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-core/src/routing.rs",
+      "from_symbol": "fractality_core::routing",
+      "line": 20,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#model",
       "verb": "implements"
     },
     {
