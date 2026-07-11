@@ -66,20 +66,30 @@ nudge (RD-12 settings-writes precedent), mc-client, cli surfaces.
 
 ## Phase checklist
 
-- [~] **Ф0 spikes** (no commits) — IN PROGRESS
-  - [ ] s1 schema-validate-at-seam — RISK: JSON-Schema lib choice + retry
-        flow. Probe: validate structured output vs schema in Rust, show
-        pass/fail + the violation-feedback shape. → delegate to GLM.
-  - [ ] s2 FileRef slice handoff — RISK: low (machinery exists). Probe:
-        child resolves + reads a Slice FileRef end-to-end under a proven
-        scope.
-  - [ ] s3 settings-injection promotion (CC) — RISK: CC settings format +
-        what CC honors. Probe: write a capability grant into the child
-        harness config at spawn; confirm CC reads it. → read env +
-        initiative first.
-  - [ ] s4 escalated-outcome round-trip — RISK: generalizing the D18
-        channel. Probe: escalated(reason,needs) climbs `parent` edges to
-        the boss/human.
+- [x] **Ф0 spikes** (no commits) — CLOSED, all seams green (report:
+      `2026-11-07-18-12-campaign3-f0-spikes.md`)
+  - [x] s1 schema-validate-at-seam — GREEN (boss-side after 2 opencode
+        failures). jsonschema 0.47.0 compiles on rustc 1.93.1; validate
+        works; violation shape = `at <JSON-Pointer>: <message>`. API:
+        validator_for → is_valid / iter_errors + err.instance_path().
+  - [x] s2 FileRef slice handoff — GREEN by inspection: `RefRange::Slice`
+        + `resolve_against` (RFC7233) exist and are unit-tested; FileRef
+        carries scope+path+range+etag; handoff = pass a FileRef in the
+        new `context_from` field (Ф1). No unknowns.
+  - [x] s3 settings-injection promotion (CC) — GREEN by inspection: the
+        capability surface is argv (--permission-mode / --allowed-tools /
+        --disallowed-tools from `profile.permissions`) + --mcp-config
+        broker + per-worker CLAUDE_CONFIG_DIR. Promotion = spawn a child
+        whose profile `allow_tools` carries `Bash(fractality *)` (the
+        nesting seam already named in profile.rs) + broker. No in-place
+        promotion (§10.2); worker-side hooks out-of-scope (I5).
+  - [~] s4 escalated-outcome round-trip — DESIGN resolved: add a terminal
+        `RunState::Escalated` + `EscalationRecord{reason, needs}` on
+        RunRecord; the run climbs via existing `parent` edges to the
+        human at the top (generalizing the D18 question/answer park
+        channel + AnswerRule). Open Q for Ф4: worker expresses escalation
+        via an ask_boss-style MCP tool vs result status. Seam viability
+        proven; no new daemon.
 - [ ] Ф1 packets & budgets (D-C3-2, D-C3-3)
 - [ ] Ф2 need-gate + delegation-rules (D-C3-1, D-C3-10)
 - [ ] Ф3 descent verbs (D-C3-4, D-C3-5)
@@ -91,13 +101,29 @@ nudge (RD-12 settings-writes precedent), mc-client, cli surfaces.
 ## Delegation scoreboard (running)
 
 - **Kept (boss):** core-seam reconnaissance (packet / run / fileref /
-  collect) — architecture, anchors all downstream phase design. Ruling
-  records, PP-003, dashboards, commissioning — plan/spec authorship
-  (never-delegate).
-- **Delegated:** (none yet — spikes are the first delegation).
+  collect / envbuild / env / invocation / profile / lib — 10 files) —
+  architecture, anchors all downstream phase design. Ruling records,
+  PP-003, dashboards, commissioning, all spike DESIGN — plan/spec
+  authorship + seam design (never-delegate).
+- **Delegated:** s1 schema spike → GLM glm-5.2 (library de-risk + build +
+  run). **Field data (Phase-5 playbook):** opencode `run` auto-rejects
+  `cargo build` inside a nested cargo project that owns its own `.git`
+  (external_directory) — delegate cargo spikes IN-PLACE in the launch
+  cwd with `cargo init --vcs none .`, never a subdir.
 
 ## Next action
 
-Design + delegate s1 (schema-validate-at-seam) to GLM under live
-observation; in parallel read backend-claude-code env + initiative route
-for s3 seam design.
+Ф0 CLOSED. Executing Ф1 (D-C3-2, D-C3-3). Blast radius small: no external
+`BudgetSpec{}`/`OutputSpec{}`/`ContextSpec{}` literals exist (grep), so
+new `#[serde(default)]` fields touch only the `impl Default`s + the
+hello_glm golden snapshot (insta accept). Slice plan (each = one commit,
+floor green after each):
+- **Ф1.1** `ContextSpec.context_from: Vec<RunId>` (access-list; default [])
+  — IN PROGRESS
+- **Ф1.2** `OutputSpec.output_schema` (raw JSON string in dep-light core;
+  validated at pod/collect with jsonschema 0.47.0 + one retry)
+- **Ф1.3** `BudgetSpec` six axes + wall-clock (RD-4): depth /
+  per_agent_calls / per_call_token_ceiling / cumulative_tokens /
+  currency / global_calls (0 = unlimited holds)
+- **Ф1.4** D-C3-3 boundary behaviors per verb (MC + profiles)
+Floor runs = backgrounded cargo (opencode unreliable today, Ф0 field data).
