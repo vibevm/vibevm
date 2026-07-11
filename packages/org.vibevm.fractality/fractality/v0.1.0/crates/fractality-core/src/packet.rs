@@ -126,6 +126,15 @@ pub struct OutputSpec {
     /// `fractality/<run-id>` at spawn time when absent.
     #[serde(default)]
     pub branch: Option<String>,
+    /// D-C3-2: an optional JSON Schema (raw JSON text) the worker's
+    /// structured result is validated against at the collection seam,
+    /// with one retry-on-violation (Ф1.2b enforces it). Absent = no
+    /// schema gate. Kept as a string so dep-light core needs no JSON
+    /// parser; the pod — which already has the runtime — parses and
+    /// validates (jsonschema 0.47.0, Ф0 s1). The seam validates
+    /// format first, quality second (FD-15).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub output_schema: Option<String>,
 }
 
 impl Default for OutputSpec {
@@ -133,6 +142,7 @@ impl Default for OutputSpec {
         Self {
             result: default_result(),
             branch: None,
+            output_schema: None,
         }
     }
 }
@@ -334,6 +344,28 @@ mod tests {
         assert_eq!(
             p.context.context_from[0].to_string(),
             "01ARZ3NDEKTSV4RRFFQ69G5FAV"
+        );
+    }
+
+    /// D-C3-2: output_schema is optional (absent by default) and carries
+    /// raw JSON Schema text when present — the pod validates against it at
+    /// the collection seam (Ф1.2b).
+    #[test]
+    fn output_schema_is_optional_and_carries_raw_json() {
+        let p = Packet::from_toml_str(minimal_packet_toml()).expect("parses");
+        assert!(
+            p.output.output_schema.is_none(),
+            "no schema gate by default"
+        );
+
+        let text = format!(
+            "{}\n[output]\noutput_schema = '{{\"type\":\"object\"}}'\n",
+            minimal_packet_toml()
+        );
+        let p = Packet::from_toml_str(&text).expect("parses with output_schema");
+        assert_eq!(
+            p.output.output_schema.as_deref(),
+            Some("{\"type\":\"object\"}")
         );
     }
 }

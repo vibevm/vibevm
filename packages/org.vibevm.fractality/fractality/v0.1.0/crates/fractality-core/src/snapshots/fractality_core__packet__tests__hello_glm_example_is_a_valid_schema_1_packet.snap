@@ -22,6 +22,7 @@ Packet {
     output: OutputSpec {
         result: "result.md",
         branch: None,
+        output_schema: None,
     },
     budget: BudgetSpec {
         wall_secs: 300,
