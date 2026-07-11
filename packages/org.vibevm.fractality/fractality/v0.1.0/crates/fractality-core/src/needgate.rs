@@ -100,6 +100,14 @@ pub struct GateInputs {
     /// The depth cap from `delegation-rules` (0 = unlimited; default
     /// policy is 1 — depth 2 only behind the experimental flag).
     pub max_depth: u32,
+    /// Whether the caller's capability class may open a child tree at all
+    /// (the routing policy's `max_depth > 0`). The weak class carries a
+    /// policy cap of `0`, which on the *routing* axis means "no spawning";
+    /// but on `max_depth` `0` means "unlimited", so a no-spawn class must
+    /// be gated HERE, not through `max_depth`. Separating the two keeps
+    /// `decide` total: a no-spawn class folds its decomposable work
+    /// instead of opening a tree (resolves the D-C3-8 overload).
+    pub can_spawn: bool,
 }
 
 /// The fixed-order decision procedure (plan §10.3). Evaluate top-down;
@@ -150,6 +158,17 @@ pub fn decide(i: &GateInputs) -> Decision {
     //    cap. At the cap, force-execute in-context (fold-local) rather
     //    than opening a deeper tree (D-C3-3 at-cap boundary).
     if i.decomposable {
+        // A class that may not spawn (routing policy cap 0 → can_spawn
+        // false) never opens a tree: its decomposable work folds into the
+        // caller. This is where the weak class is kept off spawning roots
+        // (D-C3-10); `max_depth` cannot express it, since `0` there means
+        // unlimited, not "no spawning".
+        if !i.can_spawn {
+            return Decision::new(
+                Verdict::FoldLocal,
+                "decomposable but this class may not spawn a tree — fold into the caller",
+            );
+        }
         let at_cap = i.max_depth != 0 && i.depth >= i.max_depth;
         return if at_cap {
             Decision::new(
@@ -188,6 +207,7 @@ mod tests {
             decomposable: false,
             depth: 0,
             max_depth: 1,
+            can_spawn: true,
         }
     }
 
@@ -263,6 +283,23 @@ mod tests {
             ..base()
         };
         assert_eq!(decide(&i).verdict, Verdict::Spawn);
+    }
+
+    /// A class that may not spawn (`can_spawn = false` — the weak class's
+    /// routing cap of 0) folds its decomposable work rather than opening a
+    /// tree. The `max_depth = 0` overload ("unlimited" on that axis) must
+    /// NOT win here: the `can_spawn` gate keeps the weak class off
+    /// spawning roots (D-C3-8 overload resolution).
+    #[test]
+    fn a_no_spawn_class_folds_instead_of_spawning() {
+        let i = GateInputs {
+            decomposable: true,
+            can_spawn: false,
+            max_depth: 0,
+            depth: 0,
+            ..base()
+        };
+        assert_eq!(decide(&i).verdict, Verdict::FoldLocal);
     }
 
     #[test]

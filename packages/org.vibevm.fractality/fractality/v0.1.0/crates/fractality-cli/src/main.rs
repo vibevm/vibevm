@@ -13,6 +13,7 @@
 mod boss;
 mod broker;
 mod fetch;
+mod gate_cmd;
 mod harness;
 mod hook;
 mod mc_cmd;
@@ -184,6 +185,42 @@ enum Cmd {
         #[arg(long)]
         json: bool,
     },
+    /// Run the need-gate decision procedure (D-C3-8) on a task's signals
+    /// and a candidate worker's capability class; print the verdict —
+    /// inline | route | fold-local | spawn | escalate — and its reason.
+    /// Pure calculus, no daemon. Exit: 0 decided, 2 bad class.
+    Gate {
+        /// Candidate worker capability class: weak | medium | strong.
+        #[arg(long, value_name = "CLASS")]
+        class: String,
+        /// The caller's current nesting depth.
+        #[arg(long, default_value_t = 0)]
+        depth: u32,
+        /// The task is an O(1) lookup / single fact.
+        #[arg(long)]
+        o1_lookup: bool,
+        /// The (O(1)) task needs a tool the boss lacks.
+        #[arg(long)]
+        needs_absent_tool: bool,
+        /// Task + context fit the worker window with >=30% margin.
+        #[arg(long)]
+        fits_window: bool,
+        /// The task draws on a single skill.
+        #[arg(long)]
+        single_skill: bool,
+        /// Cross-chunk dependence dominates (Silo regime).
+        #[arg(long)]
+        cross_chunk_dominant: bool,
+        /// A largest-window profile is available for a Silo route.
+        #[arg(long)]
+        large_window_available: bool,
+        /// Decomposable into composable sub-results.
+        #[arg(long)]
+        decomposable: bool,
+        /// Machine-readable output.
+        #[arg(long)]
+        json: bool,
+    },
     /// Score a task on the delegation matrix's four axes and print the
     /// verdict (the §verdict procedure as data). Exit: 0 delegate,
     /// 1 keep, 2 bad axes.
@@ -291,6 +328,29 @@ async fn main() -> std::process::ExitCode {
             SessionCmd::Show { id, json } => session::show(&home, &id, json).await,
             SessionCmd::Ls { open, json } => session::ls(&home, open, json).await,
         },
+        Cmd::Gate {
+            class,
+            depth,
+            o1_lookup,
+            needs_absent_tool,
+            fits_window,
+            single_skill,
+            cross_chunk_dominant,
+            large_window_available,
+            decomposable,
+            json,
+        } => gate_cmd::gate(
+            &class,
+            depth,
+            o1_lookup,
+            needs_absent_tool,
+            fits_window,
+            single_skill,
+            cross_chunk_dominant,
+            large_window_available,
+            decomposable,
+            json,
+        ),
         Cmd::Route {
             error_cost,
             context,
