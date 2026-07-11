@@ -126,9 +126,12 @@ pub(crate) async fn spawn(
 }
 
 /// `fractality run --packet <file>`: the sync delegation loop (D13) —
-/// register + spawn, then block to a terminal state and print the
-/// one-screen summary. Lives with the other run verbs (D13) rather than
-/// in `main`, which stays dispatch-only (the file-budget seam).
+/// register + spawn, block to a terminal state, print the one-screen
+/// summary. On an `output_schema` violation it re-dispatches ONCE with the
+/// violation report folded into the retry's context (D-C3-2 retry-on-
+/// violation, deferred here from Ф1.2b): the need-gate's re-spawn at the
+/// sync orchestration layer. Lives with the other run verbs rather than in
+/// `main`, which stays dispatch-only.
 pub(crate) async fn run_packet(
     home: &camino::Utf8Path,
     packet_path: &camino::Utf8Path,
@@ -155,8 +158,64 @@ pub(crate) async fn run_packet(
         Ok(p) => p,
         Err((code, message)) => return fail_code(code, &message),
     };
+
+    let overall = std::time::Instant::now();
+    let first = match run_once(&client, packet.clone(), parent, wait_cap).await {
+        Ok(r) => r,
+        Err(code) => return code,
+    };
+    // Retry-on-violation (D-C3-2): a single re-dispatch when the result
+    // failed its output_schema gate, with the violations folded into the
+    // retry's context notes. Checked only on the FIRST attempt, so the
+    // retry runs at most once — its own result stands whatever it is.
+    let final_run = match retry_report(&first.run_dir) {
+        Some(report) => {
+            eprintln!(
+                "run {} failed its output_schema gate; re-dispatching once with the violation report",
+                first.run_id
+            );
+            let mut retry = packet;
+            let prior = retry.context.notes.take().unwrap_or_default();
+            retry.context.notes = Some(
+                format!(
+                    "{prior}\n\n[fractality retry] the prior attempt's result failed \
+                     output_schema validation — fix these and return a conforming result:\n{report}"
+                )
+                .trim()
+                .to_owned(),
+            );
+            match run_once(&client, retry, parent, wait_cap).await {
+                Ok(r) => r,
+                Err(code) => return code,
+            }
+        }
+        None => first,
+    };
+
+    if json {
+        println!(
+            "{}",
+            serde_json::to_string_pretty(&final_run)
+                .unwrap_or_else(|e| format!("{{\"error\":\"json: {e}\"}}"))
+        );
+    } else {
+        out::print_run_summary(&final_run, overall.elapsed());
+    }
+    state_code(&final_run)
+}
+
+/// One register-spawn-and-wait cycle: registers the packet as a spawn,
+/// blocks to a terminal state, and returns the settled record. Early exits
+/// — parked past budget, wall-budget overrun, transport fault — come back
+/// as `Err(exit_code)`, already printed.
+async fn run_once(
+    client: &McClient,
+    packet: fractality_core::Packet,
+    parent: Option<fractality_core::ids::RunId>,
+    wait_cap: std::time::Duration,
+) -> Result<RunRecord, u8> {
     let started = std::time::Instant::now();
-    let run = match client
+    let run = client
         .register_run(&fractality_core::api::RegisterRunRequest {
             packet,
             parent,
@@ -164,17 +223,19 @@ pub(crate) async fn run_packet(
             origin_session: origin_session_from_env(),
         })
         .await
-    {
-        Ok(r) => r,
-        Err(e) => return fail_code(err_code(&e), &e.to_string()),
-    };
+        .map_err(|e| fail_code(err_code(&e), &e.to_string()))?;
     eprintln!("run {} spawned (dir {})", run.run_id, run.run_dir);
 
     let mut parked_notice = false;
-    let final_run = loop {
+    loop {
         tokio::time::sleep(std::time::Duration::from_millis(500)).await;
         match client.run(run.run_id).await {
-            Ok(r) if r.state.is_terminal() => break r,
+            Ok(r) if r.state.is_terminal() => {
+                if parked_notice {
+                    eprintln!("run {} resumed and finished", run.run_id);
+                }
+                return Ok(r);
+            }
             Ok(r) if r.state == RunState::WaitingOnBoss => {
                 if !parked_notice {
                     parked_notice = true;
@@ -188,18 +249,18 @@ pub(crate) async fn run_packet(
                 if started.elapsed() > wait_cap {
                     // D17 exit family 4: parked past its wait — the run
                     // stays alive for a later answer; this loop stops.
-                    return fail_code(
+                    return Err(fail_code(
                         4,
                         &format!(
                             "run {} is still parked on its question past the wall budget; \
                              it keeps waiting — `fractality questions` to triage",
                             run.run_id
                         ),
-                    );
+                    ));
                 }
             }
             Ok(_) if started.elapsed() > wait_cap => {
-                return fail_code(
+                return Err(fail_code(
                     EXIT_INFRA,
                     &format!(
                         "run {} outlived its wall budget plus grace and is still not \
@@ -207,26 +268,37 @@ pub(crate) async fn run_packet(
                          inspect with `fractality show {}` and `mc.log`",
                         run.run_id, run.run_id
                     ),
-                );
+                ));
             }
             Ok(_) => continue,
-            Err(e) => return fail_code(err_code(&e), &e.to_string()),
+            Err(e) => return Err(fail_code(err_code(&e), &e.to_string())),
         }
-    };
-    if parked_notice {
-        eprintln!("run {} resumed and finished", run.run_id);
     }
+}
 
-    if json {
-        println!(
-            "{}",
-            serde_json::to_string_pretty(&final_run)
-                .unwrap_or_else(|e| format!("{{\"error\":\"json: {e}\"}}"))
-        );
+/// The output_schema violation report for a finished run, read from its
+/// run dir's `status.json` (Ф1.2b writes the `schema_gate` there). `Some`
+/// only when the gate was checked AND failed; `None` when it passed, was
+/// not checked (no schema ⇒ no retry), or the file is unreadable.
+fn retry_report(run_dir: &camino::Utf8Path) -> Option<String> {
+    let text = std::fs::read_to_string(run_dir.join("status.json").as_std_path()).ok()?;
+    let doc: serde_json::Value = serde_json::from_str(&text).ok()?;
+    let gate = doc.get("schema_gate")?;
+    if gate.get("checked")?.as_bool()? && !gate.get("valid")?.as_bool()? {
+        let violations = gate
+            .get("violations")
+            .and_then(|v| v.as_array())
+            .map(|arr| {
+                arr.iter()
+                    .filter_map(|s| s.as_str())
+                    .collect::<Vec<_>>()
+                    .join("\n")
+            })
+            .unwrap_or_default();
+        Some(violations)
     } else {
-        out::print_run_summary(&final_run, started.elapsed());
+        None
     }
-    state_code(&final_run)
 }
 
 /// `fractality wait <id>…`: shell-wait semantics (D13/D17). The descent
@@ -414,5 +486,58 @@ pub(crate) async fn kill(home: &camino::Utf8Path, raw_id: &str, tree: bool) -> u
             if root_killed { EXIT_OK } else { EXIT_NEGATIVE }
         }
         Err(e) => fail_code(err_code(&e), &e.to_string()),
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn scratch() -> camino::Utf8PathBuf {
+        let dir = std::env::temp_dir().join(format!("fractality-retry-{}", std::process::id()));
+        std::fs::create_dir_all(&dir).expect("mkdir");
+        camino::Utf8PathBuf::from_path_buf(dir).expect("utf-8 temp dir")
+    }
+
+    fn write_status(dir: &camino::Utf8Path, body: &str) {
+        std::fs::write(dir.join("status.json").as_std_path(), body).expect("write status.json");
+    }
+
+    #[test]
+    fn retry_report_fires_only_on_a_checked_failed_gate() {
+        let dir = scratch();
+
+        // Checked + failed → the violations come back for the retry.
+        write_status(
+            &dir,
+            r#"{"schema_gate":{"checked":true,"valid":false,"violations":["at /x: missing"]}}"#,
+        );
+        assert_eq!(retry_report(&dir).as_deref(), Some("at /x: missing"));
+
+        // Checked + passed → no retry.
+        write_status(
+            &dir,
+            r#"{"schema_gate":{"checked":true,"valid":true,"violations":[]}}"#,
+        );
+        assert!(retry_report(&dir).is_none(), "a passing gate never retries");
+
+        // No gate (packet had no output_schema) → no retry.
+        write_status(
+            &dir,
+            r#"{"schema_gate":{"checked":false,"valid":true,"violations":[]}}"#,
+        );
+        assert!(
+            retry_report(&dir).is_none(),
+            "an unchecked gate never retries"
+        );
+
+        // Missing status.json → no retry, never a panic.
+        std::fs::remove_file(dir.join("status.json").as_std_path()).ok();
+        assert!(
+            retry_report(&dir).is_none(),
+            "a missing status file never retries"
+        );
+
+        std::fs::remove_dir_all(dir.as_std_path()).ok();
     }
 }
