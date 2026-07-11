@@ -5,10 +5,11 @@
 use fractality_core::ids::{PodId, RunId};
 use fractality_core::journal::Event;
 use fractality_core::packet::{BudgetSpec, WorkspaceMode};
+use fractality_core::profile::{Profile, ProfilesFile};
 use fractality_core::routing::{CapabilityClass, RoutingPolicy};
 use fractality_core::run::{KillReason, RunRecord, RunState, UsageTotals};
 use fractality_mission_control::Config;
-use fractality_mission_control::admission::check_spawn_depth;
+use fractality_mission_control::admission::{check_spawn_depth, token_present, usable_profiles};
 use fractality_mission_control::state::{AppState, PodRuntime};
 
 fn record(id: &str, profile: &str, spawn: bool, parent: Option<RunId>) -> RunRecord {
@@ -366,6 +367,72 @@ fn decisions_journal_records_and_replays() {
     assert_eq!(back.len(), 2, "both decisions replay from the stem");
     assert_eq!(back[0], record);
     assert_eq!(back[0].verdict, fractality_core::Verdict::Spawn);
+
+    std::fs::remove_dir_all(home.as_std_path()).ok();
+}
+
+/// Builds a valid single-profile file with the given token path and hands
+/// back the `Profile` — for the availability-masking checks.
+fn profile_with_token(token_file: &str) -> Profile {
+    ProfilesFile::from_toml_str(&format!(
+        "schema = 1\n[profile.p]\nbackend = \"claude-code\"\nbase_url = \"http://gw\"\n\
+         token_file = \"{token_file}\"\n[profile.p.models]\nbig = \"m\"\nsmall = \"m\"\n\
+         haiku_slot = \"m\"\n"
+    ))
+    .expect("profile parses")
+    .get("p")
+    .expect("profile p exists")
+    .clone()
+}
+
+/// Availability masking (FD-8) turns on the token file's presence: a
+/// profile with its credential on disk is usable, one without is not.
+#[test]
+fn token_present_reflects_the_credential_file() {
+    let dir = std::env::temp_dir().join(format!("fractality-tokmask-{}", std::process::id()));
+    std::fs::create_dir_all(&dir).expect("mkdir");
+    let home = camino::Utf8PathBuf::from_path_buf(dir.clone()).expect("utf-8 temp dir");
+
+    let tok = home.join("present.token");
+    std::fs::write(tok.as_std_path(), "secret").expect("write token");
+    let with = profile_with_token(&tok.as_str().replace('\\', "/"));
+    assert!(
+        token_present(&with, &home),
+        "an existing token file is present"
+    );
+
+    let without = profile_with_token(&home.join("missing.token").as_str().replace('\\', "/"));
+    assert!(
+        !token_present(&without, &home),
+        "a missing token file is not present"
+    );
+
+    std::fs::remove_dir_all(&dir).ok();
+}
+
+/// `usable_profiles` masks the registry to profiles whose credential is on
+/// disk (FD-8): a router considers only these.
+#[test]
+fn usable_profiles_masks_to_present_credentials() {
+    let (state, home) = scratch_state("usable");
+    let tok = home.join("has.token");
+    std::fs::write(tok.as_std_path(), "secret").expect("write token");
+    let profiles = format!(
+        "schema = 1\n\
+         [profile.has]\nbackend = \"claude-code\"\nbase_url = \"http://gw\"\n\
+         token_file = \"{}\"\n[profile.has.models]\nbig = \"m\"\nsmall = \"m\"\nhaiku_slot = \"m\"\n\
+         [profile.nope]\nbackend = \"claude-code\"\nbase_url = \"http://gw\"\n\
+         token_file = \"{}\"\n[profile.nope.models]\nbig = \"m\"\nsmall = \"m\"\nhaiku_slot = \"m\"\n",
+        tok.as_str().replace('\\', "/"),
+        home.join("absent.token").as_str().replace('\\', "/"),
+    );
+    std::fs::write(home.join("profiles.toml").as_std_path(), profiles).expect("write profiles");
+
+    assert_eq!(
+        usable_profiles(&state),
+        vec!["has".to_string()],
+        "only the credentialed profile is usable"
+    );
 
     std::fs::remove_dir_all(home.as_std_path()).ok();
 }

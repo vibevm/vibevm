@@ -15,7 +15,7 @@ use camino::Utf8Path;
 use fractality_core::Packet;
 use fractality_core::ids::RunId;
 use fractality_core::journal::Event;
-use fractality_core::profile::ProfilesFile;
+use fractality_core::profile::{Profile, ProfilesFile};
 use fractality_core::routing::{CapabilityClass, RoutingPolicy};
 use fractality_core::run::RunRecord;
 
@@ -144,6 +144,35 @@ pub fn check_not_duplicate(state: &AppState, packet: &Packet, parent: RunId) -> 
         )),
         None => Ok(()),
     }
+}
+
+/// Whether a profile's bearer-token file is present — the availability
+/// signal for masking (FD-8). Mirrors the existence check [`preflight`]
+/// makes at the door, factored out so routing can consult it without
+/// re-validating the whole profile. `~` expands against the user home.
+pub fn token_present(profile: &Profile, user_home: &Utf8Path) -> bool {
+    let token = fractality_mc_client::home::expand_user(&profile.token_file, user_home);
+    token.as_std_path().is_file()
+}
+
+/// Availability masking (FD-8): the profiles currently usable for routing
+/// — those whose token file is present. A router considers ONLY these, so
+/// an absent-credential profile is excluded before scoring rather than
+/// dispatched-to and failed. Names come back in profiles.toml order; an
+/// unreadable profiles file or user home masks everything to empty.
+pub fn usable_profiles(state: &AppState) -> Vec<String> {
+    let Ok(profiles) = ProfilesFile::load(&state.cfg.home) else {
+        return Vec::new();
+    };
+    let Ok(user_home) = fractality_mc_client::home::user_home() else {
+        return Vec::new();
+    };
+    profiles
+        .profile
+        .iter()
+        .filter(|(_, p)| token_present(p, &user_home))
+        .map(|(name, _)| name.clone())
+        .collect()
 }
 
 /// One admission pass: launch queued runs while their profiles have free
