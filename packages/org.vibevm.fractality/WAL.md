@@ -1,91 +1,95 @@
 # fractality — WAL (project continuation state)
 
-_Updated: 2026-07-11 ~12:40 (**two research stages CLOSED + Stage B
-draft revised + executor handoff**, one long session: RLM research
-Stage A (waves → 15 sources → 11 notes → RD-1…21 → Stage B draft),
-Fugu research Stage A2 (anchors → 4 notes → FD-1…16 → mapping →
-3 changes + D-C3-10 into the draft), the postponed-work registry,
-the recursive-fabric VISION (V1–V5), and — the owner's farewell
-order — the §10 executor guide: **all further execution moves to
-Opus-class/cheaper models; Fable's implicit context is written
-down as law**. Prior: 2026-07-10 (Campaign 2 CLOSED, DEF-C2 slice
-landed)._
+_Updated: 2026-07-11 ~18:20 (**Campaign 3 Stage B EXECUTION underway —
+70%-context checkpoint**). One session: RP-C3-1 ruled (Option B),
+Ф0 spikes CLOSED (all seams green), Ф1.1 packet `context_from`
+LANDED floor-green. Paused at the 70%-context boundary per the
+owner's standing rule; next session resumes at Ф1.2. Prior:
+2026-07-11 earlier (two research stages closed + Stage B draft +
+executor guide)._
 
 ## Current state
 
-- **Campaign 3 · Stage A (RLM research): CLOSED.** Plan
-  `FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md`; P-R1…4 all CONFIRMED
-  (overlap exactly 60%). 11 notes + `RLM-SYNTHESIS.md` (RD-1…21)
-  in `spec/refs/notes/`; INVENTORY S10–S26.
-- **Campaign 3 · Stage A2 (Sakana Fugu): CLOSED.** Plan
-  `FRACTALITY-FUGU-RESEARCH-PLAN-v0.1.md`; P-F1 ✓, P-F2 NOT
-  EVALUATED (W1 deep-research stopped in the owner's token pause —
-  recorded deviation), P-F3 ✓, P-F4 ✓. 4 notes + `FUGU-SYNTHESIS.md`
-  (FD-1…16) + `FUGU-FRACTALITY-MAPPING.md`; INVENTORY S27–S30.
-  Headline: Fugu IS the fractality thesis shipped (10/11
-  benchmarks) minus our planes — runtime budgets/cost accounting,
-  transparency, escalation-to-human; its MRCRv2 loss argues FOR
-  the descent core.
-- **Stage B draft ready and revised:**
-  `spec/plans/FRACTALITY-RLM-PLAN-v0.1.md` — scope options A/B/C
-  (B recommended), D-C3-1…10 (Fugu revision: `route` verdict,
-  `context_from` access-lists, sibling isolation by default +
-  chosen merge profile + collapse probe, D-C3-10 routing policy
-  data), **§10 executor guide (BINDING for the executing
-  session)**. Execution gated on **RP-C3-1 (OPEN)**.
-- **Postponed registry live:** `plans/postponed.md` — PP-001
-  (rule RP5, fire MT-C2-05; recipe in the PP file), PP-002
-  (DEF-C2-2b credibility facts; weight raised by RD/FD synergies).
-- **VISION recorded:** `fractality/v0.1.0/spec/VISION-RECURSIVE-FABRIC.md`
-  — V1 promotion, V2 RLM, V3 escalation, V4 advisor ladder, V5
-  attachable terminals; §5 questions now carry field answers
-  (synthesis §4).
-- **Floor at checkpoint: green** — 164 tests, conform 0, specmap
-  **170 units** / 63 items / 63 edges / 0 orphans. Docs-only
-  session: zero product-code changes. Real `~/.fractality`
-  untouched.
-- Commit chain this session: `0af23db` PP registry → `fd05356`
-  vision → `73035b2` V5 → `82dc31c`+`12f02da` Stage A plan+launch
-  → `a4c9611` Ф2 → `4e2cfde` Ф3 → `47a95a6`/`0bd4d7d`/`6c4ca62`
-  Ф4 → `c1cf57a` Ф5+draft → `f22a1fa` A close → `1852fb6` A2 plan
-  → `c9bfdf1` A2 intake+notes → `d0cf6e9` A2 synthesis+mapping+
-  revision → `2c5bbdf` A2 close → `4ccb7af` executor guide →
-  wind-down commit.
+- **Stage B COMMISSIONED — Option B (descent + ascent).** RP-C3-1
+  ruled 2026-07-11 (owner: «Вариант 1. Вариант плана - B … Вариант
+  C с адвайзором - отдельная задача, запланируй»). Recorded in plan
+  §1, §8. Advisor (Option C / V4) postponed → **PP-003**.
+- **Goal (owner, standing):** «довести кампанию 3 … рабочий RLM со
+  всеми паттернами … сделай это всё» — the WHOLE Stage B plan
+  (Ф0→Ф7). **70%-context rule:** at ~70% consumed, checkpoint and
+  ask for a restart (this checkpoint is exactly that).
+- **Ф0 spikes CLOSED** (no commits; report
+  `reports/2026-11-07-18-12-campaign3-f0-spikes.md`). s1
+  schema-validate ran green: **jsonschema 0.47.0 compiles on rustc
+  1.93.1**, validates, violation shape `at <JSON-Pointer>:
+  <message>` (API: `validator_for` → `is_valid`/`iter_errors` +
+  `err.instance_path()`). s2 (FileRef slice), s3 (settings-injection
+  promotion), s4 (escalated-outcome) green by inspection/design — all
+  compose from existing machinery.
+- **Ф1.1 LANDED** (`35a378c`): `ContextSpec.context_from: Vec<RunId>`
+  — the D-C3-2 access-list (isolation-by-default; only named results
+  cross; fold law). `#[serde(default)]`, schema stays 1, golden
+  snapshot + specmap re-minted in-commit.
+- **Floor green:** 165 tests / conform 0 / specmap **170 units / 63
+  items / 63 edges / 0 orphans**. Real `~/.fractality` untouched.
+- **Live tracker:** `reports/2026-11-07-17-52-rlmplan-state-plan.md`
+  (goal, 70%-rule, seam reconnaissance, slice plan, delegation
+  scoreboard). Started dashboard:
+  `reports/2026-11-07-16-56-rlmplan-started-plan.md`. Paused
+  dashboard added this checkpoint.
+- Session commit chain: `c3039c0` commission → `3b71d9d` PP-003 →
+  `0255c9d` started-dashboard → `db1e0d1` state-plan → `c1151bb` Ф0
+  close → `35a378c` Ф1.1 → checkpoint commits.
+
+## Next (resume here, Ф1.2 first)
+
+Reading order for the resuming session: workspace `CLAUDE.md` → this
+WAL → `CONTINUE.md` → the paused-plan dashboard
+(`…-rlmplan-paused-plan.md`) → the live state-plan tracker (has the
+seam reconnaissance so you need not re-read the crates) → plan §10
+(BINDING). Then continue the slice plan:
+
+1. **Ф1.2** `OutputSpec.output_schema` (raw JSON string in dep-light
+   core) + validation at the pod/collect seam (add jsonschema 0.47.0
+   to `fractality-pod`, `validator_for`/`iter_errors`) + **one
+   retry-on-violation** (pod re-invokes the worker once with the
+   violation report appended — scope carefully; the re-invoke touches
+   pod/supervise, not yet read).
+2. **Ф1.3** `BudgetSpec` six axes + wall-clock (RD-4): depth /
+   per_agent_calls / per_call_token_ceiling / cumulative_tokens /
+   currency / global_calls (0 = unlimited convention holds).
+3. **Ф1.4** D-C3-3 boundary behaviors per verb (MC + profiles).
+4. Then Ф2 (need-gate + delegation-rules own workspace) … Ф7.
+   Task list #2–#8 mirrors the phases.
+
+Each slice = one commit, floor green after each (specmap re-mint
+in-commit on line-number drift). **Floor/test runs = backgrounded
+cargo** (opencode unreliable today — see below).
 
 ## Constraints (do not violate without discussion)
 
-- Host Rules 1–4; delegation law + live-observation (now with
-  **first-output timeout ≤3 min** — two silent-stall strikes on
-  record); clean-room law (**executors: never open refs/src or
-  papers during implementation — Stage B plan §10.4**); I1/I2/I3;
-  D7 factual surfaces; no Python in shipped code; cwd law; commit
-  heredoc; editor-tool edits; specmap re-mint law; scratch homes;
-  no `*install*` test binaries; F15 (stop MC before builds).
-- **Stage B plan §10 is binding reading for any executing
-  session** — it overrides executor judgment, the owner overrides
-  it.
-- MT-C2-05 stays RP5-gated; MT-C3-01 (Stage B) needs its own
-  pre-registration; firing order = part of RP-C3-1.
+- Host Rules 1–4; **plan §10 executor guide is BINDING**; clean-room
+  §10.4 (never open refs/src|papers|articles while coding); delegation
+  law + live-observation (first-output ≤3 min); I1–I7; no Python in
+  shipped code; cwd law; commit heredoc; editor-tool edits; specmap
+  re-mint law; scratch homes; no `*install*` test binaries; F15 (stop
+  MC before builds).
+- **Ф6 paid trial arms HARD-STOP:** fire only after MT-C3-01
+  pre-registration is committed AND owner's verbatim RP-C3-2 word +
+  budget (§10.7, no exceptions). MT-C2-05 stays RP5-gated (unruled) —
+  MT-C3-01 is this campaign's first trial.
 - Fugu benchmark numbers are Sakana-reported — mechanism evidence
-  only, never absolutes.
+  only.
 
-## Delegation scoreboard (session total)
+## Delegation scoreboard (session)
 
-Delegated 8: the deep-research workflow (103 agents — Stage A W1),
-5 GLM repo/article surveys + 2 relaunches (Stage A Ф4), 1 GLM
-OpenFugu survey (Stage A2). Kept with cause: all papers
-(judgment), every note/synthesis/mapping/plan (never-delegate
-set), spot-checks, both W2 waves (search+triage tooling lives
-boss-side). Field data: opencode delegates stall silently at
-launch (~0-byte logs ≥14 min) — kill-and-relaunch cures; stall
-watchdog needs first-OUTPUT timeout, not just mid-run silence.
-
-## Next (candidates for the owner — executor is Opus now)
-
-1. **Rule RP-C3-1** — commission Stage B from the revised draft
-   (scope A / B-recommended / C; budget; timing; MT firing
-   order). The executing session starts at plan §10.1's reading
-   order.
-2. **Rule RP5** — fire MT-C2-05 per PP-001's recipe.
-3. Anything else: `plans/postponed.md` + INITIATIVE §15 hold the
-   deferrals.
+Delegated 1 (attempted): s1 schema spike → opencode/GLM glm-5.2.
+**FAILED twice** — external_directory reject on a nested cargo
+project, then a silent launch stall (7 min, 0 artifacts). Killed per
+the live-observation law; s1 done boss-side. **Field data (Phase-5):**
+opencode is unreliable for cargo spikes on this box today; use
+in-place `cargo init --vcs none .` if retried, and prefer backgrounded
+cargo for floor/test runs (reliable notification path). Kept
+(boss): all seam reconnaissance + design + every doc (architecture /
+plan authorship — never-delegate) — appropriate, since Ф1+ code is
+discipline-bound seam work.

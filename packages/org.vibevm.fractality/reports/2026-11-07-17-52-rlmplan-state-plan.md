@@ -4,7 +4,8 @@ _Campaign 3 Stage B execution tracker. Updated in place between status
 documents (big-plan dashboard rule — bulk stays out of status files).
 Source of truth is the spec tree (plan, syntheses, WAL); this is the
 owner-facing surface + the agent's own quick tracker. Last updated:
-2026-07-11 17:52._
+2026-07-11 18:20 (70%-context checkpoint — Ф1.1 landed, paused for
+restart)._
 
 ## Goal & operating contract (owner, 2026-07-11)
 
@@ -119,7 +120,7 @@ new `#[serde(default)]` fields touch only the `impl Default`s + the
 hello_glm golden snapshot (insta accept). Slice plan (each = one commit,
 floor green after each):
 - **Ф1.1** `ContextSpec.context_from: Vec<RunId>` (access-list; default [])
-  — IN PROGRESS
+  — ✅ LANDED (`35a378c`, floor green 165/0, specmap 170/63/63/0)
 - **Ф1.2** `OutputSpec.output_schema` (raw JSON string in dep-light core;
   validated at pod/collect with jsonschema 0.47.0 + one retry)
 - **Ф1.3** `BudgetSpec` six axes + wall-clock (RD-4): depth /
