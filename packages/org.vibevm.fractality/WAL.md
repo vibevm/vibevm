@@ -1,11 +1,13 @@
 # fractality — WAL (project continuation state)
 
-_Updated: 2026-07-11 ~19:20 (**Campaign 3 Stage B — Ф0, Ф1, Ф2
-COMPLETE; the need-gate decision core is in**). One long session:
-RP-C3-1 ruled Option B, Ф0 spikes closed, Ф1 (D-C3-2 packet + budget
-surface) landed, Ф2 (D-C3-1 need-gate + D-C3-10 routing policy)
-landed — all floor-green. Next is Ф3 (descent verbs + the gate
-wiring). ~23 commits, pushed to both remotes._
+_Updated: 2026-07-12 ~00:35 (**Campaign 3 Stage B — Ф3 IN PROGRESS:
+the gate now has teeth and a caller**). Ф0/Ф1/Ф2 CLOSED (the need-gate
+decision core). Ф3 so far, each floor-green + committed + ledgered:
+**Ф3.1** spawn depth-guard — D-C3-3 enforcement (`b23f3f1`); **Ф3.2a**
+`fractality gate` invocation — D-C3-8 (`3b0b2d2`), which also resolved
+the `max_depth=0` overload via `GateInputs.can_spawn` (routing 0=no-spawn
+vs need-gate 0=unlimited). Next: Ф3.2b decision journal, then the descent
+verbs (await) + masking. Per-slice status in the state-plan tracker._
 
 ## Current state
 
@@ -39,29 +41,45 @@ wiring). ~23 commits, pushed to both remotes._
   re-read; per-slice status; delegation scoreboard). §9 ledger in the
   plan is the commit map + scoping decisions.
 
-## Next — Ф3 (descent verbs + gate wiring)
+## Next — Ф3 (descent verbs + gate wiring) — IN PROGRESS
 
 Reading order to resume: workspace `CLAUDE.md` → this WAL → `CONTINUE.md`
-→ the state-plan tracker (carries the seam map) → plan §10 (BINDING) +
-§9 (ledger + deferrals). Then Ф3:
+→ the state-plan tracker (carries the seam map + per-slice status) →
+plan §10 (BINDING) + §9 (ledger + deferrals). **Done this session:**
+Ф3.1 depth-guard (`b23f3f1`), Ф3.2a gate invocation + `can_spawn`
+overload fix (`3b0b2d2`) — both floor-green. Remaining Ф3:
 
-1. **Descent verbs (D-C3-4, D-C3-5):** `await any|all|named` in
-   mc-client + CLI; parallel siblings the default idiom; mid-task
-   profile alternation; **sibling isolation by default** (visibility
-   only via `context_from`); a designated **merge node** answering the
-   parent goal; MC refuses near-duplicate child specs; single-writer.
-2. **The deferred gate wiring (§9):** a `fractality gate` invocation
-   surface + journal the decision tuple (D-C3-8); admission's
-   spawn-past-cap **depth-guard enforcement** (D-C3-3, using
-   `budget.max_depth` + the routing policy); **availability masking**
-   (FD-8, route over usable profiles); retry-on-violation re-dispatch.
-3. **To read for Ф3** (not yet read): mc `admission.rs`, `http.rs`,
-   `registry.rs`, `journal_store.rs`, `state.rs`; `mc-client/lib.rs`;
-   cli `mc_cmd.rs`, `swarm.rs`, `broker.rs`. Core already mapped.
+1. **Ф3.2b decision journal (D-C3-8, next):** journal the decision tuple
+   for the soft-label table. Design found this session: a **separate
+   journal stem** (like the session journal — `open_stem`/`replay_stem`
+   in `state.rs`), NOT the run fold (a gate decision may have no run).
+   **Open Q:** WHERE decisions are recorded — the offline `gate` CLI only
+   prints (like `route`), so capture at the spawn/route action point in
+   MC, or add `POST /v0/decisions`. Read `journal_store.rs` +
+   `http_sessions.rs` (the session-stem precedent) first.
+2. **Descent verbs (D-C3-4, D-C3-5):** `await any|all|named` in
+   mc-client + CLI — **NB `fractality wait` already blocks on all ids
+   (`swarm::wait`); extend it** with any/named; parallel siblings the
+   default idiom; **sibling isolation by default** (visibility only via
+   `context_from`); a designated **merge node**; MC refuses near-
+   duplicate child specs; single-writer.
+3. **Availability masking (FD-8):** route over usable profiles (token
+   present). **NB dead-surface risk:** today packets name their profile
+   and `preflight` already checks the token exists; masking needs a
+   multi-profile *router* seam to consume it — build that consumer first
+   or defer.
+4. **retry-on-violation re-dispatch** (deferred from Ф1.2b §9).
+
+**Still to read** (the deferred delegate failed — silent stall):
+`mc-client/lib.rs`, cli `swarm.rs`/`mc_cmd.rs`/`broker.rs`, mc
+`registry.rs`. Core + `admission.rs`/`http.rs`/`state.rs`/`journal.rs`
+read this session.
 
 Each slice = one commit, floor green after each; specmap re-mint
-in-commit on drift. **Floor/test runs = backgrounded cargo** (opencode
-unreliable this session).
+in-commit on drift. **Floor/test runs = backgrounded cargo, NO stdout
+redirect** (the harness captures the task output file; a `> log` steals
+it — lesson this session). opencode delegation stays unreliable this
+session (read-inventory attempt stalled silently).
 
 ## Constraints (do not violate without discussion)
 
