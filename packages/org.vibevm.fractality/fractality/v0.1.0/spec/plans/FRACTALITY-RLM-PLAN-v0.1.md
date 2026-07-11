@@ -215,6 +215,9 @@ Commit map (Stage B execution, Campaign 3):
 - Ф1.2a packet `output_schema` field (`d91780d`).
 - Ф1.2b output_schema validation at the collect seam (`12b9824`).
 - Ф1.3 budget lattice — six axes + wall-clock (`19c33e9`).
+- Ф2.1 need-gate decision procedure (`5adcceb`).
+- Ф2.2 routing policy — capability-class table (`011ef6c`).
+- Ф2.3 profile capability_class (`14f97b8`).
 
 **Scoping decision — retry-on-violation (D-C3-2).** The validation seam
 produces the retry-feedback report (Ф1.2b), but the automatic one-retry
@@ -237,6 +240,16 @@ alongside the need-gate and the depth guard, checking against the
 budget lattice (Ф1.3) it now has. Ф1 closes having shipped D-C3-2 —
 the packet + budget surface (`context_from`, `output_schema`, the
 six-axis lattice).
+
+**Scoping decision — need-gate WIRING → Ф3.** Ф2 shipped the gate's
+decision machinery: the procedure (`needgate::decide`, §10.3), the
+capability-class routing policy (data in delegation-rules + the compiled
+default), and profile-declares-class — with goldens (§6). The gate's
+INVOCATION (a `fractality gate` CLI surface + journaling the decision
+tuple, D-C3-8), its ENFORCEMENT (admission's spawn-past-cap depth guard —
+the D-C3-3 boundary), and availability masking (FD-8) land in Ф3, where
+the spawn/route verbs actually USE the gate. The gate is a pure, tested
+library now; Ф3 gives it a caller and teeth.
 
 ## 10. Executor's guide — read this before any code {#executor-guide}
 
