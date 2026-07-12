@@ -183,7 +183,7 @@ impl ResolvedGraph {
 /// ).unwrap();
 /// let provider = OnePackage(m);
 /// let picked = provider
-///     .resolve_version(&PackageRef::parse("org.vibevm.world/wal").unwrap())
+///     .resolve_version(&PackageRef::parse("org.vibevm/wal").unwrap())
 ///     .unwrap();
 /// assert_eq!(picked, semver::Version::parse("0.1.0").unwrap());
 /// ```
@@ -277,7 +277,7 @@ pub trait VersionEnumerator: DepProvider {
 /// ).unwrap();
 /// let solver = NaiveDepSolver::new(OnePackage(m));
 /// let graph = solver
-///     .solve(&[PackageRef::parse("org.vibevm.world/wal").unwrap()])
+///     .solve(&[PackageRef::parse("org.vibevm/wal").unwrap()])
 ///     .unwrap();
 /// assert_eq!(graph.packages.len(), 1);
 /// assert!(graph.packages[0].is_root);
@@ -374,11 +374,11 @@ pub enum DepProviderError {
 /// use vibe_resolver::SolveError;
 ///
 /// let err = SolveError::VersionConflict {
-///     package: "org.vibevm.world/wal".to_string(),
+///     package: "org.vibevm/wal".to_string(),
 ///     existing: "0.1.0".to_string(),
 ///     new_constraint: "^0.2".to_string(),
 /// };
-/// assert!(err.to_string().contains("version conflict on `org.vibevm.world/wal`"));
+/// assert!(err.to_string().contains("version conflict on `org.vibevm/wal`"));
 /// assert!(err.to_string().contains("[[override]]"));
 /// ```
 #[derive(Debug, Error)]

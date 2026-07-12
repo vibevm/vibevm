@@ -474,7 +474,7 @@ capabilities = ["ui:landing-page@0.3.0"]
 capabilities = ["db:any@>=1.0"]
 
 [requires.packages]
-"org.vibevm.world/wal" = "^0.1"
+"org.vibevm/wal" = "^0.1"
 
 [boot_snippet]
 source = "boot/10-feat-welcome.md"
@@ -521,7 +521,7 @@ link = "static"
         "ui:landing-page@^0.3.0"
     );
     // The modern `[requires.packages]` table flattens to a pkgref string.
-    assert_eq!(entry["requires"]["packages"][0], "org.vibevm.world/wal@^0.1");
+    assert_eq!(entry["requires"]["packages"][0], "org.vibevm/wal@^0.1");
     assert_eq!(entry["requires"]["capabilities"][0], "db:any@>=1.0");
     // `[boot_snippet]` is recorded with `source` + `category` — the M1.18
     // loading model retired the pre-de-rot `filename`.

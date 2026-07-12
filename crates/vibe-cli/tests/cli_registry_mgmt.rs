@@ -71,7 +71,7 @@ category = "flow"
     fs::write(src.join("spec/flows/wal/B.md"), "v1 B\n").unwrap();
     fs::write(src.join("boot/10-flow-wal.md"), "v1 boot\n").unwrap();
     run_git(&src, &["add", "-A"]);
-    run_git(&src, &["commit", "-m", "org.vibevm.world/wal@0.1.0"]);
+    run_git(&src, &["commit", "-m", "org.vibevm/wal@0.1.0"]);
     run_git(&src, &["tag", "v0.1.0"]);
 
     // v0.2.0: A modified, B removed, C added, boot unchanged.
@@ -90,7 +90,7 @@ category = "flow"
     fs::write(src.join("spec/flows/wal/C.md"), "v2 C\n").unwrap();
     fs::remove_file(src.join("spec/flows/wal/B.md")).unwrap();
     run_git(&src, &["add", "-A"]);
-    run_git(&src, &["commit", "-m", "org.vibevm.world/wal@0.2.0"]);
+    run_git(&src, &["commit", "-m", "org.vibevm/wal@0.2.0"]);
     run_git(&src, &["tag", "v0.2.0"]);
 
     let bare = root.join("org.vibevm.wal.git");
@@ -138,7 +138,7 @@ fn update_bumps_to_new_version_and_remateralises() {
     vibe()
         .env("VIBE_REGISTRY_CACHE", &cache)
         .arg("install")
-        .arg("org.vibevm.world/wal@=0.1.0")
+        .arg("org.vibevm/wal@=0.1.0")
         .arg("--path")
         .arg(project.path())
         .arg("--assume-yes")
@@ -162,7 +162,7 @@ fn update_bumps_to_new_version_and_remateralises() {
     let toml_path = project.path().join("vibe.toml");
     let mut manifest =
         vibe_core::manifest::Manifest::parse_str(&fs::read_to_string(&toml_path).unwrap()).unwrap();
-    manifest.requires.packages[0] = vibe_core::PackageRef::parse("org.vibevm.world/wal@*").unwrap();
+    manifest.requires.packages[0] = vibe_core::PackageRef::parse("org.vibevm/wal@*").unwrap();
     manifest.write(&toml_path).unwrap();
 
     // `vibe update` re-resolves `[requires]` afresh and re-materialises
@@ -170,7 +170,7 @@ fn update_bumps_to_new_version_and_remateralises() {
     vibe()
         .env("VIBE_REGISTRY_CACHE", &cache)
         .arg("update")
-        .arg("org.vibevm.world/wal")
+        .arg("org.vibevm/wal")
         .arg("--path")
         .arg(project.path())
         .arg("--assume-yes")
@@ -248,7 +248,7 @@ fn show_effective_emits_boot_files_with_provenance() {
 
 #[test]
 fn show_effective_includes_wal_when_present() {
-    // When the operator (or `org.vibevm.world/wal` install) put `spec/WAL.md` in
+    // When the operator (or `org.vibevm/wal` install) put `spec/WAL.md` in
     // place, `show effective` includes it with `(wal)` provenance.
     let project = tempfile::tempdir().unwrap();
     init_project(project.path());
@@ -330,7 +330,7 @@ fn user_config_promotes_vibe_registry_cache_into_runtime() {
         .env("VIBEVM_USER_CONFIG", &user_cfg_path)
         .env_remove("VIBE_REGISTRY_CACHE")
         .arg("install")
-        .arg("org.vibevm.world/wal")
+        .arg("org.vibevm/wal")
         .arg("--path")
         .arg(project.path())
         .arg("--assume-yes")
@@ -608,7 +608,7 @@ fn update_keeps_pinned_version_when_constraint_excludes_newer() {
     vibe()
         .env("VIBE_REGISTRY_CACHE", &cache)
         .arg("install")
-        .arg("org.vibevm.world/wal@^0.1")
+        .arg("org.vibevm/wal@^0.1")
         .arg("--path")
         .arg(project.path())
         .arg("--assume-yes")
@@ -620,7 +620,7 @@ fn update_keeps_pinned_version_when_constraint_excludes_newer() {
     vibe()
         .env("VIBE_REGISTRY_CACHE", &cache)
         .arg("update")
-        .arg("org.vibevm.world/wal")
+        .arg("org.vibevm/wal")
         .arg("--path")
         .arg(project.path())
         .arg("--assume-yes")
@@ -673,7 +673,7 @@ fn vendor_produces_bare_repo_per_lockfile_entry() {
     vibe()
         .env("VIBE_REGISTRY_CACHE", &cache)
         .arg("install")
-        .arg("org.vibevm.world/wal")
+        .arg("org.vibevm/wal")
         .arg("--path")
         .arg(project.path())
         .arg("--assume-yes")
@@ -783,7 +783,7 @@ fn vendor_refuses_non_empty_out_dir_without_force() {
     vibe()
         .env("VIBE_REGISTRY_CACHE", &cache)
         .arg("install")
-        .arg("org.vibevm.world/wal")
+        .arg("org.vibevm/wal")
         .arg("--path")
         .arg(project.path())
         .arg("--assume-yes")
@@ -1584,7 +1584,7 @@ fn install_unattended_skips_confirm_like_assume_yes() {
     vibe()
         .arg("--unattended")
         .arg("install")
-        .arg("org.vibevm.world/wal")
+        .arg("org.vibevm/wal")
         .arg("--path")
         .arg(project.path())
         .arg("--registry")
@@ -3543,7 +3543,7 @@ fn reinstall_regenerates_deleted_boot_artifacts() {
     init_project(project.path());
     vibe()
         .arg("install")
-        .arg("org.vibevm.world/wal")
+        .arg("org.vibevm/wal")
         .arg("--path")
         .arg(project.path())
         .arg("--registry")
@@ -3619,7 +3619,7 @@ fn reinstall_non_force_bails_when_vibedeps_slot_missing() {
     init_project(project.path());
     vibe()
         .arg("install")
-        .arg("org.vibevm.world/wal")
+        .arg("org.vibevm/wal")
         .arg("--path")
         .arg(project.path())
         .arg("--registry")
@@ -3628,7 +3628,7 @@ fn reinstall_non_force_bails_when_vibedeps_slot_missing() {
         .assert()
         .success();
 
-    // Delete the materialised slot — the lockfile still records org.vibevm.world/wal.
+    // Delete the materialised slot — the lockfile still records org.vibevm/wal.
     fs::remove_dir_all(project.path().join("vibedeps/flow-wal")).unwrap();
 
     vibe()
@@ -3646,7 +3646,7 @@ fn reinstall_reports_json() {
     init_project(project.path());
     vibe()
         .arg("install")
-        .arg("org.vibevm.world/wal")
+        .arg("org.vibevm/wal")
         .arg("--path")
         .arg(project.path())
         .arg("--registry")
@@ -3698,7 +3698,7 @@ fn reinstall_force_refetches_corrupted_vibedeps() {
     vibe()
         .env("VIBE_REGISTRY_CACHE", &cache)
         .arg("install")
-        .arg("org.vibevm.world/wal")
+        .arg("org.vibevm/wal")
         .arg("--path")
         .arg(project.path())
         .arg("--assume-yes")
@@ -3711,7 +3711,7 @@ fn reinstall_force_refetches_corrupted_vibedeps() {
         .join("vibedeps/flow-wal/0.1.0/spec/flows/wal/WAL-PROTOCOL.md");
     assert!(
         corrupted.is_file(),
-        "fixture org.vibevm.world/wal ships WAL-PROTOCOL.md"
+        "fixture org.vibevm/wal ships WAL-PROTOCOL.md"
     );
     fs::write(&corrupted, "CORRUPTED — hand-edited garbage").unwrap();
 

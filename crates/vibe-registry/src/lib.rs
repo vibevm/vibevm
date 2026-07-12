@@ -99,7 +99,7 @@ pub use multi_registry_resolver::{
 ///
 /// let reg: &dyn Registry = &EmptyRegistry;
 /// let err = reg
-///     .resolve(&PackageRef::parse("org.vibevm.world/wal").unwrap())
+///     .resolve(&PackageRef::parse("org.vibevm/wal").unwrap())
 ///     .unwrap_err();
 /// assert!(matches!(err, RegistryError::UnknownPackage { .. }));
 /// ```
@@ -134,7 +134,7 @@ pub trait Registry {
 ///     group: Group::parse("org.vibevm").unwrap(),
 ///     name: "wal".to_string(),
 ///     version: semver::Version::parse("0.2.0").unwrap(),
-///     source_dir: PathBuf::from("registry/org.vibevm.world/wal/v0.2.0"),
+///     source_dir: PathBuf::from("registry/org.vibevm/wal/v0.2.0"),
 /// };
 /// assert_eq!(resolved.version.to_string(), "0.2.0");
 /// ```
@@ -172,13 +172,13 @@ pub struct ResolvedPackage {
 ///         group: Group::parse("org.vibevm").unwrap(),
 ///         name: "wal".to_string(),
 ///         version: semver::Version::parse("0.2.0").unwrap(),
-///         source_dir: PathBuf::from("registry/org.vibevm.world/wal/v0.2.0"),
+///         source_dir: PathBuf::from("registry/org.vibevm/wal/v0.2.0"),
 ///     },
-///     cache_dir: PathBuf::from(".vibe/cache/org.vibevm.world/wal/v0.2.0"),
+///     cache_dir: PathBuf::from(".vibe/cache/org.vibevm/wal/v0.2.0"),
 ///     manifest,
 ///     content_hash: "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
 ///         .to_string(),
-///     source_uri: "file:///registry/org.vibevm.world/wal/v0.2.0".to_string(),
+///     source_uri: "file:///registry/org.vibevm/wal/v0.2.0".to_string(),
 ///     registry_name: Some("main".to_string()),
 ///     source_ref: Some("v0.2.0".to_string()),
 ///     resolved_commit: None,
@@ -259,7 +259,7 @@ impl CachedPackage {
     /// sound — a fetched registry package always carries a `[package]`
     /// table.
     #[spec(
-        deviates = "spec://org.vibevm.ai-native.core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
+        deviates = "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
         reason = "no-unwrap-in-domain: every CachedPackage construction site guards \
                   manifest.package.is_some() before building the struct, so the \
                   accessor's expect is a checked invariant; returning Result would \

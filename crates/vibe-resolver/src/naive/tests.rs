@@ -143,7 +143,7 @@ fn resolves_single_root_with_no_deps() {
     p.seed("wal", &manifest_minimal("flow", "wal", "0.1.0"));
     let solver = NaiveDepSolver::new(p);
     let graph = solver
-        .solve(&[PackageRef::parse("org.vibevm.world/wal").unwrap()])
+        .solve(&[PackageRef::parse("org.vibevm/wal").unwrap()])
         .unwrap();
     assert_eq!(graph.packages.len(), 1);
     assert!(graph.packages[0].is_root);
@@ -160,7 +160,7 @@ fn resolves_chain_of_three() {
     );
     p.seed(
         "rust",
-        &manifest_with_requires("stack", "rust", "0.1.0", &["org.vibevm.world/wal@^0.1"]),
+        &manifest_with_requires("stack", "rust", "0.1.0", &["org.vibevm/wal@^0.1"]),
     );
     p.seed("wal", &manifest_minimal("flow", "wal", "0.1.0"));
 
@@ -184,7 +184,7 @@ fn picks_highest_matching_for_range() {
 
     let solver = NaiveDepSolver::new(p);
     let graph = solver
-        .solve(&[PackageRef::parse("org.vibevm.world/wal@^0.1").unwrap()])
+        .solve(&[PackageRef::parse("org.vibevm/wal@^0.1").unwrap()])
         .unwrap();
     assert_eq!(graph.packages[0].version.to_string(), "0.1.5");
 }
@@ -202,13 +202,13 @@ fn detects_version_conflict_across_paths() {
     let solver = NaiveDepSolver::new(p);
     let err = solver
         .solve(&[
-            PackageRef::parse("org.vibevm.world/wal@^0.1").unwrap(),
-            PackageRef::parse("org.vibevm.world/wal@^0.2").unwrap(),
+            PackageRef::parse("org.vibevm/wal@^0.1").unwrap(),
+            PackageRef::parse("org.vibevm/wal@^0.2").unwrap(),
         ])
         .unwrap_err();
     match err {
         SolveError::VersionConflict { package, .. } => {
-            assert_eq!(package, "org.vibevm.world/wal");
+            assert_eq!(package, "org.vibevm/wal");
         }
         other => panic!("expected VersionConflict, got: {other:?}"),
     }
@@ -425,7 +425,7 @@ fn root_dependencies_marked() {
     let p = MapProvider::new();
     p.seed(
         "wal",
-        &manifest_with_requires("flow", "wal", "0.1.0", &["org.vibevm.world/atomic-commits@^0.1"]),
+        &manifest_with_requires("flow", "wal", "0.1.0", &["org.vibevm/atomic-commits@^0.1"]),
     );
     p.seed(
         "atomic-commits",
@@ -433,7 +433,7 @@ fn root_dependencies_marked() {
     );
     let solver = NaiveDepSolver::new(p);
     let graph = solver
-        .solve(&[PackageRef::parse("org.vibevm.world/wal").unwrap()])
+        .solve(&[PackageRef::parse("org.vibevm/wal").unwrap()])
         .unwrap();
     let roots: Vec<_> = graph.roots().collect();
     assert_eq!(roots.len(), 1);
@@ -446,7 +446,7 @@ fn dependencies_are_exact_pinned_after_solve() {
     let p = MapProvider::new();
     p.seed(
         "wal",
-        &manifest_with_requires("flow", "wal", "0.1.0", &["org.vibevm.world/atomic-commits@^0.1"]),
+        &manifest_with_requires("flow", "wal", "0.1.0", &["org.vibevm/atomic-commits@^0.1"]),
     );
     // Two versions of atomic-commits; ^0.1 should resolve to 0.1.5.
     p.seed(
@@ -460,7 +460,7 @@ fn dependencies_are_exact_pinned_after_solve() {
 
     let solver = NaiveDepSolver::new(p);
     let graph = solver
-        .solve(&[PackageRef::parse("org.vibevm.world/wal").unwrap()])
+        .solve(&[PackageRef::parse("org.vibevm/wal").unwrap()])
         .unwrap();
     let wal = graph.find(&org(), "wal").unwrap();
     assert_eq!(wal.dependencies.len(), 1);
@@ -468,7 +468,7 @@ fn dependencies_are_exact_pinned_after_solve() {
     // original `^0.1` constraint. A future re-install reads this
     // pin verbatim to reproduce the same graph.
     let dep = &wal.dependencies[0];
-    assert_eq!(dep.qualified_name(), "org.vibevm.world/atomic-commits");
+    assert_eq!(dep.qualified_name(), "org.vibevm/atomic-commits");
     let pinned = semver::Version::parse("0.1.5").unwrap();
     assert!(dep.version.matches(&pinned));
     let other = semver::Version::parse("0.1.0").unwrap();

@@ -16,7 +16,7 @@ fn apply_resolution_materialises_and_regenerates_a_standalone_project() {
         ws_dir.path(),
         "vibe.toml",
         "[project]\nname = \"demo\"\nversion = \"0.1.0\"\n\n\
-         [requires.packages]\n\"org.vibevm.world/wal\" = \"^0.3\"\n",
+         [requires.packages]\n\"org.vibevm/wal\" = \"^0.3\"\n",
     );
     write(ws_dir.path(), "spec/boot/00-core.md", "# core");
 
@@ -162,7 +162,7 @@ fn apply_resolution_skips_a_dependency_outside_the_node_requires() {
         ws_dir.path(),
         "vibe.toml",
         "[project]\nname = \"demo\"\nversion = \"0.1.0\"\n\n\
-         [requires.packages]\n\"org.vibevm.world/wal\" = \"^0.3\"\n",
+         [requires.packages]\n\"org.vibevm/wal\" = \"^0.3\"\n",
     );
     write(ws_dir.path(), "spec/boot/00-core.md", "# core");
 
@@ -206,7 +206,7 @@ fn apply_resolution_prunes_a_stale_slot_on_version_bump() {
         ws_dir.path(),
         "vibe.toml",
         "[project]\nname = \"demo\"\nversion = \"0.1.0\"\n\n\
-         [requires.packages]\n\"org.vibevm.world/wal\" = \"^0\"\n",
+         [requires.packages]\n\"org.vibevm/wal\" = \"^0\"\n",
     );
     write(ws_dir.path(), "spec/boot/00-core.md", "# core");
     let ws = Workspace::load(ws_dir.path()).unwrap();
@@ -259,7 +259,7 @@ fn apply_resolution_skips_a_present_slot_under_trust_presence() {
         ws_dir.path(),
         "vibe.toml",
         "[project]\nname = \"demo\"\nversion = \"0.1.0\"\n\n\
-         [requires.packages]\n\"org.vibevm.world/wal\" = \"^0.3\"\n",
+         [requires.packages]\n\"org.vibevm/wal\" = \"^0.3\"\n",
     );
     write(ws_dir.path(), "spec/boot/00-core.md", "# core");
     let (dep, _pkg) = dep_with_boot(
@@ -314,7 +314,7 @@ fn apply_resolution_rematerialises_a_present_slot_under_verify() {
         ws_dir.path(),
         "vibe.toml",
         "[project]\nname = \"demo\"\nversion = \"0.1.0\"\n\n\
-         [requires.packages]\n\"org.vibevm.world/wal\" = \"^0.3\"\n",
+         [requires.packages]\n\"org.vibevm/wal\" = \"^0.3\"\n",
     );
     write(ws_dir.path(), "spec/boot/00-core.md", "# core");
     let (dep, _pkg) = dep_with_boot(
@@ -349,7 +349,7 @@ fn apply_resolution_rematerialises_a_mutable_file_source_under_trust_presence() 
         ws_dir.path(),
         "vibe.toml",
         "[project]\nname = \"demo\"\nversion = \"0.1.0\"\n\n\
-         [requires.packages]\n\"org.vibevm.world/wal\" = \"^0.3\"\n",
+         [requires.packages]\n\"org.vibevm/wal\" = \"^0.3\"\n",
     );
     write(ws_dir.path(), "spec/boot/00-core.md", "# core");
     let (mut dep, _pkg) = dep_with_boot(

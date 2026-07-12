@@ -3,7 +3,9 @@
 //! utf-8 byte offsets when the server granted utf-8 positionEncoding,
 //! else UTF-16 code units converted through the line's text).
 
-specmark::scope!("spec://org.vibevm.ai-native.rust-ai-native-lang/mechanisms/TCG-PROTOCOL-RUST-v0.1#ops");
+specmark::scope!(
+    "spec://org.vibevm.ai-native.rust-ai-native-lang/mechanisms/TCG-PROTOCOL-RUST-v0.1#ops"
+);
 
 use specmark::spec;
 
@@ -61,7 +63,9 @@ pub struct OuterPosition {
 /// );
 /// assert_eq!((lsp16.0, lsp16.1), (2, 2));
 /// ```
-#[spec(implements = "spec://org.vibevm.ai-native.rust-ai-native-lang/mechanisms/TCG-PROTOCOL-RUST-v0.1#ops")]
+#[spec(
+    implements = "spec://org.vibevm.ai-native.rust-ai-native-lang/mechanisms/TCG-PROTOCOL-RUST-v0.1#ops"
+)]
 pub fn to_lsp(pos: OuterPosition, line_text: &str, encoding: PositionEncoding) -> (u32, u32) {
     let line = pos.line.saturating_sub(1);
     let take = pos.character as usize;
@@ -91,7 +95,9 @@ pub fn to_lsp(pos: OuterPosition, line_text: &str, encoding: PositionEncoding) -
 /// let outer16 = from_lsp(2, 2, "пример", PositionEncoding::Utf16);
 /// assert_eq!((outer16.line, outer16.character), (3, 2));
 /// ```
-#[spec(implements = "spec://org.vibevm.ai-native.rust-ai-native-lang/mechanisms/TCG-PROTOCOL-RUST-v0.1#ops")]
+#[spec(
+    implements = "spec://org.vibevm.ai-native.rust-ai-native-lang/mechanisms/TCG-PROTOCOL-RUST-v0.1#ops"
+)]
 pub fn from_lsp(
     line: u32,
     column: u32,

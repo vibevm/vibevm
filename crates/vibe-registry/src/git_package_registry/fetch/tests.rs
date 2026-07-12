@@ -41,7 +41,7 @@ fn fetch_clones_and_populates_per_project_cache() {
         fake.clone(),
     );
 
-    let p = PackageRef::parse("org.vibevm.world/wal@0.1.0").unwrap();
+    let p = PackageRef::parse("org.vibevm/wal@0.1.0").unwrap();
     let resolved = r.resolve(&p).unwrap();
     let cached = r.fetch(&resolved, pkg_cache.path()).unwrap();
 
@@ -98,7 +98,7 @@ fn fetch_falls_through_to_mirror_when_primary_unreachable() {
         fake.clone(),
     );
 
-    let p = PackageRef::parse("org.vibevm.world/wal@0.1.0").unwrap();
+    let p = PackageRef::parse("org.vibevm/wal@0.1.0").unwrap();
     let resolved = r.resolve(&p).unwrap();
     let cached = r.fetch(&resolved, pkg_cache.path()).unwrap();
 
@@ -150,7 +150,7 @@ fn fetch_prefers_primary_when_both_reachable() {
         fake.clone(),
     );
 
-    let p = PackageRef::parse("org.vibevm.world/wal@0.1.0").unwrap();
+    let p = PackageRef::parse("org.vibevm/wal@0.1.0").unwrap();
     let resolved = r.resolve(&p).unwrap();
     let _ = r.fetch(&resolved, pkg_cache.path()).unwrap();
 
@@ -202,7 +202,7 @@ fn fetch_falls_through_when_primary_update_fails() {
     );
 
     // First fetch lands the clone via primary.
-    let p = PackageRef::parse("org.vibevm.world/wal@0.1.0").unwrap();
+    let p = PackageRef::parse("org.vibevm/wal@0.1.0").unwrap();
     let resolved = r.resolve(&p).unwrap();
     let _ = r.fetch(&resolved, pkg_cache.path()).unwrap();
     assert_eq!(fake.bootstrap_count(), 1);
@@ -260,7 +260,7 @@ fn fetch_with_expected_hash_passes_through_when_no_pin() {
         fake.clone(),
     );
 
-    let p = PackageRef::parse("org.vibevm.world/wal@0.1.0").unwrap();
+    let p = PackageRef::parse("org.vibevm/wal@0.1.0").unwrap();
     let resolved = r.resolve(&p).unwrap();
     let cached = r
         .fetch_with_expected_hash(&resolved, pkg_cache.path(), None)
@@ -335,7 +335,7 @@ fn fetch_with_expected_hash_skips_mirror_with_disagreeing_content() {
         fake.clone(),
     );
 
-    let p = PackageRef::parse("org.vibevm.world/wal@0.1.0").unwrap();
+    let p = PackageRef::parse("org.vibevm/wal@0.1.0").unwrap();
     let resolved = r.resolve(&p).unwrap();
     let cached = r
         .fetch_with_expected_hash(&resolved, pkg_cache.path(), Some(&expected_hash))
@@ -393,7 +393,7 @@ fn fetch_with_expected_hash_returns_last_attempt_when_no_match() {
     );
 
     let bogus_pin = "sha256:0000000000000000000000000000000000000000000000000000000000000000";
-    let p = PackageRef::parse("org.vibevm.world/wal@0.1.0").unwrap();
+    let p = PackageRef::parse("org.vibevm/wal@0.1.0").unwrap();
     let resolved = r.resolve(&p).unwrap();
     let cached = r
         .fetch_with_expected_hash(&resolved, pkg_cache.path(), Some(bogus_pin))
@@ -470,7 +470,7 @@ fn fetch_reuses_existing_clone_via_update() {
         NamingConvention::Fqdn,
         fake.clone(),
     );
-    let p = PackageRef::parse("org.vibevm.world/wal@0.1.0").unwrap();
+    let p = PackageRef::parse("org.vibevm/wal@0.1.0").unwrap();
     let resolved = r.resolve(&p).unwrap();
 
     let _ = r.fetch(&resolved, pkg_cache.path()).unwrap();

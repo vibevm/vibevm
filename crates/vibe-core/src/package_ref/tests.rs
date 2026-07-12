@@ -125,22 +125,22 @@ fn parse_short_with_kind() {
 
 #[test]
 fn parse_qualified() {
-    let r = PackageRef::parse("org.vibevm.world/wal").unwrap();
+    let r = PackageRef::parse("org.vibevm/wal").unwrap();
     assert_eq!(r.kind, None);
     assert_eq!(r.group.as_ref().unwrap().as_str(), "org.vibevm");
     assert_eq!(r.name, "wal");
     assert!(r.is_qualified());
-    assert_eq!(r.to_string(), "org.vibevm.world/wal");
+    assert_eq!(r.to_string(), "org.vibevm/wal");
 }
 
 #[test]
 #[verifies("spec://vibevm/modules/vibe-registry/PROP-008#pkgref", r = 1)]
 fn parse_qualified_with_kind() {
-    let r = PackageRef::parse("flow:org.vibevm.world/wal").unwrap();
+    let r = PackageRef::parse("flow:org.vibevm/wal").unwrap();
     assert_eq!(r.kind, Some(PackageKind::Flow));
     assert_eq!(r.group.as_ref().unwrap().as_str(), "org.vibevm");
     assert_eq!(r.name, "wal");
-    assert_eq!(r.to_string(), "flow:org.vibevm.world/wal");
+    assert_eq!(r.to_string(), "flow:org.vibevm/wal");
 }
 
 #[test]
@@ -152,8 +152,8 @@ fn parse_bare_semver_is_caret_per_cargo() {
     for s in [
         "wal@0.3.0",
         "flow:wal@0.3.0",
-        "org.vibevm.world/wal@0.3.0",
-        "flow:org.vibevm.world/wal@0.3.0",
+        "org.vibevm/wal@0.3.0",
+        "flow:org.vibevm/wal@0.3.0",
     ] {
         let r = PackageRef::parse(s).unwrap();
         assert_eq!(r.name, "wal");
@@ -171,7 +171,7 @@ fn parse_bare_semver_is_caret_per_cargo() {
 
 #[test]
 fn parse_eq_version_is_exact() {
-    let r = PackageRef::parse("org.vibevm.world/wal@=0.3.0").unwrap();
+    let r = PackageRef::parse("org.vibevm/wal@=0.3.0").unwrap();
     assert!(r.version.matches(&semver::Version::parse("0.3.0").unwrap()));
     assert!(
         !r.version.matches(&semver::Version::parse("0.3.1").unwrap()),
@@ -181,7 +181,7 @@ fn parse_eq_version_is_exact() {
 
 #[test]
 fn parse_range_and_tilde_versions() {
-    let caret = PackageRef::parse("org.vibevm.world/wal@^0.3").unwrap();
+    let caret = PackageRef::parse("org.vibevm/wal@^0.3").unwrap();
     assert!(
         caret
             .version
@@ -192,7 +192,7 @@ fn parse_range_and_tilde_versions() {
             .version
             .matches(&semver::Version::parse("0.4.0").unwrap())
     );
-    let tilde = PackageRef::parse("org.vibevm.world/wal@~0.3.1").unwrap();
+    let tilde = PackageRef::parse("org.vibevm/wal@~0.3.1").unwrap();
     assert!(
         tilde
             .version
@@ -220,7 +220,7 @@ fn parse_rejects_bad_kind() {
         Error::BadPackageKind(_)
     ));
     assert!(matches!(
-        PackageRef::parse("widget:org.vibevm.world/wal").unwrap_err(),
+        PackageRef::parse("widget:org.vibevm/wal").unwrap_err(),
         Error::BadPackageKind(_)
     ));
 }
@@ -257,10 +257,10 @@ fn display_round_trips_every_form() {
     for s in [
         "wal",
         "flow:wal",
-        "org.vibevm.world/wal",
-        "flow:org.vibevm.world/wal",
-        "org.vibevm.world/wal@^0.3",
-        "flow:org.vibevm.world/wal@=0.3.0",
+        "org.vibevm/wal",
+        "flow:org.vibevm/wal",
+        "org.vibevm/wal@^0.3",
+        "flow:org.vibevm/wal@=0.3.0",
     ] {
         let r = PackageRef::parse(s).unwrap();
         let r2 = PackageRef::parse(&r.to_string()).unwrap();
@@ -272,8 +272,8 @@ fn display_round_trips_every_form() {
 #[verifies("spec://vibevm/modules/vibe-registry/PROP-008#identity", r = 1)]
 fn qualified_name_is_the_identity_string() {
     // kind and version drop; `<group>/<name>` is the identity.
-    let q = PackageRef::parse("flow:org.vibevm.world/wal@0.1.0").unwrap();
-    assert_eq!(q.qualified_name(), "org.vibevm.world/wal");
+    let q = PackageRef::parse("flow:org.vibevm/wal@0.1.0").unwrap();
+    assert_eq!(q.qualified_name(), "org.vibevm/wal");
     // No group yet — the bare name is the best identity available.
     let short = PackageRef::parse("wal@0.1.0").unwrap();
     assert_eq!(short.qualified_name(), "wal");
@@ -287,9 +287,9 @@ fn empty_input_rejected() {
 
 #[test]
 fn serde_round_trips_via_string() {
-    let r = PackageRef::parse("flow:org.vibevm.world/wal@^0.3").unwrap();
+    let r = PackageRef::parse("flow:org.vibevm/wal@^0.3").unwrap();
     let json = serde_json::to_string(&r).unwrap();
-    assert_eq!(json, r#""flow:org.vibevm.world/wal@^0.3""#);
+    assert_eq!(json, r#""flow:org.vibevm/wal@^0.3""#);
     let back: PackageRef = serde_json::from_str(&json).unwrap();
     assert_eq!(r, back);
 }

@@ -231,7 +231,7 @@ pub enum SourceKind {
 /// assert!(p.materialization.is_default());
 /// // Identity is (group, name, version, content_hash); `as_package_ref`
 /// // pins this exact installed version.
-/// assert_eq!(p.as_package_ref().unwrap().qualified_name(), "org.vibevm.world/wal");
+/// assert_eq!(p.as_package_ref().unwrap().qualified_name(), "org.vibevm/wal");
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]

@@ -2,7 +2,7 @@
 //!
 //! The fixture registry most tests run against is the hand-written
 //! `fixtures/registry/` tree that ships in the vibevm repo itself (the
-//! canonical `org.vibevm.world/wal` fixture per `VIBEVM-SPEC.md` §13). The git
+//! canonical `org.vibevm/wal` fixture per `VIBEVM-SPEC.md` §13). The git
 //! builders below construct per-package bare registries, single-package
 //! repos, and redirect stubs in temp dirs for the hermetic git-backed walks.
 //!
@@ -66,7 +66,7 @@ pub fn run_git(cwd: &Path, args: &[&str]) {
 /// Build a per-package bare git registry under `root/`: one bare repo
 /// per package, content at the repo root, tagged `v<semver>`.
 ///
-/// For this test we seed exactly one package: `org.vibevm.world/wal@0.1.0` →
+/// For this test we seed exactly one package: `org.vibevm/wal@0.1.0` →
 /// `<root>/org.vibevm.wal.git`. The "registry" is then `<root>` itself —
 /// `MultiRegistryResolver` composes per-package URLs by appending
 /// `<group>.<name>.git` to the org URL (the `fqdn` naming convention,
@@ -83,9 +83,9 @@ pub fn make_per_package_registry(root: &Path) -> PathBuf {
 
     // Per-package layout: package contents live AT THE ROOT of the repo,
     // not under `<group>/<name>/v<ver>/`.
-    copy_tree(&fixture_registry().join("org.vibevm.world/wal/v0.1.0"), &src);
+    copy_tree(&fixture_registry().join("org.vibevm/wal/v0.1.0"), &src);
     run_git(&src, &["add", "-A"]);
-    run_git(&src, &["commit", "-m", "org.vibevm.world/wal@0.1.0"]);
+    run_git(&src, &["commit", "-m", "org.vibevm/wal@0.1.0"]);
     run_git(&src, &["tag", "v0.1.0"]);
 
     let bare = root.join("org.vibevm.wal.git");
@@ -147,9 +147,9 @@ pub fn make_single_package_bare_repo(root: &Path) -> PathBuf {
     run_git(&src, &["init", "--initial-branch=main"]);
     run_git(&src, &["config", "user.email", "t@example.com"]);
     run_git(&src, &["config", "user.name", "Test"]);
-    copy_tree(&fixture_registry().join("org.vibevm.world/wal/v0.1.0"), &src);
+    copy_tree(&fixture_registry().join("org.vibevm/wal/v0.1.0"), &src);
     run_git(&src, &["add", "-A"]);
-    run_git(&src, &["commit", "-m", "org.vibevm.world/wal@0.1.0"]);
+    run_git(&src, &["commit", "-m", "org.vibevm/wal@0.1.0"]);
     run_git(&src, &["tag", "v0.1.0"]);
     let bare = root.join("flow-wal-direct.git");
     run_git(

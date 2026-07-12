@@ -4,7 +4,7 @@
 //! URL by:
 //!
 //! 1. Composing the per-package repo URL via the registry's [`NamingConvention`]
-//!    (`org.vibevm.world/wal` + `Fqdn` → `<org>/org.vibevm.wal.git`). The registry is
+//!    (`org.vibevm/wal` + `Fqdn` → `<org>/org.vibevm.wal.git`). The registry is
 //!    group-native (PROP-008): identity is `(group, name)`, `kind` plays no part
 //!    in URL composition or resolution.
 //! 2. Listing tags on that repo via the cheap [`GitBackend::list_tags`]

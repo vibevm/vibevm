@@ -221,7 +221,7 @@ async fn delete_version_removes_existing() {
         .unwrap();
     let resp = app
         .oneshot(req_delete(
-            "/v1/packages/org.vibevm.world/wal/0.1.0",
+            "/v1/packages/org.vibevm/wal/0.1.0",
             Some("topsecret"),
         ))
         .await
@@ -236,7 +236,7 @@ async fn delete_version_unauthenticated_is_401() {
     let (_tmp, state) = fresh_state(false, Some("topsecret"));
     let app = build_app(state);
     let resp = app
-        .oneshot(req_delete("/v1/packages/org.vibevm.world/wal/0.1.0", None))
+        .oneshot(req_delete("/v1/packages/org.vibevm/wal/0.1.0", None))
         .await
         .unwrap();
     assert_eq!(resp.status(), StatusCode::UNAUTHORIZED);
@@ -257,7 +257,7 @@ async fn delete_package_drops_all_versions() {
         .await
         .unwrap();
     let resp = app
-        .oneshot(req_delete("/v1/packages/org.vibevm.world/wal", Some("topsecret")))
+        .oneshot(req_delete("/v1/packages/org.vibevm/wal", Some("topsecret")))
         .await
         .unwrap();
     assert_eq!(resp.status(), StatusCode::OK);

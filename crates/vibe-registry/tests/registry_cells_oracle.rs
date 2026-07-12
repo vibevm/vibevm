@@ -22,11 +22,11 @@ use vibe_registry::git_registry::DEFAULT_FRESHNESS_SECS;
 use vibe_registry::{GitRegistry, LocalRegistry, Registry, RegistryError};
 
 /// Group-native registry layout (`<root>/<group>/<name>/v<ver>/`) with
-/// `org.vibevm.world/wal` at 0.1.0 and 0.2.0 — the same fixture shape the
+/// `org.vibevm/wal` at 0.1.0 and 0.2.0 — the same fixture shape the
 /// crate's unit tests use.
 fn seed_local_layout(root: &Path) {
     for version in ["0.1.0", "0.2.0"] {
-        let dir = root.join("org.vibevm.world/wal").join(format!("v{version}"));
+        let dir = root.join("org.vibevm/wal").join(format!("v{version}"));
         fs::create_dir_all(&dir).unwrap();
         fs::write(
             dir.join("vibe.toml"),
@@ -58,7 +58,7 @@ fn local_registry_resolves_and_fetches_through_the_seam() {
 
     // Unconstrained resolve picks the highest stable version.
     let resolved = reg
-        .resolve(&PackageRef::parse("org.vibevm.world/wal").unwrap())
+        .resolve(&PackageRef::parse("org.vibevm/wal").unwrap())
         .unwrap();
     assert_eq!(resolved.version.to_string(), "0.2.0");
 
@@ -171,7 +171,7 @@ fn git_registry_clones_once_and_serves_git_shaped_source_uris() {
     assert_eq!(backend.clone_count(), 1, "first open must clone");
     assert!(
         git.clone_dir()
-            .join("org.vibevm.world/wal/v0.2.0/vibe.toml")
+            .join("org.vibevm/wal/v0.2.0/vibe.toml")
             .exists()
     );
     assert!(git.cache_dir().join("meta.toml").exists());
@@ -180,7 +180,7 @@ fn git_registry_clones_once_and_serves_git_shaped_source_uris() {
     // for discovery, git-shaped `source_uri` on the way out.
     let reg: &dyn Registry = &git;
     let resolved = reg
-        .resolve(&PackageRef::parse("org.vibevm.world/wal@0.1.0").unwrap())
+        .resolve(&PackageRef::parse("org.vibevm/wal@0.1.0").unwrap())
         .unwrap();
     assert_eq!(resolved.version.to_string(), "0.1.0");
 
@@ -188,7 +188,7 @@ fn git_registry_clones_once_and_serves_git_shaped_source_uris() {
     let cached = reg.fetch(&resolved, &pkg_cache).unwrap();
     assert_eq!(
         cached.source_uri,
-        "git+ssh://git@gitverse.ru/anarchic/vibespecs.git#org.vibevm.world/wal/v0.1.0"
+        "git+ssh://git@gitverse.ru/anarchic/vibespecs.git#org.vibevm/wal/v0.1.0"
     );
     assert!(cached.cache_dir.join("vibe.toml").exists());
     assert!(cached.content_hash.starts_with("sha256:"));

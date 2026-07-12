@@ -336,7 +336,7 @@ async fn package_versions_returns_full_entries() {
     let (_tmp, state) = populated_state();
     let app = build_app(state);
     let resp = app
-        .oneshot(req(Method::GET, "/v1/packages/org.vibevm.world/wal"))
+        .oneshot(req(Method::GET, "/v1/packages/org.vibevm/wal"))
         .await
         .unwrap();
     assert_eq!(resp.status(), StatusCode::OK);
@@ -350,7 +350,7 @@ async fn single_version_returns_entry() {
     let (_tmp, state) = populated_state();
     let app = build_app(state);
     let resp = app
-        .oneshot(req(Method::GET, "/v1/packages/org.vibevm.world/wal/0.2.0"))
+        .oneshot(req(Method::GET, "/v1/packages/org.vibevm/wal/0.2.0"))
         .await
         .unwrap();
     assert_eq!(resp.status(), StatusCode::OK);
@@ -364,7 +364,7 @@ async fn single_version_404_for_missing_version() {
     let (_tmp, state) = populated_state();
     let app = build_app(state);
     let resp = app
-        .oneshot(req(Method::GET, "/v1/packages/org.vibevm.world/wal/9.9.9"))
+        .oneshot(req(Method::GET, "/v1/packages/org.vibevm/wal/9.9.9"))
         .await
         .unwrap();
     assert_eq!(resp.status(), StatusCode::NOT_FOUND);

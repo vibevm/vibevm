@@ -545,7 +545,7 @@ mod tests {
         super::write_vendor_readme(dir.path(), "file:///tmp/vendor", &vendored).unwrap();
         let body = fs::read_to_string(dir.path().join("README.md")).unwrap();
         assert!(body.contains("file:///tmp/vendor"));
-        assert!(body.contains("`org.vibevm.world/wal` @ `v0.1.0`"));
+        assert!(body.contains("`org.vibevm/wal` @ `v0.1.0`"));
         assert!(body.contains("[[mirror]]"));
     }
 }

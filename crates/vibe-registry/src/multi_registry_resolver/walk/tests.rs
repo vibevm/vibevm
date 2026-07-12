@@ -33,7 +33,7 @@ fn resolve_picks_first_registry_with_match() {
         fake,
     );
 
-    let p = PackageRef::parse("org.vibevm.world/wal").unwrap();
+    let p = PackageRef::parse("org.vibevm/wal").unwrap();
     let m = r.resolve(&p).unwrap();
     assert_eq!(m.registry_name.as_deref(), Some("a"));
     assert_eq!(m.resolved.version.to_string(), "0.2.0");
@@ -60,7 +60,7 @@ fn resolve_falls_through_to_next_registry_on_unknown_package() {
         fake,
     );
 
-    let p = PackageRef::parse("org.vibevm.world/wal").unwrap();
+    let p = PackageRef::parse("org.vibevm/wal").unwrap();
     let m = r.resolve(&p).unwrap();
     assert_eq!(m.registry_name.as_deref(), Some("b"));
     assert_eq!(m.resolved.version.to_string(), "0.5.0");
@@ -116,7 +116,7 @@ fn resolve_unknown_when_no_registries_and_no_override() {
     let cache = tempdir().unwrap();
     let fake = Arc::new(FakeBackend::default());
     let r = build_resolver(cache.path(), vec![], vec![], vec![], fake);
-    let p = PackageRef::parse("org.vibevm.world/wal").unwrap();
+    let p = PackageRef::parse("org.vibevm/wal").unwrap();
     let err = r.resolve(&p).unwrap_err();
     assert!(matches!(err, RegistryError::UnknownPackage { .. }));
 }
@@ -152,7 +152,7 @@ fn resolve_strict_auth_halts_on_public_401_instead_of_walking() {
     .with_strict_auth(true);
     assert!(r.strict_auth());
 
-    let p = PackageRef::parse("org.vibevm.world/wal").unwrap();
+    let p = PackageRef::parse("org.vibevm/wal").unwrap();
     let err = r.resolve(&p).unwrap_err();
     match err {
         RegistryError::Git(GitError::AuthFailed { url }) => {
@@ -193,7 +193,7 @@ fn resolve_walks_past_auth_failed_when_registry_is_public() {
         fake,
     );
 
-    let p = PackageRef::parse("org.vibevm.world/wal").unwrap();
+    let p = PackageRef::parse("org.vibevm/wal").unwrap();
     let m = r
         .resolve(&p)
         .expect("public-a's AuthFailed must walk to public-b, not halt");
@@ -273,7 +273,7 @@ fn resolve_halts_on_auth_failed_against_authenticated_registry() {
         fake,
     );
 
-    let p = PackageRef::parse("org.vibevm.world/wal").unwrap();
+    let p = PackageRef::parse("org.vibevm/wal").unwrap();
     let err = r.resolve(&p).unwrap_err();
     match err {
         RegistryError::Git(GitError::AuthFailed { url }) => {
@@ -320,7 +320,7 @@ fn resolve_halts_on_missing_token_for_authenticated_registry() {
         fake,
     );
 
-    let p = PackageRef::parse("org.vibevm.world/wal").unwrap();
+    let p = PackageRef::parse("org.vibevm/wal").unwrap();
     let err = r.resolve(&p).unwrap_err();
     match err {
         RegistryError::MissingToken { registry, env_var } => {
@@ -348,7 +348,7 @@ fn override_short_circuits_registry_resolution() {
     );
 
     let ovr = OverrideSection {
-        pkgref: "org.vibevm.world/wal".to_string(),
+        pkgref: "org.vibevm/wal".to_string(),
         source_url: "git@my-fork:vibevm/wal-fork.git".to_string(),
         r#ref: Some("my-fix".to_string()),
         reason: Some("waiting on upstream PR".to_string()),
@@ -362,7 +362,7 @@ fn override_short_circuits_registry_resolution() {
         fake,
     );
 
-    let p = PackageRef::parse("org.vibevm.world/wal").unwrap();
+    let p = PackageRef::parse("org.vibevm/wal").unwrap();
     let m = r.resolve(&p).unwrap();
     assert!(m.overridden);
     assert!(m.registry_name.is_none());
@@ -383,14 +383,14 @@ fn override_uses_default_ref_when_unspecified() {
     );
 
     let ovr = OverrideSection {
-        pkgref: "org.vibevm.world/wal".to_string(),
+        pkgref: "org.vibevm/wal".to_string(),
         source_url: "git@my-fork:vibevm/wal-fork.git".to_string(),
         r#ref: None,
         reason: None,
     };
 
     let r = build_resolver(cache.path(), vec![], vec![], vec![ovr], fake);
-    let p = PackageRef::parse("org.vibevm.world/wal").unwrap();
+    let p = PackageRef::parse("org.vibevm/wal").unwrap();
     let m = r.resolve(&p).unwrap();
     assert_eq!(m.source_ref.as_deref(), Some(DEFAULT_OVERRIDE_REF));
     assert_eq!(m.resolved.version.to_string(), "1.0.0");
@@ -411,13 +411,13 @@ fn override_refuses_when_manifest_identity_mismatches() {
     );
 
     let ovr = OverrideSection {
-        pkgref: "org.vibevm.world/wal".to_string(),
+        pkgref: "org.vibevm/wal".to_string(),
         source_url: "git@my-fork:vibevm/wal-fork.git".to_string(),
         r#ref: None,
         reason: None,
     };
     let r = build_resolver(cache.path(), vec![], vec![], vec![ovr], fake);
-    let p = PackageRef::parse("org.vibevm.world/wal").unwrap();
+    let p = PackageRef::parse("org.vibevm/wal").unwrap();
     let err = r.resolve(&p).unwrap_err();
     match err {
         RegistryError::MalformedMeta { reason, .. } => {
@@ -457,7 +457,7 @@ fn fetch_dispatches_to_registry_that_resolved() {
         fake.clone(),
     );
 
-    let p = PackageRef::parse("org.vibevm.world/wal").unwrap();
+    let p = PackageRef::parse("org.vibevm/wal").unwrap();
     let resolution = r.resolve(&p).unwrap();
     let cached = r.fetch(&resolution, pkg_cache.path()).unwrap();
 
@@ -498,7 +498,7 @@ fn fetch_override_clones_into_overrides_subtree_and_marks_overridden() {
     fake.seed_bootstrap("git@my-fork:vibevm/wal-fork.git", pkg_root.clone());
 
     let ovr = OverrideSection {
-        pkgref: "org.vibevm.world/wal".to_string(),
+        pkgref: "org.vibevm/wal".to_string(),
         source_url: "git@my-fork:vibevm/wal-fork.git".to_string(),
         r#ref: Some("my-fix".to_string()),
         reason: Some("PR pending".to_string()),
@@ -506,7 +506,7 @@ fn fetch_override_clones_into_overrides_subtree_and_marks_overridden() {
 
     let r = build_resolver(cache.path(), vec![], vec![], vec![ovr], fake.clone());
 
-    let p = PackageRef::parse("org.vibevm.world/wal").unwrap();
+    let p = PackageRef::parse("org.vibevm/wal").unwrap();
     let resolution = r.resolve(&p).unwrap();
     let cached = r.fetch(&resolution, pkg_cache.path()).unwrap();
 

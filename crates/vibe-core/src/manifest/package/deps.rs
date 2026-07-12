@@ -91,7 +91,7 @@ impl GitRefKind {
 ///
 /// let r: Requires = toml::from_str(r#"
 ///     [packages]
-///     "org.vibevm.world/wal" = { path = "../flow-wal" }
+///     "org.vibevm/wal" = { path = "../flow-wal" }
 /// "#).unwrap();
 /// let p = &r.path_packages[0];
 /// assert_eq!(p.name, "wal");
@@ -125,7 +125,7 @@ pub struct PathPackageDep {
 ///
 /// let r: Requires = toml::from_str(r#"
 ///     [packages]
-///     "org.vibevm.world/wal" = { version.var = "core" }
+///     "org.vibevm/wal" = { version.var = "core" }
 /// "#).unwrap();
 /// let v = &r.var_packages[0];
 /// assert_eq!(v.name, "wal");
@@ -362,7 +362,7 @@ mod tests {
     fn path_source_parses() {
         let r = requires_from_toml(
             r#"[packages]
-"flow:org.vibevm.world/wal" = { path = "../flow-wal" }
+"flow:org.vibevm/wal" = { path = "../flow-wal" }
 "#,
         );
         assert!(r.packages.is_empty());
@@ -380,7 +380,7 @@ mod tests {
     fn path_source_dual_form_parses() {
         let r = requires_from_toml(
             r#"[packages]
-"org.vibevm.world/wal" = { path = "../flow-wal", version = "^0.1" }
+"org.vibevm/wal" = { path = "../flow-wal", version = "^0.1" }
 "#,
         );
         assert_eq!(r.path_packages.len(), 1);
@@ -402,7 +402,7 @@ mod tests {
     fn path_source_round_trips() {
         let original = requires_from_toml(
             r#"[packages]
-"org.vibevm.world/wal" = { path = "../flow-wal", version = "^0.1" }
+"org.vibevm/wal" = { path = "../flow-wal", version = "^0.1" }
 "org.vibevm/auth" = { path = "../feat-auth" }
 "#,
         );
@@ -416,7 +416,7 @@ mod tests {
     fn version_var_parses() {
         let r = requires_from_toml(
             r#"[packages]
-"flow:org.vibevm.world/wal" = { version.var = "core" }
+"flow:org.vibevm/wal" = { version.var = "core" }
 "#,
         );
         assert!(r.packages.is_empty());
@@ -434,7 +434,7 @@ mod tests {
     fn version_var_round_trips() {
         let original = requires_from_toml(
             r#"[packages]
-"org.vibevm.world/wal" = { version.var = "core" }
+"org.vibevm/wal" = { version.var = "core" }
 "org.vibevm/auth" = "^0.2"
 "#,
         );

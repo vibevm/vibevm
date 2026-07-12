@@ -56,7 +56,7 @@ use provider::VibevmResolvoProvider;
 /// ).unwrap();
 /// let solver = ResolvoDepSolver::new(OnePackage(m));
 /// let graph = solver
-///     .solve(&[PackageRef::parse("org.vibevm.world/wal").unwrap()])
+///     .solve(&[PackageRef::parse("org.vibevm/wal").unwrap()])
 ///     .unwrap();
 /// assert_eq!(graph.packages.len(), 1);
 /// assert!(graph.packages[0].is_root);

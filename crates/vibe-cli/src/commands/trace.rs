@@ -1,12 +1,12 @@
 //! `vibe trace` — the product alias over `rust-ai-native trace`
 //! (PROP-014 §2.6). A pure delegator: the traceability engine ships in
-//! `stack:org.vibevm.ai-native/rust-ai-native-lang` and versions with the PROJECT's
+//! `stack:org.vibevm/rust-ai-native-lang` and versions with the PROJECT's
 //! pinned stack, so embedding it into the product binary would let the
 //! two skew; spawning the installed binary keeps `vibe trace` exactly
 //! as new as the discipline the project actually uses. Arguments pass
 //! through verbatim; the exit code passes back.
 
-specmark::scope!("spec://org.vibevm.ai-native.core-ai-native/mechanisms/PROP-014#index");
+specmark::scope!("spec://core-ai-native/mechanisms/PROP-014#index");
 
 use anyhow::{Result, bail};
 

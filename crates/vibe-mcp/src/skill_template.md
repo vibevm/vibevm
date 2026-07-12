@@ -99,8 +99,8 @@ version, what features are active, what files a package contributed
 
 The discipline toolchain and the agentic type oracle no longer ride
 THIS server: each language ships its own standalone MCP server as an
-`mcp`-kind package — `mcp:org.vibevm.ai-native/rust-ai-native-mcp` (18 tools) and
-`mcp:org.vibevm.ai-native/typescript-ai-native-mcp` (17 tools): the whole
+`mcp`-kind package — `mcp:org.vibevm/rust-ai-native-mcp` (18 tools) and
+`mcp:org.vibevm/typescript-ai-native-mcp` (17 tools): the whole
 discipline command surface (init, floor, the conform and specmap
 gates, trace, test-gate, tripwire, health, fast-loop, codemod) plus
 `tcg_validate` / `tcg_scope` / `tcg_complete` / `tcg_type` /

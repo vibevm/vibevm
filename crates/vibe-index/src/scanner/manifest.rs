@@ -287,7 +287,7 @@ capabilities = ["ui:landing-page@0.3.0"]
 capabilities = ["db:any@>=1.0"]
 
 [requires.packages]
-"org.vibevm.world/wal" = "^0.1"
+"org.vibevm/wal" = "^0.1"
 
 [[requires_any]]
 one_of = ["org.vibevm/rust-cli@^0.1", "org.vibevm/rust-axum@^0.2"]
@@ -297,7 +297,7 @@ one_of = ["org.vibevm/rust-cli@^0.1", "org.vibevm/rust-axum@^0.2"]
         let req = requires_from(&m.requires);
         // The modern `[requires.packages]` table flattens to a
         // `<group>/<name>@<constraint>` pkgref string.
-        assert_eq!(req.packages, vec!["org.vibevm.world/wal@^0.1".to_string()]);
+        assert_eq!(req.packages, vec!["org.vibevm/wal@^0.1".to_string()]);
         assert_eq!(req.capabilities, vec!["db:any@>=1.0".to_string()]);
         assert_eq!(requires_any_from(&m.requires_any).len(), 1);
     }

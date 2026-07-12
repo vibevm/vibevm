@@ -107,7 +107,7 @@ impl DeclaredBinary {
     ///         crate_dir: "crates/typescript-ai-native-tcg".into(),
     ///         description: None,
     ///     },
-    ///     package: "org.vibevm.ai-native/typescript-ai-native-lang".into(),
+    ///     package: "org.vibevm/typescript-ai-native-lang".into(),
     ///     group: "org.vibevm".into(),
     ///     slot: std::path::PathBuf::from("vibedeps/stack-typescript-ai-native-lang/0.4.0"),
     /// };

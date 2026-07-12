@@ -189,7 +189,7 @@ impl From<Group> for String {
 /// ```
 /// use vibe_core::PackageRef;
 ///
-/// let r = PackageRef::parse("org.vibevm.world/wal").unwrap();
+/// let r = PackageRef::parse("org.vibevm/wal").unwrap();
 /// assert_eq!(r.name.as_str(), "wal");
 /// assert_eq!(r.name, "wal"); // compares against &str directly
 ///
@@ -396,8 +396,8 @@ impl fmt::Display for VersionSpec {
 /// pkgref := [ <kind> ":" ] [ <group> "/" ] <name> [ "@" <version> ]
 /// ```
 ///
-/// - `org.vibevm.world/wal` — qualified; the form written into manifests.
-/// - `flow:org.vibevm.world/wal` — qualified, with a `kind` prefix (validated
+/// - `org.vibevm/wal` — qualified; the form written into manifests.
+/// - `flow:org.vibevm/wal` — qualified, with a `kind` prefix (validated
 ///   against the resolved manifest, never used to disambiguate — `(group,
 ///   name)` is already unique).
 /// - `wal` — short; CLI-only sugar, resolved to the qualified form at the
@@ -415,11 +415,11 @@ impl fmt::Display for VersionSpec {
 /// ```
 /// use vibe_core::PackageRef;
 ///
-/// let r = PackageRef::parse("flow:org.vibevm.world/wal@^0.3").unwrap();
-/// assert_eq!(r.qualified_name(), "org.vibevm.world/wal");
+/// let r = PackageRef::parse("flow:org.vibevm/wal@^0.3").unwrap();
+/// assert_eq!(r.qualified_name(), "org.vibevm/wal");
 /// assert!(r.is_qualified());
 /// // Display round-trips the canonical wire form.
-/// assert_eq!(r.to_string(), "flow:org.vibevm.world/wal@^0.3");
+/// assert_eq!(r.to_string(), "flow:org.vibevm/wal@^0.3");
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(try_from = "String", into = "String")]

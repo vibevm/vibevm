@@ -258,7 +258,7 @@ fn any_file_matches(root: &Path, patterns: &[String]) -> bool {
 }
 
 #[spec(
-    deviates = "spec://org.vibevm.ai-native.core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
+    deviates = "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
     reason = "ambient-env: the `if_command` activation channel (PROP-003 §2.5.2) resolves \
               a command against PATH — reading `PATH` is the predicate's definition, \
               inherent-env domain, not config a composition root could thread in ahead of \
