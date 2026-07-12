@@ -32,6 +32,13 @@ pub(crate) enum Route {
     Reply(Value),
     /// Run the ask_boss bus dance, then reply (needs the bus, async).
     AskBoss { id: Value, question: String },
+    /// Record an escalation on the bus, then reply. Terminal: the run's
+    /// task is handed UP the tree (D-C3-6) — nothing to wait for.
+    Escalate {
+        id: Value,
+        reason: String,
+        needs: String,
+    },
     /// A notification or unparseable line — nothing to write back.
     Silent,
 }
@@ -68,48 +75,92 @@ pub(crate) fn route(line: &str) -> Route {
         ("tools/list", Some(id)) => Route::Reply(json!({
             "jsonrpc": "2.0",
             "id": id,
-            "result": { "tools": [{
-                "name": "ask_boss",
-                "description": "Ask the supervising boss a question and wait for the \
-                     answer. Use when genuinely stuck or before anything destructive: \
-                     ask one precise, answerable question instead of guessing.",
-                "inputSchema": {
-                    "type": "object",
-                    "properties": {
-                        "question": {
-                            "type": "string",
-                            "description": "One precise question for the boss.",
+            "result": { "tools": [
+                {
+                    "name": "ask_boss",
+                    "description": "Ask the supervising boss a question and wait for the \
+                         answer. Use when genuinely stuck or before anything destructive: \
+                         ask one precise, answerable question instead of guessing.",
+                    "inputSchema": {
+                        "type": "object",
+                        "properties": {
+                            "question": {
+                                "type": "string",
+                                "description": "One precise question for the boss.",
+                            },
                         },
+                        "required": ["question"],
                     },
-                    "required": ["question"],
                 },
-            }]},
+                {
+                    "name": "escalate",
+                    "description": "Hand this whole task UP to the boss and STOP. Use when \
+                         the task cannot or should not be finished here — it needs a \
+                         capability, decision, or a larger context window you do not have, \
+                         or splitting it would destroy the cross-cutting reasoning it \
+                         needs. This ENDS your run (it is not a failure); after calling it, \
+                         stop working and end your turn.",
+                    "inputSchema": {
+                        "type": "object",
+                        "properties": {
+                            "reason": {
+                                "type": "string",
+                                "description": "Why the task cannot be finished here.",
+                            },
+                            "needs": {
+                                "type": "string",
+                                "description": "What would unblock it above (capability, \
+                                     decision, larger window, budget).",
+                            },
+                        },
+                        "required": ["reason"],
+                    },
+                },
+            ]},
         })),
         ("tools/call", Some(id)) => {
             let name = msg.pointer("/params/name").and_then(Value::as_str);
-            if name != Some("ask_boss") {
-                return Route::Reply(json!({
+            match name {
+                Some("ask_boss") => match msg
+                    .pointer("/params/arguments/question")
+                    .and_then(Value::as_str)
+                {
+                    Some(q) if !q.trim().is_empty() => Route::AskBoss {
+                        id,
+                        question: q.to_owned(),
+                    },
+                    _ => Route::Reply(arg_error(
+                        id,
+                        "ask_boss requires a non-empty `question` string",
+                    )),
+                },
+                Some("escalate") => {
+                    let reason = msg
+                        .pointer("/params/arguments/reason")
+                        .and_then(Value::as_str);
+                    let needs = msg
+                        .pointer("/params/arguments/needs")
+                        .and_then(Value::as_str)
+                        .unwrap_or("");
+                    match reason {
+                        Some(r) if !r.trim().is_empty() => Route::Escalate {
+                            id,
+                            reason: r.to_owned(),
+                            needs: needs.to_owned(),
+                        },
+                        _ => Route::Reply(arg_error(
+                            id,
+                            "escalate requires a non-empty `reason` string",
+                        )),
+                    }
+                }
+                other => Route::Reply(json!({
                     "jsonrpc": "2.0",
                     "id": id,
                     "error": { "code": -32602, "message": format!(
-                        "unknown tool `{}` (this broker serves ask_boss)",
-                        name.unwrap_or("?")
+                        "unknown tool `{}` (this broker serves ask_boss and escalate)",
+                        other.unwrap_or("?")
                     )},
-                }));
-            }
-            match msg
-                .pointer("/params/arguments/question")
-                .and_then(Value::as_str)
-            {
-                Some(q) if !q.trim().is_empty() => Route::AskBoss {
-                    id,
-                    question: q.to_owned(),
-                },
-                _ => Route::Reply(json!({
-                    "jsonrpc": "2.0",
-                    "id": id,
-                    "error": { "code": -32602, "message":
-                        "ask_boss requires a non-empty `question` string" },
                 })),
             }
         }
@@ -124,6 +175,15 @@ pub(crate) fn route(line: &str) -> Route {
             "error": { "code": -32601, "message": format!("method `{other}` not found") },
         })),
     }
+}
+
+/// A JSON-RPC invalid-params (-32602) error reply for a bad tool argument.
+fn arg_error(id: Value, message: &str) -> Value {
+    json!({
+        "jsonrpc": "2.0",
+        "id": id,
+        "error": { "code": -32602, "message": message },
+    })
 }
 
 /// A tool result envelope (success or in-band error, MCP shape).
@@ -179,6 +239,37 @@ async fn ask_boss(home: &camino::Utf8Path, run_id: RunId, question: &str) -> (St
     }
 }
 
+/// Records the escalation on the bus (D-C3-6): the run ends `escalated`,
+/// terminal. Unlike ask_boss there is nothing to wait for — the task is
+/// handed up. No autostart from the worker side (a worker never births
+/// daemons); a missing daemon is an in-band tool error.
+async fn escalate(
+    home: &camino::Utf8Path,
+    run_id: RunId,
+    reason: &str,
+    needs: &str,
+) -> (String, bool) {
+    let client = match McClient::connect(home).await {
+        Ok(Some(c)) => c,
+        Ok(None) => {
+            return (
+                "mission-control is not running; the escalation cannot be delivered".into(),
+                true,
+            );
+        }
+        Err(e) => return (format!("bus error: {e}"), true),
+    };
+    match client.escalate(run_id, reason, needs).await {
+        Ok(_) => (
+            "Escalated: your task has been handed UP the tree to the boss. This run is now \
+             finished — stop working and end your turn."
+                .into(),
+            false,
+        ),
+        Err(e) => (format!("escalation refused: {e}"), true),
+    }
+}
+
 /// The serve loop: newline-delimited JSON-RPC over stdio.
 pub(crate) async fn serve(home: &camino::Utf8Path) -> u8 {
     let run_id: RunId = match std::env::var("FRACTALITY_RUN_ID")
@@ -202,6 +293,10 @@ pub(crate) async fn serve(home: &camino::Utf8Path) -> u8 {
             Route::Reply(v) => v,
             Route::AskBoss { id, question } => {
                 let (text, is_error) = ask_boss(home, run_id, &question).await;
+                tool_reply(id, text, is_error)
+            }
+            Route::Escalate { id, reason, needs } => {
+                let (text, is_error) = escalate(home, run_id, &reason, &needs).await;
                 tool_reply(id, text, is_error)
             }
         };
@@ -236,9 +331,9 @@ mod tests {
         assert!(v.pointer("/result/capabilities/tools").is_some());
     }
 
-    /// tools/list serves exactly ask_boss with a required question arg.
+    /// tools/list serves ask_boss then escalate, each with its required arg.
     #[test]
-    fn tools_list_serves_ask_boss() {
+    fn tools_list_serves_ask_boss_and_escalate() {
         let Route::Reply(v) = route(r#"{"jsonrpc":"2.0","id":2,"method":"tools/list"}"#) else {
             panic!("tools/list must reply");
         };
@@ -251,7 +346,16 @@ mod tests {
                 .and_then(Value::as_str),
             Some("question")
         );
-        assert!(v.pointer("/result/tools/1").is_none(), "exactly one tool");
+        assert_eq!(
+            v.pointer("/result/tools/1/name").and_then(Value::as_str),
+            Some("escalate")
+        );
+        assert_eq!(
+            v.pointer("/result/tools/1/inputSchema/required/0")
+                .and_then(Value::as_str),
+            Some("reason")
+        );
+        assert!(v.pointer("/result/tools/2").is_none(), "exactly two tools");
     }
 
     /// A valid ask_boss call routes to the bus dance with its question.
@@ -265,6 +369,49 @@ mod tests {
             Route::AskBoss {
                 id: json!(3),
                 question: "which color?".into()
+            }
+        );
+    }
+
+    /// A valid escalate call routes to the bus with reason + needs.
+    #[test]
+    fn escalate_call_routes_with_reason_and_needs() {
+        let r = route(
+            r#"{"jsonrpc":"2.0","id":7,"method":"tools/call","params":{"name":"escalate","arguments":{"reason":"silo task","needs":"bigger window"}}}"#,
+        );
+        assert_eq!(
+            r,
+            Route::Escalate {
+                id: json!(7),
+                reason: "silo task".into(),
+                needs: "bigger window".into(),
+            }
+        );
+    }
+
+    /// escalate requires a non-empty reason; `needs` defaults to empty.
+    #[test]
+    fn escalate_requires_reason_and_defaults_needs() {
+        // Missing reason → invalid-params error, no routing.
+        let Route::Reply(v) = route(
+            r#"{"jsonrpc":"2.0","id":8,"method":"tools/call","params":{"name":"escalate","arguments":{"needs":"x"}}}"#,
+        ) else {
+            panic!("missing reason must reply an error");
+        };
+        assert_eq!(
+            v.pointer("/error/code").and_then(Value::as_i64),
+            Some(-32602)
+        );
+        // Reason present, needs absent → routes with empty needs.
+        let r = route(
+            r#"{"jsonrpc":"2.0","id":9,"method":"tools/call","params":{"name":"escalate","arguments":{"reason":"cannot do it here"}}}"#,
+        );
+        assert_eq!(
+            r,
+            Route::Escalate {
+                id: json!(9),
+                reason: "cannot do it here".into(),
+                needs: String::new(),
             }
         );
     }
