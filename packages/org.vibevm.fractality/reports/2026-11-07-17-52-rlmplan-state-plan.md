@@ -4,11 +4,12 @@ _Campaign 3 Stage B execution tracker. Updated in place between status
 documents (big-plan dashboard rule — bulk stays out of status files).
 Source of truth is the spec tree (plan, syntheses, WAL); this is the
 owner-facing surface + the agent's own quick tracker. Last updated:
-2026-07-12 02:40 (**Ф3 COMPLETE — the descent core is in**). Every D-C3
-decision landed across 9 slices this session (depth-guard, gate
-invocation + decision journal, await `--any`, refuse-near-duplicate,
-masking, retry, merge node) plus the `max_depth=0` overload fix — each
-floor green, committed, pushed. Next phase: **Ф4 escalation (D-C3-6)**.
+2026-07-12 (**Ф4 IN PROGRESS — escalation core outcome landed**). Ф3
+CLOSED (descent core, 9 slices). Ф4.1 (`e13ddbf`) lands the D-C3-6 core:
+terminal `RunState::Escalated` + `EscalationRecord`, typed `Event::
+Escalated` + fold, `escalated` metrics counter — the journal fold carved
+into `journal_fold.rs` on the way (600-line budget). Floor green. Next:
+Ф4.2 (escalation climbs the parent edges) then Ф4.3 (worker expresses it).
 Phase report: `reports/2026-12-07-02-40-campaign3-f3-descent-core.md`._
 
 ## Goal & operating contract (owner, 2026-07-11)
@@ -134,7 +135,23 @@ nudge (RD-12 settings-writes precedent), mc-client, cli surfaces.
         in `swarm.rs`, violations folded into the retry's `context.notes`,
         bounded (gate checked only on the first attempt). `fractality
         spawn` has no wait point so no retry — correct.
-- [ ] Ф4 escalation (D-C3-6)
+- [~] **Ф4 escalation (D-C3-6)** — IN PROGRESS (s4 spike design now real)
+  - [x] Ф4.1 escalation core outcome (`e13ddbf`) — terminal
+        `RunState::Escalated` + `EscalationRecord{reason, needs}`; typed
+        `Event::Escalated` + fold; `MetricsBucket.escalated` counter; MC
+        validator target. Journal fold carved to `journal_fold.rs` (600
+        budget), `journal::apply` re-exported (no caller churn); specmap
+        re-minted. Edges: `running`/`waiting_on_boss → escalated` only
+        (§10.8 minimal). Tested library — no producer yet. Floor green
+        (test-gate 206 / conform 0 / specmap clean).
+  - [ ] Ф4.2 escalation climbs the parent edges — surface escalated runs
+        to the top (mirror D18 `runs(WaitingOnBoss)` triage with
+        `runs(Escalated)`), attribute to the root via `parent` walk; a
+        distinct `state_code` exit for the CLI. Terminal record climbs;
+        run does not resume.
+  - [ ] Ф4.3 worker expresses escalation — resolve open Q (ask_boss-style
+        MCP tool vs result-status exit); wire the pod/backend + cli
+        surface. May widen the `starting → escalated` edge if result-exit.
 - [ ] Ф5 acceptance / PP-002 (RD-11, FD-9)
 - [ ] Ф6 trial (D-C3-9) — STOP at RP-C3-2
 - [ ] Ф7 close
@@ -160,6 +177,13 @@ nudge (RD-12 settings-writes precedent), mc-client, cli surfaces.
   design). **Field data:** opencode remains unreliable for reads this
   session; keep floor/test on backgrounded cargo. When it stabilizes,
   the seam-inventory read is the first thing to hand back.
+- **Ф4.1 (2026-07-12):** no delegation. Work = seam design (the escalation
+  state machine + journal fold + the forced `journal_fold.rs` module
+  split) — all never-delegate/boss-keep (§10.7: seam design, and a
+  discipline-critical split touching scope-marks + the cfg-test conform
+  exemption). Floor ran via backgrounded cargo (the reliable path);
+  first-output well under the 3-min law. Kept: legitimate; delegate
+  remains unproven this session.
 
 ## Next action
 

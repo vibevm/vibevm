@@ -234,6 +234,28 @@ Commit map (Stage B execution, Campaign 3):
 - Ф3.5b merge-node marker + at-most-one invariant (`9825f4e`, D-C3-4/5;
   `output.merge` + `check_sibling_invariants`). **Ф3 COMPLETE — the
   descent core is in: every D-C3 decision landed, floor green, pushed.**
+- Ф4.1 escalation core outcome (`e13ddbf`, D-C3-6): terminal
+  `RunState::Escalated` + `EscalationRecord{reason, needs}` on RunRecord;
+  typed `Event::Escalated` + its fold arm; `MetricsBucket.escalated`
+  counter (terminal, never `open`, never `failed`); MC write-path
+  validator target so validation and fold stay in lockstep. The replay
+  fold carved into a new `journal_fold.rs` cell (600-line budget) with
+  `journal::apply`/`ApplyOutcome` re-exported — no caller changes;
+  specmap re-minted in-commit. Tested library only — no producer yet
+  (Ф4.2 climb / Ф4.3 worker expression next; Ф2 ship-then-wire precedent).
+
+**Scoping decision — escalation edges (D-C3-6, Ф4.1).** `Escalated` is
+reachable only from `running` and `waiting_on_boss`: the live states in
+which a worker (or the boss acting on a parked run) has actually engaged
+the task and can decide it must go up. `queued`/`starting` cannot escalate
+— nothing has evaluated the task yet, so "this needs to go up" there is a
+gate-time `route`/`escalate` verdict (D-C3-1), not a run outcome. The set
+is deliberately minimal (§10.8 conservative): widening to `starting` is a
+backward-compatible edge-add reserved for Ф4.3 IF the worker expresses
+escalation via a result-status exit that can land before the first
+heartbeat. Escalation is TERMINAL (the run is done); the *record* climbs
+the `parent` edges, the run does not resume — this is the deliberate
+divergence from the D18 park channel it otherwise generalizes.
 
 **Scoping decision — decision-journal producer (D-C3-8).** The journal
 must record REAL need-gate decisions, so the producer cannot be MC
