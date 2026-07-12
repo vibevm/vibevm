@@ -113,6 +113,16 @@ argument-dependent lookup on every resolution. Acceptable typed once
 in a chat; inside spec files, re-read dozens of times per session,
 write the full address.
 
+**For a package, the module authority MUST be the package's full
+coordinate `<group>.<name>`** — e.g. `org.vibevm.ai-native.rust-ai-native-lang`,
+never a bare `rust-ai-native-lang`. A bare authority resolves only with
+ambient context (which package am I in?); the full coordinate is a
+self-contained global symbol, which is what makes every `spec://`
+citation *mechanically* refactorable — an algorithm rewrites all
+occurrences on a rename, no resolver and no model in the loop. This is
+the addressing half of vibevm's PROP-029 (fully-qualified addresses and
+mechanical refactoring).
+
 ## Single source of truth {#single-source}
 
 Every fact has exactly one authoritative anchor. Citing the anchor
