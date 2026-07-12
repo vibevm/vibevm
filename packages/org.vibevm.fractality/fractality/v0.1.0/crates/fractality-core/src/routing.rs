@@ -58,6 +58,18 @@ pub struct ClassPolicy {
     /// `advisor_enabled ⇐ caller_class ≥ medium`). Advisor itself is
     /// Stage C (PP-003); this row keeps the bar ready.
     pub advisor_enabled: bool,
+    /// PP-003 Stage C (VISION §V4): the capability class this class CONSULTS
+    /// when it asks for advice — "a rung above the caller; at the effective
+    /// top, a slightly-smaller/same-size model". Medium consults strong;
+    /// strong (the top rung) consults strong; weak consults no one
+    /// (`advisor_enabled = false`). This is routing GUIDANCE the caller
+    /// reads when choosing an advisor profile — the admission bar on
+    /// *whether* it may consult is `advisor_enabled`, enforced separately
+    /// (`check_advisor_caller_class`), never this rung. `None` = no ladder
+    /// guidance for this class; default `None` so a partial authored row
+    /// round-trips, while the compiled table below carries the ladder.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub advisor_class: Option<CapabilityClass>,
 }
 
 /// The routing policy: a row per capability class. Missing rows fall back
@@ -113,29 +125,48 @@ impl RoutingPolicy {
             .unwrap_or_else(|| Self::compiled_default_for(class))
     }
 
+    /// The advisor rung a caller of `caller_class` should route an advice
+    /// call to (PP-003 Stage C / VISION §V4): a rung above, or the same top
+    /// rung at the ceiling. `None` when the class may not consult
+    /// (`advisor_enabled = false`, e.g. weak) or its row gives no ladder
+    /// guidance. Guidance for the caller's routing choice — the admission
+    /// bar on *whether* it may consult is enforced separately
+    /// (`check_advisor_caller_class` over `advisor_enabled`); this never
+    /// gates, it only points. Total: falls back to the compiled row.
+    pub fn advisor_class_for(&self, caller_class: CapabilityClass) -> Option<CapabilityClass> {
+        let row = self.for_class(caller_class);
+        row.advisor_enabled.then_some(row.advisor_class).flatten()
+    }
+
     /// The compiled-in row for a class — the source of truth the authored
     /// `routing-policy.toml` mirrors, and the fallback when a loaded table
     /// omits a class. Total: no lookup, no panic.
     fn compiled_default_for(class: CapabilityClass) -> ClassPolicy {
         match class {
-            // Weak: route only, never a spawning root, no advisor.
+            // Weak: route only, never a spawning root, no advisor (consults
+            // no one — advice makes it worse, RD-10).
             CapabilityClass::Weak => ClassPolicy {
                 max_depth: 0,
                 allow_experimental_depth2: false,
                 advisor_enabled: false,
+                advisor_class: None,
             },
-            // Medium: one level of decomposition; clears the advisor bar.
+            // Medium: one level of decomposition; clears the advisor bar and
+            // consults a rung above (strong).
             CapabilityClass::Medium => ClassPolicy {
                 max_depth: 1,
                 allow_experimental_depth2: false,
                 advisor_enabled: true,
+                advisor_class: Some(CapabilityClass::Strong),
             },
             // Strong: one level by default; the only class allowed the
-            // experimental depth-2 flag (RD-2).
+            // experimental depth-2 flag (RD-2). At the top rung it consults a
+            // same-size advisor (strong), never nothing (VISION §V4).
             CapabilityClass::Strong => ClassPolicy {
                 max_depth: 1,
                 allow_experimental_depth2: true,
                 advisor_enabled: true,
+                advisor_class: Some(CapabilityClass::Strong),
             },
         }
     }
@@ -196,5 +227,60 @@ mod tests {
     fn class_names_serialize_snake_case() {
         let json = serde_json::to_string(&CapabilityClass::Strong).expect("serializes");
         assert_eq!(json, "\"strong\"");
+    }
+
+    #[test]
+    fn advisor_ladder_points_a_rung_above_the_caller() {
+        // VISION §V4: advise with a rung above; at the top, a same-size rung;
+        // a class that may not consult (weak) has no rung.
+        let p = RoutingPolicy::default();
+        assert_eq!(
+            p.advisor_class_for(CapabilityClass::Weak),
+            None,
+            "weak may not consult (advisor_enabled = false), so no rung"
+        );
+        assert_eq!(
+            p.advisor_class_for(CapabilityClass::Medium),
+            Some(CapabilityClass::Strong),
+            "medium consults a rung above (strong)"
+        );
+        assert_eq!(
+            p.advisor_class_for(CapabilityClass::Strong),
+            Some(CapabilityClass::Strong),
+            "strong is at the top: it consults a same-size rung, never nothing"
+        );
+    }
+
+    #[test]
+    fn advisor_enabled_gates_the_rung_even_when_a_class_names_one() {
+        // A row that names an advisor rung but is not advisor-enabled must
+        // still yield None: the bar wins over the ladder guidance.
+        let text = "\
+            schema = 1\n\
+            [class.weak]\n\
+            max_depth = 0\n\
+            allow_experimental_depth2 = false\n\
+            advisor_enabled = false\n\
+            advisor_class = \"strong\"\n";
+        let p = RoutingPolicy::from_toml_str(text).expect("parses");
+        assert_eq!(
+            p.advisor_class_for(CapabilityClass::Weak),
+            None,
+            "advisor_enabled = false suppresses the rung"
+        );
+    }
+
+    #[test]
+    fn advisor_class_round_trips_through_toml() {
+        // The ladder survives serialize→parse; the medium row carries its
+        // rung explicitly on the wire, and the weak None is simply absent.
+        let p = RoutingPolicy::default();
+        let text = toml::to_string(&p).expect("serializes");
+        let back = RoutingPolicy::from_toml_str(&text).expect("re-parses");
+        assert_eq!(p, back, "advisor_class round-trips through TOML");
+        assert!(
+            text.contains("advisor_class = \"strong\""),
+            "the ladder rung serialized onto the wire:\n{text}"
+        );
     }
 }
