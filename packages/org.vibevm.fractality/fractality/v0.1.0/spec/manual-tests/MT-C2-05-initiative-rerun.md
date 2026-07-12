@@ -78,13 +78,22 @@ for n in 1 2 3; do bash spec/manual-tests/trial/run-arm.sh b "$n"; done
 Score per MT-C2-01's rules; extract fatigue facts from each B′ run's
 `sessions.txt` + the session journal; record everything below.
 
-## RP5 — re-run authorization (OPEN)
+## RP5 — re-run authorization (RESOLVED 2026-07-12)
 
 The paid arms of this test run only on the owner's word: count
 (recommend 3+3, cap 8), boss (recommend GLM again for Ф6
 comparability; an Opus-class arm is a separate, additional ask), and
-timing. Until RP5 is RESOLVED here with the ruling verbatim, this
-file is protocol only.
+timing.
+
+**RESOLVED 2026-07-12 — the owner's ruling, verbatim.** Count/boss:
+selected the recommendation on file — **«3+3 GLM, cold boss, cap 8»**
+(3 runs arm A′ + 3 runs arm B′, GLM-5.2-served cold boss for Ф6
+comparability, technical-repeat cap 8). Timing: **«Авторизую все платные
+прогоны и автономию до конца текущего goal»** — the arms fire this goal,
+in the session driving PP-001, under the live-observation law. An
+Opus-class arm remains a separate, additional ask (not authorized here).
+The frozen predictions PR1–PR3 (§Pre-registered protocol) stand
+unchanged; scoring follows MT-C2-01's frozen rules.
 
 ## Recorded runs
 
