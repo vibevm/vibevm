@@ -1,0 +1,2 @@
+fabric ready — no delegated runs on this box yet.
+first delegation: score the task (`fractality route --error-cost reversible --context compilable --verify mechanical --size S` → delegate/small), then `fractality spawn`; discovery: the fractality-delegate skill.

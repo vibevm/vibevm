@@ -1,0 +1,2 @@
+arm=advised run=3 caller=glm-5-turbo proj=/tmp/tmp.ZhRKmBQ2bl/trial-advise-advised-3/proj home=/tmp/tmp.ZhRKmBQ2bl/trial-advise-advised-3/home
+boss_exit=0 wall_secs=142

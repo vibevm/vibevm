@@ -1,0 +1,2 @@
+arm=alone run=2 caller=glm-5-turbo proj=/tmp/tmp.rLNX1rkBhd/trial-advise-alone-2/proj home=/tmp/tmp.rLNX1rkBhd/trial-advise-alone-2/home
+boss_exit=0 wall_secs=137

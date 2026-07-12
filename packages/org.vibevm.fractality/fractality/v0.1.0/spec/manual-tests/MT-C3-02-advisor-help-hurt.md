@@ -151,7 +151,45 @@ python spec/manual-tests/trial/score-advise.py
 
 ## Recorded runs
 
-_(filled after execution, from `target/trial-results/advise-<arm>-run-<n>/`)_
+_Executed 2026-12-07 12:52–13:12 (caller `glm-5-turbo`, alone×3 + advised×3,
+all `boss_exit=0`). Scored by `score-advise.py`. Raw evidence + the group
+narrative in `reports/trial-results/2026-12-07-13-12-c3-mt-c3-02-advisor-help-hurt/`._
+
+**Pass rate: ALONE 6/9 = 66.7%, ADVISED 6/9 = 66.7% (delta +0.0).** Tasks 2
+(count) and 3 (empty-value) passed in all six runs; task 1 (order dedup)
+failed in all six — but on `error[E0432]: unresolved import
+mini_logfmt::dedup_keys`, a **name mismatch** (the menu did not pin the exact
+function name the hidden test imports), not a logic error. Task 1 is therefore
+excluded from the quality read as a trial-design artifact.
+
+### Prediction verdicts
+
+- **PR-adv-1 (advice helps): NOT TESTED — null mechanism.** ADVISED = ALONE,
+  but because **the advised caller never consulted**, not because advice
+  failed to help. There was no advice effect to measure.
+- **PR-adv-2 (every advised run consults ≥ 1×): FALSIFIED — the key finding.**
+  Zero `fractality advise` calls across all three advised runs (0 advice runs
+  in `runs.json`; 0 mentions in the transcripts). A `glm-5-turbo` caller, even
+  with a preamble explicitly inviting it to consult a stronger advisor on the
+  subtle case, **did not reach for the advisor**. A prose invitation is not
+  enough to make a weak caller consult.
+- **PR-adv-3 (no-hurt floor): CONFIRMED (trivially).** ADVISED failures (3) =
+  ALONE failures (3) — advice degraded nothing, because it did not happen.
+
+**Conclusion.** The advisor MACHINERY is real and unit-tested (the `advise`
+verb, the RD-10 caller-class bar, the ladder — all floor-green). This trial
+isolates the remaining gap as the **consult BEHAVIOUR**: a weak caller will
+not consult from a preamble alone. This is precisely the case for the deferred
+**uncertainty trigger** (C-3) — the consult must be driven by a measured
+signal (self-consistency spread, verbalized low confidence) and/or made more
+automatic than a prose invitation. The 2-tier limit stands (one point measured,
+glm-5.2 advising glm-5-turbo). Follow-ups for a re-run: pin the exact function
+name in task 1 (or make the hidden test name-agnostic); strengthen the consult
+trigger; a third tier for the full RD-10 inversion.
+
+## Owner sign-off
+
+_(recorded after the runs, as with MT-C2-01..05 and MT-C3-01)_
 
 ## Owner sign-off
 
