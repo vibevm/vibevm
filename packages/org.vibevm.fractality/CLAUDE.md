@@ -385,11 +385,14 @@ names what superseded it. Like the dashboards above, this is an
 owner-facing surface — the spec tree (plan deferral ledgers, MT
 files, WAL) stays the source of truth and wins on divergence.
 
-### Preserve paid trial results — ALWAYS (owner directive, 2026-07-12)
+### Preserve valuable test/run evidence — ALWAYS (owner directive, 2026-07-12)
 
-Every paid trial run — any `trial/run-arm.sh` / `run-advise.sh` fire —
-writes its evidence to `fractality/v0.1.0/target/trial-results/`, which is
-**gitignored**. That evidence is the record of real GLM spend; letting a
+**One rule, two cases: evidence of important or long-running testing gets
+committed, never left to rot in an ephemeral dir.**
+
+**Case 1 — every paid trial run.** Any `trial/run-arm.sh` / `run-advise.sh`
+fire writes its evidence to `fractality/v0.1.0/target/trial-results/`, which
+is **gitignored**. That evidence is the record of real GLM spend; letting a
 `cargo clean` or a fresh checkout erase it wastes the money. So **after
 every trial fire, preserve it durably and commit — this is not optional and
 not deferrable**:
@@ -405,8 +408,24 @@ transcript into the committed [`reports/trial-results/`](reports/trial-results/)
 (README there), excluding the huge, reproducible `proj-final/`. A run is not
 "done" until its evidence is committed. The scored verdicts still go in the
 MT doc's "Recorded runs"; `reports/trial-results/` holds the raw evidence
-behind them. (Owner: «новые тесты тоже сохраняй — и добавь в инструкции что
-так надо делать всегда».)
+behind them.
+
+**Case 2 — any other important or long test/run.** Not everything comes from
+the trial harness, and not every valuable run is shaped like one. Any
+sufficiently important and/or long-running test, benchmark, experiment,
+profiling pass, or measurement whose results carry value — judged **by
+meaning**, not by how it was produced — is **also** preserved under
+`reports/trial-results/` (a sensibly-named subdir), then committed. Apply
+judgment: if losing the output would waste real time or money, or if
+re-running it to recover the numbers would be expensive, save it. When in
+doubt, save it — the cost of a committed artifact is trivial next to a lost
+measurement campaign.
+
+(Owner: «новые тесты тоже сохраняй — и добавь в инструкции что так надо
+делать всегда»; and «Не все прогоны и тесты делаются обязательно так как
+сейчас, но их результаты тем не менее могут иметь ценность… по смыслу
+определять, что это результаты какого-то достаточно важного и/или долгого
+тестирования и тоже складывать в reports/trial-results».)
 
 ## End of session
 
