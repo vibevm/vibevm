@@ -332,5 +332,8 @@ pub fn print_run_detail(r: &RunRecord) {
     if let Some(v) = verifier_verdict(r) {
         println!("verifier:   {v}");
     }
+    if r.advice {
+        println!("advice:     consultation (judgment only; the caller keeps ownership)");
+    }
     print_usage_lines(r);
 }

@@ -182,6 +182,18 @@ async fn register_run(
              a verifier over an empty tree is refused",
         ));
     }
+    // The advisor bar (PP-003, D-C3-7): an advice call is refused when its
+    // caller (parent) is below the `advisor_enabled` capability bar (RD-10:
+    // advice makes a weak caller worse).
+    if let Err(message) = crate::admission::check_advisor_caller_class(
+        &state,
+        &req.packet,
+        req.parent,
+        &fractality_core::RoutingPolicy::default(),
+    ) {
+        return Err(ApiError::new(StatusCode::BAD_REQUEST, message)
+            .hint("only a caller of capability class >= medium may consult an advisor"));
+    }
     let parent_record = match req.parent {
         None => None,
         Some(parent) => match state.get_run(parent) {
@@ -280,6 +292,7 @@ async fn register_run(
         depth,
         spawn_requested: req.spawn,
         verifier: req.packet.output.verifier,
+        advice: req.packet.output.advice,
         budget: req.packet.budget,
         node_id: state.node.node_id.clone(),
         run_dir,

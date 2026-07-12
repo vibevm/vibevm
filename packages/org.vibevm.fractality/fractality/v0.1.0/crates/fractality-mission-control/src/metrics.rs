@@ -90,6 +90,7 @@ mod tests {
             depth: 0,
             spawn_requested: true,
             verifier: false,
+            advice: false,
             budget: BudgetSpec::default(),
             node_id: "n".into(),
             run_dir: "runs/x".into(),

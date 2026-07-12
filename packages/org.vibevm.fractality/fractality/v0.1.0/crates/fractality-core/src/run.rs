@@ -231,6 +231,12 @@ pub struct RunRecord {
     /// the packet.
     #[serde(default)]
     pub verifier: bool,
+    /// PP-003 / D-C3-7: this run is an ADVICE call (denormalized from
+    /// `packet.output.advice`) — a consultation that returns judgment, not
+    /// owned work; the caller keeps its task. Lets `ps`/`show` mark advisor
+    /// runs, and the accounting attribute the advice to the caller.
+    #[serde(default)]
+    pub advice: bool,
     /// The packet's hard budget, denormalized for the watchdog (a value
     /// of 0 in any field means "unlimited" for that axis).
     #[serde(default)]

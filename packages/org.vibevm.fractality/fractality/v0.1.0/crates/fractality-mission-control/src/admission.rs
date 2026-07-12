@@ -196,6 +196,45 @@ pub fn check_verifier_has_work(state: &AppState, packet: &Packet) -> Result<(), 
     }
 }
 
+/// The advisor bar (PP-003, D-C3-7 / RD-10): an ADVICE call is admitted only
+/// when its CALLER may consult an advisor — the routing policy's
+/// `advisor_enabled` for the caller's capability class. A weak caller is
+/// made WORSE by advice, not better (the minRLM/nano inversion; the SWE
+/// 1.5→1.6 threshold), so it is refused at the door. The caller is the
+/// parent run; a boss-spawned advice call (no parent) is the human at the
+/// top, always above the bar. Pure over the registry + the compiled policy;
+/// the caller maps `Err` to a 400.
+pub fn check_advisor_caller_class(
+    state: &AppState,
+    packet: &Packet,
+    parent: Option<RunId>,
+    policy: &RoutingPolicy,
+) -> Result<(), String> {
+    if !packet.output.advice {
+        return Ok(());
+    }
+    let Some(parent) = parent else {
+        // Boss-spawned advice: the caller is the human/top, above the bar.
+        return Ok(());
+    };
+    let Some(parent_run) = state.get_run(parent) else {
+        // An unknown parent is register_run's own check to refuse, not this
+        // one's — degrade to allow so the error surfaces there.
+        return Ok(());
+    };
+    let caller_class = parent_capability_class(state, &parent_run.profile);
+    if policy.for_class(caller_class).advisor_enabled {
+        Ok(())
+    } else {
+        Err(format!(
+            "advisor bar: a `{}`-class caller may not consult an advisor \
+             (advisor_enabled ⇐ caller_class ≥ medium, RD-10: advice makes a weak \
+             caller worse, not better) — route or fold the task instead",
+            caller_class.as_str()
+        ))
+    }
+}
+
 /// Whether a profile's bearer-token file is present — the availability
 /// signal for masking (FD-8). Mirrors the existence check [`preflight`]
 /// makes at the door, factored out so routing can consult it without

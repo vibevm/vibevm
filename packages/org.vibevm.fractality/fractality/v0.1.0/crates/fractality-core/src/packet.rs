@@ -154,6 +154,17 @@ pub struct OutputSpec {
     /// verification over an empty tree (§10.2). Default false.
     #[serde(default, skip_serializing_if = "is_false")]
     pub verifier: bool,
+    /// PP-003 / D-C3-7 (V4 advisor channel): this run is an ADVICE call —
+    /// a worker-shaped consultation that returns judgment, **not** owned
+    /// work. The caller keeps its task and its loop; the advice run holds
+    /// no loop, no ownership (VISION §V4). Mission-control refuses an
+    /// advice call whose CALLER (parent run) is below the advisor bar
+    /// (`advisor_enabled ⇐ caller_class ≥ medium`, RD-10: a weak caller is
+    /// made worse by advice, not better). The caller routes the call to a
+    /// rung above itself (the ladder is routing guidance, not enforced
+    /// here). Default false.
+    #[serde(default, skip_serializing_if = "is_false")]
+    pub advice: bool,
 }
 
 /// serde `skip_serializing_if` for a plain bool: omit it from the wire
@@ -170,6 +181,7 @@ impl Default for OutputSpec {
             output_schema: None,
             merge: false,
             verifier: false,
+            advice: false,
         }
     }
 }
