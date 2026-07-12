@@ -1,0 +1,172 @@
+[
+  {
+    "verdict": "route",
+    "reason": "fits the worker window (>=30% margin), single-skill — route as-is, do not decompose",
+    "class": "medium",
+    "inputs": {
+      "o1_lookup": false,
+      "needs_absent_tool": false,
+      "fits_window": true,
+      "single_skill": true,
+      "cross_chunk_dominant": false,
+      "large_window_available": false,
+      "decomposable": false,
+      "depth": 0,
+      "max_depth": 1,
+      "can_spawn": true
+    }
+  },
+  {
+    "verdict": "route",
+    "reason": "fits the worker window (>=30% margin), single-skill — route as-is, do not decompose",
+    "class": "medium",
+    "inputs": {
+      "o1_lookup": false,
+      "needs_absent_tool": false,
+      "fits_window": true,
+      "single_skill": true,
+      "cross_chunk_dominant": false,
+      "large_window_available": false,
+      "decomposable": false,
+      "depth": 0,
+      "max_depth": 1,
+      "can_spawn": true
+    }
+  },
+  {
+    "verdict": "route",
+    "reason": "fits the worker window (>=30% margin), single-skill — route as-is, do not decompose",
+    "class": "medium",
+    "inputs": {
+      "o1_lookup": false,
+      "needs_absent_tool": false,
+      "fits_window": true,
+      "single_skill": true,
+      "cross_chunk_dominant": false,
+      "large_window_available": false,
+      "decomposable": false,
+      "depth": 0,
+      "max_depth": 1,
+      "can_spawn": true
+    }
+  },
+  {
+    "verdict": "route",
+    "reason": "fits the worker window (>=30% margin), single-skill — route as-is, do not decompose",
+    "class": "medium",
+    "inputs": {
+      "o1_lookup": false,
+      "needs_absent_tool": false,
+      "fits_window": true,
+      "single_skill": true,
+      "cross_chunk_dominant": false,
+      "large_window_available": false,
+      "decomposable": false,
+      "depth": 0,
+      "max_depth": 1,
+      "can_spawn": true
+    }
+  },
+  {
+    "verdict": "route",
+    "reason": "fits the worker window (>=30% margin), single-skill — route as-is, do not decompose",
+    "class": "medium",
+    "inputs": {
+      "o1_lookup": false,
+      "needs_absent_tool": false,
+      "fits_window": true,
+      "single_skill": true,
+      "cross_chunk_dominant": false,
+      "large_window_available": false,
+      "decomposable": false,
+      "depth": 0,
+      "max_depth": 1,
+      "can_spawn": true
+    }
+  },
+  {
+    "verdict": "route",
+    "reason": "fits the worker window (>=30% margin), single-skill — route as-is, do not decompose",
+    "class": "weak",
+    "inputs": {
+      "o1_lookup": false,
+      "needs_absent_tool": false,
+      "fits_window": true,
+      "single_skill": true,
+      "cross_chunk_dominant": false,
+      "large_window_available": false,
+      "decomposable": false,
+      "depth": 0,
+      "max_depth": 0,
+      "can_spawn": false
+    }
+  },
+  {
+    "verdict": "escalate",
+    "reason": "cross-chunk dependence dominates (Silo theorem) — escalate up, do not fan out",
+    "class": "strong",
+    "inputs": {
+      "o1_lookup": false,
+      "needs_absent_tool": false,
+      "fits_window": false,
+      "single_skill": false,
+      "cross_chunk_dominant": true,
+      "large_window_available": false,
+      "decomposable": false,
+      "depth": 0,
+      "max_depth": 1,
+      "can_spawn": true
+    }
+  },
+  {
+    "verdict": "inline",
+    "reason": "O(1) lookup / single fact — the boss does it inline",
+    "class": "weak",
+    "inputs": {
+      "o1_lookup": true,
+      "needs_absent_tool": false,
+      "fits_window": false,
+      "single_skill": false,
+      "cross_chunk_dominant": false,
+      "large_window_available": false,
+      "decomposable": false,
+      "depth": 0,
+      "max_depth": 0,
+      "can_spawn": false
+    }
+  },
+  {
+    "verdict": "route",
+    "reason": "fits the worker window (>=30% margin), single-skill — route as-is, do not decompose",
+    "class": "medium",
+    "inputs": {
+      "o1_lookup": false,
+      "needs_absent_tool": false,
+      "fits_window": true,
+      "single_skill": true,
+      "cross_chunk_dominant": false,
+      "large_window_available": false,
+      "decomposable": false,
+      "depth": 0,
+      "max_depth": 1,
+      "can_spawn": true
+    }
+  },
+  {
+    "verdict": "escalate",
+    "reason": "cross-chunk dependence dominates (Silo theorem) — escalate up, do not fan out",
+    "class": "strong",
+    "inputs": {
+      "o1_lookup": false,
+      "needs_absent_tool": false,
+      "fits_window": false,
+      "single_skill": false,
+      "cross_chunk_dominant": true,
+      "large_window_available": false,
+      "decomposable": false,
+      "depth": 0,
+      "max_depth": 1,
+      "can_spawn": true
+    }
+  }
+]

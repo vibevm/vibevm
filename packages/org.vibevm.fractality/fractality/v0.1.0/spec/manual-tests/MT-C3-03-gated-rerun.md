@@ -107,7 +107,59 @@ python spec/manual-tests/trial/score-g2.py
 
 ## Recorded runs
 
-_(filled after execution, from `target/trial-results/arm-g2-run-<n>/`)_
+_Executed 2026-12-07 10:09–11:03 (boss `glm-5.2[1m]`, worker cap 80, boss cap
+100). Scored by `trial/score-g2.py`. Raw evidence preserved in
+`reports/trial-results/2026-12-07-11-03-c3-mt-c3-03-gated-rerun/` (per-run bus
+facts + decision journals + gzipped transcripts + group README)._
+
+- **Run 1** — `boss_exit=0` (clean), **4 workers** (all `failed` on the
+  staging linker / turn cap). 3 gate calls; **delegated E = {1, 3, 4, 9}**
+  (the schema task among them). Distractors: 0.
+- **Run 2** — `boss_exit=124` (25-min wall), **5 workers** (3 `completed`, 2
+  `running` at the wall). 7 gate calls. **Delegated E = {1, 3, 4, 9}.** Best
+  collection of the three.
+- **Run 3** — `boss_exit=1`, **0 workers**, died ~3.5 min in (technical
+  failure, empty stderr). Delegated nothing — drags the pool.
+
+**Pooled delegation: 8/21 ≈ 38.1%** vs the naive baseline 16.7% (~2.3×); runs
+1+2 alone = 8/14 ≈ 57%. Distractor delegations: 0.
+
+### Prediction verdicts
+
+- **P-C3-a (window-fit → route, not spawn): CONFIRMED — now a hard count.**
+  The decision journal (read via the new `fractality decisions` verb) shows
+  **8/10 gated verdicts route or inline** (route 7, inline 1, spawn 0, escalate
+  2). MT-C3-01 could only report a transcript direction; here it is 80%.
+- **P-C3-b (schema cuts rework): SUPPORTED — the mechanism engaged.** Task 9
+  drew the boss to set `output_schema` on its delegation in 2 of 3 runs (9 and
+  14 transcript mentions), where MT-C3-01 had zero. Not fully CONFIRMED: no
+  worker *completed* under a schema (all failed/timed out), so the
+  validate-and-retry gate had no return to grade. A completed schema worker
+  closes it — the task-9 nudge is the fix that made it measurable at all.
+- **P-C3-c (no wall-budget overrun): CONFIRMED.** Zero `killed(budget)`.
+- **P-C3-d (a Silo task escalates): CONFIRMED.** Task 10 (the whole-crate
+  record-validity invariant) drew **two `escalate` gate verdicts** — reason
+  "cross-chunk dependence dominates (Silo task)" — not a fan-out into
+  per-module children. MT-C3-01 had zero escalations because its menu offered
+  nothing chunk-destroying; the new Silo task is exactly the missing item, and
+  the boss's gate handled it correctly.
+
+### Honest caveats
+
+- **Run 3 was a technical failure** (0 workers, exit 1, ~3.5 min) — a clean
+  N=3 wants a re-fire of that one run (≤ 5 technical repeats reserved). The
+  pool metric (38.1%) carries its zero; runs 1+2 are the real signal (57%).
+- **Workers still failed/timed out** on the multi-file tasks despite the
+  raised 80-turn cap — the staging linker (C2 F24) and task heaviness bite
+  before the cap does. `delegated` (8) again leads `delegated-and-collected`
+  (3 completed in run 2). The delegation *decision* is what this trial
+  measures cleanly; completion is a separate worker-robustness axis.
+- Both previously-inconclusive predictions moved (P-C3-b → supported, P-C3-d →
+  confirmed), which was the whole point of PP-004.
+
+## Owner sign-off
+
+_(recorded after the runs, as with MT-C2-01..05 and MT-C3-01)_
 
 ## Owner sign-off
 

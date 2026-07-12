@@ -1,0 +1,234 @@
+[
+  {
+    "run_id": "01KXAK9EEZFYFX9VG84NRS2TZF",
+    "title": "parse-line-tests",
+    "state": "failed",
+    "profile": "glm",
+    "model": "big",
+    "workspace_mode": "worktree",
+    "parent": null,
+    "depth": 0,
+    "spawn_requested": true,
+    "verifier": false,
+    "advice": false,
+    "budget": {
+      "wall_secs": 600,
+      "max_turns": 30,
+      "max_output_tokens": 200000,
+      "max_depth": 0,
+      "max_agent_calls": 0,
+      "max_call_tokens": 0,
+      "max_global_calls": 0,
+      "max_spend_micros": 0
+    },
+    "node_id": "cbf0b306-e460-4161-9d23-f15fb6460cc7",
+    "run_dir": "C:/Users/olegc/AppData/Local/Temp/tmp.lh8xJiKOvt/trial-g2-1/home\\runs\\01KXAK9EEZFYFX9VG84NRS2TZF",
+    "created_ts_ms": 1783840946656,
+    "updated_ts_ms": 1783841199729,
+    "started_ts_ms": 1783840946656,
+    "pod": {
+      "pod_id": "01KXAK9FRE6T6QH678ZNNP2TWY",
+      "pod_pid": 44824
+    },
+    "worker_pid": 61724,
+    "exit_code": 1,
+    "failure": "worker exited with code 1",
+    "kill_reason": null,
+    "usage": {
+      "input_tokens": 29765,
+      "output_tokens": 873,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 64000,
+      "total_cost_usd": 0.20265,
+      "events": 439,
+      "web_tool_calls": 0
+    },
+    "collected": {
+      "result_source": "extracted",
+      "result": {
+        "fs": "01KXAJJ98Q97TB8R4CVCGA5N5R",
+        "path": "01KXAK9EEZFYFX9VG84NRS2TZF/wt/result.md",
+        "range": "whole",
+        "etag": "137-19f5538966e"
+      },
+      "result_path": "C:/Users/olegc/AppData/Local/Temp/tmp.lh8xJiKOvt/trial-g2-1/home\\runs\\01KXAK9EEZFYFX9VG84NRS2TZF\\wt\\result.md",
+      "acceptance_passed": 0,
+      "acceptance_total": 0,
+      "acceptance_skipped": "worker failed; acceptance not run"
+    }
+  },
+  {
+    "run_id": "01KXAK9FSH26XH314ZWFRD7MF7",
+    "title": "facts-md",
+    "state": "failed",
+    "profile": "glm",
+    "model": "big",
+    "workspace_mode": "worktree",
+    "parent": null,
+    "depth": 0,
+    "spawn_requested": true,
+    "verifier": false,
+    "advice": false,
+    "budget": {
+      "wall_secs": 420,
+      "max_turns": 25,
+      "max_output_tokens": 200000,
+      "max_depth": 0,
+      "max_agent_calls": 0,
+      "max_call_tokens": 0,
+      "max_global_calls": 0,
+      "max_spend_micros": 0
+    },
+    "node_id": "cbf0b306-e460-4161-9d23-f15fb6460cc7",
+    "run_dir": "C:/Users/olegc/AppData/Local/Temp/tmp.lh8xJiKOvt/trial-g2-1/home\\runs\\01KXAK9FSH26XH314ZWFRD7MF7",
+    "created_ts_ms": 1783840948018,
+    "updated_ts_ms": 1783841192323,
+    "started_ts_ms": 1783840948018,
+    "pod": {
+      "pod_id": "01KXAK9H6PJCBNY2EY4EG4QRSV",
+      "pod_pid": 55280
+    },
+    "worker_pid": 32220,
+    "exit_code": 1,
+    "failure": "worker exited with code 1",
+    "kill_reason": null,
+    "usage": {
+      "input_tokens": 24598,
+      "output_tokens": 207,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 35264,
+      "total_cost_usd": 0.145797,
+      "events": 68,
+      "web_tool_calls": 0
+    },
+    "collected": {
+      "result_source": "extracted",
+      "result": {
+        "fs": "01KXAJJ98Q97TB8R4CVCGA5N5R",
+        "path": "01KXAK9FSH26XH314ZWFRD7MF7/wt/result.md",
+        "range": "whole",
+        "etag": "137-19f55387980"
+      },
+      "result_path": "C:/Users/olegc/AppData/Local/Temp/tmp.lh8xJiKOvt/trial-g2-1/home\\runs\\01KXAK9FSH26XH314ZWFRD7MF7\\wt\\result.md",
+      "acceptance_passed": 0,
+      "acceptance_total": 0,
+      "acceptance_skipped": "worker failed; acceptance not run"
+    }
+  },
+  {
+    "run_id": "01KXAK9H70CAS7Y4RCWHRR6MSR",
+    "title": "fixtures-to-json",
+    "state": "failed",
+    "profile": "glm",
+    "model": "big",
+    "workspace_mode": "worktree",
+    "parent": null,
+    "depth": 0,
+    "spawn_requested": true,
+    "verifier": false,
+    "advice": false,
+    "budget": {
+      "wall_secs": 600,
+      "max_turns": 32,
+      "max_output_tokens": 200000,
+      "max_depth": 0,
+      "max_agent_calls": 0,
+      "max_call_tokens": 0,
+      "max_global_calls": 0,
+      "max_spend_micros": 0
+    },
+    "node_id": "cbf0b306-e460-4161-9d23-f15fb6460cc7",
+    "run_dir": "C:/Users/olegc/AppData/Local/Temp/tmp.lh8xJiKOvt/trial-g2-1/home\\runs\\01KXAK9H70CAS7Y4RCWHRR6MSR",
+    "created_ts_ms": 1783840949472,
+    "updated_ts_ms": 1783841145579,
+    "started_ts_ms": 1783840949472,
+    "pod": {
+      "pod_id": "01KXAK9JMBQDAQ09X1HW48TY8J",
+      "pod_pid": 49268
+    },
+    "worker_pid": 17440,
+    "exit_code": 1,
+    "failure": "worker exited with code 1",
+    "kill_reason": null,
+    "usage": {
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "total_cost_usd": 0.0,
+      "events": 13,
+      "web_tool_calls": 0
+    },
+    "collected": {
+      "result_source": "extracted",
+      "result": {
+        "fs": "01KXAJJ98Q97TB8R4CVCGA5N5R",
+        "path": "01KXAK9H70CAS7Y4RCWHRR6MSR/wt/result.md",
+        "range": "whole",
+        "etag": "137-19f5537c2e7"
+      },
+      "result_path": "C:/Users/olegc/AppData/Local/Temp/tmp.lh8xJiKOvt/trial-g2-1/home\\runs\\01KXAK9H70CAS7Y4RCWHRR6MSR\\wt\\result.md",
+      "acceptance_passed": 0,
+      "acceptance_total": 0,
+      "acceptance_skipped": "worker failed; acceptance not run"
+    }
+  },
+  {
+    "run_id": "01KXAK9JMTCYYACMCT7NCDR2RW",
+    "title": "api-manifest",
+    "state": "failed",
+    "profile": "glm",
+    "model": "big",
+    "workspace_mode": "worktree",
+    "parent": null,
+    "depth": 0,
+    "spawn_requested": true,
+    "verifier": false,
+    "advice": false,
+    "budget": {
+      "wall_secs": 480,
+      "max_turns": 25,
+      "max_output_tokens": 200000,
+      "max_depth": 0,
+      "max_agent_calls": 0,
+      "max_call_tokens": 0,
+      "max_global_calls": 0,
+      "max_spend_micros": 0
+    },
+    "node_id": "cbf0b306-e460-4161-9d23-f15fb6460cc7",
+    "run_dir": "C:/Users/olegc/AppData/Local/Temp/tmp.lh8xJiKOvt/trial-g2-1/home\\runs\\01KXAK9JMTCYYACMCT7NCDR2RW",
+    "created_ts_ms": 1783840950939,
+    "updated_ts_ms": 1783841160219,
+    "started_ts_ms": 1783840950939,
+    "pod": {
+      "pod_id": "01KXAK9M2DAKB4BRP8QYD4QD48",
+      "pod_pid": 48180
+    },
+    "worker_pid": 59272,
+    "exit_code": 1,
+    "failure": "worker exited with code 1",
+    "kill_reason": null,
+    "usage": {
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "total_cost_usd": 0.0,
+      "events": 13,
+      "web_tool_calls": 0
+    },
+    "collected": {
+      "result_source": "extracted",
+      "result": {
+        "fs": "01KXAJJ98Q97TB8R4CVCGA5N5R",
+        "path": "01KXAK9JMTCYYACMCT7NCDR2RW/wt/result.md",
+        "range": "whole",
+        "etag": "137-19f5537fc18"
+      },
+      "result_path": "C:/Users/olegc/AppData/Local/Temp/tmp.lh8xJiKOvt/trial-g2-1/home\\runs\\01KXAK9JMTCYYACMCT7NCDR2RW\\wt\\result.md",
+      "acceptance_passed": 0,
+      "acceptance_total": 0,
+      "acceptance_skipped": "worker failed; acceptance not run"
+    }
+  }
+]
