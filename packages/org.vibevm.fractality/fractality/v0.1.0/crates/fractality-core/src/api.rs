@@ -165,6 +165,11 @@ pub struct MetricsBucket {
     pub completed: u64,
     pub failed: u64,
     pub killed: u64,
+    /// Runs that handed their task UP the tree (D-C3-6): terminal, but
+    /// NOT a failure — a first-class outcome, counted apart so the trial
+    /// scoreboard can see escalation as its own signal (P-C3-d).
+    #[serde(default)]
+    pub escalated: u64,
     /// Non-terminal runs (queued through waiting_on_boss).
     pub open: u64,
     pub input_tokens: u64,

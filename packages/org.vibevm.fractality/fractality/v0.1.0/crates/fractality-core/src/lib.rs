@@ -19,6 +19,7 @@ pub mod error;
 pub mod fileref;
 pub mod ids;
 pub mod journal;
+pub mod journal_fold;
 pub mod needgate;
 pub mod node;
 pub mod packet;

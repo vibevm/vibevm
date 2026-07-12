@@ -47,6 +47,7 @@ fn fold(b: &mut MetricsBucket, run: &RunRecord) {
         RunState::Completed => b.completed += 1,
         RunState::Failed => b.failed += 1,
         RunState::Killed => b.killed += 1,
+        RunState::Escalated => b.escalated += 1,
         _ => b.open += 1,
     }
     b.input_tokens += run.usage.input_tokens;
@@ -107,6 +108,7 @@ mod tests {
             collected: None,
             question: None,
             answer: None,
+            escalation: None,
         }
     }
 
@@ -157,5 +159,27 @@ mod tests {
         assert_eq!(m.by_model["big"].runs, 2);
         assert_eq!(m.by_day["2026-07-10"].runs, 2);
         assert_eq!(m.by_day["2026-07-11"].runs, 1);
+    }
+
+    #[test]
+    fn escalated_runs_count_apart_from_open_and_failed() {
+        let day = 1_783_641_600_000u64; // 2026-07-10T00:00Z
+        let runs = vec![run(
+            "01ARZ3NDEKTSV4RRFFQ69G5FAV",
+            RunState::Escalated,
+            "glm",
+            "big",
+            (day, Some(day + 1_000), day + 4_000),
+            10,
+        )];
+        let m = compute(&runs);
+        assert_eq!(m.totals.runs, 1);
+        assert_eq!(m.totals.escalated, 1, "escalated has its own counter");
+        assert_eq!(m.totals.open, 0, "a terminal escalation is not open");
+        assert_eq!(m.totals.failed, 0, "escalation is not a failure");
+        assert_eq!(m.totals.completed, 0);
+        // Terminal, so wall time accrues (start -> last update).
+        assert_eq!(m.totals.wall_ms, 3_000);
+        assert_eq!(m.by_state.get("escalated"), Some(&1));
     }
 }

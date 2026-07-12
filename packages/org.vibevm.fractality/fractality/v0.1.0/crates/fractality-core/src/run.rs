@@ -21,14 +21,18 @@ specmark::scope!("spec://fractality/PROP-001#model");
 /// ```text
 /// queued          → starting | failed | killed
 /// starting        → running | completed | failed | killed
-/// running         → waiting_on_boss | completed | failed | killed
-/// waiting_on_boss → running | completed | failed | killed
-/// completed | failed | killed → (terminal)
+/// running         → waiting_on_boss | completed | failed | killed | escalated
+/// waiting_on_boss → running | completed | failed | killed | escalated
+/// completed | failed | killed | escalated → (terminal)
 /// ```
 ///
 /// `starting → completed` is legal because a worker may exit before its
 /// first heartbeat lands; `waiting_on_boss → completed` because a parked
-/// worker may die while parked (D18).
+/// worker may die while parked (D18). `running → escalated` and
+/// `waiting_on_boss → escalated` hand the task UP the tree as a
+/// first-class terminal outcome (D-C3-6) — the run is done, an
+/// [`EscalationRecord`] climbs the `parent` edges. Escalation is NOT a
+/// failure.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum RunState {
@@ -39,13 +43,14 @@ pub enum RunState {
     Completed,
     Failed,
     Killed,
+    Escalated,
 }
 
 impl RunState {
     pub fn is_terminal(self) -> bool {
         matches!(
             self,
-            RunState::Completed | RunState::Failed | RunState::Killed
+            RunState::Completed | RunState::Failed | RunState::Killed | RunState::Escalated
         )
     }
 
@@ -55,9 +60,12 @@ impl RunState {
         match self {
             Queued => matches!(next, Starting | Failed | Killed),
             Starting => matches!(next, Running | Completed | Failed | Killed),
-            Running => matches!(next, WaitingOnBoss | Completed | Failed | Killed),
-            WaitingOnBoss => matches!(next, Running | Completed | Failed | Killed),
-            Completed | Failed | Killed => false,
+            Running => matches!(
+                next,
+                WaitingOnBoss | Completed | Failed | Killed | Escalated
+            ),
+            WaitingOnBoss => matches!(next, Running | Completed | Failed | Killed | Escalated),
+            Completed | Failed | Killed | Escalated => false,
         }
     }
 
@@ -70,6 +78,7 @@ impl RunState {
             RunState::Completed => "completed",
             RunState::Failed => "failed",
             RunState::Killed => "killed",
+            RunState::Escalated => "escalated",
         }
     }
 }
@@ -91,9 +100,10 @@ impl std::str::FromStr for RunState {
             "completed" => Ok(RunState::Completed),
             "failed" => Ok(RunState::Failed),
             "killed" => Ok(RunState::Killed),
+            "escalated" => Ok(RunState::Escalated),
             other => Err(format!(
                 "unknown run state `{other}` (expected one of: queued, starting, running, \
-                 waiting_on_boss, completed, failed, killed)"
+                 waiting_on_boss, completed, failed, killed, escalated)"
             )),
         }
     }
@@ -170,6 +180,22 @@ pub struct Collected {
     pub acceptance_skipped: Option<String>,
 }
 
+/// Why a run handed its task UP the tree instead of finishing it
+/// (D-C3-6). Escalation is a first-class OUTCOME, not a failure: the run
+/// ends `escalated`, and this record climbs the `parent` edges until it
+/// reaches a run whose parent is the human at the top. Generalizes the
+/// D18 question channel from single questions to whole tasks.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct EscalationRecord {
+    /// One line: why this run cannot or should not complete the task
+    /// itself (e.g. "cross-chunk reasoning — any split destroys it").
+    pub reason: String,
+    /// What the run needs from above to make progress — a capability, a
+    /// decision, a larger context window, more budget. Free-form in v1;
+    /// the parent reads it to decide how to act on the handed-up task.
+    pub needs: String,
+}
+
 /// Everything mission-control knows about one run. This is both the
 /// registry entry and the `registered` journal snapshot (D9), and the wire
 /// shape for list/show (D10) — one type, no summary/detail drift.
@@ -229,13 +255,18 @@ pub struct RunRecord {
     /// cleared when a new question parks the run again.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub answer: Option<String>,
+    /// Set when the run ended `escalated` (D-C3-6): the task was handed
+    /// UP the tree rather than completed. Terminal; the record climbs the
+    /// `parent` edges to the human at the top.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub escalation: Option<EscalationRecord>,
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
 
-    const ALL: [RunState; 7] = [
+    const ALL: [RunState; 8] = [
         RunState::Queued,
         RunState::Starting,
         RunState::Running,
@@ -243,11 +274,17 @@ mod tests {
         RunState::Completed,
         RunState::Failed,
         RunState::Killed,
+        RunState::Escalated,
     ];
 
     #[test]
     fn terminal_states_have_no_exits() {
-        for from in [RunState::Completed, RunState::Failed, RunState::Killed] {
+        for from in [
+            RunState::Completed,
+            RunState::Failed,
+            RunState::Killed,
+            RunState::Escalated,
+        ] {
             for to in ALL {
                 assert!(
                     !from.can_transition_to(to),
@@ -276,6 +313,8 @@ mod tests {
             (WaitingOnBoss, Completed),
             (WaitingOnBoss, Failed),
             (WaitingOnBoss, Killed),
+            (Running, Escalated),
+            (WaitingOnBoss, Escalated),
         ];
         for from in ALL {
             for to in ALL {

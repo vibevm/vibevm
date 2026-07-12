@@ -284,6 +284,7 @@ async fn register_run(
         collected: None,
         question: None,
         answer: None,
+        escalation: None,
     };
     let stored = state.record(Event::Registered {
         run: Box::new(record),

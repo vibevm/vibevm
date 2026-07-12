@@ -39,6 +39,7 @@ fn record(id: &str, profile: &str, spawn: bool, parent: Option<RunId>) -> RunRec
         collected: None,
         question: None,
         answer: None,
+        escalation: None,
     }
 }
 

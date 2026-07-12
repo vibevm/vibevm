@@ -242,6 +242,7 @@ impl AppState {
                     _ => RunState::Failed,
                 }),
                 Event::Killed { .. } => Some(RunState::Killed),
+                Event::Escalated { .. } => Some(RunState::Escalated),
                 Event::Error { terminal: true, .. } => Some(RunState::Failed),
                 Event::Question { .. } => Some(RunState::WaitingOnBoss),
                 Event::Answer { .. } => Some(RunState::Running),
