@@ -18,7 +18,7 @@ vibe install [<pkgref> ...] [--path <dir>] [--registry <path>]
 
 ## Pkgref syntax
 
-A package reference is `[<kind>:][<group>/]<name>[@<version>]`. The qualified `<group>/<name>` form (`org.vibevm/wal`) is what manifests store; the short `<name>` / `<kind>:<name>` form used in the examples below is CLI-only sugar, resolved through the package index. Version syntax follows Cargo / npm / Poetry conventions — bare semver is shorthand for caret, use `=` for strict equal:
+A package reference is `[<kind>:][<group>/]<name>[@<version>]`. The qualified `<group>/<name>` form (`org.vibevm.world/wal`) is what manifests store; the short `<name>` / `<kind>:<name>` form used in the examples below is CLI-only sugar, resolved through the package index. Version syntax follows Cargo / npm / Poetry conventions — bare semver is shorthand for caret, use `=` for strict equal:
 
 | Form | Meaning |
 | --- | --- |
@@ -92,7 +92,7 @@ A node's authored `spec/` tree — including the conventional user-owned boot fi
 After a successful apply, `vibe install` writes:
 
 - `vibe.toml` `[requires].packages` — appends each user-supplied pkgref (CLI args), de-duplicated by `(group, name)`. Constraint shape rules:
-  - CLI had no version (`flow:wal`) → manifest gets caret of resolved version, in qualified form (`org.vibevm/wal@^0.1.0`). Cargo / npm / Poetry default.
+  - CLI had no version (`flow:wal`) → manifest gets caret of resolved version, in qualified form (`org.vibevm.world/wal@^0.1.0`). Cargo / npm / Poetry default.
   - CLI had explicit constraint (`flow:wal@^0.1`, `@~0.1.0`, `@=0.1.0`, `@>=0.1, <0.3`, ...) → preserved verbatim; we don't tighten what the operator typed.
   - `--exact` flag set → always `=<resolved-version>`, overriding both above.
 

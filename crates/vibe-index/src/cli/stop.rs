@@ -23,7 +23,7 @@ pub struct Args {
 }
 
 #[specmark::spec(
-    deviates = "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
+    deviates = "spec://org.vibevm.ai-native.core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
     reason = "unsafe-gate: libc::kill is unsafe by FFI ABI, not by memory — \
               a (pid, SIGTERM) value pair crosses the boundary, no pointers; \
               the pid comes from the server lockfile and a stale one yields \

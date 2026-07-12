@@ -43,7 +43,7 @@ fn init_creates_expected_layout() {
     // `spec/WAL.md` is NOT created by default — WAL discipline is a
     // project convention, not part of the package manager's contract.
     // Operators who want the WAL protocol install it explicitly via
-    // `vibe install org.vibevm/wal` or write the file themselves.
+    // `vibe install org.vibevm.world/wal` or write the file themselves.
     assert!(
         !path.join("spec/WAL.md").exists(),
         "spec/WAL.md must NOT be created by default; it's a project convention, not part of the package manager"

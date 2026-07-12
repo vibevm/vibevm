@@ -4,7 +4,7 @@
 ship runnable code, not only prompt content, so the discipline's verification
 tools (the conform checker, the specmap/specmark traceability engine) can live
 *inside* the discipline packages instead of being hardcoded in the vibevm
-workspace. A consumer who installs `stack:org.vibevm/rust-ai-native-lang` then has
+workspace. A consumer who installs `stack:org.vibevm.ai-native/rust-ai-native-lang` then has
 the working checkers, not a prose description of them.
 **Related:** [PROP-002 §2.1](../modules/vibe-registry/PROP-002-decentralized-registry.md#identity)
 (content-hash identity — re-scoped here to the shippable tree),
@@ -19,7 +19,7 @@ package source), [PROP-020](../modules/vibe-workspace/PROP-020-install-hooks.md)
 [ENGINE-CONFORM](../../vibedeps/flow-core-ai-native/0.6.0/spec/mechanisms/ENGINE-CONFORM-v0.1.md) and
 [PROP-014](../../vibedeps/flow-core-ai-native/0.6.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md)
 (the tools that relocate; the specs themselves now ship in
-`flow:org.vibevm/core-ai-native` — `spec://core-ai-native/mechanisms/…`).
+`flow:org.vibevm.ai-native/core-ai-native` — `spec://org.vibevm.ai-native.core-ai-native/mechanisms/…`).
 **Owner sanction:** PROP-024 reshapes the owner-frozen `VIBEVM-SPEC.md` (§4.2
 layout, §7.2 package contents, §7.3 manifest, §7.4 identity, §12 linter, §13.1
 package layout). The `VIBEVM-SPEC.md` edits required explicit owner sanction; it
@@ -32,8 +32,8 @@ was **granted 2026-06-27** — the same precedent as
 
 ### 1.1 The problem — a package can describe a tool but not ship one {#problem}
 
-The discipline packages (`flow:org.vibevm/core-ai-native`,
-`stack:org.vibevm/rust-ai-native-lang`, `…/typescript-ai-native`) carry the
+The discipline packages (`flow:org.vibevm.ai-native/core-ai-native`,
+`stack:org.vibevm.ai-native/rust-ai-native-lang`, `…/typescript-ai-native`) carry the
 manifesto, the guides, and the nine pattern cards — **prompt content**. But the
 machinery that makes the discipline *real* — the conform checker (Class-F/G
 rules, the file-length budget, the unwrap ban) and the specmap/specmark
@@ -41,7 +41,7 @@ traceability engine — is **hardcoded as crates inside the vibevm workspace**
 (`crates/conform-core`, `crates/conform-frontend-rust`, `crates/specmark`,
 `crates/specmap-core`, the `cargo xtask conform`/`specmap` drivers).
 
-Install `stack:org.vibevm/rust-ai-native-lang` today and you get a *description* of
+Install `stack:org.vibevm.ai-native/rust-ai-native-lang` today and you get a *description* of
 checkers you do not have. To actually run the discipline you would have to
 re-implement the very tools vibevm already wrote. The discipline is therefore
 **not distributable**: its strong-author artifacts (guide, cards) ship, but its
@@ -207,7 +207,7 @@ in the tree. There is no chicken-and-egg: the toolchain a build needs is vendore
 beside the code that needs it.
 
 The development loop stays ergonomic: editing the in-repo package source under
-`packages/org.vibevm/rust-ai-native/…` re-materialises the slot automatically on
+`packages/org.vibevm.ai-native/rust-ai-native/…` re-materialises the slot automatically on
 the next `vibe install` (PROP-011 §2.6 — in-workspace `file://` sources are
 mutable), so the consumed `vibedeps/` copy tracks the edited source without a
 manual `rm -rf`.
@@ -223,10 +223,10 @@ L4 (implemented checkers) ships in the package whose language they check.
   engine (`conform-core`), its Rust frontend (`conform-frontend-rust`), the
   Rust traceability macros (`specmark`, `specmark-grammar`), the traceability
   engine (`specmap-core`), and the designated audit crate (`env-audit`) — ships
-  in `stack:org.vibevm/rust-ai-native-lang`. Its centre of gravity is Rust, and
+  in `stack:org.vibevm.ai-native/rust-ai-native-lang`. Its centre of gravity is Rust, and
   shipping the toolchain whole avoids carving language-neutral cores out under
   time pressure.
-- `flow:org.vibevm/core-ai-native` stays **prompt-only** (manifesto, card
+- `flow:org.vibevm.ai-native/core-ai-native` stays **prompt-only** (manifesto, card
   format, scaffold catalog, RAID, appendix) until a second language actually
   needs the shared engine.
 - **Deferred (documented):** the language-neutral conform engine (`conform-core`)
@@ -305,7 +305,7 @@ L4 (implemented checkers) ships in the package whose language they check.
 - vibevm builds from a clean checkout, consuming its discipline toolchain (incl.
   the `specmark` proc-macro the product crates compile against) from the
   committed `vibedeps/` slot, with no prior `vibe install`.
-- An external Rust project can install `stack:org.vibevm/rust-ai-native-lang` and run
+- An external Rust project can install `stack:org.vibevm.ai-native/rust-ai-native-lang` and run
   `conform` / `specmap` against its own code.
 - Full `self-check.sh` green; conform 0/0/0; specmap clean.
 
@@ -316,7 +316,7 @@ L4 (implemented checkers) ships in the package whose language they check.
 - **2026-06-27 — draft 1.** Owner-directed: make the discipline self-sufficient
   by letting packages ship runnable code (`spec/` for prompts, the root for
   code), then relocate the Rust toolchain (conform + specmap/specmark) out of the
-  vibevm workspace and into `stack:org.vibevm/rust-ai-native-lang`. The frozen
+  vibevm workspace and into `stack:org.vibevm.ai-native/rust-ai-native-lang`. The frozen
   `VIBEVM-SPEC.md` sanction was granted the same session (§0). Decisions taken in
   the owner session: the prompt directory is `spec/` (singular, project-identical,
   not `specs/`); the full traceability stack moves alongside conform; conform is

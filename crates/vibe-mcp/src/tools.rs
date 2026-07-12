@@ -77,7 +77,7 @@ impl McpTool for QueryPackage {
                 "properties": {
                     "name": {
                         "type": "string",
-                        "description": "Group-qualified package reference in `<group>/<name>` form (e.g. `org.vibevm/wal`)."
+                        "description": "Group-qualified package reference in `<group>/<name>` form (e.g. `org.vibevm.world/wal`)."
                     }
                 },
                 "required": ["name"],
@@ -474,7 +474,7 @@ impl McpTool for AgenticExplain {
 
 /// Parse a package reference into its `(group, name)` identity. The
 /// reference must be group-qualified (`<group>/<name>`, e.g.
-/// `org.vibevm/wal`); an optional `<kind>:` prefix is tolerated but
+/// `org.vibevm.world/wal`); an optional `<kind>:` prefix is tolerated but
 /// ignored — `kind` is metadata, not identity (PROP-008 §2.3).
 fn parse_pkgref(s: &str) -> Result<(Group, String), ToolError> {
     let pkgref = PackageRef::parse(s).map_err(|e| {

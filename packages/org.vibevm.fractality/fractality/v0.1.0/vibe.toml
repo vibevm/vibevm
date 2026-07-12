@@ -19,8 +19,8 @@ requires_kinds = []
 # practice edition; the rust-ai-native aggregator pulls the -lang stack, the
 # -mcp server, and (transitively) core-ai-native at one version set.
 [requires.packages]
-"flow:org.vibevm/redbook" = "^0.2.0"
-"stack:org.vibevm/rust-ai-native" = "^0.7.0"
+"flow:org.vibevm.world/redbook" = "^0.2.0"
+"stack:org.vibevm.ai-native/rust-ai-native" = "^0.7.0"
 
 # The boss-side integration (IGNITION Phase 6): the boot snippet a
 # consuming boss loads at session start (slot 75 — outside the redbook

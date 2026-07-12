@@ -202,7 +202,7 @@ New top-level `research/` (owner's suggestion) holding `ts-demo/` — a
 minimal but REAL consumer: its own git-ignorable `vibedeps/` (bootstrap
 documented, not committed — packages content is already in-repo twice),
 its own `vibe.toml` (`[project]` + requires
-`stack:org.vibevm/typescript-ai-native = "^0.3.0"`) resolved from the
+`stack:org.vibevm.ai-native/typescript-ai-native = "^0.3.0"`) resolved from the
 in-repo `packages/` file:// registry (mutable per PROP-011 §2.6, so
 package edits propagate on re-install), `tsconfig.json` at the GUIDE §1
 floor (strict + noUncheckedIndexedAccess + exactOptionalPropertyTypes +

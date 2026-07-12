@@ -17,7 +17,7 @@ requires_kinds = []
 # the vendored engines and the consumer's installed gates to ONE
 # resolved version set. Bumped in lockstep with the stack, always.
 [requires]
-packages = { "stack:org.vibevm/typescript-ai-native-lang" = "=0.6.0" }
+packages = { "stack:org.vibevm.ai-native/typescript-ai-native-lang" = "=0.6.0" }
 
 [[binary]]
 name = "typescript-ai-native-mcp"

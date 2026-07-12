@@ -151,7 +151,7 @@ token-level campaign is ever commissioned.
   as_cross#64`); tsconfig at the §1 floor; specmap.toml namespace
   `ts-demo` with two `[[external_specs]]` pointing into `vibedeps/*/spec`
   (version-bearing paths — must bump with the stack version);
-  `vibe.toml` requires `stack:org.vibevm/typescript-ai-native = "^0.3"`.
+  `vibe.toml` requires `stack:org.vibevm.ai-native/typescript-ai-native = "^0.3"`.
 - **Hermetic node pattern**: `discipline-cli-typescript/tests/
   fresh_ts_project.rs:33` junctions `tools/ts-extract/node_modules` into
   a temp project (`cmd /c mklink /J`, verbatim-prefix stripped) so
@@ -198,7 +198,7 @@ vibevm/
 │                                                          bench corpus, baseline
 │                                                          REPORTs, runbook
 ├─ research/ts-demo/                                      unchanged (requires ^0.4)
-└─ packages/org.vibevm/typescript-ai-native/v0.4.0/       (bumped from v0.3.0)
+└─ packages/org.vibevm.ai-native/typescript-ai-native/v0.4.0/       (bumped from v0.3.0)
     ├─ vibe.toml                                          [[binary]] × 4 (+ tcg-typescript)
     ├─ tools/ts-extract/                                  unchanged
     ├─ tools/ts-oracle/                                   NEW: oracle.ts (self-contained,
@@ -412,7 +412,7 @@ response as `conform_findings[]`, each flagged `baselined: bool` against
 sanctioned findings distinctly). On `scope`: cell/seam context from
 `TsConfig` + the D2 branded list; `advice[]` strings in Class-F form
 citing the GUIDE REQs (e.g. "a bare `string` crossing this seam should
-be a branded type — spec://typescript-ai-native/guide §4"). On
+be a branded type — spec://org.vibevm.ai-native.typescript-ai-native/guide §4"). On
 `complete`: entries flagged `unsafe` get a one-line reason. The node
 side stays policy-free (facts only); ALL policy interpretation is Rust —
 one place, one truth, same engine as the gate.
@@ -656,7 +656,7 @@ repository's own engines. Any future need to consult that repository
    addressed, `target/tcg/ts-oracle/`); serde message types; the
    `OracleClient` seam + `SystemOracleClient` (spawn/correlate/timeout/
    kill-on-drop); the five-way error taxonomy with REQ citations
-   (citing `spec://typescript-ai-native/mechanisms/TCG-PROTOCOL` units);
+   (citing `spec://org.vibevm.ai-native.typescript-ai-native/mechanisms/TCG-PROTOCOL` units);
    replay tests from recorded streams (node-free).
 2. The `build_rules` pub seam in `conform-cli-typescript` (D5) — export
    + doctest; behaviour identical (the gate tests hold).

@@ -541,12 +541,12 @@ A **pkgref** (package reference) is:
 pkgref := [ <kind> ":" ] [ <group> "/" ] <name> [ "@" <version> ]
 ```
 
-- `org.vibevm/wal` — the **qualified** form; manifests and the lockfile store this (§7.3, §7.4, §7.5).
-- `flow:org.vibevm/wal` — qualified, kind-prefixed; after resolution the resolver asserts the resolved `kind` matches the prefix, and a mismatch is an error.
+- `org.vibevm.world/wal` — the **qualified** form; manifests and the lockfile store this (§7.3, §7.4, §7.5).
+- `flow:org.vibevm.world/wal` — qualified, kind-prefixed; after resolution the resolver asserts the resolved `kind` matches the prefix, and a mismatch is an error.
 - `wal` — the **short** form: CLI-only sugar, resolved to the qualified form at the CLI input boundary via the package index ([PROP-008 §2.6](spec/modules/vibe-registry/PROP-008-qualified-naming.md)). Never written to a manifest.
 - `flow:wal` — short, kind-prefixed.
 
-Examples: `org.vibevm/wal@0.3.0`, `flow:org.vibevm/welcome-page`, and the short `wal` typed on the command line.
+Examples: `org.vibevm.world/wal@0.3.0`, `flow:org.vibevm/welcome-page`, and the short `wal` typed on the command line.
 
 The full design — `group`, the identity tuple, `kind`-as-metadata, index-backed short-name resolution, collision detection — is [PROP-008](spec/modules/vibe-registry/PROP-008-qualified-naming.md).
 
@@ -559,7 +559,7 @@ In CLI commands, version is optional and defaults to "latest stable". The versio
 - `vibe install flow:wal@=0.3.0` → strict-equal: only that version.
 - `vibe install flow:wal@>=0.3, <1.0` → arbitrary `semver::VersionReq` syntax.
 
-`vibe install <pkgref>` records the dep in `vibe.toml` `[requires].packages`. When the CLI form had no version, the resolver pins to a concrete version and the manifest stores the **caret** form (`org.vibevm/wal@^0.1.0`) — same default Cargo's `cargo add` writes. When the CLI form had an explicit constraint, the manifest preserves it verbatim. The `--exact` flag overrides both: it always pins to `=<resolved-version>` (npm `--save-exact` shape).
+`vibe install <pkgref>` records the dep in `vibe.toml` `[requires].packages`. When the CLI form had no version, the resolver pins to a concrete version and the manifest stores the **caret** form (`org.vibevm.world/wal@^0.1.0`) — same default Cargo's `cargo add` writes. When the CLI form had an explicit constraint, the manifest preserves it verbatim. The `--exact` flag overrides both: it always pins to `=<resolved-version>` (npm `--save-exact` shape).
 
 ### 7.2 Package contents {#package-contents}
 
@@ -639,7 +639,7 @@ capabilities = []                   # e.g., ["ui:landing-page@0.3", "auth:oauth-
 capabilities = []                   # e.g., ["db:any@>=1.0"]
 
 [requires.packages]
-"org.vibevm/atomic-commits" = "^0.1"
+"org.vibevm.world/atomic-commits" = "^0.1"
 "org.vibevm/rust-cli"       = { version = "^0.1", link = "dynamic" }
 
 # Disjunctive requirement: exactly one of `one_of` must be satisfied.
@@ -667,7 +667,7 @@ generated_by      = "vibe 0.2.0"
 generated_at      = "2026-04-24T12:00:00Z"
 schema_version    = 5
 solver            = "resolvo-0.x"                   # depsolver identity (see §8.6)
-root_dependencies = ["org.vibevm/wal", "org.vibevm/rust-cli"]  # mirror of `vibe.toml` `[requires].packages`
+root_dependencies = ["org.vibevm.world/wal", "org.vibevm/rust-cli"]  # mirror of `vibe.toml` `[requires].packages`
 
 [[package]]
 kind            = "flow"
@@ -729,7 +729,7 @@ authors = ["Oleg <oleg@example.com>"]
 capabilities = []                                            # abstract requirements satisfied by any provider
 
 [requires.packages]
-"org.vibevm/wal"       = "^0.3"           # registry-resolved; caret-default (Cargo shorthand)
+"org.vibevm.world/wal"       = "^0.3"           # registry-resolved; caret-default (Cargo shorthand)
 "org.vibevm/rust-cli"  = "^0.1.0"
 
 # Git-source: a whole repository = one package. PROP-002 §2.4.1.
@@ -818,7 +818,7 @@ auth   = "none"                           # public read-only — default; no cre
 # fetched directly from the given URL at the given ref. Integrity (content_hash)
 # is still pinned in the lockfile and verified on every install.
 # [[override]]
-# pkgref     = "org.vibevm/wal"
+# pkgref     = "org.vibevm.world/wal"
 # source_url = "git@mycompany:forks/wal"
 # ref        = "my-fix-branch"            # optional — tag, branch, or commit
 # reason     = "awaiting upstream PR #42" # optional — surfaces in `vibe list --overrides`
@@ -867,7 +867,7 @@ local directory — typically a sibling member — instead of a registry:
 
 ```toml
 [requires.packages]
-"org.vibevm/wal" = { path = "../flow-wal", version = "^0.1" }
+"org.vibevm.world/wal" = { path = "../flow-wal", version = "^0.1" }
 ```
 
 `path` drives local development; the optional `version` is the constraint

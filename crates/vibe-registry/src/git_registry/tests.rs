@@ -45,7 +45,7 @@ fn source_uri_for_git_produces_fragment() {
     );
     assert_eq!(
         s,
-        "git+ssh://git@gitverse.ru/anarchic/vibespecs.git#org.vibevm/wal/v0.1.0"
+        "git+ssh://git@gitverse.ru/anarchic/vibespecs.git#org.vibevm.world/wal/v0.1.0"
     );
 }
 
@@ -73,7 +73,7 @@ fn open_clones_on_first_use_and_skips_when_fresh() {
     assert_eq!(fake.update_count(), 0);
     assert!(
         r1.clone_dir()
-            .join("org.vibevm/wal/v0.1.0/vibe.toml")
+            .join("org.vibevm.world/wal/v0.1.0/vibe.toml")
             .exists()
     );
     assert!(r1.cache_dir().join("meta.toml").exists());
@@ -142,7 +142,7 @@ fn resolve_and_fetch_produce_git_source_uri() {
         DEFAULT_FRESHNESS_SECS,
     )
     .unwrap();
-    let pkgref = PackageRef::parse("org.vibevm/wal@0.1.0").unwrap();
+    let pkgref = PackageRef::parse("org.vibevm.world/wal@0.1.0").unwrap();
     let resolved = r.resolve(&pkgref).unwrap();
     assert_eq!(resolved.version.to_string(), "0.1.0");
 
@@ -150,7 +150,7 @@ fn resolve_and_fetch_produce_git_source_uri() {
     fs::create_dir_all(&pkg_cache).unwrap();
     let cached = r.fetch(&resolved, &pkg_cache).unwrap();
     assert!(cached.source_uri.starts_with("git+ssh://"));
-    assert!(cached.source_uri.ends_with("#org.vibevm/wal/v0.1.0"));
+    assert!(cached.source_uri.ends_with("#org.vibevm.world/wal/v0.1.0"));
 }
 
 /// Test-only fixtures behind their own `#[cfg(test)]` marker: fact
@@ -235,7 +235,7 @@ mod fixtures {
 
     pub(super) fn seed_fixture_layout(root: &Path) {
         // Group-native on-disk layout (PROP-008): `<group>/<name>/v<ver>/`.
-        let v = root.join("org.vibevm/wal/v0.1.0");
+        let v = root.join("org.vibevm.world/wal/v0.1.0");
         fs::create_dir_all(&v).unwrap();
         fs::write(
             v.join("vibe.toml"),

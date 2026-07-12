@@ -1,4 +1,4 @@
-# mcp:org.vibevm/rust-ai-native-mcp
+# mcp:org.vibevm.ai-native/rust-ai-native-mcp
 
 The AI-Native Rust discipline served over MCP: one stdio binary
 (`rust-ai-native-mcp`), eighteen tools — the whole `rust-ai-native`
@@ -7,8 +7,8 @@ test-gate, tripwire, health, fast-loop, codemod, ledger) plus the tcg
 type oracle (validate / scope / complete / type / bench over a
 persistent rust-analyzer session).
 
-- **Install:** `vibe install mcp:org.vibevm/rust-ai-native-mcp` — the
-  exact `=` pin pulls the matching `stack:org.vibevm/rust-ai-native-lang`.
+- **Install:** `vibe install mcp:org.vibevm.ai-native/rust-ai-native-mcp` — the
+  exact `=` pin pulls the matching `stack:org.vibevm.ai-native/rust-ai-native-lang`.
 - **Register:** `vibe mcp install` writes the server into your agent's
   config (a vibevm-managed entry; the command line is the slot's built
   artifact — `vibe bin build rust-ai-native-mcp` compiles it).

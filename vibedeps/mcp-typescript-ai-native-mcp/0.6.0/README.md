@@ -1,4 +1,4 @@
-# mcp:org.vibevm/typescript-ai-native-mcp
+# mcp:org.vibevm.ai-native/typescript-ai-native-mcp
 
 The AI-Native TypeScript discipline served over MCP: one stdio binary
 (`typescript-ai-native-mcp`), seventeen tools — the whole
@@ -8,9 +8,9 @@ health, fast-loop, codemod) plus the tcg type oracle (validate / scope
 / complete / type / bench over a persistent LanguageService session —
 tsc's own engine, agreement by construction).
 
-- **Install:** `vibe install mcp:org.vibevm/typescript-ai-native-mcp` —
+- **Install:** `vibe install mcp:org.vibevm.ai-native/typescript-ai-native-mcp` —
   the exact `=` pin pulls the matching
-  `stack:org.vibevm/typescript-ai-native-lang`.
+  `stack:org.vibevm.ai-native/typescript-ai-native-lang`.
 - **Register:** `vibe mcp install` writes the server into your agent's
   config (a vibevm-managed entry; `vibe bin build
   typescript-ai-native-mcp` compiles the artifact).

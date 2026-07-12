@@ -6,7 +6,7 @@ description: Run the recurring AI-Native discipline sweep on this TypeScript pro
 # The discipline sweep (TypeScript stack)
 
 You are running the standing sweep from the Discipline's Sweep Playbook
-(`spec://core-ai-native/04-SWEEP-PLAYBOOK` — the shipped copy is at
+(`spec://org.vibevm.ai-native.core-ai-native/04-SWEEP-PLAYBOOK` — the shipped copy is at
 `vibedeps/flow-core-ai-native/<version>/spec/04-SWEEP-PLAYBOOK.md`; read it
 once per session if you have not). The two truths: **the gates are the
 floor, the sweep is the ceiling**, and **the gate is truth, the collector is

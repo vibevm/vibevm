@@ -219,7 +219,7 @@ fn main() -> ExitCode {
 /// authoritative path for surfacing that the layer is broken;
 /// every other command just runs.
 #[specmark::spec(
-    deviates = "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
+    deviates = "spec://org.vibevm.ai-native.core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
     reason = "unsafe-gate: startup env promotion runs at the top of main, \
               before the dispatcher and before any thread exists — set_var's \
               race is with concurrent readers, and none can be observing yet; \

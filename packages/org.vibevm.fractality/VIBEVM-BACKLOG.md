@@ -70,11 +70,11 @@ the item is *about* the installed shim (item 5).
 
 1. **Multi-source resolution.**
    - Build a *pruned registry copy* in the scratchpad: copy
-     `<host>/packages/` minus `org.vibevm/atomic-commits` and
-     `org.vibevm/sync-from-code` (recreates today's true upstream state
+     `<host>/packages/` minus `org.vibevm.world/atomic-commits` and
+     `org.vibevm.world/sync-from-code` (recreates today's true upstream state
      without touching the real tree).
    - `vibe init` a scratch project; `vibe.toml`: require
-     `flow:org.vibevm/redbook = "^0.2.0"`, the two `[[registry]]`
+     `flow:org.vibevm.world/redbook = "^0.2.0"`, the two `[[registry]]`
      blocks, and the new local-source mechanism under test (joined
      `--registry`, `[[registry]] url="file:///…"`, or mirror overlay —
      whatever shape ships).
@@ -91,8 +91,8 @@ the item is *about* the installed shim (item 5).
      `rust-ai-native{,-lang,-mcp}` v0.7.0, `core-ai-native` v0.7.0,
      `two-process-model` v0.1.0 (plus the rest of the edition set).
    - Scratch project with **no** local registry at all (network only):
-     `vibe install` of `flow:org.vibevm/redbook@^0.2.0` +
-     `stack:org.vibevm/rust-ai-native@^0.7.0` completes; lock's
+     `vibe install` of `flow:org.vibevm.world/redbook@^0.2.0` +
+     `stack:org.vibevm.ai-native/rust-ai-native@^0.7.0` completes; lock's
      `source_url`s are all `https://github.com/vibespecs/…`.
    - Content-hash cross-check: each package's `content_hash` in the
      scratch lock equals the hash in this workspace's `vibe.lock` (same
@@ -111,7 +111,7 @@ the item is *about* the installed shim (item 5).
 5. **Installed-shim rot.**
    - Re-run the original failing case with the *shim*:
      `~/opt/bin/vibe install --registry "<host>/packages" --unattended`
-     in a scratch project requiring `stack:org.vibevm/rust-ai-native` —
+     in a scratch project requiring `stack:org.vibevm.ai-native/rust-ai-native` —
      the manifest parse error must be gone (shim refreshed), **or** the
      shim refuses/warns loudly that it is older than the tree it
      operates on (whichever story ships).
@@ -186,7 +186,7 @@ here — the backlog holds only open items.
   "local overlay + network fall-through" recipe.
 - **Why:** any monorepo piloting its own packages (this one) hits it on
   the first umbrella package with externally-published members.
-- **Where it bit us:** installing `flow:org.vibevm/redbook` for the
+- **Where it bit us:** installing `flow:org.vibevm.world/redbook` for the
   fractality workspace — members `atomic-commits`/`sync-from-code` are
   published on vibespecs but absent from `packages/`. Worked around by
   vendoring both into `packages/org.vibevm/` (they are the owner's own
@@ -209,7 +209,7 @@ here — the backlog holds only open items.
 ## 2026-07-09 — machine-installed vibe rots silently (note, no action)
 
 - **What:** the PATH `vibe` (`~/opt/bin/vibe`) failed to parse
-  `packages/org.vibevm/rust-ai-native/v0.7.0/vibe.toml` (inline-table
+  `packages/org.vibevm.ai-native/rust-ai-native/v0.7.0/vibe.toml` (inline-table
   `[requires] packages = {…}`); the working-tree build parses it fine —
   the bug was already fixed in tree, the installed binary just lags.
 - **Why:** recorded as the motivating case for the workspace rule "use

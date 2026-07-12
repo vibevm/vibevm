@@ -27,7 +27,7 @@ use crate::{PublishError, extract_org_segment, git_publish};
 /// use vibe_publish::PublishConfig;
 ///
 /// let mut config = PublishConfig::with_defaults(
-///     PathBuf::from("fixtures/registry/org.vibevm/wal/v0.1.0"),
+///     PathBuf::from("fixtures/registry/org.vibevm.world/wal/v0.1.0"),
 ///     "https://github.com/vibespecs".to_string(),
 /// );
 /// config.dry_run = true; // describe the plan, change nothing
@@ -116,7 +116,7 @@ pub struct PublishOutcome {
 /// let publisher = Publisher::new(&creator);
 ///
 /// let mut config = PublishConfig::with_defaults(
-///     PathBuf::from("fixtures/registry/org.vibevm/wal/v0.1.0"),
+///     PathBuf::from("fixtures/registry/org.vibevm.world/wal/v0.1.0"),
 ///     "file:///tmp/registry".to_string(),
 /// );
 /// config.dry_run = true; // plan only — no push, no tag

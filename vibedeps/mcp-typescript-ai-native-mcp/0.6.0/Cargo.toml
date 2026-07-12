@@ -1,4 +1,4 @@
-# mcp:org.vibevm/typescript-ai-native-mcp — the AI-Native TypeScript
+# mcp:org.vibevm.ai-native/typescript-ai-native-mcp — the AI-Native TypeScript
 # discipline served over MCP (PROP-027; MCP-SOVEREIGNTY-PLAN Wave 4).
 # One authored crate — the server — over a vendored closure that
 # mirrors the stack's crates/ LAYOUT (stack crates at crates/<name>,

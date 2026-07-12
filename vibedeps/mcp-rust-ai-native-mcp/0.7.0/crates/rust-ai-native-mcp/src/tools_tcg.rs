@@ -7,7 +7,7 @@
 //! over the gate's own rules) — one engine, one truth, and the policy
 //! reloads per call so a mid-session freeze is honoured immediately.
 
-specmark::scope!("spec://rust-ai-native-mcp/tools/discipline-mcp-rust#tcg-tools");
+specmark::scope!("spec://org.vibevm.ai-native.rust-ai-native-mcp/tools/discipline-mcp-rust#tcg-tools");
 
 use std::cell::RefCell;
 use std::path::{Path, PathBuf};

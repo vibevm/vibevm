@@ -46,7 +46,7 @@ spec://<package>/<doc-path>#<anchor>            — a spec unit
 spec://<package>/<doc-path>#<anchor>~r<N>       — a unit at revision N
 ```
 
-- `<package>` is today the repo name (`vibevm`); the grammar reserves group-qualification (`spec://org.vibevm/wal/...`) for cross-package tracing per PROP-008, deferred (§7.1).
+- `<package>` is today the repo name (`vibevm`); the grammar reserves group-qualification (`spec://org.vibevm.world/wal/...`) for cross-package tracing per PROP-008, deferred (§7.1).
 - `<anchor>` is the explicit `{#kebab-anchor}` already used by every PROP heading. **Anchors are immutable once published and never reused.** Renaming a unit keeps its anchor; retiring a unit tombstones the anchor (`<!-- RETIRED: superseded by #new-anchor -->`) rather than deleting it.
 - A **spec unit** is the span from an anchored heading (or an explicit `REQ` block, §2.2) to the next same-or-higher heading / next unit marker.
 
@@ -321,7 +321,7 @@ Conventions and ideas are free; code is not. Per PROP-000 §3 (permissive only; 
 
 ## 7. Open questions {#open}
 
-1. **Cross-package URIs.** Group-qualified `spec://org.vibevm/wal/...` grammar and resolution against installed packages — after PROP-008 settles live.
+1. **Cross-package URIs.** Group-qualified `spec://org.vibevm.world/wal/...` grammar and resolution against installed packages — after PROP-008 settles live.
 2. **Inheritance merge.** v0.1: item tags replace `scope!` defaults. Is a `+implements` extend form needed? Decide on Phase 2 evidence.
 3. **Unit moves across documents.** Anchor immutability covers renames-in-place; moving a unit between files needs either URI redirect stubs (PROP-012 flavour) or doc-path-free unit IDs. Lean: redirect stubs.
 4. **Explanation caching.** `--prose` renderings keyed by (subgraph hash, model id) — where cached, when invalidated.

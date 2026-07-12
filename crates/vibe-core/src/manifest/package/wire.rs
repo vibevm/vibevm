@@ -343,26 +343,26 @@ mod tests {
     fn requires_map_bare_constraint_parses() {
         let r = requires_from_toml(
             r#"[packages]
-"org.vibevm/wal" = "^0.3"
+"org.vibevm.world/wal" = "^0.3"
 "org.vibevm/auth" = "*"
 "#,
         );
         assert_eq!(r.packages.len(), 2);
         assert!(r.git_packages.is_empty());
-        // BTreeMap ordering: org.vibevm/auth < org.vibevm/wal alphabetically.
+        // BTreeMap ordering: org.vibevm/auth < org.vibevm.world/wal alphabetically.
         assert_eq!(r.packages[0].qualified_name(), "org.vibevm/auth");
-        assert_eq!(r.packages[1].qualified_name(), "org.vibevm/wal");
+        assert_eq!(r.packages[1].qualified_name(), "org.vibevm.world/wal");
     }
 
     #[test]
     fn requires_inline_table_with_version_parses() {
         let r = requires_from_toml(
             r#"[packages]
-"org.vibevm/wal" = { version = "^0.3" }
+"org.vibevm.world/wal" = { version = "^0.3" }
 "#,
         );
         assert_eq!(r.packages.len(), 1);
-        assert_eq!(r.packages[0].qualified_name(), "org.vibevm/wal");
+        assert_eq!(r.packages[0].qualified_name(), "org.vibevm.world/wal");
         assert!(r.git_packages.is_empty());
     }
 
@@ -381,7 +381,7 @@ mod tests {
     fn rejects_at_in_pkgref_key() {
         let err = toml::from_str::<Requires>(
             r#"[packages]
-"org.vibevm/wal@^0.3" = "*"
+"org.vibevm.world/wal@^0.3" = "*"
 "#,
         )
         .unwrap_err();
@@ -398,7 +398,7 @@ mod tests {
 
 [packages]
 "flow:org.vibevm/internal" = { git = "https://github.com/me/flow-internal", tag = "v0.1.0", auth = "token-env", token_env = "MY" }
-"org.vibevm/wal" = "^0.3"
+"org.vibevm.world/wal" = "^0.3"
 "#,
         );
         let rendered = toml::to_string_pretty(&original).unwrap();
@@ -416,7 +416,7 @@ mod tests {
     fn requires_link_on_registry_dep_parses() {
         let r = requires_from_toml(
             r#"[packages]
-"org.vibevm/wal" = { version = "^0.3", link = "inline" }
+"org.vibevm.world/wal" = { version = "^0.3", link = "inline" }
 "#,
         );
         assert_eq!(r.packages.len(), 1);
@@ -437,7 +437,7 @@ mod tests {
     fn requires_link_absent_is_static() {
         let r = requires_from_toml(
             r#"[packages]
-"org.vibevm/wal" = "^0.3"
+"org.vibevm.world/wal" = "^0.3"
 "#,
         );
         assert!(r.links.is_empty());
@@ -452,7 +452,7 @@ mod tests {
         // survives a serialize round-trip as an inline table.
         let r = requires_from_toml(
             r#"[packages]
-"org.vibevm/wal" = { version = "^0.3", link = "static" }
+"org.vibevm.world/wal" = { version = "^0.3", link = "static" }
 "#,
         );
         assert_eq!(r.declared_link(&org(), "wal"), Some(LinkType::Static));
@@ -467,7 +467,7 @@ mod tests {
         // while `link_for` applies the `static` default.
         let r = requires_from_toml(
             r#"[packages]
-"org.vibevm/wal" = "^0.3"
+"org.vibevm.world/wal" = "^0.3"
 "#,
         );
         assert_eq!(r.declared_link(&org(), "wal"), None);
@@ -489,7 +489,7 @@ mod tests {
     fn requires_link_on_path_source_parses() {
         let r = requires_from_toml(
             r#"[packages]
-"org.vibevm/wal" = { path = "../flow-wal", link = "inline" }
+"org.vibevm.world/wal" = { path = "../flow-wal", link = "inline" }
 "#,
         );
         assert_eq!(r.path_packages.len(), 1);
@@ -500,7 +500,7 @@ mod tests {
     fn requires_link_on_var_dep_parses() {
         let r = requires_from_toml(
             r#"[packages]
-"org.vibevm/wal" = { version.var = "core", link = "dynamic" }
+"org.vibevm.world/wal" = { version.var = "core", link = "dynamic" }
 "#,
         );
         assert_eq!(r.var_packages.len(), 1);
@@ -511,7 +511,7 @@ mod tests {
     fn requires_link_rejects_unknown_value() {
         let err = toml::from_str::<Requires>(
             r#"[packages]
-"org.vibevm/wal" = { version = "^0.3", link = "weird" }
+"org.vibevm.world/wal" = { version = "^0.3", link = "weird" }
 "#,
         )
         .unwrap_err();
@@ -527,7 +527,7 @@ mod tests {
         // form — it must serialise as an inline table so `link` survives.
         let r = requires_from_toml(
             r#"[packages]
-"org.vibevm/wal" = { version = "^0.3", link = "inline" }
+"org.vibevm.world/wal" = { version = "^0.3", link = "inline" }
 "#,
         );
         let rendered = toml::to_string_pretty(&r).unwrap();
@@ -538,7 +538,7 @@ mod tests {
     fn requires_link_round_trips_across_all_source_kinds() {
         let original = requires_from_toml(
             r#"[packages]
-"org.vibevm/wal" = { version = "^0.3", link = "inline" }
+"org.vibevm.world/wal" = { version = "^0.3", link = "inline" }
 "org.vibevm/internal" = { git = "https://github.com/me/flow-internal", tag = "v0.1.0", link = "dynamic" }
 "org.vibevm/auth" = { path = "../feat-auth", link = "dynamic" }
 "org.vibevm/rust" = { version.var = "core", link = "inline" }

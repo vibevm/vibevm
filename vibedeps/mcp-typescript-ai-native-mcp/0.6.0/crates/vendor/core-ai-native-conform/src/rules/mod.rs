@@ -8,7 +8,7 @@
 //! its public path `core_ai_native_conform::rules::<RuleType>` via the
 //! re-exports below.
 
-specmark::scope!("spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules");
+specmark::scope!("spec://org.vibevm.ai-native.core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules");
 
 use crate::facts::{Fact, SourceFacts};
 
@@ -34,13 +34,13 @@ pub use typescript::{TsCellIsolation, TsUnsafeInDomain};
 ///
 /// ```
 /// let msg = core_ai_native_conform::rules::req_message(
-///     "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
+///     "spec://org.vibevm.ai-native.core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
 ///     "what went wrong",
 ///     "where to fix it",
 /// );
 /// assert_eq!(
 ///     msg,
-///     "violates REQ spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules: \
+///     "violates REQ spec://org.vibevm.ai-native.core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules: \
 ///      what went wrong; fix surface: where to fix it",
 /// );
 /// ```

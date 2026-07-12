@@ -57,7 +57,7 @@ impl Provides {
 /// let r: Requires = toml::from_str(r#"
 ///     capabilities = ["db:any@>=1.0"]
 ///     [packages]
-///     "org.vibevm/wal" = "^0.3"
+///     "org.vibevm.world/wal" = "^0.3"
 ///     "org.vibevm/rust" = { version = "^2.0", link = "dynamic" }
 /// "#).unwrap();
 /// assert_eq!(r.packages.len(), 2);
@@ -228,7 +228,7 @@ impl ConflictsList {
 ///
 /// let t: ConditionalTarget = toml::from_str(r#"
 ///     [dependencies.packages]
-///     "org.vibevm/wal" = "^0.3"
+///     "org.vibevm.world/wal" = "^0.3"
 /// "#).unwrap();
 /// assert_eq!(t.dependencies.packages.len(), 1);
 /// ```

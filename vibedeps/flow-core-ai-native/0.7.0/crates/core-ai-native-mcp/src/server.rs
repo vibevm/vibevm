@@ -6,7 +6,7 @@
 //! parse-error. The loop NEVER exits on a bad frame — only on
 //! end-of-input or a dead channel.
 
-specmark::scope!("spec://core-ai-native/mechanisms/MCP-CORE-v0.1#server");
+specmark::scope!("spec://org.vibevm.ai-native.core-ai-native/mechanisms/MCP-CORE-v0.1#server");
 
 use std::io::{BufRead, Write};
 

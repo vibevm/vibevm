@@ -58,7 +58,7 @@ code), `health` (the sweep's fact collector), `test-gate` (xfail-strict
 over node's TAP) / `tripwire` / `trace` / `fast-loop` / `codemod`; plus
 the narrow `typescript-ai-native-conform` and `typescript-ai-native-specmap` engines, and
 the agentic type oracle `typescript-ai-native-tcg`
-(also served over MCP by `mcp:org.vibevm/typescript-ai-native-mcp` —
+(also served over MCP by `mcp:org.vibevm.ai-native/typescript-ai-native-mcp` —
 PROP-027; persistent enriching `serve`
 relay + one-shot `validate`/`scope`/`complete`/`type`/`bench`: check an
 edit against in-memory overlays BEFORE writing it, with the SAME

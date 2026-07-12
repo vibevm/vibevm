@@ -105,14 +105,14 @@ pub fn enrich_validate(policy: &Policy, file: &str, raw: ValidateResult) -> Enri
                 advice.push(
                     "an unsafe-set form in domain code: prefer `unknown` + a runtime \
                      validator, a checked `as` after a guard, or `@ts-expect-error -- \
-                     reason` (spec://typescript-ai-native-lang/guide s8)"
+                     reason` (spec://org.vibevm.ai-native.typescript-ai-native-lang/guide s8)"
                         .to_string(),
                 );
             }
             if !baselined && f.rule == "ts-cell-isolation" {
                 advice.push(
                     "cells import each other only through their seam module \
-                     (spec://typescript-ai-native-lang/guide s3)"
+                     (spec://org.vibevm.ai-native.typescript-ai-native-lang/guide s3)"
                         .to_string(),
                 );
             }

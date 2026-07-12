@@ -12,7 +12,7 @@
 
 vibevm's package namespace is flat: a pkgref is `<kind>:<name>`, and `name` is "globally unique within its kind" (`VIBEVM-SPEC.md` §7.1). This does not scale — two unrelated authors will both want `flow:wal`. Maven solved exactly this with `groupId` (reverse-FQDN) for global uniqueness; npm with `@scope/`.
 
-The owner's request (design session 2026-05-20): introduce reverse-FQDN qualification at the top level (`org.vibevm`), while keeping short names usable — a user types `vibe install wal` in the CLI, but the package is canonically `org.vibevm/wal`. On a name collision, show alternatives; on a dependency conflict, fail without applying the plan; under full-auto, fail rather than guess.
+The owner's request (design session 2026-05-20): introduce reverse-FQDN qualification at the top level (`org.vibevm`), while keeping short names usable — a user types `vibe install wal` in the CLI, but the package is canonically `org.vibevm.world/wal`. On a name collision, show alternatives; on a dependency conflict, fail without applying the plan; under full-auto, fail rather than guess.
 
 **Why this does not violate [PROP-002 §3.4](PROP-002-decentralized-registry.md).** PROP-002 §3.4 rejected *per-registry identity* — `vibespecs/flow:wal` must not be a different identity from `corporate/flow:wal`, because that would make mirror-switching impossible. `group` is **not** the registry. `group` is an attribute of the *package* (exactly as Maven's `groupId` is an attribute of the artifact, not of the repository serving it). The registry remains a runtime resolution detail. Adding `group` to the identity tuple is orthogonal to §3.4 and does not reopen it.
 
@@ -77,12 +77,12 @@ The `group`↔`name` separator is `/` (`:` is taken by `kind`, `@` by version).
 
 | Form | Context | Behaviour |
 |---|---|---|
-| `org.vibevm/wal` | qualified — the form written into manifests (see §2.6, [PROP-002](PROP-002-decentralized-registry.md)) | resolved exactly |
-| `flow:org.vibevm/wal` | qualified + kind | resolved exactly; **kind validated against the manifest** |
+| `org.vibevm.world/wal` | qualified — the form written into manifests (see §2.6, [PROP-002](PROP-002-decentralized-registry.md)) | resolved exactly |
+| `flow:org.vibevm.world/wal` | qualified + kind | resolved exactly; **kind validated against the manifest** |
 | `wal` | short — CLI sugar | resolved via the index (§2.6) |
 | `flow:wal` | short + kind | resolved via the index; kind validated |
 
-- **kind validation.** If the `kind` prefix is present, after resolution the resolver asserts `resolved.kind == prefix`; mismatch is a `KindMismatch` error. A kind prefix is validation + a UX signal — it does **not** disambiguate, because by §2.2 `name` is unique within a `group`, so `flow:org.vibevm/wal` and `feat:org.vibevm/wal` cannot co-exist. A short-name collision is always a *group* collision (§2.7), resolved by group-qualification, never by kind.
+- **kind validation.** If the `kind` prefix is present, after resolution the resolver asserts `resolved.kind == prefix`; mismatch is a `KindMismatch` error. A kind prefix is validation + a UX signal — it does **not** disambiguate, because by §2.2 `name` is unique within a `group`, so `flow:org.vibevm.world/wal` and `feat:org.vibevm.world/wal` cannot co-exist. A short-name collision is always a *group* collision (§2.7), resolved by group-qualification, never by kind.
 - **The short form is CLI-only sugar.** It is never written to a manifest (§2.6).
 
 ### 2.5 Repository naming — `naming = "fqdn"` {#repo-naming}
@@ -108,10 +108,10 @@ naming = "fqdn"          # repo name = "<group>.<name>"  →  org.vibevm.wal
 
 **Decision.** A short name (`wal`, `flow:wal`) is resolved **only at the CLI input boundary**, via the index. Manifests always store the qualified form.
 
-- `vibe install wal` resolves the collision once, at the top level, and writes `org.vibevm/wal` into `[requires]`. Manifests are therefore always qualified — exactly the cargo/npm pattern (`cargo add serde` on the CLI, `serde = "1"` in `Cargo.toml`).
+- `vibe install wal` resolves the collision once, at the top level, and writes `org.vibevm.world/wal` into `[requires]`. Manifests are therefore always qualified — exactly the cargo/npm pattern (`cargo add serde` on the CLI, `serde = "1"` in `Cargo.toml`).
 - **Consequence — no transitive collisions.** Every package's `[requires]` is qualified (its author published through the same flow). The dependency graph is built from qualified names; short-name resolution never recurses into the graph. It happens once, for a human-typed CLI argument.
 - **Index dependency.** Resolving a short name requires enumerating candidates `(*, name)` across registries. The host cannot list an org cheaply ([PROP-005 §1](../vibe-index/PROP-005-package-index.md) — GitVerse exposes no org listing, GitHub is rate-limited). Therefore short-name resolution **requires [PROP-005](../vibe-index/PROP-005-package-index.md)**: one HTTP GET of `by-name/<name>.json` per registry yields the candidate set. Without an index, a registry's short names are unavailable and the qualified form is required.
-- **Lockfile is authoritative.** If `vibe.lock` already pins `org.vibevm/wal`, a later `vibe install wal` resolves to the locked entry — the short name prefers what is already locked.
+- **Lockfile is authoritative.** If `vibe.lock` already pins `org.vibevm.world/wal`, a later `vibe install wal` resolves to the locked entry — the short name prefers what is already locked.
 
 ### 2.7 Collision vs conflict {#collision}
 
@@ -132,9 +132,9 @@ Collision handling (new):
 
 ```
 flow:wal is ambiguous — 2 packages match:
-  1. org.vibevm/wal   (registry vibespecs)
+  1. org.vibevm.world/wal   (registry vibespecs)
   2. com.acme/wal     (registry acme-internal)
-Re-run with the qualified form, e.g. `vibe install org.vibevm/wal`.
+Re-run with the qualified form, e.g. `vibe install org.vibevm.world/wal`.
 ```
 
 Conflict handling is unchanged: the install pipeline is already atomic (resolve → plan → confirm → apply); a failed resolve never reaches apply — "fail without applying the plan", as the owner specified.

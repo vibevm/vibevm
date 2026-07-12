@@ -18,4 +18,4 @@ requires_kinds = []
 # and version-mirrors the stack. core-ai-native arrives transitively through
 # the -lang stack's own `[requires]`.
 [requires]
-packages = { "stack:org.vibevm/typescript-ai-native-lang" = "=0.6.0", "mcp:org.vibevm/typescript-ai-native-mcp" = "=0.6.0" }
+packages = { "stack:org.vibevm.ai-native/typescript-ai-native-lang" = "=0.6.0", "mcp:org.vibevm.ai-native/typescript-ai-native-mcp" = "=0.6.0" }

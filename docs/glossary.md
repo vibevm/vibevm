@@ -94,7 +94,7 @@ A resolved package's content as it lands on disk: its published tree, copied ver
 
 Per-registry rule for mapping a pkgref to a per-package repo name under the registry's org URL. Four values:
 
-- `fqdn` (default): `org.vibevm/wal` → `<org>/org.vibevm.wal.git`. Repo name is `<group>.<name>` — collision-free, since `(group, name)` is unique. The convention vibevm's own registries use; the default since [PROP-008](../spec/modules/vibe-registry/PROP-008-qualified-naming.md).
+- `fqdn` (default): `org.vibevm.world/wal` → `<org>/org.vibevm.wal.git`. Repo name is `<group>.<name>` — collision-free, since `(group, name)` is unique. The convention vibevm's own registries use; the default since [PROP-008](../spec/modules/vibe-registry/PROP-008-qualified-naming.md).
 - `kind-name`: `flow:wal` → `<org>/flow-wal.git`. The pre-PROP-008 default; kept for registries that have not adopted `group`.
 - `name`: `flow:wal` → `<org>/wal.git`. Legal when names are globally unique across the registry.
 - `kind/name`: `flow:wal` → `<org>/flow/wal.git`. Requires host support for nested repo paths.
@@ -109,8 +109,8 @@ A property of the registry, not a global CLI rule. [PROP-002 §2.2](../spec/modu
 
 A package reference: `[<kind>:][<group>/]<name>[@<version>]`. The qualified `<group>/<name>` form is what manifests and the lockfile store; the short `<name>` form is CLI-only sugar, resolved to the qualified form via the package index at the CLI input boundary ([PROP-008 §2.6](../spec/modules/vibe-registry/PROP-008-qualified-naming.md)). Variants:
 
-- `org.vibevm/wal` — qualified; resolved exactly.
-- `flow:org.vibevm/wal` — qualified, kind-prefixed; `kind` is validated against the manifest after resolution.
+- `org.vibevm.world/wal` — qualified; resolved exactly.
+- `flow:org.vibevm.world/wal` — qualified, kind-prefixed; `kind` is validated against the manifest after resolution.
 - `wal` — short form, CLI-only sugar; index-resolved.
 - `wal@^0.3` — short form with a semver caret constraint.
 

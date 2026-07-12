@@ -9,7 +9,7 @@ NOT use shell/Bash, do NOT stage or commit, and change NO file other than
 LICENSE.md at the repository root.
 
 1. Read the canonical UPL-1.0 license text already present in this tree:
-   packages/org.vibevm/wal-workspaces/v0.1.0/LICENSE.md
+   packages/org.vibevm.world/wal-workspaces/v0.1.0/LICENSE.md
 
 2. Overwrite the repository-root file LICENSE.md so its content is EXACTLY:
    (a) that canonical UPL text from step 1, verbatim — including its first

@@ -2,8 +2,8 @@
 
 Sub-projects hosted in this repository that are worked on as
 independent projects, each with its own boot contract, WAL, and
-cold-resume file. Canon: `flow:org.vibevm/wal-workspaces`
-(authored in `packages/org.vibevm/wal-workspaces/`); the local
+cold-resume file. Canon: `flow:org.vibevm.world/wal-workspaces`
+(authored in `packages/org.vibevm.world/wal-workspaces/`); the local
 grammar lives in `CLAUDE.md` §Workspaces.
 
 | name | root | wal | continue | status |

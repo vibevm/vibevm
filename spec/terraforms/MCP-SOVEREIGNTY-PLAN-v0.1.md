@@ -180,12 +180,12 @@ flow:org.vibevm/discipline-core (0.6.0)
 ├─ crates/mcp-core                             ← AUTHORED here (neutral transport)
 └─ spec/mechanisms/MCP-CORE-v0.1.md
 
-stack:org.vibevm/rust-ai-native (0.6.0)        ← report seams + tcg session lib
-stack:org.vibevm/typescript-ai-native (0.5.0)     surface; NO server crates here
+stack:org.vibevm.ai-native/rust-ai-native (0.6.0)        ← report seams + tcg session lib
+stack:org.vibevm.ai-native/typescript-ai-native (0.5.0)     surface; NO server crates here
 
 mcp:org.vibevm/discipline-rust (0.6.0)         ← NEW PACKAGE, NEW KIND
 ├─ vibe.toml   kind = "mcp"
-│              [requires] "stack:org.vibevm/rust-ai-native" = "=0.6.0"  (exact pin)
+│              [requires] "stack:org.vibevm.ai-native/rust-ai-native" = "=0.6.0"  (exact pin)
 │              [[binary]] discipline-mcp-rust
 │              [[mcp_server]] name="discipline-rust" binary="discipline-mcp-rust"
 ├─ crates/discipline-mcp-rust                  ← the stdio MCP server (authored)
@@ -237,7 +237,7 @@ exact-pinned to their stacks
 Because cross-slot path-deps are impossible (F13), the server package
 VENDORS its dependency closure (D3a) — and vendoring re-opens the
 gate-vs-oracle version-skew the in-slot draft killed by construction.
-The pin closes it: `[requires] "stack:org.vibevm/rust-ai-native" =
+The pin closes it: `[requires] "stack:org.vibevm.ai-native/rust-ai-native" =
 "=0.6.0"` (exact). Installing the mcp package forces the exact stack
 version; the resolver — not a runtime handshake — guarantees «one
 engine, one truth». Consequences accepted and priced: every stack

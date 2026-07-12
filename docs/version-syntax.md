@@ -24,7 +24,7 @@ When the two disagree (operator hand-edits `vibe.toml`, deletes `vibe.lock`, etc
 
 ## Pkgref syntax
 
-A package reference is `[<kind>:][<group>/]<name>[@<version>]`. Manifests store the qualified `<group>/<name>` form (`org.vibevm/wal`); the short `<kind>:<name>` form used in the examples below is CLI sugar resolved through the package index (see [`VIBEVM-SPEC.md` §7.1](../VIBEVM-SPEC.md)). The version part accepts every form `semver::VersionReq` accepts:
+A package reference is `[<kind>:][<group>/]<name>[@<version>]`. Manifests store the qualified `<group>/<name>` form (`org.vibevm.world/wal`); the short `<kind>:<name>` form used in the examples below is CLI sugar resolved through the package index (see [`VIBEVM-SPEC.md` §7.1](../VIBEVM-SPEC.md)). The version part accepts every form `semver::VersionReq` accepts:
 
 | Form | Meaning | Matches | Doesn't match |
 | --- | --- | --- | --- |
@@ -105,7 +105,7 @@ Resolver picks `0.1.0` (latest stable). Manifest gets:
 
 ```toml
 [requires.packages]
-"org.vibevm/wal" = "^0.1.0"
+"org.vibevm.world/wal" = "^0.1.0"
 ```
 
 This is the **default**, and matches `cargo add` / `npm install` / `poetry add`.
@@ -120,17 +120,17 @@ Manifest stores exactly what was typed:
 
 ```toml
 [requires.packages]
-"org.vibevm/wal" = "^0.1"
+"org.vibevm.world/wal" = "^0.1"
 ```
 
 We don't tighten `^0.1` to `^0.1.0`, even though the resolver produces a concrete patch. The operator's wider declaration wins. Same for tilde, equal, and ranges:
 
 | You typed | Manifest stores |
 | --- | --- |
-| `flow:wal@^0.1` | `"org.vibevm/wal" = "^0.1"` |
-| `flow:wal@~0.1.0` | `"org.vibevm/wal" = "~0.1.0"` |
-| `flow:wal@=0.1.0` | `"org.vibevm/wal" = "=0.1.0"` |
-| `flow:wal@>=0.1, <0.3` | `"org.vibevm/wal" = ">=0.1, <0.3"` |
+| `flow:wal@^0.1` | `"org.vibevm.world/wal" = "^0.1"` |
+| `flow:wal@~0.1.0` | `"org.vibevm.world/wal" = "~0.1.0"` |
+| `flow:wal@=0.1.0` | `"org.vibevm.world/wal" = "=0.1.0"` |
+| `flow:wal@>=0.1, <0.3` | `"org.vibevm.world/wal" = ">=0.1, <0.3"` |
 
 ### Rule 3 — `--exact` overrides everything
 
@@ -148,7 +148,7 @@ Manifest pins to `=<resolved>`, regardless of CLI form:
 
 ```toml
 [requires.packages]
-"org.vibevm/wal" = "=0.1.0"
+"org.vibevm.world/wal" = "=0.1.0"
 ```
 
 `--exact` is npm's `--save-exact` shape. Use it when you want strict reproducibility from the moment of install and don't want a later `vibe update` to wander.

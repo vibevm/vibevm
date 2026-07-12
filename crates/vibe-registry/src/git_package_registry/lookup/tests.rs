@@ -162,7 +162,7 @@ fn resolve_picks_latest_stable() {
         vec!["v0.1.0".into(), "v0.2.0".into(), "v1.0.0-rc.1".into()],
     );
     let r = registry_with(cache.path(), "git@host:org", NamingConvention::Fqdn, fake);
-    let p = PackageRef::parse("org.vibevm/wal").unwrap();
+    let p = PackageRef::parse("org.vibevm.world/wal").unwrap();
     let resolved = r.resolve(&p).unwrap();
     // 1.0.0-rc.1 is pre-release; latest stable wins.
     assert_eq!(resolved.version.to_string(), "0.2.0");
@@ -177,7 +177,7 @@ fn resolve_picks_exact_version() {
         vec!["v0.1.0".into(), "v0.2.0".into(), "v0.3.0".into()],
     );
     let r = registry_with(cache.path(), "git@host:org", NamingConvention::Fqdn, fake);
-    let p = PackageRef::parse("org.vibevm/wal@0.2.0").unwrap();
+    let p = PackageRef::parse("org.vibevm.world/wal@0.2.0").unwrap();
     let resolved = r.resolve(&p).unwrap();
     assert_eq!(resolved.version.to_string(), "0.2.0");
 }
@@ -191,7 +191,7 @@ fn resolve_picks_range() {
         vec!["v0.1.0".into(), "v0.1.5".into(), "v0.2.0".into()],
     );
     let r = registry_with(cache.path(), "git@host:org", NamingConvention::Fqdn, fake);
-    let p = PackageRef::parse("org.vibevm/wal@^0.1").unwrap();
+    let p = PackageRef::parse("org.vibevm.world/wal@^0.1").unwrap();
     let resolved = r.resolve(&p).unwrap();
     assert_eq!(resolved.version.to_string(), "0.1.5");
 }
@@ -202,7 +202,7 @@ fn resolve_no_match_errors() {
     let fake = Arc::new(FakeBackend::default());
     fake.seed_tags("git@host:org/org.vibevm.wal.git", vec!["v0.1.0".into()]);
     let r = registry_with(cache.path(), "git@host:org", NamingConvention::Fqdn, fake);
-    let p = PackageRef::parse("org.vibevm/wal@^9.0").unwrap();
+    let p = PackageRef::parse("org.vibevm.world/wal@^9.0").unwrap();
     let err = r.resolve(&p).unwrap_err();
     assert!(matches!(err, RegistryError::NoMatchingVersion { .. }));
 }

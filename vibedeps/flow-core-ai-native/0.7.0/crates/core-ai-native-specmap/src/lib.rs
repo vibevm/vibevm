@@ -19,7 +19,7 @@
 //! Design rule inherited from B5 (monotone utility): scanners degrade —
 //! an unparseable file becomes a warning entry, never a hard error.
 
-specmark::scope!("spec://core-ai-native/mechanisms/PROP-014#index");
+specmark::scope!("spec://org.vibevm.ai-native.core-ai-native/mechanisms/PROP-014#index");
 
 /// JTD-generated wire types for the canonical `specmap.json` index,
 /// generated from the package's `schemas/specmap.jtd.json` (regeneration is

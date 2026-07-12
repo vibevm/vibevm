@@ -9,7 +9,7 @@
 //! An absent `specmap.toml` yields the default policy and turns the orphan
 //! ratchet off — the pre-config behaviour.
 
-specmark::scope!("spec://core-ai-native/mechanisms/PROP-014#index");
+specmark::scope!("spec://org.vibevm.ai-native.core-ai-native/mechanisms/PROP-014#index");
 
 use std::path::{Path, PathBuf};
 

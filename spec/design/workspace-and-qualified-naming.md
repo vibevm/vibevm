@@ -57,7 +57,7 @@ Axis D (conflict-aware)     — depends on C; the conflict half partly exists al
 
 The chain `D → C → PROP-005 index` is the key finding. Reasoning:
 
-- **C needs the index.** A short name `wal` must be resolved to a qualified `org.vibevm/wal`. That requires enumerating candidates `(*, wal)` across registries. The host cannot list an org cheaply (PROP-005 §1: GitVerse exposes no org listing; GitHub is rate-limited). Therefore short-name resolution requires PROP-005 implemented.
+- **C needs the index.** A short name `wal` must be resolved to a qualified `org.vibevm.world/wal`. That requires enumerating candidates `(*, wal)` across registries. The host cannot list an org cheaply (PROP-005 §1: GitVerse exposes no org listing; GitHub is rate-limited). Therefore short-name resolution requires PROP-005 implemented.
 - **D needs C.** A *collision* is two different packages sharing a short name. You can only tell a collision apart from a harmless mirror (the same package served by two registries) once `group` exists to distinguish them. Without `group`, first-match-wins is the only sane policy.
 - **The conflict half of D already exists.** The depsolver (resolvo/libsolv per PROP-003), `[conflicts]`, and the conflict-explanation chain are in place; the install pipeline is already atomic (resolve → plan → confirm → apply), so a failed resolve never reaches apply. "Fail without applying the plan" is already true. Only *collision* detection is new.
 
@@ -71,13 +71,13 @@ Every fork weighed in the session, the options, the choice, and the reasoning. T
 
 ### Naming forks
 
-- **Separator `group`↔`name`.** Chosen: `/` → `flow:org.vibevm/wal`. `:` is taken by `kind`, `@` by version; npm-scope (`@org/`) was rejected because `@` doubling with version would confuse.
+- **Separator `group`↔`name`.** Chosen: `/` → `flow:org.vibevm.world/wal`. `:` is taken by `kind`, `@` by version; npm-scope (`@org/`) was rejected because `@` doubling with version would confuse.
 - **Is `group` mandatory?** Chosen: **mandatory**. Maven makes groupId mandatory; an optional `group` creates a grey zone ("no group" vs "has group"). The three legacy packages migrate silently — the owner waved that through ("they are test packages anyway").
 - **Enforce reverse-FQDN?** Chosen: **core does not enforce**. Whether `group` looks like a reversed domain is style — for humans and linters, not the resolver. Maven likewise does not enforce groupId shape.
 - **Canonical group for vibevm.** `org.vibevm` (domain `vibevm.org`). Recorded in PROP-008 §2.1.
 - **`kind` in the repository name?** The owner asked: can `kind` leave the repo name entirely? Yes — because identity is already URL-orthogonal (PROP-002 §2.1), the repo name identifies nothing. The one thing `kind` gave the name was disambiguation (`flow-wal` vs `feat-wal`); making `name` unique *within a group* (rather than within a kind) removes that need. Result: repo = `<group>.<name>` = `org.vibevm.wal`, `naming = "fqdn"`. `kind` becomes pure metadata and leaves the identity tuple.
-- **`kind` prefix in pkgref — keep or drop?** Chosen: **optional but allowed, validated when present**. The owner's exact framing: if `flow:` is purely a UX feature, make it optional but possible; and if an install used the prefix explicitly, validate it matches the manifest. So `org.vibevm/wal` and `flow:org.vibevm/wal` are both legal; a present prefix is checked (`KindMismatch` on mismatch). It is validation + a UX signal — it never disambiguates, because `name` is unique within `group`.
-- **Short name in manifests?** Chosen: **no — manifests store the qualified form**. The short name is CLI-only sugar; `vibe install wal` resolves once and writes `org.vibevm/wal`. This is the cargo/npm pattern (`cargo add serde` → `serde = "1"`). The decisive consequence: the dependency graph is built entirely from qualified names, so **transitive collisions vanish by construction** — short-name resolution only ever happens at the human-typed CLI boundary, not recursively through the graph.
+- **`kind` prefix in pkgref — keep or drop?** Chosen: **optional but allowed, validated when present**. The owner's exact framing: if `flow:` is purely a UX feature, make it optional but possible; and if an install used the prefix explicitly, validate it matches the manifest. So `org.vibevm.world/wal` and `flow:org.vibevm.world/wal` are both legal; a present prefix is checked (`KindMismatch` on mismatch). It is validation + a UX signal — it never disambiguates, because `name` is unique within `group`.
+- **Short name in manifests?** Chosen: **no — manifests store the qualified form**. The short name is CLI-only sugar; `vibe install wal` resolves once and writes `org.vibevm.world/wal`. This is the cargo/npm pattern (`cargo add serde` → `serde = "1"`). The decisive consequence: the dependency graph is built entirely from qualified names, so **transitive collisions vanish by construction** — short-name resolution only ever happens at the human-typed CLI boundary, not recursively through the graph.
 - **Exit code for ambiguity.** Chosen: **new code `7`**, distinct from `3` (package conflict).
 
 ### Workspace forks (7a–7e)

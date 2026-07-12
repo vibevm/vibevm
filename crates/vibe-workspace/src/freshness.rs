@@ -356,8 +356,8 @@ mod tests {
     #[test]
     fn fresh_when_lock_satisfies_and_slots_present() {
         let (_t, ws) =
-            workspace_with_requires("[requires.packages]\n\"org.vibevm/wal\" = \"^0.3\"\n");
-        let lf = lockfile(&["org.vibevm/wal"], &registry_pkg("flow", "wal", "0.3.2"));
+            workspace_with_requires("[requires.packages]\n\"org.vibevm.world/wal\" = \"^0.3\"\n");
+        let lf = lockfile(&["org.vibevm.world/wal"], &registry_pkg("flow", "wal", "0.3.2"));
         materialise_slot(&ws, PackageKind::Flow, "wal", "0.3.2");
         assert_eq!(check(&ws, &lf), Freshness::Fresh);
     }
@@ -365,7 +365,7 @@ mod tests {
     #[test]
     fn stale_when_a_declared_dep_is_absent_from_the_lock() {
         let (_t, ws) =
-            workspace_with_requires("[requires.packages]\n\"org.vibevm/wal\" = \"^0.3\"\n");
+            workspace_with_requires("[requires.packages]\n\"org.vibevm.world/wal\" = \"^0.3\"\n");
         let lf = lockfile(&[], "");
         match check(&ws, &lf) {
             Freshness::Stale(r) => assert!(r.contains("absent from vibe.lock"), "{r}"),
@@ -377,8 +377,8 @@ mod tests {
     fn stale_when_the_locked_version_is_outside_the_constraint() {
         // The constraint was tightened to `^0.4`; the lock still pins 0.3.2.
         let (_t, ws) =
-            workspace_with_requires("[requires.packages]\n\"org.vibevm/wal\" = \"^0.4\"\n");
-        let lf = lockfile(&["org.vibevm/wal"], &registry_pkg("flow", "wal", "0.3.2"));
+            workspace_with_requires("[requires.packages]\n\"org.vibevm.world/wal\" = \"^0.4\"\n");
+        let lf = lockfile(&["org.vibevm.world/wal"], &registry_pkg("flow", "wal", "0.3.2"));
         materialise_slot(&ws, PackageKind::Flow, "wal", "0.3.2");
         match check(&ws, &lf) {
             Freshness::Stale(r) => assert!(r.contains("outside the constraint"), "{r}"),
@@ -391,8 +391,8 @@ mod tests {
         // `^0.3` and the lock at 0.3.2 — no drift to a newer 0.3.x; the
         // locked version is honoured verbatim (the lockfile-respecting win).
         let (_t, ws) =
-            workspace_with_requires("[requires.packages]\n\"org.vibevm/wal\" = \"^0.3\"\n");
-        let lf = lockfile(&["org.vibevm/wal"], &registry_pkg("flow", "wal", "0.3.2"));
+            workspace_with_requires("[requires.packages]\n\"org.vibevm.world/wal\" = \"^0.3\"\n");
+        let lf = lockfile(&["org.vibevm.world/wal"], &registry_pkg("flow", "wal", "0.3.2"));
         materialise_slot(&ws, PackageKind::Flow, "wal", "0.3.2");
         assert!(check(&ws, &lf).is_fresh());
     }
@@ -402,9 +402,9 @@ mod tests {
         // `[requires]` declares only `flow:wal`, but the lock still records
         // `feat:auth` as a root — a dependency was dropped.
         let (_t, ws) =
-            workspace_with_requires("[requires.packages]\n\"org.vibevm/wal\" = \"^0.3\"\n");
+            workspace_with_requires("[requires.packages]\n\"org.vibevm.world/wal\" = \"^0.3\"\n");
         let lf = lockfile(
-            &["org.vibevm/wal", "org.vibevm/auth"],
+            &["org.vibevm.world/wal", "org.vibevm/auth"],
             &format!(
                 "{}\n{}",
                 registry_pkg("flow", "wal", "0.3.2"),
@@ -422,8 +422,8 @@ mod tests {
     #[test]
     fn stale_when_a_locked_slot_is_not_materialised() {
         let (_t, ws) =
-            workspace_with_requires("[requires.packages]\n\"org.vibevm/wal\" = \"^0.3\"\n");
-        let lf = lockfile(&["org.vibevm/wal"], &registry_pkg("flow", "wal", "0.3.2"));
+            workspace_with_requires("[requires.packages]\n\"org.vibevm.world/wal\" = \"^0.3\"\n");
+        let lf = lockfile(&["org.vibevm.world/wal"], &registry_pkg("flow", "wal", "0.3.2"));
         // No materialise_slot call — the slot is absent.
         match check(&ws, &lf) {
             Freshness::Stale(r) => assert!(r.contains("no materialised"), "{r}"),
@@ -451,10 +451,10 @@ mod tests {
         // immutable — so the lock cannot be proven fresh; it re-resolves to
         // pick up any source edit (§2.6).
         let (_t, ws) =
-            workspace_with_requires("[requires.packages]\n\"org.vibevm/wal\" = \"^0.3\"\n");
+            workspace_with_requires("[requires.packages]\n\"org.vibevm.world/wal\" = \"^0.3\"\n");
         let src = file_url_under(&ws.root, "packages/wal");
         let lf = lockfile(
-            &["org.vibevm/wal"],
+            &["org.vibevm.world/wal"],
             &local_pkg("flow", "wal", "0.3.2", &src),
         );
         materialise_slot(&ws, PackageKind::Flow, "wal", "0.3.2");
@@ -473,9 +473,9 @@ mod tests {
         // or mirror, a test fixture) is left immutable and keeps the §2.2 fast
         // path — only the in-repo self-hosting registry is mutable (§2.6).
         let (_t, ws) =
-            workspace_with_requires("[requires.packages]\n\"org.vibevm/wal\" = \"^0.3\"\n");
+            workspace_with_requires("[requires.packages]\n\"org.vibevm.world/wal\" = \"^0.3\"\n");
         let lf = lockfile(
-            &["org.vibevm/wal"],
+            &["org.vibevm.world/wal"],
             &local_pkg("flow", "wal", "0.3.2", "file:///external/registry/wal"),
         );
         materialise_slot(&ws, PackageKind::Flow, "wal", "0.3.2");
@@ -525,19 +525,19 @@ mod tests {
 
     #[test]
     fn hold_pins_pins_a_satisfied_registry_root() {
-        let lf = lockfile(&["org.vibevm/wal"], &registry_pkg("flow", "wal", "0.3.2"));
-        let declared = vec![PackageRef::parse("org.vibevm/wal@^0.3").unwrap()];
+        let lf = lockfile(&["org.vibevm.world/wal"], &registry_pkg("flow", "wal", "0.3.2"));
+        let declared = vec![PackageRef::parse("org.vibevm.world/wal@^0.3").unwrap()];
         let pinned = hold_pins(&declared, &lf);
         // `^0.3` becomes `=0.3.2` — the locked version is held.
-        assert_eq!(pinned[0].to_string(), "org.vibevm/wal@=0.3.2");
+        assert_eq!(pinned[0].to_string(), "org.vibevm.world/wal@=0.3.2");
     }
 
     #[test]
     fn hold_pins_leaves_a_changed_root_free() {
         // The constraint moved to `^0.4`; the lock at 0.3.2 no longer
         // satisfies it — this is the change, it must resolve freely.
-        let lf = lockfile(&["org.vibevm/wal"], &registry_pkg("flow", "wal", "0.3.2"));
-        let declared = vec![PackageRef::parse("org.vibevm/wal@^0.4").unwrap()];
+        let lf = lockfile(&["org.vibevm.world/wal"], &registry_pkg("flow", "wal", "0.3.2"));
+        let declared = vec![PackageRef::parse("org.vibevm.world/wal@^0.4").unwrap()];
         let pinned = hold_pins(&declared, &lf);
         assert_eq!(pinned[0], declared[0]);
     }
@@ -570,7 +570,7 @@ mod tests {
     fn hold_pins_mixes_held_and_free_roots() {
         // wal is satisfied (held); auth's constraint moved (free).
         let lf = lockfile(
-            &["org.vibevm/wal", "org.vibevm/auth"],
+            &["org.vibevm.world/wal", "org.vibevm/auth"],
             &format!(
                 "{}\n{}",
                 registry_pkg("flow", "wal", "0.3.2"),
@@ -578,11 +578,11 @@ mod tests {
             ),
         );
         let declared = vec![
-            PackageRef::parse("org.vibevm/wal@^0.3").unwrap(),
+            PackageRef::parse("org.vibevm.world/wal@^0.3").unwrap(),
             PackageRef::parse("org.vibevm/auth@^2.0").unwrap(),
         ];
         let pinned = hold_pins(&declared, &lf);
-        assert_eq!(pinned[0].to_string(), "org.vibevm/wal@=0.3.2");
+        assert_eq!(pinned[0].to_string(), "org.vibevm.world/wal@=0.3.2");
         assert_eq!(pinned[1], declared[1]);
     }
 }

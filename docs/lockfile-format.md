@@ -12,7 +12,7 @@ generated_by      = "vibe 0.2.0-dev"
 generated_at      = "2026-04-25T12:00:00Z"
 schema_version    = 5
 solver            = "resolvo-0.x"                   # optional
-root_dependencies = ["org.vibevm/wal", "org.vibevm/rust-cli"]  # optional, may be empty
+root_dependencies = ["org.vibevm.world/wal", "org.vibevm/rust-cli"]  # optional, may be empty
 
 [[package]]
 # ... per-package fields, repeated per installed package
@@ -48,7 +48,7 @@ Each `[[package]]` block describes one installed package.
 | `content_hash` | string (`sha256:<hex>`) | yes | Hash over the deterministically-ordered file tree. The **identity** half of the `(group, name, version, content_hash)` tuple — see [identity model](#identity-model). |
 | `boot_snippet` | string | no | **Retired by the loading model.** Formerly the `NN-`-prefixed boot-snippet filename. Under [PROP-009](../spec/modules/vibe-workspace/PROP-009-loading-model.md) `vibe` owns boot ordering by `category` and generates `INDEX.md` / `INLINE.md`, so a package no longer pins a boot filename — the field is left `None`. The struct slot is retained for schema-v5 compatibility. |
 | `files_written` | array of strings | yes (may be empty) | **Retired by the loading model.** Formerly the list of every file an install wrote into the project. Under PROP-009 a package is materialised verbatim into a `vibedeps/` slot — there is no per-file write list to record — so the field is left empty. The struct slot is retained for schema-v5 compatibility. |
-| `dependencies` | array of pkgref strings | no, default `[]` | Transitive deps the solver chose, pinned to exact versions (`"org.vibevm/atomic-commits@=0.1.0"`). Reproduces the resolved graph on a fresh install from this lockfile. Empty for a package with no dependencies. |
+| `dependencies` | array of pkgref strings | no, default `[]` | Transitive deps the solver chose, pinned to exact versions (`"org.vibevm.world/atomic-commits@=0.1.0"`). Reproduces the resolved graph on a fresh install from this lockfile. Empty for a package with no dependencies. |
 | `overridden` | bool | no, default `false` | True iff this package was resolved through `[[override]]` rather than the registry layer. `vibe list --overrides` filters on this; the deliberate-divergence escape hatch (`--trust-mirror`, M1.6) keys off it. |
 
 ## Identity model
@@ -100,7 +100,7 @@ generated_by      = "vibe 0.2.0-dev"
 generated_at      = "2026-04-25T12:34:56Z"
 schema_version    = 5
 solver            = "naive-1"
-root_dependencies = ["org.vibevm/wal", "org.vibevm/atomic-commits"]
+root_dependencies = ["org.vibevm.world/wal", "org.vibevm.world/atomic-commits"]
 
 [[package]]
 kind            = "flow"
@@ -113,7 +113,7 @@ source_url      = "git@gitverse.ru:vibespecs/flow-wal.git"
 source_ref      = "v0.1.0"
 content_hash    = "sha256:7d8f…b1"
 files_written   = []
-dependencies    = ["org.vibevm/atomic-commits@=0.1.0"]
+dependencies    = ["org.vibevm.world/atomic-commits@=0.1.0"]
 
 [[package]]
 kind            = "flow"

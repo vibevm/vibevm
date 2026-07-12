@@ -5,7 +5,7 @@
 //! cannot drift between language projections (the Ф6 brief's argument
 //! for routing these through conform instead of ESLint).
 
-specmark::scope!("spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules");
+specmark::scope!("spec://org.vibevm.ai-native.core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules");
 
 use crate::facts::{Fact, SourceFacts};
 use crate::finding::{Finding, Rule};

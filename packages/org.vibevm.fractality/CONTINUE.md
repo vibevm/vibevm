@@ -159,7 +159,7 @@ a1a9403 feat(fractality): Stage C — the `fractality advise` verb (D-C3-7)
 cd packages/org.vibevm.fractality && head -40 WAL.md
 cd fractality/v0.1.0
 # floor (ALWAYS from v0.1.0; NEVER while a trial fires):
-/c/Users/olegc/gits/vibevm/packages/org.vibevm/rust-ai-native-lang/v0.7.0/target/debug/rust-ai-native.exe floor
+/c/Users/olegc/gits/vibevm/packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/target/debug/rust-ai-native.exe floor
 # delegate to GLM (CC+z.ai): claude -p '<task>' --model glm-5.2[1m] at the z.ai gateway
 ```
 

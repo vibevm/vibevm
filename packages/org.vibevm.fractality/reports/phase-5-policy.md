@@ -30,7 +30,7 @@ data** — never from the studied source text (clean-room law held).
   law, the never-delegate set, the two work-order scenarios, four
   Never lines.
 - Standing rule honored: the package's `vibe.toml` requires
-  `flow:org.vibevm/redbook` ^0.2.0 and `stack:org.vibevm/rust-ai-native`
+  `flow:org.vibevm.world/redbook` ^0.2.0 and `stack:org.vibevm.ai-native/rust-ai-native`
   ^0.7.0, materialised with the working-tree vibe (26 packages into
   its own `vibedeps/`, boot artifacts generated) — the manifest parsed
   and resolved on the first try, which is itself a pilot data point

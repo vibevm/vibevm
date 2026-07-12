@@ -101,7 +101,7 @@ fn agentic_explain_cell_returns_inline_instruction() {
 fn query_package_cell_returns_full_entry() {
     let (_dir, ctx) = project_with_locked(LOCKFILE_FIXTURE);
     let out = QueryPackage
-        .run(&json!({ "name": "org.vibevm/wal" }), &ctx)
+        .run(&json!({ "name": "org.vibevm.world/wal" }), &ctx)
         .unwrap();
     assert_eq!(out["kind"], "flow");
     assert_eq!(out["name"], "wal");
@@ -152,7 +152,7 @@ fn read_subskill_cell_returns_paths_and_content() {
 
     let out = ReadSubskill
         .run(
-            &json!({ "package": "org.vibevm/wal", "subskill_path": "stack/rust" }),
+            &json!({ "package": "org.vibevm.world/wal", "subskill_path": "stack/rust" }),
             &ctx,
         )
         .unwrap();
@@ -173,7 +173,7 @@ fn read_subskill_cell_unknown_subskill_errors() {
     let (_dir, ctx) = project_with_locked(LOCKFILE_FIXTURE);
     let err = ReadSubskill
         .run(
-            &json!({ "package": "org.vibevm/wal", "subskill_path": "made/up" }),
+            &json!({ "package": "org.vibevm.world/wal", "subskill_path": "made/up" }),
             &ctx,
         )
         .unwrap_err();
@@ -197,7 +197,7 @@ fn materialise_subskill_cell_copies_lazy_pull_content() {
 
     let out = MaterialiseSubskill
         .run(
-            &json!({ "package": "org.vibevm/wal", "subskill_path": "sqlx/v08" }),
+            &json!({ "package": "org.vibevm.world/wal", "subskill_path": "sqlx/v08" }),
             &ctx,
         )
         .unwrap();
@@ -223,7 +223,7 @@ fn materialise_subskill_cell_no_op_for_non_lazy_pull() {
     let (_dir, ctx) = project_with_locked(LOCKFILE_FIXTURE);
     let out = MaterialiseSubskill
         .run(
-            &json!({ "package": "org.vibevm/wal", "subskill_path": "stack/rust" }),
+            &json!({ "package": "org.vibevm.world/wal", "subskill_path": "stack/rust" }),
             &ctx,
         )
         .unwrap();
@@ -244,7 +244,7 @@ fn materialise_subskill_cell_refuses_overwrite_without_force() {
 
     let out = MaterialiseSubskill
         .run(
-            &json!({ "package": "org.vibevm/wal", "subskill_path": "sqlx/v08" }),
+            &json!({ "package": "org.vibevm.world/wal", "subskill_path": "sqlx/v08" }),
             &ctx,
         )
         .unwrap();
@@ -265,7 +265,7 @@ fn dispatch_routes_tools_call_through_the_seam() {
         "jsonrpc": "2.0",
         "id": 1,
         "method": "tools/call",
-        "params": { "name": "query_package", "arguments": { "name": "org.vibevm/wal" } }
+        "params": { "name": "query_package", "arguments": { "name": "org.vibevm.world/wal" } }
     })
     .to_string();
     let resp = dispatch_one(ctx, &req).unwrap();

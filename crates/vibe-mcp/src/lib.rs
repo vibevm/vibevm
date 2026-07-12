@@ -129,7 +129,7 @@ pub struct ToolDescriptor {
 ///
 /// ```
 /// use vibe_mcp::ToolError;
-/// let e = ToolError::NotFound("org.vibevm/wal".into());
+/// let e = ToolError::NotFound("org.vibevm.world/wal".into());
 /// assert!(e.to_string().contains("not found"));
 /// ```
 #[derive(Debug, Error)]

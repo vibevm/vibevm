@@ -8,8 +8,8 @@ authors = ["Oleg Chirukhin"]
 # server at an exact-pinned set, and core-ai-native arrives transitively
 # through the -lang stacks. The boot snippets of the transitive deps still
 # land in spec/boot/INDEX.md via the resolver's BFS closure (PROP-009).
-"stack:org.vibevm/rust-ai-native" = "^0.7.0"
-"stack:org.vibevm/typescript-ai-native" = "^0.6.0"
+"stack:org.vibevm.ai-native/rust-ai-native" = "^0.7.0"
+"stack:org.vibevm.ai-native/typescript-ai-native" = "^0.6.0"
 
 # vibevm is its own bootstrap project — the tool itself, not yet a
 # consumer of any other vibevm registry. The `[[registry]]` blocks

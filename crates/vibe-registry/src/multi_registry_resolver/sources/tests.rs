@@ -184,7 +184,7 @@ fn resolve_path_source_rejects_version_constraint_mismatch() {
     let r =
         build_resolver(cache.path(), vec![], vec![], vec![], fake).with_path_packages(vec![dep]);
 
-    let p = PackageRef::parse("org.vibevm/wal").unwrap();
+    let p = PackageRef::parse("org.vibevm.world/wal").unwrap();
     let err = r.resolve(&p).unwrap_err();
     let msg = err.to_string();
     assert!(

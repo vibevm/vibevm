@@ -116,7 +116,7 @@ impl<'a, P: DepProvider> DepProvider for BoundedProvider<'a, P> {
 /// ).unwrap();
 /// let solver = Sat::new(OnePackage(m));
 /// let graph = solver
-///     .solve(&[PackageRef::parse("org.vibevm/wal").unwrap()])
+///     .solve(&[PackageRef::parse("org.vibevm.world/wal").unwrap()])
 ///     .unwrap();
 /// assert_eq!(graph.packages.len(), 1);
 /// ```

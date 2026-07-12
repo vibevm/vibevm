@@ -23,13 +23,13 @@ Canonical package manifests still carrying the EULA placeholder
 (vendored `vibedeps/` and `.vibe/cache/` copies are regenerated
 artifacts, refreshed after the merge, not hand-edited):
 
-- `packages/org.vibevm/core-ai-native/v0.7.0` — batch A
-- `packages/org.vibevm/rust-ai-native/v0.7.0` — batch A
-- `packages/org.vibevm/rust-ai-native-lang/v0.7.0` — batch A
-- `packages/org.vibevm/rust-ai-native-mcp/v0.7.0` — batch A
-- `packages/org.vibevm/typescript-ai-native/v0.6.0` — batch B
-- `packages/org.vibevm/typescript-ai-native-lang/v0.6.0` — batch B
-- `packages/org.vibevm/typescript-ai-native-mcp/v0.6.0` — batch B
+- `packages/org.vibevm.ai-native/core-ai-native/v0.7.0` — batch A
+- `packages/org.vibevm.ai-native/rust-ai-native/v0.7.0` — batch A
+- `packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0` — batch A
+- `packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0` — batch A
+- `packages/org.vibevm.ai-native/typescript-ai-native/v0.6.0` — batch B
+- `packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0` — batch B
+- `packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0` — batch B
 
 Per package, two edits: `license = "EULA"` → `"UPL-1.0"` in
 `vibe.toml`, and `LICENSE.md` replaced with the UPL-1.0 text (the
@@ -146,7 +146,7 @@ shipped surface was the host root `LICENSE.md` (the "EULA placeholder"). Owner
 made the UPL decision final and commissioned this run. One worktree-mode packet
 (run `01KXBEHEYJCQ1RNJ5657Q31HVA`, glm / `small`, exit 0, $0.39, ~42 s): the
 worker copied the canonical UPL-1.0 text from
-`packages/org.vibevm/wal-workspaces/v0.1.0/LICENSE.md` (via Read/Write, no
+`packages/org.vibevm.world/wal-workspaces/v0.1.0/LICENSE.md` (via Read/Write, no
 shell) and appended the third-party/refs note. Boss-verified byte-exact (`diff`
 vs canon differed only by the note; no EULA/proprietary text left; only
 `LICENSE.md` changed) and merged to `main` as

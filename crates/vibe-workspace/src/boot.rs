@@ -519,7 +519,7 @@ mod tests {
         let indexed_origins: Vec<&str> =
             boot.indexed_entries().map(|e| e.origin.as_str()).collect();
         // `static` and `dynamic` both land in the index, in composed order.
-        assert_eq!(indexed_origins, vec!["org.vibevm/rust", "org.vibevm/wal"]);
+        assert_eq!(indexed_origins, vec!["org.vibevm/rust", "org.vibevm.world/wal"]);
     }
 
     #[test]

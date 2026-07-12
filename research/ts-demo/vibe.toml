@@ -4,7 +4,7 @@ version = "0.1.0"
 authors = ["Oleg Chirukhin"]
 
 [requires.packages]
-"stack:org.vibevm/typescript-ai-native" = "^0.6.0"
+"stack:org.vibevm.ai-native/typescript-ai-native" = "^0.6.0"
 
 # The walking skeleton for the TypeScript discipline stack: a REAL
 # consumer (its own vibe.toml, its own npm toolchain, the full

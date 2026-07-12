@@ -16,7 +16,7 @@
 ## 0. Why this exists (the reframe)
 
 PROP-024 (code-bearing packages) and the two relocation campaigns (conform
-Ф1–Ф7, traceability Ph0–Ph4) made `stack:org.vibevm/rust-ai-native` ship the
+Ф1–Ф7, traceability Ph0–Ph4) made `stack:org.vibevm.ai-native/rust-ai-native` ship the
 whole Rust verification *engine* — `conform-rust` + `specmap-rust`, policy as
 data, the package tracing and gating itself. Two follow-up audits
 (2026-07-06) then asked the next question: **can a project that is not vibevm
@@ -28,7 +28,7 @@ vibevm-internal xtask tooling (§2, T1–T4).
 
 **The goal of this campaign is the final form of the discipline packages:**
 a fresh project (or an existing brownfield one) installs
-`stack:org.vibevm/rust-ai-native`, and from that moment can
+`stack:org.vibevm.ai-native/rust-ai-native`, and from that moment can
 
 1. **bootstrap** — generate its policies and registries (`discipline-rust
    init`) and run the full verification floor with one shipped command
@@ -207,7 +207,7 @@ packages/org.vibevm/discipline-core/v0.3.0/
    ├─ legacy-projections/ …        (exists)
    └─ boot/10-flow-discipline-core.md   names the new docs
 
-packages/org.vibevm/rust-ai-native/v0.3.0/
+packages/org.vibevm.ai-native/rust-ai-native/v0.3.0/
 ├─ vibe.toml                       0.3.0; requires discipline-core ^0.3; [[skill]] ×2
 ├─ README.md                       NEW — what ships + how to run it (F3/F7)
 ├─ Cargo.toml                      9 workspace members (+ discipline-cli)
@@ -350,12 +350,12 @@ stays HELD for the owner's word.
    registry (`vibe show` / registry query / github.com/vibespecs listing).
    Published or not, the bump proceeds (URI break + new binaries warrant it);
    if published, note that 0.2.0 must remain immutable there.
-3. `git mv packages/org.vibevm/rust-ai-native/{v0.2.0,v0.3.0}` and
+3. `git mv packages/org.vibevm.ai-native/rust-ai-native/{v0.2.0,v0.3.0}` and
    `git mv packages/org.vibevm/discipline-core/{v0.2.0,v0.3.0}`.
 4. Package `vibe.toml`s: `version = "0.3.0"`; rust-ai-native `[requires]`
    `"flow:org.vibevm/discipline-core" = "^0.3"`.
 5. Project `vibe.toml`: `"flow:org.vibevm/discipline-core" = "^0.3.0"`,
-   `"stack:org.vibevm/rust-ai-native" = "^0.3.0"` (typescript stays ^0.2.0).
+   `"stack:org.vibevm.ai-native/rust-ai-native" = "^0.3.0"` (typescript stays ^0.2.0).
 6. Repoint every dev-repo path that names `v0.2.0`:
    `grep -rn 'rust-ai-native/v0\.2\.0\|discipline-core/v0\.2\.0' --include='*.toml' --include='*.sh' --include='*.rs' .`
    — expect at least: root `Cargo.toml` `[workspace.dependencies]` package
@@ -407,7 +407,7 @@ All edits inside the package crates + minimal consumer-side config additions.
    rewrite `xtask/src/conform.rs` test as a delegate to it.
 4. **Message scrub (F5, D11).** `specmap-core/src/index.rs:302,316` → name
    `specmap-rust` (with "or your project's wrapper"); sweep the shipped doc
-   comments (`grep -rn 'xtask' packages/org.vibevm/rust-ai-native/v0.3.0/crates/`)
+   comments (`grep -rn 'xtask' packages/org.vibevm.ai-native/rust-ai-native/v0.3.0/crates/`)
    — rewrite every consumer-facing mention; internal history notes in
    `*-cli/src/lib.rs` headers may mention that the code was extracted from
    the dev repo, but phrased engine-first.
@@ -588,7 +588,7 @@ relocation` · `build(deps): re-materialise vibedeps`.
    Keep it hermetic (no network, no vibe, no git needed — skip tripwire in
    the test or `git init` the temp dir if the tripwire path is exercised).
 2. **Acceptance:** the new test green via
-   `cargo test --manifest-path packages/org.vibevm/rust-ai-native/v0.3.0/Cargo.toml -p discipline-cli`;
+   `cargo test --manifest-path packages/org.vibevm.ai-native/rust-ai-native/v0.3.0/Cargo.toml -p discipline-cli`;
    floor green.
 
 **Commit:** `test(discipline-cli): freeze the fresh-project bootstrap
@@ -755,7 +755,7 @@ library path; walked manually once in Phase 6 with real `vibe install`):
 
 ```sh
 mkdir demo && cd demo && git init
-# vibe.toml: [project] + requires stack:org.vibevm/rust-ai-native = "^0.3"
+# vibe.toml: [project] + requires stack:org.vibevm.ai-native/rust-ai-native = "^0.3"
 vibe install --assume-yes
 cargo install --path vibedeps/<slot>/crates/discipline-cli   # discipline-rust on PATH
 discipline-rust init                                # policies + registries + external specs

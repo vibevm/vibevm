@@ -247,7 +247,7 @@ fn version_var_resolves_from_root_workspace() {
         tmp.path(),
         "pkg/vibe.toml",
         "[package]\ngroup = \"org.vibevm\"\nname = \"pkg\"\nkind = \"flow\"\nversion = \"0.1.0\"\n\n\
-         [requires.packages]\n\"org.vibevm/wal\" = { version.var = \"core\" }\n",
+         [requires.packages]\n\"org.vibevm.world/wal\" = { version.var = \"core\" }\n",
     );
     let ws = Workspace::load(tmp.path()).unwrap();
     let pkg = ws.member_by_rel_path("pkg").unwrap();
@@ -256,7 +256,7 @@ fn version_var_resolves_from_root_workspace() {
     assert_eq!(pkg.manifest.requires.packages.len(), 1);
     assert_eq!(
         pkg.manifest.requires.packages[0].to_string(),
-        "org.vibevm/wal@^0.2"
+        "org.vibevm.world/wal@^0.2"
     );
 }
 
@@ -283,14 +283,14 @@ fn version_var_matryoshka_nearest_wins() {
         tmp.path(),
         "sub/leaf/vibe.toml",
         "[package]\ngroup = \"org.vibevm\"\nname = \"leaf\"\nkind = \"flow\"\nversion = \"0.1.0\"\n\n\
-         [requires.packages]\n\"org.vibevm/wal\" = { version.var = \"core\" }\n",
+         [requires.packages]\n\"org.vibevm.world/wal\" = { version.var = \"core\" }\n",
     );
     let ws = Workspace::load(tmp.path()).unwrap();
     let leaf = ws.member_by_rel_path("sub/leaf").unwrap();
     // The nearest enclosing [workspace.versions] — sub's — wins.
     assert_eq!(
         leaf.manifest.requires.packages[0].to_string(),
-        "org.vibevm/wal@^0.9"
+        "org.vibevm.world/wal@^0.9"
     );
 }
 
@@ -307,7 +307,7 @@ fn unknown_version_var_errors() {
         tmp.path(),
         "pkg/vibe.toml",
         "[package]\ngroup = \"org.vibevm\"\nname = \"pkg\"\nkind = \"flow\"\nversion = \"0.1.0\"\n\n\
-         [requires.packages]\n\"org.vibevm/wal\" = { version.var = \"ghost\" }\n",
+         [requires.packages]\n\"org.vibevm.world/wal\" = { version.var = \"ghost\" }\n",
     );
     let err = Workspace::load(tmp.path()).unwrap_err();
     assert!(

@@ -8,7 +8,7 @@ RESOLVED)**
 Campaign 2»; resumed and closed under the owner goal «campaign 2
 должен быть завершен», 2026-07-10) · written
 2026-07-10 against host tree `a7695ab` (clean, mirrors synced) ·
-Format: `flow:org.vibevm/campaign-plans` (one file, five roles) ·
+Format: `flow:org.vibevm.world/campaign-plans` (one file, five roles) ·
 cold-executable: any phase boundary is a safe stop; the floor is green at
 every boundary. Lineage: drains DEF-1 (+ two named IGNITION leftovers)
 from [`FRACTALITY-IGNITION-PLAN-v0.1.md`](FRACTALITY-IGNITION-PLAN-v0.1.md) §15._
@@ -557,7 +557,7 @@ CONTINUE, WORKSPACES row, backlog entries. Planned:
 cd packages/org.vibevm.fractality/fractality/v0.1.0
 git log --oneline -3        # expect this plan's commit on top of a7695ab+
 # the floor (cwd law — run FROM this directory):
-/c/Users/olegc/gits/vibevm/packages/org.vibevm/rust-ai-native-lang/v0.7.0/target/debug/rust-ai-native.exe floor
+/c/Users/olegc/gits/vibevm/packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/target/debug/rust-ai-native.exe floor
 # baseline arithmetic:
 ./target/debug/fractality.exe --help | grep -c '^  [a-z]'   # 11 public verbs (+help) at baseline
 grep -ri "session" crates/fractality-core/src/ | wc -l       # 0 at baseline

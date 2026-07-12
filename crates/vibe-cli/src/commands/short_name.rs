@@ -2,7 +2,7 @@
 //! (PROP-008 §2.6).
 //!
 //! `vibe install wal` — a bare, unqualified pkgref — is resolved here
-//! to the qualified `org.vibevm/wal` *once*, before the depsolver runs
+//! to the qualified `org.vibevm.world/wal` *once*, before the depsolver runs
 //! and before the pkgref is merged into `[requires].packages`.
 //! Manifests and the lockfile only ever store the qualified form; the
 //! short name is CLI sugar (PROP-008 §2.4). Resolution never recurses
@@ -193,7 +193,7 @@ mod tests {
         );
         assert!(msg.contains("  1. com.acme/wal"), "missing item 1:\n{msg}");
         assert!(
-            msg.contains("  2. org.vibevm/wal"),
+            msg.contains("  2. org.vibevm.world/wal"),
             "missing item 2:\n{msg}"
         );
         assert!(

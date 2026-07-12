@@ -14,7 +14,7 @@ use std::path::PathBuf;
 use common::Session;
 
 fn rust_demo() -> PathBuf {
-    // packages/org.vibevm/rust-ai-native-mcp/v0.5.0/crates/rust-ai-native-mcp
+    // packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.5.0/crates/rust-ai-native-mcp
     // → six ancestors up to the repo root (0 = this dir).
     let here = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
     let repo = here

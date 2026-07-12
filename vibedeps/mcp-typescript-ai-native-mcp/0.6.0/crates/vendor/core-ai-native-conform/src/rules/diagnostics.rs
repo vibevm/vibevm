@@ -3,7 +3,7 @@
 //! their REQ units (the attribute half and the message half, the gap
 //! audit 2026-06-12-08 recorded).
 
-specmark::scope!("spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules");
+specmark::scope!("spec://org.vibevm.ai-native.core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules");
 
 use crate::facts::{Fact, SourceFacts};
 use crate::finding::{Finding, Rule};

@@ -124,7 +124,7 @@ experiment, not a promotion.
   on the battery's work-root path in the command line, never on the
   image name alone.
 - **The teaching text exists**: both package skills
-  (`packages/org.vibevm/typescript-ai-native/v0.4.0/spec/skills/*/
+  (`packages/org.vibevm.ai-native/typescript-ai-native/v0.4.0/spec/skills/*/
   SKILL.md`) carry the Stage-A "generation-time assistant" section
   (consult `tcg_validate` before writing; the floor stays the truth) —
   the with-mcp arm quotes that posture instead of inventing new words.

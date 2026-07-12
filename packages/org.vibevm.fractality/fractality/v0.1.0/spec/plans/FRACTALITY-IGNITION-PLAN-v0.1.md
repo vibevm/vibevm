@@ -6,7 +6,7 @@ confirmed, P7 falsified with ledgered drift; the RP1 dogfood is merged;
 manual tests MT-01…MT-05 recorded green and **signed off by the owner
 2026-07-10**) ·
 written 2026-07-09 against host tree `05d3b1c` plus the same-day
-ignition bootstrap commits · Format: `flow:org.vibevm/campaign-plans`
+ignition bootstrap commits · Format: `flow:org.vibevm.world/campaign-plans`
 (one file, five roles). Campaigns 2–3 draw their mandates from §15._
 
 _ACCEPTED with owner amendments, 2026-07-09 (same day): supervision
@@ -561,8 +561,8 @@ Owner directive mid-Phase-1 («можешь сразу начать примен
 rust-ai-native и практики redbook … Пакеты у тебя есть») — **DEF-9
 resolved early**, superseding the floor-lite posture this plan shipped
 with. Concretely:
-- The workspace `vibe.toml` requires `flow:org.vibevm/redbook` (^0.2.0)
-  and `stack:org.vibevm/rust-ai-native` (^0.7.0); a **standing rule for
+- The workspace `vibe.toml` requires `flow:org.vibevm.world/redbook` (^0.2.0)
+  and `stack:org.vibevm.ai-native/rust-ai-native` (^0.7.0); a **standing rule for
   every future fractality package** (workspace contract, Hard
   conventions). Materialised into the workspace-local `vibedeps/` (26
   packages); the redbook + discipline boot lane is generated at
@@ -1095,7 +1095,7 @@ head -20 WAL.md               # PLANNED/EXECUTING + next phase pointer
 cd fractality/v0.1.0
 rust-ai-native floor        # fmt → test → clippy → conform → specmap → test-gate
 # Zero-install form while the slot is unbuilt (workspace CLAUDE.md, "Driving vibevm here"):
-#   <host>/packages/org.vibevm/rust-ai-native-lang/v0.7.0/target/debug/rust-ai-native.exe floor
+#   <host>/packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/target/debug/rust-ai-native.exe floor
 ```
 
 ## 12. Whole-campaign acceptance

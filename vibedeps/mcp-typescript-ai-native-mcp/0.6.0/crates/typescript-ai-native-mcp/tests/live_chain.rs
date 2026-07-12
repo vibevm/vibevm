@@ -14,7 +14,7 @@ use std::path::PathBuf;
 use common::Session;
 
 fn ts_demo() -> PathBuf {
-    // packages/org.vibevm/typescript-ai-native-mcp/v0.4.0/crates/… → six
+    // packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.4.0/crates/… → six
     // ancestors up to the repo root (0 = this dir).
     let here = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
     let repo = here

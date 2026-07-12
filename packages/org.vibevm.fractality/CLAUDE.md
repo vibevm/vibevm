@@ -9,7 +9,7 @@ through files on disk.
 **Status:** pre-code. The IGNITION campaign plan is authored; Phase 0 (spikes) is next.
 
 This is a **workspace** inside the vibevm repository (host registry:
-`WORKSPACES.md` at the repo root; canon: `flow:org.vibevm/wal-workspaces`) —
+`WORKSPACES.md` at the repo root; canon: `flow:org.vibevm.world/wal-workspaces`) —
 but an independent product. It does not depend on vibevm; vibevm does not
 depend on it. The repository is only its incubator.
 
@@ -98,7 +98,7 @@ Until the backlog items land, this is the working recipe:
    recomputes boot artifacts without re-resolving.
 5. **Discipline toolchain binary.** The umbrella `rust-ai-native` CLI is
    used from the host package's built tree —
-   `<host-root>/packages/org.vibevm/rust-ai-native-lang/v0.7.0/target/debug/rust-ai-native.exe`
+   `<host-root>/packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/target/debug/rust-ai-native.exe`
    (byte-same 0.7.0 sources as this workspace's `vibedeps` slot; the
    slot has no `target/` yet). Canonical consumer forms (GUIDE §13:
    `vibe bin exec …` / `cargo run --manifest-path vibedeps/…`) build the
@@ -144,8 +144,8 @@ delete the backlog entry.
   tools/self-check.sh` stays green".
 - **Package requires (standing rule, owner 2026-07-09):** every fractality
   package — this one and all future sub-packages (e.g. Phase 5's
-  `delegation-rules`) — declares `flow:org.vibevm/redbook` and
-  `stack:org.vibevm/rust-ai-native` in its `vibe.toml`
+  `delegation-rules`) — declares `flow:org.vibevm.world/redbook` and
+  `stack:org.vibevm.ai-native/rust-ai-native` in its `vibe.toml`
   `[requires.packages]` and materialises them (`vibe install --registry
   <host>/packages`) at authoring time. The discipline (conform + specmap
   gates, specmark `scope!` tags, GUIDE §13 wiring) applies from the first

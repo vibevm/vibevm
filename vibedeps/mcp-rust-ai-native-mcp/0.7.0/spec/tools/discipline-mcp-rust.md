@@ -8,7 +8,7 @@ prove it). Transport: the vendored `mcp-core` (line-delimited JSON-RPC
 2.0, protocol `2024-11-05` — MCP-CORE-v0.1).
 
 **One engine, one truth.** The tools call the SAME lib fns the CLIs
-call, and the `=X.Y.Z` pin on `stack:org.vibevm/rust-ai-native-lang` holds
+call, and the `=X.Y.Z` pin on `stack:org.vibevm.ai-native/rust-ai-native-lang` holds
 this package's vendored copies and the consumer's installed stack to
 one resolved version set. Tool-level failure (a red gate, a refusing
 oracle) is an `isError` RESULT carrying the report; protocol errors are

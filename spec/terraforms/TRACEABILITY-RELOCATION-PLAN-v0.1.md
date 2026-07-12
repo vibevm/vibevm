@@ -17,7 +17,7 @@
 PROP-024 (code-bearing packages) made a package a project that ships runnable
 code, so installing a discipline stack yields *working checkers*, not a
 description of them. Phases Ф1–Ф7 relocated the **conform** half of the
-discipline (the structural gate) into `stack:org.vibevm/rust-ai-native` and
+discipline (the structural gate) into `stack:org.vibevm.ai-native/rust-ai-native` and
 proved it works in its shipped form.
 
 But the conform relocation was scoped **conform-first**: it stripped the
@@ -43,7 +43,7 @@ disciplines itself again.
 ## 1. The decision: Option B (rust-ai-native), not discipline-core (now)
 
 **Confirmed by the owner.** Put `specmap-core` + `specmark` +
-`specmark-grammar` into **`stack:org.vibevm/rust-ai-native`**, alongside the
+`specmark-grammar` into **`stack:org.vibevm.ai-native/rust-ai-native`**, alongside the
 conform crates — *not* into the language-neutral `flow:org.vibevm/discipline-core`.
 
 **Why not discipline-core now.** These crates are "language-neutral in logic"
@@ -138,7 +138,7 @@ topology fails and we need a fallback (see §6). **Validate before any code
 moves.**
 
 **Recipe.** Create a throwaway proc-macro crate under
-`packages/org.vibevm/rust-ai-native/v0.2.0/crates/spike-macro/` (a trivial
+`packages/org.vibevm.ai-native/rust-ai-native/v0.2.0/crates/spike-macro/` (a trivial
 attribute or derive macro), add it to the package `[workspace]` members + a
 root `[workspace.dependencies]` path entry, make ONE vibevm crate (e.g. a temp
 `#[cfg(test)]` use, or `vibe-core`) consume the macro via `.workspace = true`,
@@ -212,13 +212,13 @@ package on an arbitrary project (the exact move conform made in Ф3).
 ### Phase 3 — Relocate the three crates into the package
 
 **Goal.** specmap-core + specmark + specmark-grammar live in
-`packages/org.vibevm/rust-ai-native/v0.2.0/crates/`, consumed by external
+`packages/org.vibevm.ai-native/rust-ai-native/v0.2.0/crates/`, consumed by external
 path-dep; the package ships a `specmap-rust` binary; vibevm drives the same
 library through an xtask shim.
 
 **Recipe.**
 1. `git mv crates/{specmap-core,specmark,specmark-grammar}
-   packages/org.vibevm/rust-ai-native/v0.2.0/crates/…` (100% renames). Move
+   packages/org.vibevm.ai-native/rust-ai-native/v0.2.0/crates/…` (100% renames). Move
    `schemas/specmap.jtd.json` into the package too if Phase 1 kept it at
    `schemas/` (its home should follow specmap-core).
 2. **Package `Cargo.toml`** (`packages/.../v0.2.0/Cargo.toml`): add the three to
@@ -328,7 +328,7 @@ is outward-facing — present it and HOLD for the owner's explicit word**
 ## 5. End-state (what "done" looks like)
 
 ```
-packages/org.vibevm/rust-ai-native/v0.2.0/crates/
+packages/org.vibevm.ai-native/rust-ai-native/v0.2.0/crates/
 ├─ conform-core            (re-tagged; specmark dep restored)
 ├─ conform-frontend-rust   (re-tagged)
 ├─ conform-cli             (bin: conform-rust)

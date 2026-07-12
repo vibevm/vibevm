@@ -1,7 +1,7 @@
 //! End-to-end tests for the full M0 walk: init → install → list → uninstall.
 //!
 //! The registry used here is the hand-written `fixtures/registry/` tree that ships in
-//! the vibevm repo itself (the canonical `org.vibevm/wal` fixture per
+//! the vibevm repo itself (the canonical `org.vibevm.world/wal` fixture per
 //! `VIBEVM-SPEC.md` §13). Also covers the M1.1 git-backed-registry install and
 //! the M1.15 git-source installs (`--git` + `--tag` / `--branch`).
 
@@ -30,10 +30,10 @@ fn full_install_cycle() {
     let project = tempfile::tempdir().unwrap();
     init_project(project.path());
 
-    // Install org.vibevm/wal from the local fixture registry.
+    // Install org.vibevm.world/wal from the local fixture registry.
     vibe()
         .arg("install")
-        .arg("org.vibevm/wal")
+        .arg("org.vibevm.world/wal")
         .arg("--path")
         .arg(project.path())
         .arg("--registry")
@@ -43,7 +43,7 @@ fn full_install_cycle() {
         .success();
 
     // The package's whole published tree is materialised verbatim into
-    // its `vibedeps/` slot — the fixture org.vibevm/wal v0.1.0 ships
+    // its `vibedeps/` slot — the fixture org.vibevm.world/wal v0.1.0 ships
     // `vibe.toml`, `README.md`, `boot/10-flow-wal.md`, and three
     // `spec/flows/wal/*.md` files.
     let slot = project.path().join("vibedeps/flow-wal/0.1.0");
@@ -135,7 +135,7 @@ fn full_install_cycle() {
     assert!(
         project
             .path()
-            .join(".vibe/cache/org.vibevm/wal/v0.1.0/vibe.toml")
+            .join(".vibe/cache/org.vibevm.world/wal/v0.1.0/vibe.toml")
             .is_file()
     );
 
@@ -153,7 +153,7 @@ fn full_install_cycle() {
     // `vibe uninstall` removes the package's `vibedeps/` slot.
     vibe()
         .arg("uninstall")
-        .arg("org.vibevm/wal")
+        .arg("org.vibevm.world/wal")
         .arg("--path")
         .arg(project.path())
         .arg("--assume-yes")
@@ -200,7 +200,7 @@ fn install_second_install_is_idempotent() {
 
     vibe()
         .arg("install")
-        .arg("org.vibevm/wal")
+        .arg("org.vibevm.world/wal")
         .arg("--path")
         .arg(project.path())
         .arg("--registry")
@@ -213,7 +213,7 @@ fn install_second_install_is_idempotent() {
     // present for 0.1.0, so materialisation skips it (PROP-011 §2.3).
     vibe()
         .arg("install")
-        .arg("org.vibevm/wal")
+        .arg("org.vibevm.world/wal")
         .arg("--path")
         .arg(project.path())
         .arg("--registry")
@@ -248,7 +248,7 @@ fn install_skips_a_present_slot_on_re_install() {
     // First install materialises the `vibedeps/flow-wal/0.1.0` slot.
     vibe()
         .arg("install")
-        .arg("org.vibevm/wal")
+        .arg("org.vibevm.world/wal")
         .arg("--path")
         .arg(project.path())
         .arg("--registry")
@@ -262,7 +262,7 @@ fn install_skips_a_present_slot_on_re_install() {
     let out = vibe()
         .arg("--json")
         .arg("install")
-        .arg("org.vibevm/wal")
+        .arg("org.vibevm.world/wal")
         .arg("--path")
         .arg(project.path())
         .arg("--registry")
@@ -294,7 +294,7 @@ fn install_reports_json() {
     let out = vibe()
         .arg("--json")
         .arg("install")
-        .arg("org.vibevm/wal")
+        .arg("org.vibevm.world/wal")
         .arg("--path")
         .arg(project.path())
         .arg("--registry")
@@ -336,10 +336,10 @@ fn install_skips_resolution_when_the_lockfile_is_fresh() {
     init_project(project.path());
 
     // First install — the full pipeline: resolve, materialise, lock. It
-    // also records `org.vibevm/wal` in `[requires].packages`.
+    // also records `org.vibevm.world/wal` in `[requires].packages`.
     vibe()
         .arg("install")
-        .arg("org.vibevm/wal")
+        .arg("org.vibevm.world/wal")
         .arg("--path")
         .arg(project.path())
         .arg("--registry")
@@ -348,7 +348,7 @@ fn install_skips_resolution_when_the_lockfile_is_fresh() {
         .assert()
         .success();
 
-    // Second install with no pkgref — `[requires]` carries org.vibevm/wal, the
+    // Second install with no pkgref — `[requires]` carries org.vibevm.world/wal, the
     // lock is a fresh resolution of it, the slot is materialised: the
     // depsolver is skipped.
     let out = vibe()
@@ -381,7 +381,7 @@ fn uninstall_errors_when_package_not_installed() {
 
     vibe()
         .arg("uninstall")
-        .arg("org.vibevm/wal")
+        .arg("org.vibevm.world/wal")
         .arg("--path")
         .arg(project.path())
         .arg("--assume-yes")
@@ -392,7 +392,7 @@ fn uninstall_errors_when_package_not_installed() {
 
 /// `vibe install <pkgref>` (no version) records the user-supplied
 /// pkgref in `vibe.toml` `[requires].packages` with the **caret**
-/// shape derived from the resolved version (`org.vibevm/wal@^0.1.0`).
+/// shape derived from the resolved version (`org.vibevm.world/wal@^0.1.0`).
 /// Same default as Cargo / npm / Poetry — `vibe update` later picks
 /// up patch-compatible bumps without needing an explicit re-pin.
 #[test]
@@ -402,7 +402,7 @@ fn install_writes_caret_pkgref_to_vibe_toml_requires() {
 
     vibe()
         .arg("install")
-        .arg("org.vibevm/wal")
+        .arg("org.vibevm.world/wal")
         .arg("--path")
         .arg(project.path())
         .arg("--registry")
@@ -421,12 +421,12 @@ fn install_writes_caret_pkgref_to_vibe_toml_requires() {
         manifest.requires.packages
     );
     let recorded = &manifest.requires.packages[0];
-    assert_eq!(recorded.qualified_name(), "org.vibevm/wal");
+    assert_eq!(recorded.qualified_name(), "org.vibevm.world/wal");
     // Caret shape: rendered string ends in `@^<resolved>`. The fixture
-    // ships org.vibevm/wal at v0.1.0 so the manifest should carry `^0.1.0`.
+    // ships org.vibevm.world/wal at v0.1.0 so the manifest should carry `^0.1.0`.
     assert_eq!(
         recorded.to_string(),
-        "org.vibevm/wal@^0.1.0",
+        "org.vibevm.world/wal@^0.1.0",
         "expected caret-default constraint, got: {recorded}"
     );
     // M1.15 wire shape: `[requires.packages]` map-form table with the key
@@ -436,14 +436,14 @@ fn install_writes_caret_pkgref_to_vibe_toml_requires() {
         "expected [requires.packages] header in rendered vibe.toml:\n{toml_text}"
     );
     assert!(
-        toml_text.contains("\"org.vibevm/wal\" = \"^0.1.0\""),
-        "expected `\"org.vibevm/wal\" = \"^0.1.0\"` row in rendered vibe.toml:\n{toml_text}"
+        toml_text.contains("\"org.vibevm.world/wal\" = \"^0.1.0\""),
+        "expected `\"org.vibevm.world/wal\" = \"^0.1.0\"` row in rendered vibe.toml:\n{toml_text}"
     );
 }
 
 /// PROP-008 §2.6 — short-name resolution at the CLI input boundary.
 /// `vibe install wal` (bare, unqualified) is resolved to the qualified
-/// `org.vibevm/wal` against the registry, and it is the **qualified**
+/// `org.vibevm.world/wal` against the registry, and it is the **qualified**
 /// form that lands in `vibe.toml` `[requires].packages` — a manifest
 /// never stores a short name.
 #[test]
@@ -472,15 +472,15 @@ fn install_resolves_bare_short_name_to_qualified() {
         manifest.requires.packages
     );
     let recorded = &manifest.requires.packages[0];
-    // The short `wal` was qualified to `org.vibevm/wal` before the
+    // The short `wal` was qualified to `org.vibevm.world/wal` before the
     // manifest write — the manifest pkgref carries a group.
     assert!(
         recorded.group.is_some(),
         "manifest pkgref must be group-qualified, got: {recorded}"
     );
-    assert_eq!(recorded.qualified_name(), "org.vibevm/wal");
+    assert_eq!(recorded.qualified_name(), "org.vibevm.world/wal");
     assert!(
-        toml_text.contains("\"org.vibevm/wal\""),
+        toml_text.contains("\"org.vibevm.world/wal\""),
         "expected the qualified key in vibe.toml:\n{toml_text}"
     );
 }
@@ -512,7 +512,7 @@ fn install_unresolvable_short_name_fails_with_hint() {
 /// numbered qualified alternatives so the operator can pick one.
 #[test]
 fn install_ambiguous_short_name_fails_with_exit_code_seven() {
-    // A two-group registry: `org.vibevm/wal` and `com.example/wal`
+    // A two-group registry: `org.vibevm.world/wal` and `com.example/wal`
     // both exist, so the bare `wal` cannot be resolved to one group.
     let registry = tempfile::tempdir().unwrap();
     for group in ["org.vibevm", "com.example"] {
@@ -533,7 +533,7 @@ fn install_ambiguous_short_name_fails_with_exit_code_seven() {
         .code(7)
         .stderr(predicate::str::contains("is ambiguous"))
         .stderr(predicate::str::contains("com.example/wal"))
-        .stderr(predicate::str::contains("org.vibevm/wal"));
+        .stderr(predicate::str::contains("org.vibevm.world/wal"));
 }
 
 /// `vibe install <pkgref>@^0.1` (explicit constraint) records the
@@ -547,7 +547,7 @@ fn install_preserves_explicit_constraint_in_vibe_toml() {
 
     vibe()
         .arg("install")
-        .arg("org.vibevm/wal@^0.1")
+        .arg("org.vibevm.world/wal@^0.1")
         .arg("--path")
         .arg(project.path())
         .arg("--registry")
@@ -564,7 +564,7 @@ fn install_preserves_explicit_constraint_in_vibe_toml() {
     // wins.
     assert_eq!(
         manifest.requires.packages[0].to_string(),
-        "org.vibevm/wal@^0.1"
+        "org.vibevm.world/wal@^0.1"
     );
 }
 
@@ -578,7 +578,7 @@ fn install_with_exact_flag_pins_manifest_to_eq_resolved() {
 
     vibe()
         .arg("install")
-        .arg("org.vibevm/wal")
+        .arg("org.vibevm.world/wal")
         .arg("--exact")
         .arg("--path")
         .arg(project.path())
@@ -593,7 +593,7 @@ fn install_with_exact_flag_pins_manifest_to_eq_resolved() {
     assert_eq!(manifest.requires.packages.len(), 1);
     assert_eq!(
         manifest.requires.packages[0].to_string(),
-        "org.vibevm/wal@=0.1.0",
+        "org.vibevm.world/wal@=0.1.0",
         "expected =-pinned exact constraint with --exact"
     );
 }
@@ -607,7 +607,7 @@ fn install_from_manifest_uses_requires() {
     let project = tempfile::tempdir().unwrap();
     init_project(project.path());
 
-    // Hand-edit vibe.toml: declare org.vibevm/wal as a required package without
+    // Hand-edit vibe.toml: declare org.vibevm.world/wal as a required package without
     // having installed it yet. This is the freshly-cloned-project case —
     // `vibe.toml` already declares the deps, but nothing has been resolved.
     let toml_path = project.path().join("vibe.toml");
@@ -616,11 +616,11 @@ fn install_from_manifest_uses_requires() {
     manifest
         .requires
         .packages
-        .push(vibe_core::PackageRef::parse("org.vibevm/wal").unwrap());
+        .push(vibe_core::PackageRef::parse("org.vibevm.world/wal").unwrap());
     manifest.write(&toml_path).unwrap();
 
     // Run `vibe install` with no pkgref arguments — should pick up the
-    // manifest declaration and install org.vibevm/wal.
+    // manifest declaration and install org.vibevm.world/wal.
     vibe()
         .arg("install")
         .arg("--path")
@@ -647,10 +647,10 @@ fn install_from_manifest_uses_requires() {
     assert_eq!(lock.meta.root_dependencies.len(), 1);
     assert_eq!(
         lock.meta.root_dependencies[0].qualified_name(),
-        "org.vibevm/wal"
+        "org.vibevm.world/wal"
     );
 
-    // Because org.vibevm/wal was declared in `[requires]` before this
+    // Because org.vibevm.world/wal was declared in `[requires]` before this
     // install, the boot computation sees it as a dependency of the
     // project node — `INDEX.md` names its boot file inside the
     // `vibedeps/` slot, in the dependency band (between the node's own
@@ -694,7 +694,7 @@ fn uninstall_drops_pkgref_from_vibe_toml() {
 
     vibe()
         .arg("install")
-        .arg("org.vibevm/wal")
+        .arg("org.vibevm.world/wal")
         .arg("--path")
         .arg(project.path())
         .arg("--registry")
@@ -711,7 +711,7 @@ fn uninstall_drops_pkgref_from_vibe_toml() {
 
     vibe()
         .arg("uninstall")
-        .arg("org.vibevm/wal")
+        .arg("org.vibevm.world/wal")
         .arg("--path")
         .arg(project.path())
         .arg("--assume-yes")
@@ -775,7 +775,7 @@ fn install_from_git_registry() {
     vibe()
         .env("VIBE_REGISTRY_CACHE", &cache)
         .arg("install")
-        .arg("org.vibevm/wal")
+        .arg("org.vibevm.world/wal")
         .arg("--path")
         .arg(project.path())
         .arg("--assume-yes")
@@ -857,7 +857,7 @@ fn install_from_git_source_with_tag_records_source_kind_git() {
     vibe()
         .env("VIBE_REGISTRY_CACHE", &cache)
         .arg("install")
-        .arg("org.vibevm/wal")
+        .arg("org.vibevm.world/wal")
         .arg("--git")
         .arg(&url)
         .arg("--tag")
@@ -947,7 +947,7 @@ fn install_from_git_source_with_branch_pins_lockfile_to_resolved_commit() {
     vibe()
         .env("VIBE_REGISTRY_CACHE", &cache)
         .arg("install")
-        .arg("org.vibevm/wal")
+        .arg("org.vibevm.world/wal")
         .arg("--git")
         .arg(&url)
         .arg("--branch")
@@ -1013,7 +1013,7 @@ fn install_git_source_then_repeat_install_no_args_is_idempotent() {
     vibe()
         .env("VIBE_REGISTRY_CACHE", &cache)
         .arg("install")
-        .arg("org.vibevm/wal")
+        .arg("org.vibevm.world/wal")
         .arg("--git")
         .arg(&url)
         .arg("--tag")
@@ -1078,7 +1078,7 @@ fn uninstall_removes_git_source_from_manifest_and_lockfile() {
     vibe()
         .env("VIBE_REGISTRY_CACHE", &cache)
         .arg("install")
-        .arg("org.vibevm/wal")
+        .arg("org.vibevm.world/wal")
         .arg("--git")
         .arg(&url)
         .arg("--tag")
@@ -1092,7 +1092,7 @@ fn uninstall_removes_git_source_from_manifest_and_lockfile() {
     vibe()
         .env("VIBE_REGISTRY_CACHE", &cache)
         .arg("uninstall")
-        .arg("org.vibevm/wal")
+        .arg("org.vibevm.world/wal")
         .arg("--path")
         .arg(project.path())
         .arg("--assume-yes")

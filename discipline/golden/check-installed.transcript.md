@@ -26,14 +26,14 @@ Next:
 ### stderr
 ```
 ```
-## $ vibe install org.vibevm/wal --registry <REPO>/fixtures/registry --assume-yes
+## $ vibe install org.vibevm.world/wal --registry <REPO>/fixtures/registry --assume-yes
 exit: 0
 ### stdout
 ```
 Resolving 1 root package…
 
 Materialising 1 package into vibedeps/:
-  org.vibevm/wal@0.1.0
+  org.vibevm.world/wal@0.1.0
 
 
 Materialised 1 package into vibedeps/; regenerated boot artifacts for 1 node.

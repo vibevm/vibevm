@@ -5,7 +5,7 @@
 //! agent reads is the run's WHOLE story: the runner's own stderr and
 //! every child process (cargo, rustfmt, clippy, nextest) it spawned.
 
-specmark::scope!("spec://rust-ai-native-mcp/tools/discipline-mcp-rust#discipline-tools");
+specmark::scope!("spec://org.vibevm.ai-native.rust-ai-native-mcp/tools/discipline-mcp-rust#discipline-tools");
 
 use std::path::{Path, PathBuf};
 

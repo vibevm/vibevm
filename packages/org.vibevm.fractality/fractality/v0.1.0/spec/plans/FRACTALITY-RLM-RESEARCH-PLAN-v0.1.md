@@ -408,7 +408,7 @@ git clone --depth 1 <url> /c/Users/olegc/gits/vibevm/refs/src/<name> \
 #   Ф5: RLM-SYNTHESIS.md → spec/plans/FRACTALITY-RLM-PLAN-v0.1.md (draft)
 
 # Specmap re-mint rides every commit that adds anchored spec files:
-cd fractality/v0.1.0 && /c/Users/olegc/gits/vibevm/packages/org.vibevm/rust-ai-native-lang/v0.7.0/target/debug/rust-ai-native.exe specmap
+cd fractality/v0.1.0 && /c/Users/olegc/gits/vibevm/packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/target/debug/rust-ai-native.exe specmap
 ```
 
 ## 12. Whole-stage acceptance {#acceptance}

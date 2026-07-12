@@ -590,7 +590,7 @@ shares the computed-view engine and rides with the M1.5 milestone.
 - `naming = "fqdn"` repo names (`org.vibevm.wal`), the new default; `kind` left the repository name. Registry resolution keys on `(group, name)`.
 - The package index is group-native (Phase 7) — the entry carries `group` + `workspace_origin`, the `by-name/` layer is the candidate-set file `by-name/<name>.json`.
 - Lockfile schema v5 (v4 was PROP-007's); each `[[package]]` carries `group`.
-- Index-backed short-name resolution (Phase 5) — `vibe install wal` is qualified to `org.vibevm/wal` at the CLI input boundary, lockfile-first then index/scan; the local-directory registry path is scanned directly, the multi-registry path walks each registry's `by-name/<name>.json`.
+- Index-backed short-name resolution (Phase 5) — `vibe install wal` is qualified to `org.vibevm.world/wal` at the CLI input boundary, lockfile-first then index/scan; the local-directory registry path is scanned directly, the multi-registry path walks each registry's `by-name/<name>.json`.
 - Collision detection + exit code `7` (Phase 6) — a short name matching two groups fails as `AmbiguousPackage` with the numbered qualified alternatives, never a guess.
 - `VIBEVM-SPEC.md` §7 / §8 / §9.4 and `docs/` reconciled with qualified naming (Phase 8 docs).
 
@@ -668,8 +668,8 @@ exact-pin rule, vibe-free serving, registration/consent through the
 PROP-025 trust model); core-ai-native 0.6.0 (then discipline-core) ships the neutral
 `mcp-core` transport (line-delimited 2024-11-05 loop, ToolSet seam,
 the child-capturing stderr guard); the discipline serves standalone as
-`mcp:org.vibevm/rust-ai-native-mcp` (18 tools) and
-`mcp:org.vibevm/typescript-ai-native-mcp` (17 tools), both live-chained
+`mcp:org.vibevm.ai-native/rust-ai-native-mcp` (18 tools) and
+`mcp:org.vibevm.ai-native/typescript-ai-native-mcp` (17 tools), both live-chained
 with vibe scrubbed from PATH; `vibe mcp install/uninstall/status`
 register package servers as managed entries launching slot artifacts
 directly; vibe-mcp returns to its four product tools and `vibe-tcg` is
@@ -696,7 +696,7 @@ native diagnostics are silent; the corpus asserts the asymmetry so it
 flips red when r-a catches up), and the honest fidelity posture
 throughout: rust-analyzer is NOT rustc, the oracle approximates, the
 floor stays the truth. Briefs:
-`packages/org.vibevm/rust-ai-native-lang/v0.7.0/spec/rust/tools/vibe-agentic-tcg-rust.md`
+`packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/vibe-agentic-tcg-rust.md`
 (shipped line) and `rust-ai-native-tcg.md` (token-level, VERY-FAR-FUTURE);
 mechanisms: TCG-ORACLE-RUST-v0.1 / TCG-PROTOCOL-RUST-v0.1 (same tree).
 The `ra_ap_*` embedding is the Far backlog's first entry. No agent
@@ -719,7 +719,7 @@ enrichment through the same conform engine as the gate), the portable
 (PROP-026; liftable into a standalone MCP server per the owner's
 portability amendment), and the automated two-arm opencode battery
 (gpt-oss-20b (free)) in research/tcg-bench. Component brief:
-`packages/org.vibevm/typescript-ai-native-lang/v0.6.0/spec/typescript/tools/vibe-agentic-tcg-ts.md`;
+`packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/tools/vibe-agentic-tcg-ts.md`;
 mechanisms: TCG-ORACLE-v0.1 / TCG-PROTOCOL-v0.1 (same tree). Token-level
 TCG for TypeScript is re-dispositioned VERY-FAR-FUTURE in its own brief;
 M1.23 below keeps the Rust token-level line as was.
@@ -733,7 +733,7 @@ engine (XGrammar-2 / SynCode class) guarantees parseable output and
 validates the harness integration that the later, harder stages
 (scope/name constraining on rust-analyzer, type-valid continuations,
 discipline profiles) will reuse. Tool spec:
-`packages/org.vibevm/rust-ai-native-lang/v0.7.0/spec/rust/tools/rust-ai-native-tcg.md`
+`packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/rust-ai-native-tcg.md`
 (the tool brief, renamed vibe-tcg → vibe-tcg-rust → rust-ai-native-tcg
 across the D13 suffix policy and its PROP-028 §2.4 supersession — the bare name belongs to the
 generic product crate; M1.25's agentic twin is this milestone's

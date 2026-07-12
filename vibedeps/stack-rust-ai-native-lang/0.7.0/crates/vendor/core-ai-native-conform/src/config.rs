@@ -6,7 +6,7 @@
 //! constructs the scan + the rule set from it; nothing about the policy
 //! is hardcoded in the engine.
 
-specmark::scope!("spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#facts");
+specmark::scope!("spec://org.vibevm.ai-native.core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#facts");
 
 use std::path::Path;
 

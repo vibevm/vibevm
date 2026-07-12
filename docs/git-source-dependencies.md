@@ -1,6 +1,6 @@
 # Git-source dependencies — whole-repo-as-package
 
-vibevm normally resolves dependencies through a `[[registry]]` org — `org.vibevm/wal` becomes `<org>/org.vibevm.wal` per the registry's `naming` convention. M1.15 adds a second shape: declare a dep as a **git-source**, pointing at any single git repository where the package's `vibe.toml` (carrying a `[package]` table) lives at the repository root. Same pattern as Cargo's `[dependencies] foo = { git = "..." }`, npm's `git+https://...#tag`, Poetry's `foo = { git = "..." }`, Bundler's `gem 'foo', git: '...'`. Spec: [PROP-002 §2.4.1](../spec/modules/vibe-registry/PROP-002-decentralized-registry.md#git-source).
+vibevm normally resolves dependencies through a `[[registry]]` org — `org.vibevm.world/wal` becomes `<org>/org.vibevm.wal` per the registry's `naming` convention. M1.15 adds a second shape: declare a dep as a **git-source**, pointing at any single git repository where the package's `vibe.toml` (carrying a `[package]` table) lives at the repository root. Same pattern as Cargo's `[dependencies] foo = { git = "..." }`, npm's `git+https://...#tag`, Poetry's `foo = { git = "..." }`, Bundler's `gem 'foo', git: '...'`. Spec: [PROP-002 §2.4.1](../spec/modules/vibe-registry/PROP-002-decentralized-registry.md#git-source).
 
 ## When to use
 
@@ -17,7 +17,7 @@ If the same private host serves three or more packages, declare them through a `
 ```toml
 [requires.packages]
 # Registry-resolved (the default shape):
-"org.vibevm/wal" = "^0.3"
+"org.vibevm.world/wal" = "^0.3"
 "org.vibevm/rust-cli" = "^0.1"
 
 # Git-source variants:
@@ -107,7 +107,7 @@ Override > git-source > registry reflects the semantic "override is intentional 
 
 Identity is `(group, name, version, content_hash)` per PROP-002 §2.1 and PROP-008 §2.2. The hash is computed over the **target** package content, not over the URL. Two consumers that pull the same git-source from different mirrors and produce the same content hash are bit-identical installs. Force-pushed tag rewrite caught as `IntegrityError` on the next install.
 
-The qualified pkgref `<group>/<name>` declared in `[requires.packages]` must match the `[package]` section in the repo's `vibe.toml` at the resolved ref. Mismatch — e.g. you declared `org.vibevm/internal` but the repo's manifest declares `com.acme/internal` — is rejected as `PackageIdentityMismatch` ("refusing to install"). This means a malicious git-source cannot impersonate `org.vibevm/wal` if its manifest declares a different `(group, name)`.
+The qualified pkgref `<group>/<name>` declared in `[requires.packages]` must match the `[package]` section in the repo's `vibe.toml` at the resolved ref. Mismatch — e.g. you declared `org.vibevm/internal` but the repo's manifest declares `com.acme/internal` — is rejected as `PackageIdentityMismatch` ("refusing to install"). This means a malicious git-source cannot impersonate `org.vibevm.world/wal` if its manifest declares a different `(group, name)`.
 
 ## Mutability and `vibe update`
 

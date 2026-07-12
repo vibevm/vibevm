@@ -1,5 +1,5 @@
 //! `typescript-ai-native health` — the sweep fact-collector, TS shape
-//! (`spec://core-ai-native/04-SWEEP-PLAYBOOK#collector`): the
+//! (`spec://org.vibevm.ai-native.core-ai-native/04-SWEEP-PLAYBOOK#collector`): the
 //! questions the binary gates leave on the table, answered over the
 //! SAME ts-tsc extraction the gates consume, so the numbers can never
 //! drift from what the gates see.

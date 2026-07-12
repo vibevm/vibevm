@@ -90,7 +90,7 @@ A discipline that names its own failure modes is more trustworthy than one that 
 - `mechanisms/BROWNFIELD-PROTOCOL-v0.1.md` — terraforming unfinished projects: inventory-not-gate, the registries, xfail-strict, characterization.
 - `mechanisms/LEDGER-INTENT-v0.1.md` — the intent ledger: facts vs interpretations, epoch-keyed cache.
 
-Spec-unit URIs for this package read `spec://core-ai-native/<docpath>#<anchor>` (e.g. `spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules`); the Rust implementations ship in `stack:org.vibevm/rust-ai-native-lang` (`rust-ai-native-conform`, `rust-ai-native-specmap`, `rust-ai-native`).
+Spec-unit URIs for this package read `spec://org.vibevm.ai-native.core-ai-native/<docpath>#<anchor>` (e.g. `spec://org.vibevm.ai-native.core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules`); the Rust implementations ship in `stack:org.vibevm.ai-native/rust-ai-native-lang` (`rust-ai-native-conform`, `rust-ai-native-specmap`, `rust-ai-native`).
 
 **Language projections (T2):**
 - `rust/GUIDE-AI-NATIVE-RUST.md` — the law and scaffolds projected onto Rust; supersedes GUIDE-RUST-v0.1. (Pilot language.)

@@ -26,14 +26,14 @@ fit the pilot).
      nine scaffold cards), `appendix/` (contradiction map, atlas),
      `legacy-projections/` (the eleven v0.1-era language guides),
      README (the drop's package README, verbatim).
-   - `stack:org.vibevm/rust-ai-native@0.2.0` —
+   - `stack:org.vibevm.ai-native/rust-ai-native@0.2.0` —
      `rust/GUIDE-AI-NATIVE-RUST.md`, `rust/tools/vibe-tcg.md`;
      `[requires]` on `flow:org.vibevm/discipline-core@^0.2`.
    New files per package: `vibe.toml`, a minimal boot snippet
    (minimal-sufficiency: boot says "cards load by trigger", it does
    not inline the corpus).
 2. **Self-hosted install.** `vibe install flow:org.vibevm/discipline-core
-   stack:org.vibevm/rust-ai-native --registry ./packages
+   stack:org.vibevm.ai-native/rust-ai-native --registry ./packages
    --assume-yes` — the Discipline's first carrier installed the
    Discipline through the Discipline's own tool. The stack→flow
    dependency resolved transitively. `[requires]` landed in

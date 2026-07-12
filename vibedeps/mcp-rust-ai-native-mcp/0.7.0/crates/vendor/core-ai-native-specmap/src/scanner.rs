@@ -10,7 +10,7 @@
 //! warnings)` triple — the index builder sorts and dedups downstream,
 //! so contribution order never leaks into the committed bytes.
 
-specmark::scope!("spec://core-ai-native/mechanisms/PROP-014#index");
+specmark::scope!("spec://org.vibevm.ai-native.core-ai-native/mechanisms/PROP-014#index");
 
 use std::path::Path;
 

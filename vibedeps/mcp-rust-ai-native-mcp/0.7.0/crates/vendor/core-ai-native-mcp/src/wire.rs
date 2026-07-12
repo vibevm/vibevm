@@ -4,7 +4,7 @@
 //! the presence of `id`; responses are built, never parsed (a server
 //! only answers).
 
-specmark::scope!("spec://core-ai-native/mechanisms/MCP-CORE-v0.1#wire");
+specmark::scope!("spec://org.vibevm.ai-native.core-ai-native/mechanisms/MCP-CORE-v0.1#wire");
 
 use serde::Serialize;
 use serde_json::Value;

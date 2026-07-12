@@ -2,7 +2,7 @@
 //! discipline engines (DEFERRALS-CLOSEOUT-PLAN v0.1, D1).
 //!
 //! The language-neutral engine crates are AUTHORED in
-//! `flow:org.vibevm/core-ai-native` — the flow package owns the engine —
+//! `flow:org.vibevm.ai-native/core-ai-native` — the flow package owns the engine —
 //! and each language stack ships a byte-identical VENDORED copy under its
 //! own `crates/vendor/`. A Cargo path-dep cannot cross package slots: the
 //! authored layout (`packages/org.vibevm/<name>/v<ver>/`) and the

@@ -20,7 +20,7 @@
 //! and spawned children both resolve that handle, and the capture test
 //! pins both facts on every platform this crate builds on.
 
-specmark::scope!("spec://core-ai-native/mechanisms/MCP-CORE-v0.1#capture");
+specmark::scope!("spec://org.vibevm.ai-native.core-ai-native/mechanisms/MCP-CORE-v0.1#capture");
 
 use std::fs;
 use std::io::Write as _;

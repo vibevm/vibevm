@@ -250,7 +250,7 @@ fn registry_host(url: &str) -> Option<&str> {
 /// ```
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Serialize, Deserialize)]
 pub enum NamingConvention {
-    /// `org.vibevm/wal` → `<org>/org.vibevm.wal`. The reverse-FQDN
+    /// `org.vibevm.world/wal` → `<org>/org.vibevm.wal`. The reverse-FQDN
     /// convention (PROP-008 §2.5): a flat `<group>.<name>` repo name,
     /// collision-free because `(group, name)` is unique. Default — the
     /// convention every group-aware registry uses.

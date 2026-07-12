@@ -15,7 +15,7 @@
 - Only `LICENSE.md` changed in the worktree (+ the worker's `result.md`); zero
   foreign edits.
 - The UPL body is **byte-identical** to the canonical
-  `packages/org.vibevm/wal-workspaces/v0.1.0/LICENSE.md` (`diff` differed only by
+  `packages/org.vibevm.world/wal-workspaces/v0.1.0/LICENSE.md` (`diff` differed only by
   the intended appended note); no EULA/proprietary text remains.
 - Merged to `main` as `chore(license): relicense vibevm to UPL-1.0`. Host crates
   inherit it via `license-file.workspace = true`.

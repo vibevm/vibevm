@@ -8,10 +8,10 @@
 #
 # A package version bump edits the paths below — data, not the tool.
 
-# The neutral engines: authored in flow:org.vibevm/core-ai-native,
+# The neutral engines: authored in flow:org.vibevm.ai-native/core-ai-native,
 # vendored into each language stack.
 [[sync]]
-source_root = "packages/org.vibevm/core-ai-native/v0.7.0/crates"
+source_root = "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/crates"
 crates = [
     "core-ai-native-conform",
     "core-ai-native-specmap",
@@ -19,8 +19,8 @@ crates = [
     "core-ai-native-specmark-grammar",
 ]
 targets = [
-    "packages/org.vibevm/rust-ai-native-lang/v0.7.0/crates/vendor",
-    "packages/org.vibevm/typescript-ai-native-lang/v0.6.0/crates/vendor",
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/vendor",
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/vendor",
 ]
 
 # The mcp packages (MCP-SOVEREIGNTY Waves 3-4) mirror their stack's
@@ -30,7 +30,7 @@ targets = [
 
 # The neutral engines + the MCP transport, into the rust mcp package.
 [[sync]]
-source_root = "packages/org.vibevm/core-ai-native/v0.7.0/crates"
+source_root = "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/crates"
 crates = [
     "core-ai-native-conform",
     "core-ai-native-specmap",
@@ -38,13 +38,13 @@ crates = [
     "core-ai-native-specmark-grammar",
     "core-ai-native-mcp",
 ]
-targets = ["packages/org.vibevm/rust-ai-native-mcp/v0.7.0/crates/vendor"]
+targets = ["packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/crates/vendor"]
 
 # The rust stack's toolchain crates the server links, into the rust mcp
 # package (the pin `=0.7.0` in its vibe.toml holds these byte-identical
 # copies and the consumer's installed stack to ONE version).
 [[sync]]
-source_root = "packages/org.vibevm/rust-ai-native-lang/v0.7.0/crates"
+source_root = "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates"
 crates = [
     "rust-ai-native-conform-frontend",
     "rust-ai-native-conform",
@@ -53,11 +53,11 @@ crates = [
     "rust-ai-native-tcg-bridge",
     "rust-ai-native-tcg",
 ]
-targets = ["packages/org.vibevm/rust-ai-native-mcp/v0.7.0/crates"]
+targets = ["packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/crates"]
 
 # The neutral engines + the MCP transport, into the typescript mcp package.
 [[sync]]
-source_root = "packages/org.vibevm/core-ai-native/v0.7.0/crates"
+source_root = "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/crates"
 crates = [
     "core-ai-native-conform",
     "core-ai-native-specmap",
@@ -65,12 +65,12 @@ crates = [
     "core-ai-native-specmark-grammar",
     "core-ai-native-mcp",
 ]
-targets = ["packages/org.vibevm/typescript-ai-native-mcp/v0.6.0/crates/vendor"]
+targets = ["packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/crates/vendor"]
 
 # The typescript stack's toolchain crates the server links, into the
 # typescript mcp package (pin `=0.6.0`).
 [[sync]]
-source_root = "packages/org.vibevm/typescript-ai-native-lang/v0.6.0/crates"
+source_root = "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates"
 crates = [
     "typescript-ai-native-conform-frontend",
     "typescript-ai-native-conform",
@@ -81,12 +81,12 @@ crates = [
     "typescript-ai-native-tcg-bridge",
     "typescript-ai-native-tcg",
 ]
-targets = ["packages/org.vibevm/typescript-ai-native-mcp/v0.6.0/crates"]
+targets = ["packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/crates"]
 
 # The TS stack's embedded-source tools/ dir (ts-extract, ts-oracle) —
 # the bridge crates include_str! it from the package root, so the mcp
 # package mirrors it at the same relative place.
 [[sync]]
-source_root = "packages/org.vibevm/typescript-ai-native-lang/v0.6.0"
+source_root = "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0"
 crates = ["tools"]
-targets = ["packages/org.vibevm/typescript-ai-native-mcp/v0.6.0"]
+targets = ["packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0"]

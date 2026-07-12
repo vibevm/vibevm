@@ -1,4 +1,4 @@
-# org.vibevm/rust-ai-native — a code-bearing package (PROP-024). It ships the
+# org.vibevm.ai-native/rust-ai-native — a code-bearing package (PROP-024). It ships the
 # ENGINE-CONFORM toolchain as runnable Rust, not only prompts: install the
 # stack and you get the `conform` gate, not a description of it. This is the
 # package's OWN Cargo workspace; vibevm consumes these crates by external
@@ -35,7 +35,7 @@ homepage = "https://gitverse.ru/anarchic/vibevm"
 [workspace.dependencies]
 # Internal crates — path-only (not published; consumed in-tree). The four
 # neutral engine crates under crates/vendor/ are byte-identical vendored
-# copies of flow:org.vibevm/core-ai-native's authored source (`cargo xtask
+# copies of flow:org.vibevm.ai-native/core-ai-native's authored source (`cargo xtask
 # sync-engines`; the --check gate runs in self-check). Never edit them here —
 # the fix surface is the authored copy in core-ai-native.
 conform-core = { package = "core-ai-native-conform", path = "crates/vendor/core-ai-native-conform" }

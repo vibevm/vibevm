@@ -2,7 +2,7 @@
 //! cites the MCP-CORE requirement it guards and names a fix surface, so
 //! a failing server run is navigable without this crate's source.
 
-specmark::scope!("spec://core-ai-native/mechanisms/MCP-CORE-v0.1#wire");
+specmark::scope!("spec://org.vibevm.ai-native.core-ai-native/mechanisms/MCP-CORE-v0.1#wire");
 
 use thiserror::Error;
 
@@ -22,7 +22,7 @@ use thiserror::Error;
 pub enum McpCoreError {
     #[error(
         "stdio transport {op} failed: {source} \
-         (violates spec://core-ai-native/mechanisms/MCP-CORE-v0.1#wire; \
+         (violates spec://org.vibevm.ai-native.core-ai-native/mechanisms/MCP-CORE-v0.1#wire; \
           fix surface: the host closed the pipe — check the agent host's \
           server log, then the [[mcp_server]] command line it launched)"
     )]
@@ -34,7 +34,7 @@ pub enum McpCoreError {
 
     #[error(
         "response serialisation failed: {source} \
-         (violates spec://core-ai-native/mechanisms/MCP-CORE-v0.1#wire; \
+         (violates spec://org.vibevm.ai-native.core-ai-native/mechanisms/MCP-CORE-v0.1#wire; \
           fix surface: a tool returned a value serde_json cannot render — \
           fix that tool's result type)"
     )]
@@ -45,7 +45,7 @@ pub enum McpCoreError {
 
     #[error(
         "stderr capture {op} failed: {detail} \
-         (violates spec://core-ai-native/mechanisms/MCP-CORE-v0.1#capture; \
+         (violates spec://org.vibevm.ai-native.core-ai-native/mechanisms/MCP-CORE-v0.1#capture; \
           fix surface: the capture guard could not redirect or restore \
           fd 2 — see core_ai_native_mcp::capture's platform notes)"
     )]

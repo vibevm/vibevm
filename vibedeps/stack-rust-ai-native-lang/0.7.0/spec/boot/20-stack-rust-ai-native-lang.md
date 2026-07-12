@@ -34,7 +34,7 @@ The shipped toolchain (this stack materialises it; no dev tree needed):
 (the sweep's fact collector), `test-gate` / `tripwire` / `trace` /
 `fast-loop` / `codemod` / `ledger`; plus the narrow `rust-ai-native-conform` and
 `rust-ai-native-specmap` engines, and the agentic type oracle `rust-ai-native-tcg`
-(also served over MCP by `mcp:org.vibevm/rust-ai-native-mcp` — PROP-027)
+(also served over MCP by `mcp:org.vibevm.ai-native/rust-ai-native-mcp` — PROP-027)
 (persistent enriching `serve` relay + one-shot
 `validate`/`scope`/`complete`/`type`/`bench`: check an edit against
 in-memory overlays BEFORE writing it, answered by the CONSUMER's own

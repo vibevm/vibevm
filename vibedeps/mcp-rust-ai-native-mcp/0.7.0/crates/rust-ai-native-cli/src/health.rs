@@ -1,5 +1,5 @@
 //! `rust-ai-native health` — the Discipline health collector (the Sweep
-//! Playbook's fact-gatherer — `spec://core-ai-native/04-SWEEP-PLAYBOOK#collector`).
+//! Playbook's fact-gatherer — `spec://org.vibevm.ai-native.core-ai-native/04-SWEEP-PLAYBOOK#collector`).
 //!
 //! The binary gates (`conform check`, `specmap --check`, `self-check.sh`)
 //! answer one question — *is the declared surface conformant right now?* —

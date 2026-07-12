@@ -1,10 +1,10 @@
-# AI-Native Rust (stack:org.vibevm/rust-ai-native-lang)
+# AI-Native Rust (stack:org.vibevm.ai-native/rust-ai-native-lang)
 
 The Rust projection of the AI-Native Code Discipline — and the **runnable
 toolchain** that enforces it (PROP-024 code-bearing packages): installing
 this stack yields working checkers and procedures, not descriptions of
 them. The language-neutral method (manifesto, playbooks, mechanism specs)
-comes from its dependency `flow:org.vibevm/core-ai-native`.
+comes from its dependency `flow:org.vibevm.ai-native/core-ai-native`.
 
 ## What ships
 

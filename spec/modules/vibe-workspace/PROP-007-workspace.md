@@ -101,12 +101,12 @@ The load-bearing principle that keeps this from becoming chaos:
 
 ```toml
 [requires.packages]
-"org.vibevm/wal" = { path = "../flow-wal" }
+"org.vibevm.world/wal" = { path = "../flow-wal" }
 # dual-form (recommended for any member that is itself published):
-"org.vibevm/wal" = { path = "../flow-wal", version = "^0.1" }
+"org.vibevm.world/wal" = { path = "../flow-wal", version = "^0.1" }
 ```
 
-- **Dual-form.** `path` is used during local development inside the workspace; `version` takes effect when the consuming node is itself published — the published copy references `org.vibevm/wal@^0.1` from a registry, not `../flow-wal` (which an external consumer does not have). This is cargo's `{ path = ..., version = ... }` shape. Dual-form is **required** for any path-dep whose consumer is publishable.
+- **Dual-form.** `path` is used during local development inside the workspace; `version` takes effect when the consuming node is itself published — the published copy references `org.vibevm.world/wal@^0.1` from a registry, not `../flow-wal` (which an external consumer does not have). This is cargo's `{ path = ..., version = ... }` shape. Dual-form is **required** for any path-dep whose consumer is publishable.
 - **Resolution priority.** `[[override]]` > path > git-source > registry-walk. Path sits below override (override is a deliberate patch) and above git-source (path is the most local, most authoritative declaration).
 - **Lockfile.** New `source_kind = "path"`. For a workspace-member path-dep the lockfile records a reference to the member by id within the workspace, not an external `source_url` — so the lockfile stays portable across machines (an absolute path would not).
 - **path outside the workspace.** A `path` pointing at a directory that is not a member of this workspace is permitted, but a node depending on it via path-only (no `version`) is not publishable — the published copy would dangle.

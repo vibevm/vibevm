@@ -70,21 +70,21 @@ pub fn materialise_oracle(project_root: &Path) -> Result<PathBuf, TcgBridgeError
 pub enum TcgBridgeError {
     #[error(
         "node is not spawnable: {source} \
-         (violates spec://typescript-ai-native-lang/mechanisms/TCG-PROTOCOL#errors; \
+         (violates spec://org.vibevm.ai-native.typescript-ai-native-lang/mechanisms/TCG-PROTOCOL#errors; \
          fix: install node >= 22.6 and put it on PATH)"
     )]
     NodeMissing { source: std::io::Error },
 
     #[error(
         "the project's `typescript` install is unresolvable: {detail} \
-         (violates spec://typescript-ai-native-lang/mechanisms/TCG-ORACLE#compiler; \
+         (violates spec://org.vibevm.ai-native.typescript-ai-native-lang/mechanisms/TCG-ORACLE#compiler; \
          fix: `npm install -D typescript` in the project root)"
     )]
     TypescriptUnresolvable { detail: String },
 
     #[error(
         "the oracle process died mid-session: {detail} \
-         (violates spec://typescript-ai-native-lang/mechanisms/TCG-PROTOCOL#errors; \
+         (violates spec://org.vibevm.ai-native.typescript-ai-native-lang/mechanisms/TCG-PROTOCOL#errors; \
          fix: re-init the session; if it repeats, run the op one-shot via \
          `typescript-ai-native-tcg validate ...` to see the child's stderr)"
     )]
@@ -92,7 +92,7 @@ pub enum TcgBridgeError {
 
     #[error(
         "protocol violation: {detail} \
-         (violates spec://typescript-ai-native-lang/mechanisms/TCG-PROTOCOL#framing; \
+         (violates spec://org.vibevm.ai-native.typescript-ai-native-lang/mechanisms/TCG-PROTOCOL#framing; \
          fix: rebuild the slot binary so bridge and oracle share one \
          ORACLE_PROTOCOL)"
     )]
@@ -100,7 +100,7 @@ pub enum TcgBridgeError {
 
     #[error(
         "the oracle did not answer `{op}` within {budget_ms} ms \
-         (violates spec://typescript-ai-native-lang/mechanisms/TCG-PROTOCOL#errors; \
+         (violates spec://org.vibevm.ai-native.typescript-ai-native-lang/mechanisms/TCG-PROTOCOL#errors; \
          fix: raise the timeout for cold init, or check the child's stderr \
          log lines)"
     )]

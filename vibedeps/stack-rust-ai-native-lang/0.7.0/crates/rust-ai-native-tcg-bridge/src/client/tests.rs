@@ -2,7 +2,7 @@
 //! no rust-analyzer anywhere near the unit suite (ORACLE-RUST's replay
 //! posture).
 
-specmark::scope!("spec://rust-ai-native-lang/mechanisms/TCG-ORACLE-RUST-v0.1#session");
+specmark::scope!("spec://org.vibevm.ai-native.rust-ai-native-lang/mechanisms/TCG-ORACLE-RUST-v0.1#session");
 
 use std::collections::VecDeque;
 use std::sync::{Arc, Mutex};

@@ -1,4 +1,4 @@
-specmark::scope!("spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#facts");
+specmark::scope!("spec://org.vibevm.ai-native.core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#facts");
 
 use serde::{Deserialize, Serialize};
 

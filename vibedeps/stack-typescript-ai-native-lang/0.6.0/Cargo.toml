@@ -1,10 +1,10 @@
-# org.vibevm/typescript-ai-native — a code-bearing package (PROP-024) since
+# org.vibevm.ai-native/typescript-ai-native — a code-bearing package (PROP-024) since
 # 0.3.0: it ships the TypeScript projection's runnable checkers, not only
 # prompts. This is the package's OWN Cargo workspace; a consumer's root
 # excludes vibedeps/ and the slot builds standalone (PROP-024 §2.4).
 #
 # The crates under crates/vendor/ are byte-identical vendored copies of the
-# neutral engine crates AUTHORED in flow:org.vibevm/core-ai-native
+# neutral engine crates AUTHORED in flow:org.vibevm.ai-native/core-ai-native
 # (`cargo xtask sync-engines` in the dev tree mirrors them; `--check` gates
 # drift). Never edit vendored copies — the fix surface is the authored crate.
 # The TypeScript-specific frontends and CLI drivers land as sibling members

@@ -10,7 +10,7 @@ LanguageService is tsc's own engine) — no approximation caveat rides
 these answers.
 
 **One engine, one truth.** The tools call the SAME lib fns the CLIs
-call, and the `=X.Y.Z` pin on `stack:org.vibevm/typescript-ai-native-lang`
+call, and the `=X.Y.Z` pin on `stack:org.vibevm.ai-native/typescript-ai-native-lang`
 holds this package's vendored copies and the consumer's installed stack
 to one resolved version set. Tool-level failure — a red gate, an
 absent-toolchain refusal WITH ITS RECIPE — is an `isError` RESULT;

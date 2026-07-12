@@ -1,6 +1,6 @@
 # ts-demo — the TypeScript discipline walking skeleton
 
-The pilot-lite for `stack:org.vibevm/typescript-ai-native` (NOT the
+The pilot-lite for `stack:org.vibevm.ai-native/typescript-ai-native` (NOT the
 forthcoming VibeVM TypeScript surface): a real consumer project that
 exercises the whole shipped toolchain — branded seams, Result-shaped
 errors, a validated erasure boundary, seam-only cell composition, JSDoc

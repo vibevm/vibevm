@@ -32,7 +32,7 @@ root_spec_docs = ["VIBEVM-SPEC.md"]
 #   vibe-wire             — generated code; the JTD schema is the taggable unit
 #   xtask                 — internal tooling binary (panics ok at the dev console)
 # (core-ai-native-specmark + core-ai-native-specmark-grammar relocated into
-#  flow:org.vibevm/core-ai-native in the traceability + engine-consolidation
+#  flow:org.vibevm.ai-native/core-ai-native in the traceability + engine-consolidation
 #  moves, so they are no longer vibevm crates to exempt here; the packages
 #  trace their own crates via the self-trace gate.)
 exempt = [
@@ -48,7 +48,7 @@ exempt = [
 dispositioned = []
 
 # Installed packages' spec trees, read for URI RESOLUTION only (PROP-014
-# §7.1): edges into `spec://core-ai-native/…` — the shipped mechanism specs
+# §7.1): edges into `spec://org.vibevm.ai-native.core-ai-native/…` — the shipped mechanism specs
 # this repo's tags cite — resolve through the materialised slot instead of
 # dangling. Units found here never enter the committed specmap.json.
 [[external_specs]]

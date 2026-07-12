@@ -26,14 +26,14 @@ Next:
 ### stderr
 ```
 ```
-## $ vibe install org.vibevm/wal --registry <REPO>/fixtures/registry --assume-yes
+## $ vibe install org.vibevm.world/wal --registry <REPO>/fixtures/registry --assume-yes
 exit: 0
 ### stdout
 ```
 Resolving 1 root package…
 
 Materialising 1 package into vibedeps/:
-  org.vibevm/wal@0.1.0
+  org.vibevm.world/wal@0.1.0
 
 
 Materialised 1 package into vibedeps/; regenerated boot artifacts for 1 node.
@@ -45,12 +45,12 @@ Materialised 1 package into vibedeps/; regenerated boot artifacts for 1 node.
 ```
 ./.gitignore
 ./.vibe/.gitignore
-./.vibe/cache/org.vibevm/wal/v0.1.0/README.md
-./.vibe/cache/org.vibevm/wal/v0.1.0/boot/10-flow-wal.md
-./.vibe/cache/org.vibevm/wal/v0.1.0/spec/flows/wal/WAL-PROTOCOL.md
-./.vibe/cache/org.vibevm/wal/v0.1.0/spec/flows/wal/morning-routine.md
-./.vibe/cache/org.vibevm/wal/v0.1.0/spec/flows/wal/session-end-hook.md
-./.vibe/cache/org.vibevm/wal/v0.1.0/vibe.toml
+./.vibe/cache/org.vibevm.world/wal/v0.1.0/README.md
+./.vibe/cache/org.vibevm.world/wal/v0.1.0/boot/10-flow-wal.md
+./.vibe/cache/org.vibevm.world/wal/v0.1.0/spec/flows/wal/WAL-PROTOCOL.md
+./.vibe/cache/org.vibevm.world/wal/v0.1.0/spec/flows/wal/morning-routine.md
+./.vibe/cache/org.vibevm.world/wal/v0.1.0/spec/flows/wal/session-end-hook.md
+./.vibe/cache/org.vibevm.world/wal/v0.1.0/vibe.toml
 ./AGENTS.md
 ./CLAUDE.md
 ./GEMINI.md
@@ -74,7 +74,7 @@ version = "0.0.1"
 authors = []
 
 [requires.packages]
-"org.vibevm/wal" = "^0.1.0"
+"org.vibevm.world/wal" = "^0.1.0"
 
 [[registry]]
 name = "vibespecs"
@@ -91,14 +91,14 @@ naming = "name"
 generated_by = "vibe 0.1.0-dev"
 generated_at = "<TIMESTAMP>"
 schema_version = 5
-root_dependencies = ["org.vibevm/wal@^0.1.0"]
+root_dependencies = ["org.vibevm.world/wal@^0.1.0"]
 
 [[package]]
 kind = "flow"
 name = "wal"
 group = "org.vibevm"
 version = "0.1.0"
-source_url = "file:///<REPO>/fixtures/registry/org.vibevm/wal/v0.1.0"
+source_url = "file:///<REPO>/fixtures/registry/org.vibevm.world/wal/v0.1.0"
 content_hash = "sha256:865d47fb41fb8590ef6f0780f7fe98c716b897dea494769dd37a0e5280bc55a5"
 files_written = []
 source_kind = "registry"

@@ -32,7 +32,7 @@ use crate::{
 /// use vibe_registry::LocalRegistry;
 ///
 /// let registry = LocalRegistry::new("path/to/registry").unwrap();
-/// let pkgref = PackageRef::parse("org.vibevm/wal@^0.1").unwrap();
+/// let pkgref = PackageRef::parse("org.vibevm.world/wal@^0.1").unwrap();
 /// let resolved = registry.resolve(&pkgref).unwrap();
 /// let cached = registry.fetch(&resolved, Path::new(".vibe/cache")).unwrap();
 /// assert!(cached.content_hash.starts_with("sha256:"));
@@ -279,8 +279,8 @@ mod tests {
         let dir = tempdir().unwrap();
         let root = dir.path().to_path_buf();
 
-        // org.vibevm/wal/v0.1.0
-        let v1 = root.join("org.vibevm/wal/v0.1.0");
+        // org.vibevm.world/wal/v0.1.0
+        let v1 = root.join("org.vibevm.world/wal/v0.1.0");
         fs::create_dir_all(&v1).unwrap();
         fs::write(
             v1.join("vibe.toml"),
@@ -295,8 +295,8 @@ description = "WAL v0.1.0"
         .unwrap();
         fs::write(v1.join("README.md"), "# wal 0.1.0\n").unwrap();
 
-        // org.vibevm/wal/v0.2.0
-        let v2 = root.join("org.vibevm/wal/v0.2.0");
+        // org.vibevm.world/wal/v0.2.0
+        let v2 = root.join("org.vibevm.world/wal/v0.2.0");
         fs::create_dir_all(&v2).unwrap();
         fs::write(
             v2.join("vibe.toml"),
@@ -329,7 +329,7 @@ description = "WAL v0.2.0"
     fn resolves_latest() {
         let (_guard, root) = make_fixture_registry();
         let reg = LocalRegistry::new(root).unwrap();
-        let pkgref = PackageRef::parse("org.vibevm/wal").unwrap();
+        let pkgref = PackageRef::parse("org.vibevm.world/wal").unwrap();
         let r = reg.resolve(&pkgref).unwrap();
         assert_eq!(r.version.to_string(), "0.2.0");
     }
@@ -338,7 +338,7 @@ description = "WAL v0.2.0"
     fn resolves_exact_version() {
         let (_guard, root) = make_fixture_registry();
         let reg = LocalRegistry::new(root).unwrap();
-        let pkgref = PackageRef::parse("org.vibevm/wal@0.1.0").unwrap();
+        let pkgref = PackageRef::parse("org.vibevm.world/wal@0.1.0").unwrap();
         let r = reg.resolve(&pkgref).unwrap();
         assert_eq!(r.version.to_string(), "0.1.0");
     }
@@ -347,7 +347,7 @@ description = "WAL v0.2.0"
     fn resolves_range_to_highest_match() {
         let (_guard, root) = make_fixture_registry();
         let reg = LocalRegistry::new(root).unwrap();
-        let pkgref = PackageRef::parse("org.vibevm/wal@^0.1").unwrap();
+        let pkgref = PackageRef::parse("org.vibevm.world/wal@^0.1").unwrap();
         let r = reg.resolve(&pkgref).unwrap();
         // ^0.1 → >=0.1.0, <0.2.0 — so only 0.1.0 qualifies.
         assert_eq!(r.version.to_string(), "0.1.0");
@@ -365,7 +365,7 @@ description = "WAL v0.2.0"
     #[test]
     fn candidate_groups_single_group_one_match() {
         // PROP-008 §2.6 short-name resolution: the standard fixture
-        // carries only `org.vibevm/wal`, so `wal` has one candidate.
+        // carries only `org.vibevm.world/wal`, so `wal` has one candidate.
         let (_guard, root) = make_fixture_registry();
         let reg = LocalRegistry::new(root).unwrap();
         assert_eq!(reg.candidate_groups("wal").unwrap(), vec![org()]);
@@ -381,7 +381,7 @@ description = "WAL v0.2.0"
     #[test]
     fn candidate_groups_collision_lists_every_group_sorted() {
         // A short-name collision (PROP-008 §2.7): two groups each
-        // publish a `wal`. The standard fixture gives `org.vibevm/wal`;
+        // publish a `wal`. The standard fixture gives `org.vibevm.world/wal`;
         // add `com.acme/wal` alongside. The result is sorted.
         let (_guard, root) = make_fixture_registry();
         let acme = root.join("com.acme/wal/v0.1.0");
@@ -408,7 +408,7 @@ description = "WAL v0.2.0"
     fn no_matching_version_errors() {
         let (_guard, root) = make_fixture_registry();
         let reg = LocalRegistry::new(root).unwrap();
-        let pkgref = PackageRef::parse("org.vibevm/wal@^9.0").unwrap();
+        let pkgref = PackageRef::parse("org.vibevm.world/wal@^9.0").unwrap();
         let err = reg.resolve(&pkgref).unwrap_err();
         assert!(matches!(err, RegistryError::NoMatchingVersion { .. }));
     }
@@ -418,7 +418,7 @@ description = "WAL v0.2.0"
         let (_guard, root) = make_fixture_registry();
         let reg = LocalRegistry::new(root).unwrap();
         let cache_dir = tempdir().unwrap();
-        let pkgref = PackageRef::parse("org.vibevm/wal@0.2.0").unwrap();
+        let pkgref = PackageRef::parse("org.vibevm.world/wal@0.2.0").unwrap();
         let resolved = reg.resolve(&pkgref).unwrap();
         let cached = reg.fetch(&resolved, cache_dir.path()).unwrap();
         assert!(cached.cache_dir.join("vibe.toml").exists());
@@ -434,7 +434,7 @@ description = "WAL v0.2.0"
         let reg = LocalRegistry::new(root).unwrap();
         let cache_a = tempdir().unwrap();
         let cache_b = tempdir().unwrap();
-        let pkgref = PackageRef::parse("org.vibevm/wal@0.2.0").unwrap();
+        let pkgref = PackageRef::parse("org.vibevm.world/wal@0.2.0").unwrap();
         let resolved = reg.resolve(&pkgref).unwrap();
         let a = reg.fetch(&resolved, cache_a.path()).unwrap();
         let b = reg.fetch(&resolved, cache_b.path()).unwrap();

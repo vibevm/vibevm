@@ -1,4 +1,4 @@
-# mcp:org.vibevm/rust-ai-native-mcp — the AI-Native Rust discipline served
+# mcp:org.vibevm.ai-native/rust-ai-native-mcp — the AI-Native Rust discipline served
 # over MCP (PROP-027; MCP-SOVEREIGNTY-PLAN Wave 3). This workspace
 # AUTHORS one crate — the server — and vendors its whole dependency
 # closure byte-identically (`cargo xtask sync-engines`): the stack's

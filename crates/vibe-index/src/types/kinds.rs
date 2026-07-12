@@ -79,7 +79,7 @@ impl FromStr for PackageKind {
 /// field of `repomd.json` reads exactly as a `[[registry]].naming` does.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq, ValueEnum, Serialize, Deserialize)]
 pub enum NamingConvention {
-    /// `org.vibevm/wal` → `<org>/org.vibevm.wal` — the reverse-FQDN repo
+    /// `org.vibevm.world/wal` → `<org>/org.vibevm.wal` — the reverse-FQDN repo
     /// name (PROP-008 §2.5). The default: a flat `<group>.<name>`,
     /// collision-free because `(group, name)` is unique. Every
     /// group-native registry uses it.

@@ -4,7 +4,7 @@
 //! cross the boundary through the position cell against the document's
 //! OWN text.
 
-specmark::scope!("spec://rust-ai-native-lang/mechanisms/TCG-ORACLE-RUST-v0.1#overlays");
+specmark::scope!("spec://org.vibevm.ai-native.rust-ai-native-lang/mechanisms/TCG-ORACLE-RUST-v0.1#overlays");
 
 use std::collections::HashMap;
 use std::path::{Path, PathBuf};
@@ -53,7 +53,7 @@ struct DocState {
 }
 
 /// The oracle: one rust-analyzer session for one project root.
-#[spec(implements = "spec://rust-ai-native-lang/mechanisms/TCG-ORACLE-RUST-v0.1#overlays")]
+#[spec(implements = "spec://org.vibevm.ai-native.rust-ai-native-lang/mechanisms/TCG-ORACLE-RUST-v0.1#overlays")]
 pub struct RustOracle<T: Transport> {
     client: LspClient<T>,
     caps: Capabilities,
@@ -192,7 +192,7 @@ impl<T: Transport> RustOracle<T> {
     /// Single-document pull diagnostics over the effective text
     /// (ORACLE-RUST §5: the oracle's answer is r-a's view — the floor
     /// stays the truth).
-    #[spec(implements = "spec://rust-ai-native-lang/mechanisms/TCG-PROTOCOL-RUST-v0.1#ops")]
+    #[spec(implements = "spec://org.vibevm.ai-native.rust-ai-native-lang/mechanisms/TCG-PROTOCOL-RUST-v0.1#ops")]
     pub fn validate(
         &mut self,
         rel: &str,
@@ -257,7 +257,7 @@ impl<T: Transport> RustOracle<T> {
     }
 
     /// Completions at a position over the effective text.
-    #[spec(implements = "spec://rust-ai-native-lang/mechanisms/TCG-PROTOCOL-RUST-v0.1#ops")]
+    #[spec(implements = "spec://org.vibevm.ai-native.rust-ai-native-lang/mechanisms/TCG-PROTOCOL-RUST-v0.1#ops")]
     pub fn complete(
         &mut self,
         rel: &str,
@@ -311,7 +311,7 @@ impl<T: Transport> RustOracle<T> {
     }
 
     /// Quick info (hover) at a position: type display + docs.
-    #[spec(implements = "spec://rust-ai-native-lang/mechanisms/TCG-PROTOCOL-RUST-v0.1#ops")]
+    #[spec(implements = "spec://org.vibevm.ai-native.rust-ai-native-lang/mechanisms/TCG-PROTOCOL-RUST-v0.1#ops")]
     pub fn hover(
         &mut self,
         rel: &str,

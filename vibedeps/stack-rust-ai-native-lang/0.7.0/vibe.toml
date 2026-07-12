@@ -13,7 +13,7 @@ min_vibe_version = "0.1.0"
 requires_kinds = []
 
 [requires]
-packages = { "flow:org.vibevm/core-ai-native" = "^0.7" }
+packages = { "flow:org.vibevm.ai-native/core-ai-native" = "^0.7" }
 
 [boot_snippet]
 source = "spec/boot/20-stack-rust-ai-native-lang.md"
@@ -21,7 +21,7 @@ category = "stack"
 
 # The operating procedures, as agent-installable skills (PROP-018 §2.4;
 # projected by `vibe skill install`). The methods live in
-# flow:org.vibevm/core-ai-native (04-SWEEP-PLAYBOOK, BROWNFIELD-PROTOCOL);
+# flow:org.vibevm.ai-native/core-ai-native (04-SWEEP-PLAYBOOK, BROWNFIELD-PROTOCOL);
 # these skills are their Rust-stack instantiation over the shipped
 # rust-ai-native toolchain.
 # The shipped tools (PROP-025): `vibe bin build` compiles them in the

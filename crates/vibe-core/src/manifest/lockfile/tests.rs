@@ -21,7 +21,7 @@ generated_by = "vibe 0.1.0-dev"
 generated_at = "2026-05-21T12:00:00Z"
 schema_version = 5
 solver = "resolvo-0.x"
-root_dependencies = ["org.vibevm/wal", "org.vibevm/rust-cli"]
+root_dependencies = ["org.vibevm.world/wal", "org.vibevm/rust-cli"]
 
 [[package]]
 kind = "flow"
@@ -39,7 +39,7 @@ files_written = [
 "spec/flows/wal/WAL-PROTOCOL.md",
 "spec/boot/10-flow-wal.md",
 ]
-dependencies = ["org.vibevm/atomic-commits@=0.1.0"]
+dependencies = ["org.vibevm.world/atomic-commits@=0.1.0"]
 
 [[package]]
 kind = "stack"
@@ -73,7 +73,7 @@ fn parses_fully() {
     assert_eq!(wal.dependencies.len(), 1);
     assert_eq!(
         wal.dependencies[0].qualified_name(),
-        "org.vibevm/atomic-commits"
+        "org.vibevm.world/atomic-commits"
     );
     assert_eq!(wal.source_kind, Some(SourceKind::Registry));
     assert!(!wal.overridden);

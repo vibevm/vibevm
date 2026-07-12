@@ -18,8 +18,8 @@ requires_kinds = []
 # this package grows executable policy (routing-as-data consumed by MC),
 # the discipline is already in the room.
 [requires.packages]
-"flow:org.vibevm/redbook" = "^0.2.0"
-"stack:org.vibevm/rust-ai-native" = "^0.7.0"
+"flow:org.vibevm.world/redbook" = "^0.2.0"
+"stack:org.vibevm.ai-native/rust-ai-native" = "^0.7.0"
 
 [boot_snippet]
 source = "spec/boot/77-flow-delegation-rules.md"

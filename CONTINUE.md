@@ -44,7 +44,7 @@ grep-verified product-agnostic, each protocol doc carrying a
   `packages/org.vibevm/`, 22 new package dirs (21 members + the
   umbrella in two editions). Nothing else in the repo was touched by
   the collection work except `spec/WAL.md`.
-- **The umbrella:** `flow:org.vibevm/redbook` in **two editions** —
+- **The umbrella:** `flow:org.vibevm.world/redbook` in **two editions** —
   `v0.1.0` (pins 10 core members) and `v0.2.0` (pins all 21). An
   edition is a tested set: the umbrella version IS the edition number,
   every member exact-pinned (`=X.Y.Z`), members evolve on their own
@@ -113,8 +113,8 @@ edit into core-ai-native) — nothing is blocked, nothing is half-done.
 #   vibe registry publish packages/org.vibevm/<member>/v<ver>
 # Publish wal 0.2.0 and the other nine 0.1.0 core members, then the
 # eleven wave-2 members, THEN the umbrella editions last:
-#   vibe registry publish packages/org.vibevm/redbook/v0.1.0
-#   vibe registry publish packages/org.vibevm/redbook/v0.2.0
+#   vibe registry publish packages/org.vibevm.world/redbook/v0.1.0
+#   vibe registry publish packages/org.vibevm.world/redbook/v0.2.0
 # The token is read from the per-user file with no echo (secrets
 # hygiene). Verify each landed:  (gh is absent — use the web or the
 # publisher's own output).
