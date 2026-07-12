@@ -1,25 +1,48 @@
-# vibevm — Proprietary License (EULA placeholder)
+Copyright (c) 2026 Oleg Chirukhin
 
-Copyright © 2026 Oleg Chirukhin. All rights reserved.
+The Universal Permissive License (UPL), Version 1.0
 
-vibevm (including the `vibe` CLI, the `vibe-core`, `vibe-graph`, `vibe-registry`, `vibe-install`, `vibe-llm`, and `vibe-check` crates, and all associated documentation, specifications, reference materials, and configuration) is proprietary software. No license, express or implied, is granted by distribution of this source tree.
+Subject to the condition set forth below, permission is hereby granted to any
+person obtaining a copy of this software, associated documentation and/or data
+(collectively the "Software"), free of charge and under any and all copyright
+rights in the Software, and any and all patent rights owned or freely
+licensable by each licensor hereunder covering either (i) the unmodified
+Software as contributed to or provided by such licensor, or (ii) the Larger
+Works (as defined below), to deal in both
 
-Until a formal End-User License Agreement is executed, the following applies:
+(a) the Software, and
+(b) any piece of software and/or hardware listed in the lrgrwrks.txt file if
+    one is included with the Software (each a "Larger Work" to which the
+    Software is contributed by such licensors),
 
-- You may read the source for evaluation.
-- You may build the software locally for personal evaluation.
-- You may NOT redistribute, sublicense, or publish the software or derivative works.
-- You may NOT use the software for commercial purposes.
-- You may NOT remove or obscure this notice.
+without restriction, including without limitation the rights to copy, create
+derivative works of, display, perform, and distribute the Software and make,
+use, sell, offer for sale, import, export, have made, and have sold the
+Software and the Larger Work(s), and to sublicense the foregoing rights on
+either these or other terms.
 
-The owner intends to relicense vibevm under a permissive open-source license (most likely the Universal Permissive License 1.0) at a future date. That decision is not final. Until it is, treat this project as source-available proprietary software.
+This license is subject to the following condition:
 
-For licensing inquiries, contact the owner.
+The above copyright notice and either this complete permission notice or at a
+minimum a reference to the UPL must be included in all copies or substantial
+portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 
 ---
 
-### Third-party dependencies
+### Third-party dependencies and reference materials
 
-vibevm links against third-party Rust crates distributed under permissive licenses (MIT, Apache-2.0, BSD, or equivalent). Their terms are unaffected by this notice and continue to govern their respective code. See `cargo metadata` for the authoritative list.
-
-Reference materials under `refs/book/` and `refs/src/` are the property of their respective authors and are redistributed here under each work's own terms. `refs/book/` is the owner's own work, referenced for vibevm's implementation discipline. `refs/src/` contains third-party open-source projects cloned for study only — they are NOT part of the vibevm distribution and must be removed before any redistribution.
+vibevm links against third-party Rust crates distributed under permissive
+licenses (MIT, Apache-2.0, BSD, or equivalent); their terms are unaffected by
+this license and continue to govern their respective code (see `cargo metadata`
+for the authoritative list). Reference materials under `refs/` belong to their
+respective authors: `refs/book/` is the owner's own work; `refs/src/` holds
+third-party open-source projects cloned for study only — they are NOT part of
+the vibevm distribution and must be removed before any redistribution.
