@@ -149,6 +149,13 @@
     },
     {
       "crate_name": "fractality-core",
+      "file": "crates/fractality-core/src/credibility.rs",
+      "item_kind": "mod",
+      "line": 21,
+      "symbol": "fractality_core::credibility"
+    },
+    {
+      "crate_name": "fractality-core",
       "file": "crates/fractality-core/src/error.rs",
       "item_kind": "mod",
       "line": 9,
@@ -684,6 +691,14 @@
       "file": "crates/fractality-core/src/api.rs",
       "from_symbol": "fractality_core::api",
       "line": 24,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-core/src/credibility.rs",
+      "from_symbol": "fractality_core::credibility",
+      "line": 21,
       "provenance": "authored",
       "uri": "spec://fractality/PROP-001#architecture",
       "verb": "implements"

@@ -15,6 +15,7 @@
 //! (Decisions D1–D19) and `spec/PROP-001-foundation.md` (invariants I1–I7).
 
 pub mod api;
+pub mod credibility;
 pub mod error;
 pub mod fileref;
 pub mod ids;
@@ -30,6 +31,7 @@ pub mod session;
 pub mod time;
 pub mod worker;
 
+pub use credibility::{CredibilityFact, worker_credibility};
 pub use error::CoreError;
 pub use fileref::FileRef;
 pub use ids::{PodId, RunId, ScopeId, SessionId};
