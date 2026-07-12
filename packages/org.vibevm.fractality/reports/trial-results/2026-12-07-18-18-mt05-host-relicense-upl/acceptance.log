@@ -1,0 +1,15 @@
+=== findstr /C:"Subject to the condition set forth below" LICENSE.md (exit Some(1), 30 ms) ===
+FINDSTR: Cannot open to
+FINDSTR: Cannot open the
+FINDSTR: Cannot open condition
+FINDSTR: Cannot open set
+FINDSTR: Cannot open forth
+FINDSTR: Cannot open below"
+
+=== findstr /C:"must be removed before any redistribution" LICENSE.md (exit Some(1), 20 ms) ===
+FINDSTR: Cannot open be
+FINDSTR: Cannot open removed
+FINDSTR: Cannot open before
+FINDSTR: Cannot open any
+FINDSTR: Cannot open redistribution"
+

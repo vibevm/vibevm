@@ -1,0 +1,65 @@
+schema = 1
+
+[task]
+title = "relicense-host-root-to-upl"
+goal = """
+You run inside a git worktree of the vibevm host repository (your current
+working directory is its root). Use ONLY your file Read and Write tools — do
+NOT use shell/Bash, do NOT stage or commit, and change NO file other than
+LICENSE.md at the repository root.
+
+1. Read the canonical UPL-1.0 license text already present in this tree:
+   packages/org.vibevm/wal-workspaces/v0.1.0/LICENSE.md
+
+2. Overwrite the repository-root file LICENSE.md so its content is EXACTLY:
+   (a) that canonical UPL text from step 1, verbatim — including its first
+       line "Copyright (c) 2026 Oleg Chirukhin"; then
+   (b) a blank line, a line containing only three hyphens (---), a blank line;
+       then
+   (c) this block, verbatim:
+
+### Third-party dependencies and reference materials
+
+vibevm links against third-party Rust crates distributed under permissive
+licenses (MIT, Apache-2.0, BSD, or equivalent); their terms are unaffected by
+this license and continue to govern their respective code (see `cargo metadata`
+for the authoritative list). Reference materials under `refs/` belong to their
+respective authors: `refs/book/` is the owner's own work; `refs/src/` holds
+third-party open-source projects cloned for study only — they are NOT part of
+the vibevm distribution and must be removed before any redistribution.
+
+3. Do not invent or alter any license wording. Do not touch any other file.
+
+4. Write result.md with a one-paragraph summary of exactly what you changed
+   (which file, old license -> new license).
+"""
+acceptance = [
+    'findstr /C:"Subject to the condition set forth below" LICENSE.md',
+    'findstr /C:"must be removed before any redistribution" LICENSE.md',
+]
+
+[context]
+files = []
+context_from = []
+
+[workspace]
+mode = "worktree"
+repo = "C:/Users/olegc/gits/vibevm"
+base = "main"
+
+[output]
+result = "result.md"
+
+[budget]
+wall_secs = 600
+max_turns = 20
+max_output_tokens = 80000
+max_depth = 0
+max_agent_calls = 0
+max_call_tokens = 0
+max_global_calls = 0
+max_spend_micros = 0
+
+[routing]
+profile = "glm"
+model = "small"

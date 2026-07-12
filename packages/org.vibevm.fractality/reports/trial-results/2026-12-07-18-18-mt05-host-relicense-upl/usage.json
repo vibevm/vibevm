@@ -1,0 +1,29 @@
+{
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 71936,
+  "event_counts": {
+    "assistant": 7,
+    "result": 1,
+    "system/init": 1,
+    "system/thinking_tokens": 118,
+    "user": 4
+  },
+  "events": 131,
+  "input_tokens": 65335,
+  "is_error": false,
+  "malformed_lines": 0,
+  "model": "glm-5-turbo",
+  "num_turns": 5,
+  "output_tokens": 1044,
+  "result_path": "C:\\Users\\olegc\\.fractality\\runs\\01KXBEHEYJCQ1RNJ5657Q31HVA\\wt\\result.md",
+  "result_source": "worker",
+  "run_id": "01KXBEHEYJCQ1RNJ5657Q31HVA",
+  "schema": 1,
+  "tool_counts": {
+    "Read": 2,
+    "Write": 2
+  },
+  "total_cost_usd": 0.3887429999999999,
+  "ts_ms": 1783869545691,
+  "web_tool_calls": 0
+}

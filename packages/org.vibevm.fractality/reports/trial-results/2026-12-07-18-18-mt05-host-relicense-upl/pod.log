@@ -1,0 +1,4 @@
+[2m2026-07-12T15:18:42.776451Z[0m [32m INFO[0m [2mfractality_pod[0m[2m:[0m worker spawned [3mrun_id[0m[2m=[0m01KXBEHEYJCQ1RNJ5657Q31HVA [3mworker_pid[0m[2m=[0m64276
+[2m2026-07-12T15:19:05.722816Z[0m [32m INFO[0m [2mfractality_pod::collect[0m[2m:[0m acceptance command finished [3mcommand[0m[2m=[0m"findstr /C:\"Subject to the condition set forth below\" LICENSE.md" [3mexit_code[0m[2m=[0mSome(1) [3mok[0m[2m=[0mfalse [3mduration_ms[0m[2m=[0m30
+[2m2026-07-12T15:19:05.743190Z[0m [32m INFO[0m [2mfractality_pod::collect[0m[2m:[0m acceptance command finished [3mcommand[0m[2m=[0m"findstr /C:\"must be removed before any redistribution\" LICENSE.md" [3mexit_code[0m[2m=[0mSome(1) [3mok[0m[2m=[0mfalse [3mduration_ms[0m[2m=[0m20
+[2m2026-07-12T15:19:05.747310Z[0m [32m INFO[0m [2mfractality_pod[0m[2m:[0m worker exited; pod done [3mrun_id[0m[2m=[0m01KXBEHEYJCQ1RNJ5657Q31HVA [3mexit_code[0m[2m=[0mSome(0)

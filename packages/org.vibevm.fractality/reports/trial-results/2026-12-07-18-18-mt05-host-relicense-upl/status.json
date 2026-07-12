@@ -1,0 +1,30 @@
+{
+  "acceptance": [
+    {
+      "command": "findstr /C:\"Subject to the condition set forth below\" LICENSE.md",
+      "duration_ms": 30,
+      "exit_code": 1,
+      "ok": false
+    },
+    {
+      "command": "findstr /C:\"must be removed before any redistribution\" LICENSE.md",
+      "duration_ms": 20,
+      "exit_code": 1,
+      "ok": false
+    }
+  ],
+  "acceptance_skipped": null,
+  "exit_code": 0,
+  "kill_reason": null,
+  "result_source": "worker",
+  "run_id": "01KXBEHEYJCQ1RNJ5657Q31HVA",
+  "schema": 1,
+  "schema_gate": {
+    "checked": false,
+    "valid": true,
+    "violations": []
+  },
+  "state": "completed",
+  "ts_ms": 1783869545744,
+  "worker_pid": 64276
+}

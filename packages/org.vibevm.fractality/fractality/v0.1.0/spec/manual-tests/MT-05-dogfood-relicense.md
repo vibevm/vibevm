@@ -138,3 +138,25 @@ artifacts. Pilot observation for vibevm: RP1's in-place relicense of
 published-shape coordinates sits in tension with the qualified-naming
 law («never reuse a name@version coordinate for different content»);
 surfaced to the owner rather than resolved here.
+
+### 2026-07-12 — host root `LICENSE.md` → UPL-1.0 (the last straggler)
+
+The prior firings relicensed the discipline packages; the one EULA left in our
+shipped surface was the host root `LICENSE.md` (the "EULA placeholder"). Owner
+made the UPL decision final and commissioned this run. One worktree-mode packet
+(run `01KXBEHEYJCQ1RNJ5657Q31HVA`, glm / `small`, exit 0, $0.39, ~42 s): the
+worker copied the canonical UPL-1.0 text from
+`packages/org.vibevm/wal-workspaces/v0.1.0/LICENSE.md` (via Read/Write, no
+shell) and appended the third-party/refs note. Boss-verified byte-exact (`diff`
+vs canon differed only by the note; no EULA/proprietary text left; only
+`LICENSE.md` changed) and merged to `main` as
+`chore(license): relicense vibevm to UPL-1.0`. Host crates inherit via
+`license-file.workspace`. Evidence:
+`reports/trial-results/2026-12-07-18-18-mt05-host-relicense-upl/`.
+
+**Finding — E-BUG-001:** the run reported `acceptance: 0/2 ok`, a false
+negative — `findstr /C:"multi word phrase"` lost its quoting in the pod's
+acceptance runner (each word parsed as a filename). Filed at
+`plans/external/E-BUG-001.md`; the boss-side `diff` + `grep` was the real gate,
+confirming this test's own lesson that acceptance is advisory until the diff is
+read.
