@@ -10,7 +10,7 @@ use std::fs;
 use std::path::{Path, PathBuf};
 
 use common::{
-    fixture_registry, git_available, init_project, make_per_package_registry, run_git, vibe,
+    git_available, init_project, make_per_package_registry, make_wal_dir_registry, run_git, vibe,
     write_project_with_per_package_registry,
 };
 use predicates::prelude::*;
@@ -330,7 +330,7 @@ fn user_config_promotes_vibe_registry_cache_into_runtime() {
         .env("VIBEVM_USER_CONFIG", &user_cfg_path)
         .env_remove("VIBE_REGISTRY_CACHE")
         .arg("install")
-        .arg("org.vibevm/wal")
+        .arg("org.vibevm.world/wal")
         .arg("--path")
         .arg(project.path())
         .arg("--assume-yes")
@@ -350,7 +350,7 @@ fn user_config_promotes_vibe_registry_cache_into_runtime() {
         .next()
         .expect("bucket")
         .path();
-    let pkg_clone = bucket.join("packages/org.vibevm_wal/clone");
+    let pkg_clone = bucket.join("packages/org.vibevm.world_wal/clone");
     assert!(
         pkg_clone.join(".git").exists(),
         "per-package clone must land in user-config cache: {}",
@@ -650,7 +650,7 @@ fn vendor_produces_bare_repo_per_lockfile_entry() {
     // `vibe registry vendor`. The vendor dir should contain a bare
     // git repo per lockfile entry, ready for use as `[[mirror]] url
     // = "file:///<abs>"`. Verifies the repo is consumable by checking
-    // that `git clone` succeeds against it and that the v0.1.0 tag
+    // that `git clone` succeeds against it and that the v0.2.0 tag
     // is preserved.
     if !git_available() {
         eprintln!("skipping vendor_produces_bare_repo_per_lockfile_entry: git not on PATH");
@@ -673,7 +673,7 @@ fn vendor_produces_bare_repo_per_lockfile_entry() {
     vibe()
         .env("VIBE_REGISTRY_CACHE", &cache)
         .arg("install")
-        .arg("org.vibevm/wal")
+        .arg("org.vibevm.world/wal")
         .arg("--path")
         .arg(project.path())
         .arg("--assume-yes")
@@ -695,7 +695,7 @@ fn vendor_produces_bare_repo_per_lockfile_entry() {
 
     // The vendor dir contains a bare repo for the package and a
     // README.md explaining how to wire it.
-    let bare_repo = vendor_dir.join("org.vibevm_wal.git");
+    let bare_repo = vendor_dir.join("org.vibevm.world_wal.git");
     assert!(
         bare_repo.is_dir(),
         "expected vendor bare repo at {}",
@@ -713,8 +713,8 @@ fn vendor_produces_bare_repo_per_lockfile_entry() {
     );
 
     // Verify the bare repo is a usable git source. `git ls-remote
-    // <vendor>/org.vibevm_wal.git` must list the v0.1.0 tag the install
-    // pulled in.
+    // <vendor>/org.vibevm.world_wal.git` must list the v0.2.0 tag the
+    // install pulled in.
     let ls_out = std::process::Command::new("git")
         .args(["ls-remote", "--tags", bare_repo.to_str().unwrap()])
         .env("LC_ALL", "C")
@@ -728,8 +728,8 @@ fn vendor_produces_bare_repo_per_lockfile_entry() {
     );
     let tags = String::from_utf8_lossy(&ls_out.stdout);
     assert!(
-        tags.contains("refs/tags/v0.1.0"),
-        "vendored repo missing v0.1.0 tag — got:\n{tags}"
+        tags.contains("refs/tags/v0.2.0"),
+        "vendored repo missing v0.2.0 tag — got:\n{tags}"
     );
 
     // Cloning from the vendored repo into a fresh worktree must
@@ -741,7 +741,7 @@ fn vendor_produces_bare_repo_per_lockfile_entry() {
         .args([
             "clone",
             "--branch",
-            "v0.1.0",
+            "v0.2.0",
             bare_repo.to_str().unwrap(),
             worktree.to_str().unwrap(),
         ])
@@ -756,7 +756,7 @@ fn vendor_produces_bare_repo_per_lockfile_entry() {
     );
     assert!(
         worktree.join("vibe.toml").is_file(),
-        "vendored repo's v0.1.0 tag did not produce expected payload"
+        "vendored repo's v0.2.0 tag did not produce expected payload"
     );
 }
 
@@ -783,7 +783,7 @@ fn vendor_refuses_non_empty_out_dir_without_force() {
     vibe()
         .env("VIBE_REGISTRY_CACHE", &cache)
         .arg("install")
-        .arg("org.vibevm/wal")
+        .arg("org.vibevm.world/wal")
         .arg("--path")
         .arg(project.path())
         .arg("--assume-yes")
@@ -830,7 +830,7 @@ fn vendor_refuses_non_empty_out_dir_without_force() {
         "important.txt should be gone after --force vendor"
     );
     assert!(
-        vendor_dir.join("org.vibevm_wal.git").is_dir(),
+        vendor_dir.join("org.vibevm.world_wal.git").is_dir(),
         "vendored bare repo missing after --force"
     );
 }
@@ -1584,11 +1584,11 @@ fn install_unattended_skips_confirm_like_assume_yes() {
     vibe()
         .arg("--unattended")
         .arg("install")
-        .arg("org.vibevm/wal")
+        .arg("org.vibevm.world/wal")
         .arg("--path")
         .arg(project.path())
         .arg("--registry")
-        .arg(fixture_registry())
+        .arg(make_wal_dir_registry(project.path()))
         .assert()
         .success();
 
@@ -1597,7 +1597,7 @@ fn install_unattended_skips_confirm_like_assume_yes() {
     assert!(
         project
             .path()
-            .join("vibedeps/flow-wal/0.1.0/spec/flows/wal/WAL-PROTOCOL.md")
+            .join("vibedeps/flow-wal/0.2.0/spec/flows/wal/WAL-PROTOCOL.md")
             .is_file()
     );
 }
@@ -3543,11 +3543,11 @@ fn reinstall_regenerates_deleted_boot_artifacts() {
     init_project(project.path());
     vibe()
         .arg("install")
-        .arg("org.vibevm/wal")
+        .arg("org.vibevm.world/wal")
         .arg("--path")
         .arg(project.path())
         .arg("--registry")
-        .arg(fixture_registry())
+        .arg(make_wal_dir_registry(project.path()))
         .arg("--assume-yes")
         .assert()
         .success();
@@ -3576,7 +3576,7 @@ fn reinstall_regenerates_deleted_boot_artifacts() {
     // snippet — boot is recomputed from the materialised tree, not lost.
     let index_body = fs::read_to_string(&index).unwrap();
     assert!(
-        index_body.contains("vibedeps/flow-wal/0.1.0/boot/10-flow-wal.md"),
+        index_body.contains("vibedeps/flow-wal/0.2.0/spec/boot/10-flow-wal.md"),
         "regenerated INDEX.md must name the materialised dependency boot:\n{index_body}"
     );
 }
@@ -3619,16 +3619,16 @@ fn reinstall_non_force_bails_when_vibedeps_slot_missing() {
     init_project(project.path());
     vibe()
         .arg("install")
-        .arg("org.vibevm/wal")
+        .arg("org.vibevm.world/wal")
         .arg("--path")
         .arg(project.path())
         .arg("--registry")
-        .arg(fixture_registry())
+        .arg(make_wal_dir_registry(project.path()))
         .arg("--assume-yes")
         .assert()
         .success();
 
-    // Delete the materialised slot — the lockfile still records org.vibevm/wal.
+    // Delete the materialised slot — the lockfile still records org.vibevm.world/wal.
     fs::remove_dir_all(project.path().join("vibedeps/flow-wal")).unwrap();
 
     vibe()
@@ -3646,11 +3646,11 @@ fn reinstall_reports_json() {
     init_project(project.path());
     vibe()
         .arg("install")
-        .arg("org.vibevm/wal")
+        .arg("org.vibevm.world/wal")
         .arg("--path")
         .arg(project.path())
         .arg("--registry")
-        .arg(fixture_registry())
+        .arg(make_wal_dir_registry(project.path()))
         .arg("--assume-yes")
         .assert()
         .success();
@@ -3698,7 +3698,7 @@ fn reinstall_force_refetches_corrupted_vibedeps() {
     vibe()
         .env("VIBE_REGISTRY_CACHE", &cache)
         .arg("install")
-        .arg("org.vibevm/wal")
+        .arg("org.vibevm.world/wal")
         .arg("--path")
         .arg(project.path())
         .arg("--assume-yes")
@@ -3708,10 +3708,10 @@ fn reinstall_force_refetches_corrupted_vibedeps() {
     // Corrupt a content file inside the materialised `vibedeps/` slot.
     let corrupted = project
         .path()
-        .join("vibedeps/flow-wal/0.1.0/spec/flows/wal/WAL-PROTOCOL.md");
+        .join("vibedeps/flow-wal/0.2.0/spec/flows/wal/WAL-PROTOCOL.md");
     assert!(
         corrupted.is_file(),
-        "fixture org.vibevm/wal ships WAL-PROTOCOL.md"
+        "org.vibevm.world/wal ships WAL-PROTOCOL.md"
     );
     fs::write(&corrupted, "CORRUPTED — hand-edited garbage").unwrap();
 
@@ -3736,5 +3736,5 @@ fn reinstall_force_refetches_corrupted_vibedeps() {
     let lock: vibe_core::manifest::Lockfile =
         toml::from_str(&fs::read_to_string(project.path().join("vibe.lock")).unwrap()).unwrap();
     assert_eq!(lock.packages.len(), 1);
-    assert_eq!(lock.packages[0].version.to_string(), "0.1.0");
+    assert_eq!(lock.packages[0].version.to_string(), "0.2.0");
 }

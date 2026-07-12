@@ -1,10 +1,12 @@
 //! Shared helpers for the `vibe-cli` integration-test binaries.
 //!
-//! The fixture registry most tests run against is the hand-written
-//! `fixtures/registry/` tree that ships in the vibevm repo itself (the
-//! canonical `org.vibevm/wal` fixture per `VIBEVM-SPEC.md` §13). The git
-//! builders below construct per-package bare registries, single-package
-//! repos, and redirect stubs in temp dirs for the hermetic git-backed walks.
+//! The `wal` integration tests dogfood the real `org.vibevm.world/wal`
+//! package that ships in this repo at `packages/org.vibevm.world/wal/`
+//! (the loading model installs the actual product, not a stale mini-copy
+//! fixture). The non-`wal` tests still run against the hand-written
+//! `fixtures/registry/` tree. The git builders below construct per-package
+//! bare registries, single-package repos, and redirect stubs in temp dirs
+//! for the hermetic git-backed walks.
 //!
 //! Each test binary compiles its own copy of this module and uses only a
 //! subset of the helpers, so dead-code analysis is silenced for the module
@@ -21,18 +23,41 @@ pub fn vibe() -> Command {
 }
 
 /// The `fixtures/registry/` directory at the repo root holds the
-/// hermetic fixture registry the e2e tests run against. Layout is the
-/// M0/M1.1 monorepo shape (`<kind>/<name>/v<ver>/…`); the directory
-/// is intentionally separate from the future `packages/` tree (where
-/// vibevm dogfoods its own packages — keeps test fixtures and live
-/// artefacts visually distinct).
+/// hermetic fixture registry the non-`wal` e2e tests run against.
+/// Layout is the monorepo shape (`<group>/<name>/v<ver>/…`). The `wal`
+/// tests instead dogfood the real `org.vibevm.world/wal` package from
+/// `packages/` — see [`real_wal_dir`] / [`make_wal_dir_registry`].
 pub fn fixture_registry() -> PathBuf {
+    workspace_root().join("fixtures").join("registry")
+}
+
+/// The vibevm workspace root: two `parent()`s up from this crate's
+/// manifest dir (`crates/vibe-cli` → workspace). Same computation
+/// [`fixture_registry`] builds on.
+pub fn workspace_root() -> PathBuf {
     let crate_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
-    let workspace = crate_dir
+    crate_dir
         .parent()
         .and_then(|p| p.parent())
-        .expect("workspace root");
-    workspace.join("fixtures").join("registry")
+        .expect("workspace root")
+        .to_path_buf()
+}
+
+/// The real `org.vibevm.world/wal@0.2.0` package as it ships in this
+/// repo — the tree the `wal` e2e tests dogfood rather than a fixture.
+fn real_wal_dir() -> PathBuf {
+    workspace_root().join("packages/org.vibevm.world/wal/v0.2.0")
+}
+
+/// Build a directory registry under `<root>/wal-registry/` carrying the
+/// real `org.vibevm.world/wal@0.2.0` package, copied verbatim from
+/// [`real_wal_dir`]. Returns the registry dir (`<root>/wal-registry`) so
+/// it can be passed straight to `vibe install --registry <dir>`.
+pub fn make_wal_dir_registry(root: &Path) -> PathBuf {
+    let registry = root.join("wal-registry");
+    let pkg = registry.join("org.vibevm.world").join("wal").join("v0.2.0");
+    copy_tree(&real_wal_dir(), &pkg);
+    registry
 }
 
 pub fn init_project(dir: &Path) {
@@ -66,11 +91,11 @@ pub fn run_git(cwd: &Path, args: &[&str]) {
 /// Build a per-package bare git registry under `root/`: one bare repo
 /// per package, content at the repo root, tagged `v<semver>`.
 ///
-/// For this test we seed exactly one package: `org.vibevm/wal@0.1.0` →
-/// `<root>/org.vibevm_wal.git`. The "registry" is then `<root>` itself —
-/// `MultiRegistryResolver` composes per-package URLs by appending
-/// `<group>_<name>.git` to the org URL (the `fqdn` naming convention,
-/// PROP-008 §3).
+/// For this test we seed exactly one package: `org.vibevm.world/wal@0.2.0`
+/// → `<root>/org.vibevm.world_wal.git`. The "registry" is then `<root>`
+/// itself — `MultiRegistryResolver` composes per-package URLs by
+/// appending `<group>_<name>.git` to the org URL (the `fqdn` naming
+/// convention, PROP-008 §3).
 ///
 /// Returns the org root path (not any single repo), since the install
 /// flow points `[[registry]]` at the org URL.
@@ -82,13 +107,14 @@ pub fn make_per_package_registry(root: &Path) -> PathBuf {
     run_git(&src, &["config", "user.name", "Test"]);
 
     // Per-package layout: package contents live AT THE ROOT of the repo,
-    // not under `<group>/<name>/v<ver>/`.
-    copy_tree(&fixture_registry().join("org.vibevm/wal/v0.1.0"), &src);
+    // not under `<group>/<name>/v<ver>/`. Seed it from the real
+    // `org.vibevm.world/wal@0.2.0` package (dogfood, not a fixture).
+    copy_tree(&real_wal_dir(), &src);
     run_git(&src, &["add", "-A"]);
-    run_git(&src, &["commit", "-m", "org.vibevm/wal@0.1.0"]);
-    run_git(&src, &["tag", "v0.1.0"]);
+    run_git(&src, &["commit", "-m", "org.vibevm.world/wal@0.2.0"]);
+    run_git(&src, &["tag", "v0.2.0"]);
 
-    let bare = root.join("org.vibevm_wal.git");
+    let bare = root.join("org.vibevm.world_wal.git");
     run_git(
         root,
         &[
@@ -147,10 +173,10 @@ pub fn make_single_package_bare_repo(root: &Path) -> PathBuf {
     run_git(&src, &["init", "--initial-branch=main"]);
     run_git(&src, &["config", "user.email", "t@example.com"]);
     run_git(&src, &["config", "user.name", "Test"]);
-    copy_tree(&fixture_registry().join("org.vibevm/wal/v0.1.0"), &src);
+    copy_tree(&real_wal_dir(), &src);
     run_git(&src, &["add", "-A"]);
-    run_git(&src, &["commit", "-m", "org.vibevm/wal@0.1.0"]);
-    run_git(&src, &["tag", "v0.1.0"]);
+    run_git(&src, &["commit", "-m", "org.vibevm.world/wal@0.2.0"]);
+    run_git(&src, &["tag", "v0.2.0"]);
     let bare = root.join("flow-wal-direct.git");
     run_git(
         root,
