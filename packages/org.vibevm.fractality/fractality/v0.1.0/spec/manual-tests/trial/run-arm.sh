@@ -1,12 +1,15 @@
 #!/usr/bin/env bash
-# C2 Ф6 trial runner (MT-C2-01 / MT-C2-04): one cold GLM-served boss
-# session over the staged mini_logfmt repo. Thin launcher by the
+# Ф6 trial runner (C2: MT-C2-01/-04; C3: MT-C3-01): one cold GLM-served
+# boss session over the staged mini_logfmt repo. Thin launcher by the
 # language law; the experiment design lives in the MT documents.
 #
-#   run-arm.sh a|b <run-number>
+#   run-arm.sh a|b|g <run-number>
 #
-# Arm a: snippet-in-CLAUDE.md only (the Ф6 baseline arm).
+# Arm a: snippet-in-CLAUDE.md only (the C2 Ф6 baseline arm).
 # Arm b: same + `fractality harness install` (hooks + statusline).
+# Arm g: C3 gated arm (MT-C3-01) — the menu is prefixed with the RLM
+#        preamble (`preamble-g.md`); the decision journal + escalations
+#        are collected too.
 #
 # Never echoes secret values (set +x is load-bearing).
 set -euo pipefail
@@ -27,7 +30,14 @@ mkdir -p "$OUT" "$HOME_DIR" "$SCRATCH/cc-config" "$SCRATCH/userhome"
 
 # --- staging repo (worktree-mode packets need git + main + clean tree)
 cp -r "$TRIAL_DIR/staging" "$PROJ"
-cp "$TRIAL_DIR/menu.md" "$SCRATCH/menu.md"
+# Arm g (MT-C3-01) prefixes the RLM preamble so the boss is told to reach
+# for the need-gate verbs (C2 F23: a -p boss must be instructed to use
+# them); other arms get the bare menu.
+if [ "$ARM" = "g" ]; then
+  cat "$TRIAL_DIR/preamble-g.md" "$TRIAL_DIR/menu.md" > "$SCRATCH/menu.md"
+else
+  cp "$TRIAL_DIR/menu.md" "$SCRATCH/menu.md"
+fi
 (cd "$PROJ" && git init -q -b main && git add -A \
   && git -c user.name=trial -c user.email=trial@local commit -qm "staging baseline")
 
@@ -106,10 +116,12 @@ set -e
 echo "boss_exit=$BOSS_EXIT wall_secs=$(( $(date +%s) - START_TS ))" | tee -a "$OUT/run-info.txt"
 
 # --- collect the bus facts, then stop the daemon
-"$EXE" ps --json    > "$OUT/runs.json"        || true
-"$EXE" session ls   > "$OUT/sessions.txt"     || true
-"$EXE" stats --json > "$OUT/stats.json"       || true
-"$EXE" scoreboard   > "$OUT/scoreboard.txt"   || true
+"$EXE" ps --json      > "$OUT/runs.json"        || true
+"$EXE" session ls     > "$OUT/sessions.txt"     || true
+"$EXE" stats --json   > "$OUT/stats.json"       || true
+"$EXE" scoreboard     > "$OUT/scoreboard.txt"   || true
+"$EXE" escalations --json > "$OUT/escalations.json" || true
+"$EXE" tree --json    > "$OUT/forest.json"      || true
 "$EXE" mc stop >/dev/null || true
 
 RUNS=$(python -c "import json,sys;print(len(json.load(open(sys.argv[1],encoding='utf-8'))))" "$OUT/runs.json" 2>/dev/null || echo "?")
