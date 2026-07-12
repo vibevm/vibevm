@@ -64,28 +64,23 @@ initiative re-run, MT-C3-02 help/hurt), their evidence preserved under
 
 ## Next-steps recipe (cold start)
 
-Only **task 2 (validated Stage C)** remains, and its trial is firing. When
-`fire-advise.log` shows `ALL-ADVISE-DONE`:
+**The five-task goal is done — there is no pending step.** What remains is
+owner-commissioned follow-up work, all filed in **`plans/postponed/PP-005-trial-followups.md`**
+(and summarized in `WAL.md` §Next):
 
-1. **Score the help/hurt trial:** `cd fractality/v0.1.0 && python
-   spec/manual-tests/trial/score-advise.py` (it drops each hidden test into a
-   run's proj-final, cargo-tests it, pools per-arm pass rates). Rule PR-adv-1
-   (ADVISED pass rate > ALONE?), PR-adv-2 (each advised run issued ≥1 advise
-   call?), PR-adv-3 (no more failures advised than alone?). Record verdicts in
-   MT-C3-02 §Recorded runs + fill the group README + commit. NOTE the 2-tier
-   caveat: this measures one point (glm-5.2 advises glm-5-turbo), not the full
-   RD-10 inversion.
-2. **Write C-3 — the uncertainty-trigger doc** (the caller-behaviour protocol:
-   self-consistency spread / trace length / verbalized confidence as consult
-   signals), thresholds informed by the trial data. Commit → task 2 done →
-   all five goal tasks done → the Stop-hook clears.
-3. If the trial produced a null/odd result (e.g. the caller never consulted),
-   that is itself recordable — the machinery (`advise` verb + bar + ladder) is
-   built and tested regardless; the trial validates the *effect*, and a null
-   is an honest finding, not a blocker.
+1. **FU-1 — the advisor forced-consult re-run** (MT-C3-02 returned a null
+   mechanism; re-run with a mandatory-step preamble or a forcing hook, pin
+   task-1's function name, add a 3rd model tier). ADVISOR-PLAN §6 is the
+   protocol; the thresholds are the deferred measurement.
+2. **FU-2 — the PP-001 PostToolUse nudge** (MT-C2-05 replicated Ф6 — F23
+   leaves the `-p` nudge dead; move it to a re-entered event, re-run).
+3. **FU-3 — the PP-004 clean-N=3 re-fire** (MT-C3-03 run 3 was a technical
+   failure; a completed schema-worker turns P-C3-b CONFIRMED).
 
-The C-4 build (run-advise.sh + hidden tests + scorer) is already committed
-(`2b210bc`, GLM-built + reviewed) — nothing to rebuild.
+Each is a paid GLM re-run of a frozen protocol with one small change; none
+blocks anything, and each must preserve its evidence (`save-results.sh
+<group>` → committed `reports/trial-results/`). Resume is report-then-wait:
+the owner picks which follow-up, if any, to commission.
 
 ## Non-obvious findings this session
 
@@ -137,14 +132,19 @@ New this session: core `credibility.rs`, cli `advise.rs`.
 ## Recent commit chain (newest first)
 
 ```
+2aab337 docs(fractality): file PP-005 — the three trial follow-ups
+edee7f7 docs: the five-task goal is complete — final checkpoint
+27528b8 docs(fractality): the advisor uncertainty-trigger protocol (C-3) — Stage C closes
+40382b4 test(fractality): fire + score the MT-C3-02 help/hurt trial — the consult gap
+2b210bc test(fractality): the MT-C3-02 help/hurt runner + hidden tests + scorer
+0c74180 test(fractality): fire + score the PP-001 MT-C2-05 initiative re-run
+37c01d1 test(fractality): the MT-C3-02 help/hurt menu + paired preambles (Stage C)
+c8de50f docs: mid-session checkpoint — 3 of 5 tasks done, PP-001 firing
 c85d032 feat(fractality): surface worker credibility on the cold board (PP-002 done)
 ae8544f feat(fractality): the worker-credibility query (PP-002 core)
-23744f3 docs(fractality): mark PP-004 done in the registry
 23ab679 test(fractality): fire + score the PP-004 gated re-run (MT-C3-03)
-9932b9c test(fractality): date + group the trial-results, one README per group
 552b559 test(fractality): preserve paid trial evidence durably + make it a rule
 dbdb030 test(fractality): the PP-004 gated re-run runner + scorer (arm g2)
-7623a05 docs(fractality): arm the PP-004 gated re-run — MT-C3-03 + the two menu tasks
 d28f2c4 docs(fractality): resolve MT-C2-05 RP5 — the initiative re-run is armed
 91cc156 docs(fractality): pre-register MT-C3-02 — the advisor help/hurt trial
 d601eb2 feat(fractality): raise the turn caps for trial completion (PP-004 item 1)
