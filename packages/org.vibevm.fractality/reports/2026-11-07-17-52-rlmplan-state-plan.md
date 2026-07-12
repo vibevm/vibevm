@@ -11,12 +11,14 @@ exit code 5 + `fractality escalations` inbox with call-tree-root
 attribution (Ф4.2); the `/escalate` endpoint + `McClient::escalate` +
 `escalation.md` (Ф4.3a); the broker `escalate(reason, needs)` MCP tool
 (Ф4.3b). Pod leg carved to `http_pods.rs`/`pod_leg.rs` for headroom. Floor
-green throughout. **Ф5 COMPLETE** (FD-9: `output.verifier` marker +
-cold-verifier suppression `85ac2a7`; verifier-accept surfaced `af977a4`;
-test-gate 213). **Delegation switched opencode→CC+z.ai (works — see
-scoreboard).** Next: **Ф6 — trial (D-C3-9)**: pre-register MT-C3-01 FIRST
-(§10.7 BINDING), then the RP-C3-2 pre-authorized paid arms → Ф7 (close) →
-PP-003. Phase reports: `…-f5-acceptance.md`, `…-f4-escalation.md`._
+green throughout. Ф5 COMPLETE (FD-9 acceptance). **Ф6 COMPLETE — the trial
+FIRED: gated cold boss delegated 44.4% vs 16.7% C2 baseline (~2.7×), and
+fractality ran end to end as a product for the first time** (3 GLM workers
+completed with results, 1 acceptance 1/1; P-C3-c confirmed). **Delegation
+switched opencode→CC+z.ai (works — it IS the trial mechanism).** Next:
+**Ф7 — close Stage B** (verdicts, deferrals, campaign-close, WAL), then
+**PP-003** (Option C advisor). Phase reports: `…-f6-trial.md`,
+`…-f5-acceptance.md`, `…-f4-escalation.md`._
 
 ## Goal & operating contract (owner, 2026-07-11)
 
@@ -179,8 +181,14 @@ nudge (RD-12 settings-writes precedent), mc-client, cli surfaces.
   - [x] Ф5.2 `RunRecord.verifier` denorm + verifier-accept verdict
         (ACCEPTED/REJECTED) in `run`/`show` (`af977a4`). Report:
         `reports/2026-12-07-05-26-campaign3-f5-acceptance.md`.
-- [ ] Ф6 trial (D-C3-9) — **pre-reg MT-C3-01 FIRST, then RP-C3-2 paid arms**
-- [ ] Ф7 close
+- [x] **Ф6 trial (D-C3-9) — COMPLETE** — MT-C3-01 pre-registered (`3c8ea76`)
+      → harness (`1c4a8f8`) → 3 paid GLM gated-boss runs → recorded
+      (`67a3e4a`). **Gated delegation 44.4% vs 16.7% C2 baseline (~2.7×);
+      fractality ran end to end as a product for the first time** (3 workers
+      completed, 1 acceptance 1/1). P-C3-c CONFIRMED, P-C3-a SUPPORTED,
+      P-C3-b/d inconclusive (menu gap). Report: `…-f6-trial.md`. Owner
+      sign-off pending.
+- [ ] Ф7 close — verdicts, deferrals ledger, campaign-close report, WAL
 
 ## Delegation scoreboard (running)
 

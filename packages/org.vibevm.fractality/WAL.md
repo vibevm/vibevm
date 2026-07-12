@@ -1,14 +1,16 @@
 # fractality — WAL (project continuation state)
 
-_Updated: 2026-07-12 ~05:26 (**Campaign 3 Stage B — Ф5 COMPLETE: the
-acceptance channel is in**). Ф0–Ф4 CLOSED (need-gate → descent → ascent);
-**Ф5 CLOSED this session** (FD-9): `output.verifier` marker + cold-verifier
-suppression (**Ф5.1** `85ac2a7` — `check_verifier_has_work` refuses a
-verifier over an empty/resultless tree); `RunRecord.verifier` denorm +
-verifier-accept verdict (ACCEPTED/REJECTED) in `run`/`show` (**Ф5.2**
-`af977a4`). Floor green (test-gate 213). **Next: Ф6 — trial (D-C3-9):
-pre-register MT-C3-01 FIRST (§10.7 BINDING), then RP-C3-2 paid arms.**
-Phase reports: `…-f5-acceptance.md`, `…-f4-escalation.md`._
+_Updated: 2026-07-12 ~06:44 (**Campaign 3 Stage B — Ф6 COMPLETE: the trial
+FIRED and fractality ran end to end as a product for the first time**).
+Ф0–Ф5 CLOSED (need-gate → descent → ascent → acceptance). **Ф6 CLOSED this
+session** (D-C3-9): MT-C3-01 pre-registered (`3c8ea76`) → harness `run-arm.sh
+g` + `preamble-g.md` (`1c4a8f8`) → 3 paid GLM gated-boss runs → recorded +
+`score-g.py` (`67a3e4a`). **Gated delegation 8/18 ≈ 44.4% vs C2 naive
+baseline 16.7% (~2.7×); 3 GLM workers completed with a worker result, 1
+acceptance 1/1.** P-C3-c CONFIRMED, P-C3-a SUPPORTED, P-C3-b/d inconclusive
+(menu gap). **Next: Ф7 — close Stage B** (verdicts, deferrals, campaign
+report, WAL), then **PP-003** (Option C advisor). Phase reports:
+`…-f6-trial.md`, `…-f5-acceptance.md`._
 
 ## Current state
 
@@ -37,38 +39,38 @@ Phase reports: `…-f5-acceptance.md`, `…-f4-escalation.md`._
   not be re-read; per-slice status; delegation scoreboard). Plan §9 ledger
   = commit map + scoping decisions.
 
-## Next — Ф6 (trial, D-C3-9)
+## Next — Ф7 (close Stage B)
 
 Reading order to resume: workspace `CLAUDE.md` → this WAL → `CONTINUE.md`
-→ the state-plan tracker → plan §10 (BINDING) + §9 (ledger) + §6/§7/§8.
+→ the state-plan tracker → plan §10 (BINDING) + §9 (ledger) + §7/§8.
 
-**Ф6 (D-C3-9), from plan §6:** pre-register **MT-C3-01** — write + COMMIT
-the pre-registration FIRST (§10.7 pre-reg-first is BINDING, NO exceptions)
-— then fire the budget-matched paid arms (**RP-C3-2 PRE-AUTHORIZED**
-2026-07-11: «я прямо сейчас разрешаю делать эти платные прогоны» — no
-second word needed once the pre-reg lands), score, record fatigue +
-uncertainty facts. GLM cold boss (RP1 precedent); an orchestration-collapse
-probe (two isolated siblings, one seeded with a misleading early action).
-Budget posture (arm count, spend cap) chosen at commissioning per the
-RP1/RP5 precedent.
+**Ф7 (from plan §6): close Stage B.** The code phases are all done and the
+trial fired; Ф7 is the wrap-up:
+- **Verdicts** — record each §7 prediction's verdict (P-C3-a SUPPORTED,
+  P-C3-b INCONCLUSIVE, P-C3-c CONFIRMED, P-C3-d INCONCLUSIVE) in the plan
+  §7 / §8 and mark the D-C3 decisions all landed in §9.
+- **Deferrals ledger** — the trial follow-ups (worker turn caps, a menu
+  with a schema task + a Silo task, a `fractality decisions` read verb) and
+  the Ф4/Ф5 follow-ups (worker-stop enforcement, tree→verifier query,
+  acceptance-feeds-routing) belong in `plans/postponed.md` if not already.
+- **Campaign-close report** in `reports/` + a `-completed-plan.md` dashboard
+  stage; refresh the fractality status line in the host `WORKSPACES.md`.
+- **WAL** to the Stage-B-complete checkpoint.
 
-**⚠ CAUTION — Ф6 spends REAL money and is the first true end-to-end paid
-use of fractality.** Before firing scored arms, verify the system actually
-runs a real GLM worker end to end (spawn → work → collect) — expect
-integration surprises (this is the pilot's first live product run). Seams
-to read at slice time: `spec/manual-tests/` MT files, the Campaign-2 trial
-reports (RP1/RP5 precedent + arm design), the initiative/trial harness,
-and the CC+z.ai launch recipe (delegation scoreboard) — the arms ARE GLM
-workers under Claude Code, the same mechanism now used for delegation.
+Then the owner's follow-on goal (2026-07-12): **PP-003 — Option C, the
+advisor slice (D-C3-7)**: read `plans/postponed/PP-003-…`, research it, and
+execute it to completion. Advisor = a worker-shaped run with an `advice`
+packet type, no ownership transfer; `advisor_enabled ⇐ caller_class ≥
+medium`; uncertainty-triggered; accounting on the caller's budget.
 
-**Ф5 follow-ups (non-blocking):** no "given a work run, find its verifier"
-query (tree→acceptance) — needs `context_from` denorm or a scan; acceptance
-does not yet feed routing (FD-5 soft-label table, off the D-C3-8 seam).
+**Standing follow-ups (non-blocking):** Ф4 — worker-stop after escalate is
+cooperative not enforced; Ф5 — no tree→verifier query; Ф6 — worker turn
+caps bit, menu exercised neither the schema gate (P-C3-b) nor a Silo task
+(P-C3-d).
 
-Each slice = one commit, floor green after each; specmap re-mint in-commit
-on drift (ANY code change in a scoped file drifts specmap; re-mint every
-slice). Floor via backgrounded cargo; delegation via CC+z.ai GLM for
-mechanical/bulk/run-and-report.
+Each code slice = one commit, floor green after each; specmap re-mint
+in-commit on drift. Floor via backgrounded cargo; delegation via CC+z.ai
+GLM (the proven mechanism — it is also what the trial arms run on).
 
 ## Constraints (do not violate without discussion)
 

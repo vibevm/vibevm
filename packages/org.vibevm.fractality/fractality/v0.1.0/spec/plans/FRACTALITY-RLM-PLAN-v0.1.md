@@ -321,6 +321,30 @@ record or a scan; the verdict being first-class satisfies the plan's "can
 gate completion" reading. Acceptance-feeds-routing (FD-5 soft-label table)
 is later work off the D-C3-8 seam.
 
+- Ф6 trial (D-C3-9): MT-C3-01 pre-registered (`3c8ea76`, §10.7 gate) →
+  harness `run-arm.sh g` + `preamble-g.md` (`1c4a8f8`) → 3 paid GLM
+  cold-boss runs fired → recorded runs + `score-g.py` (`67a3e4a`).
+  **Result: gated arm delegated 8/18 ≈ 44.4% vs C2 naive baseline 16.7%
+  (~2.7×); fractality ran end to end as a product for the first time**
+  (3 workers completed with a worker result, 1 acceptance 1/1). P-C3-c
+  CONFIRMED (0 wall-budget overruns), P-C3-a SUPPORTED (route, not
+  over-decompose), P-C3-b/d INCONCLUSIVE (menu set no output_schema, had no
+  Silo task). **Ф6 COMPLETE.** Report:
+  `reports/2026-12-07-06-44-campaign3-f6-trial.md`. Owner sign-off on the
+  recorded runs pending.
+
+**Scoping decision — single-arm trial + smoke-test-first (Ф6).** MT-C3-01
+fired ONE gated arm (N=3), not a fresh 2-arm A/B: the predictions are
+observations of the gated system and MT-C2-01 arm A (16.7%, same menu) is
+the naive comparator, halving the spend (RP1/RP5 posture). Run 1 was a
+readiness probe — the end-to-end loop (gate→spawn→pod→real GLM worker→
+collect→journal) was confirmed live before the rest of the ≤8-session cap
+was committed. Trial follow-ups (a future menu): raise worker turn caps
+(30 bit hard), add a structured-output task (exercise P-C3-b) + a genuine
+Silo task (exercise P-C3-d), add a `fractality decisions` read verb (make
+P-C3-a a hard number). All deferred — Stage B built the machinery and
+proved it runs.
+
 **Scoping decision — decision-journal producer (D-C3-8).** The journal
 must record REAL need-gate decisions, so the producer cannot be MC
 re-deriving one at `register_run` — MC lacks the boss's task-shape
