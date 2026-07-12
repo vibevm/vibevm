@@ -9,8 +9,13 @@ GLM gated-boss runs → delegation 8/18 ≈ 44.4% vs C2 naive baseline 16.7%
 (3 workers completed with a worker result, 1 acceptance 1/1). P-C3-c
 CONFIRMED, P-C3-a SUPPORTED, P-C3-b/d inconclusive (menu gaps → PP-004).
 Delegation switched opencode→CC+z.ai (works — it IS the trial mechanism).
-**Next: PP-003 — Option C, the advisor slice (D-C3-7)** (owner follow-on
-goal 2026-07-12). Campaign-close: `reports/…-campaign3-close.md`._
+**PP-003 advisor CORE also landed this session** (D-C3-7): the `output.advice`
+marker + the RD-10 caller-class bar (`check_advisor_caller_class` refuses an
+advice call whose caller is below `advisor_enabled`) + denorm + surfacing +
+tests (`40687ca`), floor green (test-gate 215). Plan:
+`FRACTALITY-ADVISOR-PLAN-v0.1`. **Next: a validated Stage C** (the advisor
+help/hurt trial + uncertainty trigger + ladder-data) when the owner
+commissions it. Campaign-close: `reports/…-campaign3-close.md`._
 
 ## Current state
 
@@ -39,21 +44,23 @@ goal 2026-07-12). Campaign-close: `reports/…-campaign3-close.md`._
   not be re-read; per-slice status; delegation scoreboard). Plan §9 ledger
   = commit map + scoping decisions.
 
-## Next — PP-003 (Option C, the advisor slice, D-C3-7)
+## Next — a validated Stage C (advisor trial + trigger)
 
 Reading order to resume: workspace `CLAUDE.md` → this WAL → `CONTINUE.md`
-→ the state-plan tracker → `plans/postponed/PP-003-option-c-advisor-slice.md`
-→ plan §4 (D-C3-7) + §10 (BINDING).
+→ the state-plan tracker → `FRACTALITY-ADVISOR-PLAN-v0.1` (§3 deferred) →
+`plans/postponed/PP-003-…` + PP-004.
 
-**Stage B is DONE.** The owner's follow-on goal (2026-07-12): take **PP-003
-— Option C, the advisor slice (D-C3-7)**, research it, and execute it to
-completion. From the plan §4 D-C3-7: advisor = a worker-shaped run with an
-`advice` packet type, **no ownership transfer**; `advisor_enabled ⇐
-caller_class ≥ medium`; uncertainty-triggered; the accounting line is the
-caller's budget (revisit trigger: first field data). It was cut from
-Stage B's Option B (RP-C3-1) into PP-003. Read the PP-003 doc first — it
-holds the full task, unblock, and pointers. This is Stage C scope; treat
-it as its own mandate (its own plan/pre-reg discipline if it grows).
+**Stage B is DONE and the PP-003 advisor CORE landed** (`40687ca`): the
+`output.advice` marker + the RD-10 caller-class bar (enforced at admission)
++ denorm + `show` surfacing + tests, all floor-green. The advisor is now "a
+worker run with an `advice` packet type". **Deferred to a validated Stage C**
+(FRACTALITY-ADVISOR-PLAN §3): the uncertainty trigger (caller behaviour,
+measured thresholds), the ladder-as-routing-data, a `fractality advise`
+verb, and the **help/hurt trial** (an MT-C3-02-shaped pre-registration —
+prove advice helps a medium caller, does not hurt a weak one; the RD-10
+inversion is the falsifier). Commissioned when the owner mandates Stage C.
+The core built this session is the foundation; treat the trial as its own
+mandate with its own pre-reg discipline.
 
 **Standing follow-ups (non-blocking, all filed):** Ф4 — worker-stop after
 escalate is cooperative not enforced; Ф5 — no tree→verifier query,

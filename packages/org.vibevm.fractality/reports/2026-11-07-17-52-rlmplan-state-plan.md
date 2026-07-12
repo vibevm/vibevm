@@ -17,9 +17,12 @@ fractality ran end to end as a product for the first time** (3 GLM workers
 completed with results, 1 acceptance 1/1; P-C3-c confirmed). **Ф7 CLOSED —
 STAGE B COMPLETE: the RLM is built and it runs** (§7 verdicts recorded,
 PP-004 filed, campaign-close report). **Delegation switched opencode→CC+z.ai
-(works — it IS the trial mechanism).** Next: **PP-003 — Option C, the
-advisor slice** (owner follow-on goal). Reports: `…-campaign3-close.md`,
-`…-f6-trial.md`, `…-f5-acceptance.md`._
+(works — it IS the trial mechanism).** **PP-003 advisor CORE also landed**
+(`40687ca`): `output.advice` marker + the RD-10 caller-class bar +
+denorm/surfacing/tests, floor green (test-gate 215); plan
+`FRACTALITY-ADVISOR-PLAN-v0.1`. **Next: a validated Stage C** (advisor
+help/hurt trial + trigger) when the owner commissions it. Reports:
+`…-campaign3-close.md`, `…-f6-trial.md`._
 
 ## Goal & operating contract (owner, 2026-07-11)
 
