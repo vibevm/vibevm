@@ -277,7 +277,7 @@
       "crate_name": "fractality-initiative",
       "file": "crates/fractality-initiative/src/scoreboard.rs",
       "item_kind": "mod",
-      "line": 12,
+      "line": 13,
       "symbol": "fractality_initiative::scoreboard"
     },
     {
@@ -842,7 +842,7 @@
     {
       "file": "crates/fractality-initiative/src/scoreboard.rs",
       "from_symbol": "fractality_initiative::scoreboard",
-      "line": 12,
+      "line": 13,
       "provenance": "authored",
       "uri": "spec://fractality/PROP-001#sessions",
       "verb": "implements"

@@ -92,7 +92,21 @@ pub(crate) async fn hook(home: &camino::Utf8Path, event: &str) -> u8 {
                     let now = fractality_core::time::now_ms();
                     let today = fractality_core::time::utc_date_string(now);
                     let month = today[..7].to_owned();
-                    fractality_initiative::render_board(&global, Some(&session), &today, &month)
+                    // PP-002: dated proof workers self-verify here, best-effort
+                    // (a fetch miss just omits the line — the hook never errors).
+                    let credibility = client
+                        .runs(None, None)
+                        .await
+                        .ok()
+                        .and_then(|runs| fractality_core::worker_credibility(&runs));
+                    fractality_initiative::render_board(
+                        &global,
+                        Some(&session),
+                        credibility.as_ref(),
+                        now,
+                        &today,
+                        &month,
+                    )
                 }
                 _ => return EXIT_OK,
             };

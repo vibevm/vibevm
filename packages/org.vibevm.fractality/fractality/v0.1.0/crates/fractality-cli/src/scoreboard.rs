@@ -69,9 +69,25 @@ pub(crate) async fn scoreboard(
         }
         return EXIT_OK;
     }
+    // PP-002: the worker-credibility fact, computed from the run snapshot
+    // (best-effort — a fetch failure just omits the line, never fails the
+    // board). `worker_credibility` returns None unless a completed-green
+    // acceptance backs it (D7).
+    let credibility = client
+        .runs(None, None)
+        .await
+        .ok()
+        .and_then(|runs| fractality_core::worker_credibility(&runs));
     print!(
         "{}",
-        fractality_initiative::render_board(&global, session_metrics.as_ref(), &today, &month)
+        fractality_initiative::render_board(
+            &global,
+            session_metrics.as_ref(),
+            credibility.as_ref(),
+            now,
+            &today,
+            &month,
+        )
     );
     EXIT_OK
 }

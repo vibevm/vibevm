@@ -7,6 +7,7 @@
 //! outcomes, tokens, parked questions with ages, the monthly web-tool
 //! quota burn. No invented savings numbers (D7).
 
+use fractality_core::CredibilityFact;
 use fractality_core::api::{MetricsResponse, SessionMetricsResponse};
 
 specmark::scope!("spec://fractality/PROP-001#sessions");
@@ -53,6 +54,8 @@ pub fn month_web_calls(global: &MetricsResponse, month: &str) -> u64 {
 pub fn render_board(
     global: &MetricsResponse,
     session: Option<&SessionMetricsResponse>,
+    credibility: Option<&CredibilityFact>,
+    now_ms: u64,
     today: &str,
     month: &str,
 ) -> String {
@@ -99,6 +102,19 @@ pub fn render_board(
         month_web_calls(global, month),
         global.totals.output_tokens,
     ));
+    if let Some(cred) = credibility {
+        // PP-002 (D7): rendered ONLY when a real completed-green acceptance
+        // backs it (`worker_credibility` returned Some). This is the answer to
+        // the Ф6 F24 keep-reason ("workers can't self-verify here") — dated
+        // proof, on the surface the boss reads before it decides to delegate.
+        out.push_str(&format!(
+            "workers self-verify here: acceptance {}/{} green, last proven {} ago (profile {})\n",
+            cred.acceptance_passed,
+            cred.acceptance_total,
+            fractality_core::time::format_duration_ms(now_ms.saturating_sub(cred.proven_ts_ms)),
+            cred.profile,
+        ));
+    }
     out
 }
 
@@ -204,7 +220,7 @@ mod tests {
             },
         );
         let s = session_fixture(2, 1, 2, 0, vec![parked("Which branch?", 120_000)]);
-        let board = render_board(&global, Some(&s), "2026-07-10", "2026-07");
+        let board = render_board(&global, Some(&s), None, 0, "2026-07-10", "2026-07");
         let lines: Vec<&str> = board.lines().collect();
         assert_eq!(
             lines[0],
@@ -227,7 +243,7 @@ mod tests {
     #[test]
     fn a_zero_run_box_renders_the_cold_start_board_not_zero_counters() {
         let global = MetricsResponse::default();
-        let board = render_board(&global, None, "2026-07-10", "2026-07");
+        let board = render_board(&global, None, None, 0, "2026-07-10", "2026-07");
         let lines: Vec<&str> = board.lines().collect();
         assert_eq!(
             lines[0],
@@ -247,7 +263,7 @@ mod tests {
     fn the_cold_board_keeps_the_live_session_line() {
         let global = MetricsResponse::default();
         let s = session_fixture(0, 3, 0, 0, vec![]);
-        let board = render_board(&global, Some(&s), "2026-07-10", "2026-07");
+        let board = render_board(&global, Some(&s), None, 0, "2026-07-10", "2026-07");
         let lines: Vec<&str> = board.lines().collect();
         assert!(lines[0].starts_with("session 01ARZ3NDEKTSV4RRFFQ69G5FAV"));
         assert_eq!(
@@ -261,9 +277,37 @@ mod tests {
         let mut global = MetricsResponse::default();
         global.totals.runs = 1;
         global.totals.completed = 1;
-        let board = render_board(&global, None, "2026-07-10", "2026-07");
+        let board = render_board(&global, None, None, 0, "2026-07-10", "2026-07");
         assert!(board.starts_with("today: 0 runs"));
         assert!(board.contains("all-time: 1 runs · 1 completed"));
         assert!(!board.contains("fabric ready"));
+    }
+
+    #[test]
+    fn the_board_surfaces_worker_credibility_when_a_fact_backs_it() {
+        use fractality_core::CredibilityFact;
+        let mut global = MetricsResponse::default();
+        global.totals.runs = 3;
+        global.totals.completed = 3;
+        let now = 3_600_000_u64;
+        let cred = CredibilityFact {
+            proven_ts_ms: 0, // one hour before `now`
+            profile: "glm".into(),
+            acceptance_passed: 4,
+            acceptance_total: 4,
+        };
+        let board = render_board(&global, None, Some(&cred), now, "2026-07-10", "2026-07");
+        assert!(
+            board.contains("workers self-verify here: acceptance 4/4 green")
+                && board.contains("last proven")
+                && board.contains("(profile glm)"),
+            "the credibility line renders the dated fact:\n{board}"
+        );
+        // Absent the fact, no credibility line (D7 — never invented).
+        let bare = render_board(&global, None, None, now, "2026-07-10", "2026-07");
+        assert!(
+            !bare.contains("self-verify"),
+            "no backing fact → no credibility line"
+        );
     }
 }
