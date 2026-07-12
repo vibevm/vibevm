@@ -199,7 +199,7 @@ Keep it current-state; prune stale lines.
   filename, `acceptance: 0/N`). Prefer single-token matches; the boss-side
   `diff` / `grep` is the real gate — acceptance is advisory until the diff is read.
 - **License state (keep current):** our shipped surface is **fully UPL-1.0**. The
-  canonical `packages/org.vibevm/**` (redbook family, discipline stack,
+  canonical `packages/org.vibevm.*/**` (redbook family, discipline stack,
   fractality, delegation-rules, wal-workspaces) were relicensed by MT-05 firing #2
   (merges `893e314` / `79938ab`); the host root `LICENSE.md` was relicensed
   2026-07-12 (MT-05 run `01KXBEHEYJCQ1RNJ5657Q31HVA`; host crates inherit via
@@ -212,7 +212,7 @@ Keep it current-state; prune stale lines.
 
 ## Workspaces — nested projects with their own WAL
 
-This repository hosts **workspaces**: sub-projects registered in [`WORKSPACES.md`](WORKSPACES.md) that carry their own boot contract (`CLAUDE.md` at the workspace root), their own WAL, and their own `CONTINUE.md`, and are worked on as independent projects. Canon: `flow:org.vibevm.world/wal-workspaces` (authored under `packages/org.vibevm/`, like the rest of the redbook family).
+This repository hosts **workspaces**: sub-projects registered in [`WORKSPACES.md`](WORKSPACES.md) that carry their own boot contract (`CLAUDE.md` at the workspace root), their own WAL, and their own `CONTINUE.md`, and are worked on as independent projects. Canon: `flow:org.vibevm.world/wal-workspaces` (authored under `packages/org.vibevm.world/`, like the rest of the redbook family).
 
 - A session-end or session-resume phrase carrying a workspace name — e.g. `восстанови сессию fractality` / `RESUME SESSION fractality`, `заверши сессию fractality` / `END SESSION fractality` — targets **that workspace**, not this host project. The same required behaviours apply (resume = restore, report, stop; wind-down = WAL + cold-resume + commits + push), but they operate on the workspace's own files.
 - **Workspace boot replaces the host boot.** A workspace session reads: Rules 1–4 above (repo-wide, they bind every commit), then the workspace's `CLAUDE.md` → its WAL → its `CONTINUE.md` → the active plan its WAL names. It does **not** read `spec/boot/`, `spec/WAL.md`, or host specs, and does not scan the host tree — unless the task explicitly crosses into the host project, and then it says so first.
