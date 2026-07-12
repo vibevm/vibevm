@@ -412,13 +412,26 @@ copies the small evidential subset, gzips the transcript, and excludes the
 huge reproducible `proj-final/`, into the committed
 [`reports/trial-results/`](reports/trial-results/).
 
-**Each group dir carries a `README.md`** (the helper scaffolds a stub): what
-the test was, its pre-registration (MT id), the arms, and its **summary
-results once understood** — and it is **amended** when a later analysis pass
-produces verdicts (owner rule: results written later supplement it). A run is
-not "done" until its evidence is committed; the MT doc's "Recorded runs" holds
-the canonical scored verdicts, this holds the raw evidence + the per-group
-summary behind them.
+**A `README.md` at every level that carries its own meaning** — what the test
+was, its pre-registration (MT id), the arms, and its **summary results once
+understood**, **amended** when a later analysis pass produces verdicts (owner
+rule: results written later supplement it). Concretely:
+
+- a **group** of related runs → a group `README.md` (the helper scaffolds a
+  stub);
+- a **standalone test** not part of any group → its own `README.md`, same
+  shape;
+- an **individually-meaningful run** — one that carries standalone meaning
+  even though it sits inside a group → its own `README.md` too;
+- a **pure replicate** — one of N equivalent runs whose only meaning is the
+  group's — needs **none**; the group README covers it.
+
+Judgment: write a README wherever there is independent meaning, skip it for
+mere replicates. A run is not "done" until its evidence is committed; the MT
+doc's "Recorded runs" holds the canonical scored verdicts, this holds the raw
+evidence + the summary behind them. (Owner: «если тест одиночный … ему тоже
+нужно README.md; тестам без какого-либо собственного негруппового смысла
+README.md не нужен».)
 
 **Case 2 — any other important or long test/run.** Not everything comes from
 the trial harness, and not every valuable run is shaped like one. Any

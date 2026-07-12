@@ -31,14 +31,21 @@ reports/trial-results/
 project) — tens of MB and fully reproducible, so it stays only in `target/`.
 290 MB of raw runs becomes ~6 MB of durable evidence.
 
-## Each group's README
+## A README wherever there is meaning
 
-Every group dir carries a `README.md` describing **what the test was** (the
-pre-registration / MT id, the arms, what it measured) and **its summary
-results** once understood. It is **amended** when a later analysis pass
-produces verdicts. The MT document's "Recorded runs" section stays the
-canonical scored narrative; the group README is the at-a-glance summary that
-travels with the raw evidence.
+A `README.md` describes **what the test was** (pre-registration / MT id, the
+arms, what it measured) and **its summary results** once understood, and is
+**amended** when a later analysis pass produces verdicts. One lives at every
+level that carries its own meaning:
+
+- a **group** of related runs → a group README (the helper scaffolds a stub);
+- a **standalone test** (no group) → its own README;
+- an **individually-meaningful run** inside a group → its own README too;
+- a **pure replicate** (one of N equivalent runs) → none; the group covers it.
+
+The MT document's "Recorded runs" section stays the canonical scored
+narrative; the README here is the at-a-glance summary that travels with the
+raw evidence.
 
 ## Current groups
 
