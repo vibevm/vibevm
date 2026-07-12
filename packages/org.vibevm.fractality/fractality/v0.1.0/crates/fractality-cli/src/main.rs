@@ -150,6 +150,13 @@ enum Cmd {
         #[arg(long)]
         json: bool,
     },
+    /// List runs that escalated their task up the tree (D-C3-6), each
+    /// attributed to the root of its call tree. Exit: 0 (even when empty).
+    Escalations {
+        /// Machine-readable output.
+        #[arg(long)]
+        json: bool,
+    },
     /// Answer a parked run; it resumes with the text as its tool result.
     /// Exit: 0 answered, 1 the run is not waiting, 2 infra.
     Answer {
@@ -317,6 +324,7 @@ async fn main() -> std::process::ExitCode {
         Cmd::Tree { id, json } => swarm::tree(&home, id.as_deref(), json).await,
         Cmd::Kill { id, tree } => swarm::kill(&home, &id, tree).await,
         Cmd::Questions { json } => boss::questions(&home, json).await,
+        Cmd::Escalations { json } => boss::escalations(&home, json).await,
         Cmd::Answer { id, text, file } => {
             boss::answer(&home, &id, text.as_deref(), file.as_deref()).await
         }

@@ -238,6 +238,10 @@ pub fn print_run_summary(r: &RunRecord, waited: std::time::Duration) {
     if let Some(k) = r.kill_reason {
         println!("killed:     {k}");
     }
+    if let Some(e) = &r.escalation {
+        println!("escalated:  {}", e.reason);
+        println!("needs:      {}", e.needs);
+    }
     println!(
         "waited:     {}",
         format_duration_ms(waited.as_millis() as u64)
@@ -292,6 +296,10 @@ pub fn print_run_detail(r: &RunRecord) {
     }
     if let Some(q) = &r.question {
         println!("question:   {q}");
+    }
+    if let Some(e) = &r.escalation {
+        println!("escalated:  {}", e.reason);
+        println!("needs:      {}", e.needs);
     }
     print_usage_lines(r);
 }

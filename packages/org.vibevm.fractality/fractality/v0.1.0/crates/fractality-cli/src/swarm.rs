@@ -10,7 +10,11 @@ use crate::{EXIT_INFRA, EXIT_NEGATIVE, EXIT_OK, err_code, fail_code, out, resolv
 specmark::scope!("spec://fractality/PROP-001#architecture");
 
 /// The D17 exit-code family for a terminal run: 0 completed · 1 failed ·
-/// 3 policy-killed (budget, manual) · 2 infrastructure (pod lost).
+/// 3 policy-killed (budget, manual) · 2 infrastructure (pod lost) ·
+/// 5 escalated (the task was handed UP the tree — NOT a failure, D-C3-6).
+/// A parent awaiting a child keys off 5 to climb the escalation rather
+/// than treat it as a failed run. (4 is reserved for a run left parked
+/// past its wait budget — see `run_once`.)
 pub(crate) fn state_code(r: &RunRecord) -> u8 {
     match r.state {
         RunState::Completed => EXIT_OK,
@@ -18,6 +22,7 @@ pub(crate) fn state_code(r: &RunRecord) -> u8 {
             Some(fractality_core::run::KillReason::PodLost) => EXIT_INFRA,
             _ => 3,
         },
+        RunState::Escalated => 5,
         _ => EXIT_NEGATIVE,
     }
 }
