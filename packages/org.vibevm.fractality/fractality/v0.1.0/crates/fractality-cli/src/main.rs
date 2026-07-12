@@ -173,6 +173,15 @@ enum Cmd {
         #[arg(long)]
         json: bool,
     },
+    /// Read back the need-gate decision journal (D-C3-8): the recorded
+    /// verdicts `gate --record` wrote — inline | route | fold-local |
+    /// spawn | escalate, each with its caller class and reason, oldest
+    /// last. Exit: 0 (even when empty).
+    Decisions {
+        /// Machine-readable output.
+        #[arg(long)]
+        json: bool,
+    },
     /// Answer a parked run; it resumes with the text as its tool result.
     /// Exit: 0 answered, 1 the run is not waiting, 2 infra.
     Answer {
@@ -342,6 +351,7 @@ async fn main() -> std::process::ExitCode {
         Cmd::Kill { id, tree } => swarm::kill(&home, &id, tree).await,
         Cmd::Questions { json } => boss::questions(&home, json).await,
         Cmd::Escalations { json } => boss::escalations(&home, json).await,
+        Cmd::Decisions { json } => boss::decisions(&home, json).await,
         Cmd::Answer { id, text, file } => {
             boss::answer(&home, &id, text.as_deref(), file.as_deref()).await
         }

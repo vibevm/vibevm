@@ -186,6 +186,41 @@ pub(crate) async fn stats(home: &camino::Utf8Path, json: bool) -> u8 {
     }
 }
 
+/// `fractality decisions`: the need-gate decision journal (D-C3-8) read
+/// back, oldest first — the soft-label table `gate --record` writes. The
+/// descent twin of `escalations`: where escalations show the tasks that
+/// went UP the tree, decisions show the gate verdicts that decided HOW each
+/// task was handled — inline | route | fold-local | spawn | escalate —
+/// each with the caller class it was judged for and its recorded reason.
+/// This makes P-C3-a (window-fit → route, not spawn) a hard count instead
+/// of a transcript grep (PP-004 item 4); a learned router reads the same
+/// table one day (RD-20). Exit: 0 (even when empty).
+pub(crate) async fn decisions(home: &camino::Utf8Path, json: bool) -> u8 {
+    let client = match connect_or_start(home).await {
+        Ok(c) => c,
+        Err(e) => return fail_code(err_code(&e), &e.to_string()),
+    };
+    match client.decisions().await {
+        Ok(decisions) => {
+            if json {
+                println!(
+                    "{}",
+                    serde_json::to_string_pretty(&decisions)
+                        .unwrap_or_else(|e| format!("{{\"error\":\"json: {e}\"}}"))
+                );
+                return EXIT_OK;
+            }
+            for d in &decisions {
+                // One record per line, stable order (oldest last): verdict,
+                // the caller class it was judged for, then the reason.
+                println!("{} {} — {}", d.verdict.as_str(), d.class.as_str(), d.reason);
+            }
+            EXIT_OK
+        }
+        Err(e) => fail_code(err_code(&e), &e.to_string()),
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
