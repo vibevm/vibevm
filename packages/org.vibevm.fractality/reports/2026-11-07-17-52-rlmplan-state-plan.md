@@ -4,24 +4,31 @@ _Campaign 3 Stage B execution tracker. Updated in place between status
 documents (big-plan dashboard rule — bulk stays out of status files).
 Source of truth is the spec tree (plan, syntheses, WAL); this is the
 owner-facing surface + the agent's own quick tracker. Last updated:
-2026-07-12 (**Ф4 IN PROGRESS — escalation core outcome landed**). Ф3
-CLOSED (descent core, 9 slices). Ф4.1 (`e13ddbf`) lands the D-C3-6 core:
-terminal `RunState::Escalated` + `EscalationRecord`, typed `Event::
-Escalated` + fold, `escalated` metrics counter — the journal fold carved
-into `journal_fold.rs` on the way (600-line budget). Floor green. Next:
-Ф4.2 (escalation climbs the parent edges) then Ф4.3 (worker expresses it).
-Phase report: `reports/2026-12-07-02-40-campaign3-f3-descent-core.md`._
+2026-07-12 (**Ф4 IN PROGRESS — descent→ascent both wired**). Ф3 CLOSED
+(descent core, 9 slices). Ф4.1 (`e13ddbf`) lands the D-C3-6 core (terminal
+`RunState::Escalated` + `EscalationRecord`, typed `Event::Escalated` +
+fold, `escalated` metrics counter; journal fold carved to
+`journal_fold.rs`). Ф4.2 (`6ed04e6`) lands the ascent surfaces (exit code
+5, `fractality escalations` inbox with root attribution, run-summary
+lines). Both floor green. Next: **Ф4.3 — worker expresses escalation** (an
+`escalate` MCP tool in the broker + the `/escalate` endpoint & mc-client
+verb it needs), then Ф5→Ф7. Phase report (Ф3):
+`reports/2026-12-07-02-40-campaign3-f3-descent-core.md`._
 
 ## Goal & operating contract (owner, 2026-07-11)
 
 - **Goal (verbatim):** «нам нужно по факту довести кампанию 3 и получить
   рабочий RLM со всеми паттернами … сделай весь план … проектирование,
   кодирование, тестирование, нагрузка — сделай это всё.»
-- **70%-context stop rule (verbatim):** «Если контекста останется мало
-  (допустим мы израсходовали 70%) — остановись, запланируй следующие
-  шаги, и попроси меня перезапустить сессию.» → at ~70% consumed: clean
-  stop — rewrite WAL, write a `-paused-plan.md` (done / checklist ✅ /
-  exact stop point), ask the owner to restart from a fresh context.
+- **70%-context stop rule — LIFTED 2026-07-12 (owner):** «Не
+  останавливайся на 70% заполненности контекста, продолжай по стандартным
+  правилам (включая компактификацию когда надо).» The earlier 70% clean-
+  stop is superseded: run the plan straight through, relying on context
+  compaction, no checkpoint-and-ask at 70%. (Prior rule, now dormant:
+  «Если контекста останется мало … остановись … попроси перезапустить».)
+- **Follow-on goal (owner 2026-07-12):** after the whole Stage B plan is
+  complete (Ф4→Ф7), take **PP-003 (Option C — the advisor slice, D-C3-7)**
+  from `plans/postponed.md`, research it, and execute it to completion.
 - **Hard stop (§10.7, no exceptions):** Ф6 paid trial arms fire only
   after MT-C3-01 pre-registration is committed AND the owner's verbatim
   RP-C3-2 word + budget posture are recorded. Everything else is routine
@@ -144,11 +151,13 @@ nudge (RD-12 settings-writes precedent), mc-client, cli surfaces.
         re-minted. Edges: `running`/`waiting_on_boss → escalated` only
         (§10.8 minimal). Tested library — no producer yet. Floor green
         (test-gate 206 / conform 0 / specmap clean).
-  - [ ] Ф4.2 escalation climbs the parent edges — surface escalated runs
-        to the top (mirror D18 `runs(WaitingOnBoss)` triage with
-        `runs(Escalated)`), attribute to the root via `parent` walk; a
-        distinct `state_code` exit for the CLI. Terminal record climbs;
-        run does not resume.
+  - [x] Ф4.2 escalation climbs to the top (`6ed04e6`) — `escalated` exit
+        code 5 (parent-observable, distinct from failed); `fractality
+        escalations` inbox (ascent twin of `questions`) with root
+        attribution via `root_of` (dangling-stop + cycle guard);
+        `print_run_summary`/`detail` show reason/needs. No new endpoint
+        (`runs(Escalated)` reuses the state filter). Floor green
+        (test-gate 207). Producer still absent → Ф4.3.
   - [ ] Ф4.3 worker expresses escalation — resolve open Q (ask_boss-style
         MCP tool vs result-status exit); wire the pod/backend + cli
         surface. May widen the `starting → escalated` edge if result-exit.

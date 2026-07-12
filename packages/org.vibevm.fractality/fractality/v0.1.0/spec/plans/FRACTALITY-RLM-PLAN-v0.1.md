@@ -257,6 +257,17 @@ heartbeat. Escalation is TERMINAL (the run is done); the *record* climbs
 the `parent` edges, the run does not resume — this is the deliberate
 divergence from the D18 park channel it otherwise generalizes.
 
+- Ф4.2 escalation climbs to the top (`6ed04e6`, D-C3-6): the ascent
+  surfaces — `escalated` exit code 5 (`state_code`, parent-observable,
+  distinct from failed=1, with 4 reserved for parked-past-budget);
+  `fractality escalations` inbox (the ascent twin of `questions`) listing
+  escalated runs attributed to their call-tree ROOT via a `parent`-edge
+  walk (`root_of`: dangling-stop + 64-hop cycle guard);
+  `print_run_summary`/`detail` show `escalated:`/`needs:`. No new endpoint
+  (`runs(Escalated)` reuses the state filter); the climb is a client-side
+  walk. specmap re-minted. Producer still absent — worker expression is
+  Ф4.3.
+
 **Scoping decision — decision-journal producer (D-C3-8).** The journal
 must record REAL need-gate decisions, so the producer cannot be MC
 re-deriving one at `register_run` — MC lacks the boss's task-shape
