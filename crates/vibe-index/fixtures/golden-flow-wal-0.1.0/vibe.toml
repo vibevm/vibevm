@@ -1,6 +1,6 @@
 [package]
-name = "wal"
-group = "org.vibevm"
+name = "golden-pkg"
+group = "com.example"
 kind = "flow"
 version = "0.1.0"
 authors = ["Oleg Chirukhin"]

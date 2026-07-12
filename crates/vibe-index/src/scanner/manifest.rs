@@ -335,7 +335,7 @@ group = ["a", "b"]
         let body = include_bytes!("../../fixtures/golden-flow-wal-0.1.0/vibe.toml");
         let m = parse_manifest(body).unwrap();
         let pkg = require_package(&m).unwrap();
-        assert_eq!(pkg.name, "wal");
+        assert_eq!(pkg.name, "golden-pkg");
         assert_eq!(package_kind(pkg.kind), PackageKind::Flow);
         assert_eq!(pkg.license, Some("EULA".into()));
     }
