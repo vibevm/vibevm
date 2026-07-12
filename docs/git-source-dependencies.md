@@ -1,6 +1,6 @@
 # Git-source dependencies — whole-repo-as-package
 
-vibevm normally resolves dependencies through a `[[registry]]` org — `org.vibevm.world/wal` becomes `<org>/org.vibevm_wal` per the registry's `naming` convention. M1.15 adds a second shape: declare a dep as a **git-source**, pointing at any single git repository where the package's `vibe.toml` (carrying a `[package]` table) lives at the repository root. Same pattern as Cargo's `[dependencies] foo = { git = "..." }`, npm's `git+https://...#tag`, Poetry's `foo = { git = "..." }`, Bundler's `gem 'foo', git: '...'`. Spec: [PROP-002 §2.4.1](../spec/modules/vibe-registry/PROP-002-decentralized-registry.md#git-source).
+vibevm normally resolves dependencies through a `[[registry]]` org — `org.vibevm.world/wal` becomes `<org>/org.vibevm.world_wal` per the registry's `naming` convention. M1.15 adds a second shape: declare a dep as a **git-source**, pointing at any single git repository where the package's `vibe.toml` (carrying a `[package]` table) lives at the repository root. Same pattern as Cargo's `[dependencies] foo = { git = "..." }`, npm's `git+https://...#tag`, Poetry's `foo = { git = "..." }`, Bundler's `gem 'foo', git: '...'`. Spec: [PROP-002 §2.4.1](../spec/modules/vibe-registry/PROP-002-decentralized-registry.md#git-source).
 
 ## When to use
 

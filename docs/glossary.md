@@ -94,7 +94,7 @@ A resolved package's content as it lands on disk: its published tree, copied ver
 
 Per-registry rule for mapping a pkgref to a per-package repo name under the registry's org URL. Four values:
 
-- `fqdn` (default): `org.vibevm.world/wal` → `<org>/org.vibevm_wal.git`. Repo name is `<group>.<name>` — collision-free, since `(group, name)` is unique. The convention vibevm's own registries use; the default since [PROP-008](../spec/modules/vibe-registry/PROP-008-qualified-naming.md).
+- `fqdn` (default): `org.vibevm.world/wal` → `<org>/org.vibevm.world_wal.git`. Repo name is `<group>_<name>` — collision-free, since `(group, name)` is unique. The convention vibevm's own registries use; the default since [PROP-008](../spec/modules/vibe-registry/PROP-008-qualified-naming.md).
 - `kind-name`: `flow:wal` → `<org>/flow-wal.git`. The pre-PROP-008 default; kept for registries that have not adopted `group`.
 - `name`: `flow:wal` → `<org>/wal.git`. Legal when names are globally unique across the registry.
 - `kind/name`: `flow:wal` → `<org>/flow/wal.git`. Requires host support for nested repo paths.
