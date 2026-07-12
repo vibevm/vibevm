@@ -11,13 +11,13 @@
 mod decisions;
 pub mod home;
 pub mod lock;
+mod pod_leg;
 
 use fractality_core::api::{
-    Ack, ErrorResponse, HealthResponse, KillRequest, KillResponse, MetricsResponse, NodeResponse,
-    PodEventRequest, PodHeartbeat, PodHeartbeatResponse, PodRegisterRequest, PodRegisterResponse,
+    ErrorResponse, HealthResponse, KillRequest, KillResponse, MetricsResponse, NodeResponse,
     RegisterRunRequest, RunListResponse, ShutdownResponse, TreeNode,
 };
-use fractality_core::ids::{PodId, RunId};
+use fractality_core::ids::RunId;
 use fractality_core::run::{RunRecord, RunState};
 use specmark::spec;
 
@@ -339,43 +339,6 @@ impl McClient {
     pub async fn shutdown(&self) -> Result<ShutdownResponse, ClientError> {
         self.request("POST /v0/shutdown", self.http.post(self.url("/shutdown")))
             .await
-    }
-
-    // --------------------------------------------------------------- pod leg
-
-    pub async fn pod_register(
-        &self,
-        req: &PodRegisterRequest,
-    ) -> Result<PodRegisterResponse, ClientError> {
-        self.request(
-            "POST /v0/pods/register",
-            self.http.post(self.url("/pods/register")).json(req),
-        )
-        .await
-    }
-
-    pub async fn pod_heartbeat(
-        &self,
-        pod_id: PodId,
-        hb: &PodHeartbeat,
-    ) -> Result<PodHeartbeatResponse, ClientError> {
-        self.request(
-            "POST /v0/pods/:id/heartbeat",
-            self.http
-                .post(self.url(&format!("/pods/{pod_id}/heartbeat")))
-                .json(hb),
-        )
-        .await
-    }
-
-    pub async fn pod_event(&self, pod_id: PodId, ev: &PodEventRequest) -> Result<Ack, ClientError> {
-        self.request(
-            "POST /v0/pods/:id/event",
-            self.http
-                .post(self.url(&format!("/pods/{pod_id}/event")))
-                .json(ev),
-        )
-        .await
     }
 }
 
