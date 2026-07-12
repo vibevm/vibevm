@@ -1,0 +1,52 @@
+[
+  {
+    "run_id": "01KX5WWBW9HJ3NJVSSC0MW7V5A",
+    "title": "facts-md",
+    "state": "completed",
+    "profile": "glm",
+    "model": "small",
+    "workspace_mode": "worktree",
+    "parent": null,
+    "depth": 0,
+    "spawn_requested": true,
+    "budget": {
+      "wall_secs": 600,
+      "max_turns": 25,
+      "max_output_tokens": 200000
+    },
+    "node_id": "cbf0b306-e460-4161-9d23-f15fb6460cc7",
+    "run_dir": "C:/Users/olegc/AppData/Local/Temp/tmp.n65AxSXnPo/trial-a-1/home\\runs\\01KX5WWBW9HJ3NJVSSC0MW7V5A",
+    "created_ts_ms": 1783683231626,
+    "updated_ts_ms": 1783683274761,
+    "started_ts_ms": 1783683231626,
+    "pod": {
+      "pod_id": "01KX5WWDE8ZKKEWTV10AAPHKN0",
+      "pod_pid": 45832
+    },
+    "worker_pid": 29424,
+    "exit_code": 0,
+    "failure": null,
+    "kill_reason": null,
+    "usage": {
+      "input_tokens": 69431,
+      "output_tokens": 1937,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 143168,
+      "total_cost_usd": 0.4671639999999999,
+      "events": 758,
+      "web_tool_calls": 0
+    },
+    "collected": {
+      "result_source": "worker",
+      "result": {
+        "fs": "01KX5W0K0S1QW3W6SA0R1HS115",
+        "path": "01KX5WWBW9HJ3NJVSSC0MW7V5A/wt/result.md",
+        "range": "whole",
+        "etag": "378-19f4bcec6b3"
+      },
+      "result_path": "C:/Users/olegc/AppData/Local/Temp/tmp.n65AxSXnPo/trial-a-1/home\\runs\\01KX5WWBW9HJ3NJVSSC0MW7V5A\\wt\\result.md",
+      "acceptance_passed": 1,
+      "acceptance_total": 2
+    }
+  }
+]

@@ -1,0 +1,96 @@
+[
+  {
+    "run_id": "01KXA3EN9X63M37S3DEM8D751M",
+    "title": "parse_line-test-suite",
+    "state": "running",
+    "profile": "glm",
+    "model": "big",
+    "workspace_mode": "worktree",
+    "parent": null,
+    "depth": 0,
+    "spawn_requested": true,
+    "verifier": false,
+    "budget": {
+      "wall_secs": 600,
+      "max_turns": 30,
+      "max_output_tokens": 200000,
+      "max_depth": 0,
+      "max_agent_calls": 0,
+      "max_call_tokens": 0,
+      "max_global_calls": 0,
+      "max_spend_micros": 0
+    },
+    "node_id": "cbf0b306-e460-4161-9d23-f15fb6460cc7",
+    "run_dir": "C:/Users/olegc/AppData/Local/Temp/tmp.CkSKxmqNRl/trial-g-1/home\\runs\\01KXA3EN9X63M37S3DEM8D751M",
+    "created_ts_ms": 1783824340286,
+    "updated_ts_ms": 1783824544519,
+    "started_ts_ms": 1783824340286,
+    "pod": {
+      "pod_id": "01KXA3EPGC237M8GE80A16X4Z8",
+      "pod_pid": 3512
+    },
+    "worker_pid": 52720,
+    "exit_code": null,
+    "failure": null,
+    "kill_reason": null,
+    "usage": {
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "total_cost_usd": 0.0,
+      "events": 8202,
+      "web_tool_calls": 0
+    }
+  },
+  {
+    "run_id": "01KXA3EPGQ1REYMM6GAWJHYHBP",
+    "title": "expected-json-from-fixtures",
+    "state": "failed",
+    "profile": "glm",
+    "model": "small",
+    "workspace_mode": "worktree",
+    "parent": null,
+    "depth": 0,
+    "spawn_requested": true,
+    "verifier": false,
+    "budget": {
+      "wall_secs": 600,
+      "max_turns": 30,
+      "max_output_tokens": 200000,
+      "max_depth": 0,
+      "max_agent_calls": 0,
+      "max_call_tokens": 0,
+      "max_global_calls": 0,
+      "max_spend_micros": 0
+    },
+    "node_id": "cbf0b306-e460-4161-9d23-f15fb6460cc7",
+    "run_dir": "C:/Users/olegc/AppData/Local/Temp/tmp.CkSKxmqNRl/trial-g-1/home\\runs\\01KXA3EPGQ1REYMM6GAWJHYHBP",
+    "created_ts_ms": 1783824341527,
+    "updated_ts_ms": 1783824492020,
+    "started_ts_ms": 1783824341528,
+    "pod": {
+      "pod_id": "01KXA3EQQ66P0VENH4CSGY79F6",
+      "pod_pid": 60052
+    },
+    "worker_pid": 51196,
+    "exit_code": 1,
+    "failure": "worker exited with code 1",
+    "kill_reason": null,
+    "usage": {
+      "input_tokens": 42011,
+      "output_tokens": 5357,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 1211264,
+      "total_cost_usd": 0.949612,
+      "events": 1481,
+      "web_tool_calls": 0
+    },
+    "collected": {
+      "result_source": "none",
+      "acceptance_passed": 0,
+      "acceptance_total": 0,
+      "acceptance_skipped": "worker failed; acceptance not run"
+    }
+  }
+]

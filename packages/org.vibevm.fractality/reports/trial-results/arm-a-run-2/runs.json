@@ -1,0 +1,102 @@
+[
+  {
+    "run_id": "01KX5XQ2WE6YHB1YQ5Z2VBFG3Q",
+    "title": "parse_line-test-suite",
+    "state": "completed",
+    "profile": "glm",
+    "model": "small",
+    "workspace_mode": "worktree",
+    "parent": null,
+    "depth": 0,
+    "spawn_requested": true,
+    "budget": {
+      "wall_secs": 900,
+      "max_turns": 40,
+      "max_output_tokens": 200000
+    },
+    "node_id": "cbf0b306-e460-4161-9d23-f15fb6460cc7",
+    "run_dir": "C:/Users/olegc/AppData/Local/Temp/tmp.egOY3hOKny/trial-a-2/home\\runs\\01KX5XQ2WE6YHB1YQ5Z2VBFG3Q",
+    "created_ts_ms": 1783684107151,
+    "updated_ts_ms": 1783684306395,
+    "started_ts_ms": 1783684107151,
+    "pod": {
+      "pod_id": "01KX5XQ4C6TGY2SX18MPWW6XF3",
+      "pod_pid": 35040
+    },
+    "worker_pid": 13548,
+    "exit_code": 0,
+    "failure": null,
+    "kill_reason": null,
+    "usage": {
+      "input_tokens": 54550,
+      "output_tokens": 3332,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 737280,
+      "total_cost_usd": 1.138752,
+      "events": 322,
+      "web_tool_calls": 0
+    },
+    "collected": {
+      "result_source": "worker",
+      "result": {
+        "fs": "01KX5X9PNF7EFCQDY9CSA77KD6",
+        "path": "01KX5XQ2WE6YHB1YQ5Z2VBFG3Q/wt/result.md",
+        "range": "whole",
+        "etag": "711-19f4bde25ca"
+      },
+      "result_path": "C:/Users/olegc/AppData/Local/Temp/tmp.egOY3hOKny/trial-a-2/home\\runs\\01KX5XQ2WE6YHB1YQ5Z2VBFG3Q\\wt\\result.md",
+      "acceptance_passed": 0,
+      "acceptance_total": 1
+    }
+  },
+  {
+    "run_id": "01KX5XQ4D73XK8T7T6FRGBFER5",
+    "title": "facts-table-extract",
+    "state": "completed",
+    "profile": "glm",
+    "model": "small",
+    "workspace_mode": "worktree",
+    "parent": null,
+    "depth": 0,
+    "spawn_requested": true,
+    "budget": {
+      "wall_secs": 900,
+      "max_turns": 30,
+      "max_output_tokens": 200000
+    },
+    "node_id": "cbf0b306-e460-4161-9d23-f15fb6460cc7",
+    "run_dir": "C:/Users/olegc/AppData/Local/Temp/tmp.egOY3hOKny/trial-a-2/home\\runs\\01KX5XQ4D73XK8T7T6FRGBFER5",
+    "created_ts_ms": 1783684108712,
+    "updated_ts_ms": 1783684139286,
+    "started_ts_ms": 1783684108712,
+    "pod": {
+      "pod_id": "01KX5XQ60FYWN4KSKH4MK1TDC9",
+      "pod_pid": 47648
+    },
+    "worker_pid": 48736,
+    "exit_code": 0,
+    "failure": null,
+    "kill_reason": null,
+    "usage": {
+      "input_tokens": 53758,
+      "output_tokens": 1172,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 155968,
+      "total_cost_usd": 0.376074,
+      "events": 61,
+      "web_tool_calls": 0
+    },
+    "collected": {
+      "result_source": "worker",
+      "result": {
+        "fs": "01KX5X9PNF7EFCQDY9CSA77KD6",
+        "path": "01KX5XQ4D73XK8T7T6FRGBFER5/wt/result.md",
+        "range": "whole",
+        "etag": "2d3-19f4bdbfa80"
+      },
+      "result_path": "C:/Users/olegc/AppData/Local/Temp/tmp.egOY3hOKny/trial-a-2/home\\runs\\01KX5XQ4D73XK8T7T6FRGBFER5\\wt\\result.md",
+      "acceptance_passed": 0,
+      "acceptance_total": 1
+    }
+  }
+]

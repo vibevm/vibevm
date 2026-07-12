@@ -1,0 +1,7 @@
+C:/Users/olegc/AppData/Local/Temp/tmp.o0GU6CRG4l/trial-b-2/proj\.claude\settings.local.json
+SessionStart     installed
+UserPromptSubmit installed
+PostToolUse      installed
+Stop             installed
+SessionEnd       installed
+statusLine       installed

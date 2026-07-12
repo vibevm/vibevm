@@ -1,0 +1,73 @@
+{
+  "totals": {
+    "runs": 8,
+    "completed": 2,
+    "failed": 5,
+    "killed": 0,
+    "escalated": 0,
+    "open": 1,
+    "input_tokens": 121713,
+    "output_tokens": 12573,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 594496,
+    "total_cost_usd": 1.2201380000000002,
+    "wall_ms": 1660045,
+    "web_tool_calls": 0
+  },
+  "by_state": {
+    "completed": 2,
+    "failed": 5,
+    "running": 1
+  },
+  "by_profile": {
+    "glm": {
+      "runs": 8,
+      "completed": 2,
+      "failed": 5,
+      "killed": 0,
+      "escalated": 0,
+      "open": 1,
+      "input_tokens": 121713,
+      "output_tokens": 12573,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 594496,
+      "total_cost_usd": 1.2201380000000002,
+      "wall_ms": 1660045,
+      "web_tool_calls": 0
+    }
+  },
+  "by_model": {
+    "big": {
+      "runs": 8,
+      "completed": 2,
+      "failed": 5,
+      "killed": 0,
+      "escalated": 0,
+      "open": 1,
+      "input_tokens": 121713,
+      "output_tokens": 12573,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 594496,
+      "total_cost_usd": 1.2201380000000002,
+      "wall_ms": 1660045,
+      "web_tool_calls": 0
+    }
+  },
+  "by_day": {
+    "2026-07-12": {
+      "runs": 8,
+      "completed": 2,
+      "failed": 5,
+      "killed": 0,
+      "escalated": 0,
+      "open": 1,
+      "input_tokens": 121713,
+      "output_tokens": 12573,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 594496,
+      "total_cost_usd": 1.2201380000000002,
+      "wall_ms": 1660045,
+      "web_tool_calls": 0
+    }
+  }
+}

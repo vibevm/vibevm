@@ -1,0 +1,443 @@
+[
+  {
+    "run_id": "01KXA5QWJWFSX9BCV2G80TT1RF",
+    "title": "parse_line-test-suite",
+    "state": "failed",
+    "profile": "glm",
+    "model": "big",
+    "workspace_mode": "worktree",
+    "parent": null,
+    "depth": 0,
+    "spawn_requested": true,
+    "verifier": false,
+    "budget": {
+      "wall_secs": 900,
+      "max_turns": 35,
+      "max_output_tokens": 200000,
+      "max_depth": 0,
+      "max_agent_calls": 0,
+      "max_call_tokens": 0,
+      "max_global_calls": 0,
+      "max_spend_micros": 0
+    },
+    "node_id": "cbf0b306-e460-4161-9d23-f15fb6460cc7",
+    "run_dir": "C:/Users/olegc/AppData/Local/Temp/tmp.ynzNgSWNHz/trial-g-3/home\\runs\\01KXA5QWJWFSX9BCV2G80TT1RF",
+    "created_ts_ms": 1783826739804,
+    "updated_ts_ms": 1783826982140,
+    "started_ts_ms": 1783826739804,
+    "pod": {
+      "pod_id": "01KXA5QXPRW61NSD873VDJMKB7",
+      "pod_pid": 21152
+    },
+    "worker_pid": 31472,
+    "exit_code": 1,
+    "failure": "worker exited with code 1",
+    "kill_reason": null,
+    "usage": {
+      "input_tokens": 23376,
+      "output_tokens": 310,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 6848,
+      "total_cost_usd": 0.12805400000000003,
+      "events": 194,
+      "web_tool_calls": 0
+    },
+    "collected": {
+      "result_source": "extracted",
+      "result": {
+        "fs": "01KXA58CVZV2B2Z7MKKSDH507F",
+        "path": "01KXA5QWJWFSX9BCV2G80TT1RF/wt/result.md",
+        "range": "whole",
+        "etag": "137-19f545fa4f9"
+      },
+      "result_path": "C:/Users/olegc/AppData/Local/Temp/tmp.ynzNgSWNHz/trial-g-3/home\\runs\\01KXA5QWJWFSX9BCV2G80TT1RF\\wt\\result.md",
+      "acceptance_passed": 0,
+      "acceptance_total": 0,
+      "acceptance_skipped": "worker failed; acceptance not run"
+    }
+  },
+  {
+    "run_id": "01KXA5SZ5V1QRAPM4W22DKN66X",
+    "title": "src-bundle-rename-dedup-tostring",
+    "state": "failed",
+    "profile": "glm",
+    "model": "big",
+    "workspace_mode": "worktree",
+    "parent": null,
+    "depth": 0,
+    "spawn_requested": true,
+    "verifier": false,
+    "budget": {
+      "wall_secs": 1200,
+      "max_turns": 45,
+      "max_output_tokens": 200000,
+      "max_depth": 0,
+      "max_agent_calls": 0,
+      "max_call_tokens": 0,
+      "max_global_calls": 0,
+      "max_spend_micros": 0
+    },
+    "node_id": "cbf0b306-e460-4161-9d23-f15fb6460cc7",
+    "run_dir": "C:/Users/olegc/AppData/Local/Temp/tmp.ynzNgSWNHz/trial-g-3/home\\runs\\01KXA5SZ5V1QRAPM4W22DKN66X",
+    "created_ts_ms": 1783826807996,
+    "updated_ts_ms": 1783827157235,
+    "started_ts_ms": 1783826807996,
+    "pod": {
+      "pod_id": "01KXA5T0AC3JRRFK1MKJ1NX7C1",
+      "pod_pid": 60640
+    },
+    "worker_pid": 59968,
+    "exit_code": 1,
+    "failure": "worker exited with code 1",
+    "kill_reason": null,
+    "usage": {
+      "input_tokens": 40005,
+      "output_tokens": 2426,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 208512,
+      "total_cost_usd": 0.364931,
+      "events": 1603,
+      "web_tool_calls": 0
+    },
+    "collected": {
+      "result_source": "extracted",
+      "result": {
+        "fs": "01KXA58CVZV2B2Z7MKKSDH507F",
+        "path": "01KXA5SZ5V1QRAPM4W22DKN66X/wt/result.md",
+        "range": "whole",
+        "etag": "137-19f546250ef"
+      },
+      "result_path": "C:/Users/olegc/AppData/Local/Temp/tmp.ynzNgSWNHz/trial-g-3/home\\runs\\01KXA5SZ5V1QRAPM4W22DKN66X\\wt\\result.md",
+      "acceptance_passed": 0,
+      "acceptance_total": 0,
+      "acceptance_skipped": "worker failed; acceptance not run"
+    }
+  },
+  {
+    "run_id": "01KXA5T0BCA9QJKH964FRVSYN0",
+    "title": "facts-table-extraction",
+    "state": "completed",
+    "profile": "glm",
+    "model": "big",
+    "workspace_mode": "worktree",
+    "parent": null,
+    "depth": 0,
+    "spawn_requested": true,
+    "verifier": false,
+    "budget": {
+      "wall_secs": 600,
+      "max_turns": 25,
+      "max_output_tokens": 200000,
+      "max_depth": 0,
+      "max_agent_calls": 0,
+      "max_call_tokens": 0,
+      "max_global_calls": 0,
+      "max_spend_micros": 0
+    },
+    "node_id": "cbf0b306-e460-4161-9d23-f15fb6460cc7",
+    "run_dir": "C:/Users/olegc/AppData/Local/Temp/tmp.ynzNgSWNHz/trial-g-3/home\\runs\\01KXA5T0BCA9QJKH964FRVSYN0",
+    "created_ts_ms": 1783826809196,
+    "updated_ts_ms": 1783827106058,
+    "started_ts_ms": 1783826809196,
+    "pod": {
+      "pod_id": "01KXA5T1J06SBT5NJCMQE2SSAC",
+      "pod_pid": 58872
+    },
+    "worker_pid": 61220,
+    "exit_code": 0,
+    "failure": null,
+    "kill_reason": null,
+    "usage": {
+      "input_tokens": 23415,
+      "output_tokens": 6047,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 248064,
+      "total_cost_usd": 0.392282,
+      "events": 3769,
+      "web_tool_calls": 0
+    },
+    "collected": {
+      "result_source": "worker",
+      "result": {
+        "fs": "01KXA58CVZV2B2Z7MKKSDH507F",
+        "path": "01KXA5T0BCA9QJKH964FRVSYN0/wt/result.md",
+        "range": "whole",
+        "etag": "7fd-19f54615854"
+      },
+      "result_path": "C:/Users/olegc/AppData/Local/Temp/tmp.ynzNgSWNHz/trial-g-3/home\\runs\\01KXA5T0BCA9QJKH964FRVSYN0\\wt\\result.md",
+      "acceptance_passed": 0,
+      "acceptance_total": 1
+    }
+  },
+  {
+    "run_id": "01KXA5T1JF0N3KWJ70J4XFZ1WD",
+    "title": "expected-json-from-fixtures",
+    "state": "failed",
+    "profile": "glm",
+    "model": "big",
+    "workspace_mode": "worktree",
+    "parent": null,
+    "depth": 0,
+    "spawn_requested": true,
+    "verifier": false,
+    "budget": {
+      "wall_secs": 900,
+      "max_turns": 35,
+      "max_output_tokens": 200000,
+      "max_depth": 0,
+      "max_agent_calls": 0,
+      "max_call_tokens": 0,
+      "max_global_calls": 0,
+      "max_spend_micros": 0
+    },
+    "node_id": "cbf0b306-e460-4161-9d23-f15fb6460cc7",
+    "run_dir": "C:/Users/olegc/AppData/Local/Temp/tmp.ynzNgSWNHz/trial-g-3/home\\runs\\01KXA5T1JF0N3KWJ70J4XFZ1WD",
+    "created_ts_ms": 1783826810448,
+    "updated_ts_ms": 1783827048208,
+    "started_ts_ms": 1783826810448,
+    "pod": {
+      "pod_id": "01KXA5T2TBYYD84VRBCEPMT5G8",
+      "pod_pid": 53832
+    },
+    "worker_pid": 61964,
+    "exit_code": 1,
+    "failure": "worker exited with code 1",
+    "kill_reason": null,
+    "usage": {
+      "input_tokens": 6695,
+      "output_tokens": 336,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 23552,
+      "total_cost_usd": 0.053651,
+      "events": 285,
+      "web_tool_calls": 0
+    },
+    "collected": {
+      "result_source": "extracted",
+      "result": {
+        "fs": "01KXA58CVZV2B2Z7MKKSDH507F",
+        "path": "01KXA5T1JF0N3KWJ70J4XFZ1WD/wt/result.md",
+        "range": "whole",
+        "etag": "137-19f5460a70d"
+      },
+      "result_path": "C:/Users/olegc/AppData/Local/Temp/tmp.ynzNgSWNHz/trial-g-3/home\\runs\\01KXA5T1JF0N3KWJ70J4XFZ1WD\\wt\\result.md",
+      "acceptance_passed": 0,
+      "acceptance_total": 0,
+      "acceptance_skipped": "worker failed; acceptance not run"
+    }
+  },
+  {
+    "run_id": "01KXA699TK225VTGVEYAZP4VHY",
+    "title": "facts-table-extraction",
+    "state": "completed",
+    "profile": "glm",
+    "model": "big",
+    "workspace_mode": "worktree",
+    "parent": null,
+    "depth": 0,
+    "spawn_requested": true,
+    "verifier": false,
+    "budget": {
+      "wall_secs": 600,
+      "max_turns": 25,
+      "max_output_tokens": 200000,
+      "max_depth": 0,
+      "max_agent_calls": 0,
+      "max_call_tokens": 0,
+      "max_global_calls": 0,
+      "max_spend_micros": 0
+    },
+    "node_id": "cbf0b306-e460-4161-9d23-f15fb6460cc7",
+    "run_dir": "C:/Users/olegc/AppData/Local/Temp/tmp.ynzNgSWNHz/trial-g-3/home\\runs\\01KXA699TK225VTGVEYAZP4VHY",
+    "created_ts_ms": 1783827310420,
+    "updated_ts_ms": 1783827380583,
+    "started_ts_ms": 1783827310420,
+    "pod": {
+      "pod_id": "01KXA699X6QJZVVZ9NGR364XTM",
+      "pod_pid": 56340
+    },
+    "worker_pid": 32352,
+    "exit_code": 0,
+    "failure": null,
+    "kill_reason": null,
+    "usage": {
+      "input_tokens": 22246,
+      "output_tokens": 2870,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 69760,
+      "total_cost_usd": 0.21786,
+      "events": 1399,
+      "web_tool_calls": 0
+    },
+    "collected": {
+      "result_source": "worker",
+      "result": {
+        "fs": "01KXA58CVZV2B2Z7MKKSDH507F",
+        "path": "01KXA699TK225VTGVEYAZP4VHY/wt/result.md",
+        "range": "whole",
+        "etag": "584-19f546599f5"
+      },
+      "result_path": "C:/Users/olegc/AppData/Local/Temp/tmp.ynzNgSWNHz/trial-g-3/home\\runs\\01KXA699TK225VTGVEYAZP4VHY\\wt\\result.md",
+      "acceptance_passed": 1,
+      "acceptance_total": 1
+    }
+  },
+  {
+    "run_id": "01KXA6DAAS0VBKF24H9YJ5TRAY",
+    "title": "parse_line-test-suite",
+    "state": "failed",
+    "profile": "glm",
+    "model": "big",
+    "workspace_mode": "worktree",
+    "parent": null,
+    "depth": 0,
+    "spawn_requested": true,
+    "verifier": false,
+    "budget": {
+      "wall_secs": 900,
+      "max_turns": 35,
+      "max_output_tokens": 200000,
+      "max_depth": 0,
+      "max_agent_calls": 0,
+      "max_call_tokens": 0,
+      "max_global_calls": 0,
+      "max_spend_micros": 0
+    },
+    "node_id": "cbf0b306-e460-4161-9d23-f15fb6460cc7",
+    "run_dir": "C:/Users/olegc/AppData/Local/Temp/tmp.ynzNgSWNHz/trial-g-3/home\\runs\\01KXA6DAAS0VBKF24H9YJ5TRAY",
+    "created_ts_ms": 1783827442010,
+    "updated_ts_ms": 1783827656916,
+    "started_ts_ms": 1783827442010,
+    "pod": {
+      "pod_id": "01KXA6DAD90FT11Y6Q0SB086SS",
+      "pod_pid": 60248
+    },
+    "worker_pid": 31120,
+    "exit_code": 1,
+    "failure": "worker exited with code 1",
+    "kill_reason": null,
+    "usage": {
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "total_cost_usd": 0.0,
+      "events": 13,
+      "web_tool_calls": 0
+    },
+    "collected": {
+      "result_source": "extracted",
+      "result": {
+        "fs": "01KXA58CVZV2B2Z7MKKSDH507F",
+        "path": "01KXA6DAAS0VBKF24H9YJ5TRAY/wt/result.md",
+        "range": "whole",
+        "etag": "137-19f5469f0d1"
+      },
+      "result_path": "C:/Users/olegc/AppData/Local/Temp/tmp.ynzNgSWNHz/trial-g-3/home\\runs\\01KXA6DAAS0VBKF24H9YJ5TRAY\\wt\\result.md",
+      "acceptance_passed": 0,
+      "acceptance_total": 0,
+      "acceptance_skipped": "worker failed; acceptance not run"
+    }
+  },
+  {
+    "run_id": "01KXA6DADZ5CC34A4S7QV8GTDP",
+    "title": "src-bundle-rename-dedup-tostring",
+    "state": "running",
+    "profile": "glm",
+    "model": "big",
+    "workspace_mode": "worktree",
+    "parent": null,
+    "depth": 0,
+    "spawn_requested": true,
+    "verifier": false,
+    "budget": {
+      "wall_secs": 1200,
+      "max_turns": 45,
+      "max_output_tokens": 200000,
+      "max_depth": 0,
+      "max_agent_calls": 0,
+      "max_call_tokens": 0,
+      "max_global_calls": 0,
+      "max_spend_micros": 0
+    },
+    "node_id": "cbf0b306-e460-4161-9d23-f15fb6460cc7",
+    "run_dir": "C:/Users/olegc/AppData/Local/Temp/tmp.ynzNgSWNHz/trial-g-3/home\\runs\\01KXA6DADZ5CC34A4S7QV8GTDP",
+    "created_ts_ms": 1783827442111,
+    "updated_ts_ms": 1783827731695,
+    "started_ts_ms": 1783827442111,
+    "pod": {
+      "pod_id": "01KXA6DAGM1AM8YQ0S8M1YRKQD",
+      "pod_pid": 38908
+    },
+    "worker_pid": 59460,
+    "exit_code": null,
+    "failure": null,
+    "kill_reason": null,
+    "usage": {
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "total_cost_usd": 0.0,
+      "events": 6384,
+      "web_tool_calls": 0
+    }
+  },
+  {
+    "run_id": "01KXA6DAHEHZZ8YC31R46RK0PT",
+    "title": "expected-json-from-fixtures",
+    "state": "failed",
+    "profile": "glm",
+    "model": "big",
+    "workspace_mode": "worktree",
+    "parent": null,
+    "depth": 0,
+    "spawn_requested": true,
+    "verifier": false,
+    "budget": {
+      "wall_secs": 900,
+      "max_turns": 35,
+      "max_output_tokens": 200000,
+      "max_depth": 0,
+      "max_agent_calls": 0,
+      "max_call_tokens": 0,
+      "max_global_calls": 0,
+      "max_spend_micros": 0
+    },
+    "node_id": "cbf0b306-e460-4161-9d23-f15fb6460cc7",
+    "run_dir": "C:/Users/olegc/AppData/Local/Temp/tmp.ynzNgSWNHz/trial-g-3/home\\runs\\01KXA6DAHEHZZ8YC31R46RK0PT",
+    "created_ts_ms": 1783827442223,
+    "updated_ts_ms": 1783827691002,
+    "started_ts_ms": 1783827442223,
+    "pod": {
+      "pod_id": "01KXA6DAM6YZBH7KPAYQEP1PJ7",
+      "pod_pid": 17776
+    },
+    "worker_pid": 58484,
+    "exit_code": 1,
+    "failure": "worker exited with code 1",
+    "kill_reason": null,
+    "usage": {
+      "input_tokens": 5976,
+      "output_tokens": 584,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 37760,
+      "total_cost_usd": 0.06336,
+      "events": 291,
+      "web_tool_calls": 0
+    },
+    "collected": {
+      "result_source": "extracted",
+      "result": {
+        "fs": "01KXA58CVZV2B2Z7MKKSDH507F",
+        "path": "01KXA6DAHEHZZ8YC31R46RK0PT/wt/result.md",
+        "range": "whole",
+        "etag": "137-19f546a75f6"
+      },
+      "result_path": "C:/Users/olegc/AppData/Local/Temp/tmp.ynzNgSWNHz/trial-g-3/home\\runs\\01KXA6DAHEHZZ8YC31R46RK0PT\\wt\\result.md",
+      "acceptance_passed": 0,
+      "acceptance_total": 0,
+      "acceptance_skipped": "worker failed; acceptance not run"
+    }
+  }
+]

@@ -1,0 +1,2 @@
+today: 8 runs · 2 completed · all-time: 8 runs · 2 completed · 5 failed
+month 2026-07: 0 of the web-tool quota burned · 12573 output tokens all-time

@@ -385,6 +385,29 @@ names what superseded it. Like the dashboards above, this is an
 owner-facing surface — the spec tree (plan deferral ledgers, MT
 files, WAL) stays the source of truth and wins on divergence.
 
+### Preserve paid trial results — ALWAYS (owner directive, 2026-07-12)
+
+Every paid trial run — any `trial/run-arm.sh` / `run-advise.sh` fire —
+writes its evidence to `fractality/v0.1.0/target/trial-results/`, which is
+**gitignored**. That evidence is the record of real GLM spend; letting a
+`cargo clean` or a fresh checkout erase it wastes the money. So **after
+every trial fire, preserve it durably and commit — this is not optional and
+not deferrable**:
+
+```sh
+cd fractality/v0.1.0
+bash spec/manual-tests/trial/save-results.sh   # → committed reports/trial-results/
+cd ../.. && git add reports/trial-results && git commit -m "test(fractality): preserve <arm> paid-run evidence"
+```
+
+`save-results.sh` copies the small evidential subset and gzips the
+transcript into the committed [`reports/trial-results/`](reports/trial-results/)
+(README there), excluding the huge, reproducible `proj-final/`. A run is not
+"done" until its evidence is committed. The scored verdicts still go in the
+MT doc's "Recorded runs"; `reports/trial-results/` holds the raw evidence
+behind them. (Owner: «новые тесты тоже сохраняй — и добавь в инструкции что
+так надо делать всегда».)
+
 ## End of session
 
 Rewrite `WAL.md` to the current state (checkpoint, not journal). On a

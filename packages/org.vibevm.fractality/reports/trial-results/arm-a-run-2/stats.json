@@ -1,0 +1,67 @@
+{
+  "totals": {
+    "runs": 2,
+    "completed": 2,
+    "failed": 0,
+    "killed": 0,
+    "open": 0,
+    "input_tokens": 108308,
+    "output_tokens": 4504,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 893248,
+    "total_cost_usd": 1.514826,
+    "wall_ms": 229818,
+    "web_tool_calls": 0
+  },
+  "by_state": {
+    "completed": 2
+  },
+  "by_profile": {
+    "glm": {
+      "runs": 2,
+      "completed": 2,
+      "failed": 0,
+      "killed": 0,
+      "open": 0,
+      "input_tokens": 108308,
+      "output_tokens": 4504,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 893248,
+      "total_cost_usd": 1.514826,
+      "wall_ms": 229818,
+      "web_tool_calls": 0
+    }
+  },
+  "by_model": {
+    "small": {
+      "runs": 2,
+      "completed": 2,
+      "failed": 0,
+      "killed": 0,
+      "open": 0,
+      "input_tokens": 108308,
+      "output_tokens": 4504,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 893248,
+      "total_cost_usd": 1.514826,
+      "wall_ms": 229818,
+      "web_tool_calls": 0
+    }
+  },
+  "by_day": {
+    "2026-07-10": {
+      "runs": 2,
+      "completed": 2,
+      "failed": 0,
+      "killed": 0,
+      "open": 0,
+      "input_tokens": 108308,
+      "output_tokens": 4504,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 893248,
+      "total_cost_usd": 1.514826,
+      "wall_ms": 229818,
+      "web_tool_calls": 0
+    }
+  }
+}

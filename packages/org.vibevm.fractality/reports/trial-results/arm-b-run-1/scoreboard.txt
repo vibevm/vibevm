@@ -1,0 +1,2 @@
+today: 0 runs · 0 completed · all-time: 0 runs · 0 completed · 0 failed
+month 2026-07: 0 of the web-tool quota burned · 0 output tokens all-time
