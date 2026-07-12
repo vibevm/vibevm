@@ -52,6 +52,153 @@ Stop and ask the user first for anything **non-routine**:
 
 When uncertain, ask.
 
+## Delegation-first — spend Claude on judgment, run execution on fractality
+
+**Standing directive (owner-commissioned 2026-07-12).** Claude's context and
+reasoning are the scarcest, most expensive resource in the room; cheap worker
+models (GLM-5.2 / GLM-5-turbo via z.ai) sit idle, already paid for. So for
+**every** task — one the user asks for, or one you or another plan/agent set —
+the first question is: **can this be delegated to fractality?** Delegate
+execution by default; keep Claude for architecture, planning, judgment, and
+review. A session that codes, bulk-edits, or reads-and-summarizes work a
+worker could do is spending the very budget this directive exists to save.
+
+**The calculus is `delegation-rules` — read it in-place before delegating.**
+One law: *delegate when verification is cheaper than generation.* The full
+procedure (four axes — error cost / context / verifiability / size — the
+verdict steps, the never-delegate set, per-model playbooks) lives in the
+delegation-rules package. Until it is installed as a dependency, read it where
+it lies (in-place, per owner directive — this moves once fractality graduates):
+
+- `packages/org.vibevm.fractality/delegation-rules/v0.1.0/spec/boot/77-flow-delegation-rules.md`
+- `…/spec/flows/delegation-rules/DECISION-MATRIX.md`
+- `…/spec/flows/delegation-rules/playbooks/{glm-5.2,glm-5-turbo}.md`
+
+**Don't fear the big model.** GLM-5.2 (the `big` slot) is for substantial
+one-shot work — a whole module with its tests and a self-verify command, a
+long document distilled — not just trivia; `glm-5-turbo` (`small`) takes
+bounded mechanical transforms. Size the packet coarsely (goal, exact
+paths/APIs, non-goals, an acceptance command): big models earn coarse
+one-shots.
+
+**How to run it, in-place (no global install).** fractality runs from the
+working-tree build against the global `~/.fractality` home (a mission-control
+daemon + `profiles.toml` already live there). Build it once with
+`cargo build -p fractality-cli` from
+`packages/org.vibevm.fractality/fractality/v0.1.0/`, then drive it through the
+launcher — `packages/org.vibevm.fractality/fractality.ps1` (PowerShell) or
+`fractality.sh` (Bash). In the command sketches below, `fractality` means that
+launcher (`./fractality.ps1` / `./fractality.sh`), not a binary on PATH:
+
+- `./fractality.ps1 run --packet <task.toml>` (sync) or
+  `./fractality.ps1 spawn … ; ./fractality.ps1 wait <id>` (async) —
+  mission-control spawns an isolated GLM worker; results come back as files.
+  Golden sample packet:
+  `packages/org.vibevm.fractality/fractality/v0.1.0/spec/examples/hello-glm.toml`.
+- No-packet interim route: `opencode run -m zai-coding-plan/glm-5.2 "<task>"`.
+- Free decision helpers (no daemon, no spend): `./fractality.ps1 route …` /
+  `./fractality.ps1 gate …`.
+
+**Enable RLM when a task needs it.** The need-gate is `fractality gate …`: it
+prints one of five verdicts — `inline | route | fold-local | spawn | escalate`
+— on a task's signals (VISION §V2; the recursive descent/ascent machinery is
+`packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-RLM-PLAN-v0.1.md`,
+Campaign 3 Stage B — built but still maturing). A worker only recurses —
+sub-delegates or escalates — when its profile grants the capability:
+`allow_tools = ["Bash"]` (so the worker can itself call `fractality spawn`)
+and/or `ask_boss = true` in `profiles.toml`, both off by default. If a task
+needs that sub-delegation or escalation, enable it for the worker's class
+rather than reclaiming the task by reflex.
+
+**Swarm modes route through fractality too — including `ultracode` and
+Workflow.** Whenever you would fan out a swarm of agents, prefer one of:
+
+- **(a) fractality *is* the swarm** *(the default)* — the parallel workers
+  are fractality-spawned GLM agents (`spawn` + `wait`/`tree`), not Claude
+  subagents. Heavy execution runs on cheap GLM; you orchestrate and review.
+- **(b) big-class launcher agents drive fractality** — reach for this only
+  when the mode forces Claude subagents (`ultracode` / the Workflow tool give
+  you no direct GLM spawn) or the orchestration itself needs Claude-level
+  judgment. Give the launcher a *big-class* model (e.g. Opus) but keep its
+  job *thin*: drive fractality and review the workers' files. The cost win
+  holds **only while the launcher stays thin** — a big-model agent that
+  merely orchestrates fractality moves few tokens, so it beats a mid-model
+  agent carrying the token-heavy coding at max reasoning; the moment the
+  launcher does the work itself, that arithmetic inverts. The rule under
+  both: never let Claude carry the token-heavy execution.
+
+Default a swarm to route through fractality unless the work sits in the
+never-delegate set.
+
+**Always review; the ask-first gates still bind.** Delegated output is
+advisory until you read the diff as a contributor PR and the gate/acceptance
+is green — whatever the worker claimed; delegation without review is
+abandonment. Never hand off the never-delegate set: secrets or credentials,
+destructive or irreversible operations, architecture/spec/plan authoring,
+ambiguity-that-is-design, the review itself, or sub-minute edits. **Rule 1
+still governs** — delegation is a working method; the authored surface of this
+repository stays human, and workers are tools, never credited. **Rule 4 still
+governs** — non-routine work (its ask-first list: history rewrites,
+force-push, large blobs, CI / signing / secrets, anything whose reversal costs
+work) stops for the owner *before* it is delegated or done; the never-delegate
+set is narrower than that list and never replaces it.
+
+*(The fractality workspace runs the strong, mechanized form of this — its
+⛔ DELEGATION LAW + live-observation protocol in
+`packages/org.vibevm.fractality/CLAUDE.md`. This host directive is the general
+form for all vibevm sessions; a workspace session follows its own contract.)*
+
+### Operating facts — the in-place fractality ledger (owner-authorised, keep current)
+
+**Owner grant (2026-07-12):** maintain this ledger **autonomously** — whenever
+a session verifies a durable operational fact about running fractality /
+delegation, record it here immediately (no need to ask), so no future session
+re-learns it. This is an explicit, narrow exception to Rule 4's ask-first for
+this sensitive file: it authorises *appending and curating verified
+operational facts in this subsection only*, never rewriting the rules above.
+Keep it current-state; prune stale lines.
+
+- **Build / run:** `cargo build -p fractality-cli` (also
+  `-p fractality-mission-control -p fractality-pod`) from
+  `packages/org.vibevm.fractality/fractality/v0.1.0/`; drive via the launcher;
+  global home `~/.fractality`. Binaries verified built 2026-07-12.
+- **Daemon:** `mc start` is idempotent; read-verbs auto-start it
+  (`connect_or_start`); one daemon already runs live on the global home
+  (2026-07-12). A different home ⇒ a separate daemon (own lock/port).
+- **Profiles** (`~/.fractality/profiles.toml`): profile `glm` → z.ai gateway
+  `https://api.z.ai/api/anthropic`, `big = glm-5.2[1m]`, `small = glm-5-turbo`,
+  token by PATH `~/.vibevm/zai.api.token` (never inline/echo it);
+  `config_dir = "auto"` (fresh per-run `CLAUDE_CONFIG_DIR`).
+- **Free vs paid:** `route` / `gate` are pure calculus — no daemon, no spend;
+  `run` / `spawn` / `advise` spawn a real GLM worker = **z.ai spend**. The
+  blanket paid-run pre-authorisation ended with the 2026-07-12 five-task goal —
+  a new paid run needs the owner's word (a task that commissions a run is that
+  word).
+- **Interim route (no packet):** `opencode run -m zai-coding-plan/glm-5.2 "<task>"`
+  — opencode 1.17.14, z.ai creds in its auth store (2026-07-12); use **only**
+  `zai-coding-plan/*` (the `opencode/*` Zen gateway is unpaid here and errors).
+- **Packets** (TOML, schema 1): `[task]` goal/acceptance,
+  `[workspace] mode = "worktree" | "dir"` (worktree default → `repo`/`base`,
+  deliverable branch), `[output]`, `[budget]`, `[routing]` profile/model.
+  Golden: `…/fractality/v0.1.0/spec/examples/hello-glm.toml`. Workers **cannot
+  run git** — the boss commits/merges the `fractality/<id>` branch.
+- **Enable RLM (worker recursion):** profile `allow_tools = ["Bash"]` (worker
+  may itself call `fractality spawn`) and/or `ask_boss = true` — both off by
+  default. Need-gate verdicts: `inline | route | fold-local | spawn | escalate`.
+- **F19 gotcha:** `git worktree add` of THIS host repo overflows Windows
+  MAX_PATH on deep `vibedeps/` paths → provisioning uses
+  `-c core.longpaths=true`; only a deep real repo catches it.
+- **License state (keep current):** the canonical `packages/org.vibevm/**`
+  (redbook family, discipline stack, fractality, delegation-rules,
+  wal-workspaces) are **already UPL-1.0** (prior dogfood MT-05 firing #2, merges
+  `893e314` / `79938ab`). The lone EULA straggler in our shipped surface is the
+  **host root `LICENSE.md`**. Off-limits for relicensing: `refs/**`
+  (third-party), `vibedeps/**` + `.vibe/cache/**` (regenerated dep copies),
+  `fixtures/**` + `crates/**` test data (tests assert on `"EULA"`), the
+  `licensing` package (legitimate eula-template), and `VIBEVM-SPEC.md` + specs
+  (owner-frozen / historical mentions). Dogfood spec:
+  `…/fractality/v0.1.0/spec/manual-tests/MT-05-dogfood-relicense.md`.
+
 ## Workspaces — nested projects with their own WAL
 
 This repository hosts **workspaces**: sub-projects registered in [`WORKSPACES.md`](WORKSPACES.md) that carry their own boot contract (`CLAUDE.md` at the workspace root), their own WAL, and their own `CONTINUE.md`, and are worked on as independent projects. Canon: `flow:org.vibevm/wal-workspaces` (authored under `packages/org.vibevm/`, like the rest of the redbook family).
