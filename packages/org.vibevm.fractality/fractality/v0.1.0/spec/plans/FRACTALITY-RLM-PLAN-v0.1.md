@@ -267,6 +267,36 @@ divergence from the D18 park channel it otherwise generalizes.
   (`runs(Escalated)` reuses the state filter); the climb is a client-side
   walk. specmap re-minted. Producer still absent — worker expression is
   Ф4.3.
+- (refactor) carve the MC pod leg into cells (`2ce35f8`): `pod_register`/
+  `pod_heartbeat`/`pod_event` + `mint_file_ref` → `http_pods.rs` (http.rs
+  600→379); the client-leg pod verbs → mc-client `pod_leg.rs` (lib.rs
+  597→560). Headroom for the escalate route + verb ("carve before adding").
+  Pure move, no behaviour change; first CC+z.ai GLM delegation did the
+  http.rs half (reviewed).
+- Ф4.3a escalate endpoint + client verb (`3f9a2e4`, D-C3-6):
+  `POST /v0/runs/:id/escalate` (`http_escalate.rs`) records `Event::
+  Escalated` + writes `escalation.md`; wrong-state → 409; `EscalateRequest`
+  DTO; `McClient::escalate`. Two integration tests (running-run escalates;
+  queued refused). specmap re-minted.
+- Ф4.3b escalate MCP tool (`0bf4242`, D-C3-6): the broker serves
+  `escalate(reason, needs)` alongside `ask_boss`; records via the Ф4.3a
+  path, returns a terminal "stop working" result (worker exit absorbed as a
+  kill-tail). `route()` unit tests for the tool list + call routing + arg
+  guards. **Ф4 COMPLETE — the escalation channel is in end to end**
+  (D-C3-6: core outcome → climb surfaces → endpoint/verb → worker tool;
+  floor green throughout, test-gate 211). Report:
+  `reports/2026-12-07-05-05-campaign3-f4-escalation.md`.
+
+**Open decision — worker expression, RESOLVED (Ф4.3).** The Ф0-s4 open
+question (MCP tool vs result-status exit) is decided for the MCP tool: it
+fits the state machine (the worker is `running` when it escalates, so
+`running → escalated` is clean and immediate), matches the "generalise the
+D18 channel" framing, and keeps reason/needs structured (no string
+sentinels, §10.5). A result-status exit would invert the machine — the
+pod's Exit event completes the run first, and a terminal run cannot then be
+re-marked escalated. If a fast worker ever needs to escalate before its
+first heartbeat, that is a `starting → escalated` edge-add + a status field,
+deferred until a worker actually needs it.
 
 **Scoping decision — decision-journal producer (D-C3-8).** The journal
 must record REAL need-gate decisions, so the producer cannot be MC

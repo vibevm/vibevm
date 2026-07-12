@@ -4,16 +4,17 @@ _Campaign 3 Stage B execution tracker. Updated in place between status
 documents (big-plan dashboard rule — bulk stays out of status files).
 Source of truth is the spec tree (plan, syntheses, WAL); this is the
 owner-facing surface + the agent's own quick tracker. Last updated:
-2026-07-12 (**Ф4 IN PROGRESS — descent→ascent both wired**). Ф3 CLOSED
-(descent core, 9 slices). Ф4.1 (`e13ddbf`) lands the D-C3-6 core (terminal
-`RunState::Escalated` + `EscalationRecord`, typed `Event::Escalated` +
-fold, `escalated` metrics counter; journal fold carved to
-`journal_fold.rs`). Ф4.2 (`6ed04e6`) lands the ascent surfaces (exit code
-5, `fractality escalations` inbox with root attribution, run-summary
-lines). Both floor green. Next: **Ф4.3 — worker expresses escalation** (an
-`escalate` MCP tool in the broker + the `/escalate` endpoint & mc-client
-verb it needs), then Ф5→Ф7. Phase report (Ф3):
-`reports/2026-12-07-02-40-campaign3-f3-descent-core.md`._
+2026-07-12 (**Ф4 COMPLETE — the escalation channel is in end to end**).
+Ф3 CLOSED (descent core, 9 slices); Ф4 CLOSED (D-C3-6, 4 slices + 1
+carve): terminal `RunState::Escalated` + record + fold + metrics (Ф4.1);
+exit code 5 + `fractality escalations` inbox with call-tree-root
+attribution (Ф4.2); the `/escalate` endpoint + `McClient::escalate` +
+`escalation.md` (Ф4.3a); the broker `escalate(reason, needs)` MCP tool
+(Ф4.3b). Pod leg carved to `http_pods.rs`/`pod_leg.rs` for headroom. Floor
+green throughout (test-gate 211). **Delegation switched opencode→CC+z.ai
+(works — see scoreboard).** Next: **Ф5 — acceptance / PP-002 fold-in**,
+then Ф6 (trial) → Ф7 (close) → PP-003. Phase reports:
+`…-f4-escalation.md`, `…-f3-descent-core.md`._
 
 ## Goal & operating contract (owner, 2026-07-11)
 
@@ -142,7 +143,9 @@ nudge (RD-12 settings-writes precedent), mc-client, cli surfaces.
         in `swarm.rs`, violations folded into the retry's `context.notes`,
         bounded (gate checked only on the first attempt). `fractality
         spawn` has no wait point so no retry — correct.
-- [~] **Ф4 escalation (D-C3-6)** — IN PROGRESS (s4 spike design now real)
+- [x] **Ф4 escalation (D-C3-6) — COMPLETE** (core → climb → endpoint/verb →
+      worker MCP tool; end to end, floor green throughout, test-gate 211).
+      Report: `reports/2026-12-07-05-05-campaign3-f4-escalation.md`.
   - [x] Ф4.1 escalation core outcome (`e13ddbf`) — terminal
         `RunState::Escalated` + `EscalationRecord{reason, needs}`; typed
         `Event::Escalated` + fold; `MetricsBucket.escalated` counter; MC
@@ -158,9 +161,15 @@ nudge (RD-12 settings-writes precedent), mc-client, cli surfaces.
         `print_run_summary`/`detail` show reason/needs. No new endpoint
         (`runs(Escalated)` reuses the state filter). Floor green
         (test-gate 207). Producer still absent → Ф4.3.
-  - [ ] Ф4.3 worker expresses escalation — resolve open Q (ask_boss-style
-        MCP tool vs result-status exit); wire the pod/backend + cli
-        surface. May widen the `starting → escalated` edge if result-exit.
+  - [x] Ф4.3 worker expresses escalation — **DONE via an MCP tool** (open Q
+        resolved: tool, not result-status exit — it fits the state machine).
+    - [x] (refactor) carve MC pod leg → `http_pods.rs` + `pod_leg.rs`
+          (`2ce35f8`) for budget headroom; first CC+z.ai GLM delegation did
+          the http.rs half (reviewed clean).
+    - [x] Ф4.3a `POST /v0/runs/:id/escalate` + `McClient::escalate` +
+          `escalation.md` + 2 integration tests (`3f9a2e4`); wrong-state 409.
+    - [x] Ф4.3b broker `escalate(reason, needs)` MCP tool (`0bf4242`);
+          terminal "stop working" result, worker exit absorbed as kill-tail.
 - [ ] Ф5 acceptance / PP-002 (RD-11, FD-9)
 - [ ] Ф6 trial (D-C3-9) — STOP at RP-C3-2
 - [ ] Ф7 close
