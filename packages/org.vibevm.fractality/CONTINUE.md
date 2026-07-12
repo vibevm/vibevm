@@ -54,34 +54,37 @@ landed at the owner's direction.
 
 ## Active work in flight
 
-**PP-001 firing** (background task; `scratchpad/fire-pp001.log`): 6 GLM cold
-boss runs (~25 min each, ~2.5 h total). Cannot run `floor`/`cargo` while it
-fires — Windows locks the running `.exe`s. When it prints `ALL-PP001-DONE`
-the evidence is auto-preserved under `reports/trial-results/<dated>-c2-mt-c2-05-initiative-rerun/`;
-score with the MT-C2-01 rubric + the fatigue facts (nudges by reason, the
-slate at each nudge) and rule PR1–PR3.
+**PP-004 DONE, PP-001 DONE** (both fired + scored + committed). **The
+MT-C3-02 help/hurt trial is FIRING now** (background `bi2q342zd`,
+`scratchpad/fire-advise.log`): alone×3 + advised×3, caller = glm-5-turbo,
+advisor = glm-5.2 via `fractality advise`. Cannot run `floor`/`cargo` while
+it fires (Windows `.exe` lock). When it prints `ALL-ADVISE-DONE` the evidence
+auto-preserves under `reports/trial-results/<dated>-c3-mt-c3-02-advisor-help-hurt/`.
 
 ## Next-steps recipe (cold start)
 
-1. **Collect PP-001** (if the fire finished): read `fire-pp001.log` RESULT
-   lines; the group is auto-saved; score per MT-C2-01, fill MT-C2-05 §Recorded
-   runs + the group README, commit. (If it did not finish, `bash
-   spec/manual-tests/trial/run-arm.sh {a,b} {n}` the missing runs.)
-2. **Build + fire the MT-C3-02 help/hurt trial** (task 2). Author, over
-   `trial/staging` (mini_logfmt):
-   - `menu-advise.md` — 4 genuinely-uncertain tasks with hidden acceptances:
-     (A) `first_unique` preserving FIRST-SEEN order (a HashSet reorders →
-     fails); (B) `count_records` where a trailing newline is NOT a record;
-     (C) a `merge_pairs(&a,&b)->Record` that composes into a fold (by-value
-     dead-ends); (D) `render` round-tripping an empty-value pair `k=`.
-   - `preamble-alone.md` / `preamble-advised.md` (advised tells the caller to
-     `fractality advise` a rung up before committing).
-   - `run-advise.sh` (mirror `run-arm.sh`, caller = `small` model, preamble
-     swap, collect the `advise` runs) + `score-advise.py`.
-   - Fire `alone {1,2,3}` + `advised {1,2,3}`; save (`advise-help-hurt`
-     group) + score (PR-adv-1 help, PR-adv-2 mechanism, PR-adv-3 no-hurt).
-   - Delegatable to GLM (CC+z.ai) — a discipline-light content build.
-3. **C-3** — the uncertainty-trigger doc (spec), thresholds from the trial.
+Only **task 2 (validated Stage C)** remains, and its trial is firing. When
+`fire-advise.log` shows `ALL-ADVISE-DONE`:
+
+1. **Score the help/hurt trial:** `cd fractality/v0.1.0 && python
+   spec/manual-tests/trial/score-advise.py` (it drops each hidden test into a
+   run's proj-final, cargo-tests it, pools per-arm pass rates). Rule PR-adv-1
+   (ADVISED pass rate > ALONE?), PR-adv-2 (each advised run issued ≥1 advise
+   call?), PR-adv-3 (no more failures advised than alone?). Record verdicts in
+   MT-C3-02 §Recorded runs + fill the group README + commit. NOTE the 2-tier
+   caveat: this measures one point (glm-5.2 advises glm-5-turbo), not the full
+   RD-10 inversion.
+2. **Write C-3 — the uncertainty-trigger doc** (the caller-behaviour protocol:
+   self-consistency spread / trace length / verbalized confidence as consult
+   signals), thresholds informed by the trial data. Commit → task 2 done →
+   all five goal tasks done → the Stop-hook clears.
+3. If the trial produced a null/odd result (e.g. the caller never consulted),
+   that is itself recordable — the machinery (`advise` verb + bar + ladder) is
+   built and tested regardless; the trial validates the *effect*, and a null
+   is an honest finding, not a blocker.
+
+The C-4 build (run-advise.sh + hidden tests + scorer) is already committed
+(`2b210bc`, GLM-built + reviewed) — nothing to rebuild.
 
 ## Non-obvious findings this session
 
