@@ -399,16 +399,26 @@ not deferrable**:
 
 ```sh
 cd fractality/v0.1.0
-bash spec/manual-tests/trial/save-results.sh   # → committed reports/trial-results/
-cd ../.. && git add reports/trial-results && git commit -m "test(fractality): preserve <arm> paid-run evidence"
+bash spec/manual-tests/trial/save-results.sh <group-description>   # e.g. c3-mt-c3-03-gated-rerun
+# then fill in the scaffolded reports/trial-results/<dated-group>/README.md
+cd ../.. && git add reports/trial-results && git commit -m "test(fractality): preserve <group> paid-run evidence"
 ```
 
-`save-results.sh` copies the small evidential subset and gzips the
-transcript into the committed [`reports/trial-results/`](reports/trial-results/)
-(README there), excluding the huge, reproducible `proj-final/`. A run is not
-"done" until its evidence is committed. The scored verdicts still go in the
-MT doc's "Recorded runs"; `reports/trial-results/` holds the raw evidence
-behind them.
+`save-results.sh` groups the related runs under ONE **dated** directory and
+dates each run dir too — `<год-число-месяц>-<HH-MM>-<name>` (reversedate-
+forwardtime-description), the same order as every report, e.g.
+`2026-12-07-06-42-arm-g-run-3` inside `2026-12-07-05-49-c3-f6-gated/`. It
+copies the small evidential subset, gzips the transcript, and excludes the
+huge reproducible `proj-final/`, into the committed
+[`reports/trial-results/`](reports/trial-results/).
+
+**Each group dir carries a `README.md`** (the helper scaffolds a stub): what
+the test was, its pre-registration (MT id), the arms, and its **summary
+results once understood** — and it is **amended** when a later analysis pass
+produces verdicts (owner rule: results written later supplement it). A run is
+not "done" until its evidence is committed; the MT doc's "Recorded runs" holds
+the canonical scored verdicts, this holds the raw evidence + the per-group
+summary behind them.
 
 **Case 2 — any other important or long test/run.** Not everything comes from
 the trial harness, and not every valuable run is shaped like one. Any
