@@ -35,6 +35,8 @@ cp -r "$TRIAL_DIR/staging" "$PROJ"
 # them); other arms get the bare menu.
 if [ "$ARM" = "g" ]; then
   cat "$TRIAL_DIR/preamble-g.md" "$TRIAL_DIR/menu.md" > "$SCRATCH/menu.md"
+elif [ "$ARM" = "g2" ]; then
+  cat "$TRIAL_DIR/preamble-g.md" "$TRIAL_DIR/menu.md" "$TRIAL_DIR/menu-g2-extra.md" > "$SCRATCH/menu.md"
 else
   cp "$TRIAL_DIR/menu.md" "$SCRATCH/menu.md"
 fi
@@ -122,6 +124,7 @@ echo "boss_exit=$BOSS_EXIT wall_secs=$(( $(date +%s) - START_TS ))" | tee -a "$O
 "$EXE" scoreboard     > "$OUT/scoreboard.txt"   || true
 "$EXE" escalations --json > "$OUT/escalations.json" || true
 "$EXE" tree --json    > "$OUT/forest.json"      || true
+"$EXE" decisions --json > "$OUT/decisions.json" || true
 "$EXE" mc stop >/dev/null || true
 
 RUNS=$(python -c "import json,sys;print(len(json.load(open(sys.argv[1],encoding='utf-8'))))" "$OUT/runs.json" 2>/dev/null || echo "?")
