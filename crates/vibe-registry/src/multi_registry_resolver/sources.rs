@@ -164,7 +164,7 @@ impl MultiRegistryResolver {
     fn git_source_clone_dir(&self, group: &Group, name: &str) -> PathBuf {
         self.cache_root
             .join("__git_sources__")
-            .join(format!("{group}.{name}"))
+            .join(format!("{group}_{name}"))
             .join("clone")
     }
 

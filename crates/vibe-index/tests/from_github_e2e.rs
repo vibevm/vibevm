@@ -174,11 +174,11 @@ fn from_github_cell_scans_through_the_seam() {
     std::fs::create_dir_all(&upstream).unwrap();
     let wal = make_local_repo(
         &upstream,
-        "org.vibevm.wal",
+        "org.vibevm_wal",
         &[("v0.1.0", &manifest("wal", "flow", "0.1.0"))],
     );
     let mock = spawn_mock(vec![vec![CannedRepo {
-        name: "org.vibevm.wal".into(),
+        name: "org.vibevm_wal".into(),
         clone_url: local_clone_url(&wal),
     }]]);
 
@@ -207,7 +207,7 @@ fn from_github_cell_scans_through_the_seam() {
     let entry = &report.entries[0];
     assert_eq!(entry.name, "wal");
     assert_eq!(entry.version.to_string(), "0.1.0");
-    assert!(report.snapshots.contains_key("org.vibevm.wal"));
+    assert!(report.snapshots.contains_key("org.vibevm_wal"));
 }
 
 #[test]

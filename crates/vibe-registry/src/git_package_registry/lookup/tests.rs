@@ -13,7 +13,7 @@ use crate::git_package_registry::test_support::*;
 fn list_versions_filters_non_semver_and_sorts() {
     let cache = tempdir().unwrap();
     let fake = Arc::new(FakeBackend::default());
-    let url = "git@host:org/org.vibevm.wal.git";
+    let url = "git@host:org/org.vibevm_wal.git";
     fake.seed_tags(
         url,
         vec![
@@ -36,7 +36,7 @@ fn list_versions_filters_non_semver_and_sorts() {
 fn list_versions_empty_when_repo_has_no_tags() {
     let cache = tempdir().unwrap();
     let fake = Arc::new(FakeBackend::default());
-    fake.seed_tags("git@host:org/org.vibevm.wal.git", vec![]);
+    fake.seed_tags("git@host:org/org.vibevm_wal.git", vec![]);
     let r = registry_with(cache.path(), "git@host:org", NamingConvention::Fqdn, fake);
     let v = r.list_versions(&org(), "wal").unwrap();
     assert!(v.is_empty());
@@ -60,7 +60,7 @@ fn list_versions_falls_through_to_mirror_when_primary_unreachable() {
     let cache = tempdir().unwrap();
     let fake = Arc::new(FakeBackend::default());
     fake.seed_tags(
-        "https://mirror.example/vibespecs/org.vibevm.wal.git",
+        "https://mirror.example/vibespecs/org.vibevm_wal.git",
         vec!["v0.1.0".into(), "v0.2.0".into()],
     );
     let r = registry_with_mirrors(
@@ -86,11 +86,11 @@ fn list_versions_prefers_primary_when_both_seeded() {
     let cache = tempdir().unwrap();
     let fake = Arc::new(FakeBackend::default());
     fake.seed_tags(
-        "https://primary.example/vibespecs/org.vibevm.wal.git",
+        "https://primary.example/vibespecs/org.vibevm_wal.git",
         vec!["v0.1.0".into()],
     );
     fake.seed_tags(
-        "https://mirror.example/vibespecs/org.vibevm.wal.git",
+        "https://mirror.example/vibespecs/org.vibevm_wal.git",
         vec!["v0.1.0".into(), "v0.2.0".into()],
     );
     let r = registry_with_mirrors(
@@ -134,7 +134,7 @@ fn list_versions_walks_mirrors_in_priority_order() {
     let cache = tempdir().unwrap();
     let fake = Arc::new(FakeBackend::default());
     fake.seed_tags(
-        "https://m3.example/vibespecs/org.vibevm.wal.git",
+        "https://m3.example/vibespecs/org.vibevm_wal.git",
         vec!["v0.3.0".into()],
     );
     let r = registry_with_mirrors(
@@ -158,7 +158,7 @@ fn resolve_picks_latest_stable() {
     let cache = tempdir().unwrap();
     let fake = Arc::new(FakeBackend::default());
     fake.seed_tags(
-        "git@host:org/org.vibevm.wal.git",
+        "git@host:org/org.vibevm_wal.git",
         vec!["v0.1.0".into(), "v0.2.0".into(), "v1.0.0-rc.1".into()],
     );
     let r = registry_with(cache.path(), "git@host:org", NamingConvention::Fqdn, fake);
@@ -173,7 +173,7 @@ fn resolve_picks_exact_version() {
     let cache = tempdir().unwrap();
     let fake = Arc::new(FakeBackend::default());
     fake.seed_tags(
-        "git@host:org/org.vibevm.wal.git",
+        "git@host:org/org.vibevm_wal.git",
         vec!["v0.1.0".into(), "v0.2.0".into(), "v0.3.0".into()],
     );
     let r = registry_with(cache.path(), "git@host:org", NamingConvention::Fqdn, fake);
@@ -187,7 +187,7 @@ fn resolve_picks_range() {
     let cache = tempdir().unwrap();
     let fake = Arc::new(FakeBackend::default());
     fake.seed_tags(
-        "git@host:org/org.vibevm.wal.git",
+        "git@host:org/org.vibevm_wal.git",
         vec!["v0.1.0".into(), "v0.1.5".into(), "v0.2.0".into()],
     );
     let r = registry_with(cache.path(), "git@host:org", NamingConvention::Fqdn, fake);
@@ -200,7 +200,7 @@ fn resolve_picks_range() {
 fn resolve_no_match_errors() {
     let cache = tempdir().unwrap();
     let fake = Arc::new(FakeBackend::default());
-    fake.seed_tags("git@host:org/org.vibevm.wal.git", vec!["v0.1.0".into()]);
+    fake.seed_tags("git@host:org/org.vibevm_wal.git", vec!["v0.1.0".into()]);
     let r = registry_with(cache.path(), "git@host:org", NamingConvention::Fqdn, fake);
     let p = PackageRef::parse("org.vibevm/wal@^9.0").unwrap();
     let err = r.resolve(&p).unwrap_err();
@@ -215,8 +215,8 @@ fn fetch_dep_manifest_falls_through_to_mirror_on_archive_path() {
     // manifest without a clone.
     let cache = tempdir().unwrap();
     let fake = Arc::new(FakeBackend::default());
-    let primary_url = "https://primary.example/vibespecs/org.vibevm.wal.git";
-    let mirror_url = "https://mirror.example/vibespecs/org.vibevm.wal.git";
+    let primary_url = "https://primary.example/vibespecs/org.vibevm_wal.git";
+    let mirror_url = "https://mirror.example/vibespecs/org.vibevm_wal.git";
     // Tag list seeded only on the mirror — list_versions will land
     // on the mirror first too.
     fake.seed_tags(mirror_url, vec!["v0.1.0".into()]);
@@ -247,7 +247,7 @@ fn fetch_dep_manifest_falls_through_to_mirror_on_archive_path() {
 fn fetch_dep_manifest_reads_via_archive_without_clone() {
     let cache = tempdir().unwrap();
     let fake = Arc::new(FakeBackend::default());
-    let url = "git@host:org/org.vibevm.wal.git";
+    let url = "git@host:org/org.vibevm_wal.git";
     fake.seed_tags(url, vec!["v0.1.0".into()]);
     fake.seed_file(
         url,
@@ -289,8 +289,8 @@ fn fetch_dep_manifest_clone_fallback_uses_mirror_dispatch() {
     )
     .unwrap();
 
-    let primary_url = "https://primary.example/vibespecs/org.vibevm.wal.git";
-    let mirror_url = "https://mirror.example/vibespecs/org.vibevm.wal.git";
+    let primary_url = "https://primary.example/vibespecs/org.vibevm_wal.git";
+    let mirror_url = "https://mirror.example/vibespecs/org.vibevm_wal.git";
 
     // FakeBackend's `fetch_file_at_ref` returns FileNotFoundInRef
     // when not seeded. To trigger the clone fallback we need an

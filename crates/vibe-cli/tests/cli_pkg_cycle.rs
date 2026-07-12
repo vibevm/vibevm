@@ -762,7 +762,7 @@ fn install_from_git_registry() {
     let project = tempfile::tempdir().unwrap();
     init_project(project.path());
 
-    // Org URL = parent of `org.vibevm.wal.git`. `git+file://` prefix is
+    // Org URL = parent of `org.vibevm_wal.git`. `git+file://` prefix is
     // the Cargo / pip convention recorded in lockfiles; the resolver
     // strips it before invoking `git`, so it works with both prefixed and
     // bare forms in `vibe.toml`.
@@ -803,8 +803,8 @@ fn install_from_git_registry() {
         entry.source_url
     );
     assert!(
-        entry.source_url.ends_with("/org.vibevm.wal.git"),
-        "expected per-package URL ending in /org.vibevm.wal.git, got: {}",
+        entry.source_url.ends_with("/org.vibevm_wal.git"),
+        "expected per-package URL ending in /org.vibevm_wal.git, got: {}",
         entry.source_url
     );
     assert_eq!(entry.source_ref.as_deref(), Some("v0.1.0"));
@@ -820,7 +820,7 @@ fn install_from_git_registry() {
         .collect();
     assert_eq!(clone_dirs.len(), 1, "expected one registry cache bucket");
     let bucket = clone_dirs[0].path();
-    let pkg_clone = bucket.join("packages/org.vibevm.wal/clone");
+    let pkg_clone = bucket.join("packages/org.vibevm_wal/clone");
     assert!(
         pkg_clone.join(".git").exists(),
         "per-package clone missing .git/: {}",

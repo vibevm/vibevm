@@ -256,7 +256,7 @@ fn resolve_registry_sections(args: &InitArgs) -> Vec<RegistrySection> {
         }];
     }
     // The canonical `vibespecs` GitHub org is fqdn-shaped since
-    // PROP-008 — `<group>.<name>` repositories (`org.vibevm.wal`) — so a
+    // PROP-008 — `<group>.<name>` repositories (`org.vibevm_wal`) — so a
     // fresh project resolves the qualified packages out of the box.
     let github = RegistrySection {
         name: DEFAULT_REGISTRY_NAME.to_string(),

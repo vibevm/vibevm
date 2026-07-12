@@ -78,8 +78,8 @@ impl PublishConfig {
 ///     kind: PackageKind::Flow,
 ///     name: "wal".to_string(),
 ///     version: semver::Version::parse("0.1.0").unwrap(),
-///     repo_name: "org.vibevm.wal".to_string(),
-///     repo_url: "https://github.com/vibespecs/org.vibevm.wal.git".to_string(),
+///     repo_name: "org.vibevm_wal".to_string(),
+///     repo_url: "https://github.com/vibespecs/org.vibevm_wal.git".to_string(),
 ///     tag: "v0.1.0".to_string(),
 ///     created_repo: true,
 ///     host: "github.com".to_string(),
@@ -112,7 +112,7 @@ pub struct PublishOutcome {
 /// use vibe_publish::{DirectGitCreator, PublishConfig, Publisher};
 ///
 /// // Operator-provisioned repo: push with local git credentials.
-/// let creator = DirectGitCreator::new("file:///tmp/registry/org.vibevm.wal.git");
+/// let creator = DirectGitCreator::new("file:///tmp/registry/org.vibevm_wal.git");
 /// let publisher = Publisher::new(&creator);
 ///
 /// let mut config = PublishConfig::with_defaults(

@@ -17,10 +17,10 @@ fn resolve_picks_first_registry_with_match() {
     let fake = Arc::new(FakeBackend::default());
     // Both registries have the package; first wins.
     fake.seed_tags(
-        "git@host:org-a/org.vibevm.wal.git",
+        "git@host:org-a/org.vibevm_wal.git",
         vec!["v0.1.0".into(), "v0.2.0".into()],
     );
-    fake.seed_tags("git@host:org-b/org.vibevm.wal.git", vec!["v0.5.0".into()]);
+    fake.seed_tags("git@host:org-b/org.vibevm_wal.git", vec!["v0.5.0".into()]);
 
     let r = build_resolver(
         cache.path(),
@@ -38,7 +38,7 @@ fn resolve_picks_first_registry_with_match() {
     assert_eq!(m.registry_name.as_deref(), Some("a"));
     assert_eq!(m.resolved.version.to_string(), "0.2.0");
     assert!(!m.overridden);
-    assert_eq!(m.source_url, "git@host:org-a/org.vibevm.wal.git");
+    assert_eq!(m.source_url, "git@host:org-a/org.vibevm_wal.git");
     assert_eq!(m.source_ref.as_deref(), Some("v0.2.0"));
 }
 
@@ -47,7 +47,7 @@ fn resolve_falls_through_to_next_registry_on_unknown_package() {
     let cache = tempdir().unwrap();
     let fake = Arc::new(FakeBackend::default());
     // First registry: no seed for this URL → RepoNotFound → fall through.
-    fake.seed_tags("git@host:org-b/org.vibevm.wal.git", vec!["v0.5.0".into()]);
+    fake.seed_tags("git@host:org-b/org.vibevm_wal.git", vec!["v0.5.0".into()]);
 
     let r = build_resolver(
         cache.path(),
@@ -136,8 +136,8 @@ fn resolve_strict_auth_halts_on_public_401_instead_of_walking() {
     // Primary public registry returns AuthFailed; secondary has
     // the package. With strict_auth on, the resolver must NOT
     // walk to the secondary.
-    fake.seed_auth_failure("git@host:org-a/org.vibevm.wal.git");
-    fake.seed_tags("git@host:org-b/org.vibevm.wal.git", vec!["v0.5.0".into()]);
+    fake.seed_auth_failure("git@host:org-a/org.vibevm_wal.git");
+    fake.seed_tags("git@host:org-b/org.vibevm_wal.git", vec!["v0.5.0".into()]);
 
     let r = build_resolver(
         cache.path(),
@@ -179,8 +179,8 @@ fn resolve_walks_past_auth_failed_when_registry_is_public() {
     // First registry: returns AuthFailed (think GitVerse-style 401
     // for a missing public repo). Second registry: serves the
     // package.
-    fake.seed_auth_failure("git@host:org-a/org.vibevm.wal.git");
-    fake.seed_tags("git@host:org-b/org.vibevm.wal.git", vec!["v0.5.0".into()]);
+    fake.seed_auth_failure("git@host:org-a/org.vibevm_wal.git");
+    fake.seed_tags("git@host:org-b/org.vibevm_wal.git", vec!["v0.5.0".into()]);
 
     let r = build_resolver(
         cache.path(),
@@ -228,12 +228,12 @@ fn resolve_halts_on_auth_failed_against_authenticated_registry() {
     let cache = tempdir().unwrap();
     let fake = Arc::new(FakeBackend::default());
     // The authenticated registry returns AuthFailed.
-    fake.seed_auth_failure("https://internal.example.com/vibespecs/org.vibevm.wal.git");
+    fake.seed_auth_failure("https://internal.example.com/vibespecs/org.vibevm_wal.git");
     // A second registry has the package — but the resolver must
     // NOT walk to it (the operator declared the first registry
     // as authenticated; AuthFailed is information they need).
     fake.seed_tags(
-        "git@host:org-public/org.vibevm.wal.git",
+        "git@host:org-public/org.vibevm_wal.git",
         vec!["v0.5.0".into()],
     );
 
@@ -302,7 +302,7 @@ fn resolve_halts_on_missing_token_for_authenticated_registry() {
     // Public fallback also has the package — must NOT be walked
     // past the missing-token registry.
     fake.seed_tags(
-        "git@host:org-public/org.vibevm.wal.git",
+        "git@host:org-public/org.vibevm_wal.git",
         vec!["v0.5.0".into()],
     );
 
@@ -338,7 +338,7 @@ fn override_short_circuits_registry_resolution() {
     let cache = tempdir().unwrap();
     let fake = Arc::new(FakeBackend::default());
     // Registry has flow:wal at 0.2.0, but override pins to a fork.
-    fake.seed_tags("git@host:org-a/org.vibevm.wal.git", vec!["v0.2.0".into()]);
+    fake.seed_tags("git@host:org-a/org.vibevm_wal.git", vec!["v0.2.0".into()]);
     // Override URL: serve a manifest pinned at "my-fix" branch.
     fake.seed_file(
         "git@my-fork:vibevm/wal-fork.git",
@@ -443,8 +443,8 @@ fn fetch_dispatches_to_registry_that_resolved() {
     .unwrap();
 
     let fake = Arc::new(FakeBackend::default());
-    fake.seed_tags("git@host:org-b/org.vibevm.wal.git", vec!["v0.5.0".into()]);
-    fake.seed_bootstrap("git@host:org-b/org.vibevm.wal.git", pkg_root.clone());
+    fake.seed_tags("git@host:org-b/org.vibevm_wal.git", vec!["v0.5.0".into()]);
+    fake.seed_bootstrap("git@host:org-b/org.vibevm_wal.git", pkg_root.clone());
 
     let r = build_resolver(
         cache.path(),
@@ -463,7 +463,7 @@ fn fetch_dispatches_to_registry_that_resolved() {
 
     assert_eq!(cached.registry_name.as_deref(), Some("b"));
     assert!(!cached.overridden);
-    assert_eq!(cached.source_uri, "git@host:org-b/org.vibevm.wal.git");
+    assert_eq!(cached.source_uri, "git@host:org-b/org.vibevm_wal.git");
     assert_eq!(cached.source_ref.as_deref(), Some("v0.5.0"));
     assert_eq!(cached.package_meta().version.to_string(), "0.5.0");
     assert!(cached.cache_dir.join("vibe.toml").exists());
@@ -521,7 +521,7 @@ fn fetch_override_clones_into_overrides_subtree_and_marks_overridden() {
     let overrides_root = cache
         .path()
         .join("__overrides__")
-        .join("org.vibevm.wal")
+        .join("org.vibevm_wal")
         .join("clone");
     assert!(overrides_root.join(".git").exists());
     // Materialised cache holds payload only.

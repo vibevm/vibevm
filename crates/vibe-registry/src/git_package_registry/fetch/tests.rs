@@ -30,7 +30,7 @@ fn fetch_clones_and_populates_per_project_cache() {
     // dest after copying; we want to verify our extractor strips it.
 
     let fake = Arc::new(FakeBackend::default());
-    let url = "git@host:org/org.vibevm.wal.git";
+    let url = "git@host:org/org.vibevm_wal.git";
     fake.seed_tags(url, vec!["v0.1.0".into()]);
     fake.seed_bootstrap(url, pkg_root.clone());
 
@@ -80,8 +80,8 @@ fn fetch_falls_through_to_mirror_when_primary_unreachable() {
     )
     .unwrap();
 
-    let primary_url = "https://primary.example/vibespecs/org.vibevm.wal.git";
-    let mirror_url = "https://mirror.example/vibespecs/org.vibevm.wal.git";
+    let primary_url = "https://primary.example/vibespecs/org.vibevm_wal.git";
+    let mirror_url = "https://mirror.example/vibespecs/org.vibevm_wal.git";
 
     let fake = Arc::new(FakeBackend::default());
     // Tags on both — list_versions hits primary first and finds it.
@@ -132,8 +132,8 @@ fn fetch_prefers_primary_when_both_reachable() {
     )
     .unwrap();
 
-    let primary_url = "https://primary.example/vibespecs/org.vibevm.wal.git";
-    let mirror_url = "https://mirror.example/vibespecs/org.vibevm.wal.git";
+    let primary_url = "https://primary.example/vibespecs/org.vibevm_wal.git";
+    let mirror_url = "https://mirror.example/vibespecs/org.vibevm_wal.git";
 
     let fake = Arc::new(FakeBackend::default());
     fake.seed_tags(primary_url, vec!["v0.1.0".into()]);
@@ -184,8 +184,8 @@ fn fetch_falls_through_when_primary_update_fails() {
     )
     .unwrap();
 
-    let primary_url = "https://primary.example/vibespecs/org.vibevm.wal.git";
-    let mirror_url = "https://mirror.example/vibespecs/org.vibevm.wal.git";
+    let primary_url = "https://primary.example/vibespecs/org.vibevm_wal.git";
+    let mirror_url = "https://mirror.example/vibespecs/org.vibevm_wal.git";
 
     let fake = Arc::new(FakeBackend::default());
     fake.seed_tags(primary_url, vec!["v0.1.0".into()]);
@@ -249,7 +249,7 @@ fn fetch_with_expected_hash_passes_through_when_no_pin() {
     .unwrap();
 
     let fake = Arc::new(FakeBackend::default());
-    let url = "git@host:org/org.vibevm.wal.git";
+    let url = "git@host:org/org.vibevm_wal.git";
     fake.seed_tags(url, vec!["v0.1.0".into()]);
     fake.seed_bootstrap(url, pkg_root.clone());
 
@@ -309,9 +309,9 @@ fn fetch_with_expected_hash_skips_mirror_with_disagreeing_content() {
     copy_dir_excluding_git(&pkg_a, temp_for_hash.path()).unwrap();
     let expected_hash = compute_content_hash(temp_for_hash.path()).unwrap();
 
-    let primary_url = "https://primary.example/vibespecs/org.vibevm.wal.git";
-    let mirror_a_url = "https://mirror-bad.example/vibespecs/org.vibevm.wal.git";
-    let mirror_b_url = "https://mirror-ok.example/vibespecs/org.vibevm.wal.git";
+    let primary_url = "https://primary.example/vibespecs/org.vibevm_wal.git";
+    let mirror_a_url = "https://mirror-bad.example/vibespecs/org.vibevm_wal.git";
+    let mirror_b_url = "https://mirror-ok.example/vibespecs/org.vibevm_wal.git";
 
     let fake = Arc::new(FakeBackend::default());
     // All sources seed tags so the resolver reaches them in order.
@@ -375,8 +375,8 @@ fn fetch_with_expected_hash_returns_last_attempt_when_no_match() {
     )
     .unwrap();
 
-    let primary_url = "https://primary.example/vibespecs/org.vibevm.wal.git";
-    let mirror_url = "https://mirror.example/vibespecs/org.vibevm.wal.git";
+    let primary_url = "https://primary.example/vibespecs/org.vibevm_wal.git";
+    let mirror_url = "https://mirror.example/vibespecs/org.vibevm_wal.git";
 
     let fake = Arc::new(FakeBackend::default());
     fake.seed_tags(primary_url, vec!["v0.1.0".into()]);
@@ -423,8 +423,8 @@ fn refresh_package_falls_through_to_mirror_when_primary_unreachable() {
     )
     .unwrap();
 
-    let primary_url = "https://primary.example/vibespecs/org.vibevm.wal.git";
-    let mirror_url = "https://mirror.example/vibespecs/org.vibevm.wal.git";
+    let primary_url = "https://primary.example/vibespecs/org.vibevm_wal.git";
+    let mirror_url = "https://mirror.example/vibespecs/org.vibevm_wal.git";
 
     let fake = Arc::new(FakeBackend::default());
     fake.seed_bootstrap(mirror_url, pkg_root.clone());
@@ -460,7 +460,7 @@ fn fetch_reuses_existing_clone_via_update() {
     .unwrap();
 
     let fake = Arc::new(FakeBackend::default());
-    let url = "git@host:org/org.vibevm.wal.git";
+    let url = "git@host:org/org.vibevm_wal.git";
     fake.seed_tags(url, vec!["v0.1.0".into()]);
     fake.seed_bootstrap(url, pkg_root.clone());
 
@@ -498,7 +498,7 @@ fn fetch_in_place_skips_the_cache_copy_and_keeps_git() {
     fs::write(pkg_root.join("big.bin"), "lots of files\n").unwrap();
 
     let fake = Arc::new(FakeBackend::default());
-    let url = "git@host:org/org.vibevm.giant.git";
+    let url = "git@host:org/org.vibevm_giant.git";
     fake.seed_tags(url, vec!["v1.0.0".into()]);
     fake.seed_bootstrap(url, pkg_root.clone());
 
@@ -549,7 +549,7 @@ fn materialise_in_place_clones_then_updates_the_slot() {
     .unwrap();
 
     let fake = Arc::new(FakeBackend::default());
-    let url = "git@host:org/org.vibevm.giant.git";
+    let url = "git@host:org/org.vibevm_giant.git";
     fake.seed_tags(url, vec!["v1.0.0".into()]);
     fake.seed_bootstrap(url, pkg_root.clone());
 

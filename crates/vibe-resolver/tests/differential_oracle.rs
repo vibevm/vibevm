@@ -75,7 +75,7 @@ fn seed_git_package(orgdir: &Path, scratch: &Path, name: &str, versions: &[Versi
         git(&work, &["commit", "-q", "-m", &format!("v{ver}")]);
         git(&work, &["tag", &format!("v{ver}")]);
     }
-    let bare: PathBuf = orgdir.join(format!("org.vibevm.{name}.git"));
+    let bare: PathBuf = orgdir.join(format!("org.vibevm_{name}.git"));
     git(
         scratch,
         &[

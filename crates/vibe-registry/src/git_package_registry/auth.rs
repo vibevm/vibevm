@@ -150,17 +150,17 @@ mod tests {
 
     #[test]
     fn inject_token_adds_x_access_token_to_https() {
-        let url = "https://gitlab.company.com/vibespecs/org.vibevm.wal.git";
+        let url = "https://gitlab.company.com/vibespecs/org.vibevm_wal.git";
         let out = inject_token(url, Some("ghp_xxx"));
         assert_eq!(
             out,
-            "https://x-access-token:ghp_xxx@gitlab.company.com/vibespecs/org.vibevm.wal.git"
+            "https://x-access-token:ghp_xxx@gitlab.company.com/vibespecs/org.vibevm_wal.git"
         );
     }
 
     #[test]
     fn inject_token_returns_url_unchanged_when_no_token() {
-        let url = "https://gitlab.company.com/vibespecs/org.vibevm.wal.git";
+        let url = "https://gitlab.company.com/vibespecs/org.vibevm_wal.git";
         assert_eq!(inject_token(url, None), url);
         assert_eq!(
             inject_token(url, Some("")).len(),
@@ -171,10 +171,10 @@ mod tests {
     #[test]
     fn inject_token_skips_non_https() {
         for url in [
-            "git@github.com:vibespecs/org.vibevm.wal.git",
-            "ssh://git@host/org/org.vibevm.wal.git",
+            "git@github.com:vibespecs/org.vibevm_wal.git",
+            "ssh://git@host/org/org.vibevm_wal.git",
             "file:///tmp/registry/flow-wal",
-            "http://insecure.example.com/org.vibevm.wal.git",
+            "http://insecure.example.com/org.vibevm_wal.git",
         ] {
             assert_eq!(
                 inject_token(url, Some("token")),
@@ -306,9 +306,9 @@ mod tests {
         )
         .unwrap();
         let credentialed_url =
-            "https://x-access-token:secret-token-xyz@scrub.example/vibespecs/org.vibevm.wal.git"
+            "https://x-access-token:secret-token-xyz@scrub.example/vibespecs/org.vibevm_wal.git"
                 .to_string();
-        let plain_url = "https://scrub.example/vibespecs/org.vibevm.wal.git";
+        let plain_url = "https://scrub.example/vibespecs/org.vibevm_wal.git";
         fake.seed_bootstrap(&credentialed_url, pkg_src.path().to_path_buf());
         fake.seed_tags(&credentialed_url, vec!["v0.1.0".to_string()]);
         let backend = Arc::new(ScrubTrackingBackend {

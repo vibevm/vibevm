@@ -66,7 +66,7 @@ group = "org.vibevm"
 name = "wal"
 version = "0.1.0"
 registry = "vibespecs"
-source_url = "git@gitverse.ru:vibespecs/org.vibevm.wal.git"
+source_url = "git@gitverse.ru:vibespecs/org.vibevm_wal.git"
 content_hash = "sha256:abc"
 
 [[package]]

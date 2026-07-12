@@ -113,11 +113,11 @@ mod tests {
         );
         assert_eq!(
             r.package_repo_url(&org(), "wal").unwrap(),
-            "git@gitverse.ru:vibespecs/org.vibevm.wal.git"
+            "git@gitverse.ru:vibespecs/org.vibevm_wal.git"
         );
         assert_eq!(
             r.package_repo_url(&org(), "rust-cli").unwrap(),
-            "git@gitverse.ru:vibespecs/org.vibevm.rust-cli.git"
+            "git@gitverse.ru:vibespecs/org.vibevm_rust-cli.git"
         );
     }
 
@@ -133,7 +133,7 @@ mod tests {
         );
         assert_eq!(
             r.package_repo_url(&org(), "rust-cli").unwrap(),
-            "https://gitverse.ru/vibespecs/org.vibevm.rust-cli.git"
+            "https://gitverse.ru/vibespecs/org.vibevm_rust-cli.git"
         );
     }
 

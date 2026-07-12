@@ -20,17 +20,20 @@ Two textual carriers, one identity:
 |---|---|---|
 | pkgref (manifests, lockfiles, prose) | `[<kind>:]<group>/<name>` | `stack:org.vibevm.ai-native/rust-ai-native-lang` |
 | `spec://` authority (the `<module>` segment) | `<group>/<name>` — the name is the first path segment | `spec://org.vibevm.ai-native/rust-ai-native-lang/GUIDE#anchor` |
+| repo name (flat, one segment) | `<group>_<name>` — `/` is illegal in a repo name | `org.vibevm.ai-native_rust-ai-native-lang` |
 
-**The joiner is `/` in both carriers, on purpose.** The `<group>/<name>`
-coordinate is therefore byte-identical in a pkgref and in a `spec://` authority
-— so one deterministic rule renames both, and an algorithm splits group from
-name by the single `/`, a character in neither (group is `[a-z0-9.-]`, name is
-`[a-z0-9-]`). A dot would be ambiguous: groups are dotted reverse-DNS, so a
-`<group>.<name>` authority hides the boundary — only a reader holding the
-registry (or an LLM, from context) could place it, which is the very resolver
-dependence §3 exists to remove. In the URI the name is simply the first path
-segment after the group; the resolver matches the whole URI string, so nothing
-has to parse the boundary at resolution time.
+**The one invariant: the group↔name joiner is never `.`.** It is a character
+in **neither** the group (`[a-z0-9.-]`) **nor** the name (`[a-z0-9-]`), so an
+algorithm splits the boundary deterministically. Where the surface has a path,
+that character is `/` (pkgref, `spec://`) — and the `<group>/<name>` coordinate
+is then byte-identical across both, so one rule renames them. Where the surface
+is a single flat token that cannot hold a `/` — a repository name (GitHub /
+GitVerse allow only `[A-Za-z0-9._-]`) — it is `_`. A dot would be ambiguous:
+groups are dotted reverse-DNS, so `<group>.<name>` hides the boundary — only a
+reader holding the registry (or an LLM, from context) could place it, which is
+the very resolver dependence §3 exists to remove. In a `spec://` URI the name is
+simply the first path segment after the group; the resolver matches the whole
+URI string, so nothing has to parse the boundary at resolution time.
 
 ## 2. Why — structure-independence enables mechanical refactoring {#rationale}
 

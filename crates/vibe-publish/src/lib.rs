@@ -102,7 +102,7 @@ pub fn extract_org_segment(org_url: &str) -> Result<String, PublishError> {
 /// use vibe_publish::PublishError;
 ///
 /// let err = PublishError::TagCollision {
-///     repo: "vibespecs/org.vibevm.wal".to_string(),
+///     repo: "vibespecs/org.vibevm_wal".to_string(),
 ///     tag: "v0.1.0".to_string(),
 /// };
 /// let rendered = err.to_string();

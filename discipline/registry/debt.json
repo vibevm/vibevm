@@ -218,7 +218,7 @@
    ],
    "evidence": [
     "PROP-002:63 — \"`naming` — convention for mapping a pkgref to a package repo name under this org. Values: `\\\"kind-name\\\"` (default — `flow:wal` → `<org>/flow-wal`), `\\\"name\\\"` (...), `\\\"kind/name\\\"` (...)\"",
-    "PROP-008:80 — \"### 2.5 Repository naming — `naming = \\\"fqdn\\\"`\"; PROP-008:88 — \"naming = \\\"fqdn\\\"  # repo name = \\\"<group>.<name>\\\"  →  org.vibevm.wal\"",
+    "PROP-008:80 — \"### 2.5 Repository naming — `naming = \\\"fqdn\\\"`\"; PROP-008:88 — \"naming = \\\"fqdn\\\"  # repo name = \\\"<group>.<name>\\\"  →  org.vibevm_wal\"",
     "fix cc32d7e made `vibe init` / `vibe registry add` scaffold fqdn (the shipped default)"
    ],
    "source": "Phase −1 conflict scan (LLM-proposed)",
@@ -268,7 +268,7 @@
    ],
    "evidence": [
     "90-user.md:14 — \"Per-package repos: `https://github.com/vibespecs/<kind>-<name>` (`NamingConvention::KindName` per PROP-002 §2.5).\"",
-    "PROP-008:147 — \"Repositories rename to the `naming = \\\"fqdn\\\"` shape (`org.vibevm.wal`, …).\"",
+    "PROP-008:147 — \"Repositories rename to the `naming = \\\"fqdn\\\"` shape (`org.vibevm_wal`, …).\"",
     "WAL 2026-05-23 — the canonical GitHub org hosts org.vibevm.{wal,sync-from-code,atomic-commits}; flow-* archived"
    ],
    "source": "Phase −1 conflict scan (LLM-proposed)",
@@ -429,7 +429,7 @@
    "kind": "stale-doc",
    "severity": "P3",
    "title": "agent-mcp-quickstart-opencode.md was rewritten by a stray test/xtask run (dormant)",
-   "detail": "A prior session observed a `cargo test`/xtask run rewrite this tracked file (a flow-wal -> fqdn org.vibevm.wal edit) with no commit — recorded as task #13. During the 2026-06-17 grammar-refactor run the file was committed with the correct fqdn content (8065afb, owner, parallel terminal), and the rewrite did NOT recur across this run's many self-check / cargo test passes. So it is not a deterministic cargo-test write; the underlying cause (a non-deterministic test, or a one-off `cargo xtask health` write) was never root-caused but is non-reproducing. Filed dormant for traceability.",
+   "detail": "A prior session observed a `cargo test`/xtask run rewrite this tracked file (a flow-wal -> fqdn org.vibevm_wal edit) with no commit — recorded as task #13. During the 2026-06-17 grammar-refactor run the file was committed with the correct fqdn content (8065afb, owner, parallel terminal), and the rewrite did NOT recur across this run's many self-check / cargo test passes. So it is not a deterministic cargo-test write; the underlying cause (a non-deterministic test, or a one-off `cargo xtask health` write) was never root-caused but is non-reproducing. Filed dormant for traceability.",
    "evidence": [
     "8065afb docs(guides): point the flow:wal probe at the fqdn repo",
     "docs/guides/agent-mcp-quickstart-opencode.md",

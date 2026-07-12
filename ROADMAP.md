@@ -587,7 +587,7 @@ shares the computed-view engine and rides with the M1.5 milestone.
 
 - Mandatory `[package].group`; identity tuple is `(group, name, version, content_hash)`; `kind` left identity and is now pure metadata.
 - pkgref grammar `[kind:][group/]name[@version]` — `kind` prefix optional, validated when present; manifests store the qualified `group/name` form.
-- `naming = "fqdn"` repo names (`org.vibevm.wal`), the new default; `kind` left the repository name. Registry resolution keys on `(group, name)`.
+- `naming = "fqdn"` repo names (`org.vibevm_wal`), the new default; `kind` left the repository name. Registry resolution keys on `(group, name)`.
 - The package index is group-native (Phase 7) — the entry carries `group` + `workspace_origin`, the `by-name/` layer is the candidate-set file `by-name/<name>.json`.
 - Lockfile schema v5 (v4 was PROP-007's); each `[[package]]` carries `group`.
 - Index-backed short-name resolution (Phase 5) — `vibe install wal` is qualified to `org.vibevm.world/wal` at the CLI input boundary, lockfile-first then index/scan; the local-directory registry path is scanned directly, the multi-registry path walks each registry's `by-name/<name>.json`.

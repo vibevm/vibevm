@@ -79,7 +79,7 @@ impl FromStr for PackageKind {
 /// field of `repomd.json` reads exactly as a `[[registry]].naming` does.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq, ValueEnum, Serialize, Deserialize)]
 pub enum NamingConvention {
-    /// `org.vibevm/wal` → `<org>/org.vibevm.wal` — the reverse-FQDN repo
+    /// `org.vibevm/wal` → `<org>/org.vibevm_wal` — the reverse-FQDN repo
     /// name (PROP-008 §2.5). The default: a flat `<group>.<name>`,
     /// collision-free because `(group, name)` is unique. Every
     /// group-native registry uses it.
@@ -120,7 +120,7 @@ impl NamingConvention {
     /// even the legacy `kind-*` conventions have what they need.
     pub fn repo_name(&self, kind: PackageKind, group: &Group, name: &str) -> String {
         match self {
-            NamingConvention::Fqdn => format!("{group}.{name}"),
+            NamingConvention::Fqdn => format!("{group}_{name}"),
             NamingConvention::KindName => format!("{kind}-{name}"),
             NamingConvention::Name => name.to_string(),
             NamingConvention::KindSlashName => format!("{kind}/{name}"),
@@ -189,7 +189,7 @@ mod tests {
         let group = Group::parse("org.vibevm").unwrap();
         assert_eq!(
             NamingConvention::Fqdn.repo_name(PackageKind::Flow, &group, "wal"),
-            "org.vibevm.wal"
+            "org.vibevm_wal"
         );
         assert_eq!(
             NamingConvention::KindName.repo_name(PackageKind::Flow, &group, "wal"),

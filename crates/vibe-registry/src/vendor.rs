@@ -119,7 +119,7 @@ pub enum VendorEvent {
 ///     group: "org.vibevm".into(),
 ///     name: "wal".into(),
 ///     refname: "v0.1.0".into(),
-///     repo_dir: "/tmp/vendor/org.vibevm.wal.git".into(),
+///     repo_dir: "/tmp/vendor/org.vibevm_wal.git".into(),
 /// });
 /// assert_eq!(observer.0.into_inner().len(), 1);
 /// ```
@@ -539,7 +539,7 @@ mod tests {
             group: "org.vibevm".into(),
             name: "wal".into(),
             registry: "vibespecs".into(),
-            repo_dir: "/tmp/vendor/org.vibevm.wal.git".into(),
+            repo_dir: "/tmp/vendor/org.vibevm_wal.git".into(),
             refname: "v0.1.0".into(),
         }];
         super::write_vendor_readme(dir.path(), "file:///tmp/vendor", &vendored).unwrap();

@@ -95,11 +95,11 @@ The `group`↔`name` separator is `/` (`:` is taken by `kind`, `@` by version).
 [[registry]]
 name   = "vibespecs"
 url    = "https://github.com/vibespecs"
-naming = "fqdn"          # repo name = "<group>.<name>"  →  org.vibevm.wal
+naming = "fqdn"          # repo name = "<group>_<name>"  →  org.vibevm_wal
 ```
 
-- `naming = "fqdn"` maps a pkgref to the repository name `<group>.<name>` — a clean, flat reverse-FQDN (`org.vibevm.wal`). Dots in repository names are accepted by both GitHub and GitVerse (Gitea-shape).
-- Because `(group, name)` is unique (§2.2), `<group>.<name>` is a collision-free repo name without needing `kind`. The existing `kind-name` / `name` / `kind/name` conventions (PROP-002 §2.2) remain for registries that have not adopted `group`.
+- `naming = "fqdn"` maps a pkgref to the repository name `<group>_<name>` (`org.vibevm_wal`) — a flat reverse-FQDN whose group and name are joined by `_`. The joiner is `_` on purpose: a repository name cannot contain `/` (GitHub and GitVerse both restrict it to `[A-Za-z0-9._-]`), and `_` is the one character in **neither** the group (`[a-z0-9.-]`) **nor** the name (`[a-z0-9-]`), so the coordinate stays algorithmically splittable. A dot would be ambiguous — groups are dotted reverse-DNS, so `<group>.<name>` hides the boundary. This is the flat-carrier case of vibevm PROP-029's one invariant: the group↔name joiner is never `.` — it is `/` where a path segment exists (pkgrefs, `spec://`) and `_` where a single flat token is required (repo names).
+- Because `(group, name)` is unique (§2.2), `<group>_<name>` is a collision-free repo name without needing `kind`. The existing `kind-name` / `name` / `kind/name` conventions (PROP-002 §2.2) remain for registries that have not adopted `group`.
 - This realises the owner's "short name in the CLI, fat name in the repository" goal: the repository is the pure reverse-FQDN; the CLI keeps the short alias.
 
 ### 2.6 Short-name resolution {#short-name}
@@ -164,7 +164,7 @@ The explorer is a separate, optional layer over the index — not part of PROP-0
 
 The breaking-change window is open: vibevm has no public release, no external users ([PROP-003](../vibe-resolver/PROP-003-dep-evolution.md) — "schema churn before v0.1.0 is free").
 
-- **Canonical packages.** `flow-wal`, `flow-sync-from-code`, `flow-atomic-commits` migrate to `group = "org.vibevm"`. Repositories rename to the `naming = "fqdn"` shape (`org.vibevm.wal`, …). The owner authorised migrating the test fixtures and these three without further questions.
+- **Canonical packages.** `flow-wal`, `flow-sync-from-code`, `flow-atomic-commits` migrate to `group = "org.vibevm"`. Repositories rename to the `naming = "fqdn"` shape (`org.vibevm_wal`, …). The owner authorised migrating the test fixtures and these three without further questions.
 - **Test orgs.** `vibespecstest1/2/3` fixtures re-laid-out to the new naming.
 - **Manifests.** `vibe-package.toml` → `vibe.toml` ([PROP-007 §2.2](../vibe-workspace/PROP-007-workspace.md)); add the `group` field.
 - **Lockfile.** Schema bumps to **v5** — PROP-007 had already taken v4 for `source_kind = "path"`; adds the `group` field per `[[package]]`.

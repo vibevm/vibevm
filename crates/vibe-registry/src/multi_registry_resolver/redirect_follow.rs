@@ -216,7 +216,7 @@ impl MultiRegistryResolver {
     fn redirect_clone_dir(&self, group: &Group, name: &str) -> PathBuf {
         self.cache_root
             .join("__redirects__")
-            .join(format!("{group}.{name}"))
+            .join(format!("{group}_{name}"))
             .join("clone")
     }
 
@@ -334,7 +334,7 @@ mod tests {
         // Stub repo at the registry: tag v0.3.0 has a vibe-redirect.toml
         // pointing at the target URL. NO vibe.toml. The stub-side URL is
         // composed by the registry's `Fqdn` naming — `<group>.<name>`.
-        let stub_url = "git@host:org-stub/org.vibevm.internal.git";
+        let stub_url = "git@host:org-stub/org.vibevm_internal.git";
         fake.seed_tags(stub_url, vec!["v0.3.0".into()]);
         fake.seed_file(
             stub_url,
@@ -392,7 +392,7 @@ target_url = "git@host:external/flow-internal.git"
         // `Fqdn` (`<group>.<name>`). `stub_b` is the verbatim target of
         // stub_a's marker; the resolver opens it as a single-package
         // registry, so its URL shape is arbitrary.
-        let stub_a = "git@host:org-a/org.vibevm.foo.git";
+        let stub_a = "git@host:org-a/org.vibevm_foo.git";
         let stub_b = "git@host:org-b/flow-foo.git";
         fake.seed_tags(stub_a, vec!["v1.0.0".into()]);
         fake.seed_file(
@@ -446,7 +446,7 @@ target_url = "git@host:org-c/flow-foo.git"
         let fake = Arc::new(FakeBackend::default());
         // `stub_url` is registry-composed via `Fqdn` (`<group>.<name>`);
         // `target_url` is verbatim from the marker.
-        let stub_url = "git@host:org-stub/org.vibevm.pinned.git";
+        let stub_url = "git@host:org-stub/org.vibevm_pinned.git";
         let target_url = "git@host:external/flow-pinned.git";
         // Stub has v9.9.9 tag (irrelevant — pinned overrides).
         fake.seed_tags(stub_url, vec!["v9.9.9".into()]);
@@ -491,7 +491,7 @@ pinned_ref = "v1.0.0"
         // catches this is the `name` mismatch.
         let cache = tempdir().unwrap();
         let fake = Arc::new(FakeBackend::default());
-        let stub_url = "git@host:org-stub/org.vibevm.internal.git";
+        let stub_url = "git@host:org-stub/org.vibevm_internal.git";
         let target_url = "git@host:external/some-other-pkg.git";
         fake.seed_tags(stub_url, vec!["v0.1.0".into()]);
         fake.seed_file(

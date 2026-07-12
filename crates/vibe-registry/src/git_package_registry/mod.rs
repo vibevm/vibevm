@@ -4,7 +4,7 @@
 //! URL by:
 //!
 //! 1. Composing the per-package repo URL via the registry's [`NamingConvention`]
-//!    (`org.vibevm/wal` + `Fqdn` → `<org>/org.vibevm.wal.git`). The registry is
+//!    (`org.vibevm/wal` + `Fqdn` → `<org>/org.vibevm_wal.git`). The registry is
 //!    group-native (PROP-008): identity is `(group, name)`, `kind` plays no part
 //!    in URL composition or resolution.
 //! 2. Listing tags on that repo via the cheap [`GitBackend::list_tags`]
@@ -422,7 +422,7 @@ impl GitPackageRegistry {
     /// naming (which may have produced a different *URL*-side name) — the
     /// cache is organised by `(group, name)` identity (PROP-008).
     pub fn package_clone_dir(&self, group: &Group, name: &str) -> PathBuf {
-        let internal = format!("{group}.{name}");
+        let internal = format!("{group}_{name}");
         self.cache_dir()
             .join("packages")
             .join(internal)

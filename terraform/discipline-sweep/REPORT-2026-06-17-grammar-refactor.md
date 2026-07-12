@@ -146,7 +146,7 @@ bug, a recorded one as a decision (CONFORM_EXEMPT principle):
 Commit `8065afb` ("docs(guides): point the flow:wal probe at the fqdn repo")
 landed mid-run, authored by the owner in a parallel terminal. It corrects the
 opencode quickstart's `git ls-remote` probe from the retired `flow-wal` repo
-to the canonical `org.vibevm.wal` — the same file the prior checkpoint flagged
+to the canonical `org.vibevm_wal` — the same file the prior checkpoint flagged
 as task #13 (a stray `flow-wal → fqdn` rewrite). The file now carries the
 correct fqdn content as a deliberate commit, and the rewrite did **not** recur
 across this run's many `cargo test` / `self-check` passes. Recorded dormant in

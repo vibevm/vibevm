@@ -172,7 +172,7 @@ impl MultiRegistryResolver {
     pub(super) fn override_clone_dir(&self, group: &Group, name: &str) -> PathBuf {
         self.cache_root
             .join("__overrides__")
-            .join(format!("{group}.{name}"))
+            .join(format!("{group}_{name}"))
             .join("clone")
     }
 }

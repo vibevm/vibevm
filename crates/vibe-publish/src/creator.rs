@@ -18,8 +18,8 @@ use crate::PublishError;
 /// use vibe_publish::RepoInfo;
 ///
 /// let info = RepoInfo {
-///     html_url: "https://github.com/vibespecs/org.vibevm.wal".to_string(),
-///     clone_url: "https://github.com/vibespecs/org.vibevm.wal.git".to_string(),
+///     html_url: "https://github.com/vibespecs/org.vibevm_wal".to_string(),
+///     clone_url: "https://github.com/vibespecs/org.vibevm_wal.git".to_string(),
 /// };
 /// assert!(info.clone_url.ends_with(".git"));
 /// ```
@@ -109,7 +109,7 @@ pub struct CreateOpts {
 /// let host = StaticHost;
 /// assert!(host.validate_scope("vibespecs").is_ok());
 /// assert!(matches!(
-///     host.repo_exists("someone-else", "org.vibevm.wal"),
+///     host.repo_exists("someone-else", "org.vibevm_wal"),
 ///     Err(PublishError::ScopeViolation { .. })
 /// ));
 /// ```

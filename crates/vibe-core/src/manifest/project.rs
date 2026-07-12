@@ -244,14 +244,16 @@ fn registry_host(url: &str) -> Option<&str> {
 /// // FQDN (the default) maps a (group, name) to a flat repo name.
 /// assert_eq!(
 ///     NamingConvention::Fqdn.repo_name(None, &org, "wal").unwrap(),
-///     "org.vibevm.wal",
+///     "org.vibevm_wal",
 /// );
 /// assert!(NamingConvention::default().is_default());
 /// ```
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Serialize, Deserialize)]
 pub enum NamingConvention {
-    /// `org.vibevm/wal` → `<org>/org.vibevm.wal`. The reverse-FQDN
-    /// convention (PROP-008 §2.5): a flat `<group>.<name>` repo name,
+    /// `org.vibevm/wal` → `<org>/org.vibevm_wal`. The reverse-FQDN
+    /// convention (PROP-008 §2.5): a flat `<group>_<name>` repo name — the
+    /// `_` joins group and name unambiguously (it is in neither), so the
+    /// coordinate stays algorithmically splittable where `/` cannot be used;
     /// collision-free because `(group, name)` is unique. Default — the
     /// convention every group-aware registry uses.
     #[default]
@@ -289,7 +291,7 @@ impl NamingConvention {
         name: &str,
     ) -> Result<String> {
         match self {
-            NamingConvention::Fqdn => Ok(format!("{group}.{name}")),
+            NamingConvention::Fqdn => Ok(format!("{group}_{name}")),
             NamingConvention::KindName => {
                 let kind = kind.ok_or_else(|| Error::BadPackageRef {
                     input: format!("{group}/{name}"),
@@ -481,7 +483,7 @@ url = "https://github.com/vibespecs"
         let org = Group::parse("org.vibevm").unwrap();
         assert_eq!(
             NamingConvention::Fqdn.repo_name(None, &org, "wal").unwrap(),
-            "org.vibevm.wal"
+            "org.vibevm_wal"
         );
         assert_eq!(
             NamingConvention::KindName
