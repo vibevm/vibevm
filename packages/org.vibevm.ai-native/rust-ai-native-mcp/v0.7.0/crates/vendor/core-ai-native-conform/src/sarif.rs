@@ -1,4 +1,6 @@
-specmark::scope!("spec://org.vibevm.ai-native.core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#determinism");
+specmark::scope!(
+    "spec://org.vibevm.ai-native.core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#determinism"
+);
 
 use crate::finding::{Finding, Rule};
 

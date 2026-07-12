@@ -7,7 +7,9 @@
 //! FAILS with the recipe when it is absent — installing the stack
 //! obliges the machine to carry rust-analyzer (ORACLE-RUST §1).
 
-specmark::scope!("spec://org.vibevm.ai-native.rust-ai-native-lang/mechanisms/TCG-ORACLE-RUST-v0.1#root");
+specmark::scope!(
+    "spec://org.vibevm.ai-native.rust-ai-native-lang/mechanisms/TCG-ORACLE-RUST-v0.1#root"
+);
 
 use std::path::{Path, PathBuf};
 
@@ -34,7 +36,9 @@ pub use oracle::{Diagnostic, RustOracle, ValidateOutcome};
 /// assert_eq!(e.wire_kind(), "rust-analyzer-missing");
 /// ```
 #[derive(Debug, thiserror::Error)]
-#[spec(implements = "spec://org.vibevm.ai-native.rust-ai-native-lang/mechanisms/TCG-PROTOCOL-RUST-v0.1#errors")]
+#[spec(
+    implements = "spec://org.vibevm.ai-native.rust-ai-native-lang/mechanisms/TCG-PROTOCOL-RUST-v0.1#errors"
+)]
 pub enum TcgBridgeError {
     #[error(
         "violates spec://org.vibevm.ai-native.rust-ai-native-lang/mechanisms/TCG-ORACLE-RUST-v0.1#resolution: \
@@ -101,7 +105,9 @@ impl TcgBridgeError {
 /// let c = rust_ai_native_tcg_bridge::ra_config();
 /// assert_eq!(c["diagnostics"]["experimental"]["enable"], true);
 /// ```
-#[spec(implements = "spec://org.vibevm.ai-native.rust-ai-native-lang/mechanisms/TCG-ORACLE-RUST-v0.1#config")]
+#[spec(
+    implements = "spec://org.vibevm.ai-native.rust-ai-native-lang/mechanisms/TCG-ORACLE-RUST-v0.1#config"
+)]
 pub fn ra_config() -> serde_json::Value {
     serde_json::json!({
         "diagnostics": { "experimental": { "enable": true } },
@@ -134,7 +140,9 @@ pub fn verbatim_free(path: &Path) -> PathBuf {
 /// then the recipe-carrying refusal. Returns the spawnable program
 /// (an absolute path, or the bare name when PATH resolution is the
 /// winner).
-#[spec(implements = "spec://org.vibevm.ai-native.rust-ai-native-lang/mechanisms/TCG-ORACLE-RUST-v0.1#resolution")]
+#[spec(
+    implements = "spec://org.vibevm.ai-native.rust-ai-native-lang/mechanisms/TCG-ORACLE-RUST-v0.1#resolution"
+)]
 pub fn resolve_rust_analyzer(root: &Path) -> Result<PathBuf, TcgBridgeError> {
     let rustup = std::process::Command::new("rustup")
         .args(["which", "rust-analyzer"])
