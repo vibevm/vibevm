@@ -1197,7 +1197,7 @@ vibevm ships in staged milestones. Each milestone is *useful on its own* — if 
 
 **Out of scope.** No git registry. No LLM. No `build`. No `sync`. No `check`. No `update`. No formal graph runner (workflows are implemented procedurally inside `vibe-install` — see §5.6's M0 implementation note).
 
-**Verification.** Init a project, install a hand-written `flow:wal` from a local directory, verify files appear in the right places, uninstall, verify files are removed. Hand-written `flow:wal` is the test fixture. All 15 items in §16 (M0 acceptance checklist) pass.
+**Verification.** Init a project, install `flow:org.vibevm.world/wal` from a local directory, verify files appear in the right places, uninstall, verify files are removed. The real `org.vibevm.world/wal` package — dogfooded from `packages/`, not a hand-written copy — is the test fixture. All 15 items in §16 (M0 acceptance checklist) pass.
 
 **Estimated effort.** One weekend.
 
@@ -1215,7 +1215,7 @@ vibevm ships in staged milestones. Each milestone is *useful on its own* — if 
 - `vibe show config` — prints effective configuration with provenance.
 - `vibe help`, `vibe version` — standard.
 
-**Plus.** The hand-written `flow:wal`, plus at least two more demo packages, are published to the registry. The registry is a real git-hosted organization (GitVerse: `vibespecs`), with per-package repos per §8.2.
+**Plus.** `flow:org.vibevm.world/wal`, plus at least two more redbook packages, are published to the registry. The registry is a real git-hosted organization (GitVerse: `vibespecs`), with per-package repos per §8.2.
 
 **Verification.** A user with no prior vibevm exposure can install vibevm, run `vibe init`, install three packages, see the effective spec, run `vibe check` and get a clean report. They never edit any vibevm-managed file by hand.
 
@@ -1292,6 +1292,8 @@ Exit code: 0 if no errors, 1 if errors, 0 with warnings displayed if only warnin
 ## Section 13. The hand-written flow:wal package {#hand-written-flow-wal-package}
 
 This is the canonical demo package. Implementing it correctly is the v1 acceptance test for the package model.
+
+> **Reality pointer (kept current).** The wal package is no longer hand-written for this spec — it is a real, shipped package at `packages/org.vibevm.world/wal/` (currently v0.2.0, UPL-1.0), and *that package is the single source of truth* for wal's contents, manifest, and boot snippet. The integration tests dogfood it directly rather than a hand-written copy. The listings in §13.1–13.4 below are the **original design-phase sketch**, retained for the narrative of the package model but drifted from the shipped package — the boot snippet moved to `spec/boot/10-flow-wal.md`, the license is now UPL-1.0, and the tree gained `cold-resume.md` and a `wal-status` skill. For current contents, read the real package, not this section.
 
 ### 13.1 Package contents {#wal-package-contents}
 
