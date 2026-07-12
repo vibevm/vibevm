@@ -10,6 +10,7 @@
 //! - `2` — infrastructure error: no daemon and it could not be started,
 //!   transport failure, unusable home.
 
+mod advise;
 mod boss;
 mod broker;
 mod fetch;
@@ -107,6 +108,21 @@ enum Cmd {
         #[arg(long, value_name = "RUN_ID")]
         parent: Option<String>,
         /// Machine-readable output (the registered run record).
+        #[arg(long)]
+        json: bool,
+    },
+    /// Consult an advisor (V4 advisor channel, PP-003 / D-C3-7): run a
+    /// packet as an ADVICE call — judgment, not owned work. The verb marks
+    /// the packet `output.advice`, so mission-control applies the RD-10
+    /// caller-class bar (a caller below `medium` is refused: advice makes a
+    /// weak caller worse). Runs synchronously like `run`; the caller keeps
+    /// its own task and loop, reading the advisor's judgment. Exit: 0
+    /// completed, 1 failed/refused, 3 killed, 2 infrastructure.
+    Advise {
+        /// Task packet (TOML, plan D7) — the consultation to route to an advisor.
+        #[arg(long, value_name = "FILE")]
+        packet: Utf8PathBuf,
+        /// Machine-readable output (the final run record).
         #[arg(long)]
         json: bool,
     },
@@ -320,6 +336,7 @@ async fn main() -> std::process::ExitCode {
             parent,
             json,
         } => swarm::spawn(&home, &packet, parent.as_deref(), json).await,
+        Cmd::Advise { packet, json } => advise::advise(&home, &packet, json).await,
         Cmd::Wait { ids, any, timeout } => swarm::wait(&home, &ids, timeout, any).await,
         Cmd::Tree { id, json } => swarm::tree(&home, id.as_deref(), json).await,
         Cmd::Kill { id, tree } => swarm::kill(&home, &id, tree).await,

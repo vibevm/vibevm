@@ -39,8 +39,15 @@
       "crate_name": "fractality-cli",
       "file": "crates/fractality-cli/src/main.rs",
       "item_kind": "mod",
-      "line": 36,
+      "line": 37,
       "symbol": "fractality_cli"
+    },
+    {
+      "crate_name": "fractality-cli",
+      "file": "crates/fractality-cli/src/advise.rs",
+      "item_kind": "mod",
+      "line": 25,
+      "symbol": "fractality_cli::advise"
     },
     {
       "crate_name": "fractality-cli",
@@ -556,7 +563,15 @@
     {
       "file": "crates/fractality-cli/src/main.rs",
       "from_symbol": "fractality_cli",
-      "line": 36,
+      "line": 37,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-cli/src/advise.rs",
+      "from_symbol": "fractality_cli::advise",
+      "line": 25,
       "provenance": "authored",
       "uri": "spec://fractality/PROP-001#architecture",
       "verb": "implements"

@@ -213,7 +213,7 @@ pub(crate) async fn run_packet(
 /// blocks to a terminal state, and returns the settled record. Early exits
 /// — parked past budget, wall-budget overrun, transport fault — come back
 /// as `Err(exit_code)`, already printed.
-async fn run_once(
+pub(crate) async fn run_once(
     client: &McClient,
     packet: fractality_core::Packet,
     parent: Option<fractality_core::ids::RunId>,
