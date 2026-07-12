@@ -188,15 +188,26 @@ Keep it current-state; prune stale lines.
 - **F19 gotcha:** `git worktree add` of THIS host repo overflows Windows
   MAX_PATH on deep `vibedeps/` paths → provisioning uses
   `-c core.longpaths=true`; only a deep real repo catches it.
-- **License state (keep current):** the canonical `packages/org.vibevm/**`
-  (redbook family, discipline stack, fractality, delegation-rules,
-  wal-workspaces) are **already UPL-1.0** (prior dogfood MT-05 firing #2, merges
-  `893e314` / `79938ab`). The lone EULA straggler in our shipped surface is the
-  **host root `LICENSE.md`**. Off-limits for relicensing: `refs/**`
-  (third-party), `vibedeps/**` + `.vibe/cache/**` (regenerated dep copies),
-  `fixtures/**` + `crates/**` test data (tests assert on `"EULA"`), the
-  `licensing` package (legitimate eula-template), and `VIBEVM-SPEC.md` + specs
-  (owner-frozen / historical mentions). Dogfood spec:
+- **Filing fractality bugs:** operational / behavioural bugs found while running
+  fractality go to `packages/org.vibevm.fractality/plans/external/E-BUG-NNN.md`
+  (stable id in the filename), in the **E-BUG format** — *what happened · what I
+  wanted · what I got · why they differ · ideas on the cause · ideas on the fix ·
+  workaround · references* — worked during fractality's own development. First:
+  `E-BUG-001` (acceptance quote-mangling).
+- **Acceptance gotcha (E-BUG-001):** a packet's `acceptance` mangles quoted
+  multi-word commands — `findstr /C:"a b c"` false-fails (each word parsed as a
+  filename, `acceptance: 0/N`). Prefer single-token matches; the boss-side
+  `diff` / `grep` is the real gate — acceptance is advisory until the diff is read.
+- **License state (keep current):** our shipped surface is **fully UPL-1.0**. The
+  canonical `packages/org.vibevm/**` (redbook family, discipline stack,
+  fractality, delegation-rules, wal-workspaces) were relicensed by MT-05 firing #2
+  (merges `893e314` / `79938ab`); the host root `LICENSE.md` was relicensed
+  2026-07-12 (MT-05 run `01KXBEHEYJCQ1RNJ5657Q31HVA`; host crates inherit via
+  `license-file.workspace`). The `"EULA"` strings that remain are all **off-limits
+  for relicensing**: `refs/**` (third-party), `vibedeps/**` + `.vibe/cache/**`
+  (regenerated dep copies), `fixtures/**` + `crates/**` test data (tests assert on
+  `"EULA"`), the `licensing` package (legitimate eula-template), and
+  `VIBEVM-SPEC.md` + specs (owner-frozen / historical mentions). Dogfood spec:
   `…/fractality/v0.1.0/spec/manual-tests/MT-05-dogfood-relicense.md`.
 
 ## Workspaces — nested projects with their own WAL
