@@ -173,6 +173,15 @@ async fn register_run(
     req.packet
         .validate()
         .map_err(|e| ApiError::new(StatusCode::BAD_REQUEST, e.to_string()))?;
+    // Cold-verifier suppression (Ф5, FD-9): an acceptance/verifier packet
+    // must have real work to check — refused at the door when its
+    // `context_from` names no run that produced a result.
+    if let Err(message) = crate::admission::check_verifier_has_work(&state, &req.packet) {
+        return Err(ApiError::new(StatusCode::BAD_REQUEST, message).hint(
+            "run the work first, then verify its results via context_from; \
+             a verifier over an empty tree is refused",
+        ));
+    }
     let parent_record = match req.parent {
         None => None,
         Some(parent) => match state.get_run(parent) {

@@ -145,6 +145,15 @@ pub struct OutputSpec {
     /// node's is a later slice.
     #[serde(default, skip_serializing_if = "is_false")]
     pub merge: bool,
+    /// Ф5 (FD-9/RD-11): this run is an acceptance VERIFIER over the runs in
+    /// `context.context_from` — its `task.acceptance` verdict decides
+    /// whether that work is accepted (verifier-accept as run-tree
+    /// completion). A verifier reads only named results (RD-11: clean
+    /// context by design, the fold law). Mission-control refuses a verifier
+    /// whose `context_from` names no run that produced a result — no cold
+    /// verification over an empty tree (§10.2). Default false.
+    #[serde(default, skip_serializing_if = "is_false")]
+    pub verifier: bool,
 }
 
 /// serde `skip_serializing_if` for a plain bool: omit it from the wire
@@ -160,6 +169,7 @@ impl Default for OutputSpec {
             branch: None,
             output_schema: None,
             merge: false,
+            verifier: false,
         }
     }
 }

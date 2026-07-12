@@ -167,6 +167,35 @@ pub fn check_sibling_invariants(
     Ok(())
 }
 
+/// Cold-verifier suppression (Ф5, FD-9 / §10.2): an acceptance VERIFIER run
+/// must have real work to verify. A packet with `output.verifier` is
+/// refused unless its `context.context_from` names at least one run that
+/// produced a result — no cold verification over an empty tree. Verifiers
+/// read only named results (RD-11: clean context by design, the fold law),
+/// so `context_from` is exactly the set of work under review. Pure over the
+/// registry snapshot; the caller maps `Err` to a door refusal.
+pub fn check_verifier_has_work(state: &AppState, packet: &Packet) -> Result<(), String> {
+    if !packet.output.verifier {
+        return Ok(());
+    }
+    let has_work = packet.context.context_from.iter().any(|id| {
+        state
+            .get_run(*id)
+            .and_then(|r| r.collected)
+            .is_some_and(|c| c.result_source != "none")
+    });
+    if has_work {
+        Ok(())
+    } else {
+        Err(
+            "cold verifier: an acceptance/verifier run needs real work to check — its \
+             `context.context_from` names no run that produced a result (no cold \
+             verification over an empty tree)"
+                .to_owned(),
+        )
+    }
+}
+
 /// Whether a profile's bearer-token file is present — the availability
 /// signal for masking (FD-8). Mirrors the existence check [`preflight`]
 /// makes at the door, factored out so routing can consult it without

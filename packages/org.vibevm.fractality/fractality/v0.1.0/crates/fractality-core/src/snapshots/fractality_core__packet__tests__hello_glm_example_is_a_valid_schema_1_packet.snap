@@ -24,6 +24,7 @@ Packet {
         branch: None,
         output_schema: None,
         merge: false,
+        verifier: false,
     },
     budget: BudgetSpec {
         wall_secs: 300,
