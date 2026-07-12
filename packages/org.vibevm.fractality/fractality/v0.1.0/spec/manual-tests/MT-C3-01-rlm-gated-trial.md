@@ -105,7 +105,71 @@ mc_runs=<k>`; a clean end is `boss_exit=0`.
 
 ## Recorded runs
 
-_(filled after execution — pre-registration ends here)_
+_Executed 2026-07-12 (session driving Ф6; runner + build as specified;
+boss `glm-5.2[1m]`, workers `small` where spawned). Scored by
+`trial/score-g.py` over `target/trial-results/arm-g-run-<n>/`._
+
+- **Run 1** — `boss_exit=1` (`error_max_turns`, 50 turns), wall 495 s,
+  **mc_runs=2**. Gated: the boss ran `fractality gate --record` (3 calls),
+  got **route** verdicts for tasks 1 & 4 (single-skill, window-fitting),
+  and **spawned two workers** (`parse_line-test-suite`, `expected-json-
+  from-fixtures`). Both unfinished at the boss's turn wall — one `running`,
+  one `failed` (worker hit its own 30-turn cap on the 6-fixture task).
+  **Delegated E = {1, 4} = 2/6.** Distractors: 0.
+- **Run 2** — `boss_exit=124` (25-min wall), **mc_runs=2**. 10 gate calls.
+  **One worker COMPLETED end to end:** `rename-rec-to-record` (task 2,
+  `result_source=worker`, **acceptance 1/1 passed**); the second was still
+  `running` at the wall. **Delegated E = {1, 2} = 2/6.** Distractors: 0.
+- **Run 3** — `boss_exit=124` (25-min wall), **mc_runs=8** — the boss
+  fanned out hardest. 9 gate calls (a `route` verdict observed). **Two
+  workers COMPLETED:** `facts-table-extraction` ×2 (task 3,
+  `result_source=worker`, acceptance 1/1 and 0/1); the rest failed on
+  30-turn caps or were still running at the wall. **Delegated E = {1, 2, 3,
+  4} = 4/6.** Distractors: 0.
+
+**Pooled delegation metric (delegated ÷ attempted over E, the C2 rubric):
+8/18 ≈ 44.4%** — against the historical naive baseline **MT-C2-01 arm A =
+3/18 ≈ 16.7%** over the same menu. The gated arm delegated **~2.7×** more.
+Distractor delegations: **0/9 run-opportunities** — the matrix KEEP on
+tasks 7/8 was respected every run.
+
+### Prediction verdicts
+
+- **P-C3-a (window-fit → route, not over-decompose): SUPPORTED.** Every
+  gated task that fit a worker window was routed as ONE worker call, never
+  decomposed into a child tree; the boss consulted `fractality gate` 3–10×
+  per run and acted on route verdicts. Not a hard % (the gate's own reason
+  strings are the evidence, not an A/B delta), but the direction is clean.
+- **P-C3-b (schema cuts rework): INCONCLUSIVE.** No boss set an
+  `output_schema` on a packet, so the gate never fired; nothing to measure.
+  The seam works (Ф1.2b tests), but the trial did not exercise it — a menu
+  with an explicit structured-output task would.
+- **P-C3-c (no wall-budget overrun): CONFIRMED.** Zero runs ended
+  `killed(budget)`; no worker's wall exceeded its packet `budget.wall_secs`
+  (600 s). The one axis nobody else enforces held under fire.
+- **P-C3-d (a Silo task escalates): NOT OBSERVED (→ INCONCLUSIVE, leaning
+  refuted for this menu).** Zero escalations across all runs; the bosses
+  treated task 3 (facts extraction from a single doc) as *route-able*, not
+  a cross-chunk Silo — arguably correct, since the menu has no genuinely
+  chunk-destroying task. The escalation channel is built + tested (Ф4); the
+  menu simply offered nothing that demanded it. A trial menu needs a real
+  Silo item (a whole-repo reasoning task no split survives) to test P-C3-d.
+
+### Honest caveats (recorded, not excuses)
+
+- **The system RAN END TO END** — this is the trial's most important
+  result: workers spawned as real GLM Claude-Code processes under real
+  pods, did work, wrote results, ran acceptance, and folded back into the
+  journal. fractality's first live product use functions.
+- Boss + worker **turn caps** (boss 50, worker 30) bit hard: bosses timed
+  out mid-menu, workers timed out mid-task — so *delegated* is measured,
+  but *delegated-and-collected* is lower (3 workers completed across the
+  three runs). This depresses absolute completion, not the A↔baseline
+  delegation delta. Raising the worker cap is a config change for a future
+  trial, deliberately NOT done mid-frozen-protocol.
+- The C2 F24 staging linker defect (`env -i` breaks MSVC auto-detect) is
+  passed through by the runner (DEF-C2-2a); it was not observed to block
+  this trial (workers completed).
 
 ## Owner sign-off
 
