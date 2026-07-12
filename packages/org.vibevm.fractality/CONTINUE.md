@@ -6,18 +6,20 @@ divergence. Resume with `восстанови сессию fractality` (report-t
 
 ## TL;DR
 
-Executing the owner's five-task goal — **1) clean stuck branches · 2) a
-validated Stage C · 3) PP-004 follow-ups · 4) PP-001 · 5) PP-002** —
-autonomously with compaction, delegating grunt to GLM (CC+z.ai). A Stop-hook
-holds the session on this goal until all five are genuinely done.
+**The owner's five-task goal is COMPLETE** — 1) clean stuck branches · 2) a
+validated Stage C · 3) PP-004 · 4) PP-001 · 5) PP-002 — all done, committed,
+and pushed to both remotes (gitverse canonical + github mirror, ~32 commits),
+floor green throughout. Run autonomously with GLM delegation (CC+z.ai) under a
+Stop-hook that now clears.
 
-**Done: tasks 1, 3, 5.** **Task 4 is FIRING now** (PP-001, background).
-**Task 2 has its machinery + pre-registration; its help/hurt trial build +
-fire + the C-3 doc remain.** ~24 commits, all on `main`, pushed to both
-remotes (gitverse canonical + github mirror) at the latest. Floor green
-throughout (test-gate 223). Two paid trials fired this session (the PP-004
-gated re-run + PP-001 in flight); a big new evidence-preservation convention
-landed at the owner's direction.
+**Three paid trials fired + scored this session**, each preserved under the
+new binding evidence convention: PP-004 gated re-run (P-C3-a/b/d moved),
+PP-001 initiative re-run (replicates Ф6 — hooks don't move cold delegation,
+the RLM gate does), and the MT-C3-02 advisor help/hurt trial (a null
+mechanism — a weak caller won't consult from a preamble; the machinery is
+built, the consult behaviour is the gap). Follow-ups (a forced-consult advisor
+re-run, a PostToolUse nudge for PP-001, a clean-N=3 PP-004 re-fire) are filed
+in `WAL.md` §Next and the registry. Nothing is in flight.
 
 ## Where each task stands
 
@@ -54,12 +56,11 @@ landed at the owner's direction.
 
 ## Active work in flight
 
-**PP-004 DONE, PP-001 DONE** (both fired + scored + committed). **The
-MT-C3-02 help/hurt trial is FIRING now** (background `bi2q342zd`,
-`scratchpad/fire-advise.log`): alone×3 + advised×3, caller = glm-5-turbo,
-advisor = glm-5.2 via `fractality advise`. Cannot run `floor`/`cargo` while
-it fires (Windows `.exe` lock). When it prints `ALL-ADVISE-DONE` the evidence
-auto-preserves under `reports/trial-results/<dated>-c3-mt-c3-02-advisor-help-hurt/`.
+**Nothing in flight — the five-task goal is complete.** All three paid trials
+this session are fired, scored, and committed (PP-004 gated re-run, PP-001
+initiative re-run, MT-C3-02 help/hurt), their evidence preserved under
+`reports/trial-results/`. The remaining work is owner-commissioned follow-ups
+(WAL §Next), not in-flight work.
 
 ## Next-steps recipe (cold start)
 
