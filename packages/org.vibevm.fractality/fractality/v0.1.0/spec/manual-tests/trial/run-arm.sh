@@ -107,7 +107,7 @@ set +e
       --output-format stream-json --verbose \
       --model "$BIG_ID" \
       --permission-mode acceptEdits \
-      --max-turns 50 \
+      --max-turns 100 \
       --allowed-tools Bash Edit Write Read Glob Grep \
       < "$SCRATCH/menu.md" \
       > "$OUT/boss-transcript.jsonl" 2> "$OUT/boss-stderr.log")

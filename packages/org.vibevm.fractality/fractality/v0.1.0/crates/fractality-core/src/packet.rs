@@ -267,7 +267,14 @@ fn default_wall_secs() -> u64 {
     1800
 }
 fn default_max_turns() -> u32 {
-    40
+    // Raised 40 → 80 (PP-004 item 1): the Ф6/MT-C3-01 trial workers hit
+    // their turn cap mid-task on multi-file work (e.g. "6 fixtures → 6 JSON
+    // files"), so `delegated-and-collected` trailed `delegated` purely on
+    // the cap, not on capability. A turn cap bounds a runaway, not a
+    // healthy task — a task that finishes in 20 turns costs 20 whatever the
+    // ceiling — so the headroom is close to free and only saves the tasks a
+    // low cap would have severed.
+    80
 }
 fn default_max_output_tokens() -> u64 {
     200_000
@@ -415,7 +422,7 @@ mod tests {
         assert_eq!(p.output.result, "result.md");
         assert_eq!(p.output.branch, None);
         assert_eq!(p.budget.wall_secs, 1800);
-        assert_eq!(p.budget.max_turns, 40);
+        assert_eq!(p.budget.max_turns, 80);
         assert_eq!(p.budget.max_output_tokens, 200_000);
         assert_eq!(p.routing.model, "big");
         assert!(p.context.files.is_empty());
