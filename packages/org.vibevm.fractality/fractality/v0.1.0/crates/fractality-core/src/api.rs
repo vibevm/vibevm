@@ -145,6 +145,20 @@ pub struct AnswerRequest {
     pub answer: String,
 }
 
+/// `POST /v0/runs/:id/escalate` — hand the run's task UP the tree
+/// (D-C3-6). Called by the broker's `escalate` tool from inside the
+/// worker; the run ends `escalated` and the record climbs the `parent`
+/// edges to the human at the top. Terminal — unlike a question, there is
+/// no resume.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct EscalateRequest {
+    /// Why the run hands the task up instead of finishing it.
+    pub reason: String,
+    /// What it needs from above to make progress (capability, decision,
+    /// larger window, budget). Free-form in v1.
+    pub needs: String,
+}
+
 /// `GET /v0/metrics` — aggregates over the whole registry (D16: every
 /// telemetry consumer reads exactly this; no shadow accounting).
 #[derive(Debug, Clone, PartialEq, Default, Serialize, Deserialize)]

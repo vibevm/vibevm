@@ -336,6 +336,27 @@ impl McClient {
         .await
     }
 
+    /// Escalates a run: hands its whole task UP the tree (D-C3-6). Called
+    /// by the broker's `escalate` tool from inside the worker; the run
+    /// ends `escalated` (terminal — no resume).
+    pub async fn escalate(
+        &self,
+        id: RunId,
+        reason: &str,
+        needs: &str,
+    ) -> Result<RunRecord, ClientError> {
+        self.request(
+            "POST /v0/runs/:id/escalate",
+            self.http
+                .post(self.url(&format!("/runs/{id}/escalate")))
+                .json(&fractality_core::api::EscalateRequest {
+                    reason: reason.to_owned(),
+                    needs: needs.to_owned(),
+                }),
+        )
+        .await
+    }
+
     pub async fn shutdown(&self) -> Result<ShutdownResponse, ClientError> {
         self.request("POST /v0/shutdown", self.http.post(self.url("/shutdown")))
             .await

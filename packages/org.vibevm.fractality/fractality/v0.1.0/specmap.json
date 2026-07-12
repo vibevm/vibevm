@@ -298,14 +298,14 @@
       "crate_name": "fractality-mc-client",
       "file": "crates/fractality-mc-client/src/lib.rs",
       "item_kind": "fn",
-      "line": 500,
+      "line": 521,
       "symbol": "fractality_mc_client::inherit_guard::Guard::restore_inherit"
     },
     {
       "crate_name": "fractality-mc-client",
       "file": "crates/fractality-mc-client/src/lib.rs",
       "item_kind": "fn",
-      "line": 471,
+      "line": 492,
       "symbol": "fractality_mc_client::inherit_guard::Guard::strip_std_handles"
     },
     {
@@ -326,7 +326,7 @@
       "crate_name": "fractality-mission-control",
       "file": "crates/fractality-mission-control/src/lib.rs",
       "item_kind": "mod",
-      "line": 38,
+      "line": 39,
       "symbol": "fractality_mission_control"
     },
     {
@@ -340,7 +340,7 @@
       "crate_name": "fractality-mission-control",
       "file": "crates/fractality-mission-control/src/lib.rs",
       "item_kind": "enum",
-      "line": 68,
+      "line": 69,
       "symbol": "fractality_mission_control::ServerError"
     },
     {
@@ -363,6 +363,13 @@
       "item_kind": "mod",
       "line": 15,
       "symbol": "fractality_mission_control::http_decisions"
+    },
+    {
+      "crate_name": "fractality-mission-control",
+      "file": "crates/fractality-mission-control/src/http_escalate.rs",
+      "item_kind": "mod",
+      "line": 18,
+      "symbol": "fractality_mission_control::http_escalate"
     },
     {
       "crate_name": "fractality-mission-control",
@@ -845,7 +852,7 @@
     {
       "file": "crates/fractality-mc-client/src/lib.rs",
       "from_symbol": "fractality_mc_client::inherit_guard::Guard::restore_inherit",
-      "line": 502,
+      "line": 523,
       "provenance": "authored",
       "uri": "spec://fractality/PROP-001#architecture",
       "verb": "deviates",
@@ -854,7 +861,7 @@
     {
       "file": "crates/fractality-mc-client/src/lib.rs",
       "from_symbol": "fractality_mc_client::inherit_guard::Guard::strip_std_handles",
-      "line": 474,
+      "line": 495,
       "provenance": "authored",
       "uri": "spec://fractality/PROP-001#architecture",
       "verb": "deviates",
@@ -879,7 +886,7 @@
     {
       "file": "crates/fractality-mission-control/src/lib.rs",
       "from_symbol": "fractality_mission_control",
-      "line": 38,
+      "line": 39,
       "provenance": "authored",
       "uri": "spec://fractality/PROP-001#architecture",
       "verb": "implements"
@@ -895,7 +902,7 @@
     {
       "file": "crates/fractality-mission-control/src/lib.rs",
       "from_symbol": "fractality_mission_control::ServerError",
-      "line": 78,
+      "line": 79,
       "provenance": "authored",
       "uri": "spec://fractality/PROP-001#architecture",
       "verb": "implements"
@@ -920,6 +927,14 @@
       "file": "crates/fractality-mission-control/src/http_decisions.rs",
       "from_symbol": "fractality_mission_control::http_decisions",
       "line": 15,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-mission-control/src/http_escalate.rs",
+      "from_symbol": "fractality_mission_control::http_escalate",
+      "line": 18,
       "provenance": "authored",
       "uri": "spec://fractality/PROP-001#architecture",
       "verb": "implements"

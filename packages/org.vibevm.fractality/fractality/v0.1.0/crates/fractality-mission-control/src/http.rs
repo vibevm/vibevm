@@ -41,6 +41,10 @@ pub fn router(state: Arc<AppState>) -> Router {
             "/runs/{id}/answer",
             post(crate::http_questions::post_answer),
         )
+        .route(
+            "/runs/{id}/escalate",
+            post(crate::http_escalate::post_escalate),
+        )
         .route("/metrics", get(metrics))
         .route(
             "/decisions",
