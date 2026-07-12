@@ -6,7 +6,7 @@
 //! as its expectation. Targets are recorded, never CI-gated; the
 //! REPORT is the ratchet.
 
-specmark::scope!("spec://org.vibevm.ai-native.rust-ai-native-lang/mechanisms/TCG-ORACLE-RUST-v0.1#approximation");
+specmark::scope!("spec://org.vibevm.ai-native/rust-ai-native-lang/mechanisms/TCG-ORACLE-RUST-v0.1#approximation");
 
 use std::collections::BTreeSet;
 use std::path::Path;

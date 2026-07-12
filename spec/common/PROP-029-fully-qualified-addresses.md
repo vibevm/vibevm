@@ -19,11 +19,18 @@ Two textual carriers, one identity:
 | Carrier | Form | Example |
 |---|---|---|
 | pkgref (manifests, lockfiles, prose) | `[<kind>:]<group>/<name>` | `stack:org.vibevm.ai-native/rust-ai-native-lang` |
-| `spec://` authority (the `<module>` segment) | `<group>.<name>` | `spec://org.vibevm.ai-native.rust-ai-native-lang/GUIDE#anchor` |
+| `spec://` authority (the `<module>` segment) | `<group>/<name>` — the name is the first path segment | `spec://org.vibevm.ai-native/rust-ai-native-lang/GUIDE#anchor` |
 
-The separator differs by carrier only because `/` already delimits the URI
-path — the dotted form is exactly the FQDN repository name (PROP-008 §2.5). A
-consumer parsing either recovers the same `(group, name)`.
+**The joiner is `/` in both carriers, on purpose.** The `<group>/<name>`
+coordinate is therefore byte-identical in a pkgref and in a `spec://` authority
+— so one deterministic rule renames both, and an algorithm splits group from
+name by the single `/`, a character in neither (group is `[a-z0-9.-]`, name is
+`[a-z0-9-]`). A dot would be ambiguous: groups are dotted reverse-DNS, so a
+`<group>.<name>` authority hides the boundary — only a reader holding the
+registry (or an LLM, from context) could place it, which is the very resolver
+dependence §3 exists to remove. In the URI the name is simply the first path
+segment after the group; the resolver matches the whole URI string, so nothing
+has to parse the boundary at resolution time.
 
 ## 2. Why — structure-independence enables mechanical refactoring {#rationale}
 

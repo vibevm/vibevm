@@ -9,7 +9,7 @@
 //! rides these answers.
 
 specmark::scope!(
-    "spec://org.vibevm.ai-native.typescript-ai-native-mcp/tools/discipline-mcp-typescript#tcg-tools"
+    "spec://org.vibevm.ai-native/typescript-ai-native-mcp/tools/discipline-mcp-typescript#tcg-tools"
 );
 
 use std::cell::RefCell;

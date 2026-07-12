@@ -3,7 +3,7 @@
 //! posture).
 
 specmark::scope!(
-    "spec://org.vibevm.ai-native.rust-ai-native-lang/mechanisms/TCG-ORACLE-RUST-v0.1#session"
+    "spec://org.vibevm.ai-native/rust-ai-native-lang/mechanisms/TCG-ORACLE-RUST-v0.1#session"
 );
 
 use std::collections::VecDeque;

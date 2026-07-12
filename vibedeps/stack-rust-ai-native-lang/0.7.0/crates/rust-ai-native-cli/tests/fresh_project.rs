@@ -104,7 +104,7 @@ fn init_then_trace_resolves_and_the_gates_catch_violations() {
     write(
         root,
         "crates/app/src/uses_mechanism.rs",
-        "specmark::scope!(\"spec://org.vibevm.ai-native.core-ai-native/mechanisms/ENGINE-X-v0.1#rules\");\n",
+        "specmark::scope!(\"spec://org.vibevm.ai-native/core-ai-native/mechanisms/ENGINE-X-v0.1#rules\");\n",
     );
     // (registered as a module so the scanner sees it)
     write(

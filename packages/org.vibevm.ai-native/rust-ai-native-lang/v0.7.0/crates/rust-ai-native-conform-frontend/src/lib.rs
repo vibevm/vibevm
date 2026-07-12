@@ -5,7 +5,7 @@
 //! rather than an error; the rest of the tree still extracts.
 
 specmark::scope!(
-    "spec://org.vibevm.ai-native.core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#frontends"
+    "spec://org.vibevm.ai-native/core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#frontends"
 );
 
 use conform_core::{Fact, Frontend};

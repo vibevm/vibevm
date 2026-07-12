@@ -5,7 +5,7 @@
 //! whole layer replays without rust-analyzer.
 
 specmark::scope!(
-    "spec://org.vibevm.ai-native.rust-ai-native-lang/mechanisms/TCG-ORACLE-RUST-v0.1#session"
+    "spec://org.vibevm.ai-native/rust-ai-native-lang/mechanisms/TCG-ORACLE-RUST-v0.1#session"
 );
 
 use std::collections::HashMap;
@@ -41,7 +41,7 @@ pub struct Capabilities {
 
 /// The client: correlation, auto-answers, notification state.
 #[spec(
-    implements = "spec://org.vibevm.ai-native.rust-ai-native-lang/mechanisms/TCG-ORACLE-RUST-v0.1#session"
+    implements = "spec://org.vibevm.ai-native/rust-ai-native-lang/mechanisms/TCG-ORACLE-RUST-v0.1#session"
 )]
 pub struct LspClient<T: Transport> {
     transport: T,
@@ -226,7 +226,7 @@ impl<T: Transport> LspClient<T> {
     /// The ORACLE-RUST §2 handshake: initialize (utf-8 requested, pull
     /// diagnostics, serverStatus), read the granted set, initialized.
     #[spec(
-        implements = "spec://org.vibevm.ai-native.rust-ai-native-lang/mechanisms/TCG-ORACLE-RUST-v0.1#session"
+        implements = "spec://org.vibevm.ai-native/rust-ai-native-lang/mechanisms/TCG-ORACLE-RUST-v0.1#session"
     )]
     pub fn initialize(
         &mut self,

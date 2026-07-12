@@ -8,7 +8,7 @@
 //! LanguageService is tsc's own engine), so no approximation caveat
 //! rides these answers.
 
-specmark::scope!("spec://org.vibevm.ai-native.typescript-ai-native-mcp/tools/discipline-mcp-typescript#tcg-tools");
+specmark::scope!("spec://org.vibevm.ai-native/typescript-ai-native-mcp/tools/discipline-mcp-typescript#tcg-tools");
 
 use std::cell::RefCell;
 use std::path::{Path, PathBuf};

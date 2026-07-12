@@ -19,7 +19,7 @@ package source), [PROP-020](../modules/vibe-workspace/PROP-020-install-hooks.md)
 [ENGINE-CONFORM](../../vibedeps/flow-core-ai-native/0.6.0/spec/mechanisms/ENGINE-CONFORM-v0.1.md) and
 [PROP-014](../../vibedeps/flow-core-ai-native/0.6.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md)
 (the tools that relocate; the specs themselves now ship in
-`flow:org.vibevm.ai-native/core-ai-native` — `spec://org.vibevm.ai-native.core-ai-native/mechanisms/…`).
+`flow:org.vibevm.ai-native/core-ai-native` — `spec://org.vibevm.ai-native/core-ai-native/mechanisms/…`).
 **Owner sanction:** PROP-024 reshapes the owner-frozen `VIBEVM-SPEC.md` (§4.2
 layout, §7.2 package contents, §7.3 manifest, §7.4 identity, §12 linter, §13.1
 package layout). The `VIBEVM-SPEC.md` edits required explicit owner sanction; it

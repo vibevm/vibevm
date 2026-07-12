@@ -6,7 +6,7 @@
 //! every child process (cargo, rustfmt, clippy, nextest) it spawned.
 
 specmark::scope!(
-    "spec://org.vibevm.ai-native.rust-ai-native-mcp/tools/discipline-mcp-rust#discipline-tools"
+    "spec://org.vibevm.ai-native/rust-ai-native-mcp/tools/discipline-mcp-rust#discipline-tools"
 );
 
 use std::path::{Path, PathBuf};

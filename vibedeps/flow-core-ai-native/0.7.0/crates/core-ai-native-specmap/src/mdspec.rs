@@ -8,7 +8,7 @@
 //! line are legacy-unmarked and still inventoried (full node inventory,
 //! PROP-014 §4 Phase 0).
 
-specmark::scope!("spec://org.vibevm.ai-native.core-ai-native/mechanisms/PROP-014#spec-units");
+specmark::scope!("spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#spec-units");
 
 use std::path::Path;
 

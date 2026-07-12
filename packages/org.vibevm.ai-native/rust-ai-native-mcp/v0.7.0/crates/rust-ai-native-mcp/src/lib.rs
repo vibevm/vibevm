@@ -8,7 +8,7 @@
 //! (lazy-spawned, respawn-once). Serving needs no vibe anywhere on the
 //! machine — the PROP-027 §2.6 acceptance.
 
-specmark::scope!("spec://org.vibevm.ai-native.rust-ai-native-mcp/tools/discipline-mcp-rust#root");
+specmark::scope!("spec://org.vibevm.ai-native/rust-ai-native-mcp/tools/discipline-mcp-rust#root");
 
 use std::path::Path;
 

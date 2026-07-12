@@ -8,7 +8,7 @@
 //! evaluation lands with Phase 1; reported as not-yet-evaluable).
 
 specmark::scope!(
-    "spec://org.vibevm.ai-native.core-ai-native/mechanisms/BROWNFIELD-PROTOCOL-v0.1#registries"
+    "spec://org.vibevm.ai-native/core-ai-native/mechanisms/BROWNFIELD-PROTOCOL-v0.1#registries"
 );
 
 use anyhow::{Context, Result};

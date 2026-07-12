@@ -11,12 +11,12 @@
 use core_ai_native_specmark as specmark;
 use core_ai_native_specmark::{spec, verifies};
 
-const URI: &str = "spec://org.vibevm.ai-native.core-ai-native/mechanisms/PROP-014#addressing-code";
+const URI: &str = "spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#addressing-code";
 
-specmark::scope!("spec://org.vibevm.ai-native.core-ai-native/mechanisms/PROP-014#addressing-code");
+specmark::scope!("spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#addressing-code");
 
 #[spec(
-    implements = "spec://org.vibevm.ai-native.core-ai-native/mechanisms/PROP-014#addressing-code",
+    implements = "spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#addressing-code",
     r = 1
 )]
 struct Tagged {
@@ -24,10 +24,10 @@ struct Tagged {
 }
 
 #[spec(
-    implements = "spec://org.vibevm.ai-native.core-ai-native/mechanisms/PROP-014#addressing-code"
+    implements = "spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#addressing-code"
 )]
 #[spec(
-    documents = "spec://org.vibevm.ai-native.core-ai-native/mechanisms/PROP-014#addressing-spec",
+    documents = "spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#addressing-spec",
     r = 1
 )]
 enum MultiTagged {
@@ -36,7 +36,7 @@ enum MultiTagged {
 }
 
 #[spec(
-    deviates = "spec://org.vibevm.ai-native.core-ai-native/mechanisms/PROP-014#addressing-code",
+    deviates = "spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#addressing-code",
     r = 1,
     reason = "test fixture exercising the deviates carrier form"
 )]
@@ -46,7 +46,7 @@ impl Tagged {
     }
 }
 
-#[spec(informs = "spec://org.vibevm.ai-native.core-ai-native/mechanisms/PROP-014#edges~r1")]
+#[spec(informs = "spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#edges~r1")]
 fn helper(x: u8) -> u8 {
     x + 1
 }
@@ -55,7 +55,7 @@ mod inner {
     use core_ai_native_specmark as specmark;
 
     specmark::scope!(
-        "spec://org.vibevm.ai-native.core-ai-native/mechanisms/PROP-014#addressing-code",
+        "spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#addressing-code",
         r = 1
     );
 
@@ -66,7 +66,7 @@ mod inner {
 
 #[test]
 #[verifies(
-    "spec://org.vibevm.ai-native.core-ai-native/mechanisms/PROP-014#addressing-code",
+    "spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#addressing-code",
     r = 1
 )]
 fn tags_are_inert() {
@@ -79,7 +79,7 @@ fn tags_are_inert() {
 }
 
 #[test]
-#[verifies("spec://org.vibevm.ai-native.core-ai-native/mechanisms/PROP-014#addressing-code")]
+#[verifies("spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#addressing-code")]
 fn verifies_without_pin_compiles_and_runs() {
     assert_eq!(1 + 1, 2);
 }

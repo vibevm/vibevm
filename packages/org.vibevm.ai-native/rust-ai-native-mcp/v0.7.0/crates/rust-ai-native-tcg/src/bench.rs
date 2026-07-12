@@ -7,7 +7,7 @@
 //! REPORT is the ratchet.
 
 specmark::scope!(
-    "spec://org.vibevm.ai-native.rust-ai-native-lang/mechanisms/TCG-ORACLE-RUST-v0.1#approximation"
+    "spec://org.vibevm.ai-native/rust-ai-native-lang/mechanisms/TCG-ORACLE-RUST-v0.1#approximation"
 );
 
 use std::collections::BTreeSet;

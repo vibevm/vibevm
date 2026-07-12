@@ -6,7 +6,7 @@ description: Adopt the AI-Native discipline on an existing (brownfield) TypeScri
 # Terraform a TypeScript codebase (brownfield adoption)
 
 You are executing the BROWNFIELD protocol
-(`spec://org.vibevm.ai-native.core-ai-native/mechanisms/BROWNFIELD-PROTOCOL-v0.1` — shipped
+(`spec://org.vibevm.ai-native/core-ai-native/mechanisms/BROWNFIELD-PROTOCOL-v0.1` — shipped
 copy under `vibedeps/flow-core-ai-native/<version>/spec/mechanisms/`;
 read it before the first phase, and skim `03-RAID-PLAYBOOK` +
 `05-CAMPAIGN-FORM` for the campaign machinery). The founding principles:

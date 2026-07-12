@@ -4,7 +4,7 @@
 
 **Companions** (vibevm-hosted, the pilot project's spec tree — cited as context, not shipped here): PROP-000 (foundation, license policy §3), PROP-003 (the LLM-boundary philosophy this PROP extends), PROP-009 (boot/loading model — specmap becomes its intra-project counterpart), PROP-013 (category C "drift" — specmap mechanizes its detection), Red Book ch. 2 (files as IPC) and ch. 3 (Sync-from-Code — specmap is its instrumentation).
 
-**Home.** `flow:org.vibevm.ai-native/core-ai-native`, `spec/mechanisms/` — this mechanism ships with the Discipline (URIs `spec://org.vibevm.ai-native.core-ai-native/mechanisms/PROP-014#…`); its Rust implementation ships in `stack:org.vibevm.ai-native/rust-ai-native-lang` (`specmap-core` + the `rust-ai-native-specmap` binary). The tag *syntax* shown throughout (`#[spec]`, `scope!`) is the Rust projection; other language stacks ship their own projection of the same model.
+**Home.** `flow:org.vibevm.ai-native/core-ai-native`, `spec/mechanisms/` — this mechanism ships with the Discipline (URIs `spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#…`); its Rust implementation ships in `stack:org.vibevm.ai-native/rust-ai-native-lang` (`specmap-core` + the `rust-ai-native-specmap` binary). The tag *syntax* shown throughout (`#[spec]`, `scope!`) is the Rust projection; other language stacks ship their own projection of the same model.
 
 ---
 

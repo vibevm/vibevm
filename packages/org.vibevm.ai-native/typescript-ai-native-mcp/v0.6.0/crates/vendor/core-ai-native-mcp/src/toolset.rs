@@ -3,7 +3,7 @@
 //! loop. Servers built on this crate implement [`Tool`] per command and
 //! register them; the loop owns dispatch, the tools own semantics.
 
-specmark::scope!("spec://org.vibevm.ai-native.core-ai-native/mechanisms/MCP-CORE-v0.1#toolset");
+specmark::scope!("spec://org.vibevm.ai-native/core-ai-native/mechanisms/MCP-CORE-v0.1#toolset");
 
 use std::collections::BTreeMap;
 

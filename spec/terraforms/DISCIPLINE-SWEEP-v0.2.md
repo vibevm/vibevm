@@ -5,7 +5,7 @@
 one file — the portable sweep template, the Rust idioms, and vibevm's own
 numbers — and the first two now ship with the Discipline itself
 (SELF-SUFFICIENCY-PLAN Phase 5): the template is
-[`spec://org.vibevm.ai-native.core-ai-native/04-SWEEP-PLAYBOOK`](../../vibedeps/flow-core-ai-native/0.7.0/spec/04-SWEEP-PLAYBOOK.md)
+[`spec://org.vibevm.ai-native/core-ai-native/04-SWEEP-PLAYBOOK`](../../vibedeps/flow-core-ai-native/0.7.0/spec/04-SWEEP-PLAYBOOK.md)
 (tiers, cadence, collector contract, the WISH→census→Rule ladder), the Rust
 idioms are GUIDE §14 in the rust-ai-native stack, and the runnable surface
 is the shipped `rust-ai-native` tool driven by the `/rust-ai-native-sweep`
@@ -42,7 +42,7 @@ sit at `discipline/registry/`, goldens at `discipline/golden/`
   memory (the "count the list, not the record" lesson, SHRINK v0.1 §0).
 - conform baseline: 0 frozen (empty since PUBDOC-DRAIN v0.1).
 - The canonical deviates target is
-  `spec://org.vibevm.ai-native.core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules`.
+  `spec://org.vibevm.ai-native/core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules`.
 - Known standing landmines live in the collector's `danger_band_files` —
   re-read `discipline/health/latest.json`, not a stale list here.
 - Owner-frozen surfaces (never swept, drift is FILED): `spec/boot/00-core.md`,

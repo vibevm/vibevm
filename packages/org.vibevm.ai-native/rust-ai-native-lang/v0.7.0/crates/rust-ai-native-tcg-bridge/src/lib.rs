@@ -8,7 +8,7 @@
 //! obliges the machine to carry rust-analyzer (ORACLE-RUST §1).
 
 specmark::scope!(
-    "spec://org.vibevm.ai-native.rust-ai-native-lang/mechanisms/TCG-ORACLE-RUST-v0.1#root"
+    "spec://org.vibevm.ai-native/rust-ai-native-lang/mechanisms/TCG-ORACLE-RUST-v0.1#root"
 );
 
 use std::path::{Path, PathBuf};
@@ -37,39 +37,39 @@ pub use oracle::{Diagnostic, RustOracle, ValidateOutcome};
 /// ```
 #[derive(Debug, thiserror::Error)]
 #[spec(
-    implements = "spec://org.vibevm.ai-native.rust-ai-native-lang/mechanisms/TCG-PROTOCOL-RUST-v0.1#errors"
+    implements = "spec://org.vibevm.ai-native/rust-ai-native-lang/mechanisms/TCG-PROTOCOL-RUST-v0.1#errors"
 )]
 pub enum TcgBridgeError {
     #[error(
-        "violates spec://org.vibevm.ai-native.rust-ai-native-lang/mechanisms/TCG-ORACLE-RUST-v0.1#resolution: \
+        "violates spec://org.vibevm.ai-native/rust-ai-native-lang/mechanisms/TCG-ORACLE-RUST-v0.1#resolution: \
          no rust-analyzer resolvable ({detail}); fix surface: \
          `rustup component add rust-analyzer` (a stack prerequisite)"
     )]
     RustAnalyzerMissing { detail: String },
 
     #[error(
-        "violates spec://org.vibevm.ai-native.rust-ai-native-lang/mechanisms/TCG-ORACLE-RUST-v0.1#session: \
+        "violates spec://org.vibevm.ai-native/rust-ai-native-lang/mechanisms/TCG-ORACLE-RUST-v0.1#session: \
          the workspace failed to load ({detail}); fix surface: run \
          `cargo metadata` in the project root and read its error"
     )]
     WorkspaceUnloadable { detail: String },
 
     #[error(
-        "violates spec://org.vibevm.ai-native.rust-ai-native-lang/mechanisms/TCG-ORACLE-RUST-v0.1#lifecycle: \
+        "violates spec://org.vibevm.ai-native/rust-ai-native-lang/mechanisms/TCG-ORACLE-RUST-v0.1#lifecycle: \
          the rust-analyzer child is gone ({detail}); fix surface: the host \
          registry respawns once; run the op one-shot to see stderr"
     )]
     OracleCrashed { detail: String },
 
     #[error(
-        "violates spec://org.vibevm.ai-native.rust-ai-native-lang/mechanisms/TCG-PROTOCOL-RUST-v0.1#parity: \
+        "violates spec://org.vibevm.ai-native/rust-ai-native-lang/mechanisms/TCG-PROTOCOL-RUST-v0.1#parity: \
          protocol violation ({detail}); fix surface: rebuild the slot binary \
          so relay and host share one protocol"
     )]
     Protocol { detail: String },
 
     #[error(
-        "violates spec://org.vibevm.ai-native.rust-ai-native-lang/mechanisms/TCG-PROTOCOL-RUST-v0.1#errors: \
+        "violates spec://org.vibevm.ai-native/rust-ai-native-lang/mechanisms/TCG-PROTOCOL-RUST-v0.1#errors: \
          `{op}` did not answer within {budget_ms} ms; fix surface: raise the \
          caller's budget or check rust-analyzer health"
     )]
@@ -106,7 +106,7 @@ impl TcgBridgeError {
 /// assert_eq!(c["diagnostics"]["experimental"]["enable"], true);
 /// ```
 #[spec(
-    implements = "spec://org.vibevm.ai-native.rust-ai-native-lang/mechanisms/TCG-ORACLE-RUST-v0.1#config"
+    implements = "spec://org.vibevm.ai-native/rust-ai-native-lang/mechanisms/TCG-ORACLE-RUST-v0.1#config"
 )]
 pub fn ra_config() -> serde_json::Value {
     serde_json::json!({
@@ -141,7 +141,7 @@ pub fn verbatim_free(path: &Path) -> PathBuf {
 /// (an absolute path, or the bare name when PATH resolution is the
 /// winner).
 #[spec(
-    implements = "spec://org.vibevm.ai-native.rust-ai-native-lang/mechanisms/TCG-ORACLE-RUST-v0.1#resolution"
+    implements = "spec://org.vibevm.ai-native/rust-ai-native-lang/mechanisms/TCG-ORACLE-RUST-v0.1#resolution"
 )]
 pub fn resolve_rust_analyzer(root: &Path) -> Result<PathBuf, TcgBridgeError> {
     let rustup = std::process::Command::new("rustup")
@@ -215,7 +215,7 @@ mod tests {
             assert_eq!(e.wire_kind(), kind);
             let msg = e.to_string();
             assert!(
-                msg.contains("spec://org.vibevm.ai-native.rust-ai-native-lang/mechanisms/"),
+                msg.contains("spec://org.vibevm.ai-native/rust-ai-native-lang/mechanisms/"),
                 "{msg}"
             );
             assert!(msg.contains(hint), "{msg}");

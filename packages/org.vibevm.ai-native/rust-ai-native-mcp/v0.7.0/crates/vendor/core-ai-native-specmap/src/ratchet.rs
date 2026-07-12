@@ -23,7 +23,7 @@
 //! into `specmap.json`; the full PROP-014 §2.5 orphan table lands when
 //! PROP-014 itself is unit-ified after ratification.
 
-specmark::scope!("spec://org.vibevm.ai-native.core-ai-native/mechanisms/PROP-014#index");
+specmark::scope!("spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#index");
 
 use std::collections::HashSet;
 use std::path::Path;

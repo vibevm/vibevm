@@ -27,8 +27,10 @@ struct ExternalSpec {
 }
 
 /// Scan `vibedeps/<slot>/<version>/` for installed packages that carry a
-/// `spec/` tree, reading each slot's `vibe.toml` `[package]` `<group>.<name>`
-/// as its fully-qualified namespace (PROP-029). Deterministic order.
+/// `spec/` tree, reading each slot's `vibe.toml` `[package]` `<group>/<name>`
+/// as its fully-qualified namespace (PROP-029: the same `/`-joined coordinate
+/// the pkgref carries, so the group↔name split is algorithmic). Deterministic
+/// order.
 fn discover_external_specs(root: &Path) -> Vec<ExternalSpec> {
     let mut out = Vec::new();
     let vibedeps = root.join("vibedeps");
@@ -74,7 +76,7 @@ fn discover_external_specs(root: &Path) -> Vec<ExternalSpec> {
             let rel = vdir.join("spec");
             let rel = rel.strip_prefix(root).unwrap_or(&rel);
             out.push(ExternalSpec {
-                namespace: format!("{group}.{name}"),
+                namespace: format!("{group}/{name}"),
                 root: rel.to_string_lossy().replace('\\', "/"),
             });
         }
@@ -387,7 +389,7 @@ mod tests {
         run_init(root, &opts()).unwrap();
         let specmap = std::fs::read_to_string(root.join("specmap.toml")).unwrap();
         assert!(
-            specmap.contains("namespace = \"org.x.some-core\""),
+            specmap.contains("namespace = \"org.x/some-core\""),
             "{specmap}"
         );
         assert!(

@@ -114,9 +114,15 @@ in a chat; inside spec files, re-read dozens of times per session,
 write the full address.
 
 **For a package, the module authority MUST be the package's full
-coordinate `<group>.<name>`** — e.g. `org.vibevm.ai-native.rust-ai-native-lang`,
-never a bare `rust-ai-native-lang`. A bare authority resolves only with
-ambient context (which package am I in?); the full coordinate is a
+coordinate `<group>/<name>`** — the name is the first path segment,
+`/`-joined exactly as in a pkgref (e.g.
+`org.vibevm.ai-native/rust-ai-native-lang`), never a bare
+`rust-ai-native-lang`. The `/` matters: it is the one character in
+neither the group (`[a-z0-9.-]`) nor the name (`[a-z0-9-]`), so an
+algorithm splits the boundary deterministically — a dotted
+`<group>.<name>` would hide it, since groups are dotted reverse-DNS. A
+bare authority resolves only with ambient context (which package am I
+in?); the full coordinate is a
 self-contained global symbol, which is what makes every `spec://`
 citation *mechanically* refactorable — an algorithm rewrites all
 occurrences on a rename, no resolver and no model in the loop. This is

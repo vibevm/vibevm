@@ -4601,7 +4601,7 @@
       "from_symbol": "vibe_cli::commands::trace",
       "line": 9,
       "provenance": "authored",
-      "uri": "spec://org.vibevm.ai-native.core-ai-native/mechanisms/PROP-014#index",
+      "uri": "spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#index",
       "verb": "implements"
     },
     {
@@ -5158,7 +5158,7 @@
       "from_symbol": "vibe_cli::commands::workspace::publish::node_abs_dir",
       "line": 492,
       "provenance": "authored",
-      "uri": "spec://org.vibevm.ai-native.core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
+      "uri": "spec://org.vibevm.ai-native/core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
       "verb": "deviates",
       "reason": "no-unwrap-in-domain: a PublishNode is built from the workspace's own membership, so its rel_path always names a member; member_by_rel_path cannot miss here, and threading a Result would carry a None the plan construction excludes through every node_abs_dir caller"
     },
@@ -5207,7 +5207,7 @@
       "from_symbol": "vibe_cli::promote_user_config_env",
       "line": 221,
       "provenance": "authored",
-      "uri": "spec://org.vibevm.ai-native.core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
+      "uri": "spec://org.vibevm.ai-native/core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
       "verb": "deviates",
       "reason": "unsafe-gate: startup env promotion runs at the top of main, before the dispatcher and before any thread exists — set_var's race is with concurrent readers, and none can be observing yet; the env-audit crate is test infrastructure and a mutate-anytime safe production API would advertise soundness it cannot prove"
     },
@@ -6095,7 +6095,7 @@
       "from_symbol": "vibe_index::cli::stop::run",
       "line": 25,
       "provenance": "authored",
-      "uri": "spec://org.vibevm.ai-native.core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
+      "uri": "spec://org.vibevm.ai-native/core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
       "verb": "deviates",
       "reason": "unsafe-gate: libc::kill is unsafe by FFI ABI, not by memory — a (pid, SIGTERM) value pair crosses the boundary, no pointers; the pid comes from the server lockfile and a stale one yields ESRCH, which the operator-facing message already covers"
     },
@@ -7244,7 +7244,7 @@
       "from_symbol": "vibe_publish::redirect_sync::build_target_fetch_url",
       "line": 245,
       "provenance": "authored",
-      "uri": "spec://org.vibevm.ai-native.core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
+      "uri": "spec://org.vibevm.ai-native/core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
       "verb": "deviates",
       "reason": "ambient-env: the target token env-var name is discovered at runtime from the stub's `vibe-redirect.toml` (`token_env`, or a host-derived default), so the read cannot move to a composition root that has not yet read the marker"
     },
@@ -7285,7 +7285,7 @@
       "from_symbol": "vibe_registry::CachedPackage::package_meta",
       "line": 261,
       "provenance": "authored",
-      "uri": "spec://org.vibevm.ai-native.core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
+      "uri": "spec://org.vibevm.ai-native/core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
       "verb": "deviates",
       "reason": "no-unwrap-in-domain: every CachedPackage construction site guards manifest.package.is_some() before building the struct, so the accessor's expect is a checked invariant; returning Result would force every reader of an already-validated package through error plumbing for a state the constructors exclude"
     },
@@ -7392,7 +7392,7 @@
       "from_symbol": "vibe_registry::git_package_registry::fetch::GitPackageRegistry::fetch_with_expected_hash",
       "line": 266,
       "provenance": "authored",
-      "uri": "spec://org.vibevm.ai-native.core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
+      "uri": "spec://org.vibevm.ai-native/core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
       "verb": "deviates",
       "reason": "no-unwrap-in-domain: primary_err is Some whenever the source loop exhausts — the primary URL exists by package_urls' type and its failure is recorded before any continue; lifting the primary out of the loop (the try_lookup shape) would duplicate the three-step per-source body this fn shares between primary and mirrors"
     },
@@ -7823,7 +7823,7 @@
       "from_symbol": "vibe_resolver::activation::command_resolves_on_path",
       "line": 260,
       "provenance": "authored",
-      "uri": "spec://org.vibevm.ai-native.core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
+      "uri": "spec://org.vibevm.ai-native/core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
       "verb": "deviates",
       "reason": "ambient-env: the `if_command` activation channel (PROP-003 §2.5.2) resolves a command against PATH — reading `PATH` is the predicate's definition, inherent-env domain, not config a composition root could thread in ahead of the user's `[activation]` rule"
     },

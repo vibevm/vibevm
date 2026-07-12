@@ -7,7 +7,7 @@ playbooks (`03-RAID-PLAYBOOK.md` campaigns, `04-SWEEP-PLAYBOOK.md` the
 standing sweep, `05-CAMPAIGN-FORM.md` the campaign paper trail,
 `06-WAL-CONVENTION.md` session-durable state — optional but preferred), the
 mechanism specs under `mechanisms/` (ENGINE-CONFORM, PROP-014 specmap,
-BROWNFIELD-PROTOCOL, LEDGER-INTENT — the units `spec://org.vibevm.ai-native.core-ai-native/…`
+BROWNFIELD-PROTOCOL, LEDGER-INTENT — the units `spec://org.vibevm.ai-native/core-ai-native/…`
 tags cite), and `appendix/`. The concrete per-language `cards/` and the
 runnable checkers ship in each language stack, not here.
 **Do not read it all at boot** — the Discipline's own delivery rule is

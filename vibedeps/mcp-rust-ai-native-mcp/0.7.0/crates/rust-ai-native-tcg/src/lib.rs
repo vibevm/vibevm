@@ -5,7 +5,7 @@
 //! brands). The serve relay and the bench harness live in their own
 //! cells.
 
-specmark::scope!("spec://org.vibevm.ai-native.rust-ai-native-lang/mechanisms/TCG-PROTOCOL-RUST-v0.1#enrichment");
+specmark::scope!("spec://org.vibevm.ai-native/rust-ai-native-lang/mechanisms/TCG-PROTOCOL-RUST-v0.1#enrichment");
 
 use std::path::{Path, PathBuf};
 
@@ -32,7 +32,7 @@ pub const QUIESCENCE_BUDGET: std::time::Duration = std::time::Duration::from_sec
 
 /// The project policy the relay enriches through: the conform config,
 /// the frozen ratchet baseline, and the root they belong to.
-#[spec(implements = "spec://org.vibevm.ai-native.rust-ai-native-lang/mechanisms/TCG-PROTOCOL-RUST-v0.1#enrichment")]
+#[spec(implements = "spec://org.vibevm.ai-native/rust-ai-native-lang/mechanisms/TCG-PROTOCOL-RUST-v0.1#enrichment")]
 pub struct Policy {
     pub root: PathBuf,
     pub config: Config,
@@ -192,7 +192,7 @@ fn advice_for(rule: &str) -> Option<String> {
 /// frontend's facts over the effective text, the shared rule
 /// assembly, findings flagged against the frozen baseline, advice
 /// citing GUIDE REQs (TCG-PROTOCOL-RUST §3 — one engine, one truth).
-#[spec(implements = "spec://org.vibevm.ai-native.rust-ai-native-lang/mechanisms/TCG-PROTOCOL-RUST-v0.1#enrichment")]
+#[spec(implements = "spec://org.vibevm.ai-native/rust-ai-native-lang/mechanisms/TCG-PROTOCOL-RUST-v0.1#enrichment")]
 pub fn enrich_validate(
     policy: &Policy,
     file_rel: &str,
@@ -266,7 +266,7 @@ pub struct BrandedNewtype {
 /// assert_eq!(hits[0].name, "GuestName");
 /// assert!(hits[0].heuristic);
 /// ```
-#[spec(implements = "spec://org.vibevm.ai-native.rust-ai-native-lang/mechanisms/TCG-PROTOCOL-RUST-v0.1#ops")]
+#[spec(implements = "spec://org.vibevm.ai-native/rust-ai-native-lang/mechanisms/TCG-PROTOCOL-RUST-v0.1#ops")]
 pub fn detect_newtypes(text: &str, seam_file: &str) -> Vec<BrandedNewtype> {
     let Ok(ast) = syn::parse_file(text) else {
         return Vec::new();

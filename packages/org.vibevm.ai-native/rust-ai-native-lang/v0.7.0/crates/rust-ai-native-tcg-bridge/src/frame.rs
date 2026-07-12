@@ -4,7 +4,7 @@
 //! cursors.
 
 specmark::scope!(
-    "spec://org.vibevm.ai-native.rust-ai-native-lang/mechanisms/TCG-PROTOCOL-RUST-v0.1#parity"
+    "spec://org.vibevm.ai-native/rust-ai-native-lang/mechanisms/TCG-PROTOCOL-RUST-v0.1#parity"
 );
 
 use std::io::{BufRead, Write};

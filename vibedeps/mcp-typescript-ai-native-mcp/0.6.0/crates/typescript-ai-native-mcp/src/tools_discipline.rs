@@ -10,7 +10,7 @@
 //! carrying the recipe.
 
 specmark::scope!(
-    "spec://org.vibevm.ai-native.typescript-ai-native-mcp/tools/discipline-mcp-typescript#discipline-tools"
+    "spec://org.vibevm.ai-native/typescript-ai-native-mcp/tools/discipline-mcp-typescript#discipline-tools"
 );
 
 use std::path::{Path, PathBuf};

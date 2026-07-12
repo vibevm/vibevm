@@ -5,7 +5,7 @@
 //! OWN text.
 
 specmark::scope!(
-    "spec://org.vibevm.ai-native.rust-ai-native-lang/mechanisms/TCG-ORACLE-RUST-v0.1#overlays"
+    "spec://org.vibevm.ai-native/rust-ai-native-lang/mechanisms/TCG-ORACLE-RUST-v0.1#overlays"
 );
 
 use std::collections::HashMap;
@@ -56,7 +56,7 @@ struct DocState {
 
 /// The oracle: one rust-analyzer session for one project root.
 #[spec(
-    implements = "spec://org.vibevm.ai-native.rust-ai-native-lang/mechanisms/TCG-ORACLE-RUST-v0.1#overlays"
+    implements = "spec://org.vibevm.ai-native/rust-ai-native-lang/mechanisms/TCG-ORACLE-RUST-v0.1#overlays"
 )]
 pub struct RustOracle<T: Transport> {
     client: LspClient<T>,
@@ -197,7 +197,7 @@ impl<T: Transport> RustOracle<T> {
     /// (ORACLE-RUST §5: the oracle's answer is r-a's view — the floor
     /// stays the truth).
     #[spec(
-        implements = "spec://org.vibevm.ai-native.rust-ai-native-lang/mechanisms/TCG-PROTOCOL-RUST-v0.1#ops"
+        implements = "spec://org.vibevm.ai-native/rust-ai-native-lang/mechanisms/TCG-PROTOCOL-RUST-v0.1#ops"
     )]
     pub fn validate(
         &mut self,
@@ -264,7 +264,7 @@ impl<T: Transport> RustOracle<T> {
 
     /// Completions at a position over the effective text.
     #[spec(
-        implements = "spec://org.vibevm.ai-native.rust-ai-native-lang/mechanisms/TCG-PROTOCOL-RUST-v0.1#ops"
+        implements = "spec://org.vibevm.ai-native/rust-ai-native-lang/mechanisms/TCG-PROTOCOL-RUST-v0.1#ops"
     )]
     pub fn complete(
         &mut self,
@@ -320,7 +320,7 @@ impl<T: Transport> RustOracle<T> {
 
     /// Quick info (hover) at a position: type display + docs.
     #[spec(
-        implements = "spec://org.vibevm.ai-native.rust-ai-native-lang/mechanisms/TCG-PROTOCOL-RUST-v0.1#ops"
+        implements = "spec://org.vibevm.ai-native/rust-ai-native-lang/mechanisms/TCG-PROTOCOL-RUST-v0.1#ops"
     )]
     pub fn hover(
         &mut self,

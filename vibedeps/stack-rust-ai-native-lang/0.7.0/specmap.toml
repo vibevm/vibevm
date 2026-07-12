@@ -5,7 +5,7 @@
 # `rust-ai-native-specmap --gate --path <this package>` — the orphan-coverage gate only.
 #
 # Why gate-only, not the full --check index: the `scope!` tags on these crates
-# cite spec://org.vibevm.ai-native.core-ai-native/mechanisms/{ENGINE-CONFORM,PROP-014,…} units that
+# cite spec://org.vibevm.ai-native/core-ai-native/mechanisms/{ENGINE-CONFORM,PROP-014,…} units that
 # ship in flow:org.vibevm.ai-native/core-ai-native — a SIBLING package this tree cannot
 # see (a consumer resolves them via its own [[external_specs]] over the
 # materialised vibedeps/; the dev repo proves that). On the package tree alone

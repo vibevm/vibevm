@@ -4,7 +4,7 @@
 //! useful without an LLM by contract — prose rendering is a later,
 //! separate presentation layer.
 
-specmark::scope!("spec://org.vibevm.ai-native.core-ai-native/mechanisms/PROP-014#queries");
+specmark::scope!("spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#queries");
 
 use crate::generated::specmap::{Edge, SpecUnit, Specmap};
 use anyhow::{Result, bail};
