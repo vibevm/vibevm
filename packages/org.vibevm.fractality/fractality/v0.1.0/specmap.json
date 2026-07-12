@@ -1386,7 +1386,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:06804bfb889556e6219b33541379a274aeb1018260e0fbb76095fc3a8463b75c",
+      "content_hash": "sha256:0c1accfc2718b709ec5e90663dd5aa885faaefb0ed8cd9f0eb37c9399785e599",
       "doc_path": "plans/FRACTALITY-ADVISOR-PLAN-v0.1",
       "file": "spec/plans/FRACTALITY-ADVISOR-PLAN-v0.1.md",
       "heading": "FRACTALITY-ADVISOR-PLAN v0.1 — Stage C: the advisor channel (D-C3-7)",

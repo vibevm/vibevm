@@ -89,8 +89,65 @@ core is in; the following need field data or a trial and are NOT built:
    Stage B, the machinery ships first; the behavioural trigger and the
    validating trial follow with real data (PP-003 unblock questions stand).
 
-## 5. Next
+## 5. Stage C executed (2026-07-12)
 
-A validated Stage C: the help/hurt trial (MT-C3-02-shaped), the uncertainty
-trigger with measured thresholds, and the ladder-as-data. Commissioned by
-the owner when Stage C is mandated; the core built here is the foundation.
+The owner commissioned Stage C; it ran end to end:
+
+- **The `fractality advise` verb** (`a1a9403`) — the V4 CLI surface (marks
+  `output.advice`, sync-runs like `run`, MC applies the RD-10 caller-class bar).
+- **The ladder as routing data** (`0740bc3`) — `ClassPolicy.advisor_class`
+  (medium→strong, strong→strong, weak→none) + `advisor_class_for`.
+- **The help/hurt trial** (MT-C3-02, `40382b4`) — fired alone×3 + advised×3
+  (caller glm-5-turbo, advisor glm-5.2). **Result: a null MECHANISM.** The
+  advised caller NEVER consulted (0 advice calls), so ADVISED = ALONE = 66.7%
+  with no advice effect to measure. PR-adv-2 falsified — a preamble invitation
+  is not enough to make a weak caller reach for the advisor. This is the
+  finding that shapes §6.
+- **The uncertainty trigger** — documented in §6 below (C-3).
+
+The machinery is real and floor-green; the trial isolated the remaining gap as
+the consult BEHAVIOUR, which §6 addresses.
+
+## 6. The uncertainty trigger — the consult protocol (C-3)
+
+The MT-C3-02 finding is unambiguous: **a weak caller will not consult from a
+prose invitation.** Advice is only ever useful if the consult actually
+happens, so WHEN and HOW a caller consults is the load-bearing behaviour — not
+the packet format, which is done.
+
+**The signal — WHEN to consult (RD-10 / SRLM).** A caller consults on
+*intrinsic uncertainty*, measured, not on a vibe:
+
+- **self-consistency spread** — sample the same sub-decision k times (k≈3–5);
+  disagreement among the samples is the strongest cheap uncertainty signal.
+  Wide spread → consult.
+- **verbalized confidence** — ask the caller to state a 0–1 confidence on the
+  subtle case; below a threshold → consult. (Weakly calibrated on small models;
+  use as a secondary signal.)
+- **trace length / branchiness** — an unusually short or thrashing trace on a
+  task that should take work is a proxy for "guessed" → consult.
+
+Only a caller of class ≥ medium consults (the RD-10 bar, already enforced at
+admission); a weak caller is barred because advice makes it worse.
+
+**The delivery — HOW to make it fire.** MT-C3-02 proves the open question is
+delivery, not signal. Three escalating options, cheapest first:
+
+1. **A stronger, structural preamble** — not "you MAY consult" but a required
+   step: "for each subtle case, FIRST sample your answer 3× (self-consistency);
+   if they disagree, you MUST `fractality advise` before committing." Re-run
+   MT-C3-02 with this to test whether *mandated* consult moves quality.
+2. **A harness/hook that forces it** — a PostToolUse-style check that, on a
+   detected-uncertain step, injects the advise call or blocks the commit until
+   the caller consults. This makes the trigger the fabric's job, not the weak
+   caller's discipline — the same lesson PP-001 taught for the initiative nudge.
+3. **Core-side, later** — a gate that, given an uncertainty score on a run,
+   recommends `advise` the way the need-gate recommends `route`/`escalate`.
+
+**Thresholds — still to be MEASURED (not guessed).** MT-C3-02 could not
+measure them because no consult fired. The re-run under delivery-option 1 or 2
+is what produces them: the self-consistency spread and confidence values at
+which advice HELPS a medium caller and does NOT hurt a weak one (the RD-10
+inversion), and it needs a third model tier for the weak-caller arm. Until
+then this section is the *method*, and the thresholds are the deferred
+measurement — filed honestly, not invented.
