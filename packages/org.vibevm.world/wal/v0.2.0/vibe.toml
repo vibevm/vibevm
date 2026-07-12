@@ -1,0 +1,22 @@
+[package]
+name = "wal"
+group = "org.vibevm.world"
+kind = "flow"
+version = "0.2.0"
+authors = ["Oleg Chirukhin"]
+license = "UPL-1.0"
+description = "Write-Ahead Log discipline for human-AI development sessions: the checkpoint file, the cold-resume snapshot, and the session rituals around them"
+keywords = ["wal", "memory", "discipline", "session-management", "continuation"]
+
+[compatibility]
+min_vibe_version = "0.1.0"
+requires_kinds = []
+
+[boot_snippet]
+source = "spec/boot/10-flow-wal.md"
+category = "flow"
+
+[[skill]]
+name = "wal-status"
+path = "spec/skills/wal-status"
+description = "Read the project WAL end to end and emit a ten-line orientation: phase, attention items, next step; warn on staleness"

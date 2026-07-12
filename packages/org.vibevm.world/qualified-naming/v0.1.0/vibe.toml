@@ -1,0 +1,17 @@
+[package]
+name = "qualified-naming"
+group = "org.vibevm.world"
+kind = "flow"
+version = "0.1.0"
+authors = ["Oleg Chirukhin"]
+license = "UPL-1.0"
+description = "Qualified naming for package ecosystems: mandatory groups, identity tuples, short names only at the CLI boundary, collision vs conflict"
+keywords = ["naming", "namespaces", "packages", "identity", "ecosystem-design"]
+
+[compatibility]
+min_vibe_version = "0.1.0"
+requires_kinds = []
+
+[boot_snippet]
+source = "spec/boot/67-flow-qualified-naming.md"
+category = "flow"

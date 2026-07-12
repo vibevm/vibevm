@@ -1,0 +1,17 @@
+[package]
+name = "campaign-plans"
+group = "org.vibevm.world"
+kind = "flow"
+version = "0.1.0"
+authors = ["Oleg Chirukhin"]
+license = "UPL-1.0"
+description = "Cold-executable campaign plans: frozen baseline, falsifiable predictions, phase gates, an execution ledger, and a deferral ledger that seeds the next campaign"
+keywords = ["planning", "campaigns", "refactoring", "phases", "predictions"]
+
+[compatibility]
+min_vibe_version = "0.1.0"
+requires_kinds = []
+
+[boot_snippet]
+source = "spec/boot/40-flow-campaign-plans.md"
+category = "flow"

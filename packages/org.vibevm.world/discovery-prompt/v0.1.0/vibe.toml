@@ -1,0 +1,17 @@
+[package]
+name = "discovery-prompt"
+group = "org.vibevm.world"
+kind = "flow"
+version = "0.1.0"
+authors = ["Oleg Chirukhin"]
+license = "UPL-1.0"
+description = "The DISCOVERY collaborative-research prompt: a structured-uncertainty response grammar, adversarial self-checks, and intensity knobs for LLM research sessions"
+keywords = ["research", "prompt", "discovery", "uncertainty", "collaboration"]
+
+[compatibility]
+min_vibe_version = "0.1.0"
+requires_kinds = []
+
+[boot_snippet]
+source = "spec/boot/50-flow-discovery-prompt.md"
+category = "flow"
