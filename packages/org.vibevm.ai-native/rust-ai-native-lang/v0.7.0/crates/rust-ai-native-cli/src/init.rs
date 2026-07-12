@@ -27,8 +27,8 @@ struct ExternalSpec {
 }
 
 /// Scan `vibedeps/<slot>/<version>/` for installed packages that carry a
-/// `spec/` tree, reading each slot's `vibe.toml` `[package] name` as its
-/// namespace. Deterministic order (sorted by slot path).
+/// `spec/` tree, reading each slot's `vibe.toml` `[package]` `<group>.<name>`
+/// as its fully-qualified namespace (PROP-029). Deterministic order.
 fn discover_external_specs(root: &Path) -> Vec<ExternalSpec> {
     let mut out = Vec::new();
     let vibedeps = root.join("vibedeps");
@@ -61,17 +61,20 @@ fn discover_external_specs(root: &Path) -> Vec<ExternalSpec> {
             let Ok(table) = manifest.parse::<toml::Table>() else {
                 continue;
             };
-            let Some(name) = table
-                .get("package")
-                .and_then(|p| p.get("name"))
-                .and_then(|n| n.as_str())
+            let package = table.get("package");
+            let Some(name) = package.and_then(|p| p.get("name")).and_then(|n| n.as_str()) else {
+                continue;
+            };
+            let Some(group) = package
+                .and_then(|p| p.get("group"))
+                .and_then(|g| g.as_str())
             else {
                 continue;
             };
             let rel = vdir.join("spec");
             let rel = rel.strip_prefix(root).unwrap_or(&rel);
             out.push(ExternalSpec {
-                namespace: name.to_string(),
+                namespace: format!("{group}.{name}"),
                 root: rel.to_string_lossy().replace('\\', "/"),
             });
         }
@@ -383,7 +386,10 @@ mod tests {
         .unwrap();
         run_init(root, &opts()).unwrap();
         let specmap = std::fs::read_to_string(root.join("specmap.toml")).unwrap();
-        assert!(specmap.contains("namespace = \"some-core\""), "{specmap}");
+        assert!(
+            specmap.contains("namespace = \"org.x.some-core\""),
+            "{specmap}"
+        );
         assert!(
             specmap.contains("root = \"vibedeps/flow-some-core/0.3.0/spec\""),
             "{specmap}"
