@@ -24,6 +24,7 @@ fn record(id: &str, profile: &str, spawn: bool, parent: Option<RunId>) -> RunRec
         origin_session: None,
         depth: 0,
         spawn_requested: spawn,
+        verifier: false,
         budget: BudgetSpec::default(),
         node_id: "n".into(),
         run_dir: "runs/x".into(),

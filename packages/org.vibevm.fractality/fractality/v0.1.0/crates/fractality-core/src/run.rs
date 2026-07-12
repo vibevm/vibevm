@@ -224,6 +224,13 @@ pub struct RunRecord {
     /// registrations stay a driving primitive for tests and manual pods.
     #[serde(default)]
     pub spawn_requested: bool,
+    /// Ф5 (FD-9): this run is an acceptance VERIFIER (denormalized from
+    /// `packet.output.verifier`) — its acceptance verdict is a
+    /// verifier-accept over the work named in its `context_from`, not a
+    /// self-test. Lets `ps`/`show` mark verifier runs without re-reading
+    /// the packet.
+    #[serde(default)]
+    pub verifier: bool,
     /// The packet's hard budget, denormalized for the watchdog (a value
     /// of 0 in any field means "unlimited" for that axis).
     #[serde(default)]

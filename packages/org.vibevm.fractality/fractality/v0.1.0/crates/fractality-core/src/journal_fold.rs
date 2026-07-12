@@ -234,6 +234,7 @@ mod tests {
             origin_session: None,
             depth: 0,
             spawn_requested: false,
+            verifier: false,
             budget: crate::packet::BudgetSpec::default(),
             node_id: "node-1".into(),
             run_dir: "runs/x".into(),

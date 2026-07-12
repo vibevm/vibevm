@@ -140,7 +140,10 @@ async fn completed_work_with_result(client: &McClient) -> RunId {
     run.run_id
 }
 
-async fn register(client: &McClient, packet: Packet) -> Result<RunState, ClientError> {
+async fn register(
+    client: &McClient,
+    packet: Packet,
+) -> Result<fractality_core::run::RunRecord, ClientError> {
     client
         .register_run(&RegisterRunRequest {
             packet,
@@ -149,7 +152,6 @@ async fn register(client: &McClient, packet: Packet) -> Result<RunState, ClientE
             spawn: false,
         })
         .await
-        .map(|r| r.state)
 }
 
 #[tokio::test]
@@ -162,10 +164,14 @@ async fn a_verifier_over_real_work_is_admitted() {
         .expect("live");
 
     let work = completed_work_with_result(&client).await;
-    let state = register(&client, verifier_packet(&[work]))
+    let rec = register(&client, verifier_packet(&[work]))
         .await
         .expect("a verifier over real work is admitted");
-    assert_eq!(state, RunState::Queued);
+    assert_eq!(rec.state, RunState::Queued);
+    assert!(
+        rec.verifier,
+        "the run is marked a verifier (denormalized from output.verifier)"
+    );
 
     server.stop().await;
     std::fs::remove_dir_all(home.as_std_path()).ok();

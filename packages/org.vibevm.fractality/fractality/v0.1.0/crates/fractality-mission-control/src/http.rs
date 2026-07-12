@@ -279,6 +279,7 @@ async fn register_run(
         origin_session: req.origin_session,
         depth,
         spawn_requested: req.spawn,
+        verifier: req.packet.output.verifier,
         budget: req.packet.budget,
         node_id: state.node.node_id.clone(),
         run_dir,

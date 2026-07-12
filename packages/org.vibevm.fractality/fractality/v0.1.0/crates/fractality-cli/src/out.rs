@@ -223,6 +223,31 @@ pub fn print_runs(runs: &[RunRecord], quiet: bool) {
     }
 }
 
+/// The verifier-accept verdict line for a verifier run (Ф5, FD-9): a
+/// verifier's `task.acceptance` decides whether the work it checked is
+/// accepted — verifier-accept as run-tree completion. `None` for
+/// non-verifier runs (a plain run's acceptance is a self-test, not a
+/// verdict over a tree).
+fn verifier_verdict(r: &RunRecord) -> Option<String> {
+    if !r.verifier {
+        return None;
+    }
+    Some(match &r.collected {
+        None => "pending (no verdict yet)".to_owned(),
+        Some(c) if c.acceptance_total == 0 => "inconclusive (no acceptance checks)".to_owned(),
+        Some(c) if c.acceptance_passed == c.acceptance_total => {
+            format!(
+                "ACCEPTED ({}/{} checks passed)",
+                c.acceptance_passed, c.acceptance_total
+            )
+        }
+        Some(c) => format!(
+            "REJECTED ({}/{} checks passed)",
+            c.acceptance_passed, c.acceptance_total
+        ),
+    })
+}
+
 /// The one-screen summary `fractality run` prints at the end (D13).
 pub fn print_run_summary(r: &RunRecord, waited: std::time::Duration) {
     println!("state:      {}", r.state);
@@ -241,6 +266,9 @@ pub fn print_run_summary(r: &RunRecord, waited: std::time::Duration) {
     if let Some(e) = &r.escalation {
         println!("escalated:  {}", e.reason);
         println!("needs:      {}", e.needs);
+    }
+    if let Some(v) = verifier_verdict(r) {
+        println!("verifier:   {v}");
     }
     println!(
         "waited:     {}",
@@ -300,6 +328,9 @@ pub fn print_run_detail(r: &RunRecord) {
     if let Some(e) = &r.escalation {
         println!("escalated:  {}", e.reason);
         println!("needs:      {}", e.needs);
+    }
+    if let Some(v) = verifier_verdict(r) {
+        println!("verifier:   {v}");
     }
     print_usage_lines(r);
 }
