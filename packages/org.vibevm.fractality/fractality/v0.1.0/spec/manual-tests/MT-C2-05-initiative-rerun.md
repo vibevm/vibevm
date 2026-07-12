@@ -97,4 +97,41 @@ unchanged; scoring follows MT-C2-01's frozen rules.
 
 ## Recorded runs
 
-- _(empty — no run has been authorized or fired)_
+_Executed 2026-12-07 11:26–12:27 (boss `glm-5.2[1m]`, arm A′ = a, arm B′ = b,
+3 each). All six ended clean (`boss_exit=0`, 8–17 min — the bosses finished
+the menu, none timed out). Raw evidence + the group narrative in
+`reports/trial-results/2026-12-07-12-27-c2-mt-c2-05-initiative-rerun/`._
+
+- **Arm A′ (repaired baseline, no hooks):** run 1 = 0 workers, run 2 = 2
+  workers (`parse_line-test-suite` [task 1], `facts-table-from-vendor-notes`
+  [task 3]), run 3 = 0. **Delegated E = 2/18 = 11.1%.**
+- **Arm B′ (A′ + `harness install`):** all three runs = **0 workers**. Hooks
+  were installed (SessionStart + UserPromptSubmit) and the cold board fired
+  the repaired F25 shape, but the boss delegated nothing. **0/18 = 0%.**
+
+### Prediction verdicts
+
+- **PR1 (A′ ≥ 16.7%): FALSIFIED (within noise).** A′ = 11.1% < the old
+  baseline 16.7%; at N=3 the gap is one run's tasks, so "no improvement" is
+  the honest read, not "regression".
+- **PR2 (every B′ run fires ≥ 1 mid-work nudge): NOT CONFIRMED.** The mid-work
+  nudge rides `UserPromptSubmit`, which a single-prompt `-p` boss never
+  re-fires (F23 — the mechanic DEF-C2 could not repair for the `-p` modality).
+  No re-fired nudge is confirmable in the transcripts.
+- **PR3 (B′ ≥ A′ + 30): FALSIFIED, hard.** B′ = 0% — worse than A′, not +30.
+  The initiative hooks did not move cold delegation.
+
+**Conclusion — MT-C2-05 REPLICATES the Ф6 finding, it does not overturn it.**
+The repaired initiative surface still does not move a cold `-p` boss (A′ ≈
+old A within noise; B′ = 0% = old B). F24 (toolchain) and F25 (cold board)
+ARE repaired — arm A′ run 2's workers spawned and ran, and the board leads
+with the verb — so the residual zero is a delegation-*decision* gap, driven
+by F23: a `-p` boss never re-enters `UserPromptSubmit`, so the nudge channel
+is structurally dead in that modality. The lever that DOES move cold
+delegation is the RLM gate/preamble (arm g, 44.4%, MT-C3-01), not initiative
+hooks — which validates Campaign 3's pivot. Open follow-up: move the mid-work
+nudge to a channel a `-p` boss re-enters (a PostToolUse path).
+
+## Owner sign-off
+
+_(recorded after the runs, as with MT-C2-01..04)_

@@ -1,0 +1,2 @@
+arm=b run=2 boss=glm-5.2[1m] proj=/tmp/tmp.0gNU4EiQT2/trial-b-2/proj home=/tmp/tmp.0gNU4EiQT2/trial-b-2/home
+boss_exit=0 wall_secs=513

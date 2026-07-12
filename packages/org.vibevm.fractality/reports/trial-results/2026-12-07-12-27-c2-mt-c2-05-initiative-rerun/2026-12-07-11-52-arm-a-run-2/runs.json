@@ -1,0 +1,117 @@
+[
+  {
+    "run_id": "01KXAQV3WGS3SNH6DMDDME3M85",
+    "title": "parse_line-test-suite",
+    "state": "failed",
+    "profile": "glm",
+    "model": "big",
+    "workspace_mode": "worktree",
+    "parent": null,
+    "depth": 0,
+    "spawn_requested": true,
+    "verifier": false,
+    "advice": false,
+    "budget": {
+      "wall_secs": 900,
+      "max_turns": 30,
+      "max_output_tokens": 200000,
+      "max_depth": 0,
+      "max_agent_calls": 0,
+      "max_call_tokens": 0,
+      "max_global_calls": 0,
+      "max_spend_micros": 0
+    },
+    "node_id": "cbf0b306-e460-4161-9d23-f15fb6460cc7",
+    "run_dir": "C:/Users/olegc/AppData/Local/Temp/tmp.N1oxoRIJ4I/trial-a-2/home\\runs\\01KXAQV3WGS3SNH6DMDDME3M85",
+    "created_ts_ms": 1783845719952,
+    "updated_ts_ms": 1783846057992,
+    "started_ts_ms": 1783845719953,
+    "pod": {
+      "pod_id": "01KXAQV55JT5MEWSPCWQJ8WWKT",
+      "pod_pid": 56972
+    },
+    "worker_pid": 43984,
+    "exit_code": 1,
+    "failure": "worker exited with code 1",
+    "kill_reason": null,
+    "usage": {
+      "input_tokens": 33856,
+      "output_tokens": 1116,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 101440,
+      "total_cost_usd": 0.2479,
+      "events": 489,
+      "web_tool_calls": 0
+    },
+    "collected": {
+      "result_source": "extracted",
+      "result": {
+        "fs": "01KXAQEHW2EMEH6WZ4ZR818K4N",
+        "path": "01KXAQV3WGS3SNH6DMDDME3M85/wt/result.md",
+        "range": "whole",
+        "etag": "137-19f5582b804"
+      },
+      "result_path": "C:/Users/olegc/AppData/Local/Temp/tmp.N1oxoRIJ4I/trial-a-2/home\\runs\\01KXAQV3WGS3SNH6DMDDME3M85\\wt\\result.md",
+      "acceptance_passed": 0,
+      "acceptance_total": 0,
+      "acceptance_skipped": "worker failed; acceptance not run"
+    }
+  },
+  {
+    "run_id": "01KXAQV580YYVYC1VVVAG82G3X",
+    "title": "facts-table-from-vendor-notes",
+    "state": "completed",
+    "profile": "glm",
+    "model": "big",
+    "workspace_mode": "worktree",
+    "parent": null,
+    "depth": 0,
+    "spawn_requested": true,
+    "verifier": false,
+    "advice": false,
+    "budget": {
+      "wall_secs": 600,
+      "max_turns": 25,
+      "max_output_tokens": 200000,
+      "max_depth": 0,
+      "max_agent_calls": 0,
+      "max_call_tokens": 0,
+      "max_global_calls": 0,
+      "max_spend_micros": 0
+    },
+    "node_id": "cbf0b306-e460-4161-9d23-f15fb6460cc7",
+    "run_dir": "C:/Users/olegc/AppData/Local/Temp/tmp.N1oxoRIJ4I/trial-a-2/home\\runs\\01KXAQV580YYVYC1VVVAG82G3X",
+    "created_ts_ms": 1783845721348,
+    "updated_ts_ms": 1783846030022,
+    "started_ts_ms": 1783845721348,
+    "pod": {
+      "pod_id": "01KXAQV6QQX0NMFEDMZ63P2CK2",
+      "pod_pid": 61232
+    },
+    "worker_pid": 20192,
+    "exit_code": 0,
+    "failure": null,
+    "kill_reason": null,
+    "usage": {
+      "input_tokens": 45211,
+      "output_tokens": 6950,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 185920,
+      "total_cost_usd": 0.4927649999999999,
+      "events": 4977,
+      "web_tool_calls": 0
+    },
+    "collected": {
+      "result_source": "worker",
+      "result": {
+        "fs": "01KXAQEHW2EMEH6WZ4ZR818K4N",
+        "path": "01KXAQV580YYVYC1VVVAG82G3X/wt/result.md",
+        "range": "whole",
+        "etag": "710-19f55815e12"
+      },
+      "result_path": "C:/Users/olegc/AppData/Local/Temp/tmp.N1oxoRIJ4I/trial-a-2/home\\runs\\01KXAQV580YYVYC1VVVAG82G3X\\wt\\result.md",
+      "acceptance_passed": 0,
+      "acceptance_total": 1
+    }
+  }
+]
