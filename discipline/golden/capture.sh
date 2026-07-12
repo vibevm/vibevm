@@ -113,7 +113,7 @@ file_of "$T" CLAUDE.md
 new_sandbox
 T="$(begin install-qualified 'vibe init, then install a fully-qualified pkgref from the hermetic fixture registry (LocalRegistry path).')"
 step "$T" init --path .
-step "$T" install org.vibevm/wal --registry "$FIX_M" --assume-yes
+step "$T" install org.vibevm.world/wal --registry "$FIX_M" --assume-yes
 tree_of "$T"
 file_of "$T" vibe.toml
 file_of "$T" vibe.lock
@@ -131,7 +131,7 @@ file_of "$T" vibe.lock
 new_sandbox
 T="$(begin check-installed 'vibe check over a freshly initialised + installed project — what a clean checkup looks like.')"
 step "$T" init --path .
-step "$T" install org.vibevm/wal --registry "$FIX_M" --assume-yes
+step "$T" install org.vibevm.world/wal --registry "$FIX_M" --assume-yes
 step "$T" check --path .
 step "$T" check --path . --quiet
 
@@ -139,8 +139,8 @@ step "$T" check --path . --quiet
 new_sandbox
 T="$(begin uninstall 'install then uninstall — the slot, lockfile and manifest must come back clean.')"
 step "$T" init --path .
-step "$T" install org.vibevm/wal --registry "$FIX_M" --assume-yes
-step "$T" uninstall org.vibevm/wal --assume-yes
+step "$T" install org.vibevm.world/wal --registry "$FIX_M" --assume-yes
+step "$T" uninstall org.vibevm.world/wal --assume-yes
 tree_of "$T"
 file_of "$T" vibe.toml
 file_of "$T" vibe.lock

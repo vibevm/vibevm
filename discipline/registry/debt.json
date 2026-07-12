@@ -358,7 +358,7 @@
    "kind": "stale-doc",
    "severity": "P3",
    "title": "vibe init next-steps hint still leads with the kind-qualified pkgref shape",
-   "detail": "The scaffold's closing hint reads \"install packages with `vibe install <kind>:<name>` (e.g. flow:wal)\" — the pre-PROP-008 emphasis. The kind: prefix is still legal pkgref grammar, but the canonical qualified form (org.vibevm/wal) and the short-name sugar are what PROP-008 documents lead with. Surfaced by the Phase −1 characterization capture.",
+   "detail": "The scaffold's closing hint reads \"install packages with `vibe install <kind>:<name>` (e.g. flow:wal)\" — the pre-PROP-008 emphasis. The kind: prefix is still legal pkgref grammar, but the canonical qualified form (org.vibevm.world/wal) and the short-name sugar are what PROP-008 documents lead with. Surfaced by the Phase −1 characterization capture.",
    "evidence": [
     "terraform/golden/init.transcript.md — \"install packages with `vibe install <kind>:<name>` (e.g. flow:wal)\"",
     "crates/vibe-cli/src/commands/init.rs"
