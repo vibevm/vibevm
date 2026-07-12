@@ -1,115 +1,120 @@
 # fractality — WAL (project continuation state)
 
-_Updated: 2026-07-12 ~06:48 (**Campaign 3 STAGE B COMPLETE — the RLM is
-built and it runs**). Ф0–Ф7 all CLOSED. The whole fabric: need-gate (Ф2) →
-descent core (Ф3) → escalation ascent (Ф4, D-C3-6) → acceptance (Ф5,
-FD-9) → the trial (Ф6, D-C3-9) → close (Ф7). **Ф6 fired MT-C3-01: 3 paid
-GLM gated-boss runs → delegation 8/18 ≈ 44.4% vs C2 naive baseline 16.7%
-(~2.7×), and fractality ran end to end as a product for the first time**
-(3 workers completed with a worker result, 1 acceptance 1/1). P-C3-c
-CONFIRMED, P-C3-a SUPPORTED, P-C3-b/d inconclusive (menu gaps → PP-004).
-Delegation switched opencode→CC+z.ai (works — it IS the trial mechanism).
-**PP-003 advisor CORE also landed this session** (D-C3-7): the `output.advice`
-marker + the RD-10 caller-class bar (`check_advisor_caller_class` refuses an
-advice call whose caller is below `advisor_enabled`) + denorm + surfacing +
-tests (`40687ca`), floor green (test-gate 215). Plan:
-`FRACTALITY-ADVISOR-PLAN-v0.1`. **Next: a validated Stage C** (the advisor
-help/hurt trial + uncertainty trigger + ladder-data) when the owner
-commissions it. Campaign-close: `reports/…-campaign3-close.md`._
+_Updated: 2026-07-12 (mid-session — the big Stage C + PP-004 push).
+Campaign 3 Stage B is COMPLETE (all Ф0–Ф7 closed, prior WAL); this session
+executes the owner's five-task goal: **1) clean stuck branches ✓ 2) a
+validated Stage C 3) PP-004 follow-ups 4) PP-001 5) PP-002**, autonomous
+with compaction, delegating grunt to GLM (CC+z.ai). Substantial machinery +
+all three trials armed have landed + pushed; the PP-004 gated re-run is
+FIRING now. The canonical living state; supersedes CONTINUE.md on divergence._
 
-## Current state
+## Where the goal stands (this session)
 
-- **Stage B COMMISSIONED — Option B** (RP-C3-1, plan §1/§8). Advisor
-  (Option C/V4) postponed → PP-003.
-- **Goal (owner, standing):** the WHOLE Stage B plan (Ф0→Ф7), a working
-  RLM with all patterns — then **PP-003** (Option C advisor slice, D-C3-7).
-  **70%-context stop rule is LIFTED** (owner 2026-07-12): run straight
-  through with context compaction, no checkpoint-and-ask at 70%.
-- **Ф0–Ф2 CLOSED** — spikes (jsonschema 0.47.0 on rustc 1.93.1); the
-  packet + budget surface (D-C3-2); the need-gate machinery (`needgate::
-  decide`, routing policy, profile class — D-C3-1/D-C3-10). Reports under
-  `reports/…-f0/f1/f2….md`.
-- **Ф3 CLOSED — the descent core** (9 slices): depth-guard, gate
-  invocation + decision journal (D-C3-8), await `--any`, refuse-near-dup,
-  masking, retry-on-violation, merge-node marker + `max_depth=0` fix.
-  Report `…-f3-descent-core.md`.
-- **Ф4 CLOSED — escalation (D-C3-6)**, the ascent (see header). The
-  open Ф0-s4 question resolved: worker escalates via an **MCP tool**
-  (`escalate`), not a result-status exit (fits the state machine). Report
-  `…-f4-escalation.md`.
-- **Floor green:** test-gate 211 / conform 0 / specmap clean. Real
-  `~/.fractality` untouched. Every extension at a named seam.
-- **Live tracker:** `reports/2026-11-07-17-52-rlmplan-state-plan.md`
-  (goal + operating contract, seam reconnaissance — read it, crates need
-  not be re-read; per-slice status; delegation scoreboard). Plan §9 ledger
-  = commit map + scoping decisions.
+- **Task 1 — stuck branches: DONE.** 11 `fractality/<ULID>` trial-worktree
+  branches + 5 gigabyte temp trees removed; `git branch` = `main` only.
+- **Task 2 — validated Stage C: machinery IN, trial armed.**
+  - `fractality advise` verb (`a1a9403`) — the V4 advisor channel's CLI
+    surface (marks `output.advice`, sync-runs like `run`, MC applies the
+    RD-10 caller-class bar). New `advise.rs` cell; `run_once` → `pub(crate)`.
+  - Advisor ladder as routing data (`0740bc3`) — `ClassPolicy.advisor_class`
+    (medium→strong, strong→strong, weak→none) + `advisor_class_for`, guidance
+    gated by `advisor_enabled`.
+  - **MT-C3-02 help/hurt trial PRE-REGISTERED** (`91cc156`) — the paired-arm
+    (ALONE vs ADVISED) design, honestly scoped to the ONE point two GLM tiers
+    can serve (glm-5.2 advising glm-5-turbo); the weak-caller falsifier arm
+    needs a 3rd tier, deferred. **Build (run-advise.sh + uncertain menu +
+    scorer) + fire = the remaining Stage C step.**
+  - Deferred: C-3 uncertainty-trigger doc (wants measured thresholds from the
+    help/hurt trial).
+- **Task 3 — PP-004: machinery IN, trial FIRING.**
+  - Turn caps raised (`d601eb2`) — packet default `max_turns` 40→80, runner
+    boss `--max-turns` 50→100 (item 1).
+  - `fractality decisions` read verb (`28b47b3`) — the need-gate journal
+    readable, P-C3-a as a hard count (item 4).
+  - Menu tasks 9 (schema→P-C3-b) + 10 (Silo→P-C3-d) + MT-C3-03 pre-reg
+    (`7623a05`); runner arm `g2` + `score-g2.py` (`dbdb030`, **delegated to
+    GLM glm-5.2, $0.97, reviewed clean**).
+  - **MT-C3-03 gated re-run FIRING now** (arm g2 ×3, background) — save +
+    score + verdicts pending its completion.
+- **Task 4 — PP-001: ARMED.** RP5 resolved (`d28f2c4`) — owner ruling «3+3
+  GLM cold boss cap 8» recorded verbatim in MT-C2-05 §RP5. Reuses the arm-a/b
+  runner. Fire + score pending.
+- **Task 5 — PP-002: NOT STARTED.** DEF-C2-2b-full worker credibility on the
+  boss surface (acceptance-schema plumbing). Note: `RunRecord.collected`
+  already carries `acceptance_passed/total` — the missing half is
+  aggregating a credibility fact + surfacing it. Design questions in
+  `plans/postponed/PP-002-…`.
 
-## Next — a validated Stage C (advisor trial + trigger)
+## Evidence-preservation convention (owner directive, 2026-07-12 — NEW, binding)
 
-Reading order to resume: workspace `CLAUDE.md` → this WAL → `CONTINUE.md`
-→ the state-plan tracker → `FRACTALITY-ADVISOR-PLAN-v0.1` (§3 deferred) →
-`plans/postponed/PP-003-…` + PP-004.
+The owner caught that paid trial results were written only to the gitignored
+`target/trial-results/` — one `cargo clean` from wasted. Now a **standing,
+non-optional rule** (workspace `CLAUDE.md` §"Preserve valuable test/run
+evidence"):
 
-**Stage B is DONE and the PP-003 advisor CORE landed** (`40687ca`): the
-`output.advice` marker + the RD-10 caller-class bar (enforced at admission)
-+ denorm + `show` surfacing + tests, all floor-green. The advisor is now "a
-worker run with an `advice` packet type". **Deferred to a validated Stage C**
-(FRACTALITY-ADVISOR-PLAN §3): the uncertainty trigger (caller behaviour,
-measured thresholds), the ladder-as-routing-data, a `fractality advise`
-verb, and the **help/hurt trial** (an MT-C3-02-shaped pre-registration —
-prove advice helps a medium caller, does not hurt a weak one; the RD-10
-inversion is the falsifier). Commissioned when the owner mandates Stage C.
-The core built this session is the foundation; treat the trial as its own
-mandate with its own pre-reg discipline.
+- After every trial fire (and, by judgment, any important/long run whose
+  results carry value): `bash spec/manual-tests/trial/save-results.sh
+  <group-description>`, fill the scaffolded group README, commit.
+- Layout: **dated groups of dated runs** — `<год-число-месяц>-<HH-MM>-<name>`
+  (report convention), each group dir carrying a `README.md` (what the test
+  was + summary results, amended when analysis lands). `proj-final/` excluded
+  (huge + reproducible); transcripts gzipped.
+- The nine prior paid runs (C2 arm-a/b + C3 arm-g) are preserved + restructured
+  (`552b559`, `9932b9c`); rule + broadening (`ea6e0b7`). A run is not "done"
+  until its evidence is committed.
 
-**Standing follow-ups (non-blocking, all filed):** Ф4 — worker-stop after
-escalate is cooperative not enforced; Ф5 — no tree→verifier query,
-acceptance does not feed routing (FD-5); Ф6 — worker turn caps, menu
-exercised neither the schema gate nor a Silo task, no `decisions` read verb
-(all → PP-004).
+## Next — finish the firing, then the deferred trials + PP-002
 
-Each code slice = one commit, floor green after each; specmap re-mint
-in-commit on drift. Floor via backgrounded cargo; delegation via CC+z.ai
-GLM (the proven mechanism — it is also what the trial arms run on).
+Reading order to resume: workspace `CLAUDE.md` → this WAL → `CONTINUE.md` →
+the MT pre-regs (MT-C3-02, MT-C3-03, MT-C2-05) → `plans/postponed/PP-002/004`.
+
+1. **Collect the FIRING MT-C3-03 gated re-run** — when arm g2 ×3 finishes:
+   `save-results.sh c3-mt-c3-03-gated-rerun`, fill the group README,
+   `python spec/manual-tests/trial/score-g2.py`, record verdicts in MT-C3-03
+   "Recorded runs" (P-C3-a as decision counts, P-C3-b schema gate, P-C3-d
+   escalation), commit.
+2. **Build + fire the MT-C3-02 help/hurt trial** — `run-advise.sh` (caller =
+   small model + advise/alone preamble swap), the uncertain-task menu with
+   hidden acceptances over `trial/staging`, `score-advise.py`; fire alone×3 +
+   advised×3; save (`advise-help-hurt` group) + score + verdicts.
+3. **Fire the PP-001 MT-C2-05 re-run** — `run-arm.sh {a,b} {1,2,3}` (RP5
+   resolved), save (`c2-mt-c2-05-rerun` group) + score by MT-C2-01 rules +
+   rule PR1–PR3.
+4. **PP-002 plumbing** — acceptance-backed credibility on the boss surface.
+5. **C-3 uncertainty-trigger doc** — with thresholds measured from the
+   help/hurt trial.
+
+Each code slice = one commit, floor green after each (backgrounded cargo — but
+NEVER during a live trial fire: Windows locks the running `.exe`s). Trials
+fire in the background; save-results is mandatory after each.
 
 ## Constraints (do not violate without discussion)
 
-- Host Rules 1–4; **plan §10 executor guide is BINDING**; clean-room
-  §10.4 (never open refs/src|papers|articles while coding); the delegation
-  law + live-observation; I1–I7; no Python in shipped code; cwd law;
-  commit heredoc; editor-tool edits (PS 5.1 corrupts UTF-8-no-BOM);
-  specmap re-mint law; scratch homes; no `*install*` test binaries; F15
-  (stop MC before builds); domain code has no `unwrap`/`expect` (conform);
-  600-line conform cell budget (carve before adding).
-- **Ф6 paid trial arms — RP-C3-2 PRE-AUTHORIZED 2026-07-11** (owner:
-  «я прямо сейчас разрешаю делать эти платные прогоны»). Arms fire only
-  after MT-C3-01 pre-registration is committed (§10.7 pre-reg-first still
-  binds); budget posture confirmed at Ф6. MT-C2-05 stays RP5-gated.
-- Fugu benchmark numbers are Sakana-reported — mechanism evidence only.
+- Host Rules 1–4; **plan §10 executor guide BINDING**; clean-room §10.4;
+  delegation law + live-observation; no Python in shipped code (trial
+  runner/scorer are legitimate test tooling); commit heredoc; editor-tool
+  edits (PS 5.1 UTF-8); specmap re-mint in-commit on scoped-file change (MT
+  docs + trial assets are NOT specmap-indexed — verified); domain code no
+  `unwrap`/`expect` (conform); 600-line conform cell budget; F15 (stop MC
+  before builds).
+- **All paid trial arms PRE-AUTHORIZED this goal** (owner 2026-07-12:
+  «Авторизую все платные прогоны и автономию до конца текущего goal»). RP5 for
+  MT-C2-05 resolved (3+3 GLM cold boss cap 8).
+- **Preserve valuable test evidence — ALWAYS** (see the convention section).
 
 ## Delegation scoreboard (session)
 
-**MECHANISM SWITCH — opencode → CC+z.ai (the phase's process win).**
-opencode/GLM stalled again (booted, no tool output, killed ~3 min). The
-owner: launch GLM the way fractality itself does — headless Claude Code
-(`claude -p`) at the z.ai Anthropic-compatible gateway. Recipe (verified,
-from this workspace's `backend-claude-code/envbuild.rs` +
-`spec/examples/profiles.sample.toml`): `env -u ANTHROPIC_API_KEY
-ANTHROPIC_BASE_URL=https://api.z.ai/api/anthropic ANTHROPIC_AUTH_TOKEN=$(cat
-~/.vibevm/zai.api.token) API_TIMEOUT_MS=3000000
-CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1 claude -p '<task>' --model
-glm-5.2[1m] --dangerously-skip-permissions --output-format stream-json
---verbose` from the workspace cwd. Never echo the token (`$(cat …)` → env
-var, value never hits stdout). Watch heuristics (owner 2026-07-12): silent
->5 min after the first line ⇒ kill; actively producing ⇒ wait for exit up
-to 30 min.
-
-- **Delegated & succeeded:** the http.rs pod-leg carve (GLM glm-5.2 removed
-  4 functions, cleaned all unused imports via a clippy loop, self-verified;
-  clean diff on review). This is the model for Ф5→Ф7 + PP-003: mechanical
-  carves, bulk edits, run-and-report → CC+z.ai GLM.
-- **Kept boss-side (legitimately):** all seam design (the escalation state
-  machine, the escalate endpoint/DTO/verb, the broker tool); the mc-client
-  twin carve (small, content already loaded); floors run backgrounded (the
-  harness notification IS the "don't babysit" the law wants — token-cheap);
-  review of every delegated diff (the boss's half of the bargain).
+- **Delegated & succeeded:** the PP-004 arm-g2 runner + `score-g2.py` build →
+  GLM glm-5.2 via CC+z.ai ($0.97). Precise discipline-light work order; GLM
+  self-verified (`bash -n`, `ast.parse`), correctly declined to recreate an
+  existing file. Reviewed clean (arm concat, decisions-collection line,
+  verdict-key match vs the kebab-case serde). The model for run-and-report +
+  mechanical trial-asset builds.
+- **Kept boss-side (legitimately):** all seam/experiment design — the advise
+  verb + advisor ladder (V4 seam), the three MT pre-registrations (spec
+  authoring), the uncertain-task design, the evidence-preservation convention
+  (owner-facing surface); trial FIRING via backgrounded harness (token-cheap,
+  the notification is the "don't babysit") + review of the delegated diff.
+- **Mechanism:** CC+z.ai GLM (`claude -p --model glm-5.2[1m]` at the z.ai
+  Anthropic gateway) — the proven delegation path; also what the trial arms
+  run on. Never echo the token (`$(cat …)` → env var).
