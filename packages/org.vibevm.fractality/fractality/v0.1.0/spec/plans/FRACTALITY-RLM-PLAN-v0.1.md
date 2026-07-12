@@ -298,6 +298,29 @@ re-marked escalated. If a fast worker ever needs to escalate before its
 first heartbeat, that is a `starting → escalated` edge-add + a status field,
 deferred until a worker actually needs it.
 
+- Ф5.1 verifier marker + cold-verifier suppression (`85ac2a7`, FD-9):
+  `OutputSpec.verifier` marks an acceptance verifier over `context_from`
+  work; `admission::check_verifier_has_work` refuses (400) a verifier whose
+  `context_from` names no run that produced a result — no cold verification
+  over an empty tree (§10.2), applied unconditionally in `register_run`
+  (packet-validity, like `validate()`). Two integration tests.
+- Ф5.2 verifier-accept surfaced (`af977a4`, FD-9): `RunRecord.verifier`
+  denorm (from `output.verifier` at registration); `verifier_verdict`
+  renders ACCEPTED/REJECTED/inconclusive/pending in `run`/`show`. **Ф5
+  COMPLETE — the acceptance channel: cold-verifier refusal + verifier-accept
+  readability** (floor green, test-gate 213). Report:
+  `reports/2026-12-07-05-26-campaign3-f5-acceptance.md`.
+
+**Scoping decision — verifier-accept is a readable verdict, not a hard gate
+(Ф5.2).** §10.8 conservative: a verifier's acceptance verdict is first-class
+on its record and rendered as ACCEPTED/REJECTED; it does NOT suspend the
+tree's runs from going terminal (a hard completion gate would be intrusive
+and is not what v1 needs). The query "given a work run, find its verifier"
+(tree → acceptance) is deferred — it needs a `context_from` denorm on the
+record or a scan; the verdict being first-class satisfies the plan's "can
+gate completion" reading. Acceptance-feeds-routing (FD-5 soft-label table)
+is later work off the D-C3-8 seam.
+
 **Scoping decision — decision-journal producer (D-C3-8).** The journal
 must record REAL need-gate decisions, so the producer cannot be MC
 re-deriving one at `register_run` — MC lacks the boss's task-shape

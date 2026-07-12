@@ -1,16 +1,14 @@
 # fractality — WAL (project continuation state)
 
-_Updated: 2026-07-12 ~05:05 (**Campaign 3 Stage B — Ф4 COMPLETE: the
-escalation channel is in end to end**). Ф0/Ф1/Ф2/Ф3 CLOSED; **Ф4 CLOSED
-this session** (D-C3-6) across 4 slices + 1 carve, each floor-green +
-committed. The ascent landed: terminal `RunState::Escalated` + record +
-fold + `escalated` metric (**Ф4.1** `e13ddbf`); exit code 5 + `fractality
-escalations` inbox with call-tree-root attribution (**Ф4.2** `6ed04e6`);
-`POST /v0/runs/:id/escalate` + `McClient::escalate` + `escalation.md`
-(**Ф4.3a** `3f9a2e4`); broker `escalate(reason, needs)` MCP tool (**Ф4.3b**
-`0bf4242`). Pod leg carved to `http_pods.rs`/`pod_leg.rs` for headroom
-(`2ce35f8`). **Next: Ф5 — acceptance / PP-002 fold-in.** Phase report:
-`reports/2026-12-07-05-05-campaign3-f4-escalation.md`._
+_Updated: 2026-07-12 ~05:26 (**Campaign 3 Stage B — Ф5 COMPLETE: the
+acceptance channel is in**). Ф0–Ф4 CLOSED (need-gate → descent → ascent);
+**Ф5 CLOSED this session** (FD-9): `output.verifier` marker + cold-verifier
+suppression (**Ф5.1** `85ac2a7` — `check_verifier_has_work` refuses a
+verifier over an empty/resultless tree); `RunRecord.verifier` denorm +
+verifier-accept verdict (ACCEPTED/REJECTED) in `run`/`show` (**Ф5.2**
+`af977a4`). Floor green (test-gate 213). **Next: Ф6 — trial (D-C3-9):
+pre-register MT-C3-01 FIRST (§10.7 BINDING), then RP-C3-2 paid arms.**
+Phase reports: `…-f5-acceptance.md`, `…-f4-escalation.md`._
 
 ## Current state
 
@@ -39,33 +37,38 @@ escalations` inbox with call-tree-root attribution (**Ф4.2** `6ed04e6`);
   not be re-read; per-slice status; delegation scoreboard). Plan §9 ledger
   = commit map + scoping decisions.
 
-## Next — Ф5 (acceptance / PP-002 fold-in)
+## Next — Ф6 (trial, D-C3-9)
 
 Reading order to resume: workspace `CLAUDE.md` → this WAL → `CONTINUE.md`
-→ the state-plan tracker → plan §10 (BINDING) + §9 (ledger) + §6 (phases).
+→ the state-plan tracker → plan §10 (BINDING) + §9 (ledger) + §6/§7/§8.
 
-**Ф5 (RD-11, FD-9), from plan §6:** acceptance verdicts can gate run-tree
-completion (verifier-accept), and an acceptance packet on an
-empty/workless tree is refused (no cold verification — the "cold verifier"
-§10.2 that must be refused mechanically). Fold in PP-002 (acceptance).
-Seams to read at slice time: `pod/collect.rs` (`run_acceptance`, already
-writes per-cmd verdicts → `acceptance.log`), `core::run::Collected`
-(`acceptance_passed`/`total`/`skipped` already exist), the await/collect
-completion path (`swarm.rs`), and how the tree's completion is judged.
-The acceptance plumbing (verdicts on the record) is ALREADY present from
-Phase 4 — Ф5 adds the GATE (verdicts decide tree completion) + the
-cold-verifier refusal.
+**Ф6 (D-C3-9), from plan §6:** pre-register **MT-C3-01** — write + COMMIT
+the pre-registration FIRST (§10.7 pre-reg-first is BINDING, NO exceptions)
+— then fire the budget-matched paid arms (**RP-C3-2 PRE-AUTHORIZED**
+2026-07-11: «я прямо сейчас разрешаю делать эти платные прогоны» — no
+second word needed once the pre-reg lands), score, record fatigue +
+uncertainty facts. GLM cold boss (RP1 precedent); an orchestration-collapse
+probe (two isolated siblings, one seeded with a misleading early action).
+Budget posture (arm count, spend cap) chosen at commissioning per the
+RP1/RP5 precedent.
 
-**Ф4 follow-ups (non-blocking, NOT gating Ф5):** worker-stop after escalate
-is cooperative not enforced (pod-reap is a future pod feature); no
-automatic re-dispatch of an escalation (`fractality escalations` shows,
-the boss acts — an `on_escalation` policy is Phase-5 delegation-rules);
-`escalation.md` has no renderer yet (symmetric with question.md).
+**⚠ CAUTION — Ф6 spends REAL money and is the first true end-to-end paid
+use of fractality.** Before firing scored arms, verify the system actually
+runs a real GLM worker end to end (spawn → work → collect) — expect
+integration surprises (this is the pilot's first live product run). Seams
+to read at slice time: `spec/manual-tests/` MT files, the Campaign-2 trial
+reports (RP1/RP5 precedent + arm design), the initiative/trial harness,
+and the CC+z.ai launch recipe (delegation scoreboard) — the arms ARE GLM
+workers under Claude Code, the same mechanism now used for delegation.
+
+**Ф5 follow-ups (non-blocking):** no "given a work run, find its verifier"
+query (tree→acceptance) — needs `context_from` denorm or a scan; acceptance
+does not yet feed routing (FD-5 soft-label table, off the D-C3-8 seam).
 
 Each slice = one commit, floor green after each; specmap re-mint in-commit
-on drift (ANY code change in a scoped file shifts tagged-item locations →
-drift; re-mint every slice). **Floor via backgrounded cargo** (harness
-captures the task file — NO `> log` redirect; explicit `cd <v0.1.0>`).
+on drift (ANY code change in a scoped file drifts specmap; re-mint every
+slice). Floor via backgrounded cargo; delegation via CC+z.ai GLM for
+mechanical/bulk/run-and-report.
 
 ## Constraints (do not violate without discussion)
 

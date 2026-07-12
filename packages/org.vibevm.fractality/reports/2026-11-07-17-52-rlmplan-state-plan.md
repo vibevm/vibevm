@@ -11,10 +11,12 @@ exit code 5 + `fractality escalations` inbox with call-tree-root
 attribution (Ф4.2); the `/escalate` endpoint + `McClient::escalate` +
 `escalation.md` (Ф4.3a); the broker `escalate(reason, needs)` MCP tool
 (Ф4.3b). Pod leg carved to `http_pods.rs`/`pod_leg.rs` for headroom. Floor
-green throughout (test-gate 211). **Delegation switched opencode→CC+z.ai
-(works — see scoreboard).** Next: **Ф5 — acceptance / PP-002 fold-in**,
-then Ф6 (trial) → Ф7 (close) → PP-003. Phase reports:
-`…-f4-escalation.md`, `…-f3-descent-core.md`._
+green throughout. **Ф5 COMPLETE** (FD-9: `output.verifier` marker +
+cold-verifier suppression `85ac2a7`; verifier-accept surfaced `af977a4`;
+test-gate 213). **Delegation switched opencode→CC+z.ai (works — see
+scoreboard).** Next: **Ф6 — trial (D-C3-9)**: pre-register MT-C3-01 FIRST
+(§10.7 BINDING), then the RP-C3-2 pre-authorized paid arms → Ф7 (close) →
+PP-003. Phase reports: `…-f5-acceptance.md`, `…-f4-escalation.md`._
 
 ## Goal & operating contract (owner, 2026-07-11)
 
@@ -170,8 +172,14 @@ nudge (RD-12 settings-writes precedent), mc-client, cli surfaces.
           `escalation.md` + 2 integration tests (`3f9a2e4`); wrong-state 409.
     - [x] Ф4.3b broker `escalate(reason, needs)` MCP tool (`0bf4242`);
           terminal "stop working" result, worker exit absorbed as kill-tail.
-- [ ] Ф5 acceptance / PP-002 (RD-11, FD-9)
-- [ ] Ф6 trial (D-C3-9) — STOP at RP-C3-2
+- [x] **Ф5 acceptance / PP-002 (RD-11, FD-9) — COMPLETE** (FD-9 both halves)
+  - [x] Ф5.1 `output.verifier` marker + cold-verifier suppression
+        (`85ac2a7`) — `check_verifier_has_work` refuses (400) a verifier
+        over an empty/resultless `context_from`; 2 integration tests.
+  - [x] Ф5.2 `RunRecord.verifier` denorm + verifier-accept verdict
+        (ACCEPTED/REJECTED) in `run`/`show` (`af977a4`). Report:
+        `reports/2026-12-07-05-26-campaign3-f5-acceptance.md`.
+- [ ] Ф6 trial (D-C3-9) — **pre-reg MT-C3-01 FIRST, then RP-C3-2 paid arms**
 - [ ] Ф7 close
 
 ## Delegation scoreboard (running)
