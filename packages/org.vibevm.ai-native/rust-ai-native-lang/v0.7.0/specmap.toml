@@ -1,0 +1,57 @@
+# specmap.toml — the rust-ai-native-lang package's own traceability policy.
+#
+# The package ships the specmap engine and now traces ITSELF (Traceability
+# Relocation Plan, Phase 4): the discipline disciplines itself again. Run it as
+# `rust-ai-native-specmap --gate --path <this package>` — the orphan-coverage gate only.
+#
+# Why gate-only, not the full --check index: the `scope!` tags on these crates
+# cite spec://org.vibevm.ai-native.core-ai-native/mechanisms/{ENGINE-CONFORM,PROP-014,…} units that
+# ship in flow:org.vibevm.ai-native/core-ai-native — a SIBLING package this tree cannot
+# see (a consumer resolves them via its own [[external_specs]] over the
+# materialised vibedeps/; the dev repo proves that). On the package tree alone
+# every edge is cross-package "dangling", so a committed specmap.json would be
+# noise. What is meaningful — and what this gates — is coverage: every gated
+# crate's public surface carries a scope!/#[spec] tag, so no discipline code
+# drifts untagged.
+
+# The spec:// namespace for units under this package's own spec/ tree.
+namespace = "rust-ai-native-lang"
+
+# Code roots scanned for tags: the package's OWN crates, named explicitly.
+# crates/vendor/* is deliberately absent — those are byte-synced copies of
+# flow:org.vibevm.ai-native/core-ai-native's authored engine crates (`cargo xtask
+# sync-engines`), and the AUTHORED package self-traces them; gating the
+# copies here would double-count the same tags.
+scan_roots = [
+    "crates/rust-ai-native-conform-frontend",
+    "crates/rust-ai-native-conform",
+    "crates/rust-ai-native-cli",
+    "crates/rust-ai-native-env-audit",
+    "crates/rust-ai-native-specmap",
+    "crates/rust-ai-native-tcg-bridge",
+    "crates/rust-ai-native-tcg",
+]
+
+# The package's prompt content (guides, cards, boot). Irrelevant to the orphan
+# gate (which reads code edges, not spec units), but named for completeness.
+spec_roots = ["spec"]
+
+# No repo-root spec document here (the consumer hosts VIBEVM-SPEC.md).
+root_spec_docs = []
+
+# Crates exempt from the orphan gate:
+#   rust-ai-native-conform, rust-ai-native-specmap,
+#   rust-ai-native-cli              — CLI driver binaries (the
+#                                `rust-ai-native-conform` /
+#                                `rust-ai-native-specmap` / `rust-ai-native`
+#                                entry points): drivers, not discipline domain code
+# (specmark + specmark-grammar moved to flow:org.vibevm.ai-native/core-ai-native with
+#  the engine consolidation, DEFERRALS-CLOSEOUT Phase 1; the authored package
+#  exempts the bootstrap pair now.)
+exempt = [
+    "rust-ai-native-conform",
+    "rust-ai-native-cli",
+    "rust-ai-native-specmap",
+]
+
+dispositioned = []

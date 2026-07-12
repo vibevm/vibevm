@@ -1,0 +1,31 @@
+[package]
+name = "typescript-ai-native-mcp"
+group = "org.vibevm.ai-native"
+kind = "mcp"
+version = "0.6.0"
+authors = ["Oleg Chirukhin"]
+license = "UPL-1.0"
+description = "The AI-Native TypeScript discipline over MCP: every typescript-ai-native command and the tcg type oracle as agent tools, served straight from the slot with no vibe in the runtime path"
+keywords = ["mcp", "typescript", "ai-native", "discipline", "agent"]
+
+[compatibility]
+min_vibe_version = "0.1.0"
+requires_kinds = []
+
+# The exact-pin law (PROP-027 §2.3): this package vendors the stack's
+# toolchain crates byte-identically (sync-engines), and the pin holds
+# the vendored engines and the consumer's installed gates to ONE
+# resolved version set. Bumped in lockstep with the stack, always.
+[requires]
+packages = { "stack:org.vibevm.ai-native/typescript-ai-native-lang" = "=0.6.0" }
+
+[[binary]]
+name = "typescript-ai-native-mcp"
+crate = "crates/typescript-ai-native-mcp"
+description = "the stdio MCP server: 17 tools - the discipline command surface + the tcg type oracle"
+
+[[mcp_server]]
+name = "typescript-ai-native"
+binary = "typescript-ai-native-mcp"
+description = "AI-Native TypeScript discipline gates + type oracle over MCP (PROP-027)"
+args = ["--path", "{project_root}"]

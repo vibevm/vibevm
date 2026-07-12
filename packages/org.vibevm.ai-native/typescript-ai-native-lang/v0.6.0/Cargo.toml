@@ -1,0 +1,70 @@
+# org.vibevm.ai-native/typescript-ai-native — a code-bearing package (PROP-024) since
+# 0.3.0: it ships the TypeScript projection's runnable checkers, not only
+# prompts. This is the package's OWN Cargo workspace; a consumer's root
+# excludes vibedeps/ and the slot builds standalone (PROP-024 §2.4).
+#
+# The crates under crates/vendor/ are byte-identical vendored copies of the
+# neutral engine crates AUTHORED in flow:org.vibevm.ai-native/core-ai-native
+# (`cargo xtask sync-engines` in the dev tree mirrors them; `--check` gates
+# drift). Never edit vendored copies — the fix surface is the authored crate.
+# The TypeScript-specific frontends and CLI drivers land as sibling members
+# (DEFERRALS-CLOSEOUT-PLAN v0.1, Phases 2–4).
+[workspace]
+resolver = "3"
+members = [
+    "crates/typescript-ai-native-conform",
+    "crates/typescript-ai-native-conform-frontend",
+    "crates/typescript-ai-native-cli",
+    "crates/typescript-ai-native-specmap",
+    "crates/typescript-ai-native-specmap-scan",
+    "crates/typescript-ai-native-tcg",
+    "crates/typescript-ai-native-tcg-bridge",
+    "crates/typescript-ai-native-extract-bridge",
+    "crates/vendor/core-ai-native-conform",
+    "crates/vendor/core-ai-native-specmap",
+    "crates/vendor/core-ai-native-specmark",
+    "crates/vendor/core-ai-native-specmark-grammar",
+]
+
+[workspace.package]
+version = "0.6.0"
+edition = "2024"
+rust-version = "1.93"
+authors = ["Oleg Chirukhin"]
+license-file = "LICENSE.md"
+publish = false
+repository = "https://gitverse.ru/anarchic/vibevm"
+homepage = "https://gitverse.ru/anarchic/vibevm"
+
+[workspace.dependencies]
+# Internal crates — path-only (not published; consumed in-tree).
+conform-core = { package = "core-ai-native-conform", path = "crates/vendor/core-ai-native-conform" }
+specmap-core = { package = "core-ai-native-specmap", path = "crates/vendor/core-ai-native-specmap" }
+specmark = { package = "core-ai-native-specmark", path = "crates/vendor/core-ai-native-specmark" }
+specmark-grammar = { package = "core-ai-native-specmark-grammar", path = "crates/vendor/core-ai-native-specmark-grammar" }
+typescript-ai-native-extract-bridge = { path = "crates/typescript-ai-native-extract-bridge" }
+typescript-ai-native-conform-frontend = { path = "crates/typescript-ai-native-conform-frontend" }
+typescript-ai-native-conform = { path = "crates/typescript-ai-native-conform" }
+typescript-ai-native-specmap-scan = { path = "crates/typescript-ai-native-specmap-scan" }
+typescript-ai-native-specmap = { path = "crates/typescript-ai-native-specmap" }
+typescript-ai-native-cli = { path = "crates/typescript-ai-native-cli" }
+typescript-ai-native-tcg-bridge = { path = "crates/typescript-ai-native-tcg-bridge" }
+typescript-ai-native-tcg = { path = "crates/typescript-ai-native-tcg" }
+
+# Third-party (all permissive licenses — PROP-000 §3). Feature sets match
+# vibevm's so the engines behave identically wherever they are built.
+anyhow = "1"
+thiserror = "2"
+clap = { version = "4", features = ["derive"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = { version = "1", features = ["preserve_order"] }
+sha2 = "0.10"
+toml = "0.9"
+walkdir = "2"
+glob = "0.3"
+syn = { version = "2", features = ["full", "visit"] }
+quote = "1"
+proc-macro2 = { version = "1", features = ["span-locations"] }
+
+# Dev / test
+tempfile = "3"
