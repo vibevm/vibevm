@@ -198,6 +198,26 @@ Keep it current-state; prune stale lines.
   multi-word commands — `findstr /C:"a b c"` false-fails (each word parsed as a
   filename, `acceptance: 0/N`). Prefer single-token matches; the boss-side
   `diff` / `grep` is the real gate — acceptance is advisory until the diff is read.
+- **Delegated-run mechanics (verified 2026-07-13, first real host delegation —
+  the wal-test migration on `glm`/`big`):** a `worktree`-mode worker gets its
+  **own cold `target/`** (provisioning shares nothing with the host), so an
+  edit-and-verify task pays a full `cargo build` — hand such a worker a
+  **`cargo check`** self-verify (not the full suite), set `wall_secs` high, and
+  expect a long run. **`max_turns` blows easily on a many-edit task** (80 did
+  not cover ~40 edits + iterative build-verify): the run then ends
+  `state=failed exit=1` **though the work may be complete** — never discard on
+  "failed"; review the worktree first. **`show`/`ps` usage (in/out tokens) does
+  not flush until terminal** — `in=0/out=0` mid-run is *not* a stall; judge
+  liveness by `runs/<id>/worker-stdout.jsonl` growth + `git -C runs/<id>/wt
+  status`. Review path (workers can't git): `git -C runs/<id>/wt diff` → read as
+  a PR → `git apply` it into the host tree (worker touches disjoint files → it
+  applies clean) → boss runs the real gate (`self-check`) → boss commits +
+  pushes. **Workers don't `cargo fmt`** → run `cargo fmt --all` after applying
+  (fmt is self-check's fail-fast first gate). A background `fractality wait <id>`
+  yields a clean completion notification. Net: `big` executed the ~40-edit,
+  map-guided migration faithfully (0 stale values); the only boss fixes were
+  fmt + 2 behavioural edge cases — exactly the "boss verifies + finishes the
+  tail" split.
 - **License state (keep current):** our shipped surface is **fully UPL-1.0**. The
   canonical `packages/org.vibevm.*/**` (redbook family, discipline stack,
   fractality, delegation-rules, wal-workspaces) were relicensed by MT-05 firing #2
