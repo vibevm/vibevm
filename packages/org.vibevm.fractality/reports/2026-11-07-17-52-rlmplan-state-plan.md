@@ -193,6 +193,28 @@ nudge (RD-12 settings-writes precedent), mc-client, cli surfaces.
   exemption). Floor ran via backgrounded cargo (the reliable path);
   first-output well under the 3-min law. Kept: legitimate; delegate
   remains unproven this session.
+- **Ф4.3 (2026-07-12) — DELEGATION MECHANISM SWITCH, opencode → CC+z.ai.**
+  opencode/GLM stalled AGAIN this session (booted, but the model turn
+  never produced tool output — killed at ~3 min). Owner then pointed out
+  the obvious: launch GLM the way **fractality itself** does — headless
+  Claude Code (`claude -p`) pointed at the z.ai Anthropic-compatible
+  gateway. Recipe (from this workspace's own `backend-claude-code/
+  envbuild.rs` + `spec/examples/profiles.sample.toml`, VERIFIED live):
+  `env -u ANTHROPIC_API_KEY ANTHROPIC_BASE_URL=https://api.z.ai/api/anthropic
+  ANTHROPIC_AUTH_TOKEN=$(cat ~/.vibevm/zai.api.token) API_TIMEOUT_MS=3000000
+  CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1 claude -p '<task>' --model
+  glm-5.2[1m] --dangerously-skip-permissions --output-format stream-json
+  --verbose` from the workspace cwd. **First delegation on it SUCCEEDED:**
+  GLM (glm-5.2) carved the pod-leg out of `http.rs` (600→379), cleaned all
+  unused imports via a clippy loop, verified with cargo — a clean diff on
+  review. Never echo the token (secrets law): `$(cat …)` pipes into the
+  env var, value never hits stdout. Watch heuristics (owner 2026-07-12):
+  silent >5 min after the first line ⇒ hung, kill; actively producing ⇒
+  wait for process exit up to 30 min. **This supersedes the opencode
+  recipe for the rest of the plan** (mechanical carves, bulk edits,
+  floor/test run-and-report all now go to CC+z.ai GLM). Kept boss-side:
+  seam design, the mc-client twin carve (small, content already loaded),
+  and review of every delegated diff.
 
 ## Next action
 
