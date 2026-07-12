@@ -177,14 +177,30 @@ license-cleared; refs tree local and pinned.
 
 ## 7. Prediction candidates (frozen at commissioning) {#predictions}
 
+_Verdicts recorded at Ф6 (MT-C3-01, 3 gated runs). Normative record:
+MT-C3-01 Recorded runs; narrative: `reports/…-f6-trial.md`._
+
 - P-C3-a: the need-gate's window-fit guard alone removes ≥ X% of
   unnecessary descents in the trial (X set with baseline data).
+  **→ SUPPORTED** — every window-fitting single-skill task was routed as
+  ONE worker call, never over-decomposed into a child tree; the gate was
+  consulted 3–10× per run. Not a hard % (no `decisions` read verb yet — a
+  trial follow-up); the gate's reason strings are the evidence.
 - P-C3-b: schema-validated returns cut malformed-result rework to
-  ~zero across trial runs.
+  ~zero across trial runs. **→ INCONCLUSIVE** — no boss set an
+  `output_schema` on a packet, so the gate never fired. The seam is
+  unit-tested (Ф1.2b); the menu did not exercise it. Follow-up: a menu with
+  an explicit structured-output task.
 - P-C3-c: no trial run exceeds its wall-clock budget (the axis
   nobody else enforces — our differentiator holds under fire).
+  **→ CONFIRMED** — zero runs ended `killed(budget)`; no worker's wall
+  exceeded its packet `budget.wall_secs` (600 s).
 - P-C3-d: ≥1 Silo-regime task in the trial menu escalates rather
-  than fans out, and scores better for it.
+  than fans out, and scores better for it. **→ INCONCLUSIVE (leaning
+  refuted for this menu)** — zero escalations; the bosses correctly routed
+  task 3 (single-doc facts extraction) rather than escalating, because the
+  menu offers no genuinely chunk-destroying Silo task. The escalation
+  channel is built + tested (Ф4); follow-up: a whole-repo reasoning item.
 
 ## 8. Review points {#review-points}
 

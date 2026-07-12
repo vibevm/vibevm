@@ -14,11 +14,12 @@ attribution (Ф4.2); the `/escalate` endpoint + `McClient::escalate` +
 green throughout. Ф5 COMPLETE (FD-9 acceptance). **Ф6 COMPLETE — the trial
 FIRED: gated cold boss delegated 44.4% vs 16.7% C2 baseline (~2.7×), and
 fractality ran end to end as a product for the first time** (3 GLM workers
-completed with results, 1 acceptance 1/1; P-C3-c confirmed). **Delegation
-switched opencode→CC+z.ai (works — it IS the trial mechanism).** Next:
-**Ф7 — close Stage B** (verdicts, deferrals, campaign-close, WAL), then
-**PP-003** (Option C advisor). Phase reports: `…-f6-trial.md`,
-`…-f5-acceptance.md`, `…-f4-escalation.md`._
+completed with results, 1 acceptance 1/1; P-C3-c confirmed). **Ф7 CLOSED —
+STAGE B COMPLETE: the RLM is built and it runs** (§7 verdicts recorded,
+PP-004 filed, campaign-close report). **Delegation switched opencode→CC+z.ai
+(works — it IS the trial mechanism).** Next: **PP-003 — Option C, the
+advisor slice** (owner follow-on goal). Reports: `…-campaign3-close.md`,
+`…-f6-trial.md`, `…-f5-acceptance.md`._
 
 ## Goal & operating contract (owner, 2026-07-11)
 
@@ -188,7 +189,10 @@ nudge (RD-12 settings-writes precedent), mc-client, cli surfaces.
       completed, 1 acceptance 1/1). P-C3-c CONFIRMED, P-C3-a SUPPORTED,
       P-C3-b/d inconclusive (menu gap). Report: `…-f6-trial.md`. Owner
       sign-off pending.
-- [ ] Ф7 close — verdicts, deferrals ledger, campaign-close report, WAL
+- [x] **Ф7 close — COMPLETE.** §7 prediction verdicts recorded; deferrals
+      filed (PP-004 next-trial improvements); campaign-close report
+      (`…-campaign3-close.md`); WORKSPACES + WAL refreshed. **STAGE B
+      COMPLETE — the RLM is built and it runs.** Next: PP-003 (Option C).
 
 ## Delegation scoreboard (running)
 

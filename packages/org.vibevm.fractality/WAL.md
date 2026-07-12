@@ -1,16 +1,16 @@
 # fractality — WAL (project continuation state)
 
-_Updated: 2026-07-12 ~06:44 (**Campaign 3 Stage B — Ф6 COMPLETE: the trial
-FIRED and fractality ran end to end as a product for the first time**).
-Ф0–Ф5 CLOSED (need-gate → descent → ascent → acceptance). **Ф6 CLOSED this
-session** (D-C3-9): MT-C3-01 pre-registered (`3c8ea76`) → harness `run-arm.sh
-g` + `preamble-g.md` (`1c4a8f8`) → 3 paid GLM gated-boss runs → recorded +
-`score-g.py` (`67a3e4a`). **Gated delegation 8/18 ≈ 44.4% vs C2 naive
-baseline 16.7% (~2.7×); 3 GLM workers completed with a worker result, 1
-acceptance 1/1.** P-C3-c CONFIRMED, P-C3-a SUPPORTED, P-C3-b/d inconclusive
-(menu gap). **Next: Ф7 — close Stage B** (verdicts, deferrals, campaign
-report, WAL), then **PP-003** (Option C advisor). Phase reports:
-`…-f6-trial.md`, `…-f5-acceptance.md`._
+_Updated: 2026-07-12 ~06:48 (**Campaign 3 STAGE B COMPLETE — the RLM is
+built and it runs**). Ф0–Ф7 all CLOSED. The whole fabric: need-gate (Ф2) →
+descent core (Ф3) → escalation ascent (Ф4, D-C3-6) → acceptance (Ф5,
+FD-9) → the trial (Ф6, D-C3-9) → close (Ф7). **Ф6 fired MT-C3-01: 3 paid
+GLM gated-boss runs → delegation 8/18 ≈ 44.4% vs C2 naive baseline 16.7%
+(~2.7×), and fractality ran end to end as a product for the first time**
+(3 workers completed with a worker result, 1 acceptance 1/1). P-C3-c
+CONFIRMED, P-C3-a SUPPORTED, P-C3-b/d inconclusive (menu gaps → PP-004).
+Delegation switched opencode→CC+z.ai (works — it IS the trial mechanism).
+**Next: PP-003 — Option C, the advisor slice (D-C3-7)** (owner follow-on
+goal 2026-07-12). Campaign-close: `reports/…-campaign3-close.md`._
 
 ## Current state
 
@@ -39,34 +39,27 @@ report, WAL), then **PP-003** (Option C advisor). Phase reports:
   not be re-read; per-slice status; delegation scoreboard). Plan §9 ledger
   = commit map + scoping decisions.
 
-## Next — Ф7 (close Stage B)
+## Next — PP-003 (Option C, the advisor slice, D-C3-7)
 
 Reading order to resume: workspace `CLAUDE.md` → this WAL → `CONTINUE.md`
-→ the state-plan tracker → plan §10 (BINDING) + §9 (ledger) + §7/§8.
+→ the state-plan tracker → `plans/postponed/PP-003-option-c-advisor-slice.md`
+→ plan §4 (D-C3-7) + §10 (BINDING).
 
-**Ф7 (from plan §6): close Stage B.** The code phases are all done and the
-trial fired; Ф7 is the wrap-up:
-- **Verdicts** — record each §7 prediction's verdict (P-C3-a SUPPORTED,
-  P-C3-b INCONCLUSIVE, P-C3-c CONFIRMED, P-C3-d INCONCLUSIVE) in the plan
-  §7 / §8 and mark the D-C3 decisions all landed in §9.
-- **Deferrals ledger** — the trial follow-ups (worker turn caps, a menu
-  with a schema task + a Silo task, a `fractality decisions` read verb) and
-  the Ф4/Ф5 follow-ups (worker-stop enforcement, tree→verifier query,
-  acceptance-feeds-routing) belong in `plans/postponed.md` if not already.
-- **Campaign-close report** in `reports/` + a `-completed-plan.md` dashboard
-  stage; refresh the fractality status line in the host `WORKSPACES.md`.
-- **WAL** to the Stage-B-complete checkpoint.
+**Stage B is DONE.** The owner's follow-on goal (2026-07-12): take **PP-003
+— Option C, the advisor slice (D-C3-7)**, research it, and execute it to
+completion. From the plan §4 D-C3-7: advisor = a worker-shaped run with an
+`advice` packet type, **no ownership transfer**; `advisor_enabled ⇐
+caller_class ≥ medium`; uncertainty-triggered; the accounting line is the
+caller's budget (revisit trigger: first field data). It was cut from
+Stage B's Option B (RP-C3-1) into PP-003. Read the PP-003 doc first — it
+holds the full task, unblock, and pointers. This is Stage C scope; treat
+it as its own mandate (its own plan/pre-reg discipline if it grows).
 
-Then the owner's follow-on goal (2026-07-12): **PP-003 — Option C, the
-advisor slice (D-C3-7)**: read `plans/postponed/PP-003-…`, research it, and
-execute it to completion. Advisor = a worker-shaped run with an `advice`
-packet type, no ownership transfer; `advisor_enabled ⇐ caller_class ≥
-medium`; uncertainty-triggered; accounting on the caller's budget.
-
-**Standing follow-ups (non-blocking):** Ф4 — worker-stop after escalate is
-cooperative not enforced; Ф5 — no tree→verifier query; Ф6 — worker turn
-caps bit, menu exercised neither the schema gate (P-C3-b) nor a Silo task
-(P-C3-d).
+**Standing follow-ups (non-blocking, all filed):** Ф4 — worker-stop after
+escalate is cooperative not enforced; Ф5 — no tree→verifier query,
+acceptance does not feed routing (FD-5); Ф6 — worker turn caps, menu
+exercised neither the schema gate nor a Silo task, no `decisions` read verb
+(all → PP-004).
 
 Each code slice = one commit, floor green after each; specmap re-mint
 in-commit on drift. Floor via backgrounded cargo; delegation via CC+z.ai

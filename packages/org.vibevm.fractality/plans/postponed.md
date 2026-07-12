@@ -19,3 +19,4 @@ spec tree (plan deferral ledgers, MT files, WAL) wins.
 | [PP-001](postponed/PP-001-rule-rp5-fire-mt-c2-05-rerun.md) | Rule RP5 — authorize and fire the MT-C2-05 re-run | 2026-07-10 | POSTPONED | owner rules RP5 |
 | [PP-002](postponed/PP-002-def-c2-2b-worker-credibility.md) | DEF-C2-2b-full — acceptance-backed worker credibility on the boss surface | 2026-07-10 | POSTPONED | owner commissions (own slice or Campaign 3) |
 | [PP-003](postponed/PP-003-option-c-advisor-slice.md) | Option C — the advisor slice (V4) | 2026-07-11 | POSTPONED | owner commissions Stage C |
+| [PP-004](postponed/PP-004-next-trial-improvements.md) | Next-trial improvements (worker caps, schema+Silo menu tasks, `decisions` verb) | 2026-07-12 | POSTPONED | owner commissions a follow-up trial (MT-C3-02) |
