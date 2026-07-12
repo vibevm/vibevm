@@ -1,175 +1,162 @@
 # fractality — cold-resume checkpoint
 
-_Written 2026-07-12 ~07:00 at session save. `WAL.md` (same directory) is
-the canonical living state and supersedes this snapshot wherever they
-diverge. Resume with `восстанови сессию fractality` (report-then-wait)._
+_Written 2026-07-12 mid-session (the five-task goal push). `WAL.md` (same
+directory) is the canonical living state and supersedes this snapshot on
+divergence. Resume with `восстанови сессию fractality` (report-then-wait)._
 
 ## TL;DR
 
-**Campaign 3 Stage B is COMPLETE, and the PP-003 advisor core landed too.**
-This session drove the whole back half of the plan end to end: Ф4
-(escalation) → Ф5 (acceptance) → Ф6 (the paid trial) → Ф7 (close Stage B) →
-PP-003 (the advisor core). ~22 commits, all on `main`, pushed to both
-remotes. Floor green at every boundary (test-gate 215). Two landmark
-results in Ф6:
+Executing the owner's five-task goal — **1) clean stuck branches · 2) a
+validated Stage C · 3) PP-004 follow-ups · 4) PP-001 · 5) PP-002** —
+autonomously with compaction, delegating grunt to GLM (CC+z.ai). A Stop-hook
+holds the session on this goal until all five are genuinely done.
 
-1. **fractality ran end to end as a product for the first time** — real GLM
-   workers spawned under real pods, did work, wrote results, ran
-   acceptance, folded into the journal.
-2. **The RLM gated arm delegated 44.4% vs the 16.7% naive baseline (~2.7×).**
+**Done: tasks 1, 3, 5.** **Task 4 is FIRING now** (PP-001, background).
+**Task 2 has its machinery + pre-registration; its help/hurt trial build +
+fire + the C-3 doc remain.** ~24 commits, all on `main`, pushed to both
+remotes (gitverse canonical + github mirror) at the latest. Floor green
+throughout (test-gate 223). Two paid trials fired this session (the PP-004
+gated re-run + PP-001 in flight); a big new evidence-preservation convention
+landed at the owner's direction.
 
-**No active blocker.** The whole owner goal (finish the Stage B plan, then
-take PP-003) is done. What remains is future scope the owner commissions: a
-validated Stage C (the advisor help/hurt trial) + the PP-004 trial
-follow-ups.
+## Where each task stands
 
-## Where work stands
+- **Task 1 — stuck branches: DONE.** 11 `fractality/<ULID>` trial-worktree
+  branches + 5 gigabyte temp trees removed; `git branch` = `main` only.
+- **Task 2 — validated Stage C: machinery + pre-reg IN; trial + C-3 REMAIN.**
+  - `fractality advise` verb (`a1a9403`) — V4 advisor channel CLI surface.
+  - Advisor ladder as routing data (`0740bc3`) — `ClassPolicy.advisor_class`
+    + `advisor_class_for`.
+  - MT-C3-02 help/hurt trial **pre-registered** (`91cc156`) — paired arm
+    (ALONE vs ADVISED), one caller tier (glm-5.2 advises glm-5-turbo; the
+    weak-caller falsifier arm needs a 3rd tier, deferred).
+  - **REMAINING:** build `run-advise.sh` + the uncertain-task `menu-advise.md`
+    (4 tasks with hidden acceptances over `trial/staging`, designed below) +
+    2 preambles + `score-advise.py`; fire alone×3 + advised×3; save + score.
+    Then **C-3** the uncertainty-trigger doc (thresholds measured from the
+    trial).
+- **Task 3 — PP-004: DONE.** Caps↑ (`d601eb2`), `decisions` verb (`28b47b3`),
+  menu tasks 9/10 + MT-C3-03 (`7623a05`), arm g2 + scorer (`dbdb030`, GLM-built
+  $0.97). Gated re-run **fired + scored** (`23ab679`): P-C3-a CONFIRMED as a
+  hard count (80% route/inline), P-C3-b SUPPORTED (boss set output_schema),
+  P-C3-d CONFIRMED (Silo task → 2 escalate verdicts). Pool 38.1% (run 3 a
+  technical failure). Evidence in `reports/trial-results/2026-12-07-11-03-…`.
+- **Task 4 — PP-001: FIRING NOW.** RP5 resolved (`d28f2c4`, 3+3 GLM cold boss
+  cap 8). Arm a/b ×3 firing in the background (`fire-pp001.log`), auto-saves
+  to a `c2-mt-c2-05-initiative-rerun` group at the end. **On resume: check
+  the fire completed, then score by MT-C2-01 rules + rule PR1–PR3 into
+  MT-C2-05 "Recorded runs" + fill the group README + commit.**
+- **Task 5 — PP-002: DONE.** The credibility query (`core::worker_credibility`
+  → `CredibilityFact`, `ae8544f`) + the surface (`c85d032`): the cold board
+  (SessionStart hook) + `fractality scoreboard` show "workers self-verify
+  here: acceptance N/N green, last proven <age> (profile X)" when a real
+  completed-green acceptance backs it (D7). Answers the Ф6 F24 keep-reason.
 
-- Branch `main`, **in sync with BOTH remotes** at `531d83b` (GitVerse
-  `origin` + GitHub `github`), working tree clean.
-- Floor green: test-gate 215, conform 0, specmap clean, clippy/fmt clean.
-- Real `~/.fractality` untouched by tests; the Ф6 trial read
-  `~/.fractality/profiles.toml` as a template only (scratch homes for runs).
+## Active work in flight
 
-## The BIG process change this session — delegation mechanism switched
-
-**opencode → CC+z.ai.** opencode/GLM stalled again (booted, no tool output,
-killed ~3 min). The fix (owner-prompted): launch GLM the way fractality
-itself does — headless Claude Code at the z.ai gateway. **Verified working
-recipe** (from this workspace's `backend-claude-code/envbuild.rs` +
-`spec/examples/profiles.sample.toml`):
-
-```sh
-env -u ANTHROPIC_API_KEY \
-    ANTHROPIC_BASE_URL="https://api.z.ai/api/anthropic" \
-    ANTHROPIC_AUTH_TOKEN="$(cat ~/.vibevm/zai.api.token)" \
-    API_TIMEOUT_MS=3000000 CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1 \
-    claude -p '<task>' --model glm-5.2[1m] --dangerously-skip-permissions \
-      --output-format stream-json --verbose
-```
-
-Never echo the token (`$(cat …)` pipes into the env var, value never hits
-stdout — secrets law). Watch heuristics (owner): silent >5 min after the
-first line ⇒ hung, kill; actively producing ⇒ wait for exit up to 30 min.
-This IS the mechanism the trial arms run on. Use it for mechanical
-carves / bulk edits / run-and-report from here on.
+**PP-001 firing** (background task; `scratchpad/fire-pp001.log`): 6 GLM cold
+boss runs (~25 min each, ~2.5 h total). Cannot run `floor`/`cargo` while it
+fires — Windows locks the running `.exe`s. When it prints `ALL-PP001-DONE`
+the evidence is auto-preserved under `reports/trial-results/<dated>-c2-mt-c2-05-initiative-rerun/`;
+score with the MT-C2-01 rubric + the fatigue facts (nudges by reason, the
+slate at each nudge) and rule PR1–PR3.
 
 ## Next-steps recipe (cold start)
 
-The Stage B plan is done. The candidate next work (owner commissions):
+1. **Collect PP-001** (if the fire finished): read `fire-pp001.log` RESULT
+   lines; the group is auto-saved; score per MT-C2-01, fill MT-C2-05 §Recorded
+   runs + the group README, commit. (If it did not finish, `bash
+   spec/manual-tests/trial/run-arm.sh {a,b} {n}` the missing runs.)
+2. **Build + fire the MT-C3-02 help/hurt trial** (task 2). Author, over
+   `trial/staging` (mini_logfmt):
+   - `menu-advise.md` — 4 genuinely-uncertain tasks with hidden acceptances:
+     (A) `first_unique` preserving FIRST-SEEN order (a HashSet reorders →
+     fails); (B) `count_records` where a trailing newline is NOT a record;
+     (C) a `merge_pairs(&a,&b)->Record` that composes into a fold (by-value
+     dead-ends); (D) `render` round-tripping an empty-value pair `k=`.
+   - `preamble-alone.md` / `preamble-advised.md` (advised tells the caller to
+     `fractality advise` a rung up before committing).
+   - `run-advise.sh` (mirror `run-arm.sh`, caller = `small` model, preamble
+     swap, collect the `advise` runs) + `score-advise.py`.
+   - Fire `alone {1,2,3}` + `advised {1,2,3}`; save (`advise-help-hurt`
+     group) + score (PR-adv-1 help, PR-adv-2 mechanism, PR-adv-3 no-hurt).
+   - Delegatable to GLM (CC+z.ai) — a discipline-light content build.
+3. **C-3** — the uncertainty-trigger doc (spec), thresholds from the trial.
 
-1. **A validated Stage C — the advisor help/hurt trial.** Read
-   `fractality/v0.1.0/spec/plans/FRACTALITY-ADVISOR-PLAN-v0.1.md` §3
-   (deferred). Needs its OWN pre-registration (MT-C3-02-shaped) + a menu
-   with genuinely uncertain tasks + a paired-arm design (caller-with-advisor
-   vs caller-alone). The RD-10 inversion is the falsifier: advice must HELP
-   a medium caller and NOT hurt a weak one. Also deferred: the uncertainty
-   trigger (measured thresholds), the ladder-as-routing-data, a
-   `fractality advise` verb.
-2. **PP-004 trial follow-ups** (`plans/postponed/PP-004-…`): raise worker
-   turn caps (30 bit hard), add a schema task (test P-C3-b) + a Silo task
-   (test P-C3-d) to the trial menu, add a `fractality decisions` read verb
-   (mirror `escalations`) so P-C3-a becomes a hard number.
-3. **To re-run the Ф6 trial:** `cd fractality/v0.1.0 && cargo build
-   --workspace && bash spec/manual-tests/trial/run-arm.sh g <n>` (arm g =
-   gated; results in `target/trial-results/arm-g-run-<n>/`; score with
-   `python spec/manual-tests/trial/score-g.py`).
+## Non-obvious findings this session
 
-Resume is report-then-wait — the owner steers; the above are candidates.
-
-## Non-obvious findings this session (do not rediscover)
-
-- **specmap indexes `fractality/v0.1.0/spec/**` anchors** — writing a spec
-  doc (a plan under `spec/plans/`) adds a spec unit and DRIFTS specmap.
-  Re-mint AFTER writing spec docs, and never write one mid-floor (it fails
-  `specmap --check`). Reports under `packages/…/reports/` are OUTSIDE the
-  spec tree — they do NOT drift specmap.
-- **The Ф2 team pre-built the advisor bar** — `ClassPolicy.advisor_enabled`
-  already existed "ready for PP-003" (Weak:false, Medium/Strong:true), and
-  `CapabilityClass` derives `Ord`, so `caller_class >= Medium` just works.
-  PP-003 only had to add the `advice` marker + enforce the bar.
-- **The Ф6 trial harness** (`run-arm.sh`) reads the REAL
-  `~/.fractality/profiles.toml` (a template, copied to a scratch home) and
-  uses `python` (tomllib) to parse it. The boss runs via `claude --print`
-  with the z.ai env under `env -i` + a Rust-toolchain passthrough
-  (DEF-C2-2a) so scratch `env -i` does not break cargo.
-- **Worker/boss turn caps dominated trial completion** — boss 50, worker 30;
-  bosses timed out mid-menu, workers mid-task. `delegated` (8) is honest;
-  `delegated-and-collected` (3) trails it purely because of the caps.
-- **The 600-line conform cell budget bit twice more** this session — the
-  journal fold carved to `journal_fold.rs`, and the whole MC pod leg carved
-  to `http_pods.rs` + `pod_leg.rs` (headroom for the escalate endpoint/verb).
-- **Adding a field to `OutputSpec` or `RunRecord`** updates the `hello_glm`
-  Debug snapshot (`fractality_core/src/snapshots/…hello_glm…snap`) and needs
-  every RunRecord literal site touched (journal_fold `fixed_run`, metrics
-  `run`, http `register_run`, `admission_primitives` `record`).
+- **`target/trial-results/` is GITIGNORED** — paid-run evidence must be saved
+  to `reports/trial-results/` or a `cargo clean` wastes the money. Now a
+  binding rule (workspace CLAUDE.md §"Preserve valuable test/run evidence"):
+  after every trial fire (and any important/long run, by judgment) run
+  `save-results.sh <group-description>` + fill the scaffolded group README +
+  commit. Layout: **dated groups of dated runs** (год-число-месяц-время), a
+  README at every level with its own meaning (not on pure replicates).
+- **specmap tracks cell LINE SPANS** — editing ANY scoped `.rs` file shifts
+  spans and drifts specmap even with no cell added/removed; re-mint in-commit
+  (`rust-ai-native specmap`). MT docs + trial assets are NOT indexed.
+- **The `glm` profile has only 2 tiers** (glm-5.2 big, glm-5-turbo small) — the
+  help/hurt trial's two-point RD-10 inversion needs three; it fires the one
+  point two tiers serve (5.2 advises 5-turbo), the rest deferred.
+- **`cargo fmt` is safe** (rustfmt handles UTF-8) — the PS-5.1 corruption
+  quirk is only PowerShell's Get/Set-Content, not rustfmt.
+- **Mirror non-ff can be transient** — gitverse rejected a push as "non-ff"
+  while merely being behind (an ancestor of local); `git merge-base
+  --is-ancestor origin/main main` confirmed ff-safe and a plain `git push
+  origin main` synced it. Never `--force`.
 
 ## Repository map (workspace)
 
-`packages/org.vibevm.fractality/` — `CLAUDE.md` (contract), `WAL.md`
-(canonical state), this file, `WORKSPACES.md` row in the host,
-`VIBEVM-BACKLOG.md`; **`plans/`** (postponed.md + PP-001/002/003/004);
-**`reports/`** (per-phase reports incl. `…-f4-escalation`, `…-f5-acceptance`,
-`…-f6-trial`, `…-campaign3-close`, the state-plan tracker). `fractality/
-v0.1.0/` — the Cargo workspace: `crates/{core, mission-control, pod,
-mc-client, backend-claude-code, cli, initiative}`; `spec/` (PROP-001,
-VISION, plans/**RLM-PLAN v0.1** + **ADVISOR-PLAN v0.1**, manual-tests/
-**MT-C3-01** + trial harness, refs/ notes); `delegation-rules/v0.1.0/`
-(routing policy). New cells this session: core `journal_fold.rs`; mc
-`http_pods.rs` / `http_escalate.rs`; mc-client `pod_leg.rs`; tests
-`escalate.rs` / `verifier.rs` / `advisor.rs`.
+`packages/org.vibevm.fractality/` — `CLAUDE.md` (contract, now with the
+evidence rule), `WAL.md`, this file, `WORKSPACES.md` row, `VIBEVM-BACKLOG.md`;
+**`plans/`** (postponed.md + PP-001/002/003/004); **`reports/`** (per-phase
+narratives + **`trial-results/`** — the committed paid-run evidence, dated
+groups). `fractality/v0.1.0/` — the Cargo workspace: `crates/{core,
+mission-control, pod, mc-client, backend-claude-code, cli, initiative}`;
+`spec/` (PROP-001, VISION, plans/**RLM** + **ADVISOR**, manual-tests/**MT-C3-01/02/03**
++ **MT-C2-05** + the trial harness `run-arm.sh`/`save-results.sh`/`score-g2.py`).
+New this session: core `credibility.rs`, cli `advise.rs`.
 
-## Decisions / policy in force (long form)
+## Decisions / policy in force
 
-- Host Rules 1–4; **plan §10 executor guide is BINDING**; clean-room §10.4
-  (never open `refs/src|papers|articles` while coding); commit via
-  `git commit -F - <<'MSG'` heredoc; editor-tool edits only (PS 5.1
-  corrupts UTF-8-no-BOM); no Python in shipped code (test/prototype only —
-  the trial runner + scorer are legitimate); scratch homes; no `*install*`
-  test binaries; F15 (stop MC before builds); domain code has no
-  `unwrap`/`expect` (conform); 600-line conform cell budget (carve before
-  adding); specmap re-mint in-commit on ANY scoped-file change.
-- **70%-context stop rule LIFTED** (owner 2026-07-12): run straight through
-  with compaction.
-- **RP-C3-2 paid trial arms PRE-AUTHORIZED** — fired at Ф6 (MT-C3-01, 3
-  runs). A future advisor trial needs its own pre-registration + word.
-- Floor = the gate panel run FROM `fractality/v0.1.0/`: fmt → test → clippy
-  → conform → specmap → test-gate; green at every phase boundary.
+- Host Rules 1–4; plan §10 executor guide BINDING; clean-room §10.4; the
+  delegation law + live-observation; no Python in shipped code (trial
+  runners/scorers are test tooling); commit heredoc; editor-tool edits (PS
+  5.1); specmap re-mint on ANY scoped-file change; F15; domain code no
+  unwrap/expect; 600-line conform cell budget.
+- **All paid trial arms PRE-AUTHORIZED this goal** (owner: «Авторизую все
+  платные прогоны и автономию до конца текущего goal»). RP5 = 3+3 GLM cold
+  boss cap 8.
+- **Preserve valuable test evidence — ALWAYS** (the new convention).
+- Never `floor`/`cargo` while a trial fires (Windows `.exe` lock).
 
-## Recent commit chain (last ~22, newest first)
+## Recent commit chain (newest first)
 
 ```
-531d83b docs(fractality): WAL + tracker — PP-003 advisor core landed
-9bea86d docs(fractality): PP-003 advisor plan + registry status
-40687ca feat(fractality): PP-003 advisor core — the caller-class bar (D-C3-7)
-7c6c232 docs(fractality): Ф7 close — Stage B COMPLETE
-7020e68 docs(fractality): Ф6 close — trial phase report, ledger, WAL
-67a3e4a test(fractality): Ф6 MT-C3-01 recorded runs — the gated trial fired
-1c4a8f8 test(fractality): Ф6 trial harness — arm g (gated) runner + preamble
-3c8ea76 docs(fractality): Ф6 pre-register MT-C3-01 (the RLM gated trial)
-2fe365c docs(fractality): Ф5 close — phase report, ledger, WAL
-af977a4 feat(fractality): Ф5.2 verifier-accept surfaced (FD-9)
-85ac2a7 feat(fractality): Ф5.1 verifier marker + cold-verifier suppression
-7850be7 docs(fractality): Ф4 close — phase report, ledger, WAL
-0bf4242 feat(fractality): Ф4.3b escalate MCP tool in the broker (D-C3-6)
-3f9a2e4 feat(fractality): Ф4.3a escalate endpoint + client verb (D-C3-6)
-2e10aa9 docs(fractality): record the opencode→CC+z.ai delegation switch
-2ce35f8 refactor(fractality): carve the MC pod leg into its own cells
-e355557 docs(fractality): Ф4.2 ledger + operating-rule update
-6ed04e6 feat(fractality): Ф4.2 escalation climbs to the top (D-C3-6)
-ee2fc46 docs(fractality): Ф4.1 ledger — escalation core outcome
-e13ddbf feat(fractality): Ф4.1 escalation core outcome (D-C3-6)
+c85d032 feat(fractality): surface worker credibility on the cold board (PP-002 done)
+ae8544f feat(fractality): the worker-credibility query (PP-002 core)
+23744f3 docs(fractality): mark PP-004 done in the registry
+23ab679 test(fractality): fire + score the PP-004 gated re-run (MT-C3-03)
+9932b9c test(fractality): date + group the trial-results, one README per group
+552b559 test(fractality): preserve paid trial evidence durably + make it a rule
+dbdb030 test(fractality): the PP-004 gated re-run runner + scorer (arm g2)
+7623a05 docs(fractality): arm the PP-004 gated re-run — MT-C3-03 + the two menu tasks
+d28f2c4 docs(fractality): resolve MT-C2-05 RP5 — the initiative re-run is armed
+91cc156 docs(fractality): pre-register MT-C3-02 — the advisor help/hurt trial
+d601eb2 feat(fractality): raise the turn caps for trial completion (PP-004 item 1)
+28b47b3 feat(fractality): the `fractality decisions` read verb (PP-004 item 4)
+0740bc3 feat(fractality): Stage C — the advisor ladder as routing data (V4)
+a1a9403 feat(fractality): Stage C — the `fractality advise` verb (D-C3-7)
 ```
 
 ## Quick-start
 
 ```sh
-cd packages/org.vibevm.fractality && head -30 WAL.md
+cd packages/org.vibevm.fractality && head -40 WAL.md
 cd fractality/v0.1.0
-# floor (ALWAYS from v0.1.0):
+# floor (ALWAYS from v0.1.0; NEVER while a trial fires):
 /c/Users/olegc/gits/vibevm/packages/org.vibevm/rust-ai-native-lang/v0.7.0/target/debug/rust-ai-native.exe floor
-# delegate to GLM (the CC+z.ai recipe above) for mechanical/bulk/run-and-report.
+# delegate to GLM (CC+z.ai): claude -p '<task>' --model glm-5.2[1m] at the z.ai gateway
 ```
 
 Resume phrase: `восстанови сессию fractality` (report-then-wait).
-Wind-down: `заверши сессию fractality`.
