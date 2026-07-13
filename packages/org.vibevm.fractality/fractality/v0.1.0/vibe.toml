@@ -21,6 +21,9 @@ requires_kinds = []
 [requires.packages]
 "flow:org.vibevm.world/redbook" = "^0.2.0"
 "stack:org.vibevm.ai-native/rust-ai-native" = "^0.7.0"
+# fractality is itself a specspace of the host; it dogfoods the specspace
+# grammar it lives under (boot snippet slot 11 → target resolution + registry).
+"flow:org.vibevm.world/wal-specspaces" = "^0.1.0"
 
 # The boss-side integration (IGNITION Phase 6): the boot snippet a
 # consuming boss loads at session start (slot 75 — outside the redbook

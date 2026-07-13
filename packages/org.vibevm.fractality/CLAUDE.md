@@ -1,4 +1,4 @@
-# fractality — workspace contract (read this first)
+# fractality — specspace contract (read this first)
 
 **Project:** fractality — an agent operating system in its earliest form: a
 mission-control scheduler plus a delegation toolchain that lets an expensive
@@ -8,8 +8,8 @@ through files on disk.
 **Binaries (planned):** `fractality` (CLI), `fractality-mission-control` (the scheduler daemon).
 **Status:** pre-code. The IGNITION campaign plan is authored; Phase 0 (spikes) is next.
 
-This is a **workspace** inside the vibevm repository (host registry:
-`WORKSPACES.md` at the repo root; canon: `flow:org.vibevm.world/wal-workspaces`) —
+This is a **specspace** inside the vibevm repository (host registry:
+`SPECSPACES.md` at the repo root; canon: `flow:org.vibevm.world/wal-specspaces`) —
 but an independent product. It does not depend on vibevm; vibevm does not
 depend on it. The repository is only its incubator.
 
@@ -29,7 +29,7 @@ depend on it. The repository is only its incubator.
    [`fractality/v0.1.0/CLAUDE.md`](fractality/v0.1.0/CLAUDE.md) —
    i.e. every entry of `fractality/v0.1.0/spec/boot/INDEX.md`, in order.
    These are the redbook practice snippets plus the AI-Native discipline
-   boot, materialised by `vibe install` into the workspace's own
+   boot, materialised by `vibe install` into the specspace's own
    `vibedeps/`. They bind every session here the same way the flows bind
    any vibevm consumer project.
 
@@ -41,7 +41,7 @@ the host project, say so before touching host files.
 ## vibevm pilot posture — fractality is the pilot project
 
 fractality development doubles as the **pilot use of vibevm** (owner
-directive, 2026-07-09): this workspace consumes vibevm end to end — `vibe
+directive, 2026-07-09): this specspace consumes vibevm end to end — `vibe
 install`, the redbook flows, the AI-Native discipline stack — the way any
 external project would. Friction discovered here is product signal, not
 noise.
@@ -60,7 +60,7 @@ noise.
   here — package management, boot assembly, skills, the discipline stack all
   route through vibe wherever vibe covers the job.
 - **Deferrable wishes** — features, ergonomics, non-blocking bugs — go to
-  [`VIBEVM-BACKLOG.md`](VIBEVM-BACKLOG.md) at this workspace root, one
+  [`VIBEVM-BACKLOG.md`](VIBEVM-BACKLOG.md) at this specspace root, one
   dated entry each: what, why, where it bit us.
 - **Urgent large bugs** — anything that blocks fractality work or corrupts
   state — are fixed in the host immediately, in the same session; host-side
@@ -76,7 +76,7 @@ Until the backlog items land, this is the working recipe:
    `<host-root>/target/debug/vibe.exe`. The PATH `vibe`
    (`~/opt/bin/vibe`) is stale — its manifest parser already failed once
    on a valid package manifest.
-2. **Install / update workspace deps.** From `fractality/v0.1.0/`:
+2. **Install / update specspace deps.** From `fractality/v0.1.0/`:
    `<host-root>/target/debug/vibe.exe install --registry
    "<host-root>/packages" --unattended --invoked-by claude-code`.
    Know the semantics: `--registry` is the **exclusive** M0
@@ -91,15 +91,15 @@ Until the backlog items land, this is the working recipe:
    `<host-root>/packages/org.vibevm/<name>/v0.1.0/`. They are the
    owner's own published flows, tag-pinned. Do not edit the vendored
    copies — upstream is the published repo.
-4. **Boot artifacts** live in this workspace:
+4. **Boot artifacts** live in this specspace:
    `fractality/v0.1.0/spec/boot/INDEX.md` + the `<vibevm>` block in
    `fractality/v0.1.0/CLAUDE.md`, reading snippets out of the
-   workspace-local `vibedeps/`. `vibe reinstall` (from `v0.1.0/`)
+   specspace-local `vibedeps/`. `vibe reinstall` (from `v0.1.0/`)
    recomputes boot artifacts without re-resolving.
 5. **Discipline toolchain binary.** The umbrella `rust-ai-native` CLI is
    used from the host package's built tree —
    `<host-root>/packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/target/debug/rust-ai-native.exe`
-   (byte-same 0.7.0 sources as this workspace's `vibedeps` slot; the
+   (byte-same 0.7.0 sources as this specspace's `vibedeps` slot; the
    slot has no `target/` yet). Canonical consumer forms (GUIDE §13:
    `vibe bin exec …` / `cargo run --manifest-path vibedeps/…`) build the
    slot on first use — switch to them once the slot is built.
@@ -133,7 +133,7 @@ delete the backlog entry.
 - **Artifacts in English** (code, specs, docs, commit messages); chat with
   the owner in Russian.
 - **Commit scope:** `fractality` (e.g. `feat(fractality): …`), regardless of
-  which crate inside the workspace changed. The workspace is one subsystem
+  which crate inside the specspace changed. The specspace is one subsystem
   from the host's point of view.
 - **Floor (gate panel), from Phase 1 on:** the AI-Native floor, run inside
   `fractality/v0.1.0/`: `rust-ai-native floor` (= fmt → test → clippy →
@@ -159,7 +159,7 @@ delete the backlog entry.
   [`fractality/v0.1.0/spec/refs/INVENTORY.md`](fractality/v0.1.0/spec/refs/INVENTORY.md)
   is inspiration-only. Study → write a study note (what it achieves, which
   decisions we take) → implement from the note. Never port lines, never
-  adapt code file-by-file. This binds the whole workspace.
+  adapt code file-by-file. This binds the whole specspace.
 - **Worker-env invariant (security):** a spawned worker's environment is
   constructed from a whitelist plus its profile — it never inherits
   `ANTHROPIC_*` / `CLAUDE_*` from the parent. Tests enforce this; treat any
@@ -255,11 +255,11 @@ fractality exists to kill. Hand-run today what the pod will automate:
    wait for completion to discover a derailment.
 5. Completion is the background-task notification, never a blind
    timeout.
-6. **Pin the cwd in the launch command itself** (`cd <workspace> &&
+6. **Pin the cwd in the launch command itself** (`cd <specspace> &&
    opencode run …`), and use absolute paths in the watcher. The shell's
    inherited cwd is poisoned by any earlier `cd` (a delegate once ran
    12 minutes against the host root chasing paths that exist only in
-   the workspace — caught 2026-07-10).
+   the specspace — caught 2026-07-10).
 
 (This protocol is the manual prototype of the pod's telemetry:
 streamed transcript + heartbeats + stall watchdog on the MC bus.)
@@ -267,7 +267,7 @@ streamed transcript + heartbeats + stall watchdog on the MC bus.)
 **Delegate context economics (measured 2026-07-10, opencode WAL):** a
 GLM delegate does NOT ingest the discipline/boot corpus — it reads only
 its target files; the standing cached prefix is ~15k tokens (opencode
-system prompt + the AGENTS.md chain: workspace block 0.8 KB + host root
+system prompt + the AGENTS.md chain: specspace block 0.8 KB + host root
 12 KB + task text). Multi-minute silences are GLM turn latency (stdout
 is end-buffered under redirection — hence the file-mtime telemetry),
 not context loading. Hygiene: surgical tasks may run from a scratch cwd
@@ -277,7 +277,7 @@ non-interactive `opencode run` auto-rejects any file read outside the
 cwd (`permission requested: external_directory … auto-rejecting`), so
 absolute paths into another tree fail closed — copy the inputs into the
 scratch cwd first (and strip `.git`/assets from copies). Tasks that
-self-verify with cargo/conform keep cwd in the workspace. Heartbeats in
+self-verify with cargo/conform keep cwd in the specspace. Heartbeats in
 the work order must be shell commands (`echo "PROGRESS: …"`) — a bare
 `PROGRESS:` line gets executed as a command and errors (measured same
 day). `opencode run --print-logs` streams logs to stderr — capture it
@@ -315,7 +315,7 @@ is field data for Phase 5's playbooks — record surprises in `WAL.md`.
 ## Phase reports (owner directive, 2026-07-10)
 
 Every campaign phase ends with an owner-facing report in
-[`reports/`](reports/) at this workspace root — same habit as the
+[`reports/`](reports/) at this specspace root — same habit as the
 IGNITION narratives, now a standing rule. Owner's words (verbatim):
 «внутри — что было сделано, какие у тебя на этот счет идеи и
 размышления, главное: какие решения были приняты!!! что осталось
@@ -453,9 +453,9 @@ measurement campaign.
 ## End of session
 
 Rewrite `WAL.md` to the current state (checkpoint, not journal). On a
-wind-down phrase naming this workspace (`заверши сессию fractality` /
+wind-down phrase naming this specspace (`заверши сессию fractality` /
 `END SESSION fractality`): also overwrite `CONTINUE.md` wholesale and refresh
-the fractality status line in the host `WORKSPACES.md`. Commit per host
+the fractality status line in the host `SPECSPACES.md`. Commit per host
 rules; push via `cargo xtask mirror` from the host root (routine per Rule 4).
 Resume (`восстанови сессию fractality`) is report-then-wait: restore, verify
 empirically, report, stop.

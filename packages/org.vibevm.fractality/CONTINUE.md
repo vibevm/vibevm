@@ -86,7 +86,7 @@ the owner picks which follow-up, if any, to commission.
 
 - **`target/trial-results/` is GITIGNORED** — paid-run evidence must be saved
   to `reports/trial-results/` or a `cargo clean` wastes the money. Now a
-  binding rule (workspace CLAUDE.md §"Preserve valuable test/run evidence"):
+  binding rule (specspace CLAUDE.md §"Preserve valuable test/run evidence"):
   after every trial fire (and any important/long run, by judgment) run
   `save-results.sh <group-description>` + fill the scaffolded group README +
   commit. Layout: **dated groups of dated runs** (год-число-месяц-время), a
@@ -104,10 +104,10 @@ the owner picks which follow-up, if any, to commission.
   --is-ancestor origin/main main` confirmed ff-safe and a plain `git push
   origin main` synced it. Never `--force`.
 
-## Repository map (workspace)
+## Repository map (specspace)
 
 `packages/org.vibevm.fractality/` — `CLAUDE.md` (contract, now with the
-evidence rule), `WAL.md`, this file, `WORKSPACES.md` row, `VIBEVM-BACKLOG.md`;
+evidence rule), `WAL.md`, this file, `SPECSPACES.md` row, `VIBEVM-BACKLOG.md`;
 **`plans/`** (postponed.md + PP-001/002/003/004); **`reports/`** (per-phase
 narratives + **`trial-results/`** — the committed paid-run evidence, dated
 groups). `fractality/v0.1.0/` — the Cargo workspace: `crates/{core,

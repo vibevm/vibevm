@@ -193,13 +193,13 @@ plan's MCP-call quota is a metered resource (Campaign 1, Phase 5 playbooks).
 
 ## 6. Relationship to the host repository {#host}
 
-fractality is incubated as a vibevm **workspace** (host `WORKSPACES.md`;
-`flow:org.vibevm.world/wal-workspaces`) and packaged in the vibevm format
+fractality is incubated as a vibevm **specspace** (host `SPECSPACES.md`;
+`flow:org.vibevm.world/wal-specspaces`) and packaged in the vibevm format
 (`tool:org.vibevm.fractality/fractality`), but it is a standalone product:
 no dependency on vibevm at build time or runtime, its own WAL and plans, its
 own floor. Publishing to any registry is owner-word-only. When the product
-outgrows the incubator, the workspace graduates to its own repository per
-the workspaces protocol.
+outgrows the incubator, the specspace graduates to its own repository per
+the specspaces protocol.
 
 ## 7. Evolution horizons (designed-for, not built) {#horizons}
 
