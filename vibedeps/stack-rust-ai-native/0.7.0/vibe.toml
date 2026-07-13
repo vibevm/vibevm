@@ -1,10 +1,10 @@
 [package]
 name = "rust-ai-native"
-group = "org.vibevm"
+group = "org.vibevm.ai-native"
 kind = "stack"
 version = "0.7.0"
 authors = ["Oleg Chirukhin"]
-license = "EULA"
+license = "UPL-1.0"
 description = "AI-Native Rust - the family aggregator: one install pulls the language stack (rust-ai-native-lang) and its MCP server (rust-ai-native-mcp), and transitively the flow foundation core-ai-native. Content-minimal by design (PROP-028): no code, no boot snippet, no policy - it only names the family members at one resolved version set."
 keywords = ["rust", "ai-native", "discipline", "stack", "aggregator"]
 

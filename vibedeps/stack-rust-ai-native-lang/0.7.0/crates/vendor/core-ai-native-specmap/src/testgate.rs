@@ -11,7 +11,9 @@
 //! never appears in the run is reported as a warning (possible rename /
 //! deletion — the promotion protocol covers shrinking the registry).
 
-specmark::scope!("spec://org.vibevm.ai-native/core-ai-native/mechanisms/BROWNFIELD-PROTOCOL-v0.1#test-gate");
+specmark::scope!(
+    "spec://org.vibevm.ai-native/core-ai-native/mechanisms/BROWNFIELD-PROTOCOL-v0.1#test-gate"
+);
 
 use std::collections::BTreeMap;
 

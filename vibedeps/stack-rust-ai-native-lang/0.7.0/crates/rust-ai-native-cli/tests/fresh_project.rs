@@ -49,7 +49,7 @@ pub fn hello() -> &'static str {
     write(
         root,
         "vibedeps/flow-core-ai-native/0.3.0/vibe.toml",
-        "[package]\nname = \"core-ai-native\"\ngroup = \"org.vibevm\"\nkind = \"flow\"\nversion = \"0.3.0\"\n",
+        "[package]\nname = \"core-ai-native\"\ngroup = \"org.vibevm.ai-native\"\nkind = \"flow\"\nversion = \"0.3.0\"\n",
     );
     write(
         root,

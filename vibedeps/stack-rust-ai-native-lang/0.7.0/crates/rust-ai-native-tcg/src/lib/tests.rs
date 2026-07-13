@@ -2,7 +2,9 @@
 //! engine, findings flag against the baseline, advice cites the
 //! GUIDE, completions finalise per policy. rust-analyzer-free.
 
-specmark::scope!("spec://org.vibevm.ai-native/rust-ai-native-lang/mechanisms/TCG-PROTOCOL-RUST-v0.1#enrichment");
+specmark::scope!(
+    "spec://org.vibevm.ai-native/rust-ai-native-lang/mechanisms/TCG-PROTOCOL-RUST-v0.1#enrichment"
+);
 
 use std::path::Path;
 

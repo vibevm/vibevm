@@ -1,10 +1,10 @@
 [package]
 name = "core-ai-native"
-group = "org.vibevm"
+group = "org.vibevm.ai-native"
 kind = "flow"
 version = "0.7.0"
 authors = ["Oleg Chirukhin"]
-license = "EULA"
+license = "UPL-1.0"
 description = "The AI-Native Code Discipline v0.2 (BETA) - language-independent principles, pattern cards, executable-scaffold catalog, and raid playbook for code optimized for comprehension and safe modification by AI agents"
 keywords = ["discipline", "ai-native", "pattern-cards", "scaffolds", "raids"]
 

@@ -11,8 +11,17 @@ authors = ["Oleg Chirukhin"]
 "stack:org.vibevm.ai-native/rust-ai-native" = "^0.7.0"
 "stack:org.vibevm.ai-native/typescript-ai-native" = "^0.6.0"
 
-# vibevm is its own bootstrap project — the tool itself, not yet a
-# consumer of any other vibevm registry. The `[[registry]]` blocks
+# The specspaces flow — the host now dogfoods its own specspace grammar
+# instead of hand-inlining it in CLAUDE.md: the boot snippet (slot 11)
+# delivers RESUME/END SESSION target resolution and the SPECSPACES.md
+# registry. Resolves locally from packages/ (its transitive wal =0.2.0
+# pin is present there).
+"flow:org.vibevm.world/wal-specspaces" = "^0.1.0"
+
+# vibevm is its own bootstrap project — the tool itself, and now the first
+# consumer of a package it authors: flow:wal-specspaces above resolves from
+# the local packages/ tree; it is not yet a consumer of any remote vibevm
+# registry. The `[[registry]]` blocks
 # below are the same defaults `vibe init` writes for every new
 # project, kept here so `vibe check` / `vibe show config` can resolve
 # provenance against the same shape every other vibevm project uses.

@@ -7,7 +7,9 @@
 //! (matched here) and `rev:<spec-uri>` (needs specmap revisions —
 //! evaluation lands with Phase 1; reported as not-yet-evaluable).
 
-specmark::scope!("spec://org.vibevm.ai-native/core-ai-native/mechanisms/BROWNFIELD-PROTOCOL-v0.1#registries");
+specmark::scope!(
+    "spec://org.vibevm.ai-native/core-ai-native/mechanisms/BROWNFIELD-PROTOCOL-v0.1#registries"
+);
 
 use anyhow::{Context, Result};
 use serde::Deserialize;

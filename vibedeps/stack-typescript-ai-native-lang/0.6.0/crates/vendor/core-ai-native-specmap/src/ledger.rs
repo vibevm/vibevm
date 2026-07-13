@@ -17,7 +17,9 @@
 //! Local per checkout; never shipped, never signed, never exposed —
 //! `.ledger/` is git-ignored.
 
-specmark::scope!("spec://org.vibevm.ai-native/core-ai-native/mechanisms/LEDGER-INTENT-v0.1#classes");
+specmark::scope!(
+    "spec://org.vibevm.ai-native/core-ai-native/mechanisms/LEDGER-INTENT-v0.1#classes"
+);
 
 use std::path::{Path, PathBuf};
 

@@ -23,7 +23,9 @@ struct Tagged {
     value: u8,
 }
 
-#[spec(implements = "spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#addressing-code")]
+#[spec(
+    implements = "spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#addressing-code"
+)]
 #[spec(
     documents = "spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#addressing-spec",
     r = 1
@@ -63,7 +65,10 @@ mod inner {
 }
 
 #[test]
-#[verifies("spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#addressing-code", r = 1)]
+#[verifies(
+    "spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#addressing-code",
+    r = 1
+)]
 fn tags_are_inert() {
     let t = Tagged { value: 21 };
     assert_eq!(t.doubled(), 42);

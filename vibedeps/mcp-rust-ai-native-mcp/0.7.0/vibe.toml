@@ -1,10 +1,10 @@
 [package]
 name = "rust-ai-native-mcp"
-group = "org.vibevm"
+group = "org.vibevm.ai-native"
 kind = "mcp"
 version = "0.7.0"
 authors = ["Oleg Chirukhin"]
-license = "EULA"
+license = "UPL-1.0"
 description = "The AI-Native Rust discipline over MCP: every rust-ai-native command and the tcg type oracle as agent tools, served straight from the slot with no vibe in the runtime path"
 keywords = ["mcp", "rust", "ai-native", "discipline", "agent"]
 
