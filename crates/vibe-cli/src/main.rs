@@ -72,10 +72,20 @@ fn main() -> ExitCode {
         cli.unattended,
     );
 
+    // PROP-030: the embedded registry belongs to a source-*installed* `vibe` —
+    // one whose `current_exe` sits under a VVM install slot, so `derive_self`
+    // resolves it (`self_loc`). A `cargo run` binary or a test harness is not
+    // installed: it has no embedded registry and must NOT pick up the
+    // developer's `~/opt` one. Gate discovery on the running install and read
+    // its active record's source path through that install's own root. Shared
+    // by the install-family commands (install / update / reinstall).
+    let discover_embedded_root =
+        || -> Option<PathBuf> { commands::vvm::embedded_root_at(self_loc.as_ref()?.root.clone()) };
+
     let result = match cli.command {
         Command::Init(args) => commands::init::run(&ctx, args),
         Command::List(args) => commands::list::run(&ctx, args),
-        Command::Install(args) => commands::install::run(&ctx, args),
+        Command::Install(args) => commands::install::run(&ctx, args, discover_embedded_root()),
         Command::Outdated(args) => commands::outdated::run(&ctx, args),
         Command::Search(args) => {
             // The composition root reads the search command's
@@ -92,8 +102,8 @@ fn main() -> ExitCode {
         Command::Agentic(args) => commands::agentic::run(&ctx, args),
         Command::Drain(args) => commands::agentic::run_command(&ctx, args),
         Command::Uninstall(args) => commands::uninstall::run(&ctx, args),
-        Command::Update(args) => commands::update::run(&ctx, args),
-        Command::Reinstall(args) => commands::reinstall::run(&ctx, args),
+        Command::Update(args) => commands::update::run(&ctx, args, discover_embedded_root()),
+        Command::Reinstall(args) => commands::reinstall::run(&ctx, args, discover_embedded_root()),
         Command::Check(args) => commands::check::run(&ctx, args),
         Command::Show(args) => commands::show::run(&ctx, args),
         Command::Registry(args) => commands::registry::run(&ctx, args),

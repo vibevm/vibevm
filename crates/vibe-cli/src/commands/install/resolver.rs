@@ -11,8 +11,10 @@ use vibe_core::manifest::Manifest;
 use vibe_core::{Group, PackageRef};
 use vibe_install::InstallSource;
 use vibe_registry::{CachedPackage, LocalRegistry, MultiRegistryResolver, RegistryError};
+use vibe_resolver::EmbeddedPrecedence;
 
 use crate::cli::InstallArgs;
+use crate::registry::ProviderCell;
 
 /// Either a M0-shape local-directory registry (used by `--registry <path>`
 /// and the in-tree fixture path) or a full PROP-002 multi-registry
@@ -29,6 +31,16 @@ pub(crate) enum InstallResolver {
     // path-source maps), so an unboxed enum would bloat every
     // `InstallResolver` value to the size of the multi-registry path.
     Multi(Box<MultiRegistryResolver>, Option<&'static str>),
+    /// PROP-030: the embedded local-directory registry (a source install's
+    /// in-tree `packages/`) composed with an optional declared multi-registry
+    /// walk at the origin-selected precedence. `declared = None` is the
+    /// no-`[[registry]]` project where the embedded registry stands alone.
+    Embedded {
+        embedded: LocalRegistry,
+        declared: Option<Box<MultiRegistryResolver>>,
+        precedence: EmbeddedPrecedence,
+        solver: Option<&'static str>,
+    },
 }
 
 impl InstallSource for InstallResolver {
@@ -55,6 +67,46 @@ impl InstallSource for InstallResolver {
                 let resolution = m.resolve(pkgref)?;
                 m.fetch_with_expected_hash(&resolution, cache_root, expected_hash)
             }
+            InstallResolver::Embedded {
+                embedded,
+                declared,
+                precedence,
+                ..
+            } => {
+                let fetch_embedded = || -> Result<CachedPackage, RegistryError> {
+                    let resolved = embedded.resolve(pkgref)?;
+                    embedded.fetch(&resolved, cache_root)
+                };
+                let fetch_declared = || -> Result<CachedPackage, RegistryError> {
+                    match declared {
+                        Some(m) => {
+                            let resolution = m.resolve(pkgref)?;
+                            m.fetch_with_expected_hash(&resolution, cache_root, expected_hash)
+                        }
+                        None => {
+                            let group = pkgref.group.clone().ok_or_else(|| {
+                                RegistryError::UnqualifiedPkgref(pkgref.to_string())
+                            })?;
+                            Err(RegistryError::UnknownPackage {
+                                group,
+                                name: pkgref.name.to_string(),
+                            })
+                        }
+                    }
+                };
+                // Fetch in precedence order, falling through only a genuine
+                // "not here" (a real failure halts).
+                match precedence {
+                    EmbeddedPrecedence::EmbeddedFirst => match fetch_embedded() {
+                        Err(e) if is_registry_absent(&e) => fetch_declared(),
+                        other => other,
+                    },
+                    EmbeddedPrecedence::EmbeddedLast => match fetch_declared() {
+                        Err(e) if is_registry_absent(&e) => fetch_embedded(),
+                        other => other,
+                    },
+                }
+            }
         }
     }
 
@@ -64,13 +116,12 @@ impl InstallSource for InstallResolver {
     ) -> Result<vibe_resolver::ResolvedGraph, vibe_resolver::SolveError> {
         // Cell selection lives in the registry module (R-001); this
         // match only routes the resource the caller already owns.
-        let solver_override = match self {
-            InstallResolver::Local(_, s) | InstallResolver::Multi(_, s) => *s,
+        let (provider_cell, solver_override) = match self {
+            InstallResolver::Local(_, s) => (ProviderCell::Local, *s),
+            InstallResolver::Multi(_, s) => (ProviderCell::Multi, *s),
+            InstallResolver::Embedded { solver, .. } => (ProviderCell::Embedded, *solver),
         };
-        let flags = crate::registry::selection_flags(
-            matches!(self, InstallResolver::Local(..)),
-            solver_override,
-        );
+        let flags = crate::registry::selection_flags(provider_cell, solver_override);
         let solver = match self {
             InstallResolver::Local(r, _) => {
                 crate::registry::dep_solver(&flags, crate::registry::ProviderResource::Local(r))
@@ -78,6 +129,19 @@ impl InstallSource for InstallResolver {
             InstallResolver::Multi(m, _) => {
                 crate::registry::dep_solver(&flags, crate::registry::ProviderResource::Multi(m))
             }
+            InstallResolver::Embedded {
+                embedded,
+                declared,
+                precedence,
+                ..
+            } => crate::registry::dep_solver(
+                &flags,
+                crate::registry::ProviderResource::Embedded {
+                    embedded,
+                    declared: declared.as_deref(),
+                    precedence: *precedence,
+                },
+            ),
         };
         solver.solve(roots)
     }
@@ -105,6 +169,36 @@ impl InstallSource for InstallResolver {
                 let resolution = m.resolve(pkgref)?;
                 m.materialise_in_place(&resolution, slot)
             }
+            // In-place needs a git backend to clone and incrementally update;
+            // the embedded local-directory registry has none. Serve it from
+            // the declared walk when that carries the package, else refuse with
+            // the same InPlaceUnsupported a `--registry <dir>` install gives.
+            InstallResolver::Embedded { declared, .. } => match declared {
+                Some(m) => match m.resolve(pkgref) {
+                    Ok(resolution) => m.materialise_in_place(&resolution, slot),
+                    Err(e) if is_registry_absent(&e) => {
+                        let group = pkgref
+                            .group
+                            .clone()
+                            .ok_or_else(|| RegistryError::UnqualifiedPkgref(pkgref.to_string()))?;
+                        Err(RegistryError::InPlaceUnsupported {
+                            group,
+                            name: pkgref.name.to_string(),
+                        })
+                    }
+                    Err(e) => Err(e),
+                },
+                None => {
+                    let group = pkgref
+                        .group
+                        .clone()
+                        .ok_or_else(|| RegistryError::UnqualifiedPkgref(pkgref.to_string()))?;
+                    Err(RegistryError::InPlaceUnsupported {
+                        group,
+                        name: pkgref.name.to_string(),
+                    })
+                }
+            },
         }
     }
 }
@@ -121,6 +215,17 @@ impl InstallResolver {
         match self {
             InstallResolver::Local(r, _) => Ok(r.candidate_groups(name)?),
             InstallResolver::Multi(m, _) => Ok(m.resolve_name_candidates(name)),
+            InstallResolver::Embedded {
+                embedded, declared, ..
+            } => {
+                let mut groups = embedded.candidate_groups(name)?;
+                if let Some(m) = declared {
+                    groups.extend(m.resolve_name_candidates(name));
+                }
+                groups.sort_by(|a, b| a.as_str().cmp(b.as_str()));
+                groups.dedup();
+                Ok(groups)
+            }
         }
     }
 }
@@ -232,6 +337,29 @@ fn validate_solver(flag: Option<&str>) -> Result<Option<&'static str>> {
     }
 }
 
+/// The registry errors that mean "this source does not serve the
+/// coordinate" — the embedded/declared composition falls through these and
+/// halts on anything else (PROP-002 §2.3.1 fall-through set).
+fn is_registry_absent(err: &RegistryError) -> bool {
+    matches!(
+        err,
+        RegistryError::UnknownPackage { .. }
+            | RegistryError::NoMatchingVersion { .. }
+            | RegistryError::PackageNotFoundEverywhere { .. }
+    )
+}
+
+/// Open the declared multi-registry walk from the manifest — shared by the
+/// plain multi-registry path and the embedded composition.
+fn open_multi(manifest: &Manifest, args: &InstallArgs) -> Result<MultiRegistryResolver> {
+    Ok(
+        MultiRegistryResolver::open(&manifest.registries, &manifest.mirrors, &manifest.overrides)
+            .context("opening multi-registry resolver")?
+            .with_strict_auth(args.auth_required)
+            .with_git_packages(manifest.requires.git_packages.clone()),
+    )
+}
+
 /// Build the install resolver for this invocation.
 ///
 /// Precedence (matches `VIBEVM-SPEC.md` §9.1):
@@ -243,6 +371,7 @@ fn validate_solver(flag: Option<&str>) -> Result<Option<&'static str>> {
 pub(crate) fn build_install_resolver(
     args: &InstallArgs,
     manifest: &Manifest,
+    embedded_root: Option<&Path>,
 ) -> Result<InstallResolver> {
     let solver = validate_solver(args.solver.as_deref())?;
     if let Some(explicit) = &args.registry {
@@ -255,16 +384,39 @@ pub(crate) fn build_install_resolver(
         return Ok(InstallResolver::Local(local, solver));
     }
 
+    // PROP-030: a source-installed `vibe` exposes its in-tree `packages/` as an
+    // ambient embedded registry, composed with the declared walk at developer
+    // precedence (embedded-first). It also stands in for the walk entirely when
+    // the project declares no `[[registry]]`, lifting the bail below.
+    if let Some(root) = embedded_root {
+        let root = crate::commands::init::strip_unc_public(root.to_path_buf());
+        let embedded = crate::registry::local_registry(root.clone()).map_err(|e| {
+            anyhow!(
+                "failed to open the embedded registry at `{}`: {e}",
+                root.display()
+            )
+        })?;
+        let declared = if manifest.registries.is_empty() {
+            None
+        } else {
+            Some(Box::new(open_multi(manifest, args)?))
+        };
+        return Ok(InstallResolver::Embedded {
+            embedded,
+            declared,
+            precedence: EmbeddedPrecedence::EmbeddedFirst,
+            solver,
+        });
+    }
+
     if manifest.registries.is_empty() {
         bail!(
             "no registry configured. Pass `--registry <path>` or add a `[[registry]]` entry to `vibe.toml`."
         );
     }
 
-    let mrr =
-        MultiRegistryResolver::open(&manifest.registries, &manifest.mirrors, &manifest.overrides)
-            .context("opening multi-registry resolver")?
-            .with_strict_auth(args.auth_required)
-            .with_git_packages(manifest.requires.git_packages.clone());
-    Ok(InstallResolver::Multi(Box::new(mrr), solver))
+    Ok(InstallResolver::Multi(
+        Box::new(open_multi(manifest, args)?),
+        solver,
+    ))
 }

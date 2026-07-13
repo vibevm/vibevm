@@ -37,6 +37,7 @@ use error::VvmError;
 use model::{InstallRecord, State, VersionId};
 use store::VersionStore;
 
+pub(crate) use embedded::embedded_root_at;
 pub use selfloc::{derive_self, same_location};
 
 /// Env var naming the install base (defaults to the user's home dir); the

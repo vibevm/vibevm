@@ -17,10 +17,6 @@ use super::store::{StoreError, VersionStore};
 /// `packages/` directory. A `managed` / `binary` origin, a missing
 /// `source_path`, or an absent `packages/` all mean "no embedded registry"
 /// — the caller then falls back to the declared registries (§8).
-//
-// pub(crate) + unused until PROP-030 slice 3 wires it into
-// `build_install_resolver`; the `#[allow]` retires when that lands.
-#[allow(dead_code)]
 pub(crate) fn embedded_root_for(record: &InstallRecord) -> Option<PathBuf> {
     if record.origin != Origin::External {
         return None;
@@ -33,9 +29,18 @@ pub(crate) fn embedded_root_for(record: &InstallRecord) -> Option<PathBuf> {
 /// `current` pointer names), or `None` when no source install is active or
 /// its `packages/` is gone. This is the PROP-030 §7 discovery hook: reuse
 /// `VersionStore::active` rather than reading the environment.
-#[allow(dead_code)]
 pub(crate) fn active_embedded_root(store: &VersionStore) -> Result<Option<PathBuf>, StoreError> {
     Ok(store.active()?.as_ref().and_then(embedded_root_for))
+}
+
+/// Best-effort discovery for the composition root (`main.rs`): open a store at
+/// `root` and resolve the active install's embedded registry, treating a store
+/// read error as "no embedded registry" — a moved or unreadable install simply
+/// falls back to the declared registries (PROP-030 §8).
+pub(crate) fn embedded_root_at(root: PathBuf) -> Option<PathBuf> {
+    active_embedded_root(&VersionStore::new(root))
+        .ok()
+        .flatten()
 }
 
 #[cfg(test)]

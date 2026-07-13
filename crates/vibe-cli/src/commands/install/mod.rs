@@ -83,7 +83,7 @@ impl PlanObserver for CtxObserver<'_> {
     }
 }
 
-pub fn run(ctx: &output::Context, args: InstallArgs) -> Result<()> {
+pub fn run(ctx: &output::Context, args: InstallArgs, embedded_root: Option<PathBuf>) -> Result<()> {
     let project_root = resolve_project_root(&args.path)?;
     // PROP-011 §2.3 — the materialise-diff strategy, read once from the
     // user config so a malformed config fails before any resolution.
@@ -104,7 +104,7 @@ pub fn run(ctx: &output::Context, args: InstallArgs) -> Result<()> {
             .context("recording --git declaration to vibe.toml")?;
     }
 
-    let resolver = build_install_resolver(&args, &manifest)?;
+    let resolver = build_install_resolver(&args, &manifest, embedded_root.as_deref())?;
 
     // Parse the CLI pkgrefs and qualify short names at the input
     // boundary (PROP-008 §2.6) — manifests only ever store the

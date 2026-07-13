@@ -46,14 +46,18 @@ use crate::commands::install::build_install_resolver;
 use crate::exit_code::InstallError;
 use crate::output;
 
-pub fn run(ctx: &output::Context, args: ReinstallArgs) -> Result<()> {
+pub fn run(
+    ctx: &output::Context,
+    args: ReinstallArgs,
+    embedded_root: Option<PathBuf>,
+) -> Result<()> {
     let project_root = resolve_project_root(&args.path)?;
     let workspace = Workspace::discover(&project_root)
         .context("discovering the workspace enclosing the project")?;
     let lockfile = load_lockfile(&workspace.root)?;
 
     if args.force {
-        run_force(ctx, &workspace, &lockfile, &args)
+        run_force(ctx, &workspace, &lockfile, &args, embedded_root.as_deref())
     } else {
         run_regenerate(ctx, &workspace, &lockfile, &args)
     }
@@ -130,6 +134,7 @@ fn run_force(
     workspace: &Workspace,
     lockfile: &Lockfile,
     args: &ReinstallArgs,
+    embedded_root: Option<&Path>,
 ) -> Result<()> {
     // No locked packages — `--force` has nothing to re-fetch. Still
     // regenerate boot so a stale artifact is recomputed.
@@ -183,8 +188,9 @@ fn run_force(
 
     // The resolver is built from the workspace root manifest — registries,
     // mirrors, overrides, and git-source declarations are root-level.
-    let resolver = build_install_resolver(&resolver_args(), &workspace.root_manifest)
-        .context("building the install resolver")?;
+    let resolver =
+        build_install_resolver(&resolver_args(), &workspace.root_manifest, embedded_root)
+            .context("building the install resolver")?;
 
     // Bypass the cache — wipe the project package cache so every fetch
     // re-downloads from source (PROP-009 §2.10).

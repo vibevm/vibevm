@@ -50,11 +50,11 @@ struct PendingInPlace {
     dependencies: Vec<PackageRef>,
 }
 
-pub fn run(ctx: &output::Context, args: UpdateArgs) -> Result<()> {
+pub fn run(ctx: &output::Context, args: UpdateArgs, embedded_root: Option<PathBuf>) -> Result<()> {
     // No arguments / `--all`: re-resolve the whole graph. That is the
     // `vibe install` from-manifest path exactly, so delegate to it.
     if args.all || args.packages.is_empty() {
-        return super::install::run(ctx, install_args_from(&args));
+        return super::install::run(ctx, install_args_from(&args), embedded_root);
     }
 
     // Scoped update: only the named packages and their subtrees move.
@@ -114,7 +114,11 @@ pub fn run(ctx: &output::Context, args: UpdateArgs) -> Result<()> {
         )?);
     }
 
-    let resolver = build_install_resolver(&install_args_from(&args), &manifest)?;
+    let resolver = build_install_resolver(
+        &install_args_from(&args),
+        &manifest,
+        embedded_root.as_deref(),
+    )?;
 
     ctx.heading(&format!(
         "Re-resolving {} package{}…",

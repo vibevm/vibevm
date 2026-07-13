@@ -19,7 +19,8 @@ use vibe_publish::DirectGitCreator;
 use vibe_registry::{LocalRegistry, MultiRegistryResolver, RegistryError};
 use vibe_resolver::sat::Sat;
 use vibe_resolver::{
-    DepSolver, LocalRegistryProvider, MultiRegistryProvider, NaiveDepSolver, ResolvoDepSolver,
+    DepSolver, EmbeddedPrecedence, EmbeddedProvider, LocalRegistryProvider, MultiRegistryProvider,
+    NaiveDepSolver, ResolvoDepSolver,
 };
 
 /// Where a selected value came from. The full chain is
@@ -82,17 +83,35 @@ pub const FLAGS: &[FlagInfo] = &[
         name: "provider",
         default: "multi-registry",
         birth: "2026-06-10",
-        sunset: "none — the two provider cells are both permanent \
-                 (--registry <path> vs configured registries)",
+        sunset: "none — the three provider cells are all permanent \
+                 (--registry <path> vs configured registries vs the \
+                 embedded source-install registry, PROP-030)",
     },
 ];
 
 /// Interpret the parsed CLI state into selection flags. The only
 /// place flag values are decided.
 pub fn selection_flags(
-    registry_path_given: bool,
+    provider: ProviderCell,
     solver_override: Option<&'static str>,
 ) -> SelectionFlags {
+    let provider = match provider {
+        // `--registry <path>` is an explicit operator choice.
+        ProviderCell::Local => Selected {
+            value: "local-registry",
+            provenance: Provenance::Cli,
+        },
+        ProviderCell::Multi => Selected {
+            value: "multi-registry",
+            provenance: Provenance::BuiltIn,
+        },
+        // Ambient default derived from a source install (PROP-030); an
+        // explicit `--prefer-embedded` re-stamps this as Cli in a later slice.
+        ProviderCell::Embedded => Selected {
+            value: "embedded",
+            provenance: Provenance::BuiltIn,
+        },
+    };
     SelectionFlags {
         solver: Selected {
             value: solver_override.unwrap_or("resolvo"),
@@ -102,18 +121,19 @@ pub fn selection_flags(
                 Provenance::BuiltIn
             },
         },
-        provider: if registry_path_given {
-            Selected {
-                value: "local-registry",
-                provenance: Provenance::Cli,
-            }
-        } else {
-            Selected {
-                value: "multi-registry",
-                provenance: Provenance::BuiltIn,
-            }
-        },
+        provider,
     }
+}
+
+/// Which DepProvider cell an install invocation selected — decided by the
+/// resolver's shape at the composition root and read here (R-001) to stamp
+/// the `provider` flag. Separate from [`ProviderResource`] (which carries the
+/// borrowed registries) so the flag decision needs no lifetimes.
+#[derive(Debug, Clone, Copy)]
+pub enum ProviderCell {
+    Local,
+    Multi,
+    Embedded,
 }
 
 /// The provider resource matching the selected `provider` cell. The
@@ -122,6 +142,14 @@ pub fn selection_flags(
 pub enum ProviderResource<'a> {
     Local(&'a LocalRegistry),
     Multi(&'a MultiRegistryResolver),
+    /// PROP-030: the embedded local-directory registry, composed with an
+    /// optional declared multi-registry walk, at the origin-selected
+    /// precedence.
+    Embedded {
+        embedded: &'a LocalRegistry,
+        declared: Option<&'a MultiRegistryResolver>,
+        precedence: EmbeddedPrecedence,
+    },
 }
 
 /// Construct the `Registry/local` cell for `--registry <dir>` — the
@@ -171,6 +199,45 @@ pub fn dep_solver<'a>(
         ("sat", "multi-registry", ProviderResource::Multi(m)) => {
             Box::new(Sat::new(MultiRegistryProvider::new(m)))
         }
+        (
+            "resolvo",
+            "embedded",
+            ProviderResource::Embedded {
+                embedded,
+                declared,
+                precedence,
+            },
+        ) => Box::new(ResolvoDepSolver::new(EmbeddedProvider::new(
+            LocalRegistryProvider::new(embedded),
+            declared.map(MultiRegistryProvider::new),
+            precedence,
+        ))),
+        (
+            "naive",
+            "embedded",
+            ProviderResource::Embedded {
+                embedded,
+                declared,
+                precedence,
+            },
+        ) => Box::new(NaiveDepSolver::new(EmbeddedProvider::new(
+            LocalRegistryProvider::new(embedded),
+            declared.map(MultiRegistryProvider::new),
+            precedence,
+        ))),
+        (
+            "sat",
+            "embedded",
+            ProviderResource::Embedded {
+                embedded,
+                declared,
+                precedence,
+            },
+        ) => Box::new(Sat::new(EmbeddedProvider::new(
+            LocalRegistryProvider::new(embedded),
+            declared.map(MultiRegistryProvider::new),
+            precedence,
+        ))),
         (solver, provider, _) => unreachable!(
             "selection_flags is the only producer of flag values and never \
              emits solver `{solver}` / provider `{provider}` with a \
@@ -184,25 +251,29 @@ mod tests {
     use super::*;
 
     #[test]
-    fn provider_flag_follows_registry_path() {
-        let local = selection_flags(true, None);
+    fn provider_flag_follows_the_selected_cell() {
+        let local = selection_flags(ProviderCell::Local, None);
         assert_eq!(local.provider.value, "local-registry");
         assert_eq!(local.provider.provenance, Provenance::Cli);
 
-        let multi = selection_flags(false, None);
+        let multi = selection_flags(ProviderCell::Multi, None);
         assert_eq!(multi.provider.value, "multi-registry");
         assert_eq!(multi.provider.provenance, Provenance::BuiltIn);
         assert_eq!(multi.solver.value, "resolvo");
         assert_eq!(multi.solver.provenance, Provenance::BuiltIn);
+
+        let embedded = selection_flags(ProviderCell::Embedded, None);
+        assert_eq!(embedded.provider.value, "embedded");
+        assert_eq!(embedded.provider.provenance, Provenance::BuiltIn);
     }
 
     #[test]
     fn solver_override_carries_cli_provenance() {
-        let overridden = selection_flags(false, Some("naive"));
+        let overridden = selection_flags(ProviderCell::Multi, Some("naive"));
         assert_eq!(overridden.solver.value, "naive");
         assert_eq!(overridden.solver.provenance, Provenance::Cli);
 
-        let default = selection_flags(false, None);
+        let default = selection_flags(ProviderCell::Multi, None);
         assert_eq!(default.solver.value, "resolvo");
         assert_eq!(default.solver.provenance, Provenance::BuiltIn);
     }
