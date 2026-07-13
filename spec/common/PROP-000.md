@@ -125,44 +125,12 @@ vibevm's writer-conflict resolution — the **Human > Spec > Tests > Code** orde
 
 ## 12. Commit and push discipline {#commits}
 
-**Decision:** Four non-negotiable rules govern commits, pushes, and attribution in this repository. These rules appear **verbatim** in [`CLAUDE.md`](../../CLAUDE.md) (and the identical `AGENTS.md` / `GEMINI.md`) so they are the very first thing read at every session boot. They are reproduced here as the authoritative reference.
+The repository's commit-and-push discipline is the **git-practices** family (a host dependency), whose members carry the full text:
 
-### 12.1 Attribution — keep this repository human-authored
-
-Never attribute authorship of any part of this repository to an artificial-intelligence (AI) or neural-network–based system of any kind — no commit messages, no Git trailers (`Co-Authored-By`, `Signed-off-by: <model-name>`, etc.), no branch names, no worktree branch names, no code comments, no README lines, no release notes. This applies to every such system regardless of provider, model family, or whether it is local or cloud-hosted.
-
-**Why:** Some jurisdictions regulate or criminalize machine authorship of software. We are not currently subject to such regulation and are not violating any present law; the owner chooses this policy proactively so that any future regulation finds no hook on this project. The surface this repository presents is: a human wrote this code, full stop.
-
-This paragraph (and its copy in `CLAUDE.md` / `AGENTS.md` / `GEMINI.md`) is the **single** place in the entire project where AI tooling is discussed in the attribution sense. Everywhere else — commits, code, docs, branches, CI, signing — assume human authorship only. `VIBEVM-SPEC.md` discusses AI integration as a **feature of the vibevm product** (what the tool does); that is product scope, not authorship attribution, and is not covered by this rule.
-
-### 12.2 Conventional Commits {#conventional-commits}
-
-Every commit follows the [Conventional Commits](https://www.conventionalcommits.org/) specification. Format:
-
-```
-type(scope): short imperative subject line
-
-Longer body — anywhere from a sentence to a mini-article — explaining
-WHY this change was made and what follows from it. The diff already
-shows what changed; the commit message's job is to convey the reasoning
-and downstream consequences that a future reader cannot reconstruct
-from the diff alone.
-
-Cite `spec://…` URIs where relevant.
-```
-
-- Subject line short enough to render cleanly in web Git UIs (target ≤ 60 characters, hard limit 72).
-- Body free-form; prefer paragraphs over bullet lists when the reasoning is continuous.
-- `type` is the standard set: `feat`, `fix`, `chore`, `docs`, `build`, `test`, `refactor`, `perf`, `style`, `ci`, `revert`.
-- `scope` names the most affected crate, package, or subsystem (e.g. `core`, `install`, `wal`, `registry`, `spec`).
-
-### 12.3 Group commits by meaning {#grouping}
-
-When the working tree carries changes spanning multiple concerns, split them into separate commits grouped by topic — never by file name or time of edit. Each commit is one logical unit. A working set containing "fix typo in README" + "refactor the planner" + "update the manifest schema" is **three** commits.
-
-### 12.4 Autonomy on routine changes {#autonomy}
-
-Routine large changes — implementing a planned milestone, finishing a feature slice, touching many files for one coherent reason — may be committed and pushed without user approval, using rules 12.1–12.3. Ask the user first for anything non-routine: rewriting published history (rebase of pushed commits, `git commit --amend` on pushed work), `git push --force` / `--force-with-lease`, bringing in large binary blobs, changing CI or signing configuration, any operation whose reversal costs work. When uncertain, ask.
+- human-authored **attribution** — `spec://org.vibevm.world/attribution-policy/flows/attribution-policy/ATTRIBUTION-POLICY#root`;
+- the **Conventional Commits** message format — `spec://org.vibevm.world/conventional-commits/flows/conventional-commits/conventional-commits#root`;
+- **atomicity**, one commit = one logical idea — `spec://org.vibevm.world/atomic-commits/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL#root`;
+- commit **autonomy** — routine proceeds, and the red lines (history rewrites, force-push, large blobs, CI / signing / secrets) stop and ask — `spec://org.vibevm.world/autonomy/flows/autonomy/AUTONOMY-PROTOCOL#root`.
 
 ---
 
@@ -296,7 +264,7 @@ vibevm's setup docs are [`DEV-GUIDE.md`](../../DEV-GUIDE.md) (contributor / buil
 1. **Vocabulary lock.** Never use Maven's "lifecycle/phase/goal" or Bazel's internal terminology in user-facing or internal code. The installable kinds are `flow`, `feat`, `stack`, `tool`, `mcp` — the register grows only by owner amendment to `VIBEVM-SPEC.md` §4.1 (`app` is anticipated). The canonical process discipline vocabulary is the one in `VIBEVM-SPEC.md` §4 and the book.
 2. **`spec/` is fixed.** The directory name and role cannot be configured away in v1.
 3. **User-owned files are never written by `vibe`.** `spec/boot/00-core.md` and `spec/boot/90-user.md` are off-limits to install/uninstall/update.
-4. **One commit = one logical unit.** Commit messages follow Conventional Commits (see §12) and reference `spec://…` URIs where relevant.
+4. **One commit = one logical unit.** Commit messages follow the git-practices family (§12) and reference `spec://…` URIs where relevant.
 5. **Dogfood.** vibevm is being built using the same discipline it enforces. The `spec/` tree in this repo IS `vibe init`'s reference output.
-6. **Human authorship is the only attribution.** See §12.1. This is the only place in the project where AI tooling is discussed in the attribution sense.
+6. **Human authorship is the only attribution.** The posture is the `attribution-policy` flow (a git-practices member, §12); everywhere else assume human authorship only.
 7. **Tokens never appear in vibevm output.** See §20. Audited in unit tests; any new code path touching a `Token` or `RepoCreator` is reviewed for redaction and scope-escalation safety.
