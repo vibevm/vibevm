@@ -1,0 +1,53 @@
+# specmap.snapshot — the "before" graph (§4.3)
+
+Captured from a live `cargo xtask specmap` regen at branch `cultural-refactor`
+head `be7a92c` (host `8831a14`). The regenerated `specmap.json` was **reverted**
+(`git checkout -- specmap.json`) — the committed index stays at its parked,
+drifted baseline (CONTINUE: "specmap regen — regen when M1 lands"). The baseline
+that §4.9 gate 1 protects is the **fact set below**, not a committed file. A live
+regen reads the current tree, so before/after dangling comparisons are valid
+regardless of the committed json's staleness.
+
+## The graph (live regen)
+- **711** spec units · **589** tagged code items · **603** edges.
+
+## The dangling set — what gate 1 protects
+- **∅ — 0 suspects, 0 warnings.** The tree is internally consistent: every code
+  `#[spec]`/`#[verifies]`/`scope!` edge resolves (host `spec://vibevm/…` + the one
+  `[[external_specs]]` → `core-ai-native`). **Gate 1 = this stays 0.**
+
+## Known orphan — recorded so it does NOT count as "new"
+- `vibe_resolver::embedded_provider::EmbeddedPrecedence` (enum) at
+  `crates/vibe-resolver/src/embedded_provider.rs:18` — untagged `pub enum` from the
+  PROP-030 work. Ratchet: **1 gated orphan, 0 dispositioned, 4 crates exempt**
+  (vibe-graph, vibe-llm, vibe-wire, xtask). This is an *orphan* (untagged pub item),
+  NOT a dangling edge; it is pre-existing and in the baseline.
+
+## Pre-existing editorial drift — context only, NOT gated (parked)
+The committed `specmap.json` is stale vs the tree (the drift M1 would catch):
+- unbumped-hash (content changed, revision still r1) on 9 anchors:
+  `PROP-024#bootstrap`, `PROP-024#placement`, `PROP-002#registry-model`,
+  `PROP-008#collision`, `PROP-008#migration`, `PROP-008#pkgref`,
+  `PROP-008#repo-naming`, `PROP-008#short-name`, `PROP-007#path-source`.
+- vs committed json: units +98, edges +14/−8.
+This drift is orthogonal to dangling. It is NOT part of gate 1 and is not resolved
+here (respecting the park).
+
+## Gate-1 procedure (run per capsule, §4.9.1)
+1. **Primary (precise, cheap):** for every address the capsule moves, grep the code
+   for citers of the OLD address —
+   `grep -rEn '#\[spec|#\[verifies|scope!' crates/ xtask/ | grep '<old#anchor>'`
+   (or grep the raw old address). Every code citer must be retargeted to the new
+   address. Prose citers are handled via `prose-links.tsv` (gate 2).
+2. **Secondary (whole-graph):** run `cargo xtask specmap`; assert the summary is
+   still `… 0 suspects, 0 warnings` and the ratchet still reports **exactly** the
+   one known orphan (no NEW suspect/warning/orphan). Then `git checkout -- specmap.json`
+   to keep the committed index at its parked baseline.
+3. A growth in suspects/warnings, or a NEW orphan, = a severed edge → the capsule
+   fails gate 1; fix before committing.
+
+## Companion baseline files
+- `prose-links.tsv` — 121 `spec://` prose citations across 69 corpus files (gate 2:
+  no NEW broken prose link — every citation still resolves to an existing anchor).
+- `anchors.tsv` — 729 `{#anchor}` definitions across the corpus (the resolution
+  target set; a moved anchor keeps its `{#…}`, so its identity survives the move).
