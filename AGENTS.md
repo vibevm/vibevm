@@ -2,55 +2,14 @@
 
 Every session in this repository begins by reading this file, then every file in `spec/boot/` in filename order, then `spec/WAL.md`, then any relevant PROP/FEAT documents under `spec/common/` and `spec/modules/` for the task at hand. Only after that, start work.
 
-The four rules below are non-negotiable and apply to every session. Authoritative reference: [spec://vibevm/common/PROP-000#commits](spec/common/PROP-000.md#commits).
+The four non-negotiable commit-and-push rules of this repository are the `git-practices` family, a dependency of this project. In brief:
 
-## Rule 1 — Attribution: keep this repository human-authored
+- **Attribution — keep this repository human-authored.** Never mark any part of this repository as authored by an artificial-intelligence or neural-network system — no commit messages, no Git trailers (`Co-Authored-By`, `Signed-off-by: <model-name>`, etc.), no branch or worktree names, no code comments, no README lines, no release notes — regardless of provider, model family, or local vs cloud. The surface this repository presents is: a human wrote this code, full stop. This is the single place in the project where AI tooling is discussed in the attribution sense; `VIBEVM-SPEC.md`'s AI-integration text is product scope, not attribution.
+- **Conventional Commits.** `type(scope): subject` (target ≤ 60 chars, hard limit 72) with a body that explains *why*, not *what*.
+- **Atomicity — group commits by meaning.** One commit is one logical idea; split a mixed working tree by topic, never by file name or time of edit.
+- **Autonomy on routine changes only.** Routine large changes may be committed and pushed without first asking; anything non-routine — rewriting published history, `git push --force[-with-lease]`, large binary blobs, CI / signing / secrets changes, any operation whose reversal would cost work — stops and asks first. When uncertain, ask.
 
-Never attribute authorship of any part of this repository to an artificial-intelligence (AI) or neural-network–based system of any kind — no commit messages, no Git trailers (`Co-Authored-By`, `Signed-off-by: <model-name>`, etc.), no branch names, no worktree branch names, no code comments, no README lines, no release notes. This applies to every such system regardless of provider, model family, or whether it is local or cloud-hosted.
-
-**Why:** Some jurisdictions regulate or criminalize machine authorship of software. We are not currently subject to such regulation and are not violating any present law; the owner chooses this policy proactively so that any future regulation finds no hook on this project. The surface this repository presents is: a human wrote this code, full stop.
-
-**This paragraph (and its copy in [PROP-000 §12.1](spec/common/PROP-000.md#commits)) is the single place in the entire project where AI tooling is discussed in the attribution sense.** Everywhere else — commits, code, docs, branches, CI, signing — assume human authorship only. `VIBEVM-SPEC.md` discusses AI integration as a feature of the vibevm product (what the tool does for its users); that is product scope, not attribution, and is not covered by this rule.
-
-## Rule 2 — Conventional Commits
-
-Every commit follows the [Conventional Commits](https://www.conventionalcommits.org/) specification.
-
-```
-type(scope): short imperative subject line
-
-Longer body — a sentence, a paragraph, or a mini-article depending
-on how much reasoning the change carries. Explain WHY this change
-was made and what follows from it. The diff already shows what
-changed; the value of the commit message is the reasoning and the
-downstream consequences that a future reader cannot reconstruct
-from the diff alone.
-
-Cite `spec://…` URIs where relevant.
-```
-
-- Keep the subject short (target ≤ 60 characters, hard limit 72) so Git web UIs render it without truncation.
-- Body is free-form; prefer paragraphs over bullet lists when reasoning is continuous.
-- `type` is one of `feat`, `fix`, `chore`, `docs`, `build`, `test`, `refactor`, `perf`, `style`, `ci`, `revert`.
-- `scope` names the most affected crate, package, or subsystem (e.g. `core`, `install`, `wal`, `registry`, `spec`).
-
-## Rule 3 — Group commits by meaning
-
-When the working tree carries changes spanning multiple concerns, split them into separate commits grouped by topic — never by file name or time of edit. Each commit is one logical unit. A working set containing "fix typo in README" + "refactor the planner" + "update the manifest schema" is **three** commits, not one.
-
-## Rule 4 — Autonomy on routine changes only
-
-Routine large changes — implementing a planned milestone, finishing a feature slice, touching many files for one coherent reason — may be committed and pushed without first asking the user, using rules 1–3.
-
-Stop and ask the user first for anything **non-routine**:
-
-- rewriting published history (rebase of pushed commits, `git commit --amend` of pushed work),
-- `git push --force` or `--force-with-lease`,
-- bringing in large binary blobs,
-- changing CI, signing, or secrets configuration,
-- any operation whose reversal would cost work.
-
-When uncertain, ask.
+Authoritative record: [spec://vibevm/common/PROP-000#commits](spec/common/PROP-000.md#commits).
 
 ## Delegation-first — spend Claude on judgment, run execution on fractality
 
