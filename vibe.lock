@@ -1,6 +1,6 @@
 [meta]
 generated_by = "vibe 0.1.0-dev"
-generated_at = "2026-07-13T21:56:34Z"
+generated_at = "2026-07-13T22:34:51Z"
 schema_version = 5
 root_dependencies = [
     "stack:org.vibevm/rust-ai-native@^0.7.0",
@@ -10,6 +10,7 @@ root_dependencies = [
     "stack:org.vibevm.ai-native/typescript-ai-native@^0.6.0",
     "flow:org.vibevm.world/dev-runtime-docs@^0.1.0",
     "flow:org.vibevm.world/conflict-protocol@^0.1.0",
+    "flow:org.vibevm.world/git-practices@^0.1.0",
 ]
 
 [[package]]
@@ -30,6 +31,22 @@ version = "0.1.0"
 source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm.world/dev-runtime-docs/v0.1.0"
 content_hash = "sha256:08a8adbcc9c8514c0011f2913c0e0143f02f2e9e05b2cab1abd46a316f651297"
 files_written = []
+source_kind = "registry"
+
+[[package]]
+kind = "flow"
+name = "git-practices"
+group = "org.vibevm.world"
+version = "0.1.0"
+source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm.world/git-practices/v0.1.0"
+content_hash = "sha256:b7ecfe2b43d596698b42b1e81c5075c7c9ed2ec372588bd7d421dc5d0ae23dd4"
+files_written = []
+dependencies = [
+    "flow:org.vibevm.world/atomic-commits@=0.1.0",
+    "flow:org.vibevm.world/attribution-policy@=0.1.0",
+    "flow:org.vibevm.world/autonomy@=0.1.0",
+    "flow:org.vibevm.world/conventional-commits@=0.1.0",
+]
 source_kind = "registry"
 
 [[package]]
@@ -123,6 +140,46 @@ source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm.ai-native/t
 content_hash = "sha256:07520779d82e9d460993b55b2fa55faaef1f5bafb94ba2da36ce743d6ac74014"
 files_written = []
 dependencies = ["stack:org.vibevm.ai-native/typescript-ai-native-lang@=0.6.0"]
+source_kind = "registry"
+
+[[package]]
+kind = "flow"
+name = "atomic-commits"
+group = "org.vibevm.world"
+version = "0.1.0"
+source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm.world/atomic-commits/v0.1.0"
+content_hash = "sha256:49411d4ba6cc9b0fecd4888b82437d4ec11826183c951a5db4481caa4f095cf2"
+files_written = []
+source_kind = "registry"
+
+[[package]]
+kind = "flow"
+name = "attribution-policy"
+group = "org.vibevm.world"
+version = "0.1.0"
+source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm.world/attribution-policy/v0.1.0"
+content_hash = "sha256:59dcc9f3a4fcf6c2e581ea982afb2bf16c6f3ccac73b955d8bfd3789dfd02ada"
+files_written = []
+source_kind = "registry"
+
+[[package]]
+kind = "flow"
+name = "autonomy"
+group = "org.vibevm.world"
+version = "0.1.0"
+source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm.world/autonomy/v0.1.0"
+content_hash = "sha256:73e411e167e41032ec119ad50a31230422e5b1aab572bbba695afd546c78903e"
+files_written = []
+source_kind = "registry"
+
+[[package]]
+kind = "flow"
+name = "conventional-commits"
+group = "org.vibevm.world"
+version = "0.1.0"
+source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm.world/conventional-commits/v0.1.0"
+content_hash = "sha256:9e531661d185662a4d01c0e3e2a368ac6b55d6cc90a7dfd4ceec0eda8ff6c32d"
+files_written = []
 source_kind = "registry"
 
 [[package]]

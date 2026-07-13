@@ -1,0 +1,17 @@
+[package]
+name = "atomic-commits"
+group = "org.vibevm.world"
+kind = "flow"
+version = "0.1.0"
+authors = ["Oleg Chirukhin"]
+license = "UPL-1.0"
+description = "Atomic commits discipline: one commit = one logical idea — how to split a mixed working tree, when to batch, and why atomicity matters more in a human-AI team (the message FORMAT is the separate conventional-commits flow)"
+keywords = ["git", "commits", "atomicity", "discipline", "splitting"]
+
+[compatibility]
+min_vibe_version = "0.1.0"
+requires_kinds = []
+
+[boot_snippet]
+source = "boot/30-flow-atomic-commits.md"
+category = "flow"

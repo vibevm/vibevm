@@ -26,7 +26,23 @@ path = "vibedeps/stack-typescript-ai-native-lang/0.6.0/spec/boot/20-stack-typesc
 kind = "static"
 
 [[entry]]
+path = "vibedeps/flow-atomic-commits/0.1.0/boot/30-flow-atomic-commits.md"
+kind = "static"
+
+[[entry]]
+path = "vibedeps/flow-attribution-policy/0.1.0/spec/boot/55-flow-attribution-policy.md"
+kind = "static"
+
+[[entry]]
+path = "vibedeps/flow-autonomy/0.1.0/boot/32-flow-autonomy.md"
+kind = "static"
+
+[[entry]]
 path = "vibedeps/flow-conflict-protocol/0.1.0/spec/boot/35-flow-conflict-protocol.md"
+kind = "static"
+
+[[entry]]
+path = "vibedeps/flow-conventional-commits/0.1.0/boot/31-flow-conventional-commits.md"
 kind = "static"
 
 [[entry]]
