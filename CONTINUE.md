@@ -1,228 +1,97 @@
 # CONTINUE.md — cold-resume checkpoint
 
-_Written 2026-07-13, session close. A very large session: **MCP repair** (the
-discipline servers were down; root-caused, rebuilt, back up), the **fractality
-delegation rules were tightened** (runs are no longer "paid"; every non-trivial
-task now carries an out-loud delegation verdict; sessions announce their
-harness), a **`debug>release` slot-binary resolver** landed, the
-**persistent-worker gap was filed** (E-ENH-001), and — the headline —
-**PROP-030 (the embedded registry) was implemented end to end, 5/5 slices,
-each gate-green and pushed.** Everything is committed and PUSHED to both
-mirrors (head `92e0668`); tree clean; self-check green at close._
+_Written 2026-07-13, session close. A long **analytical / design session** — the owner framed it as conversation, **no product code**. Starting from the owner's big cultural-pattern extraction plan, we designed the entire **refactoring-engine program** and captured it as committed specs + plans. Nothing was executed; the design is **provisional**. Everything is committed on `main` (head `e6c818f`, **8 commits ahead of origin** at write time — see push status at the bottom); tree clean._
 
-> **`spec/WAL.md` is the canonical living state**; if this snapshot and the WAL
-> disagree, the WAL wins. The **git log is the authoritative per-item record.**
-> Boot first (`CLAUDE.md` → `spec/boot/INLINE.md` if present →
-> `spec/boot/INDEX.md` → its files → `spec/WAL.md`), then read this.
+> `spec/WAL.md` is the canonical living state; if this snapshot and the WAL disagree, the **WAL wins**. The **git log is the authoritative per-item record.** Boot first (`CLAUDE.md` → `spec/boot/INDEX.md` → its files → `spec/WAL.md`), then read this.
 
 ---
 
 ## TL;DR
 
-vibevm is a spec-driven package manager (`vibe` CLI, Rust workspace under
-`crates/`, packages under `packages/`). This session:
+This session designed vibevm's **refactoring engine** as a program and wrote its plans. The through-line: **refactoring is the largest and most expensive activity in AI-assisted development; making it algorithmic + gated is the highest-leverage investment** — it turns `O(files)` LLM file-walking into `O(decision)` tool calls (below even the cheap-model tier). **Nothing was implemented** — the design is **provisional input** to an OpenRewrite-research-driven redesign.
 
-1. **MCP repair.** `rust-ai-native` / `typescript-ai-native` discipline MCP
-   servers were down — `.mcp.json` pointed at `vibedeps/…/target/release/*.exe`
-   that a prior `vibe install` re-materialise had wiped. Rebuilt both release
-   binaries, smoke-passed, regenerated `.mcp.json` (byte-identical). User
-   reconnected via `/mcp`; **both servers are up** (their `mcp__*` tools live).
-2. **Fractality grant (A) — `944528e`.** Ledger "Free vs paid" flipped: fractality
-   runs are **pre-authorised, not paid** — do not ask before spawning. Rule 4 red
-   lines + never-delegate set still bind. Byte-identical across CLAUDE/AGENTS/GEMINI.
-3. **Persistent-worker gap (B) — `2aa6533`.** Investigated: fractality **cannot**
-   keep a warm worker across tasks (one run == one pod == one one-shot
-   `claude --print`). Filed `E-ENH-001` in the fractality specspace with cites +
-   hook points.
-4. **`debug>release` resolver (C) — `51c2d91`.** `DeclaredBinary::artifact()`
-   (`crates/vibe-workspace/src/bins.rs`) now resolves the slot binary
-   debug-first, release-fallback (was hard-coded release). Fixes the exact
-   MCP-down failure mode for the future; affects `.mcp.json` generation +
-   `vibe bin exec`.
-5. **Delegation rules (`e7e4598`).** Two boot-contract additions (CLAUDE/AGENTS/
-   GEMINI, identical): (a) **every non-trivial task must state its
-   parallelization/delegation verdict out loud before executing** (native
-   agent-spawn only under Claude Code; else fractality, fractality preferred);
-   (b) **announce the harness in the first response of every session**, cached
-   for the delegation analysis.
-6. **PROP-030 — the embedded registry: COMPLETE (5/5).** See below.
-
-## PROP-030 — embedded registry (the headline; DONE)
-
-**Goal (owner directive):** a source-**installed** `vibe` resolves its own
-in-tree `packages/` automatically for any project — no `--registry`, no
-`[[registry]]`. Spec: `spec/modules/vibe-registry/PROP-030-embedded-registry.md`.
-
-Five slices, each a separate commit, each full-self-check-green, all pushed:
-
-| slice | commit | content |
-|---|---|---|
-| 1 | `097c200` | **discovery** — `commands/vvm/embedded.rs`: from the active VVM install (`origin=external` + `source_path` + `<sp>/packages`) derive the embedded root |
-| 2 | `a06fa3d` | **`EmbeddedProvider`** — `vibe-resolver/src/embedded_provider.rs`: a combining `DepProvider`/`VersionEnumerator` cell; per-coordinate precedence (developer=embedded-first / distribution=embedded-last), `list_versions` unions, fetch serves precedence-first-that-has-it, absent falls through, real failure propagates |
-| 3 | `3eb7f80` | **`InstallResolver::Embedded` + R-001 seam** — `resolver.rs` variant + `InstallSource`; `registry.rs` `ProviderResource::Embedded` + 3 `dep_solver` arms + `ProviderCell`; `build_install_resolver` composes + lifts the empty-`[[registry]]` bail; discovery threaded through `main.rs` into install/update/reinstall (§7) |
-| 4 | `e5226af` | **reproducibility guard** — tag `CachedPackage.is_embedded` in the embedded fetch (→ `record.rs` writes `source_kind="embedded"`); CI-off (no embedded when `$CI` set); `vibe check` warns on `source_kind=embedded` lock entries |
-| 5 | `92e0668` | **flags + doctor** — `--prefer-embedded`/`--no-prefer-embedded`/`--no-default-registry` (+`VIBE_NO_DEFAULT_REGISTRY`), mutually-excl validated; `vibe self doctor` reports the embedded registry |
-
-**What now works:** source-installed `vibe install <pkg>` (no flags) auto-resolves
-in-tree `packages/`; developer precedence embedded-first; the negation + suppress
-flags + CI env behave; non-portable locks warn; a `cargo run`/test binary gets no
-embedded registry (gated on `self_loc`).
+**Start here next session:** `spec/terraforms/REFACTORING-ENGINE-META-PLAN-v0.1.md` — the program map that indexes everything below.
 
 ## Where work stands
+- **Branch `main`**, tree clean, **8 commits ahead of origin** at write time (see push status).
+- **No product code changed.** Eight design/plan docs committed (`782752c` → `e6c818f`).
+- **Nothing executed.** M1, the `EmbeddedPrecedence` orphan, and the specmap regen are **parked**.
 
-- **Branch `main`**, tree clean, **local == origin == github @ `92e0668`**
-  (pushed with `git push origin main` + `git push github main`).
-- **`self-check` all green (exit 0)** at close (ran per slice; 5× green).
-- **MCP discipline servers up** (`mcp__rust-ai-native__*`,
-  `mcp__typescript-ai-native__*` reconnected this session).
+## The design arc — the eight documents
 
-## Active blocker
+| Document | Role |
+|---|---|
+| `spec/common/PROP-032` | **the model** — universal typed graph (spec + code nodes, edges); agent-first IDE substrate; `code://` node (§2.3); three-tier packaging (§2.8) |
+| `spec/common/PROP-031` | **the mutations** — algorithmic refactoring / codemod engine; write-side of the model; typed commands, gated; three-tier stack; operation algebra |
+| `spec/common/PROP-033` | **the registry** — package-declared (`[[refactoring]]`), discovered, precompiled refactorings; three kinds (algo/llm/hybrid) |
+| PROP-014 *(grows in place)* | the code↔spec **projection** of the model; gains `code://` node + spec→spec / spec→code directions |
+| `spec/terraforms/SPECMAP-UNIT-MOBILITY-PLAN` | the **first operation's** execution plan (move units across package boundaries, gated) |
+| `spec/research/OPENREWRITE-RESEARCH-PLAN` | the **clean-room study** that precedes + informs everything |
+| `spec/terraforms/REFACTORING-ENGINE-META-PLAN` | **the program map** — start here |
+| `spec/terraforms/CULTURAL-EXTRACTION-PLAN` | the **executable bootstrap** (autonomous `/goal`) — the owner's original refactoring, hardened |
 
-**None.** The next major direction is a **VERY BIG REFACTORING** (owner-declared
-at session close; scope TBD — the owner defines it next session). The three
-PROP-030 follow-ups below are **deferred behind that refactoring** — do not start
-them until the refactoring lands (or the owner re-prioritises).
+## The key decisions (condensed; full list in the meta-plan §3)
+1. **The model is a symmetric typed graph** (spec ↔ code ↔ package); specmap is the read-side, refactoring the write-side of the *same* model.
+2. **Agent-first.** The IDE is a headless model+operations server; the agent emits typed commands over MCP; the GUI is the last, optional client.
+3. **Code is a first-class addressable node** — `code://<ns>/<id>`, minted on an item marker (per-language carrier), never external/location-based.
+4. **A refactoring is done only when the model re-checks clean** — atomic, deterministic, dry-run, gated.
+5. **Three-tier operation stack**; wrap permissive engines (rust-analyzer / ast-grep / ts-morph), never reimplement AST surgery.
+6. **Refactorings are package-declared, discovered, precompiled, cached** (the `INDEX.md`/`.mcp.json` pattern); three kinds under one gated interface.
+7. **Three-tier product model** — base vibevm / SDD substrate (`org.vibevm.world`) / ai-native discipline; dependency inverted (a legacy tree gets traceability + refactoring without conform).
+8. **Prose `spec://` links + spec→code become graph edges** (refactorable, not just gated).
+9. **PROP-014 grows in place** (owner decision).
+10. **Clean-room OpenRewrite study; iterative essential-first; a three-session firewall.**
+11. **The cultural refactoring does NOT delegate** (never-delegate set: architecture + merge judgment); boss-side, restart-on-overflow.
 
-## Backlog — deferred until AFTER the VERY BIG REFACTORING
+## Next — two independent tracks (either can go first)
+1. **Bootstrap (the original goal):** launch `spec/terraforms/CULTURAL-EXTRACTION-PLAN-v0.1.md` under `/goal`. Needs **only the existing specmap gate — no engine.** Boss-side, no swarm. It cleans + layers vibevm's own specs, and its `report.md` hands the engine build a concrete requirements list from doing every move by hand — resolving the chicken-and-egg.
+2. **Engine:** run `spec/research/OPENREWRITE-RESEARCH-PLAN-v0.1.md` in a **fresh clean session** (clean-room firewall) → redesign PROP-031/032/033 from the findings → implement essential-first (M1 → `rename-address` → `move-unit` → composition → search/find-fix).
 
-1. **Fractality test-expansion (earmarked delegation).** The PROP-030 flag /
-   composition logic (`build_install_resolver` branches: embedded-only lifts
-   bail; embedded+declared; `--no-default-registry` suppresses; mutual-excl bail;
-   precedence from `--no-prefer-embedded`) + the `InstallResolver::Embedded`
-   `InstallSource` behaviour (resolve_and_fetch precedence, candidate_groups
-   union, `is_embedded` tagging) are **compile-covered but have no dedicated unit
-   tests**. `EmbeddedProvider`'s brain IS tested (slice 2). These tests must be
-   **in-crate** (both types are `pub(crate)`). This is the clean fractality
-   `big`-worker task — give it a precise packet (exact file, test cases, the
-   `differential_oracle.rs` LocalRegistry fixture pattern, the `resolver_args()`
-   InstallArgs template, acceptance `cargo test -p vibe-cli`).
-2. **E2E verification (`/verify`).** `vibe self update` → `vibe install` in a
-   throwaway project **with no `--registry`** → prove embedded actually resolves
-   the in-tree `packages/`. The real proof beyond unit tests.
-3. **Resolution-output naming.** "resolved `X` from the embedded registry" in the
-   install pipeline's per-package emit (PROP-030 §6). Cosmetic; touches the
-   install pipeline output.
-
-## Next-steps recipe (for whoever picks up cold)
-
-1. **Boot + resume-report only** (do NOT auto-execute): `восстанови сессию`.
-2. The owner will define the **VERY BIG REFACTORING**. That is the next work.
-3. The three items above wait behind it. When the owner clears item 1, the
-   fractality packet is: add tests to `crates/vibe-cli/src/commands/install/
-   resolver.rs` (unit `mod tests`) — build `InstallArgs` via a `resolver_args()`-
-   style literal, a `Manifest` via `Manifest::parse_str`, an embedded
-   `LocalRegistry` via the `seed_local_package` shape
-   (`crates/vibe-resolver/tests/differential_oracle.rs:92`).
+## Parked (deferred; or handled as bootstrap Slice 0)
+- **M1** — wire `cargo xtask specmap --check` into `tools/self-check.sh` (the gate that catches severed spec↔code edges).
+- **The orphan** — `EmbeddedPrecedence` (`crates/vibe-resolver/src/embedded_provider.rs:18`), untagged `pub enum`; tag it to make specmap `--check` green.
+- **The specmap regen** — the host `specmap.json` is silently drifted (editorial + code-tag evolution); regen when M1 lands. (Reverted the in-progress regen this session to keep the tree clean.)
+- **Candidate tweak** — add a *stop-on-stuck-gate* rule to `CULTURAL-EXTRACTION-PLAN` §4.9 (offered, not applied).
 
 ## Non-obvious findings (this session)
+- The specmap engine **already** does cross-package resolution (`external_specs`), revisions/suspects, dangling detection — all tested. The gap is narrow: it's **not gated** (M1).
+- The host `specmap.json` was **silently drifted** — the proof that gating it (M1) is needed.
+- The specmap graph is **code→spec only**; prose `spec://` links are **not** edges → need a grep gate now, or the M5 "prose-as-edges" extension.
+- Cultural patterns are mostly **process** (commit discipline, WAL, delegation) with **few code edges** → the bootstrap's dominant safety is prose-links + boot-resolves + self-check, with specmap dangling-delta catching the `token.rs`-style cases.
+- `| tail` masks the real exit code (90-user.md quirk).
 
-- **Embedded discovery must gate on the RUNNING install, not the `current`
-  pointer.** PROP-030 §2 says "the record whose slot holds `current_exe`." First
-  cut used `store.active()` at a `~/opt` fallback root, so a **test binary**
-  (`current_exe` = `target/debug/deps/…`, not a VVM slot) picked up the
-  developer's real `~/opt` install → every `vibe install` in the test suite
-  silently resolved through the checkout's `packages/`, flipping git-source
-  installs' `source_kind` to `registry` (4 red tests). Fix: gate on
-  `self_loc.is_some()` (`derive_self(current_exe)`), so only a source-INSTALLED
-  vibe discovers embedded; `cargo run`/tests get `None`. (`main.rs` closure.)
-- **conform caught what a GLM worker would have missed** (validates keeping the
-  core boss-side): slice 2 tripped `no-unwrap-in-domain` (two `.expect()` →
-  `.unwrap_or_else` through the error enum) and `cell-has-oracle` (a `#[cell]`
-  needs an **integration** test driving it, not just unit tests of its free
-  functions — added `tests/embedded_provider.rs`).
-- **`is_embedded` tagging was the slice-3 gap that slice 4 closed.** The embedded
-  fetch returns a `LocalRegistry` `CachedPackage` with `is_embedded=false`; you
-  must set `cached.is_embedded = true` in the embedded arm so `record.rs` writes
-  `source_kind="embedded"` and the guard can key on it.
-- **Adding a field to a clap `Args` struct breaks its literal constructors.**
-  `InstallArgs` is built literally in `reinstall.rs::resolver_args()` and
-  `update.rs::install_args_from()` — new flags must be added there too.
-  `cargo check -p vibe-cli --all-targets` enumerates such sites (plain
-  `cargo build` misses tests).
-- **MCP-down root cause:** `vibe install` re-materialises `vibedeps/` from source
-  but does **not** rebuild `target/release/*.exe`, so the `.mcp.json` release
-  paths went missing while debug builds sat in `packages/…/target/debug/`. The
-  `vibevm` product server survived because it's a PATH command (`vibe`), not a
-  slot file.
-- **`vibe mcp install` builds nothing** (`install.rs` "Nothing is built here") —
-  regenerating `.mcp.json` with running servers is safe (no locked-exe rebuild).
-- **fractality has no warm worker** (E-ENH-001): one-shot `claude --print` per
-  run; `max_concurrent` is a slot limit, not a pool. So small per-task
-  delegations pay a full cold spawn — prefer inline for small work until the gap
-  closes.
-
-## Repository map (top level)
-
+## Repository map (the new + relevant)
 ```
-vibevm/
-├─ CLAUDE.md / AGENTS.md / GEMINI.md   boot contract (byte-identical): Rules 1–4,
-│                                       Delegation-first (fractality-not-paid grant,
-│                                       out-loud analysis + harness-announce rules)
-├─ SPECSPACES.md                       specspace registry (`default: host`; fractality row)
-├─ crates/                             the vibe product (Rust workspace)
-│   ├─ vibe-core/      manifest+lockfile (SourceKind::Embedded, LockedPackage.source_kind)
-│   ├─ vibe-registry/  registries+resolvers (CachedPackage.is_embedded; LocalRegistry M0)
-│   ├─ vibe-resolver/  DepProvider/solver seam; **embedded_provider.rs** (slice 2)
-│   ├─ vibe-install/   record.rs (is_embedded→source_kind=embedded), plan.rs
-│   ├─ vibe-check/     `vibe check` cells; lockfile_files.rs (embedded warn, slice 4)
-│   └─ vibe-cli/       install/{resolver.rs,mod.rs}, registry.rs (R-001 seam),
-│                      cli/pkg.rs (flags), commands/vvm/{mod.rs,embedded.rs}, main.rs
-├─ packages/
-│   ├─ org.vibevm.world/       redbook family + wal + wal-specspaces + the rest
-│   ├─ org.vibevm.ai-native/   discipline toolchain (rust 0.7 / ts 0.6 / core 0.7 + 2 MCP)
-│   └─ org.vibevm.fractality/  the fractality specspace (own contract/WAL); plans/external/E-ENH-001
-├─ spec/
-│   ├─ modules/vibe-registry/PROP-030-embedded-registry.md   ← the shipped feature's spec
-│   └─ WAL.md, boot/*
-└─ tools/self-check.sh   the gate (fmt → test → clippy → vibe check → conform → sync-engines → specmap)
+spec/
+├─ common/     PROP-031/032/033 — NEW, provisional (the engine design)
+├─ terraforms/ REFACTORING-ENGINE-META-PLAN (start here), SPECMAP-UNIT-MOBILITY-PLAN,
+│              CULTURAL-EXTRACTION-PLAN (the /goal bootstrap) — NEW
+├─ research/   OPENREWRITE-RESEARCH-PLAN — NEW (clean-room)
+└─ WAL.md, boot/*
+packages/org.vibevm.ai-native/core-ai-native/.../mechanisms/PROP-014  — the specmap engine + spec (grows in place)
+crates/vibe-resolver/src/embedded_provider.rs:18   — the parked orphan
+specmap.toml / specmap.json (repo root)            — the host traceability index (drifted; regen parked)
+tools/self-check.sh                                — the gate (M1 adds a specmap --check step)
 ```
-
-## Standing decisions in force
-
-- **Fractality runs are pre-authorised, not paid** (grant A, 2026-07-13): don't
-  ask before spawning; Rule 4 red lines + never-delegate set still bind.
-- **Out-loud delegation analysis** for every non-trivial task; **announce the
-  harness** in a session's first response (both in the boot contract now).
-- **PROP-030 precedence is origin-selected:** today only `external` (developer)
-  installs have an embedded registry → always embedded-first; `--no-prefer-embedded`
-  flips it; distribution/embedded-last awaits the future bundle feature (§3.2).
-- **Embedded discovery is gated on a source-INSTALLED vibe** (`self_loc`), never a
-  `cargo run`/test binary; CI (`$CI`) and `--no-default-registry` /
-  `VIBE_NO_DEFAULT_REGISTRY` suppress it.
-- **Rule 1 (attribution) absolute** — human-authored surface; no AI attribution.
-  Rules 2–4 unchanged.
-- **Machine quirks (this box):** edits via editor tools (PS 5.1 corrupts
-  UTF-8-no-BOM); commits via `git commit -F - <<'MSG'` heredoc; `self-check.sh`
-  through Git Bash, check the real exit code; never read/echo token files.
 
 ## Recent commit chain (newest first)
-
 ```
-92e0668 feat(cli): embedded-registry flags and the doctor line          (PROP-030 s5)
-e5226af feat(cli): guard the embedded registry against non-portable locks (PROP-030 s4)
-3eb7f80 feat(cli): resolve installs through the embedded registry        (PROP-030 s3)
-a06fa3d feat(resolver): compose embedded + declared registries by precedence (PROP-030 s2)
-097c200 feat(vvm): discover the embedded registry from the active install (PROP-030 s1)
-e7e4598 docs(delegation): mandate out-loud delegation analysis + harness announce
-51c2d91 feat(workspace): resolve slot binaries debug-first, else release
-2aa6533 docs(fractality): file E-ENH-001 — persistent worker request
-944528e docs(delegation): pre-authorise fractality runs (not paid)
-fdb3b27 docs(wal): session-end checkpoint — specspaces, URLs, tool/app, PROP-030   (prior session)
-92bb4f9 docs(continue): cold-resume checkpoint — specspaces, URL migration, PROP-030 (prior)
-2528a68 feat(core): add the embedded source_kind (PROP-030 scaffold)               (prior)
+e6c818f docs(terraform): cultural-extraction bootstrap plan (autonomous /goal)
+53ba94c docs(terraform): refactoring-engine meta-plan (the program map)
+6c27eea docs(research): OpenRewrite clean-room research plan
+39b78b9 docs(spec): refactoring registry (PROP-033) + three-tier packaging (PROP-032 §2.8)
+5d2c510 docs(terraform): SPECMAP unit-mobility plan under PROP-031/032
+037de30 docs(spec): PROP-031 - algorithmic refactoring, the codemod engine
+782752c docs(spec): PROP-032 - project model and agent-first IDE substrate
+d64276a docs(wal): session-end checkpoint — PROP-030 5/5, refactoring next   (prior session)
 ```
 
-## Quick-start (verify the tree)
-
+## Quick-start
 ```sh
-bash tools/self-check.sh; echo "EXIT=$?"    # must be 0
-
-git log --oneline -8                         # the PROP-030 chain above
-
-# PROP-030 surface:
-grep -n 'no_default_registry\|prefer_embedded' crates/vibe-cli/src/cli/pkg.rs
-sed -n '/InstallResolver::Embedded/p' crates/vibe-cli/src/commands/install/resolver.rs
+bash tools/self-check.sh; echo "EXIT=$?"                      # baseline (real exit code, not a | tail)
+sed -n '1,40p' spec/terraforms/REFACTORING-ENGINE-META-PLAN-v0.1.md   # the map — start here
+# Bootstrap track: launch CULTURAL-EXTRACTION-PLAN under /goal.
+# Engine track:    run OPENREWRITE-RESEARCH-PLAN in a fresh clean session.
 ```
 
-The WAL supersedes this snapshot wherever they diverge. Next session: **the owner
-defines the VERY BIG REFACTORING** — the three PROP-030 follow-ups wait behind it.
+The WAL supersedes this snapshot wherever they diverge. Next session: **read the meta-plan first**, then pick a track (bootstrap `/goal` or the OpenRewrite research).
