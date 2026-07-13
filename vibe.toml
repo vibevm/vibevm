@@ -25,9 +25,11 @@ authors = ["Oleg Chirukhin"]
 "flow:org.vibevm.world/conflict-protocol" = { version = "^0.1.0", link = "static" }
 
 # Commit-and-push discipline — the git-practices family (extracted from PROP-000
-# §12 + CLAUDE.md Rules 1–4). Pulls conventional-commits + atomic-commits +
-# autonomy + attribution-policy; their boot snippets deliver the disciplines.
-"flow:org.vibevm.world/git-practices" = { version = "^0.1.0", link = "static" }
+# §12 + CLAUDE.md Rules 1–4). An INLINE family: its members' boot snippets land
+# verbatim in spec/boot/INLINE.md (read first, max attention) — the four
+# non-negotiable rules keep guaranteed priority even though the text now lives
+# in the packages.
+"flow:org.vibevm.world/git-practices" = { version = "^0.1.0", link = "inline" }
 
 # vibevm is its own bootstrap project — the tool itself, and now the first
 # consumer of a package it authors: flow:wal-specspaces above resolves from

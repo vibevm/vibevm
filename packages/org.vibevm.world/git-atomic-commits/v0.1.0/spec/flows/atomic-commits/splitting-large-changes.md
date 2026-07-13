@@ -74,7 +74,7 @@ cruft.
 For each planned commit, use `git add -p` (patch mode) to stage
 exactly the hunks that belong to it. Then commit with the
 appropriate Conventional Commits message (the format is the
-`conventional-commits` flow: `spec://org.vibevm.world/conventional-commits/flows/conventional-commits/conventional-commits#root`).
+`conventional-commits` flow: `spec://org.vibevm.world/git-conventional-commits/flows/conventional-commits/conventional-commits#root`).
 
 ```
 git add -p                # stage retry-feature hunks

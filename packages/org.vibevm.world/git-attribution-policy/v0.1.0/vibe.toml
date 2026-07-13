@@ -1,5 +1,5 @@
 [package]
-name = "attribution-policy"
+name = "git-attribution-policy"
 group = "org.vibevm.world"
 kind = "flow"
 version = "0.1.0"
@@ -15,3 +15,5 @@ requires_kinds = []
 [boot_snippet]
 source = "spec/boot/55-flow-attribution-policy.md"
 category = "flow"
+# A non-negotiable commit rule (human-authored) — suggest the inline priority lane.
+link = "inline"

@@ -127,10 +127,10 @@ vibevm's writer-conflict resolution — the **Human > Spec > Tests > Code** orde
 
 The repository's commit-and-push discipline is the **git-practices** family (a host dependency), whose members carry the full text:
 
-- human-authored **attribution** — `spec://org.vibevm.world/attribution-policy/flows/attribution-policy/ATTRIBUTION-POLICY#root`;
-- the **Conventional Commits** message format — `spec://org.vibevm.world/conventional-commits/flows/conventional-commits/conventional-commits#root`;
-- **atomicity**, one commit = one logical idea — `spec://org.vibevm.world/atomic-commits/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL#root`;
-- commit **autonomy** — routine proceeds, and the red lines (history rewrites, force-push, large blobs, CI / signing / secrets) stop and ask — `spec://org.vibevm.world/autonomy/flows/autonomy/AUTONOMY-PROTOCOL#root`.
+- human-authored **attribution** — `spec://org.vibevm.world/git-attribution-policy/flows/attribution-policy/ATTRIBUTION-POLICY#root`;
+- the **Conventional Commits** message format — `spec://org.vibevm.world/git-conventional-commits/flows/conventional-commits/conventional-commits#root`;
+- **atomicity**, one commit = one logical idea — `spec://org.vibevm.world/git-atomic-commits/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL#root`;
+- commit **autonomy** — routine proceeds, and the red lines (history rewrites, force-push, large blobs, CI / signing / secrets) stop and ask — `spec://org.vibevm.world/git-autonomy/flows/autonomy/AUTONOMY-PROTOCOL#root`.
 
 ---
 

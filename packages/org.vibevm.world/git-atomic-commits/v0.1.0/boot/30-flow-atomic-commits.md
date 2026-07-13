@@ -15,7 +15,7 @@ fifteen files for one coherent reason is **one** commit, not fifteen.
 ## Message format
 
 Commit messages follow the **conventional-commits** flow — a sibling package:
-`spec://org.vibevm.world/conventional-commits/flows/conventional-commits/conventional-commits#root`.
+`spec://org.vibevm.world/git-conventional-commits/flows/conventional-commits/conventional-commits#root`.
 Conventional Commits is the *format*; this flow is the *atomicity* (one commit, one idea). The
 two are distinct and run together — a `feat: add foo, bar, baz` message is valid Conventional
 Commits and a violation of the atomic rule.
