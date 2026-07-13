@@ -45,6 +45,7 @@ use vibe_core::{Group, PackageRef, VersionSpec};
 
 pub mod activation;
 pub mod conditional;
+pub mod embedded_provider;
 pub mod features;
 pub mod fixpoint_model;
 pub mod local_registry_provider;
@@ -54,6 +55,7 @@ pub mod resolvo_engine;
 pub mod sat;
 
 pub use activation::{ActivationContext, ActivationOutcome, CapabilityTag, TagError};
+pub use embedded_provider::{EmbeddedPrecedence, EmbeddedProvider};
 pub use features::{
     FeatureError, FeatureExpansion, FeatureRequest, FeatureValue, expand_features,
     validate_features_table,
