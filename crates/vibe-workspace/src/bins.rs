@@ -96,7 +96,19 @@ pub struct DeclaredBinary {
 }
 
 impl DeclaredBinary {
-    /// The slot-resident release artifact (PROP-025 §3).
+    /// The bare artifact filename — `<name>.exe` on Windows, `<name>`
+    /// elsewhere.
+    fn artifact_file(&self) -> String {
+        if cfg!(windows) {
+            format!("{}.exe", self.decl.name)
+        } else {
+            self.decl.name.clone()
+        }
+    }
+
+    /// The slot-resident **release** artifact (PROP-025 §3) — where a
+    /// consent-gated `cargo build --release` lands, and the stable
+    /// fallback dispatch uses when no debug build is present.
     ///
     /// ```
     /// # use vibe_workspace::bins::DeclaredBinary;
@@ -111,17 +123,58 @@ impl DeclaredBinary {
     ///     group: "org.vibevm".into(),
     ///     slot: std::path::PathBuf::from("vibedeps/stack-typescript-ai-native-lang/0.4.0"),
     /// };
+    /// assert!(bin.release_artifact().to_string_lossy().contains("release"));
+    /// ```
+    pub fn release_artifact(&self) -> PathBuf {
+        self.slot
+            .join("target")
+            .join("release")
+            .join(self.artifact_file())
+    }
+
+    /// The slot-resident **debug** artifact — where a plain `cargo build`
+    /// (no `--release`) in the slot lands. Preferred over the release
+    /// build when it exists on disk (see [`Self::artifact`]).
+    pub fn debug_artifact(&self) -> PathBuf {
+        self.slot
+            .join("target")
+            .join("debug")
+            .join(self.artifact_file())
+    }
+
+    /// The artifact dispatch should launch: the **debug** build when one
+    /// exists in the slot, otherwise the **release** build. Debug wins so
+    /// an iterating developer who has run a plain `cargo build` in the
+    /// slot gets that fresh binary without a `--release` rebuild; release
+    /// is the stable fallback (and the only artifact `vibe` builds
+    /// itself). Both MCP-server registration and `vibe bin exec` resolve
+    /// through here, so the launched binary stays consistent across them.
+    ///
+    /// ```
+    /// # use vibe_workspace::bins::DeclaredBinary;
+    /// # use vibe_core::manifest::BinaryDecl;
+    /// let bin = DeclaredBinary {
+    ///     decl: BinaryDecl {
+    ///         name: "typescript-ai-native-tcg".into(),
+    ///         crate_dir: "crates/typescript-ai-native-tcg".into(),
+    ///         description: None,
+    ///     },
+    ///     package: "org.vibevm/typescript-ai-native-lang".into(),
+    ///     group: "org.vibevm".into(),
+    ///     slot: std::path::PathBuf::from("vibedeps/stack-typescript-ai-native-lang/0.4.0"),
+    /// };
+    /// // No build on disk at this synthetic slot → falls back to release.
     /// let artifact = bin.artifact();
     /// assert!(artifact.starts_with(&bin.slot));
     /// assert!(artifact.to_string_lossy().contains("release"));
     /// ```
     pub fn artifact(&self) -> PathBuf {
-        let file = if cfg!(windows) {
-            format!("{}.exe", self.decl.name)
+        let debug = self.debug_artifact();
+        if debug.exists() {
+            debug
         } else {
-            self.decl.name.clone()
-        };
-        self.slot.join("target").join("release").join(file)
+            self.release_artifact()
+        }
     }
 }
 
@@ -281,9 +334,9 @@ pub fn build_binary(bin: &DeclaredBinary, assume_yes: bool) -> Result<(), BinsEr
             name: bin.decl.name.clone(),
         });
     }
-    if !bin.artifact().exists() {
+    if !bin.release_artifact().exists() {
         return Err(BinsError::ArtifactMissing {
-            artifact: bin.artifact(),
+            artifact: bin.release_artifact(),
         });
     }
     Ok(())
@@ -353,7 +406,36 @@ crate = "crates/typescript-ai-native-tcg"
         assert_eq!(bins.len(), 1);
         assert_eq!(bins[0].decl.name, "typescript-ai-native-tcg");
         assert_eq!(bins[0].group, "org.vibevm");
+        // No build on disk in the fixture slot → dispatch resolves to the
+        // release path (the stable fallback).
         assert!(bins[0].artifact().to_string_lossy().contains("release"));
+    }
+
+    #[test]
+    fn artifact_prefers_debug_over_release() {
+        let dir = tempfile::tempdir().expect("tempdir");
+        let bin = DeclaredBinary {
+            decl: vibe_core::manifest::BinaryDecl {
+                name: "typescript-ai-native-tcg".into(),
+                crate_dir: "crates/typescript-ai-native-tcg".into(),
+                description: None,
+            },
+            package: "org.vibevm/typescript-ai-native-lang".into(),
+            group: "org.vibevm".into(),
+            slot: dir.path().to_path_buf(),
+        };
+        // Nothing built yet → dispatch falls back to the release path.
+        assert_eq!(bin.artifact(), bin.release_artifact());
+        // A plain `cargo build` (debug) in the slot wins over release.
+        let debug = bin.debug_artifact();
+        std::fs::create_dir_all(debug.parent().expect("debug parent")).expect("debug dir");
+        std::fs::write(&debug, b"stub").expect("debug artifact");
+        assert_eq!(bin.artifact(), debug);
+        // Debug still wins even once a release build also exists.
+        let release = bin.release_artifact();
+        std::fs::create_dir_all(release.parent().expect("release parent")).expect("release dir");
+        std::fs::write(&release, b"stub").expect("release artifact");
+        assert_eq!(bin.artifact(), bin.debug_artifact());
     }
 
     #[test]
