@@ -8,6 +8,7 @@
 specmark::scope!("spec://vibevm/common/PROP-019#surface");
 
 mod builder;
+mod embedded;
 mod env;
 mod error;
 mod git;
