@@ -32,7 +32,7 @@ category = "flow"
 "flow:org.vibevm.world/conflict-protocol" = "=0.1.0"
 "flow:org.vibevm.world/campaign-plans" = "=0.1.0"
 "flow:org.vibevm.world/discovery-prompt" = "=0.1.0"
-"flow:org.vibevm.world/attribution-policy" = "=0.1.0"
+# attribution-policy now arrives via git-practices (§12.1 human-authored)
 # The project-practice wave (edition 0.2.0)
 "flow:org.vibevm.world/operating-modes" = "=0.1.0"
 "flow:org.vibevm.world/health-audit" = "=0.1.0"
