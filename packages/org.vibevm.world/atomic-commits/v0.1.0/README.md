@@ -11,15 +11,13 @@ team they are load-bearing: the human's primary verification mechanism
 is reading the diff, and a commit that mixes three concerns across
 eight files is not verifiable in one pass.
 
-This package ships three pieces of content plus a boot snippet:
+This package ships the **atomicity** discipline (the message **format** is the separate
+`flow:conventional-commits` package):
 
 - `spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md` — full
   protocol: what an atomic commit is, why it matters more in a
   human-AI team than elsewhere, when to split, when to batch, and the
   rule that pushed history is frozen.
-- `spec/flows/atomic-commits/conventional-commits.md` — message
-  format: header shape, allowed types, scope convention, body
-  structure, worked examples, anti-patterns.
 - `spec/flows/atomic-commits/splitting-large-changes.md` — mechanical
   procedure for turning a messy working tree into a sequence of
   atomic commits using `git add -p`, including a prompt for

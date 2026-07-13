@@ -12,20 +12,13 @@ A session that produces (a) a typo fix, (b) a refactor, and (c) a
 schema update is **three** commits, not one. A feature that touches
 fifteen files for one coherent reason is **one** commit, not fifteen.
 
-## Format
+## Message format
 
-Every commit follows [Conventional Commits](https://www.conventionalcommits.org/):
-
-```
-type(scope): short imperative subject line
-
-Longer body explaining WHY this change was made and what follows from
-it. Cite spec://… URIs where relevant.
-```
-
-Subject ≤ 60 characters (hard limit 72). Body answers *why*, not *what*
-— the diff already shows what changed. Full format in
-[`spec/flows/atomic-commits/conventional-commits.md`](../flows/atomic-commits/conventional-commits.md).
+Commit messages follow the **conventional-commits** flow — a sibling package:
+`spec://org.vibevm.world/conventional-commits/flows/conventional-commits/conventional-commits#root`.
+Conventional Commits is the *format*; this flow is the *atomicity* (one commit, one idea). The
+two are distinct and run together — a `feat: add foo, bar, baz` message is valid Conventional
+Commits and a violation of the atomic rule.
 
 ## Session end
 

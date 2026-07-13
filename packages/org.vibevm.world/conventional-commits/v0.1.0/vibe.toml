@@ -1,0 +1,17 @@
+[package]
+name = "conventional-commits"
+group = "org.vibevm.world"
+kind = "flow"
+version = "0.1.0"
+authors = ["Oleg Chirukhin"]
+license = "UPL-1.0"
+description = "The Conventional Commits message format: a typed header (type(scope): subject), a why-not-what body, the allowed-type set, scope convention, worked examples, and anti-patterns"
+keywords = ["git", "commits", "conventional-commits", "message-format", "discipline"]
+
+[compatibility]
+min_vibe_version = "0.1.0"
+requires_kinds = []
+
+[boot_snippet]
+source = "boot/31-flow-conventional-commits.md"
+category = "flow"
