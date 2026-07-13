@@ -211,6 +211,7 @@ pub fn run(ctx: &output::Context, args: UpdateArgs) -> Result<()> {
             overridden: false,
             is_git_source: false,
             is_path_source: false,
+            is_embedded: false,
             via_redirect: None,
         };
         updated.push((cached, p.dependencies));

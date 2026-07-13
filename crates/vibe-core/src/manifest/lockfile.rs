@@ -205,6 +205,12 @@ pub enum SourceKind {
     /// typically a sibling workspace member. `source_url` then carries the
     /// path relative to the workspace root, not a URL. PROP-007 §2.5.
     Path,
+    /// Resolved from the source-linked embedded registry — the in-tree
+    /// `packages/` of a source-installed `vibe` (PROP-030). `source_url`
+    /// carries the `file://` path into that tree. The entry is
+    /// machine-local; the reproducibility guard (PROP-030 §5) keys on this
+    /// variant.
+    Embedded,
 }
 
 /// One installed package, as it appears in the lockfile.

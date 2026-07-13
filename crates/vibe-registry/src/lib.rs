@@ -185,6 +185,7 @@ pub struct ResolvedPackage {
 ///     overridden: false,
 ///     is_git_source: false,
 ///     is_path_source: false,
+///     is_embedded: false,
 ///     via_redirect: None,
 /// };
 /// assert_eq!(cached.package_meta().version.to_string(), "0.2.0");
@@ -240,6 +241,13 @@ pub struct CachedPackage {
     /// member's path relative to the workspace root — never a URL, never
     /// an absolute path.
     pub is_path_source: bool,
+
+    /// `true` iff this package was resolved from the source-linked
+    /// embedded registry (PROP-030) — the in-tree `packages/` of a
+    /// source-installed `vibe`. Mutually exclusive with `overridden`,
+    /// `is_git_source`, and `is_path_source`. Lockfile maps this to
+    /// `source_kind = "embedded"`, keying the reproducibility guard.
+    pub is_embedded: bool,
 
     /// When this package was resolved via a registry stub that
     /// redirected to an external URL (PROP-002 §2.4.2), the **stub**

@@ -229,6 +229,7 @@ impl LocalRegistry {
             overridden: false,
             is_git_source: false,
             is_path_source: false,
+            is_embedded: false,
             via_redirect: None,
         })
     }

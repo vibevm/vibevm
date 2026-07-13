@@ -174,6 +174,8 @@ pub(crate) fn locked_package_from_fetched(f: &Fetched, language: Option<&str>) -
         SourceKind::Path
     } else if c.is_git_source {
         SourceKind::Git
+    } else if c.is_embedded {
+        SourceKind::Embedded
     } else {
         SourceKind::Registry
     };

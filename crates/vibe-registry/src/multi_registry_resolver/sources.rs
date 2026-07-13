@@ -264,6 +264,7 @@ impl MultiRegistryResolver {
             overridden: false,
             is_git_source: true,
             is_path_source: false,
+            is_embedded: false,
             via_redirect: None,
         })
     }
@@ -332,6 +333,7 @@ impl MultiRegistryResolver {
             overridden: false,
             is_git_source: false,
             is_path_source: true,
+            is_embedded: false,
             via_redirect: None,
         })
     }
