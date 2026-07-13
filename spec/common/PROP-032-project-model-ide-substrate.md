@@ -85,6 +85,16 @@ Building GUI-first would invert the dependency — a graphical shell over an inc
 
 `req r1` — Because everything is one graph with minted addresses, the hard properties are **free**: a link to an address that resolves to no node is a **dangling** edge (the existing gate); a duplicate minted id is a **duplicate-address** warning (the existing `duplicate-anchor` machinery); a rename is a **`rename-address`** operation (PROP-031); a stale pin is a **suspect** (PROP-014 §2.2). This is the reason symmetry is *cheap once the node model generalises*: no new subsystem, only more node kinds and edge directions in the graph that already computes all of this.
 
+### 2.8 The substrate is a discipline-neutral, independently-installable tier {#packaging}
+
+`req r1` — The substrate (specmark + specmap-core + the refactoring operations and their registry, [PROP-033](spec://vibevm/common/PROP-033#root)) is packaged **independently of the ai-native discipline** and delivered as its own installable tier, so vibevm serves a spectrum of users through a **three-tier product model**:
+
+1. **Base vibevm** — the package manager itself (resolve / install / lockfile / boot; working with `vibe.toml` projects; loading spec collections). No traceability, no refactoring, no discipline. The "just load a collection of specs" user lives here.
+2. **+ the SDD substrate** (a package under `org.vibevm.world`, not `ai-native`) — installs specmark + specmap + the refactoring registry: the `spec://` / `code://` model, integrity checking, navigation, and the algorithmic refactoring core. Proper spec-driven development, **without** the strict discipline.
+3. **+ the ai-native discipline** (`rust-ai-native`, …) — the strict opt-in: conform, cards, cells, the nine scaffolds. It **depends on** tier 2, contributing its own refactorings to the registry; it never owns the substrate.
+
+The dependency runs `ai-native → SDD substrate → base vibevm` — a **dependency inversion** from today, where `rust-ai-native` owns specmap. A legacy tree that cannot adopt the discipline still gets tiers 1–2. This re-opens what the Traceability-Relocation plan §1 deferred, for the stronger reason of *product surface* (not cross-language DRY). The **center of each tier is its Rust library + its spec**, so agents work with it directly (§2.6); the CLI (`vibe refactor …`) and MCP are thin surfaces, never the center.
+
 ## 3. Layering — what this owns, versus PROP-014 and PROP-031 {#layering}
 
 `prop r1` — To avoid duplication (the one real overlap risk), the boundary is explicit:
