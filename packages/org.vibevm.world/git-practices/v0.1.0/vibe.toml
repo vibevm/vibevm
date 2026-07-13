@@ -19,3 +19,4 @@ requires_kinds = []
 [requires.packages]
 "flow:org.vibevm.world/conventional-commits" = "=0.1.0"
 "flow:org.vibevm.world/atomic-commits" = "=0.1.0"
+"flow:org.vibevm.world/autonomy" = "=0.1.0"
