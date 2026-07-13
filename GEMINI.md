@@ -220,7 +220,7 @@ Keep it current-state; prune stale lines.
   tail" split.
 - **License state (keep current):** our shipped surface is **fully UPL-1.0**. The
   canonical `packages/org.vibevm.*/**` (redbook family, discipline stack,
-  fractality, delegation-rules, wal-workspaces) were relicensed by MT-05 firing #2
+  fractality, delegation-rules, wal-specspaces) were relicensed by MT-05 firing #2
   (merges `893e314` / `79938ab`); the host root `LICENSE.md` was relicensed
   2026-07-12 (MT-05 run `01KXBEHEYJCQ1RNJ5657Q31HVA`; host crates inherit via
   `license-file.workspace`). The `"EULA"` strings that remain are all **off-limits
@@ -230,13 +230,12 @@ Keep it current-state; prune stale lines.
   `VIBEVM-SPEC.md` + specs (owner-frozen / historical mentions). Dogfood spec:
   `…/fractality/v0.1.0/spec/manual-tests/MT-05-dogfood-relicense.md`.
 
-## Workspaces — nested projects with their own WAL
+## Specspaces — nested projects with their own WAL
 
-This repository hosts **workspaces**: sub-projects registered in [`WORKSPACES.md`](WORKSPACES.md) that carry their own boot contract (`CLAUDE.md` at the workspace root), their own WAL, and their own `CONTINUE.md`, and are worked on as independent projects. Canon: `flow:org.vibevm.world/wal-workspaces` (authored under `packages/org.vibevm.world/`, like the rest of the redbook family).
+This repository can host **specspaces**: sub-projects registered in [`SPECSPACES.md`](SPECSPACES.md) that carry their own boot contract, WAL, and `CONTINUE.md`, worked on as independent projects. Canon (grammar, target resolution, the five laws) is the installed flow `flow:org.vibevm.world/wal-specspaces` — its snippet is slot 11 of `spec/boot/INDEX.md`, and the full protocol is `spec/flows/wal-specspaces/SPECSPACES-PROTOCOL.md` inside that package. This section is the signpost; two rules bind regardless:
 
-- A session-end or session-resume phrase carrying a workspace name — e.g. `восстанови сессию fractality` / `RESUME SESSION fractality`, `заверши сессию fractality` / `END SESSION fractality` — targets **that workspace**, not this host project. The same required behaviours apply (resume = restore, report, stop; wind-down = WAL + cold-resume + commits + push), but they operate on the workspace's own files.
-- **Workspace boot replaces the host boot.** A workspace session reads: Rules 1–4 above (repo-wide, they bind every commit), then the workspace's `CLAUDE.md` → its WAL → its `CONTINUE.md` → the active plan its WAL names. It does **not** read `spec/boot/`, `spec/WAL.md`, or host specs, and does not scan the host tree — unless the task explicitly crosses into the host project, and then it says so first.
-- A workspace wind-down also refreshes that workspace's one-line status in `WORKSPACES.md`. The host WAL is updated only if host files changed in the same session.
+- **Target resolution.** A **bare** session phrase (`восстанови сессию` / `RESUME SESSION` with no name) targets the `default:` declared in `SPECSPACES.md` if one is set, and otherwise **this host project** — never a specspace by accident. Name a specspace (`восстанови сессию fractality` / `RESUME SESSION fractality`, `заверши сессию fractality` / `END SESSION fractality`) to target it; an explicit name or directory always overrides the default. Registered today: `fractality` (`packages/org.vibevm.fractality/`).
+- **Boot scoping.** A specspace session reads the host's Rules 1–4 above (repo-wide, they bind every commit) plus the specspace's own boot contract → its WAL → its `CONTINUE.md` → the active plan its WAL names. It does **not** read the host `spec/boot/`, `spec/WAL.md`, or host specs, and does not scan the host tree — unless the task explicitly crosses into the host project, and then it says so first. A specspace wind-down refreshes that specspace's one-line status in `SPECSPACES.md`; the host WAL is updated only if host files changed in the same session.
 
 ## Memory discipline: project facts stay in the project
 

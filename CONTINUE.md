@@ -42,7 +42,7 @@ and finished by the boss. All green, all pushed.
     `typescript-ai-native{,-lang,-mcp}`.
   - `packages/org.vibevm.world/` — everything else: the redbook family
     (`wal`, `redbook`, `sync-from-code`, `atomic-commits`, `addressable-specs`,
-    … ~23 packages) + `wal-workspaces`.
+    … ~23 packages) + `wal-specspaces`.
   - `packages/org.vibevm.fractality/` — the fractality workspace (its own
     contract/WAL; a separate product incubated here).
   - Bare `org.vibevm` is now **fixture-only** — the test registry
@@ -137,7 +137,7 @@ vibevm/
 ├─ packages/
 │   ├─ org.vibevm.ai-native/   discipline toolchain (conform/specmap/specmark;
 │   │                          rust 0.7.0 / ts 0.6.0 / core 0.7.0; two MCP servers)
-│   ├─ org.vibevm.world/        redbook family + wal + wal-workspaces + the rest
+│   ├─ org.vibevm.world/        redbook family + wal + wal-specspaces + the rest
 │   └─ org.vibevm.fractality/   the fractality workspace (own contract/WAL) +
 │                               fractality.ps1 / .sh launchers
 ├─ fixtures/registry/org.vibevm/   the hermetic TEST registry (fixture-only group):
