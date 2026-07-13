@@ -10,6 +10,18 @@
 schema = 1
 
 [[entry]]
+path = "spec/boot/75-tool-fractality.md"
+kind = "static"
+
+[[entry]]
+path = "vibedeps/flow-core-ai-native/0.7.0/spec/boot/10-flow-core-ai-native.md"
+kind = "static"
+
+[[entry]]
+path = "vibedeps/stack-rust-ai-native-lang/0.7.0/spec/boot/20-stack-rust-ai-native-lang.md"
+kind = "static"
+
+[[entry]]
 path = "vibedeps/flow-addressable-specs/0.1.0/spec/boot/15-flow-addressable-specs.md"
 kind = "static"
 
@@ -31,10 +43,6 @@ kind = "static"
 
 [[entry]]
 path = "vibedeps/flow-conflict-protocol/0.1.0/spec/boot/35-flow-conflict-protocol.md"
-kind = "static"
-
-[[entry]]
-path = "vibedeps/flow-core-ai-native/0.7.0/spec/boot/10-flow-core-ai-native.md"
 kind = "static"
 
 [[entry]]
@@ -70,10 +78,6 @@ path = "vibedeps/flow-qualified-naming/0.1.0/spec/boot/67-flow-qualified-naming.
 kind = "static"
 
 [[entry]]
-path = "vibedeps/stack-rust-ai-native-lang/0.7.0/spec/boot/20-stack-rust-ai-native-lang.md"
-kind = "static"
-
-[[entry]]
 path = "vibedeps/flow-secrets-hygiene/0.1.0/spec/boot/57-flow-secrets-hygiene.md"
 kind = "static"
 
@@ -103,4 +107,8 @@ kind = "static"
 
 [[entry]]
 path = "vibedeps/flow-redbook/0.2.0/spec/boot/03-flow-redbook.md"
+kind = "static"
+
+[[entry]]
+path = "vibedeps/flow-wal-specspaces/0.1.0/spec/boot/11-flow-wal-specspaces.md"
 kind = "static"
