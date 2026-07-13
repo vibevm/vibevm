@@ -1,17 +1,18 @@
 # CONTINUE.md — cold-resume checkpoint
 
-_Written 2026-07-13, session close. This session did three linked things:
-the **`org.vibevm` → `org.vibevm.ai-native` / `org.vibevm.world` group
-restructure**, the **PROP-029 fully-qualified-address invariant** (so package
-addresses can be refactored by an algorithm, not an LLM), and the **`wal`
-name-collision kill** — the last of which was the **first real host-side
-fractality delegation** (a cheap GLM worker did the ~40-edit test migration;
-the boss reviewed and finished). Everything is committed and PUSHED to both
-mirrors (`5fb38c5`); the tree is clean; self-check was green at close._
+_Written 2026-07-13, session close. A long, multi-feature session: the vibevm
+**source repo migrated to `vibevm/vibevm`** on both hosts; the **`wal-workspaces`
+flow was renamed to `wal-specspaces`** ("specspace" everywhere) with a
+**default-resume bug fix** and a **host dogfood** of the flow; **`tool`/`app`
+boot categories** were added (unblocking the fractality install); **all repo
+URLs** were repointed to the new org; **`vibe self update`** activated the
+in-tree build; and **PROP-030 (the embedded registry)** was designed and its
+lockfile scaffold landed. Everything is committed and PUSHED to both mirrors
+(head `2528a68`); tree clean; self-check green at close._
 
-> **`spec/WAL.md` is the canonical living state**; if this snapshot and the
-> WAL disagree, the WAL wins. The **git log is the authoritative per-item
-> record.** Boot first (`CLAUDE.md` → `spec/boot/INLINE.md` if present →
+> **`spec/WAL.md` is the canonical living state**; if this snapshot and the WAL
+> disagree, the WAL wins. The **git log is the authoritative per-item record.**
+> Boot first (`CLAUDE.md` → `spec/boot/INLINE.md` if present →
 > `spec/boot/INDEX.md` → its files → `spec/WAL.md`), then read this.
 
 ---
@@ -19,217 +20,209 @@ mirrors (`5fb38c5`); the tree is clean; self-check was green at close._
 ## TL;DR
 
 vibevm is a spec-driven package manager (`vibe` CLI, Rust workspace under
-`crates/`, packages under `packages/`). This session made package addresses
-**mechanically refactorable** and removed the one thing that blocked that: a
-duplicated package name. `org.vibevm` was a junk-drawer group; it split into
-`org.vibevm.ai-native` (the discipline toolchain) and `org.vibevm.world`
-(the redbook family + everything else). Every address was rewritten to its
-full `(group, name)` coordinate under **one invariant — the group↔name joiner
-is never `.`**: `/` where a path exists (pkgrefs, `spec://`), `_` where a flat
-token is required (repo names). Then the `wal` fixture that duplicated the real
-`org.vibevm.world/wal` package name was deleted and its tests migrated to
-dogfood the real package — the migration delegated to a GLM worker, reviewed
-and finished by the boss. All green, all pushed.
+`crates/`, packages under `packages/`). This session did six linked things,
+all committed + pushed to `vibevm/vibevm` on GitVerse **and** GitHub:
+
+1. **Remote migration.** `origin`+`github` repointed to `git@gitverse.ru:vibevm/vibevm.git`
+   and `git@github.com:vibevm/vibevm.git` (one org, `vibevm`, on both hosts).
+2. **Specspaces.** The nested-project-WAL flow `wal-workspaces` → **`wal-specspaces`**;
+   `WORKSPACES.md` → `SPECSPACES.md`; the term "workspace"→"specspace" on the
+   live surface. Plus the **default-resume fix** and a **host dogfood**.
+3. **`tool`/`app` boot categories** — the vibe `BootCategory` enum gained them,
+   so the fractality manifest (`category = "tool"`) parses; fractality then
+   materialised `wal-specspaces`.
+4. **URL migration** — every `anarchic/vibevm` / `anarchic-pro/vibevm` → `vibevm/vibevm`
+   (grep-zero), `mirrors.toml` now targets the two current repos; `vibespecs`
+   (the package registry, a *separate* repo) deliberately untouched.
+5. **`vibe self update`** — rebuilt the in-tree vibe and activated it (instance 9);
+   the PATH shim `~/opt/bin/vibe` is now current.
+6. **PROP-030 embedded registry** — DESIGN committed; lockfile SCAFFOLD landed;
+   the resolver core is the **next session's job** (see below).
 
 ## Where work stands
 
-- **Branch `main`**, tree clean, **local == origin == github @ `5fb38c5`**
-  (`cargo xtask mirror` synced both — routine per Rule 4).
+- **Branch `main`**, tree clean, **local == origin == github @ `2528a68`**
+  (pushed directly with `git push origin main` + `git push github main` — NOT
+  `cargo xtask mirror`; see finding below).
 - **`self-check` all green (exit 0)** at close.
-- **Two real top-level groups** now hold every package:
-  - `packages/org.vibevm.ai-native/` — the discipline toolchain:
-    `core-ai-native`, `rust-ai-native{,-lang,-mcp}`,
-    `typescript-ai-native{,-lang,-mcp}`.
-  - `packages/org.vibevm.world/` — everything else: the redbook family
-    (`wal`, `redbook`, `sync-from-code`, `atomic-commits`, `addressable-specs`,
-    … ~23 packages) + `wal-specspaces`.
-  - `packages/org.vibevm.fractality/` — the fractality workspace (its own
-    contract/WAL; a separate product incubated here).
-  - Bare `org.vibevm` is now **fixture-only** — the test registry
-    (`fixtures/registry/org.vibevm/…`) uses it; no real package does.
-- **PROP-029 is in force** (`spec/common/PROP-029-fully-qualified-addresses.md`):
-  every on-disk address is fully qualified; the joiner is never `.`.
-- **The `wal` collision is fully killed** — see the four commits below.
-  `name = "wal"` is now single-valued among real packages.
+- **vibe self-updated:** `vibe self current` → `branch:main #9`; the working-tree
+  build is active on PATH.
 
 ## Active blocker
 
-**None.** Everything is complete, verified, and mirrored; the tree is clean.
-The remaining items are owner-court (a remote-repo cleanup the boss must not
-do itself, and cosmetics) — nothing is blocked or half-done.
+**None.** The one thing to know before working: the **AI-Native discipline MCP
+servers were killed this session** (`rust-ai-native-mcp.exe`,
+`typescript-ai-native-mcp.exe`) to let `vibe install` re-materialise `vibedeps/`
+(they were holding those files). Their tools (`mcp__rust-ai-native__*`,
+`mcp__typescript-ai-native__*`) are **disconnected** — **restart Claude Code**
+to restore them. Nothing is broken; they just need respawning.
 
-## Open items (owner-court — none is a standing mandate)
+## Next session — the recipe: finish PROP-030 (the embedded registry)
 
-1. **Delete the stale published trio** on `github.com/vibespecs` + GitVerse:
-   `org.vibevm.wal`, `org.vibevm.sync-from-code`, `org.vibevm.atomic-commits`.
-   The owner stated they have no users and are disposable; local packages moved
-   to `org.vibevm.world`, so republish under the new group at public release.
-   **Owner-side** (web UI / token) — the boss does not touch remote repos.
-2. **Cosmetic — golden dir name.** `crates/vibe-index/fixtures/golden-flow-wal-0.1.0/`
-   still carries "wal" as a *filesystem label*; the package identity inside is
-   already `com.example/golden-pkg` (de-collided). Rename the dir for full
-   de-wal if wanted: `git mv` + update two path refs (`content_hash_parity.rs`
-   `.join(...)` and `manifest.rs` `include_bytes!(...)`).
-3. **`VIBEVM-SPEC.md:939`** has one owner-frozen `org.vibevm.wal.git` occurrence
-   in a naming example — owner's to update (it was left frozen; §11/§13 wal
-   claims WERE updated this session under the owner's explicit un-freeze).
-4. **Pre-existing product open items** (carried from prior campaigns; WAL has
-   the detail): registry publish of the discipline families (rust **0.7.0** /
-   ts **0.6.0** / core **0.7.0** / the two `-mcp`); a TS-STACK step in
-   `tools/self-check.sh`; colon-free fact-store slot names (today
-   `sha256:<hex>.json` lands as an NTFS alternate data stream);
-   `vibe install --refresh` ergonomics; the `app` kind; Stage-B delivery
-   experiments; vibe-mcp rebase onto mcp-core; PROP-025 v2 shims.
+**Goal (owner directive):** when `vibe` is installed from a source tree, the
+in-tree `packages/` resolves automatically for any project — no `--registry`,
+no `[[registry]]` edit. Full design: `spec/modules/vibe-registry/PROP-030-embedded-registry.md`.
+The lockfile scaffold is already in (`2528a68`): `SourceKind::Embedded`
+(`crates/vibe-core/src/manifest/lockfile.rs`), `CachedPackage.is_embedded`
+(`crates/vibe-registry/src/lib.rs`), and the tagging branch in
+`crates/vibe-install/src/record.rs`. It is inert until the resolver wires it.
+
+**Remaining (the resolver core — build in verified slices, self-check each):**
+
+1. **`EmbeddedProvider`** in `crates/vibe-resolver/` (beside
+   `local_registry_provider.rs` / `multi_registry_provider.rs`): a `DepProvider`
+   + `VersionEnumerator` that wraps an embedded `LocalRegistryProvider` + an
+   optional `MultiRegistryProvider`, delegating **per-coordinate** with
+   embedded-first (developer) or embedded-last (distribution). It goes through
+   the R-001 seam (`#[cell(seam="DepProvider", …)]`) → **specmap registration +
+   conform** apply (this is the discipline-machinery layer that makes this
+   bigger than a plain 4-crate change).
+2. **`ProviderResource::Embedded` + `InstallResolver::Embedded`**
+   (`crates/vibe-cli/src/registry.rs` + `commands/install/resolver.rs`) + the
+   `dep_solver` cases; implement `InstallSource` (resolve_and_fetch sets
+   `is_embedded = true`; solve via the combining provider; materialise_in_place
+   errors — a `LocalRegistry` has no git backend; candidate_groups unions both).
+3. **Discovery** in `build_install_resolver`: read the active VVM install via
+   the `VersionStore` (`crates/vibe-cli/src/commands/vvm/store.rs`, `store.active()`
+   → `source_path` + `origin`); if `origin = "external"` and `<source_path>/packages`
+   exists, compose the embedded registry at the origin-selected precedence; lift
+   the empty-`[[registry]]` bail.
+4. **Guard + control:** `--frozen`/CI-off (drop embedded); `vibe check` warning on
+   `source_kind=embedded` lock entries; flags `--prefer-embedded` /
+   `--no-default-registry` (+ `VIBE_NO_DEFAULT_REGISTRY`); `vibe doctor` line.
+5. **Tests** across the combining provider + discovery; `bash tools/self-check.sh`
+   = 0 (mind conform/specmap for the new cell).
+
+Task **#11** in the task list carries this same checklist.
 
 ## Non-obvious findings (this session)
 
-- **The joiner invariant is the whole game for mechanical refactoring.** A dot
-  is ambiguous because groups are dotted reverse-DNS (`org.vibevm.world.wal`
-  can't be split without a resolver). `/` (path surfaces) and `_` (flat repo
-  names) are each a character in **neither** the group `[a-z0-9.-]` **nor** the
-  name `[a-z0-9-]`, so an algorithm splits the coordinate deterministically.
-  `spec://` needed no grammar change — resolution is full-URI-string exact
-  match; the authority text only *constructs* unit URIs.
-- **There are TWO fqdn repo-name renders**, and they must stay in lockstep:
-  `crates/vibe-core/src/manifest/project.rs` (`NamingConvention::Fqdn`) and the
-  parallel port in `crates/vibe-index/src/types/kinds.rs`. The underscore
-  change had to touch both; a grep that only covers vibe-core misses vibe-index.
-- **A duplicate package *name* forces an LLM back into the loop**, even when the
-  full coordinates differ — the owner's reason for the wal-collision kill.
-  Mechanical package ops need `name` to resolve to exactly one package; a
-  fixture reusing a real name breaks that. Test fixtures that mimic real
-  packages should use synthetic/reserved names (`com.example/…`) or dogfood the
-  real package.
-- **Dogfooding vs isolated fixtures — the owner's testing philosophy.** For a
-  monorepo where packages and the package-manager co-evolve, tests SHOULD
-  install the real product package; a test breaking on package evolution is
-  *signal* (a real regression), and a stale fixture copy is *false coverage*.
-  Caveat: assert on invariants (installs, lockfile coordinate, content-hash),
-  not incidental version strings, so breakage means a real regression — and
-  put the test registry OUTSIDE the project dir (an in-project registry, or a
-  double `make_wal_dir_registry(project.path())`, re-copies files and defeats
-  the re-install freshness / skip fast path — the two edge-case failures the
-  boss fixed).
-- **fractality delegated-run mechanics** (now in the CLAUDE.md ledger): a
-  `worktree` worker gets its own **cold `target/`** → give it `cargo check`,
-  not the full suite; **`max_turns` failures can be complete work** (review the
-  worktree, don't discard); `show`/`ps` **usage tokens don't flush until
-  terminal** (in=0/out=0 mid-run is not a stall — judge by
-  `runs/<id>/worker-stdout.jsonl` growth + `git -C runs/<id>/wt status`); review
-  path is `git -C runs/<id>/wt diff` → `git apply` into the host tree →
-  self-check → boss commits; **workers don't `cargo fmt`** → run it before the
-  fmt gate.
+- **The specspace default-resume fix is the whole point of the rename.** A bare
+  `восстанови сессию` at the host root used to sometimes resume a specspace
+  (e.g. `fractality`) instead of the host WAL. Now: an explicit name/dir always
+  wins; a **bare** phrase takes `SPECSPACES.md`'s `default:` (set to `host`
+  here) else the host — never a specspace by accident. Canon lives in the
+  installed `flow:org.vibevm.world/wal-specspaces` boot snippet (slot 11) +
+  `SPECSPACES-PROTOCOL.md`; the host `CLAUDE.md §Specspaces` is now a signpost.
+- **`embedded` ≠ `local` (reserved).** PROP-030 names vibevm's own in-tree
+  packages **embedded** (`--prefer-embedded`, `source_kind=embedded`);
+  `--prefer-local` is **reserved** for a future user-own-repositories feature.
+  Precedence is **origin-selected**: developer (source install, `origin=external`)
+  → embedded wins clashes; end-user distribution → embedded is a fall-through.
+- **`vibe install` has no incremental mode** — it re-materialises the whole
+  closure, so it collides with any process holding `vibedeps/` (hence the
+  MCP-server kill). Candidate ergonomics fix / backlog.
+- **`vibe self update`** = "rebuild and activate the latest in-tree version"
+  (`self install latest`); writes `~/opt/vibevm/versions/branch/<id>/<n>/` and
+  repoints the PATH shim. The install ledger `~/opt/vibevm/state.toml` records
+  each install's `origin` (`external` = built from a source tree) + `source_path`
+  — the hook PROP-030's discovery uses.
+- **External projects consume local packages by path:** `vibe install <pkgref>
+  --registry C:\Users\olegc\gits\vibevm\packages` (M0 local-directory mode;
+  overrides `[[registry]]`; no network). No persistent local-path config today —
+  PROP-030 is exactly the fix for that friction.
+- **`cargo xtask mirror` is mis-targeted post-migration? No — fixed.** `mirrors.toml`
+  now points at `vibevm/vibevm` on both hosts, so `cargo xtask mirror` would work;
+  but this session pushed with plain `git push origin main` + `git push github main`
+  (both remotes already repointed). Either is fine now.
+- **`sed` on ASCII-safe substitutions is byte-preserving** even in files with
+  Cyrillic/em-dashes (the pattern/replacement are ASCII; other bytes pass
+  through). The machine-quirk "editor-tools-only" rule is specifically about
+  PowerShell 5.1 Get/Set-Content, not GNU sed. Used it for the URL sweep +
+  verified every diff. **But** a too-broad `sed` anchor (`is_path_source:`) once
+  hit sibling structs (`MultiResolution`) — anchor precisely + build to verify.
+- **Adding a struct field spreads to test/in-place sites `cargo build` misses;**
+  `cargo test --workspace --no-run` is what enumerates them (found `update.rs` +
+  `plan.rs` beyond the 7 the lib build showed).
 
 ## Repository map (top level)
 
 ```
 vibevm/
 ├─ CLAUDE.md / AGENTS.md / GEMINI.md   boot contract (byte-identical): Rules 1–4,
-│                                       delegation-first + in-place fractality ledger
-├─ VIBEVM-SPEC.md                       product spec (owner-frozen except the wal
-│                                       edits made this session under explicit word)
-├─ crates/                              the vibe product (Rust workspace)
-│   ├─ vibe-core/      manifest + lockfile types, NamingConvention::Fqdn render
-│   ├─ vibe-registry/  git + local registries, resolvers, vendor
-│   ├─ vibe-index/     package index + scanner (parallel content_hash port;
-│   │                  the golden hash-anchor fixture lives here)
-│   ├─ vibe-resolver/ vibe-workspace/ vibe-install/ vibe-cli/ vibe-publish/ vibe-mcp/ …
+│                                       delegation-first ledger, §Specspaces signpost
+├─ SPECSPACES.md                       the specspace registry (was WORKSPACES.md);
+│                                       `default: host` + the fractality row
+├─ VIBEVM-SPEC.md                      product spec (owner-frozen)
+├─ mirrors.toml                        `cargo xtask mirror` targets → vibevm/vibevm ×2
+├─ crates/                             the vibe product (Rust workspace)
+│   ├─ vibe-core/      manifest+lockfile types (SourceKind::Embedded, BootCategory Tool/App)
+│   ├─ vibe-registry/  registries+resolvers (CachedPackage.is_embedded; LocalRegistry M0)
+│   ├─ vibe-resolver/  DepProvider/solver seam (EmbeddedProvider goes here next)
+│   ├─ vibe-install/   record.rs (source_kind tagging), plan.rs (in-place)
+│   ├─ vibe-cli/       install/resolver.rs, registry.rs (R-001 seam), commands/vvm (self-update)
+│   └─ vibe-workspace/ boot.rs (BootBand; band_for)
 ├─ packages/
-│   ├─ org.vibevm.ai-native/   discipline toolchain (conform/specmap/specmark;
-│   │                          rust 0.7.0 / ts 0.6.0 / core 0.7.0; two MCP servers)
-│   ├─ org.vibevm.world/        redbook family + wal + wal-specspaces + the rest
-│   └─ org.vibevm.fractality/   the fractality workspace (own contract/WAL) +
-│                               fractality.ps1 / .sh launchers
-├─ fixtures/registry/org.vibevm/   the hermetic TEST registry (fixture-only group):
-│                                   integration-*, pin-server, pin-stack, feat-pkg
-│                                   (the wal/sync-from-code/atomic-commits fixtures
-│                                    were deleted this session)
-├─ spec/                            PROP/FEAT docs, spec/WAL.md, spec/boot/*
-│   ├─ common/PROP-029-…            fully-qualified addresses + mechanical refactoring
-│   └─ modules/vibe-registry/PROP-008  qualified naming (§2.5 repo-name render)
-└─ tools/self-check.sh              the gate (fmt → clippy → test → conform → specmap)
+│   ├─ org.vibevm.world/   redbook family + wal + **wal-specspaces** (renamed) + the rest
+│   ├─ org.vibevm.ai-native/  discipline toolchain (rust 0.7.0 / ts 0.6.0 / core 0.7.0 + 2 MCP)
+│   └─ org.vibevm.fractality/ the fractality specspace (own contract/WAL); now dogfoods wal-specspaces
+├─ spec/
+│   ├─ modules/vibe-registry/PROP-030-embedded-registry.md   ← next session's spec
+│   ├─ common/PROP-029-… (fully-qualified addresses), PROP-016 (source mirrors)
+│   └─ WAL.md, boot/*
+└─ tools/self-check.sh   the gate (fmt → test → clippy → vibe check → conform → sync-engines → specmap)
 ```
 
-## Standing decisions in force (long form)
+## Standing decisions in force
 
-- **PROP-029 — fully-qualified addresses.** Every on-disk address carries its
-  full `(group, name)`; nothing stores a bare name (short names are CLI-only,
-  resolved at the input boundary). The joiner is **never `.`** — `/` on path
-  surfaces (pkgref, `spec://`), `_` on flat repo names. This is the precondition
-  for a future deterministic rename engine (grep-zero the old coordinate). Test
-  fixtures and `spec://demo/…` grammar examples are out of scope.
-- **Global name-uniqueness for mechanical ops.** Real package names do not
-  collide across groups where it can be helped, and test fixtures must not reuse
-  a real package's name — otherwise a bare name is two-valued and only an LLM
-  can disambiguate.
-- **Delegation-first** (owner-commissioned): every substantial task first asks
-  "can this go to fractality?" — cheap GLM workers carry the token-heavy grind;
-  the boss keeps architecture, judgment, spec authoring, secrets, and the review
-  of every delegated result. Never let the boss carry token-heavy execution.
-  The calculus is `delegation-rules` (read in-place); the in-place run recipe +
-  operating facts are the CLAUDE.md fractality ledger (owner-authorised to keep
-  current autonomously).
-- **License:** the shipped surface is **fully UPL-1.0**; the `"EULA"` strings
-  that remain are all off-limits for relicensing (third-party `refs/**`,
-  regenerated `vibedeps/**` + `.vibe/cache/**`, `fixtures/**` + `crates/**` test
-  data, the `licensing` eula-template package, owner-frozen specs).
-- **Rule 1 (attribution) is absolute:** the authored surface stays
-  human-authored — no AI attribution anywhere (commits, trailers, branches,
-  comments); workers are tools, never credited. Rules 2–4 (Conventional Commits,
-  topic-grouped commits, autonomy-on-routine-only) unchanged.
-- **Machine quirks (this box):** edits via editor tools only (PowerShell 5.1
-  corrupts UTF-8-no-BOM round-trips); commits via `git commit -F - <<'MSG'`
-  heredoc only; push via `cargo xtask mirror` (GitVerse origin + GitHub mirror,
-  ff-only, SSH URLs). Never read/echo token files.
+- **Specspace terminology.** The nested-project-WAL concept is **specspace**
+  (`flow:org.vibevm.world/wal-specspaces`, `SPECSPACES.md`). The vibe
+  `[workspace]` manifest role, the `vibe-workspace` crate, Cargo `[workspace]`,
+  and the fractality packet `[workspace] mode` are a **different sense** and stay
+  "workspace". A bare session phrase → host, never a specspace by accident.
+- **PROP-030 developer↔user precedence.** Embedded (in-tree) packages: **first**
+  for a source-installed developer (win clashes — vibevm-on-vibevm), **last** for
+  a future distribution's end user. `--prefer-embedded`; `--prefer-local`
+  reserved.
+- **Repo home.** vibevm source = `vibevm/vibevm` on GitVerse **and** GitHub (one
+  org). Package registry = the separate `vibespecs` GitHub org (untouched).
+  Old repos (`anarchic/vibevm`, `anarchic-pro/vibevm`, and the stray
+  `olegchir/vibevm`) are the **owner's to delete manually**.
+- **Delegation-first** (owner-commissioned): spend Claude on architecture,
+  planning, judgment, review; delegate execution to fractality/GLM where
+  verification is cheaper than generation. This session kept the sensitive
+  resolver core boss-side and *checkpointed rather than rushed* it — aligned with
+  the production-grade quality bar.
+- **Rule 1 (attribution) absolute:** the authored surface stays human-authored —
+  no AI attribution in commits, trailers, branches, comments. Rules 2–4 unchanged.
+- **Machine quirks (this box):** edits via editor tools (PS 5.1 corrupts
+  UTF-8-no-BOM round-trips) — *but* GNU `sed` with ASCII patterns is byte-safe;
+  commits via `git commit -F - <<'MSG'` heredoc; `self-check.sh` through Git Bash,
+  check the real exit code; never read/echo token files.
 
 ## Recent commit chain (this session, newest first)
 
 ```
+2528a68 feat(core): add the embedded source_kind (PROP-030 scaffold)
+e3e74f9 docs(spec): PROP-030 — the embedded registry
+350cd8c chore(repo): point all source URLs at the vibevm/vibevm repos
+53fc15b build(fractality): materialise wal-specspaces now that tool parses
+3e020b0 feat(core): accept tool and app boot_snippet categories
+f0748c2 refactor(fractality): adopt the specspace term in the contract
+43401cf build(specspaces): dogfood wal-specspaces into the host boot
+b59aba8 refactor(specspaces): rename the wal-workspaces flow to wal-specspaces
+8549943 docs(wal): session-end checkpoint — restructure, PROP-029, wal collision kill
+b6756e6 docs(continue): cold-resume checkpoint — restructure + wal collision kill
 5fb38c5 docs(delegation): record the first host delegated-run mechanics in the ledger
-e3c95c8 test(vibe-cli): migrate the wal integration tests onto the real package
-a17658b test(vibe-index): de-collide the golden hash-anchor from the wal name
-596f706 docs(spec): align VIBEVM-SPEC wal references with the shipped package
-e170884 test(fixtures): delete the dead wal-sibling fixtures that duplicated real names
-12ad64c fix(docs): render org.vibevm.world/wal as org.vibevm.world_wal, not org.vibevm_wal
-9aff183 refactor(registry): fqdn repo name joins group and name with _ (not .)
-2b02996 refactor(spec): spec:// authority joins group and name with / (not .)
-9e0ef52 fix(refactor): rustfmt the typescript discipline packages' Rust crates
-4fdabb1 fix(rust-ai-native): external-spec namespace is the fully-qualified <group>.<name>
-a42f5cc fix(refactor): repoint hardcoded discipline paths in scripts to the new group
-4abc8fe fix(refactor): fmt all discipline members; fix stale group-dir prose
-e529008 fix(refactor): reformat authored engines and re-sync vendored write-throughs
-1a40097 fix(refactor): keep host test/fixture data bare; reformat discipline
-d52bf02 refactor(spec): repoint every reference to the new package groups
-6970828 refactor(packages): move the remaining packages to org.vibevm.world
-788e67c refactor(packages): move the AI-Native discipline to org.vibevm.ai-native
-2bad078 docs(spec): PROP-029 — fully-qualified addresses + mechanical refactoring
-4ca473b docs(spec): record the fractality bug convention and full-UPL state
-0a4d8aa docs(fractality): file E-BUG-001 and record the MT-05 relicense run
-5086c5b chore(license): relicense vibevm to UPL-1.0
-09920c5 chore(fractality): in-place launcher for the working-tree CLI
-cadca12 docs(spec): delegation-first directive in the boot contract
 ```
-
-(Before these: the redbook collection + fractality-ignition sessions — see the
-WAL's dated section headers and the git log.)
 
 ## Quick-start (verify the tree)
 
 ```sh
-bash tools/self-check.sh; echo "EXIT=$?"          # must be 0 (fmt→clippy→test→conform→specmap)
+bash tools/self-check.sh; echo "EXIT=$?"           # must be 0
 
-# Grep-zero the killed collision (expect no real package named wal outside org.vibevm.world):
-git grep -nE 'name = "wal"' -- packages fixtures crates   # only com.example/golden-pkg + the real one
+vibe self current                                   # → branch:main #9 (self-updated)
 
-# Run vibe (working-tree build), e.g. install the real wal into a scratch project:
-cargo build -p vibe-cli
-# see crates/vibe-cli/tests/cli_pkg_cycle.rs for the dogfood pattern (make_wal_dir_registry)
+# The specspace default-resume: a bare `восстанови сессию` at the host root
+# resolves to the HOST WAL (SPECSPACES.md `default: host`); name a specspace
+# (`восстанови сессию fractality`) to target it.
 
-# Drive a fractality delegation (paid — needs the owner's word):
-#   cd packages/org.vibevm.fractality && ./fractality.ps1 spawn --packet <task.toml>
-#   ./fractality.ps1 wait <id>   (bg → completion notification); review runs/<id>/wt diff
+# Grep-zero the migrated URLs (expect nothing but refs/ third-party):
+git grep -n 'anarchic/vibevm\|anarchic-pro' -- . ':(exclude)refs'
+
+# PROP-030 next: cargo build -p vibe-cli ; then wire EmbeddedProvider (see recipe).
 ```
 
-The WAL supersedes this snapshot wherever they diverge. Session-resume phrase:
-`восстанови сессию` (boots into a status report and waits — the open items above
-are the owner's call, not a standing mandate).
+The WAL supersedes this snapshot wherever they diverge. To pick up PROP-030:
+read `spec/modules/vibe-registry/PROP-030-embedded-registry.md`, then task #11 /
+the recipe above. Restart Claude Code first to restore the discipline MCP servers.
