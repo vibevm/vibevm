@@ -1,14 +1,14 @@
 # CONTINUE.md — cold-resume checkpoint
 
-_Written 2026-07-13, session close. A long, multi-feature session: the vibevm
-**source repo migrated to `vibevm/vibevm`** on both hosts; the **`wal-workspaces`
-flow was renamed to `wal-specspaces`** ("specspace" everywhere) with a
-**default-resume bug fix** and a **host dogfood** of the flow; **`tool`/`app`
-boot categories** were added (unblocking the fractality install); **all repo
-URLs** were repointed to the new org; **`vibe self update`** activated the
-in-tree build; and **PROP-030 (the embedded registry)** was designed and its
-lockfile scaffold landed. Everything is committed and PUSHED to both mirrors
-(head `2528a68`); tree clean; self-check green at close._
+_Written 2026-07-13, session close. A very large session: **MCP repair** (the
+discipline servers were down; root-caused, rebuilt, back up), the **fractality
+delegation rules were tightened** (runs are no longer "paid"; every non-trivial
+task now carries an out-loud delegation verdict; sessions announce their
+harness), a **`debug>release` slot-binary resolver** landed, the
+**persistent-worker gap was filed** (E-ENH-001), and — the headline —
+**PROP-030 (the embedded registry) was implemented end to end, 5/5 slices,
+each gate-green and pushed.** Everything is committed and PUSHED to both
+mirrors (head `92e0668`); tree clean; self-check green at close._
 
 > **`spec/WAL.md` is the canonical living state**; if this snapshot and the WAL
 > disagree, the WAL wins. The **git log is the authoritative per-item record.**
@@ -20,209 +20,209 @@ lockfile scaffold landed. Everything is committed and PUSHED to both mirrors
 ## TL;DR
 
 vibevm is a spec-driven package manager (`vibe` CLI, Rust workspace under
-`crates/`, packages under `packages/`). This session did six linked things,
-all committed + pushed to `vibevm/vibevm` on GitVerse **and** GitHub:
+`crates/`, packages under `packages/`). This session:
 
-1. **Remote migration.** `origin`+`github` repointed to `git@gitverse.ru:vibevm/vibevm.git`
-   and `git@github.com:vibevm/vibevm.git` (one org, `vibevm`, on both hosts).
-2. **Specspaces.** The nested-project-WAL flow `wal-workspaces` → **`wal-specspaces`**;
-   `WORKSPACES.md` → `SPECSPACES.md`; the term "workspace"→"specspace" on the
-   live surface. Plus the **default-resume fix** and a **host dogfood**.
-3. **`tool`/`app` boot categories** — the vibe `BootCategory` enum gained them,
-   so the fractality manifest (`category = "tool"`) parses; fractality then
-   materialised `wal-specspaces`.
-4. **URL migration** — every `anarchic/vibevm` / `anarchic-pro/vibevm` → `vibevm/vibevm`
-   (grep-zero), `mirrors.toml` now targets the two current repos; `vibespecs`
-   (the package registry, a *separate* repo) deliberately untouched.
-5. **`vibe self update`** — rebuilt the in-tree vibe and activated it (instance 9);
-   the PATH shim `~/opt/bin/vibe` is now current.
-6. **PROP-030 embedded registry** — DESIGN committed; lockfile SCAFFOLD landed;
-   the resolver core is the **next session's job** (see below).
+1. **MCP repair.** `rust-ai-native` / `typescript-ai-native` discipline MCP
+   servers were down — `.mcp.json` pointed at `vibedeps/…/target/release/*.exe`
+   that a prior `vibe install` re-materialise had wiped. Rebuilt both release
+   binaries, smoke-passed, regenerated `.mcp.json` (byte-identical). User
+   reconnected via `/mcp`; **both servers are up** (their `mcp__*` tools live).
+2. **Fractality grant (A) — `944528e`.** Ledger "Free vs paid" flipped: fractality
+   runs are **pre-authorised, not paid** — do not ask before spawning. Rule 4 red
+   lines + never-delegate set still bind. Byte-identical across CLAUDE/AGENTS/GEMINI.
+3. **Persistent-worker gap (B) — `2aa6533`.** Investigated: fractality **cannot**
+   keep a warm worker across tasks (one run == one pod == one one-shot
+   `claude --print`). Filed `E-ENH-001` in the fractality specspace with cites +
+   hook points.
+4. **`debug>release` resolver (C) — `51c2d91`.** `DeclaredBinary::artifact()`
+   (`crates/vibe-workspace/src/bins.rs`) now resolves the slot binary
+   debug-first, release-fallback (was hard-coded release). Fixes the exact
+   MCP-down failure mode for the future; affects `.mcp.json` generation +
+   `vibe bin exec`.
+5. **Delegation rules (`e7e4598`).** Two boot-contract additions (CLAUDE/AGENTS/
+   GEMINI, identical): (a) **every non-trivial task must state its
+   parallelization/delegation verdict out loud before executing** (native
+   agent-spawn only under Claude Code; else fractality, fractality preferred);
+   (b) **announce the harness in the first response of every session**, cached
+   for the delegation analysis.
+6. **PROP-030 — the embedded registry: COMPLETE (5/5).** See below.
+
+## PROP-030 — embedded registry (the headline; DONE)
+
+**Goal (owner directive):** a source-**installed** `vibe` resolves its own
+in-tree `packages/` automatically for any project — no `--registry`, no
+`[[registry]]`. Spec: `spec/modules/vibe-registry/PROP-030-embedded-registry.md`.
+
+Five slices, each a separate commit, each full-self-check-green, all pushed:
+
+| slice | commit | content |
+|---|---|---|
+| 1 | `097c200` | **discovery** — `commands/vvm/embedded.rs`: from the active VVM install (`origin=external` + `source_path` + `<sp>/packages`) derive the embedded root |
+| 2 | `a06fa3d` | **`EmbeddedProvider`** — `vibe-resolver/src/embedded_provider.rs`: a combining `DepProvider`/`VersionEnumerator` cell; per-coordinate precedence (developer=embedded-first / distribution=embedded-last), `list_versions` unions, fetch serves precedence-first-that-has-it, absent falls through, real failure propagates |
+| 3 | `3eb7f80` | **`InstallResolver::Embedded` + R-001 seam** — `resolver.rs` variant + `InstallSource`; `registry.rs` `ProviderResource::Embedded` + 3 `dep_solver` arms + `ProviderCell`; `build_install_resolver` composes + lifts the empty-`[[registry]]` bail; discovery threaded through `main.rs` into install/update/reinstall (§7) |
+| 4 | `e5226af` | **reproducibility guard** — tag `CachedPackage.is_embedded` in the embedded fetch (→ `record.rs` writes `source_kind="embedded"`); CI-off (no embedded when `$CI` set); `vibe check` warns on `source_kind=embedded` lock entries |
+| 5 | `92e0668` | **flags + doctor** — `--prefer-embedded`/`--no-prefer-embedded`/`--no-default-registry` (+`VIBE_NO_DEFAULT_REGISTRY`), mutually-excl validated; `vibe self doctor` reports the embedded registry |
+
+**What now works:** source-installed `vibe install <pkg>` (no flags) auto-resolves
+in-tree `packages/`; developer precedence embedded-first; the negation + suppress
+flags + CI env behave; non-portable locks warn; a `cargo run`/test binary gets no
+embedded registry (gated on `self_loc`).
 
 ## Where work stands
 
-- **Branch `main`**, tree clean, **local == origin == github @ `2528a68`**
-  (pushed directly with `git push origin main` + `git push github main` — NOT
-  `cargo xtask mirror`; see finding below).
-- **`self-check` all green (exit 0)** at close.
-- **vibe self-updated:** `vibe self current` → `branch:main #9`; the working-tree
-  build is active on PATH.
+- **Branch `main`**, tree clean, **local == origin == github @ `92e0668`**
+  (pushed with `git push origin main` + `git push github main`).
+- **`self-check` all green (exit 0)** at close (ran per slice; 5× green).
+- **MCP discipline servers up** (`mcp__rust-ai-native__*`,
+  `mcp__typescript-ai-native__*` reconnected this session).
 
 ## Active blocker
 
-**None.** The one thing to know before working: the **AI-Native discipline MCP
-servers were killed this session** (`rust-ai-native-mcp.exe`,
-`typescript-ai-native-mcp.exe`) to let `vibe install` re-materialise `vibedeps/`
-(they were holding those files). Their tools (`mcp__rust-ai-native__*`,
-`mcp__typescript-ai-native__*`) are **disconnected** — **restart Claude Code**
-to restore them. Nothing is broken; they just need respawning.
+**None.** The next major direction is a **VERY BIG REFACTORING** (owner-declared
+at session close; scope TBD — the owner defines it next session). The three
+PROP-030 follow-ups below are **deferred behind that refactoring** — do not start
+them until the refactoring lands (or the owner re-prioritises).
 
-## Next session — the recipe: finish PROP-030 (the embedded registry)
+## Backlog — deferred until AFTER the VERY BIG REFACTORING
 
-**Goal (owner directive):** when `vibe` is installed from a source tree, the
-in-tree `packages/` resolves automatically for any project — no `--registry`,
-no `[[registry]]` edit. Full design: `spec/modules/vibe-registry/PROP-030-embedded-registry.md`.
-The lockfile scaffold is already in (`2528a68`): `SourceKind::Embedded`
-(`crates/vibe-core/src/manifest/lockfile.rs`), `CachedPackage.is_embedded`
-(`crates/vibe-registry/src/lib.rs`), and the tagging branch in
-`crates/vibe-install/src/record.rs`. It is inert until the resolver wires it.
+1. **Fractality test-expansion (earmarked delegation).** The PROP-030 flag /
+   composition logic (`build_install_resolver` branches: embedded-only lifts
+   bail; embedded+declared; `--no-default-registry` suppresses; mutual-excl bail;
+   precedence from `--no-prefer-embedded`) + the `InstallResolver::Embedded`
+   `InstallSource` behaviour (resolve_and_fetch precedence, candidate_groups
+   union, `is_embedded` tagging) are **compile-covered but have no dedicated unit
+   tests**. `EmbeddedProvider`'s brain IS tested (slice 2). These tests must be
+   **in-crate** (both types are `pub(crate)`). This is the clean fractality
+   `big`-worker task — give it a precise packet (exact file, test cases, the
+   `differential_oracle.rs` LocalRegistry fixture pattern, the `resolver_args()`
+   InstallArgs template, acceptance `cargo test -p vibe-cli`).
+2. **E2E verification (`/verify`).** `vibe self update` → `vibe install` in a
+   throwaway project **with no `--registry`** → prove embedded actually resolves
+   the in-tree `packages/`. The real proof beyond unit tests.
+3. **Resolution-output naming.** "resolved `X` from the embedded registry" in the
+   install pipeline's per-package emit (PROP-030 §6). Cosmetic; touches the
+   install pipeline output.
 
-**Remaining (the resolver core — build in verified slices, self-check each):**
+## Next-steps recipe (for whoever picks up cold)
 
-1. **`EmbeddedProvider`** in `crates/vibe-resolver/` (beside
-   `local_registry_provider.rs` / `multi_registry_provider.rs`): a `DepProvider`
-   + `VersionEnumerator` that wraps an embedded `LocalRegistryProvider` + an
-   optional `MultiRegistryProvider`, delegating **per-coordinate** with
-   embedded-first (developer) or embedded-last (distribution). It goes through
-   the R-001 seam (`#[cell(seam="DepProvider", …)]`) → **specmap registration +
-   conform** apply (this is the discipline-machinery layer that makes this
-   bigger than a plain 4-crate change).
-2. **`ProviderResource::Embedded` + `InstallResolver::Embedded`**
-   (`crates/vibe-cli/src/registry.rs` + `commands/install/resolver.rs`) + the
-   `dep_solver` cases; implement `InstallSource` (resolve_and_fetch sets
-   `is_embedded = true`; solve via the combining provider; materialise_in_place
-   errors — a `LocalRegistry` has no git backend; candidate_groups unions both).
-3. **Discovery** in `build_install_resolver`: read the active VVM install via
-   the `VersionStore` (`crates/vibe-cli/src/commands/vvm/store.rs`, `store.active()`
-   → `source_path` + `origin`); if `origin = "external"` and `<source_path>/packages`
-   exists, compose the embedded registry at the origin-selected precedence; lift
-   the empty-`[[registry]]` bail.
-4. **Guard + control:** `--frozen`/CI-off (drop embedded); `vibe check` warning on
-   `source_kind=embedded` lock entries; flags `--prefer-embedded` /
-   `--no-default-registry` (+ `VIBE_NO_DEFAULT_REGISTRY`); `vibe doctor` line.
-5. **Tests** across the combining provider + discovery; `bash tools/self-check.sh`
-   = 0 (mind conform/specmap for the new cell).
-
-Task **#11** in the task list carries this same checklist.
+1. **Boot + resume-report only** (do NOT auto-execute): `восстанови сессию`.
+2. The owner will define the **VERY BIG REFACTORING**. That is the next work.
+3. The three items above wait behind it. When the owner clears item 1, the
+   fractality packet is: add tests to `crates/vibe-cli/src/commands/install/
+   resolver.rs` (unit `mod tests`) — build `InstallArgs` via a `resolver_args()`-
+   style literal, a `Manifest` via `Manifest::parse_str`, an embedded
+   `LocalRegistry` via the `seed_local_package` shape
+   (`crates/vibe-resolver/tests/differential_oracle.rs:92`).
 
 ## Non-obvious findings (this session)
 
-- **The specspace default-resume fix is the whole point of the rename.** A bare
-  `восстанови сессию` at the host root used to sometimes resume a specspace
-  (e.g. `fractality`) instead of the host WAL. Now: an explicit name/dir always
-  wins; a **bare** phrase takes `SPECSPACES.md`'s `default:` (set to `host`
-  here) else the host — never a specspace by accident. Canon lives in the
-  installed `flow:org.vibevm.world/wal-specspaces` boot snippet (slot 11) +
-  `SPECSPACES-PROTOCOL.md`; the host `CLAUDE.md §Specspaces` is now a signpost.
-- **`embedded` ≠ `local` (reserved).** PROP-030 names vibevm's own in-tree
-  packages **embedded** (`--prefer-embedded`, `source_kind=embedded`);
-  `--prefer-local` is **reserved** for a future user-own-repositories feature.
-  Precedence is **origin-selected**: developer (source install, `origin=external`)
-  → embedded wins clashes; end-user distribution → embedded is a fall-through.
-- **`vibe install` has no incremental mode** — it re-materialises the whole
-  closure, so it collides with any process holding `vibedeps/` (hence the
-  MCP-server kill). Candidate ergonomics fix / backlog.
-- **`vibe self update`** = "rebuild and activate the latest in-tree version"
-  (`self install latest`); writes `~/opt/vibevm/versions/branch/<id>/<n>/` and
-  repoints the PATH shim. The install ledger `~/opt/vibevm/state.toml` records
-  each install's `origin` (`external` = built from a source tree) + `source_path`
-  — the hook PROP-030's discovery uses.
-- **External projects consume local packages by path:** `vibe install <pkgref>
-  --registry C:\Users\olegc\gits\vibevm\packages` (M0 local-directory mode;
-  overrides `[[registry]]`; no network). No persistent local-path config today —
-  PROP-030 is exactly the fix for that friction.
-- **`cargo xtask mirror` is mis-targeted post-migration? No — fixed.** `mirrors.toml`
-  now points at `vibevm/vibevm` on both hosts, so `cargo xtask mirror` would work;
-  but this session pushed with plain `git push origin main` + `git push github main`
-  (both remotes already repointed). Either is fine now.
-- **`sed` on ASCII-safe substitutions is byte-preserving** even in files with
-  Cyrillic/em-dashes (the pattern/replacement are ASCII; other bytes pass
-  through). The machine-quirk "editor-tools-only" rule is specifically about
-  PowerShell 5.1 Get/Set-Content, not GNU sed. Used it for the URL sweep +
-  verified every diff. **But** a too-broad `sed` anchor (`is_path_source:`) once
-  hit sibling structs (`MultiResolution`) — anchor precisely + build to verify.
-- **Adding a struct field spreads to test/in-place sites `cargo build` misses;**
-  `cargo test --workspace --no-run` is what enumerates them (found `update.rs` +
-  `plan.rs` beyond the 7 the lib build showed).
+- **Embedded discovery must gate on the RUNNING install, not the `current`
+  pointer.** PROP-030 §2 says "the record whose slot holds `current_exe`." First
+  cut used `store.active()` at a `~/opt` fallback root, so a **test binary**
+  (`current_exe` = `target/debug/deps/…`, not a VVM slot) picked up the
+  developer's real `~/opt` install → every `vibe install` in the test suite
+  silently resolved through the checkout's `packages/`, flipping git-source
+  installs' `source_kind` to `registry` (4 red tests). Fix: gate on
+  `self_loc.is_some()` (`derive_self(current_exe)`), so only a source-INSTALLED
+  vibe discovers embedded; `cargo run`/tests get `None`. (`main.rs` closure.)
+- **conform caught what a GLM worker would have missed** (validates keeping the
+  core boss-side): slice 2 tripped `no-unwrap-in-domain` (two `.expect()` →
+  `.unwrap_or_else` through the error enum) and `cell-has-oracle` (a `#[cell]`
+  needs an **integration** test driving it, not just unit tests of its free
+  functions — added `tests/embedded_provider.rs`).
+- **`is_embedded` tagging was the slice-3 gap that slice 4 closed.** The embedded
+  fetch returns a `LocalRegistry` `CachedPackage` with `is_embedded=false`; you
+  must set `cached.is_embedded = true` in the embedded arm so `record.rs` writes
+  `source_kind="embedded"` and the guard can key on it.
+- **Adding a field to a clap `Args` struct breaks its literal constructors.**
+  `InstallArgs` is built literally in `reinstall.rs::resolver_args()` and
+  `update.rs::install_args_from()` — new flags must be added there too.
+  `cargo check -p vibe-cli --all-targets` enumerates such sites (plain
+  `cargo build` misses tests).
+- **MCP-down root cause:** `vibe install` re-materialises `vibedeps/` from source
+  but does **not** rebuild `target/release/*.exe`, so the `.mcp.json` release
+  paths went missing while debug builds sat in `packages/…/target/debug/`. The
+  `vibevm` product server survived because it's a PATH command (`vibe`), not a
+  slot file.
+- **`vibe mcp install` builds nothing** (`install.rs` "Nothing is built here") —
+  regenerating `.mcp.json` with running servers is safe (no locked-exe rebuild).
+- **fractality has no warm worker** (E-ENH-001): one-shot `claude --print` per
+  run; `max_concurrent` is a slot limit, not a pool. So small per-task
+  delegations pay a full cold spawn — prefer inline for small work until the gap
+  closes.
 
 ## Repository map (top level)
 
 ```
 vibevm/
 ├─ CLAUDE.md / AGENTS.md / GEMINI.md   boot contract (byte-identical): Rules 1–4,
-│                                       delegation-first ledger, §Specspaces signpost
-├─ SPECSPACES.md                       the specspace registry (was WORKSPACES.md);
-│                                       `default: host` + the fractality row
-├─ VIBEVM-SPEC.md                      product spec (owner-frozen)
-├─ mirrors.toml                        `cargo xtask mirror` targets → vibevm/vibevm ×2
+│                                       Delegation-first (fractality-not-paid grant,
+│                                       out-loud analysis + harness-announce rules)
+├─ SPECSPACES.md                       specspace registry (`default: host`; fractality row)
 ├─ crates/                             the vibe product (Rust workspace)
-│   ├─ vibe-core/      manifest+lockfile types (SourceKind::Embedded, BootCategory Tool/App)
+│   ├─ vibe-core/      manifest+lockfile (SourceKind::Embedded, LockedPackage.source_kind)
 │   ├─ vibe-registry/  registries+resolvers (CachedPackage.is_embedded; LocalRegistry M0)
-│   ├─ vibe-resolver/  DepProvider/solver seam (EmbeddedProvider goes here next)
-│   ├─ vibe-install/   record.rs (source_kind tagging), plan.rs (in-place)
-│   ├─ vibe-cli/       install/resolver.rs, registry.rs (R-001 seam), commands/vvm (self-update)
-│   └─ vibe-workspace/ boot.rs (BootBand; band_for)
+│   ├─ vibe-resolver/  DepProvider/solver seam; **embedded_provider.rs** (slice 2)
+│   ├─ vibe-install/   record.rs (is_embedded→source_kind=embedded), plan.rs
+│   ├─ vibe-check/     `vibe check` cells; lockfile_files.rs (embedded warn, slice 4)
+│   └─ vibe-cli/       install/{resolver.rs,mod.rs}, registry.rs (R-001 seam),
+│                      cli/pkg.rs (flags), commands/vvm/{mod.rs,embedded.rs}, main.rs
 ├─ packages/
-│   ├─ org.vibevm.world/   redbook family + wal + **wal-specspaces** (renamed) + the rest
-│   ├─ org.vibevm.ai-native/  discipline toolchain (rust 0.7.0 / ts 0.6.0 / core 0.7.0 + 2 MCP)
-│   └─ org.vibevm.fractality/ the fractality specspace (own contract/WAL); now dogfoods wal-specspaces
+│   ├─ org.vibevm.world/       redbook family + wal + wal-specspaces + the rest
+│   ├─ org.vibevm.ai-native/   discipline toolchain (rust 0.7 / ts 0.6 / core 0.7 + 2 MCP)
+│   └─ org.vibevm.fractality/  the fractality specspace (own contract/WAL); plans/external/E-ENH-001
 ├─ spec/
-│   ├─ modules/vibe-registry/PROP-030-embedded-registry.md   ← next session's spec
-│   ├─ common/PROP-029-… (fully-qualified addresses), PROP-016 (source mirrors)
+│   ├─ modules/vibe-registry/PROP-030-embedded-registry.md   ← the shipped feature's spec
 │   └─ WAL.md, boot/*
 └─ tools/self-check.sh   the gate (fmt → test → clippy → vibe check → conform → sync-engines → specmap)
 ```
 
 ## Standing decisions in force
 
-- **Specspace terminology.** The nested-project-WAL concept is **specspace**
-  (`flow:org.vibevm.world/wal-specspaces`, `SPECSPACES.md`). The vibe
-  `[workspace]` manifest role, the `vibe-workspace` crate, Cargo `[workspace]`,
-  and the fractality packet `[workspace] mode` are a **different sense** and stay
-  "workspace". A bare session phrase → host, never a specspace by accident.
-- **PROP-030 developer↔user precedence.** Embedded (in-tree) packages: **first**
-  for a source-installed developer (win clashes — vibevm-on-vibevm), **last** for
-  a future distribution's end user. `--prefer-embedded`; `--prefer-local`
-  reserved.
-- **Repo home.** vibevm source = `vibevm/vibevm` on GitVerse **and** GitHub (one
-  org). Package registry = the separate `vibespecs` GitHub org (untouched).
-  Old repos (`anarchic/vibevm`, `anarchic-pro/vibevm`, and the stray
-  `olegchir/vibevm`) are the **owner's to delete manually**.
-- **Delegation-first** (owner-commissioned): spend Claude on architecture,
-  planning, judgment, review; delegate execution to fractality/GLM where
-  verification is cheaper than generation. This session kept the sensitive
-  resolver core boss-side and *checkpointed rather than rushed* it — aligned with
-  the production-grade quality bar.
-- **Rule 1 (attribution) absolute:** the authored surface stays human-authored —
-  no AI attribution in commits, trailers, branches, comments. Rules 2–4 unchanged.
+- **Fractality runs are pre-authorised, not paid** (grant A, 2026-07-13): don't
+  ask before spawning; Rule 4 red lines + never-delegate set still bind.
+- **Out-loud delegation analysis** for every non-trivial task; **announce the
+  harness** in a session's first response (both in the boot contract now).
+- **PROP-030 precedence is origin-selected:** today only `external` (developer)
+  installs have an embedded registry → always embedded-first; `--no-prefer-embedded`
+  flips it; distribution/embedded-last awaits the future bundle feature (§3.2).
+- **Embedded discovery is gated on a source-INSTALLED vibe** (`self_loc`), never a
+  `cargo run`/test binary; CI (`$CI`) and `--no-default-registry` /
+  `VIBE_NO_DEFAULT_REGISTRY` suppress it.
+- **Rule 1 (attribution) absolute** — human-authored surface; no AI attribution.
+  Rules 2–4 unchanged.
 - **Machine quirks (this box):** edits via editor tools (PS 5.1 corrupts
-  UTF-8-no-BOM round-trips) — *but* GNU `sed` with ASCII patterns is byte-safe;
-  commits via `git commit -F - <<'MSG'` heredoc; `self-check.sh` through Git Bash,
-  check the real exit code; never read/echo token files.
+  UTF-8-no-BOM); commits via `git commit -F - <<'MSG'` heredoc; `self-check.sh`
+  through Git Bash, check the real exit code; never read/echo token files.
 
-## Recent commit chain (this session, newest first)
+## Recent commit chain (newest first)
 
 ```
-2528a68 feat(core): add the embedded source_kind (PROP-030 scaffold)
-e3e74f9 docs(spec): PROP-030 — the embedded registry
-350cd8c chore(repo): point all source URLs at the vibevm/vibevm repos
-53fc15b build(fractality): materialise wal-specspaces now that tool parses
-3e020b0 feat(core): accept tool and app boot_snippet categories
-f0748c2 refactor(fractality): adopt the specspace term in the contract
-43401cf build(specspaces): dogfood wal-specspaces into the host boot
-b59aba8 refactor(specspaces): rename the wal-workspaces flow to wal-specspaces
-8549943 docs(wal): session-end checkpoint — restructure, PROP-029, wal collision kill
-b6756e6 docs(continue): cold-resume checkpoint — restructure + wal collision kill
-5fb38c5 docs(delegation): record the first host delegated-run mechanics in the ledger
+92e0668 feat(cli): embedded-registry flags and the doctor line          (PROP-030 s5)
+e5226af feat(cli): guard the embedded registry against non-portable locks (PROP-030 s4)
+3eb7f80 feat(cli): resolve installs through the embedded registry        (PROP-030 s3)
+a06fa3d feat(resolver): compose embedded + declared registries by precedence (PROP-030 s2)
+097c200 feat(vvm): discover the embedded registry from the active install (PROP-030 s1)
+e7e4598 docs(delegation): mandate out-loud delegation analysis + harness announce
+51c2d91 feat(workspace): resolve slot binaries debug-first, else release
+2aa6533 docs(fractality): file E-ENH-001 — persistent worker request
+944528e docs(delegation): pre-authorise fractality runs (not paid)
+fdb3b27 docs(wal): session-end checkpoint — specspaces, URLs, tool/app, PROP-030   (prior session)
+92bb4f9 docs(continue): cold-resume checkpoint — specspaces, URL migration, PROP-030 (prior)
+2528a68 feat(core): add the embedded source_kind (PROP-030 scaffold)               (prior)
 ```
 
 ## Quick-start (verify the tree)
 
 ```sh
-bash tools/self-check.sh; echo "EXIT=$?"           # must be 0
+bash tools/self-check.sh; echo "EXIT=$?"    # must be 0
 
-vibe self current                                   # → branch:main #9 (self-updated)
+git log --oneline -8                         # the PROP-030 chain above
 
-# The specspace default-resume: a bare `восстанови сессию` at the host root
-# resolves to the HOST WAL (SPECSPACES.md `default: host`); name a specspace
-# (`восстанови сессию fractality`) to target it.
-
-# Grep-zero the migrated URLs (expect nothing but refs/ third-party):
-git grep -n 'anarchic/vibevm\|anarchic-pro' -- . ':(exclude)refs'
-
-# PROP-030 next: cargo build -p vibe-cli ; then wire EmbeddedProvider (see recipe).
+# PROP-030 surface:
+grep -n 'no_default_registry\|prefer_embedded' crates/vibe-cli/src/cli/pkg.rs
+sed -n '/InstallResolver::Embedded/p' crates/vibe-cli/src/commands/install/resolver.rs
 ```
 
-The WAL supersedes this snapshot wherever they diverge. To pick up PROP-030:
-read `spec/modules/vibe-registry/PROP-030-embedded-registry.md`, then task #11 /
-the recipe above. Restart Claude Code first to restore the discipline MCP servers.
+The WAL supersedes this snapshot wherever they diverge. Next session: **the owner
+defines the VERY BIG REFACTORING** — the three PROP-030 follow-ups wait behind it.
