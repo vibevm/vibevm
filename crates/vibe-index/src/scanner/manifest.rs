@@ -169,6 +169,8 @@ fn boot_category_str(c: BootCategory) -> String {
         BootCategory::Foundation => "foundation",
         BootCategory::Flow => "flow",
         BootCategory::Stack => "stack",
+        BootCategory::Tool => "tool",
+        BootCategory::App => "app",
         BootCategory::UserOverride => "user-override",
     }
     .to_string()

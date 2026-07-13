@@ -330,15 +330,19 @@ pub enum LinkType {
 /// ```
 /// use vibe_core::manifest::BootCategory;
 ///
-/// // Four ordering bands; the wire form is the kebab-case name (e.g.
-/// // `category = "user-override"`), shown on `BootSnippet` below.
-/// let bands = [
+/// // The categories a boot snippet can declare; the wire form is the
+/// // kebab-case name (e.g. `category = "user-override"`), shown on
+/// // `BootSnippet` below. `flow` / `stack` / `tool` / `app` are package
+/// // contributions and sort into the dependency band.
+/// let categories = [
 ///     BootCategory::Foundation,
 ///     BootCategory::Flow,
 ///     BootCategory::Stack,
+///     BootCategory::Tool,
+///     BootCategory::App,
 ///     BootCategory::UserOverride,
 /// ];
-/// assert_eq!(bands.len(), 4);
+/// assert_eq!(categories.len(), 6);
 /// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
@@ -350,6 +354,10 @@ pub enum BootCategory {
     Flow,
     /// A `stack` package's technology contribution.
     Stack,
+    /// A `tool` package's contribution — an installed tool's boot snippet.
+    Tool,
+    /// An `app` package's contribution.
+    App,
     /// User-owned overrides — composed last, so they win.
     UserOverride,
 }

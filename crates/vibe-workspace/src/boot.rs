@@ -255,14 +255,14 @@ pub fn compute_effective_boot(inputs: NodeBootInputs<'_>) -> Result<EffectiveBoo
     Ok(EffectiveBoot { entries })
 }
 
-/// Map a contribution's declared category to its band. A `flow` / `stack`
-/// category, or none at all, falls to `default_band` — `NodeOwn` for the
-/// node's own boot, `Dependency` for a dependency's.
+/// Map a category to its band: foundation and user-override get their own;
+/// `flow` / `stack` / `tool` / `app` (or none at all) fall to `default_band`.
 fn band_for(category: Option<BootCategory>, default_band: BootBand) -> BootBand {
     match category {
         Some(BootCategory::Foundation) => BootBand::Foundation,
         Some(BootCategory::UserOverride) => BootBand::UserOverride,
-        Some(BootCategory::Flow | BootCategory::Stack) | None => default_band,
+        Some(BootCategory::Flow | BootCategory::Stack | BootCategory::Tool | BootCategory::App)
+        | None => default_band,
     }
 }
 
