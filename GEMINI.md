@@ -148,6 +148,27 @@ set is narrower than that list and never replaces it.
 `packages/org.vibevm.fractality/CLAUDE.md`. This host directive is the general
 form for all vibevm sessions; a workspace session follows its own contract.)*
 
+**Surface the delegation/parallelization analysis out loud — always, for any
+non-trivial task.** When the user hands you work that is *not* the small,
+mechanical, sub-minute class, you MUST — *before* executing — state in your reply
+how the work could be parallelized or delegated: through the host's own
+agent-spawn (only when this session runs in Claude Code) or through
+**fractality**, with **fractality preferred wherever both fit**. This is not the
+silent internal "can I delegate this?" of the opening directive; it is an
+out-loud verdict the owner sees every time, per non-trivial task — even when the
+verdict is "keep it boss-side," and then you say why (which never-delegate
+reason, or the cost math). Trivial mechanical edits are exempt: just do them.
+
+**Announce the harness first, once per session, so that analysis never re-derives
+the host.** In the **first response of every session** — whatever the opening
+prompt (resume, a task, a question) — state plainly which harness/agent and model
+is running it (e.g. "Claude Code, Opus 4.8"; "Codex"; "Gemini CLI"), and treat
+that as a cached fact for the rest of the session. The host decides the
+delegation menu — a session's own agent-spawn (the `Agent` / Workflow /
+`ultracode` machinery) exists **only under Claude Code**; every other harness has
+fractality as its sole delegation route — so the analysis above reads the cached
+host instead of recomputing it each time.
+
 ### Operating facts — the in-place fractality ledger (owner-authorised, keep current)
 
 **Owner grant (2026-07-12):** maintain this ledger **autonomously** — whenever
