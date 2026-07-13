@@ -8,7 +8,7 @@ use std::fs;
 use std::path::{Path, PathBuf};
 
 use specmark::cell;
-use vibe_core::manifest::Lockfile;
+use vibe_core::manifest::{Lockfile, SourceKind};
 
 use crate::{Check, CheckId, CheckOptions, CheckReport};
 
@@ -81,6 +81,33 @@ impl Check for LockfileFilesCheck {
                     }
                 }
             }
+        }
+
+        // PROP-030 §5 (reproducibility guard): a package resolved from the
+        // embedded registry of a source install records source_kind =
+        // "embedded" — a machine-local path a teammate or CI cannot reproduce.
+        // Warn (do not fail) so a non-portable lock does not leak into a shared
+        // commit unnoticed.
+        let embedded: Vec<String> = lockfile
+            .packages
+            .iter()
+            .filter(|p| p.source_kind == Some(SourceKind::Embedded))
+            .map(|p| format!("{}:{}@{}", p.kind, p.name, p.version))
+            .collect();
+        if !embedded.is_empty() {
+            report.warn(
+                CheckId::LockfileFiles,
+                Some(PathBuf::from(Lockfile::FILENAME)),
+                None,
+                format!(
+                    "{} lockfile entr{} resolved from the embedded registry of a source \
+                     install (source_kind = \"embedded\") and are not portable — publish \
+                     or vendor these packages before sharing the lock: {}",
+                    embedded.len(),
+                    if embedded.len() == 1 { "y" } else { "ies" },
+                    embedded.join(", ")
+                ),
+            );
         }
     }
 }
@@ -160,6 +187,39 @@ files_written = []
                 .any(|f| f.check == CheckId::LockfileFiles
                     && f.severity == Severity::Warning
                     && f.message.contains("orphan")),
+            "got: {:?}",
+            report.findings
+        );
+    }
+
+    #[test]
+    fn embedded_source_kind_entry_warns_as_non_portable() {
+        let project = tempdir().unwrap();
+        write_minimal_project(project.path());
+        let lockfile = r#"[meta]
+generated_by = "vibe-test"
+generated_at = "2026-07-13T00:00:00Z"
+schema_version = 5
+
+[[package]]
+kind = "flow"
+group = "org.vibevm"
+name = "wal"
+version = "0.1.0"
+source_url = "file:///checkout/packages"
+content_hash = "sha256:00"
+files_written = []
+source_kind = "embedded"
+"#;
+        fs::write(project.path().join("vibe.lock"), lockfile).unwrap();
+        let report = check_project(project.path(), &opts());
+        assert!(
+            report
+                .findings
+                .iter()
+                .any(|f| f.check == CheckId::LockfileFiles
+                    && f.severity == Severity::Warning
+                    && f.message.contains("not portable")),
             "got: {:?}",
             report.findings
         );

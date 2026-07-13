@@ -75,7 +75,11 @@ impl InstallSource for InstallResolver {
             } => {
                 let fetch_embedded = || -> Result<CachedPackage, RegistryError> {
                     let resolved = embedded.resolve(pkgref)?;
-                    embedded.fetch(&resolved, cache_root)
+                    let mut cached = embedded.fetch(&resolved, cache_root)?;
+                    // Tag the provenance so `record.rs` writes source_kind =
+                    // "embedded" and the reproducibility guard keys on it (§5).
+                    cached.is_embedded = true;
+                    Ok(cached)
                 };
                 let fetch_declared = || -> Result<CachedPackage, RegistryError> {
                     match declared {

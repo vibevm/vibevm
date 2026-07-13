@@ -79,8 +79,14 @@ fn main() -> ExitCode {
     // developer's `~/opt` one. Gate discovery on the running install and read
     // its active record's source path through that install's own root. Shared
     // by the install-family commands (install / update / reinstall).
-    let discover_embedded_root =
-        || -> Option<PathBuf> { commands::vvm::embedded_root_at(self_loc.as_ref()?.root.clone()) };
+    let discover_embedded_root = || -> Option<PathBuf> {
+        // PROP-030 §5 (CI-off): CI resolves from declared registries only, so a
+        // machine-local embedded lock cannot silently pass there.
+        if read_env_opt("CI").is_some() {
+            return None;
+        }
+        commands::vvm::embedded_root_at(self_loc.as_ref()?.root.clone())
+    };
 
     let result = match cli.command {
         Command::Init(args) => commands::init::run(&ctx, args),
