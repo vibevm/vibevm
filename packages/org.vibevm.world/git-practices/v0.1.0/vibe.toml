@@ -1,0 +1,21 @@
+[package]
+name = "git-practices"
+group = "org.vibevm.world"
+kind = "flow"
+version = "0.1.0"
+authors = ["Oleg Chirukhin"]
+license = "UPL-1.0"
+description = "Git practices — the family aggregator for a repository's commit-and-push discipline: one install pulls the message format (conventional-commits) and the atomicity discipline (atomic-commits), and — as they land — human-authored attribution and commit autonomy. Content-minimal (PROP-028): no boot snippet of its own; each member ships theirs."
+keywords = ["git", "commits", "discipline", "family", "aggregator"]
+
+[compatibility]
+min_vibe_version = "0.1.0"
+requires_kinds = []
+
+# The family aggregator (PROP-028): exact pins hold the members to one set.
+# Each member is its own installable flow with its own boot snippet; this
+# umbrella carries no content of its own. Grows to include human-authored
+# attribution (§12.1) and commit autonomy (§12.4) as those members land.
+[requires.packages]
+"flow:org.vibevm.world/conventional-commits" = "=0.1.0"
+"flow:org.vibevm.world/atomic-commits" = "=0.1.0"
