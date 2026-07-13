@@ -106,7 +106,7 @@ pub struct FullScanHit {
 ///     Some("vibevm".to_string())
 /// );
 /// // A non-GitHub host has no org to walk — the caller falls through.
-/// assert_eq!(detect_github_org("https://gitverse.ru/anarchic/vibevm"), None);
+/// assert_eq!(detect_github_org("https://gitverse.ru/vibevm/vibevm"), None);
 /// ```
 pub fn detect_github_org(url: &str) -> Option<String> {
     let parsed = reqwest::Url::parse(url).ok()?;

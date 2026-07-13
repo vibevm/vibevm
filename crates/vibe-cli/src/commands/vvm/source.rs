@@ -110,8 +110,8 @@ impl Mirror {
     /// The public clone URL (PROP-016).
     pub(crate) fn url(self) -> &'static str {
         match self {
-            Mirror::GitVerse => "https://gitverse.ru/anarchic/vibevm.git",
-            Mirror::Github => "https://github.com/anarchic-pro/vibevm.git",
+            Mirror::GitVerse => "https://gitverse.ru/vibevm/vibevm.git",
+            Mirror::Github => "https://github.com/vibevm/vibevm.git",
         }
     }
 

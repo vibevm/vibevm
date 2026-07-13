@@ -36,14 +36,14 @@ schema = 1
 
 [[target]]
 name = "gitverse"
-url = "git@gitverse.ru:anarchic/vibevm.git"
+url = "git@gitverse.ru:vibevm/vibevm.git"
 mode = "push"            # the maintainer pushes mainline here
 refs = ["main", "tags"]  # what to mirror
 region = "ru"
 
 [[target]]
 name = "github"
-url = "git@github.com:anarchic-pro/vibevm.git"
+url = "git@github.com:vibevm/vibevm.git"
 mode = "push"
 refs = ["main", "tags"]
 region = "us"
@@ -111,10 +111,10 @@ Append a `[[target]]` block to `mirrors.toml` (§3.1), commit it, ensure your SS
 
 This PROP governs the **source repository**; it is orthogonal to the **package registry**, and the two must not be conflated.
 
-- **Source mirrors** (this PROP): the vibevm *source* is multi-homed across GitVerse (`anarchic/vibevm`) and GitHub (`anarchic-pro/vibevm`), kept in step by `cargo xtask mirror`. Auth is the maintainer's **per-host SSH keys**.
+- **Source mirrors** (this PROP): the vibevm *source* is multi-homed across GitVerse (`vibevm/vibevm`) and GitHub (`vibevm/vibevm`), kept in step by `cargo xtask mirror`. Auth is the maintainer's **per-host SSH keys**.
 - **Package registry** ([PROP-000 §7](PROP-000.md#registry), [PROP-002 §2.10](../modules/vibe-registry/PROP-002-decentralized-registry.md#publish)): published *packages* live in the GitHub `vibespecs` org. Auth is the **`~/.vibevm/github.publish.token`**, used *only* by `vibe registry publish`, scoped strictly to `vibespecs` (the token-secrecy and scope discipline in PROP-000 §20 / 90-user.md are unchanged).
 
-So `anarchic-pro/vibevm` (a source mirror) and `github.com/vibespecs/*` (the package registry) are different GitHub orgs serving different purposes with different credentials. The publish token is never used to push source; an SSH key is never used to publish a package. The original split-host rationale (GitVerse's API does not expose org-scoped repo creation, which the publisher needs; GitHub's does) still holds for the registry and is untouched.
+So `vibevm/vibevm` (a source mirror) and `github.com/vibespecs/*` (the package registry) are different GitHub orgs serving different purposes with different credentials. The publish token is never used to push source; an SSH key is never used to publish a package. The original split-host rationale (GitVerse's API does not expose org-scoped repo creation, which the publisher needs; GitHub's does) still holds for the registry and is untouched.
 
 ## 6. Safety and limits {#safety}
 
@@ -130,5 +130,5 @@ So `anarchic-pro/vibevm` (a source mirror) and `github.com/vibespecs/*` (the pac
 
 ## 8. Version history {#history}
 
-- **2026-06-14 — authored, in force.** Owner decision: the source becomes multi-homed (GitVerse + GitHub `anarchic-pro/vibevm`, both public, canonical for reading; US↔GitHub, RU↔GitVerse), kept in sync always and automatically by the maintainer's fan-out. The benevolent-dictator / hub-and-spoke model (no primary, single-writer mainline), the `mirrors.toml` registry, and `cargo xtask mirror` (`--check`, `--from`) plus the off-by-default `health --mirrors` probe are defined here. Supersedes the interim multi-push-remote and the abandoned bidirectional-multi-master sketch.
+- **2026-06-14 — authored, in force.** Owner decision: the source becomes multi-homed (GitVerse + GitHub `vibevm/vibevm`, both public, canonical for reading; US↔GitHub, RU↔GitVerse), kept in sync always and automatically by the maintainer's fan-out. The benevolent-dictator / hub-and-spoke model (no primary, single-writer mainline), the `mirrors.toml` registry, and `cargo xtask mirror` (`--check`, `--from`) plus the off-by-default `health --mirrors` probe are defined here. Supersedes the interim multi-push-remote and the abandoned bidirectional-multi-master sketch.
 - **2026-06-14 — fan-out refreshes tracking refs (§3.2, §4.3).** `cargo xtask mirror` now updates the local remote-tracking ref of any remote matching a target after a successful branch push. Pushing by raw URL otherwise leaves `refs/remotes/<remote>/<branch>` stale, so `git status` falsely read "ahead of origin/main" right after a green rollout (the host was actually level — `mirror --check`, which queries the host, saw the truth). No model change: a local, best-effort convenience that makes the maintainer's working-tree view match the hosts without a manual `git fetch`.

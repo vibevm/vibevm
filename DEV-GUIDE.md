@@ -31,7 +31,7 @@ Verify with `git --version`.
 
 ### 2.3 SSH key for GitVerse (required to push vibevm itself)
 
-Needed to push to `git@gitverse.ru:anarchic/vibevm.git` — the project source-of-truth repo lives on GitVerse. Load the key into `ssh-agent`, verify with `ssh -T git@gitverse.ru` — it should confirm auth and exit without a shell.
+Needed to push to `git@gitverse.ru:vibevm/vibevm.git` — the project source-of-truth repo lives on GitVerse. Load the key into `ssh-agent`, verify with `ssh -T git@gitverse.ru` — it should confirm auth and exit without a shell.
 
 ### 2.4 Publish token (required for `vibe registry publish`)
 

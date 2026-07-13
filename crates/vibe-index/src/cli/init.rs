@@ -84,7 +84,7 @@ fn write_readme(data_dir: &std::path::Path, registry: &str, registry_url: &str) 
         "# vibe-index — `{registry}`\n\
         \n\
         Metadata index for the vibevm registry `{registry}` (`{registry_url}`).\n\
-        Format: [PROP-005](https://gitverse.ru/anarchic/vibevm/raw/branch/main/spec/modules/vibe-index/PROP-005-package-index.md).\n\
+        Format: [PROP-005](https://gitverse.ru/vibevm/vibevm/raw/branch/main/spec/modules/vibe-index/PROP-005-package-index.md).\n\
         \n\
         ## Files\n\
         \n\

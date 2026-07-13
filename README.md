@@ -157,7 +157,7 @@ cargo xtask check-codegen    # CI uses this to assert no schema drift
 
 Read [`CLAUDE.md`](CLAUDE.md) before your first commit — the four non-negotiable rules (attribution, Conventional Commits, group by meaning, autonomy on routine changes only) apply to every contribution. Setup procedure is in [`DEV-GUIDE.md`](DEV-GUIDE.md). Process disciplines for the project itself live under `spec/boot/` and are loaded at every session start.
 
-Issues / PRs: this repo lives at `https://gitverse.ru/anarchic/vibevm`. The package registry is a separate org at `https://gitverse.ru/vibespecs` (currently transitioning from the M1.1 monorepo at `anarchic/vibespecs`).
+Issues / PRs: this repo lives at `https://gitverse.ru/vibevm/vibevm`. The package registry is a separate org at `https://gitverse.ru/vibespecs` (currently transitioning from the M1.1 monorepo at `anarchic/vibespecs`).
 
 ## License
 

@@ -280,7 +280,7 @@ Never edit `vibe.lock` by hand to silence this — that defeats the integrity ch
 1. Re-run with `RUST_LOG=debug` or scope it: `RUST_LOG=vibe_registry=trace,vibe_publish=debug vibe …` to see git command lines and HTTP request shapes.
 2. The error type usually comes from one of three crates — `vibe-core` (parse / IO), `vibe-registry` (git, registry), `vibe-install` (plan, apply). The message prefix usually points at the right one.
 3. If the cause is a layer below `vibe`, the error message includes the underlying tool's stderr verbatim. Run that tool's command line manually to reproduce.
-4. File an issue at <https://gitverse.ru/anarchic/vibevm/issues> with: `vibe --version`, `git --version`, the full command, the full error output, and `cat vibe.toml` / `cat vibe.lock` minus any secrets.
+4. File an issue at <https://gitverse.ru/vibevm/vibevm/issues> with: `vibe --version`, `git --version`, the full command, the full error output, and `cat vibe.toml` / `cat vibe.lock` minus any secrets.
 
 ## Related
 

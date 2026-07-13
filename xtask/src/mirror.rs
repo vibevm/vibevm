@@ -449,18 +449,18 @@ mod tests {
     #[test]
     fn normalize_url_strips_git_suffix_and_trailing_slash() {
         assert_eq!(
-            normalize_url("git@github.com:anarchic-pro/vibevm.git"),
-            "git@github.com:anarchic-pro/vibevm"
+            normalize_url("git@github.com:vibevm/vibevm.git"),
+            "git@github.com:vibevm/vibevm"
         );
         assert_eq!(
-            normalize_url("https://gitverse.ru/anarchic/vibevm.git/"),
-            "https://gitverse.ru/anarchic/vibevm"
+            normalize_url("https://gitverse.ru/vibevm/vibevm.git/"),
+            "https://gitverse.ru/vibevm/vibevm"
         );
         // Already bare — unchanged, and the leading `git@` is never touched
         // (only the tail is trimmed).
         assert_eq!(
-            normalize_url("git@gitverse.ru:anarchic/vibevm"),
-            "git@gitverse.ru:anarchic/vibevm"
+            normalize_url("git@gitverse.ru:vibevm/vibevm"),
+            "git@gitverse.ru:vibevm/vibevm"
         );
     }
 
@@ -469,15 +469,15 @@ mod tests {
         // mirrors.toml carries the `.git` form; a remote may not, or vice
         // versa — normalisation makes the two compare equal.
         let remotes = vec![
-            remote("origin", "git@gitverse.ru:anarchic/vibevm.git"),
-            remote("github", "git@github.com:anarchic-pro/vibevm"),
+            remote("origin", "git@gitverse.ru:vibevm/vibevm.git"),
+            remote("github", "git@github.com:vibevm/vibevm"),
         ];
         assert_eq!(
-            remotes_matching(&remotes, "git@gitverse.ru:anarchic/vibevm"),
+            remotes_matching(&remotes, "git@gitverse.ru:vibevm/vibevm"),
             vec!["origin"]
         );
         assert_eq!(
-            remotes_matching(&remotes, "git@github.com:anarchic-pro/vibevm.git"),
+            remotes_matching(&remotes, "git@github.com:vibevm/vibevm.git"),
             vec!["github"]
         );
     }
@@ -486,7 +486,7 @@ mod tests {
     fn no_matching_remote_when_url_is_unknown() {
         // A target with no configured remote (the push-by-URL-only case):
         // nothing to refresh, no spurious match.
-        let remotes = vec![remote("origin", "git@gitverse.ru:anarchic/vibevm.git")];
+        let remotes = vec![remote("origin", "git@gitverse.ru:vibevm/vibevm.git")];
         assert!(remotes_matching(&remotes, "git@example.com:someone/other.git").is_empty());
     }
 
@@ -495,11 +495,11 @@ mod tests {
         // Two remotes pointing at one host: both tracking refs must move,
         // and the input order is preserved.
         let remotes = vec![
-            remote("origin", "git@gitverse.ru:anarchic/vibevm.git"),
-            remote("alias", "git@gitverse.ru:anarchic/vibevm.git"),
+            remote("origin", "git@gitverse.ru:vibevm/vibevm.git"),
+            remote("alias", "git@gitverse.ru:vibevm/vibevm.git"),
         ];
         assert_eq!(
-            remotes_matching(&remotes, "git@gitverse.ru:anarchic/vibevm.git"),
+            remotes_matching(&remotes, "git@gitverse.ru:vibevm/vibevm.git"),
             vec!["origin", "alias"]
         );
     }

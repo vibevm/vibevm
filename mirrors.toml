@@ -23,14 +23,14 @@ schema = 1
 
 [[target]]
 name = "gitverse"
-url = "git@gitverse.ru:anarchic/vibevm.git"
+url = "git@gitverse.ru:vibevm/vibevm.git"
 mode = "push"
 refs = ["main", "tags"]
 region = "ru"
 
 [[target]]
 name = "github"
-url = "git@github.com:anarchic-pro/vibevm.git"
+url = "git@github.com:vibevm/vibevm.git"
 mode = "push"
 refs = ["main", "tags"]
 region = "us"

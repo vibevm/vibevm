@@ -1018,7 +1018,7 @@ and you want to close a loop that's bugging you.
 - **`cargo deny` in CI.** Licence-check automated: fail the build if a
   dep with a non-permissive licence sneaks in. Matches PROP-000 §3's
   "permissive only" rule.
-- **Docs site.** Eventually `https://gitverse.ru/anarchic/vibevm` is
+- **Docs site.** Eventually `https://gitverse.ru/vibevm/vibevm` is
   enough — but once user-facing docs exist under `docs/`, render them
   through mdBook or Zola so URIs are clickable.
 
