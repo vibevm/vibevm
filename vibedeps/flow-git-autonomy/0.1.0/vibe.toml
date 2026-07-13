@@ -1,0 +1,19 @@
+[package]
+name = "git-autonomy"
+group = "org.vibevm.world"
+kind = "flow"
+version = "0.1.0"
+authors = ["Oleg Chirukhin"]
+license = "UPL-1.0"
+description = "Commit/push autonomy: routine large changes proceed without a confirmation handshake; a fixed set of non-routine, hard-to-reverse operations (history rewrites, force-push, large blobs, CI/signing/secrets) always stops and asks first"
+keywords = ["git", "autonomy", "discipline", "commits", "safety"]
+
+[compatibility]
+min_vibe_version = "0.1.0"
+requires_kinds = []
+
+[boot_snippet]
+source = "boot/32-flow-autonomy.md"
+category = "flow"
+# A non-negotiable commit rule — suggest the inline priority lane (PROP-009 §2.4).
+link = "inline"

@@ -18,18 +18,14 @@ authors = ["Oleg Chirukhin"]
 # pin is present there).
 "flow:org.vibevm.world/wal-specspaces" = "^0.1.0"
 
-# Load-bearing setup-docs obligation (extracted from PROP-000 §19).
-"flow:org.vibevm.world/dev-runtime-docs" = { version = "^0.1.0", link = "static" }
-
-# Writer-conflict resolution: Human > Spec > Tests > Code (extracted from PROP-000 §9).
-"flow:org.vibevm.world/conflict-protocol" = { version = "^0.1.0", link = "static" }
-
-# Commit-and-push discipline — the git-practices family (extracted from PROP-000
-# §12 + CLAUDE.md Rules 1–4). An INLINE family: its members' boot snippets land
-# verbatim in spec/boot/INLINE.md (read first, max attention) — the four
-# non-negotiable rules keep guaranteed priority even though the text now lives
-# in the packages.
-"flow:org.vibevm.world/git-practices" = { version = "^0.1.0", link = "inline" }
+# vibevm dogfoods the whole redbook — the curated, tested edition of AI-native
+# development practices (a PROP-028 collection). Depending on the collection, not
+# on individual flows, means every practice extracted from this project's own
+# specs reaches vibevm through redbook as it is collected — no per-flow host entry.
+# dev-runtime-docs (§19), conflict-protocol (§9), and the git-practices family
+# (§12 + the trio Rules) now arrive transitively through it; the git-* commit
+# rules self-suggest the inline lane, so they still land in spec/boot/INLINE.md.
+"flow:org.vibevm.world/redbook" = { version = "^0.2.0", link = "static" }
 
 # vibevm is its own bootstrap project — the tool itself, and now the first
 # consumer of a package it authors: flow:wal-specspaces above resolves from

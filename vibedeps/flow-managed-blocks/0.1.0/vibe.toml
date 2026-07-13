@@ -1,0 +1,17 @@
+[package]
+name = "managed-blocks"
+group = "org.vibevm.world"
+kind = "flow"
+version = "0.1.0"
+authors = ["Oleg Chirukhin"]
+license = "UPL-1.0"
+description = "Managed blocks: how a tool writes into files it does not own — one delimited block, deterministic scanning, hard stop on malformed state"
+keywords = ["co-tenancy", "config-files", "markers", "tool-design", "non-destructive"]
+
+[compatibility]
+min_vibe_version = "0.1.0"
+requires_kinds = []
+
+[boot_snippet]
+source = "spec/boot/65-flow-managed-blocks.md"
+category = "flow"
