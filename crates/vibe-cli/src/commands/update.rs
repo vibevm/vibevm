@@ -348,6 +348,9 @@ fn install_args_from(args: &UpdateArgs) -> InstallArgs {
         // `vibe update` carries no `--allow-hooks`; hook consent on the
         // whole-graph path is resolved by the `vibe install` it delegates to.
         allow_hooks: false,
+        prefer_embedded: false,
+        no_prefer_embedded: false,
+        no_default_registry: false,
     }
 }
 

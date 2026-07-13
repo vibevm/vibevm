@@ -143,6 +143,26 @@ pub struct InstallArgs {
     #[arg(long, value_name = "naive|sat|resolvo")]
     pub solver: Option<String>,
 
+    /// PROP-030: prefer the embedded registry (a source install's in-tree
+    /// `packages/`) over the declared `[[registry]]` walk on a coordinate
+    /// clash — already the default for a source-installed developer; this flag
+    /// forces it. Mutually exclusive with `--no-prefer-embedded`.
+    #[arg(long)]
+    pub prefer_embedded: bool,
+
+    /// PROP-030: consult the declared `[[registry]]` walk before the embedded
+    /// registry, so a published package wins a coordinate clash and the
+    /// embedded copy only fills gaps. Mutually exclusive with
+    /// `--prefer-embedded`.
+    #[arg(long)]
+    pub no_prefer_embedded: bool,
+
+    /// PROP-030: ignore the ambient embedded registry entirely for this
+    /// command — resolve only from the declared `[[registry]]` walk. Also set
+    /// by `VIBE_NO_DEFAULT_REGISTRY=1`.
+    #[arg(long)]
+    pub no_default_registry: bool,
+
     /// Add a git-source declaration for the single positional pkgref
     /// — fetches the package directly from this git URL rather than
     /// resolving it through `[[registry]]`. PROP-002 §2.4.1.

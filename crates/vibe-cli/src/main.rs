@@ -82,7 +82,7 @@ fn main() -> ExitCode {
     let discover_embedded_root = || -> Option<PathBuf> {
         // PROP-030 §5 (CI-off): CI resolves from declared registries only, so a
         // machine-local embedded lock cannot silently pass there.
-        if read_env_opt("CI").is_some() {
+        if read_env_opt("CI").is_some() || read_env_opt("VIBE_NO_DEFAULT_REGISTRY").is_some() {
             return None;
         }
         commands::vvm::embedded_root_at(self_loc.as_ref()?.root.clone())

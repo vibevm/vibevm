@@ -378,6 +378,9 @@ pub(crate) fn build_install_resolver(
     embedded_root: Option<&Path>,
 ) -> Result<InstallResolver> {
     let solver = validate_solver(args.solver.as_deref())?;
+    if args.prefer_embedded && args.no_prefer_embedded {
+        bail!("--prefer-embedded and --no-prefer-embedded are mutually exclusive");
+    }
     if let Some(explicit) = &args.registry {
         let p = explicit
             .canonicalize()
@@ -389,10 +392,13 @@ pub(crate) fn build_install_resolver(
     }
 
     // PROP-030: a source-installed `vibe` exposes its in-tree `packages/` as an
-    // ambient embedded registry, composed with the declared walk at developer
-    // precedence (embedded-first). It also stands in for the walk entirely when
-    // the project declares no `[[registry]]`, lifting the bail below.
-    if let Some(root) = embedded_root {
+    // ambient embedded registry, composed with the declared walk. Precedence is
+    // developer/embedded-first by default; `--no-prefer-embedded` flips it so a
+    // published package wins a clash. `--no-default-registry` (and, at the
+    // composition root, `VIBE_NO_DEFAULT_REGISTRY`) suppresses it entirely. When
+    // the project declares no `[[registry]]`, the embedded registry stands in
+    // alone, lifting the bail below.
+    if let Some(root) = embedded_root.filter(|_| !args.no_default_registry) {
         let root = crate::commands::init::strip_unc_public(root.to_path_buf());
         let embedded = crate::registry::local_registry(root.clone()).map_err(|e| {
             anyhow!(
@@ -405,10 +411,15 @@ pub(crate) fn build_install_resolver(
         } else {
             Some(Box::new(open_multi(manifest, args)?))
         };
+        let precedence = if args.no_prefer_embedded {
+            EmbeddedPrecedence::EmbeddedLast
+        } else {
+            EmbeddedPrecedence::EmbeddedFirst
+        };
         return Ok(InstallResolver::Embedded {
             embedded,
             declared,
-            precedence: EmbeddedPrecedence::EmbeddedFirst,
+            precedence,
             solver,
         });
     }

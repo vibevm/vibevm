@@ -440,6 +440,7 @@ fn run_doctor_cmd(ctx: &output::Context, env: &VvmEnv, args: VvmDoctorArgs) -> R
     let shim_dir = store.shim_dir();
     let on_path = path_has_dir(env.path_var.as_deref(), &shim_dir);
     let active = store.active()?;
+    let embedded_registry = active.as_ref().and_then(embedded::embedded_root_for);
     let active_missing = active
         .as_ref()
         .map(|r| !store.binary_path(&r.version_id(), r.instance).is_file())
@@ -461,6 +462,7 @@ fn run_doctor_cmd(ctx: &output::Context, env: &VvmEnv, args: VvmDoctorArgs) -> R
             "shim_dir_on_path": on_path,
             "active": active.as_ref().map(|r| r.version_id().to_string()),
             "active_binary_ok": !active_missing,
+            "embedded_registry": embedded_registry.as_ref().map(|p| p.display().to_string()),
         }));
     }
 
@@ -496,6 +498,15 @@ fn run_doctor_cmd(ctx: &output::Context, env: &VvmEnv, args: VvmDoctorArgs) -> R
             r.version_id()
         )),
         None => ctx.step("-    no active version (set one with `vibe self use <selector>`)"),
+    }
+    // PROP-030: the embedded registry the active source install exposes for
+    // every project (its in-tree `packages/`).
+    match &embedded_registry {
+        Some(root) => ctx.step(&format!(
+            "ok   embedded registry {} (source install; precedence embedded-first)",
+            root.display()
+        )),
+        None => ctx.step("-    no embedded registry (the active version is not a source install)"),
     }
 
     if args.fix && confirm(ctx, args.yes, "Write shims and put the shim dir on PATH?")? {
