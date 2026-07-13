@@ -1,6 +1,6 @@
 [meta]
 generated_by = "vibe 0.1.0-dev"
-generated_at = "2026-07-13T21:25:16Z"
+generated_at = "2026-07-13T21:56:34Z"
 schema_version = 5
 root_dependencies = [
     "stack:org.vibevm/rust-ai-native@^0.7.0",
@@ -9,7 +9,18 @@ root_dependencies = [
     "stack:org.vibevm.ai-native/rust-ai-native@^0.7.0",
     "stack:org.vibevm.ai-native/typescript-ai-native@^0.6.0",
     "flow:org.vibevm.world/dev-runtime-docs@^0.1.0",
+    "flow:org.vibevm.world/conflict-protocol@^0.1.0",
 ]
+
+[[package]]
+kind = "flow"
+name = "conflict-protocol"
+group = "org.vibevm.world"
+version = "0.1.0"
+source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm.world/conflict-protocol/v0.1.0"
+content_hash = "sha256:6bdea900f490eaa333bca0a715b990e1a441cea002b21cfceb7e43f1cf15a99e"
+files_written = []
+source_kind = "registry"
 
 [[package]]
 kind = "flow"

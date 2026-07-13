@@ -105,7 +105,7 @@ Workflows are graph queries (target node + transitive dependencies) per §5.5.
 
 ## 9. Conflict resolution {#conflicts}
 
-**Decision:** Per book chapter 1 / `VIBEVM-SPEC.md` §2.2: **Human > Spec > Tests > Code**. AI never silently overrides spec; when it believes the spec is wrong it adds a `REVIEW` marker and surfaces the question.
+vibevm's writer-conflict resolution — the **Human > Spec > Tests > Code** order (also pinned in [`VIBEVM-SPEC.md`](../../VIBEVM-SPEC.md) §2.2 and book chapter 1) — is the `conflict-protocol` flow: `spec://org.vibevm.world/conflict-protocol/flows/conflict-protocol/CONFLICT-PROTOCOL#root`.
 
 ---
 

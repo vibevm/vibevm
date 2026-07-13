@@ -21,6 +21,9 @@ authors = ["Oleg Chirukhin"]
 # Load-bearing setup-docs obligation (extracted from PROP-000 §19).
 "flow:org.vibevm.world/dev-runtime-docs" = { version = "^0.1.0", link = "static" }
 
+# Writer-conflict resolution: Human > Spec > Tests > Code (extracted from PROP-000 §9).
+"flow:org.vibevm.world/conflict-protocol" = { version = "^0.1.0", link = "static" }
+
 # vibevm is its own bootstrap project — the tool itself, and now the first
 # consumer of a package it authors: flow:wal-specspaces above resolves from
 # the local packages/ tree; it is not yet a consumer of any remote vibevm
