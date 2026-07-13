@@ -170,10 +170,14 @@ Keep it current-state; prune stale lines.
   token by PATH `~/.vibevm/zai.api.token` (never inline/echo it);
   `config_dir = "auto"` (fresh per-run `CLAUDE_CONFIG_DIR`).
 - **Free vs paid:** `route` / `gate` are pure calculus — no daemon, no spend;
-  `run` / `spawn` / `advise` spawn a real GLM worker = **z.ai spend**. The
-  blanket paid-run pre-authorisation ended with the 2026-07-12 five-task goal —
-  a new paid run needs the owner's word (a task that commissions a run is that
-  word).
+  `run` / `spawn` / `advise` spawn a real GLM worker (z.ai). **Standing owner
+  grant (2026-07-13): fractality runs are NOT treated as paid — do not ask
+  before spawning; use them freely and by default, the more delegation the
+  better (this is the whole point of the delegation-first directive).** Rule 4's
+  non-routine red lines still bind the *work* a run performs (history rewrites,
+  force-push, large blobs, CI / signing / secrets, irreversible ops) — those
+  stop for the owner whether done directly or via a worker, and the never-delegate
+  set still governs what may be handed off at all.
 - **Interim route (no packet):** `opencode run -m zai-coding-plan/glm-5.2 "<task>"`
   — opencode 1.17.14, z.ai creds in its auth store (2026-07-12); use **only**
   `zai-coding-plan/*` (the `opencode/*` Zen gateway is unpaid here and errors).
