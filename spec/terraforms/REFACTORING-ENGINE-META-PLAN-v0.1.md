@@ -59,7 +59,7 @@ Conceptual layering: **PROP-032 (model) ⊃ PROP-014 (its code↔spec projection
   - **Slice 4 — search recipes / find→fix:** the pipeline connecting conform (find) → refactoring (fix).
   - **Slice 5+ —** more kinds (LLM/hybrid), more languages, preconditions, recipe-goldens as a standing gate.
 - **Parallel packaging track:** extract specmark + specmap out of `ai-native` into the neutral `org.vibevm.world` SDD-substrate package (dependency inversion, PROP-032 §2.8).
-- **The ultimate consumer:** the big **cultural-pattern extraction refactoring** — the engine's first large migration.
+- **The bootstrap track (runs FIRST, does *not* wait for the engine):** the **cultural-pattern extraction refactoring** — pull vibevm's general programming-culture material into reusable packages, minimally-tooled (the existing specmap gate) and gated. Executable plan: [`CULTURAL-EXTRACTION-PLAN-v0.1`](CULTURAL-EXTRACTION-PLAN-v0.1.md), launchable under `/goal`. It cleans and layers vibevm's own specs **and** its `report.md` hands the engine build a concrete requirements list drawn from doing every move by hand. The engine, once built, becomes the tool that maintains this at scale — so the bootstrap both *precedes* and is later *re-served by* the engine. This resolves the chicken-and-egg: you do not need the engine to do the refactoring, only the gate.
 
 ## 5. The clean-room firewall — the campaign's first law {#firewall}
 
