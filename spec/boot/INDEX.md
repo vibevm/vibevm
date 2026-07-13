@@ -26,6 +26,10 @@ path = "vibedeps/stack-typescript-ai-native-lang/0.6.0/spec/boot/20-stack-typesc
 kind = "static"
 
 [[entry]]
+path = "vibedeps/flow-dev-runtime-docs/0.1.0/boot/58-flow-dev-runtime-docs.md"
+kind = "static"
+
+[[entry]]
 path = "vibedeps/flow-wal/0.2.0/spec/boot/10-flow-wal.md"
 kind = "static"
 

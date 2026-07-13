@@ -268,9 +268,7 @@ Concretely, the canonical `flow:wal@0.1.0` payload (vendored as a hermetic e2e t
 - [`DEV-GUIDE.md`](../../DEV-GUIDE.md) — contributor-facing: everything to install on a fresh machine to clone, build, test, contribute to, and (if authorized) publish from this repository.
 - [`RUNTIME-GUIDE.md`](../../RUNTIME-GUIDE.md) — user-facing: everything to install and env-configure to run the shipped `vibe` CLI.
 
-Every change that touches toolchain, prerequisites, env variables, paths, or bootstrap steps MUST update the relevant guide in the **same** commit. Never ship a setup change with the doc update deferred — a contributor or user hitting a broken setup with no matching doc is exactly the failure these files exist to prevent.
-
-The obligation is pinned here (rather than only in the guides themselves) so that every contributor sees it during the boot-sequence read-order, before touching env or toolchain code.
+vibevm's setup docs are [`DEV-GUIDE.md`](../../DEV-GUIDE.md) (contributor / build) and [`RUNTIME-GUIDE.md`](../../RUNTIME-GUIDE.md) (runtime / user). The same-commit obligation that binds them is the `dev-runtime-docs` flow: `spec://org.vibevm.world/dev-runtime-docs/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL#obligation`.
 
 ---
 

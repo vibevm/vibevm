@@ -1,0 +1,17 @@
+[package]
+name = "dev-runtime-docs"
+group = "org.vibevm.world"
+kind = "flow"
+version = "0.1.0"
+authors = ["Oleg Chirukhin"]
+license = "UPL-1.0"
+description = "Load-bearing setup + runtime docs: a change to toolchain / prerequisites / env / paths ships with the doc update in the same commit, never deferred"
+keywords = ["docs", "setup", "runtime", "onboarding", "discipline"]
+
+[compatibility]
+min_vibe_version = "0.1.0"
+requires_kinds = []
+
+[boot_snippet]
+source = "boot/58-flow-dev-runtime-docs.md"
+category = "flow"

@@ -18,6 +18,9 @@ authors = ["Oleg Chirukhin"]
 # pin is present there).
 "flow:org.vibevm.world/wal-specspaces" = "^0.1.0"
 
+# Load-bearing setup-docs obligation (extracted from PROP-000 §19).
+"flow:org.vibevm.world/dev-runtime-docs" = { version = "^0.1.0", link = "static" }
+
 # vibevm is its own bootstrap project — the tool itself, and now the first
 # consumer of a package it authors: flow:wal-specspaces above resolves from
 # the local packages/ tree; it is not yet a consumer of any remote vibevm
