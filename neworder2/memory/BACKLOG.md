@@ -41,3 +41,16 @@ each snippet's anchors, but excluding the generated artifact is simpler and corr
 
 **Home when built:** the `rust-ai-native-specmap` scan + `specmap.toml` (host policy).
 **Interim:** accept the N `duplicate-anchor` warnings on INLINE.md as known/cosmetic (0 suspects).
+
+## B3 — regenerate the fractality nested-project lock post-rename (found 2026-07-14)
+
+**Problem.** The git-practices member rename (git-atomic-commits, git-attribution-policy, …)
+renamed the package dirs and each member's `vibe.toml` `name`, so the fractality nested project's
+`packages/org.vibevm.fractality/fractality/v0.1.0/vibe.lock` — which pins some of those members —
+is stale: its `source_url` paths, `name` fields, and (because the `name` change alters package
+content) `content_hash` values no longer match. The rename sed touched only the `source_url`
+paths, half-updating a generated file, so that edit was reverted rather than committed.
+
+**Fix (a fractality session):** run `vibe install` in the fractality project to regenerate the
+lock cleanly. Low priority — the nested project is a specspace, not currently installed from here.
+Do not hand-edit the generated lock.
