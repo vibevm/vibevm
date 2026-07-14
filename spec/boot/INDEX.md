@@ -8,10 +8,14 @@
 # system is <name> (windows / macos / linux), and skip it otherwise.
 
 schema = 1
-inline = "spec/boot/STATIC.md"
+static = "spec/boot/STATIC.md"
 
 [[entry]]
 path = "spec/boot/00-core.md"
+kind = "static"
+
+[[entry]]
+path = "spec/boot/INLINE.md"
 kind = "static"
 
 [[entry]]
@@ -107,6 +111,10 @@ path = "vibedeps/flow-wal/0.2.0/spec/boot/10-flow-wal.md"
 kind = "static"
 
 [[entry]]
+path = "vibedeps/flow-wal-specspaces/0.1.0/spec/boot/11-flow-wal-specspaces.md"
+kind = "static"
+
+[[entry]]
 path = "vibedeps/flow-redbook/0.2.0/spec/boot/03-flow-redbook.md"
 kind = "static"
 
@@ -116,10 +124,6 @@ kind = "static"
 
 [[entry]]
 path = "vibedeps/flow-delegation-first/0.1.0/spec/boot/76-flow-delegation-first.md"
-kind = "static"
-
-[[entry]]
-path = "vibedeps/flow-wal-specspaces/0.1.0/spec/boot/11-flow-wal-specspaces.md"
 kind = "static"
 
 [[entry]]

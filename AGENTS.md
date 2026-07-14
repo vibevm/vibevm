@@ -195,8 +195,8 @@ Rationale: the resume boundary exists so the owner can inspect the restored stat
 This project's boot sequence is computed by vibe (the PROP-009 loading
 model). To begin a session, read these files in order:
 
-1. `spec/boot/INLINE.md` — if it exists. The priority lane: read it first
-   and in full.
+1. `spec/boot/STATIC.md` — if it exists. The static (priority) lane: read it
+   first and in full.
 2. `spec/boot/INDEX.md` — a generated TOML manifest. Read every file named
    by its `[[entry]]` tables, in the listed order. A `kind = "static"`
    entry is read directly; a `kind = "dynamic"` entry is an INCLUDE

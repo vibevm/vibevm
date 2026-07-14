@@ -357,7 +357,7 @@ version = "0.1.0"
 [boot_snippet]
 source = "boot/10-flow-wal.md"
 category = "flow"
-link = "inline"
+link = "static"
 "#;
         let m = parse_manifest(body).unwrap();
         let bs = boot_snippet_from(&m.boot_snippet).expect("boot_snippet present");
