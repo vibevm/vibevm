@@ -31,6 +31,9 @@ pub struct Node {
     pub level: u8,
     /// Heading text, with the leading `#`s and trailing `{#anchor}` stripped.
     pub heading: String,
+    /// Any text after the `{#anchor}` on the heading line — e.g. a `#source`
+    /// merge marker `:add` / `:replace` (PROP-035 §7.3). Empty when absent.
+    pub trailing: String,
     /// 0-based source line of the heading (`0` for the root, which has none).
     pub heading_line: usize,
     /// Source lines `[start, end)` this node covers, subtree included.
@@ -63,6 +66,7 @@ impl DocTree {
             id: None,
             level: 0,
             heading: String::new(),
+            trailing: String::new(),
             heading_line: 0,
             span: 0..lines.len(),
             parent: None,
@@ -76,7 +80,7 @@ impl DocTree {
             if fenced[i] {
                 continue;
             }
-            let Some((level, heading, anchor)) = parse_heading(line) else {
+            let Some((level, heading, anchor, trailing)) = parse_heading(line) else {
                 continue;
             };
 
@@ -98,6 +102,7 @@ impl DocTree {
                 id: anchor.clone(),
                 level,
                 heading,
+                trailing,
                 heading_line: i,
                 span: i..lines.len(),
                 parent: Some(parent),
@@ -172,6 +177,16 @@ impl DocTree {
         &self.duplicate_anchors
     }
 
+    /// The anchored nodes, in document order, as `(id, anchor)`. Skips the root
+    /// and any heading without an anchor.
+    pub fn anchored(&self) -> impl Iterator<Item = (NodeId, &str)> {
+        self.nodes
+            .iter()
+            .enumerate()
+            .skip(1)
+            .filter_map(|(i, n)| n.id.as_deref().map(|a| (NodeId(i), a)))
+    }
+
     /// The source text a node covers (heading line through its whole subtree),
     /// rejoined with `\n`.
     pub fn text(&self, id: NodeId) -> String {
@@ -220,10 +235,10 @@ pub(crate) fn fence_mask(lines: &[String]) -> Vec<bool> {
     mask
 }
 
-/// Parse an ATX heading line into `(level, heading_text, anchor)`. Requires a
-/// space after the `#`s (so `#nospace` is not a heading), matching the vendored
-/// engine's rule.
-fn parse_heading(line: &str) -> Option<(u8, String, Option<String>)> {
+/// Parse an ATX heading line into `(level, heading_text, anchor, trailing)`.
+/// Requires a space after the `#`s (so `#nospace` is not a heading), matching
+/// the vendored engine's rule.
+fn parse_heading(line: &str) -> Option<(u8, String, Option<String>, String)> {
     let hashes = line.chars().take_while(|&c| c == '#').count();
     if hashes == 0 || hashes > 6 {
         return None;
@@ -232,20 +247,24 @@ fn parse_heading(line: &str) -> Option<(u8, String, Option<String>)> {
     if !rest.starts_with(' ') {
         return None;
     }
-    let (heading, anchor) = split_anchor(rest.trim());
-    Some((hashes as u8, heading, anchor))
+    let (heading, anchor, trailing) = split_anchor(rest.trim());
+    Some((hashes as u8, heading, anchor, trailing))
 }
 
-/// Split a trailing `{#anchor}` off heading text.
-fn split_anchor(text: &str) -> (String, Option<String>) {
-    if let Some(pos) = text.rfind("{#")
-        && text.ends_with('}')
+/// Split a `{#anchor}` out of heading text, returning the text before it, the
+/// anchor, and any trailing text after the closing `}` (e.g. a `:add` /
+/// `:replace` merge marker). The anchor need not sit at the end of the line.
+fn split_anchor(text: &str) -> (String, Option<String>, String) {
+    if let Some(open) = text.find("{#")
+        && let Some(close_rel) = text[open + 2..].find('}')
     {
-        let anchor = &text[pos + 2..text.len() - 1];
-        let heading = text[..pos].trim_end().to_string();
-        return (heading, Some(anchor.to_string()));
+        let close = open + 2 + close_rel;
+        let anchor = text[open + 2..close].to_string();
+        let heading = text[..open].trim_end().to_string();
+        let trailing = text[close + 1..].trim().to_string();
+        return (heading, Some(anchor), trailing);
     }
-    (text.to_string(), None)
+    (text.to_string(), None, String::new())
 }
 
 #[cfg(test)]
@@ -356,6 +375,14 @@ b
         let top = t.children(t.root())[0];
         assert_eq!(t.node(top).id, None);
         assert_eq!(t.node(top).heading, "Plain heading");
+    }
+
+    #[test]
+    fn anchor_trailing_marker_is_captured() {
+        let t = DocTree::parse("## Name {#tag} :replace\nbody\n");
+        let n = t.find_by_anchor("tag").unwrap();
+        assert_eq!(t.node(n).heading, "Name");
+        assert_eq!(t.node(n).trailing, ":replace");
     }
 
     #[test]

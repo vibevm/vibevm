@@ -20,9 +20,11 @@
 mod address;
 mod directives;
 mod doctree;
+mod merge;
 mod resolver;
 
 pub use address::{Authority, SpecAddress, SpecAddressError};
 pub use directives::{Directive, DirectiveError, DirectiveKind, Directives, InPlaceUse};
 pub use doctree::{DocTree, Node, NodeId};
+pub use merge::{MergeMode, MergedSection, SectionOrigin, merge_contract_source};
 pub use resolver::{FileResolver, ResolveError};
