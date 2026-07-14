@@ -24,7 +24,9 @@ use std::fmt::Write as _;
 
 use crate::address::{SpecAddress, SpecAddressError};
 use crate::directives::{DirectiveKind, Directives};
+use crate::doctree::DocTree;
 use crate::embed::{EmbedError, SectionSource, expand_embeds};
+use crate::merge::fold_source;
 use crate::use_graph::{UseGraphError, topo_order_from};
 
 /// Why inline compilation failed.
@@ -57,9 +59,22 @@ pub fn compile_inline(
                 reason,
             })?;
 
-        // phase 3 (source-merge) is deferred; phase 4 (embed) over the
-        // use-resolved body.
-        let body = strip_use_lines(&text);
+        // phase 3 — fold source into a contract that declares #source.
+        let folded = match first_source_directive(&text) {
+            Some(source_addr) => {
+                let contract_tree = DocTree::parse(&text);
+                let src_text = source.section_text(&source_addr).map_err(|reason| {
+                    CompileError::Unresolved {
+                        addr: source_addr.to_string(),
+                        reason,
+                    }
+                })?;
+                fold_source(&contract_tree, &DocTree::parse(&src_text))
+            }
+            None => text,
+        };
+        // phase 4 — embed over the use/source-resolved body.
+        let body = strip_directive_lines(&folded, &[DirectiveKind::Use, DirectiveKind::Source]);
         let expanded = expand_embeds(&body, source)?;
 
         writeln!(out, "<!-- begin: {key} -->").unwrap(); // phase 5
@@ -72,21 +87,31 @@ pub fn compile_inline(
     Ok(out)
 }
 
-/// Remove `#use` directive lines — their target is emitted separately by the
-/// topological order, so the directive would be a leftover in the output.
-fn strip_use_lines(text: &str) -> String {
+/// The first `#source` address in a document, if it declares one (§7.3).
+fn first_source_directive(text: &str) -> Option<SpecAddress> {
+    Directives::parse(text)
+        .directives
+        .into_iter()
+        .find(|d| d.kind == DirectiveKind::Source)
+        .map(|d| d.address)
+}
+
+/// Remove directive lines of the given kinds. `#use` is resolved by the
+/// ordering and `#source` by the fold, so both would be leftovers in the
+/// compiled output.
+fn strip_directive_lines(text: &str, kinds: &[DirectiveKind]) -> String {
     let directives = Directives::parse(text);
-    let use_lines: HashSet<usize> = directives
+    let strip: HashSet<usize> = directives
         .directives
         .iter()
-        .filter(|d| d.kind == DirectiveKind::Use)
+        .filter(|d| kinds.contains(&d.kind))
         .map(|d| d.line)
         .collect();
 
     let kept: Vec<&str> = text
         .lines()
         .enumerate()
-        .filter(|(i, _)| !use_lines.contains(i))
+        .filter(|(i, _)| !strip.contains(i))
         .map(|(_, line)| line)
         .collect();
     kept.join("\n")
@@ -166,5 +191,25 @@ mod tests {
             compile_inline(&seed, &src),
             Err(CompileError::UseGraph(_))
         ));
+    }
+
+    #[test]
+    fn folds_source_into_a_contract_that_declares_it() {
+        let src = MockSource::new(&[
+            (
+                "spec://org.vibevm.demo/lib/contract/api#root",
+                "# API {#root}\n#source spec://org.vibevm.demo/lib/source/impl#root\ncontract-body",
+            ),
+            (
+                "spec://org.vibevm.demo/lib/source/impl#root",
+                "# Impl {#root}\nsource-body",
+            ),
+        ]);
+        let seed = SpecAddress::parse("spec://org.vibevm.demo/lib/contract/api#root").unwrap();
+        let out = compile_inline(&seed, &src).unwrap();
+        assert!(out.contains("contract-body"), "{out}");
+        assert!(out.contains("source-body"), "{out}");
+        // The #source directive is resolved by the fold, not left behind.
+        assert!(!out.contains("#source"), "{out}");
     }
 }

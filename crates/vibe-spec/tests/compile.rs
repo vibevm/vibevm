@@ -32,3 +32,16 @@ fn compiles_a_document_pulling_a_use_and_an_embed() {
     assert!(!out.contains("#use"), "{out}");
     assert!(!out.contains("#embed"), "{out}");
 }
+
+#[test]
+fn compiles_a_contract_folding_its_source() {
+    let source = FsSectionSource::new(FileResolver::new(ws(), "vibevm"));
+    let seed = SpecAddress::parse("spec://org.vibevm.demo/demo-lib/contract/API#root").unwrap();
+    let out = compile_inline(&seed, &source).unwrap();
+
+    // The contract's own text and its folded-in source are both present.
+    assert!(out.contains("contract surface of demo-lib"), "{out}");
+    assert!(out.contains("heavy source behind the contract"), "{out}");
+    // The #source directive is resolved by the fold, not left behind.
+    assert!(!out.contains("#source"), "{out}");
+}
