@@ -431,7 +431,7 @@ name = "demo"
 version = "0.1.0"
 
 [boot]
-default_link = "inline"
+default_link = "static"
 "#;
     Manifest::parse_str(raw).unwrap();
 }

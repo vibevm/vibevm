@@ -295,36 +295,35 @@ impl Compatibility {
 /// Set by the consumer on a `[requires.packages]` entry (`link = "…"`); a
 /// package may suggest a default on its own `[boot_snippet]`; a workspace
 /// may set a fallback in `[boot].default_link`. Absent everywhere, the
-/// type is [`LinkType::Static`].
+/// type is [`LinkType::Dynamic`].
 ///
 /// ```
 /// use vibe_core::manifest::LinkType;
 ///
-/// // Absent everywhere, a dependency links statically (PROP-009 §2.4); a
-/// // consumer overrides it per-dep with `link = "inline"` or `"dynamic"`.
-/// assert_eq!(LinkType::default(), LinkType::Static);
+/// // Absent everywhere, a dependency links dynamically (PROP-009 §2.4); a
+/// // consumer overrides it per-dep with `link = "static"`.
+/// assert_eq!(LinkType::default(), LinkType::Dynamic);
 /// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Default)]
 #[serde(rename_all = "lowercase")]
 pub enum LinkType {
-    /// Concatenated verbatim into the generated `INLINE.md`, read first —
-    /// the emergency priority lane. Duplicates the text on disk, so used
-    /// sparingly, for critical disciplines and top-level skills.
-    Inline,
-    /// The default. `vibe` resolves the contribution to a concrete path in
-    /// the generated `INDEX.md`; the agent reads it directly.
-    #[default]
+    /// Compiled verbatim into the generated `STATIC.md`, read first — the
+    /// statically-linked priority lane (AOT). Duplicates the text on disk,
+    /// so used deliberately, for critical disciplines and top-level skills.
     Static,
-    /// `INDEX.md` carries an INCLUDE pointer the agent resolves at boot —
-    /// supports conditional, context-gated loading.
+    /// The default. `vibe` resolves the contribution to a concrete path in
+    /// the generated `INDEX.md`; the agent reads it **dynamically, on
+    /// demand**. An optional `when` condition (PROP-009 §2.6) gates that
+    /// read — context-gated / conditional loading.
+    #[default]
     Dynamic,
     /// This package **and its entire transitive closure** are pulled
-    /// `inline` (PROP-035 §12 / PROP-034 §2.1). A consumer-side property of
-    /// the edge — the same package can be pulled `inline-transitive` by one
-    /// consumer and `static` by another. Resolved to `inline` at emission,
+    /// `static` (PROP-035 §12 / PROP-034 §2.1). A consumer-side property of
+    /// the edge — the same package can be pulled `static-transitive` by one
+    /// consumer and `dynamic` by another. Resolved to `static` at emission,
     /// with the mode propagated across the closure by `bootgen`.
-    #[serde(rename = "inline-transitive")]
-    InlineTransitive,
+    #[serde(rename = "static-transitive")]
+    StaticTransitive,
 }
 
 /// Ordering band for a package's boot snippet within the computed boot
@@ -426,11 +425,11 @@ impl std::fmt::Display for TargetOs {
 /// let b: BootSnippet = toml::from_str(r#"
 ///     source = "boot/10-flow-wal.md"
 ///     category = "flow"
-///     link = "static"
+///     link = "dynamic"
 /// "#).unwrap();
 /// assert_eq!(b.source.to_str(), Some("boot/10-flow-wal.md"));
 /// assert_eq!(b.category, Some(BootCategory::Flow));
-/// assert_eq!(b.link, Some(LinkType::Static));
+/// assert_eq!(b.link, Some(LinkType::Dynamic));
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]

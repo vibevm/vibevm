@@ -179,7 +179,7 @@ impl TryFrom<RequiresWire> for Requires {
                     // §2.4) before the source-kind dispatch — `link` is
                     // valid on every source kind. Every declared value is
                     // stored, an explicit `static` included: writing
-                    // `link = "static"` overrides a workspace
+                    // `link = "dynamic"` overrides a workspace
                     // `[boot].default_link` / a package-suggested link, and
                     // that intent is lost if explicit `static` is dropped.
                     if let Some(link) = inline.link {
@@ -416,11 +416,11 @@ mod tests {
     fn requires_link_on_registry_dep_parses() {
         let r = requires_from_toml(
             r#"[packages]
-"org.vibevm/wal" = { version = "^0.3", link = "inline" }
+"org.vibevm/wal" = { version = "^0.3", link = "static" }
 "#,
         );
         assert_eq!(r.packages.len(), 1);
-        assert_eq!(r.link_for(&org(), "wal"), LinkType::Inline);
+        assert_eq!(r.link_for(&org(), "wal"), LinkType::Static);
     }
 
     #[test]
@@ -441,24 +441,24 @@ mod tests {
 "#,
         );
         assert!(r.links.is_empty());
-        assert_eq!(r.link_for(&org(), "wal"), LinkType::Static);
+        assert_eq!(r.link_for(&org(), "wal"), LinkType::Dynamic);
     }
 
     #[test]
     fn requires_explicit_static_link_is_stored() {
-        // An explicit `link = "static"` is kept, not folded into "absent":
+        // An explicit `link = "dynamic"` is kept, not folded into "absent":
         // the loading-model precedence (PROP-009 §2.4) lets it override a
         // workspace default, so the explicit choice must survive — and it
         // survives a serialize round-trip as an inline table.
         let r = requires_from_toml(
             r#"[packages]
-"org.vibevm/wal" = { version = "^0.3", link = "static" }
+"org.vibevm/wal" = { version = "^0.3", link = "dynamic" }
 "#,
         );
-        assert_eq!(r.declared_link(&org(), "wal"), Some(LinkType::Static));
-        assert_eq!(r.link_for(&org(), "wal"), LinkType::Static);
+        assert_eq!(r.declared_link(&org(), "wal"), Some(LinkType::Dynamic));
+        assert_eq!(r.link_for(&org(), "wal"), LinkType::Dynamic);
         let back: Requires = toml::from_str(&toml::to_string_pretty(&r).unwrap()).unwrap();
-        assert_eq!(back.declared_link(&org(), "wal"), Some(LinkType::Static));
+        assert_eq!(back.declared_link(&org(), "wal"), Some(LinkType::Dynamic));
     }
 
     #[test]
@@ -471,7 +471,7 @@ mod tests {
 "#,
         );
         assert_eq!(r.declared_link(&org(), "wal"), None);
-        assert_eq!(r.link_for(&org(), "wal"), LinkType::Static);
+        assert_eq!(r.link_for(&org(), "wal"), LinkType::Dynamic);
     }
 
     #[test]
@@ -489,11 +489,11 @@ mod tests {
     fn requires_link_on_path_source_parses() {
         let r = requires_from_toml(
             r#"[packages]
-"org.vibevm/wal" = { path = "../flow-wal", link = "inline" }
+"org.vibevm/wal" = { path = "../flow-wal", link = "static" }
 "#,
         );
         assert_eq!(r.path_packages.len(), 1);
-        assert_eq!(r.link_for(&org(), "wal"), LinkType::Inline);
+        assert_eq!(r.link_for(&org(), "wal"), LinkType::Static);
     }
 
     #[test]
@@ -527,33 +527,33 @@ mod tests {
         // form — it must serialise as an inline table so `link` survives.
         let r = requires_from_toml(
             r#"[packages]
-"org.vibevm/wal" = { version = "^0.3", link = "inline" }
+"org.vibevm/wal" = { version = "^0.3", link = "static" }
 "#,
         );
         let rendered = toml::to_string_pretty(&r).unwrap();
-        assert!(rendered.contains("link = \"inline\""), "{rendered}");
+        assert!(rendered.contains("link = \"static\""), "{rendered}");
     }
 
     #[test]
     fn requires_link_round_trips_across_all_source_kinds() {
         let original = requires_from_toml(
             r#"[packages]
-"org.vibevm/wal" = { version = "^0.3", link = "inline" }
+"org.vibevm/wal" = { version = "^0.3", link = "static" }
 "org.vibevm/internal" = { git = "https://github.com/me/flow-internal", tag = "v0.1.0", link = "dynamic" }
 "org.vibevm/auth" = { path = "../feat-auth", link = "dynamic" }
-"org.vibevm/rust" = { version.var = "core", link = "inline" }
+"org.vibevm/rust" = { version.var = "core", link = "static" }
 "org.vibevm/plain" = "^0.1"
 "#,
         );
         let rendered = toml::to_string_pretty(&original).unwrap();
         let back: Requires = toml::from_str(&rendered).unwrap();
         assert_eq!(original, back);
-        // Four declared links survive; the bare entry stays implicitly static.
+        // Four declared links survive; the bare entry stays implicitly dynamic.
         assert_eq!(back.links.len(), 4);
-        assert_eq!(back.link_for(&org(), "wal"), LinkType::Inline);
+        assert_eq!(back.link_for(&org(), "wal"), LinkType::Static);
         assert_eq!(back.link_for(&org(), "internal"), LinkType::Dynamic);
         assert_eq!(back.link_for(&org(), "auth"), LinkType::Dynamic);
-        assert_eq!(back.link_for(&org(), "rust"), LinkType::Inline);
-        assert_eq!(back.link_for(&org(), "plain"), LinkType::Static);
+        assert_eq!(back.link_for(&org(), "rust"), LinkType::Static);
+        assert_eq!(back.link_for(&org(), "plain"), LinkType::Dynamic);
     }
 }

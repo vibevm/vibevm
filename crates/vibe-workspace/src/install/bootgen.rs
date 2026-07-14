@@ -153,7 +153,7 @@ pub(crate) fn node_own_boot(
             continue;
         }
         // The generated artifacts are not authored boot.
-        if name == boot_artifacts::INLINE_FILE || name == boot_artifacts::INDEX_FILE {
+        if name == boot_artifacts::STATIC_FILE || name == boot_artifacts::INDEX_FILE {
             continue;
         }
         let category = match name.as_str() {
@@ -192,7 +192,7 @@ fn node_dependency_boot(
     // The inline-transitive closure (PROP-035 §12): every package reached
     // through a direct edge the consumer declared `inline-transitive` — the
     // edge's target and its whole `requires` closure — is forced `inline`.
-    let forced_inline = inline_transitive_closure(node_manifest, &index);
+    let forced_inline = static_transitive_closure(node_manifest, &index);
 
     // Breadth-first transitive closure from the node's direct requires.
     // A `[requires.packages]` key is group-qualified (PROP-008 §2.6), so
@@ -246,7 +246,7 @@ fn node_dependency_boot(
                 // requirement carries a consumer-declared `link` and a
                 // transitive dependency reads back as `None`.
                 declared_link: if forced_inline.contains(&(dep.group.clone(), dep.name.clone())) {
-                    Some(LinkType::Inline)
+                    Some(LinkType::Static)
                 } else {
                     node_manifest.requires.declared_link(&dep.group, &dep.name)
                 },
@@ -264,7 +264,7 @@ fn node_dependency_boot(
 /// reachable through a direct `[requires.packages]` edge the consumer
 /// declared `inline-transitive` — the edge's target and its whole `requires`
 /// closure. Membership forces the boot entry `inline`.
-fn inline_transitive_closure(
+fn static_transitive_closure(
     node_manifest: &Manifest,
     index: &HashMap<(&Group, &str), &ResolvedDep>,
 ) -> HashSet<(Group, String)> {
@@ -273,7 +273,7 @@ fn inline_transitive_closure(
         .iter_pkgrefs()
         .filter_map(|(g, n)| g.map(|g| (g.clone(), n.to_string())))
         .filter(|(g, n)| {
-            node_manifest.requires.declared_link(g, n) == Some(LinkType::InlineTransitive)
+            node_manifest.requires.declared_link(g, n) == Some(LinkType::StaticTransitive)
         })
         .collect();
     let mut forced: HashSet<(Group, String)> = HashSet::new();

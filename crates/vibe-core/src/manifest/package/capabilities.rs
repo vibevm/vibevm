@@ -137,15 +137,15 @@ impl Requires {
 
     /// The inclusion type (PROP-009 §2.4) in effect for the `<group>/<name>`
     /// dependency in this `[requires]`, with the contract default applied —
-    /// an absent declaration resolves to [`LinkType::Static`].
+    /// an absent declaration resolves to [`LinkType::Dynamic`].
     pub fn link_for(&self, group: &Group, name: &str) -> LinkType {
         self.declared_link(group, name).unwrap_or_default()
     }
 
     /// The inclusion type the consumer **explicitly declared** for
     /// `<group>/<name>`, or `None` if it declared none. Unlike
-    /// [`Requires::link_for`], an explicit `link = "static"` returns
-    /// `Some(LinkType::Static)`, not `None`: the loading-model precedence
+    /// [`Requires::link_for`], an explicit `link = "dynamic"` returns
+    /// `Some(LinkType::Dynamic)`, not `None`: the loading-model precedence
     /// (PROP-009 §2.4) lets an explicit declaration override a workspace
     /// `[boot].default_link` or a package-suggested link, and that
     /// distinction is lost if explicit `static` is folded into "absent".

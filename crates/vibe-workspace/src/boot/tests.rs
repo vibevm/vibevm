@@ -78,7 +78,7 @@ fn own_boot_bands_by_category() {
         ]
     );
     // Authored boot is always `static`.
-    assert!(boot.entries.iter().all(|e| e.link == LinkType::Static));
+    assert!(boot.entries.iter().all(|e| e.link == LinkType::Dynamic));
 }
 
 #[test]
@@ -137,17 +137,17 @@ fn bootless_dependency_contributes_no_entry_but_still_orders() {
 fn link_precedence_declared_beats_suggested_and_default() {
     let mut d = dep("x", true, &[]);
     d.declared_link = Some(LinkType::Dynamic);
-    d.suggested_link = Some(LinkType::Inline);
-    let boot = compute(&[], &[], &[d], Some(LinkType::Static));
+    d.suggested_link = Some(LinkType::Static);
+    let boot = compute(&[], &[], &[d], Some(LinkType::Dynamic));
     assert_eq!(boot.entries[0].link, LinkType::Dynamic);
 }
 
 #[test]
 fn link_precedence_suggested_beats_default() {
     let mut d = dep("x", true, &[]);
-    d.suggested_link = Some(LinkType::Inline);
+    d.suggested_link = Some(LinkType::Static);
     let boot = compute(&[], &[], &[d], Some(LinkType::Dynamic));
-    assert_eq!(boot.entries[0].link, LinkType::Inline);
+    assert_eq!(boot.entries[0].link, LinkType::Static);
 }
 
 #[test]
@@ -161,7 +161,7 @@ fn link_precedence_falls_through_to_default() {
 fn link_precedence_defaults_to_static() {
     let d = dep("x", true, &[]);
     let boot = compute(&[], &[], &[d], None);
-    assert_eq!(boot.entries[0].link, LinkType::Static);
+    assert_eq!(boot.entries[0].link, LinkType::Dynamic);
 }
 
 #[test]
@@ -192,18 +192,18 @@ fn dependency_cycle_is_rejected() {
 }
 
 #[test]
-fn inline_and_indexed_entries_split_by_link() {
+fn inline_and_dynamic_entries_split_by_link() {
     let mut inline = dep("crit", true, &[]);
-    inline.declared_link = Some(LinkType::Inline);
+    inline.declared_link = Some(LinkType::Static);
     let mut dynamic = dep("rust", true, &[]);
     dynamic.declared_link = Some(LinkType::Dynamic);
     let plain = dep("wal", true, &[]); // static
     let boot = compute(&[], &[], &[inline, dynamic, plain], None);
 
-    let inline_origins: Vec<&str> = boot.inline_entries().map(|e| e.origin.as_str()).collect();
+    let inline_origins: Vec<&str> = boot.static_entries().map(|e| e.origin.as_str()).collect();
     assert_eq!(inline_origins, vec!["org.vibevm/crit"]);
 
-    let indexed_origins: Vec<&str> = boot.indexed_entries().map(|e| e.origin.as_str()).collect();
+    let indexed_origins: Vec<&str> = boot.dynamic_entries().map(|e| e.origin.as_str()).collect();
     // `static` and `dynamic` both land in the index, in composed order.
     assert_eq!(indexed_origins, vec!["org.vibevm/rust", "org.vibevm/wal"]);
 }
@@ -261,13 +261,13 @@ fn when_forces_dynamic_even_over_an_explicit_inline() {
     // OS-conditional — `when` wins, because a condition cannot be
     // honoured by the verbatim inline lane.
     let mut d = dep("win-only", true, &[]);
-    d.declared_link = Some(LinkType::Inline);
+    d.declared_link = Some(LinkType::Static);
     d.when = Some(WhenCondition::Os(TargetOs::Windows));
-    let boot = compute(&[], &[], &[d], Some(LinkType::Static));
+    let boot = compute(&[], &[], &[d], Some(LinkType::Dynamic));
     assert_eq!(boot.entries[0].link, LinkType::Dynamic);
     // And it lands in the index, not the inline lane.
-    assert_eq!(boot.inline_entries().count(), 0);
-    let indexed: Vec<&str> = boot.indexed_entries().map(|e| e.origin.as_str()).collect();
+    assert_eq!(boot.static_entries().count(), 0);
+    let indexed: Vec<&str> = boot.dynamic_entries().map(|e| e.origin.as_str()).collect();
     assert_eq!(indexed, vec!["org.vibevm/win-only"]);
 }
 
@@ -290,8 +290,8 @@ fn inline_transitive_resolves_to_inline_at_emission() {
     // inline lane (PROP-035 §12): bootgen propagated the mode across the
     // closure, and the engine just emits inline.
     let mut d = dep("x", true, &[]);
-    d.declared_link = Some(LinkType::InlineTransitive);
+    d.declared_link = Some(LinkType::StaticTransitive);
     let boot = compute(&[], &[], &[d], None);
-    assert_eq!(boot.entries[0].link, LinkType::Inline);
-    assert_eq!(boot.inline_entries().count(), 1);
+    assert_eq!(boot.entries[0].link, LinkType::Static);
+    assert_eq!(boot.static_entries().count(), 1);
 }

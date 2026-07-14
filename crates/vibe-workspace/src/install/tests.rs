@@ -86,7 +86,7 @@ fn apply_resolution_inline_dependency_produces_inline_md() {
         ws_dir.path(),
         "vibe.toml",
         "[project]\nname = \"demo\"\nversion = \"0.1.0\"\n\n\
-         [requires.packages]\n\"org.vibevm/crit\" = { version = \"^1.0\", link = \"inline\" }\n",
+         [requires.packages]\n\"org.vibevm/crit\" = { version = \"^1.0\", link = \"static\" }\n",
     );
     write(ws_dir.path(), "spec/boot/00-core.md", "# core");
 
@@ -109,7 +109,7 @@ fn apply_resolution_inline_dependency_produces_inline_md() {
 
     // The consumer declared `link = "inline"`, so the dependency's
     // boot is concatenated into INLINE.md.
-    let inline = fs::read_to_string(ws_dir.path().join("spec/boot/INLINE.md")).unwrap();
+    let inline = fs::read_to_string(ws_dir.path().join("spec/boot/STATIC.md")).unwrap();
     assert!(inline.contains("# critical discipline"), "{inline}");
 }
 

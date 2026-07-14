@@ -465,7 +465,7 @@ fn stage_node_regenerates_boot_for_the_published_shape() {
     // A stale INLINE.md left over from a dev-tree inline dependency.
     write(
         tmp.path(),
-        "packages/a/spec/boot/INLINE.md",
+        "packages/a/spec/boot/STATIC.md",
         "stale inline lane",
     );
     write(tmp.path(), "packages/a/CLAUDE.md", "stale dev redirect");
@@ -486,7 +486,7 @@ fn stage_node_regenerates_boot_for_the_published_shape() {
     // No inline dependencies in the published shape — the stale
     // INLINE.md is removed.
     assert!(
-        !staged.staging.path().join("spec/boot/INLINE.md").exists(),
+        !staged.staging.path().join("spec/boot/STATIC.md").exists(),
         "a stale INLINE.md must be cleared in the published copy"
     );
     // The redirect is regenerated as a thin generated pointer.

@@ -14,19 +14,19 @@ fn org() -> Group {
 }
 
 #[test]
-fn link_type_parses_inline_transitive_wire_form() {
+fn link_type_parses_static_transitive_wire_form() {
     #[derive(serde::Deserialize)]
     struct L {
         v: LinkType,
     }
     // PROP-035 §12 — the kebab wire form.
-    let lt: LinkType = toml::from_str("v = \"inline-transitive\"")
+    let lt: LinkType = toml::from_str("v = \"static-transitive\"")
         .map(|w: L| w.v)
         .unwrap();
-    assert_eq!(lt, LinkType::InlineTransitive);
-    // The existing forms are unchanged.
-    let inline: LinkType = toml::from_str("v = \"inline\"").map(|w: L| w.v).unwrap();
-    assert_eq!(inline, LinkType::Inline);
+    assert_eq!(lt, LinkType::StaticTransitive);
+    // The base forms.
+    let base: LinkType = toml::from_str("v = \"static\"").map(|w: L| w.v).unwrap();
+    assert_eq!(base, LinkType::Static);
 }
 
 #[test]
@@ -99,7 +99,7 @@ fn package_meta_as_package_ref_pins_exact() {
 
 #[test]
 fn link_type_default_is_static() {
-    assert_eq!(LinkType::default(), LinkType::Static);
+    assert_eq!(LinkType::default(), LinkType::Dynamic);
 }
 
 #[test]
@@ -107,12 +107,12 @@ fn boot_snippet_parses_category_and_link() {
     let bs: BootSnippet = toml::from_str(
         r#"source = "boot/10-flow-wal.md"
 category = "flow"
-link = "inline"
+link = "static"
 "#,
     )
     .unwrap();
     assert_eq!(bs.category, Some(BootCategory::Flow));
-    assert_eq!(bs.link, Some(LinkType::Inline));
+    assert_eq!(bs.link, Some(LinkType::Static));
 }
 
 #[test]

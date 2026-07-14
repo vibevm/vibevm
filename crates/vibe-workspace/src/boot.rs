@@ -10,9 +10,9 @@
 //! pure function: it takes the already-discovered inputs ([`NodeBootInputs`])
 //! and returns the ordered [`EffectiveBoot`]. It does not run the depsolver,
 //! read disk, or generate artifacts — the workspace walk and the unified
-//! resolution feed it (a later phase), and the `INLINE.md` / `INDEX.md`
+//! resolution feed it (a later phase), and the `STATIC.md` / `INDEX.md`
 //! artifacts are projected from its output (also a later phase, via
-//! [`EffectiveBoot::inline_entries`] / [`EffectiveBoot::indexed_entries`]).
+//! [`EffectiveBoot::static_entries`] / [`EffectiveBoot::dynamic_entries`]).
 //!
 //! ## Ordering — four bands (PROP-009 §2.5)
 //!
@@ -25,14 +25,14 @@
 //!
 //! Each dependency's [`LinkType`] is resolved by precedence: the consumer's
 //! explicit per-dependency `link` wins; then the package's `[boot_snippet]`
-//! suggestion; then the workspace `[boot].default_link`; then `static`. A
-//! node's own authored boot is always `static` — it already lives in the
-//! node's tree, so there is nothing to inline or defer.
+//! suggestion; then the workspace `[boot].default_link`; then `dynamic`. A
+//! node's own authored boot is always `dynamic` — it already lives in the
+//! node's tree and is read by reference from `INDEX.md`, so there is
+//! nothing to compile into the static lane.
 //!
 //! A dependency whose `[boot_snippet]` carries a `when` condition
-//! (PROP-009 §2.6) overrides that precedence and is always `dynamic`: a
-//! condition can only be honoured by the dynamic INCLUDE form, never by
-//! the verbatim `inline` lane or a direct `static` read.
+//! (PROP-009 §2.6) is a conditional `dynamic` entry: the condition can only
+//! be honoured by the gated INDEX form, never by the verbatim `static` lane.
 
 specmark::scope!("spec://vibevm/modules/vibe-workspace/PROP-009#effective-boot");
 
@@ -146,16 +146,16 @@ impl EffectiveBoot {
         self.entries.is_empty()
     }
 
-    /// The `inline`-linked entries, in composed order — the source for the
-    /// generated `INLINE.md` (PROP-009 §2.3).
-    pub fn inline_entries(&self) -> impl Iterator<Item = &BootEntry> {
-        self.entries.iter().filter(|e| e.link == LinkType::Inline)
+    /// The `static`-linked entries, in composed order — the source for the
+    /// generated `STATIC.md` (PROP-009 §2.3).
+    pub fn static_entries(&self) -> impl Iterator<Item = &BootEntry> {
+        self.entries.iter().filter(|e| e.link == LinkType::Static)
     }
 
-    /// The `static` and `dynamic` entries, in composed order — the source
-    /// for the generated `INDEX.md` (PROP-009 §2.3).
-    pub fn indexed_entries(&self) -> impl Iterator<Item = &BootEntry> {
-        self.entries.iter().filter(|e| e.link != LinkType::Inline)
+    /// The `dynamic`-linked entries, in composed order — the source for the
+    /// generated `INDEX.md` (PROP-009 §2.3).
+    pub fn dynamic_entries(&self) -> impl Iterator<Item = &BootEntry> {
+        self.entries.iter().filter(|e| e.link != LinkType::Static)
     }
 }
 
@@ -194,7 +194,7 @@ pub fn compute_effective_boot(inputs: NodeBootInputs<'_>) -> Result<EffectiveBoo
         entries.push(BootEntry {
             path: boot.path.clone(),
             band: BootBand::Foundation,
-            link: LinkType::Static,
+            link: LinkType::Dynamic,
             when: None,
             origin: boot.origin.clone(),
         });
@@ -206,7 +206,7 @@ pub fn compute_effective_boot(inputs: NodeBootInputs<'_>) -> Result<EffectiveBoo
         entries.push(BootEntry {
             path: boot.path.clone(),
             band: band_for(boot.category, BootBand::NodeOwn),
-            link: LinkType::Static,
+            link: LinkType::Dynamic,
             when: None,
             origin: boot.origin.clone(),
         });
@@ -228,15 +228,15 @@ pub fn compute_effective_boot(inputs: NodeBootInputs<'_>) -> Result<EffectiveBoo
             .or(dep.suggested_link)
             .or(inputs.default_link)
             .unwrap_or_default();
-        // `inline-transitive` (PROP-035 §12) resolves to `inline` at
+        // `static-transitive` (PROP-035 §12) resolves to `static` at
         // emission — bootgen has already propagated the mode down the
-        // closure, so here it is just an inline entry.
+        // closure, so here it is just a static entry.
         let link = match link {
-            LinkType::InlineTransitive => LinkType::Inline,
+            LinkType::StaticTransitive => LinkType::Static,
             other => other,
         };
         // A conditional snippet is `dynamic` by nature (PROP-009 §2.4): a
-        // `when` cannot be honoured by the verbatim `inline` lane or a
+        // `when` cannot be honoured by the verbatim `static` lane or a
         // direct `static` read, so it forces the dynamic INCLUDE form
         // whatever the `link` precedence resolved to.
         let link = if dep.when.is_some() {

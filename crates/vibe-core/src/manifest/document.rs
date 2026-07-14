@@ -269,7 +269,7 @@ pub struct OriginSection {
 #[serde(deny_unknown_fields)]
 pub struct BootSection {
     /// Default inclusion type for dependencies that declare no `link` of
-    /// their own. Absent → the PROP-009 §2.4 default, [`LinkType::Static`].
+    /// their own. Absent → the PROP-009 §2.4 default, [`LinkType::Dynamic`].
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub default_link: Option<LinkType>,
 }

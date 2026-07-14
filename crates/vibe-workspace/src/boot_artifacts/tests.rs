@@ -9,7 +9,7 @@ use super::*;
 use crate::boot::{BootBand, BootEntry};
 use specmark::verifies;
 use tempfile::TempDir;
-use vibe_core::manifest::{TargetOs, WhenCondition};
+use vibe_core::manifest::{LinkType, TargetOs, WhenCondition};
 
 #[cfg(test)]
 fn entry(path: &str, link: LinkType, origin: &str) -> BootEntry {
@@ -45,17 +45,20 @@ fn render_index_of_empty_boot_is_just_the_schema() {
     let text = render_index(&boot(vec![])).unwrap();
     let parsed: toml::Value = toml::from_str(&text).unwrap();
     assert_eq!(parsed.get("schema").unwrap().as_integer(), Some(1));
-    assert!(parsed.get("inline").is_none());
+    assert!(parsed.get("static").is_none());
     assert!(parsed.get("entry").is_none());
 }
 
 #[test]
 fn render_index_carries_static_and_dynamic_entries_in_order() {
     let b = boot(vec![
-        entry("spec/boot/00-core.md", LinkType::Static, "."),
-        entry(
+        // Unconditional → read directly (kind "static").
+        entry("spec/boot/00-core.md", LinkType::Dynamic, "."),
+        // Conditional (a `when`) → gated INCLUDE (kind "dynamic").
+        entry_when(
             "vibedeps/stack-rust/2.1.0/boot/rust.md",
             LinkType::Dynamic,
+            Some(WhenCondition::Os(TargetOs::Linux)),
             "stack:rust",
         ),
     ]);
@@ -73,25 +76,25 @@ fn render_index_carries_static_and_dynamic_entries_in_order() {
 }
 
 #[test]
-fn render_index_inline_pointer_present_only_with_inline_entries() {
+fn render_index_inline_pointer_present_only_with_static_entries() {
     let without = render_index(&boot(vec![entry(
         "spec/boot/00-core.md",
-        LinkType::Static,
+        LinkType::Dynamic,
         ".",
     )]))
     .unwrap();
-    assert!(!without.contains("inline ="));
+    assert!(!without.contains("static ="));
 
     let with = render_index(&boot(vec![entry(
         "vibedeps/flow-crit/1.0.0/boot.md",
-        LinkType::Inline,
+        LinkType::Static,
         "flow:crit",
     )]))
     .unwrap();
     let parsed: toml::Value = toml::from_str(&with).unwrap();
     assert_eq!(
-        parsed.get("inline").unwrap().as_str(),
-        Some("spec/boot/INLINE.md")
+        parsed.get("static").unwrap().as_str(),
+        Some("spec/boot/STATIC.md")
     );
 }
 
@@ -113,7 +116,9 @@ fn render_index_emits_when_on_a_dynamic_entry() {
 }
 
 #[test]
-fn render_index_dynamic_without_when_omits_the_key() {
+fn render_index_unconditional_entry_is_kind_static() {
+    // A dynamically-linked entry with no `when` is read directly — kind
+    // "static", and no `when` key.
     let b = boot(vec![entry_when(
         "vibedeps/stack-rust/2.1.0/boot.md",
         LinkType::Dynamic,
@@ -122,42 +127,43 @@ fn render_index_dynamic_without_when_omits_the_key() {
     )]);
     let parsed: toml::Value = toml::from_str(&render_index(&b).unwrap()).unwrap();
     let e = &parsed.get("entry").unwrap().as_array().unwrap()[0];
-    assert_eq!(e.get("kind").unwrap().as_str(), Some("dynamic"));
-    assert!(
-        e.get("when").is_none(),
-        "an unconditional dynamic entry carries no `when`"
-    );
-}
-
-#[test]
-fn render_index_never_emits_when_on_a_static_entry() {
-    // Defensive: the engine never produces a `static` entry carrying a
-    // `when` (a condition forces `dynamic`), but the renderer drops a
-    // stray one rather than emit an incoherent `static` + `when`.
-    let b = boot(vec![entry_when(
-        "spec/boot/00-core.md",
-        LinkType::Static,
-        Some(WhenCondition::Os(TargetOs::Linux)),
-        ".",
-    )]);
-    let parsed: toml::Value = toml::from_str(&render_index(&b).unwrap()).unwrap();
-    let e = &parsed.get("entry").unwrap().as_array().unwrap()[0];
     assert_eq!(e.get("kind").unwrap().as_str(), Some("static"));
     assert!(
         e.get("when").is_none(),
-        "a static entry must not carry `when`"
+        "an unconditional entry carries no `when`"
     );
 }
 
 #[test]
-fn render_inline_is_none_without_inline_entries() {
-    let ws = TempDir::new().unwrap();
-    let b = boot(vec![entry("spec/boot/00-core.md", LinkType::Static, ".")]);
-    assert!(render_inline(&b, ws.path()).unwrap().is_none());
+fn render_index_excludes_static_lane_entries() {
+    // A statically-linked entry belongs in STATIC.md, not INDEX.md — only
+    // the dynamic entry is indexed.
+    let b = boot(vec![
+        entry(
+            "vibedeps/flow-crit/1.0.0/boot.md",
+            LinkType::Static,
+            "flow:crit",
+        ),
+        entry("spec/boot/00-core.md", LinkType::Dynamic, "."),
+    ]);
+    let parsed: toml::Value = toml::from_str(&render_index(&b).unwrap()).unwrap();
+    let entries = parsed.get("entry").unwrap().as_array().unwrap();
+    assert_eq!(entries.len(), 1);
+    assert_eq!(
+        entries[0].get("path").unwrap().as_str(),
+        Some("spec/boot/00-core.md")
+    );
 }
 
 #[test]
-fn render_inline_concatenates_contributions_verbatim() {
+fn render_static_is_none_without_static_entries() {
+    let ws = TempDir::new().unwrap();
+    let b = boot(vec![entry("spec/boot/00-core.md", LinkType::Dynamic, ".")]);
+    assert!(render_static(&b, ws.path()).unwrap().is_none());
+}
+
+#[test]
+fn render_static_concatenates_contributions_verbatim() {
     let ws = TempDir::new().unwrap();
     let crit = ws.path().join("vibedeps/flow-crit/1.0.0/boot.md");
     fs::create_dir_all(crit.parent().unwrap()).unwrap();
@@ -165,20 +171,20 @@ fn render_inline_concatenates_contributions_verbatim() {
 
     let b = boot(vec![entry(
         "vibedeps/flow-crit/1.0.0/boot.md",
-        LinkType::Inline,
+        LinkType::Static,
         "flow:crit",
     )]);
-    let text = render_inline(&b, ws.path()).unwrap().unwrap();
+    let text = render_static(&b, ws.path()).unwrap().unwrap();
     assert!(text.contains("generated by vibe, do not edit"));
-    assert!(text.contains("<!-- vibe:inline flow:crit"));
+    assert!(text.contains("<!-- vibe:static flow:crit"));
     assert!(text.contains("# Critical discipline"));
     assert!(text.contains("Always do the thing."));
 }
 
 #[test]
-fn render_inline_expands_an_embed_directive() {
-    // The payoff (PROP-035 §8): a #embed in an inline contribution is
-    // expanded when INLINE.md is compiled.
+fn render_static_expands_an_embed_directive() {
+    // The payoff (PROP-035 §8): a #embed in a static contribution is
+    // expanded when STATIC.md is compiled.
     let ws = TempDir::new().unwrap();
     let contrib = ws.path().join("vibedeps/flow-x/1.0.0/boot.md");
     fs::create_dir_all(contrib.parent().unwrap()).unwrap();
@@ -193,16 +199,16 @@ fn render_inline_expands_an_embed_directive() {
 
     let b = boot(vec![entry(
         "vibedeps/flow-x/1.0.0/boot.md",
-        LinkType::Inline,
+        LinkType::Static,
         "flow:x",
     )]);
-    let text = render_inline(&b, ws.path()).unwrap().unwrap();
+    let text = render_static(&b, ws.path()).unwrap().unwrap();
     assert!(text.contains("EMBEDDED CONTENT"), "{text}");
     assert!(!text.contains("#embed"), "{text}");
 }
 
 #[test]
-fn render_inline_without_directives_is_left_verbatim() {
+fn render_static_without_directives_is_left_verbatim() {
     // The guard: a directive-free lane is not touched by the compiler, so
     // vibevm's own boot stays byte-identical until it adopts the format.
     let ws = TempDir::new().unwrap();
@@ -211,22 +217,22 @@ fn render_inline_without_directives_is_left_verbatim() {
     fs::write(&contrib, "# Y\n\nplain boot content, no directives.").unwrap();
     let b = boot(vec![entry(
         "vibedeps/flow-y/1.0.0/boot.md",
-        LinkType::Inline,
+        LinkType::Static,
         "flow:y",
     )]);
-    let text = render_inline(&b, ws.path()).unwrap().unwrap();
+    let text = render_static(&b, ws.path()).unwrap().unwrap();
     assert!(text.contains("plain boot content, no directives."));
 }
 
 #[test]
-fn render_inline_errors_on_a_missing_contribution() {
+fn render_static_errors_on_a_missing_contribution() {
     let ws = TempDir::new().unwrap();
     let b = boot(vec![entry(
         "vibedeps/flow-gone/1.0.0/boot.md",
-        LinkType::Inline,
+        LinkType::Static,
         "flow:gone",
     )]);
-    let err = render_inline(&b, ws.path()).unwrap_err();
+    let err = render_static(&b, ws.path()).unwrap_err();
     assert!(matches!(err, WorkspaceError::Io { .. }), "{err}");
 }
 
@@ -234,19 +240,19 @@ fn render_inline_errors_on_a_missing_contribution() {
 fn render_redirect_points_at_the_boot_files() {
     let r = render_redirect();
     assert!(r.contains("do not edit"));
-    assert!(r.contains("spec/boot/INLINE.md"));
+    assert!(r.contains("spec/boot/STATIC.md"));
     assert!(r.contains("spec/boot/INDEX.md"));
 }
 
 #[test]
 fn write_boot_artifacts_writes_index_and_redirects() {
     let ws = TempDir::new().unwrap();
-    let b = boot(vec![entry("spec/boot/00-core.md", LinkType::Static, ".")]);
+    let b = boot(vec![entry("spec/boot/00-core.md", LinkType::Dynamic, ".")]);
     let written = write_boot_artifacts(ws.path(), ws.path(), &b).unwrap();
 
     assert!(written.index.is_file());
-    assert!(written.inline.is_none());
-    assert!(!ws.path().join("spec/boot/INLINE.md").exists());
+    assert!(written.static_lane.is_none());
+    assert!(!ws.path().join("spec/boot/STATIC.md").exists());
     assert_eq!(written.redirects.len(), 3);
     for name in REDIRECT_FILES {
         assert!(ws.path().join(name).is_file(), "{name} must be written");
@@ -262,12 +268,12 @@ fn write_boot_artifacts_writes_inline_when_present() {
 
     let b = boot(vec![entry(
         "vibedeps/flow-crit/1.0.0/boot.md",
-        LinkType::Inline,
+        LinkType::Static,
         "flow:crit",
     )]);
     let written = write_boot_artifacts(ws.path(), ws.path(), &b).unwrap();
-    assert!(written.inline.is_some());
-    assert!(ws.path().join("spec/boot/INLINE.md").is_file());
+    assert!(written.static_lane.is_some());
+    assert!(ws.path().join("spec/boot/STATIC.md").is_file());
 }
 
 #[test]
@@ -277,20 +283,20 @@ fn write_boot_artifacts_removes_a_stale_inline() {
     fs::create_dir_all(crit.parent().unwrap()).unwrap();
     fs::write(&crit, "# discipline").unwrap();
 
-    // First generation has an inline contribution.
+    // First generation has an static contribution.
     let with_inline = boot(vec![entry(
         "vibedeps/flow-crit/1.0.0/boot.md",
-        LinkType::Inline,
+        LinkType::Static,
         "flow:crit",
     )]);
     write_boot_artifacts(ws.path(), ws.path(), &with_inline).unwrap();
-    assert!(ws.path().join("spec/boot/INLINE.md").exists());
+    assert!(ws.path().join("spec/boot/STATIC.md").exists());
 
     // A later generation has none — the stale INLINE.md must go.
-    let without = boot(vec![entry("spec/boot/00-core.md", LinkType::Static, ".")]);
+    let without = boot(vec![entry("spec/boot/00-core.md", LinkType::Dynamic, ".")]);
     let written = write_boot_artifacts(ws.path(), ws.path(), &without).unwrap();
-    assert!(written.inline.is_none());
-    assert!(!ws.path().join("spec/boot/INLINE.md").exists());
+    assert!(written.static_lane.is_none());
+    assert!(!ws.path().join("spec/boot/STATIC.md").exists());
 }
 
 // ----- the managed <vibevm> block (PROP-012) -----
