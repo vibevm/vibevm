@@ -13,25 +13,9 @@ Authoritative record: [spec://vibevm/common/PROP-000#commits](spec/common/PROP-0
 
 ## Delegation-first — spend Claude on judgment, run execution on fractality
 
-**Standing directive (owner-commissioned 2026-07-12).** Claude's context and
-reasoning are the scarcest, most expensive resource in the room; cheap worker
-models (GLM-5.2 / GLM-5-turbo via z.ai) sit idle, already paid for. So for
-**every** task — one the user asks for, or one you or another plan/agent set —
-the first question is: **can this be delegated to fractality?** Delegate
-execution by default; keep Claude for architecture, planning, judgment, and
-review. A session that codes, bulk-edits, or reads-and-summarizes work a
-worker could do is spending the very budget this directive exists to save.
+**The directive is now installed.** The standing posture — Claude's context and reasoning are the scarcest, most expensive resource in the room; the cheap worker slots sit idle, already paid for, so **delegate execution by default and keep Claude for architecture, planning, judgment, and review** (a session that codes, bulk-edits, or reads-and-summarizes work a worker could do is spending the very budget this directive exists to save) — is the `delegation-first` flow, a static dependency of this project. It carries the product-agnostic directive in full: the scarce-resource thesis, delegate-by-default, the capable-worker mandate, the never-delegate set, and the two obligations (always review; surface the analysis out loud and announce the harness). The decidable calculus it sits above — *delegate when verification is cheaper than generation*, scored on four axes (error cost / context / verifiability / size) with the verdict steps and per-model playbooks — is the `delegation-rules` flow it pulls, now **installed** as a dependency rather than read in-place: `spec://org.vibevm.fractality/delegation-rules/flows/delegation-rules/DECISION-MATRIX#root`.
 
-**The calculus is `delegation-rules` — read it in-place before delegating.**
-One law: *delegate when verification is cheaper than generation.* The full
-procedure (four axes — error cost / context / verifiability / size — the
-verdict steps, the never-delegate set, per-model playbooks) lives in the
-delegation-rules package. Until it is installed as a dependency, read it where
-it lies (in-place, per owner directive — this moves once fractality graduates):
-
-- `packages/org.vibevm.fractality/delegation-rules/v0.1.0/spec/boot/77-flow-delegation-rules.md`
-- `…/spec/flows/delegation-rules/DECISION-MATRIX.md`
-- `…/spec/flows/delegation-rules/playbooks/{glm-5.2,glm-5-turbo}.md`
+What follows is vibevm's **operational layer** on that directive — the fractality worker fabric (how to run it, when to enable recursion, how the swarm modes route), the vibevm-specific bindings of the always-review / surface-the-analysis / announce-the-harness obligations, and the live operating-facts ledger.
 
 **Don't fear the big model.** GLM-5.2 (the `big` slot) is for substantial
 one-shot work — a whole module with its tests and a self-verify command, a
