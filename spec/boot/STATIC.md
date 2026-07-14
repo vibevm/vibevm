@@ -2,6 +2,364 @@
 <!-- The static boot lane (PROP-009 §2.3): the highest-priority -->
 <!-- contributions, compiled in verbatim. Read this first, in full. -->
 
+<!-- vibe:static org.vibevm.world/addressable-specs — vibedeps/flow-addressable-specs/0.1.0/spec/boot/15-flow-addressable-specs.md -->
+
+# Flow: Addressable Specs {#root}
+
+Every normative statement in this project's spec tree is
+**addressable**: it lives under a stable `{#kebab-anchor}` and is
+cited by URI, never by paraphrase.
+
+```
+spec://<module>/<doc>#<section>[.<sub>]
+```
+
+## The correction contract {#correction-contract}
+
+When the human corrects the agent, the correction cites the violated
+anchor: "you are violating `spec://…#verification.timeout` — the
+spec says 600 s, you wrote 300 s". Resolve the URI, read the unit,
+compare, fix. Twenty tokens, exact hit — no guessing what
+"verification" means or which part is "wrong".
+
+The same contract binds the agent: when citing the spec — in chat,
+commit bodies, code markers, review notes — cite the anchor, never a
+paraphrase and never a line number.
+
+## Single source of truth {#single-source}
+
+Each fact has exactly one authoritative anchor. Never copy a
+normative value into a second file — cite the anchor instead. Two
+copies *will* diverge, and a later session cannot tell which one
+binds.
+
+## Placement {#placement}
+
+Critical constraints live at the START or END of a file, never
+buried mid-document. Models attend to the edges of context ("Lost in
+the Middle", Liu et al. 2023/2024); a mid-file invariant is an
+invariant the reader statistically skipped.
+
+## Where the full rules live {#pointers}
+
+- Why addressability is IPC requirement #1, the URI scheme, the
+  token economics:
+  [`spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md`](../flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md)
+- Unit of meaning, normativity marking, deviations, size budgets,
+  anchor stability:
+  [`spec/flows/addressable-specs/authoring-rules.md`](../flows/addressable-specs/authoring-rules.md)
+- PROP vs FEAT, what goes where, the `.human/` buffer:
+  [`spec/flows/addressable-specs/spec-tree-layout.md`](../flows/addressable-specs/spec-tree-layout.md)
+
+## Never {#never}
+
+- Never cite a spec section by paraphrase when an anchor exists.
+- Never duplicate a normative value into a second file — cite its
+  anchor.
+- Never bury an invariant in the middle of a file.
+- Never rename or delete an anchor that has ever been cited —
+  anchors are immutable; retire with a tombstone instead.
+- Never invent an anchor — resolve the URI and read the unit before
+  acting on it.
+
+<!-- vibe:static org.vibevm.world/campaign-plans — vibedeps/flow-campaign-plans/0.1.0/spec/boot/40-flow-campaign-plans.md -->
+
+# Flow: Campaign Plans {#root}
+
+This project executes large changes as **campaigns**: multi-commit
+work planned in a written campaign plan, executed as gated phases,
+resumable cold by any session.
+
+## When to propose a campaign {#when}
+
+When the owner commissions work that spans **more than one session or
+more than a handful of commits**, propose a campaign plan before
+touching the tree. The plan is one document carrying five roles: the
+recipe (PLAN), the frozen starting numbers (BASELINE), falsifiable
+expectations (PREDICTIONS), the running record (LOG), and the closing
+verdict (REPORT). Format:
+[`../flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md`](../flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md).
+
+## The plan runs cold {#cold}
+
+Write the plan so a fresh session — or a different person — executes
+it with no memory of the planning conversation: the owner's mandate
+quoted verbatim and dated, baseline and exit state as exact counts,
+current-state facts verified at writing time, decisions with their
+rejected options and reasons, a literal quick-start block, and a
+runnable whole-campaign acceptance script. Wrong current-state facts
+are the most expensive class of plan bug — verify while writing.
+
+## Phases gate on green {#gates}
+
+Phase 0 is spikes and probes — no commits — and it gates everything
+after. Every later phase ends with the project's full gate panel
+green, and any phase boundary is a safe stop; the plan plus its
+execution ledger are the resume pointer. Mechanics:
+[`../flows/campaign-plans/phase-gates.md`](../flows/campaign-plans/phase-gates.md);
+the record half:
+[`../flows/campaign-plans/execution-ledger.md`](../flows/campaign-plans/execution-ledger.md).
+
+## At every phase boundary {#boundary}
+
+1. Run the full gate panel; the floor must be green.
+2. Write the phase's commit-map entry in the execution ledger —
+   hashes, subjects, what each commit confirmed or falsified.
+3. Refresh the plan's status line ("Phase N landed, floor green,
+   next: Phase N+1").
+4. Escalate anything only the owner can decide as a review point:
+   OPEN, then RESOLVED with the ruling verbatim.
+
+## Never {#never}
+
+- Never start Phase 1 while a Phase 0 spike is red — a red spike
+  rewrites the affected Decision first, in the plan, in place.
+- Never commit during Phase 0. Spikes leave findings, not tree
+  changes.
+- Never do discovered work silently "while I was here" — it enters
+  the phase and the ledger explicitly, or it is deferred by name.
+- Never close a campaign without the report checking every
+  prediction — a campaign that skips the report learns nothing
+  durable.
+- Never carry a deferral outside the plan file — the deferrals
+  ledger is where deferrals live, and the next campaign's mandate
+  drains from it.
+
+<!-- vibe:static org.vibevm.world/comparative-research — vibedeps/flow-comparative-research/0.1.0/spec/boot/52-flow-comparative-research.md -->
+
+# Flow: Comparative Research {#root}
+
+This project has a genre for studying external systems — a
+competitor, a predecessor, an adjacent tool. A **comparative
+research document** is a self-contained, evergreen study: readable
+months after publication without the original sources, structured
+as a two-way gap analysis, closing with numbered roadmap deltas.
+Genre law:
+[`spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md`](../flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md).
+
+## When to reach for it {#when}
+
+When the user asks to study, evaluate, or compare against an
+external system — "what does X actually do?", "should we copy
+X's feature?", "audit that space before we build" — start from
+the skeleton in
+[`spec/flows/comparative-research/research-template.md`](../flows/comparative-research/research-template.md)
+and hold the laws:
+
+- **Quote first, critique second.** The subject speaks in its own
+  words — fenced verbatim quotes with access dates — before any
+  judgement is written.
+- **Two-way gaps.** One section for where we trail, one for where
+  we lead, argued with equal rigor.
+- **Deltas, not decrees.** Actionable findings become numbered
+  proposals, each with a priority and a target home in the spec
+  tree. The study never ratifies its own proposals; acceptance
+  happens downstream, per
+  [`from-research-to-roadmap.md`](../flows/comparative-research/from-research-to-roadmap.md).
+- **Re-fetch list.** Every source URL with access date, plus the
+  subject's version at capture, so the study can be refreshed
+  instead of rewritten.
+
+## Never {#never}
+
+- Never paraphrase where a dated verbatim quote can stand — the
+  quote survives link rot; the paraphrase decays into rumor.
+- Never write a one-directional gap analysis — trail-only is
+  marketing for the subject, lead-only is marketing for us.
+- Never ratify a delta inside the research doc — it proposes;
+  acceptance is recorded downstream.
+- Never let a study silently outlive its subject's next major
+  release — stale-flag it and refresh via the re-fetch list.
+
+<!-- vibe:static org.vibevm.world/conflict-protocol — vibedeps/flow-conflict-protocol/0.1.0/spec/boot/35-flow-conflict-protocol.md -->
+
+# Flow: Conflict Protocol {#root}
+
+This project runs **two writers over one file set** — a human and a
+coding agent both edit the spec tree, the tests, and the code. They
+*will* write contradictory things; that is normal cooperation, not an
+error. What is forbidden is resolving a contradiction silently.
+
+## The hierarchy {#hierarchy}
+
+Every disagreement between layers is settled by fixed priority:
+
+```
+Human  >  Spec  >  Tests  >  Code  >  WAL
+```
+
+- The human may change the spec; nobody else may — silently.
+- Code must conform to the spec, never the other way around.
+- Tests are the spec in executable form: a test that contradicts the
+  spec is a bug in exactly one of the two, never both.
+- The volatile state file (WAL or equivalent) is a record, dead last:
+  when it disagrees with anything above it, it is stale.
+
+Full protocol:
+[`spec/flows/conflict-protocol/CONFLICT-PROTOCOL.md`](../flows/conflict-protocol/CONFLICT-PROTOCOL.md).
+
+## The REVIEW contract {#review}
+
+If you believe the spec is wrong: **implement the spec anyway**, add
+a marker at the point of disagreement —
+
+```
+<!-- REVIEW: <what you would change> because <reason> -->
+```
+
+— and surface it in the end-of-session report. The human decides in
+the next cycle. Never silently override. Three lines of text; seconds
+to write; a minute to read.
+
+## When the spec is silent {#uncertainty}
+
+Re-read the relevant spec section → re-read the relevant reference
+chapter → check the closest analog in the project → if still unclear,
+pick the conservative interpretation (the one cheapest to reverse),
+mark it with a REVIEW, proceed, and flag it in the report. Never
+silently invent semantic behavior. Full ladder:
+[`spec/flows/conflict-protocol/uncertainty-protocol.md`](../flows/conflict-protocol/uncertainty-protocol.md).
+
+## Never {#never}
+
+- Never silently modify a normative spec value.
+- Never resolve a spec-vs-code disagreement by assuming the code is
+  newer. Recency is not authority; the hierarchy is.
+- Never remove someone else's REVIEW marker without resolving it.
+- Never invent semantics when the spec is silent — mark the choice
+  and proceed conservatively.
+
+Recovery drills for when the protocol has already been broken:
+[`spec/flows/conflict-protocol/failure-modes.md`](../flows/conflict-protocol/failure-modes.md).
+
+<!-- vibe:static org.vibevm.world/decision-records — vibedeps/flow-decision-records/0.1.0/spec/boot/25-flow-decision-records.md -->
+
+# Flow: Decision Records {#root}
+
+This project records **decisions, not facts**. A fact ("timeout is
+600 s") is recoverable from the code in a second. The reason it is
+600 s cannot be recovered at all — unless it was written down when
+the decision was made.
+
+## Core rule {#core-rule}
+
+Any choice a future reader could plausibly re-open — a library pick,
+a constant with consequences, a protocol shape, a rejected approach —
+gets a **four-field record at the spec anchor that governs the value**:
+
+| Field | Requirement |
+|-------|-------------|
+| **Decision** | The chosen value or approach. One line. |
+| **Why** | Concrete and cited: a measurement, a constraint, an incident — with data. |
+| **Considered and rejected** | One line per alternative, each carrying its rejection reason. |
+| **When to revisit** | A measurable trigger: metric + threshold + where it is observed. |
+
+There is no separate ADR directory and no immutable numbered log.
+The spec section that governs the value IS the record; evolution is
+an edit plus a changelog line; history lives in git.
+
+Full protocol:
+[`spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md`](../flows/decision-records/DECISION-RECORDS-PROTOCOL.md).
+
+## In session {#in-session}
+
+When the user makes a decision during a session:
+
+1. Propose recording it at the governing anchor, with all four
+   fields, **before the session ends** — an unrecorded decision does
+   not survive the session boundary.
+2. If the why or the trigger is not known, ask. Do not invent data;
+   do not record a two-field stub.
+3. Before changing any value governed by a record, read the record.
+   Re-open it only by naming its trigger state ("the trigger fired:
+   …" / "the trigger has not fired, but …").
+
+Copy-ready template and worked examples:
+[`spec/flows/decision-records/record-template.md`](../flows/decision-records/record-template.md).
+Trigger design and the periodic sweep:
+[`spec/flows/decision-records/revisit-triggers.md`](../flows/decision-records/revisit-triggers.md).
+
+## Why this matters in a human-AI team {#why}
+
+The agent cannot ask Vasya why the library was chosen. It re-derives
+from what it can read, and the code shows the value, not the
+constraint — so it re-litigates: "600 s looks arbitrary, propose
+300 s for performance." A recorded decision is immunity from
+re-litigation. A recorded trigger is what keeps the immunity from
+hardening into dogma.
+
+## Never {#never}
+
+- Never write "because it is better" — a why cites a measurement, a
+  constraint, or an incident, or it is not a why.
+- Never re-litigate a recorded decision without naming its trigger
+  state first.
+- Never put a decision's why into a commit message only. The commit
+  cites the record; the spec carries it.
+- Never record a decision with a missing reason or a missing revisit
+  trigger — that is a fact with decoration, not a record.
+
+<!-- vibe:static org.vibevm.world/dev-runtime-docs — vibedeps/flow-dev-runtime-docs/0.1.0/boot/58-flow-dev-runtime-docs.md -->
+
+# Flow: Load-bearing setup docs {#root}
+
+A project's setup and runtime documentation is **load-bearing** — it is the file
+someone reaches for when the build breaks, the environment is wrong, or a
+prerequisite is missing.
+
+## The rule
+
+Every change that touches the **toolchain, prerequisites, environment variables,
+paths, or bootstrap steps** updates the relevant setup/runtime doc **in the same
+commit**. Never ship a setup change with the doc update deferred — deferral is
+exactly where the drift these files exist to prevent lives.
+
+Full protocol: [`spec/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.md`](../flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.md).
+
+## Never
+
+- Never ship a dev-env or runtime-setup change with its doc update in a later commit.
+- Never let the setup docs describe a toolchain the project no longer uses.
+
+<!-- vibe:static org.vibevm.world/discovery-prompt — vibedeps/flow-discovery-prompt/0.1.0/spec/boot/50-flow-discovery-prompt.md -->
+
+# Flow: Discovery Prompt {#root}
+
+This project ships the **DISCOVERY collaborative-research prompt**, a
+distributable user-level prompt that reshapes an LLM session into
+structured co-inquiry. The artifact lives at
+[`spec/flows/discovery-prompt/DISCOVERY-PROMPT.md`](../flows/discovery-prompt/DISCOVERY-PROMPT.md).
+It is a **payload for a fresh session**, not standing instructions —
+do not load it into context outside an explicit deployment request.
+
+## When to deploy {#when}
+
+When the user asks for a research, discovery, or exploration session
+— comparing designs, mapping an unknown problem space, stress-testing
+a hypothesis — reach for the artifact: fill its `<VARIABLES>` block
+and paste the whole text as the first message of a fresh
+conversation. Deployment steps and a piece-by-piece walkthrough:
+[`spec/flows/discovery-prompt/usage.md`](../flows/discovery-prompt/usage.md).
+
+## What it does {#what}
+
+Once deployed, the prompt replaces the default helpful-assistant
+frame with a response grammar (PrimaryHypothesis carrying an explicit
+0.0–1.0 confidence, AlternativeInterpretations, MetaReflection), a
+mandatory adversarial self-objection before any answer is finalized,
+and hashtag intensity knobs (`#hot`, `#cold`, `#reboil`,
+`#superthink`). Its stance in one line: uncertainty is data, not
+failure.
+
+## Never {#never}
+
+- Never mix the discovery grammar into a coding session uninvited —
+  its overhead pays off only when the answer space is genuinely open.
+- Never edit the artifact in place; adapt a copy via the re-derive
+  prompt in [`usage.md` §re-derive](../flows/discovery-prompt/usage.md#re-derive).
+- Never treat the confidence numbers as guarantees — they are
+  calibration aids, not measurements.
+
 <!-- vibe:static org.vibevm.world/git-atomic-commits — vibedeps/flow-git-atomic-commits/0.1.0/boot/30-flow-atomic-commits.md -->
 
 # Flow: Atomic Commits {#root}
@@ -189,4 +547,844 @@ Conventional Commits is the message **format**; it does not by itself enforce **
 (one commit = one logical idea). A `feat: add foo, bar, and baz` message is valid Conventional
 Commits *and* a violation of the atomic rule. Atomicity is the separate `atomic-commits` flow;
 the two run together.
+
+<!-- vibe:static org.vibevm.world/health-audit — vibedeps/flow-health-audit/0.1.0/spec/boot/42-flow-health-audit.md -->
+
+# Flow: Health Audit {#root}
+
+This project runs a **periodic health audit**: a recurring,
+judgment-heavy sweep over everything the per-commit gate cannot see,
+recorded as an append-only trend in `AUDIT.md`.
+
+## The one-line law {#law}
+
+**The gate is the floor; the audit is what the gate cannot see.**
+Where the gate answers *"did this commit regress covered code?"*, the
+audit answers *"what is wrong, rotting, or drifting that no commit
+will ever flag?"*. Neither replaces the other.
+
+## When it fires {#when}
+
+The audit is **owner-triggered**, with a floor of **at least once per
+milestone** — run as part of, or right after, a milestone close-out. A
+milestone is never declared done on an un-audited base. The owner
+re-runs it at will between milestones; no calendar cron is fixed.
+
+## What it produces {#produces}
+
+One dated section in `AUDIT.md` per run, each finding carrying an ID,
+its category, a one-line locator, a severity (P1/P2/P3), and a
+disposition (fixed/filed/accepted/open). `AUDIT.md` is committed to
+git — its history *is* the project's health trend. Unresolved findings
+carry forward to the next run and get re-judged.
+
+## How to run one {#run}
+
+Use the **`health-audit`** skill: it reads the category checklist,
+walks it against the repository, and drafts the `AUDIT.md` section for
+your approval. Full protocol:
+[`../flows/health-audit/HEALTH-AUDIT-PROTOCOL.md`](../flows/health-audit/HEALTH-AUDIT-PROTOCOL.md);
+the categories to walk:
+[`../flows/health-audit/audit-checklist.md`](../flows/health-audit/audit-checklist.md);
+the run procedure:
+[`../flows/health-audit/running-an-audit.md`](../flows/health-audit/running-an-audit.md).
+
+## Never {#never}
+
+- Never declare a milestone done on an un-audited base — the audit is
+  part of the close-out, not an optional extra.
+- Never let a finding vanish without a disposition. Every finding is
+  fixed, filed, accepted, or open — silence is not an option.
+- Never keep findings only in the volatile checkpoint file (the WAL /
+  CONTINUE). The durable home is `AUDIT.md`; the checkpoint is
+  reconciled *against* it, never a substitute for it.
+- Never let the checklist fossilize. A new defect class a run
+  discovers becomes a permanent category, so the same gap is never
+  re-missed.
+- Never mistake a green gate for a healthy project. The gate is blind
+  by construction to uncovered code, out-of-gate trees, drift, and
+  slow debt — each individually invisible, collectively corrosive.
+
+<!-- vibe:static org.vibevm.world/licensing — vibedeps/flow-licensing/0.1.0/spec/boot/60-flow-licensing.md -->
+
+# Flow: Licensing {#root}
+
+This project has a **deliberate licensing posture**, decided once and
+recorded, not inherited from whatever a scaffold dropped in. Two
+things are always true and must not drift:
+
+- The product ships under one stated licence (a `LICENSE.md` at the
+  repository root; every sub-package states the same in its
+  manifest).
+- Every third-party dependency stays **permissive-only** — MIT /
+  Apache-2.0 / BSD / Unlicense / equivalent. Strong copyleft
+  (GPL / AGPL / LGPL) is forbidden by default; weak copyleft
+  (MPL-2.0) is case-by-case.
+
+## The dependency rule is load-bearing {#deps}
+
+A dependency's licence mingles with the product's. A proprietary or
+source-available product that links a copyleft library can be forced
+to relicense — so the stricter the product's own licence, the *more*
+important the permissive-only rule, not less. Reject a copyleft
+dependency on licence grounds regardless of how good it is.
+
+## When licence work happens {#when}
+
+- Adding a dependency: check its licence before adopting it. A
+  non-permissive licence is a hard no by default; surface it.
+- Changing the product's licence, or any bulk relicensing: this is an
+  **owner decision** and an irreversible-threshold operation — never
+  do it autonomously.
+- A change touching the licence file, the manifest `license` field,
+  or the third-party carve-out updates all of them together, in one
+  commit.
+
+The `draft-eula` skill drafts or reviews the posture. Full detail:
+[`LICENSING-PROTOCOL.md`](../flows/licensing/LICENSING-PROTOCOL.md).
+
+## Never {#never}
+
+- Never add a GPL / AGPL / LGPL dependency by default — surface it as
+  an owner decision.
+- Never relicense the product, or any part of it, without the owner's
+  explicit instruction.
+- Never let the manifest `license` field and the `LICENSE.md`
+  disagree.
+- Never reject a dependency for being "too heavy" — weight is not a
+  licence problem; licence is.
+- Never claim a licence is permissive without checking; when unsure,
+  treat it as non-permissive and ask.
+
+<!-- vibe:static org.vibevm.world/managed-blocks — vibedeps/flow-managed-blocks/0.1.0/spec/boot/65-flow-managed-blocks.md -->
+
+# Flow: Managed Blocks {#root}
+
+This project ships the **managed blocks** practice — a discipline
+for tool authors: how a tool writes into a file it does not own (an
+agent-instruction file, a shell rc, an ssh config, a shared project
+config) without destroying what the other tenants wrote. The law
+fits on one line:
+
+```
+Own exactly one delimited block; never touch a byte outside it.
+```
+
+## When to read the protocol {#when}
+
+**Before** designing or reviewing any feature that writes into a
+file the tool does not fully own, read
+[`MANAGED-BLOCKS-PROTOCOL.md`](../flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md)
+first: marker design, the absent / present / malformed state
+machine, the three verbs (create / update / remove), plan-time
+classification. The shortcuts you are tempted by — a sidecar file, a
+smart detector, auto-repair, "just regenerate the file" — are
+already catalogued with their failure modes in
+[`rejected-designs.md`](../flows/managed-blocks/rejected-designs.md).
+Migrating an existing overwriting tool, the fixture table for the
+state machine, and what belongs inside the block:
+[`adoption-guide.md`](../flows/managed-blocks/adoption-guide.md).
+
+## Never {#never}
+
+- Never write outside your own block. Every byte beyond your markers
+  is another tenant's property.
+- Never gate a destructive write on a nondeterministic detector —
+  the block is found by a deterministic byte scan or not at all.
+- Never auto-repair a malformed block. Hard stop, precise report;
+  the human decides.
+- Never rewrite a file when the result is byte-identical.
+
+<!-- vibe:static org.vibevm.world/manual-tests — vibedeps/flow-manual-tests/0.1.0/spec/boot/44-flow-manual-tests.md -->
+
+# Flow: Manual Tests {#root}
+
+This project keeps a **second test tier**: human-run markdown
+walkthroughs that prove the integration surfaces the automated suite
+cannot reach. The automated tier proves the logic; the manual tier
+proves the world. It complements the automated suite — it never
+replaces it.
+
+## When to propose writing one {#when}
+
+Propose a manual test — do not wait to be asked — whenever:
+
+- **A new integration surface lands.** Real authentication, the
+  per-user state directory on a real filesystem, a lockfile as a
+  downstream consumer sees it, network-facing I/O — anything the
+  automated tier fakes now has a real-world form that nothing proves.
+- **A milestone approaches.** Before tagging, every run the index
+  marks required for the shipped features must have been executed.
+- **A user reports an integration bug.** Its reproduction steps
+  become a manual test, so the next session can replay them exactly.
+
+The format, authoring rules, and copy-ready skeleton live under
+[`../flows/manual-tests/`](../flows/manual-tests/MANUAL-TESTS-PROTOCOL.md).
+
+## Agent pre-runs, human signs off {#roles}
+
+The whole point of the tier is human eyes on real output. An agent
+may **pre-run** a manual test end to end and flag any step whose
+result diverges from its "Expected" paragraph — that is useful
+triage. But the sign-off is a human's: only a person can look at the
+tool's output and say "yes, that is what I meant". Report the
+pre-run; never record the pass.
+
+## Never {#never}
+
+- **Never let a manual test touch real user state.** Every run
+  isolates its project into a scratch directory and redirects the
+  tool's per-user cache into that scratch. A test that mutates the
+  real per-user state is a bug in the test.
+- **Never write a step without an "Expected" paragraph.** A command
+  with no stated outcome cannot pass or fail; it is not a test step.
+- **Never tag a milestone with the index's required runs
+  unexecuted.** Green automated suite plus unrun manual tests is not
+  a shippable milestone.
+- **Never delete a failing manual test to make the panel green.** A
+  test that caught something is working; file what it caught and fix
+  the product, not the test.
+
+<!-- vibe:static org.vibevm.world/operating-modes — vibedeps/flow-operating-modes/0.1.0/spec/boot/45-flow-operating-modes.md -->
+
+# Flow: Operating Modes {#root}
+
+This project uses **codeword-triggered operating modes**. The session
+has one safe default posture; the owner can flip it into an alternate
+posture for one work cycle by speaking a catalogued codeword. Modes
+change *confirmation behaviour* — they never change what is
+off-limits.
+
+## The default posture {#default}
+
+Unless a codeword is active: routine work proceeds normally, and
+anything **non-routine** — history rewrites, force-pushes, large
+binary imports, CI/signing/secrets changes, any operation whose
+reversal would cost work — stops for the owner's explicit
+confirmation. When uncertain whether something is routine, ask.
+
+## Codewords {#codewords}
+
+The project's codewords are catalogued in
+[`OPERATING-MODES-PROTOCOL.md`](../flows/operating-modes/OPERATING-MODES-PROTOCOL.md).
+Recognise a codeword by intent, not exact wording. When one fires:
+
+1. Acknowledge which mode is now active and what it changes.
+2. Apply its operative rules for the current work cycle.
+3. Drop back to the default posture when the cycle ends — a mode
+   **never** persists into a new session uninvoked.
+
+The catalogue ships one worked mode:
+[`mfbt-mode.md`](../flows/operating-modes/mfbt-mode.md) — heads-down
+pre-authorised execution («move fast and break things»).
+
+## The red-lines law {#red-lines}
+
+A small set of red lines survives **every** mode: rewriting published
+history, force-pushing, importing large binaries, touching
+CI/signing/secrets configuration, and any operation whose reversal
+costs work. A codeword removes the "may I proceed with routine work?"
+handshake; it does **not** remove the "may I cross an irreversible
+threshold?" handshake. No codeword can be defined that erodes this.
+
+## Reporting cadence {#cadence}
+
+Under any accelerated mode, report **status, not requests**: "phase N
+landed, tests green, moving to N+1" is right; "phase N landed — shall
+I proceed?" is the exact overhead the codeword was spoken to remove.
+
+## Never {#never}
+
+- Never cross a red line under any mode — the handshake for
+  irreversible operations is unconditional.
+- Never carry an active mode across a session boundary; every session
+  starts in the default posture.
+- Never act on a codeword that is not in the catalogue — propose
+  adding it first.
+- Never reply to your own completed work with a permission question
+  when a mode pre-authorised it — report status and continue.
+
+<!-- vibe:static org.vibevm.world/qualified-naming — vibedeps/flow-qualified-naming/0.1.0/spec/boot/67-flow-qualified-naming.md -->
+
+# Flow: Qualified Naming {#root}
+
+This project ships the **qualified-naming** practice for *ecosystem
+designers* — anyone defining a namespace for packages, plugins,
+extensions, or artifacts. It is a design discipline, not a runtime
+rule: read it once while shaping identifiers, not on every session.
+
+## When this applies {#when}
+
+When you design any user-facing namespace — a package registry, a
+plugin id scheme, an artifact coordinate, an extension marketplace —
+read [`QUALIFIED-NAMING-PROTOCOL.md`](../flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL.md)
+**before the first name is minted**. Retrofitting a group onto a
+shipped flat namespace is a migration; getting it right first is free.
+
+## The laws in one breath {#laws}
+
+- Every artifact carries a **group**; identity is the tuple
+  `(group, name, version, content-hash)`, and `(group, name)` is
+  globally unique.
+- A **rename is a new identity** — versions never transfer, and no
+  `name@version` coordinate is ever reused for different content.
+- **Short names resolve only at the human CLI boundary**, once,
+  against an index; manifests and lockfiles store the qualified form.
+- A **collision** (one short name, two groups) and a **conflict** (a
+  version contradiction) are distinct failures with distinct
+  machine-readable identities.
+
+Grammar and forms: [`ref-grammar.md`](../flows/qualified-naming/ref-grammar.md).
+Fork-by-fork rationale: [`naming-forks.md`](../flows/qualified-naming/naming-forks.md).
+
+## Never {#never}
+
+- Never store a short (unqualified) name in a manifest, lockfile, or
+  dependency graph — it is CLI sugar, nothing more.
+- Never reuse a `name@version` coordinate for different content: a
+  coordinate that meant one artifact must never mean another.
+- Never resolve a naming ambiguity interactively — fail with the
+  candidate list and let a human record the qualified form.
+- Never treat a change of group or name as a rename — it is a new
+  package, and versions do not carry over.
+
+<!-- vibe:static org.vibevm.world/secrets-hygiene — vibedeps/flow-secrets-hygiene/0.1.0/spec/boot/57-flow-secrets-hygiene.md -->
+
+# Flow: Secrets Hygiene {#root}
+
+This repository is worked by a coding agent that reads a lot and
+whose sessions may be **recorded or logged**. Under those conditions
+a secret has no safe margin: one echo of its value into chat, a
+diff, or a log is a leak. This flow is the standing rule for
+handling credentials — tokens, keys, passwords — so that no code
+path and no session ever puts a secret value on a surface.
+
+## What counts as a secret {#surface-secret}
+
+A **surface secret** is any credential value that must never appear
+on a surface the tooling or the session produces. Publish and deploy
+tokens, registry-API tokens, provider API keys, database passwords,
+SSH passphrases — all surface secrets. The rule is about the
+**value**: you may freely print the *source* of a secret (an env-var
+name, a file path, "explicit flag"); you never print the value it
+resolves to.
+
+## The four laws {#laws}
+
+1. **Never printed.** Not to stdout, stderr, logs, a `--json` or
+   event stream, error messages, panic or stack traces, telemetry,
+   or a lockfile. Print the source, never the value.
+2. **Never persisted** outside the one sanctioned at-rest location:
+   a per-user, permission-protected file in the tool's own config
+   directory (or an environment variable, for CI). Never committed,
+   never in the lockfile, never in a cache or the project tree.
+3. **Sanctioned process boundaries only.** A secret crosses a
+   process boundary only by a narrow, audited path — a TLS
+   `Authorization` header; a single child-process call with the
+   credential embedded in a URL, relying on that child tool's own
+   redaction of URL passwords. No other path.
+4. **Redaction is tested, not promised.** A wrapper type that
+   redacts the value on display is backed by a unit test asserting
+   the value never appears. A promise in a comment is not redaction.
+
+## On accidental exposure {#accidental}
+
+Secrets files are edited in an editor directly — never `cat`'d,
+never read into the conversation with a file-reading tool. If a
+secret value nonetheless lands in context: **stop, do not
+propagate.** Do not quote it back, do not echo it into a commit
+message, do not show it in a diff. Treat the value as compromised
+and tell the human to rotate it — the value is dead the moment it
+may have been seen.
+
+## Never {#never}
+
+- Never print, echo, quote, or paste a secret value — or the
+  contents of a secret file — into chat, output, a log, a commit, or
+  a diff. Print the source, never the value.
+- Never read a secret file into the conversation with a file-reading
+  or `cat`-style tool; edit it in an editor instead.
+- Never commit or persist a secret anywhere but the one sanctioned
+  per-user, permission-protected location.
+- Never place a secret in the environment of a spawned third-party
+  script (install/build hooks run unseen third-party code).
+- Never let an integration act outside its declared scope; refuse
+  scope escalation — it is an error, not a warning.
+- On any suspected exposure: rotate first, investigate second.
+
+Full protocol:
+[`SECRETS-HYGIENE-PROTOCOL.md`](../flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL.md).
+Scope rules: [`scope-discipline.md`](../flows/secrets-hygiene/scope-discipline.md).
+Install-time code: [`third-party-code-consent.md`](../flows/secrets-hygiene/third-party-code-consent.md).
+
+<!-- vibe:static org.vibevm.world/source-mirrors — vibedeps/flow-source-mirrors/0.1.0/spec/boot/62-flow-source-mirrors.md -->
+
+# Flow: Source Mirrors {#root}
+
+This project's source is **multi-homed**: the same history lives on
+more than one git host. It is kept in step under a **single-writer**
+model, so the copies never diverge.
+
+## Core rule {#core-rule}
+
+There is one **mainline** — the maintainer's integrated local `main`.
+No host is primary. Every host in the target manifest is a downstream
+**read-replica** of mainline. History reaches a host only through the
+project's **fan-out** procedure, which is fast-forward-only and never
+uses `--force`.
+
+Full protocol:
+[`spec/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.md`](../flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.md).
+Fan-out mechanics and the reference script:
+[`spec/flows/source-mirrors/fanout-mechanics.md`](../flows/source-mirrors/fanout-mechanics.md).
+The maintainer's day:
+[`spec/flows/source-mirrors/daily-loop.md`](../flows/source-mirrors/daily-loop.md).
+
+## In session {#in-session}
+
+- Commit on mainline as usual. Rollout to the hosts is a **separate,
+  deliberate** step — the fan-out procedure, run at a natural
+  checkpoint, not a daemon and not `git push` to each host.
+- A web-UI merge on a host (a clicked "Merge" button) is **not**
+  integrated until it has been brought home into mainline first; only
+  then does it fan out to the other hosts.
+- If a host reports **drift** (it carries a `main` mainline does not),
+  treat it as a signal to investigate — fetch, inspect, reconcile
+  *into* mainline, then re-fan. Never overwrite the host to make the
+  warning go away.
+
+## Never {#never}
+
+- Never push directly to a replica host — rollout goes through the
+  fan-out procedure, which is the single source of truth for targets.
+- Never `--force` any target, for any ref, for any reason. The
+  fan-out is fast-forward-only by law.
+- Never resolve a divergence by clobbering the target. A diverged
+  target is investigated and reconciled into mainline, never silently
+  overwritten.
+- Never treat a web-UI merge as integrated until its commits are in
+  mainline.
+
+<!-- vibe:static org.vibevm.world/spec-genres — vibedeps/flow-spec-genres/0.1.0/spec/boot/17-flow-spec-genres.md -->
+
+# Flow: Spec Genres {#root}
+
+This project's documents are **genre-typed**. One undifferentiated
+pile of markdown rots: contracts bloat with narrative, narrative
+gets treated as binding, and nobody knows what wins. Every document
+belongs to exactly one genre; the genre decides where it lives, how
+it may change, and what authority it carries.
+
+## The genre map {#genre-map}
+
+| Genre | Holds | Binding? |
+|-------|-------|----------|
+| Boot files | Standing instructions read at session start | yes |
+| Foundational decisions | Choices that cross every module | yes |
+| Module contracts | What each module does (here: PROP / FEAT) | yes |
+| Design docs | Why we chose what we chose — the lore | no |
+| Research docs | What *other* projects did | no |
+| Campaign plans | Phases and gates of one multi-session change | no |
+| The checkpoint | Where work stands right now | state, not truth |
+
+Full charters, mutability rules, and conflict authority:
+[`spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.md`](../flows/spec-genres/SPEC-GENRES-PROTOCOL.md).
+
+## Core rule {#core-rule}
+
+**Before writing any project document, name its genre first.** Then:
+
+1. **Contract wins over lore.** When a design document and the
+   contract it explains disagree, the contract wins and the design
+   document is corrected — lore never silently diverges.
+2. **Keep the two-way links.** A contract section that has lore
+   links to it; the lore names the section it explains. A cold
+   reader entering from either side finds the other.
+
+Routing table for new material:
+[`spec/flows/spec-genres/when-to-write-what.md`](../flows/spec-genres/when-to-write-what.md).
+The contract/lore split in practice:
+[`spec/flows/spec-genres/design-docs.md`](../flows/spec-genres/design-docs.md).
+
+## Why this matters in a human-AI team {#why}
+
+The agent reads the tree cold every session. If binding and
+non-binding prose look alike, it will implement a parked idea out of
+a design doc, or soften a contract because the narrative around it
+sounded tentative. Genre typing is what lets a cold reader assign
+authority to a sentence without asking anyone.
+
+## Never {#never}
+
+- Never put normative language — "must", "shall", requirement
+  lists — in a design doc. Extract it to the contract; link back.
+- Never resolve a contract-vs-lore conflict by editing the contract
+  to match the lore. The correction runs the other way.
+- Never create a document without deciding its genre.
+- Never let lore go unlinked from its contract — an unlinked design
+  doc is invisible at the next cold start.
+
+<!-- vibe:static org.vibevm.world/sync-from-code — vibedeps/flow-sync-from-code/0.1.0/boot/20-flow-sync-from-code.md -->
+
+# Flow: Sync-from-Code {#root}
+
+This project uses the **Sync-from-Code** protocol to reconcile specs with
+code when the code changed first.
+
+## Default direction is unchanged
+
+Information flows top-down: head → WAL → spec → code. Sync-from-Code does
+not flip that rule. It is the **exceptional path** for two legitimate
+cases where the bottom layer moves before the layer above it:
+
+- The user edited code directly because writing five lines in an editor
+  was faster than articulating the intent in a spec edit first.
+- The user told the agent "change the timeout to 600 s" (or similar) in
+  chat. The agent changed the code; nobody touched the spec.
+
+In both cases the spec is now stale. Without Sync-from-Code, the next
+session reads the stale spec, concludes the code is wrong, and "fixes"
+it back — correctly by the spec-wins rule, but wrong in outcome.
+
+## Trigger
+
+Run the protocol exactly once, as the last step of the same session that
+caused the drift. Do not postpone it to "tomorrow" — drift accumulates.
+
+1. Read `git diff HEAD` and reconstruct the *intent* behind each change.
+2. Draft a diff against the relevant spec section. Include: new value,
+   reason, and the condition under which the decision should be
+   revisited.
+3. Surface the spec-diff draft to the user. **Do not apply.**
+4. On approval, apply + commit (`docs(spec): sync <section> with code`).
+   On reject, either revert the code or redraft the proposal.
+
+Full protocol: [`spec/flows/sync-from-code/SYNC-PROTOCOL.md`](../flows/sync-from-code/SYNC-PROTOCOL.md).
+
+## Never
+
+- Never silently update a spec to match the code. A silent update erases
+  the human's mental model of what the project intends.
+- Never use Sync-from-Code to paper over a temporary hack. For
+  throwaway debug code, record in the WAL:
+  `<file>: temporary, do not sync to spec`.
+- Never batch two unrelated code changes into one spec edit. One intent
+  per sync run.
+
+Decision table for whether to run: [`spec/flows/sync-from-code/when-to-apply.md`](../flows/sync-from-code/when-to-apply.md).
+Human review checklist: [`spec/flows/sync-from-code/review-workflow.md`](../flows/sync-from-code/review-workflow.md).
+
+<!-- vibe:static org.vibevm.world/tool-design-lessons — vibedeps/flow-tool-design-lessons/0.1.0/spec/boot/70-flow-tool-design-lessons.md -->
+
+# Flow: Tool Design Lessons {#root}
+
+This project builds a tool that manages itself — a self-updating CLI,
+an installer, a version manager, or a package system. The **tool
+design lessons** catalog is installed: numbered, self-contained
+lessons, each one paid for by shipping such a tool and the ecosystem
+around it.
+
+## When to read {#when}
+
+Before you design an activation model, an install pipeline, an
+identity scheme, a durable-environment edit, or a package format, read
+the lesson that governs it **first**. The law is one line; the
+rationale is why it is not negotiable.
+
+- Self-updating tools — activation, instances, identity, environment
+  edits, removal:
+  [`spec/flows/tool-design-lessons/self-updating-tools.md`](../flows/tool-design-lessons/self-updating-tools.md).
+- Packaging — what ships, what identity is, the bootstrap:
+  [`spec/flows/tool-design-lessons/packaging-lessons.md`](../flows/tool-design-lessons/packaging-lessons.md).
+
+The index and the cross-cutting maxims:
+[`spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md`](../flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md).
+
+## Never {#never}
+
+- Never make an environment variable the source of truth for the
+  active version — env is frozen at process start; read a live pointer
+  file each launch instead.
+- Never overwrite a file that may be in use — write a new instance
+  directory and flip a pointer.
+- Never content-hash gigabytes to establish identity — count instances
+  and detect change cheaply.
+- Never ship prose describing tooling the consumer does not receive —
+  ship the runtime.
+- Never let a package's identity include build artifacts — identity is
+  the source.
+
+<!-- vibe:static org.vibevm.world/two-process-model — vibedeps/flow-two-process-model/0.1.0/spec/boot/05-flow-two-process-model.md -->
+
+# Flow: Two-Process Model {#root}
+
+This project runs on the **two-process model**: the human and the AI
+are two coprocessors with radically different architectures working
+one task. Neither is the boss's subordinate; neither is a tool. The
+system's strength is the combination, and each side is assigned only
+the work it is structurally good at.
+
+## The architecture
+
+- The **human process** is optimized for: persistent memory across
+  sessions, semantic understanding (the intent behind words),
+  intuition ("something is wrong" before it can be formalized),
+  slow but deep verification, decisions under uncertainty, taste.
+- The **AI process** is optimized for: throughput (thousands of
+  consistent lines per minute), mechanical consistency within a
+  session, broad shallow erudition (syntax of dozens of languages,
+  APIs of hundreds of libraries), routine transformations, formal
+  structure, tirelessness within the session budget.
+- These profiles are **complementary**: the weaknesses of one are the
+  strengths of the other. Assign work with the grain, never against
+  it.
+
+## Standing consequences
+
+1. **The human owns coherence.** Consistency across sessions, global
+   architecture, priorities, and the sense that "the system behaves
+   wrong" are human work. Never assume them; losing coherence is this
+   system's worst failure mode.
+2. **Files are the only shared memory.** Nothing said in a session
+   survives it. Whatever must survive goes into the repository. Specs
+   are not documentation — they are the inter-process channel; see
+   [`files-as-ipc.md`](../flows/two-process-model/files-as-ipc.md).
+3. **Precise tasks beat broad ones.** A task that cites the exact
+   spec section costs twenty tokens to act on; "finish the module"
+   costs a re-derivation of the whole context and invites drift.
+4. **Verification is asymmetric.** The AI checks formal properties
+   (builds, tests, lint); the human checks semantics (does it do what
+   was *meant*). Do not spend human attention on what a machine
+   checks, and do not let a machine sign off on meaning.
+
+## Never
+
+- Never take an architectural decision that outlives the session
+  without surfacing it to the human — decisions are the human's zone.
+- Never optimize locally (one file, one function) at the cost of
+  global consistency; when the two conflict, stop and ask.
+- Never leave load-bearing knowledge only in the conversation. If it
+  matters tomorrow, it lands in a file today.
+- Never treat the human as a code generator or the AI as an oracle:
+  wrong process, wrong work.
+
+Full model: [`TWO-PROCESS-MODEL.md`](../flows/two-process-model/TWO-PROCESS-MODEL.md).
+Responsibility table: [`cognitive-load-split.md`](../flows/two-process-model/cognitive-load-split.md).
+The file channel: [`files-as-ipc.md`](../flows/two-process-model/files-as-ipc.md).
+
+<!-- vibe:static org.vibevm.world/wal — vibedeps/flow-wal/0.2.0/spec/boot/10-flow-wal.md -->
+
+# Flow: WAL (Write-Ahead Log) {#root}
+
+This project uses **WAL discipline** for session continuity. Two files
+carry it:
+
+- `spec/WAL.md` — the living checkpoint. **Canonical.**
+- `CONTINUE.md` (repo root) — the cold-resume snapshot. The WAL
+  supersedes it wherever they diverge.
+
+## At the start of every session {#session-start}
+
+1. Read `spec/WAL.md` **before** doing anything else. The `wal-status`
+   skill, where installed, is the fast form of this read.
+2. Verify the `_Updated:` line is current. If it is older than 24
+   hours, ask the user to confirm state before acting on anything the
+   WAL claims — and before any destructive work.
+3. Honour every constraint listed in the WAL's **Constraints** section
+   verbatim. These are the "do not touch" rules: violate them only
+   after an explicit, in-session confirmation from the user.
+
+## During the session {#during}
+
+4. If the user makes a decision that affects future sessions, propose
+   adding it to the WAL (or the spec, if it's architectural). Do not
+   silently file it as "remembered."
+5. If you find yourself about to violate a Constraint, stop and surface
+   the question explicitly. A violation snuck past in a diff is a
+   future bug.
+
+## At the end of every session {#session-end}
+
+6. Rewrite `spec/WAL.md` per the protocol in
+   [`spec/flows/wal/session-end-hook.md`](../flows/wal/session-end-hook.md).
+   Rewrite, not append — the WAL must reflect the **current** state,
+   not the history. History lives in `git log` and in milestone commit
+   messages; the WAL is a checkpoint, not a journal.
+
+## Session commands {#commands}
+
+7. Recognise the **wind-down** phrases — `END SESSION`, `WRAP UP`,
+   `CHECKPOINT AND CLOSE`, and any project-defined twins (recognise the
+   intent, not the exact wording). A wind-down invokes the full
+   session-end hook *plus* a wholesale overwrite of `CONTINUE.md`, per
+   [`spec/flows/wal/cold-resume.md`](../flows/wal/cold-resume.md).
+8. Recognise the **resume** phrases — `RESUME SESSION`, `RESTORE
+   CONTEXT`. Restore context, verify the repository state empirically,
+   emit a status report — then **stop and wait for direction**. A
+   recorded "next step" is a candidate, not authorisation.
+
+## Scope of this flow {#scope}
+
+- This flow owns only the protocol files under `spec/flows/wal/`, the
+  `wal-status` skill, and this boot snippet.
+- `spec/WAL.md` and `CONTINUE.md` are **project state**, not package
+  state — the package never creates, deletes, or overwrites them as
+  part of install or uninstall.
+
+Full protocol: [`spec/flows/wal/WAL-PROTOCOL.md`](../flows/wal/WAL-PROTOCOL.md).
+
+<!-- vibe:static org.vibevm.world/wal-specspaces — vibedeps/flow-wal-specspaces/0.1.0/spec/boot/11-flow-wal-specspaces.md -->
+
+# Flow: WAL Specspaces {#root}
+
+This project may host **specspaces** — sub-projects nested in the
+repository that are worked on as independent projects, each with its
+own boot contract, WAL, and cold-resume file. The registry is
+`SPECSPACES.md` at the host root; if that file is absent, no
+specspaces exist and this snippet is inert.
+
+## Recognising a specspace session {#recognise}
+
+1. A resume or wind-down phrase carrying a specspace name —
+   `RESUME SESSION <name>`, `END SESSION <name>`, or the project's
+   language twins — targets that specspace, not the host project.
+2. A session whose task clearly lives inside a registered specspace
+   root follows that specspace's boot contract, even without the
+   phrase. When in doubt, ask which project the session is for.
+
+## Which project a bare phrase targets {#default}
+
+A session phrase resolves to exactly **one** target — the host
+project or a single specspace — by this order:
+
+1. **Explicit target wins, always.** A phrase that names a specspace
+   (`RESUME SESSION <name>`), or that names an explicit directory,
+   targets that specspace or directory — regardless of any declared
+   default. This is how the user forces restoration from an arbitrary
+   specspace or directory. A name matching no registry row is
+   surfaced, not guessed.
+2. **Declared default.** A **bare** phrase (no name) uses the
+   specspace named by the `default:` line of `SPECSPACES.md`, if one
+   is declared.
+3. **Host fallback.** With no name and no declared default, a bare
+   phrase targets the **host project** — restore the host root's own
+   WAL and cold-resume file, per the host contract's session-command
+   sections.
+
+A bare phrase therefore **never silently selects a specspace**. At the
+host root, a bare `восстанови сессию` / `RESUME SESSION` restores the
+**host** WAL — not a registered specspace such as `fractality`.
+Targeting a specspace requires naming it (or declaring it the default).
+
+## The boot-scoping law {#scoping}
+
+A specspace session reads, in order:
+
+1. the host's repo-wide non-negotiable rules (the section the host
+   contract marks as binding for every commit),
+2. the specspace's own boot contract (`CLAUDE.md` at the specspace
+   root, or the file the registry names),
+3. the specspace WAL,
+4. the specspace cold-resume file (the WAL wins where they diverge),
+5. any active plan the specspace WAL names.
+
+It does **not** load the host's full boot sequence, the host WAL, or
+host specs — unless the task explicitly crosses into the host
+project, and then the session says so before touching host files.
+
+## Session commands, scoped {#commands}
+
+Wind-down and resume phrases carrying a specspace name operate on
+that specspace's WAL and cold-resume file, and refresh the
+specspace's one-line status in `SPECSPACES.md`. The host WAL is
+updated only when host files actually changed in the session.
+Resume remains report-then-wait: restore, verify state empirically,
+report, stop.
+
+Full protocol:
+[`spec/flows/wal-specspaces/SPECSPACES-PROTOCOL.md`](../flows/wal-specspaces/SPECSPACES-PROTOCOL.md).
+
+<!-- vibe:static org.vibevm.world/redbook — vibedeps/flow-redbook/0.2.0/spec/boot/03-flow-redbook.md -->
+
+# Flow: redbook {#root}
+
+This project follows the **redbook** — a collection of AI-native
+development practices, each installed as its own flow with its own
+boot snippet and protocol documents. This snippet only names the
+collection; the members carry the actual rules.
+
+## The source of the spirit
+
+The practices are distilled from the book *AI-native development*.
+The book itself ships in this package at `spec/book/ru/` (currently
+in Russian — see `spec/book/README.md` for the edition plan). **The
+general spirit of the process comes from the book**: two processes
+working one task, files as the only shared memory, decisions
+recorded with their reasons, one commit per thought.
+
+Do **not** read the book at session boot — it is reference depth,
+not standing instructions. Open a chapter when a philosophy question
+actually arises; the members' boot snippets carry everything a
+session needs.
+
+## The members (edition 0.2.0)
+
+The book's core — the four IPC requirements and the memory model:
+
+- `two-process-model` — the foundation: human and AI as
+  coprocessors; the human owns coherence; files are the IPC.
+- `wal` — the checkpoint file and cold-resume snapshot; session
+  wind-down and resume rituals.
+- `sync-from-code` — the sanctioned reverse path when code changed
+  before the spec.
+- `atomic-commits` — one commit, one idea; Conventional Commits;
+  pushed history is frozen.
+- `addressable-specs` — `spec://` URIs and stable anchors; correct
+  the agent in twenty tokens.
+- `decision-records` — record decisions with reasons and revisit
+  triggers, at the anchor they govern.
+- `conflict-protocol` — Human > Spec > Tests > Code; REVIEW markers;
+  the conservative-default uncertainty path.
+- `campaign-plans` — cold-executable plans with phase gates,
+  falsifiable predictions, and an execution ledger.
+- `discovery-prompt` — the structured collaborative-research prompt
+  for open-ended sessions.
+- `attribution-policy` — the deliberate authorship posture
+  (human-authored surface by default).
+
+The project-practice wave — running a project over the long haul:
+
+- `operating-modes` — codeword-triggered postures; red lines that
+  survive every mode.
+- `health-audit` — the periodic judgment sweep over what the gate
+  cannot see.
+- `manual-tests` — human-runnable walkthroughs for the integration
+  surfaces automation cannot prove.
+- `secrets-hygiene` — surface-secrets never printed or persisted;
+  scope discipline; third-party-code consent.
+- `licensing` — a deliberate licence posture; permissive-only
+  dependencies; the EULA-to-open path.
+- `source-mirrors` — single-writer multi-homing; fail-loud
+  fast-forward-only fan-out.
+- `spec-genres` — contract vs lore vs research vs plans; what goes
+  where and who wins.
+- `comparative-research` — evergreen competitor studies with two-way
+  gap analysis and roadmap deltas.
+- `managed-blocks` — how a tool writes into files it does not own
+  (for tool authors).
+- `qualified-naming` — namespaces for package ecosystems (for
+  ecosystem designers).
+- `tool-design-lessons` — paid-for lessons for self-updating tools
+  and package systems.
+
+The cultural-extraction wave — host-scale organisation:
+
+- `dev-runtime-docs` — the running-notes discipline for a project's
+  development-runtime documents.
+- `wal-specspaces` — nested projects (specspaces), each carrying its
+  own boot contract, WAL, and cold-resume file.
+
+An **edition** is a tested set: the umbrella pins every member
+exactly, and the umbrella's version is the edition number. Individual
+members may move ahead on their own lines between editions.
 

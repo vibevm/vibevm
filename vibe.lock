@@ -1,6 +1,6 @@
 [meta]
 generated_by = "vibe 0.1.0-dev"
-generated_at = "2026-07-14T11:44:26Z"
+generated_at = "2026-07-14T23:20:50Z"
 schema_version = 5
 root_dependencies = [
     "stack:org.vibevm/rust-ai-native@^0.7.0",
@@ -36,7 +36,7 @@ name = "redbook"
 group = "org.vibevm.world"
 version = "0.2.0"
 source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm.world/redbook/v0.2.0"
-content_hash = "sha256:5d1ed10ec1485590684b8a408732431fa504dc8c1937c92f039a057b112f6a4c"
+content_hash = "sha256:94c40fc1af60e114bb1b4e40881fabfd6d189d70aa243b87eef4954011757728"
 files_written = []
 dependencies = [
     "flow:org.vibevm.world/addressable-specs@=0.1.0",
@@ -60,6 +60,7 @@ dependencies = [
     "flow:org.vibevm.world/tool-design-lessons@=0.1.0",
     "flow:org.vibevm.world/two-process-model@=0.1.0",
     "flow:org.vibevm.world/wal@=0.2.0",
+    "flow:org.vibevm.world/wal-specspaces@=0.1.0",
 ]
 source_kind = "registry"
 
@@ -246,7 +247,7 @@ name = "git-atomic-commits"
 group = "org.vibevm.world"
 version = "0.1.0"
 source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm.world/git-atomic-commits/v0.1.0"
-content_hash = "sha256:95173580b138e96b3a729cbbc1708fb1da9a67405220b471e819a04aebd82bc3"
+content_hash = "sha256:6f82661478c4a5a3899cf06a3a0515002cb6ab0d80ff2982e33dc93acbc5b3f7"
 files_written = []
 source_kind = "registry"
 
@@ -256,7 +257,7 @@ name = "git-attribution-policy"
 group = "org.vibevm.world"
 version = "0.1.0"
 source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm.world/git-attribution-policy/v0.1.0"
-content_hash = "sha256:71b551081bf7534561cd986e9959025673dfbbb3be808576878d3efd60b20d9c"
+content_hash = "sha256:1e03be538195503b582fe53485c0cf26b63781a2edb4373d39c68488de68f32b"
 files_written = []
 source_kind = "registry"
 
@@ -266,7 +267,7 @@ name = "git-autonomy"
 group = "org.vibevm.world"
 version = "0.1.0"
 source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm.world/git-autonomy/v0.1.0"
-content_hash = "sha256:9f87e83531a79953252e8be35725931b5efe3fa8d9a04cdce96b103c144864c6"
+content_hash = "sha256:1ead4453c12171c7f0ef8ae0058181f5c445309e846106b3689d1c55c13c1905"
 files_written = []
 source_kind = "registry"
 
@@ -276,7 +277,7 @@ name = "git-conventional-commits"
 group = "org.vibevm.world"
 version = "0.1.0"
 source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm.world/git-conventional-commits/v0.1.0"
-content_hash = "sha256:b0dd50660dbf3eb477ef84fd4a7e21746c6f84c2a0bf45ac4156ecdf6cddbf2d"
+content_hash = "sha256:40366c09d560fa67cb903af51378e244fd212ac7abad636ce5b7bd6f233f8eae"
 files_written = []
 source_kind = "registry"
 

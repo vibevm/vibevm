@@ -25,7 +25,7 @@ authors = ["Oleg Chirukhin"]
 # dev-runtime-docs (§19), conflict-protocol (§9), and the git-practices family
 # (§12 + the trio Rules) now arrive transitively through it; the git-* commit
 # rules self-suggest the inline lane, so they still land in spec/boot/INLINE.md.
-"flow:org.vibevm.world/redbook" = { version = "^0.2.0", link = "dynamic" }
+"flow:org.vibevm.world/redbook" = { version = "^0.2.0", link = "static-transitive" }
 
 # The delegation-first directive (fractality group), static — delegate execution
 # by default, keep the boss for judgment and review. It pulls the delegation-rules

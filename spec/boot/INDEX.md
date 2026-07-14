@@ -15,10 +15,6 @@ path = "spec/boot/00-core.md"
 kind = "static"
 
 [[entry]]
-path = "spec/boot/INLINE.md"
-kind = "static"
-
-[[entry]]
 path = "vibedeps/flow-core-ai-native/0.7.0/spec/boot/10-flow-core-ai-native.md"
 kind = "static"
 
@@ -28,94 +24,6 @@ kind = "static"
 
 [[entry]]
 path = "vibedeps/stack-typescript-ai-native-lang/0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md"
-kind = "static"
-
-[[entry]]
-path = "vibedeps/flow-addressable-specs/0.1.0/spec/boot/15-flow-addressable-specs.md"
-kind = "static"
-
-[[entry]]
-path = "vibedeps/flow-campaign-plans/0.1.0/spec/boot/40-flow-campaign-plans.md"
-kind = "static"
-
-[[entry]]
-path = "vibedeps/flow-comparative-research/0.1.0/spec/boot/52-flow-comparative-research.md"
-kind = "static"
-
-[[entry]]
-path = "vibedeps/flow-conflict-protocol/0.1.0/spec/boot/35-flow-conflict-protocol.md"
-kind = "static"
-
-[[entry]]
-path = "vibedeps/flow-decision-records/0.1.0/spec/boot/25-flow-decision-records.md"
-kind = "static"
-
-[[entry]]
-path = "vibedeps/flow-dev-runtime-docs/0.1.0/boot/58-flow-dev-runtime-docs.md"
-kind = "static"
-
-[[entry]]
-path = "vibedeps/flow-discovery-prompt/0.1.0/spec/boot/50-flow-discovery-prompt.md"
-kind = "static"
-
-[[entry]]
-path = "vibedeps/flow-health-audit/0.1.0/spec/boot/42-flow-health-audit.md"
-kind = "static"
-
-[[entry]]
-path = "vibedeps/flow-licensing/0.1.0/spec/boot/60-flow-licensing.md"
-kind = "static"
-
-[[entry]]
-path = "vibedeps/flow-managed-blocks/0.1.0/spec/boot/65-flow-managed-blocks.md"
-kind = "static"
-
-[[entry]]
-path = "vibedeps/flow-manual-tests/0.1.0/spec/boot/44-flow-manual-tests.md"
-kind = "static"
-
-[[entry]]
-path = "vibedeps/flow-operating-modes/0.1.0/spec/boot/45-flow-operating-modes.md"
-kind = "static"
-
-[[entry]]
-path = "vibedeps/flow-qualified-naming/0.1.0/spec/boot/67-flow-qualified-naming.md"
-kind = "static"
-
-[[entry]]
-path = "vibedeps/flow-secrets-hygiene/0.1.0/spec/boot/57-flow-secrets-hygiene.md"
-kind = "static"
-
-[[entry]]
-path = "vibedeps/flow-source-mirrors/0.1.0/spec/boot/62-flow-source-mirrors.md"
-kind = "static"
-
-[[entry]]
-path = "vibedeps/flow-spec-genres/0.1.0/spec/boot/17-flow-spec-genres.md"
-kind = "static"
-
-[[entry]]
-path = "vibedeps/flow-sync-from-code/0.1.0/boot/20-flow-sync-from-code.md"
-kind = "static"
-
-[[entry]]
-path = "vibedeps/flow-tool-design-lessons/0.1.0/spec/boot/70-flow-tool-design-lessons.md"
-kind = "static"
-
-[[entry]]
-path = "vibedeps/flow-two-process-model/0.1.0/spec/boot/05-flow-two-process-model.md"
-kind = "static"
-
-[[entry]]
-path = "vibedeps/flow-wal/0.2.0/spec/boot/10-flow-wal.md"
-kind = "static"
-
-[[entry]]
-path = "vibedeps/flow-wal-specspaces/0.1.0/spec/boot/11-flow-wal-specspaces.md"
-kind = "static"
-
-[[entry]]
-path = "vibedeps/flow-redbook/0.2.0/spec/boot/03-flow-redbook.md"
 kind = "static"
 
 [[entry]]
