@@ -77,12 +77,12 @@ pub fn compile_inline(
         let body = strip_directive_lines(&folded, &[DirectiveKind::Use, DirectiveKind::Source]);
         let expanded = expand_embeds(&body, source)?;
 
-        writeln!(out, "<!-- begin: {key} -->").unwrap(); // phase 5
+        writeln!(out, "{}", crate::markers::open(key)).unwrap(); // phase 5
         out.push_str(&expanded);
         if !expanded.ends_with('\n') {
             out.push('\n');
         }
-        writeln!(out, "<!-- end: {key} -->").unwrap();
+        writeln!(out, "{}", crate::markers::close(key)).unwrap();
     }
     Ok(out)
 }
@@ -167,8 +167,8 @@ mod tests {
         assert!(!out.contains("#use"), "{out}");
         assert!(!out.contains("#embed"), "{out}");
         // Node markers wrap each emission.
-        assert!(out.contains("<!-- begin: spec://vibevm/a#r -->"));
-        assert!(out.contains("<!-- end: spec://vibevm/b#r -->"));
+        assert!(out.contains("<!-- vibe:begin spec://vibevm/a#r -->"));
+        assert!(out.contains("<!-- vibe:end spec://vibevm/b#r -->"));
     }
 
     #[test]
@@ -177,7 +177,7 @@ mod tests {
         let seed = SpecAddress::parse("spec://vibevm/a#r").unwrap();
         let out = compile_inline(&seed, &src).unwrap();
         assert!(out.contains("just me"));
-        assert!(out.contains("<!-- begin: spec://vibevm/a#r -->"));
+        assert!(out.contains("<!-- vibe:begin spec://vibevm/a#r -->"));
     }
 
     #[test]

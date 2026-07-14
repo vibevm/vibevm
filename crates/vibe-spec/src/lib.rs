@@ -22,6 +22,7 @@ mod directives;
 mod doctree;
 mod embed;
 mod link_table;
+mod markers;
 mod merge;
 mod pipeline;
 mod resolver;
@@ -32,6 +33,7 @@ pub use directives::{Directive, DirectiveError, DirectiveKind, Directives, InPla
 pub use doctree::{DocTree, Node, NodeId};
 pub use embed::{EmbedError, FsSectionSource, SectionSource, expand_embeds};
 pub use link_table::{LinkTable, LinkTableError, build_link_table};
+pub use markers::{Block, close, decompile, open};
 pub use merge::{MergeMode, MergedSection, SectionOrigin, fold_source, merge_contract_source};
 pub use pipeline::{CompileError, compile_inline};
 pub use resolver::{FileResolver, ResolveError};

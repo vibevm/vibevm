@@ -3,7 +3,7 @@
 
 use std::path::{Path, PathBuf};
 
-use vibe_spec::{FileResolver, FsSectionSource, SpecAddress, compile_inline};
+use vibe_spec::{FileResolver, FsSectionSource, SpecAddress, compile_inline, decompile};
 
 fn ws() -> PathBuf {
     Path::new(env!("CARGO_MANIFEST_DIR")).join("tests/fixtures/ws")
@@ -44,4 +44,18 @@ fn compiles_a_contract_folding_its_source() {
     assert!(out.contains("heavy source behind the contract"), "{out}");
     // The #source directive is resolved by the fold, not left behind.
     assert!(!out.contains("#source"), "{out}");
+}
+
+#[test]
+fn compiled_output_decompiles_to_its_blocks() {
+    let source = FsSectionSource::new(FileResolver::new(ws(), "vibevm"));
+    let seed = SpecAddress::parse("spec://vibevm/modules/demo/PROP-050#root").unwrap();
+    let out = compile_inline(&seed, &source).unwrap();
+
+    // Reversible (§11): the two emitted blocks — the #use dependency then the
+    // seed — recover from the markers.
+    let blocks = decompile(&out);
+    assert_eq!(blocks.len(), 2, "{out}");
+    assert!(blocks.iter().any(|b| b.key.contains("PROP-000")));
+    assert!(blocks.iter().any(|b| b.key.contains("PROP-050")));
 }
