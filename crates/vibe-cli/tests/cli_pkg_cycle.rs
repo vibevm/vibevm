@@ -101,11 +101,11 @@ fn full_install_cycle() {
         index.contains("vibedeps/flow-wal/0.2.0/spec/boot/10-flow-wal.md"),
         "INDEX.md must name the installed dependency's boot snippet:\n{index}"
     );
-    // The fixtures declare no `link = "inline"` dependency, so there is
-    // no INLINE.md.
+    // The fixtures declare no `link = "static"` dependency, so there is
+    // no STATIC.md.
     assert!(
-        !project.path().join("spec/boot/INLINE.md").exists(),
-        "INLINE.md is only generated for inline-linked dependencies"
+        !project.path().join("spec/boot/STATIC.md").exists(),
+        "STATIC.md is only generated for static-linked dependencies"
     );
     // The redirect files are generated thin pointers at the boot
     // artifacts.

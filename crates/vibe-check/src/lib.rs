@@ -18,7 +18,7 @@
 //! 7. [`CheckId::BootDirectory`] — `spec/boot/` exists and holds only
 //!    markdown files. PROP-009 retired the `NN-` filename prefix; the
 //!    directory holds authored boot files and `vibe`-generated
-//!    `INDEX.md` / `INLINE.md` artifacts, none numerically prefixed.
+//!    `INDEX.md` / `STATIC.md` artifacts, none numerically prefixed.
 //!    [`CheckId::RedirectBlock`] checks the `<vibevm>` block of each
 //!    agent instruction file is well-formed (PROP-012).
 //! 8. [`CheckId::LockfileFiles`] — every package in `vibe.lock` has a

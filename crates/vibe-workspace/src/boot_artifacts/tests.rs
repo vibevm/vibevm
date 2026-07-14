@@ -292,7 +292,7 @@ fn write_boot_artifacts_removes_a_stale_inline() {
     write_boot_artifacts(ws.path(), ws.path(), &with_inline).unwrap();
     assert!(ws.path().join("spec/boot/STATIC.md").exists());
 
-    // A later generation has none — the stale INLINE.md must go.
+    // A later generation has none — the stale STATIC.md must go.
     let without = boot(vec![entry("spec/boot/00-core.md", LinkType::Dynamic, ".")]);
     let written = write_boot_artifacts(ws.path(), ws.path(), &without).unwrap();
     assert!(written.static_lane.is_none());

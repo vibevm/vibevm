@@ -1,6 +1,6 @@
 //! Check 7 — `spec/boot/` exists and holds only markdown files.
 //! PROP-009 retired the `NN-` filename prefix; the directory holds
-//! authored boot files and `vibe`-generated `INDEX.md` / `INLINE.md`
+//! authored boot files and `vibe`-generated `INDEX.md` / `STATIC.md`
 //! artifacts, none numerically prefixed.
 
 specmark::scope!("spec://vibevm/VIBEVM-SPEC#linter");
@@ -53,7 +53,7 @@ impl Check for BootDirectoryCheck {
         };
         // PROP-009 §2.5 retired the `NN-` filename prefix — `vibe` owns boot
         // ordering by category band, and the generated `INDEX.md` /
-        // `INLINE.md` artifacts carry no numeric prefix. Any markdown file is
+        // `STATIC.md` artifacts carry no numeric prefix. Any markdown file is
         // a valid boot file; only a non-markdown stray is worth flagging.
         for entry in entries.filter_map(|e| e.ok()) {
             let name = entry.file_name().to_string_lossy().into_owned();
@@ -84,11 +84,11 @@ mod tests {
     #[test]
     fn boot_dir_accepts_the_loading_model_layout() {
         // PROP-009 §2.5 retired the `NN-` prefix: the generated INDEX.md
-        // / INLINE.md and any author-named boot file are all valid.
+        // / STATIC.md and any author-named boot file are all valid.
         let project = tempdir().unwrap();
         write_minimal_project(project.path());
         fs::write(project.path().join("spec/boot/INDEX.md"), "schema = 1\n").unwrap();
-        fs::write(project.path().join("spec/boot/INLINE.md"), "# inline\n").unwrap();
+        fs::write(project.path().join("spec/boot/STATIC.md"), "# inline\n").unwrap();
         fs::write(project.path().join("spec/boot/rules.md"), "# rules\n").unwrap();
         let report = check_project(project.path(), &opts());
         assert!(
