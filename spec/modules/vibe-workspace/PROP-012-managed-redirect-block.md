@@ -3,6 +3,7 @@
 **Milestone:** design proposal; it refines [PROP-009 §2.3](PROP-009-loading-model.md) (M1.18, Phases 1–6 shipped) and **corrects a destructive defect already in the shipped Phase-4 code** — so it is a prerequisite for PROP-009 §4 / the M1.18 Phase-7 redirect rewrite, not a far-future milestone. Owner to place in [`ROADMAP.md`](../../../ROADMAP.md). Not implementation-locked.
 **Status:** IMPLEMENTED — shipped with M1.18 Phase 7 (the block engine in `vibe-workspace::boot_artifacts`, plan-time validation, the `vibe check` `RedirectBlock` finding, and the self-migration that put the `<vibevm>` block into this repository's own instruction files). Requirements were captured 2026-05-22 (drafts 1–2); decision units typed at REQ grain 2026-06-12 (the depth program).
 **Related:** [PROP-009](PROP-009-loading-model.md) (the loading model — §2.3 the redirect, §4 migration; the Phase-4 implementation `vibe-workspace::boot_artifacts::write_boot_artifacts` / `render_redirect` / `REDIRECT_FILES` this PROP reworks); [PROP-007](PROP-007-workspace.md) (workspaces — every entry-point node carries its own instruction files).
+**Discipline:** the general co-tenant / managed-block pattern — the co-tenant law, the marker design, the well-formedness state machine that classifies a file before mutation, and the create / update / remove verbs — is the `managed-blocks` flow: `spec://org.vibevm.world/managed-blocks/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL#root`. This PROP is vibevm's instance of it — the `<vibevm>` redirect block in the agent instruction files, verified by `vibe-workspace::boot_artifacts` and the `vibe check` `RedirectBlock` finding.
 **Owner sanction:** PROP-012 amends PROP-009 §2.3 (a PROP document — editable) and reshapes the redirect-file wording in `VIBEVM-SPEC.md` §6.1 / §4.2. Those `VIBEVM-SPEC.md` edits fall inside the M1.18 Phase-7 spec-consistency sanction already granted; PROP-012 adds no new owner-frozen surface.
 
 ---
@@ -21,7 +22,7 @@ A whole-file overwrite silently destroys every byte of that. The first `vibe ins
 
 It also contradicts vibevm's own founding rule. PROP-009 §2.1 — the C++-`#include` rule — is that *installing a dependency must never modify a node's authored content*. The redirect write violates exactly that, for the most visible authored file in the project.
 
-The fix is the standard managed-block discipline — the shape `ssh`, shell-rc installers, and countless config tools already use: vibevm owns one small, clearly-delimited, **machine-findable** region of each instruction file, and never touches a byte outside it. vibevm becomes a **good co-tenant** — it writes its redirect into its own pen and leaves the rest of the file to whoever else shares it.
+The fix is the standard managed-block discipline (the general problem and the co-tenant law: the `managed-blocks` flow's `spec://org.vibevm.world/managed-blocks/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL#problem`) — the shape `ssh`, shell-rc installers, and countless config tools already use: vibevm owns one small, clearly-delimited, **machine-findable** region of each instruction file, and never touches a byte outside it. vibevm becomes a **good co-tenant** — it writes its redirect into its own pen and leaves the rest of the file to whoever else shares it.
 
 ---
 
