@@ -2538,6 +2538,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "vibe-spec"
+version = "0.1.0-dev"
+dependencies = [
+ "thiserror 2.0.18",
+]
+
+[[package]]
 name = "vibe-wire"
 version = "0.1.0-dev"
 dependencies = [
