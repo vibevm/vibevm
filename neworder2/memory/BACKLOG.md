@@ -55,7 +55,13 @@ paths, half-updating a generated file, so that edit was reverted rather than com
 lock cleanly. Low priority — the nested project is a specspace, not currently installed from here.
 Do not hand-edit the generated lock.
 
-## B4 — finish thinning the trio's delegation operational block (2026-07-14)
+## B4 — DONE (2026-07-14, commit 4720d65): trio delegation operational block thinned
+
+The three sections below were collapsed to one "Running fractality here" note (vibevm's exact
+entry points — launcher path, build, run/spawn/wait/route/gate, opencode route, the RLM-plan
+reference, the ultracode/Workflow-can't-spawn-GLM caveat) that cites the package for the directive
+and the ledger for the facts; the swarm-internals prescriptions were removed. Original scope, for
+the record:
 
 `delegation-first` now carries the concrete **first-level** usage (fractality run/spawn/wait,
 GLM-5.2 as `big`, enable RLM via the profile flags, the fan-out hand-off, the 5/95 target). Done in
