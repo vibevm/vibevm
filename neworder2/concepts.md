@@ -13,6 +13,45 @@ removed), **stub** (reduced to a link, no loading prose), **file-delete** (whole
 
 ---
 
+## PROGRESS (v2 execution — updated 2026-07-14)
+
+**Done:**
+- **Section A — `git-practices` FAMILY: COMPLETE.** Aggregator + 4 members, renamed with a
+  `git-` prefix (git-conventional-commits, git-atomic-commits, git-autonomy,
+  git-attribution-policy) so the family groups in a listing. Members self-suggest
+  `link="inline"` → the four rules load verbatim from `spec/boot/INLINE.md`. Host PROP-000 §12
+  → stub; CLAUDE/AGENTS/GEMINI Rules 1–4 → one-line-each pointer.
+- **dev-runtime-docs (§19), conflict-protocol (§9): extracted** (host stubs cite the flows).
+- **source-mirrors (PROP-016): thinned** to vibevm's host set + registry distinction + tooling
+  — the first class-A extraction; **pattern verified** (redbook package covers the host spec).
+
+**KEY REFRAME — vibevm now depends on the whole `redbook`** (`flow:org.vibevm.world/redbook`,
+a static host dep). Every Section C package already ships to vibevm through redbook, so a
+class-A extraction is now just **"thin the host spec + cite the flow"** — no dep to add, the
+package is already delivered. This simplifies all of Section C.
+
+**Remaining, by risk (execution order):**
+1. *Clean — markdown-only, standalone file → fractality-delegable under diff review:*
+   PROP-013 (health-audit), PROP-029 (addressable-specs), spec/design/README (spec-genres),
+   decision-records genre cites.
+2. *PROP-000 §-sections (ONE file — do together, never parallel-fan-out):* §14 manual-tests,
+   §20 secrets-hygiene (⚠ code edge `#token-secrecy` → repoint), §3 licensing (⚠ owner-governed
+   license state + EULA→UPL audit).
+3. *⚠ code edges to repoint (boss-side):* PROP-012 (managed-blocks `#markers`),
+   PROP-008 (qualified-naming, many edges).
+4. *⚠ RO source `spec/boot/00-core.md` — cite/repoint only, never rewrite the RO text:*
+   two-process-model, sync-from-code, conflict-protocol residue.
+5. *file-delete:* PROP-006 → `operating-modes` + the NEW `mfbt` package (Section B).
+6. *Section B new packages:* `mfbt`, `delegation-first` (⚠ fractality ledger disposition).
+7. *Section D:* per-spec STAYS analysis (owner: "их может быть МНОГО").
+
+**Delegation posture (per host directive):** clean standalone specs → a fractality worker
+thins per the PROP-016 template, boss reviews the diff + gates + commits (workers can't git);
+⚠ specs (code edges, RO sources, owner-governed) stay boss-side. Backlog: B1 `transitive-inline`,
+B2 specmap-skip-generated-boot-artifacts (`memory/BACKLOG.md`).
+
+---
+
 ## A. FAMILY — `org.vibevm.world/git-practices` (from PROP-000 §12 + CLAUDE.md Rules 1–4)
 
 Aggregator (PROP-028 family); its members are separate sub-packages in ITS deps. §12 "Commit
