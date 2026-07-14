@@ -102,6 +102,50 @@ pub fn merge_contract_source(contract: &DocTree, source: &DocTree) -> Vec<Merged
     out
 }
 
+/// Fold `source` into `contract` at the **top level**, producing one document
+/// (PROP-035 §7.3, §8 phase 3). Each top-level contract section is emitted
+/// merged with its same-anchor source section — `:add` (contract then source)
+/// or `:replace` (source only) — unmatched contract sections unchanged, and
+/// top-level source-only sections appended after. Nested sections merge as part
+/// of their top-level ancestor's subtree text; the clean case is a flat
+/// contract, which is the norm (§4). `merge_contract_source` is the finer,
+/// per-section view; this is the document-level reconstruction the pipeline
+/// wants.
+pub fn fold_source(contract: &DocTree, source: &DocTree) -> String {
+    let mut out = String::new();
+
+    for &child in contract.children(contract.root()) {
+        match contract
+            .node(child)
+            .id
+            .as_deref()
+            .and_then(|a| source.find_by_anchor(a))
+        {
+            Some(sid) => match MergeMode::from_trailing(&source.node(sid).trailing) {
+                MergeMode::Replace => out.push_str(&source.text(sid)),
+                MergeMode::Add => {
+                    out.push_str(&contract.text(child));
+                    out.push('\n');
+                    out.push_str(&source.text(sid));
+                }
+            },
+            None => out.push_str(&contract.text(child)),
+        }
+        out.push('\n');
+    }
+
+    for &schild in source.children(source.root()) {
+        if let Some(anchor) = source.node(schild).id.as_deref()
+            && contract.find_by_anchor(anchor).is_none()
+        {
+            out.push_str(&source.text(schild));
+            out.push('\n');
+        }
+    }
+
+    out
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -161,5 +205,34 @@ mod tests {
         let merged = merge_contract_source(&contract, &source);
         let anchors: Vec<&str> = merged.iter().map(|s| s.anchor.as_str()).collect();
         assert_eq!(anchors, ["a", "b", "c"]);
+    }
+
+    #[test]
+    fn fold_merges_matched_and_keeps_unmatched() {
+        let contract = DocTree::parse("# A {#a}\ncontract-a\n# B {#b}\ncontract-b\n");
+        let source = DocTree::parse("# A {#a}\nsource-a\n");
+        let folded = fold_source(&contract, &source);
+        // A is :add-merged (contract then source); B is contract-only.
+        let ca = folded.find("contract-a").unwrap();
+        let sa = folded.find("source-a").unwrap();
+        assert!(ca < sa, "contract before source:\n{folded}");
+        assert!(folded.contains("contract-b"));
+    }
+
+    #[test]
+    fn fold_replace_drops_the_contract_side() {
+        let contract = DocTree::parse("# A {#a}\ncontract-a\n");
+        let source = DocTree::parse("# A {#a} :replace\nsource-a\n");
+        let folded = fold_source(&contract, &source);
+        assert!(folded.contains("source-a"));
+        assert!(!folded.contains("contract-a"));
+    }
+
+    #[test]
+    fn fold_appends_source_only_sections() {
+        let contract = DocTree::parse("# A {#a}\ncontract-a\n");
+        let source = DocTree::parse("# A {#a}\nsource-a\n# Extra {#extra}\nsource-extra\n");
+        let folded = fold_source(&contract, &source);
+        assert!(folded.contains("source-extra"), "{folded}");
     }
 }

@@ -30,7 +30,7 @@ pub use address::{Authority, SpecAddress, SpecAddressError};
 pub use directives::{Directive, DirectiveError, DirectiveKind, Directives, InPlaceUse};
 pub use doctree::{DocTree, Node, NodeId};
 pub use embed::{EmbedError, FsSectionSource, SectionSource, expand_embeds};
-pub use merge::{MergeMode, MergedSection, SectionOrigin, merge_contract_source};
+pub use merge::{MergeMode, MergedSection, SectionOrigin, fold_source, merge_contract_source};
 pub use pipeline::{CompileError, compile_inline};
 pub use resolver::{FileResolver, ResolveError};
 pub use use_graph::{UseGraphError, topo_order_from};
