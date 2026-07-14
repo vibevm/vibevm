@@ -15,14 +15,7 @@ Authoritative record: [spec://vibevm/common/PROP-000#commits](spec/common/PROP-0
 
 **The directive is now installed.** The standing posture — Claude's context and reasoning are the scarcest, most expensive resource in the room; the cheap worker slots sit idle, already paid for, so **delegate execution by default and keep Claude for architecture, planning, judgment, and review** (a session that codes, bulk-edits, or reads-and-summarizes work a worker could do is spending the very budget this directive exists to save) — is the `delegation-first` flow, a static dependency of this project. It carries the product-agnostic directive in full: the scarce-resource thesis, delegate-by-default, the capable-worker mandate, the never-delegate set, and the two obligations (always review; surface the analysis out loud and announce the harness). The decidable calculus it sits above — *delegate when verification is cheaper than generation*, scored on four axes (error cost / context / verifiability / size) with the verdict steps and per-model playbooks — is the `delegation-rules` flow it pulls, now **installed** as a dependency rather than read in-place: `spec://org.vibevm.fractality/delegation-rules/flows/delegation-rules/DECISION-MATRIX#root`.
 
-What follows is vibevm's **operational layer** on that directive — the fractality worker fabric (how to run it, when to enable recursion, how the swarm modes route), the vibevm-specific bindings of the always-review / surface-the-analysis / announce-the-harness obligations, and the live operating-facts ledger.
-
-**Don't fear the big model.** GLM-5.2 (the `big` slot) is for substantial
-one-shot work — a whole module with its tests and a self-verify command, a
-long document distilled — not just trivia; `glm-5-turbo` (`small`) takes
-bounded mechanical transforms. Size the packet coarsely (goal, exact
-paths/APIs, non-goals, an acceptance command): big models earn coarse
-one-shots.
+What follows is **only** vibevm's operational layer on that directive — how to run the fractality worker fabric, when to enable recursion, how the swarm modes route, and how Rules 1 & 4 bind delegated work — plus the live operating-facts ledger. The directive's general content (the thesis, the capable-worker mandate, the never-delegate set, and the review / surface / announce obligations) is loaded from the package above, not repeated here.
 
 **How to run it, in-place (no global install).** fractality runs from the
 working-tree build against the global `~/.fractality` home (a mission-control
@@ -73,44 +66,12 @@ Workflow.** Whenever you would fan out a swarm of agents, prefer one of:
 Default a swarm to route through fractality unless the work sits in the
 never-delegate set.
 
-**Always review; the ask-first gates still bind.** Delegated output is
-advisory until you read the diff as a contributor PR and the gate/acceptance
-is green — whatever the worker claimed; delegation without review is
-abandonment. Never hand off the never-delegate set: secrets or credentials,
-destructive or irreversible operations, architecture/spec/plan authoring,
-ambiguity-that-is-design, the review itself, or sub-minute edits. **Rule 1
-still governs** — delegation is a working method; the authored surface of this
-repository stays human, and workers are tools, never credited. **Rule 4 still
-governs** — non-routine work (its ask-first list: history rewrites,
-force-push, large blobs, CI / signing / secrets, anything whose reversal costs
-work) stops for the owner *before* it is delegated or done; the never-delegate
-set is narrower than that list and never replaces it.
+**Rules 1 & 4 bind delegated work exactly as direct work.** A worker is a tool, never credited — the authored surface of this repository stays human (Rule 1); and non-routine work (Rule 4's ask-first list — history rewrites, force-push, large blobs, CI / signing / secrets, anything whose reversal costs work) stops for the owner *before* it is delegated, not only when done directly. The never-delegate set is narrower than that list and never replaces it.
 
 *(The fractality workspace runs the strong, mechanized form of this — its
 ⛔ DELEGATION LAW + live-observation protocol in
-`packages/org.vibevm.fractality/CLAUDE.md`. This host directive is the general
-form for all vibevm sessions; a workspace session follows its own contract.)*
-
-**Surface the delegation/parallelization analysis out loud — always, for any
-non-trivial task.** When the user hands you work that is *not* the small,
-mechanical, sub-minute class, you MUST — *before* executing — state in your reply
-how the work could be parallelized or delegated: through the host's own
-agent-spawn (only when this session runs in Claude Code) or through
-**fractality**, with **fractality preferred wherever both fit**. This is not the
-silent internal "can I delegate this?" of the opening directive; it is an
-out-loud verdict the owner sees every time, per non-trivial task — even when the
-verdict is "keep it boss-side," and then you say why (which never-delegate
-reason, or the cost math). Trivial mechanical edits are exempt: just do them.
-
-**Announce the harness first, once per session, so that analysis never re-derives
-the host.** In the **first response of every session** — whatever the opening
-prompt (resume, a task, a question) — state plainly which harness/agent and model
-is running it (e.g. "Claude Code, Opus 4.8"; "Codex"; "Gemini CLI"), and treat
-that as a cached fact for the rest of the session. The host decides the
-delegation menu — a session's own agent-spawn (the `Agent` / Workflow /
-`ultracode` machinery) exists **only under Claude Code**; every other harness has
-fractality as its sole delegation route — so the analysis above reads the cached
-host instead of recomputing it each time.
+`packages/org.vibevm.fractality/CLAUDE.md`. The delegation-first package above is
+the general form for all vibevm sessions; a workspace session follows its own contract.)*
 
 ### Operating facts — the in-place fractality ledger (owner-authorised, keep current)
 
