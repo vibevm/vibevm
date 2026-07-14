@@ -54,3 +54,24 @@ paths, half-updating a generated file, so that edit was reverted rather than com
 **Fix (a fractality session):** run `vibe install` in the fractality project to regenerate the
 lock cleanly. Low priority — the nested project is a specspace, not currently installed from here.
 Do not hand-edit the generated lock.
+
+## B4 — finish thinning the trio's delegation operational block (2026-07-14)
+
+`delegation-first` now carries the concrete **first-level** usage (fractality run/spawn/wait,
+GLM-5.2 as `big`, enable RLM via the profile flags, the fan-out hand-off, the 5/95 target). Done in
+the trio so far: the general obligations removed, the four commit rules → a git-practices pointer.
+Still redundant in the trio's Delegation-first block and to be thinned:
+
+- **"How to run it, in-place"** — the general spawn commands are in the package; keep only the exact
+  vibevm residue (the launcher path `packages/org.vibevm.fractality/fractality.ps1`, the build
+  command) and cite the package for usage. Much overlaps the ledger's "Build / run" line — dedupe.
+- **"Enable RLM"** — the enable (allow_tools / ask_boss / `fractality gate`) is the package's
+  `#recursion`; keep only the vibevm pointer (the `FRACTALITY-RLM-PLAN` reference) + cite.
+- **"Swarm modes"** — the package's `#swarm` covers first-level; the old section prescribed swarm
+  **internals** (thin bosses, launcher arithmetic) the owner rejected — remove that, keep at most
+  "swarms route through fractality (package `#swarm`)".
+- Update the "What follows" framing line to match.
+
+Keep verbatim: the operating-facts **ledger** and the **Rule 1 & 4** binding. Trio byte-identical.
+The delicate part is judging the exact vibevm residue vs the package/ledger overlap — best with
+fresh context. Also worth an owner re-read of the reshaped `DELEGATION-FIRST-PROTOCOL.md`.
