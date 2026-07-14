@@ -176,6 +176,49 @@ fn render_inline_concatenates_contributions_verbatim() {
 }
 
 #[test]
+fn render_inline_expands_an_embed_directive() {
+    // The payoff (PROP-035 §8): a #embed in an inline contribution is
+    // expanded when INLINE.md is compiled.
+    let ws = TempDir::new().unwrap();
+    let contrib = ws.path().join("vibedeps/flow-x/1.0.0/boot.md");
+    fs::create_dir_all(contrib.parent().unwrap()).unwrap();
+    fs::write(
+        &contrib,
+        "# X {#root}\n#embed spec://vibevm/common/TARGET#root",
+    )
+    .unwrap();
+    let target = ws.path().join("spec/common/TARGET.md");
+    fs::create_dir_all(target.parent().unwrap()).unwrap();
+    fs::write(&target, "# Target {#root}\nEMBEDDED CONTENT").unwrap();
+
+    let b = boot(vec![entry(
+        "vibedeps/flow-x/1.0.0/boot.md",
+        LinkType::Inline,
+        "flow:x",
+    )]);
+    let text = render_inline(&b, ws.path()).unwrap().unwrap();
+    assert!(text.contains("EMBEDDED CONTENT"), "{text}");
+    assert!(!text.contains("#embed"), "{text}");
+}
+
+#[test]
+fn render_inline_without_directives_is_left_verbatim() {
+    // The guard: a directive-free lane is not touched by the compiler, so
+    // vibevm's own boot stays byte-identical until it adopts the format.
+    let ws = TempDir::new().unwrap();
+    let contrib = ws.path().join("vibedeps/flow-y/1.0.0/boot.md");
+    fs::create_dir_all(contrib.parent().unwrap()).unwrap();
+    fs::write(&contrib, "# Y\n\nplain boot content, no directives.").unwrap();
+    let b = boot(vec![entry(
+        "vibedeps/flow-y/1.0.0/boot.md",
+        LinkType::Inline,
+        "flow:y",
+    )]);
+    let text = render_inline(&b, ws.path()).unwrap().unwrap();
+    assert!(text.contains("plain boot content, no directives."));
+}
+
+#[test]
 fn render_inline_errors_on_a_missing_contribution() {
     let ws = TempDir::new().unwrap();
     let b = boot(vec![entry(

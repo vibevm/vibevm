@@ -198,6 +198,15 @@ pub enum WorkspaceError {
     )]
     IndexRender { reason: String },
 
+    /// Compiling the inline boot lane (PROP-035 §8) failed — an `#embed`
+    /// directive in an inline contribution could not be resolved. The
+    /// contribution is malformed; `reason` names the offending address.
+    #[error(
+        "compiling spec/boot/INLINE.md failed: {reason} \
+         (violates spec://vibevm/modules/vibe-workspace/PROP-035#embed)"
+    )]
+    InlineCompile { reason: String },
+
     /// A publish operation referenced a node `rel_path` that names no
     /// node of this workspace — the selection and the loaded workspace
     /// fell out of sync.

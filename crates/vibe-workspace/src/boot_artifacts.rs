@@ -41,9 +41,15 @@ use std::path::{Path, PathBuf};
 use serde::Serialize;
 use specmark::spec;
 use vibe_core::manifest::LinkType;
+use vibe_spec::{FileResolver, FsSectionSource, expand_embeds};
 
 use crate::WorkspaceError;
 use crate::boot::EffectiveBoot;
+
+/// The host project's `spec://` authority (PROP-035 §6) — the root project is
+/// addressed as `vibevm`. Used to resolve `#embed` targets when compiling the
+/// inline lane.
+const HOST_NAMESPACE: &str = "vibevm";
 
 /// `schema` version of the generated `INDEX.md` manifest (PROP-009 §2.3).
 pub const INDEX_SCHEMA: u32 = 1;
@@ -202,7 +208,24 @@ pub fn render_inline(
         out.push_str(content.trim_end());
         out.push_str("\n\n");
     }
+    // Spec-compiler (PROP-035 §8): expand any `#embed` the inline lane carries
+    // (§7.1). Guarded — a lane with no directives is byte-identical, so
+    // vibevm's own boot stays untouched until it adopts the format (§15).
+    // `#use` / `#source` are mode-dependent and left to the structural loader.
+    if has_embed_directive(&out) {
+        let source = FsSectionSource::new(FileResolver::new(workspace_root, HOST_NAMESPACE));
+        out = expand_embeds(&out, &source).map_err(|e| WorkspaceError::InlineCompile {
+            reason: e.to_string(),
+        })?;
+    }
     Ok(Some(out))
+}
+
+/// Whether the inline lane carries an `#embed` directive (a line starting with
+/// `#embed ` after leading whitespace) — the guard that keeps a directive-free
+/// lane byte-identical.
+fn has_embed_directive(text: &str) -> bool {
+    text.lines().any(|l| l.trim_start().starts_with("#embed "))
 }
 
 /// The body of vibevm's managed redirect block — the text between the
