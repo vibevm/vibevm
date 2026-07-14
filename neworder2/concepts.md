@@ -22,28 +22,33 @@ removed), **stub** (reduced to a link, no loading prose), **file-delete** (whole
   `link="inline"` → the four rules load verbatim from `spec/boot/INLINE.md`. Host PROP-000 §12
   → stub; CLAUDE/AGENTS/GEMINI Rules 1–4 → one-line-each pointer.
 - **dev-runtime-docs (§19), conflict-protocol (§9): extracted** (host stubs cite the flows).
-- **source-mirrors (PROP-016): thinned** to vibevm's host set + registry distinction + tooling
-  — the first class-A extraction; **pattern verified** (redbook package covers the host spec).
+- **Class-A extractions done** (host spec thinned to residue + cites the flow; all gated green):
+  - **source-mirrors** — PROP-016 (host set + registry split-host distinction + `cargo xtask mirror`).
+  - **health-audit** — PROP-013 (M1.19 proof + per-category known-instances + vibevm's category E).
+  - **addressable-specs** — PROP-029 (three carriers + the mechanical-refactoring foundation).
+  - **spec-genres** — spec/design/README (vibevm's genre table + design-doc index).
+  - **manual-tests** — PROP-000 §14 (vibevm's real surfaces + VIBE_REGISTRY_CACHE bindings).
+  - **secrets-hygiene** — PROP-000 §20 (Token/ApiKey types + adapter scope; `req r1` + code edges intact, spec-editorial).
+  - **managed-blocks** — PROP-012 (companion cite; code-verified feature spec kept whole).
 
 **KEY REFRAME — vibevm now depends on the whole `redbook`** (`flow:org.vibevm.world/redbook`,
 a static host dep). Every Section C package already ships to vibevm through redbook, so a
 class-A extraction is now just **"thin the host spec + cite the flow"** — no dep to add, the
 package is already delivered. This simplifies all of Section C.
 
-**Remaining, by risk (execution order):**
-1. *Clean — markdown-only, standalone file → fractality-delegable under diff review:*
-   PROP-013 (health-audit), PROP-029 (addressable-specs), spec/design/README (spec-genres),
-   decision-records genre cites.
-2. *PROP-000 §-sections (ONE file — do together, never parallel-fan-out):* §14 manual-tests,
-   §20 secrets-hygiene (⚠ code edge `#token-secrecy` → repoint), §3 licensing (⚠ owner-governed
-   license state + EULA→UPL audit).
-3. *⚠ code edges to repoint (boss-side):* PROP-012 (managed-blocks `#markers`),
-   PROP-008 (qualified-naming, many edges).
-4. *⚠ RO source `spec/boot/00-core.md` — cite/repoint only, never rewrite the RO text:*
-   two-process-model, sync-from-code, conflict-protocol residue.
-5. *file-delete:* PROP-006 → `operating-modes` + the NEW `mfbt` package (Section B).
-6. *Section B new packages:* `mfbt`, `delegation-first` (⚠ fractality ledger disposition).
-7. *Section D:* per-spec STAYS analysis (owner: "их может быть МНОГО").
+**Remaining, by risk:**
+1. **⚠ OWNER-BLOCKED — §3 licensing.** Needs an owner decision *before* thinning: PROP-000 §3
+   still reads "proprietary EULA (this phase)", but the `CLAUDE.md` fractality ledger records the
+   shipped surface as "fully UPL-1.0". Resolve the EULA-vs-UPL posture + run the EULA→UPL audit —
+   the owner's call (concepts §E6). Do not touch §3 unilaterally.
+2. *Companion cite (boss-side, feature spec kept whole — like PROP-012):* PROP-008
+   (qualified-naming — many code edges).
+3. *Diffuse:* decision-records (a genre cite across PROPs' Decision / Rejected sections).
+4. *⚠ RO source `spec/boot/00-core.md` — cite only, never rewrite the RO text:*
+   two-process-model, sync-from-code.
+5. *Section B — new packages (bigger):* `mfbt` (+ file-delete PROP-006, extract operating-modes),
+   `delegation-first` (⚠ fractality ledger disposition).
+6. *Section D:* per-spec STAYS analysis for the module PROPs (owner: "их может быть МНОГО").
 
 **Delegation posture (per host directive):** clean standalone specs → a fractality worker
 thins per the PROP-016 template, boss reviews the diff + gates + commits (workers can't git);
