@@ -13,13 +13,16 @@
 //! reproduced here segment-by-segment so a plain `spec://pkg/doc#anchor` parses
 //! byte-identically to the legacy engine.
 //!
-//! Today the crate carries the address grammar; the document IR and the router
-//! land on top of it in following slices.
+//! The crate now carries the full router — the address grammar, the document
+//! IR, and file resolution — plus the directive scanner (§7). The compilation
+//! pipeline (§8) and link tables (§10) build on top of it next.
 
 mod address;
+mod directives;
 mod doctree;
 mod resolver;
 
 pub use address::{Authority, SpecAddress, SpecAddressError};
+pub use directives::{Directive, DirectiveError, DirectiveKind, Directives, InPlaceUse};
 pub use doctree::{DocTree, Node, NodeId};
 pub use resolver::{FileResolver, ResolveError};

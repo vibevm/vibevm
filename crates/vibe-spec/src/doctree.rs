@@ -192,8 +192,9 @@ impl DocTree {
 
 /// A precomputed mask marking lines inside fenced code blocks (```` ``` ```` or
 /// `~~~`), including the fence lines themselves. Headings on masked lines are
-/// not tree nodes — a `#` in a code sample is not a section.
-fn fence_mask(lines: &[String]) -> Vec<bool> {
+/// not tree nodes — a `#` in a code sample is not a section. Shared with the
+/// directive scanner, which ignores directives in fenced code the same way.
+pub(crate) fn fence_mask(lines: &[String]) -> Vec<bool> {
     let mut mask = vec![false; lines.len()];
     let mut fence: Option<&'static str> = None;
     for (i, line) in lines.iter().enumerate() {
