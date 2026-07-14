@@ -62,10 +62,16 @@ fn visit(
     match state.get(&key) {
         Some(Color::Black) => return Ok(()),
         Some(Color::Gray) => {
-            // Back-edge to a node still on the stack: a cycle. Report the loop
-            // from that node's first appearance onward.
+            // Back-edge to a node still on the stack: a cycle. PROP-035 §9 makes
+            // it legal when every node on the loop is a contract (the
+            // forward-declaration case) — admit it by not re-entering the edge.
+            // A loop touching any source node is a hard error.
             let start = path.iter().position(|k| *k == key).unwrap_or(0);
-            let mut cycle = path[start..].to_vec();
+            let loop_nodes = &path[start..];
+            if is_contract(&key) && loop_nodes.iter().all(|k| is_contract(k)) {
+                return Ok(());
+            }
+            let mut cycle = loop_nodes.to_vec();
             cycle.push(key);
             return Err(UseGraphError::Cycle(cycle));
         }
@@ -106,6 +112,14 @@ fn visit(
     path.pop();
     order.push(key);
     Ok(())
+}
+
+/// A node is a contract if its doc-path has a `contract` segment (PROP-035 §4) —
+/// the layer where a `#use` cycle is a legal forward declaration (§9).
+fn is_contract(key: &str) -> bool {
+    SpecAddress::parse(key)
+        .map(|addr| addr.doc_path.split('/').any(|seg| seg == "contract"))
+        .unwrap_or(false)
 }
 
 #[cfg(test)]
@@ -219,5 +233,41 @@ mod tests {
         let src = MockSource::new(&[("spec://vibevm/a#r", "no uses here")]);
         let order = topo_order_from(&seed(), &src).unwrap();
         assert_eq!(order, vec!["spec://vibevm/a#r".to_string()]);
+    }
+
+    #[test]
+    fn a_contract_cycle_is_admitted() {
+        let src = MockSource::new(&[
+            (
+                "spec://org.vibevm.demo/lib/contract/a#r",
+                "#use spec://org.vibevm.demo/lib/contract/b#r",
+            ),
+            (
+                "spec://org.vibevm.demo/lib/contract/b#r",
+                "#use spec://org.vibevm.demo/lib/contract/a#r",
+            ),
+        ]);
+        let seed = SpecAddress::parse("spec://org.vibevm.demo/lib/contract/a#r").unwrap();
+        let order = topo_order_from(&seed, &src).unwrap();
+        assert_eq!(order.len(), 2, "both contracts present: {order:?}");
+    }
+
+    #[test]
+    fn a_cycle_touching_a_source_node_is_rejected() {
+        let src = MockSource::new(&[
+            (
+                "spec://org.vibevm.demo/lib/contract/a#r",
+                "#use spec://org.vibevm.demo/lib/source/b#r",
+            ),
+            (
+                "spec://org.vibevm.demo/lib/source/b#r",
+                "#use spec://org.vibevm.demo/lib/contract/a#r",
+            ),
+        ]);
+        let seed = SpecAddress::parse("spec://org.vibevm.demo/lib/contract/a#r").unwrap();
+        assert!(matches!(
+            topo_order_from(&seed, &src),
+            Err(UseGraphError::Cycle(_))
+        ));
     }
 }
