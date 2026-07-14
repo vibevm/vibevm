@@ -48,3 +48,4 @@ category = "flow"
 # The cultural-extraction wave (edition bump to a clean 0.3.0 lands when the
 # full new practice set has settled; accumulated here in place meanwhile).
 "flow:org.vibevm.world/dev-runtime-docs" = "=0.1.0"
+"flow:org.vibevm.world/wal-specspaces" = "=0.1.0"
