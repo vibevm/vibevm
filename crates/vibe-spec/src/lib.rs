@@ -23,6 +23,7 @@ mod doctree;
 mod embed;
 mod merge;
 mod resolver;
+mod use_graph;
 
 pub use address::{Authority, SpecAddress, SpecAddressError};
 pub use directives::{Directive, DirectiveError, DirectiveKind, Directives, InPlaceUse};
@@ -30,3 +31,4 @@ pub use doctree::{DocTree, Node, NodeId};
 pub use embed::{EmbedError, FsSectionSource, SectionSource, expand_embeds};
 pub use merge::{MergeMode, MergedSection, SectionOrigin, merge_contract_source};
 pub use resolver::{FileResolver, ResolveError};
+pub use use_graph::{UseGraphError, topo_order_from};
