@@ -1,0 +1,17 @@
+[package]
+name = "manual-tests"
+group = "org.vibevm"
+kind = "flow"
+version = "0.1.0"
+authors = ["Oleg Chirukhin"]
+license = "UPL-1.0"
+description = "Human-runnable manual tests: markdown walkthroughs for the integration surfaces automated suites cannot prove"
+keywords = ["testing", "smoke-tests", "integration", "walkthrough", "verification"]
+
+[compatibility]
+min_vibe_version = "0.1.0"
+requires_kinds = []
+
+[boot_snippet]
+source = "spec/boot/44-flow-manual-tests.md"
+category = "flow"

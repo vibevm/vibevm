@@ -1,0 +1,35 @@
+[package]
+name = "delegation-rules"
+group = "org.vibevm.fractality"
+kind = "flow"
+version = "0.1.0"
+authors = ["Oleg Chirukhin"]
+license = "UPL-1.0"
+description = "The delegation policy layer for fractality bosses: a decidable routing matrix (delegate when verification is cheaper than generation) plus per-model playbooks for the worker fleet"
+keywords = ["delegation", "routing", "policy", "playbooks", "agents"]
+
+[compatibility]
+min_vibe_version = "0.1.0"
+requires_kinds = []
+
+# Standing rule (owner, 2026-07-09): every fractality package carries the
+# redbook practices and the AI-Native stack from birth. For this prose-only
+# flow the code gates are vacuous today; the requires still bind so the day
+# this package grows executable policy (routing-as-data consumed by MC),
+# the discipline is already in the room.
+[requires.packages]
+"flow:org.vibevm.world/redbook" = "^0.2.0"
+"stack:org.vibevm.ai-native/rust-ai-native" = "^0.7.0"
+
+[boot_snippet]
+source = "spec/boot/77-flow-delegation-rules.md"
+category = "flow"
+
+[[registry]]
+name = "vibespecs"
+url = "https://github.com/vibespecs"
+
+[[registry]]
+name = "vibespecs-gitverse"
+url = "https://gitverse.ru/vibespecs"
+naming = "name"

@@ -1,0 +1,49 @@
+# org.vibevm/core-ai-native — the language-neutral Discipline package,
+# code-bearing since 0.4.0 (PROP-024; DEFERRALS-CLOSEOUT-PLAN v0.1 Phase 1).
+# It AUTHORS the neutral engine crates — the conform fact/rule engine, the
+# specmap traceability engine, and the specmark tag bootstrap pair — that
+# every language stack ships as byte-identical vendored copies under its own
+# `crates/vendor/` (`cargo xtask sync-engines` mirrors them; `--check` gates
+# drift). The per-language FRONTENDS and CLI drivers stay in the stacks;
+# this package owns what no single language owns.
+[workspace]
+resolver = "3"
+members = [
+    "crates/core-ai-native-conform",
+    "crates/core-ai-native-mcp",
+    "crates/core-ai-native-specmap",
+    "crates/core-ai-native-specmark",
+    "crates/core-ai-native-specmark-grammar",
+]
+
+[workspace.package]
+version = "0.7.0"
+edition = "2024"
+rust-version = "1.93"
+authors = ["Oleg Chirukhin"]
+license-file = "LICENSE.md"
+publish = false
+repository = "https://gitverse.ru/vibevm/vibevm"
+homepage = "https://gitverse.ru/vibevm/vibevm"
+
+[workspace.dependencies]
+# Internal crates — path-only (not published; consumed in-tree).
+specmark = { package = "core-ai-native-specmark", path = "crates/core-ai-native-specmark" }
+specmark-grammar = { package = "core-ai-native-specmark-grammar", path = "crates/core-ai-native-specmark-grammar" }
+
+# Third-party (all permissive licenses — PROP-000 §3). Feature sets match
+# vibevm's so the engines behave identically wherever they are built.
+anyhow = "1"
+thiserror = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = { version = "1", features = ["preserve_order"] }
+sha2 = "0.10"
+toml = "0.9"
+walkdir = "2"
+glob = "0.3"
+syn = { version = "2", features = ["full", "visit"] }
+quote = "1"
+proc-macro2 = { version = "1", features = ["span-locations"] }
+
+# Dev / test
+tempfile = "3"

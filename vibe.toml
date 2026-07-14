@@ -27,6 +27,15 @@ authors = ["Oleg Chirukhin"]
 # rules self-suggest the inline lane, so they still land in spec/boot/INLINE.md.
 "flow:org.vibevm.world/redbook" = { version = "^0.2.0", link = "static" }
 
+# The delegation-first directive (fractality group), static — delegate execution
+# by default, keep the boss for judgment and review. It pulls the delegation-rules
+# calculus it sits above, so the boot now delivers the delegation practice the
+# CLAUDE.md directive anticipated installing ("until it is installed as a
+# dependency, read it in-place"). CLAUDE.md still carries the fuller directive plus
+# the fractality-specific launcher ops and the live ledger; thinning the general
+# part to a pointer at this package is a follow-up.
+"flow:org.vibevm.fractality/delegation-first" = { version = "^0.1.0", link = "static" }
+
 # vibevm is its own bootstrap project — the tool itself, and now the first
 # consumer of a package it authors: flow:wal-specspaces above resolves from
 # the local packages/ tree; it is not yet a consumer of any remote vibevm

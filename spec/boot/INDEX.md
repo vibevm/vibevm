@@ -111,6 +111,14 @@ path = "vibedeps/flow-redbook/0.2.0/spec/boot/03-flow-redbook.md"
 kind = "static"
 
 [[entry]]
+path = "vibedeps/flow-delegation-rules/0.1.0/spec/boot/77-flow-delegation-rules.md"
+kind = "static"
+
+[[entry]]
+path = "vibedeps/flow-delegation-first/0.1.0/spec/boot/76-flow-delegation-first.md"
+kind = "static"
+
+[[entry]]
 path = "vibedeps/flow-wal-specspaces/0.1.0/spec/boot/11-flow-wal-specspaces.md"
 kind = "static"
 

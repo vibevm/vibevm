@@ -1,6 +1,6 @@
 [meta]
 generated_by = "vibe 0.1.0-dev"
-generated_at = "2026-07-13T23:19:40Z"
+generated_at = "2026-07-14T11:13:07Z"
 schema_version = 5
 root_dependencies = [
     "stack:org.vibevm/rust-ai-native@^0.7.0",
@@ -12,7 +12,23 @@ root_dependencies = [
     "flow:org.vibevm.world/conflict-protocol@^0.1.0",
     "flow:org.vibevm.world/git-practices@^0.1.0",
     "flow:org.vibevm.world/redbook@^0.2.0",
+    "flow:org.vibevm.fractality/delegation-first@^0.1.0",
 ]
+
+[[package]]
+kind = "flow"
+name = "delegation-first"
+group = "org.vibevm.fractality"
+version = "0.1.0"
+source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm.fractality/delegation-first/v0.1.0"
+content_hash = "sha256:7893b9c55fc2608bddc9dcfbb380e4dac3ad8b607780877ee00eec837b055ce7"
+files_written = []
+dependencies = [
+    "flow:org.vibevm.fractality/delegation-rules@=0.1.0",
+    "flow:org.vibevm.world/redbook@=0.2.0",
+    "stack:org.vibevm.ai-native/rust-ai-native@=0.7.0",
+]
+source_kind = "registry"
 
 [[package]]
 kind = "flow"
@@ -138,6 +154,20 @@ source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm.ai-native/t
 content_hash = "sha256:07520779d82e9d460993b55b2fa55faaef1f5bafb94ba2da36ce743d6ac74014"
 files_written = []
 dependencies = ["stack:org.vibevm.ai-native/typescript-ai-native-lang@=0.6.0"]
+source_kind = "registry"
+
+[[package]]
+kind = "flow"
+name = "delegation-rules"
+group = "org.vibevm.fractality"
+version = "0.1.0"
+source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm.fractality/delegation-rules/v0.1.0"
+content_hash = "sha256:5f6d3e9e4330445b99d67fb049f0b4266f945c3efc96e888af98a60968981ead"
+files_written = []
+dependencies = [
+    "flow:org.vibevm.world/redbook@=0.2.0",
+    "stack:org.vibevm.ai-native/rust-ai-native@=0.7.0",
+]
 source_kind = "registry"
 
 [[package]]

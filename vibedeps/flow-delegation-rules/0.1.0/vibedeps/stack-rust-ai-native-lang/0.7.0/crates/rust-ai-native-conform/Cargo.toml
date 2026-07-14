@@ -1,0 +1,25 @@
+[package]
+name = "rust-ai-native-conform"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+license-file.workspace = true
+publish.workspace = true
+repository.workspace = true
+homepage.workspace = true
+description = "The conform engine driver and `rust-ai-native-conform` binary (ENGINE-CONFORM v0.1): load conform.toml, build the rule set, run check / freeze over a project tree"
+
+[[bin]]
+name = "rust-ai-native-conform"
+path = "src/main.rs"
+
+[dependencies]
+conform-core.workspace = true
+rust-ai-native-conform-frontend.workspace = true
+anyhow.workspace = true
+serde_json.workspace = true
+clap.workspace = true
+
+[dev-dependencies]
+tempfile.workspace = true
