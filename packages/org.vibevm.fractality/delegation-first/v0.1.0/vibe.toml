@@ -1,0 +1,34 @@
+[package]
+name = "delegation-first"
+group = "org.vibevm.fractality"
+kind = "flow"
+version = "0.1.0"
+authors = ["Oleg Chirukhin"]
+license = "UPL-1.0"
+description = "The standing delegation directive for a boss–worker agent setup: delegate execution by default and reserve the expensive boss for judgment and review — the posture layer above the delegation-rules calculus"
+keywords = ["delegation", "agents", "orchestration", "directive", "policy"]
+
+[compatibility]
+min_vibe_version = "0.1.0"
+requires_kinds = []
+
+# Standing rule (owner, 2026-07-09): every fractality package carries the
+# redbook practices and the AI-Native stack from birth. This flow also pulls
+# its sibling delegation-rules — the directive names the calculus it sits above.
+[requires.packages]
+"flow:org.vibevm.world/redbook" = "^0.2.0"
+"stack:org.vibevm.ai-native/rust-ai-native" = "^0.7.0"
+"flow:org.vibevm.fractality/delegation-rules" = "^0.1.0"
+
+[boot_snippet]
+source = "spec/boot/76-flow-delegation-first.md"
+category = "flow"
+
+[[registry]]
+name = "vibespecs"
+url = "https://github.com/vibespecs"
+
+[[registry]]
+name = "vibespecs-gitverse"
+url = "https://gitverse.ru/vibespecs"
+naming = "name"
