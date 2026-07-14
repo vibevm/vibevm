@@ -4,7 +4,7 @@
 //! edge: the target must be linked *before* its user. Starting from a seed, we
 //! walk the edges cascade-style — the seed's uses, then their uses, and so on —
 //! and return the reachable nodes in **topological order**: every dependency
-//! before its dependents, the seed last. This is the order the inline compiler
+//! before its dependents, the seed last. This is the order the static compiler
 //! emits in (§8 phase 2) and the set a structural load pulls; a node nothing
 //! uses never enters it (tree-shaking).
 //!

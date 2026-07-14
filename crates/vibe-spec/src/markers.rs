@@ -1,6 +1,6 @@
 //! Reversible emission markers (PROP-035 §11).
 //!
-//! When the compiler places a block into `INLINE.md`, it wraps it in an
+//! When the compiler places a block into `STATIC.md`, it wraps it in an
 //! open **and** close comment carrying the block's full `spec://` key — which
 //! already encodes package (`group/name`), document (`doc-path`), and section
 //! (`anchor`). The paired markers make the compiled document **reversible**:

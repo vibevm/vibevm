@@ -1,6 +1,6 @@
-//! The inline compilation pipeline (PROP-035 §8) — the primitives, composed.
+//! The static compilation pipeline (PROP-035 §8) — the primitives, composed.
 //!
-//! `compile_inline` runs the phases in the fixed order the spec pins:
+//! `compile_static` runs the phases in the fixed order the spec pins:
 //!
 //! 1. **parse / topo** — build the `#use` graph from the seed and order it so
 //!    every dependency precedes its dependents (§7.2, §8 phase 2);
@@ -12,11 +12,11 @@
 //!
 //! A `#use` line is *resolved by the ordering* — its target is emitted, once,
 //! above — so the line itself is stripped from a node's body on emit; it would
-//! otherwise be a dangling directive in the compiled `INLINE.md`. `@spec`
+//! otherwise be a dangling directive in the compiled `STATIC.md`. `@spec`
 //! in-place references are left in prose (their target is likewise already
 //! above). No `#embed` survives (§7.1).
 //!
-//! This is the algorithmic, LLM-free inline compiler (§2) — the reference
+//! This is the algorithmic, LLM-free static compiler (§2) — the reference
 //! semantics the structural loader is later checked against.
 
 use std::collections::HashSet;
@@ -29,7 +29,7 @@ use crate::embed::{EmbedError, SectionSource, expand_embeds};
 use crate::merge::fold_source;
 use crate::use_graph::{UseGraphError, topo_order_from};
 
-/// Why inline compilation failed.
+/// Why static compilation failed.
 #[derive(Debug, thiserror::Error)]
 pub enum CompileError {
     #[error(transparent)]
@@ -42,8 +42,8 @@ pub enum CompileError {
     Unresolved { addr: String, reason: String },
 }
 
-/// Compile the closure reachable from `seed` into a single inline document.
-pub fn compile_inline(
+/// Compile the closure reachable from `seed` into a single static document.
+pub fn compile_static(
     seed: &SpecAddress,
     source: &impl SectionSource,
 ) -> Result<String, CompileError> {
@@ -155,7 +155,7 @@ mod tests {
             ("spec://vibevm/c#r", "cee"),
         ]);
         let seed = SpecAddress::parse("spec://vibevm/a#r").unwrap();
-        let out = compile_inline(&seed, &src).unwrap();
+        let out = compile_static(&seed, &src).unwrap();
 
         // The dependency `b` is emitted before its user `a`.
         let bee = out.find("bee").unwrap();
@@ -175,7 +175,7 @@ mod tests {
     fn a_lone_seed_compiles_to_itself() {
         let src = MockSource::new(&[("spec://vibevm/a#r", "# A {#r}\njust me")]);
         let seed = SpecAddress::parse("spec://vibevm/a#r").unwrap();
-        let out = compile_inline(&seed, &src).unwrap();
+        let out = compile_static(&seed, &src).unwrap();
         assert!(out.contains("just me"));
         assert!(out.contains("<!-- vibe:begin spec://vibevm/a#r -->"));
     }
@@ -188,7 +188,7 @@ mod tests {
         ]);
         let seed = SpecAddress::parse("spec://vibevm/a#r").unwrap();
         assert!(matches!(
-            compile_inline(&seed, &src),
+            compile_static(&seed, &src),
             Err(CompileError::UseGraph(_))
         ));
     }
@@ -206,7 +206,7 @@ mod tests {
             ),
         ]);
         let seed = SpecAddress::parse("spec://org.vibevm.demo/lib/contract/api#root").unwrap();
-        let out = compile_inline(&seed, &src).unwrap();
+        let out = compile_static(&seed, &src).unwrap();
         assert!(out.contains("contract-body"), "{out}");
         assert!(out.contains("source-body"), "{out}");
         // The #source directive is resolved by the fold, not left behind.

@@ -1,6 +1,6 @@
 //! Link tables (PROP-035 §10) — the vtable analogue *(provisional)*.
 //!
-//! Inline mode is a devirtualized/non-virtual call (bound statically); structural
+//! Static mode is a devirtualized/non-virtual call (bound statically); structural
 //! mode is a virtual call (late-bound at runtime); a **link table is the vtable**
 //! — an index the compiler builds once so the runtime dispatches cheaply instead
 //! of searching. Built at install-time by walking every directive edge
