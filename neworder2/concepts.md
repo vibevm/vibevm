@@ -36,19 +36,21 @@ a static host dep). Every Section C package already ships to vibevm through redb
 class-A extraction is now just **"thin the host spec + cite the flow"** — no dep to add, the
 package is already delivered. This simplifies all of Section C.
 
-**Remaining, by risk:**
-1. **⚠ OWNER-BLOCKED — §3 licensing.** Needs an owner decision *before* thinning: PROP-000 §3
-   still reads "proprietary EULA (this phase)", but the `CLAUDE.md` fractality ledger records the
-   shipped surface as "fully UPL-1.0". Resolve the EULA-vs-UPL posture + run the EULA→UPL audit —
-   the owner's call (concepts §E6). Do not touch §3 unilaterally.
-2. *Companion cite (boss-side, feature spec kept whole — like PROP-012):* PROP-008
-   (qualified-naming — many code edges).
-3. *Diffuse:* decision-records (a genre cite across PROPs' Decision / Rejected sections).
-4. *⚠ RO source `spec/boot/00-core.md` — cite only, never rewrite the RO text:*
-   two-process-model, sync-from-code.
-5. *Section B — new packages (bigger):* `mfbt` (+ file-delete PROP-006, extract operating-modes),
-   `delegation-first` (⚠ fractality ledger disposition).
-6. *Section D:* per-spec STAYS analysis for the module PROPs (owner: "их может быть МНОГО").
+**§3 licensing — SETTLED, leave as-is.** The `CLAUDE.md` ledger marks §3's EULA text an
+owner-frozen historical mention (specs off-limits for relicensing), and the real relicense
+(host `LICENSE.md` → UPL-1.0) + the EULA→UPL audit are already done. §3 is intentionally an EULA
+mention over a UPL-licensed tree — not a contradiction to fix. **Left untouched by design.**
+
+**Companion cites + light remainder — done:** PROP-008 (qualified-naming), PROP-012 (managed-blocks)
+kept whole with a header cite; decision-records cited from the design README; two-process-model +
+sync-from-code cited from `00-core.md` (under the owner's edit-anything permission).
+
+**Remaining:**
+1. *Section B — new packages (bigger, boss-side authoring — never-delegate):* `mfbt`
+   (+ file-delete PROP-006, extract operating-modes), `delegation-first` (⚠ fractality ledger
+   disposition — reconcile with the in-place ledger before moving it).
+2. *Section D:* per-spec STAYS analysis for the module PROPs (owner: "их может быть МНОГО") —
+   confirm each is genuinely vibevm machinery, add companion cites where a lesson applies.
 
 **Delegation posture (per host directive):** clean standalone specs → a fractality worker
 thins per the PROP-016 template, boss reviews the diff + gates + commits (workers can't git);
