@@ -141,9 +141,29 @@ impl DocTree {
     }
 
     /// The node carrying a given flat anchor, if any (first occurrence on a
-    /// collision). Tree-path (`a.b.c`) resolution belongs to the router.
+    /// collision).
     pub fn find_by_anchor(&self, anchor: &str) -> Option<NodeId> {
         self.anchors.get(anchor).copied()
+    }
+
+    /// Resolve a tree-path anchor (`SpecAddress::anchor`, e.g. `a.b.c` →
+    /// `["a", "b", "c"]`) to a node. The first segment is matched flat — a
+    /// label unique anywhere in the document, as anchors are today; each
+    /// further segment descends into the children of the current match. An
+    /// empty path denotes the whole document (the root).
+    pub fn resolve_path(&self, path: &[String]) -> Option<NodeId> {
+        let Some((first, rest)) = path.split_first() else {
+            return Some(self.root());
+        };
+        let mut current = self.find_by_anchor(first)?;
+        for seg in rest {
+            current = self
+                .children(current)
+                .iter()
+                .copied()
+                .find(|&c| self.node(c).id.as_deref() == Some(seg.as_str()))?;
+        }
+        Some(current)
     }
 
     /// Anchors that appeared more than once (each extra occurrence listed). An
@@ -341,5 +361,21 @@ b
     fn hash_without_space_is_not_a_heading() {
         let t = DocTree::parse("#notaheading\ntext\n");
         assert_eq!(t.len(), 1); // root only
+    }
+
+    #[test]
+    fn resolve_flat_and_tree_path() {
+        let t = DocTree::parse(DOC);
+        // A single segment matches flat.
+        assert_eq!(t.resolve_path(&["first".into()]), t.find_by_anchor("first"));
+        // A tree path descends: `deep` is a child of `first`.
+        let deep = t.resolve_path(&["first".into(), "deep".into()]).unwrap();
+        assert_eq!(t.node(deep).heading, "Deep");
+        // An empty path is the whole document.
+        assert_eq!(t.resolve_path(&[]), Some(t.root()));
+        // A wrong descent fails: `second` is a sibling of `first`, not a child.
+        assert!(t.resolve_path(&["first".into(), "second".into()]).is_none());
+        // A missing first segment fails.
+        assert!(t.resolve_path(&["nope".into()]).is_none());
     }
 }
