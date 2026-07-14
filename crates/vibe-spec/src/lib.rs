@@ -22,6 +22,7 @@ mod directives;
 mod doctree;
 mod embed;
 mod merge;
+mod pipeline;
 mod resolver;
 mod use_graph;
 
@@ -30,5 +31,6 @@ pub use directives::{Directive, DirectiveError, DirectiveKind, Directives, InPla
 pub use doctree::{DocTree, Node, NodeId};
 pub use embed::{EmbedError, FsSectionSource, SectionSource, expand_embeds};
 pub use merge::{MergeMode, MergedSection, SectionOrigin, merge_contract_source};
+pub use pipeline::{CompileError, compile_inline};
 pub use resolver::{FileResolver, ResolveError};
 pub use use_graph::{UseGraphError, topo_order_from};
