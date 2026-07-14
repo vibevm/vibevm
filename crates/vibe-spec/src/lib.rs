@@ -18,6 +18,8 @@
 
 mod address;
 mod doctree;
+mod resolver;
 
 pub use address::{Authority, SpecAddress, SpecAddressError};
 pub use doctree::{DocTree, Node, NodeId};
+pub use resolver::{FileResolver, ResolveError};
