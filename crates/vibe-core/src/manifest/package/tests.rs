@@ -14,6 +14,22 @@ fn org() -> Group {
 }
 
 #[test]
+fn link_type_parses_inline_transitive_wire_form() {
+    #[derive(serde::Deserialize)]
+    struct L {
+        v: LinkType,
+    }
+    // PROP-035 §12 — the kebab wire form.
+    let lt: LinkType = toml::from_str("v = \"inline-transitive\"")
+        .map(|w: L| w.v)
+        .unwrap();
+    assert_eq!(lt, LinkType::InlineTransitive);
+    // The existing forms are unchanged.
+    let inline: LinkType = toml::from_str("v = \"inline\"").map(|w: L| w.v).unwrap();
+    assert_eq!(inline, LinkType::Inline);
+}
+
+#[test]
 fn publish_posture_default_is_all_true() {
     assert!(PublishPosture::default().is_default());
     assert!(!PublishPosture::default().is_never());

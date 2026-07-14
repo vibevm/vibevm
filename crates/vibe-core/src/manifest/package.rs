@@ -318,6 +318,13 @@ pub enum LinkType {
     /// `INDEX.md` carries an INCLUDE pointer the agent resolves at boot —
     /// supports conditional, context-gated loading.
     Dynamic,
+    /// This package **and its entire transitive closure** are pulled
+    /// `inline` (PROP-035 §12 / PROP-034 §2.1). A consumer-side property of
+    /// the edge — the same package can be pulled `inline-transitive` by one
+    /// consumer and `static` by another. Resolved to `inline` at emission,
+    /// with the mode propagated across the closure by `bootgen`.
+    #[serde(rename = "inline-transitive")]
+    InlineTransitive,
 }
 
 /// Ordering band for a package's boot snippet within the computed boot

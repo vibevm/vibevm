@@ -162,7 +162,7 @@ pub fn render_index(boot: &EffectiveBoot) -> Result<String, WorkspaceError> {
                 kind: match e.link {
                     LinkType::Static => "static",
                     LinkType::Dynamic => "dynamic",
-                    LinkType::Inline => {
+                    LinkType::Inline | LinkType::InlineTransitive => {
                         unreachable!("inline entries are excluded by indexed_entries()")
                     }
                 },

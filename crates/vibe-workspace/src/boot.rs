@@ -228,6 +228,13 @@ pub fn compute_effective_boot(inputs: NodeBootInputs<'_>) -> Result<EffectiveBoo
             .or(dep.suggested_link)
             .or(inputs.default_link)
             .unwrap_or_default();
+        // `inline-transitive` (PROP-035 §12) resolves to `inline` at
+        // emission — bootgen has already propagated the mode down the
+        // closure, so here it is just an inline entry.
+        let link = match link {
+            LinkType::InlineTransitive => LinkType::Inline,
+            other => other,
+        };
         // A conditional snippet is `dynamic` by nature (PROP-009 §2.4): a
         // `when` cannot be honoured by the verbatim `inline` lane or a
         // direct `static` read, so it forces the dynamic INCLUDE form
@@ -596,5 +603,17 @@ mod tests {
         let own = vec![authored("spec/boot/notes.md", None)];
         let boot = compute(&own, &inherited, &[], None);
         assert!(boot.entries.iter().all(|e| e.when.is_none()));
+    }
+
+    #[test]
+    fn inline_transitive_resolves_to_inline_at_emission() {
+        // A dependency whose resolved link is `inline-transitive` lands in the
+        // inline lane (PROP-035 §12): bootgen propagated the mode across the
+        // closure, and the engine just emits inline.
+        let mut d = dep("x", true, &[]);
+        d.declared_link = Some(LinkType::InlineTransitive);
+        let boot = compute(&[], &[], &[d], None);
+        assert_eq!(boot.entries[0].link, LinkType::Inline);
+        assert_eq!(boot.inline_entries().count(), 1);
     }
 }

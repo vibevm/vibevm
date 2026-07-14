@@ -13,7 +13,7 @@ use std::path::Path;
 
 use specmark::spec;
 use vibe_core::Group;
-use vibe_core::manifest::{BootCategory, Manifest};
+use vibe_core::manifest::{BootCategory, LinkType, Manifest};
 
 use crate::boot::{self, AuthoredBoot, DependencyBoot, NodeBootInputs};
 use crate::{Workspace, WorkspaceError, boot_artifacts, vibedeps};
@@ -189,6 +189,11 @@ fn node_dependency_boot(
         .map(|d| ((&d.group, d.name.as_str()), d))
         .collect();
 
+    // The inline-transitive closure (PROP-035 §12): every package reached
+    // through a direct edge the consumer declared `inline-transitive` — the
+    // edge's target and its whole `requires` closure — is forced `inline`.
+    let forced_inline = inline_transitive_closure(node_manifest, &index);
+
     // Breadth-first transitive closure from the node's direct requires.
     // A `[requires.packages]` key is group-qualified (PROP-008 §2.6), so
     // every `iter_pkgrefs` entry carries a group.
@@ -236,9 +241,15 @@ fn node_dependency_boot(
                 name: dep.name.clone(),
                 boot_path,
                 category: snippet.and_then(|bs| bs.category),
-                // Only a direct requirement carries a consumer-declared
-                // `link`; a transitive dependency reads back as `None`.
-                declared_link: node_manifest.requires.declared_link(&dep.group, &dep.name),
+                // An `inline-transitive` edge (or membership in one's closure)
+                // forces `inline` (PROP-035 §12); otherwise only a direct
+                // requirement carries a consumer-declared `link` and a
+                // transitive dependency reads back as `None`.
+                declared_link: if forced_inline.contains(&(dep.group.clone(), dep.name.clone())) {
+                    Some(LinkType::Inline)
+                } else {
+                    node_manifest.requires.declared_link(&dep.group, &dep.name)
+                },
                 suggested_link: snippet.and_then(|bs| bs.link),
                 // The package's `[boot_snippet].when` OS gate, if any — it
                 // forces the entry `dynamic` (PROP-009 §2.4).
@@ -247,6 +258,36 @@ fn node_dependency_boot(
             }
         })
         .collect()
+}
+
+/// The inline-transitive closure (PROP-035 §12): every `(group, name)`
+/// reachable through a direct `[requires.packages]` edge the consumer
+/// declared `inline-transitive` — the edge's target and its whole `requires`
+/// closure. Membership forces the boot entry `inline`.
+fn inline_transitive_closure(
+    node_manifest: &Manifest,
+    index: &HashMap<(&Group, &str), &ResolvedDep>,
+) -> HashSet<(Group, String)> {
+    let mut queue: VecDeque<(Group, String)> = node_manifest
+        .requires
+        .iter_pkgrefs()
+        .filter_map(|(g, n)| g.map(|g| (g.clone(), n.to_string())))
+        .filter(|(g, n)| {
+            node_manifest.requires.declared_link(g, n) == Some(LinkType::InlineTransitive)
+        })
+        .collect();
+    let mut forced: HashSet<(Group, String)> = HashSet::new();
+    while let Some((group, name)) = queue.pop_front() {
+        if !forced.insert((group.clone(), name.clone())) {
+            continue;
+        }
+        if let Some(dep) = index.get(&(&group, name.as_str())) {
+            for (rg, rn) in &dep.requires {
+                queue.push_back((rg.clone(), rn.clone()));
+            }
+        }
+    }
+    forced
 }
 
 /// Validate every node's agent instruction files before any mutation
