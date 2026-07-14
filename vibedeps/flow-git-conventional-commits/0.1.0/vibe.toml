@@ -17,4 +17,4 @@ source = "boot/31-flow-conventional-commits.md"
 category = "flow"
 # A non-negotiable commit rule — suggest the inline priority lane (PROP-009 §2.4):
 # its text lands verbatim in INLINE.md, read first, unless a consumer overrides.
-link = "inline"
+link = "static"

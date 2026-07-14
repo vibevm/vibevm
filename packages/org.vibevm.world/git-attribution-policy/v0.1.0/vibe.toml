@@ -16,4 +16,4 @@ requires_kinds = []
 source = "spec/boot/55-flow-attribution-policy.md"
 category = "flow"
 # A non-negotiable commit rule (human-authored) — suggest the inline priority lane.
-link = "inline"
+link = "static"
