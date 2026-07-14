@@ -468,8 +468,8 @@ package `org.vibevm.world/conventional-commits`.
    is enforced by process, not Rust — in which case there is nothing to retarget
    and the graph is undisturbed.)
 3. Add to host `specmap.toml`: `[[external_specs]] namespace =
-   "org.vibevm.world/conventional-commits"` (or the short segment the tags cite),
-   `root = "packages/org.vibevm.world/conventional-commits/v0.1.0/spec"`.
+   "org.vibevm.world/git-conventional-commits"` (or the short segment the tags cite),
+   `root = "packages/org.vibevm.world/git-conventional-commits/v0.1.0/spec"`.
 4. Handle inbound **prose** links (boot snippets, `CLAUDE.md`, the four-rules
    contract cite `spec://vibevm/common/PROP-000#…`): rewrite them to the new
    address — gated iff M5 landed, manual otherwise.
@@ -478,7 +478,7 @@ package `org.vibevm.world/conventional-commits`.
 
 **Under Tier 1 (M3):** steps 1-3 collapse to
 `rust-ai-native-specmap move spec://vibevm/common/PROP-000#conventional-commits
---to packages/org.vibevm.world/conventional-commits/v0.1.0/spec/GUIDE.md
+--to packages/org.vibevm.world/git-conventional-commits/v0.1.0/spec/GUIDE.md
 --retarget --dry-run`, review, drop `--dry-run`. Step 4 still needs M5.
 
 **Under Tier 2 (M2):** add `--redirect` to parallelise across a swarm; a late
