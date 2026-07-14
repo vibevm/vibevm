@@ -17,5 +17,7 @@
 //! land on top of it in following slices.
 
 mod address;
+mod doctree;
 
 pub use address::{Authority, SpecAddress, SpecAddressError};
+pub use doctree::{DocTree, Node, NodeId};
