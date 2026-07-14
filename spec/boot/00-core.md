@@ -25,12 +25,14 @@ See [`CLAUDE.md`](../../CLAUDE.md) (and its identical copies `AGENTS.md` / `GEMI
 
 ## Reading layers (per book, `refs/book/`)
 
+vibevm's instance of the **two-process-model** flow (`spec://org.vibevm.world/two-process-model/flows/two-process-model/TWO-PROCESS-MODEL#root`) — human and agent as two processes sharing one repository; these are its reading layers, information flowing top-down, the human winning conflicts:
+
 - **Head** (human's memory) — not your concern, but respect that it exists. Human wins conflicts with the spec.
 - **WAL** (`spec/WAL.md`) — volatile, rewritten each session, describes *current* state.
 - **Spec** (other files under `spec/`) — stable decisions, addressable via `spec://…` URIs.
 - **Code** (everything under `crates/`, `tests/`) — artefacts. Losing them is inconvenient; losing the spec is a catastrophe.
 
-Information flows top-down. If code changes first, reconcile up via the Sync-from-Code protocol (book, chapter 3) — propose a spec update, do not rewrite code back.
+Information flows top-down. If code changes first, reconcile up via the **sync-from-code** flow (`spec://org.vibevm.world/sync-from-code/flows/sync-from-code/SYNC-PROTOCOL#root`; also `refs/book/` chapter 3) — propose a spec update, do not rewrite code back.
 
 ## Hard conventions
 
