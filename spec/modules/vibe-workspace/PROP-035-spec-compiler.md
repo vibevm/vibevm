@@ -39,10 +39,10 @@ Two executors, one contract:
 
 A new `vibe.toml` `[package]` field `format`, alongside `version`:
 
-- **`format = "simple"`** — legacy / adapted prompts, carried **whole**, with no VibeVM-specific structure. For importing existing prompt corpora without rewriting them. Rules (the current behaviour, made explicit): inclusion in `[requires.packages]` means (a) structural — the agent reads the file; (b) inline — its text is spliced into the target. If `[boot_snippet].source` names a file, only that file is read/spliced; **absent even that, every file in the package is read/spliced by recursive walk**.
-- **`format = "normal"`** — the default (absent `format`, a package is `normal`). The VibeVM-native form: the `contract` / `source` split (§4), directives (§7), and the compiler (§8). A `normal` package is **not read just because it is present** — it participates only when something actually `#use`s it (§7.2). This is tree-shaking, and it is the default posture.
+- **`format = "simple"`** — **the default** (absent `format`, a package is `simple`). Legacy / adapted prompts, carried **whole**, with no VibeVM-specific structure — for importing existing corpora without rewriting them, and the fail-safe posture. Rules: inclusion in `[requires.packages]` means (a) structural — the agent reads the file; (b) inline — its text is spliced into the target. If `[boot_snippet].source` names a file, only that file is read/spliced; **absent even that, every file in the package is read/spliced by a recursive walk** — the over-load is the author's problem, the deliberate cost of not adopting `normal`.
+- **`format = "normal"`** — the VibeVM-native form, **opt-in**: the `contract` / `source` split (§4), directives (§7), and the compiler (§8). A `normal` package is **not read just because it is present** — it participates only when something actually `#use`s it (§7.2). This is tree-shaking; the optimized posture for authors who understand the machinery, at the price of structuring the package correctly.
 
-Migration is incremental (§15); today's corpus is `normal` by default and is migrated package-by-package, VibeVM's own core last.
+**Why `simple` is the default (owner decision, 2026-07-15).** A forgotten `format` must **fail safe, not silent**. With `normal` as the default, a naive or mis-built package that nobody `#use`s loads **nothing** — a silent no-op, the worst failure. With `simple` as the default it loads **everything** — noisy and unoptimized, but visibly working; the author opts into `normal` and its discipline deliberately. Migration (§15) is thereby a non-event: the existing corpus keeps working as `simple`, and packages convert to `normal` one at a time as their authors optimize them.
 
 ---
 
@@ -224,7 +224,7 @@ Incremental, safety-first (owner-set):
 
 - **Build and test on a demo fixture corpus first** — throwaway packages exercising `simple`/`normal`, `contract`/`source`, `#embed`/`#use`/`#source`, cycles, and `@spec`. These are **not** real packages, and experimenting on them must never break vibevm itself.
 - **Migrate real packages gradually**, improving them onto the new format one at a time.
-- **Convert vibevm itself last:** first the whole of `org.vibevm.world`, and only then (if at all) the core feature specs. The `default = normal` blast radius (every present-but-un-migrated package nominally "broken", §13) is absorbed by this staging, not by a flag-day.
+- **Convert vibevm itself last:** first the whole of `org.vibevm.world`, and only then (if at all) the core feature specs. With `simple` as the default (§3) there is **no blast radius** — an un-migrated package keeps loading as `simple` (whole), so conversion to `normal` is per-package and opt-in, never a flag-day.
 
 ---
 
@@ -243,3 +243,4 @@ Incremental, safety-first (owner-set):
 ## 17. Version history {#history}
 
 - **2026-07-14 — drafted (owner-requested), provisional.** Captures the "inline vision" design dialogue: two build modes as AOT/JIT with the equivalence invariant (§2); `simple`/`normal` package formats (§3); the `contract`/`source` split (§4); the hierarchical document IR with MD and future-XML frontends (§5); the unified `spec://` grammar and the deterministic router (§6); the three directives `#embed` / `#use` / `#source` plus the `@spec` in-place-use sigil and the read-set (§7); the five-phase compilation pipeline and the embed-ordering standard (§8); the C++-derived cycle rules and the contract-layer no-deadlock invariant (§9); link tables as the vtable analogue (§10, provisional); reversible open/close markers (§11); `transitive-inline` folding in PROP-034 as the emission layer (§12); the first-loaded structural loader (§13); the future algorithmic executor (§14); and the demo-corpus-first, vibevm-last migration (§15). Implementation begins with the router (§6) under this contract.
+- **2026-07-15 — implemented, and the default flipped to `simple`.** §5–§13 shipped as the `vibe-spec` crate and wired into `bootgen` (the payoff: `render_inline` runs `expand_embeds`, guarded); `transitive-inline` (§12) landed on `LinkType`. **§3's default changed from `normal` to `simple`** (owner decision): a forgotten `format` must fail *safe* (over-load, visibly working) rather than *silent* (a `normal` no-op), which also removes the §15 migration blast radius. Still open and under review: the `link` × `format` interaction (does a `normal` + `static` edge read eagerly or lazily?) and whether the `link` type set (`inline` / `static` / `dynamic`) should shrink or grow.
