@@ -2,12 +2,7 @@
 
 Every session in this repository begins by reading this file, then every file in `spec/boot/` in filename order, then `spec/WAL.md`, then any relevant PROP/FEAT documents under `spec/common/` and `spec/modules/` for the task at hand. Only after that, start work.
 
-The four non-negotiable commit-and-push rules of this repository are the `git-practices` family, a dependency of this project. In brief:
-
-- **Attribution — keep this repository human-authored.** Never mark any part of this repository as authored by an artificial-intelligence or neural-network system — no commit messages, no Git trailers (`Co-Authored-By`, `Signed-off-by: <model-name>`, etc.), no branch or worktree names, no code comments, no README lines, no release notes — regardless of provider, model family, or local vs cloud. The surface this repository presents is: a human wrote this code, full stop. This is the single place in the project where AI tooling is discussed in the attribution sense; `VIBEVM-SPEC.md`'s AI-integration text is product scope, not attribution.
-- **Conventional Commits.** `type(scope): subject` (target ≤ 60 chars, hard limit 72) with a body that explains *why*, not *what*.
-- **Atomicity — group commits by meaning.** One commit is one logical idea; split a mixed working tree by topic, never by file name or time of edit.
-- **Autonomy on routine changes only.** Routine large changes may be committed and pushed without first asking; anything non-routine — rewriting published history, `git push --force[-with-lease]`, large binary blobs, CI / signing / secrets changes, any operation whose reversal would cost work — stops and asks first. When uncertain, ask.
+The repository's commit-and-push discipline — human-authored **attribution** (never mark any part of this repository as AI-authored), **Conventional Commits**, **atomicity**, and commit **autonomy** (routine proceeds; non-routine stops and asks) — is the `git-practices` family, a dependency of this project loaded first and verbatim from `spec/boot/INLINE.md`. The rules live in that inline lane, not restated here. Authoritative record: [spec://vibevm/common/PROP-000#commits](spec/common/PROP-000.md#commits).
 
 Authoritative record: [spec://vibevm/common/PROP-000#commits](spec/common/PROP-000.md#commits).
 
