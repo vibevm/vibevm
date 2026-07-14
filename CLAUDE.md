@@ -8,58 +8,25 @@ Authoritative record: [spec://vibevm/common/PROP-000#commits](spec/common/PROP-0
 
 ## Delegation-first — spend Claude on judgment, run execution on fractality
 
-**The directive is now installed.** The standing posture — Claude's context and reasoning are the scarcest, most expensive resource in the room; the cheap worker slots sit idle, already paid for, so **delegate execution by default and keep Claude for architecture, planning, judgment, and review** (a session that codes, bulk-edits, or reads-and-summarizes work a worker could do is spending the very budget this directive exists to save) — is the `delegation-first` flow, a static dependency of this project. It carries the product-agnostic directive in full: the scarce-resource thesis, delegate-by-default, the capable-worker mandate, the never-delegate set, and the two obligations (always review; surface the analysis out loud and announce the harness). The decidable calculus it sits above — *delegate when verification is cheaper than generation*, scored on four axes (error cost / context / verifiability / size) with the verdict steps and per-model playbooks — is the `delegation-rules` flow it pulls, now **installed** as a dependency rather than read in-place: `spec://org.vibevm.fractality/delegation-rules/flows/delegation-rules/DECISION-MATRIX#root`.
+**The directive is now installed.** The standing posture — Claude's context and reasoning are the scarcest, most expensive resource in the room; the cheap worker slots sit idle, already paid for, so **delegate execution by default and keep Claude for architecture, planning, judgment, and review** (a session that codes, bulk-edits, or reads-and-summarizes work a worker could do is spending the very budget this directive exists to save) — is the `delegation-first` flow, a static dependency of this project. It carries the directive in full — the scarce-resource thesis and the ~5%-boss / ~95%-worker target, delegate-by-default, GLM-5.2 as the `big` worker slot, first-level swarm and RLM handling, the never-delegate set, and the obligations (always review; surface the analysis out loud; announce the harness). The decidable calculus it sits above — *delegate when verification is cheaper than generation*, scored on four axes (error cost / context / verifiability / size) with the verdict steps and per-model playbooks — is the `delegation-rules` flow it pulls, now **installed** as a dependency rather than read in-place: `spec://org.vibevm.fractality/delegation-rules/flows/delegation-rules/DECISION-MATRIX#root`.
 
-What follows is **only** vibevm's operational layer on that directive — how to run the fractality worker fabric, when to enable recursion, how the swarm modes route, and how Rules 1 & 4 bind delegated work — plus the live operating-facts ledger. The directive's general content (the thesis, the capable-worker mandate, the never-delegate set, and the review / surface / announce obligations) is loaded from the package above, not repeated here.
+What follows is **only** vibevm's operational specifics on that directive — the exact fractality entry points, how Rules 1 & 4 bind delegated work, and the live operating-facts ledger. The directive itself — delegate by default, GLM-5.2, RLM, swarms, review, surface, announce — is the package above, not repeated here.
 
-**How to run it, in-place (no global install).** fractality runs from the
-working-tree build against the global `~/.fractality` home (a mission-control
-daemon + `profiles.toml` already live there). Build it once with
-`cargo build -p fractality-cli` from
-`packages/org.vibevm.fractality/fractality/v0.1.0/`, then drive it through the
-launcher — `packages/org.vibevm.fractality/fractality.ps1` (PowerShell) or
-`fractality.sh` (Bash). In the command sketches below, `fractality` means that
-launcher (`./fractality.ps1` / `./fractality.sh`), not a binary on PATH:
-
-- `./fractality.ps1 run --packet <task.toml>` (sync) or
-  `./fractality.ps1 spawn … ; ./fractality.ps1 wait <id>` (async) —
-  mission-control spawns an isolated GLM worker; results come back as files.
-  Golden sample packet:
-  `packages/org.vibevm.fractality/fractality/v0.1.0/spec/examples/hello-glm.toml`.
-- No-packet interim route: `opencode run -m zai-coding-plan/glm-5.2 "<task>"`.
-- Free decision helpers (no daemon, no spend): `./fractality.ps1 route …` /
-  `./fractality.ps1 gate …`.
-
-**Enable RLM when a task needs it.** The need-gate is `fractality gate …`: it
-prints one of five verdicts — `inline | route | fold-local | spawn | escalate`
-— on a task's signals (VISION §V2; the recursive descent/ascent machinery is
-`packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-RLM-PLAN-v0.1.md`,
-Campaign 3 Stage B — built but still maturing). A worker only recurses —
-sub-delegates or escalates — when its profile grants the capability:
-`allow_tools = ["Bash"]` (so the worker can itself call `fractality spawn`)
-and/or `ask_boss = true` in `profiles.toml`, both off by default. If a task
-needs that sub-delegation or escalation, enable it for the worker's class
-rather than reclaiming the task by reflex.
-
-**Swarm modes route through fractality too — including `ultracode` and
-Workflow.** Whenever you would fan out a swarm of agents, prefer one of:
-
-- **(a) fractality *is* the swarm** *(the default)* — the parallel workers
-  are fractality-spawned GLM agents (`spawn` + `wait`/`tree`), not Claude
-  subagents. Heavy execution runs on cheap GLM; you orchestrate and review.
-- **(b) big-class launcher agents drive fractality** — reach for this only
-  when the mode forces Claude subagents (`ultracode` / the Workflow tool give
-  you no direct GLM spawn) or the orchestration itself needs Claude-level
-  judgment. Give the launcher a *big-class* model (e.g. Opus) but keep its
-  job *thin*: drive fractality and review the workers' files. The cost win
-  holds **only while the launcher stays thin** — a big-model agent that
-  merely orchestrates fractality moves few tokens, so it beats a mid-model
-  agent carrying the token-heavy coding at max reasoning; the moment the
-  launcher does the work itself, that arithmetic inverts. The rule under
-  both: never let Claude carry the token-heavy execution.
-
-Default a swarm to route through fractality unless the work sits in the
-never-delegate set.
+**Running fractality here.** The first-level usage lives in the package; the
+verified operating facts (profiles, tokens, packet schema, build state) are the
+ledger below. The entry points between them: the launcher is
+`packages/org.vibevm.fractality/fractality.ps1` (PowerShell) / `fractality.sh`
+(Bash), built once via `cargo build -p fractality-cli` from
+`packages/org.vibevm.fractality/fractality/v0.1.0/` against the global
+`~/.fractality` home. Drive it — `./fractality.ps1 run --packet <task.toml>`
+(sync) or `spawn … ; wait <id>` (async); free `route` / `gate` helpers (no
+daemon, no spend); no-packet interim route
+`opencode run -m zai-coding-plan/glm-5.2 "<task>"`. RLM's need-gate is
+`fractality gate …`; its recursive-descent machinery is
+`packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-RLM-PLAN-v0.1.md`
+(Campaign 3 Stage B, maturing). On Claude Code, `ultracode` / the Workflow tool
+cannot spawn GLM workers directly, so a swarm under them still routes through
+fractality.
 
 **Rules 1 & 4 bind delegated work exactly as direct work.** A worker is a tool, never credited — the authored surface of this repository stays human (Rule 1); and non-routine work (Rule 4's ask-first list — history rewrites, force-push, large blobs, CI / signing / secrets, anything whose reversal costs work) stops for the owner *before* it is delegated, not only when done directly. The never-delegate set is narrower than that list and never replaces it.
 
