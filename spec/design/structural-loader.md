@@ -1,4 +1,4 @@
-# The structural loader — honouring directives without the inline compiler {#root}
+# The structural loader — honouring directives without the static compiler {#root}
 
 **Status:** DESIGN — provisional (PROP-035 §13). These instructions are authored but **not yet wired into any live boot**: migration is demo-corpus-first, `org.vibevm.world` next, vibevm's own boot last (PROP-035 §15). This document is the reference text; a package that adopts the spec-compiler format will load it (or its successor) first.
 
@@ -6,11 +6,11 @@
 
 ## What this is {#what}
 
-The **first-loaded instructions** that make an agent honour the spec-compiler directives (`#use` / `#embed` / `#source` / `@spec`) in **structural mode** — reading on demand — the lazy counterpart to the algorithmic inline compiler (PROP-035 §2). Until a hard algorithmic agent exists (§14), an LLM executes them.
+The **first-loaded instructions** that make an agent honour the spec-compiler directives (`#use` / `#embed` / `#source` / `@spec`) in **structural mode** — reading on demand — the lazy counterpart to the algorithmic static compiler (PROP-035 §2). Until a hard algorithmic agent exists (§14), an LLM executes them.
 
 A project or package that manages its content this way MUST load these instructions before anything else; without them the directives are inert prose. A managed project or package that omits them is **broken** (§13), and the project/package-creation tools must inject them.
 
-The one hard contract: your structural reading MUST reach the **same effective spec** the inline compiler would produce. The inline compiler is the reference semantics; you are its lazy executor (§2).
+The one hard contract: your structural reading MUST reach the **same effective spec** the static compiler would produce. The static compiler is the reference semantics; you are its lazy executor (§2).
 
 ---
 
@@ -56,4 +56,4 @@ Crucially, the read-set records **what exists and where, not what is currently i
 - Never use an entity from a `#use` / `@spec` target without reading the target first.
 - Never re-read an `@spec` target that is both already in the read-set **and** still in your context.
 - Never treat a bare `spec://` as mandatory — only `@spec://` compels a read.
-- Never let structural reading diverge from what the inline compiler would produce (§2).
+- Never let structural reading diverge from what the static compiler would produce (§2).

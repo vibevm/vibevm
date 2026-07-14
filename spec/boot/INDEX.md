@@ -8,7 +8,7 @@
 # system is <name> (windows / macos / linux), and skip it otherwise.
 
 schema = 1
-inline = "spec/boot/INLINE.md"
+inline = "spec/boot/STATIC.md"
 
 [[entry]]
 path = "spec/boot/00-core.md"

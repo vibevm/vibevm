@@ -123,7 +123,7 @@ the lost-in-the-middle risk §6.4 already rejected); a resolved path index (clea
 
 **Resolution — a refined hybrid.** Not one of the three: a model where `inline`,
 `static`, and `dynamic` *all coexist* as per-dependency inclusion types (§6), plus a
-dedicated generated `INLINE.md`. The owner's reasoning: `INLINE.md` is an *emergency
+dedicated generated `STATIC.md`. The owner's reasoning: `STATIC.md` is an *emergency
 priority lane*. For the highest-importance content — top-level skills, critical
 disciplines — the boot text is concatenated verbatim into one file read first, so its
 priority is guaranteed by *position* and does not depend on the agent performing
@@ -160,10 +160,10 @@ build") are two views it emits.
 ## 6. The three inclusion types — the refined Fork-1 answer in detail
 
 Each dependency in a consumer's `vibe.toml` carries an inclusion type (working syntax:
-`link = "inline" | "static" | "dynamic"`); the default is `static`. At `vibe install`
+`link = "static" | "static" | "dynamic"`); the default is `static`. At `vibe install`
 time, for each entry-point node `vibe` generates:
 
-- **`INLINE.md`** — the verbatim concatenation of every `inline`-typed contribution in
+- **`STATIC.md`** — the verbatim concatenation of every `static`-typed contribution in
   the node's effective boot, in priority order. Read first; one read; maximum attention
   weight. The emergency lane — used sparingly, for top-level skills and critical
   disciplines. Generated only when the node has inline contributions.
@@ -171,13 +171,13 @@ time, for each entry-point node `vibe` generates:
   `static` entries appear as resolved file paths the agent reads directly (a flat,
   parallelisable loop). `dynamic` entries appear as INCLUDE pointers the agent resolves
   at boot.
-- Session-start order: `CLAUDE.md` → `INLINE.md` → `INDEX.md` and the files it names.
+- Session-start order: `CLAUDE.md` → `STATIC.md` → `INDEX.md` and the files it names.
 
 Cost profile:
 
 | Type | Reads at boot | Content on disk | Use |
 |---|---|---|---|
-| `inline` | ~1 (already in `INLINE.md`) | duplicated (bounded — few items) | critical disciplines, top-level skills |
+| `inline` | ~1 (already in `STATIC.md`) | duplicated (bounded — few items) | critical disciplines, top-level skills |
 | `static` | 1 + N (N parallelisable) | lives once | the default — ordinary dependencies |
 | `dynamic` | 1 + N + graph-walk | lives once | conditional / context-gated boot |
 
@@ -206,7 +206,7 @@ the loading model generalises subskill delivery rather than inventing a parallel
   an index-regeneration step.
 - **vibevm dogfoods itself.** The vibevm repository is itself a vibevm project;
   PROP-009 changes how *this* repository boots. `spec/boot/00-core.md` and
-  `spec/boot/90-user.md` stay user-owned authored boot; the generated `INLINE.md` /
+  `spec/boot/90-user.md` stay user-owned authored boot; the generated `STATIC.md` /
   `INDEX.md` join them. The migration is part of the milestone.
 
 ---

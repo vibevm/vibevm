@@ -88,9 +88,9 @@ It is a manual configuration the user makes by hand, once; vibevm supplies the p
 
 `design r1`
 
-**Decision.** What goes *between* the markers is exactly the redirect content PROP-009 §2.3 already specifies — an instruction to read `spec/boot/INLINE.md` (when present) and then `spec/boot/INDEX.md`. PROP-012 changes how that content is *delivered* — a fenced region of a possibly-shared file — not what it *says*.
+**Decision.** What goes *between* the markers is exactly the redirect content PROP-009 §2.3 already specifies — an instruction to read `spec/boot/STATIC.md` (when present) and then `spec/boot/INDEX.md`. PROP-012 changes how that content is *delivered* — a fenced region of a possibly-shared file — not what it *says*.
 
-Consequently this PROP **supersedes the "thin generated file" wording of PROP-009 §2.3**: the instruction file is no longer wholly generated; only its `<vibevm>` block is. PROP-009 §2.3's session-start order is otherwise unchanged — the agent reads the instruction file, then `INLINE.md`, then `INDEX.md`. The "generated — do not edit" warning moves *inside* the block and is reworded to scope it to the block. A malformed block is also a `vibe check` finding (§3), so the user meets the problem in the linter rather than mid-install.
+Consequently this PROP **supersedes the "thin generated file" wording of PROP-009 §2.3**: the instruction file is no longer wholly generated; only its `<vibevm>` block is. PROP-009 §2.3's session-start order is otherwise unchanged — the agent reads the instruction file, then `STATIC.md`, then `INDEX.md`. The "generated — do not edit" warning moves *inside* the block and is reworded to scope it to the block. A malformed block is also a `vibe check` finding (§3), so the user meets the problem in the linter rather than mid-install.
 
 ---
 

@@ -52,7 +52,7 @@ The skip trusts slot-presence-for-a-version as a proxy for correctness — by de
 
 **Decision.** Boot-artifact regeneration (`regenerate_boot` over every node) is **kept whole-tree**. It is not the expensive part, and scoping it is low-value:
 
-- It is cheap: per node, an in-memory topological sort plus writing `INDEX.md` (a small TOML), the redirects (~1 KB each), and `INLINE.md` only when the node has inline dependencies. The cost is `O(nodes)` small operations, not the corpus-sized I/O of materialisation.
+- It is cheap: per node, an in-memory topological sort plus writing `INDEX.md` (a small TOML), the redirects (~1 KB each), and `STATIC.md` only when the node has static dependencies. The cost is `O(nodes)` small operations, not the corpus-sized I/O of materialisation.
 - It does not churn git: git tracks content, so regenerating a byte-identical `INDEX.md` produces no diff.
 - Whole-tree regeneration is **self-healing**: a boot artifact left stale by an earlier bug is silently corrected on the next install. A scoped regeneration would preserve such staleness.
 

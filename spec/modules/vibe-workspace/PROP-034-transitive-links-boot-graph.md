@@ -1,6 +1,7 @@
 # PROP-034: Transitive inclusion links and the static boot-link graph {#root}
 
 **Status:** DRAFT — requirements, 2026-07-14 (owner-requested). Extends [PROP-009](PROP-009-loading-model.md) (the loading model). Not implementation-locked.
+**Terminology (2026-07-16):** the `inline` / `static` / `dynamic` link types this document describes were **renamed** — read `inline` as `static` (the verbatim `STATIC.md` lane), `static` as `dynamic` (the default, a by-reference read), and the old `dynamic` as a `dynamic` entry carrying a `when`; `inline-transitive` is now `static-transitive`. See PROP-009 §2.4. The body below predates the rename and keeps the old names.
 **Related:** [PROP-009 §2.4](PROP-009-loading-model.md#inclusion-types) (the direct `inline` / `static` / `dynamic` link types this PROP makes transitive), [PROP-028](../../common/PROP-028-package-families.md) (families / collections — the motivating consumer), [PROP-003](../vibe-resolver/PROP-003-dep-evolution.md) / [PROP-017](../vibe-resolver/PROP-017-resolvo-resolver.md) (version unification — one node per resolved package), [`spec/design/loading-and-boot-model.md`](../../design/loading-and-boot-model.md) (the static/dynamic-linking metaphor this PROP completes).
 **Supersedes:** backlog `B1` (`transitive-inline` / `transitive-static`) — promoted to this PROP.
 
