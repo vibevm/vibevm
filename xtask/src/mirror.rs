@@ -253,7 +253,7 @@ fn refresh_tracking(root: &Path, remotes: &[(String, String)], target_url: &str,
 
 /// The argv for pushing one ref to a target URL — the single place the
 /// fan-out's push command is built, so the load-bearing **never `--force`**,
-/// fast-forward-only invariant (PROP-016 §6, the `CLAUDE.md` Rule 4 red
+/// fast-forward-only invariant (PROP-016 §4, the `CLAUDE.md` force-push red
 /// line) lives in one checkable spot. `tags` fans every tag (`--tags`); any
 /// other ref pushes that branch with a bare `git push` — no `--force`, no
 /// `+`-prefixed (force) refspec — so a non-fast-forward fails loud rather
@@ -424,8 +424,8 @@ mod tests {
 
     #[test]
     fn push_args_never_force() {
-        // The marquee invariant of the whole mirror system (PROP-016 §6,
-        // CLAUDE.md Rule 4): the fan-out NEVER force-pushes. Guarding every
+        // The marquee invariant of the whole mirror system (PROP-016 §4,
+        // CLAUDE.md force-push rule): the fan-out NEVER force-pushes. Guarding every
         // ref shape keeps a future edit from quietly slipping `--force` in.
         for git_ref in ["main", "tags", "release", "v1.0"] {
             let args = push_args("git@host:org/repo.git", git_ref);
