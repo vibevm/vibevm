@@ -1,18 +1,12 @@
 # Design-rationale specs
 
-This directory holds **design rationale** documents: the *why* and the *lore* behind vibevm's own architectural decisions — the path of a design discussion, the forks weighed and rejected, the precedents studied, the owner's mental model, and the ideas parked for later.
+This directory holds vibevm's **design-rationale** documents: the *why* and the *lore* behind vibevm's own architectural decisions — the path of a design discussion, the forks weighed and rejected, the precedents studied, the owner's mental model, and the ideas parked for later. It is the **design-doc genre** of the `spec-genres` flow this project follows: `spec://org.vibevm.world/spec-genres/flows/spec-genres/SPEC-GENRES-PROTOCOL#root`.
 
-These documents are **non-normative**. The contract — *what* the system does — lives in the PROP / FEAT documents under [`spec/modules/`](../modules/) and [`spec/common/`](../common/). A `spec/design/` document explains *why a PROP is shaped the way it is*. When a design document and its PROP disagree, **the PROP wins** and the design document is corrected.
+These documents are **non-normative**. The contract — *what* the system does — lives in the PROP / FEAT documents under [`spec/modules/`](../modules/) and [`spec/common/`](../common/); a `spec/design/` document explains *why a PROP is shaped the way it is*. When a design document and its PROP disagree, **the PROP wins** and the design document is corrected — the flow's precedence law (`spec://org.vibevm.world/spec-genres/flows/spec-genres/SPEC-GENRES-PROTOCOL#precedence`): load-bearing rationale stays inside the PROP, the narrative lore moves out to here (`spec://org.vibevm.world/spec-genres/flows/spec-genres/SPEC-GENRES-PROTOCOL#contract-vs-lore`).
 
-## Why this genre exists
+## vibevm's spec/ genres
 
-A PROP is a contract for an implementer: it must be precise, minimal, and readable as a contract. Pouring a full discussion log — every fork, every analogy, every rejected branch — into a PROP makes it unreadable as a contract. But that reasoning is valuable: it is what lets a future session (or a fresh contributor) understand the *intent* without re-deriving it, and avoid re-litigating settled questions.
-
-Industry calls this split RFC-vs-RFC-discussion, or spec-vs-ADR, or code-vs-design-doc. vibevm keeps the **load-bearing** rationale inside each PROP (the `Decision` / `Rejected alternatives` / `Open questions` sections) and moves the **narrative** rationale — the lore — here.
-
-This split mirrors the project's existing reading layers ([`spec/boot/00-core.md`](../boot/00-core.md)): the spec is stable normative memory; this directory is its explanatory companion.
-
-## How `spec/design/` differs from the other `spec/` genres
+vibevm's instance of the genre table — the general taxonomy (each genre's charter, mutability, reader, and authority-on-conflict) is the flow's `spec://org.vibevm.world/spec-genres/flows/spec-genres/SPEC-GENRES-PROTOCOL#genres`:
 
 | Directory | Holds | Normative? |
 |---|---|---|
@@ -25,13 +19,13 @@ This split mirrors the project's existing reading layers ([`spec/boot/00-core.md
 
 `research/` and `design/` are both non-normative, but they look in opposite directions: `research/` studies what *other* projects did; `design/` records why *we* chose what we chose.
 
-## When to write a document here
-
-When a design discussion produces more reasoning than a PROP can absorb without losing its contract readability — a multi-fork design session, a large refactor weighed against several alternatives, a decision whose context would otherwise live only in one conversation and be lost at the next session boundary.
-
 ## Linking rule
 
-Every `spec/design/` document names the PROP(s) it explains. Every PROP it explains links back to it from its `Related` header — so a session that reads a PROP during the boot sequence finds the rationale without being told it exists. The link is the mechanism that makes the lore survive a cold start.
+Every `spec/design/` document names the PROP(s) it explains; every PROP it explains links back to it from its `Related` header — the flow's two-way linking law (`spec://org.vibevm.world/spec-genres/flows/spec-genres/SPEC-GENRES-PROTOCOL#linking`), so a session that reads a PROP during the boot sequence finds the rationale without being told it exists. A one-directional link is a latent break.
+
+## When to write a document here
+
+When a design discussion produces more reasoning than a PROP can absorb without losing its contract readability — a multi-fork design session, a large refactor weighed against several alternatives, a decision whose context would otherwise live only in one conversation and be lost at the next session boundary. (The general decision table is the flow's `when-to-write-what` document.)
 
 ## Index
 
