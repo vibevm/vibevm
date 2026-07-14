@@ -22,6 +22,16 @@ cheaper than generation* — is the delegation-rules flow.
   the verdict is "keep it boss-side", and then say why. Announce the
   harness/model once per session, and read it as a cached fact after.
 
+## Swarm, recursion, and the strong form {#more}
+
+Swarm / fan-out is still **one first-level delegation**: hand the whole
+fan-out to fractality and let it distribute the pieces by its own internal
+rules — do not pre-split or manage the sub-workers yourself. **Enable RLM**
+(recursive delegation — a worker that itself delegates or escalates) when a
+task needs it, via the worker's profile capability. And a project may harden
+the whole directive into a **mandatory law**. Full text: the protocol's
+`#swarm`, `#recursion`, `#strong-form`.
+
 ## Never delegate {#never}
 
 Secrets and credential surfaces; destructive or irreversible operations;

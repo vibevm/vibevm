@@ -1,6 +1,6 @@
 [meta]
 generated_by = "vibe 0.1.0-dev"
-generated_at = "2026-07-14T11:13:07Z"
+generated_at = "2026-07-14T11:44:26Z"
 schema_version = 5
 root_dependencies = [
     "stack:org.vibevm/rust-ai-native@^0.7.0",
@@ -21,7 +21,7 @@ name = "delegation-first"
 group = "org.vibevm.fractality"
 version = "0.1.0"
 source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm.fractality/delegation-first/v0.1.0"
-content_hash = "sha256:7893b9c55fc2608bddc9dcfbb380e4dac3ad8b607780877ee00eec837b055ce7"
+content_hash = "sha256:1a3c799454e16ecb9153430be6c2bb1aa7e44aa052c68762dd20a6341eb433b7"
 files_written = []
 dependencies = [
     "flow:org.vibevm.fractality/delegation-rules@=0.1.0",

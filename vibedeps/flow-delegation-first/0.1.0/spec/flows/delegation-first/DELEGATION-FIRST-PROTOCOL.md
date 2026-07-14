@@ -4,8 +4,11 @@
 "boss" agent takes toward a fleet of cheaper worker agents: *why*
 delegation is the default rather than the exception, *what* question to
 ask before doing any task yourself, *what* you must never hand off, and
-the two obligations — review, and saying the analysis out loud — that
-keep delegation honest. The decidable *how* — the routing calculus and
+the obligations that keep delegation honest — review above all, and
+surfacing the analysis out loud. It assumes **fractality** as the agent
+spawner (the flow lives in the `org.vibevm.fractality` group deliberately)
+and covers only **first-level** delegation; how fractality then splits work
+across sub-agents is fractality's own system. The decidable *how* — the routing calculus and
 the per-model playbooks — is the sibling **delegation-rules** flow
 (`spec://org.vibevm.fractality/delegation-rules/flows/delegation-rules/DECISION-MATRIX#root`);
 this document is the standing *directive* above that calculus.
@@ -21,8 +24,17 @@ could do is burning the very budget the delegation setup exists to save.
 
 The consequence is a **default, not a permission**: for *every* task —
 one the user asks for, or one you or another plan set — the first
-question is *"can this be delegated?"*, and the burden of proof is on
-keeping it boss-side, not on handing it off.
+question is *"can this be delegated to fractality?"* (fractality is the
+agent spawner this directive assumes — the flow lives in the
+`org.vibevm.fractality` group deliberately, so it may count on it; a setup
+that prefers a different fabric substitutes it here), and the burden of
+proof is on keeping it boss-side, not on handing it off.
+
+The target is concrete: roughly **5% of tasks to the boss** — Opus-class
+smart work, architecture, judgment, review — and **95% to the workers**
+for delegable execution, because that is the real split between judgment
+and execution. Under-delegating is the failure this directive exists to
+prevent.
 
 ## Delegate execution by default {#default}
 
@@ -46,16 +58,60 @@ than generation.** Score the task — error cost, context transferability,
 verifiability, size — and run the verdict procedure in the
 delegation-rules flow. A small, mechanical, verifiable task goes to the
 cheapest worker; a substantial but verifiable one goes to the capable
-worker as a coarse one-shot; the rest stays boss-side. Routing names
-capability slots, never vendors.
+worker as a coarse one-shot; the rest stays boss-side. Routing works in
+capability slots (`big` / `small`) that map to models — today `big` is
+GLM-5.2 (below).
 
 ## Don't fear the big model {#big-model}
 
-The capable worker slot is for **substantial one-shot work** — a whole
-module with its tests and a self-verify command, a long document
-distilled — not just trivia. Big models earn coarse prompts: state the
-goal and the acceptance, not a line-by-line script. Under-using the
-capable slot on only-trivia is the same waste as not delegating at all.
+The capable worker slot — today **GLM-5.2** (the `big` slot; name it
+explicitly so it is reached for systematically, and grow the list of
+supported big models as new ones land) — is for **substantial one-shot
+work**: a whole module with its tests and a self-verify command, a long
+document distilled — not just trivia. `glm-5-turbo` (the `small` slot)
+takes bounded mechanical transforms. Big models earn coarse prompts:
+state the goal and the acceptance, not a line-by-line script. Under-using
+the capable slot on only-trivia is the same waste as not delegating at all.
+
+## The strong, mandatory form {#strong-form}
+
+A project may harden this directive from a **default** into a **mandatory
+law**: delegation is not merely preferred but required for every bulk,
+mechanical, or read-and-summarize step, and the boss records per session
+what it *delegated* and what it *kept, and why* — a scoreboard that makes
+an un-delegated session visibly account for itself. The strong form also
+makes delegation **never blind**: a launched worker is observed live —
+progress heartbeats and a stall watchdog — because minutes of silent
+waiting on an invisible worker is the exact waste delegation exists to
+kill; react to the first wrong signal rather than waiting for a derailed
+run to finish. In vibevm's fractality this strong form is the workspace's
+⛔ DELEGATION LAW — a mandatory, mechanized delegation contract with the
+delegated/kept scoreboard and the live-observation protocol; a project's
+exact scoreboard format and telemetry channel live in its host contract.
+
+## Enable recursion when a task needs it {#recursion}
+
+**RLM** — recursive language-model delegation: a worker that itself
+sub-delegates or escalates, rather than the boss doing so — is off by
+default. When a task is deep enough to need it, **recommend enabling RLM**
+for the worker's class by granting the capability in its `profiles.toml`
+entry: `allow_tools = ["Bash"]` (so the worker can itself call `fractality
+spawn`) and/or `ask_boss = true` (so it may escalate). That is your whole
+part — you recommend enabling RLM and set the flag; fractality's RLM
+machinery then decides how the recursion descends and ascends. Do not drive
+or shape the recursion yourself.
+
+## Swarm and fan-out {#swarm}
+
+When a task fans out into many parallel pieces, that is still **one
+first-level delegation**: hand the whole fan-out to fractality
+(`fractality spawn <packet>`, then `fractality wait` / `fractality tree` to
+watch and collect). Fractality distributes the pieces across its worker
+agents by its **own internal rules** — do not pre-split the work, do not
+prescribe how it parallelizes, do not manage the sub-workers yourself. Your
+job begins and ends at the first-level hand-off and the review of the
+result; how the work is divided below that is fractality's system, not
+yours to direct.
 
 ## Always review {#review}
 
