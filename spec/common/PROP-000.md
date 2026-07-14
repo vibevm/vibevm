@@ -150,20 +150,13 @@ Concretely, the canonical `flow:wal@0.1.0` payload (vendored as a hermetic e2e t
 
 ## 14. Manual-test protocol {#manual-tests}
 
-**Decision:** human-runnable smoke-tests live in [`manual-tests/`](../../manual-tests/) at the repo root, one Markdown file per scenario, named `<milestone>-<slug>.md` (e.g. `M1.1-git-registry-smoke.md`). The directory's own [`README.md`](../../manual-tests/README.md) carries the authoring conventions, the clean-slate protocol, and the index.
+**Decision:** human-runnable smoke-tests live in [`manual-tests/`](../../manual-tests/) at the repo root, one Markdown file per scenario, named `<milestone>-<slug>.md` (e.g. `M1.1-git-registry-smoke.md`); the directory's own [`README.md`](../../manual-tests/README.md) carries the index. The tier itself — why a project keeps a second, human-run test layer alongside the automated suite, what a manual test is and is not, when to run one, and who signs it off (a human, over an agent's pre-run) — is the `manual-tests` flow: `spec://org.vibevm.world/manual-tests/flows/manual-tests/MANUAL-TESTS-PROTOCOL#root`, with the four authoring rules in its `authoring-rules` document and the copy-ready skeleton in `test-template`.
 
-**Why a second test tier.** `cargo test --workspace` uses fakes, tempdirs, and local bare repositories for speed and hermeticity. That tier cannot prove the integration surfaces that only matter in the real world — SSH auth against GitVerse, the lockfile `source_uri` exactly as it appears to downstream consumers, the `~/.vibe/` layout on a user's actual filesystem, a human looking at CLI output and saying "yes, that's what I meant". These scripts are that last mile. They complement `cargo test` — they do not replace it.
+**vibevm's real-world surfaces.** `cargo test --workspace` uses fakes, tempdirs, and local bare repositories for speed and hermeticity (the flow's `spec://org.vibevm.world/manual-tests/flows/manual-tests/MANUAL-TESTS-PROTOCOL#why-second-tier`); the manual tier is the last mile for what only the real world has here: SSH auth against GitVerse, the lockfile `source_uri` exactly as a downstream consumer receives it, the `~/.vibe/` layout on a user's actual filesystem, and a human confirming the CLI output says what they meant.
 
-**Authoring rules** (full versions in `manual-tests/README.md`):
+**vibevm's bindings.** Every test isolates state with `mktemp -d` for the project and `VIBE_REGISTRY_CACHE` pointing inside the scratch dir for the registry cache — the user's real `~/.vibe/` is never touched by a run. Git Bash on Windows is the primary smoke-test environment (macOS and Linux must work too); where platform output differs (path separators, `.exe` suffix), the Windows form comes first with a portable note.
 
-1. **Clean slate is mandatory.** Every test isolates its state with `mktemp -d` for the project and with `VIBE_REGISTRY_CACHE` pointing inside the scratch dir for the registry cache. The user's real `~/.vibe/` must never be touched by a test run.
-2. **Self-contained walkthrough.** A reader opens the file, executes top-to-bottom, and finishes with no ambient state. Each step has a command in a fenced block and an "Expected" paragraph.
-3. **Platform coverage.** Commands are POSIX-shell compatible. Git Bash on Windows is the primary smoke-test environment; macOS and Linux must work too. When platform output differs (path separators, `stat` flags, `.exe` suffix), the Windows form comes first with a portable note.
-4. **Cleanup + what-to-file-if-it-fails.** Every test ends with a copy-pasteable teardown block and a section listing the artefacts to collect if something broke.
-
-**When to run.** Before tagging any milestone; after changes to integration surfaces (git backend, CLI arg parsing, lockfile format) even when `cargo test` stays green; and as reproducers whenever a user files an integration bug.
-
-**Where pinned:** this PROP entry is the policy; [`manual-tests/README.md`](../../manual-tests/README.md) is the operational guide. [`spec/WAL.md`](../WAL.md) names the outstanding manual runs for the current milestone.
+**When to run** (the flow's `spec://org.vibevm.world/manual-tests/flows/manual-tests/MANUAL-TESTS-PROTOCOL#when`, against vibevm's surfaces): before tagging any milestone; after changes to the git backend, CLI arg parsing, or lockfile format even when `cargo test` stays green; and as reproducers whenever a user files an integration bug. [`spec/WAL.md`](../WAL.md) names the outstanding manual runs for the current milestone.
 
 ---
 
