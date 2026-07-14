@@ -89,3 +89,7 @@ reason = "generated code (JTD-schema codegen output), excluded by PROP-014 §2.3
 [[exempt]]
 crate = "xtask"
 reason = "internal developer tooling — panics are acceptable at the developer's own console; stays exempt on the record (CONVERT-PLAN Phase 5, 5.3)"
+
+[[exempt]]
+crate = "vibe-spec"
+reason = "PROP-035 spec-compiler, provisional — not yet spec-tagged or REQ-edged; enters gated_crates once the format stabilises and its seams are doctested (§15 migration puts vibevm's own adoption last)"
