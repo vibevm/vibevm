@@ -1,6 +1,6 @@
 # PACKAGE-TREE-PLAN v0.1 — `vibe tree`, the algorithmic spec-tree analyzer with an interactive TUI
 
-_Status: EXECUTING · Phase 1 complete (floor green, 2026-07-15) · written
+_Status: EXECUTING · Phase 2 complete (floor green, 2026-07-15) · written
 against tree `bf2897b` · cold-executable: every phase ends with
 `bash tools/self-check.sh` green; any phase boundary is a safe stop; this file
 is the resume pointer._
@@ -336,6 +336,25 @@ tools/self-check.sh` → exit 0.
 - Delegated to a Claude subagent (the native `Agent` tool), reviewed as a PR +
   full floor. That delegation-*mechanism* was itself a miss (a native subagent
   is not the cheap GLM slot) — see the interleaved fix below.
+
+**Phase 2** (2026-07-15, floor green): `cee039d` the interactive rat-salsa TUI —
+the tree flattened into a scrollable/selectable table (`│├└` + `+`/`-`, load +
+T/C/S columns), `↑↓`/`←→` nav, `Space`/`F` fold, `Enter` detail modal, a status
+line with the STATIC.md size. Delegated to a **same-model (Claude) subagent**
+per the new `#worker-choice` rule — a niche rat-salsa API where reviewing a
+foreign-model diff ≈ regenerating it (the low-verifiability carve-out; the
+verifiable Phase-4 engine work goes to GLM/fractality). Reviewed as a PR + full
+floor. Field data: the modular ratatui crates must be *direct* deps (rat-salsa
+does not re-export them); `select_row_style` needs an explicit fg/bg to
+highlight an unfocused row.
+- **Anomaly caught + reverted:** an out-of-scope `vibe.toml` restructuring
+  (`delegation-first`→static, ai-native→static-transitive, `wal-specspaces`
+  dropped) leaked into the tree during the Phase-2 window — not boss-authored;
+  the subagent misattributed it as "owner work". Reverted
+  (`git checkout -- vibe.toml`); the manifest stays at the known-good HEAD. The
+  deliberate `delegation-first`→static question is surfaced to the owner, not
+  taken. Lesson: diff the whole tree before every commit (selective `git add`
+  already caught it).
 
 **Interleaved (owner-directed, NOT campaign phases):**
 - `7382944` the native-tool-vs-GLM fact in the host trio fractality ledger (#3).
