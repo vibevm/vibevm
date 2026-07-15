@@ -43,6 +43,22 @@ The owner ratified this plan and set a standing mandate that governs **every** c
 
 **Human-legibility is a founding discipline, not decoration.** Every action carries a **human-readable name and a description**; both are **first-class searchable fields** (the name/description lane is the fallback match when id and other fields do not). Filling them is **part of the AI-native discipline for building any UI** on this system: an action with an empty or meaningless name/description **fails the floor gate** (`conform`), exactly as untested domain logic does. "The interface is understandable and well-navigable" is a **stated design goal of the system itself**, inherited by every frontend built on it — the reusable guideline the owner wants for other UIs (§0). This is normatively owned by Spec 1 and enforced by the implementation.
 
+**AIUI — the final abstraction: an interface with no visual part (owner, 2026-07-15).** The TUI is
+only *one* surface. The canonical interface this system targets is **visual-free** — a **native way
+for an AI to operate the UI**: invoke actions by address with typed parameters, read the structured
+model/state and the set of available (enabled) actions, and observe the typed result — with
+rendering **entirely optional** (shown to a human or for debugging, or not shown at all). This is a
+full **"AIUI"**, and it is exactly what the rest of this mandate already builds toward: actions *and
+the model* **fully decoupled from the visual**, addressable, typed, programmatically **invocable and
+observable**. It is therefore promoted to a **founding design goal**: the headless AIUI surface is
+the **reference** surface, and every visual surface (TUI now; web / IDE later) is a **projection** of
+the same core — *nothing* in the core / model / controller may depend on rendering, and the model
+must be **serialisable and queryable** so an AI reads structured state, never pixels. **Not built
+now** — we prototype on the ordinary TUI — but the architecture is designed so the AIUI is a thin
+headless adapter that already works because the core owes it nothing. This crowns the
+frontend-agnostic and programmatic-invocation-primary pillars, and aligns the UI with vibevm's
+two-process model and its MCP surface. (New obligation **DO18**; Spec 1 owns it normatively.)
+
 ---
 
 ## 0.2 — Execution ledger + scope addenda (running) {#ledger}
