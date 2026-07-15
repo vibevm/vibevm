@@ -20,9 +20,11 @@
 //!
 //! This crate implements the **plumbing core**, PROP-039 §§1–8: addressing,
 //! the Action value, the registry, parameters, context + enablement,
-//! invocation, and i18n. The keymap (§9), Search Everywhere (§10), and the
-//! Surface / AIUI layer (§11) are implemented separately and are intentionally
-//! absent here.
+//! invocation, and i18n — plus the **Search Everywhere** engine (§10, the
+//! [`search`] module: the provider trait, the one shared matcher, and the
+//! tabbed/grouped/recency-weighted engine). Concrete providers live in
+//! consumer crates. The keymap (§9) and the Surface / AIUI layer (§11) are
+//! implemented separately and are intentionally absent here.
 //!
 //! Spec: [PROP-039](../../../spec/modules/vibe-actions/PROP-039-action-system.md);
 //! design: [`spec/design/action-system.md`](../../../spec/design/action-system.md).
@@ -37,6 +39,7 @@ pub mod i18n;
 pub mod invoke;
 pub mod params;
 pub mod registry;
+pub mod search;
 
 pub use action::{
     Action, ActionBuildError, ActionBuilder, Capability, EnablementFn, Icon, InvokeFn, Msg,
@@ -52,3 +55,7 @@ pub use params::{
     ParamError, ParamSchema, ParamSpec, ParamType, ParamValue, ParamValues, validate,
 };
 pub use registry::{Registry, RegistryError};
+pub use search::{
+    Candidate, Hit, ItemRef, Modifiers, ProviderId, Query, SearchEngine, SearchProvider, SearchRow,
+    Selected, Tab,
+};
