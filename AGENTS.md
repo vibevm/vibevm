@@ -79,6 +79,10 @@ Keep it current-state; prune stale lines.
 - **Interim route (no packet):** `opencode run -m zai-coding-plan/glm-5.2 "<task>"`
   — opencode 1.17.14, z.ai creds in its auth store (2026-07-12); use **only**
   `zai-coding-plan/*` (the `opencode/*` Zen gateway is unpaid here and errors).
+  **Owner ruling (2026-07-15): `opencode` works POORLY vs fractality — prefer the
+  fractality launcher (`run` / `spawn --packet`) even over opencode's warm-build
+  convenience; treat bare `opencode run` only as a last-resort fallback when the
+  launcher is genuinely unavailable.**
 - **Packets** (TOML, schema 1): `[task]` goal/acceptance,
   `[workspace] mode = "worktree" | "dir"` (worktree default → `repo`/`base`,
   deliverable branch), `[output]`, `[budget]`, `[routing]` profile/model.
