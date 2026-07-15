@@ -101,11 +101,20 @@ This plan runs continuously (§0.1) — phases land and commit as they complete.
   place** (proven headless: running "Cycle ordering" changes the ordering; revealing a package
   selects its row). Self-check all green; the binary is healthy. **The owner's acceptance (§0.1) is
   met** — pending the owner's interactive visual confirmation in a real terminal.
-- **Deferred increments** (next, non-blocking): back the `vibe.tree` action catalogue with a live
-  `vibe_actions::Registry` (Ctx enablement + address-routed invoke, PROP-037 §13.2); per-character
-  match highlighting in the results (the engine already returns byte ranges); promote PROP-037's
-  F-key menus (§7.1/§7.2) onto the action system; the headless **AIUI** surface (PROP-039 §11.3);
-  the legibility floor-gate + enumerable-registry golden (PROP-039 §8.4/§12.2) as CI gates.
+- **2026-07-15 — the five deferred increments are all DONE** (owner: «сделай все остальные пункты
+  до конца» / «план выполнен до конца»), each floor-green + committed:
+  1. the `vibe.tree` catalogue is backed by a **live `vibe_actions::Registry`** — real Actions with
+     presentation + capability + a typed `Ctx` enablement (with "why disabled" reasons); the search
+     `ActionProvider` enumerates it and dispatches by address (`551532e`);
+  2. **match highlighting** in the results — the engine's byte ranges are bolded (`94f10d8`);
+  3. the **legibility floor-gate + enumerable-registry golden** run over the real vibe.tree Registry
+     (`dd26677` the `gate` module, `a4e6d2c` wired as vibe-cli tests);
+  4. the **headless AIUI** surface (`dd26677` the `aiui` module — `list_actions` / `invoke`;
+     `a4e6d2c` proving the vibe.tree actions are AI-enumerable + invocable headless);
+  5. the **F2 sort / F3 mode selection menus** (`171239d`; the `flatten` cell was extracted to keep
+     `state.rs` under the 600-line budget).
+  **The whole arc is complete: research → design-doc → Spec 1 → Spec 2 → the F1 Search Everywhere
+  implementation → all five increments.** `main` is ahead of origin (mirror at wind-down).
 
 **Scope addenda (owner, 2026-07-15) — fold into the findings doc + Spec 1**
 - **RQ13 — project-wide / STRUCTURAL Search Everywhere.** Study how VSCode + IDEA search the whole
