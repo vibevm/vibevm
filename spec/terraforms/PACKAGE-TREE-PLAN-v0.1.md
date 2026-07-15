@@ -1,8 +1,8 @@
 # PACKAGE-TREE-PLAN v0.1 — `vibe tree`, the algorithmic spec-tree analyzer with an interactive TUI
 
-_Status: PLANNED · written against tree `bf2897b` · cold-executable: every
-phase ends with `bash tools/self-check.sh` green; any phase boundary is a safe
-stop; this file is the resume pointer._
+_Status: EXECUTING · Phase 0 complete (green, 2026-07-15) · written against tree
+`bf2897b` · cold-executable: every phase ends with `bash tools/self-check.sh`
+green; any phase boundary is a safe stop; this file is the resume pointer._
 
 > Reading order for a cold executor: boot the normal way (`CLAUDE.md` →
 > `spec/boot/INDEX.md` and its files → `spec/WAL.md` → `CONTINUE.md`), then read
@@ -226,7 +226,12 @@ not lore.
 - 0.1 Data probe: on `bf2897b`, hand-assemble the model for 3 packages (redbook=static-transitive parent, addressable-specs=static-by-transitive, rust-ai-native=dynamic) from `vibe.lock` + `STATIC.md` + `INDEX.md` + root/dep `vibe.toml`; confirm the effective lane, the `T`/`C`/`S` flags, and the `when` read match reality (checks P1/P2/P3).
 - 0.2 Stack spike: a throwaway `rat-salsa`+`rat-widget` binary that renders a 3-level static tree with a scrollable, selectable table + one modal; confirm the widget set covers the interaction model on Windows/crossterm (checks P4, R1, R3).
 - 0.3 Schema probe: hand-write one `PackageTree` JSON instance for the 3-package slice; validate against the draft schema (checks P6).
-- Exit: findings written into §5/§6 (rewrite affected decisions in place if a spike is red). No tree changes.
+- Exit: findings folded into the plan; rewrite affected decisions in place if a spike is red. No tree changes.
+
+**Phase 0 outcome (2026-07-15) — GREEN on all three probes:**
+- **0.1 data probe (P1/P2/P3 preliminary):** the model assembles on real packages — `redbook` is the static-transitive *declarer* (effective static, `T=false`, STATIC.md:1307); `addressable-specs` is forced static by that closure (effective static, `T=true`, STATIC.md:5; its own `vibe.toml` `[boot_snippet]` has no `link`/`when`); `rust-ai-native-lang` is dynamic (in INDEX.md, no `link`); `rust-ai-native` (umbrella) ships **no `[boot_snippet]`** → the `load.type = "none"` case is real and must be handled. STATIC.md `vibe:static` markers parse; origin+path resolve to existing files.
+- **0.2 stack spike (P4, R1, R3):** a throwaway `rat-salsa 4.0.3 + rat-widget 3.2.x` crate **builds clean on this box** (rust 1.93, edition 2024, Windows). Resolved stack: modular **ratatui-core 0.1.2 / ratatui-widgets 0.3.2 / ratatui-crossterm 0.1.2** + **crossterm 0.29.0**, with **rat-scrolled 2.0.2 / rat-focus 2.1.1 / rat-event 2.1.0 / rat-cursor 2.0.0** — the scroll/select/focus/event primitives the TUI needs. The tree renders as a flattened row list in a scrollable table (glyphs computed per visible row); no dedicated Tree widget is required.
+- **0.3 schema probe (P6):** a hand-written 4-package instance (static-declarer, forced-static, dynamic, `none`) **validates** against `package-tree.schema.v1.json` with a Draft 2020-12 validator; the two deltas (`load.in_static_md`/`in_index_md`, `staticLane.bytes`/`lines`) landed. Phase 1's golden uses the Rust `jsonschema` crate (self-contained).
 
 **Phase 1 — engine + JSON + contract.** Prediction: P1/P2/P3/P6.
 - 1.1 Author `spec/modules/vibe-cli/FEAT-0NN-package-tree.md` (D8) — columns, effective computation, decompile rule, JSON shape, anchors.
@@ -237,7 +242,7 @@ not lore.
 - Exit: floor green; `vibe tree --json` valid; goldens pass.
 
 **Phase 2 — interactive TUI base.** Prediction: P4.
-- 2.1 Add the stack to `[workspace.dependencies]` + `vibe-cli/Cargo.toml` (D4).
+- 2.1 Add `rat-salsa`+`rat-widget` to `[workspace.dependencies]` + `vibe-cli/Cargo.toml` (D4); use their re-exported ratatui-core/crossterm — do NOT add a top-level `ratatui` (Phase-0-resolved: the modular 0.1.x split would conflict).
 - 2.2 rat-salsa app: the tree render (name column `│├└` + `▾`/`⊕`, the `load` column, the `T`/`C`/`S` checkbox columns); `↑↓` move + scroll + highlight; `←→` horizontal pan; `F` fold-all; `Space` fold-line; `ENTER` → detail modal (vertical fields per the mandate) + `Esc`; `q` quit. Status line (order / mode / `STATIC.md` size) + footer keymap. tty-guarded; non-tty keeps `--json`/plain.
 - Commits: `build(deps): add the ratatui TUI stack` · `feat(vibe-cli): interactive vibe tree TUI`.
 - Exit: floor green; TUI renders + navigates this repo's tree.
