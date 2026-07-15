@@ -103,6 +103,10 @@ pub enum CheckId {
     /// root is well-formed: zero markers, or exactly one ordered
     /// `<vibevm>` … `</vibevm>` pair.
     RedirectBlock,
+    /// PROP-038 §3 — every per-unit boot artifact's recorded fingerprint
+    /// matches a fresh recomputation (the hybrid linker's dirty-subgraph is
+    /// consistent); a stale artifact warns to `vibe reinstall`.
+    BootGraphIntegrity,
 }
 
 impl CheckId {
@@ -119,10 +123,14 @@ impl CheckId {
             CheckId::I18nCoverage => "i18n_coverage",
             CheckId::ActivationConflict => "activation_conflict",
             CheckId::RedirectBlock => "redirect_block",
+            CheckId::BootGraphIntegrity => "boot_graph_integrity",
         }
     }
 
-    /// Every check id, for documenting / iterating in tests.
+    /// Every **cell-backed** check id, for documenting / iterating in tests.
+    /// Excludes [`CheckId::BootGraphIntegrity`], which is wired externally in
+    /// `vibe check` over the installed workspace (PROP-038 §3) rather than as a
+    /// vibe-check cell — it has no project-file-only cell to register here.
     pub fn all() -> &'static [CheckId] {
         &[
             CheckId::ManifestValidity,

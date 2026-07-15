@@ -8,8 +8,10 @@ use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result, bail};
 use serde::Serialize;
-use vibe_check::{CheckOptions, CheckReport, Finding, Severity};
+use vibe_check::{CheckId, CheckOptions, CheckReport, Finding, Severity};
 use vibe_core::manifest::Manifest;
+use vibe_workspace::Workspace;
+use vibe_workspace::install::verify_boot_graph;
 
 use crate::cli::CheckArgs;
 use crate::output;
@@ -21,7 +23,11 @@ pub fn run(ctx: &output::Context, args: CheckArgs) -> Result<()> {
         review_max_age_days: args.review_max_age_days,
         now_unix_utc: None,
     };
-    let report = vibe_check::check_project(&project_root, &opts);
+    let mut report = vibe_check::check_project(&project_root, &opts);
+    // PROP-038 §3 — the boot-graph integrity check runs on the installed
+    // workspace, which vibe-check (project-file only) does not load; append
+    // its findings here where the vibe-workspace stack is available.
+    append_boot_graph_findings(&project_root, &mut report);
     let errors = report.count(Severity::Error);
     let warnings = report.count(Severity::Warning);
     let infos = report.count(Severity::Info);
@@ -170,4 +176,29 @@ fn resolve_project_root(path: &Path) -> Result<PathBuf> {
         );
     }
     Ok(stripped)
+}
+
+/// Append PROP-038 §3 boot-graph integrity findings: any per-unit boot
+/// artifact whose recorded fingerprint is stale (the hybrid linker's
+/// dirty-subgraph should have refreshed it). Best-effort — a project that is
+/// not an installed workspace, or whose materialisation cannot be read,
+/// contributes no findings.
+fn append_boot_graph_findings(project_root: &Path, report: &mut CheckReport) {
+    let Ok(ws) = Workspace::load(project_root) else {
+        return;
+    };
+    let Ok(stale) = verify_boot_graph(&ws) else {
+        return;
+    };
+    for (group, name) in stale {
+        report.findings.push(Finding {
+            check: CheckId::BootGraphIntegrity,
+            severity: Severity::Warning,
+            path: None,
+            line: None,
+            message: format!(
+                "stale boot artifact for {group}/{name} — its fingerprint is out of date; run `vibe reinstall`"
+            ),
+        });
+    }
 }
