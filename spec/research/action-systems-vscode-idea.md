@@ -1,9 +1,10 @@
 # Action systems in VSCode and IntelliJ IDEA — a comparative study {#root}
 
 **Genre:** research (comparative-research flow) — non-binding, evergreen. **Status:** COMPLETE —
-part (a), both source studies (quote-first), the 14 design obligations (DO1–DO14), the two-way
-gap analysis, the 12 roadmap deltas (Δ1–Δ12 → prospective PROP-039 REQs), and the predictions
-check (P1–P5 CONFIRMED, P6 SUPPORTED) are all written; feeds Spec 1 behind the firewall. **Provenance:** local read-only snapshots at
+part (a); both source studies (quote-first) including project-wide/**structural** Search Everywhere
+(§3.7) and **i18n** (§3.8); the 18 design obligations (DO1–DO18); the two-way gap analysis; the 16
+roadmap deltas (Δ1–Δ16 → prospective PROP-039 REQs); and the predictions check (P1–P5 CONFIRMED, P6
+SUPPORTED). Feeds Spec 1 behind the firewall. **Provenance:** local read-only snapshots at
 `C:\Users\olegc\git\snapshot\vscode` (`microsoft/vscode`, MIT) and
 `C:\Users\olegc\git\snapshot\idea` (`intellij-community`, Apache-2.0), accessed **2026-07-15**;
 exact upstream commits not captured (see §8 re-fetch). **Firewall:** this document is the
@@ -556,6 +557,118 @@ best ~100 of ~3000 fast.
 
 ---
 
+### 3.7 Project-wide / structural Search Everywhere — beyond actions (RQ13) {#structural-se}
+
+Both IDEs search far more than commands; the owner wants our SE to search **packages + every
+package-card field + actions** now, and **AI-Native language structure** (the specmap: spec/code
+nodes) later, through **one open provider seam**. The non-action search paths yield the decisive
+abstraction.
+
+**VSCode — one ranker over heterogeneous items via an accessor.** The bare "anything" provider
+composes file search (the `ISearchService`, cache-primed + throttled + cancellation-threaded),
+workspace symbols (a fan-out over `WorkspaceSymbolProviderRegistry.all()`), and editor symbols (the
+outline / `DocumentSymbolProvider` language feature). The generalization seam is **`IItemAccessor<T>`**
+— `{ getItemLabel, getItemDescription, getItemPath }` — so **one** `compareItemsByFuzzyScore` ranks
+any heterogeneous item that exposes a label/description/path; a new source (`pkg:`) either registers
+a `PickerQuickAccessProvider` under a new prefix or joins the fan-out by yielding accessor-shaped
+items. Language structure is surfaced purely as a **provider registry** (register a
+`DocumentSymbolProvider`; QuickAccess consumes whatever is registered). **The warning it teaches:**
+the "anything" provider hardwires its sources in a fixed `Promise.all([files, symbols])` god-object
+— *do not copy that*; design the aggregator as an **iterable list of contributed sources** from day
+one.
+
+**IntelliJ — the two-phase "enumerate cheap keys → match → resolve heavy items".** This is the
+load-bearing idea. Every non-action tab (Classes/Files/Symbols) is the *same*
+`AbstractGotoSEContributor` whose only per-tab hook is `createModel()`; the model
+(`ContributorsBasedGotoByModel`) fans out over registered `ChooseByNameContributor`s and runs:
+
+```java
+() -> base.getModel().getNames(...)         // ALL cheap keys, streamed from an index (scope/IdFilter pushed down)
+for (MatchResult r : matched(names))        // matched against a MinusculeMatcher (camel-hump/fuzzy)
+    model.getElementsByName(r.name, ...)     // resolve ONLY survivors to heavy items
+```
+
+Structure feeds the index (PSI/stubs → `PsiShortNamesCache`), the index feeds the model — so
+"structural understanding" is just *a read-side view of an index populated from parsed structure*.
+Two altitudes: a **batteries-included base** (implement one method, `createModel`) or a **raw
+`fetchWeightedElements` escape hatch** (Text search uses find-in-files, no name model). Contributor
+`sortWeight` (tab order) is separate from per-element weight (in-list rank). *(Caveat: this exact API
+is `@Deprecated` in favour of a new split `SeItemsProvider` — we copy the distilled contract, not the
+type names.)*
+
+**The minimal "searchable structured universe" contract** (our provider seam — from the IDEA study,
+generalized). A source is SE-pluggable if it supplies: **(1)** identity + tab presentation
+`{id, group_name, sort_weight, separate_tab?}`; **(2) enumerate cheap keys** (streamed,
+scope/filter-aware); **(3) resolve key → item(s)** on demand (only for matched keys); **(4)** item →
+key round-trip; **(5)** match keys against the pattern (reuse the matcher); **(6)** two weights (tab
++ element); **(7) navigate/act** on a selected item (`process_selected → close?`); **(8)** async +
+cancellation; **(9)** partial-availability awareness. **This is exactly the open seam the owner
+asked for:** the **PackageTree provider now** — keys = package FQNs streamed from the tree + every
+detail-card field; resolve = the `PackageNode`; navigate = reveal it — and the **AI-Native structural
+provider later** — keys = spec/code node ids streamed from the specmap; resolve = the node; navigate
+= open it — are the **same seam with a different key/resolve/navigate triple**.
+
+**Lessons (drive Spec 1 `#search-everywhere` + the implementation):**
+- **COPY** the **two-phase enumerate→match→resolve** split — what makes a large universe searchable
+  at per-keystroke latency; bake it into the provider trait.
+- **COPY** VSCode's **one-ranker-over-an-accessor** (`{label, description, key/path}`) so packages,
+  card-fields, actions, and future structural nodes rank in one commensurable list (the shared-scale
+  rule from §3.6).
+- **COPY** the **two altitudes** (reusable base + raw escape hatch), **scope/filter push-down**, and
+  **contributor-weight vs element-weight** separation.
+- **AVOID** the VSCode god-provider (hardwired sources) and the materialize-the-whole-universe legacy
+  shape — our aggregator iterates **contributed** providers and **streams**.
+- **Our providers at ship:** `PackageProvider` (package names), `PackageFieldProvider` (every
+  detail-card field — the owner's "search inside all card fields"), `ActionProvider` (invocable in
+  place). Reserved behind the same trait: `StructureProvider` (AI-Native specmap nodes), added later
+  **without touching the engine**.
+
+---
+
+### 3.8 i18n / localization (RQ14) {#i18n}
+
+Our TUI is English-only; both IDEs localize. **The shared invariant to steal:** the address is
+identity and is **never** localized; name/description are **values** looked up by a key derived from
+that identity, with **English guaranteed present** as the terminating fallback.
+
+**IntelliJ — key derived from the id.** `ActionsBundle.actionText(id) = message("action."+id+".text")`
+(+ `.description`); strings live in `ActionsBundle.properties` (`MessageFormat` → `{0}`,
+`{n,choice,…}` plurals). `DynamicBundle` resolves `(key, locale)` through a **priority-ordered parent
+chain** (region-folder → region-suffix → language-folder → language-suffix → plugin-default →
+**platform-default = English via `Locale.ROOT`**), so a miss falls through to English; translations
+ship as `_<locale>.properties` or **language-pack plugins**. `@Nls` + `@PropertyKey(resourceBundle=…)`
+give **edit-time key validation**; a missing key becomes a `!key!` sentinel (asserts only in dev).
+
+**VSCode — inline English + build-time extraction.** `localize('explore', "Explorer")` carries the
+English default **inline at the call site** (self-documenting + always-present fallback). A build
+pass extracts every call, assigns a **numeric index**, and rewrites the call to that index; at
+runtime the identity is a bare integer into a locale array. `localize2` returns **`{ original,
+value }`** — the English original stays attached to every localized string, so the palette still
+matches the English text under a foreign locale.
+
+**Our design (Rust-idiomatic, the best of both — feeds Spec 1 `#i18n`):**
+- **Key derived from the address** (IntelliJ) + **English default inline** (VSCode): store per action
+  two `Msg { key = "action.<addr>.name", default_en }`; no display string on the action, no second
+  key namespace to drift.
+- **A `Catalogue` with a parent/fallback chain**, the `en` catalogue **seeded from the inline
+  defaults** so a release lookup can never miss (no `!key!`, no panic). On-disk: **Fluent
+  (`fluent-rs`)** — named args + ICU plurals; a `phf`/embedded map is the lighter alternative.
+- **Keep `{ value, original_en }` on every resolved label** (copy `localize2`) so **Search Everywhere
+  indexes the English original *and* the localized value** — the highest-value, lowest-cost idea in
+  either codebase.
+- **Locale swap** via `ArcSwap<Catalogue>` (no reflection); translations ship as a package's
+  `locales/<lang>.ftl` or a **language-pack package**; merge by explicit priority (language-pack >
+  package locale > inline English).
+- **English is the only mandatory-complete locale.** The **human-legibility gate (DO5) asserts
+  against the default (English) surface** — every action's inline `default_en` name + description
+  present + non-empty; other locales may lag and fall back silently. A **pseudo-locale** QA build
+  (bracket + vowel-double) catches un-externalized/truncation-fragile strings.
+- **Typed newtypes** `MessageKey` / `Localized` + a build/CI check "every registry key resolves in
+  `en`" (a missing English string is a CI error, not a runtime sentinel). Accelerators stay in the
+  **keymap**, never embedded in the label.
+
+---
+
 ## 4. The complaint / failure-mode catalogue → design obligations (part c) {#pain}
 
 Every complaint below is grounded in the two sources (and matches well-known public pain); each
@@ -578,6 +691,10 @@ study's checklist against the new design.
 | **DO12** | Both cores are **UI-toolkit-coupled** (DOM / Swing focus, renderers, dispatch timers) | A **pure, render-dep-free core** + a `Surface` adapter seam (TUI now; web/plugin later) |
 | **DO13** | Testing & headless invocation were **retrofitted** | Designed-in: the registry is **enumerable** (golden coverage), every action **headless-invocable** |
 | **DO14** | **No capability/permission model** — any code invokes any action (fine for a trusted desktop IDE, a liability for a networked web UI) | A **capability/visibility scope** on invocation |
+| **DO15** | **i18n** — our TUI is English-only; both IDEs localize (IDEA `ActionsBundle` `action.<id>.text/.description`; VSCode `nls.localize`) | A **real message catalogue** keyed by the stable **address**; English the default/fallback; the legibility gate (DO5) checks the **default locale**; a package may ship translations |
+| **DO16** | Search must reach **the whole project structurally**, not just actions — VSCode/IDEA search files/symbols/structure | An **open provider seam** (§3.7) via the **two-phase enumerate→resolve** contract: PackageTree + every card-field + actions now, AI-Native structure later — same seam |
+| **DO17** | Proven mechanisms we still lack | **Systematically adopt**: synonyms/aliases + abbreviations as searchable metadata; usage-stats/recency ranking; precise key-scoped reactivity; progressive fast/slow async |
+| **DO18** | The interface is coupled to a visual surface | **AIUI** (§0.1) — the core is drivable + observable **headless**: actions invoked by address, the model **serialisable/queryable**; the visual surface is one optional projection, the headless one is the reference |
 
 ## 5. Two-way gap analysis {#gaps}
 
@@ -617,6 +734,10 @@ study **proposes**; ratification happens in the contract (spec-genres). Anchors 
 | **Δ10** | **Frontend-agnostic core** + the `Surface` adapter seam (zero render deps) | DO12 | `#frontend-seam` |
 | **Δ11** | A **capability/visibility scope** on invocation | DO14 | `#capabilities` |
 | **Δ12** | **Testability** — enumerable-registry golden + headless invocation | DO13 | `#testability` |
+| **Δ13** | **i18n** — a catalogue keyed by the address; English inline default + `{value, original_en}` on every label (SE matches English under any locale); the gate checks the default locale | DO15 | `#i18n` |
+| **Δ14** | The **project-wide/structural provider seam** — the two-phase enumerate→resolve contract; PackageTree + card-field + action providers now, a reserved structural provider later; one commensurable ranker | DO16 | `#search-everywhere` `#providers` |
+| **Δ15** | The **headless AIUI surface** — a programmatic drive+observe API over the same core (invoke by address; read serialisable model state + enabled actions); the reference surface, visual surfaces are projections | DO18 | `#aiui` `#frontend-seam` |
+| **Δ16** | Adopt the **missing mechanisms** — synonyms/aliases + abbreviations (searchable), recency/usage ranking, key-scoped reactivity, progressive fast/slow async | DO17 | `#search-everywhere` `#presentation` |
 
 ## 7. Predictions check (P1–P6) {#predictions}
 
