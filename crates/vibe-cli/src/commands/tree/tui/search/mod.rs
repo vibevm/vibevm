@@ -248,3 +248,153 @@ fn run_action(app: &mut App, idx: usize) -> Control<AppEvent> {
     }
     Control::Changed
 }
+
+#[cfg(test)]
+mod tests {
+    use vibe_actions::search::{Hit, SearchRow};
+
+    use super::*;
+    use crate::commands::tree::model::{
+        Boot, Condition, HOST_NAMESPACE, IndexLane, Load, LoadOrigin, LoadType, Package,
+        PackageTree, Project, SCHEMA_VERSION,
+    };
+
+    fn pkg(id: &str) -> Package {
+        let (group, name) = id.split_once('/').unwrap_or(("g", id));
+        Package {
+            id: id.to_string(),
+            group: group.to_string(),
+            name: name.to_string(),
+            kind: "flow".to_string(),
+            version: "0.1.0".to_string(),
+            content_hash: None,
+            source: None,
+            load: Load {
+                load_type: LoadType::None,
+                transitive: false,
+                declared: None,
+                origin: LoadOrigin::None,
+                in_static_md: false,
+                in_index_md: false,
+                boot_path: None,
+            },
+            condition: Condition::absent(),
+            dependencies: Vec::new(),
+        }
+    }
+
+    fn tiny_app() -> App {
+        let tree = PackageTree {
+            schema_version: SCHEMA_VERSION,
+            generated_at: None,
+            tool_version: None,
+            project: Project {
+                root: "/tmp/x".to_string(),
+                name: None,
+                is_workspace: false,
+                host_namespace: HOST_NAMESPACE.to_string(),
+            },
+            roots: vec!["g/alpha".to_string(), "g/beta".to_string()],
+            packages: vec![pkg("g/alpha"), pkg("g/beta")],
+            boot: Boot {
+                static_md: None,
+                index_md: IndexLane {
+                    present: false,
+                    path: "spec/boot/INDEX.md".to_string(),
+                    static_pointer: None,
+                    entries: Vec::new(),
+                },
+            },
+            in_place_specs: Vec::new(),
+            diagnostics: Vec::new(),
+        };
+        App::new(tree)
+    }
+
+    fn hits(s: &SearchState) -> Vec<&Hit> {
+        s.rows
+            .iter()
+            .filter_map(|r| match r {
+                SearchRow::Hit(h) => Some(h),
+                _ => None,
+            })
+            .collect()
+    }
+
+    #[test]
+    fn opens_with_all_plus_three_category_tabs() {
+        let s = SearchState::open(&tiny_app());
+        assert_eq!(s.tabs.len(), 4, "All + Packages + Card fields + Actions");
+        assert!(s.tabs[0].is_all, "the first tab is the hybrid All tab");
+    }
+
+    #[test]
+    fn typing_a_package_name_surfaces_it() {
+        let mut s = SearchState::open(&tiny_app());
+        for c in "alpha".chars() {
+            s.type_char(c);
+        }
+        assert!(
+            hits(&s).iter().any(|h| h.primary.contains("alpha")),
+            "g/alpha is found by name"
+        );
+    }
+
+    #[test]
+    fn running_an_action_from_search_mutates_the_tree() {
+        let mut app = tiny_app();
+        let before = app.ordering;
+        let s = SearchState::open(&app);
+        app.search = Some(s);
+        {
+            let st = app.search.as_mut().expect("open");
+            for c in "ordering".chars() {
+                st.type_char(c);
+            }
+            assert!(
+                hits(st).iter().any(|h| h.provider == ACTIONS),
+                "the Cycle ordering action is found"
+            );
+        }
+        let _ = confirm(&mut app);
+        assert_ne!(
+            app.ordering, before,
+            "the action ran and changed the ordering"
+        );
+        assert!(
+            app.search.is_none(),
+            "the window closed on the Close verdict"
+        );
+    }
+
+    #[test]
+    fn revealing_a_package_selects_it_in_the_all_tree() {
+        let mut app = tiny_app();
+        app.cycle_display_mode(); // leave All so reveal must switch back
+        assert_ne!(app.display_mode, DisplayMode::All);
+        let s = SearchState::open(&app);
+        app.search = Some(s);
+        {
+            let st = app.search.as_mut().expect("open");
+            st.next_tab(); // All -> Packages
+            for c in "beta".chars() {
+                st.type_char(c);
+            }
+            assert!(
+                hits(st).iter().any(|h| h.provider == PACKAGES),
+                "g/beta is found in the Packages tab"
+            );
+        }
+        let _ = confirm(&mut app);
+        assert_eq!(
+            app.display_mode,
+            DisplayMode::All,
+            "reveal switched to the all-tree"
+        );
+        assert_eq!(
+            app.selected_row().map(|r| r.id.as_str()),
+            Some("g/beta"),
+            "the revealed package is selected"
+        );
+    }
+}
