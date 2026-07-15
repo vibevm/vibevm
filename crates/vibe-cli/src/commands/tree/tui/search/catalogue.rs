@@ -245,4 +245,39 @@ mod tests {
         assert!(next.evaluate(&Ctx::new().with(tabs)).enabled);
         assert!(!next.evaluate(&Ctx::new().with(all)).enabled);
     }
+
+    #[test]
+    fn the_catalogue_passes_the_legibility_and_reachability_gates() {
+        let reg = build_registry();
+        vibe_actions::gate::legibility(&reg).expect("every vibe.tree action is legible (§8.4)");
+        vibe_actions::gate::reachable(&reg).expect("every vibe.tree action is reachable (§12.2)");
+    }
+
+    #[test]
+    fn the_headless_aiui_enumerates_the_actions() {
+        let reg = build_registry();
+        let ctx = Ctx::new().with(TreeCtx {
+            mode: DisplayMode::Tabs,
+            has_pkg_selection: false,
+        });
+        let views = vibe_actions::aiui::list_actions(&reg, &ctx);
+        assert_eq!(
+            views.len(),
+            TREE_ACTIONS.len(),
+            "every action is AI-enumerable"
+        );
+        assert!(
+            views
+                .iter()
+                .all(|v| !v.name.is_empty() && !v.description.is_empty())
+        );
+        let fold = views
+            .iter()
+            .find(|v| v.address == "action://vibe.tree/fold.toggle")
+            .expect("present");
+        assert!(
+            !fold.enabled && fold.reason.is_some(),
+            "a disabled action carries its reason for the AI"
+        );
+    }
 }
