@@ -19,6 +19,7 @@ fn entry(path: &str, link: LinkType, origin: &str) -> BootEntry {
         link,
         when: None,
         origin: origin.to_string(),
+        use_ref: false,
     }
 }
 
@@ -32,6 +33,7 @@ fn entry_when(path: &str, link: LinkType, when: Option<WhenCondition>, origin: &
         link,
         when,
         origin: origin.to_string(),
+        use_ref: false,
     }
 }
 

@@ -193,6 +193,18 @@ pub fn render_static(
     }
     let mut out = String::from(STATIC_HEADER);
     for entry in entries {
+        if entry.use_ref {
+            // A soft-hoist reference (PROP-038 §2.5): this package's text lives
+            // once in the global root STATIC.md. Leave a `#use` marker so the
+            // graph edge survives locally and the read-set dedups the read —
+            // the agent knows the package is part of this zone without a
+            // duplicated copy.
+            out.push_str(&format!(
+                "<!-- vibe:hoisted {} — text in the root STATIC.md -->\n#use spec://{}\n\n",
+                entry.origin, entry.origin
+            ));
+            continue;
+        }
         let abs = workspace_root.join(&entry.path);
         let content = fs::read_to_string(&abs).map_err(|e| io_err(&abs, e))?;
         // An HTML-comment provenance marker — invisible in rendered

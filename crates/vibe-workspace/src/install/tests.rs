@@ -190,6 +190,80 @@ fn dynamic_dep_statically_links_its_child_into_a_per_unit_static_md() {
 }
 
 #[test]
+fn a_package_shared_by_two_units_is_hoisted_to_the_root() {
+    // PROP-038 §2.4 — `a` and `e` both statically link `shared`; it is soft
+    // and pulled twice, so it is hoisted to the global root STATIC.md once,
+    // and each local zone carries a #use marker instead of a duplicate copy.
+    let ws_dir = TempDir::new().unwrap();
+    write(
+        ws_dir.path(),
+        "vibe.toml",
+        "[project]\nname = \"demo\"\nversion = \"0.1.0\"\n\n\
+         [requires.packages]\n\"org.vibevm/a\" = \"^1.0\"\n\"org.vibevm/e\" = \"^1.0\"\n",
+    );
+    write(ws_dir.path(), "spec/boot/00-core.md", "# core");
+
+    let static_child = "[boot_snippet]\nsource = \"boot/{n}.md\"\n\n[requires.packages]\n\
+         \"org.vibevm/shared\" = { version = \"^1.0\", link = \"static\" }\n";
+    let (a, _a) = dep_with_requires(
+        "a",
+        "1.0.0",
+        &static_child.replace("{n}", "a"),
+        "boot/a.md",
+        "# a boot",
+        &["shared"],
+    );
+    let (e, _e) = dep_with_requires(
+        "e",
+        "1.0.0",
+        &static_child.replace("{n}", "e"),
+        "boot/e.md",
+        "# e boot",
+        &["shared"],
+    );
+    let (shared, _s) = dep_with_boot(
+        "shared",
+        "1.0.0",
+        "[boot_snippet]\nsource = \"boot/shared.md\"\n",
+        "boot/shared.md",
+        "# shared discipline",
+    );
+
+    let ws = Workspace::load(ws_dir.path()).unwrap();
+    apply_resolution(&ws, &[a, e, shared], SlotIntegrity::TrustPresence, None).unwrap();
+
+    // The shared text is hoisted to the global root STATIC.md — exactly once,
+    // with a shared-by hint naming the consumers.
+    let root_static = fs::read_to_string(ws_dir.path().join("spec/boot/STATIC.md")).unwrap();
+    assert_eq!(
+        root_static.matches("# shared discipline").count(),
+        1,
+        "hoisted exactly once: {root_static}"
+    );
+    assert!(
+        root_static.contains("shared by"),
+        "shared-by hint: {root_static}"
+    );
+
+    // a's local STATIC.md carries a #use marker, not the shared text.
+    let a_static = fs::read_to_string(
+        ws_dir
+            .path()
+            .join("vibedeps/flow-a/1.0.0/spec/boot/STATIC.md"),
+    )
+    .unwrap();
+    assert!(a_static.contains("# a boot"), "{a_static}");
+    assert!(
+        a_static.contains("#use spec://org.vibevm/shared"),
+        "local #use marker: {a_static}"
+    );
+    assert!(
+        !a_static.contains("# shared discipline"),
+        "shared text must not duplicate into a: {a_static}"
+    );
+}
+
+#[test]
 fn apply_resolution_renders_when_from_a_boot_snippet() {
     let ws_dir = TempDir::new().unwrap();
     write(

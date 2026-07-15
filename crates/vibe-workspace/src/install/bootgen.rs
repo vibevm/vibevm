@@ -15,7 +15,7 @@ use specmark::spec;
 use vibe_core::Group;
 use vibe_core::manifest::{BootCategory, LinkType, Manifest};
 
-use crate::boot::hybrid::{self, UnitEdge, UnitId, UnitInput, ZoneMembership};
+use crate::boot::hybrid::{self, UnitEdge, UnitId, UnitInput, ZoneMembership, hoist};
 use crate::boot::{
     self, AuthoredBoot, BootBand, BootEntry, DependencyBoot, EffectiveBoot, NodeBootInputs,
 };
@@ -37,7 +37,19 @@ pub fn regenerate_boot_from(
     // just the snippet. For a tree with no intermediate static edge this is a
     // no-op, keeping the node artifacts byte-identical (PROP-038 §5).
     let table = build_unit_table(resolution);
-    let with_static = emit_package_units(&workspace.root, resolution, &table)?;
+    // Soft hoisting (PROP-038 §2.4): a package soft-statically linked by two or
+    // more units is `shared` — hoisted to the global root STATIC.md and linked
+    // once, its local zones left a #use marker. `pulls` also feeds the
+    // shared-by hint. For a tree with no shared package this is all empty.
+    let pulls = hoist::soft_static_pulls(&table);
+    let shared: HashSet<UnitId> = pulls
+        .iter()
+        .filter(|(pkg, pullers)| {
+            pullers.len() >= 2 && table.get(pkg).is_some_and(|u| u.own_boot_path.is_some())
+        })
+        .map(|(pkg, _)| pkg.clone())
+        .collect();
+    let with_static = emit_package_units(&workspace.root, resolution, &table, &shared)?;
 
     // The absolute root's foundation boot — inherited by every member
     // (PROP-009 §2.2: inherited foundation flows down).
@@ -56,12 +68,17 @@ pub fn regenerate_boot_from(
             root_foundation.clone()
         };
         let deps = node_dependency_boot(manifest, resolution, &with_static);
-        let effective = boot::compute_effective_boot(NodeBootInputs {
+        let mut effective = boot::compute_effective_boot(NodeBootInputs {
             own_boot: &own,
             inherited_foundation: &inherited,
             dependencies: &deps,
             default_link: manifest.boot.default_link,
         })?;
+        // The absolute root is the hoist point: it carries the single copy of
+        // every shared package (PROP-038 §2.4).
+        if rel == "." {
+            append_hoisted(&mut effective, &shared, &table, &pulls);
+        }
         boot_artifacts::write_boot_artifacts(&node_dir, &workspace.root, &effective)?;
         nodes_regenerated.push(rel.to_string());
     }
@@ -407,6 +424,7 @@ fn emit_package_units(
     workspace_root: &Path,
     resolution: &[ResolvedDep],
     table: &HashMap<UnitId, UnitInput>,
+    shared: &HashSet<UnitId>,
 ) -> Result<HashSet<UnitId>, WorkspaceError> {
     let slots: HashMap<UnitId, String> = resolution
         .iter()
@@ -416,6 +434,9 @@ fn emit_package_units(
         .keys()
         .map(|id| (id.clone(), hybrid::resolve_zone(id, table)))
         .collect();
+    // A package needs a STATIC.md when it statically links a child that is NOT
+    // hoisted away — a zone whose every non-self static member is shared
+    // (hoisted) reduces to #use markers, still worth emitting for the edges.
     let with_static: HashSet<UnitId> = zones
         .iter()
         .filter(|(id, zone)| has_static_children(id, zone, table))
@@ -424,7 +445,7 @@ fn emit_package_units(
 
     for id in &with_static {
         let Some(slot) = slots.get(id) else { continue };
-        let effective = zone_to_effective(&zones[id], table, &with_static, &slots);
+        let effective = zone_to_effective(id, &zones[id], table, &with_static, &slots, shared);
         let boot_dir = workspace_root.join(slot).join("spec").join("boot");
         emit_effective(&boot_dir, workspace_root, &effective)?;
     }
@@ -451,10 +472,12 @@ fn has_static_children(
 /// dynamic edge to a package that itself has a `STATIC.md` points at that
 /// `STATIC.md` (so the parent loads the whole zone); otherwise at the snippet.
 fn zone_to_effective(
+    root_id: &UnitId,
     zone: &ZoneMembership,
     table: &HashMap<UnitId, UnitInput>,
     with_static: &HashSet<UnitId>,
     slots: &HashMap<UnitId, String>,
+    shared: &HashSet<UnitId>,
 ) -> EffectiveBoot {
     let mut entries: Vec<BootEntry> = Vec::new();
     for member in hybrid::topo_zone(&zone.static_members, table) {
@@ -464,12 +487,17 @@ fn zone_to_effective(
         let Some(path) = &unit.own_boot_path else {
             continue; // a boot-less member threads the order but adds no text
         };
+        // A shared member is hoisted to the global root STATIC.md; leave a
+        // #use marker in place of its content (PROP-038 §2.5). A unit is never
+        // hoisted out of its own zone (`root_id` owns the zone).
+        let hoisted = &member != root_id && shared.contains(&member);
         entries.push(BootEntry {
             path: path.clone(),
             band: BootBand::Dependency,
             link: LinkType::Static,
             when: None,
             origin: unit.origin.clone(),
+            use_ref: hoisted,
         });
     }
     for (target, when) in &zone.dynamic_edges {
@@ -482,6 +510,7 @@ fn zone_to_effective(
             link: LinkType::Dynamic,
             when: *when,
             origin: format!("{}/{}", target.0, target.1),
+            use_ref: false,
         });
     }
     EffectiveBoot { entries }
@@ -527,6 +556,52 @@ fn emit_effective(
         }
     }
     Ok(())
+}
+
+/// Append the hoisted shared packages (PROP-038 §2.4) to the global root's
+/// effective boot as compiled-in `static` entries in topological order — the
+/// single copy every local zone references through a #use marker. Each entry's
+/// provenance names the units that share it (the shared-by hint, §2.5). A
+/// no-op when nothing is shared, so the root artifacts stay byte-identical on
+/// a tree with no shared package (PROP-038 §5).
+#[spec(
+    implements = "spec://vibevm/modules/vibe-workspace/PROP-038#hoisting",
+    r = 1
+)]
+fn append_hoisted(
+    effective: &mut EffectiveBoot,
+    shared: &HashSet<UnitId>,
+    table: &HashMap<UnitId, UnitInput>,
+    pulls: &HashMap<UnitId, HashSet<UnitId>>,
+) {
+    if shared.is_empty() {
+        return;
+    }
+    for id in hybrid::topo_zone(shared, table) {
+        let Some(unit) = table.get(&id) else { continue };
+        let Some(path) = &unit.own_boot_path else {
+            continue;
+        };
+        effective.entries.push(BootEntry {
+            path: path.clone(),
+            band: BootBand::Dependency,
+            link: LinkType::Static,
+            when: None,
+            origin: format!("{} [shared by {}]", unit.origin, shared_by(&id, pulls)),
+            use_ref: false,
+        });
+    }
+}
+
+/// The sorted `<group>/<name>` list of units that soft-statically pull a
+/// hoisted package — the shared-by hint (PROP-038 §2.5).
+fn shared_by(id: &UnitId, pulls: &HashMap<UnitId, HashSet<UnitId>>) -> String {
+    let mut names: Vec<String> = pulls
+        .get(id)
+        .map(|s| s.iter().map(|(g, n)| format!("{g}/{n}")).collect())
+        .unwrap_or_default();
+    names.sort();
+    names.join(", ")
 }
 
 /// Validate every node's agent instruction files before any mutation

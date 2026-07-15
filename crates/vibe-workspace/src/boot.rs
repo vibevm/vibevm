@@ -136,6 +136,12 @@ pub struct BootEntry {
     /// Provenance — a node `rel_path` for authored boot, a `<group>/<name>`
     /// pkgref for a dependency.
     pub origin: String,
+    /// A soft-hoist reference (PROP-038 §2.5): a `static` entry hoisted out of
+    /// this unit's zone into the global root `STATIC.md`. The renderer emits a
+    /// `#use spec://<origin>` marker instead of the file's content, so the
+    /// graph edge survives locally while the text lives once at the hoist
+    /// point. `false` for an ordinary compiled-in entry.
+    pub use_ref: bool,
 }
 
 /// A node's computed effective boot sequence (PROP-009 §2.2) — every entry
@@ -202,6 +208,7 @@ pub fn compute_effective_boot(inputs: NodeBootInputs<'_>) -> Result<EffectiveBoo
             link: LinkType::Dynamic,
             when: None,
             origin: boot.origin.clone(),
+            use_ref: false,
         });
     }
 
@@ -214,6 +221,7 @@ pub fn compute_effective_boot(inputs: NodeBootInputs<'_>) -> Result<EffectiveBoo
             link: LinkType::Dynamic,
             when: None,
             origin: boot.origin.clone(),
+            use_ref: false,
         });
     }
 
@@ -256,6 +264,7 @@ pub fn compute_effective_boot(inputs: NodeBootInputs<'_>) -> Result<EffectiveBoo
             link,
             when: dep.when,
             origin: format!("{}/{}", dep.group, dep.name),
+            use_ref: false,
         });
     }
 
