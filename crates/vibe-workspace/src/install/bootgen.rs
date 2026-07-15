@@ -15,7 +15,7 @@ use specmark::spec;
 use vibe_core::Group;
 use vibe_core::manifest::{BootCategory, LinkType, Manifest};
 
-use crate::boot::hybrid::{UnitId, hoist};
+use crate::boot::hybrid::{UnitId, fingerprint, hoist};
 use crate::boot::{self, AuthoredBoot, DependencyBoot, NodeBootInputs};
 use crate::{Workspace, WorkspaceError, boot_artifacts, vibedeps};
 
@@ -39,6 +39,14 @@ pub fn regenerate_boot_from(
     // just the snippet. For a tree with no intermediate static edge this is a
     // no-op, keeping the node artifacts byte-identical (PROP-038 §5).
     let table = build_unit_table(resolution);
+    // Boot-graph fingerprints (PROP-038 §2.7) drive the dirty-subgraph skip in
+    // per-unit emission (§2.8) — a package whose fingerprint is unchanged is
+    // not recompiled. Keyed on each unit's resolved version.
+    let versions: HashMap<UnitId, String> = resolution
+        .iter()
+        .map(|d| ((d.group.clone(), d.name.clone()), d.version.to_string()))
+        .collect();
+    let fps = fingerprint::fingerprints(&table, &versions);
     // Soft hoisting (PROP-038 §2.4): a package soft-statically linked by two or
     // more units is `shared` — hoisted to the global root STATIC.md and linked
     // once, its local zones left a #use marker. `pulls` also feeds the
@@ -51,7 +59,7 @@ pub fn regenerate_boot_from(
         })
         .map(|(pkg, _)| pkg.clone())
         .collect();
-    let with_static = emit_package_units(&workspace.root, resolution, &table, &shared)?;
+    let with_static = emit_package_units(&workspace.root, resolution, &table, &shared, &fps)?;
 
     // The absolute root's foundation boot — inherited by every member
     // (PROP-009 §2.2: inherited foundation flows down).

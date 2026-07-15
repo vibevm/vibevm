@@ -53,6 +53,20 @@ const HOST_NAMESPACE: &str = "vibevm";
 /// `schema` version of the generated `INDEX.md` manifest (PROP-009 §2.3).
 pub const INDEX_SCHEMA: u32 = 1;
 
+/// The header comment line carrying a unit's boot-graph fingerprint
+/// (PROP-038 §2.7). Present on a per-unit `INDEX.md` so a later regeneration
+/// can skip a unit whose fingerprint is unchanged (§2.8). A leading `#` makes
+/// it a TOML comment — invisible to the manifest parser.
+pub const FP_MARKER: &str = "# vibe:fp ";
+
+/// Read the fingerprint recorded in a generated artifact's header, if any
+/// (PROP-038 §2.7). Returns the trimmed hash after [`FP_MARKER`].
+pub fn read_fingerprint(text: &str) -> Option<String> {
+    text.lines()
+        .find_map(|l| l.trim().strip_prefix(FP_MARKER))
+        .map(|s| s.trim().to_string())
+}
+
 /// Generated-artifact filenames, relative to a node's `spec/boot/`.
 pub const STATIC_FILE: &str = "STATIC.md";
 /// See [`STATIC_FILE`].
@@ -149,7 +163,10 @@ struct IndexManifest {
 /// Serialisation is structurally infallible with today's fixed manifest
 /// shape; the error is routed anyway so a future shape change degrades
 /// to a diagnosis instead of a panic.
-pub fn render_index(boot: &EffectiveBoot) -> Result<String, WorkspaceError> {
+pub fn render_index(
+    boot: &EffectiveBoot,
+    fingerprint: Option<&str>,
+) -> Result<String, WorkspaceError> {
     let has_static = boot.static_entries().next().is_some();
     let manifest = IndexManifest {
         schema: INDEX_SCHEMA,
@@ -174,7 +191,14 @@ pub fn render_index(boot: &EffectiveBoot) -> Result<String, WorkspaceError> {
     let body = toml::to_string_pretty(&manifest).map_err(|e| WorkspaceError::IndexRender {
         reason: e.to_string(),
     })?;
-    Ok(format!("{INDEX_HEADER}{body}"))
+    // The fingerprint header (PROP-038 §2.7) — a TOML comment, so the manifest
+    // stays parseable. Omitted (`None`) on a node so its INDEX.md is
+    // byte-stable; carried on a per-unit INDEX to drive the dirty-subgraph.
+    let fp_line = match fingerprint {
+        Some(fp) => format!("{FP_MARKER}{fp}\n\n"),
+        None => String::new(),
+    };
+    Ok(format!("{INDEX_HEADER}{fp_line}{body}"))
 }
 
 /// Render `STATIC.md` — the verbatim concatenation of the `static`-linked
@@ -441,9 +465,10 @@ pub fn write_boot_artifacts(
     let boot_dir = node_dir.join("spec").join("boot");
     fs::create_dir_all(&boot_dir).map_err(|e| io_err(&boot_dir, e))?;
 
-    // INDEX.md — always.
+    // INDEX.md — always. A node carries no fingerprint (byte-stable); the
+    // per-unit dirty-subgraph (PROP-038 §2.8) is emit-side, in `hybrid_emit`.
     let index = boot_dir.join(INDEX_FILE);
-    fs::write(&index, render_index(boot)?).map_err(|e| io_err(&index, e))?;
+    fs::write(&index, render_index(boot, None)?).map_err(|e| io_err(&index, e))?;
 
     // STATIC.md — only when there are static contributions.
     let static_path = boot_dir.join(STATIC_FILE);

@@ -530,3 +530,7 @@ mod test_helpers;
 #[cfg(test)]
 #[path = "install/tests_hooks.rs"]
 mod tests_hooks;
+
+#[cfg(test)]
+#[path = "install/tests_hybrid.rs"]
+mod tests_hybrid;

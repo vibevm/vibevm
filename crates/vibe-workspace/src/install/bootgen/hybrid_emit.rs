@@ -117,6 +117,7 @@ pub(super) fn emit_package_units(
     resolution: &[ResolvedDep],
     table: &HashMap<UnitId, UnitInput>,
     shared: &HashSet<UnitId>,
+    fingerprints: &HashMap<UnitId, String>,
 ) -> Result<HashSet<UnitId>, WorkspaceError> {
     let slots: HashMap<UnitId, String> = resolution
         .iter()
@@ -139,7 +140,8 @@ pub(super) fn emit_package_units(
         let Some(slot) = slots.get(id) else { continue };
         let effective = zone_to_effective(id, &zones[id], table, &with_static, &slots, shared);
         let boot_dir = workspace_root.join(slot).join("spec").join("boot");
-        emit_effective(&boot_dir, workspace_root, &effective)?;
+        let fp = fingerprints.get(id).map(String::as_str).unwrap_or("");
+        emit_effective(&boot_dir, workspace_root, &effective, fp)?;
     }
     Ok(with_static)
 }
@@ -235,10 +237,26 @@ fn emit_effective(
     boot_dir: &Path,
     workspace_root: &Path,
     effective: &EffectiveBoot,
+    fingerprint: &str,
 ) -> Result<(), WorkspaceError> {
-    fs::create_dir_all(boot_dir).map_err(|e| io_err(boot_dir, e))?;
     let index = boot_dir.join(boot_artifacts::INDEX_FILE);
-    fs::write(&index, boot_artifacts::render_index(effective)?).map_err(|e| io_err(&index, e))?;
+    // Dirty-subgraph skip (PROP-038 §2.8): if the existing INDEX carries the
+    // same fingerprint, this unit's whole static zone is unchanged — skip both
+    // writes. An unchanged install thus recompiles nothing and churns no git.
+    let unchanged = fs::read_to_string(&index)
+        .ok()
+        .and_then(|existing| boot_artifacts::read_fingerprint(&existing))
+        .as_deref()
+        == Some(fingerprint);
+    if unchanged {
+        return Ok(());
+    }
+    fs::create_dir_all(boot_dir).map_err(|e| io_err(boot_dir, e))?;
+    fs::write(
+        &index,
+        boot_artifacts::render_index(effective, Some(fingerprint))?,
+    )
+    .map_err(|e| io_err(&index, e))?;
     let static_path = boot_dir.join(boot_artifacts::STATIC_FILE);
     match boot_artifacts::render_static(effective, workspace_root)? {
         Some(text) => fs::write(&static_path, text).map_err(|e| io_err(&static_path, e))?,
