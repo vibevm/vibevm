@@ -14,6 +14,20 @@ use super::state::{App, RowNode};
 
 /// Handle one terminal event, returning the rat-salsa control-flow verdict.
 pub fn handle(event: &Event, app: &mut App) -> Result<Control<AppEvent>> {
+    // A terminal resize must repaint the whole surface. rat-salsa's event loop
+    // renders only when a handler returns `Control::Changed`; it never
+    // auto-repaints on resize (every rat-salsa example handles it explicitly),
+    // so the old `_ => Control::Continue` default silently dropped
+    // `Event::Resize` and left the display garbled until the next keypress. The
+    // same drop also swallowed the resize crossterm emits at startup (on
+    // entering the alternate screen), which is why the status line was missing
+    // from the first frame. Handle it before the modal gate so a resize
+    // repaints even while the detail popup is open (PROP-036 §2.11); ratatui
+    // re-sizes its back-buffer on the next `draw`, so one `Changed` suffices.
+    if let Event::Resize(..) = event {
+        return Ok(Control::Changed);
+    }
+
     // The modal captures input while open (§2.11).
     if app.modal_open {
         return Ok(handle_modal(event, app));
