@@ -17,6 +17,21 @@ shapes, blind spots) lives in the
 [playbooks](../flows/delegation-rules/playbooks/); routing names
 slots, never vendors.
 
+## The axis also picks the worker {#worker-choice}
+
+Verifiability decides not just *whether* to delegate but
+*which* worker gets it. A high-verifiability delegable task
+goes to the `big` GLM slot — the review is cheap, so the
+cheap, already-paid-for worker wins. A
+delegable-but-low-verifiability task, where reviewing a
+foreign-model diff would cost as much as regenerating it, may
+use a same-model subagent for context-offload. The harness's
+native sub-agent tool (Claude Code's `Agent` / `Task` /
+`Workflow`, which spawn same-model workers) is **never** the
+reflex default for delegable execution: it spends the
+expensive process without the cost saving the `big` slot
+gives (delegation-first `#route`).
+
 ## The never-delegate set {#never-delegate}
 
 Always the boss's own work: secrets and credential surfaces;

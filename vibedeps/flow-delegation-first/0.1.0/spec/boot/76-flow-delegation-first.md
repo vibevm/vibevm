@@ -22,6 +22,24 @@ cheaper than generation* — is the delegation-rules flow.
   the verdict is "keep it boss-side", and then say why. Announce the
   harness/model once per session, and read it as a cached fact after.
 
+## Route to the cheap slot, not the native tool {#route}
+
+"Delegate" means the cheap `big` worker slot (GLM-5.2) reached through
+**fractality** — it does *not* mean the harness's own sub-agent tool. On a
+harness whose native `Agent` / `Task` / `Workflow` spawns **same-model**
+workers (on Claude Code, Claude), using it for token-heavy execution offloads
+your context window but spends the very scarce, expensive process this
+directive exists to conserve — it satisfies the *word* "delegate" and defeats
+its *purpose*. That frictionless native tool is the **default failure mode**;
+name it and route through fractality instead. A same-model subagent is
+justified only when the task's low verifiability would make reviewing a
+foreign-model diff cost more than regenerating it (the delegation-rules test,
+applied to the choice of worker) — and you say so out loud. Documented worker
+friction (a cold build, a blown turn budget, a `failed` exit on complete work)
+is a reason to design the packet well (a `check`-only self-verify, a generous
+wall clock, reading the worktree even on "failed"), never a reason to fall back
+to the native tool.
+
 ## Swarm, recursion, and the strong form {#more}
 
 Swarm / fan-out is still **one first-level delegation**: hand the whole
