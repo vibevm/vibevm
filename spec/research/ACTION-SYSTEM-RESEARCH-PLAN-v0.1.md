@@ -73,7 +73,15 @@ This plan runs continuously (§0.1) — phases land and commit as they complete.
   design-space map, both systems quote-first, 14 design obligations (DO1–DO14), the two-way gaps,
   12 roadmap deltas (Δ1–Δ12 → PROP-039 REQs), and the predictions check (P1–P5 CONFIRMED, P6
   SUPPORTED). Commits `ba2fe1f` + `3351168` + `386ac19`.
-- **In flight:** the follow-up STUDY below (project-wide/structural SE + i18n), 3 subagents.
+- **2026-07-15 — STUDY fully COMPLETE** (9 subagents): the follow-up project-wide/structural SE +
+  i18n addendum landed (`8623e45`); the findings doc now carries DO1–DO18 and Δ1–Δ16.
+- **2026-07-15 — DESIGN-DOC landed** (`4a9a8f9`): [`spec/design/action-system.md`](../design/action-system.md)
+  — the maximal architecture + the ten decisions (D1–D10).
+- **2026-07-15 — SPEC 1 landed:** [`PROP-039`](../modules/vibe-actions/PROP-039-action-system.md) —
+  the `vibe-actions` contract, granular addressable REQs (§1–§14) mapping Δ1–Δ16.
+- **Next:** SPEC 2 (revise/improve PROP-037 onto `vibe-actions` + a `vibe.tree` action catalogue +
+  update TREE-TUI-PLAN) → then implementation (the `vibe-actions` crate + the SE engine + the F1
+  window).
 
 **Scope addenda (owner, 2026-07-15) — fold into the findings doc + Spec 1**
 - **RQ13 — project-wide / STRUCTURAL Search Everywhere.** Study how VSCode + IDEA search the whole
