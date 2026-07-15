@@ -45,6 +45,17 @@ this sensitive file: it authorises *appending and curating verified
 operational facts in this subsection only*, never rewriting the rules above.
 Keep it current-state; prune stale lines.
 
+- **Harness delegation surface (verified 2026-07-15):** on Claude Code the
+  native `Agent` / `Task` / `Workflow` tools spawn **Claude** workers, not GLM —
+  they offload the boss's context window but do **not** reach the cheap `big`
+  GLM slot. GLM is reachable only through the fractality launcher
+  (`fractality.ps1 run` / `spawn --packet …`, or the interim
+  `opencode run -m zai-coding-plan/glm-5.2`). So **delegable *execution* routes
+  through fractality by default**; a native Claude subagent is justified only by
+  the delegation-rules verifiability test (review-cost ≥ regen-cost), and its
+  use is stated out loud. Reaching for the frictionless native tool because it
+  "is delegation" satisfies the word and defeats the purpose — that is the
+  default failure mode. Launcher verified live 2026-07-15.
 - **Build / run:** `cargo build -p fractality-cli` (also
   `-p fractality-mission-control -p fractality-pod`) from
   `packages/org.vibevm.fractality/fractality/v0.1.0/`; drive via the launcher;
