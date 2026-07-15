@@ -72,6 +72,10 @@ End-to-end walkthroughs that compose multiple commands into a real scenario. Eac
 
 [`troubleshooting.md`](troubleshooting.md) — first-aid for every error `vibe` surfaces. Each entry: what you see, what it means, what to do. Covers install / registry / git-backend / publish / resolver / CLI error variants.
 
+## FAQ
+
+[`faq/`](faq/README.md) — answers to real developer questions, written up as standalone pages. Where troubleshooting maps an error message to a fix, the FAQ answers "how do I …" and "why does vibevm …" questions. First entry: [resolving version conflicts](faq/version-conflicts.md) (unified resolution, `[[override]]`, forcing a version inside the tree).
+
 ## Glossary
 
 [`glossary.md`](glossary.md) — vocabulary reference for the project. Every term that has a specific meaning in vibevm — `kind`, `pkgref`, `capability`, `mirror`, `override`, `content_hash`, `transitive`, `user-owned`, etc. — defined in one place. Includes an "anti-vocabulary" of adjacent-ecosystem terms we deliberately don't use.
