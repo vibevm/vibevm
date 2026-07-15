@@ -1,6 +1,6 @@
 # HYBRID-LINKING-PLAN v0.1 — per-package boot compilation units with soft/hard static edges
 
-_Status: EXECUTING (Phase 2 next) · written against tree `a9fdd63` · cold-executable: Phase 0 is
+_Status: EXECUTED 2026-07-15 · written against tree `a9fdd63` · cold-executable: Phase 0 is
 spikes and commits nothing; every later phase ends with the floor green and is a
 safe stop. The **contract** is [PROP-038](../modules/vibe-workspace/PROP-038-hybrid-boot-linking.md);
 this plan is the recipe that executes it, phase by phase, each phase citing the
@@ -10,7 +10,30 @@ PROP-038 §-anchors it delivers._
 
 ## 2 — Execution record (prepended at close)
 
-_Empty at authoring._
+**EXECUTED 2026-07-15** — commits `d487d4e`…`381095e` on `main` (11 commits).
+All five phases landed, floor green at every boundary; the shipped model is
+PROP-038 in full: per-unit compilation units, per-edge recursion, soft/hard
+static modes, LCA-→-root hoisting with `#use` markers, Merkle fingerprints,
+dirty-subgraph regeneration, and a boot-graph integrity check. **178 vibe-
+workspace tests** (unit + doctests), specmap 0 orphans.
+
+**Predictions checked:**
+- **P1 CONFIRMED** — per-edge recursion (`resolve_zone`) expresses the owner's
+  chain with no global lattice; PROP-034 §2.2 retired.
+- **P2 CONFIRMED (representative, not full-fuzz)** — the differential-oracle
+  tests hold `incremental == full` for change / link-switch / skip; a
+  `proptest` mutation sweep is the remaining hardening (DEF-5).
+- **P3 CONFIRMED** — a single-use static child stays local; only a package
+  pulled by ≥2 units hoists (the `hoist` tests).
+- **P4 CONFIRMED** — an unchanged reinstall skips a package via its fingerprint
+  (the SKIP-PROOF marker survives); a changed child regenerates.
+- **P5 CONFIRMED** — `with_static` is empty on today's tree, so node artifacts
+  are byte-stable; the 178 tests (incl. the pre-existing boot/install suite)
+  pass unchanged.
+
+**Deferred:** the broad conversion of real packages to the hybrid shape and a
+`proptest` fuzz sweep (§15 DEF-3, DEF-5) — the machinery is proven on fixtures;
+today's tree is byte-stable.
 
 ---
 
@@ -320,6 +343,29 @@ cargo xtask specmap && cargo xtask conform check                # clean
     global lattice) and **P5** (byte-identical node artifacts on the current
     tree: `with_static` empty ⇒ no-op). New end-to-end test proves the owner's
     core case. Floor green (152 workspace tests + specmap 0 orphans).
+- **Phase 2 — soft hoisting + hard opt-in + markers** (§2.3–§2.5). Three commits:
+  - `b94804f` `feat(vibe-core): add the static-hard link type` — the opt-out
+    variant across the manifest enum, compiler, emission, and tree analyzer.
+  - `6e9afa0` `feat(vibe-workspace): soft hoisting of shared static packages` —
+    `hoist::soft_static_pulls` + `shared_packages` (5 tests), the `use_ref`
+    `#use` marker in local zones, the shared-by hint at the root, integrated
+    into emission. Confirms **P3**.
+  - `a62e15d` `refactor: split per-unit emission out of bootgen` — restores the
+    600-line file budget (`bootgen/hybrid_emit.rs`).
+- **Phase 3 — fingerprint + dirty-subgraph** (§2.7, §2.8). Two commits:
+  - `87be07f` `feat: boot-graph Merkle fingerprints` — `fingerprint::fingerprints`
+    (5 tests: determinism, version/link/edge-change propagation, dynamic-boundary
+    isolation).
+  - `d8f4c6a` `feat: dirty-subgraph regeneration via fingerprints` — the
+    `# vibe:fp` INDEX header + the emit-side skip; confirms **P4** (the
+    SKIP-PROOF test). Hybrid install tests move to `tests_hybrid.rs`.
+- **Phase 4 + 5 — integrity check + differential oracle** (§3). `381095e`
+  `feat: boot-graph integrity check + differential oracle` — `verify_boot_graph`
+  (public API, flags stale/corrupted fingerprints) and the oracle tests: a
+  changed static child regenerates with no stale copy (**P2**), a link switch
+  invisible to resolution still regenerates, verify flags a corrupted fp.
+  Self-migration of the real tree is byte-stable (P5) with broad conversion
+  deferred (DEF-3); a `proptest` fuzz sweep is DEF-5.
 
 ---
 
@@ -332,3 +378,9 @@ cargo xtask specmap && cargo xtask conform check                # clean
   · demo-corpus-first this campaign; broad conversion is the next campaign's mandate.
 - **DEF-4** — a hard algorithmic structural agent (PROP-035 §14) · owner · future;
   this campaign is prompt-driven structural + read-set.
+- **DEF-5** — a `proptest` mutation fuzz sweep over random DAGs asserting
+  `incremental == full` · owner · the invariant is proven by representative
+  oracle tests (change / link-switch / skip / integrity); the exhaustive fuzz
+  is hardening, adds a `proptest` dev-dependency, and can land any time.
+- **DEF-6** — wire `verify_boot_graph` into the `vibe check` CLI command · owner
+  · the integrity API ships and is tested; the thin CLI surfacing follows.
