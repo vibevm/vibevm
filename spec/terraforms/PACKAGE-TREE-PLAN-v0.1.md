@@ -1,6 +1,6 @@
 # PACKAGE-TREE-PLAN v0.1 — `vibe tree`, the algorithmic spec-tree analyzer with an interactive TUI
 
-_Status: EXECUTING · Phase 2 complete (floor green, 2026-07-15) · written
+_Status: EXECUTING · Phase 3 complete (floor green, 2026-07-15) · written
 against tree `bf2897b` · cold-executable: every phase ends with
 `bash tools/self-check.sh` green; any phase boundary is a safe stop; this file
 is the resume pointer._
@@ -355,6 +355,13 @@ highlight an unfocused row.
   deliberate `delegation-first`→static question is surfaced to the owner, not
   taken. Lesson: diff the whole tree before every commit (selective `git add`
   already caught it).
+
+**Phase 3** (2026-07-15, floor green): `4e3d269` the ordering + display modes —
+`n` topological↔alphabetical, `x` All→SubTables→Tabs, `t` static/dynamic swap,
+`Tab`/`[`/`]` tab nav; the flat builders + partition live in a new
+`tui/modes.rs` with unit tests. Same-model subagent (continued the Phase-2
+agent's rat-salsa context) per `#worker-choice`; reviewed as a PR + floor green.
+No tree leak this time — the manifest guard held.
 
 **Interleaved (owner-directed, NOT campaign phases):**
 - `7382944` the native-tool-vs-GLM fact in the host trio fractality ledger (#3).
