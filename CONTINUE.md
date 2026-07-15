@@ -1,75 +1,119 @@
-# CONTINUE.md — cold-resume checkpoint (2026-07-15)
+# CONTINUE.md — cold-resume checkpoint (2026-07-15, end of day)
 
 > `spec/WAL.md` is the canonical living state; if this snapshot and the WAL diverge, the WAL wins.
 
+## ⏭️ FIRST THING NEXT SESSION (owner directive, 2026-07-15)
+
+**Significantly improve the `vibe tree` TUI spec + plan BEFORE writing any code.**
+The owner said, verbatim, on winding down: *"там нужно сильно улучшить
+спецификацию и план, напомни мне про это при восстановлении сессии."* So at
+resume, surface this first: **[PROP-037](spec/modules/vibe-cli/PROP-037-tree-tui.md)**
+(the TUI application contract) and **[TREE-TUI-PLAN-v0.1](spec/terraforms/TREE-TUI-PLAN-v0.1.md)**
+(the campaign recipe) are a **first draft** — they need a hard revision pass with
+the owner (tighten the architecture, the granular REQs, the phasing) before
+Phase 0 starts. Do **not** jump into Phase 0 / coding; open with the report and
+the improve-the-spec agenda, then take the owner's steer (this is a RESUME →
+report-then-wait boundary anyway).
+
 ## TL;DR
 
-**`vibe tree` shipped** — an algorithmic spec-tree analyzer with an interactive
-ratatui TUI, landed in vibevm **core** (a `vibe-cli` subcommand, not a standalone
-package) across five gated phases, floor green at every boundary. It answers
-"what is connected, and how does it load?": it joins the resolved dependency
-graph (`vibe.lock`) with the committed boot artifacts (`STATIC.md` / `INDEX.md`)
-and the manifests, and annotates every package with its **effective** boot load
-type (`static` / `dynamic` / `none`) plus the flags that explain it —
-**T**ransitive (forced static by a `static-transitive` ancestor), **C**ondition
-(a `when` gate), **S**TATIC.md membership.
-
-Three surfaces: the **interactive TUI** (default on a tty), **`--json`** (the
-machine model, validated against a shipped JSON Schema), and a **plain** ASCII
-tree (non-tty / `--plain`).
-
-Also this window: the **delegation directive was hardened** (the "native
-sub-agent tool ≠ the cheap GLM slot" loophole is now named), and two owner
-rulings were recorded (**opencode < fractality**; **no fractality this session**
-after transient z.ai 529s → **Opus[1m] subagents** for delegation).
-
-**Everything is on `main`, floor GREEN.** No blocker. **Only remaining step: mirror to GitHub** (`main` is 16 commits ahead of `origin`; `cargo xtask mirror`).
+Two things happened this session. **(1) The PACKAGE-TREE campaign is DONE and
+shipped** — `vibe tree`, the algorithmic spec-tree analyzer with an interactive
+ratatui TUI, landed in vibevm core (all 5 phases + close-out, floor green,
+mirrored). A follow-up **resize bug-fix** shipped too (the TUI now repaints on
+terminal resize + paints the status line on the first frame). **(2) A NEW, MUCH
+BIGGER campaign — TREE-TUI — was kicked off**: the owner commissioned turning the
+TUI into a real application (MVC layers, a reusable component library, F-key
+menus, a modal stack, settings persistence, a copy system, trees in all modes).
+The **spec (PROP-037) + plan (TREE-TUI-PLAN)** are written and committed but are a
+first draft to be improved next session (see the reminder above). **No TREE-TUI
+code exists yet** — Phase 0 has not started.
 
 ## Where work stands
 
-- Branch **`main`**, working tree **clean**, **16 commits ahead of `origin/main`** (0 behind). **Not yet mirrored to github** — run `cargo xtask mirror` (routine per Rule 4).
-- **Gate: `bash tools/self-check.sh` GREEN** at every phase boundary (fmt · `cargo test --workspace` · clippy `-D warnings` · `vibe check` 0/0/0 · conform 0 findings · specmap · sync-engines). 110 vibe-cli tests pass.
+- Branch **`main`**, tree **clean**, **2 commits ahead of `origin`** (`6473ecb`
+  PROP-037 + `1f30037` the plan) — this wind-down mirrors them.
+- `bash tools/self-check.sh` **GREEN**. `vibe tree` (analyzer + TUI) fully works:
+  `./target/debug/vibe tree` (TUI), `--json` (schema-valid), `--plain`.
+- The PACKAGE-TREE campaign: `spec/terraforms/PACKAGE-TREE-PLAN-v0.1.md` (status
+  **EXECUTED**). The TREE-TUI campaign: `spec/terraforms/TREE-TUI-PLAN-v0.1.md`
+  (status **PLANNED**, Phase 0 not begun) + `spec/modules/vibe-cli/PROP-037-tree-tui.md`.
 
-## Active blocker + the exact unblock
+## The active next step
 
-**None.** The one pending action is the mirror: `cargo xtask mirror` from the repo root (fast-forward-only fan-out to GitVerse + GitHub).
-
-## Next steps (optional, post-ship)
-
-1. **Mirror** — `cargo xtask mirror` (the only close-out remainder).
-2. **Manual-test sign-off (MT-01)** — a human runs `spec/manual-tests/MT-01-vibe-tree.md` on a real terminal and signs off the TUI (the agent cannot drive a tty).
-3. **Deferrals (PACKAGE-TREE-PLAN §15):** NG4 the stale-artifacts diagnostic (committed artifacts vs a fresh `EffectiveBoot`); NG5 STATIC.md-contribution detail in the modal; NG1–3 the runtime "actually-loaded" skill + GUI (the future `tool:org.vibevm.core/package-tree`).
-4. **The lock root-drift** the new diagnostic caught (5 stale roots in `vibe.lock` vs `vibe.toml`) — a `vibe install` re-resolve would reconcile it; out of scope this campaign, owner's call.
+1. **Improve PROP-037 + TREE-TUI-PLAN with the owner** (the reminder above) — the
+   agenda: sharpen the four-layer MVC boundaries (RP1), the `ui::` component API
+   (RP2), the granularity/addressability of the REQs, and the phasing.
+2. Then Phase 0 spikes (rat-widget component coverage, the Tree-widget + filter
+   pipeline, `arboard` clipboard, `~/.vibe/tree` JSON, the modal stack).
+3. Then Phase 1 (the four-layer foundation refactor of the existing TUI).
 
 ## Non-obvious findings (do not re-learn)
 
-- **`vibe tree` is core, not a package.** Owner ruling: the algorithmic analyzer + TUI is part of vibevm core (a `vibe-cli` subcommand using the canonical `vibe-core`/`vibe-workspace`/`vibe-spec` parsers). `tool:org.vibevm.core/package-tree` is reserved for the *future* runtime-analysis skill + GUI (that group does not exist yet).
-- **Effective load type is read from the committed artifacts, not recomputed.** `STATIC.md`'s `<!-- vibe:static {origin} — {path} -->` open-markers (a *dedicated* decompiler — NOT `vibe_spec::decompile`, which parses the distinct `vibe:begin/end` format and returns empty on `STATIC.md`) give the static set; `INDEX.md` `[[entry]]` paths give the dynamic set; neither ⇒ `none`.
-- **The JSON envelope vs the schema:** `--json` emits `{"ok":true,"command":"tree", …model…}`; the shipped `package-tree.schema.v1.json` (`additionalProperties:false`) describes the *model*, so the golden strips `ok`/`command` before validating.
-- **`in_place_specs` is correctly empty here.** The @spec scan widened to all 33 boot-lane files; vibevm's boot carries no `@spec`/`#embed` (those live in vibe-spec *code* + PROP-035 + `structural-loader.md`). The field is meaningful only for a boot lane that uses the structural-loader directives.
-- **The delegation loophole:** on Claude Code the native `Agent`/`Task`/`Workflow` tools spawn **Claude** workers, not GLM — real delegation to the cheap slot needs **fractality**. Recorded in the directive (`#route`, `#worker-choice`) + the trio ledger. This session: fractality hit two transient **z.ai 529s**, so the owner ruled Opus[1m] subagents for the rest.
-- **CRLF hell on reinstall:** `vibe install` re-materializes `vibedeps/` with LF, flipping CRLF-committed slots (noise). To keep only the meaningful files after a reinstall: stage them, then `git -c core.autocrlf=false checkout -- .` to hard-restore the rest (plain `git checkout --` gets re-dirtied by autocrlf).
-- **Machine quirks (unchanged):** edit `.md` via Edit/Write only (PS5.1 corrupts UTF-8); commits via `git commit -F - <<'MSG'` heredoc; check the real exit code, never a `| tail`'d pipe; `self-check.sh` via Git Bash; **no AI-authorship trailers** (Rule 1). The WAL is too big for the Read tool — read its head via `Read limit=2` (line 2 is the giant `_Updated:` summary).
+- **The TREE-TUI architecture (owner-approved direction):** four layers — vibevm
+  boundary (`PackageTree` only) / Model (data + UI state) / View (a
+  rat-widget-idiomatic component library + a separate `Theme`) / Controller (a
+  mode-aware keymap registry + a modal stack). Styling must not leak into logic;
+  vibevm logic must not leak into the app (MVC).
+- **The load-bearing abstraction:** the **Tree is a widget fed by a configurable
+  filter/shape pipeline** — the three tree shapes and the three modes are
+  pipeline configs, not bespoke renderers (PROP-037 §3). Default shape =
+  members-as-roots + full subtrees; shape/sort are F2 settings, persisted.
+- **Components:** wrap `rat-widget` behind our `ui::` API + `Theme`; extend in its
+  idiom where it lacks; `ratatui-core` only as a last resort.
+- **Standard `ComingSoon` modal:** one reusable placeholder for every unbuilt
+  feature (PNG export, F1 Search Everywhere, …) — lets all F-keys be wired early.
+- **Keymap:** F-keys for commands (F1 search, F2 sort, F3 mode, F6 copy / ↑F6
+  copy-settings), `Esc` = quit-with-confirm; the footer writes `Shift` as `↑`.
+  (The earlier "don't touch keys" is retired by this redesign.)
+- **The resize fix (shipped):** rat-salsa repaints only on `Control::Changed`; the
+  handler must return `Changed` on `Event::Resize` (the startup alt-screen resize
+  was the missing-first-frame cause too). Fixed in `tui/input.rs`.
+- **Delegation state (owner rulings this session):** the "native sub-agent tool ≠
+  the cheap GLM slot" loophole is named in the directive (`#route`,
+  `#worker-choice`) + the fractality ledger; **opencode < fractality**; and **no
+  fractality this session** (transient z.ai 529s) → **Opus[1m] subagents** for
+  delegation. That last ruling is session-scoped — a fresh session may re-evaluate
+  fractality if z.ai is healthy.
+- **Machine quirks:** edit `.md` via Edit/Write only (PS5.1 corrupts UTF-8);
+  heredoc commits; `self-check.sh` via Git Bash; **no AI-authorship trailers**
+  (Rule 1); the WAL is too big to Read whole — `Read limit=2` gets the giant
+  `_Updated:` summary line; a `vibe install` reinstall produces CRLF noise across
+  vibedeps — stage the meaningful files then `git -c core.autocrlf=false checkout
+  -- .`.
 
 ## Repository map (vibe tree)
 
-- `crates/vibe-cli/src/commands/tree/` — the command. `mod.rs` (run + dispatch json/plain/tui), `model.rs` (the serde `PackageTree` types mirroring the schema), `build.rs` (the engine — graph × artifacts × manifests), `artifacts.rs` (the STATIC.md `vibe:static` decompiler + INDEX.md reader), `diagnostics.rs` (root-drift; stale-artifacts deferred), `plain.rs` (the static ASCII renderer), `tui/` (`mod.rs`/`state.rs`/`render.rs`/`input.rs`/`modal.rs`/`modes.rs` — the rat-salsa app).
-- `crates/vibe-cli/resources/package-tree.schema.v1.json` — the shipped JSON Schema.
-- `crates/vibe-cli/tests/tree_json.rs` — the golden (validates `--json` + Phase-0 facts).
-- `spec/modules/vibe-cli/PROP-036-package-tree.md` — the contract (the code scopes to its anchors via specmark).
-- `spec/manual-tests/MT-01-vibe-tree.md` — the human-signoff walkthrough (first host manual test).
-- `spec/terraforms/PACKAGE-TREE-PLAN-v0.1.md` — the campaign plan (EXECUTED; §2 close report + scorecard).
+- `crates/vibe-cli/src/commands/tree/` — the shipped analyzer + TUI. `build.rs`
+  (the `PackageTree` engine — the vibevm boundary the app renders), `model.rs`,
+  `artifacts.rs`, `diagnostics.rs`, `plain.rs`, and `tui/` (`mod.rs`/`state.rs`/
+  `render.rs`/`input.rs`/`modal.rs`/`modes.rs` — the current rat-salsa TUI, to be
+  refactored onto MVC in TREE-TUI Phase 1; `modes.rs`'s flat lists become trees).
+- `crates/vibe-cli/resources/package-tree.schema.v1.json` — the `--json` schema.
+- `spec/modules/vibe-cli/PROP-036-package-tree.md` — the analyzer contract.
+- `spec/modules/vibe-cli/PROP-037-tree-tui.md` — the TUI application contract (the
+  granular addressable REQs; **improve next session**).
+- `spec/manual-tests/MT-01-vibe-tree.md` — the analyzer/TUI manual test.
+- `spec/terraforms/PACKAGE-TREE-PLAN-v0.1.md` (EXECUTED) · `TREE-TUI-PLAN-v0.1.md`
+  (PLANNED).
 
 ## Decisions in force
 
-- **`vibe tree` = core subcommand** (canonical parsers, no drift); `tool:org.vibevm.core/package-tree` = future skill/GUI.
-- **Load type = effective, read from artifacts** (what the agent actually boots), not a fresh recompute; the root-drift/stale-artifacts diagnostics surface staleness.
-- **Terminology = the PROP-035 canon** — `static`/`dynamic` (the owner's "inline"/three-type words map to the two-type canon; the file is `STATIC.md`, not `inline.md`).
-- **Delegation:** delegable execution routes to the cheap slot (GLM via fractality) by default; a same-model subagent is justified only by the verifiability test (review-cost ≥ regen-cost), stated out loud. This session it was Opus[1m] subagents (owner ruling, fractality out).
+- `vibe tree` = vibevm core (a `vibe-cli` subcommand, canonical parsers); the
+  future `tool:org.vibevm.core/package-tree` is for a runtime skill + GUI, not this.
+- Load type = effective, read from the committed artifacts.
+- TREE-TUI: four-layer MVC; Tree-widget + filter pipeline; wrap-rat-widget
+  components; `ComingSoon` for stubs; F-keys; English-only (i18n indirection only);
+  AI-Native Rust + granular addressable REQs.
 
-## Recent commits (last 25)
+## Recent commits (last 14)
 
 ```
+1f30037 docs(plan): TREE-TUI campaign — the vibe tree TUI application
+6473ecb docs(spec): PROP-037 vibe tree TUI application contract
+80944ee fix(vibe-cli): vibe tree — repaint on terminal resize (fixes the stale first frame)
+ee92ad6 docs(continue): cold-resume checkpoint — vibe tree shipped
+d8822f9 docs(wal): session-end checkpoint — vibe tree shipped
 98ad6d6 docs(plan): PACKAGE-TREE campaign EXECUTED — close report + scorecard
 007c030 build(host): materialize the delegation directive edits into vibedeps + lock
 f724798 test(vibe-cli): MT-01 manual test for the vibe tree TUI
@@ -79,34 +123,17 @@ a0e0b15 feat(vibe-cli): vibe tree — @spec widening + root-drift diagnostic (PR
 4e3d269 feat(vibe-cli): vibe tree — ordering + display modes (PROP-036 §2.11)
 e732ac0 docs(plan): Phase 2 landed — ledger + the reverted vibe.toml anomaly
 cee039d feat(vibe-cli): vibe tree — the interactive TUI (PROP-036 §2.11)
-c3386fe docs(plan): Phase 1 landed — execution ledger + close-out reinstall
-1b4057c docs(delegation): name the native-subagent anti-pattern in the directive
-7f38454 feat(vibe-cli): vibe tree — the spec-tree analyzer engine (PROP-036)
-7382944 docs(delegation): record the native-tool-vs-GLM fact in the fractality ledger
-ccd7fd4 docs(spec): PROP-036 vibe tree analyzer contract
-f0bdd80 docs(plan): fold Phase 0 findings — all three probes green
-7822052 docs(plan): PACKAGE-TREE campaign for the vibe tree analyzer
-bf2897b feat(host): pull redbook as static-transitive (PROP-035 §12)
-07c0ffa docs(continue): cold-resume for the static/dynamic link model
-bb9a0b1 docs(wal): checkpoint — the link-type rename shipped
-1b992bb refactor(rename): clean the last INLINE.md references (PROP-035)
-61dfacf refactor(boot): STATIC.md artifacts + the missed vibe-index wire (PROP-035)
-0a471c0 refactor(spec): rename inline->static, static->dynamic (PROP-035)
-8a36b8d refactor(packages): rename link wire values for static/dynamic (PROP-035)
-b9125b4 refactor(vibe-spec): rename the inline compiler to the static compiler (PROP-035)
-de9761f refactor(link): rename inline->static, static->dynamic (PROP-035)
 ```
 
 ## Quick-start
 
 ```sh
-cargo build -p vibe-cli                       # ./target/debug/vibe (never the PATH vibe)
-./target/debug/vibe tree                      # the interactive TUI (on a tty)
-./target/debug/vibe tree --json | head -c 400 # the machine model
-./target/debug/vibe tree --plain              # the static ASCII tree
-cargo test -p vibe-cli                         # 110 tests incl. the golden
-bash tools/self-check.sh                       # the full floor — expect all green
-cargo xtask mirror                             # THE PENDING STEP: fan out main to GitVerse + GitHub
+cargo build -p vibe-cli                 # ./target/debug/vibe
+./target/debug/vibe tree                # the interactive TUI (resize now repaints)
+bash tools/self-check.sh                # the floor — expect all green
+# next session, read + improve these before any code:
+sed -n '1,60p' spec/modules/vibe-cli/PROP-037-tree-tui.md
+sed -n '1,40p' spec/terraforms/TREE-TUI-PLAN-v0.1.md
 ```
 
 ## Pointer
