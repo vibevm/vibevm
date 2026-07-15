@@ -147,6 +147,28 @@ pub struct ZoneMembership {
 /// for a normal compile and is set on descent through a `static-transitive`
 /// edge — it forces the subtree static, overriding nested `dynamic` edges but
 /// not a `when` gate.
+///
+/// ```
+/// use std::collections::HashMap;
+/// use vibe_workspace::boot::hybrid::{resolve_zone, UnitEdge, UnitId, UnitInput};
+/// use vibe_core::{Group, manifest::LinkType};
+///
+/// let g = Group::parse("org.vibevm").unwrap();
+/// let id = |n: &str| -> UnitId { (g.clone(), n.to_string()) };
+/// let unit = |edges: Vec<UnitEdge>| UnitInput {
+///     own_boot_path: None, origin: String::new(), when: None, edges,
+/// };
+/// // root →(dynamic) a: the dynamic edge BREAKS the zone — `a` is not compiled
+/// // in, it surfaces as a dynamic edge instead (contrast the static case on
+/// // `UnitInput`, where `a` joins the static zone).
+/// let mut table: HashMap<UnitId, UnitInput> = HashMap::new();
+/// table.insert(id("root"), unit(vec![UnitEdge { target: id("a"), link: LinkType::Dynamic }]));
+/// table.insert(id("a"), unit(vec![]));
+/// let zone = resolve_zone(&id("root"), &table);
+/// assert!(!zone.static_members.contains(&id("a")));
+/// assert_eq!(zone.dynamic_edges.len(), 1);
+/// assert_eq!(zone.dynamic_edges[0].0, id("a"));
+/// ```
 pub fn resolve_zone(root: &UnitId, units: &HashMap<UnitId, UnitInput>) -> ZoneMembership {
     let mut membership = ZoneMembership::default();
     let mut static_visited: HashSet<UnitId> = HashSet::new();
@@ -224,6 +246,25 @@ fn descend(
 /// `super::topo_order`, so the emitted `STATIC.md` is byte-stable and
 /// migration-safe (PROP-038 §5). Returns the members in compiled order; the
 /// root unit (the zone's owner) sorts last, after everything it builds on.
+///
+/// ```
+/// use std::collections::HashMap;
+/// use vibe_workspace::boot::hybrid::{resolve_zone, topo_zone, UnitEdge, UnitId, UnitInput};
+/// use vibe_core::{Group, manifest::LinkType};
+///
+/// let g = Group::parse("org.vibevm").unwrap();
+/// let id = |n: &str| -> UnitId { (g.clone(), n.to_string()) };
+/// let unit = |edges: Vec<UnitEdge>| UnitInput {
+///     own_boot_path: None, origin: String::new(), when: None, edges,
+/// };
+/// // root →(static) a: both compile in; the dependency `a` orders before the
+/// // dependent `root`.
+/// let mut table: HashMap<UnitId, UnitInput> = HashMap::new();
+/// table.insert(id("root"), unit(vec![UnitEdge { target: id("a"), link: LinkType::Static }]));
+/// table.insert(id("a"), unit(vec![]));
+/// let zone = resolve_zone(&id("root"), &table);
+/// assert_eq!(topo_zone(&zone.static_members, &table), vec![id("a"), id("root")]);
+/// ```
 pub fn topo_zone(members: &HashSet<UnitId>, units: &HashMap<UnitId, UnitInput>) -> Vec<UnitId> {
     let ids: Vec<UnitId> = members.iter().cloned().collect();
     let index: HashMap<&UnitId, usize> = ids.iter().enumerate().map(|(i, id)| (id, i)).collect();

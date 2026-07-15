@@ -27,6 +27,33 @@ use super::{UnitId, UnitInput};
 /// For each package, the set of units that **soft-statically** pull it — a
 /// direct `static` edge, or membership in a `static-transitive` edge's forced
 /// subtree (§2.4, §5.2). `static-hard` and `dynamic` edges never contribute.
+///
+/// ```
+/// use std::collections::HashMap;
+/// use vibe_workspace::boot::hybrid::{UnitEdge, UnitId, UnitInput};
+/// use vibe_workspace::boot::hybrid::hoist::soft_static_pulls;
+/// use vibe_core::{Group, manifest::LinkType};
+///
+/// let g = Group::parse("org.vibevm").unwrap();
+/// let id = |n: &str| -> UnitId { (g.clone(), n.to_string()) };
+/// let stat = |t: &str| UnitEdge { target: id(t), link: LinkType::Static };
+/// let unit = |edges: Vec<UnitEdge>| UnitInput {
+///     own_boot_path: Some("x.md".to_string()),
+///     origin: String::new(),
+///     when: None,
+///     edges,
+/// };
+/// // `a` and `b` both static-link `shared`; only `a` static-links `own`.
+/// let mut table = HashMap::new();
+/// table.insert(id("a"), unit(vec![stat("shared"), stat("own")]));
+/// table.insert(id("b"), unit(vec![stat("shared")]));
+/// table.insert(id("shared"), unit(vec![]));
+/// table.insert(id("own"), unit(vec![]));
+/// let pulls = soft_static_pulls(&table);
+/// assert_eq!(pulls[&id("shared")].len(), 2);     // pulled by a and b
+/// assert_eq!(pulls[&id("own")].len(), 1);        // pulled by a alone
+/// assert!(pulls[&id("own")].contains(&id("a")));
+/// ```
 pub fn soft_static_pulls(table: &HashMap<UnitId, UnitInput>) -> HashMap<UnitId, HashSet<UnitId>> {
     let mut pulls: HashMap<UnitId, HashSet<UnitId>> = HashMap::new();
     for (uid, unit) in table {
