@@ -16,6 +16,8 @@
 //! package in its forced (non-`when`-gated) subtree; `static-hard` opts out
 //! (never counted, never hoisted); `dynamic` is not static and never counts.
 
+specmark::scope!("spec://vibevm/modules/vibe-workspace/PROP-038#hoisting");
+
 use std::collections::{HashMap, HashSet};
 
 use vibe_core::manifest::LinkType;
@@ -53,6 +55,29 @@ pub fn soft_static_pulls(table: &HashMap<UnitId, UnitInput>) -> HashMap<UnitId, 
 /// The packages hoisted to the global root `STATIC.md` — those soft-pulled by
 /// **two or more** distinct units, and that ship boot content of their own
 /// (a content-less package has nothing to duplicate). PROP-038 §2.4.
+///
+/// ```
+/// use std::collections::HashMap;
+/// use vibe_workspace::boot::hybrid::{UnitEdge, UnitId, UnitInput};
+/// use vibe_workspace::boot::hybrid::hoist::shared_packages;
+/// use vibe_core::{Group, manifest::LinkType};
+///
+/// let g = Group::parse("org.vibevm").unwrap();
+/// let id = |n: &str| -> UnitId { (g.clone(), n.to_string()) };
+/// let stat = |t: &str| UnitEdge { target: id(t), link: LinkType::Static };
+/// let unit = |edges: Vec<UnitEdge>| UnitInput {
+///     own_boot_path: Some("x.md".to_string()),
+///     origin: String::new(),
+///     when: None,
+///     edges,
+/// };
+/// // Two units static-link `shared` — it is shared, so hoisted.
+/// let mut table = HashMap::new();
+/// table.insert(id("a"), unit(vec![stat("shared")]));
+/// table.insert(id("b"), unit(vec![stat("shared")]));
+/// table.insert(id("shared"), unit(vec![]));
+/// assert!(shared_packages(&table).contains(&id("shared")));
+/// ```
 pub fn shared_packages(table: &HashMap<UnitId, UnitInput>) -> HashSet<UnitId> {
     soft_static_pulls(table)
         .into_iter()

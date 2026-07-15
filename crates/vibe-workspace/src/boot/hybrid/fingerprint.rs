@@ -10,6 +10,8 @@
 //! boundary breaks propagation). A `when`-gated target is treated as dynamic
 //! for propagation, matching [`super::resolve_zone`].
 
+specmark::scope!("spec://vibevm/modules/vibe-workspace/PROP-038#change-detection");
+
 use std::collections::{HashMap, HashSet};
 
 use sha2::{Digest, Sha256};
@@ -21,6 +23,26 @@ use super::{UnitId, UnitInput};
 /// memoisation. `versions` gives each unit's resolved version — the content
 /// identity for an immutable package (a mutable in-workspace source is
 /// re-materialised regardless, PROP-011 §2.6, so the version key suffices).
+///
+/// ```
+/// use std::collections::HashMap;
+/// use vibe_workspace::boot::hybrid::{UnitId, UnitInput};
+/// use vibe_workspace::boot::hybrid::fingerprint::fingerprints;
+/// use vibe_core::Group;
+///
+/// let g = Group::parse("org.vibevm").unwrap();
+/// let id: UnitId = (g, "a".to_string());
+/// let mut table = HashMap::new();
+/// table.insert(id.clone(), UnitInput {
+///     own_boot_path: Some("a.md".to_string()),
+///     origin: String::new(),
+///     when: None,
+///     edges: vec![],
+/// });
+/// let versions: HashMap<UnitId, String> = [(id.clone(), "1.0.0".to_string())].into_iter().collect();
+/// let fps = fingerprints(&table, &versions);
+/// assert!(fps.contains_key(&id));
+/// ```
 pub fn fingerprints(
     table: &HashMap<UnitId, UnitInput>,
     versions: &HashMap<UnitId, String>,

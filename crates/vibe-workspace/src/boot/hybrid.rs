@@ -53,6 +53,14 @@ pub type UnitId = (Group, String);
 /// for the shipped bootgen's root-only seeding: every unit's edges carry
 /// their own modes, so a `dynamic`-linked package's `static` edge to its own
 /// dependency is honoured.
+///
+/// ```
+/// use vibe_workspace::boot::hybrid::UnitEdge;
+/// use vibe_core::{Group, manifest::LinkType};
+/// let g = Group::parse("org.vibevm").unwrap();
+/// let edge = UnitEdge { target: (g, "wal".to_string()), link: LinkType::Static };
+/// assert_eq!(edge.link, LinkType::Static);
+/// ```
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct UnitEdge {
     /// The dependency this edge points at.
@@ -64,6 +72,30 @@ pub struct UnitEdge {
 }
 
 /// A compilation unit's inputs for the recursive compiler (PROP-038 §2.1).
+///
+/// ```
+/// use std::collections::HashMap;
+/// use vibe_workspace::boot::hybrid::{resolve_zone, UnitEdge, UnitId, UnitInput};
+/// use vibe_core::{Group, manifest::LinkType};
+///
+/// let g = Group::parse("org.vibevm").unwrap();
+/// let id = |n: &str| -> UnitId { (g.clone(), n.to_string()) };
+/// let unit = |boot: &str, edges: Vec<UnitEdge>| UnitInput {
+///     own_boot_path: Some(boot.to_string()),
+///     origin: String::new(),
+///     when: None,
+///     edges,
+/// };
+/// // root →(static) a — `a` compiles into root's static zone.
+/// let mut table: HashMap<UnitId, UnitInput> = HashMap::new();
+/// table.insert(
+///     id("root"),
+///     unit("root.md", vec![UnitEdge { target: id("a"), link: LinkType::Static }]),
+/// );
+/// table.insert(id("a"), unit("a.md", vec![]));
+/// let zone = resolve_zone(&id("root"), &table);
+/// assert!(zone.static_members.contains(&id("a")));
+/// ```
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct UnitInput {
     /// The unit's own boot content, compiled into its `STATIC.md` when the
@@ -86,6 +118,13 @@ pub struct UnitInput {
 
 /// The membership of one unit's static zone (PROP-038 §2.2) — the recursion's
 /// output, before ordering.
+///
+/// ```
+/// use vibe_workspace::boot::hybrid::ZoneMembership;
+/// let m = ZoneMembership::default();
+/// assert!(m.static_members.is_empty());
+/// assert!(m.dynamic_edges.is_empty());
+/// ```
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
 pub struct ZoneMembership {
     /// Units compiled into this unit's `STATIC.md`, deduplicated. Unordered
