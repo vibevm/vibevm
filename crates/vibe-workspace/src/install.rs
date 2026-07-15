@@ -34,6 +34,8 @@ use crate::{Workspace, WorkspaceError, vibedeps};
 mod bootgen;
 pub(crate) use bootgen::node_own_boot;
 use bootgen::validate_redirect_blocks;
+/// The boot-graph integrity check (PROP-038 §3) — public API for `vibe check`.
+pub use bootgen::verify_boot_graph;
 pub use bootgen::{regenerate_boot, regenerate_boot_from};
 
 /// A resolved, fetched dependency ready to materialise — the minimum the

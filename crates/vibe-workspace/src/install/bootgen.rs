@@ -23,7 +23,7 @@ use super::{ResolvedDep, io_err};
 
 #[path = "bootgen/hybrid_emit.rs"]
 mod hybrid_emit;
-use hybrid_emit::{append_hoisted, build_unit_table, emit_package_units};
+use hybrid_emit::{append_hoisted, build_unit_table, emit_package_units, verify_fingerprints};
 
 /// Regenerate every node's boot artifacts from a given `resolution` — the
 /// boot half of [`apply_resolution`], without materialising. Returns the
@@ -107,6 +107,32 @@ pub fn regenerate_boot(workspace: &Workspace) -> Result<Vec<String>, WorkspaceEr
     validate_redirect_blocks(workspace)?;
     let resolution = read_materialised(&workspace.root)?;
     regenerate_boot_from(workspace, &resolution)
+}
+
+/// Verify the per-unit boot artifacts are current (PROP-038 §3) — the integrity
+/// half of `vibe check`, reconstructing the resolution from the materialised
+/// `vibedeps/` tree. Returns the stale units: a package that statically links a
+/// child but whose on-disk fingerprint is missing or mismatched, i.e. one the
+/// dirty-subgraph should have regenerated. An empty result means the boot graph
+/// is consistent.
+#[spec(
+    implements = "spec://vibevm/modules/vibe-workspace/PROP-038#tests",
+    r = 1
+)]
+pub fn verify_boot_graph(workspace: &Workspace) -> Result<Vec<UnitId>, WorkspaceError> {
+    let resolution = read_materialised(&workspace.root)?;
+    let table = build_unit_table(&resolution);
+    let versions: HashMap<UnitId, String> = resolution
+        .iter()
+        .map(|d| ((d.group.clone(), d.name.clone()), d.version.to_string()))
+        .collect();
+    let fps = fingerprint::fingerprints(&table, &versions);
+    Ok(verify_fingerprints(
+        &workspace.root,
+        &resolution,
+        &table,
+        &fps,
+    ))
 }
 
 /// Reconstruct the resolution by reading every `vibedeps/` slot's manifest.

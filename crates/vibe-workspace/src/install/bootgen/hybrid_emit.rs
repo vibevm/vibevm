@@ -314,3 +314,42 @@ fn shared_by(id: &UnitId, pulls: &HashMap<UnitId, HashSet<UnitId>>) -> String {
     names.sort();
     names.join(", ")
 }
+
+/// Verify per-unit boot-graph integrity (PROP-038 §3) — the check half of the
+/// dirty-subgraph. Recompute each unit that *should* carry a `STATIC.md` (it
+/// statically links a child) and confirm the fingerprint recorded in its
+/// on-disk `INDEX.md` matches a fresh recomputation. Returns the stale units
+/// (missing artifact, or a mismatched fingerprint the regeneration should have
+/// refreshed), sorted for a deterministic report.
+#[spec(
+    implements = "spec://vibevm/modules/vibe-workspace/PROP-038#tests",
+    r = 1
+)]
+pub(super) fn verify_fingerprints(
+    workspace_root: &Path,
+    resolution: &[ResolvedDep],
+    table: &HashMap<UnitId, UnitInput>,
+    fingerprints: &HashMap<UnitId, String>,
+) -> Vec<UnitId> {
+    let slots: HashMap<UnitId, String> = resolution
+        .iter()
+        .map(|d| ((d.group.clone(), d.name.clone()), slot_rel_path(d)))
+        .collect();
+    let mut stale: Vec<UnitId> = Vec::new();
+    for id in table.keys() {
+        let zone = hybrid::resolve_zone(id, table);
+        if !has_static_children(id, &zone, table) {
+            continue; // no per-unit STATIC.md is expected for this unit
+        }
+        let Some(slot) = slots.get(id) else { continue };
+        let index = workspace_root.join(slot).join("spec/boot/INDEX.md");
+        let stored = fs::read_to_string(&index)
+            .ok()
+            .and_then(|t| boot_artifacts::read_fingerprint(&t));
+        if stored.as_deref() != fingerprints.get(id).map(String::as_str) {
+            stale.push(id.clone());
+        }
+    }
+    stale.sort();
+    stale
+}
