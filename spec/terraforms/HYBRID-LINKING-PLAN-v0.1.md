@@ -365,7 +365,13 @@ cargo xtask specmap && cargo xtask conform check                # clean
   changed static child regenerates with no stale copy (**P2**), a link switch
   invisible to resolution still regenerates, verify flags a corrupted fp.
   Self-migration of the real tree is byte-stable (P5) with broad conversion
-  deferred (DEF-3); a `proptest` fuzz sweep is DEF-5.
+  deferred (DEF-3).
+- **Follow-ups — DEF-5 + DEF-6 closed.** `5cac7c0` `feat(vibe-cli): wire
+  boot-graph integrity into vibe check` — `verify_boot_graph` surfaces as a
+  `BootGraphIntegrity` warning (DEF-6). `e38ca5d` `test: proptest fuzz over the
+  boot-graph change detector` — random-DAG mutation sweep confirming the dirty
+  set equals the static-ancestors on thousands of shapes (DEF-5). Only DEF-3
+  (broad conversion) and DEF-4 (algorithmic structural agent) remain.
 
 ---
 
@@ -378,9 +384,9 @@ cargo xtask specmap && cargo xtask conform check                # clean
   · demo-corpus-first this campaign; broad conversion is the next campaign's mandate.
 - **DEF-4** — a hard algorithmic structural agent (PROP-035 §14) · owner · future;
   this campaign is prompt-driven structural + read-set.
-- **DEF-5** — a `proptest` mutation fuzz sweep over random DAGs asserting
-  `incremental == full` · owner · the invariant is proven by representative
-  oracle tests (change / link-switch / skip / integrity); the exhaustive fuzz
-  is hardening, adds a `proptest` dev-dependency, and can land any time.
-- **DEF-6** — wire `verify_boot_graph` into the `vibe check` CLI command · owner
-  · the integrity API ships and is tested; the thin CLI surfacing follows.
+- **DEF-5 — LANDED** (`e38ca5d`) — the `proptest` mutation fuzz sweep: random
+  acyclic DAGs assert fingerprint edge-order invariance and that a content
+  change flips **exactly** the static-ancestors (nothing lost, dynamic
+  boundaries isolate) — the machine-generated differential oracle.
+- **DEF-6 — LANDED** (`5cac7c0`) — `verify_boot_graph` wired into `vibe check`;
+  a stale per-unit artifact surfaces as a `BootGraphIntegrity` warning.
