@@ -1,8 +1,9 @@
 # PACKAGE-TREE-PLAN v0.1 — `vibe tree`, the algorithmic spec-tree analyzer with an interactive TUI
 
-_Status: EXECUTING · Phase 0 complete (green, 2026-07-15) · written against tree
-`bf2897b` · cold-executable: every phase ends with `bash tools/self-check.sh`
-green; any phase boundary is a safe stop; this file is the resume pointer._
+_Status: EXECUTING · Phase 1 complete (floor green, 2026-07-15) · written
+against tree `bf2897b` · cold-executable: every phase ends with
+`bash tools/self-check.sh` green; any phase boundary is a safe stop; this file
+is the resume pointer._
 
 > Reading order for a cold executor: boot the normal way (`CLAUDE.md` →
 > `spec/boot/INDEX.md` and its files → `spec/WAL.md` → `CONTINUE.md`), then read
@@ -320,8 +321,34 @@ grep -q '"schema_version": 1' /tmp/tree.json                   # envelope presen
 
 ## 14 — Execution ledger
 
-_Filled by the executing session: per-phase commit maps binding hashes to the
-planned subjects, with what each commit confirmed or falsified._
+**Phase 0** (2026-07-15, no product code): `7822052` the plan · `f0bdd80` Phase 0
+findings (all three probes green).
+
+**Phase 1** (2026-07-15, floor green): `ccd7fd4` PROP-036 contract · `7f38454`
+the `vibe tree` engine (model + builder + artifacts + `--json` + plain + schema +
+golden). Confirmed on this repo: 36 packages = 26 static / 5 dynamic / 5 none;
+transitive = 21; the Phase-0 facts hold (redbook static/declared,
+addressable-specs static/transitive, rust-ai-native none). `bash
+tools/self-check.sh` → exit 0.
+- Deviation from the plan's 2-commit split (§8): landed as **one** commit — the
+  `tree` module is dead code until wired, so a model-only commit would fail the
+  green-at-each-step floor. Atomic-per-feature is the correct unit.
+- Delegated to a Claude subagent (the native `Agent` tool), reviewed as a PR +
+  full floor. That delegation-*mechanism* was itself a miss (a native subagent
+  is not the cheap GLM slot) — see the interleaved fix below.
+
+**Interleaved (owner-directed, NOT campaign phases):**
+- `7382944` the native-tool-vs-GLM fact in the host trio fractality ledger (#3).
+- `1b4057c` the `#route` / `#worker-choice` anti-pattern in the delegation-first
+  + delegation-rules package boot snippets (#1/#2).
+- **Close-out obligation (owner-directed):** the #1/#2 authored-package edits
+  take effect only after `vibe install` re-materializes `vibedeps/` + regenerates
+  the boot artifacts. This reinstall is folded into THIS campaign's close-out (no
+  version bump, no specspace activation). Recipe: build the working-tree binary
+  (`cargo build -p vibe-cli`), `./target/debug/vibe install --registry packages
+  --assume-yes` from the host root, keep the regenerated `spec/boot/{STATIC,INDEX}.md`
+  + `vibedeps/flow-delegation-*` + `vibe.lock`, revert CRLF-only `vibedeps/` noise
+  (`git checkout -- vibedeps/` on unchanged slots), commit.
 
 ---
 
