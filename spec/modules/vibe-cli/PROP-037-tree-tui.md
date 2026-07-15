@@ -1,14 +1,21 @@
 # PROP-037: `vibe tree` — the interactive TUI application {#root}
 
-**Status:** DRAFT — requirements, 2026-07-15 (owner-commissioned). Extends
+**Status:** DRAFT — requirements, 2026-07-15 (owner-commissioned); **revised
+2026-07-15 (Spec 2)** onto the action system: the TUI is a `Surface` on
+`vibe-actions` (PROP-039), every command is an addressed action (§13), Search
+Everywhere (§7.3) is promoted from a stub to a shipped feature, and the i18n
+mechanism (§1.6) is now real. Extends
 [PROP-036 §2.11](PROP-036-package-tree.md#tui) (the analyzer's TUI sketch) into
-a full application contract. Written in the post-rename link vocabulary.
+a full application contract.
 **Related:** [PROP-036](PROP-036-package-tree.md) (the `vibe tree` analyzer +
-the `PackageTree` model this app renders), [core-ai-native discipline]
-(`spec://org.vibevm.ai-native/core-ai-native`) (the AI-Native Rust discipline
-the code follows, §11). Plan: `spec/terraforms/TREE-TUI-PLAN-v0.1.md`.
-**Language:** the shipped UI is **English only** (§1.6); localization is a named
-non-goal (§12).
+the `PackageTree` model this app renders); **[PROP-039](../vibe-actions/PROP-039-action-system.md)
+(the `vibe-actions` action system this TUI is built on — §13)** + its design-doc
+[`spec/design/action-system.md`](../../design/action-system.md); [core-ai-native
+discipline](`spec://org.vibevm.ai-native/core-ai-native`) (§11). Plan:
+`spec/terraforms/TREE-TUI-PLAN-v0.1.md`.
+**Language:** the shipped UI is **English** (§1.6); the **i18n mechanism ships**
+(PROP-039 §8, §13.4) with English the only mandatory-complete locale — no
+non-English catalogues are shipped now (§12).
 
 This contract is deliberately **granular and addressable** (owner directive):
 every feature is its own `{#anchor}` REQ, cited by the code via `specmark`, so a
@@ -291,8 +298,26 @@ The tree **shape** (§3.3) is also chosen here (a further group), per context.
 Choices persist (§9).
 
 ### 7.3 F1 — Search Everywhere {#f1-search}
-REQ. `F1` is reserved for "Search Everywhere" (design TBD). Until built, `F1`
-opens the standard `ComingSoon` modal (§2.10).
+REQ. `F1` opens the **Search Everywhere** window — the `vibe-actions` Search
+Everywhere engine (PROP-039 §10), in the IntelliJ IDEA idiom: a hybrid **"All"**
+tab that searches everything, plus **per-category tabs** that narrow it
+(`Tab`/`Shift+Tab` cycle; the "All" tab carries a category checkbox filter). Three
+providers ship (PROP-039 §10.4):
+- **Packages** — by name (`PackageProvider` over the `PackageTree`); selecting
+  reveals the package in the tree.
+- **Card fields** — inside **every field** of the package detail cards (§8)
+  (`PackageFieldProvider`: name, version, kind, license, load-type, origin, path,
+  deps, diagnostics…); selecting opens the card focused on that field.
+- **Actions** — all `vibe.tree` actions (§13.5) by address, **name, and
+  description** (`ActionProvider`); selecting **invokes** the action in place (a
+  command performs and closes; a toggle stays open). Disabled actions render greyed
+  with their "why disabled" reason and their keybinding.
+
+Matching falls back to the **name/description** lane when nothing matches by id or
+another field (PROP-039 §10.3). Results render through one normalized row (icon ·
+primary · a right-aligned keybinding · group). This **supersedes** the reserved
+`ComingSoon` stub. A future `StructureProvider` (AI-Native specmap nodes) plugs into
+the same engine with no TUI change.
 
 ### 7.4 Escape — quit with confirmation {#quit-confirm}
 REQ. At the base screen, `Esc` opens a confirm dialog ("Really quit?") with
@@ -381,13 +406,87 @@ feature set navigable.
 
 ## 12. Non-goals {#non-goals}
 
-- **Localization** — English-only now; the i18n indirection (§1.6) is the only
-  present obligation.
+- **Non-English localization content** — the i18n *mechanism* ships (PROP-039 §8,
+  §13.4); no non-English catalogues are shipped now, and English is the only
+  mandatory-complete locale.
 - **PNG export** — reserved behind `ComingSoon` (§10.4) until the rasterization
   spike lands.
-- **Search Everywhere** — reserved behind `ComingSoon` (§7.3); design TBD.
+- **The AIUI surface itself** — not built now; this TUI is its prototype (§13.1,
+  PROP-039 §11.3). The Search-Everywhere `StructureProvider` (AI-Native specmap
+  nodes) is likewise reserved (§7.3) — the same engine, added later.
 - **PlantUML / Mermaid copy formats** — later additions to §10.2.
 - **A settings UI** — settings are edited via the menus (§7) and persisted (§9);
   no dedicated settings editor screen.
 - **Non-tty operation** — `--json` / `--plain` (PROP-036) remain the machine and
   fallback surfaces; this contract governs the interactive TUI only.
+
+---
+
+## 13. Built on the action system (`vibe-actions`, PROP-039) {#action-system}
+
+This TUI is the **first consumer** and the **prototype surface** of the action
+system (PROP-039). This section adapts the architecture above onto it and is
+**authoritative** where it upgrades an earlier section.
+
+### 13.1 The TUI is a Surface; the Model is the serialisable view {#as-surface}
+REQ. The TUI is a `Surface` (PROP-039 §11.1) over `vibe-actions`; it owns rendering
+and event capture and nothing of the action core. The Model (§1.3) is the source of
+the **serialisable `ModelView`** (PROP-039 §11.2) — focus, the modal stack, the
+visible rows, the active tab/mode, the selection, and the set of enabled actions
+with their reasons. No rendering type leaks into the Model. This makes the TUI the
+prototype that proves the **AIUI** (PROP-039 §11.3): the same tree can later be
+driven headless with no change to this crate's model/controller.
+
+### 13.2 Commands are addressed actions {#as-actions}
+REQ. Every TUI command is a `vibe-actions` **Action** (PROP-039 §3) in the group
+**`vibe.tree`**, addressed `action://vibe.tree/<name>`, carrying a mandatory
+human-readable **name + description** (§13.4), a typed param schema, and a typed
+enablement over a `TreeCtx` snapshot (the mode, the selection, the active tab). This
+**upgrades §1.5's "typed intent enum"**: the Controller resolves an event to an
+`ActionAddr` and calls `invoke` (PROP-039 §7.1); it no longer switch-matches a local
+enum.
+
+### 13.3 The keymap binds keys to addresses {#as-keymap}
+REQ. The mode-aware keymap (§5.1) binds each key/chord, per context, to an
+`(action://vibe.tree/<name>, params)` (PROP-039 §9). The footer label (§5.2) is the
+action's **name**; the footer lists exactly the actions **enabled** in the current
+context (their enablement predicate, PROP-039 §6.2). Tree navigation keys (§5.3)
+remain direct (navigation, not commands).
+
+### 13.4 i18n is real {#as-i18n}
+REQ. This **upgrades §1.6** from "i18n-ready" to the shipped `vibe-actions` i18n
+(PROP-039 §8): every action and UI string is an address-keyed catalogue entry
+(`action.vibe.tree.<name>.name` / `.description`) with an inline English default;
+the resolved label keeps `{value, original_en}` so Search Everywhere (§7.3) matches
+the English text under any locale. English is the only mandatory-complete locale and
+is checked by the legibility gate (PROP-039 §8.4).
+
+### 13.5 The action catalogue {#action-catalogue}
+REQ. The `vibe.tree` actions at ship — each an addressed Action with a name +
+description; the **key is its default binding** (the map, not the identity):
+
+| Address (`action://vibe.tree/…`) | Key | Name | Description |
+|---|---|---|---|
+| `search.everywhere` | `F1` | Search Everywhere | Search packages, card fields, and actions; run a found action. |
+| `sort` | `F2` | Sort & shape… | Choose the ordering and tree shape for the current view. |
+| `mode.set` | `F3` | Switch mode… | Switch between tree, sub-tables, and tabs display. |
+| `copy` | `F6` | Copy | Copy the current screen (Markdown) to the clipboard or a file. |
+| `copy.settings` | `↑F6` | Copy settings… | Choose the copy format and destination. |
+| `fold.toggle` | `Space` | Fold / unfold | Fold or unfold the selected node. |
+| `card.open` | `Enter` | Open details | Open the detail card for the selected package. |
+| `tab.next` / `tab.prev` | `↑→` / `↑←` | Next / previous tab | Move between tabs in tabs mode. |
+| `quit` | `Esc` (base) | Quit | Leave `vibe tree` (with confirmation). |
+
+REQ. This catalogue is the **enumerable** source for both the footer and the Search
+Everywhere `ActionProvider` (§7.3): adding a command means registering an Action
+(address + name + description + enablement), which then appears in the footer, the
+keymap, and Search Everywhere with no further wiring (PROP-039 §4.3, §12.2).
+
+### 13.6 What this leaves to PROP-039 {#as-boundary}
+REQ. The action core — address, registry, params, context, invoke, i18n, the keymap
+resolver, the Search Everywhere engine + provider trait, and the Surface seam — is
+owned by `vibe-actions` (PROP-039); this contract owns only the **vibe.tree
+specifics**: the concrete actions (§13.5), the three providers' key/resolve/navigate
+(§7.3), the `TreeCtx` shape, the F-key map, the theme, and the TUI Surface. The
+layering law of §1 is extended: **the action core never leaks into the TUI, and TUI
+rendering never leaks into the action core.**

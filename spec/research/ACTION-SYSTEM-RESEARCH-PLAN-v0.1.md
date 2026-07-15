@@ -79,9 +79,13 @@ This plan runs continuously (§0.1) — phases land and commit as they complete.
   — the maximal architecture + the ten decisions (D1–D10).
 - **2026-07-15 — SPEC 1 landed:** [`PROP-039`](../modules/vibe-actions/PROP-039-action-system.md) —
   the `vibe-actions` contract, granular addressable REQs (§1–§14) mapping Δ1–Δ16.
-- **Next:** SPEC 2 (revise/improve PROP-037 onto `vibe-actions` + a `vibe.tree` action catalogue +
-  update TREE-TUI-PLAN) → then implementation (the `vibe-actions` crate + the SE engine + the F1
-  window).
+- **2026-07-15 — SPEC 2 landed:** [PROP-037](../modules/vibe-cli/PROP-037-tree-tui.md) revised onto
+  `vibe-actions` (new §13 built-on-the-action-system + §7.3 Search Everywhere promoted from a stub +
+  the `vibe.tree` action catalogue §13.5 + non-goals refreshed); TREE-TUI-PLAN carries the
+  superseding note. **The specifications are complete** (research → design-doc → Spec 1 → Spec 2).
+- **Next — IMPLEMENTATION:** build the `vibe-actions` crate (PROP-039 §§2–11), then wire the F1
+  Search Everywhere window into the `vibe tree` TUI (the acceptance, §0.1). Gated phases, floor
+  green, committed at each boundary.
 
 **Scope addenda (owner, 2026-07-15) — fold into the findings doc + Spec 1**
 - **RQ13 — project-wide / STRUCTURAL Search Everywhere.** Study how VSCode + IDEA search the whole

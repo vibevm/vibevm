@@ -6,6 +6,18 @@ The **contract** is [PROP-037](../modules/vibe-cli/PROP-037-tree-tui.md); this
 plan is the recipe that executes it, phase by phase, each phase citing the
 PROP-037 REQ anchors it delivers._
 
+> **Superseding note (2026-07-15).** The TUI is now built on the **`vibe-actions`**
+> action system ([PROP-039](../modules/vibe-actions/PROP-039-action-system.md);
+> PROP-037 §13, revised). Implementation therefore **leads with the `vibe-actions`
+> crate** (address · action · registry · params · context · invoke · i18n · keymap ·
+> search · surface — PROP-039 §§2–11), then wires it into this TUI, where **F1 Search
+> Everywhere** (PROP-037 §7.3 — packages + every card field + actions, invocable;
+> IDEA-idiom hybrid "All" + per-category tabs) is the **acceptance**
+> (`spec://vibevm/research/ACTION-SYSTEM-RESEARCH-PLAN#mandate`). This plan's phases
+> 1–5 are re-expressed as `vibe-actions` Surface work; the phase gates (self-check
+> green, safe stop at any boundary) are unchanged. The live implementation ledger is
+> the research plan's `#ledger`._
+
 ---
 
 ## 2 — Execution record (prepended at close)
