@@ -1,17 +1,93 @@
 # AINATIVE-ANALYSIS-RAID v0.1 — AI-Native scaffold coverage of the static-analysis engine
 
-_Status: EXECUTING (Phase 1 next) · written against tree `3227fde` · cold-executable:
-every phase ends floor-green (`bash tools/self-check.sh`); any phase boundary is a
-safe stop. A **raid** (03-RAID-PLAYBOOK) applies a card-set across a layer when
-per-edit triggers can't keep up — here the layer is the static-analysis engine,
-never scaffold-covered beyond file-level `scope!`. Paper trail per
-05-CAMPAIGN-FORM._
+_Status: **EXECUTED** (Phases 0–5 done, floor-green throughout) · opened against
+tree `3227fde`, closed at `d821910` · cold-executable: every phase ends
+floor-green (`bash tools/self-check.sh`); any phase boundary is a safe stop. A
+**raid** (03-RAID-PLAYBOOK) applies a card-set across a layer when per-edit
+triggers can't keep up — here the layer is the static-analysis engine, never
+scaffold-covered beyond file-level `scope!`. Paper trail per 05-CAMPAIGN-FORM._
 
 ---
 
 ## 2 — Execution record (prepended at close)
 
-_Empty at authoring._
+**Closed 2026-07-15, `3227fde` → `d821910`, floor-green at every boundary.** The
+engine now carries the AI-Native scaffolds where they buy reader value; two
+predicted gaps proved illusory and are recorded honestly rather than papered
+over.
+
+**What landed (per phase):**
+
+- **P1 — tree D/H full-engine oracle** (`5b90357`). A hermetic six-package
+  fixture (`crates/vibe-cli/tests/tree_fixture.rs`) — root manifest + lockfile +
+  STATIC.md + INDEX.md, no real-repo dependency — run end-to-end through `vibe
+  tree --json`, asserting every load lane (static/declared, dynamic/default,
+  static-transitive declarer, transitive member, when-forced, none). The
+  Class-D safety net (D5): a silent change in how the lockfile + artifacts fold
+  into `LoadType`/`LoadOrigin` breaks a named lane. **P1 confirmed** — passed
+  first run; no lane needed a real-repo fact the fixture couldn't express. The
+  schema version is injected from `vibe-core` so the fixture survives a bump.
+  (`decompile_static` / `read_index` were already characterized in artifacts.rs
+  — no work, as R1 anticipated.)
+- **P2 — tree F + C** (`3533610` F, `da3c57e` C). **F:** every `tree` diagnostic
+  now carries a required `spec_ref` citing the REQ it enforces (today
+  root-drift → PROP-036 §2.10); the field sets the pattern the deferred
+  stale-artifacts check will follow. **P2 confirmed** — additive schema
+  property, `tree_json.rs` + schema stayed green. **C:** a `debug_assert` on the
+  static-transitive closure documents the load-bearing invariant (every member
+  is a resolved package) AND the subtle non-invariant (a declarer may sit in
+  another declarer's closure — `Declared` wins), so a reader steps through the
+  real rule.
+- **P3 — hybrid H** (`59bde39`). A shared `#[cfg(test)]` testkit
+  (`hybrid/testkit.rs`) replaces three byte-identical copies of the
+  `org`/`id`/`unit`/`table` construction boilerplate — one declarative reference
+  model of the unit table — plus a fluent `gated_unit` for the `when`-gate case.
+  **P3 confirmed** — no test's meaning changed; the full hybrid suite stayed
+  green, net −26 lines.
+- **P4 — hybrid G doctests** (`d821910`). `resolve_zone`, `topo_zone`,
+  `soft_static_pulls` gained runnable examples on the public API; the hybrid
+  seam is now 8/8 doctested.
+- **P4 overall confirmed** — the ≈200-test suite passed unchanged at every
+  boundary; no behavior changed (D1 freeze held).
+
+**RP1 resolved.** The F wire field is a *required* property on the `diagnostic`
+schema def (not a version bump — v1 stays v1). Justification exercised without
+stopping the raid: the only consumers of `package-tree.schema.v1.json` are
+in-repo (the TUI, `tree_json.rs`) and output is always freshly generated, so a
+required field is safe and reversible. Recorded here for the owner; trivially
+revertible if unwanted.
+
+**Cards that misfired (illusory gaps — the honest part):**
+
+- **Hybrid `#[spec]` fn-traces (Phase 3's second half) — dropped as redundant.**
+  The audit predicted a fn-trace gap. It is not one: `specmark::scope!` gives
+  *every* item in a module a default `implements` edge to the module's anchor
+  (PROP-014 §2.3), and hybrid.rs / hoist.rs / fingerprint.rs are each
+  **single-REQ modules** (all fns implement the one anchor — #edge-recursion /
+  #hoisting / #change-detection respectively). A fn-level `#[spec]` would only
+  restate the inherited edge — noise, not finer provenance. (Contrast
+  `hybrid_emit`, whose fns genuinely span #units / #hoisting / #change-detection
+  / #incremental and so earn per-fn tags — that is where the pattern pays off.)
+- **"vibe-workspace pub-doctest gap reduced" (§4 exit line) — imprecise.** The
+  health `pub_doctest_drain_backlog` metric is **type-scoped** (the sweep
+  playbook drains a crate's *types*); the seam fns I doctested improve reader
+  value but do not move the crate counter, which stays 30. The seam goal (8/8
+  hybrid items doctested) was the real target and is met; the crate-wide,
+  type-scoped drain is a separate sweep (DEF-A1), exactly as scoped.
+
+**Gaps "где имеет смысл" skipped (recorded, not silently dropped):**
+
+- B newtypes on `model.rs` and I codemods — pre-declared non-goals (D4, DEF-A2);
+  a serde DTO and a no-recurring-pattern engine gain nothing.
+- Weak/theatre C contracts — only the ONE load-bearing closure invariant was
+  asserted; disjointness-of-declarers was deliberately NOT asserted (it is a
+  legal state) and recorded as a comment instead.
+
+**Exit census (verified `d821910`):** floor all-green; specmap 0 gated orphans;
+file-length 0 over budget (the P3 refactor *removed* net lines); hybrid public
+seam 8/8 doctested; the tree engine has a hermetic full-engine oracle where it
+had none. Deferred, unchanged: vibe-workspace type-doctest gap 30, vibe-install
+gap 9 (the next promotable crate) — DEF-A1.
 
 ---
 
@@ -231,6 +307,23 @@ cargo xtask health                                             # doctest gap mov
 - **Phase 0 (pre-raid)** — `3227fde` `test(vibe-cli): characterization oracle +
   contract for the tree engine (d/h/c)`. The classify_origin decision-table oracle
   (6 rows) + build_package mutual-exclusion contract.
+- **Phase 1** — `5b90357` `test(vibe-cli): hermetic full-engine fixture oracle
+  for vibe tree (d/h)`. Six-package hermetic fixture, every load lane asserted
+  through `vibe tree --json`. `tempfile` added to vibe-cli dev-deps.
+- **Phase 2 (F)** — `3533610` `feat(vibe-cli): tree diagnostics cite their
+  governing REQ (scaffold-f)`. Required `spec_ref` on `Diagnostic` + schema def;
+  RP1 resolved additively.
+- **Phase 2 (C)** — `da3c57e` `test(vibe-cli): contract the static-transitive
+  closure invariant (scaffold-c)`. The load-bearing closure-membership
+  `debug_assert` + the documented non-invariant.
+- **Phase 3 (H)** — `59bde39` `test(vibe-workspace): shared unit-table testkit
+  for the hybrid linker (scaffold-h)`. `hybrid/testkit.rs` reference model +
+  fluent `gated_unit`; three suites refactored onto it (net −26 lines). Traces
+  half dropped as redundant (see §2).
+- **Phase 4 (G)** — `d821910` `docs(vibe-workspace): doctests on the hybrid
+  linker's remaining public seams (scaffold-g)`. `resolve_zone` / `topo_zone` /
+  `soft_static_pulls` doctested; seam now 8/8.
+- **Phase 5** — this REPORT (§2), committed with the ledger close.
 
 ---
 
