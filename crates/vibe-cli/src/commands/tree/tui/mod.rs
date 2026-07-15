@@ -13,6 +13,7 @@
 
 specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-036#tui");
 
+mod copy;
 mod flatten;
 mod input;
 mod menu;

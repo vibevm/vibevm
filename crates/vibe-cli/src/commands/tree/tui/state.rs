@@ -119,6 +119,9 @@ pub struct App {
     pub search: Option<SearchState>,
     /// The open F-key selection menu (F2/F3), if any (PROP-037 §7.1/§7.2).
     pub menu: Option<MenuState>,
+    /// A transient footer flash (e.g. an F6-copy confirmation); cleared on the
+    /// next input event (PROP-037 §10).
+    pub flash: Option<String>,
     /// Current row ordering (`n`).
     pub ordering: Ordering,
     /// Current display mode (`x`).
@@ -146,6 +149,7 @@ impl App {
             modal_open: false,
             search: None,
             menu: None,
+            flash: None,
             ordering: Ordering::Topological,
             display_mode: DisplayMode::All,
             static_first: true,

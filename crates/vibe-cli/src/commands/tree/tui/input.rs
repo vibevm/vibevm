@@ -10,12 +10,16 @@ use rat_widget::event::ct_event;
 use ratatui_crossterm::crossterm::event::{Event, KeyCode, KeyEventKind};
 
 use super::AppEvent;
+use super::copy;
 use super::menu::{self, MenuState};
 use super::search::{self, SearchState};
 use super::state::{App, RowNode};
 
 /// Handle one terminal event, returning the rat-salsa control-flow verdict.
 pub fn handle(event: &Event, app: &mut App) -> Result<Control<AppEvent>> {
+    // Any input clears a pending footer flash (PROP-037 §10).
+    app.flash = None;
+
     // A terminal resize must repaint the whole surface. rat-salsa's event loop
     // renders only when a handler returns `Control::Changed`; it never
     // auto-repaints on resize (every rat-salsa example handles it explicitly),
@@ -59,6 +63,12 @@ pub fn handle(event: &Event, app: &mut App) -> Result<Control<AppEvent>> {
     if is_press_fkey(event, 3) {
         let mode = MenuState::mode(app);
         app.menu = Some(mode);
+        return Ok(Control::Changed);
+    }
+    // F6 copies the current view to the clipboard as Markdown (PROP-037 §10).
+    if is_press_fkey(event, 6) {
+        let msg = copy::copy(app);
+        app.flash = Some(msg);
         return Ok(Control::Changed);
     }
 

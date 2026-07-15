@@ -97,6 +97,7 @@ syn = { version = "2", features = ["full", "visit"] }
 quote = "1"
 proc-macro2 = { version = "1", features = ["span-locations"] }
 anyhow = "1"
+arboard = "3.4"
 thiserror = "2"
 serde = { version = "1", features = ["derive"] }
 toml = "0.9"

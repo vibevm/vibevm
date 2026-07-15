@@ -30,6 +30,7 @@ vibe-wire.workspace = true
 vibe-spec.workspace = true
 semver.workspace = true
 anyhow.workspace = true
+arboard.workspace = true
 chrono.workspace = true
 clap.workspace = true
 console.workspace = true

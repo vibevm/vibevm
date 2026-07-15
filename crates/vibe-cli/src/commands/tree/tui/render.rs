@@ -96,6 +96,11 @@ fn render_footer(area: Rect, buf: &mut Buffer, app: &App) {
     if area.width == 0 {
         return;
     }
+    // A copy/action flash takes the footer until the next input clears it.
+    if let Some(flash) = &app.flash {
+        Widget::render(Line::styled(format!(" {flash}"), theme::title()), area, buf);
+        return;
+    }
     // Shared commands, then the mode-specific navigation.
     let mut keys: Vec<(&str, &str)> = vec![
         ("F1", " search  "),
