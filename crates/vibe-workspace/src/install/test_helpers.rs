@@ -51,3 +51,24 @@ pub(super) fn dep_with_boot(
     };
     (dep, pkg)
 }
+
+/// Like [`dep_with_boot`] but with declared `requires` edges (the graph edges
+/// for the boot closure). The manifest's own `[requires.packages]` — where the
+/// per-edge `link` modes live (PROP-038 §2.2) — must be included in
+/// `snippet_toml` for those modes to be read.
+#[cfg(test)]
+pub(super) fn dep_with_requires(
+    name: &str,
+    version: &str,
+    snippet_toml: &str,
+    boot_rel: &str,
+    boot_body: &str,
+    requires: &[&str],
+) -> (ResolvedDep, TempDir) {
+    let (mut dep, tmp) = dep_with_boot(name, version, snippet_toml, boot_rel, boot_body);
+    dep.requires = requires
+        .iter()
+        .map(|n| (Group::parse("org.vibevm").unwrap(), (*n).to_string()))
+        .collect();
+    (dep, tmp)
+}
