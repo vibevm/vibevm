@@ -1,113 +1,114 @@
-# CONTINUE.md — cold-resume checkpoint (2026-07-16)
+# CONTINUE.md — cold-resume checkpoint (2026-07-15)
 
 > `spec/WAL.md` is the canonical living state; if this snapshot and the WAL diverge, the WAL wins.
 
 ## TL;DR
 
-The **spec-compiler mission (PROP-035)** is complete and, on top of it, the **link-type rename** shipped —
-vibevm's boot terminology now matches the CS static/dynamic-linking standard:
+**`vibe tree` shipped** — an algorithmic spec-tree analyzer with an interactive
+ratatui TUI, landed in vibevm **core** (a `vibe-cli` subcommand, not a standalone
+package) across five gated phases, floor green at every boundary. It answers
+"what is connected, and how does it load?": it joins the resolved dependency
+graph (`vibe.lock`) with the committed boot artifacts (`STATIC.md` / `INDEX.md`)
+and the manifests, and annotates every package with its **effective** boot load
+type (`static` / `dynamic` / `none`) plus the flags that explain it —
+**T**ransitive (forced static by a `static-transitive` ancestor), **C**ondition
+(a `when` gate), **S**TATIC.md membership.
 
-- **`static`** (was `inline`) — compiled verbatim into the **`STATIC.md`** lane ("the static compiler").
-- **`dynamic`** (was `static`) — the **default**; resolved to a path in `INDEX.md`, read by reference, with
-  an optional `when` gating the read.
-- the old `dynamic` is **gone** — a conditional load is just a `dynamic` entry carrying a `when`.
-- `inline-transitive`→`static-transitive`; `INLINE.md`→`STATIC.md`; `render_inline`→`render_static`;
-  `compile_inline`→`compile_static`.
+Three surfaces: the **interactive TUI** (default on a tty), **`--json`** (the
+machine model, validated against a shipped JSON Schema), and a **plain** ASCII
+tree (non-tty / `--plain`).
 
-Also shipped this window: **`simple` is now the default package format** (fail-safe over fail-silent,
-PROP-035 §3), and **`redbook@0.2.0` gained `wal-specspaces`** (every `org.vibevm.world` content package is
-now in the edition).
+Also this window: the **delegation directive was hardened** (the "native
+sub-agent tool ≠ the cheap GLM slot" loophole is now named), and two owner
+rulings were recorded (**opencode < fractality**; **no fractality this session**
+after transient z.ai 529s → **Opus[1m] subagents** for delegation).
 
-**Everything is on `main` (== origin == github), full-workspace `bash tools/self-check.sh` is GREEN.**
-No blocker.
+**Everything is on `main`, floor GREEN.** No blocker. **Only remaining step: mirror to GitHub** (`main` is 16 commits ahead of `origin`; `cargo xtask mirror`).
 
 ## Where work stands
 
-- Branch **`main`**, working tree clean, pushed both remotes. The rename spans `vibe-core` / `vibe-workspace`
-  / `vibe-spec` / `vibe-index`, the package manifests, the specs, and the regenerated boot artifacts
-  (`spec/boot/INLINE.md` → `spec/boot/STATIC.md`, git-detected rename; the `CLAUDE.md`/`AGENTS.md`/`GEMINI.md`
-  redirect points at `STATIC.md`).
-- **Gate state: `bash tools/self-check.sh` GREEN** — fmt, `cargo test --workspace`, clippy `-D warnings`,
-  `vibe check` (0/0/0), `conform`, and the specmap ratchet all pass.
+- Branch **`main`**, working tree **clean**, **16 commits ahead of `origin/main`** (0 behind). **Not yet mirrored to github** — run `cargo xtask mirror` (routine per Rule 4).
+- **Gate: `bash tools/self-check.sh` GREEN** at every phase boundary (fmt · `cargo test --workspace` · clippy `-D warnings` · `vibe check` 0/0/0 · conform 0 findings · specmap · sync-engines). 110 vibe-cli tests pass.
 
 ## Active blocker + the exact unblock
 
-**None.**
+**None.** The one pending action is the mirror: `cargo xtask mirror` from the repo root (fast-forward-only fan-out to GitVerse + GitHub).
 
-## Next steps (post-mission, optional)
+## Next steps (optional, post-ship)
 
-1. **Migration (§15)** — adopt the `normal` format on real packages, in order: demo corpus (done) → all of
-   `org.vibevm.world` → vibevm's own core specs last. A package adopts by splitting into `contract/` +
-   `source/`, using directives, and loading `spec/design/structural-loader.md` first.
-2. **Equivalence testing (§16)** — differential-test the static compiler (reference semantics) against the
-   structural loader on a corpus. Empirical, deferred by design.
-3. **`link` × `format`** open question (PROP-035 §17): does a `normal` + `static` edge read eagerly or lazily?
-4. Nested-section source-merge (the flat-contract case is done).
-5. Fold `vibe-spec` into `conform.toml` `gated_crates` once it is spec-tagged + REQ-edged (it is `exempt`).
+1. **Mirror** — `cargo xtask mirror` (the only close-out remainder).
+2. **Manual-test sign-off (MT-01)** — a human runs `spec/manual-tests/MT-01-vibe-tree.md` on a real terminal and signs off the TUI (the agent cannot drive a tty).
+3. **Deferrals (PACKAGE-TREE-PLAN §15):** NG4 the stale-artifacts diagnostic (committed artifacts vs a fresh `EffectiveBoot`); NG5 STATIC.md-contribution detail in the modal; NG1–3 the runtime "actually-loaded" skill + GUI (the future `tool:org.vibevm.core/package-tree`).
+4. **The lock root-drift** the new diagnostic caught (5 stale roots in `vibe.lock` vs `vibe.toml`) — a `vibe install` re-resolve would reconcile it; out of scope this campaign, owner's call.
 
 ## Non-obvious findings (do not re-learn)
 
-- **The link model is now two types**: `static` (verbatim `STATIC.md`) and `dynamic` (by-reference
-  `INDEX.md`, `when` optional). `INDEX.md` `kind` is **derived from `when`** — conditional → `"dynamic"`,
-  unconditional → `"static"` — which preserves the manifest output. `STATIC.md` replaces `INLINE.md`.
-- **The rename had a swap trap**: old `Static` and old `Inline` change places, so `LinkType::Static` in code
-  compiles but flips meaning. It was done with a temp-marker sed (`Static→TMP→Dynamic`, `Inline→Static`),
-  never a blind find-replace; escaped strings (`\"inline\"`) were sed-missed and fixed by hand.
-- **`simple` is the default format** (PROP-035 §3): a forgotten `format` over-loads (visibly working) rather
-  than silently loading nothing.
-- **The payoff is guarded** — `render_static` only compiles when the lane carries a `#embed`; a directive-free
-  lane is byte-identical, so vibevm's own boot stays as-is until it adopts the format.
-- **Reinstall re-materializes with LF line endings** — after `vibe install` the `vibedeps/` tree shows a huge
-  CRLF→LF diff that is **noise** (content-identical); revert it (`git checkout -- vibedeps/`) and keep only
-  the boot artifacts + trio + lock. The old `spec/boot/INLINE.md` is **orphaned** by the renamed bootgen
-  (it manages `STATIC.md` now) — `git rm` it.
-- **Commits:** heredoc only, never `-m` with backticks; **no AI-authorship trailers** (Rule 1).
-- **Editing:** Edit/Write for `.md` with non-ASCII (§); sed is safe on `.rs` (ASCII) and byte-preserves `§`.
-  WAL is too big for the Read tool — read its head via `Get-Content -TotalCount`.
+- **`vibe tree` is core, not a package.** Owner ruling: the algorithmic analyzer + TUI is part of vibevm core (a `vibe-cli` subcommand using the canonical `vibe-core`/`vibe-workspace`/`vibe-spec` parsers). `tool:org.vibevm.core/package-tree` is reserved for the *future* runtime-analysis skill + GUI (that group does not exist yet).
+- **Effective load type is read from the committed artifacts, not recomputed.** `STATIC.md`'s `<!-- vibe:static {origin} — {path} -->` open-markers (a *dedicated* decompiler — NOT `vibe_spec::decompile`, which parses the distinct `vibe:begin/end` format and returns empty on `STATIC.md`) give the static set; `INDEX.md` `[[entry]]` paths give the dynamic set; neither ⇒ `none`.
+- **The JSON envelope vs the schema:** `--json` emits `{"ok":true,"command":"tree", …model…}`; the shipped `package-tree.schema.v1.json` (`additionalProperties:false`) describes the *model*, so the golden strips `ok`/`command` before validating.
+- **`in_place_specs` is correctly empty here.** The @spec scan widened to all 33 boot-lane files; vibevm's boot carries no `@spec`/`#embed` (those live in vibe-spec *code* + PROP-035 + `structural-loader.md`). The field is meaningful only for a boot lane that uses the structural-loader directives.
+- **The delegation loophole:** on Claude Code the native `Agent`/`Task`/`Workflow` tools spawn **Claude** workers, not GLM — real delegation to the cheap slot needs **fractality**. Recorded in the directive (`#route`, `#worker-choice`) + the trio ledger. This session: fractality hit two transient **z.ai 529s**, so the owner ruled Opus[1m] subagents for the rest.
+- **CRLF hell on reinstall:** `vibe install` re-materializes `vibedeps/` with LF, flipping CRLF-committed slots (noise). To keep only the meaningful files after a reinstall: stage them, then `git -c core.autocrlf=false checkout -- .` to hard-restore the rest (plain `git checkout --` gets re-dirtied by autocrlf).
+- **Machine quirks (unchanged):** edit `.md` via Edit/Write only (PS5.1 corrupts UTF-8); commits via `git commit -F - <<'MSG'` heredoc; check the real exit code, never a `| tail`'d pipe; `self-check.sh` via Git Bash; **no AI-authorship trailers** (Rule 1). The WAL is too big for the Read tool — read its head via `Read limit=2` (line 2 is the giant `_Updated:` summary).
 
-## Repository map
+## Repository map (vibe tree)
 
-- `crates/vibe-spec` — the spec compiler (address / doctree / resolver / directives / merge / embed /
-  use_graph / pipeline (`compile_static`) / link_table / markers). Integration tests + `tests/fixtures/ws`.
-- `crates/vibe-workspace` — install + **bootgen** (`render_static` / `INDEX.md`, the payoff, transitive-static
-  in `install/bootgen.rs`); `boot.rs` (`static_entries` / `dynamic_entries`). `crates/vibe-core` — manifests +
-  `LinkType` (`Static` / `Dynamic` / `StaticTransitive`). Other `crates/vibe-*` as before.
-- `packages/org.vibevm.*/**` — practice flows + stacks + fractality. `spec/` — `boot/` (00-core, 90-user,
-  generated INDEX.md + **STATIC.md**), `common/`, `modules/` (PROP-009 loading-model, PROP-034, **PROP-035**),
-  `design/` (incl. `structural-loader.md`), `WAL.md`.
-- Root: `CLAUDE.md`/`AGENTS.md`/`GEMINI.md` (byte-identical trio, redirect→STATIC.md), `conform.toml`,
-  `vibe.toml`, `vibe.lock`.
+- `crates/vibe-cli/src/commands/tree/` — the command. `mod.rs` (run + dispatch json/plain/tui), `model.rs` (the serde `PackageTree` types mirroring the schema), `build.rs` (the engine — graph × artifacts × manifests), `artifacts.rs` (the STATIC.md `vibe:static` decompiler + INDEX.md reader), `diagnostics.rs` (root-drift; stale-artifacts deferred), `plain.rs` (the static ASCII renderer), `tui/` (`mod.rs`/`state.rs`/`render.rs`/`input.rs`/`modal.rs`/`modes.rs` — the rat-salsa app).
+- `crates/vibe-cli/resources/package-tree.schema.v1.json` — the shipped JSON Schema.
+- `crates/vibe-cli/tests/tree_json.rs` — the golden (validates `--json` + Phase-0 facts).
+- `spec/modules/vibe-cli/PROP-036-package-tree.md` — the contract (the code scopes to its anchors via specmark).
+- `spec/manual-tests/MT-01-vibe-tree.md` — the human-signoff walkthrough (first host manual test).
+- `spec/terraforms/PACKAGE-TREE-PLAN-v0.1.md` — the campaign plan (EXECUTED; §2 close report + scorecard).
 
-## Recent commits (last 20)
+## Decisions in force
+
+- **`vibe tree` = core subcommand** (canonical parsers, no drift); `tool:org.vibevm.core/package-tree` = future skill/GUI.
+- **Load type = effective, read from artifacts** (what the agent actually boots), not a fresh recompute; the root-drift/stale-artifacts diagnostics surface staleness.
+- **Terminology = the PROP-035 canon** — `static`/`dynamic` (the owner's "inline"/three-type words map to the two-type canon; the file is `STATIC.md`, not `inline.md`).
+- **Delegation:** delegable execution routes to the cheap slot (GLM via fractality) by default; a same-model subagent is justified only by the verifiability test (review-cost ≥ regen-cost), stated out loud. This session it was Opus[1m] subagents (owner ruling, fractality out).
+
+## Recent commits (last 25)
 
 ```
-refactor(rename): clean the last INLINE.md references (PROP-035)
-refactor(boot): STATIC.md artifacts + the missed vibe-index wire (PROP-035)
-refactor(spec): rename inline->static, static->dynamic (PROP-035)
-refactor(packages): rename link wire values for static/dynamic (PROP-035)
-refactor(vibe-spec): rename the inline compiler to the static compiler (PROP-035)
-refactor(link): rename inline->static, static->dynamic (PROP-035)
-spec(vibe-workspace): default package format is simple (PROP-035 §3)
-feat(redbook): include wal-specspaces in the edition
-docs(continue): PROP-035 complete — cold-resume for the finished mission
-docs(wal): mark PROP-035 complete — the spec compiler shipped
-feat(vibe-workspace): the inline-transitive link (PROP-035 §12)
-feat(vibe-workspace): compile the inline boot lane (PROP-035)   [the payoff]
-docs(spec-compiler): author the structural loader (PROP-035 §13)
-feat(vibe-spec): reversible block markers and decompile (PROP-035)
-feat(vibe-spec): build directive link tables (PROP-035 §10)
-feat(vibe-spec): wire the source-fold into compile_static (PROP-035)
-feat(vibe-spec): fold source into contract document (PROP-035)
-feat(vibe-spec): admit contract-only #use cycles (PROP-035)
-feat(vibe-spec): compile the pipeline / topo #use / expand #embed (PROP-035)
-feat(vibe-spec): the spec:// router — address, doctree, resolver (PROP-035)
+98ad6d6 docs(plan): PACKAGE-TREE campaign EXECUTED — close report + scorecard
+007c030 build(host): materialize the delegation directive edits into vibedeps + lock
+f724798 test(vibe-cli): MT-01 manual test for the vibe tree TUI
+a0e0b15 feat(vibe-cli): vibe tree — @spec widening + root-drift diagnostic (PROP-036 §2.9-§2.10)
+5b59f82 docs(delegation): record the opencode-vs-fractality owner ruling
+32f4d49 docs(plan): Phase 3 landed — ordering + display modes in the ledger
+4e3d269 feat(vibe-cli): vibe tree — ordering + display modes (PROP-036 §2.11)
+e732ac0 docs(plan): Phase 2 landed — ledger + the reverted vibe.toml anomaly
+cee039d feat(vibe-cli): vibe tree — the interactive TUI (PROP-036 §2.11)
+c3386fe docs(plan): Phase 1 landed — execution ledger + close-out reinstall
+1b4057c docs(delegation): name the native-subagent anti-pattern in the directive
+7f38454 feat(vibe-cli): vibe tree — the spec-tree analyzer engine (PROP-036)
+7382944 docs(delegation): record the native-tool-vs-GLM fact in the fractality ledger
+ccd7fd4 docs(spec): PROP-036 vibe tree analyzer contract
+f0bdd80 docs(plan): fold Phase 0 findings — all three probes green
+7822052 docs(plan): PACKAGE-TREE campaign for the vibe tree analyzer
+bf2897b feat(host): pull redbook as static-transitive (PROP-035 §12)
+07c0ffa docs(continue): cold-resume for the static/dynamic link model
+bb9a0b1 docs(wal): checkpoint — the link-type rename shipped
+1b992bb refactor(rename): clean the last INLINE.md references (PROP-035)
+61dfacf refactor(boot): STATIC.md artifacts + the missed vibe-index wire (PROP-035)
+0a471c0 refactor(spec): rename inline->static, static->dynamic (PROP-035)
+8a36b8d refactor(packages): rename link wire values for static/dynamic (PROP-035)
+b9125b4 refactor(vibe-spec): rename the inline compiler to the static compiler (PROP-035)
+de9761f refactor(link): rename inline->static, static->dynamic (PROP-035)
 ```
 
 ## Quick-start
 
 ```sh
-cargo test -p vibe-spec                 # the compiler crate
-bash tools/self-check.sh                # the full gate — expect "self-check: all green"
-cargo build -p vibe-cli                 # the working-tree binary (never the PATH vibe)
-./target/debug/vibe.exe install --registry packages --assume-yes   # regenerate boot (MCP off; revert vibedeps CRLF noise after)
+cargo build -p vibe-cli                       # ./target/debug/vibe (never the PATH vibe)
+./target/debug/vibe tree                      # the interactive TUI (on a tty)
+./target/debug/vibe tree --json | head -c 400 # the machine model
+./target/debug/vibe tree --plain              # the static ASCII tree
+cargo test -p vibe-cli                         # 110 tests incl. the golden
+bash tools/self-check.sh                       # the full floor — expect all green
+cargo xtask mirror                             # THE PENDING STEP: fan out main to GitVerse + GitHub
 ```
+
+## Pointer
+
+`spec/WAL.md` (the `_Updated:` line at the top) is the canonical living state and supersedes this snapshot on any divergence.
