@@ -53,6 +53,7 @@ ratatui-crossterm.workspace = true
 
 [dev-dependencies]
 assert_cmd.workspace = true
+tempfile.workspace = true
 rust-ai-native-env-audit.workspace = true
 predicates.workspace = true
 toml.workspace = true
