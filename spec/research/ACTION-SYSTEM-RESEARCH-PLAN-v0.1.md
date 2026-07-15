@@ -115,6 +115,14 @@ This plan runs continuously (§0.1) — phases land and commit as they complete.
      `state.rs` under the 600-line budget).
   **The whole arc is complete: research → design-doc → Spec 1 → Spec 2 → the F1 Search Everywhere
   implementation → all five increments.** `main` is ahead of origin (mirror at wind-down).
+- **2026-07-16 — DESIGN REVISION** (owner feedback on the first screenshots — the modals were
+  "отстой", the footer showed dead keys, F6 was missing): a real visual pass landed. A **Rosé Pine
+  "cosmic violet" theme** (`cd12031`, `tui/theme.rs`, PROP-037 §2.2) is applied to every surface —
+  rounded iris-titled modal panels over a purple-tinted base, a coloured table (static=foam,
+  dynamic=iris, flags=gold), coloured per-provider search badges. The footer is now **mode-aware**
+  and drops the superseded `n/x/t/[ ]/F` letter keys (tab nav = Tab/Shift+Tab). **F6 copy** is built
+  (`e388912`: the current view → Markdown → the clipboard via `arboard`, with a footer flash). Self-
+  check green throughout; the interactive look is the owner's to confirm in a real terminal.
 
 **Scope addenda (owner, 2026-07-15) — fold into the findings doc + Spec 1**
 - **RQ13 — project-wide / STRUCTURAL Search Everywhere.** Study how VSCode + IDEA search the whole
