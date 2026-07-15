@@ -1,30 +1,29 @@
-//! The interactive TUI application state and the fold-aware flatten
-//! (PROP-036 §2.11, §2.12).
-//!
-//! [`App`] owns the model and the derived, scrollable [`VisibleRow`] list. The
-//! flatten adapts the Phase-1 [`super::super::plain`] DFS — the same `│├└`
-//! glyphs, `(*)` DAG dedup, and orphan pass — into "given a fold set, compute
-//! the visible rows", adding a `+`/`-` expand indicator per node.
-//!
-//! The [`Ordering`] and [`DisplayMode`] enums each carry only their Phase-2
-//! variant today; Phase 3 (the `n` ordering toggle and the `x` display-mode
-//! cycle) adds variants and key handlers, never a restructure.
+//! The interactive TUI application state and the fold-aware tree flatten
+//! (PROP-036 §2.11, §2.12). [`App`] owns the model and the derived, scrollable
+//! [`VisibleRow`] list; the tree flatten adapts the Phase-1
+//! [`super::super::plain`] DFS (`│├└` glyphs, `(*)` DAG dedup, orphan pass) and
+//! the flat modes (SubTables / Tabs) build their rows in [`super::modes`].
 
 specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-036#tui");
 
-use std::collections::{BTreeMap, BTreeSet, VecDeque};
+use std::collections::{BTreeMap, BTreeSet};
 
 use rat_widget::table::TableState;
 
 use super::super::model::{LoadType, Package, PackageTree};
+use super::modes;
+
+/// The number of flat-mode partitions / tabs: `static`, `dynamic`, `no-boot`.
+const TAB_COUNT: usize = 3;
 
 /// Row ordering, shown in the status line (PROP-036 §2.11).
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Ordering {
-    /// Analysis order — the declared-root DFS. The Phase-2 default and, today,
-    /// the only variant.
+    /// Analysis order — the declared-root DFS (the default).
     Topological,
-    // Phase 3: `Alphabetical` — the `n` toggle adds this variant here.
+    /// Sorted by `group/name`: roots, each node's children, and the orphan list
+    /// are alphabetised before the walk; tree structure is otherwise preserved.
+    Alphabetical,
 }
 
 impl Ordering {
@@ -32,6 +31,7 @@ impl Ordering {
     pub fn label(self) -> &'static str {
         match self {
             Ordering::Topological => "topological",
+            Ordering::Alphabetical => "alphabetical",
         }
     }
 }
@@ -39,9 +39,13 @@ impl Ordering {
 /// Display mode, shown in the status line (PROP-036 §2.11).
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum DisplayMode {
-    /// One all-together tree. The Phase-2 default and, today, the only variant.
+    /// One all-together tree (the default).
     All,
-    // Phase 3: `SubTables` / `Tabs` — the `x` cycle adds these variants here.
+    /// A flat list partitioned into `static` / `dynamic` / `no-boot` sub-tables,
+    /// each under a subheader row.
+    SubTables,
+    /// A flat list behind `Static` / `Dynamic` / `No-boot` tabs.
+    Tabs,
 }
 
 impl DisplayMode {
@@ -49,6 +53,8 @@ impl DisplayMode {
     pub fn label(self) -> &'static str {
         match self {
             DisplayMode::All => "all",
+            DisplayMode::SubTables => "sub-tables",
+            DisplayMode::Tabs => "tabs",
         }
     }
 }
@@ -63,6 +69,8 @@ pub enum RowNode {
     Missing,
     /// The "not reached from a declared root" divider (§2.12 orphan pass).
     Separator,
+    /// A flat-mode section subheader (`static dependencies`, …).
+    Subheader,
 }
 
 /// One flattened, rendered tree row. Owns its drawn strings so the derived
@@ -105,10 +113,14 @@ pub struct App {
     pub max_name_width: usize,
     /// Whether the detail modal is open.
     pub modal_open: bool,
-    /// Current ordering (Phase 2: always [`Ordering::Topological`]).
+    /// Current row ordering (`n`).
     pub ordering: Ordering,
-    /// Current display mode (Phase 2: always [`DisplayMode::All`]).
+    /// Current display mode (`x`).
     pub display_mode: DisplayMode,
+    /// Whether `static` sorts before `dynamic` in the flat modes (`t`).
+    pub static_first: bool,
+    /// The active tab index in [`DisplayMode::Tabs`] (`[`/`]`/`Tab`).
+    pub tab: usize,
     /// A fatal error captured by the error handler, re-raised after the loop
     /// restores the terminal.
     pub fatal: Option<anyhow::Error>,
@@ -128,9 +140,11 @@ impl App {
             modal_open: false,
             ordering: Ordering::Topological,
             display_mode: DisplayMode::All,
+            static_first: true,
+            tab: 0,
             fatal: None,
         };
-        app.reflatten();
+        app.rebuild();
         app
     }
 
@@ -143,6 +157,10 @@ impl App {
     /// Toggle the fold state of the selected node (`Space`). Only package rows
     /// that actually have children fold.
     pub fn toggle_fold_selected(&mut self) {
+        // Folding is a tree-mode affordance; inert in the flat modes.
+        if self.display_mode != DisplayMode::All {
+            return;
+        }
         let Some(idx) = self.table.selected() else {
             return;
         };
@@ -160,12 +178,15 @@ impl App {
         if !self.folded.remove(&id) {
             self.folded.insert(id);
         }
-        self.reflatten_keep_selection();
+        self.rebuild_keep_selection();
     }
 
     /// Fold or unfold the whole tree (`F`). Folds every node that has children,
     /// or clears the fold set.
     pub fn toggle_fold_all(&mut self) {
+        if self.display_mode != DisplayMode::All {
+            return;
+        }
         self.all_folded = !self.all_folded;
         self.folded.clear();
         if self.all_folded {
@@ -175,13 +196,13 @@ impl App {
                 }
             }
         }
-        self.reflatten_keep_selection();
+        self.rebuild_keep_selection();
     }
 
     /// Recompute the rows and clamp the selection to the new row count.
-    fn reflatten_keep_selection(&mut self) {
+    fn rebuild_keep_selection(&mut self) {
         let prev = self.table.selected().unwrap_or(0);
-        self.reflatten();
+        self.rebuild();
         let next = if self.rows.is_empty() {
             None
         } else {
@@ -190,11 +211,20 @@ impl App {
         self.table.select(next);
     }
 
-    /// Rebuild [`App::rows`] from the model, honouring the fold set
-    /// (PROP-036 §2.12). Keeps `table.rows` and the pan clamp in sync so key
-    /// handling stays correct between renders.
-    pub fn reflatten(&mut self) {
-        self.rows = flatten(&self.tree, &self.folded);
+    /// Rebuild [`App::rows`] for the current display mode + ordering, keeping
+    /// `table.rows` and the pan clamp in sync so key handling stays correct
+    /// between renders (PROP-036 §2.11–§2.12).
+    pub fn rebuild(&mut self) {
+        self.rows = match self.display_mode {
+            DisplayMode::All => flatten(&self.tree, &self.folded, self.ordering),
+            DisplayMode::SubTables => {
+                modes::subtables_rows(&self.tree, self.ordering, self.static_first)
+            }
+            DisplayMode::Tabs => {
+                let group = modes::group_order(self.static_first)[self.tab.min(TAB_COUNT - 1)];
+                modes::tab_group_rows(&self.tree, self.ordering, group)
+            }
+        };
         self.max_name_width = self
             .rows
             .iter()
@@ -204,10 +234,71 @@ impl App {
         self.h_offset = self.h_offset.min(self.max_name_width);
         self.table.rows = self.rows.len();
     }
+
+    /// Cycle the row ordering: Topological ↔ Alphabetical (`n`). Applies to
+    /// every display mode.
+    pub fn cycle_ordering(&mut self) {
+        self.ordering = match self.ordering {
+            Ordering::Topological => Ordering::Alphabetical,
+            Ordering::Alphabetical => Ordering::Topological,
+        };
+        self.rebuild();
+        self.reset_selection_top();
+    }
+
+    /// Cycle the display mode: All → SubTables → Tabs → All (`x`).
+    pub fn cycle_display_mode(&mut self) {
+        self.display_mode = match self.display_mode {
+            DisplayMode::All => DisplayMode::SubTables,
+            DisplayMode::SubTables => DisplayMode::Tabs,
+            DisplayMode::Tabs => DisplayMode::All,
+        };
+        self.rebuild();
+        self.reset_selection_top();
+    }
+
+    /// Swap whether `static` or `dynamic` comes first in the flat modes (`t`).
+    pub fn swap_priority(&mut self) {
+        self.static_first = !self.static_first;
+        self.rebuild();
+        self.reset_selection_top();
+    }
+
+    /// Select the next tab, wrapping — [`DisplayMode::Tabs`] only (`]` / `Tab`).
+    pub fn next_tab(&mut self) {
+        self.step_tab(1);
+    }
+
+    /// Select the previous tab, wrapping — [`DisplayMode::Tabs`] only (`[`).
+    pub fn prev_tab(&mut self) {
+        self.step_tab(-1);
+    }
+
+    fn step_tab(&mut self, delta: isize) {
+        if self.display_mode != DisplayMode::Tabs {
+            return;
+        }
+        let n = TAB_COUNT as isize;
+        self.tab = (((self.tab as isize + delta) % n + n) % n) as usize;
+        self.rebuild();
+        self.reset_selection_top();
+    }
+
+    /// Move the selection to the first selectable row and scroll to the top —
+    /// after a mode / ordering / tab change.
+    fn reset_selection_top(&mut self) {
+        let first = self
+            .rows
+            .iter()
+            .position(|r| matches!(r.node, RowNode::Package(_) | RowNode::Missing));
+        let sel = first.or(if self.rows.is_empty() { None } else { Some(0) });
+        self.table.select(sel);
+        self.table.set_row_offset(0);
+    }
 }
 
 /// The effective-load column label (PROP-036 §2.3).
-fn load_label(load: LoadType) -> &'static str {
+pub(super) fn load_label(load: LoadType) -> &'static str {
     match load {
         LoadType::Static => "static",
         LoadType::Dynamic => "dynamic",
@@ -218,7 +309,7 @@ fn load_label(load: LoadType) -> &'static str {
 /// Flatten the DAG into visible rows given a fold set (PROP-036 §2.12). Walks
 /// each declared root, then an orphan pass for anything not reached — so the
 /// view never hides a package.
-fn flatten(tree: &PackageTree, folded: &BTreeSet<String>) -> Vec<VisibleRow> {
+fn flatten(tree: &PackageTree, folded: &BTreeSet<String>, ordering: Ordering) -> Vec<VisibleRow> {
     let by_id: BTreeMap<&str, usize> = tree
         .packages
         .iter()
@@ -229,11 +320,17 @@ fn flatten(tree: &PackageTree, folded: &BTreeSet<String>) -> Vec<VisibleRow> {
     let mut rows: Vec<VisibleRow> = Vec::new();
     let mut seen: BTreeSet<String> = BTreeSet::new();
 
-    let root_count = tree.roots.len();
-    for (i, root) in tree.roots.iter().enumerate() {
+    // Alphabetical ordering sorts the siblings (here, the roots) by group/name;
+    // structure is otherwise preserved (PROP-036 §2.11).
+    let mut roots: Vec<&str> = tree.roots.iter().map(|s| s.as_str()).collect();
+    if ordering == Ordering::Alphabetical {
+        roots.sort_unstable();
+    }
+    let root_count = roots.len();
+    for (i, &root) in roots.iter().enumerate() {
         let is_last = i + 1 == root_count;
         walk(
-            root, "", is_last, true, tree, &by_id, folded, &mut seen, &mut rows,
+            root, "", is_last, true, tree, &by_id, folded, ordering, &mut seen, &mut rows,
         );
     }
 
@@ -241,7 +338,7 @@ fn flatten(tree: &PackageTree, folded: &BTreeSet<String>) -> Vec<VisibleRow> {
     // (e.g. a drifted lock root) is still shown (PROP-036 §2.12). Reachability
     // is judged over the FULL graph, ignoring folds — a folded-away subtree is
     // hidden, not resurrected here.
-    let reachable = reachable_from_roots(tree, &by_id);
+    let reachable = modes::reachable_from_roots(tree, &by_id);
     let mut orphans: Vec<&Package> = tree
         .packages
         .iter()
@@ -262,33 +359,11 @@ fn flatten(tree: &PackageTree, folded: &BTreeSet<String>) -> Vec<VisibleRow> {
         for (k, pkg) in orphans.into_iter().enumerate() {
             let is_last = k + 1 == n;
             walk(
-                &pkg.id, "", is_last, true, tree, &by_id, folded, &mut seen, &mut rows,
+                &pkg.id, "", is_last, true, tree, &by_id, folded, ordering, &mut seen, &mut rows,
             );
         }
     }
     rows
-}
-
-/// The set of package ids reachable from any declared root over the full
-/// dependency graph (folds ignored). Cycle-guarded on the `group/name` key.
-fn reachable_from_roots(tree: &PackageTree, by_id: &BTreeMap<&str, usize>) -> BTreeSet<String> {
-    let mut reached: BTreeSet<String> = BTreeSet::new();
-    let mut queue: VecDeque<String> = tree.roots.iter().cloned().collect();
-    while let Some(id) = queue.pop_front() {
-        if !reached.insert(id.clone()) {
-            continue;
-        }
-        if let Some(&idx) = by_id.get(id.as_str())
-            && let Some(pkg) = tree.packages.get(idx)
-        {
-            for dep in &pkg.dependencies {
-                if !reached.contains(dep) {
-                    queue.push_back(dep.clone());
-                }
-            }
-        }
-    }
-    reached
 }
 
 /// Depth-first walk producing rows. Marks a re-occurrence `(*)` and does not
@@ -303,6 +378,7 @@ fn walk(
     tree: &PackageTree,
     by_id: &BTreeMap<&str, usize>,
     folded: &BTreeSet<String>,
+    ordering: Ordering,
     seen: &mut BTreeSet<String>,
     rows: &mut Vec<VisibleRow>,
 ) {
@@ -370,8 +446,13 @@ fn walk(
     } else {
         format!("{prefix}\u{2502}  ")
     };
-    let n = pkg.dependencies.len();
-    for (i, dep) in pkg.dependencies.iter().enumerate() {
+    // Alphabetical ordering sorts a node's children by group/name.
+    let mut deps: Vec<&str> = pkg.dependencies.iter().map(|s| s.as_str()).collect();
+    if ordering == Ordering::Alphabetical {
+        deps.sort_unstable();
+    }
+    let n = deps.len();
+    for (i, &dep) in deps.iter().enumerate() {
         let dep_last = i + 1 == n;
         walk(
             dep,
@@ -381,6 +462,7 @@ fn walk(
             tree,
             by_id,
             folded,
+            ordering,
             seen,
             rows,
         );
@@ -481,5 +563,33 @@ mod tests {
         let app = App::new(tree(vec![pkg("g/a", &[]), pkg("g/b", &[])], &["g/a"]));
         assert!(app.rows.iter().any(|r| r.node == RowNode::Separator));
         assert!(app.rows.iter().any(|r| r.id == "g/b"));
+    }
+
+    fn package_ids(app: &App) -> Vec<String> {
+        app.rows
+            .iter()
+            .filter(|r| matches!(r.node, RowNode::Package(_)))
+            .map(|r| r.id.clone())
+            .collect()
+    }
+
+    #[test]
+    fn alphabetical_ordering_sorts_siblings_preserving_structure() {
+        // A root whose children are declared c, a, b.
+        let mut app = App::new(tree(
+            vec![
+                pkg("g/root", &["g/c", "g/a", "g/b"]),
+                pkg("g/a", &[]),
+                pkg("g/b", &[]),
+                pkg("g/c", &[]),
+            ],
+            &["g/root"],
+        ));
+        // Topological keeps the declared sibling order.
+        assert_eq!(package_ids(&app), ["g/root", "g/c", "g/a", "g/b"]);
+        // `n` → Alphabetical sorts siblings; the root stays first (structure kept).
+        app.cycle_ordering();
+        assert_eq!(app.ordering, Ordering::Alphabetical);
+        assert_eq!(package_ids(&app), ["g/root", "g/a", "g/b", "g/c"]);
     }
 }

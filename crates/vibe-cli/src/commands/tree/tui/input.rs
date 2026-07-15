@@ -50,9 +50,29 @@ pub fn handle(event: &Event, app: &mut App) -> Result<Control<AppEvent>> {
             open_modal(app);
             Control::Changed
         }
-        // Phase 3: the `n` ordering toggle, the `x` display-mode cycle, `t`
-        // static/dynamic priority swap, and `[`/`]`/`Tab` tab switching slot in
-        // here as additional match arms over `app.ordering` / `app.display_mode`.
+        // Ordering (`n`) and display mode (`x`) — PROP-036 §2.11.
+        ct_event!(key press 'n') => {
+            app.cycle_ordering();
+            Control::Changed
+        }
+        ct_event!(key press 'x') => {
+            app.cycle_display_mode();
+            Control::Changed
+        }
+        // Static/dynamic priority swap (`t`) — SubTables section order + Tabs order.
+        ct_event!(key press 't') => {
+            app.swap_priority();
+            Control::Changed
+        }
+        // Tab switching (Tabs mode only; inert otherwise).
+        ct_event!(keycode press Tab) | ct_event!(key press ']') => {
+            app.next_tab();
+            Control::Changed
+        }
+        ct_event!(key press '[') => {
+            app.prev_tab();
+            Control::Changed
+        }
         _ => Control::Continue,
     };
     Ok(control)

@@ -15,6 +15,7 @@ specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-036#tui");
 
 mod input;
 mod modal;
+mod modes;
 mod render;
 mod state;
 

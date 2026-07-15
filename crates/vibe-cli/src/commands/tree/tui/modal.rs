@@ -61,7 +61,9 @@ fn detail_lines(app: &App) -> Vec<Line<'static>> {
         return Vec::new();
     };
     match row.node {
-        RowNode::Separator => vec![Line::from("not reached from a declared root".to_string())],
+        // Label rows carry no detail; `open_modal` never opens them, and an
+        // empty result keeps the modal closed if one ever slips through.
+        RowNode::Separator | RowNode::Subheader => Vec::new(),
         RowNode::Missing => vec![label("id", &row.id), label("status", "not in the lockfile")],
         RowNode::Package(i) => match app.tree.packages.get(i) {
             Some(pkg) => package_lines(pkg),

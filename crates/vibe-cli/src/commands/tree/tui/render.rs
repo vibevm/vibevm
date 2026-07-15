@@ -4,6 +4,7 @@
 
 specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-036#tui");
 
+use rat_widget::tabbed::{TabPlacement, TabType, Tabbed, TabbedState};
 use rat_widget::table::Table;
 use rat_widget::table::textdata::{Cell, Row};
 use ratatui_core::buffer::Buffer;
@@ -12,7 +13,8 @@ use ratatui_core::style::{Color, Modifier, Style};
 use ratatui_core::widgets::StatefulWidget;
 
 use super::modal;
-use super::state::{App, RowNode};
+use super::modes;
+use super::state::{App, DisplayMode, RowNode};
 
 /// Draw the whole surface for this frame.
 pub fn draw(area: Rect, buf: &mut Buffer, app: &mut App) {
@@ -27,7 +29,10 @@ pub fn draw(area: Rect, buf: &mut Buffer, app: &mut App) {
     .areas(area);
 
     render_status(status, buf, app);
-    render_table(body, buf, app);
+    match app.display_mode {
+        DisplayMode::Tabs => render_tabs(body, buf, app),
+        _ => render_table(body, buf, app),
+    }
     render_footer(footer, buf);
 
     // The modal sits on top of everything, so it is drawn last (§2.11).
@@ -66,9 +71,9 @@ fn render_footer(area: Rect, buf: &mut Buffer) {
     if area.width == 0 {
         return;
     }
-    // Phase 3 adds `n order  x mode  t swap  [ ] tabs` to this hint.
     let hint = " \u{2191}/\u{2193} move   \u{2190}/\u{2192} pan   Space fold   \
-                F fold-all   Enter detail   q quit";
+                F fold-all   n order   x mode   t swap   [ ] tabs   \
+                Enter detail   q quit";
     let bar = Style::new().add_modifier(Modifier::DIM);
     buf.set_style(area, bar);
     buf.set_string(area.x, area.y, hint, bar);
@@ -108,14 +113,43 @@ fn render_table(area: Rect, buf: &mut Buffer, app: &mut App) {
     StatefulWidget::render(table, area, buf, &mut app.table);
 }
 
+/// The Tabs display mode: the `Tabbed` widget chrome with the active tab's flat
+/// package list rendered inside its content area (PROP-036 §2.11).
+fn render_tabs(area: Rect, buf: &mut Buffer, app: &mut App) {
+    if area.width == 0 || area.height == 0 {
+        return;
+    }
+    let order = modes::group_order(app.static_first);
+    let labels: Vec<&'static str> = order.iter().map(|g| g.tab_label()).collect();
+
+    // Selection is driven by `app.tab`; a per-frame state suffices since we read
+    // `widget_area` back within this same pass.
+    let mut tabs_state = TabbedState::default();
+    tabs_state.select(Some(app.tab.min(order.len().saturating_sub(1))));
+
+    let tabbed = Tabbed::new()
+        .tab_type(TabType::Attached)
+        .placement(TabPlacement::Top)
+        .tabs(labels)
+        .select_style(Style::new().fg(Color::Black).bg(Color::Cyan));
+    StatefulWidget::render(tabbed, area, buf, &mut tabs_state);
+
+    render_table(tabs_state.widget_area, buf, app);
+}
+
 /// Build the ratatui rows for this frame, applying the horizontal pan to the
 /// name cell only (`←`/`→` — PROP-036 §2.11). The value/checkbox columns stay
-/// fixed.
+/// fixed; subheader rows are styled and never panned.
 fn build_rows(app: &App) -> Vec<Row<'static>> {
     app.rows
         .iter()
         .map(|r| {
-            let name: String = r.name.chars().skip(app.h_offset).collect();
+            let is_label = matches!(r.node, RowNode::Separator | RowNode::Subheader);
+            let name: String = if is_label {
+                r.name.clone()
+            } else {
+                r.name.chars().skip(app.h_offset).collect()
+            };
             let (load, t, c, s) = match r.node {
                 RowNode::Package(_) => (
                     r.load.to_string(),
@@ -129,15 +163,23 @@ fn build_rows(app: &App) -> Vec<Row<'static>> {
                     String::new(),
                     String::new(),
                 ),
-                RowNode::Separator => (String::new(), String::new(), String::new(), String::new()),
+                RowNode::Separator | RowNode::Subheader => {
+                    (String::new(), String::new(), String::new(), String::new())
+                }
             };
-            Row::new([
+            let mut row = Row::new([
                 Cell::from(name),
                 Cell::from(load),
                 Cell::from(t),
                 Cell::from(c),
                 Cell::from(s),
-            ])
+            ]);
+            if matches!(r.node, RowNode::Subheader) {
+                row = row.style(Some(
+                    Style::new().add_modifier(Modifier::BOLD | Modifier::UNDERLINED),
+                ));
+            }
+            row
         })
         .collect()
 }
