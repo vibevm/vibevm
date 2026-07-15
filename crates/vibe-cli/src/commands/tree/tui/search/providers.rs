@@ -4,7 +4,9 @@
 //! tree), so the [`vibe_actions::search::SearchEngine`] can own them for the
 //! window's lifetime. A provider's `on_selected` returns only `Close`/`Stay`; the
 //! App applies the reveal / open-card / run effect by `(provider, item)`
-//! (`super::apply_effect`), since only the App may mutate the model.
+//! (`super::apply_effect`), since only the App may mutate the model. The action
+//! catalogue itself (and its live `vibe_actions::Registry`) lives in
+//! [`super::catalogue`].
 
 specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-037#f1-search");
 
@@ -12,7 +14,9 @@ use vibe_actions::search::{
     Candidate, ItemRef, Modifiers, ProviderId, Query, SearchProvider, Selected,
 };
 
-use super::super::state::DisplayMode;
+use vibe_actions::{ActionAddr, Ctx, Registry};
+
+use super::catalogue::{TreeCtx, key_for};
 use crate::commands::tree::model::{
     Condition, DeclaredLink, LoadOrigin, LoadType, PackageTree, Source,
 };
@@ -179,117 +183,52 @@ impl SearchProvider for FieldProvider {
 }
 
 // ---------------------------------------------------------------------------
-// ActionProvider — the vibe.tree action catalogue (PROP-037 §13.5).
+// ActionProvider — the vibe.tree action catalogue (PROP-037 §13.5). The
+// catalogue + its live Registry are in `super::catalogue`.
 // ---------------------------------------------------------------------------
 
-/// A context snapshot taken when the window opens — the actions' enablement
-/// reads it (PROP-039 §6.2). Kept small and `Copy`.
-#[derive(Clone, Copy)]
-pub struct TreeCtx {
-    pub mode: DisplayMode,
-    pub has_pkg_selection: bool,
+/// One materialised action candidate — resolved from a real `vibe_actions`
+/// [`vibe_actions::Action`] at open: presentation, synonyms, and the enablement
+/// verdict (with its "why disabled" reason).
+struct ActionCand {
+    name: String,
+    desc: String,
+    key: String,
+    synonyms: Vec<String>,
+    enabled: bool,
+    reason: Option<String>,
 }
 
-/// A `vibe.tree` action: a stable `action://vibe.tree/<name>` address, a
-/// human-readable name + description (PROP-037 §13.4/§13.5), its default key,
-/// searchable synonyms, and an enablement predicate over [`TreeCtx`].
-pub struct TreeActionSpec {
-    pub addr: &'static str,
-    pub name: &'static str,
-    pub desc: &'static str,
-    pub key: &'static str,
-    pub synonyms: &'static [&'static str],
-    pub enabled: fn(&TreeCtx) -> bool,
-}
-
-/// The catalogue. Both the [`ActionProvider`] (candidates) and the App
-/// (effect dispatch, by index) index this list — the `ItemRef` is a catalogue
-/// index. Each address is a valid `action://vibe.tree/…` (asserted in tests).
-pub const TREE_ACTIONS: &[TreeActionSpec] = &[
-    TreeActionSpec {
-        addr: "action://vibe.tree/ordering.cycle",
-        name: "Cycle ordering",
-        desc: "Switch between topological and alphabetical row ordering.",
-        key: "n",
-        synonyms: &["sort", "alphabetical", "topological", "order"],
-        enabled: |_| true,
-    },
-    TreeActionSpec {
-        addr: "action://vibe.tree/mode.cycle",
-        name: "Cycle display mode",
-        desc: "Switch between tree, sub-tables, and tabs display.",
-        key: "x",
-        synonyms: &["mode", "view", "tabs", "sub-tables", "layout"],
-        enabled: |_| true,
-    },
-    TreeActionSpec {
-        addr: "action://vibe.tree/priority.swap",
-        name: "Swap static/dynamic priority",
-        desc: "Swap whether static or dynamic sorts first in the flat modes.",
-        key: "t",
-        synonyms: &["static", "dynamic", "priority", "swap"],
-        enabled: |c| !matches!(c.mode, DisplayMode::All),
-    },
-    TreeActionSpec {
-        addr: "action://vibe.tree/fold.toggle",
-        name: "Fold / unfold selected",
-        desc: "Fold or unfold the selected node's subtree.",
-        key: "Space",
-        synonyms: &["collapse", "expand", "fold", "unfold"],
-        enabled: |c| matches!(c.mode, DisplayMode::All) && c.has_pkg_selection,
-    },
-    TreeActionSpec {
-        addr: "action://vibe.tree/fold.all",
-        name: "Fold / unfold all",
-        desc: "Fold or unfold every node with children.",
-        key: "F",
-        synonyms: &["collapse all", "expand all"],
-        enabled: |c| matches!(c.mode, DisplayMode::All),
-    },
-    TreeActionSpec {
-        addr: "action://vibe.tree/card.open",
-        name: "Open details",
-        desc: "Open the detail card for the selected package.",
-        key: "Enter",
-        synonyms: &["details", "card", "inspect"],
-        enabled: |c| c.has_pkg_selection,
-    },
-    TreeActionSpec {
-        addr: "action://vibe.tree/tab.next",
-        name: "Next tab",
-        desc: "Move to the next tab (tabs mode).",
-        key: "Tab",
-        synonyms: &["forward"],
-        enabled: |c| matches!(c.mode, DisplayMode::Tabs),
-    },
-    TreeActionSpec {
-        addr: "action://vibe.tree/tab.prev",
-        name: "Previous tab",
-        desc: "Move to the previous tab (tabs mode).",
-        key: "[",
-        synonyms: &["back", "previous"],
-        enabled: |c| matches!(c.mode, DisplayMode::Tabs),
-    },
-    TreeActionSpec {
-        addr: "action://vibe.tree/quit",
-        name: "Quit",
-        desc: "Leave vibe tree.",
-        key: "q",
-        synonyms: &["exit", "close"],
-        enabled: |_| true,
-    },
-];
-
-/// Searches the action catalogue by name, description, address, and synonyms;
-/// selecting runs the action in place.
+/// Searches the `vibe.tree` action [`Registry`] by name, description, address,
+/// and synonyms; selecting runs the action in place. Enablement (and its "why
+/// disabled" reason) comes from each real Action's predicate over the
+/// [`TreeCtx`] snapshot (PROP-039 §6.2).
 pub struct ActionProvider {
-    ctx: TreeCtx,
+    cands: Vec<ActionCand>,
 }
 
 impl ActionProvider {
-    /// Build over a context snapshot (enablement is evaluated per candidate).
-    pub fn build(ctx: TreeCtx) -> Self {
-        Self { ctx }
+    /// Enumerate the registry, resolving each action's presentation + enablement
+    /// over `ctx`. Returns the provider and the parallel address list — in the
+    /// same order, so an `ItemRef` indexes both — the App dispatches by address.
+    pub fn build(registry: &Registry, ctx: TreeCtx) -> (Self, Vec<ActionAddr>) {
+        let vctx = Ctx::new().with(ctx);
+        let mut cands = Vec::new();
+        let mut addrs = Vec::new();
+        for action in registry.iter() {
+            let en = action.evaluate(&vctx);
+            let addr = action.addr().clone();
+            cands.push(ActionCand {
+                name: action.presentation().name().default_en().to_string(),
+                desc: action.presentation().description().default_en().to_string(),
+                key: key_for(&addr.to_string()).to_string(),
+                synonyms: action.search_meta().synonyms().to_vec(),
+                enabled: en.enabled,
+                reason: en.reason.map(|r| r.as_str().to_string()),
+            });
+            addrs.push(addr);
+        }
+        (Self { cands }, addrs)
     }
 }
 
@@ -304,18 +243,24 @@ impl SearchProvider for ActionProvider {
         300
     }
     fn candidates(&self, _query: &Query) -> Vec<Candidate> {
-        TREE_ACTIONS
+        self.cands
             .iter()
             .enumerate()
-            .map(|(idx, a)| {
-                let mut extra: Vec<String> = vec![a.desc.to_string(), a.addr.to_string()];
-                extra.extend(a.synonyms.iter().map(|s| s.to_string()));
+            .map(|(idx, c)| {
+                let mut extra = vec![c.desc.clone()];
+                extra.extend(c.synonyms.clone());
+                // A disabled action surfaces its "why disabled" reason; an enabled
+                // one shows its keybinding.
+                let secondary = match (c.enabled, &c.reason) {
+                    (false, Some(reason)) => Some(reason.clone()),
+                    _ => Some(c.key.clone()),
+                };
                 Candidate {
                     item: ItemRef(idx),
-                    primary: a.name.to_string(),
-                    secondary: Some(a.key.to_string()),
+                    primary: c.name.clone(),
+                    secondary,
                     extra_haystacks: extra,
-                    enabled: (a.enabled)(&self.ctx),
+                    enabled: c.enabled,
                 }
             })
             .collect()
@@ -367,60 +312,4 @@ fn condition_value(c: &Condition) -> Option<String> {
 
 fn source_value(source: Option<&Source>) -> Option<String> {
     source.and_then(|s| s.url.clone()).filter(|s| !s.is_empty())
-}
-
-#[cfg(test)]
-mod tests {
-    use vibe_actions::ActionAddr;
-
-    use super::*;
-
-    #[test]
-    fn every_tree_action_address_is_a_valid_action_uri() {
-        for a in TREE_ACTIONS {
-            let addr =
-                ActionAddr::parse(a.addr).unwrap_or_else(|e| panic!("bad address {}: {e}", a.addr));
-            assert_eq!(addr.to_string(), a.addr, "address round-trips");
-        }
-    }
-
-    #[test]
-    fn action_addresses_are_unique() {
-        let mut seen = std::collections::BTreeSet::new();
-        for a in TREE_ACTIONS {
-            assert!(seen.insert(a.addr), "duplicate address {}", a.addr);
-        }
-    }
-
-    #[test]
-    fn every_action_has_a_nonempty_name_and_description() {
-        for a in TREE_ACTIONS {
-            assert!(!a.name.is_empty(), "{} has a name", a.addr);
-            assert!(!a.desc.is_empty(), "{} has a description", a.addr);
-        }
-    }
-
-    #[test]
-    fn enablement_reads_the_context() {
-        let all = TreeCtx {
-            mode: DisplayMode::All,
-            has_pkg_selection: true,
-        };
-        let tabs = TreeCtx {
-            mode: DisplayMode::Tabs,
-            has_pkg_selection: false,
-        };
-        let fold = TREE_ACTIONS
-            .iter()
-            .find(|a| a.addr == "action://vibe.tree/fold.toggle")
-            .unwrap();
-        assert!((fold.enabled)(&all), "fold enabled in All with a selection");
-        assert!(!(fold.enabled)(&tabs), "fold disabled outside All");
-        let next = TREE_ACTIONS
-            .iter()
-            .find(|a| a.addr == "action://vibe.tree/tab.next")
-            .unwrap();
-        assert!((next.enabled)(&tabs), "tab.next enabled in Tabs");
-        assert!(!(next.enabled)(&all), "tab.next disabled outside Tabs");
-    }
 }

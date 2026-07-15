@@ -14,22 +14,22 @@
 
 specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-037#f1-search");
 
+mod catalogue;
 mod providers;
 pub mod render;
 
 use std::collections::HashSet;
 
 use rat_salsa::Control;
+use vibe_actions::ActionAddr;
 use vibe_actions::search::{
     ItemRef, Modifiers, ProviderId, Query, SearchEngine, SearchProvider, SearchRow, Selected, Tab,
 };
 
 use super::AppEvent;
 use super::state::{App, DisplayMode, RowNode};
-use providers::{
-    ACTIONS, ActionProvider, FIELDS, FieldProvider, PACKAGES, PackageProvider, TREE_ACTIONS,
-    TreeCtx,
-};
+use catalogue::TreeCtx;
+use providers::{ACTIONS, ActionProvider, FIELDS, FieldProvider, PACKAGES, PackageProvider};
 
 /// The open Search Everywhere window's state.
 pub struct SearchState {
@@ -40,6 +40,9 @@ pub struct SearchState {
     pub(super) tab_idx: usize,
     pub(super) rows: Vec<SearchRow>,
     pub(super) selected_row: usize,
+    /// The action addresses in the ActionProvider's enumeration order — the App
+    /// dispatches a selected action's effect by its address (PROP-037 §13.5).
+    action_addrs: Vec<ActionAddr>,
 }
 
 impl SearchState {
@@ -53,10 +56,12 @@ impl SearchState {
                 .map(|r| matches!(r.node, RowNode::Package(_)))
                 .unwrap_or(false),
         };
+        let registry = catalogue::build_registry();
+        let (action_provider, action_addrs) = ActionProvider::build(&registry, ctx);
         let providers: Vec<Box<dyn SearchProvider>> = vec![
             Box::new(PackageProvider::build(&app.tree)),
             Box::new(FieldProvider::build(&app.tree)),
-            Box::new(ActionProvider::build(ctx)),
+            Box::new(action_provider),
         ];
         let engine = SearchEngine::new(providers);
         let tabs = engine.tabs();
@@ -69,6 +74,7 @@ impl SearchState {
             tab_idx: 0,
             rows: Vec::new(),
             selected_row: 0,
+            action_addrs,
         };
         state.research();
         state
@@ -180,7 +186,16 @@ pub fn confirm(app: &mut App) -> Control<AppEvent> {
     let Some((provider, item, verdict)) = confirmed else {
         return Control::Unchanged;
     };
-    let control = apply_effect(app, provider, item);
+    // For an action, resolve its address from the dispatch table before applying
+    // the effect (which may drop the window).
+    let addr = if provider == ACTIONS {
+        app.search
+            .as_ref()
+            .and_then(|s| s.action_addrs.get(item.0).cloned())
+    } else {
+        None
+    };
+    let control = apply_effect(app, provider, item, addr.as_ref());
     if matches!(verdict, Selected::Close) {
         app.search = None;
     }
@@ -188,7 +203,12 @@ pub fn confirm(app: &mut App) -> Control<AppEvent> {
 }
 
 /// Apply a confirmed selection to the model (only the App may mutate it).
-fn apply_effect(app: &mut App, provider: ProviderId, item: ItemRef) -> Control<AppEvent> {
+fn apply_effect(
+    app: &mut App,
+    provider: ProviderId,
+    item: ItemRef,
+    addr: Option<&ActionAddr>,
+) -> Control<AppEvent> {
     match provider {
         PACKAGES => {
             reveal_package(app, item.0);
@@ -199,7 +219,7 @@ fn apply_effect(app: &mut App, provider: ProviderId, item: ItemRef) -> Control<A
             app.modal_open = true; // open the card for the revealed package
             Control::Changed
         }
-        ACTIONS => run_action(app, item.0),
+        ACTIONS => run_action(app, addr),
         _ => Control::Changed,
     }
 }
@@ -222,11 +242,11 @@ fn reveal_package(app: &mut App, pkg_idx: usize) {
 }
 
 /// Run a `vibe.tree` catalogue action by its address (PROP-037 §13.5).
-fn run_action(app: &mut App, idx: usize) -> Control<AppEvent> {
-    let Some(spec) = TREE_ACTIONS.get(idx) else {
+fn run_action(app: &mut App, addr: Option<&ActionAddr>) -> Control<AppEvent> {
+    let Some(addr) = addr else {
         return Control::Changed;
     };
-    match spec.addr {
+    match addr.to_string().as_str() {
         "action://vibe.tree/ordering.cycle" => app.cycle_ordering(),
         "action://vibe.tree/mode.cycle" => app.cycle_display_mode(),
         "action://vibe.tree/priority.swap" => app.swap_priority(),
