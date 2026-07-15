@@ -1,22 +1,23 @@
 //! The F-key selection menus (PROP-037 §7.1 F3 mode menu, §7.2 F2 sort menu): a
 //! small captive dropdown that lists the choices for one setting, marks the
 //! current one, and applies the pick on `Enter`. This is the menu-driven path
-//! the contract's F-key scheme calls for; the bare letter shortcuts (`n`/`x`)
-//! still work alongside it. A menu is a Controller affordance — selecting one
-//! calls an `App` mutator directly (it does not run through the action system,
-//! which cycles rather than sets a specific value).
+//! the contract's F-key scheme calls for (the bare `n`/`x`/`t` letter shortcuts
+//! are gone — superseded, PROP-037 §5). A menu is a Controller affordance —
+//! selecting one calls an `App` mutator directly (it does not run through the
+//! action system, which cycles rather than sets a specific value).
 
 specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-037#f3-mode-menu");
 
 use ratatui_core::buffer::Buffer;
 use ratatui_core::layout::{Constraint, Flex, Layout, Rect};
-use ratatui_core::style::{Color, Modifier, Style};
 use ratatui_core::text::Line;
 use ratatui_core::widgets::Widget;
 use ratatui_widgets::block::Block;
+use ratatui_widgets::borders::BorderType;
 use ratatui_widgets::clear::Clear;
 
 use super::state::{App, DisplayMode, Ordering};
+use super::theme;
 
 /// What selecting a menu option does to the model.
 #[derive(Clone, Copy)]
@@ -113,19 +114,19 @@ pub fn confirm(app: &mut App) {
 /// Draw the menu centered over `area` (drawn after the base, before nothing —
 /// the card / search windows are separate captive modes, never open together).
 pub fn draw(area: Rect, buf: &mut Buffer, menu: &MenuState) {
-    if area.width < 16 || area.height < 4 {
+    if area.width < 20 || area.height < 5 {
         return;
     }
-    let inner_w = menu
+    let label_w = menu
         .options
         .iter()
         .map(|o| o.label.chars().count())
         .chain(std::iter::once(menu.title.chars().count()))
         .max()
-        .unwrap_or(10) as u16
-        + 8; // radio marker + padding
-    let w = inner_w.clamp(16, area.width.saturating_sub(2));
-    let h = (menu.options.len() as u16 + 2).clamp(3, area.height.saturating_sub(2));
+        .unwrap_or(10) as u16;
+    let w = (label_w + 10).clamp(20, area.width.saturating_sub(4));
+    // border(2) + a blank top row + the options + the hint row.
+    let h = (menu.options.len() as u16 + 4).clamp(5, area.height.saturating_sub(2));
 
     let [mid] = Layout::vertical([Constraint::Length(h)])
         .flex(Flex::Center)
@@ -135,34 +136,62 @@ pub fn draw(area: Rect, buf: &mut Buffer, menu: &MenuState) {
         .areas(mid);
 
     Widget::render(Clear, popup, buf);
-    let block = Block::bordered().title(format!(" {} ", menu.title));
+    let block = Block::bordered()
+        .border_type(BorderType::Rounded)
+        .border_style(theme::border())
+        .title(Line::styled(format!(" {} ", menu.title), theme::title()))
+        .style(theme::panel());
     let inner = block.inner(popup);
     Widget::render(block, popup, buf);
 
+    let list_top = inner.y + 1; // a blank row under the title
+    let hint_row = inner.y + inner.height.saturating_sub(1); // reserved for the hint
     for (i, option) in menu.options.iter().enumerate() {
-        let y = inner.y + i as u16;
-        if y >= inner.y + inner.height {
+        let y = list_top + i as u16;
+        if y >= hint_row {
             break;
         }
-        let rect = Rect::new(inner.x, y, inner.width, 1);
+        let rect = Rect::new(inner.x + 1, y, inner.width.saturating_sub(2), 1);
         let selected = i == menu.selected;
-        let mut style = Style::new();
+        let marker = if option.checked {
+            "\u{25c9} "
+        } else {
+            "\u{25cb} "
+        };
         if selected {
-            style = style.fg(Color::Black).bg(Color::Cyan);
+            buf.set_style(rect, theme::selection());
+            buf.set_stringn(
+                rect.x,
+                rect.y,
+                format!("{marker}{}", option.label),
+                rect.width as usize,
+                theme::selection(),
+            );
+        } else {
+            let marker_style = if option.checked {
+                theme::accent()
+            } else {
+                theme::dim()
+            };
+            buf.set_stringn(rect.x, rect.y, marker, 2, marker_style);
+            buf.set_stringn(
+                rect.x + 2,
+                rect.y,
+                &option.label,
+                rect.width.saturating_sub(2) as usize,
+                theme::text(),
+            );
         }
-        buf.set_style(rect, style);
-        let marker = if option.checked { "(o) " } else { "( ) " };
-        let text = format!("{marker}{}", option.label);
-        buf.set_stringn(rect.x, rect.y, text, rect.width as usize, style);
     }
 
-    // A one-line hint under the last option if there is room.
-    let hint_y = inner.y + menu.options.len() as u16;
-    if hint_y < inner.y + inner.height {
-        let hint = Line::from(" \u{2191}/\u{2193} \u{2022} Enter \u{2022} Esc")
-            .style(Style::new().add_modifier(Modifier::DIM));
-        Widget::render(hint, Rect::new(inner.x, hint_y, inner.width, 1), buf);
-    }
+    // The key hint on the last inner row.
+    buf.set_stringn(
+        inner.x + 1,
+        hint_row,
+        " \u{2191}/\u{2193}  \u{2022}  Enter  \u{2022}  Esc",
+        inner.width.saturating_sub(2) as usize,
+        theme::dim(),
+    );
 }
 
 #[cfg(test)]

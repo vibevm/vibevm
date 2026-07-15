@@ -6,16 +6,17 @@ specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-036#tui");
 
 use ratatui_core::buffer::Buffer;
 use ratatui_core::layout::{Constraint, Flex, Layout, Rect};
-use ratatui_core::style::{Modifier, Style};
-use ratatui_core::text::Line;
+use ratatui_core::text::{Line, Span};
 use ratatui_core::widgets::Widget;
 use ratatui_widgets::block::Block;
+use ratatui_widgets::borders::BorderType;
 use ratatui_widgets::clear::Clear;
 
 use super::super::model::{
     Condition, ConditionKind, DeclaredLink, LoadOrigin, LoadType, Package, Source, SourceKind,
 };
 use super::state::{App, RowNode};
+use super::theme;
 
 /// Draw the detail modal centered over `area`.
 pub fn draw(area: Rect, buf: &mut Buffer, app: &App) {
@@ -41,7 +42,11 @@ pub fn draw(area: Rect, buf: &mut Buffer, app: &App) {
 
     // Wipe the area under the popup, then frame it, then fill the detail.
     Widget::render(Clear, popup, buf);
-    let block = Block::bordered().title(" package ");
+    let block = Block::bordered()
+        .border_type(BorderType::Rounded)
+        .border_style(theme::border())
+        .title(Line::styled(" package ", theme::title()))
+        .style(theme::panel());
     let inner = block.inner(popup);
     Widget::render(block, popup, buf);
 
@@ -149,14 +154,17 @@ fn push_source(out: &mut Vec<Line<'static>>, source: Option<&Source>) {
     }
 }
 
-/// A bold title line.
+/// A bold, accent title line.
 fn heading(text: &str) -> Line<'static> {
-    Line::from(text.to_string()).style(Style::new().add_modifier(Modifier::BOLD))
+    Line::from(text.to_string()).style(theme::title())
 }
 
-/// A `label: value` detail line.
+/// A `label: value` detail line — a dim label, a bright value.
 fn label(name: &str, value: &str) -> Line<'static> {
-    Line::from(format!("{name}: {value}"))
+    Line::from(vec![
+        Span::styled(format!("{name}: "), theme::dim()),
+        Span::styled(value.to_string(), theme::text()),
+    ])
 }
 
 fn load_type_label(t: LoadType) -> &'static str {

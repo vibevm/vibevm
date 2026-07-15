@@ -85,34 +85,18 @@ pub fn handle(event: &Event, app: &mut App) -> Result<Control<AppEvent>> {
             app.toggle_fold_selected();
             Control::Changed
         }
-        ct_event!(key press 'F') | ct_event!(key press SHIFT - 'F') => {
-            app.toggle_fold_all();
-            Control::Changed
-        }
         ct_event!(keycode press Enter) => {
             open_modal(app);
             Control::Changed
         }
-        // Ordering (`n`) and display mode (`x`) — PROP-036 §2.11.
-        ct_event!(key press 'n') => {
-            app.cycle_ordering();
-            Control::Changed
-        }
-        ct_event!(key press 'x') => {
-            app.cycle_display_mode();
-            Control::Changed
-        }
-        // Static/dynamic priority swap (`t`) — SubTables section order + Tabs order.
-        ct_event!(key press 't') => {
-            app.swap_priority();
-            Control::Changed
-        }
-        // Tab switching (Tabs mode only; inert otherwise).
-        ct_event!(keycode press Tab) | ct_event!(key press ']') => {
+        // Tab switching (Tabs mode only; inert otherwise) — PROP-037 §5.3. The
+        // `n`/`x`/`t`/`[`/`]`/`F` letter shortcuts are superseded by F1/F2/F3 and
+        // the F1 action search (PROP-037 §5), so they no longer clutter the keymap.
+        ct_event!(keycode press Tab) => {
             app.next_tab();
             Control::Changed
         }
-        ct_event!(key press '[') => {
+        ct_event!(keycode press BackTab) => {
             app.prev_tab();
             Control::Changed
         }

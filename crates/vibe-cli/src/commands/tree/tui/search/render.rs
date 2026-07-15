@@ -1,7 +1,8 @@
-//! Draw the Search Everywhere window (PROP-037 §7.3): a large centered modal with
-//! a query line, the hybrid "All" + per-category tab strip, the grouped results
-//! list (headers in All, one normalized row per hit), and a key hint. Drawn last
-//! in the frame so it sits on top.
+//! Draw the Search Everywhere window (PROP-037 §7.3): a rounded, iris-titled
+//! panel with a query line, the hybrid "All" + per-category tab strip (pills),
+//! the grouped results list (a coloured per-provider badge heads each group in
+//! the All tab, one normalized row per hit), and a key hint. Drawn last so it
+//! sits on top. All colour comes from [`super::super::theme`].
 
 specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-037#f1-search");
 
@@ -11,20 +12,21 @@ use ratatui_core::style::{Color, Modifier, Style};
 use ratatui_core::text::{Line, Span};
 use ratatui_core::widgets::Widget;
 use ratatui_widgets::block::Block;
+use ratatui_widgets::borders::BorderType;
 use ratatui_widgets::clear::Clear;
 
 use vibe_actions::search::SearchRow;
 
+use super::super::theme;
 use super::SearchState;
 
 /// Draw the window centered over `area`.
 pub fn draw(area: Rect, buf: &mut Buffer, state: &SearchState) {
-    if area.width < 30 || area.height < 8 {
+    if area.width < 40 || area.height < 10 {
         return;
     }
-    // A large, centered window: ~80% each way, clamped.
-    let w = (area.width * 8 / 10).clamp(30, area.width.saturating_sub(2));
-    let h = (area.height * 8 / 10).clamp(8, area.height.saturating_sub(2));
+    let w = (area.width * 7 / 10).clamp(40, area.width.saturating_sub(4));
+    let h = (area.height * 7 / 10).clamp(10, area.height.saturating_sub(2));
     let [mid] = Layout::vertical([Constraint::Length(h)])
         .flex(Flex::Center)
         .areas(area);
@@ -33,45 +35,63 @@ pub fn draw(area: Rect, buf: &mut Buffer, state: &SearchState) {
         .areas(mid);
 
     Widget::render(Clear, popup, buf);
-    let block = Block::bordered().title(" Search Everywhere ");
+    let block = Block::bordered()
+        .border_type(BorderType::Rounded)
+        .border_style(theme::border())
+        .title(Line::styled(" Search Everywhere ", theme::title()))
+        .style(theme::panel());
     let inner = block.inner(popup);
     Widget::render(block, popup, buf);
 
-    let [query, tabs, results, footer] = Layout::vertical([
+    // One column of horizontal padding inside the border.
+    let pad = Rect::new(
+        inner.x + 1,
+        inner.y,
+        inner.width.saturating_sub(2),
+        inner.height,
+    );
+    let [query, tabs, rule, results, footer] = Layout::vertical([
+        Constraint::Length(1),
         Constraint::Length(1),
         Constraint::Length(1),
         Constraint::Min(0),
         Constraint::Length(1),
     ])
-    .areas(inner);
+    .areas(pad);
 
     draw_query(query, buf, state);
     draw_tabs(tabs, buf, state);
+    // A subtle rule between the tab strip and the results.
+    buf.set_string(
+        rule.x,
+        rule.y,
+        "\u{2500}".repeat(rule.width as usize),
+        theme::border(),
+    );
     draw_results(results, buf, state);
     draw_footer(footer, buf);
 }
 
-/// The query line: a prompt glyph, the typed text, and a block cursor.
+/// The query line: an iris prompt glyph, the typed text, and a block cursor.
 fn draw_query(area: Rect, buf: &mut Buffer, state: &SearchState) {
     let line = Line::from(vec![
-        Span::styled("\u{276f} ", Style::new().fg(Color::Cyan)),
-        Span::raw(state.query.clone()),
-        Span::styled("\u{2588}", Style::new().add_modifier(Modifier::SLOW_BLINK)),
+        Span::styled("\u{276f} ", theme::accent()),
+        Span::styled(state.query.clone(), theme::text()),
+        Span::styled("\u{2588}", theme::accent()),
     ]);
     Widget::render(line, area, buf);
 }
 
-/// The tab strip: `[All] Packages  Card fields  Actions`, the active one
-/// reversed (PROP-037 §7.3 hybrid + per-category tabs).
+/// The tab strip: the active tab a filled iris pill, the rest dim.
 fn draw_tabs(area: Rect, buf: &mut Buffer, state: &SearchState) {
     let mut spans: Vec<Span<'static>> = Vec::new();
     for (i, tab) in state.tabs.iter().enumerate() {
         let active = i == state.tab_idx;
         let label = format!(" {} ", tab.title);
         let style = if active {
-            Style::new().fg(Color::Black).bg(Color::Cyan)
+            theme::selection()
         } else {
-            Style::new().add_modifier(Modifier::DIM)
+            theme::dim()
         };
         spans.push(Span::styled(label, style));
         spans.push(Span::raw(" "));
@@ -79,16 +99,23 @@ fn draw_tabs(area: Rect, buf: &mut Buffer, state: &SearchState) {
     Widget::render(Line::from(spans), area, buf);
 }
 
+/// The per-provider badge colour (the coloured group heads in the All tab).
+fn provider_color(provider: &str) -> Color {
+    match provider {
+        "packages" => theme::IRIS,
+        "fields" => theme::FOAM,
+        "actions" => theme::GOLD,
+        _ => theme::ROSE,
+    }
+}
+
 /// The grouped results list with a scroll window that keeps the selection in
-/// view. Headers (All tab only) are underlined; the selected hit is reversed;
-/// disabled hits are dim; the secondary text (a keybinding / the field owner) is
-/// right-aligned.
+/// view.
 fn draw_results(area: Rect, buf: &mut Buffer, state: &SearchState) {
     if area.height == 0 || state.rows.is_empty() {
         return;
     }
     let height = area.height as usize;
-    // Scroll so the selected row is visible.
     let start = if state.selected_row >= height {
         state.selected_row - height + 1
     } else {
@@ -100,83 +127,99 @@ fn draw_results(area: Rect, buf: &mut Buffer, state: &SearchState) {
         let rect = Rect::new(area.x, y, area.width, 1);
         let idx = start + offset;
         match row {
-            SearchRow::Header { title, count, .. } => {
-                let line = Line::from(Span::styled(
-                    format!("{title}  ({count})"),
-                    Style::new().add_modifier(Modifier::BOLD | Modifier::UNDERLINED),
-                ));
+            SearchRow::Header {
+                provider,
+                title,
+                count,
+            } => {
+                // A coloured pill badge + a dim count (screenshot-5 style).
+                let badge = Style::new()
+                    .fg(theme::BASE)
+                    .bg(provider_color(provider))
+                    .add_modifier(Modifier::BOLD);
+                let line = Line::from(vec![
+                    Span::styled(format!(" {} ", title.to_uppercase()), badge),
+                    Span::styled(format!("  {count}"), theme::dim()),
+                ]);
                 Widget::render(line, rect, buf);
             }
-            SearchRow::Hit(hit) => {
-                let selected = idx == state.selected_row;
-                let mut base = Style::new();
-                if !hit.enabled {
-                    base = base.add_modifier(Modifier::DIM);
-                }
-                if selected {
-                    base = base.fg(Color::Black).bg(Color::Cyan);
-                }
-                buf.set_style(rect, base);
-                // Primary on the left; secondary right-aligned in a dim style.
-                let indent = if matches!(state.tabs.get(state.tab_idx), Some(t) if t.is_all) {
-                    "  "
-                } else {
-                    ""
-                };
-                buf.set_stringn(
-                    rect.x,
-                    rect.y,
-                    format!("{indent}{}", hit.primary),
-                    rect.width as usize,
-                    base,
-                );
-                // Bold the matched byte ranges into `primary` (from the engine's
-                // one scorer) so the query stands out — PROP-039 §10.3. `get`
-                // guards a non-char-boundary range rather than panicking.
-                let indent_w = indent.chars().count();
-                for &(bs, be) in &hit.match_ranges {
-                    let (Some(slice), Some(before)) =
-                        (hit.primary.get(bs..be), hit.primary.get(..bs))
-                    else {
-                        continue;
-                    };
-                    let col = indent_w + before.chars().count();
-                    if (col as u16) < rect.width {
-                        buf.set_stringn(
-                            rect.x + col as u16,
-                            rect.y,
-                            slice,
-                            slice.len(),
-                            base.add_modifier(Modifier::BOLD),
-                        );
-                    }
-                }
-                if let Some(secondary) = &hit.secondary {
-                    let sw = secondary.chars().count() as u16;
-                    if sw + 2 < rect.width {
-                        let sstyle = if selected {
-                            base
-                        } else {
-                            base.add_modifier(Modifier::DIM)
-                        };
-                        buf.set_stringn(
-                            rect.x + rect.width - sw - 1,
-                            rect.y,
-                            secondary,
-                            sw as usize,
-                            sstyle,
-                        );
-                    }
-                }
-            }
+            SearchRow::Hit(hit) => draw_hit(rect, buf, state, hit, idx == state.selected_row),
+        }
+    }
+}
+
+/// One result row: the primary (with matched ranges bolded in the accent) on
+/// the left, the secondary (keybinding / "why disabled" reason) right-aligned.
+fn draw_hit(
+    rect: Rect,
+    buf: &mut Buffer,
+    state: &SearchState,
+    hit: &vibe_actions::search::Hit,
+    selected: bool,
+) {
+    let base = if selected {
+        theme::selection()
+    } else if !hit.enabled {
+        theme::dim()
+    } else {
+        theme::text()
+    };
+    buf.set_style(rect, base);
+    let indent = if matches!(state.tabs.get(state.tab_idx), Some(t) if t.is_all) {
+        "  "
+    } else {
+        ""
+    };
+    buf.set_stringn(
+        rect.x,
+        rect.y,
+        format!("{indent}{}", hit.primary),
+        rect.width as usize,
+        base,
+    );
+    // Bold the matched byte ranges into `primary` in the accent (PROP-039 §10.3);
+    // on the selection bar keep the bar's fg so it stays legible.
+    let hi = if selected {
+        base.add_modifier(Modifier::BOLD)
+    } else {
+        theme::accent().add_modifier(Modifier::BOLD)
+    };
+    let indent_w = indent.chars().count();
+    for &(bs, be) in &hit.match_ranges {
+        let (Some(slice), Some(before)) = (hit.primary.get(bs..be), hit.primary.get(..bs)) else {
+            continue;
+        };
+        let col = indent_w + before.chars().count();
+        if (col as u16) < rect.width {
+            buf.set_stringn(rect.x + col as u16, rect.y, slice, slice.len(), hi);
+        }
+    }
+    if let Some(secondary) = &hit.secondary {
+        let sw = secondary.chars().count() as u16;
+        if sw + 2 < rect.width {
+            let sstyle = if selected { base } else { theme::dim() };
+            buf.set_stringn(
+                rect.x + rect.width - sw - 1,
+                rect.y,
+                secondary,
+                sw as usize,
+                sstyle,
+            );
         }
     }
 }
 
 /// The key hint.
 fn draw_footer(area: Rect, buf: &mut Buffer) {
-    let hint = " \u{2191}/\u{2193} select   Tab category   Enter run   Esc close";
-    let style = Style::new().add_modifier(Modifier::DIM);
-    buf.set_style(area, style);
-    buf.set_string(area.x, area.y, hint, style);
+    let line = Line::from(vec![
+        Span::styled("\u{2191}/\u{2193}", theme::key()),
+        Span::styled(" select   ", theme::key_desc()),
+        Span::styled("Tab", theme::key()),
+        Span::styled(" category   ", theme::key_desc()),
+        Span::styled("Enter", theme::key()),
+        Span::styled(" run   ", theme::key_desc()),
+        Span::styled("Esc", theme::key()),
+        Span::styled(" close", theme::key_desc()),
+    ]);
+    Widget::render(line, area, buf);
 }
