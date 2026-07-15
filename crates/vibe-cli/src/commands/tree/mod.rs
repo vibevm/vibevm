@@ -13,6 +13,7 @@ specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-036#command");
 
 mod artifacts;
 mod build;
+mod diagnostics;
 mod model;
 mod plain;
 mod tui;

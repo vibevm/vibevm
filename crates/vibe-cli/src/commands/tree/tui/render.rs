@@ -42,7 +42,8 @@ pub fn draw(area: Rect, buf: &mut Buffer, app: &mut App) {
 }
 
 /// The status line: ordering · display mode · the `STATIC.md` size indicator
-/// (PROP-036 §2.6).
+/// (PROP-036 §2.6) · the in-place `@spec` count (§2.9) · a non-fatal
+/// diagnostics indicator (§2.10), shown only when something drifted.
 fn render_status(area: Rect, buf: &mut Buffer, app: &App) {
     if area.width == 0 {
         return;
@@ -51,15 +52,21 @@ fn render_status(area: Rect, buf: &mut Buffer, app: &App) {
         Some(lane) => (lane.bytes, lane.lines),
         None => (0, 0),
     };
-    // Phase 3: the `n` ordering toggle and the `x` display-mode cycle change
-    // these two labels; the line is already rendered from the enums.
+    // A drifted lockfile / other non-fatal findings surface here (§2.10);
+    // hidden when clean so a healthy tree carries no warning noise.
+    let diag_seg = match app.tree.diagnostics.len() {
+        0 => String::new(),
+        n => format!("   \u{26a0} {n} diag"),
+    };
     let text = format!(
-        " ordering: {}   mode: {}   STATIC.md: {} bytes / {} lines   packages: {}",
+        " ordering: {}   mode: {}   STATIC.md: {} bytes / {} lines   packages: {}   @spec: {}{}",
         app.ordering.label(),
         app.display_mode.label(),
         bytes,
         lines,
         app.tree.packages.len(),
+        app.tree.in_place_specs.len(),
+        diag_seg,
     );
     let bar = Style::new().fg(Color::Black).bg(Color::Cyan);
     buf.set_style(area, bar);

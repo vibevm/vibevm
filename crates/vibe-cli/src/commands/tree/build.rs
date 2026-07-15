@@ -17,15 +17,19 @@ use vibe_core::manifest::{LinkType, LockedPackage, Lockfile, Manifest};
 use vibe_spec::Directives;
 
 use super::artifacts::{self, IndexParse};
+use super::diagnostics;
 use super::model::{
     Boot, Carrier, Condition, ConditionKind, DeclaredLink, HOST_NAMESPACE, InPlaceSpec, IndexLane,
     Load, LoadOrigin, LoadType, Package, PackageTree, Project, SCHEMA_VERSION, Source, SourceKind,
     StaticLane,
 };
 
-/// The host-authored boot files scanned for in-place `@spec` markers
-/// (PROP-036 §2.9). The generated `STATIC.md` / `INDEX.md` are excluded —
-/// they are artifacts, not authored boot lanes.
+/// The host-authored boot files that seed the in-place `@spec` scan
+/// (PROP-036 §2.9). The full scan set (built in [`build_tree`]) adds every
+/// `STATIC.md` contribution source and every `INDEX.md` entry path — every
+/// boot source file that actually loads. The generated `STATIC.md` /
+/// `INDEX.md` themselves are never scanned: they are artifacts, not authored
+/// boot lanes.
 const HOST_BOOT_FILES: &[&str] = &["00-core.md", "90-user.md"];
 
 /// Build the full [`PackageTree`] model for the project rooted at `root`.
@@ -110,11 +114,26 @@ pub fn build_tree(root: &Path) -> Result<PackageTree> {
         })
         .collect();
 
-    let roots = manifest
+    let roots: Vec<String> = manifest
         .requires
         .iter_pkgrefs()
         .filter_map(|(group, name)| group.map(|g| format!("{g}/{name}")))
         .collect();
+
+    // Non-fatal diagnostics (PROP-036 §2.10) — computed before `roots` and the
+    // boot artifacts below are moved into the model.
+    let diagnostics = diagnostics::check(&roots, &lockfile);
+
+    // Every boot source file that actually loads (PROP-036 §2.9): the two
+    // host-authored boot files, plus every `STATIC.md` contribution source and
+    // every `INDEX.md` entry path. Deduped, project-relative.
+    let mut boot_file_set: BTreeSet<String> = HOST_BOOT_FILES
+        .iter()
+        .map(|n| format!("spec/boot/{n}"))
+        .collect();
+    boot_file_set.extend(static_contribs.iter().map(|c| c.source_path.clone()));
+    boot_file_set.extend(index.entries.iter().map(|e| e.path.clone()));
+    let boot_files: Vec<String> = boot_file_set.into_iter().collect();
 
     let boot = Boot {
         static_md: static_text.as_deref().map(|t| StaticLane {
@@ -147,10 +166,10 @@ pub fn build_tree(root: &Path) -> Result<PackageTree> {
         roots,
         packages,
         boot,
-        in_place_specs: collect_in_place(root),
-        // TODO(phase-1-tail): diagnostics (stale-artifacts vs a fresh
-        // EffectiveBoot; lock↔toml root drift) — PROP-036 §2.10 / plan Phase 4.
-        diagnostics: Vec::new(),
+        in_place_specs: collect_in_place(root, &boot_files),
+        // Root-drift lands here now; the stale-artifacts check (needs a fresh
+        // EffectiveBoot recompute) is still deferred — PROP-036 §2.10.
+        diagnostics,
     })
 }
 
@@ -315,14 +334,16 @@ fn condition_from_when(when: Option<&str>) -> Condition {
     }
 }
 
-/// Collect in-place `@spec` / `#use` / `#embed` / `#source` markers from the
-/// host-authored boot files via the canonical fence-aware parser
-/// (PROP-036 §2.9). A bare `spec://` is discretionary and not collected.
-fn collect_in_place(root: &Path) -> Vec<InPlaceSpec> {
+/// Collect in-place `@spec` / `#use` / `#embed` / `#source` markers from every
+/// boot source file that loads, via the canonical fence-aware parser
+/// (PROP-036 §2.9). `boot_files` are project-relative paths (the host-authored
+/// boot files plus every `STATIC.md` / `INDEX.md` source path); each that
+/// exists is read and parsed. A bare `spec://` is discretionary and not
+/// collected. An empty result is correct when no boot file carries a marker.
+fn collect_in_place(root: &Path, boot_files: &[String]) -> Vec<InPlaceSpec> {
     let mut out = Vec::new();
-    for name in HOST_BOOT_FILES {
-        let file = format!("spec/boot/{name}");
-        let Ok(text) = fs::read_to_string(root.join(&file)) else {
+    for file in boot_files {
+        let Ok(text) = fs::read_to_string(root.join(file)) else {
             continue;
         };
         let directives = Directives::parse(&text);

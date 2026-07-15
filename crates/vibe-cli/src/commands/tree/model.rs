@@ -174,10 +174,8 @@ pub struct InPlaceSpec {
     pub target_package: Option<String>,
 }
 
-/// One non-fatal diagnostic (PROP-036 §2.10).
-// Wired in Phase 1 (the `diagnostics` array is always `[]`); populated in
-// Phase 4 when the stale-artifacts / root-drift checks land.
-#[allow(dead_code)]
+/// One non-fatal diagnostic (PROP-036 §2.10). Constructed by the diagnostics
+/// engine — today the root-drift check (`super::diagnostics`).
 #[derive(Debug, Serialize)]
 pub struct Diagnostic {
     pub severity: Severity,
@@ -255,10 +253,11 @@ pub enum Carrier {
     Source,
 }
 
-/// A diagnostic severity.
-// Phase 1 wires the `diagnostics` field (always `[]`); the variants are
-// constructed when the diagnostics themselves land in Phase 4 (PROP-036 §2.10:
-// stale-artifacts, lock↔toml root-drift).
+/// A diagnostic severity. `Warn` is constructed by the root-drift diagnostic
+/// (PROP-036 §2.10); `Info` / `Error` are reserved for the deferred
+/// stale-artifacts check and so are not yet constructed — the schema (and the
+/// wire enum) keep all three. The `dead_code` allow scopes exactly those two
+/// not-yet-built variants; it retires when stale-artifacts lands.
 #[allow(dead_code)]
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
 #[serde(rename_all = "lowercase")]
