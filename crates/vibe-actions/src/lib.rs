@@ -34,7 +34,9 @@ specmark::scope!("spec://vibevm/modules/vibe-actions/PROP-039#root");
 
 pub mod action;
 pub mod address;
+pub mod aiui;
 pub mod context;
+pub mod gate;
 pub mod i18n;
 pub mod invoke;
 pub mod params;
@@ -46,7 +48,9 @@ pub use action::{
     Presentation, ResolvedAction, SearchMeta,
 };
 pub use address::{ActionAddr, AddrError, QueryPairs};
+pub use aiui::ActionView;
 pub use context::{Ctx, Enablement};
+pub use gate::{LegibilityViolation, ReachabilityViolation};
 pub use i18n::{Catalogue, Localized, MessageKey, ResolvedLabel};
 pub use invoke::{
     BoxFuture, CancellationToken, GrantedScope, InvokeError, InvokeOutcome, InvokeResult, invoke,
