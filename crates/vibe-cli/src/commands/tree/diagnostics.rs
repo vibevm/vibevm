@@ -15,6 +15,11 @@ use vibe_core::manifest::Lockfile;
 
 use super::model::{Diagnostic, Severity};
 
+/// The REQ every diagnostic in this module enforces (PROP-036 §2.10). Each
+/// `Diagnostic` cites it via `spec_ref` (scaffold-F) so the surfaced fact
+/// carries a jump to its governing contract.
+const DIAGNOSTICS_REQ: &str = "spec://vibevm/modules/vibe-cli/PROP-036#diagnostics";
+
 /// Compute the non-fatal diagnostics for a resolved tree (PROP-036 §2.10).
 ///
 /// `roots` is the manifest `[requires.packages]` projected to `group/name`
@@ -50,6 +55,7 @@ fn root_drift(roots: &[String], lockfile: &Lockfile) -> Option<Diagnostic> {
             "{drift} lock root(s) differ from vibe.toml [requires.packages]; the lockfile may be behind \u{2014} run vibe install"
         ),
         locator: Some("vibe.lock meta.root_dependencies".to_string()),
+        spec_ref: DIAGNOSTICS_REQ.to_string(),
     })
 }
 
@@ -81,6 +87,9 @@ mod tests {
             out[0].locator.as_deref(),
             Some("vibe.lock meta.root_dependencies")
         );
+        // scaffold-F: the diagnostic cites the REQ it enforces.
+        assert_eq!(out[0].spec_ref, DIAGNOSTICS_REQ);
+        assert!(out[0].spec_ref.starts_with("spec://"));
     }
 
     #[test]

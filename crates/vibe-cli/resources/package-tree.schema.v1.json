@@ -171,13 +171,14 @@
     },
     "diagnostic": {
       "type": "object",
-      "required": ["severity", "code", "message"],
+      "required": ["severity", "code", "message", "spec_ref"],
       "additionalProperties": false,
       "properties": {
         "severity": { "enum": ["info", "warn", "error"] },
         "code": { "type": "string" },
         "message": { "type": "string" },
-        "locator": { "type": ["string", "null"] }
+        "locator": { "type": ["string", "null"] },
+        "spec_ref": { "type": "string", "description": "spec:// URI of the REQ this diagnostic enforces (scaffold-F)" }
       }
     }
   }

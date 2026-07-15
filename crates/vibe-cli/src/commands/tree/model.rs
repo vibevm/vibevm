@@ -182,6 +182,11 @@ pub struct Diagnostic {
     pub code: String,
     pub message: String,
     pub locator: Option<String>,
+    /// spec:// URI of the REQ this diagnostic enforces (scaffold-F). Every
+    /// diagnostic names the contract it speaks for, so a reader jumps straight
+    /// to the governing spec; required, because a diagnostic without a citable
+    /// REQ is a diagnostic without a defined meaning.
+    pub spec_ref: String,
 }
 
 /// Effective lane a package's boot snippet actually built into.
