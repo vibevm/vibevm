@@ -94,6 +94,18 @@ This plan runs continuously (§0.1) — phases land and commit as they complete.
   Everywhere modal** (input · tabs · results · invoke). Integration design: providers materialise
   owned candidates at open (no borrow on the tree); the App applies the reveal/open-card/run-command
   effect by `(provider, item)`. Floor-green + commit = the acceptance (§0.1).
+- **2026-07-15 — ACCEPTANCE LANDED.** `vibe-actions::search` engine (`d8ddc7b`) + the **F1 Search
+  Everywhere window** in the `vibe tree` TUI (`78b156a`) + a headless integration test (`a69963b`).
+  F1 opens the hybrid **"All"** + per-category tabs; searches **packages** by name, **every card
+  field**, and the **`vibe.tree` actions** by name/description/synonyms; a **found action runs in
+  place** (proven headless: running "Cycle ordering" changes the ordering; revealing a package
+  selects its row). Self-check all green; the binary is healthy. **The owner's acceptance (§0.1) is
+  met** — pending the owner's interactive visual confirmation in a real terminal.
+- **Deferred increments** (next, non-blocking): back the `vibe.tree` action catalogue with a live
+  `vibe_actions::Registry` (Ctx enablement + address-routed invoke, PROP-037 §13.2); per-character
+  match highlighting in the results (the engine already returns byte ranges); promote PROP-037's
+  F-key menus (§7.1/§7.2) onto the action system; the headless **AIUI** surface (PROP-039 §11.3);
+  the legibility floor-gate + enumerable-registry golden (PROP-039 §8.4/§12.2) as CI gates.
 
 **Scope addenda (owner, 2026-07-15) — fold into the findings doc + Spec 1**
 - **RQ13 — project-wide / STRUCTURAL Search Everywhere.** Study how VSCode + IDEA search the whole
