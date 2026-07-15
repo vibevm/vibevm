@@ -15,6 +15,7 @@ mod artifacts;
 mod build;
 mod model;
 mod plain;
+mod tui;
 
 use anyhow::Result;
 use serde_json::Value;
@@ -44,13 +45,13 @@ pub fn run(ctx: &output::Context, args: TreeArgs) -> Result<()> {
         return Ok(());
     }
 
-    // Phase 1 renders the plain ASCII tree on every non-JSON surface.
-    //
-    // Phase 2 seam: the interactive rat-salsa TUI launches when the session
-    // is attended and `--plain` was not passed; `--plain` and a non-tty keep
-    // the plain renderer below (PROP-036 §2.11 fallback). The decision is
-    // wired now so Phase 2 is a one-line branch here.
-    let _would_launch_tui = console::user_attended() && !args.plain;
+    // The interactive rat-salsa TUI launches when the session is attended and
+    // `--plain` was not passed (PROP-036 §2.11). `--plain` and a non-tty fall
+    // through to the plain ASCII renderer; `--json` returned above. Neither
+    // `--json` nor `--plain` ever enters interactive mode (§2.1).
+    if console::user_attended() && !args.plain {
+        return tui::run(tree);
+    }
     print!("{}", plain::render(&tree));
     Ok(())
 }

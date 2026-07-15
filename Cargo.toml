@@ -119,6 +119,17 @@ dirs = "5"
 reqwest = { version = "0.12", default-features = false, features = ["blocking", "json", "rustls-tls"] }
 chrono = { version = "0.4", default-features = false, features = ["serde", "clock", "std"] }
 
+# `vibe tree` interactive TUI (PROP-036 §2.11). rat-salsa event-loop + rat-widget
+# table, over the modular ratatui split (core / widgets / crossterm) that
+# rat-salsa / rat-widget pull — pinned here too so the whole graph builds ONE
+# shared copy and their types are nameable from vibe-cli. All MIT or
+# MIT/Apache-2.0 (PROP-000 §3 permissive).
+rat-salsa = "4.0"
+rat-widget = "3.2"
+ratatui-core = "0.1"
+ratatui-widgets = "0.3"
+ratatui-crossterm = "0.1"
+
 # Dev / test
 assert_cmd = "2"
 predicates = "3"
