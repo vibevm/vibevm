@@ -209,6 +209,24 @@ fn build_package(
             (LoadType::None, false, false, None, Condition::absent())
         };
 
+    // Contract (PROP-036 §2.3, scaffold-c witness at the use site): the
+    // effective lane is mutually exclusive — a package lands in STATIC.md or
+    // INDEX.md or neither, never both, and each flag matches the load type.
+    debug_assert!(
+        !(in_static && in_index),
+        "{id}: a package cannot be in both STATIC.md and INDEX.md"
+    );
+    debug_assert_eq!(
+        in_static,
+        load_type == LoadType::Static,
+        "{id}: in_static_md must hold iff the effective load is static"
+    );
+    debug_assert_eq!(
+        in_index,
+        load_type == LoadType::Dynamic,
+        "{id}: in_index_md must hold iff the effective load is dynamic"
+    );
+
     let declared = manifest.requires.declared_link(&p.group, &p.name);
     let (transitive, origin) = classify_origin(
         load_type,
@@ -432,3 +450,7 @@ fn load_lockfile(root: &Path) -> Result<Lockfile> {
     }
     Lockfile::read(&path).with_context(|| format!("reading {}", path.display()))
 }
+
+#[cfg(test)]
+#[path = "build/tests.rs"]
+mod tests;
