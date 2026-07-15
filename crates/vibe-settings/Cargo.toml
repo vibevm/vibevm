@@ -1,0 +1,16 @@
+[package]
+name = "vibe-settings"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+license-file.workspace = true
+publish.workspace = true
+repository.workspace = true
+homepage.workspace = true
+description = "Three-level, schema-first, introspectable application/user preferences for vibevm (PROP-040)"
+
+[dependencies]
+specmark.workspace = true
+thiserror.workspace = true
+serde.workspace = true
