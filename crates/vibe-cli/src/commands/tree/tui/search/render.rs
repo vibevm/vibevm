@@ -130,6 +130,27 @@ fn draw_results(area: Rect, buf: &mut Buffer, state: &SearchState) {
                     rect.width as usize,
                     base,
                 );
+                // Bold the matched byte ranges into `primary` (from the engine's
+                // one scorer) so the query stands out — PROP-039 §10.3. `get`
+                // guards a non-char-boundary range rather than panicking.
+                let indent_w = indent.chars().count();
+                for &(bs, be) in &hit.match_ranges {
+                    let (Some(slice), Some(before)) =
+                        (hit.primary.get(bs..be), hit.primary.get(..bs))
+                    else {
+                        continue;
+                    };
+                    let col = indent_w + before.chars().count();
+                    if (col as u16) < rect.width {
+                        buf.set_stringn(
+                            rect.x + col as u16,
+                            rect.y,
+                            slice,
+                            slice.len(),
+                            base.add_modifier(Modifier::BOLD),
+                        );
+                    }
+                }
                 if let Some(secondary) = &hit.secondary {
                     let sw = secondary.chars().count() as u16;
                     if sw + 2 < rect.width {
