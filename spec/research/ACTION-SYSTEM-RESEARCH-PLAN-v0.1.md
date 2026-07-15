@@ -83,9 +83,17 @@ This plan runs continuously (§0.1) — phases land and commit as they complete.
   `vibe-actions` (new §13 built-on-the-action-system + §7.3 Search Everywhere promoted from a stub +
   the `vibe.tree` action catalogue §13.5 + non-goals refreshed); TREE-TUI-PLAN carries the
   superseding note. **The specifications are complete** (research → design-doc → Spec 1 → Spec 2).
-- **Next — IMPLEMENTATION:** build the `vibe-actions` crate (PROP-039 §§2–11), then wire the F1
-  Search Everywhere window into the `vibe tree` TUI (the acceptance, §0.1). Gated phases, floor
-  green, committed at each boundary.
+- **2026-07-15 — IMPLEMENTATION started.** The `vibe-actions` **core crate landed** (`a7f00c7`,
+  self-check all green, gated in `conform.toml`) — address/action/registry/params/context/invoke/
+  i18n, 58+2 tests (implemented by a subagent to the boss's spec; the boss reviewed it + integrated
+  the conform gate — the 5 error enums carry their `#[spec]` REQ edges). The **Search Everywhere
+  engine** (`vibe-actions::search` — the provider trait + a tiered matcher + tab/merge/recency) is in
+  flight, delegated to the boss's exact design (PROP-039 §10).
+- **Next (boss, never-delegate):** the TUI integration in `vibe-cli` — three providers (Package /
+  PackageField / Action over the `PackageTree` + a `vibe.tree` action catalogue) + the **F1 Search
+  Everywhere modal** (input · tabs · results · invoke). Integration design: providers materialise
+  owned candidates at open (no borrow on the tree); the App applies the reveal/open-card/run-command
+  effect by `(provider, item)`. Floor-green + commit = the acceptance (§0.1).
 
 **Scope addenda (owner, 2026-07-15) — fold into the findings doc + Spec 1**
 - **RQ13 — project-wide / STRUCTURAL Search Everywhere.** Study how VSCode + IDEA search the whole
