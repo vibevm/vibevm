@@ -41,6 +41,11 @@ use vibe_core::{Group, PackageKind};
 
 use crate::WorkspaceError;
 
+/// The per-unit recursive compiler (PROP-038) — the hybrid linker that
+/// compiles each compilation unit from its own edges. Lands alongside this
+/// module's per-node composition during the migration (PROP-038 §4).
+pub mod hybrid;
+
 /// The band a boot entry sorts into within the computed sequence
 /// (PROP-009 §2.5). Declaration order **is** the sort order — the
 /// foundation leads, user overrides trail:
