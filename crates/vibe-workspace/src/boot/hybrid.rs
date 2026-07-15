@@ -37,6 +37,7 @@ use std::collections::{BinaryHeap, HashMap, HashSet};
 use vibe_core::Group;
 use vibe_core::manifest::{LinkType, WhenCondition};
 
+pub mod fingerprint;
 pub mod hoist;
 
 /// A compilation unit's identity — a resolved `(group, name)` (PROP-038 §2.1).
