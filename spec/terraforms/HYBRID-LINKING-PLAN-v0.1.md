@@ -1,6 +1,6 @@
 # HYBRID-LINKING-PLAN v0.1 — per-package boot compilation units with soft/hard static edges
 
-_Status: PLANNED · written against tree `a9fdd63` · cold-executable: Phase 0 is
+_Status: EXECUTING (Phase 2 next) · written against tree `a9fdd63` · cold-executable: Phase 0 is
 spikes and commits nothing; every later phase ends with the floor green and is a
 safe stop. The **contract** is [PROP-038](../modules/vibe-workspace/PROP-038-hybrid-boot-linking.md);
 this plan is the recipe that executes it, phase by phase, each phase citing the
@@ -299,7 +299,27 @@ cargo xtask specmap && cargo xtask conform check                # clean
 
 ## 14 — Execution ledger
 
-_Filled by the executing session._
+- **Phase 0 — spikes + spec resolution.** `d487d4e` `docs(spec): PROP-038
+  accepted — resolve Phase 0 open questions`. Code reconnaissance folded the
+  five §5 questions into resolutions (soft/hard × transitive orthogonal; both
+  direct + forced edges count static-use; fingerprint in the artifact header;
+  per-package granularity; dynamic boundaries aggregate into the unit INDEX)
+  and the migration-safety corollary (per-unit artifacts additive, entry-point
+  artifacts byte-stable). Baseline floor green. No code committed (spikes only).
+- **Phase 1 — per-unit emission + per-edge recursion** (§2.1, §2.2). Two commits:
+  - `542befd` `feat(vibe-workspace): hybrid per-unit boot compiler` — the pure
+    core `boot/hybrid.rs`: `resolve_zone` (membership recursion, dynamic-bounded,
+    static-transitive forces, when-gate stays dynamic) + `topo_zone` (Kahn +
+    pkgref tie-break for byte-stability). 5 unit tests: the owner's chain, diamond
+    dedup, forced subtree, the when gate.
+  - `29388fe` `feat(vibe-workspace): wire per-unit boot compilation into install`
+    — `build_unit_table` (edges carry each package's OWN manifest's link modes,
+    fixing root-only seeding) + `emit_package_units` (writes STATIC.md/INDEX.md
+    into a slot when a package statically links a child) + the node dynamic-edge
+    refinement (→ the child's STATIC.md). Confirms **P1** (per-edge recursion, no
+    global lattice) and **P5** (byte-identical node artifacts on the current
+    tree: `with_static` empty ⇒ no-op). New end-to-end test proves the owner's
+    core case. Floor green (152 workspace tests + specmap 0 orphans).
 
 ---
 
