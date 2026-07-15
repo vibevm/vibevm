@@ -1,0 +1,184 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://vibespecs.org/schemas/package-tree/v1.json",
+  "title": "vibe package-tree",
+  "description": "Algorithmic snapshot of a vibevm project's spec/dependency tree: the resolved package graph, per-package effective boot load type, the two boot lanes (STATIC.md / INDEX.md), and in-place @spec markers. Produced by `vibe tree --json`.",
+  "type": "object",
+  "required": ["schema_version", "project", "roots", "packages", "boot"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": { "const": 1 },
+    "generated_at": { "type": "string", "format": "date-time" },
+    "tool_version": { "type": "string" },
+    "project": {
+      "type": "object",
+      "required": ["root", "is_workspace", "host_namespace"],
+      "additionalProperties": false,
+      "properties": {
+        "root": { "type": "string", "description": "Absolute path to the project root" },
+        "name": { "type": ["string", "null"] },
+        "is_workspace": { "type": "boolean" },
+        "host_namespace": { "type": "string", "description": "Host authority for spec:// (e.g. \"vibevm\")" }
+      }
+    },
+    "roots": {
+      "type": "array",
+      "description": "Declared roots from vibe.toml [requires.packages], as \"group/name\"",
+      "items": { "$ref": "#/$defs/packageId" }
+    },
+    "packages": { "type": "array", "items": { "$ref": "#/$defs/package" } },
+    "boot": {
+      "type": "object",
+      "required": ["index_md"],
+      "additionalProperties": false,
+      "properties": {
+        "static_md": { "anyOf": [{ "$ref": "#/$defs/staticLane" }, { "type": "null" }] },
+        "index_md": { "$ref": "#/$defs/indexLane" }
+      }
+    },
+    "in_place_specs": { "type": "array", "items": { "$ref": "#/$defs/inPlaceSpec" } },
+    "diagnostics": { "type": "array", "items": { "$ref": "#/$defs/diagnostic" } }
+  },
+  "$defs": {
+    "packageId": { "type": "string", "pattern": "^[^/]+/[^/@]+$", "description": "\"group/name\"" },
+    "package": {
+      "type": "object",
+      "required": ["id", "group", "name", "kind", "version", "load", "condition", "dependencies"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "$ref": "#/$defs/packageId" },
+        "group": { "type": "string" },
+        "name": { "type": "string" },
+        "kind": { "enum": ["flow", "feat", "stack", "tool", "mcp", "app"] },
+        "version": { "type": "string" },
+        "content_hash": { "type": ["string", "null"] },
+        "source": { "$ref": "#/$defs/source" },
+        "load": { "$ref": "#/$defs/load" },
+        "condition": { "$ref": "#/$defs/condition" },
+        "dependencies": {
+          "type": "array",
+          "description": "Out-edges (children in the tree), as \"group/name\"",
+          "items": { "$ref": "#/$defs/packageId" }
+        }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "kind": { "enum": ["registry", "git", "override", "path", "embedded"] },
+        "url": { "type": ["string", "null"] },
+        "ref": { "type": ["string", "null"] },
+        "commit": { "type": ["string", "null"] }
+      }
+    },
+    "load": {
+      "type": "object",
+      "required": ["type", "transitive", "in_static_md", "in_index_md"],
+      "additionalProperties": false,
+      "properties": {
+        "type": { "enum": ["static", "dynamic", "none"], "description": "Effective lane actually built. none = the package ships no boot snippet" },
+        "transitive": { "type": "boolean", "description": "Effective static was forced by a static-transitive ancestor, not the package's own declaration" },
+        "declared": { "enum": ["static", "dynamic", "static-transitive", null], "description": "Consumer's declared link for this edge (null = not declared)" },
+        "origin": { "enum": ["declared", "suggested", "default", "static-transitive", "when-forced", "none"], "description": "Why type has its value" },
+        "in_static_md": { "type": "boolean", "description": "Physically present as a contribution in STATIC.md (the S column)" },
+        "in_index_md": { "type": "boolean", "description": "Physically present as an entry in INDEX.md" },
+        "boot_path": { "type": ["string", "null"], "description": "Project-relative source boot file that landed, if any" }
+      }
+    },
+    "condition": {
+      "type": "object",
+      "required": ["present"],
+      "additionalProperties": false,
+      "properties": {
+        "present": { "type": "boolean" },
+        "raw": { "type": ["string", "null"], "description": "e.g. \"os:windows\"" },
+        "kind": { "enum": ["os", null] },
+        "value": { "type": ["string", "null"] }
+      }
+    },
+    "staticLane": {
+      "type": "object",
+      "required": ["present", "path", "bytes", "lines", "contributions"],
+      "additionalProperties": false,
+      "properties": {
+        "present": { "type": "boolean" },
+        "path": { "type": "string" },
+        "bytes": { "type": "integer", "minimum": 0, "description": "Total size of STATIC.md — the status-line indicator" },
+        "lines": { "type": "integer", "minimum": 0 },
+        "contributions": { "type": "array", "items": { "$ref": "#/$defs/staticContribution" } }
+      }
+    },
+    "staticContribution": {
+      "type": "object",
+      "required": ["order", "origin", "source_path"],
+      "additionalProperties": false,
+      "properties": {
+        "order": { "type": "integer", "minimum": 0 },
+        "origin": { "type": "string", "description": "\"group/name\" pkgref, or host rel-path for authored boot" },
+        "source_path": { "type": "string", "description": "Workspace-relative source file" },
+        "bytes": { "type": "integer", "minimum": 0 },
+        "lines": { "type": "integer", "minimum": 0 },
+        "embeds": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["address", "start_line", "end_line"],
+            "properties": {
+              "address": { "type": "string" },
+              "start_line": { "type": "integer" },
+              "end_line": { "type": "integer" }
+            }
+          }
+        }
+      }
+    },
+    "indexLane": {
+      "type": "object",
+      "required": ["present", "path", "entries"],
+      "additionalProperties": false,
+      "properties": {
+        "present": { "type": "boolean" },
+        "path": { "type": "string" },
+        "static_pointer": { "type": ["string", "null"], "description": "INDEX.md \"static\" field → STATIC.md path, if any" },
+        "entries": { "type": "array", "items": { "$ref": "#/$defs/indexEntry" } }
+      }
+    },
+    "indexEntry": {
+      "type": "object",
+      "required": ["order", "path", "kind"],
+      "additionalProperties": false,
+      "properties": {
+        "order": { "type": "integer", "minimum": 0 },
+        "path": { "type": "string" },
+        "kind": { "enum": ["static", "dynamic"], "description": "INDEX read-timing axis (when-gated=dynamic). NOT the package load type" },
+        "when": { "type": ["string", "null"] }
+      }
+    },
+    "inPlaceSpec": {
+      "type": "object",
+      "required": ["carrier", "address", "file", "line"],
+      "additionalProperties": false,
+      "properties": {
+        "carrier": { "enum": ["@spec", "#use", "#embed", "#source"] },
+        "address": { "type": "string", "description": "spec:// URI" },
+        "file": { "type": "string", "description": "Project-relative" },
+        "line": { "type": "integer", "minimum": 1 },
+        "resolved": { "type": "boolean" },
+        "target_package": { "type": ["string", "null"] }
+      }
+    },
+    "diagnostic": {
+      "type": "object",
+      "required": ["severity", "code", "message"],
+      "additionalProperties": false,
+      "properties": {
+        "severity": { "enum": ["info", "warn", "error"] },
+        "code": { "type": "string" },
+        "message": { "type": "string" },
+        "locator": { "type": ["string", "null"] }
+      }
+    }
+  }
+}

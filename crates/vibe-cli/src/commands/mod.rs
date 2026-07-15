@@ -40,6 +40,7 @@ pub mod short_name;
 pub mod show;
 pub mod skill;
 pub mod trace;
+pub mod tree;
 pub mod uninstall;
 pub mod update;
 pub mod vars;

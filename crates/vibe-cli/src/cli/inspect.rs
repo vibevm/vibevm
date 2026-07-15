@@ -77,6 +77,19 @@ pub struct ShowPurlsArgs {
 }
 
 #[derive(Debug, clap::Args)]
+pub struct TreeArgs {
+    /// Project root. Defaults to the current directory.
+    #[arg(long, default_value = ".")]
+    pub path: PathBuf,
+
+    /// Force the plain ASCII tree instead of the interactive TUI. The TUI
+    /// is Phase 2 (PROP-036 §2.11); today output is plain regardless, so
+    /// this flag is currently a no-op on a tty.
+    #[arg(long)]
+    pub plain: bool,
+}
+
+#[derive(Debug, clap::Args)]
 pub struct CheckArgs {
     /// Project root with `vibe.toml`. Defaults to current directory.
     #[arg(long, default_value = ".")]

@@ -123,6 +123,11 @@ chrono = { version = "0.4", default-features = false, features = ["serde", "cloc
 assert_cmd = "2"
 predicates = "3"
 tempfile = "3"
+# JSON-Schema validator for the `vibe tree --json` golden (PROP-036). MIT.
+# default-features off: the schema is self-contained (internal `$defs` only),
+# so the HTTP/file `$ref` resolvers — and their aws-lc-rs / reqwest toolchain
+# — are not needed.
+jsonschema = { version = "0.47", default-features = false }
 trybuild = "1"
 proptest = "1"
 axum = "0.8"

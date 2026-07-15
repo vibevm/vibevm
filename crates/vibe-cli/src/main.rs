@@ -112,6 +112,7 @@ fn main() -> ExitCode {
         Command::Reinstall(args) => commands::reinstall::run(&ctx, args, discover_embedded_root()),
         Command::Check(args) => commands::check::run(&ctx, args),
         Command::Show(args) => commands::show::run(&ctx, args),
+        Command::Tree(args) => commands::tree::run(&ctx, args),
         Command::Registry(args) => commands::registry::run(&ctx, args),
         Command::Workspace(args) => commands::workspace::run(&ctx, args),
         Command::Vvm(args) => {
