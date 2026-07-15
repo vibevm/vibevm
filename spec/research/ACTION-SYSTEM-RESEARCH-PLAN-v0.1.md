@@ -1,6 +1,6 @@
 # Action-System Research Plan v0.1 — a clean-room study feeding the addressable-action system
 
-**status: PLANNED · not started · runs COLD in its own session(s) · this campaign is STUDY only — it produces a findings document that feeds Spec 1 (the system), then Spec 2 (vibe tree), then the implementation, each behind a firewall (§1)**
+**status: EXECUTING (2026-07-15) · autonomous full-arc mandate — STUDY → design-doc → Spec 1 → Spec 2 → implementation, run to completion, MAXIMAL (no simplification, owner directive §0.1) · acceptance = a working F1 Search Everywhere in the `vibe tree` TUI (§0.1) · the §1 firewall is held as phase discipline within one continuous run (sources are read only during STUDY, and by read-only subagents; the specs and code are authored from the findings document)**
 
 > **Read-first / boot.** Executed **cold, in a fresh session the owner launches for it**. Boot the normal way (`CLAUDE.md` → `spec/boot/INDEX.md` → its files → `spec/WAL.md` → `CONTINUE.md`), then read this whole file. It is self-contained: the strategic thesis, the **clean-room firewall (non-negotiable)**, the verified sources and where they live, the question-driven agenda, the deliverables, the phases, the predictions, the risks, and the open owner-decisions are all here.
 >
@@ -22,6 +22,26 @@ The owner wants a **Search Everywhere** window for `vibe tree` — "по тип�
 
 1. **Essential-first.** We do not rebuild VSCode's or IntelliJ's action stack. We define the **smallest useful core** that makes `vibe tree`'s actions addressable + searchable, and grow. Part of the research's job is to tell us what that essential slice *is*.
 2. **Clean-room (§1).** We take ideas, never code.
+
+---
+
+## 0.1 Overarching mandate & acceptance — LIVING (owner, 2026-07-15) {#mandate}
+
+The owner ratified this plan and set a standing mandate that governs **every** campaign it seeds — the STUDY here, then the design-doc, Spec 1, Spec 2, and the implementation. Verbatim essentials:
+
+> «не нужно ничего упрощать — делай максимальные нормальные варианты дизайн-доков и прочего» · «Продолжай пока не закончишь реализацию» · «напиши ВСЕ СПЕЦИФИКАЦИИ ХОРОШО И ПОЛНО и РЕАЛИЗУЙ Search Everywhere в TUI в котором можно и искать пакеты, и искать actions, найденные экшены можно вызывать» · «я хочу чтобы у экшенов были человекочитаемые названия и описания и … можно было искать … по названиям и описаниям … заполнение этих полей должно быть частью дисциплины ИИ разработки UI (любого UI). Интерфейс должен быть понимаемым и хорошо навигируемым, и это одна из вещей которые лежат в основе».
+
+**No simplification.** Every deliverable is the maximal, proper version — a full standalone design-doc (RP5 → authored, not folded), a full Spec 1, a full Spec 2. "Essential-first" (§0) means the *sequence* is smallest-useful-first, never a *scope-cut*.
+
+**Run to completion, autonomously.** Execute the whole arc without stopping at each gate for permission (report status, not requests — `operating-modes`); surface only Rule-4 red lines (history rewrite, force-push, large blobs, CI/secrets) and true blockers. Checkpoint via commits + this plan's ledger so a cold resume continues without loss.
+
+**Acceptance — the definition of done.** In the `vibe tree` TUI, **F1** opens a Search-Everywhere window in the **IntelliJ IDEA visual idiom** — a hybrid **"All"** tab that searches everything, plus separate **per-category tabs** that narrow the search — which searches, and lets the user act on:
+
+1. **packages** by name;
+2. **inside every field of the package detail cards** — a real Search Everywhere, all card fields indexed;
+3. **all actions** — and a found action **can be invoked** directly from the results.
+
+**Human-legibility is a founding discipline, not decoration.** Every action carries a **human-readable name and a description**; both are **first-class searchable fields** (the name/description lane is the fallback match when id and other fields do not). Filling them is **part of the AI-native discipline for building any UI** on this system: an action with an empty or meaningless name/description **fails the floor gate** (`conform`), exactly as untested domain logic does. "The interface is understandable and well-navigable" is a **stated design goal of the system itself**, inherited by every frontend built on it — the reusable guideline the owner wants for other UIs (§0). This is normatively owned by Spec 1 and enforced by the implementation.
 
 ---
 
@@ -170,6 +190,8 @@ These are **hypotheses for Spec 1**, listed here so the study knows what it is t
 9. **Invocation surfaces are adapters.** Keymap, menu/group tree, palette/SE, programmatic API, and a future JSON-RPC for out-of-process frontends — all funnel through the one `invoke`.
 10. **Cross-cutting by design, not bolted on.** Cancellation, typed results/errors, an optional telemetry hook, an optional undo/transaction wrapper, a capability/visibility scope, and localizable presentation decoupled from the stable address. *(Answers: capability model, i18n, composition, testing.)*
 
+11. **Human-legibility as a founding discipline (owner directive, §0.1).** Every action MUST carry a **human-readable name and a description** — non-empty and meaningful — and both are **first-class searchable fields** (the fallback match lane, per the acceptance). This is enforced, not encouraged: an action missing either **fails the floor gate** (`conform`), the same way untested domain logic does. Navigability and understandability are a **stated design goal** of the system, inherited by every frontend built on it — the reusable guideline the owner wants for other UIs (§0). *(Answers: presentation-vs-identity entanglement; discoverability; "I can't find the thing I know exists".)*
+
 There is a thematic through-line to state plainly in the findings doc: **this is addressability extended from specs to behaviour.** It fits the AI-Native Rust discipline the owner already mandated for `vibe tree` (every action an addressable REQ the code cites via specmark; a characterization golden over the whole registry).
 
 ---
@@ -221,6 +243,8 @@ At close, the campaign hands **only the findings document** to the SPEC-1 sessio
 ---
 
 ## 11. Open review points — owner decisions {#review-points}
+
+**All resolved by the owner (2026-07-15)** — «я со всем согласен, кроме упрощения» + the §0.1 follow-ups. Kept below for the record: RP1 → the URI `action://` form; RP2 → the maximal self-contained core, no scope-cut; RP3 → homes accepted (findings doc in `spec/research/`; Spec 1 = a new module `spec/modules/vibe-actions/` + PROP-039 + a new crate `vibe-actions`); RP4 → the boss reads the sources, source-reading fanned to read-only subagents to spare context (announced); RP5 → author the **full standalone design-doc** `spec/design/action-system.md` (do not fold).
 
 - **RP1 — the product name + the addressing grammar.** **Owner lean (2026-07-15): the URI form `action://<group>/<name>[?params]`** — the behaviour-layer twin of `spec://<module>/<doc>#<anchor>`, with typed parameters carried as the query (e.g. `action://vibe.tree/sort?by=name&dir=asc`). This lean **directs the study** — sharpen RQ1 (identity/addressing) and RQ7 (Search Everywhere) against it — and is **ratified in Spec 1**, not here. Rejected for now: an IntelliJ-style **dotted FQDN** (`org.vibevm.tree.copy.markdown`) — parameters cannot live in the address, and it reads less like the project's `spec://` brand. Working concept name **"Addressable Actions"**, also ratified in Spec 1.
 - **RP2 — Spec-1 scope boundary.** What is in the self-contained core (identity, registry, invocation, typed params, typed context, discovery/SE, adapter seam) vs. what stays vibe-tree-specific (the concrete action catalogue, the F-key map, the tree providers)? A first cut is in §6/§7; the owner confirms the line.
