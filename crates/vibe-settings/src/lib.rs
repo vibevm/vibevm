@@ -29,3 +29,4 @@ specmark::scope!("spec://vibevm/modules/vibe-settings/PROP-040#root");
 
 pub mod error;
 pub mod loader;
+pub mod schema;
