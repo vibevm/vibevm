@@ -45,6 +45,43 @@ The owner ratified this plan and set a standing mandate that governs **every** c
 
 ---
 
+## 0.2 — Execution ledger + scope addenda (running) {#ledger}
+
+_A running record so a cold resume continues without loss; `git log` is the authoritative history.
+This plan runs continuously (§0.1) — phases land and commit as they complete._
+
+**Progress**
+- **2026-07-15 — STUDY (action systems) COMPLETE.** Six read-only subagents studied the VSCode +
+  IntelliJ action systems (clean-room, sources outside the repo). Findings doc
+  [`action-systems-vscode-idea.md`](action-systems-vscode-idea.md) landed — the part-(a)
+  design-space map, both systems quote-first, 14 design obligations (DO1–DO14), the two-way gaps,
+  12 roadmap deltas (Δ1–Δ12 → PROP-039 REQs), and the predictions check (P1–P5 CONFIRMED, P6
+  SUPPORTED). Commits `ba2fe1f` + `3351168` + `386ac19`.
+- **In flight:** the follow-up STUDY below (project-wide/structural SE + i18n), 3 subagents.
+
+**Scope addenda (owner, 2026-07-15) — fold into the findings doc + Spec 1**
+- **RQ13 — project-wide / STRUCTURAL Search Everywhere.** Study how VSCode + IDEA search the whole
+  project, not only actions — files/symbols/text, and IDEA's language-structural index (PSI/stubs).
+  The point: the SE **provider abstraction must be open enough** that we implement a **PackageTree
+  provider now** (packages + every package-card field) and a **future AI-Native structural provider**
+  (spec/code nodes — the specmap) against the *same* seam.
+- **RQ14 — i18n.** The TUI is English-only; we add a **real** message-catalogue i18n (IDEA
+  `ActionsBundle` `action.<id>.text/.description`; VSCode `nls.localize`). → **DO15**: every action's
+  name/description is a localizable catalogue entry keyed by the stable **address**, English the
+  default/fallback, the legibility gate checks the default locale.
+- **DO16** — structural / project-wide **provider extensibility** (from RQ13): one provider seam,
+  packages now, AI-Native structure later. **DO17** — systematically adopt the incumbents' proven
+  mechanisms we still lack: synonyms/aliases + abbreviations as searchable metadata; usage-stats /
+  recency ranking; precise key-scoped reactivity; progressive fast/slow async. (The owner's "add the
+  missing mechanisms that VSCode/IDEA have and we don't.")
+
+**Next (the arc):** finish the follow-up study → the maximal **design-doc**
+(`spec/design/action-system.md`, RP5) → **Spec 1** (PROP-039, the `vibe-actions` contract) →
+**Spec 2** (revise PROP-037 + the vibe-tree action catalogue) → **implementation** (the `vibe-actions`
+crate + the SE engine + the F1 window). Acceptance in §0.1.
+
+---
+
 ## 1. Clean-room discipline — GATING, non-negotiable {#clean-room}
 
 This section governs the whole campaign. Violating it is worse than not doing the research at all.
