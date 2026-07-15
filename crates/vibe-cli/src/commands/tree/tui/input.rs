@@ -7,9 +7,10 @@ specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-036#tui");
 use anyhow::Result;
 use rat_salsa::Control;
 use rat_widget::event::ct_event;
-use ratatui_crossterm::crossterm::event::Event;
+use ratatui_crossterm::crossterm::event::{Event, KeyCode, KeyEventKind};
 
 use super::AppEvent;
+use super::search::{self, SearchState};
 use super::state::{App, RowNode};
 
 /// Handle one terminal event, returning the rat-salsa control-flow verdict.
@@ -28,9 +29,21 @@ pub fn handle(event: &Event, app: &mut App) -> Result<Control<AppEvent>> {
         return Ok(Control::Changed);
     }
 
+    // The Search Everywhere window captures input while open (PROP-037 §7.3).
+    if app.search.is_some() {
+        return Ok(handle_search(event, app));
+    }
+
     // The modal captures input while open (§2.11).
     if app.modal_open {
         return Ok(handle_modal(event, app));
+    }
+
+    // F1 opens Search Everywhere (PROP-037 §7.3).
+    if is_press_f1(event) {
+        let state = SearchState::open(app);
+        app.search = Some(state);
+        return Ok(Control::Changed);
     }
 
     let control = match event {
@@ -101,6 +114,45 @@ fn handle_modal(event: &Event, app: &mut App) -> Control<AppEvent> {
         }
         _ => Control::Unchanged,
     }
+}
+
+/// True for an `F1` key-press event.
+fn is_press_f1(event: &Event) -> bool {
+    matches!(event, Event::Key(k) if k.code == KeyCode::F(1) && k.kind == KeyEventKind::Press)
+}
+
+/// The captive Search Everywhere handler (PROP-037 §7.3): typing filters, `↑`/`↓`
+/// move the selection, `Tab`/`Shift+Tab` cycle the category tabs, `Enter` runs the
+/// selection, `Esc` closes.
+fn handle_search(event: &Event, app: &mut App) -> Control<AppEvent> {
+    let Event::Key(k) = event else {
+        return Control::Unchanged;
+    };
+    if k.kind != KeyEventKind::Press {
+        return Control::Unchanged;
+    }
+    match k.code {
+        KeyCode::Esc => {
+            app.search = None;
+            Control::Changed
+        }
+        KeyCode::Enter => search::confirm(app),
+        KeyCode::Up => with_search(app, |s| s.select_up()),
+        KeyCode::Down => with_search(app, |s| s.select_down()),
+        KeyCode::Tab => with_search(app, |s| s.next_tab()),
+        KeyCode::BackTab => with_search(app, |s| s.prev_tab()),
+        KeyCode::Backspace => with_search(app, |s| s.backspace()),
+        KeyCode::Char(c) => with_search(app, move |s| s.type_char(c)),
+        _ => Control::Unchanged,
+    }
+}
+
+/// Run a mutation on the open search window and request a repaint.
+fn with_search(app: &mut App, f: impl FnOnce(&mut SearchState)) -> Control<AppEvent> {
+    if let Some(state) = app.search.as_mut() {
+        f(state);
+    }
+    Control::Changed
 }
 
 /// Move the selection up one row, keeping it visible.

@@ -39,6 +39,12 @@ pub fn draw(area: Rect, buf: &mut Buffer, app: &mut App) {
     if app.modal_open {
         modal::draw(area, buf, app);
     }
+
+    // Search Everywhere (F1) is a captive window over everything, drawn last
+    // (PROP-037 §7.3).
+    if let Some(search) = &app.search {
+        super::search::render::draw(area, buf, search);
+    }
 }
 
 /// The status line: ordering · display mode · the `STATIC.md` size indicator
@@ -78,7 +84,7 @@ fn render_footer(area: Rect, buf: &mut Buffer) {
     if area.width == 0 {
         return;
     }
-    let hint = " \u{2191}/\u{2193} move   \u{2190}/\u{2192} pan   Space fold   \
+    let hint = " F1 search   \u{2191}/\u{2193} move   \u{2190}/\u{2192} pan   Space fold   \
                 F fold-all   n order   x mode   t swap   [ ] tabs   \
                 Enter detail   q quit";
     let bar = Style::new().add_modifier(Modifier::DIM);

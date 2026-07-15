@@ -17,6 +17,7 @@ path = "src/main.rs"
 [dependencies]
 specmark.workspace = true
 vibe-core.workspace = true
+vibe-actions.workspace = true
 vibe-graph.workspace = true
 vibe-install.workspace = true
 vibe-registry.workspace = true

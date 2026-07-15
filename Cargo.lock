@@ -3427,6 +3427,7 @@ dependencies = [
  "toml 0.9.12+spec-1.1.0",
  "tracing",
  "tracing-subscriber",
+ "vibe-actions",
  "vibe-check",
  "vibe-core",
  "vibe-graph",

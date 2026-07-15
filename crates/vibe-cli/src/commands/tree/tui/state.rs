@@ -12,6 +12,7 @@ use rat_widget::table::TableState;
 
 use super::super::model::{LoadType, Package, PackageTree};
 use super::modes;
+use super::search::SearchState;
 
 /// The number of flat-mode partitions / tabs: `static`, `dynamic`, `no-boot`.
 const TAB_COUNT: usize = 3;
@@ -113,6 +114,8 @@ pub struct App {
     pub max_name_width: usize,
     /// Whether the detail modal is open.
     pub modal_open: bool,
+    /// The open Search Everywhere window (F1), if any (PROP-037 §7.3).
+    pub search: Option<SearchState>,
     /// Current row ordering (`n`).
     pub ordering: Ordering,
     /// Current display mode (`x`).
@@ -138,6 +141,7 @@ impl App {
             h_offset: 0,
             max_name_width: 0,
             modal_open: false,
+            search: None,
             ordering: Ordering::Topological,
             display_mode: DisplayMode::All,
             static_first: true,

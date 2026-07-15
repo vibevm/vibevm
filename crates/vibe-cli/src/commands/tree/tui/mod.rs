@@ -17,6 +17,7 @@ mod input;
 mod modal;
 mod modes;
 mod render;
+mod search;
 mod state;
 
 use anyhow::Result;
