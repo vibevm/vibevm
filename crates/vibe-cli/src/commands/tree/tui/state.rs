@@ -6,11 +6,12 @@
 
 specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-036#tui");
 
-use std::collections::{BTreeMap, BTreeSet};
+use std::collections::BTreeSet;
 
 use rat_widget::table::TableState;
 
-use super::super::model::{LoadType, Package, PackageTree};
+use super::super::model::{LoadType, PackageTree};
+use super::menu::MenuState;
 use super::modes;
 use super::search::SearchState;
 
@@ -116,6 +117,8 @@ pub struct App {
     pub modal_open: bool,
     /// The open Search Everywhere window (F1), if any (PROP-037 §7.3).
     pub search: Option<SearchState>,
+    /// The open F-key selection menu (F2/F3), if any (PROP-037 §7.1/§7.2).
+    pub menu: Option<MenuState>,
     /// Current row ordering (`n`).
     pub ordering: Ordering,
     /// Current display mode (`x`).
@@ -142,6 +145,7 @@ impl App {
             max_name_width: 0,
             modal_open: false,
             search: None,
+            menu: None,
             ordering: Ordering::Topological,
             display_mode: DisplayMode::All,
             static_first: true,
@@ -220,7 +224,7 @@ impl App {
     /// between renders (PROP-036 §2.11–§2.12).
     pub fn rebuild(&mut self) {
         self.rows = match self.display_mode {
-            DisplayMode::All => flatten(&self.tree, &self.folded, self.ordering),
+            DisplayMode::All => super::flatten::flatten(&self.tree, &self.folded, self.ordering),
             DisplayMode::SubTables => {
                 modes::subtables_rows(&self.tree, self.ordering, self.static_first)
             }
@@ -257,6 +261,20 @@ impl App {
             DisplayMode::SubTables => DisplayMode::Tabs,
             DisplayMode::Tabs => DisplayMode::All,
         };
+        self.rebuild();
+        self.reset_selection_top();
+    }
+
+    /// Set the display mode to a specific value (the F3 menu, PROP-037 §7.1).
+    pub fn set_display_mode(&mut self, mode: DisplayMode) {
+        self.display_mode = mode;
+        self.rebuild();
+        self.reset_selection_top();
+    }
+
+    /// Set the row ordering to a specific value (the F2 menu, PROP-037 §7.2).
+    pub fn set_ordering(&mut self, ordering: Ordering) {
+        self.ordering = ordering;
         self.rebuild();
         self.reset_selection_top();
     }
@@ -307,169 +325,6 @@ pub(super) fn load_label(load: LoadType) -> &'static str {
         LoadType::Static => "static",
         LoadType::Dynamic => "dynamic",
         LoadType::None => "none",
-    }
-}
-
-/// Flatten the DAG into visible rows given a fold set (PROP-036 §2.12). Walks
-/// each declared root, then an orphan pass for anything not reached — so the
-/// view never hides a package.
-fn flatten(tree: &PackageTree, folded: &BTreeSet<String>, ordering: Ordering) -> Vec<VisibleRow> {
-    let by_id: BTreeMap<&str, usize> = tree
-        .packages
-        .iter()
-        .enumerate()
-        .map(|(i, p)| (p.id.as_str(), i))
-        .collect();
-
-    let mut rows: Vec<VisibleRow> = Vec::new();
-    let mut seen: BTreeSet<String> = BTreeSet::new();
-
-    // Alphabetical ordering sorts the siblings (here, the roots) by group/name;
-    // structure is otherwise preserved (PROP-036 §2.11).
-    let mut roots: Vec<&str> = tree.roots.iter().map(|s| s.as_str()).collect();
-    if ordering == Ordering::Alphabetical {
-        roots.sort_unstable();
-    }
-    let root_count = roots.len();
-    for (i, &root) in roots.iter().enumerate() {
-        let is_last = i + 1 == root_count;
-        walk(
-            root, "", is_last, true, tree, &by_id, folded, ordering, &mut seen, &mut rows,
-        );
-    }
-
-    // Orphan pass: any package genuinely not reachable from a declared root
-    // (e.g. a drifted lock root) is still shown (PROP-036 §2.12). Reachability
-    // is judged over the FULL graph, ignoring folds — a folded-away subtree is
-    // hidden, not resurrected here.
-    let reachable = modes::reachable_from_roots(tree, &by_id);
-    let mut orphans: Vec<&Package> = tree
-        .packages
-        .iter()
-        .filter(|p| !reachable.contains(&p.id))
-        .collect();
-    orphans.sort_by(|a, b| a.id.cmp(&b.id));
-    if !orphans.is_empty() {
-        rows.push(VisibleRow {
-            node: RowNode::Separator,
-            id: String::new(),
-            name: "— not reached from a declared root —".to_string(),
-            load: "",
-            transitive: false,
-            condition: false,
-            in_static: false,
-        });
-        let n = orphans.len();
-        for (k, pkg) in orphans.into_iter().enumerate() {
-            let is_last = k + 1 == n;
-            walk(
-                &pkg.id, "", is_last, true, tree, &by_id, folded, ordering, &mut seen, &mut rows,
-            );
-        }
-    }
-    rows
-}
-
-/// Depth-first walk producing rows. Marks a re-occurrence `(*)` and does not
-/// re-expand it (DAG dedup), and a folded node `+` (does not recurse). Mirrors
-/// [`super::super::plain`]'s connector/prefix construction.
-#[allow(clippy::too_many_arguments)]
-fn walk(
-    id: &str,
-    prefix: &str,
-    is_last: bool,
-    is_root: bool,
-    tree: &PackageTree,
-    by_id: &BTreeMap<&str, usize>,
-    folded: &BTreeSet<String>,
-    ordering: Ordering,
-    seen: &mut BTreeSet<String>,
-    rows: &mut Vec<VisibleRow>,
-) {
-    // A root carries no connector; every child gets a `├─`/`└─` connector on
-    // top of the accumulated vertical-bar prefix.
-    let connector = if is_root {
-        String::new()
-    } else if is_last {
-        format!("{prefix}\u{2514}\u{2500} ")
-    } else {
-        format!("{prefix}\u{251c}\u{2500} ")
-    };
-
-    let Some(&idx) = by_id.get(id) else {
-        rows.push(VisibleRow {
-            node: RowNode::Missing,
-            id: id.to_string(),
-            name: format!("{connector}{id}  (not in lockfile)"),
-            load: "?",
-            transitive: false,
-            condition: false,
-            in_static: false,
-        });
-        return;
-    };
-    let Some(pkg) = tree.packages.get(idx) else {
-        return;
-    };
-
-    let repeated = seen.contains(id);
-    let has_children = !pkg.dependencies.is_empty();
-    let is_folded = folded.contains(id);
-    // The expand indicator is shown only on a first-seen node that has
-    // children; a re-occurrence is a display leaf (its subtree lives elsewhere).
-    let indicator = if has_children && !repeated {
-        if is_folded { "+ " } else { "- " }
-    } else {
-        ""
-    };
-    let marker = if repeated { " (*)" } else { "" };
-    rows.push(VisibleRow {
-        node: RowNode::Package(idx),
-        id: id.to_string(),
-        name: format!("{connector}{indicator}{id}{marker}"),
-        load: load_label(pkg.load.load_type),
-        transitive: pkg.load.transitive,
-        condition: pkg.condition.present,
-        in_static: pkg.load.in_static_md,
-    });
-
-    if repeated {
-        return;
-    }
-    seen.insert(id.to_string());
-    if is_folded {
-        return;
-    }
-
-    // Children of a root start at column 0; deeper levels extend the prefix
-    // with a vertical bar or a blank gutter.
-    let child_prefix = if is_root {
-        String::new()
-    } else if is_last {
-        format!("{prefix}   ")
-    } else {
-        format!("{prefix}\u{2502}  ")
-    };
-    // Alphabetical ordering sorts a node's children by group/name.
-    let mut deps: Vec<&str> = pkg.dependencies.iter().map(|s| s.as_str()).collect();
-    if ordering == Ordering::Alphabetical {
-        deps.sort_unstable();
-    }
-    let n = deps.len();
-    for (i, &dep) in deps.iter().enumerate() {
-        let dep_last = i + 1 == n;
-        walk(
-            dep,
-            &child_prefix,
-            dep_last,
-            false,
-            tree,
-            by_id,
-            folded,
-            ordering,
-            seen,
-            rows,
-        );
     }
 }
 

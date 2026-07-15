@@ -10,6 +10,7 @@ use rat_widget::event::ct_event;
 use ratatui_crossterm::crossterm::event::{Event, KeyCode, KeyEventKind};
 
 use super::AppEvent;
+use super::menu::{self, MenuState};
 use super::search::{self, SearchState};
 use super::state::{App, RowNode};
 
@@ -34,15 +35,30 @@ pub fn handle(event: &Event, app: &mut App) -> Result<Control<AppEvent>> {
         return Ok(handle_search(event, app));
     }
 
+    // An F-key menu captures input while open (PROP-037 §7.1/§7.2).
+    if app.menu.is_some() {
+        return Ok(handle_menu(event, app));
+    }
+
     // The modal captures input while open (§2.11).
     if app.modal_open {
         return Ok(handle_modal(event, app));
     }
 
-    // F1 opens Search Everywhere (PROP-037 §7.3).
-    if is_press_f1(event) {
+    // F1 opens Search Everywhere; F2/F3 open the sort / mode menus (PROP-037 §7).
+    if is_press_fkey(event, 1) {
         let state = SearchState::open(app);
         app.search = Some(state);
+        return Ok(Control::Changed);
+    }
+    if is_press_fkey(event, 2) {
+        let sort = MenuState::sort(app);
+        app.menu = Some(sort);
+        return Ok(Control::Changed);
+    }
+    if is_press_fkey(event, 3) {
+        let mode = MenuState::mode(app);
+        app.menu = Some(mode);
         return Ok(Control::Changed);
     }
 
@@ -116,9 +132,9 @@ fn handle_modal(event: &Event, app: &mut App) -> Control<AppEvent> {
     }
 }
 
-/// True for an `F1` key-press event.
-fn is_press_f1(event: &Event) -> bool {
-    matches!(event, Event::Key(k) if k.code == KeyCode::F(1) && k.kind == KeyEventKind::Press)
+/// True for an `F<n>` key-press event.
+fn is_press_fkey(event: &Event, n: u8) -> bool {
+    matches!(event, Event::Key(k) if k.code == KeyCode::F(n) && k.kind == KeyEventKind::Press)
 }
 
 /// The captive Search Everywhere handler (PROP-037 §7.3): typing filters, `↑`/`↓`
@@ -153,6 +169,40 @@ fn with_search(app: &mut App, f: impl FnOnce(&mut SearchState)) -> Control<AppEv
         f(state);
     }
     Control::Changed
+}
+
+/// The captive F-key menu handler (PROP-037 §7.1/§7.2): `↑`/`↓` move, `Enter`
+/// applies the highlighted option, `Esc` closes.
+fn handle_menu(event: &Event, app: &mut App) -> Control<AppEvent> {
+    let Event::Key(k) = event else {
+        return Control::Unchanged;
+    };
+    if k.kind != KeyEventKind::Press {
+        return Control::Unchanged;
+    }
+    match k.code {
+        KeyCode::Esc => {
+            app.menu = None;
+            Control::Changed
+        }
+        KeyCode::Enter => {
+            menu::confirm(app);
+            Control::Changed
+        }
+        KeyCode::Up => {
+            if let Some(m) = app.menu.as_mut() {
+                m.select_up();
+            }
+            Control::Changed
+        }
+        KeyCode::Down => {
+            if let Some(m) = app.menu.as_mut() {
+                m.select_down();
+            }
+            Control::Changed
+        }
+        _ => Control::Unchanged,
+    }
 }
 
 /// Move the selection up one row, keeping it visible.

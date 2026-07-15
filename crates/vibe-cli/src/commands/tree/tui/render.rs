@@ -45,6 +45,11 @@ pub fn draw(area: Rect, buf: &mut Buffer, app: &mut App) {
     if let Some(search) = &app.search {
         super::search::render::draw(area, buf, search);
     }
+
+    // The F-key menus (F2/F3) are a captive dropdown, drawn last (PROP-037 §7).
+    if let Some(menu) = &app.menu {
+        super::menu::draw(area, buf, menu);
+    }
 }
 
 /// The status line: ordering · display mode · the `STATIC.md` size indicator
@@ -84,7 +89,7 @@ fn render_footer(area: Rect, buf: &mut Buffer) {
     if area.width == 0 {
         return;
     }
-    let hint = " F1 search   \u{2191}/\u{2193} move   \u{2190}/\u{2192} pan   Space fold   \
+    let hint = " F1 search   F2 sort   F3 mode   \u{2191}/\u{2193} move   \u{2190}/\u{2192} pan   Space fold   \
                 F fold-all   n order   x mode   t swap   [ ] tabs   \
                 Enter detail   q quit";
     let bar = Style::new().add_modifier(Modifier::DIM);
