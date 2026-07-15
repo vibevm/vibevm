@@ -1,9 +1,8 @@
 # PACKAGE-TREE-PLAN v0.1 — `vibe tree`, the algorithmic spec-tree analyzer with an interactive TUI
 
-_Status: EXECUTING · Phase 3 complete (floor green, 2026-07-15) · written
-against tree `bf2897b` · cold-executable: every phase ends with
-`bash tools/self-check.sh` green; any phase boundary is a safe stop; this file
-is the resume pointer._
+_Status: **EXECUTED 2026-07-15** · all phases shipped, floor green at every
+boundary · written against tree `bf2897b` · commit span `7822052` → `007c030`
+on `main`._
 
 > Reading order for a cold executor: boot the normal way (`CLAUDE.md` →
 > `spec/boot/INDEX.md` and its files → `spec/WAL.md` → `CONTINUE.md`), then read
@@ -13,10 +12,48 @@ is the resume pointer._
 
 ---
 
-## 2 — Execution record (prepended at close)
+## 2 — Execution record (EXECUTED 2026-07-15)
 
-_Empty at authoring. The closing session prepends the commit range, per-phase
-deltas, and the prediction scorecard here._
+**Shipped.** `vibe tree` — the algorithmic spec-tree analyzer with an
+interactive ratatui TUI — landed in vibevm core across five phases, floor green
+at every boundary. All on `main`, commit span `7822052` (plan) → `007c030`
+(close-out materialization).
+
+- **Phase 0** `7822052` · `f0bdd80` — spikes (data / stack / schema), all green.
+- **Phase 1** `ccd7fd4` · `7f38454` — PROP-036 contract + the engine (model,
+  builder, STATIC.md decompiler, INDEX.md reader, `--json` + schema + golden,
+  plain renderer).
+- **Phase 2** `cee039d` — the interactive rat-salsa/rat-widget TUI.
+- **Phase 3** `4e3d269` — ordering (`n`) + display modes (`x`: all / sub-tables
+  / tabs), `t` swap + tab nav.
+- **Phase 4** `a0e0b15` · `f724798` — @spec widening + root-drift diagnostic +
+  status-line surfacing + the MT-01 manual test.
+- **Close-out** `007c030` — materialized the delegation-directive edits into
+  vibedeps + lock.
+- **Interleaved (owner-directed):** the delegation-directive fix (`7382944` the
+  trio ledger fact, `1b4057c` `#route`/`#worker-choice`) + the
+  opencode-vs-fractality ruling (`5b59f82`).
+
+**Prediction scorecard (§7).**
+- **P2 · CONFIRMED** — all 26 STATIC.md contributions decompile (origin + path +
+  embeds), 0 unparseable.
+- **P3 · CONFIRMED** — 36 packages attribute as 26 static / 5 dynamic / 5 none,
+  0 orphans.
+- **P4 · CONFIRMED** — rat-widget's `Table`/`TableState` covered scroll + select;
+  no hand-rolled viewport.
+- **P6 · CONFIRMED** — `vibe tree --json` validates against
+  `package-tree.schema.v1.json` (Phase-0 probe + the Phase-1 golden via the
+  `jsonschema` crate).
+- **P5 · SURPRISED** — the widened boot-lane @spec scan (33 files) finds **0**
+  markers: the ~17 known `@spec://` live in vibe-spec *code* + PROP-035 +
+  `structural-loader.md`, NOT the boot lane. The scan is correctly empty; the
+  prediction's premise (boot files carry @spec) was wrong. Field data:
+  `in_place_specs` is meaningful only for a project whose boot lane actually uses
+  `@spec`/`#embed` (the structural-loader model), not vibevm's current boot.
+- **P1 · DEFERRED** — the stale-artifacts cross-check (committed artifacts vs a
+  fresh `EffectiveBoot`) was deferred (§15); the effective-read-from-artifacts it
+  would validate is live and correct. The *other* §2.10 check — root-drift — DID
+  land and caught a real 5-root lock drift on this repo.
 
 ---
 
@@ -363,6 +400,17 @@ highlight an unfocused row.
 agent's rat-salsa context) per `#worker-choice`; reviewed as a PR + floor green.
 No tree leak this time — the manifest guard held.
 
+**Phase 4** (2026-07-15, floor green): `a0e0b15` @spec widening + the root-drift
+diagnostic (new `tree/diagnostics.rs`) + the status-line surfacing; `f724798`
+the MT-01 manual test (the first host manual test). The engine went to an
+**Opus[1m] subagent** after fractality/GLM hit two transient z.ai 529s and the
+owner ruled "no fractality this session — use Opus subagents"; the diagnostics
+indicator + the manual test were boss-side. root-drift caught the real 5-root
+lock drift; the @spec scan widened to 33 boot files (0 markers — correct). The
+close-out `007c030` then materialized the #1/#2 delegation edits into vibedeps +
+lock (CRLF re-materialization noise reverted; boot re-verified `vibe check`
+0/0/0).
+
 **Interleaved (owner-directed, NOT campaign phases):**
 - `7382944` the native-tool-vs-GLM fact in the host trio fractality ledger (#3).
 - `1b4057c` the `#route` / `#worker-choice` anti-pattern in the delegation-first
@@ -383,6 +431,13 @@ No tree leak this time — the manifest guard held.
 - **NG1** — skill/prompt for runtime "actually-loaded" analysis · owner · deferred → `tool:org.vibevm.core/package-tree`.
 - **NG2** — the GUI client · owner · deferred → same future package.
 - **NG3** — `.vibe/` load-logging + multi-agency design · owner · deferred → with NG1.
+- **NG4** — the **stale-artifacts** diagnostic (committed `STATIC.md`/`INDEX.md`
+  vs a fresh `EffectiveBoot` recompute, PROP-036 §2.10) · deferred — needs the
+  full boot recompute; `Severity::{Info,Error}` are reserved for it (they carry
+  the scoped `#[allow(dead_code)]` until it lands).
+- **NG5** — the **STATIC.md-contribution detail in the TUI modal** (bytes / lines
+  / embeds for a static package) · deferred — the data already ships in `--json`
+  `boot.static_md.contributions`; the modal shows package detail without it.
 
 _Lineage: this ledger seeds the next campaign's mandate — the future
 `org.vibevm.core/package-tree` package is commissioned by pointing at NG1–NG3._
