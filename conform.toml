@@ -31,6 +31,7 @@ max_file_lines = 600
 # edges).
 gated_crates = [
     "vibe-core",
+    "vibe-actions",
     "vibe-index",
     "vibe-install",
     "vibe-resolver",
