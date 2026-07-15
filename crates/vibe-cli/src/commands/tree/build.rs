@@ -91,6 +91,18 @@ pub fn build_tree(root: &Path) -> Result<PackageTree> {
         .collect();
     let st_closure = static_transitive_closure(&by_id, &declarers);
 
+    // Contract (PROP-036 §2.4, scaffold-c): a well-formed lockfile is
+    // dependency-closed, so every static-transitive closure member is itself a
+    // resolved package — the classifier only ever asks `st_closure.contains`
+    // for ids that exist in `by_id`. (A declarer MAY also appear in another
+    // declarer's closure — that is legal; `classify_origin` gives it `Declared`,
+    // the declarer branch winning over in-closure, so the closure is NOT
+    // asserted disjoint from `declarers`.)
+    debug_assert!(
+        st_closure.iter().all(|id| by_id.contains_key(id)),
+        "static-transitive closure over a dependency-closed lockfile must contain only resolved packages"
+    );
+
     // Per-package suggested link, from the materialised slot manifest.
     let suggested: BTreeMap<String, Option<LinkType>> = lockfile
         .packages
