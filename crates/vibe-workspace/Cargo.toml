@@ -21,3 +21,6 @@ tempfile.workspace = true
 toml.workspace = true
 vibe-core.workspace = true
 vibe-spec.workspace = true
+
+[dev-dependencies]
+proptest.workspace = true

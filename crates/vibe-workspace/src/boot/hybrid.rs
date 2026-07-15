@@ -40,6 +40,9 @@ use vibe_core::manifest::{LinkType, WhenCondition};
 pub mod fingerprint;
 pub mod hoist;
 
+#[cfg(test)]
+mod fuzz;
+
 /// A compilation unit's identity — a resolved `(group, name)` (PROP-038 §2.1).
 /// One node per unified package version (the resolver has already unified
 /// versions, PROP-017), so the version is not part of the key.
