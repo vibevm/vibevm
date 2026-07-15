@@ -183,6 +183,7 @@ fn declared_label(d: DeclaredLink) -> &'static str {
         DeclaredLink::Static => "static",
         DeclaredLink::Dynamic => "dynamic",
         DeclaredLink::StaticTransitive => "static-transitive",
+        DeclaredLink::StaticHard => "static-hard",
     }
 }
 

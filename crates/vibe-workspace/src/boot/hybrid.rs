@@ -147,8 +147,14 @@ fn descend(
         // `static-transitive` edge keeps it in the static zone.
         let gated = units.get(&edge.target).and_then(|u| u.when).is_some();
         let stays_static = !gated
-            && (forced || matches!(edge.link, LinkType::Static | LinkType::StaticTransitive));
+            && (forced
+                || matches!(
+                    edge.link,
+                    LinkType::Static | LinkType::StaticTransitive | LinkType::StaticHard
+                ));
         if stays_static {
+            // Only `static-transitive` forces the subtree; `static` and
+            // `static-hard` compile the target but honour its own edges.
             let child_forced = forced || edge.link == LinkType::StaticTransitive;
             descend(
                 &edge.target,

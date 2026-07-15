@@ -233,11 +233,12 @@ pub fn compute_effective_boot(inputs: NodeBootInputs<'_>) -> Result<EffectiveBoo
             .or(dep.suggested_link)
             .or(inputs.default_link)
             .unwrap_or_default();
-        // `static-transitive` (PROP-035 §12) resolves to `static` at
-        // emission — bootgen has already propagated the mode down the
-        // closure, so here it is just a static entry.
+        // `static-transitive` (PROP-035 §12) and `static-hard` (PROP-038
+        // §2.3) both resolve to `static` at emission — the priority lane is
+        // the same; the modes differ only in propagation (transitive) and
+        // hoisting (hard opts out), decided before emission.
         let link = match link {
-            LinkType::StaticTransitive => LinkType::Static,
+            LinkType::StaticTransitive | LinkType::StaticHard => LinkType::Static,
             other => other,
         };
         // A conditional snippet is `dynamic` by nature (PROP-009 §2.4): a

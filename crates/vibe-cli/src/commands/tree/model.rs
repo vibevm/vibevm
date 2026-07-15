@@ -200,6 +200,7 @@ pub enum DeclaredLink {
     Static,
     Dynamic,
     StaticTransitive,
+    StaticHard,
 }
 
 /// Why `load.type` has its value (PROP-036 §2.3–§2.5).

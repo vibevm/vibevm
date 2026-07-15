@@ -307,9 +307,11 @@ impl Compatibility {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Default)]
 #[serde(rename_all = "lowercase")]
 pub enum LinkType {
-    /// Compiled verbatim into the generated `STATIC.md`, read first — the
-    /// statically-linked priority lane (AOT). Duplicates the text on disk,
-    /// so used deliberately, for critical disciplines and top-level skills.
+    /// Compiled into the generated `STATIC.md`, read first — the
+    /// statically-linked priority lane (AOT). The **soft** default (PROP-038
+    /// §2.3): a package linked `static` by more than one consumer is
+    /// **hoisted** to the least common static-zone ancestor and linked once
+    /// (compile-time dedup, PROP-038 §2.4), so the text is not duplicated.
     Static,
     /// The default. `vibe` resolves the contribution to a concrete path in
     /// the generated `INDEX.md`; the agent reads it **dynamically, on
@@ -324,6 +326,13 @@ pub enum LinkType {
     /// with the mode propagated across the closure by `bootgen`.
     #[serde(rename = "static-transitive")]
     StaticTransitive,
+    /// `static-hard` (PROP-038 §2.3) — an explicit opt-out of soft hoisting.
+    /// Compiled **locally** into every consumer's `STATIC.md`, never hoisted;
+    /// duplicates are deduped at read time by the read-set (PROP-035 §7.4).
+    /// For a package that must load only with its consumer — lazy locality
+    /// chosen over compile-time dedup.
+    #[serde(rename = "static-hard")]
+    StaticHard,
 }
 
 /// Ordering band for a package's boot snippet within the computed boot

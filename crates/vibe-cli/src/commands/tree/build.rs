@@ -266,11 +266,11 @@ fn classify_origin(
             if is_declarer {
                 // The static-transitive declarer's static-ness is its own.
                 (false, LoadOrigin::Declared)
-            } else if in_closure && suggested != Some(LinkType::Static) {
+            } else if in_closure && !is_static_link(suggested) {
                 (true, LoadOrigin::StaticTransitive)
-            } else if declared == Some(LinkType::Static) {
+            } else if is_static_link(declared) {
                 (false, LoadOrigin::Declared)
-            } else if suggested == Some(LinkType::Static) {
+            } else if is_static_link(suggested) {
                 (false, LoadOrigin::Suggested)
             } else {
                 (false, LoadOrigin::Default)
@@ -397,12 +397,20 @@ fn to_source(p: &LockedPackage) -> Source {
     }
 }
 
+/// Whether a declared / suggested link puts a package in the static lane —
+/// `static` or `static-hard` (both compile in; they differ only in hoisting,
+/// PROP-038 §2.3). `static-transitive` is handled separately (closure).
+fn is_static_link(link: Option<LinkType>) -> bool {
+    matches!(link, Some(LinkType::Static | LinkType::StaticHard))
+}
+
 /// Map a declared [`LinkType`] to the model wire enum.
 fn to_declared_link(link: Option<LinkType>) -> Option<DeclaredLink> {
     link.map(|l| match l {
         LinkType::Static => DeclaredLink::Static,
         LinkType::Dynamic => DeclaredLink::Dynamic,
         LinkType::StaticTransitive => DeclaredLink::StaticTransitive,
+        LinkType::StaticHard => DeclaredLink::StaticHard,
     })
 }
 

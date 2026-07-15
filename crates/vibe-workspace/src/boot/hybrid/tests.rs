@@ -146,6 +146,19 @@ fn diamond_compiles_shared_package_once() {
     assert_eq!(topo_names(&m, &units), vec!["c", "a", "b", "root"]);
 }
 
+/// `static-hard` compiles the child in exactly like `static` — the two differ
+/// only in hoisting (applied later), not in zone membership (PROP-038 §2.3).
+#[test]
+fn static_hard_compiles_the_child_in() {
+    let units = table(vec![
+        node("root", &[("a", LinkType::StaticHard)]),
+        unit("a", &[]),
+    ]);
+    let m = resolve_zone(&id("root"), &units);
+    assert_eq!(static_names(&m), vec!["a", "root"]);
+    assert!(m.dynamic_edges.is_empty());
+}
+
 /// A `when`-gated package stays dynamic even under a static edge — OS
 /// content must never reach the wrong OS (PROP-009 §2.4).
 #[test]
