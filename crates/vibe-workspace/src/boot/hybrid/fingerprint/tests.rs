@@ -1,44 +1,9 @@
 //! Unit tests for boot-graph fingerprints ([`super`]) — the Merkle change
 //! detector that drives dirty-subgraph regeneration (PROP-038 §2.7).
 
-use super::super::{UnitEdge, UnitInput};
 use super::*;
-use vibe_core::Group;
+use crate::boot::hybrid::testkit::{id, table, unit};
 use vibe_core::manifest::LinkType;
-
-#[cfg(test)]
-fn org() -> Group {
-    Group::parse("org.vibevm").unwrap()
-}
-
-#[cfg(test)]
-fn id(name: &str) -> UnitId {
-    (org(), name.to_string())
-}
-
-#[cfg(test)]
-fn unit(name: &str, edges: &[(&str, LinkType)]) -> (UnitId, UnitInput) {
-    (
-        id(name),
-        UnitInput {
-            own_boot_path: Some(format!("vibedeps/flow-{name}/1.0.0/boot.md")),
-            origin: format!("org.vibevm/{name}"),
-            when: None,
-            edges: edges
-                .iter()
-                .map(|(t, l)| UnitEdge {
-                    target: id(t),
-                    link: *l,
-                })
-                .collect(),
-        },
-    )
-}
-
-#[cfg(test)]
-fn table(v: Vec<(UnitId, UnitInput)>) -> HashMap<UnitId, UnitInput> {
-    v.into_iter().collect()
-}
 
 #[cfg(test)]
 fn vers(names: &[&str]) -> HashMap<UnitId, String> {

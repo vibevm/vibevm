@@ -2,52 +2,9 @@
 //! per the file-length budget. The centrepiece is the owner's chain example
 //! (PROP-038 §2.2): `root→A(dynamic)→B(static)→C(dynamic)→D(static-transitive)`.
 
+use super::testkit::{gated_unit, id, node, table, unit};
 use super::*;
 use vibe_core::manifest::LinkType;
-
-/// The canonical first-party `Group` for tests.
-#[cfg(test)]
-fn org() -> Group {
-    Group::parse("org.vibevm").unwrap()
-}
-
-#[cfg(test)]
-fn id(name: &str) -> UnitId {
-    (org(), name.to_string())
-}
-
-/// A unit with a boot snippet and the given `(target, link)` edges.
-#[cfg(test)]
-fn unit(name: &str, edges: &[(&str, LinkType)]) -> (UnitId, UnitInput) {
-    (
-        id(name),
-        UnitInput {
-            own_boot_path: Some(format!("vibedeps/flow-{name}/1.0.0/boot.md")),
-            origin: format!("org.vibevm/{name}"),
-            when: None,
-            edges: edges
-                .iter()
-                .map(|(t, link)| UnitEdge {
-                    target: id(t),
-                    link: *link,
-                })
-                .collect(),
-        },
-    )
-}
-
-/// A boot-less workspace-node-like unit (no own snippet), given edges.
-#[cfg(test)]
-fn node(name: &str, edges: &[(&str, LinkType)]) -> (UnitId, UnitInput) {
-    let (uid, mut u) = unit(name, edges);
-    u.own_boot_path = None;
-    (uid, u)
-}
-
-#[cfg(test)]
-fn table(units: Vec<(UnitId, UnitInput)>) -> HashMap<UnitId, UnitInput> {
-    units.into_iter().collect()
-}
 
 /// `resolve_zone` static members as a sorted pkgref list, for assertions.
 #[cfg(test)]
@@ -164,17 +121,14 @@ fn static_hard_compiles_the_child_in() {
 #[test]
 fn when_gate_stays_dynamic_under_a_static_edge() {
     use vibe_core::manifest::{TargetOs, WhenCondition};
-    let mut units = table(vec![
+    let win = WhenCondition::Os(TargetOs::Windows);
+    let units = table(vec![
         node("root", &[("win", LinkType::Static)]),
-        unit("win", &[]),
+        gated_unit("win", win, &[]),
     ]);
-    units.get_mut(&id("win")).unwrap().when = Some(WhenCondition::Os(TargetOs::Windows));
     let m = resolve_zone(&id("root"), &units);
     // The static edge does not compile a gated target in.
     assert_eq!(static_names(&m), vec!["root"]);
     assert_eq!(dynamic_names(&m), vec!["win"]);
-    assert_eq!(
-        m.dynamic_edges[0].1,
-        Some(WhenCondition::Os(TargetOs::Windows))
-    );
+    assert_eq!(m.dynamic_edges[0].1, Some(win));
 }
