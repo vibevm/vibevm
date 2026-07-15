@@ -26,3 +26,6 @@
 //! - Phase 2.7 — `persist`: diff-from-default + `.gitignore` gen (§6, §9).
 
 specmark::scope!("spec://vibevm/modules/vibe-settings/PROP-040#root");
+
+pub mod error;
+pub mod loader;

@@ -3838,6 +3838,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "vibe-settings"
+version = "0.1.0-dev"
+dependencies = [
+ "core-ai-native-specmark",
+ "serde",
+ "tempfile",
+ "thiserror 2.0.18",
+ "toml 0.9.12+spec-1.1.0",
+]
+
+[[package]]
 name = "vibe-spec"
 version = "0.1.0-dev"
 dependencies = [
