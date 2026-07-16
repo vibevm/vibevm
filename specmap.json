@@ -450,6 +450,20 @@
     },
     {
       "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/prefs/tui/catalogue.rs",
+      "item_kind": "mod",
+      "line": 18,
+      "symbol": "vibe_cli::commands::prefs::tui::catalogue"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/prefs/tui/dispatch.rs",
+      "item_kind": "mod",
+      "line": 15,
+      "symbol": "vibe_cli::commands::prefs::tui::dispatch"
+    },
+    {
+      "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/prefs/tui/form/mod.rs",
       "item_kind": "mod",
       "line": 21,
@@ -543,7 +557,7 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/prefs/tui/input.rs",
       "item_kind": "mod",
-      "line": 17,
+      "line": 30,
       "symbol": "vibe_cli::commands::prefs::tui::input"
     },
     {
@@ -587,6 +601,27 @@
       "item_kind": "mod",
       "line": 8,
       "symbol": "vibe_cli::commands::prefs::tui::render"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/prefs/tui/search/mod.rs",
+      "item_kind": "mod",
+      "line": 19,
+      "symbol": "vibe_cli::commands::prefs::tui::search"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/prefs/tui/search/providers.rs",
+      "item_kind": "mod",
+      "line": 21,
+      "symbol": "vibe_cli::commands::prefs::tui::search::providers"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/prefs/tui/search/render.rs",
+      "item_kind": "mod",
+      "line": 11,
+      "symbol": "vibe_cli::commands::prefs::tui::search::render"
     },
     {
       "crate_name": "vibe-cli",
@@ -5913,6 +5948,22 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-cli/src/commands/prefs/tui/catalogue.rs",
+      "from_symbol": "vibe_cli::commands::prefs::tui::catalogue",
+      "line": 18,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-settings/PROP-041#commands-are-actions",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/prefs/tui/dispatch.rs",
+      "from_symbol": "vibe_cli::commands::prefs::tui::dispatch",
+      "line": 15,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-settings/PROP-041#commands-are-actions",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-cli/src/commands/prefs/tui/form/mod.rs",
       "from_symbol": "vibe_cli::commands::prefs::tui::form",
       "line": 21,
@@ -6019,7 +6070,7 @@
     {
       "file": "crates/vibe-cli/src/commands/prefs/tui/input.rs",
       "from_symbol": "vibe_cli::commands::prefs::tui::input",
-      "line": 17,
+      "line": 30,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-settings/PROP-041#tree-widget",
       "verb": "implements"
@@ -6070,6 +6121,30 @@
       "line": 8,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-settings/PROP-041#tree-widget",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/prefs/tui/search/mod.rs",
+      "from_symbol": "vibe_cli::commands::prefs::tui::search",
+      "line": 19,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-settings/PROP-041#settings-search",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/prefs/tui/search/providers.rs",
+      "from_symbol": "vibe_cli::commands::prefs::tui::search::providers",
+      "line": 21,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-settings/PROP-041#settings-search",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/prefs/tui/search/render.rs",
+      "from_symbol": "vibe_cli::commands::prefs::tui::search::render",
+      "line": 11,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-settings/PROP-041#settings-search",
       "verb": "implements"
     },
     {
@@ -21745,6 +21820,18 @@
     },
     {
       "code": "dangling-edge",
+      "file": "crates/vibe-cli/src/commands/prefs/tui/catalogue.rs",
+      "line": 18,
+      "message": "edge `vibe_cli::commands::prefs::tui::catalogue` --implements--> `spec://vibevm/modules/vibe-settings/PROP-041#commands-are-actions`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "crates/vibe-cli/src/commands/prefs/tui/dispatch.rs",
+      "line": 15,
+      "message": "edge `vibe_cli::commands::prefs::tui::dispatch` --implements--> `spec://vibevm/modules/vibe-settings/PROP-041#commands-are-actions`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
       "file": "crates/vibe-cli/src/commands/prefs/tui/form/control.rs",
       "line": 17,
       "message": "edge `vibe_cli::commands::prefs::tui::form::control` --implements--> `spec://vibevm/modules/vibe-settings/PROP-041#form-per-type`: no spec unit carries this anchor"
@@ -21808,6 +21895,24 @@
       "file": "crates/vibe-cli/src/commands/prefs/tui/registry.rs",
       "line": 224,
       "message": "edge `vibe_cli::commands::prefs::tui::registry::PageRegistry::tree` --implements--> `spec://vibevm/modules/vibe-settings/PROP-041#declarative-pages`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "crates/vibe-cli/src/commands/prefs/tui/search/mod.rs",
+      "line": 19,
+      "message": "edge `vibe_cli::commands::prefs::tui::search` --implements--> `spec://vibevm/modules/vibe-settings/PROP-041#settings-search`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "crates/vibe-cli/src/commands/prefs/tui/search/providers.rs",
+      "line": 21,
+      "message": "edge `vibe_cli::commands::prefs::tui::search::providers` --implements--> `spec://vibevm/modules/vibe-settings/PROP-041#settings-search`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "crates/vibe-cli/src/commands/prefs/tui/search/render.rs",
+      "line": 11,
+      "message": "edge `vibe_cli::commands::prefs::tui::search::render` --implements--> `spec://vibevm/modules/vibe-settings/PROP-041#settings-search`: no spec unit carries this anchor"
     },
     {
       "code": "dangling-edge",
