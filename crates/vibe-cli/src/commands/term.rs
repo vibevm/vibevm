@@ -213,15 +213,20 @@ fn resolve_vibeterm() -> Result<Vibeterm> {
 fn electron_binary(v: &Vibeterm) -> Result<PathBuf> {
     match v.shape {
         VibetermShape::Packaged => {
+            // electron-packager names the executable after the app name —
+            // `vibeterm` (`apps/vibeterm/scripts/package.mjs` passes `'vibeterm'`
+            // as the packager name) — so a packaged build ships `vibeterm.exe`,
+            // NOT `electron.exe`. Looking for `electron.exe` here was the bug
+            // that made `vibe tree -t` from an instance fail to spawn.
             let exe_name = if cfg!(windows) {
-                "electron.exe"
+                "vibeterm.exe"
             } else {
-                "electron"
+                "vibeterm"
             };
             let bin = v.dir.join(exe_name);
             if !bin.is_file() {
                 bail!(
-                    "packaged vibeterm's Electron binary is missing at `{}`",
+                    "packaged vibeterm's binary is missing at `{}`",
                     bin.display()
                 );
             }
@@ -295,4 +300,58 @@ fn which_on_path(name: &str) -> Option<String> {
 #[cfg(not(windows))]
 fn detect_shell() -> String {
     std::env::var("SHELL").unwrap_or_else(|_| "/bin/sh".to_string())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::fs;
+
+    /// A packaged build ships `vibeterm.exe` (named after the app by
+    /// electron-packager), NOT `electron.exe` — `electron_binary` must resolve
+    /// the app-named binary (PROP-042 §5). This is the regression that made
+    /// `vibe tree -t` from an instance fail to spawn.
+    #[test]
+    fn packaged_electron_binary_is_app_named() {
+        let tmp = tempfile::tempdir().unwrap();
+        let dir = tmp.path().join("vibeterm-win32-x64");
+        fs::create_dir_all(dir.join("resources").join("app")).unwrap();
+        fs::write(
+            dir.join("resources").join("app").join("package.json"),
+            b"{}",
+        )
+        .unwrap();
+        let exe_name = if cfg!(windows) {
+            "vibeterm.exe"
+        } else {
+            "vibeterm"
+        };
+        fs::write(dir.join(exe_name), b"binary").unwrap();
+        // classify agrees it is packaged.
+        assert_eq!(classify_vibeterm(&dir), VibetermShape::Packaged);
+        let v = Vibeterm {
+            dir: dir.clone(),
+            shape: VibetermShape::Packaged,
+        };
+        let bin = electron_binary(&v).expect("packaged binary resolves");
+        assert_eq!(bin.file_name().unwrap(), exe_name);
+    }
+
+    /// A packaged dir without the app-named binary errors clearly, never hangs.
+    #[test]
+    fn packaged_missing_binary_errors() {
+        let tmp = tempfile::tempdir().unwrap();
+        let dir = tmp.path().join("vibeterm-win32-x64");
+        fs::create_dir_all(dir.join("resources").join("app")).unwrap();
+        fs::write(
+            dir.join("resources").join("app").join("package.json"),
+            b"{}",
+        )
+        .unwrap();
+        let v = Vibeterm {
+            dir,
+            shape: VibetermShape::Packaged,
+        };
+        assert!(electron_binary(&v).is_err());
+    }
 }
