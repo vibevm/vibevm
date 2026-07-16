@@ -15,8 +15,11 @@ the detail `Card` (wrapped form), settings persistence (palette/tier/mode/sort/s
 depth-2). Sign-off: `spec/manual-tests/MT-02-vibe-tree-tui.md` (owner's eye — the one open item).
 **Commit span** `2f41477`→`514f3b3` + Шаг 4 `f875413`→`21dfc0d`. **Шаг 4 (settings UI, PROP-041)
 IN PROGRESS** per `SETTINGS-UI-PLAN-v0.1.md`: S1 (page registry + settings tree, `0128360`) done;
-S2 (edit form) in flight; S3–S7 (provenance / validation / search / actions / sign-off) pending.
-**Нет блокера.** AIUI — «потом» (settings + actions AIUI-ready по дизайну)._
+S2 (edit form) **прерван 429 usage-limitом (reset 2026-07-16 15:36:25)** — partial (`form/` +
+`schema/types.rs` 616-line) откатан к чистому S1 (green); S3–S7 (provenance / validation / search /
+actions / sign-off) pending. **Блокер:** API usage limit до reset — delegate-работа упадёт; main loop
+близок к лимиту. После reset продолжить S2 (spec в `SETTINGS-UI-PLAN v0.1` §S2). `CONTINUE.md` —
+canonical cold-resume. AIUI — «потом»._
 
 ---
 

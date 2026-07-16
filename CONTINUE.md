@@ -1,190 +1,165 @@
-# CONTINUE.md — cold-resume checkpoint (2026-07-16, settings system EXECUTED → next: TUI)
+# CONTINUE.md — cold-resume checkpoint (2026-07-16, Шаг 3 TUI EXECUTED → Шаг 4 settings UI S1 done, S2–S7 pending)
 
 > `spec/WAL.md` is the canonical living state; if this snapshot and the WAL diverge, the WAL wins.
 
 ## TL;DR
 
-Эта сессия выполнила **Шаги 0–2** мета-плана settings-system + TUI: clean-room
-research → 2 спецификации (PROP-040 settings system, PROP-041 settings UI) →
-**полная реализация `vibe-settings` crate (Шаг 2, 8 фаз)**, floor green throughout.
-**21 коммит** (`8262a28`→`dbab98a`) на `main`, local (этот wind-down зеркалирует).
-**Следующее:** **Шаг 3 — TUI** (PROP-037 + visual language, 11 фаз P0–P10) —
-большая многосессионная работа; визуальный язык — primary axis. **Нет блокера.**
+**Шаг 3 (the `vibe tree` TUI, PROP-037) ВЫПОЛНЕН ПОЛНОСТЬЮ** — все 11 фаз P0–P10
+`TREE-TUI-PLAN-v0.2.md` на `main`, floor-green throughout (`self-check` all green,
+241 vibe-cli tests, conform 0). **Шаг 4 (settings UI, PROP-041)** в процессе по
+`SETTINGS-UI-PLAN-v0.1.md`: **S1 (page registry + settings tree) готов**, S2
+(edit form) **прерван 429-лимитом** — partial откатан, дерево чистое.
+
+**Активный блокер:** API usage limit (429, «Usage limit reached for 5 hour»,
+**reset 2026-07-16 15:36:25**). До reset делегат-работа (native subagents) снова
+упадёт; main loop тоже может быть близко к лимиту. **Нет кодового блокера** —
+после reset продолжить S2.
 
 ## Where work stands
 
-- Ветка **`main`**, дерево **чистое**, `main` ahead of origin на 21 коммит
-  (последний wind-down был `45a660b`, action-system arc). Этот wind-down
-  зеркалирует (`cargo xtask mirror`, ff-only, GitVerse + GitHub).
-- `bash tools/self-check.sh` **GREEN** (fmt / clippy `-D warnings` / vibe check /
-  conform / specmap-advisory / workspace tests).
-- **Новый crate `vibe-settings`** (gated): 6 ячеек — `loader`, `schema`,
-  `resolver`, `events`, `cli`, `persist`. Frontend-agnostic (no ratatui/crossterm).
-- **`vibe prefs` CLI** (vibe-cli wiring): `get/set/list/check/migrate/show-origins`
-  + `--layer/--json/--quiet`. 6 subcommands.
-- Тесты vibe-settings: **87 unit + 34 doctests + 2 e2e golden**, все green.
-- `vibe tree` §9 (ad-hoc `~/.vibe/tree`) — **НЕ тронут**; становится экземпляром
-  системы в Шаге 3 (TUI P9a).
+- Ветка **`main`**, дерево **чистое**, ~50+ коммитов этой сессии (Шаг 2 settings
+  + Шаг 3 TUI + Шаг 4 S1). **Не запушено** — push при закрытии сессии (Rule 4).
+- `bash tools/self-check.sh` **GREEN** (проверено после Шага 3; Шаг 4 S1 его не
+  сломал — vibe-cli 273 tests, conform 0, specmap clean).
+- **Шаг 3 TUI (PROP-037) — EXECUTED:** visual language (5 switchable палитр,
+  glyph vocab ▾▸↩●○, 4-tier rendering, `&Theme` threaded, compat shim retired),
+  `ui::` library (Window/Button/RadioGroup/TextField/Group/Card/MsgDialog/
+  ComingSoon), TreeShape pipeline × 3, trees everywhere, `vibe_actions::keymap`
+  resolver + invoke-by-addr dispatch, Esc quit-confirm, detail Card (wrapped),
+  settings persistence (palette/tier/mode/sort/shape via `vibe-settings`),
+  copy system (F6/Shift+F6, depth-2 copy-settings→FileDest). Sign-off:
+  `spec/manual-tests/MT-02-vibe-tree-tui.md` (owner visual — единственный open
+  item Шага 3).
+- **Шаг 4 settings UI (PROP-041) — S1 done:** `commands/prefs/tui/` (page
+  registry Configurable-EP, settings tree через visual language, origin hint,
+  `vibe prefs ui` launch). S2 partial (form/) **откатан** к чистому S1.
 
 ## The active next step (candidate — a RESUME is report-then-wait)
 
-**Шаг 3 — TUI (PROP-037 + visual language), primary axis = визуальный язык.**
-Подробный план (11 фаз P0–P10) — в `~/.claude-glm/plans/hashed-questing-beaver.md`
-(session-scoped; **перенести в `spec/terraforms/TREE-TUI-PLAN-v0.2.md`** при начале).
+**Шаг 4 — S2 (the edit form, PROP-041 §4).** Подробный план —
+`spec/terraforms/SETTINGS-UI-PLAN-v0.1.md` (фазы S1–S7).
 
-1. **P0 спайки (NO commits):** capability detection (crossterm), Key-токен seam
-   (для `vibe_actions::keymap`), Palette trait shape, tier-mapping, modal-stack
-   draw+input order, rat-widget popup-nesting, **specmap regen** (pre-existing
-   orphans vibe_spec/vibe_resolver — separate, не блокирует).
-2. **P1 visual-language spec (boss-authored):** `spec/design/tui-visual-language.md`
-   (lore, расширь stub) + PROP-037 §2.2 normative anchors `#palette-tokens`/
-   `#glyph-vocabulary`/`#rendering-tiers`/`#window-aesthetics`.
-3. **P2 palette/glyph/tier system:** `Palette` trait + **5 палитр** (Rosé Pine
-   cosmic-violet сохранить ТОЧНО + Catppuccin Mocha/Macchiato/Frappé/Latte);
-   glyph vocabulary (заменить ASCII `+/-`→`▾▸`, `(*)`→`↩`, `x`/`.`→`●○`);
-   rendering tiers + degradation (truecolor→256→16; rounded→unicode→ASCII);
-   `Theme` value-тип. Активная палитра/tier → **`vibe-settings`** (Шаг 2 готов!).
-4. **P3–P10:** ui-foundation (`ui::Window`, `state/` split, ModalStack) →
-   tree-widget+pipeline+3-shapes → trees-everywhere → keymap+actions+quit →
-   components+F2+ComingSoon → detail-card → settings-через-систему (P9a) →
-   copy-system → discipline+sign-off.
-- **Sign-off:** только финал (каждая фаза ends floor-green; глазами владелец
-  проверяет один раз в конце).
-- **Делегирование:** native Claude subagents для ячеек (boss-spec → review +
-  finish-tail + self-check); boss держит architecture/spec/dispatch. vibe-cli
-  gated + conform-EMPTY → настоящий self-check-gate требует boss-side.
+1. **S2 edit form** — right pane: per-type fields (bool→toggle, enum→RadioGroup,
+   int/string→TextField, array→list, table→Group); Configurable lifecycle
+   (`is_modified`/`apply`/`reset`); write-layer choice (L3 project / L1
+   no-project, scope-forbidden refused); `applies` badge. Пометка: S2-делегат
+   успел создать `prefs/tui/form/{control,lifecycle,mod}.rs` + раздуть
+   `vibe-settings/src/schema/types.rs` до 616 (conform RED) до обрыва 429 —
+   **откатано**; запустить заново после reset.
+2. **S3 provenance** — «where does this value come from?» + layer-aware override.
+3. **S4 validation** — inline schema-violation feedback + «check all layers».
+4. **S5 search** — reuse `vibe-actions` Search Everywhere over the registry.
+5. **S6 actions** — every command a `vibe.prefs` action, keymap-bound; modal
+   stack popups; AIUI-clean.
+6. **S7 sign-off** — MT-03 + owner visual.
 
-Затем **Шаг 4** — settings UI на TUI (PROP-041). **AIUI** — «потом» (settings +
-actions AIUI-ready по дизайну, surface не built).
+После S7 — **мета-план завершён** (settings system ✓ → TUI ✓ → settings UI ✓).
+AIUI — «потом».
 
 ## Non-obvious findings (do not re-learn)
 
-### Settings system (Шаг 2 — готов)
-- **`vibe-settings` = application/user prefs** (Vibe Tree UI: палитры/шрифты/tier/
-  mode/sort/shape; будущие app prefs), **НЕ** расширение `vibe.toml` (project
-  manifest, как `pom.xml`). Аналогия `.idea/` vs `pom.xml`. Хранится: `~/.vibe/`
-  (L1) + `.vibe/settings.toml` (L2 committed) + `.vibe/settings.local.toml`
-  (L3 gitignored). Precedence: default ⊂ L1 ⊂ L2 ⊂ L3 ⊂ CLI ⊂ env.
-- **Resolver — pure** (`resolve` → immutable `ResolvedPrefs` snapshot; change =
-  fresh resolve). **deep-merge**: scalar last-wins, objects recurse, **arrays
-  replace** (opt-in `MergeStrategy` per key). **`inspect(key)` → per-layer
-  provenance** (value + default/l1/l2/l3/cli/env + origin) — ключевой AIUI-API.
-- **Scope per key** (User/Machine/Project/TeamOnly) → writable-layer matrix
-  (`Scope::writable_layers`); `set` в forbidden layer → `PrefsError::WrongLayer`.
-- **TOML не имеет null** — «explicit unset» = удалить ключ (persist 2.7 owns);
-  `MergeByKey` — interim identity-by-index (REVIEW: key_field на KeyMeta в будущем).
-- **AI-Native discipline:** каждая cell `specmark::scope!` + per-fn
-  `#[spec(implements=".../PROP-040#anchor")]`; **public TYPE declarations тоже
-  `#[specmark::spec]`** (9 schema types — specmap ratchet ловит илиphans иначе);
-  thiserror enums с `#[specmark::spec]`; no unwrap/expect domain; ≤600/cell
-  (dir-module split где надо); doctests на public seams.
-- **Path-classifier** (`loader::classify`) — L3 по basename (`settings.local.toml`
-  anywhere), L1/L2 по location (L1 iff `<home>/.vibe/`); env-aware (`HOME`) + pure
-  `classify_with_home` core.
-- **Persist:** diff-from-default (non-default only, collapse-to-empty) +
-  comment-preserve (raw-text extraction header/footer, НЕ toml_edit decor) +
-  atomic write (`.tmp`+rename); `vibe init` пишет `.gitignore` для L3.
-- **Делегирование pattern (works):** boss spec = REQ-anchor + сигнатуры +
-  acceptance-test + target → native subagent → diff как PR + re-verify (cargo
-  test/clippy/conform) + commit. 8 ячеек — стабильно high quality.
+### Delegation patterns (this session)
+- **Параллельные delegates в общем worktree ГОНЯТСЯ** (P5+P7 конфликтовали —
+  каждый откатывал другого через `git checkout`/`rm`). Запускать delegates с
+  пересекающимися файлами **только последовательно**. Разные файлы — параллельно
+  ок (P6+P8, P3+P4 прошли).
+- **Conform-gated vibe-cli delegates работают ~20–40 мин** (conform-итерации).
+  floor-gate verification: `cargo check` + `clippy -D warnings` + `cargo test` +
+  `cargo xtask conform check` (baseline EMPTY) + `cargo xtask specmap --check`.
+- **delegate оставляет diff для boss** (не коммитит) — boss verify + commit.
+  specmap.json delegate уже регенерит — boss коммитит как `chore(specmap)`.
+- **AI-Native**: `#[allow(dead_code)]` для Phase-staged API — принятая конвенция
+  (theme/, P4 TreeShape variants, P9a `set_shape`). conform baseline EMPTY
+  держится если каждый pub item имеет scope!/edge.
 
-### Visual language (Шаг 3 — pending)
-- **ASCII-уродства сейчас:** fold `+/-` (`flatten.rs:126`), DAG `(*)`
-  (`flatten.rs:130`), flags `x`/`.` (`render.rs:240`). Замены: `▾▸`, `↩`, `●○`.
-  Tree `│├└─` + rounded `╭╮╰╯` + `↑↓←→⇆` уже Unicode (хорошо).
-- **5 палитр** data-driven (semantic role tokens): Rosé Pine (сохранить 11
-  `Color::Rgb` из `theme.rs` ТОЧНО) + Catppuccin Mocha/Macchiato/Frappé/Latte.
-- **Tiers:** truecolor (`$COLORTERM`)→256→16; rounded→unicode box→ASCII.
-- rat-widget 3.2.1 inventory: **wrap** Menu/Button/RadioGroup/TextField/Tabbed
-  (уже)/Popup/MsgDialog/List; **extend/invent** только Group.
+### TUI architecture (Шаг 3)
+- **rat-salsa 4.x** — не trait-based: `run_tui(init, render, event, error, ...)`
+  с fn pointers. `Control::Changed` на resize ( repaint). AppEvent wraps
+  crossterm Event.
+- **vibe-actions no-render-dep** — `keymap` модуль (Key/KeyCode/KeyModifiers +
+  pure resolver) cross-crate seam; TUI владеет crossterm→Key bridge
+  (`keymap_bridge.rs`). `KeyModifiers` (не `Modifiers` — коллизия с
+  `search::Modifiers`).
+- **state.rs 600/600** (P9b) — на грани бюджета. Новый prefs TUI — отдельный
+  `PrefsApp` (не shared), свои cell-файлы.
+- **PROP-041 anchors `REQ {#anchor}`** (без точки) — specmap resolver их НЕ
+  подбирает (advisory, +1 warning; не блокирует). Heading-style `## … {#anchor}`
+  работает.
 
-### Discipline / harness
-- **specmap `--check` НЕ в self-check** для vibevm crates (advisory); pre-existing
-  orphans: 33 в `vibe-spec` (PROP-035 provisional) + 1 в `vibe-resolver` —
-  separate debt, НЕ блокирует settings/TUI. vibe-settings specmap-clean (138 units).
-- **conform baseline EMPTY** (zero slack); `state.rs` 458/600 — превентивный split
-  в `state/` каталог в P3.
-- Edit `.md`/`.rs` via Edit/Write only (PS5.1 corrupts UTF-8); commit via heredoc
-  (`git commit -F -`); **no AI-authorship trailers** (Rule 1). Subagents don't
-  `cargo fmt` → `cargo fmt --all` после их работы.
+### 429 limit
+- «Usage limit reached for 5 hour» — reset **2026-07-16 15:36:25**. Delegate
+  spawns падают; main loop работал до последнего. После reset — продолжить.
 
 ## Repository map (новое этой сессии)
 
-- **`crates/vibe-settings/`** — NEW. Ячейки: `loader.rs`, `error.rs`, `schema/`
-  (`{types,registry,validate,mod}.rs`), `resolver/` (`{mod,merge,tests}.rs`),
-  `events/` (`{mod,tests}.rs`), `cli/` (`{mod,tests}.rs`), `persist/`
-  (`{mod,write,error}.rs`), `lib.rs`. `tests/golden_e2e.rs`.
-- **`crates/vibe-cli/src/`** — wiring: `cli/prefs.rs`, `commands/prefs/`
-  (`{mod,get,set,list,check,migrate,origins}.rs`), `commands/init.rs`
-  (`.gitignore` gen), `templates/root-gitignore`.
-- **Specs/plans:** `spec/modules/vibe-settings/PROP-040-settings.md` (settings
-  system), `PROP-041-settings-ui.md` (settings UI); `spec/terraforms/
-  SETTINGS-SYSTEM-META-PLAN-v0.1.md` (4-step meta), `SETTINGS-SYSTEM-IMPL-PLAN-v0.1.md`
-  (Шаг 2 EXECUTED); `spec/research/settings-system-vscode-idea.md` (comparative
-  research, 16 deltas); `spec/design/tui-visual-language.md` (stub для P1).
+- **`crates/vibe-cli/src/commands/tree/tui/`** — PROP-037 TUI: `theme/`
+  (`{mod,palette,palettes/{rose_pine,catppuccin,mod},glyphs,tier}`),
+  `ui/` (`{mod,window,button,radio_group,text_field,group,card,msg_dialog,
+  coming_soon}`), `shape.rs` (TreeShape), `flatten.rs`, `state.rs`,
+  `render.rs`, `input.rs`, `dispatch.rs`, `keymap_bridge.rs`, `settings/`
+  (vibe-settings bridge), `copy/` (`{mod,settings,file_dest}`), `modal.rs`,
+  `menu/` (`{mod,sort,mode}`), `modes.rs`, `search/`.
+- **`crates/vibe-cli/src/commands/prefs/tui/`** — PROP-041 settings UI (S1):
+  `{mod,registry,page_tree,state,render,settings,input}` + `../ui.rs` launch.
+- **`crates/vibe-actions/src/keymap.rs`** — pure resolver seam.
+- **Specs/plans:** `PROP-037` (TUI, §2.2 visual-language anchors), `PROP-041`
+  (settings UI), `PROP-040` (settings system); `TREE-TUI-PLAN-v0.2.md` (EXECUTED),
+  `SETTINGS-UI-PLAN-v0.1.md` (S1 done, S2–S7 pending), `SETTINGS-SYSTEM-*`;
+  `spec/design/tui-visual-language.md` (lore); `spec/manual-tests/MT-02-*`
+  (TUI sign-off).
 
 ## Decisions in force
 
-- **Мета-план:** settings system (✓ spec+impl) → TUI (PROP-037 + visual language)
-  → settings UI. AIUI потом.
-- **Трёхуровневая модель** (L1⊂L2⊂L3, L3 wins); `ResolvedPrefs` resolver с
-  per-field provenance; inspect-API AIUI-ready. Clean-room VSCode/IntelliJ.
+- **Мета-план:** settings system (✓) → TUI PROP-037 (✓ EXECUTED) → settings UI
+  PROP-041 (S1 ✓, S2–S7 pending) → DONE. AIUI потом.
 - **TUI visual language:** Unicode/truecolor primary; 5 палитр data-driven;
-  rendering tiers; символы-only для основного UI (без Sixel/Kitty), ratatui-image
-  readiness.
-- **SDD + AI-Native Rust:** под каждую фазу точные спеки (granular anchors,
-  cite via specmark); cells; ≤600; conform+specmap green.
-- Rule 1–4 (CLAUDE.md) на месте. Предыдущая работа (action-system arc) —
-  завершена, в `45a660b`.
+  rendering tiers; символы-only; ratatui-image readiness.
+- **Boss rulings recorded:** state/ split + formal ModalStack (D3/D7) deferred
+  (depth-2 covered pragmatically via captive fields); palette/tier picker UI
+  (S2/S6 territory) pending.
+- SDD + AI-Native Rust throughout; Rule 1–4 на месте.
 
-## Recent commits (last 21, oneline — вся эта сессия)
+## Recent commits (oneline — Шаг 3 + Шаг 4)
 
 ```
-dbab98a docs(terraform): mark SETTINGS-SYSTEM-IMPL-PLAN Step 2 EXECUTED
-02bee60 test(vibe-settings): end-to-end golden — 3-level resolve/inspect/scope-refusal/migrate
-941bcd9 chore(specmap): regenerate the snapshot (vibe-settings PROP-040 units)
-4567662 fix(vibe-settings): spec-tag the public schema types (PROP-040 §6/§7, phase 2.8)
-12c0884 feat(vibe-settings,vibe-cli): persist — diff-from-default + comment-preserve + gitignore
-a83a79c feat(vibe-settings,vibe-cli): the vibe prefs CLI surface (PROP-040 §8, phase 2.6)
-43532fd feat(vibe-settings): the events cell — change-events + applies + file-watch
-eb68bff feat(vibe-settings): the resolver cell — ResolvedPrefs + deep-merge + inspect
-9741cee feat(vibe-settings): the schema cell — KeyMeta/Scope/Schema + validation
-7af6ea1 feat(vibe-settings): the loader cell — L1/L2/L3 loaders + path-classifier
-16a7d40 feat(vibe-settings): scaffold the crate + wire workspace (PROP-040, phase 2.1)
-e53da83 docs(terraform): settings-system impl plan v0.1 (Шаг 2 phases)
-c27d466 docs(spec): PROP-041 — the vibevm settings UI (TUI surface)
-e69438e docs(spec): PROP-040 — the vibevm settings system (application/user prefs)
-abfd2b9 docs(research): settings-system study — VSCode/IntelliJ/web synthesis + deltas
-103627e docs(terraform): reframe settings scope to application/user prefs
-47c8ec0 docs(continue): cold-resume — settings system + TUI visual language initiative
-516108e docs(design): TUI visual language vision (lore for PROP-037 §2.2)
-5e6b101 docs(research): settings-system study (VSCode/IntelliJ/web) — stub + baseline
-8262a28 docs(terraform): plan the settings-system + TUI campaign (meta)
-45a660b docs(wal): session-end checkpoint — action system + F1 Search Everywhere
+40201dc docs(wal): checkpoint — tree TUI (Шаг 3) EXECUTED, settings UI (Шаг 4) in progress
+21dfc0d chore(specmap): regenerate the snapshot (prefs TUI foundation, PROP-041 S1)
+0128360 feat(vibe-cli): the vibe prefs TUI foundation — page registry + settings tree (PROP-041 §1–§3; S1)
+f875413 docs(terraform): SETTINGS-UI-PLAN v0.1 — the vibe prefs TUI (PROP-041, Шаг 4)
+514f3b3 docs(tree-tui): MT-02 visual sign-off + mark TREE-TUI-PLAN v0.2 EXECUTED
+4be7adf chore(specmap): regenerate the snapshot (the copy system, P9b)
+bdc88fd feat(vibe-cli): the copy system + depth-2 copy-settings → file-dest (PROP-037 §10; P9b)
+8b57b13 chore(specmap): regenerate the snapshot (settings cell + theme threading, P9a)
+b019e88 feat(vibe-cli): settings persistence + the live, switchable theme (PROP-037 §9, §2.2; P9a)
+b7c1374 chore(specmap): regenerate the snapshot (keymap dispatch + detail card, P6+P8)
+3641aff feat(vibe-cli): the detail card as a wrapped form (PROP-037 §8, §2.9; P8)
+43a3c60 feat(vibe-cli): keymap resolver + invoke-by-addr dispatch + Esc quit-confirm (PROP-037 §5, §13; P6)
+db81e03 chore(specmap): regenerate the snapshot (ui components + F2 menu, P7)
+f9de0e8 feat(vibe-cli): ui components + the F2 sort/shape menu (PROP-037 §2.6–2.10, §7.2; P7)
+f77957a chore(specmap): regenerate the snapshot (modes scope → PROP-037#modes, P5)
+a503339 feat(vibe-cli): trees in every mode + Shift-arrow tab nav (PROP-037 §4, §5.3; P5)
+c7ad9a0 docs(terraform): TREE-TUI-PLAN ledger — P3 foundation + P4 pipeline DONE
+f02112f chore(specmap): regenerate the snapshot (ui foundation + tree-shape pipeline)
+5d808a2 feat(vibe-cli): ui foundation + the tree filter/shape pipeline (PROP-037 §2.3–2.10, §3.2–3.3; P3+P4)
+3c828d2 docs(terraform): TREE-TUI-PLAN ledger — P2 visual-language system DONE
+… (P2 → P0 earlier)
 ```
 
 ## Quick-start
 
 ```sh
-git status -sb && git log --oneline -3            # main, 21 ahead of origin (wind-down mirrors)
-# канонический мета-план:
-sed -n '1,60p' spec/terraforms/SETTINGS-SYSTEM-META-PLAN-v0.1.md
-# impl-план Шага 2 (EXECUTED — ledger §12):
-sed -n '1,40p' spec/terraforms/SETTINGS-SYSTEM-IMPL-PLAN-v0.1.md
-# контракт settings system:
-sed -n '1,40p' spec/modules/vibe-settings/PROP-040-settings.md
-# visual-language vision (stub для P1):
-sed -n '1,50p' spec/design/tui-visual-language.md
-bash tools/self-check.sh                           # floor GREEN
-cargo test -p vibe-settings                        # 87 unit + 2 e2e + 34 doc
-./target/debug/vibe prefs --help                   # 6 subcommands
+git status -sb && git log --oneline -5          # main, clean; ~50 commits this session
+sed -n '1,60p' spec/terraforms/SETTINGS-UI-PLAN-v0.1.md   # Шаг 4 plan (S1 done, S2 next)
+bash tools/self-check.sh                         # floor GREEN (verified post-Шаг 3)
+cargo test -p vibe-cli                           # 273 tests green
+./target/debug/vibe tree                         # the TUI (PROP-037, Шаг 3)
+./target/debug/vibe prefs ui                     # the settings TUI (PROP-041 S1 — tree only; form is S2)
+# resume S2 after the 429 reset (2026-07-16 15:36:25):
+#   re-launch the S2 edit-form delegate (spec in SETTINGS-UI-PLAN v0.1 §S2)
 ```
 
 ## Pointer
 
-- **Канонический живой state:** `spec/WAL.md` (верхняя `_Updated:` строка) —
-  описывает завершённый action-system arc; **этот CONTINUE описывает новую
-  работу** (settings system EXECUTED + TUI pending). Обновлено этим wind-down.
-- **Мета-план:** `spec/terraforms/SETTINGS-SYSTEM-META-PLAN-v0.1.md`.
-- **Детальный план TUI (P0–P10):** `~/.claude-glm/plans/hashed-questing-beaver.md`
-  (session; перенести в `spec/terraforms/TREE-TUI-PLAN-v0.2.md` в Шаге 3 P0).
+- **Канонический живой state:** `spec/WAL.md` (верхняя `_Updated:` строка).
+- **Шаг 4 plan:** `spec/terraforms/SETTINGS-UI-PLAN-v0.1.md`.
+- **Шаг 3 plan (EXECUTED):** `spec/terraforms/TREE-TUI-PLAN-v0.2.md`.
