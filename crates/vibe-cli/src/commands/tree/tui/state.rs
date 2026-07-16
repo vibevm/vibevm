@@ -398,14 +398,18 @@ mod tests {
         app.toggle_fold_selected();
         assert_eq!(app.rows.len(), 1, "child hidden under a folded root");
         assert!(
-            app.rows[0].name.contains(super::super::theme::fold_collapsed()),
+            app.rows[0]
+                .name
+                .contains(super::super::theme::fold_collapsed()),
             "folded node shows the collapsed glyph"
         );
         // Unfold restores.
         app.toggle_fold_selected();
         assert_eq!(app.rows.len(), 2);
         assert!(
-            app.rows[0].name.contains(super::super::theme::fold_expanded()),
+            app.rows[0]
+                .name
+                .contains(super::super::theme::fold_expanded()),
             "unfolded node shows the expanded glyph"
         );
     }
