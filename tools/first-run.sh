@@ -40,6 +40,21 @@ run self doctor --fix --yes
 echo
 run self ls || true
 
+# Build vibeterm (apps/vibeterm — the Electron terminal `vibe term` / `vibe tree
+# -t` launch). npm 11 blocks native postinstall by default, so this is install
+# + the node-pty prebuild + Electron's binary fetch (see apps/vibeterm/README.md
+# "Setup"). Non-fatal: a Rust-only dev box skips it; `vibe term` then names the
+# missing setup step rather than hanging.
+if command -v npm >/dev/null 2>&1; then
+  echo "==> npm install (apps/vibeterm)"
+  (cd apps/vibeterm && npm install \
+     && npm rebuild node-pty --foreground-scripts \
+     && node node_modules/electron/install.js) \
+    || echo "first-run: apps/vibeterm build FAILED — vibe term will say so" >&2
+else
+  echo "first-run: npm not found — apps/vibeterm left unbuilt (vibe term will say so)" >&2
+fi
+
 cat <<'EOF'
 
 first-run: done. Open a NEW terminal, then:

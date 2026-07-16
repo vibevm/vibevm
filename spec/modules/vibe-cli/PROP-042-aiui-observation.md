@@ -128,7 +128,7 @@ overrides the detected shell.
 
 REQ. vibeterm is located **without a `PATH` search**: an explicit
 `$VIBEVM_VIBETERM` directory wins, else a development fallback walks up from the
-running binary for `research/vibeterm`. Its Electron binary is resolved through
+running binary for `apps/vibeterm`. Its Electron binary is resolved through
 the app's own `node_modules/electron/path.txt`. A missing install fails with a
 message naming the setup step, never a silent hang.
 

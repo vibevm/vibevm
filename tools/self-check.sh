@@ -182,13 +182,13 @@ run_step "rust-ai-native-specmap --gate (typescript-ai-native-mcp pkg self-trace
   cargo run --quiet --manifest-path "$PKG_MANIFEST" -p rust-ai-native-specmap --bin rust-ai-native-specmap -- --gate --path "$MCPT_DIR" || OVERALL=$?
 
 # 11. vibeterm's pure-logic tests (TERMINAL-AIUI Phase 2). The Electron terminal
-# lives in research/vibeterm/ as scratch; its arg + shell-default logic is pure
-# ESM, tested under `node --test` with no deps and no GUI, so gate it here — the
+# lives in apps/vibeterm/; its arg + shell-default logic is pure ESM, tested
+# under `node --test` with no deps and no GUI, so gate it here — the
 # `vibe term` -> vibeterm launch contract cannot silently regress. Skipped where
 # node is absent (a Rust-only box); the Electron GUI itself is a manual visual pass.
 if command -v node >/dev/null 2>&1; then
   run_step "node --test (vibeterm args)" \
-    bash -c 'cd research/vibeterm && node --test' || OVERALL=$?
+    bash -c 'cd apps/vibeterm && node --test' || OVERALL=$?
 elif [ "$QUIET" -eq 0 ]; then
   printf '\n=== node --test (vibeterm args) — SKIPPED (no node on PATH) ===\n' >&2
 fi
