@@ -24,6 +24,9 @@ pub(crate) mod keymap_bridge;
 mod keyscript;
 mod menu;
 mod modal;
+/// `pub(crate)` — the model-plane projection is read by the `vibe aiui state`
+/// handler (PROP-039 §11.2/§11.3, prototyped on the TUI).
+pub(crate) mod model_view;
 mod modes;
 mod render;
 mod row;
@@ -130,6 +133,27 @@ pub(crate) fn snapshot_headless(
     } else {
         snapshot::to_text(&buf)
     })
+}
+
+/// Project the `vibe tree` TUI state headlessly to a serialisable
+/// [`model_view::TreeModelView`] — the AIUI model plane (PROP-039 §11.2/§11.3,
+/// PROP-042 §4 `state`). Builds a fresh [`App`] over `tree` (theme defaults, no
+/// settings load → deterministic), drives the `send` key script through the real
+/// [`input::handle`], and projects the resulting state. The semantic sibling of
+/// [`snapshot_headless`]: same `(tree, script)`, but the model instead of the
+/// glyph grid — for flow/state assertions with no rendering at all.
+#[spec(implements = "spec://vibevm/modules/vibe-cli/PROP-042#aiui-cli")]
+pub(crate) fn state_headless(tree: PackageTree, send: &str) -> Result<model_view::TreeModelView> {
+    let script = keyscript::parse(send)?;
+    let mut app = App::new(tree);
+    if !app.rows.is_empty() {
+        app.table.select(Some(0));
+    }
+    for ev in &script {
+        // Drive the model; the `Control` verdict is irrelevant headlessly.
+        let _ = input::handle(ev, &mut app)?;
+    }
+    Ok(app.model_view())
 }
 
 /// Select the first row so navigation and the highlight have an anchor.

@@ -106,14 +106,27 @@ settled (deterministic snapshots — never the pre-key screen); `close` tears th
 session down. A verb defaults to the most recent session; `--session <pid>`
 targets a specific one.
 
+REQ. The **model-plane** verb projects the TUI state — no rendering at all:
+
+```
+vibe aiui state [--path <dir>] [--send "<script>"]
+```
+
+builds the `vibe tree` model at `--path`, drives `--send` (§3), and prints a
+serialisable `ModelView` (PROP-039 §11.2/§11.3) — display mode, ordering, the
+active tab, the selection, the visible rows, and which modals are open. It is
+read-only and non-interactive; it observes structured state an agent asserts on
+(flow, focus, open menus), never pixels. The projection is a pure function of
+the built `App` and carries no rendering types.
+
 REQ. The control transport is **loopback-only and token-guarded**. A `--control`
 vibeterm serves JSON over `http://127.0.0.1:<ephemeral>` and writes a discovery
 file `~/.vibevm/aiui/<pid>.json` plus a `latest.json` pointer, each
 `{ port, token, pid, startedAt }` at mode `0600`. Every request carries the
 bearer token; the socket binds `127.0.0.1` only. `open` accepts a discovered
 session only when its `startedAt` is at or after the spawn instant, so a stale
-`latest.json` is never mistaken for the freshly-spawned one. The model-plane
-`state` verb lands in a later phase and is governed here as it arrives.
+`latest.json` is never mistaken for the freshly-spawned one. The model-plane `state` verb is governed by PROP-039 §11.2/§11.3; its `vibe tree`
+projection is prototyped here per PROP-039 §13 (the TUI is the reference surface).
 
 ## 5. The `vibe term` launcher {#vibe-term}
 

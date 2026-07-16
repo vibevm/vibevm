@@ -22,6 +22,12 @@ pub enum AiuiSubcommand {
     /// with `--size COLSxROWS`, and pick `--format text|cells`. Read-only.
     Render(AiuiRenderArgs),
 
+    /// Project the `vibe tree` TUI state to a serialisable `ModelView` — the
+    /// model plane (PROP-039 §11.2/§11.3, PROP-042 §4). Builds the model at
+    /// `--path`, drives `--send`, prints the structured state (display mode,
+    /// selection, open modals, visible rows) as JSON. Read-only, headless.
+    State(AiuiStateArgs),
+
     /// Launch vibeterm with a control server and wait for it to be ready
     /// (PROP-042 §4). Prints the session id (the vibeterm pid) so later verbs
     /// can target it.
@@ -194,4 +200,17 @@ pub enum SnapFormat {
     Text,
     /// JSON: run-length-encoded rows carrying fg/bg/modifiers.
     Cells,
+}
+
+#[derive(Debug, Args)]
+pub struct AiuiStateArgs {
+    /// Project root to analyse — the same resolver `vibe tree` uses.
+    #[arg(long, default_value = ".")]
+    pub path: PathBuf,
+
+    /// A space-separated key script to drive before projecting (PROP-042 §3),
+    /// e.g. "F2" (open the sort menu) or "Esc" (open the quit dialog).
+    /// `F4`/`F6` are refused (side effects).
+    #[arg(long, default_value = "")]
+    pub send: String,
 }

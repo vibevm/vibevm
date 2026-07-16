@@ -107,3 +107,13 @@ pub(crate) fn snapshot(
     let tree = build::build_tree(&root)?;
     tui::snapshot_headless(tree, cols, rows, send, cells)
 }
+
+/// Project the tree TUI state headlessly — the AIUI model plane (PROP-042 §4
+/// `state`). Resolves + builds the model like [`snapshot`], drives the `send`
+/// key script, and projects the resulting state to a
+/// [`tui::model_view::TreeModelView`] for flow/state assertions.
+pub(crate) fn state(path: &std::path::Path, send: &str) -> Result<tui::model_view::TreeModelView> {
+    let root = super::resolve_project_root(path)?;
+    let tree = build::build_tree(&root)?;
+    tui::state_headless(tree, send)
+}
