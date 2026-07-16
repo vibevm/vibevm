@@ -8,6 +8,10 @@
 //! - [`Window`] — the bordered, titled, centered panel (§2.3). Extracted from
 //!   the three call sites (`modal`, `menu`, `search`) that each inlined the same
 //!   centered-popup pattern. Composes `theme::panel()`/`border()`/`title()`.
+//! - [`Card`] — a `Window` laid out as a labelled vertical form (§2.9 `#card`,
+//!   §8 `#detail-card`): bold field headers, wrapped values, blank-line
+//!   spacing, and the theme `✕` close glyph. The detail modal renders through
+//!   it instead of a glued text blob.
 //! - [`Group`] — a bordered frame clustering children, with an optional name at
 //!   the frame's top-right (§2.6). Wraps `Block` (stateless frame, no focus
 //!   graph). The F2 sort/shape menu frames its groups with this.
@@ -32,6 +36,7 @@
 specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-037#components");
 
 pub mod button;
+pub mod card;
 pub mod coming_soon;
 pub mod group;
 pub mod msg_dialog;
@@ -42,10 +47,11 @@ pub mod window;
 // `Button`, `RadioGroup`, `TextField`, and `MsgDialog`/`ComingSoon` are the
 // component foundation; several light up as their owning dialogs land (P6
 // quit-confirm, P7 ComingSoon/PNG, and the later copy-settings §10.2 / file-path
-// §10.5 modals). `Window` and `Group` are live today. Matches the `theme`
-// module's Phase-3 `#[allow]`.
+// §10.5 modals). `Window`, `Group`, and `Card` are live today. Matches the
+// `theme` module's Phase-3 `#[allow]`.
 #[allow(unused_imports)]
 pub use button::Button;
+pub use card::Card;
 #[allow(unused_imports)]
 pub use coming_soon::ComingSoon;
 #[allow(unused_imports)]

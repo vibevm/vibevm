@@ -1,155 +1,139 @@
-//! The detail modal: `Enter` opens a centered popup showing the selected row's
-//! full detail vertically; `Esc`/`Enter` close it (PROP-036 §2.11). Rendered
-//! last in the draw pass so it sits on top.
+//! The detail modal: `Enter` opens the detail **Card** (PROP-037 §8
+//! `#detail-card`) centred over the tree, showing the selected row's full
+//! detail as a labelled vertical form — bold headers, wrapped values, a `✕`
+//! close affordance; `Esc`/`✕` close it (PROP-036 §2.11). Rendered last in the
+//! draw pass so it sits on top.
+//!
+//! The Card component (PROP-037 §2.9 `#card`, in [`super::ui::card`]) owns the
+//! frame, the panel ground, the close glyph, the bold-header + wrapped-value
+//! layout, and the content-based sizing. This module is only the bridge from
+//! the TUI's selected row to a populated [`Card`]: it decides *what* fields the
+//! card carries (the PROP-036 §2.11 package detail), the card decides *how*
+//! they look.
 
 specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-036#tui");
 
 use ratatui_core::buffer::Buffer;
 use ratatui_core::layout::Rect;
-use ratatui_core::text::{Line, Span};
-use ratatui_core::widgets::Widget;
+use ratatui_core::text::Line;
 
 use super::super::model::{
     Condition, ConditionKind, DeclaredLink, LoadOrigin, LoadType, Package, Source, SourceKind,
 };
 use super::state::{App, RowNode};
 use super::theme;
-use super::ui::Window;
+use super::ui::Card;
 
-/// Draw the detail modal centered over `area`.
+/// Draw the detail modal centred over `area`: build a [`Card`] for the selected
+/// row and let it render itself (PROP-037 §8). A no-op when the selection
+/// carries no detail (separator / subheader / nothing selected).
 pub fn draw(area: Rect, buf: &mut Buffer, app: &App) {
     if area.width < 8 || area.height < 5 {
         return;
     }
-    let lines = detail_lines(app);
-    if lines.is_empty() {
+    let Some(card) = detail_card(app) else {
         return;
-    }
-
-    // Fit the popup to the content, clamped to the screen.
-    let want_h = (lines.len() as u16).saturating_add(2); // + top/bottom border
-    let h = want_h.clamp(3, area.height);
-    let w = 74u16.min(area.width.saturating_sub(2)).max(24);
-
-    // The centered titled frame is the shared `Window` (PROP-037 §2.3); the
-    // detail fills the returned inner rect one line per row.
-    let inner = Window::centered(area, buf, Line::styled(" package ", theme::title()), w, h);
-
-    for (i, line) in lines.into_iter().enumerate() {
-        let y = i as u16;
-        if y >= inner.height {
-            break;
-        }
-        let row = Rect::new(inner.x, inner.y + y, inner.width, 1);
-        Widget::render(line, row, buf);
-    }
-}
-
-/// The vertical detail for the selected row.
-fn detail_lines(app: &App) -> Vec<Line<'static>> {
-    let Some(row) = app.selected_row() else {
-        return Vec::new();
     };
+    card.render(area, buf);
+}
+
+/// Build the detail [`Card`] for the selected row, if any (PROP-036 §2.11).
+fn detail_card(app: &App) -> Option<Card> {
+    let row = app.selected_row()?;
     match row.node {
-        // Label rows carry no detail; `open_modal` never opens them, and an
-        // empty result keeps the modal closed if one ever slips through.
-        RowNode::Separator | RowNode::Subheader => Vec::new(),
-        RowNode::Missing => vec![label("id", &row.id), label("status", "not in the lockfile")],
-        RowNode::Package(i) => match app.tree.packages.get(i) {
-            Some(pkg) => package_lines(pkg),
-            None => Vec::new(),
-        },
+        // Label rows carry no detail; `open_modal` never opens them, and a
+        // `None` here keeps the modal closed if one ever slips through.
+        RowNode::Separator | RowNode::Subheader => None,
+        RowNode::Missing => {
+            let mut card = Card::new(Line::styled(" detail ", theme::title()));
+            card.push("id", &row.id);
+            card.push("status", "not in the lockfile");
+            Some(card)
+        }
+        RowNode::Package(i) => app.tree.packages.get(i).map(package_card),
     }
 }
 
-/// The full package detail, one field per line (PROP-036 §2.11).
-fn package_lines(p: &Package) -> Vec<Line<'static>> {
-    let declared = p.load.declared.map(declared_label).unwrap_or("(none)");
-    // The fixed leading fields; the source, hash, boot path, and dependency
-    // list below are conditional / variable-length, so they push onto this.
-    let mut out: Vec<Line<'static>> = vec![
-        heading(&p.id),
-        label("group", &p.group),
-        label("name", &p.name),
-        label("version", &p.version),
-        label("kind", &p.kind),
-        label("load type", load_type_label(p.load.load_type)),
-        label("declared link", declared),
-        label(
-            "transitive",
-            &format!(
-                "{}   (origin: {})",
-                p.load.transitive,
-                origin_label(p.load.origin)
-            ),
+/// The full package detail, one labelled field per PROP-036 §2.11 entry. The
+/// package id is the card's border title (the prominent heading); the labelled
+/// rows below carry the rest of the field set.
+fn package_card(p: &Package) -> Card {
+    let mut card = Card::new(Line::styled(format!(" {} ", p.id), theme::title()));
+    card.push("group", &p.group);
+    card.push("name", &p.name);
+    card.push("version", &p.version);
+    card.push("kind", &p.kind);
+    card.push("load type", load_type_label(p.load.load_type));
+    card.push(
+        "declared link",
+        p.load.declared.map(declared_label).unwrap_or("(none)"),
+    );
+    card.push(
+        "transitive",
+        format!(
+            "{}   (origin: {})",
+            p.load.transitive,
+            origin_label(p.load.origin)
         ),
-        condition_line(&p.condition),
-        label("in STATIC.md", &p.load.in_static_md.to_string()),
-        label("in INDEX.md", &p.load.in_index_md.to_string()),
-    ];
-
-    push_source(&mut out, p.source.as_ref());
-
-    out.push(label(
+    );
+    card.push("condition", condition_value(&p.condition));
+    card.push("in STATIC.md", p.load.in_static_md);
+    card.push("in INDEX.md", p.load.in_index_md);
+    card.push("source", source_value(p.source.as_ref()));
+    card.push(
         "content hash",
         p.content_hash.as_deref().unwrap_or("(none)"),
-    ));
-    out.push(label(
-        "boot path",
-        p.load.boot_path.as_deref().unwrap_or("(none)"),
-    ));
-
-    out.push(label("dependencies", &format!("{}", p.dependencies.len())));
-    for dep in &p.dependencies {
-        out.push(Line::from(format!("    {dep}")));
-    }
-    out
+    );
+    card.push("boot path", p.load.boot_path.as_deref().unwrap_or("(none)"));
+    card.push("dependencies", deps_value(&p.dependencies));
+    card
 }
 
-/// The `when` condition line, with the full raw text when present (§2.5).
-fn condition_line(c: &Condition) -> Line<'static> {
+/// The `when` condition value, with the full raw text and the parsed kind
+/// (PROP-036 §2.5).
+fn condition_value(c: &Condition) -> String {
     if !c.present {
-        return label("condition", "(none)");
+        return "(none)".to_string();
     }
     let raw = c.raw.as_deref().unwrap_or("");
     let kind = c.kind.map(condition_kind_label).unwrap_or("");
     let value = c.value.as_deref().unwrap_or("");
     if kind.is_empty() {
-        label("condition", raw)
+        raw.to_string()
     } else {
-        label("condition", &format!("{raw}   ({kind} = {value})"))
+        format!("{raw}   ({kind} = {value})")
     }
 }
 
-/// Append the source provenance lines (§2.7 `source`).
-fn push_source(out: &mut Vec<Line<'static>>, source: Option<&Source>) {
+/// The source provenance value (PROP-036 §2.7 `source`): kind + url on the
+/// first line, indented `ref:`/`commit:` lines below when present.
+fn source_value(source: Option<&Source>) -> String {
     match source {
-        None => out.push(label("source", "(none)")),
+        None => "(none)".to_string(),
         Some(s) => {
             let kind = s.kind.map(source_kind_label).unwrap_or("(unknown)");
             let url = s.url.as_deref().unwrap_or("");
-            out.push(label("source", &format!("{kind}   {url}")));
+            let mut out = format!("{kind}   {url}");
             if let Some(git_ref) = &s.git_ref {
-                out.push(Line::from(format!("    ref: {git_ref}")));
+                out.push_str(&format!("\nref: {git_ref}"));
             }
             if let Some(commit) = &s.commit {
-                out.push(Line::from(format!("    commit: {commit}")));
+                out.push_str(&format!("\ncommit: {commit}"));
             }
+            out
         }
     }
 }
 
-/// A bold, accent title line.
-fn heading(text: &str) -> Line<'static> {
-    Line::from(text.to_string()).style(theme::title())
-}
-
-/// A `label: value` detail line — a dim label, a bright value.
-fn label(name: &str, value: &str) -> Line<'static> {
-    Line::from(vec![
-        Span::styled(format!("{name}: "), theme::dim()),
-        Span::styled(value.to_string(), theme::text()),
-    ])
+/// The dependency list value: the count on the first line, each edge on its own
+/// indented line below (so a long dependency list wraps instead of running off
+/// the right edge).
+fn deps_value(deps: &[String]) -> String {
+    let mut out = format!("{}", deps.len());
+    for dep in deps {
+        out.push_str(&format!("\n  {dep}"));
+    }
+    out
 }
 
 fn load_type_label(t: LoadType) -> &'static str {
@@ -193,5 +177,123 @@ fn source_kind_label(k: SourceKind) -> &'static str {
 fn condition_kind_label(k: ConditionKind) -> &'static str {
     match k {
         ConditionKind::Os => "os",
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::commands::tree::model::*;
+
+    /// Build a representative package covering every field the card surfaces.
+    fn fixture_pkg() -> Package {
+        Package {
+            id: "org.demo/widget".to_string(),
+            group: "org.demo".to_string(),
+            name: "widget".to_string(),
+            kind: "flow".to_string(),
+            version: "1.2.3".to_string(),
+            content_hash: Some("abc0123456789".to_string()),
+            source: Some(Source {
+                kind: Some(SourceKind::Git),
+                url: Some("https://example.invalid/widget".to_string()),
+                git_ref: Some("main".to_string()),
+                commit: Some("deadbeef".to_string()),
+            }),
+            load: Load {
+                load_type: LoadType::Static,
+                transitive: true,
+                declared: Some(DeclaredLink::Static),
+                origin: LoadOrigin::Declared,
+                in_static_md: true,
+                in_index_md: false,
+                boot_path: Some("spec/boot/widget.md".to_string()),
+            },
+            condition: Condition {
+                present: true,
+                raw: Some("os == windows".to_string()),
+                kind: Some(ConditionKind::Os),
+                value: Some("windows".to_string()),
+            },
+            dependencies: vec!["org.demo/dep-a".to_string(), "org.demo/dep-b".to_string()],
+        }
+    }
+
+    /// `package_card` surfaces the PROP-036 §2.11 field set: every expected
+    /// header is present, and the variable-length source / dependencies values
+    /// carry their detail (PROP-037 §8).
+    #[test]
+    fn package_card_carries_the_expected_field_set() {
+        let card = package_card(&fixture_pkg());
+        let headers: Vec<&str> = card.rows().iter().map(|r| r.header.as_str()).collect();
+        for expected in [
+            "group",
+            "name",
+            "version",
+            "kind",
+            "load type",
+            "declared link",
+            "transitive",
+            "condition",
+            "in STATIC.md",
+            "in INDEX.md",
+            "source",
+            "content hash",
+            "boot path",
+            "dependencies",
+        ] {
+            assert!(
+                headers.contains(&expected),
+                "card is missing field {expected:?}"
+            );
+        }
+    }
+
+    /// The source value folds kind + url + ref + commit into one wrapped value;
+    /// the dependencies value lists the count then each edge on its own line.
+    #[test]
+    fn package_card_folds_source_and_dependencies_values() {
+        let card = package_card(&fixture_pkg());
+        let rows: std::collections::HashMap<&str, &str> = card
+            .rows()
+            .iter()
+            .map(|r| (r.header.as_str(), r.value.as_str()))
+            .collect();
+        let source = rows["source"];
+        assert!(source.contains("git"));
+        assert!(source.contains("https://example.invalid/widget"));
+        assert!(source.contains("ref: main"));
+        assert!(source.contains("commit: deadbeef"));
+
+        let deps = rows["dependencies"];
+        assert!(deps.starts_with("2"));
+        assert!(deps.contains("org.demo/dep-a"));
+        assert!(deps.contains("org.demo/dep-b"));
+    }
+
+    /// A missing-row card carries the id + status fields only.
+    #[test]
+    fn missing_row_card_has_id_and_status() {
+        let mut card = Card::new(Line::styled(" detail ", theme::title()));
+        card.push("id", "org.demo/ghost");
+        card.push("status", "not in the lockfile");
+        let headers: Vec<&str> = card.rows().iter().map(|r| r.header.as_str()).collect();
+        assert_eq!(headers, ["id", "status"]);
+    }
+
+    /// `condition_value` formats a present condition with its parsed kind, and a
+    /// `(none)` for an absent one.
+    #[test]
+    fn condition_value_formats_present_and_absent() {
+        let present = Condition {
+            present: true,
+            raw: Some("os == windows".to_string()),
+            kind: Some(ConditionKind::Os),
+            value: Some("windows".to_string()),
+        };
+        assert_eq!(condition_value(&present), "os == windows   (os = windows)");
+
+        let absent = Condition::absent();
+        assert_eq!(condition_value(&absent), "(none)");
     }
 }

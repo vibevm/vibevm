@@ -462,6 +462,13 @@ pub fn flag_off_glyph() -> &'static str {
     default_theme().glyphs().flag_off
 }
 
+/// The window/card close affordance (`✕` Tier ≥ 1, `x` Tier 0) — drawn top-right
+/// on a window border (PROP-037 §2.2.4, §8). Distinct from the *style* helpers:
+/// this is the glyph a component stamps into a border cell.
+pub fn close_glyph() -> &'static str {
+    default_theme().glyphs().close
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
