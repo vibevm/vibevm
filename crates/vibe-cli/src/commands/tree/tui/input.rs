@@ -184,6 +184,8 @@ pub fn handle(event: &Event, app: &mut App) -> Result<Control<AppEvent>> {
         }
         // Esc at the base screen opens the quit-confirm (PROP-037 §7.4).
         ct_event!(keycode press Esc) => {
+            // OK is the default-focused button when the dialog opens.
+            app.confirm_cancel_focused = false;
             app.confirm_quit = true;
             Control::Changed
         }
@@ -211,13 +213,29 @@ fn handle_modal(event: &Event, app: &mut App) -> Control<AppEvent> {
     }
 }
 
-/// The captive quit-confirm handler (PROP-037 §7.4): `Enter` quits, `Esc`
-/// cancels; everything else is swallowed.
+/// The captive quit-confirm handler (PROP-037 §7.4). The dialog has two
+/// buttons — OK (default-focused) and Cancel; `Enter` activates the focused
+/// one (OK quits, Cancel cancels), `Esc` cancels, Tab/←/→ move the focus.
 fn handle_confirm_quit(event: &Event, app: &mut App) -> Control<AppEvent> {
     match event {
-        ct_event!(keycode press Enter) => Control::Quit,
         ct_event!(keycode press Esc) => {
             app.confirm_quit = false;
+            Control::Changed
+        }
+        ct_event!(keycode press Enter) => {
+            // Activate the focused button: OK quits, Cancel cancels.
+            if app.confirm_cancel_focused {
+                app.confirm_quit = false;
+                Control::Changed
+            } else {
+                Control::Quit
+            }
+        }
+        // Tab / ← / → move focus between OK and Cancel.
+        ct_event!(keycode press Tab)
+        | ct_event!(keycode press Left)
+        | ct_event!(keycode press Right) => {
+            app.confirm_cancel_focused = !app.confirm_cancel_focused;
             Control::Changed
         }
         _ => Control::Unchanged,
@@ -241,8 +259,10 @@ fn is_press_shift_fkey(event: &Event, n: u8) -> bool {
 }
 
 /// The captive Search Everywhere handler (PROP-037 §7.3): typing filters, Up/Down
-/// move the selection, `Tab`/`Shift+Tab` cycle the category tabs, `Enter` runs the
-/// selection, `Esc` closes.
+/// move the selection, `Shift+←`/`Shift+→` cycle the category tabs (the app-wide
+/// "tabs" binding, PROP-037 §5), `Enter` runs the selection, `Esc` closes. `Tab`
+/// is reserved for focus-group cycling (PROP-037 §5.1) — Search Everywhere's
+/// focus groups land with the focus model; until then `Tab` is inert here.
 fn handle_search(event: &Event, app: &mut App) -> Control<AppEvent> {
     let Event::Key(k) = event else {
         return Control::Unchanged;
@@ -258,8 +278,13 @@ fn handle_search(event: &Event, app: &mut App) -> Control<AppEvent> {
         KeyCode::Enter => search::confirm(app),
         KeyCode::Up => with_search(app, |s| s.select_up()),
         KeyCode::Down => with_search(app, |s| s.select_down()),
-        KeyCode::Tab => with_search(app, |s| s.next_tab()),
-        KeyCode::BackTab => with_search(app, |s| s.prev_tab()),
+        // Shift+←/→ cycle the category tabs (app-wide tab binding, PROP-037 §5).
+        KeyCode::Left if k.modifiers.contains(KeyModifiers::SHIFT) => {
+            with_search(app, |s| s.prev_tab())
+        }
+        KeyCode::Right if k.modifiers.contains(KeyModifiers::SHIFT) => {
+            with_search(app, |s| s.next_tab())
+        }
         KeyCode::Backspace => with_search(app, |s| s.backspace()),
         KeyCode::Char(c) => with_search(app, move |s| s.type_char(c)),
         _ => Control::Unchanged,

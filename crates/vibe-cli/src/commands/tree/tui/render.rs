@@ -16,7 +16,7 @@ use ratatui_core::widgets::{StatefulWidget, Widget};
 
 use super::state::{App, DisplayMode, RowNode};
 use super::theme::Role;
-use super::ui::MsgDialog;
+use super::ui::{Button, Window};
 use super::{copy, modal, modes};
 
 /// Draw the whole surface for this frame.
@@ -52,8 +52,7 @@ pub fn draw(area: Rect, buf: &mut Buffer, app: &mut App) {
     }
     // The quit-confirm dialog (PROP-037 §7.4) — drawn last, on top of everything.
     if app.confirm_quit {
-        MsgDialog::new("Really quit?", "Enter to quit \u{00b7} Esc to cancel")
-            .render(area, buf, &app.theme);
+        render_confirm_quit(area, buf, app);
     }
     // The copy-settings modal (Shift+F6) and its depth-2 file-dest overlay
     // (PROP-037 §10.2/§10.5). Copy-settings is drawn over the base; file-dest
@@ -273,4 +272,50 @@ fn flag_cell(on: bool, theme: &super::theme::Theme) -> Cell<'static> {
     } else {
         Cell::from(theme.glyphs().flag_off).style(Some(theme.flag_off()))
     }
+}
+
+/// The quit-confirm dialog (PROP-037 §7.4 `#quit-confirm`): a centered titled
+/// window with a body line and two buttons — **OK** (default-focused) and
+/// **Cancel**. `Enter` activates the focused button (OK quits, Cancel cancels);
+/// `Esc` cancels; Tab/←/→ move the focus between the buttons (handled in
+/// `input::handle_confirm_quit`). Drawn last, over everything.
+fn render_confirm_quit(area: Rect, buf: &mut Buffer, app: &App) {
+    let theme = &app.theme;
+    let title = Line::styled(" Really quit? ", theme.title());
+    let width = 32u16.min(area.width.saturating_sub(2));
+    let height = 5u16.min(area.height);
+    let inner = Window::centered(area, buf, title, width, height, theme);
+    if inner.width < 18 || inner.height < 3 {
+        return;
+    }
+    // body row, a one-row gap, then the OK / Cancel buttons row.
+    let [body_row, _gap, btn_row] = Layout::vertical([
+        Constraint::Length(1),
+        Constraint::Length(1),
+        Constraint::Length(1),
+    ])
+    .areas(inner);
+
+    buf.set_stringn(
+        body_row.x,
+        body_row.y,
+        "Quit vibe tree?",
+        body_row.width as usize,
+        theme.text(),
+    );
+
+    // OK is focused unless the user moved focus to Cancel.
+    let ok = Button::new("OK").focused(!app.confirm_cancel_focused);
+    let cancel = Button::new("Cancel").focused(app.confirm_cancel_focused);
+    let ok_w = ok.width();
+    let cancel_w = cancel.width();
+    let gap = 2u16;
+    let total = ok_w.saturating_add(gap).saturating_add(cancel_w);
+    let start = btn_row.x + btn_row.width.saturating_sub(total) / 2;
+    ok.render(Rect::new(start, btn_row.y, ok_w, 1), buf, theme);
+    cancel.render(
+        Rect::new(start + ok_w + gap, btn_row.y, cancel_w, 1),
+        buf,
+        theme,
+    );
 }

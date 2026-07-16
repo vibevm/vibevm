@@ -87,19 +87,19 @@ impl Button {
     }
 
     /// The outer width the button occupies when rendered: the label plus one
-    /// cell of padding on the left (the cell to the right of the label stays
-    /// filled with the style background, so two adjacent buttons read evenly).
-    /// Use this to centre a button in a row.
+    /// cell of padding on each side (symmetric, so the highlight reads centred
+    /// under the label and two adjacent buttons space evenly). Use this to
+    /// centre a button in a row.
     #[must_use]
     pub fn width(&self) -> u16 {
-        self.label.chars().count() as u16 + 1
+        self.label.chars().count() as u16 + 2
     }
 
     /// Render the button into a single-row `area` (PROP-037 §2.5).
     ///
     /// The whole area is styled — [`Theme::selection()`] when focused (accent
     /// ground, base text, bold), [`Theme::dim()`] otherwise — and the padded
-    /// label is written from the left. Truncates to `area.width`.
+    /// label is written symmetrically (` {label} `). Truncates to `area.width`.
     #[spec(implements = "spec://vibevm/modules/vibe-cli/PROP-037#button")]
     pub fn render(&self, area: Rect, buf: &mut Buffer, theme: &Theme) {
         let style = if self.focused {
@@ -108,10 +108,11 @@ impl Button {
             theme.dim()
         };
         buf.set_style(area, style);
-        // The leading space is the left padding; `set_stringn` writes from
-        // (area.x, area.y) and truncates at area.width. Trailing cells keep the
-        // styled background filled in by `set_style` above.
-        let text = format!(" {}", self.label);
+        // Symmetric padding: one space each side of the label, so the highlight
+        // is centred under the label (not offset one cell left). `set_stringn`
+        // writes from (area.x, area.y) and truncates at area.width; trailing
+        // cells keep the styled background filled in by `set_style` above.
+        let text = format!(" {} ", self.label);
         buf.set_stringn(area.x, area.y, &text, area.width as usize, style);
     }
 }
@@ -177,11 +178,11 @@ mod tests {
         assert_eq!(buf[Position::new(1, 0)].symbol(), "C");
     }
 
-    /// `width()` is the label plus one cell of left padding.
+    /// `width()` is the label plus one cell of padding on each side.
     #[test]
     fn width_is_label_plus_padding() {
-        assert_eq!(Button::new("OK").width(), 3);
-        assert_eq!(Button::new("Cancel").width(), 7);
+        assert_eq!(Button::new("OK").width(), 4);
+        assert_eq!(Button::new("Cancel").width(), 8);
     }
 
     /// `focused()` is the focus toggle; `new()` starts unfocused.

@@ -142,8 +142,12 @@ pub struct App {
     /// The open file-dest modal (depth-2 over copy-settings); Esc returns to it (§10.5).
     pub file_dest: Option<FileDest>,
     /// Whether the quit-confirm dialog is open (PROP-037 §7.4 `#quit-confirm`).
-    /// A bare `Esc` at the base screen opens it; `Enter` confirms, `Esc` cancels.
+    /// A bare `Esc` at the base screen opens it; `Enter` activates the focused
+    /// button (OK quits, Cancel cancels), `Esc` cancels, Tab/←/→ move focus.
     pub confirm_quit: bool,
+    /// The focused button in the quit-confirm dialog (PROP-037 §7.4): `false` =
+    /// OK (the default), `true` = Cancel. Tab/←/→ toggle it.
+    pub confirm_cancel_focused: bool,
     /// A transient footer flash (e.g. an F6-copy confirmation); cleared on the
     /// next input event (PROP-037 §10).
     pub flash: Option<String>,
@@ -187,6 +191,7 @@ impl App {
             copy_settings: None,
             file_dest: None,
             confirm_quit: false,
+            confirm_cancel_focused: false,
             flash: None,
             ordering: Ordering::Topological,
             shape: TreeShape::default(),
