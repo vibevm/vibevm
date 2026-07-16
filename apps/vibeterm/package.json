@@ -10,7 +10,8 @@
   "main": "main.cjs",
   "scripts": {
     "start": "electron .",
-    "test": "node --test"
+    "test": "node --test",
+    "package": "node scripts/package.mjs"
   },
   "dependencies": {
     "@xterm/addon-fit": "^0.10.0",
@@ -18,5 +19,9 @@
     "@xterm/xterm": "^5.5.0",
     "electron": "^32.0.0",
     "node-pty": "^1.1.0"
+  },
+  "devDependencies": {
+    "@electron/packager": "^24.0.0",
+    "@electron/rebuild": "^4.0.0"
   }
 }

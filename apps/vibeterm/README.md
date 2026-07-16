@@ -39,7 +39,7 @@ from Electron or node-pty, so it is unit-tested under a plain `node --test`
 Requires Node ≥ 22.6 and npm 11.
 
 ```sh
-cd research/vibeterm
+cd apps/vibeterm
 
 # 1. Install dependencies. npm 11 blocks native postinstall scripts by
 #    default, so node-pty's prebuild and Electron's binary are NOT fetched

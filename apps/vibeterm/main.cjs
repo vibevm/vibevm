@@ -30,6 +30,25 @@ const pty = require('node-pty');
 // frequent source of blank-window / driver faults on headless or remote boxes.
 app.disableHardwareAcceleration();
 
+// Chrome DevTools Protocol (CDP): in `--control` mode, open a remote-debugging
+// endpoint so an external agent (vibe-cli via `chromiumoxide`) can attach to
+// the live page and read its REAL state — the xterm grid's cols/cell metrics,
+// the DOM layout, the scrollbar box — straight from the runtime, with no
+// screenshot OCR. The loopback port is chosen by the launcher (Rust, which can
+// bind synchronously) and passed as `--cdp-port`; we publish it in the
+// discovery file. `app.commandLine.appendSwitch` MUST run before
+// `app.whenReady()`, so the flags are read from `process.argv` here directly.
+let cdpPort = 0;
+{
+  const idx = process.argv.indexOf('--cdp-port');
+  const v = idx >= 0 ? Number(process.argv[idx + 1]) : NaN;
+  if (Number.isInteger(v) && v > 0 && v < 65536 && process.argv.includes('--control')) {
+    cdpPort = v;
+    app.commandLine.appendSwitch('remote-debugging-port', String(v));
+    app.commandLine.appendSwitch('remote-allow-origins', '*');
+  }
+}
+
 // Backstop: never let a stray throw surface Electron's error dialog.
 process.on('uncaughtException', (err) => {
   console.error('[vibeterm] uncaughtException:', err);
@@ -54,6 +73,14 @@ let controlToken = null;
 let discovery = null;
 /** key-name → pty escape sequence (lib/keymap.mjs); set in control mode. */
 let keyToSeq = null;
+/**
+ * Live-preview hooks (set in `createWindow`): `stopPty` tears the hosted
+ * program down without touching Electron (freeing its binary for a rebuild);
+ * `startPty` spawns it again at the last grid size. Both stay `null` until the
+ * window is up.
+ */
+let stopPty = null;
+let startPty = null;
 /** Epoch ms of the last pty byte; drives POST /wait. */
 let lastDataAt = 0;
 /**
@@ -164,6 +191,7 @@ function writeDiscovery(port) {
     pid: process.pid,
     startedAt: Date.now(),
   };
+  if (cdpPort > 0) info.cdpPort = cdpPort;
   const json = JSON.stringify(info, null, 2);
   const pidFile = path.join(dir, `${process.pid}.json`);
   const latestFile = path.join(dir, 'latest.json');
@@ -367,6 +395,61 @@ async function handleControlRequest(req, res) {
       return;
     }
 
+    case 'POST /capture': {
+      let body;
+      try {
+        body = await readJsonBody(req);
+      } catch {
+        sendJson(res, 400, { error: 'invalid_body' });
+        return;
+      }
+      const savePath = typeof body.path === 'string' ? body.path : null;
+      if (!savePath) {
+        sendJson(res, 400, { error: 'path_required' });
+        return;
+      }
+      if (!win || win.isDestroyed()) {
+        sendJson(res, 503, { error: 'no_window' });
+        return;
+      }
+      try {
+        const image = await win.webContents.capturePage();
+        const png = image.toPNG();
+        const { width, height } = image.getSize();
+        fs.writeFileSync(savePath, png);
+        sendJson(res, 200, { ok: true, path: savePath, width, height, bytes: png.length });
+      } catch (err) {
+        sendJson(res, 500, { error: 'capture_failed', detail: String(err) });
+      }
+      return;
+    }
+
+    case 'POST /resize': {
+      let body;
+      try {
+        body = await readJsonBody(req);
+      } catch {
+        sendJson(res, 400, { error: 'invalid_body' });
+        return;
+      }
+      const w = Number(body.width);
+      const h = Number(body.height);
+      if (!(w > 0 && h > 0)) {
+        sendJson(res, 400, { error: 'width_height_required' });
+        return;
+      }
+      if (!win || win.isDestroyed()) {
+        sendJson(res, 503, { error: 'no_window' });
+        return;
+      }
+      // Resize the window in CSS pixels; the renderer's ResizeObserver refits the
+      // grid and reports back, and applySize resizes the pty + mirror — exactly
+      // the fluid reflow a mouse drag triggers, but driven for tests/automation.
+      win.setContentSize(Math.round(w), Math.round(h));
+      sendJson(res, 200, { ok: true, width: Math.round(w), height: Math.round(h) });
+      return;
+    }
+
     case 'POST /input': {
       let body;
       try {
@@ -432,6 +515,53 @@ async function handleControlRequest(req, res) {
       sendJson(res, 200, { ok: true });
       // Tear down only after the response is flushed to the socket.
       res.on('finish', () => quit());
+      return;
+    }
+
+    case 'POST /pty-stop': {
+      // Live preview: stop the hosted program only (NOT Electron) so its binary
+      // is free to rebuild. The renderer + CDP endpoint + discovery stay live.
+      if (stopPty) stopPty();
+      sendJson(res, 200, { ok: true });
+      return;
+    }
+    case 'POST /pty-start': {
+      // Live preview: (re)spawn the hosted program at the current grid. Pair
+      // with /pty-stop around a rebuild for a fast TUI preview loop.
+      if (startPty) startPty();
+      sendJson(res, 200, { ok: true, cols: curCols, rows: curRows });
+      return;
+    }
+
+    case 'POST /scrollbar': {
+      // Flip the scrollbar policy live: `auto` (bar hidden for a full-screen
+      // TUI, shown for a shell), `on` (always), `off` (never). The renderer
+      // hides/shows the bar and refits the grid; no Electron restart.
+      let body;
+      try {
+        body = await readJsonBody(req);
+      } catch {
+        sendJson(res, 400, { error: 'invalid_body' });
+        return;
+      }
+      const mode =
+        body && ['auto', 'on', 'off'].includes(body.mode) ? body.mode : null;
+      if (!mode) {
+        sendJson(res, 400, { error: 'mode_must_be_auto_on_off' });
+        return;
+      }
+      if (!win || win.isDestroyed()) {
+        sendJson(res, 503, { error: 'no_window' });
+        return;
+      }
+      try {
+        const ok = await win.webContents.executeJavaScript(
+          `window.setScrollbarMode && window.setScrollbarMode(${JSON.stringify(mode)})`,
+        );
+        sendJson(res, 200, { ok: !!ok, mode });
+      } catch (err) {
+        sendJson(res, 500, { error: 'scrollbar_failed', detail: String(err) });
+      }
       return;
     }
 
@@ -511,17 +641,41 @@ async function createWindow() {
     startControlServer(cols, rows);
   }
 
+  // A headless (offscreen) window is sized to the requested grid so the capture
+  // is a tight PNG of the terminal (generous per-cell metrics for 14px Consolas,
+  // a little margin over clipping); a visible window keeps a comfortable default.
+  const winW = hideWindow ? Math.round(cols * 9) + 24 : 900;
+  const winH = hideWindow ? Math.round(rows * 19) + 24 : 640;
   win = new BrowserWindow({
-    width: 900,
-    height: 640,
+    width: winW,
+    height: winH,
     // Hidden for control/observation sessions (`vibe aiui open --headless`):
     // the terminal is driven over HTTP and read from the headless mirror, so no
     // OS window pops up. Visible for standalone `vibe term` / `vibe tree -t`.
     show: !hideWindow,
     backgroundColor: '#191724',
+    // The app icon — the default for our apps, sourced from `resources/`
+    // (SVG authoring copy + the rasterised PNG/ICO). On Windows ICO is
+    // preferred for the taskbar; PNG works everywhere Electron runs.
+    icon: path.join(
+      __dirname,
+      'resources',
+      process.platform === 'win32' ? 'icon.ico' : 'icon.png',
+    ),
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
+      // A headless session renders **offscreen** (to a bitmap, no visible
+      // window) so `webContents.capturePage()` can still return a faithful PNG
+      // of the xterm.js grid for `vibe aiui snapshot --png`. A never-shown
+      // ordinary window does not paint, so its capture would be blank.
+      offscreen: hideWindow,
+      // Never throttle. A backgrounded/occluded window otherwise has its timers
+      // and repaint (requestAnimationFrame) suspended by Chromium, which stalls
+      // the initial fit (the grid stays at the spawn fallback) and makes
+      // capturePage return an empty 0x0 image. We drive and capture these
+      // windows headlessly, so they must keep running when not in front.
+      backgroundThrottling: false,
     },
   });
 
@@ -534,6 +688,7 @@ async function createWindow() {
     if (ptyProc) return;
     curCols = spawnCols;
     curRows = spawnRows;
+    ptyExitCode = null; // a fresh child has not exited yet
     if (headless) {
       try {
         headless.resize(spawnCols, spawnRows);
@@ -546,7 +701,12 @@ async function createWindow() {
       cols: spawnCols,
       rows: spawnRows,
       cwd: process.cwd(),
-      env: process.env,
+      // Advertise 24-bit colour: xterm.js renders truecolour, so the hosted TUI
+      // (`vibe tree`) must take its Tier-3 path and emit exact RGB (Rosé Pine),
+      // not degrade to the 256-colour cube — which paints e.g. a `Surface1`
+      // unset flag the same gold as a `Gold` set flag. Warp sets this; we must
+      // too, or our colours silently mismatch the real terminal.
+      env: { ...process.env, COLORTERM: 'truecolor' },
     });
     // main -> renderer, plus the headless mirror (control mode) so /snapshot
     // sees exactly what the renderer sees. Guard every send against a destroyed
@@ -586,6 +746,14 @@ async function createWindow() {
       quit();
     });
   };
+  // Expose PTY stop/start to the control plane: an agent restarts the hosted
+  // program WITHOUT restarting Electron — a live-preview loop. `pty-stop`
+  // frees the binary for a rebuild; `pty-start` spawns the fresh one at the
+  // current grid. The renderer, the CDP endpoint, and discovery all stay live.
+  stopPty = () => disposePty();
+  startPty = () => {
+    if (!ptyProc) spawnPty(curCols || cols, curRows || rows);
+  };
   // Spawn-or-resize to a grid size. Idempotent: the first call spawns the pty;
   // a later call (a late 'ready' that lost the fallback race, or a real window
   // resize) just resizes the pty + headless mirror. This is what keeps the
@@ -607,27 +775,41 @@ async function createWindow() {
     }
   };
 
-  if (hideWindow) {
-    // Headless: a hidden window has no settled layout to fit, so the pty and the
-    // headless mirror are born at exactly the requested size and stay there.
-    // The renderer still loads (hidden); its fit reports are ignored — snapshots
-    // read from the headless mirror, which spawnPty sizes to match.
-    spawnPty(cols, rows);
-  } else {
-    // Visible: born at the renderer's fitted grid (reported once layout settles),
-    // so the hosted program lays out for exactly what is shown. A fallback spawns
-    // at the args size only if the renderer never reports; a late 'ready' after
-    // that fallback is corrected by applySize (resize), not dropped.
-    ipcMain.once('ready', (_event, size) => {
-      applySize(
-        size && size.cols > 0 ? size.cols : cols,
-        size && size.rows > 0 ? size.rows : rows,
+  // Both visible and headless-offscreen windows have a real layout, so both take
+  // the renderer's fitted grid: the pty is born (and later resized) to exactly
+  // what xterm displays, so the two never disagree — no fit-vs-pty skew, on
+  // screen or in a capture. The renderer reports once layout settles; a fallback
+  // spawns at the args size if it never does; a late 'ready' after that fallback
+  // is corrected by applySize (a resize), not dropped.
+  // Spawn the pty at the renderer's FITTED grid, not the requested `cols×rows`.
+  // We used to wait for a `ready` IPC from the renderer, but that raced: the
+  // renderer fires `ready` during DOM load, BEFORE this listener was wired, so
+  // it was silently dropped — the pty then fell back (4s) to the args size
+  // (120×40) while xterm displayed the fitted size (113×33), and the grid
+  // skewed / wrapped under the scrollbar. The visible window is born at a
+  // fixed 900×640 regardless of `--cols`, so the args size is never what xterm
+  // shows. Instead, after load, ask the renderer directly for its fitted grid
+  // and spawn at THAT; the `resize` IPC below keeps the pty in sync as the
+  // window changes. A late fallback still covers a renderer that won't report.
+  const spawnAtFitted = async () => {
+    try {
+      const size = await win.webContents.executeJavaScript(
+        '(() => { try { window.fit && window.fit.fit(); } catch (e) {} ' +
+        'return { cols: term.cols, rows: term.rows }; })()',
       );
-    });
-    setTimeout(() => {
-      if (!ptyProc) spawnPty(cols, rows);
-    }, 4000);
-  }
+      if (size && size.cols > 0 && size.rows > 0) {
+        applySize(size.cols, size.rows);
+        return;
+      }
+    } catch {
+      /* page not ready yet; the fallback below spawns at the args size */
+    }
+    if (!ptyProc) spawnPty(cols, rows);
+  };
+  spawnAtFitted();
+  setTimeout(() => {
+    if (!ptyProc) spawnPty(cols, rows);
+  }, 4000);
 
   // renderer -> main: feed keystrokes / pastes to the pty.
   ipcMain.on('input', (_event, data) => {
@@ -638,14 +820,12 @@ async function createWindow() {
     }
   });
 
-  // renderer -> main: keep the pty (and the headless mirror) sized to the
-  // visible grid (FitAddon), so the hosted program lays out for exactly what is
-  // shown. Routes through applySize, so a resize arriving before the pty is up
-  // spawns it rather than being dropped. Ignored in headless mode, where the
-  // grid is fixed at spawn and a hidden window's phantom layout must not drift
-  // the snapshot size.
+  // renderer -> main: keep the pty (and the headless mirror) sized to the grid
+  // xterm fits to, so the hosted program always lays out for exactly what is
+  // shown. This is the fluid layout: dragging the window (visible) reflows the
+  // program live at a constant font size. Routes through applySize, so a resize
+  // arriving before the pty is up spawns it rather than being dropped.
   ipcMain.on('resize', (_event, size) => {
-    if (hideWindow) return;
     if (size && size.cols > 0 && size.rows > 0) applySize(size.cols, size.rows);
   });
 
