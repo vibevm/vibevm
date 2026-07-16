@@ -23,11 +23,16 @@ mod modal;
 mod modes;
 mod render;
 mod search;
-mod settings;
+// `pub(crate)` — the `vibe.tree.*` schema + palette/tier mapping is read by the
+// `vibe prefs` settings TUI (PROP-041) so the two surfaces share one theme.
+pub(crate) mod settings;
 mod shape;
 mod state;
-mod theme;
-mod ui;
+// `pub(crate)` — shared with the `vibe prefs` settings TUI (PROP-041 §1
+// #built-on-tree-tui): it composes the same `Theme` + glyph vocabulary + `ui::`
+// component library instead of re-inventing them.
+pub(crate) mod theme;
+pub(crate) mod ui;
 
 use anyhow::Result;
 use rat_salsa::poll::PollCrossterm;

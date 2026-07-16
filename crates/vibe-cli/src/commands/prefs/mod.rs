@@ -26,6 +26,8 @@ mod list;
 mod migrate;
 mod origins;
 mod set;
+mod tui;
+mod ui;
 
 use std::path::{Path, PathBuf};
 
@@ -44,6 +46,7 @@ pub fn run(ctx: &output::Context, args: PrefsArgs) -> Result<()> {
         PrefsSubcommand::Check(a) => check::run(ctx, a),
         PrefsSubcommand::Migrate(a) => migrate::run(ctx, a),
         PrefsSubcommand::ShowOrigins(a) => origins::run(ctx, a),
+        PrefsSubcommand::Ui(a) => ui::run(ctx, a),
     }
 }
 

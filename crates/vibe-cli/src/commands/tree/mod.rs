@@ -16,7 +16,10 @@ mod build;
 mod diagnostics;
 mod model;
 mod plain;
-mod tui;
+// `pub(crate)` so the `vibe prefs` settings TUI (PROP-041) composes the same
+// PROP-037 `ui::` component library + `theme::Theme` without duplicating them —
+// the component library is the reuse unit (PROP-041 §1 #built-on-tree-tui).
+pub(crate) mod tui;
 
 use anyhow::Result;
 use serde_json::Value;

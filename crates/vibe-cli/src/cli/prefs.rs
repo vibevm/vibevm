@@ -43,6 +43,11 @@ pub enum PrefsSubcommand {
     /// key (PROP-040 §8 `#show-origins`).
     #[command(name = "show-origins")]
     ShowOrigins(PrefsOriginsArgs),
+
+    /// Open the interactive settings TUI (PROP-041) — a surface over the
+    /// three-level store: browse pages, see where each value comes from, and
+    /// (S2) edit per-type fields. Launches when the session is attended.
+    Ui(PrefsPathArgs),
 }
 
 #[derive(Debug, Args)]
