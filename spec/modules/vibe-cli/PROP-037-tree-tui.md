@@ -117,7 +117,76 @@ REQ. A single `Theme` value carries every color, text style, border style,
 spacing, and glyph the components use (selection highlight, window chrome, group
 frames, the `[x]` close glyph, subheaders, disabled/enabled button, etc.).
 Components take `&Theme`; no component hard-codes a `Color`/`Style`. The theme is
-terminal light/dark aware where it matters.
+terminal light/dark aware where it matters. The theme is the TUI's "CSS"
+(§1.4): a restyle touches only the theme.
+
+The visual language is **a first-class part of this contract**, not an
+afterthought. The lore (aesthetics, rationale, the full tables the eye reads)
+lives in the design doc
+[`spec/design/tui-visual-language.md`](../../design/tui-visual-language.md);
+the normative REQs the code is traceable to are the four anchors below.
+
+#### 2.2.1 Palette tokens {#palette-tokens}
+
+REQ. Colour reaches a component only through a **`Palette`** — a data-driven
+mapping from **semantic role tokens** to `Color`. The role set is exactly:
+`base`, `surface0`, `surface1`, `muted`, `subtext`, `text`, `accent`, `love`,
+`gold`, `foam`, `rose`, `selection`, `border`, `paper`, `button_on`,
+`button_off`. No component names a `Color` literal; it names a role.
+
+REQ. Five palettes ship, each a complete role→`Color` mapping. **Rosé Pine**
+(the cosmic-violet look already in `theme.rs`) is **canonical-locked**: its
+eleven `Color::Rgb` values are preserved exactly (a snapshot test pins them).
+**Catppuccin Mocha, Macchiato, Frappé** (dark) and **Catppuccin Latte** (light)
+are the canonical Catppuccin values (`accent`←mauve, `love`←red, `gold`←yellow,
+`foam`←teal, `rose`←pink, `muted`←overlay0, `subtext`←subtext0). The canonical
+hex values for all five are normative in the design doc §3.
+
+REQ. A palette carries an `is_light` flag; `selection` is composed (`accent`
+ground + `base` text, bold), `border` = `muted`, `paper` = `surface0`, and the
+`paper`/`selection` rendering inverts against `is_light` so a light theme's
+detail card reads correctly. The active palette is a `Model` field, persisted
+through the settings system (§9) and overridable at the CLI/env.
+
+#### 2.2.2 Glyph vocabulary {#glyph-vocabulary}
+
+REQ. Every glyph is a constant on the `Theme`, never a hardcoded string at a
+call site. The fold indicator is `▾`/`▸` (not `+`/`-`); the DAG re-occurrence
+marker is `↩` (not `(*)`); the on/off flags are `●`/`○` (not `x`/`.`). Tree
+connectors stay `│├└─`; the frame stays rounded `╭╮╰╯`; the close affordance is
+`✕`; the bar indicator uses block elements `▁▂▃▄▅▆▇█` (or braille). The full
+replacement table is normative in the design doc §2.
+
+REQ. In the primary UI (Tier ≥ 1) there are no `+`/`-`/`*`/`#`/`x`/`.` used as
+**semantic** glyphs. Those ASCII characters appear only behind the Tier 0
+fallback (§2.2.3).
+
+#### 2.2.3 Rendering tiers {#rendering-tiers}
+
+REQ. Rendering degrades through four tiers — **3** (truecolor: full RGB, rounded
+frames, braille/blocks), **2** (256-colour: palette quantised to the 6×6×6 cube,
+rounded, blocks), **1** (16 ANSI: role→ANSI mapping, rounded-or-square frames,
+blocks), **0** (dumb / `TERM=linux` / no Unicode: ANSI mono, ASCII `+-|` frames,
+`#` indicators).
+
+REQ. Tier detection is a **pure function** over the environment —
+`detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier` (`$COLORTERM`
+first, then `$TERM`; `crossterm` exposes no colour-count API). The TUI reads the
+env once at launch in a sanctioned spot and feeds the values in; the detected
+tier is overridable through the settings system (§9).
+
+REQ. Degradation is a **projection**: one `Theme` is built for Tier 3 and
+projected onto the detected tier (roles quantised / ANSI-mapped / ASCII-fallback).
+One source of truth, many projections — never bespoke per-tier rendering in a
+component.
+
+#### 2.2.4 Window aesthetics {#window-aesthetics}
+
+REQ. A window (§2.3) is not a fallback: it composes a solid `base` panel, a
+rounded frame stroked in `border`, a title rendered as an `accent`-coloured chip,
+interior padding, an optional shadow (so the panel reads as raised), and a
+top-right `[✕]` close affordance. Even at Tier 1 the frame + filled panel +
+title chip carry the "floating panel" reading without truecolor.
 
 ### 2.3 Window / Panel {#window}
 
