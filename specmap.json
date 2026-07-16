@@ -345,16 +345,23 @@
     },
     {
       "crate_name": "vibe-cli",
-      "file": "crates/vibe-cli/src/commands/aiui.rs",
+      "file": "crates/vibe-cli/src/commands/aiui/mod.rs",
       "item_kind": "mod",
-      "line": 6,
+      "line": 7,
       "symbol": "vibe_cli::commands::aiui"
     },
     {
       "crate_name": "vibe-cli",
-      "file": "crates/vibe-cli/src/commands/aiui.rs",
+      "file": "crates/vibe-cli/src/commands/aiui/control.rs",
+      "item_kind": "mod",
+      "line": 6,
+      "symbol": "vibe_cli::commands::aiui::control"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/aiui/mod.rs",
       "item_kind": "fn",
-      "line": 21,
+      "line": 29,
       "symbol": "vibe_cli::commands::aiui::render"
     },
     {
@@ -5940,17 +5947,25 @@
       "verb": "implements"
     },
     {
-      "file": "crates/vibe-cli/src/commands/aiui.rs",
+      "file": "crates/vibe-cli/src/commands/aiui/mod.rs",
       "from_symbol": "vibe_cli::commands::aiui",
+      "line": 7,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-cli/PROP-042#aiui-cli",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/aiui/control.rs",
+      "from_symbol": "vibe_cli::commands::aiui::control",
       "line": 6,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-cli/PROP-042#aiui-cli",
       "verb": "implements"
     },
     {
-      "file": "crates/vibe-cli/src/commands/aiui.rs",
+      "file": "crates/vibe-cli/src/commands/aiui/mod.rs",
       "from_symbol": "vibe_cli::commands::aiui::render",
-      "line": 23,
+      "line": 31,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-cli/PROP-042#aiui-cli",
       "verb": "implements"
@@ -16909,7 +16924,7 @@
     },
     {
       "anchor": "key-script",
-      "content_hash": "sha256:813d65a514cda62add29f599cd037ac0c192cfdef1e1ab0d212b48f250f4db38",
+      "content_hash": "sha256:bee2500cf66daef9bae5d2b2429cbfc70c7dbc40ea9f7e494bdcfe682fdecadc",
       "doc_path": "modules/vibe-cli/PROP-042",
       "file": "spec/modules/vibe-cli/PROP-042-aiui-observation.md",
       "heading": "3. The key script",
@@ -16918,11 +16933,11 @@
     },
     {
       "anchor": "aiui-cli",
-      "content_hash": "sha256:1c6bedda25da38d30f16c50bc56901fb0dc6011f8f105e36fba631397dc5c152",
+      "content_hash": "sha256:97dfe14a4bc2f6022db2e9d25af2aeff59fa60ba6fcd728b895726f3c4e775c3",
       "doc_path": "modules/vibe-cli/PROP-042",
       "file": "spec/modules/vibe-cli/PROP-042-aiui-observation.md",
       "heading": "4. The `vibe aiui` surface",
-      "line": 64,
+      "line": 77,
       "uri": "spec://vibevm/modules/vibe-cli/PROP-042#aiui-cli"
     },
     {
@@ -16931,7 +16946,7 @@
       "doc_path": "modules/vibe-cli/PROP-042",
       "file": "spec/modules/vibe-cli/PROP-042-aiui-observation.md",
       "heading": "5. The `vibe term` launcher",
-      "line": 80,
+      "line": 118,
       "uri": "spec://vibevm/modules/vibe-cli/PROP-042#vibe-term"
     },
     {
@@ -16940,7 +16955,7 @@
       "doc_path": "modules/vibe-cli/PROP-042",
       "file": "spec/modules/vibe-cli/PROP-042-aiui-observation.md",
       "heading": "6. Never",
-      "line": 97,
+      "line": 135,
       "uri": "spec://vibevm/modules/vibe-cli/PROP-042#never"
     },
     {
