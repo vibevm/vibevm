@@ -998,15 +998,36 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/tree/tui/menu/mod.rs",
       "item_kind": "mod",
-      "line": 26,
+      "line": 37,
       "symbol": "vibe_cli::commands::tree::tui::menu"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/tree/tui/menu/mod.rs",
       "item_kind": "fn",
-      "line": 87,
+      "line": 103,
       "symbol": "vibe_cli::commands::tree::tui::menu::MenuState::coming_soon"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/tree/tui/menu/mod.rs",
+      "item_kind": "fn",
+      "line": 145,
+      "symbol": "vibe_cli::commands::tree::tui::menu::MenuState::focus_next_group"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/tree/tui/menu/mod.rs",
+      "item_kind": "fn",
+      "line": 162,
+      "symbol": "vibe_cli::commands::tree::tui::menu::MenuState::focus_prev_group"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/tree/tui/menu/draw.rs",
+      "item_kind": "mod",
+      "line": 7,
+      "symbol": "vibe_cli::commands::tree::tui::menu::draw"
     },
     {
       "crate_name": "vibe-cli",
@@ -1026,14 +1047,14 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/tree/tui/menu/sort.rs",
       "item_kind": "mod",
-      "line": 9,
+      "line": 12,
       "symbol": "vibe_cli::commands::tree::tui::menu::sort"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/tree/tui/menu/sort.rs",
       "item_kind": "fn",
-      "line": 18,
+      "line": 24,
       "symbol": "vibe_cli::commands::tree::tui::menu::sort::MenuState::sort"
     },
     {
@@ -1056,6 +1077,13 @@
       "item_kind": "mod",
       "line": 6,
       "symbol": "vibe_cli::commands::tree::tui::render"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/tree/tui/row.rs",
+      "item_kind": "mod",
+      "line": 7,
+      "symbol": "vibe_cli::commands::tree::tui::row"
     },
     {
       "crate_name": "vibe-cli",
@@ -1299,7 +1327,7 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/tree/tui/ui/group.rs",
       "item_kind": "fn",
-      "line": 66,
+      "line": 86,
       "symbol": "vibe_cli::commands::tree::tui::ui::group::Group::render"
     },
     {
@@ -6574,7 +6602,7 @@
     {
       "file": "crates/vibe-cli/src/commands/tree/tui/menu/mod.rs",
       "from_symbol": "vibe_cli::commands::tree::tui::menu",
-      "line": 26,
+      "line": 37,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-cli/PROP-037#f2-sort-menu",
       "verb": "implements"
@@ -6582,9 +6610,33 @@
     {
       "file": "crates/vibe-cli/src/commands/tree/tui/menu/mod.rs",
       "from_symbol": "vibe_cli::commands::tree::tui::menu::MenuState::coming_soon",
-      "line": 89,
+      "line": 105,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-cli/PROP-037#coming-soon",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/tree/tui/menu/mod.rs",
+      "from_symbol": "vibe_cli::commands::tree::tui::menu::MenuState::focus_next_group",
+      "line": 149,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-cli/PROP-037#focus-groups",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/tree/tui/menu/mod.rs",
+      "from_symbol": "vibe_cli::commands::tree::tui::menu::MenuState::focus_prev_group",
+      "line": 163,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-cli/PROP-037#focus-groups",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/tree/tui/menu/draw.rs",
+      "from_symbol": "vibe_cli::commands::tree::tui::menu::draw",
+      "line": 7,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-cli/PROP-037#f2-sort-menu",
       "verb": "implements"
     },
     {
@@ -6598,7 +6650,7 @@
     {
       "file": "crates/vibe-cli/src/commands/tree/tui/menu/mode.rs",
       "from_symbol": "vibe_cli::commands::tree::tui::menu::mode::MenuState::mode",
-      "line": 14,
+      "line": 16,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-cli/PROP-037#f3-mode-menu",
       "verb": "implements"
@@ -6606,7 +6658,7 @@
     {
       "file": "crates/vibe-cli/src/commands/tree/tui/menu/sort.rs",
       "from_symbol": "vibe_cli::commands::tree::tui::menu::sort",
-      "line": 9,
+      "line": 12,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-cli/PROP-037#f2-sort-menu",
       "verb": "implements"
@@ -6614,7 +6666,7 @@
     {
       "file": "crates/vibe-cli/src/commands/tree/tui/menu/sort.rs",
       "from_symbol": "vibe_cli::commands::tree::tui::menu::sort::MenuState::sort",
-      "line": 21,
+      "line": 29,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-cli/PROP-037#f2-sort-menu",
       "verb": "implements"
@@ -6639,6 +6691,14 @@
       "file": "crates/vibe-cli/src/commands/tree/tui/render.rs",
       "from_symbol": "vibe_cli::commands::tree::tui::render",
       "line": 6,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-cli/PROP-036#tui",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/tree/tui/row.rs",
+      "from_symbol": "vibe_cli::commands::tree::tui::row",
+      "line": 7,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-cli/PROP-036#tui",
       "verb": "implements"
@@ -6919,7 +6979,7 @@
     {
       "file": "crates/vibe-cli/src/commands/tree/tui/ui/group.rs",
       "from_symbol": "vibe_cli::commands::tree::tui::ui::group::Group::render",
-      "line": 73,
+      "line": 95,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-cli/PROP-037#group",
       "verb": "implements"
