@@ -18,13 +18,14 @@
 //!
 //! # Scope
 //!
-//! This crate implements the **plumbing core**, PROP-039 §§1–8: addressing,
+//! This crate implements the **plumbing core**, PROP-039 §§1–10: addressing,
 //! the Action value, the registry, parameters, context + enablement,
-//! invocation, and i18n — plus the **Search Everywhere** engine (§10, the
-//! [`search`] module: the provider trait, the one shared matcher, and the
-//! tabbed/grouped/recency-weighted engine). Concrete providers live in
-//! consumer crates. The keymap (§9) and the Surface / AIUI layer (§11) are
-//! implemented separately and are intentionally absent here.
+//! invocation, i18n, the **keymap resolver** (§9, the [`keymap`] module — the
+//! pure 3-state resolver a surface drives), and the **Search Everywhere** engine
+//! (§10, the [`search`] module: the provider trait, the one shared matcher, and
+//! the tabbed/grouped/recency-weighted engine). Concrete providers live in
+//! consumer crates. The Surface layer (§11.1) is implemented by the consumer
+//! surface; the headless **AIUI** reference (§11.3) lives in the [`aiui`] module.
 //!
 //! Spec: [PROP-039](../../../spec/modules/vibe-actions/PROP-039-action-system.md);
 //! design: [`spec/design/action-system.md`](../../../spec/design/action-system.md).
@@ -39,6 +40,7 @@ pub mod context;
 pub mod gate;
 pub mod i18n;
 pub mod invoke;
+pub mod keymap;
 pub mod params;
 pub mod registry;
 pub mod search;
@@ -55,6 +57,7 @@ pub use i18n::{Catalogue, Localized, MessageKey, ResolvedLabel};
 pub use invoke::{
     BoxFuture, CancellationToken, GrantedScope, InvokeError, InvokeOutcome, InvokeResult, invoke,
 };
+pub use keymap::{Binding, Conflict, Key, KeyCode, KeyModifiers, Keymap, Match};
 pub use params::{
     ParamError, ParamSchema, ParamSpec, ParamType, ParamValue, ParamValues, validate,
 };
