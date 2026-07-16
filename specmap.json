@@ -1180,14 +1180,14 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/tree/tui/settings.rs",
       "item_kind": "fn",
-      "line": 239,
+      "line": 271,
       "symbol": "vibe_cli::commands::tree::tui::settings::TreeSettings::load"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/tree/tui/settings.rs",
       "item_kind": "fn",
-      "line": 340,
+      "line": 380,
       "symbol": "vibe_cli::commands::tree::tui::settings::build_schema"
     },
     {
@@ -6894,7 +6894,7 @@
     {
       "file": "crates/vibe-cli/src/commands/tree/tui/settings.rs",
       "from_symbol": "vibe_cli::commands::tree::tui::settings::TreeSettings::load",
-      "line": 243,
+      "line": 275,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-cli/PROP-037#settings",
       "verb": "implements"
@@ -6902,11 +6902,11 @@
     {
       "file": "crates/vibe-cli/src/commands/tree/tui/settings.rs",
       "from_symbol": "vibe_cli::commands::tree::tui::settings::build_schema",
-      "line": 352,
+      "line": 392,
       "provenance": "authored",
       "uri": "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
       "verb": "deviates",
-      "reason": "no-unwrap-gate: the six vibe.tree.* KeyMeta are built from static non-empty literal descriptions and unique dotted paths — KeyMeta::new and Schema::register cannot fail on these inputs; asserting the invariant once at this single registration point is clearer than propagating an unreachable Result through every caller"
+      "reason": "no-unwrap-gate: the seven vibe.tree.* KeyMeta are built from static non-empty literal descriptions and unique dotted paths — KeyMeta::new and Schema::register cannot fail on these inputs; asserting the invariant once at this single registration point is clearer than propagating an unreachable Result through every caller"
     },
     {
       "file": "crates/vibe-cli/src/commands/tree/tui/shape.rs",
