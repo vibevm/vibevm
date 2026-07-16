@@ -342,8 +342,9 @@ pub(super) mod test_support {
         PackageTree, Project, SCHEMA_VERSION,
     };
 
-    /// A minimal app: one `g/a` package, declared as a root, default settings.
-    pub fn app() -> App {
+    /// A minimal fixture tree: one `g/a` package, declared as a root. Shared by
+    /// [`app`] and the AIUI render-plane golden test (PROP-042).
+    pub fn fixture_tree() -> PackageTree {
         let pkg = Package {
             id: "g/a".to_string(),
             group: "g".to_string(),
@@ -364,7 +365,7 @@ pub(super) mod test_support {
             condition: Condition::absent(),
             dependencies: Vec::new(),
         };
-        let tree = PackageTree {
+        PackageTree {
             schema_version: SCHEMA_VERSION,
             generated_at: None,
             tool_version: None,
@@ -387,8 +388,12 @@ pub(super) mod test_support {
             },
             in_place_specs: Vec::new(),
             diagnostics: Vec::new(),
-        };
-        App::new(tree)
+        }
+    }
+
+    /// A minimal app over [`fixture_tree`], default settings.
+    pub fn app() -> App {
+        App::new(fixture_tree())
     }
 
     /// A read-only view of a `Groups` menu's group list, active-group index, and

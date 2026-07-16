@@ -104,6 +104,7 @@ fn main() -> ExitCode {
             commands::search::run(&ctx, args, search_env)
         }
         Command::Mcp(args) => commands::mcp::run(&ctx, args),
+        Command::Aiui(args) => commands::aiui::run(&ctx, args),
         Command::Skill(args) => commands::skill::run(&ctx, args),
         Command::Agentic(args) => commands::agentic::run(&ctx, args),
         Command::Drain(args) => commands::agentic::run_command(&ctx, args),

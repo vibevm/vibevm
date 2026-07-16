@@ -59,3 +59,18 @@ pub fn run(ctx: &output::Context, args: TreeArgs) -> Result<()> {
     print!("{}", plain::render(&tree));
     Ok(())
 }
+
+/// Render the tree TUI headlessly to a snapshot string — the AIUI render plane
+/// (PROP-042 §1/§4). Resolves + builds the model like [`run`], then projects one
+/// frame (driven by the `send` key script) at `cols×rows` to `text` (or `cells`).
+pub(crate) fn snapshot(
+    path: &std::path::Path,
+    cols: u16,
+    rows: u16,
+    send: &str,
+    cells: bool,
+) -> Result<String> {
+    let root = super::resolve_project_root(path)?;
+    let tree = build::build_tree(&root)?;
+    tui::snapshot_headless(tree, cols, rows, send, cells)
+}

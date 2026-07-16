@@ -21,12 +21,14 @@ mod input;
 /// TUI (PROP-041 §8 `#commands-are-actions` reuses the same keymap resolver),
 /// so it is crate-visible.
 pub(crate) mod keymap_bridge;
+mod keyscript;
 mod menu;
 mod modal;
 mod modes;
 mod render;
 mod row;
 mod search;
+mod snapshot;
 // `pub(crate)` — the `vibe.tree.*` schema + palette/tier mapping is read by the
 // `vibe prefs` settings TUI (PROP-041) so the two surfaces share one theme.
 pub(crate) mod settings;
@@ -44,6 +46,7 @@ use rat_salsa::{Control, RunConfig, SalsaAppContext, run_tui};
 use ratatui_core::buffer::Buffer;
 use ratatui_core::layout::Rect;
 use ratatui_crossterm::crossterm::event::Event;
+use specmark::spec;
 
 use super::model::PackageTree;
 use state::App;
@@ -94,6 +97,39 @@ pub fn run(tree: PackageTree) -> Result<()> {
         return Err(err);
     }
     Ok(())
+}
+
+/// Render the `vibe tree` TUI headlessly to a snapshot string — the AIUI render
+/// plane (PROP-042 §1 `#render-plane`). Builds a fresh [`App`] over `tree` (theme
+/// defaults, no settings load → deterministic), drives the `send` key script
+/// through the real [`input::handle`], paints one frame into an off-screen
+/// [`Buffer`] of `cols×rows`, and projects it to the `text` (or `cells`)
+/// snapshot (§2). No terminal, no alt-screen, no rat-salsa loop.
+#[spec(implements = "spec://vibevm/modules/vibe-cli/PROP-042#render-plane")]
+pub(crate) fn snapshot_headless(
+    tree: PackageTree,
+    cols: u16,
+    rows: u16,
+    send: &str,
+    cells: bool,
+) -> Result<String> {
+    let script = keyscript::parse(send)?;
+    let mut app = App::new(tree);
+    if !app.rows.is_empty() {
+        app.table.select(Some(0));
+    }
+    for ev in &script {
+        // Drive the model; the `Control` verdict is irrelevant headlessly.
+        let _ = input::handle(ev, &mut app)?;
+    }
+    let area = Rect::new(0, 0, cols, rows);
+    let mut buf = Buffer::empty(area);
+    render::draw(area, &mut buf, &mut app);
+    Ok(if cells {
+        serde_json::to_string_pretty(&snapshot::to_cells(&buf))?
+    } else {
+        snapshot::to_text(&buf)
+    })
 }
 
 /// Select the first row so navigation and the highlight have an anchor.

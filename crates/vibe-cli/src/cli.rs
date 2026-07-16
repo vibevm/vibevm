@@ -12,6 +12,7 @@ specmark::scope!("spec://vibevm/VIBEVM-SPEC#command-summary");
 use clap::{Parser, Subcommand};
 
 mod agentic;
+mod aiui;
 mod inspect;
 mod mcp;
 mod pkg;
@@ -23,6 +24,7 @@ mod vvm;
 mod workspace;
 
 pub use agentic::*;
+pub use aiui::*;
 pub use inspect::*;
 pub use mcp::*;
 pub use pkg::*;
@@ -112,6 +114,12 @@ pub enum Command {
     /// PROP-004 §5.1 / ROADMAP §M1.7. Reads JSON-RPC 2.0 requests
     /// line-by-line from stdin; writes responses to stdout.
     Mcp(McpArgs),
+
+    /// The agent-facing observation surface (PROP-042). `vibe aiui render`
+    /// renders the `vibe tree` TUI headlessly to a symbolic snapshot (text or
+    /// cells) — no terminal, deterministic — so an agent can *see* the
+    /// interface and golden tests can diff it. Read-only.
+    Aiui(AiuiArgs),
 
     /// Project package-declared skills into coding agents — vibevm's
     /// standalone mode (PROP-018 §2.6). `vibe skill list` shows what the
