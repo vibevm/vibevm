@@ -23,7 +23,7 @@ use ratatui_core::text::Line;
 use ratatui_core::widgets::Widget;
 use specmark::spec;
 
-use super::super::theme;
+use super::super::theme::Theme;
 use super::window::Window;
 
 /// One labelled field of a [`Card`] — a bold header and a (possibly long,
@@ -51,7 +51,7 @@ pub struct Card {
 
 impl Card {
     /// Build an empty card whose border title is `title` (callers pass an
-    /// already-styled line, e.g. `Line::styled(" pkg ", theme::title())`).
+    /// already-styled line, e.g. `Line::styled(" pkg ", theme.title())`).
     #[must_use]
     pub fn new(title: impl Into<Line<'static>>) -> Self {
         Self {
@@ -92,7 +92,7 @@ impl Card {
     /// lines beneath, and a blank gap before the next field. Long values wrap
     /// at word boundaries to the content width; they are never truncated.
     #[spec(implements = "spec://vibevm/modules/vibe-cli/PROP-037#detail-card")]
-    pub fn render(&self, area: Rect, buf: &mut Buffer) {
+    pub fn render(&self, area: Rect, buf: &mut Buffer, theme: &Theme) {
         if area.width < 20 || area.height < 5 || self.rows.is_empty() {
             return;
         }
@@ -120,12 +120,12 @@ impl Card {
             .saturating_add(2); // + top/bottom border
         let height = want_h.min(area.height);
 
-        let inner = Window::centered(area, buf, self.title.clone(), width, height);
+        let inner = Window::centered(area, buf, self.title.clone(), width, height, theme);
 
         // The `✕` sits on the top border, one cell inside the top-right corner.
         // `Window::centered` returns `block.inner(popup)`, so the popup itself
         // is `inner` expanded by one cell on every side.
-        paint_close(inner, buf);
+        paint_close(inner, buf, theme);
 
         // Lay the rows out top-to-bottom, clipping at the inner rect's bottom
         // (height was clamped to the screen, so a tall card never overflows).
@@ -137,7 +137,7 @@ impl Card {
             }
             let header_area = Rect::new(inner.x, y, inner.width, 1);
             Widget::render(
-                Line::styled(format!("{}:", row.header), theme::title()),
+                Line::styled(format!("{}:", row.header), theme.title()),
                 header_area,
                 buf,
             );
@@ -147,7 +147,7 @@ impl Card {
                     break;
                 }
                 let value_area = Rect::new(inner.x, y, inner.width, 1);
-                Widget::render(Line::styled(vl.clone(), theme::text()), value_area, buf);
+                Widget::render(Line::styled(vl.clone(), theme.text()), value_area, buf);
                 y += 1;
             }
             // Blank-line gap between fields (PROP-037 §8).
@@ -158,12 +158,12 @@ impl Card {
 
 /// Stamp the theme close glyph (`✕`) on the top border, one cell inside the
 /// top-right corner of the popup whose inner rect is `inner`.
-fn paint_close(inner: Rect, buf: &mut Buffer) {
+fn paint_close(inner: Rect, buf: &mut Buffer, theme: &Theme) {
     let popup_w = inner.width.saturating_add(2);
     let popup_x = inner.x.saturating_sub(1);
     let popup_y = inner.y.saturating_sub(1);
     let close_x = popup_x + popup_w.saturating_sub(2);
-    buf.set_string(close_x, popup_y, theme::close_glyph(), theme::accent());
+    buf.set_string(close_x, popup_y, theme.glyphs().close, theme.accent());
 }
 
 /// Word-wrap `value` to `width` columns, honouring embedded newlines. Each
@@ -235,7 +235,8 @@ mod tests {
     /// header is bold (PROP-037 §8 — bold headers + wrapped values).
     #[test]
     fn card_wraps_long_values_and_bold_headers() {
-        let mut card = Card::new(Line::styled(" demo ", theme::title()));
+        let theme = Theme::default();
+        let mut card = Card::new(Line::styled(" demo ", theme.title()));
         card.push(
             "description",
             "alpha beta gamma delta epsilon zeta eta theta iota",
@@ -243,7 +244,7 @@ mod tests {
 
         let area = Rect::new(0, 0, 26, 24);
         let mut buf = Buffer::empty(area);
-        card.render(area, &mut buf);
+        card.render(area, &mut buf, &theme);
 
         // The first value word ("alpha") and the last ("iota") land on
         // different rows → the value wrapped.
@@ -271,14 +272,15 @@ mod tests {
     /// A rendered card stamps the theme close glyph (`✕`) on the top border.
     #[test]
     fn card_paints_the_close_glyph_on_the_top_border() {
-        let mut card = Card::new(Line::styled(" demo ", theme::title()));
+        let theme = Theme::default();
+        let mut card = Card::new(Line::styled(" demo ", theme.title()));
         card.push("k", "v");
 
         let area = Rect::new(0, 0, 40, 12);
         let mut buf = Buffer::empty(area);
-        card.render(area, &mut buf);
+        card.render(area, &mut buf, &theme);
 
-        let glyph = theme::close_glyph();
+        let glyph = theme.glyphs().close;
         let on_border = (0..area.width)
             .flat_map(|x| (0..area.height).map(move |y| Position::new(x, y)))
             .any(|p| buf[p].symbol() == glyph);
@@ -288,8 +290,13 @@ mod tests {
     /// A card with no rows (or a tiny area) renders nothing.
     #[test]
     fn empty_or_undersized_card_is_a_noop() {
+        let theme = Theme::default();
         let mut buf = Buffer::empty(Rect::new(0, 0, 20, 5));
-        Card::new(Line::styled(" demo ", theme::title())).render(Rect::new(0, 0, 20, 5), &mut buf);
+        Card::new(Line::styled(" demo ", theme.title())).render(
+            Rect::new(0, 0, 20, 5),
+            &mut buf,
+            &theme,
+        );
         // Empty card → nothing painted (every cell stays the default space).
         for x in 0..20 {
             for y in 0..5 {

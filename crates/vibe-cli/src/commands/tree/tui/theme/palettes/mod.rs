@@ -14,9 +14,9 @@ pub use rose_pine::RosePine;
 use super::{Palette, Rgb, Role};
 
 mod catppuccin;
-/// Visible to the parent so the legacy colour-const shim can read [`rose_pine::TABLE`]
-/// at `const` time (the single source of the canonical-locked hexes).
-pub(super) mod rose_pine;
+/// The Rosé Pine palette + its canonical-locked role → [`Rgb`] `TABLE` (the
+/// single source of the eleven base-role hexes, pinned by the snapshot test).
+mod rose_pine;
 
 /// The enumerable set of shipped palettes (PROP-037 §2.2.1). The active palette
 /// is a Model field, persisted through the settings system and overridable at

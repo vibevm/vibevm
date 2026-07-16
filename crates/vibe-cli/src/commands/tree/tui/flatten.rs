@@ -20,6 +20,7 @@ use super::super::model::{Package, PackageTree};
 use super::modes;
 use super::shape::{ShapeCtx, compute_reaches_member};
 use super::state::{Ordering, RowNode, VisibleRow, load_label};
+use super::theme::Glyphs;
 
 /// Re-exported so the call site ([`super::state`]) reaches the shape via the
 /// pipeline entry point: `super::flatten::TreeShape`. Also brings the type into
@@ -40,6 +41,7 @@ pub(super) fn flatten(
     ordering: Ordering,
     shape: TreeShape,
     filter: &BTreeSet<String>,
+    glyphs: &Glyphs,
 ) -> Vec<VisibleRow> {
     let by_id: BTreeMap<&str, usize> = tree
         .packages
@@ -61,7 +63,8 @@ pub(super) fn flatten(
     for (i, &root) in roots.iter().enumerate() {
         let is_last = i + 1 == root_count;
         walk(
-            root, "", is_last, true, tree, &by_id, folded, ordering, &ctx, &mut seen, &mut rows,
+            root, "", is_last, true, tree, &by_id, folded, ordering, &ctx, glyphs, &mut seen,
+            &mut rows,
         );
     }
 
@@ -93,8 +96,8 @@ pub(super) fn flatten(
             for (k, pkg) in orphans.into_iter().enumerate() {
                 let is_last = k + 1 == n;
                 walk(
-                    &pkg.id, "", is_last, true, tree, &by_id, folded, ordering, &ctx, &mut seen,
-                    &mut rows,
+                    &pkg.id, "", is_last, true, tree, &by_id, folded, ordering, &ctx, glyphs,
+                    &mut seen, &mut rows,
                 );
             }
         }
@@ -119,6 +122,7 @@ fn walk(
     folded: &BTreeSet<String>,
     ordering: Ordering,
     ctx: &ShapeCtx,
+    glyphs: &Glyphs,
     seen: &mut BTreeSet<String>,
     rows: &mut Vec<VisibleRow>,
 ) {
@@ -170,15 +174,15 @@ fn walk(
     // +/- Tier 0 — never a hardcoded ASCII literal.
     let indicator = if has_children && !repeated {
         if is_folded {
-            format!("{} ", super::theme::fold_collapsed())
+            format!("{} ", glyphs.fold_collapsed)
         } else {
-            format!("{} ", super::theme::fold_expanded())
+            format!("{} ", glyphs.fold_expanded)
         }
     } else {
         String::new()
     };
     let marker = if repeated {
-        format!(" {}", super::theme::dag_dedup())
+        format!(" {}", glyphs.dag_dedup)
     } else {
         String::new()
     };
@@ -222,6 +226,7 @@ fn walk(
             folded,
             ordering,
             ctx,
+            glyphs,
             seen,
             rows,
         );
@@ -291,6 +296,19 @@ mod tests {
         rows.iter().map(|r| r.id.clone()).collect()
     }
 
+    /// Flatten with the rich (Tier ≥ 1) glyph set — the test fixture for every
+    /// case; [`flatten`] takes its glyphs from the caller now (threaded off the
+    /// active theme), so the tests supply them explicitly.
+    fn flatten_g(
+        tree: &PackageTree,
+        folded: &BTreeSet<String>,
+        ordering: Ordering,
+        shape: TreeShape,
+        filter: &BTreeSet<String>,
+    ) -> Vec<VisibleRow> {
+        flatten(tree, folded, ordering, shape, filter, &Glyphs::rich())
+    }
+
     /// The canonical shape fixture: declared root `a` with `a→b→c` and `a→d`,
     /// filter `{b, d}` (a subset, not all). The three shapes visibly diverge on
     /// it: (a) `b,c,d`; (b) `b,d`; (c) `a,b,d`.
@@ -317,7 +335,7 @@ mod tests {
         // `d` is a leaf root. The orphan pass keys off the declared root `a`,
         // which reaches the whole graph, so nothing is orphaned.
         let t = fixture();
-        let rows = flatten(
+        let rows = flatten_g(
             &t,
             &BTreeSet::new(),
             Ordering::Topological,
@@ -334,7 +352,7 @@ mod tests {
         // a member (`c` is not in the set, `d` has no deps), so both root; `b`'s
         // only child `c` is out-of-set and is pruned.
         let t = fixture();
-        let rows = flatten(
+        let rows = flatten_g(
             &t,
             &BTreeSet::new(),
             Ordering::Topological,
@@ -352,7 +370,7 @@ mod tests {
         // The declared root `a` itself is shown because it lies on a path to a
         // member, even though `a` is not a member.
         let t = fixture();
-        let rows = flatten(
+        let rows = flatten_g(
             &t,
             &BTreeSet::new(),
             Ordering::Topological,
@@ -368,21 +386,21 @@ mod tests {
         // three distinct row-id lists.
         let t = fixture();
         let f = filter_b_d();
-        let a = flatten(
+        let a = flatten_g(
             &t,
             &BTreeSet::new(),
             Ordering::Topological,
             TreeShape::MembersAsRoots,
             &f,
         );
-        let b = flatten(
+        let b = flatten_g(
             &t,
             &BTreeSet::new(),
             Ordering::Topological,
             TreeShape::LoadTypeForest,
             &f,
         );
-        let c = flatten(
+        let c = flatten_g(
             &t,
             &BTreeSet::new(),
             Ordering::Topological,
@@ -405,7 +423,7 @@ mod tests {
         // lands under the separator exactly as before.
         let t = tree(vec![pkg("g/a", &[]), pkg("g/b", &[])], &["g/a"]);
         let filter: BTreeSet<String> = ["g/a".to_string()].into_iter().collect();
-        let rows = flatten(
+        let rows = flatten_g(
             &t,
             &BTreeSet::new(),
             Ordering::Topological,
@@ -424,7 +442,7 @@ mod tests {
         // `c` shows under it.
         let t = tree(vec![pkg("g/b", &["g/c"]), pkg("g/c", &[])], &[]);
         let filter: BTreeSet<String> = ["g/b".to_string(), "g/c".to_string()].into_iter().collect();
-        let rows = flatten(
+        let rows = flatten_g(
             &t,
             &BTreeSet::new(),
             Ordering::Topological,
@@ -450,7 +468,7 @@ mod tests {
             &["g/a", "g/x"],
         );
         let filter: BTreeSet<String> = ["g/b".to_string()].into_iter().collect();
-        let rows = flatten(
+        let rows = flatten_g(
             &t,
             &BTreeSet::new(),
             Ordering::Topological,
@@ -474,14 +492,14 @@ mod tests {
             &["g/a"],
         );
         let filter: BTreeSet<String> = ["g/a".to_string()].into_iter().collect();
-        let rows = flatten(
+        let rows = flatten_g(
             &t,
             &BTreeSet::new(),
             Ordering::Topological,
             TreeShape::MembersAsRoots,
             &filter,
         );
-        let dedup = super::super::theme::dag_dedup();
+        let dedup = Glyphs::rich().dag_dedup;
         let reoccurrences = rows.iter().filter(|r| r.name.contains(dedup)).count();
         assert_eq!(reoccurrences, 1, "the second g/d is marked once");
     }

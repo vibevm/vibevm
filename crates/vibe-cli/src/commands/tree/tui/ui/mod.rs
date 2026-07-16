@@ -7,7 +7,7 @@
 //!
 //! - [`Window`] — the bordered, titled, centered panel (§2.3). Extracted from
 //!   the three call sites (`modal`, `menu`, `search`) that each inlined the same
-//!   centered-popup pattern. Composes `theme::panel()`/`border()`/`title()`.
+//!   centered-popup pattern. Composes `theme.panel()`/`border()`/`title()`.
 //! - [`Card`] — a `Window` laid out as a labelled vertical form (§2.9 `#card`,
 //!   §8 `#detail-card`): bold field headers, wrapped values, blank-line
 //!   spacing, and the theme `✕` close glyph. The detail modal renders through

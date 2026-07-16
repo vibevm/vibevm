@@ -21,7 +21,7 @@ use super::super::model::{
     Condition, ConditionKind, DeclaredLink, LoadOrigin, LoadType, Package, Source, SourceKind,
 };
 use super::state::{App, RowNode};
-use super::theme;
+use super::theme::Theme;
 use super::ui::Card;
 
 /// Draw the detail modal centred over `area`: build a [`Card`] for the selected
@@ -34,7 +34,7 @@ pub fn draw(area: Rect, buf: &mut Buffer, app: &App) {
     let Some(card) = detail_card(app) else {
         return;
     };
-    card.render(area, buf);
+    card.render(area, buf, &app.theme);
 }
 
 /// Build the detail [`Card`] for the selected row, if any (PROP-036 §2.11).
@@ -45,20 +45,24 @@ fn detail_card(app: &App) -> Option<Card> {
         // `None` here keeps the modal closed if one ever slips through.
         RowNode::Separator | RowNode::Subheader => None,
         RowNode::Missing => {
-            let mut card = Card::new(Line::styled(" detail ", theme::title()));
+            let mut card = Card::new(Line::styled(" detail ", app.theme.title()));
             card.push("id", &row.id);
             card.push("status", "not in the lockfile");
             Some(card)
         }
-        RowNode::Package(i) => app.tree.packages.get(i).map(package_card),
+        RowNode::Package(i) => app
+            .tree
+            .packages
+            .get(i)
+            .map(|p| package_card(p, &app.theme)),
     }
 }
 
 /// The full package detail, one labelled field per PROP-036 §2.11 entry. The
 /// package id is the card's border title (the prominent heading); the labelled
 /// rows below carry the rest of the field set.
-fn package_card(p: &Package) -> Card {
-    let mut card = Card::new(Line::styled(format!(" {} ", p.id), theme::title()));
+fn package_card(p: &Package, theme: &Theme) -> Card {
+    let mut card = Card::new(Line::styled(format!(" {} ", p.id), theme.title()));
     card.push("group", &p.group);
     card.push("name", &p.name);
     card.push("version", &p.version);
@@ -224,7 +228,8 @@ mod tests {
     /// carry their detail (PROP-037 §8).
     #[test]
     fn package_card_carries_the_expected_field_set() {
-        let card = package_card(&fixture_pkg());
+        let theme = Theme::default();
+        let card = package_card(&fixture_pkg(), &theme);
         let headers: Vec<&str> = card.rows().iter().map(|r| r.header.as_str()).collect();
         for expected in [
             "group",
@@ -253,7 +258,8 @@ mod tests {
     /// the dependencies value lists the count then each edge on its own line.
     #[test]
     fn package_card_folds_source_and_dependencies_values() {
-        let card = package_card(&fixture_pkg());
+        let theme = Theme::default();
+        let card = package_card(&fixture_pkg(), &theme);
         let rows: std::collections::HashMap<&str, &str> = card
             .rows()
             .iter()
@@ -274,7 +280,8 @@ mod tests {
     /// A missing-row card carries the id + status fields only.
     #[test]
     fn missing_row_card_has_id_and_status() {
-        let mut card = Card::new(Line::styled(" detail ", theme::title()));
+        let theme = Theme::default();
+        let mut card = Card::new(Line::styled(" detail ", theme.title()));
         card.push("id", "org.demo/ghost");
         card.push("status", "not in the lockfile");
         let headers: Vec<&str> = card.rows().iter().map(|r| r.header.as_str()).collect();

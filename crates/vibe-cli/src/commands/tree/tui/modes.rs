@@ -17,6 +17,7 @@ use std::collections::{BTreeMap, BTreeSet, VecDeque};
 use super::super::model::{LoadType, PackageTree};
 use super::flatten::{TreeShape, flatten};
 use super::state::{Ordering, RowNode, VisibleRow};
+use super::theme::Glyphs;
 
 /// The three effective-load partitions of the partitioned display modes
 /// (PROP-037 §4.2/§4.3).
@@ -80,6 +81,7 @@ pub fn subtables_rows(
     ordering: Ordering,
     shape: TreeShape,
     static_first: bool,
+    glyphs: &Glyphs,
 ) -> Vec<VisibleRow> {
     let mut rows: Vec<VisibleRow> = Vec::new();
     for group in group_order(static_first) {
@@ -88,7 +90,7 @@ pub fn subtables_rows(
             continue;
         }
         rows.push(subheader_row(group));
-        rows.extend(flatten(tree, folded, ordering, shape, &filter));
+        rows.extend(flatten(tree, folded, ordering, shape, &filter, glyphs));
     }
     rows
 }
@@ -101,12 +103,13 @@ pub fn tab_group_rows(
     ordering: Ordering,
     shape: TreeShape,
     group: LoadGroup,
+    glyphs: &Glyphs,
 ) -> Vec<VisibleRow> {
     let filter = group_filter(tree, group);
     if filter.is_empty() {
         return Vec::new();
     }
-    flatten(tree, folded, ordering, shape, &filter)
+    flatten(tree, folded, ordering, shape, &filter, glyphs)
 }
 
 /// The package ids whose effective load type falls in `group` — the partition's
@@ -246,6 +249,7 @@ mod tests {
             Ordering::Topological,
             TreeShape::MembersAsRoots,
             true,
+            &Glyphs::rich(),
         );
 
         // Two subheaders, in the user-chosen block order.
@@ -296,6 +300,7 @@ mod tests {
             Ordering::Topological,
             TreeShape::MembersAsRoots,
             false,
+            &Glyphs::rich(),
         );
         let first_subheader = rows
             .iter()
@@ -321,6 +326,7 @@ mod tests {
             Ordering::Topological,
             TreeShape::MembersAsRoots,
             true,
+            &Glyphs::rich(),
         );
         assert!(!rows.iter().any(|r| r.name == "no-boot"));
     }
@@ -344,6 +350,7 @@ mod tests {
             Ordering::Topological,
             TreeShape::MembersAsRoots,
             LoadGroup::Static,
+            &Glyphs::rich(),
         );
         let ids: Vec<&str> = rows
             .iter()
@@ -386,6 +393,7 @@ mod tests {
             Ordering::Topological,
             TreeShape::MembersAsRoots,
             true,
+            &Glyphs::rich(),
         );
         assert!(
             rows.iter().filter(|r| r.id == "g/n").count() >= 2,
@@ -401,6 +409,7 @@ mod tests {
             Ordering::Topological,
             TreeShape::MembersAsRoots,
             true,
+            &Glyphs::rich(),
         );
         let gd_rows: Vec<&VisibleRow> = rows.iter().filter(|r| r.id == "g/d").collect();
         assert!(
@@ -410,7 +419,7 @@ mod tests {
         assert!(
             gd_rows
                 .iter()
-                .all(|r| r.name.contains(super::super::theme::fold_collapsed())),
+                .all(|r| r.name.contains(Glyphs::rich().fold_collapsed)),
             "g/d shows the collapsed glyph in every block (shared fold set)"
         );
         assert_eq!(

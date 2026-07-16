@@ -15,8 +15,9 @@ use ratatui_core::text::{Line, Span};
 use ratatui_core::widgets::{StatefulWidget, Widget};
 
 use super::state::{App, DisplayMode, RowNode};
+use super::theme::Role;
 use super::ui::MsgDialog;
-use super::{modal, modes, theme};
+use super::{modal, modes};
 
 /// Draw the whole surface for this frame.
 pub fn draw(area: Rect, buf: &mut Buffer, app: &mut App) {
@@ -43,15 +44,16 @@ pub fn draw(area: Rect, buf: &mut Buffer, app: &mut App) {
     }
     // Search Everywhere (F1) — a captive window over everything (PROP-037 §7.3).
     if let Some(search) = &app.search {
-        super::search::render::draw(area, buf, search);
+        super::search::render::draw(area, buf, search, &app.theme);
     }
     // The F-key menus (F2/F3) — a captive dropdown (PROP-037 §7.1/§7.2).
-    if let Some(menu) = &app.menu {
-        super::menu::draw(area, buf, menu);
+    if app.menu.is_some() {
+        super::menu::draw(area, buf, app);
     }
     // The quit-confirm dialog (PROP-037 §7.4) — drawn last, on top of everything.
     if app.confirm_quit {
-        MsgDialog::new("Really quit?", "Enter to quit \u{00b7} Esc to cancel").render(area, buf);
+        MsgDialog::new("Really quit?", "Enter to quit \u{00b7} Esc to cancel")
+            .render(area, buf, &app.theme);
     }
 }
 
@@ -66,8 +68,8 @@ fn render_status(area: Rect, buf: &mut Buffer, app: &App) {
         Some(lane) => (lane.bytes, lane.lines),
         None => (0, 0),
     };
-    let label = theme::status_bar();
-    let value = theme::status_value();
+    let label = app.theme.status_bar();
+    let value = app.theme.status_value();
     let mut spans = vec![
         Span::styled(" ordering ", label),
         Span::styled(app.ordering.label(), value),
@@ -86,8 +88,8 @@ fn render_status(area: Rect, buf: &mut Buffer, app: &App) {
         spans.push(Span::styled(
             format!("   \u{26a0} {} diag", app.tree.diagnostics.len()),
             Style::new()
-                .fg(theme::GOLD)
-                .bg(theme::SURFACE0)
+                .fg(app.theme.color(Role::Gold))
+                .bg(app.theme.color(Role::Surface0))
                 .add_modifier(Modifier::BOLD),
         ));
     }
@@ -103,7 +105,11 @@ fn render_footer(area: Rect, buf: &mut Buffer, app: &App) {
     }
     // A copy/action flash takes the footer until the next input clears it.
     if let Some(flash) = &app.flash {
-        Widget::render(Line::styled(format!(" {flash}"), theme::title()), area, buf);
+        Widget::render(
+            Line::styled(format!(" {flash}"), app.theme.title()),
+            area,
+            buf,
+        );
         return;
     }
     // Shared commands, then the mode-specific navigation.
@@ -128,8 +134,8 @@ fn render_footer(area: Rect, buf: &mut Buffer, app: &App) {
 
     let mut spans: Vec<Span<'static>> = vec![Span::raw(" ")];
     for (k, desc) in keys {
-        spans.push(Span::styled(k.to_string(), theme::key()));
-        spans.push(Span::styled(desc.to_string(), theme::key_desc()));
+        spans.push(Span::styled(k.to_string(), app.theme.key()));
+        spans.push(Span::styled(desc.to_string(), app.theme.key_desc()));
     }
     Widget::render(Line::from(spans), area, buf);
 }
@@ -147,7 +153,7 @@ fn render_table(area: Rect, buf: &mut Buffer, app: &mut App) {
         Cell::from("C"),
         Cell::from("S"),
     ])
-    .style(Some(theme::header()));
+    .style(Some(app.theme.header()));
 
     let table = Table::default()
         .rows(rows)
@@ -160,10 +166,10 @@ fn render_table(area: Rect, buf: &mut Buffer, app: &mut App) {
         ])
         .header(header)
         .column_spacing(1)
-        .style(theme::text())
+        .style(app.theme.text())
         // Explicit fg+bg so the selected row highlights whether or not the widget
         // holds keyboard focus.
-        .select_row_style(Some(theme::row_selection()));
+        .select_row_style(Some(app.theme.row_selection()));
 
     StatefulWidget::render(table, area, buf, &mut app.table);
 }
@@ -184,8 +190,8 @@ fn render_tabs(area: Rect, buf: &mut Buffer, app: &mut App) {
         .tab_type(TabType::Attached)
         .placement(TabPlacement::Top)
         .tabs(labels)
-        .style(theme::dim())
-        .select_style(theme::selection());
+        .style(app.theme.dim())
+        .select_style(app.theme.selection());
     StatefulWidget::render(tabbed, area, buf, &mut tabs_state);
 
     render_table(tabs_state.widget_area, buf, app);
@@ -195,6 +201,7 @@ fn render_tabs(area: Rect, buf: &mut Buffer, app: &mut App) {
 /// the name cell only (`←`/`→`). The load cell and the `T`/`C`/`S` flags carry
 /// their semantic colour (PROP-037 §2.2); subheader / separator rows are styled.
 fn build_rows(app: &App) -> Vec<Row<'static>> {
+    let theme = &app.theme;
     app.rows
         .iter()
         .map(|r| {
@@ -207,14 +214,14 @@ fn build_rows(app: &App) -> Vec<Row<'static>> {
             match r.node {
                 RowNode::Package(_) => Row::new([
                     Cell::from(name),
-                    Cell::from(r.load.to_string()).style(Some(theme::load(r.load))),
-                    flag_cell(r.transitive),
-                    flag_cell(r.condition),
-                    flag_cell(r.in_static),
+                    Cell::from(r.load.to_string()).style(Some(theme.load(r.load))),
+                    flag_cell(r.transitive, theme),
+                    flag_cell(r.condition, theme),
+                    flag_cell(r.in_static, theme),
                 ]),
                 RowNode::Missing => Row::new([
-                    Cell::from(name).style(Some(Style::new().fg(theme::LOVE))),
-                    Cell::from("?").style(Some(theme::dim())),
+                    Cell::from(name).style(Some(Style::new().fg(theme.color(Role::Love)))),
+                    Cell::from("?").style(Some(theme.dim())),
                     Cell::from(""),
                     Cell::from(""),
                     Cell::from(""),
@@ -226,7 +233,7 @@ fn build_rows(app: &App) -> Vec<Row<'static>> {
                     Cell::from(""),
                     Cell::from(""),
                 ])
-                .style(Some(theme::dim())),
+                .style(Some(theme.dim())),
                 RowNode::Subheader => Row::new([
                     Cell::from(name),
                     Cell::from(""),
@@ -235,7 +242,9 @@ fn build_rows(app: &App) -> Vec<Row<'static>> {
                     Cell::from(""),
                 ])
                 .style(Some(
-                    theme::accent().add_modifier(Modifier::BOLD | Modifier::UNDERLINED),
+                    theme
+                        .accent()
+                        .add_modifier(Modifier::BOLD | Modifier::UNDERLINED),
                 )),
             }
         })
@@ -243,12 +252,12 @@ fn build_rows(app: &App) -> Vec<Row<'static>> {
 }
 
 /// A single-character flag cell in its on/off colour.
-fn flag_cell(on: bool) -> Cell<'static> {
+fn flag_cell(on: bool, theme: &super::theme::Theme) -> Cell<'static> {
     // The glyph comes from the theme vocabulary (PROP-037 §2.2.2): ●/○
     // Tier ≥ 1, x/. Tier 0 — never a hardcoded ASCII literal.
     if on {
-        Cell::from(theme::flag_on_glyph()).style(Some(theme::flag_on()))
+        Cell::from(theme.glyphs().flag_on).style(Some(theme.flag_on()))
     } else {
-        Cell::from(theme::flag_off_glyph()).style(Some(theme::flag_off()))
+        Cell::from(theme.glyphs().flag_off).style(Some(theme.flag_off()))
     }
 }

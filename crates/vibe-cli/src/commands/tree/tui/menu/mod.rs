@@ -32,7 +32,7 @@ use specmark::spec;
 
 use super::shape::TreeShape;
 use super::state::{App, DisplayMode, Ordering};
-use super::theme;
+use super::theme::Theme;
 use super::ui::{ComingSoon, Group, Window};
 
 pub mod mode;
@@ -185,12 +185,14 @@ pub fn confirm(app: &mut App) {
         Action::ApplyClose(effect) => {
             if let Some(effect) = effect {
                 apply_effect(app, effect);
+                persist_effect(app, effect);
             }
             app.menu = None;
         }
         Action::ApplyResync(effect) => {
             if let Some(effect) = effect {
                 apply_effect(app, effect);
+                persist_effect(app, effect);
             }
             // Snapshot the live values the marks reflect, then re-sync every
             // option without overlapping a borrow of `app.menu`.
@@ -205,6 +207,34 @@ pub fn confirm(app: &mut App) {
             {
                 resync_marks(groups, &snap);
             }
+        }
+    }
+}
+
+/// Persist the effect's value through the settings system (PROP-037 §9) when
+/// the launch path armed the app with a [`TreeSettings`] cell. A no-op in unit
+/// tests (where `app.settings` is `None`) so a model mutator never touches the
+/// operator's disk. Swallowed + warned on failure — the change is already live
+/// in the model for this session.
+fn persist_effect(app: &App, effect: MenuEffect) {
+    use super::settings::{
+        KEY_MODE, KEY_SHAPE, KEY_SORT, KEY_STATIC_FIRST, mode_label, shape_label, sort_label,
+    };
+    let Some(s) = &app.settings else {
+        return;
+    };
+    match effect {
+        MenuEffect::SetMode(mode) => {
+            s.set(KEY_MODE, toml::Value::String(mode_label(mode).into()));
+        }
+        MenuEffect::SetOrdering(order) => {
+            s.set(KEY_SORT, toml::Value::String(sort_label(order).into()));
+        }
+        MenuEffect::SetShape(shape) => {
+            s.set(KEY_SHAPE, toml::Value::String(shape_label(shape).into()));
+        }
+        MenuEffect::SetStaticFirst(static_first) => {
+            s.set(KEY_STATIC_FIRST, toml::Value::Boolean(static_first));
         }
     }
 }
@@ -252,16 +282,20 @@ fn resync_marks(groups: &mut [MenuGroup], snap: &Snapshot) {
 
 /// Draw the menu centered over `area` (drawn after the base, before nothing —
 /// the card / search windows are separate captive modes, never open together).
-pub fn draw(area: Rect, buf: &mut Buffer, menu: &MenuState) {
+pub fn draw(area: Rect, buf: &mut Buffer, app: &App) {
+    let Some(menu) = app.menu.as_ref() else {
+        return;
+    };
     if area.width < 20 || area.height < 5 {
         return;
     }
+    let theme = &app.theme;
     match &menu.kind {
         MenuKind::ComingSoon => {
-            ComingSoon::new(&menu.title).render(area, buf);
+            ComingSoon::new(&menu.title).render(area, buf, theme);
         }
         MenuKind::Groups { groups, cursor, .. } => {
-            draw_groups(area, buf, &menu.title, groups, *cursor);
+            draw_groups(area, buf, &menu.title, groups, *cursor, theme);
         }
     }
 }
@@ -269,7 +303,14 @@ pub fn draw(area: Rect, buf: &mut Buffer, menu: &MenuState) {
 /// Lay the groups out inside a centered [`Window`]. A single group (F3) renders
 /// as a flat list with no group chrome (§7.2 "no group chrome needed"); two or
 /// more (F2) frame each group with a [`Group`] whose name sits top-right.
-fn draw_groups(area: Rect, buf: &mut Buffer, title: &str, groups: &[MenuGroup], cursor: usize) {
+fn draw_groups(
+    area: Rect,
+    buf: &mut Buffer,
+    title: &str,
+    groups: &[MenuGroup],
+    cursor: usize,
+    theme: &Theme,
+) {
     let multi = groups.len() > 1;
     let label_w = groups
         .iter()
@@ -299,9 +340,10 @@ fn draw_groups(area: Rect, buf: &mut Buffer, title: &str, groups: &[MenuGroup], 
     let inner = Window::centered(
         area,
         buf,
-        Line::styled(format!(" {title} "), theme::title()),
+        Line::styled(format!(" {title} "), theme.title()),
         w,
         h,
+        theme,
     );
     let hint_row = inner.y + inner.height.saturating_sub(1);
 
@@ -314,14 +356,14 @@ fn draw_groups(area: Rect, buf: &mut Buffer, title: &str, groups: &[MenuGroup], 
                 break;
             }
             let garea = Rect::new(inner.x, y, inner.width, gh);
-            let ginner = Group::named(&group.name).render(garea, buf);
+            let ginner = Group::named(&group.name).render(garea, buf, theme);
             for (oi, option) in group.options.iter().enumerate() {
                 let oy = ginner.y + oi as u16;
                 if oy >= hint_row {
                     break;
                 }
                 let rect = Rect::new(ginner.x, oy, ginner.width, 1);
-                draw_option(rect, buf, option, flat == cursor);
+                draw_option(rect, buf, option, flat == cursor, theme);
                 flat += 1;
             }
             y += gh + 1; // a one-row gap between framed groups
@@ -336,7 +378,7 @@ fn draw_groups(area: Rect, buf: &mut Buffer, title: &str, groups: &[MenuGroup], 
                 break;
             }
             let rect = Rect::new(inner.x + 1, y, inner.width.saturating_sub(2), 1);
-            draw_option(rect, buf, option, i == cursor);
+            draw_option(rect, buf, option, i == cursor, theme);
         }
     }
 
@@ -346,33 +388,33 @@ fn draw_groups(area: Rect, buf: &mut Buffer, title: &str, groups: &[MenuGroup], 
         hint_row,
         " \u{2191}/\u{2193}  \u{2022}  Enter  \u{2022}  Esc",
         inner.width.saturating_sub(2) as usize,
-        theme::dim(),
+        theme.dim(),
     );
 }
 
 /// Draw one option row: the theme on/off mark plus the label, on the selection
 /// bar when this is the cursor row. Marks come from the theme vocabulary
-/// ([`theme::flag_on_glyph`]/[`theme::flag_off_glyph`]) — never a literal.
-fn draw_option(rect: Rect, buf: &mut Buffer, option: &MenuOption, is_cursor: bool) {
+/// (`flag_on`/`flag_off` glyphs) — never a literal.
+fn draw_option(rect: Rect, buf: &mut Buffer, option: &MenuOption, is_cursor: bool, theme: &Theme) {
     let mark = if option.checked {
-        theme::flag_on_glyph()
+        theme.glyphs().flag_on
     } else {
-        theme::flag_off_glyph()
+        theme.glyphs().flag_off
     };
     if is_cursor {
-        buf.set_style(rect, theme::selection());
+        buf.set_style(rect, theme.selection());
         buf.set_stringn(
             rect.x,
             rect.y,
             format!("{mark} {}", option.label),
             rect.width as usize,
-            theme::selection(),
+            theme.selection(),
         );
     } else {
         let mark_style = if option.checked {
-            theme::accent()
+            theme.accent()
         } else {
-            theme::dim()
+            theme.dim()
         };
         buf.set_stringn(rect.x, rect.y, mark, rect.width as usize, mark_style);
         buf.set_stringn(
@@ -380,7 +422,7 @@ fn draw_option(rect: Rect, buf: &mut Buffer, option: &MenuOption, is_cursor: boo
             rect.y,
             &option.label,
             rect.width.saturating_sub(2) as usize,
-            theme::text(),
+            theme.text(),
         );
     }
 }

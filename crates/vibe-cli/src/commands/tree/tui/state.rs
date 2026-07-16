@@ -19,6 +19,8 @@ use super::flatten::TreeShape;
 use super::menu::MenuState;
 use super::modes;
 use super::search::SearchState;
+use super::settings::TreeSettings;
+use super::theme::Theme;
 
 /// The number of partition tabs: `static`, `dynamic`, `no-boot`.
 const TAB_COUNT: usize = 3;
@@ -107,6 +109,15 @@ pub struct VisibleRow {
 pub struct App {
     /// The analysed model (owned).
     pub tree: PackageTree,
+    /// The active theme — the single source of colour, glyphs, and rendering
+    /// tier (PROP-037 §2.2, §9). Built from the resolved `vibe.tree.palette` /
+    /// `vibe.tree.tier` settings on launch; every renderer reads it by
+    /// reference. Defaults to Rosé Pine / Tier 3 when no settings are loaded.
+    pub theme: Theme,
+    /// The settings cell, present on the live launch path and `None` in unit
+    /// tests (so a model mutator that persists — e.g. the F2 menu — is a no-op
+    /// against the disk in tests). Carries the `vibe.tree.*` schema + paths.
+    pub settings: Option<TreeSettings>,
     /// The flattened visible rows — recomputed on every fold change.
     pub rows: Vec<VisibleRow>,
     /// Node keys (`group/name`) the user has collapsed.
@@ -150,10 +161,15 @@ pub struct App {
 }
 
 impl App {
-    /// Build the app over an already-analysed model and flatten it once.
+    /// Build the app over an already-analysed model and flatten it once. The
+    /// theme defaults to Rosé Pine / Tier 3 and `settings` is `None` — the
+    /// launch path ([`super::run`]) follows this with [`App::apply_prefs`] to
+    /// load the resolved `vibe.tree.*` settings and re-skin/re-mode the app.
     pub fn new(tree: PackageTree) -> Self {
         let mut app = App {
             tree,
+            theme: Theme::default(),
+            settings: None,
             rows: Vec::new(),
             folded: BTreeSet::new(),
             all_folded: false,
@@ -174,6 +190,25 @@ impl App {
         };
         app.rebuild();
         app
+    }
+
+    /// Load the resolved `vibe.tree.*` settings and apply them: rebuild the
+    /// theme (palette + tier) and set the model's mode / sort / shape /
+    /// static-first from the snapshot, then reflatten (PROP-037 §9). Stores
+    /// the [`TreeSettings`] on the app so later menu changes can persist back.
+    /// Called by the launch path after [`App::new`]; a no-op for the theme when
+    /// settings are absent/corrupt (the defaults already in place win).
+    pub fn apply_prefs(&mut self, settings: TreeSettings) {
+        let prefs = settings.load();
+        self.theme = settings.theme(&prefs);
+        let snap = settings.snapshot(&prefs);
+        self.display_mode = snap.mode;
+        self.ordering = snap.sort;
+        self.shape = snap.shape;
+        self.static_first = snap.static_first;
+        self.settings = Some(settings);
+        self.rebuild();
+        self.reset_selection_top();
     }
 
     /// The visible row under the selection, if any.
@@ -240,6 +275,7 @@ impl App {
     /// one [`super::flatten`] walk over a partition-specific filter; the shared
     /// `folded` set feeds every block so fold state is global by package id (D5).
     pub fn rebuild(&mut self) {
+        let glyphs = self.theme.glyphs();
         self.rows = match self.display_mode {
             // Tree mode = the active shape over the declared-root filter, which
             // reproduces the pre-shape walk byte-for-byte under the default
@@ -255,6 +291,7 @@ impl App {
                     self.ordering,
                     self.shape,
                     &filter,
+                    glyphs,
                 )
             }
             // SubTables = several trees stacked vertically, one per effective-
@@ -266,12 +303,20 @@ impl App {
                 self.ordering,
                 self.shape,
                 self.static_first,
+                glyphs,
             ),
             // Tabs = one tree per tab; the active tab shows that partition's
             // tree (PROP-037 §4.3).
             DisplayMode::Tabs => {
                 let group = modes::group_order(self.static_first)[self.tab.min(TAB_COUNT - 1)];
-                modes::tab_group_rows(&self.tree, &self.folded, self.ordering, self.shape, group)
+                modes::tab_group_rows(
+                    &self.tree,
+                    &self.folded,
+                    self.ordering,
+                    self.shape,
+                    group,
+                    glyphs,
+                )
             }
         };
         self.max_name_width = self
@@ -456,18 +501,14 @@ mod tests {
         app.toggle_fold_selected();
         assert_eq!(app.rows.len(), 1, "child hidden under a folded root");
         assert!(
-            app.rows[0]
-                .name
-                .contains(super::super::theme::fold_collapsed()),
+            app.rows[0].name.contains(app.theme.glyphs().fold_collapsed),
             "folded node shows the collapsed glyph"
         );
         // Unfold restores.
         app.toggle_fold_selected();
         assert_eq!(app.rows.len(), 2);
         assert!(
-            app.rows[0]
-                .name
-                .contains(super::super::theme::fold_expanded()),
+            app.rows[0].name.contains(app.theme.glyphs().fold_expanded),
             "unfolded node shows the expanded glyph"
         );
     }
@@ -484,7 +525,7 @@ mod tests {
             ],
             &["g/a"],
         ));
-        let dedup = super::super::theme::dag_dedup();
+        let dedup = app.theme.glyphs().dag_dedup;
         let reoccurrences = app.rows.iter().filter(|r| r.name.contains(dedup)).count();
         assert_eq!(reoccurrences, 1, "the second `g/d` is marked once");
     }

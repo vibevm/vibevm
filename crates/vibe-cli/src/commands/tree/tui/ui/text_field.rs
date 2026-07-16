@@ -28,7 +28,7 @@ use ratatui_core::buffer::Buffer;
 use ratatui_core::layout::Rect;
 use specmark::spec;
 
-use super::super::theme;
+use super::super::theme::Theme;
 
 /// A single-line editable text input (PROP-037 §2.8).
 ///
@@ -89,24 +89,24 @@ impl TextField {
 
     /// Render the field into a single-row `area` (PROP-037 §2.8).
     ///
-    /// Fills the row with [`theme::panel()`], writes the value in
-    /// [`theme::text()`], and — when focused — paints a `█` block cursor in
-    /// [`theme::selection()`] (accent ground) at the cell after the last
+    /// Fills the row with [`Theme::panel()`], writes the value in
+    /// [`Theme::text()`], and — when focused — paints a `█` block cursor in
+    /// [`Theme::selection()`] (accent ground) at the cell after the last
     /// character (clamped to `area.width`). The panel fill makes the field read
     /// as a bordered input box; the containing `Window`/`Group` supplies the
     /// outer chrome.
     #[spec(implements = "spec://vibevm/modules/vibe-cli/PROP-037#text-field")]
-    pub fn render(&self, area: Rect, buf: &mut Buffer) {
+    pub fn render(&self, area: Rect, buf: &mut Buffer, theme: &Theme) {
         if area.width == 0 {
             return;
         }
-        buf.set_style(area, theme::panel());
+        buf.set_style(area, theme.panel());
         buf.set_stringn(
             area.x,
             area.y,
             &self.value,
             area.width as usize,
-            theme::text(),
+            theme.text(),
         );
         if self.focused {
             // The cursor sits just past the last rendered character, clamped to
@@ -116,7 +116,7 @@ impl TextField {
                 .x
                 .saturating_add(self.value.chars().count() as u16)
                 .min(last);
-            buf.set_stringn(cursor_x, area.y, "\u{2588}", 1, theme::selection());
+            buf.set_stringn(cursor_x, area.y, "\u{2588}", 1, theme.selection());
         }
     }
 }
@@ -130,6 +130,7 @@ impl Default for TextField {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::commands::tree::tui::theme::Role;
     use ratatui_core::layout::Position;
 
     /// `type_char`/`backspace` append and delete; `value()` round-trips.
@@ -153,21 +154,22 @@ mod tests {
     /// A focused field paints the `█` cursor cell on the accent ground.
     #[test]
     fn focused_field_renders_the_block_cursor() {
+        let theme = Theme::default();
         let mut f = TextField::new().focused(true);
         f.type_char('x');
         let area = Rect::new(0, 0, 10, 1);
         let mut buf = Buffer::empty(area);
-        f.render(area, &mut buf);
+        f.render(area, &mut buf, &theme);
         // The value 'x' is at column 0; the cursor █ at column 1.
-        assert_eq!(buf[(Position::new(0, 0))].symbol(), "x");
+        assert_eq!(buf[Position::new(0, 0)].symbol(), "x");
         assert_eq!(
-            buf[(Position::new(1, 0))].symbol(),
+            buf[Position::new(1, 0)].symbol(),
             "\u{2588}",
             "cursor glyph"
         );
         assert_eq!(
-            buf[(Position::new(1, 0))].bg,
-            theme::IRIS,
+            buf[Position::new(1, 0)].bg,
+            theme.color(Role::Accent),
             "cursor on the accent ground"
         );
     }
@@ -175,14 +177,15 @@ mod tests {
     /// An unfocused field renders the value with no cursor.
     #[test]
     fn unfocused_field_has_no_cursor() {
+        let theme = Theme::default();
         let f = TextField::new().focused(false);
         let area = Rect::new(0, 0, 10, 1);
         let mut buf = Buffer::empty(area);
-        f.render(area, &mut buf);
-        assert_eq!(buf[(Position::new(0, 0))].symbol(), " ");
+        f.render(area, &mut buf, &theme);
+        assert_eq!(buf[Position::new(0, 0)].symbol(), " ");
         for x in 0..area.width {
             assert_ne!(
-                buf[(Position::new(x, 0))].symbol(),
+                buf[Position::new(x, 0)].symbol(),
                 "\u{2588}",
                 "no cursor when unfocused"
             );

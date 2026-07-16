@@ -14,6 +14,7 @@ use ratatui_core::buffer::Buffer;
 use ratatui_core::layout::Rect;
 use specmark::spec;
 
+use super::super::theme::Theme;
 use super::msg_dialog::MsgDialog;
 
 /// The fixed body every Coming Soon modal shows.
@@ -60,14 +61,14 @@ impl ComingSoon {
     /// Render the modal centred over `area` (PROP-037 §2.10). Delegates to the
     /// underlying [`MsgDialog`] render.
     #[spec(implements = "spec://vibevm/modules/vibe-cli/PROP-037#coming-soon")]
-    pub fn render(&self, area: Rect, buf: &mut Buffer) {
-        self.dialog.render(area, buf);
+    pub fn render(&self, area: Rect, buf: &mut Buffer, theme: &Theme) {
+        self.dialog.render(area, buf, theme);
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use super::super::super::theme;
+    use super::super::super::theme::{Role, Theme};
     use super::*;
     use ratatui_core::layout::Position;
 
@@ -84,15 +85,17 @@ mod tests {
     fn render_draws_title_and_body() {
         let area = Rect::new(0, 0, 48, 8);
         let mut buf = Buffer::empty(area);
-        ComingSoon::new("PNG export").render(area, &mut buf);
+        let theme = Theme::default();
+        ComingSoon::new("PNG export").render(area, &mut buf, &theme);
 
         let has_body = (0..area.width)
-            .any(|x| (0..area.height).any(|y| buf[(Position::new(x, y))].symbol() == "T"));
+            .any(|x| (0..area.height).any(|y| buf[Position::new(x, y)].symbol() == "T"));
         assert!(has_body, "the body line 'This feature…' is rendered");
 
         // The focused OK button paints the accent ground.
+        let accent = theme.color(Role::Accent);
         let has_ok = (0..area.width)
-            .any(|x| (0..area.height).any(|y| buf[(Position::new(x, y))].bg == theme::IRIS));
+            .any(|x| (0..area.height).any(|y| buf[Position::new(x, y)].bg == accent));
         assert!(has_ok, "the focused OK button is painted");
     }
 }

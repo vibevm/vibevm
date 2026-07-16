@@ -7,7 +7,7 @@
 //! a group frame is a *stateless* border — exactly what
 //! `ratatui_widgets::block::Block` is. There is no focus graph, no event
 //! handling, no per-cell state: [`Group::render`] strokes a border in
-//! [`theme::border()`], fills with [`theme::panel()`], writes the name
+//! [`Theme::border()`], fills with [`Theme::panel()`], writes the name
 //! right-aligned in the top border, and returns `block.inner(area)`. So this is
 //! the straight wrap the §2.1 strategy names for `Group`: the whole look flows
 //! through [`theme`], and a restyle never touches this struct.
@@ -23,7 +23,7 @@ use ratatui_core::widgets::Widget;
 use ratatui_widgets::block::Block;
 use specmark::spec;
 
-use super::super::theme;
+use super::super::theme::Theme;
 
 /// A bordered cluster of child components with an optional name at the frame's
 /// top-right corner (PROP-037 §2.6). Groups give a multi-setting dialog — the F2
@@ -66,18 +66,18 @@ impl Group {
     /// Render the bordered frame over `area` and return the inner content rect
     /// (PROP-037 §2.6).
     ///
-    /// Strokes a plain (square) border in [`theme::border()`], fills the panel
-    /// with [`theme::panel()`], writes the name right-aligned in the top border
-    /// in [`theme::title()`] when set, and returns `block.inner(area)` for the
+    /// Strokes a plain (square) border in [`Theme::border()`], fills the panel
+    /// with [`Theme::panel()`], writes the name right-aligned in the top border
+    /// in [`Theme::title()`] when set, and returns `block.inner(area)` for the
     /// caller to lay children into.
     #[spec(implements = "spec://vibevm/modules/vibe-cli/PROP-037#group")]
-    pub fn render(&self, area: Rect, buf: &mut Buffer) -> Rect {
+    pub fn render(&self, area: Rect, buf: &mut Buffer, theme: &Theme) -> Rect {
         let mut block = Block::bordered()
-            .border_style(theme::border())
-            .style(theme::panel());
+            .border_style(theme.border())
+            .style(theme.panel());
         if let Some(name) = &self.name {
             block =
-                block.title_top(Line::styled(format!(" {name} "), theme::title()).right_aligned());
+                block.title_top(Line::styled(format!(" {name} "), theme.title()).right_aligned());
         }
         let inner = block.inner(area);
         Widget::render(block, area, buf);
@@ -115,11 +115,12 @@ mod tests {
     fn render_returns_inset_inner_and_strokes_a_border() {
         let area = Rect::new(0, 0, 20, 5);
         let mut buf = Buffer::empty(area);
-        let inner = Group::new().render(area, &mut buf);
+        let theme = Theme::default();
+        let inner = Group::new().render(area, &mut buf, &theme);
         assert_eq!(inner, Rect::new(1, 1, 18, 3), "inner is inset by one cell");
         // A square top-left border corner sits at the origin (plain border, not
         // rounded — distinct from `Window`'s rounded popup frame).
-        let corner = buf[(Position::new(0, 0))].symbol();
+        let corner = buf[Position::new(0, 0)].symbol();
         assert_eq!(corner, "\u{250c}", "plain square top-left corner \u{250c}");
     }
 
@@ -128,9 +129,10 @@ mod tests {
     fn named_group_writes_the_name_in_the_top_border() {
         let area = Rect::new(0, 0, 30, 5);
         let mut buf = Buffer::empty(area);
-        Group::named("Shape").render(area, &mut buf);
+        let theme = Theme::default();
+        Group::named("Shape").render(area, &mut buf, &theme);
         // The name 'Shape' appears in the top border row (y == 0).
-        let top_has_name = (0..area.width).any(|x| buf[(Position::new(x, 0))].symbol() == "S");
+        let top_has_name = (0..area.width).any(|x| buf[Position::new(x, 0)].symbol() == "S");
         assert!(top_has_name, "the group name is rendered in the top border");
     }
 }

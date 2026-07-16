@@ -62,6 +62,7 @@ env_roots = [
     "crates/vibe-cli/src/main.rs",
     "crates/vibe-cli/src/output.rs",
     "crates/vibe-cli/src/commands/show/config.rs",
+    "crates/vibe-cli/src/commands/tree/tui/settings.rs",
     "crates/vibe-core/src/user_config.rs",
     "crates/vibe-settings/src/loader.rs",
     "crates/vibe-index/src/scanner/git_cli.rs",

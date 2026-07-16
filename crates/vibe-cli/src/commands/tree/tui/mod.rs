@@ -23,6 +23,7 @@ mod modal;
 mod modes;
 mod render;
 mod search;
+mod settings;
 mod shape;
 mod state;
 mod theme;
@@ -60,9 +61,14 @@ type Global = SalsaAppContext<AppEvent, anyhow::Error>;
 /// Launch the interactive TUI over an already-built model (PROP-036 §2.11).
 ///
 /// `run_tui` owns terminal setup and teardown (raw mode, alt-screen, and panic
-/// restore), so this never touches the terminal directly.
+/// restore), so this never touches the terminal directly. The active theme
+/// (palette + tier) and the persisted UI state (mode / sort / shape /
+/// static-first) are loaded from the `vibe.tree.*` settings before the loop
+/// starts (PROP-037 §9); a missing or corrupt settings file falls back to the
+/// built-in defaults and is swallowed + warned, never a hard error.
 pub fn run(tree: PackageTree) -> Result<()> {
     let mut app = App::new(tree);
+    app.apply_prefs(settings::TreeSettings::new());
     let mut global = Global::default();
     run_tui(
         init,

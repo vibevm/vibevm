@@ -5,8 +5,8 @@
 //! modal (PROP-036 §2.11), the F-key menus (PROP-037 §7.1/§7.2), and the Search
 //! Everywhere window (PROP-037 §7.3) all shared — each one inlined the same
 //! five-step recipe (two-axis `Flex::Center` layout, `Clear`, a rounded `Block`
-//! titled in `theme::title()`, stroked in `theme::border()`, filled with
-//! `theme::panel()`, return `block.inner(popup)`). [`Window::centered`] is that
+//! titled in `theme.title()`, stroked in `theme.border()`, filled with
+//! `theme.panel()`, return `block.inner(popup)`). [`Window::centered`] is that
 //! recipe, once; callers pass a styled title line and their content's outer
 //! size, and get back the inner content rect.
 //!
@@ -26,7 +26,7 @@ use ratatui_widgets::borders::BorderType;
 use ratatui_widgets::clear::Clear;
 use specmark::spec;
 
-use super::super::theme;
+use super::super::theme::Theme;
 
 /// A bordered, titled panel — the base of every modal and the card (PROP-037
 /// §2.3).
@@ -43,9 +43,9 @@ impl Window {
     /// content rect (PROP-037 §2.3).
     ///
     /// Clears the underlying cells, strokes a rounded border in
-    /// [`theme::border()`], fills the panel with [`theme::panel()`], writes
+    /// [`Theme::border()`], fills the panel with [`Theme::panel()`], writes
     /// `title` as the border title (callers pass an already-styled line, e.g.
-    /// `Line::styled(" Search Everywhere ", theme::title())`), and returns
+    /// `Line::styled(" Search Everywhere ", theme.title())`), and returns
     /// `block.inner(popup)` for the caller to lay its content into.
     ///
     /// `width`/`height` are the popup's outer dimensions; callers clamp them to
@@ -60,6 +60,7 @@ impl Window {
         title: impl Into<Line<'static>>,
         width: u16,
         height: u16,
+        theme: &Theme,
     ) -> Rect {
         let [mid] = Layout::vertical([Constraint::Length(height)])
             .flex(Flex::Center)
@@ -74,9 +75,9 @@ impl Window {
         Widget::render(Clear, popup, buf);
         let block = Block::bordered()
             .border_type(BorderType::Rounded)
-            .border_style(theme::border())
+            .border_style(theme.border())
             .title(title.into())
-            .style(theme::panel());
+            .style(theme.panel());
         let inner = block.inner(popup);
         Widget::render(block, popup, buf);
         inner
@@ -94,18 +95,20 @@ mod tests {
     fn centered_draws_a_rounded_titled_panel_and_returns_inner() {
         let area = Rect::new(0, 0, 40, 12);
         let mut buf = Buffer::empty(area);
+        let theme = Theme::default();
 
         let inner = Window::centered(
             area,
             &mut buf,
-            Line::styled(" demo ", theme::title()),
+            Line::styled(" demo ", theme.title()),
             20,
             6,
+            &theme,
         );
 
         // The popup is centered: x = (40-20)/2 = 10, y = (12-6)/2 = 3.
         // The rounded top-left corner sits at the popup's origin.
-        let corner = buf[(Position::new(10, 3))].symbol();
+        let corner = buf[Position::new(10, 3)].symbol();
         assert!(
             corner == "╭" || corner == "┌" || corner.len() == 1,
             "expected a border corner at the popup origin, got {corner:?}"
@@ -124,7 +127,15 @@ mod tests {
     fn centered_inner_is_inset_from_the_popup() {
         let area = Rect::new(0, 0, 30, 10);
         let mut buf = Buffer::empty(area);
-        let inner = Window::centered(area, &mut buf, Line::styled(" x ", theme::title()), 16, 6);
+        let theme = Theme::default();
+        let inner = Window::centered(
+            area,
+            &mut buf,
+            Line::styled(" x ", theme.title()),
+            16,
+            6,
+            &theme,
+        );
         // popup is 16x6 centered in 30x10 → x=7, y=2; inner is inset by 1.
         assert_eq!(inner.x, 8);
         assert_eq!(inner.y, 3);

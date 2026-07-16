@@ -18,12 +18,9 @@ pub struct RosePine;
 
 /// The single source of truth for every Rosé Pine role → [`Rgb`] mapping. The
 /// first eleven rows are the canonical base roles; the last five are the
-/// derived composition tokens (PROP-037 §2.2.1). Read by both the [`Palette`]
-/// impl and the const compatibility shim in [`theme`] that backs the legacy
-/// `BASE`/`IRIS`/… colour constants — so the hex appears exactly once.
-///
-/// [`theme`]: crate::commands::tree::tui::theme
-pub const TABLE: [(Role, Rgb); 16] = [
+/// derived composition tokens (PROP-037 §2.2.1). Read by the [`Palette`] impl
+/// and the fidelity snapshot test below — so the hex appears exactly once.
+const TABLE: [(Role, Rgb); 16] = [
     (Role::Base, Rgb(25, 23, 36)),       // #191724
     (Role::Surface0, Rgb(31, 29, 46)),   // #1f1d2e
     (Role::Surface1, Rgb(38, 35, 58)),   // #26233a

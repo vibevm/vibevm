@@ -15,8 +15,8 @@
 //!
 //! Phase 7 therefore takes §2.1 option 3 (invent on `ratatui_core`) for the
 //! render surface, styled exclusively through [`theme`] — including the
-//! selected/unselected marks, which come from [`theme::flag_on_glyph`] (●) and
-//! [`theme::flag_off_glyph`] (○), never a hard-coded literal. `↑`/`↓`/`Enter`
+//! selected/unselected marks, which come from `theme.glyphs().flag_on` (●) and
+//! `theme.glyphs().flag_off` (○), never a hard-coded literal. `↑`/`↓`/`Enter`
 //! are wired at the controller layer when a single-choice dialog owns a
 //! `RadioGroup`; the primitive is render + navigate for now.
 //!
@@ -28,14 +28,14 @@ use ratatui_core::buffer::Buffer;
 use ratatui_core::layout::Rect;
 use specmark::spec;
 
-use super::super::theme;
+use super::super::theme::Theme;
 
 /// A group of mutually-exclusive options — exactly one is selected (PROP-037
 /// §2.7). Backs single-choice settings (the copy format/destination, §10.2; a
 /// later copy-settings modal composes this primitive).
 ///
-/// The selected option is marked with [`theme::flag_on_glyph`] (●), the rest
-/// with [`theme::flag_off_glyph`] (○) — the theme vocabulary, so the marks
+/// The selected option is marked with `theme.glyphs().flag_on` (●), the rest
+/// with `theme.glyphs().flag_off` (○) — the theme vocabulary, so the marks
 /// degrade through every rendering tier (PROP-037 §2.2.2/§2.2.3) and a restyle
 /// never touches this struct.
 // Phase-7 component foundation; lights up when a single-choice dialog (the
@@ -106,11 +106,11 @@ impl RadioGroup {
     }
 
     /// Render the group into `area`: the label as a title row, then one row per
-    /// option — the selected marked [`theme::flag_on_glyph`] (●), the rest
-    /// [`theme::flag_off_glyph`] (○) (PROP-037 §2.7). No-op if `area` cannot
+    /// option — the selected marked `theme.glyphs().flag_on` (●), the rest
+    /// `theme.glyphs().flag_off` (○) (PROP-037 §2.7). No-op if `area` cannot
     /// hold the label row.
     #[spec(implements = "spec://vibevm/modules/vibe-cli/PROP-037#radio-group")]
-    pub fn render(&self, area: Rect, buf: &mut Buffer) {
+    pub fn render(&self, area: Rect, buf: &mut Buffer, theme: &Theme) {
         if area.height < 2 {
             return;
         }
@@ -120,7 +120,7 @@ impl RadioGroup {
             area.y,
             &self.label,
             area.width as usize,
-            theme::title(),
+            theme.title(),
         );
         // One row per option under the label.
         for (i, option) in self.options.iter().enumerate() {
@@ -130,14 +130,14 @@ impl RadioGroup {
             }
             let is_selected = i == self.selected;
             let glyph = if is_selected {
-                theme::flag_on_glyph()
+                theme.glyphs().flag_on
             } else {
-                theme::flag_off_glyph()
+                theme.glyphs().flag_off
             };
             let glyph_style = if is_selected {
-                theme::accent()
+                theme.accent()
             } else {
-                theme::dim()
+                theme.dim()
             };
             buf.set_stringn(area.x, y, glyph, area.width as usize, glyph_style);
             buf.set_stringn(
@@ -145,7 +145,7 @@ impl RadioGroup {
                 y,
                 option,
                 area.width.saturating_sub(2) as usize,
-                theme::text(),
+                theme.text(),
             );
         }
     }
@@ -159,18 +159,19 @@ mod tests {
     /// The selected option carries the on-glyph; the others the off-glyph.
     #[test]
     fn render_marks_the_selected_option() {
+        let theme = Theme::default();
         let g = RadioGroup::new("Format", vec!["Markdown".into(), "PNG".into()]).selected(1);
         let area = Rect::new(0, 0, 20, 4);
         let mut buf = Buffer::empty(area);
-        g.render(area, &mut buf);
+        g.render(area, &mut buf, &theme);
 
         // Row 1 (Markdown) is the off-mark; row 2 (PNG) is the on-mark.
-        let on = theme::flag_on_glyph();
-        let off = theme::flag_off_glyph();
-        assert_eq!(buf[(Position::new(0, 1))].symbol(), off, "Markdown is off");
-        assert_eq!(buf[(Position::new(0, 2))].symbol(), on, "PNG is on");
+        let on = theme.glyphs().flag_on;
+        let off = theme.glyphs().flag_off;
+        assert_eq!(buf[Position::new(0, 1)].symbol(), off, "Markdown is off");
+        assert_eq!(buf[Position::new(0, 2)].symbol(), on, "PNG is on");
         // The label is the title row.
-        assert_eq!(buf[(Position::new(0, 0))].symbol(), "F", "label row");
+        assert_eq!(buf[Position::new(0, 0)].symbol(), "F", "label row");
     }
 
     /// `select_up`/`select_down` wrap around the option list.
@@ -198,12 +199,13 @@ mod tests {
     /// A too-short area (no room for label + an option) is a no-op.
     #[test]
     fn render_is_a_noop_when_too_short() {
+        let theme = Theme::default();
         let g = RadioGroup::new("x", vec!["a".into()]);
         let area = Rect::new(0, 0, 10, 1);
         let mut buf = Buffer::empty(area);
-        g.render(area, &mut buf);
+        g.render(area, &mut buf, &theme);
         for x in 0..area.width {
-            assert_eq!(buf[(Position::new(x, 0))].symbol(), " ");
+            assert_eq!(buf[Position::new(x, 0)].symbol(), " ");
         }
     }
 }

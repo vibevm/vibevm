@@ -30,14 +30,14 @@ use ratatui_core::buffer::Buffer;
 use ratatui_core::layout::Rect;
 use specmark::spec;
 
-use super::super::theme;
+use super::super::theme::Theme;
 
 /// A labelled, focusable button (PROP-037 §2.5).
 ///
-/// The focused button is painted with [`theme::selection()`] — accent ground,
+/// The focused button is painted with [`Theme::selection()`] — accent ground,
 /// base text, bold — the same highlight the table and the menus use, so focus
 /// reads consistently and degrades through every rendering tier with no
-/// hard-coded [`Color`]. An unfocused button is [`theme::dim()`] (the codebase's
+/// hard-coded [`Color`]. An unfocused button is [`Theme::dim()`] (the codebase's
 /// established inactive style; a `subtext()` helper does not exist on the
 /// theme yet). Construction is a builder; [`Button::render`] draws a single row.
 ///
@@ -97,15 +97,15 @@ impl Button {
 
     /// Render the button into a single-row `area` (PROP-037 §2.5).
     ///
-    /// The whole area is styled — [`theme::selection()`] when focused (accent
-    /// ground, base text, bold), [`theme::dim()`] otherwise — and the padded
+    /// The whole area is styled — [`Theme::selection()`] when focused (accent
+    /// ground, base text, bold), [`Theme::dim()`] otherwise — and the padded
     /// label is written from the left. Truncates to `area.width`.
     #[spec(implements = "spec://vibevm/modules/vibe-cli/PROP-037#button")]
-    pub fn render(&self, area: Rect, buf: &mut Buffer) {
+    pub fn render(&self, area: Rect, buf: &mut Buffer, theme: &Theme) {
         let style = if self.focused {
-            theme::selection()
+            theme.selection()
         } else {
-            theme::dim()
+            theme.dim()
         };
         buf.set_style(area, style);
         // The leading space is the left padding; `set_stringn` writes from
@@ -119,6 +119,7 @@ impl Button {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::commands::tree::tui::theme::Role;
     use ratatui_core::layout::Position;
     use ratatui_core::style::{Color, Modifier};
 
@@ -127,39 +128,53 @@ mod tests {
     #[test]
     fn focused_button_paints_the_selection_highlight() {
         let mut buf = Buffer::empty(Rect::new(0, 0, 10, 1));
+        let theme = Theme::default();
         Button::new("OK")
             .focused(true)
-            .render(Rect::new(0, 0, 10, 1), &mut buf);
+            .render(Rect::new(0, 0, 10, 1), &mut buf, &theme);
 
         // The whole row is the accent background + base foreground, bold.
-        let cell = &buf[(Position::new(0, 0))];
-        assert_eq!(cell.bg, theme::IRIS, "focused bg is the accent (IRIS)");
-        assert_eq!(cell.fg, theme::BASE, "focused fg is the base text");
+        let cell = &buf[Position::new(0, 0)];
+        assert_eq!(
+            cell.bg,
+            theme.color(Role::Accent),
+            "focused bg is the accent"
+        );
+        assert_eq!(
+            cell.fg,
+            theme.color(Role::Base),
+            "focused fg is the base text"
+        );
         assert!(
             cell.modifier.contains(Modifier::BOLD),
             "focused button is bold"
         );
         // The label is written after the leading padding space.
-        assert_eq!(buf[(Position::new(1, 0))].symbol(), "O");
-        assert_eq!(buf[(Position::new(2, 0))].symbol(), "K");
+        assert_eq!(buf[Position::new(1, 0)].symbol(), "O");
+        assert_eq!(buf[Position::new(2, 0)].symbol(), "K");
     }
 
     /// An unfocused button renders dim (the muted foreground), no accent ground.
     #[test]
     fn unfocused_button_is_dim() {
         let mut buf = Buffer::empty(Rect::new(0, 0, 10, 1));
+        let theme = Theme::default();
         Button::new("Cancel")
             .focused(false)
-            .render(Rect::new(0, 0, 10, 1), &mut buf);
+            .render(Rect::new(0, 0, 10, 1), &mut buf, &theme);
 
-        let cell = &buf[(Position::new(0, 0))];
-        assert_eq!(cell.fg, theme::MUTED, "unfocused fg is the muted role");
+        let cell = &buf[Position::new(0, 0)];
+        assert_eq!(
+            cell.fg,
+            theme.color(Role::Muted),
+            "unfocused fg is the muted role"
+        );
         assert_eq!(
             cell.bg,
             Color::Reset,
             "unfocused button has no accent ground"
         );
-        assert_eq!(buf[(Position::new(1, 0))].symbol(), "C");
+        assert_eq!(buf[Position::new(1, 0)].symbol(), "C");
     }
 
     /// `width()` is the label plus one cell of left padding.

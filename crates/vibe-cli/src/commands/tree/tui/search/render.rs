@@ -14,12 +14,12 @@ use ratatui_core::widgets::Widget;
 
 use vibe_actions::search::SearchRow;
 
-use super::super::theme;
+use super::super::theme::{Role, Theme};
 use super::super::ui::Window;
 use super::SearchState;
 
 /// Draw the window centered over `area`.
-pub fn draw(area: Rect, buf: &mut Buffer, state: &SearchState) {
+pub fn draw(area: Rect, buf: &mut Buffer, state: &SearchState, theme: &Theme) {
     if area.width < 40 || area.height < 10 {
         return;
     }
@@ -31,9 +31,10 @@ pub fn draw(area: Rect, buf: &mut Buffer, state: &SearchState) {
     let inner = Window::centered(
         area,
         buf,
-        Line::styled(" Search Everywhere ", theme::title()),
+        Line::styled(" Search Everywhere ", theme.title()),
         w,
         h,
+        theme,
     );
 
     // One column of horizontal padding inside the border.
@@ -52,39 +53,39 @@ pub fn draw(area: Rect, buf: &mut Buffer, state: &SearchState) {
     ])
     .areas(pad);
 
-    draw_query(query, buf, state);
-    draw_tabs(tabs, buf, state);
+    draw_query(query, buf, state, theme);
+    draw_tabs(tabs, buf, state, theme);
     // A subtle rule between the tab strip and the results.
     buf.set_string(
         rule.x,
         rule.y,
         "\u{2500}".repeat(rule.width as usize),
-        theme::border(),
+        theme.border(),
     );
-    draw_results(results, buf, state);
-    draw_footer(footer, buf);
+    draw_results(results, buf, state, theme);
+    draw_footer(footer, buf, theme);
 }
 
 /// The query line: an iris prompt glyph, the typed text, and a block cursor.
-fn draw_query(area: Rect, buf: &mut Buffer, state: &SearchState) {
+fn draw_query(area: Rect, buf: &mut Buffer, state: &SearchState, theme: &Theme) {
     let line = Line::from(vec![
-        Span::styled("\u{276f} ", theme::accent()),
-        Span::styled(state.query.clone(), theme::text()),
-        Span::styled("\u{2588}", theme::accent()),
+        Span::styled("\u{276f} ", theme.accent()),
+        Span::styled(state.query.clone(), theme.text()),
+        Span::styled("\u{2588}", theme.accent()),
     ]);
     Widget::render(line, area, buf);
 }
 
 /// The tab strip: the active tab a filled iris pill, the rest dim.
-fn draw_tabs(area: Rect, buf: &mut Buffer, state: &SearchState) {
+fn draw_tabs(area: Rect, buf: &mut Buffer, state: &SearchState, theme: &Theme) {
     let mut spans: Vec<Span<'static>> = Vec::new();
     for (i, tab) in state.tabs.iter().enumerate() {
         let active = i == state.tab_idx;
         let label = format!(" {} ", tab.title);
         let style = if active {
-            theme::selection()
+            theme.selection()
         } else {
-            theme::dim()
+            theme.dim()
         };
         spans.push(Span::styled(label, style));
         spans.push(Span::raw(" "));
@@ -93,18 +94,18 @@ fn draw_tabs(area: Rect, buf: &mut Buffer, state: &SearchState) {
 }
 
 /// The per-provider badge colour (the coloured group heads in the All tab).
-fn provider_color(provider: &str) -> Color {
+fn provider_color(provider: &str, theme: &Theme) -> Color {
     match provider {
-        "packages" => theme::IRIS,
-        "fields" => theme::FOAM,
-        "actions" => theme::GOLD,
-        _ => theme::ROSE,
+        "packages" => theme.color(Role::Accent),
+        "fields" => theme.color(Role::Foam),
+        "actions" => theme.color(Role::Gold),
+        _ => theme.color(Role::Rose),
     }
 }
 
 /// The grouped results list with a scroll window that keeps the selection in
 /// view.
-fn draw_results(area: Rect, buf: &mut Buffer, state: &SearchState) {
+fn draw_results(area: Rect, buf: &mut Buffer, state: &SearchState, theme: &Theme) {
     if area.height == 0 || state.rows.is_empty() {
         return;
     }
@@ -127,16 +128,18 @@ fn draw_results(area: Rect, buf: &mut Buffer, state: &SearchState) {
             } => {
                 // A coloured pill badge + a dim count (screenshot-5 style).
                 let badge = Style::new()
-                    .fg(theme::BASE)
-                    .bg(provider_color(provider))
+                    .fg(theme.color(Role::Base))
+                    .bg(provider_color(provider, theme))
                     .add_modifier(Modifier::BOLD);
                 let line = Line::from(vec![
                     Span::styled(format!(" {} ", title.to_uppercase()), badge),
-                    Span::styled(format!("  {count}"), theme::dim()),
+                    Span::styled(format!("  {count}"), theme.dim()),
                 ]);
                 Widget::render(line, rect, buf);
             }
-            SearchRow::Hit(hit) => draw_hit(rect, buf, state, hit, idx == state.selected_row),
+            SearchRow::Hit(hit) => {
+                draw_hit(rect, buf, state, hit, idx == state.selected_row, theme)
+            }
         }
     }
 }
@@ -149,13 +152,14 @@ fn draw_hit(
     state: &SearchState,
     hit: &vibe_actions::search::Hit,
     selected: bool,
+    theme: &Theme,
 ) {
     let base = if selected {
-        theme::selection()
+        theme.selection()
     } else if !hit.enabled {
-        theme::dim()
+        theme.dim()
     } else {
-        theme::text()
+        theme.text()
     };
     buf.set_style(rect, base);
     let indent = if matches!(state.tabs.get(state.tab_idx), Some(t) if t.is_all) {
@@ -175,7 +179,7 @@ fn draw_hit(
     let hi = if selected {
         base.add_modifier(Modifier::BOLD)
     } else {
-        theme::accent().add_modifier(Modifier::BOLD)
+        theme.accent().add_modifier(Modifier::BOLD)
     };
     let indent_w = indent.chars().count();
     for &(bs, be) in &hit.match_ranges {
@@ -190,7 +194,7 @@ fn draw_hit(
     if let Some(secondary) = &hit.secondary {
         let sw = secondary.chars().count() as u16;
         if sw + 2 < rect.width {
-            let sstyle = if selected { base } else { theme::dim() };
+            let sstyle = if selected { base } else { theme.dim() };
             buf.set_stringn(
                 rect.x + rect.width - sw - 1,
                 rect.y,
@@ -203,16 +207,16 @@ fn draw_hit(
 }
 
 /// The key hint.
-fn draw_footer(area: Rect, buf: &mut Buffer) {
+fn draw_footer(area: Rect, buf: &mut Buffer, theme: &Theme) {
     let line = Line::from(vec![
-        Span::styled("\u{2191}/\u{2193}", theme::key()),
-        Span::styled(" select   ", theme::key_desc()),
-        Span::styled("Tab", theme::key()),
-        Span::styled(" category   ", theme::key_desc()),
-        Span::styled("Enter", theme::key()),
-        Span::styled(" run   ", theme::key_desc()),
-        Span::styled("Esc", theme::key()),
-        Span::styled(" close", theme::key_desc()),
+        Span::styled("\u{2191}/\u{2193}", theme.key()),
+        Span::styled(" select   ", theme.key_desc()),
+        Span::styled("Tab", theme.key()),
+        Span::styled(" category   ", theme.key_desc()),
+        Span::styled("Enter", theme.key()),
+        Span::styled(" run   ", theme.key_desc()),
+        Span::styled("Esc", theme.key()),
+        Span::styled(" close", theme.key_desc()),
     ]);
     Widget::render(line, area, buf);
 }
