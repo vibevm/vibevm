@@ -6,6 +6,7 @@
 
 specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-037#copy");
 
+use super::menu::MenuState;
 use super::state::{App, RowNode};
 
 /// Render the current view as a Markdown document, plus the package count.
@@ -61,6 +62,18 @@ fn write_clipboard(text: String) -> Result<(), String> {
     let mut clipboard =
         arboard::Clipboard::new().map_err(|e| format!("clipboard unavailable: {e}"))?;
     clipboard.set_text(text).map_err(|e| e.to_string())
+}
+
+/// Open the ComingSoon placeholder for PNG export (PROP-037 §10.4 `#copy-png`).
+/// PNG export (a rasterized tree image) is **reserved** — selecting PNG opens the
+/// [`ComingSoon`] modal until the rasterization (font + image crates) is built
+/// (§12 non-goal-for-now). Routed through `app.menu` so the existing F-key menu
+/// capture (`↑`/`↓`/`Enter`/`Esc`) drives it.
+///
+/// [`ComingSoon`]: super::ui::ComingSoon
+#[allow(dead_code)] // wired when the copy-settings modal (§10.2) offers PNG as a format.
+pub fn png_coming_soon(app: &mut App) {
+    app.menu = Some(MenuState::coming_soon("PNG export"));
 }
 
 #[cfg(test)]

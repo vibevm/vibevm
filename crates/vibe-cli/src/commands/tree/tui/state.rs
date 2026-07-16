@@ -333,6 +333,17 @@ impl App {
         self.reset_selection_top();
     }
 
+    /// Set whether `static` sorts before `dynamic` in the partitioned modes to a
+    /// specific value (the F2 sort menu "Block order" group, PROP-037 §7.2).
+    /// Mirrors [`App::set_ordering`] / [`App::set_shape`]: rebuild + reset the
+    /// selection to the top.
+    #[allow(dead_code)] // selected by the F2 sort menu "Block order" group (§7.2, Phase 7); exercised in tests.
+    pub fn set_static_first(&mut self, static_first: bool) {
+        self.static_first = static_first;
+        self.rebuild();
+        self.reset_selection_top();
+    }
+
     /// Select the next tab, wrapping — [`DisplayMode::Tabs`] only (`Shift+→`).
     pub fn next_tab(&mut self) {
         self.step_tab(1);
