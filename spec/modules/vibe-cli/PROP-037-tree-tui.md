@@ -342,10 +342,28 @@ lists the active keys with short labels; **`Shift` is written as `↑`** (e.g.
 ### 5.3 Tree interaction keys {#tree-keys}
 
 REQ. Within a tree: `↑`/`↓` move selection (+ scroll), `←`/`→` pan horizontally,
-`Space` folds/unfolds the selected node, `Enter` opens the detail card (§8). In
-tabs mode, `Shift`+`←`/`→` switches tabs (plain `←`/`→` stay tree-pan, which is
-why tab-switch takes Shift). These direct keys are exempt from the F-key scheme
-(they are navigation, not commands).
+`Space` folds/unfolds the selected node, `Enter` opens the detail card (§8).
+`Shift`+`←`/`→` switches **tabs app-wide** — the tree's display tabs (in tabs
+mode) and the Search Everywhere category tabs (§7.3); plain `←`/`→` stay
+tree-pan (which is why tab-switch takes Shift). These direct keys are exempt
+from the F-key scheme (they are navigation, not commands).
+
+### 5.4 Focus groups + Tab Order {#focus-groups}
+
+REQ. A screen's controls are partitioned into **focus groups** — cohesive
+clusters the user steps between with `Tab` (and `Shift+Tab` backwards). Within a
+group the group's own keys act (arrows move a radio selection, typing edits a
+field, `Enter` activates a button). A screen with more than one focus group
+declares a **Tab Order** — the explicit sequence `Tab` cycles — per screen; a
+single-group screen has no Tab Order (`Tab` is inert there). `Tab` never switches
+display tabs (that is `Shift+←`/`Shift+→`, §5.3) and never activates a control
+(that is `Enter`).
+
+REQ. The focused group is visually marked (the theme's selection/accent), so the
+user sees where `Tab` will land next. Example Tab Orders: the F2 sort menu (§7.2)
+cycles its radio groups — "Sort by" → "Shape" (→ "Block order" in sub-tables
+mode); a settings form (PROP-041 §4) cycles its field groups; the quit-confirm
+dialog (§7.4) cycles OK → Cancel.
 
 ---
 
@@ -384,7 +402,7 @@ tab that searches everything, plus **per-category tabs** that narrow it
 providers ship (PROP-039 §10.4):
 - **Packages** — by name (`PackageProvider` over the `PackageTree`); selecting
   reveals the package in the tree.
-- **Card fields** — inside **every field** of the package detail cards (§8)
+- **Cards** — inside **every field** of the package detail cards (§8)
   (`PackageFieldProvider`: name, version, kind, license, load-type, origin, path,
   deps, diagnostics…); selecting opens the card focused on that field.
 - **Actions** — all `vibe.tree` actions (§13.5) by address, **name, and
@@ -546,7 +564,7 @@ description; the **key is its default binding** (the map, not the identity):
 
 | Address (`action://vibe.tree/…`) | Key | Name | Description |
 |---|---|---|---|
-| `search.everywhere` | `F1` | Search Everywhere | Search packages, card fields, and actions; run a found action. |
+| `search.everywhere` | `F1` | Search Everywhere | Search packages, cards, and actions; run a found action. |
 | `sort` | `F2` | Sort & shape… | Choose the ordering and tree shape for the current view. |
 | `mode.set` | `F3` | Switch mode… | Switch between tree, sub-tables, and tabs display. |
 | `copy` | `F6` | Copy | Copy the current screen (Markdown) to the clipboard or a file. |
