@@ -697,8 +697,15 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/tree/tui/flatten.rs",
       "item_kind": "mod",
-      "line": 6,
+      "line": 13,
       "symbol": "vibe_cli::commands::tree::tui::flatten"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/tree/tui/flatten.rs",
+      "item_kind": "fn",
+      "line": 29,
+      "symbol": "vibe_cli::commands::tree::tui::flatten::flatten"
     },
     {
       "crate_name": "vibe-cli",
@@ -762,6 +769,20 @@
       "item_kind": "mod",
       "line": 7,
       "symbol": "vibe_cli::commands::tree::tui::search::render"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/tree/tui/shape.rs",
+      "item_kind": "mod",
+      "line": 9,
+      "symbol": "vibe_cli::commands::tree::tui::shape"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/tree/tui/shape.rs",
+      "item_kind": "impl",
+      "line": 45,
+      "symbol": "vibe_cli::commands::tree::tui::shape::<impl TreeShape>"
     },
     {
       "crate_name": "vibe-cli",
@@ -881,6 +902,55 @@
       "item_kind": "fn",
       "line": 104,
       "symbol": "vibe_cli::commands::tree::tui::theme::tier::project_color"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/tree/tui/ui/mod.rs",
+      "item_kind": "mod",
+      "line": 20,
+      "symbol": "vibe_cli::commands::tree::tui::ui"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/tree/tui/ui/button.rs",
+      "item_kind": "mod",
+      "line": 27,
+      "symbol": "vibe_cli::commands::tree::tui::ui::button"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/tree/tui/ui/button.rs",
+      "item_kind": "fn",
+      "line": 98,
+      "symbol": "vibe_cli::commands::tree::tui::ui::button::Button::render"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/tree/tui/ui/msg_dialog.rs",
+      "item_kind": "mod",
+      "line": 10,
+      "symbol": "vibe_cli::commands::tree::tui::ui::msg_dialog"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/tree/tui/ui/msg_dialog.rs",
+      "item_kind": "fn",
+      "line": 63,
+      "symbol": "vibe_cli::commands::tree::tui::ui::msg_dialog::MsgDialog::render"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/tree/tui/ui/window.rs",
+      "item_kind": "mod",
+      "line": 18,
+      "symbol": "vibe_cli::commands::tree::tui::ui::window"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/tree/tui/ui/window.rs",
+      "item_kind": "fn",
+      "line": 42,
+      "symbol": "vibe_cli::commands::tree::tui::ui::window::Window::centered"
     },
     {
       "crate_name": "vibe-cli",
@@ -5754,9 +5824,17 @@
     {
       "file": "crates/vibe-cli/src/commands/tree/tui/flatten.rs",
       "from_symbol": "vibe_cli::commands::tree::tui::flatten",
-      "line": 6,
+      "line": 13,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-cli/PROP-036#tui",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/tree/tui/flatten.rs",
+      "from_symbol": "vibe_cli::commands::tree::tui::flatten::flatten",
+      "line": 36,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-cli/PROP-037#tree-filters",
       "verb": "implements"
     },
     {
@@ -5829,6 +5907,22 @@
       "line": 7,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-cli/PROP-037#f1-search",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/tree/tui/shape.rs",
+      "from_symbol": "vibe_cli::commands::tree::tui::shape",
+      "line": 9,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-cli/PROP-037#tree-shapes",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/tree/tui/shape.rs",
+      "from_symbol": "vibe_cli::commands::tree::tui::shape::<impl TreeShape>",
+      "line": 45,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-cli/PROP-037#tree-shapes",
       "verb": "implements"
     },
     {
@@ -5965,6 +6059,62 @@
       "line": 108,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-cli/PROP-037#rendering-tiers",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/tree/tui/ui/mod.rs",
+      "from_symbol": "vibe_cli::commands::tree::tui::ui",
+      "line": 20,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-cli/PROP-037#components",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/tree/tui/ui/button.rs",
+      "from_symbol": "vibe_cli::commands::tree::tui::ui::button",
+      "line": 27,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-cli/PROP-037#button",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/tree/tui/ui/button.rs",
+      "from_symbol": "vibe_cli::commands::tree::tui::ui::button::Button::render",
+      "line": 103,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-cli/PROP-037#button",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/tree/tui/ui/msg_dialog.rs",
+      "from_symbol": "vibe_cli::commands::tree::tui::ui::msg_dialog",
+      "line": 10,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-cli/PROP-037#coming-soon",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/tree/tui/ui/msg_dialog.rs",
+      "from_symbol": "vibe_cli::commands::tree::tui::ui::msg_dialog::MsgDialog::render",
+      "line": 66,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-cli/PROP-037#coming-soon",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/tree/tui/ui/window.rs",
+      "from_symbol": "vibe_cli::commands::tree::tui::ui::window",
+      "line": 18,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-cli/PROP-037#window",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/tree/tui/ui/window.rs",
+      "from_symbol": "vibe_cli::commands::tree::tui::ui::window::Window::centered",
+      "line": 55,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-cli/PROP-037#window",
       "verb": "implements"
     },
     {
