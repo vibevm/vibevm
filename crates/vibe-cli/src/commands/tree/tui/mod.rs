@@ -25,6 +25,7 @@ mod menu;
 mod modal;
 mod modes;
 mod render;
+mod row;
 mod search;
 // `pub(crate)` — the `vibe.tree.*` schema + palette/tier mapping is read by the
 // `vibe prefs` settings TUI (PROP-041) so the two surfaces share one theme.

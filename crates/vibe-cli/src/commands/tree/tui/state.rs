@@ -12,7 +12,7 @@ use std::collections::BTreeSet;
 
 use rat_widget::table::TableState;
 
-use super::super::model::{LoadType, PackageTree};
+use super::super::model::PackageTree;
 // `TreeShape` is the shape stage of the PROP-037 §3.2/§3.3 pipeline, selected
 // per context by the F2 sort menu (§7.2) and carried into the flatten walk.
 use super::copy::{CopySettings, FileDest};
@@ -22,6 +22,9 @@ use super::modes;
 use super::search::SearchState;
 use super::settings::TreeSettings;
 use super::theme::Theme;
+
+pub(super) use super::row::load_label;
+pub use super::row::{RowNode, VisibleRow};
 
 /// The number of partition tabs: `static`, `dynamic`, `no-boot`.
 const TAB_COUNT: usize = 3;
@@ -68,42 +71,6 @@ impl DisplayMode {
             DisplayMode::Tabs => "tabs",
         }
     }
-}
-
-/// What a visible row points at. `Copy` so it can be read out from behind a
-/// shared borrow of [`App::rows`] without moving the row.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum RowNode {
-    /// A resolved package — an index into [`PackageTree::packages`].
-    Package(usize),
-    /// A dependency edge whose target is not in the lockfile.
-    Missing,
-    /// The "not reached from a declared root" divider (§2.12 orphan pass).
-    Separator,
-    /// A SubTables section subheader (`static dependencies`, …).
-    Subheader,
-}
-
-/// One flattened, rendered tree row. Owns its drawn strings so the derived
-/// list outlives any borrow of the model during a render pass.
-#[derive(Debug, Clone)]
-pub struct VisibleRow {
-    /// What this row is.
-    pub node: RowNode,
-    /// The bare identity (`group/name`, or the edge target for a missing node;
-    /// empty for the separator) — used by the detail modal.
-    pub id: String,
-    /// The drawn name cell: prefix + connector + `+`/`-` indicator + id +
-    /// `(*)` re-occurrence marker.
-    pub name: String,
-    /// The effective-load column label (meaningful for `Package` rows).
-    pub load: &'static str,
-    /// `T` — transitive-static flag.
-    pub transitive: bool,
-    /// `C` — `when`-condition flag.
-    pub condition: bool,
-    /// `S` — physically in `STATIC.md`.
-    pub in_static: bool,
 }
 
 /// The interactive TUI application state (PROP-036 §2.11).
@@ -435,15 +402,6 @@ impl App {
         let sel = first.or(if self.rows.is_empty() { None } else { Some(0) });
         self.table.select(sel);
         self.table.set_row_offset(0);
-    }
-}
-
-/// The effective-load column label (PROP-036 §2.3).
-pub(super) fn load_label(load: LoadType) -> &'static str {
-    match load {
-        LoadType::Static => "static",
-        LoadType::Dynamic => "dynamic",
-        LoadType::None => "none",
     }
 }
 
