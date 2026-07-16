@@ -158,7 +158,36 @@ only one that takes input.
 
 ---
 
-## 6. ratatui-image readiness {#image-ready}
+## 6. Spacing & rhythm {#spacing-rhythm}
+
+A beautiful window is mostly **empty space used well**. The complaint that turns a "window" back
+into "an error box on the worst terminal" is content jammed into a corner: a message flush against
+the frame, a row of hints spilling off the left edge with no centre. The fix is a spacing
+vocabulary held in three constants, so a re-space is one edit (the normative surface is
+[PROP-037 §2.2.5](../modules/vibe-cli/PROP-037-tree-tui.md#spacing)):
+
+- **Interior padding (`PAD_X` = 2, `PAD_Y` = 1).** Every window frame holds its content off the
+  border — two cells left and right, one row top and bottom. The body of a dialog floats: a blank
+  row under the title chip, a blank row above the base, clear margins at the sides. This is what
+  makes a `╭╮╰╯` frame read as a *raised panel* and not a box drawn around text. `ui::inner_pad` is
+  the one helper; a dialog sizes its window to leave room for the padding, then lays its content
+  into `inner_pad(inner)`.
+- **Group gutter (`GUTTER` = 1).** A radio option inside a `Group` frame is inset one cell off the
+  stroke, and its selection highlight bar is inset with it — so the `●`/`○` mark and the accent bar
+  sit *inside* the group, never welded to its border. Nested frames (a window, then a group inside
+  it) each keep their own breathing room, so the eye separates the levels.
+- **Rhythm & centring.** Structure is read from separation: framed groups get a blank row between
+  them; an inline run of hints gets a `•` separator with a space each side; and a row of controls
+  is **centred in its area**. A left-jammed row reads as debug output — a website footer that slid
+  to the left margin. The footer is the worked example: **two centred rows**, the F-keys above and
+  the navigation below, each centred under the screen with `•`-separated rhythm.
+
+The rule in one line: **content floats inside the frame with air on every side, and multi-element
+rows are centred.** Air is not wasted space — it is the difference between a UI and a dump.
+
+---
+
+## 7. ratatui-image readiness {#image-ready}
 
 The primary UI is glyphs (portable). But the structure is **ready** for `ratatui-image` (future
 package-preview images, a designed info-card image): placeholder slots and reserved image areas in
@@ -167,10 +196,11 @@ image raster when the terminal advertises support. Reserved, not built (PROP-037
 
 ---
 
-## 7. What becomes normative in PROP-037 §2.2
+## 8. What becomes normative in PROP-037 §2.2
 
 When §2.2 carries the anchors: `#palette-tokens` (the role set + the five canonical palettes),
 `#glyph-vocabulary` (the replacement table + the "no ASCII in the primary UI" rule),
 `#rendering-tiers` (the tier table + the pure `detect_tier` + the projection law), `#window-aesthetics`
-(the window composition + "a window is not a fallback"). This lore explains *why*; the contract
-carries the *values* the code traces to.
+(the window composition + "a window is not a fallback"), `#spacing` (interior padding, the group
+gutter, and centred rhythm). This lore explains *why*; the contract carries the *values* the code
+traces to.

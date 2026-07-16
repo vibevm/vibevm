@@ -197,6 +197,30 @@ interior padding, an optional shadow (so the panel reads as raised), and a
 top-right `[✕]` close affordance. Even at Tier 1 the frame + filled panel +
 title chip carry the "floating panel" reading without truecolor.
 
+#### 2.2.5 Spacing & rhythm {#spacing}
+
+REQ. The theme's **spacing** (§2.2) is normative, not decorative: a component
+never jams its content against a stroke, and a row of controls is **centre-
+aligned in its area**, never left-jammed. The `ui::` library owns the spacing
+vocabulary — three constants that define the rhythm, so a re-space touches one
+place:
+
+- **`PAD_X` = 2, `PAD_Y` = 1 — interior padding.** Inside every window/dialog
+  frame, content is inset from the border: a horizontal margin (`PAD_X`) each
+  side and a vertical margin (`PAD_Y`) top and bottom — a blank row under the
+  title and a blank row above the base. This is the "interior padding" §2.2.4
+  requires; `ui::inner_pad` applies it. A window whose body sits on the frame is
+  a violation.
+- **`GUTTER` = 1 — group gutter.** A control inside a `Group` frame (§2.6) is
+  inset from that frame's stroke by the gutter, and its selection highlight bar
+  is inset with it, so neither the label nor the bar touches the border.
+- **Rhythm.** Sibling controls are separated — framed groups by a blank row
+  between them, inline hint/footer runs by a `•` separator with surrounding
+  space — so the eye reads structure, not a wall of glyphs.
+
+The values are lore-explained in the design doc §6 `#spacing-rhythm`; the footer
+(§5.2) is the canonical inline application.
+
 ### 2.3 Window / Panel {#window}
 
 REQ. A `Window` component: a bordered, titled region drawn over a cleared rect,
@@ -338,6 +362,13 @@ sort menu (§7.2), `F3` mode menu (§7.1), `F4` settings (opens the `vibe prefs`
 settings UI — PROP-041), `F6` copy / `Shift+F6` copy-settings (§10.2). The footer
 lists the active keys with short labels; **`Shift` is written as `↑`** (e.g.
 `Shift+F6` → `↑F6`) to keep hints short.
+
+REQ. The footer renders as **two centred rows** (§2.2.5 `#spacing`): the F-key
+command row (`F1`…`F6`) above, the navigation + `Enter`/`Esc` row below, each a
+run of `key desc` pairs separated by a dim `•` and **centred under the screen**.
+Only the keys valid in the current context appear. A single left-aligned run
+jamming every hint onto one line is a violation — the footer carries visual
+rhythm like the rest of the surface (§2.2.5).
 
 ### 5.3 Tree interaction keys {#tree-keys}
 
