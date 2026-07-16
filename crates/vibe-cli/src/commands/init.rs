@@ -96,6 +96,16 @@ pub fn run(ctx: &output::Context, args: InitArgs) -> Result<()> {
         "gitignore: root",
     )?);
 
+    // 5a. Ensure the L3 personal-settings file is gitignored (PROP-040 §9
+    //     #gitignore-autogen). The fresh template above already lists it; this
+    //     appends the entry to an operator's pre-existing .gitignore that
+    //     predates the settings system, preserving all existing content. A
+    //     personal file must never be accidentally committed — the IntelliJ
+    //     `workspace.xml` "keeps popping up" pain, avoided by default.
+    if let Some(o) = ensure_local_settings_gitignored(&path)? {
+        outcomes.push(o);
+    }
+
     // 6. Generate the boot artifacts (PROP-009): `spec/boot/INDEX.md` and
     //    the managed `<vibevm>` block in CLAUDE.md / AGENTS.md / GEMINI.md
     //    (PROP-012), so a freshly-initialised project is bootable at once.
@@ -184,6 +194,45 @@ fn ensure_file(
 
 fn ensure_dir(path: &Path) -> Result<()> {
     fs::create_dir_all(path).with_context(|| format!("creating `{}`", path.display()))
+}
+
+/// Ensure the project-root `.gitignore` protects the L3 personal-settings file
+/// (PROP-040 §9 `#gitignore-autogen`): `/.vibe/settings.local.toml` must never
+/// be accidentally committed. Idempotent — if the file already ignores the local
+/// settings basename (any line naming `settings.local.toml`), this is a no-op;
+/// otherwise it appends a small section, preserving all existing content.
+/// Returns `Some(Outcome)` only when it appended, `None` when already covered or
+/// no root `.gitignore` is present (the step-5 `ensure_file` owns creation).
+fn ensure_local_settings_gitignored(root: &Path) -> Result<Option<Outcome>> {
+    let path = root.join(".gitignore");
+    let existing = match fs::read_to_string(&path) {
+        Ok(text) => text,
+        Err(_) => return Ok(None),
+    };
+    // Marker: any line that ignores the local settings file. Match the
+    // distinctive basename so an operator's own spelling still counts.
+    if existing
+        .lines()
+        .any(|line| line.contains("settings.local.toml"))
+    {
+        return Ok(None);
+    }
+    let mut content = existing;
+    if !content.ends_with('\n') {
+        content.push('\n');
+    }
+    content.push_str(
+        "\n# vibevm personal settings (L3 — never committed; PROP-040 §9 #gitignore-autogen)\n\
+         /.vibe/settings.local.toml\n\
+         /.vibe/*.local.toml\n",
+    );
+    fs::write(&path, &content)
+        .with_context(|| format!("appending L3 settings entry to `{}`", path.display()))?;
+    Ok(Some(Outcome {
+        path: relative_to_root(root, &path),
+        action: Action::Created,
+        reason: "gitignore: L3 personal settings",
+    }))
 }
 
 fn ensure_project_manifest(

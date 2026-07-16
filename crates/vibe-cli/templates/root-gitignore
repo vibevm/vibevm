@@ -1,6 +1,14 @@
 # vibevm cache (per-project, should never be committed)
 /.vibe/
 
+# vibevm personal settings (L3 — never committed; PROP-040 §9 #gitignore-autogen).
+# These are redundant while /.vibe/ stands above, but they survive a future edit
+# that un-ignores .vibe/ so the shared L2 settings.toml can be committed — the
+# IntelliJ workspace.xml "keeps popping up" pain, avoided by default rather
+# than by operator discipline.
+/.vibe/settings.local.toml
+/.vibe/*.local.toml
+
 # OS / editor noise
 .DS_Store
 Thumbs.db

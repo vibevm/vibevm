@@ -57,7 +57,7 @@ pub fn run(ctx: &output::Context, args: PrefsSetArgs) -> Result<()> {
     };
 
     let path = paths.for_layer(layer).to_path_buf();
-    persist_layer(&path, &table, layer)?;
+    persist_layer(&path, &table, layer, &schema)?;
 
     if ctx.is_json() {
         ctx.emit_json(&SetReport {

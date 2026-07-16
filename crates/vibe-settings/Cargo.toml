@@ -15,6 +15,11 @@ specmark.workspace = true
 thiserror.workspace = true
 serde.workspace = true
 toml.workspace = true
+# `toml_edit` is the comment-preserving write engine for the persist cell
+# (PROP-040 §6 #diff-from-default, phase 2.7): a `DocumentMut` round-trips an
+# operator's header comments + role-marker where the `toml` crate's serialiser
+# would discard them. Pinned at the workspace level (PROP-040 §12 #crate-boundary).
+toml_edit.workspace = true
 
 [dev-dependencies]
 tempfile.workspace = true

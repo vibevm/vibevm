@@ -4,9 +4,12 @@
 //! Decision D3 (SETTINGS-SYSTEM-IMPL-PLAN-v0.1 §6): the *logic* (get/set/list/
 //! check/migrate/show-origins over the resolver) lives in the frontend-agnostic
 //! `vibe-settings::cli` cell; this module is the *surface* — clap dispatch,
-//! L1/L2/L3 path resolution, layer loading, output formatting, and the basic
-//! disk persist that `set`/`migrate` perform (phase 2.7 enriches the write step
-//! with diff-from-default, comment-preserve, and `.gitignore` gen).
+//! L1/L2/L3 path resolution, layer loading, output formatting, and the disk
+//! persist that `set`/`migrate` perform. Persistence is the enriched
+//! `vibe-settings::persist` cell (phase 2.7): diff-from-default strips
+//! default-valued keys (§6 `#diff-from-default`), `toml_edit` preserves an
+//! operator's comments + role-marker header (§3 `#role-marker`), and the write
+//! is atomic (sibling `.tmp` + rename).
 //!
 //! L1 is the user's `~/.vibe/settings.toml` (via `dirs::home_dir`); L2/L3 sit
 //! under `<repo>/.vibe/`. A malformed layer is a non-fatal warning (PROP-040 §3
@@ -161,25 +164,21 @@ pub(super) fn parse_value(s: &str) -> Result<toml::Value> {
     Ok(toml::Value::String(s.to_owned()))
 }
 
-/// Persist a layer table to disk (basic write; phase 2.7 enriches). Creates the
-/// `.vibe/` directory when needed, writes the role-marker header (§3
-/// `#role-marker`) + the pretty TOML body to a sibling temp file, then renames
-/// over the target — crash-safe atomic install.
-pub(super) fn persist_layer(path: &Path, table: &toml::Table, layer: Layer) -> Result<()> {
-    if let Some(parent) = path.parent() {
-        std::fs::create_dir_all(parent)
-            .with_context(|| format!("creating `.vibe/` at `{}`", parent.display()))?;
-    }
-    let body = format!(
-        "{}\n\n{}\n",
-        layer.role_marker(),
-        toml::to_string_pretty(table).context("serialising layer table")?
-    );
-    let file_name = path.file_name().context("layer path has no file name")?;
-    let tmp = path.with_file_name(format!("{}.tmp", file_name.to_string_lossy()));
-    std::fs::write(&tmp, &body)
-        .with_context(|| format!("writing temp file `{}`", tmp.display()))?;
-    std::fs::rename(&tmp, path).with_context(|| format!("installing `{}`", path.display()))?;
+/// Persist a layer table to disk via the enriched `vibe-settings::persist`
+/// cell: strip default-valued keys (§6 `#diff-from-default`), preserve an
+/// existing file's comments + role-marker header (§3 `#role-marker`), and
+/// install atomically (sibling `.tmp` + rename). The diff is a no-op while the
+/// schema is empty (phase 2.6 state) — unknown keys pass through unchanged — so
+/// `set`/`migrate` are safe before the TUI populates the schema.
+pub(super) fn persist_layer(
+    path: &Path,
+    table: &toml::Table,
+    layer: Layer,
+    schema: &Schema,
+) -> Result<()> {
+    let diffed = vibe_settings::persist::diff_from_default(table, schema);
+    vibe_settings::persist::write_layer(path, &diffed, layer)
+        .with_context(|| format!("persisting {layer} to `{}`", path.display()))?;
     Ok(())
 }
 

@@ -41,11 +41,12 @@ pub fn run(ctx: &output::Context, args: PrefsPathArgs) -> Result<()> {
         _ => unreachable!("run_prefs(Migrate) returns Migrated"),
     };
 
-    // Persist each rewritten layer (basic write; phase 2.7 comment-preserves).
+    // Persist each rewritten layer via the enriched persist cell
+    // (diff-from-default + comment-preserve, phase 2.7).
     let mut report_layers = Vec::new();
     for entry in &migrated {
         let path = paths.for_layer(entry.layer).to_path_buf();
-        persist_layer(&path, &entry.table, entry.layer)?;
+        persist_layer(&path, &entry.table, entry.layer, &schema)?;
         report_layers.push(MigrateLayer {
             layer: entry.layer.label().to_string(),
             path: path.display().to_string(),

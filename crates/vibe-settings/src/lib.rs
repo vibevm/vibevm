@@ -31,5 +31,6 @@ pub mod cli;
 pub mod error;
 pub mod events;
 pub mod loader;
+pub mod persist;
 pub mod resolver;
 pub mod schema;
