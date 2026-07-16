@@ -245,6 +245,15 @@ impl Theme {
     pub fn key_desc(&self) -> Style {
         Style::new().fg(self.color(Role::Subtext))
     }
+
+    /// A validation warning — an inline schema-violation marker (PROP-041 §6
+    /// `#validation-feedback`). Composes the warm `Gold` role so a violation
+    /// reads as cautionary without being alarming (a deprecation hint or an
+    /// out-of-range value); a harder error shade is a later addition.
+    #[must_use]
+    pub fn warning(&self) -> Style {
+        Style::new().fg(self.color(Role::Gold))
+    }
 }
 
 impl Default for Theme {

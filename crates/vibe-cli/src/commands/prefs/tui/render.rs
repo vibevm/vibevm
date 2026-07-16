@@ -33,6 +33,11 @@ pub fn draw(area: Rect, buf: &mut Buffer, app: &mut PrefsApp) {
     render_status(status, buf, app);
     render_body(body, buf, app);
     render_footer(footer, buf, app);
+
+    // The lint modal overlays the surface when open (PROP-041 §6 #lint-all).
+    if let Some(lint) = &app.lint {
+        super::lint::render_lint(area, buf, lint, &app.theme);
+    }
 }
 
 /// The status line: the surface title + the active session context (project /
@@ -142,7 +147,7 @@ fn render_open_page(area: Rect, buf: &mut Buffer, app: &mut PrefsApp) {
         return;
     }
     match app.form.as_mut() {
-        Some(form) => super::form::render::render_form(inner, buf, form, &app.theme),
+        Some(form) => super::form::render::render_form(inner, buf, form, &app.prefs, &app.theme),
         None => {
             let body = " Select a page and press Enter to open it.";
             if inner.height >= 1 {
@@ -174,6 +179,8 @@ fn render_footer(area: Rect, buf: &mut Buffer, app: &PrefsApp) {
             ("\u{2191}\u{2193}", " move  "),
             ("Space", " toggle  "),
             ("Tab", " layer  "),
+            ("?", " provenance  "),
+            ("c", " check  "),
             ("a", " apply  "),
             ("r", " reset  "),
             ("Esc", " back"),
@@ -183,6 +190,7 @@ fn render_footer(area: Rect, buf: &mut Buffer, app: &PrefsApp) {
             ("\u{2191}\u{2193}", " move  "),
             ("\u{2190}\u{2192}", " fold  "),
             ("Enter", " open  "),
+            ("c", " check  "),
             ("q", " quit"),
         ]
     };

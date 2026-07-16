@@ -1,9 +1,13 @@
 //! Key handling for the settings TUI (PROP-041 §3 `#tree-widget`, §4
-//! `#edit-form`, §8 `#commands-are-actions`). The tree-nav keys (↑/↓ move,
+//! `#edit-form`, §5 `#provenance-view`, §6 `#validation-feedback`,
+//! `#lint-all`, §8 `#commands-are-actions`). The tree-nav keys (↑/↓ move,
 //! ←/→ fold, Enter open, q quit) act at the base screen. When a page is open,
 //! the form captures input: ↑/↓ move field focus, Space/Enter toggle/select,
 //! Tab cycles the write-layer, typing edits a focused text field, `a` applies,
-//! `r` resets, Esc closes the page.
+//! `r` resets, `?` toggles the provenance view, `x` clears the focused field at
+//! the write-layer (from the provenance view), `c` opens the check-all-layers
+//! modal, Esc closes the page. The lint modal, when open, captures all input:
+//! ↑/↓ navigate, Enter jumps to the field, Esc closes.
 //!
 //! Mirrors the `vibe tree` TUI's structure (the `Event::Key(k)` + `match
 //! k.code` pattern the copy/file-dest handlers use) over [`PrefsApp`]. The resize
@@ -26,6 +30,12 @@ pub fn handle(event: &Event, app: &mut PrefsApp) -> Result<Control<super::AppEve
     // auto-repaints on resize — the tree TUI records this lesson).
     if let Event::Resize(..) = event {
         return Ok(Control::Changed);
+    }
+
+    // The lint modal captures all input when open (PROP-041 §6 #lint-all) —
+    // checked before the form so it overlays the page pane.
+    if app.lint.is_some() {
+        return Ok(handle_lint(event, app));
     }
 
     // When a page is open, the form captures input (PROP-041 §4).
@@ -54,6 +64,11 @@ pub fn handle(event: &Event, app: &mut PrefsApp) -> Result<Control<super::AppEve
             app.open_selected();
             Control::Changed
         }
+        // `c` opens the check-all-layers modal (PROP-041 §6 #lint-all).
+        ct_event!(key press 'c') | ct_event!(key press 'C') => {
+            app.open_lint();
+            Control::Changed
+        }
         ct_event!(keycode press Esc) => Control::Quit,
         // `q` quits the settings TUI (S1; a quit-confirm gates this in a later
         // phase, mirroring the tree TUI's PROP-037 §7.4 dialog).
@@ -63,11 +78,45 @@ pub fn handle(event: &Event, app: &mut PrefsApp) -> Result<Control<super::AppEve
     Ok(control)
 }
 
-/// The captive form handler (PROP-041 §4 `#edit-form`). Routes the terminal
-/// event to the open form's field model. `↑`/`↓` move field focus; `Space`/`Enter`
-/// toggle a bool / cycle a selection; `Tab` cycles the write-layer; printable
-/// chars + `Backspace` edit a focused text field; `a` applies the form; `r`
-/// resets; `Esc` closes the page (back to the tree).
+/// The lint-modal handler (PROP-041 §6 `#lint-all`). `↑`/`↓` move the
+/// selection, `Enter` jumps to the owning page + focuses the offending field,
+/// `Esc` closes the modal. Every other key is swallowed (`Unchanged`) so the
+/// modal is modal.
+fn handle_lint(event: &Event, app: &mut PrefsApp) -> Control<super::AppEvent> {
+    let Event::Key(k) = event else {
+        return Control::Unchanged;
+    };
+    if k.kind != KeyEventKind::Press {
+        return Control::Unchanged;
+    }
+    match k.code {
+        KeyCode::Esc => {
+            app.close_lint();
+            Control::Changed
+        }
+        KeyCode::Up => {
+            app.lint_up();
+            Control::Changed
+        }
+        KeyCode::Down => {
+            app.lint_down();
+            Control::Changed
+        }
+        KeyCode::Enter => {
+            app.lint_jump_to_selected();
+            Control::Changed
+        }
+        _ => Control::Unchanged,
+    }
+}
+
+/// The captive form handler (PROP-041 §4 `#edit-form`, §5 `#provenance-view`,
+/// §6 `#lint-all`). Routes the terminal event to the open form's field model.
+/// `↑`/`↓` move field focus; `Space`/`Enter` toggle a bool / cycle a selection;
+/// `Tab` cycles the write-layer; printable chars + `Backspace` edit a focused
+/// text field; `?` toggles the provenance view; `x` clears the focused field at
+/// the write-layer (from the provenance view); `c` opens the lint modal; `a`
+/// applies the form; `r` resets; `Esc` closes the page (back to the tree).
 fn handle_form(event: &Event, app: &mut PrefsApp) -> Control<super::AppEvent> {
     let Event::Key(k) = event else {
         return Control::Unchanged;
@@ -75,8 +124,17 @@ fn handle_form(event: &Event, app: &mut PrefsApp) -> Control<super::AppEvent> {
     if k.kind != KeyEventKind::Press {
         return Control::Unchanged;
     }
+
+    // `c` opens the lint modal — handled before borrowing the form so `app.lint`
+    // can be set without a borrow conflict (PROP-041 §6 #lint-all).
+    if matches!(k.code, KeyCode::Char('c') | KeyCode::Char('C')) {
+        app.open_lint();
+        return Control::Changed;
+    }
+
     // Pull the form out so we can move / type / apply without nested borrows of
-    // `app`. The schema (for `apply`'s diff) + prefs (for `reset`) stay on `app`.
+    // `app`. The schema (for `apply`'s diff) + prefs (for `reset`/`clear`) stay
+    // on `app`.
     let Some(form) = app.form.as_mut() else {
         return Control::Unchanged;
     };
@@ -104,6 +162,30 @@ fn handle_form(event: &Event, app: &mut PrefsApp) -> Control<super::AppEvent> {
         KeyCode::Tab => {
             form.cycle_write_layer();
             Control::Changed
+        }
+        // `?` toggles the provenance view for the focused field (PROP-041 §5
+        // #provenance-view). Never types (`?` is Shift+/; a text field types it
+        // only via the `Char(c) if focused_is_text` arm below, which shadows
+        // this only when a text field is focused — provenance is reachable from
+        // a toggle/selection field first, or by moving focus after toggling).
+        KeyCode::Char('?') if !focused_is_text => {
+            form.toggle_provenance();
+            Control::Changed
+        }
+        // `x` clears the focused field's value at the write-layer (PROP-041 §5
+        // #provenance-edit — "clear L3 to fall back to L2"). Only active when the
+        // provenance view is open; the clear-this-layer affordance is in that view.
+        KeyCode::Char('x') | KeyCode::Char('X') if form.provenance_open && !focused_is_text => {
+            match form.clear_focused(&app.schema, &app.prefs) {
+                Ok(()) => Control::Changed,
+                Err(err) => {
+                    tracing::warn!(
+                        %err,
+                        "vibe prefs form: clear_focused failed — the layer is not changed"
+                    );
+                    Control::Changed
+                }
+            }
         }
         // Space/Enter: toggle a bool / cycle a selection / no-op on text.
         KeyCode::Char(' ') | KeyCode::Enter => {
@@ -133,15 +215,25 @@ fn handle_form(event: &Event, app: &mut PrefsApp) -> Control<super::AppEvent> {
         // swallows alphanumerics above). Reachable by moving focus to a
         // toggle/selection field first. `form` borrows `app.form`; `app.schema`
         // + `app.prefs` are disjoint fields, so they borrow cleanly alongside.
+        // Apply is gated on `has_blocking_error` (§6 #validation-feedback) — a
+        // field in error reports why and does not persist.
         KeyCode::Char('a') | KeyCode::Char('A') if !focused_is_text => {
-            match form.apply(&app.schema) {
-                Ok(()) => Control::Changed,
-                Err(err) => {
-                    tracing::warn!(
-                        %err,
-                        "vibe prefs form: apply failed — the change is not persisted"
-                    );
-                    Control::Changed
+            if form.has_blocking_error() {
+                tracing::warn!(
+                    "vibe prefs form: apply blocked — a field has a validation error \
+                     (violates spec://vibevm/modules/vibe-settings/PROP-041#validation)"
+                );
+                Control::Changed
+            } else {
+                match form.apply(&app.schema) {
+                    Ok(()) => Control::Changed,
+                    Err(err) => {
+                        tracing::warn!(
+                            %err,
+                            "vibe prefs form: apply failed — the change is not persisted"
+                        );
+                        Control::Changed
+                    }
                 }
             }
         }
@@ -288,5 +380,71 @@ mod tests {
         assert!(matches!(ctrl, Control::Changed));
         let after = app.form.as_ref().unwrap().write_layer;
         assert_ne!(before, after, "Tab cycled the write-layer");
+    }
+
+    // ── S3: provenance toggle + clear ───────────────────────────────────────
+
+    #[test]
+    fn question_mark_toggles_the_provenance_view() {
+        let mut app = app();
+        app.table.select(Some(1)); // Palette leaf.
+        let _ = handle(&press(KeyCode::Enter), &mut app).unwrap();
+        let form = app.form.as_ref().unwrap();
+        assert!(!form.provenance_open, "provenance starts closed");
+        // `?` opens it.
+        let ctrl = handle(&press(KeyCode::Char('?')), &mut app).unwrap();
+        assert!(matches!(ctrl, Control::Changed));
+        assert!(
+            app.form.as_ref().unwrap().provenance_open,
+            "provenance is open after ?"
+        );
+        // `?` again closes it.
+        let ctrl = handle(&press(KeyCode::Char('?')), &mut app).unwrap();
+        assert!(matches!(ctrl, Control::Changed));
+        assert!(
+            !app.form.as_ref().unwrap().provenance_open,
+            "provenance is closed after second ?"
+        );
+    }
+
+    // ── S4: check-all-layers modal ──────────────────────────────────────────
+
+    #[test]
+    fn c_at_the_base_opens_the_lint_modal() {
+        let mut app = app();
+        assert!(app.lint.is_none());
+        let ctrl = handle(&press(KeyCode::Char('c')), &mut app).unwrap();
+        assert!(matches!(ctrl, Control::Changed));
+        assert!(app.lint.is_some(), "c opened the lint modal");
+    }
+
+    #[test]
+    fn c_on_an_open_form_also_opens_the_lint_modal() {
+        let mut app = app();
+        app.table.select(Some(1));
+        let _ = handle(&press(KeyCode::Enter), &mut app).unwrap();
+        let ctrl = handle(&press(KeyCode::Char('c')), &mut app).unwrap();
+        assert!(matches!(ctrl, Control::Changed));
+        assert!(app.lint.is_some(), "c opened the lint modal from the form");
+    }
+
+    #[test]
+    fn esc_closes_the_lint_modal() {
+        let mut app = app();
+        app.open_lint();
+        assert!(app.lint.is_some());
+        let ctrl = handle(&press(KeyCode::Esc), &mut app).unwrap();
+        assert!(matches!(ctrl, Control::Changed));
+        assert!(app.lint.is_none(), "Esc closed the lint modal");
+    }
+
+    #[test]
+    fn lint_modal_captures_arrow_keys_for_navigation() {
+        let mut app = app();
+        app.open_lint();
+        // The lint modal has no entries (clean layers in the test env) — the
+        // navigation is a clamped no-op but still returns Changed (repaint).
+        let ctrl = handle(&press(KeyCode::Down), &mut app).unwrap();
+        assert!(matches!(ctrl, Control::Changed));
     }
 }

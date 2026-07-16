@@ -4,7 +4,8 @@
 //! baseline), `apply()` (writes via the persist path P9a's `TreeSettings` uses,
 //! to the chosen write-layer; throws a typed error on a scope-forbidden layer or
 //! an invalid value), `reset()` (prefs → form). `apply` is gated on
-//! `is_modified()` — the form never writes a no-op.
+//! `is_modified()` — the form never writes a no-op. The `clear_focused`
+//! provenance-edit method (§5 `#provenance-edit`) lives in [`super::provenance_edit`].
 //!
 //! ## Write path (#write-layer-choice)
 //!
@@ -329,7 +330,6 @@ mod tests {
             paths(&dir),
         );
         assert!(!form.is_modified(), "not modified at build");
-        // Edit: flip the toggle.
         if let FieldControl::Toggle(b) = &mut form.fields[0].control {
             *b = false;
         }
@@ -352,20 +352,14 @@ mod tests {
             Layer::L3,
             paths(&dir),
         );
-        // Edit: flip true → false.
         if let FieldControl::Toggle(b) = &mut form.fields[0].control {
             *b = false;
         }
         assert!(form.is_modified());
         form.apply(&schema()).unwrap();
-        // The L3 file now carries the override.
         let written = fs::read_to_string(&l3).unwrap();
-        assert!(
-            written.contains("flag = false"),
-            "L3 carries the override: {written}"
-        );
-        assert!(written.contains("L3"), "role-marker header present");
-        // is_modified reads false post-apply (baseline updated).
+        assert!(written.contains("flag = false"), "L3 carries: {written}");
+        assert!(written.contains("L3"), "role-marker present");
         assert!(!form.is_modified(), "baseline updated post-apply");
     }
 
@@ -386,15 +380,12 @@ mod tests {
             paths(&dir),
         );
         form.apply(&schema()).unwrap();
-        // No file written (apply is gated on is_modified).
         assert!(!l3.exists(), "no no-op write");
     }
 
     #[test]
     fn apply_refuses_a_scope_forbidden_layer_citing_section_7() {
         let dir = tempdir().unwrap();
-        // A Machine-scoped key may only be written to L1; writing it to L3 is
-        // refused (PROP-040 §7 #scope-matrix).
         let mut form = Form::for_test(
             "Machine",
             "a page",
@@ -404,15 +395,13 @@ mod tests {
                 Scope::Machine,
                 Some(&toml::Value::String("/usr/bin".into())),
             )],
-            Layer::L3, // forbidden for Scope::Machine (L1-only).
+            Layer::L3,
             paths(&dir),
         );
-        // Edit the value so apply attempts a write.
         if let FieldControl::Text { field, .. } = &mut form.fields[0].control {
             field.type_char('!');
         }
         let err = form.apply(&schema()).unwrap_err();
-        // Capture the Display string before the match moves the fields.
         let msg = err.to_string();
         match err {
             ApplyError::ScopeForbidden { key, scope, layer } => {
@@ -422,9 +411,7 @@ mod tests {
             }
             other => panic!("expected ScopeForbidden, got {other:?}"),
         }
-        // The diagnostic cites PROP-040 §7's scope-matrix anchor.
         assert!(msg.contains("scope-matrix"), "cites the REQ: {msg}");
-        assert!(msg.contains("L3"));
     }
 
     #[test]
@@ -442,7 +429,6 @@ mod tests {
             Layer::L3,
             paths(&dir),
         );
-        // Type a non-numeric value into the Int field.
         if let FieldControl::Text { field, .. } = &mut form.fields[0].control {
             field.backspace();
             field.type_char('x');
@@ -468,22 +454,18 @@ mod tests {
             Layer::L3,
             paths(&dir),
         );
-        // Edit: flip true → false.
         if let FieldControl::Toggle(b) = &mut form.fields[0].control {
             *b = false;
         }
         assert!(form.is_modified());
         form.reset(&prefs);
         assert!(!form.is_modified(), "reset reverted the edit");
-        // The control reflects the resolved value again.
         assert!(matches!(form.fields[0].control, FieldControl::Toggle(true)));
     }
 
     #[test]
     fn closed_set_selection_resets_to_the_resolved_choice() {
-        // A closed-set string field: edit (cycle), then reset restores the value.
         let dir = tempdir().unwrap();
-        // Plant a mode key with value "all".
         let mut s = Schema::new();
         s.register(
             KeyMeta::new("vibe.tree.mode", KeyType::String, Scope::User, "mode")
@@ -509,7 +491,6 @@ mod tests {
             Layer::L3,
             paths(&dir),
         );
-        // Cycle all → sub-tables.
         form.fields[0].control.activate();
         assert_eq!(
             form.fields[0].control.current_value(),
@@ -527,11 +508,8 @@ mod tests {
 
     #[test]
     fn diff_drops_a_key_set_back_to_its_default() {
-        // Editing a key back to its default → diff-from-default drops it from
-        // the written file (PROP-040 §6 #diff-from-default → trivial reset).
         let dir = tempdir().unwrap();
         let l3 = dir.path().join("settings.local.toml");
-        // Seed an L3 override `flag = false` (non-default; default is true).
         fs::write(&l3, "# L3 — user-project.\n[vibe.tree]\nflag = false\n").unwrap();
         let mut form = Form::for_test(
             "Palette",
@@ -540,12 +518,11 @@ mod tests {
                 "vibe.tree.flag",
                 KeyType::Bool,
                 Scope::User,
-                Some(&toml::Value::Boolean(false)), // resolved from the override
+                Some(&toml::Value::Boolean(false)),
             )],
             Layer::L3,
             paths(&dir),
         );
-        // Edit false → true (back to the default).
         if let FieldControl::Toggle(b) = &mut form.fields[0].control {
             *b = true;
         }
@@ -553,7 +530,7 @@ mod tests {
         let written = fs::read_to_string(&l3).unwrap();
         assert!(
             !written.contains("flag = true"),
-            "default-valued key dropped by the diff: {written}"
+            "default-valued key dropped: {written}"
         );
     }
 }

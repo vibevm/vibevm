@@ -1,9 +1,13 @@
-//! The form render pass (PROP-041 §4 `#edit-form`, `#apply-indicator`). Draws
-//! the open page as a vertical form of typed fields — one per preference key —
-//! into the right pane's inner rect. Each field renders its label + the
-//! `applies` badge (PROP-040 §10, shown per field per `#apply-indicator`) + the
-//! per-type control, with the focused field marked by the theme's fold glyph.
-//! The write-layer selector and the Apply/Reset/move keymap hint frame the form.
+//! The form render pass (PROP-041 §4 `#edit-form`, `#apply-indicator`, §5
+//! `#provenance-view`, §6 `#validation-feedback`). Draws the open page as a
+//! vertical form of typed fields — one per preference key — into the right
+//! pane's inner rect. Each field renders its label + the `applies` badge
+//! (PROP-040 §10, shown per field per `#apply-indicator`) + the per-type
+//! control, with the focused field marked by the theme's fold glyph. A field in
+//! error renders an inline warning line under its control (§6); the focused
+//! field renders its provenance block under the control when the view is open
+//! (§5). The write-layer selector and the Apply/Reset/move keymap hint frame the
+//! form.
 //!
 //! Every colour + glyph comes from [`Theme`] — no hardcoded literal, so a
 //! restyle touches only the theme. The text-field cursor is composed by building
@@ -15,18 +19,28 @@ specmark::scope!("spec://vibevm/modules/vibe-settings/PROP-041#edit-form");
 use ratatui_core::buffer::Buffer;
 use ratatui_core::layout::Rect;
 use ratatui_core::text::{Line, Span};
+use vibe_settings::resolver::ResolvedPrefs;
 
 use crate::commands::tree::tui::theme::Theme;
 use crate::commands::tree::tui::ui::TextField;
 
 use super::Form;
 use super::control::FieldControl;
+use super::validation::DiagnosticLevel;
 
 /// Draw the form into `area` (the page pane's inner rect). No-op if `area`
 /// cannot hold a single row. Fields are laid out top-to-bottom with a y cursor;
 /// the write-layer selector + the keymap hint are pinned to the bottom when
-/// there is room.
-pub fn render_form(area: Rect, buf: &mut Buffer, form: &Form, theme: &Theme) {
+/// there is room. `prefs` is read-only — the provenance view (§5) reads
+/// `inspect` through it; the surface owns no preference logic (§1
+/// `#surface-not-engine`).
+pub fn render_form(
+    area: Rect,
+    buf: &mut Buffer,
+    form: &Form,
+    prefs: &ResolvedPrefs,
+    theme: &Theme,
+) {
     if area.width == 0 || area.height == 0 {
         return;
     }
@@ -48,8 +62,11 @@ pub fn render_form(area: Rect, buf: &mut Buffer, form: &Form, theme: &Theme) {
     }
 
     // Each field: a label row (focus marker + short name + applies badge) then
-    // the per-type control rows.
+    // the per-type control rows, then an inline warning line if the field is in
+    // error (§6 #validation-feedback), then the provenance block when the view
+    // is open for the focused field (§5 #provenance-view).
     let glyphs = theme.glyphs();
+    let diagnostics = form.diagnostics();
     for (idx, field) in form.fields.iter().enumerate() {
         let focused = idx == form.focus;
         let label = short_label(&field.key);
@@ -72,11 +89,84 @@ pub fn render_form(area: Rect, buf: &mut Buffer, form: &Form, theme: &Theme) {
         // Control rows.
         y = render_control(body, y, &field.control, focused, theme, buf);
         y = advance(y, body);
+
+        // Inline validation warning (§6 #validation-feedback) — one line per
+        // diagnostic attached to this field, in the warning style with the rule
+        // cited. An Error-level diagnostic blocks apply (the keymap hint shows
+        // "blocked" when the focused field is in error).
+        for diag in diagnostics.iter().filter(|d| d.field_idx == idx) {
+            y = render_warning(
+                body,
+                y,
+                &diag.key,
+                &diag.message,
+                diag.rule,
+                diag.level,
+                theme,
+                buf,
+            );
+            y = advance(y, body);
+        }
+
+        // Provenance block for the focused field (§5 #provenance-view). Renders
+        // inline under the control when `provenance_open`; reads `inspect` so
+        // the surface owns no merge logic.
+        if focused
+            && form.provenance_open
+            && let Some(iv) = prefs.inspect(&field.key)
+        {
+            y = super::provenance::render_provenance(
+                body,
+                y,
+                &field.key,
+                &iv,
+                form.write_layer,
+                theme,
+                buf,
+            );
+            y = advance(y, body);
+        }
     }
 
     // Write-layer selector + keymap hint pinned to the bottom.
     let footer_y = area.y + area.height.saturating_sub(footer_height.min(area.height));
     render_footer(area, footer_y, form, theme, buf);
+}
+
+/// Render an inline validation warning line under a field (PROP-041 §6
+/// `#validation-feedback`). A `!` marker in the warning style (an `Error`-level
+/// diagnostic) or `~` (a non-blocking `Warning`), the message, and the rule
+/// cited in dim — so the violation reads at a glance and the user can find the
+/// governing contract clause.
+#[allow(clippy::too_many_arguments)] // a fixed render signature — matches render_control.
+fn render_warning(
+    area: Rect,
+    y: u16,
+    key: &str,
+    message: &str,
+    rule: &str,
+    level: DiagnosticLevel,
+    theme: &Theme,
+    buf: &mut Buffer,
+) -> u16 {
+    if y >= area.y + area.height {
+        return y;
+    }
+    let (glyph, style) = match level {
+        DiagnosticLevel::Error => ("!", theme.warning()),
+        DiagnosticLevel::Warning => ("~", theme.dim()),
+    };
+    let short = message_key(key);
+    let line = Line::from(vec![
+        Span::styled("  ", theme.text()),
+        Span::styled(glyph, style),
+        Span::styled(" ", theme.text()),
+        Span::styled(short, style),
+        Span::styled(": ", style),
+        Span::styled(message.to_owned(), style),
+        Span::styled(format!("  ({rule})"), theme.dim()),
+    ]);
+    write_line_obj(area, y, line, buf)
 }
 
 /// Render one field's control rows (the per-type surface, §4 `#form-per-type`).
@@ -172,17 +262,21 @@ fn render_footer(area: Rect, y: u16, form: &Form, theme: &Theme, buf: &mut Buffe
     if next < area.y + area.height {
         let modified = form.is_modified();
         // Keymap hint — adapts when a text field is focused (typing then apply/reset
-        // move to a non-text field first).
+        // move to a non-text field first) and when the provenance view is open
+        // (x clears the focused layer). The `?` provenance toggle and `c`
+        // check-all-layers are always listed (§5 #provenance-view, §6 #lint-all).
         let hint = if form
             .focused_field()
             .map(|f| f.control.is_text())
             .unwrap_or(false)
         {
-            " \u{2191}\u{2193} move   Backspace del   Esc back   Tab layer"
+            " \u{2191}\u{2193} move   Backspace del   ? provenance   c check   Esc back   Tab layer"
+        } else if form.provenance_open {
+            " \u{2191}\u{2193} move   ? close provenance   x clear layer   c check   Esc back"
         } else if modified {
-            " \u{2191}\u{2193} move   Space/Enter toggle   Tab layer   a apply   r reset   Esc back"
+            " \u{2191}\u{2193} move   Space/Enter toggle   ? provenance   c check   Tab layer   a apply   r reset   Esc back"
         } else {
-            " \u{2191}\u{2193} move   Space/Enter toggle   Tab layer   r reset   Esc back"
+            " \u{2191}\u{2193} move   Space/Enter toggle   ? provenance   c check   Tab layer   r reset   Esc back"
         };
         write_line(area, next, hint, theme.key_desc(), buf);
     }
@@ -199,6 +293,13 @@ fn layer_descriptor(layer: vibe_settings::loader::Layer) -> &'static str {
 
 /// The last segment of a dotted path (the field's short label).
 fn short_label(path: &str) -> &str {
+    path.rsplit('.').next().unwrap_or(path)
+}
+
+/// The last segment of a dotted path for a diagnostic (mirrors `short_label` —
+/// the inline warning prefixes with the short key name so the user sees which
+/// field is in error at a glance).
+fn message_key(path: &str) -> &str {
     path.rsplit('.').next().unwrap_or(path)
 }
 
@@ -246,8 +347,20 @@ mod tests {
     use crate::commands::prefs::tui::form::control::{FieldControl, Selection, TextKind};
     use crate::commands::prefs::tui::form::{FormField, LayerPaths};
     use crate::commands::tree::tui::ui::TextField;
-    use vibe_settings::loader::Layer;
+    use vibe_settings::loader::{Layer, LayeredRaw};
+    use vibe_settings::resolver::resolve;
     use vibe_settings::schema::{Applies, KeyMeta, KeyType, Scope};
+
+    /// An empty resolved prefs (no layers set) — sufficient for the render tests,
+    /// which do not open the provenance view (so `inspect` is never read).
+    fn prefs() -> ResolvedPrefs {
+        resolve(
+            LayeredRaw::default(),
+            &vibe_settings::schema::Schema::new(),
+            toml::Table::new(),
+            toml::Table::new(),
+        )
+    }
 
     fn bool_field(name: &str, value: bool, applies: Applies) -> FormField {
         let meta = KeyMeta::new(name, KeyType::Bool, Scope::User, "a bool")
@@ -317,7 +430,7 @@ mod tests {
         );
         let area = Rect::new(0, 0, 40, 12);
         let mut buf = Buffer::empty(area);
-        render_form(area, &mut buf, &form, &theme);
+        render_form(area, &mut buf, &form, &prefs(), &theme);
         // The label 'flag' appears somewhere, and the toggle shows '● true'.
         let rendered = buffer_string(&buf, area);
         assert!(rendered.contains("flag"), "label present: {rendered}");
@@ -338,7 +451,7 @@ mod tests {
         );
         let area = Rect::new(0, 0, 40, 14);
         let mut buf = Buffer::empty(area);
-        render_form(area, &mut buf, &form, &theme);
+        render_form(area, &mut buf, &form, &prefs(), &theme);
         let rendered = buffer_string(&buf, area);
         assert!(rendered.contains("all"));
         assert!(rendered.contains("tabs"));
@@ -359,7 +472,7 @@ mod tests {
         );
         let area = Rect::new(0, 0, 40, 12);
         let mut buf = Buffer::empty(area);
-        render_form(area, &mut buf, &form, &theme);
+        render_form(area, &mut buf, &form, &prefs(), &theme);
         let rendered = buffer_string(&buf, area);
         assert!(rendered.contains("tier"));
         assert!(rendered.contains("3"));
@@ -377,7 +490,7 @@ mod tests {
         );
         let area = Rect::new(0, 0, 60, 12);
         let mut buf = Buffer::empty(area);
-        render_form(area, &mut buf, &form, &theme);
+        render_form(area, &mut buf, &form, &prefs(), &theme);
         let rendered = buffer_string(&buf, area);
         assert!(rendered.contains("Write layer:"), "selector present");
         assert!(rendered.contains("L3"), "layer label present");
@@ -403,7 +516,7 @@ mod tests {
         );
         let area = Rect::new(0, 0, 40, 16);
         let mut buf = Buffer::empty(area);
-        render_form(area, &mut buf, &form, &theme);
+        render_form(area, &mut buf, &form, &prefs(), &theme);
         // The focused field (index 0) has the fold-collapsed marker (▸ at T≥1).
         let rendered = buffer_string(&buf, area);
         assert!(

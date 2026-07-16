@@ -22,7 +22,10 @@ specmark::scope!("spec://vibevm/modules/vibe-settings/PROP-041#edit-form");
 
 pub mod control;
 pub mod lifecycle;
+pub mod provenance;
+pub mod provenance_edit;
 pub mod render;
+pub mod validation;
 
 use std::path::{Path, PathBuf};
 
@@ -63,9 +66,11 @@ impl LayerPaths {
 
     /// Build from the process env, reusing [`TreeSettings`]'s path logic so the
     /// form and the `vibe tree` TUI agree on where the layers live (PROP-040 §3
-    /// fixes L1 at `~/.vibe/`, L2/L3 at `<cwd>/.vibe/`).
+    /// fixes L1 at `~/.vibe/`, L2/L3 at `<cwd>/.vibe/`). `pub(crate)` so the
+    /// cross-layer lint-all action ([`super::lint`]) can build the same paths
+    /// without re-deriving them.
     #[must_use]
-    fn from_env() -> Self {
+    pub(crate) fn from_env() -> Self {
         let ts = TreeSettings::new();
         Self {
             l1: ts.layer_path(Layer::L1).to_owned(),
@@ -135,6 +140,10 @@ pub struct Form {
     /// The layer `apply` writes to (PROP-041 §4 `#write-layer-choice`). Defaults
     /// to L3 for a project session, L1 for a no-project session; `Tab` cycles.
     pub write_layer: Layer,
+    /// Whether the provenance view is open for the focused field (PROP-041 §5
+    /// `#provenance-view`). Toggled by `?`; follows the focus — when open, the
+    /// block renders under whichever field is focused.
+    pub provenance_open: bool,
     /// The three layer file paths.
     paths: LayerPaths,
 }
@@ -176,6 +185,7 @@ impl Form {
             fields,
             focus: 0,
             write_layer,
+            provenance_open: false,
             paths,
         })
     }
@@ -197,6 +207,7 @@ impl Form {
             fields,
             focus: 0,
             write_layer,
+            provenance_open: false,
             paths,
         }
     }
@@ -240,6 +251,21 @@ impl Form {
             Layer::L2 => Layer::L3,
             Layer::L3 => Layer::L1,
         };
+    }
+
+    /// Toggle the provenance view for the focused field (PROP-041 §5
+    /// `#provenance-view`, wired to `?`).
+    pub fn toggle_provenance(&mut self) {
+        self.provenance_open = !self.provenance_open;
+    }
+
+    /// Focus the field whose key matches `key`, if any (PROP-041 §6 `#lint-all`'s
+    /// jump-to-field: selecting a lint entry opens the owning page and focuses
+    /// the offending field). A no-op when the key is not on this page.
+    pub fn focus_key(&mut self, key: &str) {
+        if let Some(idx) = self.fields.iter().position(|f| f.key == key) {
+            self.focus = idx;
+        }
     }
 }
 

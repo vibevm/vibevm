@@ -68,6 +68,10 @@ pub struct PrefsApp {
     /// opens ([`PrefsApp::open_selected`]); cleared on
     /// [`PrefsApp::close_page`]). `None` exactly when `open_page` is `None`.
     pub form: Option<super::form::Form>,
+    /// The cross-layer lint modal state (PROP-041 §6 `#lint-all`). `Some` while
+    /// the "check all layers" modal is open; `None` when it is closed. Built by
+    /// [`PrefsApp::open_lint`] from the loaded layer files.
+    pub lint: Option<super::lint::LintState>,
     /// A fatal error captured by the error handler, re-raised after the loop
     /// restores the terminal.
     pub fatal: Option<anyhow::Error>,
@@ -93,6 +97,7 @@ impl PrefsApp {
             table: TableState::default(),
             open_page: None,
             form: None,
+            lint: None,
             fatal: None,
         };
         app.rebuild();
@@ -185,6 +190,60 @@ impl PrefsApp {
     pub fn close_page(&mut self) {
         self.open_page = None;
         self.form = None;
+    }
+
+    /// Open the "check all layers" modal (PROP-041 §6 `#lint-all`, wired to `c`).
+    /// Builds the modal state by running `schema::validate` over each loaded
+    /// layer file (L1/L2/L3). The modal captures input while open.
+    pub fn open_lint(&mut self) {
+        let paths = super::form::LayerPaths::from_env();
+        self.lint = Some(super::lint::LintState::build(&self.schema, &paths));
+    }
+
+    /// Close the lint modal (`Esc` from the modal).
+    pub fn close_lint(&mut self) {
+        self.lint = None;
+    }
+
+    /// Move the lint selection up one row.
+    pub fn lint_up(&mut self) {
+        if let Some(lint) = &mut self.lint {
+            lint.up();
+        }
+    }
+
+    /// Move the lint selection down one row.
+    pub fn lint_down(&mut self) {
+        if let Some(lint) = &mut self.lint {
+            lint.down();
+        }
+    }
+
+    /// Jump to the field owning the selected lint entry (PROP-041 §6 `#lint-all`'s
+    /// jump-to-field, wired to `Enter` in the modal). Opens the owning page and
+    /// focuses the offending field; closes the modal. A diagnostic whose key no
+    /// page owns (a typo / retired name) closes the modal without jumping — the
+    /// list itself is the diagnostic surface for those.
+    pub fn lint_jump_to_selected(&mut self) {
+        let Some(entry) = self.lint.as_ref().and_then(|l| l.selected()).cloned() else {
+            self.close_lint();
+            return;
+        };
+        self.close_lint();
+        // Find the page that owns this key.
+        let page_id = self
+            .registry
+            .pages()
+            .iter()
+            .find(|d| d.keys.iter().any(|k| k == &entry.path))
+            .map(|d| d.id.clone());
+        if let Some(id) = page_id {
+            self.open_page = Some(id);
+            self.form = super::form::Form::build(self);
+            if let Some(form) = &mut self.form {
+                form.focus_key(&entry.path);
+            }
+        }
     }
 
     /// The display name for the open page, if any (titles the right pane).
