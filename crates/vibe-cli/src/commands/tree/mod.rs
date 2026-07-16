@@ -54,10 +54,43 @@ pub fn run(ctx: &output::Context, args: TreeArgs) -> Result<()> {
     // through to the plain ASCII renderer; `--json` returned above. Neither
     // `--json` nor `--plain` ever enters interactive mode (§2.1).
     if console::user_attended() && !args.plain {
-        return tui::run(tree);
+        return match resolve_launch_mode(&args) {
+            tui::settings::LaunchMode::Vibeterm => open_in_vibeterm(&root),
+            tui::settings::LaunchMode::Console => tui::run(tree),
+        };
     }
     print!("{}", plain::render(&tree));
     Ok(())
+}
+
+/// Resolve where `vibe tree` opens: an explicit `-c`/`-t` flag wins; else the
+/// persisted `vibe.tree.launch-mode` setting, defaulting to `console`
+/// (TERMINAL-AIUI §6.2 — never force the desktop app on a fresh user).
+fn resolve_launch_mode(args: &TreeArgs) -> tui::settings::LaunchMode {
+    use tui::settings::LaunchMode;
+    if args.terminal {
+        LaunchMode::Vibeterm
+    } else if args.console {
+        LaunchMode::Console
+    } else {
+        let settings = tui::settings::TreeSettings::new();
+        settings.launch_mode(&settings.load())
+    }
+}
+
+/// Open the tree in vibeterm: launch it running `vibe tree --path <root> -c`, so
+/// the child renders the console TUI *inside* vibeterm (the `-c` prevents `-t`
+/// recursion). The running binary is quoted, since an installed path may contain
+/// spaces (a `<root>` with spaces is a known edge until vibeterm's `splitCommand`
+/// tokenises quoted arguments).
+fn open_in_vibeterm(root: &std::path::Path) -> Result<()> {
+    let exe = std::env::current_exe()?;
+    let exec = format!(
+        "{} tree --path {} -c",
+        super::term::quote_exe(&exe.to_string_lossy()),
+        root.display(),
+    );
+    super::term::launch_vibeterm(&exec, None, None)
 }
 
 /// Render the tree TUI headlessly to a snapshot string — the AIUI render plane

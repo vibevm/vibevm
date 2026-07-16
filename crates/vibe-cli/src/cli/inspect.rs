@@ -87,6 +87,16 @@ pub struct TreeArgs {
     /// this flag is currently a no-op on a tty.
     #[arg(long)]
     pub plain: bool,
+
+    /// Open the in-terminal console TUI (today's default). Mutually exclusive
+    /// with `-t` (TERMINAL-AIUI §6.2).
+    #[arg(short = 'c', long, conflicts_with = "terminal")]
+    pub console: bool,
+
+    /// Open in the vibeterm desktop terminal instead of the current terminal.
+    /// Mutually exclusive with `-c` (TERMINAL-AIUI §6.2).
+    #[arg(short = 't', long, conflicts_with = "console")]
+    pub terminal: bool,
 }
 
 #[derive(Debug, clap::Args)]

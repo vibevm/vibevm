@@ -18,8 +18,6 @@ use crate::output;
 /// the `--exec` override), and launch the terminal detached.
 #[spec(implements = "spec://vibevm/modules/vibe-cli/PROP-042#vibe-term")]
 pub fn run(_ctx: &output::Context, args: TermArgs) -> Result<()> {
-    let vibeterm = resolve_vibeterm()?;
-    let electron = electron_binary(&vibeterm)?;
     // A bare shell path may contain spaces (`C:\Program Files\…\pwsh.exe`);
     // quote it so vibeterm's `splitCommand` keeps it as one token. A user
     // `--exec` command line is passed through verbatim (they quote as needed).
@@ -27,16 +25,24 @@ pub fn run(_ctx: &output::Context, args: TermArgs) -> Result<()> {
         Some(cmd) => cmd,
         None => quote_exe(&detect_shell()),
     };
+    launch_vibeterm(&exec, args.cols, args.rows)
+}
 
+/// Launch vibeterm running `exec` (the command line for its PTY), optionally at
+/// `cols×rows`. Shared by `vibe term` and `vibe tree -t` (PROP-042 §5): resolve
+/// vibeterm + its Electron binary, spawn it detached, report the pid.
+pub(crate) fn launch_vibeterm(exec: &str, cols: Option<u16>, rows: Option<u16>) -> Result<()> {
+    let vibeterm = resolve_vibeterm()?;
+    let electron = electron_binary(&vibeterm)?;
     let mut cmd = Command::new(&electron);
     cmd.arg(&vibeterm)
         .arg("--exec")
-        .arg(&exec)
+        .arg(exec)
         .current_dir(&vibeterm);
-    if let Some(c) = args.cols {
+    if let Some(c) = cols {
         cmd.arg("--cols").arg(c.to_string());
     }
-    if let Some(r) = args.rows {
+    if let Some(r) = rows {
         cmd.arg("--rows").arg(r.to_string());
     }
     let child = cmd
@@ -49,7 +55,7 @@ pub fn run(_ctx: &output::Context, args: TermArgs) -> Result<()> {
 /// Double-quote an executable path that contains whitespace so vibeterm's
 /// `splitCommand` keeps it as one token; already-quoted or space-free paths pass
 /// through unchanged.
-fn quote_exe(exe: &str) -> String {
+pub(crate) fn quote_exe(exe: &str) -> String {
     if exe.contains(char::is_whitespace) && !exe.starts_with('"') {
         format!("\"{exe}\"")
     } else {

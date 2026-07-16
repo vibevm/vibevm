@@ -44,6 +44,9 @@ pub const KEY_SORT: &str = "vibe.tree.sort";
 pub const KEY_SHAPE: &str = "vibe.tree.shape";
 /// The dotted path of the static-first block-order key.
 pub const KEY_STATIC_FIRST: &str = "vibe.tree.static-first";
+/// The dotted path of the launch-mode key (TERMINAL-AIUI §6.2): where a bare
+/// `vibe tree` opens.
+pub const KEY_LAUNCH_MODE: &str = "vibe.tree.launch-mode";
 
 /// The conventional L1 file: `<home>/.vibe/settings.toml`.
 const DOT_VIBE: &str = ".vibe";
@@ -128,6 +131,35 @@ fn parse_shape(value: Option<&str>) -> TreeShape {
         Some("load-type-forest") => TreeShape::LoadTypeForest,
         Some("pruned-tree") => TreeShape::PrunedTree,
         _ => TreeShape::MembersAsRoots,
+    }
+}
+
+/// Where a bare `vibe tree` opens (TERMINAL-AIUI §6.2): the in-terminal console
+/// TUI, or the vibeterm desktop terminal.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LaunchMode {
+    /// The in-terminal console TUI (today's behaviour; the clean-install default).
+    Console,
+    /// Open in the vibeterm desktop terminal.
+    Vibeterm,
+}
+
+/// The launch-mode label (the `vibe.tree.launch-mode` wire value).
+#[must_use]
+pub(super) fn launch_mode_label(mode: LaunchMode) -> &'static str {
+    match mode {
+        LaunchMode::Console => "console",
+        LaunchMode::Vibeterm => "vibeterm",
+    }
+}
+
+/// Parse a launch-mode label; an unknown/absent value falls back to `Console`
+/// — the clean-install default never forces the desktop app on a fresh user.
+#[must_use]
+fn parse_launch_mode(value: Option<&str>) -> LaunchMode {
+    match value {
+        Some("vibeterm") => LaunchMode::Vibeterm,
+        _ => LaunchMode::Console,
     }
 }
 
@@ -288,6 +320,14 @@ impl TreeSettings {
         }
     }
 
+    /// The persisted launch mode for a bare `vibe tree` (TERMINAL-AIUI §6.2): the
+    /// `vibe.tree.launch-mode` setting, defaulting to `console` (never force the
+    /// desktop app on a fresh user).
+    #[must_use]
+    pub fn launch_mode(&self, prefs: &ResolvedPrefs) -> LaunchMode {
+        parse_launch_mode(prefs.get(KEY_LAUNCH_MODE).and_then(toml::Value::as_str))
+    }
+
     /// Persist a single key to the L1 layer atomically (PROP-037 §9, PROP-040
     /// §6 `#diff-from-default`): load the current L1 table (preserving the
     /// other keys), set the one dotted path, diff against the schema defaults,
@@ -351,7 +391,7 @@ impl std::error::Error for SetError {}
 /// caller.
 #[specmark::spec(
     deviates = "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
-    reason = "no-unwrap-gate: the six vibe.tree.* KeyMeta are built from static \
+    reason = "no-unwrap-gate: the seven vibe.tree.* KeyMeta are built from static \
               non-empty literal descriptions and unique dotted paths — KeyMeta::new \
               and Schema::register cannot fail on these inputs; asserting the \
               invariant once at this single registration point is clearer than \
@@ -435,6 +475,20 @@ fn build_schema() -> Schema {
             .with_default(toml::Value::Boolean(true)),
         )
         .expect("unique static-first key");
+    schema
+        .register(
+            KeyMeta::new(
+                KEY_LAUNCH_MODE,
+                KeyType::String,
+                Scope::User,
+                "where a bare `vibe tree` opens (console = the in-terminal TUI, vibeterm = the desktop terminal)",
+            )
+            .expect("non-empty launch-mode doc")
+            .with_default(toml::Value::String(
+                launch_mode_label(LaunchMode::Console).into(),
+            )),
+        )
+        .expect("unique launch-mode key");
     schema
 }
 
