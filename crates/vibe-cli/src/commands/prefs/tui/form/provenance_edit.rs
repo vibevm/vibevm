@@ -132,7 +132,7 @@ fn remove_dotted(table: &mut toml::Table, path: &str) {
 
 #[cfg(test)]
 mod tests {
-    use super::super::control::{FieldControl, build_control};
+    use super::super::control::build_control;
     use super::*;
     use std::fs;
     use tempfile::tempdir;
