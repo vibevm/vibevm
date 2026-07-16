@@ -61,6 +61,19 @@ Names are case-insensitive. An unknown name, or a refused side-effecting key
 (`F4`, `F6`; §1), is a hard error naming the offending token — never a silent
 skip.
 
+REQ. The **render plane** (§1) turns each key name straight into a
+`crossterm::event::Event` — terminal-free, no escape bytes. The **terminal
+plane** (§4, `vibe aiui send`) must instead encode each name to the bytes the
+hosted program's platform expects, and the encoding is **platform-specific**: on
+Unix, the standard xterm VT sequences (SS3 `ESC O P`–`S` for F1–F4, CSI for the
+rest); on **Windows**, **win32-input-mode** (`ESC [ Vk;Sc;Uc;Kd;Cs;Rc _` — a
+key-down record then a key-up), the form a ConPTY translates into the console
+`INPUT_RECORD`s a raw reader expects. The raw VT form is **not** reliable on
+Windows: conhost synthesises a key record from it for a cooked reader (a shell)
+but not for a raw reader (a crossterm TUI such as `vibe tree`), so the keys are
+silently dropped. A caller therefore drives the same key script identically on
+either plane; the encoding difference is the implementation's to hide.
+
 ## 4. The `vibe aiui` surface {#aiui-cli}
 
 REQ. `vibe aiui` is the agent-facing command family. Its render-plane verb:
@@ -72,10 +85,35 @@ vibe aiui render [--path <dir>] [--size <COLSxROWS>] [--send "<script>"] [--form
 builds the `vibe tree` model at `--path` (the same resolver `vibe tree` uses),
 drives `--send` (§3) at `--size` (default `80x24`), and prints the `--format`
 snapshot (§2, default `text`) to stdout. It is read-only and non-interactive:
-it never enters the TUI, spawns a terminal, or touches user state. Additional
-`vibe aiui` verbs (terminal-plane `open`/`send`/`snapshot`/`wait`/`close`,
-model-plane `state`) land in later campaign phases and are governed here as they
-arrive.
+it never enters the TUI, spawns a terminal, or touches user state.
+
+REQ. The **terminal-plane** verbs drive a live vibeterm control session:
+
+```
+vibe aiui open     [--exec <cmd>] [--size <COLSxROWS>] [--timeout-ms <n>]
+vibe aiui send     <key>... [--text <literal>] [--session <pid>]
+vibe aiui snapshot [--session <pid>]
+vibe aiui wait     [--idle-ms <n>] [--timeout-ms <n>] [--session <pid>]
+vibe aiui close    [--session <pid>]
+```
+
+`open` launches a **windowless** vibeterm running `--exec` (default: the console
+`vibe tree` over the current directory) with a control server, waits for its
+discovery file, and prints the session id (the vibeterm pid). `send` drives a key
+script (§3) and/or literal `--text`; `snapshot` prints the live grid (§2); `wait`
+blocks until the hosted program has answered the last input **and** the grid has
+settled (deterministic snapshots — never the pre-key screen); `close` tears the
+session down. A verb defaults to the most recent session; `--session <pid>`
+targets a specific one.
+
+REQ. The control transport is **loopback-only and token-guarded**. A `--control`
+vibeterm serves JSON over `http://127.0.0.1:<ephemeral>` and writes a discovery
+file `~/.vibevm/aiui/<pid>.json` plus a `latest.json` pointer, each
+`{ port, token, pid, startedAt }` at mode `0600`. Every request carries the
+bearer token; the socket binds `127.0.0.1` only. `open` accepts a discovered
+session only when its `startedAt` is at or after the spawn instant, so a stale
+`latest.json` is never mistaken for the freshly-spawned one. The model-plane
+`state` verb lands in a later phase and is governed here as it arrives.
 
 ## 5. The `vibe term` launcher {#vibe-term}
 
