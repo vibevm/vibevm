@@ -503,6 +503,18 @@ perfectly aligned (handshake reported 131×35), the agent `Read` the PNG.
 Commit-map: `9e94394` docs(spec) §5 · `94f24b4` feat(vibeterm) MVP · `bee50cf`
 feat(vibe-cli) vibe term · `676ab53` chore(specmap).
 
+### Phase 3a — `vibe tree` launch modes (LANDED 2026-07-16, self-check green)
+
+`vibe tree` gains `-c`/`--console` and `-t`/`--terminal` (mutually exclusive) +
+the `vibe.tree.launch-mode` setting in the `vibe.tree.*` schema, default
+`console` (a fresh user is never pushed into the desktop app). `-t` launches
+vibeterm running `vibe tree --path <root> -c` (the child renders the console TUI
+inside vibeterm; `-c` prevents recursion) via the launcher shared out of
+`vibe term`. The **remaining half of Phase 3 — the loopback control API +
+`vibe aiui open/send/snapshot/wait/close`** — is next.
+
+Commit-map: `81de4ec` feat launch modes · `ffc94cc` chore(specmap).
+
 ### Decisions status
 D1 (sequencing) — render-plane-first **executed** (Phase 1 landed) ahead of the
 terminal (Phase 2 next), per the recommendation; owner ratified "whole plan".
