@@ -1,10 +1,13 @@
 # SETTINGS-UI-PLAN v0.1 — the `vibe prefs` TUI surface (PROP-041)
 
-_Status: **ACTIVE** (2026-07-16). The settings UI atop the now-landed `vibe tree`
-TUI (PROP-037, Шаг 3 EXECUTED) + the settings system (PROP-040, Шаг 2 EXECUTED).
-Each phase ends floor-green; AI-Native Rust + SDD throughout. Surface lives in
-`vibe-cli` (`commands/prefs/tui/`) — it composes PROP-037's `ui::` components +
-theme and PROP-040's `vibe-settings` data layer; it owns no preference logic._
+_Status: **EXECUTED** (2026-07-16) — all seven phases S1–S7 landed on `main`,
+floor-green throughout (`self-check` all green, 347 vibe-cli tests, conform 0,
+specmap clean); the owner's visual sign-off is the open item
+(`spec/manual-tests/MT-03-vibe-prefs-tui.md`). The settings UI atop the landed
+`vibe tree` TUI (PROP-037, Шаг 3) + the settings system (PROP-040, Шаг 2). The
+surface lives in `vibe-cli` (`commands/prefs/tui/`) — it composes PROP-037's
+`ui::` components + theme and PROP-040's `vibe-settings` data layer; it owns no
+preference logic._
 
 **Contract:** [PROP-041](../modules/vibe-settings/PROP-041-settings-ui.md). **Data
 layer:** [PROP-040](../modules/vibe-settings/PROP-040-settings.md) (`vibe-settings`).
@@ -39,4 +42,36 @@ reads through it.
 `cargo xtask conform check` (baseline EMPTY); `cargo xtask specmap --check`; `bash tools/self-check.sh`.
 
 ## Running ledger
-_(заполняется по фазам)_
+
+### S1–S7 — DONE (2026-07-16); the settings TUI ships
+
+All seven phases landed on `main`, floor-green at every boundary (`self-check`
+all green, 347 vibe-cli tests, conform 0, specmap clean):
+
+- **S1** (`0128360`) — the foundation: a Configurable-EP-style **page registry**
+  + the **settings tree widget** (reusing PROP-037's visual language — rounded
+  frames, ▾▸/│├└─, theme, no widget re-invented) with a per-row origin hint;
+  `vibe prefs ui` launch.
+- **S2** (`4438aee`) — the **edit form**: per-type fields (bool→toggle, enum/
+  closed-set→Selection, int/string→TextField, array/table→note) + the
+  Configurable lifecycle (`is_modified`/`apply`/`reset` mirroring
+  `TreeSettings::try_set`) + a write-layer selector (scope-forbidden refused);
+  `applies` badge.
+- **S3** (`9fb48bc`) — **provenance**: `?` toggles an inline block (resolved
+  value + per-layer contribution + winning origin + shadowed layers); `x` clears
+  the focused write-layer (falls back).
+- **S4** (`9fb48bc`) — **validation**: inline schema-violation warnings (gold,
+  rule cited) gating `apply`; `c` opens the lint modal (`validate` across
+  L1/L2/L3, jump-to-field).
+- **S5** (`623eab8`) — **search**: a `SettingsProvider` over the registry via the
+  `vibe-actions` Search Everywhere engine (key/name/description/synonyms;
+  deprecated keys surface `replaced_by`); selecting opens the page focused on
+  the field.
+- **S6** (`623eab8`) — **actions**: every command a `vibe.prefs` action (8-spec
+  catalogue → collision-checked Registry + keymap; `dispatch_by_addr`; footer
+  lists enabled actions per context); modal-stack Esc pop.
+- **S7** — sign-off: `self-check` all green; `specmap` advisory (34 pre-existing
+  orphans = `vibe_spec`/`vibe_resolver` debt, unchanged); i18n ships via the
+  `vibe.prefs` catalogue inline-English defaults; the manual visual sign-off is
+  `spec/manual-tests/MT-03-vibe-prefs-tui.md` (owner's eye). One clippy
+  `--all-targets` unused-import fix landed (`2592112`).

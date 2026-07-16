@@ -1,5 +1,20 @@
 # WAL — Project Continuation State
 
+## CHECKPOINT 2026-07-16 — META-PLAN CLOSED: Шаг 3 (TUI) + Шаг 4 (settings UI) EXECUTED
+
+_Updated: 2026-07-16 — **МЕТА-ПЛАН ВЫПОЛНЕН.** `vibe tree` TUI (PROP-037, Шаг 3, 11 фаз P0–P10) +
+`vibe prefs` settings UI (PROP-041, Шаг 4, 7 фаз S1–S7) — оба EXECUTED на `main`, floor-green
+throughout (`self-check` all green, 347 vibe-cli tests, conform 0, specmap clean). Шаг 4: page
+registry + settings tree (S1), edit form per-type + Configurable lifecycle + write-layer (S2),
+provenance view `?`/`x` (S3), validation inline + lint `c` (S4), search over registry via
+Search Everywhere (S5), vibe.prefs action surface + keymap + footer (S6), sign-off (S7).
+**Единственный открытый item — owner visual sign-off** MT-02 (TUI) + MT-03 (prefs UI). **AIUI —
+«потом»** (следующий milestone; settings + actions AIUI-ready по дизайну). `CONTINUE.md` —
+canonical cold-resume. Нет блокера. S2 earlier был прерван 429 usage-limit — reset прошёл, работа
+завершена._
+
+---
+
 ## CHECKPOINT 2026-07-16 — TREE TUI EXECUTED (Шаг 3, PROP-037) → settings UI in progress (Шаг 4, PROP-041)
 
 _Updated: 2026-07-16 — **Шаг 3 (the `vibe tree` TUI, PROP-037) LANDED END-TO-END** — all eleven phases
