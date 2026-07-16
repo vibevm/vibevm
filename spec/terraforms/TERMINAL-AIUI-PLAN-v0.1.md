@@ -471,11 +471,25 @@ Phase 1.**
 - Electron offscreen capture needs `disableHardwareAcceleration()` for reliable
   headless software rendering.
 
+### Phase 1 — render plane + snapshot contract (LANDED 2026-07-16, self-check green)
+
+`vibe aiui render` ships. `tui::snapshot_headless` builds a fresh `App` over a
+`PackageTree` (theme defaults, no settings load → deterministic), drives a
+`--send` key script through the real `input::handle`, paints one frame into an
+off-screen `Buffer`, and projects it to `text` or `cells` (`snapshot`); the
+`keyscript` parser refuses the side-effecting `F4`/`F6`. PROP-042 is the
+contract. **Golden tier:** a byte-stable base-frame `.snap.txt` diffed by a test
+(`UPDATE_GOLDENS=1` refreshes) + a cells-shape test — a layout regression now
+fails in self-check with no terminal. Proven live:
+`vibe aiui render --send "F2"` renders the sort menu + the two-row footer.
+
+Commit-map: `a3d1341` docs(spec) PROP-042 · `a5e3068` feat(vibe-cli) render
+plane · `8cb3bcc` chore(specmap).
+
 ### Decisions status
-D1 (sequencing) — both planes now proven feasible; **render-plane-first still
-recommended** (cheapest, unblocks the golden tier); owner ratified "whole plan,
-Phase 0 both planes"; phase order to confirm at the Phase 1 boundary. D2–D6
-proposals stand.
+D1 (sequencing) — render-plane-first **executed** (Phase 1 landed) ahead of the
+terminal (Phase 2 next), per the recommendation; owner ratified "whole plan".
+D2–D6 proposals stand.
 
 ### Commit-map
 - `d6a85be` docs(plan): TERMINAL-AIUI-PLAN v0.1 (this plan).
