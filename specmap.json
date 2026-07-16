@@ -732,7 +732,7 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/tree/tui/modes.rs",
       "item_kind": "mod",
-      "line": 10,
+      "line": 13,
       "symbol": "vibe_cli::commands::tree::tui::modes"
     },
     {
@@ -788,7 +788,7 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/tree/tui/state.rs",
       "item_kind": "mod",
-      "line": 7,
+      "line": 9,
       "symbol": "vibe_cli::commands::tree::tui::state"
     },
     {
@@ -5864,9 +5864,9 @@
     {
       "file": "crates/vibe-cli/src/commands/tree/tui/modes.rs",
       "from_symbol": "vibe_cli::commands::tree::tui::modes",
-      "line": 10,
+      "line": 13,
       "provenance": "authored",
-      "uri": "spec://vibevm/modules/vibe-cli/PROP-036#tui",
+      "uri": "spec://vibevm/modules/vibe-cli/PROP-037#modes",
       "verb": "implements"
     },
     {
@@ -5928,7 +5928,7 @@
     {
       "file": "crates/vibe-cli/src/commands/tree/tui/state.rs",
       "from_symbol": "vibe_cli::commands::tree::tui::state",
-      "line": 7,
+      "line": 9,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-cli/PROP-036#tui",
       "verb": "implements"
