@@ -58,9 +58,13 @@ node node_modules/electron/install.js
 > `npm install` cannot resolve `^1.1.0`, pin the current beta explicitly
 > (e.g. `npm install node-pty@1.1.0-beta`).
 >
-> If launching later fails with a `NODE_MODULE_VERSION` mismatch, node-pty's
-> prebuild does not match Electron's ABI — rebuild it against Electron with
-> `npx electron-rebuild -f -w node-pty`.
+> node-pty is built on `node-addon-api` (N-API), so its shipped prebuilds are
+> ABI-stable across Node/Electron versions: the same `.node` loads in system
+> Node and in Electron 32 (verified — ConPTY spawns correctly under Electron).
+> Do **not** run `@electron/rebuild` / `electron-rebuild` against node-pty here:
+> it forces `node-gyp`, which trips a broken relative-path `cd shared &&
+> GetCommitHash.bat` in `deps/winpty/src/winpty.gyp` and fails. The prebuild is
+> correct as shipped; no rebuild is wanted.
 
 ## Run
 

@@ -4,15 +4,24 @@
  * VVM version manager diff-copies into an instance next to the `vibe` binary.
  *
  * `npm install` alone is NOT enough: npm 11 blocks native/postinstall scripts,
- * so Electron's binary and node-pty's prebuild are not fetched, and node-pty's
- * prebuild targets system Node's ABI — not Electron's. So this does the full
- * dance, in order:
+ * so Electron's binary download and node-pty's prebuild staging do not run.
+ * So this does the full dance, in order:
  *
  *   1. npm install                                 — deps (idempotent)
- *   2. npm rebuild node-pty --foreground-scripts   — node-pty prebuild + ConPTY DLL
+ *   2. npm rebuild node-pty --foreground-scripts   — node-pty prebuild + ConPTY DLLs
  *   3. node node_modules/electron/install.js       — Electron's binary (its postinstall)
- *   4. npx @electron/rebuild -f -w node-pty        — rebuild node-pty vs Electron's ABI
- *   5. npx @electron/packager … --dir --asar=false — the relocatable dir
+ *   4. npx @electron/packager … --dir --asar=false — the relocatable dir
+ *
+ * NO @electron/rebuild step. node-pty is built on node-addon-api (N-API), so its
+ * shipped prebuilds are ABI-stable across Node/Electron versions: the same .node
+ * loads in system Node 24 (modules=137) and Electron 32's Node 20 (modules=128)
+ * and ConPTY spawns correctly under Electron (verified). node-pty's own install
+ * script (`scripts/prebuild.js || node-gyp rebuild`) takes the prebuild branch and
+ * never invokes node-gyp, so deps/winpty/src/winpty.gyp — whose `<!(cmd /c "cd
+ * shared && GetCommitHash.bat")` assumes cwd=deps/winpty/src and fails under
+ * node-gyp's real cwd — is never reached. Forcing @electron/rebuild would re-enter
+ * node-gyp, hit that broken winpty.gyp, and fail; it is both unnecessary and broken
+ * for this N-API addon, so it is omitted.
  *
  * Output: `<out>/vibeterm-<plat>-<arch>/` — `electron(.exe)` at the root,
  * `resources/app/{main.cjs,renderer.js,index.html,lib/,package.json,
@@ -56,17 +65,17 @@ function run(label, cmd, args) {
 run('npm install', 'npm', ['install']);
 run('node-pty prebuild', 'npm', ['rebuild', 'node-pty', '--foreground-scripts']);
 run('electron binary', 'node', ['node_modules/electron/install.js']);
-run('node-pty vs electron ABI', 'npx', ['@electron/rebuild', '-f', '-w', 'node-pty']);
 
 // electron-packager: a plain DIRECTORY (no installer), no asar (the unpacked
-// tree is transparent and diffable by VVM). `--prune` drops devDeps from the
-// packaged node_modules; `--overwrite` replaces a prior build.
+// tree is transparent and diffable by VVM). @electron/packager v20 ships asar
+// OFF by default, so no flag is passed (passing `--asar=false` warns). `--prune`
+// drops devDeps from the packaged node_modules; `--overwrite` replaces a prior
+// build.
 run('electron-packager', 'npx', [
   '@electron/packager',
   appDir,
   'vibeterm',
   '--dir',
-  '--asar=false',
   `--platform=${PLATFORM}`,
   `--arch=${ARCH}`,
   `--out=${out}`,
