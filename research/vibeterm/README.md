@@ -1,0 +1,117 @@
+# vibeterm
+
+A minimal, real Electron terminal. It hosts an interactive PTY (via
+[node-pty](https://github.com/microsoft/node-pty)) running a command, and
+renders it with [xterm.js](https://xtermjs.org/). This is the visual terminal
+an agent or human observes — a debug/test tool today, a terminal we grow.
+
+It starts a shell (or the command you pass via `--exec`), streams its output
+into the window, and sends your keystrokes back to it.
+
+## Architecture
+
+Two processes, one PTY, IPC between them:
+
+- **node-pty runs in the Electron _main_ process — never the renderer.** The
+  renderer has no `worker_threads`, so constructing a pty there throws
+  `Failed to construct 'Worker'`. The renderer is xterm.js only.
+- **PTY output** flows main → renderer as `win.webContents.send('pty', data)`
+  and is written to the terminal with `term.write(data)`.
+- **Keystrokes** flow renderer → main as `ipcRenderer.send('input', data)`
+  and are written to the child with `pty.write(data)`.
+
+Graceful teardown (otherwise Electron pops an error dialog):
+
+1. Every `win.webContents.send(...)` is guarded by `!win.isDestroyed()`.
+2. The `pty.onData` subscription is disposed **before** teardown, so no byte
+   is ever sent to a destroyed window.
+3. To stop the child we prefer letting it exit. `pty.kill()` is only called
+   inside a `try/catch` — on Windows it throws ConPTY `AttachConsole failed`
+   outside a real console, which is swallowed; `app.quit()` reaps the child
+   regardless.
+
+The pure argument/command logic lives in `lib/args.mjs`, which imports nothing
+from Electron or node-pty, so it is unit-tested under a plain `node --test`
+(no native build, no GUI).
+
+## Setup
+
+Requires Node ≥ 22.6 and npm 11.
+
+```sh
+cd research/vibeterm
+
+# 1. Install dependencies. npm 11 blocks native postinstall scripts by
+#    default, so node-pty's prebuild and Electron's binary are NOT fetched
+#    by `npm install` alone.
+npm install
+
+# 2. Build/verify node-pty's native addon (fetches the Windows prebuild +
+#    the bundled ConPTY DLL; no C++ toolchain needed).
+npm rebuild node-pty --foreground-scripts
+
+# 3. Fetch Electron's own binary (its postinstall was blocked too).
+node node_modules/electron/install.js
+```
+
+> node-pty is currently published on a `1.1.x` prerelease line. If
+> `npm install` cannot resolve `^1.1.0`, pin the current beta explicitly
+> (e.g. `npm install node-pty@1.1.0-beta`).
+>
+> If launching later fails with a `NODE_MODULE_VERSION` mismatch, node-pty's
+> prebuild does not match Electron's ABI — rebuild it against Electron with
+> `npx electron-rebuild -f -w node-pty`.
+
+## Run
+
+```sh
+npm start          # === electron .
+```
+
+By default vibeterm launches a plain per-platform shell: `%COMSPEC%` (falling
+back to `cmd.exe`) on Windows, `$SHELL` (falling back to `/bin/sh`) elsewhere.
+
+## Flags
+
+Pass flags after `--` so Electron forwards them to the app:
+
+```sh
+electron . -- --exec "vibe tree -c" --cols 100 --rows 30
+```
+
+| Flag             | Meaning                                              | Default        |
+| ---------------- | ---------------------------------------------------- | -------------- |
+| `--exec "<cmd>"` | Shell command line to run instead of the default.    | (the shell)    |
+| `--cols <n>`     | Terminal width in columns.                           | `84`           |
+| `--rows <n>`     | Terminal height in rows.                             | `30`           |
+
+Both `--flag value` and `--flag=value` forms work. Malformed or missing values
+fall back to the defaults. The first token of `--exec` may be quoted so an
+executable path can contain spaces:
+`--exec '"C:\Program Files\Git\bin\bash.exe" -l'`.
+
+The smart pwsh-vs-powershell shell detection lives in the Rust `vibe term`
+caller, which passes its chosen shell through `--exec`. vibeterm's own default
+(`defaultShell`) is just the simple per-platform fallback above, for standalone
+`electron .` use.
+
+## Test
+
+```sh
+npm test           # === node --test  (auto-discovers test/*.test.mjs)
+```
+
+The tests exercise `lib/args.mjs` only (`parseArgs`, `defaultShell`,
+`splitCommand`) and need no dependencies installed — they run on a bare Node.
+(`node --test` with no path uses Node's default test-file glob, which finds
+`test/args.test.mjs` and skips `node_modules`. The bare form is the repo
+convention — `node --test <dir>` is not a valid directory search on Node 24.)
+
+## Layout
+
+- `main.cjs` — Electron main: spawns node-pty, wires IPC both ways, handles
+  graceful teardown. (`.cjs` = always CommonJS, regardless of `"type"`.)
+- `renderer.js` — the xterm.js renderer, loaded by `index.html`.
+- `index.html` — links xterm's stylesheet, hosts the `#term` grid.
+- `lib/args.mjs` — pure, testable arg + command helpers (no Electron/node-pty).
+- `test/args.test.mjs` — `node --test` unit tests for `lib/args.mjs`.

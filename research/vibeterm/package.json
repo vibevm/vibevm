@@ -1,0 +1,21 @@
+{
+  "name": "@org.vibevm/vibeterm",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "vibeterm — a minimal Electron terminal: an interactive node-pty child rendered with xterm.js. The visual terminal an agent or human observes.",
+  "engines": {
+    "node": ">=22.6"
+  },
+  "main": "main.cjs",
+  "scripts": {
+    "start": "electron .",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "@xterm/addon-fit": "^0.10.0",
+    "@xterm/xterm": "^5.5.0",
+    "electron": "^32.0.0",
+    "node-pty": "^1.1.0"
+  }
+}
