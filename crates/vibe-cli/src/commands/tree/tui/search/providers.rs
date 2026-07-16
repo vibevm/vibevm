@@ -160,7 +160,7 @@ impl SearchProvider for FieldProvider {
         FIELDS
     }
     fn group_name(&self) -> &str {
-        "Card fields"
+        "Cards"
     }
     fn sort_weight(&self) -> i32 {
         200

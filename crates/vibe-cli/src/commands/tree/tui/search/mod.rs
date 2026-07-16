@@ -322,7 +322,7 @@ mod tests {
     #[test]
     fn opens_with_all_plus_three_category_tabs() {
         let s = SearchState::open(&tiny_app());
-        assert_eq!(s.tabs.len(), 4, "All + Packages + Card fields + Actions");
+        assert_eq!(s.tabs.len(), 4, "All + Packages + Cards + Actions");
         assert!(s.tabs[0].is_all, "the first tab is the hybrid All tab");
     }
 
