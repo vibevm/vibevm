@@ -9,10 +9,11 @@ specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-037#f2-sort-menu");
 use ratatui_core::buffer::Buffer;
 use ratatui_core::layout::Rect;
 use ratatui_core::text::Line;
+use ratatui_core::widgets::Widget;
 
 use super::super::state::App;
 use super::super::theme::Theme;
-use super::super::ui::{ComingSoon, Group, Window};
+use super::super::ui::{ComingSoon, GUTTER, Group, PAD_X, PAD_Y, Window, inner_pad};
 use super::{MenuGroup, MenuKind, MenuOption};
 
 /// Draw the menu centered over `area` (drawn after the base, before nothing —
@@ -56,6 +57,13 @@ fn draw_groups(
     theme: &Theme,
 ) {
     let multi = groups.len() > 1;
+    // The hint advertised on the last row — its width can exceed the widest
+    // option, so it factors into the window width below.
+    let hint = if multi {
+        "\u{2191}/\u{2193}  \u{2022}  Tab  \u{2022}  Enter  \u{2022}  Esc"
+    } else {
+        "\u{2191}/\u{2193}  \u{2022}  Enter  \u{2022}  Esc"
+    };
     let label_w = groups
         .iter()
         .flat_map(|g| g.options.iter().map(|o| o.label.chars().count()))
@@ -63,23 +71,29 @@ fn draw_groups(
         .chain(std::iter::once(title.chars().count()))
         .max()
         .unwrap_or(10);
-    let w = (label_w as u16 + 8).clamp(24, area.width.saturating_sub(4));
+    // Content must hold both the widest framed option row — label + `● ` mark +
+    // the option gutter each side + the group border — and the hint line (with a
+    // cell of slack); the window then adds interior padding and its own border
+    // (PROP-037 §2.2.5 `#spacing`).
+    let group_row_w = label_w + 2 + 2 * GUTTER as usize + 2;
+    let content_w = group_row_w.max(hint.chars().count() + 2);
+    let w = (content_w as u16 + 2 * PAD_X + 2).clamp(28, area.width.saturating_sub(4));
 
-    // Inner content height: the hint row + the options + group framing.
-    let total_opts: usize = groups.iter().map(|g| g.options.len()).sum();
-    let body_h = if multi {
-        // each group = 2 border + options; one-row gaps between groups; + hint row
+    // Content rows, inside the interior padding: the framed groups with a
+    // one-row gap between them, then a blank row, then the hint. A single group
+    // (F3) is a flat list, no frame.
+    let content_h = if multi {
         groups
             .iter()
             .map(|g| g.options.len() + 2)
             .sum::<usize>()
             .saturating_add(groups.len().saturating_sub(1))
-            + 1
+            + 2 // a blank row + the hint row
     } else {
-        total_opts + 3 // a blank row + options + hint row
+        groups.first().map_or(0, |g| g.options.len()) + 2 // a blank row + hint
     };
-    let h = (body_h as u16 + 2) // + the window's own two border rows
-        .clamp(5, area.height.saturating_sub(2));
+    let h = (content_h as u16 + 2 * PAD_Y + 2) // interior padding + window border
+        .clamp(6, area.height.saturating_sub(2));
 
     let inner = Window::centered(
         area,
@@ -89,16 +103,21 @@ fn draw_groups(
         h,
         theme,
     );
-    let hint_row = inner.y + inner.height.saturating_sub(1);
+    let content = inner_pad(inner);
+    if content.width < 8 || content.height < 3 {
+        return;
+    }
+    let hint_row = content.y + content.height.saturating_sub(1);
 
     if multi {
-        let mut y = inner.y;
+        let mut y = content.y;
         for (gi, group) in groups.iter().enumerate() {
             let gh = group.options.len() as u16 + 2;
-            if y + gh > hint_row {
+            // Keep a blank row between the last group and the hint.
+            if y + gh > hint_row.saturating_sub(1) {
                 break;
             }
-            let garea = Rect::new(inner.x, y, inner.width, gh);
+            let garea = Rect::new(content.x, y, content.width, gh);
             // The active focus-group is accent-framed; the rest render dim
             // (PROP-037 §5.4 — the user sees where `Tab` has landed).
             let ginner = Group::named(&group.name)
@@ -109,7 +128,13 @@ fn draw_groups(
                 if oy >= hint_row {
                     break;
                 }
-                let rect = Rect::new(ginner.x, oy, ginner.width, 1);
+                // Inset the option (and its highlight bar) off the group stroke.
+                let rect = Rect::new(
+                    ginner.x + GUTTER,
+                    oy,
+                    ginner.width.saturating_sub(2 * GUTTER),
+                    1,
+                );
                 // Only the active group shows a highlight bar (`Enter`'s target);
                 // inactive groups show their `●`/`○` value marks only.
                 let is_cursor = gi == active_group && oi == group.cursor;
@@ -118,32 +143,30 @@ fn draw_groups(
             y += gh + 1; // a one-row gap between framed groups
         }
     } else {
-        // Single group: flat list, no group chrome (preserves the F3 look).
+        // Single group (F3): a flat list, no group chrome, options inset off the
+        // window's interior padding by the option gutter.
         let group = &groups[0];
-        let list_top = inner.y + 1; // a blank row under the title
         for (i, option) in group.options.iter().enumerate() {
-            let y = list_top + i as u16;
-            if y >= hint_row {
+            let y = content.y + i as u16;
+            if y >= hint_row.saturating_sub(1) {
                 break;
             }
-            let rect = Rect::new(inner.x + 1, y, inner.width.saturating_sub(2), 1);
+            let rect = Rect::new(
+                content.x + GUTTER,
+                y,
+                content.width.saturating_sub(2 * GUTTER),
+                1,
+            );
             draw_option(rect, buf, option, i == group.cursor, theme);
         }
     }
 
-    // The key hint on the last inner row. Multi-group advertises `Tab` for
-    // focus-group cycling (PROP-037 §5.4); single-group omits it.
-    let hint = if multi {
-        " \u{2191}/\u{2193}  \u{2022}  Tab  \u{2022}  Enter  \u{2022}  Esc"
-    } else {
-        " \u{2191}/\u{2193}  \u{2022}  Enter  \u{2022}  Esc"
-    };
-    buf.set_stringn(
-        inner.x + 1,
-        hint_row,
-        hint,
-        inner.width.saturating_sub(2) as usize,
-        theme.dim(),
+    // The key hint on the last content row, centred for rhythm (defined above,
+    // so its width factors into the window size).
+    Widget::render(
+        Line::styled(hint, theme.dim()).centered(),
+        Rect::new(content.x, hint_row, content.width, 1),
+        buf,
     );
 }
 

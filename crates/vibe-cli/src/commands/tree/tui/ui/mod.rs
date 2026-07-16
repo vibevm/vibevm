@@ -35,6 +35,34 @@
 
 specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-037#components");
 
+use ratatui_core::layout::Rect;
+
+/// Interior horizontal padding inside a window frame, in cells (PROP-037
+/// §2.2.5 `#spacing`). Content never touches the border — a clear left/right
+/// margin between the frame and what it holds.
+pub const PAD_X: u16 = 2;
+/// Interior vertical padding inside a window frame, in rows (PROP-037 §2.2.5).
+/// A blank row under the title and above the base, so content breathes.
+pub const PAD_Y: u16 = 1;
+/// The inset of a control within its own [`Group`] frame, in cells (PROP-037
+/// §2.2.5). Lighter than [`PAD_X`] — the group frame already contains the
+/// control; the gutter just keeps its glyphs off the stroke.
+pub const GUTTER: u16 = 1;
+
+/// Inset `rect` by the standard interior padding ([`PAD_X`] / [`PAD_Y`]),
+/// returning the content rect (PROP-037 §2.2.5 `#spacing`). Saturating, so a
+/// rect too small to hold the padding collapses to a zero-size inner instead of
+/// underflowing.
+#[must_use]
+pub fn inner_pad(rect: Rect) -> Rect {
+    Rect {
+        x: rect.x.saturating_add(PAD_X),
+        y: rect.y.saturating_add(PAD_Y),
+        width: rect.width.saturating_sub(2 * PAD_X),
+        height: rect.height.saturating_sub(2 * PAD_Y),
+    }
+}
+
 pub mod button;
 pub mod card;
 pub mod coming_soon;

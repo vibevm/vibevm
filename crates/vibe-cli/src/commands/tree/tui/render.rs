@@ -9,14 +9,14 @@ use rat_widget::tabbed::{TabPlacement, TabType, Tabbed, TabbedState};
 use rat_widget::table::Table;
 use rat_widget::table::textdata::{Cell, Row};
 use ratatui_core::buffer::Buffer;
-use ratatui_core::layout::{Constraint, Layout, Rect};
+use ratatui_core::layout::{Constraint, Flex, Layout, Rect};
 use ratatui_core::style::{Modifier, Style};
 use ratatui_core::text::{Line, Span};
 use ratatui_core::widgets::{StatefulWidget, Widget};
 
 use super::state::{App, DisplayMode, RowNode};
 use super::theme::Role;
-use super::ui::{Button, Window};
+use super::ui::{Button, Window, inner_pad};
 use super::{copy, modal, modes};
 
 /// Draw the whole surface for this frame.
@@ -27,7 +27,7 @@ pub fn draw(area: Rect, buf: &mut Buffer, app: &mut App) {
     let [status, body, footer] = Layout::vertical([
         Constraint::Length(1),
         Constraint::Min(0),
-        Constraint::Length(1),
+        Constraint::Length(2),
     ])
     .areas(area);
 
@@ -106,50 +106,70 @@ fn render_status(area: Rect, buf: &mut Buffer, app: &App) {
     Widget::render(Line::from(spans), area, buf);
 }
 
-/// The mode-aware footer (PROP-037 §5): only the keys valid in the current
-/// context — the letter shortcuts the F-keys superseded are gone.
+/// The mode-aware footer (PROP-037 §5.2 `#keys`): **two centered rows** — the
+/// F-key command row above, the navigation + Enter/Esc row below — so the hints
+/// read as a balanced footer with visual rhythm, not one left-jammed line. Only
+/// the keys valid in the current context appear (the letter shortcuts the
+/// F-keys superseded are gone).
 fn render_footer(area: Rect, buf: &mut Buffer, app: &App) {
-    if area.width == 0 {
+    if area.width == 0 || area.height == 0 {
         return;
     }
-    // A copy/action flash takes the footer until the next input clears it.
+    let [row1, row2] = Layout::vertical([Constraint::Length(1), Constraint::Length(1)]).areas(area);
+
+    // A copy/action flash takes the footer until the next input clears it —
+    // centered on the footer's first row.
     if let Some(flash) = &app.flash {
         Widget::render(
-            Line::styled(format!(" {flash}"), app.theme.title()),
-            area,
+            Line::styled(flash.clone(), app.theme.title()).centered(),
+            row1,
             buf,
         );
         return;
     }
-    // Shared commands, then the mode-specific navigation.
-    let mut keys: Vec<(&str, &str)> = vec![
-        ("F1", " search  "),
-        ("F2", " sort  "),
-        ("F3", " mode  "),
-        ("F4", " settings  "),
-        ("F6", " copy  "),
-        ("\u{2191}\u{2193}", " move  "),
-        ("\u{2190}\u{2192}", " pan  "),
+
+    // Row 1 — the F-key commands.
+    let fkeys: [(&str, &str); 5] = [
+        ("F1", "search"),
+        ("F2", "sort"),
+        ("F3", "mode"),
+        ("F4", "settings"),
+        ("F6", "copy"),
+    ];
+    Widget::render(key_row(app, &fkeys), row1, buf);
+
+    // Row 2 — navigation, then Enter/Esc (the quit-confirm binding, §7.4).
+    let mut nav: Vec<(&str, &str)> = vec![
+        ("\u{2191}\u{2193}", "move"),
+        ("\u{2190}\u{2192}", "pan"),
         // Every mode renders through the one Tree widget (PROP-037 §3.1, §4), so
         // Space folds in all of them.
-        ("Space", " fold  "),
+        ("Space", "fold"),
     ];
     if app.display_mode == DisplayMode::Tabs {
         // Shift+←/→ switches tabs; plain ←/→ stays tree-pan (PROP-037 §5.3).
         // `Shift` is written `↑` per §5.2.
-        keys.push(("\u{2191}\u{2190}\u{2191}\u{2192}", " tab  "));
+        nav.push(("\u{2191}\u{2190}\u{2191}\u{2192}", "tab"));
     }
-    keys.push(("Enter", " details  "));
-    // Esc opens the quit-confirm at the base screen (PROP-037 §7.4) — the
-    // footer advertises the real binding, not the retired `q`.
-    keys.push(("Esc", " quit"));
+    nav.push(("Enter", "details"));
+    nav.push(("Esc", "quit"));
+    Widget::render(key_row(app, &nav), row2, buf);
+}
 
-    let mut spans: Vec<Span<'static>> = vec![Span::raw(" ")];
-    for (k, desc) in keys {
-        spans.push(Span::styled(k.to_string(), app.theme.key()));
-        spans.push(Span::styled(desc.to_string(), app.theme.key_desc()));
+/// Build one centered footer row: `key desc` pairs separated by a dim `•`, the
+/// key in the accent key style and the description muted (PROP-037 §5.2). The
+/// row is centre-aligned so it sits under the middle of the screen, not jammed
+/// to the left edge.
+fn key_row(app: &App, entries: &[(&str, &str)]) -> Line<'static> {
+    let mut spans: Vec<Span<'static>> = Vec::with_capacity(entries.len() * 4);
+    for (i, (k, d)) in entries.iter().enumerate() {
+        if i > 0 {
+            spans.push(Span::styled("  \u{2022}  ", app.theme.dim()));
+        }
+        spans.push(Span::styled((*k).to_string(), app.theme.key()));
+        spans.push(Span::styled(format!(" {d}"), app.theme.key_desc()));
     }
-    Widget::render(Line::from(spans), area, buf);
+    Line::from(spans).centered()
 }
 
 /// The flattened, scrollable, selectable table (PROP-036 §2.2, §2.11).
@@ -282,29 +302,34 @@ fn flag_cell(on: bool, theme: &super::theme::Theme) -> Cell<'static> {
 fn render_confirm_quit(area: Rect, buf: &mut Buffer, app: &App) {
     let theme = &app.theme;
     let title = Line::styled(" Really quit? ", theme.title());
-    let width = 32u16.min(area.width.saturating_sub(2));
-    let height = 5u16.min(area.height);
+    // Seven rows tall — 2 border + interior padding above/below the three
+    // content rows (body · gap · buttons) — and wide enough for air around the
+    // widest element, so the dialog reads as a window, not a jammed box
+    // (PROP-037 §2.2.5 `#spacing`).
+    let width = 36u16.min(area.width.saturating_sub(4));
+    let height = 7u16.min(area.height.saturating_sub(2));
     let inner = Window::centered(area, buf, title, width, height, theme);
-    if inner.width < 18 || inner.height < 3 {
+    let content = inner_pad(inner);
+    if content.width < 14 || content.height < 3 {
         return;
     }
-    // body row, a one-row gap, then the OK / Cancel buttons row.
+    // The three content rows, centred vertically inside the padded content so
+    // the body and buttons sit off both the top and the bottom border.
     let [body_row, _gap, btn_row] = Layout::vertical([
         Constraint::Length(1),
         Constraint::Length(1),
         Constraint::Length(1),
     ])
-    .areas(inner);
+    .flex(Flex::Center)
+    .areas(content);
 
-    buf.set_stringn(
-        body_row.x,
-        body_row.y,
-        "Quit vibe tree?",
-        body_row.width as usize,
-        theme.text(),
+    Widget::render(
+        Line::styled("Quit vibe tree?", theme.text()).centered(),
+        body_row,
+        buf,
     );
 
-    // OK is focused unless the user moved focus to Cancel.
+    // OK is focused unless the user moved focus to Cancel; the pair is centred.
     let ok = Button::new("OK").focused(!app.confirm_cancel_focused);
     let cancel = Button::new("Cancel").focused(app.confirm_cancel_focused);
     let ok_w = ok.width();
