@@ -101,6 +101,14 @@ pub fn handle(event: &Event, app: &mut App) -> Result<Control<AppEvent>> {
         app.menu = Some(mode);
         return Ok(Control::Changed);
     }
+    // F4 opens the settings UI (`vibe prefs ui`, PROP-041) as a subprocess.
+    // The tree TUI suspends its terminal (leaves the alt-screen + raw mode) so
+    // the prefs TUI owns a clean one, runs it, then resumes and reloads the
+    // `vibe.tree.*` prefs — palette/tier may have changed while the user was in
+    // settings, so the theme + view are re-read from disk before the repaint.
+    if is_press_fkey(event, 4) {
+        return Ok(open_prefs(app));
+    }
     // Shift+F6 opens the copy-settings modal (PROP-037 §10.2 `#copy-flow`).
     // Checked before F6 so the Shift modifier is not swallowed by the plain-F6
     // copy path (`is_press_fkey` does not gate on modifiers).
@@ -442,4 +450,31 @@ fn open_modal(app: &mut App) {
     if has_detail {
         app.modal_open = true;
     }
+}
+
+/// F4 — open the settings UI (`vibe prefs ui`, PROP-041) as a subprocess. The
+/// tree TUI suspends its terminal — leaves the alternate screen + disables raw
+/// mode — so the prefs TUI owns a clean terminal; on its exit the tree TUI
+/// resumes its terminal and reloads the `vibe.tree.*` prefs (palette/tier may
+/// have changed while the user was in settings, so the theme + view are re-read
+/// from disk before the repaint). The subprocess inherits stdio so the prefs
+/// TUI is fully interactive.
+fn open_prefs(app: &mut App) -> Control<AppEvent> {
+    use ratatui_crossterm::crossterm::{
+        execute,
+        terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
+    };
+    let stdout = std::io::stdout();
+    // Drop out of the tree TUI's terminal state for a clean hand-off.
+    let _ = disable_raw_mode();
+    let _ = execute!(&stdout, LeaveAlternateScreen);
+    // Run the same binary as `vibe prefs ui`. `current_exe` resolves the
+    // dev-binary or the installed instance alike; fall back to a PATH lookup.
+    let exe = std::env::current_exe().unwrap_or_else(|_| std::path::PathBuf::from("vibe"));
+    let _ = std::process::Command::new(&exe).args(["prefs", "ui"]).status();
+    // Restore the tree TUI's terminal + reload any changed prefs.
+    let _ = execute!(&stdout, EnterAlternateScreen);
+    let _ = enable_raw_mode();
+    app.apply_prefs(super::settings::TreeSettings::new());
+    Control::Changed
 }

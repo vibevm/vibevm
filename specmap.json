@@ -16093,7 +16093,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:a2ba3eeeed377dad77adcef5e02c42feec5da8d3cb24f69afa61557aa5636fae",
+      "content_hash": "sha256:5395021b4d558188ca4fd74c3b9ef44937b5340f015de25ff9de525508866afd",
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "PROP-037: `vibe tree` — the interactive TUI application",
@@ -16381,7 +16381,7 @@
     },
     {
       "anchor": "keymap",
-      "content_hash": "sha256:6be4c0bc9286a143c2a7d0d08468ed8a7b39a184e68eda3bfef651cedcf09ae3",
+      "content_hash": "sha256:01d6a22d70774217d25a2ec2c308c282aa73a97bbbef2aaa0a9807a2a744ecd8",
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "5. The keymap",
@@ -16399,7 +16399,7 @@
     },
     {
       "anchor": "keys",
-      "content_hash": "sha256:c0cf452c5b393d78429b572dc713777b30d698c130f186729e4b40540ef678d1",
+      "content_hash": "sha256:782b7c74826fffc324360b40f45eb21577cbb6a9d29c438653e3a471a84aa27d",
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "5.2 The F-key scheme + footer",
@@ -16412,7 +16412,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "5.3 Tree interaction keys",
-      "line": 341,
+      "line": 342,
       "uri": "spec://vibevm/modules/vibe-cli/PROP-037#tree-keys"
     },
     {
@@ -16421,7 +16421,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "6. The modal stack",
-      "line": 351,
+      "line": 352,
       "uri": "spec://vibevm/modules/vibe-cli/PROP-037#modal-stack"
     },
     {
@@ -16430,7 +16430,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "7. Menus & dialogs",
-      "line": 362,
+      "line": 363,
       "uri": "spec://vibevm/modules/vibe-cli/PROP-037#dialogs"
     },
     {
@@ -16439,7 +16439,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "7.1 F3 — the mode menu",
-      "line": 364,
+      "line": 365,
       "uri": "spec://vibevm/modules/vibe-cli/PROP-037#f3-mode-menu"
     },
     {
@@ -16448,7 +16448,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "7.2 F2 — the sort menu",
-      "line": 368,
+      "line": 369,
       "uri": "spec://vibevm/modules/vibe-cli/PROP-037#f2-sort-menu"
     },
     {
@@ -16457,7 +16457,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "7.3 F1 — Search Everywhere",
-      "line": 378,
+      "line": 379,
       "uri": "spec://vibevm/modules/vibe-cli/PROP-037#f1-search"
     },
     {
@@ -16466,7 +16466,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "7.4 Escape — quit with confirmation",
-      "line": 400,
+      "line": 401,
       "uri": "spec://vibevm/modules/vibe-cli/PROP-037#quit-confirm"
     },
     {
@@ -16475,7 +16475,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "8. The detail card",
-      "line": 408,
+      "line": 409,
       "uri": "spec://vibevm/modules/vibe-cli/PROP-037#detail-card"
     },
     {
@@ -16484,7 +16484,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "9. Settings persistence",
-      "line": 426,
+      "line": 427,
       "uri": "spec://vibevm/modules/vibe-cli/PROP-037#settings"
     },
     {
@@ -16493,7 +16493,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "10. The copy system",
-      "line": 437,
+      "line": 438,
       "uri": "spec://vibevm/modules/vibe-cli/PROP-037#copy"
     },
     {
@@ -16502,7 +16502,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "10.1 Per-screen copy providers",
-      "line": 439,
+      "line": 440,
       "uri": "spec://vibevm/modules/vibe-cli/PROP-037#copy-providers"
     },
     {
@@ -16511,7 +16511,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "10.2 F6 copy / Shift+F6 copy-settings",
-      "line": 446,
+      "line": 447,
       "uri": "spec://vibevm/modules/vibe-cli/PROP-037#copy-flow"
     },
     {
@@ -16520,7 +16520,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "10.3 Markdown export",
-      "line": 453,
+      "line": 454,
       "uri": "spec://vibevm/modules/vibe-cli/PROP-037#copy-markdown"
     },
     {
@@ -16529,7 +16529,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "10.4 PNG export",
-      "line": 458,
+      "line": 459,
       "uri": "spec://vibevm/modules/vibe-cli/PROP-037#copy-png"
     },
     {
@@ -16538,7 +16538,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "10.5 Destination — clipboard vs file",
-      "line": 463,
+      "line": 464,
       "uri": "spec://vibevm/modules/vibe-cli/PROP-037#copy-dest"
     },
     {
@@ -16547,7 +16547,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "11. AI-Native Rust discipline",
-      "line": 471,
+      "line": 472,
       "uri": "spec://vibevm/modules/vibe-cli/PROP-037#discipline"
     },
     {
@@ -16556,7 +16556,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "12. Non-goals",
-      "line": 485,
+      "line": 486,
       "uri": "spec://vibevm/modules/vibe-cli/PROP-037#non-goals"
     },
     {
@@ -16565,7 +16565,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "13. Built on the action system (`vibe-actions`, PROP-039)",
-      "line": 503,
+      "line": 504,
       "uri": "spec://vibevm/modules/vibe-cli/PROP-037#action-system"
     },
     {
@@ -16574,7 +16574,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "13.1 The TUI is a Surface; the Model is the serialisable view",
-      "line": 509,
+      "line": 510,
       "uri": "spec://vibevm/modules/vibe-cli/PROP-037#as-surface"
     },
     {
@@ -16583,7 +16583,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "13.2 Commands are addressed actions",
-      "line": 518,
+      "line": 519,
       "uri": "spec://vibevm/modules/vibe-cli/PROP-037#as-actions"
     },
     {
@@ -16592,7 +16592,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "13.3 The keymap binds keys to addresses",
-      "line": 527,
+      "line": 528,
       "uri": "spec://vibevm/modules/vibe-cli/PROP-037#as-keymap"
     },
     {
@@ -16601,7 +16601,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "13.4 i18n is real",
-      "line": 534,
+      "line": 535,
       "uri": "spec://vibevm/modules/vibe-cli/PROP-037#as-i18n"
     },
     {
@@ -16610,7 +16610,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "13.5 The action catalogue",
-      "line": 542,
+      "line": 543,
       "uri": "spec://vibevm/modules/vibe-cli/PROP-037#action-catalogue"
     },
     {
@@ -16619,7 +16619,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "13.6 What this leaves to PROP-039",
-      "line": 563,
+      "line": 564,
       "uri": "spec://vibevm/modules/vibe-cli/PROP-037#as-boundary"
     },
     {

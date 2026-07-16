@@ -127,6 +127,7 @@ fn render_footer(area: Rect, buf: &mut Buffer, app: &App) {
         ("F1", " search  "),
         ("F2", " sort  "),
         ("F3", " mode  "),
+        ("F4", " settings  "),
         ("F6", " copy  "),
         ("\u{2191}\u{2193}", " move  "),
         ("\u{2190}\u{2192}", " pan  "),

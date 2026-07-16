@@ -334,9 +334,10 @@ registry; no context re-implements dispatch.
 ### 5.2 The F-key scheme + footer {#keys}
 
 REQ. Primary actions are on function keys: `F1` Search Everywhere (§7.3), `F2`
-sort menu (§7.2), `F3` mode menu (§7.1), `F6` copy / `Shift+F6` copy-settings
-(§10.2). The footer lists the active keys with short labels; **`Shift` is written
-as `↑`** (e.g. `Shift+F6` → `↑F6`) to keep hints short.
+sort menu (§7.2), `F3` mode menu (§7.1), `F4` settings (opens the `vibe prefs`
+settings UI — PROP-041), `F6` copy / `Shift+F6` copy-settings (§10.2). The footer
+lists the active keys with short labels; **`Shift` is written as `↑`** (e.g.
+`Shift+F6` → `↑F6`) to keep hints short.
 
 ### 5.3 Tree interaction keys {#tree-keys}
 
