@@ -9,15 +9,12 @@
 specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-037#f3-mode-menu");
 
 use ratatui_core::buffer::Buffer;
-use ratatui_core::layout::{Constraint, Flex, Layout, Rect};
+use ratatui_core::layout::Rect;
 use ratatui_core::text::Line;
-use ratatui_core::widgets::Widget;
-use ratatui_widgets::block::Block;
-use ratatui_widgets::borders::BorderType;
-use ratatui_widgets::clear::Clear;
 
 use super::state::{App, DisplayMode, Ordering};
 use super::theme;
+use super::ui::Window;
 
 /// What selecting a menu option does to the model.
 #[derive(Clone, Copy)]
@@ -128,21 +125,15 @@ pub fn draw(area: Rect, buf: &mut Buffer, menu: &MenuState) {
     // border(2) + a blank top row + the options + the hint row.
     let h = (menu.options.len() as u16 + 4).clamp(5, area.height.saturating_sub(2));
 
-    let [mid] = Layout::vertical([Constraint::Length(h)])
-        .flex(Flex::Center)
-        .areas(area);
-    let [popup] = Layout::horizontal([Constraint::Length(w)])
-        .flex(Flex::Center)
-        .areas(mid);
-
-    Widget::render(Clear, popup, buf);
-    let block = Block::bordered()
-        .border_type(BorderType::Rounded)
-        .border_style(theme::border())
-        .title(Line::styled(format!(" {} ", menu.title), theme::title()))
-        .style(theme::panel());
-    let inner = block.inner(popup);
-    Widget::render(block, popup, buf);
+    // The centered titled frame is the shared `Window` (PROP-037 §2.3); the
+    // option list + hint fill the returned inner rect.
+    let inner = Window::centered(
+        area,
+        buf,
+        Line::styled(format!(" {} ", menu.title), theme::title()),
+        w,
+        h,
+    );
 
     let list_top = inner.y + 1; // a blank row under the title
     let hint_row = inner.y + inner.height.saturating_sub(1); // reserved for the hint

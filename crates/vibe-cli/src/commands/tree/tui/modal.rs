@@ -5,18 +5,16 @@
 specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-036#tui");
 
 use ratatui_core::buffer::Buffer;
-use ratatui_core::layout::{Constraint, Flex, Layout, Rect};
+use ratatui_core::layout::Rect;
 use ratatui_core::text::{Line, Span};
 use ratatui_core::widgets::Widget;
-use ratatui_widgets::block::Block;
-use ratatui_widgets::borders::BorderType;
-use ratatui_widgets::clear::Clear;
 
 use super::super::model::{
     Condition, ConditionKind, DeclaredLink, LoadOrigin, LoadType, Package, Source, SourceKind,
 };
 use super::state::{App, RowNode};
 use super::theme;
+use super::ui::Window;
 
 /// Draw the detail modal centered over `area`.
 pub fn draw(area: Rect, buf: &mut Buffer, app: &App) {
@@ -33,22 +31,9 @@ pub fn draw(area: Rect, buf: &mut Buffer, app: &App) {
     let h = want_h.clamp(3, area.height);
     let w = 74u16.min(area.width.saturating_sub(2)).max(24);
 
-    let [mid] = Layout::vertical([Constraint::Length(h)])
-        .flex(Flex::Center)
-        .areas(area);
-    let [popup] = Layout::horizontal([Constraint::Length(w)])
-        .flex(Flex::Center)
-        .areas(mid);
-
-    // Wipe the area under the popup, then frame it, then fill the detail.
-    Widget::render(Clear, popup, buf);
-    let block = Block::bordered()
-        .border_type(BorderType::Rounded)
-        .border_style(theme::border())
-        .title(Line::styled(" package ", theme::title()))
-        .style(theme::panel());
-    let inner = block.inner(popup);
-    Widget::render(block, popup, buf);
+    // The centered titled frame is the shared `Window` (PROP-037 §2.3); the
+    // detail fills the returned inner rect one line per row.
+    let inner = Window::centered(area, buf, Line::styled(" package ", theme::title()), w, h);
 
     for (i, line) in lines.into_iter().enumerate() {
         let y = i as u16;

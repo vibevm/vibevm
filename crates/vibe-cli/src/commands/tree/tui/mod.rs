@@ -21,8 +21,10 @@ mod modal;
 mod modes;
 mod render;
 mod search;
+mod shape;
 mod state;
 mod theme;
+mod ui;
 
 use anyhow::Result;
 use rat_salsa::poll::PollCrossterm;

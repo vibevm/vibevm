@@ -7,17 +7,15 @@
 specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-037#f1-search");
 
 use ratatui_core::buffer::Buffer;
-use ratatui_core::layout::{Constraint, Flex, Layout, Rect};
+use ratatui_core::layout::{Constraint, Layout, Rect};
 use ratatui_core::style::{Color, Modifier, Style};
 use ratatui_core::text::{Line, Span};
 use ratatui_core::widgets::Widget;
-use ratatui_widgets::block::Block;
-use ratatui_widgets::borders::BorderType;
-use ratatui_widgets::clear::Clear;
 
 use vibe_actions::search::SearchRow;
 
 use super::super::theme;
+use super::super::ui::Window;
 use super::SearchState;
 
 /// Draw the window centered over `area`.
@@ -27,21 +25,16 @@ pub fn draw(area: Rect, buf: &mut Buffer, state: &SearchState) {
     }
     let w = (area.width * 7 / 10).clamp(40, area.width.saturating_sub(4));
     let h = (area.height * 7 / 10).clamp(10, area.height.saturating_sub(2));
-    let [mid] = Layout::vertical([Constraint::Length(h)])
-        .flex(Flex::Center)
-        .areas(area);
-    let [popup] = Layout::horizontal([Constraint::Length(w)])
-        .flex(Flex::Center)
-        .areas(mid);
 
-    Widget::render(Clear, popup, buf);
-    let block = Block::bordered()
-        .border_type(BorderType::Rounded)
-        .border_style(theme::border())
-        .title(Line::styled(" Search Everywhere ", theme::title()))
-        .style(theme::panel());
-    let inner = block.inner(popup);
-    Widget::render(block, popup, buf);
+    // The centered titled frame is the shared `Window` (PROP-037 §2.3); the
+    // query/tabs/results/footer fill the returned inner rect.
+    let inner = Window::centered(
+        area,
+        buf,
+        Line::styled(" Search Everywhere ", theme::title()),
+        w,
+        h,
+    );
 
     // One column of horizontal padding inside the border.
     let pad = Rect::new(

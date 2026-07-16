@@ -228,7 +228,21 @@ impl App {
     /// between renders (PROP-036 §2.11–§2.12).
     pub fn rebuild(&mut self) {
         self.rows = match self.display_mode {
-            DisplayMode::All => super::flatten::flatten(&self.tree, &self.folded, self.ordering),
+            // Tree mode = the default shape (a) over the declared-root filter,
+            // which reproduces the pre-shape walk byte-for-byte (the member set
+            // equals the declared roots, so (a)'s root set + declared-root
+            // orphan pass is exactly the PROP-036 §2.12 flatten). Phase 5+ will
+            // swap this filter for the search/selection set.
+            DisplayMode::All => {
+                let filter: BTreeSet<String> = self.tree.roots.iter().cloned().collect();
+                super::flatten::flatten(
+                    &self.tree,
+                    &self.folded,
+                    self.ordering,
+                    super::flatten::TreeShape::MembersAsRoots,
+                    &filter,
+                )
+            }
             DisplayMode::SubTables => {
                 modes::subtables_rows(&self.tree, self.ordering, self.static_first)
             }
