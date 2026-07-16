@@ -254,6 +254,13 @@
     },
     {
       "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/cli/aiui.rs",
+      "item_kind": "mod",
+      "line": 5,
+      "symbol": "vibe_cli::cli::aiui"
+    },
+    {
+      "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli/inspect.rs",
       "item_kind": "mod",
       "line": 7,
@@ -328,6 +335,20 @@
       "item_kind": "mod",
       "line": 14,
       "symbol": "vibe_cli::commands::agentic"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/aiui.rs",
+      "item_kind": "mod",
+      "line": 6,
+      "symbol": "vibe_cli::commands::aiui"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/aiui.rs",
+      "item_kind": "fn",
+      "line": 21,
+      "symbol": "vibe_cli::commands::aiui::render"
     },
     {
       "crate_name": "vibe-cli",
@@ -996,6 +1017,20 @@
     },
     {
       "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/tree/tui/keyscript.rs",
+      "item_kind": "mod",
+      "line": 6,
+      "symbol": "vibe_cli::commands::tree::tui::keyscript"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/tree/tui/keyscript.rs",
+      "item_kind": "fn",
+      "line": 12,
+      "symbol": "vibe_cli::commands::tree::tui::keyscript::parse"
+    },
+    {
+      "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/tree/tui/menu/mod.rs",
       "item_kind": "mod",
       "line": 37,
@@ -1147,6 +1182,34 @@
       "item_kind": "impl",
       "line": 45,
       "symbol": "vibe_cli::commands::tree::tui::shape::<impl TreeShape>"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/tree/tui/snapshot.rs",
+      "item_kind": "mod",
+      "line": 6,
+      "symbol": "vibe_cli::commands::tree::tui::snapshot"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/tree/tui/snapshot.rs",
+      "item_kind": "fn",
+      "line": 41,
+      "symbol": "vibe_cli::commands::tree::tui::snapshot::to_cells"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/tree/tui/snapshot.rs",
+      "item_kind": "fn",
+      "line": 14,
+      "symbol": "vibe_cli::commands::tree::tui::snapshot::to_text"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/tree/tui/mod.rs",
+      "item_kind": "fn",
+      "line": 102,
+      "symbol": "vibe_cli::commands::tree::tui::snapshot_headless"
     },
     {
       "crate_name": "vibe-cli",
@@ -1894,7 +1957,7 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/main.rs",
       "item_kind": "fn",
-      "line": 220,
+      "line": 221,
       "symbol": "vibe_cli::promote_user_config_env"
     },
     {
@@ -5752,6 +5815,14 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-cli/src/cli/aiui.rs",
+      "from_symbol": "vibe_cli::cli::aiui",
+      "line": 5,
+      "provenance": "authored",
+      "uri": "spec://vibevm/VIBEVM-SPEC#command-summary",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-cli/src/cli/inspect.rs",
       "from_symbol": "vibe_cli::cli::inspect",
       "line": 7,
@@ -5837,6 +5908,22 @@
       "line": 14,
       "provenance": "authored",
       "uri": "spec://vibevm/common/PROP-018#relay",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/aiui.rs",
+      "from_symbol": "vibe_cli::commands::aiui",
+      "line": 6,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-cli/PROP-042#aiui-cli",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/aiui.rs",
+      "from_symbol": "vibe_cli::commands::aiui::render",
+      "line": 23,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-cli/PROP-042#aiui-cli",
       "verb": "implements"
     },
     {
@@ -6600,6 +6687,22 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-cli/src/commands/tree/tui/keyscript.rs",
+      "from_symbol": "vibe_cli::commands::tree::tui::keyscript",
+      "line": 6,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-cli/PROP-042#key-script",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/tree/tui/keyscript.rs",
+      "from_symbol": "vibe_cli::commands::tree::tui::keyscript::parse",
+      "line": 14,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-cli/PROP-042#key-script",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-cli/src/commands/tree/tui/menu/mod.rs",
       "from_symbol": "vibe_cli::commands::tree::tui::menu",
       "line": 37,
@@ -6774,6 +6877,38 @@
       "line": 45,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-cli/PROP-037#tree-shapes",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/tree/tui/snapshot.rs",
+      "from_symbol": "vibe_cli::commands::tree::tui::snapshot",
+      "line": 6,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-cli/PROP-042#snapshot-contract",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/tree/tui/snapshot.rs",
+      "from_symbol": "vibe_cli::commands::tree::tui::snapshot::to_cells",
+      "line": 43,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-cli/PROP-042#snapshot-contract",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/tree/tui/snapshot.rs",
+      "from_symbol": "vibe_cli::commands::tree::tui::snapshot::to_text",
+      "line": 17,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-cli/PROP-042#snapshot-contract",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/tree/tui/mod.rs",
+      "from_symbol": "vibe_cli::commands::tree::tui::snapshot_headless",
+      "line": 108,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-cli/PROP-042#render-plane",
       "verb": "implements"
     },
     {
@@ -7657,7 +7792,7 @@
     {
       "file": "crates/vibe-cli/src/main.rs",
       "from_symbol": "vibe_cli::promote_user_config_env",
-      "line": 239,
+      "line": 240,
       "provenance": "authored",
       "uri": "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
       "verb": "deviates",
@@ -16708,6 +16843,51 @@
       "heading": "13.6 What this leaves to PROP-039",
       "line": 613,
       "uri": "spec://vibevm/modules/vibe-cli/PROP-037#as-boundary"
+    },
+    {
+      "anchor": "render-plane",
+      "content_hash": "sha256:91a6bc43f5011dfb7e2dc309cd5acd1e6b0f83d347df73ffdf60b79c196035a9",
+      "doc_path": "modules/vibe-cli/PROP-042",
+      "file": "spec/modules/vibe-cli/PROP-042-aiui-observation.md",
+      "heading": "1. The render plane",
+      "line": 16,
+      "uri": "spec://vibevm/modules/vibe-cli/PROP-042#render-plane"
+    },
+    {
+      "anchor": "snapshot-contract",
+      "content_hash": "sha256:d21a8d463ba3f3d3e28ca0d027fbf56cef1d6e69c4a66f083158a19a7314b330",
+      "doc_path": "modules/vibe-cli/PROP-042",
+      "file": "spec/modules/vibe-cli/PROP-042-aiui-observation.md",
+      "heading": "2. The snapshot contract",
+      "line": 35,
+      "uri": "spec://vibevm/modules/vibe-cli/PROP-042#snapshot-contract"
+    },
+    {
+      "anchor": "key-script",
+      "content_hash": "sha256:813d65a514cda62add29f599cd037ac0c192cfdef1e1ab0d212b48f250f4db38",
+      "doc_path": "modules/vibe-cli/PROP-042",
+      "file": "spec/modules/vibe-cli/PROP-042-aiui-observation.md",
+      "heading": "3. The key script",
+      "line": 54,
+      "uri": "spec://vibevm/modules/vibe-cli/PROP-042#key-script"
+    },
+    {
+      "anchor": "aiui-cli",
+      "content_hash": "sha256:1c6bedda25da38d30f16c50bc56901fb0dc6011f8f105e36fba631397dc5c152",
+      "doc_path": "modules/vibe-cli/PROP-042",
+      "file": "spec/modules/vibe-cli/PROP-042-aiui-observation.md",
+      "heading": "4. The `vibe aiui` surface",
+      "line": 64,
+      "uri": "spec://vibevm/modules/vibe-cli/PROP-042#aiui-cli"
+    },
+    {
+      "anchor": "never",
+      "content_hash": "sha256:cfb6e2837e0c6c22baba4e8d478b034fbcbf62a360f2beab2a1ba9596c3fe98e",
+      "doc_path": "modules/vibe-cli/PROP-042",
+      "file": "spec/modules/vibe-cli/PROP-042-aiui-observation.md",
+      "heading": "5. Never",
+      "line": 80,
+      "uri": "spec://vibevm/modules/vibe-cli/PROP-042#never"
     },
     {
       "anchor": "root",
