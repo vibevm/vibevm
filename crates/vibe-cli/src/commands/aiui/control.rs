@@ -74,9 +74,24 @@ pub(super) fn send(a: AiuiSendArgs) -> Result<()> {
     Ok(())
 }
 
-/// `vibe aiui snapshot`: print the running terminal's symbolic text grid.
+/// `vibe aiui snapshot`: print the running terminal's symbolic text grid, or —
+/// with `--png <path>` — write a PNG screenshot of the live window (the visual
+/// ground truth) to that path and print it.
 pub(super) fn snapshot(a: AiuiSnapshotArgs) -> Result<()> {
     let disc = read_discovery(a.session)?;
+    if let Some(mut path) = a.png {
+        // The server writes the PNG to `path`; resolve it absolute first so it
+        // lands where the caller expects regardless of vibeterm's own cwd.
+        if !path.is_absolute() {
+            path = std::env::current_dir()?.join(&path);
+        }
+        let body = post(&disc, "/capture", json!({ "path": path.to_string_lossy() }))?;
+        println!(
+            "{}",
+            body["path"].as_str().unwrap_or(&path.to_string_lossy())
+        );
+        return Ok(());
+    }
     let body = get(&disc, "/snapshot?format=text")?;
     print!("{}", body["text"].as_str().unwrap_or(""));
     Ok(())

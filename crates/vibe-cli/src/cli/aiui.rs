@@ -99,6 +99,12 @@ pub struct AiuiSendArgs {
 
 #[derive(Debug, Args)]
 pub struct AiuiSnapshotArgs {
+    /// Write a PNG screenshot of the live window to this path (the visual ground
+    /// truth — read it to *see* colour/glyph/aesthetics). Omit to print the
+    /// symbolic text grid instead.
+    #[arg(long)]
+    pub png: Option<PathBuf>,
+
     /// The session id (vibeterm pid); defaults to the most recent session.
     #[arg(long)]
     pub session: Option<u32>,
