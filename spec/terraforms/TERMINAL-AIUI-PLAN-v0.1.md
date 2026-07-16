@@ -486,6 +486,23 @@ fails in self-check with no terminal. Proven live:
 Commit-map: `a3d1341` docs(spec) PROP-042 · `a5e3068` feat(vibe-cli) render
 plane · `8cb3bcc` chore(specmap).
 
+### Phase 2 — vibeterm MVP + `vibe term` (LANDED 2026-07-16, self-check green)
+
+vibeterm ships (`research/vibeterm/`): an Electron terminal — node-pty in the
+main process, xterm.js renderer over IPC, a **ready-handshake** that spawns the
+PTY at the renderer's FitAddon-fitted grid size (aligned, no resize race),
+graceful teardown (guarded sends, dispose-before-kill). `--exec` hosts any
+command (default: a platform shell); the pure arg/shell logic is `node --test`'d
+(17 cases) and gated by a new self-check step. **`vibe term`** (Rust) detects the
+shell (pwsh 7+ preferred on Windows, present 7.6.3), locates vibeterm without a
+PATH search, resolves its Electron binary via the app's own `path.txt`, and
+launches it detached. **Proven live:** vibeterm rendered the real `vibe tree` TUI
+perfectly aligned (handshake reported 131×35), the agent `Read` the PNG.
+`term.rs` joined conform's `env_roots` (a launcher reading env for the spawn).
+
+Commit-map: `9e94394` docs(spec) §5 · `94f24b4` feat(vibeterm) MVP · `bee50cf`
+feat(vibe-cli) vibe term · `676ab53` chore(specmap).
+
 ### Decisions status
 D1 (sequencing) — render-plane-first **executed** (Phase 1 landed) ahead of the
 terminal (Phase 2 next), per the recommendation; owner ratified "whole plan".
