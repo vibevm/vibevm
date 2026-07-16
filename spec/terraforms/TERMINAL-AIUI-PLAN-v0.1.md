@@ -386,6 +386,18 @@ Phase 1.**
   proving the "agent produces + reads a screenshot" loop headlessly.
 - **(f) Control transport — PASS.** Loopback HTTP+JSON round-trip on
   `127.0.0.1:<ephemeral>` echoed `{keys:[…]}`; the §4 protocol shape holds.
+- **(g) Full vertical (owner-requested) — PASS.** The real `vibe tree` PTY output
+  rendered through **xterm.js in an Electron renderer** to a **deterministic
+  178 KB PNG** (three identical captures) — the actual tree (`├─│└─▾`, `●/○`, the
+  tabs chrome, the selected row, the two-row footer), which the agent `Read`.
+  **Architecture correction:** node-pty MUST run in the Electron **main** process
+  — the renderer has no `worker_threads` ("Failed to construct 'Worker'"); the
+  renderer is xterm.js only, fed PTY bytes over IPC (§4 gains a main↔renderer
+  hop). **Clean teardown:** guard `webContents.send` with `!win.isDestroyed()`
+  **and graceful-quit** (write `Esc`+`Enter` so `vibe` exits itself; never
+  `p.kill()` — which throws the ConPTY `AttachConsole failed` in a non-console
+  context and pops an Electron error dialog). Both errors eliminated once these
+  two rules were applied.
 - **(C) Model plane — not spiked** (existing `vibe-actions::aiui` seams confirmed
   by recon; Phase 5).
 - **(e) strict render↔terminal parity — deferred to Phase 1** (needs a shared
