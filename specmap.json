@@ -443,6 +443,76 @@
     },
     {
       "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/prefs/tui/mod.rs",
+      "item_kind": "mod",
+      "line": 26,
+      "symbol": "vibe_cli::commands::prefs::tui"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/prefs/tui/input.rs",
+      "item_kind": "mod",
+      "line": 13,
+      "symbol": "vibe_cli::commands::prefs::tui::input"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/prefs/tui/page_tree.rs",
+      "item_kind": "mod",
+      "line": 19,
+      "symbol": "vibe_cli::commands::prefs::tui::page_tree"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/prefs/tui/page_tree.rs",
+      "item_kind": "fn",
+      "line": 54,
+      "symbol": "vibe_cli::commands::prefs::tui::page_tree::flatten"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/prefs/tui/registry.rs",
+      "item_kind": "mod",
+      "line": 19,
+      "symbol": "vibe_cli::commands::prefs::tui::registry"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/prefs/tui/registry.rs",
+      "item_kind": "fn",
+      "line": 216,
+      "symbol": "vibe_cli::commands::prefs::tui::registry::PageRegistry::tree"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/prefs/tui/render.rs",
+      "item_kind": "mod",
+      "line": 8,
+      "symbol": "vibe_cli::commands::prefs::tui::render"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/prefs/tui/settings.rs",
+      "item_kind": "mod",
+      "line": 16,
+      "symbol": "vibe_cli::commands::prefs::tui::settings"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/prefs/tui/state.rs",
+      "item_kind": "mod",
+      "line": 11,
+      "symbol": "vibe_cli::commands::prefs::tui::state"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/prefs/ui.rs",
+      "item_kind": "mod",
+      "line": 12,
+      "symbol": "vibe_cli::commands::prefs::ui"
+    },
+    {
+      "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/registry/mod.rs",
       "item_kind": "mod",
       "line": 15,
@@ -5734,6 +5804,86 @@
       "line": 3,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-settings/PROP-040#prefs-command",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/prefs/tui/mod.rs",
+      "from_symbol": "vibe_cli::commands::prefs::tui",
+      "line": 26,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-settings/PROP-041#overview",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/prefs/tui/input.rs",
+      "from_symbol": "vibe_cli::commands::prefs::tui::input",
+      "line": 13,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-settings/PROP-041#tree-widget",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/prefs/tui/page_tree.rs",
+      "from_symbol": "vibe_cli::commands::prefs::tui::page_tree",
+      "line": 19,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-settings/PROP-041#tree-widget",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/prefs/tui/page_tree.rs",
+      "from_symbol": "vibe_cli::commands::prefs::tui::page_tree::flatten",
+      "line": 62,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-settings/PROP-041#tree-widget",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/prefs/tui/registry.rs",
+      "from_symbol": "vibe_cli::commands::prefs::tui::registry",
+      "line": 19,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-settings/PROP-041#registry",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/prefs/tui/registry.rs",
+      "from_symbol": "vibe_cli::commands::prefs::tui::registry::PageRegistry::tree",
+      "line": 224,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-settings/PROP-041#declarative-pages",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/prefs/tui/render.rs",
+      "from_symbol": "vibe_cli::commands::prefs::tui::render",
+      "line": 8,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-settings/PROP-041#tree-widget",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/prefs/tui/settings.rs",
+      "from_symbol": "vibe_cli::commands::prefs::tui::settings",
+      "line": 16,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-settings/PROP-041#registry",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/prefs/tui/state.rs",
+      "from_symbol": "vibe_cli::commands::prefs::tui::state",
+      "line": 11,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-settings/PROP-041#tree-widget",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/prefs/ui.rs",
+      "from_symbol": "vibe_cli::commands::prefs::ui",
+      "line": 12,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-settings/PROP-041#overview",
       "verb": "implements"
     },
     {
@@ -21382,6 +21532,12 @@
       "file": "crates/vibe-cli/src/commands/prefs/set.rs",
       "line": 3,
       "message": "edge `vibe_cli::commands::prefs::set` --implements--> `spec://vibevm/modules/vibe-settings/PROP-040#prefs-command`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "crates/vibe-cli/src/commands/prefs/tui/registry.rs",
+      "line": 224,
+      "message": "edge `vibe_cli::commands::prefs::tui::registry::PageRegistry::tree` --implements--> `spec://vibevm/modules/vibe-settings/PROP-041#declarative-pages`: no spec unit carries this anchor"
     },
     {
       "code": "dangling-edge",
