@@ -688,10 +688,73 @@
     },
     {
       "crate_name": "vibe-cli",
-      "file": "crates/vibe-cli/src/commands/tree/tui/copy.rs",
+      "file": "crates/vibe-cli/src/commands/tree/tui/copy/mod.rs",
       "item_kind": "mod",
-      "line": 7,
+      "line": 23,
       "symbol": "vibe_cli::commands::tree::tui::copy"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/tree/tui/copy/mod.rs",
+      "item_kind": "fn",
+      "line": 82,
+      "symbol": "vibe_cli::commands::tree::tui::copy::card_markdown"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/tree/tui/copy/mod.rs",
+      "item_kind": "fn",
+      "line": 178,
+      "symbol": "vibe_cli::commands::tree::tui::copy::confirm_file_dest_save"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/tree/tui/copy/mod.rs",
+      "item_kind": "fn",
+      "line": 147,
+      "symbol": "vibe_cli::commands::tree::tui::copy::confirm_settings"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/tree/tui/copy/mod.rs",
+      "item_kind": "fn",
+      "line": 114,
+      "symbol": "vibe_cli::commands::tree::tui::copy::copy"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/tree/tui/copy/file_dest.rs",
+      "item_kind": "mod",
+      "line": 12,
+      "symbol": "vibe_cli::commands::tree::tui::copy::file_dest"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/tree/tui/copy/file_dest.rs",
+      "item_kind": "fn",
+      "line": 103,
+      "symbol": "vibe_cli::commands::tree::tui::copy::file_dest::FileDest::render"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/tree/tui/copy/settings.rs",
+      "item_kind": "mod",
+      "line": 12,
+      "symbol": "vibe_cli::commands::tree::tui::copy::settings"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/tree/tui/copy/settings.rs",
+      "item_kind": "fn",
+      "line": 118,
+      "symbol": "vibe_cli::commands::tree::tui::copy::settings::CopySettings::render"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/tree/tui/copy/mod.rs",
+      "item_kind": "fn",
+      "line": 40,
+      "symbol": "vibe_cli::commands::tree::tui::copy::tree_markdown"
     },
     {
       "crate_name": "vibe-cli",
@@ -1005,7 +1068,7 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/tree/tui/ui/card.rs",
       "item_kind": "fn",
-      "line": 86,
+      "line": 101,
       "symbol": "vibe_cli::commands::tree::tui::ui::card::Card::render"
     },
     {
@@ -1075,7 +1138,7 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/tree/tui/ui/text_field.rs",
       "item_kind": "fn",
-      "line": 90,
+      "line": 99,
       "symbol": "vibe_cli::commands::tree::tui::ui::text_field::TextField::render"
     },
     {
@@ -5954,11 +6017,83 @@
       "verb": "implements"
     },
     {
-      "file": "crates/vibe-cli/src/commands/tree/tui/copy.rs",
+      "file": "crates/vibe-cli/src/commands/tree/tui/copy/mod.rs",
       "from_symbol": "vibe_cli::commands::tree::tui::copy",
-      "line": 7,
+      "line": 23,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-cli/PROP-037#copy",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/tree/tui/copy/mod.rs",
+      "from_symbol": "vibe_cli::commands::tree::tui::copy::card_markdown",
+      "line": 88,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-cli/PROP-037#copy-providers",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/tree/tui/copy/mod.rs",
+      "from_symbol": "vibe_cli::commands::tree::tui::copy::confirm_file_dest_save",
+      "line": 182,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-cli/PROP-037#copy-dest",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/tree/tui/copy/mod.rs",
+      "from_symbol": "vibe_cli::commands::tree::tui::copy::confirm_settings",
+      "line": 152,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-cli/PROP-037#copy-flow",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/tree/tui/copy/mod.rs",
+      "from_symbol": "vibe_cli::commands::tree::tui::copy::copy",
+      "line": 118,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-cli/PROP-037#copy-flow",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/tree/tui/copy/file_dest.rs",
+      "from_symbol": "vibe_cli::commands::tree::tui::copy::file_dest",
+      "line": 12,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-cli/PROP-037#copy-dest",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/tree/tui/copy/file_dest.rs",
+      "from_symbol": "vibe_cli::commands::tree::tui::copy::file_dest::FileDest::render",
+      "line": 108,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-cli/PROP-037#copy-dest",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/tree/tui/copy/settings.rs",
+      "from_symbol": "vibe_cli::commands::tree::tui::copy::settings",
+      "line": 12,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-cli/PROP-037#copy-flow",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/tree/tui/copy/settings.rs",
+      "from_symbol": "vibe_cli::commands::tree::tui::copy::settings::CopySettings::render",
+      "line": 121,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-cli/PROP-037#copy-flow",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/tree/tui/copy/mod.rs",
+      "from_symbol": "vibe_cli::commands::tree::tui::copy::tree_markdown",
+      "line": 46,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-cli/PROP-037#copy-markdown",
       "verb": "implements"
     },
     {
@@ -6317,7 +6452,7 @@
     {
       "file": "crates/vibe-cli/src/commands/tree/tui/ui/card.rs",
       "from_symbol": "vibe_cli::commands::tree::tui::ui::card::Card::render",
-      "line": 94,
+      "line": 109,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-cli/PROP-037#detail-card",
       "verb": "implements"
@@ -6397,7 +6532,7 @@
     {
       "file": "crates/vibe-cli/src/commands/tree/tui/ui/text_field.rs",
       "from_symbol": "vibe_cli::commands::tree::tui::ui::text_field::TextField::render",
-      "line": 98,
+      "line": 107,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-cli/PROP-037#text-field",
       "verb": "implements"
