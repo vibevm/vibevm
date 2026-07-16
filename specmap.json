@@ -695,6 +695,13 @@
     },
     {
       "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/tree/tui/dispatch.rs",
+      "item_kind": "mod",
+      "line": 13,
+      "symbol": "vibe_cli::commands::tree::tui::dispatch"
+    },
+    {
+      "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/tree/tui/flatten.rs",
       "item_kind": "mod",
       "line": 13,
@@ -711,8 +718,15 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/tree/tui/input.rs",
       "item_kind": "mod",
-      "line": 5,
+      "line": 21,
       "symbol": "vibe_cli::commands::tree::tui::input"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/tree/tui/keymap_bridge.rs",
+      "item_kind": "mod",
+      "line": 18,
+      "symbol": "vibe_cli::commands::tree::tui::keymap_bridge"
     },
     {
       "crate_name": "vibe-cli",
@@ -760,7 +774,7 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/tree/tui/modal.rs",
       "item_kind": "mod",
-      "line": 5,
+      "line": 14,
       "symbol": "vibe_cli::commands::tree::tui::modal"
     },
     {
@@ -942,7 +956,7 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/tree/tui/ui/mod.rs",
       "item_kind": "mod",
-      "line": 32,
+      "line": 36,
       "symbol": "vibe_cli::commands::tree::tui::ui"
     },
     {
@@ -958,6 +972,20 @@
       "item_kind": "fn",
       "line": 98,
       "symbol": "vibe_cli::commands::tree::tui::ui::button::Button::render"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/tree/tui/ui/card.rs",
+      "item_kind": "mod",
+      "line": 16,
+      "symbol": "vibe_cli::commands::tree::tui::ui::card"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/tree/tui/ui/card.rs",
+      "item_kind": "fn",
+      "line": 86,
+      "symbol": "vibe_cli::commands::tree::tui::ui::card::Card::render"
     },
     {
       "crate_name": "vibe-cli",
@@ -5913,6 +5941,14 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-cli/src/commands/tree/tui/dispatch.rs",
+      "from_symbol": "vibe_cli::commands::tree::tui::dispatch",
+      "line": 13,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-cli/PROP-037#action-catalogue",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-cli/src/commands/tree/tui/flatten.rs",
       "from_symbol": "vibe_cli::commands::tree::tui::flatten",
       "line": 13,
@@ -5931,9 +5967,17 @@
     {
       "file": "crates/vibe-cli/src/commands/tree/tui/input.rs",
       "from_symbol": "vibe_cli::commands::tree::tui::input",
-      "line": 5,
+      "line": 21,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-cli/PROP-036#tui",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/tree/tui/keymap_bridge.rs",
+      "from_symbol": "vibe_cli::commands::tree::tui::keymap_bridge",
+      "line": 18,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-cli/PROP-037#action-catalogue",
       "verb": "implements"
     },
     {
@@ -5987,7 +6031,7 @@
     {
       "file": "crates/vibe-cli/src/commands/tree/tui/modal.rs",
       "from_symbol": "vibe_cli::commands::tree::tui::modal",
-      "line": 5,
+      "line": 14,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-cli/PROP-036#tui",
       "verb": "implements"
@@ -6195,7 +6239,7 @@
     {
       "file": "crates/vibe-cli/src/commands/tree/tui/ui/mod.rs",
       "from_symbol": "vibe_cli::commands::tree::tui::ui",
-      "line": 32,
+      "line": 36,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-cli/PROP-037#components",
       "verb": "implements"
@@ -6214,6 +6258,22 @@
       "line": 103,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-cli/PROP-037#button",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/tree/tui/ui/card.rs",
+      "from_symbol": "vibe_cli::commands::tree::tui::ui::card",
+      "line": 16,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-cli/PROP-037#card",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/tree/tui/ui/card.rs",
+      "from_symbol": "vibe_cli::commands::tree::tui::ui::card::Card::render",
+      "line": 94,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-cli/PROP-037#detail-card",
       "verb": "implements"
     },
     {
