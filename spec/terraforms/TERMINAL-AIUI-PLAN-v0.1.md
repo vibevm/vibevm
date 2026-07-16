@@ -35,11 +35,15 @@ land first as the foundation for a golden-test tier.
   instant, CI-gateable. This is the substrate for golden tests and my everyday
   "did my layout change look right" check.
 - **Terminal plane (visual, real pixels) — the product.** An Electron +
-  xterm.js + node-pty desktop app (`vibe-term`) hosts the real `vibe tree` in a
-  PTY, renders it with true fonts/colors, and exposes a loopback control API for
-  snapshot (text + cells + **PNG**) and input. `vibe tree -t` launches it. The
-  PNG is what I `Read` to actually *see* color/glyph/aesthetics; it is also the
-  seed of a real terminal we grow for users.
+  xterm.js + node-pty desktop app (`vibeterm`) hosts a real PTY, renders it with
+  true fonts/colors, and exposes a loopback control API for snapshot (text +
+  cells + **PNG**) and input. **`vibe term`** opens vibeterm standalone with a
+  shell (`pwsh` on Windows when present) so the owner debugs it directly;
+  **`vibe tree -t`** runs the tree in it, `-c` forces the console TUI, and a bare
+  `vibe tree` follows the `vibe.tree.launch_mode` setting (**clean-install
+  default: console**). The PNG is what I `Read` to actually *see*
+  color/glyph/aesthetics; it is also the seed of a real terminal we grow for
+  users.
 - **Model plane (semantic) — extends PROP-039.** `vibe-actions::aiui` already
   ships `list_actions` + `invoke`; add the missing `state() → ModelView` and a
   `search()` wrapper (PROP-039 §11.3, "designed-for, not built now"). Drive by
@@ -169,19 +173,53 @@ its own `ModelView`). Golden-friendly + assertion-friendly:
 
 ---
 
-## 6. `vibe tree -t` and the `vibe aiui` surface
+## 6. Launch surfaces — `vibe term`, `vibe tree`, `vibe aiui`
 
-**`vibe tree -t` (UX sugar):** add `#[arg(short='t', long)] terminal: bool` to
-`TreeArgs` (`crates/vibe-cli/src/cli/inspect.rs:79`; `-t` is free). Branch at the
-launch gate (`…/tree/mod.rs:56`, before `tui::run`): resolve the terminal app
-(§ resolution below), spawn it with `--exec "<this-exe> tree --path <path>"`
-(the `open_prefs` subprocess pattern, `…/tui/input.rs:504` — resolve `vibe` via
-`current_exe`), and hand over. No recursion: the child runs `vibe tree` **without**
-`-t`.
+### 6.1 `vibe term` — vibeterm standalone (a real terminal)
 
-**`vibe aiui …` (agent entry):** new `crates/vibe-cli/src/cli/aiui.rs` +
-`Command::Aiui(AiuiArgs)` + `commands/aiui.rs` (the `cli/mcp.rs` pattern,
-verified at `cli.rs:114` / `main.rs:106`). Sub-verbs:
+`vibe term` opens **vibeterm hosting an interactive shell**, so the owner can use
+and eyeball-debug it directly and vibeterm is a general terminal from day one —
+not just a `vibe tree` viewer, matching the "eventually for regular users" goal.
+vibeterm takes an `--exec <cmd>` (default: the detected shell); `vibe term`
+launches it with no `--exec` (⇒ the shell), and `vibe tree -t` (§6.2) is just
+vibeterm `--exec "<this-exe> tree -c"`.
+
+**Shell detection (verified on this box, 2026-07-16):**
+- **Windows — prefer modern PowerShell 7+ (`pwsh`) over the built-in 5.1.**
+  Resolve `pwsh` via PATH → `%ProgramFiles%\PowerShell\7\pwsh.exe` →
+  `%LOCALAPPDATA%\Microsoft\WindowsApps\pwsh.exe`; if none, fall back to
+  `%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe` (5.1). (This box:
+  `pwsh` 7.6.3 present → used; 5.1.26100 is the fallback.) Preferring `pwsh` also
+  sidesteps the PS-5.1 UTF-8 round-trip corruption this repo already fights.
+- **Linux/macOS — `$SHELL`, falling back to `/bin/sh`.**
+
+### 6.2 `vibe tree` launch modes
+
+`vibe tree` gains a **launch mode**, resolved by precedence:
+
+1. **explicit flag wins** — `-c`/`--console` (the in-terminal console TUI, today's
+   behaviour) or `-t`/`--terminal` (open in vibeterm). Mutually exclusive (clap
+   `conflicts_with`); added to `TreeArgs` (`crates/vibe-cli/src/cli/inspect.rs:79`;
+   `-c`/`-t` are free).
+2. **the `vibe.tree.launch_mode` setting** — a new enum field (`console` |
+   `vibeterm`) in the `vibe.tree.*` schema (PROP-040/041, edited via `vibe prefs`),
+   consulted by a bare `vibe tree`.
+3. **clean-install default = `console`.** With nothing configured, `vibe tree`
+   runs the console TUI — **never** vibeterm. Don't push a desktop app (Electron,
+   node-pty) on a fresh user; the console TUI is the safe, dependency-free default.
+
+`--plain` stays orthogonal (the non-interactive text dump). Wiring: branch at the
+launch gate (`…/tree/mod.rs:56`) — `console` → `tui::run` (today); `vibeterm` →
+resolve vibeterm (§6.4) + spawn it `--exec "<this-exe> tree --path <path> -c"`
+(the `open_prefs` subprocess pattern, `…/tui/input.rs:504`; resolve `<this-exe>`
+via `current_exe`). The child carries `-c`, so it renders the console TUI inside
+vibeterm — no recursion.
+
+### 6.3 `vibe aiui …` (agent entry)
+
+New `crates/vibe-cli/src/cli/aiui.rs` + `Command::Aiui(AiuiArgs)` +
+`commands/aiui.rs` (the `cli/mcp.rs` pattern, verified at `cli.rs:114` /
+`main.rs:106`). Sub-verbs:
 
 - `vibe aiui render --path <fixture> --size 80x24 --send "F2 Down Enter" --format text|cells`
   — the **render plane**, one-shot, prints the grid to stdout. No terminal, no
@@ -190,19 +228,22 @@ verified at `cli.rs:114` / `main.rs:106`). Sub-verbs:
   wait for the control server, print the session id.
 - `vibe aiui send <keys…> [--text …]`, `vibe aiui snapshot --text|--cells|--png <path>`,
   `vibe aiui wait [--idle 120ms]`, `vibe aiui resize WxH`, `vibe aiui close` —
-  the terminal-plane control verbs (§4), keyed by session id (or the sole
-  running session).
+  the terminal-plane control verbs (§4), keyed by session id (or the sole running
+  session).
 - `vibe aiui state [--path <fixture>]` — the **model plane** `ModelView` dump.
 
 **MCP (later):** the same verbs as `McpTool`s (`crates/vibe-mcp/src/tools.rs:35`
 trait, one struct + one line in `default_tools()`), so I can call them natively
-instead of via Bash. Note `McpTool::run` is sync and `aiui::invoke` is async →
-bridge with a current-thread `block_on` (§9-D5).
+instead of via Bash. `McpTool::run` is sync and `aiui::invoke` is async → bridge
+with a current-thread `block_on` (§9-D5).
 
-**App resolution** (never PATH — PROP-025 §8): mirror the vvm precedence —
-`current_exe`→`derive_self` sibling (`…/vvm/selfloc.rs:22`) → `$VIBEVM_*`
-override (new `vibe vars` row) → default under `~/opt`. In dev, resolve to
-`electron <repo>/packages/…/vibe-term` / an `npm start`.
+### 6.4 vibeterm resolution
+
+Never PATH (PROP-025 §8): mirror the vvm precedence — `current_exe`→`derive_self`
+sibling (`…/vvm/selfloc.rs:22`) → `$VIBEVM_*` override (new `vibe vars` row) →
+default under `~/opt`. In dev, resolve to `electron <repo>/packages/…/vibeterm` /
+an `npm start`. On Windows a Node/electron launcher spawns via `cmd /c` (the
+PROP-025 §4 shim lesson); node-pty (main-process) needs no rebuild (Phase-0 (g)).
 
 ---
 
@@ -215,8 +256,8 @@ Phase 0 is spikes (no commits); every later phase ends with the floor green
 |---|---|---|---|
 | **0** | Spikes (no commits) | Prove: (a) `render::draw` into an off-screen Buffer from a new `pub` entrypoint; (b) `input::handle` accepts synthetic `Event`s and drives state; (c) node-pty runs `vibe tree` under Electron and xterm.js renders it; (d) `capturePage()` yields a faithful PNG; (e) `@xterm/headless` cell grid == render-plane grid on a simple frame; (f) a Rust↔Node loopback JSON round-trip. | findings recorded; red spike rewrites the affected §9 decision |
 | **1** | Render plane + snapshot contract | `vibe tree --snapshot` / `vibe aiui render`: headless drive-loop (build `App` → apply `--send` script → `render::draw` → emit `text`/`cells`). Pin size/theme/fixture. The `text`/`cells` schema (§5). A `pub fn` headless entrypoint in `tui/mod.rs`. | self-check green; a golden `.snap.txt` for the base frame committed + a test that re-renders and diffs it |
-| **2** | The vibe terminal (MVP) | `vibe-term` Electron app: node-pty + renderer xterm.js + a pinned font, runs an arbitrary `--exec`. Its own npm project + a new `self-check.sh` gate step (`npm ci && npm test && npm run build`). Registered as a specspace. | app launches `vibe tree`, renders it; its gate step green |
-| **3** | `vibe tree -t` + terminal control API | `-t` launches `vibe-term` running `vibe tree`. The loopback control server (§4) + discovery file. `vibe aiui open/send/snapshot(text,cells)/wait/state/close`. | agent drives the running terminal: open → send F2 → wait → snapshot text, asserted |
+| **2** | vibeterm MVP + `vibe term` | `vibeterm` Electron app: **node-pty in the main process** + xterm.js renderer over IPC, a pinned font, graceful teardown (Phase-0 (g)); hosts an arbitrary `--exec` (default: the detected shell — pwsh-preferred on Windows, §6.1). **`vibe term`** launches it standalone with the shell. Own npm project + a new `self-check.sh` gate step (`npm ci && npm test && npm run build`). Registered as a specspace. | `vibe term` opens a working shell; `vibeterm --exec "vibe tree -c"` renders the TUI; the gate step green |
+| **3** | `vibe tree` launch modes + control API | `-c`/`-t` flags + the `vibe.tree.launch_mode` setting (default `console`, §6.2); `-t` (or a bare `vibe tree` when the setting is `vibeterm`) launches vibeterm running `vibe tree -c`. The loopback control server (§4) + discovery file. `vibe aiui open/send/snapshot(text,cells)/wait/state/close`. | `vibe tree -t` opens in vibeterm; the setting flips the bare default; the agent drives it: open → send F2 → wait → snapshot text, asserted |
 | **4** | PNG snapshots | `capturePage()` cropped to the terminal rect → `vibe aiui snapshot --png`. Determinism (font, size, theme). | agent `Read`s a PNG of the F2 menu and the quit dialog and confirms the fix visually |
 | **5** | Model plane completion | `ModelView` + `state()` + `search()` wrapper in `vibe-actions::aiui` (PROP-039 §11.3); give the tree catalogue real `invoke` bodies or wire `dispatch_by_addr` behind `aiui::invoke`. `vibe aiui state`. | `vibe aiui state` returns a serialised `ModelView`; a flow test drives by `action://` and asserts state |
 | **6** | Testing doc + scenarios (goldens) | The test-tier doc (§8) + the §8 scenarios as committed goldens/tests. | scenarios run green in self-check (render plane) + a manual-test index entry for the PNG/visual pass |
@@ -260,19 +301,34 @@ render golden, how to add one, how to do a visual pass, the determinism rules.
    advanced (model plane) and the tab chrome (render plane).
 7. **narrow width** — size `56×20`; assert graceful degradation (documents the
    footer-clip edge this session flagged).
+8. **`vibe term` shell** — `vibe term` (vibeterm hosting the detected shell);
+   assert vibeterm opens and the shell prompt renders — vibeterm as a general
+   terminal, not just a tree viewer (Windows uses `pwsh` when present).
 
 ---
 
-## 9. Decisions for the owner (proposals — ratify or override)
+## 9. Decisions
 
+**Ratified refinements (owner, 2026-07-16):**
+- **R1 — the name is `vibeterm`** (one word, no dash) — the app, the package, the
+  launcher, the `--exec` host. Applied throughout this plan.
+- **R2 — `vibe term` launches vibeterm standalone with a shell** (§6.1), so the
+  owner can eyeball-debug it and vibeterm is a general terminal from day one, not
+  just a `vibe tree` viewer. Windows prefers `pwsh` (7+) over the built-in 5.1;
+  unix uses `$SHELL`.
+- **R3 — `vibe tree` launch modes** (§6.2): `-c` console, `-t` vibeterm, bare →
+  the `vibe.tree.launch_mode` setting; **clean-install default = `console`** —
+  never force the desktop app (Electron/node-pty) on a fresh user.
+
+**Open (proposals — ratify or override):**
 - **D1 — Sequencing.** *Proposed:* render plane (Phase 1) before the Electron
   terminal (Phase 2). *Why:* terminal-free, deterministic, days not weeks, and
   it fixes the snapshot contract the terminal reuses; I get symbolic eyes
   immediately. *Rejected:* terminal-first (the owner's staging) — front-loads
   the heaviest, least-deterministic piece before the cheap win. **Owner call.**
-- **D2 — Where the terminal app lives.** *Proposed:* start in `research/vibe-term/`
+- **D2 — Where the terminal app lives.** *Proposed:* start in `research/vibeterm/`
   (the sanctioned scratch home, like `research/ts-demo`), **promote** to a
-  first-class specspace `packages/org.vibevm.terminal/vibe-term/v0.1.0/` once it
+  first-class specspace `packages/org.vibevm.terminal/vibeterm/v0.1.0/` once it
   stabilises (the fractality precedent). *Rejected:* a top-level `apps/` dir —
   breaks the "first-party code is a versioned package or a `research/` scratch"
   rule.
@@ -328,7 +384,7 @@ render golden, how to add one, how to do a visual pass, the determinism rules.
 - **Render/terminal-plane specs:** new PROP(s) (§9-D4), design-doc lore for the
   three-plane model + testing pyramid, cross-linked to PROP-037 (the TUI) and
   PROP-039 (the model plane).
-- **Terminal app:** `research/vibe-term/` → `packages/org.vibevm.terminal/…`;
+- **Terminal app:** `research/vibeterm/` → `packages/org.vibevm.terminal/…`;
   own `spec/`, `LICENSE.md` (permissive third-party banner — Electron/xterm.js/
   node-pty all MIT), `SPECSPACES.md` registration, boot contract + WAL + CONTINUE.
 - **Gating:** a new `self-check.sh` step for the terminal npm project; the render
