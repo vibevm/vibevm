@@ -462,7 +462,7 @@ fn open_modal(app: &mut App) {
 fn open_prefs(app: &mut App) -> Control<AppEvent> {
     use ratatui_crossterm::crossterm::{
         execute,
-        terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
+        terminal::{EnterAlternateScreen, LeaveAlternateScreen, disable_raw_mode, enable_raw_mode},
     };
     let stdout = std::io::stdout();
     // Drop out of the tree TUI's terminal state for a clean hand-off.
@@ -471,7 +471,9 @@ fn open_prefs(app: &mut App) -> Control<AppEvent> {
     // Run the same binary as `vibe prefs ui`. `current_exe` resolves the
     // dev-binary or the installed instance alike; fall back to a PATH lookup.
     let exe = std::env::current_exe().unwrap_or_else(|_| std::path::PathBuf::from("vibe"));
-    let _ = std::process::Command::new(&exe).args(["prefs", "ui"]).status();
+    let _ = std::process::Command::new(&exe)
+        .args(["prefs", "ui"])
+        .status();
     // Restore the tree TUI's terminal + reload any changed prefs.
     let _ = execute!(&stdout, EnterAlternateScreen);
     let _ = enable_raw_mode();
