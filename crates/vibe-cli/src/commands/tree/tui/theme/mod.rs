@@ -432,6 +432,36 @@ pub fn key_desc() -> Style {
     default_theme().key_desc()
 }
 
+// --- glyph accessors (PROP-037 §2.2.2) -------------------------------------
+// The tree's fold/dag/flag glyphs are read off the default theme's Glyphs set
+// so call sites never hardcode an ASCII literal; threaded per-Theme in P3.
+
+/// A folded-node marker (`▸` Tier ≥ 1, `+` Tier 0).
+pub fn fold_collapsed() -> &'static str {
+    default_theme().glyphs().fold_collapsed
+}
+
+/// An unfolded-node marker (`▾` Tier ≥ 1, `-` Tier 0).
+pub fn fold_expanded() -> &'static str {
+    default_theme().glyphs().fold_expanded
+}
+
+/// The DAG re-occurrence / cycle-guard marker (`↩` Tier ≥ 1, `*` Tier 0).
+pub fn dag_dedup() -> &'static str {
+    default_theme().glyphs().dag_dedup
+}
+
+/// A set-flag glyph (`●` Tier ≥ 1, `x` Tier 0). Distinct from the `flag_on`
+/// *style* helper above — this is the glyph, that is the colour.
+pub fn flag_on_glyph() -> &'static str {
+    default_theme().glyphs().flag_on
+}
+
+/// An unset-flag glyph (`○` Tier ≥ 1, `.` Tier 0).
+pub fn flag_off_glyph() -> &'static str {
+    default_theme().glyphs().flag_off
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

@@ -122,12 +122,22 @@ fn walk(
     let is_folded = folded.contains(id);
     // The expand indicator is shown only on a first-seen node that has
     // children; a re-occurrence is a display leaf (its subtree lives elsewhere).
+    // Glyphs come from the theme vocabulary (PROP-037 §2.2.2): ▾/▸ Tier ≥ 1,
+    // +/- Tier 0 — never a hardcoded ASCII literal.
     let indicator = if has_children && !repeated {
-        if is_folded { "+ " } else { "- " }
+        if is_folded {
+            format!("{} ", super::theme::fold_collapsed())
+        } else {
+            format!("{} ", super::theme::fold_expanded())
+        }
     } else {
-        ""
+        String::new()
     };
-    let marker = if repeated { " (*)" } else { "" };
+    let marker = if repeated {
+        format!(" {}", super::theme::dag_dedup())
+    } else {
+        String::new()
+    };
     rows.push(VisibleRow {
         node: RowNode::Package(idx),
         id: id.to_string(),

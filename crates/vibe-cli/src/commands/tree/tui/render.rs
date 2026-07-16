@@ -236,9 +236,11 @@ fn build_rows(app: &App) -> Vec<Row<'static>> {
 
 /// A single-character flag cell in its on/off colour.
 fn flag_cell(on: bool) -> Cell<'static> {
+    // The glyph comes from the theme vocabulary (PROP-037 §2.2.2): ●/○
+    // Tier ≥ 1, x/. Tier 0 — never a hardcoded ASCII literal.
     if on {
-        Cell::from("x").style(Some(theme::flag_on()))
+        Cell::from(theme::flag_on_glyph()).style(Some(theme::flag_on()))
     } else {
-        Cell::from(".").style(Some(theme::flag_off()))
+        Cell::from(theme::flag_off_glyph()).style(Some(theme::flag_off()))
     }
 }
