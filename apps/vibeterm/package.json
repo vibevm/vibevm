@@ -21,7 +21,7 @@
     "node-pty": "^1.1.0"
   },
   "devDependencies": {
-    "@electron/packager": "^24.0.0",
+    "@electron/packager": "^20.0.0",
     "@electron/rebuild": "^4.0.0"
   }
 }

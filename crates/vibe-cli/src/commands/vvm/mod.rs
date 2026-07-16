@@ -20,6 +20,7 @@ pub(crate) mod selfloc;
 mod source;
 mod store;
 mod tools;
+mod vibeterm_packager;
 
 use std::io::IsTerminal;
 use std::path::{Path, PathBuf};
@@ -239,7 +240,14 @@ fn run_install_cmd(ctx: &output::Context, env: &VvmEnv, args: VvmInstallArgs) ->
         origin,
         source_path,
     };
-    install::perform_install(ctx, &store, &source_dir, &req, &builder::CargoBuilder)
+    install::perform_install(
+        ctx,
+        &store,
+        &source_dir,
+        &req,
+        &builder::CargoBuilder,
+        &vibeterm_packager::NpmPackager::new(ctx),
+    )
 }
 
 /// `self update` — rebuild and activate the latest in-tree version. A thin
@@ -463,6 +471,14 @@ fn run_doctor_cmd(ctx: &output::Context, env: &VvmEnv, args: VvmDoctorArgs) -> R
             "active": active.as_ref().map(|r| r.version_id().to_string()),
             "active_binary_ok": !active_missing,
             "embedded_registry": embedded_registry.as_ref().map(|p| p.display().to_string()),
+            "optional_tools": tools::check_optional().iter().map(|t| serde_json::json!({
+                "name": t.name, "version": t.version, "ok": t.ok, "min": t.min_version,
+            })).collect::<Vec<_>>(),
+            "vibeterm_packaged": active.as_ref().filter(|_| !active_missing).is_some_and(|r| {
+                let exe = if cfg!(windows) { "electron.exe" } else { "electron" };
+                store.instance_dir(&r.version_id(), r.instance)
+                    .join("vibeterm").join(exe).is_file()
+            }),
         }));
     }
 
@@ -507,6 +523,41 @@ fn run_doctor_cmd(ctx: &output::Context, env: &VvmEnv, args: VvmDoctorArgs) -> R
             root.display()
         )),
         None => ctx.step("-    no embedded registry (the active version is not a source install)"),
+    }
+    // Advisory (non-blocking): the optional tools that package vibeterm, and
+    // whether the active instance actually carries a packaged vibeterm.
+    for t in tools::check_optional() {
+        match &t.version {
+            Some(v) if t.ok => ctx.step(&format!(
+                "ok   {} {} (optional: vibeterm packaging)",
+                t.name, v
+            )),
+            Some(v) => ctx.step(&format!(
+                "old  {} {} (need >= {}; optional) — {}",
+                t.name, v, t.min_version, t.help_url
+            )),
+            None => ctx.step(&format!(
+                "-    {} not found (optional: vibeterm packaging) — {}",
+                t.name, t.help_url
+            )),
+        }
+    }
+    if let Some(r) = active.as_ref().filter(|_| !active_missing) {
+        let exe = if cfg!(windows) {
+            "electron.exe"
+        } else {
+            "electron"
+        };
+        let packaged = store
+            .instance_dir(&r.version_id(), r.instance)
+            .join("vibeterm")
+            .join(exe)
+            .is_file();
+        ctx.step(if packaged {
+            "ok   vibeterm packaged alongside the active version"
+        } else {
+            "-    vibeterm not packaged in the active instance (`vibe term` will name the setup step)"
+        });
     }
 
     if args.fix && confirm(ctx, args.yes, "Write shims and put the shim dir on PATH?")? {

@@ -40,6 +40,29 @@ pub(crate) const REQUIRED_TOOLS: &[ToolSpec] = &[
     },
 ];
 
+/// Tools `vibe self install` uses ONLY to package vibeterm (node, npm) —
+/// **advisory, not required**: a Rust-only box skips vibeterm and still builds
+/// (PROP-019 §2.7). Surfaced by `self doctor` but never counted as a problem.
+pub(crate) const OPTIONAL_TOOLS: &[ToolSpec] = &[
+    ToolSpec {
+        name: "node",
+        check: &["node", "--version"],
+        min_version: "22.6.0",
+        help_url: "https://nodejs.org/",
+    },
+    ToolSpec {
+        name: "npm",
+        check: &["npm", "--version"],
+        min_version: "11.0.0",
+        help_url: "https://docs.npmjs.com/downloading-and-installing-node-js-and-npm",
+    },
+];
+
+/// Probe the optional (vibeterm-packaging) tools.
+pub(crate) fn check_optional() -> Vec<ToolStatus> {
+    OPTIONAL_TOOLS.iter().map(check_one).collect()
+}
+
 /// The platform linker / C toolchain hint for `man doctor` (PROP-019 §2.8).
 pub(crate) fn linker_hint() -> (&'static str, &'static str) {
     if cfg!(windows) {

@@ -126,11 +126,15 @@ then `PATH`, falling back to `…\WindowsPowerShell\v1.0\powershell.exe`; on oth
 platforms `$SHELL`, falling back to `/bin/sh`. An explicit `--exec <cmd>`
 overrides the detected shell.
 
-REQ. vibeterm is located **without a `PATH` search**: an explicit
-`$VIBEVM_VIBETERM` directory wins, else a development fallback walks up from the
-running binary for `apps/vibeterm`. Its Electron binary is resolved through
-the app's own `node_modules/electron/path.txt`. A missing install fails with a
-message naming the setup step, never a silent hang.
+REQ. vibeterm is located **without a `PATH` search**, in three tiers in order:
+(1) an explicit `$VIBEVM_VIBETERM` directory wins (an override); (2) else an
+installed `vibe` finds the packaged `vibeterm/` shipped inside its own instance
+dir (next to its binary); (3) else a development fallback walks up from the
+running binary for `apps/vibeterm`. The resolver distinguishes a **packaged**
+dir (electron binary at its root, `resources/app/` inside — invoked directly,
+no app-path arg) from a **dev** dir (Electron resolved via
+`node_modules/electron/path.txt`, the app dir passed as a positional arg). A
+missing install fails with a message naming the setup step, never a silent hang.
 
 ## 6. Never {#never}
 

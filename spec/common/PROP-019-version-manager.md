@@ -136,6 +136,8 @@ $VIBEVM_INSTALL_ROOT/            install base — default: home dir
        ├─ state.toml             inventory: every instance + its metadata
        ├─ versions/<kind>/<id>/<instance>/   immutable distribution dirs
        │       vibe[.exe], *.dll/.so, assets…
+       │       vibeterm/   the packaged vibeterm Electron app (runtime + resources/app
+       │                   + node_modules; §2.7) — present only when npm/electron packaged it
        │       .vvm-manifest.toml   file list (rel,size,mtime,hash?) for diff-copy
        ├─ build/                 shared cargo --target-dir (gc-able)
        └─ src/<kind>/<id>/       MANAGED clones only (clone path); never the
@@ -223,6 +225,13 @@ instance** by diff-copy, record provenance, flip `current`.
   `build/` target dir (§9.3 — never the source tree's `target/`; load-
   bearing on Windows and keeps the dev tree clean), honouring
   `rust-toolchain.toml`.
+- **Package vibeterm (optional).** When `node`/`npm` are on PATH, `apps/vibeterm`
+  is built into a relocatable dir (electron-packager, with node-pty rebuilt to
+  Electron's ABI) and added to the dist set as the `vibeterm/` subtree. This
+  runs on the target host (node-pty's native addon and Electron's runtime are
+  OS/arch-specific — no cross-OS build). Skipped gracefully on a Rust-only box
+  — the instance still installs; `vibe term` then names the missing setup step
+  (PROP-042 §5).
 - **Place by diff-copy (§2.15).** The built distribution is placed into a
   fresh instance dir, copying only files that changed versus the previous
   instance and hardlinking the rest — so a 2 GB distribution where only
@@ -364,6 +373,10 @@ and hardlinks the rest, **without hashing gigabytes** (§9.2):
 
 This scales to a multi-GB distribution: an 80 GB asset that did not change
 is shared by hardlink; only the changed `vibe.exe` is copied (§9.2, §9.6).
+The `vibeterm/` subtree (~220 MB, ~3-4 k files) participates in the same
+diff-copy: small files hashed by the ≤16 MiB rule, the Electron binary by
+`(size, mtime)`; an unchanged vibeterm is hardlinked file-by-file free, and a
+rebuild that changed nothing dedup-skips the whole instance.
 
 ### 2.16 Source provenance and linked sources {#provenance}
 

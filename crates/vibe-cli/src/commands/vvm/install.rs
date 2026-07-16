@@ -14,7 +14,9 @@ use super::builder::{Builder, ResolvedVersion};
 use super::model::{InstallRecord, Origin, Profile, VersionId};
 use super::placer::{self, Manifest};
 use super::store::{BINARY_NAME, VersionStore};
+use super::vibeterm_packager::VibetermPackager;
 use crate::output;
+use walkdir::WalkDir;
 
 /// A best-effort install lock so two installs do not race (PROP-019 §2.7).
 struct InstallLock {
@@ -69,6 +71,7 @@ pub(crate) fn perform_install(
     source_root: &Path,
     req: &InstallRequest,
     builder: &dyn Builder,
+    packager: &dyn VibetermPackager,
 ) -> Result<()> {
     let _lock = InstallLock::acquire(store)?;
     let id = &req.resolved.id;
@@ -79,7 +82,15 @@ pub(crate) fn perform_install(
         source_root.display()
     ));
     let out = builder.build(source_root, &store.build_dir(), req.profile)?;
-    let dist = vec![(out.binary.clone(), BINARY_NAME.to_string())];
+    let mut dist = vec![(out.binary.clone(), BINARY_NAME.to_string())];
+    // Package vibeterm and add its relocatable tree to the dist set as
+    // `vibeterm/...` (PROP-019 §2.7 amendment). `Ok(None)` is a graceful skip
+    // (a Rust-only box, or a tree without apps/vibeterm); the instance still
+    // installs, and `vibe term` then names the missing setup step.
+    let vt_staging = store.build_dir().join("vibeterm-dist");
+    if let Some(vt) = packager.package(source_root, &vt_staging)? {
+        dist.extend(walk_vibeterm_dist(&vt.dir)?);
+    }
     let manifest = placer::manifest_for(&dist)?;
 
     let prev = latest_instance(store, id)?;
@@ -118,6 +129,28 @@ pub(crate) fn perform_install(
     Ok(())
 }
 
+/// Walk a staged, relocatable vibeterm dir and emit `(abs_src, "vibeterm/<rel>")`
+/// pairs for the placer. Every file in a packaged Electron app is load-bearing
+/// (the runtime, locales, the app + its node_modules) — ship the whole tree.
+fn walk_vibeterm_dist(staged: &Path) -> Result<Vec<(PathBuf, String)>> {
+    let mut out = Vec::new();
+    for entry in WalkDir::new(staged).follow_links(false) {
+        let e = entry?;
+        if !e.file_type().is_file() {
+            continue;
+        }
+        let rel = e.path().strip_prefix(staged)?;
+        out.push((
+            e.path().to_path_buf(),
+            Path::new("vibeterm")
+                .join(rel)
+                .to_string_lossy()
+                .into_owned(),
+        ));
+    }
+    Ok(out)
+}
+
 /// The newest existing instance of `id` plus its manifest, for diff-copy.
 fn latest_instance(
     store: &VersionStore,
@@ -138,6 +171,7 @@ mod tests {
     use super::*;
     use crate::commands::vvm::builder::BuildOutput;
     use crate::commands::vvm::model::Kind;
+    use crate::commands::vvm::vibeterm_packager::{SkipPackager, VibetermOutput, VibetermPackager};
     use specmark::verifies;
 
     /// A builder that writes a chosen byte string into the managed target dir
@@ -193,6 +227,7 @@ mod tests {
             &FakeBuilder {
                 content: b"v1".to_vec(),
             },
+            &SkipPackager,
         )
         .unwrap();
         let inst1 = store.instance_dir(&resolved.id, 1);
@@ -209,6 +244,7 @@ mod tests {
             &FakeBuilder {
                 content: b"v1".to_vec(),
             },
+            &SkipPackager,
         )
         .unwrap();
         assert_eq!(store.instances_of(&resolved.id).unwrap().len(), 1);
@@ -222,6 +258,7 @@ mod tests {
             &FakeBuilder {
                 content: b"v2".to_vec(),
             },
+            &SkipPackager,
         )
         .unwrap();
         assert_eq!(store.instances_of(&resolved.id).unwrap().len(), 2);
@@ -239,8 +276,54 @@ mod tests {
             &FakeBuilder {
                 content: b"v2".to_vec(),
             },
+            &SkipPackager,
         )
         .unwrap();
         assert_eq!(store.instances_of(&resolved.id).unwrap().len(), 3);
+    }
+
+    /// A packager that stages a fake vibeterm tree (two files), proving the dist
+    /// set gains a `vibeterm/` subtree the placer lays out under the instance.
+    struct FakePackager;
+    impl VibetermPackager for FakePackager {
+        fn package(
+            &self,
+            _source_root: &Path,
+            staging_root: &Path,
+        ) -> Result<Option<VibetermOutput>> {
+            let dir = staging_root.join("vibeterm-fake-x86");
+            fs::create_dir_all(dir.join("resources/app"))?;
+            fs::write(dir.join("electron.exe"), b"electron")?;
+            fs::write(dir.join("resources/app/package.json"), b"{}")?;
+            Ok(Some(VibetermOutput { dir }))
+        }
+    }
+
+    #[test]
+    #[verifies("spec://vibevm/common/PROP-019#build", r = 1)]
+    fn install_places_vibeterm_subtree_when_packaged() {
+        let tmp = tempfile::tempdir().unwrap();
+        let store = VersionStore::new(tmp.path());
+        let src = tempfile::tempdir().unwrap();
+        let resolved = ResolvedVersion {
+            id: VersionId::new(Kind::Branch, "main"),
+            commit: "feedface".into(),
+        };
+        perform_install(
+            &quiet(),
+            &store,
+            src.path(),
+            &req(&resolved, false, "t1"),
+            &FakeBuilder {
+                content: b"v".to_vec(),
+            },
+            &FakePackager,
+        )
+        .unwrap();
+        let inst = store.instance_dir(&resolved.id, 1);
+        assert!(inst.join(BINARY_NAME).is_file());
+        // The vibeterm subtree landed next to the binary.
+        assert!(inst.join("vibeterm/electron.exe").is_file());
+        assert!(inst.join("vibeterm/resources/app/package.json").is_file());
     }
 }
