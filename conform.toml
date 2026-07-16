@@ -63,6 +63,10 @@ env_roots = [
     "crates/vibe-cli/src/output.rs",
     "crates/vibe-cli/src/commands/show/config.rs",
     "crates/vibe-cli/src/commands/tree/tui/settings.rs",
+    # `vibe term` detects the interactive shell ($SHELL / pwsh via ProgramFiles /
+    # PATH …) and locates vibeterm ($VIBEVM_VIBETERM) — a launcher whose job is
+    # to read the environment for the spawn (PROP-042 §5).
+    "crates/vibe-cli/src/commands/term.rs",
     "crates/vibe-core/src/user_config.rs",
     "crates/vibe-settings/src/loader.rs",
     "crates/vibe-index/src/scanner/git_cli.rs",

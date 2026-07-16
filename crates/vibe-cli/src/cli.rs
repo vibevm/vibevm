@@ -19,6 +19,7 @@ mod pkg;
 mod prefs;
 mod registry;
 mod skill;
+mod term;
 mod vars;
 mod vvm;
 mod workspace;
@@ -31,6 +32,7 @@ pub use pkg::*;
 pub use prefs::*;
 pub use registry::*;
 pub use skill::*;
+pub use term::*;
 pub use vars::*;
 pub use vvm::*;
 pub use workspace::*;
@@ -120,6 +122,11 @@ pub enum Command {
     /// cells) — no terminal, deterministic — so an agent can *see* the
     /// interface and golden tests can diff it. Read-only.
     Aiui(AiuiArgs),
+
+    /// Launch the vibeterm terminal app hosting a detected interactive shell
+    /// (Windows prefers PowerShell 7 `pwsh`; unix uses `$SHELL`). The terminal an
+    /// agent or human can observe; `--exec` overrides the shell (PROP-042 §5).
+    Term(TermArgs),
 
     /// Project package-declared skills into coding agents — vibevm's
     /// standalone mode (PROP-018 §2.6). `vibe skill list` shows what the
