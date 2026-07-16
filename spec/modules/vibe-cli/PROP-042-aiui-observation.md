@@ -77,7 +77,24 @@ it never enters the TUI, spawns a terminal, or touches user state. Additional
 model-plane `state`) land in later campaign phases and are governed here as they
 arrive.
 
-## 5. Never {#never}
+## 5. The `vibe term` launcher {#vibe-term}
+
+REQ. `vibe term` launches the **vibeterm** terminal app hosting an interactive
+shell, so the terminal can be used and eyeball-debugged standalone. The shell is
+**detected**: on Windows, modern PowerShell 7+ (`pwsh`) is preferred over the
+built-in Windows PowerShell 5.1 — resolved via the standard install locations
+(`%ProgramFiles%\PowerShell\7\pwsh.exe`, `%LOCALAPPDATA%\…\WindowsApps\pwsh.exe`)
+then `PATH`, falling back to `…\WindowsPowerShell\v1.0\powershell.exe`; on other
+platforms `$SHELL`, falling back to `/bin/sh`. An explicit `--exec <cmd>`
+overrides the detected shell.
+
+REQ. vibeterm is located **without a `PATH` search**: an explicit
+`$VIBEVM_VIBETERM` directory wins, else a development fallback walks up from the
+running binary for `research/vibeterm`. Its Electron binary is resolved through
+the app's own `node_modules/electron/path.txt`. A missing install fails with a
+message naming the setup step, never a silent hang.
+
+## 6. Never {#never}
 
 - Never load user settings into a snapshot render — determinism dies and goldens
   churn. Defaults only.
