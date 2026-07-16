@@ -4,7 +4,7 @@
       "crate_name": "vibe-actions",
       "file": "crates/vibe-actions/src/lib.rs",
       "item_kind": "mod",
-      "line": 33,
+      "line": 34,
       "symbol": "vibe_actions"
     },
     {
@@ -76,6 +76,13 @@
       "item_kind": "enum",
       "line": 49,
       "symbol": "vibe_actions::invoke::InvokeError"
+    },
+    {
+      "crate_name": "vibe-actions",
+      "file": "crates/vibe-actions/src/keymap.rs",
+      "item_kind": "mod",
+      "line": 25,
+      "symbol": "vibe_actions::keymap"
     },
     {
       "crate_name": "vibe-actions",
@@ -762,13 +769,6 @@
       "item_kind": "mod",
       "line": 7,
       "symbol": "vibe_cli::commands::tree::tui::state"
-    },
-    {
-      "crate_name": "vibe-cli",
-      "file": "crates/vibe-cli/src/commands/tree/tui/theme.rs",
-      "item_kind": "mod",
-      "line": 8,
-      "symbol": "vibe_cli::commands::tree::tui::theme"
     },
     {
       "crate_name": "vibe-cli",
@@ -4849,7 +4849,7 @@
     {
       "file": "crates/vibe-actions/src/lib.rs",
       "from_symbol": "vibe_actions",
-      "line": 33,
+      "line": 34,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-actions/PROP-039#root",
       "verb": "implements"
@@ -4932,6 +4932,14 @@
       "line": 52,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-actions/PROP-039#invoke",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-actions/src/keymap.rs",
+      "from_symbol": "vibe_actions::keymap",
+      "line": 25,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-actions/PROP-039#keymap",
       "verb": "implements"
     },
     {
@@ -5717,14 +5725,6 @@
       "line": 7,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-cli/PROP-036#tui",
-      "verb": "implements"
-    },
-    {
-      "file": "crates/vibe-cli/src/commands/tree/tui/theme.rs",
-      "from_symbol": "vibe_cli::commands::tree::tui::theme",
-      "line": 8,
-      "provenance": "authored",
-      "uri": "spec://vibevm/modules/vibe-cli/PROP-037#theme",
       "verb": "implements"
     },
     {
