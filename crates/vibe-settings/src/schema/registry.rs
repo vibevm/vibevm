@@ -30,6 +30,7 @@ use super::types::{KeyMeta, SchemaError};
 /// assert_eq!(tree_keys, vec!["tree.mode", "tree.palette"]);
 /// # Ok::<(), vibe_settings::schema::SchemaError>(())
 /// ```
+#[specmark::spec(implements = "spec://vibevm/modules/vibe-settings/PROP-040#schema")]
 #[derive(Debug, Clone, Default)]
 pub struct Schema {
     keys: BTreeMap<String, KeyMeta>,

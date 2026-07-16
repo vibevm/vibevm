@@ -28,6 +28,7 @@ use crate::loader::Layer;
 /// assert_eq!(KeyType::Bool.to_string(), "bool");
 /// assert_eq!(KeyType::Array.label(), "array");
 /// ```
+#[specmark::spec(implements = "spec://vibevm/modules/vibe-settings/PROP-040#schema-fields")]
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum KeyType {
     /// A boolean flag (`true` / `false`).
@@ -90,6 +91,7 @@ impl fmt::Display for KeyType {
 /// assert_eq!(Scope::TeamOnly.writable_layers(), &[Layer::L2]);
 /// assert_eq!(Scope::Project.to_string(), "project");
 /// ```
+#[specmark::spec(implements = "spec://vibevm/modules/vibe-settings/PROP-040#scope-meta")]
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Scope {
     /// Settable in L1 (and overridden by L2/L3). Roams (future cloud, §14).
@@ -154,6 +156,7 @@ impl fmt::Display for Scope {
 /// assert_eq!(Applies::default(), Applies::Live);
 /// assert_eq!(Applies::Restart.label(), "restart");
 /// ```
+#[specmark::spec(implements = "spec://vibevm/modules/vibe-settings/PROP-040#applies")]
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Default)]
 pub enum Applies {
     /// Takes effect immediately (default — most preferences).
@@ -199,6 +202,7 @@ impl fmt::Display for Applies {
 /// assert_eq!(MergeStrategy::default(), MergeStrategy::Replace);
 /// assert_eq!(MergeStrategy::Append.label(), "append");
 /// ```
+#[specmark::spec(implements = "spec://vibevm/modules/vibe-settings/PROP-040#merge-strategy-opt-in")]
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Default)]
 pub enum MergeStrategy {
     /// Higher layer's array fully replaces the lower (default; non-obvious
@@ -246,6 +250,7 @@ impl fmt::Display for MergeStrategy {
 /// let d = Deprecation::with_replacement("use `tree.sort`", "node.sort");
 /// assert_eq!(d.replaced_by.as_deref(), Some("node.sort"));
 /// ```
+#[specmark::spec(implements = "spec://vibevm/modules/vibe-settings/PROP-040#deprecation")]
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Deprecation {
     /// The dotted path that replaces this key, if any.
@@ -301,6 +306,7 @@ impl Deprecation {
 /// assert_eq!(key.applies, Applies::Reload);
 /// assert!(matches!(key.default, Some(toml::Value::String(_))));
 /// ```
+#[specmark::spec(implements = "spec://vibevm/modules/vibe-settings/PROP-040#schema-fields")]
 #[derive(Debug, Clone, PartialEq)]
 pub struct KeyMeta {
     /// The dotted path of the key, e.g. `"tree.palette"` (PROP-040 §5
