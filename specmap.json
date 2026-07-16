@@ -303,6 +303,13 @@
     },
     {
       "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/cli/term.rs",
+      "item_kind": "mod",
+      "line": 4,
+      "symbol": "vibe_cli::cli::term"
+    },
+    {
+      "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli/vars.rs",
       "item_kind": "mod",
       "line": 3,
@@ -853,6 +860,20 @@
       "item_kind": "mod",
       "line": 12,
       "symbol": "vibe_cli::commands::skill"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/term.rs",
+      "item_kind": "mod",
+      "line": 6,
+      "symbol": "vibe_cli::commands::term"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/term.rs",
+      "item_kind": "fn",
+      "line": 17,
+      "symbol": "vibe_cli::commands::term::run"
     },
     {
       "crate_name": "vibe-cli",
@@ -1957,7 +1978,7 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/main.rs",
       "item_kind": "fn",
-      "line": 221,
+      "line": 222,
       "symbol": "vibe_cli::promote_user_config_env"
     },
     {
@@ -5871,6 +5892,14 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-cli/src/cli/term.rs",
+      "from_symbol": "vibe_cli::cli::term",
+      "line": 4,
+      "provenance": "authored",
+      "uri": "spec://vibevm/VIBEVM-SPEC#command-summary",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-cli/src/cli/vars.rs",
       "from_symbol": "vibe_cli::cli::vars",
       "line": 3,
@@ -6500,6 +6529,22 @@
       "line": 12,
       "provenance": "authored",
       "uri": "spec://vibevm/common/PROP-018#vibe-skill",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/term.rs",
+      "from_symbol": "vibe_cli::commands::term",
+      "line": 6,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-cli/PROP-042#vibe-term",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/term.rs",
+      "from_symbol": "vibe_cli::commands::term::run",
+      "line": 19,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-cli/PROP-042#vibe-term",
       "verb": "implements"
     },
     {
@@ -7792,7 +7837,7 @@
     {
       "file": "crates/vibe-cli/src/main.rs",
       "from_symbol": "vibe_cli::promote_user_config_env",
-      "line": 240,
+      "line": 241,
       "provenance": "authored",
       "uri": "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
       "verb": "deviates",
@@ -16881,12 +16926,21 @@
       "uri": "spec://vibevm/modules/vibe-cli/PROP-042#aiui-cli"
     },
     {
-      "anchor": "never",
-      "content_hash": "sha256:cfb6e2837e0c6c22baba4e8d478b034fbcbf62a360f2beab2a1ba9596c3fe98e",
+      "anchor": "vibe-term",
+      "content_hash": "sha256:0bc6f145d7bfaf6332d1f67c01643b46d302ee2aeb5db7c13e1d06dd48e2a6a1",
       "doc_path": "modules/vibe-cli/PROP-042",
       "file": "spec/modules/vibe-cli/PROP-042-aiui-observation.md",
-      "heading": "5. Never",
+      "heading": "5. The `vibe term` launcher",
       "line": 80,
+      "uri": "spec://vibevm/modules/vibe-cli/PROP-042#vibe-term"
+    },
+    {
+      "anchor": "never",
+      "content_hash": "sha256:2e7f3e9005bbd7bdbbe3e4d0a4b75a59ba57b0846e03181ea108ff786c2e8435",
+      "doc_path": "modules/vibe-cli/PROP-042",
+      "file": "spec/modules/vibe-cli/PROP-042-aiui-observation.md",
+      "heading": "6. Never",
+      "line": 97,
       "uri": "spec://vibevm/modules/vibe-cli/PROP-042#never"
     },
     {
