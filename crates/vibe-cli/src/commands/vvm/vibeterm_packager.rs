@@ -6,11 +6,12 @@
 specmark::scope!("spec://vibevm/common/PROP-019#build");
 
 use std::path::{Path, PathBuf};
-use std::process::{Command, Stdio};
+use std::process::Command;
 
 use anyhow::{Context, Result, bail};
 use specmark::spec;
 
+use super::tools::has_tool;
 use crate::output;
 
 /// The product of a vibeterm packaging step: the staged, relocatable app dir
@@ -77,7 +78,7 @@ impl VibetermPackager for NpmPackager<'_> {
         }
         // package.mjs leaves exactly one `vibeterm-<plat>-<arch>` child; resolve
         // it so the in-instance rels are `vibeterm/…` (not a nested platform dir).
-        let mut children: Vec<PathBuf> = std::fs::read_dir(staging_root)
+        let children: Vec<PathBuf> = std::fs::read_dir(staging_root)
             .with_context(|| format!("reading vibeterm staging `{}`", staging_root.display()))?
             .filter_map(Result::ok)
             .filter_map(|e| {
@@ -93,9 +94,13 @@ impl VibetermPackager for NpmPackager<'_> {
                 staging_root.display()
             );
         }
-        Ok(Some(VibetermOutput {
-            dir: children.pop().unwrap(),
-        }))
+        // `children.len() == 1` here (checked above); take it without `unwrap`
+        // (the conform `no-unwrap-in-domain` ban).
+        let dir = match children.into_iter().next() {
+            Some(d) => d,
+            None => bail!("vibeterm packaging produced no `vibeterm-*` dir"),
+        };
+        Ok(Some(VibetermOutput { dir }))
     }
 }
 
@@ -109,15 +114,4 @@ impl VibetermPackager for SkipPackager {
     fn package(&self, _source_root: &Path, _staging_root: &Path) -> Result<Option<VibetermOutput>> {
         Ok(None)
     }
-}
-
-/// Whether a tool (npm/node) is invocable on PATH. Presence only — version
-/// floors are enforced by package.mjs (`engines`) and the README.
-fn has_tool(name: &str) -> bool {
-    Command::new(name)
-        .arg("--version")
-        .stdout(Stdio::null())
-        .stderr(Stdio::null())
-        .status()
-        .is_ok()
 }

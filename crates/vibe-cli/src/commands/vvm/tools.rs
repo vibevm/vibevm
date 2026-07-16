@@ -113,11 +113,38 @@ fn check_one(spec: &ToolSpec) -> ToolStatus {
 }
 
 fn run_version(cmd: &[&str]) -> Option<String> {
-    let out = Command::new(cmd[0]).args(&cmd[1..]).output().ok()?;
+    let out = tool_command(cmd[0]).args(&cmd[1..]).output().ok()?;
     if !out.status.success() {
         return None;
     }
     extract_semver(&String::from_utf8_lossy(&out.stdout))
+}
+
+/// Whether a tool is invocable by name (presence only; version floors are
+/// enforced elsewhere — `engines` for npm, [`check_one`] for the required set).
+/// `pub(crate)` so the vibeterm packager's availability gate reuses one probe.
+pub(crate) fn has_tool(name: &str) -> bool {
+    tool_command(name)
+        .arg("--version")
+        .stdout(std::process::Stdio::null())
+        .stderr(std::process::Stdio::null())
+        .status()
+        .is_ok()
+}
+
+/// Build a [`Command`] for a bare tool name, cross-platform (PROP-019 §2.8).
+/// On Windows a PATH-resolved tool is often a `.cmd`/`.bat` shim (`npm`,
+/// `npx`), but Rust's `Command::new` does **not** consult `PATHEXT`, so it
+/// cannot find `npm.cmd`. Routing through `cmd /C` lets `cmd.exe` do the
+/// `PATHEXT` resolution; elsewhere the bare name is correct.
+fn tool_command(name: &str) -> Command {
+    if cfg!(windows) {
+        let mut c = Command::new("cmd.exe");
+        c.arg("/C").arg(name);
+        c
+    } else {
+        Command::new(name)
+    }
 }
 
 /// Pull the first `X.Y.Z` out of a `--version` line, tolerating vendor
