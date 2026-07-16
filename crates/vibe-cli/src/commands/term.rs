@@ -6,7 +6,7 @@
 specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-042#vibe-term");
 
 use std::path::{Path, PathBuf};
-use std::process::Command;
+use std::process::{Command, Stdio};
 
 use anyhow::{Result, anyhow, bail};
 use specmark::spec;
@@ -32,24 +32,52 @@ pub fn run(_ctx: &output::Context, args: TermArgs) -> Result<()> {
 /// `cols×rows`. Shared by `vibe term` and `vibe tree -t` (PROP-042 §5): resolve
 /// vibeterm + its Electron binary, spawn it detached, report the pid.
 pub(crate) fn launch_vibeterm(exec: &str, cols: Option<u16>, rows: Option<u16>) -> Result<()> {
+    let child = spawn_vibeterm(exec, cols, rows, false)?;
+    println!("vibeterm launched (pid {}) — running `{exec}`", child.id());
+    Ok(())
+}
+
+/// Spawn vibeterm detached and return the child handle. `control` adds
+/// `--control` so vibeterm starts its AIUI control server + discovery file, and
+/// `--headless` so no OS window pops up — a control session is driven over HTTP
+/// and read from the headless mirror (PROP-042 §4), so a visible GUI would only
+/// flash on screen and steal focus. Shared by `vibe term`, `vibe tree -t`, and
+/// `vibe aiui open`.
+pub(crate) fn spawn_vibeterm(
+    exec: &str,
+    cols: Option<u16>,
+    rows: Option<u16>,
+    control: bool,
+) -> Result<std::process::Child> {
     let vibeterm = resolve_vibeterm()?;
     let electron = electron_binary(&vibeterm)?;
     let mut cmd = Command::new(&electron);
     cmd.arg(&vibeterm)
         .arg("--exec")
         .arg(exec)
-        .current_dir(&vibeterm);
+        .current_dir(&vibeterm)
+        // Detach the child's stdio. vibeterm is a GUI process that long-outlives
+        // this launcher; if it inherited our pipes it would hold them open, so a
+        // `vibe aiui open` whose stdout is captured (e.g. `pid=$(vibe aiui
+        // open)`) would hang until vibeterm exits, and Electron's GPU-cache
+        // chatter would spam the launcher's console.
+        .stdin(Stdio::null())
+        .stdout(Stdio::null())
+        .stderr(Stdio::null());
     if let Some(c) = cols {
         cmd.arg("--cols").arg(c.to_string());
     }
     if let Some(r) = rows {
         cmd.arg("--rows").arg(r.to_string());
     }
-    let child = cmd
-        .spawn()
-        .map_err(|e| anyhow!("launching vibeterm via `{}`: {e}", electron.display()))?;
-    println!("vibeterm launched (pid {}) — running `{exec}`", child.id());
-    Ok(())
+    if control {
+        // Observation sessions are windowless: driven over HTTP, read from the
+        // headless mirror. (`vibe term` / `vibe tree -t` pass control = false and
+        // stay visible for a human to watch.)
+        cmd.arg("--control").arg("--headless");
+    }
+    cmd.spawn()
+        .map_err(|e| anyhow!("launching vibeterm via `{}`: {e}", electron.display()))
 }
 
 /// Double-quote an executable path that contains whitespace so vibeterm's

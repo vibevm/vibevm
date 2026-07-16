@@ -67,6 +67,9 @@ env_roots = [
     # PATH …) and locates vibeterm ($VIBEVM_VIBETERM) — a launcher whose job is
     # to read the environment for the spawn (PROP-042 §5).
     "crates/vibe-cli/src/commands/term.rs",
+    # `vibe aiui` reads $HOME/$USERPROFILE to find `~/.vibevm/aiui/` — vibeterm's
+    # control-session discovery directory (PROP-042 §4).
+    "crates/vibe-cli/src/commands/aiui/control.rs",
     "crates/vibe-core/src/user_config.rs",
     "crates/vibe-settings/src/loader.rs",
     "crates/vibe-index/src/scanner/git_cli.rs",

@@ -1,9 +1,12 @@
-//! `vibe aiui` — the agent-facing observation surface (PROP-042). The
-//! render-plane verb (`render`) drives the `vibe tree` TUI headlessly and prints
-//! a symbolic snapshot; terminal-plane and model-plane verbs land in later
-//! campaign phases.
+//! `vibe aiui` — the agent-facing observation surface (PROP-042). The **render
+//! plane** (`render`) drives the `vibe tree` TUI headlessly to a symbolic
+//! snapshot (no terminal). The **control plane** (`open`/`send`/`snapshot`/
+//! `wait`/`close`) drives and observes a *running* vibeterm over its loopback
+//! control server (§4). Model-plane verbs land in a later phase.
 
 specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-042#aiui-cli");
+
+mod control;
 
 use anyhow::{Result, anyhow};
 use specmark::spec;
@@ -15,6 +18,11 @@ use crate::output;
 pub fn run(_ctx: &output::Context, args: AiuiArgs) -> Result<()> {
     match args.command {
         AiuiSubcommand::Render(a) => render(a),
+        AiuiSubcommand::Open(a) => control::open(a),
+        AiuiSubcommand::Send(a) => control::send(a),
+        AiuiSubcommand::Snapshot(a) => control::snapshot(a),
+        AiuiSubcommand::Wait(a) => control::wait(a),
+        AiuiSubcommand::Close(a) => control::close(a),
     }
 }
 
@@ -29,8 +37,8 @@ fn render(a: AiuiRenderArgs) -> Result<()> {
     Ok(())
 }
 
-/// Parse a `COLSxROWS` grid spec (case-insensitive `x`).
-fn parse_size(s: &str) -> Result<(u16, u16)> {
+/// Parse a `COLSxROWS` grid spec (case-insensitive `x`), enforcing a floor.
+pub(super) fn parse_size(s: &str) -> Result<(u16, u16)> {
     let (c, r) = s
         .split_once(['x', 'X'])
         .ok_or_else(|| anyhow!("--size must be COLSxROWS, got `{s}`"))?;
