@@ -1,5 +1,5 @@
  ordering topological   mode all   STATIC.md 0b / 0L   packages 1   @spec
-name                                                 load      T   C   S
+name                                                 load      S   T   C
 g/a                                                  none      ○   ○   ○
 
 

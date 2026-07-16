@@ -222,12 +222,6 @@ impl Theme {
         Style::new().fg(self.color(role))
     }
 
-    /// A set flag (`T`/`C`/`S` = `●`).
-    #[must_use]
-    pub fn flag_on(&self) -> Style {
-        Style::new().fg(self.color(Role::Gold))
-    }
-
     /// An unset flag (`○`).
     #[must_use]
     pub fn flag_off(&self) -> Style {

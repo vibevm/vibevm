@@ -24,9 +24,12 @@ pub fn draw(area: Rect, buf: &mut Buffer, app: &mut App) {
     if area.width == 0 || area.height == 0 {
         return;
     }
-    let [status, body, footer] = Layout::vertical([
+    // A one-line gap between the tree and the footer — visual breathing room
+    // (an empty line, background only; nothing is rendered into it).
+    let [status, body, _gap, footer] = Layout::vertical([
         Constraint::Length(1),
         Constraint::Min(0),
+        Constraint::Length(1),
         Constraint::Length(2),
     ])
     .areas(area);
@@ -181,9 +184,9 @@ fn render_table(area: Rect, buf: &mut Buffer, app: &mut App) {
     let header = Row::new([
         Cell::from("name"),
         Cell::from("load"),
+        Cell::from("S"),
         Cell::from("T"),
         Cell::from("C"),
-        Cell::from("S"),
     ])
     .style(Some(app.theme.header()));
 
@@ -247,9 +250,12 @@ fn build_rows(app: &App) -> Vec<Row<'static>> {
                 RowNode::Package(_) => Row::new([
                     Cell::from(name),
                     Cell::from(r.load.to_string()).style(Some(theme.load(r.load))),
-                    flag_cell(r.transitive, theme),
-                    flag_cell(r.condition, theme),
-                    flag_cell(r.in_static, theme),
+                    // Column order S, T, C; each flag's ON colour is its column's
+                    // own (S=Gold, T=Muted, C=Accent) so the three read at a
+                    // glance, while OFF stays the shared dim style.
+                    flag_cell(r.in_static, theme, Role::Gold),
+                    flag_cell(r.transitive, theme, Role::Muted),
+                    flag_cell(r.condition, theme, Role::Accent),
                 ]),
                 RowNode::Missing => Row::new([
                     Cell::from(name).style(Some(Style::new().fg(theme.color(Role::Love)))),
@@ -283,12 +289,13 @@ fn build_rows(app: &App) -> Vec<Row<'static>> {
         .collect()
 }
 
-/// A single-character flag cell in its on/off colour.
-fn flag_cell(on: bool, theme: &super::theme::Theme) -> Cell<'static> {
-    // The glyph comes from the theme vocabulary (PROP-037 §2.2.2): ●/○
-    // Tier ≥ 1, x/. Tier 0 — never a hardcoded ASCII literal.
+/// A single-character flag cell: `●` in the column's own colour when on, `○`
+/// in the shared dim flag-off style when off. The glyph comes from the theme
+/// vocabulary (PROP-037 §2.2.2): ●/○ Tier ≥ 1, x/. Tier 0 — never a hardcoded
+/// ASCII literal.
+fn flag_cell(on: bool, theme: &super::theme::Theme, on_role: Role) -> Cell<'static> {
     if on {
-        Cell::from(theme.glyphs().flag_on).style(Some(theme.flag_on()))
+        Cell::from(theme.glyphs().flag_on).style(Some(Style::new().fg(theme.color(on_role))))
     } else {
         Cell::from(theme.glyphs().flag_off).style(Some(theme.flag_off()))
     }
