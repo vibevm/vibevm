@@ -118,6 +118,20 @@ cargo build -p vibe-cli && ./target/debug/vibe tree   # glyph-замены ви�
 
 ## Running ledger (заполняется по фазам)
 
+### P3 — ui foundation (IN PROGRESS 2026-07-16; rescoped by boss judgment)
+
+- **In scope now:** `ui::Window` extract (D2 — dedup the 3 centered-popup bodies
+  in modal/menu/search) + `ui::Button`/`ui::MsgDialog` wrappers (PROP-037 §2.5,
+  §2.10) — the foundation P6 (quit-confirm), P7 (ComingSoon), P8 (card close),
+  P9b (copy-settings modal) build on.
+- **Deferred to P9b (boss ruling):** the `state/` split (D7) and the ModalStack
+  migration (D3). `state.rs` is 458/600 — the split is preventive churn with no
+  current payoff (the theme fields ride the compat shim, not `App`); the modal
+  **stack** only earns its keep at depth-2 (copy-settings → file-path, §10.5),
+  so it migrates there alongside the depth-2 work. Today's 3 captive modal
+  fields already behave as a depth-1 stack (§6 satisfied at depth 1). Recorded
+  honestly, not papered over.
+
 ### P2 — visual-language system (DONE 2026-07-16)
 
 - **Core** (`7d606ce` + specmap `3cbb8c1`): `theme.rs` → `theme/` module — `Role`
