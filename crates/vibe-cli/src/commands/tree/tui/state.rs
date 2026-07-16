@@ -125,6 +125,9 @@ pub struct App {
     pub search: Option<SearchState>,
     /// The open F-key selection menu (F2/F3), if any (PROP-037 §7.1/§7.2).
     pub menu: Option<MenuState>,
+    /// Whether the quit-confirm dialog is open (PROP-037 §7.4 `#quit-confirm`).
+    /// A bare `Esc` at the base screen opens it; `Enter` confirms, `Esc` cancels.
+    pub confirm_quit: bool,
     /// A transient footer flash (e.g. an F6-copy confirmation); cleared on the
     /// next input event (PROP-037 §10).
     pub flash: Option<String>,
@@ -160,6 +163,7 @@ impl App {
             modal_open: false,
             search: None,
             menu: None,
+            confirm_quit: false,
             flash: None,
             ordering: Ordering::Topological,
             shape: TreeShape::default(),

@@ -14,7 +14,7 @@
 
 specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-037#f1-search");
 
-mod catalogue;
+pub(super) mod catalogue;
 mod providers;
 pub mod render;
 
@@ -27,6 +27,7 @@ use vibe_actions::search::{
 };
 
 use super::AppEvent;
+use super::dispatch;
 use super::state::{App, DisplayMode, RowNode};
 use catalogue::TreeCtx;
 use providers::{ACTIONS, ActionProvider, FIELDS, FieldProvider, PACKAGES, PackageProvider};
@@ -219,7 +220,12 @@ fn apply_effect(
             app.modal_open = true; // open the card for the revealed package
             Control::Changed
         }
-        ACTIONS => run_action(app, addr),
+        // An action runs through the shared address dispatch (PROP-037 §13.2)
+        // — the same path the base-mode keymap uses.
+        ACTIONS => match addr {
+            Some(addr) => dispatch::dispatch_by_addr(app, addr),
+            None => Control::Changed,
+        },
         _ => Control::Changed,
     }
 }
@@ -239,34 +245,6 @@ fn reveal_package(app: &mut App, pkg_idx: usize) {
         app.table.select(Some(row));
         app.table.scroll_to_selected();
     }
-}
-
-/// Run a `vibe.tree` catalogue action by its address (PROP-037 §13.5).
-fn run_action(app: &mut App, addr: Option<&ActionAddr>) -> Control<AppEvent> {
-    let Some(addr) = addr else {
-        return Control::Changed;
-    };
-    match addr.to_string().as_str() {
-        "action://vibe.tree/ordering.cycle" => app.cycle_ordering(),
-        "action://vibe.tree/mode.cycle" => app.cycle_display_mode(),
-        "action://vibe.tree/priority.swap" => app.swap_priority(),
-        "action://vibe.tree/fold.toggle" => app.toggle_fold_selected(),
-        "action://vibe.tree/fold.all" => app.toggle_fold_all(),
-        "action://vibe.tree/card.open" => {
-            if app
-                .selected_row()
-                .map(|r| matches!(r.node, RowNode::Package(_) | RowNode::Missing))
-                .unwrap_or(false)
-            {
-                app.modal_open = true;
-            }
-        }
-        "action://vibe.tree/tab.next" => app.next_tab(),
-        "action://vibe.tree/tab.prev" => app.prev_tab(),
-        "action://vibe.tree/quit" => return Control::Quit,
-        _ => {}
-    }
-    Control::Changed
 }
 
 #[cfg(test)]

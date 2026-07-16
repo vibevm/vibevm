@@ -15,6 +15,7 @@ use ratatui_core::text::{Line, Span};
 use ratatui_core::widgets::{StatefulWidget, Widget};
 
 use super::state::{App, DisplayMode, RowNode};
+use super::ui::MsgDialog;
 use super::{modal, modes, theme};
 
 /// Draw the whole surface for this frame.
@@ -47,6 +48,10 @@ pub fn draw(area: Rect, buf: &mut Buffer, app: &mut App) {
     // The F-key menus (F2/F3) — a captive dropdown (PROP-037 §7.1/§7.2).
     if let Some(menu) = &app.menu {
         super::menu::draw(area, buf, menu);
+    }
+    // The quit-confirm dialog (PROP-037 §7.4) — drawn last, on top of everything.
+    if app.confirm_quit {
+        MsgDialog::new("Really quit?", "Enter to quit \u{00b7} Esc to cancel").render(area, buf);
     }
 }
 

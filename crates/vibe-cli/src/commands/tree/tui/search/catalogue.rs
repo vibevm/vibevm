@@ -11,7 +11,8 @@
 specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-037#action-catalogue");
 
 use vibe_actions::{
-    Action, ActionAddr, Capability, Ctx, Enablement, InvokeOutcome, Registry, SearchMeta,
+    Action, ActionAddr, Capability, Ctx, Enablement, InvokeOutcome, Key, KeyCode, KeyModifiers,
+    Keymap, ParamValues, Registry, SearchMeta,
 };
 
 use super::super::state::DisplayMode;
@@ -189,6 +190,97 @@ pub fn key_for(addr: &str) -> &'static str {
         .unwrap_or("")
 }
 
+/// Parse a catalogue `key` string into a [`Key`] (PROP-037 §13.3 `#as-keymap`).
+///
+/// The notation is table-driven and intentionally small:
+/// - `"F1"`..`"F12"` → `KeyCode::F(n)`;
+/// - named keys: `"Space"`, `"Enter"`, `"Esc"`, `"Tab"`, `"Backspace"`, `"Delete"`,
+///   `"Insert"`, `"Home"`, `"End"`, `"PageUp"`, `"PageDown"`, and the arrows
+///   `"Up"`/`"Down"`/`"Left"`/`"Right"`;
+/// - `"↑X"` → the key `X` with `SHIFT` (the `↑` glyph is the spec's Shift prefix,
+///   PROP-037 §5.2);
+/// - any other single character → `KeyCode::Char(c)`. An uppercase letter implies
+///   `SHIFT` (crossterm sends `Shift+f` as `Char('F')` + `SHIFT`, so the binding
+///   carries `SHIFT` too to match).
+///
+/// Returns `None` for an unrecognised string (a malformed entry — the catalogue
+/// is asserted valid in tests, so this never fires for a real entry).
+pub fn parse_key(s: &str) -> Option<Key> {
+    let (base, shift) = match s.strip_prefix('\u{2191}') {
+        Some(rest) => (rest, true),
+        None => (s, false),
+    };
+    let mut key = parse_key_base(base)?;
+    if shift {
+        key = key.with_mods(KeyModifiers::SHIFT);
+    }
+    Some(key)
+}
+
+/// The inner parser — resolves the non-Shift part.
+fn parse_key_base(s: &str) -> Option<Key> {
+    // F1..F12 — distinguish from the letter 'F' by checking the suffix is digits.
+    if let Some(rest) = s.strip_prefix('F')
+        && let Ok(n) = rest.parse::<u8>()
+        && (1..=12).contains(&n)
+    {
+        return Some(Key::new(KeyCode::F(n)));
+    }
+    let code = match s {
+        "Space" => KeyCode::Space,
+        "Enter" => KeyCode::Enter,
+        "Esc" => KeyCode::Esc,
+        "Tab" => KeyCode::Tab,
+        "Backspace" => KeyCode::Backspace,
+        "Delete" => KeyCode::Delete,
+        "Insert" => KeyCode::Insert,
+        "Home" => KeyCode::Home,
+        "End" => KeyCode::End,
+        "PageUp" => KeyCode::PageUp,
+        "PageDown" => KeyCode::PageDown,
+        "Up" => KeyCode::Up,
+        "Down" => KeyCode::Down,
+        "Left" => KeyCode::Left,
+        "Right" => KeyCode::Right,
+        // Arrow glyphs (PROP-037 §5.2) — the same characters the footer hint
+        // renders. `↑` (U+2191) never reaches here: it is stripped as the Shift
+        // prefix before `parse_key_base` is called.
+        "\u{2190}" => KeyCode::Left,
+        "\u{2192}" => KeyCode::Right,
+        "\u{2193}" => KeyCode::Down,
+        _ => {
+            let mut chars = s.chars();
+            let c = chars.next()?;
+            if chars.next().is_none() {
+                let mut key = Key::new(KeyCode::Char(c));
+                if c.is_ascii_uppercase() {
+                    key = key.with_mods(KeyModifiers::SHIFT);
+                }
+                return Some(key);
+            }
+            return None;
+        }
+    };
+    Some(Key::new(code))
+}
+
+/// Build the `vibe.tree` [`Keymap`] from [`TREE_ACTIONS`] (PROP-037 §13.3
+/// `#as-keymap`). Each entry's `key` string is parsed into a [`Key`] and bound
+/// to its address with default weight. Entries whose key fails to parse are
+/// skipped — the catalogue is asserted valid in tests, so the skip never fires.
+pub fn build_keymap() -> Keymap {
+    let mut km = Keymap::new();
+    for spec in TREE_ACTIONS {
+        let Ok(addr) = ActionAddr::parse(spec.addr) else {
+            continue;
+        };
+        if let Some(key) = parse_key(spec.key) {
+            km.bind([key], addr, ParamValues::new(), 0);
+        }
+    }
+    km
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -279,5 +371,50 @@ mod tests {
             !fold.enabled && fold.reason.is_some(),
             "a disabled action carries its reason for the AI"
         );
+    }
+
+    #[test]
+    fn build_keymap_binds_every_action_and_resolves_each_by_key() {
+        use vibe_actions::Match;
+        let km = build_keymap();
+        assert_eq!(
+            km.bindings().len(),
+            TREE_ACTIONS.len(),
+            "one binding per catalogue entry"
+        );
+        for spec in TREE_ACTIONS {
+            let key = parse_key(spec.key).unwrap_or_else(|| panic!("parses {}", spec.key));
+            let addr = ActionAddr::parse(spec.addr).unwrap_or_else(|e| panic!("{e}"));
+            match km.resolve(std::slice::from_ref(&key), |_| true) {
+                Match::Found(resolved, _) => assert_eq!(resolved, addr),
+                other => panic!("{} not resolved by key {:?}: {:?}", spec.addr, key, other),
+            }
+        }
+    }
+
+    #[test]
+    fn parse_key_handles_f_keys_named_keys_shift_prefix_and_chars() {
+        assert_eq!(parse_key("F1"), Some(Key::new(KeyCode::F(1))));
+        assert_eq!(parse_key("F12"), Some(Key::new(KeyCode::F(12))));
+        assert_eq!(parse_key("Space"), Some(Key::new(KeyCode::Space)));
+        assert_eq!(parse_key("Enter"), Some(Key::new(KeyCode::Enter)));
+        assert_eq!(parse_key("Esc"), Some(Key::new(KeyCode::Esc)));
+        assert_eq!(parse_key("q"), Some(Key::new(KeyCode::Char('q'))));
+        // Uppercase implies Shift.
+        assert_eq!(
+            parse_key("F"),
+            Some(Key::new(KeyCode::Char('F')).with_mods(KeyModifiers::SHIFT))
+        );
+        // Shift prefix.
+        assert_eq!(
+            parse_key("\u{2191}F6"),
+            Some(Key::new(KeyCode::F(6)).with_mods(KeyModifiers::SHIFT))
+        );
+        assert_eq!(
+            parse_key("\u{2191}\u{2192}"),
+            Some(Key::new(KeyCode::Right).with_mods(KeyModifiers::SHIFT))
+        );
+        // F is the letter, not a function-key prefix (no trailing digits).
+        assert_eq!(parse_key("Fred"), None);
     }
 }
