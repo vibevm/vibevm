@@ -25,12 +25,15 @@
 
 specmark::scope!("spec://vibevm/modules/vibe-settings/PROP-041#overview");
 
+pub mod catalogue;
+pub mod dispatch;
 pub mod form;
 pub mod input;
 pub mod lint;
 pub mod page_tree;
 pub mod registry;
 pub mod render;
+pub mod search;
 pub mod settings;
 pub mod state;
 

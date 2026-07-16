@@ -1,16 +1,29 @@
 //! Key handling for the settings TUI (PROP-041 §3 `#tree-widget`, §4
 //! `#edit-form`, §5 `#provenance-view`, §6 `#validation-feedback`,
-//! `#lint-all`, §8 `#commands-are-actions`). The tree-nav keys (↑/↓ move,
-//! ←/→ fold, Enter open, q quit) act at the base screen. When a page is open,
-//! the form captures input: ↑/↓ move field focus, Space/Enter toggle/select,
-//! Tab cycles the write-layer, typing edits a focused text field, `a` applies,
-//! `r` resets, `?` toggles the provenance view, `x` clears the focused field at
-//! the write-layer (from the provenance view), `c` opens the check-all-layers
-//! modal, Esc closes the page. The lint modal, when open, captures all input:
-//! ↑/↓ navigate, Enter jumps to the field, Esc closes.
+//! `#lint-all`, §7 `#settings-search`, §8 `#commands-are-actions`,
+//! `#modal-stack`). The tree-nav keys (↑/↓ move, ←/→ fold, Enter open, q quit)
+//! act at the base screen. When a page is open, the form captures input: ↑/↓
+//! move field focus, Space/Enter toggle/select, Tab cycles the write-layer,
+//! typing edits a focused text field, `a` applies, `r` resets, `?` toggles the
+//! provenance view, `x` clears the focused field at the write-layer (from the
+//! provenance view), `c` opens the check-all-layers modal, `/` or `F1` opens
+//! Search Everywhere, Esc pops the modal stack (provenance first, then the
+//! page). The lint + search overlays, when open, capture all input.
 //!
-//! Mirrors the `vibe tree` TUI's structure (the `Event::Key(k)` + `match
-//! k.code` pattern the copy/file-dest handlers use) over [`PrefsApp`]. The resize
+//! ## Base-mode routing (PROP-037 §5.1, §13.3 `#as-keymap`)
+//!
+//! At the base screen the flow mirrors the `vibe tree` TUI:
+//! 1. **F1** opens Search Everywhere (a direct opener; `/` is bound in the
+//!    catalogue and resolved by the keymap).
+//! 2. **Keymap resolution** — convert the event to a `vibe_actions::Key` and
+//!    `resolve` against the `vibe.prefs` keymap built from [`super::catalogue`].
+//!    On `Found(addr)` the shared [`super::dispatch::dispatch_by_addr`] applies
+//!    the effect (the same function the Search Everywhere ACTIONS provider
+//!    uses).
+//! 3. **Direct tree-nav** — arrows pan, `←`/`→`/Space fold, `Esc` quits. These
+//!    are navigation keys (exempt from the action catalogue, PROP-037 §5.3).
+//!
+//! Mirrors the `vibe tree` TUI's structure over [`PrefsApp`]. The resize
 //! repaint is handled first so the display never garbles (the same lesson the
 //! tree TUI records).
 
@@ -20,8 +33,14 @@ use anyhow::Result;
 use rat_salsa::Control;
 use rat_widget::event::ct_event;
 use ratatui_crossterm::crossterm::event::{Event, KeyCode, KeyEventKind};
+use vibe_actions::Match;
 
+use crate::commands::tree::tui::keymap_bridge;
+
+use super::catalogue;
+use super::dispatch;
 use super::form::control::FieldControl;
+use super::search::SearchState;
 use super::state::PrefsApp;
 
 /// Handle one terminal event, returning the rat-salsa control-flow verdict.
@@ -30,6 +49,12 @@ pub fn handle(event: &Event, app: &mut PrefsApp) -> Result<Control<super::AppEve
     // auto-repaints on resize — the tree TUI records this lesson).
     if let Event::Resize(..) = event {
         return Ok(Control::Changed);
+    }
+
+    // The Search Everywhere window captures input while open (PROP-041 §7
+    // #settings-search) — checked first so it overlays the lint modal + the form.
+    if app.search.is_some() {
+        return Ok(handle_search(event, app));
     }
 
     // The lint modal captures all input when open (PROP-041 §6 #lint-all) —
@@ -43,6 +68,31 @@ pub fn handle(event: &Event, app: &mut PrefsApp) -> Result<Control<super::AppEve
         return Ok(handle_form(event, app));
     }
 
+    // F1 opens Search Everywhere (the tree-TUI-aligned entry point; `/` is
+    // bound in the catalogue and resolved by the keymap below).
+    if is_press_fkey(event, 1) {
+        app.open_search();
+        return Ok(Control::Changed);
+    }
+
+    // Keymap resolution (PROP-041 §8 #commands-are-actions, PROP-037 §13.3):
+    // convert the event to a Key and ask the vibe.prefs keymap which action it
+    // means. On Found, dispatch by address through the shared path the Search
+    // Everywhere ACTIONS provider uses; on NoMatch / NeedMoreChords, fall
+    // through to the direct tree-nav keys below.
+    if let Some(key) = keymap_bridge::event_to_key(event) {
+        let km = catalogue::build_keymap();
+        match km.resolve(std::slice::from_ref(&key), |addr| {
+            dispatch::enabled_in_base(app, addr)
+        }) {
+            Match::Found(addr, _) => return Ok(dispatch::dispatch_by_addr(app, &addr)),
+            Match::NoMatch | Match::NeedMoreChords => {}
+        }
+    }
+
+    // Direct tree-nav keys — always handled here so navigation is instant and
+    // unaffected by the resolver's enablement gate (PROP-037 §5.3). These are
+    // the keys the keymap does not own (arrows, fold, Esc-quit).
     let control = match event {
         ct_event!(keycode press Up) => {
             app.move_up();
@@ -60,19 +110,7 @@ pub fn handle(event: &Event, app: &mut PrefsApp) -> Result<Control<super::AppEve
             app.toggle_fold_selected();
             Control::Changed
         }
-        ct_event!(keycode press Enter) => {
-            app.open_selected();
-            Control::Changed
-        }
-        // `c` opens the check-all-layers modal (PROP-041 §6 #lint-all).
-        ct_event!(key press 'c') | ct_event!(key press 'C') => {
-            app.open_lint();
-            Control::Changed
-        }
         ct_event!(keycode press Esc) => Control::Quit,
-        // `q` quits the settings TUI (S1; a quit-confirm gates this in a later
-        // phase, mirroring the tree TUI's PROP-037 §7.4 dialog).
-        ct_event!(key press 'q') | ct_event!(key press 'Q') => Control::Quit,
         _ => Control::Continue,
     };
     Ok(control)
@@ -131,6 +169,11 @@ fn handle_form(event: &Event, app: &mut PrefsApp) -> Control<super::AppEvent> {
         app.open_lint();
         return Control::Changed;
     }
+    // F1 opens Search Everywhere over the form (PROP-041 §7 #settings-search).
+    if is_press_fkey(event, 1) {
+        app.open_search();
+        return Control::Changed;
+    }
 
     // Pull the form out so we can move / type / apply without nested borrows of
     // `app`. The schema (for `apply`'s diff) + prefs (for `reset`/`clear`) stay
@@ -145,8 +188,26 @@ fn handle_form(event: &Event, app: &mut PrefsApp) -> Control<super::AppEvent> {
         .map(|f| f.control.is_text())
         .unwrap_or(false);
     match k.code {
+        // Modal-stack pop (PROP-041 §8 #modal-stack): if the provenance view is
+        // open, Esc closes it first; otherwise Esc closes the page. The flag is
+        // copied to a local so the `form` borrow ends before `app.close_page()`
+        // takes `&mut app` on the else branch (NLL — `form` is not touched on
+        // that path after the read).
         KeyCode::Esc => {
-            app.close_page();
+            let provenance_open = form.provenance_open;
+            if provenance_open {
+                form.provenance_open = false;
+            } else {
+                app.close_page();
+            }
+            Control::Changed
+        }
+        // `/` opens Search Everywhere — but not when typing into a text field
+        // (PROP-041 §7 #settings-search). On this path `form` is not touched
+        // inside the arm, so the borrow has ended and `app.open_search()` is
+        // free to run.
+        KeyCode::Char('/') if !focused_is_text => {
+            app.open_search();
             Control::Changed
         }
         // Field focus (↑/↓) — always active.
@@ -243,6 +304,46 @@ fn handle_form(event: &Event, app: &mut PrefsApp) -> Control<super::AppEvent> {
         }
         _ => Control::Unchanged,
     }
+}
+
+/// The captive Search Everywhere handler (PROP-041 §7 `#settings-search`):
+/// typing filters, Up/Down move the selection, `Tab`/`Shift+Tab` cycle the
+/// category tabs, `Enter` confirms the selection (opens the owning page focused
+/// on the field, or runs the selected action), `Esc` closes.
+fn handle_search(event: &Event, app: &mut PrefsApp) -> Control<super::AppEvent> {
+    let Event::Key(k) = event else {
+        return Control::Unchanged;
+    };
+    if k.kind != KeyEventKind::Press {
+        return Control::Unchanged;
+    }
+    match k.code {
+        KeyCode::Esc => {
+            app.close_search();
+            Control::Changed
+        }
+        KeyCode::Enter => super::search::confirm(app),
+        KeyCode::Up => with_search(app, |s| s.select_up()),
+        KeyCode::Down => with_search(app, |s| s.select_down()),
+        KeyCode::Tab => with_search(app, |s| s.next_tab()),
+        KeyCode::BackTab => with_search(app, |s| s.prev_tab()),
+        KeyCode::Backspace => with_search(app, |s| s.backspace()),
+        KeyCode::Char(c) => with_search(app, move |s| s.type_char(c)),
+        _ => Control::Unchanged,
+    }
+}
+
+/// Run a mutation on the open search window and request a repaint.
+fn with_search(app: &mut PrefsApp, f: impl FnOnce(&mut SearchState)) -> Control<super::AppEvent> {
+    if let Some(state) = app.search.as_mut() {
+        f(state);
+    }
+    Control::Changed
+}
+
+/// True for an `F<n>` key-press event (mirrors the tree TUI's helper).
+fn is_press_fkey(event: &Event, n: u8) -> bool {
+    matches!(event, Event::Key(k) if k.code == KeyCode::F(n) && k.kind == KeyEventKind::Press)
 }
 
 #[cfg(test)]

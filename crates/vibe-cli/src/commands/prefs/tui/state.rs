@@ -19,8 +19,10 @@ use vibe_settings::schema::Schema;
 use crate::commands::tree::tui::settings as tree_settings;
 use crate::commands::tree::tui::theme::Theme;
 
+use super::catalogue::PrefsActionCtx;
 use super::page_tree::{PageRow, flatten};
 use super::registry::PageRegistry;
+use super::search::SearchState;
 use super::settings::builtin_registry;
 
 /// The session context (PROP-041 §3 `#tree-context`): whether there is an
@@ -72,6 +74,11 @@ pub struct PrefsApp {
     /// the "check all layers" modal is open; `None` when it is closed. Built by
     /// [`PrefsApp::open_lint`] from the loaded layer files.
     pub lint: Option<super::lint::LintState>,
+    /// The Search Everywhere window (PROP-041 §7 `#settings-search`). `Some`
+    /// while the window is open (it then captures input); `None` when closed.
+    /// Built by [`PrefsApp::open_search`] over the registry + schema + action
+    /// catalogue.
+    pub search: Option<SearchState>,
     /// A fatal error captured by the error handler, re-raised after the loop
     /// restores the terminal.
     pub fatal: Option<anyhow::Error>,
@@ -98,6 +105,7 @@ impl PrefsApp {
             open_page: None,
             form: None,
             lint: None,
+            search: None,
             fatal: None,
         };
         app.rebuild();
@@ -205,6 +213,61 @@ impl PrefsApp {
         self.lint = None;
     }
 
+    /// Open the Search Everywhere window (PROP-041 §7 `#settings-search`, wired
+    /// to `/` / `F1`). The window captures input while open.
+    pub fn open_search(&mut self) {
+        let state = SearchState::open(self);
+        self.search = Some(state);
+    }
+
+    /// Close the Search Everywhere window (`Esc`).
+    pub fn close_search(&mut self) {
+        self.search = None;
+    }
+
+    /// Open a specific page by id and focus the field for `key` (PROP-041 §7
+    /// `#settings-search`'s "selecting a result opens the owning page focused on
+    /// that field", and §6 `#lint-all`'s jump-to-field). A no-op on the form
+    /// side when the page id is unknown (the registry find returns `None`).
+    pub fn open_page_focused(&mut self, page_id: &str, key: &str) {
+        // Only open when the page is actually declared (a search hit always
+        // carries a real page id, but a lint jump may name a key no page owns).
+        if !self.registry.pages().iter().any(|d| d.id == page_id) {
+            return;
+        }
+        self.open_page = Some(page_id.to_owned());
+        self.form = super::form::Form::build(self);
+        if let Some(form) = &mut self.form {
+            form.focus_key(key);
+        }
+    }
+
+    /// The action-enablement snapshot for the `vibe.prefs` catalogue (PROP-039
+    /// §6.2, PROP-041 §8 `#commands-are-actions`). Read by the keymap resolver
+    /// gate + the footer + the search ActionProvider.
+    #[must_use]
+    pub fn action_ctx(&self) -> PrefsActionCtx {
+        PrefsActionCtx {
+            at_base: self.open_page.is_none() && self.lint.is_none() && self.search.is_none(),
+            page_open: self.open_page.is_some(),
+            leaf_selected: self
+                .selected_row()
+                .map(|r| r.is_openable())
+                .unwrap_or(false),
+            form_editable: self
+                .form
+                .as_ref()
+                .and_then(|f| f.focused_field())
+                .map(|f| !f.control.is_text())
+                .unwrap_or(false),
+            has_blocking_error: self
+                .form
+                .as_ref()
+                .map(|f| f.has_blocking_error())
+                .unwrap_or(false),
+        }
+    }
+
     /// Move the lint selection up one row.
     pub fn lint_up(&mut self) {
         if let Some(lint) = &mut self.lint {
@@ -230,7 +293,8 @@ impl PrefsApp {
             return;
         };
         self.close_lint();
-        // Find the page that owns this key.
+        // Find the page that owns this key, then open + focus via the shared
+        // path the search result selection also uses.
         let page_id = self
             .registry
             .pages()
@@ -238,11 +302,7 @@ impl PrefsApp {
             .find(|d| d.keys.iter().any(|k| k == &entry.path))
             .map(|d| d.id.clone());
         if let Some(id) = page_id {
-            self.open_page = Some(id);
-            self.form = super::form::Form::build(self);
-            if let Some(form) = &mut self.form {
-                form.focus_key(&entry.path);
-            }
+            self.open_page_focused(&id, &entry.path);
         }
     }
 

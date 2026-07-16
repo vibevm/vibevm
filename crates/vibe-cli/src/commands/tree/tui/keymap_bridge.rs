@@ -24,7 +24,11 @@ use vibe_actions::keymap::{Key, KeyCode, KeyModifiers};
 
 /// Convert a crossterm [`Event`] into a `vibe_actions` [`Key`], or `None` if the
 /// event is not a key press the keymap should see.
-pub(super) fn event_to_key(event: &Event) -> Option<Key> {
+///
+/// `pub(crate)` so the `vibe prefs` TUI (PROP-041 §8 `#commands-are-actions`)
+/// can drive the same keymap resolver over the same crossterm events without
+/// duplicating the bridge.
+pub(crate) fn event_to_key(event: &Event) -> Option<Key> {
     let Event::Key(k) = event else {
         return None;
     };

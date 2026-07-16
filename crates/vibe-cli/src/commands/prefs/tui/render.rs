@@ -38,6 +38,11 @@ pub fn draw(area: Rect, buf: &mut Buffer, app: &mut PrefsApp) {
     if let Some(lint) = &app.lint {
         super::lint::render_lint(area, buf, lint, &app.theme);
     }
+    // The Search Everywhere window overlays the surface when open (PROP-041 §7
+    // #settings-search) — drawn last so it sits above the lint modal too.
+    if let Some(search) = &app.search {
+        super::search::render::draw(area, buf, search, &app.theme);
+    }
 }
 
 /// The status line: the surface title + the active session context (project /
@@ -168,32 +173,26 @@ fn open_title(app: &PrefsApp) -> String {
     app.open_page_title().unwrap_or("Settings").to_owned()
 }
 
-/// The footer keymap hint (PROP-041 §8 — the settings UI mirrors the `vibe
-/// tree` footer convention).
+/// The action-aware footer (PROP-041 §8 `#commands-are-actions`, PROP-037 §5.2):
+/// lists the `vibe.prefs` actions **enabled** for the current context, drawn
+/// from the live catalogue via [`super::catalogue::enabled_footer_keys`]. The
+/// navigation keys (`↑↓` move, `←→`/Space fold, `Esc` back) are appended as
+/// direct-hint entries because they are navigation, not catalogue actions
+/// (mirroring the `vibe tree` footer, which mixes keymap actions + direct nav).
 fn render_footer(area: Rect, buf: &mut Buffer, app: &PrefsApp) {
     if area.width == 0 {
         return;
     }
-    let keys: Vec<(&str, &str)> = if app.open_page.is_some() {
-        vec![
-            ("\u{2191}\u{2193}", " move  "),
-            ("Space", " toggle  "),
-            ("Tab", " layer  "),
-            ("?", " provenance  "),
-            ("c", " check  "),
-            ("a", " apply  "),
-            ("r", " reset  "),
-            ("Esc", " back"),
-        ]
+    // The enabled vibe.prefs actions for the current context (PROP-037 §5.2).
+    let mut keys: Vec<(&str, &str)> = super::catalogue::enabled_footer_keys(app.action_ctx());
+    // Navigation hints (not in the action catalogue — direct handlers).
+    if app.open_page.is_some() {
+        keys.insert(0, ("\u{2191}\u{2193}", " move  "));
+        keys.push(("Esc", " back"));
     } else {
-        vec![
-            ("\u{2191}\u{2193}", " move  "),
-            ("\u{2190}\u{2192}", " fold  "),
-            ("Enter", " open  "),
-            ("c", " check  "),
-            ("q", " quit"),
-        ]
-    };
+        keys.insert(0, ("\u{2191}\u{2193}", " move  "));
+        keys.insert(1, ("\u{2190}\u{2192}", " fold  "));
+    }
     let mut spans: Vec<Span<'static>> = vec![Span::raw(" ")];
     for (k, desc) in keys {
         spans.push(Span::styled(k.to_string(), app.theme.key()));

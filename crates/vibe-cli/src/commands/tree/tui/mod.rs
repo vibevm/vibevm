@@ -17,7 +17,10 @@ mod copy;
 mod dispatch;
 mod flatten;
 mod input;
-mod keymap_bridge;
+/// The crossterm → `vibe_actions::Key` bridge is shared with the `vibe prefs`
+/// TUI (PROP-041 §8 `#commands-are-actions` reuses the same keymap resolver),
+/// so it is crate-visible.
+pub(crate) mod keymap_bridge;
 mod menu;
 mod modal;
 mod modes;
