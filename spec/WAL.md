@@ -1,5 +1,25 @@
 # WAL — Project Continuation State
 
+## CHECKPOINT 2026-07-16 — TREE TUI EXECUTED (Шаг 3, PROP-037) → settings UI in progress (Шаг 4, PROP-041)
+
+_Updated: 2026-07-16 — **Шаг 3 (the `vibe tree` TUI, PROP-037) LANDED END-TO-END** — all eleven phases
+P0–P10 of `TREE-TUI-PLAN-v0.2.md` on `main`, floor-green throughout (`self-check` all green, 241
+vibe-cli tests, conform 0, specmap clean): the formal visual language (5 palettes data-driven —
+Rosé Pine locked + Catppuccin Mocha/Macchiato/Frappe/Latte; glyph vocabulary ▾▸↩●○; 4-tier
+rendering + pure `detect_tier` + projection; `&Theme` threaded through `App`, compat shim retired),
+the `ui::` component library (Window/Button/RadioGroup/TextField/Group/Card/MsgDialog/ComingSoon),
+the tree filter/shape pipeline (`TreeShape` × 3), trees in every mode (SubTables stacked / Tabs),
+`vibe_actions::keymap` resolver + invoke-by-addr dispatch (string-match killed), Esc quit-confirm,
+the detail `Card` (wrapped form), settings persistence (palette/tier/mode/sort/shape via
+`vibe-settings`, Шаг 2), the copy system (tree/card Markdown, F6, Shift+F6 copy-settings → FileDest
+depth-2). Sign-off: `spec/manual-tests/MT-02-vibe-tree-tui.md` (owner's eye — the one open item).
+**Commit span** `2f41477`→`514f3b3` + Шаг 4 `f875413`→`21dfc0d`. **Шаг 4 (settings UI, PROP-041)
+IN PROGRESS** per `SETTINGS-UI-PLAN-v0.1.md`: S1 (page registry + settings tree, `0128360`) done;
+S2 (edit form) in flight; S3–S7 (provenance / validation / search / actions / sign-off) pending.
+**Нет блокера.** AIUI — «потом» (settings + actions AIUI-ready по дизайну)._
+
+---
+
 ## CHECKPOINT 2026-07-16 — settings system EXECUTED (Шаги 0–2) → next: TUI
 
 _Updated: 2026-07-16 — **SETTINGS SYSTEM LANDED (Шаги 0–2 мета-плана), TUI — следующий.**
