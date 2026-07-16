@@ -459,7 +459,7 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/prefs/tui/form/mod.rs",
       "item_kind": "fn",
-      "line": 143,
+      "line": 152,
       "symbol": "vibe_cli::commands::prefs::tui::form::Form::build"
     },
     {
@@ -480,43 +480,78 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/prefs/tui/form/lifecycle.rs",
       "item_kind": "mod",
-      "line": 25,
+      "line": 26,
       "symbol": "vibe_cli::commands::prefs::tui::form::lifecycle"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/prefs/tui/form/lifecycle.rs",
       "item_kind": "fn",
-      "line": 50,
+      "line": 51,
       "symbol": "vibe_cli::commands::prefs::tui::form::lifecycle::Form::apply"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/prefs/tui/form/lifecycle.rs",
       "item_kind": "fn",
-      "line": 39,
+      "line": 40,
       "symbol": "vibe_cli::commands::prefs::tui::form::lifecycle::Form::is_modified"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/prefs/tui/form/lifecycle.rs",
       "item_kind": "fn",
-      "line": 126,
+      "line": 127,
       "symbol": "vibe_cli::commands::prefs::tui::form::lifecycle::Form::reset"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/prefs/tui/form/provenance.rs",
+      "item_kind": "mod",
+      "line": 14,
+      "symbol": "vibe_cli::commands::prefs::tui::form::provenance"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/prefs/tui/form/provenance_edit.rs",
+      "item_kind": "mod",
+      "line": 16,
+      "symbol": "vibe_cli::commands::prefs::tui::form::provenance_edit"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/prefs/tui/form/provenance_edit.rs",
+      "item_kind": "fn",
+      "line": 29,
+      "symbol": "vibe_cli::commands::prefs::tui::form::provenance_edit::Form::clear_focused"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/prefs/tui/form/render.rs",
       "item_kind": "mod",
-      "line": 13,
+      "line": 17,
       "symbol": "vibe_cli::commands::prefs::tui::form::render"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/prefs/tui/form/validation.rs",
+      "item_kind": "mod",
+      "line": 16,
+      "symbol": "vibe_cli::commands::prefs::tui::form::validation"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/prefs/tui/input.rs",
       "item_kind": "mod",
-      "line": 13,
+      "line": 17,
       "symbol": "vibe_cli::commands::prefs::tui::input"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/prefs/tui/lint.rs",
+      "item_kind": "mod",
+      "line": 14,
+      "symbol": "vibe_cli::commands::prefs::tui::lint"
     },
     {
       "crate_name": "vibe-cli",
@@ -5888,7 +5923,7 @@
     {
       "file": "crates/vibe-cli/src/commands/prefs/tui/form/mod.rs",
       "from_symbol": "vibe_cli::commands::prefs::tui::form::Form::build",
-      "line": 147,
+      "line": 156,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-settings/PROP-041#form-per-type",
       "verb": "implements"
@@ -5912,7 +5947,7 @@
     {
       "file": "crates/vibe-cli/src/commands/prefs/tui/form/lifecycle.rs",
       "from_symbol": "vibe_cli::commands::prefs::tui::form::lifecycle",
-      "line": 25,
+      "line": 26,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-settings/PROP-041#configurable-lifecycle",
       "verb": "implements"
@@ -5920,7 +5955,7 @@
     {
       "file": "crates/vibe-cli/src/commands/prefs/tui/form/lifecycle.rs",
       "from_symbol": "vibe_cli::commands::prefs::tui::form::lifecycle::Form::apply",
-      "line": 57,
+      "line": 58,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-settings/PROP-041#write-layer-choice",
       "verb": "implements"
@@ -5928,7 +5963,7 @@
     {
       "file": "crates/vibe-cli/src/commands/prefs/tui/form/lifecycle.rs",
       "from_symbol": "vibe_cli::commands::prefs::tui::form::lifecycle::Form::is_modified",
-      "line": 42,
+      "line": 43,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-settings/PROP-041#configurable-lifecycle",
       "verb": "implements"
@@ -5936,25 +5971,65 @@
     {
       "file": "crates/vibe-cli/src/commands/prefs/tui/form/lifecycle.rs",
       "from_symbol": "vibe_cli::commands::prefs::tui::form::lifecycle::Form::reset",
-      "line": 130,
+      "line": 131,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-settings/PROP-041#configurable-lifecycle",
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-cli/src/commands/prefs/tui/form/provenance.rs",
+      "from_symbol": "vibe_cli::commands::prefs::tui::form::provenance",
+      "line": 14,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-settings/PROP-041#provenance",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/prefs/tui/form/provenance_edit.rs",
+      "from_symbol": "vibe_cli::commands::prefs::tui::form::provenance_edit",
+      "line": 16,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-settings/PROP-041#provenance-edit",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/prefs/tui/form/provenance_edit.rs",
+      "from_symbol": "vibe_cli::commands::prefs::tui::form::provenance_edit::Form::clear_focused",
+      "line": 37,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-settings/PROP-041#provenance-edit",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-cli/src/commands/prefs/tui/form/render.rs",
       "from_symbol": "vibe_cli::commands::prefs::tui::form::render",
-      "line": 13,
+      "line": 17,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-settings/PROP-041#edit-form",
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-cli/src/commands/prefs/tui/form/validation.rs",
+      "from_symbol": "vibe_cli::commands::prefs::tui::form::validation",
+      "line": 16,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-settings/PROP-041#validation",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-cli/src/commands/prefs/tui/input.rs",
       "from_symbol": "vibe_cli::commands::prefs::tui::input",
-      "line": 13,
+      "line": 17,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-settings/PROP-041#tree-widget",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/prefs/tui/lint.rs",
+      "from_symbol": "vibe_cli::commands::prefs::tui::lint",
+      "line": 14,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-settings/PROP-041#lint-all",
       "verb": "implements"
     },
     {
@@ -21683,32 +21758,50 @@
     {
       "code": "dangling-edge",
       "file": "crates/vibe-cli/src/commands/prefs/tui/form/lifecycle.rs",
-      "line": 25,
+      "line": 26,
       "message": "edge `vibe_cli::commands::prefs::tui::form::lifecycle` --implements--> `spec://vibevm/modules/vibe-settings/PROP-041#configurable-lifecycle`: no spec unit carries this anchor"
     },
     {
       "code": "dangling-edge",
       "file": "crates/vibe-cli/src/commands/prefs/tui/form/lifecycle.rs",
-      "line": 42,
+      "line": 43,
       "message": "edge `vibe_cli::commands::prefs::tui::form::lifecycle::Form::is_modified` --implements--> `spec://vibevm/modules/vibe-settings/PROP-041#configurable-lifecycle`: no spec unit carries this anchor"
     },
     {
       "code": "dangling-edge",
       "file": "crates/vibe-cli/src/commands/prefs/tui/form/lifecycle.rs",
-      "line": 57,
+      "line": 58,
       "message": "edge `vibe_cli::commands::prefs::tui::form::lifecycle::Form::apply` --implements--> `spec://vibevm/modules/vibe-settings/PROP-041#write-layer-choice`: no spec unit carries this anchor"
     },
     {
       "code": "dangling-edge",
       "file": "crates/vibe-cli/src/commands/prefs/tui/form/lifecycle.rs",
-      "line": 130,
+      "line": 131,
       "message": "edge `vibe_cli::commands::prefs::tui::form::lifecycle::Form::reset` --implements--> `spec://vibevm/modules/vibe-settings/PROP-041#configurable-lifecycle`: no spec unit carries this anchor"
     },
     {
       "code": "dangling-edge",
       "file": "crates/vibe-cli/src/commands/prefs/tui/form/mod.rs",
-      "line": 147,
+      "line": 156,
       "message": "edge `vibe_cli::commands::prefs::tui::form::Form::build` --implements--> `spec://vibevm/modules/vibe-settings/PROP-041#form-per-type`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "crates/vibe-cli/src/commands/prefs/tui/form/provenance_edit.rs",
+      "line": 16,
+      "message": "edge `vibe_cli::commands::prefs::tui::form::provenance_edit` --implements--> `spec://vibevm/modules/vibe-settings/PROP-041#provenance-edit`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "crates/vibe-cli/src/commands/prefs/tui/form/provenance_edit.rs",
+      "line": 37,
+      "message": "edge `vibe_cli::commands::prefs::tui::form::provenance_edit::Form::clear_focused` --implements--> `spec://vibevm/modules/vibe-settings/PROP-041#provenance-edit`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "crates/vibe-cli/src/commands/prefs/tui/lint.rs",
+      "line": 14,
+      "message": "edge `vibe_cli::commands::prefs::tui::lint` --implements--> `spec://vibevm/modules/vibe-settings/PROP-041#lint-all`: no spec unit carries this anchor"
     },
     {
       "code": "dangling-edge",
