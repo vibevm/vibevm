@@ -711,7 +711,7 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/tree/tui/flatten.rs",
       "item_kind": "fn",
-      "line": 29,
+      "line": 30,
       "symbol": "vibe_cli::commands::tree::tui::flatten::flatten"
     },
     {
@@ -821,6 +821,27 @@
     },
     {
       "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/tree/tui/settings.rs",
+      "item_kind": "mod",
+      "line": 20,
+      "symbol": "vibe_cli::commands::tree::tui::settings"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/tree/tui/settings.rs",
+      "item_kind": "fn",
+      "line": 225,
+      "symbol": "vibe_cli::commands::tree::tui::settings::TreeSettings::load"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/tree/tui/settings.rs",
+      "item_kind": "fn",
+      "line": 326,
+      "symbol": "vibe_cli::commands::tree::tui::settings::build_schema"
+    },
+    {
+      "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/tree/tui/shape.rs",
       "item_kind": "mod",
       "line": 9,
@@ -844,14 +865,14 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/tree/tui/theme/mod.rs",
       "item_kind": "mod",
-      "line": 18,
+      "line": 20,
       "symbol": "vibe_cli::commands::tree::tui::theme"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/tree/tui/theme/mod.rs",
       "item_kind": "fn",
-      "line": 87,
+      "line": 84,
       "symbol": "vibe_cli::commands::tree::tui::theme::Theme::color"
     },
     {
@@ -928,7 +949,7 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/tree/tui/theme/palettes/rose_pine.rs",
       "item_kind": "impl",
-      "line": 46,
+      "line": 43,
       "symbol": "vibe_cli::commands::tree::tui::theme::palettes::rose_pine::<impl Palette for RosePine>"
     },
     {
@@ -998,7 +1019,7 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/tree/tui/ui/coming_soon.rs",
       "item_kind": "fn",
-      "line": 60,
+      "line": 61,
       "symbol": "vibe_cli::commands::tree::tui::ui::coming_soon::ComingSoon::render"
     },
     {
@@ -5959,7 +5980,7 @@
     {
       "file": "crates/vibe-cli/src/commands/tree/tui/flatten.rs",
       "from_symbol": "vibe_cli::commands::tree::tui::flatten::flatten",
-      "line": 36,
+      "line": 37,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-cli/PROP-037#tree-filters",
       "verb": "implements"
@@ -6085,6 +6106,31 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-cli/src/commands/tree/tui/settings.rs",
+      "from_symbol": "vibe_cli::commands::tree::tui::settings",
+      "line": 20,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-cli/PROP-037#settings",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/tree/tui/settings.rs",
+      "from_symbol": "vibe_cli::commands::tree::tui::settings::TreeSettings::load",
+      "line": 229,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-cli/PROP-037#settings",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/tree/tui/settings.rs",
+      "from_symbol": "vibe_cli::commands::tree::tui::settings::build_schema",
+      "line": 338,
+      "provenance": "authored",
+      "uri": "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
+      "verb": "deviates",
+      "reason": "no-unwrap-gate: the six vibe.tree.* KeyMeta are built from static non-empty literal descriptions and unique dotted paths — KeyMeta::new and Schema::register cannot fail on these inputs; asserting the invariant once at this single registration point is clearer than propagating an unreachable Result through every caller"
+    },
+    {
       "file": "crates/vibe-cli/src/commands/tree/tui/shape.rs",
       "from_symbol": "vibe_cli::commands::tree::tui::shape",
       "line": 9,
@@ -6111,7 +6157,7 @@
     {
       "file": "crates/vibe-cli/src/commands/tree/tui/theme/mod.rs",
       "from_symbol": "vibe_cli::commands::tree::tui::theme",
-      "line": 18,
+      "line": 20,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-cli/PROP-037#theme",
       "verb": "implements"
@@ -6119,7 +6165,7 @@
     {
       "file": "crates/vibe-cli/src/commands/tree/tui/theme/mod.rs",
       "from_symbol": "vibe_cli::commands::tree::tui::theme::Theme::color",
-      "line": 90,
+      "line": 87,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-cli/PROP-037#rendering-tiers",
       "verb": "implements"
@@ -6207,7 +6253,7 @@
     {
       "file": "crates/vibe-cli/src/commands/tree/tui/theme/palettes/rose_pine.rs",
       "from_symbol": "vibe_cli::commands::tree::tui::theme::palettes::rose_pine::<impl Palette for RosePine>",
-      "line": 46,
+      "line": 43,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-cli/PROP-037#palette-tokens",
       "verb": "implements"
@@ -6287,7 +6333,7 @@
     {
       "file": "crates/vibe-cli/src/commands/tree/tui/ui/coming_soon.rs",
       "from_symbol": "vibe_cli::commands::tree::tui::ui::coming_soon::ComingSoon::render",
-      "line": 62,
+      "line": 63,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-cli/PROP-037#coming-soon",
       "verb": "implements"
