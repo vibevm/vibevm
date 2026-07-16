@@ -299,8 +299,10 @@ fn with_search(app: &mut App, f: impl FnOnce(&mut SearchState)) -> Control<AppEv
     Control::Changed
 }
 
-/// The captive F-key menu handler (PROP-037 §7.1/§7.2): Up/Down move, `Enter`
-/// applies the highlighted option, `Esc` closes.
+/// The captive F-key menu handler (PROP-037 §5.4/§7.1/§7.2): Up/Down move the
+/// selection within the active focus-group, `Tab`/`Shift+Tab` cycle the active
+/// group (F2 multi-group; inert on F3's single group), `Enter` applies the
+/// active group's highlighted option, `Esc` closes.
 fn handle_menu(event: &Event, app: &mut App) -> Control<AppEvent> {
     let Event::Key(k) = event else {
         return Control::Unchanged;
@@ -326,6 +328,21 @@ fn handle_menu(event: &Event, app: &mut App) -> Control<AppEvent> {
         KeyCode::Down => {
             if let Some(m) = app.menu.as_mut() {
                 m.select_down();
+            }
+            Control::Changed
+        }
+        // Tab / Shift+Tab cycle the active focus-group (PROP-037 §5.4). On F2's
+        // multi-group menu this walks Sort by → Shape → Block order; on F3's
+        // single group it is a no-op (no Tab Order).
+        KeyCode::Tab => {
+            if let Some(m) = app.menu.as_mut() {
+                m.focus_next_group();
+            }
+            Control::Changed
+        }
+        KeyCode::BackTab => {
+            if let Some(m) = app.menu.as_mut() {
+                m.focus_prev_group();
             }
             Control::Changed
         }

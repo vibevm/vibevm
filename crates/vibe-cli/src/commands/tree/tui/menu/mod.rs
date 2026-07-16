@@ -8,32 +8,41 @@
 //!
 //! The module is split along its responsibility seams to stay under the 600-line
 //! file budget: this file holds the shared model ([`MenuState`], [`MenuKind`],
-//! [`MenuEffect`]), the navigation + `confirm` policy, and the rendering;
-//! [`sort`] holds the multi-group F2 constructor + group builders;
-//! [`mode`] holds the single-group F3 constructor.
+//! [`MenuEffect`]) and the focus-group navigation + `confirm` policy; [`sort`]
+//! holds the multi-group F2 constructor + group builders; [`mode`] holds the
+//! single-group F3 constructor; [`draw`] holds the rendering (the active
+//! focus-group is accent-framed there).
 //!
-//! ## The multi-group F2 menu (PROP-037 §7.2 `#f2-sort-menu`)
+//! ## The multi-group F2 menu — focus groups + Tab Order
+//! (PROP-037 §5.4 `#focus-groups`, §7.2 `#f2-sort-menu`)
 //!
 //! F2's content depends on the active mode: tree & tabs modes get a "Sort by"
 //! group and a "Shape" group; sub-tables mode gets those two plus a "Block
-//! order" group. The menu is modelled as [`MenuKind::Groups`] — one flat cursor
-//! walks every option across all groups (`↑`/`↓`), and `Enter` applies the
-//! highlighted option's [`MenuEffect`]. A multi-group F2 menu is **sticky**: it
+//! order" group. Each group is a **focus group** (§5.4): `Tab`/`Shift+Tab`
+//! cycle the **active group** (Sort by → Shape → Block order → Sort by …), and
+//! `↑`/`↓` move the selection **within** the active group only (wrapping inside
+//! that group's options, never crossing into another). `Enter` applies the
+//! active group's selected option. A multi-group F2 menu is **sticky**: it
 //! applies the effect, **stays open**, and re-syncs every option's mark from the
 //! live [`App`] (so the user adjusts several groups then `Esc`). F3 (a single
-//! group) and [`MenuKind::ComingSoon`] close on `Enter`.
+//! group — no Tab Order, `Tab` is inert) and [`MenuKind::ComingSoon`] close on
+//! `Enter`.
+//!
+//! The model: [`MenuGroup`] owns its own within-group `cursor` (the highlight
+//! position), and [`MenuKind::Groups`] carries `active_group` (which group
+//! `Tab` has focus in). This mirrors the copy-settings focus-group pattern
+//! (`focus` + per-`RadioGroup` selection) — per-group memory so `Tab` away and
+//! back leaves the cursor exactly where it was.
 
 specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-037#f2-sort-menu");
 
-use ratatui_core::buffer::Buffer;
-use ratatui_core::layout::Rect;
-use ratatui_core::text::Line;
 use specmark::spec;
 
 use super::shape::TreeShape;
 use super::state::{App, DisplayMode, Ordering};
-use super::theme::Theme;
-use super::ui::{ComingSoon, Group, Window};
+
+mod draw;
+pub(super) use self::draw::draw;
 
 pub mod mode;
 pub mod sort;
@@ -57,20 +66,27 @@ pub(super) struct MenuOption {
     pub(super) effect: MenuEffect,
 }
 
-/// A named cluster of mutually-exclusive options ("Sort by", "Shape", …).
+/// A named focus group of mutually-exclusive options ("Sort by", "Shape", …).
+/// Owns its own within-group `cursor` (the highlight position, PROP-037 §5.4) so
+/// `Tab` away and back leaves it where the user left it — the same split as
+/// copy-settings' `RadioGroup::selected`.
 pub(super) struct MenuGroup {
     pub(super) name: String,
     pub(super) options: Vec<MenuOption>,
+    /// The highlighted option within this group (the row `Enter` applies when
+    /// this group is the active one). Wraps within `options.len()` on `↑`/`↓`.
+    pub(super) cursor: usize,
 }
 
 /// What an open menu shows.
 pub(super) enum MenuKind {
-    /// A stack of named groups with one flat cursor walking every option. `sticky`
-    /// = F2 (apply + stay open + re-sync on `Enter`); `!sticky` = F3 (apply +
-    /// close on `Enter`).
+    /// A stack of named focus groups (PROP-037 §5.4). `active_group` is the one
+    /// `Tab` has focus in (its cursor is live, its frame is accent-marked);
+    /// `sticky` = F2 (apply + stay open + re-sync on `Enter`), `!sticky` = F3
+    /// (apply + close on `Enter`, single group so `Tab` is inert).
     Groups {
         groups: Vec<MenuGroup>,
-        cursor: usize,
+        active_group: usize,
         sticky: bool,
     },
     /// The §2.10 placeholder, drawn through [`ComingSoon`]; `Enter`/`Esc` close.
@@ -95,55 +111,92 @@ impl MenuState {
         }
     }
 
-    /// Move the highlight down, wrapping across every option in every group.
+    /// Move the highlight down within the **active group**, wrapping inside that
+    /// group's options (PROP-037 §5.4 — `↑`/`↓` never cross into another group).
     pub fn select_down(&mut self) {
-        if let MenuKind::Groups { groups, cursor, .. } = &mut self.kind {
-            let total: usize = groups.iter().map(|g| g.options.len()).sum();
-            if total > 0 {
-                *cursor = (*cursor + 1) % total;
-            }
+        if let MenuKind::Groups {
+            groups,
+            active_group,
+            ..
+        } = &mut self.kind
+            && let Some(g) = groups.get_mut(*active_group)
+            && !g.options.is_empty()
+        {
+            g.cursor = (g.cursor + 1) % g.options.len();
         }
     }
 
-    /// Move the highlight up, wrapping across every option in every group.
+    /// Move the highlight up within the **active group**, wrapping inside that
+    /// group's options (PROP-037 §5.4).
     pub fn select_up(&mut self) {
-        if let MenuKind::Groups { groups, cursor, .. } = &mut self.kind {
-            let total: usize = groups.iter().map(|g| g.options.len()).sum();
-            if total > 0 {
-                let n = total;
-                *cursor = (*cursor + n - 1) % n;
-            }
+        if let MenuKind::Groups {
+            groups,
+            active_group,
+            ..
+        } = &mut self.kind
+            && let Some(g) = groups.get_mut(*active_group)
+            && !g.options.is_empty()
+        {
+            let n = g.options.len();
+            g.cursor = (g.cursor + n - 1) % n;
+        }
+    }
+
+    /// Cycle the active focus group forward (`Tab`, PROP-037 §5.4). The
+    /// within-group cursors are untouched — only which group holds the live
+    /// `↑`/`↓` + `Enter` changes. A single-group menu (F3) is a no-op (there is
+    /// no Tab Order — `Tab` is inert there).
+    #[spec(implements = "spec://vibevm/modules/vibe-cli/PROP-037#focus-groups")]
+    pub fn focus_next_group(&mut self) {
+        if let MenuKind::Groups {
+            groups,
+            active_group,
+            ..
+        } = &mut self.kind
+            && groups.len() > 1
+        {
+            *active_group = (*active_group + 1) % groups.len();
+        }
+    }
+
+    /// Cycle the active focus group backward (`Shift+Tab`, PROP-037 §5.4).
+    #[spec(implements = "spec://vibevm/modules/vibe-cli/PROP-037#focus-groups")]
+    pub fn focus_prev_group(&mut self) {
+        if let MenuKind::Groups {
+            groups,
+            active_group,
+            ..
+        } = &mut self.kind
+            && groups.len() > 1
+        {
+            let n = groups.len();
+            *active_group = (*active_group + n - 1) % n;
         }
     }
 }
 
-/// The flat index of the first checked option, or 0 — where the cursor starts so
-/// the menu opens on the current value of its first group.
-pub(super) fn initial_cursor(groups: &[MenuGroup]) -> usize {
-    let mut flat = 0;
-    for g in groups {
-        for o in &g.options {
-            if o.checked {
-                return flat;
-            }
-            flat += 1;
-        }
-    }
-    0
+/// The within-group index of the first checked option, or 0 — where each group's
+/// cursor starts so a group opens on its current value. Called per group by the
+/// F2/F3 constructors after building the options.
+pub(super) fn initial_group_cursor(options: &[MenuOption]) -> usize {
+    options.iter().position(|o| o.checked).unwrap_or(0)
 }
 
-/// The effect of the option at the flat `cursor`, if any.
-pub(super) fn effect_at(groups: &[MenuGroup], cursor: usize) -> Option<MenuEffect> {
-    let mut idx = 0;
-    for g in groups {
-        for o in &g.options {
-            if idx == cursor {
-                return Some(o.effect);
-            }
-            idx += 1;
-        }
-    }
-    None
+/// The index of the first group that has a checked option, or 0 — where the
+/// `active_group` starts so the menu opens focused on the group holding a
+/// current value.
+pub(super) fn initial_active_group(groups: &[MenuGroup]) -> usize {
+    groups
+        .iter()
+        .position(|g| g.options.iter().any(|o| o.checked))
+        .unwrap_or(0)
+}
+
+/// The effect of the `active_group`'s currently-selected option, if any.
+pub(super) fn active_effect(groups: &[MenuGroup], active_group: usize) -> Option<MenuEffect> {
+    groups
+        .get(active_group)
+        .and_then(|g| g.options.get(g.cursor).map(|o| o.effect))
 }
 
 /// What `confirm` should do, resolved with a shared borrow so the `App` mutation
@@ -154,20 +207,20 @@ enum Action {
     ApplyResync(Option<MenuEffect>),
 }
 
-/// Apply the highlighted option to the model. A sticky multi-group menu (F2)
-/// applies the effect, **stays open**, and re-syncs every option's mark from
-/// the live `App`; F3 (single group) and ComingSoon close on `Enter`
-/// (PROP-037 §7.1/§7.2/§2.10).
+/// Apply the active group's highlighted option to the model. A sticky
+/// multi-group menu (F2) applies the effect, **stays open**, and re-syncs every
+/// option's mark from the live `App`; F3 (single group) and ComingSoon close on
+/// `Enter` (PROP-037 §5.4/§7.1/§7.2/§2.10).
 pub fn confirm(app: &mut App) {
     let action = app.menu.as_ref().map(|menu| match &menu.kind {
         MenuKind::ComingSoon => Action::Close,
         MenuKind::Groups {
             groups,
-            cursor,
+            active_group,
             sticky,
             ..
         } => {
-            let effect = effect_at(groups, *cursor);
+            let effect = active_effect(groups, *active_group);
             if *sticky {
                 Action::ApplyResync(effect)
             } else {
@@ -269,161 +322,13 @@ fn effect_is_active(effect: MenuEffect, snap: &Snapshot) -> bool {
 }
 
 /// Re-sync every option's `checked` mark from the live `App` snapshot — the
-/// sticky-F2 "apply then keep adjusting" behaviour (PROP-037 §7.2).
+/// sticky-F2 "apply then keep adjusting" behaviour (PROP-037 §7.2). The
+/// per-group cursors are untouched: only the `●`/`○` value marks move.
 fn resync_marks(groups: &mut [MenuGroup], snap: &Snapshot) {
     for g in groups {
         for o in &mut g.options {
             o.checked = effect_is_active(o.effect, snap);
         }
-    }
-}
-
-// --- drawing ----------------------------------------------------------------
-
-/// Draw the menu centered over `area` (drawn after the base, before nothing —
-/// the card / search windows are separate captive modes, never open together).
-pub fn draw(area: Rect, buf: &mut Buffer, app: &App) {
-    let Some(menu) = app.menu.as_ref() else {
-        return;
-    };
-    if area.width < 20 || area.height < 5 {
-        return;
-    }
-    let theme = &app.theme;
-    match &menu.kind {
-        MenuKind::ComingSoon => {
-            ComingSoon::new(&menu.title).render(area, buf, theme);
-        }
-        MenuKind::Groups { groups, cursor, .. } => {
-            draw_groups(area, buf, &menu.title, groups, *cursor, theme);
-        }
-    }
-}
-
-/// Lay the groups out inside a centered [`Window`]. A single group (F3) renders
-/// as a flat list with no group chrome (§7.2 "no group chrome needed"); two or
-/// more (F2) frame each group with a [`Group`] whose name sits top-right.
-fn draw_groups(
-    area: Rect,
-    buf: &mut Buffer,
-    title: &str,
-    groups: &[MenuGroup],
-    cursor: usize,
-    theme: &Theme,
-) {
-    let multi = groups.len() > 1;
-    let label_w = groups
-        .iter()
-        .flat_map(|g| g.options.iter().map(|o| o.label.chars().count()))
-        .chain(groups.iter().map(|g| g.name.chars().count()))
-        .chain(std::iter::once(title.chars().count()))
-        .max()
-        .unwrap_or(10);
-    let w = (label_w as u16 + 8).clamp(24, area.width.saturating_sub(4));
-
-    // Inner content height: the hint row + the options + group framing.
-    let total_opts: usize = groups.iter().map(|g| g.options.len()).sum();
-    let body_h = if multi {
-        // each group = 2 border + options; one-row gaps between groups; + hint row
-        groups
-            .iter()
-            .map(|g| g.options.len() + 2)
-            .sum::<usize>()
-            .saturating_add(groups.len().saturating_sub(1))
-            + 1
-    } else {
-        total_opts + 3 // a blank row + options + hint row
-    };
-    let h = (body_h as u16 + 2) // + the window's own two border rows
-        .clamp(5, area.height.saturating_sub(2));
-
-    let inner = Window::centered(
-        area,
-        buf,
-        Line::styled(format!(" {title} "), theme.title()),
-        w,
-        h,
-        theme,
-    );
-    let hint_row = inner.y + inner.height.saturating_sub(1);
-
-    let mut flat = 0usize;
-    if multi {
-        let mut y = inner.y;
-        for group in groups {
-            let gh = group.options.len() as u16 + 2;
-            if y + gh > hint_row {
-                break;
-            }
-            let garea = Rect::new(inner.x, y, inner.width, gh);
-            let ginner = Group::named(&group.name).render(garea, buf, theme);
-            for (oi, option) in group.options.iter().enumerate() {
-                let oy = ginner.y + oi as u16;
-                if oy >= hint_row {
-                    break;
-                }
-                let rect = Rect::new(ginner.x, oy, ginner.width, 1);
-                draw_option(rect, buf, option, flat == cursor, theme);
-                flat += 1;
-            }
-            y += gh + 1; // a one-row gap between framed groups
-        }
-    } else {
-        // Single group: flat list, no group chrome (preserves the F3 look).
-        let group = &groups[0];
-        let list_top = inner.y + 1; // a blank row under the title
-        for (i, option) in group.options.iter().enumerate() {
-            let y = list_top + i as u16;
-            if y >= hint_row {
-                break;
-            }
-            let rect = Rect::new(inner.x + 1, y, inner.width.saturating_sub(2), 1);
-            draw_option(rect, buf, option, i == cursor, theme);
-        }
-    }
-
-    // The key hint on the last inner row.
-    buf.set_stringn(
-        inner.x + 1,
-        hint_row,
-        " \u{2191}/\u{2193}  \u{2022}  Enter  \u{2022}  Esc",
-        inner.width.saturating_sub(2) as usize,
-        theme.dim(),
-    );
-}
-
-/// Draw one option row: the theme on/off mark plus the label, on the selection
-/// bar when this is the cursor row. Marks come from the theme vocabulary
-/// (`flag_on`/`flag_off` glyphs) — never a literal.
-fn draw_option(rect: Rect, buf: &mut Buffer, option: &MenuOption, is_cursor: bool, theme: &Theme) {
-    let mark = if option.checked {
-        theme.glyphs().flag_on
-    } else {
-        theme.glyphs().flag_off
-    };
-    if is_cursor {
-        buf.set_style(rect, theme.selection());
-        buf.set_stringn(
-            rect.x,
-            rect.y,
-            format!("{mark} {}", option.label),
-            rect.width as usize,
-            theme.selection(),
-        );
-    } else {
-        let mark_style = if option.checked {
-            theme.accent()
-        } else {
-            theme.dim()
-        };
-        buf.set_stringn(rect.x, rect.y, mark, rect.width as usize, mark_style);
-        buf.set_stringn(
-            rect.x + 2,
-            rect.y,
-            &option.label,
-            rect.width.saturating_sub(2) as usize,
-            theme.text(),
-        );
     }
 }
 
@@ -486,11 +391,12 @@ pub(super) mod test_support {
         App::new(tree)
     }
 
-    /// A read-only view of a `Groups` menu's group list, flat cursor, and sticky
-    /// flag (panics on other kinds — which is the point in a Groups-menu test).
+    /// A read-only view of a `Groups` menu's group list, active-group index, and
+    /// sticky flag (panics on other kinds — which is the point in a Groups-menu
+    /// test). Each group carries its own within-group `cursor`.
     pub struct GroupsView<'a> {
         pub groups: &'a [MenuGroup],
-        pub cursor: usize,
+        pub active_group: usize,
         pub sticky: bool,
     }
 
@@ -498,11 +404,11 @@ pub(super) mod test_support {
         match &menu.kind {
             MenuKind::Groups {
                 groups,
-                cursor,
+                active_group,
                 sticky,
             } => GroupsView {
                 groups,
-                cursor: *cursor,
+                active_group: *active_group,
                 sticky: *sticky,
             },
             _ => panic!("expected a Groups menu"),
@@ -534,6 +440,8 @@ mod tests {
         let mut m = MenuState::coming_soon("PNG export");
         m.select_up();
         m.select_down();
+        m.focus_next_group();
+        m.focus_prev_group();
         assert!(matches!(m.kind, MenuKind::ComingSoon));
     }
 }

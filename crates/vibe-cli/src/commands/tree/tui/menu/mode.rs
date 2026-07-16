@@ -7,10 +7,12 @@ specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-037#f3-mode-menu");
 use specmark::spec;
 
 use super::super::state::{App, DisplayMode};
-use super::{MenuEffect, MenuGroup, MenuKind, MenuOption, MenuState, initial_cursor};
+use super::{MenuEffect, MenuGroup, MenuKind, MenuOption, MenuState, initial_group_cursor};
 
 impl MenuState {
     /// The F3 display-mode menu (PROP-037 §7.1) — one group; closes on `Enter`.
+    /// A single-group menu has no Tab Order, so `Tab` is inert here
+    /// (PROP-037 §5.4).
     #[spec(implements = "spec://vibevm/modules/vibe-cli/PROP-037#f3-mode-menu")]
     pub fn mode(app: &App) -> Self {
         let options: Vec<MenuOption> =
@@ -22,16 +24,17 @@ impl MenuState {
                     effect: MenuEffect::SetMode(m),
                 })
                 .collect();
+        let cursor = initial_group_cursor(&options);
         let groups = vec![MenuGroup {
             name: "Display mode".to_string(),
             options,
+            cursor,
         }];
-        let cursor = initial_cursor(&groups);
         Self {
             title: "Display mode".to_string(),
             kind: MenuKind::Groups {
                 groups,
-                cursor,
+                active_group: 0,
                 sticky: false,
             },
         }
@@ -54,13 +57,34 @@ mod tests {
             let v = groups_view(a.menu.as_ref().expect("open"));
             assert_eq!(v.groups.len(), 1, "F3 is one group");
             assert!(!v.sticky, "F3 closes on Enter");
-            assert_eq!(v.cursor, 0, "cursor on the current mode");
+            assert_eq!(v.active_group, 0, "the one group is the active group");
+            assert_eq!(v.groups[0].cursor, 0, "cursor on the current mode");
             assert!(v.groups[0].options[0].checked, "All is marked");
         }
         // `↑` from the first option wraps to the last (Tabs); confirm applies it.
         a.menu.as_mut().expect("open").select_up();
+        assert_eq!(
+            groups_view(a.menu.as_ref().expect("open")).groups[0].cursor,
+            2,
+            "cursor wrapped to Tabs within the single group"
+        );
         confirm(&mut a);
         assert_eq!(a.display_mode, DisplayMode::Tabs);
         assert!(a.menu.is_none(), "the menu closed on confirm");
+    }
+
+    /// F3 is a single group — `Tab`/`Shift+Tab` are inert (no Tab Order,
+    /// PROP-037 §5.4): the active group stays 0 and cursors don't move.
+    #[test]
+    fn tab_is_inert_on_the_single_group_mode_menu() {
+        let mut m = MenuState::mode(&app());
+        m.focus_next_group();
+        assert_eq!(
+            groups_view(&m).active_group,
+            0,
+            "Tab does nothing on a single-group menu"
+        );
+        m.focus_prev_group();
+        assert_eq!(groups_view(&m).active_group, 0, "Shift+Tab likewise inert");
     }
 }
