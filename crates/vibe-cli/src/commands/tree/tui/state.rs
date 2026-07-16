@@ -15,6 +15,7 @@ use rat_widget::table::TableState;
 use super::super::model::{LoadType, PackageTree};
 // `TreeShape` is the shape stage of the PROP-037 §3.2/§3.3 pipeline, selected
 // per context by the F2 sort menu (§7.2) and carried into the flatten walk.
+use super::copy::{CopySettings, FileDest};
 use super::flatten::TreeShape;
 use super::menu::MenuState;
 use super::modes;
@@ -136,6 +137,10 @@ pub struct App {
     pub search: Option<SearchState>,
     /// The open F-key selection menu (F2/F3), if any (PROP-037 §7.1/§7.2).
     pub menu: Option<MenuState>,
+    /// The open copy-settings modal (Shift+F6) — a depth-2 captive copy field (§10.2).
+    pub copy_settings: Option<CopySettings>,
+    /// The open file-dest modal (depth-2 over copy-settings); Esc returns to it (§10.5).
+    pub file_dest: Option<FileDest>,
     /// Whether the quit-confirm dialog is open (PROP-037 §7.4 `#quit-confirm`).
     /// A bare `Esc` at the base screen opens it; `Enter` confirms, `Esc` cancels.
     pub confirm_quit: bool,
@@ -179,6 +184,8 @@ impl App {
             modal_open: false,
             search: None,
             menu: None,
+            copy_settings: None,
+            file_dest: None,
             confirm_quit: false,
             flash: None,
             ordering: Ordering::Topological,

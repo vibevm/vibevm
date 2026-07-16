@@ -23,7 +23,7 @@ specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-036#tui");
 use anyhow::Result;
 use rat_salsa::Control;
 use rat_widget::event::ct_event;
-use ratatui_crossterm::crossterm::event::{Event, KeyCode, KeyEventKind};
+use ratatui_crossterm::crossterm::event::{Event, KeyCode, KeyEventKind, KeyModifiers};
 use vibe_actions::Match;
 
 use super::AppEvent;
@@ -51,6 +51,18 @@ pub fn handle(event: &Event, app: &mut App) -> Result<Control<AppEvent>> {
     // re-sizes its back-buffer on the next `draw`, so one `Changed` suffices.
     if let Event::Resize(..) = event {
         return Ok(Control::Changed);
+    }
+
+    // The depth-2 copy cascade (PROP-037 §10.2/§10.5): file-dest captures input
+    // first when present (Esc returns to copy-settings, not the base), else
+    // copy-settings. These are the two captive copy fields on `App` — the
+    // depth-2 stack for this one flow, without a full ModalStack (see
+    // `copy`'s module doc).
+    if app.file_dest.is_some() {
+        return Ok(handle_file_dest(event, app));
+    }
+    if app.copy_settings.is_some() {
+        return Ok(handle_copy_settings(event, app));
     }
 
     // The Search Everywhere window captures input while open (PROP-037 §7.3).
@@ -87,6 +99,13 @@ pub fn handle(event: &Event, app: &mut App) -> Result<Control<AppEvent>> {
     if is_press_fkey(event, 3) {
         let mode = MenuState::mode(app);
         app.menu = Some(mode);
+        return Ok(Control::Changed);
+    }
+    // Shift+F6 opens the copy-settings modal (PROP-037 §10.2 `#copy-flow`).
+    // Checked before F6 so the Shift modifier is not swallowed by the plain-F6
+    // copy path (`is_press_fkey` does not gate on modifiers).
+    if is_press_shift_fkey(event, 6) {
+        app.copy_settings = Some(copy::CopySettings::new());
         return Ok(Control::Changed);
     }
     // F6 copies the current view to the clipboard as Markdown (PROP-037 §10).
@@ -165,11 +184,19 @@ pub fn handle(event: &Event, app: &mut App) -> Result<Control<AppEvent>> {
     Ok(control)
 }
 
-/// The captive modal handler: `Enter`/`Esc` close; everything else is swallowed.
+/// The captive modal handler: `Enter`/`Esc` close; `F6` copies the open card to
+/// the clipboard (PROP-037 §10 — "what I see is what I copy"); everything else
+/// is swallowed.
 fn handle_modal(event: &Event, app: &mut App) -> Control<AppEvent> {
     match event {
         ct_event!(keycode press Esc) | ct_event!(keycode press Enter) => {
             app.modal_open = false;
+            Control::Changed
+        }
+        // F6 copies the current screen (the open card) to the clipboard (§10.2).
+        e if is_press_fkey(e, 6) => {
+            let msg = copy::copy(app);
+            app.flash = Some(msg);
             Control::Changed
         }
         _ => Control::Unchanged,
@@ -192,6 +219,17 @@ fn handle_confirm_quit(event: &Event, app: &mut App) -> Control<AppEvent> {
 /// True for an `F<n>` key-press event.
 fn is_press_fkey(event: &Event, n: u8) -> bool {
     matches!(event, Event::Key(k) if k.code == KeyCode::F(n) && k.kind == KeyEventKind::Press)
+}
+
+/// True for a `Shift+F<n>` key-press event (PROP-037 §5.2 — `↑` is Shift).
+fn is_press_shift_fkey(event: &Event, n: u8) -> bool {
+    matches!(
+        event,
+        Event::Key(k)
+            if k.code == KeyCode::F(n)
+                && k.kind == KeyEventKind::Press
+                && k.modifiers.contains(KeyModifiers::SHIFT)
+    )
 }
 
 /// The captive Search Everywhere handler (PROP-037 §7.3): typing filters, Up/Down
@@ -262,7 +300,114 @@ fn handle_menu(event: &Event, app: &mut App) -> Control<AppEvent> {
     }
 }
 
-/// Move the selection up one row, keeping it visible.
+/// The captive copy-settings handler (PROP-037 §10.2): `↑`/`↓` move the
+/// selection within the focused radio group, `Tab`/`Shift+Tab` cycle focus
+/// between the two groups, `Enter` confirms, `Esc` cancels.
+fn handle_copy_settings(event: &Event, app: &mut App) -> Control<AppEvent> {
+    let Event::Key(k) = event else {
+        return Control::Unchanged;
+    };
+    if k.kind != KeyEventKind::Press {
+        return Control::Unchanged;
+    }
+    match k.code {
+        KeyCode::Esc => {
+            app.copy_settings = None;
+            Control::Changed
+        }
+        KeyCode::Enter => {
+            copy::confirm_settings(app);
+            Control::Changed
+        }
+        KeyCode::Up => {
+            if let Some(cs) = app.copy_settings.as_mut() {
+                cs.select_up();
+            }
+            Control::Changed
+        }
+        KeyCode::Down => {
+            if let Some(cs) = app.copy_settings.as_mut() {
+                cs.select_down();
+            }
+            Control::Changed
+        }
+        KeyCode::Tab => {
+            if let Some(cs) = app.copy_settings.as_mut() {
+                cs.focus_next();
+            }
+            Control::Changed
+        }
+        KeyCode::BackTab => {
+            if let Some(cs) = app.copy_settings.as_mut() {
+                cs.focus_prev();
+            }
+            Control::Changed
+        }
+        _ => Control::Unchanged,
+    }
+}
+
+/// The captive file-destination handler (PROP-037 §10.5): typing edits the
+/// path (when the path field is focused), `Tab`/`Shift+Tab` cycle focus (path →
+/// Save → Cancel), `Enter` on a button acts (Save writes, Cancel closes), `Enter`
+/// on the path field advances to Save, `Esc` cancels back to copy-settings (the
+/// depth-2 cascade — closes file-dest only, copy-settings stays open).
+fn handle_file_dest(event: &Event, app: &mut App) -> Control<AppEvent> {
+    let Event::Key(k) = event else {
+        return Control::Unchanged;
+    };
+    if k.kind != KeyEventKind::Press {
+        return Control::Unchanged;
+    }
+    match k.code {
+        // Esc cancels back to copy-settings (closes file-dest only).
+        KeyCode::Esc => {
+            app.file_dest = None;
+            Control::Changed
+        }
+        KeyCode::Tab => {
+            if let Some(fd) = app.file_dest.as_mut() {
+                fd.focus_next();
+            }
+            Control::Changed
+        }
+        KeyCode::BackTab => {
+            if let Some(fd) = app.file_dest.as_mut() {
+                fd.focus_prev();
+            }
+            Control::Changed
+        }
+        KeyCode::Enter => {
+            let (is_save, is_cancel) = app
+                .file_dest
+                .as_ref()
+                .map(|fd| (fd.is_save_focused(), fd.is_cancel_focused()))
+                .unwrap_or((false, false));
+            if is_save {
+                copy::confirm_file_dest_save(app);
+            } else if is_cancel {
+                app.file_dest = None;
+            } else if let Some(fd) = app.file_dest.as_mut() {
+                // Path field focused: advance to Save (intuitive "done typing").
+                fd.advance_to_save();
+            }
+            Control::Changed
+        }
+        KeyCode::Backspace => {
+            if let Some(fd) = app.file_dest.as_mut() {
+                fd.backspace();
+            }
+            Control::Changed
+        }
+        KeyCode::Char(c) => {
+            if let Some(fd) = app.file_dest.as_mut() {
+                fd.type_char(c);
+            }
+            Control::Changed
+        }
+        _ => Control::Unchanged,
+    }
+}
 fn move_up(app: &mut App) {
     if app.rows.is_empty() {
         return;

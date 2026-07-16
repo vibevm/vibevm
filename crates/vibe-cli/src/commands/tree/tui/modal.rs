@@ -38,7 +38,10 @@ pub fn draw(area: Rect, buf: &mut Buffer, app: &App) {
 }
 
 /// Build the detail [`Card`] for the selected row, if any (PROP-036 §2.11).
-fn detail_card(app: &App) -> Option<Card> {
+/// Exposed to the copy provider (PROP-037 §10.1) so `card_markdown` serializes
+/// byte-faithfully to what the modal renders — one source for the card's
+/// field set.
+pub(super) fn detail_card(app: &App) -> Option<Card> {
     let row = app.selected_row()?;
     match row.node {
         // Label rows carry no detail; `open_modal` never opens them, and a

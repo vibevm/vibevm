@@ -17,7 +17,7 @@ use ratatui_core::widgets::{StatefulWidget, Widget};
 use super::state::{App, DisplayMode, RowNode};
 use super::theme::Role;
 use super::ui::MsgDialog;
-use super::{modal, modes};
+use super::{copy, modal, modes};
 
 /// Draw the whole surface for this frame.
 pub fn draw(area: Rect, buf: &mut Buffer, app: &mut App) {
@@ -54,6 +54,16 @@ pub fn draw(area: Rect, buf: &mut Buffer, app: &mut App) {
     if app.confirm_quit {
         MsgDialog::new("Really quit?", "Enter to quit \u{00b7} Esc to cancel")
             .render(area, buf, &app.theme);
+    }
+    // The copy-settings modal (Shift+F6) and its depth-2 file-dest overlay
+    // (PROP-037 §10.2/§10.5). Copy-settings is drawn over the base; file-dest
+    // is drawn over copy-settings when present — the fixed depth-2 cascade
+    // (see `copy`'s module doc). Input capture mirrors this order in `input`.
+    if app.copy_settings.is_some() {
+        copy::render_settings(area, buf, app);
+    }
+    if app.file_dest.is_some() {
+        copy::render_file_dest(area, buf, app);
     }
 }
 

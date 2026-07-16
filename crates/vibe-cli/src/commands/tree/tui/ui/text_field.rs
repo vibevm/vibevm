@@ -65,6 +65,15 @@ impl TextField {
         self
     }
 
+    /// Pre-fill the value (builder). Used by the copy-to-file modal (§10.5) to
+    /// render the live path string the user is typing — the field stays an
+    /// append-only primitive; the path state lives in the owning modal.
+    #[must_use]
+    pub fn with_value(mut self, value: impl Into<String>) -> Self {
+        self.value = value.into();
+        self
+    }
+
     /// The current value.
     #[must_use]
     pub fn value(&self) -> &str {

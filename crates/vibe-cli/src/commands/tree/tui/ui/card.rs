@@ -83,6 +83,21 @@ impl Card {
         self.rows.is_empty()
     }
 
+    /// Serialize the card's rows as Markdown (PROP-037 §10.1/§10.3
+    /// `#copy-markdown`) — each field as a `**header:** value` block separated
+    /// by a blank line. The copy provider's card serializer: the same [`Card`]
+    /// the detail modal builds is serialized here, so the copy is byte-faithful
+    /// to what is on screen ("what I see is what I copy", §10.1).
+    #[allow(dead_code)] // first user: copy::card_markdown (§10.1).
+    #[must_use]
+    pub fn to_markdown(&self) -> String {
+        let mut out = String::new();
+        for row in &self.rows {
+            out.push_str(&format!("**{}:** {}\n\n", row.header, row.value));
+        }
+        out
+    }
+
     /// Render the card centred over `area`, sized to its wrapped content and
     /// clamped to the screen (PROP-037 §8 `#detail-card`).
     ///
