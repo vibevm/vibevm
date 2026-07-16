@@ -45,8 +45,8 @@ pub struct PrefsApp {
     /// The resolved preferences snapshot (read-only — PROP-041 §1
     /// `#surface-not-engine`).
     pub prefs: ResolvedPrefs,
-    /// The declared preference-key schema (introspection for the origin hint).
-    #[allow(dead_code)] // carried for S2's edit form; S1 reads prefs only.
+    /// The declared preference-key schema (introspection for the origin hint +
+    /// the edit form's per-type controls, §4).
     pub schema: Schema,
     /// The session context (L2 active or not).
     pub ctx: PrefsCtx,
@@ -64,6 +64,10 @@ pub struct PrefsApp {
     /// The open page id, if any (S1 renders a placeholder pane; S2 renders the
     /// form, §4).
     pub open_page: Option<String>,
+    /// The per-type edit form for the open page (PROP-041 §4). Built when a page
+    /// opens ([`PrefsApp::open_selected`]); cleared on
+    /// [`PrefsApp::close_page`]). `None` exactly when `open_page` is `None`.
+    pub form: Option<super::form::Form>,
     /// A fatal error captured by the error handler, re-raised after the loop
     /// restores the terminal.
     pub fatal: Option<anyhow::Error>,
@@ -88,6 +92,7 @@ impl PrefsApp {
             folded: BTreeSet::new(),
             table: TableState::default(),
             open_page: None,
+            form: None,
             fatal: None,
         };
         app.rebuild();
@@ -164,20 +169,22 @@ impl PrefsApp {
     }
 
     /// Open the focused leaf page (`Enter`). A group row is a no-op (it folds,
-    /// not opens). Sets [`PrefsApp::open_page`]; S1 renders the placeholder,
-    /// S2 renders the form (§4).
+    /// not opens). Sets [`PrefsApp::open_page`] and builds the per-type edit
+    /// form over the page's keys (§4 `#form-per-type`).
     pub fn open_selected(&mut self) {
         let Some(row) = self.selected_row() else {
             return;
         };
         if row.is_openable() {
             self.open_page = Some(row.id.clone());
+            self.form = super::form::Form::build(self);
         }
     }
 
-    /// Close the open page (`Esc` from the page pane).
+    /// Close the open page (`Esc` from the page pane). Drops the edit form.
     pub fn close_page(&mut self) {
         self.open_page = None;
+        self.form = None;
     }
 
     /// The display name for the open page, if any (titles the right pane).

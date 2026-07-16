@@ -124,11 +124,10 @@ fn build_rows(app: &PrefsApp) -> Vec<Row<'static>> {
         .collect()
 }
 
-/// The open page's pane — S1 placeholder (PROP-041 §4 #form-per-type is S2).
-/// When a page is open, a themed titled panel shows the page name + a
-/// "form lands in S2" note + the page description; when none, a hint nudges the
-/// user to open one.
-fn render_open_page(area: Rect, buf: &mut Buffer, app: &PrefsApp) {
+/// The open page's pane (PROP-041 §4 `#edit-form`). When a page is open, a
+/// themed titled panel frames the per-type edit form (built in
+/// [`PrefsApp::open_selected`]); when none, a hint nudges the user to open one.
+fn render_open_page(area: Rect, buf: &mut Buffer, app: &mut PrefsApp) {
     let block = Block::bordered()
         .border_type(BorderType::Rounded)
         .border_style(app.theme.border())
@@ -142,24 +141,19 @@ fn render_open_page(area: Rect, buf: &mut Buffer, app: &PrefsApp) {
     if inner.width == 0 || inner.height == 0 {
         return;
     }
-    let body = match app.open_page.as_deref() {
-        None => " Select a page and press Enter to open it.".to_owned(),
-        Some(_) => " The per-type settings form lands in S2 (PROP-041 \u{00a7}4).".to_owned(),
-    };
-    if inner.height >= 1 {
-        buf.set_stringn(
-            inner.x,
-            inner.y,
-            &body,
-            inner.width as usize,
-            app.theme.dim(),
-        );
-    }
-    // Surface the page description under the placeholder note when a page is open.
-    if let Some(desc) = open_description(app) {
-        let y = inner.y + 2;
-        if y < inner.bottom() {
-            buf.set_stringn(inner.x, y, desc, inner.width as usize, app.theme.text());
+    match app.form.as_mut() {
+        Some(form) => super::form::render::render_form(inner, buf, form, &app.theme),
+        None => {
+            let body = " Select a page and press Enter to open it.";
+            if inner.height >= 1 {
+                buf.set_stringn(
+                    inner.x,
+                    inner.y,
+                    body,
+                    inner.width as usize,
+                    app.theme.dim(),
+                );
+            }
         }
     }
 }
@@ -169,16 +163,6 @@ fn open_title(app: &PrefsApp) -> String {
     app.open_page_title().unwrap_or("Settings").to_owned()
 }
 
-/// The open page's description (shown under the placeholder note).
-fn open_description(app: &PrefsApp) -> Option<&str> {
-    let id = app.open_page.as_deref()?;
-    app.registry
-        .pages()
-        .iter()
-        .find(|d| d.id == id)
-        .map(|d| d.description.as_str())
-}
-
 /// The footer keymap hint (PROP-041 §8 — the settings UI mirrors the `vibe
 /// tree` footer convention).
 fn render_footer(area: Rect, buf: &mut Buffer, app: &PrefsApp) {
@@ -186,7 +170,14 @@ fn render_footer(area: Rect, buf: &mut Buffer, app: &PrefsApp) {
         return;
     }
     let keys: Vec<(&str, &str)> = if app.open_page.is_some() {
-        vec![("Esc", " back  ")]
+        vec![
+            ("\u{2191}\u{2193}", " move  "),
+            ("Space", " toggle  "),
+            ("Tab", " layer  "),
+            ("a", " apply  "),
+            ("r", " reset  "),
+            ("Esc", " back"),
+        ]
     } else {
         vec![
             ("\u{2191}\u{2193}", " move  "),

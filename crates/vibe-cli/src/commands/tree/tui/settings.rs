@@ -222,6 +222,20 @@ impl TreeSettings {
         &self.schema
     }
 
+    /// The conventional file path for a given layer (PROP-040 §3). Used by the
+    /// `vibe prefs` settings form to write a key to the chosen write-layer
+    /// (PROP-041 §4 `#write-layer-choice`) — the form mirrors this cell's
+    /// persist path (load → set-dotted → diff → atomic-write) against whichever
+    /// layer the user picked.
+    #[must_use]
+    pub fn layer_path(&self, layer: Layer) -> &std::path::Path {
+        match layer {
+            Layer::L1 => &self.l1,
+            Layer::L2 => &self.l2,
+            Layer::L3 => &self.l3,
+        }
+    }
+
     /// Load + resolve every layer into one immutable snapshot (PROP-040 §5).
     /// A missing/unreadable file is swallowed — [`load_all`] treats a missing
     /// file as an empty table; a parse error is logged and treated as empty so
@@ -446,7 +460,7 @@ fn detect_env_tier() -> Tier {
 }
 
 /// Insert `value` at a dotted `path` in `table`, creating intermediate tables.
-fn set_dotted(table: &mut toml::Table, path: &str, value: toml::Value) {
+pub(crate) fn set_dotted(table: &mut toml::Table, path: &str, value: toml::Value) {
     let mut segments = path.split('.');
     let Some(last) = segments.next_back() else {
         return;
