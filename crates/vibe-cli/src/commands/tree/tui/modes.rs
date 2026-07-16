@@ -1,20 +1,25 @@
-//! The flat display modes — SubTables and Tabs (PROP-036 §2.11). Both collapse
-//! the DAG to one row per package (§2.12), ordered by the current [`Ordering`]
-//! and partitioned by effective load type into `static` / `dynamic` / `no-boot`
-//! groups. The `t` priority swap reorders the two boot groups; `no-boot` is
-//! always last.
+//! The partitioned display modes — SubTables and Tabs (PROP-037 §4.2/§4.3). Both
+//! render through the one Tree widget now: SubTables stacks one full tree per
+//! effective-load partition under a subheader; Tabs renders the active
+//! partition's tree. Each block/tab is a [`super::flatten::flatten`] call over
+//! the partition's member set — a pipeline configuration (PROP-037 §3.2), not a
+//! bespoke flat-list renderer. Fold state is shared across blocks by package id
+//! (D5): the one `folded` set is fed to every block's flatten, so folding a
+//! package in one block folds it everywhere.
 //!
-//! The tree mode ([`DisplayMode::All`]) keeps its own fold-aware walk in
-//! [`super::state`]; this module is only the flat builders.
+//! The graph utility [`reachable_from_roots`] stays here — the tree flatten's
+//! orphan pass (PROP-036 §2.12) consumes it.
 
-specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-036#tui");
+specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-037#modes");
 
 use std::collections::{BTreeMap, BTreeSet, VecDeque};
 
-use super::super::model::{LoadType, Package, PackageTree};
-use super::state::{Ordering, RowNode, VisibleRow, load_label};
+use super::super::model::{LoadType, PackageTree};
+use super::flatten::{TreeShape, flatten};
+use super::state::{Ordering, RowNode, VisibleRow};
 
-/// The three effective-load partitions of the flat display modes (§2.11).
+/// The three effective-load partitions of the partitioned display modes
+/// (PROP-037 §4.2/§4.3).
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum LoadGroup {
     /// Effective `static`.
@@ -64,99 +69,59 @@ pub fn group_order(static_first: bool) -> [LoadGroup; 3] {
     }
 }
 
-/// The SubTables rows: the flat, ordered package list partitioned by effective
-/// load type, each non-empty group preceded by a subheader row (PROP-036 §2.11).
+/// The SubTables rows: **one full tree per non-empty effective-load partition**,
+/// each under a subheader, in the user-chosen block order (PROP-037 §4.2). Each
+/// block is a [`flatten`] call over the partition's member set — a real tree
+/// (`│├└─` connectors, fold, DAG dedup), not a flat list. The same `folded` set
+/// feeds every block (D5 — fold state is shared by package id across blocks).
 pub fn subtables_rows(
     tree: &PackageTree,
+    folded: &BTreeSet<String>,
     ordering: Ordering,
+    shape: TreeShape,
     static_first: bool,
 ) -> Vec<VisibleRow> {
-    let indices = ordered_indices(tree, ordering);
     let mut rows: Vec<VisibleRow> = Vec::new();
     for group in group_order(static_first) {
-        let members: Vec<(usize, &Package)> = indices
-            .iter()
-            .filter_map(|&i| tree.packages.get(i).map(|p| (i, p)))
-            .filter(|(_, p)| LoadGroup::of(p.load.load_type) == group)
-            .collect();
-        if members.is_empty() {
+        let filter = group_filter(tree, group);
+        if filter.is_empty() {
             continue;
         }
         rows.push(subheader_row(group));
-        rows.extend(members.into_iter().map(|(i, p)| flat_row(i, p)));
+        rows.extend(flatten(tree, folded, ordering, shape, &filter));
     }
     rows
 }
 
-/// The flat package list for one tab's group, in the current ordering.
-pub fn tab_group_rows(tree: &PackageTree, ordering: Ordering, group: LoadGroup) -> Vec<VisibleRow> {
-    ordered_indices(tree, ordering)
-        .into_iter()
-        .filter_map(|i| tree.packages.get(i).map(|p| (i, p)))
-        .filter(|(_, p)| LoadGroup::of(p.load.load_type) == group)
-        .map(|(i, p)| flat_row(i, p))
+/// The active tab's tree: the one partition's member set, flattened with the
+/// shared fold state (PROP-037 §4.3). An empty partition renders no rows.
+pub fn tab_group_rows(
+    tree: &PackageTree,
+    folded: &BTreeSet<String>,
+    ordering: Ordering,
+    shape: TreeShape,
+    group: LoadGroup,
+) -> Vec<VisibleRow> {
+    let filter = group_filter(tree, group);
+    if filter.is_empty() {
+        return Vec::new();
+    }
+    flatten(tree, folded, ordering, shape, &filter)
+}
+
+/// The package ids whose effective load type falls in `group` — the partition's
+/// member set, the `filter` fed into that block/tab's [`flatten`].
+fn group_filter(tree: &PackageTree, group: LoadGroup) -> BTreeSet<String> {
+    tree.packages
+        .iter()
+        .filter(|p| LoadGroup::of(p.load.load_type) == group)
+        .map(|p| p.id.clone())
         .collect()
 }
 
-/// The unique package indices in the current ordering (PROP-036 §2.11).
-pub fn ordered_indices(tree: &PackageTree, ordering: Ordering) -> Vec<usize> {
-    match ordering {
-        Ordering::Alphabetical => {
-            let mut idx: Vec<usize> = (0..tree.packages.len()).collect();
-            idx.sort_by(|&a, &b| tree.packages[a].id.cmp(&tree.packages[b].id));
-            idx
-        }
-        Ordering::Topological => topological_indices(tree),
-    }
-}
-
-/// First-seen order in the declared-root DFS, then any unreached package
-/// (sorted by id) — the analysis order.
-fn topological_indices(tree: &PackageTree) -> Vec<usize> {
-    let by_id: BTreeMap<&str, usize> = tree
-        .packages
-        .iter()
-        .enumerate()
-        .map(|(i, p)| (p.id.as_str(), i))
-        .collect();
-    let mut order: Vec<usize> = Vec::new();
-    let mut seen: BTreeSet<usize> = BTreeSet::new();
-    for root in &tree.roots {
-        dfs(root, &by_id, tree, &mut seen, &mut order);
-    }
-    let mut rest: Vec<usize> = (0..tree.packages.len())
-        .filter(|i| !seen.contains(i))
-        .collect();
-    rest.sort_by(|&a, &b| tree.packages[a].id.cmp(&tree.packages[b].id));
-    order.extend(rest);
-    order
-}
-
-/// Collect first-seen package indices, cycle-guarded on the index.
-fn dfs(
-    id: &str,
-    by_id: &BTreeMap<&str, usize>,
-    tree: &PackageTree,
-    seen: &mut BTreeSet<usize>,
-    order: &mut Vec<usize>,
-) {
-    let Some(&idx) = by_id.get(id) else {
-        return;
-    };
-    if !seen.insert(idx) {
-        return;
-    }
-    order.push(idx);
-    if let Some(pkg) = tree.packages.get(idx) {
-        for dep in &pkg.dependencies {
-            dfs(dep, by_id, tree, seen, order);
-        }
-    }
-}
-
 /// The set of package ids reachable from any declared root over the full
-/// dependency graph (folds ignored). Used by the tree flatten's orphan test in
-/// [`super::state`]; a shared graph utility. Cycle-guarded on the id key.
+/// dependency graph (folds ignored). Used by the tree flatten's orphan pass in
+/// [`super::flatten`]; a shared graph utility. Cycle-guarded on the id key.
 pub(super) fn reachable_from_roots(
     tree: &PackageTree,
     by_id: &BTreeMap<&str, usize>,
@@ -180,19 +145,6 @@ pub(super) fn reachable_from_roots(
     reached
 }
 
-/// A flat (no tree glyphs) package row.
-fn flat_row(idx: usize, p: &Package) -> VisibleRow {
-    VisibleRow {
-        node: RowNode::Package(idx),
-        id: p.id.clone(),
-        name: p.id.clone(),
-        load: load_label(p.load.load_type),
-        transitive: p.load.transitive,
-        condition: p.condition.present,
-        in_static: p.load.in_static_md,
-    }
-}
-
 /// A subheader label row (its value/checkbox columns are blank).
 fn subheader_row(group: LoadGroup) -> VisibleRow {
     VisibleRow {
@@ -210,9 +162,11 @@ fn subheader_row(group: LoadGroup) -> VisibleRow {
 mod tests {
     use super::*;
     use crate::commands::tree::model::*;
-    use crate::commands::tree::tui::state::{Ordering, RowNode};
 
-    fn pkg(id: &str, load: LoadType) -> Package {
+    /// A package `id` of effective load `load` depending on `deps` (ids), no
+    /// condition. `in_static_md`/`in_index_md` mirror the load type so the `S`
+    /// column is consistent, but partitioning keys only off `load_type`.
+    fn pkg(id: &str, load: LoadType, deps: &[&str]) -> Package {
         let (group, name) = id.split_once('/').unwrap_or(("g", id));
         Package {
             id: id.to_string(),
@@ -232,11 +186,15 @@ mod tests {
                 boot_path: None,
             },
             condition: Condition::absent(),
-            dependencies: Vec::new(),
+            dependencies: deps.iter().map(|s| s.to_string()).collect(),
         }
     }
 
-    fn tree(packages: Vec<Package>) -> PackageTree {
+    /// Build a `PackageTree` over `packages` with the given declared `roots`.
+    /// Tests pass roots that reach every package so the MembersAsRoots orphan
+    /// pass is a no-op (the orphan pass keys off declared roots, not the
+    /// partition filter).
+    fn tree(packages: Vec<Package>, roots: &[&str]) -> PackageTree {
         PackageTree {
             schema_version: SCHEMA_VERSION,
             generated_at: None,
@@ -247,7 +205,7 @@ mod tests {
                 is_workspace: false,
                 host_namespace: HOST_NAMESPACE.to_string(),
             },
-            roots: Vec::new(),
+            roots: roots.iter().map(|s| s.to_string()).collect(),
             packages,
             boot: Boot {
                 static_md: None,
@@ -263,35 +221,82 @@ mod tests {
         }
     }
 
+    /// True if the row's name carries a tree connector (`└─`/`├─`).
+    fn has_connector(row: &VisibleRow) -> bool {
+        row.name.contains('\u{2514}') || row.name.contains('\u{251c}')
+    }
+
     #[test]
-    fn subtables_partition_by_load_type_with_subheaders() {
-        let t = tree(vec![
-            pkg("g/s", LoadType::Static),
-            pkg("g/d", LoadType::Dynamic),
-            pkg("g/n", LoadType::None),
-        ]);
-        let rows = subtables_rows(&t, Ordering::Alphabetical, true);
-        let names: Vec<&str> = rows.iter().map(|r| r.name.as_str()).collect();
+    fn subtables_renders_one_stacked_tree_per_load_group() {
+        // Two load groups, each a 2-level chain, every package reached from a
+        // declared root (so the MembersAsRoots orphan pass adds nothing).
+        let t = tree(
+            vec![
+                pkg("g/s1", LoadType::Static, &["g/s2"]),
+                pkg("g/s2", LoadType::Static, &[]),
+                pkg("g/d1", LoadType::Dynamic, &["g/d2"]),
+                pkg("g/d2", LoadType::Dynamic, &[]),
+            ],
+            &["g/s1", "g/d1"],
+        );
+        let folded = BTreeSet::new();
+        let rows = subtables_rows(
+            &t,
+            &folded,
+            Ordering::Topological,
+            TreeShape::MembersAsRoots,
+            true,
+        );
+
+        // Two subheaders, in the user-chosen block order.
+        let subheaders: Vec<&str> = rows
+            .iter()
+            .filter(|r| r.node == RowNode::Subheader)
+            .map(|r| r.name.as_str())
+            .collect();
         assert_eq!(
-            names,
-            [
-                "static dependencies",
-                "g/s",
-                "dynamic dependencies",
-                "g/d",
-                "no-boot",
-                "g/n",
-            ]
+            subheaders,
+            ["static dependencies", "dynamic dependencies"],
+            "one subheader per non-empty partition, in block order"
+        );
+
+        // Each block is a TREE, not a flat list: the child rows carry `└─`/`├─`
+        // connectors. A flat list would have no connectors at all.
+        let connected: Vec<&VisibleRow> = rows
+            .iter()
+            .filter(|r| matches!(r.node, RowNode::Package(_)) && has_connector(r))
+            .collect();
+        assert!(
+            !connected.is_empty(),
+            "SubTables renders trees with connectors, not a flat list"
+        );
+        assert!(
+            connected.iter().any(|r| r.id == "g/s2"),
+            "the static child is a tree node"
+        );
+        assert!(
+            connected.iter().any(|r| r.id == "g/d2"),
+            "the dynamic child is a tree node"
         );
     }
 
     #[test]
-    fn t_swap_puts_dynamic_first() {
-        let t = tree(vec![
-            pkg("g/s", LoadType::Static),
-            pkg("g/d", LoadType::Dynamic),
-        ]);
-        let rows = subtables_rows(&t, Ordering::Alphabetical, false);
+    fn t_swap_puts_dynamic_block_first() {
+        let t = tree(
+            vec![
+                pkg("g/s", LoadType::Static, &[]),
+                pkg("g/d", LoadType::Dynamic, &[]),
+            ],
+            &["g/s", "g/d"],
+        );
+        let folded = BTreeSet::new();
+        let rows = subtables_rows(
+            &t,
+            &folded,
+            Ordering::Topological,
+            TreeShape::MembersAsRoots,
+            false,
+        );
         let first_subheader = rows
             .iter()
             .find(|r| matches!(r.node, RowNode::Subheader))
@@ -301,25 +306,117 @@ mod tests {
 
     #[test]
     fn empty_group_is_skipped() {
-        // No `none` packages → no "no-boot" subheader.
-        let t = tree(vec![
-            pkg("g/s", LoadType::Static),
-            pkg("g/d", LoadType::Dynamic),
-        ]);
-        let rows = subtables_rows(&t, Ordering::Alphabetical, true);
+        // No `none` packages -> no "no-boot" subheader or block.
+        let t = tree(
+            vec![
+                pkg("g/s", LoadType::Static, &[]),
+                pkg("g/d", LoadType::Dynamic, &[]),
+            ],
+            &["g/s", "g/d"],
+        );
+        let folded = BTreeSet::new();
+        let rows = subtables_rows(
+            &t,
+            &folded,
+            Ordering::Topological,
+            TreeShape::MembersAsRoots,
+            true,
+        );
         assert!(!rows.iter().any(|r| r.name == "no-boot"));
     }
 
     #[test]
-    fn tab_group_rows_filter_to_one_group() {
-        let t = tree(vec![
-            pkg("g/s", LoadType::Static),
-            pkg("g/d", LoadType::Dynamic),
-            pkg("g/n", LoadType::None),
-        ]);
-        let rows = tab_group_rows(&t, Ordering::Alphabetical, LoadGroup::Dynamic);
-        assert_eq!(rows.len(), 1);
-        assert_eq!(rows[0].id, "g/d");
-        assert!(matches!(rows[0].node, RowNode::Package(_)));
+    fn tabs_active_tab_renders_that_partitions_tree() {
+        // The Static tab shows the static partition's tree (g/s1 -> g/s2), with
+        // connectors, and NOT the dynamic package (a different partition).
+        let t = tree(
+            vec![
+                pkg("g/s1", LoadType::Static, &["g/s2"]),
+                pkg("g/s2", LoadType::Static, &[]),
+                pkg("g/d1", LoadType::Dynamic, &[]),
+            ],
+            &["g/s1", "g/d1"],
+        );
+        let folded = BTreeSet::new();
+        let rows = tab_group_rows(
+            &t,
+            &folded,
+            Ordering::Topological,
+            TreeShape::MembersAsRoots,
+            LoadGroup::Static,
+        );
+        let ids: Vec<&str> = rows
+            .iter()
+            .filter(|r| matches!(r.node, RowNode::Package(_)))
+            .map(|r| r.id.as_str())
+            .collect();
+        assert!(ids.contains(&"g/s1"));
+        assert!(ids.contains(&"g/s2"));
+        assert!(
+            rows.iter().any(|r| r.id == "g/s2" && has_connector(r)),
+            "the static child carries a tree connector (a tree, not a flat list)"
+        );
+        assert!(
+            !ids.contains(&"g/d1"),
+            "the active tab shows only its own partition"
+        );
+    }
+
+    #[test]
+    fn folding_in_subtables_is_shared_across_every_block() {
+        // g/s(static) -> g/d(dynamic) -> g/n(none). g/d carries the child g/n
+        // and appears in TWO blocks: the static block (as a transitive dep of
+        // g/s) and the dynamic block (as a root). Folding g/d must collapse it
+        // in EVERY block -- the one `folded` set feeds every flatten (D5).
+        let t = tree(
+            vec![
+                pkg("g/s", LoadType::Static, &["g/d"]),
+                pkg("g/d", LoadType::Dynamic, &["g/n"]),
+                pkg("g/n", LoadType::None, &[]),
+            ],
+            &["g/s"],
+        );
+
+        // Unfolded: g/n shows under g/d in both the static and dynamic blocks
+        // (plus its own no-boot root).
+        let unfolded = BTreeSet::new();
+        let rows = subtables_rows(
+            &t,
+            &unfolded,
+            Ordering::Topological,
+            TreeShape::MembersAsRoots,
+            true,
+        );
+        assert!(
+            rows.iter().filter(|r| r.id == "g/n").count() >= 2,
+            "g/n visible under g/d in multiple blocks before folding"
+        );
+
+        // Fold g/d: it collapses everywhere, hiding g/n under it in every block.
+        let mut folded = BTreeSet::new();
+        folded.insert("g/d".to_string());
+        let rows = subtables_rows(
+            &t,
+            &folded,
+            Ordering::Topological,
+            TreeShape::MembersAsRoots,
+            true,
+        );
+        let gd_rows: Vec<&VisibleRow> = rows.iter().filter(|r| r.id == "g/d").collect();
+        assert!(
+            gd_rows.len() >= 2,
+            "g/d still anchors every block it appears in"
+        );
+        assert!(
+            gd_rows
+                .iter()
+                .all(|r| r.name.contains(super::super::theme::fold_collapsed())),
+            "g/d shows the collapsed glyph in every block (shared fold set)"
+        );
+        assert_eq!(
+            rows.iter().filter(|r| r.id == "g/n").count(),
+            1,
+            "folding g/d hid g/n under it in every block; only g/n's own no-boot root remains"
+        );
     }
 }

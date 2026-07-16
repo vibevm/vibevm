@@ -99,15 +99,15 @@ pub fn handle(event: &Event, app: &mut App) -> Result<Control<AppEvent>> {
             open_modal(app);
             Control::Changed
         }
-        // Tab switching (Tabs mode only; inert otherwise) — PROP-037 §5.3. The
-        // `n`/`x`/`t`/`[`/`]`/`F` letter shortcuts are superseded by F1/F2/F3 and
-        // the F1 action search (PROP-037 §5), so they no longer clutter the keymap.
-        ct_event!(keycode press Tab) => {
-            app.next_tab();
+        // Tab switching — Shift+← / Shift+→ (Tabs mode only; inert otherwise —
+        // `step_tab` guards on DisplayMode::Tabs). PROP-037 §5.3: plain ←/→ stay
+        // tree horizontal-pan, which is why tab-switch takes Shift.
+        ct_event!(keycode press SHIFT-Left) => {
+            app.prev_tab();
             Control::Changed
         }
-        ct_event!(keycode press BackTab) => {
-            app.prev_tab();
+        ct_event!(keycode press SHIFT-Right) => {
+            app.next_tab();
             Control::Changed
         }
         _ => Control::Continue,

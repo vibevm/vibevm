@@ -1,8 +1,10 @@
 //! The interactive TUI application state and the fold-aware tree flatten
 //! (PROP-036 §2.11, §2.12). [`App`] owns the model and the derived, scrollable
 //! [`VisibleRow`] list; the tree flatten adapts the Phase-1
-//! [`super::super::plain`] DFS (`│├└` glyphs, `(*)` DAG dedup, orphan pass) and
-//! the flat modes (SubTables / Tabs) build their rows in [`super::modes`].
+//! [`super::super::plain`] DFS (`│├└` glyphs, `(*)` DAG dedup, orphan pass); the
+//! partitioned modes (SubTables / Tabs) build their stacked / per-tab trees in
+//! [`super::modes`] over the one [`super::flatten`] walk — every mode renders a
+//! tree (PROP-037 §3.1, §4).
 
 specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-036#tui");
 
@@ -11,11 +13,14 @@ use std::collections::BTreeSet;
 use rat_widget::table::TableState;
 
 use super::super::model::{LoadType, PackageTree};
+// `TreeShape` is the shape stage of the PROP-037 §3.2/§3.3 pipeline, selected
+// per context by the F2 sort menu (§7.2) and carried into the flatten walk.
+use super::flatten::TreeShape;
 use super::menu::MenuState;
 use super::modes;
 use super::search::SearchState;
 
-/// The number of flat-mode partitions / tabs: `static`, `dynamic`, `no-boot`.
+/// The number of partition tabs: `static`, `dynamic`, `no-boot`.
 const TAB_COUNT: usize = 3;
 
 /// Row ordering, shown in the status line (PROP-036 §2.11).
@@ -38,15 +43,16 @@ impl Ordering {
     }
 }
 
-/// Display mode, shown in the status line (PROP-036 §2.11).
+/// Display mode, shown in the status line (PROP-036 §2.11, PROP-037 §4).
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum DisplayMode {
     /// One all-together tree (the default).
     All,
-    /// A flat list partitioned into `static` / `dynamic` / `no-boot` sub-tables,
-    /// each under a subheader row.
+    /// Several trees stacked vertically — one per effective-load partition, each
+    /// under a subheader (PROP-037 §4.2).
     SubTables,
-    /// A flat list behind `Static` / `Dynamic` / `No-boot` tabs.
+    /// One tree per tab — the active tab shows that partition's tree
+    /// (PROP-037 §4.3).
     Tabs,
 }
 
@@ -71,7 +77,7 @@ pub enum RowNode {
     Missing,
     /// The "not reached from a declared root" divider (§2.12 orphan pass).
     Separator,
-    /// A flat-mode section subheader (`static dependencies`, …).
+    /// A SubTables section subheader (`static dependencies`, …).
     Subheader,
 }
 
@@ -124,11 +130,16 @@ pub struct App {
     pub flash: Option<String>,
     /// Current row ordering (`n`).
     pub ordering: Ordering,
+    /// The active tree shape (PROP-037 §3.3 `#tree-shapes`) — the forest policy
+    /// carried into every `flatten`, in every mode. Selected per context by the
+    /// F2 sort menu (§7.2); defaults to [`TreeShape::MembersAsRoots`] (the
+    /// byte-identical continuation of the pre-shape walk).
+    pub shape: TreeShape,
     /// Current display mode (`x`).
     pub display_mode: DisplayMode,
-    /// Whether `static` sorts before `dynamic` in the flat modes (`t`).
+    /// Whether `static` sorts before `dynamic` in the partitioned modes (`t`).
     pub static_first: bool,
-    /// The active tab index in [`DisplayMode::Tabs`] (`[`/`]`/`Tab`).
+    /// The active tab index in [`DisplayMode::Tabs`] (`Shift+←`/`Shift+→`).
     pub tab: usize,
     /// A fatal error captured by the error handler, re-raised after the loop
     /// restores the terminal.
@@ -151,6 +162,7 @@ impl App {
             menu: None,
             flash: None,
             ordering: Ordering::Topological,
+            shape: TreeShape::default(),
             display_mode: DisplayMode::All,
             static_first: true,
             tab: 0,
@@ -166,13 +178,11 @@ impl App {
         self.rows.get(idx)
     }
 
-    /// Toggle the fold state of the selected node (`Space`). Only package rows
-    /// that actually have children fold.
+    /// Toggle the fold state of the selected node (`Space`). Every display mode
+    /// renders through the one Tree widget (PROP-037 §3.1, §4), so Space folds in
+    /// all of them; only package rows that actually have children fold, and a
+    /// subheader / separator selection is a no-op.
     pub fn toggle_fold_selected(&mut self) {
-        // Folding is a tree-mode affordance; inert in the flat modes.
-        if self.display_mode != DisplayMode::All {
-            return;
-        }
         let Some(idx) = self.table.selected() else {
             return;
         };
@@ -194,11 +204,8 @@ impl App {
     }
 
     /// Fold or unfold the whole tree (`F`). Folds every node that has children,
-    /// or clears the fold set.
+    /// or clears the fold set. Applies in every mode (each is a tree).
     pub fn toggle_fold_all(&mut self) {
-        if self.display_mode != DisplayMode::All {
-            return;
-        }
         self.all_folded = !self.all_folded;
         self.folded.clear();
         if self.all_folded {
@@ -225,30 +232,42 @@ impl App {
 
     /// Rebuild [`App::rows`] for the current display mode + ordering, keeping
     /// `table.rows` and the pan clamp in sync so key handling stays correct
-    /// between renders (PROP-036 §2.11–§2.12).
+    /// between renders (PROP-036 §2.11–§2.12, PROP-037 §4). Every mode runs the
+    /// one [`super::flatten`] walk over a partition-specific filter; the shared
+    /// `folded` set feeds every block so fold state is global by package id (D5).
     pub fn rebuild(&mut self) {
         self.rows = match self.display_mode {
-            // Tree mode = the default shape (a) over the declared-root filter,
-            // which reproduces the pre-shape walk byte-for-byte (the member set
-            // equals the declared roots, so (a)'s root set + declared-root
-            // orphan pass is exactly the PROP-036 §2.12 flatten). Phase 5+ will
-            // swap this filter for the search/selection set.
+            // Tree mode = the active shape over the declared-root filter, which
+            // reproduces the pre-shape walk byte-for-byte under the default
+            // members-as-roots shape (the member set equals the declared roots,
+            // so (a)'s root set + declared-root orphan pass is exactly the
+            // PROP-036 §2.12 flatten). Phase 5+ will swap this filter for the
+            // search/selection set.
             DisplayMode::All => {
                 let filter: BTreeSet<String> = self.tree.roots.iter().cloned().collect();
                 super::flatten::flatten(
                     &self.tree,
                     &self.folded,
                     self.ordering,
-                    super::flatten::TreeShape::MembersAsRoots,
+                    self.shape,
                     &filter,
                 )
             }
-            DisplayMode::SubTables => {
-                modes::subtables_rows(&self.tree, self.ordering, self.static_first)
-            }
+            // SubTables = several trees stacked vertically, one per effective-
+            // load partition under a subheader (PROP-037 §4.2). Each block is a
+            // full `flatten` over that partition's member set.
+            DisplayMode::SubTables => modes::subtables_rows(
+                &self.tree,
+                &self.folded,
+                self.ordering,
+                self.shape,
+                self.static_first,
+            ),
+            // Tabs = one tree per tab; the active tab shows that partition's
+            // tree (PROP-037 §4.3).
             DisplayMode::Tabs => {
                 let group = modes::group_order(self.static_first)[self.tab.min(TAB_COUNT - 1)];
-                modes::tab_group_rows(&self.tree, self.ordering, group)
+                modes::tab_group_rows(&self.tree, &self.folded, self.ordering, self.shape, group)
             }
         };
         self.max_name_width = self
@@ -297,19 +316,29 @@ impl App {
         self.reset_selection_top();
     }
 
-    /// Swap whether `static` or `dynamic` comes first in the flat modes (`t`).
+    /// Set the tree shape to a specific value (the F2 sort menu, PROP-037 §3.3
+    /// `#tree-shapes`). Mirrors [`App::set_ordering`]: rebuild + reset selection.
+    #[allow(dead_code)] // selected by the F2 sort menu (§7.2, Phase 5+); exercised in tests today.
+    pub fn set_shape(&mut self, shape: TreeShape) {
+        self.shape = shape;
+        self.rebuild();
+        self.reset_selection_top();
+    }
+
+    /// Swap whether `static` or `dynamic` comes first in the partitioned modes
+    /// (`t`).
     pub fn swap_priority(&mut self) {
         self.static_first = !self.static_first;
         self.rebuild();
         self.reset_selection_top();
     }
 
-    /// Select the next tab, wrapping — [`DisplayMode::Tabs`] only (`]` / `Tab`).
+    /// Select the next tab, wrapping — [`DisplayMode::Tabs`] only (`Shift+→`).
     pub fn next_tab(&mut self) {
         self.step_tab(1);
     }
 
-    /// Select the previous tab, wrapping — [`DisplayMode::Tabs`] only (`[`).
+    /// Select the previous tab, wrapping — [`DisplayMode::Tabs`] only (`Shift+←`).
     pub fn prev_tab(&mut self) {
         self.step_tab(-1);
     }
@@ -479,5 +508,30 @@ mod tests {
         app.cycle_ordering();
         assert_eq!(app.ordering, Ordering::Alphabetical);
         assert_eq!(package_ids(&app), ["g/root", "g/a", "g/b", "g/c"]);
+    }
+
+    #[test]
+    fn set_shape_rebuilds_the_tree_mode_walk() {
+        // `set_shape` is the F2-sort-menu mutator (PROP-037 §3.3 `#tree-shapes`),
+        // and the shape field drives the tree-mode (All) walk too (§4.1). Under
+        // the default members-as-roots shape the declared-root walk shows the full
+        // subtree; switching to PrunedTree keeps only branches reaching a filter
+        // member, so over the declared-root filter only `g/root` itself remains.
+        let mut app = App::new(tree(
+            vec![
+                pkg("g/root", &["g/a", "g/b"]),
+                pkg("g/a", &[]),
+                pkg("g/b", &[]),
+            ],
+            &["g/root"],
+        ));
+        assert_eq!(app.shape, TreeShape::MembersAsRoots);
+        assert_eq!(package_ids(&app), ["g/root", "g/a", "g/b"]);
+        app.set_shape(TreeShape::PrunedTree);
+        assert_eq!(app.shape, TreeShape::PrunedTree);
+        assert_eq!(package_ids(&app), ["g/root"]);
+        // Back to the default restores the full subtree.
+        app.set_shape(TreeShape::MembersAsRoots);
+        assert_eq!(package_ids(&app), ["g/root", "g/a", "g/b"]);
     }
 }

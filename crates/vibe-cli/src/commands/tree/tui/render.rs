@@ -109,11 +109,14 @@ fn render_footer(area: Rect, buf: &mut Buffer, app: &App) {
         ("F6", " copy  "),
         ("\u{2191}\u{2193}", " move  "),
         ("\u{2190}\u{2192}", " pan  "),
+        // Every mode renders through the one Tree widget (PROP-037 §3.1, §4), so
+        // Space folds in all of them.
+        ("Space", " fold  "),
     ];
-    match app.display_mode {
-        DisplayMode::All => keys.push(("Space", " fold  ")),
-        DisplayMode::Tabs => keys.push(("\u{21c6}", " tab  ")),
-        DisplayMode::SubTables => {}
+    if app.display_mode == DisplayMode::Tabs {
+        // Shift+←/→ switches tabs; plain ←/→ stays tree-pan (PROP-037 §5.3).
+        // `Shift` is written `↑` per §5.2.
+        keys.push(("\u{2191}\u{2190}\u{2191}\u{2192}", " tab  "));
     }
     keys.push(("Enter", " details  "));
     keys.push(("q", " quit"));
