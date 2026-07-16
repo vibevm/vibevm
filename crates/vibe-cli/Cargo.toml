@@ -53,6 +53,10 @@ rat-widget.workspace = true
 ratatui-core.workspace = true
 ratatui-widgets.workspace = true
 ratatui-crossterm.workspace = true
+# CDP attach to the running vibeterm Electron page (`vibe aiui inspect`) — PROP-042.
+chromiumoxide.workspace = true
+tokio.workspace = true
+futures.workspace = true
 
 [dev-dependencies]
 assert_cmd.workspace = true

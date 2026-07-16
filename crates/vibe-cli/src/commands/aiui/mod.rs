@@ -6,6 +6,7 @@
 
 specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-042#aiui-cli");
 
+mod cdp;
 mod control;
 
 use anyhow::{Result, anyhow};
@@ -23,6 +24,10 @@ pub fn run(_ctx: &output::Context, args: AiuiArgs) -> Result<()> {
         AiuiSubcommand::Snapshot(a) => control::snapshot(a),
         AiuiSubcommand::Wait(a) => control::wait(a),
         AiuiSubcommand::Close(a) => control::close(a),
+        AiuiSubcommand::Inspect(a) => cdp::inspect(a),
+        AiuiSubcommand::PtyStop(a) => control::pty_stop(a),
+        AiuiSubcommand::PtyStart(a) => control::pty_start(a),
+        AiuiSubcommand::Scrollbar(a) => control::scrollbar(a),
     }
 }
 

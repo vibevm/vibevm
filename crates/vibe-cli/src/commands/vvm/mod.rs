@@ -16,7 +16,7 @@ mod install;
 mod model;
 mod placer;
 mod remove;
-mod selfloc;
+pub(crate) mod selfloc;
 mod source;
 mod store;
 mod tools;

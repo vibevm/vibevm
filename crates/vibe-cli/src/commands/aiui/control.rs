@@ -11,16 +11,24 @@ use std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};
 use anyhow::{Result, anyhow, bail};
 use serde_json::{Value, json};
 
-use crate::cli::{AiuiOpenArgs, AiuiSendArgs, AiuiSessionArgs, AiuiSnapshotArgs, AiuiWaitArgs};
+use crate::cli::{
+    AiuiOpenArgs, AiuiScrollbarArgs, AiuiSendArgs, AiuiSessionArgs, AiuiSnapshotArgs, AiuiWaitArgs,
+    ScrollbarMode,
+};
 
-/// A running vibeterm control session's discovery info.
-struct Discovery {
-    port: u16,
-    token: String,
-    pid: u32,
+/// A running vibeterm control session's discovery info. `pub(super)` so the CDP
+/// `inspect` sibling can read the same session's fields.
+pub(super) struct Discovery {
+    pub(super) port: u16,
+    pub(super) token: String,
+    pub(super) pid: u32,
     /// `Date.now()` (epoch ms) when vibeterm wrote the file — used to tell our
     /// freshly-spawned session apart from a stale `latest.json`.
-    started_at: u128,
+    pub(super) started_at: u128,
+    /// The Chrome DevTools Protocol port, when vibeterm opened a
+    /// `--remote-debugging-port` endpoint for `vibe aiui inspect` (PROP-042 §4).
+    /// `None` for a session whose vibeterm predates `--cdp-port`.
+    pub(super) cdp_port: Option<u16>,
 }
 
 /// `vibe aiui open`: launch vibeterm with its control server, wait for the
@@ -43,7 +51,9 @@ pub(super) fn open(a: AiuiOpenArgs) -> Result<()> {
     // vibeterm reports is not the pid we spawn — Electron's launcher forks the
     // real main process — so we cannot target a `<pid>.json` by the child id.)
     let since_ms = now_ms();
-    let child = super::super::term::spawn_vibeterm(&exec, Some(cols), Some(rows), true)?;
+    // Control server always on; headless unless the caller asks to watch it live.
+    let child =
+        super::super::term::spawn_vibeterm(&exec, Some(cols), Some(rows), true, !a.visible)?;
     // The child handle is dropped (detached): vibeterm owns its own lifetime and
     // is torn down via `vibe aiui close`, not by this process.
     drop(child);
@@ -92,6 +102,39 @@ pub(super) fn close(a: AiuiSessionArgs) -> Result<()> {
     Ok(())
 }
 
+/// `vibe aiui pty-stop`: stop the hosted program only (NOT Electron). The
+/// renderer + CDP endpoint stay live; the binary is freed for a rebuild.
+pub(super) fn pty_stop(a: AiuiSessionArgs) -> Result<()> {
+    let disc = read_discovery(a.session)?;
+    post(&disc, "/pty-stop", json!({}))?;
+    Ok(())
+}
+
+/// `vibe aiui pty-start`: (re)spawn the hosted program at the current grid.
+/// Pairs with `pty-stop` around a rebuild for a live TUI preview loop.
+pub(super) fn pty_start(a: AiuiSessionArgs) -> Result<()> {
+    let disc = read_discovery(a.session)?;
+    let v = post(&disc, "/pty-start", json!({}))?;
+    println!(
+        "pty started: cols={} rows={}",
+        v.get("cols").and_then(|x| x.as_u64()).unwrap_or(0),
+        v.get("rows").and_then(|x| x.as_u64()).unwrap_or(0),
+    );
+    Ok(())
+}
+
+/// `vibe aiui scrollbar <mode>`: flip the scrollbar policy live.
+pub(super) fn scrollbar(a: AiuiScrollbarArgs) -> Result<()> {
+    let disc = read_discovery(a.session)?;
+    let mode = match a.mode {
+        ScrollbarMode::Auto => "auto",
+        ScrollbarMode::On => "on",
+        ScrollbarMode::Off => "off",
+    };
+    post(&disc, "/scrollbar", json!({ "mode": mode }))?;
+    Ok(())
+}
+
 /// The default `--exec` for `vibe aiui open`: the console `vibe tree` over the
 /// directory `vibe aiui` was run from, by this same binary. The cwd is resolved
 /// to an absolute path (vibeterm runs with its own cwd) and both the binary and
@@ -127,8 +170,9 @@ fn home() -> PathBuf {
 }
 
 /// Read a session's discovery file — `<pid>.json` for an explicit session, else
-/// `latest.json` (the most recently opened).
-fn read_discovery(session: Option<u32>) -> Result<Discovery> {
+/// `latest.json` (the most recently opened). `pub(super)` so the CDP `inspect`
+/// sibling reads the same session.
+pub(super) fn read_discovery(session: Option<u32>) -> Result<Discovery> {
     let file = match session {
         Some(pid) => aiui_dir().join(format!("{pid}.json")),
         None => aiui_dir().join("latest.json"),
@@ -175,11 +219,13 @@ fn parse_discovery(raw: &str) -> Result<Discovery> {
         .to_string();
     let pid = v["pid"].as_u64().unwrap_or(0);
     let started_at = v["startedAt"].as_u64().unwrap_or(0);
+    let cdp_port = v.get("cdpPort").and_then(|x| x.as_u64()).map(|p| p as u16);
     Ok(Discovery {
         port: port as u16,
         token,
         pid: pid as u32,
         started_at: started_at as u128,
+        cdp_port,
     })
 }
 

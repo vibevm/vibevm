@@ -38,6 +38,28 @@ pub enum AiuiSubcommand {
 
     /// Close a running vibeterm session.
     Close(AiuiSessionArgs),
+
+    /// Evaluate a JavaScript expression in the live vibeterm renderer page over
+    /// CDP — read its REAL state (the xterm grid's cols/cell metrics, the
+    /// scrollbar box) straight from the runtime, with no screenshot. Requires a
+    /// `--control` session (PROP-042 §4).
+    Inspect(AiuiInspectArgs),
+
+    /// Stop the hosted program (the PTY child) WITHOUT restarting Electron —
+    /// frees its binary for a rebuild. The renderer, the CDP endpoint, and the
+    /// discovery file all stay live. Pair with `pty-start` for a fast TUI
+    /// preview loop (PROP-042 §4).
+    PtyStop(AiuiSessionArgs),
+
+    /// (Re)spawn the hosted program at the current grid. Pair with `pty-stop`
+    /// around a rebuild for a live TUI preview — the agent sees the change
+    /// without reconnecting CDP or relaunching Electron (PROP-042 §4).
+    PtyStart(AiuiSessionArgs),
+
+    /// Set the scrollbar policy live: `auto` (hidden for a full-screen TUI,
+    /// shown for a shell), `on` (always), `off` (never). The renderer refits the
+    /// grid — no Electron restart. Requires a `--control` session (PROP-042 §4).
+    Scrollbar(AiuiScrollbarArgs),
 }
 
 #[derive(Debug, Args)]
@@ -50,6 +72,11 @@ pub struct AiuiOpenArgs {
     /// Terminal grid as `COLSxROWS` (passed to vibeterm).
     #[arg(long)]
     pub size: Option<String>,
+
+    /// Show the OS window (default: headless). A visible control session lets a
+    /// human watch and resize it live while the agent drives it.
+    #[arg(long)]
+    pub visible: bool,
 
     /// How long to wait (ms) for the control server's discovery file.
     #[arg(long, default_value_t = 8000)]
@@ -97,6 +124,40 @@ pub struct AiuiSessionArgs {
     /// The session id (vibeterm pid); defaults to the most recent session.
     #[arg(long)]
     pub session: Option<u32>,
+}
+
+#[derive(Debug, Args)]
+pub struct AiuiInspectArgs {
+    /// A JavaScript expression to evaluate in the live renderer page, e.g.
+    /// `JSON.stringify({cols: term.cols, rows: term.rows})`. Its return value is
+    /// printed as JSON.
+    pub expr: String,
+
+    /// The session id (vibeterm pid); defaults to the most recent session.
+    #[arg(long)]
+    pub session: Option<u32>,
+}
+
+#[derive(Debug, Args)]
+pub struct AiuiScrollbarArgs {
+    /// The scrollbar policy.
+    #[arg(value_enum)]
+    pub mode: ScrollbarMode,
+
+    /// The session id (vibeterm pid); defaults to the most recent session.
+    #[arg(long)]
+    pub session: Option<u32>,
+}
+
+/// The `vibe aiui scrollbar` policy (PROP-042 §4).
+#[derive(Debug, Clone, Copy, ValueEnum)]
+pub enum ScrollbarMode {
+    /// Hidden for a full-screen TUI (alt-screen), shown for a shell.
+    Auto,
+    /// Always show the scrollbar.
+    On,
+    /// Never show the scrollbar.
+    Off,
 }
 
 #[derive(Debug, Args)]

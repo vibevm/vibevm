@@ -32,30 +32,38 @@ pub fn run(_ctx: &output::Context, args: TermArgs) -> Result<()> {
 /// `cols×rows`. Shared by `vibe term` and `vibe tree -t` (PROP-042 §5): resolve
 /// vibeterm + its Electron binary, spawn it detached, report the pid.
 pub(crate) fn launch_vibeterm(exec: &str, cols: Option<u16>, rows: Option<u16>) -> Result<()> {
-    let child = spawn_vibeterm(exec, cols, rows, false)?;
+    // Visible, no control server: a human uses it directly and resizes it live.
+    let child = spawn_vibeterm(exec, cols, rows, false, false)?;
     println!("vibeterm launched (pid {}) — running `{exec}`", child.id());
     Ok(())
 }
 
 /// Spawn vibeterm detached and return the child handle. `control` adds
-/// `--control` so vibeterm starts its AIUI control server + discovery file, and
-/// `--headless` so no OS window pops up — a control session is driven over HTTP
-/// and read from the headless mirror (PROP-042 §4), so a visible GUI would only
-/// flash on screen and steal focus. Shared by `vibe term`, `vibe tree -t`, and
-/// `vibe aiui open`.
+/// `--control` so vibeterm starts its AIUI control server + discovery file;
+/// `headless` adds `--headless` so no OS window pops up (a control session is
+/// driven over HTTP and read from the headless mirror, PROP-042 §4). The two are
+/// orthogonal: a headless control session is the default agent case, but
+/// `vibe aiui open --visible` runs control **visible** so a human can watch and
+/// resize it live. `vibe term` / `vibe tree -t` pass neither. Shared by all three.
 pub(crate) fn spawn_vibeterm(
     exec: &str,
     cols: Option<u16>,
     rows: Option<u16>,
     control: bool,
+    headless: bool,
 ) -> Result<std::process::Child> {
     let vibeterm = resolve_vibeterm()?;
     let electron = electron_binary(&vibeterm)?;
     let mut cmd = Command::new(&electron);
-    cmd.arg(&vibeterm)
-        .arg("--exec")
+    // Dev layout: `electron <appdir>` (Electron resolves via node_modules/electron).
+    // Packaged layout: electron-packager put the binary at the dir root and it
+    // auto-loads resources/app, so NO app-path argument is passed.
+    if vibeterm.shape == VibetermShape::Dev {
+        cmd.arg(&vibeterm.dir);
+    }
+    cmd.arg("--exec")
         .arg(exec)
-        .current_dir(&vibeterm)
+        .current_dir(&vibeterm.dir)
         // Detach the child's stdio. vibeterm is a GUI process that long-outlives
         // this launcher; if it inherited our pipes it would hold them open, so a
         // `vibe aiui open` whose stdout is captured (e.g. `pid=$(vibe aiui
@@ -71,10 +79,18 @@ pub(crate) fn spawn_vibeterm(
         cmd.arg("--rows").arg(r.to_string());
     }
     if control {
-        // Observation sessions are windowless: driven over HTTP, read from the
-        // headless mirror. (`vibe term` / `vibe tree -t` pass control = false and
-        // stay visible for a human to watch.)
-        cmd.arg("--control").arg("--headless");
+        cmd.arg("--control");
+        // In control mode, also open a Chrome DevTools Protocol endpoint so an
+        // external agent (chromiumoxide) can attach and read the live page's
+        // real state (xterm grid cols/cell metrics, DOM layout) without OCR.
+        // We pick the loopback port synchronously here and pass it so vibeterm
+        // publishes it in its discovery file; the agent reads that. A tiny race
+        // exists between this bind and Electron's, acceptable on loopback.
+        let cdp = pick_free_loopback_port()?;
+        cmd.arg("--cdp-port").arg(cdp.to_string());
+    }
+    if headless {
+        cmd.arg("--headless");
     }
     cmd.spawn()
         .map_err(|e| anyhow!("launching vibeterm via `{}`: {e}", electron.display()))
@@ -91,54 +107,147 @@ pub(crate) fn quote_exe(exe: &str) -> String {
     }
 }
 
+/// Bind a transient loopback TCP socket at an OS-chosen port and return that
+/// port, purely to hand Electron a likely-free `--remote-debugging-port` for
+/// the CDP endpoint. The socket is dropped immediately, so a small race with
+/// Electron's own bind remains — acceptable on loopback for a dev/debug endpoint.
+pub(crate) fn pick_free_loopback_port() -> Result<u16> {
+    let listener = std::net::TcpListener::bind(("127.0.0.1", 0))
+        .map_err(|e| anyhow!("finding a free loopback port for CDP: {e}"))?;
+    listener
+        .local_addr()
+        .map(|a| a.port())
+        .map_err(|e| anyhow!("resolving the CDP port: {e}"))
+}
+
+/// Whether a resolved vibeterm is the unpackaged dev source (`apps/vibeterm`,
+/// Electron resolved through `node_modules/electron/path.txt`) or a packaged,
+/// self-contained build (electron binary at the dir root, `resources/app/`
+/// inside — produced by `apps/vibeterm/scripts/package.mjs`).
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub(crate) enum VibetermShape {
+    Dev,
+    Packaged,
+}
+
+/// A resolved vibeterm: its directory and whether it is the dev or packaged form.
+pub(crate) struct Vibeterm {
+    pub(crate) dir: PathBuf,
+    pub(crate) shape: VibetermShape,
+}
+
+/// Classify a dir as dev or packaged by electron-packager's signature (the app
+/// lives at `resources/app/package.json` only in a packaged build).
+fn classify_vibeterm(dir: &Path) -> VibetermShape {
+    if dir
+        .join("resources")
+        .join("app")
+        .join("package.json")
+        .is_file()
+    {
+        VibetermShape::Packaged
+    } else {
+        VibetermShape::Dev
+    }
+}
+
 /// Locate the vibeterm app directory without a `PATH` search (PROP-042 §5):
-/// `$VIBEVM_VIBETERM` wins; else a dev fallback walks up from the running binary
-/// for `research/vibeterm`.
-fn resolve_vibeterm() -> Result<PathBuf> {
+/// `$VIBEVM_VIBETERM` wins (an explicit override); else an installed `vibe`
+/// finds the packaged `vibeterm/` shipped inside its own instance dir
+/// (`selfloc::derive_self`); else a dev fallback walks up from the running
+/// binary for `apps/vibeterm` — works for a `target/debug` or `target/release`
+/// build alike, since both sit under the repo root.
+fn resolve_vibeterm() -> Result<Vibeterm> {
+    // Tier 1 — explicit override (dev or packaged).
     if let Some(dir) = std::env::var_os("VIBEVM_VIBETERM") {
         let dir = PathBuf::from(dir);
-        if dir.join("package.json").exists() {
-            return Ok(dir);
+        let dev_ok = dir.join("package.json").exists();
+        let pkg_ok = dir
+            .join("resources")
+            .join("app")
+            .join("package.json")
+            .exists();
+        if !dev_ok && !pkg_ok {
+            bail!(
+                "$VIBEVM_VIBETERM = `{}` is neither a dev app nor a packaged build",
+                dir.display()
+            );
         }
-        bail!("$VIBEVM_VIBETERM = `{}` has no package.json", dir.display());
+        let shape = classify_vibeterm(&dir);
+        return Ok(Vibeterm { dir, shape });
     }
+    // Tier 2 — packaged alongside the running binary in its VVM instance.
+    if let Some(loc) =
+        crate::commands::vvm::selfloc::derive_self(std::env::current_exe().ok().as_deref())
+    {
+        let cand = loc.home.join("vibeterm");
+        if matches!(classify_vibeterm(&cand), VibetermShape::Packaged) {
+            return Ok(Vibeterm {
+                dir: cand,
+                shape: VibetermShape::Packaged,
+            });
+        }
+    }
+    // Tier 3 — dev walk-up for apps/vibeterm.
     let exe = std::env::current_exe()?;
     let mut cursor = exe.parent();
     while let Some(dir) = cursor {
-        let cand = dir.join("research").join("vibeterm");
+        let cand = dir.join("apps").join("vibeterm");
         if cand.join("package.json").exists() {
-            return Ok(cand);
+            return Ok(Vibeterm {
+                dir: cand,
+                shape: VibetermShape::Dev,
+            });
         }
         cursor = dir.parent();
     }
     bail!(
         "vibeterm not found — set $VIBEVM_VIBETERM to its directory \
-         (dev: <repo>/research/vibeterm)"
+         (dev: <repo>/apps/vibeterm; packaged: the instance's vibeterm/)"
     )
 }
 
-/// Resolve vibeterm's Electron binary through its own `node_modules/electron/
-/// path.txt` — the canonical, cross-platform resolution the electron package
-/// itself uses.
-fn electron_binary(vibeterm: &Path) -> Result<PathBuf> {
-    let base = vibeterm.join("node_modules").join("electron");
-    let path_txt = base.join("path.txt");
-    let rel = std::fs::read_to_string(&path_txt).map_err(|_| {
-        anyhow!(
-            "vibeterm's Electron is not installed (no `{}`). Run `npm install` in \
-             `{}` and follow its README (npm 11 blocks the postinstall).",
-            path_txt.display(),
-            vibeterm.display()
-        )
-    })?;
-    let bin = base.join("dist").join(rel.trim());
-    if !bin.exists() {
-        bail!(
-            "vibeterm's Electron binary is missing at `{}`",
-            bin.display()
-        );
+/// Resolve vibeterm's Electron binary. Dev: through its own
+/// `node_modules/electron/path.txt` (the resolution the electron package uses).
+/// Packaged: the binary sits at the dir root (electron-packager lays it there).
+fn electron_binary(v: &Vibeterm) -> Result<PathBuf> {
+    match v.shape {
+        VibetermShape::Packaged => {
+            let exe_name = if cfg!(windows) {
+                "electron.exe"
+            } else {
+                "electron"
+            };
+            let bin = v.dir.join(exe_name);
+            if !bin.is_file() {
+                bail!(
+                    "packaged vibeterm's Electron binary is missing at `{}`",
+                    bin.display()
+                );
+            }
+            Ok(bin)
+        }
+        VibetermShape::Dev => {
+            let base = v.dir.join("node_modules").join("electron");
+            let path_txt = base.join("path.txt");
+            let rel = std::fs::read_to_string(&path_txt).map_err(|_| {
+                anyhow!(
+                    "vibeterm's Electron is not installed (no `{}`). Run `npm install` in \
+                     `{}` and follow its README (npm 11 blocks the postinstall).",
+                    path_txt.display(),
+                    v.dir.display()
+                )
+            })?;
+            let bin = base.join("dist").join(rel.trim());
+            if !bin.exists() {
+                bail!(
+                    "vibeterm's Electron binary is missing at `{}`",
+                    bin.display()
+                );
+            }
+            Ok(bin)
+        }
     }
-    Ok(bin)
 }
 
 /// The interactive shell to host (PROP-042 §5): pwsh 7+ preferred on Windows.
