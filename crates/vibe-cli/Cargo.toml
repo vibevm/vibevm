@@ -26,6 +26,7 @@ vibe-check.workspace = true
 vibe-publish.workspace = true
 vibe-workspace.workspace = true
 vibe-mcp.workspace = true
+vibe-settings.workspace = true
 vibe-wire.workspace = true
 vibe-spec.workspace = true
 semver.workspace = true

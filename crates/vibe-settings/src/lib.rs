@@ -27,6 +27,7 @@
 
 specmark::scope!("spec://vibevm/modules/vibe-settings/PROP-040#root");
 
+pub mod cli;
 pub mod error;
 pub mod events;
 pub mod loader;

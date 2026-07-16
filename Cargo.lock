@@ -3672,6 +3672,7 @@ dependencies = [
  "vibe-publish",
  "vibe-registry",
  "vibe-resolver",
+ "vibe-settings",
  "vibe-spec",
  "vibe-wire",
  "vibe-workspace",

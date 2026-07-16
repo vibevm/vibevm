@@ -15,6 +15,7 @@ mod agentic;
 mod inspect;
 mod mcp;
 mod pkg;
+mod prefs;
 mod registry;
 mod skill;
 mod vars;
@@ -25,6 +26,7 @@ pub use agentic::*;
 pub use inspect::*;
 pub use mcp::*;
 pub use pkg::*;
+pub use prefs::*;
 pub use registry::*;
 pub use skill::*;
 pub use vars::*;
@@ -148,6 +150,12 @@ pub enum Command {
 
     /// Inspect computed project state (effective spec, configuration).
     Show(ShowArgs),
+
+    /// Inspect and edit application/user preferences — the three-level
+    /// app-prefs store (`vibe-settings`, PROP-040 §8). `vibe prefs get/set/
+    /// list/check/migrate` plus `vibe prefs show-origins`. Distinct from
+    /// `vibe show config` (the project-config view).
+    Prefs(PrefsArgs),
 
     /// Analyze the resolved spec/dependency tree (PROP-036): the effective
     /// boot load type per package (`static` / `dynamic` / `none`), the
