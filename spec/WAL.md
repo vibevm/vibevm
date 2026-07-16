@@ -1,5 +1,32 @@
 # WAL — Project Continuation State
 
+## CHECKPOINT 2026-07-17 — TERMINAL-AIUI: packaging + AIUI plan LANDED (goal-hook CLOSED)
+
+_Updated: 2026-07-17 — **the TERMINAL-AIUI campaign goal-hook is CLOSED.** Both owner asks landed
+on `main`, floor-green, **pushed to origin** (the prior session's 6 + this session's 7 commits;
+`11ccea4..abb5e5e main -> main`). **(1) Packaging** — `vibe self install`/`self update` now carries a
+self-contained packaged vibeterm (Electron runtime + app + node_modules + node-pty prebuild) into each
+instance's `vibeterm/` subtree via a new `NpmPackager` seam (`commands/vvm/vibeterm_packager.rs`); the
+3-tier resolver (`commands/term.rs`) finds it instance-relative. Proven live: `vibe term` from a
+`self install`-ed instance launches the packaged `vibeterm.exe`. Three Windows bugs fixed on the way —
+Rust's `Command::new` is blind to `.cmd` shims (npm/npx) without a `cmd /C` wrapper
+(`vvm::tools::tool_command`); electron-packager names the binary after the app (`vibeterm.exe`, NOT
+`electron.exe`) so `electron_binary` + the doctor check had to look for the app-named exe; and
+`@electron/rebuild` was both unnecessary (node-pty is N-API, prebuilt binary ABI-stable across Node 24
+and Electron 32) and broken (force-runs node-gyp, which trips a bad relative-path `cd shared &&
+GetCommitHash.bat` in `deps/winpty/src/winpty.gyp`) — dropped. `vvm/mod.rs` crossed the 600-line budget
+→ `run_doctor_cmd` extracted to `doctor.rs`. **(2) AIUI plan** — Phase 5 (model plane: `vibe aiui state`
+→ serialisable `TreeModelView`, PROP-039 §11.2/§11.3 prototyped on the TUI) + Phase 6 (render goldens —
+base/f2/f3/quit/narrow via a multi-golden harness + `spec/manual-tests/MT-05-aiui-visual-testing.md`)
+landed. Phase 4 (PNG snapshot) was the prior session. **Phase 7 (MCP) deferred by name** (plan §7, out
+of campaign scope, not in §12 acceptance). Floor at close: `self-check` all green (fmt/clippy `--all-targets
+-D warnings`/vibe check 0 errors/conform 0 new/Rust 34+11+19/npm 39). `CONTINUE.md` — canonical
+cold-resume. **No blocker.** Owner's remaining move is the visual sign-off (run `vibe tree -t` in a real
+attended terminal over a `vibe.toml` cwd; a redirected shell is not `user_attended()` so `-t` is ignored
+— see CONTINUE.md findings)._
+
+---
+
 ## CHECKPOINT 2026-07-16 — META-PLAN CLOSED: Шаг 3 (TUI) + Шаг 4 (settings UI) EXECUTED
 
 _Updated: 2026-07-16 — **МЕТА-ПЛАН ВЫПОЛНЕН.** `vibe tree` TUI (PROP-037, Шаг 3, 11 фаз P0–P10) +
