@@ -166,14 +166,23 @@ fallback (§2.2.3).
 REQ. Rendering degrades through four tiers — **3** (truecolor: full RGB, rounded
 frames, braille/blocks), **2** (256-colour: palette quantised to the 6×6×6 cube,
 rounded, blocks), **1** (16 ANSI: role→ANSI mapping, rounded-or-square frames,
-blocks), **0** (dumb / `TERM=linux` / no Unicode: ANSI mono, ASCII `+-|` frames,
-`#` indicators).
+blocks), **0** (explicitly dumb — `TERM=linux` (the Linux VT) or `TERM=dumb`:
+ANSI mono, ASCII `+-|` frames, `#` indicators).
 
 REQ. Tier detection is a **pure function** over the environment —
 `detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier` (`$COLORTERM`
 first, then `$TERM`; `crossterm` exposes no colour-count API). The TUI reads the
 env once at launch in a sanctioned spot and feeds the values in; the detected
-tier is overridable through the settings system (§9).
+tier is overridable through the settings system (§9). **The default is Tier 3**:
+anything not explicitly dumb (an unset or empty `TERM`/`COLORTERM`, or a generic
+`TERM=xterm`) is assumed truecolor, because every incumbent terminal renders
+truecolor and several (notably on Windows) do not advertise the capability via
+env at all — defaulting to Tier 3 keeps a modern terminal colourful instead of
+degrading it to mono. The lower tiers are the **fallback** (the degradation
+path), reached only when the environment explicitly advertises a lower
+capability (a 256-colour `TERM`, or an explicitly dumb `TERM=linux`/`dumb`);
+Tier 0 is never reached from an unset env. A genuinely limited terminal is
+otherwise overridden via `vibe.tree.tier`.
 
 REQ. Degradation is a **projection**: one `Theme` is built for Tier 3 and
 projected onto the detected tier (roles quantised / ANSI-mapped / ASCII-fallback).

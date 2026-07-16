@@ -140,7 +140,9 @@ fn render_footer(area: Rect, buf: &mut Buffer, app: &App) {
         keys.push(("\u{2191}\u{2190}\u{2191}\u{2192}", " tab  "));
     }
     keys.push(("Enter", " details  "));
-    keys.push(("q", " quit"));
+    // Esc opens the quit-confirm at the base screen (PROP-037 §7.4) — the
+    // footer advertises the real binding, not the retired `q`.
+    keys.push(("Esc", " quit"));
 
     let mut spans: Vec<Span<'static>> = vec![Span::raw(" ")];
     for (k, desc) in keys {

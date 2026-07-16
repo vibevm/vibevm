@@ -122,13 +122,16 @@ L1/L2/L3 and is overridable at the CLI/env.
 | **3** | `$COLORTERM` ∈ {`truecolor`,`24bit`} | full 24-bit RGB | rounded `╭╮╰╯` | braille / blocks |
 | **2** | 256-colour (`$TERM` contains `256`) | palette quantised to the 6×6×6 cube | rounded | blocks (8) |
 | **1** | 16-colour ANSI | ANSI role mapping | rounded (if supported) / square `┌┐└┘` | blocks (8) |
-| **0** | dumb / `TERM=linux` / no Unicode | ANSI mono | ASCII `+-\|` | `#` |
+| **0** | explicitly dumb (`TERM=linux` / `dumb`) | ANSI mono | ASCII `+-\|` | `#` |
 
 **Detection (normative in PROP-037 §2.2 `#rendering-tiers`):** a **pure function** over the
 environment — `detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier`. `crossterm` exposes
 no colour-count API, so detection is env-driven (`$COLORTERM` first, then `$TERM`); the TUI reads the
-env once, at launch, in a sanctioned spot, and feeds the values in. The detected tier is overridable
-through the settings system (a user on a misreported terminal can force Tier 3).
+env once, at launch, in a sanctioned spot, and feeds the values in. The **default is Tier 3** — a
+modern terminal is assumed truecolour even when it does not advertise the capability via env
+(notably on Windows); the lower tiers are the **fallback** (the degradation path), reached only when
+the environment explicitly advertises a lower capability (a 256-colour `TERM`, or an explicitly dumb
+`TERM=linux`/`dumb`). The detected tier is overridable through the settings system.
 
 **Degradation = projection.** A `Theme` is built for Tier 3 (the full palette + rounded + braille),
 then **projected** onto the detected tier: a 256-colour terminal gets each role quantised to the

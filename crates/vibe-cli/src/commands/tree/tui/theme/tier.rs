@@ -50,6 +50,16 @@ impl Tier {
 /// no colour-count API, so the TUI reads the env once at launch and feeds both
 /// values in. The detected tier is overridable through the settings system.
 ///
+/// The **default is Tier 3 (truecolour)** for anything not explicitly dumb:
+/// every incumbent terminal (Warp, iTerm2, Windows Terminal, Alacritty, kitty,
+/// GNOME…) renders truecolour, and several of them — especially on Windows —
+/// do not advertise it via `TERM`/`COLORTERM` at all. Defaulting to Tier 3
+/// makes the TUI colourful out of the box instead of degrading a modern
+/// terminal to mono. The lower tiers are the **fallback** (the degradation
+/// path), reached only when the environment explicitly advertises a lower
+/// capability — a 256-colour `TERM`, or an explicitly dumb `TERM=linux`/`dumb`
+/// — or when overridden via `vibe.tree.tier`.
+///
 /// # Examples
 ///
 /// Every branch, doctested:
@@ -67,16 +77,16 @@ impl Tier {
 /// assert_eq!(detect_tier(None, Some("xterm-256color")), Tier::T2);
 /// assert_eq!(detect_tier(Some(""), Some("xterm-256color")), Tier::T2);
 ///
-/// // linux / dumb / empty TERM → Tier 0.
+/// // Explicitly dumb → Tier 0 (the only path to mono).
 /// assert_eq!(detect_tier(None, Some("linux")), Tier::T0);
 /// assert_eq!(detect_tier(None, Some("dumb")), Tier::T0);
-/// assert_eq!(detect_tier(None, Some("")), Tier::T0);
-/// assert_eq!(detect_tier(None, None), Tier::T0);
 ///
-/// // Anything else → Tier 1.
-/// assert_eq!(detect_tier(None, Some("xterm-256color")), Tier::T2); // contains "256"
-/// assert_eq!(detect_tier(None, Some("xterm")), Tier::T1);
-/// assert_eq!(detect_tier(None, Some("screen")), Tier::T1);
+/// // Everything else — including an UNSET/empty TERM (a modern terminal that
+/// // doesn't advertise via env, e.g. Warp on Windows) → Tier 3.
+/// assert_eq!(detect_tier(None, None), Tier::T3);
+/// assert_eq!(detect_tier(None, Some("")), Tier::T3);
+/// assert_eq!(detect_tier(None, Some("xterm")), Tier::T3);
+/// assert_eq!(detect_tier(None, Some("screen")), Tier::T3);
 /// ```
 #[spec(implements = "spec://vibevm/modules/vibe-cli/PROP-037#rendering-tiers")]
 #[must_use]
@@ -93,12 +103,16 @@ pub fn detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier {
     if term_str.contains("256") {
         return Tier::T2;
     }
-    // 3. linux / dumb / empty (or unset) → Tier 0.
-    if term_str == "linux" || term_str == "dumb" || term_str.is_empty() {
+    // 3. Explicitly dumb terminals (the Linux VT, or `dumb`) → Tier 0 — the
+    // only path to mono / ASCII frames. An empty or unset TERM is NOT dumb: it
+    // is a modern terminal that did not advertise via env (Warp on Windows),
+    // so it falls through to the Tier 3 default below.
+    if term_str == "linux" || term_str == "dumb" {
         return Tier::T0;
     }
-    // 4. Anything else → Tier 1.
-    Tier::T1
+    // 4. Anything else — including an unset/empty TERM — assumes Tier 3
+    // truecolour (the modern-terminal default; override via `vibe.tree.tier`).
+    Tier::T3
 }
 
 /// Project a canonical [`Rgb`] onto the detected [`Tier`] (PROP-037 §2.2.3):
@@ -197,17 +211,20 @@ mod tests {
 
     #[test]
     fn detect_dumb_branch() {
+        // Only explicitly dumb terminals → Tier 0.
         assert_eq!(detect_tier(None, Some("linux")), Tier::T0);
         assert_eq!(detect_tier(None, Some("dumb")), Tier::T0);
-        assert_eq!(detect_tier(None, Some("")), Tier::T0);
-        assert_eq!(detect_tier(None, None), Tier::T0);
     }
 
     #[test]
-    fn detect_default_t1_branch() {
-        assert_eq!(detect_tier(None, Some("xterm")), Tier::T1);
-        assert_eq!(detect_tier(None, Some("screen")), Tier::T1);
-        assert_eq!(detect_tier(None, Some("rxvt-unicode")), Tier::T1);
+    fn detect_default_t3_branch() {
+        // Anything else — including unset/empty TERM (a modern terminal that
+        // didn't advertise via env) → Tier 3, the modern-terminal default.
+        assert_eq!(detect_tier(None, Some("xterm")), Tier::T3);
+        assert_eq!(detect_tier(None, Some("screen")), Tier::T3);
+        assert_eq!(detect_tier(None, Some("rxvt-unicode")), Tier::T3);
+        assert_eq!(detect_tier(None, None), Tier::T3);
+        assert_eq!(detect_tier(None, Some("")), Tier::T3);
     }
 
     #[test]
