@@ -515,6 +515,43 @@ inside vibeterm; `-c` prevents recursion) via the launcher shared out of
 
 Commit-map: `81de4ec` feat launch modes · `ffc94cc` chore(specmap).
 
+### Phase 3b — the terminal control plane (`vibe aiui open/send/snapshot/wait/close`) (LANDED 2026-07-16, self-check green)
+
+The loopback control API lands, closing the terminal plane. vibeterm gains a
+`--control` server (loopback HTTP+JSON, ephemeral port, bearer token, discovery
+`~/.vibevm/aiui/<pid>.json` + `latest.json`) with a `@xterm/headless` snapshot
+mirror, and a `--headless` mode (no OS window — a control session is observed,
+not watched). **`vibe aiui`** (Rust, blocking `reqwest`) drives it: `open`
+(spawn windowless + await discovery + print the pid), `send` (key script + text),
+`snapshot`, `wait`, `close`.
+
+Three real Windows bugs, found by live smoke, are fixed:
+- **Discovery race** — Electron forks its main process, so the pid Rust spawns is
+  not the pid vibeterm reports; `open` polls `latest.json` with a `startedAt`
+  freshness gate, not a `<child.id()>.json` that never appears.
+- **`$()` hang** — a detached vibeterm inherited the launcher's stdio and held the
+  pipe open, hanging `pid=$(vibe aiui open)`; `spawn_vibeterm` detaches stdio.
+- **Windows input to a raw TUI** — injecting VT (`ESC O Q`) reaches a cooked reader
+  (a shell) but a ConPTY does not synthesise the key record for a raw reader (a
+  crossterm TUI), so keys were dropped. `keymap.mjs` now emits **win32-input-mode**
+  (`ESC [ Vk;Sc;Uc;Kd;Cs;Rc _`) on Windows, VT elsewhere. Diagnosis credit: the
+  "VS Code is Electron+ConPTY and drives crossterm TUIs daily" counter-example
+  refuted a supposed platform wall (a second-model review turned the corner).
+
+Two determinism fixes to `wait`: it no longer reports idle before the pty's first
+byte (`sawData`) or before the program has answered the last key (`lastInputAt`),
+so a snapshot after `send` never catches the pre-reaction screen. Also fixed the
+visible-terminal horizontal skew (a fallback timer spawned the pty at the default
+width before the renderer's fit): the renderer now fits via a `ResizeObserver`
+and the headless path spawns at the exact grid. **Proven live, repeatably:**
+open → snapshot (aligned 120-col tree) → `send F2` (sort menu opens) → `Up` +
+`Enter` (tree re-sorts topological↔alphabetical) → close, green across runs, no
+orphaned processes.
+
+Commit-map: `bb4d305` feat(vibeterm) control+headless+win32-input · `a25c078`
+feat(vibe-cli) vibe aiui + launcher fixes · `2fc9174` docs(spec) PROP-042 §3/§4 ·
+`61b8bd0` chore(specmap).
+
 ### Decisions status
 D1 (sequencing) — render-plane-first **executed** (Phase 1 landed) ahead of the
 terminal (Phase 2 next), per the recommendation; owner ratified "whole plan".
