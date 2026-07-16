@@ -18,6 +18,8 @@ addressable anchor, cite через `specmark`). **Мета-план:** [SETTING
 ## 2 — Execution record (пополняется)
 
 - 2026-07-16: план написан; фаза 2.1 (scaffold) стартовала.
+- 2026-07-16: **Шаг 2 EXECUTED** — `vibe-settings` crate целиком (фазы 2.1–2.8),
+  floor green throughout. Commit map + свершившиеся predictions — см. §12.
 
 ---
 
@@ -136,6 +138,47 @@ cargo xtask specmap && cargo xtask conform check   # PROP-040 anchors scope!'d, 
 ## 12 — Execution ledger
 
 _Заполняется._
+
+**Шаг 2 EXECUTED (2026-07-16) — `vibe-settings` crate целиком, floor green throughout.**
+
+Commit map (11 коммитов `e53da83`→`02bee60`):
+- `e53da83` docs(terraform): impl-plan v0.1
+- `16a7d40` feat phase 2.1 — scaffold + workspace wiring
+- `7af6ea1` feat phase 2.2 — loader cell (L1/L2/L3 + path-classifier)
+- `9741cee` feat phase 2.4 — schema cell (KeyMeta/Scope/Schema + validation)
+- `eb68bff` feat phase 2.3 — resolver cell (ResolvedPrefs + deep-merge + inspect)
+- `43532fd` feat phase 2.5 — events cell (change-events + applies + Watcher trait)
+- `a83a79c` feat phase 2.6 — `vibe prefs` CLI (logic cell + vibe-cli wiring)
+- `12c0884` feat phase 2.7 — persist (diff-from-default + comment-preserve + gitignore)
+- `4567662` fix — spec-tag public schema types (specmap-clean)
+- `941bcd9` chore — specmap regen (PROP-040 units)
+- `02bee60` test — end-to-end golden (3-level resolve/inspect/scope-refusal/migrate)
+
+**Predictions — все подтверждены:** P1 (pure resolve, immutable snapshot) ✓;
+P2 (deep-merge без per-key special-casing) ✓; P3 (inspect.origin roundtrips
+provenance, golden-tested) ✓; P4 (каждая cell conform 0-findings + specmap-clean)
+✓ для vibe-settings (138 PROP-040 units, 0 orphans).
+
+**AI-Native Rust:** cells (loader / schema / resolver / events / cli / persist),
+каждая `specmark::scope!` + per-fn `#[spec(implements)]`; `thiserror` enums с
+`#[specmark::spec]`; no `unwrap`/`expect` в domain; ≤600/cell (dir-module split
+где потребовалось); doctests на каждом public seam (34 doc + 87 unit + 2 e2e);
+conform 0 findings.
+
+**Делегирование:** 8 ячеек реализованы native Claude subagents под boss-спеками
+(REQ-anchor + сигнатуры + acceptance-test + target), каждая — boss review (diff
+как PR + re-verify tests/conform) + commit. Boss держал architecture (crate
+layout, resolver design, specmap discipline) + integration + финальный golden.
+
+**Тесты/acceptance:** `cargo test -p vibe-settings` — 87 unit + 34 doc + 2 e2e
+green; `cargo test -p vibe-cli` green; `bash tools/self-check.sh` all green;
+`vibe prefs --help` — все 6 subcommands; end-to-end set→get→list→origins→
+check→migrate round-trip verified.
+
+**Known pre-existing (НЕ Шаг 2):** `cargo xtask specmap --check` всё ещё fail из-за
+33 orphans в `vibe-spec` (PROP-035 provisional) + 1 в `vibe-resolver` — separate
+debt, не блокирует settings-system (gate advisory для vibevm crates, impl-plan
+D4). `vibe tree` §9 → экземпляр системы в Шаге 3 (TUI P9a), НЕ здесь (DEF-2.1).
 
 ---
 
