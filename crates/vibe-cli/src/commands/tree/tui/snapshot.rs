@@ -125,27 +125,82 @@ fn mod_names(m: Modifier) -> Vec<&'static str> {
 
 #[cfg(test)]
 mod tests {
+    use std::path::PathBuf;
+
     use super::super::menu::test_support::fixture_tree;
     use super::super::snapshot_headless;
 
-    /// The base-frame render is byte-stable — diff against the committed golden
-    /// (PROP-042 §1/§2). `UPDATE_GOLDENS=1` refreshes it when an intentional
-    /// visual change lands (a reviewed diff).
+    /// The committed-golden directory (manifest-dir-relative, absolute at compile
+    /// time so the test is CWD-independent).
+    const GOLDENS_DIR: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/src/commands/tree/tui/goldens");
+
+    /// The path of a render-plane text golden by name (`<name>.snap.txt`).
+    fn golden_path(name: &str) -> PathBuf {
+        PathBuf::from(GOLDENS_DIR).join(format!("{name}.snap.txt"))
+    }
+
+    /// Diff a rendered `text` snapshot against its committed golden
+    /// (PROP-042 §1/§2). `UPDATE_GOLDENS=1` refreshes the file in place — run it
+    /// once to seed a new scenario or when an intentional visual change lands,
+    /// then review the diff before committing. A drift fails with the refresh
+    /// recipe so the fix is mechanical.
+    fn assert_text_golden(name: &str, got: &str) {
+        let path = golden_path(name);
+        if std::env::var("UPDATE_GOLDENS").is_ok() {
+            std::fs::write(&path, got).expect("write golden");
+        }
+        let golden = std::fs::read_to_string(&path).unwrap_or_default();
+        assert_eq!(
+            got, golden,
+            "render golden `{name}` drifted; run \
+             `UPDATE_GOLDENS=1 cargo test -p vibe-cli matches_golden` to refresh"
+        );
+    }
+
+    // --- Seed scenarios (PROP-042 §8 / TERMINAL-AIUI-PLAN §8): each is a
+    // `(fixture, size, key-script) → committed .snap.txt`. Adding a scenario =
+    // one test fn + `UPDATE_GOLDENS=1` to seed it. They catch spacing / centring
+    // / truncation / footer-clip regressions with no terminal.
+
+    /// Scenario 1 — the base frame: the two-row centred footer, the status line,
+    /// the table over the one-package fixture.
     #[test]
     fn base_frame_matches_golden() {
         let got = snapshot_headless(fixture_tree(), 74, 22, "", false).expect("render");
-        let path = concat!(
-            env!("CARGO_MANIFEST_DIR"),
-            "/src/commands/tree/tui/goldens/base.snap.txt"
-        );
-        if std::env::var("UPDATE_GOLDENS").is_ok() {
-            std::fs::write(path, &got).expect("write golden");
-        }
-        let golden = std::fs::read_to_string(path).unwrap_or_default();
-        assert_eq!(
-            got, golden,
-            "base-frame snapshot drifted; run `UPDATE_GOLDENS=1 cargo test -p vibe-cli base_frame_matches_golden` to refresh"
-        );
+        assert_text_golden("base", &got);
+    }
+
+    /// Scenario 2 — the F2 sort menu over the base frame: group frames inset from
+    /// the window, options inset from the group frames, the hint row intact.
+    #[test]
+    fn f2_sort_menu_matches_golden() {
+        let got = snapshot_headless(fixture_tree(), 74, 22, "F2", false).expect("render");
+        assert_text_golden("f2-sort-menu", &got);
+    }
+
+    /// Scenario 3 — the F3 display-mode menu: the single-group flat list, the
+    /// inert `Tab` (one partition on the one-package fixture).
+    #[test]
+    fn f3_mode_menu_matches_golden() {
+        let got = snapshot_headless(fixture_tree(), 74, 22, "F3", false).expect("render");
+        assert_text_golden("f3-mode-menu", &got);
+    }
+
+    /// Scenario 4 — the quit-confirm dialog: a bare `Esc` at the base screen
+    /// opens it; `OK`/`Cancel` render centred with air.
+    #[test]
+    fn quit_dialog_matches_golden() {
+        let got = snapshot_headless(fixture_tree(), 74, 22, "Esc", false).expect("render");
+        assert_text_golden("quit-dialog", &got);
+    }
+
+    /// Scenario 5 — narrow width (`56×20`): graceful degradation. This documents
+    /// the footer-clip edge the render plane must keep visible (not hide): a
+    /// regression here is a layout change a human must review.
+    #[test]
+    fn narrow_width_matches_golden() {
+        let got = snapshot_headless(fixture_tree(), 56, 20, "", false).expect("render");
+        assert_text_golden("narrow-width", &got);
     }
 
     /// The `cells` format is well-formed JSON with `{cols, rows, grid[rows]}`.

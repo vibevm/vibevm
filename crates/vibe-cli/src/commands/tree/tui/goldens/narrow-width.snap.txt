@@ -1,0 +1,20 @@
+ ordering topological   mode all   STATIC.md 0b / 0L   p
+name                               load      S   T   C
+g/a                                none      ○   ○   ○
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ search  •  F2 sort  •  F3 mode  •  F4 settings  •  F6 c
+ove  •  ←→ pan  •  Space fold  •  Enter details  •  Esc

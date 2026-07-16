@@ -1,0 +1,22 @@
+ ordering topological   mode all   STATIC.md 0b / 0L   packages 1   @spec
+name                                                 load      S   T   C
+g/a                                                  none      ○   ○   ○
+
+
+
+
+                       ╭ Display mode ─────────────╮
+                       │                           │
+                       │   ● all                   │
+                       │   ○ sub-tables            │
+                       │   ○ tabs                  │
+                       │                           │
+                       │   ↑/↓  •  Enter  •  Esc   │
+                       │                           │
+                       ╰───────────────────────────╯
+
+
+
+
+      F1 search  •  F2 sort  •  F3 mode  •  F4 settings  •  F6 copy
+     ↑↓ move  •  ←→ pan  •  Space fold  •  Enter details  •  Esc quit
