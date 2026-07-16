@@ -8,25 +8,58 @@ import { parseArgs, defaultShell, splitCommand } from '../lib/args.mjs';
 // ---------------------------------------------------------------------------
 
 test('parseArgs: defaults when no flags are present', () => {
-  assert.deepEqual(parseArgs([]), { exec: null, cols: 84, rows: 30 });
+  assert.deepEqual(parseArgs([]), {
+    exec: null,
+    cols: 84,
+    rows: 30,
+    control: false,
+  });
   assert.deepEqual(parseArgs(['electron', '.']), {
     exec: null,
     cols: 84,
     rows: 30,
+    control: false,
   });
 });
 
 test('parseArgs: --exec, --cols, --rows in space-separated form', () => {
   assert.deepEqual(
     parseArgs(['--exec', 'vibe tree -c', '--cols', '100', '--rows', '40']),
-    { exec: 'vibe tree -c', cols: 100, rows: 40 },
+    { exec: 'vibe tree -c', cols: 100, rows: 40, control: false },
   );
 });
 
 test('parseArgs: inline --flag=value form (only the first = splits)', () => {
   assert.deepEqual(
     parseArgs(['--exec=cmd.exe /K echo hi', '--cols=120', '--rows=50']),
-    { exec: 'cmd.exe /K echo hi', cols: 120, rows: 50 },
+    { exec: 'cmd.exe /K echo hi', cols: 120, rows: 50, control: false },
+  );
+});
+
+test('parseArgs: --control is a boolean flag (present → true)', () => {
+  assert.deepEqual(parseArgs(['--control']), {
+    exec: null,
+    cols: 84,
+    rows: 30,
+    control: true,
+  });
+  // It takes no value, so it does not swallow the following token.
+  assert.deepEqual(
+    parseArgs(['--exec', 'vibe tree', '--control', '--cols', '100']),
+    { exec: 'vibe tree', cols: 100, rows: 30, control: true },
+  );
+});
+
+test('parseArgs: --headless is asymmetric — key set only when present', () => {
+  // Absent: the default parse shape carries no `headless` key at all.
+  assert.equal('headless' in parseArgs([]), false);
+  assert.equal(parseArgs([]).headless, undefined);
+  // Present: a boolean flag that takes no value and reads truthy.
+  assert.equal(parseArgs(['--headless']).headless, true);
+  // It composes with the other flags and does not swallow a following token.
+  assert.deepEqual(
+    parseArgs(['--control', '--headless', '--cols', '100']),
+    { exec: null, cols: 100, rows: 30, control: true, headless: true },
   );
 });
 
@@ -40,7 +73,12 @@ test('parseArgs: ignores positional tokens (whole process.argv is safe)', () => 
     '--cols',
     '90',
   ];
-  assert.deepEqual(parseArgs(argv), { exec: '/bin/bash -l', cols: 90, rows: 30 });
+  assert.deepEqual(parseArgs(argv), {
+    exec: '/bin/bash -l',
+    cols: 90,
+    rows: 30,
+    control: false,
+  });
 });
 
 test('parseArgs: malformed / missing values fall back to defaults', () => {
@@ -49,12 +87,19 @@ test('parseArgs: malformed / missing values fall back to defaults', () => {
     exec: null,
     cols: 84,
     rows: 30,
+    control: false,
   });
-  assert.deepEqual(parseArgs(['--exec']), { exec: null, cols: 84, rows: 30 });
+  assert.deepEqual(parseArgs(['--exec']), {
+    exec: null,
+    cols: 84,
+    rows: 30,
+    control: false,
+  });
   assert.deepEqual(parseArgs(['--cols', '100abc']), {
     exec: null,
     cols: 84,
     rows: 30,
+    control: false,
   });
 });
 
@@ -65,6 +110,7 @@ test('parseArgs: a dangling flag does not swallow the next flag', () => {
     exec: null,
     cols: 100,
     rows: 30,
+    control: false,
   });
 });
 
@@ -74,8 +120,18 @@ test('parseArgs: an empty or whitespace-only --exec is treated as absent', () =>
 });
 
 test('parseArgs: is robust to non-array / junk input', () => {
-  assert.deepEqual(parseArgs(undefined), { exec: null, cols: 84, rows: 30 });
-  assert.deepEqual(parseArgs(null), { exec: null, cols: 84, rows: 30 });
+  assert.deepEqual(parseArgs(undefined), {
+    exec: null,
+    cols: 84,
+    rows: 30,
+    control: false,
+  });
+  assert.deepEqual(parseArgs(null), {
+    exec: null,
+    cols: 84,
+    rows: 30,
+    control: false,
+  });
 });
 
 // ---------------------------------------------------------------------------
@@ -134,6 +190,37 @@ test('splitCommand: a single-quoted first token may contain spaces', () => {
 
 test('splitCommand: an unterminated quote takes the rest as the file', () => {
   assert.deepEqual(splitCommand('"just-this'), { file: 'just-this', args: [] });
+});
+
+test('splitCommand: a quoted argument ANYWHERE keeps its spaces', () => {
+  assert.deepEqual(
+    splitCommand('"C:\\Program Files\\vibe.exe" tree --path "C:\\a b" -c'),
+    {
+      file: 'C:\\Program Files\\vibe.exe',
+      args: ['tree', '--path', 'C:\\a b', '-c'],
+    },
+  );
+});
+
+test('splitCommand: a quote glued to an unquoted prefix joins into one word', () => {
+  assert.deepEqual(splitCommand('vibe --path="C:\\a b" -c'), {
+    file: 'vibe',
+    args: ['--path=C:\\a b', '-c'],
+  });
+});
+
+test('splitCommand: single and double quotes mix within one line', () => {
+  assert.deepEqual(splitCommand('"a b" \'c d\' e'), {
+    file: 'a b',
+    args: ['c d', 'e'],
+  });
+});
+
+test('splitCommand: an unterminated quote in a later arg takes the rest', () => {
+  assert.deepEqual(splitCommand('vibe "unterminated arg'), {
+    file: 'vibe',
+    args: ['unterminated arg'],
+  });
 });
 
 test('splitCommand: empty / whitespace / non-string input yields an empty file', () => {

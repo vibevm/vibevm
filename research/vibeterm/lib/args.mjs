@@ -27,16 +27,26 @@ function toPositiveInt(value) {
  * Parse vibeterm's command-line flags out of an argv array.
  *
  * Recognises `--exec <cmd>`, `--cols <n>` and `--rows <n>` in either the
- * space-separated (`--cols 100`) or inline (`--cols=100`) form, anywhere in
- * the array. Positional tokens (the electron binary, `.`, a bare `--`) are
- * ignored, so passing the whole `process.argv` is safe. Missing, malformed,
- * out-of-range, or empty values fall back to the defaults.
+ * space-separated (`--cols 100`) or inline (`--cols=100`) form, plus the
+ * booleans `--control` and `--headless`, anywhere in the array. Positional
+ * tokens (the electron binary, `.`, a bare `--`) are ignored, so passing the
+ * whole `process.argv` is safe. Missing, malformed, out-of-range, or empty
+ * values fall back to the defaults.
+ *
+ * `--headless` is asymmetric on purpose: the key is set only when the flag is
+ * present, so the default parse shape (no `headless` key) is unchanged and a
+ * caller reads `out.headless` as truthy-when-hidden, falsy otherwise.
  *
  * @param {string[]} argv
- * @returns {{ exec: string | null, cols: number, rows: number }}
+ * @returns {{ exec: string | null, cols: number, rows: number, control: boolean, headless?: boolean }}
  */
 export function parseArgs(argv) {
-  const out = { exec: null, cols: DEFAULT_COLS, rows: DEFAULT_ROWS };
+  const out = {
+    exec: null,
+    cols: DEFAULT_COLS,
+    rows: DEFAULT_ROWS,
+    control: false,
+  };
   const args = Array.isArray(argv) ? argv : [];
 
   for (let i = 0; i < args.length; i++) {
@@ -82,6 +92,19 @@ export function parseArgs(argv) {
         if (n !== null) out.rows = n;
         break;
       }
+      case '--control': {
+        // A boolean flag: presence enables the control server. It takes no
+        // value, so a following token is left for the next iteration.
+        out.control = true;
+        break;
+      }
+      case '--headless': {
+        // A boolean flag: presence hides the OS window (a control /
+        // observation session is driven over HTTP and snapshotted, so it needs
+        // no visible GUI). Set only when present — see the parse-shape note.
+        out.headless = true;
+        break;
+      }
       default:
         break;
     }
@@ -108,41 +131,65 @@ export function defaultShell(platform, env) {
 }
 
 /**
+ * Tokenize a shell-style command line into whitespace-separated words, with
+ * double- and single-quoted spans allowed ANYWHERE in a word (not just at its
+ * start). Quote characters are removed and their contents joined with any
+ * adjacent unquoted characters, so `--path="C:\\a b"` yields the single word
+ * `--path=C:\\a b`. An unterminated quote consumes to end-of-string.
+ *
+ * @param {string} line
+ * @returns {string[]}
+ */
+function tokenize(line) {
+  const tokens = [];
+  /** @type {string | null} `null` = between words; a string = the word so far. */
+  let current = null;
+  /** @type {string | null} the open quote char, or `null` when unquoted. */
+  let quote = null;
+
+  for (const ch of line) {
+    if (quote !== null) {
+      // Inside a quoted span: the matching quote closes it; all else is literal.
+      if (ch === quote) quote = null;
+      else current += ch;
+      continue;
+    }
+    if (ch === '"' || ch === "'") {
+      quote = ch;
+      if (current === null) current = '';
+      continue;
+    }
+    if (ch === ' ' || ch === '\t' || ch === '\n' || ch === '\r') {
+      if (current !== null) {
+        tokens.push(current);
+        current = null;
+      }
+      continue;
+    }
+    current = (current ?? '') + ch;
+  }
+
+  // A trailing word — including the content of an unterminated quote — is kept.
+  if (current !== null) tokens.push(current);
+  return tokens;
+}
+
+/**
  * Split a shell command line into an executable + argument vector for
  * `pty.spawn(file, args, …)`.
  *
- * The first token may be quoted (`"C:\\Program Files\\app.exe" -x`), which
- * lets the executable path carry spaces; the remainder is a simple whitespace
- * split. Quoting inside later arguments is NOT interpreted — the Rust caller
- * passes already-resolved arguments, and node-pty re-quotes as needed.
+ * A proper tokenizer (see {@link tokenize}) is used, so both the executable
+ * and any argument may be double- or single-quoted to carry spaces:
+ * `"C:\\Program Files\\vibe.exe" tree --path "C:\\a b" -c` splits into the
+ * file `C:\\Program Files\\vibe.exe` and args `tree`, `--path`, `C:\\a b`,
+ * `-c`. An unterminated quote takes the rest of the line as one word.
  *
  * @param {string} cmdline
  * @returns {{ file: string, args: string[] }}
  */
 export function splitCommand(cmdline) {
-  const line = typeof cmdline === 'string' ? cmdline.trim() : '';
-  if (line === '') return { file: '', args: [] };
-
-  let file;
-  let rest;
-  const quote = line[0];
-  if (quote === '"' || quote === "'") {
-    const end = line.indexOf(quote, 1);
-    if (end === -1) {
-      // Unterminated quote: take the remainder as the file, with no args.
-      file = line.slice(1);
-      rest = '';
-    } else {
-      file = line.slice(1, end);
-      rest = line.slice(end + 1);
-    }
-  } else {
-    const firstToken = line.match(/^\S+/u)[0];
-    file = firstToken;
-    rest = line.slice(firstToken.length);
-  }
-
-  const trimmedRest = rest.trim();
-  const args = trimmedRest === '' ? [] : trimmedRest.split(/\s+/u);
-  return { file, args };
+  const line = typeof cmdline === 'string' ? cmdline : '';
+  const tokens = tokenize(line);
+  if (tokens.length === 0) return { file: '', args: [] };
+  return { file: tokens[0], args: tokens.slice(1) };
 }

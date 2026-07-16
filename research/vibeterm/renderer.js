@@ -27,19 +27,52 @@ term.open(document.getElementById('term'));
 term.focus();
 
 // Fit the grid to the window so the hosted program renders for exactly the
-// visible grid (no overlap / wrapping). Report the fitted size to main: the
-// initial `ready` lets main spawn the pty at this size (no resize race); later
-// window resizes send `resize` so main resizes the live pty.
-function fitGrid() {
+// visible grid (no overlap / wrapping). We report the fitted size to main via a
+// ResizeObserver rather than a one-shot rAF: the observer fires only once the
+// container has a settled, non-zero layout, so `fit.fit()` measures the real
+// width — a fit against a not-yet-laid-out (0-box) container yields a bogus
+// column count, and spawning the pty at it is exactly the "everything skews
+// diagonally" bug. The first good report is `ready` (main spawns the pty at
+// this size); every later one is `resize` (main resizes the live pty).
+const termEl = document.getElementById('term');
+let sentReady = false;
+let reportPending = false;
+
+function reportSize() {
+  reportPending = false;
+  // Skip until the container is actually laid out — a hidden (headless) window
+  // stays 0-box forever, so this simply never fires `ready`, which is correct:
+  // headless spawns at the requested size on the main side.
+  if (!termEl || termEl.clientWidth < 1 || termEl.clientHeight < 1) return;
+  let size;
   try {
     fit.fit();
+    size = { cols: term.cols, rows: term.rows };
   } catch {
-    /* container not laid out yet */
+    return; /* container not laid out yet */
   }
-  return { cols: term.cols, rows: term.rows };
+  if (!(size.cols > 0 && size.rows > 0)) return;
+  if (!sentReady) {
+    sentReady = true;
+    ipcRenderer.send('ready', size);
+  } else {
+    ipcRenderer.send('resize', size);
+  }
 }
-requestAnimationFrame(() => ipcRenderer.send('ready', fitGrid()));
-window.addEventListener('resize', () => ipcRenderer.send('resize', fitGrid()));
+
+// Coalesce bursts (a drag-resize fires many times per second) into one fit per
+// animation frame.
+function scheduleReport() {
+  if (reportPending) return;
+  reportPending = true;
+  requestAnimationFrame(reportSize);
+}
+
+const resizeObserver = new ResizeObserver(scheduleReport);
+resizeObserver.observe(termEl);
+// The observer delivers an initial callback for the observed element, but tick
+// once too in case the very first (0 -> N) transition is coalesced away.
+scheduleReport();
 
 // main -> renderer: raw pty output.
 ipcRenderer.on('pty', (_event, data) => {
