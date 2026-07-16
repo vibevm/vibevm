@@ -362,7 +362,55 @@ has signed off one visual pass.
 
 ---
 
-## 13. Ledger (filled during execution)
+## 13. Ledger
 
-_Phase 0 → …: hashes, subjects, what each confirmed/falsified. Empty until
-execution begins._
+### Phase 0 — spikes (2026-07-16, no code committed; findings below)
+
+**Verdict: every plane's hardest uncertainty was probed and PASSED — GREEN to
+Phase 1.**
+
+- **(A) Render plane — PASS.** A throwaway test drove the real handlers with no
+  terminal: synthetic `Event::Key(F2)` → `input::handle` returned `Changed` and
+  opened the sort menu → `render::draw` painted into `Buffer::empty(58×18)` → the
+  grid dumped clean (menu over base + the two-row footer). Confirms spikes a+b
+  and the render-plane cell grid. Phase-1 seam: a `pub` headless entrypoint in
+  `tui/mod.rs` (`App`/`render` are module-private).
+- **(B) Terminal plane, symbolic — PASS.** `node-pty` (ConPTY) spawned the real
+  `target/debug/vibe.exe tree` in an 80×24 PTY; `@xterm/headless` parsed the ANSI
+  into a faithful cell grid — the tree (`▾├─└│`, `●/○`), the tabs chrome, and the
+  **new two-row centred footer** all rendered correctly in a real emulator.
+  node-pty ships **prebuilt binaries + a bundled ConPTY DLL — no C++ toolchain**.
+- **(d) Terminal plane, visual — PASS.** Electron (`offscreen: true` +
+  `disableHardwareAcceleration()`) `capturePage()` wrote an **842×483 PNG** of a
+  Rosé-Pine F2 menu; the agent `Read` it and saw the colours/glyphs/layout —
+  proving the "agent produces + reads a screenshot" loop headlessly.
+- **(f) Control transport — PASS.** Loopback HTTP+JSON round-trip on
+  `127.0.0.1:<ephemeral>` echoed `{keys:[…]}`; the §4 protocol shape holds.
+- **(C) Model plane — not spiked** (existing `vibe-actions::aiui` seams confirmed
+  by recon; Phase 5).
+- **(e) strict render↔terminal parity — deferred to Phase 1** (needs a shared
+  fixture; both pipelines proven independently).
+
+**Setup findings (→ the terminal package's dev-runtime doc):**
+- Node **v24.18** (≥22.6 ✓), npm 11.16.
+- **npm 11 `allow-scripts` blocks native/postinstall by default.** node-pty needs
+  `npm rebuild node-pty --foreground-scripts`; electron needs its binary fetched
+  via `node node_modules/electron/install.js` (or `npm approve-scripts`). Bake
+  into the setup steps.
+- node-pty ConPTY throws `AttachConsole failed` on `kill()` in a non-console
+  context — cosmetic teardown quirk; mitigate by sending a quit key so `vibe`
+  exits before the PTY closes.
+- Electron offscreen capture needs `disableHardwareAcceleration()` for reliable
+  headless software rendering.
+
+### Decisions status
+D1 (sequencing) — both planes now proven feasible; **render-plane-first still
+recommended** (cheapest, unblocks the golden tier); owner ratified "whole plan,
+Phase 0 both planes"; phase order to confirm at the Phase 1 boundary. D2–D6
+proposals stand.
+
+### Commit-map
+- `d6a85be` docs(plan): TERMINAL-AIUI-PLAN v0.1 (this plan).
+- Phase 0 left **no code commits** (spikes reverted; node probes ran in the
+  session scratchpad, outside the repo), per the campaign-plans discipline —
+  findings recorded above.
