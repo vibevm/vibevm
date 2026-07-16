@@ -772,6 +772,118 @@
     },
     {
       "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/tree/tui/theme/mod.rs",
+      "item_kind": "mod",
+      "line": 18,
+      "symbol": "vibe_cli::commands::tree::tui::theme"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/tree/tui/theme/mod.rs",
+      "item_kind": "fn",
+      "line": 87,
+      "symbol": "vibe_cli::commands::tree::tui::theme::Theme::color"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/tree/tui/theme/glyphs.rs",
+      "item_kind": "mod",
+      "line": 12,
+      "symbol": "vibe_cli::commands::tree::tui::theme::glyphs"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/tree/tui/theme/palette.rs",
+      "item_kind": "mod",
+      "line": 10,
+      "symbol": "vibe_cli::commands::tree::tui::theme::palette"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/tree/tui/theme/palettes/mod.rs",
+      "item_kind": "mod",
+      "line": 7,
+      "symbol": "vibe_cli::commands::tree::tui::theme::palettes"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/tree/tui/theme/palettes/catppuccin.rs",
+      "item_kind": "mod",
+      "line": 8,
+      "symbol": "vibe_cli::commands::tree::tui::theme::palettes::catppuccin"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/tree/tui/theme/palettes/catppuccin.rs",
+      "item_kind": "impl",
+      "line": 140,
+      "symbol": "vibe_cli::commands::tree::tui::theme::palettes::catppuccin::<impl Palette for Frappe>"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/tree/tui/theme/palettes/catppuccin.rs",
+      "item_kind": "impl",
+      "line": 153,
+      "symbol": "vibe_cli::commands::tree::tui::theme::palettes::catppuccin::<impl Palette for Latte>"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/tree/tui/theme/palettes/catppuccin.rs",
+      "item_kind": "impl",
+      "line": 127,
+      "symbol": "vibe_cli::commands::tree::tui::theme::palettes::catppuccin::<impl Palette for Macchiato>"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/tree/tui/theme/palettes/catppuccin.rs",
+      "item_kind": "impl",
+      "line": 114,
+      "symbol": "vibe_cli::commands::tree::tui::theme::palettes::catppuccin::<impl Palette for Mocha>"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/tree/tui/theme/palettes/mod.rs",
+      "item_kind": "fn",
+      "line": 52,
+      "symbol": "vibe_cli::commands::tree::tui::theme::palettes::resolve"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/tree/tui/theme/palettes/rose_pine.rs",
+      "item_kind": "mod",
+      "line": 7,
+      "symbol": "vibe_cli::commands::tree::tui::theme::palettes::rose_pine"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/tree/tui/theme/palettes/rose_pine.rs",
+      "item_kind": "impl",
+      "line": 46,
+      "symbol": "vibe_cli::commands::tree::tui::theme::palettes::rose_pine::<impl Palette for RosePine>"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/tree/tui/theme/tier.rs",
+      "item_kind": "mod",
+      "line": 11,
+      "symbol": "vibe_cli::commands::tree::tui::theme::tier"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/tree/tui/theme/tier.rs",
+      "item_kind": "fn",
+      "line": 48,
+      "symbol": "vibe_cli::commands::tree::tui::theme::tier::detect_tier"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/tree/tui/theme/tier.rs",
+      "item_kind": "fn",
+      "line": 104,
+      "symbol": "vibe_cli::commands::tree::tui::theme::tier::project_color"
+    },
+    {
+      "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/uninstall.rs",
       "item_kind": "mod",
       "line": 10,
@@ -5725,6 +5837,134 @@
       "line": 7,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-cli/PROP-036#tui",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/tree/tui/theme/mod.rs",
+      "from_symbol": "vibe_cli::commands::tree::tui::theme",
+      "line": 18,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-cli/PROP-037#theme",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/tree/tui/theme/mod.rs",
+      "from_symbol": "vibe_cli::commands::tree::tui::theme::Theme::color",
+      "line": 90,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-cli/PROP-037#rendering-tiers",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/tree/tui/theme/glyphs.rs",
+      "from_symbol": "vibe_cli::commands::tree::tui::theme::glyphs",
+      "line": 12,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-cli/PROP-037#glyph-vocabulary",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/tree/tui/theme/palette.rs",
+      "from_symbol": "vibe_cli::commands::tree::tui::theme::palette",
+      "line": 10,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-cli/PROP-037#palette-tokens",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/tree/tui/theme/palettes/mod.rs",
+      "from_symbol": "vibe_cli::commands::tree::tui::theme::palettes",
+      "line": 7,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-cli/PROP-037#palette-tokens",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/tree/tui/theme/palettes/catppuccin.rs",
+      "from_symbol": "vibe_cli::commands::tree::tui::theme::palettes::catppuccin",
+      "line": 8,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-cli/PROP-037#palette-tokens",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/tree/tui/theme/palettes/catppuccin.rs",
+      "from_symbol": "vibe_cli::commands::tree::tui::theme::palettes::catppuccin::<impl Palette for Frappe>",
+      "line": 140,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-cli/PROP-037#palette-tokens",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/tree/tui/theme/palettes/catppuccin.rs",
+      "from_symbol": "vibe_cli::commands::tree::tui::theme::palettes::catppuccin::<impl Palette for Latte>",
+      "line": 153,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-cli/PROP-037#palette-tokens",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/tree/tui/theme/palettes/catppuccin.rs",
+      "from_symbol": "vibe_cli::commands::tree::tui::theme::palettes::catppuccin::<impl Palette for Macchiato>",
+      "line": 127,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-cli/PROP-037#palette-tokens",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/tree/tui/theme/palettes/catppuccin.rs",
+      "from_symbol": "vibe_cli::commands::tree::tui::theme::palettes::catppuccin::<impl Palette for Mocha>",
+      "line": 114,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-cli/PROP-037#palette-tokens",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/tree/tui/theme/palettes/mod.rs",
+      "from_symbol": "vibe_cli::commands::tree::tui::theme::palettes::resolve",
+      "line": 58,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-cli/PROP-037#palette-tokens",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/tree/tui/theme/palettes/rose_pine.rs",
+      "from_symbol": "vibe_cli::commands::tree::tui::theme::palettes::rose_pine",
+      "line": 7,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-cli/PROP-037#palette-tokens",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/tree/tui/theme/palettes/rose_pine.rs",
+      "from_symbol": "vibe_cli::commands::tree::tui::theme::palettes::rose_pine::<impl Palette for RosePine>",
+      "line": 46,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-cli/PROP-037#palette-tokens",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/tree/tui/theme/tier.rs",
+      "from_symbol": "vibe_cli::commands::tree::tui::theme::tier",
+      "line": 11,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-cli/PROP-037#rendering-tiers",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/tree/tui/theme/tier.rs",
+      "from_symbol": "vibe_cli::commands::tree::tui::theme::tier::detect_tier",
+      "line": 81,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-cli/PROP-037#rendering-tiers",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/tree/tui/theme/tier.rs",
+      "from_symbol": "vibe_cli::commands::tree::tui::theme::tier::project_color",
+      "line": 108,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-cli/PROP-037#rendering-tiers",
       "verb": "implements"
     },
     {
