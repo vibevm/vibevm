@@ -18,3 +18,18 @@ packages = { "flow:org.vibevm.ai-native/core-ai-native" = "^0.7" }
 [boot_snippet]
 source = "spec/boot/20-stack-go-ai-native-lang.md"
 category = "stack"
+
+# The operating procedures, as agent-installable skills (PROP-018 §2.4;
+# projected by `vibe skill install`). The methods live in
+# flow:org.vibevm.ai-native/core-ai-native (04-SWEEP-PLAYBOOK, BROWNFIELD-PROTOCOL);
+# these skills are their Go-stack instantiation over the shipped
+# go-ai-native toolchain.
+[[skill]]
+name = "go-ai-native-sweep"
+path = "spec/skills/go-ai-native-sweep"
+description = "The recurring AI-Native discipline sweep for Go: the seven-step floor, then the health collector's ratchet items"
+
+[[skill]]
+name = "go-ai-native-terraform"
+path = "spec/skills/go-ai-native-terraform"
+description = "Adopt the AI-Native discipline on an existing Go codebase: inventory-not-gate, the registries, characterization, then card raids package by package"
