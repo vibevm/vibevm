@@ -1,0 +1,2 @@
+# Build output + the materialised extractor / fact cache / SARIF.
+target/

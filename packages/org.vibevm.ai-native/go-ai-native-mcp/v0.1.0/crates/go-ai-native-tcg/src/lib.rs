@@ -12,7 +12,7 @@ specmark::scope!("spec://go-ai-native-lang/go/mechanisms/TCG-PROTOCOL-GO-v0.1#en
 use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result};
-use conform_core::{Config, Fact, SourceFacts, baseline, baseline::Baseline, check};
+use conform_core::{Config, SourceFacts, baseline, baseline::Baseline, check};
 use go_ai_native_extract_bridge::{RawFact, RawMarker};
 use go_ai_native_tcg_bridge::oracle::Completion;
 use go_ai_native_tcg_bridge::position::OuterPosition;

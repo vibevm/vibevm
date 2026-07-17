@@ -1,0 +1,6 @@
+{
+  "schema": 1,
+  "findings": [
+    "go-cell-isolation|internal/cells/batchplanner/planner_test.go|reconcile-demo/internal/cells/naiveplanner#9"
+  ]
+}

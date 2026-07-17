@@ -1,0 +1,342 @@
+{
+  "code_items": [
+    {
+      "crate_name": "go",
+      "file": "internal/cells/batchplanner/doc.go",
+      "item_kind": "package",
+      "line": 7,
+      "symbol": "internal/cells/batchplanner/doc.go"
+    },
+    {
+      "crate_name": "go",
+      "file": "internal/cells/batchplanner/planner.go",
+      "item_kind": "decl",
+      "line": 23,
+      "symbol": "internal/cells/batchplanner/planner.go::Plan"
+    },
+    {
+      "crate_name": "go",
+      "file": "internal/cells/batchplanner/planner_test.go",
+      "item_kind": "decl",
+      "line": 26,
+      "symbol": "internal/cells/batchplanner/planner_test.go::FuzzPlannersAgree"
+    },
+    {
+      "crate_name": "go",
+      "file": "internal/cells/batchplanner/planner_test.go",
+      "item_kind": "decl",
+      "line": 69,
+      "symbol": "internal/cells/batchplanner/planner_test.go::TestPlanIsDeterministic"
+    },
+    {
+      "crate_name": "go",
+      "file": "internal/cells/naiveplanner/doc.go",
+      "item_kind": "package",
+      "line": 6,
+      "symbol": "internal/cells/naiveplanner/doc.go"
+    },
+    {
+      "crate_name": "go",
+      "file": "internal/cells/naiveplanner/planner.go",
+      "item_kind": "decl",
+      "line": 24,
+      "symbol": "internal/cells/naiveplanner/planner.go::Plan"
+    },
+    {
+      "crate_name": "go",
+      "file": "internal/cells/naiveplanner/planner_test.go",
+      "item_kind": "decl",
+      "line": 81,
+      "symbol": "internal/cells/naiveplanner/planner_test.go::TestNilStateIsTheClosedFailure"
+    },
+    {
+      "crate_name": "go",
+      "file": "internal/cells/naiveplanner/planner_test.go",
+      "item_kind": "decl",
+      "line": 96,
+      "symbol": "internal/cells/naiveplanner/planner_test.go::TestPlanIsTotalProperty"
+    },
+    {
+      "crate_name": "go",
+      "file": "internal/cells/naiveplanner/planner_test.go",
+      "item_kind": "decl",
+      "line": 16,
+      "symbol": "internal/cells/naiveplanner/planner_test.go::TestPlanMatrix"
+    },
+    {
+      "crate_name": "go",
+      "file": "internal/registry/registry.go",
+      "item_kind": "package",
+      "line": 5,
+      "symbol": "internal/registry/registry.go"
+    },
+    {
+      "crate_name": "go",
+      "file": "internal/seams/doc.go",
+      "item_kind": "package",
+      "line": 6,
+      "symbol": "internal/seams/doc.go"
+    },
+    {
+      "crate_name": "go",
+      "file": "internal/seams/errors.go",
+      "item_kind": "decl",
+      "line": 26,
+      "symbol": "internal/seams/errors.go::PlanError"
+    },
+    {
+      "crate_name": "go",
+      "file": "internal/seams/seams.go",
+      "item_kind": "decl",
+      "line": 53,
+      "symbol": "internal/seams/seams.go::Planner"
+    },
+    {
+      "crate_name": "go",
+      "file": "internal/sim/doc.go",
+      "item_kind": "package",
+      "line": 6,
+      "symbol": "internal/sim/doc.go"
+    },
+    {
+      "crate_name": "go",
+      "file": "internal/sim/world.go",
+      "item_kind": "decl",
+      "line": 60,
+      "symbol": "internal/sim/world.go::Step"
+    },
+    {
+      "crate_name": "go",
+      "file": "internal/sim/world_test.go",
+      "item_kind": "decl",
+      "line": 15,
+      "symbol": "internal/sim/world_test.go::TestReconcileConvergesInOneStepAndHoldsTheFixedPoint"
+    }
+  ],
+  "edges": [
+    {
+      "file": "internal/cells/batchplanner/doc.go",
+      "from_symbol": "internal/cells/batchplanner/doc.go",
+      "line": 7,
+      "provenance": "authored",
+      "uri": "spec://go-demo/PROP-001#req-planner-seam",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "internal/cells/batchplanner/planner.go",
+      "from_symbol": "internal/cells/batchplanner/planner.go::Plan",
+      "line": 23,
+      "provenance": "authored",
+      "uri": "spec://go-demo/PROP-001#req-plan-total",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "internal/cells/batchplanner/planner_test.go",
+      "from_symbol": "internal/cells/batchplanner/planner_test.go::FuzzPlannersAgree",
+      "line": 26,
+      "provenance": "authored",
+      "uri": "spec://go-demo/PROP-001#req-planner-seam",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "internal/cells/batchplanner/planner_test.go",
+      "from_symbol": "internal/cells/batchplanner/planner_test.go::TestPlanIsDeterministic",
+      "line": 69,
+      "provenance": "authored",
+      "uri": "spec://go-demo/PROP-001#req-plan-order",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "internal/cells/naiveplanner/doc.go",
+      "from_symbol": "internal/cells/naiveplanner/doc.go",
+      "line": 6,
+      "provenance": "authored",
+      "uri": "spec://go-demo/PROP-001#req-planner-seam",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "internal/cells/naiveplanner/planner.go",
+      "from_symbol": "internal/cells/naiveplanner/planner.go::Plan",
+      "line": 24,
+      "provenance": "authored",
+      "uri": "spec://go-demo/PROP-001#req-plan-total",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "internal/cells/naiveplanner/planner_test.go",
+      "from_symbol": "internal/cells/naiveplanner/planner_test.go::TestNilStateIsTheClosedFailure",
+      "line": 81,
+      "provenance": "authored",
+      "uri": "spec://go-demo/PROP-001#req-errors",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "internal/cells/naiveplanner/planner_test.go",
+      "from_symbol": "internal/cells/naiveplanner/planner_test.go::TestPlanIsTotalProperty",
+      "line": 96,
+      "provenance": "authored",
+      "uri": "spec://go-demo/PROP-001#req-plan-total",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "internal/cells/naiveplanner/planner_test.go",
+      "from_symbol": "internal/cells/naiveplanner/planner_test.go::TestPlanMatrix",
+      "line": 16,
+      "provenance": "authored",
+      "uri": "spec://go-demo/PROP-001#req-plan-total",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "internal/registry/registry.go",
+      "from_symbol": "internal/registry/registry.go",
+      "line": 5,
+      "provenance": "authored",
+      "uri": "spec://go-demo/PROP-001#req-planner-seam",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "internal/seams/doc.go",
+      "from_symbol": "internal/seams/doc.go",
+      "line": 6,
+      "provenance": "authored",
+      "uri": "spec://go-demo/PROP-001#req-planner-seam",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "internal/seams/errors.go",
+      "from_symbol": "internal/seams/errors.go::PlanError",
+      "line": 26,
+      "provenance": "authored",
+      "uri": "spec://go-demo/PROP-001#req-errors",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "internal/seams/seams.go",
+      "from_symbol": "internal/seams/seams.go::Planner",
+      "line": 53,
+      "provenance": "authored",
+      "uri": "spec://go-demo/PROP-001#req-planner-seam",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "internal/sim/doc.go",
+      "from_symbol": "internal/sim/doc.go",
+      "line": 6,
+      "provenance": "authored",
+      "uri": "spec://go-demo/PROP-001#req-converge",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "internal/sim/world.go",
+      "from_symbol": "internal/sim/world.go::Step",
+      "line": 60,
+      "provenance": "authored",
+      "uri": "spec://go-demo/PROP-001#req-converge",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "internal/sim/world_test.go",
+      "from_symbol": "internal/sim/world_test.go::TestReconcileConvergesInOneStepAndHoldsTheFixedPoint",
+      "line": 15,
+      "provenance": "authored",
+      "uri": "spec://go-demo/PROP-001#req-converge",
+      "verb": "verifies",
+      "pinned_r": 1
+    }
+  ],
+  "schema": 2,
+  "spec_units": [
+    {
+      "anchor": "root",
+      "content_hash": "sha256:98c962417588366551adbafd8798db1654d0f97c6bb545324c04132521588cc7",
+      "doc_path": "PROP-001",
+      "file": "spec/PROP-001-reconciler.md",
+      "heading": "PROP-001 — the miniature reconciler",
+      "line": 1,
+      "uri": "spec://go-demo/PROP-001#root"
+    },
+    {
+      "anchor": "cells",
+      "content_hash": "sha256:0888d966c1d1e0cc5872fae6969fcf90ee94862a2c4c56f12dae2a3e43019152",
+      "doc_path": "PROP-001",
+      "file": "spec/PROP-001-reconciler.md",
+      "heading": "Cells",
+      "line": 8,
+      "uri": "spec://go-demo/PROP-001#cells",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "req-planner-seam",
+      "content_hash": "sha256:89f6340931484099669deaeb2ce9cd351e3da65e9f52f47ac41d1600243d2c63",
+      "doc_path": "PROP-001",
+      "file": "spec/PROP-001-reconciler.md",
+      "heading": "The planner seam",
+      "line": 14,
+      "uri": "spec://go-demo/PROP-001#req-planner-seam",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "req-plan-total",
+      "content_hash": "sha256:38fcb8d55757c0f23e2ce00111de18a5370734e332e7b2938180c1d984f890c3",
+      "doc_path": "PROP-001",
+      "file": "spec/PROP-001-reconciler.md",
+      "heading": "Plans are total",
+      "line": 23,
+      "uri": "spec://go-demo/PROP-001#req-plan-total",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "req-plan-order",
+      "content_hash": "sha256:eab82d20aa16c1c564e6114ab1ba1b8fbade9c86d704d41cb67a894f453e0c00",
+      "doc_path": "PROP-001",
+      "file": "spec/PROP-001-reconciler.md",
+      "heading": "Plans are ordered",
+      "line": 30,
+      "uri": "spec://go-demo/PROP-001#req-plan-order",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "req-converge",
+      "content_hash": "sha256:3cd9f14f2a9312f471a9af448dbe566bc1a6d9d768bd25f0fe2ba492e874f2d7",
+      "doc_path": "PROP-001",
+      "file": "spec/PROP-001-reconciler.md",
+      "heading": "Reconciliation converges",
+      "line": 38,
+      "uri": "spec://go-demo/PROP-001#req-converge",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "req-errors",
+      "content_hash": "sha256:3664f78f0effef1ae1e0aaf54fa48abf06d4ba5d065083672cfa1ac0d8709fa4",
+      "doc_path": "PROP-001",
+      "file": "spec/PROP-001-reconciler.md",
+      "heading": "The failure set",
+      "line": 45,
+      "uri": "spec://go-demo/PROP-001#req-errors",
+      "kind": "req",
+      "revision": 1
+    }
+  ],
+  "suspects": [],
+  "warnings": []
+}

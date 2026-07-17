@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "collector": "go-ai-native health",
+  "files_in_scope": 15,
+  "file_length": {
+    "budget": 600,
+    "danger_floor": 540,
+    "over_budget": [],
+    "danger_band": []
+  },
+  "ban_census": {
+    "reasoned": 0,
+    "unreasoned": 2
+  },
+  "export_examples": {
+    "exports": 39,
+    "with_examples": 3
+  },
+  "orphan_backlog": []
+}

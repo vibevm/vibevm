@@ -167,6 +167,14 @@ pub fn materialise_extractor(project_root: &Path) -> std::io::Result<std::path::
         std::fs::create_dir_all(&dir)?;
         std::fs::write(&path, EXTRACTOR_SOURCE)?;
     }
+    // The module cut-off: a go.mod beside the materialised extractor
+    // makes the directory its own module, so a Go consumer's
+    // `go test ./...` / `go vet ./...` never descends into target/ and
+    // compiles the tool as project code (the demo floor caught it).
+    let modfile = dir.join("go.mod");
+    if !modfile.exists() {
+        std::fs::write(&modfile, "module go-extract-materialised\n\ngo 1.24\n")?;
+    }
     Ok(path)
 }
 
