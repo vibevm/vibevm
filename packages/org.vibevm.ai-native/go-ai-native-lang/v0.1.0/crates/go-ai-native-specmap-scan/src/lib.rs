@@ -269,6 +269,7 @@ mod tests {
                 line: (i + 1) as u32,
                 is_exported: true,
                 has_doc_example: false,
+                underlying: None,
             })
             .collect();
         FileRecord {
