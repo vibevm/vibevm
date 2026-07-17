@@ -291,6 +291,27 @@ dependencies = [
 ]
 
 [[package]]
+name = "go-ai-native-specmap"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "core-ai-native-specmap",
+ "core-ai-native-specmark",
+ "go-ai-native-extract-bridge",
+ "go-ai-native-specmap-scan",
+]
+
+[[package]]
+name = "go-ai-native-specmap-scan"
+version = "0.1.0"
+dependencies = [
+ "core-ai-native-specmap",
+ "core-ai-native-specmark",
+ "core-ai-native-specmark-grammar",
+ "go-ai-native-extract-bridge",
+]
+
+[[package]]
 name = "hashbrown"
 version = "0.17.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"

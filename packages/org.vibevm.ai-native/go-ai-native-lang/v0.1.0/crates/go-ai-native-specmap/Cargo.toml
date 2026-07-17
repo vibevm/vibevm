@@ -1,0 +1,18 @@
+[package]
+name = "go-ai-native-specmap"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+license-file.workspace = true
+publish.workspace = true
+repository.workspace = true
+homepage.workspace = true
+description = "The standalone traceability index + orphan gate for Go trees: mint/check the PROP-014 specmap.json through the go-extract scanner"
+
+[dependencies]
+anyhow.workspace = true
+go-ai-native-extract-bridge.workspace = true
+go-ai-native-specmap-scan.workspace = true
+specmap-core.workspace = true
+specmark.workspace = true

@@ -15,6 +15,8 @@ members = [
     "crates/go-ai-native-conform",
     "crates/go-ai-native-conform-frontend",
     "crates/go-ai-native-extract-bridge",
+    "crates/go-ai-native-specmap",
+    "crates/go-ai-native-specmap-scan",
     "crates/vendor/core-ai-native-conform",
     "crates/vendor/core-ai-native-specmap",
     "crates/vendor/core-ai-native-specmark",
@@ -40,6 +42,8 @@ specmark-grammar = { package = "core-ai-native-specmark-grammar", path = "crates
 go-ai-native-extract-bridge = { path = "crates/go-ai-native-extract-bridge" }
 go-ai-native-conform-frontend = { path = "crates/go-ai-native-conform-frontend" }
 go-ai-native-conform = { path = "crates/go-ai-native-conform" }
+go-ai-native-specmap-scan = { path = "crates/go-ai-native-specmap-scan" }
+go-ai-native-specmap = { path = "crates/go-ai-native-specmap" }
 
 # Third-party (all permissive licenses — PROP-000 §3). Feature sets match
 # the sibling stacks' so the engines behave identically wherever built.
