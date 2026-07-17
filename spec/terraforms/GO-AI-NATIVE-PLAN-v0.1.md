@@ -1,8 +1,9 @@
 # GO-AI-NATIVE-PLAN v0.1 — Go as the third supported language of the Discipline
 
-**Status: Phase 0 in flight (plan authored 2026-07-17; owner mandate: execute end-to-end
-autonomously, this session).**
-_Update this line at every phase boundary; the §13 ledger is the running record._
+**Status: CLOSED 2026-07-17 — all phases landed, floor green on the pilot, REPORT
+written (§12).** Deferred by name: registry publishing; host installation of the go
+stack; the bench corpus seeding (see §12 P3); token-level tcg (very-far-future).
+_The §13 ledger is the record._
 
 > Read-first: `CLAUDE.md` → `spec/boot/` → `spec/WAL.md`, then this plan. The WAL
 > supersedes this plan's status line wherever they diverge. The three source corpora this
@@ -59,6 +60,20 @@ rehearse exactly that future (a miniature reconciler).
    analog), the fact extractor is stdlib-only Go we author ourselves, and staticcheck /
    exhaustive are optional policy-gated floor steps. No LLVM/clang-class machinery is
    needed anywhere on the critical path.
+9. «покрой сам go-ai-native практиками ai-native языков, чтобы это не получился кусок
+   нейрослопа. Например заметь, что rust-ai-native доработан, а typescript-ai-native
+   нет - там даже спекмарк есть не везде. Пожалуйста, сделай чтобы go-ai-native был
+   написан хорошо и с использованием ai-native практик.»
+   → **D14 — self-application at the rust-ai-native grade, not the TS grade.** The Go
+   stack's own Rust crates carry `specmark::scope!` / `#[spec]` tags citing the
+   package's OWN anchored spec units (namespace `go-ai-native-lang`) and the core
+   mechanisms; every spec document authored in Phases 2–3 carries stable `{#anchor}`s
+   with `req rN` kind lines so those edges resolve; the package self-traces via
+   `specmap.toml` (scan_roots over its crates, CLI drivers exempt, orphan gate);
+   crate errors are `thiserror` enums whose messages cite the violated REQ and a fix
+   surface; every pub seam carries a doctest; files respect the 600-line budget; no
+   `unwrap`/`expect` in domain logic. «Goal set: go-ai-native реализован» (owner,
+   same date).
 
 Consequences bound into this plan: full code-bearing parity (not spec-only); the tcg line
 ships its **agentic** delivery only (the token-level brief stays a stub, exactly like the
@@ -410,12 +425,65 @@ cd research/go-demo && go test ./... && go vet ./...
 - **P5:** no artifact KIND beyond the isomorphic set is needed; if one appears, that is a
   REPORT finding about the form, not a silent extra file.
 
-## 12. REPORT (written at close) {#report}
+## 12. REPORT {#report}
 
-_Pending — filled at Phase 10 with results vs P1–P5, misfired rules, lessons for
-Discipline revision._
+Written at close, 2026-07-17. Results vs §11:
+
+- **P1 — PARTIALLY CONFIRMED.** The stack's own Rust landed at **6,113 lines** (inside
+  the 6–9k envelope). Go landed at **674 (extractor) + 1,526 (demo) = 2,200** — above
+  the 0.5–1k prediction, because the pilot grew a full test corpus (matrix, property,
+  fuzz oracle, simulator conformance, executed Examples) rather than a minimal tree.
+  The overshoot is deliberate richness, not scope creep.
+- **P2 — CONFIRMED.** All nine scaffold classes survived projection; the predicted weak
+  spots (B without typestate culture, linter-carried exhaustiveness) landed exactly as
+  named workarounds (defined types + constructors; the `exhaustive` evidence provider).
+- **P3 — PARTIALLY CONFIRMED.** The fidelity posture landed as designed (gopls =
+  go/types, between TS and Rust) and the live chain proved the mechanism (a seeded type
+  error through a pure overlay; push-fallback + `$/progress` readiness both exercised in
+  replay). A **live gopls-vs-floor asymmetry corpus case was NOT yet captured** — the
+  bench corpus ships empty; seeding it is the named deferral.
+- **P4 — FALSIFIED, instructively.** The engines did NOT absorb Go unchanged: the
+  neutral core needed `Fact::GoUnsafe`, `GoConfig`, the Go walk, and `rules/go.rs` —
+  shipped as the authored **core-ai-native 0.8.0** (R5 held: zero in-vendor edits; the
+  fix surface was a version bump, exactly the escape R5 names). Lesson for the
+  Discipline: a third language IS a core minor version, plan it as one.
+- **P5 — CONFIRMED.** No artifact kind beyond the isomorphic set was needed.
+
+Misfires and findings worth carrying: Go's `flag` package stops at the first non-flag
+argument (the `--files` boolean-marker fix); a literal `.` scan root is eaten by
+hidden-dir filters without a depth-0 guard; mdspec mints doc-ids from the document
+HEADING, not the filename (the demo's dangling-edge lesson, now in its README); a
+materialised Go tool inside a consumer module needs a go.mod cut-off or `./...`
+compiles it; `-race` needs cgo on Windows (scoped out by the guide's goroutine rule for
+the demo). The deliberate sibling-import in the demo's differential oracle became the
+first REAL frozen ratchet entry — the replacement-window debt pattern works end to end.
 
 ## 13. Execution ledger {#ledger}
 
 - **2026-07-17 — plan authored.** Phase −1 facts gathered (crate volumes, manifest
   forms, toolchain absence). Status: Phase 0 next.
+- **2026-07-17 — Phases 0–3.** Toolchain provisioned (go 1.26.5 at C:/opt/go; gopls
+  0.23 + staticcheck 0.8-rc + exhaustive→master-with-bumped-x/tools into C:/opt/gotools
+  — the pinned v0.12.0 does not compile under go 1.26). Skeletons, GUIDE, boot, nine
+  cards, tcg mechanisms/briefs/stub, skills: commits 05976fa…d5c6865.
+- **2026-07-17 — Phases 4–6.** core-ai-native **0.8.0** (Go in the neutral engine:
+  bfb72da); go-extract + bridge + conform gate (1f3d56a; fixtures pin the ten-finding
+  census); specmap scanner + orphan ratchet with package-grain scope (27e10af); the
+  ten-verb umbrella CLI with the `go test -json` gate and the Example-coverage join
+  (969c3fb + 8a26e25). Every phase: full workspace tests green.
+- **2026-07-17 — Phase 7.** The agentic tcg (0d28898): LSP bridge to the consumer's
+  gopls (env→PATH→GOBIN→GOPATH/bin), `$/progress` readiness, dual diagnostics channels,
+  the `--stdin-file` overlay extraction, FILLED markers, brand detection via the new
+  `underlying` item field. **Live chain green on real gopls at first attempt** (seeded
+  error through a pure overlay; hover; no-zombie shutdown). Finding-parity pins relay =
+  gate.
+- **2026-07-17 — Phase 8.** go-ai-native-mcp (044b028): 17 tools, capture guard,
+  language guard, server replay — green on first build.
+- **2026-07-17 — Phase 9.** research/go-demo (509bb82): the reconciler pilot;
+  **`go-ai-native floor` ALL GREEN (7 steps, 0 disabled)**; the live tcg one-shot
+  contract proven (dirty overlay exit 1 with Class-F advice, clean exit 0 — real exit
+  codes checked, never a piped tail's); health snapshot committed; ONE deliberate
+  finding frozen (the oracle's sibling import — replacement debt).
+- **2026-07-17 — Phase 10.** README finalized; D14 self-trace green
+  (`rust-ai-native-specmap --gate` over the stack: 0 orphans, 3 CLI drivers exempt);
+  REPORT written; campaign CLOSED.
