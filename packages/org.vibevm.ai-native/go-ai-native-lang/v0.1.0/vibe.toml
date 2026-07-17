@@ -19,6 +19,28 @@ packages = { "flow:org.vibevm.ai-native/core-ai-native" = "^0.7" }
 source = "spec/boot/20-stack-go-ai-native-lang.md"
 category = "stack"
 
+# The shipped tools (PROP-025): `vibe bin build` compiles them in the
+# slot; `vibe bin exec <name>` dispatches through the project's lockfile.
+[[binary]]
+name = "go-ai-native"
+crate = "crates/go-ai-native-cli"
+description = "the umbrella discipline tool for Go: init / floor / conform / specmap / trace / test-gate / tripwire / health / fast-loop / codemod"
+
+[[binary]]
+name = "go-ai-native-conform"
+crate = "crates/go-ai-native-conform"
+description = "the standalone go-extract conform gate for Go trees"
+
+[[binary]]
+name = "go-ai-native-specmap"
+crate = "crates/go-ai-native-specmap"
+description = "the standalone traceability index + orphan gate for Go trees"
+
+[[binary]]
+name = "go-ai-native-tcg"
+crate = "crates/go-ai-native-tcg"
+description = "the agentic type oracle: a persistent enriching relay (serve) over the consumer's gopls, one-shot validate/scope/complete/type forms, and the bench harness"
+
 # The operating procedures, as agent-installable skills (PROP-018 §2.4;
 # projected by `vibe skill install`). The methods live in
 # flow:org.vibevm.ai-native/core-ai-native (04-SWEEP-PLAYBOOK, BROWNFIELD-PROTOCOL);

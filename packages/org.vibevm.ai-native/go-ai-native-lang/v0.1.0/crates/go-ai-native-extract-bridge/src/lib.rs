@@ -83,6 +83,12 @@ pub enum RawFact {
         line: u32,
         is_exported: bool,
         has_doc_example: bool,
+        /// kind=type only: the primitive underlying of a defined type
+        /// (`type AccountID string` → `"string"`) — the Go brand
+        /// signal (TCG-PROTOCOL-GO §2 `scope.branded`). Absent for
+        /// non-type items, aliases, and non-primitive underlyings.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        underlying: Option<String>,
     },
     FileMetrics {
         lines: u32,
@@ -164,6 +170,46 @@ pub fn materialise_extractor(project_root: &Path) -> std::io::Result<std::path::
     Ok(path)
 }
 
+/// Extract exactly one file whose HYPOTHETICAL content is handed in
+/// (the overlay form the oracle relay uses, TCG-PROTOCOL-GO §3):
+/// `go run extract.go --stdin-file <rel>` with the content on stdin.
+pub fn extract_content(
+    project_root: &Path,
+    extractor: &Path,
+    file_rel: &str,
+    content: &str,
+) -> Result<FileRecord, BridgeError> {
+    use std::io::Write;
+    let mut cmd = Command::new(go_binary());
+    cmd.arg("run")
+        .arg(extractor)
+        .arg("--root")
+        .arg(project_root)
+        .arg("--stdin-file")
+        .arg(file_rel)
+        .stdin(std::process::Stdio::piped())
+        .stdout(std::process::Stdio::piped())
+        .stderr(std::process::Stdio::piped());
+    let mut child = cmd
+        .spawn()
+        .map_err(|source| BridgeError::GoMissing { source })?;
+    if let Some(mut stdin) = child.stdin.take() {
+        let _ = stdin.write_all(content.as_bytes());
+    }
+    let output = child
+        .wait_with_output()
+        .map_err(|source| BridgeError::GoMissing { source })?;
+    let stderr = String::from_utf8_lossy(&output.stderr).trim().to_string();
+    if !output.status.success() {
+        let status = output.status.code().unwrap_or(-1);
+        return Err(BridgeError::ExtractorFailed { status, stderr });
+    }
+    let mut records = parse_ndjson(&String::from_utf8_lossy(&output.stdout))?;
+    records.pop().ok_or_else(|| BridgeError::Protocol {
+        detail: "the overlay extraction produced no record".to_string(),
+    })
+}
+
 /// Run the extractor over `project_root` (optionally narrowed to
 /// `files`, repo-relative) and parse its stream.
 pub fn extract_tree(
@@ -217,6 +263,7 @@ pub fn conform_facts(record: &FileRecord) -> Vec<conform_core::Fact> {
                 line,
                 is_exported,
                 has_doc_example,
+                ..
             } => Fact::Item {
                 kind: kind.clone(),
                 symbol: symbol.clone(),

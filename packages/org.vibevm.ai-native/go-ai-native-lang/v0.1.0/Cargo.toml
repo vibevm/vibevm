@@ -18,6 +18,8 @@ members = [
     "crates/go-ai-native-extract-bridge",
     "crates/go-ai-native-specmap",
     "crates/go-ai-native-specmap-scan",
+    "crates/go-ai-native-tcg",
+    "crates/go-ai-native-tcg-bridge",
     "crates/vendor/core-ai-native-conform",
     "crates/vendor/core-ai-native-specmap",
     "crates/vendor/core-ai-native-specmark",
@@ -46,6 +48,8 @@ go-ai-native-conform = { path = "crates/go-ai-native-conform" }
 go-ai-native-specmap-scan = { path = "crates/go-ai-native-specmap-scan" }
 go-ai-native-specmap = { path = "crates/go-ai-native-specmap" }
 go-ai-native-cli = { path = "crates/go-ai-native-cli" }
+go-ai-native-tcg-bridge = { path = "crates/go-ai-native-tcg-bridge" }
+go-ai-native-tcg = { path = "crates/go-ai-native-tcg" }
 
 # Third-party (all permissive licenses — PROP-000 §3). Feature sets match
 # the sibling stacks' so the engines behave identically wherever built.

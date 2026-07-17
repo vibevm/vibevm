@@ -21,6 +21,7 @@ import (
 	"go/ast"
 	"go/parser"
 	"go/token"
+	"io"
 	"io/fs"
 	"os"
 	"path/filepath"
@@ -51,6 +52,10 @@ type fact struct {
 	Symbol        string `json:"symbol,omitempty"`
 	IsExported    *bool  `json:"is_exported,omitempty"`
 	HasDocExample *bool  `json:"has_doc_example,omitempty"`
+	// item kind=type only: the underlying type's rendering when it is
+	// a defined type over a primitive (`type AccountID string` →
+	// "string") — the Go brand signal the oracle's scope answers use.
+	Underlying string `json:"underlying,omitempty"`
 	// import
 	ToPath string `json:"to_path,omitempty"`
 	// go_unsafe reuses Kind; Reason carries deviation testimony
@@ -80,8 +85,25 @@ func main() {
 	root := flag.String("root", ".", "project root")
 	filesGiven := flag.Bool("files", false,
 		"positional args are the file list; with zero args, extract nothing (probe)")
+	stdinFile := flag.String("stdin-file", "",
+		"extract exactly this repo-relative file, its content read from stdin (the overlay form)")
 	flag.Parse()
 	files := flag.Args()
+
+	out := json.NewEncoder(os.Stdout)
+	if *stdinFile != "" {
+		src, err := io.ReadAll(os.Stdin)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "go-extract: reading stdin: %v\n", err)
+			os.Exit(1)
+		}
+		rec := extractSource(filepath.ToSlash(*stdinFile), src)
+		if err := out.Encode(rec); err != nil {
+			fmt.Fprintf(os.Stderr, "go-extract: encoding %s: %v\n", *stdinFile, err)
+			os.Exit(1)
+		}
+		return
+	}
 
 	if !*filesGiven && len(files) == 0 {
 		walked, err := walkTree(*root)
@@ -93,7 +115,6 @@ func main() {
 	}
 	sort.Strings(files)
 
-	out := json.NewEncoder(os.Stdout)
 	for _, rel := range files {
 		rec := extractFile(*root, filepath.ToSlash(rel))
 		if err := out.Encode(rec); err != nil {
@@ -130,6 +151,21 @@ func walkTree(root string) ([]string, error) {
 }
 
 func extractFile(root, rel string) record {
+	src, err := os.ReadFile(filepath.Join(root, filepath.FromSlash(rel)))
+	if err != nil {
+		return record{
+			Protocol: protocol,
+			File:     rel,
+			InTest:   strings.HasSuffix(rel, "_test.go"),
+			Degraded: true,
+			Facts:    []fact{},
+			Markers:  []marker{},
+		}
+	}
+	return extractSource(rel, src)
+}
+
+func extractSource(rel string, src []byte) record {
 	rec := record{
 		Protocol: protocol,
 		File:     rel,
@@ -137,20 +173,15 @@ func extractFile(root, rel string) record {
 		Facts:    []fact{},
 		Markers:  []marker{},
 	}
-	src, err := os.ReadFile(filepath.Join(root, filepath.FromSlash(rel)))
-	if err != nil {
-		rec.Degraded = true
-		return rec
-	}
 	rec.Facts = append(rec.Facts, fact{Fact: "file_metrics", Lines: physicalLines(src)})
 
 	fset := token.NewFileSet()
-	parsed, err := parser.ParseFile(fset, rel, src, parser.ParseComments)
+	parsed, perr := parser.ParseFile(fset, rel, src, parser.ParseComments)
 	if parsed == nil {
 		rec.Degraded = true
 		return rec
 	}
-	if err != nil {
+	if perr != nil {
 		// Partial AST: keep going with what parsed, but say so.
 		rec.Degraded = true
 	}
@@ -418,6 +449,7 @@ func (ex *extractor) genItems(d *ast.GenDecl, errOwners map[string]bool) {
 				Fact: "item", Kind: "type", Symbol: s.Name.Name,
 				Line: ex.line(s.Pos()), IsExported: &exported,
 				HasDocExample: &noExample,
+				Underlying:    primitiveUnderlying(s),
 			})
 			ex.seamErrorShape(s, errOwners)
 		case *ast.ValueSpec:
@@ -439,6 +471,27 @@ func (ex *extractor) genItems(d *ast.GenDecl, errOwners map[string]bool) {
 			}
 		}
 	}
+}
+
+// primitiveUnderlying renders a defined type's underlying primitive
+// (`type AccountID string` → "string"); alias declarations and
+// non-primitive underlyings yield "".
+func primitiveUnderlying(s *ast.TypeSpec) string {
+	if s.Assign.IsValid() {
+		return "" // an alias is the same type, not a brand
+	}
+	ident, ok := s.Type.(*ast.Ident)
+	if !ok {
+		return ""
+	}
+	switch ident.Name {
+	case "string", "bool",
+		"int", "int8", "int16", "int32", "int64",
+		"uint", "uint8", "uint16", "uint32", "uint64", "uintptr",
+		"float32", "float64", "byte", "rune":
+		return ident.Name
+	}
+	return ""
 }
 
 // errorMethodOwners collects type names carrying an `Error() string`

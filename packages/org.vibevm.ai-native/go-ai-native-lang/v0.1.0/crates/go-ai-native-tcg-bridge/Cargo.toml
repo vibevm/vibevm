@@ -1,0 +1,26 @@
+# go-ai-native-tcg-bridge — the LSP client seam over the consumer's own
+# gopls (TCG-ORACLE-GO v0.1 / TCG-PROTOCOL-GO v0.1): the family-prefixed
+# twin of rust-ai-native-tcg-bridge, per the GUIDE §3 naming rule
+# (PROP-028 §2.4). Replay-tested without gopls; the live end-to-end
+# suite requires the tool and fails with the recipe when absent (a
+# stack obligation, never a skip).
+[package]
+name = "go-ai-native-tcg-bridge"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+license-file.workspace = true
+publish.workspace = true
+repository.workspace = true
+homepage.workspace = true
+
+[dependencies]
+go-ai-native-extract-bridge.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+specmark.workspace = true
+thiserror.workspace = true
+
+[dev-dependencies]
+tempfile.workspace = true

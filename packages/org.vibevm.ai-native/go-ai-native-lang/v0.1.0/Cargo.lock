@@ -333,6 +333,35 @@ dependencies = [
 ]
 
 [[package]]
+name = "go-ai-native-tcg"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "clap",
+ "core-ai-native-conform",
+ "core-ai-native-specmark",
+ "go-ai-native-conform",
+ "go-ai-native-extract-bridge",
+ "go-ai-native-tcg-bridge",
+ "serde",
+ "serde_json",
+ "tempfile",
+ "thiserror",
+]
+
+[[package]]
+name = "go-ai-native-tcg-bridge"
+version = "0.1.0"
+dependencies = [
+ "core-ai-native-specmark",
+ "go-ai-native-extract-bridge",
+ "serde",
+ "serde_json",
+ "tempfile",
+ "thiserror",
+]
+
+[[package]]
 name = "hashbrown"
 version = "0.17.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
