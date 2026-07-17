@@ -1,0 +1,20 @@
+[package]
+name = "go-ai-native-lang"
+group = "org.vibevm.ai-native"
+kind = "stack"
+version = "0.1.0"
+authors = ["Oleg Chirukhin"]
+license = "UPL-1.0"
+description = "AI-Native Go - the Go projection of the Discipline v0.2: gap closure over a prescriptive language (closed error sets, loud interface conformance, owned goroutines, no init()), cells and seams, the nine scaffolds in Go, //spec: directive traceability, and the nine scaffold cards"
+keywords = ["go", "golang", "ai-native", "discipline", "stack"]
+
+[compatibility]
+min_vibe_version = "0.1.0"
+requires_kinds = []
+
+[requires]
+packages = { "flow:org.vibevm.ai-native/core-ai-native" = "^0.7" }
+
+[boot_snippet]
+source = "spec/boot/20-stack-go-ai-native-lang.md"
+category = "stack"

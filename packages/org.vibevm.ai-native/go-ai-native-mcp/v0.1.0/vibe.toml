@@ -1,0 +1,20 @@
+[package]
+name = "go-ai-native-mcp"
+group = "org.vibevm.ai-native"
+kind = "mcp"
+version = "0.1.0"
+authors = ["Oleg Chirukhin"]
+license = "UPL-1.0"
+description = "The AI-Native Go discipline over MCP: every go-ai-native command and the tcg type oracle as agent tools, served straight from the slot with no vibe in the runtime path"
+keywords = ["mcp", "go", "golang", "ai-native", "discipline", "agent"]
+
+[compatibility]
+min_vibe_version = "0.1.0"
+requires_kinds = []
+
+# The exact-pin law (PROP-027 §2.3): this package vendors the stack's
+# toolchain crates byte-identically (sync-engines), and the pin holds
+# the vendored engines and the consumer's installed gates to ONE
+# resolved version set. Bumped in lockstep with the stack, always.
+[requires]
+packages = { "stack:org.vibevm.ai-native/go-ai-native-lang" = "=0.1.0" }
