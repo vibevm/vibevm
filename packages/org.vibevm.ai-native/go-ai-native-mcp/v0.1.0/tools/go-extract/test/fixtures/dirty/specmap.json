@@ -1,0 +1,91 @@
+{
+  "code_items": [
+    {
+      "crate_name": "go",
+      "file": "internal/cells/plan/plan.go",
+      "item_kind": "package",
+      "line": 4,
+      "symbol": "internal/cells/plan/plan.go"
+    },
+    {
+      "crate_name": "go",
+      "file": "internal/cells/plan/plan.go",
+      "item_kind": "decl",
+      "line": 49,
+      "symbol": "internal/cells/plan/plan.go::Sanctioned"
+    },
+    {
+      "crate_name": "go",
+      "file": "internal/cells/plan/plan.go",
+      "item_kind": "decl",
+      "line": 30,
+      "symbol": "internal/cells/plan/plan.go::Solve"
+    }
+  ],
+  "edges": [
+    {
+      "file": "internal/cells/plan/plan.go",
+      "from_symbol": "internal/cells/plan/plan.go",
+      "line": 4,
+      "provenance": "authored",
+      "uri": "spec://demo/PROP-001#cells",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "internal/cells/plan/plan.go",
+      "from_symbol": "internal/cells/plan/plan.go::Sanctioned",
+      "line": 49,
+      "provenance": "authored",
+      "uri": "spec://demo/PROP-001#cells",
+      "verb": "deviates",
+      "pinned_r": 1,
+      "reason": "wall clock IS the domain here"
+    },
+    {
+      "file": "internal/cells/plan/plan.go",
+      "from_symbol": "internal/cells/plan/plan.go::Solve",
+      "line": 30,
+      "provenance": "authored",
+      "uri": "spec://demo/PROP-001#req-solve",
+      "verb": "implements",
+      "pinned_r": 2
+    }
+  ],
+  "schema": 2,
+  "spec_units": [
+    {
+      "anchor": "root",
+      "content_hash": "sha256:e17a0af4d434bf0aeb3a09ec9f95d3d48fbfb118c345394a0bef086cb14d4a5b",
+      "doc_path": "PROP-001",
+      "file": "spec/PROP-001.md",
+      "heading": "PROP-001 — the dirty fixture spec",
+      "line": 1,
+      "uri": "spec://demo/PROP-001#root"
+    },
+    {
+      "anchor": "cells",
+      "content_hash": "sha256:10ca7dced069d432927266c158fc793dd5960b5ba200fd04fcebdfbf49559af0",
+      "doc_path": "PROP-001",
+      "file": "spec/PROP-001.md",
+      "heading": "Cells",
+      "line": 3,
+      "uri": "spec://demo/PROP-001#cells",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "req-solve",
+      "content_hash": "sha256:d5986fa3b2d80a269a0ad0b0d23d2106b817d2f96bb70deac160007b076c17ad",
+      "doc_path": "PROP-001",
+      "file": "spec/PROP-001.md",
+      "heading": "Solve",
+      "line": 8,
+      "uri": "spec://demo/PROP-001#req-solve",
+      "kind": "req",
+      "revision": 2
+    }
+  ],
+  "suspects": [],
+  "warnings": []
+}

@@ -18,3 +18,14 @@ requires_kinds = []
 # resolved version set. Bumped in lockstep with the stack, always.
 [requires]
 packages = { "stack:org.vibevm.ai-native/go-ai-native-lang" = "=0.1.0" }
+
+[[binary]]
+name = "go-ai-native-mcp"
+crate = "crates/go-ai-native-mcp"
+description = "the stdio MCP server: 17 tools - the discipline command surface + the tcg type oracle"
+
+[[mcp_server]]
+name = "go-ai-native"
+binary = "go-ai-native-mcp"
+description = "AI-Native Go discipline gates + type oracle over MCP (PROP-027)"
+args = ["--path", "{project_root}"]

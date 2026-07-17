@@ -1,0 +1,74 @@
+{
+  "code_items": [
+    {
+      "crate_name": "go",
+      "file": "internal/cells/greet/greet.go",
+      "item_kind": "package",
+      "line": 5,
+      "symbol": "internal/cells/greet/greet.go"
+    },
+    {
+      "crate_name": "go",
+      "file": "internal/cells/greet/greet.go",
+      "item_kind": "decl",
+      "line": 35,
+      "symbol": "internal/cells/greet/greet.go::New"
+    }
+  ],
+  "edges": [
+    {
+      "file": "internal/cells/greet/greet.go",
+      "from_symbol": "internal/cells/greet/greet.go",
+      "line": 5,
+      "provenance": "authored",
+      "uri": "spec://demo/PROP-001#cells",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "internal/cells/greet/greet.go",
+      "from_symbol": "internal/cells/greet/greet.go::New",
+      "line": 35,
+      "provenance": "authored",
+      "uri": "spec://demo/PROP-001#req-greet",
+      "verb": "implements",
+      "pinned_r": 1
+    }
+  ],
+  "schema": 2,
+  "spec_units": [
+    {
+      "anchor": "root",
+      "content_hash": "sha256:7be5cc65dd1323ca8484c11564d9668ab737dd8cb6eeda881422cfdcd49921df",
+      "doc_path": "PROP-001",
+      "file": "spec/PROP-001.md",
+      "heading": "PROP-001 — the clean fixture spec",
+      "line": 1,
+      "uri": "spec://demo/PROP-001#root"
+    },
+    {
+      "anchor": "cells",
+      "content_hash": "sha256:10ca7dced069d432927266c158fc793dd5960b5ba200fd04fcebdfbf49559af0",
+      "doc_path": "PROP-001",
+      "file": "spec/PROP-001.md",
+      "heading": "Cells",
+      "line": 3,
+      "uri": "spec://demo/PROP-001#cells",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "req-greet",
+      "content_hash": "sha256:79007fea58a516b3af58a1d1242471c598fa45f9d4776501593f6bbb91d08dd9",
+      "doc_path": "PROP-001",
+      "file": "spec/PROP-001.md",
+      "heading": "Greet",
+      "line": 8,
+      "uri": "spec://demo/PROP-001#req-greet",
+      "kind": "req",
+      "revision": 1
+    }
+  ],
+  "suspects": [],
+  "warnings": []
+}

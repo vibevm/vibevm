@@ -1,0 +1,19 @@
+[package]
+name = "go-ai-native-conform"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+license-file.workspace = true
+publish.workspace = true
+repository.workspace = true
+homepage.workspace = true
+description = "The standalone go-extract conform gate for Go trees: the Go rule set over the language-neutral engine, SARIF, and the ratchet baseline"
+
+[dependencies]
+anyhow.workspace = true
+clap.workspace = true
+conform-core.workspace = true
+go-ai-native-conform-frontend.workspace = true
+serde_json.workspace = true
+specmark.workspace = true
