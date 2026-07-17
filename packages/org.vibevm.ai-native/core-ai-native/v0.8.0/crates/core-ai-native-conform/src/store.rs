@@ -417,7 +417,10 @@ fn go_sources(
             .sort_by_file_name()
             .into_iter()
             .filter_entry(|e| {
-                !e.file_type().is_dir()
+                // depth 0 is the scan root itself — a literal `.` root
+                // must not be eaten by the hidden-dir filter below.
+                e.depth() == 0
+                    || !e.file_type().is_dir()
                     || e.file_name()
                         .to_str()
                         .map(|n| !GO_SKIP_DIRS.contains(&n) && !n.starts_with('.'))

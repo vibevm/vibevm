@@ -256,6 +256,27 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0cc23270f6e1808e30a928bdc84dea0b9b4136a8bc82338574f23baf47bbd280"
 
 [[package]]
+name = "go-ai-native-cli"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "clap",
+ "core-ai-native-conform",
+ "core-ai-native-specmap",
+ "core-ai-native-specmark",
+ "core-ai-native-specmark-grammar",
+ "go-ai-native-conform",
+ "go-ai-native-conform-frontend",
+ "go-ai-native-extract-bridge",
+ "go-ai-native-specmap",
+ "go-ai-native-specmap-scan",
+ "serde",
+ "serde_json",
+ "tempfile",
+ "toml",
+]
+
+[[package]]
 name = "go-ai-native-conform"
 version = "0.1.0"
 dependencies = [
