@@ -46,6 +46,28 @@ the neutral engine).
   `/go-ai-native-terraform` (brownfield adoption per
   BROWNFIELD-PROTOCOL) and `/go-ai-native-sweep` (the recurring sweep).
 
+## External tooling — the complete list
+
+Everything the stack touches outside its own crates, consolidated
+(normative homes: GUIDE §1 baseline, GUIDE §14 wiring, TCG-ORACLE-GO §1):
+
+| Tool | Role | License | Required? | Resolution / recipe |
+|---|---|---|---|---|
+| **go ≥ 1.24** (gofmt ships with it) | floor steps gofmt/vet/tests/test-gate; `go run` for go-extract; bench | BSD-3 | **MUST** — absence is a recipe-carrying failure, never a skip | PATH, or env `GO_AI_NATIVE_GO` pointing at the binary |
+| **gopls** | the agentic tcg oracle (validate/scope/complete/type over overlays) | BSD-3 | **MUST** for the tcg surface | env `GO_AI_NATIVE_GOPLS` → PATH → `GOBIN` → `GOPATH/bin`; `go install golang.org/x/tools/gopls@latest` |
+| **staticcheck** | correctness evidence provider (floor step `staticcheck`) | MIT | policy-gated — disable with a reason in `[go].floor_disable`; the disablement prints every run | `go install honnef.co/go/tools/cmd/staticcheck@latest` |
+| **exhaustive** | THE carrier of closed-set switch exhaustiveness (Go has no sum types — GUIDE §5) | BSD-2 | policy-gated, same step | `go install github.com/nishanths/exhaustive/cmd/exhaustive@latest` — note: v0.12.0 does not compile under go ≥ 1.26 (its pinned x/tools); build from master with a bumped x/tools until a release lands |
+| **govulncheck** | supply-chain scan | BSD-3 | CI-posture only (network-touching — never a floor step) | `go install golang.org/x/vuln/cmd/govulncheck@latest` |
+| **git** | tripwire's change-set collection | GPLv2 (tool, spawned) | needed by `tripwire` only | any PATH git |
+| **cargo / Rust toolchain** | building the stack's own binaries from the slot | MIT/Apache-2.0 | build-time only (a vibevm code-bearing-package property, not a Go one) | rustup |
+
+**Deliberately absent:** golangci-lint (GPL-3.0 — banned by the
+licensing flow; at most a personal separate-process dev tool),
+node/npm (the TS stack's need, not ours), rust-analyzer, any
+LLVM/clang-class machinery. The fact extractor is **pure Go stdlib**
+(zero third-party imports), so the only external process on the
+critical path is the language's own official analyzer.
+
 ## Running the tools
 
 Three supported forms, from your project root (where `vibedeps/` is):
