@@ -1,0 +1,7 @@
+# The dirty fixture's policy: everything under the fixture root is Go,
+# cells live where the census expects them.
+roots = []
+
+[go]
+roots = ["."]
+cells_dir = "internal/cells"

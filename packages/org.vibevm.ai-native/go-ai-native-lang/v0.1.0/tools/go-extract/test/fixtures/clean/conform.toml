@@ -1,0 +1,6 @@
+# The clean fixture's policy — same topology as dirty, zero findings.
+roots = []
+
+[go]
+roots = ["."]
+cells_dir = "internal/cells"

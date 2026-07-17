@@ -1,0 +1,60 @@
+# org.vibevm.ai-native/go-ai-native-lang — a code-bearing package (PROP-024):
+# it ships the Go projection's runnable checkers, not only prompts. This is
+# the package's OWN Cargo workspace; a consumer's root excludes vibedeps/
+# and the slot builds standalone (PROP-024 §2.4).
+#
+# The crates under crates/vendor/ are byte-identical vendored copies of the
+# neutral engine crates AUTHORED in flow:org.vibevm.ai-native/core-ai-native
+# v0.8.0 (the first edition carrying the Go fact/config/rule support).
+# Never edit vendored copies — the fix surface is the authored crate.
+[workspace]
+resolver = "3"
+members = [
+    # Members land phase-by-phase with their code (GO-AI-NATIVE-PLAN §7);
+    # the full set at campaign close mirrors the sibling stacks.
+    "crates/go-ai-native-conform",
+    "crates/go-ai-native-conform-frontend",
+    "crates/go-ai-native-extract-bridge",
+    "crates/vendor/core-ai-native-conform",
+    "crates/vendor/core-ai-native-specmap",
+    "crates/vendor/core-ai-native-specmark",
+    "crates/vendor/core-ai-native-specmark-grammar",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.93"
+authors = ["Oleg Chirukhin"]
+license-file = "LICENSE.md"
+publish = false
+repository = "https://gitverse.ru/vibevm/vibevm"
+homepage = "https://gitverse.ru/vibevm/vibevm"
+
+[workspace.dependencies]
+# Internal crates — path-only (not published; consumed in-tree).
+conform-core = { package = "core-ai-native-conform", path = "crates/vendor/core-ai-native-conform" }
+specmap-core = { package = "core-ai-native-specmap", path = "crates/vendor/core-ai-native-specmap" }
+specmark = { package = "core-ai-native-specmark", path = "crates/vendor/core-ai-native-specmark" }
+specmark-grammar = { package = "core-ai-native-specmark-grammar", path = "crates/vendor/core-ai-native-specmark-grammar" }
+go-ai-native-extract-bridge = { path = "crates/go-ai-native-extract-bridge" }
+go-ai-native-conform-frontend = { path = "crates/go-ai-native-conform-frontend" }
+go-ai-native-conform = { path = "crates/go-ai-native-conform" }
+
+# Third-party (all permissive licenses — PROP-000 §3). Feature sets match
+# the sibling stacks' so the engines behave identically wherever built.
+anyhow = "1"
+thiserror = "2"
+clap = { version = "4", features = ["derive"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = { version = "1", features = ["preserve_order"] }
+sha2 = "0.10"
+toml = "0.9"
+walkdir = "2"
+glob = "0.3"
+syn = { version = "2", features = ["full", "visit"] }
+quote = "1"
+proc-macro2 = { version = "1", features = ["span-locations"] }
+
+# Dev / test
+tempfile = "3"
