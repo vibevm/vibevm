@@ -1,5 +1,29 @@
 # WAL — Project Continuation State
 
+## CHECKPOINT 2026-07-17 (evening) — GO-AI-NATIVE CAMPAIGN CLOSED: Go is the third language
+
+_Updated: 2026-07-17 — **the GO-AI-NATIVE campaign is CLOSED end-to-end**
+(`spec/terraforms/GO-AI-NATIVE-PLAN-v0.1.md`, REPORT §12 written). Go is the Discipline's
+third supported language at full Rust/TS parity: three packages under
+`packages/org.vibevm.ai-native/` — `go-ai-native-lang` 0.1.0 (GUIDE + 9 cards + tcg
+mechanisms/briefs + skills + 8 crates + the stdlib-only go-extract), `go-ai-native-mcp`
+0.1.0 (17 tools), aggregator `go-ai-native` 0.1.0 — plus **core-ai-native 0.8.0** (the Go
+fact/config/walk/rules in the neutral engine; 0.7.0 untouched for the ^0.7-pinned Rust/TS
+stacks). The agentic tcg (owner: agentic-only) rides the CONSUMER's gopls over LSP —
+live-chain green at first attempt; token-level stays a very-far-future stub. The pilot
+`research/go-demo` (a miniature reconciler) is floor-green: **`go-ai-native floor` ALL
+GREEN, 7 steps** — with ONE deliberate frozen finding (the differential oracle's sibling
+import = the replacement-window debt pattern, working end to end); live tcg one-shot
+proves exit 1/0 on dirty/clean overlays. D14 self-application: the stack's crates carry
+scope!/#[spec], `rust-ai-native-specmap --gate` over them is 0-orphan. Toolchain on this
+box: go 1.26.5 at C:/opt/go; gopls/staticcheck/exhaustive at C:/opt/gotools (exhaustive
+built from master with bumped x/tools — v0.12.0 does not compile under go 1.26). All 12
+campaign commits on `main`; host self-check GREEN. **Deferred by name:** registry
+publishing (owner decision), host installation of the go stack (no host Go code until
+the Kubernetes work), bench-corpus seeding (REPORT P3), token-level tcg._
+
+---
+
 ## CHECKPOINT 2026-07-17 — TERMINAL-AIUI: packaging + AIUI plan LANDED (goal-hook CLOSED)
 
 _Updated: 2026-07-17 — **the TERMINAL-AIUI campaign goal-hook is CLOSED.** Both owner asks landed
