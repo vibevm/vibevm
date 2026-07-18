@@ -149,6 +149,23 @@ no app-path arg) from a **dev** dir (Electron resolved via
 `node_modules/electron/path.txt`, the app dir passed as a positional arg). A
 missing install fails with a message naming the setup step, never a silent hang.
 
+### 5.1 In-place upgrade & the icon protocol {#in-place-upgrade}
+
+REQ. vibeterm sets `VIBETERM=1` in its PTY environment. A `vibe tree` launched
+**inside** vibeterm (this env present) does not spawn a second window — it
+upgrades the current terminal in place: the `-t` / vibeterm launch resolves to
+the in-terminal console TUI here, so a plain shell becomes a "VibeTree terminal"
+for the session (PROP-036 §2.13). Outside vibeterm, `-t` still opens the desktop
+app.
+
+REQ. While the tree is open in that upgrade, vibeterm's **window + taskbar icon**
+is swapped to `vibetree`, reverting to the window's launch icon on exit. The swap
+is in-band: `vibe tree` emits `OSC 7773 ; <icon-name> ST` (an empty name reverts);
+the vibeterm renderer forwards the name to the main process, which calls
+`win.setIcon`. **Windows + Linux only** — `setIcon` is a no-op on macOS (the app
+owns its Dock icon there), the documented platform gap. In any non-vibeterm
+terminal the OSC is an unknown sequence, harmlessly discarded.
+
 ## 6. Never {#never}
 
 - Never load user settings into a snapshot render — determinism dies and goldens

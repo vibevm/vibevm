@@ -14,6 +14,7 @@ specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-036#command");
 mod artifacts;
 mod build;
 mod diagnostics;
+mod host;
 mod model;
 mod picker;
 mod plain;
@@ -78,18 +79,30 @@ pub fn run(ctx: &output::Context, args: TreeArgs) -> Result<()> {
     // (returned above) and `--plain` (an explicit ASCII request) still win;
     // without `-t` a non-tty falls through to ASCII as before, so a pipe is
     // never surprised by a spawned window (TERMINAL-AIUI §6.2).
+    //
+    // Already inside vibeterm, on a real tty? Don't open a *second* window —
+    // upgrade the current terminal in place: render the console TUI here,
+    // swapping vibeterm's icon to vibetree for the session (PROP-042 §5.1).
+    // The `user_attended` guard matters: `-t` with no tty (a GUI
+    // double-click, or a `| pipe`) must NOT try to run the interactive TUI —
+    // it would block on a non-tty — so it falls back to spawning the app.
     if args.terminal && !args.plain {
+        if host::in_vibeterm() && console::user_attended() {
+            return host::run_upgraded(|| tui::run(tree));
+        }
         return open_in_vibeterm(&root);
     }
 
     // The interactive rat-salsa TUI launches when the session is attended and
     // `--plain` was not passed (PROP-036 §2.11). `--plain` and a non-tty fall
     // through to the plain ASCII renderer; `--json` returned above. Neither
-    // `--json` nor `--plain` ever enters interactive mode (§2.1).
+    // `--json` nor `--plain` ever enters interactive mode (§2.1). Vibeterm launch
+    // mode opens the desktop app — unless we are already in vibeterm, where it
+    // (and plain console mode) run the TUI in place with the vibetree icon.
     if console::user_attended() && !args.plain {
         return match resolve_launch_mode(&args, &settings, &prefs) {
-            tui::settings::LaunchMode::Vibeterm => open_in_vibeterm(&root),
-            tui::settings::LaunchMode::Console => tui::run(tree),
+            tui::settings::LaunchMode::Vibeterm if !host::in_vibeterm() => open_in_vibeterm(&root),
+            _ => host::run_upgraded(|| tui::run(tree)),
         };
     }
     print!("{}", plain::render(&tree));

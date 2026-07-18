@@ -28,6 +28,15 @@ const fit = new FitAddon();
 term.loadAddon(fit);
 term.open(document.getElementById('term'));
 term.focus();
+
+// A custom OSC lets the hosted program (`vibe tree`) swap vibeterm's
+// window/taskbar icon while it runs — a temporary "vibetree terminal" upgrade.
+// `ESC ] 7773 ; <icon-name> ST` sets the icon (empty name reverts to the launch
+// icon); forward the name to the main process, which owns win.setIcon.
+term.parser.registerOscHandler(7773, (data) => {
+  ipcRenderer.send('vibeterm:set-icon', typeof data === 'string' ? data : '');
+  return true;
+});
 // The scrollbar policy is a three-way switch the agent can flip at runtime
 // (`window.setScrollbarMode`, driven by `POST /scrollbar`): `auto` hides it
 // while the hosted program is in the ALTERNATE buffer (a full-screen TUI like

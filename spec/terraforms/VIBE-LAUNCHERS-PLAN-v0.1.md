@@ -216,6 +216,19 @@ magick /tmp/vt.png -define icon:auto-resize=256,128,64,48,32,16 assets/icons/vib
   (native chooser, no unsafe in our code). Floor-green (self-check all green, unittests 371);
   redeployed to instance 30 and verified live — from `~/opt/bin` the tree now renders the
   remembered repo instead of crashing.
+- _2026-07-19 (feature — owner: run in place inside vibeterm + swap the icon):_ **VibeTree
+  upgrades the current terminal instead of opening a second window.** vibeterm now exports
+  `VIBETERM=1` in its PTY; `vibe tree` inside vibeterm (on a real tty) renders the console
+  TUI **in place** — the plain shell becomes a "VibeTree terminal" for the session — instead
+  of spawning another Electron window. While the tree is open, vibeterm's window + taskbar
+  icon swaps to `vibetree` and reverts to its launch icon on exit, via an in-band `OSC 7773`
+  the renderer forwards to `win.setIcon` (**Windows + Linux**; a no-op on macOS — the
+  platform gap). A `user_attended` guard stops a no-tty `-t` (a GUI double-click, or a
+  `| pipe`) from blocking on the TUI — it falls back to spawning the app. New: `tree/host.rs`
+  + PROP-042 §5.1. Floor-green (self-check all green); verified the in-place path emits the
+  `OSC 7773 ; vibetree` and spawns **no** second window, and the packaged vibeterm carries the
+  env + OSC handler + IPC. **Owner's eyes** confirm the visual taskbar-icon swap in a live
+  vibeterm (the OS titlebar/taskbar icon is not scriptable to screenshot here). Redeployed.
 
 ## 9. REPORT — (written at close; checks §5 P1–P5)
 

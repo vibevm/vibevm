@@ -56,6 +56,12 @@ process.on('uncaughtException', (err) => {
 
 /** @type {import('electron').BrowserWindow | null} */
 let win = null;
+/**
+ * The `--icon` name this window launched with (`null` = the default icon), so a
+ * runtime icon swap (`vibe tree` upgrading the terminal) can revert to it.
+ * @type {string | null}
+ */
+let launchIconName = null;
 /** @type {import('node-pty').IPty | null} */
 let ptyProc = null;
 /** @type {import('node-pty').IDisposable | null} */
@@ -641,6 +647,8 @@ async function createWindow() {
   // module-level `headless` (the @xterm/headless mirror).
   const { exec, cols, rows, control, headless: hideWindow, icon: iconName } =
     parseArgs(process.argv);
+  // Remember the launch icon so a runtime swap (`vibe tree`) can revert to it.
+  launchIconName = iconName ?? null;
   const commandLine = exec ?? defaultShell(process.platform, process.env);
   const { file, args } = splitCommand(commandLine);
 
@@ -717,7 +725,11 @@ async function createWindow() {
       // not degrade to the 256-colour cube — which paints e.g. a `Surface1`
       // unset flag the same gold as a `Gold` set flag. Warp sets this; we must
       // too, or our colours silently mismatch the real terminal.
-      env: { ...process.env, COLORTERM: 'truecolor' },
+      //
+      // `VIBETERM=1` tells a nested `vibe tree` it is already inside vibeterm, so
+      // it upgrades this terminal in place (console TUI + the vibetree icon)
+      // instead of spawning a second window (PROP-042 §5, PROP-036 §2.13).
+      env: { ...process.env, COLORTERM: 'truecolor', VIBETERM: '1' },
     });
     // main -> renderer, plus the headless mirror (control mode) so /snapshot
     // sees exactly what the renderer sees. Guard every send against a destroyed
@@ -838,6 +850,23 @@ async function createWindow() {
   // arriving before the pty is up spawns it rather than being dropped.
   ipcMain.on('resize', (_event, size) => {
     if (size && size.cols > 0 && size.rows > 0) applySize(size.cols, size.rows);
+  });
+
+  // renderer -> main: swap the window/taskbar icon at runtime. The hosted
+  // program (`vibe tree`) emits `OSC 7773 ; <name> ST`; the renderer forwards
+  // the name here. A named icon (`vibetree`) upgrades the terminal's identity
+  // while the tree is open; an empty name reverts to this window's launch icon.
+  // Windows + Linux only — Electron's setIcon is a no-op on macOS (the app owns
+  // its Dock icon there), which is the documented platform gap.
+  ipcMain.on('vibeterm:set-icon', (_event, name) => {
+    if (!win || win.isDestroyed() || process.platform === 'darwin') return;
+    const wanted =
+      typeof name === 'string' && name.trim() !== '' ? name.trim() : launchIconName;
+    try {
+      win.setIcon(resolveIconPath(wanted));
+    } catch {
+      /* icon swap is best-effort — a bad name never breaks the session */
+    }
   });
 
   win.on('closed', () => {
