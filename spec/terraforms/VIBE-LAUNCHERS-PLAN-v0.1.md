@@ -170,6 +170,17 @@ magick /tmp/vt.png -define icon:auto-resize=256,128,64,48,32,16 assets/icons/vib
   + 256/512 PNG); explorations + a colour map archived in `ideas-icons/`. Owner requirements
   folded in: **D8** (the window icon matches the launcher) and the high-quality Start-menu
   tile (**D6**). Awaiting owner go before Phase 0.
+- _2026-07-18 (execution — owner: «запусти всё»):_ **Phases 0–2 + D8 landed, floor green,
+  pushed.** Phase 0 spike proved the mechanism AND surfaced a real bug — `vibe tree -t`
+  ignored an explicit `-t` in a non-tty (the GUI-launcher case), fixed in `5765da0`.
+  Phase 1: PROP-043 (`905199d`). Phase 2: `crates/vibe-launcher` + the `vibetree` bin,
+  conform-green, VibeTree.exe verified opening vibeterm, no console flash (`9742d4d`).
+  **D8** (`965e479`): the tree window carries the `vibetree` icon end to end — verified the
+  packaged vibeterm receives `--icon vibetree` and ships `icon-vibetree.ico`. Phase 3
+  (install) done **manually**: the release `VibeTree.exe` placed in `~/opt/bin` (on PATH,
+  selfloc-resolves), a Start-menu `VibeTree.lnk` created (its icon = the embedded hi-q
+  green `.ico`). **Deferred by name:** folding the launcher build + placement + shortcut
+  into the VVM `self install`/`update` pipeline (the automated Phase 3).
 
 ## 9. REPORT — (written at close; checks §5 P1–P5)
 
