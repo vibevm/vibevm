@@ -205,6 +205,17 @@ magick /tmp/vt.png -define icon:auto-resize=256,128,64,48,32,16 assets/icons/vib
   → the lowercase exes, `IconLocation` = each exe (its embedded icon), cwd = repo (tree) / home
   (term). End-to-end confirmed by composition: the resolve→spawn path is the proven VibeTree
   core; every link (current→29, packaged icon==c2, exe icons, shortcut targets) checked.
+- _2026-07-19 (fix — owner: VibeTree crashed when run outside a project):_ **VibeTree now
+  works from anywhere.** Root cause: `vibe tree` needs a `vibe.toml` in cwd; a double-click
+  from `~/opt/bin` (or any non-project shell) has none, so the child exited 1 and the
+  launcher faithfully reported it (the dialog the owner saw). Fixed in `vibe tree`
+  (PROP-036 §2.13 #project-resolution), **human surfaces only** (`--json` stays strict):
+  resolve **cwd → remembered last-project → native folder picker (`-t` only)**; every
+  successful open records `vibe.tree.last-project` (an L1 setting) so a later context-free
+  launch reopens it; a cancelled picker is a clean no-op (no error dialog). New dep `rfd`
+  (native chooser, no unsafe in our code). Floor-green (self-check all green, unittests 371);
+  redeployed to instance 30 and verified live — from `~/opt/bin` the tree now renders the
+  remembered repo instead of crashing.
 
 ## 9. REPORT — (written at close; checks §5 P1–P5)
 

@@ -56,6 +56,29 @@ fn schema_declares_the_six_vibe_tree_keys() {
 }
 
 #[test]
+fn last_project_round_trips_through_l1_and_blank_reads_absent() {
+    let dir = tempdir().unwrap();
+    let s = settings_in(dir.path());
+
+    // Absent until the first open records one.
+    assert!(s.last_project(&s.load()).is_none());
+
+    // Recorded value round-trips through the L1 file.
+    s.set(
+        KEY_LAST_PROJECT,
+        toml::Value::String("C:/proj/vibevm".into()),
+    );
+    assert_eq!(
+        s.last_project(&s.load()),
+        Some(std::path::PathBuf::from("C:/proj/vibevm")),
+    );
+
+    // A blank value reads back as absent (so it falls through to the picker).
+    s.set(KEY_LAST_PROJECT, toml::Value::String("   ".into()));
+    assert!(s.last_project(&s.load()).is_none());
+}
+
+#[test]
 fn loading_palette_mocha_builds_a_mocha_theme() {
     let dir = tempdir().unwrap();
     std::fs::write(

@@ -184,6 +184,28 @@ trailing `(*)` and does not re-expand it, and cycle-guards the walk on the
 package's qualified `group/name` (REQ). The flat display modes (§2.11) collapse
 the DAG to one row per package.
 
+### 2.13 Project resolution — VibeTree works from anywhere {#project-resolution}
+
+`vibe tree` shows a project's tree, so it needs one — but a GUI launcher
+(`VibeTree.exe` / a Start-menu shortcut, PROP-043) or an arbitrary shell may sit
+outside any project. Resolution order for the **human** surfaces (the TUI and
+`-t`; **not** `--json`, a scripting surface resolved strictly from `--path`)
+(REQ):
+
+1. **The given path** — `--path` (default: cwd, walked up for `vibe.toml`). On
+   success it is **recorded as the last project** (`vibe.tree.last-project`, an
+   L1 setting), so a later context-free launch reopens it. An explicit `--path`
+   that is not a project is a hard error — never silently redirected.
+2. **The remembered last project** — when the cwd is not a project and no
+   explicit `--path` was given, the recorded `last-project` opens (if it is still
+   a project).
+3. **A folder picker** — a `-t` (VibeTree / GUI) launch with neither of the above
+   opens a native folder chooser; the pick is recorded as the last project.
+   Cancelling is a clean no-op (no error dialog), never a failure.
+
+A console launch (no `-t`) with neither a cwd project nor a memory keeps the
+original `run vibe init` guidance.
+
 ---
 
 ## 3. Data sources {#data-sources}

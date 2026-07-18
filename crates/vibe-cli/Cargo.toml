@@ -53,6 +53,9 @@ rat-widget.workspace = true
 ratatui-core.workspace = true
 ratatui-widgets.workspace = true
 ratatui-crossterm.workspace = true
+# `vibe tree -t` "no project here" native folder picker (VIBE-LAUNCHERS): when
+# VibeTree is launched outside any project and none was opened before.
+rfd = { version = "0.15", default-features = false }
 # CDP attach to the running vibeterm Electron page (`vibe aiui inspect`) — PROP-042.
 chromiumoxide.workspace = true
 tokio.workspace = true

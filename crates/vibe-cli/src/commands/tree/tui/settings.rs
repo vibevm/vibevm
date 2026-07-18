@@ -47,6 +47,10 @@ pub const KEY_STATIC_FIRST: &str = "vibe.tree.static-first";
 /// The dotted path of the launch-mode key (TERMINAL-AIUI §6.2): where a bare
 /// `vibe tree` opens.
 pub const KEY_LAUNCH_MODE: &str = "vibe.tree.launch-mode";
+/// The dotted path of the last-opened-project key (VIBE-LAUNCHERS): the project
+/// root recorded on every successful open, so a context-free VibeTree launch
+/// (double-clicked from `~/opt/bin`, no project in cwd) reopens it.
+pub const KEY_LAST_PROJECT: &str = "vibe.tree.last-project";
 
 /// The conventional L1 file: `<home>/.vibe/settings.toml`.
 const DOT_VIBE: &str = ".vibe";
@@ -328,6 +332,19 @@ impl TreeSettings {
         parse_launch_mode(prefs.get(KEY_LAUNCH_MODE).and_then(toml::Value::as_str))
     }
 
+    /// The last project opened in `vibe tree` (VIBE-LAUNCHERS): recorded on every
+    /// open, so a context-free VibeTree launch reopens it. Absent (`None`) until
+    /// the first open, or if the stored value is blank.
+    #[must_use]
+    pub fn last_project(&self, prefs: &ResolvedPrefs) -> Option<PathBuf> {
+        prefs
+            .get(KEY_LAST_PROJECT)
+            .and_then(toml::Value::as_str)
+            .map(str::trim)
+            .filter(|s| !s.is_empty())
+            .map(PathBuf::from)
+    }
+
     /// Persist a single key to the L1 layer atomically (PROP-037 §9, PROP-040
     /// §6 `#diff-from-default`): load the current L1 table (preserving the
     /// other keys), set the one dotted path, diff against the schema defaults,
@@ -391,7 +408,7 @@ impl std::error::Error for SetError {}
 /// caller.
 #[specmark::spec(
     deviates = "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
-    reason = "no-unwrap-gate: the seven vibe.tree.* KeyMeta are built from static \
+    reason = "no-unwrap-gate: the eight vibe.tree.* KeyMeta are built from static \
               non-empty literal descriptions and unique dotted paths — KeyMeta::new \
               and Schema::register cannot fail on these inputs; asserting the \
               invariant once at this single registration point is clearer than \
@@ -489,6 +506,17 @@ fn build_schema() -> Schema {
             )),
         )
         .expect("unique launch-mode key");
+    schema
+        .register(
+            KeyMeta::new(
+                KEY_LAST_PROJECT,
+                KeyType::String,
+                Scope::User,
+                "the last project opened in `vibe tree`; recorded on open so a context-free VibeTree launch reopens it (no default — absent until the first open)",
+            )
+            .expect("non-empty last-project doc"),
+        )
+        .expect("unique last-project key");
     schema
 }
 

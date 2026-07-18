@@ -15,21 +15,44 @@ mod artifacts;
 mod build;
 mod diagnostics;
 mod model;
+mod picker;
 mod plain;
 // `pub(crate)` so the `vibe prefs` settings TUI (PROP-041) composes the same
 // PROP-037 `ui::` component library + `theme::Theme` without duplicating them —
 // the component library is the reuse unit (PROP-041 §1 #built-on-tree-tui).
 pub(crate) mod tui;
 
-use anyhow::Result;
+use std::path::{Path, PathBuf};
+
+use anyhow::{Result, anyhow};
 use serde_json::Value;
+use vibe_settings::resolver::ResolvedPrefs;
 
 use crate::cli::TreeArgs;
 use crate::output;
 
-/// Run `vibe tree` — build the model, then dispatch to the requested surface.
+use tui::settings::TreeSettings;
+
+/// Run `vibe tree` — resolve the project, build the model, then dispatch to the
+/// requested surface.
 pub fn run(ctx: &output::Context, args: TreeArgs) -> Result<()> {
-    let root = super::resolve_project_root(&args.path)?;
+    let settings = TreeSettings::new();
+    let prefs = settings.load();
+
+    // `--json` is a pure scripting surface: resolve strictly from the given path
+    // — no remembered-project fallback, no picker, no recording, so a script is
+    // never silently redirected to a different project. The human surfaces get
+    // the VibeTree "works from anywhere" resolution (cwd → last → picker).
+    let root = if ctx.is_json() {
+        super::resolve_project_root(&args.path)?
+    } else {
+        match resolve_root(&args, &settings, &prefs)? {
+            Some(root) => root,
+            // The picker was cancelled — a clean no-op exit, so a GUI launcher
+            // shows no error dialog.
+            None => return Ok(()),
+        }
+    };
     let tree = build::build_tree(&root)?;
 
     if ctx.is_json() {
@@ -64,7 +87,7 @@ pub fn run(ctx: &output::Context, args: TreeArgs) -> Result<()> {
     // through to the plain ASCII renderer; `--json` returned above. Neither
     // `--json` nor `--plain` ever enters interactive mode (§2.1).
     if console::user_attended() && !args.plain {
-        return match resolve_launch_mode(&args) {
+        return match resolve_launch_mode(&args, &settings, &prefs) {
             tui::settings::LaunchMode::Vibeterm => open_in_vibeterm(&root),
             tui::settings::LaunchMode::Console => tui::run(tree),
         };
@@ -73,18 +96,96 @@ pub fn run(ctx: &output::Context, args: TreeArgs) -> Result<()> {
     Ok(())
 }
 
+/// Resolve which project the tree opens — the VibeTree "works from anywhere"
+/// order (VIBE-LAUNCHERS):
+///
+/// 1. the given path (cwd by default, or an explicit `--path`) — recorded as the
+///    last project on success;
+/// 2. else, if no explicit `--path` was given, the remembered last project;
+/// 3. else, a `-t` (VibeTree / GUI) launch opens a native folder picker.
+///
+/// `Ok(None)` means the picker was cancelled — a clean no-op. A console launch
+/// with neither a cwd project nor a memory returns the original `vibe init`
+/// guidance. An explicit `--path` that is not a project is a hard error (never
+/// silently redirected).
+fn resolve_root(
+    args: &TreeArgs,
+    settings: &TreeSettings,
+    prefs: &ResolvedPrefs,
+) -> Result<Option<PathBuf>> {
+    let cwd_err = match super::resolve_project_root(&args.path) {
+        Ok(root) => {
+            record_last_project(settings, prefs, &root);
+            return Ok(Some(root));
+        }
+        Err(err) => {
+            // An explicit `--path` that fails is a hard error; only the default
+            // (`.`, i.e. cwd) falls back to the remembered project / picker.
+            if args.path.as_path() != Path::new(".") {
+                return Err(err);
+            }
+            err
+        }
+    };
+
+    // The remembered project (recorded on a previous open), if still valid.
+    if let Some(last) = settings.last_project(prefs)
+        && let Ok(root) = super::resolve_project_root(&last)
+    {
+        return Ok(Some(root));
+    }
+
+    // A GUI/terminal launch (VibeTree) with nothing to show opens a picker; a
+    // cancel is a clean no-op (`Ok(None)`).
+    if args.terminal {
+        return match picker::pick_project_folder() {
+            Some(dir) => {
+                let root = super::resolve_project_root(&dir).map_err(|_| {
+                    anyhow!(
+                        "`{}` is not a vibe project (no `vibe.toml`) — nothing to show",
+                        dir.display()
+                    )
+                })?;
+                record_last_project(settings, prefs, &root);
+                Ok(Some(root))
+            }
+            None => Ok(None),
+        };
+    }
+
+    // A console launch with no project and no memory: the original guidance
+    // (names the cwd and points at `vibe init`).
+    Err(cwd_err)
+}
+
+/// Record `root` as the last-opened project (VIBE-LAUNCHERS), skipping the write
+/// when it is unchanged so a repeat launch from the same project does not rewrite
+/// the settings file.
+fn record_last_project(settings: &TreeSettings, prefs: &ResolvedPrefs, root: &Path) {
+    if settings.last_project(prefs).as_deref() == Some(root) {
+        return;
+    }
+    settings.set(
+        tui::settings::KEY_LAST_PROJECT,
+        toml::Value::String(root.to_string_lossy().into_owned()),
+    );
+}
+
 /// Resolve where `vibe tree` opens: an explicit `-c`/`-t` flag wins; else the
 /// persisted `vibe.tree.launch-mode` setting, defaulting to `console`
 /// (TERMINAL-AIUI §6.2 — never force the desktop app on a fresh user).
-fn resolve_launch_mode(args: &TreeArgs) -> tui::settings::LaunchMode {
+fn resolve_launch_mode(
+    args: &TreeArgs,
+    settings: &TreeSettings,
+    prefs: &ResolvedPrefs,
+) -> tui::settings::LaunchMode {
     use tui::settings::LaunchMode;
     if args.terminal {
         LaunchMode::Vibeterm
     } else if args.console {
         LaunchMode::Console
     } else {
-        let settings = tui::settings::TreeSettings::new();
-        settings.launch_mode(&settings.load())
+        settings.launch_mode(prefs)
     }
 }
 
