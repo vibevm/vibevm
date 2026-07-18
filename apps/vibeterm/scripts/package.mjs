@@ -66,16 +66,18 @@ run('npm install', 'npm', ['install']);
 run('node-pty prebuild', 'npm', ['rebuild', 'node-pty', '--foreground-scripts']);
 run('electron binary', 'node', ['node_modules/electron/install.js']);
 
-// electron-packager: a plain DIRECTORY (no installer), no asar (the unpacked
-// tree is transparent and diffable by VVM). @electron/packager v20 ships asar
-// OFF by default, so no flag is passed (passing `--asar=false` warns). `--prune`
-// drops devDeps from the packaged node_modules; `--overwrite` replaces a prior
-// build.
+// electron-packager: a plain DIRECTORY (no installer), asar OFF. @electron/packager
+// v20 defaults asar ON — it would emit `resources/app.asar` (a monolithic blob),
+// but VVM wants the unpacked `resources/app/` tree: transparent, diff-copyable, and
+// the layout the resolver + PROP-019 §2.7 / PROP-042 §5 expect. So force it OFF with
+// `--no-asar`. `--prune` drops devDeps from the packaged node_modules; `--overwrite`
+// replaces a prior build.
 run('electron-packager', 'npx', [
   '@electron/packager',
   appDir,
   'vibeterm',
   '--dir',
+  '--no-asar',
   `--platform=${PLATFORM}`,
   `--arch=${ARCH}`,
   `--out=${out}`,
