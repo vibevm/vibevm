@@ -181,6 +181,21 @@ magick /tmp/vt.png -define icon:auto-resize=256,128,64,48,32,16 assets/icons/vib
   selfloc-resolves), a Start-menu `VibeTree.lnk` created (its icon = the embedded hi-q
   green `.ico`). **Deferred by name:** folding the launcher build + placement + shortcut
   into the VVM `self install`/`update` pipeline (the automated Phase 3).
+- _2026-07-18 (second launcher — owner: pick a vibeterm icon + a VibeTerm launcher):_
+  **VibeTerm landed, floor green.** The vibeterm app icon was redesigned in a new
+  `ideas-icons/vibeterm/` sub-batch (a terminal-prompt motif, two generators computing the
+  trails/rain/sparkle geometry — see its README); the owner picked
+  `vibeterm-c2-coralstars-sparkle`. Shipped as the **official** icon:
+  `assets/icons/vibeterm.{svg,ico,png,-512.png}` + the vibeterm **window default**
+  `apps/vibeterm/resources/icon.{svg,ico,png}` (so plain `vibe term` shows it — no `--icon`
+  needed). Second launcher: the `vibeterm` bin (`vibe term`), and `build.rs` switched from
+  crate-wide `winres` to **per-binary** embedding (`embed-resource::compile_for` →
+  `rustc-link-arg-bin`) so `vibetree.exe`/`vibeterm.exe` carry different icons from one
+  crate (the `LAUNCHERS` registry table). Verified: both release exes extract their distinct
+  icons (green graph / coral prompt). PROP-043 #registry + #icon updated. **Not yet:** the
+  install/deploy of `VibeTerm.exe` to `~/opt/bin` + Start-menu, and repackaging a live
+  instance so the running window shows the c2 icon (installed instance still ships the old
+  packaged resources) — both ride the same deferred Phase 3 / a `self update`.
 
 ## 9. REPORT — (written at close; checks §5 P1–P5)
 

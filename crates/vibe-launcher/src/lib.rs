@@ -1,9 +1,10 @@
 //! `vibe-launcher` — the shared core behind vibevm's GUI launchers (PROP-043).
 //!
-//! A launcher is a thin, GUI-subsystem binary (e.g. `vibetree`) that resolves the
-//! active `vibe`, starts a sub-command without a console flash, and reports any
-//! failure in a native dialog. The heavy work stays in `vibe`; this crate only
-//! resolves it, spawns it windowless, and never dies silently on a double-click.
+//! A launcher is a thin, GUI-subsystem binary (e.g. `vibetree` → `vibe tree -t`,
+//! `vibeterm` → `vibe term`) that resolves the active `vibe`, starts a
+//! sub-command without a console flash, and reports any failure in a native
+//! dialog. The heavy work stays in `vibe`; this crate only resolves it, spawns
+//! it windowless, and never dies silently on a double-click.
 
 specmark::scope!("spec://vibevm/modules/vibe-launcher/PROP-043#root");
 
@@ -163,10 +164,8 @@ fn report(message: &str) {
     unsafe {
         use windows_sys::Win32::UI::WindowsAndMessaging::{MB_ICONERROR, MB_OK, MessageBoxW};
         let text: Vec<u16> = message.encode_utf16().chain(std::iter::once(0)).collect();
-        let title: Vec<u16> = "VibeTree"
-            .encode_utf16()
-            .chain(std::iter::once(0))
-            .collect();
+        // Neutral title: the core is shared by every launcher (VibeTree, VibeTerm).
+        let title: Vec<u16> = "vibevm".encode_utf16().chain(std::iter::once(0)).collect();
         MessageBoxW(
             std::ptr::null_mut(),
             text.as_ptr(),

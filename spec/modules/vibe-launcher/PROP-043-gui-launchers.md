@@ -4,10 +4,10 @@ Status: accepted (VIBE-LAUNCHERS campaign, 2026-07-18).
 Module: `vibe-launcher` (`crates/vibe-launcher`).
 
 vibevm ships small **GUI launchers** — double-clickable desktop entry points that
-open a specific `vibe` experience in its graphical form. The first is
-**VibeTree** (`vibe tree -t`). A launcher is a thin, GUI-subsystem binary over a
-shared core; the family grows by a one-line registry entry, never by new
-machinery. The heavy execution stays in `vibe`; the launcher only resolves it,
+open a specific `vibe` experience in its graphical form. The first two are
+**VibeTree** (`vibe tree -t`) and **VibeTerm** (`vibe term`). A launcher is a
+thin, GUI-subsystem binary over a shared core; the family grows by a one-line
+registry entry, never by new machinery. The heavy execution stays in `vibe`; the launcher only resolves it,
 starts it without a console flash, and reports failure where a user can see it.
 
 Design lore + phases: `spec/terraforms/VIBE-LAUNCHERS-PLAN-v0.1.md`.
@@ -46,13 +46,31 @@ one is a registry entry plus a thin binary, with no core change. Dynamic,
 after-install minting of launchers (third-party packages/prompts) is a separate
 future system, not this module.
 
+| Launcher | Binary | `vibe` argv | Icon (`assets/icons/`) |
+|----------|--------|-------------|------------------------|
+| VibeTree | `vibetree` | `tree -t` | `vibetree` — emerald node-graph |
+| VibeTerm | `vibeterm` | `term` | `vibeterm` — coral prompt `>_` |
+
+The registry is materialised as the `LAUNCHERS` table in
+`crates/vibe-launcher/build.rs` (binary → icon, for per-binary embedding) plus
+each binary's compiled-in argv (`src/bin/<name>.rs`, a one-liner over
+[`run`](#spawn)).
+
 ## Icon: family identity, window matches launcher {#icon}
 
 REQ. A launcher embeds its family icon from `assets/icons/` (Windows: the
-multi-resolution `.ico`, its 256 layer the Start-menu tile). The graphical
-window a launcher opens carries the **same** icon as the launcher itself — e.g.
-VibeTree's window shows the `vibetree` icon, matching `VibeTree.exe` — so the
-whole path reads as one app. `vibe`'s neutral surfaces keep the `default` icon.
+multi-resolution `.ico`, its 256 layer the Start-menu tile) — **per binary**, so
+`vibetree.exe` and `vibeterm.exe` carry different icons from one crate. The
+graphical window a launcher opens carries the **same** icon as the launcher
+itself, so the whole path reads as one app:
+
+- **VibeTree** — the window is forced to `vibetree` (`vibe tree -t` passes
+  `--icon vibetree`), matching `VibeTree.exe`.
+- **VibeTerm** — the vibeterm window's **default** icon *is* `vibeterm`
+  (`apps/vibeterm/resources/icon.*`), so plain `vibe term` already matches
+  `VibeTerm.exe` with no override.
+
+`vibe`'s other neutral surfaces keep the `default` icon.
 
 ## Never {#never}
 

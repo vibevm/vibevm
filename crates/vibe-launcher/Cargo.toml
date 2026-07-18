@@ -8,7 +8,7 @@ license-file.workspace = true
 publish.workspace = true
 repository.workspace = true
 homepage.workspace = true
-description = "GUI launchers for vibevm apps (VibeTree) — PROP-043"
+description = "GUI launchers for vibevm apps (VibeTree, VibeTerm) — PROP-043"
 
 [lib]
 path = "src/lib.rs"
@@ -16,6 +16,10 @@ path = "src/lib.rs"
 [[bin]]
 name = "vibetree"
 path = "src/bin/vibetree.rs"
+
+[[bin]]
+name = "vibeterm"
+path = "src/bin/vibeterm.rs"
 
 [dependencies]
 specmark.workspace = true
@@ -28,4 +32,7 @@ windows-sys = { version = "0.59", features = [
 ] }
 
 [target.'cfg(windows)'.build-dependencies]
-winres = "0.1"
+# per-binary icon embedding (vibetree.exe ≠ vibeterm.exe) via
+# `cargo:rustc-link-arg-bin`; winres embeds one icon crate-wide, which cannot
+# distinguish the launchers.
+embed-resource = "3"
