@@ -1,16 +1,22 @@
 # App-family icons
 
 Shared icons for the vibevm application family (the launcher binaries and the
-desktop apps). One visual system: the vibevm **node-graph** figure — a hub, four
-nodes, four spokes — centered on a **rounded-square gradient tile** (charcoal
-`#2A2A32` → `#161619`). Each app keeps the tile and varies the graph colour.
+desktop apps). All sit on the same **rounded-square gradient tile** and use the
+same coral/emerald ink, in **two motifs**:
 
-| Name | Use | Graph colour | Nodes |
-|------|-----|--------------|-------|
-| `default`  | the default / library app | coral `#D97757` | dark fill, coloured ring |
-| `vibetree` | the VibeTree launcher (`vibe tree -t`) | muted emerald `#5FB584` | dark fill, coloured ring |
+- **node-graph** — a hub, four nodes, four spokes (`default`, `vibetree`).
+- **terminal-prompt** — a `>_` prompt with a starry sky (`vibeterm`).
 
-The figure derives from `apps/vibeterm/resources/icon.svg` (unchanged geometry).
+| Name | Use | Motif | Ink |
+|------|-----|-------|-----|
+| `default`  | the default / library app | node-graph | coral `#D97757` |
+| `vibetree` | the VibeTree launcher (`vibe tree -t`) + tree window | node-graph | muted emerald `#5FB584` |
+| `vibeterm` | the VibeTerm launcher (`vibe term`) + the vibeterm window default | terminal-prompt `>_` + coral stars + sparkle | coral `#D97757` |
+
+Each `*.svg` here is a standalone master (edit it directly). `vibeterm.svg` is
+the winner of the [`../../ideas-icons/vibeterm/`](../../ideas-icons/vibeterm/)
+exploration; the graph masters descend from vibeterm's original node-graph
+`icon.svg`, since replaced by the prompt design.
 
 ## Formats
 
