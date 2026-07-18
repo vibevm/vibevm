@@ -1,7 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
-<defs><linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2A2A32"/><stop offset="1" stop-color="#161619"/></linearGradient></defs>
-<rect x="14" y="14" width="484" height="484" rx="108" fill="url(#bg)"/>
-<g transform="translate(256 256) scale(1.4) translate(-256 -256)">
+<defs>
+<linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2A2A32"/><stop offset="1" stop-color="#161619"/></linearGradient>
+<clipPath id="t"><rect x="0" y="0" width="512" height="512" rx="115"/></clipPath>
+</defs>
+<rect x="0" y="0" width="512" height="512" rx="115" fill="url(#bg)"/>
+<g clip-path="url(#t)"><g transform="translate(256 256) scale(1.55) translate(-256 -256)">
 <g transform="translate(64 64) scale(12)">
 <line x1="16" y1="16" x2="7"  y2="7"  stroke="#5FB584" stroke-width="2" opacity="0.55"/>
 <line x1="16" y1="16" x2="26" y2="9"  stroke="#5FB584" stroke-width="2" opacity="0.55"/>
@@ -13,5 +16,5 @@
 <circle cx="9"  cy="25" r="3" fill="#14120E" stroke="#5FB584" stroke-width="2"/>
 <circle cx="25" cy="24" r="3" fill="#14120E" stroke="#5FB584" stroke-width="2"/>
 </g>
-</g>
+</g></g>
 </svg>

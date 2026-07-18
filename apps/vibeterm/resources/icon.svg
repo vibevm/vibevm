@@ -1,7 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
-<defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#26262E"/><stop offset="1" stop-color="#161619"/></linearGradient></defs>
-<rect x="14" y="14" width="484" height="484" rx="108" fill="url(#g)"/>
-<g transform="translate(256 206) scale(1.4) translate(-256 -206)">
+<defs>
+<linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#26262E"/><stop offset="1" stop-color="#161619"/></linearGradient>
+<clipPath id="t"><rect x="0" y="0" width="512" height="512" rx="115"/></clipPath>
+</defs>
+<rect x="0" y="0" width="512" height="512" rx="115" fill="url(#g)"/>
+<g clip-path="url(#t)"><g transform="translate(256 214) scale(1.5) translate(-256 -214)">
 <circle cx="104" cy="104" r="11" fill="#D97757"/>
 <circle cx="176" cy="84" r="8" fill="#D97757"/>
 <circle cx="250" cy="108" r="10" fill="#D97757"/>
@@ -13,5 +16,5 @@
 <path d="M 372 114 Q 380 152 418 160 Q 380 168 372 206 Q 364 168 326 160 Q 364 152 372 114 Z" fill="#D97757"/>
 <path d="M 160 190 L 252 250 L 160 310" fill="none" stroke="#D97757" stroke-width="30" stroke-linecap="round" stroke-linejoin="round"/>
 <rect x="250" y="300" width="96" height="26" rx="8" fill="#D97757"/>
-</g>
+</g></g>
 </svg>
