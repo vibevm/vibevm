@@ -23,12 +23,22 @@ reported error (`#report`), never a silent exit.
 
 ## Start the child without a console flash {#spawn}
 
-REQ. Each launcher binary is compiled for the GUI subsystem
-(`windows_subsystem = "windows"` on Windows) so a double-click allocates **no
-console window**. It spawns `vibe` with the platform's no-window creation flag
-(`CREATE_NO_WINDOW` on Windows) so the console-subsystem child does not flash a
-window either. The launcher waits for `vibe` to start the graphical app and
-exits; `vibe` itself detaches the desktop app.
+REQ. A **window-only** launcher (e.g. `vibeterm`) is compiled for the GUI
+subsystem (`windows_subsystem = "windows"` on Windows) so a double-click
+allocates **no console window**. It spawns `vibe` with the platform's no-window
+creation flag (`CREATE_NO_WINDOW` on Windows) so the console-subsystem child does
+not flash a window either. The launcher waits for `vibe` to start the graphical
+app and exits; `vibe` itself detaches the desktop app.
+
+REQ. A **terminal-aware** launcher (e.g. `vibetree`, whose command has an
+in-terminal console mode) is instead **console-subsystem** — a GUI-subsystem
+process the shell does not wait for, which would race a hosted TUI against the
+shell prompt. Launched **from a terminal** ($VIBETERM, or a console shared with a
+shell) it runs the sub-command **in place**, inheriting stdio so the child renders
+in the current terminal and the shell waits (PROP-042 §5.1). **Double-clicked**
+(it owns a fresh console alone), it hides that console and spawns the app
+windowless as above — so this entry stays effectively window-only, at the cost of
+a brief console blink the minimised-launch shortcut mitigates.
 
 ## Fail loud, graphically {#report}
 

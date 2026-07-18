@@ -29,6 +29,9 @@ thiserror.workspace = true
 windows-sys = { version = "0.59", features = [
     "Win32_UI_WindowsAndMessaging",
     "Win32_Foundation",
+    # GetConsoleProcessList / GetConsoleWindow — tell a double-click from a shell
+    # launch, and hide our own console on the double-click path.
+    "Win32_System_Console",
 ] }
 
 [target.'cfg(windows)'.build-dependencies]

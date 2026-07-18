@@ -70,6 +70,76 @@ pub fn run(subcommand: &[&str]) -> ExitCode {
     }
 }
 
+/// Terminal-aware launcher entry (VIBE-LAUNCHERS / PROP-042 §5.1): for a launcher
+/// whose command has an in-terminal console mode (vibetree → `vibe tree`).
+///
+/// - Launched **from a terminal** (inside vibeterm, or any shell): run the
+///   sub-command **in place** — inherit stdio so the child renders in the current
+///   terminal and the shell waits for it. For `vibe tree` this upgrades the
+///   terminal (console TUI + the vibetree icon) instead of opening a window.
+/// - **Double-clicked** (we own a fresh console alone): hide that console and
+///   spawn the app windowless, exactly like [`run`].
+///
+/// The binary MUST be **console-subsystem** (no `windows_subsystem = "windows"`)
+/// for the in-terminal case to work — a GUI-subsystem process the shell does not
+/// wait for, so a hosted TUI would race the shell prompt.
+///
+/// ```no_run
+/// // The whole of a console-subsystem launcher binary (e.g. `vibetree`):
+/// let code = vibe_launcher::run_terminal_aware(&["tree", "-t"]);
+/// # let _ = code;
+/// ```
+#[specmark::spec(implements = "spec://vibevm/modules/vibe-cli/PROP-042#in-place-upgrade")]
+pub fn run_terminal_aware(subcommand: &[&str]) -> ExitCode {
+    if in_terminal() {
+        return run_inherited(subcommand);
+    }
+    // Double-click: hide the console Windows just gave us, then open the app.
+    #[cfg(windows)]
+    win::hide_own_console();
+    run(subcommand)
+}
+
+/// Run the sub-command in the current terminal: inherit stdio, wait, and mirror
+/// its exit code. Failures go to stderr (visible in the terminal), not a dialog.
+fn run_inherited(subcommand: &[&str]) -> ExitCode {
+    let vibe = match resolve_vibe() {
+        Ok(vibe) => vibe,
+        Err(err) => {
+            eprintln!("{err}");
+            return ExitCode::FAILURE;
+        }
+    };
+    match Command::new(&vibe).args(subcommand).status() {
+        Ok(status) => ExitCode::from(u8::try_from(status.code().unwrap_or(1)).unwrap_or(1)),
+        Err(err) => {
+            eprintln!("could not start `{}`: {err}", vibe.display());
+            ExitCode::FAILURE
+        }
+    }
+}
+
+/// Whether we were launched from a terminal (run in place) rather than by a
+/// double-click (spawn a window). `$VIBETERM` (set inside vibeterm) is definitive;
+/// otherwise a Windows console shared with another process (the shell) marks a
+/// terminal, and on other platforms a tty stdout does.
+fn in_terminal() -> bool {
+    if std::env::var_os("VIBETERM").is_some_and(|v| !v.is_empty()) {
+        return true;
+    }
+    #[cfg(windows)]
+    {
+        // A double-click owns a fresh console alone (count 1); a shell that
+        // launched us is attached too (count > 1).
+        win::console_process_count() > 1
+    }
+    #[cfg(not(windows))]
+    {
+        use std::io::IsTerminal;
+        std::io::stdout().is_terminal()
+    }
+}
+
 /// Resolve → spawn → wait; the fallible half of [`run`].
 fn try_run(subcommand: &[&str]) -> Result<(), LauncherError> {
     let vibe = resolve_vibe()?;
@@ -175,4 +245,45 @@ fn report(message: &str) {
     }
     #[cfg(not(windows))]
     eprintln!("{message}");
+}
+
+/// Windows console probes for [`run_terminal_aware`]: tell a double-click (our own
+/// fresh console) from a shell launch, and hide our console on the double-click
+/// path so none lingers behind the spawned app.
+#[cfg(windows)]
+mod win {
+    /// The number of processes attached to our console. `1` means we own a fresh
+    /// console alone — a double-click; `> 1` means a shell launched us into its
+    /// console (a terminal). A missing console reports `0`.
+    #[specmark::spec(
+        deviates = "spec://vibevm/modules/vibe-launcher/PROP-043#spawn",
+        reason = "unsafe-gate: one FFI call to GetConsoleProcessList into a fixed stack buffer; the API's whole contract is a valid writable buffer + its length, both satisfied — a dedicated audit crate for a single console probe is not warranted"
+    )]
+    pub(super) fn console_process_count() -> u32 {
+        use windows_sys::Win32::System::Console::GetConsoleProcessList;
+        let mut pids = [0u32; 4];
+        // SAFETY: GetConsoleProcessList writes up to `pids.len()` PIDs into the
+        // valid, aligned stack buffer and returns the true count; no aliasing.
+        unsafe { GetConsoleProcessList(pids.as_mut_ptr(), pids.len() as u32) }
+    }
+
+    /// Hide our own console window (the double-click path), so no console lingers
+    /// behind the spawned app. Called only when we own the console alone, so it
+    /// never hides a shell's window.
+    #[specmark::spec(
+        deviates = "spec://vibevm/modules/vibe-launcher/PROP-043#spawn",
+        reason = "unsafe-gate: two FFI calls (GetConsoleWindow, ShowWindow) on our own console HWND; a null handle is a no-op and no Rust-owned memory is touched — a dedicated audit crate for hiding one window is not warranted"
+    )]
+    pub(super) fn hide_own_console() {
+        use windows_sys::Win32::System::Console::GetConsoleWindow;
+        use windows_sys::Win32::UI::WindowsAndMessaging::{SW_HIDE, ShowWindow};
+        // SAFETY: GetConsoleWindow returns our console HWND or null; ShowWindow on
+        // it (or a null no-op) touches no Rust-owned memory.
+        unsafe {
+            let hwnd = GetConsoleWindow();
+            if !hwnd.is_null() {
+                ShowWindow(hwnd, SW_HIDE);
+            }
+        }
+    }
 }

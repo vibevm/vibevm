@@ -229,6 +229,21 @@ magick /tmp/vt.png -define icon:auto-resize=256,128,64,48,32,16 assets/icons/vib
   `OSC 7773 ; vibetree` and spawns **no** second window, and the packaged vibeterm carries the
   env + OSC handler + IPC. **Owner's eyes** confirm the visual taskbar-icon swap in a live
   vibeterm (the OS titlebar/taskbar icon is not scriptable to screenshot here). Redeployed.
+- _2026-07-19 (fix — owner: the `vibetree` launcher should upgrade in place too):_ **`vibetree`
+  now upgrades the terminal instead of opening a window.** Root cause: `vibetree.exe` was
+  GUI-subsystem (to avoid a console flash on double-click), but a GUI process **the shell does
+  not wait for** — so its `vibe tree -t` child raced the shell prompt for the PTY. Switched
+  `vibetree` to **console-subsystem** + a terminal-aware core
+  (`vibe_launcher::run_terminal_aware`): from a terminal (`$VIBETERM`, or a console shared
+  with a shell — via `GetConsoleProcessList`) it runs `vibe tree -t` **inheriting stdio** so it
+  renders in place and the shell waits (then `vibe tree` does the TUI + icon swap); when
+  **double-clicked** (it owns a fresh console alone) it hides that console (`ShowWindow
+  SW_HIDE`) and spawns a window as before. `vibeterm` stays GUI-subsystem (window-only).
+  PROP-043 #spawn updated. Verified: `vibetree.exe` is now CONSOLE-subsystem (`vibeterm.exe`
+  stays GUI), green icon intact, floor-green. **Tradeoff:** a brief console blink on a raw
+  double-click (the Start-menu shortcut launches minimised to soften it). This is a
+  launcher-only change — rebuilt + reinstalled the release exe to `~/opt/bin`, no new `vibe`
+  instance needed.
 
 ## 9. REPORT — (written at close; checks §5 P1–P5)
 
