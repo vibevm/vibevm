@@ -5,13 +5,26 @@ directions generated while choosing the vibevm app-family icons. The *shipping*
 icons live in [`../assets/icons/`](../assets/icons/); this directory keeps the
 alternatives so a future session can revisit a direction without re-deriving it.
 
-Every entry is kept as **SVG (master) + PNG (256 px preview)**. All build on the
-vibevm node-graph figure from `apps/vibeterm/resources/icon.svg`.
+Every entry is kept as **SVG (master) + PNG (256 px preview)**. The graph
+candidates build on the vibevm node-graph figure; the [`vibeterm/`](vibeterm/)
+sub-batch is a separate terminal-prompt motif (see below).
 
-## The chosen pair (canonical copies in `assets/icons/`)
+## The chosen icons (canonical copies in `assets/icons/`)
 
 - `default` — coral graph on the rounded-square gradient tile.
 - `vibetree` — muted emerald (`#5FB584`) graph, same tile.
+- `vibeterm` — the **terminal-prompt** design (a `>_` prompt, not the graph):
+  the winner of the [`vibeterm/`](vibeterm/) sub-batch,
+  `vibeterm-c2-coralstars-sparkle` (coral stars + a four-point sparkle).
+
+## `vibeterm/` — the terminal-prompt sub-batch
+
+A separate exploration for the vibeterm app icon (a distinct visual motif from
+the node-graph above): a coral `>_` on the gradient tile with varying "sky"
+treatments (star fields, long-exposure trails, meteor rain, a hero sparkle). Its
+own [`vibeterm/README.md`](vibeterm/README.md) documents every candidate and the
+two generators (`gen.mjs`, `gen-combo.mjs`) that computed the trails/rain/sparkle
+geometry. Shipped winner: `vibeterm-c2-coralstars-sparkle`.
 
 ## Green candidates for vibetree
 

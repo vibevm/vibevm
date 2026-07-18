@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+<defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#26262E"/><stop offset="1" stop-color="#161619"/></linearGradient></defs>
+<rect x="24" y="24" width="464" height="464" rx="104" fill="url(#g)"/>
+<!-- long-exposure star trails: stars smeared into thin fanned arcs, each capped by a bright point -->
+<g stroke="#D97757" stroke-width="3" stroke-linecap="round" fill="none">
+<path d="M 70 142 Q 110 122 152 118"  opacity="0.42"/>
+<path d="M 122 122 Q 164 102 206 102" opacity="0.50"/>
+<path d="M 182 102 Q 226 86 270 94"   opacity="0.55"/>
+<path d="M 248 92  Q 292 82 336 96"   opacity="0.55"/>
+<path d="M 302 96  Q 346 86 390 110"  opacity="0.50"/>
+<path d="M 356 126 Q 400 122 442 148" opacity="0.42"/>
+<path d="M 150 166 Q 192 150 234 152" opacity="0.38"/>
+<path d="M 300 160 Q 342 150 384 168" opacity="0.38"/>
+</g>
+<g fill="#D97757">
+<circle cx="152" cy="118" r="3.6"/>
+<circle cx="206" cy="102" r="3.6"/>
+<circle cx="270" cy="94"  r="3.8"/>
+<circle cx="336" cy="96"  r="3.6"/>
+<circle cx="390" cy="110" r="3.6"/>
+<circle cx="442" cy="148" r="3.2"/>
+<circle cx="234" cy="152" r="3"/>
+<circle cx="384" cy="168" r="3"/>
+</g>
+<g fill="#E8A085" opacity="0.8">
+<circle cx="108" cy="150" r="2"/>
+<circle cx="322" cy="140" r="2"/>
+<circle cx="176" cy="150" r="1.8"/>
+</g>
+<path d="M 160 190 L 252 250 L 160 310" fill="none" stroke="#D97757" stroke-width="30" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="250" y="300" width="96" height="26" rx="8" fill="#D97757"/>
+</svg>
