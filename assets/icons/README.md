@@ -14,17 +14,22 @@ The figure derives from `apps/vibeterm/resources/icon.svg` (unchanged geometry).
 
 ## Formats
 
-- `*.svg` — the master (edit this).
-- `*.ico` — multi-resolution (256/64/48/32/16), for Windows `.exe` embedding.
-- `*.png` — 256×256, for general use / other platforms.
+- `*.svg` — the master (edit this); infinitely scalable.
+- `*.ico` — multi-resolution (256/128/64/48/32/16), rebuilt by downsampling a 1024px
+  render for clean anti-aliasing. For Windows `.exe` embedding and the Start-menu tile
+  (256 is the `.ico` format ceiling).
+- `*.png` — 256×256, general use.
+- `*-512.png` — 512×512, the high-resolution large icon (high-DPI / installer tiles /
+  anywhere above the `.ico` 256 ceiling).
 
 ## Regenerate the raster formats from a master
 
 ```sh
-# .ico (multi-resolution)
-magick -background none -density 384 vibetree.svg \
-  -define icon:auto-resize=256,64,48,32,16 vibetree.ico
-# .png (256)
+# high-quality .ico: render 1024px first, then downsample to every layer
+magick -background none -density 768 vibetree.svg -resize 1024x1024 vibetree-1024.png
+magick vibetree-1024.png -define icon:auto-resize=256,128,64,48,32,16 vibetree.ico
+# large + standard PNG
+magick -background none -density 768 vibetree.svg -resize 512x512 vibetree-512.png
 magick -background none -density 384 vibetree.svg -resize 256x256 vibetree.png
 ```
 
