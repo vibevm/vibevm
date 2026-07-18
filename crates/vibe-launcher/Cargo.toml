@@ -1,0 +1,31 @@
+[package]
+name = "vibe-launcher"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+license-file.workspace = true
+publish.workspace = true
+repository.workspace = true
+homepage.workspace = true
+description = "GUI launchers for vibevm apps (VibeTree) — PROP-043"
+
+[lib]
+path = "src/lib.rs"
+
+[[bin]]
+name = "vibetree"
+path = "src/bin/vibetree.rs"
+
+[dependencies]
+specmark.workspace = true
+thiserror.workspace = true
+
+[target.'cfg(windows)'.dependencies]
+windows-sys = { version = "0.59", features = [
+    "Win32_UI_WindowsAndMessaging",
+    "Win32_Foundation",
+] }
+
+[target.'cfg(windows)'.build-dependencies]
+winres = "0.1"

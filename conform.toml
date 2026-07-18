@@ -35,6 +35,7 @@ gated_crates = [
     "vibe-settings",
     "vibe-index",
     "vibe-install",
+    "vibe-launcher",
     "vibe-resolver",
     "vibe-registry",
     "vibe-workspace",
@@ -70,6 +71,10 @@ env_roots = [
     # `vibe aiui` reads $HOME/$USERPROFILE to find `~/.vibevm/aiui/` — vibeterm's
     # control-session discovery directory (PROP-042 §4).
     "crates/vibe-cli/src/commands/aiui/control.rs",
+    # The GUI launchers resolve the active `vibe` from the environment
+    # (VIBEVM_HOME / the VVM `current` pointer / PATH) — a resolver whose job is
+    # to read the env for the spawn, like `vibe term` (PROP-043 #resolve).
+    "crates/vibe-launcher/src/lib.rs",
     "crates/vibe-core/src/user_config.rs",
     "crates/vibe-settings/src/loader.rs",
     "crates/vibe-index/src/scanner/git_cli.rs",
