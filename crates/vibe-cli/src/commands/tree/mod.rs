@@ -49,6 +49,16 @@ pub fn run(ctx: &output::Context, args: TreeArgs) -> Result<()> {
         return Ok(());
     }
 
+    // An explicit `-t`/`--terminal` is a deliberate request for the vibeterm
+    // desktop app and overrides tty detection — a GUI launcher / Start-menu
+    // shortcut (e.g. VibeTree.exe) has no console but still means it. `--json`
+    // (returned above) and `--plain` (an explicit ASCII request) still win;
+    // without `-t` a non-tty falls through to ASCII as before, so a pipe is
+    // never surprised by a spawned window (TERMINAL-AIUI §6.2).
+    if args.terminal && !args.plain {
+        return open_in_vibeterm(&root);
+    }
+
     // The interactive rat-salsa TUI launches when the session is attended and
     // `--plain` was not passed (PROP-036 §2.11). `--plain` and a non-tty fall
     // through to the plain ASCII renderer; `--json` returned above. Neither
