@@ -36,6 +36,29 @@ test('parseArgs: inline --flag=value form (only the first = splits)', () => {
   );
 });
 
+test('parseArgs: --icon selects the window icon by name (space and inline)', () => {
+  assert.deepEqual(parseArgs(['--icon', 'vibetree']), {
+    exec: null,
+    cols: 84,
+    rows: 30,
+    control: false,
+    icon: 'vibetree',
+  });
+  assert.deepEqual(parseArgs(['--icon=default']), {
+    exec: null,
+    cols: 84,
+    rows: 30,
+    control: false,
+    icon: 'default',
+  });
+});
+
+test('parseArgs: --icon is asymmetric — absent unless a non-empty value is given', () => {
+  assert.ok(!('icon' in parseArgs([])));
+  assert.ok(!('icon' in parseArgs(['--icon', ''])));
+  assert.ok(!('icon' in parseArgs(['--icon'])));
+});
+
 test('parseArgs: --control is a boolean flag (present → true)', () => {
   assert.deepEqual(parseArgs(['--control']), {
     exec: null,

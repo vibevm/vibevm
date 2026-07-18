@@ -619,13 +619,28 @@ function startControlServer(initialCols, initialRows) {
   });
 }
 
+// Resolve the app-family window icon (PROP-043 #icon): `--icon <name>` picks
+// `resources/icon-<name>.<ext>` (ext = ico on Windows, png elsewhere), falling
+// back to the default `resources/icon.<ext>` when no name is given or the named
+// file is missing — so an unknown name never leaves the window icon-less.
+function resolveIconPath(name) {
+  const ext = process.platform === 'win32' ? 'ico' : 'png';
+  const dir = path.join(__dirname, 'resources');
+  if (typeof name === 'string' && name.trim() !== '') {
+    const named = path.join(dir, `icon-${name}.${ext}`);
+    if (fs.existsSync(named)) return named;
+  }
+  return path.join(dir, `icon.${ext}`);
+}
+
 async function createWindow() {
   // Pure, dependency-free logic — the same module the unit tests import.
   const { parseArgs, defaultShell, splitCommand } = await import('./lib/args.mjs');
 
   // `headless: hideWindow` renames on destructure so it does not shadow the
   // module-level `headless` (the @xterm/headless mirror).
-  const { exec, cols, rows, control, headless: hideWindow } = parseArgs(process.argv);
+  const { exec, cols, rows, control, headless: hideWindow, icon: iconName } =
+    parseArgs(process.argv);
   const commandLine = exec ?? defaultShell(process.platform, process.env);
   const { file, args } = splitCommand(commandLine);
 
@@ -654,14 +669,10 @@ async function createWindow() {
     // OS window pops up. Visible for standalone `vibe term` / `vibe tree -t`.
     show: !hideWindow,
     backgroundColor: '#191724',
-    // The app icon — the default for our apps, sourced from `resources/`
-    // (SVG authoring copy + the rasterised PNG/ICO). On Windows ICO is
-    // preferred for the taskbar; PNG works everywhere Electron runs.
-    icon: path.join(
-      __dirname,
-      'resources',
-      process.platform === 'win32' ? 'icon.ico' : 'icon.png',
-    ),
+    // The app-family window icon, chosen by `--icon <name>` (default | vibetree)
+    // so the window matches its launcher (PROP-043 #icon). Windows uses ICO
+    // (taskbar); PNG elsewhere. resolveIconPath falls back to the default.
+    icon: resolveIconPath(iconName),
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,

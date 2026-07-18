@@ -37,8 +37,12 @@ function toPositiveInt(value) {
  * present, so the default parse shape (no `headless` key) is unchanged and a
  * caller reads `out.headless` as truthy-when-hidden, falsy otherwise.
  *
+ * `--icon <name>` names the app-family window icon (`default` | `vibetree`);
+ * it is set only when present, and `main.cjs` resolves it to a `resources/`
+ * file, falling back to the default when absent or unknown.
+ *
  * @param {string[]} argv
- * @returns {{ exec: string | null, cols: number, rows: number, control: boolean, headless?: boolean }}
+ * @returns {{ exec: string | null, cols: number, rows: number, control: boolean, headless?: boolean, icon?: string }}
  */
 export function parseArgs(argv) {
   const out = {
@@ -103,6 +107,14 @@ export function parseArgs(argv) {
         // observation session is driven over HTTP and snapshotted, so it needs
         // no visible GUI). Set only when present — see the parse-shape note.
         out.headless = true;
+        break;
+      }
+      case '--icon': {
+        // The app-family window icon by name (`default` | `vibetree`). Set only
+        // when present; main.cjs resolves it to a resources/ file with a
+        // fallback, so an unknown name never breaks the launch.
+        const value = takeValue();
+        if (value !== null && value.trim() !== '') out.icon = value;
         break;
       }
       default:

@@ -25,15 +25,20 @@ pub fn run(_ctx: &output::Context, args: TermArgs) -> Result<()> {
         Some(cmd) => cmd,
         None => quote_exe(&detect_shell()),
     };
-    launch_vibeterm(&exec, args.cols, args.rows)
+    launch_vibeterm(&exec, args.cols, args.rows, None)
 }
 
 /// Launch vibeterm running `exec` (the command line for its PTY), optionally at
 /// `cols×rows`. Shared by `vibe term` and `vibe tree -t` (PROP-042 §5): resolve
 /// vibeterm + its Electron binary, spawn it detached, report the pid.
-pub(crate) fn launch_vibeterm(exec: &str, cols: Option<u16>, rows: Option<u16>) -> Result<()> {
+pub(crate) fn launch_vibeterm(
+    exec: &str,
+    cols: Option<u16>,
+    rows: Option<u16>,
+    icon: Option<&str>,
+) -> Result<()> {
     // Visible, no control server: a human uses it directly and resizes it live.
-    let child = spawn_vibeterm(exec, cols, rows, false, false)?;
+    let child = spawn_vibeterm(exec, cols, rows, false, false, icon)?;
     println!("vibeterm launched (pid {}) — running `{exec}`", child.id());
     Ok(())
 }
@@ -51,6 +56,7 @@ pub(crate) fn spawn_vibeterm(
     rows: Option<u16>,
     control: bool,
     headless: bool,
+    icon: Option<&str>,
 ) -> Result<std::process::Child> {
     let vibeterm = resolve_vibeterm()?;
     let electron = electron_binary(&vibeterm)?;
@@ -72,6 +78,11 @@ pub(crate) fn spawn_vibeterm(
         .stdin(Stdio::null())
         .stdout(Stdio::null())
         .stderr(Stdio::null());
+    // The window icon selects the app-family identity (PROP-043 #icon): a
+    // launcher-opened tree carries `vibetree`; a plain `vibe term` the default.
+    if let Some(name) = icon {
+        cmd.arg("--icon").arg(name);
+    }
     if let Some(c) = cols {
         cmd.arg("--cols").arg(c.to_string());
     }

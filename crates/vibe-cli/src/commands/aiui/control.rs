@@ -53,7 +53,7 @@ pub(super) fn open(a: AiuiOpenArgs) -> Result<()> {
     let since_ms = now_ms();
     // Control server always on; headless unless the caller asks to watch it live.
     let child =
-        super::super::term::spawn_vibeterm(&exec, Some(cols), Some(rows), true, !a.visible)?;
+        super::super::term::spawn_vibeterm(&exec, Some(cols), Some(rows), true, !a.visible, None)?;
     // The child handle is dropped (detached): vibeterm owns its own lifetime and
     // is torn down via `vibe aiui close`, not by this process.
     drop(child);

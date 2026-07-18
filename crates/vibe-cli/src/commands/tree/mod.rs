@@ -100,7 +100,9 @@ fn open_in_vibeterm(root: &std::path::Path) -> Result<()> {
         super::term::quote_exe(&exe.to_string_lossy()),
         root.display(),
     );
-    super::term::launch_vibeterm(&exec, None, None)
+    // The tree carries the `vibetree` window icon so it matches VibeTree.exe
+    // (PROP-043 #icon / VIBE-LAUNCHERS D8).
+    super::term::launch_vibeterm(&exec, None, None, Some("vibetree"))
 }
 
 /// Render the tree TUI headlessly to a snapshot string — the AIUI render plane
