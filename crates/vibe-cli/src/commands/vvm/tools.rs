@@ -124,12 +124,19 @@ fn run_version(cmd: &[&str]) -> Option<String> {
 /// enforced elsewhere — `engines` for npm, [`check_one`] for the required set).
 /// `pub(crate)` so the vibeterm packager's availability gate reuses one probe.
 pub(crate) fn has_tool(name: &str) -> bool {
+    // Gate on the tool's own exit code, not merely that a process spawned: on
+    // Windows the spawn is always `cmd.exe` (which exists unconditionally), so
+    // `.status().is_ok()` returned `true` for EVERY name — a Rust-only box then
+    // failed `self update` at `Command::new("node")` instead of gracefully
+    // skipping vibeterm. A missing tool makes `cmd /C <name> --version` exit
+    // non-zero; a real one exits 0.
     tool_command(name)
         .arg("--version")
         .stdout(std::process::Stdio::null())
         .stderr(std::process::Stdio::null())
         .status()
-        .is_ok()
+        .map(|s| s.success())
+        .unwrap_or(false)
 }
 
 /// Build a [`Command`] for a bare tool name, cross-platform (PROP-019 §2.8).
