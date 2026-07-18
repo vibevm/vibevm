@@ -192,10 +192,19 @@ magick /tmp/vt.png -define icon:auto-resize=256,128,64,48,32,16 assets/icons/vib
   crate-wide `winres` to **per-binary** embedding (`embed-resource::compile_for` →
   `rustc-link-arg-bin`) so `vibetree.exe`/`vibeterm.exe` carry different icons from one
   crate (the `LAUNCHERS` registry table). Verified: both release exes extract their distinct
-  icons (green graph / coral prompt). PROP-043 #registry + #icon updated. **Not yet:** the
-  install/deploy of `VibeTerm.exe` to `~/opt/bin` + Start-menu, and repackaging a live
-  instance so the running window shows the c2 icon (installed instance still ships the old
-  packaged resources) — both ride the same deferred Phase 3 / a `self update`.
+  icons (green graph / coral prompt). PROP-043 #registry + #icon updated. Pushed to both
+  mirrors (`02781dc`).
+- _2026-07-19 (deploy — owner: install both + lowercase exe names):_ **Deployed on the
+  owner's machine.** `vibe self update --force` rebuilt from the local tree to **instance 29**
+  (active), whose packaged vibeterm now ships `resources/app/resources/icon.ico` == c2
+  (byte-identical) — so the `vibe term` window shows c2 with no `--icon`. Launchers installed
+  to `~/opt/bin` with **lowercase** names (`vibetree.exe`, `vibeterm.exe`) for easy terminal
+  typing (the old capitalised `VibeTree.exe` removed; case-insensitive FS ⇒ delete-before-copy
+  so the entry is truly lowercase); embedded icons verified on the installed exes (green /
+  coral). Start-menu shortcuts recreated: display names **VibeTree** / **VibeTerm** (capitalised)
+  → the lowercase exes, `IconLocation` = each exe (its embedded icon), cwd = repo (tree) / home
+  (term). End-to-end confirmed by composition: the resolve→spawn path is the proven VibeTree
+  core; every link (current→29, packaged icon==c2, exe icons, shortcut targets) checked.
 
 ## 9. REPORT — (written at close; checks §5 P1–P5)
 
