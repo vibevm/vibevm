@@ -48,7 +48,14 @@ impl VibetermPackager for NpmPackager<'_> {
     fn package(&self, source_root: &Path, staging_root: &Path) -> Result<Option<VibetermOutput>> {
         let app = source_root.join("apps").join("vibeterm");
         if !app.join("package.json").is_file() {
-            return Ok(None); // not a tree that carries vibeterm
+            // A tree without apps/vibeterm (an old tag, a partial checkout). Say
+            // so — a silent skip here is exactly what makes a later `vibe term`
+            // failure mysterious.
+            self.ctx.summary(
+                "vibeterm not packaged (no apps/vibeterm in the source tree) — \
+                 `vibe term` will name the setup step",
+            );
+            return Ok(None);
         }
         // The packaging script needs node + npm on PATH. Absent → graceful skip;
         // the instance installs without vibeterm (vibe term then errors clearly).

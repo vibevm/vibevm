@@ -88,9 +88,12 @@ pub(crate) fn perform_install(
     // (a Rust-only box, or a tree without apps/vibeterm); the instance still
     // installs, and `vibe term` then names the missing setup step.
     let vt_staging = store.build_dir().join("vibeterm-dist");
-    if let Some(vt) = packager.package(source_root, &vt_staging)? {
+    let vibeterm_packaged = if let Some(vt) = packager.package(source_root, &vt_staging)? {
         dist.extend(walk_vibeterm_dist(&vt.dir)?);
-    }
+        true
+    } else {
+        false
+    };
     let manifest = placer::manifest_for(&dist)?;
 
     let prev = latest_instance(store, id)?;
@@ -126,6 +129,16 @@ pub(crate) fn perform_install(
     store.write_current(&inst_dir)?;
     ctx.created(&inst_dir.display().to_string());
     ctx.summary(&format!("installed {id} (instance {instance}) — active"));
+    // The active instance ships without vibeterm — surface it now, at install
+    // time, not later when `vibe term` / `vibe tree -t` first errors. The
+    // packager already logged *why* it skipped; this names the consequence.
+    if !vibeterm_packaged {
+        ctx.summary(
+            "note: this instance ships WITHOUT vibeterm — `vibe term` / \
+             `vibe tree -t` will error until it is packaged; see the note above \
+             and `vibe self doctor`",
+        );
+    }
     Ok(())
 }
 
