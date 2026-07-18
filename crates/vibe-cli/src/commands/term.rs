@@ -136,15 +136,29 @@ pub(crate) struct Vibeterm {
     pub(crate) shape: VibetermShape,
 }
 
-/// Classify a dir as dev or packaged by electron-packager's signature (the app
-/// lives at `resources/app/package.json` only in a packaged build).
+/// The executable name a packaged vibeterm ships: electron-packager names it
+/// after the app (`vibeterm`), so a packaged build carries `vibeterm(.exe)` at
+/// its dir root. That exe is the one signal present in BOTH packaging layouts —
+/// the unpacked `resources/app/` tree and the asar-packed `resources/app.asar`.
+pub(crate) fn packaged_exe_name() -> &'static str {
+    if cfg!(windows) {
+        "vibeterm.exe"
+    } else {
+        "vibeterm"
+    }
+}
+
+/// Classify a dir as dev or packaged by electron-packager's signature: a
+/// packaged build carries the app-named binary at its root (PROP-042 §5 names
+/// "electron binary at its root" as the distinguishing feature). Keying off the
+/// exe — not `resources/app/package.json` — is what lets an **asar-packed**
+/// build be recognized: `@electron/packager` v20 defaults asar ON, so the app
+/// lives in `resources/app.asar` with no unpacked `app/package.json`, and the
+/// old probe wrongly demoted such an instance to `Dev` (the bug that made
+/// `vibe term` / `vibe tree -t` fail from a correctly-packaged instance). A dev
+/// source dir has no app-named exe, so it still falls to `Dev`.
 fn classify_vibeterm(dir: &Path) -> VibetermShape {
-    if dir
-        .join("resources")
-        .join("app")
-        .join("package.json")
-        .is_file()
-    {
+    if dir.join(packaged_exe_name()).is_file() {
         VibetermShape::Packaged
     } else {
         VibetermShape::Dev
@@ -162,11 +176,10 @@ fn resolve_vibeterm() -> Result<Vibeterm> {
     if let Some(dir) = std::env::var_os("VIBEVM_VIBETERM") {
         let dir = PathBuf::from(dir);
         let dev_ok = dir.join("package.json").exists();
-        let pkg_ok = dir
-            .join("resources")
-            .join("app")
-            .join("package.json")
-            .exists();
+        // A packaged build is recognized by its app-named exe at the root, not
+        // by `resources/app/package.json` — the latter is absent in an
+        // asar-packed build (see `classify_vibeterm`).
+        let pkg_ok = dir.join(packaged_exe_name()).is_file();
         if !dev_ok && !pkg_ok {
             bail!(
                 "$VIBEVM_VIBETERM = `{}` is neither a dev app nor a packaged build",
@@ -218,12 +231,7 @@ fn electron_binary(v: &Vibeterm) -> Result<PathBuf> {
             // as the packager name) — so a packaged build ships `vibeterm.exe`,
             // NOT `electron.exe`. Looking for `electron.exe` here was the bug
             // that made `vibe tree -t` from an instance fail to spawn.
-            let exe_name = if cfg!(windows) {
-                "vibeterm.exe"
-            } else {
-                "vibeterm"
-            };
-            let bin = v.dir.join(exe_name);
+            let bin = v.dir.join(packaged_exe_name());
             if !bin.is_file() {
                 bail!(
                     "packaged vibeterm's binary is missing at `{}`",
@@ -353,5 +361,45 @@ mod tests {
             shape: VibetermShape::Packaged,
         };
         assert!(electron_binary(&v).is_err());
+    }
+
+    /// An asar-packed build (`@electron/packager` v20's default) has
+    /// `resources/app.asar` and NO unpacked `resources/app/package.json` — only
+    /// the app-named exe at root. `classify` must still call it Packaged and
+    /// `electron_binary` must resolve the exe. This is the regression that made
+    /// `vibe term` / `vibe tree -t` fail from a correctly-packaged instance.
+    #[test]
+    fn classify_recognizes_asar_packed_build() {
+        let tmp = tempfile::tempdir().unwrap();
+        let dir = tmp.path().join("vibeterm-win32-x64");
+        fs::create_dir_all(dir.join("resources")).unwrap();
+        fs::write(dir.join("resources").join("app.asar"), b"asar").unwrap();
+        fs::write(dir.join(packaged_exe_name()), b"binary").unwrap();
+        // The old signal is absent — proving we no longer depend on it.
+        assert!(
+            !dir.join("resources")
+                .join("app")
+                .join("package.json")
+                .is_file()
+        );
+        assert_eq!(classify_vibeterm(&dir), VibetermShape::Packaged);
+        let v = Vibeterm {
+            dir: dir.clone(),
+            shape: VibetermShape::Packaged,
+        };
+        assert_eq!(
+            electron_binary(&v).unwrap().file_name().unwrap(),
+            packaged_exe_name()
+        );
+    }
+
+    /// A dev source dir (a `package.json` at root, no app-named exe) stays Dev —
+    /// the classifier must not mistake the source app for a packaged build.
+    #[test]
+    fn classify_dev_source_dir_stays_dev() {
+        let tmp = tempfile::tempdir().unwrap();
+        let dir = tmp.path();
+        fs::write(dir.join("package.json"), b"{}").unwrap();
+        assert_eq!(classify_vibeterm(dir), VibetermShape::Dev);
     }
 }
