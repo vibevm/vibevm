@@ -11,6 +11,7 @@ use anyhow::{Context, Result, bail};
 use specmark::spec;
 
 use super::builder::{Builder, ResolvedVersion};
+use super::launchers::LauncherInstaller;
 use super::model::{InstallRecord, Origin, Profile, VersionId};
 use super::placer::{self, Manifest};
 use super::store::{BINARY_NAME, VersionStore};
@@ -72,6 +73,7 @@ pub(crate) fn perform_install(
     req: &InstallRequest,
     builder: &dyn Builder,
     packager: &dyn VibetermPackager,
+    launchers: &dyn LauncherInstaller,
 ) -> Result<()> {
     let _lock = InstallLock::acquire(store)?;
     let id = &req.resolved.id;
@@ -115,39 +117,46 @@ pub(crate) fn perform_install(
             "{id} already up to date (instance {}) — active",
             prev_rec.instance
         ));
-        return Ok(());
+    } else {
+        let instance = store.alloc_instance()?;
+        let prev_ref = prev.as_ref().map(|(dir, man, _)| (dir.as_path(), man));
+        placer::place(store, id, instance, &dist, &manifest, prev_ref)?;
+
+        store.record_install(InstallRecord {
+            kind: id.kind,
+            id: id.id.clone(),
+            instance,
+            commit: req.resolved.commit.clone(),
+            toolchain: out.toolchain,
+            profile: req.profile,
+            installed_at: req.now.to_string(),
+            origin: req.origin,
+            source_path: req.source_path.clone(),
+        })?;
+
+        let inst_dir = store.instance_dir(id, instance);
+        store.write_current(&inst_dir)?;
+        ctx.created(&inst_dir.display().to_string());
+        ctx.summary(&format!("installed {id} (instance {instance}) — active"));
+        // The active instance ships without vibeterm — surface it now, at
+        // install time, not later when `vibe term` / `vibe tree -t` first
+        // errors. The packager already logged *why* it skipped; this names the
+        // consequence.
+        if !vibeterm_packaged {
+            ctx.summary(
+                "note: this instance ships WITHOUT vibeterm — `vibe term` / \
+                 `vibe tree -t` will error until it is packaged; see the note \
+                 above and `vibe self doctor`",
+            );
+        }
     }
 
-    let instance = store.alloc_instance()?;
-    let prev_ref = prev.as_ref().map(|(dir, man, _)| (dir.as_path(), man));
-    placer::place(store, id, instance, &dist, &manifest, prev_ref)?;
-
-    store.record_install(InstallRecord {
-        kind: id.kind,
-        id: id.id.clone(),
-        instance,
-        commit: req.resolved.commit.clone(),
-        toolchain: out.toolchain,
-        profile: req.profile,
-        installed_at: req.now.to_string(),
-        origin: req.origin,
-        source_path: req.source_path.clone(),
-    })?;
-
-    let inst_dir = store.instance_dir(id, instance);
-    store.write_current(&inst_dir)?;
-    ctx.created(&inst_dir.display().to_string());
-    ctx.summary(&format!("installed {id} (instance {instance}) — active"));
-    // The active instance ships without vibeterm — surface it now, at install
-    // time, not later when `vibe term` / `vibe tree -t` first errors. The
-    // packager already logged *why* it skipped; this names the consequence.
-    if !vibeterm_packaged {
-        ctx.summary(
-            "note: this instance ships WITHOUT vibeterm — `vibe term` / \
-             `vibe tree -t` will error until it is packaged; see the note above \
-             and `vibe self doctor`",
-        );
-    }
+    // Refresh the GUI launchers (VibeTree / VibeTerm / VibeFrame) + their
+    // Start-menu shortcuts against the now-active shim dir (PROP-043
+    // #self-install). Runs on BOTH paths so `vibe self update` keeps the
+    // launchers current even on a no-op (dedup-skip) update; best-effort inside,
+    // so a launcher problem is a note, never an install failure.
+    launchers.refresh(ctx, store, source_root, req.profile)?;
     Ok(())
 }
 
@@ -189,6 +198,7 @@ fn latest_instance(
 mod tests {
     use super::*;
     use crate::commands::vvm::builder::BuildOutput;
+    use crate::commands::vvm::launchers::SkipLauncherInstaller;
     use crate::commands::vvm::model::Kind;
     use crate::commands::vvm::vibeterm_packager::{SkipPackager, VibetermOutput, VibetermPackager};
     use specmark::verifies;
@@ -247,6 +257,7 @@ mod tests {
                 content: b"v1".to_vec(),
             },
             &SkipPackager,
+            &SkipLauncherInstaller,
         )
         .unwrap();
         let inst1 = store.instance_dir(&resolved.id, 1);
@@ -264,6 +275,7 @@ mod tests {
                 content: b"v1".to_vec(),
             },
             &SkipPackager,
+            &SkipLauncherInstaller,
         )
         .unwrap();
         assert_eq!(store.instances_of(&resolved.id).unwrap().len(), 1);
@@ -278,6 +290,7 @@ mod tests {
                 content: b"v2".to_vec(),
             },
             &SkipPackager,
+            &SkipLauncherInstaller,
         )
         .unwrap();
         assert_eq!(store.instances_of(&resolved.id).unwrap().len(), 2);
@@ -296,6 +309,7 @@ mod tests {
                 content: b"v2".to_vec(),
             },
             &SkipPackager,
+            &SkipLauncherInstaller,
         )
         .unwrap();
         assert_eq!(store.instances_of(&resolved.id).unwrap().len(), 3);
@@ -338,6 +352,7 @@ mod tests {
                 content: b"v".to_vec(),
             },
             &FakePackager,
+            &SkipLauncherInstaller,
         )
         .unwrap();
         let inst = store.instance_dir(&resolved.id, 1);

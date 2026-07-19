@@ -14,6 +14,7 @@ mod env;
 mod error;
 mod git;
 mod install;
+mod launchers;
 mod model;
 mod placer;
 mod remove;
@@ -247,6 +248,7 @@ fn run_install_cmd(ctx: &output::Context, env: &VvmEnv, args: VvmInstallArgs) ->
         &req,
         &builder::CargoBuilder,
         &vibeterm_packager::NpmPackager::new(ctx),
+        &launchers::NativeLauncherInstaller,
     )
 }
 
