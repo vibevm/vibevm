@@ -1,6 +1,11 @@
 # Campaign — VibeTerm terminal shell (tabs · panes · windows) v0.1
 
-**Status:** ACTIVE. **Opened:** 2026-07-19. **Contract:**
+**Status:** GATED (2026-07-19) — implementation (P1 onward) waits on the
+UI-architecture research
+[`VIBETERM-UI-ARCHITECTURE-RESEARCH-PLAN-v0.1`](../research/VIBETERM-UI-ARCHITECTURE-RESEARCH-PLAN-v0.1.md)
+→ a design-doc → the contracts, per the owner's research → design → execution
+cadence. Phase 0 (the reparent spike) stands; P1+ resume once the architecture is
+settled. **Opened:** 2026-07-19. **Contract:**
 [`spec/modules/vibeterm/PROP-044-terminal-shell.md`](../modules/vibeterm/PROP-044-terminal-shell.md).
 **Floor:** `apps/vibeterm` — `node --test` (existing) + `tsc --noEmit` + `vitest`
 (new Solid chrome + engine cells). The Rust floor (`bash tools/self-check.sh`)
