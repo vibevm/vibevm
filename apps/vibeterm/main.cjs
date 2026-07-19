@@ -23,7 +23,7 @@ const http = require('node:http');
 const crypto = require('node:crypto');
 const os = require('node:os');
 const fs = require('node:fs');
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, WebContentsView } = require('electron');
 const pty = require('node-pty');
 
 // A text grid needs no GPU compositing, and hardware acceleration is a
@@ -639,6 +639,221 @@ function resolveIconPath(name) {
   return path.join(dir, `icon.${ext}`);
 }
 
+// ---------------------------------------------------------------------------
+// Shell path (multi-tab) — spec://vibeterm/PROP-044#d2-shell-default,
+// spec://vibeterm/PROP-047#mvc. The default visible `vibe term` is the multi-tab
+// shell: a Solid chrome (contextIsolation:true + typed preload bridge) + N
+// per-tab WebContentsView terminals (lean xterm). The engine (render-free TS,
+// dist/engine) owns the ModelView; main owns the pty/view side-effects. The
+// bare single-view path (createWindow below) is used only for --headless /
+// --control (PROP-042 frozen).
+// ---------------------------------------------------------------------------
+
+/** @type {import('electron').BrowserWindow | null} */
+let shellWin = null;
+/**
+ * @type {Map<string, { pty: import('node-pty').IPty, ptySub: import('node-pty').IDisposable, view: import('electron').WebContentsView, title: string }>}
+ */
+const shellTabs = new Map();
+let activeTabId = null;
+let nextTabNum = 0;
+
+/** Build a ModelView snapshot of the live shell state (the engine's window on main). */
+function shellModelView() {
+  const tabsArr = [...shellTabs.entries()].map(([id, t]) => ({
+    id,
+    title: t.title,
+    kind: 'terminal',
+    active: id === activeTabId,
+  }));
+  const tabsMap = new Map(tabsArr.map((t) => [t.id, t]));
+  return {
+    windows: [{ id: 'w1', tabs: tabsArr.map((t) => t.id) }],
+    tabs: tabsMap,
+    panes: new Map(),
+    compact: false,
+    activeWindow: 'w1',
+    activeTab: activeTabId,
+    activePane: null,
+    enabledActions: [],
+  };
+}
+
+function shellEmit(payload) {
+  if (!shellWin || shellWin.isDestroyed()) return;
+  shellWin.webContents.send('vibeterm:event', { v: '0.1.0', kind: 'event', payload });
+}
+
+// Lay out the terminal views: one content area beside the contacts-style rail.
+// The rail width is a design token in the chrome; here it is the layout main owns.
+const RAIL_WIDTH = 240;
+function layoutShell() {
+  if (!shellWin || shellWin.isDestroyed()) return;
+  const [w, h] = shellWin.getContentSize();
+  const contentW = Math.max(0, w - RAIL_WIDTH);
+  for (const [id, t] of shellTabs) {
+    if (id === activeTabId) {
+      t.view.setVisible(true);
+      t.view.setBounds({ x: RAIL_WIDTH, y: 0, width: contentW, height: h });
+    } else {
+      t.view.setVisible(false);
+    }
+  }
+}
+
+async function openTab(baseExec) {
+  nextTabNum += 1;
+  const id = `t${nextTabNum}`;
+  const { defaultShell, splitCommand } = await import('./lib/args.mjs');
+  const commandLine = baseExec ?? defaultShell(process.platform, process.env);
+  const { file, args } = splitCommand(commandLine);
+  const title = `Terminal ${nextTabNum}`;
+
+  // Each tab is its own WebContentsView (D0) running the lean xterm terminal-view page.
+  const view = new WebContentsView({
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false,
+      backgroundThrottling: false,
+    },
+  });
+  await view.webContents.loadFile(path.join(__dirname, 'terminal-view', 'index.html'));
+
+  // node-pty in main (PROP-044 §3); bytes flow main -> this tab's view; keystrokes back.
+  const ptyProc = pty.spawn(file, args, {
+    name: 'xterm-256color',
+    cols: 80,
+    rows: 24,
+    cwd: process.cwd(),
+    env: { ...process.env, COLORTERM: 'truecolor', VIBETERM: '1' },
+  });
+  const ptySub = ptyProc.onData((data) => {
+    if (!view.webContents.isDestroyed()) view.webContents.send('pty', data);
+  });
+  // Keystrokes / resize / ready arrive from this view only.
+  view.webContents.on('ipc-message', (_e, channel, data) => {
+    if (channel === 'input') {
+      try {
+        ptyProc.write(data);
+      } catch {
+        /* pty gone */
+      }
+    } else if (channel === 'ready' || channel === 'resize') {
+      const c = data && data.cols > 0 ? data.cols : 80;
+      const r = data && data.rows > 0 ? data.rows : 24;
+      try {
+        ptyProc.resize(c, r);
+      } catch {
+        /* pty gone */
+      }
+    }
+  });
+
+  shellTabs.set(id, { pty: ptyProc, ptySub, view, title });
+  activeTabId = id;
+  shellWin.contentView.addChildView(view);
+  layoutShell();
+
+  shellEmit({ t: 'opened', tabId: id, title });
+  shellEmit({ t: 'active-changed', tabId: id });
+  shellEmit({ t: 'modelview', view: shellModelView() });
+}
+
+function selectTab(id) {
+  if (!shellTabs.has(id) || id === activeTabId) return;
+  activeTabId = id;
+  layoutShell();
+  shellEmit({ t: 'active-changed', tabId: id });
+  shellEmit({ t: 'modelview', view: shellModelView() });
+}
+
+function closeTab(id) {
+  const t = shellTabs.get(id);
+  if (!t) return;
+  try {
+    t.ptySub.dispose();
+  } catch {
+    /* already disposed */
+  }
+  try {
+    t.pty.kill();
+  } catch {
+    /* ConPTY / already exited */
+  }
+  if (shellWin && !shellWin.isDestroyed()) {
+    try {
+      shellWin.contentView.removeChildView(t.view);
+    } catch {
+      /* already gone */
+    }
+  }
+  try {
+    t.view.webContents.destroy();
+  } catch {
+    /* already destroyed */
+  }
+  shellTabs.delete(id);
+  if (activeTabId === id) {
+    const remaining = [...shellTabs.keys()];
+    activeTabId = remaining.length > 0 ? remaining[remaining.length - 1] : null;
+    layoutShell();
+  }
+  shellEmit({ t: 'closed', tabId: id });
+  shellEmit({ t: 'modelview', view: shellModelView() });
+}
+
+async function createShellWindow({ exec, iconName }) {
+  shellWin = new BrowserWindow({
+    width: 1100,
+    height: 720,
+    backgroundColor: '#191724',
+    icon: resolveIconPath(iconName),
+    webPreferences: {
+      nodeIntegration: false,
+      contextIsolation: true,
+      preload: path.join(__dirname, 'preload.cjs'),
+      backgroundThrottling: false,
+    },
+  });
+  // Load the Solid chrome bundle (vite build -> dist/chrome).
+  await shellWin.loadFile(path.join(__dirname, 'dist', 'chrome', 'index.html'));
+
+  shellWin.on('resize', () => layoutShell());
+
+  // The chrome -> engine command channel (the typed preload bridge exposes 'vibeterm:command').
+  // The engine is the single writer of the ModelView; main owns the pty/view side-effects each
+  // command implies. The Command union is PROP-047 §3.
+  ipcMain.handle('vibeterm:command', async (_e, raw) => {
+    try {
+      const cmd = raw || {};
+      if (cmd.t === 'open') await openTab(exec);
+      else if (cmd.t === 'select') selectTab(cmd.tabId);
+      else if (cmd.t === 'close') closeTab(cmd.tabId);
+      else if (cmd.t === 'set-compact') shellEmit({ t: 'modelview', view: shellModelView() });
+      return { ok: true };
+    } catch (err) {
+      console.error('[vibeterm] shell command error:', err);
+      return { ok: false, error: String(err) };
+    }
+  });
+
+  // The chrome reads the initial ModelView snapshot on load (AIUI `state()` verb, peer-read).
+  ipcMain.handle('vibeterm:state', () => shellModelView());
+
+  shellWin.webContents.once('did-finish-load', () => {
+    shellEmit({ t: 'ready' });
+    shellEmit({ t: 'modelview', view: shellModelView() });
+    // Open the first terminal so the shell is never empty on a cold launch.
+    openTab(exec).catch((err) => console.error('[vibeterm] initial openTab failed:', err));
+  });
+
+  shellWin.on('closed', () => {
+    shellWin = null;
+    for (const id of [...shellTabs.keys()]) closeTab(id);
+    quit();
+  });
+}
+
 async function createWindow() {
   // Pure, dependency-free logic — the same module the unit tests import.
   const { parseArgs, defaultShell, splitCommand } = await import('./lib/args.mjs');
@@ -651,6 +866,12 @@ async function createWindow() {
   launchIconName = iconName ?? null;
   const commandLine = exec ?? defaultShell(process.platform, process.env);
   const { file, args } = splitCommand(commandLine);
+
+  // spec://vibeterm/PROP-044#d2-shell-default: the default visible `vibe term` is the multi-tab
+  // shell. The bare single-view path below is used only for --headless / --control (PROP-042 frozen).
+  if (!control && !hideWindow) {
+    return createShellWindow({ exec, iconName });
+  }
 
   curCols = cols;
   curRows = rows;
@@ -698,7 +919,9 @@ async function createWindow() {
     },
   });
 
-  await win.loadFile(path.join(__dirname, 'index.html'));
+  // The single-view path loads the same lean terminal-view page the shell's per-tab
+  // WebContentsViews use (the root index.html is now the Solid chrome entry, built by vite).
+  await win.loadFile(path.join(__dirname, 'terminal-view', 'index.html'));
 
   // Spawn the pty once the renderer reports its fitted grid size, so the hosted
   // program is born at exactly the visible size (no initial resize race). A

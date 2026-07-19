@@ -1,0 +1,211 @@
+@import "tailwindcss";
+
+/*
+  spec://vibeterm/design-system#tokens
+  Role-tokens as CSS custom properties. Components reference roles, never a raw colour.
+  Tailwind v4 `@theme` consumes these (one namespace, not two). Live theme switch = rebind the
+  token block (data-theme on <html>) — no reload.
+*/
+
+:root,
+[data-theme="dark-purple"] {
+  /* dark-purple theme (default) — after the ProjectX reference */
+  --vibe-base: #191724;
+  --vibe-surface: #1f1d2e;
+  --vibe-surface-1: #26233a;
+  --vibe-rail: #15121d;
+  --vibe-text: #e0def4;
+  --vibe-subtext: #908caa;
+  --vibe-muted: #6e6a86;
+  --vibe-accent: #c4a7e7;
+  --vibe-accent-strong: #a98ad6;
+  --vibe-border: #2a2740;
+  --vibe-selection: #c4a7e7;
+  --vibe-rose: #ebbcba;
+  --vibe-foam: #9ccfd8;
+  --vibe-gold: #f6c177;
+}
+
+[data-theme="anthropic"] {
+  /* Anthropic-style: warm paper ground, clay accent */
+  --vibe-base: #f4f0e8;
+  --vibe-surface: #ece5d8;
+  --vibe-surface-1: #e0d7c6;
+  --vibe-rail: #efe9dc;
+  --vibe-text: #3a3530;
+  --vibe-subtext: #6b6258;
+  --vibe-muted: #9a9080;
+  --vibe-accent: #c15f3c;
+  --vibe-accent-strong: #a84e2f;
+  --vibe-border: #d6cdba;
+  --vibe-selection: #c15f3c;
+  --vibe-rose: #c97b6a;
+  --vibe-foam: #5b8a72;
+  --vibe-gold: #c8902e;
+}
+
+html,
+body,
+#app {
+  margin: 0;
+  height: 100%;
+  background: var(--vibe-base);
+  color: var(--vibe-text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  overflow: hidden;
+}
+
+/* The content area is intentionally transparent: the per-tab terminal WebContentsViews are
+   native surfaces laid out by main *over* this region (right of the rail). */
+#content {
+  background: transparent;
+}
+
+/* --- shell layout --- */
+.shell {
+  display: flex;
+  height: 100%;
+  width: 100%;
+}
+
+.rail {
+  width: 240px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--vibe-rail);
+  border-right: 1px solid var(--vibe-border);
+  color: var(--vibe-text);
+  user-select: none;
+}
+
+.rail-app {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 14px 10px;
+  font-weight: 600;
+  color: var(--vibe-accent);
+}
+.app-glyph {
+  color: var(--vibe-accent-strong);
+}
+
+/* --- the contacts-style terminal list --- */
+.tab-list {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+.rail-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 10px;
+  color: var(--vibe-subtext);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.rail-new {
+  background: transparent;
+  color: var(--vibe-subtext);
+  border: 1px solid var(--vibe-border);
+  border-radius: 6px;
+  width: 22px;
+  height: 22px;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+}
+.rail-new:hover {
+  color: var(--vibe-accent);
+  border-color: var(--vibe-accent);
+}
+
+.tab-items {
+  flex: 1;
+  overflow-y: auto;
+  padding: 4px 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.tab-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  color: var(--vibe-subtext);
+}
+.tab-item:hover {
+  background: var(--vibe-surface);
+  color: var(--vibe-text);
+}
+.tab-item.active {
+  background: var(--vibe-surface-1);
+  color: var(--vibe-text);
+  box-shadow: inset 2px 0 0 var(--vibe-accent);
+}
+.tab-glyph {
+  color: var(--vibe-muted);
+  font-size: 10px;
+}
+.tab-item.active .tab-glyph {
+  color: var(--vibe-accent);
+}
+.tab-title {
+  flex: 1;
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.tab-close {
+  visibility: hidden;
+  background: transparent;
+  border: none;
+  color: var(--vibe-muted);
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+  padding: 0 2px;
+}
+.tab-item:hover .tab-close {
+  visibility: visible;
+}
+.tab-close:hover {
+  color: var(--vibe-rose);
+}
+
+.tab-empty {
+  padding: 14px 12px;
+  color: var(--vibe-muted);
+  font-size: 12px;
+}
+
+/* --- footer controls (theme + locale) --- */
+.rail-footer {
+  display: flex;
+  gap: 6px;
+  padding: 10px;
+  border-top: 1px solid var(--vibe-border);
+}
+.rail-btn {
+  flex: 1;
+  background: var(--vibe-surface);
+  color: var(--vibe-subtext);
+  border: 1px solid var(--vibe-border);
+  border-radius: 6px;
+  padding: 6px 8px;
+  font-size: 12px;
+  cursor: pointer;
+}
+.rail-btn:hover {
+  color: var(--vibe-accent);
+  border-color: var(--vibe-accent);
+}
