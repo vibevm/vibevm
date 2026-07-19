@@ -1,5 +1,39 @@
 # WAL — Project Continuation State
 
+## CHECKPOINT 2026-07-19 — VIBEFRAME SPLIT + SELF-INSTALL LAUNCHERS (goal-hook CLOSED)
+
+_Updated: 2026-07-19 — two things closed on `main`, floor-green, pushed to both mirrors
+(`85a5420`…`2c1588b`). **(1) vibeframe split (complete):** the *simple* single-window terminal was
+**copied** out of `apps/vibeterm/` into `apps/vibeframe/` — vibeframe is now **VibeTree's stable
+host** while **vibeterm** stays in place to become the *complex* multi-tab workspace (PROP-044,
+gated behind research). Landed: `vibe frame` + `VibeFrame.exe` launcher + a no-dots icon
+(`assets/icons/vibeframe.*`), the terminal-app resolver (`commands/term.rs`) parameterised by app
+name with a **fallback to vibeterm when the target app is unpackaged**, tree/aiui routed to
+vibeframe, `VIBEFRAME` accepted in the in-place-upgrade detection, and the install pipeline packaging
+**both** `apps/vibeterm`→`vibeterm/` and `apps/vibeframe`→`vibeframe/` into each instance. Contracts
+PROP-044 (complex) + PROP-045 (simple). **(2) Self-install launchers (this session, the last goal):**
+`vibe self install`/`self update` now **builds `vibe-launcher` and places VibeTree / VibeTerm /
+VibeFrame into `~/opt/bin` + creates their Start-menu shortcuts** — no manual build+copy+shortcut.
+New `LauncherInstaller` seam (`commands/vvm/launchers.rs`; native live, `#[cfg(test)]` no-op for the
+gate) invoked at the tail of `perform_install` on **both** the new-instance and dedup-skip paths →
+idempotent, self-bootstrapping without `--force`. Placement is **rename-aside** (a running exe on
+Windows can't be overwritten but can be renamed → `.old-<n>` sidecar, dropped immediately when
+unlocked, swept next update). Shortcuts via PowerShell `WScript.Shell` into `Programs\vibevm\`. Best-
+effort throughout — a locked exe / missing rc.exe / shortcut failure is a note, never an install
+failure. **Windows built + verified live** across instances 35→38 (`refreshed 3 GUI launchers`, clean
+`~/opt/bin`, 3 `.lnk`); Mac/Linux `.desktop`/`.app` shortcuts deferred by owner (exe placement is
+already cross-platform). Contract **PROP-043 #self-install**. **Bootstrap gotcha (verified):**
+`vibe self update` runs the CURRENTLY-INSTALLED binary's pipeline code, so a pipeline-code change
+takes effect only on the SECOND update. Floor: `self-check` all green (incl. 3 new launcher tests).
+`CONTINUE.md` — canonical cold-resume. **No blocker.** Installed instance **38** active.
+**Next (report-then-wait):** the big VibeTerm complex-shell milestone-1 build is GATED behind
+`research/vibeterm/` (UI-architecture research → design → contracts; Solid+Vite+Tailwind v4+Kobalte,
+AI-UI-ready via the ported action-system + visual language). **Discipline unchanged:** never the
+reference app's real name in-repo; heredoc commits; no AI attribution; edits via Edit/Write; push via
+`cargo xtask mirror`._
+
+---
+
 ## CHECKPOINT 2026-07-17 (evening) — GO-AI-NATIVE CAMPAIGN CLOSED: Go is the third language
 
 _Updated: 2026-07-17 — **the GO-AI-NATIVE campaign is CLOSED end-to-end**
