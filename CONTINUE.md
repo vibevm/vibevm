@@ -1,76 +1,218 @@
-# CONTINUE.md — cold-resume checkpoint (2026-07-17 evening, GO-AI-NATIVE CLOSED)
+# CONTINUE.md — cold-resume checkpoint (2026-07-19, VIBEFRAME SPLIT + SELF-INSTALL LAUNCHERS)
 
 > `spec/WAL.md` is the canonical living state; if this snapshot and the WAL diverge, the WAL wins.
 
 ## TL;DR
 
-**The GO-AI-NATIVE campaign is CLOSED end-to-end in one session** — Go is the
-Discipline's third supported language at full Rust/TS parity, per the owner's mandate
-(«реализация на уровне с Rust и Typescript», agentic-only tcg, демо + тест-корпус,
-end-to-end по собственному плану). Everything is committed on `main` and pushed; host
-self-check green; the campaign plan's REPORT is written
-(`spec/terraforms/GO-AI-NATIVE-PLAN-v0.1.md` §12–§13).
+Two things closed this session-arc, both on `main`, floor-green, pushed to both mirrors:
 
-## What landed (12 commits, 05976fa…)
+1. **vibeframe split** (prior sessions, complete) — the *simple* single-window terminal
+   was **copied** out of `apps/vibeterm/` into `apps/vibeframe/`. vibeframe is now
+   **VibeTree's stable host**; **vibeterm** stays in place to become the *complex*
+   multi-tab workspace (PROP-044, gated behind research). Routing, `vibe frame`,
+   `VibeFrame.exe`, a no-dots icon, and dual-app packaging all landed.
+2. **Self-install launchers** (this session, the last goal) — the VVM install pipeline
+   now **builds `vibe-launcher` and places VibeTree / VibeTerm / VibeFrame into
+   `~/opt/bin` + creates their Start-menu shortcuts on every `vibe self update`**. No
+   more manual `cargo build -p vibe-launcher` + copy + hand-made shortcut. Windows path
+   built and **verified live** (instances 35→38); Mac/Linux shortcuts deferred by owner.
 
-- **Packages** (`packages/org.vibevm.ai-native/`): `go-ai-native-lang` 0.1.0 — the
-  stack: GUIDE-AI-NATIVE-GO, 9 cards, TCG-ORACLE-GO/TCG-PROTOCOL-GO, briefs
-  (vibe-agentic-tcg-go full-parity; go-ai-native-tcg token-level STUB very-far-future),
-  sweep/terraform skills, 8 crates (cli/conform/conform-frontend/extract-bridge/
-  specmap/specmap-scan/tcg/tcg-bridge) + `tools/go-extract/extract.go` (stdlib-only);
-  `go-ai-native-mcp` 0.1.0 — 17 tools; aggregator `go-ai-native` 0.1.0.
-- **core-ai-native 0.8.0**: Fact::GoUnsafe, GoConfig ([go] table), the Go walk
-  (depth-0 guard!), rules/go.rs (GoUnsafeInDomain cell-scoped kinds, GoCellIsolation —
-  no sibling imports at all, no in-cell seam). 0.7.0 untouched (Rust/TS pins ^0.7).
-- **The pilot** `research/go-demo`: a miniature reconciler (K8s rehearsal) —
-  `go-ai-native floor` ALL GREEN (7 steps), one deliberate frozen finding (the
-  differential fuzz oracle imports the sibling it replaces — replacement-window debt),
-  live tcg one-shot: dirty overlay → exit 1 + Class-F advice; clean → exit 0.
-- **Live chains proven**: gopls bridge green at first attempt (seeded type error via
-  pure overlay, hover, no-zombie shutdown); finding-parity relay=gate; MCP server
-  replay; fresh-go-project init→gates walk.
+**No blocker.** Working tree clean, `main` in sync with `origin/main`, installed
+instance **38** active with a clean `~/opt/bin` and a `Programs\vibevm\` shortcut group.
 
-## Machine facts (this box)
+## Where work stands
 
-go 1.26.5 at `C:/opt/go` (NOT on PATH — export `PATH="/c/opt/go/bin:/c/opt/gotools:$PATH"`
-or set `GO_AI_NATIVE_GO`); gopls 0.23 / staticcheck 0.8-rc / exhaustive at
-`C:/opt/gotools` (exhaustive built from master with bumped x/tools — v0.12.0 does not
-compile under go 1.26). `-race` needs cgo here (no gcc) — the demo has no goroutines,
-so the guide's rule is not engaged.
+- Branch `main`, synced with `origin/main` (both mirrors at `2c1588b`). Working tree clean.
+- Installed env: `~/opt/vibevm/current` → instance **38**; `~/opt/bin` holds the 3 launcher
+  exes (0 `.old-*` sidecars); `%APPDATA%\…\Start Menu\Programs\vibevm\{VibeTree,VibeTerm,VibeFrame}.lnk`.
+- `bash tools/self-check.sh` — all green (fmt / clippy `--all-targets -D warnings` / vibe check /
+  conform / Rust tests incl. 3 new launcher tests / npm).
 
-## Candidate next steps (a RESUME is report-then-wait)
+## What landed this session (self-install launchers)
 
-1. **Registry publishing** of the three go packages + core 0.8.0 (owner decision,
-   PROP-002; never autonomous).
-2. **Bench-corpus seeding** (REPORT P3's deferral): capture the first live
-   gopls-vs-floor asymmetry case in `go-ai-native-tcg bench` corpus form.
-3. **Rust/TS stacks onto core ^0.8** when their next versions bump (no action now).
-4. Host Go code (Kubernetes work) eventually consumes the stack via `vibe install`.
+- `f3df5dd` **feat(vvm): self-install the GUI launchers on every install/update**
+- `2c1588b` **docs(vibeframe): mark the self-installing-launchers enhancement done**
+
+New module **`crates/vibe-cli/src/commands/vvm/launchers.rs`** — the `LauncherInstaller`
+seam (native impl live; `SkipLauncherInstaller` `#[cfg(test)]` no-op for the gate), mirroring
+the `Builder` / `VibetermPackager` / `EnvPersister` seams. Wired into `perform_install`
+(`install.rs`) as a **tail on BOTH the new-instance and dedup-skip paths** → idempotent,
+self-bootstrapping without `--force`. `mod.rs` declares `mod launchers;` and passes
+`&NativeLauncherInstaller` in `run_install_cmd`.
+
+Native impl does, best-effort throughout (a locked exe / missing rc.exe / shortcut failure
+is a *note*, never an install failure):
+1. `cargo build -p vibe-launcher --target-dir <managed build dir>` (same dir + profile as
+   the `vibe` build; default profile is **Debug**);
+2. **rename-aside** placement into `store.shim_dir()` = `~/opt/bin`: a running exe can't be
+   overwritten on Windows but CAN be renamed → move to `.old-<nanos>`, copy the new one,
+   then **drop the sidecar immediately if unlocked** (else it waits for the next update's
+   sweep, which runs at the start of the next placement);
+3. Windows Start-menu `.lnk` via PowerShell `WScript.Shell` into
+   `[Environment]::GetFolderPath('Programs')\vibevm\<Label>.lnk` (target = shim-dir exe,
+   icon = exe,0, workingdir = shim dir). Non-Windows = no-op (exe still placed).
+
+Spec: **PROP-043 #self-install** (new section + VibeFrame added to the registry table +
+two `#never` bullets); tests tagged `#[verifies(...#self-install)]`. PROP-045 §4 and
+`research/vibeterm/VIBEFRAME-SPLIT-PLAN-v0.1.md#deferred-launchers` flipped from *deferred*
+to *done (Windows)*.
+
+## What landed earlier in the arc (vibeframe split) — commits `85a5420`…`58f8b96`
+
+- `daedb6e` copy `apps/vibeterm/` → `apps/vibeframe/` (sed-renamed identifiers, `VIBEFRAME=1`).
+- `0723a3c` + `278d6ef` route `vibe tree -t` / `vibe aiui` → vibeframe, with a **fallback to
+  vibeterm when the target app is unpackaged** (so an installed launcher never hard-fails).
+- `6e5aa9e` `vibe frame`; `908debe` `VibeFrame.exe` launcher; `c572c3c` no-dots icon
+  (`assets/icons/vibeframe.*` from `ideas-icons/vibeterm/vibeterm-1-nodots`).
+- `25ca6fc` package **both** `apps/vibeterm` → `vibeterm/` and `apps/vibeframe` → `vibeframe/`
+  into each instance (packager + dist-walker parameterised by app name).
+- `b17328f` accept **`VIBEFRAME`** (alongside `VIBETERM`) in the in-place-upgrade detection.
+- `85a5420` PROP-044 (vibeterm = complex shell contract); `58f8b96` PROP-045 (vibeframe = simple
+  frame contract).
+
+The **terminal-app resolver** is `crates/vibe-cli/src/commands/term.rs`, parameterised by app
+name: `resolve_app(app)` (env override `VIBEVM_<APP>` → dev `apps/<app>` → packaged `<home>/<app>`),
+with `resolve_app` falling back to `"vibeterm"` when `app != "vibeterm"` and unresolved.
+
+## Candidate next steps (a RESUME is report-then-wait — do NOT auto-start)
+
+1. **The VibeTerm complex shell, milestone-1** — the Slack-like multi-column layout the owner
+   asked for (codename **ProjectX** — a substitution token; see the discipline note below).
+   **GATED**: research → design → contracts first, per `research/vibeterm/`:
+   `VIBETERM-UI-ARCHITECTURE-RESEARCH-PLAN-v0.1.md` (AI-UI-ready: port the vibe-actions
+   Search-Everywhere/action-system methodology + the visual language; headless AIUI is the
+   reference surface) → then `VIBETERM-SHELL-PLAN-v0.1.md`. Self-contained handoff:
+   `research/vibeterm/task.md`. Stack decided: **Solid + Vite + Tailwind v4 + Kobalte + strict
+   TS**, Electron IPC transport, i18n + two themes from day one.
+2. **Mac/Linux launcher shortcuts** (`.desktop` / `.app`) — the only deferred part of
+   self-install; exe placement is already cross-platform. Owner will test Mac/Linux separately.
+3. Minor: the last PROP-042 §5 routing cross-note is implied by PROP-045 §2 — trim if a reader
+   wants it explicit.
 
 ## Non-obvious findings (do not re-learn)
 
-- Go's `flag` package stops at the first non-flag arg → the extractor's `--files` is a
-  boolean marker; probe = `--files` with zero args.
-- mdspec mints doc-ids from the document HEADING (`# PROP-001 — …` → PROP-001), not the
-  filename — tags citing the filename dangle.
-- A materialised Go tool inside a consumer module needs a go.mod cut-off, or the
-  consumer's `./...` compiles it as project code.
-- A literal `.` scan root is eaten by hidden-dir filters without a depth-0 guard.
-- exit codes after `| tail` are the tail's — check the real one (`> /dev/null; echo $?`).
+- **`vibe self update` bootstrap**: it runs the *currently-installed* binary's pipeline code, so
+  a change to the install pipeline (packaging, launcher-refresh) takes effect only on the
+  **SECOND** update — the first builds the new binary into a new instance; the second runs it.
+  Verified 35→36 (feature active) and 37→38 (the sidecar-cleanup polish active).
+- **Launcher refresh runs on BOTH `perform_install` paths** (new-instance + dedup-skip) — that
+  is what makes it idempotent and self-bootstrap without `--force`. A no-op update still
+  re-ensures the launchers.
+- **Windows `std::fs::copy` propagates the SOURCE mtime** (CopyFileExW) → a placed launcher's
+  timestamp is its *build* time, not the copy time. Cosmetic; bytes are correct.
+- **Rename-aside** is the Windows-safe replace: overwrite/delete of a running exe fails, but
+  *rename* succeeds. Sidecar dropped immediately when unlocked; swept next update when locked.
+- **`SkipLauncherInstaller` must be `#[cfg(test)]`** (struct + impl) or clippy `-D dead-code`
+  fails the non-test build — exactly how `SkipPackager` is gated.
+- **Install does NOT write the `vibe`/`vibe.cmd` shims** — only `vibe self use` + `self doctor`
+  do. Launchers, like the shim, resolve the active instance via `~/opt/vibevm/current`, so they
+  self-maintain across updates once placed.
+- `store.shim_dir()` = `<root>/bin` = `~/opt/bin`; `store.build_dir()` = `~/opt/vibevm/build`
+  (the managed `--target-dir`, never the source `target/`).
+- `grep -c` exits 1 on zero matches → it breaks `&&` chains (bit me checking sidecar count).
+
+## Repository map (top level)
+
+- `crates/` — Rust workspace. `vibe-cli` (the `vibe` CLI: `commands/vvm/` = the version manager
+  / install pipeline; `commands/term.rs` = terminal-app resolver; `commands/tree/` = the tree
+  TUI + host integration; `commands/aiui/` = AIUI control). `vibe-launcher` (GUI launcher bins
+  vibetree/vibeterm/vibeframe + shared core + per-bin icon embed in `build.rs`). Plus
+  `specmark`/specmap tooling, `vibe-actions`, etc.
+- `apps/` — Electron apps: `vibeterm/` (the complex terminal, evolving) and `vibeframe/` (the
+  simple frame, VibeTree's host — a copy of vibeterm, kept minimal).
+- `spec/` — PROP/FEAT contracts + `WAL.md` + `boot/`. Relevant here: `modules/vibe-launcher/PROP-043`
+  (launchers, now incl. `#self-install`), `modules/vibeterm/PROP-044` (complex shell),
+  `modules/vibeframe/PROP-045` (simple frame), `common/PROP-019` (install pipeline).
+- `research/vibeterm/` — the VibeTerm UI-architecture research + shell-campaign plans + the
+  split plan + `task.md` handoff.
+- `assets/icons/` — launcher icons (`vibetree/vibeterm/vibeframe.{svg,png,ico}`).
+- `packages/org.vibevm.*/` — the AI-Native discipline stacks (Rust/TS/Go), fractality,
+  delegation-rules, wal-specspaces. `refs/` — third-party references (gitignored screenshots).
+
+## Architectural decisions in force
+
+- **vibeframe = simple / vibeterm = complex**, siblings from one copy; they never share renderer
+  code beyond the initial copy (PROP-044/045). vibeframe hosts `vibe tree`; vibeterm is the
+  standalone evolving workspace.
+- **AI-UI-ready from the start**: any terminal function must be drivable by an AI over a
+  *semantic* `invoke` API (not CDP), exactly as by a human — every architecture decision accounts
+  for the future headless AIUI surface (port the Vibe Tree action-system + visual-language
+  methodology; it was designed universal).
+- **Research → design → execution** as separate phases for the big shell architecture; don't
+  one-shot. Read prior art in full.
+- **Install pipeline is self-contained**: `vibe self update` builds vibe, packages both terminal
+  apps into the instance, and now self-installs the launchers + shortcuts (PROP-043 #self-install
+  × PROP-019).
+
+## Discipline constraints (hard, from CLAUDE.md + user memory)
+
+- **NEVER write "Slack" anywhere** in repo / git history / chat. "ProjectX" is a substitution
+  token for the reference app; the equivalence lives ONLY in out-of-git user memory. Our feature
+  is the **VibeTerm shell**, not "ProjectX".
+- Commits **only** via heredoc `git commit -F - <<'MSG'` (never `-m` with backticks — command
+  substitution has corrupted messages twice). **No AI attribution** anywhere (Rule 1).
+  Conventional Commits, atomic (Rule 3).
+- Edits **only** via Edit/Write (PS5.1 UTF-8-no-BOM round-trip corrupts non-ASCII); revert via
+  `git restore`. Self-check via **Git Bash** (`bash tools/self-check.sh`) for the real exit code;
+  commit only when green (fmt is its fail-fast first gate — run `cargo fmt --all` after edits).
+- Push via **`cargo xtask mirror`** (fans out to both GitVerse + GitHub). Never blanket
+  `Stop-Process` by name. Never suggest `/code-review`.
+- Rule-4 non-routine ops (history rewrite of *pushed* commits, force-push, large blobs,
+  CI/secrets) stop for the owner. Delegation (fractality/GLM) is the default for cheap execution,
+  but high-error-cost / high-context work like the install pipeline stays with the boss.
+
+## Recent commit chain (last 26, newest first)
+
+```
+2c1588b docs(vibeframe): mark the self-installing-launchers enhancement done
+f3df5dd feat(vvm): self-install the GUI launchers on every install/update
+58f8b96 docs(vibeframe): add the simple-terminal-frame contract PROP-045
+b17328f feat: accept VIBEFRAME in the in-place-upgrade detection
+2acd358 docs(research): note the self-installing-launchers enhancement
+25ca6fc feat(vibe-cli): package vibeframe into installed instances
+c572c3c feat(vibeframe): give VibeFrame its own no-dots icon
+908debe feat(vibe-launcher): add the VibeFrame.exe launcher
+6e5aa9e feat(vibe-cli): add the vibe frame command
+278d6ef fix(vibe-cli): fall back to vibeterm when the target app is unpackaged
+0723a3c feat(vibe-cli): route vibe tree -t and vibe aiui to vibeframe
+daedb6e feat(vibeframe): copy vibeterm as the simple terminal frame
+2a19e63 docs(research): plan the vibeframe split — VibeTree's simple terminal host
+146b007 docs(research): add the self-contained VibeTerm task handoff (task.md)
+edf7bc7 docs(research): relocate vibeterm plans into a self-contained research/vibeterm/
+d6d61af docs(research): resolve RP-A/RP-D — vibeterm as a self-contained system
+4cdb2f7 docs(campaign): gate the VibeTerm shell build behind the UI-architecture research
+d65d086 docs(research): open the VibeTerm UI-architecture research plan
+8dd21bf docs(campaign): open the VibeTerm shell campaign plan
+85a5420 docs(vibeterm): add terminal-shell contract PROP-044
+f263b22 chore(gitignore): never track ProjectX reference captures
+c3b7b09 feat(icons): vibeterm back to the maximized (enlarged) glyph
+09e2391 docs(ideas-icons): archive the enlarged icon attempts
+5bc7332 feat(icons): original glyphs, uniformly scaled to full-bleed
+90f5a2b feat(icons): full-bleed tile — kill the edge margin, fill like neighbours
+129e01b feat(icons): enlarge vibeterm + vibetree to fill the taskbar tile
+```
 
 ## Quick-start
 
-```sh
-git status -sb && git log --oneline -12
-bash tools/self-check.sh                 # host floor
-export PATH="/c/opt/go/bin:/c/opt/gotools:$PATH"
-cargo test --manifest-path packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/Cargo.toml
-cd research/go-demo && \
-  /c/Users/olegc/gits/vibevm/packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/target/debug/go-ai-native.exe floor
+```bash
+# floor gate (real exit code — always via Git Bash)
+bash tools/self-check.sh
+
+# rebuild + reinstall vibe from the working tree (run TWICE for a pipeline-code change)
+vibe self update
+
+# the terminals
+vibe frame          # simple frame (vibeframe)   — VibeTree's host
+vibe term           # complex terminal (vibeterm)
+vibe tree -t        # tree TUI, hosted in vibeframe
+
+# push both mirrors
+cargo xtask mirror
+
+# inspect the installed env
+cat ~/opt/vibevm/current
+ls ~/opt/bin/ | grep -Ei 'vibe(tree|term|frame)'
+ls "$APPDATA/Microsoft/Windows/Start Menu/Programs/vibevm/"
 ```
 
-## Pointer
-
-- **Canonical living state:** `spec/WAL.md` (the evening 2026-07-17 checkpoint).
-- **Campaign record:** `spec/terraforms/GO-AI-NATIVE-PLAN-v0.1.md` (CLOSED; §12 REPORT,
-  §13 ledger).
+> The WAL (`spec/WAL.md`) is the canonical living state and supersedes this snapshot if they diverge.
