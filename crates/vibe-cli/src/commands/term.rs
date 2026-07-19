@@ -228,6 +228,13 @@ fn resolve_app(app: &str) -> Result<Vibeterm> {
         }
         cursor = dir.parent();
     }
+    // Interim fallback: an app not yet packaged into installed instances (e.g.
+    // vibeframe) resolves to vibeterm instead, so an installed VibeTree keeps
+    // launching rather than failing. Dev finds apps/<app> directly above, so this
+    // fires only from an installed instance until <app>/ is packaged.
+    if app != "vibeterm" {
+        return resolve_app("vibeterm");
+    }
     bail!(
         "{app} not found — set ${env_var} to its directory \
          (dev: <repo>/apps/{app}; packaged: the instance's {app}/)"
