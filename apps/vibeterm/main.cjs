@@ -827,14 +827,14 @@ async function createShellWindow({ exec, iconName, hideWindow }) {
       backgroundThrottling: false,
     },
   });
-  // Load the Solid chrome bundle (vite build -> dist/chrome).
-  await shellWin.loadFile(path.join(__dirname, 'dist', 'chrome', 'index.html'));
 
-  shellWin.on('resize', () => layoutShell());
-
-  // The chrome -> engine command channel (the typed preload bridge exposes 'vibeterm:command').
-  // The engine is the single writer of the ModelView; main owns the pty/view side-effects each
-  // command implies. The Command union is PROP-047 §3.
+  // Register the IPC handlers BEFORE loadFile: the chrome renderer's module script (bridge.ts)
+  // calls window.vibeterm.state()/command() the moment it mounts, and loadFile's await resolves
+  // once the HTML is parsed -- the module can execute and fire its first IPC before a handler
+  // registered after the await is in place (a real race that surfaced as "No handler registered
+  // for 'vibeterm:state'" offscreen). Handlers are idempotent across windows.
+  ipcMain.removeHandler('vibeterm:command');
+  ipcMain.removeHandler('vibeterm:state');
   ipcMain.handle('vibeterm:command', async (_e, raw) => {
     try {
       const cmd = raw || {};
@@ -848,16 +848,23 @@ async function createShellWindow({ exec, iconName, hideWindow }) {
       return { ok: false, error: String(err) };
     }
   });
-
-  // The chrome reads the initial ModelView snapshot on load (AIUI `state()` verb, peer-read).
+  // The chrome reads the initial ModelView snapshot on mount (AIUI `state()` verb, peer-read).
   ipcMain.handle('vibeterm:state', () => shellModelView());
 
-  shellWin.webContents.once('did-finish-load', () => {
-    shellEmit({ t: 'ready' });
-    shellEmit({ t: 'modelview', view: shellModelView() });
-    // Open the first terminal so the shell is never empty on a cold launch.
-    openTab(exec).catch((err) => console.error('[vibeterm] initial openTab failed:', err));
-  });
+  // Load the Solid chrome bundle (vite build -> dist/chrome).
+  await shellWin.loadFile(path.join(__dirname, 'dist', 'chrome', 'index.html'));
+
+  shellWin.on('resize', () => layoutShell());
+
+  // Open the first terminal so the shell is never empty on a cold launch. `loadFile` above is
+  // already awaited (the chrome page is loaded), so start immediately. Earlier drafts gated this
+  // on `did-finish-load`, which races (the event can fire before the listener is attached) -- and
+  // in offscreen mode `isLoading()` reports true while `did-finish-load` never settles, so the
+  // initial openTab silently never fired. There is nothing to wait for: the chrome reads its
+  // initial snapshot through the `state()` IPC on mount, and `openTab` emits its own events.
+  shellEmit({ t: 'ready' });
+  shellEmit({ t: 'modelview', view: shellModelView() });
+  openTab(exec).catch((err) => console.error('[vibeterm] initial openTab failed:', err));
 
   shellWin.on('closed', () => {
     shellWin = null;
