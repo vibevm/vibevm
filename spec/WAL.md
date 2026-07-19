@@ -1,5 +1,34 @@
 # WAL — Project Continuation State
 
+## CHECKPOINT 2026-07-19 (later) — VIBETERM UI-ARCHITECTURE: research → design → contracts → execution DONE (pre-MVP)
+
+_Updated: 2026-07-19 (later) — the whole vibeterm UI-architecture campaign landed on `main`, floor-green
+(Rust gate + vibe check + 41 node-test + 15 vitest), ahead of `origin/main` by 6 commits (mirror pending).
+The cadence ran end to end under a goal-hook: the research plan was sharpened first (frozen-vs-open framing
++ identity-grammar conformance + 6 new RQs + AI-Native-ready output), then the findings doc (Phase 1
+ports/adapts/new + the conformance surface + the eval matrix; Phase 2/3/4 comparative + obligations + 16
+numbered deltas D1–D16), then the vibeterm-owned design-doc (`architecture.md` + `design-system.md`), then
+the contracts (**PROP-046** action/AIUI core + **PROP-047** ModelView/transport + PROP-044 §12 family
+cross-note), then the pre-MVP implementation. The pre-MVP is an architectural sketch: a **render-free TS
+engine** (`#no-render-dep`, no Solid/DOM/Electron — address/action/registry/context/i18n/modelview/
+protocol/tabs/aiui cells, 15 vitest cases), an **Electron main shell path** (`Map<TabId,{pty,
+WebContentsView}>` + Solid chrome window + typed preload bridge, `contextIsolation:true`), a **Solid
+chrome** (contacts-style TabList + design tokens with two launch themes + reactive en/ru i18n), and a
+**lean vanilla xterm terminal-view**. Create + switch tabs works over the typed command/event protocol;
+the engine is the single writer of the `ModelView`, the chrome is a one-way projection. `--control`/
+`--headless` single-view path frozen (loads the same terminal-view page). Full functionality (split,
+tear-off, profiles, capability gating active, conformance golden across Rust+TS) is out of pre-MVP scope —
+the architecture is ready, the build wires the create/switch slice. pty spawn in this sandbox hits the
+known node-pty "AttachConsole failed" without a real Windows console (environment, not code — vibeterm
+runs on the owner's desktop, instance 38); the GUI visual pass is the owner's. Commits: `6ff6a2a` (plan
+sharpen) · `3bd277e` (Phase 1) · `a6e22fc` (research close) · `2932349` (D2 design-doc) · `cb15828` (D3
+contracts) · `43f6716` (D4 pre-MVP shell). `CONTINUE.md` updated. **Next (report-then-wait):** the owner's
+GUI smoke on a real desktop (`cd apps/vibeterm && npm run build && npm start`), then either the M1
+build-out (split/tear-off per VIBETERM-SHELL-PLAN) or the conformance golden across Rust `vibe-actions` +
+TS `vibeterm-core`. **No blocker.**_
+
+---
+
 ## CHECKPOINT 2026-07-19 — VIBEFRAME SPLIT + SELF-INSTALL LAUNCHERS (goal-hook CLOSED)
 
 _Updated: 2026-07-19 — two things closed on `main`, floor-green, pushed to both mirrors
