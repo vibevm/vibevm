@@ -36,6 +36,13 @@ desktop.ini
 # upstream copyright and to keep the public repo lean.
 /refs/
 
+# ProjectX design captures (reference screenshots under refs/screens/projectx/).
+# The owner requires these NEVER enter git. Redundant with /refs/ above and kept
+# deliberately explicit — belt-and-suspenders, so the guarantee survives any future
+# change to the /refs/ rule. Both an anchored and a recursive form for certainty.
+/refs/screens/projectx/
+**/refs/screens/projectx/
+
 # Local playgrounds for hand-testing M0 (not source of truth)
 /playground/
 
