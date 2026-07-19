@@ -78,3 +78,14 @@ it end to end. Scoped while the parent session's context was low, so it is delib
 Big and cross-cutting; safe to interrupt only at atomic boundaries. **Recommend executing in a
 session with full context.** The copy (step 1) is safe/reversible on its own; the redirects (steps
 3–5) change behaviour and should land together.
+
+## Deferred enhancement — self-installing launchers {#deferred-launchers}
+
+Owner point (2026-07-19): **`vibe self update` / the install pipeline should itself place the GUI
+launchers (VibeTree / VibeTerm / VibeFrame) into the install bin dir (`~/opt/bin`) and create their
+Start-menu shortcuts** — instead of a manual `cargo build --release -p vibe-launcher` + `cp` + a
+hand-made shortcut. A self-contained install: updating vibe installs/refreshes its launchers +
+shortcuts too. Cross-platform (Windows `.lnk`, Linux `.desktop`, macOS `.app`/alias). Touches
+PROP-043 (launchers) × PROP-019 (install) + `install.rs` (place the release-built launcher exes;
+generate the shortcuts). Not built yet — the next enhancement after the split's remaining follow-ups
+(VIBEFRAME in-place-upgrade detection; the specs).
