@@ -8,7 +8,7 @@ license-file.workspace = true
 publish.workspace = true
 repository.workspace = true
 homepage.workspace = true
-description = "GUI launchers for vibevm apps (VibeTree, VibeTerm) — PROP-043"
+description = "GUI launchers for vibevm apps (VibeTree, VibeTerm, VibeFrame) — PROP-043"
 
 [lib]
 path = "src/lib.rs"
@@ -20,6 +20,10 @@ path = "src/bin/vibetree.rs"
 [[bin]]
 name = "vibeterm"
 path = "src/bin/vibeterm.rs"
+
+[[bin]]
+name = "vibeframe"
+path = "src/bin/vibeframe.rs"
 
 [dependencies]
 specmark.workspace = true

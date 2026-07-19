@@ -12,8 +12,11 @@ fn main() {
 
         // (binary name, icon file under ../../assets/icons/). The `.ico`'s 256
         // layer is the Start-menu tile.
-        const LAUNCHERS: &[(&str, &str)] =
-            &[("vibetree", "vibetree.ico"), ("vibeterm", "vibeterm.ico")];
+        const LAUNCHERS: &[(&str, &str)] = &[
+            ("vibetree", "vibetree.ico"),
+            ("vibeterm", "vibeterm.ico"),
+            ("vibeframe", "vibeterm.ico"),
+        ];
 
         let manifest = std::env::var("CARGO_MANIFEST_DIR").expect("CARGO_MANIFEST_DIR");
         let out = std::env::var("OUT_DIR").expect("OUT_DIR");
