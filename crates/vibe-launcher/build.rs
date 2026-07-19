@@ -15,7 +15,7 @@ fn main() {
         const LAUNCHERS: &[(&str, &str)] = &[
             ("vibetree", "vibetree.ico"),
             ("vibeterm", "vibeterm.ico"),
-            ("vibeframe", "vibeterm.ico"),
+            ("vibeframe", "vibeframe.ico"),
         ];
 
         let manifest = std::env::var("CARGO_MANIFEST_DIR").expect("CARGO_MANIFEST_DIR");
