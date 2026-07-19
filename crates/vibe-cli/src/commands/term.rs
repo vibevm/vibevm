@@ -25,7 +25,7 @@ pub fn run(_ctx: &output::Context, args: TermArgs) -> Result<()> {
         Some(cmd) => cmd,
         None => quote_exe(&detect_shell()),
     };
-    launch_vibeterm(&exec, args.cols, args.rows, None)
+    launch_vibeterm(&exec, args.cols, args.rows, None, "vibeterm")
 }
 
 /// Launch vibeterm running `exec` (the command line for its PTY), optionally at
@@ -36,10 +36,11 @@ pub(crate) fn launch_vibeterm(
     cols: Option<u16>,
     rows: Option<u16>,
     icon: Option<&str>,
+    app: &str,
 ) -> Result<()> {
     // Visible, no control server: a human uses it directly and resizes it live.
-    let child = spawn_vibeterm(exec, cols, rows, false, false, icon)?;
-    println!("vibeterm launched (pid {}) — running `{exec}`", child.id());
+    let child = spawn_vibeterm(exec, cols, rows, false, false, icon, app)?;
+    println!("{app} launched (pid {}) — running `{exec}`", child.id());
     Ok(())
 }
 
@@ -57,9 +58,10 @@ pub(crate) fn spawn_vibeterm(
     control: bool,
     headless: bool,
     icon: Option<&str>,
+    app: &str,
 ) -> Result<std::process::Child> {
-    let vibeterm = resolve_vibeterm()?;
-    let electron = electron_binary(&vibeterm)?;
+    let vibeterm = resolve_app(app)?;
+    let electron = electron_binary(&vibeterm, app)?;
     let mut cmd = Command::new(&electron);
     // Dev layout: `electron <appdir>` (Electron resolves via node_modules/electron).
     // Packaged layout: electron-packager put the binary at the dir root and it
@@ -151,11 +153,11 @@ pub(crate) struct Vibeterm {
 /// after the app (`vibeterm`), so a packaged build carries `vibeterm(.exe)` at
 /// its dir root. That exe is the one signal present in BOTH packaging layouts —
 /// the unpacked `resources/app/` tree and the asar-packed `resources/app.asar`.
-pub(crate) fn packaged_exe_name() -> &'static str {
+pub(crate) fn packaged_exe_name(app: &str) -> String {
     if cfg!(windows) {
-        "vibeterm.exe"
+        format!("{app}.exe")
     } else {
-        "vibeterm"
+        app.to_string()
     }
 }
 
@@ -168,8 +170,8 @@ pub(crate) fn packaged_exe_name() -> &'static str {
 /// old probe wrongly demoted such an instance to `Dev` (the bug that made
 /// `vibe term` / `vibe tree -t` fail from a correctly-packaged instance). A dev
 /// source dir has no app-named exe, so it still falls to `Dev`.
-fn classify_vibeterm(dir: &Path) -> VibetermShape {
-    if dir.join(packaged_exe_name()).is_file() {
+fn classify_vibeterm(dir: &Path, app: &str) -> VibetermShape {
+    if dir.join(packaged_exe_name(app)).is_file() {
         VibetermShape::Packaged
     } else {
         VibetermShape::Dev
@@ -182,41 +184,42 @@ fn classify_vibeterm(dir: &Path) -> VibetermShape {
 /// (`selfloc::derive_self`); else a dev fallback walks up from the running
 /// binary for `apps/vibeterm` — works for a `target/debug` or `target/release`
 /// build alike, since both sit under the repo root.
-fn resolve_vibeterm() -> Result<Vibeterm> {
+fn resolve_app(app: &str) -> Result<Vibeterm> {
+    let env_var = format!("VIBEVM_{}", app.to_uppercase());
     // Tier 1 — explicit override (dev or packaged).
-    if let Some(dir) = std::env::var_os("VIBEVM_VIBETERM") {
+    if let Some(dir) = std::env::var_os(&env_var) {
         let dir = PathBuf::from(dir);
         let dev_ok = dir.join("package.json").exists();
         // A packaged build is recognized by its app-named exe at the root, not
         // by `resources/app/package.json` — the latter is absent in an
         // asar-packed build (see `classify_vibeterm`).
-        let pkg_ok = dir.join(packaged_exe_name()).is_file();
+        let pkg_ok = dir.join(packaged_exe_name(app)).is_file();
         if !dev_ok && !pkg_ok {
             bail!(
-                "$VIBEVM_VIBETERM = `{}` is neither a dev app nor a packaged build",
+                "${env_var} = `{}` is neither a dev app nor a packaged build",
                 dir.display()
             );
         }
-        let shape = classify_vibeterm(&dir);
+        let shape = classify_vibeterm(&dir, app);
         return Ok(Vibeterm { dir, shape });
     }
     // Tier 2 — packaged alongside the running binary in its VVM instance.
     if let Some(loc) =
         crate::commands::vvm::selfloc::derive_self(std::env::current_exe().ok().as_deref())
     {
-        let cand = loc.home.join("vibeterm");
-        if matches!(classify_vibeterm(&cand), VibetermShape::Packaged) {
+        let cand = loc.home.join(app);
+        if matches!(classify_vibeterm(&cand, app), VibetermShape::Packaged) {
             return Ok(Vibeterm {
                 dir: cand,
                 shape: VibetermShape::Packaged,
             });
         }
     }
-    // Tier 3 — dev walk-up for apps/vibeterm.
+    // Tier 3 — dev walk-up for apps/<app>.
     let exe = std::env::current_exe()?;
     let mut cursor = exe.parent();
     while let Some(dir) = cursor {
-        let cand = dir.join("apps").join("vibeterm");
+        let cand = dir.join("apps").join(app);
         if cand.join("package.json").exists() {
             return Ok(Vibeterm {
                 dir: cand,
@@ -226,15 +229,15 @@ fn resolve_vibeterm() -> Result<Vibeterm> {
         cursor = dir.parent();
     }
     bail!(
-        "vibeterm not found — set $VIBEVM_VIBETERM to its directory \
-         (dev: <repo>/apps/vibeterm; packaged: the instance's vibeterm/)"
+        "{app} not found — set ${env_var} to its directory \
+         (dev: <repo>/apps/{app}; packaged: the instance's {app}/)"
     )
 }
 
 /// Resolve vibeterm's Electron binary. Dev: through its own
 /// `node_modules/electron/path.txt` (the resolution the electron package uses).
 /// Packaged: the binary sits at the dir root (electron-packager lays it there).
-fn electron_binary(v: &Vibeterm) -> Result<PathBuf> {
+fn electron_binary(v: &Vibeterm, app: &str) -> Result<PathBuf> {
     match v.shape {
         VibetermShape::Packaged => {
             // electron-packager names the executable after the app name —
@@ -242,7 +245,7 @@ fn electron_binary(v: &Vibeterm) -> Result<PathBuf> {
             // as the packager name) — so a packaged build ships `vibeterm.exe`,
             // NOT `electron.exe`. Looking for `electron.exe` here was the bug
             // that made `vibe tree -t` from an instance fail to spawn.
-            let bin = v.dir.join(packaged_exe_name());
+            let bin = v.dir.join(packaged_exe_name(app));
             if !bin.is_file() {
                 bail!(
                     "packaged vibeterm's binary is missing at `{}`",
@@ -347,12 +350,12 @@ mod tests {
         };
         fs::write(dir.join(exe_name), b"binary").unwrap();
         // classify agrees it is packaged.
-        assert_eq!(classify_vibeterm(&dir), VibetermShape::Packaged);
+        assert_eq!(classify_vibeterm(&dir, "vibeterm"), VibetermShape::Packaged);
         let v = Vibeterm {
             dir: dir.clone(),
             shape: VibetermShape::Packaged,
         };
-        let bin = electron_binary(&v).expect("packaged binary resolves");
+        let bin = electron_binary(&v, "vibeterm").expect("packaged binary resolves");
         assert_eq!(bin.file_name().unwrap(), exe_name);
     }
 
@@ -371,7 +374,7 @@ mod tests {
             dir,
             shape: VibetermShape::Packaged,
         };
-        assert!(electron_binary(&v).is_err());
+        assert!(electron_binary(&v, "vibeterm").is_err());
     }
 
     /// An asar-packed build (`@electron/packager` v20's default) has
@@ -385,7 +388,7 @@ mod tests {
         let dir = tmp.path().join("vibeterm-win32-x64");
         fs::create_dir_all(dir.join("resources")).unwrap();
         fs::write(dir.join("resources").join("app.asar"), b"asar").unwrap();
-        fs::write(dir.join(packaged_exe_name()), b"binary").unwrap();
+        fs::write(dir.join(packaged_exe_name("vibeterm")), b"binary").unwrap();
         // The old signal is absent — proving we no longer depend on it.
         assert!(
             !dir.join("resources")
@@ -393,14 +396,17 @@ mod tests {
                 .join("package.json")
                 .is_file()
         );
-        assert_eq!(classify_vibeterm(&dir), VibetermShape::Packaged);
+        assert_eq!(classify_vibeterm(&dir, "vibeterm"), VibetermShape::Packaged);
         let v = Vibeterm {
             dir: dir.clone(),
             shape: VibetermShape::Packaged,
         };
         assert_eq!(
-            electron_binary(&v).unwrap().file_name().unwrap(),
-            packaged_exe_name()
+            electron_binary(&v, "vibeterm")
+                .unwrap()
+                .file_name()
+                .unwrap(),
+            packaged_exe_name("vibeterm").as_str()
         );
     }
 
@@ -411,6 +417,6 @@ mod tests {
         let tmp = tempfile::tempdir().unwrap();
         let dir = tmp.path();
         fs::write(dir.join("package.json"), b"{}").unwrap();
-        assert_eq!(classify_vibeterm(dir), VibetermShape::Dev);
+        assert_eq!(classify_vibeterm(dir, "vibeterm"), VibetermShape::Dev);
     }
 }
