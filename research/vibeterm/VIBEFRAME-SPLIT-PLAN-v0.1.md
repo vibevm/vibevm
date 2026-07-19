@@ -79,13 +79,20 @@ Big and cross-cutting; safe to interrupt only at atomic boundaries. **Recommend 
 session with full context.** The copy (step 1) is safe/reversible on its own; the redirects (steps
 3–5) change behaviour and should land together.
 
-## Deferred enhancement — self-installing launchers {#deferred-launchers}
+## Self-installing launchers — DONE (Windows) {#deferred-launchers}
 
 Owner point (2026-07-19): **`vibe self update` / the install pipeline should itself place the GUI
 launchers (VibeTree / VibeTerm / VibeFrame) into the install bin dir (`~/opt/bin`) and create their
 Start-menu shortcuts** — instead of a manual `cargo build --release -p vibe-launcher` + `cp` + a
 hand-made shortcut. A self-contained install: updating vibe installs/refreshes its launchers +
-shortcuts too. Cross-platform (Windows `.lnk`, Linux `.desktop`, macOS `.app`/alias). Touches
-PROP-043 (launchers) × PROP-019 (install) + `install.rs` (place the release-built launcher exes;
-generate the shortcuts). Not built yet — the next enhancement after the split's remaining follow-ups
-(VIBEFRAME in-place-upgrade detection; the specs).
+shortcuts too.
+
+**Built 2026-07-19 (Windows path).** `crates/vibe-cli/src/commands/vvm/launchers.rs` — the
+`LauncherInstaller` seam (native impl live, no-op for the gate), invoked at the tail of
+`perform_install` on **both** the new-instance and dedup-skip paths (idempotent, self-bootstrapping).
+It `cargo build -p vibe-launcher` into the managed target-dir, **rename-aside**-places each exe into
+the shim dir (a running launcher is renamed to a `.old-<n>` sidecar, swept next update), and creates
+per-user Start-menu `.lnk`s (`Programs\vibevm\<Label>.lnk`) via PowerShell `WScript.Shell`. Best-effort
+throughout — a locked exe / missing rc.exe / shortcut failure is a note, never an install failure.
+Contract: **PROP-043 #self-install**. Cross-platform exe placement works; **Windows shortcuts only**
+for now — Linux `.desktop` / macOS `.app` are tracked separately (owner: tested apart from this task).

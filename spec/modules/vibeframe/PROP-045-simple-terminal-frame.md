@@ -61,9 +61,10 @@ vibeframe is a graceful skip; `vibe tree -t` then uses the §2 fallback.
 
 REQ. `VibeFrame.exe` is a GUI-subsystem launcher running `vibe frame`, carrying
 vibeframe's no-dots icon via the per-binary embed table (PROP-043 #icon); it needs
-no standalone app of its own. **Deferred** (VIBEFRAME-SPLIT-PLAN
-`#deferred-launchers`): the install pipeline placing the launcher exes + creating
-their Start-menu / desktop shortcuts itself, rather than by hand.
+no standalone app of its own. The VVM install pipeline **self-installs** it (with
+VibeTree / VibeTerm): every `vibe self update` places the launcher exes in the
+shim dir and (Windows) (re)creates their Start-menu shortcuts, with no by-hand
+build + copy (PROP-043 #self-install; `.desktop` / `.app` tracked separately).
 
 ## 5. Relationship to vibeterm {#vs-vibeterm}
 
