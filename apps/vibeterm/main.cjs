@@ -40,9 +40,14 @@ app.disableHardwareAcceleration();
 // `app.whenReady()`, so the flags are read from `process.argv` here directly.
 let cdpPort = 0;
 {
+  // `--cdp-port <n>` opens a Chrome DevTools Protocol endpoint so an external agent
+  // (or a smoke test) can attach and read/drive the live page -- the single-view
+  // control path AND the multi-tab shell path (the shell exposes its chrome and each
+  // per-tab terminal WebContentsView as separate CDP targets). `app.commandLine.
+  // appendSwitch` MUST run before `app.whenReady()`.
   const idx = process.argv.indexOf('--cdp-port');
   const v = idx >= 0 ? Number(process.argv[idx + 1]) : NaN;
-  if (Number.isInteger(v) && v > 0 && v < 65536 && process.argv.includes('--control')) {
+  if (Number.isInteger(v) && v > 0 && v < 65536) {
     cdpPort = v;
     app.commandLine.appendSwitch('remote-debugging-port', String(v));
     app.commandLine.appendSwitch('remote-allow-origins', '*');
@@ -802,16 +807,23 @@ function closeTab(id) {
   shellEmit({ t: 'modelview', view: shellModelView() });
 }
 
-async function createShellWindow({ exec, iconName }) {
+async function createShellWindow({ exec, iconName, hideWindow }) {
+  // `hideWindow` (--headless) renders the chrome offscreen so a CDP client can still
+  // capturePage a faithful PNG with no OS window (a never-shown ordinary window does
+  // not paint -- its capture is blank). The per-tab terminal WebContentsViews render
+  // into this offscreen window too. Used by smoke tests / the AIUI peer; the default
+  // visible `vibe term` passes neither --headless nor --cdp-port.
   shellWin = new BrowserWindow({
     width: 1100,
     height: 720,
     backgroundColor: '#191724',
     icon: resolveIconPath(iconName),
+    show: !hideWindow,
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
       preload: path.join(__dirname, 'preload.cjs'),
+      offscreen: hideWindow,
       backgroundThrottling: false,
     },
   });
@@ -869,8 +881,8 @@ async function createWindow() {
 
   // spec://vibeterm/PROP-044#d2-shell-default: the default visible `vibe term` is the multi-tab
   // shell. The bare single-view path below is used only for --headless / --control (PROP-042 frozen).
-  if (!control && !hideWindow) {
-    return createShellWindow({ exec, iconName });
+  if (!control) {
+    return createShellWindow({ exec, iconName, hideWindow });
   }
 
   curCols = cols;
