@@ -27,7 +27,12 @@ pub(crate) struct VibetermOutput {
 /// instance still installs; `vibe term` then names the missing setup step
 /// rather than hanging.
 pub(crate) trait VibetermPackager {
-    fn package(&self, source_root: &Path, staging_root: &Path) -> Result<Option<VibetermOutput>>;
+    fn package(
+        &self,
+        source_root: &Path,
+        staging_root: &Path,
+        app: &str,
+    ) -> Result<Option<VibetermOutput>>;
 }
 
 /// The production packager: drives `apps/vibeterm/scripts/package.mjs`, which
@@ -45,58 +50,62 @@ impl<'a> NpmPackager<'a> {
 
 impl VibetermPackager for NpmPackager<'_> {
     #[spec(implements = "spec://vibevm/common/PROP-019#build")]
-    fn package(&self, source_root: &Path, staging_root: &Path) -> Result<Option<VibetermOutput>> {
-        let app = source_root.join("apps").join("vibeterm");
-        if !app.join("package.json").is_file() {
-            // A tree without apps/vibeterm (an old tag, a partial checkout). Say
-            // so — a silent skip here is exactly what makes a later `vibe term`
-            // failure mysterious.
-            self.ctx.summary(
-                "vibeterm not packaged (no apps/vibeterm in the source tree) — \
-                 `vibe term` will name the setup step",
-            );
+    fn package(
+        &self,
+        source_root: &Path,
+        staging_root: &Path,
+        app: &str,
+    ) -> Result<Option<VibetermOutput>> {
+        let app_dir = source_root.join("apps").join(app);
+        if !app_dir.join("package.json").is_file() {
+            // A tree without apps/<app> (an old tag, a partial checkout). Say so —
+            // a silent skip here is exactly what makes a later launch failure
+            // mysterious.
+            self.ctx.summary(&format!(
+                "{app} not packaged (no apps/{app} in the source tree) — \
+                 the terminal will name the setup step"
+            ));
             return Ok(None);
         }
         // The packaging script needs node + npm on PATH. Absent → graceful skip;
-        // the instance installs without vibeterm (vibe term then errors clearly).
+        // the instance installs without <app> (the terminal then errors clearly).
         if !has_tool("npm") || !has_tool("node") {
-            self.ctx.summary(
-                "vibeterm not packaged (npm/node unavailable) — \
-                 `vibe term` will name the setup step",
-            );
+            self.ctx.summary(&format!(
+                "{app} not packaged (npm/node unavailable) — \
+                 the terminal will name the setup step"
+            ));
             return Ok(None);
         }
         std::fs::create_dir_all(staging_root)
-            .with_context(|| format!("creating vibeterm staging `{}`", staging_root.display()))?;
-        self.ctx.step(&format!(
-            "packaging vibeterm into {}",
-            staging_root.display()
-        ));
-        let script = app.join("scripts").join("package.mjs");
+            .with_context(|| format!("creating {app} staging `{}`", staging_root.display()))?;
+        self.ctx
+            .step(&format!("packaging {app} into {}", staging_root.display()));
+        let script = app_dir.join("scripts").join("package.mjs");
         let status = Command::new("node")
             .arg(&script)
             .arg("--out")
             .arg(staging_root)
-            .current_dir(&app)
+            .current_dir(&app_dir)
             .status()
-            .with_context(|| format!("spawning vibeterm packaging ({})", script.display()))?;
+            .with_context(|| format!("spawning {app} packaging ({})", script.display()))?;
         if !status.success() {
-            bail!("vibeterm packaging failed (exit {:?})", status.code());
+            bail!("{app} packaging failed (exit {:?})", status.code());
         }
-        // package.mjs leaves exactly one `vibeterm-<plat>-<arch>` child; resolve
-        // it so the in-instance rels are `vibeterm/…` (not a nested platform dir).
+        // package.mjs leaves exactly one `<app>-<plat>-<arch>` child; resolve it
+        // so the in-instance rels are `<app>/…` (not a nested platform dir).
+        let prefix = format!("{app}-");
         let children: Vec<PathBuf> = std::fs::read_dir(staging_root)
-            .with_context(|| format!("reading vibeterm staging `{}`", staging_root.display()))?
+            .with_context(|| format!("reading {app} staging `{}`", staging_root.display()))?
             .filter_map(Result::ok)
             .filter_map(|e| {
                 let is_dir = e.file_type().map(|t| t.is_dir()).unwrap_or(false);
-                let is_pkg = e.file_name().to_string_lossy().starts_with("vibeterm-");
+                let is_pkg = e.file_name().to_string_lossy().starts_with(&prefix);
                 (is_dir && is_pkg).then(|| e.path())
             })
             .collect();
         if children.len() != 1 {
             bail!(
-                "vibeterm packaging produced {} `vibeterm-*` dirs under `{}` (expected 1)",
+                "{app} packaging produced {} `{app}-*` dirs under `{}` (expected 1)",
                 children.len(),
                 staging_root.display()
             );
@@ -105,7 +114,7 @@ impl VibetermPackager for NpmPackager<'_> {
         // (the conform `no-unwrap-in-domain` ban).
         let dir = match children.into_iter().next() {
             Some(d) => d,
-            None => bail!("vibeterm packaging produced no `vibeterm-*` dir"),
+            None => bail!("{app} packaging produced no `{app}-*` dir"),
         };
         Ok(Some(VibetermOutput { dir }))
     }
@@ -118,7 +127,12 @@ pub(crate) struct SkipPackager;
 
 #[cfg(test)]
 impl VibetermPackager for SkipPackager {
-    fn package(&self, _source_root: &Path, _staging_root: &Path) -> Result<Option<VibetermOutput>> {
+    fn package(
+        &self,
+        _source_root: &Path,
+        _staging_root: &Path,
+        _app: &str,
+    ) -> Result<Option<VibetermOutput>> {
         Ok(None)
     }
 }

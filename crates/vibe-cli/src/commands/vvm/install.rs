@@ -88,12 +88,21 @@ pub(crate) fn perform_install(
     // (a Rust-only box, or a tree without apps/vibeterm); the instance still
     // installs, and `vibe term` then names the missing setup step.
     let vt_staging = store.build_dir().join("vibeterm-dist");
-    let vibeterm_packaged = if let Some(vt) = packager.package(source_root, &vt_staging)? {
-        dist.extend(walk_vibeterm_dist(&vt.dir)?);
-        true
-    } else {
-        false
-    };
+    let vibeterm_packaged =
+        if let Some(vt) = packager.package(source_root, &vt_staging, "vibeterm")? {
+            dist.extend(walk_vibeterm_dist(&vt.dir, "vibeterm")?);
+            true
+        } else {
+            false
+        };
+    // vibeframe — the simple terminal frame VibeTree runs in — is packaged the
+    // same way, into `vibeframe/…` (VIBEFRAME-SPLIT-PLAN). A missing/unpackaged
+    // vibeframe is a graceful skip; installed `vibe tree -t` then falls back to
+    // vibeterm.
+    let vf_staging = store.build_dir().join("vibeframe-dist");
+    if let Some(vf) = packager.package(source_root, &vf_staging, "vibeframe")? {
+        dist.extend(walk_vibeterm_dist(&vf.dir, "vibeframe")?);
+    }
     let manifest = placer::manifest_for(&dist)?;
 
     let prev = latest_instance(store, id)?;
@@ -145,7 +154,7 @@ pub(crate) fn perform_install(
 /// Walk a staged, relocatable vibeterm dir and emit `(abs_src, "vibeterm/<rel>")`
 /// pairs for the placer. Every file in a packaged Electron app is load-bearing
 /// (the runtime, locales, the app + its node_modules) — ship the whole tree.
-fn walk_vibeterm_dist(staged: &Path) -> Result<Vec<(PathBuf, String)>> {
+fn walk_vibeterm_dist(staged: &Path, app: &str) -> Result<Vec<(PathBuf, String)>> {
     let mut out = Vec::new();
     for entry in WalkDir::new(staged).follow_links(false) {
         let e = entry?;
@@ -155,10 +164,7 @@ fn walk_vibeterm_dist(staged: &Path) -> Result<Vec<(PathBuf, String)>> {
         let rel = e.path().strip_prefix(staged)?;
         out.push((
             e.path().to_path_buf(),
-            Path::new("vibeterm")
-                .join(rel)
-                .to_string_lossy()
-                .into_owned(),
+            Path::new(app).join(rel).to_string_lossy().into_owned(),
         ));
     }
     Ok(out)
@@ -303,6 +309,7 @@ mod tests {
             &self,
             _source_root: &Path,
             staging_root: &Path,
+            _app: &str,
         ) -> Result<Option<VibetermOutput>> {
             let dir = staging_root.join("vibeterm-fake-x86");
             fs::create_dir_all(dir.join("resources/app"))?;
