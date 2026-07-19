@@ -89,12 +89,114 @@ design-doc and contracts can be authored from the findings alone. The AI-UI surf
 by this research — but the architecture it recommends must make that surface a thin peer-client adapter
 that "already works because the core owes rendering nothing."
 
+**Conformance direction — RESOLVED (owner, 2026-07-19, sharpens RP-A).** "Self-contained, no
+**build**-dependency on vibevm-internal" (RP-A) does **not** mean "no shared grammar." A Rust `vibe-actions`
+and a TS `vibeterm-core` that each re-derive the address grammar, the `ModelView` shape, and the AIUI verbs
+independently **will diverge** — different addresses, different `ModelView`, two incompatible AIUIs (the
+R5 two-core-drift failure mode). The resolution is to separate two notions the original RP-A conflated:
+**(a) build-dependency** — which stays none, correctly — from **(b) identity-grammar conformance** — which
+is now first-class. The findings must recommend an **identity-grammar spec** (the address grammar, the
+`ModelView` schema, the AIUI verb set, the Search-Everywhere provider contract) carried as a **normative
+document**, against which **both** implementations validate via a **conformance golden in CI**. No crate
+imports the other; the grammar is provenance, verified by machine. This is the load-bearing refinement
+that makes "methodologically-compatible grammar" (RP-A's own words) **testable** rather than aspirational.
+
+**AI-Native-ready output (owner, 2026-07-19).** Every deliverable this research seeds — the findings'
+numbered deltas, and downstream the design-doc and the vibeterm PROP family — is authored to land
+**directly** under the two AI-Native disciplines the host project already runs, with no retrofit:
+
+- **AI-Native Rust** (`spec://org.vibevm.ai-native/core-ai-native`) governs the **`vibe-actions` side** of
+  the conformance contract: each REQ is a granular addressable anchor cited by code via `specmark::scope!`;
+  the conformance golden is a **characterization golden** over the registry/`ModelView`/AIUI surface.
+- **AI-Native TypeScript** (the `typescript-ai-native` stack) governs the **`vibeterm-core` side**: the
+  engine's pure cells (tab registry, pane-layout maths, session model, protocol codec) carry single
+  registration points, no sibling-cell coupling, strict `tsconfig`, branded types, `Result` errors,
+  `vitest` cell tests, and a `tsc`/`specmap` gate; the **`#no-render-dep` invariant is a dependency-boundary
+  lint on the floor from day one** (the TS twin of the Rust gate).
+- The **identity-grammar spec** itself is the seam where the two disciplines meet: it is the one document
+  both sides conform to and the one golden both CI floors run. Authoring the deltas as REQ-ready (each
+  carrying a prospective `spec://vibeterm/…#…` anchor and a falsifiable acceptance) is therefore not a
+  late styling pass — it is how the research output is shaped from the first delta.
+
 ## 0.2 Execution ledger (running) {#ledger}
 
 _A running record so a cold resume continues without loss; `git log` is the authoritative history._
 
 - **2026-07-19 — PLANNED.** This plan authored from a full read of `vibe-cli` + `vibe-actions` + the
   design lore + the house template. Awaiting owner review of §11 before Phase 1. No study commits yet.
+- **2026-07-19 — PLAN SHARPENED.** A critical re-read surfaced a structural conflict: the plan declared
+  "open research → design → contracts" while PROP-044 + `task.md` §3 had already frozen D0–D7 as **binding**
+  (stack, transport shape, i18n/theming presence, tab model, tear-off). Left as-is, research would ratify
+  frozen decisions rather than earn its answers. Resolution landed in this revision: §0.3 separates the
+  **frozen axes** (constraints research works within) from the **open questions** (what research actually
+  earns); §3 RQs are re-posed in the mode "how exactly to realise X within the frozen stack, and what new
+  questions does that raise," not "which stack." RP-A is sharpened to **conformance** (identity-grammar
+  spec + CI golden — §0.1). New RQs added: capability/security surface for an AI peer, AIUI-plane
+  unification, the transport-contract form. Predictions sharpened to falsifiable + measured, with an
+  AI-UI evaluation-matrix deliverable. Output framed AI-Native-ready (Rust + TS). No study commits yet;
+  this is a plan revision, awaiting owner review of §11 before Phase 1.
+
+---
+
+## 0.3 Frozen axes vs open questions — the scope contract {#frozen-vs-open}
+
+This research is **constrained**, not open-ended. The owner has already decided a set of load-bearing axes
+(recorded as PROP-044 D0–D7 + RP-A/D + the AI-UI mandate); they are **constraints this research works
+within**, not hypotheses it earns. What the research **does** earn is the realisation detail of each frozen
+axis, plus the genuinely open questions the frozen axes raise. Naming both explicitly is what keeps the
+study from collapsing into a post-hoc ratification of decisions already made.
+
+### Frozen axes — constraints (do not re-litigate without naming the trigger) {#frozen}
+
+- **AI-UI-Ready by construction** (owner). Control is semantic `invoke`; CDP is observation-only (PROP-042).
+- **Self-contained & detachable** (RP-A + RP-D): the full adapted system lives under `spec/modules/vibeterm/`
+  (+ `apps/vibeterm/`), a PROP family, no build-dep on vibevm-internal. **Conformance to a shared
+  identity-grammar is in-scope** (§0.1); a build-dep is not.
+- **Stack — Solid + Vite + Tailwind v4 + Kobalte + strict TS** (PROP-044 D4). Terminal-view pages stay lean
+  vanilla TS + xterm.js (N tabs = N light renderers).
+- **Shell = default visible `vibe term`** (D2); headless/`--control` stays bare single-view, unchanged (§8).
+- **Tabs engine — each tab = own `WebContentsView` + main-owned pty keyed by `TabId`**; reparent preserves
+  live state (D0, empirically verified). Split ceiling = 2 in M1 (D3).
+- **Chrome↔engine protocol — transport-agnostic, sidecar-ready** (D5): Electron IPC via a typed preload
+  bridge now; the **form** of the contract (codec, versioning, stream/RPC, consistency) is an open question.
+- **i18n from the start** (D6): address-keyed catalogue, `{value, original_en}`, legibility gate, en + ru,
+  live locale switch. The TS **mechanism** (Fluent runtime, reactive catalogue) is an open question.
+- **Live theming via design tokens** (D7): CSS custom properties, live switch, components reference roles
+  never hex, two launch themes (dark purple + Anthropic). The **token architecture** (Tailwind @theme
+  integration, Kobalte, a11y modes, icons, spacing-scale) is an open question.
+- **TS-core now, full AI-Native gate later** (D1): typed TS cells + `tsc` + `vitest` from the start;
+  `eslint`/`conform`/`specmap` wiring deferred until the shell stabilises.
+- **AI-Native-ready output** (§0.1): the deltas land as REQ-ready anchors under AI-Native Rust
+  (`vibe-actions` side) and AI-Native TS (`vibeterm-core` side), with a conformance golden both floors run.
+
+### Open questions — what this research EARNS {#open}
+
+- The **shape of the action/AIUI core in TS** (registry, typed context, pure enablement, `invoke`,
+  `ModelView`, the Surface seam) — its concrete cell decomposition within the frozen stack and the
+  `#no-render-dep` boundary lint.
+- The **`ModelView` schema for a window→tab→pane tree** (fields, deltas vs re-resolution, per-pane focus,
+  accessibility projection) — richer than the TUI's single-screen snapshot.
+- The **identity-grammar conformance contract** between Rust `vibe-actions` and TS `vibeterm-core` (§0.1).
+- The **capability/permission surface** for an AI / networked caller (Dangerous actions, caller provenance,
+  scope-REFUSE, audit) — inert in the TUI, load-bearing once AI is a peer.
+- How the new **semantic AIUI relates to PROP-042's three planes** (render / terminal / model) — extension,
+  fourth plane, or peer; per-tab vs per-process.
+- The **transport-contract form** within "transport-agnostic" — codec, versioning, stream vs RPC,
+  backpressure, ordering, consistency between main-engine and Solid-store.
+- The **state-container model** reconciling Solid fine-grained reactivity with the immutable-`ModelView` /
+  re-resolution discipline, without a double source of truth.
+- The **design-system specifics** within "design tokens + two themes" (Tailwind v4 `@theme`, Kobalte
+  theming, accessibility modes, SVG icon vocabulary, spacing-scale).
+- The **AI-UI evaluation criterion** — how "not worse than a human" is measured (a task matrix driven both
+  ways: `invoke` vs human, compared on success / latency / observability).
+- The **GUI-only inventory** with no TUI analogue (drag-and-drop, multi-pane focus, clipboard, OS
+  integration, DPI/scale, the accessibility tree) — each a candidate architecture delta.
+- The **external comparative** (clean-room, docs-first): how VS Code / Zed / Warp / Raycast expose control
+  (semantic vs CDP vs proprietary) and how Radix / Tailwind / Style-Dictionary model design tokens.
+
+The research **earns** the open questions and **details** the realisation of the frozen axes. It does not
+reopen the axes. A finding that a frozen axis is wrong stops the study and surfaces a named trigger to the
+owner (per the decision-record discipline) — it is not silently re-decided inside the findings.
 
 ---
 
@@ -150,7 +252,11 @@ for permissive VS Code, under the firewall (§1).
 
 ## 3. Study questions — grounded in OUR port {#questions}
 
-Each RQ carries a preliminary hypothesis to confirm or refute.
+Each RQ carries a preliminary hypothesis to confirm or refute. **Scope (§0.3):** RQ1–RQ11 are the
+original study questions (several sharpened in this revision); RQ12–RQ17 are added where the §0.1
+conformance refinement, the §0.3 frozen/open split, and a critical re-read exposed open questions the
+original plan had not posed. Every RQ is posed within the frozen axes — it asks *how to realise X under
+the frozen stack*, or names a genuinely open question — it does not reopen an axis.
 
 - **RQ1 — Universality of the action core.** Which PROP-039 concerns are surface/language-neutral, and
   how does each port to TS? *Hypothesis: address grammar, Action value, Registry laws, typed
@@ -161,11 +267,19 @@ Each RQ carries a preliminary hypothesis to confirm or refute.
   Profile, Theme, Locale, Action, Provider) — identity/addressing, hierarchy, and the `action://vibeterm/*`
   catalogue. *Hypothesis: stable ids (branded `TabId`, etc.) + the `action://` grammar cover addressing
   with no new scheme.*
-- **RQ3 — MVC/state in TS/Solid.** How does "the Model + Registry are the interface; the View is one
-  projection" realise in SolidJS? Render-free engine (no Solid/DOM/Electron types) + a serialisable
-  `ModelView` + the chrome as its projection + the AI-UI surface as a peer client. *Hypothesis: Solid's
-  fine-grained store is an excellent `ModelView` host; MVVM and our MVC coincide; a dependency-boundary
-  lint keeps the engine render-free.*
+- **RQ3 — MVC/state in TS/Solid: the state-container reconciliation (sharpened).** The naive framing
+  ("Solid's store is an excellent `ModelView` host; MVVM and our MVC coincide") hides a real tension.
+  PROP-039 §3.2 requires the resolved snapshot to be **immutable** and change to come by **re-resolution**
+  — but Solid's `createStore` is a **fine-grained mutable** store optimised for in-place path updates. The
+  question this research earns: **what is the source of truth, and how do the immutable-re-resolution
+  discipline and Solid's mutable reactivity coexist without a double source of truth** and without a
+  re-render storm on a large window→tab→pane `ModelView`? Candidate shape to confirm or refute: the
+  render-free engine owns the authoritative immutable `ModelView`; a Solid store is a **one-way projection**
+  (engine → chrome) rebuilt on re-resolution; chrome-local **ephemeral** state only (hover, drag-ghost,
+  in-flight keystrokes) lives outside the engine and never crosses the seam. *Hypothesis: the projection
+  model holds; the chrome never mutates the `ModelView` directly — it dispatches actions (the AI-UI verb)
+  and re-resolves. Falsified if a class of UI state cannot be expressed without chrome-side mutation of the
+  model, or if the projection rebuild is too costly at the tab counts users reach.*
 - **RQ4 — The AI-UI surface (semantic, NOT CDP).** The verbs (`invoke` / `state` / `list_actions` /
   `search`), the `ModelView` **schema for a multi-window/tab/pane shell**, how it attaches as a peer of
   the Solid chrome, and how it relates to PROP-042's planes and the Rust `vibe aiui`. *Hypothesis: the
@@ -176,13 +290,32 @@ Each RQ carries a preliminary hypothesis to confirm or refute.
   (cmdk/Kobalte). *Hypothesis: the PROP-039 §10 engine is surface-neutral; only the row renderer changes.*
 - **RQ6 — i18n for TS/GUI.** Address-keyed catalogue in TS, `{value, original_en}`, the legibility gate,
   en + ru, live locale switch. *Hypothesis: PROP-039 §8 ports directly; Fluent has a JS runtime.*
-- **RQ7 — Visual language & design system (the GUI twin of the Theme).** The GUI analogue of semantic
-  palette role-tokens + one-source-projection: **design tokens** (colour/space/radius/typography roles),
-  the **two launch themes** (dark purple + Anthropic-style), **live** theme switching, the component
-  library (Solid + Kobalte + Tailwind v4), the visual grammar (windows/panels/spacing/rhythm — the GUI
-  §5/§6), icon vocabulary, and accessibility axes (contrast / reduced-motion / density). *Hypothesis: the
-  TUI's "one Theme projected across tiers" becomes "one token set projected across themes/modes"; the
-  tier-degradation concept has no GUI analogue and is replaced by theme/accessibility modes.*
+- **RQ7 — Visual language & design system (the GUI twin of the Theme; split into sub-questions).** The
+  frozen axis (D7) fixes "design tokens + two themes + live switch + role-not-hex"; what this research
+  earns is the **token architecture**. The TUI's glyph vocabulary (`▾▸●○╭╮`) does **not** port to a GUI, so
+  the design system has genuinely new surface beyond a port. Sub-questions, each its own prospective REQ:
+  - **RQ7a — Tailwind v4 `@theme` vs our design tokens.** Tailwind v4 already ships a theme layer (`@theme`
+    with CSS-variable generation); does our token system **sit above** it, **replace** it, or **layer
+    through** it? *Hypothesis: our semantic role-tokens resolve to CSS custom properties that Tailwind's
+    `@theme` consumes — one source, Tailwind as the utility consumer, not a competing token namespace.*
+  - **RQ7b — Kobalte theming unification.** Kobalte exposes its primitives via `data-*` attributes and its
+    own CSS-variable convention; how do its parts adopt **our** role-tokens so a Kobalte dialog and our
+    `ui::Window` read as one system? *Hypothesis: a thin Kobalte-theme adapter maps our roles onto
+    Kobalte's expected variables; components never reach past our tokens.*
+  - **RQ7c — Accessibility modes (contrast / reduced-motion / density).** The TUI's tier-degradation has no
+    GUI analogue; the GUI analogue is **a11y/density modes**. Representation: CSS media queries
+    (`prefers-reduced-motion`, `prefers-contrast`), explicit `data-` attributes, or token-variants? *Hypothesis:
+    a token-variant layer (a theme × a mode matrix) driven by both media queries and explicit user choice.*
+  - **RQ7d — The GUI icon vocabulary.** The TUI glyph table does not carry over; a GUI needs an **SVG icon
+    system** (one source, role-coloured, theme-aware, a11y-labelled). *Hypothesis: a small owned SVG icon
+    set consumed through a single `<Icon name=role>` primitive; icons reference roles, never raw colour.*
+  - **RQ7e — Spacing & rhythm scale.** The TUI's `PAD_X/PAD_Y/GUTTER` constants become a GUI **spacing
+    scale**; is it Tailwind's spacing scale, a custom scale, or both? *Hypothesis: one owned spacing scale
+    exposed as tokens; Tailwind utilities reference it; the §6 rhythm rules (centred rows, interior padding,
+    group gutter) port as layout primitives, not magic numbers.*
+  - *Umbrella hypothesis: the TUI's "one Theme projected across tiers" becomes "one token set projected
+    across themes/modes"; the tier-degradation concept has no GUI analogue and is replaced by theme × a11y
+    modes; the design system is a first-class deliverable (RP-C), not decoration.*
 - **RQ8 — External comparative (clean-room, docs-first).** How do VS Code / Zed / Warp / Raycast model
   the palette + actions; how do Radix/Tailwind/Style-Dictionary model design tokens; do any expose a
   render-free, addressable, **AI-drivable** action core with a serialisable model as the reference
@@ -200,11 +333,72 @@ Each RQ carries a preliminary hypothesis to confirm or refute.
   specs standalone and can spin out of vibevm? Which vibevm concepts are ported as owned re-expressions
   vs. depended upon? *Hypothesis: everything the shell needs (actions/AIUI/`ModelView`/SE/i18n/design
   system) is re-expressed under `spec/modules/vibeterm/`; the only ties to vibevm are methodological
-  provenance (citations), never build/spec dependencies.*
+  provenance (citations), never build/spec dependencies — with the identity-grammar (RQ12) the **one**
+  shared normative surface, conformance-tested not build-depended.*
 
----
+- **RQ12 — Conformance: the identity-grammar contract (new; sharpens RP-A).** What is the **minimum**
+  shared surface the Rust `vibe-actions` and the TS `vibeterm-core` must agree on so their two AIUIs are
+  one surface, while neither imports the other? Candidate: an **identity-grammar spec** — the `action://`
+  grammar, the `ModelView` schema (incl. the window→tab→pane tree), the AIUI verb set
+  (`invoke`/`state`/`list_actions`/`search`), the Search-Everywhere provider contract, the i18n key scheme
+  — carried as a normative document both implementations validate via a **conformance golden in CI**.
+  *Hypothesis: the grammar is small enough to specify without coupling, rich enough that conformant
+  implementations interoperate at the AIUI surface; the conformance golden is a characterization golden on
+  both floors. Falsified if a load-bearing behaviour cannot be expressed without a build-dep, or if the
+  two implementations cannot be kept conformant by a CI check.*
 
-## 4. Part (a) — the independent design-space map, written BEFORE external sources {#design-space}
+- **RQ13 — Capability / permission surface for an AI / networked caller (new).** PROP-039 §7.2's
+  `Capability` (`Safe`/`Mutating`/`Dangerous`) is **inert in the trusted local TUI**. Once the AI is a peer
+  client with the same `invoke` — and later a networked sidecar — "the AI may do anything a human may"
+  meets "a `Dangerous` action must not fire without consent." This research earns the model: how is a
+  `Dangerous` action gated for a non-human caller (prompt-on-dangerous? allowlist? a confirmation action
+  the AI must invoke first?), how is the **caller identified and scoped** (local AI vs sidecar vs remote),
+  and where does the scope-REFUSE live (it must refuse scope escalation as an error, never a warning — the
+  `secrets-hygiene` posture)? *Hypothesis: PROP-039 §7.2 capabilities + an explicit caller-identity +
+  granted-scope context + a prompt-on-`Dangerous` flow for non-trusted callers; the engine never trusts
+  the caller's self-reported scope. Falsified if a safe, non-bypassable model cannot be sketched.*
+
+- **RQ14 — AIUI-plane unification (new).** Today `vibe aiui` (PROP-042) drives **three planes**: the render
+  plane (CDP, observation-only), the terminal plane (`--control` HTTP over a live single view), and the
+  model plane (`vibe aiui state` → `ModelView`). The new semantic AIUI (`invoke` over the shell's action
+  core) is a fourth control surface. The research earns the relationship: is semantic-`invoke` an
+  **extension of the model plane**, a **fourth peer plane**, or a **replacement** of the terminal-plane
+  control? How do the per-tab AIUI scope (`TabId`) and the per-process `--control` discovery coexist? And
+  how does a single `vibe aiui` CLI address both the shell (invoke `vibeterm/*`) and the hosted `vibe tree`
+  (invoke `vibe.tree/*`) without forking the surface? *Hypothesis: the four verbs fold onto the model
+  plane; the terminal plane stays as the legacy single-view observation path (frozen, PROP-044 §8); CDP
+  stays observation-only. Falsified if the unification loses a capability the three-plane model has.*
+
+- **RQ15 — Transport-contract form (new; details the frozen D5).** "Transport-agnostic, sidecar-ready,
+  no Electron types" (D5) is frozen; its **form** is open. The research earns: the **codec** (a TS
+  discriminated union + hand-rolled codec? a JSON-Schema? an IDL — protobuf/cap'n'proto — generating both
+  sides?), the **versioning** (contract-semver vs per-message), the **exchange model** (event-stream for
+  `opened`/`closed`/`moved`/`active-changed` vs request-response for commands), **backpressure** and
+  **ordering** across windows, and the **consistency model** between the authoritative main engine and the
+  Solid-store projection (RQ3). *Hypothesis: a TS discriminated union as the contract source, a generated
+  JSON-Schema for cross-language/conformance use, contract-semver, a hybrid event+RPC exchange, and a
+  single-writer (main) consistency model with the chrome as a one-way projection. Falsified if a
+  transport requirement forces Electron types back into the contract.*
+
+- **RQ16 — The GUI-only inventory (new).** Each item below has **no TUI analogue** and is therefore a
+  candidate *invent*, not a port; the research catalogues them and assigns each a prospective REQ so none
+  is discovered late: drag-and-drop (tab reorder, tear-off drag-back into a window); keyboard focus
+  management across multiple panes (a Tab-order model richer than PROP-037 §5.4's single-screen order);
+  clipboard semantics per platform; OS integration (notifications, dock/taskbar badges, jump-lists,
+  window-state restore); DPI/scale and font rendering under xterm.js; the **accessibility tree** (ARIA for
+  the chrome; xterm.js's own a11y for the terminal views). *Hypothesis: every item resolves as an additive
+  GUI delta under the frozen axes; none reopens an axis. Falsified if any item forces a change to a frozen
+  axis (e.g. a11y forces a non-token colour path).*
+
+- **RQ17 — The AI-UI evaluation criterion (new; makes "not worse than a human" measurable).** The owner's
+  non-negotiable is that the AI drives any function **as well as or better than a human**. As written that
+  is a slogan. The research earns an **evaluation matrix**: a representative task set over the shell (open
+  / select / switch / split / tear-off / search / theme-switch / locale-switch), each driven **both** ways
+  — by a human (mouse + keyboard) and by the AIUI verbs — and compared on **success rate**, **latency**,
+  and **observability** (can the AI assert the resulting state?). This matrix is a findings-deliverable and
+  the substrate of the "we lead" prediction (§9). *Hypothesis: on the matrix the AI path reaches parity on
+  success and observability and trades latency within an acceptable bound; cases where it cannot are named
+  design obligations, not silent gaps.*
 
 Written first, on purpose (anti-anchoring): enumerate what an **AI-UI-ready, universal GUI architecture**
 needs from first principles + our own methodology, so the external study confirms or refutes a stated
@@ -225,8 +419,15 @@ become the predictions (§9). The concept inventory to fill from our specs + fir
 9. **Keymap / input** — keys bind to addresses; a pure resolver; chords in the adapter.
 10. **Surfaces as adapters** — the chrome (Solid), the terminal views (vanilla xterm), the AI-UI, a
     future sidecar — all peers of one engine.
-11. **Transport** — the sidecar-ready contract; Electron IPC now; capability scope.
+11. **Transport** — the sidecar-ready contract; Electron IPC now; the contract **form** (RQ15).
 12. **Testability & evolvability** — the headless AIUI as the golden; how the stack grows without churn.
+13. **Identity-grammar conformance (RQ12)** — the one normative surface the Rust `vibe-actions` and the TS
+    `vibeterm-core` share; the conformance golden both CI floors run; provenance, not a build-dep.
+14. **Capability / permission surface (RQ13)** — `Dangerous`-action gating, caller identity + granted scope,
+    scope-REFUSE, audit — the security model an AI/networked peer makes load-bearing.
+15. **The GUI-only inventory (RQ16)** — drag-and-drop, multi-pane focus, clipboard, OS integration,
+    DPI/scale, the accessibility tree; each a candidate *invent*, catalogued up front.
+16. **The AI-UI evaluation criterion (RQ17)** — the task matrix that makes "as well as a human" measurable.
 
 ## 5. Part (c) — the pitfall / failure-mode catalogue {#pitfalls}
 
@@ -249,6 +450,26 @@ design obligation:
   system is a first-class deliverable, the GUI twin of `tui-visual-language.md`.)
 - **Over-building the universal contract** before one surface ships. (Answer: target the shell as the
   first consumer; the contract is *ready* for more, proven by design not by building adapters.)
+- **Two cores drift silently (the no-conformance failure).** A Rust `vibe-actions` and a TS `vibeterm-core`
+  that share no grammar diverge — addresses, `ModelView`, AIUI verbs — and the two AIUIs become
+  incompatible with no test to catch it. (Answer: RQ12 — an identity-grammar spec + a conformance golden
+  in CI; build-dep stays none, conformance is machine-checked.)
+- **The capability hole.** An AI peer with the same `invoke` as a human, but no gating, fires `Dangerous`
+  actions without consent; a networked caller escalates scope. (Answer: RQ13 — caller identity + granted
+  scope + prompt-on-`Dangerous` + scope-REFUSE; the engine never trusts the caller's self-reported scope.)
+- **AIUI-plane proliferation.** The legacy three-plane `vibe aiui` (render/terminal/model) plus a new
+  semantic-invoke surface fork into two unrelated AIUIs to one app. (Answer: RQ14 — fold the verbs onto one
+  plane, keep CDP observation-only, declare the relationship explicitly in the contracts.)
+- **Double source of truth.** A Solid mutable store and an immutable-`ModelView` engine both mutated → the
+  chrome and the AI disagree about state; optimistic chrome edits race authoritative engine events. (Answer:
+  RQ3 — the engine is the single writer; the Solid store is a one-way projection; ephemeral chrome state
+  never crosses the seam.)
+- **The GUI-only unknowns discovered late.** DnD, multi-pane focus, clipboard, OS integration, DPI, a11y —
+  each has no TUI analogue and surfaces mid-build as rework. (Answer: RQ16 — catalogue them up front, each
+  a named prospective REQ.)
+- **"AI-UI-ready" as an unmeasured slogan.** Without a criterion, the AI surface ships "designed-for" but
+  never proven "as well as a human." (Answer: RQ17 — the evaluation matrix; cases the AI cannot do are
+  design obligations, not silent gaps.)
 
 ## 6. Part (d) — candidate architecture pillars (to be EARNED, not yet normative) {#pillars}
 
@@ -278,6 +499,24 @@ AI-UI-first and answers a §5 pitfall.
     design-docs, code — lives under `spec/modules/vibeterm/` (+ `apps/vibeterm/`) with **no hard
     dependency on vibevm-internal crates or specs**, so vibeterm can stand alone and spin out
     (specspace-ready). vibevm's methodology is ported as provenance, never a build dependency.
+11. **Identity-grammar conformance (RQ12).** A normative identity-grammar spec (address grammar,
+    `ModelView` schema, AIUI verbs, SE provider contract, i18n key scheme) that both the Rust
+    `vibe-actions` and the TS `vibeterm-core` validate against a CI conformance golden — provenance, not a
+    build-dep; the load-bearing answer to two-core drift (R5).
+12. **Capability-scoped AI / networked callers (RQ13).** A non-bypassable capability + caller-identity +
+    granted-scope model with prompt-on-`Dangerous` and scope-REFUSE — the security surface the AIUI peer
+    makes load-bearing; the engine never trusts the caller's self-reported scope.
+13. **One AIUI surface, not two (RQ14).** The semantic verbs fold onto a single plane; the legacy
+    `vibe aiui` terminal/model/render planes are declared (extension / fourth / replacement) explicitly;
+    CDP stays observation-only.
+14. **A measurable AI-UI (RQ17).** The evaluation matrix — a task set driven both by human and by the AIUI
+    verbs and compared on success / latency / observability — is a findings deliverable; "as well as a
+    human" is demonstrated, not asserted.
+
+> **All pillars are posed within the frozen axes (§0.3).** A pillar does not reopen the stack, the tab
+> model, the transport-shape decision, or the presence of i18n/theming — it earns the *realisation* of
+> each and the genuinely open questions above. A pillar falsified by the study becomes a named trigger to
+> the owner, not a silent redesign.
 
 ## 7. Deliverables {#deliverables}
 
@@ -285,10 +524,15 @@ AI-UI-first and answers a §5 pitfall.
 campaign.
 
 - **D1 — the findings document** (this campaign's output). Home `research/vibeterm/` (comparative-research
-  genre for the external part): the §4 design-space map; the internal methodology extraction (what
-  ports / adapts / is new); the §5 pitfalls validated; the external comparative (two-way gaps); the §6
-  pillars as **numbered architecture deltas** each naming a prospective contract REQ; the §9 predictions
-  checked; a re-fetch/provenance table for external sources.
+  genre for the external part): the §4 design-space map (incl. the §0.3 frozen/open split as its framing);
+  the internal methodology extraction (what ports / adapts / is new); the §5 pitfalls validated; the
+  external comparative (two-way gaps); the §6 pillars as **numbered architecture deltas** each naming a
+  prospective contract REQ; the §9 predictions checked; the **AI-UI evaluation matrix** (RQ17); the
+  **recommended identity-grammar conformance surface** (RQ12) — the minimum the Rust and TS cores share and
+  the shape of the conformance golden; a re-fetch/provenance table for external sources. Every delta is
+  **REQ-ready** — a prospective `spec://vibeterm/…#…` anchor, a one-line acceptance, and the AI-Native
+  discipline (Rust for `vibe-actions`, TS for `vibeterm-core`) it lands under — so D2/D3 author from the
+  findings alone with no re-derivation.
 - **D2 — the design-doc** (downstream): **vibeterm-owned** (under `spec/modules/vibeterm/`, not the
   shared `spec/design/`) — the VibeTerm UI architecture (entities, MVC/state, the AI-UI surface) and the
   **design system** (the GUI twin of `tui-visual-language.md`), likely split into an architecture-lore
@@ -305,9 +549,12 @@ campaign.
 Every phase ends `bash tools/self-check.sh` green (docs-only phases are trivially green; the floor still
 runs) + an execution-ledger entry (§0.2) + a refreshed status line. Any boundary is a safe stop.
 
-- **Phase 0 — framing (NO commits).** Resolve the §11 review points with the owner; lock RQ1–RQ10; write
-  the §4 design-space map and turn its claims into §9 predictions; confirm which external sources are
-  in-bounds (RP-E). **Gate: the RQs + review points + design-space map reviewed with the owner.**
+- **Phase 0 — framing (NO commits).** Resolve the §11 review points with the owner; lock RQ1–RQ17; write
+  the §4 design-space map **under the §0.3 frozen/open framing** (frozen axes are constraints, not
+  hypotheses) and turn its claims into §9 predictions; **sketch the AI-UI evaluation matrix (RQ17)** so the
+  "we lead / parity" predictions are measurable from the start; confirm which external sources are in-bounds
+  (RP-E) and the per-source depth (RP-B). **Gate: the RQs + review points + design-space map reviewed with
+  the owner.**
 - **Phase 1 — internal methodology extraction.** From our own specs, write the ports/adapts/new table
   for the full vertical (entities, MVC/state, actions/AIUI, SE, i18n, visual language). Commit `docs(research): …`.
 - **Phase 2 — external comparative (clean-room, docs-first).** Targeted study of §2.2; two-way gaps.
@@ -319,19 +566,39 @@ runs) + an execution-ledger entry (§0.2) + a refreshed status line. Any boundar
 
 ## 9. Predictions — falsifiable, checked at close {#predictions}
 
-- **P1** — Every PROP-039 core concern is expressible in TS with **zero rendering deps**. *Falsified if
-  some concern needs a DOM/Solid/Electron type.*
-- **P2** — The serialisable `ModelView` generalises from a single-screen TUI to a **window→tab→pane
-  tree** with no new mechanism. *Falsified if the multi-surface shell needs a fundamentally different
-  model shape.*
-- **P3** — A **language-neutral action/AIUI contract** shared by Rust and TS is feasible and unifies the
-  two AIUIs. *Falsified if they cannot share address grammar + `ModelView` + verbs without loss.*
-- **P4** — "One Theme projected across tiers" maps to **"one token set projected across themes/modes"**;
-  the tier-degradation concept has **no** GUI analogue. *Falsified if tiers have a real GUI analogue we
-  need.*
-- **P5** — No mainstream GUI app (VS Code / Zed / Warp) exposes a **render-free, addressable,
+- **P1** — Every PROP-039 core concern (address, registry, typed context, pure enablement, `invoke`,
+  capabilities, `ModelView`, Surface, SE provider model, address-keyed i18n) is expressible in TS with
+  **zero rendering deps**, enforced by a dependency-boundary lint on the floor. *Falsified if a core
+  concern cannot be expressed without importing a Solid/DOM/Electron type into an engine cell, or if the
+  boundary lint cannot be made to fail on such an import.*
+- **P2** — The serialisable `ModelView` generalises from a single-screen TUI to a **window→tab→pane tree**
+  using only re-resolution + event-deltas (no stateful diffing, no second mutation mechanism). *Falsified
+  if the multi-surface shell needs a fundamentally different model shape or a beyond-re-resolution
+  diffing mechanism.*
+- **P3** — A **language-neutral identity-grammar** (address grammar + `ModelView` schema + AIUI verbs + SE
+  provider contract + i18n key scheme) is small enough to specify without coupling, and a **conformance
+  golden** keeps the Rust `vibe-actions` and the TS `vibeterm-core` conformant in CI. *Falsified if a
+  load-bearing behaviour cannot be expressed without a build-dep, or if the two implementations cannot be
+  kept conformant by a CI check.*
+- **P4** — The immutable-`ModelView`/re-resolution discipline and Solid's fine-grained reactivity
+  reconcile via a **one-way projection** with no double source of truth (RQ3). *Falsified if a class of UI
+  state forces chrome-side mutation of the model, or if the projection rebuild is too costly at real tab
+  counts.*
+- **P5** — A safe, non-bypassable **capability + caller-scope** model for an AI/networked peer is
+  feasible (prompt-on-`Dangerous`, scope-REFUSE, engine never trusts self-reported scope). *Falsified if
+  the model cannot be sketched without a trusted-caller assumption that breaks the AIUI-peer goal.*
+- **P6** — "One Theme projected across tiers" maps to **"one token set projected across themes/modes"**;
+  the tier-degradation concept has **no** GUI analogue (replaced by theme × a11y/density modes). *Falsified
+  if a real GUI tier-analogue is needed.*
+- **P7** — On the **AI-UI evaluation matrix (RQ17)**, the AIUI-verb path reaches **parity** with the
+  human path on success rate and observability, and trades latency within an acceptable bound; residual
+  gaps are named design obligations. *Falsified if the AI path is measurably worse than human on success or
+  observability on the matrix, with no design-obligation remedy.*
+- **P8** — No mainstream GUI app (VS Code / Zed / Warp / Raycast) exposes a **render-free, addressable,
   AI-drivable** action core with a serialisable `ModelView` as the *reference* surface — our approach
-  **leads**. *Falsified if one already does exactly this.*
+  **leads** — **and** the comparative confirms at least one proven mechanism per open area (token systems,
+  palette UX, keyboard model) worth adopting. *Falsified if a competitor already does exactly this, or if
+  the comparative yields nothing adoptable.*
 
 ## 10. Risks {#risks}
 
@@ -342,8 +609,18 @@ runs) + an execution-ledger entry (§0.2) + a refreshed status line. Any boundar
   for MIT VS Code; the findings doc is the only interface; the Rust/Java/TS boundary forces re-expression.
 - **R4 — over-building the universal contract** before one surface ships. Mitigation: target the shell;
   readiness proven by design, not by building adapters.
-- **R5 — two-core drift** (Rust `vibe-actions` vs the TS shell core). Mitigation: RP-A — settle the one
-  shared contract in this research, before either grows.
+- **R5 — two-core drift** (Rust `vibe-actions` vs the TS shell core). Mitigation: **RQ12 / §0.1 — an
+  identity-grammar conformance spec + a CI conformance golden**; build-dep stays none (RP-A), conformance
+  is machine-checked from the first delta. (The original "settle the one shared contract" mitigation
+  contradicted RP-A's "no shared contract" — conformance is the reconciliation: shared **grammar**, not
+  shared **build-dep**.)
+- **R6 — the frozen-axis trap (new).** With D0–D7 frozen, research risks ratifying decisions rather than
+  earning answers. Mitigation: §0.3 names frozen vs open explicitly; every RQ is posed within the frozen
+  axes; a finding that a frozen axis is wrong surfaces a named trigger to the owner, it is not silently
+  re-decided.
+- **R7 — the unmeasured AI-UI (new).** "AI-UI-ready by construction" can ship as "designed-for" without
+  ever being proven "as well as a human." Mitigation: RQ17 — the evaluation matrix is a Phase-0 sketch and
+  a findings deliverable; P7 is the measured prediction.
 
 ## 11. Open review points — owner decisions {#review-points}
 
@@ -362,9 +639,23 @@ Resolve these in Phase 0, before Phase 1.
   bridge to the Rust crate (process/language mismatch + coupling). *Revisit:* if a live shared contract with
   the Rust TUI-AIUI is ever needed, add an interop adapter — without making vibeterm depend on vibevm to
   build.
+  **Conformance refinement — RESOLVED (owner, 2026-07-19; sharpens RP-A, see §0.1 + RQ12).** The
+  "methodologically-compatible grammar" line above is now load-bearing and testable: the shared surface
+  is an **identity-grammar spec** (address grammar + `ModelView` schema + AIUI verbs + SE provider
+  contract + i18n key scheme) carried as a **normative document**, validated by a **conformance golden in
+  CI** on both the Rust `vibe-actions` and the TS `vibeterm-core` sides. This is **not** the rejected
+  "shared language-neutral contract module" (that would be a build-dep coupling vibeterm to vibevm) —
+  there is no crate import either way; the grammar is provenance the CI keeps honest. The minimum shared
+  surface and the golden's shape are themselves an open question this research earns (RQ12); the
+  *direction* (identity-grammar + CI golden) is settled.
 - **RP-B — research scope & external source set.** *Lean:* internal port is primary; external comparative
   is targeted + docs-first (VS Code, Zed, Warp, Raycast; Radix/Tailwind/Style-Dictionary). Owner confirms
-  the set (and whether to include any).
+  the set (and whether to include any). **Per-source depth (added):** the comparative is bounded by the
+  open questions — VS Code (MIT, source-readable) gets depth on the action/palette model **and on how it
+  exposes (or fails to expose) a semantic control API** (RQ8/RQ14); Zed/Warp/Raycast get docs/behaviour
+  reads focused on the **AI/agent control surface** (RQ8, the "we lead" prediction); Radix/Tailwind/Style
+  -Dictionary get design-token depth only (RQ7a). The acceptance is the two-way gap table, not an
+  exhaustive audit.
 - **RP-C — design-system depth.** *Lean:* the visual language + design system is a **first-class
   deliverable** of this research (its own design-doc, the GUI twin of `tui-visual-language.md`), covering
   the two launch themes, tokens, live switching, the component library, the visual grammar, and
