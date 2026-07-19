@@ -2,7 +2,7 @@
 
 **Status:** DRAFT (v0.1, 2026-07-19) — milestone-1 target, not yet implemented.
 **Module:** `vibeterm` (new). **Campaign:**
-[`spec/terraforms/VIBETERM-SHELL-PLAN-v0.1.md`](../../terraforms/VIBETERM-SHELL-PLAN-v0.1.md).
+[`research/vibeterm/VIBETERM-SHELL-PLAN-v0.1.md`](../../../research/vibeterm/VIBETERM-SHELL-PLAN-v0.1.md).
 **Related:** PROP-042 (AIUI observation — the headless single-view path this
 contract must NOT disturb), PROP-043 (GUI launchers — `vibeterm.exe` opens this
 shell), PROP-036 / PROP-037 (the `vibe tree` model + TUI, hostable as a tab),

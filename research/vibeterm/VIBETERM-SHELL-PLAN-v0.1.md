@@ -2,11 +2,11 @@
 
 **Status:** GATED (2026-07-19) — implementation (P1 onward) waits on the
 UI-architecture research
-[`VIBETERM-UI-ARCHITECTURE-RESEARCH-PLAN-v0.1`](../research/VIBETERM-UI-ARCHITECTURE-RESEARCH-PLAN-v0.1.md)
+[`VIBETERM-UI-ARCHITECTURE-RESEARCH-PLAN-v0.1`](VIBETERM-UI-ARCHITECTURE-RESEARCH-PLAN-v0.1.md)
 → a design-doc → the contracts, per the owner's research → design → execution
 cadence. Phase 0 (the reparent spike) stands; P1+ resume once the architecture is
 settled. **Opened:** 2026-07-19. **Contract:**
-[`spec/modules/vibeterm/PROP-044-terminal-shell.md`](../modules/vibeterm/PROP-044-terminal-shell.md).
+[`spec/modules/vibeterm/PROP-044-terminal-shell.md`](../../spec/modules/vibeterm/PROP-044-terminal-shell.md).
 **Floor:** `apps/vibeterm` — `node --test` (existing) + `tsc --noEmit` + `vitest`
 (new Solid chrome + engine cells). The Rust floor (`bash tools/self-check.sh`)
 applies to any `crates/**` change (e.g. a new `vibe term` flag).
@@ -69,13 +69,13 @@ corePASS=true   xtermPASS=true
 
 → `WebContentsView` reparent (`removeChildView`→`addChildView`) preserves the same
 `WebContents` (no reload) and its live xterm.js. Foundation of PROP-044 §3/§5 and
-Decision [#d0](../modules/vibeterm/PROP-044-terminal-shell.md#d0-reparent). Spike
+Decision [#d0](../../spec/modules/vibeterm/PROP-044-terminal-shell.md#d0-reparent). Spike
 kept in the session scratchpad (throwaway).
 
 ## Decisions {#decisions}
 
 The binding records live at the contract:
-[PROP-044 #decisions](../modules/vibeterm/PROP-044-terminal-shell.md#decisions) —
+[PROP-044 #decisions](../../spec/modules/vibeterm/PROP-044-terminal-shell.md#decisions) —
 D0 reparent-preserves-state (verified), D1 TS-core-now, D2 shell-default, D3
 split-ceiling-2, D4 UI-stack (Solid/Vite/Tailwind v4/Kobalte/strict TS), D5
 transport-agnostic-sidecar-ready-protocol, D6 i18n-from-the-start, D7

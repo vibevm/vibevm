@@ -4,15 +4,15 @@
 executes. A **research campaign** (research → design → execution): its output is a **findings
 document** that feeds a *separate* design-doc session, which feeds *separate* contract sessions
 (PROP-044 + siblings), which feed *separate* implementation sessions. This plan is modelled on its
-sibling [`ACTION-SYSTEM-RESEARCH-PLAN-v0.1`](ACTION-SYSTEM-RESEARCH-PLAN-v0.1.md), the house genre for
+sibling [`ACTION-SYSTEM-RESEARCH-PLAN-v0.1`](../../spec/research/ACTION-SYSTEM-RESEARCH-PLAN-v0.1.md), the house genre for
 exactly this kind of study.
 
 > **Read-first / boot.** Executed cold. Boot the normal way (`CLAUDE.md` → `spec/boot/INDEX.md` → its
 > files → `spec/WAL.md` → `CONTINUE.md`), then read this whole file. It is self-contained: the thesis,
 > the clean-room firewall, the sources, the question-driven agenda, the deliverables, the phases, the
 > predictions, the risks, and the open owner-decisions are all here. **Prerequisite reading (our own
-> specs, no firewall):** PROP-039 (`vibe-actions`) + [`spec/design/action-system.md`](../design/action-system.md);
-> PROP-037 (the `vibe tree` TUI surface) + [`spec/design/tui-visual-language.md`](../design/tui-visual-language.md);
+> specs, no firewall):** PROP-039 (`vibe-actions`) + [`spec/design/action-system.md`](../../spec/design/action-system.md);
+> PROP-037 (the `vibe tree` TUI surface) + [`spec/design/tui-visual-language.md`](../../spec/design/tui-visual-language.md);
 > PROP-042 (the AIUI observation planes); PROP-044 (the VibeTerm shell contract, the first consumer).
 
 ---
@@ -127,9 +127,9 @@ crosses (a)→(b/c/d).
 
 | Concern | Where |
 |---|---|
-| The render-free action core, Registry, typed Ctx + pure enablement, `invoke`, capabilities, i18n, Search Everywhere provider model, Surface + serialisable `ModelView`, the headless AIUI | **PROP-039** (`spec://vibevm/modules/vibe-actions/PROP-039`) + design-doc [`action-system.md`](../design/action-system.md) |
+| The render-free action core, Registry, typed Ctx + pure enablement, `invoke`, capabilities, i18n, Search Everywhere provider model, Surface + serialisable `ModelView`, the headless AIUI | **PROP-039** (`spec://vibevm/modules/vibe-actions/PROP-039`) + design-doc [`action-system.md`](../../spec/design/action-system.md) |
 | The four-layer MVC surface; component library; the Theme; the action catalogue; keymap-binds-addresses; i18n-is-real | **PROP-037** §1, §2, §13 |
-| The visual language: semantic palette role-tokens, glyph vocabulary, tiers, **degradation-as-projection**, window aesthetics, spacing/rhythm | **[`tui-visual-language.md`](../design/tui-visual-language.md)** + PROP-037 §2.2 |
+| The visual language: semantic palette role-tokens, glyph vocabulary, tiers, **degradation-as-projection**, window aesthetics, spacing/rhythm | **[`tui-visual-language.md`](../../spec/design/tui-visual-language.md)** + PROP-037 §2.2 |
 | The three observation planes (render / terminal / model), the `ModelView` projection verb, CDP-is-observation-only | **PROP-042** §1–§5 |
 | The shell we are architecting: tab model, panes, windows, the chrome↔engine seam (D5), i18n (D6), theming (D7) | **PROP-044** (VibeTerm shell) |
 | The foton base stack (Solid + Vite + Tailwind v4 + Kobalte), reused for the chrome | `C:\Users\olegc\git\foton\packages\desktop` (owner's other project; base stack only) |
@@ -284,7 +284,7 @@ AI-UI-first and answers a §5 pitfall.
 **Only D1 belongs to THIS campaign.** D2–D4 are named for sequencing; each is its own downstream
 campaign.
 
-- **D1 — the findings document** (this campaign's output). Home `spec/research/` (comparative-research
+- **D1 — the findings document** (this campaign's output). Home `research/vibeterm/` (comparative-research
   genre for the external part): the §4 design-space map; the internal methodology extraction (what
   ports / adapts / is new); the §5 pitfalls validated; the external comparative (two-way gaps); the §6
   pillars as **numbered architecture deltas** each naming a prospective contract REQ; the §9 predictions
@@ -374,7 +374,7 @@ Resolve these in Phase 0, before Phase 1.
   MVC/state + `ModelView`, the AIUI surface, Search Everywhere, i18n, and the visual language + design
   system) for vibeterm, alongside PROP-044 (the shell). vibeterm's design-docs (lore, incl. the design
   system) live in its own vibeterm-owned space, not the shared `spec/design/`. The findings doc for THIS
-  research stays in `spec/research/`. *Why:* vibeterm must be able to live as a standalone project and
+  research lives in `research/vibeterm/`. *Why:* vibeterm must be able to live as a standalone project and
   theoretically detach from vibevm — a self-contained module is what makes that possible (RP-A).
   *Rejected:* a language-neutral extension of `vibe-actions` / folding into a shared module (both couple
   vibeterm to vibevm). *Revisit:* if vibeterm is promoted to a full specspace (own boot/WAL/CONTINUE), its
@@ -404,7 +404,7 @@ read the specs fully). This is a judgment-heavy study; it runs mostly boss-led.
 # Phase 1: internal methodology extraction → ports/adapts/new table.
 # Phase 2: external comparative (docs/behaviour-first; MIT source only, under the §1 firewall).
 # Output goes ONLY to the findings doc (comparative-research genre):
-#   spec/research/vibeterm-ui-architecture-*.md   (D1)
+#   research/vibeterm/vibeterm-ui-architecture-*.md   (D1)
 bash tools/self-check.sh   # the floor — green at every phase boundary
 ```
 
