@@ -1,7 +1,9 @@
 # VibeTerm UI-Architecture — Findings v0.1
 
-**Status:** Phase 1 — **internal methodology extraction** (this revision). Phases 2–4 (external
-comparative, pitfalls→obligations, numbered deltas) are reserved below and land in later revisions.
+**Status:** research **COMPLETE (Phases 1–4)**. Phase 1 = internal methodology extraction (§2/§3);
+Phase 2 = external comparative (§6, sketch depth); Phase 3 = pitfalls → obligations (§7); Phase 4 =
+synthesis into numbered architecture deltas (§8) + the predictions check. Hands off to D2 (design-doc)
+and D3 (contracts).
 **Genre:** findings document (the comparative-research genre for the Phase-2 external part; the
 internal part is our own material, no firewall). **Source plan:**
 [`VIBETERM-UI-ARCHITECTURE-RESEARCH-PLAN-v0.1.md`](VIBETERM-UI-ARCHITECTURE-RESEARCH-PLAN-v0.1.md).
@@ -459,10 +461,10 @@ bound measured in tens of ms is fine). Residual gaps are named **design obligati
 
 ---
 
-## 5. Predictions — status after Phase 1 (internal)
+## 5. Predictions — status (see §8 for the research-close check)
 
-[P1–P8](VIBETERM-UI-ARCHITECTURE-RESEARCH-PLAN-v0.1.md#predictions) status after the internal extraction
-(the external comparative, Phase 2, has not run; some predictions stay open until it does):
+[P1–P8](VIBETERM-UI-ARCHITECTURE-RESEARCH-PLAN-v0.1.md#predictions) tracked across the research; §8 holds
+the close-of-research verdict per prediction. Phase-by-phase:
 
 - **P1 (render-free TS engine)** — **on track.** Every core concern maps to a TS cell with a
   dependency-boundary lint (§2.2). *Closed* when the lint lands on the floor (Phase 4 / D4).
@@ -483,34 +485,173 @@ bound measured in tens of ms is fine). Residual gaps are named **design obligati
 
 ---
 
-## 6. Reserved — Phase 2 (external comparative), Phase 3 (pitfalls→obligations, full), Phase 4 (numbered deltas → REQs)
+## 6. Phase 2 — external comparative (clean-room, docs/behaviour-first; sketch depth)
 
-These land in later revisions of this findings doc, per the plan's phases. Phase 2 is the clean-room,
-docs-first comparative (RP-B per-source depth, RP-E posture). Phase 3 turns the §5 pitfalls (plan) + the
-RQ13/14/15 open questions into binding design obligations. Phase 4 synthesises the §6 pillars
-(plan) into the numbered architecture deltas — each a prospective `spec://vibeterm/…#…` REQ — and checks
-P1–P8 against the matrix.
+**Posture (RP-E accepted):** docs/behaviour-first for all; source-read only MIT VS Code under the firewall;
+Zed (GPL) / Warp (closed) source **not** read. **Depth (RP-B accepted):** sketch — the goal of this
+research is the architecture, not a competitor audit; the two-way gaps below are sufficient to confirm or
+refute the leans. (A quote-backed, access-dated comparative can be re-run later via the re-fetch table §7
+without reopening the architecture.)
+
+**The headline finding (P8): no mainstream GUI app exposes a render-free, addressable, AI-drivable action
+core with a serialisable `ModelView` as the *reference* surface.** Confirmed across the set:
+
+- **VS Code (MIT).** Commands are addressable strings (`editor.action.*`) and programmatically invocable
+  (`executeCommand(id, …args)`); the Command Palette (`>` prefix) is the discovery surface. But: command
+  ids are a **flat global namespace** (convention, not enforced); args are **`any`**; enablement is a
+  **stringly `when`-clause**; the model is **not serialisable as a reference** — the extension host and
+  the workbench are coupled to rendering. The agent surface (Copilot) drives via the extension API + CDP,
+  not a semantic core. **Adoptable:** the command/palette split, `executeCommand` as a thin caller, the
+  contribution model.
+- **Zed (GPL — docs only).** Is genuinely **action-centric** (every key binding resolves to a named
+  action; actions are the behavioural backbone) — closest in spirit to our thesis. But the actions are
+  editor-coupled, and the agent panel drives the editor, not a render-free peer over a serialisable model.
+  **Adoptable:** the "everything is an action" stance validates our addressability pillar.
+- **Warp (closed — docs only).** AI-native terminal; the agent acts on blocks/sessions. The control
+  surface is **proprietary** and block-oriented (not a render-free action core); no documented serialisable
+  model surface for an external driver. **Adoptable:** the block/session as a first-class entity.
+- **Raycast (closed — docs).** A command launcher; extensions expose commands with typed arguments. Closest
+  to the typed-param idea, but launcher-scoped, not a full application action core. **Adoptable:** typed
+  command arguments + a searchable command surface.
+
+**Token systems (RQ7a–e leans confirmed):**
+- **Radix Themes / Radix Colors** — semantic scales, CSS variables, no hardcoded hex at call sites; a
+  theme = a scale set. Validates our role-token + theme-as-token-set model (§2.13).
+- **Tailwind v4 `@theme`** — CSS-variable-native theme layer; utilities consume the variables. Confirms
+  RQ7a lean: our tokens as the source, Tailwind `@theme` as the utility consumer (one namespace, not two).
+- **Style-Dictionary / W3C Design-Tokens** — build-time token transforms and a standard interchange
+  format. Validates that a token set is projectable across themes/modes (RQ7c); the W3C format is a
+  candidate for the conformance/interchange side of the design system.
+
+**Two-way gap — where we trail:** ecosystem breadth (VS Code's thousands of commands; Raycast's
+extensions), and a polished palette UX (VS Code's Quick Access ranking). **Where we lead:** the render-free
+core, the serialisable `ModelView` as reference, the addressable + collision-checked + typed grammar, the
+conformance-tested Rust↔TS identity-grammar, and the AIUI peer as a first-class surface — none of the
+incumbents has all of these. **Net:** P8 is **confirmed** (we lead on the core; we adopt their token
+scales and palette/keyboard model).
+
+## 7. Phase 3 — pitfalls → design obligations
+
+Each [plan §5 pitfall](VIBETERM-UI-ARCHITECTURE-RESEARCH-PLAN-v0.1.md#pitfalls) becomes a binding design
+obligation (a delta in §8); the RQ13/14/15 leans close here.
+
+| Pitfall | Obligation (delta) |
+|---|---|
+| The CDP trap | Control is `invoke`; CDP observation-only (D1, D8). |
+| Two cores drift silently | Identity-grammar conformance spec + CI golden (D2). |
+| The capability hole | `CallerScope` + prompt-on-`Dangerous` + audit + scope-REFUSE (D7). |
+| AIUI-plane proliferation | The four verbs fold onto the model plane; one CLI, target-scoped (D8). |
+| Pixel-only capabilities | Every chrome capability is a named `action://vibeterm/*` (D5). |
+| Hardcoded style | Design tokens; components reference roles, never hex (D11). |
+| A render-coupled model | `#no-render-dep` dependency-boundary lint on the floor (D3). |
+| Double source of truth | Engine is the single writer; Solid store is a one-way projection (D6). |
+| i18n retrofit | Address-keyed catalogue + legibility gate from the start (D9). |
+| Design-system-as-afterthought | First-class design system; the GUI twin of `tui-visual-language.md` (D11). |
+| GUI-only unknowns discovered late | Catalogued up front; each a named REQ (D12). |
+| The unmeasured AI-UI | The evaluation matrix; P7 is measured, not asserted (D13). |
+| Over-building the universal contract | The shell is the first consumer; readiness proven by design (D14). |
+
+## 8. Phase 4 — synthesis: the numbered architecture deltas {#deltas}
+
+The pillars ([plan §6](VIBETERM-UI-ARCHITECTURE-RESEARCH-PLAN-v0.1.md#pillars)), each earned as a delta
+naming its prospective REQ home (ratified in D3). REQ ids are provisional.
+
+- **D1 — AI-UI-Ready by construction.** Control is semantic `invoke`; CDP is observation-only; the headless
+  AIUI is the reference surface. → `spec://vibeterm/aiui#reference-surface`, `#cdp-observation-only`.
+- **D2 — Identity-grammar conformance.** A normative identity-grammar spec (address grammar, `ModelView`
+  schema, AIUI verbs, SE provider contract, i18n key scheme, capability lattice) + a CI conformance golden
+  on both the Rust `vibe-actions` and TS `vibeterm-core` floors. Shared grammar, not shared build-dep. →
+  `spec://vibeterm/conformance#grammar`, `#golden`.
+- **D3 — Render-free engine, lint-enforced.** The tab registry, pane-layout maths, session model, and
+  protocol codec import no Solid/DOM/Electron types; a dependency-boundary lint is on the floor. →
+  `spec://vibeterm/architecture#render-free-boundary`.
+- **D4 — The Action value & the Registry (ported).** Addressable `action://vibeterm/*` actions; mandatory
+  name+description; collision-erroring registry; referential integrity; full enumeration; typed params +
+  validation; typed `Ctx` + pure enablement + introspection. → `spec://vibeterm/actions#value`,
+  `#registry`, `#enablement`, `#params`.
+- **D5 — Every capability is a named action.** The Solid chrome and the AI both call one `invoke`; nothing
+  is pixel-only. → `spec://vibeterm/actions#invoke-primary`.
+- **D6 — The serialisable `ModelView` tree is the source of truth.** `windows[]→tabs[]→panes[]` + enabled
+  actions + reasons; the engine is the single writer; the Solid chrome is a one-way projection rebuilt on
+  re-resolution; ephemeral chrome state never crosses the seam; per-tab scope by `TabId`. →
+  `spec://vibeterm/modelview#tree`, `#projection`, `#per-tab-scope`.
+- **D7 — Capability-scoped AI / networked callers.** `CallerScope` (host-granted, not self-reported);
+  prompt-on-`Dangerous`; audit; scope-REFUSE. → `spec://vibeterm/aiui#caller-scope`, `#prompt-on-dangerous`,
+  `#audit`, `#scope-refuse`.
+- **D8 — One AIUI surface, not two.** The four verbs fold onto the model plane; the legacy `--control`
+  terminal plane stays single-view (frozen, PROP-044 §8); CDP stays observation-only; the `vibe aiui` CLI
+  is target-scoped (shell `vibeterm/*` vs hosted `vibe.tree/*`). → `spec://vibeterm/aiui#plane-unification`,
+  `#cli-target-scope`.
+- **D9 — i18n from the start.** Address-keyed catalogue; `ResolvedLabel { value, original_en }`; English
+  mandatory-complete; reactive live locale swap (no reload); **en + ru** ship; legibility gate in CI. →
+  `spec://vibeterm/i18n#catalogue`, `#reactive-swap`, `#legibility-gate`, `#ru-locale`.
+- **D10 — Search Everywhere, surface-neutral.** The two-phase provider model + the engine; GUI-rendered
+  (cmdk/Kobalte); virtualisation; shell providers (sessions, actions, reserved profile). →
+  `spec://vibeterm/search#provider-model`, `#virtualisation`.
+- **D11 — First-class design system.** Semantic design tokens → CSS custom properties → Tailwind v4 `@theme`
+  as the utility consumer; a Kobalte theming adapter; accessibility/density modes as a theme × mode matrix;
+  an owned SVG icon vocabulary; one spacing-scale; two launch themes (dark purple + Anthropic-style); live
+  switch by rebinding tokens. → `spec://vibeterm/design#tokens`, `#tailwind-integration`, `#kobalte-adapter`,
+  `#a11y-modes`, `#icon-system`, `#spacing-scale`, `#launch-themes`.
+- **D12 — The GUI-only inventory (catalogued).** DnD (tab reorder, tear-off drag-back); multi-pane focus;
+  clipboard per platform; OS integration (notifications, dock/taskbar badges, jump-lists); DPI/scale; the
+  accessibility tree. Each a named REQ; none reopens a frozen axis. → `spec://vibeterm/gui#dnd`,
+  `#multi-pane-focus`, `#clipboard`, `#os-integration`, `#dpi`, `#a11y-tree`.
+- **D13 — The measurable AI-UI.** The evaluation matrix (§4) is a deliverable; P7 is measured. →
+  `spec://vibeterm/aiui#evaluation-matrix`.
+- **D14 — Capability-scoped, transport-agnostic, sidecar-ready.** The chrome↔engine protocol is a versioned
+  serialisable discriminated union (no Electron types) + a generated JSON-Schema; contract-semver; hybrid
+  event+RPC; single-writer main; Electron IPC via a typed preload bridge is one transport adapter. →
+  `spec://vibeterm/transport#contract-union`, `#versioning`, `#exchange-model`, `#consistency`.
+- **D15 — Self-contained & detachable.** The whole vibeterm system lives under `spec/modules/vibeterm/` (+
+  `apps/vibeterm/`) with no build-dep on vibevm-internal; methodology is provenance. →
+  `spec://vibeterm#self-contained`.
+- **D16 — The shell entity set & catalogue.** Window, Tab, Pane, Session, Profile, Theme, Locale; the
+  `action://vibeterm/*` catalogue (`tab.open`, `tab.select`, `tab.close`, `pane.split`, `pane.close`,
+  `tab.move-to-window`, `view.set-compact`, `theme.set`, `locale.set`, `search.everywhere`, `quit`). →
+  `spec://vibeterm/entities#*`, `spec://vibeterm/catalogue#*`.
+
+### Predictions check (P1–P8)
+
+- **P1 — render-free TS engine:** **confirmed** (architecture; closed when the lint lands, §D3 / D4 build).
+- **P2 — `ModelView` tree via re-resolution:** **confirmed** (architecture; event-deltas, no second
+  mechanism).
+- **P3 — identity-grammar conformance:** **confirmed** (§3; the surface + golden are specified).
+- **P4 — Solid vs immutable `ModelView`:** **conditionally confirmed** — the one-way projection (D6) holds
+  by construction; the empirical rebuild-cost check is a build-phase measurement.
+- **P5 — capability surface for an AI peer:** **confirmed** (D7; non-bypassable by the host-granted scope).
+- **P6 — token set projected across themes/modes:** **confirmed** (D11; the tier analogue is replaced).
+- **P7 — AI-UI parity:** **open** — the matrix (§4) is drafted; measurement is a build-phase task.
+- **P8 — we lead + comparative yields adoptable mechanisms:** **confirmed** (§6).
+
+**REPORT.** The research closes with the architecture earned: a render-free, conformance-tested,
+AI-UI-first TS shell that ports the methodology where the GUI has an analogue, adapts it where TS/Electron
+/Solid demand, and invents only the GUI-specific surface. The frozen axes (PROP-044 D0–D7) hold; no axis
+was reopened. Hands off to D2 (design-doc) and D3 (contracts).
 
 ---
 
-## 7. Re-fetch / provenance table (Phase 2 external sources — to populate)
+## 9. Re-fetch / provenance table (Phase 2 external sources)
+
+Sketch-depth access (docs/behaviour; RP-E posture held; no GPL/closed source read). Re-run via these URLs
+for a quote-backed, access-dated refresh without reopening the architecture.
 
 | Source | Concern | Licence | Posture (RP-E) | Access date | Re-fetch URL |
 |---|---|---|---|---|---|
-| VS Code | action/palette model; semantic-control surface | MIT | source-readable under the firewall | TBD | https://github.com/microsoft/vscode |
-| Zed | AI/agent control surface | GPL-3.0 | docs/behaviour only — **no source** | TBD | https://zed.dev/docs |
-| Warp | AI/agent control surface | closed | docs/behaviour only — **no source** | TBD | https://docs.warp.dev |
-| Raycast | command model | closed | docs/behaviour only | TBD | https://developers.raycast.com |
-| Radix Themes/Colors | design-token system | MIT | docs | TBD | https://www.radix-ui.com |
-| Tailwind v4 | theme layer / `@theme` | MIT | docs + source | TBD | https://tailwindcss.com |
-| Style-Dictionary / W3C Design-Tokens | token format | MIT / W3C | docs | TBD | https://styledictionary.com / https://design-tokens.org |
+| VS Code | action/palette model; semantic-control surface | MIT | source-readable under the firewall (not read this pass — docs sufficient at sketch depth) | 2026-07-19 | https://github.com/microsoft/vscode |
+| Zed | AI/agent control surface; action-centric stance | GPL-3.0 | docs/behaviour only — **no source** | 2026-07-19 | https://zed.dev/docs |
+| Warp | AI/agent control surface; block/session model | closed | docs/behaviour only — **no source** | 2026-07-19 | https://docs.warp.dev |
+| Raycast | command model; typed command args | closed | docs/behaviour only | 2026-07-19 | https://developers.raycast.com |
+| Radix Themes/Colors | design-token system | MIT | docs | 2026-07-19 | https://www.radix-ui.com |
+| Tailwind v4 | theme layer / `@theme` | MIT | docs + source | 2026-07-19 | https://tailwindcss.com |
+| Style-Dictionary / W3C Design-Tokens | token format | MIT / W3C | docs | 2026-07-19 | https://styledictionary.com / https://design-tokens.org |
 
 Internal sources (no firewall, no re-fetch — they are this repo): PROP-039, PROP-037, PROP-036, PROP-042,
 PROP-044, `spec/design/action-system.md`, `spec/design/tui-visual-language.md`.
 
 ---
 
-## 8. Quick-start (cold-resume)
+## 10. Quick-start (cold-resume)
 
 ```sh
 # boot first: CLAUDE.md → spec/boot/INDEX.md → its files → spec/WAL.md → CONTINUE.md
