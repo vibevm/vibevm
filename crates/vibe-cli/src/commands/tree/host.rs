@@ -14,16 +14,20 @@ use std::io::Write;
 
 use anyhow::Result;
 
-/// The env var vibeterm sets in its PTY so a nested `vibe tree` knows it already
-/// runs inside the desktop terminal (and need not spawn another window).
-const VIBETERM_ENV: &str = "VIBETERM";
+/// The env vars a vibe desktop terminal sets in its PTY so a nested `vibe tree`
+/// knows it already runs inside one (and need not spawn another window):
+/// `VIBETERM` (the complex terminal) or `VIBEFRAME` (the simple frame).
+const TERMINAL_ENVS: [&str; 2] = ["VIBETERM", "VIBEFRAME"];
 
 /// The custom OSC code the vibeterm renderer listens on to swap its icon.
 const OSC_SET_ICON: &str = "7773";
 
-/// Whether this process runs inside a vibeterm PTY.
+/// Whether this process runs inside a vibe desktop terminal PTY (vibeterm or
+/// vibeframe).
 pub(super) fn in_vibeterm() -> bool {
-    std::env::var_os(VIBETERM_ENV).is_some_and(|v| !v.is_empty())
+    TERMINAL_ENVS
+        .iter()
+        .any(|k| std::env::var_os(k).is_some_and(|v| !v.is_empty()))
 }
 
 /// Ask vibeterm to swap its window/taskbar icon to the named app-family icon

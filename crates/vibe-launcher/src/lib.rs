@@ -120,11 +120,14 @@ fn run_inherited(subcommand: &[&str]) -> ExitCode {
 }
 
 /// Whether we were launched from a terminal (run in place) rather than by a
-/// double-click (spawn a window). `$VIBETERM` (set inside vibeterm) is definitive;
-/// otherwise a Windows console shared with another process (the shell) marks a
-/// terminal, and on other platforms a tty stdout does.
+/// double-click (spawn a window). `$VIBETERM` / `$VIBEFRAME` (set inside vibeterm
+/// or vibeframe) is definitive; otherwise a Windows console shared with another
+/// process (the shell) marks a terminal, and on other platforms a tty stdout does.
 fn in_terminal() -> bool {
-    if std::env::var_os("VIBETERM").is_some_and(|v| !v.is_empty()) {
+    if ["VIBETERM", "VIBEFRAME"]
+        .iter()
+        .any(|k| std::env::var_os(k).is_some_and(|v| !v.is_empty()))
+    {
         return true;
     }
     #[cfg(windows)]
