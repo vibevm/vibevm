@@ -38,12 +38,15 @@ projections of one core. **This research works out how that universal methodolog
 GUI stack** — the whole vertical the owner named: *entities → MVC/state → actions/AIUI → Search
 Everywhere → i18n → visual language → design system.*
 
-**The crux question.** `vibe-actions` is Rust and render-free; the shell is TypeScript / SolidJS /
-Electron. What is the **right relationship** between the two? A shared, language-neutral **contract**
-(one address grammar, one `ModelView` schema, one set of AIUI verbs, one Search-Everywhere provider
-model, one i18n key scheme) with a **TS core conforming to it** — so the Rust TUI-AIUI and the TS
-shell-AIUI are **one coherent AI-UI surface across vibevm** — is the working lean (RP-A). Earning or
-overturning it is the heart of the study.
+**The crux question — RESOLVED by the owner (2026-07-19).** `vibe-actions` is Rust and render-free; the
+shell is TypeScript / SolidJS / Electron. Rather than couple them through a shared contract, **vibeterm
+carries its own full, self-contained adaptation** of the methodology under `spec/modules/vibeterm/` —
+able to live as a standalone project and even spin out of vibevm (RP-A, RP-D). It **ports** the
+methodology (addressable `action://` actions, the Registry, typed context + pure enablement, `invoke`,
+the serialisable `ModelView`, the AIUI-as-reference, Search Everywhere, i18n, design-tokens) and
+re-expresses it in TS, keeping a methodologically-compatible grammar for coherence — but depending on
+nothing vibevm-internal. Making that self-contained re-expression *right* across the whole vertical is
+the heart of the study.
 
 **Guard-rails** (keep an open-ended study tractable):
 1. **Port-first, invent-second.** The methodology exists and is universal by design; the default is to
@@ -193,6 +196,11 @@ Each RQ carries a preliminary hypothesis to confirm or refute.
   transport-agnostic **sidecar-ready** protocol (PROP-044 D5), testability (the headless AIUI as the
   golden reference), and how the whole stack stays evolvable. *Hypothesis: PROP-039 §7.2 capabilities +
   PROP-044 D5 already frame this.*
+- **RQ11 — Self-containment & detachability.** What must vibeterm **own** vs. borrow so it builds and
+  specs standalone and can spin out of vibevm? Which vibevm concepts are ported as owned re-expressions
+  vs. depended upon? *Hypothesis: everything the shell needs (actions/AIUI/`ModelView`/SE/i18n/design
+  system) is re-expressed under `spec/modules/vibeterm/`; the only ties to vibevm are methodological
+  provenance (citations), never build/spec dependencies.*
 
 ---
 
@@ -266,6 +274,10 @@ AI-UI-first and answers a §5 pitfall.
    accessibility modes — the GUI twin of the palette-token/projection model.
 9. **Capability-scoped, transport-agnostic, sidecar-ready** (PROP-044 D5): the protocol is the contract;
    Electron IPC is one adapter; a future external state process is another.
+10. **Self-contained & detachable** (owner, 2026-07-19). The whole vibeterm system — specs, contracts,
+    design-docs, code — lives under `spec/modules/vibeterm/` (+ `apps/vibeterm/`) with **no hard
+    dependency on vibevm-internal crates or specs**, so vibeterm can stand alone and spin out
+    (specspace-ready). vibevm's methodology is ported as provenance, never a build dependency.
 
 ## 7. Deliverables {#deliverables}
 
@@ -277,12 +289,14 @@ campaign.
   ports / adapts / is new); the §5 pitfalls validated; the external comparative (two-way gaps); the §6
   pillars as **numbered architecture deltas** each naming a prospective contract REQ; the §9 predictions
   checked; a re-fetch/provenance table for external sources.
-- **D2 — the design-doc** (downstream): `spec/design/` — the VibeTerm UI architecture (entities,
-  MVC/state, the AI-UI surface, and the **design system** — likely split into a `vibeterm-ui-architecture.md`
-  and a `vibeterm-design-system.md`, the GUI twin of `tui-visual-language.md`).
-- **D3 — the contracts** (downstream): revise **PROP-044** with the AI-UI-readiness REQs, and author the
-  contract home the owner chooses for the GUI action/AIUI + design-system layer (RP-D) — a new module vs a
-  language-neutral extension of `vibe-actions`.
+- **D2 — the design-doc** (downstream): **vibeterm-owned** (under `spec/modules/vibeterm/`, not the
+  shared `spec/design/`) — the VibeTerm UI architecture (entities, MVC/state, the AI-UI surface) and the
+  **design system** (the GUI twin of `tui-visual-language.md`), likely split into an architecture-lore
+  doc and a design-system doc. Self-contained, so vibeterm can spin out.
+- **D3 — the contracts** (downstream): the **vibeterm PROP family** under `spec/modules/vibeterm/` — the
+  action/AIUI system, the design system, MVC/state, Search Everywhere, i18n — plus a revised **PROP-044**
+  carrying the AI-UI-readiness REQs. All self-contained, with no hard dependency on vibevm-internal crates
+  or specs (RP-A/RP-D).
 - **D4 — implementation** (downstream): the VibeTerm-shell campaign (VIBETERM-SHELL-PLAN), now **gated
   behind** D1–D3.
 
@@ -335,11 +349,19 @@ runs) + an execution-ledger entry (§0.2) + a refreshed status line. Any boundar
 
 Resolve these in Phase 0, before Phase 1.
 
-- **RP-A — the Rust↔TS action-core relationship (the crux).** *Lean:* a **language-neutral action/AIUI
-  contract** (address grammar, `ModelView` schema, AIUI verbs, SE provider model, i18n key scheme) with a
-  **TS core conforming to it** — so the Rust TUI-AIUI and the TS shell-AIUI are one coherent surface.
-  *Alternatives:* a fresh, methodology-aligned but independent TS core (risks drift); a bridge that reuses
-  the Rust crate from TS (process/language mismatch). Owner confirms the direction.
+- **RP-A — the action-core relationship (the crux). RESOLVED (owner, 2026-07-19).** vibeterm carries its
+  **own full, self-contained adaptation** of the methodology under `spec/modules/vibeterm/` (RP-D) — it
+  does **not** depend on the Rust `vibe-actions` crate or a shared cross-language contract module. It
+  **ports** the methodology (addressable `action://` actions, the Registry laws, typed context + pure
+  enablement, `invoke`, the serialisable `ModelView`, the AIUI-as-reference, the Search-Everywhere provider
+  model, address-keyed i18n, design-tokens) and re-expresses it in TS, keeping a methodologically-compatible
+  grammar (address form, `ModelView` shape, AIUI verbs) as a deliberate choice for coherence and possible
+  future cross-surface bridging — but depending on nothing vibevm-internal. *Why:* the owner wants vibeterm
+  self-sufficient, able to live standalone and even spin out of vibevm; a shared-contract dependency would
+  tie it back in. *Rejected:* a shared language-neutral contract module (couples vibeterm to vibevm); a
+  bridge to the Rust crate (process/language mismatch + coupling). *Revisit:* if a live shared contract with
+  the Rust TUI-AIUI is ever needed, add an interop adapter — without making vibeterm depend on vibevm to
+  build.
 - **RP-B — research scope & external source set.** *Lean:* internal port is primary; external comparative
   is targeted + docs-first (VS Code, Zed, Warp, Raycast; Radix/Tailwind/Style-Dictionary). Owner confirms
   the set (and whether to include any).
@@ -347,10 +369,16 @@ Resolve these in Phase 0, before Phase 1.
   deliverable** of this research (its own design-doc, the GUI twin of `tui-visual-language.md`), covering
   the two launch themes, tokens, live switching, the component library, the visual grammar, and
   accessibility modes. Owner confirms (vs deferring it to a follow-on).
-- **RP-D — homes.** Findings in `spec/research/` (recommended). Contract home for the GUI action/AIUI +
-  design-system layer: a **new module** (e.g. `spec/modules/vibeterm-ui/`) vs a **language-neutral
-  extension of `vibe-actions`** (a shared contract both Rust and TS conform to) vs folding into PROP-044.
-  Owner decides.
+- **RP-D — homes. RESOLVED (owner, 2026-07-19).** `spec/modules/vibeterm/` carries the **full
+  self-contained vibeterm system** — a PROP family adapting the whole vertical (the action system,
+  MVC/state + `ModelView`, the AIUI surface, Search Everywhere, i18n, and the visual language + design
+  system) for vibeterm, alongside PROP-044 (the shell). vibeterm's design-docs (lore, incl. the design
+  system) live in its own vibeterm-owned space, not the shared `spec/design/`. The findings doc for THIS
+  research stays in `spec/research/`. *Why:* vibeterm must be able to live as a standalone project and
+  theoretically detach from vibevm — a self-contained module is what makes that possible (RP-A).
+  *Rejected:* a language-neutral extension of `vibe-actions` / folding into a shared module (both couple
+  vibeterm to vibevm). *Revisit:* if vibeterm is promoted to a full specspace (own boot/WAL/CONTINUE), its
+  home migrates accordingly.
 - **RP-E — clean-room posture for external GUI sources.** *Lean:* docs/behaviour-first for all; read
   source only for MIT VS Code under the firewall; **do not read** Zed (GPL) or Warp (closed) source.
   Owner confirms (and names any local snapshots if source reading is cleared).
