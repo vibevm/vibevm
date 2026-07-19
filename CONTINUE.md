@@ -1,32 +1,43 @@
-# CONTINUE.md — cold-resume checkpoint (2026-07-19, VIBEFRAME SPLIT + SELF-INSTALL LAUNCHERS)
+# CONTINUE.md — cold-resume checkpoint (2026-07-19, VIBETERM UI-ARCHITECTURE: research → execution done)
 
 > `spec/WAL.md` is the canonical living state; if this snapshot and the WAL diverge, the WAL wins.
 
 ## TL;DR
 
-Two things closed this session-arc, both on `main`, floor-green, pushed to both mirrors:
+The **whole vibeterm UI-architecture campaign** ran end to end under a goal-hook and landed on `main`,
+floor-green, **ahead of `origin/main` by 6 commits (mirror pending)**:
 
-1. **vibeframe split** (prior sessions, complete) — the *simple* single-window terminal
-   was **copied** out of `apps/vibeterm/` into `apps/vibeframe/`. vibeframe is now
-   **VibeTree's stable host**; **vibeterm** stays in place to become the *complex*
-   multi-tab workspace (PROP-044, gated behind research). Routing, `vibe frame`,
-   `VibeFrame.exe`, a no-dots icon, and dual-app packaging all landed.
-2. **Self-install launchers** (this session, the last goal) — the VVM install pipeline
-   now **builds `vibe-launcher` and places VibeTree / VibeTerm / VibeFrame into
-   `~/opt/bin` + creates their Start-menu shortcuts on every `vibe self update`**. No
-   more manual `cargo build -p vibe-launcher` + copy + hand-made shortcut. Windows path
-   built and **verified live** (instances 35→38); Mac/Linux shortcuts deferred by owner.
+- **research** — the plan was **sharpened** first (frozen-vs-open framing, identity-grammar conformance,
+  6 new RQs, AI-Native-ready output), then the **findings doc** closed: Phase 1 ports/adapts/new + the
+  conformance surface + the AI-UI eval matrix; Phase 2/3/4 comparative + pitfalls→obligations + 16 numbered
+  architecture deltas D1–D16. `research/vibeterm/vibeterm-ui-architecture-findings-v0.1.md`.
+- **design** — the vibeterm-owned design-doc: `spec/modules/vibeterm/architecture.md` (entities, MVC, AI-UI,
+  transport, conformance) + `design-system.md` (the GUI twin of `tui-visual-language.md`).
+- **contracts** — the vibeterm PROP family: **PROP-046** (action/AIUI core + identity-grammar conformance)
+  + **PROP-047** (ModelView/MVC + transport + entities) + PROP-044 §12 family cross-note.
+- **execution** — a **pre-MVP architectural sketch** of the shell (`apps/vibeterm`): a **render-free TS
+  engine** (`#no-render-dep`; address/action/registry/context/i18n/modelview/protocol/tabs/aiui cells, 15
+  vitest cases), an **Electron main shell path** (`Map<TabId,{pty,WebContentsView}>` + Solid chrome window
+  + typed preload bridge, `contextIsolation:true`), a **Solid chrome** (contacts-style TabList + design
+  tokens, two launch themes, reactive en/ru i18n), and a **lean vanilla xterm terminal-view**. **Create +
+  switch tabs** works over the typed command/event protocol; the engine is the single writer of the
+  `ModelView`, the chrome is a one-way projection. `--control`/`--headless` single-view frozen.
 
-**No blocker.** Working tree clean, `main` in sync with `origin/main`, installed
-instance **38** active with a clean `~/opt/bin` and a `Programs\vibevm\` shortcut group.
+**No blocker.** Code complete, build green (engine esbuild bundle + chrome vite bundle), tests green
+(41 node-test + 15 vitest + the Rust gate + vibe check). The one thing not verified here is the **GUI
+visual pass**: pty spawn in this sandbox hits node-pty's known "AttachConsole failed" without a real
+Windows console (environment, not code — vibeterm runs on the owner's desktop, instance 38). The owner
+smokes it on a real box: `cd apps/vibeterm && npm run build && npm start`.
 
 ## Where work stands
 
-- Branch `main`, synced with `origin/main` (both mirrors at `2c1588b`). Working tree clean.
-- Installed env: `~/opt/vibevm/current` → instance **38**; `~/opt/bin` holds the 3 launcher
-  exes (0 `.old-*` sidecars); `%APPDATA%\…\Start Menu\Programs\vibevm\{VibeTree,VibeTerm,VibeFrame}.lnk`.
-- `bash tools/self-check.sh` — all green (fmt / clippy `--all-targets -D warnings` / vibe check /
-  conform / Rust tests incl. 3 new launcher tests / npm).
+- Branch `main`, **ahead of `origin/main` by 6** (the vibeterm campaign; mirror pending). Working tree: only
+  the docs edits for this checkpoint uncommitted (WAL + this file).
+- Installed env: `~/opt/vibevm/current` → instance **38** (pre-refactor vibeterm; the new shell needs a
+  `vibe self update` cycle to land in an instance). `apps/vibeterm` runs standalone via
+  `cd apps/vibeterm && npm install && npm run build && npm start`.
+- `bash tools/self-check.sh` — all green (fmt / clippy `--all-targets -D warnings` / vibe check / conform /
+  Rust tests / npm / node --test (vibeterm args) / **vitest (vibeterm engine cells)** — the new step).
 
 ## What landed this session (self-install launchers)
 
@@ -164,6 +175,13 @@ with `resolve_app` falling back to `"vibeterm"` when `app != "vibeterm"` and unr
 ## Recent commit chain (last 26, newest first)
 
 ```
+43f6716 feat(vibeterm): D4 pre-MVP shell -- render-free engine + Solid chrome + per-tab terminals
+cb15828 docs(vibeterm): D3 contracts -- the vibeterm PROP family (PROP-046/047 + PROP-044 §12)
+2932349 docs(vibeterm): D2 design-doc -- architecture + design system lore
+a6e22fc docs(research): vibeterm research close -- Phase 2/3/4 (deltas)
+3bd277e docs(research): vibeterm Phase 1 -- internal methodology extraction
+6ff6a2a docs(research): sharpen the vibeterm UI-architecture plan before Phase 1
+731e7f1 docs(wal): session checkpoint — vibeframe split + self-install launchers closed
 2c1588b docs(vibeframe): mark the self-installing-launchers enhancement done
 f3df5dd feat(vvm): self-install the GUI launchers on every install/update
 58f8b96 docs(vibeframe): add the simple-terminal-frame contract PROP-045
