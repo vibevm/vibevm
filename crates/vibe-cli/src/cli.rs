@@ -128,6 +128,11 @@ pub enum Command {
     /// agent or human can observe; `--exec` overrides the shell (PROP-042 §5).
     Term(TermArgs),
 
+    /// Launch the vibeframe terminal — the simple terminal frame VibeTree runs
+    /// in (a copy of vibeterm's minimal single-window terminal). Same flags as
+    /// `term`; hosts the detected shell or `--exec`.
+    Frame(TermArgs),
+
     /// Project package-declared skills into coding agents — vibevm's
     /// standalone mode (PROP-018 §2.6). `vibe skill list` shows what the
     /// installed packages (and the project itself) declare via `[[skill]]`;

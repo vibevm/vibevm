@@ -106,6 +106,7 @@ fn main() -> ExitCode {
         Command::Mcp(args) => commands::mcp::run(&ctx, args),
         Command::Aiui(args) => commands::aiui::run(&ctx, args),
         Command::Term(args) => commands::term::run(&ctx, args),
+        Command::Frame(args) => commands::term::run_frame(&ctx, args),
         Command::Skill(args) => commands::skill::run(&ctx, args),
         Command::Agentic(args) => commands::agentic::run(&ctx, args),
         Command::Drain(args) => commands::agentic::run_command(&ctx, args),

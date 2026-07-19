@@ -28,6 +28,17 @@ pub fn run(_ctx: &output::Context, args: TermArgs) -> Result<()> {
     launch_vibeterm(&exec, args.cols, args.rows, None, "vibeterm")
 }
 
+/// Run `vibe frame`: like `vibe term`, but launches vibeframe — the simple
+/// terminal frame VibeTree runs in (a copy of the minimal vibeterm terminal).
+#[spec(implements = "spec://vibevm/modules/vibe-cli/PROP-042#vibe-term")]
+pub fn run_frame(_ctx: &output::Context, args: TermArgs) -> Result<()> {
+    let exec = match args.exec {
+        Some(cmd) => cmd,
+        None => quote_exe(&detect_shell()),
+    };
+    launch_vibeterm(&exec, args.cols, args.rows, None, "vibeframe")
+}
+
 /// Launch vibeterm running `exec` (the command line for its PTY), optionally at
 /// `cols×rows`. Shared by `vibe term` and `vibe tree -t` (PROP-042 §5): resolve
 /// vibeterm + its Electron binary, spawn it detached, report the pid.
