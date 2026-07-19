@@ -291,3 +291,25 @@ is the binding part.
   second theme); a theme system deferred past first release (contradicts the
   requirement).
 - **When to revisit.** When user-authored themes or a theme editor become a goal.
+
+---
+
+## 12. Sibling contracts — the vibeterm PROP family {#family}
+
+This contract governs the **shell regions, tab model, panes, and tear-off** (the visible surface). The
+**AI-UI-ready architecture** the shell is built on lives in the self-contained vibeterm PROP family
+alongside it (RP-A/RP-D — [`architecture.md`](architecture.md) is the lore; the findings doc is the
+research):
+
+- **[PROP-046](PROP-046-action-aiui-core.md)** — the action/AIUI core: the render-free engine, the
+  addressable `action://vibeterm/*` actions, the registry, typed context + pure enablement, `invoke` +
+  the **capability/permission surface for an AI peer** (caller-scope, prompt-on-`Dangerous`, audit,
+  scope-REFUSE), i18n (en + ru), the four AIUI verbs, and the **identity-grammar conformance** with the
+  Rust `vibe-actions`.
+- **[PROP-047](PROP-047-modelview-transport.md)** — the serialisable `ModelView` tree (window→tab→pane),
+  the MVC reconciliation (engine single-writer, Solid one-way projection), the chrome↔engine transport
+  contract (versioned discriminated union, no Electron types, sidecar-ready), and the shell entity set.
+
+The shell decisions D0–D7 above are **frozen axes** (constraints) for that architecture; PROP-046/047
+*realise* them and earn the open questions, they do not reopen them. Lore:
+[`architecture.md`](architecture.md) + [`design-system.md`](design-system.md).
