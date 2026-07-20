@@ -351,6 +351,8 @@ fn install_args_from(args: &UpdateArgs) -> InstallArgs {
         prefer_embedded: false,
         no_prefer_embedded: false,
         no_default_registry: false,
+        offline: false,
+        embedded_short_circuit: false,
     }
 }
 

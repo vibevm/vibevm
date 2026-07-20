@@ -149,6 +149,10 @@ pub enum ProviderResource<'a> {
         embedded: &'a LocalRegistry,
         declared: Option<&'a MultiRegistryResolver>,
         precedence: EmbeddedPrecedence,
+        /// PROP-030 §3.1: `--embedded-short-circuit` — stop version
+        /// enumeration at the embedded registry for any coordinate it
+        /// serves, sparing the declared walk's network round-trip.
+        short_circuit: bool,
     },
 }
 
@@ -206,11 +210,13 @@ pub fn dep_solver<'a>(
                 embedded,
                 declared,
                 precedence,
+                short_circuit,
             },
         ) => Box::new(ResolvoDepSolver::new(EmbeddedProvider::new(
             LocalRegistryProvider::new(embedded),
             declared.map(MultiRegistryProvider::new),
             precedence,
+            short_circuit,
         ))),
         (
             "naive",
@@ -219,11 +225,13 @@ pub fn dep_solver<'a>(
                 embedded,
                 declared,
                 precedence,
+                short_circuit,
             },
         ) => Box::new(NaiveDepSolver::new(EmbeddedProvider::new(
             LocalRegistryProvider::new(embedded),
             declared.map(MultiRegistryProvider::new),
             precedence,
+            short_circuit,
         ))),
         (
             "sat",
@@ -232,11 +240,13 @@ pub fn dep_solver<'a>(
                 embedded,
                 declared,
                 precedence,
+                short_circuit,
             },
         ) => Box::new(Sat::new(EmbeddedProvider::new(
             LocalRegistryProvider::new(embedded),
             declared.map(MultiRegistryProvider::new),
             precedence,
+            short_circuit,
         ))),
         (solver, provider, _) => unreachable!(
             "selection_flags is the only producer of flag values and never \

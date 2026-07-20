@@ -41,6 +41,16 @@ pub struct EmbeddedProvider<'a> {
     embedded: LocalRegistryProvider<'a>,
     declared: Option<MultiRegistryProvider<'a>>,
     precedence: EmbeddedPrecedence,
+    /// PROP-030 §3.1: when set (`--embedded-short-circuit`), version
+    /// enumeration stops at the first provider that serves a coordinate
+    /// instead of unioning across all of them. With embedded-first
+    /// ordering that means a coordinate the embedded registry carries
+    /// never reaches the declared walk — sparing its network round-trip
+    /// (and any credential prompt) — while a coordinate the embedded
+    /// registry lacks still falls through to the declared providers.
+    /// Only ever `true` alongside [`EmbeddedPrecedence::EmbeddedFirst`]
+    /// (the CLI makes it mutually exclusive with embedded-last).
+    short_circuit: bool,
 }
 
 impl<'a> EmbeddedProvider<'a> {
@@ -52,11 +62,13 @@ impl<'a> EmbeddedProvider<'a> {
         embedded: LocalRegistryProvider<'a>,
         declared: Option<MultiRegistryProvider<'a>>,
         precedence: EmbeddedPrecedence,
+        short_circuit: bool,
     ) -> Self {
         EmbeddedProvider {
             embedded,
             declared,
             precedence,
+            short_circuit,
         }
     }
 
@@ -95,7 +107,15 @@ impl<'a> VersionEnumerator for EmbeddedProvider<'a> {
         group: &Group,
         name: &str,
     ) -> Result<Vec<semver::Version>, DepProviderError> {
-        union_versions(&self.ordered(), group, name)
+        if self.short_circuit {
+            // PROP-030 §3.1: stop at the first provider that serves the
+            // coordinate (embedded, under embedded-first ordering) so a
+            // locally-covered package never triggers the declared walk's
+            // network round-trip.
+            first_served_versions(&self.ordered(), group, name)
+        } else {
+            union_versions(&self.ordered(), group, name)
+        }
     }
 }
 
@@ -185,6 +205,38 @@ fn union_versions(
     all.sort();
     all.dedup();
     Ok(all)
+}
+
+/// The versions of the **first** provider that serves `(group, name)`,
+/// sorted and de-duplicated — the short-circuit enumeration
+/// `--embedded-short-circuit` selects (PROP-030 §3.1). Unlike
+/// [`union_versions`], it does NOT consult later providers once one has
+/// answered: with embedded-first ordering a coordinate the embedded
+/// registry carries is resolved without ever touching the declared walk
+/// (and its network round-trip). A provider that is merely absent for the
+/// coordinate is skipped; a real failure short-circuits with the error;
+/// if every provider is absent the last absence is returned. `providers`
+/// is never empty (see [`order_providers`]).
+fn first_served_versions(
+    providers: &[&dyn VersionEnumerator],
+    group: &Group,
+    name: &str,
+) -> Result<Vec<semver::Version>, DepProviderError> {
+    let mut last_absent = None;
+    for &p in providers {
+        match p.list_versions(group, name) {
+            Ok(mut versions) => {
+                versions.sort();
+                versions.dedup();
+                return Ok(versions);
+            }
+            Err(e) if is_absent(&e) => last_absent = Some(e),
+            Err(e) => return Err(e),
+        }
+    }
+    Err(last_absent.unwrap_or_else(|| {
+        DepProviderError::Other("embedded composition consulted no providers".into())
+    }))
 }
 
 #[cfg(test)]
@@ -352,6 +404,52 @@ mod tests {
         assert_eq!(
             union_versions(&order, &group(), "wal").unwrap(),
             vec![v("1.0.0"), v("2.0.0"), v("3.0.0")]
+        );
+    }
+
+    #[test]
+    fn short_circuit_stops_at_the_first_serving_provider() {
+        // PROP-030 §3.1: with embedded-first ordering, a coordinate the
+        // embedded provider serves is enumerated from embedded alone — the
+        // declared provider is never consulted (no network round-trip).
+        // Proven by making the declared side FAIL HARD: were it consulted,
+        // the error would propagate; instead we get embedded's versions.
+        let emb = Canned {
+            answer: Answer::Serves(vec![v("1.0.0"), v("2.0.0")]),
+            label: "emb",
+        };
+        let dec = Canned {
+            answer: Answer::Fails,
+            label: "dec",
+        };
+        let order = order_providers(&emb, Some(&dec), EmbeddedPrecedence::EmbeddedFirst);
+        assert_eq!(
+            first_served_versions(&order, &group(), "wal").unwrap(),
+            vec![v("1.0.0"), v("2.0.0")]
+        );
+        // The default (union) path, by contrast, DOES consult the declared
+        // side and so surfaces its hard failure — this is exactly the
+        // network round-trip short-circuit spares.
+        assert!(union_versions(&order, &group(), "wal").is_err());
+    }
+
+    #[test]
+    fn short_circuit_falls_through_when_embedded_absent() {
+        // The other half of PROP-030 §3.1: a coordinate the embedded
+        // provider lacks still reaches the declared provider under
+        // short-circuit — network only for what embedded does not carry.
+        let emb = Canned {
+            answer: Answer::Absent,
+            label: "emb",
+        };
+        let dec = Canned {
+            answer: Answer::Serves(vec![v("3.0.0")]),
+            label: "dec",
+        };
+        let order = order_providers(&emb, Some(&dec), EmbeddedPrecedence::EmbeddedFirst);
+        assert_eq!(
+            first_served_versions(&order, &group(), "wal").unwrap(),
+            vec![v("3.0.0")]
         );
     }
 

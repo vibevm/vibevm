@@ -39,6 +39,11 @@ pub(crate) enum InstallResolver {
         embedded: LocalRegistry,
         declared: Option<Box<MultiRegistryResolver>>,
         precedence: EmbeddedPrecedence,
+        /// PROP-030 §3.1: when set (`--embedded-short-circuit`), version
+        /// enumeration stops at the embedded registry for any coordinate it
+        /// serves, so the declared walk (and its network round-trip) is
+        /// consulted only for packages the embedded registry lacks.
+        short_circuit: bool,
         solver: Option<&'static str>,
     },
 }
@@ -137,6 +142,7 @@ impl InstallSource for InstallResolver {
                 embedded,
                 declared,
                 precedence,
+                short_circuit,
                 ..
             } => crate::registry::dep_solver(
                 &flags,
@@ -144,6 +150,7 @@ impl InstallSource for InstallResolver {
                     embedded,
                     declared: declared.as_deref(),
                     precedence: *precedence,
+                    short_circuit: *short_circuit,
                 },
             ),
         };
@@ -381,6 +388,12 @@ pub(crate) fn build_install_resolver(
     if args.prefer_embedded && args.no_prefer_embedded {
         bail!("--prefer-embedded and --no-prefer-embedded are mutually exclusive");
     }
+    if args.embedded_short_circuit && args.no_prefer_embedded {
+        bail!(
+            "--embedded-short-circuit and --no-prefer-embedded are mutually exclusive \
+             (short-circuit only makes sense with embedded-first precedence)"
+        );
+    }
     if let Some(explicit) = &args.registry {
         let p = explicit
             .canonicalize()
@@ -406,7 +419,12 @@ pub(crate) fn build_install_resolver(
                 root.display()
             )
         })?;
-        let declared = if manifest.registries.is_empty() {
+        // PROP-030 §3.1: `--offline` drops the declared network walk
+        // entirely, so the embedded registry answers alone — no git host is
+        // contacted, no credential prompt is possible. A coordinate the
+        // embedded registry lacks then fails locally rather than reaching
+        // the network.
+        let declared = if manifest.registries.is_empty() || args.offline {
             None
         } else {
             Some(Box::new(open_multi(manifest, args)?))
@@ -420,8 +438,23 @@ pub(crate) fn build_install_resolver(
             embedded,
             declared,
             precedence,
+            short_circuit: args.embedded_short_circuit,
             solver,
         });
+    }
+
+    // PROP-030 §3.1: `--offline` with no embedded registry (not a source
+    // install, or embedded suppressed by `--no-default-registry`) and no
+    // explicit `--registry` has nothing local to resolve from — the declared
+    // network walk is disabled offline. Fail with an actionable message
+    // rather than silently doing nothing.
+    if args.offline {
+        bail!(
+            "--offline: no local registry available to resolve from. \
+             Offline resolution needs the embedded registry of a source install \
+             (check `vibe self doctor`) or an explicit `--registry <dir>`; \
+             the declared network `[[registry]]` walk is disabled under --offline."
+        );
     }
 
     if manifest.registries.is_empty() {
@@ -434,4 +467,88 @@ pub(crate) fn build_install_resolver(
         Box::new(open_multi(manifest, args)?),
         solver,
     ))
+}
+
+#[cfg(test)]
+mod flag_tests {
+    use std::path::PathBuf;
+
+    use super::*;
+
+    /// A fully-defaulted `InstallArgs` — every flag off — that tests flip
+    /// one field at a time to exercise a single guard clause.
+    fn base_args() -> InstallArgs {
+        InstallArgs {
+            packages: Vec::new(),
+            path: PathBuf::from("."),
+            registry: None,
+            assume_yes: false,
+            language: None,
+            features: Vec::new(),
+            no_default_features: false,
+            all_features: false,
+            exact: false,
+            auth_required: false,
+            solver: None,
+            git: None,
+            tag: None,
+            branch: None,
+            rev: None,
+            git_auth: None,
+            git_token_env: None,
+            allow_hooks: false,
+            prefer_embedded: false,
+            no_prefer_embedded: false,
+            no_default_registry: false,
+            offline: false,
+            embedded_short_circuit: false,
+        }
+    }
+
+    /// A minimal package manifest — no `[[registry]]`, so the declared walk
+    /// is empty. Enough for the guard clauses under test, which read only
+    /// `manifest.registries` (and only after the guards they exercise).
+    fn empty_manifest() -> Manifest {
+        Manifest::parse_str(
+            "[package]\ngroup = \"org.vibevm\"\nname = \"x\"\nkind = \"flow\"\nversion = \"0.1.0\"\n",
+        )
+        .unwrap()
+    }
+
+    #[test]
+    fn short_circuit_conflicts_with_embedded_last() {
+        // PROP-030 §3.1: `--embedded-short-circuit` presupposes
+        // embedded-first precedence, so pairing it with
+        // `--no-prefer-embedded` is a contradiction rejected up front —
+        // before any registry is opened or the network is touched.
+        let mut args = base_args();
+        args.embedded_short_circuit = true;
+        args.no_prefer_embedded = true;
+        // `.map(|_| ())` so the `Ok` payload is `()` (Debug) — `InstallResolver`
+        // deliberately isn't Debug (it holds live registry handles).
+        let err = build_install_resolver(&args, &empty_manifest(), None)
+            .map(|_| ())
+            .unwrap_err();
+        assert!(
+            err.to_string().contains("mutually exclusive"),
+            "expected a mutual-exclusivity error; got: {err}"
+        );
+    }
+
+    #[test]
+    fn offline_without_a_local_registry_bails_before_the_network() {
+        // PROP-030 §3.1: `--offline` with no embedded registry and no
+        // `--registry` has nothing local to resolve from. It must fail with
+        // an actionable message rather than fall through to the declared
+        // network walk (whose construction is what a plain install does).
+        let mut args = base_args();
+        args.offline = true;
+        let err = build_install_resolver(&args, &empty_manifest(), None)
+            .map(|_| ())
+            .unwrap_err();
+        assert!(
+            err.to_string().contains("--offline"),
+            "expected the offline bail; got: {err}"
+        );
+    }
 }

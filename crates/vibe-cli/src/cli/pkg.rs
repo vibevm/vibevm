@@ -163,6 +163,26 @@ pub struct InstallArgs {
     #[arg(long)]
     pub no_default_registry: bool,
 
+    /// PROP-030 §3.1: resolve strictly offline — consult only the embedded
+    /// registry and explicit local / path sources, never a network
+    /// `[[registry]]`. No git host is contacted; a package not available
+    /// locally fails without a single network request (and thus without any
+    /// credential prompt). Contrast `--embedded-short-circuit`, which still
+    /// reaches the network for coordinates the embedded registry lacks.
+    #[arg(long)]
+    pub offline: bool,
+
+    /// PROP-030 §3.1: prefer the embedded registry and short-circuit the
+    /// network for every coordinate it already provides — the declared
+    /// `[[registry]]` walk is consulted ONLY for packages the embedded
+    /// registry does not carry. A fully-embedded dependency graph resolves
+    /// with zero network access (no version-enumeration round-trip, no
+    /// credential prompt), while a genuinely missing package is still
+    /// fetched from the network. Implies embedded-first precedence;
+    /// mutually exclusive with `--no-prefer-embedded`.
+    #[arg(long)]
+    pub embedded_short_circuit: bool,
+
     /// Add a git-source declaration for the single positional pkgref
     /// — fetches the package directly from this git URL rather than
     /// resolving it through `[[registry]]`. PROP-002 §2.4.1.

@@ -95,6 +95,37 @@ suppresses the embedded registry entirely for a command. An explicit
 `--registry <path>` still shadows everything (PROP-002 M0 exclusivity),
 unchanged.
 
+**Enumeration reaches the network by default; two flags opt out.** Precedence
+(above) governs which side *wins* a coordinate and which side a package is
+*fetched* from — the fetch path is first-served (embedded-first stops at the
+embedded copy). But **version enumeration** (the candidate set the solver picks
+from) **unions across embedded *and* declared** by default, so the solver can
+see a newer published version even for a package the embedded registry already
+carries. That union is deliberate — it keeps a source developer from silently
+pinning stale versions — but it means a declared network `[[registry]]` is
+contacted (a `git ls-remote`) even when the embedded registry could answer
+alone. Two opt-in flags trade that freshness check for zero network:
+
+- **`--offline`** — resolve strictly offline: the declared network walk is not
+  opened at all, so the embedded registry (plus explicit `--registry` / path /
+  git sources) answers alone. No git host is contacted; a coordinate absent
+  locally fails **without a single network request** (and thus without any
+  credential prompt). With no embedded registry and no `--registry`, the command
+  bails with an actionable message rather than silently resolving nothing.
+- **`--embedded-short-circuit`** — keep the declared walk available, but
+  short-circuit version enumeration at the embedded registry for any coordinate
+  it serves: the network is reached **only** for packages the embedded registry
+  lacks. A fully-embedded dependency graph resolves with zero network access
+  (no enumeration round-trip, no credential prompt), while a genuinely missing
+  package is still fetched from the network. Implies embedded-first precedence;
+  mutually exclusive with `--no-prefer-embedded`.
+
+Neither flag is the default: a bare `vibe install` still unions embedded with the
+declared walk. Note the interaction with PROP-002 §2.2.1 — a public
+(`auth = "none"`) registry now silences credential prompts unconditionally, so
+even the default union path never raises a login dialog for a missing public
+package; the two flags above additionally spare the network round-trip itself.
+
 ### 3.2 Terminology — `embedded` vs `local` {#terminology}
 
 **`embedded`** names packages that ship *inside vibevm itself* — the in-tree

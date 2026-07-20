@@ -47,6 +47,7 @@ fn embedded_registry_answers_alone_when_no_declared_walk() {
         LocalRegistryProvider::new(&registry),
         None,
         EmbeddedPrecedence::EmbeddedFirst,
+        false,
     );
     let group = Group::parse("org.vibevm").unwrap();
 
