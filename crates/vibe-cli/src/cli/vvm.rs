@@ -47,6 +47,10 @@ pub enum VvmSubcommand {
 
     /// Print the shell line that activates a version in the current shell.
     Env(VvmEnvArgs),
+
+    /// Repoint source provenance to a moved checkout and remove the instances
+    /// built from the abandoned tree (PROP-019 §2.17).
+    Relocate(VvmRelocateArgs),
 }
 
 /// The `--tag`/`--branch`/`--commit` triplet shared by the selector-taking
@@ -139,6 +143,28 @@ pub struct VvmEnvArgs {
     /// detected shell.
     #[arg(long)]
     pub shell: Option<String>,
+}
+
+/// Flags for `self relocate` — repoint source provenance after a checkout move
+/// (PROP-019 §2.17).
+#[derive(Debug, clap::Args)]
+pub struct VvmRelocateArgs {
+    /// The new vibevm source-tree path — where the checkout moved TO. Must
+    /// resolve to a real vibevm checkout.
+    pub target: String,
+
+    /// The old source-tree path to move FROM. Inferred from the recorded
+    /// `source_path` of the installed external instances when omitted.
+    #[arg(long, value_name = "PATH")]
+    pub from: Option<String>,
+
+    /// Show what would be repointed and removed; change nothing.
+    #[arg(long)]
+    pub dry_run: bool,
+
+    /// Skip the confirmation prompt (non-interactive runs / scripts).
+    #[arg(short = 'y', long, alias = "assume-yes")]
+    pub yes: bool,
 }
 
 #[derive(Debug, clap::Args)]

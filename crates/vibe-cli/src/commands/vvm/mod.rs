@@ -17,6 +17,7 @@ mod install;
 mod launchers;
 mod model;
 mod placer;
+mod relocate;
 mod remove;
 pub(crate) mod selfloc;
 mod source;
@@ -91,6 +92,7 @@ pub fn run(ctx: &output::Context, args: VvmArgs, env: VvmEnv) -> Result<()> {
         VvmSubcommand::Remove(a) => remove::run_remove_cmd(ctx, &env, a),
         VvmSubcommand::Gc(a) => remove::run_gc_cmd(ctx, &env, a),
         VvmSubcommand::Env(a) => run_env_cmd(&env, a),
+        VvmSubcommand::Relocate(a) => relocate::run_relocate_cmd(ctx, &env, a),
     }
 }
 
