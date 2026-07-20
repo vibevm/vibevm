@@ -392,6 +392,7 @@ fn write_and_read_roundtrip_on_disk() {
         naming: super::super::NamingConvention::KindName,
         auth: super::super::AuthKind::None,
         token_env: None,
+        enabled: true,
     });
     m.write(&path).unwrap();
     let back = Manifest::read(&path).unwrap();

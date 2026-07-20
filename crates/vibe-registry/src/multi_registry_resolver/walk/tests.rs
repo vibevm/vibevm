@@ -12,6 +12,21 @@ use vibe_core::manifest::NamingConvention;
 use crate::multi_registry_resolver::test_support::*;
 
 #[test]
+#[specmark::verifies("spec://vibevm/modules/vibe-registry/PROP-002#enabled")]
+fn disabled_registry_is_skipped_by_the_resolver() {
+    // PROP-002 §2.2.3 #enabled: `enabled = false` drops the registry from the
+    // built resolver, so no resolution path consults it — without deleting it.
+    let cache = tempdir().unwrap();
+    let backend = Arc::new(FakeBackend::default());
+    let on = registry_section("on", "git@host:on");
+    let mut off = registry_section("off", "git@host:off");
+    off.enabled = false;
+    let resolver = build_resolver(cache.path(), vec![on, off], vec![], vec![], backend);
+    // The disabled `off` is absent; only the enabled `on` was built.
+    assert_eq!(resolver.registries().len(), 1);
+}
+
+#[test]
 fn resolve_picks_first_registry_with_match() {
     let cache = tempdir().unwrap();
     let fake = Arc::new(FakeBackend::default());
@@ -261,6 +276,7 @@ fn resolve_halts_on_auth_failed_against_authenticated_registry() {
         naming: NamingConvention::Fqdn,
         auth: vibe_core::manifest::AuthKind::CredentialHelper,
         token_env: None,
+        enabled: true,
     };
     let r = build_resolver(
         cache.path(),

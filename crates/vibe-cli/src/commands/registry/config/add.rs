@@ -103,6 +103,7 @@ pub(in crate::commands::registry) fn run_add(
         naming,
         auth,
         token_env: args.token_env.clone(),
+        enabled: true,
     };
 
     match position_label {

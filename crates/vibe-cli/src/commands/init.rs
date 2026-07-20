@@ -302,6 +302,7 @@ fn resolve_registry_sections(args: &InitArgs) -> Vec<RegistrySection> {
             naming: NamingConvention::Fqdn,
             auth: vibe_core::manifest::AuthKind::None,
             token_env: None,
+            enabled: true,
         }];
     }
     // The canonical `vibespecs` GitHub org is fqdn-shaped since
@@ -317,6 +318,7 @@ fn resolve_registry_sections(args: &InitArgs) -> Vec<RegistrySection> {
         naming: NamingConvention::Fqdn,
         auth: vibe_core::manifest::AuthKind::None,
         token_env: None,
+        enabled: true,
     };
     // GitVerse default uses `naming = "name"` (no kind prefix). The
     // public `vibespecs` org on GitVerse provisions repos under their
@@ -334,6 +336,7 @@ fn resolve_registry_sections(args: &InitArgs) -> Vec<RegistrySection> {
         naming: NamingConvention::Name,
         auth: vibe_core::manifest::AuthKind::None,
         token_env: None,
+        enabled: true,
     };
     vec![github, gitverse]
 }

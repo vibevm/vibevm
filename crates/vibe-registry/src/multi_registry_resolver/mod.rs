@@ -272,6 +272,13 @@ impl MultiRegistryResolver {
     ) -> Result<Self, RegistryError> {
         let mut built = Vec::with_capacity(registries.len());
         for reg in registries {
+            // PROP-002 §2.2.3 #enabled: a disabled registry is skipped
+            // entirely — never built into the resolver, so no path (install /
+            // outdated / search / sync) consults it. Flip `enabled` back to
+            // re-activate; no re-add needed.
+            if !reg.enabled {
+                continue;
+            }
             // Compose the priority-sorted mirror chain for this registry
             // (named `of = "<reg.name>"` plus wildcard `of = "*"`). This
             // is exactly what `Self::mirrors_for` would compute, but

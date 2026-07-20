@@ -144,6 +144,7 @@ mod fixtures {
             naming: NamingConvention::Fqdn,
             auth: vibe_core::manifest::AuthKind::None,
             token_env: None,
+            enabled: true,
         }
     }
 
@@ -159,6 +160,7 @@ mod fixtures {
             naming: NamingConvention::Fqdn,
             auth: vibe_core::manifest::AuthKind::TokenEnv,
             token_env: Some(env_var.to_string()),
+            enabled: true,
         }
     }
 

@@ -142,6 +142,12 @@ This is what makes the `none` default safe everywhere — CI / opencode harnesse
 
 **Decision.** `--offline` narrows the effective set to **local** sources — `file://` and bare filesystem paths — and drops every **remote** one (`http(s)://`, `ssh://`, `git://`, scp `user@host:…`). A machine-local registry (project or global) still resolves offline, while a github/gitverse registry is simply absent — no network round-trip, no credential prompt. When the local-only set is empty and there is no embedded registry or explicit `--registry <dir>`, offline resolution fails with an actionable message rather than reaching the network. Locality is classified by URL scheme (`vibe_core::url_is_local`).
 
+### 2.2.3 Disabling a registry: `enabled` {#enabled}
+
+`req r1`
+
+**Decision.** Every `[[registry]]` carries an `enabled` flag, default `true`. Setting `enabled = false` switches a registry off **without deleting its entry** — it is skipped by **every** resolution path (`install` / `outdated` / `search` / `registry sync` / `vendor`), because the filter lives at the one resolver-construction point (`MultiRegistryResolver::from_manifest`): a disabled registry is never built, so nothing downstream can consult it. Re-enable by flipping the flag back; no re-add. The default `true` is skipped on serialize, so only an explicit `enabled = false` appears in a written `vibe.toml`. The flag applies uniformly to a project `vibe.toml` and the machine-global `~/.vibe/registry.toml`.
+
 ### 2.3 Mirror layer: transparent, integrity-verified {#mirror}
 
 `req r1`
