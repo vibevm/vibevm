@@ -6,7 +6,7 @@
     "danger_floor": 540
   },
   "summary": {
-    "gated_crates": 10,
+    "gated_crates": 13,
     "exempt_crates": 5,
     "pub_doctest_gated": [
       "vibe-core",
@@ -15,13 +15,17 @@
     "conform_baseline_total": 0,
     "conform_baseline_by_rule": {},
     "files_over_budget": 0,
-    "files_in_danger_band": 23,
-    "deviation_debt": 8,
+    "files_in_danger_band": 27,
+    "deviation_debt": 12,
     "pub_doctest_promotion_candidates": [],
     "pub_doctest_drain_backlog": [
       {
         "crate": "vibe-install",
         "typed_gap": 9
+      },
+      {
+        "crate": "vibe-settings",
+        "typed_gap": 10
       },
       {
         "crate": "vibe-check",
@@ -44,12 +48,16 @@
         "typed_gap": 30
       },
       {
+        "crate": "vibe-actions",
+        "typed_gap": 45
+      },
+      {
         "crate": "vibe-index",
         "typed_gap": 85
       },
       {
         "crate": "vibe-cli",
-        "typed_gap": 120
+        "typed_gap": 201
       }
     ],
     "danger_band_files": [
@@ -58,8 +66,12 @@
         "lines": 600
       },
       {
-        "file": "crates/vibe-cli/src/commands/tree/tui/state.rs",
-        "lines": 595
+        "file": "crates/vibe-cli/src/commands/tree/tui/settings.rs",
+        "lines": 599
+      },
+      {
+        "file": "crates/vibe-actions/src/action.rs",
+        "lines": 598
       },
       {
         "file": "crates/vibe-resolver/src/features.rs",
@@ -67,6 +79,10 @@
       },
       {
         "file": "crates/vibe-registry/src/index_client.rs",
+        "lines": 590
+      },
+      {
+        "file": "crates/vibe-settings/src/schema/types.rs",
         "lines": 590
       },
       {
@@ -90,6 +106,10 @@
         "lines": 578
       },
       {
+        "file": "crates/vibe-registry/src/git_backend/shell.rs",
+        "lines": 577
+      },
+      {
         "file": "crates/vibe-workspace/src/lib.rs",
         "lines": 575
       },
@@ -98,12 +118,12 @@
         "lines": 574
       },
       {
-        "file": "crates/vibe-cli/src/commands/vvm/mod.rs",
-        "lines": 570
-      },
-      {
         "file": "crates/vibe-resolver/src/lib.rs",
         "lines": 565
+      },
+      {
+        "file": "crates/vibe-cli/src/commands/tree/tui/state.rs",
+        "lines": 563
       },
       {
         "file": "crates/vibe-core/src/manifest/document.rs",
@@ -118,8 +138,16 @@
         "lines": 556
       },
       {
+        "file": "crates/vibe-cli/src/commands/install/resolver.rs",
+        "lines": 554
+      },
+      {
         "file": "crates/vibe-mcp/src/agentic.rs",
         "lines": 554
+      },
+      {
+        "file": "crates/vibe-cli/src/commands/prefs/tui/input.rs",
+        "lines": 551
       },
       {
         "file": "crates/vibe-registry/src/search/full_scan.rs",
@@ -138,10 +166,6 @@
         "lines": 544
       },
       {
-        "file": "crates/vibe-registry/src/git_backend/shell.rs",
-        "lines": 542
-      },
-      {
         "file": "crates/vibe-registry/src/multi_registry_resolver/walk.rs",
         "lines": 540
       }
@@ -149,6 +173,28 @@
     "over_budget_files": []
   },
   "crates": [
+    {
+      "crate": "vibe-actions",
+      "gated": true,
+      "pub_doctest_gated": false,
+      "pub_types": 49,
+      "typed_doctested": 4,
+      "typed_gap": 45,
+      "error_enums": 5,
+      "error_enums_missing_req": [],
+      "cells": 0,
+      "deviations": 0,
+      "unwrap_domain": 0,
+      "env_nonroot": 0,
+      "unsafe_nonaudit": 0,
+      "danger_files": [
+        {
+          "file": "crates/vibe-actions/src/action.rs",
+          "lines": 598
+        }
+      ],
+      "over_budget": []
+    },
     {
       "crate": "vibe-check",
       "gated": true,
@@ -170,28 +216,36 @@
       "crate": "vibe-cli",
       "gated": true,
       "pub_doctest_gated": false,
-      "pub_types": 120,
-      "typed_doctested": 0,
-      "typed_gap": 120,
+      "pub_types": 202,
+      "typed_doctested": 1,
+      "typed_gap": 201,
       "error_enums": 7,
       "error_enums_missing_req": [],
       "cells": 0,
-      "deviations": 2,
+      "deviations": 3,
       "unwrap_domain": 0,
       "env_nonroot": 0,
       "unsafe_nonaudit": 0,
       "danger_files": [
         {
+          "file": "crates/vibe-cli/src/commands/install/resolver.rs",
+          "lines": 554
+        },
+        {
           "file": "crates/vibe-cli/src/commands/mcp/install.rs",
           "lines": 546
         },
         {
-          "file": "crates/vibe-cli/src/commands/tree/tui/state.rs",
-          "lines": 595
+          "file": "crates/vibe-cli/src/commands/prefs/tui/input.rs",
+          "lines": 551
         },
         {
-          "file": "crates/vibe-cli/src/commands/vvm/mod.rs",
-          "lines": 570
+          "file": "crates/vibe-cli/src/commands/tree/tui/settings.rs",
+          "lines": 599
+        },
+        {
+          "file": "crates/vibe-cli/src/commands/tree/tui/state.rs",
+          "lines": 563
         },
         {
           "file": "crates/vibe-cli/src/commands/workspace/publish.rs",
@@ -295,6 +349,23 @@
       "over_budget": []
     },
     {
+      "crate": "vibe-launcher",
+      "gated": true,
+      "pub_doctest_gated": false,
+      "pub_types": 0,
+      "typed_doctested": 0,
+      "typed_gap": 0,
+      "error_enums": 1,
+      "error_enums_missing_req": [],
+      "cells": 0,
+      "deviations": 3,
+      "unwrap_domain": 0,
+      "env_nonroot": 0,
+      "unsafe_nonaudit": 0,
+      "danger_files": [],
+      "over_budget": []
+    },
+    {
       "crate": "vibe-llm",
       "gated": false,
       "pub_doctest_gated": false,
@@ -371,7 +442,7 @@
       "danger_files": [
         {
           "file": "crates/vibe-registry/src/git_backend/shell.rs",
-          "lines": 542
+          "lines": 577
         },
         {
           "file": "crates/vibe-registry/src/git_package_registry/fetch/tests.rs",
@@ -422,6 +493,28 @@
         {
           "file": "crates/vibe-resolver/src/lib.rs",
           "lines": 565
+        }
+      ],
+      "over_budget": []
+    },
+    {
+      "crate": "vibe-settings",
+      "gated": true,
+      "pub_doctest_gated": false,
+      "pub_types": 27,
+      "typed_doctested": 17,
+      "typed_gap": 10,
+      "error_enums": 5,
+      "error_enums_missing_req": [],
+      "cells": 0,
+      "deviations": 0,
+      "unwrap_domain": 0,
+      "env_nonroot": 0,
+      "unsafe_nonaudit": 0,
+      "danger_files": [
+        {
+          "file": "crates/vibe-settings/src/schema/types.rs",
+          "lines": 590
         }
       ],
       "over_budget": []

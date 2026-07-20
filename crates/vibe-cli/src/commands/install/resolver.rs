@@ -473,6 +473,8 @@ pub(crate) fn build_install_resolver(
 mod flag_tests {
     use std::path::PathBuf;
 
+    use specmark::verifies;
+
     use super::*;
 
     /// A fully-defaulted `InstallArgs` — every flag off — that tests flip
@@ -516,6 +518,7 @@ mod flag_tests {
     }
 
     #[test]
+    #[verifies("spec://vibevm/modules/vibe-registry/PROP-030#knob")]
     fn short_circuit_conflicts_with_embedded_last() {
         // PROP-030 §3.1: `--embedded-short-circuit` presupposes
         // embedded-first precedence, so pairing it with
@@ -536,6 +539,7 @@ mod flag_tests {
     }
 
     #[test]
+    #[verifies("spec://vibevm/modules/vibe-registry/PROP-030#knob")]
     fn offline_without_a_local_registry_bails_before_the_network() {
         // PROP-030 §3.1: `--offline` with no embedded registry and no
         // `--registry` has nothing local to resolve from. It must fail with

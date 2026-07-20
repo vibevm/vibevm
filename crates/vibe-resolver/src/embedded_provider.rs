@@ -241,6 +241,8 @@ fn first_served_versions(
 
 #[cfg(test)]
 mod tests {
+    use specmark::verifies;
+
     use super::*;
 
     /// A canned provider: it either serves a fixed version set, is absent
@@ -408,6 +410,7 @@ mod tests {
     }
 
     #[test]
+    #[verifies("spec://vibevm/modules/vibe-registry/PROP-030#knob")]
     fn short_circuit_stops_at_the_first_serving_provider() {
         // PROP-030 §3.1: with embedded-first ordering, a coordinate the
         // embedded provider serves is enumerated from embedded alone — the
@@ -434,6 +437,7 @@ mod tests {
     }
 
     #[test]
+    #[verifies("spec://vibevm/modules/vibe-registry/PROP-030#knob")]
     fn short_circuit_falls_through_when_embedded_absent() {
         // The other half of PROP-030 §3.1: a coordinate the embedded
         // provider lacks still reaches the declared provider under

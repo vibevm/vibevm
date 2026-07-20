@@ -4,6 +4,8 @@
 
 specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-001#backend");
 
+use specmark::verifies;
+
 use super::tar::parse_octal;
 use super::*;
 
@@ -138,6 +140,7 @@ fn classify_credential_prompt_failure_after_silencing() {
 }
 
 #[test]
+#[verifies("spec://vibevm/modules/vibe-registry/PROP-002#registry-auth")]
 fn force_silence_wins_over_tty_and_env() {
     // PROP-002 §2.2.1: a public (`auth = "none"`) backend forces the
     // silencing layer on. The `force_silence` branch returns before any
@@ -147,6 +150,7 @@ fn force_silence_wins_over_tty_and_env() {
 }
 
 #[test]
+#[verifies("spec://vibevm/modules/vibe-registry/PROP-002#registry-auth")]
 fn forced_apply_common_env_shuts_every_interactive_channel() {
     // With `force_silence`, every channel git could use to prompt for
     // credentials is closed on the spawned invocation (PROP-002 §2.2.1):
@@ -192,6 +196,7 @@ fn forced_apply_common_env_shuts_every_interactive_channel() {
 }
 
 #[test]
+#[verifies("spec://vibevm/modules/vibe-registry/PROP-002#registry-auth")]
 fn shellgit_yields_an_anonymous_public_variant() {
     // A source `ShellGit` is interactive by default and hands out an
     // anonymous-posture variant for public registries — the backend
