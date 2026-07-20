@@ -1,50 +1,35 @@
 // spec://vibeterm/PROP-044#regions, spec://vibeterm/design-system
-// The shell window: a left rail (the contacts-style terminal list + controls) and a right content
-// region that is intentionally transparent (the per-tab terminal WebContentsViews are native surfaces
-// main lays out over it). Live theme + locale switching from the start.
+// The shell window: four columns left-to-right — a narrow profiles rail, the contacts-style
+// terminal list, the content area (header bar over a transparent region the per-tab terminal
+// WebContentsViews main lays out over), and a right details sidebar. The content header carries
+// the working theme/locale toggles; the rest of the chrome mirrors the reference layout.
 
-import { createSignal, type JSX } from "solid-js";
+import type { JSX } from "solid-js";
+import { ProfilesRail } from "./ProfilesRail";
 import { TabList } from "./TabList";
-import { t, toggleLocale } from "./i18n";
+import { ContentHeader } from "./ContentHeader";
+import { RightSidebar } from "./RightSidebar";
+import { view } from "./bridge";
 import "./theme.css";
 
-const THEMES = ["dark-purple", "anthropic"] as const;
-type Theme = (typeof THEMES)[number];
-
 export function App(): JSX.Element {
-  const [theme, setTheme] = createSignal<Theme>("dark-purple");
-
-  const applyTheme = (next: Theme) => {
-    setTheme(next);
-    document.documentElement.setAttribute("data-theme", next);
+  // The sidebar drops when the active window is split (the reference's split-view shows the two
+  // panes taking the full content width).
+  const split = () => {
+    const v = view();
+    if (!v || v.windows.length === 0) return false;
+    const w = v.windows.find((x) => x.id === v.activeWindow) ?? v.windows[0];
+    return w ? w.panes.length >= 2 : false;
   };
-
-  const cycleTheme = () => {
-    const idx = THEMES.indexOf(theme());
-    const next = THEMES[(idx + 1) % THEMES.length];
-    if (next) applyTheme(next);
-  };
-
   return (
-    <div class="shell">
-      <aside class="rail">
-        <header class="rail-app">
-          <span class="app-glyph" aria-hidden="true">
-            ◆
-          </span>
-          <span class="app-name">{t("app.title")}</span>
-        </header>
-        <TabList />
-        <footer class="rail-footer">
-          <button class="rail-btn" onClick={cycleTheme} title={t("theme.toggle")}>
-            ◐
-          </button>
-          <button class="rail-btn" onClick={() => toggleLocale()} title="locale">
-            {t("locale.toggle")}
-          </button>
-        </footer>
-      </aside>
-      <main id="content" />
+    <div class="shell" classList={{ split: split() }}>
+      <ProfilesRail />
+      <TabList />
+      <main class="content">
+        <ContentHeader />
+        <div id="content" />
+      </main>
+      <RightSidebar />
     </div>
   );
 }

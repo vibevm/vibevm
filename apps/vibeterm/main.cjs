@@ -723,14 +723,36 @@ function shellModelView() {
   };
 }
 
-// Lay out one window's panes: 1 pane = full content beside the rail; 2 panes = side-by-side halves.
-const RAIL_WIDTH = 240;
+// Layout geometry. The chrome renders FOUR columns (profiles rail, terminal list, content, right
+// sidebar) plus a content header bar; the per-tab terminal WebContentsViews are native surfaces
+// main lays out over the CONTENT region only (below the header, between the list and the sidebar).
+// A torn-off window is chromeless: a thin header (rendered by tearoff.html) on top, terminal below.
+const PROFILES_RAIL = 56;
+const LIST_WIDTH = 240;
+const SIDEBAR_WIDTH = 280;
+const CONTENT_HEADER = 40;
+const TEAROFF_HEADER = 36;
+const PANE_DIVIDER = 1;
+
 function layoutWindow(winId) {
   const w = shellWindows.get(winId);
   if (!w || w.win.isDestroyed()) return;
   const [cw, ch] = w.win.getContentSize();
-  const contentX = w.hasChrome ? RAIL_WIDTH : 0;
-  const contentW = Math.max(0, cw - contentX);
+  // The right sidebar drops in a split (the two panes take the full content width). Keep these in
+  // sync with the chrome grid (theme.css .shell / .shell.split).
+  const sidebarActive = w.hasChrome && w.panes.length < 2;
+  let contentX, contentW, contentY, contentH;
+  if (w.hasChrome) {
+    contentX = PROFILES_RAIL + LIST_WIDTH;
+    contentW = Math.max(0, cw - contentX - (sidebarActive ? SIDEBAR_WIDTH : 0));
+    contentY = CONTENT_HEADER;
+    contentH = Math.max(0, ch - CONTENT_HEADER);
+  } else {
+    contentX = 0;
+    contentW = cw;
+    contentY = TEAROFF_HEADER;
+    contentH = Math.max(0, ch - TEAROFF_HEADER);
+  }
   const paneIds = w.panes;
   const showPane = (paneId, x, width) => {
     const p = shellPanes.get(paneId);
@@ -738,14 +760,14 @@ function layoutWindow(winId) {
     const tab = shellTabs.get(p.tabId);
     if (!tab) return;
     tab.view.setVisible(true);
-    tab.view.setBounds({ x, y: 0, width, height: ch });
+    tab.view.setBounds({ x, y: contentY, width, height: contentH });
   };
   if (paneIds.length === 1) {
     showPane(paneIds[0], contentX, contentW);
   } else if (paneIds.length >= 2) {
-    const half = Math.floor(contentW / 2);
+    const half = Math.floor((contentW - PANE_DIVIDER) / 2);
     showPane(paneIds[0], contentX, half);
-    showPane(paneIds[1], contentX + half, contentW - half);
+    showPane(paneIds[1], contentX + half + PANE_DIVIDER, contentW - half - PANE_DIVIDER);
   }
   // hide this window's tabs that are not currently in a pane
   for (const tabId of w.tabs) {

@@ -1,5 +1,7 @@
-// spec://vibeterm/design-system#spacing-scale, spec://vibeterm/PROP-047#projection
-// The contacts-style terminal list: a vertical rail of TabItem rows over the projected ModelView.
+// spec://vibeterm/design-system#spacing-scale, spec://vibeterm/PROP-047#projection, PROP-044 §1
+// Column 2: a "TERMINALS" header (label + chevron + new-tab) over the vertical list of TabItem
+// rows, with a user-profile card pinned to the bottom (avatar + name + status + mic/headphones/
+// settings). The list reads the projected ModelView.
 
 import { For, Show, type JSX } from "solid-js";
 import { TabItem } from "./TabItem";
@@ -11,16 +13,23 @@ export function TabList(): JSX.Element {
     const v = view();
     return v ? [...v.tabs.values()] : [];
   };
+  const compact = () => view()?.compact ?? false;
 
   return (
-    <div class="tab-list">
-      <div class="rail-header">
-        <span class="rail-title">{t("tab.list")}</span>
-        <button class="rail-new" title={t("tab.new")} onClick={() => sendCommand({ t: "open" })}>
+    <section class="terminal-list" classList={{ compact: compact() }}>
+      <header class="list-header">
+        <span class="list-title">
+          <span class="list-chevron" aria-hidden="true">
+            ▾
+          </span>
+          {t("tab.list")}
+        </span>
+        <button class="list-new" title={t("tab.new")} onClick={() => sendCommand({ t: "open" })}>
           +
         </button>
-      </div>
-      <div class="tab-items">
+      </header>
+
+      <div class="list-items">
         <For each={tabs()}>
           {(tab) => (
             <TabItem
@@ -38,6 +47,23 @@ export function TabList(): JSX.Element {
           <div class="tab-empty">{t("tab.empty")}</div>
         </Show>
       </div>
-    </div>
+
+      <footer class="list-user">
+        <span class="list-user-avatar" />
+        <span class="list-user-text">
+          <span class="list-user-name">{t("user.name")}</span>
+          <span class="list-user-status">{t("user.status")}</span>
+        </span>
+        <button class="list-user-icon" title="mute" aria-label="mute">
+          🎤
+        </button>
+        <button class="list-user-icon" title="headphones" aria-label="headphones">
+          ♪
+        </button>
+        <button class="list-user-icon" title="settings" aria-label="settings">
+          ⚙
+        </button>
+      </footer>
+    </section>
   );
 }

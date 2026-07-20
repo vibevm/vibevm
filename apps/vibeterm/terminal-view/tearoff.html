@@ -1,22 +1,99 @@
 <!doctype html>
 <!--
-  spec://vibeterm/PROP-044 §5 — a chromeless host window for a torn-off terminal. No rail, no
-  chrome: the reparented per-tab WebContentsView (D0) is laid out over this page by main. The page
-  only exists so the BrowserWindow has a webContents to host the view.
+  spec://vibeterm/PROP-044 §5 — a chromeless host window for a torn-off terminal. No rail, no list:
+  a thin top header (terminal name + a few utility icons + close) over the reparented per-tab
+  WebContentsView, which main lays out below TEAROFF_HEADER. The header is a static placeholder here
+  (the torn-off tab's view is the live surface).
 -->
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <title>vibeterm</title>
     <style>
+      :root {
+        --base: #191724;
+        --surface: #1f1d2e;
+        --border: #2a2740;
+        --text: #e0def4;
+        --subtext: #908caa;
+        --accent: #c4a7e7;
+        --muted: #6e6a86;
+      }
       html,
       body {
         margin: 0;
         height: 100%;
-        background: #191724;
+        background: var(--base);
+        color: var(--text);
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
         overflow: hidden;
+      }
+      .to-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 36px;
+        padding: 0 12px;
+        background: var(--base);
+        border-bottom: 1px solid var(--border);
+        box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
+        -webkit-app-region: drag; /* let the header drag the frameless-ish window */
+      }
+      .to-left {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .to-glyph {
+        color: var(--muted);
+        font-size: 16px;
+      }
+      .to-title {
+        font-weight: 600;
+        font-size: 13px;
+      }
+      .to-topic {
+        color: var(--muted);
+        font-size: 12px;
+        border-left: 1px solid var(--border);
+        padding-left: 8px;
+      }
+      .to-right {
+        display: flex;
+        gap: 2px;
+        -webkit-app-region: no-drag;
+      }
+      .to-icon {
+        width: 28px;
+        height: 28px;
+        border-radius: 6px;
+        border: none;
+        background: transparent;
+        color: var(--subtext);
+        font-size: 13px;
+        cursor: pointer;
+        display: grid;
+        place-items: center;
+      }
+      .to-icon:hover {
+        background: var(--surface);
+        color: var(--text);
       }
     </style>
   </head>
-  <body></body>
+  <body>
+    <div class="to-header">
+      <div class="to-left">
+        <span class="to-glyph">#</span>
+        <span class="to-title">terminal</span>
+        <span class="to-topic">a VibeTerm terminal</span>
+      </div>
+      <div class="to-right">
+        <button class="to-icon" title="search">⌕</button>
+        <button class="to-icon" title="pin">☆</button>
+        <button class="to-icon" title="close">×</button>
+      </div>
+    </div>
+    <!-- the torn-off terminal WebContentsView is laid out by main BELOW this header -->
+  </body>
 </html>
