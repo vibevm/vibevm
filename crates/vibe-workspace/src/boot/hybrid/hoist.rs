@@ -42,6 +42,7 @@ use super::{UnitId, UnitInput};
 ///     origin: String::new(),
 ///     when: None,
 ///     edges,
+///     format: Default::default(),
 /// };
 /// // `a` and `b` both static-link `shared`; only `a` static-links `own`.
 /// let mut table = HashMap::new();
@@ -97,6 +98,7 @@ pub fn soft_static_pulls(table: &HashMap<UnitId, UnitInput>) -> HashMap<UnitId, 
 ///     origin: String::new(),
 ///     when: None,
 ///     edges,
+///     format: Default::default(),
 /// };
 /// // Two units static-link `shared` — it is shared, so hoisted.
 /// let mut table = HashMap::new();

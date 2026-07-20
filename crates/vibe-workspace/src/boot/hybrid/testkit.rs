@@ -53,6 +53,7 @@ pub(crate) fn unit(name: &str, edges: &[(&str, LinkType)]) -> (UnitId, UnitInput
             origin: format!("org.vibevm/{name}"),
             when: None,
             edges: mk_edges(edges),
+            format: Default::default(),
         },
     )
 }

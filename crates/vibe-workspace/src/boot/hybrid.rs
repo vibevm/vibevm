@@ -35,7 +35,7 @@ use std::cmp::Reverse;
 use std::collections::{BinaryHeap, HashMap, HashSet};
 
 use vibe_core::Group;
-use vibe_core::manifest::{LinkType, WhenCondition};
+use vibe_core::manifest::{LinkType, PackageFormat, WhenCondition};
 
 pub mod fingerprint;
 pub mod hoist;
@@ -88,6 +88,7 @@ pub struct UnitEdge {
 ///     origin: String::new(),
 ///     when: None,
 ///     edges,
+///     format: Default::default(),
 /// };
 /// // root →(static) a — `a` compiles into root's static zone.
 /// let mut table: HashMap<UnitId, UnitInput> = HashMap::new();
@@ -117,6 +118,11 @@ pub struct UnitInput {
     /// The unit's direct edges, each carrying the link mode from this unit's
     /// manifest.
     pub edges: Vec<UnitEdge>,
+    /// The unit's PROP-035 §3 package format. `Normal` tells the static
+    /// renderer to compile this unit's `#use`/`#source` closure (PROP-035 §8)
+    /// when it is compiled into a `STATIC.md`; `Simple` (the default) keeps
+    /// the verbatim concatenation.
+    pub format: PackageFormat,
 }
 
 /// The membership of one unit's static zone (PROP-038 §2.2) — the recursion's
@@ -157,6 +163,7 @@ pub struct ZoneMembership {
 /// let id = |n: &str| -> UnitId { (g.clone(), n.to_string()) };
 /// let unit = |edges: Vec<UnitEdge>| UnitInput {
 ///     own_boot_path: None, origin: String::new(), when: None, edges,
+///     format: Default::default(),
 /// };
 /// // root →(dynamic) a: the dynamic edge BREAKS the zone — `a` is not compiled
 /// // in, it surfaces as a dynamic edge instead (contrast the static case on
@@ -256,6 +263,7 @@ fn descend(
 /// let id = |n: &str| -> UnitId { (g.clone(), n.to_string()) };
 /// let unit = |edges: Vec<UnitEdge>| UnitInput {
 ///     own_boot_path: None, origin: String::new(), when: None, edges,
+///     format: Default::default(),
 /// };
 /// // root →(static) a: both compile in; the dependency `a` orders before the
 /// // dependent `root`.

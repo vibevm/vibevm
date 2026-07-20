@@ -74,6 +74,15 @@ pub(super) fn build_unit_table(resolution: &[ResolvedDep]) -> HashMap<UnitId, Un
                     origin: format!("{}/{}", dep.group, dep.name),
                     when: snippet.and_then(|bs| bs.when),
                     edges,
+                    // PROP-035 §3 — carry the package's format so a `normal`
+                    // unit is compiled (not concatenated) when it enters a
+                    // static zone (PROP-035 §8). Absent a `[package]`, `simple`.
+                    format: dep
+                        .manifest
+                        .package
+                        .as_ref()
+                        .map(|p| p.format)
+                        .unwrap_or_default(),
                 },
             )
         })
@@ -193,6 +202,9 @@ fn zone_to_effective(
             when: None,
             origin: unit.origin.clone(),
             use_ref: hoisted,
+            // A `normal` static member is compiled to its closure by
+            // `render_static` (PROP-035 §8); `simple` stays verbatim.
+            format: unit.format,
         });
     }
     for (target, when) in &zone.dynamic_edges {
@@ -206,6 +218,9 @@ fn zone_to_effective(
             when: *when,
             origin: format!("{}/{}", target.0, target.1),
             use_ref: false,
+            // A dynamic edge is read by reference (INDEX.md), never compiled
+            // into the static lane, so its format does not matter here.
+            format: Default::default(),
         });
     }
     EffectiveBoot { entries }
@@ -300,6 +315,9 @@ pub(super) fn append_hoisted(
             when: None,
             origin: format!("{} [shared by {}]", unit.origin, shared_by(&id, pulls)),
             use_ref: false,
+            // A hoisted `normal` package is still compiled to its closure
+            // (PROP-035 §8) at the single hoist point.
+            format: unit.format,
         });
     }
 }

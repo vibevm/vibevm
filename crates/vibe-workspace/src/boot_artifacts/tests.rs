@@ -9,7 +9,7 @@ use super::*;
 use crate::boot::{BootBand, BootEntry};
 use specmark::verifies;
 use tempfile::TempDir;
-use vibe_core::manifest::{LinkType, TargetOs, WhenCondition};
+use vibe_core::manifest::{LinkType, PackageFormat, TargetOs, WhenCondition};
 
 #[cfg(test)]
 fn entry(path: &str, link: LinkType, origin: &str) -> BootEntry {
@@ -20,6 +20,7 @@ fn entry(path: &str, link: LinkType, origin: &str) -> BootEntry {
         when: None,
         origin: origin.to_string(),
         use_ref: false,
+        format: Default::default(),
     }
 }
 
@@ -34,12 +35,60 @@ fn entry_when(path: &str, link: LinkType, when: Option<WhenCondition>, origin: &
         when,
         origin: origin.to_string(),
         use_ref: false,
+        format: Default::default(),
     }
 }
 
 #[cfg(test)]
 fn boot(entries: Vec<BootEntry>) -> EffectiveBoot {
     EffectiveBoot { entries }
+}
+
+/// A `normal`-format `static` entry — the renderer compiles its `#use` /
+/// `#source` closure rather than concatenating the file (PROP-035 §8).
+#[cfg(test)]
+fn entry_normal(path: &str, origin: &str) -> BootEntry {
+    BootEntry {
+        path: path.to_string(),
+        band: BootBand::Dependency,
+        link: LinkType::Static,
+        when: None,
+        origin: origin.to_string(),
+        use_ref: false,
+        format: PackageFormat::Normal,
+    }
+}
+
+/// Write the `greeter` normal-package fixture into `ws`'s `vibedeps/` slot and
+/// return the contract's workspace-relative path — a runnable reference model
+/// (scaffold H) of a `normal` package: a contract that `#source`s an impl and
+/// `#use`s a prelude, plus an `unused` section reachable by neither directive
+/// (so the compile must tree-shake it away, PROP-035 §7.2).
+#[cfg(test)]
+fn write_greeter_fixture(ws: &Path) -> String {
+    let base = ws.join("vibedeps/flow-greeter/1.0.0/spec");
+    let write = |rel: &str, body: &str| {
+        let p = base.join(rel);
+        fs::create_dir_all(p.parent().unwrap()).unwrap();
+        fs::write(&p, body).unwrap();
+    };
+    write(
+        "contract/greeting.md",
+        "# Greeting contract {#root}\n\
+         #source spec://com.example.hello/greeter/source/greeting#root\n\
+         #use spec://com.example.hello/greeter/contract/prelude#root\n\n\
+         CONTRACT_BODY\n",
+    );
+    write(
+        "source/greeting.md",
+        "# Greeting impl {#root}\n\nSOURCE_BODY\n",
+    );
+    write("contract/prelude.md", "# Prelude {#root}\n\nPRELUDE_BODY\n");
+    write(
+        "contract/unused.md",
+        "# Unused {#root}\n\nUNUSED_SHOULD_NOT_APPEAR\n",
+    );
+    "vibedeps/flow-greeter/1.0.0/spec/contract/greeting.md".to_string()
 }
 
 #[test]
@@ -226,6 +275,90 @@ fn render_static_without_directives_is_left_verbatim() {
     )]);
     let text = render_static(&b, ws.path()).unwrap().unwrap();
     assert!(text.contains("plain boot content, no directives."));
+}
+
+#[test]
+#[verifies("spec://vibevm/modules/vibe-workspace/PROP-035#pipeline")]
+fn render_static_compiles_a_normal_package_closure() {
+    // The heart of `normal + static` (PROP-035 §8): the contribution is
+    // compiled to its `#use`/`#source`-resolved, tree-shaken, dependency-
+    // ordered closure — not the file concatenated verbatim.
+    let ws = TempDir::new().unwrap();
+    let contract = write_greeter_fixture(ws.path());
+    let b = boot(vec![entry_normal(&contract, "com.example.hello/greeter")]);
+    let text = render_static(&b, ws.path()).unwrap().unwrap();
+
+    // Source-merge (§7.3): the contract's `#source` impl body folds in.
+    assert!(text.contains("CONTRACT_BODY"), "{text}");
+    assert!(text.contains("SOURCE_BODY"), "{text}");
+    // Tree-shaking (§7.2): the `#use`'d prelude is pulled...
+    assert!(text.contains("PRELUDE_BODY"), "{text}");
+    // ...but a section nothing `#use`s never enters the closure.
+    assert!(!text.contains("UNUSED_SHOULD_NOT_APPEAR"), "{text}");
+    // Topological order (§8 phase 2): the dependency precedes its user.
+    let prelude = text.find("PRELUDE_BODY").unwrap();
+    let contract_body = text.find("CONTRACT_BODY").unwrap();
+    assert!(
+        prelude < contract_body,
+        "dependency must precede its user:\n{text}"
+    );
+    // No directive survives the compile (§7.1 / §8).
+    assert!(!text.contains("#use "), "{text}");
+    assert!(!text.contains("#source "), "{text}");
+    assert!(!text.contains("#embed "), "{text}");
+}
+
+#[test]
+#[verifies("spec://vibevm/modules/vibe-workspace/PROP-035#formats")]
+fn render_static_normal_differs_from_simple_on_the_same_file() {
+    // The crux of the format distinction (PROP-035 §3/§8): the SAME contract
+    // file pulled `static` compiles (normal) versus concatenates verbatim
+    // (simple). This is the differential oracle for the feature.
+    let ws = TempDir::new().unwrap();
+    let contract = write_greeter_fixture(ws.path());
+
+    let normal = render_static(
+        &boot(vec![entry_normal(&contract, "com.example.hello/greeter")]),
+        ws.path(),
+    )
+    .unwrap()
+    .unwrap();
+    let simple = render_static(
+        &boot(vec![entry(
+            &contract,
+            LinkType::Static,
+            "com.example.hello/greeter",
+        )]),
+        ws.path(),
+    )
+    .unwrap()
+    .unwrap();
+
+    // `simple` carries the file verbatim: the directive is unresolved, the
+    // source is not merged, and the dependency is not pulled.
+    assert!(
+        simple.contains("#use "),
+        "simple keeps the directive:\n{simple}"
+    );
+    assert!(
+        !simple.contains("SOURCE_BODY"),
+        "simple must not merge source"
+    );
+    assert!(
+        !simple.contains("PRELUDE_BODY"),
+        "simple must not pull the dep"
+    );
+    // `normal` resolves the closure: directive gone, source merged, dep pulled.
+    assert!(
+        !normal.contains("#use "),
+        "normal must resolve the directive:\n{normal}"
+    );
+    assert!(normal.contains("SOURCE_BODY"));
+    assert!(normal.contains("PRELUDE_BODY"));
+    assert_ne!(
+        normal, simple,
+        "normal and simple must produce different static lanes"
+    );
 }
 
 #[test]

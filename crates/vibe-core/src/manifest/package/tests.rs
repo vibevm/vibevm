@@ -5,6 +5,8 @@
 //! file-grain scanners (the conform frontend) scope their `unwrap`s
 //! as test code.
 
+use specmark::verifies;
+
 use super::*;
 
 /// The canonical group every fixture package in these tests belongs to.
@@ -86,6 +88,7 @@ fn package_meta_as_package_ref_pins_exact() {
         publish: PublishPosture::default(),
         materialization: Materialization::default(),
         bridge: false,
+        format: PackageFormat::default(),
     };
     let r = meta.as_package_ref().unwrap();
     assert_eq!(r.kind, Some(PackageKind::Flow));
@@ -93,6 +96,38 @@ fn package_meta_as_package_ref_pins_exact() {
     assert_eq!(r.name, "wal");
     assert!(r.version.matches(&semver::Version::parse("0.3.0").unwrap()));
     assert!(!r.version.matches(&semver::Version::parse("0.3.1").unwrap()));
+}
+
+#[test]
+#[verifies("spec://vibevm/modules/vibe-workspace/PROP-035#formats")]
+fn package_format_parses_and_defaults_to_simple() {
+    // PROP-035 §3: `format` is optional and defaults to `simple` — the
+    // fail-safe posture (a forgotten format over-loads, visibly working,
+    // rather than silently loading nothing). A manifest opts into `normal`
+    // explicitly.
+    #[derive(Deserialize)]
+    struct F {
+        v: PackageFormat,
+    }
+    let normal: PackageFormat = toml::from_str("v = \"normal\"").map(|w: F| w.v).unwrap();
+    assert_eq!(normal, PackageFormat::Normal);
+    assert!(normal.is_normal());
+
+    // Absent on a `[package]`, it defaults to `simple`.
+    let pkg: PackageMeta = toml::from_str(
+        "name = \"greeter\"\ngroup = \"com.example.hello\"\nkind = \"flow\"\nversion = \"0.1.0\"\n",
+    )
+    .unwrap();
+    assert_eq!(pkg.format, PackageFormat::Simple);
+    assert!(pkg.format.is_default());
+
+    // Explicit `format = "normal"` on a `[package]` is carried through, and
+    // `deny_unknown_fields` still stands (a bogus field is rejected).
+    let pkg_n: PackageMeta = toml::from_str(
+        "name = \"greeter\"\ngroup = \"com.example.hello\"\nkind = \"flow\"\nversion = \"0.1.0\"\nformat = \"normal\"\n",
+    )
+    .unwrap();
+    assert!(pkg_n.format.is_normal());
 }
 
 // --- PROP-009 §2.4 / §2.5 — inclusion type + boot category ----------

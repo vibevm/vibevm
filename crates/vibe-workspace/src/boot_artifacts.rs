@@ -44,6 +44,11 @@ use vibe_spec::{FileResolver, FsSectionSource, expand_embeds};
 
 use crate::WorkspaceError;
 use crate::boot::EffectiveBoot;
+use normal::compile_normal_entry;
+
+/// `normal + static` compilation — the branch that compiles a `normal`
+/// package's closure rather than concatenating it (PROP-035 §8).
+mod normal;
 
 /// The host project's `spec://` authority (PROP-035 §6) — the root project is
 /// addressed as `vibevm`. Used to resolve `#embed` targets when compiling the
@@ -201,12 +206,17 @@ pub fn render_index(
     Ok(format!("{INDEX_HEADER}{fp_line}{body}"))
 }
 
-/// Render `STATIC.md` — the verbatim concatenation of the `static`-linked
+/// Render `STATIC.md` — the concatenation of the `static`-linked
 /// contributions, in composed order. Returns `None` when the node has no
 /// static contributions (no `STATIC.md` is generated then).
 ///
-/// `workspace_root` resolves each contribution's path to its content on
-/// disk; the contributions live in the materialised `vibedeps/` tree.
+/// A `simple` contribution is carried **verbatim** (PROP-035 §3); a `normal`
+/// one is **compiled** to its `#use`/`#source`-resolved, tree-shaken closure
+/// (PROP-035 §8, [`compile_normal_entry`]) — so a `normal + static` edge bakes
+/// in only what the contract actually reaches, merged, in dependency order,
+/// rather than the whole file. `workspace_root` resolves each contribution's
+/// path (and every `spec://` a `normal` closure walks) against the
+/// materialised `vibedeps/` tree.
 pub fn render_static(
     boot: &EffectiveBoot,
     workspace_root: &Path,
@@ -229,15 +239,24 @@ pub fn render_static(
             ));
             continue;
         }
-        let abs = workspace_root.join(&entry.path);
-        let content = fs::read_to_string(&abs).map_err(|e| io_err(&abs, e))?;
-        // An HTML-comment provenance marker — invisible in rendered
-        // markdown, so the concatenated content stays verbatim.
+        // An HTML-comment provenance marker — invisible in rendered markdown,
+        // so the concatenated content stays verbatim (or marks the compiled
+        // closure's origin, for a `normal` package).
         out.push_str(&format!(
             "<!-- vibe:static {} — {} -->\n\n",
             entry.origin, entry.path
         ));
-        out.push_str(content.trim_end());
+        // PROP-035 §8: a `normal` package's static contribution is the
+        // `#use` / `#source`-resolved, tree-shaken closure reachable from its
+        // contract — compiled, not concatenated. A `simple` package is carried
+        // verbatim (its over-load the author's problem, PROP-035 §3).
+        let body = if entry.format.is_normal() {
+            compile_normal_entry(entry, workspace_root)?
+        } else {
+            let abs = workspace_root.join(&entry.path);
+            fs::read_to_string(&abs).map_err(|e| io_err(&abs, e))?
+        };
+        out.push_str(body.trim_end());
         out.push_str("\n\n");
     }
     // Spec-compiler (PROP-035 §8): expand any `#embed` the static lane carries

@@ -115,11 +115,66 @@ pub struct PackageMeta {
     /// Default `false`.
     #[serde(default, skip_serializing_if = "is_false")]
     pub bridge: bool,
+    /// `[package].format` — the PROP-035 §3 package format. `simple` (the
+    /// default) is carried whole, directive-free; `normal` opts into the
+    /// contract/source split and the spec compiler, so a `static`-linked
+    /// `normal` package is compiled to its `#use`-reachable, `#source`-merged
+    /// closure (PROP-035 §7/§8) rather than concatenated verbatim. Default
+    /// `simple` — a forgotten `format` fails safe (over-load, visibly working),
+    /// never silent (PROP-035 §3, owner decision).
+    #[serde(default, skip_serializing_if = "PackageFormat::is_default")]
+    pub format: PackageFormat,
 }
 
 /// `skip_serializing_if` helper for boolean fields that default to `false`.
 fn is_false(b: &bool) -> bool {
     !*b
+}
+
+/// `[package].format` — the PROP-035 §3 package format, selecting whether a
+/// package is carried whole (`simple`) or participates through the spec
+/// compiler's directives (`normal`).
+///
+/// The distinction is what the boot linker keys on: a `static`-linked `normal`
+/// package is compiled to the tree-shaken, `#source`-merged closure reachable
+/// from its contract (PROP-035 §8), where a `simple` one is concatenated
+/// verbatim (the whole file, its over-load the author's problem, PROP-035 §3).
+///
+/// ```
+/// use vibe_core::manifest::PackageFormat;
+///
+/// // Absent `format`, a package is `simple` — the fail-safe default
+/// // (PROP-035 §3): a forgotten format over-loads (visibly working) rather
+/// // than silently loading nothing.
+/// assert_eq!(PackageFormat::default(), PackageFormat::Simple);
+/// assert!(PackageFormat::default().is_default());
+/// assert!(PackageFormat::Normal.is_normal());
+/// ```
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum PackageFormat {
+    /// Carried whole, directive-free — legacy / adapted prompts, and the
+    /// fail-safe default (PROP-035 §3).
+    #[default]
+    Simple,
+    /// The VibeVM-native form: the contract/source split and the directive
+    /// compiler (`#embed` / `#use` / `#source`), so the package is tree-shaken
+    /// and its `static` lane compiled to the closure, not concatenated whole.
+    Normal,
+}
+
+impl PackageFormat {
+    /// `true` for the default (`simple`) — lets the serializer skip the field
+    /// on an unchanged manifest.
+    pub fn is_default(&self) -> bool {
+        matches!(self, PackageFormat::Simple)
+    }
+
+    /// `true` iff this is the `normal` format — the spec-compiler form the
+    /// boot linker compiles rather than concatenates.
+    pub fn is_normal(&self) -> bool {
+        matches!(self, PackageFormat::Normal)
+    }
 }
 
 impl PackageMeta {

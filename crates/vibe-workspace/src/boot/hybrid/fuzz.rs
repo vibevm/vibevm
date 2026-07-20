@@ -68,6 +68,7 @@ fn arb_table() -> impl Strategy<Value = (HashMap<UnitId, UnitInput>, HashMap<Uni
                         origin: format!("org.vibevm/u{i}"),
                         when: None,
                         edges,
+                        format: Default::default(),
                     },
                 );
                 versions.insert(uid(i), "1.0.0".to_string());

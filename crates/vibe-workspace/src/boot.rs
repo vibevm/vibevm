@@ -36,7 +36,7 @@
 
 specmark::scope!("spec://vibevm/modules/vibe-workspace/PROP-009#effective-boot");
 
-use vibe_core::manifest::{BootCategory, LinkType, WhenCondition};
+use vibe_core::manifest::{BootCategory, LinkType, PackageFormat, WhenCondition};
 use vibe_core::{Group, PackageKind};
 
 use crate::WorkspaceError;
@@ -118,6 +118,11 @@ pub struct DependencyBoot {
     /// The `(group, name)` of every package this one directly requires —
     /// the edges of the topological order.
     pub requires: Vec<(Group, String)>,
+    /// The dependency's PROP-035 §3 package format. A `normal` package whose
+    /// entry resolves `static` is compiled to its `#use`-reachable,
+    /// `#source`-merged closure by the boot linker (PROP-035 §8); a `simple`
+    /// one is concatenated verbatim. Default `simple` (fail-safe).
+    pub format: PackageFormat,
 }
 
 /// One entry in a node's computed effective boot sequence.
@@ -142,6 +147,12 @@ pub struct BootEntry {
     /// graph edge survives locally while the text lives once at the hoist
     /// point. `false` for an ordinary compiled-in entry.
     pub use_ref: bool,
+    /// The contributing package's PROP-035 §3 format. `Normal` on a `static`
+    /// entry tells the renderer to compile the `#use`/`#source` closure from
+    /// this entry's contract rather than concatenate the file verbatim
+    /// (PROP-035 §8). `Simple` (the default, and always for a node's own
+    /// authored boot) keeps the verbatim path.
+    pub format: PackageFormat,
 }
 
 /// A node's computed effective boot sequence (PROP-009 §2.2) — every entry
@@ -209,6 +220,8 @@ pub fn compute_effective_boot(inputs: NodeBootInputs<'_>) -> Result<EffectiveBoo
             when: None,
             origin: boot.origin.clone(),
             use_ref: false,
+            // A node's own authored boot is always carried verbatim.
+            format: PackageFormat::Simple,
         });
     }
 
@@ -222,6 +235,8 @@ pub fn compute_effective_boot(inputs: NodeBootInputs<'_>) -> Result<EffectiveBoo
             when: None,
             origin: boot.origin.clone(),
             use_ref: false,
+            // A node's own authored boot is always carried verbatim.
+            format: PackageFormat::Simple,
         });
     }
 
@@ -265,6 +280,10 @@ pub fn compute_effective_boot(inputs: NodeBootInputs<'_>) -> Result<EffectiveBoo
             when: dep.when,
             origin: format!("{}/{}", dep.group, dep.name),
             use_ref: false,
+            // Carry the dependency's format so the static renderer knows
+            // whether to compile the closure (`normal`) or concatenate
+            // verbatim (`simple`) — PROP-035 §8.
+            format: dep.format,
         });
     }
 

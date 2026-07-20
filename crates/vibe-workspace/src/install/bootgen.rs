@@ -328,6 +328,16 @@ fn node_dependency_boot(
                 // forces the entry `dynamic` (PROP-009 §2.4).
                 when: snippet.and_then(|bs| bs.when),
                 requires: dep.requires.clone(),
+                // PROP-035 §3 — the package's declared format. A `normal`
+                // dependency pulled `static` is compiled to its closure by
+                // `render_static` (PROP-035 §8); absent a `[package]` table,
+                // it defaults to `simple` (verbatim, fail-safe).
+                format: dep
+                    .manifest
+                    .package
+                    .as_ref()
+                    .map(|p| p.format)
+                    .unwrap_or_default(),
             }
         })
         .collect()

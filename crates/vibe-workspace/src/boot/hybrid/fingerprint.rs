@@ -38,6 +38,7 @@ use super::{UnitId, UnitInput};
 ///     origin: String::new(),
 ///     when: None,
 ///     edges: vec![],
+///     format: Default::default(),
 /// });
 /// let versions: HashMap<UnitId, String> = [(id.clone(), "1.0.0".to_string())].into_iter().collect();
 /// let fps = fingerprints(&table, &versions);

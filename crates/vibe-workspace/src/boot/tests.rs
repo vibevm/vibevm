@@ -5,7 +5,8 @@
 //! (the conform frontend) scope their `unwrap`s as test code.
 
 use super::*;
-use vibe_core::manifest::TargetOs;
+use specmark::verifies;
+use vibe_core::manifest::{PackageFormat, TargetOs};
 
 #[cfg(test)]
 fn authored(path: &str, category: Option<BootCategory>) -> AuthoredBoot {
@@ -35,6 +36,7 @@ fn dep(name: &str, has_boot: bool, requires: &[&str]) -> DependencyBoot {
         suggested_link: None,
         when: None,
         requires: requires.iter().map(|r| (org(), r.to_string())).collect(),
+        format: Default::default(),
     }
 }
 
@@ -58,6 +60,39 @@ fn compute(
 fn empty_inputs_yield_empty_boot() {
     let boot = compute(&[], &[], &[], None);
     assert!(boot.is_empty());
+}
+
+#[test]
+#[verifies("spec://vibevm/modules/vibe-workspace/PROP-035#formats")]
+fn dependency_format_reaches_its_boot_entry() {
+    // The static renderer keys on `BootEntry.format` to decide compile vs
+    // verbatim (PROP-035 §8); the composition must carry a `normal`
+    // dependency's format through to its entry, and a node's own authored
+    // boot stays `simple`.
+    let mut d = dep("greeter", true, &[]);
+    d.format = PackageFormat::Normal;
+    d.suggested_link = Some(LinkType::Static);
+    let own = vec![authored("spec/boot/notes.md", None)];
+    let boot = compute(&own, &[], &[d], None);
+
+    let dep_entry = boot
+        .entries
+        .iter()
+        .find(|e| e.origin == "org.vibevm/greeter")
+        .expect("the dependency contributes an entry");
+    assert_eq!(dep_entry.format, PackageFormat::Normal);
+    assert_eq!(dep_entry.link, LinkType::Static);
+
+    let own_entry = boot
+        .entries
+        .iter()
+        .find(|e| e.path == "spec/boot/notes.md")
+        .expect("the node's own boot contributes an entry");
+    assert_eq!(
+        own_entry.format,
+        PackageFormat::Simple,
+        "a node's own authored boot is always simple"
+    );
 }
 
 #[test]
