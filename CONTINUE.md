@@ -1,206 +1,187 @@
-# CONTINUE.md — cold-resume checkpoint (2026-07-20, VIBETERM UI-ARCHITECTURE: research → execution + M1 split/tear-off + ProjectX redesign)
+# CONTINUE — cold-resume checkpoint
 
-> `spec/WAL.md` is the canonical living state; if this snapshot and the WAL diverge, the WAL wins.
+_Written 2026-07-20 (end of the settings-home + global-registry session). Overwrites the prior
+vibeterm-M1 CONTINUE. `spec/WAL.md` is the canonical living state and supersedes this snapshot if they
+diverge._
 
 ## TL;DR
 
-The **vibeterm UI-architecture campaign ran end to end** this session-arc and is **on `main`, floor-green,
-pushed to both mirrors** (GitVerse + GitHub), working tree clean. Cadence: **research → design → contracts
-→ execution**, then the **M1 build-out** (split + tear-off) and a **chrome redesign to match the ProjectX
-reference** (4-column layout). The pre-MVP shell creates/switches/splits/tears-off terminals over a
-render-free TS engine, AI-UI-ready by construction, verifiable offscreen via CDP.
+Two owner-requested features shipped this session, plus two follow-up refinements — all on `main`,
+**floor-green**, **not yet pushed** (`main` is **11 ahead of `origin/main`, 0 behind** → fast-forward):
 
-**No blocker.** The one open item is **pixel-polish against the reference captures** (exact spacing,
-avatar art, copy) and **wiring the placeholder controls** (rename / background-tab / close-others /
-search). The architecture and the working surface are done.
+1. **Settings-home consolidation.** One chokepoint `vibe_core::settings` is now the single authority for
+   the per-user settings dir: `$VIBE_SETTINGS` overrides, else `<home>/.vibe`. Every previously-dispersed
+   resolver (registry/search caches, PROP-040 L1 `settings.toml` + its path-classifier, publish tokens,
+   aiui discovery, user `config.toml`) routes through it. The legacy `~/.vibevm` and the XDG
+   `~/.config/vibe/config.toml` are folded into `~/.vibe`, with **read-only fallback** to the old paths so
+   nothing breaks mid-migration. **The owner's live files were migrated on disk** (see §Live migration).
+2. **Machine-global registry config** `~/.vibe/registry.toml` — same `[[registry]]`/`[[mirror]]`/
+   `[[override]]` shape as a project `vibe.toml`, **any** registry (remote or local), merged **project-first**
+   (dedupe by `name`). `--offline` refined to resolve **local repos only** (drops remote).
+3. **Refinement:** clarified (spec + test) that the global file accepts **any** registry, not just local.
+4. **Refinement:** optional **`enabled`** flag on `[[registry]]` (default `true`, skipped-on-serialize) —
+   switch a registry off without deleting it; skipped by every resolution path.
+
+**No blocker.** The one open item is the **push** (11 commits, via `cargo xtask mirror` — see §Push).
 
 ## Where work stands
 
-- Branch `main`, **synced with `origin/main`** (both mirrors at `0976b03`). Working tree clean.
-- `apps/vibeterm`: TypeScript + Solid + Vite + Tailwind v4 + Kobalte + vitest. `npm run build` (engine
-  esbuild bundle + chrome vite bundle) green; `npm test` green (41 `node --test` lib + 17 `vitest`
-  engine); `bash tools/self-check.sh` green (Rust gate + vibe check + conform + both app-test steps).
-- The shell **runs offscreen** (`electron . --headless --cdp-port N`, spawn via `Stdio::null` — see
-  non-obvious findings) and is **driven + screenshot via CDP** (`scripts/cdp-smoke.mjs`,
-  `scripts/cdp-split-smoke.mjs`). `analyze_image` on the screenshots confirms the 4-column layout and
-  that the sidebar drops in split.
+- Branch `main`, **11 ahead / 0 behind** `origin/main`. Working tree clean except one untracked file that
+  is **NOT ours** — `research/vibeterm/projectx-function-map.md` (never commit it; likewise never commit
+  `packages/org.vibevm.vibeapp/` if it reappears).
+- Floor **all green**: `cargo fmt --all --check`, `cargo test --workspace`, `cargo clippy --workspace
+  --all-targets -D warnings`, `cargo xtask conform check` (**0 findings**), `cargo xtask specmap` (**0 new**
+  orphans), `cargo run -p vibe-cli -- check` (**0 errors**; 1 pre-existing warning: stale boot artifact for
+  `org.vibevm.world/git-practices`, unrelated).
+- `cargo xtask specmap --check` reports **34 gated orphans** — these are **pre-existing baseline** in
+  `vibe-spec` (PROP-035 spec-compiler, provisional/exempt) + `vibe-resolver::EmbeddedPrecedence`; **none are
+  this session's code**. The operative gate is `cargo xtask specmap` (write, exit 0), which is green.
 
-## What landed this session-arc (vibeterm UI-architecture campaign)
+## Push (the one open item)
 
-research → design → contracts → execution → M1 build-out → redesign:
+`main` is 11 fast-forward commits ahead of `origin`. **Rollout is `cargo xtask mirror`** (GitVerse +
+GitHub), **not** a bare `git push origin` (that hits GitVerse only). Held for the owner's explicit go this
+session (the owner asked to be the one to authorise the push). To push:
 
-- `6ff6a2a` **sharpen the research plan** (frozen-vs-open framing, identity-grammar conformance, 6 new
-  RQs, AI-Native-ready output).
-- `3bd277e` Phase 1 findings — ports/adapts/new + conformance surface + AI-UI eval matrix.
-- `a6e22fc` research close — Phase 2/3/4 (comparative + pitfalls→obligations + **16 deltas D1–D16**).
-- `2932349` D2 design-doc — `spec/modules/vibeterm/architecture.md` + `design-system.md`.
-- `cb15828` D3 contracts — **PROP-046** (action/AIUI core + conformance) + **PROP-047** (ModelView/MVC +
-  transport) + PROP-044 §12 family cross-note.
-- `43f6716` D4 pre-MVP shell — render-free TS engine + Solid chrome + per-tab `WebContentsView`
-  terminals + typed preload bridge.
-- `7c297e1` offscreen shell + CDP for headless screenshot/drive.
-- `0721ad2` fix initial-openTab + IPC-handler race offscreen.
-- `a0cea60` **split view + tear-off (M1 P2/P3)**.
-- `0976b03` **chrome visual fidelity to the ProjectX reference** (4-column layout, full 8-item context
-  menu, tear-off header).
+```sh
+cargo xtask mirror          # fast-forward-only to every target in mirrors.toml
+cargo xtask mirror --check  # verify both mirrors are in sync
+```
 
-## The vibeterm pre-MVP shell (apps/vibeterm)
+## Live migration (owner's home dir — DONE this session)
 
-Architecture (PROP-044/046/047 in force):
+`~/.vibevm` **removed**; everything moved into `~/.vibe`:
+- `git.publish.token`, `github.publish.token`, `zai.api.token`, `zai.api.token.2`, `aiui/` — copied
+  byte-identical (`cmp`-verified), old dir deleted.
+- `~/.config/vibe/config.toml` did **not** exist on this box (nothing to fold).
+- `~/.fractality/profiles.toml` `token_file` edited `~/.vibevm/zai.api.token` → **`~/.vibe/zai.api.token`**
+  (verified: profiles points at the existing, byte-identical file). Token bytes unchanged → **fractality /
+  z.ai delegation keeps working** (no re-auth). No live spawn was run to confirm — the owner asked not to
+  delegate to GLM workers this session, and the token-read chain is logically verified.
 
-- **engine** (`src/engine/`, render-free TS, `#no-render-dep` lint/boundary): `address` · `action` ·
-  `registry` · `context` · `i18n` · `modelview` (window→tab→pane tree) · `protocol` (versioned
-  discriminated union) · `tabs` (pure single-writer cell) · `aiui` (4-verb reference surface). 17 vitest
-  cases.
-- **main** (`main.cjs`): `shellWindows` Map (multi-window) + `shellTabs` (windowId) + `shellPanes`
-  (slot). Layout constants match the chrome grid (PROFILES_RAIL 56 / LIST_WIDTH 240 / SIDEBAR_WIDTH 280
-  / CONTENT_HEADER 40 / TEAROFF_HEADER 36); the terminal `WebContentsView`s overlay the content region
-  only; the sidebar drops in split; tear-off reparents a view into a chromeless `BrowserWindow` (D0 —
-  no reload, xterm buffer intact). `--control`/`--headless` single-view path frozen (PROP-042).
-- **chrome** (`src/chrome/`, Solid): `ProfilesRail` · `TabList` (rich rows + user card) · `TabItem` (8-
-  item context menu) · `ContentHeader` (theme/locale toggles working) · `RightSidebar` · `App` (4-col
-  grid). `bridge.ts` is the one-way ModelView projection + command sender. Tailwind v4 + design tokens
-  (Rosé Pine dark-purple + Anthropic-style).
-- **terminal-view** (`terminal-view/`): lean vanilla xterm page (per-tab, reused by single-view);
-  `tearoff.html` = chromeless header host.
+## Next steps (pick up cold)
 
-Working surface: **open / select / close / pane.split / pane.close / tab.move-to-window / theme /
-locale**. Placeholders: rename, background-tab, close-others/all, sidebar search + items, profiles-rail
-icons, content-header utility icons.
+1. **Push** (§Push above) once authorised.
+2. Optional polish on the new features:
+   - `vibe registry enable/disable <name>` CLI toggle (today `enabled` is a manifest field only; edit
+     `vibe.toml` / `~/.vibe/registry.toml` by hand). Would live near
+     `crates/vibe-cli/src/commands/registry/config/`.
+   - Extend `enabled` to `[[mirror]]` / `[[override]]` for uniformity (same 3-line pattern: field +
+     filter). Scoped out this session (the owner asked about "repository").
+   - A `vibe registry list` marker showing disabled entries.
+3. The prior **vibeterm M1** track is also on `main` (see the commit chain / the WAL's 2026-07-20 vibeterm
+   checkpoint) — its next steps (pixel-polish, placeholder controls, M1 close) are independent of this work.
 
-## Non-obvious findings (do not re-learn)
+## Non-obvious findings this session
 
-- **pty spawn needs `Stdio::null`.** A bare `electron .` launched from Git Bash trips node-pty's ConPTY
-  agent (`AttachConsole failed`) because electron inherits the shell's console. `vibe-cli`'s
-  `spawn_vibeterm` uses `Stdio::null()` and pty works; for a direct smoke, spawn electron with
-  `</dev/null >/dev/null 2>&1 &` (the cdp-smoke scripts do this). Visible `vibe term` is unaffected.
-- **CDP screenshot is the GUI verify.** `--headless` + `--cdp-port` render the chrome offscreen;
-  `Page.captureScreenshot` returns a faithful PNG; `Runtime.evaluate` drives `window.vibeterm.*`. The
-  terminal `WebContentsView`s are native surfaces over the chrome renderer, so a chrome screenshot
-  shows the rail/list/sidebar (not the terminals) — drive + assert through the ModelView (`state()`) for
-  terminal/pane truth, screenshot for chrome layout.
-- **IPC handlers register BEFORE `loadFile`.** `await loadFile` resolves once HTML is parsed; the chrome
-  module can then fire `state()` before a handler registered after the await exists (`No handler
-  registered`). And **initial openTab starts immediately after loadFile** — a `did-finish-load`/`isLoading`
-  gate races and never settles offscreen.
-- **ESM/CJS**: the package is `type: module`; `main.cjs`/`preload.cjs` are CommonJS; the engine is an
-  **esbuild ESM bundle** (tsc emits extension-less imports Node ESM rejects) imported by main via
-  dynamic `import('./dist/engine/index.js')`; chrome is a vite browser bundle; types come from source
-  via the `@vibeterm/engine` path alias.
-- **Engine build is no-DOM** (`tsconfig.engine.json` lib ES2022, no DOM); the typecheck-all `tsconfig.json`
-  adds DOM for the chrome. The `#no-render-dep` invariant holds on the engine build.
-- **Kobalte** `ContextMenu` is itself the Root (no `.Root`); `ContextMenu.Item`/`.Separator`/`.Portal`.
-- **Layout constants are duplicated** between `main.cjs` (terminal view bounds) and `theme.css` (chrome
-  grid) — keep them in sync (PROFILES_RAIL 56 / LIST_WIDTH 240 / SIDEBAR_WIDTH 280 / CONTENT_HEADER 40
-  / TEAROFF_HEADER 36).
+- **conform's extracted-test detection.** Moving an inline `#[cfg(test)] mod tests { … }` to a sibling
+  `foo/tests.rs` is safe **only if every fn in it is `#[test]`**. A *non-`#[test]` helper fn* with
+  `.unwrap()`/`.expect()` in an extracted file is flagged `no-unwrap-in-domain` (conform parses the file
+  standalone and doesn't see the parent's `#[cfg(test)]`). Fix: keep tests **inline** and split *domain*
+  code instead, **or** ensure the extracted file has only `#[test]` fns. (`resolver.rs` split its
+  `apply_git_source_flag` into `resolver/git_source_flag.rs` and kept tests inline; `project.rs` extracted
+  its tests to `project/tests.rs` cleanly because they are all `#[test]`.)
+- **specmap editorial drift.** Editing the *prose* under a spec anchor (not the REQ) makes
+  `specmap --check` report `unbumped-hash`. Resolution: `cargo xtask specmap` (regenerate) **and** mark the
+  commit body `spec-editorial: <anchor-slug>` (don't bump `r`). Used for `#publish` / `#trust-gate` /
+  `#global-config`.
+- **env-read composition roots** are an allow-list in `conform.toml` (`env_roots = [...]`). A new file that
+  legitimately reads `$VIBE_SETTINGS`/`HOME` (like `settings.rs`) must be added there, or conform flags
+  `ambient-env`.
+- **Push is multi-homed.** `git push origin` hits **only GitVerse**; the repo is mirrored to GitHub too.
+  The correct rollout is **`cargo xtask mirror`** (fast-forward-only to every target in `mirrors.toml`).
+- **fractality reads `token_file` with no fallback** — it expands exactly the path in `profiles.toml`. The
+  `~/.vibevm`→`~/.vibe` fallback lives in the *vibe* publish/aiui readers, not in fractality; that is why
+  the live `profiles.toml` had to be edited.
 
-## Discipline constraints (hard, from CLAUDE.md + user memory)
+## The settings + registry architecture (in force)
 
-- **NEVER write the reference app's real name** in repo / git / chat. **"ProjectX"** is a substitution
-  token; the equivalence lives only in out-of-git user memory. Our feature is the **VibeTerm shell**.
-- Commits **only** via heredoc `git commit -F -`; **no AI attribution** (Rule 1). Conventional Commits,
-  atomic (Rule 3).
-- Edits **only** via Edit/Write (PS5.1 UTF-8-no-BOM round-trip corrupts non-ASCII); self-check via **Git
-  Bash** (`bash tools/self-check.sh`), real exit code.
-- Push via **`cargo xtask mirror`** (GitVerse + GitHub, fast-forward-only). Never blanket
-  `Stop-Process` by name. Never suggest `/code-review`.
-- Rule-4 red lines (history rewrite of pushed, force-push, large blobs, CI/secrets) stop for the owner.
+- `crates/vibe-core/src/settings.rs` — **THE** settings-dir chokepoint. `settings_dir()` = `$VIBE_SETTINGS`
+  else `<home>/.vibe`; `legacy_settings_dir()` = `<home>/.vibevm` (read fallback only). Typed accessors:
+  `registry_config_path` / `user_config_path` / `settings_toml_path` / `registries_cache_dir` /
+  `search_cache_dir` / `aiui_dir`. Pure core `settings_dir_from(override, home)` is the tested seam.
+- `crates/vibe-core/src/global_registry.rs` — `GlobalRegistryConfig` (loads `~/.vibe/registry.toml`),
+  `merge_effective(project, global)` (project-first, dedupe by name / pkgref; mirrors concatenated),
+  `EffectiveRegistryConfig::local_only()` (the `--offline` filter), `url_is_local()` (scheme classifier).
+- `crates/vibe-cli/src/commands/install/resolver.rs` — the composition root: `effective_registry_config`
+  loads+merges the global config once and threads it into `build_install_resolver` (kept test-hermetic by
+  DI, not a hidden filesystem read).
+- **`enabled` filter** lives in `crates/vibe-registry/src/multi_registry_resolver/mod.rs`
+  (`from_manifest`, the single construction point) — `if !reg.enabled { continue; }` — so **every**
+  resolution path honours it. The field is on `RegistrySection` (`crates/vibe-core/src/manifest/project.rs`,
+  `#[serde(default = "default_true", skip_serializing_if = "is_true")]`).
+- Normative spec: **PROP-002 §2.2.2** (`#global-config`, `#offline-local`) and **§2.2.3** (`#enabled`);
+  design record: `spec/research/SETTINGS-HOME-AND-GLOBAL-REGISTRY-PLAN-v0.1.md`.
 
-## Candidate next steps (a RESUME is report-then-wait — do NOT auto-start)
+## Repository map (top level)
 
-1. **Pixel-polish vs the reference captures** (`refs/screens/projectx/`, out of git): exact spacing,
-   avatar art, the sidebar/row copy, the user-card. Layout shape is confirmed; this is visual tuning.
-2. **Wire the placeholder controls**: rename (an `action://vibeterm/tab.rename` + prompt), background-tab
-  open, close-others/close-all, sidebar search (a Search Everywhere provider), profiles-rail selection.
-3. **Identity-grammar conformance golden** (PROP-046 §9 / findings §3): the Rust `vibe-actions` ↔ TS
-  `vibeterm-core` CI golden — the load-bearing anti-drift mechanism, currently architected-not-built.
-4. **M1 close (P4)**: manual-test walkthrough (`spec/manual-tests/MT-*` for the shell), README/runtime-docs,
-  health-audit, then the "something more serious" backlog (profiles restore per PROP-040/041, per-tab
-  AIUI over the wire).
+- `crates/` — the Rust workspace. Key crates this session: `vibe-core` (manifest schemas +
+  `settings`/`global_registry`), `vibe-registry` (`MultiRegistryResolver`), `vibe-cli` (commands, the
+  install composition root), `vibe-publish` (tokens), `vibe-settings` (PROP-040 layered prefs +
+  path-classifier), `vibe-workspace` (boot artifacts), `vibe-spec` (PROP-035 spec-compiler, provisional).
+- `apps/vibeterm/`, `apps/vibeframe/` — the Electron terminal shells (JS/TS); `vibeterm/main.cjs` writes
+  the aiui discovery files (now under `~/.vibe/aiui`, `$VIBE_SETTINGS`-aware).
+- `spec/` — the normative tree: `spec/common/PROP-000` (secrets), `spec/modules/vibe-registry/PROP-002`
+  (registry), `spec/modules/vibe-workspace/PROP-009/011/035/040` etc., `spec/research/` (design docs),
+  `spec/boot/` (session boot lane incl. `90-user.md`), `spec/WAL.md` (living state).
+- `packages/org.vibevm.fractality/` — the fractality specspace (own boot/WAL/CONTINUE; delegation engine).
+- `xtask/` — `cargo xtask {conform check, specmap, mirror, codegen}`.
+- Root docs: `RUNTIME-GUIDE.md` (paths/env table — updated), `DEV-GUIDE.md`, `VIBEVM-SPEC.md`, `ROADMAP.md`,
+  `CLAUDE.md`/`AGENTS.md`/`GEMINI.md` (kept identical), `conform.toml`, `specmap.json`.
 
-## Repository map (vibeterm-focused)
+## Discipline (unchanged, binds every commit)
 
-- `apps/vibeterm/` — the shell. `src/engine/` (render-free TS cells), `src/chrome/` (Solid), `main.cjs`
-  (Electron main + shell state), `preload.cjs` (typed bridge), `terminal-view/` (lean xterm + tearoff),
-  `lib/` (args/keymap, `node --test`), `scripts/` (cdp-smoke), `tsconfig*.json`, `vite.config.ts`,
-  `vitest.config.ts`, `package.json`. `dist/` gitignored.
-- `spec/modules/vibeterm/` — **PROP-044** (shell regions/tabs/panes/windows) · **PROP-046** (action/AIUI
-  core + conformance) · **PROP-047** (ModelView/MVC + transport) · `architecture.md` + `design-system.md`
-  (lore).
-- `research/vibeterm/` — `task.md` (cold-start index) · `VIBETERM-UI-ARCHITECTURE-RESEARCH-PLAN-v0.1.md`
-  · `vibeterm-ui-architecture-findings-v0.1.md` (the closed research) · `VIBETERM-SHELL-PLAN-v0.1.md`
-  (build campaign, P1 done / P2-P3 done / P4 close pending) · `VIBEFRAME-SPLIT-PLAN-v0.1.md`.
-- `crates/vibe-cli/` — the `vibe` CLI; `commands/term.rs` (`spawn_vibeterm` — the `Stdio::null` pty
-  fix), `commands/aiui/` (the three-plane `vibe aiui`).
-- `refs/screens/projectx/` — reference captures (out of git). `assets/icons/vibeterm.*` — launcher icons.
-
-## Architectural decisions in force
-
-- **vibeframe = simple / vibeterm = complex** (PROP-044/045); vibeframe hosts `vibe tree`, vibeterm is
-  the standalone evolving workspace.
-- **AI-UI-Ready by construction** (owner): control is semantic `invoke`; CDP is observation-only.
-- **Self-contained & detachable** under `spec/modules/vibeterm/` + `apps/vibeterm/`, no build-dep on
-  vibevm-internal; **identity-grammar conformance** (shared grammar + CI golden) is the one tie.
-- **Stack**: Solid + Vite + Tailwind v4 + Kobalte + strict TS; terminal views lean vanilla xterm.
-  Tabs = per-tab `WebContentsView` + main-owned pty (reparent preserves state, D0 verified).
-- **Engine is the single writer of the ModelView**; the Solid chrome is a one-way projection rebuilt on
-  re-resolution; ephemeral chrome state never crosses the seam.
-- **Transport-agnostic chrome↔engine protocol** (versioned discriminated union, no Electron types,
-  sidecar-ready); Electron IPC via a typed preload bridge is one adapter.
-- **i18n from the start** (en + ru, address-keyed, reactive live swap, legibility gate); **live theming**
-  via design tokens (two launch themes).
+- **Never** write the reference app's real name anywhere (repo/history/chat) — it is "ProjectX" / "the
+  reference"; our feature is the **VibeTerm** shell.
+- **No AI attribution** on any commit (no `Co-Authored-By` / `Claude` trailers).
+- Commits via **heredoc** `git commit -F - <<'MSG'` only (backtick `-m` corrupted messages before).
+- File edits via **Edit/Write** only — PS 5.1 corrupts UTF-8-no-BOM round-trips (`git restore` to recover).
+- **Never** `Stop-Process` by bare name (killed the Claude Code terminal once) — filter to your own PID.
+- **Push via `cargo xtask mirror`** (GitVerse + GitHub), never a bare `git push origin` (GitVerse-only).
+- Secrets: never `cat`/`Read`/`echo` a token file; `cp`/`cmp`/size only.
 
 ## Recent commit chain (last 25, newest first)
 
 ```
+8b9b630 feat(registry): optional `enabled` flag to switch a registry off without deleting it
+e19efec docs(registry): clarify ~/.vibe/registry.toml accepts any registry, not just local
+14e1174 docs: point tokens, config, and aiui discovery at the canonical ~/.vibe
+74f08cc chore(discipline): satisfy the conform + specmap floor for the settings work
+8aec7cc feat(registry): machine-global registry config merged project-first
+f0e89db feat(settings): consolidate the settings home behind one chokepoint
+df16b5a docs(research): plan the settings-home consolidation + global registry
+65fcc00 feat: compile normal-format packages in the static boot lane
+dbc8eea test(traceability): trace the new auth / offline tests to spec
+a8b508d feat(cli): add --offline and --embedded-short-circuit install knobs
+5fc2f0c fix(registry): silence credential prompts for public (auth=none) registries
+7106c1e docs(continue): cold-resume checkpoint -- vibeterm M1 + ProjectX redesign
+03848c8 docs(wal): session checkpoint -- vibeterm M1 build-out + ProjectX redesign
 0976b03 feat(vibeterm): chrome visual fidelity to the ProjectX reference
 a0cea60 feat(vibeterm): split view + tear-off (M1 P2/P3)
 0721ad2 fix(vibeterm): initial openTab + IPC-handler race in the offscreen shell
 7c297e1 feat(vibeterm): offscreen shell + CDP for headless screenshot/drive
 4c7fb4c docs(continue): cold-resume checkpoint -- vibeterm UI-arch campaign
-cb32901 docs(wal): session checkpoint -- vibeterm UI-arch campaign (research -> execution) done
+cb32901 docs(wal): session checkpoint -- vibeterm UI-arch campaign done
 43f6716 feat(vibeterm): D4 pre-MVP shell -- render-free engine + Solid chrome + per-tab terminals
 cb15828 docs(vibeterm): D3 contracts -- the vibeterm PROP family
 2932349 docs(vibeterm): D2 design-doc -- architecture + design system lore
 a6e22fc docs(research): vibeterm research close -- Phase 2/3/4 (deltas)
 3bd277e docs(research): vibeterm Phase 1 -- internal methodology extraction
 6ff6a2a docs(research): sharpen the vibeterm UI-architecture plan before Phase 1
-731e7f1 docs(wal): session checkpoint — vibeframe split + self-install launchers closed
-6dc9f10 docs(continue): cold-resume checkpoint — vibeframe split + self-install launchers
-2c1588b docs(vibeframe): mark the self-installing-launchers enhancement done
-f3df5dd feat(vvm): self-install the GUI launchers on every install/update
-58f8b96 docs(vibeframe): add the simple-terminal-frame contract PROP-045
-b17328f feat: accept VIBEFRAME in the in-place-upgrade detection
-2acd358 docs(research): note the self-installing-launchers enhancement
-25ca6fc feat(vibe-cli): package vibeframe into installed instances
-c572c3c feat(vibeframe): give VibeFrame its own no-dots icon
-908debe feat(vibe-launcher): add the VibeFrame.exe launcher
-6e5aa9e feat(vibe-cli): add the vibe frame command
-278d6ef fix(vibe-cli): fall back to vibeterm when the target app is unpackaged
-0723a3c feat(vibe-cli): route vibe tree -t and vibe aiui to vibeframe
 ```
 
 ## Quick-start
 
-```bash
-# boot: CLAUDE.md → spec/boot/ → spec/WAL.md → CONTINUE.md (this file)
-#       → research/vibeterm/task.md + the findings doc + PROP-044/046/047
-# floor gate (real exit code — always via Git Bash)
-bash tools/self-check.sh
-# rebuild + reinstall vibe from the working tree (run TWICE for a pipeline-code change)
-vibe self update
-# the terminals
-vibe frame          # simple frame (vibeframe)   — VibeTree's host
-vibe term           # the complex shell (vibeterm) — 4-column, split/tear-off
-vibe tree -t        # tree TUI, hosted in vibeframe
-# run the shell from the working tree (dev)
-cd apps/vibeterm && npm install && npm run build && npm start
-# offscreen smoke (CDP screenshot + drive)
-cd apps/vibeterm && MSYS_NO_PATHCONV=1 node_modules/.bin/electron . --headless --cdp-port 9222 --exec "cmd.exe" </dev/null >/dev/null 2>&1 &
-node scripts/cdp-smoke.mjs 9222 /tmp/vibe          # open/select + screenshots
-node scripts/cdp-split-smoke.mjs 9222 /tmp/vibe    # split/tear-off + screenshots
-# push both mirrors
-cargo xtask mirror
-```
+```sh
+# floor (from repo root)
+cargo fmt --all -- --check
+cargo test --workspace
+cargo clippy --workspace --all-targets -- -D warnings
+cargo xtask conform check
+cargo xtask specmap            # regenerate; --check for strict CI drift
+cargo run -q -p vibe-cli -- check
 
-> The WAL (`spec/WAL.md`) is the canonical living state and supersedes this snapshot if they diverge.
+# push both mirrors (the correct rollout — NOT `git push origin`)
+cargo xtask mirror
+cargo xtask mirror --check
+```
