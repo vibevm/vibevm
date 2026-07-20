@@ -68,15 +68,15 @@ impl RegistrySource {
 }
 
 /// Turn a local `[[registry]]` url (`file://…` / bare path, already classified
-/// local by [`url_is_local`]) into the filesystem path [`LocalRegistry`] opens.
-/// Handles the common empty-authority forms — `file:///C:/x` (Windows drive),
-/// `file:///home/x` (POSIX), `file:/x` — and bare paths verbatim. UNC
-/// (`file://host/share`) and anything else with a non-empty authority are
-/// rejected: they are not the plain-directory registry shape `LocalRegistry`
-/// serves.
+/// local by [`url_is_local`] and not a `git+` transport — `git+file://` is a
+/// local *git* repo, handled by the git-clone backend, not here) into the
+/// filesystem path [`LocalRegistry`] opens. Handles the common empty-authority
+/// forms — `file:///C:/x` (Windows drive), `file:///home/x` (POSIX),
+/// `file:/x` — and bare paths verbatim. UNC (`file://host/share`) and anything
+/// else with a non-empty authority are rejected: they are not the
+/// plain-directory registry shape `LocalRegistry` serves.
 pub(crate) fn local_path_from_url(url: &str) -> Result<PathBuf, RegistryError> {
     let s = url.trim();
-    let s = s.strip_prefix("git+").unwrap_or(s);
     let raw = if let Some(after) = s
         .strip_prefix("file://")
         .or_else(|| s.strip_prefix("file:"))
@@ -123,10 +123,12 @@ mod tests {
     use super::*;
 
     /// `local_path_from_url` handles the `file://` Windows-drive and POSIX
-    /// forms, the `git+` prefix, and bare paths — the four shapes a local
-    /// `[[registry]]` url can take (per `url_is_local`).
+    /// forms and bare paths — the shapes a local-directory `[[registry]]` url
+    /// takes (per `url_is_local`). A `git+` transport is NOT a local-directory
+    /// url (it is a local *git* repo the git-clone backend handles) and never
+    /// reaches this parser.
     #[test]
-    fn local_path_from_url_parses_file_gitplus_and_bare_forms() {
+    fn local_path_from_url_parses_file_and_bare_forms() {
         // file:// Windows drive: the empty-authority form `file:///C:/x`.
         assert_eq!(
             local_path_from_url("file:///C:/x/y").unwrap(),
@@ -136,11 +138,6 @@ mod tests {
         assert_eq!(
             local_path_from_url("file:///home/x/y").unwrap(),
             PathBuf::from("/home/x/y")
-        );
-        // git+ transport prefix peeled first.
-        assert_eq!(
-            local_path_from_url("git+file:///C:/x").unwrap(),
-            PathBuf::from("C:/x")
         );
         // Bare path (no scheme) — used verbatim.
         assert_eq!(

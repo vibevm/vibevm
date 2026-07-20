@@ -302,13 +302,17 @@ impl MultiRegistryResolver {
                 continue;
             }
             // A local `[[registry]]` url (`file://` / bare path, per
-            // `url_is_local`) is served straight off the filesystem by
-            // `LocalRegistry` — never git-cloned — so a plain on-disk
-            // directory works as a registry (PROP-002 §2.2.2). `naming` /
-            // `auth` / `mirrors` / `index_client` are git-only knobs and do
-            // not apply (LocalRegistry reads `<root>/<group>/<name>/v<version>/`
-            // directly).
-            if url_is_local(&reg.url) {
+            // `url_is_local`) — but NOT a `git+` transport (`git+file://` is a
+            // local *git* repo to clone, not a plain directory) — is served
+            // straight off the filesystem by `LocalRegistry`, never
+            // git-cloned, so a plain on-disk directory works as a registry
+            // (PROP-002 §2.2.2). `url_is_local` still classifies `git+file://`
+            // as local for the `--offline` filter (no network); the `git+`
+            // guard here keeps it on the git-clone backend. `naming` / `auth`
+            // / `mirrors` / `index_client` are git-only knobs and do not apply
+            // (LocalRegistry reads `<root>/<group>/<name>/v<version>/` directly).
+            let is_git_transport = reg.url.trim().to_ascii_lowercase().starts_with("git+");
+            if url_is_local(&reg.url) && !is_git_transport {
                 let path = local_path_from_url(&reg.url)?;
                 sources.push(RegistrySource::Local(LocalRegistrySource {
                     name: reg.name.clone(),

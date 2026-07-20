@@ -119,3 +119,26 @@ fn local_directory_registry_resolves_and_fetches_without_git() {
     assert!(cached.cache_dir.join("README.md").is_file());
     assert!(cached.content_hash.starts_with("sha256:"));
 }
+
+/// A `git+file://` url is a local *git* repo to clone (the `git+` transport),
+/// NOT a plain directory — it stays on the git backend, never routed to
+/// `LocalRegistry`. Regression guard: the local-directory fix initially sent
+/// `git+file://` to `LocalRegistry` and broke git-clone local registries
+/// (caught by `cli_pkg_cycle::install_from_git_registry` under the floor).
+#[test]
+fn git_transport_url_stays_on_the_git_backend_not_local() {
+    let cache = tempdir().unwrap();
+    let r = build_resolver(
+        cache.path(),
+        vec![registry_section("local-git", "git+file:///C:/some/repo")],
+        vec![],
+        vec![],
+        Arc::new(FakeBackend::default()),
+    );
+    assert!(
+        r.sources()
+            .iter()
+            .all(|s| !matches!(s, RegistrySource::Local(_))),
+        "git+file:// is a git transport — must stay on the git backend, not LocalRegistry"
+    );
+}
