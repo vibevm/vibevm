@@ -243,4 +243,25 @@ pub trait GitBackend: Send + Sync {
     fn set_remote_url(&self, _dest: &Path, _remote: &str, _url: &str) -> Result<(), GitError> {
         Ok(())
     }
+
+    /// Return an anonymous-posture variant of this backend for use against
+    /// a public (`auth = "none"`) registry, or `None` when this backend
+    /// has no interactive-credential surface to silence.
+    ///
+    /// The anonymous variant unconditionally suppresses every channel git
+    /// might use for *interactive* credential entry — GCM popups,
+    /// `credential.helper`, `core.askPass` — regardless of TTY, so a
+    /// 401/403 from a public host classifies as "no answer here" and the
+    /// registry walk continues, instead of blocking on a login prompt
+    /// (PROP-002 §2.2.1). A public registry never sends credentials, so
+    /// there is nothing to prompt for.
+    ///
+    /// `MultiRegistryResolver::from_manifest` calls this for every
+    /// `auth = "none"` registry and falls back to the shared backend when
+    /// it returns `None`. The default returns `None`: a test fake drives
+    /// no real git and never prompts, so it needs no anonymous variant.
+    /// The production [`ShellGit`] overrides it.
+    fn anonymized_for_public(&self) -> Option<std::sync::Arc<dyn GitBackend>> {
+        None
+    }
 }

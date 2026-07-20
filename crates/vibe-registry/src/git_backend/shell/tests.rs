@@ -32,6 +32,7 @@ fn preflight_succeeds_when_git_installed() {
 fn preflight_reports_not_installed_for_bogus_binary() {
     let g = ShellGit {
         binary: PathBuf::from("definitely-not-git-xyz"),
+        force_anonymous: false,
         preflight_cache: OnceLock::new(),
     };
     let err = g.preflight().unwrap_err();
@@ -92,7 +93,7 @@ fn head_commit_returns_the_checked_out_sha() {
 
     // It matches what git itself reports for HEAD in the clone.
     let mut cmd = Command::new("git");
-    apply_common_env(&mut cmd);
+    apply_common_env(&mut cmd, false);
     cmd.args(["rev-parse", "HEAD"]).current_dir(&dest);
     let expected = String::from_utf8_lossy(&cmd.output().unwrap().stdout)
         .trim()
@@ -322,7 +323,7 @@ mod fixtures {
 
     pub(super) fn run_or_panic(cwd: &Path, args: &[&str]) {
         let mut cmd = Command::new("git");
-        apply_common_env(&mut cmd);
+        apply_common_env(&mut cmd, false);
         cmd.args(args);
         cmd.current_dir(cwd);
         let out = cmd.output().expect("failed to spawn git for test setup");

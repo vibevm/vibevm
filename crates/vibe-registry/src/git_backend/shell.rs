@@ -17,7 +17,7 @@ specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-001#backend");
 use std::ffi::OsString;
 use std::path::{Path, PathBuf};
 use std::process::{Command, Output};
-use std::sync::OnceLock;
+use std::sync::{Arc, OnceLock};
 
 use super::{GitBackend, GitError};
 
@@ -29,6 +29,14 @@ use super::{GitBackend, GitError};
 #[derive(Debug)]
 pub struct ShellGit {
     binary: PathBuf,
+    // Force the interactive-credential silencing layer on for every
+    // invocation of this instance, regardless of TTY (PROP-002 §2.2.1).
+    // Set on the anonymous variant a `MultiRegistryResolver` hands to a
+    // public (`auth = "none"`) registry, so a 401/403 from a public host
+    // can never turn into a blocking GCM / askPass prompt — it classifies
+    // as "no answer here" and the registry walk continues. `false` on the
+    // default backend, whose silencing stays TTY-derived.
+    force_anonymous: bool,
     // Cached preflight result — populated on first `preflight()` call
     // for this instance. Kept per-instance (not global) so tests with
     // bogus binaries do not poison the cache for instances pointing at
@@ -57,6 +65,7 @@ impl ShellGit {
             .unwrap_or_else(|| PathBuf::from("git"));
         ShellGit {
             binary,
+            force_anonymous: false,
             preflight_cache: OnceLock::new(),
         }
     }
@@ -67,7 +76,7 @@ impl ShellGit {
     pub fn preflight(&self) -> Result<(), GitError> {
         let ok = *self.preflight_cache.get_or_init(|| {
             let mut cmd = Command::new(&self.binary);
-            apply_common_env(&mut cmd);
+            apply_common_env(&mut cmd, self.force_anonymous);
             cmd.arg("--version");
             cmd.output().map(|o| o.status.success()).unwrap_or(false)
         });
@@ -83,7 +92,7 @@ impl ShellGit {
         // apply_common_env may push `-c <key>=<value>` flags that must
         // come BEFORE the subcommand — push the env / global-flag
         // layer first, then the actual git subcommand args.
-        apply_common_env(&mut cmd);
+        apply_common_env(&mut cmd, self.force_anonymous);
         cmd.args(args);
         if let Some(d) = cwd {
             cmd.current_dir(d);
@@ -108,7 +117,7 @@ impl ShellGit {
     /// unsupported").
     fn run_raw(&self, args: &[&str], cwd: Option<&Path>) -> Result<Output, GitError> {
         let mut cmd = Command::new(&self.binary);
-        apply_common_env(&mut cmd);
+        apply_common_env(&mut cmd, self.force_anonymous);
         cmd.args(args);
         if let Some(d) = cwd {
             cmd.current_dir(d);
@@ -320,6 +329,19 @@ impl GitBackend for ShellGit {
         self.run(&["remote", "set-url", remote, url], Some(dest))
             .map(|_| ())
     }
+
+    fn anonymized_for_public(&self) -> Option<Arc<dyn GitBackend>> {
+        // A public-registry backend: same git binary, but with the
+        // interactive-credential silencing layer forced on for every
+        // invocation (PROP-002 §2.2.1). Fresh `preflight_cache` — the
+        // probe is per-instance and cheap to redo. Cannot derive `Clone`
+        // (`OnceLock` is not `Clone`), so reconstruct explicitly.
+        Some(Arc::new(ShellGit {
+            binary: self.binary.clone(),
+            force_anonymous: true,
+            preflight_cache: OnceLock::new(),
+        }))
+    }
 }
 
 mod tar;
@@ -332,14 +354,16 @@ use tar::extract_single_file_from_tar;
 ///    `GIT_TERMINAL_PROMPT=0` so terminal-style prompts don't block
 ///    a non-TTY parent; on Windows `CREATE_NO_WINDOW` so a hostless
 ///    parent doesn't flash a console.
-/// 2. **TTY-aware.** When running unattended (no stdin TTY OR
-///    `VIBE_UNATTENDED` env-var truthy), suppress every channel git
-///    might use for *interactive* credential entry: GCM popups
-///    (`GCM_INTERACTIVE=Never`), system credential helpers
-///    (`-c credential.helper=`), `core.askPass` (`-c core.askPass=`),
-///    and `GIT_ASKPASS` (set to empty). This is the policy from
-///    PROP-002 §2.2.1: in a scripted run a 401 must not become a
-///    blocking GUI prompt; the resolver instead classifies it as an
+/// 2. **TTY-aware, or forced.** When `force_silence` is set (the
+///    backend serves a public `auth = "none"` registry — see
+///    [`should_silence_credential_helpers`]) OR we are running
+///    unattended (no stdin TTY OR `VIBE_UNATTENDED` env-var truthy),
+///    suppress every channel git might use for *interactive* credential
+///    entry: GCM popups (`GCM_INTERACTIVE=Never`), system credential
+///    helpers (`-c credential.helper=`), `core.askPass`
+///    (`-c core.askPass=`), and `GIT_ASKPASS` (set to empty). This is
+///    the policy from PROP-002 §2.2.1: a 401 must not become a blocking
+///    GUI prompt; the resolver instead classifies it as an
 ///    `UnknownPackage` (for `auth = "none"` registries) or as an
 ///    `AuthFailed` halt (for `auth = "token-env"` /
 ///    `"credential-helper"` registries).
@@ -354,11 +378,11 @@ use tar::extract_single_file_from_tar;
 /// regardless of TTY; `VIBEVM_GIT_SILENCE_HELPERS=0` forces it off.
 /// Neither value is the typical case — the TTY-derived default
 /// covers most operators.
-fn apply_common_env(cmd: &mut Command) {
+fn apply_common_env(cmd: &mut Command, force_silence: bool) {
     cmd.env("LC_ALL", "C").env("LANG", "C");
     cmd.env("GIT_TERMINAL_PROMPT", "0");
 
-    if should_silence_credential_helpers() {
+    if should_silence_credential_helpers(force_silence) {
         cmd.env("GCM_INTERACTIVE", "Never");
         // Reset both ends of the system credential machinery for the
         // duration of this invocation. `credential.helper=` empty
@@ -384,6 +408,13 @@ fn apply_common_env(cmd: &mut Command) {
 /// Decide whether to silence interactive credential mechanisms.
 /// Resolution order:
 ///
+/// 0. `force_silence` — the caller's per-backend posture. A backend
+///    handed to a public (`auth = "none"`) registry sets this so a
+///    401/403 from a public host can never become an interactive
+///    credential prompt, regardless of TTY (PROP-002 §2.2.1). A public
+///    registry never sends credentials, so there is nothing to prompt
+///    for — the 401 must classify as "no answer here" and the walk
+///    continues. This wins over every environment/TTY signal below.
 /// 1. `VIBEVM_GIT_SILENCE_HELPERS` env-var — explicit operator
 ///    override (truthy / falsy vocabulary same as `VIBE_UNATTENDED`:
 ///    `1`, `true`, `yes`, `on` for true; everything else for false).
@@ -393,9 +424,13 @@ fn apply_common_env(cmd: &mut Command) {
 ///    parent (CI, service, opencode harness).
 ///
 /// Otherwise (interactive TTY without `--unattended`), leave git
-/// alone — an operator running `vibe install` at a real terminal
-/// might genuinely want to type a password.
-fn should_silence_credential_helpers() -> bool {
+/// alone — an operator running `vibe install` against an
+/// authenticated registry at a real terminal might genuinely want to
+/// type a password.
+fn should_silence_credential_helpers(force_silence: bool) -> bool {
+    if force_silence {
+        return true;
+    }
     if let Ok(v) = std::env::var("VIBEVM_GIT_SILENCE_HELPERS") {
         return is_truthy(v.trim());
     }

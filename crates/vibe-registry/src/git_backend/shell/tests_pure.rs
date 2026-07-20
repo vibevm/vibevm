@@ -138,6 +138,77 @@ fn classify_credential_prompt_failure_after_silencing() {
 }
 
 #[test]
+fn force_silence_wins_over_tty_and_env() {
+    // PROP-002 §2.2.1: a public (`auth = "none"`) backend forces the
+    // silencing layer on. The `force_silence` branch returns before any
+    // env / TTY probe, so this is deterministic — it does not read the
+    // process environment, and it holds even on an interactive terminal.
+    assert!(should_silence_credential_helpers(true));
+}
+
+#[test]
+fn forced_apply_common_env_shuts_every_interactive_channel() {
+    // With `force_silence`, every channel git could use to prompt for
+    // credentials is closed on the spawned invocation (PROP-002 §2.2.1):
+    // empty `-c credential.helper=` and `-c core.askPass=` on the argv,
+    // `GCM_INTERACTIVE=Never` in the env, plus the always-on
+    // `GIT_TERMINAL_PROMPT=0`. So a public-host 401 returns immediately
+    // as an error instead of blocking on a GCM popup.
+    let mut cmd = Command::new("git");
+    apply_common_env(&mut cmd, true);
+
+    let args: Vec<String> = cmd
+        .get_args()
+        .map(|a| a.to_string_lossy().into_owned())
+        .collect();
+    assert!(
+        args.windows(2)
+            .any(|w| w[0] == "-c" && w[1] == "credential.helper="),
+        "expected `-c credential.helper=` on argv; got {args:?}"
+    );
+    assert!(
+        args.windows(2)
+            .any(|w| w[0] == "-c" && w[1] == "core.askPass="),
+        "expected `-c core.askPass=` on argv; got {args:?}"
+    );
+
+    let envs: std::collections::HashMap<String, Option<String>> = cmd
+        .get_envs()
+        .map(|(k, v)| {
+            (
+                k.to_string_lossy().into_owned(),
+                v.map(|v| v.to_string_lossy().into_owned()),
+            )
+        })
+        .collect();
+    assert_eq!(
+        envs.get("GCM_INTERACTIVE"),
+        Some(&Some("Never".to_string()))
+    );
+    assert_eq!(
+        envs.get("GIT_TERMINAL_PROMPT"),
+        Some(&Some("0".to_string()))
+    );
+}
+
+#[test]
+fn shellgit_yields_an_anonymous_public_variant() {
+    // A source `ShellGit` is interactive by default and hands out an
+    // anonymous-posture variant for public registries — the backend
+    // `MultiRegistryResolver::from_manifest` wires to every
+    // `auth = "none"` registry (PROP-002 §2.2.1).
+    let base = ShellGit::new();
+    assert!(
+        !base.force_anonymous,
+        "the default backend stays interactive"
+    );
+    assert!(
+        base.anonymized_for_public().is_some(),
+        "ShellGit must expose an anonymous variant for public registries"
+    );
+}
+
+#[test]
 fn classify_http_status_codes() {
     // Direct HTTP transport errors — when the host returns a
     // structured response without redirecting through the

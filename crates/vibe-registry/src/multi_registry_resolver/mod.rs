@@ -293,6 +293,21 @@ impl MultiRegistryResolver {
             } else {
                 None
             };
+            // PROP-002 §2.2.1 — a public (`auth = "none"`) registry must
+            // never turn a 401/403 into an interactive credential prompt.
+            // Hand it an anonymous-posture backend that forces the git
+            // credential-silencing layer on regardless of TTY, so a
+            // missing/private repo classifies as "no answer here" and the
+            // walk continues (`GitBackend::anonymized_for_public`).
+            // Authenticated regimes keep the shared backend, whose 401 is a
+            // real, actionable failure the operator must see.
+            let entry_backend = if matches!(reg.auth, vibe_core::manifest::AuthKind::None) {
+                backend
+                    .anonymized_for_public()
+                    .unwrap_or_else(|| Arc::clone(&backend))
+            } else {
+                Arc::clone(&backend)
+            };
             let mut entry = GitPackageRegistry::open_with_auth(
                 &reg.name,
                 &reg.url,
@@ -300,7 +315,7 @@ impl MultiRegistryResolver {
                 reg.naming,
                 mirror_urls,
                 &cache_root,
-                Arc::clone(&backend),
+                entry_backend,
                 freshness_secs,
                 reg.auth,
                 token_env_name.as_deref(),
