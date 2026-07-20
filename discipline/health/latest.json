@@ -40,12 +40,12 @@
         "typed_gap": 18
       },
       {
-        "crate": "vibe-registry",
+        "crate": "vibe-workspace",
         "typed_gap": 30
       },
       {
-        "crate": "vibe-workspace",
-        "typed_gap": 30
+        "crate": "vibe-registry",
+        "typed_gap": 32
       },
       {
         "crate": "vibe-actions",
@@ -162,12 +162,12 @@
         "lines": 546
       },
       {
-        "file": "crates/vibe-cli/src/commands/workspace/publish.rs",
-        "lines": 544
+        "file": "crates/vibe-registry/src/multi_registry_resolver/walk.rs",
+        "lines": 545
       },
       {
-        "file": "crates/vibe-registry/src/multi_registry_resolver/walk.rs",
-        "lines": 540
+        "file": "crates/vibe-cli/src/commands/workspace/publish.rs",
+        "lines": 544
       }
     ],
     "over_budget_files": []
@@ -421,9 +421,9 @@
       "crate": "vibe-registry",
       "gated": true,
       "pub_doctest_gated": false,
-      "pub_types": 38,
+      "pub_types": 40,
       "typed_doctested": 8,
-      "typed_gap": 30,
+      "typed_gap": 32,
       "error_enums": 5,
       "error_enums_missing_req": [],
       "cells": 3,
@@ -450,7 +450,7 @@
         },
         {
           "file": "crates/vibe-registry/src/multi_registry_resolver/walk.rs",
-          "lines": 540
+          "lines": 545
         },
         {
           "file": "crates/vibe-registry/src/search/full_scan.rs",
