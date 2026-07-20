@@ -92,6 +92,10 @@ versions), and unambiguous where `man` collided with the Unix manual page:
 - `self gc` — reclaim disk (§2.10).
 - `self doctor` (+ `--fix`) — verify the install and environment (§2.11).
 - `self env` — print activation lines for a shell.
+- `self relocate <path>` — repoint source provenance to a moved checkout and
+  clear the instances built from the abandoned tree (§2.17). Flags:
+  `--from <old-path>` (override the inferred old location); `-y`/`--yes`
+  (non-interactive); `--dry-run`.
 
 Top-level **`vibe vars`** (§2.14) prints the runtime variable context —
 the values vibevm *actually* uses (derived from `current_exe`) versus what
@@ -399,6 +403,52 @@ without being in the checkout and without copying it. The installed instance
 is self-contained (it runs without the source); the path is needed only to
 rebuild, and a clear error is given if it has moved.
 
+### 2.17 Relocate — repointing provenance after a checkout move {#relocate}
+
+`req r1`
+
+A committer's checkout is not pinned in place: it is cloned, moved, renamed,
+re-organised on disk. When it moves, every *external* instance's remembered
+`source_path` (§2.16) goes stale — a later linked-source rebuild would miss —
+and the pile of instances built from the abandoned tree clutters `self ls`.
+`self relocate <new-path>` is the maintenance verb for that move.
+
+- **Validate the new location.** `<new-path>` must resolve to a real vibevm
+  source tree (the `find_source_root` shape — workspace `Cargo.toml` +
+  `crates/vibe-cli`); a path that is not a checkout is refused before anything
+  mutates. The new path is canonicalised and `\\?\`-stripped exactly as install
+  records it (§2.16), so the rewritten `source_path` matches the form every
+  other record carries.
+- **Infer the old location.** With no `--from`, the old path is the source
+  provenance already recorded on the installed external instances (the common
+  value when one checkout moved). `--from <old-path>` states it explicitly for
+  an ambiguous inventory. There is nothing to relocate when no external
+  instance records a source tree — the command says so and exits, never invents
+  a move.
+- **Repoint, then prune.** Two effects, in one atomic `state.toml` rewrite:
+  *(a)* every external instance whose `source_path` is the old location is
+  **repointed** to the new one — so linked-source rebuilds (§2.16) resolve to
+  the live tree; *(b)* the **built instance directories** sourced from the old
+  tree are **removed** — they are provenance-stale artifacts of the abandoned
+  checkout, and their records are forgotten.
+- **The active instance is never deleted.** Relocating must not pull the
+  running binary out from under the machine: the active instance's directory is
+  kept and only its `source_path` is repointed. Removing the active (or any
+  version) is `self remove`'s job (§2.9). A stale instance dir still locked by
+  a running process is skipped best-effort and collected later (§2.10).
+- **Consent and scriptability.** Removing instances is irreversible, so the
+  default is an **interactive warning** that lists what is repointed and what
+  is removed, behind a confirm. `-y`/`--yes` (or `--unattended`) skips it for
+  scripts and CI; a non-TTY run without `--yes` errors rather than silently
+  applying (the same contract as `self remove`/`gc`, §2.9, §2.10). `--dry-run`
+  prints the plan and changes nothing. `--json` emits the plan and the applied
+  result. A no-op (old already equals new) is reported, not an error.
+
+Relocate touches only `state.toml` and the install root's own `versions/`
+instance dirs. It never touches a committer's source tree (external sources are
+held by reference, §2.16), never the shared `build/` cache (that is `self gc`,
+§2.10), and never `~/.cargo`.
+
 ## 3. Architecture — seams and cells {#architecture}
 
 `req r1`
@@ -427,7 +477,7 @@ The full verb set on all three platforms: `self install` (external in-place +
 managed clone paths, debug + release, diff-copy into instances), `self use`
 (live `current`, no reload), `self ls`/`current`/`which`, `self remove` (safe
 + `--all`), `self gc` (build cache + prune), `self doctor` (+ `--fix`),
-`self env`, and `vibe vars`. Selector resolution per §2.3; durable
+`self env`, `self relocate` (§2.17), and `vibe vars`. Selector resolution per §2.3; durable
 PATH/advisory-env per §2.6 across Windows (cmd/PowerShell/Git Bash), macOS
 (zsh/bash), Linux (bash/zsh/fish). diff-copy with hardlink sharing is in
 scope (§2.15). Linked sources (§2.16) are in scope (the `source_path`
@@ -475,6 +525,10 @@ profile** is one constant (§2.2); the **Rust pin** is `rust-toolchain.toml`
   diff` per §2.14; the publish token never appears.
 - `self remove` never wipes without `--all` + reconfirm; `self gc` never
   touches `~/.cargo`; external sources are never modified or removed.
+- `self relocate <new>` repoints external `source_path` records and removes the
+  stale instance dirs built from the old tree, keeping the active instance; the
+  active's source is repointed, not deleted. `--dry-run` changes nothing; a
+  non-TTY run without `--yes` errors.
 - Full `self-check.sh` green; conform 0/0/0; specmap clean.
 
 ## 9. Design rationale & questions explored {#rationale}
