@@ -209,3 +209,25 @@ body,
   color: var(--vibe-accent);
   border-color: var(--vibe-accent);
 }
+
+/* --- right-click context menu (Kobalte) --- */
+.ctx-menu {
+  z-index: 50;
+  background: var(--vibe-surface);
+  border: 1px solid var(--vibe-border);
+  border-radius: 8px;
+  padding: 4px;
+  min-width: 180px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  font-size: 13px;
+}
+.ctx-item {
+  padding: 7px 10px;
+  border-radius: 6px;
+  color: var(--vibe-text);
+  cursor: pointer;
+}
+.ctx-item[data-highlighted] {
+  background: var(--vibe-surface-1);
+  color: var(--vibe-accent);
+}

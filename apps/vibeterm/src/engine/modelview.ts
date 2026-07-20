@@ -16,10 +16,17 @@ export function paneId(s: string): PaneId {
   return s as PaneId;
 }
 
+// A pane is a layout slot in a window that shows one tab's view (PROP-044 §4). The engine models
+// the slot LOGICALLY ("full" | "left" | "right"); the pixel bounds are main's job (it knows the
+// window size). One window holds 1 pane (no split) or 2 panes (a split, D3 ceiling). The same tab
+// may back the pane as the active tab; a split shows TWO tabs side by side.
+export type PaneSlot = "full" | "left" | "right";
+
 export interface Pane {
   readonly id: PaneId;
   readonly tabId: TabId;
-  readonly bounds: { readonly x: number; readonly y: number; readonly w: number; readonly h: number };
+  readonly windowId: WindowId;
+  readonly slot: PaneSlot;
 }
 
 export interface Tab {
@@ -32,6 +39,7 @@ export interface Tab {
 export interface ShellWindow {
   readonly id: WindowId;
   readonly tabs: readonly TabId[];
+  readonly panes: readonly PaneId[];
 }
 
 export interface EnabledAction {
@@ -56,12 +64,9 @@ export type TabEvent =
   | { readonly type: "opened"; readonly tab: Tab }
   | { readonly type: "closed"; readonly tabId: TabId }
   | { readonly type: "active-changed"; readonly tabId: TabId }
-  | {
-      readonly type: "moved";
-      readonly tabId: TabId;
-      readonly fromWindow: WindowId;
-      readonly toWindow: WindowId;
-    };
+  | { readonly type: "moved"; readonly tabId: TabId; readonly fromWindow: WindowId; readonly toWindow: WindowId }
+  | { readonly type: "pane-split"; readonly paneId: PaneId; readonly tabId: TabId }
+  | { readonly type: "pane-closed"; readonly paneId: PaneId };
 
 export interface ModelViewChange {
   readonly view: ModelView;

@@ -654,65 +654,120 @@ function resolveIconPath(name) {
 // --control (PROP-042 frozen).
 // ---------------------------------------------------------------------------
 
-/** @type {import('electron').BrowserWindow | null} */
-let shellWin = null;
+// spec://vibeterm/PROP-044 §3-§5, spec://vibeterm/PROP-047#mvc — multi-window shell state.
+// The engine (render-free TS) owns the ModelView SHAPE; main owns the live pty/view side-effects
+// and is the single writer of these maps (the conformance golden pins the shape; main rebuilds the
+// ModelView from them). A tear-off reparents a tab's WebContentsView into a fresh BrowserWindow
+// (D0 — no reload, xterm buffer intact). Split ceiling = 2 panes per window (D3).
+
+/** @type {Map<string, { win: import('electron').BrowserWindow, hasChrome: boolean, tabs: string[], panes: string[], activeTab: string | null }>} */
+const shellWindows = new Map();
+let activeWindowId = null;
 /**
- * @type {Map<string, { pty: import('node-pty').IPty, ptySub: import('node-pty').IDisposable, view: import('electron').WebContentsView, title: string }>}
+ * @type {Map<string, { pty: import('node-pty').IPty, ptySub: import('node-pty').IDisposable, view: import('electron').WebContentsView, title: string, windowId: string }>}
  */
 const shellTabs = new Map();
+/** @type {Map<string, { tabId: string, slot: 'full' | 'left' | 'right' }>} */
+const shellPanes = new Map();
 let activeTabId = null;
+let activePaneId = null;
 let nextTabNum = 0;
+let nextPaneNum = 0;
+let nextWinNum = 0;
 
-/** Build a ModelView snapshot of the live shell state (the engine's window on main). */
+function freshWindowId() {
+  nextWinNum += 1;
+  return `w${nextWinNum}`;
+}
+function freshPaneId() {
+  nextPaneNum += 1;
+  return `p${nextPaneNum}`;
+}
+
+/** The primary chrome window (the only one that subscribes to engine events). */
+function chromeWindow() {
+  for (const [, w] of shellWindows) {
+    if (w.hasChrome && !w.win.isDestroyed()) return w.win;
+  }
+  return null;
+}
+
+function shellEmit(payload) {
+  const win = chromeWindow();
+  if (!win) return;
+  win.webContents.send('vibeterm:event', { v: '0.1.0', kind: 'event', payload });
+}
+
+/** Build a ModelView snapshot of the live shell state (the AIUI reads this). */
 function shellModelView() {
-  const tabsArr = [...shellTabs.entries()].map(([id, t]) => ({
-    id,
-    title: t.title,
-    kind: 'terminal',
-    active: id === activeTabId,
-  }));
-  const tabsMap = new Map(tabsArr.map((t) => [t.id, t]));
+  const tabsMap = new Map();
+  for (const [id, t] of shellTabs) {
+    tabsMap.set(id, { id, title: t.title, kind: 'terminal', active: id === activeTabId });
+  }
+  const panesMap = new Map();
+  for (const [id, p] of shellPanes) {
+    const tab = shellTabs.get(p.tabId);
+    if (!tab) continue;
+    panesMap.set(id, { id, tabId: p.tabId, windowId: tab.windowId, slot: p.slot });
+  }
+  const windows = [...shellWindows.entries()].map(([id, w]) => ({ id, tabs: w.tabs, panes: w.panes }));
   return {
-    windows: [{ id: 'w1', tabs: tabsArr.map((t) => t.id) }],
+    windows,
     tabs: tabsMap,
-    panes: new Map(),
+    panes: panesMap,
     compact: false,
-    activeWindow: 'w1',
+    activeWindow: activeWindowId,
     activeTab: activeTabId,
-    activePane: null,
+    activePane: activePaneId,
     enabledActions: [],
   };
 }
 
-function shellEmit(payload) {
-  if (!shellWin || shellWin.isDestroyed()) return;
-  shellWin.webContents.send('vibeterm:event', { v: '0.1.0', kind: 'event', payload });
-}
-
-// Lay out the terminal views: one content area beside the contacts-style rail.
-// The rail width is a design token in the chrome; here it is the layout main owns.
+// Lay out one window's panes: 1 pane = full content beside the rail; 2 panes = side-by-side halves.
 const RAIL_WIDTH = 240;
-function layoutShell() {
-  if (!shellWin || shellWin.isDestroyed()) return;
-  const [w, h] = shellWin.getContentSize();
-  const contentW = Math.max(0, w - RAIL_WIDTH);
-  for (const [id, t] of shellTabs) {
-    if (id === activeTabId) {
-      t.view.setVisible(true);
-      t.view.setBounds({ x: RAIL_WIDTH, y: 0, width: contentW, height: h });
-    } else {
-      t.view.setVisible(false);
-    }
+function layoutWindow(winId) {
+  const w = shellWindows.get(winId);
+  if (!w || w.win.isDestroyed()) return;
+  const [cw, ch] = w.win.getContentSize();
+  const contentX = w.hasChrome ? RAIL_WIDTH : 0;
+  const contentW = Math.max(0, cw - contentX);
+  const paneIds = w.panes;
+  const showPane = (paneId, x, width) => {
+    const p = shellPanes.get(paneId);
+    if (!p) return;
+    const tab = shellTabs.get(p.tabId);
+    if (!tab) return;
+    tab.view.setVisible(true);
+    tab.view.setBounds({ x, y: 0, width, height: ch });
+  };
+  if (paneIds.length === 1) {
+    showPane(paneIds[0], contentX, contentW);
+  } else if (paneIds.length >= 2) {
+    const half = Math.floor(contentW / 2);
+    showPane(paneIds[0], contentX, half);
+    showPane(paneIds[1], contentX + half, contentW - half);
+  }
+  // hide this window's tabs that are not currently in a pane
+  for (const tabId of w.tabs) {
+    const tab = shellTabs.get(tabId);
+    if (!tab) continue;
+    const inPane = paneIds.some((pid) => shellPanes.get(pid)?.tabId === tabId);
+    if (!inPane) tab.view.setVisible(false);
   }
 }
 
-async function openTab(baseExec) {
+function layoutAll() {
+  for (const winId of shellWindows.keys()) layoutWindow(winId);
+}
+
+async function openTab(baseExec, opts) {
   nextTabNum += 1;
   const id = `t${nextTabNum}`;
   const { defaultShell, splitCommand } = await import('./lib/args.mjs');
   const commandLine = baseExec ?? defaultShell(process.platform, process.env);
   const { file, args } = splitCommand(commandLine);
   const title = `Terminal ${nextTabNum}`;
+  const winId = (opts && opts.windowId) || activeWindowId;
 
   // Each tab is its own WebContentsView (D0) running the lean xterm terminal-view page.
   const view = new WebContentsView({
@@ -735,7 +790,6 @@ async function openTab(baseExec) {
   const ptySub = ptyProc.onData((data) => {
     if (!view.webContents.isDestroyed()) view.webContents.send('pty', data);
   });
-  // Keystrokes / resize / ready arrive from this view only.
   view.webContents.on('ipc-message', (_e, channel, data) => {
     if (channel === 'input') {
       try {
@@ -754,10 +808,21 @@ async function openTab(baseExec) {
     }
   });
 
-  shellTabs.set(id, { pty: ptyProc, ptySub, view, title });
+  const w = shellWindows.get(winId);
+  if (!w) throw new Error(`unknown window: ${winId}`);
+  shellTabs.set(id, { pty: ptyProc, ptySub, view, title, windowId: winId });
+  // The new tab becomes the visible one: replace the window's panes with a single full pane.
+  for (const pid of w.panes) shellPanes.delete(pid);
+  const paneId = freshPaneId();
+  shellPanes.set(paneId, { tabId: id, slot: 'full' });
+  w.panes = [paneId];
+  w.tabs = [...w.tabs, id];
+  w.activeTab = id;
+  w.win.contentView.addChildView(view);
   activeTabId = id;
-  shellWin.contentView.addChildView(view);
-  layoutShell();
+  activePaneId = paneId;
+  activeWindowId = winId;
+  layoutWindow(winId);
 
   shellEmit({ t: 'opened', tabId: id, title });
   shellEmit({ t: 'active-changed', tabId: id });
@@ -765,14 +830,25 @@ async function openTab(baseExec) {
 }
 
 function selectTab(id) {
-  if (!shellTabs.has(id) || id === activeTabId) return;
+  const tab = shellTabs.get(id);
+  if (!tab) return;
+  const w = shellWindows.get(tab.windowId);
+  if (!w) return;
+  // Make the selected tab the one the active pane shows.
+  let pane = activePaneId && shellPanes.get(activePaneId) ? activePaneId : w.panes[0];
+  if (pane) {
+    const p = shellPanes.get(pane);
+    if (p) shellPanes.set(pane, { ...p, tabId: id });
+  }
   activeTabId = id;
-  layoutShell();
+  activeWindowId = tab.windowId;
+  w.activeTab = id;
+  layoutWindow(tab.windowId);
   shellEmit({ t: 'active-changed', tabId: id });
   shellEmit({ t: 'modelview', view: shellModelView() });
 }
 
-function closeTab(id) {
+function disposeTab(id) {
   const t = shellTabs.get(id);
   if (!t) return;
   try {
@@ -785,35 +861,210 @@ function closeTab(id) {
   } catch {
     /* ConPTY / already exited */
   }
-  if (shellWin && !shellWin.isDestroyed()) {
-    try {
-      shellWin.contentView.removeChildView(t.view);
-    } catch {
-      /* already gone */
-    }
-  }
   try {
     t.view.webContents.destroy();
   } catch {
     /* already destroyed */
   }
   shellTabs.delete(id);
-  if (activeTabId === id) {
-    const remaining = [...shellTabs.keys()];
-    activeTabId = remaining.length > 0 ? remaining[remaining.length - 1] : null;
-    layoutShell();
+}
+
+function removeViewFromWindow(win, view) {
+  try {
+    win.contentView.removeChildView(view);
+  } catch {
+    /* already gone */
+  }
+}
+
+function closeTab(id) {
+  const t = shellTabs.get(id);
+  if (!t) return;
+  const winId = t.windowId;
+  const w = shellWindows.get(winId);
+  if (w && !w.win.isDestroyed()) removeViewFromWindow(w.win, t.view);
+  if (w) {
+    const surviving = w.panes.filter((pid) => {
+      const p = shellPanes.get(pid);
+      if (p && p.tabId === id) {
+        shellPanes.delete(pid);
+        return false;
+      }
+      return true;
+    });
+    if (surviving.length === 1) {
+      const only = shellPanes.get(surviving[0]);
+      if (only) shellPanes.set(surviving[0], { ...only, slot: 'full' });
+    }
+    w.panes = surviving;
+    w.tabs = w.tabs.filter((x) => x !== id);
+  }
+  disposeTab(id);
+  if (w && w.tabs.length > 0) {
+    const nextActive = w.tabs[w.tabs.length - 1];
+    if (w.panes.length === 0) {
+      const pid = freshPaneId();
+      shellPanes.set(pid, { tabId: nextActive, slot: 'full' });
+      w.panes = [pid];
+      activePaneId = pid;
+    }
+    activeTabId = nextActive;
+    w.activeTab = nextActive;
+    layoutWindow(winId);
+  } else if (w && w.tabs.length === 0 && shellWindows.size > 1) {
+    // the window is now empty and not the last -> close it
+    closeShellWindow(winId);
   }
   shellEmit({ t: 'closed', tabId: id });
   shellEmit({ t: 'modelview', view: shellModelView() });
 }
 
+// spec://vibeterm/PROP-044 §4 — split view (ceiling 2 panes per window).
+function paneSplit(tabId) {
+  const tab = shellTabs.get(tabId);
+  if (!tab) return;
+  const w = shellWindows.get(tab.windowId);
+  if (!w || w.panes.length !== 1) return; // split ceiling 2 (D3)
+  const firstId = w.panes[0];
+  const first = shellPanes.get(firstId);
+  if (!first) return;
+  shellPanes.set(firstId, { ...first, slot: 'left' });
+  const second = freshPaneId();
+  shellPanes.set(second, { tabId, slot: 'right' });
+  w.panes = [firstId, second];
+  activePaneId = second;
+  activeTabId = tabId;
+  layoutWindow(tab.windowId);
+  shellEmit({ t: 'modelview', view: shellModelView() });
+}
+
+function paneClose(paneId) {
+  const p = shellPanes.get(paneId);
+  if (!p) return;
+  const tab = shellTabs.get(p.tabId);
+  if (!tab) return;
+  const w = shellWindows.get(tab.windowId);
+  if (!w || w.panes.length < 2) return;
+  shellPanes.delete(paneId);
+  const surviving = w.panes.filter((x) => x !== paneId);
+  if (surviving.length === 1) {
+    const only = shellPanes.get(surviving[0]);
+    if (only) shellPanes.set(surviving[0], { ...only, slot: 'full' });
+  }
+  w.panes = surviving;
+  activePaneId = surviving.length > 0 ? surviving[surviving.length - 1] : null;
+  layoutWindow(tab.windowId);
+  shellEmit({ t: 'modelview', view: shellModelView() });
+}
+
+// spec://vibeterm/PROP-044 §5 + D0 — tear-off: reparent the tab's WebContentsView into a fresh window.
+async function moveTabToWindow(tabId, target) {
+  const tab = shellTabs.get(tabId);
+  if (!tab) return;
+  const srcWinId = tab.windowId;
+  const src = shellWindows.get(srcWinId);
+  if (!src) return;
+
+  let targetWinId;
+  if (target === 'new' || !shellWindows.has(target)) {
+    targetWinId = await createTearoffWindow();
+  } else {
+    targetWinId = target;
+  }
+  const tgt = shellWindows.get(targetWinId);
+  if (!tgt) return;
+
+  // detach from source
+  removeViewFromWindow(src.win, tab.view);
+  const droppedSrcPanes = src.panes.filter((pid) => shellPanes.get(pid)?.tabId === tabId);
+  for (const pid of droppedSrcPanes) shellPanes.delete(pid);
+  src.panes = src.panes.filter((p) => !droppedSrcPanes.includes(p));
+  src.tabs = src.tabs.filter((x) => x !== tabId);
+  if (src.panes.length === 1) {
+    const only = shellPanes.get(src.panes[0]);
+    if (only) shellPanes.set(src.panes[0], { ...only, slot: 'full' });
+  }
+
+  // attach to target (reparent the SAME view -- D0: no reload, xterm buffer intact)
+  tab.windowId = targetWinId;
+  shellTabs.set(tabId, tab);
+  tgt.win.contentView.addChildView(tab.view);
+  tgt.tabs = [...tgt.tabs, tabId];
+  if (tgt.panes.length === 0) {
+    const pid = freshPaneId();
+    shellPanes.set(pid, { tabId, slot: 'full' });
+    tgt.panes = [pid];
+    activePaneId = pid;
+  }
+  tgt.activeTab = tabId;
+  activeTabId = tabId;
+  activeWindowId = targetWinId;
+
+  // source empty and not the last -> close it; else re-activate a survivor
+  if (src.tabs.length === 0 && shellWindows.size > 1) {
+    closeShellWindow(srcWinId);
+  } else if (src.tabs.length > 0) {
+    const next = src.tabs[src.tabs.length - 1];
+    if (src.panes.length === 0) {
+      const pid = freshPaneId();
+      shellPanes.set(pid, { tabId: next, slot: 'full' });
+      src.panes = [pid];
+    }
+    src.activeTab = next;
+    layoutWindow(srcWinId);
+  }
+  layoutWindow(targetWinId);
+  shellEmit({ t: 'modelview', view: shellModelView() });
+}
+
+function closeShellWindow(winId) {
+  const w = shellWindows.get(winId);
+  if (!w) return;
+  for (const tabId of [...w.tabs]) disposeTab(tabId);
+  for (const pid of w.panes) shellPanes.delete(pid);
+  shellWindows.delete(winId);
+  try {
+    if (!w.win.isDestroyed()) w.win.destroy();
+  } catch {
+    /* already destroyed */
+  }
+}
+
+// A chromeless host window for a torn-off terminal (no rail, just the reparented view).
+async function createTearoffWindow() {
+  const id = freshWindowId();
+  const win = new BrowserWindow({
+    width: 760,
+    height: 520,
+    backgroundColor: '#191724',
+    webPreferences: {
+      nodeIntegration: false,
+      contextIsolation: true,
+      backgroundThrottling: false,
+    },
+  });
+  await win.loadFile(path.join(__dirname, 'terminal-view', 'tearoff.html'));
+  shellWindows.set(id, { win, hasChrome: false, tabs: [], panes: [], activeTab: null });
+  win.on('resize', () => layoutWindow(id));
+  win.on('closed', () => {
+    const w2 = shellWindows.get(id);
+    if (w2) {
+      for (const tabId of [...w2.tabs]) disposeTab(tabId);
+      for (const pid of w2.panes) shellPanes.delete(pid);
+      shellWindows.delete(id);
+    }
+    shellEmit({ t: 'modelview', view: shellModelView() });
+  });
+  return id;
+}
+
 async function createShellWindow({ exec, iconName, hideWindow }) {
   // `hideWindow` (--headless) renders the chrome offscreen so a CDP client can still
   // capturePage a faithful PNG with no OS window (a never-shown ordinary window does
-  // not paint -- its capture is blank). The per-tab terminal WebContentsViews render
-  // into this offscreen window too. Used by smoke tests / the AIUI peer; the default
+  // not paint -- its capture is blank). Used by smoke tests / the AIUI peer; the default
   // visible `vibe term` passes neither --headless nor --cdp-port.
-  shellWin = new BrowserWindow({
+  const winId = freshWindowId();
+  const win = new BrowserWindow({
     width: 1100,
     height: 720,
     backgroundColor: '#191724',
@@ -827,6 +1078,8 @@ async function createShellWindow({ exec, iconName, hideWindow }) {
       backgroundThrottling: false,
     },
   });
+  shellWindows.set(winId, { win, hasChrome: true, tabs: [], panes: [], activeTab: null });
+  activeWindowId = winId;
 
   // Register the IPC handlers BEFORE loadFile: the chrome renderer's module script (bridge.ts)
   // calls window.vibeterm.state()/command() the moment it mounts, and loadFile's await resolves
@@ -841,6 +1094,9 @@ async function createShellWindow({ exec, iconName, hideWindow }) {
       if (cmd.t === 'open') await openTab(exec);
       else if (cmd.t === 'select') selectTab(cmd.tabId);
       else if (cmd.t === 'close') closeTab(cmd.tabId);
+      else if (cmd.t === 'pane.split') paneSplit(cmd.tabId);
+      else if (cmd.t === 'pane.close') paneClose(cmd.paneId);
+      else if (cmd.t === 'tab.move-to-window') await moveTabToWindow(cmd.tabId, cmd.windowId);
       else if (cmd.t === 'set-compact') shellEmit({ t: 'modelview', view: shellModelView() });
       return { ok: true };
     } catch (err) {
@@ -852,23 +1108,23 @@ async function createShellWindow({ exec, iconName, hideWindow }) {
   ipcMain.handle('vibeterm:state', () => shellModelView());
 
   // Load the Solid chrome bundle (vite build -> dist/chrome).
-  await shellWin.loadFile(path.join(__dirname, 'dist', 'chrome', 'index.html'));
+  await win.loadFile(path.join(__dirname, 'dist', 'chrome', 'index.html'));
 
-  shellWin.on('resize', () => layoutShell());
+  win.on('resize', () => layoutWindow(winId));
 
-  // Open the first terminal so the shell is never empty on a cold launch. `loadFile` above is
-  // already awaited (the chrome page is loaded), so start immediately. Earlier drafts gated this
-  // on `did-finish-load`, which races (the event can fire before the listener is attached) -- and
-  // in offscreen mode `isLoading()` reports true while `did-finish-load` never settles, so the
-  // initial openTab silently never fired. There is nothing to wait for: the chrome reads its
-  // initial snapshot through the `state()` IPC on mount, and `openTab` emits its own events.
+  // Open the first terminal so the shell is never empty on a cold launch. `loadFile` is already
+  // awaited (the chrome page is loaded), so start immediately. There is nothing to wait for: the
+  // chrome reads its initial snapshot through the `state()` IPC on mount, and openTab emits its
+  // own events. (An earlier `did-finish-load` gate raced and never settled offscreen.)
   shellEmit({ t: 'ready' });
   shellEmit({ t: 'modelview', view: shellModelView() });
-  openTab(exec).catch((err) => console.error('[vibeterm] initial openTab failed:', err));
+  openTab(exec, { windowId: winId }).catch((err) =>
+    console.error('[vibeterm] initial openTab failed:', err),
+  );
 
-  shellWin.on('closed', () => {
-    shellWin = null;
-    for (const id of [...shellTabs.keys()]) closeTab(id);
+  win.on('closed', () => {
+    // the primary chrome window closed -> tear the whole shell down
+    for (const id of [...shellWindows.keys()]) closeShellWindow(id);
     quit();
   });
 }

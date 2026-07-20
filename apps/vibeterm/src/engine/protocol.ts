@@ -2,14 +2,20 @@
 // The chrome<->engine transport contract: a versioned discriminated union carrying NO Electron types.
 // Electron IPC via a typed preload bridge is one transport adapter; a future sidecar is another.
 
-import type { TabId } from "./modelview";
+import type { PaneId, TabId, WindowId } from "./modelview";
 
 export const PROTOCOL_VERSION = "0.1.0";
+
+// A target window for tear-off: a known id, or the literal "new" (create a fresh window).
+export type WindowTarget = WindowId | "new";
 
 export type Command =
   | { readonly t: "open" }
   | { readonly t: "select"; readonly tabId: TabId }
   | { readonly t: "close"; readonly tabId: TabId }
+  | { readonly t: "pane.split"; readonly tabId: TabId; readonly dir?: "right" | "down" }
+  | { readonly t: "pane.close"; readonly paneId: PaneId }
+  | { readonly t: "tab.move-to-window"; readonly tabId: TabId; readonly windowId: WindowTarget }
   | { readonly t: "set-compact"; readonly on: boolean }
   | { readonly t: "set-theme"; readonly theme: string }
   | { readonly t: "set-locale"; readonly locale: string };

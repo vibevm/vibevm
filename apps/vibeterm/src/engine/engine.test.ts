@@ -112,6 +112,53 @@ describe("tabs cell (the ModelView single-writer)", () => {
     expect(v.tabs.has(first)).toBe(false);
     expect(v.activeTab).not.toBe(first);
   });
+
+  it("pane.split adds a second pane (slots left/right) and pane.close collapses back", () => {
+    resetTabCounter();
+    let v = emptyModelView("w1");
+    v = apply(v, { t: "open" }).view; // t1 visible (full)
+    v = apply(v, { t: "open" }).view; // t2 visible (full); t1 still in list
+    const t1 = v.windows[0]!.tabs[0]!;
+    const beforePanes = v.windows[0]!.panes.length;
+    expect(beforePanes).toBe(1);
+    const r = apply(v, { t: "pane.split", tabId: t1 });
+    v = r.view;
+    expect(v.windows[0]!.panes.length).toBe(2);
+    const [p1, p2] = v.windows[0]!.panes;
+    expect(v.panes.get(p1!)?.slot).toBe("left");
+    expect(v.panes.get(p2!)?.slot).toBe("right");
+    expect(v.panes.get(p2!)?.tabId).toBe(t1);
+    expect(r.events.some((e) => e.type === "pane-split")).toBe(true);
+    // split ceiling 2: a second split is a no-op
+    const noop = apply(v, { t: "pane.split", tabId: t1 });
+    expect(noop.view.windows[0]!.panes.length).toBe(2);
+    // closing the second pane collapses the survivor back to full
+    const closed = apply(v, { t: "pane.close", paneId: p2! });
+    v = closed.view;
+    expect(v.windows[0]!.panes.length).toBe(1);
+    expect(v.panes.get(v.windows[0]!.panes[0]!)?.slot).toBe("full");
+  });
+
+  it("tab.move-to-window new creates a 2nd window and moves the tab", () => {
+    resetTabCounter();
+    let v = emptyModelView("w1");
+    v = apply(v, { t: "open" }).view; // t1
+    v = apply(v, { t: "open" }).view; // t2
+    const t1 = v.windows[0]!.tabs[0]!;
+    expect(v.windows.length).toBe(1);
+    const r = apply(v, { t: "tab.move-to-window", tabId: t1, windowId: "new" });
+    v = r.view;
+    expect(v.windows.length).toBe(2);
+    // source window keeps the other tab; target shows the moved one
+    const src = v.windows.find((w) => w.id === "w1");
+    const tgt = v.windows.find((w) => w.id !== "w1");
+    expect(src?.tabs.includes(t1)).toBe(false);
+    expect(tgt?.tabs.includes(t1)).toBe(true);
+    expect(tgt?.panes.length).toBe(1);
+    expect(v.activeWindow).toBe(tgt?.id);
+    expect(v.activeTab).toBe(t1);
+    expect(r.events.some((e) => e.type === "moved")).toBe(true);
+  });
 });
 
 describe("protocol", () => {

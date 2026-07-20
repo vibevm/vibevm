@@ -29,6 +29,9 @@ export type Command =
   | { readonly t: "open" }
   | { readonly t: "select"; readonly tabId: string }
   | { readonly t: "close"; readonly tabId: string }
+  | { readonly t: "pane.split"; readonly tabId: string; readonly dir?: "right" | "down" }
+  | { readonly t: "pane.close"; readonly paneId: string }
+  | { readonly t: "tab.move-to-window"; readonly tabId: string; readonly windowId: string | "new" }
   | { readonly t: "set-compact"; readonly on: boolean }
   | { readonly t: "set-theme"; readonly theme: string }
   | { readonly t: "set-locale"; readonly locale: string };

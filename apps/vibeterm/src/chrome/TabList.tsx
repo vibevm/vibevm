@@ -27,6 +27,10 @@ export function TabList(): JSX.Element {
               tab={{ id: tab.id, title: tab.title, active: tab.active }}
               onSelect={(id) => sendCommand({ t: "select", tabId: id })}
               onClose={(id) => sendCommand({ t: "close", tabId: id })}
+              onSplit={(id) => sendCommand({ t: "pane.split", tabId: id, dir: "right" })}
+              onTearOff={(id) =>
+                sendCommand({ t: "tab.move-to-window", tabId: id, windowId: "new" })
+              }
             />
           )}
         </For>

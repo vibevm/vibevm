@@ -1,0 +1,22 @@
+<!doctype html>
+<!--
+  spec://vibeterm/PROP-044 §5 — a chromeless host window for a torn-off terminal. No rail, no
+  chrome: the reparented per-tab WebContentsView (D0) is laid out over this page by main. The page
+  only exists so the BrowserWindow has a webContents to host the view.
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>vibeterm</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+        background: #191724;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body></body>
+</html>
