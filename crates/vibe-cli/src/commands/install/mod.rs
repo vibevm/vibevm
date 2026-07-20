@@ -104,7 +104,8 @@ pub fn run(ctx: &output::Context, args: InstallArgs, embedded_root: Option<PathB
             .context("recording --git declaration to vibe.toml")?;
     }
 
-    let resolver = build_install_resolver(&args, &manifest, embedded_root.as_deref())?;
+    let global = vibe_core::GlobalRegistryConfig::load()?;
+    let resolver = build_install_resolver(&args, &manifest, embedded_root.as_deref(), &global)?;
 
     // Parse the CLI pkgrefs and qualify short names at the input
     // boundary (PROP-008 §2.6) — manifests only ever store the

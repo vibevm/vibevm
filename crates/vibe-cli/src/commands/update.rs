@@ -114,10 +114,12 @@ pub fn run(ctx: &output::Context, args: UpdateArgs, embedded_root: Option<PathBu
         )?);
     }
 
+    let global = vibe_core::GlobalRegistryConfig::load()?;
     let resolver = build_install_resolver(
         &install_args_from(&args),
         &manifest,
         embedded_root.as_deref(),
+        &global,
     )?;
 
     ctx.heading(&format!(

@@ -188,9 +188,14 @@ fn run_force(
 
     // The resolver is built from the workspace root manifest — registries,
     // mirrors, overrides, and git-source declarations are root-level.
-    let resolver =
-        build_install_resolver(&resolver_args(), &workspace.root_manifest, embedded_root)
-            .context("building the install resolver")?;
+    let global = vibe_core::GlobalRegistryConfig::load()?;
+    let resolver = build_install_resolver(
+        &resolver_args(),
+        &workspace.root_manifest,
+        embedded_root,
+        &global,
+    )
+    .context("building the install resolver")?;
 
     // Bypass the cache — wipe the project package cache so every fetch
     // re-downloads from source (PROP-009 §2.10).

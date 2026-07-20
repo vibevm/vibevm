@@ -15,6 +15,7 @@ specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-002#capability");
 pub mod capability_ref;
 pub mod content_hash;
 pub mod error;
+pub mod global_registry;
 pub mod manifest;
 pub mod package_ref;
 pub mod provenance;
@@ -27,6 +28,10 @@ pub mod values;
 pub use capability_ref::{CapabilityName, CapabilityNamespace, CapabilityRef};
 pub use content_hash::ContentHash;
 pub use error::{Error, Result};
+pub use global_registry::{
+    EffectiveRegistryConfig, GlobalRegistryConfig, GlobalRegistryError, merge_effective,
+    url_is_local,
+};
 pub use package_ref::{Group, PackageKind, PackageName, PackageRef, VersionSpec};
 pub use provenance::{SourceUrl, TraceId};
 pub use rel_path::RelPath;

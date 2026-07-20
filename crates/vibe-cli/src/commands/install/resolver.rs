@@ -8,7 +8,9 @@ use std::path::Path;
 
 use anyhow::{Context, Result, anyhow, bail};
 use vibe_core::manifest::Manifest;
-use vibe_core::{Group, PackageRef};
+use vibe_core::{
+    EffectiveRegistryConfig, GlobalRegistryConfig, Group, PackageRef, merge_effective,
+};
 use vibe_install::InstallSource;
 use vibe_registry::{CachedPackage, LocalRegistry, MultiRegistryResolver, RegistryError};
 use vibe_resolver::EmbeddedPrecedence;
@@ -360,11 +362,29 @@ fn is_registry_absent(err: &RegistryError) -> bool {
     )
 }
 
-/// Open the declared multi-registry walk from the manifest — shared by the
-/// plain multi-registry path and the embedded composition.
-fn open_multi(manifest: &Manifest, args: &InstallArgs) -> Result<MultiRegistryResolver> {
+/// The effective declared-registry config for this invocation: the project
+/// manifest merged with the machine-global `~/.vibe/registry.toml`
+/// (project-first, PROP-002 §2.2.2), then narrowed to local-only sources
+/// under `--offline` (§2.2.2.1). `global` is loaded once at the composition
+/// root and passed in, so this stays a pure, testable transform.
+fn effective_registry_config(
+    manifest: &Manifest,
+    args: &InstallArgs,
+    global: &GlobalRegistryConfig,
+) -> EffectiveRegistryConfig {
+    let eff = merge_effective(manifest, global);
+    if args.offline { eff.local_only() } else { eff }
+}
+
+/// Open the declared multi-registry walk from a precomputed effective config —
+/// shared by the plain multi-registry path and the embedded composition.
+fn open_multi_from(
+    eff: &EffectiveRegistryConfig,
+    manifest: &Manifest,
+    args: &InstallArgs,
+) -> Result<MultiRegistryResolver> {
     Ok(
-        MultiRegistryResolver::open(&manifest.registries, &manifest.mirrors, &manifest.overrides)
+        MultiRegistryResolver::open(&eff.registries, &eff.mirrors, &eff.overrides)
             .context("opening multi-registry resolver")?
             .with_strict_auth(args.auth_required)
             .with_git_packages(manifest.requires.git_packages.clone()),
@@ -376,13 +396,20 @@ fn open_multi(manifest: &Manifest, args: &InstallArgs) -> Result<MultiRegistryRe
 /// Precedence (matches `VIBEVM-SPEC.md` §9.1):
 /// 1. `--registry <path>` — explicit local-directory registry (M0 shape,
 ///    used by tests and offline workflows).
-/// 2. `[[registry]]` array in `vibe.toml` → [`MultiRegistryResolver`]
-///    covering priority order, mirrors, and overrides per
+/// 2. `[[registry]]` array in `vibe.toml`, merged with the machine-global
+///    `~/.vibe/registry.toml` (project-first, PROP-002 §2.2.2) →
+///    [`MultiRegistryResolver`] covering priority order, mirrors, and
+///    overrides per
 ///    [PROP-002](../../../../spec/modules/vibe-registry/PROP-002-decentralized-registry.md).
+///
+/// `global` is the machine-global registry config, loaded once at the caller
+/// (composition root) and threaded in so this function performs no filesystem
+/// I/O of its own and stays test-hermetic.
 pub(crate) fn build_install_resolver(
     args: &InstallArgs,
     manifest: &Manifest,
     embedded_root: Option<&Path>,
+    global: &GlobalRegistryConfig,
 ) -> Result<InstallResolver> {
     let solver = validate_solver(args.solver.as_deref())?;
     if args.prefer_embedded && args.no_prefer_embedded {
@@ -404,13 +431,18 @@ pub(crate) fn build_install_resolver(
         return Ok(InstallResolver::Local(local, solver));
     }
 
+    // The declared walk: project `[[registry]]` merged with the machine-global
+    // `~/.vibe/registry.toml` (project-first, PROP-002 §2.2.2), narrowed to
+    // local-only sources under `--offline` (§2.2.2.1). Computed once, shared.
+    let effective = effective_registry_config(manifest, args, global);
+
     // PROP-030: a source-installed `vibe` exposes its in-tree `packages/` as an
     // ambient embedded registry, composed with the declared walk. Precedence is
     // developer/embedded-first by default; `--no-prefer-embedded` flips it so a
     // published package wins a clash. `--no-default-registry` (and, at the
     // composition root, `VIBE_NO_DEFAULT_REGISTRY`) suppresses it entirely. When
-    // the project declares no `[[registry]]`, the embedded registry stands in
-    // alone, lifting the bail below.
+    // the effective walk is empty, the embedded registry stands in alone,
+    // lifting the bail below.
     if let Some(root) = embedded_root.filter(|_| !args.no_default_registry) {
         let root = crate::commands::init::strip_unc_public(root.to_path_buf());
         let embedded = crate::registry::local_registry(root.clone()).map_err(|e| {
@@ -419,15 +451,15 @@ pub(crate) fn build_install_resolver(
                 root.display()
             )
         })?;
-        // PROP-030 §3.1: `--offline` drops the declared network walk
-        // entirely, so the embedded registry answers alone — no git host is
-        // contacted, no credential prompt is possible. A coordinate the
-        // embedded registry lacks then fails locally rather than reaching
-        // the network.
-        let declared = if manifest.registries.is_empty() || args.offline {
+        // PROP-002 §2.2.2.1: `--offline` has already filtered the effective set
+        // to local sources, so a machine-local `file://` registry still
+        // composes with the embedded one while a remote github/gitverse walk is
+        // dropped — no host is contacted, no credential prompt is possible. The
+        // declared walk is `None` only when no registry survives.
+        let declared = if effective.registries.is_empty() {
             None
         } else {
-            Some(Box::new(open_multi(manifest, args)?))
+            Some(Box::new(open_multi_from(&effective, manifest, args)?))
         };
         let precedence = if args.no_prefer_embedded {
             EmbeddedPrecedence::EmbeddedLast
@@ -443,28 +475,29 @@ pub(crate) fn build_install_resolver(
         });
     }
 
-    // PROP-030 §3.1: `--offline` with no embedded registry (not a source
-    // install, or embedded suppressed by `--no-default-registry`) and no
-    // explicit `--registry` has nothing local to resolve from — the declared
-    // network walk is disabled offline. Fail with an actionable message
-    // rather than silently doing nothing.
-    if args.offline {
+    // No embedded registry (not a source install, or suppressed by
+    // `--no-default-registry`) and no explicit `--registry`.
+    if effective.registries.is_empty() {
+        // PROP-002 §2.2.2.1: under `--offline` the remote walk is disabled and
+        // no local registry survived, so there is nothing to resolve from —
+        // fail with an actionable message rather than reach the network.
+        if args.offline {
+            bail!(
+                "--offline: no local registry available to resolve from. \
+                 Offline resolution needs a local (`file://`) `[[registry]]` — in the \
+                 project `vibe.toml` or `~/.vibe/registry.toml` — the embedded registry \
+                 of a source install (check `vibe self doctor`), or an explicit \
+                 `--registry <dir>`; remote registries are disabled under --offline."
+            );
+        }
         bail!(
-            "--offline: no local registry available to resolve from. \
-             Offline resolution needs the embedded registry of a source install \
-             (check `vibe self doctor`) or an explicit `--registry <dir>`; \
-             the declared network `[[registry]]` walk is disabled under --offline."
-        );
-    }
-
-    if manifest.registries.is_empty() {
-        bail!(
-            "no registry configured. Pass `--registry <path>` or add a `[[registry]]` entry to `vibe.toml`."
+            "no registry configured. Pass `--registry <path>` or add a `[[registry]]` \
+             entry to `vibe.toml` (or `~/.vibe/registry.toml`)."
         );
     }
 
     Ok(InstallResolver::Multi(
-        Box::new(open_multi(manifest, args)?),
+        Box::new(open_multi_from(&effective, manifest, args)?),
         solver,
     ))
 }
@@ -529,9 +562,14 @@ mod flag_tests {
         args.no_prefer_embedded = true;
         // `.map(|_| ())` so the `Ok` payload is `()` (Debug) — `InstallResolver`
         // deliberately isn't Debug (it holds live registry handles).
-        let err = build_install_resolver(&args, &empty_manifest(), None)
-            .map(|_| ())
-            .unwrap_err();
+        let err = build_install_resolver(
+            &args,
+            &empty_manifest(),
+            None,
+            &GlobalRegistryConfig::default(),
+        )
+        .map(|_| ())
+        .unwrap_err();
         assert!(
             err.to_string().contains("mutually exclusive"),
             "expected a mutual-exclusivity error; got: {err}"
@@ -547,9 +585,14 @@ mod flag_tests {
         // network walk (whose construction is what a plain install does).
         let mut args = base_args();
         args.offline = true;
-        let err = build_install_resolver(&args, &empty_manifest(), None)
-            .map(|_| ())
-            .unwrap_err();
+        let err = build_install_resolver(
+            &args,
+            &empty_manifest(),
+            None,
+            &GlobalRegistryConfig::default(),
+        )
+        .map(|_| ())
+        .unwrap_err();
         assert!(
             err.to_string().contains("--offline"),
             "expected the offline bail; got: {err}"

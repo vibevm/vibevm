@@ -128,6 +128,20 @@ This is what makes the `none` default safe everywhere — CI / opencode harnesse
 
 **Migration.** Pre-this-decision `vibe.toml` files with no `auth` field on `[[registry]]` parse as `auth = "none"` (default), preserving every current behaviour for public registries. Operators who want token-based access add the field explicitly; nothing breaks for anyone else.
 
+### 2.2.2 Machine-global registry config: `~/.vibe/registry.toml` {#global-config}
+
+`req r1`
+
+**Decision.** Registry settings may also live in a per-user file resolved through the settings chokepoint (`vibe_core::settings::registry_config_path` → `~/.vibe/registry.toml`, or `$VIBE_SETTINGS/registry.toml`). It carries the same `[[registry]]` / `[[mirror]]` / `[[override]]` sections as a project `vibe.toml`. This lets a developer keep **machine-local** registries (a `file://` checkout, a path repo) out of a team-shared `vibe.toml`, where a hard-coded local path would differ per teammate.
+
+**Merge — project first, dedupe by name.** The effective registry list is the project's `[[registry]]` entries followed by the global file's, with a `name` collision resolved in the **project's** favour (the project entry wins; the global one is dropped). Mirrors are concatenated (project first). Overrides are project-first, deduped by `pkgref` (project wins). The merge is a pure function (`vibe_core::merge_effective`), verified in isolation. A project's explicit declaration always outranks a machine default, so a shared `vibe.toml` stays authoritative for the team while each machine supplements it with its own local repositories.
+
+#### 2.2.2.1 `--offline` resolves local registries only {#offline-local}
+
+`req r1`
+
+**Decision.** `--offline` narrows the effective set to **local** sources — `file://` and bare filesystem paths — and drops every **remote** one (`http(s)://`, `ssh://`, `git://`, scp `user@host:…`). A machine-local registry (project or global) still resolves offline, while a github/gitverse registry is simply absent — no network round-trip, no credential prompt. When the local-only set is empty and there is no embedded registry or explicit `--registry <dir>`, offline resolution fails with an actionable message rather than reaching the network. Locality is classified by URL scheme (`vibe_core::url_is_local`).
+
 ### 2.3 Mirror layer: transparent, integrity-verified {#mirror}
 
 `req r1`
