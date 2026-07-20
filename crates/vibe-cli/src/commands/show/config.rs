@@ -122,7 +122,7 @@ const CONFIG_ENV_VARS: &[(&str, &str, bool /* sensitive */)] = &[
     ),
     (
         "VIBEVM_PUBLISH_TOKEN_GITHUB",
-        "Publish token for `vibe registry publish` against GitHub. Wins over the legacy `VIBEVM_PUBLISH_TOKEN` and over `~/.vibevm/github.publish.token`.",
+        "Publish token for `vibe registry publish` against GitHub. Wins over the legacy `VIBEVM_PUBLISH_TOKEN` and over `~/.vibe/github.publish.token`.",
         true,
     ),
     (

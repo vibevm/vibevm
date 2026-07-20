@@ -43,7 +43,7 @@ Adding a host is one `[[target]]` block, committed — the set is living.
 This PROP governs the **source repository**; it is orthogonal to the **package registry**, and the two must not be conflated.
 
 - **Source mirrors** (this PROP): the vibevm *source* is multi-homed across GitVerse (`vibevm/vibevm`) and GitHub (`vibevm/vibevm`), kept in step by `cargo xtask mirror`. Auth is the maintainer's **per-host SSH keys**.
-- **Package registry** ([PROP-000 §7](PROP-000.md#registry), [PROP-002 §2.10](../modules/vibe-registry/PROP-002-decentralized-registry.md#publish)): published *packages* live in the GitHub `vibespecs` org. Auth is the **`~/.vibevm/github.publish.token`**, used *only* by `vibe registry publish`, scoped strictly to `vibespecs`.
+- **Package registry** ([PROP-000 §7](PROP-000.md#registry), [PROP-002 §2.10](../modules/vibe-registry/PROP-002-decentralized-registry.md#publish)): published *packages* live in the GitHub `vibespecs` org. Auth is the **`~/.vibe/github.publish.token`**, used *only* by `vibe registry publish`, scoped strictly to `vibespecs`.
 
 So `vibevm/vibevm` (a source mirror) and `github.com/vibespecs/*` (the package registry) are different GitHub orgs serving different purposes with different credentials. The publish token is never used to push source; an SSH key is never used to publish a package. The original split-host rationale (GitVerse's API does not expose org-scoped repo creation, which the publisher needs; GitHub's does) holds for the registry and is untouched.
 

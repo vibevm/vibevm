@@ -972,7 +972,7 @@ A resolver pass that only needs to consider N candidate versions of a package sh
 
 **v1 ships `vibe registry publish <path>`** — a maintainer-facing command that creates a new package repository under the configured registry organization, pushes the package contents, and creates the version tag. It is mechanical: no semantic review, no LLM-backed safety analysis. The full *reviewed publish* surface (LLM censor per §8.5, signed attestations, policy gates) remains v2+.
 
-Auth uses a registry-specific public-API token stored in the user's vibevm config directory (`~/.vibevm/git.publish.token` or `VIBEVM_PUBLISH_TOKEN` env-var overriding). Publishing goes through a host adapter behind a `RepoCreator` trait, with concrete impls per host (GitVerse in v1; GitHub / Gitea / Forgejo added as adopters request them). The adapter pattern keeps consuming code host-agnostic: `vibe install` / `vibe update` never know which host served the content.
+Auth uses a registry-specific public-API token stored in the user's vibevm config directory (`~/.vibe/git.publish.token` or `VIBEVM_PUBLISH_TOKEN` env-var overriding). Publishing goes through a host adapter behind a `RepoCreator` trait, with concrete impls per host (GitVerse in v1; GitHub / Gitea / Forgejo added as adopters request them). The adapter pattern keeps consuming code host-agnostic: `vibe install` / `vibe update` never know which host served the content.
 
 Error surface (called out because non-admin maintainers will hit these routinely):
 - **401 / 403 from the host API** → "token lacks `repo:create` permission in `<org>`; contact the org owner or use a different token".

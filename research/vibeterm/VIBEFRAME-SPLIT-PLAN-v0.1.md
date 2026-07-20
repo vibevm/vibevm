@@ -31,7 +31,7 @@ it end to end. Scoped while the parent session's context was low, so it is delib
 2. **Rename identifiers** in the copy: `package.json` name → `@org.vibevm/vibeframe` + description
    ("simple terminal frame — VibeTree's host"); `[vibeterm]` → `[vibeframe]` log tags; `<title>` +
    `BrowserWindow` title; the in-terminal **env marker** (see Decisions); icons (reuse vibeterm's for
-   now — own icon later). Keep the shared bits: `OSC 7773` icon protocol, the `~/.vibevm/aiui`
+   now — own icon later). Keep the shared bits: `OSC 7773` icon protocol, the `~/.vibe/aiui`
    discovery dir, the control-server/CDP surface (vibeframe still supports `--control` for aiui).
 3. **vibe-cli resolver** — the terminal-app locator (PROP-042 §5 `#vibe-term`: `$VIBEVM_VIBETERM` →
    packaged `vibeterm/` → dev `apps/vibeterm`). Route the **tree/aiui** paths to **vibeframe** (add

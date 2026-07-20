@@ -13,7 +13,7 @@ step 1 copies them in.
 ## Prerequisites
 
 - `~/.fractality/profiles.toml` with the `glm` profile;
-  `~/.vibevm/zai.api.token` present.
+  `~/.vibe/zai.api.token` present.
 - Built binaries: from `fractality/v0.1.0/`, `cargo build --workspace`.
 - `git` on PATH.
 

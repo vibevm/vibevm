@@ -104,7 +104,7 @@ the freshly-built entry to `<index_url>/v1/packages` after the push.
 
 ```sh
 export VIBEVM_INDEX_URL_VIBESPECS=https://index.example.com
-export VIBEVM_INDEX_TOKEN_VIBESPECS="$(cat ~/.vibevm/index.token)"
+export VIBEVM_INDEX_TOKEN_VIBESPECS="$(cat ~/.vibe/index.token)"
 vibe registry publish ./flow-foo
 ```
 

@@ -8,7 +8,7 @@ schema = 1
 [profile.glm]
 backend = "claude-code"
 base_url = "https://api.z.ai/api/anthropic"   # F3: the z.ai Anthropic-compatible gateway
-token_file = "~/.vibevm/zai.api.token"
+token_file = "~/.vibe/zai.api.token"
 claude_binary = "claude"
 config_dir = "auto"        # fresh per-run CLAUDE_CONFIG_DIR; onboards headless (F4/R5)
 

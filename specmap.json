@@ -12956,7 +12956,7 @@
   "spec_units": [
     {
       "anchor": "root",
-      "content_hash": "sha256:ce65dd227f6d61d89a596ff304026384347e52d5dddb61f54fd11c6d231fce97",
+      "content_hash": "sha256:3d21e9c714382deed465e366b08991d31bb41b870c5726d29ca835c1ba189bbe",
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "vibevm: A Software Project Manager for Spec-Driven Development with AI Agents",
@@ -13370,7 +13370,7 @@
     },
     {
       "anchor": "registry",
-      "content_hash": "sha256:6926a9f411d9900ee9eca8b8a6093dd261df8763de3fe6c96f80d00a6166a531",
+      "content_hash": "sha256:50e4ec150d1420643eb5e4eefa88f6b98b9bccf68ac22e8091bee4da3754b393",
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "Section 8. The registry",
@@ -13406,7 +13406,7 @@
     },
     {
       "anchor": "publishing",
-      "content_hash": "sha256:15f7acbac094fe5724c73be27bb242a1714f2bc2907697e7d2bca6dbe011e581",
+      "content_hash": "sha256:b469d60220ceac38dddffc754e0eaca44ff7c60e619720faa32af29d9b39f66c",
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "8.4 Publishing",
@@ -14648,7 +14648,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:45de03dce5df2b0ad12aaec35a1ff810fdca39dd066d1d12a06699fa2fc6ca51",
+      "content_hash": "sha256:cc9b283ca78d8c36376572e2a0dfd369937d32237afd804aec6e2b323c8361c4",
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "PROP-000: Foundational technical decisions",
@@ -14828,7 +14828,7 @@
     },
     {
       "anchor": "token-secrecy",
-      "content_hash": "sha256:1cccfae7059896d04b12ca6e2daee6f39f36525287c01ef5d1a0f63c51256391",
+      "content_hash": "sha256:9761acca694d9ab5c0ab88bb3dad06003f5fa1d25b03f883ca4adb91f24572ed",
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "20. Token secrecy and adapter scope",
@@ -14911,7 +14911,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:83759fd774fbca06e6d912c0a79b1c36c412b4eefd2358a8653b7af6c5e5849f",
+      "content_hash": "sha256:4d734d66676a30bcb912525e12b9dc36ce539db3fb7c67f0ddad3e4b1c01617f",
       "doc_path": "common/PROP-016",
       "file": "spec/common/PROP-016-source-mirrors.md",
       "heading": "PROP-016: Decentralized source mirrors — the vibevm setup",
@@ -14938,7 +14938,7 @@
     },
     {
       "anchor": "registry",
-      "content_hash": "sha256:ba4ce850066f9470bc1c6e517a8bbb0ce4aa51f12ba5c285cef873be99811722",
+      "content_hash": "sha256:a46191a56a5ad70c2b8e108435bf9ab53685682c2671c2a718a6e0737870c96d",
       "doc_path": "common/PROP-016",
       "file": "spec/common/PROP-016-source-mirrors.md",
       "heading": "3. Relationship to the package-registry split-host",
@@ -17684,7 +17684,7 @@
     },
     {
       "anchor": "aiui-cli",
-      "content_hash": "sha256:7f930bca0890bb1c9f15b84d23fe77770c667ce8544f34456975c9185613d416",
+      "content_hash": "sha256:3240d3745e9926d39b2d549946c72dff4f4cee16c739fce8deb4814c45966580",
       "doc_path": "modules/vibe-cli/PROP-042",
       "file": "spec/modules/vibe-cli/PROP-042-aiui-observation.md",
       "heading": "4. The `vibe aiui` surface",
@@ -18699,7 +18699,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:7e99814e65f0b6eb0370a4c830bd399783fd73fddaf17b8e00ba176b94e06b74",
+      "content_hash": "sha256:7d4db553b457eb83f2eefe14c6f1e12b067ff32fbcc677773cae1cc3686a14a7",
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
       "heading": "PROP-002: Decentralized, mirror-friendly registry with capability-based depsolver",
@@ -18717,7 +18717,7 @@
     },
     {
       "anchor": "decisions",
-      "content_hash": "sha256:ab738d2a1a409f2d15ea2809accee310a70e827455f2d5de9968b30f258faa59",
+      "content_hash": "sha256:79562edbf42b9e3b64efb3be9d268b192e712d1bf8c84604b2bfb137976b4a6a",
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
       "heading": "2. Decisions",
@@ -18891,7 +18891,7 @@
     },
     {
       "anchor": "publish",
-      "content_hash": "sha256:c46925f3c788265b411580bd3e314cb4b6d9df86c6d4263323b963e81ef634f0",
+      "content_hash": "sha256:a5f4b539990506e4a727b1d8bd41ab8ff8e65417ac2388897fc25a9b98ce8bb6",
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
       "heading": "2.10 Publish utility: `vibe registry publish <path>`",
@@ -21114,7 +21114,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:c2bec506a81c285c1ceda86bb2d68d7187c7c3453522dc54d0a159030181f39d",
+      "content_hash": "sha256:e6910b847eda5e1cd4142f746d165e17dc598aa7affb4cc3a405baa6e5e3d554",
       "doc_path": "modules/vibe-workspace/PROP-020",
       "file": "spec/modules/vibe-workspace/PROP-020-install-hooks.md",
       "heading": "PROP-020 — Install hooks",
@@ -21150,7 +21150,7 @@
     },
     {
       "anchor": "decisions",
-      "content_hash": "sha256:8df72181c2eef9039bd1c0e891ad8f766b8057d2a1bc5a0e9bcbed4ed47879f2",
+      "content_hash": "sha256:4155701da3d1b1f43b9aaf73b72f5cb7a9d78efd61858e6d571674f7b44a5925",
       "doc_path": "modules/vibe-workspace/PROP-020",
       "file": "spec/modules/vibe-workspace/PROP-020-install-hooks.md",
       "heading": "2. Decisions",
@@ -21181,7 +21181,7 @@
     },
     {
       "anchor": "trust-gate",
-      "content_hash": "sha256:49afdd5499f31ccf294d1d24f164a30ab82e29d0b100b5c33f04d27d1aaa5528",
+      "content_hash": "sha256:c15a7f45c9efcdec3cb7b5159a9faa01e376b4c7af91faf05a58995bf7165823",
       "doc_path": "modules/vibe-workspace/PROP-020",
       "file": "spec/modules/vibe-workspace/PROP-020-install-hooks.md",
       "heading": "2.3 Trust gate — allow-list of groups, plus first-run consent",

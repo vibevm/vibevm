@@ -115,7 +115,7 @@ visual xterm.js and yields the PNG.
 
 **Transport:** loopback HTTP+JSON on an ephemeral port, bound to `127.0.0.1`,
 guarded by a per-session token. Port+token+pid+size written to a **discovery
-file** `~/.vibevm/aiui/<session-id>.json` so `vibe aiui` finds the running app
+file** `~/.vibe/aiui/<session-id>.json` so `vibe aiui` finds the running app
 without a fixed port. (Rejected: OS-native pipes — more portable-code cost;
 stdio to Electron — Electron's stdio is unreliable. See §9-D3.)
 
@@ -519,7 +519,7 @@ Commit-map: `81de4ec` feat launch modes · `ffc94cc` chore(specmap).
 
 The loopback control API lands, closing the terminal plane. vibeterm gains a
 `--control` server (loopback HTTP+JSON, ephemeral port, bearer token, discovery
-`~/.vibevm/aiui/<pid>.json` + `latest.json`) with a `@xterm/headless` snapshot
+`~/.vibe/aiui/<pid>.json` + `latest.json`) with a `@xterm/headless` snapshot
 mirror, and a `--headless` mode (no OS window — a control session is observed,
 not watched). **`vibe aiui`** (Rust, blocking `reqwest`) drives it: `open`
 (spawn windowless + await discovery + print the pid), `send` (key script + text),

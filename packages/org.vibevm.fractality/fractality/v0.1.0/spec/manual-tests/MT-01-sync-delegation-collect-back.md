@@ -16,7 +16,7 @@ own copy in step 1, and mission-control refuses the run with a loud
 ## Prerequisites
 
 - `~/.fractality/profiles.toml` with the `glm` profile (copy
-  `spec/examples/profiles.sample.toml`); `~/.vibevm/zai.api.token`
+  `spec/examples/profiles.sample.toml`); `~/.vibe/zai.api.token`
   present.
 - Built binaries: from `fractality/v0.1.0/`, `cargo build --workspace`.
 - `cargo` on PATH (the acceptance command uses the pod's own env).

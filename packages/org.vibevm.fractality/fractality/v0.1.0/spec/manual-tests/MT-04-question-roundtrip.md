@@ -13,7 +13,7 @@ waiting on the answer. **Isolated:** scratch `--home`; a dedicated
 ## Prerequisites
 
 - `~/.fractality/profiles.toml` with the `glm` profile;
-  `~/.vibevm/zai.api.token` present.
+  `~/.vibe/zai.api.token` present.
 - Built binaries: from `fractality/v0.1.0/`, `cargo build --workspace`.
 
 ## Steps
@@ -31,7 +31,7 @@ waiting on the answer. **Isolated:** scratch `--home`; a dedicated
    [profile.mt4]
    backend = "claude-code"
    base_url = "https://api.z.ai/api/anthropic"
-   token_file = "~/.vibevm/zai.api.token"
+   token_file = "~/.vibe/zai.api.token"
    [profile.mt4.models]
    big = "glm-5.2[1m]"
    small = "glm-5-turbo"

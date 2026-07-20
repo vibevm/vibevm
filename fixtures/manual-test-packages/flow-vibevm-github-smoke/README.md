@@ -15,7 +15,7 @@ vibe registry publish ./fixtures/manual-test-packages/flow-vibevm-github-smoke \
 ```
 
 The default registry (`vibespecs` on GitHub) is used; the publish path
-loads `~/.vibevm/github.publish.token` (or `VIBEVM_PUBLISH_TOKEN_GITHUB`
+loads `~/.vibe/github.publish.token` (or `VIBEVM_PUBLISH_TOKEN_GITHUB`
 / legacy `VIBEVM_PUBLISH_TOKEN`), creates the repo on first publish via
 the GitHub REST API, pushes the contents on `main`, and tags the
 release.

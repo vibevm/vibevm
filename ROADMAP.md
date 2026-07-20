@@ -22,8 +22,8 @@
 > adapter behind the existing `RepoCreator` trait drives the publish
 > flow; `GitVerseCreator` remains in tree for any future Gitea-shape
 > host that fully supports the org-scoped POST. Token path rotates
-> to `~/.vibevm/<host>.publish.token` (per-host); legacy
-> `~/.vibevm/git.publish.token` is the fallback. See
+> to `~/.vibe/<host>.publish.token` (per-host); legacy
+> `~/.vibe/git.publish.token` is the fallback. See
 > [PROP-000 §7](spec/common/PROP-000.md#registry) and
 > [PROP-002 §2.10](spec/modules/vibe-registry/PROP-002-decentralized-registry.md#publish).
 >

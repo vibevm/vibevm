@@ -164,7 +164,7 @@ Schema is `deny_unknown_fields` strict — a typo in `[env]` (`[envv]`, `[enviro
 
 This means a user-config file that pins `VIBE_REGISTRY_CACHE = "/data/vibe-cache"` actually relocates the cache for `vibe install` / `vibe registry sync` invocations on the same machine — no `export` needed. `vibe show config` distinguishes operator-set values (`provenance = "env"`) from promoted defaults (`provenance = "user-config"`) by tracking which names the startup promotion wrote.
 
-**Token discipline.** Putting `VIBEVM_PUBLISH_TOKEN` in the user-level config is a poor operator choice (the right home is `~/.vibevm/<host>.publish.token` per [PROP-000 §20](../../spec/common/PROP-000.md#token-secrecy)), but `vibe show config` will not refuse to parse the file — it surfaces the token as `redacted` regardless of source, never prints the bytes.
+**Token discipline.** Putting `VIBEVM_PUBLISH_TOKEN` in the user-level config is a poor operator choice (the right home is `~/.vibe/<host>.publish.token` per [PROP-000 §20](../../spec/common/PROP-000.md#token-secrecy)), but `vibe show config` will not refuse to parse the file — it surfaces the token as `redacted` regardless of source, never prints the bytes.
 
 ### JSON shape
 

@@ -175,13 +175,13 @@ Never edit `vibe.lock` by hand to silence this — that defeats the integrity ch
 
 **What.** The publish token doesn't have the right scope to create new repositories in the target org. HTTP `401` / `403` from the host.
 
-**Action.** Mint a new token with `repo:create` (or equivalent) scope, or ask an org owner to elevate the existing one. Token is read from `VIBEVM_PUBLISH_TOKEN` first, then `~/.vibevm/git.publish.token`.
+**Action.** Mint a new token with `repo:create` (or equivalent) scope, or ask an org owner to elevate the existing one. Token is read from `VIBEVM_PUBLISH_TOKEN` first, then `~/.vibe/git.publish.token`.
 
-### `publish refused: no token available for host `…`. Set `VIBEVM_PUBLISH_TOKEN` or write a token to `~/.vibevm/git.publish.token`.`
+### `publish refused: no token available for host `…`. Set `VIBEVM_PUBLISH_TOKEN` or write a token to `~/.vibe/git.publish.token`.`
 
 **What.** No token was found in either source.
 
-**Action.** Either `export VIBEVM_PUBLISH_TOKEN=<token>` (one-shot for this shell) or write the token to `~/.vibevm/git.publish.token` (persistent, recommended for repeat publishes).
+**Action.** Either `export VIBEVM_PUBLISH_TOKEN=<token>` (one-shot for this shell) or write the token to `~/.vibe/git.publish.token` (persistent, recommended for repeat publishes).
 
 ### `publish refused: organization `…` does not exist on `…``
 

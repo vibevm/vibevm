@@ -1,5 +1,5 @@
 //! The vibeterm control-plane client for `vibe aiui` (PROP-042 §4): read the
-//! discovery file a `--control` vibeterm writes to `~/.vibevm/aiui/`, then drive
+//! discovery file a `--control` vibeterm writes to `~/.vibe/aiui/`, then drive
 //! it over loopback HTTP+JSON (token-guarded) — open / send / snapshot / wait /
 //! close. Blocking `reqwest`; no daemon, no ambient network.
 

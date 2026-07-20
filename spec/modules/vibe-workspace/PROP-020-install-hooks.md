@@ -108,7 +108,7 @@ Running a package's hook is running third-party code at install time. Until a
 content-scanning gate exists (§4), trust is governed cheaply:
 
 - **Allow-listed groups run silently.** A config key (global
-  `~/.vibevm/config.toml` `[hooks].allowed_groups`, with a project-level
+  `~/.vibe/config.toml` `[hooks].allowed_groups`, with a project-level
   override) lists trusted package groups. **`org.vibevm` is in the allow-list
   by default.** A package whose group is allow-listed runs its hooks with no
   prompt.

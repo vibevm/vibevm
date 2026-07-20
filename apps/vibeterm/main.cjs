@@ -184,9 +184,16 @@ function quit() {
 // Control server (AIUI) — only constructed when `--control` is passed.
 // ---------------------------------------------------------------------------
 
-/** The discovery directory: `<home>/.vibevm/aiui`. */
+/**
+ * The discovery directory: `<settings-dir>/aiui` — `$VIBE_SETTINGS` if set,
+ * else `<home>/.vibe/aiui`. Mirrors the Rust `vibe_core::settings` chokepoint
+ * so `vibe aiui` (which reads `~/.vibe/aiui`, falling back to the legacy
+ * `~/.vibevm/aiui`) finds the file the shell writes.
+ */
 function aiuiDir() {
-  return path.join(os.homedir(), '.vibevm', 'aiui');
+  const override = process.env.VIBE_SETTINGS;
+  const base = override && override.length > 0 ? override : path.join(os.homedir(), '.vibe');
+  return path.join(base, 'aiui');
 }
 
 /**

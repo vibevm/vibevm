@@ -115,7 +115,7 @@ Tokens flow through the same M1.14 plumbing: read once at resolver-open time, ke
 
 ### `vibe registry redirect` (recommended)
 
-The CLI helper creates the stub repo automatically — analogous to `vibe registry publish`, but commits a `vibe-redirect.toml` marker instead of package content. It uses the same publish-token and host-adapter infrastructure (PROP-002 §2.10), so the same `~/.vibevm/<host>.publish.token` you already configured for publishing is consumed here.
+The CLI helper creates the stub repo automatically — analogous to `vibe registry publish`, but commits a `vibe-redirect.toml` marker instead of package content. It uses the same publish-token and host-adapter infrastructure (PROP-002 §2.10), so the same `~/.vibe/<host>.publish.token` you already configured for publishing is consumed here.
 
 ```bash
 # Bare minimum — pass-through-tag policy, no auth.

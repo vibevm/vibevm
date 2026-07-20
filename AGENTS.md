@@ -65,7 +65,7 @@ Keep it current-state; prune stale lines.
   (2026-07-12). A different home ⇒ a separate daemon (own lock/port).
 - **Profiles** (`~/.fractality/profiles.toml`): profile `glm` → z.ai gateway
   `https://api.z.ai/api/anthropic`, `big = glm-5.2[1m]`, `small = glm-5-turbo`,
-  token by PATH `~/.vibevm/zai.api.token` (never inline/echo it);
+  token by PATH `~/.vibe/zai.api.token` (never inline/echo it);
   `config_dir = "auto"` (fresh per-run `CLAUDE_CONFIG_DIR`).
 - **Free vs paid:** `route` / `gate` are pure calculus — no daemon, no spend;
   `run` / `spawn` / `advise` spawn a real GLM worker (z.ai). **Standing owner

@@ -52,7 +52,7 @@ Publishing spans N independent host repositories; there is no transaction. On th
 
 ## Authentication
 
-Same publish-token loading as [`vibe registry publish`](registry-publish.md): `VIBEVM_PUBLISH_TOKEN` env-var, then `~/.vibevm/<host-prefix>.publish.token`, then the legacy host-agnostic path. Token-secrecy invariants are identical (PROP-000 §20) — the token never reaches any vibevm-produced output and is embedded into the push URL only at the moment of `git push`. `--dry-run` loads no token at all.
+Same publish-token loading as [`vibe registry publish`](registry-publish.md): `VIBEVM_PUBLISH_TOKEN` env-var, then `~/.vibe/<host-prefix>.publish.token`, then the legacy host-agnostic path. Token-secrecy invariants are identical (PROP-000 §20) — the token never reaches any vibevm-produced output and is embedded into the push URL only at the moment of `git push`. `--dry-run` loads no token at all.
 
 GitVerse `[[registry]]` publishing is refused early, the same gap as `vibe registry publish`: the GitVerse public API does not expose org-scoped repo creation. `--dry-run` still works against a GitVerse registry.
 

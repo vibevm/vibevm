@@ -121,7 +121,7 @@ the built `App` and carries no rendering types.
 
 REQ. The control transport is **loopback-only and token-guarded**. A `--control`
 vibeterm serves JSON over `http://127.0.0.1:<ephemeral>` and writes a discovery
-file `~/.vibevm/aiui/<pid>.json` plus a `latest.json` pointer, each
+file `~/.vibe/aiui/<pid>.json` plus a `latest.json` pointer, each
 `{ port, token, pid, startedAt }` at mode `0600`. Every request carries the
 bearer token; the socket binds `127.0.0.1` only. `open` accepts a discovered
 session only when its `startedAt` is at or after the spawn instant, so a stale

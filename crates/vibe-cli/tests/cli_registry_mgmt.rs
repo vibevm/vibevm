@@ -448,7 +448,7 @@ fn show_config_live_env_overrides_user_config() {
 fn show_config_user_token_default_redacts_value() {
     // VIBEVM_PUBLISH_TOKEN is sensitive: even if defaulted via
     // user-config (which would be a poor operator choice — token
-    // belongs in `~/.vibevm/<host>.publish.token` per PROP-000 §20
+    // belongs in `~/.vibe/<host>.publish.token` per PROP-000 §20
     // — but we can't refuse to load) the value must NEVER appear in
     // output.
     let project = tempfile::tempdir().unwrap();

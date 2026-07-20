@@ -36,7 +36,7 @@ vibe registry redirect <pkgref> --to <url>
 
 ## Authentication
 
-Same publish-token loading as [`vibe registry publish`](registry-publish.md): `VIBEVM_PUBLISH_TOKEN` env-var (highest), then `~/.vibevm/<host-prefix>.publish.token`, then legacy `~/.vibevm/git.publish.token`. The token must have `repo:create` permission in the target organization on the registry's host (`github.com` for GitHub-hosted registries).
+Same publish-token loading as [`vibe registry publish`](registry-publish.md): `VIBEVM_PUBLISH_TOKEN` env-var (highest), then `~/.vibe/<host-prefix>.publish.token`, then legacy `~/.vibe/git.publish.token`. The token must have `repo:create` permission in the target organization on the registry's host (`github.com` for GitHub-hosted registries).
 
 Token secrecy invariants are identical to `vibe registry publish` (PROP-000 §20). The token is never logged, never recorded in any vibevm-produced output, and embedded into the push URL only at the moment of `git remote add`.
 

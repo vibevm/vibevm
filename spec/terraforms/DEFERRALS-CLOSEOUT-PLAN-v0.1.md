@@ -244,13 +244,13 @@ here so Phase 9 executes cold:
   shippable tree (PROP-024 §2.2, the Ф4c filter), so hashes stay
   reproducible, and a slot refresh naturally invalidates its binaries
   (staleness for free).
-- **Shims are dumb, `vibe` is the dispatcher:** `~/.vibevm/bin/<name>`
+- **Shims are dumb, `vibe` is the dispatcher:** `~/.vibe/bin/<name>`
   (paired `.cmd` on Windows — the PROP-015 `cmd /c` lesson) execs
   `vibe bin exec <name> -- <args…>`; `bin exec` walks up from CWD to
   `vibe.lock`, resolves which slot pins that binary, builds it if the
   artifact is missing (consent rules below), and execs it with the exit
   code passed through. Outside any project: the newest installed
-  version, from a user-level `~/.vibevm/bins.toml` registry updated at
+  version, from a user-level `~/.vibe/bins.toml` registry updated at
   install time. Reconcile with PROP-019's existing shim dir at
   execution time — if the version manager already owns a PATH-prepended
   dir, reuse it rather than introduce a second one.
@@ -574,7 +574,7 @@ safe stop:
 - §4 dispatch: dumb shims in a global bin dir (Windows `.cmd` pair —
   the PROP-015 lesson) delegating to `vibe bin exec` (walk up to
   `vibe.lock` → the pinned slot's artifact → build-if-missing → exec;
-  outside a project: newest from `~/.vibevm/bins.toml`); PROP-019
+  outside a project: newest from `~/.vibe/bins.toml`); PROP-019
   shim-dir reconciliation.
 - §5 staleness/offline: slot refresh invalidates; network-honest failure
   mode (cargo needs crates.io unless the cache is warm); `cargo install

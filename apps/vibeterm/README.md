@@ -118,8 +118,8 @@ On start it:
 - generates a random **Bearer token**;
 - mirrors every PTY byte into a headless xterm (in the main process) so it can
   return a text snapshot of the exact grid the window shows;
-- writes a **discovery file** at `~/.vibevm/aiui/<pid>.json` and a
-  `~/.vibevm/aiui/latest.json` pointer, each holding
+- writes a **discovery file** at `~/.vibe/aiui/<pid>.json` and a
+  `~/.vibe/aiui/latest.json` pointer, each holding
   `{ port, token, pid, startedAt }` (mode `0600`; removed on quit).
 
 Every endpoint requires `Authorization: Bearer <token>` — a missing/wrong token

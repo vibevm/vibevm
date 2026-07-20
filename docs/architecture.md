@@ -137,7 +137,7 @@ for each node in graph:
 [CLI parse]                                     ← vibe registry publish ./fixtures/registry/flow/wal/v0.1.0
     │
     ▼
-[load token]                                    ← env > ~/.vibevm/git.publish.token
+[load token]                                    ← env > ~/.vibe/git.publish.token
     │
     ▼
 [GitVerseCreator::new(token)]                   ← reqwest blocking + rustls

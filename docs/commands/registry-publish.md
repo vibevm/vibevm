@@ -40,8 +40,8 @@ Other hosts: clean error pointing at [PROP-002 §2.10](../../spec/modules/vibe-r
 A publish token is required. Order of precedence:
 
 1. `VIBEVM_PUBLISH_TOKEN` environment variable (highest; useful in CI).
-2. `~/.vibevm/<host-prefix>.publish.token` — per-host file. The prefix is the first label of the host: `github.publish.token` for `github.com`, `gitverse.publish.token` for `gitverse.ru`, `gitlab.publish.token` for `gitlab.com`, etc.
-3. `~/.vibevm/git.publish.token` — legacy host-agnostic fallback. Kept so existing GitVerse-only setups keep working without rename.
+2. `~/.vibe/<host-prefix>.publish.token` — per-host file. The prefix is the first label of the host: `github.publish.token` for `github.com`, `gitverse.publish.token` for `gitverse.ru`, `gitlab.publish.token` for `gitlab.com`, etc.
+3. `~/.vibe/git.publish.token` — legacy host-agnostic fallback. Kept so existing GitVerse-only setups keep working without rename.
 
 Token must be issued by the host and must have `repo:create` permission in the target organization. For GitHub, that's a personal access token (PAT) with the `repo` scope on the `vibespecs` org. For GitVerse, see <https://gitverse.ru/docs/public-api/>.
 
@@ -67,7 +67,7 @@ Token must be issued by the host and must have `repo:create` permission in the t
 | `git push` denied | "publish refused: no push access to `<repo>`. Ask a maintainer of that repo to grant push." |
 | Tag already exists | "publish refused: tag `<tag>` already exists. Pick a new version — `vibe registry publish` does not force-push." |
 | Network unreachable | "publish refused: host `<host>` is unreachable." |
-| Token missing | "publish refused: no token available. Set `VIBEVM_PUBLISH_TOKEN` or write a token to `~/.vibevm/<host>.publish.token` (e.g. `github.publish.token`)." |
+| Token missing | "publish refused: no token available. Set `VIBEVM_PUBLISH_TOKEN` or write a token to `~/.vibe/<host>.publish.token` (e.g. `github.publish.token`)." |
 | Unsupported host | "publish refused: no RepoCreator adapter for host `<host>`. Configured registry URL points at an unsupported host; add an adapter per PROP-002 §2.10 or use a supported host." |
 
 ## Examples

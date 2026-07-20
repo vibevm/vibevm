@@ -24,7 +24,7 @@ vibe aiui open --visible        # vibeterm + control plane + CDP endpoint
 
 This opens a visible window running `vibe tree` over the current directory, with
 the loopback control server and the Chrome DevTools Protocol endpoint. The
-session writes `~/.vibevm/aiui/latest.json` (`port`, `token`, `cdpPort`, `pid`).
+session writes `~/.vibe/aiui/latest.json` (`port`, `token`, `cdpPort`, `pid`).
 Leave it open for the whole dev session.
 
 ## Live preview — Rust change

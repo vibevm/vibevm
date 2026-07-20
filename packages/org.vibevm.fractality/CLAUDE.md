@@ -152,7 +152,7 @@ delete the backlog entry.
   line of code, not retrofitted (DEF-9 resolved early by the same
   directive).
 - **Secrets:** never read, print, or log token files
-  (`~/.vibevm/zai.api.token` and siblings). Code reads them at spawn time
+  (`~/.vibe/zai.api.token` and siblings). Code reads them at spawn time
   only and never echoes them; tests use fakes. One accidental echo is a leak
   (sessions are screen-recorded).
 - **Clean-room law:** every reference source in

@@ -37,10 +37,10 @@ Needed to push to `git@gitverse.ru:vibevm/vibevm.git` — the project source-of-
 
 The package registry organization (`vibespecs`) lives on GitHub at <https://github.com/vibespecs>. Publish-side ops require a GitHub personal access token (PAT) with `repo` scope on the org, stored at:
 
-- POSIX: `~/.vibevm/github.publish.token`
-- Windows: `%USERPROFILE%\.vibevm\github.publish.token`
+- POSIX: `~/.vibe/github.publish.token`
+- Windows: `%USERPROFILE%\.vibe\github.publish.token`
 
-The publish-token loader also accepts the legacy `~/.vibevm/git.publish.token` (host-agnostic fallback) and the env-var `VIBEVM_PUBLISH_TOKEN` (wins over both). Per-host file precedence — `~/.vibevm/<host-prefix>.publish.token` — exists so you can hold tokens for several hosts without juggling env vars.
+The publish-token loader also accepts the legacy `~/.vibe/git.publish.token` (host-agnostic fallback) and the env-var `VIBEVM_PUBLISH_TOKEN` (wins over both). Per-host file precedence — `~/.vibe/<host-prefix>.publish.token` — exists so you can hold tokens for several hosts without juggling env vars. Files still under the pre-consolidation `~/.vibevm/` are read as a fallback when the `~/.vibe/` copy is absent.
 
 **Token files are surface secrets per [PROP-000 §20](spec/common/PROP-000.md#token-secrecy):**
 

@@ -582,8 +582,8 @@ Architecture:
 **Token loading.** The publish token loader (`crate::token::load_token(host)`) iterates these sources in order, returning the first non-empty value:
 
 1. `VIBEVM_PUBLISH_TOKEN` environment variable (host-agnostic; useful for CI).
-2. `~/.vibevm/<host-prefix>.publish.token` — per-host file. The prefix is the first label of the host (`github` for `github.com`, `gitverse` for `gitverse.ru`, `gitlab` for `gitlab.com`).
-3. `~/.vibevm/git.publish.token` — legacy host-agnostic fallback.
+2. `~/.vibe/<host-prefix>.publish.token` — per-host file. The prefix is the first label of the host (`github` for `github.com`, `gitverse` for `gitverse.ru`, `gitlab` for `gitlab.com`).
+3. `~/.vibe/git.publish.token` — legacy host-agnostic fallback.
 
 The per-host file lets the operator hold tokens for several hosts simultaneously without juggling env vars. The legacy fallback covers the GitVerse-only era and keeps existing setups working.
 

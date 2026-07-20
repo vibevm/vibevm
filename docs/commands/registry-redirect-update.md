@@ -56,7 +56,7 @@ Operator-side metadata changes (`auth`, `token_env`, `description`) do **not** r
 
 ## Authentication
 
-Same publish-token loading as [`vibe registry redirect`](registry-redirect.md): `VIBEVM_PUBLISH_TOKEN` env-var (highest), then `~/.vibevm/<host-prefix>.publish.token`, then legacy `~/.vibevm/git.publish.token`. The token must have `repo:write` permission for the stub repo in the registry organization.
+Same publish-token loading as [`vibe registry redirect`](registry-redirect.md): `VIBEVM_PUBLISH_TOKEN` env-var (highest), then `~/.vibe/<host-prefix>.publish.token`, then legacy `~/.vibe/git.publish.token`. The token must have `repo:write` permission for the stub repo in the registry organization.
 
 Token secrecy invariants are identical to all publish commands (PROP-000 §20). The token is never logged, never recorded in any vibevm-produced output, and embedded into the push URL only at the moment of `git push`.
 
