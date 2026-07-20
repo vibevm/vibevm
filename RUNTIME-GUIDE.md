@@ -36,7 +36,7 @@ For SSH-based access (faster on subsequent fetches, mandatory for some self-host
 | `~/.vibe/github.publish.token` | GitHub PAT for `vibe registry publish` against the `vibespecs` org | absent unless you place it |
 | `~/.vibe/<host>.publish.token` | per-host publish token, e.g. `gitverse.publish.token`, `gitlab.publish.token` | absent unless you place it |
 | `~/.vibe/git.publish.token` | legacy host-agnostic publish token (fallback) | absent unless you place it |
-| `~/.vibe/registry.toml` | machine-global registry config (`[[registry]]`/`[[mirror]]`/`[[override]]`), merged after the project's | absent unless you place it |
+| `~/.vibe/registry.toml` | machine-global registry config (`[[registry]]`/`[[mirror]]`/`[[override]]`) — any registry, remote or local — merged after the project's | absent unless you place it |
 | `~/.vibe/config.toml` | user-level config (`[env]` / `[install]`) | absent unless you place it |
 | `~/.vibe/registries/` | per-machine registry clone cache | overridden by `VIBE_REGISTRY_CACHE` |
 | `<project>/.vibe/cache/` | per-project package content cache | gitignored |

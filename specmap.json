@@ -2314,6 +2314,13 @@
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/global_registry.rs",
       "item_kind": "fn",
+      "line": 354,
+      "symbol": "vibe_core::global_registry::tests::global_config_accepts_any_registry_not_just_local"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/global_registry.rs",
+      "item_kind": "fn",
       "line": 342,
       "symbol": "vibe_core::global_registry::tests::local_only_keeps_local_drops_remote"
     },
@@ -2335,7 +2342,7 @@
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/global_registry.rs",
       "item_kind": "fn",
-      "line": 354,
+      "line": 378,
       "symbol": "vibe_core::global_registry::tests::url_is_local_truth_table"
     },
     {
@@ -8604,6 +8611,14 @@
     },
     {
       "file": "crates/vibe-core/src/global_registry.rs",
+      "from_symbol": "vibe_core::global_registry::tests::global_config_accepts_any_registry_not_just_local",
+      "line": 355,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-002#global-config",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/global_registry.rs",
       "from_symbol": "vibe_core::global_registry::tests::local_only_keeps_local_drops_remote",
       "line": 343,
       "provenance": "authored",
@@ -8629,7 +8644,7 @@
     {
       "file": "crates/vibe-core/src/global_registry.rs",
       "from_symbol": "vibe_core::global_registry::tests::url_is_local_truth_table",
-      "line": 355,
+      "line": 379,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#offline-local",
       "verb": "verifies"
@@ -18699,7 +18714,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:7d4db553b457eb83f2eefe14c6f1e12b067ff32fbcc677773cae1cc3686a14a7",
+      "content_hash": "sha256:19992d77b38f6d1a30047a8d6fa95e92c8356b9e8f5ae4928bd831175f75f772",
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
       "heading": "PROP-002: Decentralized, mirror-friendly registry with capability-based depsolver",
@@ -18717,7 +18732,7 @@
     },
     {
       "anchor": "decisions",
-      "content_hash": "sha256:79562edbf42b9e3b64efb3be9d268b192e712d1bf8c84604b2bfb137976b4a6a",
+      "content_hash": "sha256:6724dc23b6230da7e7e43082ad74eaacdb12b61835876fdd686ab17d9fdb8c7f",
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
       "heading": "2. Decisions",
@@ -18759,7 +18774,7 @@
     },
     {
       "anchor": "global-config",
-      "content_hash": "sha256:a23a9f55c7bea50e361bf611a4f2eb56639312dbc8df470017e0d3d7465977a0",
+      "content_hash": "sha256:0ecce5b86f230c91d99b4e203b1345e1b391d6971703520807652e02b51f40a1",
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
       "heading": "2.2.2 Machine-global registry config: `~/.vibe/registry.toml`",

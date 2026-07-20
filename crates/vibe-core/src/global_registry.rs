@@ -352,6 +352,30 @@ mod tests {
     }
 
     #[test]
+    #[verifies("spec://vibevm/modules/vibe-registry/PROP-002#global-config")]
+    fn global_config_accepts_any_registry_not_just_local() {
+        // `~/.vibe/registry.toml` is not limited to local repos — it takes the
+        // same `[[registry]]` shape as a project `vibe.toml`, so any remote
+        // (https / ssh / git@), with `auth`, is merged and searched just like a
+        // project registry. Only `--offline` (via `local_only`) narrows it.
+        let project =
+            project_with("[[registry]]\nname=\"team\"\nurl=\"https://github.com/team\"\n");
+        let global: GlobalRegistryConfig = toml::from_str(
+            "[[registry]]\nname=\"extra\"\nurl=\"https://gitverse.ru/me/extra\"\nauth=\"token-env\"\n",
+        )
+        .unwrap();
+        let eff = merge_effective(&project, &global);
+        assert_eq!(eff.registries.len(), 2);
+        // The remote global registry is present, searched after the project's.
+        assert_eq!(eff.registries[1].name, "extra");
+        assert_eq!(eff.registries[1].url, "https://gitverse.ru/me/extra");
+        assert_eq!(eff.registries[1].auth, crate::manifest::AuthKind::TokenEnv);
+        // Online the remote survives; under `--offline` (local_only) every
+        // remote — the project's and the global's alike — is dropped.
+        assert!(eff.local_only().registries.is_empty());
+    }
+
+    #[test]
     #[verifies("spec://vibevm/modules/vibe-registry/PROP-002#offline-local")]
     fn url_is_local_truth_table() {
         for (url, want_local) in [
