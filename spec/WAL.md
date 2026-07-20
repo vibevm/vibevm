@@ -1,5 +1,32 @@
 # WAL — Project Continuation State
 
+## CHECKPOINT 2026-07-20 (later) — SETTINGS-HOME CONSOLIDATION + GLOBAL REGISTRY + `enabled` FLAG
+
+_Updated: 2026-07-20 (later) — a settings-layer campaign landed on `main`, floor-green, **11 ahead of
+`origin/main` (0 behind), mirror pending** (push held for the owner's explicit go). **(1) One settings
+chokepoint** `vibe_core::settings` — `$VIBE_SETTINGS` else `<home>/.vibe` — is now the single authority;
+the eight dispersed resolvers (registry/search caches, PROP-040 L1 `settings.toml` + path-classifier,
+publish tokens, aiui discovery, user `config.toml`) route through it; the legacy `~/.vibevm` and the XDG
+`~/.config/vibe/config.toml` fold into `~/.vibe` with read-only fallback. **The owner's live files were
+migrated on disk** (`~/.vibevm` removed → `~/.vibe`; `~/.fractality/profiles.toml` `token_file` →
+`~/.vibe/zai.api.token`, byte-identical, verified; delegation unaffected). **(2) Machine-global registry**
+`~/.vibe/registry.toml` — same `[[registry]]`/`[[mirror]]`/`[[override]]` shape, **any** registry, merged
+**project-first** (dedupe by name); `--offline` refined to **local-only** (drops remote); PROP-002 §2.2.2.
+**(3) `enabled` flag** on `[[registry]]` — optional, default `true`, skipped-on-serialize — switch a
+registry off without deleting it; filtered at the one construction point
+(`MultiRegistryResolver::from_manifest`), so every path (install/outdated/search/sync/vendor) honours it;
+PROP-002 §2.2.3. Commits: `df16b5a` (design) · `f0e89db` (chokepoint) · `8aec7cc` (global registry) ·
+`74f08cc` (discipline) · `14e1174` (doc sweep + JS aiui writer) · `e19efec` (any-registry clarify) ·
+`8b9b630` (`enabled`). Floor: fmt/test/clippy/conform-0/specmap-0-new/vibe-check-0-err. `CONTINUE.md`
+rewritten. **No blocker. Next:** push via `cargo xtask mirror` (owner's go), then optional
+`vibe registry enable/disable` CLI + extend `enabled` to mirror/override. **Known issue (pre-existing, not
+this work):** `specmap --check` 34 gated orphans = `vibe-spec` provisional + `vibe-resolver::
+EmbeddedPrecedence` baseline; stale-boot warning for `org.vibevm.world/git-practices` on `vibe check`.
+**Discipline unchanged: never the reference app's real name; heredoc commits; no AI attribution; edits via
+Edit/Write; push via `cargo xtask mirror`.**_
+
+---
+
 ## CHECKPOINT 2026-07-20 — VIBETERM M1 BUILD-OUT + ProjectX REDESIGN (offscreen-CDP verify loop in place)
 
 _Updated: 2026-07-20 — continuing the vibeterm UI-architecture campaign past the pre-MVP: the **M1
