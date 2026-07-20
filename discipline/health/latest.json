@@ -57,7 +57,7 @@
       },
       {
         "crate": "vibe-cli",
-        "typed_gap": 201
+        "typed_gap": 202
       }
     ],
     "danger_band_files": [
@@ -66,12 +66,12 @@
         "lines": 600
       },
       {
-        "file": "crates/vibe-cli/src/commands/tree/tui/settings.rs",
-        "lines": 599
-      },
-      {
         "file": "crates/vibe-actions/src/action.rs",
         "lines": 598
+      },
+      {
+        "file": "crates/vibe-cli/src/commands/tree/tui/settings.rs",
+        "lines": 591
       },
       {
         "file": "crates/vibe-resolver/src/features.rs",
@@ -91,7 +91,7 @@
       },
       {
         "file": "crates/vibe-core/src/manifest/document/tests.rs",
-        "lines": 583
+        "lines": 584
       },
       {
         "file": "crates/vibe-registry/src/git_package_registry/fetch/tests.rs",
@@ -110,12 +110,12 @@
         "lines": 577
       },
       {
-        "file": "crates/vibe-workspace/src/lib.rs",
-        "lines": 575
+        "file": "crates/vibe-workspace/src/boot_artifacts/tests.rs",
+        "lines": 576
       },
       {
-        "file": "crates/vibe-core/src/manifest/project.rs",
-        "lines": 574
+        "file": "crates/vibe-workspace/src/lib.rs",
+        "lines": 575
       },
       {
         "file": "crates/vibe-resolver/src/lib.rs",
@@ -138,10 +138,6 @@
         "lines": 556
       },
       {
-        "file": "crates/vibe-cli/src/commands/install/resolver.rs",
-        "lines": 554
-      },
-      {
         "file": "crates/vibe-mcp/src/agentic.rs",
         "lines": 554
       },
@@ -159,6 +155,10 @@
       },
       {
         "file": "crates/vibe-cli/src/commands/mcp/install.rs",
+        "lines": 546
+      },
+      {
+        "file": "crates/vibe-registry/src/multi_registry_resolver/walk/tests.rs",
         "lines": 546
       },
       {
@@ -216,10 +216,10 @@
       "crate": "vibe-cli",
       "gated": true,
       "pub_doctest_gated": false,
-      "pub_types": 202,
+      "pub_types": 203,
       "typed_doctested": 1,
-      "typed_gap": 201,
-      "error_enums": 7,
+      "typed_gap": 202,
+      "error_enums": 8,
       "error_enums_missing_req": [],
       "cells": 0,
       "deviations": 3,
@@ -227,10 +227,6 @@
       "env_nonroot": 0,
       "unsafe_nonaudit": 0,
       "danger_files": [
-        {
-          "file": "crates/vibe-cli/src/commands/install/resolver.rs",
-          "lines": 554
-        },
         {
           "file": "crates/vibe-cli/src/commands/mcp/install.rs",
           "lines": 546
@@ -241,7 +237,7 @@
         },
         {
           "file": "crates/vibe-cli/src/commands/tree/tui/settings.rs",
-          "lines": 599
+          "lines": 591
         },
         {
           "file": "crates/vibe-cli/src/commands/tree/tui/state.rs",
@@ -258,10 +254,10 @@
       "crate": "vibe-core",
       "gated": true,
       "pub_doctest_gated": true,
-      "pub_types": 73,
-      "typed_doctested": 73,
+      "pub_types": 77,
+      "typed_doctested": 77,
       "typed_gap": 0,
-      "error_enums": 3,
+      "error_enums": 4,
       "error_enums_missing_req": [],
       "cells": 0,
       "deviations": 0,
@@ -271,7 +267,7 @@
       "danger_files": [
         {
           "file": "crates/vibe-core/src/manifest/document/tests.rs",
-          "lines": 583
+          "lines": 584
         },
         {
           "file": "crates/vibe-core/src/manifest/document.rs",
@@ -280,10 +276,6 @@
         {
           "file": "crates/vibe-core/src/manifest/package/wire.rs",
           "lines": 559
-        },
-        {
-          "file": "crates/vibe-core/src/manifest/project.rs",
-          "lines": 574
         },
         {
           "file": "crates/vibe-core/src/package_ref.rs",
@@ -453,6 +445,10 @@
           "lines": 590
         },
         {
+          "file": "crates/vibe-registry/src/multi_registry_resolver/walk/tests.rs",
+          "lines": 546
+        },
+        {
           "file": "crates/vibe-registry/src/multi_registry_resolver/walk.rs",
           "lines": 540
         },
@@ -575,6 +571,10 @@
       "env_nonroot": 0,
       "unsafe_nonaudit": 0,
       "danger_files": [
+        {
+          "file": "crates/vibe-workspace/src/boot_artifacts/tests.rs",
+          "lines": 576
+        },
         {
           "file": "crates/vibe-workspace/src/freshness.rs",
           "lines": 588
