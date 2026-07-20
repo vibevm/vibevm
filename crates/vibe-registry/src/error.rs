@@ -76,6 +76,18 @@ pub enum RegistryError {
     )]
     BadVersionDir { path: PathBuf, name: String },
 
+    /// A local `[[registry]]` url (`file://` / bare path per `url_is_local`)
+    /// did not resolve to a filesystem path. Local registries are served by
+    /// `LocalRegistry` straight off the filesystem (PROP-002 §2.2.2), so a
+    /// malformed local url is caught at construction, not mid-walk.
+    #[error(
+        "`{url}` is a local `[[registry]]` url that does not resolve to a filesystem path \
+         (violates spec://vibevm/modules/vibe-registry/PROP-002#registry-model; \
+          fix: use a `file:///<path>` URL or a bare path pointing at a directory laid out \
+          `<group>/<name>/v<version>/`)"
+    )]
+    BadLocalRegistryUrl { url: String },
+
     #[error(transparent)]
     Core(#[from] vibe_core::Error),
 

@@ -49,3 +49,73 @@ fn mirrors_for_filters_and_sorts() {
     assert_eq!(m[1].url, "https://a");
     assert_eq!(m[2].url, "https://catchall");
 }
+
+/// A `[[registry]]` whose `url` is a local, **non-git** directory is served
+/// by `LocalRegistry` (filesystem read), not `git clone` — so a plain
+/// directory laid out `<group>/<name>/v<version>/` resolves and fetches with
+/// no git backend. This is the fix for the "file:// registry → not found"
+/// regression where every `[[registry]]` was git-cloned.
+#[test]
+fn local_directory_registry_resolves_and_fetches_without_git() {
+    use std::fs;
+
+    let cache = tempdir().unwrap();
+    // The registry root: a plain directory (NO `.git`) laid out as a registry.
+    let root = tempdir().unwrap();
+    let group = "org.vibevm";
+    let name = "wal";
+    let pkg_dir = root.path().join(group).join(name).join("v0.1.0");
+    fs::create_dir_all(&pkg_dir).unwrap();
+    fs::write(
+        pkg_dir.join("vibe.toml"),
+        manifest_text(name, "flow", "0.1.0"),
+    )
+    .unwrap();
+    fs::write(pkg_dir.join("README.md"), "wal").unwrap();
+    assert!(
+        !root.path().join(".git").exists(),
+        "sanity: the registry is not a git repo"
+    );
+
+    // A [[registry]] whose url is the bare path to that directory.
+    let url = root.path().display().to_string();
+    let r = build_resolver(
+        cache.path(),
+        vec![registry_section("local", &url)],
+        vec![],
+        vec![],
+        Arc::new(FakeBackend::default()),
+    );
+
+    // The local source is NOT in the git subset; it is a `Local` source.
+    assert_eq!(
+        r.registries().len(),
+        0,
+        "git subset empty — a local dir is not git"
+    );
+    assert_eq!(r.sources().len(), 1);
+    assert!(matches!(r.sources()[0], RegistrySource::Local(_)));
+
+    let g = Group::parse(group).unwrap();
+    let versions = r.list_versions(&g, name).unwrap();
+    assert_eq!(versions, vec![semver::Version::parse("0.1.0").unwrap()]);
+
+    let pkgref = PackageRef::parse(&format!("{group}/{name}@0.1.0")).unwrap();
+    let resolution = r.resolve(&pkgref).unwrap();
+    assert_eq!(resolution.registry_name.as_deref(), Some("local"));
+    assert_eq!(resolution.source_url, url);
+    assert!(
+        resolution.source_ref.is_none(),
+        "no git ref for a local source"
+    );
+    assert_eq!(
+        resolution.resolved.version,
+        semver::Version::parse("0.1.0").unwrap()
+    );
+
+    let proj_cache = tempdir().unwrap();
+    let cached = r.fetch(&resolution, proj_cache.path()).unwrap();
+    assert!(cached.cache_dir.join("vibe.toml").is_file());
+    assert!(cached.cache_dir.join("README.md").is_file());
+    assert!(cached.content_hash.starts_with("sha256:"));
+}

@@ -60,18 +60,25 @@ impl MultiRegistryResolver {
                     group: resolution.resolved.group.clone(),
                     name: resolution.resolved.name.clone(),
                 })?;
-        let reg = self
-            .registries
+        let src = self
+            .sources
             .iter()
-            .find(|r| r.name() == registry_name)
+            .find(|s| s.name() == registry_name)
             .ok_or_else(|| RegistryError::UnknownPackage {
                 group: resolution.resolved.group.clone(),
                 name: resolution.resolved.name.clone(),
             })?;
-        // `GitPackageRegistry::fetch_with_expected_hash` already populates
-        // `registry_name` / `source_ref` / `overridden = false` correctly;
-        // nothing to wrap.
-        reg.fetch_with_expected_hash(&resolution.resolved, project_cache, expected_hash)
+        // Dispatch on the source kind: a git registry fetches by clone +
+        // mirror-aware hash gate; a local-directory registry copies straight
+        // off the filesystem via `LocalRegistry::fetch` (no git, no ref).
+        // `LocalRegistry::fetch` already populates the `CachedPackage`
+        // provenance correctly for a registry-served local source.
+        match src {
+            RegistrySource::Git(reg) => {
+                reg.fetch_with_expected_hash(&resolution.resolved, project_cache, expected_hash)
+            }
+            RegistrySource::Local(ls) => ls.registry.fetch(&resolution.resolved, project_cache),
+        }
     }
 
     /// Place a registry-served `in-place` package directly into its project
@@ -93,15 +100,24 @@ impl MultiRegistryResolver {
                     group: resolution.resolved.group.clone(),
                     name: resolution.resolved.name.clone(),
                 })?;
-        let reg = self
-            .registries
+        let src = self
+            .sources
             .iter()
-            .find(|r| r.name() == registry_name)
+            .find(|s| s.name() == registry_name)
             .ok_or_else(|| RegistryError::UnknownPackage {
                 group: resolution.resolved.group.clone(),
                 name: resolution.resolved.name.clone(),
             })?;
-        reg.materialise_in_place(&resolution.resolved, slot)
+        // In-place needs a git source to clone and incrementally update; a
+        // local-directory registry has no git backend (PROP-022 §2.4), so it
+        // is `InPlaceUnsupported` — same posture as `--registry <path>`.
+        match src {
+            RegistrySource::Git(reg) => reg.materialise_in_place(&resolution.resolved, slot),
+            RegistrySource::Local(_) => Err(RegistryError::InPlaceUnsupported {
+                group: resolution.resolved.group.clone(),
+                name: resolution.resolved.name.clone(),
+            }),
+        }
     }
 
     fn fetch_override(

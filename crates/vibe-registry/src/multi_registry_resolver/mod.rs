@@ -44,23 +44,28 @@ use vibe_core::manifest::{
     GitPackageDep, Lockfile, Manifest, MirrorSection, OverrideSection, RedirectFile, RefPolicy,
     RegistrySection, parse_redirect_bytes,
 };
-use vibe_core::{Group, PackageKind, PackageRef, VersionSpec};
+use vibe_core::{Group, PackageKind, PackageRef, VersionSpec, url_is_local};
 
 use crate::git_backend::{GitBackend, GitError, ShellGit};
 use crate::git_package_registry::{GitPackageRegistry, copy_dir_excluding_git};
 use crate::registry_cache::{DEFAULT_FRESHNESS_SECS, default_cache_root, strip_git_plus_prefix};
 use crate::{
-    CachedPackage, InPlaceMaterialised, RegistryError, ResolvedPackage, compute_content_hash,
+    CachedPackage, InPlaceMaterialised, LocalRegistry, RegistryError, ResolvedPackage,
+    compute_content_hash,
 };
 
+mod attempt;
 mod dispatch;
 mod redirect_follow;
 mod refresh;
+mod source;
 mod sources;
 mod walk;
 
+pub use attempt::{RegistryWalkAttempt, WalkAttemptStatus};
 pub use refresh::{RefreshReport, RefreshedEntry, RefreshedVia, SkippedEntry};
-pub use walk::{RegistryWalkAttempt, WalkAttemptStatus};
+pub(crate) use source::local_path_from_url;
+pub use source::{LocalRegistrySource, RegistrySource};
 
 /// Default ref for `[[override]]` entries that omit `ref`. Most adopters
 /// will pin a tag or branch explicitly; `main` is the practical default
@@ -152,6 +157,13 @@ pub struct ResolvedPathDep {
 /// layers from `vibe.toml`.
 pub struct MultiRegistryResolver {
     registries: Vec<Arc<GitPackageRegistry>>,
+    /// The ordered walk list — git and local sources interleaved in the
+    /// declared `[[registry]]` order. The four core operations
+    /// (list / resolve / fetch-dep-manifest / fetch) iterate this; the
+    /// git-only operations (index short-name, refresh, vendor clone-dir)
+    /// stay on `registries`, the denormalised git subset, since a local
+    /// directory has no index / git-refresh / per-package clone.
+    sources: Vec<RegistrySource>,
     mirrors: Vec<MirrorSection>,
     overrides: HashMap<String, OverrideSection>,
     /// Git-source declarations from `[requires.packages]` table-form
@@ -181,20 +193,30 @@ pub struct MultiRegistryResolver {
 
 impl MultiRegistryResolver {
     /// Direct constructor — every input handed in already-built. Used by
-    /// tests and callers that want to substitute a specific backend.
+    /// tests and callers that want to substitute a specific backend. The git
+    /// subset (`registries`) is derived from `sources` so the two never
+    /// disagree.
     pub fn new(
-        registries: Vec<Arc<GitPackageRegistry>>,
+        sources: Vec<RegistrySource>,
         mirrors: Vec<MirrorSection>,
         overrides: Vec<OverrideSection>,
         backend: Arc<dyn GitBackend>,
         cache_root: PathBuf,
     ) -> Self {
+        let registries = sources
+            .iter()
+            .filter_map(|s| match s {
+                RegistrySource::Git(g) => Some(Arc::clone(g)),
+                RegistrySource::Local(_) => None,
+            })
+            .collect();
         let overrides = overrides
             .into_iter()
             .map(|o| (o.pkgref.clone(), o))
             .collect();
         MultiRegistryResolver {
             registries,
+            sources,
             mirrors,
             overrides,
             git_packages: HashMap::new(),
@@ -270,13 +292,29 @@ impl MultiRegistryResolver {
         backend: Arc<dyn GitBackend>,
         freshness_secs: u64,
     ) -> Result<Self, RegistryError> {
-        let mut built = Vec::with_capacity(registries.len());
+        let mut sources: Vec<RegistrySource> = Vec::with_capacity(registries.len());
         for reg in registries {
             // PROP-002 §2.2.3 #enabled: a disabled registry is skipped
             // entirely — never built into the resolver, so no path (install /
             // outdated / search / sync) consults it. Flip `enabled` back to
             // re-activate; no re-add needed.
             if !reg.enabled {
+                continue;
+            }
+            // A local `[[registry]]` url (`file://` / bare path, per
+            // `url_is_local`) is served straight off the filesystem by
+            // `LocalRegistry` — never git-cloned — so a plain on-disk
+            // directory works as a registry (PROP-002 §2.2.2). `naming` /
+            // `auth` / `mirrors` / `index_client` are git-only knobs and do
+            // not apply (LocalRegistry reads `<root>/<group>/<name>/v<version>/`
+            // directly).
+            if url_is_local(&reg.url) {
+                let path = local_path_from_url(&reg.url)?;
+                sources.push(RegistrySource::Local(LocalRegistrySource {
+                    name: reg.name.clone(),
+                    url: reg.url.clone(),
+                    registry: LocalRegistry::new(path)?,
+                }));
                 continue;
             }
             // Compose the priority-sorted mirror chain for this registry
@@ -337,10 +375,10 @@ impl MultiRegistryResolver {
             {
                 entry = entry.with_index_client(client);
             }
-            built.push(Arc::new(entry));
+            sources.push(RegistrySource::Git(Arc::new(entry)));
         }
         Ok(Self::new(
-            built,
+            sources,
             mirrors.to_vec(),
             overrides.to_vec(),
             backend,
@@ -368,6 +406,13 @@ impl MultiRegistryResolver {
 
     pub fn registries(&self) -> &[Arc<GitPackageRegistry>] {
         &self.registries
+    }
+
+    /// The ordered walk list — git and local-directory sources in declared
+    /// `[[registry]]` order. The four core operations iterate this; the
+    /// git-only operations use [`Self::registries`] (the git subset).
+    pub fn sources(&self) -> &[RegistrySource] {
+        &self.sources
     }
 
     /// Index-backed short-name candidate enumeration (PROP-008 §2.6).

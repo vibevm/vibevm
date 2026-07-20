@@ -6,86 +6,39 @@
 
 specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-002#registry-model");
 
-use std::fmt::Write as _;
-
+use super::attempt::format_walk_attempts;
 use super::redirect_follow::try_fetch_redirect;
 use super::*;
 
-/// One row in the aggregated "tried these registries" report
-/// surfaced via [`RegistryError::PackageNotFoundEverywhere`].
-/// Captured per-registry during the walk in
-/// [`MultiRegistryResolver::resolve`]; carried through the
-/// `DepProvider` error chain into `vibe-cli`'s install-error
-/// JSON envelope so machine-readable consumers can branch on the
-/// per-registry status without parsing prose.
-#[derive(Debug, Clone, serde::Serialize)]
-pub struct RegistryWalkAttempt {
-    pub name: String,
-    pub url: String,
-    pub auth: vibe_core::manifest::AuthKind,
-    pub status: WalkAttemptStatus,
-}
-
-#[derive(Debug, Clone, Copy, serde::Serialize)]
-#[serde(rename_all = "kebab-case")]
-pub enum WalkAttemptStatus {
-    /// Registry's `resolve` returned `UnknownPackage` — the
-    /// registry was reachable, manifest parsed, just no version
-    /// matching the pkgref.
-    NotFound,
-    /// Registry returned 401 / 403 (`AuthFailed`) but was declared
-    /// `auth = "none"` and `strict_auth` was off, so the resolver
-    /// reclassified the failure as "no public answer here" and
-    /// walked past. The line below tells the operator the host
-    /// would need credentials if they want to access this
-    /// registry as authenticated.
-    Public401,
-}
-
-impl WalkAttemptStatus {
-    pub fn as_label(&self) -> &'static str {
-        match self {
-            WalkAttemptStatus::NotFound => "not found",
-            WalkAttemptStatus::Public401 => "access denied (401, walked past — auth=none)",
-        }
+/// Read a dep manifest straight off a local-directory registry's filesystem
+/// (`<root>/<group>/<name>/v<version>/vibe.toml`) — the `fetch_dep_manifest`
+/// leg for a [`super::RegistrySource::Local`]. Returns `UnknownPackage` when
+/// the coordinate is absent (so the walk falls through to the next source,
+/// matching the git arm's `FileNotFoundInRef` / `UnknownPackage` fall-through)
+/// and `MalformedMeta` when the file is unparseable.
+fn read_local_dep_manifest(
+    ls: &super::LocalRegistrySource,
+    group: &Group,
+    name: &str,
+    version: &semver::Version,
+) -> Result<Manifest, RegistryError> {
+    let path = ls
+        .registry
+        .root()
+        .join(group.as_str())
+        .join(name)
+        .join(format!("v{version}"))
+        .join(Manifest::FILENAME);
+    if !path.exists() {
+        return Err(RegistryError::UnknownPackage {
+            group: group.clone(),
+            name: name.to_string(),
+        });
     }
-}
-
-fn format_walk_attempts(attempts: &[RegistryWalkAttempt]) -> String {
-    // Compute the column width for the registry-name column so
-    // the rendered table stays aligned regardless of label
-    // length. URLs are too varied to align — they wrap to the
-    // right of the arrow.
-    let name_width = attempts.iter().map(|a| a.name.len()).max().unwrap_or(0);
-    let url_width = attempts.iter().map(|a| a.url.len()).max().unwrap_or(0);
-    let mut out = String::new();
-    for a in attempts {
-        // Indent each line with two spaces so the report nests
-        // visually under the parent error's "Tried:" label.
-        let _ = writeln!(
-            out,
-            "  - {:<name_width$}  ({:<url_width$})  → {} (auth={})",
-            a.name,
-            a.url,
-            a.status.as_label(),
-            a.auth.as_str(),
-            name_width = name_width,
-            url_width = url_width,
-        );
-    }
-    // Hint at the bottom — the most common operator next step
-    // when nothing was found anywhere.
-    if attempts
-        .iter()
-        .any(|a| matches!(a.status, WalkAttemptStatus::Public401))
-    {
-        out.push_str(
-            "\nHint: at least one registry returned 401 / 403 and was walked past as `auth=none`.\n\
-             If that registry is actually private, set `auth = \"token-env\"` and provide the\n\
-             token via `VIBEVM_REGISTRY_TOKEN_<HOST>`; see docs/registry-auth.md.",
-        );
-    }
-    out
+    Manifest::read(&path).map_err(|e| RegistryError::MalformedMeta {
+        path: path.clone(),
+        reason: e.to_string(),
+    })
 }
 
 impl MultiRegistryResolver {
@@ -111,19 +64,29 @@ impl MultiRegistryResolver {
             || self.git_packages.contains_key(&qualified);
 
         if !pinned {
-            for reg in &self.registries {
-                match reg.list_versions(group, name) {
-                    Ok(versions) if !versions.is_empty() => return Ok(versions),
-                    Ok(_) => continue,
-                    Err(RegistryError::UnknownPackage { .. }) => continue,
-                    Err(RegistryError::Git(crate::git_backend::GitError::AuthFailed {
-                        ..
-                    })) if matches!(reg.auth_kind(), vibe_core::manifest::AuthKind::None)
-                        && !self.strict_auth =>
-                    {
-                        continue;
+            for src in &self.sources {
+                match src {
+                    super::RegistrySource::Git(reg) => match reg.list_versions(group, name) {
+                        Ok(versions) if !versions.is_empty() => return Ok(versions),
+                        Ok(_) => continue,
+                        Err(RegistryError::UnknownPackage { .. }) => continue,
+                        Err(RegistryError::Git(crate::git_backend::GitError::AuthFailed {
+                            ..
+                        })) if matches!(reg.auth_kind(), vibe_core::manifest::AuthKind::None)
+                            && !self.strict_auth =>
+                        {
+                            continue;
+                        }
+                        Err(other) => return Err(other),
+                    },
+                    super::RegistrySource::Local(ls) => {
+                        match ls.registry.list_versions(group, name) {
+                            Ok(versions) if !versions.is_empty() => return Ok(versions),
+                            Ok(_) => continue,
+                            Err(RegistryError::UnknownPackage { .. }) => continue,
+                            Err(other) => return Err(other),
+                        }
                     }
-                    Err(other) => return Err(other),
                 }
             }
         }
@@ -199,61 +162,96 @@ impl MultiRegistryResolver {
             .as_ref()
             .ok_or_else(|| RegistryError::UnqualifiedPkgref(pkgref.to_string()))?;
         let mut attempts: Vec<RegistryWalkAttempt> = Vec::new();
-        for reg in &self.registries {
-            match reg.resolve(pkgref) {
-                Ok(resolved) => {
-                    let stub_tag = format!("v{}", resolved.version);
-                    // Step 2a: redirect probe (PROP-002 §2.4.2). The
-                    // registry served a tag; check whether the repo
-                    // at that tag is a stub pointing elsewhere. The
-                    // probe is one extra `git archive` call, only
-                    // when the registry-walk leg succeeded; cheap.
-                    if let Some(redirect) =
-                        try_fetch_redirect(&self.backend, reg, &resolved, &stub_tag)?
-                    {
-                        return self.follow_redirect(pkgref, &resolved, reg, &redirect, &stub_tag);
+        for src in &self.sources {
+            match src {
+                RegistrySource::Git(reg) => match reg.resolve(pkgref) {
+                    Ok(resolved) => {
+                        let stub_tag = format!("v{}", resolved.version);
+                        // Step 2a: redirect probe (PROP-002 §2.4.2). The
+                        // registry served a tag; check whether the repo
+                        // at that tag is a stub pointing elsewhere. The
+                        // probe is one extra `git archive` call, only
+                        // when the registry-walk leg succeeded; cheap.
+                        if let Some(redirect) =
+                            try_fetch_redirect(&self.backend, reg, &resolved, &stub_tag)?
+                        {
+                            return self
+                                .follow_redirect(pkgref, &resolved, reg, &redirect, &stub_tag);
+                        }
+                        let url = reg.package_repo_url(&resolved.group, &resolved.name)?;
+                        return Ok(MultiResolution {
+                            resolved,
+                            registry_name: Some(reg.name().to_string()),
+                            source_url: url,
+                            source_ref: Some(stub_tag),
+                            overridden: false,
+                            is_git_source: false,
+                            is_path_source: false,
+                            via_redirect: None,
+                            redirect_target_auth: vibe_core::manifest::AuthKind::None,
+                            redirect_target_token_env: None,
+                        });
                     }
-                    let url = reg.package_repo_url(&resolved.group, &resolved.name)?;
-                    return Ok(MultiResolution {
-                        resolved,
-                        registry_name: Some(reg.name().to_string()),
-                        source_url: url,
-                        source_ref: Some(stub_tag),
-                        overridden: false,
-                        is_git_source: false,
-                        is_path_source: false,
-                        via_redirect: None,
-                        redirect_target_auth: vibe_core::manifest::AuthKind::None,
-                        redirect_target_token_env: None,
-                    });
-                }
-                Err(RegistryError::UnknownPackage { .. }) => {
-                    attempts.push(RegistryWalkAttempt {
-                        name: reg.name().to_string(),
-                        url: reg.org_url().to_string(),
-                        auth: reg.auth_kind(),
-                        status: WalkAttemptStatus::NotFound,
-                    });
-                    continue;
-                }
-                Err(RegistryError::Git(crate::git_backend::GitError::AuthFailed { .. }))
-                    if matches!(reg.auth_kind(), vibe_core::manifest::AuthKind::None)
+                    Err(RegistryError::UnknownPackage { .. }) => {
+                        attempts.push(RegistryWalkAttempt {
+                            name: reg.name().to_string(),
+                            url: reg.org_url().to_string(),
+                            auth: reg.auth_kind(),
+                            status: WalkAttemptStatus::NotFound,
+                        });
+                        continue;
+                    }
+                    Err(RegistryError::Git(crate::git_backend::GitError::AuthFailed {
+                        ..
+                    })) if matches!(reg.auth_kind(), vibe_core::manifest::AuthKind::None)
                         && !self.strict_auth =>
-                {
-                    tracing::debug!(
-                        target: "vibe_registry::resolve",
-                        registry = %reg.name(),
-                        "auth_failed on auth=none registry treated as unknown-package; walking"
-                    );
-                    attempts.push(RegistryWalkAttempt {
-                        name: reg.name().to_string(),
-                        url: reg.org_url().to_string(),
-                        auth: reg.auth_kind(),
-                        status: WalkAttemptStatus::Public401,
-                    });
-                    continue;
-                }
-                Err(other) => return Err(other),
+                    {
+                        tracing::debug!(
+                            target: "vibe_registry::resolve",
+                            registry = %reg.name(),
+                            "auth_failed on auth=none registry treated as unknown-package; walking"
+                        );
+                        attempts.push(RegistryWalkAttempt {
+                            name: reg.name().to_string(),
+                            url: reg.org_url().to_string(),
+                            auth: reg.auth_kind(),
+                            status: WalkAttemptStatus::Public401,
+                        });
+                        continue;
+                    }
+                    Err(other) => return Err(other),
+                },
+                // A local-directory registry: resolve straight off the
+                // filesystem — no redirect probe, no per-package repo URL,
+                // no auth. The source is the directory itself, recorded as
+                // the lockfile `source_url` (a `file://` / path string) with
+                // no `source_ref` (there is no git ref).
+                RegistrySource::Local(ls) => match ls.registry.resolve(pkgref) {
+                    Ok(resolved) => {
+                        return Ok(MultiResolution {
+                            resolved,
+                            registry_name: Some(ls.name.clone()),
+                            source_url: ls.url.clone(),
+                            source_ref: None,
+                            overridden: false,
+                            is_git_source: false,
+                            is_path_source: false,
+                            via_redirect: None,
+                            redirect_target_auth: vibe_core::manifest::AuthKind::None,
+                            redirect_target_token_env: None,
+                        });
+                    }
+                    Err(RegistryError::UnknownPackage { .. }) => {
+                        attempts.push(RegistryWalkAttempt {
+                            name: ls.name.clone(),
+                            url: ls.url.clone(),
+                            auth: vibe_core::manifest::AuthKind::None,
+                            status: WalkAttemptStatus::NotFound,
+                        });
+                        continue;
+                    }
+                    Err(other) => return Err(other),
+                },
             }
         }
 
@@ -484,16 +482,23 @@ impl MultiRegistryResolver {
         // wins (overrides are not consulted by `fetch_dep_manifest` —
         // those are handled by the install pipeline directly).
         if let Some(name_filter) = &resolution.registry_name
-            && let Some(reg) = self
-                .registries
+            && let Some(src) = self
+                .sources
                 .iter()
-                .find(|r| r.name() == name_filter.as_str())
+                .find(|s| s.name() == name_filter.as_str())
         {
-            return reg.fetch_dep_manifest(group, name, version);
+            return match src {
+                RegistrySource::Git(reg) => reg.fetch_dep_manifest(group, name, version),
+                RegistrySource::Local(ls) => read_local_dep_manifest(ls, group, name, version),
+            };
         }
         let mut last_err: Option<RegistryError> = None;
-        for reg in &self.registries {
-            match reg.fetch_dep_manifest(group, name, version) {
+        for src in &self.sources {
+            let tried = match src {
+                RegistrySource::Git(reg) => reg.fetch_dep_manifest(group, name, version),
+                RegistrySource::Local(ls) => read_local_dep_manifest(ls, group, name, version),
+            };
+            match tried {
                 Ok(m) => return Ok(m),
                 Err(err)
                     if matches!(
