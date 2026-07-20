@@ -131,12 +131,12 @@ fn render_layer(
     // before a `[section]` header or a `key = value` line attaches to that
     // item's own decor, not the document root) — the raw scan finds the header
     // regardless of which item carries it.
-    let header = leading_comments(existing);
-    let header = if header.is_empty() {
-        layer.role_marker().to_string()
-    } else {
-        header
-    };
+    //
+    // Self-heal: [`rebuild_header`] collapses a role-marker that a past writer
+    // duplicated (the raw scan would otherwise carry every copy forward,
+    // bloating the file one frozen relic at a time) and keeps the operator's
+    // notes.
+    let header = rebuild_header(&leading_comments(existing), layer.role_marker());
     let footer = trailing_comments(existing);
 
     let mut out = String::new();
@@ -150,6 +150,38 @@ fn render_layer(
         out.push('\n');
     }
     Ok(out)
+}
+
+/// Rebuild a layer header so the role-marker appears **at most once** — a
+/// self-heal for a file whose marker was duplicated across past writes. The raw
+/// [`leading_comments`] scan would otherwise carry every duplicate forward on
+/// each save (the comment-preserving writer never trims), so a one-time
+/// doubling bug freezes into a permanently bloated file; this collapses it back
+/// the next time the layer is written.
+///
+/// The first marker line is kept; later copies are dropped. Operator notes —
+/// `#`-comment lines that are not the marker — are preserved in order. Blank
+/// padding is tightened. The marker is ensured present even when the raw header
+/// carried only operator notes, so the layer's identity is always stamped.
+fn rebuild_header(raw: &str, marker: &str) -> String {
+    let marker_t = marker.trim();
+    let mut out: Vec<&str> = Vec::new();
+    let mut have_marker = false;
+    for line in raw.lines() {
+        let t = line.trim();
+        if t == marker_t {
+            if !have_marker {
+                out.push(line);
+                have_marker = true;
+            }
+        } else if t.starts_with('#') {
+            out.push(line);
+        }
+    }
+    if !have_marker {
+        out.insert(0, marker);
+    }
+    out.join("\n")
 }
 
 /// The contiguous comment block at the top of `text`: the run of `#`-comment and
@@ -290,5 +322,37 @@ mod tests {
         write_layer(&path, &table, Layer::L2).unwrap();
         assert!(path.exists());
         assert!(!dir.path().join("settings.toml.tmp").exists());
+    }
+
+    #[test]
+    fn write_layer_self_heals_a_duplicated_marker() {
+        // A header bloated by a past writer (the role-marker duplicated many
+        // times, frozen in place because the comment-preserving writer never
+        // deduped) collapses back to a single marker on the next write.
+        let dir = tempdir().unwrap();
+        let path = dir.path().join("settings.toml");
+        let marker = Layer::L1.role_marker();
+        let bloated = format!(
+            "{}\n\n{}\n\n{}\n\n[vibe.tree]\nlast-project = 'x'\n",
+            marker, marker, marker,
+        );
+        fs::write(&path, bloated).unwrap();
+        assert_eq!(
+            fs::read_to_string(&path).unwrap().matches(marker).count(),
+            3,
+            "sanity: seeded with three markers"
+        );
+
+        let mut table = toml::Table::new();
+        table.insert("k".to_string(), toml::Value::Integer(1));
+        write_layer(&path, &table, Layer::L1).unwrap();
+
+        let after = fs::read_to_string(&path).unwrap();
+        assert_eq!(
+            after.matches(marker).count(),
+            1,
+            "duplicated markers self-heal to one; got:\n{after}"
+        );
+        assert!(after.contains("k = 1"), "body still present");
     }
 }
