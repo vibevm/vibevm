@@ -79,6 +79,9 @@ env_roots = [
     # to read the env for the spawn, like `vibe term` (PROP-043 #resolve).
     "crates/vibe-launcher/src/lib.rs",
     "crates/vibe-core/src/user_config.rs",
+    # The settings-dir chokepoint: the ONE place that reads $VIBE_SETTINGS /
+    # HOME / USERPROFILE to resolve `~/.vibe`, so every settings path agrees.
+    "crates/vibe-core/src/settings.rs",
     "crates/vibe-settings/src/loader.rs",
     "crates/vibe-index/src/scanner/git_cli.rs",
     "crates/vibe-publish/src/post_hook.rs",

@@ -424,14 +424,14 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/install/resolver.rs",
       "item_kind": "fn",
-      "line": 541,
+      "line": 489,
       "symbol": "vibe_cli::commands::install::resolver::flag_tests::offline_without_a_local_registry_bails_before_the_network"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/install/resolver.rs",
       "item_kind": "fn",
-      "line": 520,
+      "line": 463,
       "symbol": "vibe_cli::commands::install::resolver::flag_tests::short_circuit_conflicts_with_embedded_last"
     },
     {
@@ -2284,6 +2284,62 @@
     },
     {
       "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/global_registry.rs",
+      "item_kind": "mod",
+      "line": 13,
+      "symbol": "vibe_core::global_registry"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/global_registry.rs",
+      "item_kind": "fn",
+      "line": 150,
+      "symbol": "vibe_core::global_registry::EffectiveRegistryConfig::local_only"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/global_registry.rs",
+      "item_kind": "enum",
+      "line": 80,
+      "symbol": "vibe_core::global_registry::GlobalRegistryError"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/global_registry.rs",
+      "item_kind": "fn",
+      "line": 177,
+      "symbol": "vibe_core::global_registry::merge_effective"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/global_registry.rs",
+      "item_kind": "fn",
+      "line": 342,
+      "symbol": "vibe_core::global_registry::tests::local_only_keeps_local_drops_remote"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/global_registry.rs",
+      "item_kind": "fn",
+      "line": 317,
+      "symbol": "vibe_core::global_registry::tests::merge_dedupes_overrides_by_pkgref_and_concatenates_mirrors"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/global_registry.rs",
+      "item_kind": "fn",
+      "line": 298,
+      "symbol": "vibe_core::global_registry::tests::merge_is_project_first_and_dedupes_registries_by_name"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/global_registry.rs",
+      "item_kind": "fn",
+      "line": 354,
+      "symbol": "vibe_core::global_registry::tests::url_is_local_truth_table"
+    },
+    {
+      "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/mod.rs",
       "item_kind": "mod",
       "line": 11,
@@ -2669,6 +2725,20 @@
     },
     {
       "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/settings.rs",
+      "item_kind": "mod",
+      "line": 24,
+      "symbol": "vibe_core::settings"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/settings.rs",
+      "item_kind": "fn",
+      "line": 146,
+      "symbol": "vibe_core::settings::tests::override_wins_verbatim_over_home"
+    },
+    {
+      "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/timestamp.rs",
       "item_kind": "mod",
       "line": 9,
@@ -2678,14 +2748,14 @@
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/user_config.rs",
       "item_kind": "mod",
-      "line": 26,
+      "line": 29,
       "symbol": "vibe_core::user_config"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/user_config.rs",
       "item_kind": "enum",
-      "line": 166,
+      "line": 173,
       "symbol": "vibe_core::user_config::UserConfigError"
     },
     {
@@ -3777,14 +3847,14 @@
       "crate_name": "vibe-publish",
       "file": "crates/vibe-publish/src/lib.rs",
       "item_kind": "mod",
-      "line": 27,
+      "line": 28,
       "symbol": "vibe_publish"
     },
     {
       "crate_name": "vibe-publish",
       "file": "crates/vibe-publish/src/lib.rs",
       "item_kind": "enum",
-      "line": 97,
+      "line": 98,
       "symbol": "vibe_publish::PublishError"
     },
     {
@@ -3812,7 +3882,7 @@
       "crate_name": "vibe-publish",
       "file": "crates/vibe-publish/src/github.rs",
       "item_kind": "mod",
-      "line": 39,
+      "line": 40,
       "symbol": "vibe_publish::github"
     },
     {
@@ -3868,21 +3938,21 @@
       "crate_name": "vibe-publish",
       "file": "crates/vibe-publish/src/token.rs",
       "item_kind": "mod",
-      "line": 31,
+      "line": 35,
       "symbol": "vibe_publish::token"
     },
     {
       "crate_name": "vibe-publish",
       "file": "crates/vibe-publish/src/token.rs",
       "item_kind": "fn",
-      "line": 273,
+      "line": 303,
       "symbol": "vibe_publish::token::tests::debug_redacts_value"
     },
     {
       "crate_name": "vibe-publish",
       "file": "crates/vibe-publish/src/token.rs",
       "item_kind": "fn",
-      "line": 282,
+      "line": 312,
       "symbol": "vibe_publish::token::tests::display_redacts_value"
     },
     {
@@ -4995,21 +5065,28 @@
       "crate_name": "vibe-settings",
       "file": "crates/vibe-settings/src/loader.rs",
       "item_kind": "fn",
-      "line": 155,
+      "line": 203,
       "symbol": "vibe_settings::loader::classify_with_home"
     },
     {
       "crate_name": "vibe-settings",
       "file": "crates/vibe-settings/src/loader.rs",
       "item_kind": "fn",
-      "line": 248,
+      "line": 156,
+      "symbol": "vibe_settings::loader::classify_with_settings_dir"
+    },
+    {
+      "crate_name": "vibe-settings",
+      "file": "crates/vibe-settings/src/loader.rs",
+      "item_kind": "fn",
+      "line": 281,
       "symbol": "vibe_settings::loader::load_all"
     },
     {
       "crate_name": "vibe-settings",
       "file": "crates/vibe-settings/src/loader.rs",
       "item_kind": "fn",
-      "line": 179,
+      "line": 212,
       "symbol": "vibe_settings::loader::load_layer"
     },
     {
@@ -6303,7 +6380,7 @@
     {
       "file": "crates/vibe-cli/src/commands/install/resolver.rs",
       "from_symbol": "vibe_cli::commands::install::resolver::flag_tests::offline_without_a_local_registry_bails_before_the_network",
-      "line": 542,
+      "line": 490,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-registry/PROP-030#knob",
       "verb": "verifies"
@@ -6311,7 +6388,7 @@
     {
       "file": "crates/vibe-cli/src/commands/install/resolver.rs",
       "from_symbol": "vibe_cli::commands::install::resolver::flag_tests::short_circuit_conflicts_with_embedded_last",
-      "line": 521,
+      "line": 464,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-registry/PROP-030#knob",
       "verb": "verifies"
@@ -8494,6 +8571,70 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-core/src/global_registry.rs",
+      "from_symbol": "vibe_core::global_registry",
+      "line": 13,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-002#global-config",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/global_registry.rs",
+      "from_symbol": "vibe_core::global_registry::EffectiveRegistryConfig::local_only",
+      "line": 155,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-002#offline-local",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/global_registry.rs",
+      "from_symbol": "vibe_core::global_registry::GlobalRegistryError",
+      "line": 95,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-002#global-config",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/global_registry.rs",
+      "from_symbol": "vibe_core::global_registry::merge_effective",
+      "line": 205,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-002#global-config",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/global_registry.rs",
+      "from_symbol": "vibe_core::global_registry::tests::local_only_keeps_local_drops_remote",
+      "line": 343,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-002#offline-local",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/global_registry.rs",
+      "from_symbol": "vibe_core::global_registry::tests::merge_dedupes_overrides_by_pkgref_and_concatenates_mirrors",
+      "line": 318,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-002#global-config",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/global_registry.rs",
+      "from_symbol": "vibe_core::global_registry::tests::merge_is_project_first_and_dedupes_registries_by_name",
+      "line": 299,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-002#global-config",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/global_registry.rs",
+      "from_symbol": "vibe_core::global_registry::tests::url_is_local_truth_table",
+      "line": 355,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-002#offline-local",
+      "verb": "verifies"
+    },
+    {
       "file": "crates/vibe-core/src/manifest/mod.rs",
       "from_symbol": "vibe_core::manifest",
       "line": 11,
@@ -8975,6 +9116,22 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-core/src/settings.rs",
+      "from_symbol": "vibe_core::settings",
+      "line": 24,
+      "provenance": "authored",
+      "uri": "spec://vibevm/VIBEVM-SPEC#configuration-sources-in-precedence-order",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/settings.rs",
+      "from_symbol": "vibe_core::settings::tests::override_wins_verbatim_over_home",
+      "line": 147,
+      "provenance": "authored",
+      "uri": "spec://vibevm/VIBEVM-SPEC#configuration-sources-in-precedence-order",
+      "verb": "verifies"
+    },
+    {
       "file": "crates/vibe-core/src/timestamp.rs",
       "from_symbol": "vibe_core::timestamp",
       "line": 9,
@@ -8985,7 +9142,7 @@
     {
       "file": "crates/vibe-core/src/user_config.rs",
       "from_symbol": "vibe_core::user_config",
-      "line": 26,
+      "line": 29,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-011#materialise-diff",
       "verb": "implements"
@@ -8993,7 +9150,7 @@
     {
       "file": "crates/vibe-core/src/user_config.rs",
       "from_symbol": "vibe_core::user_config::UserConfigError",
-      "line": 181,
+      "line": 188,
       "provenance": "authored",
       "uri": "spec://vibevm/VIBEVM-SPEC#configuration-sources-in-precedence-order",
       "verb": "implements"
@@ -10281,7 +10438,7 @@
     {
       "file": "crates/vibe-publish/src/lib.rs",
       "from_symbol": "vibe_publish",
-      "line": 27,
+      "line": 28,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#publish",
       "verb": "implements"
@@ -10289,7 +10446,7 @@
     {
       "file": "crates/vibe-publish/src/lib.rs",
       "from_symbol": "vibe_publish::PublishError",
-      "line": 113,
+      "line": 114,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#publish",
       "verb": "implements"
@@ -10321,7 +10478,7 @@
     {
       "file": "crates/vibe-publish/src/github.rs",
       "from_symbol": "vibe_publish::github",
-      "line": 39,
+      "line": 40,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#publish",
       "verb": "implements"
@@ -10386,7 +10543,7 @@
     {
       "file": "crates/vibe-publish/src/token.rs",
       "from_symbol": "vibe_publish::token",
-      "line": 31,
+      "line": 35,
       "provenance": "authored",
       "uri": "spec://vibevm/common/PROP-000#token-secrecy",
       "verb": "implements"
@@ -10394,7 +10551,7 @@
     {
       "file": "crates/vibe-publish/src/token.rs",
       "from_symbol": "vibe_publish::token::tests::debug_redacts_value",
-      "line": 274,
+      "line": 304,
       "provenance": "authored",
       "uri": "spec://vibevm/common/PROP-000#token-secrecy",
       "verb": "verifies"
@@ -10402,7 +10559,7 @@
     {
       "file": "crates/vibe-publish/src/token.rs",
       "from_symbol": "vibe_publish::token::tests::display_redacts_value",
-      "line": 283,
+      "line": 313,
       "provenance": "authored",
       "uri": "spec://vibevm/common/PROP-000#token-secrecy",
       "verb": "verifies"
@@ -11768,7 +11925,7 @@
     {
       "file": "crates/vibe-settings/src/loader.rs",
       "from_symbol": "vibe_settings::loader::classify",
-      "line": 150,
+      "line": 151,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-settings/PROP-040#path-classifier",
       "verb": "implements"
@@ -11776,7 +11933,15 @@
     {
       "file": "crates/vibe-settings/src/loader.rs",
       "from_symbol": "vibe_settings::loader::classify_with_home",
-      "line": 159,
+      "line": 206,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-settings/PROP-040#path-classifier",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-settings/src/loader.rs",
+      "from_symbol": "vibe_settings::loader::classify_with_settings_dir",
+      "line": 182,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-settings/PROP-040#path-classifier",
       "verb": "implements"
@@ -11784,7 +11949,7 @@
     {
       "file": "crates/vibe-settings/src/loader.rs",
       "from_symbol": "vibe_settings::loader::load_all",
-      "line": 266,
+      "line": 299,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-settings/PROP-040#locations",
       "verb": "implements"
@@ -11792,7 +11957,7 @@
     {
       "file": "crates/vibe-settings/src/loader.rs",
       "from_symbol": "vibe_settings::loader::load_layer",
-      "line": 196,
+      "line": 229,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-settings/PROP-040#missing-is-default",
       "verb": "implements"
@@ -18534,7 +18699,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:6e9d1f91f2662717c57076ed9ce71e2e18873c820cff3fc0365dae822d7366fa",
+      "content_hash": "sha256:7e99814e65f0b6eb0370a4c830bd399783fd73fddaf17b8e00ba176b94e06b74",
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
       "heading": "PROP-002: Decentralized, mirror-friendly registry with capability-based depsolver",
@@ -18552,7 +18717,7 @@
     },
     {
       "anchor": "decisions",
-      "content_hash": "sha256:84dfcb14142dcc657607c4a8946b4085aff7eb1b2e8eb130fd81e1e3382e12c8",
+      "content_hash": "sha256:ab738d2a1a409f2d15ea2809accee310a70e827455f2d5de9968b30f258faa59",
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
       "heading": "2. Decisions",
@@ -18593,12 +18758,34 @@
       "revision": 1
     },
     {
+      "anchor": "global-config",
+      "content_hash": "sha256:a23a9f55c7bea50e361bf611a4f2eb56639312dbc8df470017e0d3d7465977a0",
+      "doc_path": "modules/vibe-registry/PROP-002",
+      "file": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
+      "heading": "2.2.2 Machine-global registry config: `~/.vibe/registry.toml`",
+      "line": 131,
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-002#global-config",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "offline-local",
+      "content_hash": "sha256:b4aa5bf41b7d47719abb6f9baef8109b69cbd690e6a1f887e03b324b9dde5752",
+      "doc_path": "modules/vibe-registry/PROP-002",
+      "file": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
+      "heading": "2.2.2.1 `--offline` resolves local registries only",
+      "line": 139,
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-002#offline-local",
+      "kind": "req",
+      "revision": 1
+    },
+    {
       "anchor": "mirror",
       "content_hash": "sha256:86241c8a842ce42d1717d3e0dfed0c7cc7248744ddedbc510e07411782d7c640",
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
       "heading": "2.3 Mirror layer: transparent, integrity-verified",
-      "line": 131,
+      "line": 145,
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#mirror",
       "kind": "req",
       "revision": 1
@@ -18609,7 +18796,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
       "heading": "2.3.1 Failure-mode discriminator: registry-walk vs mirror-walk",
-      "line": 152,
+      "line": 166,
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#failure-discriminator",
       "kind": "req",
       "revision": 1
@@ -18620,7 +18807,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
       "heading": "2.4 Overrides: surgical pin of source location",
-      "line": 169,
+      "line": 183,
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#override",
       "kind": "req",
       "revision": 1
@@ -18631,7 +18818,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
       "heading": "2.4.1 Git-source declarations: `[requires.packages]` table-form",
-      "line": 187,
+      "line": 201,
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#git-source",
       "kind": "req",
       "revision": 1
@@ -18642,7 +18829,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
       "heading": "2.4.2 Registry redirect: delegating package content to an external repo",
-      "line": 307,
+      "line": 321,
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#redirect",
       "kind": "req",
       "revision": 1
@@ -18653,7 +18840,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
       "heading": "2.5 Per-package layout: flat, tag-based",
-      "line": 432,
+      "line": 446,
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#layout",
       "kind": "req",
       "revision": 1
@@ -18664,7 +18851,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
       "heading": "2.6 Cache layout: organized by canonical registry URL",
-      "line": 455,
+      "line": 469,
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#cache",
       "kind": "req",
       "revision": 1
@@ -18675,7 +18862,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
       "heading": "2.7 Lockfile schema v2",
-      "line": 478,
+      "line": 492,
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#lockfile",
       "kind": "req",
       "revision": 1
@@ -18686,7 +18873,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
       "heading": "2.8 Depsolver: resolvo primary, DepSolver trait for fallback",
-      "line": 512,
+      "line": 526,
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#solver",
       "kind": "req",
       "revision": 1
@@ -18697,7 +18884,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
       "heading": "2.9 Capability-based deps: `[provides]` / `[requires]` / `[[requires_any]]` / `[obsoletes]` / `[conflicts]`",
-      "line": 528,
+      "line": 542,
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#capability",
       "kind": "req",
       "revision": 1
@@ -18708,7 +18895,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
       "heading": "2.10 Publish utility: `vibe registry publish <path>`",
-      "line": 545,
+      "line": 559,
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#publish",
       "kind": "req",
       "revision": 1
@@ -18719,7 +18906,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
       "heading": "2.11 JTD + codegen for wire contracts",
-      "line": 588,
+      "line": 602,
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#jtd",
       "kind": "req",
       "revision": 1
@@ -18730,7 +18917,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
       "heading": "2.12 Performance and resolver I/O strategy",
-      "line": 603,
+      "line": 617,
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#perf",
       "kind": "req",
       "revision": 1
@@ -18741,7 +18928,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
       "heading": "3. Rejected alternatives",
-      "line": 622,
+      "line": 636,
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#rejected"
     },
     {
@@ -18750,7 +18937,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
       "heading": "4. Out of scope for Phase A",
-      "line": 658,
+      "line": 672,
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#out-of-scope"
     },
     {
@@ -18759,7 +18946,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
       "heading": "5. Acceptance (Phase A)",
-      "line": 671,
+      "line": 685,
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#acceptance"
     },
     {
@@ -18768,7 +18955,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
       "heading": "6. Phase B preview (M1.6)",
-      "line": 692,
+      "line": 706,
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#phase-b"
     },
     {
@@ -18777,7 +18964,7 @@
       "doc_path": "modules/vibe-registry/PROP-002",
       "file": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
       "heading": "7. Open questions",
-      "line": 706,
+      "line": 720,
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#open"
     },
     {
@@ -21419,7 +21606,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:88afeb30ea55850ff2362f7aa5d645a5b1cd4e30c59665675dff03cbb0671f7b",
+      "content_hash": "sha256:9856ae5887463d85ce1aef68bba3335c48314ac862ffe00ff01fc9a90e587df8",
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "spec/modules/vibe-workspace/PROP-035-spec-compiler.md",
       "heading": "PROP-035: The spec compiler — directive preprocessor, package formats, and the two-mode boot linker",
@@ -21608,7 +21795,7 @@
     },
     {
       "anchor": "history",
-      "content_hash": "sha256:4de1804d17878d5e9d5b398996884c1b46c4eaba119c349da5132105a89b56ca",
+      "content_hash": "sha256:f5ddb498db94730af9b5695be4be8167d8e8426781d468fc65e5447a7ce2dcea",
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "spec/modules/vibe-workspace/PROP-035-spec-compiler.md",
       "heading": "17. Version history",
@@ -22696,6 +22883,96 @@
       "uri": "spec://vibevm/research/PROP-004#reading"
     },
     {
+      "anchor": "why",
+      "content_hash": "sha256:c63f505a719cb528f8c989046d4d4ab5d9df5f688f194fe50a35d69cb967053c",
+      "doc_path": "research/SETTINGS-HOME-AND-GLOBAL-REGISTRY-PLAN-v0.1",
+      "file": "spec/research/SETTINGS-HOME-AND-GLOBAL-REGISTRY-PLAN-v0.1.md",
+      "heading": "0. Why this exists",
+      "line": 9,
+      "uri": "spec://vibevm/research/SETTINGS-HOME-AND-GLOBAL-REGISTRY-PLAN-v0.1#why"
+    },
+    {
+      "anchor": "findings",
+      "content_hash": "sha256:9d70211afc7274c8176640c435533ca3569ce16ca4271a4845444e0344e8cdfa",
+      "doc_path": "research/SETTINGS-HOME-AND-GLOBAL-REGISTRY-PLAN-v0.1",
+      "file": "spec/research/SETTINGS-HOME-AND-GLOBAL-REGISTRY-PLAN-v0.1.md",
+      "heading": "1. Findings — current state (verified 2026-07-20)",
+      "line": 19,
+      "uri": "spec://vibevm/research/SETTINGS-HOME-AND-GLOBAL-REGISTRY-PLAN-v0.1#findings"
+    },
+    {
+      "anchor": "decisions",
+      "content_hash": "sha256:a70ac44dc54fde4912bf5da8be1e54397720f310f31bf80298598caed439cfdb",
+      "doc_path": "research/SETTINGS-HOME-AND-GLOBAL-REGISTRY-PLAN-v0.1",
+      "file": "spec/research/SETTINGS-HOME-AND-GLOBAL-REGISTRY-PLAN-v0.1.md",
+      "heading": "2. Owner decisions — LOCKED (2026-07-20)",
+      "line": 37,
+      "uri": "spec://vibevm/research/SETTINGS-HOME-AND-GLOBAL-REGISTRY-PLAN-v0.1#decisions"
+    },
+    {
+      "anchor": "chokepoint",
+      "content_hash": "sha256:caa9c1926bf0a07f13318a2d6f68685e51bac4945e3cd0e2d505284c2d49af66",
+      "doc_path": "research/SETTINGS-HOME-AND-GLOBAL-REGISTRY-PLAN-v0.1",
+      "file": "spec/research/SETTINGS-HOME-AND-GLOBAL-REGISTRY-PLAN-v0.1.md",
+      "heading": "3. Architecture A — the settings-dir chokepoint",
+      "line": 45,
+      "uri": "spec://vibevm/research/SETTINGS-HOME-AND-GLOBAL-REGISTRY-PLAN-v0.1#chokepoint"
+    },
+    {
+      "anchor": "global-registry",
+      "content_hash": "sha256:2621301931b25e163ef0f55cdf1cd3bf22f1e56c02f30d79fe542852dfe1f19a",
+      "doc_path": "research/SETTINGS-HOME-AND-GLOBAL-REGISTRY-PLAN-v0.1",
+      "file": "spec/research/SETTINGS-HOME-AND-GLOBAL-REGISTRY-PLAN-v0.1.md",
+      "heading": "4. Architecture B — global registry.toml, merge, offline",
+      "line": 72,
+      "uri": "spec://vibevm/research/SETTINGS-HOME-AND-GLOBAL-REGISTRY-PLAN-v0.1#global-registry"
+    },
+    {
+      "anchor": "migration",
+      "content_hash": "sha256:5fe1e63ab08c207be36976637e2d04fc743f462329000a355c200ce45774236c",
+      "doc_path": "research/SETTINGS-HOME-AND-GLOBAL-REGISTRY-PLAN-v0.1",
+      "file": "spec/research/SETTINGS-HOME-AND-GLOBAL-REGISTRY-PLAN-v0.1.md",
+      "heading": "5. Migration & backward-compat",
+      "line": 119,
+      "uri": "spec://vibevm/research/SETTINGS-HOME-AND-GLOBAL-REGISTRY-PLAN-v0.1#migration"
+    },
+    {
+      "anchor": "surface",
+      "content_hash": "sha256:e268499508f038412b8bb3362df33b853e5a2945dd4d7f264620909128454aee",
+      "doc_path": "research/SETTINGS-HOME-AND-GLOBAL-REGISTRY-PLAN-v0.1",
+      "file": "spec/research/SETTINGS-HOME-AND-GLOBAL-REGISTRY-PLAN-v0.1.md",
+      "heading": "6. Change surface",
+      "line": 131,
+      "uri": "spec://vibevm/research/SETTINGS-HOME-AND-GLOBAL-REGISTRY-PLAN-v0.1#surface"
+    },
+    {
+      "anchor": "tests",
+      "content_hash": "sha256:9895065b5c3193cdaadbffdefe0eb833816a0c8522e7aec0a3e9fa9ec5b44056",
+      "doc_path": "research/SETTINGS-HOME-AND-GLOBAL-REGISTRY-PLAN-v0.1",
+      "file": "spec/research/SETTINGS-HOME-AND-GLOBAL-REGISTRY-PLAN-v0.1.md",
+      "heading": "7. Test plan — AI-native cards",
+      "line": 147,
+      "uri": "spec://vibevm/research/SETTINGS-HOME-AND-GLOBAL-REGISTRY-PLAN-v0.1#tests"
+    },
+    {
+      "anchor": "phases",
+      "content_hash": "sha256:3a10de288c97b7cbdea3e8c4171e48157fc6a108671038f711338e84dbbed585",
+      "doc_path": "research/SETTINGS-HOME-AND-GLOBAL-REGISTRY-PLAN-v0.1",
+      "file": "spec/research/SETTINGS-HOME-AND-GLOBAL-REGISTRY-PLAN-v0.1.md",
+      "heading": "8. Phases & delegation split",
+      "line": 156,
+      "uri": "spec://vibevm/research/SETTINGS-HOME-AND-GLOBAL-REGISTRY-PLAN-v0.1#phases"
+    },
+    {
+      "anchor": "risks",
+      "content_hash": "sha256:66789dfa79cde9a8c17c957dff7fa4b13fb85be95df3cb4f1d81ce59c404c78f",
+      "doc_path": "research/SETTINGS-HOME-AND-GLOBAL-REGISTRY-PLAN-v0.1",
+      "file": "spec/research/SETTINGS-HOME-AND-GLOBAL-REGISTRY-PLAN-v0.1.md",
+      "heading": "9. Risks & open items",
+      "line": 168,
+      "uri": "spec://vibevm/research/SETTINGS-HOME-AND-GLOBAL-REGISTRY-PLAN-v0.1#risks"
+    },
+    {
       "anchor": "root",
       "content_hash": "sha256:fe64c9636955c7175189ab6cfb2250e3c43056bc3835687c3b326f793fe42cae",
       "doc_path": "research/action-systems-vscode-idea",
@@ -23550,19 +23827,25 @@
     {
       "code": "dangling-edge",
       "file": "crates/vibe-settings/src/loader.rs",
-      "line": 150,
+      "line": 151,
       "message": "edge `vibe_settings::loader::classify` --implements--> `spec://vibevm/modules/vibe-settings/PROP-040#path-classifier`: no spec unit carries this anchor"
     },
     {
       "code": "dangling-edge",
       "file": "crates/vibe-settings/src/loader.rs",
-      "line": 159,
+      "line": 182,
+      "message": "edge `vibe_settings::loader::classify_with_settings_dir` --implements--> `spec://vibevm/modules/vibe-settings/PROP-040#path-classifier`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "crates/vibe-settings/src/loader.rs",
+      "line": 206,
       "message": "edge `vibe_settings::loader::classify_with_home` --implements--> `spec://vibevm/modules/vibe-settings/PROP-040#path-classifier`: no spec unit carries this anchor"
     },
     {
       "code": "dangling-edge",
       "file": "crates/vibe-settings/src/loader.rs",
-      "line": 196,
+      "line": 229,
       "message": "edge `vibe_settings::loader::load_layer` --implements--> `spec://vibevm/modules/vibe-settings/PROP-040#missing-is-default`: no spec unit carries this anchor"
     },
     {

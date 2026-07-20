@@ -120,6 +120,22 @@ pub enum GlobalRegistryError {
 /// The merged, resolution-ready registry config: a project manifest's
 /// sections plus the machine-global file's (PROP-002 §2.2.2).
 /// [`Self::local_only`] narrows it for `--offline`.
+///
+/// ```
+/// use vibe_core::{merge_effective, EffectiveRegistryConfig, GlobalRegistryConfig};
+/// use vibe_core::manifest::Manifest;
+///
+/// let project = Manifest::parse_str(
+///     "[package]\ngroup=\"org.x\"\nname=\"p\"\nkind=\"flow\"\nversion=\"0.1.0\"\n\
+///      [[registry]]\nname=\"team\"\nurl=\"https://github.com/team\"\n",
+/// )
+/// .unwrap();
+/// // With no global file, the effective config is just the project's.
+/// let eff: EffectiveRegistryConfig = merge_effective(&project, &GlobalRegistryConfig::default());
+/// assert_eq!(eff.registries.len(), 1);
+/// assert_eq!(eff.registries[0].name, "team");
+/// assert!(eff.mirrors.is_empty() && eff.overrides.is_empty());
+/// ```
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct EffectiveRegistryConfig {
     /// Priority-ordered registries (project first, then machine-global).
