@@ -118,11 +118,12 @@ impl fmt::Display for Layer {
 /// `settings.local.toml` is L3 *because of its name*; `settings.toml` under the
 /// user's `~/.vibe/` is L1; `settings.toml` under any other `.vibe/` is L2.
 ///
-/// [`classify`] reads the process `HOME`/`USERPROFILE` only to locate the
-/// user-machine root (PROP-040 §3 fixes L1 at `~/.vibe/`); the deterministic
-/// core is [`classify_with_home`], which tests drive without env. Unrecognised
-/// basenames fall back to [`Layer::L2`] (the repo-shared default) so the
-/// classifier is total and never panics.
+/// [`classify`] reads `$VIBE_SETTINGS` (else `HOME`/`USERPROFILE`) only to
+/// locate the user-machine root (PROP-040 §3 fixes L1 at `~/.vibe/`, or
+/// wherever `$VIBE_SETTINGS` points); the deterministic core is
+/// [`classify_with_settings_dir`], which tests drive without env.
+/// Unrecognised basenames fall back to [`Layer::L2`] (the repo-shared
+/// default) so the classifier is total and never panics.
 ///
 /// ```
 /// use vibe_settings::loader::{Layer, classify_with_home};
@@ -149,22 +150,45 @@ impl fmt::Display for Layer {
 /// ```
 #[specmark::spec(implements = "spec://vibevm/modules/vibe-settings/PROP-040#path-classifier")]
 pub fn classify(path: &Path) -> Layer {
-    classify_with_home(path, home_dir().as_deref())
+    classify_with_settings_dir(path, resolved_settings_dir().as_deref())
 }
 
-/// The pure core of [`classify`], parameterised by the user-home directory so
-/// tests (and callers that already resolved home) can classify deterministically
-/// without touching the process environment. This is the function the
-/// path-classifier REQ (§9 `#path-classifier`) is verified against.
+/// The pure core of [`classify`], parameterised by the resolved L1 settings
+/// directory so tests (and callers that already resolved it) can classify
+/// deterministically without touching the process environment. This is the
+/// function the path-classifier REQ (§9 `#path-classifier`) is verified
+/// against: a `settings.toml` whose parent is exactly `settings_dir` is L1;
+/// any other `settings.toml` is L2; `settings.local.toml` is L3 by name.
+///
+/// ```
+/// use vibe_settings::loader::{Layer, classify_with_settings_dir};
+/// use std::path::Path;
+///
+/// // L1 is the file directly under the resolved settings dir — which, under
+/// // `$VIBE_SETTINGS`, need not be named `.vibe` at all.
+/// assert_eq!(
+///     classify_with_settings_dir(Path::new("/opt/vibe/settings.toml"), Some(Path::new("/opt/vibe"))),
+///     Layer::L1,
+/// );
+/// // The same basename elsewhere is the repo-shared L2.
+/// assert_eq!(
+///     classify_with_settings_dir(
+///         Path::new("/srv/repo/.vibe/settings.toml"),
+///         Some(Path::new("/opt/vibe")),
+///     ),
+///     Layer::L2,
+/// );
+/// ```
 #[specmark::spec(implements = "spec://vibevm/modules/vibe-settings/PROP-040#path-classifier")]
-pub fn classify_with_home(path: &Path, home: Option<&Path>) -> Layer {
+pub fn classify_with_settings_dir(path: &Path, settings_dir: Option<&Path>) -> Layer {
     let basename = path.file_name().and_then(|s| s.to_str());
     match basename {
         // L3 by name — `settings.local.toml` anywhere is the user-project layer.
         Some(name) if name == LOCAL_SETTINGS_FILE => Layer::L3,
-        // `settings.toml`: L1 iff it sits in the user's home `.vibe/`, else L2.
+        // `settings.toml`: L1 iff it sits directly in the resolved settings
+        // dir, else L2.
         Some(name) if name == SETTINGS_FILE => {
-            if parent_is_dot_vibe(path) && in_home_dotvibe(path, home) {
+            if is_l1(path, settings_dir) {
                 Layer::L1
             } else {
                 Layer::L2
@@ -174,6 +198,15 @@ pub fn classify_with_home(path: &Path, home: Option<&Path>) -> Layer {
         // repo-shared default so the classifier stays total.
         _ => Layer::L2,
     }
+}
+
+/// Backward-compatible shim: classify against the user's home `.vibe/`.
+/// Equivalent to [`classify_with_settings_dir`] with `<home>/.vibe` as the
+/// L1 directory (the pre-`$VIBE_SETTINGS` fixed location, PROP-040 §3).
+#[specmark::spec(implements = "spec://vibevm/modules/vibe-settings/PROP-040#path-classifier")]
+pub fn classify_with_home(path: &Path, home: Option<&Path>) -> Layer {
+    let dir = home.map(|h| h.join(DOT_VIBE));
+    classify_with_settings_dir(path, dir.as_deref())
 }
 
 /// Read and parse one layer file as TOML (PROP-040 §3 `#missing-is-default`).
@@ -274,25 +307,29 @@ pub fn load_all(l1: &Path, l2: &Path, l3: &Path) -> Result<LayeredRaw, SettingsE
 
 // ─── path-classifier helpers (private; deterministic, no env) ─────────────────
 
-/// Whether `path` sits directly inside a `.vibe` directory.
-fn parent_is_dot_vibe(path: &Path) -> bool {
-    path.parent()
-        .and_then(|p| p.file_name())
-        .and_then(|s| s.to_str())
-        == Some(DOT_VIBE)
+/// Whether `path` is `<settings-dir>/<file>` — i.e. its parent is exactly
+/// the resolved settings directory. `false` when the settings dir is
+/// unknown. This is the L1 test (PROP-040 §9 `#path-classifier`): under
+/// `$VIBE_SETTINGS` the L1 dir is arbitrary, so L1 is location-by-parent,
+/// not name-by-`.vibe`.
+fn is_l1(path: &Path, settings_dir: Option<&Path>) -> bool {
+    matches!(
+        (path.parent(), settings_dir),
+        (Some(parent), Some(dir)) if parent == dir
+    )
 }
 
-/// Whether `path` is `<home>/.vibe/<file>` — i.e. its `.vibe` parent's parent
-/// equals `home`. `false` when `home` is unknown.
-fn in_home_dotvibe(path: &Path, home: Option<&Path>) -> bool {
-    let Some(home) = home else { return false };
-    let Some(dot_vibe) = path.parent() else {
-        return false;
-    };
-    let Some(grandparent) = dot_vibe.parent() else {
-        return false;
-    };
-    grandparent == home
+/// The resolved L1 settings directory used to *tag* a classified file:
+/// `$VIBE_SETTINGS` (verbatim) else `<home>/.vibe`. Deliberately mirrors
+/// the workspace chokepoint `vibe_core::settings::settings_dir`;
+/// `vibe-settings` stays `vibe-core`-free (PROP-040 §12 `#crate-boundary`),
+/// so this thin resolution is duplicated here rather than imported — keep
+/// the two in sync.
+fn resolved_settings_dir() -> Option<PathBuf> {
+    if let Some(o) = std::env::var_os("VIBE_SETTINGS").filter(|s| !s.is_empty()) {
+        return Some(PathBuf::from(o));
+    }
+    Some(home_dir()?.join(DOT_VIBE))
 }
 
 /// Best-effort user-home detection — reads `HOME` (Unix / Git Bash) then

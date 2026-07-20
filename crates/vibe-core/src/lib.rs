@@ -19,6 +19,7 @@ pub mod manifest;
 pub mod package_ref;
 pub mod provenance;
 pub mod rel_path;
+pub mod settings;
 pub mod timestamp;
 pub mod user_config;
 pub mod values;

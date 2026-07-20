@@ -23,13 +23,14 @@ pub const DEFAULT_FRESHNESS_SECS: u64 = 3600;
 ///
 /// Honours `VIBE_REGISTRY_CACHE` if set (used by tests and by users
 /// who want an explicit out-of-home location), otherwise returns
-/// `~/.vibe/registries/` per `VIBEVM-SPEC.md` §8.3.
+/// `<settings-dir>/registries/` per `VIBEVM-SPEC.md` §8.3 — resolved
+/// through the one `vibe_core::settings` chokepoint so `$VIBE_SETTINGS`
+/// moves the cache with the rest of the settings tree.
 pub fn default_cache_root() -> Result<PathBuf, RegistryError> {
     if let Some(custom) = std::env::var_os("VIBE_REGISTRY_CACHE") {
         return Ok(PathBuf::from(custom));
     }
-    let home = dirs::home_dir().ok_or(RegistryError::NoHomeDir)?;
-    Ok(home.join(".vibe").join("registries"))
+    vibe_core::settings::registries_cache_dir().ok_or(RegistryError::NoHomeDir)
 }
 
 /// Strip a `git+` transport-wrapper prefix (`git+ssh://`, `git+https://`,

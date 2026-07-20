@@ -14,9 +14,10 @@
 //!   classifies errors per the surface in PROP-002.
 //! - [`Token`] — token loading per [PROP-000 §20](../../../spec/common/PROP-000.md#token-secrecy).
 //!   Per-host file precedence: `VIBEVM_PUBLISH_TOKEN` env →
-//!   `~/.vibevm/<host-prefix>.publish.token` → legacy
-//!   `~/.vibevm/git.publish.token`. Token never logged, never
-//!   persisted, never leaks out of process.
+//!   `~/.vibe/<host-prefix>.publish.token` → legacy
+//!   `~/.vibe/git.publish.token` (with `~/.vibevm` read as a migration
+//!   fallback). Token never logged, never persisted, never leaks out of
+//!   process.
 //!
 //! Consuming code (the CLI command) instantiates a `RepoCreator`,
 //! constructs a `Publisher`, calls `Publisher::publish`, and renders
@@ -138,9 +139,9 @@ pub enum PublishError {
 
     #[error(
         "publish refused: no token available for host `{host}`. \
-         Set `VIBEVM_PUBLISH_TOKEN` or write a token to `~/.vibevm/git.publish.token`. \
+         Set `VIBEVM_PUBLISH_TOKEN` or write a token to `~/.vibe/git.publish.token`. \
          (violates spec://vibevm/modules/vibe-registry/PROP-002#publish; \
-         fix: export `VIBEVM_PUBLISH_TOKEN` or write `~/.vibevm/<host-prefix>.publish.token`)"
+         fix: export `VIBEVM_PUBLISH_TOKEN` or write `~/.vibe/<host-prefix>.publish.token`)"
     )]
     AuthMissing { host: String },
 

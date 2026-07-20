@@ -1,4 +1,5 @@
-//! User-level configuration file: `~/.config/vibe/config.toml`.
+//! User-level configuration file: `<settings-dir>/config.toml`
+//! (canonical `~/.vibe/config.toml`, or under `$VIBE_SETTINGS`).
 //!
 //! VIBEVM-SPEC §9.5 places this file fourth in the configuration
 //! precedence chain (CLI flags > env vars > project `vibe.toml` >
@@ -11,9 +12,11 @@
 //!
 //! - `VIBEVM_USER_CONFIG` env-var, when set, points at the file
 //!   directly (override; useful for tests + ad-hoc invocations).
-//! - Otherwise: `$XDG_CONFIG_HOME/vibe/config.toml` if `XDG_CONFIG_HOME`
-//!   is set; else `$HOME/.config/vibe/config.toml` on Unix and
-//!   `%APPDATA%\vibe\config.toml` on Windows.
+//! - Otherwise the canonical `<settings-dir>/config.toml` via the one
+//!   `crate::settings` chokepoint. The pre-consolidation XDG location
+//!   (`$XDG_CONFIG_HOME/vibe/config.toml`, `%APPDATA%\vibe\config.toml`,
+//!   or `$HOME/.config/vibe/config.toml`) is read only as a migration
+//!   fallback when no canonical file exists.
 //!
 //! v0 deliberately scopes "what runtime consumers do with this layer"
 //! to ZERO — only `vibe show config` reads it today. Wiring user-
@@ -31,7 +34,7 @@ use std::path::{Path, PathBuf};
 use serde::{Deserialize, Serialize};
 use specmark::spec;
 
-/// Parsed `~/.config/vibe/config.toml`.
+/// Parsed `<settings-dir>/config.toml` (canonical `~/.vibe/config.toml`).
 ///
 /// ```
 /// use vibe_core::user_config::UserConfig;
@@ -119,19 +122,23 @@ impl UserConfig {
         if let Some(custom) = std::env::var_os("VIBEVM_USER_CONFIG") {
             return Some(PathBuf::from(custom));
         }
-        if let Some(xdg) = std::env::var_os("XDG_CONFIG_HOME").filter(|s| !s.is_empty()) {
-            return Some(PathBuf::from(xdg).join("vibe").join("config.toml"));
+        // Consolidated into the one settings dir (`~/.vibe`, or
+        // `$VIBE_SETTINGS`). Prefer the canonical file; fall back to the
+        // pre-consolidation XDG / `%APPDATA%` location only when the
+        // canonical is absent but a legacy file exists, so a not-yet-
+        // migrated user keeps being read.
+        let canonical = crate::settings::user_config_path();
+        if let Some(c) = &canonical
+            && c.exists()
+        {
+            return canonical;
         }
-        let home = home_dir()?;
-        if cfg!(windows) {
-            // Windows precedence: %APPDATA% wins over ~/.config (which
-            // is not the canonical Windows shape) when no XDG_CONFIG_HOME
-            // is set.
-            if let Some(appdata) = std::env::var_os("APPDATA").filter(|s| !s.is_empty()) {
-                return Some(PathBuf::from(appdata).join("vibe").join("config.toml"));
-            }
+        if let Some(legacy) = legacy_xdg_config_path()
+            && legacy.exists()
+        {
+            return Some(legacy);
         }
-        Some(home.join(".config").join("vibe").join("config.toml"))
+        canonical
     }
 
     /// Read the user-level config from the [`Self::default_path`].
@@ -200,6 +207,25 @@ pub enum UserConfigError {
         #[source]
         source: toml::de::Error,
     },
+}
+
+/// The pre-consolidation user-config location, a read-only migration
+/// fallback for [`UserConfig::default_path`]:
+/// `$XDG_CONFIG_HOME/vibe/config.toml`, else `%APPDATA%\vibe\config.toml`
+/// on Windows, else `$HOME/.config/vibe/config.toml`. Superseded by the
+/// canonical `<settings-dir>/config.toml` (`crate::settings`).
+fn legacy_xdg_config_path() -> Option<PathBuf> {
+    if let Some(xdg) = std::env::var_os("XDG_CONFIG_HOME").filter(|s| !s.is_empty()) {
+        return Some(PathBuf::from(xdg).join("vibe").join("config.toml"));
+    }
+    // Windows precedence: %APPDATA% wins over ~/.config (which is not the
+    // canonical Windows shape) when no XDG_CONFIG_HOME is set.
+    if cfg!(windows)
+        && let Some(appdata) = std::env::var_os("APPDATA").filter(|s| !s.is_empty())
+    {
+        return Some(PathBuf::from(appdata).join("vibe").join("config.toml"));
+    }
+    Some(home_dir()?.join(".config").join("vibe").join("config.toml"))
 }
 
 /// Best-effort home-directory detection. Reads `HOME` on Unix and

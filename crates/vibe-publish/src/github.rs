@@ -22,9 +22,10 @@
 //! The token is loaded by [`crate::token::load_token_for_host`] with the
 //! per-host file precedence pinned in
 //! [PROP-000 §20](../../../spec/common/PROP-000.md#token-secrecy):
-//! `VIBEVM_PUBLISH_TOKEN` env → `~/.vibevm/github.publish.token` →
-//! legacy `~/.vibevm/git.publish.token`. The value is never logged
-//! and is redacted on `Display`/`Debug` of the [`Token`] wrapper.
+//! `VIBEVM_PUBLISH_TOKEN` env → `~/.vibe/github.publish.token` →
+//! legacy `~/.vibe/git.publish.token` (with `~/.vibevm` read as a
+//! migration fallback). The value is never logged and is redacted on
+//! `Display`/`Debug` of the [`Token`] wrapper.
 //!
 //! Push authentication. GitHub does not let an HTTP API token push by
 //! itself; the standard pattern is to embed the token in the HTTPS

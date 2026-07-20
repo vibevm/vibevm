@@ -572,20 +572,12 @@ pub(crate) fn set_dotted(table: &mut toml::Table, path: &str, value: toml::Value
     current.insert(last.to_owned(), value);
 }
 
-/// Locate `~/.vibe/` — the L1 root (PROP-040 §3). Reads `HOME` then
-/// `USERPROFILE`; falls back to the conventional `.vibe` relative path when
-/// neither is set (the classifier still treats it as L1-by-name only when it
-/// sits under a known home — this fallback is best-effort for the launch path).
+/// Locate the L1 root (PROP-040 §3) — `<settings-dir>` via the one
+/// `vibe_core::settings` chokepoint (`~/.vibe`, or `$VIBE_SETTINGS`). Falls
+/// back to the conventional `.vibe` relative path when no home is resolvable
+/// — best-effort for the launch path.
 fn home_dot_vibe() -> PathBuf {
-    if let Some(home) = std::env::var_os("HOME").filter(|s| !s.is_empty()) {
-        return PathBuf::from(home).join(DOT_VIBE);
-    }
-    if cfg!(windows)
-        && let Some(profile) = std::env::var_os("USERPROFILE").filter(|s| !s.is_empty())
-    {
-        return PathBuf::from(profile).join(DOT_VIBE);
-    }
-    PathBuf::from(DOT_VIBE)
+    vibe_core::settings::settings_dir().unwrap_or_else(|| PathBuf::from(DOT_VIBE))
 }
 
 /// Locate `<cwd>/.vibe/` — the L2/L3 root.

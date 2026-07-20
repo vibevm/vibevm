@@ -12,15 +12,19 @@
 //! 3. `VIBEVM_PUBLISH_TOKEN` — legacy host-agnostic env var. Kept so
 //!    setups that already exported it keep working without a rename;
 //!    the host-specific form should be preferred in new setups.
-//! 4. `~/.vibevm/<host-prefix>.publish.token` — per-host file. The
-//!    prefix is the **first label** of the host: `github` for
-//!    `github.com`, `gitverse` for `gitverse.ru`, `gitlab` for
-//!    `gitlab.com`. Lets one operator hold tokens for several hosts
-//!    without juggling env vars at all.
-//! 5. `~/.vibevm/git.publish.token` — legacy host-agnostic file.
+//! 4. `<settings-dir>/<host-prefix>.publish.token` — per-host file in the
+//!    canonical settings dir (`~/.vibe`, or `$VIBE_SETTINGS`). The prefix
+//!    is the **first label** of the host: `github` for `github.com`,
+//!    `gitverse` for `gitverse.ru`, `gitlab` for `gitlab.com`. Lets one
+//!    operator hold tokens for several hosts without juggling env vars.
+//! 5. `~/.vibevm/<host-prefix>.publish.token` — the same per-host file in
+//!    the pre-consolidation dir; a read-only migration fallback.
+//! 6. `<settings-dir>/git.publish.token` — legacy host-agnostic file.
 //!    Kept so existing GitVerse-only setups keep working without a
 //!    rename. Will be retired in a future major version once the
 //!    per-host pattern is universal.
+//! 7. `~/.vibevm/git.publish.token` — the same host-agnostic file in the
+//!    pre-consolidation dir; a read-only migration fallback.
 //!
 //! Tokens are surface secrets; never logged at any level. The
 //! [`Token`] type wraps the string and `Display`s as `***` to make
@@ -122,8 +126,10 @@ pub fn host_env_var(host: &str) -> Option<String> {
 /// Walks (in order):
 /// 1. `VIBEVM_PUBLISH_TOKEN_<HOST>` env var (host-specific).
 /// 2. `VIBEVM_PUBLISH_TOKEN` env var (legacy host-agnostic).
-/// 3. `~/.vibevm/<host-prefix>.publish.token` file (host-specific).
-/// 4. `~/.vibevm/git.publish.token` file (legacy host-agnostic).
+/// 3. `<settings-dir>/<host-prefix>.publish.token` file (host-specific),
+///    then the same file under the legacy `~/.vibevm` dir.
+/// 4. `<settings-dir>/git.publish.token` file (legacy host-agnostic),
+///    then the same file under the legacy `~/.vibevm` dir.
 ///
 /// The `host` argument shapes the per-host lookup and surfaces in the
 /// `AuthMissing` error. The `<host-prefix>` is derived as the first
@@ -185,61 +191,85 @@ fn read_legacy_env_token() -> Option<Token> {
     })
 }
 
+/// Read a token from `path` if it exists and is non-empty. Missing file
+/// or blank content is `Ok(None)` — the caller falls through to the next
+/// candidate path; an I/O error surfaces.
+fn read_token_file(path: PathBuf) -> Result<Option<Token>, PublishError> {
+    if !path.exists() {
+        return Ok(None);
+    }
+    let raw = fs::read_to_string(&path).map_err(|e| PublishError::Io {
+        path: path.clone(),
+        message: format!("reading token: {e}"),
+    })?;
+    let trimmed = raw.trim();
+    if trimmed.is_empty() {
+        return Ok(None);
+    }
+    Ok(Some(Token {
+        value: trimmed.to_string(),
+        source: TokenSource::File(path),
+    }))
+}
+
+/// Per-host token file: the canonical settings dir first, then the legacy
+/// `~/.vibevm` dir as a read-only migration fallback.
 fn read_per_host_token(host: &str) -> Result<Option<Token>, PublishError> {
-    let Some(path) = per_host_token_path(host) else {
-        return Ok(None);
-    };
-    if !path.exists() {
-        return Ok(None);
+    for path in [
+        per_host_token_path(host),
+        dot_vibevm_per_host_token_path(host),
+    ]
+    .into_iter()
+    .flatten()
+    {
+        if let Some(t) = read_token_file(path)? {
+            return Ok(Some(t));
+        }
     }
-    let raw = fs::read_to_string(&path).map_err(|e| PublishError::Io {
-        path: path.clone(),
-        message: format!("reading token: {e}"),
-    })?;
-    let trimmed = raw.trim();
-    if trimmed.is_empty() {
-        return Ok(None);
-    }
-    Ok(Some(Token {
-        value: trimmed.to_string(),
-        source: TokenSource::File(path),
-    }))
+    Ok(None)
 }
 
+/// Host-agnostic legacy-format token file: the canonical settings dir
+/// first, then the legacy `~/.vibevm` dir as a read-only migration
+/// fallback.
 fn read_legacy_token() -> Result<Option<Token>, PublishError> {
-    let Some(path) = legacy_token_path() else {
-        return Ok(None);
-    };
-    if !path.exists() {
-        return Ok(None);
+    for path in [legacy_token_path(), dot_vibevm_token_path()]
+        .into_iter()
+        .flatten()
+    {
+        if let Some(t) = read_token_file(path)? {
+            return Ok(Some(t));
+        }
     }
-    let raw = fs::read_to_string(&path).map_err(|e| PublishError::Io {
-        path: path.clone(),
-        message: format!("reading token: {e}"),
-    })?;
-    let trimmed = raw.trim();
-    if trimmed.is_empty() {
-        return Ok(None);
-    }
-    Ok(Some(Token {
-        value: trimmed.to_string(),
-        source: TokenSource::File(path),
-    }))
+    Ok(None)
 }
 
-/// Path to the per-host token file: `<home>/.vibevm/<prefix>.publish.token`,
-/// where `<prefix>` is the first label of `host`. Returns `None` if no
-/// home directory is detectable or `host` is empty.
+/// Path to the per-host token file `<settings-dir>/<prefix>.publish.token`
+/// (canonical `~/.vibe`, or `$VIBE_SETTINGS`), where `<prefix>` is the
+/// first label of `host`. Returns `None` if no home directory is
+/// detectable or `host` is empty.
 pub fn per_host_token_path(host: &str) -> Option<PathBuf> {
     let prefix = host_prefix(host)?;
-    let home = dirs::home_dir()?;
-    Some(home.join(".vibevm").join(format!("{prefix}.publish.token")))
+    Some(vibe_core::settings::settings_dir()?.join(format!("{prefix}.publish.token")))
 }
 
-/// Path to the legacy host-agnostic token file: `<home>/.vibevm/git.publish.token`.
+/// The per-host token file under the pre-consolidation `~/.vibevm` dir —
+/// a read-only migration fallback for [`per_host_token_path`].
+fn dot_vibevm_per_host_token_path(host: &str) -> Option<PathBuf> {
+    let prefix = host_prefix(host)?;
+    Some(vibe_core::settings::legacy_settings_dir()?.join(format!("{prefix}.publish.token")))
+}
+
+/// Path to the legacy host-agnostic token file
+/// `<settings-dir>/git.publish.token` (canonical `~/.vibe`).
 pub fn legacy_token_path() -> Option<PathBuf> {
-    let home = dirs::home_dir()?;
-    Some(home.join(".vibevm").join("git.publish.token"))
+    Some(vibe_core::settings::settings_dir()?.join("git.publish.token"))
+}
+
+/// The host-agnostic token file under the pre-consolidation `~/.vibevm`
+/// dir — a read-only migration fallback for [`legacy_token_path`].
+fn dot_vibevm_token_path() -> Option<PathBuf> {
+    Some(vibe_core::settings::legacy_settings_dir()?.join("git.publish.token"))
 }
 
 /// Backwards-compatible alias. Prefer [`legacy_token_path`] in new code.
@@ -355,13 +385,14 @@ mod tests {
     }
 
     #[test]
-    fn per_host_token_path_renders_under_dot_vibevm() {
-        // We can't assert the exact home dir, but we can assert the
-        // suffix and that some path is returned.
+    fn per_host_token_path_renders_under_canonical_settings_dir() {
+        // We can't assert the exact home dir, but the file name is fixed
+        // and the path now lands in the canonical settings dir (`~/.vibe`),
+        // not the legacy `~/.vibevm` — whose reads are a fallback only.
         let p = per_host_token_path("github.com").expect("home dir present in test env");
         let s = p.to_string_lossy().to_string();
         assert!(s.ends_with("github.publish.token"));
-        assert!(s.contains(".vibevm"));
+        assert!(!s.contains(".vibevm"));
     }
 
     #[test]

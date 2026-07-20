@@ -19,7 +19,6 @@ tracing.workspace = true
 semver.workspace = true
 sha2.workspace = true
 walkdir.workspace = true
-dirs.workspace = true
 serde.workspace = true
 serde_json.workspace = true
 toml.workspace = true

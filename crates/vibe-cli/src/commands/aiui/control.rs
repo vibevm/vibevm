@@ -173,32 +173,45 @@ fn default_tree_exec() -> String {
     format!("{exe} tree --path {cwd} -c")
 }
 
-/// `~/.vibevm/aiui/` — where vibeterm writes its per-session discovery files.
+/// `<settings-dir>/aiui/` — where vibeterm writes its per-session
+/// discovery files (canonical `~/.vibe`, or `$VIBE_SETTINGS`), resolved
+/// through the one `vibe_core::settings` chokepoint.
 fn aiui_dir() -> PathBuf {
-    home().join(".vibevm").join("aiui")
+    vibe_core::settings::aiui_dir().unwrap_or_else(|| PathBuf::from("aiui"))
 }
 
-/// The user's home directory (`HOME`, then `USERPROFILE` on Windows).
-fn home() -> PathBuf {
-    if let Some(h) = std::env::var_os("HOME").filter(|s| !s.is_empty()) {
-        return PathBuf::from(h);
+/// The pre-consolidation `~/.vibevm/aiui/`, read as a migration fallback
+/// for a vibeterm shell that still writes to the old location.
+fn legacy_aiui_dir() -> Option<PathBuf> {
+    vibe_core::settings::legacy_settings_dir().map(|d| d.join("aiui"))
+}
+
+/// Candidate discovery-file paths for `name`: the canonical settings dir
+/// first, then the legacy `~/.vibevm/aiui` migration fallback.
+fn discovery_candidates(name: &str) -> Vec<PathBuf> {
+    let mut paths = vec![aiui_dir().join(name)];
+    if let Some(legacy) = legacy_aiui_dir() {
+        paths.push(legacy.join(name));
     }
-    if cfg!(windows)
-        && let Some(p) = std::env::var_os("USERPROFILE").filter(|s| !s.is_empty())
-    {
-        return PathBuf::from(p);
-    }
-    PathBuf::from(".")
+    paths
 }
 
 /// Read a session's discovery file — `<pid>.json` for an explicit session, else
 /// `latest.json` (the most recently opened). `pub(super)` so the CDP `inspect`
 /// sibling reads the same session.
 pub(super) fn read_discovery(session: Option<u32>) -> Result<Discovery> {
-    let file = match session {
-        Some(pid) => aiui_dir().join(format!("{pid}.json")),
-        None => aiui_dir().join("latest.json"),
+    let name = match session {
+        Some(pid) => format!("{pid}.json"),
+        None => "latest.json".to_string(),
     };
+    let candidates = discovery_candidates(&name);
+    // Prefer whichever location actually holds the file; fall back to the
+    // canonical path for the "not found" message.
+    let file = candidates
+        .iter()
+        .find(|p| p.exists())
+        .cloned()
+        .unwrap_or_else(|| candidates[0].clone());
     let raw = std::fs::read_to_string(&file).map_err(|_| {
         anyhow!(
             "no vibeterm control session (`{}` not found) — run `vibe aiui open` first",
@@ -213,14 +226,18 @@ pub(super) fn read_discovery(session: Option<u32>) -> Result<Discovery> {
 /// rather than a `<pid>.json` sidesteps the Electron launcher's pid indirection;
 /// the freshness gate rejects a stale pointer from an earlier session.
 fn wait_for_discovery(since_ms: u128, timeout_ms: u64) -> Result<Discovery> {
-    let file = aiui_dir().join("latest.json");
+    // Watch both the canonical and the legacy `latest.json`: a not-yet-
+    // migrated vibeterm shell still writes the old location.
+    let candidates = discovery_candidates("latest.json");
     let deadline = Instant::now() + Duration::from_millis(timeout_ms);
     loop {
-        if let Ok(raw) = std::fs::read_to_string(&file)
-            && let Ok(disc) = parse_discovery(&raw)
-            && disc.started_at >= since_ms
-        {
-            return Ok(disc);
+        for file in &candidates {
+            if let Ok(raw) = std::fs::read_to_string(file)
+                && let Ok(disc) = parse_discovery(&raw)
+                && disc.started_at >= since_ms
+            {
+                return Ok(disc);
+            }
         }
         if Instant::now() >= deadline {
             bail!("vibeterm's control server did not come up within {timeout_ms} ms");

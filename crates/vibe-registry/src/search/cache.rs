@@ -70,9 +70,11 @@ struct CacheEntry {
 }
 
 /// Returns the cache root, honouring an explicit `override_dir` first
-/// then falling back to `<home>/.vibe/search-cache`. `None` if no
-/// home directory is detectable and no override is given — the cache
-/// layer silently degrades to no-op in that case.
+/// then falling back to `<settings-dir>/search-cache` (via the one
+/// `vibe_core::settings` chokepoint, so `$VIBE_SETTINGS` relocates it
+/// with the rest). `None` if no home directory is detectable and no
+/// override is given — the cache layer silently degrades to no-op in
+/// that case.
 ///
 /// The override originates from `VIBEVM_SEARCH_CACHE_DIR`, but that env
 /// read happens at the composition root (`main.rs`) and the value is
@@ -84,7 +86,7 @@ pub fn cache_root(override_dir: Option<&str>) -> Option<PathBuf> {
     {
         return Some(PathBuf::from(s));
     }
-    Some(dirs::home_dir()?.join(".vibe").join("search-cache"))
+    vibe_core::settings::search_cache_dir()
 }
 
 /// Filesystem-safe rendering of the registry name. Only ASCII

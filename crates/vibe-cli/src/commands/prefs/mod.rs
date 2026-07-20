@@ -91,13 +91,16 @@ fn resolve_repo(path: &Path) -> PathBuf {
 /// an unresolvable home is a hard error (a clearer failure than silently
 /// skipping the user-machine layer).
 pub(super) fn layer_paths(repo_root: &Path) -> Result<LayerPaths> {
-    let home = dirs::home_dir().context(
+    // L1 flows through the one `vibe_core::settings` chokepoint, so it lands
+    // in `~/.vibe/settings.toml` — or wherever `$VIBE_SETTINGS` points — and
+    // the loader's path-classifier tags it L1 by the same rule.
+    let l1 = vibe_core::settings::settings_toml_path().context(
         "could not resolve the user home for L1 (`~/.vibe/settings.toml`); \
-         set HOME (Unix/Git Bash) or USERPROFILE (Windows)",
+         set HOME (Unix/Git Bash) or USERPROFILE (Windows), or $VIBE_SETTINGS",
     )?;
     let dot_vibe = repo_root.join(".vibe");
     Ok(LayerPaths {
-        l1: home.join(".vibe").join("settings.toml"),
+        l1,
         l2: dot_vibe.join("settings.toml"),
         l3: dot_vibe.join("settings.local.toml"),
     })
