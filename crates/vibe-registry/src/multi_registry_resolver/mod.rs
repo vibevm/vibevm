@@ -44,7 +44,7 @@ use vibe_core::manifest::{
     GitPackageDep, Lockfile, Manifest, MirrorSection, OverrideSection, RedirectFile, RefPolicy,
     RegistrySection, parse_redirect_bytes,
 };
-use vibe_core::{Group, PackageKind, PackageRef, VersionSpec, url_is_local};
+use vibe_core::{Group, PackageKind, PackageRef, VersionSpec};
 
 use crate::git_backend::{GitBackend, GitError, ShellGit};
 use crate::git_package_registry::{GitPackageRegistry, copy_dir_excluding_git};
@@ -64,8 +64,8 @@ mod walk;
 
 pub use attempt::{RegistryWalkAttempt, WalkAttemptStatus};
 pub use refresh::{RefreshReport, RefreshedEntry, RefreshedVia, SkippedEntry};
-pub(crate) use source::local_path_from_url;
 pub use source::{LocalRegistrySource, RegistrySource};
+pub(crate) use source::{is_local_directory_url, local_path_from_url};
 
 /// Default ref for `[[override]]` entries that omit `ref`. Most adopters
 /// will pin a tag or branch explicitly; `main` is the practical default
@@ -301,18 +301,19 @@ impl MultiRegistryResolver {
             if !reg.enabled {
                 continue;
             }
-            // A local `[[registry]]` url (`file://` / bare path, per
-            // `url_is_local`) — but NOT a `git+` transport (`git+file://` is a
-            // local *git* repo to clone, not a plain directory) — is served
-            // straight off the filesystem by `LocalRegistry`, never
-            // git-cloned, so a plain on-disk directory works as a registry
-            // (PROP-002 §2.2.2). `url_is_local` still classifies `git+file://`
-            // as local for the `--offline` filter (no network); the `git+`
-            // guard here keeps it on the git-clone backend. `naming` / `auth`
-            // / `mirrors` / `index_client` are git-only knobs and do not apply
-            // (LocalRegistry reads `<root>/<group>/<name>/v<version>/` directly).
-            let is_git_transport = reg.url.trim().to_ascii_lowercase().starts_with("git+");
-            if url_is_local(&reg.url) && !is_git_transport {
+            // A `[[registry]]` url with an explicit `file:` scheme (the
+            // documented local-directory form, e.g. `file:///C:/repos/app`)
+            // is served straight off the filesystem by `LocalRegistry` —
+            // never git-cloned — so a plain on-disk directory works as a
+            // registry (PROP-002 §2.2.2). A bare path or a `git+` transport
+            // (`git+file://`, `git+https://`) stays on the git-clone backend:
+            // those are local/remote *git* repos to clone, the historical
+            // behaviour the multi-registry tests and local-git workflows
+            // rely on. (`url_is_local` is a wider predicate used by the
+            // separate `--offline` filter; the backend choice is narrower —
+            // `file:` only.) `naming` / `auth` / `mirrors` / `index_client`
+            // are git-only knobs and do not apply to a LocalRegistry.
+            if is_local_directory_url(&reg.url) {
                 let path = local_path_from_url(&reg.url)?;
                 sources.push(RegistrySource::Local(LocalRegistrySource {
                     name: reg.name.clone(),

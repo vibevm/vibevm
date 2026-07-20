@@ -67,6 +67,19 @@ impl RegistrySource {
     }
 }
 
+/// Whether a `[[registry]]` url names a **local-directory** registry — an
+/// explicit `file:` scheme (`file:///C:/x`, `file:///home/x`). This is the
+/// backend-choice predicate: only a `file:` url opens a [`LocalRegistry`]
+/// (filesystem monorepo). A bare path (no scheme) and a `git+` transport
+/// (`git+file://`, `git+https://`) stay on the git-clone backend — they are
+/// local/remote *git* repos, the historical behaviour. (The wider
+/// [`url_is_local`] is the `--offline` filter's predicate — it also keeps bare
+/// paths and `git+file://`, since they need no network; the backend choice is
+/// narrower on purpose.)
+pub(crate) fn is_local_directory_url(url: &str) -> bool {
+    url.trim().to_ascii_lowercase().starts_with("file:")
+}
+
 /// Turn a local `[[registry]]` url (`file://…` / bare path, already classified
 /// local by [`url_is_local`] and not a `git+` transport — `git+file://` is a
 /// local *git* repo, handled by the git-clone backend, not here) into the

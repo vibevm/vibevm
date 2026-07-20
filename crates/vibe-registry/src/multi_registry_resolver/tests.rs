@@ -77,8 +77,15 @@ fn local_directory_registry_resolves_and_fetches_without_git() {
         "sanity: the registry is not a git repo"
     );
 
-    // A [[registry]] whose url is the bare path to that directory.
-    let url = root.path().display().to_string();
+    // A [[registry]] whose url is the explicit `file://` form for that
+    // directory. (A bare path stays on the git backend — the historical
+    // behaviour; only `file:` opens a LocalRegistry.)
+    let root_str = root.path().display().to_string().replace('\\', "/");
+    let url = if root_str.starts_with('/') {
+        format!("file://{root_str}")
+    } else {
+        format!("file:///{root_str}")
+    };
     let r = build_resolver(
         cache.path(),
         vec![registry_section("local", &url)],
@@ -140,5 +147,30 @@ fn git_transport_url_stays_on_the_git_backend_not_local() {
             .iter()
             .all(|s| !matches!(s, RegistrySource::Local(_))),
         "git+file:// is a git transport — must stay on the git backend, not LocalRegistry"
+    );
+}
+
+/// A bare-path url (no scheme) stays on the git backend too — it is the
+/// historical "local git repo to clone" form the multi-registry tests and
+/// local-git workflows rely on. Only an explicit `file:` scheme opens a
+/// LocalRegistry. Regression guard: an earlier draft of the local-directory
+/// fix routed bare paths to LocalRegistry and broke
+/// `differential_oracle::provider_pair_agrees_on_solvable_inputs`.
+#[test]
+fn bare_path_url_stays_on_the_git_backend_not_local() {
+    let cache = tempdir().unwrap();
+    let bare = cache.path().join("org"); // a bare filesystem path, no scheme
+    let r = build_resolver(
+        cache.path(),
+        vec![registry_section("local-git", &bare.display().to_string())],
+        vec![],
+        vec![],
+        Arc::new(FakeBackend::default()),
+    );
+    assert!(
+        r.sources()
+            .iter()
+            .all(|s| !matches!(s, RegistrySource::Local(_))),
+        "a bare path (no scheme) is a git registry historically — only file:// opens LocalRegistry"
     );
 }
