@@ -1,5 +1,26 @@
 # WAL — Project Continuation State
 
+## CHECKPOINT 2026-07-20 — VIBETERM M1 BUILD-OUT + ProjectX REDESIGN (offscreen-CDP verify loop in place)
+
+_Updated: 2026-07-20 — continuing the vibeterm UI-architecture campaign past the pre-MVP: the **M1
+build-out** (split view P2 + tear-off P3) and a **chrome redesign to the ProjectX reference** landed on
+`main`, floor-green, pushed to both mirrors (`a0cea60` split/tear-off · `0976b03` redesign). `main`
+synced with `origin/main`, working tree clean. **The shell now runs offscreen** (`--headless --cdp-port`,
+spawn via `Stdio::null` — node-pty's ConPTY agent trips on an inherited Git-Bash console) and is **driven
++ screenshot via CDP** (`scripts/cdp-smoke.mjs`, `scripts/cdp-split-smoke.mjs`); `analyze_image` on the
+captures confirms the four-column layout (profiles rail · TERMINALS list with rich rows + user card ·
+content+header · right sidebar) and that the sidebar drops in split. Working surface: open / select /
+close / pane.split / pane.close / tab.move-to-window / theme / locale (live). Placeholders: rename,
+background-tab, close-others/all, sidebar search + items, profiles-rail icons, content-header utility
+icons. Engine render-free TS (17 vitest); contracts PROP-044/046/047; research closed (findings + 16
+deltas). **No blocker.** **Next (report-then-wait):** pixel-polish vs the reference captures, wire the
+placeholder controls, the identity-grammar conformance golden (PROP-046 §9), or M1 close (P4 manual-test
++ docs + health-audit). See `CONTINUE.md` (rewritten) for the full cold-resume. **Discipline unchanged:
+never the reference app's real name; heredoc commits; no AI attribution; edits via Edit/Write; push via
+`cargo xtask mirror`.**_
+
+---
+
 ## CHECKPOINT 2026-07-19 (later) — VIBETERM UI-ARCHITECTURE: research → design → contracts → execution DONE (pre-MVP)
 
 _Updated: 2026-07-19 (later) — the whole vibeterm UI-architecture campaign landed on `main`, floor-green
