@@ -164,6 +164,54 @@ pub(crate) fn matches(new: &Manifest, prev: &Manifest) -> bool {
             .all(|e| prev.get(&e.rel).map(|pe| unchanged(e, pe)).unwrap_or(false))
 }
 
+/// Is `e` the transient "a real-time scanner / indexer has a handle open on a
+/// file inside this directory" lock? On Windows that is `ERROR_ACCESS_DENIED`
+/// (5); `fs::rename` / `fs::remove_dir_all` of a directory holding a freshly
+/// written `.exe` / `.dll` (the placer stages the full distribution — the
+/// Electron apps included) trips it moments after the write. The handle
+/// releases within a second or two, so a short retry turns a flaky install
+/// into a reliable one. `PermissionDenied` is the kind-level fallback for
+/// other platforms / mappings.
+fn is_transient_lock(e: &io::Error) -> bool {
+    e.raw_os_error() == Some(5) || e.kind() == io::ErrorKind::PermissionDenied
+}
+
+/// `fs::rename` that retries on a transient access-denied lock (see
+/// [`is_transient_lock`]). A non-lock error surfaces immediately — the retry
+/// never masks a real failure.
+fn rename_into_place(from: &Path, to: &Path) -> io::Result<()> {
+    retry(|| fs::rename(from, to))
+}
+
+/// `fs::remove_dir_all` that retries on a transient access-denied lock — the
+/// staging cleanup and the existing-instance removal hit the same scanner
+/// race the publish rename does.
+fn remove_tree(path: &Path) -> io::Result<()> {
+    retry(|| fs::remove_dir_all(path))
+}
+
+/// Run `op`, retrying only on a transient lock with a short backoff. The
+/// backoff sequence is bounded (~5s total) — long enough for a scanner to
+/// release a handle, short enough that a genuinely locked file still
+/// surfaces in reasonable time.
+fn retry(mut op: impl FnMut() -> io::Result<()>) -> io::Result<()> {
+    const BACKOFF_MS: [u64; 7] = [100, 200, 400, 800, 800, 800, 800];
+    let mut last = None;
+    for ms in BACKOFF_MS {
+        match op() {
+            Ok(()) => return Ok(()),
+            Err(e) if is_transient_lock(&e) => {
+                last = Some(e);
+                std::thread::sleep(std::time::Duration::from_millis(ms));
+            }
+            Err(e) => return Err(e),
+        }
+    }
+    // The loop only advances on a transient-lock error, which sets `last`;
+    // reaching here means the backoff is exhausted on a lock.
+    Err(last.unwrap_or_else(|| io::Error::other("retry backoff exhausted")))
+}
+
 /// Place a distribution into a new instance dir by diff-copy: hardlink files
 /// unchanged versus `prev`, copy the rest, write the manifest, and publish
 /// atomically (PROP-019 §2.15).
@@ -177,7 +225,7 @@ pub(crate) fn place(
 ) -> Result<(), PlaceError> {
     let staging = store.version_id_dir(id).join(".staging");
     if staging.exists() {
-        fs::remove_dir_all(&staging).map_err(|source| PlaceError::Layout {
+        remove_tree(&staging).map_err(|source| PlaceError::Layout {
             path: staging.clone(),
             source,
         })?;
@@ -224,7 +272,7 @@ pub(crate) fn place(
 
     let final_dir = store.instance_dir(id, instance);
     if final_dir.exists() {
-        fs::remove_dir_all(&final_dir).map_err(|source| PlaceError::Layout {
+        remove_tree(&final_dir).map_err(|source| PlaceError::Layout {
             path: final_dir.clone(),
             source,
         })?;
@@ -235,7 +283,7 @@ pub(crate) fn place(
             source,
         })?;
     }
-    fs::rename(&staging, &final_dir).map_err(|source| PlaceError::Layout {
+    rename_into_place(&staging, &final_dir).map_err(|source| PlaceError::Layout {
         path: final_dir.clone(),
         source,
     })?;
@@ -293,5 +341,40 @@ mod tests {
             fs::read(store.instance_dir(&id, 2).join(BINARY_NAME)).unwrap(),
             b"BIN"
         );
+    }
+
+    /// `is_transient_lock` recognises the Windows `ERROR_ACCESS_DENIED` (5)
+    /// and the kind-level `PermissionDenied` — the scanner-held-handle races
+    /// the publish rename / staging cleanup retry on — and not other errors.
+    #[test]
+    #[verifies("spec://vibevm/common/PROP-019#instances", r = 1)]
+    fn is_transient_lock_classifies_access_denied() {
+        assert!(is_transient_lock(&io::Error::from_raw_os_error(5)));
+        assert!(is_transient_lock(&io::Error::new(
+            io::ErrorKind::PermissionDenied,
+            "denied",
+        )));
+        assert!(!is_transient_lock(&io::Error::new(
+            io::ErrorKind::NotFound,
+            "missing",
+        )));
+    }
+
+    /// `rename_into_place` / `remove_tree` succeed on an unlocked directory
+    /// (the common path, no retry needed) and report the lock-class errors
+    /// they would retry on rather than masking them.
+    #[test]
+    #[verifies("spec://vibevm/common/PROP-019#instances", r = 1)]
+    fn rename_and_remove_succeed_when_unlocked() {
+        let tmp = tempfile::tempdir().unwrap();
+        let from = tmp.path().join("staging");
+        let to = tmp.path().join("final");
+        fs::create_dir_all(&from).unwrap();
+        fs::write(from.join("vibe"), b"x").unwrap();
+        rename_into_place(&from, &to).unwrap();
+        assert!(to.join("vibe").is_file());
+        assert!(!from.exists(), "rename moved the dir out of staging");
+        remove_tree(&to).unwrap();
+        assert!(!to.exists());
     }
 }
