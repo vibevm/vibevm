@@ -254,6 +254,44 @@ Usage:
 
 The `( … )` subshell handles CWD restoration automatically — exit the subshell, you're back where you started. The `|| return $?` propagates a build failure so the optional refresh step never runs against a stale binary.
 
+### 3.2 IDE setup — rust-analyzer (the Rust LSP)
+
+[rust-analyzer](https://rust-analyzer.github.io/) is the recommended language server for Rust: inline types, go-to-definition, inlay hints, completion, and clippy-on-save. It runs the same `cargo` / `clippy` pipeline §3 documents, just inside your editor.
+
+**Install.** The server ships with the toolchain: `rustup component add rust-analyzer`. Editor bindings: VS Code / VSCodium — the official *rust-analyzer* extension; Neovim / Emacs / Helix / JetBrains (via the Rust plugin) all drive the same `rust-analyzer` binary.
+
+**Multi-workspace layout — the one gotcha.** This repo is a monorepo of **several Cargo workspaces** (PROP-024). The root workspace ([`Cargo.toml`](Cargo.toml)) `exclude`s `packages/` and `vibedeps/`, and those carry their *own* workspaces — `packages/org.vibevm.fractality/fractality/v0.1.0/`, the AI-native stacks under `packages/org.vibevm.ai-native/…`, and the vendored copies under `vibedeps/`. So:
+
+- Opening the **repo root** indexes the host workspace (`crates/`, `xtask`, `apps/`). That is what you want for `vibe-cli` work.
+- To edit a **nested workspace** (fractality, the discipline stacks, an mcp package), open that subdirectory in a second editor window, or add its `Cargo.toml` to your editor's linked-projects list (VS Code: `rust-analyzer.linkedProjects`). Pointing the root workspace at a nested one slows indexing and confuses `cargo metadata`.
+
+**Recommended settings** — match the project gate (§6: clippy with `-D warnings`, all targets). VS Code / VSCodium `settings.json`:
+
+```jsonc
+{
+  "rust-analyzer.check.command": "clippy",
+  "rust-analyzer.check.extraArgs": ["--all-targets"],
+  "rust-analyzer.cargo.allTargets": true,
+  "rust-analyzer.linkedProjects": []
+  // add nested-workspace Cargo.toml paths here when you edit them
+}
+```
+
+Or a project-local `rust-analyzer.toml` at the repo root (read by recent rust-analyzer):
+
+```toml
+[check]
+command = "clippy"
+extraArgs = ["--all-targets"]
+
+[cargo]
+allTargets = true
+```
+
+**Spec anchors.** Every code cell carries `specmark::scope!` / `#[spec(...)]` / `#[verifies(...)]` citing `spec://…` URIs. rust-analyzer's go-to-definition and rename treat these like any other macro; the URI strings are the source of truth — edit the spec, not the strings (see the Addressable Specs flow in [`spec/boot/STATIC.md`](spec/boot/STATIC.md)). The `vibe trace` command (a delegating alias to `rust-ai-native trace`) resolves a URI to its definition.
+
+**Toolchain note.** Pinned to edition 2024 / stable ≥ 1.93 ([`rust-toolchain.toml`](rust-toolchain.toml)). A rust-analyzer release from the last few months is current enough; if inlay hints misrender or macros error, `rustup update` and update the editor extension.
+
 ## 4. Manual smoke-tests
 
 Live integration scripts live under [`manual-tests/`](manual-tests/). One file per scenario, self-contained walkthrough with clean-slate setup and teardown. Read [`manual-tests/README.md`](manual-tests/README.md) for the authoring conventions. Run the relevant script before tagging any milestone and after any change to an integration surface (git backend, CLI args, lockfile schema).
