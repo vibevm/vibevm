@@ -55,6 +55,25 @@ pub(crate) fn launch_vibeterm(
     Ok(())
 }
 
+/// Launch a desktop terminal for `exec`, OR — when no terminal app is
+/// resolvable — run `in_place` in the current terminal instead. This is the
+/// `vibe tree -t` fallback path: a nested `vibe tree` whose box has no
+/// vibeframe/vibeterm on `PATH` still renders the console TUI right here
+/// rather than erroring out. The desktop-terminal path spawns the app
+/// detached; the in-place path runs `in_place` synchronously and returns
+/// its result.
+pub(crate) fn launch_vibeterm_or_in_place(
+    exec: &str,
+    icon: Option<&str>,
+    app: &str,
+    in_place: impl FnOnce() -> Result<()>,
+) -> Result<()> {
+    match launch_vibeterm(exec, None, None, icon, app) {
+        Ok(()) => Ok(()),
+        Err(_) => in_place(),
+    }
+}
+
 /// Spawn vibeterm detached and return the child handle. `control` adds
 /// `--control` so vibeterm starts its AIUI control server + discovery file;
 /// `headless` adds `--headless` so no OS window pops up (a control session is
@@ -144,10 +163,10 @@ pub(crate) fn pick_free_loopback_port() -> Result<u16> {
         .map_err(|e| anyhow!("resolving the CDP port: {e}"))
 }
 
-/// Whether a resolved vibeterm is the unpackaged dev source (`apps/vibeterm`,
-/// Electron resolved through `node_modules/electron/path.txt`) or a packaged,
-/// self-contained build (electron binary at the dir root, `resources/app/`
-/// inside — produced by `apps/vibeterm/scripts/package.mjs`).
+/// Whether a resolved vibeterm is the unpackaged dev source (the package's
+/// `app/` dir, Electron resolved through `node_modules/electron/path.txt`) or
+/// a packaged, self-contained build (electron binary at the dir root,
+/// `resources/app/` inside — produced by the product's `app/scripts/package.mjs`).
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub(crate) enum VibetermShape {
     Dev,
@@ -189,12 +208,24 @@ fn classify_vibeterm(dir: &Path, app: &str) -> VibetermShape {
     }
 }
 
-/// Locate the vibeterm app directory without a `PATH` search (PROP-042 §5):
-/// `$VIBEVM_VIBETERM` wins (an explicit override); else an installed `vibe`
-/// finds the packaged `vibeterm/` shipped inside its own instance dir
-/// (`selfloc::derive_self`); else a dev fallback walks up from the running
-/// binary for `apps/vibeterm` — works for a `target/debug` or `target/release`
-/// build alike, since both sit under the repo root.
+/// Locate the terminal app directory (PROP-042 §5, post-extraction): try
+/// each resolution tier in order, returning the first that matches. The
+/// terminal apps now live in a separate products repo and publish themselves
+/// to `PATH`; this resolver still honours the legacy instance-packaged layout
+/// for back-compat with pre-extraction installs.
+///
+/// - **Tier 1** — `$VIBEVM_<APP>` explicit override (dev source or a packaged
+///   dir; an env var set by a developer or a launcher).
+/// - **Tier 2** — the active VVM instance's packaged `<app>/` sub-tree
+///   (back-compat: a pre-extraction instance still carries it).
+/// - **Tier 3** — a `PATH` lookup for the app-named packaged binary (the
+///   extracted-product path — how `<app> self install`-placed binaries are
+///   found). The directory the binary lives in is treated as the packaged
+///   root; its shape is `Packaged`.
+///
+/// Resolution failure returns a typed error so a caller can fall back (e.g.
+/// `vibe tree` runs in place when vibeframe is absent); `vibe term` /
+/// `vibe frame` surface the error to the user instead.
 fn resolve_app(app: &str) -> Result<Vibeterm> {
     let env_var = format!("VIBEVM_{}", app.to_uppercase());
     // Tier 1 — explicit override (dev or packaged).
@@ -226,30 +257,34 @@ fn resolve_app(app: &str) -> Result<Vibeterm> {
             });
         }
     }
-    // Tier 3 — dev walk-up for apps/<app>.
-    let exe = std::env::current_exe()?;
-    let mut cursor = exe.parent();
-    while let Some(dir) = cursor {
-        let cand = dir.join("apps").join(app);
-        if cand.join("package.json").exists() {
+    // Tier 3 — PATH lookup for the packaged app-named binary. The directory
+    // the binary sits in is the packaged root (electron-packager's output
+    // carries the app-named exe at its root, see PROP-electron-packaging).
+    if let Some(dir) = via_path(app) {
+        if matches!(classify_vibeterm(&dir, app), VibetermShape::Packaged) {
             return Ok(Vibeterm {
-                dir: cand,
-                shape: VibetermShape::Dev,
+                dir,
+                shape: VibetermShape::Packaged,
             });
         }
-        cursor = dir.parent();
-    }
-    // Interim fallback: an app not yet packaged into installed instances (e.g.
-    // vibeframe) resolves to vibeterm instead, so an installed VibeTree keeps
-    // launching rather than failing. Dev finds apps/<app> directly above, so this
-    // fires only from an installed instance until <app>/ is packaged.
-    if app != "vibeterm" {
-        return resolve_app("vibeterm");
     }
     bail!(
-        "{app} not found — set ${env_var} to its directory \
-         (dev: <repo>/apps/{app}; packaged: the instance's {app}/)"
+        "{app} not found — set ${env_var} to its directory, install it on PATH \
+         (`{app} self install` from the vibevm-term repo), or run an instance \
+         that packages it"
     )
+}
+
+/// First `PATH` entry whose `<app>(.exe)` lives in it, returned as that
+/// directory. None when no entry matches. Used by [`resolve_app`] as the
+/// extracted-product resolution tier.
+fn via_path(app: &str) -> Option<PathBuf> {
+    let path = std::env::var_os("PATH")?;
+    let exe_name = packaged_exe_name(app);
+    std::env::split_paths(&path).find_map(|dir| {
+        let cand = dir.join(&exe_name);
+        cand.is_file().then(|| dir)
+    })
 }
 
 /// Resolve vibeterm's Electron binary. Dev: through its own
@@ -259,7 +294,7 @@ fn electron_binary(v: &Vibeterm, app: &str) -> Result<PathBuf> {
     match v.shape {
         VibetermShape::Packaged => {
             // electron-packager names the executable after the app name —
-            // `vibeterm` (`apps/vibeterm/scripts/package.mjs` passes `'vibeterm'`
+            // `vibeterm` (the product's `app/scripts/package.mjs` passes `'vibeterm'`
             // as the packager name) — so a packaged build ships `vibeterm.exe`,
             // NOT `electron.exe`. Looking for `electron.exe` here was the bug
             // that made `vibe tree -t` from an instance fail to spawn.

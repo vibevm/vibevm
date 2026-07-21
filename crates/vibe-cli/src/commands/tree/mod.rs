@@ -25,7 +25,7 @@ pub(crate) mod tui;
 
 use std::path::{Path, PathBuf};
 
-use anyhow::{Result, anyhow};
+use anyhow::{Result, anyhow, bail};
 use serde_json::Value;
 use vibe_settings::resolver::ResolvedPrefs;
 
@@ -202,11 +202,18 @@ fn resolve_launch_mode(
     }
 }
 
-/// Open the tree in vibeterm: launch it running `vibe tree --path <root> -c`, so
-/// the child renders the console TUI *inside* vibeterm (the `-c` prevents `-t`
-/// recursion). The running binary is quoted, since an installed path may contain
-/// spaces (a `<root>` with spaces is a known edge until vibeterm's `splitCommand`
-/// tokenises quoted arguments).
+/// Open the tree in a desktop terminal: launch vibeframe running
+/// `vibe tree --path <root> -c`, so the child renders the console TUI *inside*
+/// the terminal (the `-c` prevents `-t` recursion). The running binary is
+/// quoted, since an installed path may contain spaces (a `<root>` with spaces
+/// is a known edge until the terminal's `splitCommand` tokenises quoted
+/// arguments).
+///
+/// When vibeframe is not resolvable (no `$VIBEVM_VIBEFRAME`, no packaged
+/// `<instance>/vibeframe/`, no `vibeframe` on `PATH`), the tree runs **in
+/// place** in the current terminal via `vibe tree --path <root> -c` as a
+/// subprocess — the extracted-product fallback (a box without the terminal
+/// product installed still gets a working tree, just no desktop window).
 fn open_in_vibeterm(root: &std::path::Path) -> Result<()> {
     let exe = std::env::current_exe()?;
     let exec = format!(
@@ -216,7 +223,28 @@ fn open_in_vibeterm(root: &std::path::Path) -> Result<()> {
     );
     // The tree carries the `vibetree` window icon so it matches VibeTree.exe
     // (PROP-043 #icon / VIBE-LAUNCHERS D8).
-    super::term::launch_vibeterm(&exec, None, None, Some("vibetree"), "vibeframe")
+    let exe_for_in_place = exe.clone();
+    let root_for_in_place = root.to_path_buf();
+    super::term::launch_vibeterm_or_in_place(&exec, Some("vibetree"), "vibeframe", || {
+        run_tree_in_place(&exe_for_in_place, &root_for_in_place)
+    })
+}
+
+/// Run `vibe tree --path <root> -c` synchronously in THIS terminal, inheriting
+/// stdio so the TUI renders right here. The in-place fallback for when no
+/// desktop terminal product (vibeframe / vibeterm) is resolvable.
+fn run_tree_in_place(exe: &std::path::Path, root: &std::path::Path) -> Result<()> {
+    let status = std::process::Command::new(exe)
+        .arg("tree")
+        .arg("--path")
+        .arg(root)
+        .arg("-c")
+        .status()?;
+    if status.success() {
+        Ok(())
+    } else {
+        bail!("in-place `vibe tree` exited with {:?}", status.code());
+    }
 }
 
 /// Render the tree TUI headlessly to a snapshot string — the AIUI render plane
