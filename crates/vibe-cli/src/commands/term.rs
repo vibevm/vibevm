@@ -283,7 +283,7 @@ fn via_path(app: &str) -> Option<PathBuf> {
     let exe_name = packaged_exe_name(app);
     std::env::split_paths(&path).find_map(|dir| {
         let cand = dir.join(&exe_name);
-        cand.is_file().then(|| dir)
+        cand.is_file().then_some(dir)
     })
 }
 
