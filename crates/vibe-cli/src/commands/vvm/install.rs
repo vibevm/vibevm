@@ -1,23 +1,29 @@
 //! The install pipeline orchestration (PROP-019 §2.7): lock, build, place
 //! the distribution into a new instance by diff-copy (skipping when nothing
 //! changed), record provenance, and flip `current`.
+//!
+//! The terminal apps (vibeterm, vibeframe) and the GUI launchers
+//! (vibe-launcher) used to be packaged into the instance alongside the
+//! `vibe` binary; they have moved to a separate products repo
+//! (`vibevm-term`) and now publish themselves to `PATH` through their own
+//! version-manager. The install pipeline here handles the `vibe` binary
+//! only — `vibe term` / `vibe frame` resolve the terminal apps through
+//! `$VIBEVM_<APP>` → the active instance's packaged `<app>/` (back-compat)
+//! → `PATH` lookup, with an in-place fallback for `vibe tree`.
 
 specmark::scope!("spec://vibevm/common/PROP-019#build");
 
 use std::fs;
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 
 use anyhow::{Context, Result, bail};
 use specmark::spec;
 
 use super::builder::{Builder, ResolvedVersion};
-use super::launchers::LauncherInstaller;
 use super::model::{InstallRecord, Origin, Profile, VersionId};
 use super::placer::{self, Manifest};
 use super::store::{BINARY_NAME, VersionStore};
-use super::vibeterm_packager::VibetermPackager;
 use crate::output;
-use walkdir::WalkDir;
 
 /// A best-effort install lock so two installs do not race (PROP-019 §2.7).
 struct InstallLock {
@@ -69,11 +75,9 @@ pub(crate) struct InstallRequest<'a> {
 pub(crate) fn perform_install(
     ctx: &output::Context,
     store: &VersionStore,
-    source_root: &Path,
+    source_root: &std::path::Path,
     req: &InstallRequest,
     builder: &dyn Builder,
-    packager: &dyn VibetermPackager,
-    launchers: &dyn LauncherInstaller,
 ) -> Result<()> {
     let _lock = InstallLock::acquire(store)?;
     let id = &req.resolved.id;
@@ -84,27 +88,7 @@ pub(crate) fn perform_install(
         source_root.display()
     ));
     let out = builder.build(source_root, &store.build_dir(), req.profile)?;
-    let mut dist = vec![(out.binary.clone(), BINARY_NAME.to_string())];
-    // Package vibeterm and add its relocatable tree to the dist set as
-    // `vibeterm/...` (PROP-019 §2.7 amendment). `Ok(None)` is a graceful skip
-    // (a Rust-only box, or a tree without apps/vibeterm); the instance still
-    // installs, and `vibe term` then names the missing setup step.
-    let vt_staging = store.build_dir().join("vibeterm-dist");
-    let vibeterm_packaged =
-        if let Some(vt) = packager.package(source_root, &vt_staging, "vibeterm")? {
-            dist.extend(walk_vibeterm_dist(&vt.dir, "vibeterm")?);
-            true
-        } else {
-            false
-        };
-    // vibeframe — the simple terminal frame VibeTree runs in — is packaged the
-    // same way, into `vibeframe/…` (VIBEFRAME-SPLIT-PLAN). A missing/unpackaged
-    // vibeframe is a graceful skip; installed `vibe tree -t` then falls back to
-    // vibeterm.
-    let vf_staging = store.build_dir().join("vibeframe-dist");
-    if let Some(vf) = packager.package(source_root, &vf_staging, "vibeframe")? {
-        dist.extend(walk_vibeterm_dist(&vf.dir, "vibeframe")?);
-    }
+    let dist = vec![(out.binary.clone(), BINARY_NAME.to_string())];
     let manifest = placer::manifest_for(&dist)?;
 
     let prev = latest_instance(store, id)?;
@@ -138,45 +122,9 @@ pub(crate) fn perform_install(
         store.write_current(&inst_dir)?;
         ctx.created(&inst_dir.display().to_string());
         ctx.summary(&format!("installed {id} (instance {instance}) — active"));
-        // The active instance ships without vibeterm — surface it now, at
-        // install time, not later when `vibe term` / `vibe tree -t` first
-        // errors. The packager already logged *why* it skipped; this names the
-        // consequence.
-        if !vibeterm_packaged {
-            ctx.summary(
-                "note: this instance ships WITHOUT vibeterm — `vibe term` / \
-                 `vibe tree -t` will error until it is packaged; see the note \
-                 above and `vibe self doctor`",
-            );
-        }
     }
 
-    // Refresh the GUI launchers (VibeTree / VibeTerm / VibeFrame) + their
-    // Start-menu shortcuts against the now-active shim dir (PROP-043
-    // #self-install). Runs on BOTH paths so `vibe self update` keeps the
-    // launchers current even on a no-op (dedup-skip) update; best-effort inside,
-    // so a launcher problem is a note, never an install failure.
-    launchers.refresh(ctx, store, source_root, req.profile)?;
     Ok(())
-}
-
-/// Walk a staged, relocatable vibeterm dir and emit `(abs_src, "vibeterm/<rel>")`
-/// pairs for the placer. Every file in a packaged Electron app is load-bearing
-/// (the runtime, locales, the app + its node_modules) — ship the whole tree.
-fn walk_vibeterm_dist(staged: &Path, app: &str) -> Result<Vec<(PathBuf, String)>> {
-    let mut out = Vec::new();
-    for entry in WalkDir::new(staged).follow_links(false) {
-        let e = entry?;
-        if !e.file_type().is_file() {
-            continue;
-        }
-        let rel = e.path().strip_prefix(staged)?;
-        out.push((
-            e.path().to_path_buf(),
-            Path::new(app).join(rel).to_string_lossy().into_owned(),
-        ));
-    }
-    Ok(out)
 }
 
 /// The newest existing instance of `id` plus its manifest, for diff-copy.
@@ -198,9 +146,7 @@ fn latest_instance(
 mod tests {
     use super::*;
     use crate::commands::vvm::builder::BuildOutput;
-    use crate::commands::vvm::launchers::SkipLauncherInstaller;
     use crate::commands::vvm::model::Kind;
-    use crate::commands::vvm::vibeterm_packager::{SkipPackager, VibetermOutput, VibetermPackager};
     use specmark::verifies;
 
     /// A builder that writes a chosen byte string into the managed target dir
@@ -210,7 +156,12 @@ mod tests {
     }
 
     impl Builder for FakeBuilder {
-        fn build(&self, _root: &Path, target_dir: &Path, profile: Profile) -> Result<BuildOutput> {
+        fn build(
+            &self,
+            _root: &std::path::Path,
+            target_dir: &std::path::Path,
+            profile: Profile,
+        ) -> Result<BuildOutput> {
             let dir = target_dir.join(profile.target_subdir());
             fs::create_dir_all(&dir).unwrap();
             let binary = dir.join(BINARY_NAME);
@@ -256,8 +207,6 @@ mod tests {
             &FakeBuilder {
                 content: b"v1".to_vec(),
             },
-            &SkipPackager,
-            &SkipLauncherInstaller,
         )
         .unwrap();
         let inst1 = store.instance_dir(&resolved.id, 1);
@@ -274,8 +223,6 @@ mod tests {
             &FakeBuilder {
                 content: b"v1".to_vec(),
             },
-            &SkipPackager,
-            &SkipLauncherInstaller,
         )
         .unwrap();
         assert_eq!(store.instances_of(&resolved.id).unwrap().len(), 1);
@@ -289,8 +236,6 @@ mod tests {
             &FakeBuilder {
                 content: b"v2".to_vec(),
             },
-            &SkipPackager,
-            &SkipLauncherInstaller,
         )
         .unwrap();
         assert_eq!(store.instances_of(&resolved.id).unwrap().len(), 2);
@@ -308,57 +253,8 @@ mod tests {
             &FakeBuilder {
                 content: b"v2".to_vec(),
             },
-            &SkipPackager,
-            &SkipLauncherInstaller,
         )
         .unwrap();
         assert_eq!(store.instances_of(&resolved.id).unwrap().len(), 3);
-    }
-
-    /// A packager that stages a fake vibeterm tree (two files), proving the dist
-    /// set gains a `vibeterm/` subtree the placer lays out under the instance.
-    struct FakePackager;
-    impl VibetermPackager for FakePackager {
-        fn package(
-            &self,
-            _source_root: &Path,
-            staging_root: &Path,
-            _app: &str,
-        ) -> Result<Option<VibetermOutput>> {
-            let dir = staging_root.join("vibeterm-fake-x86");
-            fs::create_dir_all(dir.join("resources/app"))?;
-            fs::write(dir.join("electron.exe"), b"electron")?;
-            fs::write(dir.join("resources/app/package.json"), b"{}")?;
-            Ok(Some(VibetermOutput { dir }))
-        }
-    }
-
-    #[test]
-    #[verifies("spec://vibevm/common/PROP-019#build", r = 1)]
-    fn install_places_vibeterm_subtree_when_packaged() {
-        let tmp = tempfile::tempdir().unwrap();
-        let store = VersionStore::new(tmp.path());
-        let src = tempfile::tempdir().unwrap();
-        let resolved = ResolvedVersion {
-            id: VersionId::new(Kind::Branch, "main"),
-            commit: "feedface".into(),
-        };
-        perform_install(
-            &quiet(),
-            &store,
-            src.path(),
-            &req(&resolved, false, "t1"),
-            &FakeBuilder {
-                content: b"v".to_vec(),
-            },
-            &FakePackager,
-            &SkipLauncherInstaller,
-        )
-        .unwrap();
-        let inst = store.instance_dir(&resolved.id, 1);
-        assert!(inst.join(BINARY_NAME).is_file());
-        // The vibeterm subtree landed next to the binary.
-        assert!(inst.join("vibeterm/electron.exe").is_file());
-        assert!(inst.join("vibeterm/resources/app/package.json").is_file());
     }
 }

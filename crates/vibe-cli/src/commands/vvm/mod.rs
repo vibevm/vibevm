@@ -14,7 +14,6 @@ mod env;
 mod error;
 mod git;
 mod install;
-mod launchers;
 mod model;
 mod placer;
 mod relocate;
@@ -23,7 +22,6 @@ pub(crate) mod selfloc;
 mod source;
 mod store;
 mod tools;
-mod vibeterm_packager;
 
 use std::io::IsTerminal;
 use std::path::{Path, PathBuf};
@@ -243,15 +241,7 @@ fn run_install_cmd(ctx: &output::Context, env: &VvmEnv, args: VvmInstallArgs) ->
         origin,
         source_path,
     };
-    install::perform_install(
-        ctx,
-        &store,
-        &source_dir,
-        &req,
-        &builder::CargoBuilder,
-        &vibeterm_packager::NpmPackager::new(ctx),
-        &launchers::NativeLauncherInstaller,
-    )
+    install::perform_install(ctx, &store, &source_dir, &req, &builder::CargoBuilder)
 }
 
 /// `self update` — rebuild and activate the latest in-tree version. A thin

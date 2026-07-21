@@ -40,29 +40,6 @@ pub(crate) const REQUIRED_TOOLS: &[ToolSpec] = &[
     },
 ];
 
-/// Tools `vibe self install` uses ONLY to package vibeterm (node, npm) —
-/// **advisory, not required**: a Rust-only box skips vibeterm and still builds
-/// (PROP-019 §2.7). Surfaced by `self doctor` but never counted as a problem.
-pub(crate) const OPTIONAL_TOOLS: &[ToolSpec] = &[
-    ToolSpec {
-        name: "node",
-        check: &["node", "--version"],
-        min_version: "22.6.0",
-        help_url: "https://nodejs.org/",
-    },
-    ToolSpec {
-        name: "npm",
-        check: &["npm", "--version"],
-        min_version: "11.0.0",
-        help_url: "https://docs.npmjs.com/downloading-and-installing-node-js-and-npm",
-    },
-];
-
-/// Probe the optional (vibeterm-packaging) tools.
-pub(crate) fn check_optional() -> Vec<ToolStatus> {
-    OPTIONAL_TOOLS.iter().map(check_one).collect()
-}
-
 /// The platform linker / C toolchain hint for `man doctor` (PROP-019 §2.8).
 pub(crate) fn linker_hint() -> (&'static str, &'static str) {
     if cfg!(windows) {
@@ -118,25 +95,6 @@ fn run_version(cmd: &[&str]) -> Option<String> {
         return None;
     }
     extract_semver(&String::from_utf8_lossy(&out.stdout))
-}
-
-/// Whether a tool is invocable by name (presence only; version floors are
-/// enforced elsewhere — `engines` for npm, [`check_one`] for the required set).
-/// `pub(crate)` so the vibeterm packager's availability gate reuses one probe.
-pub(crate) fn has_tool(name: &str) -> bool {
-    // Gate on the tool's own exit code, not merely that a process spawned: on
-    // Windows the spawn is always `cmd.exe` (which exists unconditionally), so
-    // `.status().is_ok()` returned `true` for EVERY name — a Rust-only box then
-    // failed `self update` at `Command::new("node")` instead of gracefully
-    // skipping vibeterm. A missing tool makes `cmd /C <name> --version` exit
-    // non-zero; a real one exits 0.
-    tool_command(name)
-        .arg("--version")
-        .stdout(std::process::Stdio::null())
-        .stderr(std::process::Stdio::null())
-        .status()
-        .map(|s| s.success())
-        .unwrap_or(false)
 }
 
 /// Build a [`Command`] for a bare tool name, cross-platform (PROP-019 §2.8).

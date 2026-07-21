@@ -1,6 +1,12 @@
 //! `vibe self doctor` — the environment health check (PROP-019 §2.8), split out
 //! of the `vvm` hub along the command-handler seam to keep the hub under the
-//! 600-line file budget. Carries the vibeterm-packaging advisory (§2.7).
+//! 600-line file budget.
+//!
+//! The terminal apps (vibeterm, vibeframe) and the GUI launchers used to be
+//! packaged into the instance alongside `vibe`; they have moved to a separate
+//! products repo and now publish themselves to `PATH`. The doctor no longer
+//! probes for them — `vibe term` / `vibe frame` resolve through `PATH` (with
+//! an in-place fallback for `vibe tree`).
 
 specmark::scope!("spec://vibevm/common/PROP-019#surface");
 
@@ -12,21 +18,9 @@ use super::env;
 use super::tools;
 use super::{VvmEnv, confirm, make_persister, path_has_dir};
 
-/// The executable name a packaged vibeterm ships — electron-packager names it
-/// after the app (`vibeterm`), not `electron` (see `term::electron_binary`).
-fn packaged_vibeterm_exe() -> &'static str {
-    if cfg!(windows) {
-        "vibeterm.exe"
-    } else {
-        "vibeterm"
-    }
-}
-
-/// `vibe self doctor`: probe the required toolchain, the shim dir on PATH, the
-/// active version's binary, the embedded registry (PROP-030), and — advisorially
-/// — the optional node/npm that package vibeterm and whether the active instance
-/// actually carries a packaged vibeterm (PROP-019 §2.7). Problems block; the
-/// vibeterm rows never do (a Rust-only box is healthy without it).
+/// `vibe self doctor`: probe the required toolchain, the shim dir on PATH,
+/// the active version's binary, and the embedded registry (PROP-030).
+/// Problems block.
 pub(super) fn run_doctor_cmd(
     ctx: &output::Context,
     env: &VvmEnv,
@@ -60,13 +54,6 @@ pub(super) fn run_doctor_cmd(
             "active": active.as_ref().map(|r| r.version_id().to_string()),
             "active_binary_ok": !active_missing,
             "embedded_registry": embedded_registry.as_ref().map(|p| p.display().to_string()),
-            "optional_tools": tools::check_optional().iter().map(|t| serde_json::json!({
-                "name": t.name, "version": t.version, "ok": t.ok, "min": t.min_version,
-            })).collect::<Vec<_>>(),
-            "vibeterm_packaged": active.as_ref().filter(|_| !active_missing).is_some_and(|r| {
-                store.instance_dir(&r.version_id(), r.instance)
-                    .join("vibeterm").join(packaged_vibeterm_exe()).is_file()
-            }),
         }));
     }
 
@@ -111,36 +98,6 @@ pub(super) fn run_doctor_cmd(
             root.display()
         )),
         None => ctx.step("-    no embedded registry (the active version is not a source install)"),
-    }
-    // Advisory (non-blocking): the optional tools that package vibeterm, and
-    // whether the active instance actually carries a packaged vibeterm.
-    for t in tools::check_optional() {
-        match &t.version {
-            Some(v) if t.ok => ctx.step(&format!(
-                "ok   {} {} (optional: vibeterm packaging)",
-                t.name, v
-            )),
-            Some(v) => ctx.step(&format!(
-                "old  {} {} (need >= {}; optional) — {}",
-                t.name, v, t.min_version, t.help_url
-            )),
-            None => ctx.step(&format!(
-                "-    {} not found (optional: vibeterm packaging) — {}",
-                t.name, t.help_url
-            )),
-        }
-    }
-    if let Some(r) = active.as_ref().filter(|_| !active_missing) {
-        let packaged = store
-            .instance_dir(&r.version_id(), r.instance)
-            .join("vibeterm")
-            .join(packaged_vibeterm_exe())
-            .is_file();
-        ctx.step(if packaged {
-            "ok   vibeterm packaged alongside the active version"
-        } else {
-            "-    vibeterm not packaged in the active instance (`vibe term` will name the setup step)"
-        });
     }
 
     if args.fix && confirm(ctx, args.yes, "Write shims and put the shim dir on PATH?")? {
