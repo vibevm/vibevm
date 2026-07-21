@@ -35,7 +35,6 @@ gated_crates = [
     "vibe-settings",
     "vibe-index",
     "vibe-install",
-    "vibe-launcher",
     "vibe-resolver",
     "vibe-registry",
     "vibe-workspace",
