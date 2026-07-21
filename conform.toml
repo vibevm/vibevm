@@ -74,10 +74,8 @@ env_roots = [
     # `vibe aiui` reads the settings dir ($VIBE_SETTINGS / $HOME) to find `~/.vibe/aiui/` — vibeterm's
     # control-session discovery directory (PROP-042 §4).
     "crates/vibe-cli/src/commands/aiui/control.rs",
-    # The GUI launchers resolve the active `vibe` from the environment
-    # (VIBEVM_HOME / the VVM `current` pointer / PATH) — a resolver whose job is
-    # to read the env for the spawn, like `vibe term` (PROP-043 #resolve).
-    "crates/vibe-launcher/src/lib.rs",
+    # The GUI launchers moved to the vibevm-term products repo; their env-var
+    # resolver (`spec://vibe-launcher/PROP-043#resolve`) is no longer in-tree.
     "crates/vibe-core/src/user_config.rs",
     # The settings-dir chokepoint: the ONE place that reads $VIBE_SETTINGS /
     # HOME / USERPROFILE to resolve `~/.vibe`, so every settings path agrees.

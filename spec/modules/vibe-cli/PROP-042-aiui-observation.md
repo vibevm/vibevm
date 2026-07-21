@@ -1,15 +1,18 @@
 # PROP-042 — AIUI observation: the render plane & the `vibe aiui` surface
 
-**Status:** ACTIVE (v0.1, 2026-07-16). **Module:** `vibe-cli`. **Campaign:**
-[`spec/terraforms/TERMINAL-AIUI-PLAN-v0.1.md`](../../terraforms/TERMINAL-AIUI-PLAN-v0.1.md).
+**Status:** ACTIVE (v0.1, 2026-07-16). **Module:** `vibe-cli`.
 **Related:** PROP-037 (the `vibe tree` TUI it observes), PROP-039 §11.3 (the model
-plane / `vibe-actions::aiui`), PROP-036 (the tree model).
+plane / `vibe-actions::aiui`), PROP-036 (the tree model). The terminal products
+(vibeterm, vibeframe) and their contracts now live in the `vibevm-term` products
+repo — this PROP cites them as cross-repo contracts
+(`spec://vibeterm/*`, `spec://term-common/*`); the `vibe aiui` / `vibe term`
+CLI surface itself stays on the host.
 
 This contract governs the **render plane** — a terminal-free way to render the
 `vibe tree` TUI to a symbolic snapshot so an agent (or a golden test) can *see*
 the interface without a real terminal — and the `vibe aiui` CLI surface that
 exposes it. The terminal plane (vibeterm) and the model plane are governed
-elsewhere (the campaign plan / a vibeterm PROP / PROP-039).
+elsewhere (a vibeterm PROP in `vibevm-term` / PROP-039).
 
 ---
 
@@ -139,15 +142,23 @@ then `PATH`, falling back to `…\WindowsPowerShell\v1.0\powershell.exe`; on oth
 platforms `$SHELL`, falling back to `/bin/sh`. An explicit `--exec <cmd>`
 overrides the detected shell.
 
-REQ. vibeterm is located **without a `PATH` search**, in three tiers in order:
-(1) an explicit `$VIBEVM_VIBETERM` directory wins (an override); (2) else an
-installed `vibe` finds the packaged `vibeterm/` shipped inside its own instance
-dir (next to its binary); (3) else a development fallback walks up from the
-running binary for `apps/vibeterm`. The resolver distinguishes a **packaged**
-dir (electron binary at its root, `resources/app/` inside — invoked directly,
-no app-path arg) from a **dev** dir (Electron resolved via
-`node_modules/electron/path.txt`, the app dir passed as a positional arg). A
-missing install fails with a message naming the setup step, never a silent hang.
+REQ. The terminal app (`vibeterm` for `vibe term`, `vibeframe` for `vibe tree
+-t`) is located in three tiers in order: **(1)** an explicit `$VIBEVM_<APP>`
+directory wins (`<APP>` is the uppercased app name — `VIBETERM` / `VIBEFRAME`,
+an override a developer or a launcher sets); **(2)** else an installed `vibe`
+checks the packaged `<app>/` shipped inside its own instance dir, next to its
+binary (the legacy, pre-extraction layout — kept for back-compat with instances
+that still carry it); **(3)** else a `PATH` lookup for the app-named packaged
+binary (`vibeterm` / `vibeframe`) — the **extracted-product path**, how the
+vibevm-term repo's `<app> self install` publishes the product. The directory the
+binary sits in is treated as the packaged root. The resolver distinguishes a
+**packaged** dir (electron binary at its root, `resources/app/` inside — invoked
+directly, no app-path arg) from a **dev** dir (Electron resolved via
+`node_modules/electron/path.txt`, the app dir passed as a positional arg — only
+reachable through `$VIBEVM_<APP>` now that the in-tree `apps/` source has moved
+to vibevm-term). Resolution failure returns a typed error; `vibe term` /
+`vibe frame` surface it to the user, while `vibe tree` falls back to running
+the console TUI in place (§5.1).
 
 ### 5.1 In-place upgrade & the icon protocol {#in-place-upgrade}
 

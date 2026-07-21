@@ -229,13 +229,16 @@ instance** by diff-copy, record provenance, flip `current`.
   `build/` target dir (§9.3 — never the source tree's `target/`; load-
   bearing on Windows and keeps the dev tree clean), honouring
   `rust-toolchain.toml`.
-- **Package vibeterm (optional).** When `node`/`npm` are on PATH, `apps/vibeterm`
-  is built into a relocatable dir (electron-packager, with node-pty rebuilt to
-  Electron's ABI) and added to the dist set as the `vibeterm/` subtree. This
-  runs on the target host (node-pty's native addon and Electron's runtime are
-  OS/arch-specific — no cross-OS build). Skipped gracefully on a Rust-only box
-  — the instance still installs; `vibe term` then names the missing setup step
-  (PROP-042 §5).
+- **Build the `vibe` binary only.** The terminal products (vibeterm,
+  vibeframe) and the GUI launchers (vibe-launcher) used to be packaged
+  into the instance alongside `vibe`; they have moved to a separate
+  products repo (`vibevm-term`) and now publish themselves to `PATH`
+  through their own version-manager (`<product> self install`). The
+  install pipeline here builds `vibe` only — `vibe term` / `vibe frame`
+  resolve the terminal apps through `$VIBEVM_<APP>` → the active
+  instance's packaged `<app>/` (back-compat) → `PATH`, with an in-place
+  fallback for `vibe tree` when no terminal app is available
+  (`spec://term-common/PROP-vvm#root` is the products-repo twin).
 - **Place by diff-copy (§2.15).** The built distribution is placed into a
   fresh instance dir, copying only files that changed versus the previous
   instance and hardlinking the rest — so a 2 GB distribution where only
