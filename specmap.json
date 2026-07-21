@@ -1607,7 +1607,7 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/vvm/doctor.rs",
       "item_kind": "mod",
-      "line": 5,
+      "line": 11,
       "symbol": "vibe_cli::commands::vvm::doctor"
     },
     {
@@ -1684,50 +1684,22 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/vvm/install.rs",
       "item_kind": "mod",
-      "line": 5,
+      "line": 14,
       "symbol": "vibe_cli::commands::vvm::install"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/vvm/install.rs",
       "item_kind": "fn",
-      "line": 64,
+      "line": 70,
       "symbol": "vibe_cli::commands::vvm::install::perform_install"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/vvm/install.rs",
       "item_kind": "fn",
-      "line": 240,
+      "line": 191,
       "symbol": "vibe_cli::commands::vvm::install::tests::install_makes_instance_skips_unchanged_and_forces_rebuild"
-    },
-    {
-      "crate_name": "vibe-cli",
-      "file": "crates/vibe-cli/src/commands/vvm/install.rs",
-      "item_kind": "fn",
-      "line": 336,
-      "symbol": "vibe_cli::commands::vvm::install::tests::install_places_vibeterm_subtree_when_packaged"
-    },
-    {
-      "crate_name": "vibe-cli",
-      "file": "crates/vibe-cli/src/commands/vvm/launchers.rs",
-      "item_kind": "mod",
-      "line": 15,
-      "symbol": "vibe_cli::commands::vvm::launchers"
-    },
-    {
-      "crate_name": "vibe-cli",
-      "file": "crates/vibe-cli/src/commands/vvm/launchers.rs",
-      "item_kind": "fn",
-      "line": 297,
-      "symbol": "vibe_cli::commands::vvm::launchers::tests::place_exe_creates_then_replaces"
-    },
-    {
-      "crate_name": "vibe-cli",
-      "file": "crates/vibe-cli/src/commands/vvm/launchers.rs",
-      "item_kind": "fn",
-      "line": 325,
-      "symbol": "vibe_cli::commands::vvm::launchers::tests::place_exe_sweeps_stale_sidecars"
     },
     {
       "crate_name": "vibe-cli",
@@ -1838,15 +1810,99 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/vvm/placer.rs",
       "item_kind": "fn",
-      "line": 252,
+      "line": 346,
+      "symbol": "vibe_cli::commands::vvm::placer::tests::is_transient_lock_classifies_access_denied"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/vvm/placer.rs",
+      "item_kind": "fn",
+      "line": 300,
       "symbol": "vibe_cli::commands::vvm::placer::tests::manifest_round_trips_and_detects_change"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/vvm/placer.rs",
       "item_kind": "fn",
-      "line": 270,
+      "line": 318,
       "symbol": "vibe_cli::commands::vvm::placer::tests::place_creates_an_instance_with_a_manifest"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/vvm/placer.rs",
+      "item_kind": "fn",
+      "line": 363,
+      "symbol": "vibe_cli::commands::vvm::placer::tests::rename_and_remove_succeed_when_unlocked"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/vvm/relocate/mod.rs",
+      "item_kind": "mod",
+      "line": 12,
+      "symbol": "vibe_cli::commands::vvm::relocate"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/vvm/relocate/mod.rs",
+      "item_kind": "enum",
+      "line": 30,
+      "symbol": "vibe_cli::commands::vvm::relocate::RelocateError"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/vvm/relocate/mod.rs",
+      "item_kind": "struct",
+      "line": 55,
+      "symbol": "vibe_cli::commands::vvm::relocate::RelocatePlan"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/vvm/relocate/tests.rs",
+      "item_kind": "fn",
+      "line": 175,
+      "symbol": "vibe_cli::commands::vvm::relocate::tests::apply_is_a_noop_on_an_empty_plan"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/vvm/relocate/tests.rs",
+      "item_kind": "fn",
+      "line": 133,
+      "symbol": "vibe_cli::commands::vvm::relocate::tests::apply_removes_dirs_repoints_active_and_forgets_deleted"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/vvm/relocate/tests.rs",
+      "item_kind": "fn",
+      "line": 42,
+      "symbol": "vibe_cli::commands::vvm::relocate::tests::infer_old_source_picks_the_most_common_external_path"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/vvm/relocate/tests.rs",
+      "item_kind": "fn",
+      "line": 120,
+      "symbol": "vibe_cli::commands::vvm::relocate::tests::plan_keeps_the_active_instance"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/vvm/relocate/tests.rs",
+      "item_kind": "fn",
+      "line": 61,
+      "symbol": "vibe_cli::commands::vvm::relocate::tests::plan_partitions_old_matching_records"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/vvm/relocate/tests.rs",
+      "item_kind": "fn",
+      "line": 200,
+      "symbol": "vibe_cli::commands::vvm::relocate::tests::rewrite_state_keeps_locked_forgets_removed_and_repoints_active"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/vvm/relocate/tests.rs",
+      "item_kind": "fn",
+      "line": 253,
+      "symbol": "vibe_cli::commands::vvm::relocate::tests::run_rejects_a_non_source_tree_target"
     },
     {
       "crate_name": "vibe-cli",
@@ -1999,36 +2055,22 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/vvm/tools.rs",
       "item_kind": "fn",
-      "line": 201,
+      "line": 159,
       "symbol": "vibe_cli::commands::vvm::tools::tests::extract_semver_tolerates_vendor_suffixes"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/vvm/tools.rs",
       "item_kind": "fn",
-      "line": 182,
+      "line": 140,
       "symbol": "vibe_cli::commands::vvm::tools::tests::required_tools_table_is_well_formed"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/vvm/tools.rs",
       "item_kind": "fn",
-      "line": 219,
+      "line": 177,
       "symbol": "vibe_cli::commands::vvm::tools::tests::version_ok_compares_semver"
-    },
-    {
-      "crate_name": "vibe-cli",
-      "file": "crates/vibe-cli/src/commands/vvm/vibeterm_packager.rs",
-      "item_kind": "mod",
-      "line": 6,
-      "symbol": "vibe_cli::commands::vvm::vibeterm_packager"
-    },
-    {
-      "crate_name": "vibe-cli",
-      "file": "crates/vibe-cli/src/commands/vvm/vibeterm_packager.rs",
-      "item_kind": "fn",
-      "line": 52,
-      "symbol": "vibe_cli::commands::vvm::vibeterm_packager::NpmPackager<'_>::package"
     },
     {
       "crate_name": "vibe-cli",
@@ -3466,76 +3508,6 @@
       "symbol": "vibe_install::record"
     },
     {
-      "crate_name": "vibe-launcher",
-      "file": "crates/vibe-launcher/src/lib.rs",
-      "item_kind": "mod",
-      "line": 9,
-      "symbol": "vibe_launcher"
-    },
-    {
-      "crate_name": "vibe-launcher",
-      "file": "crates/vibe-launcher/src/lib.rs",
-      "item_kind": "enum",
-      "line": 22,
-      "symbol": "vibe_launcher::LauncherError"
-    },
-    {
-      "crate_name": "vibe-launcher",
-      "file": "crates/vibe-launcher/src/bin/vibeframe.rs",
-      "item_kind": "mod",
-      "line": 8,
-      "symbol": "vibe_launcher::bin::vibeframe"
-    },
-    {
-      "crate_name": "vibe-launcher",
-      "file": "crates/vibe-launcher/src/bin/vibeterm.rs",
-      "item_kind": "mod",
-      "line": 6,
-      "symbol": "vibe_launcher::bin::vibeterm"
-    },
-    {
-      "crate_name": "vibe-launcher",
-      "file": "crates/vibe-launcher/src/bin/vibetree.rs",
-      "item_kind": "mod",
-      "line": 11,
-      "symbol": "vibe_launcher::bin::vibetree"
-    },
-    {
-      "crate_name": "vibe-launcher",
-      "file": "crates/vibe-launcher/src/lib.rs",
-      "item_kind": "fn",
-      "line": 227,
-      "symbol": "vibe_launcher::report"
-    },
-    {
-      "crate_name": "vibe-launcher",
-      "file": "crates/vibe-launcher/src/lib.rs",
-      "item_kind": "fn",
-      "line": 53,
-      "symbol": "vibe_launcher::run"
-    },
-    {
-      "crate_name": "vibe-launcher",
-      "file": "crates/vibe-launcher/src/lib.rs",
-      "item_kind": "fn",
-      "line": 73,
-      "symbol": "vibe_launcher::run_terminal_aware"
-    },
-    {
-      "crate_name": "vibe-launcher",
-      "file": "crates/vibe-launcher/src/lib.rs",
-      "item_kind": "fn",
-      "line": 258,
-      "symbol": "vibe_launcher::win::console_process_count"
-    },
-    {
-      "crate_name": "vibe-launcher",
-      "file": "crates/vibe-launcher/src/lib.rs",
-      "item_kind": "fn",
-      "line": 273,
-      "symbol": "vibe_launcher::win::hide_own_console"
-    },
-    {
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/lib.rs",
       "item_kind": "mod",
@@ -4181,6 +4153,13 @@
     },
     {
       "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/multi_registry_resolver/attempt.rs",
+      "item_kind": "mod",
+      "line": 8,
+      "symbol": "vibe_registry::multi_registry_resolver::attempt"
+    },
+    {
+      "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/src/multi_registry_resolver/dispatch.rs",
       "item_kind": "mod",
       "line": 6,
@@ -4199,6 +4178,13 @@
       "item_kind": "mod",
       "line": 6,
       "symbol": "vibe_registry::multi_registry_resolver::refresh"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/multi_registry_resolver/source.rs",
+      "item_kind": "mod",
+      "line": 12,
+      "symbol": "vibe_registry::multi_registry_resolver::source"
     },
     {
       "crate_name": "vibe-registry",
@@ -4239,7 +4225,7 @@
       "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/src/multi_registry_resolver/walk.rs",
       "item_kind": "fn",
-      "line": 92,
+      "line": 45,
       "symbol": "vibe_registry::multi_registry_resolver::walk::MultiRegistryResolver::list_versions"
     },
     {
@@ -4778,7 +4764,7 @@
       "crate_name": "vibe-resolver",
       "file": "crates/vibe-resolver/src/local_registry_provider.rs",
       "item_kind": "fn",
-      "line": 69,
+      "line": 81,
       "symbol": "vibe_resolver::local_registry_provider::LocalRegistryProvider<'a>::list_versions"
     },
     {
@@ -7750,7 +7736,7 @@
     {
       "file": "crates/vibe-cli/src/commands/vvm/doctor.rs",
       "from_symbol": "vibe_cli::commands::vvm::doctor",
-      "line": 5,
+      "line": 11,
       "provenance": "authored",
       "uri": "spec://vibevm/common/PROP-019#surface",
       "verb": "implements"
@@ -7842,7 +7828,7 @@
     {
       "file": "crates/vibe-cli/src/commands/vvm/install.rs",
       "from_symbol": "vibe_cli::commands::vvm::install",
-      "line": 5,
+      "line": 14,
       "provenance": "authored",
       "uri": "spec://vibevm/common/PROP-019#build",
       "verb": "implements"
@@ -7850,7 +7836,7 @@
     {
       "file": "crates/vibe-cli/src/commands/vvm/install.rs",
       "from_symbol": "vibe_cli::commands::vvm::install::perform_install",
-      "line": 68,
+      "line": 74,
       "provenance": "authored",
       "uri": "spec://vibevm/common/PROP-019#build",
       "verb": "implements"
@@ -7858,44 +7844,9 @@
     {
       "file": "crates/vibe-cli/src/commands/vvm/install.rs",
       "from_symbol": "vibe_cli::commands::vvm::install::tests::install_makes_instance_skips_unchanged_and_forces_rebuild",
-      "line": 241,
+      "line": 192,
       "provenance": "authored",
       "uri": "spec://vibevm/common/PROP-019#instances",
-      "verb": "verifies",
-      "pinned_r": 1
-    },
-    {
-      "file": "crates/vibe-cli/src/commands/vvm/install.rs",
-      "from_symbol": "vibe_cli::commands::vvm::install::tests::install_places_vibeterm_subtree_when_packaged",
-      "line": 337,
-      "provenance": "authored",
-      "uri": "spec://vibevm/common/PROP-019#build",
-      "verb": "verifies",
-      "pinned_r": 1
-    },
-    {
-      "file": "crates/vibe-cli/src/commands/vvm/launchers.rs",
-      "from_symbol": "vibe_cli::commands::vvm::launchers",
-      "line": 15,
-      "provenance": "authored",
-      "uri": "spec://vibevm/modules/vibe-launcher/PROP-043#self-install",
-      "verb": "implements"
-    },
-    {
-      "file": "crates/vibe-cli/src/commands/vvm/launchers.rs",
-      "from_symbol": "vibe_cli::commands::vvm::launchers::tests::place_exe_creates_then_replaces",
-      "line": 300,
-      "provenance": "authored",
-      "uri": "spec://vibevm/modules/vibe-launcher/PROP-043#self-install",
-      "verb": "verifies",
-      "pinned_r": 1
-    },
-    {
-      "file": "crates/vibe-cli/src/commands/vvm/launchers.rs",
-      "from_symbol": "vibe_cli::commands::vvm::launchers::tests::place_exe_sweeps_stale_sidecars",
-      "line": 328,
-      "provenance": "authored",
-      "uri": "spec://vibevm/modules/vibe-launcher/PROP-043#self-install",
       "verb": "verifies",
       "pinned_r": 1
     },
@@ -8025,8 +7976,17 @@
     },
     {
       "file": "crates/vibe-cli/src/commands/vvm/placer.rs",
+      "from_symbol": "vibe_cli::commands::vvm::placer::tests::is_transient_lock_classifies_access_denied",
+      "line": 350,
+      "provenance": "authored",
+      "uri": "spec://vibevm/common/PROP-019#instances",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/vvm/placer.rs",
       "from_symbol": "vibe_cli::commands::vvm::placer::tests::manifest_round_trips_and_detects_change",
-      "line": 253,
+      "line": 301,
       "provenance": "authored",
       "uri": "spec://vibevm/common/PROP-019#instances",
       "verb": "verifies",
@@ -8035,9 +7995,105 @@
     {
       "file": "crates/vibe-cli/src/commands/vvm/placer.rs",
       "from_symbol": "vibe_cli::commands::vvm::placer::tests::place_creates_an_instance_with_a_manifest",
-      "line": 271,
+      "line": 319,
       "provenance": "authored",
       "uri": "spec://vibevm/common/PROP-019#instances",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/vvm/placer.rs",
+      "from_symbol": "vibe_cli::commands::vvm::placer::tests::rename_and_remove_succeed_when_unlocked",
+      "line": 367,
+      "provenance": "authored",
+      "uri": "spec://vibevm/common/PROP-019#instances",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/vvm/relocate/mod.rs",
+      "from_symbol": "vibe_cli::commands::vvm::relocate",
+      "line": 12,
+      "provenance": "authored",
+      "uri": "spec://vibevm/common/PROP-019#relocate",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/vvm/relocate/mod.rs",
+      "from_symbol": "vibe_cli::commands::vvm::relocate::RelocateError",
+      "line": 35,
+      "provenance": "authored",
+      "uri": "spec://vibevm/common/PROP-019#relocate",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/vvm/relocate/mod.rs",
+      "from_symbol": "vibe_cli::commands::vvm::relocate::RelocatePlan",
+      "line": 61,
+      "provenance": "authored",
+      "uri": "spec://vibevm/common/PROP-019#relocate",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/vvm/relocate/tests.rs",
+      "from_symbol": "vibe_cli::commands::vvm::relocate::tests::apply_is_a_noop_on_an_empty_plan",
+      "line": 177,
+      "provenance": "authored",
+      "uri": "spec://vibevm/common/PROP-019#relocate",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/vvm/relocate/tests.rs",
+      "from_symbol": "vibe_cli::commands::vvm::relocate::tests::apply_removes_dirs_repoints_active_and_forgets_deleted",
+      "line": 137,
+      "provenance": "authored",
+      "uri": "spec://vibevm/common/PROP-019#relocate",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/vvm/relocate/tests.rs",
+      "from_symbol": "vibe_cli::commands::vvm::relocate::tests::infer_old_source_picks_the_most_common_external_path",
+      "line": 43,
+      "provenance": "authored",
+      "uri": "spec://vibevm/common/PROP-019#relocate",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/vvm/relocate/tests.rs",
+      "from_symbol": "vibe_cli::commands::vvm::relocate::tests::plan_keeps_the_active_instance",
+      "line": 123,
+      "provenance": "authored",
+      "uri": "spec://vibevm/common/PROP-019#relocate",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/vvm/relocate/tests.rs",
+      "from_symbol": "vibe_cli::commands::vvm::relocate::tests::plan_partitions_old_matching_records",
+      "line": 66,
+      "provenance": "authored",
+      "uri": "spec://vibevm/common/PROP-019#relocate",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/vvm/relocate/tests.rs",
+      "from_symbol": "vibe_cli::commands::vvm::relocate::tests::rewrite_state_keeps_locked_forgets_removed_and_repoints_active",
+      "line": 205,
+      "provenance": "authored",
+      "uri": "spec://vibevm/common/PROP-019#relocate",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/vvm/relocate/tests.rs",
+      "from_symbol": "vibe_cli::commands::vvm::relocate::tests::run_rejects_a_non_source_tree_target",
+      "line": 255,
+      "provenance": "authored",
+      "uri": "spec://vibevm/common/PROP-019#relocate",
       "verb": "verifies",
       "pinned_r": 1
     },
@@ -8224,7 +8280,7 @@
     {
       "file": "crates/vibe-cli/src/commands/vvm/tools.rs",
       "from_symbol": "vibe_cli::commands::vvm::tools::tests::extract_semver_tolerates_vendor_suffixes",
-      "line": 202,
+      "line": 160,
       "provenance": "authored",
       "uri": "spec://vibevm/common/PROP-019#tools",
       "verb": "verifies",
@@ -8233,7 +8289,7 @@
     {
       "file": "crates/vibe-cli/src/commands/vvm/tools.rs",
       "from_symbol": "vibe_cli::commands::vvm::tools::tests::required_tools_table_is_well_formed",
-      "line": 183,
+      "line": 141,
       "provenance": "authored",
       "uri": "spec://vibevm/common/PROP-019#tools",
       "verb": "verifies",
@@ -8242,27 +8298,11 @@
     {
       "file": "crates/vibe-cli/src/commands/vvm/tools.rs",
       "from_symbol": "vibe_cli::commands::vvm::tools::tests::version_ok_compares_semver",
-      "line": 220,
+      "line": 178,
       "provenance": "authored",
       "uri": "spec://vibevm/common/PROP-019#tools",
       "verb": "verifies",
       "pinned_r": 1
-    },
-    {
-      "file": "crates/vibe-cli/src/commands/vvm/vibeterm_packager.rs",
-      "from_symbol": "vibe_cli::commands::vvm::vibeterm_packager",
-      "line": 6,
-      "provenance": "authored",
-      "uri": "spec://vibevm/common/PROP-019#build",
-      "verb": "implements"
-    },
-    {
-      "file": "crates/vibe-cli/src/commands/vvm/vibeterm_packager.rs",
-      "from_symbol": "vibe_cli::commands::vvm::vibeterm_packager::NpmPackager<'_>::package",
-      "line": 52,
-      "provenance": "authored",
-      "uri": "spec://vibevm/common/PROP-019#build",
-      "verb": "implements"
     },
     {
       "file": "crates/vibe-cli/src/commands/workspace/mod.rs",
@@ -10007,89 +10047,6 @@
       "verb": "implements"
     },
     {
-      "file": "crates/vibe-launcher/src/lib.rs",
-      "from_symbol": "vibe_launcher",
-      "line": 9,
-      "provenance": "authored",
-      "uri": "spec://vibevm/modules/vibe-launcher/PROP-043#root",
-      "verb": "implements"
-    },
-    {
-      "file": "crates/vibe-launcher/src/lib.rs",
-      "from_symbol": "vibe_launcher::LauncherError",
-      "line": 25,
-      "provenance": "authored",
-      "uri": "spec://vibevm/modules/vibe-launcher/PROP-043#report",
-      "verb": "implements"
-    },
-    {
-      "file": "crates/vibe-launcher/src/bin/vibeframe.rs",
-      "from_symbol": "vibe_launcher::bin::vibeframe",
-      "line": 8,
-      "provenance": "authored",
-      "uri": "spec://vibevm/modules/vibe-launcher/PROP-043#registry",
-      "verb": "implements"
-    },
-    {
-      "file": "crates/vibe-launcher/src/bin/vibeterm.rs",
-      "from_symbol": "vibe_launcher::bin::vibeterm",
-      "line": 6,
-      "provenance": "authored",
-      "uri": "spec://vibevm/modules/vibe-launcher/PROP-043#registry",
-      "verb": "implements"
-    },
-    {
-      "file": "crates/vibe-launcher/src/bin/vibetree.rs",
-      "from_symbol": "vibe_launcher::bin::vibetree",
-      "line": 11,
-      "provenance": "authored",
-      "uri": "spec://vibevm/modules/vibe-launcher/PROP-043#registry",
-      "verb": "implements"
-    },
-    {
-      "file": "crates/vibe-launcher/src/lib.rs",
-      "from_symbol": "vibe_launcher::report",
-      "line": 229,
-      "provenance": "authored",
-      "uri": "spec://vibevm/modules/vibe-launcher/PROP-043#report",
-      "verb": "deviates",
-      "reason": "one isolated MessageBoxW FFI call with a documented SAFETY invariant; a dedicated audit crate for a single dialog is not warranted"
-    },
-    {
-      "file": "crates/vibe-launcher/src/lib.rs",
-      "from_symbol": "vibe_launcher::run",
-      "line": 62,
-      "provenance": "authored",
-      "uri": "spec://vibevm/modules/vibe-launcher/PROP-043#spawn",
-      "verb": "implements"
-    },
-    {
-      "file": "crates/vibe-launcher/src/lib.rs",
-      "from_symbol": "vibe_launcher::run_terminal_aware",
-      "line": 92,
-      "provenance": "authored",
-      "uri": "spec://vibevm/modules/vibe-cli/PROP-042#in-place-upgrade",
-      "verb": "implements"
-    },
-    {
-      "file": "crates/vibe-launcher/src/lib.rs",
-      "from_symbol": "vibe_launcher::win::console_process_count",
-      "line": 261,
-      "provenance": "authored",
-      "uri": "spec://vibevm/modules/vibe-launcher/PROP-043#spawn",
-      "verb": "deviates",
-      "reason": "unsafe-gate: one FFI call to GetConsoleProcessList into a fixed stack buffer; the API's whole contract is a valid writable buffer + its length, both satisfied — a dedicated audit crate for a single console probe is not warranted"
-    },
-    {
-      "file": "crates/vibe-launcher/src/lib.rs",
-      "from_symbol": "vibe_launcher::win::hide_own_console",
-      "line": 276,
-      "provenance": "authored",
-      "uri": "spec://vibevm/modules/vibe-launcher/PROP-043#spawn",
-      "verb": "deviates",
-      "reason": "unsafe-gate: two FFI calls (GetConsoleWindow, ShowWindow) on our own console HWND; a null handle is a no-op and no Rust-owned memory is touched — a dedicated audit crate for hiding one window is not warranted"
-    },
-    {
       "file": "crates/vibe-mcp/src/lib.rs",
       "from_symbol": "vibe_mcp",
       "line": 31,
@@ -10841,6 +10798,14 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-registry/src/multi_registry_resolver/attempt.rs",
+      "from_symbol": "vibe_registry::multi_registry_resolver::attempt",
+      "line": 8,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-002#registry-model",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-registry/src/multi_registry_resolver/dispatch.rs",
       "from_symbol": "vibe_registry::multi_registry_resolver::dispatch",
       "line": 6,
@@ -10860,6 +10825,14 @@
       "file": "crates/vibe-registry/src/multi_registry_resolver/refresh.rs",
       "from_symbol": "vibe_registry::multi_registry_resolver::refresh",
       "line": 6,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-002#registry-model",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-registry/src/multi_registry_resolver/source.rs",
+      "from_symbol": "vibe_registry::multi_registry_resolver::source",
+      "line": 12,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#registry-model",
       "verb": "implements"
@@ -10907,7 +10880,7 @@
     {
       "file": "crates/vibe-registry/src/multi_registry_resolver/walk.rs",
       "from_symbol": "vibe_registry::multi_registry_resolver::walk::MultiRegistryResolver::list_versions",
-      "line": 102,
+      "line": 55,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#solver",
       "verb": "implements"
@@ -11593,7 +11566,7 @@
     {
       "file": "crates/vibe-resolver/src/local_registry_provider.rs",
       "from_symbol": "vibe_resolver::local_registry_provider::LocalRegistryProvider<'a>::list_versions",
-      "line": 69,
+      "line": 81,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-017#provider-enrichment",
       "verb": "implements"
@@ -15215,7 +15188,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:057c32506567fb566e20f63067bb4dca30850069ec273b51d91d747905b2e3f4",
+      "content_hash": "sha256:37475d645d95134d49001b1b16b8d90dd6b9db2a868c0afafd29c614478f280f",
       "doc_path": "common/PROP-019",
       "file": "spec/common/PROP-019-version-manager.md",
       "heading": "PROP-019 — VibeVM Version Manager (VVM)",
@@ -15262,7 +15235,7 @@
     },
     {
       "anchor": "decisions",
-      "content_hash": "sha256:aec0e933866ccddb9025a33d8f07ff2f302a984666b38bad3296007da37844a0",
+      "content_hash": "sha256:57f78501f9acd9c03986751a3701f315c0b052091569634ab05dfdb994ba328e",
       "doc_path": "common/PROP-019",
       "file": "spec/common/PROP-019-version-manager.md",
       "heading": "2. Decisions",
@@ -15282,7 +15255,7 @@
     },
     {
       "anchor": "surface",
-      "content_hash": "sha256:479b60fca37243d094ca4b80e8ea865abd51e4ac069772b01e08205a4016c51a",
+      "content_hash": "sha256:213f343421298b4fdc8a6003ac6c3035380f97f1b60822934f48bcffd880327f",
       "doc_path": "common/PROP-019",
       "file": "spec/common/PROP-019-version-manager.md",
       "heading": "2.2 Command surface — `vibe self` (+ `vibe vars`)",
@@ -15297,7 +15270,7 @@
       "doc_path": "common/PROP-019",
       "file": "spec/common/PROP-019-version-manager.md",
       "heading": "2.3 Version selectors and resolution",
-      "line": 100,
+      "line": 104,
       "uri": "spec://vibevm/common/PROP-019#selectors",
       "kind": "req",
       "revision": 1
@@ -15308,7 +15281,7 @@
       "doc_path": "common/PROP-019",
       "file": "spec/common/PROP-019-version-manager.md",
       "heading": "2.4 On-disk layout — instances, the `current` pointer, manifests",
-      "line": 118,
+      "line": 122,
       "uri": "spec://vibevm/common/PROP-019#layout",
       "kind": "req",
       "revision": 1
@@ -15319,7 +15292,7 @@
       "doc_path": "common/PROP-019",
       "file": "spec/common/PROP-019-version-manager.md",
       "heading": "2.5 Activation — live `current` file + `current_exe` truth",
-      "line": 154,
+      "line": 158,
       "uri": "spec://vibevm/common/PROP-019#activation",
       "kind": "req",
       "revision": 1
@@ -15330,18 +15303,18 @@
       "doc_path": "common/PROP-019",
       "file": "spec/common/PROP-019-version-manager.md",
       "heading": "2.6 PATH and durable environment management",
-      "line": 184,
+      "line": 188,
       "uri": "spec://vibevm/common/PROP-019#path",
       "kind": "req",
       "revision": 1
     },
     {
       "anchor": "build",
-      "content_hash": "sha256:b7e9866e31ac565573dedf6431df55d8bb161c46a29591a32c1d072df49c7206",
+      "content_hash": "sha256:38d648ab16b1d7c6e45fad3466ecc667b64adde0a6c53003b5099d7549bf5d17",
       "doc_path": "common/PROP-019",
       "file": "spec/common/PROP-019-version-manager.md",
       "heading": "2.7 The install pipeline — sources by reference, diff-copy to an instance",
-      "line": 205,
+      "line": 209,
       "uri": "spec://vibevm/common/PROP-019#build",
       "kind": "req",
       "revision": 1
@@ -15352,7 +15325,7 @@
       "doc_path": "common/PROP-019",
       "file": "spec/common/PROP-019-version-manager.md",
       "heading": "2.8 Required toolchain — a single source of truth",
-      "line": 249,
+      "line": 256,
       "uri": "spec://vibevm/common/PROP-019#tools",
       "kind": "req",
       "revision": 1
@@ -15363,7 +15336,7 @@
       "doc_path": "common/PROP-019",
       "file": "spec/common/PROP-019-version-manager.md",
       "heading": "2.9 Removal — safe by default",
-      "line": 262,
+      "line": 269,
       "uri": "spec://vibevm/common/PROP-019#remove",
       "kind": "req",
       "revision": 1
@@ -15374,7 +15347,7 @@
       "doc_path": "common/PROP-019",
       "file": "spec/common/PROP-019-version-manager.md",
       "heading": "2.10 Garbage collection — `self gc`",
-      "line": 280,
+      "line": 287,
       "uri": "spec://vibevm/common/PROP-019#gc",
       "kind": "req",
       "revision": 1
@@ -15385,7 +15358,7 @@
       "doc_path": "common/PROP-019",
       "file": "spec/common/PROP-019-version-manager.md",
       "heading": "2.11 Introspection — `doctor`, `ls`, `current`, `which`, `env`",
-      "line": 300,
+      "line": 307,
       "uri": "spec://vibevm/common/PROP-019#introspection",
       "kind": "req",
       "revision": 1
@@ -15396,7 +15369,7 @@
       "doc_path": "common/PROP-019",
       "file": "spec/common/PROP-019-version-manager.md",
       "heading": "2.12 Cold-start (bootstrap)",
-      "line": 311,
+      "line": 318,
       "uri": "spec://vibevm/common/PROP-019#bootstrap",
       "kind": "req",
       "revision": 1
@@ -15407,7 +15380,7 @@
       "doc_path": "common/PROP-019",
       "file": "spec/common/PROP-019-version-manager.md",
       "heading": "2.13 Security and trust",
-      "line": 321,
+      "line": 328,
       "uri": "spec://vibevm/common/PROP-019#security",
       "kind": "req",
       "revision": 1
@@ -15418,7 +15391,7 @@
       "doc_path": "common/PROP-019",
       "file": "spec/common/PROP-019-version-manager.md",
       "heading": "2.14 `vibe vars` — reconciling actual vs environment",
-      "line": 332,
+      "line": 339,
       "uri": "spec://vibevm/common/PROP-019#vars",
       "kind": "req",
       "revision": 1
@@ -15429,7 +15402,7 @@
       "doc_path": "common/PROP-019",
       "file": "spec/common/PROP-019-version-manager.md",
       "heading": "2.15 Distribution instances and diff-copy",
-      "line": 353,
+      "line": 360,
       "uri": "spec://vibevm/common/PROP-019#instances",
       "kind": "req",
       "revision": 1
@@ -15440,8 +15413,19 @@
       "doc_path": "common/PROP-019",
       "file": "spec/common/PROP-019-version-manager.md",
       "heading": "2.16 Source provenance and linked sources",
-      "line": 381,
+      "line": 388,
       "uri": "spec://vibevm/common/PROP-019#provenance",
+      "kind": "req",
+      "revision": 1
+    },
+    {
+      "anchor": "relocate",
+      "content_hash": "sha256:5c854ae631b19902a528f22a41eb0567dbee97b7ff92a71b9a30fe9b9a7548e5",
+      "doc_path": "common/PROP-019",
+      "file": "spec/common/PROP-019-version-manager.md",
+      "heading": "2.17 Relocate — repointing provenance after a checkout move",
+      "line": 409,
+      "uri": "spec://vibevm/common/PROP-019#relocate",
       "kind": "req",
       "revision": 1
     },
@@ -15451,18 +15435,18 @@
       "doc_path": "common/PROP-019",
       "file": "spec/common/PROP-019-version-manager.md",
       "heading": "3. Architecture — seams and cells",
-      "line": 402,
+      "line": 455,
       "uri": "spec://vibevm/common/PROP-019#architecture",
       "kind": "req",
       "revision": 1
     },
     {
       "anchor": "mvp",
-      "content_hash": "sha256:2c721d43c2d6af8154178950a6b6bfd1121b831d7de2b542d2f319be7b6bc29e",
+      "content_hash": "sha256:4b4101702d77812d0e5479b1ba4aaeb77f44cbed0c863569d38294c3a24833c3",
       "doc_path": "common/PROP-019",
       "file": "spec/common/PROP-019-version-manager.md",
       "heading": "4. MVP scope",
-      "line": 424,
+      "line": 477,
       "uri": "spec://vibevm/common/PROP-019#mvp"
     },
     {
@@ -15471,7 +15455,7 @@
       "doc_path": "common/PROP-019",
       "file": "spec/common/PROP-019-version-manager.md",
       "heading": "5. Out of scope (now)",
-      "line": 436,
+      "line": 489,
       "uri": "spec://vibevm/common/PROP-019#out-of-scope"
     },
     {
@@ -15480,7 +15464,7 @@
       "doc_path": "common/PROP-019",
       "file": "spec/common/PROP-019-version-manager.md",
       "heading": "6. Far backlog",
-      "line": 442,
+      "line": 495,
       "uri": "spec://vibevm/common/PROP-019#far-backlog"
     },
     {
@@ -15489,18 +15473,18 @@
       "doc_path": "common/PROP-019",
       "file": "spec/common/PROP-019-version-manager.md",
       "heading": "7. Maintenance & evolution — updating the stack",
-      "line": 451,
+      "line": 504,
       "uri": "spec://vibevm/common/PROP-019#maintenance",
       "kind": "req",
       "revision": 1
     },
     {
       "anchor": "acceptance",
-      "content_hash": "sha256:f6ea8a388a91cf5122e5f3c1d3f3ce68e12413df4485b2d9ffae97dbeffd398c",
+      "content_hash": "sha256:de9123b2048fffd09f89f1b8b16a24285a4bbc730e48a46d17ac1d282a6d8aa6",
       "doc_path": "common/PROP-019",
       "file": "spec/common/PROP-019-version-manager.md",
       "heading": "8. Acceptance",
-      "line": 460,
+      "line": 513,
       "uri": "spec://vibevm/common/PROP-019#acceptance",
       "kind": "req",
       "revision": 1
@@ -15511,7 +15495,7 @@
       "doc_path": "common/PROP-019",
       "file": "spec/common/PROP-019-version-manager.md",
       "heading": "9. Design rationale & questions explored",
-      "line": 480,
+      "line": 537,
       "uri": "spec://vibevm/common/PROP-019#rationale"
     },
     {
@@ -15520,7 +15504,7 @@
       "doc_path": "common/PROP-019",
       "file": "spec/common/PROP-019-version-manager.md",
       "heading": "9.1 Why `current` file + `current_exe`, not `$VIBEVM_HOME` (v1)",
-      "line": 485,
+      "line": 542,
       "uri": "spec://vibevm/common/PROP-019#rationale-truth"
     },
     {
@@ -15529,7 +15513,7 @@
       "doc_path": "common/PROP-019",
       "file": "spec/common/PROP-019-version-manager.md",
       "heading": "9.2 Why not content-hash the distribution",
-      "line": 498,
+      "line": 555,
       "uri": "spec://vibevm/common/PROP-019#rationale-no-hash"
     },
     {
@@ -15538,7 +15522,7 @@
       "doc_path": "common/PROP-019",
       "file": "spec/common/PROP-019-version-manager.md",
       "heading": "9.3 Why whole-directory instances, not in-place file replace",
-      "line": 509,
+      "line": 566,
       "uri": "spec://vibevm/common/PROP-019#rationale-instances"
     },
     {
@@ -15547,7 +15531,7 @@
       "doc_path": "common/PROP-019",
       "file": "spec/common/PROP-019-version-manager.md",
       "heading": "9.4 Why a monotonic counter for the instance key",
-      "line": 520,
+      "line": 577,
       "uri": "spec://vibevm/common/PROP-019#rationale-counter"
     },
     {
@@ -15556,7 +15540,7 @@
       "doc_path": "common/PROP-019",
       "file": "spec/common/PROP-019-version-manager.md",
       "heading": "9.5 Why auto-prune only for binary artifacts",
-      "line": 528,
+      "line": 585,
       "uri": "spec://vibevm/common/PROP-019#rationale-prune"
     },
     {
@@ -15565,7 +15549,7 @@
       "doc_path": "common/PROP-019",
       "file": "spec/common/PROP-019-version-manager.md",
       "heading": "9.6 Why sources are held by reference, never copied",
-      "line": 536,
+      "line": 593,
       "uri": "spec://vibevm/common/PROP-019#rationale-sources"
     },
     {
@@ -15574,7 +15558,7 @@
       "doc_path": "common/PROP-019",
       "file": "spec/common/PROP-019-version-manager.md",
       "heading": "9.7 Why the binary, not the shim, emits the divergence warning",
-      "line": 546,
+      "line": 603,
       "uri": "spec://vibevm/common/PROP-019#rationale-warning"
     },
     {
@@ -17691,7 +17675,7 @@
       "doc_path": "modules/vibe-cli/PROP-042",
       "file": "spec/modules/vibe-cli/PROP-042-aiui-observation.md",
       "heading": "1. The render plane",
-      "line": 16,
+      "line": 19,
       "uri": "spec://vibevm/modules/vibe-cli/PROP-042#render-plane"
     },
     {
@@ -17700,7 +17684,7 @@
       "doc_path": "modules/vibe-cli/PROP-042",
       "file": "spec/modules/vibe-cli/PROP-042-aiui-observation.md",
       "heading": "2. The snapshot contract",
-      "line": 35,
+      "line": 38,
       "uri": "spec://vibevm/modules/vibe-cli/PROP-042#snapshot-contract"
     },
     {
@@ -17709,7 +17693,7 @@
       "doc_path": "modules/vibe-cli/PROP-042",
       "file": "spec/modules/vibe-cli/PROP-042-aiui-observation.md",
       "heading": "3. The key script",
-      "line": 54,
+      "line": 57,
       "uri": "spec://vibevm/modules/vibe-cli/PROP-042#key-script"
     },
     {
@@ -17718,16 +17702,16 @@
       "doc_path": "modules/vibe-cli/PROP-042",
       "file": "spec/modules/vibe-cli/PROP-042-aiui-observation.md",
       "heading": "4. The `vibe aiui` surface",
-      "line": 77,
+      "line": 80,
       "uri": "spec://vibevm/modules/vibe-cli/PROP-042#aiui-cli"
     },
     {
       "anchor": "vibe-term",
-      "content_hash": "sha256:a34a78ad486e223e002daaf2357d0f7106476e4b144946917e178ab6a0527c23",
+      "content_hash": "sha256:fafb2b09280415486d3edda9b53c99684e99fab54289c7def4cae22386cc3407",
       "doc_path": "modules/vibe-cli/PROP-042",
       "file": "spec/modules/vibe-cli/PROP-042-aiui-observation.md",
       "heading": "5. The `vibe term` launcher",
-      "line": 131,
+      "line": 134,
       "uri": "spec://vibevm/modules/vibe-cli/PROP-042#vibe-term"
     },
     {
@@ -17736,7 +17720,7 @@
       "doc_path": "modules/vibe-cli/PROP-042",
       "file": "spec/modules/vibe-cli/PROP-042-aiui-observation.md",
       "heading": "5.1 In-place upgrade & the icon protocol",
-      "line": 152,
+      "line": 163,
       "uri": "spec://vibevm/modules/vibe-cli/PROP-042#in-place-upgrade"
     },
     {
@@ -17745,7 +17729,7 @@
       "doc_path": "modules/vibe-cli/PROP-042",
       "file": "spec/modules/vibe-cli/PROP-042-aiui-observation.md",
       "heading": "6. Never",
-      "line": 169,
+      "line": 180,
       "uri": "spec://vibevm/modules/vibe-cli/PROP-042#never"
     },
     {
@@ -18187,78 +18171,6 @@
       "heading": "12. Version history",
       "line": 922,
       "uri": "spec://vibevm/modules/vibe-index/PROP-005#history"
-    },
-    {
-      "anchor": "root",
-      "content_hash": "sha256:f18fb023aec6c2e754ed0bb855863923619a0777114fdc056323b3a517e333c4",
-      "doc_path": "modules/vibe-launcher/PROP-043",
-      "file": "spec/modules/vibe-launcher/PROP-043-gui-launchers.md",
-      "heading": "PROP-043 — GUI launchers",
-      "line": 1,
-      "uri": "spec://vibevm/modules/vibe-launcher/PROP-043#root"
-    },
-    {
-      "anchor": "resolve",
-      "content_hash": "sha256:71618bdb561d9c0e77e2d2bcfdb3330fc988488e7107069d26c2fa621fc145ae",
-      "doc_path": "modules/vibe-launcher/PROP-043",
-      "file": "spec/modules/vibe-launcher/PROP-043-gui-launchers.md",
-      "heading": "Resolve `vibe` without a PATH search",
-      "line": 17,
-      "uri": "spec://vibevm/modules/vibe-launcher/PROP-043#resolve"
-    },
-    {
-      "anchor": "spawn",
-      "content_hash": "sha256:ed92b65285b586de12ffc42cb67de1740a2361d5bc0db934bf1f3e01773e4881",
-      "doc_path": "modules/vibe-launcher/PROP-043",
-      "file": "spec/modules/vibe-launcher/PROP-043-gui-launchers.md",
-      "heading": "Start the child without a console flash",
-      "line": 26,
-      "uri": "spec://vibevm/modules/vibe-launcher/PROP-043#spawn"
-    },
-    {
-      "anchor": "report",
-      "content_hash": "sha256:8d07ef847f402b3b61d4a60115f9b211e46ad754ad61e26354a67c53b15676ea",
-      "doc_path": "modules/vibe-launcher/PROP-043",
-      "file": "spec/modules/vibe-launcher/PROP-043-gui-launchers.md",
-      "heading": "Fail loud, graphically",
-      "line": 45,
-      "uri": "spec://vibevm/modules/vibe-launcher/PROP-043#report"
-    },
-    {
-      "anchor": "registry",
-      "content_hash": "sha256:b474bc05dedc5083922b4dde05859badc4dc8ef043d31ab4f92cb301d472e1d8",
-      "doc_path": "modules/vibe-launcher/PROP-043",
-      "file": "spec/modules/vibe-launcher/PROP-043-gui-launchers.md",
-      "heading": "One core, N thin binaries, a declarative registry",
-      "line": 52,
-      "uri": "spec://vibevm/modules/vibe-launcher/PROP-043#registry"
-    },
-    {
-      "anchor": "icon",
-      "content_hash": "sha256:3eeefb0e1883d109d52db04ca8dfcb9aa5dfc1f98df6bcafcc6475a4ae84d986",
-      "doc_path": "modules/vibe-launcher/PROP-043",
-      "file": "spec/modules/vibe-launcher/PROP-043-gui-launchers.md",
-      "heading": "Icon: family identity, window matches launcher",
-      "line": 72,
-      "uri": "spec://vibevm/modules/vibe-launcher/PROP-043#icon"
-    },
-    {
-      "anchor": "self-install",
-      "content_hash": "sha256:9138d79aa06980a5cedaaf0b0c5421a890b0b276178cd4afe1bb33c05e430cf3",
-      "doc_path": "modules/vibe-launcher/PROP-043",
-      "file": "spec/modules/vibe-launcher/PROP-043-gui-launchers.md",
-      "heading": "Self-install: the pipeline places the launchers",
-      "line": 88,
-      "uri": "spec://vibevm/modules/vibe-launcher/PROP-043#self-install"
-    },
-    {
-      "anchor": "never",
-      "content_hash": "sha256:c2cf3cc045c5fa74aa22d777c7c4dc6f26650ceea23e3297949daaed510381d0",
-      "doc_path": "modules/vibe-launcher/PROP-043",
-      "file": "spec/modules/vibe-launcher/PROP-043-gui-launchers.md",
-      "heading": "Never",
-      "line": 117,
-      "uri": "spec://vibevm/modules/vibe-launcher/PROP-043#never"
     },
     {
       "anchor": "root",
@@ -21988,429 +21900,6 @@
       "uri": "spec://vibevm/modules/vibe-workspace/PROP-038#history"
     },
     {
-      "anchor": "role",
-      "content_hash": "sha256:4409fe51729a4ec75f250625d9c9b47d92dcce1597f74afb7ff170702502131f",
-      "doc_path": "modules/vibeframe/PROP-045",
-      "file": "spec/modules/vibeframe/PROP-045-simple-terminal-frame.md",
-      "heading": "1. Role & scope",
-      "line": 18,
-      "uri": "spec://vibevm/modules/vibeframe/PROP-045#role"
-    },
-    {
-      "anchor": "routing",
-      "content_hash": "sha256:46dffb7714790b2b7c6b8b188a26f3d8f218ba0f2c2418c25e8e46c59fa5ce14",
-      "doc_path": "modules/vibeframe/PROP-045",
-      "file": "spec/modules/vibeframe/PROP-045-simple-terminal-frame.md",
-      "heading": "2. Routing",
-      "line": 32,
-      "uri": "spec://vibevm/modules/vibeframe/PROP-045#routing"
-    },
-    {
-      "anchor": "identity",
-      "content_hash": "sha256:3ba27fe4cb0ca1f8c14eef82268943d69659289750aeb0b9340a0deacdb0bfe8",
-      "doc_path": "modules/vibeframe/PROP-045",
-      "file": "spec/modules/vibeframe/PROP-045-simple-terminal-frame.md",
-      "heading": "3. Identity & the in-terminal marker",
-      "line": 42,
-      "uri": "spec://vibevm/modules/vibeframe/PROP-045#identity"
-    },
-    {
-      "anchor": "packaging",
-      "content_hash": "sha256:55eab5cf29d33ec637b86555297250898a0a15f12cd8563cc6060e7de491d744",
-      "doc_path": "modules/vibeframe/PROP-045",
-      "file": "spec/modules/vibeframe/PROP-045-simple-terminal-frame.md",
-      "heading": "4. Packaging & install",
-      "line": 55,
-      "uri": "spec://vibevm/modules/vibeframe/PROP-045#packaging"
-    },
-    {
-      "anchor": "vs-vibeterm",
-      "content_hash": "sha256:fdb3a407b6f66666b09f2bffca746b444a7cdb1a9892fe4e821c2cc5b1a218ad",
-      "doc_path": "modules/vibeframe/PROP-045",
-      "file": "spec/modules/vibeframe/PROP-045-simple-terminal-frame.md",
-      "heading": "5. Relationship to vibeterm",
-      "line": 69,
-      "uri": "spec://vibevm/modules/vibeframe/PROP-045#vs-vibeterm"
-    },
-    {
-      "anchor": "non-goals",
-      "content_hash": "sha256:7ad39a1bb85f13fc014844f0cf816338d9debc9a16d75eb88e430f8f560f2999",
-      "doc_path": "modules/vibeframe/PROP-045",
-      "file": "spec/modules/vibeframe/PROP-045-simple-terminal-frame.md",
-      "heading": "Non-goals",
-      "line": 77,
-      "uri": "spec://vibevm/modules/vibeframe/PROP-045#non-goals"
-    },
-    {
-      "anchor": "regions",
-      "content_hash": "sha256:99ae6576552846e74af064b13d45bdb8ded4e0a5916a1e1da0d32c00c1ffa42e",
-      "doc_path": "modules/vibeterm/PROP-044",
-      "file": "spec/modules/vibeterm/PROP-044-terminal-shell.md",
-      "heading": "1. Shell regions",
-      "line": 21,
-      "uri": "spec://vibevm/modules/vibeterm/PROP-044#regions"
-    },
-    {
-      "anchor": "compact",
-      "content_hash": "sha256:979091f32d2baccd9a44e8c6bf57b89397047249d15e8ba8f9b62eb5376ced10",
-      "doc_path": "modules/vibeterm/PROP-044",
-      "file": "spec/modules/vibeterm/PROP-044-terminal-shell.md",
-      "heading": "2. Compact toggle",
-      "line": 35,
-      "uri": "spec://vibevm/modules/vibeterm/PROP-044#compact"
-    },
-    {
-      "anchor": "tab-model",
-      "content_hash": "sha256:2981a7d4509814af47a1822038413cd00010f36752c4998ca4f8c86148cf8dc2",
-      "doc_path": "modules/vibeterm/PROP-044",
-      "file": "spec/modules/vibeterm/PROP-044-terminal-shell.md",
-      "heading": "3. The tab model",
-      "line": 41,
-      "uri": "spec://vibevm/modules/vibeterm/PROP-044#tab-model"
-    },
-    {
-      "anchor": "panes",
-      "content_hash": "sha256:6700c022cce9bec4fbdf4a1871a42df618e33ce5b4dca3a29e54046dffa50b38",
-      "doc_path": "modules/vibeterm/PROP-044",
-      "file": "spec/modules/vibeterm/PROP-044-terminal-shell.md",
-      "heading": "4. Panes: switching and split view",
-      "line": 62,
-      "uri": "spec://vibevm/modules/vibeterm/PROP-044#panes"
-    },
-    {
-      "anchor": "tear-off",
-      "content_hash": "sha256:380fa684a42f5c83c4cdc5303a6da60992a97d73d007a0358bc25fe872359396",
-      "doc_path": "modules/vibeterm/PROP-044",
-      "file": "spec/modules/vibeterm/PROP-044-terminal-shell.md",
-      "heading": "5. Tear-off: open in new window",
-      "line": 81,
-      "uri": "spec://vibevm/modules/vibeterm/PROP-044#tear-off"
-    },
-    {
-      "anchor": "context-menu",
-      "content_hash": "sha256:fb208c163b3fe3d8ffbc8ea00458da50a05868a6119966c37943f41594ed429f",
-      "doc_path": "modules/vibeterm/PROP-044",
-      "file": "spec/modules/vibeterm/PROP-044-terminal-shell.md",
-      "heading": "6. Context menu",
-      "line": 95,
-      "uri": "spec://vibevm/modules/vibeterm/PROP-044#context-menu"
-    },
-    {
-      "anchor": "m1-scope",
-      "content_hash": "sha256:5252cd19afa370f8f8fb72f4027b3b0d078e52d53f5e217194c2da9fe4c11d34",
-      "doc_path": "modules/vibeterm/PROP-044",
-      "file": "spec/modules/vibeterm/PROP-044-terminal-shell.md",
-      "heading": "7. Milestone-1 scope — placeholder vs functional",
-      "line": 102,
-      "uri": "spec://vibevm/modules/vibeterm/PROP-044#m1-scope"
-    },
-    {
-      "anchor": "headless-unchanged",
-      "content_hash": "sha256:2d11313994738491dda475d59f1f26f0c17e784331ec48b8149cbd98f5a34fb6",
-      "doc_path": "modules/vibeterm/PROP-044",
-      "file": "spec/modules/vibeterm/PROP-044-terminal-shell.md",
-      "heading": "8. The headless / control path is unchanged",
-      "line": 113,
-      "uri": "spec://vibevm/modules/vibeterm/PROP-044#headless-unchanged"
-    },
-    {
-      "anchor": "seam",
-      "content_hash": "sha256:98ccb606e7e7376813675ca462dc55b270a77d0cebe2517c5c9618cf77808f37",
-      "doc_path": "modules/vibeterm/PROP-044",
-      "file": "spec/modules/vibeterm/PROP-044-terminal-shell.md",
-      "heading": "9. The chrome ↔ engine seam",
-      "line": 122,
-      "uri": "spec://vibevm/modules/vibeterm/PROP-044#seam"
-    },
-    {
-      "anchor": "i18n",
-      "content_hash": "sha256:b3784444a33c98b89602e7e39525454d4ec9c26ca1244e79a2fbd33da24fec61",
-      "doc_path": "modules/vibeterm/PROP-044",
-      "file": "spec/modules/vibeterm/PROP-044-terminal-shell.md",
-      "heading": "10. Internationalisation",
-      "line": 149,
-      "uri": "spec://vibevm/modules/vibeterm/PROP-044#i18n"
-    },
-    {
-      "anchor": "theming",
-      "content_hash": "sha256:5acbdd81787c04b262913ce755fe3c0b2e8385205c23f75f637c32002b396fa0",
-      "doc_path": "modules/vibeterm/PROP-044",
-      "file": "spec/modules/vibeterm/PROP-044-terminal-shell.md",
-      "heading": "11. Theming",
-      "line": 158,
-      "uri": "spec://vibevm/modules/vibeterm/PROP-044#theming"
-    },
-    {
-      "anchor": "decisions",
-      "content_hash": "sha256:cfeff1562caed536a36efc6f19ff8aaa3dd4b0c51f6799fcf8c01de15b4d8d36",
-      "doc_path": "modules/vibeterm/PROP-044",
-      "file": "spec/modules/vibeterm/PROP-044-terminal-shell.md",
-      "heading": "Decisions",
-      "line": 174,
-      "uri": "spec://vibevm/modules/vibeterm/PROP-044#decisions"
-    },
-    {
-      "anchor": "d0-reparent",
-      "content_hash": "sha256:5060ca67b05f03d85902ec196ca253780bbccb18c5ea1a233b9e3e0d2bf0123a",
-      "doc_path": "modules/vibeterm/PROP-044",
-      "file": "spec/modules/vibeterm/PROP-044-terminal-shell.md",
-      "heading": "D0 — `WebContentsView` reparent preserves live state",
-      "line": 176,
-      "uri": "spec://vibevm/modules/vibeterm/PROP-044#d0-reparent"
-    },
-    {
-      "anchor": "d1-ts-core",
-      "content_hash": "sha256:2b35dbd04694b909c10cdaa792665bdc34f72c5971cf69809066ddd136d568ff",
-      "doc_path": "modules/vibeterm/PROP-044",
-      "file": "spec/modules/vibeterm/PROP-044-terminal-shell.md",
-      "heading": "D1 — TypeScript core now, full gate later",
-      "line": 195,
-      "uri": "spec://vibevm/modules/vibeterm/PROP-044#d1-ts-core"
-    },
-    {
-      "anchor": "d2-shell-default",
-      "content_hash": "sha256:90b62d51da0dad222fc824f8701a39937470b773ff1e593a05067b14aaa2da3e",
-      "doc_path": "modules/vibeterm/PROP-044",
-      "file": "spec/modules/vibeterm/PROP-044-terminal-shell.md",
-      "heading": "D2 — Shell is the default visible `vibe term`",
-      "line": 209,
-      "uri": "spec://vibevm/modules/vibeterm/PROP-044#d2-shell-default"
-    },
-    {
-      "anchor": "d3-split-two",
-      "content_hash": "sha256:0fce47543364769fde5d293d7e8f7e0cfaee34220afbc055d0f617aba518537d",
-      "doc_path": "modules/vibeterm/PROP-044",
-      "file": "spec/modules/vibeterm/PROP-044-terminal-shell.md",
-      "heading": "D3 — Split ceiling of two panes in milestone 1",
-      "line": 221,
-      "uri": "spec://vibevm/modules/vibeterm/PROP-044#d3-split-two"
-    },
-    {
-      "anchor": "d4-ui-stack",
-      "content_hash": "sha256:7e5bf80b25dde2160aae54da3807aff681b602c522d31a39fbb7975947187823",
-      "doc_path": "modules/vibeterm/PROP-044",
-      "file": "spec/modules/vibeterm/PROP-044-terminal-shell.md",
-      "heading": "D4 — UI stack: Solid + Vite + Tailwind v4 + Kobalte + strict TS",
-      "line": 231,
-      "uri": "spec://vibevm/modules/vibeterm/PROP-044#d4-ui-stack"
-    },
-    {
-      "anchor": "d5-sidecar-ready",
-      "content_hash": "sha256:f976f53747bfbee33326f74df0cc66fd27cf097f79c20bb62e98d6ab3860f9b9",
-      "doc_path": "modules/vibeterm/PROP-044",
-      "file": "spec/modules/vibeterm/PROP-044-terminal-shell.md",
-      "heading": "D5 — Chrome↔engine protocol: transport-agnostic, sidecar-ready",
-      "line": 253,
-      "uri": "spec://vibevm/modules/vibeterm/PROP-044#d5-sidecar-ready"
-    },
-    {
-      "anchor": "d6-i18n",
-      "content_hash": "sha256:9c974fb038d7d9dbb4e96e7fb90223be00615744316f250b227a2f7e64090a6f",
-      "doc_path": "modules/vibeterm/PROP-044",
-      "file": "spec/modules/vibeterm/PROP-044-terminal-shell.md",
-      "heading": "D6 — Internationalisation from the start",
-      "line": 269,
-      "uri": "spec://vibevm/modules/vibeterm/PROP-044#d6-i18n"
-    },
-    {
-      "anchor": "d7-theming",
-      "content_hash": "sha256:c482dcb1ccbe320e5a2803e5e5cad159fde46342e3c1a694a73137d915572d7d",
-      "doc_path": "modules/vibeterm/PROP-044",
-      "file": "spec/modules/vibeterm/PROP-044-terminal-shell.md",
-      "heading": "D7 — Live theming; two launch themes",
-      "line": 280,
-      "uri": "spec://vibevm/modules/vibeterm/PROP-044#d7-theming"
-    },
-    {
-      "anchor": "family",
-      "content_hash": "sha256:ccdbafbc147e0617e8e27f8d58c0d83654571d57e815b12f8c8c6ef72f7dd0b8",
-      "doc_path": "modules/vibeterm/PROP-044",
-      "file": "spec/modules/vibeterm/PROP-044-terminal-shell.md",
-      "heading": "12. Sibling contracts — the vibeterm PROP family",
-      "line": 297,
-      "uri": "spec://vibevm/modules/vibeterm/PROP-044#family"
-    },
-    {
-      "anchor": "root",
-      "content_hash": "sha256:627af5cd23ceb84b94072bfb87a245974394d708c4a6d906a873c095485a5d68",
-      "doc_path": "modules/vibeterm/PROP-046",
-      "file": "spec/modules/vibeterm/PROP-046-action-aiui-core.md",
-      "heading": "PROP-046 — the vibeterm action/AIUI core",
-      "line": 1,
-      "uri": "spec://vibevm/modules/vibeterm/PROP-046#root"
-    },
-    {
-      "anchor": "overview",
-      "content_hash": "sha256:8d543ba8635707643aecf7136a5e3b38ce94c28faa0f354baaee54d4986601c0",
-      "doc_path": "modules/vibeterm/PROP-046",
-      "file": "spec/modules/vibeterm/PROP-046-action-aiui-core.md",
-      "heading": "1. Overview & the render-free invariant",
-      "line": 15,
-      "uri": "spec://vibevm/modules/vibeterm/PROP-046#overview"
-    },
-    {
-      "anchor": "addressing",
-      "content_hash": "sha256:63863085064eab536300f66feeae543b7a6a7e1ec987f72d03f91f23163d2aa6",
-      "doc_path": "modules/vibeterm/PROP-046",
-      "file": "spec/modules/vibeterm/PROP-046-action-aiui-core.md",
-      "heading": "2. Addressing",
-      "line": 25,
-      "uri": "spec://vibevm/modules/vibeterm/PROP-046#addressing"
-    },
-    {
-      "anchor": "action-value",
-      "content_hash": "sha256:22f1cddcd636e9457392acccda16221e8428e2462f3db3ac378e425a54b2c3e6",
-      "doc_path": "modules/vibeterm/PROP-046",
-      "file": "spec/modules/vibeterm/PROP-046-action-aiui-core.md",
-      "heading": "3. The Action value",
-      "line": 35,
-      "uri": "spec://vibevm/modules/vibeterm/PROP-046#action-value"
-    },
-    {
-      "anchor": "registry",
-      "content_hash": "sha256:efc44fdbfa18d8afc4dd2633c3e44559c9335c85ebfb2fd561a9a1f122292421",
-      "doc_path": "modules/vibeterm/PROP-046",
-      "file": "spec/modules/vibeterm/PROP-046-action-aiui-core.md",
-      "heading": "4. The Registry",
-      "line": 50,
-      "uri": "spec://vibevm/modules/vibeterm/PROP-046#registry"
-    },
-    {
-      "anchor": "context",
-      "content_hash": "sha256:e49676f19b503200f9dbf7d17a637b136a7274becc63ce9530b6bceb22812ec6",
-      "doc_path": "modules/vibeterm/PROP-046",
-      "file": "spec/modules/vibeterm/PROP-046-action-aiui-core.md",
-      "heading": "5. Context & enablement",
-      "line": 63,
-      "uri": "spec://vibevm/modules/vibeterm/PROP-046#context"
-    },
-    {
-      "anchor": "invocation",
-      "content_hash": "sha256:f759ffe92111b718d3d88eb00a6abfbcc8a269096664802d3b5cf20826eaff55",
-      "doc_path": "modules/vibeterm/PROP-046",
-      "file": "spec/modules/vibeterm/PROP-046-action-aiui-core.md",
-      "heading": "6. Invocation & capability — incl. the AI-peer surface",
-      "line": 76,
-      "uri": "spec://vibevm/modules/vibeterm/PROP-046#invocation"
-    },
-    {
-      "anchor": "i18n",
-      "content_hash": "sha256:9b4c8795660cfe0bb48abc6be2d782a22035bfe31f2cab2492b727b72cf7c479",
-      "doc_path": "modules/vibeterm/PROP-046",
-      "file": "spec/modules/vibeterm/PROP-046-action-aiui-core.md",
-      "heading": "7. i18n",
-      "line": 99,
-      "uri": "spec://vibevm/modules/vibeterm/PROP-046#i18n"
-    },
-    {
-      "anchor": "aiui",
-      "content_hash": "sha256:0f65a81e6a3502fd4fa1dcbb7f4621e09ba2b0e6a61be5e934e98d5ee0176163",
-      "doc_path": "modules/vibeterm/PROP-046",
-      "file": "spec/modules/vibeterm/PROP-046-action-aiui-core.md",
-      "heading": "8. The AI-UI surface",
-      "line": 119,
-      "uri": "spec://vibevm/modules/vibeterm/PROP-046#aiui"
-    },
-    {
-      "anchor": "conformance",
-      "content_hash": "sha256:e5bba1377a81848001e40e4802a4f6e3f0d567fc3ec628afda2dd7e2a0db5213",
-      "doc_path": "modules/vibeterm/PROP-046",
-      "file": "spec/modules/vibeterm/PROP-046-action-aiui-core.md",
-      "heading": "9. Identity-grammar conformance",
-      "line": 136,
-      "uri": "spec://vibevm/modules/vibeterm/PROP-046#conformance"
-    },
-    {
-      "anchor": "discipline",
-      "content_hash": "sha256:9c64e4bf2cd47632d7206423c81850de1ecc24c842f153bd543352226d7b2644",
-      "doc_path": "modules/vibeterm/PROP-046",
-      "file": "spec/modules/vibeterm/PROP-046-action-aiui-core.md",
-      "heading": "10. Discipline",
-      "line": 151,
-      "uri": "spec://vibevm/modules/vibeterm/PROP-046#discipline"
-    },
-    {
-      "anchor": "non-goals",
-      "content_hash": "sha256:04cd22d30f63be78bb6ac0e5990099eac9909312e2ca04a120bf2c66dcfe8499",
-      "doc_path": "modules/vibeterm/PROP-046",
-      "file": "spec/modules/vibeterm/PROP-046-action-aiui-core.md",
-      "heading": "11. Non-goals (pre-MVP sketch)",
-      "line": 158,
-      "uri": "spec://vibevm/modules/vibeterm/PROP-046#non-goals"
-    },
-    {
-      "anchor": "root",
-      "content_hash": "sha256:98c5a1d2e6e95fedd7e5514b2a6cd81381615142930541b9259531cc426deef9",
-      "doc_path": "modules/vibeterm/PROP-047",
-      "file": "spec/modules/vibeterm/PROP-047-modelview-transport.md",
-      "heading": "PROP-047 — the vibeterm `ModelView`, MVC, and the transport seam",
-      "line": 1,
-      "uri": "spec://vibevm/modules/vibeterm/PROP-047#root"
-    },
-    {
-      "anchor": "modelview",
-      "content_hash": "sha256:3a67861e22caabe4c2a8e8a97a9b02679ccde8f82e5175f88525fdc7be26e6e4",
-      "doc_path": "modules/vibeterm/PROP-047",
-      "file": "spec/modules/vibeterm/PROP-047-modelview-transport.md",
-      "heading": "1. The `ModelView` tree",
-      "line": 12,
-      "uri": "spec://vibevm/modules/vibeterm/PROP-047#modelview"
-    },
-    {
-      "anchor": "mvc",
-      "content_hash": "sha256:6f958de08e47494a6b11c386e9c647a70443539c955824375ebd730260af4a4f",
-      "doc_path": "modules/vibeterm/PROP-047",
-      "file": "spec/modules/vibeterm/PROP-047-modelview-transport.md",
-      "heading": "2. The MVC reconciliation",
-      "line": 26,
-      "uri": "spec://vibevm/modules/vibeterm/PROP-047#mvc"
-    },
-    {
-      "anchor": "transport",
-      "content_hash": "sha256:3391d9f583ec21e7fcb6ffadf74c17ec7a72d8e0e0a124e5aef9ef1bcc5fb534",
-      "doc_path": "modules/vibeterm/PROP-047",
-      "file": "spec/modules/vibeterm/PROP-047-modelview-transport.md",
-      "heading": "3. The chrome ↔ engine transport contract",
-      "line": 38,
-      "uri": "spec://vibevm/modules/vibeterm/PROP-047#transport"
-    },
-    {
-      "anchor": "entities",
-      "content_hash": "sha256:ab57afd06931115528eb49f91a2dc52c1650f8f4405df0755f5d76d1aff8bc58",
-      "doc_path": "modules/vibeterm/PROP-047",
-      "file": "spec/modules/vibeterm/PROP-047-modelview-transport.md",
-      "heading": "4. The shell entity set",
-      "line": 61,
-      "uri": "spec://vibevm/modules/vibeterm/PROP-047#entities"
-    },
-    {
-      "anchor": "surfaces",
-      "content_hash": "sha256:0c2c6c312972008ba1aae4108f21e722787ff9398bec4c8651d19e25f9014644",
-      "doc_path": "modules/vibeterm/PROP-047",
-      "file": "spec/modules/vibeterm/PROP-047-modelview-transport.md",
-      "heading": "5. Surfaces",
-      "line": 73,
-      "uri": "spec://vibevm/modules/vibeterm/PROP-047#surfaces"
-    },
-    {
-      "anchor": "pre-mvp",
-      "content_hash": "sha256:aa6bce7f01a4537445f909d524b51d3a273a1d37241fb529f859fa9bc1d5b8ad",
-      "doc_path": "modules/vibeterm/PROP-047",
-      "file": "spec/modules/vibeterm/PROP-047-modelview-transport.md",
-      "heading": "6. Pre-MVP scope",
-      "line": 79,
-      "uri": "spec://vibevm/modules/vibeterm/PROP-047#pre-mvp"
-    },
-    {
-      "anchor": "non-goals",
-      "content_hash": "sha256:7de829d7fabc056141d8dc608ea97fbb0ef9a60b5585528fdd17856a08aac0a3",
-      "doc_path": "modules/vibeterm/PROP-047",
-      "file": "spec/modules/vibeterm/PROP-047-modelview-transport.md",
-      "heading": "7. Non-goals",
-      "line": 86,
-      "uri": "spec://vibevm/modules/vibeterm/PROP-047#non-goals"
-    },
-    {
       "anchor": "why",
       "content_hash": "sha256:7e61cd6ee2f67f72f77f1c79e5b56f9a088c6f4ce8ecd5b0cf5f58e902d16a70",
       "doc_path": "research/ACTION-SYSTEM-RESEARCH-PLAN-v0.1",
@@ -23774,18 +23263,6 @@
       "file": "crates/vibe-cli/src/commands/prefs/tui/search/render.rs",
       "line": 11,
       "message": "edge `vibe_cli::commands::prefs::tui::search::render` --implements--> `spec://vibevm/modules/vibe-settings/PROP-041#settings-search`: no spec unit carries this anchor"
-    },
-    {
-      "code": "pin-into-unmarked-unit",
-      "file": "crates/vibe-cli/src/commands/vvm/launchers.rs",
-      "line": 300,
-      "message": "edge `vibe_cli::commands::vvm::launchers::tests::place_exe_creates_then_replaces` pins r1 but `spec://vibevm/modules/vibe-launcher/PROP-043#self-install` carries no kind/revision line yet"
-    },
-    {
-      "code": "pin-into-unmarked-unit",
-      "file": "crates/vibe-cli/src/commands/vvm/launchers.rs",
-      "line": 328,
-      "message": "edge `vibe_cli::commands::vvm::launchers::tests::place_exe_sweeps_stale_sidecars` pins r1 but `spec://vibevm/modules/vibe-launcher/PROP-043#self-install` carries no kind/revision line yet"
     },
     {
       "code": "dangling-edge",
