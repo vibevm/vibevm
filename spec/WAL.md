@@ -1,5 +1,32 @@
 # WAL — Project Continuation State
 
+## CHECKPOINT 2026-07-21 — VIBETERM/VIBEFRAME/VIBE-LAUNCHER EXTRACTION (Phase 2a host-side landed)
+
+_Updated: 2026-07-21 — the **terminal-product extraction** Phase 2a landed on `main`: the
+vibeterm/vibeframe/vibe-launcher terminal products and GUI launchers moved to a separate products
+repo (`vibevm-term`) in Phase 1 (12 commits there); this is the host-side tear-down that follows.
+**8 commits** on `main`: (1) `refactor(vvm): stop packaging the terminal products and launchers` —
+`perform_install` builds the `vibe` binary only (was: `vibe` + packaged vibeterm + vibeframe +
+launcher refresh); dropped `launchers.rs` + `vibeterm_packager.rs` + the doctor/tools optional-tools
+seam. (2) `refactor(term): resolve terminal apps via PATH with an in-place fallback` — the resolver
+tiers are now `$VIBEVM_<APP>` → packaged `<instance>/<app>/` (back-compat) → `PATH` lookup;
+dropped the in-tree `apps/<app>` walk-up and the silent vibeframe→vibeterm fallback; `vibe tree -t`
+now falls back to running the console TUI in place when vibeframe is absent. (3)
+`refactor(workspace): remove the vibe-launcher crate` — crate dir + workspace membership + Cargo.lock +
+`assets/icons/{vibetree,vibeterm,vibeframe}.*`. (4) `chore(tools): drop the vibeterm gates from
+self-check and first-run` — step 11 (apps/vibeterm node --test + vitest) and the apps/vibeterm npm
+install block. (5) `docs(specs): apps and launchers are external products` — PROP-019 §2.7 (build the
+`vibe` binary only), PROP-042 header + §5 (the resolver tiers), conform.toml env_root. (6)
+`chore(extract): drop the moved terminal/launcher sources` — apps/, the vibeterm/vibeframe/vibe-launcher
+spec modules, the terminal/launcher terraforms, MT-04/MT-05, research/vibeterm/, the vibeterm
+ideas-icons scratchpad. (7) `chore(specmap): drop the moved terminal/launcher anchors` (regen). (8)
+`fix(conform): drop vibe-launcher from gated_crates` — the one Phase-2a miss the floor caught.
+**Floor:** `cargo check` + `cargo test -p vibe-cli --test vvm` (4/4) green; `self-check.sh` green after
+the conform fixup; specmap regen clean. **Cross-repo:** vibevm-term Phase 2b (the ported version-manager
+twin) landed in parallel — 4 commits there (the vvm port, the normative PROPs, the product self CLIs).
+**No blocker. Next:** push both sides (the extraction commits + the Phase-2b twin) once the owner gives
+the go. **Discipline unchanged.**_
+
 ## CHECKPOINT 2026-07-20 (later) — SETTINGS-HOME CONSOLIDATION + GLOBAL REGISTRY + `enabled` FLAG
 
 _Updated: 2026-07-20 (later) — a settings-layer campaign landed on `main`, floor-green, **11 ahead of
