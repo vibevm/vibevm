@@ -260,13 +260,13 @@ fn resolve_app(app: &str) -> Result<Vibeterm> {
     // Tier 3 — PATH lookup for the packaged app-named binary. The directory
     // the binary sits in is the packaged root (electron-packager's output
     // carries the app-named exe at its root, see PROP-electron-packaging).
-    if let Some(dir) = via_path(app) {
-        if matches!(classify_vibeterm(&dir, app), VibetermShape::Packaged) {
-            return Ok(Vibeterm {
-                dir,
-                shape: VibetermShape::Packaged,
-            });
-        }
+    if let Some(dir) = via_path(app)
+        && matches!(classify_vibeterm(&dir, app), VibetermShape::Packaged)
+    {
+        return Ok(Vibeterm {
+            dir,
+            shape: VibetermShape::Packaged,
+        });
     }
     bail!(
         "{app} not found — set ${env_var} to its directory, install it on PATH \
