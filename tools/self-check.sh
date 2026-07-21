@@ -181,22 +181,11 @@ MCPT_DIR="packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0"
 run_step "rust-ai-native-specmap --gate (typescript-ai-native-mcp pkg self-trace)" \
   cargo run --quiet --manifest-path "$PKG_MANIFEST" -p rust-ai-native-specmap --bin rust-ai-native-specmap -- --gate --path "$MCPT_DIR" || OVERALL=$?
 
-# 11. vibeterm's pure-logic tests (TERMINAL-AIUI Phase 2 + the vibeterm-core engine).
-# apps/vibeterm holds (a) the pure-ESM arg/shell-default lib tested under `node --test`, and (b) the
-# render-free engine cells (PROP-046/047) tested under `vitest`. Scope `node --test` to the lib files
-# explicitly: a bare `node --test` would also pick up the engine's vitest suites (different syntax).
-if command -v node >/dev/null 2>&1; then
-  run_step "node --test (vibeterm args)" \
-    bash -c 'cd apps/vibeterm && node --test test/args.test.mjs test/keymap.test.mjs' || OVERALL=$?
-  if [ -d apps/vibeterm/node_modules/vitest ]; then
-    run_step "vitest (vibeterm engine cells)" \
-      bash -c 'cd apps/vibeterm && npx vitest run' || OVERALL=$?
-  elif [ "$QUIET" -eq 0 ]; then
-    printf '\n=== vitest (vibeterm engine) — SKIPPED (apps/vibeterm deps not installed) ===\n' >&2
-  fi
-elif [ "$QUIET" -eq 0 ]; then
-  printf '\n=== node --test (vibeterm args) — SKIPPED (no node on PATH) ===\n' >&2
-fi
+# 11. The vibeterm / vibeframe terminal products moved to a separate repo
+# (`vibevm-term`); their pure-logic tests (`node --test` for the shared
+# arg/keymap helpers, `vitest` for the vibeterm engine cells) live there now.
+# The host's self-check no longer runs them — the vibevm-term repo carries
+# its own floor.
 
 if [ "$QUIET" -eq 0 ]; then
   if [ "$OVERALL" -eq 0 ]; then
