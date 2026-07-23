@@ -4,12 +4,10 @@
 //! and asserts the guard fires before any registry is opened.
 
 // This whole file is test code (referenced via `#[cfg(test)] #[path]` in
-// resolver.rs). The crate-internal attribute re-marks it for the conform
-// no-unwrap-in-domain rule, which keys on `#[cfg(test)]` / `#[test]` — the
-// `#[path]` indirection otherwise hides the enclosing-module gate from the
-// per-file fact extractor, and `empty_manifest()`'s `.unwrap()` would
-// surface as a spurious domain-logic violation.
-#![cfg(test)]
+// resolver.rs). The `#[spec(deviates)]` on `empty_manifest` is the
+// conform-recognised testimony for the test-fixture `.unwrap()` — the
+// `#[path]` indirection hides the enclosing-module gate from the per-file
+// fact extractor, so the deviation annotation carries the boundary here.
 
 use std::path::PathBuf;
 

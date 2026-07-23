@@ -398,16 +398,16 @@ pub(crate) fn build_install_resolver(
     // The family is ordered project-local first (a developer's own in-tree
     // packages win a clash), then vibe-embedded.
     let mut locals: Vec<LocalRegistry> = Vec::new();
-    if !args.no_prefer_local {
-        if let Some(root) = super::project_packages_root(project_root) {
-            let root = crate::commands::init::strip_unc_public(root);
-            locals.push(crate::registry::local_registry(root.clone()).map_err(|e| {
-                anyhow!(
-                    "failed to open the project-local registry at `{}`: {e}",
-                    root.display()
-                )
-            })?);
-        }
+    if !args.no_prefer_local
+        && let Some(root) = super::project_packages_root(project_root)
+    {
+        let root = crate::commands::init::strip_unc_public(root);
+        locals.push(crate::registry::local_registry(root.clone()).map_err(|e| {
+            anyhow!(
+                "failed to open the project-local registry at `{}`: {e}",
+                root.display()
+            )
+        })?);
     }
     if let Some(root) = embedded_root.filter(|_| !args.no_default_registry) {
         let root = crate::commands::init::strip_unc_public(root.to_path_buf());

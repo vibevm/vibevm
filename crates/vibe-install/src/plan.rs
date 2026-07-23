@@ -1,8 +1,7 @@
-//! The planning phase — derive the effective root set, run the
-//! depsolver, fetch and feature-pin every node, expand conditional
-//! dependencies to a fixed point, and shape the resolution the caller
-//! confirms before [`apply`](crate::apply) mutates anything beyond
-//! the recorded migration writes.
+//! The planning phase — derive the effective root set, run the depsolver,
+//! fetch and feature-pin every node, expand conditional dependencies to a
+//! fixed point, and shape the resolution the caller confirms before
+//! [`apply`](crate::apply) mutates anything beyond the recorded migration writes.
 
 specmark::scope!("spec://vibevm/VIBEVM-SPEC#install-workflow-in-detail");
 
