@@ -48,6 +48,7 @@ pub mod conditional;
 pub mod embedded_provider;
 pub mod features;
 pub mod fixpoint_model;
+pub mod local_composite_provider;
 pub mod local_registry_provider;
 pub mod multi_registry_provider;
 pub mod naive;
@@ -60,6 +61,7 @@ pub use features::{
     FeatureError, FeatureExpansion, FeatureRequest, FeatureValue, expand_features,
     validate_features_table,
 };
+pub use local_composite_provider::LocalCompositeProvider;
 pub use local_registry_provider::LocalRegistryProvider;
 pub use multi_registry_provider::MultiRegistryProvider;
 pub use naive::NaiveDepSolver;
