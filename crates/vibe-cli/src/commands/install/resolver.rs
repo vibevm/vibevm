@@ -374,6 +374,9 @@ pub(crate) fn build_install_resolver(
              (short-circuit only makes sense with embedded-first precedence)"
         );
     }
+    if args.prefer_local && args.no_prefer_local {
+        bail!("--prefer-local and --no-prefer-local are mutually exclusive");
+    }
     if let Some(explicit) = &args.registry {
         let p = explicit
             .canonicalize()
@@ -398,14 +401,16 @@ pub(crate) fn build_install_resolver(
     // The family is ordered project-local first (a developer's own in-tree
     // packages win a clash), then vibe-embedded.
     let mut locals: Vec<LocalRegistry> = Vec::new();
-    if let Some(root) = super::project_packages_root(project_root) {
-        let root = crate::commands::init::strip_unc_public(root);
-        locals.push(crate::registry::local_registry(root.clone()).map_err(|e| {
-            anyhow!(
-                "failed to open the project-local registry at `{}`: {e}",
-                root.display()
-            )
-        })?);
+    if !args.no_prefer_local {
+        if let Some(root) = super::project_packages_root(project_root) {
+            let root = crate::commands::init::strip_unc_public(root);
+            locals.push(crate::registry::local_registry(root.clone()).map_err(|e| {
+                anyhow!(
+                    "failed to open the project-local registry at `{}`: {e}",
+                    root.display()
+                )
+            })?);
+        }
     }
     if let Some(root) = embedded_root.filter(|_| !args.no_default_registry) {
         let root = crate::commands::init::strip_unc_public(root.to_path_buf());
@@ -510,6 +515,8 @@ mod flag_tests {
             no_default_registry: false,
             offline: false,
             embedded_short_circuit: false,
+            prefer_local: false,
+            no_prefer_local: false,
         }
     }
 
@@ -579,6 +586,30 @@ mod flag_tests {
         assert!(
             err.to_string().contains("--offline"),
             "expected the offline bail; got: {err}"
+        );
+    }
+
+    /// PROP-030 §3.3: `--prefer-local` and `--no-prefer-local` are mutually
+    /// exclusive — same guard shape as the embedded pair.
+    #[test]
+    #[verifies("spec://vibevm/modules/vibe-registry/PROP-030#project-local", r = 1)]
+    fn prefer_local_conflicts_with_no_prefer_local() {
+        let mut args = base_args();
+        args.prefer_local = true;
+        args.no_prefer_local = true;
+        let project_root = tempfile::tempdir().unwrap();
+        let err = build_install_resolver(
+            &args,
+            &empty_manifest(),
+            None,
+            project_root.path(),
+            &GlobalRegistryConfig::default(),
+        )
+        .map(|_| ())
+        .unwrap_err();
+        assert!(
+            err.to_string().contains("--prefer-local"),
+            "expected a prefer-local mutual-exclusivity error; got: {err}"
         );
     }
 

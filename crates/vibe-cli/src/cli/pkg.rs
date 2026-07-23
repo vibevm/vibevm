@@ -183,6 +183,24 @@ pub struct InstallArgs {
     #[arg(long)]
     pub embedded_short_circuit: bool,
 
+    /// PROP-030 §3.3: explicitly opt in to project-local packages (the
+    /// `<project_root>/packages/` directory) winning a clash inside the
+    /// local-registry family. This is already the default when
+    /// project-packages are discovered; the flag is an explicit affirmation
+    /// (mirrors `--prefer-embedded`'s relationship to its default). Mutually
+    /// exclusive with `--no-prefer-local`.
+    #[arg(long)]
+    pub prefer_local: bool,
+
+    /// PROP-030 §3.3: ignore the project-local `packages/` directory for
+    /// this command — resolve only from vibe-embedded (when available) and
+    /// the declared `[[registry]]` walk. Use when a project's `packages/`
+    /// is stale, broken, or being deliberately bypassed. Mutually exclusive
+    /// with `--prefer-local`. Does NOT suppress vibe-embedded — for that,
+    /// use `--no-default-registry`.
+    #[arg(long)]
+    pub no_prefer_local: bool,
+
     /// Add a git-source declaration for the single positional pkgref
     /// — fetches the package directly from this git URL rather than
     /// resolving it through `[[registry]]`. PROP-002 §2.4.1.

@@ -316,6 +316,8 @@ fn resolver_args() -> InstallArgs {
         no_default_registry: false,
         offline: false,
         embedded_short_circuit: false,
+        prefer_local: false,
+        no_prefer_local: false,
     }
 }
 
