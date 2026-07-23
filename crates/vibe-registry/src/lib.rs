@@ -186,6 +186,7 @@ pub struct ResolvedPackage {
 ///     is_git_source: false,
 ///     is_path_source: false,
 ///     is_embedded: false,
+///     is_local: false,
 ///     via_redirect: None,
 /// };
 /// assert_eq!(cached.package_meta().version.to_string(), "0.2.0");
@@ -243,11 +244,21 @@ pub struct CachedPackage {
     pub is_path_source: bool,
 
     /// `true` iff this package was resolved from the source-linked
-    /// embedded registry (PROP-030) — the in-tree `packages/` of a
+    /// embedded registry (PROP-030 §2) — the in-tree `packages/` of a
     /// source-installed `vibe`. Mutually exclusive with `overridden`,
-    /// `is_git_source`, and `is_path_source`. Lockfile maps this to
-    /// `source_kind = "embedded"`, keying the reproducibility guard.
+    /// `is_git_source`, `is_path_source`, and `is_local`. Lockfile maps
+    /// this to `source_kind = "embedded"`, keying the reproducibility guard.
     pub is_embedded: bool,
+
+    /// `true` iff this package was resolved from the project-local
+    /// `packages/` (PROP-030 §3.3) — the in-tree `packages/` of the
+    /// *current* project, not of a vibe install. Mutually exclusive with
+    /// `overridden`, `is_git_source`, `is_path_source`, and `is_embedded`.
+    /// Lockfile maps this to `source_kind = "local"`. Unlike `is_embedded`,
+    /// a project-local entry is portable (every checkout of the project
+    /// carries the same `packages/`), so the reproducibility guard does
+    /// NOT key on this variant.
+    pub is_local: bool,
 
     /// When this package was resolved via a registry stub that
     /// redirected to an external URL (PROP-002 §2.4.2), the **stub**

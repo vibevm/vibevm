@@ -178,6 +178,7 @@ fn source_kind_label(k: SourceKind) -> &'static str {
         SourceKind::Override => "override",
         SourceKind::Path => "path",
         SourceKind::Embedded => "embedded",
+        SourceKind::Local => "local",
     }
 }
 

@@ -244,6 +244,8 @@ pub enum SourceKind {
     Override,
     Path,
     Embedded,
+    /// Project-local `packages/` (PROP-030 §3.3) — portable per-project.
+    Local,
 }
 
 /// The carrier of an in-place spec marker (PROP-036 §2.9).

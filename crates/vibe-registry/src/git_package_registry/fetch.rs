@@ -365,6 +365,7 @@ impl GitPackageRegistry {
                 is_git_source: false,
                 is_path_source: false,
                 is_embedded: false,
+            is_local: false,
                 via_redirect: None,
             };
             match expected_hash {

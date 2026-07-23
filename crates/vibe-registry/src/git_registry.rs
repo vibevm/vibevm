@@ -237,6 +237,7 @@ impl Registry for GitRegistry {
             is_git_source: false,
             is_path_source: false,
             is_embedded: false,
+            is_local: false,
             via_redirect: None,
         })
     }

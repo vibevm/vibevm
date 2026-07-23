@@ -420,6 +420,7 @@ fn to_source(p: &LockedPackage) -> Source {
             LockKind::Override => SourceKind::Override,
             LockKind::Path => SourceKind::Path,
             LockKind::Embedded => SourceKind::Embedded,
+            LockKind::Local => SourceKind::Local,
         }),
         url: Some(p.source_url.as_str().to_string()),
         git_ref: p.source_ref.clone(),

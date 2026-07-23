@@ -312,6 +312,7 @@ impl MultiRegistryResolver {
             is_git_source: false,
             is_path_source: false,
             is_embedded: false,
+            is_local: false,
             via_redirect: resolution.via_redirect.clone(),
         })
     }

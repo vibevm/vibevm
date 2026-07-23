@@ -206,11 +206,20 @@ pub enum SourceKind {
     /// path relative to the workspace root, not a URL. PROP-007 §2.5.
     Path,
     /// Resolved from the source-linked embedded registry — the in-tree
-    /// `packages/` of a source-installed `vibe` (PROP-030). `source_url`
+    /// `packages/` of a source-installed `vibe` (PROP-030 §2). `source_url`
     /// carries the `file://` path into that tree. The entry is
     /// machine-local; the reproducibility guard (PROP-030 §5) keys on this
     /// variant.
     Embedded,
+    /// Resolved from the project-local `packages/` — the in-tree `packages/`
+    /// of the *current* project (PROP-030 §3.3). Unlike `Embedded` (which
+    /// derives from a vibe install's source_path), `Local` is per-project
+    /// and portable: every checkout of the project carries the same
+    /// `packages/`, so a lock entry with this source_kind does NOT trip the
+    /// reproducibility guard. `source_url` carries the `file://` path into
+    /// `<project_root>/packages/...`. The reserved name from PROP-030 §3.2
+    /// / §9 D2, now implemented for the project-packages feature.
+    Local,
 }
 
 /// One installed package, as it appears in the lockfile.
