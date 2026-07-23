@@ -1,11 +1,14 @@
-//! Path helpers, display utils, report rendering, and templates for
-//! `vibe init`. Split out of `mod.rs` to keep the main module under the
-//! 600-line file budget.
+//! Path helpers, display utils, report rendering, file-ensurance, and
+//! templates for `vibe init`.
 
 use super::*;
 use crate::cli::InitArgs;
 use crate::output;
+use anyhow::{Context, Result};
+use serde::Serialize;
+use std::fs;
 use std::path::Path;
+use vibe_core::manifest::{Lockfile, Manifest, ProjectSection, RegistrySection};
 
 pub(super) fn resolve_name(args: &InitArgs, path: &Path) -> Result<String> {
     if let Some(n) = &args.name {
@@ -147,3 +150,181 @@ pub(super) fn boot_00_core_template(project_name: &str) -> String {
 }
 
 pub(super) const ROOT_GITIGNORE_TEMPLATE: &str = include_str!("../../../templates/root-gitignore");
+pub(super) fn generate_boot_artifacts(ctx: &output::Context, path: &Path) -> Result<Vec<Outcome>> {
+    const ARTIFACTS: [&str; 4] = ["spec/boot/INDEX.md", "CLAUDE.md", "AGENTS.md", "GEMINI.md"];
+    let preexisting: Vec<bool> = ARTIFACTS.iter().map(|f| path.join(f).exists()).collect();
+
+    let workspace = vibe_workspace::Workspace::load(path)
+        .with_context(|| "loading the new project to generate its boot artifacts")?;
+    vibe_workspace::install::regenerate_boot(&workspace)
+        .with_context(|| "generating the boot artifacts")?;
+
+    let mut outcomes = Vec::with_capacity(ARTIFACTS.len());
+    for (artifact, &existed) in ARTIFACTS.iter().zip(&preexisting) {
+        if existed {
+            ctx.skipped(artifact, "regenerated");
+        } else {
+            ctx.created(artifact);
+        }
+        outcomes.push(Outcome {
+            path: (*artifact).to_string(),
+            action: if existed {
+                Action::Kept
+            } else {
+                Action::Created
+            },
+            reason: "boot artifact",
+        });
+    }
+    Ok(outcomes)
+}
+
+#[derive(Debug, Clone, Serialize)]
+pub(super) struct Outcome {
+    pub(super) path: String,
+    pub(super) action: Action,
+    pub(super) reason: &'static str,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
+#[serde(rename_all = "lowercase")]
+pub(super) enum Action {
+    Created,
+    Kept,
+}
+
+pub(super) fn ensure_file(
+    ctx: &output::Context,
+    root: &Path,
+    path: &Path,
+    content: &str,
+    reason: &'static str,
+) -> Result<Outcome> {
+    if let Some(parent) = path.parent() {
+        ensure_dir(parent)?;
+    }
+    let rel = relative_to_root(root, path);
+    if path.exists() {
+        ctx.skipped(&rel, "already exists");
+        return Ok(Outcome {
+            path: rel,
+            action: Action::Kept,
+            reason,
+        });
+    }
+    fs::write(path, content).with_context(|| format!("writing `{}`", path.display()))?;
+    ctx.created(&rel);
+    Ok(Outcome {
+        path: rel,
+        action: Action::Created,
+        reason,
+    })
+}
+
+pub(super) fn ensure_dir(path: &Path) -> Result<()> {
+    fs::create_dir_all(path).with_context(|| format!("creating `{}`", path.display()))
+}
+
+/// Ensure the project-root `.gitignore` protects the L3 personal-settings file
+/// (PROP-040 §9 `#gitignore-autogen`): `/.vibe/settings.local.toml` must never
+/// be accidentally committed. Idempotent — if the file already ignores the local
+/// settings basename (any line naming `settings.local.toml`), this is a no-op;
+/// otherwise it appends a small section, preserving all existing content.
+/// Returns `Some(Outcome)` only when it appended, `None` when already covered or
+/// no root `.gitignore` is present (the step-5 `ensure_file` owns creation).
+pub(super) fn ensure_local_settings_gitignored(root: &Path) -> Result<Option<Outcome>> {
+    let path = root.join(".gitignore");
+    let existing = match fs::read_to_string(&path) {
+        Ok(text) => text,
+        Err(_) => return Ok(None),
+    };
+    // Marker: any line that ignores the local settings file. Match the
+    // distinctive basename so an operator's own spelling still counts.
+    if existing
+        .lines()
+        .any(|line| line.contains("settings.local.toml"))
+    {
+        return Ok(None);
+    }
+    let mut content = existing;
+    if !content.ends_with('\n') {
+        content.push('\n');
+    }
+    content.push_str(
+        "\n# vibevm personal settings (L3 — never committed; PROP-040 §9 #gitignore-autogen)\n\
+         /.vibe/settings.local.toml\n\
+         /.vibe/*.local.toml\n",
+    );
+    fs::write(&path, &content)
+        .with_context(|| format!("appending L3 settings entry to `{}`", path.display()))?;
+    Ok(Some(Outcome {
+        path: relative_to_root(root, &path),
+        action: Action::Created,
+        reason: "gitignore: L3 personal settings",
+    }))
+}
+
+pub(super) fn ensure_project_manifest(
+    ctx: &output::Context,
+    root: &Path,
+    name: &str,
+    stack: Option<&str>,
+    registries: Vec<RegistrySection>,
+    authors: &[String],
+) -> Result<Outcome> {
+    let path = root.join(Manifest::FILENAME);
+    let rel = relative_to_root(root, &path);
+    if path.exists() {
+        ctx.skipped(&rel, "already exists");
+        return Ok(Outcome {
+            path: rel,
+            action: Action::Kept,
+            reason: "project manifest",
+        });
+    }
+
+    let manifest = Manifest {
+        project: Some(ProjectSection {
+            name: name.to_string(),
+            version: "0.0.1".to_string(),
+            authors: authors.to_vec(),
+        }),
+        active: stack.map(|s| ActiveSection {
+            stack: Some(s.to_string()),
+        }),
+        registries,
+        ..Default::default()
+    };
+
+    manifest.write(&path)?;
+    ctx.created(&rel);
+    Ok(Outcome {
+        path: rel,
+        action: Action::Created,
+        reason: "project manifest",
+    })
+}
+
+pub(super) fn ensure_empty_lockfile(ctx: &output::Context, root: &Path) -> Result<Outcome> {
+    let path = root.join(Lockfile::FILENAME);
+    let rel = relative_to_root(root, &path);
+    if path.exists() {
+        ctx.skipped(&rel, "already exists");
+        return Ok(Outcome {
+            path: rel,
+            action: Action::Kept,
+            reason: "lockfile",
+        });
+    }
+    let lockfile = Lockfile::empty(
+        format!("vibe {}", env!("CARGO_PKG_VERSION")),
+        current_timestamp_utc(),
+    );
+    lockfile.write(&path)?;
+    ctx.created(&rel);
+    Ok(Outcome {
+        path: rel,
+        action: Action::Created,
+        reason: "lockfile",
+    })
+}

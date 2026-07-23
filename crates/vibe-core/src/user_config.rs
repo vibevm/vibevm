@@ -57,6 +57,13 @@ pub struct UserConfig {
     /// `[install]` — install-behaviour settings (PROP-011).
     #[serde(default, skip_serializing_if = "InstallConfig::is_default")]
     pub install: InstallConfig,
+
+    /// `[init]` — defaults for `vibe init` prompts. `last_author` is
+    /// saved after the first interactive `vibe init` (or updated when
+    /// the user enters a different author), then reused as the default
+    /// for subsequent inits — npm's "license + author remember" pattern.
+    #[serde(default, skip_serializing_if = "InitConfig::is_default")]
+    pub init: InitConfig,
 }
 
 /// `[install]` section — install-behaviour settings (PROP-011 §5.2).
@@ -83,6 +90,31 @@ impl InstallConfig {
     /// `[install]` entirely on a config that never set it.
     pub fn is_default(&self) -> bool {
         *self == InstallConfig::default()
+    }
+}
+
+/// `[init]` section — defaults persisted from `vibe init` prompts.
+///
+/// ```
+/// use vibe_core::user_config::InitConfig;
+///
+/// let c = InitConfig::default();
+/// assert!(c.last_author.is_none());
+/// assert!(c.is_default());
+/// ```
+#[derive(Debug, Default, Clone, PartialEq, Eq, Deserialize, Serialize)]
+#[serde(deny_unknown_fields)]
+pub struct InitConfig {
+    /// The author name entered in the last interactive `vibe init`.
+    /// Saved on first use, updated when the user enters a different
+    /// value. Reused as the default for subsequent inits.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub last_author: Option<String>,
+}
+
+impl InitConfig {
+    pub fn is_default(&self) -> bool {
+        *self == InitConfig::default()
     }
 }
 
@@ -168,6 +200,33 @@ impl UserConfig {
         })?;
         Ok(cfg)
     }
+
+    /// Save the user config to its canonical path, creating the parent
+    /// directory if needed. Used by `vibe init` to persist `last_author`.
+    pub fn save(&self) -> Result<(), UserConfigError> {
+        let Some(path) = crate::settings::user_config_path() else {
+            return Ok(()); // no settings dir — the layer is optional
+        };
+        self.save_to(&path)
+    }
+
+    /// Save to an explicit path (tests, ad-hoc).
+    pub fn save_to(&self, path: &Path) -> Result<(), UserConfigError> {
+        if let Some(parent) = path.parent() {
+            std::fs::create_dir_all(parent).map_err(|source| UserConfigError::Io {
+                path: parent.to_path_buf(),
+                source,
+            })?;
+        }
+        let body = toml::to_string_pretty(self).map_err(|source| UserConfigError::Serialize {
+            path: path.to_path_buf(),
+            source,
+        })?;
+        std::fs::write(path, body).map_err(|source| UserConfigError::Io {
+            path: path.to_path_buf(),
+            source,
+        })
+    }
 }
 
 /// Why loading the user config failed — an I/O error reading the file, or
@@ -206,6 +265,15 @@ pub enum UserConfigError {
         path: PathBuf,
         #[source]
         source: toml::de::Error,
+    },
+    #[error(
+        "could not serialise the user config for `{path}`: {source} \
+         (violates spec://vibevm/VIBEVM-SPEC#configuration-sources-in-precedence-order)"
+    )]
+    Serialize {
+        path: PathBuf,
+        #[source]
+        source: toml::ser::Error,
     },
 }
 

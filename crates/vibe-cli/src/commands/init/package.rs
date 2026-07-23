@@ -1,11 +1,15 @@
-//! Package + group creation for `vibe init package` / `vibe init group`
-//! and the project-with-package forms.
+//! Package + group creation for `vibe init package` / `vibe init group`.
 
-use super::*;
+use super::helpers::*;
+use super::prompts::{self, ProjectFields};
 use crate::cli::InitArgs;
 use crate::output;
 use std::fs;
 use std::path::Path;
+use vibe_core::manifest::Manifest;
+use vibe_core::user_config::UserConfig;
+
+use anyhow::{Result, bail};
 
 /// Create a package in an existing project root (dynamic link).
 pub(super) fn create_package_in_project(
@@ -14,6 +18,8 @@ pub(super) fn create_package_in_project(
     project_path: &Path,
     group: &str,
     name: &str,
+    user_config: &mut UserConfig,
+    interactive: bool,
 ) -> Result<()> {
     let path = canonical_no_unc(project_path)?;
     if !path.join(Manifest::FILENAME).exists() {
@@ -22,14 +28,24 @@ pub(super) fn create_package_in_project(
             path.display()
         );
     }
+
+    // Gather package field values (interactive or defaults from project fields).
+    let fields = if interactive {
+        prompts::prompt_package_fields(group, name, user_config)?
+    } else {
+        prompts::package_fields_from_args(args, group, name, user_config)
+    };
+    prompts::maybe_save_author(user_config, &fields.authors);
+
     ctx.heading(&format!(
         "Creating package `{group}/{name}` in `{}`",
         path.display()
     ));
 
-    let mut outcomes = create_package_dirs(ctx, &path, group, name, args, "dynamic")?;
+    let mut outcomes =
+        create_package_dirs_from_fields(ctx, &path, group, name, "dynamic", &fields)?;
 
-    // Regenerate boot artifacts for the project.
+    // Regenerate boot artifacts.
     outcomes.extend(generate_boot_artifacts(ctx, &path)?);
 
     report(
@@ -57,8 +73,7 @@ pub(super) fn create_group_in_project(
     Ok(())
 }
 
-/// Create the package directory tree: packages/<group>/<name>/v<version>/
-/// with vibe.toml, spec/boot/, README.md.
+/// Create the package directory tree for project+package (static link).
 pub(super) fn create_package_dirs(
     ctx: &output::Context,
     project_root: &Path,
@@ -66,9 +81,33 @@ pub(super) fn create_package_dirs(
     name: &str,
     args: &InitArgs,
     default_link: &str,
+    project_fields: &ProjectFields,
 ) -> Result<Vec<Outcome>> {
-    let version = args.version.as_deref().unwrap_or("0.1.0");
-    let kind = args.kind.as_deref().unwrap_or("tool");
+    let fields = ProjectFields {
+        name: name.to_string(),
+        version: args.version.clone().unwrap_or_else(|| "0.1.0".to_string()),
+        authors: project_fields.authors.clone(),
+        license: args
+            .license
+            .clone()
+            .unwrap_or_else(|| project_fields.license.clone()),
+        description: args.description.clone().unwrap_or_default(),
+        format: args.format.clone().unwrap_or_else(|| "normal".to_string()),
+    };
+    create_package_dirs_from_fields(ctx, project_root, group, name, default_link, &fields)
+}
+
+/// Create the package directory tree from explicit fields.
+fn create_package_dirs_from_fields(
+    ctx: &output::Context,
+    project_root: &Path,
+    group: &str,
+    name: &str,
+    link: &str,
+    fields: &ProjectFields,
+) -> Result<Vec<Outcome>> {
+    let kind = "tool";
+    let version = &fields.version;
     let pkg_dir = project_root
         .join("packages")
         .join(group)
@@ -77,70 +116,56 @@ pub(super) fn create_package_dirs(
 
     let mut outcomes = Vec::new();
 
-    // Package manifest.
     let manifest_path = pkg_dir.join(Manifest::FILENAME);
-    let rel = display_pathbuf(
+    let manifest_rel = display_pathbuf(
         &pkg_dir
             .strip_prefix(project_root)
             .unwrap_or(&pkg_dir)
             .join(Manifest::FILENAME),
     );
     if manifest_path.exists() {
-        ctx.skipped(&rel, "already exists");
+        ctx.skipped(&manifest_rel, "already exists");
         outcomes.push(Outcome {
-            path: rel,
+            path: manifest_rel,
             action: Action::Kept,
             reason: "package manifest",
         });
     } else {
         ensure_dir(&pkg_dir)?;
-        let authors = resolve_authors(args);
-        let license = args.license.as_deref().unwrap_or("UPL-1.0");
-        let description = args.description.as_deref().unwrap_or("");
-        let format = args.format.as_deref().unwrap_or("simple");
-        let link = args.link.as_deref().unwrap_or(default_link);
-
+        let authors_line = if fields.authors.is_empty() {
+            String::new()
+        } else {
+            let quoted: Vec<String> = fields.authors.iter().map(|a| format!("\"{a}\"")).collect();
+            format!("authors = [{}]\n", quoted.join(", "))
+        };
         let manifest_text = format!(
-            "[package]\n\
-             group = \"{group}\"\n\
-             name = \"{name}\"\n\
-             kind = \"{kind}\"\n\
-             version = \"{version}\"\n\
-             {authors_line}\
-             license = \"{license}\"\n\
-             description = \"{description}\"\n\
-             format = \"{format}\"\n\
-             \n\
-             [boot_snippet]\n\
-             source = \"spec/boot/10-tool-{name}.md\"\n\
-             category = \"tool\"\n\
-             link = \"{link}\"\n",
-            authors_line = if authors.is_empty() {
-                String::new()
-            } else {
-                let quoted: Vec<String> = authors.iter().map(|a| format!("\"{a}\"")).collect();
-                format!("authors = [{}]\n", quoted.join(", "))
-            },
+            "[package]\ngroup = \"{group}\"\nname = \"{name}\"\nkind = \"{kind}\"\n\
+             version = \"{version}\"\n{authors_line}\
+             license = \"{license}\"\ndescription = \"{description}\"\nformat = \"{format}\"\n\n\
+             [boot_snippet]\nsource = \"spec/boot/10-tool-{name}.md\"\ncategory = \"tool\"\nlink = \"{link}\"\n",
+            license = fields.license,
+            description = fields.description,
+            format = fields.format,
         );
         fs::write(&manifest_path, &manifest_text)?;
-        ctx.created(&rel);
+        ctx.created(&manifest_rel);
         outcomes.push(Outcome {
-            path: rel,
+            path: manifest_rel,
             action: Action::Created,
             reason: "package manifest",
         });
     }
 
-    // spec/boot/ for the package.
+    // spec/boot/.
     let boot_dir = pkg_dir.join("spec").join("boot");
     ensure_dir(&boot_dir)?;
     let boot_file = boot_dir.join(format!("10-tool-{name}.md"));
     let boot_rel = display_pathbuf(boot_file.strip_prefix(project_root).unwrap_or(&boot_file));
     if !boot_file.exists() {
-        let boot_content = format!(
+        let content = format!(
             "<!-- vibe:static org.{group}/{name} — boot snippet -->\n\n# {name}\n\nA `{kind}` package.\n"
         );
-        fs::write(&boot_file, &boot_content)?;
+        fs::write(&boot_file, &content)?;
         ctx.created(&boot_rel);
         outcomes.push(Outcome {
             path: boot_rel,
@@ -184,21 +209,4 @@ pub(super) fn create_package_dirs(
     }
 
     Ok(outcomes)
-}
-
-/// Resolve authors from `--author` flags or git config.
-pub(super) fn resolve_authors(args: &InitArgs) -> Vec<String> {
-    if !args.authors.is_empty() {
-        return args.authors.clone();
-    }
-    // Try git config user.name.
-    let name = std::process::Command::new("git")
-        .args(["config", "user.name"])
-        .output()
-        .ok()
-        .filter(|o| o.status.success())
-        .and_then(|o| String::from_utf8(o.stdout).ok())
-        .map(|s| s.trim().to_string())
-        .filter(|s| !s.is_empty());
-    name.into_iter().collect()
 }
