@@ -193,6 +193,7 @@ fn run_force(
         &resolver_args(),
         &workspace.root_manifest,
         embedded_root,
+        &workspace.root,
         &global,
     )
     .context("building the install resolver")?;

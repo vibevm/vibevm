@@ -119,6 +119,7 @@ pub fn run(ctx: &output::Context, args: UpdateArgs, embedded_root: Option<PathBu
         &install_args_from(&args),
         &manifest,
         embedded_root.as_deref(),
+        &project_root,
         &global,
     )?;
 

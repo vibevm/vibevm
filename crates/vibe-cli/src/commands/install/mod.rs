@@ -11,9 +11,11 @@
 
 specmark::scope!("spec://vibevm/VIBEVM-SPEC#install-workflow-in-detail");
 
+mod project_local;
 mod report;
 mod resolver;
 
+pub(crate) use project_local::project_packages_root;
 pub(crate) use resolver::{InstallResolver, build_install_resolver};
 pub(crate) use vibe_install::exact_pinned_pkgref;
 
@@ -105,7 +107,13 @@ pub fn run(ctx: &output::Context, args: InstallArgs, embedded_root: Option<PathB
     }
 
     let global = vibe_core::GlobalRegistryConfig::load()?;
-    let resolver = build_install_resolver(&args, &manifest, embedded_root.as_deref(), &global)?;
+    let resolver = build_install_resolver(
+        &args,
+        &manifest,
+        embedded_root.as_deref(),
+        &project_root,
+        &global,
+    )?;
 
     // Parse the CLI pkgrefs and qualify short names at the input
     // boundary (PROP-008 §2.6) — manifests only ever store the

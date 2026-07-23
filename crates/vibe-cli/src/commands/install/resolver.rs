@@ -361,6 +361,7 @@ pub(crate) fn build_install_resolver(
     args: &InstallArgs,
     manifest: &Manifest,
     embedded_root: Option<&Path>,
+    project_root: &Path,
     global: &GlobalRegistryConfig,
 ) -> Result<InstallResolver> {
     let solver = validate_solver(args.solver.as_deref())?;
@@ -388,24 +389,42 @@ pub(crate) fn build_install_resolver(
     // local-only sources under `--offline` (§2.2.2.1). Computed once, shared.
     let effective = effective_registry_config(manifest, args, global);
 
-    // PROP-030: a source-installed `vibe` exposes its in-tree `packages/` as an
-    // ambient embedded registry, composed with the declared walk. Precedence is
-    // developer/embedded-first by default; `--no-prefer-embedded` flips it so a
-    // published package wins a clash. `--no-default-registry` (and, at the
-    // composition root, `VIBE_NO_DEFAULT_REGISTRY`) suppresses it entirely. When
-    // the effective walk is empty, the embedded registry stands in alone,
-    // lifting the bail below.
+    // PROP-030 §3.3: build the local-registry family. Project-local
+    // (`<project_root>/packages/`) is discovered from the current project —
+    // not gated on the running vibe being source-installed, not CI-suppressed
+    // (it is per-project and portable). Vibe-embedded (§2) derives from a
+    // source install's `source_path`, suppressed by `--no-default-registry`
+    // and the composition-root `CI` / `VIBE_NO_DEFAULT_REGISTRY` gate.
+    // The family is ordered project-local first (a developer's own in-tree
+    // packages win a clash), then vibe-embedded.
+    let mut locals: Vec<LocalRegistry> = Vec::new();
+    if let Some(root) = super::project_packages_root(project_root) {
+        let root = crate::commands::init::strip_unc_public(root);
+        locals.push(crate::registry::local_registry(root.clone()).map_err(|e| {
+            anyhow!(
+                "failed to open the project-local registry at `{}`: {e}",
+                root.display()
+            )
+        })?);
+    }
     if let Some(root) = embedded_root.filter(|_| !args.no_default_registry) {
         let root = crate::commands::init::strip_unc_public(root.to_path_buf());
-        let embedded = crate::registry::local_registry(root.clone()).map_err(|e| {
+        locals.push(crate::registry::local_registry(root.clone()).map_err(|e| {
             anyhow!(
                 "failed to open the embedded registry at `{}`: {e}",
                 root.display()
             )
-        })?;
+        })?);
+    }
+
+    // If any local source is present, compose it with the declared walk at the
+    // origin-selected precedence. This lifts PROP-002's "no registry
+    // configured" bail when either local is present (even without a declared
+    // `[[registry]]`).
+    if !locals.is_empty() {
         // PROP-002 §2.2.2.1: `--offline` has already filtered the effective set
         // to local sources, so a machine-local `file://` registry still
-        // composes with the embedded one while a remote github/gitverse walk is
+        // composes with the locals while a remote github/gitverse walk is
         // dropped — no host is contacted, no credential prompt is possible. The
         // declared walk is `None` only when no registry survives.
         let declared = if effective.registries.is_empty() {
@@ -419,10 +438,7 @@ pub(crate) fn build_install_resolver(
             EmbeddedPrecedence::EmbeddedFirst
         };
         return Ok(InstallResolver::Embedded {
-            // Layer-2: a single-element Vec preserves the pre-§3.3 behaviour
-            // (only vibe-embedded is in the local family). Layer-5 prepends
-            // project-local when `<project_root>/packages/` is discovered.
-            locals: vec![embedded],
+            locals,
             declared,
             precedence,
             short_circuit: args.embedded_short_circuit,
@@ -430,8 +446,8 @@ pub(crate) fn build_install_resolver(
         });
     }
 
-    // No embedded registry (not a source install, or suppressed by
-    // `--no-default-registry`) and no explicit `--registry`.
+    // No local source (no project-local packages/, and no vibe-embedded or it
+    // was suppressed) and no explicit `--registry`.
     if effective.registries.is_empty() {
         // PROP-002 §2.2.2.1: under `--offline` the remote walk is disabled and
         // no local registry survived, so there is nothing to resolve from —
@@ -440,14 +456,16 @@ pub(crate) fn build_install_resolver(
             bail!(
                 "--offline: no local registry available to resolve from. \
                  Offline resolution needs a local (`file://`) `[[registry]]` — in the \
-                 project `vibe.toml` or `~/.vibe/registry.toml` — the embedded registry \
-                 of a source install (check `vibe self doctor`), or an explicit \
-                 `--registry <dir>`; remote registries are disabled under --offline."
+                 project `vibe.toml` or `~/.vibe/registry.toml` — a project-local \
+                 `packages/` directory, the embedded registry of a source install \
+                 (check `vibe self doctor`), or an explicit `--registry <dir>`; \
+                 remote registries are disabled under --offline."
             );
         }
         bail!(
-            "no registry configured. Pass `--registry <path>` or add a `[[registry]]` \
-             entry to `vibe.toml` (or `~/.vibe/registry.toml`)."
+            "no registry configured. Pass `--registry <path>`, add a `[[registry]]` \
+             entry to `vibe.toml` (or `~/.vibe/registry.toml`), or place the package \
+             in a project-local `packages/` directory."
         );
     }
 
@@ -515,12 +533,17 @@ mod flag_tests {
         let mut args = base_args();
         args.embedded_short_circuit = true;
         args.no_prefer_embedded = true;
+        // A project root with no `packages/` so the project-local discovery
+        // (PROP-030 §3.3) does not activate and the test stays focused on the
+        // embedded-short-circuit × no-prefer-embedded guard.
+        let project_root = tempfile::tempdir().unwrap();
         // `.map(|_| ())` so the `Ok` payload is `()` (Debug) — `InstallResolver`
         // deliberately isn't Debug (it holds live registry handles).
         let err = build_install_resolver(
             &args,
             &empty_manifest(),
             None,
+            project_root.path(),
             &GlobalRegistryConfig::default(),
         )
         .map(|_| ())
@@ -539,12 +562,16 @@ mod flag_tests {
         // effective set) has nothing local to resolve from. It must fail with
         // an actionable message rather than fall through to the declared
         // network walk (whose construction is what a plain install does).
+        // A project root with no `packages/` so project-local does not rescue
+        // the bail (this test asserts the bail fires).
         let mut args = base_args();
         args.offline = true;
+        let project_root = tempfile::tempdir().unwrap();
         let err = build_install_resolver(
             &args,
             &empty_manifest(),
             None,
+            project_root.path(),
             &GlobalRegistryConfig::default(),
         )
         .map(|_| ())
@@ -553,5 +580,56 @@ mod flag_tests {
             err.to_string().contains("--offline"),
             "expected the offline bail; got: {err}"
         );
+    }
+
+    /// PROP-030 §3.3: a project with `<project_root>/packages/` resolves
+    /// successfully even when `embedded_root` is `None` (cargo run, test
+    /// harness, distribution install). Project-local discovery is NOT gated
+    /// on the running vibe being source-installed, so the local family is
+    /// non-empty and the resolver is built — without project-local, the same
+    /// args would bail with "no registry configured".
+    #[test]
+    #[verifies("spec://vibevm/modules/vibe-registry/PROP-030#project-local", r = 1)]
+    fn project_local_packages_activate_resolver_without_vibe_embedded() {
+        let project_root = tempfile::tempdir().unwrap();
+        // A real packages/ tree the discovery helper recognises. Needs at
+        // least one valid package so opening the LocalRegistry is cheap, but
+        // the resolver itself does not read it here — only its presence
+        // flips the construction path from the bail to the Embedded variant.
+        std::fs::create_dir_all(
+            project_root.path().join("packages").join("org.vibevm").join("wal").join("v0.1.0"),
+        )
+        .unwrap();
+        std::fs::write(
+            project_root
+                .path()
+                .join("packages")
+                .join("org.vibevm")
+                .join("wal")
+                .join("v0.1.0")
+                .join("vibe.toml"),
+            "[package]\ngroup=\"org.vibevm\"\nname=\"wal\"\nkind=\"flow\"\nversion=\"0.1.0\"\n",
+        )
+        .unwrap();
+
+        let args = base_args();
+        // embedded_root = None: this is the load-bearing case. Without
+        // project-local, build_install_resolver would bail with "no registry
+        // configured"; with project-local, it returns an Embedded resolver
+        // whose local family is the single project-local registry.
+        let resolver = build_install_resolver(
+            &args,
+            &empty_manifest(),
+            None,
+            project_root.path(),
+            &GlobalRegistryConfig::default(),
+        );
+        match resolver {
+            Ok(_) => { /* the load-bearing assertion: success, not the bail */ }
+            Err(e) => panic!(
+                "project-local packages/ should activate the resolver even with \
+                 no vibe-embedded; got: {e}"
+            ),
+        }
     }
 }
