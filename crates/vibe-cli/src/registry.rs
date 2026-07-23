@@ -19,7 +19,8 @@ use vibe_publish::DirectGitCreator;
 use vibe_registry::{LocalRegistry, MultiRegistryResolver, RegistryError};
 use vibe_resolver::sat::Sat;
 use vibe_resolver::{
-    DepSolver, EmbeddedPrecedence, EmbeddedProvider, LocalRegistryProvider, MultiRegistryProvider,
+    DepSolver, EmbeddedPrecedence, EmbeddedProvider, LocalCompositeProvider, LocalRegistryProvider,
+    MultiRegistryProvider,
     NaiveDepSolver, ResolvoDepSolver,
 };
 
@@ -142,11 +143,13 @@ pub enum ProviderCell {
 pub enum ProviderResource<'a> {
     Local(&'a LocalRegistry),
     Multi(&'a MultiRegistryResolver),
-    /// PROP-030: the embedded local-directory registry, composed with an
-    /// optional declared multi-registry walk, at the origin-selected
-    /// precedence.
+    /// PROP-030: the local-registry family (project-local `packages/` plus
+    /// the vibe-embedded `packages/` of a source install), composed into one
+    /// `LocalCompositeProvider` and an optional declared multi-registry
+    /// walk, at the origin-selected precedence. The Vec is ordered:
+    /// project-local first (when discovered), then vibe-embedded.
     Embedded {
-        embedded: &'a LocalRegistry,
+        locals: Vec<&'a LocalRegistry>,
         declared: Option<&'a MultiRegistryResolver>,
         precedence: EmbeddedPrecedence,
         /// PROP-030 §3.1: `--embedded-short-circuit` — stop version
@@ -207,13 +210,13 @@ pub fn dep_solver<'a>(
             "resolvo",
             "embedded",
             ProviderResource::Embedded {
-                embedded,
+                locals,
                 declared,
                 precedence,
                 short_circuit,
             },
         ) => Box::new(ResolvoDepSolver::new(EmbeddedProvider::new(
-            LocalRegistryProvider::new(embedded),
+            LocalCompositeProvider::new(locals.into_iter().map(LocalRegistryProvider::new).collect()),
             declared.map(MultiRegistryProvider::new),
             precedence,
             short_circuit,
@@ -222,13 +225,13 @@ pub fn dep_solver<'a>(
             "naive",
             "embedded",
             ProviderResource::Embedded {
-                embedded,
+                locals,
                 declared,
                 precedence,
                 short_circuit,
             },
         ) => Box::new(NaiveDepSolver::new(EmbeddedProvider::new(
-            LocalRegistryProvider::new(embedded),
+            LocalCompositeProvider::new(locals.into_iter().map(LocalRegistryProvider::new).collect()),
             declared.map(MultiRegistryProvider::new),
             precedence,
             short_circuit,
@@ -237,13 +240,13 @@ pub fn dep_solver<'a>(
             "sat",
             "embedded",
             ProviderResource::Embedded {
-                embedded,
+                locals,
                 declared,
                 precedence,
                 short_circuit,
             },
         ) => Box::new(Sat::new(EmbeddedProvider::new(
-            LocalRegistryProvider::new(embedded),
+            LocalCompositeProvider::new(locals.into_iter().map(LocalRegistryProvider::new).collect()),
             declared.map(MultiRegistryProvider::new),
             precedence,
             short_circuit,

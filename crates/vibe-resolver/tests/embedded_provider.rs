@@ -11,7 +11,8 @@ use specmark::verifies;
 use vibe_core::{Group, PackageRef};
 use vibe_registry::LocalRegistry;
 use vibe_resolver::{
-    DepProvider, EmbeddedPrecedence, EmbeddedProvider, LocalRegistryProvider, VersionEnumerator,
+    DepProvider, EmbeddedPrecedence, EmbeddedProvider, LocalCompositeProvider,
+    LocalRegistryProvider, VersionEnumerator,
 };
 
 fn v(s: &str) -> semver::Version {
@@ -43,8 +44,10 @@ fn embedded_registry_answers_alone_when_no_declared_walk() {
     seed(&root, "wal", &["0.1.0", "0.2.0"]);
 
     let registry = LocalRegistry::new(&root).unwrap();
+    // The local family is now a composite (PROP-030 §3.3): a single-element
+    // composite is equivalent to the pre-§3.3 single-provider shape.
     let provider = EmbeddedProvider::new(
-        LocalRegistryProvider::new(&registry),
+        LocalCompositeProvider::new(vec![LocalRegistryProvider::new(&registry)]),
         None,
         EmbeddedPrecedence::EmbeddedFirst,
         false,

@@ -1,18 +1,28 @@
-//! `DepProvider` composing an embedded local-directory registry with the
-//! declared multi-registry walk, at the origin-selected precedence
-//! (PROP-030 §3). A source-installed developer resolves **embedded-first**
-//! (their in-tree edits win a coordinate clash); a distribution's end user
-//! resolves **embedded-last** (the bundle only fills gaps). The discovery
-//! that produces the embedded registry, and the choice of precedence from
-//! the install `origin`, live in the CLI (PROP-030 §7); this cell is only
-//! the composition.
+//! `DepProvider` composing the local-registry family (project-local
+//! `packages/` + the vibe-embedded `packages/` of a source install) with the
+//! declared multi-registry walk, at the origin-selected precedence (PROP-030
+//! §3, §3.3). A source-installed developer resolves **embedded-first** (their
+//! in-tree edits win a coordinate clash); a distribution's end user resolves
+//! **embedded-last** (the bundle only fills gaps). The discovery that
+//! produces the local-registry family (project_root + active-install source),
+//! and the choice of precedence from the install `origin`, live in the CLI
+//! (PROP-030 §7); this cell is only the composition.
+//!
+//! Pre-§3.3 this cell held a single `LocalRegistryProvider` for the embedded
+//! registry. Adding project-local packages as a second source at the same
+//! tier forced either N-way logic inside this cell or a composite — the
+//! [`LocalCompositeProvider`] owns the inner ordering of the local family
+//! (project-local first, vibe-embedded second) and exposes the same
+//! `VersionEnumerator` surface this cell consumed, so the composition with
+//! the declared walk stays 2-way at the upper layer.
 
 use specmark::{cell, spec};
 use vibe_core::manifest::Manifest;
 use vibe_core::{Group, PackageRef};
 
 use crate::{
-    DepProvider, DepProviderError, LocalRegistryProvider, MultiRegistryProvider, VersionEnumerator,
+    DepProvider, DepProviderError, LocalCompositeProvider, MultiRegistryProvider,
+    VersionEnumerator,
 };
 
 /// Which side wins a coordinate both the embedded registry and the declared
@@ -28,17 +38,19 @@ pub enum EmbeddedPrecedence {
     EmbeddedLast,
 }
 
-/// A `DepProvider` over the embedded local-directory registry plus an
-/// optional declared multi-registry walk, delegating **per coordinate** at
-/// the [`EmbeddedPrecedence`] the caller selected from the install origin.
+/// A `DepProvider` over the local-registry family (project-local +
+/// vibe-embedded, composed by [`LocalCompositeProvider`]) plus an optional
+/// declared multi-registry walk, delegating **per coordinate** at the
+/// [`EmbeddedPrecedence`] the caller selected from the install origin.
 ///
-/// Both sub-providers are owned (each holds a `&'a` borrow of its registry),
-/// so the composed provider moves into a solver cell exactly like the plain
-/// providers do — the only borrow that outlives it is the registries'.
+/// Both sub-providers are owned (each holds a `&'a` borrow of its
+/// registry/registries), so the composed provider moves into a solver cell
+/// exactly like the plain providers do — the only borrow that outlives it is
+/// the registries'.
 #[cell(seam = "DepProvider", variant = "embedded", flag = "provider")]
 #[spec(implements = "spec://vibevm/modules/vibe-registry/PROP-030#precedence")]
 pub struct EmbeddedProvider<'a> {
-    embedded: LocalRegistryProvider<'a>,
+    embedded: LocalCompositeProvider<'a>,
     declared: Option<MultiRegistryProvider<'a>>,
     precedence: EmbeddedPrecedence,
     /// PROP-030 §3.1: when set (`--embedded-short-circuit`), version
@@ -54,12 +66,15 @@ pub struct EmbeddedProvider<'a> {
 }
 
 impl<'a> EmbeddedProvider<'a> {
-    /// Compose the embedded registry with an optional declared walk. With
-    /// `declared = None` (a project that declares no `[[registry]]`), the
-    /// embedded registry answers alone — the case that lifts PROP-002's
-    /// "no registry configured" bail (PROP-030 §3).
+    /// Compose the local-registry family with an optional declared walk.
+    /// With `declared = None` (a project that declares no `[[registry]]`),
+    /// the local family answers alone — the case that lifts PROP-002's
+    /// "no registry configured" bail (PROP-030 §3). The caller builds
+    /// `embedded` with project-local first when project-packages are
+    /// discovered, then vibe-embedded, so the inner ordering of the local
+    /// family already reflects the developer-in-project precedence.
     pub fn new(
-        embedded: LocalRegistryProvider<'a>,
+        embedded: LocalCompositeProvider<'a>,
         declared: Option<MultiRegistryProvider<'a>>,
         precedence: EmbeddedPrecedence,
         short_circuit: bool,
@@ -73,7 +88,8 @@ impl<'a> EmbeddedProvider<'a> {
     }
 
     /// The sub-providers in resolution order for this precedence — always
-    /// non-empty (the embedded provider is always present).
+    /// non-empty (the embedded family is always present, and its composite
+    /// holds ≥1 local).
     fn ordered(&self) -> Vec<&dyn VersionEnumerator> {
         order_providers(
             &self.embedded,

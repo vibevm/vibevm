@@ -36,9 +36,13 @@ pub(crate) enum InstallResolver {
     /// PROP-030: the embedded local-directory registry (a source install's
     /// in-tree `packages/`) composed with an optional declared multi-registry
     /// walk at the origin-selected precedence. `declared = None` is the
-    /// no-`[[registry]]` project where the embedded registry stands alone.
+    /// no-`[[registry]]` project where the local family stands alone. The
+    /// Vec is the ordered local-registry family — project-local first (when
+    /// `<project_root>/packages/` is discovered, PROP-030 §3.3), then
+    /// vibe-embedded. The composite at the resolver layer (PROP-030 §3)
+    /// honours this ordering: the first local wins a clash inside the family.
     Embedded {
-        embedded: LocalRegistry,
+        locals: Vec<LocalRegistry>,
         declared: Option<Box<MultiRegistryResolver>>,
         precedence: EmbeddedPrecedence,
         /// PROP-030 §3.1: when set (`--embedded-short-circuit`), version
@@ -75,18 +79,50 @@ impl InstallSource for InstallResolver {
                 m.fetch_with_expected_hash(&resolution, cache_root, expected_hash)
             }
             InstallResolver::Embedded {
-                embedded,
+                locals,
                 declared,
                 precedence,
                 ..
             } => {
-                let fetch_embedded = || -> Result<CachedPackage, RegistryError> {
-                    let resolved = embedded.resolve(pkgref)?;
-                    let mut cached = embedded.fetch(&resolved, cache_root)?;
-                    // Tag the provenance so `record.rs` writes source_kind =
-                    // "embedded" and the reproducibility guard keys on it (§5).
-                    cached.is_embedded = true;
-                    Ok(cached)
+                let fetch_local = || -> Result<CachedPackage, RegistryError> {
+                    // Walk the local family in order (project-local first,
+                    // then vibe-embedded). The first local that serves the
+                    // coordinate wins; an absence falls through to the next;
+                    // any real failure halts. Provenance tagging (embedded
+                    // vs project-local) is refined in `record.rs` from the
+                    // `source_uri` — here every local hit is tagged
+                    // `is_embedded` so the existing reproducibility guard
+                    // fires for the machine-local vibe-embedded case; the
+                    // project-local distinction lands in the lock-record
+                    // mapping (PROP-030 §3.3 / §4).
+                    let mut last_absent: Option<RegistryError> = None;
+                    for local in locals {
+                        match local.resolve(pkgref) {
+                            Ok(resolved) => {
+                                let mut cached = local.fetch(&resolved, cache_root)?;
+                                cached.is_embedded = true;
+                                return Ok(cached);
+                            }
+                            Err(e) if is_registry_absent(&e) => {
+                                last_absent = Some(e);
+                            }
+                            Err(e) => return Err(e),
+                        }
+                    }
+                    Err(last_absent.unwrap_or_else(|| {
+                        // No local served the coordinate and none returned a
+                        // typed absence either (e.g. an empty `locals` Vec — a
+                        // programming error the construction path forbids).
+                        // Synthesize a generic absence so the caller's
+                        // fall-through still classifies it as "not here".
+                        RegistryError::UnknownPackage {
+                            group: pkgref
+                                .group
+                                .clone()
+                                .unwrap_or_else(|| Group::parse("anon.vibevm").unwrap()),
+                            name: pkgref.name.to_string(),
+                        }
+                    }))
                 };
                 let fetch_declared = || -> Result<CachedPackage, RegistryError> {
                     match declared {
@@ -108,12 +144,12 @@ impl InstallSource for InstallResolver {
                 // Fetch in precedence order, falling through only a genuine
                 // "not here" (a real failure halts).
                 match precedence {
-                    EmbeddedPrecedence::EmbeddedFirst => match fetch_embedded() {
+                    EmbeddedPrecedence::EmbeddedFirst => match fetch_local() {
                         Err(e) if is_registry_absent(&e) => fetch_declared(),
                         other => other,
                     },
                     EmbeddedPrecedence::EmbeddedLast => match fetch_declared() {
-                        Err(e) if is_registry_absent(&e) => fetch_embedded(),
+                        Err(e) if is_registry_absent(&e) => fetch_local(),
                         other => other,
                     },
                 }
@@ -141,7 +177,7 @@ impl InstallSource for InstallResolver {
                 crate::registry::dep_solver(&flags, crate::registry::ProviderResource::Multi(m))
             }
             InstallResolver::Embedded {
-                embedded,
+                locals,
                 declared,
                 precedence,
                 short_circuit,
@@ -149,7 +185,7 @@ impl InstallSource for InstallResolver {
             } => crate::registry::dep_solver(
                 &flags,
                 crate::registry::ProviderResource::Embedded {
-                    embedded,
+                    locals: locals.iter().collect(),
                     declared: declared.as_deref(),
                     precedence: *precedence,
                     short_circuit: *short_circuit,
@@ -229,9 +265,15 @@ impl InstallResolver {
             InstallResolver::Local(r, _) => Ok(r.candidate_groups(name)?),
             InstallResolver::Multi(m, _) => Ok(m.resolve_name_candidates(name)),
             InstallResolver::Embedded {
-                embedded, declared, ..
+                locals, declared, ..
             } => {
-                let mut groups = embedded.candidate_groups(name)?;
+                // The local family is a Vec: union candidate_groups across
+                // every local (project-local + vibe-embedded), then layer in
+                // the declared walk, then sort + dedup.
+                let mut groups = Vec::new();
+                for local in locals {
+                    groups.extend(local.candidate_groups(name)?);
+                }
                 if let Some(m) = declared {
                     groups.extend(m.resolve_name_candidates(name));
                 }
@@ -377,7 +419,10 @@ pub(crate) fn build_install_resolver(
             EmbeddedPrecedence::EmbeddedFirst
         };
         return Ok(InstallResolver::Embedded {
-            embedded,
+            // Layer-2: a single-element Vec preserves the pre-§3.3 behaviour
+            // (only vibe-embedded is in the local family). Layer-5 prepends
+            // project-local when `<project_root>/packages/` is discovered.
+            locals: vec![embedded],
             declared,
             precedence,
             short_circuit: args.embedded_short_circuit,
