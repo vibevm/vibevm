@@ -29,8 +29,8 @@ pub use capability_ref::{CapabilityName, CapabilityNamespace, CapabilityRef};
 pub use content_hash::ContentHash;
 pub use error::{Error, Result};
 pub use global_registry::{
-    EffectiveRegistryConfig, GlobalRegistryConfig, GlobalRegistryError, merge_effective,
-    url_is_local,
+    EffectiveRegistryConfig, GlobalRegistryConfig, GlobalRegistryError, default_registries,
+    ensure_default_global_registry, merge_effective, url_is_local,
 };
 pub use package_ref::{Group, PackageKind, PackageName, PackageRef, VersionSpec};
 pub use provenance::{SourceUrl, TraceId};

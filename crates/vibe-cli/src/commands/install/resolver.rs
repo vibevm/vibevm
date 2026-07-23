@@ -469,8 +469,13 @@ pub(crate) fn build_install_resolver(
     }
 
     // No local source (no project-local packages/, and no vibe-embedded or it
-    // was suppressed) and no explicit `--registry`.
-    if effective.registries.is_empty() {
+    // was suppressed) and no explicit `--registry`. A `--git` install (or a
+    // re-install whose manifest already carries a git-source entry) does not
+    // need a registry — the git-source is the resolver, so skip the bail and
+    // fall through to the Multi path (which handles an empty declared set
+    // for a git-source-only resolution).
+    let has_git_source = args.git.is_some() || !manifest.requires.git_packages.is_empty();
+    if effective.registries.is_empty() && !has_git_source {
         // PROP-002 §2.2.2.1: under `--offline` the remote walk is disabled and
         // no local registry survived, so there is nothing to resolve from —
         // fail with an actionable message rather than reach the network.

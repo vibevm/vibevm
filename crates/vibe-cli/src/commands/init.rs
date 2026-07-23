@@ -12,8 +12,7 @@ use std::path::Path;
 use anyhow::{Context, Result, bail};
 use serde::Serialize;
 use vibe_core::manifest::{
-    ActiveSection, DEFAULT_REGISTRY_GITVERSE_NAME, DEFAULT_REGISTRY_GITVERSE_URL,
-    DEFAULT_REGISTRY_NAME, DEFAULT_REGISTRY_REF, DEFAULT_REGISTRY_URL, Lockfile, Manifest,
+    ActiveSection, DEFAULT_REGISTRY_NAME, DEFAULT_REGISTRY_REF, Lockfile, Manifest,
     NamingConvention, ProjectSection, RegistrySection,
 };
 
@@ -282,11 +281,16 @@ fn ensure_project_manifest(
 ///   replacing the defaults entirely. `--registry-ref` further overrides
 ///   the ref.
 /// - default → two entries:
-///   1. `vibespecs` on GitHub (primary — drives `vibe registry publish`
-///      and the first stop on resolve fallback).
-///   2. `vibespecs-gitverse` on GitVerse (secondary — different package
-///      set; consulted on `UnknownPackage` fall-through). Publishing here
-///      is currently a stub; resolve-time read works.
+///   The default pair (vibespecs GitHub + GitVerse) is no longer written
+///   into per-project `vibe.toml` — it lives in `~/.vibe/registry.toml`,
+///   seeded by `ensure_default_global_registry()` on first use. A project's
+///   `vibe.toml` stays clean of registry boilerplate; a project only carries
+///   `[[registry]]` entries for registries it needs *beyond* the machine
+///   default (a local `file://` checkout, a private org, etc.).
+///
+///   `--registry-url <URL>` still writes a single explicit entry for a
+///   project that pins a specific registry. `--no-registry` stays a no-op
+///   (it was the same as the new default — empty).
 fn resolve_registry_sections(args: &InitArgs) -> Vec<RegistrySection> {
     if args.no_registry {
         return Vec::new();
@@ -305,40 +309,10 @@ fn resolve_registry_sections(args: &InitArgs) -> Vec<RegistrySection> {
             enabled: true,
         }];
     }
-    // The canonical `vibespecs` GitHub org is fqdn-shaped since
-    // PROP-008 — `<group>.<name>` repositories (`org.vibevm_wal`) — so a
-    // fresh project resolves the qualified packages out of the box.
-    let github = RegistrySection {
-        name: DEFAULT_REGISTRY_NAME.to_string(),
-        url: DEFAULT_REGISTRY_URL.to_string(),
-        r#ref: args
-            .registry_ref
-            .clone()
-            .unwrap_or_else(|| DEFAULT_REGISTRY_REF.to_string()),
-        naming: NamingConvention::Fqdn,
-        auth: vibe_core::manifest::AuthKind::None,
-        token_env: None,
-        enabled: true,
-    };
-    // GitVerse default uses `naming = "name"` (no kind prefix). The
-    // public `vibespecs` org on GitVerse provisions repos under their
-    // package name only — `vibespecs/vibevm-direct-push-smoke` rather
-    // than `vibespecs/flow-vibevm-direct-push-smoke`. Keeping the
-    // default consistent with what the org actually carries means a
-    // fresh `vibe init` resolves GitVerse-only packages correctly out
-    // of the box. The convention is recorded per-registry in
-    // `vibe.toml`, so a project mirroring a different org (where
-    // kind-name is the convention) overrides it freely.
-    let gitverse = RegistrySection {
-        name: DEFAULT_REGISTRY_GITVERSE_NAME.to_string(),
-        url: DEFAULT_REGISTRY_GITVERSE_URL.to_string(),
-        r#ref: DEFAULT_REGISTRY_REF.to_string(),
-        naming: NamingConvention::Name,
-        auth: vibe_core::manifest::AuthKind::None,
-        token_env: None,
-        enabled: true,
-    };
-    vec![github, gitverse]
+    // No `--registry-url` / `--no-registry`: the defaults (vibespecs GitHub +
+    // GitVerse) now live in `~/.vibe/registry.toml`, not in the project.
+    // An empty vector keeps the project's `vibe.toml` clean.
+    Vec::new()
 }
 
 fn ensure_empty_lockfile(ctx: &output::Context, root: &Path) -> Result<Outcome> {

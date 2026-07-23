@@ -72,6 +72,20 @@ fn main() -> ExitCode {
         cli.unattended,
     );
 
+    // Ensure `~/.vibe/registry.toml` exists with the default pair (vibespecs
+    // GitHub + GitVerse) on any registry-needing command. A fresh checkout on
+    // a new machine resolves packages out of the box without a manual
+    // `vibe registry add`. Never overwrites an existing file — user edits are
+    // preserved. Soft-warns on failure (the global layer is optional).
+    // Skipped when VIBE_NO_DEFAULT_REGISTRY is set (tests, CI, or explicit
+    // opt-out).
+    if needs_global_registry(&cli.command)
+        && read_env_opt("VIBE_NO_DEFAULT_REGISTRY").is_none()
+        && let Err(e) = vibe_core::ensure_default_global_registry()
+    {
+        eprintln!("vibe: warning: could not seed ~/.vibe/registry.toml: {e}");
+    }
+
     // PROP-030: the embedded registry belongs to a source-*installed* `vibe` —
     // one whose `current_exe` sits under a VVM install slot, so `derive_self`
     // resolves it (`self_loc`). A `cargo run` binary or a test harness is not
@@ -297,4 +311,23 @@ fn init_tracing() {
 /// the Phase-5 `ambient-env` rule names `main.rs` a recorded root).
 fn read_env_opt(name: &str) -> Option<String> {
     std::env::var(name).ok().filter(|s| !s.trim().is_empty())
+}
+
+/// Whether a command touches the registry layer (and thus benefits from the
+/// default `~/.vibe/registry.toml` being seeded). Commands like `version` /
+/// `vars` / `tree` / `term` don't resolve packages, so they skip the seed
+/// check. This is advisory — `ensure_default_global_registry` is a cheap
+/// file-existence check regardless.
+fn needs_global_registry(cmd: &cli::Command) -> bool {
+    use cli::Command;
+    matches!(
+        cmd,
+        Command::Init(_)
+            | Command::Install(_)
+            | Command::Update(_)
+            | Command::Reinstall(_)
+            | Command::Outdated(_)
+            | Command::Search(_)
+            | Command::Registry(_)
+    )
 }

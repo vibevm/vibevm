@@ -75,6 +75,80 @@ impl GlobalRegistryConfig {
             source,
         })
     }
+
+    /// Write to an explicit path (tests, ad-hoc). Creates the parent
+    /// directory if it does not exist.
+    pub fn write_to(&self, path: &Path) -> Result<(), GlobalRegistryError> {
+        if let Some(parent) = path.parent() {
+            std::fs::create_dir_all(parent).map_err(|source| GlobalRegistryError::Io {
+                path: parent.to_path_buf(),
+                source,
+            })?;
+        }
+        let body =
+            toml::to_string_pretty(self).map_err(|source| GlobalRegistryError::Serialize {
+                path: path.to_path_buf(),
+                source,
+            })?;
+        std::fs::write(path, body).map_err(|source| GlobalRegistryError::Io {
+            path: path.to_path_buf(),
+            source,
+        })
+    }
+}
+
+/// The default pair of registries seeded into a fresh `~/.vibe/registry.toml`:
+/// the vibespecs GitHub org (canonical publish target) and the GitVerse mirror
+/// (resolve fall-through). These are the same defaults `vibe init` used to
+/// write into every project's `vibe.toml`; they now live here once per
+/// machine instead of per-project, so a project's `vibe.toml` stays clean of
+/// registry boilerplate (PROP-002 §2.2.2 `#global-config`).
+pub fn default_registries() -> Vec<RegistrySection> {
+    use crate::manifest::AuthKind;
+    vec![
+        RegistrySection {
+            name: crate::manifest::DEFAULT_REGISTRY_NAME.to_string(),
+            url: crate::manifest::DEFAULT_REGISTRY_URL.to_string(),
+            r#ref: crate::manifest::DEFAULT_REGISTRY_REF.to_string(),
+            naming: crate::manifest::NamingConvention::Fqdn,
+            auth: AuthKind::None,
+            token_env: None,
+            enabled: true,
+        },
+        RegistrySection {
+            name: crate::manifest::DEFAULT_REGISTRY_GITVERSE_NAME.to_string(),
+            url: crate::manifest::DEFAULT_REGISTRY_GITVERSE_URL.to_string(),
+            r#ref: crate::manifest::DEFAULT_REGISTRY_REF.to_string(),
+            naming: crate::manifest::NamingConvention::Name,
+            auth: AuthKind::None,
+            token_env: None,
+            enabled: true,
+        },
+    ]
+}
+
+/// Ensure `~/.vibe/registry.toml` exists, seeding it with the default pair
+/// (vibespecs GitHub + GitVerse) if it does not. Never overwrites an existing
+/// file — a user's hand-edited registries are preserved. Called by the CLI's
+/// composition root before any registry-needing command, so a fresh machine
+/// resolves packages out of the box without a manual `vibe registry add`.
+///
+/// Returns `Ok(())` when the file already exists (nothing to do), when the
+/// seed was written successfully, or when the settings dir is unresolvable
+/// (the global registry layer is optional; the caller soft-warns).
+pub fn ensure_default_global_registry() -> Result<(), GlobalRegistryError> {
+    let Some(path) = crate::settings::registry_config_path() else {
+        return Ok(());
+    };
+    if path.exists() {
+        return Ok(());
+    }
+    let seeded = GlobalRegistryConfig {
+        registries: default_registries(),
+        mirrors: Vec::new(),
+        overrides: Vec::new(),
+    };
+    seeded.write_to(&path)
 }
 
 /// Why loading the global registry config failed — an I/O error or a TOML
@@ -114,6 +188,16 @@ pub enum GlobalRegistryError {
         path: PathBuf,
         #[source]
         source: toml::de::Error,
+    },
+    #[error(
+        "could not serialise the registry config for `{path}`: {source} \
+         (violates spec://vibevm/modules/vibe-registry/PROP-002#global-config; \
+          fix: report this — the in-memory config is malformed)"
+    )]
+    Serialize {
+        path: PathBuf,
+        #[source]
+        source: toml::ser::Error,
     },
 }
 
@@ -437,5 +521,41 @@ mod tests {
             GlobalRegistryConfig::load_from(&p).unwrap_err(),
             GlobalRegistryError::Parse { .. }
         ));
+    }
+
+    #[test]
+    fn default_registries_carries_both_github_and_gitverse() {
+        let regs = default_registries();
+        assert_eq!(regs.len(), 2);
+        assert_eq!(regs[0].name, crate::manifest::DEFAULT_REGISTRY_NAME);
+        assert_eq!(regs[0].url, crate::manifest::DEFAULT_REGISTRY_URL);
+        assert_eq!(
+            regs[1].name,
+            crate::manifest::DEFAULT_REGISTRY_GITVERSE_NAME
+        );
+        assert_eq!(regs[1].url, crate::manifest::DEFAULT_REGISTRY_GITVERSE_URL);
+    }
+
+    #[test]
+    fn write_to_round_trips() {
+        let dir = tempfile::tempdir().unwrap();
+        let p = dir.path().join("registry.toml");
+        let cfg = GlobalRegistryConfig {
+            registries: default_registries(),
+            mirrors: Vec::new(),
+            overrides: Vec::new(),
+        };
+        cfg.write_to(&p).unwrap();
+        let loaded = GlobalRegistryConfig::load_from(&p).unwrap();
+        assert_eq!(loaded, cfg);
+    }
+
+    #[test]
+    fn write_to_creates_parent_dir() {
+        let dir = tempfile::tempdir().unwrap();
+        let p = dir.path().join("nested/deep/registry.toml");
+        let cfg = GlobalRegistryConfig::default();
+        cfg.write_to(&p).unwrap();
+        assert!(p.exists());
     }
 }
