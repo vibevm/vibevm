@@ -224,4 +224,43 @@ source_kind = "embedded"
             report.findings
         );
     }
+
+    /// PROP-030 §3.3: a package resolved from the project-local `packages/`
+    /// records `source_kind = "local"` — and unlike `embedded`, it is
+    /// portable (every checkout of the project carries the same tree), so
+    /// the reproducibility guard does NOT warn. This is the load-bearing
+    /// distinction between the two local-family tiers: embedded is
+    /// machine-local (warns), local is project-local (portable).
+    #[test]
+    fn local_source_kind_entry_is_portable_no_warn() {
+        let project = tempdir().unwrap();
+        write_minimal_project(project.path());
+        let lockfile = r#"[meta]
+generated_by = "vibe-test"
+generated_at = "2026-07-13T00:00:00Z"
+schema_version = 5
+
+[[package]]
+kind = "flow"
+group = "org.vibevm"
+name = "wal"
+version = "0.1.0"
+source_url = "file:///project/packages"
+content_hash = "sha256:00"
+files_written = []
+source_kind = "local"
+"#;
+        fs::write(project.path().join("vibe.lock"), lockfile).unwrap();
+        let report = check_project(project.path(), &opts());
+        assert!(
+            !report
+                .findings
+                .iter()
+                .any(|f| f.check == CheckId::LockfileFiles
+                    && f.severity == Severity::Warning
+                    && f.message.contains("not portable")),
+            "a local source_kind entry is portable and must not warn; got: {:?}",
+            report.findings
+        );
+    }
 }
