@@ -6,8 +6,20 @@
 
 specmark::scope!("spec://vibevm/VIBEVM-SPEC#project-initialization");
 
+mod helpers;
+mod package;
+
+// Bring the split-out functions into scope so mod.rs reads as before.
+use helpers::*;
+use package::{
+    create_group_in_project, create_package_dirs, create_package_in_project, resolve_authors,
+};
+
+// Re-export items accessed from other modules (resolver.rs, install/ etc.).
+pub(crate) use helpers::{current_timestamp_utc, strip_unc_public};
+
 use std::fs;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result, bail};
 use serde::Serialize;
@@ -20,17 +32,178 @@ use crate::cli::InitArgs;
 use crate::output;
 
 pub fn run(ctx: &output::Context, args: InitArgs) -> Result<()> {
-    fs::create_dir_all(&args.path)
-        .with_context(|| format!("creating project directory `{}`", args.path.display()))?;
+    // Parse the positional arguments into an InitTarget.
+    let target = parse_positionals(&args.positional)?;
+    let project_path = resolve_project_path(&args, &target)?;
 
-    let path = canonical_no_unc(&args.path)?;
-    let display_root = normalize_display(&args.path, &path);
+    match &target {
+        InitTarget::ProjectOnly => {
+            create_project(ctx, &args, &project_path, None)?;
+        }
+        InitTarget::ProjectWithPackage { group, name } => {
+            create_project(ctx, &args, &project_path, Some((group, name)))?;
+        }
+        InitTarget::Package { group, name } => {
+            create_package_in_project(ctx, &args, &project_path, group, name)?;
+        }
+        InitTarget::Group { group } => {
+            create_group_in_project(ctx, &project_path, group)?;
+        }
+    }
+    Ok(())
+}
+
+/// What `vibe init` should create, parsed from the positional args.
+#[derive(Debug, Clone)]
+enum InitTarget {
+    /// Just a project (vibe.toml + spec tree), no package.
+    ProjectOnly,
+    /// A project plus a package under packages/<group>/<name>/.
+    ProjectWithPackage { group: String, name: String },
+    /// Add a package to an existing project root.
+    Package { group: String, name: String },
+    /// Add a group directory to an existing project root.
+    Group { group: String },
+}
+
+/// Parse positional args into an InitTarget.
+///
+/// Forms:
+///   []                                      → ProjectOnly (CWD, legacy)
+///   ["projectname"]                         → ProjectOnly (in projectname/)
+///   ["org.vibevm.apple", "projectname"]     → ProjectWithPackage in projectname/
+///   ["org.vibevm.apple"]                    → ProjectWithPackage in CWD
+///   ["org.vibevm.apple/orange"]             → ProjectWithPackage in CWD
+///   ["package", "org.vibevm.apple/orange"]  → Package in CWD
+///   ["package", "org.vibevm.apple/orange", "dir"] → Package in dir/
+///   ["group", "org.vibevm.apple"]           → Group in CWD
+///   ["group", "org.vibevm.apple", "dir"]    → Group in dir/
+fn parse_positionals(positional: &[String]) -> Result<InitTarget> {
+    if positional.is_empty() {
+        return Ok(InitTarget::ProjectOnly);
+    }
+
+    let first = &positional[0];
+
+    // Subcommand forms: `vibe init package ...` / `vibe init group ...`
+    if first == "package" {
+        let pkgref = positional
+            .get(1)
+            .context("`vibe init package` requires a pkgref `<group>/<name>`")?;
+        let (group, name) = split_pkgref(pkgref)?;
+        return Ok(InitTarget::Package { group, name });
+    }
+    if first == "group" {
+        let group = positional
+            .get(1)
+            .context("`vibe init group` requires a group name (e.g. org.vibevm.apple)")?;
+        validate_group(group)?;
+        return Ok(InitTarget::Group {
+            group: group.clone(),
+        });
+    }
+
+    // No subcommand keyword — the first arg is either a pkgref or a path.
+    if looks_like_group_or_pkgref(first) {
+        // First arg is a group or pkgref → project with package in CWD
+        // (or in the second positional if it's a path).
+        let (group, name) = if first.contains('/') {
+            split_pkgref(first)?
+        } else {
+            // group-only → default package name "main"
+            validate_group(first)?;
+            (first.clone(), "main".to_string())
+        };
+        return Ok(InitTarget::ProjectWithPackage { group, name });
+    }
+
+    // First arg is a path (no dots → not a group). If there's a second arg,
+    // it's a pkgref → project with package at that path.
+    if let Some(second) = positional.get(1)
+        && looks_like_group_or_pkgref(second)
+    {
+        let (group, name) = if second.contains('/') {
+            split_pkgref(second)?
+        } else {
+            validate_group(second)?;
+            (second.clone(), "main".to_string())
+        };
+        return Ok(InitTarget::ProjectWithPackage { group, name });
+    }
+
+    // Just a path → project only.
+    Ok(InitTarget::ProjectOnly)
+}
+
+/// Does `s` look like a reverse-FQDN group (`org.vibevm.apple`) or a
+/// pkgref (`org.vibevm.apple/orange`)? Heuristic: contains a dot.
+fn looks_like_group_or_pkgref(s: &str) -> bool {
+    s.contains('.') || s.contains('/')
+}
+
+/// Split a pkgref `org.vibevm.apple/orange` into `(group, name)`.
+fn split_pkgref(s: &str) -> Result<(String, String)> {
+    let (group, name) = s.split_once('/').context(format!(
+        "`{s}` is not a valid pkgref — expected `<group>/<name>` (e.g. org.vibevm.apple/orange)"
+    ))?;
+    validate_group(group)?;
+    if name.is_empty() {
+        bail!("package name after `/` is empty in `{s}`");
+    }
+    Ok((group.to_string(), name.to_string()))
+}
+
+/// Validate a group looks like a reverse-FQDN (at least one dot, lowercase).
+fn validate_group(group: &str) -> Result<()> {
+    if !group.contains('.') {
+        bail!("`{group}` is not a valid group — expected a reverse-FQDN like `org.vibevm.apple`");
+    }
+    // Let the Group parser do the full validation.
+    vibe_core::Group::parse(group).with_context(|| format!("`{group}` is not a valid group"))?;
+    Ok(())
+}
+
+/// Resolve the project root path from args + target.
+fn resolve_project_path(args: &InitArgs, _target: &InitTarget) -> Result<PathBuf> {
+    // The path is: the last positional that doesn't look like a pkgref/group/subcommand,
+    // or `--path`, or CWD.
+    let positional_path = args
+        .positional
+        .iter()
+        .rev()
+        .find(|s| s != &"package" && s != &"group" && !looks_like_group_or_pkgref(s));
+    if let Some(p) = positional_path {
+        return Ok(PathBuf::from(p));
+    }
+    if let Some(p) = &args.path {
+        return Ok(p.clone());
+    }
+    // For Package/Group targets: default to CWD (the project must already exist).
+    // For ProjectOnly/ProjectWithPackage: default to CWD too (matches legacy).
+    Ok(PathBuf::from("."))
+}
+
+/// Create a full project (vibe.toml + spec tree + boot artifacts), optionally
+/// with a package under packages/<group>/<name>/v<version>/.
+fn create_project(
+    ctx: &output::Context,
+    args: &InitArgs,
+    project_path: &Path,
+    package: Option<(&str, &str)>,
+) -> Result<()> {
+    let display_requested = project_path.to_path_buf();
+
+    fs::create_dir_all(project_path)
+        .with_context(|| format!("creating project directory `{}`", project_path.display()))?;
+
+    let path = canonical_no_unc(project_path)?;
+    let display_root = normalize_display(&display_requested, &path);
 
     if !path.is_dir() {
         bail!("target `{}` is not a directory", display_root);
     }
 
-    let project_name = resolve_name(&args, &path)?;
+    let project_name = resolve_name(args, &path)?;
 
     ctx.heading(&format!(
         "Initializing project `{project_name}` in `{display_root}`"
@@ -60,23 +233,19 @@ pub fn run(ctx: &output::Context, args: InitArgs) -> Result<()> {
     )?);
 
     // 3. Project manifest and empty lockfile.
-    //
-    // (No `spec/WAL.md` scaffold — WAL discipline is a project
-    // convention, not part of the package manager's contract. Operators
-    // who want the WAL protocol install it explicitly, e.g. via
-    // `vibe install flow:wal`, which ships a protocol document plus a
-    // starter `spec/WAL.md` template.)
-    let registries = resolve_registry_sections(&args);
-    outcomes.push(ensure_project_manifest(
+    let registries = resolve_registry_sections(args);
+    let manifest_authors = resolve_authors(args);
+    outcomes.push(ensure_project_manifest_full(
         ctx,
         &path,
         &project_name,
         args.stack.as_deref(),
         registries,
+        &manifest_authors,
     )?);
     outcomes.push(ensure_empty_lockfile(ctx, &path)?);
 
-    // 4. `.vibe/` cache (gitignored per §4.2).
+    // 4. `.vibe/` cache (gitignored).
     ensure_dir(&path.join(".vibe/cache"))?;
     outcomes.push(ensure_file(
         ctx,
@@ -86,7 +255,7 @@ pub fn run(ctx: &output::Context, args: InitArgs) -> Result<()> {
         "gitignore: cache",
     )?);
 
-    // 5. .gitignore at project root (only if absent — don't overwrite).
+    // 5. .gitignore at project root.
     outcomes.push(ensure_file(
         ctx,
         &path,
@@ -95,20 +264,19 @@ pub fn run(ctx: &output::Context, args: InitArgs) -> Result<()> {
         "gitignore: root",
     )?);
 
-    // 5a. Ensure the L3 personal-settings file is gitignored (PROP-040 §9
-    //     #gitignore-autogen). The fresh template above already lists it; this
-    //     appends the entry to an operator's pre-existing .gitignore that
-    //     predates the settings system, preserving all existing content. A
-    //     personal file must never be accidentally committed — the IntelliJ
-    //     `workspace.xml` "keeps popping up" pain, avoided by default.
     if let Some(o) = ensure_local_settings_gitignored(&path)? {
         outcomes.push(o);
     }
 
-    // 6. Generate the boot artifacts (PROP-009): `spec/boot/INDEX.md` and
-    //    the managed `<vibevm>` block in CLAUDE.md / AGENTS.md / GEMINI.md
-    //    (PROP-012), so a freshly-initialised project is bootable at once.
-    //    vibevm owns only the block; any co-tenant content is preserved.
+    // 6. Package (if requested).
+    if let Some((group, name)) = package {
+        let pkg_outcomes = create_package_dirs(
+            ctx, &path, group, name, args, "static", // project+package = static link
+        )?;
+        outcomes.extend(pkg_outcomes);
+    }
+
+    // 7. Generate the boot artifacts.
     outcomes.extend(generate_boot_artifacts(ctx, &path)?);
 
     report(ctx, &project_name, &display_root, &outcomes)?;
@@ -150,7 +318,7 @@ fn generate_boot_artifacts(ctx: &output::Context, path: &Path) -> Result<Vec<Out
 }
 
 #[derive(Debug, Clone, Serialize)]
-struct Outcome {
+pub(super) struct Outcome {
     path: String,
     action: Action,
     reason: &'static str,
@@ -158,7 +326,7 @@ struct Outcome {
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
 #[serde(rename_all = "lowercase")]
-enum Action {
+pub(super) enum Action {
     Created,
     Kept,
 }
@@ -191,7 +359,7 @@ fn ensure_file(
     })
 }
 
-fn ensure_dir(path: &Path) -> Result<()> {
+pub(super) fn ensure_dir(path: &Path) -> Result<()> {
     fs::create_dir_all(path).with_context(|| format!("creating `{}`", path.display()))
 }
 
@@ -234,12 +402,13 @@ fn ensure_local_settings_gitignored(root: &Path) -> Result<Option<Outcome>> {
     }))
 }
 
-fn ensure_project_manifest(
+fn ensure_project_manifest_full(
     ctx: &output::Context,
     root: &Path,
     name: &str,
     stack: Option<&str>,
     registries: Vec<RegistrySection>,
+    authors: &[String],
 ) -> Result<Outcome> {
     let path = root.join(Manifest::FILENAME);
     let rel = relative_to_root(root, &path);
@@ -256,7 +425,7 @@ fn ensure_project_manifest(
         project: Some(ProjectSection {
             name: name.to_string(),
             version: "0.0.1".to_string(),
-            authors: vec![],
+            authors: authors.to_vec(),
         }),
         active: stack.map(|s| ActiveSection {
             stack: Some(s.to_string()),
@@ -338,144 +507,3 @@ fn ensure_empty_lockfile(ctx: &output::Context, root: &Path) -> Result<Outcome> 
         reason: "lockfile",
     })
 }
-
-fn resolve_name(args: &InitArgs, path: &Path) -> Result<String> {
-    if let Some(n) = &args.name {
-        return Ok(n.clone());
-    }
-    let basename = path
-        .file_name()
-        .and_then(|n| n.to_str())
-        .unwrap_or("project");
-    Ok(basename.to_string())
-}
-
-fn relative_to_root(root: &Path, full: &Path) -> String {
-    let stripped = full.strip_prefix(root).unwrap_or(full);
-    display_pathbuf(stripped)
-}
-
-fn display_pathbuf(p: &Path) -> String {
-    // Display with forward slashes — consistent across macOS/Linux/Windows.
-    let s = p.display().to_string();
-    s.replace('\\', "/")
-}
-
-/// Canonicalize and strip Windows UNC (`\\?\`) prefix where present.
-fn canonical_no_unc(path: &Path) -> Result<std::path::PathBuf> {
-    let canon = path
-        .canonicalize()
-        .with_context(|| format!("canonicalizing `{}`", path.display()))?;
-    Ok(strip_unc(canon))
-}
-
-#[cfg(windows)]
-fn strip_unc(p: std::path::PathBuf) -> std::path::PathBuf {
-    let s = p.as_os_str().to_string_lossy();
-    if let Some(rest) = s.strip_prefix(r"\\?\") {
-        std::path::PathBuf::from(rest)
-    } else {
-        p
-    }
-}
-
-#[cfg(not(windows))]
-fn strip_unc(p: std::path::PathBuf) -> std::path::PathBuf {
-    p
-}
-
-/// Re-export for sibling command modules.
-pub(crate) fn strip_unc_public(p: std::path::PathBuf) -> std::path::PathBuf {
-    strip_unc(p)
-}
-
-/// Prefer the user-supplied display (e.g. `.`) if it still points at the
-/// canonical path; otherwise fall back to the canonical (UNC-stripped) form.
-fn normalize_display(requested: &Path, canonical: &Path) -> String {
-    let requested_matches = requested
-        .canonicalize()
-        .map(|c| strip_unc(c) == *canonical)
-        .unwrap_or(false);
-    if requested_matches {
-        display_pathbuf(requested)
-    } else {
-        display_pathbuf(canonical)
-    }
-}
-
-pub(crate) fn current_timestamp_utc() -> String {
-    vibe_core::timestamp::now_utc()
-}
-
-fn report(
-    ctx: &output::Context,
-    name: &str,
-    display_root: &str,
-    outcomes: &[Outcome],
-) -> Result<()> {
-    let created = outcomes
-        .iter()
-        .filter(|o| o.action == Action::Created)
-        .count();
-    let kept = outcomes.iter().filter(|o| o.action == Action::Kept).count();
-
-    if ctx.is_json() {
-        use vibe_wire::generated::init_report::{
-            InitReport, Outcome as WireOutcome, OutcomeAction,
-        };
-        let payload = InitReport {
-            ok: true,
-            command: "init".to_string(),
-            project: name.to_string(),
-            path: display_root.to_string(),
-            created: u32::try_from(created).unwrap_or(u32::MAX),
-            kept: u32::try_from(kept).unwrap_or(u32::MAX),
-            outcomes: outcomes
-                .iter()
-                .map(|o| WireOutcome {
-                    path: o.path.clone(),
-                    action: match o.action {
-                        Action::Created => OutcomeAction::Created,
-                        Action::Kept => OutcomeAction::Kept,
-                    },
-                    reason: o.reason.to_string(),
-                })
-                .collect(),
-        };
-        ctx.emit_json(&payload)?;
-        return Ok(());
-    }
-
-    if ctx.is_quiet() {
-        ctx.summary(&format!(
-            "vibe init: {created} created, {kept} kept in `{display_root}`"
-        ));
-        return Ok(());
-    }
-
-    println!();
-    ctx.summary(&format!(
-        "Done. Project `{name}`: {created} file{} created, {kept} kept.",
-        if created == 1 { "" } else { "s" }
-    ));
-    println!();
-    println!("Next:");
-    println!("  • edit spec/boot/00-core.md and spec/common/ as your project takes shape");
-    println!("  • install packages with `vibe install <kind>:<name>` (e.g. flow:wal)");
-    Ok(())
-}
-
-// ==== Templates ============================================================
-//
-// The project-facing content `vibe init` writes lives as data under
-// `crates/vibe-cli/templates/` and is pulled in with `include_str!`: code
-// renders, data carries the prose. `.gitattributes` pins the tree to LF, so
-// the bytes `include_str!` embeds are the bytes the e2e tests expect.
-
-const BOOT_90_USER_TEMPLATE: &str = include_str!("../../templates/boot-90-user.md");
-
-fn boot_00_core_template(project_name: &str) -> String {
-    include_str!("../../templates/boot-00-core.md").replace("{project_name}", project_name)
-}
-
-const ROOT_GITIGNORE_TEMPLATE: &str = include_str!("../../templates/root-gitignore");

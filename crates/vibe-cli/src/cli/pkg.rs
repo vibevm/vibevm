@@ -11,9 +11,23 @@ use std::path::PathBuf;
 
 #[derive(Debug, clap::Args)]
 pub struct InitArgs {
-    /// Directory to initialize (defaults to the current working directory).
-    #[arg(long, default_value = ".")]
-    pub path: PathBuf,
+    /// Positional arguments: `[package|group] [pkgref] [path]`.
+    ///
+    /// Forms:
+    ///   vibe init                              — project in CWD (legacy)
+    ///   vibe init projectname                  — project in projectname/
+    ///   vibe init org.vibevm.apple projectname — project + package in projectname/
+    ///   vibe init org.vibevm.apple             — project + package in CWD
+    ///   vibe init org.vibevm.apple/orange      — project + package in CWD
+    ///   vibe init package org.vibevm.apple/orange [path]  — add package
+    ///   vibe init group org.vibevm.apple [path]           — add group
+    #[arg(num_args = 0..=3)]
+    pub positional: Vec<String>,
+
+    /// Directory to initialize (back-compat with `--path .`).
+    /// When positional path is also given, the positional wins.
+    #[arg(long)]
+    pub path: Option<PathBuf>,
 
     /// Pre-set the active stack name (still requires installation separately).
     #[arg(long)]
@@ -24,26 +38,46 @@ pub struct InitArgs {
     pub name: Option<String>,
 
     /// Override the default registry URL written into `vibe.toml`.
-    /// When unset, `vibe init` writes two `[[registry]]` blocks: the
-    /// `vibespecs` organisation on GitHub (primary, drives `vibe
-    /// registry publish` and the first stop on resolve fallback) and
-    /// `vibespecs-gitverse` on GitVerse (secondary, queried on
-    /// `UnknownPackage` fall-through). Setting this flag replaces both
-    /// defaults with a single `[[registry]]` pointing at the supplied
-    /// URL. Conflicts with `--no-registry`.
     #[arg(long = "registry-url", conflicts_with = "no_registry")]
     pub registry_url: Option<String>,
 
     /// Override the default ref (`main`) recorded under `[registry]`.
-    /// Conflicts with `--no-registry`.
     #[arg(long = "registry-ref", conflicts_with = "no_registry")]
     pub registry_ref: Option<String>,
 
-    /// Do not write a `[registry]` section into `vibe.toml`. The
-    /// project will then require `--registry <path>` on every
-    /// `vibe install`, or a manual edit to `vibe.toml` later.
+    /// Do not write a `[registry]` section into `vibe.toml`.
     #[arg(long = "no-registry")]
     pub no_registry: bool,
+
+    // --- Package creation flags (for `vibe init package` and project+pkg forms) ---
+    /// Package kind: flow, feat, stack, tool, mcp. Default: tool.
+    #[arg(long)]
+    pub kind: Option<String>,
+
+    /// Package/project version. Default: 0.1.0 for packages, 0.0.1 for projects.
+    #[arg(long)]
+    pub version: Option<String>,
+
+    /// Author name (can be repeated). Default: detected from git config.
+    #[arg(long = "author")]
+    pub authors: Vec<String>,
+
+    /// License. Default: UPL-1.0.
+    #[arg(long)]
+    pub license: Option<String>,
+
+    /// One-line description.
+    #[arg(long)]
+    pub description: Option<String>,
+
+    /// Package format: simple or normal. Default: simple.
+    #[arg(long)]
+    pub format: Option<String>,
+
+    /// Link type for the boot snippet: static or dynamic.
+    /// Default: static for project+package, dynamic for `init package`.
+    #[arg(long)]
+    pub link: Option<String>,
 }
 
 #[derive(Debug, clap::Args)]
