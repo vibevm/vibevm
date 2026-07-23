@@ -132,40 +132,94 @@ package; the two flags above additionally spare the network round-trip itself.
 `packages/` of a source build, or a distribution's bundle. The flag is
 `--prefer-embedded`; the lock `source_kind` is `embedded` (§4).
 
-**`--prefer-local` is reserved** and MUST NOT be used for this feature. It names
-a *future, distinct* capability: a user — who is **not** a vibevm developer —
-pointing vibe at *their own* local package repositories. Embedded packages
-(vibevm's own) and a user's local repos are different things with different
-precedence stories; conflating them under one flag would foreclose that future.
+**`local`** names packages that ship *inside the current project* — the
+in-tree `<project_root>/packages/` of any vibe project (§3.3). The flag is
+`--prefer-local` / `--no-prefer-local`; the lock `source_kind` is `local`
+(§4). Originally reserved (see §9 D2 historical text) for a broader
+"user-own-repos" feature, the name now lands for the narrower
+project-packages semantics first; arbitrary user-repos remain a future
+expansion under a different name.
+
+### 3.3 Project-local sources {#project-local}
+
+REQ. A project carrying `<project_root>/packages/` (where `project_root` is
+the directory holding the project's `vibe.toml`, resolved by
+`resolve_project_root`) gets that directory auto-opened as a `LocalRegistry`
+and composed into the local-registry family alongside the vibe-embedded
+registry. No `[[registry]]` block, no `--registry <path>`, no
+`~/.vibe/registry.toml` machine entry needed.
+
+REQ. Project-local discovery is **independent of the running vibe's install
+origin**. Unlike vibe-embedded (§2), it works from a `cargo run`, a test
+binary, a distribution install, and a source install alike — every kind of
+`vibe` invocation that targets a project with a `packages/` directory
+discovers it. The feature exists for the downstream consumer's project, not
+for the tool.
+
+REQ. The local family is ordered **project-local first**, then
+vibe-embedded, so a developer's own in-tree packages win a clash inside the
+family (the project is the source of truth for its own deps). This ordering
+is internal to the `LocalCompositeProvider`; against the declared
+`[[registry]]` walk, the family as a whole composes at the existing
+`EmbeddedPrecedence` (§3).
+
+REQ. The CI-off gate (`CI` / `VIBE_NO_DEFAULT_REGISTRY`, §5) does **NOT**
+suppress project-local — it is per-project and portable (every checkout
+carries the same `packages/`), so a project-local lock is reproducible
+across machines and CI. The gate continues to suppress the vibe-embedded
+half (the machine-local one).
+
+REQ. `--no-prefer-local` suppresses project-packages discovery for one
+command (use when a project's `packages/` is stale, broken, or deliberately
+bypassed). It does NOT suppress vibe-embedded — `--no-default-registry`
+remains the knob for that. `--prefer-local` is the explicit affirmation of
+the default (project-local wins the local family); mutually exclusive with
+`--no-prefer-local`.
+
+REQ. A package resolved from project-local records `source_kind = "local"`
+in `vibe.lock` (§4) — distinct from `embedded`. Unlike `embedded`, it is
+**portable** and the reproducibility guard (§5) does NOT warn on it: every
+checkout of the project resolves the same `packages/` to the same content.
 
 ## 4. The lock {#lock}
 
 A package resolved from the embedded registry records `source_kind = "embedded"`
-in `vibe.lock` (a new [PROP-002](PROP-002-decentralized-registry.md) `SourceKind`
+in `vibe.lock` (a [PROP-002](PROP-002-decentralized-registry.md) `SourceKind`
 variant beside `registry` / `git` / `override` / `path`). Its `source_url` is the
 `file://` path into `<source_path>/packages`.
+
+A package resolved from project-local (§3.3) records `source_kind = "local"`
+(another `SourceKind` variant). Its `source_url` is the `file://` path into
+`<project_root>/packages`.
 
 `source_kind = "embedded"` is the marker the reproducibility guard keys on (§5):
 it says "this entry resolved from a machine-local, source-install-derived
 directory," which a different machine — a teammate, CI — cannot reproduce.
+`source_kind = "local"` is portable (per-project, §3.3) and the guard does NOT
+key on it.
 
 ## 5. Reproducibility guard {#guard}
 
-A `file://<source_path>/packages/...` entry is **machine-local**: a checkout on
-another box, or CI, has no such path. Left unguarded, an embedded-resolved lock
-committed to a shared repo breaks for everyone else. The guard, at the
-**warn + CI-off** strength the owner chose:
+A `file://<source_path>/packages/...` entry (the vibe-embedded registry, §2) is
+**machine-local**: a checkout on another box, or CI, has no such path. Left
+unguarded, an embedded-resolved lock committed to a shared repo breaks for
+everyone else. The guard, at the **warn + CI-off** strength the owner chose:
 
-- **CI-off.** In `--frozen` (and any non-interactive CI resolution), the embedded
-  registry is **disabled by default** — CI must resolve from declared registries,
-  so a machine-local lock cannot silently pass there.
+- **CI-off.** In `--frozen` (and any non-interactive CI resolution), the
+  vibe-embedded registry is **disabled by default** — CI must resolve from
+  declared registries (and, since §3.3, project-local), so a machine-local lock
+  cannot silently pass there. Project-local is NOT suppressed by this gate — it
+  is per-project and portable.
 - **Warn.** `vibe check` **warns** (does not fail) when the lock carries any
   `source_kind = "embedded"` entry: "this lockfile depends on the embedded
   registry of a source install and is not portable; publish or vendor these
-  packages before sharing the lock."
+  packages before sharing the lock." A `source_kind = "local"` entry is
+  portable and does NOT warn.
 
-This keeps the convenience strictly a **developer-machine** affordance and stops
-a non-portable lock from leaking into a shared commit unnoticed.
+This keeps the embedded-registry convenience strictly a **developer-machine**
+affordance and stops a non-portable lock from leaking into a shared commit
+unnoticed. Project-local (§3.3) is the *portable* counterpart — it has the same
+convenience without the portability caveat.
 
 ## 6. Discoverability {#doctor}
 
@@ -219,6 +273,15 @@ Grounded in the current tree:
 - **D2 — `embedded`, not `local`, in name and `source_kind`.** *Rejected:*
   `--prefer-local` / `source_kind = "local"`. "Local" is reserved for a future
   user-owned-repository feature (§3.2); using it here would collide.
+  **D2 revised (§3.3 amendment):** the reserved `--prefer-local` /
+  `source_kind = "local"` name now **lands for the narrower project-packages
+  semantics** — a project's own in-tree `<project_root>/packages/`. The
+  narrower scope (a single well-known directory per project, portable across
+  checkouts) is distinct from the original "arbitrary user-owned-repos"
+  concern, which remains a future expansion under a different name. The
+  reservation was the right call to avoid colliding the two; the §3.3
+  feature takes the name now that the narrow semantics is shipped and the
+  broader one is still unscoped.
 - **D3 — explicit sources stay above embedded.** *Rejected:* embedded above
   overrides / path / git. Those are deliberate per-dependency choices; an ambient
   default must not override a decision the author wrote down.
