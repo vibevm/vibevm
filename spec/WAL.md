@@ -4,12 +4,13 @@ _Updated: 2026-07-23_
 
 ## Current phase
 
-The **terminal-product extraction** + **project-packages auto-discovery**
-campaigns are landed and pushed. vibevm's install pipeline builds the `vibe`
-binary only; the terminal products (vibeterm, vibeframe, launcher) live in
-the sibling `vibevm-term` repo under `packages/org.vibevm.term/` and resolve
-via project-packages auto-discovery (PROP-030 §3.3). Both repos are
-synced with their remotes, floors green.
+The **default registry migration** is landing: the vibespecs GitHub +
+GitVerse `[[registry]]` pair moves from per-project `vibe.toml` templates
+into the machine-global `~/.vibe/registry.toml`, seeded automatically on
+first use. `vibe init` now produces a clean project manifest (no
+`[[registry]]` boilerplate); `~/.vibe/registry.toml` is created by
+`ensure_default_global_registry()` at the CLI composition root on any
+registry-needing command if it does not yet exist.
 
 ## Constraints — do not violate
 

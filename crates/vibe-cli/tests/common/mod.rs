@@ -19,7 +19,12 @@ use std::path::{Path, PathBuf};
 use assert_cmd::Command;
 
 pub fn vibe() -> Command {
-    Command::cargo_bin("vibe").expect("vibe binary built")
+    let mut cmd = Command::cargo_bin("vibe").expect("vibe binary built");
+    // Suppress the global-registry seeding so tests don't pollute the real
+    // `~/.vibe/registry.toml` or pick up real-world registries that change
+    // the resolution/cache shape they assert against.
+    cmd.env("VIBE_NO_DEFAULT_REGISTRY", "1");
+    cmd
 }
 
 /// The `fixtures/registry/` directory at the repo root holds the

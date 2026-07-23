@@ -26,6 +26,19 @@ fn publish_against_gitverse_registry_emits_stub_envelope() {
     let project = tempfile::tempdir().unwrap();
     init_project(project.path());
 
+    // Add the gitverse registry (defaults no longer land in the project).
+    vibe()
+        .arg("registry")
+        .arg("add")
+        .arg("vibespecs-gitverse")
+        .arg("https://gitverse.ru/vibespecs")
+        .arg("--naming")
+        .arg("name")
+        .arg("--path")
+        .arg(project.path())
+        .assert()
+        .success();
+
     // Synthesize a minimal package directory the publisher can read.
     // The stub fires before any of these bytes matter — the test
     // would still pass with an empty file — but the manifest is what

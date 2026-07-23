@@ -493,6 +493,18 @@ fn show_config_emits_registry_block_with_provenance() {
     let project = tempfile::tempdir().unwrap();
     init_project(project.path());
 
+    // Add a registry so `show config` has one to emit (defaults no longer
+    // land in the project vibe.toml — they live in ~/.vibe/registry.toml).
+    vibe()
+        .arg("registry")
+        .arg("add")
+        .arg("vibespecs")
+        .arg("https://github.com/vibespecs")
+        .arg("--path")
+        .arg(project.path())
+        .assert()
+        .success();
+
     let out = vibe()
         .arg("--json")
         .arg("show")
@@ -508,7 +520,7 @@ fn show_config_emits_registry_block_with_provenance() {
     let registries = payload["registries"].as_array().unwrap();
     assert!(
         !registries.is_empty(),
-        "default `vibe init` configures a registry"
+        "a registry added via `vibe registry add` appears in `show config`"
     );
     assert_eq!(registries[0]["provenance"], "vibe.toml");
     let env = payload["env"].as_array().unwrap();
@@ -3373,6 +3385,17 @@ fn set_mirror_accepts_file_url_with_no_org_segment() {
     let abs_vendor = vendor_dir.path().to_string_lossy().replace('\\', "/");
     let mirror_url = format!("file:///{abs_vendor}");
 
+    // Add a registry first (defaults no longer land in the project).
+    vibe()
+        .arg("registry")
+        .arg("add")
+        .arg("vibespecs")
+        .arg("https://github.com/vibespecs")
+        .arg("--path")
+        .arg(project.path())
+        .assert()
+        .success();
+
     vibe()
         .arg("registry")
         .arg("set-mirror")
@@ -3403,6 +3426,17 @@ fn set_mirror_rejects_empty_url() {
     // check doesn't sneak through unnoticed.
     let project = tempfile::tempdir().unwrap();
     init_project(project.path());
+
+    // Add a registry first (defaults no longer land in the project).
+    vibe()
+        .arg("registry")
+        .arg("add")
+        .arg("vibespecs")
+        .arg("https://github.com/vibespecs")
+        .arg("--path")
+        .arg(project.path())
+        .assert()
+        .success();
 
     for bad in ["", "   "] {
         vibe()

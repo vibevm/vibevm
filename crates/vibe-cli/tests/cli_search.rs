@@ -16,7 +16,9 @@ use serde::Deserialize;
 use tokio::net::TcpListener;
 
 fn vibe() -> Command {
-    Command::cargo_bin("vibe").expect("vibe binary built")
+    let mut cmd = Command::cargo_bin("vibe").expect("vibe binary built");
+    cmd.env("VIBE_NO_DEFAULT_REGISTRY", "1");
+    cmd
 }
 
 /// Cache-isolating wrapper. Every test gets its own tempdir for the

@@ -62,7 +62,9 @@ const TEST_REGISTRY_GITVERSE_NAME: &str = "vibespecstest3";
 const TEST_REGISTRY_GITVERSE_URL: &str = "git@gitverse.ru:vibespecstest3";
 
 fn vibe() -> Command {
-    Command::cargo_bin("vibe").expect("vibe binary built")
+    let mut cmd = Command::cargo_bin("vibe").expect("vibe binary built");
+    cmd.env("VIBE_NO_DEFAULT_REGISTRY", "1");
+    cmd
 }
 
 /// Initialise a project and overwrite the default `[[registry]]`

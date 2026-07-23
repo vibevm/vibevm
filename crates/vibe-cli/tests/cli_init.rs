@@ -8,7 +8,11 @@ use assert_cmd::Command;
 use predicates::prelude::*;
 
 fn vibe() -> Command {
-    Command::cargo_bin("vibe").expect("vibe binary built")
+    let mut cmd = Command::cargo_bin("vibe").expect("vibe binary built");
+    // Suppress global-registry seeding so tests don't pollute the real
+    // ~/.vibe/registry.toml or pick up real-world registries.
+    cmd.env("VIBE_NO_DEFAULT_REGISTRY", "1");
+    cmd
 }
 
 #[test]
@@ -214,13 +218,13 @@ fn init_version() {
 }
 
 #[test]
-fn init_writes_default_registry() {
-    // Default `vibe init` provisions two `[[registry]]` blocks: GitHub
-    // primary (canonical publish target) + GitVerse secondary
-    // (resolve-time fall-through). The block order is load-bearing —
-    // primary first drives `vibe registry publish` and the resolver
-    // walk order. See `resolve_registry_sections` in
-    // `crates/vibe-cli/src/commands/init.rs`.
+fn init_default_has_no_project_registries() {
+    // Since the default pair (vibespecs GitHub + GitVerse) moved from
+    // the project `vibe.toml` to the machine-global `~/.vibe/registry.toml`
+    // (seeded by `ensure_default_global_registry`), a default `vibe init`
+    // produces a project `vibe.toml` with NO `[[registry]]` sections.
+    // The project stays clean of registry boilerplate; a project only
+    // carries `[[registry]]` entries it needs *beyond* the machine default.
     let dir = tempfile::tempdir().unwrap();
     let path = dir.path();
 
@@ -235,41 +239,14 @@ fn init_writes_default_registry() {
     let parsed = vibe_core::manifest::Manifest::parse_str(&manifest_text).unwrap();
     assert_eq!(
         parsed.registries.len(),
-        2,
-        "default `vibe init` writes both GitHub + GitVerse registries; got: {manifest_text}"
+        0,
+        "default `vibe init` writes no [[registry]] blocks (they live in \
+         ~/.vibe/registry.toml now); got: {manifest_text}"
     );
-
-    let primary = &parsed.registries[0];
-    assert_eq!(primary.name, vibe_core::manifest::DEFAULT_REGISTRY_NAME);
-    assert_eq!(primary.url, vibe_core::manifest::DEFAULT_REGISTRY_URL);
-    assert_eq!(primary.r#ref, vibe_core::manifest::DEFAULT_REGISTRY_REF);
-    // The GitHub `vibespecs` org is fqdn-shaped (PROP-008 §2.5).
-    assert_eq!(primary.naming, vibe_core::manifest::NamingConvention::Fqdn);
-
-    let secondary = &parsed.registries[1];
-    assert_eq!(
-        secondary.name,
-        vibe_core::manifest::DEFAULT_REGISTRY_GITVERSE_NAME
-    );
-    assert_eq!(
-        secondary.url,
-        vibe_core::manifest::DEFAULT_REGISTRY_GITVERSE_URL
-    );
-    // GitVerse default uses `naming = "name"` (no kind-prefix);
-    // the public `vibespecs` org on GitVerse provisions repos
-    // under bare package names (`vibevm-direct-push-smoke`) and the
-    // resolver must match that to find them.
-    assert_eq!(
-        secondary.naming,
-        vibe_core::manifest::NamingConvention::Name
-    );
-
     assert!(
-        manifest_text.contains("[[registry]]"),
-        "manifest must contain [[registry]]: {manifest_text}"
+        !manifest_text.contains("[[registry]]"),
+        "project vibe.toml must not contain [[registry]]: {manifest_text}"
     );
-    assert!(manifest_text.contains(vibe_core::manifest::DEFAULT_REGISTRY_URL));
-    assert!(manifest_text.contains(vibe_core::manifest::DEFAULT_REGISTRY_GITVERSE_URL));
 }
 
 #[test]
