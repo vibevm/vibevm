@@ -408,6 +408,48 @@
     },
     {
       "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/install/flag_tests.rs",
+      "item_kind": "fn",
+      "line": 52,
+      "symbol": "vibe_cli::commands::install::flag_tests::empty_manifest"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/install/flag_tests.rs",
+      "item_kind": "fn",
+      "line": 99,
+      "symbol": "vibe_cli::commands::install::flag_tests::offline_without_a_local_registry_bails_before_the_network"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/install/flag_tests.rs",
+      "item_kind": "fn",
+      "line": 127,
+      "symbol": "vibe_cli::commands::install::flag_tests::prefer_local_conflicts_with_no_prefer_local"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/install/flag_tests.rs",
+      "item_kind": "fn",
+      "line": 151,
+      "symbol": "vibe_cli::commands::install::flag_tests::project_local_packages_activate_resolver_without_vibe_embedded"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/install/flag_tests.rs",
+      "item_kind": "fn",
+      "line": 68,
+      "symbol": "vibe_cli::commands::install::flag_tests::short_circuit_conflicts_with_embedded_last"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/install/project_local.rs",
+      "item_kind": "mod",
+      "line": 18,
+      "symbol": "vibe_cli::commands::install::project_local"
+    },
+    {
+      "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/install/report.rs",
       "item_kind": "mod",
       "line": 5,
@@ -419,20 +461,6 @@
       "item_kind": "mod",
       "line": 5,
       "symbol": "vibe_cli::commands::install::resolver"
-    },
-    {
-      "crate_name": "vibe-cli",
-      "file": "crates/vibe-cli/src/commands/install/resolver.rs",
-      "item_kind": "fn",
-      "line": 489,
-      "symbol": "vibe_cli::commands::install::resolver::flag_tests::offline_without_a_local_registry_bails_before_the_network"
-    },
-    {
-      "crate_name": "vibe-cli",
-      "file": "crates/vibe-cli/src/commands/install/resolver.rs",
-      "item_kind": "fn",
-      "line": 463,
-      "symbol": "vibe_cli::commands::install::resolver::flag_tests::short_circuit_conflicts_with_embedded_last"
     },
     {
       "crate_name": "vibe-cli",
@@ -3945,7 +3973,7 @@
       "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/src/lib.rs",
       "item_kind": "fn",
-      "line": 262,
+      "line": 273,
       "symbol": "vibe_registry::CachedPackage::package_meta"
     },
     {
@@ -4344,56 +4372,56 @@
       "crate_name": "vibe-resolver",
       "file": "crates/vibe-resolver/src/lib.rs",
       "item_kind": "trait",
-      "line": 159,
+      "line": 161,
       "symbol": "vibe_resolver::DepProvider"
     },
     {
       "crate_name": "vibe-resolver",
       "file": "crates/vibe-resolver/src/lib.rs",
       "item_kind": "enum",
-      "line": 304,
+      "line": 306,
       "symbol": "vibe_resolver::DepProviderError"
     },
     {
       "crate_name": "vibe-resolver",
       "file": "crates/vibe-resolver/src/lib.rs",
       "item_kind": "trait",
-      "line": 254,
+      "line": 256,
       "symbol": "vibe_resolver::DepSolver"
     },
     {
       "crate_name": "vibe-resolver",
       "file": "crates/vibe-resolver/src/lib.rs",
       "item_kind": "struct",
-      "line": 109,
+      "line": 111,
       "symbol": "vibe_resolver::ResolvedGraph"
     },
     {
       "crate_name": "vibe-resolver",
       "file": "crates/vibe-resolver/src/lib.rs",
       "item_kind": "fn",
-      "line": 146,
+      "line": 148,
       "symbol": "vibe_resolver::ResolvedGraph::find"
     },
     {
       "crate_name": "vibe-resolver",
       "file": "crates/vibe-resolver/src/lib.rs",
       "item_kind": "struct",
-      "line": 72,
+      "line": 74,
       "symbol": "vibe_resolver::ResolvedNode"
     },
     {
       "crate_name": "vibe-resolver",
       "file": "crates/vibe-resolver/src/lib.rs",
       "item_kind": "enum",
-      "line": 372,
+      "line": 374,
       "symbol": "vibe_resolver::SolveError"
     },
     {
       "crate_name": "vibe-resolver",
       "file": "crates/vibe-resolver/src/lib.rs",
       "item_kind": "trait",
-      "line": 209,
+      "line": 211,
       "symbol": "vibe_resolver::VersionEnumerator"
     },
     {
@@ -4582,42 +4610,42 @@
       "crate_name": "vibe-resolver",
       "file": "crates/vibe-resolver/src/embedded_provider.rs",
       "item_kind": "struct",
-      "line": 31,
+      "line": 41,
       "symbol": "vibe_resolver::embedded_provider::EmbeddedProvider"
     },
     {
       "crate_name": "vibe-resolver",
       "file": "crates/vibe-resolver/src/embedded_provider.rs",
       "item_kind": "fn",
-      "line": 92,
+      "line": 108,
       "symbol": "vibe_resolver::embedded_provider::EmbeddedProvider<'a>::fetch_manifest"
     },
     {
       "crate_name": "vibe-resolver",
       "file": "crates/vibe-resolver/src/embedded_provider.rs",
       "item_kind": "fn",
-      "line": 104,
+      "line": 120,
       "symbol": "vibe_resolver::embedded_provider::EmbeddedProvider<'a>::list_versions"
     },
     {
       "crate_name": "vibe-resolver",
       "file": "crates/vibe-resolver/src/embedded_provider.rs",
       "item_kind": "fn",
-      "line": 87,
+      "line": 103,
       "symbol": "vibe_resolver::embedded_provider::EmbeddedProvider<'a>::resolve_version"
     },
     {
       "crate_name": "vibe-resolver",
       "file": "crates/vibe-resolver/src/embedded_provider.rs",
       "item_kind": "fn",
-      "line": 439,
+      "line": 455,
       "symbol": "vibe_resolver::embedded_provider::tests::short_circuit_falls_through_when_embedded_absent"
     },
     {
       "crate_name": "vibe-resolver",
       "file": "crates/vibe-resolver/src/embedded_provider.rs",
       "item_kind": "fn",
-      "line": 412,
+      "line": 428,
       "symbol": "vibe_resolver::embedded_provider::tests::short_circuit_stops_at_the_first_serving_provider"
     },
     {
@@ -4752,6 +4780,55 @@
       "item_kind": "struct",
       "line": 25,
       "symbol": "vibe_resolver::fixpoint_model::ModelPackage"
+    },
+    {
+      "crate_name": "vibe-resolver",
+      "file": "crates/vibe-resolver/src/local_composite_provider.rs",
+      "item_kind": "mod",
+      "line": 20,
+      "symbol": "vibe_resolver::local_composite_provider"
+    },
+    {
+      "crate_name": "vibe-resolver",
+      "file": "crates/vibe-resolver/src/local_composite_provider.rs",
+      "item_kind": "fn",
+      "line": 65,
+      "symbol": "vibe_resolver::local_composite_provider::LocalCompositeProvider<'a>::fetch_manifest"
+    },
+    {
+      "crate_name": "vibe-resolver",
+      "file": "crates/vibe-resolver/src/local_composite_provider.rs",
+      "item_kind": "fn",
+      "line": 77,
+      "symbol": "vibe_resolver::local_composite_provider::LocalCompositeProvider<'a>::list_versions"
+    },
+    {
+      "crate_name": "vibe-resolver",
+      "file": "crates/vibe-resolver/src/local_composite_provider.rs",
+      "item_kind": "fn",
+      "line": 60,
+      "symbol": "vibe_resolver::local_composite_provider::LocalCompositeProvider<'a>::resolve_version"
+    },
+    {
+      "crate_name": "vibe-resolver",
+      "file": "crates/vibe-resolver/src/local_composite_provider.rs",
+      "item_kind": "fn",
+      "line": 224,
+      "symbol": "vibe_resolver::local_composite_provider::tests::absent_in_first_falls_through_to_second"
+    },
+    {
+      "crate_name": "vibe-resolver",
+      "file": "crates/vibe-resolver/src/local_composite_provider.rs",
+      "item_kind": "fn",
+      "line": 251,
+      "symbol": "vibe_resolver::local_composite_provider::tests::list_versions_unions_across_both_providers"
+    },
+    {
+      "crate_name": "vibe-resolver",
+      "file": "crates/vibe-resolver/src/local_composite_provider.rs",
+      "item_kind": "fn",
+      "line": 196,
+      "symbol": "vibe_resolver::local_composite_provider::tests::project_local_wins_over_embedded_on_a_clash"
     },
     {
       "crate_name": "vibe-resolver",
@@ -4925,7 +5002,7 @@
       "crate_name": "vibe-resolver",
       "file": "crates/vibe-resolver/tests/embedded_provider.rs",
       "item_kind": "fn",
-      "line": 37,
+      "line": 38,
       "symbol": "vibe_resolver::tests::embedded_provider::embedded_registry_answers_alone_when_no_declared_walk"
     },
     {
@@ -6362,6 +6439,57 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-cli/src/commands/install/flag_tests.rs",
+      "from_symbol": "vibe_cli::commands::install::flag_tests::empty_manifest",
+      "line": 55,
+      "provenance": "authored",
+      "uri": "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
+      "verb": "deviates",
+      "reason": "no-unwrap-gate: a test fixture over a static valid-manifest literal — parse_str cannot fail on this input; the .unwrap() is a one-off assertion at the test-fixture boundary, not domain logic."
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/install/flag_tests.rs",
+      "from_symbol": "vibe_cli::commands::install::flag_tests::offline_without_a_local_registry_bails_before_the_network",
+      "line": 100,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-030#knob",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/install/flag_tests.rs",
+      "from_symbol": "vibe_cli::commands::install::flag_tests::prefer_local_conflicts_with_no_prefer_local",
+      "line": 130,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-030#project-local",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/install/flag_tests.rs",
+      "from_symbol": "vibe_cli::commands::install::flag_tests::project_local_packages_activate_resolver_without_vibe_embedded",
+      "line": 158,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-030#project-local",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/install/flag_tests.rs",
+      "from_symbol": "vibe_cli::commands::install::flag_tests::short_circuit_conflicts_with_embedded_last",
+      "line": 69,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-030#knob",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/install/project_local.rs",
+      "from_symbol": "vibe_cli::commands::install::project_local",
+      "line": 18,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-030#project-local",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-cli/src/commands/install/report.rs",
       "from_symbol": "vibe_cli::commands::install::report",
       "line": 5,
@@ -6376,22 +6504,6 @@
       "provenance": "authored",
       "uri": "spec://vibevm/VIBEVM-SPEC#install-workflow-in-detail",
       "verb": "implements"
-    },
-    {
-      "file": "crates/vibe-cli/src/commands/install/resolver.rs",
-      "from_symbol": "vibe_cli::commands::install::resolver::flag_tests::offline_without_a_local_registry_bails_before_the_network",
-      "line": 490,
-      "provenance": "authored",
-      "uri": "spec://vibevm/modules/vibe-registry/PROP-030#knob",
-      "verb": "verifies"
-    },
-    {
-      "file": "crates/vibe-cli/src/commands/install/resolver.rs",
-      "from_symbol": "vibe_cli::commands::install::resolver::flag_tests::short_circuit_conflicts_with_embedded_last",
-      "line": 464,
-      "provenance": "authored",
-      "uri": "spec://vibevm/modules/vibe-registry/PROP-030#knob",
-      "verb": "verifies"
     },
     {
       "file": "crates/vibe-cli/src/commands/list.rs",
@@ -10554,7 +10666,7 @@
     {
       "file": "crates/vibe-registry/src/lib.rs",
       "from_symbol": "vibe_registry::CachedPackage::package_meta",
-      "line": 269,
+      "line": 280,
       "provenance": "authored",
       "uri": "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
       "verb": "deviates",
@@ -11019,7 +11131,7 @@
     {
       "file": "crates/vibe-resolver/src/lib.rs",
       "from_symbol": "vibe_resolver::DepProvider",
-      "line": 192,
+      "line": 194,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#solver",
       "verb": "implements"
@@ -11027,7 +11139,7 @@
     {
       "file": "crates/vibe-resolver/src/lib.rs",
       "from_symbol": "vibe_resolver::DepProviderError",
-      "line": 323,
+      "line": 325,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#failure-discriminator",
       "verb": "implements"
@@ -11035,7 +11147,7 @@
     {
       "file": "crates/vibe-resolver/src/lib.rs",
       "from_symbol": "vibe_resolver::DepSolver",
-      "line": 287,
+      "line": 289,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#solver",
       "verb": "implements"
@@ -11043,7 +11155,7 @@
     {
       "file": "crates/vibe-resolver/src/lib.rs",
       "from_symbol": "vibe_resolver::DepSolver",
-      "line": 288,
+      "line": 290,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#solver-upgrade",
       "verb": "deviates",
@@ -11052,7 +11164,7 @@
     {
       "file": "crates/vibe-resolver/src/lib.rs",
       "from_symbol": "vibe_resolver::ResolvedGraph",
-      "line": 132,
+      "line": 134,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#solver-upgrade",
       "verb": "implements"
@@ -11060,7 +11172,7 @@
     {
       "file": "crates/vibe-resolver/src/lib.rs",
       "from_symbol": "vibe_resolver::ResolvedGraph::find",
-      "line": 147,
+      "line": 149,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-registry/PROP-008#identity",
       "verb": "implements"
@@ -11068,7 +11180,7 @@
     {
       "file": "crates/vibe-resolver/src/lib.rs",
       "from_symbol": "vibe_resolver::ResolvedNode",
-      "line": 93,
+      "line": 95,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#lockfile",
       "verb": "implements"
@@ -11076,7 +11188,7 @@
     {
       "file": "crates/vibe-resolver/src/lib.rs",
       "from_symbol": "vibe_resolver::ResolvedNode",
-      "line": 92,
+      "line": 94,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-registry/PROP-008#identity",
       "verb": "implements"
@@ -11084,7 +11196,7 @@
     {
       "file": "crates/vibe-resolver/src/lib.rs",
       "from_symbol": "vibe_resolver::SolveError",
-      "line": 387,
+      "line": 389,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#capability",
       "verb": "implements"
@@ -11092,7 +11204,7 @@
     {
       "file": "crates/vibe-resolver/src/lib.rs",
       "from_symbol": "vibe_resolver::SolveError",
-      "line": 388,
+      "line": 390,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-017#unsatisfiable",
       "verb": "implements"
@@ -11100,7 +11212,7 @@
     {
       "file": "crates/vibe-resolver/src/lib.rs",
       "from_symbol": "vibe_resolver::VersionEnumerator",
-      "line": 243,
+      "line": 245,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-017#provider-enrichment",
       "verb": "implements"
@@ -11358,7 +11470,7 @@
     {
       "file": "crates/vibe-resolver/src/embedded_provider.rs",
       "from_symbol": "vibe_resolver::embedded_provider::EmbeddedProvider",
-      "line": 39,
+      "line": 51,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-registry/PROP-030#precedence",
       "verb": "implements"
@@ -11366,7 +11478,7 @@
     {
       "file": "crates/vibe-resolver/src/embedded_provider.rs",
       "from_symbol": "vibe_resolver::embedded_provider::EmbeddedProvider<'a>::fetch_manifest",
-      "line": 92,
+      "line": 108,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-registry/PROP-030#precedence",
       "verb": "implements"
@@ -11374,7 +11486,7 @@
     {
       "file": "crates/vibe-resolver/src/embedded_provider.rs",
       "from_symbol": "vibe_resolver::embedded_provider::EmbeddedProvider<'a>::list_versions",
-      "line": 104,
+      "line": 120,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-017#provider-enrichment",
       "verb": "implements"
@@ -11382,7 +11494,7 @@
     {
       "file": "crates/vibe-resolver/src/embedded_provider.rs",
       "from_symbol": "vibe_resolver::embedded_provider::EmbeddedProvider<'a>::resolve_version",
-      "line": 87,
+      "line": 103,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-registry/PROP-030#precedence",
       "verb": "implements"
@@ -11390,7 +11502,7 @@
     {
       "file": "crates/vibe-resolver/src/embedded_provider.rs",
       "from_symbol": "vibe_resolver::embedded_provider::tests::short_circuit_falls_through_when_embedded_absent",
-      "line": 440,
+      "line": 456,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-registry/PROP-030#knob",
       "verb": "verifies"
@@ -11398,7 +11510,7 @@
     {
       "file": "crates/vibe-resolver/src/embedded_provider.rs",
       "from_symbol": "vibe_resolver::embedded_provider::tests::short_circuit_stops_at_the_first_serving_provider",
-      "line": 413,
+      "line": 429,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-registry/PROP-030#knob",
       "verb": "verifies"
@@ -11554,6 +11666,64 @@
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#conditional-deps",
       "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-resolver/src/local_composite_provider.rs",
+      "from_symbol": "vibe_resolver::local_composite_provider",
+      "line": 20,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-030#project-local",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-resolver/src/local_composite_provider.rs",
+      "from_symbol": "vibe_resolver::local_composite_provider::LocalCompositeProvider<'a>::fetch_manifest",
+      "line": 65,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-030#project-local",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-resolver/src/local_composite_provider.rs",
+      "from_symbol": "vibe_resolver::local_composite_provider::LocalCompositeProvider<'a>::list_versions",
+      "line": 83,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-resolver/PROP-017#provider-enrichment",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-resolver/src/local_composite_provider.rs",
+      "from_symbol": "vibe_resolver::local_composite_provider::LocalCompositeProvider<'a>::resolve_version",
+      "line": 60,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-030#project-local",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-resolver/src/local_composite_provider.rs",
+      "from_symbol": "vibe_resolver::local_composite_provider::tests::absent_in_first_falls_through_to_second",
+      "line": 229,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-030#project-local",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-resolver/src/local_composite_provider.rs",
+      "from_symbol": "vibe_resolver::local_composite_provider::tests::list_versions_unions_across_both_providers",
+      "line": 256,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-resolver/PROP-017#provider-enrichment",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-resolver/src/local_composite_provider.rs",
+      "from_symbol": "vibe_resolver::local_composite_provider::tests::project_local_wins_over_embedded_on_a_clash",
+      "line": 201,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-030#project-local",
+      "verb": "verifies",
+      "pinned_r": 1
     },
     {
       "file": "crates/vibe-resolver/src/local_registry_provider.rs",
@@ -11776,7 +11946,7 @@
     {
       "file": "crates/vibe-resolver/tests/embedded_provider.rs",
       "from_symbol": "vibe_resolver::tests::embedded_provider::embedded_registry_answers_alone_when_no_declared_walk",
-      "line": 38,
+      "line": 39,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-registry/PROP-030#precedence",
       "verb": "verifies"
@@ -19489,7 +19659,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:7f4fc301916006ae10b203d9a61acf2ca9a9f6592c5311a22ceaedf5f32788ff",
+      "content_hash": "sha256:4311cffd77547e6bab8bbee0fd063cd06611346bf7cc7923ef704ff4ac77659d",
       "doc_path": "modules/vibe-registry/PROP-030",
       "file": "spec/modules/vibe-registry/PROP-030-embedded-registry.md",
       "heading": "PROP-030 — The embedded registry",
@@ -19525,7 +19695,7 @@
     },
     {
       "anchor": "precedence",
-      "content_hash": "sha256:f43606e2494f303ee7a77538b37478a57dff41bc434ec93811f825881623c89a",
+      "content_hash": "sha256:486cc4fecfc56d76acc70dcb86f09031f0acc6262e61153912833c60b0d4b340",
       "doc_path": "modules/vibe-registry/PROP-030",
       "file": "spec/modules/vibe-registry/PROP-030-embedded-registry.md",
       "heading": "3. Precedence",
@@ -19543,7 +19713,7 @@
     },
     {
       "anchor": "terminology",
-      "content_hash": "sha256:dfb7bc35b079812a5aea7615249120097df0fab77fba93d7da52185d0149b497",
+      "content_hash": "sha256:bb090270557c3bc08b451e813c18dee10a24a7e94474f53150c1e7011b95f320",
       "doc_path": "modules/vibe-registry/PROP-030",
       "file": "spec/modules/vibe-registry/PROP-030-embedded-registry.md",
       "heading": "3.2 Terminology — `embedded` vs `local`",
@@ -19551,21 +19721,30 @@
       "uri": "spec://vibevm/modules/vibe-registry/PROP-030#terminology"
     },
     {
+      "anchor": "project-local",
+      "content_hash": "sha256:3d69a78a77bdfced4757b647323e2b8baa1210b28b734a11395d2b3fb11d268d",
+      "doc_path": "modules/vibe-registry/PROP-030",
+      "file": "spec/modules/vibe-registry/PROP-030-embedded-registry.md",
+      "heading": "3.3 Project-local sources",
+      "line": 143,
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-030#project-local"
+    },
+    {
       "anchor": "lock",
-      "content_hash": "sha256:8dc2247faeaf0c26eb7ae28ef027d62b34858753e99c847a52fa2732d64b9db4",
+      "content_hash": "sha256:bc96172e7512d8814d2e91a488253ef891eb3a52b9ac6cb9f160e91b5a2e9439",
       "doc_path": "modules/vibe-registry/PROP-030",
       "file": "spec/modules/vibe-registry/PROP-030-embedded-registry.md",
       "heading": "4. The lock",
-      "line": 141,
+      "line": 184,
       "uri": "spec://vibevm/modules/vibe-registry/PROP-030#lock"
     },
     {
       "anchor": "guard",
-      "content_hash": "sha256:498d83ca379122f69ab24badafc04ee82dc6c0a5ee2e9eae880958dd7134cf90",
+      "content_hash": "sha256:d2e81e65557c43dc3a61c68e9b953595c1ccdf951a99c6f1e4115a77e6ecf7a5",
       "doc_path": "modules/vibe-registry/PROP-030",
       "file": "spec/modules/vibe-registry/PROP-030-embedded-registry.md",
       "heading": "5. Reproducibility guard",
-      "line": 152,
+      "line": 201,
       "uri": "spec://vibevm/modules/vibe-registry/PROP-030#guard"
     },
     {
@@ -19574,7 +19753,7 @@
       "doc_path": "modules/vibe-registry/PROP-030",
       "file": "spec/modules/vibe-registry/PROP-030-embedded-registry.md",
       "heading": "6. Discoverability",
-      "line": 170,
+      "line": 224,
       "uri": "spec://vibevm/modules/vibe-registry/PROP-030#doctor"
     },
     {
@@ -19583,7 +19762,7 @@
       "doc_path": "modules/vibe-registry/PROP-030",
       "file": "spec/modules/vibe-registry/PROP-030-embedded-registry.md",
       "heading": "7. Implementation hooks",
-      "line": 180,
+      "line": 234,
       "uri": "spec://vibevm/modules/vibe-registry/PROP-030#impl"
     },
     {
@@ -19592,16 +19771,16 @@
       "doc_path": "modules/vibe-registry/PROP-030",
       "file": "spec/modules/vibe-registry/PROP-030-embedded-registry.md",
       "heading": "8. Edge cases",
-      "line": 201,
+      "line": 255,
       "uri": "spec://vibevm/modules/vibe-registry/PROP-030#edges"
     },
     {
       "anchor": "decisions",
-      "content_hash": "sha256:dd1bcfb6f009329915e269a19e52387f9dc52ce6a292e4e013c99dd3a5f41803",
+      "content_hash": "sha256:7d03ff8956ee06fb729813a9407194109373163a17daa549714607eb1a671446",
       "doc_path": "modules/vibe-registry/PROP-030",
       "file": "spec/modules/vibe-registry/PROP-030-embedded-registry.md",
       "heading": "9. Decisions",
-      "line": 213,
+      "line": 267,
       "uri": "spec://vibevm/modules/vibe-registry/PROP-030#decisions"
     },
     {
@@ -23133,6 +23312,18 @@
       "message": "edge `vibe_cli::cli::prefs` --implements--> `spec://vibevm/modules/vibe-settings/PROP-040#prefs-command`: no spec unit carries this anchor"
     },
     {
+      "code": "pin-into-unmarked-unit",
+      "file": "crates/vibe-cli/src/commands/install/flag_tests.rs",
+      "line": 130,
+      "message": "edge `vibe_cli::commands::install::flag_tests::prefer_local_conflicts_with_no_prefer_local` pins r1 but `spec://vibevm/modules/vibe-registry/PROP-030#project-local` carries no kind/revision line yet"
+    },
+    {
+      "code": "pin-into-unmarked-unit",
+      "file": "crates/vibe-cli/src/commands/install/flag_tests.rs",
+      "line": 158,
+      "message": "edge `vibe_cli::commands::install::flag_tests::project_local_packages_activate_resolver_without_vibe_embedded` pins r1 but `spec://vibevm/modules/vibe-registry/PROP-030#project-local` carries no kind/revision line yet"
+    },
+    {
       "code": "dangling-edge",
       "file": "crates/vibe-cli/src/commands/prefs/check.rs",
       "line": 3,
@@ -23263,6 +23454,18 @@
       "file": "crates/vibe-cli/src/commands/prefs/tui/search/render.rs",
       "line": 11,
       "message": "edge `vibe_cli::commands::prefs::tui::search::render` --implements--> `spec://vibevm/modules/vibe-settings/PROP-041#settings-search`: no spec unit carries this anchor"
+    },
+    {
+      "code": "pin-into-unmarked-unit",
+      "file": "crates/vibe-resolver/src/local_composite_provider.rs",
+      "line": 201,
+      "message": "edge `vibe_resolver::local_composite_provider::tests::project_local_wins_over_embedded_on_a_clash` pins r1 but `spec://vibevm/modules/vibe-registry/PROP-030#project-local` carries no kind/revision line yet"
+    },
+    {
+      "code": "pin-into-unmarked-unit",
+      "file": "crates/vibe-resolver/src/local_composite_provider.rs",
+      "line": 229,
+      "message": "edge `vibe_resolver::local_composite_provider::tests::absent_in_first_falls_through_to_second` pins r1 but `spec://vibevm/modules/vibe-registry/PROP-030#project-local` carries no kind/revision line yet"
     },
     {
       "code": "dangling-edge",
