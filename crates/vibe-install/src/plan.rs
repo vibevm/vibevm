@@ -463,7 +463,7 @@ fn try_in_place_incremental(
         is_git_source: false,
         is_path_source: false,
         is_embedded: false,
-            is_local: false,
+        is_local: false,
         via_redirect: None,
     };
     Ok(Some(Fetched {
