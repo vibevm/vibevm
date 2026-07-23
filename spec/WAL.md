@@ -1,5 +1,63 @@
 # WAL — Project Continuation State
 
+## CHECKPOINT 2026-07-23 — PROJECT-PACKAGES AUTO-DISCOVERY (PROP-030 §3.3)
+
+_Updated: 2026-07-23 — the **project-packages auto-discovery** feature landed on
+`main`, **floor-green** (`cargo fmt --check` + `cargo clippy --workspace
+--all-targets` + `cargo test --workspace` + `conform check` 0 findings +
+`specmap` regen + full `self-check.sh`), end-to-end smoke-verified. The
+fundamental answer to "should `packages/` be a standard not just for vibevm
+itself but for any project?": **yes**, via a new tier in the local-registry
+family alongside vibe-embedded._
+
+**The feature.** Any project carrying `<project_root>/packages/` now resolves
+from it automatically — no `[[registry]]` block, no `~/.vibe/registry.toml`
+entry, no `--registry <path>`. The local-registry family built by
+`build_install_resolver` gains project-local as its first member (ahead of
+vibe-embedded), so a developer's own in-tree packages win a clash inside the
+family. Discovery is **independent of the running vibe's install origin**
+(cargo run / test / distribution / source all see the same packages/) and
+**NOT CI-suppressed** (it is per-project and portable).
+
+**The architecture.** A new `LocalCompositeProvider` cell
+(vibe-resolver) composes an ordered list of `LocalRegistryProvider`s, so
+`EmbeddedProvider` stays structurally 2-way (composite-vs-declared) and the
+multiplicity is localised. `InstallResolver::Embedded.locals` is now a
+`Vec<LocalRegistry>` ordered `[project-local?, vibe-embedded?]`, with a
+`project_local_count` tracking which leading entries are project-local — so
+the fetch path tags `is_local` (portable, `source_kind = "local"`) vs
+`is_embedded` (machine-local, `source_kind = "embedded"`).
+
+**The spec.** PROP-030 gained §3.3 (Project-local sources {#project-local}),
+§3.2 / §9 D2 revised (the reserved `--prefer-local` name now lands for the
+narrower project-packages semantics; arbitrary user-repos remain a future
+expansion under a different name), §4 / §5 updated (source_kind = "local" is
+portable; the reproducibility guard warns only on "embedded", not "local").
+
+**Commits (this feature):** `dea2216` LocalCompositeProvider · `47281fc`
+EmbeddedProvider over composite · `fe1939b` SourceKind::Local + is_local ·
+`cbe406c` project_local discovery + build_install_resolver takes project_root ·
+`eeaaec6` --prefer-local / --no-prefer-local flags · `c5da092` reproducibility
+guard test (Local is portable, no warn) · `60e5cfc` fmt touch-ups · `1d492c3`
+plan.rs budget fix · `302b37c` spec §3.3 + flag_tests split · `c3823f3` specmap
+regen · `82e7221` clippy/conform touch-ups · `efd12c3` provenance split
+(project-local → source_kind=local).
+
+**End-to-end smoke (cargo run):** a tempdir project with
+`packages/org.vibevm/wal/v0.1.0/vibe.toml` and `vibe.toml` carrying only
+`[requires.packages] "flow:org.vibevm/wal" = "^0.1.0"` (no `[[registry]]`,
+global registry moved aside) resolves + materialises; the resulting
+`vibe.lock` carries `source_kind = "local"` with `source_url` pointing at the
+project's own `packages/...`.
+
+**What this unblocks.** vibevm-term can now place its product packages under
+`packages/org.vibevm.term/...` (instead of the root-level `org.vibevm.term/` +
+`~/.vibe/registry.toml` hack), and any downstream consumer gets the same
+treatment for free. The follow-up to actually move vibevm-term's layout is the
+next step.
+
+**No blocker.** Push pending the owner's go.
+
 ## CHECKPOINT 2026-07-21 — VIBETERM/VIBEFRAME/VIBE-LAUNCHER EXTRACTION (Phase 2a host-side landed)
 
 _Updated: 2026-07-21 — the **terminal-product extraction** Phase 2a landed on `main`: the
