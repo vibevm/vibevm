@@ -43,6 +43,14 @@ pub(crate) enum InstallResolver {
     /// honours this ordering: the first local wins a clash inside the family.
     Embedded {
         locals: Vec<LocalRegistry>,
+        /// PROP-030 §3.3: how many leading entries of `locals` are the
+        /// project-local registry (0 when only vibe-embedded is in the
+        /// family, 1 when project-packages were discovered). The fetch path
+        /// tags the resolved package `is_local` (portable) for an index < this
+        /// count, else `is_embedded` (machine-local) — so the lock records the
+        /// right `source_kind` and the reproducibility guard fires only for
+        /// the vibe-embedded half.
+        project_local_count: usize,
         declared: Option<Box<MultiRegistryResolver>>,
         precedence: EmbeddedPrecedence,
         /// PROP-030 §3.1: when set (`--embedded-short-circuit`), version
@@ -80,6 +88,7 @@ impl InstallSource for InstallResolver {
             }
             InstallResolver::Embedded {
                 locals,
+                project_local_count,
                 declared,
                 precedence,
                 ..
@@ -88,19 +97,24 @@ impl InstallSource for InstallResolver {
                     // Walk the local family in order (project-local first,
                     // then vibe-embedded). The first local that serves the
                     // coordinate wins; an absence falls through to the next;
-                    // any real failure halts. Provenance tagging (embedded
-                    // vs project-local) is refined in `record.rs` from the
-                    // `source_uri` — here every local hit is tagged
-                    // `is_embedded` so the existing reproducibility guard
-                    // fires for the machine-local vibe-embedded case; the
-                    // project-local distinction lands in the lock-record
-                    // mapping (PROP-030 §3.3 / §4).
+                    // any real failure halts. Provenance tagging:
+                    //   index < project_local_count → is_local (portable,
+                    //     per-project packages/ — PROP-030 §3.3)
+                    //   else → is_embedded (machine-local, vibe's in-tree
+                    //     packages — PROP-030 §2)
+                    // so the lock records the right source_kind and the
+                    // reproducibility guard fires only for the vibe-embedded
+                    // half.
                     let mut last_absent: Option<RegistryError> = None;
-                    for local in locals {
+                    for (idx, local) in locals.iter().enumerate() {
                         match local.resolve(pkgref) {
                             Ok(resolved) => {
                                 let mut cached = local.fetch(&resolved, cache_root)?;
-                                cached.is_embedded = true;
+                                if idx < *project_local_count {
+                                    cached.is_local = true;
+                                } else {
+                                    cached.is_embedded = true;
+                                }
                                 return Ok(cached);
                             }
                             Err(e) if is_registry_absent(&e) => {
@@ -398,6 +412,10 @@ pub(crate) fn build_install_resolver(
     // The family is ordered project-local first (a developer's own in-tree
     // packages win a clash), then vibe-embedded.
     let mut locals: Vec<LocalRegistry> = Vec::new();
+    // project_local_count is the number of leading locals that are
+    // project-local (0 or 1). Tracked so the fetch path can tag the
+    // resolved package is_local (portable) vs is_embedded (machine-local).
+    let mut project_local_count: usize = 0;
     if !args.no_prefer_local
         && let Some(root) = super::project_packages_root(project_root)
     {
@@ -408,8 +426,9 @@ pub(crate) fn build_install_resolver(
                 root.display()
             )
         })?);
+        project_local_count = 1;
     }
-    if let Some(root) = embedded_root.filter(|_| !args.no_default_registry) {
+    if let Some(root) = embedded_root.filter(|_: &&Path| !args.no_default_registry) {
         let root = crate::commands::init::strip_unc_public(root.to_path_buf());
         locals.push(crate::registry::local_registry(root.clone()).map_err(|e| {
             anyhow!(
@@ -441,6 +460,7 @@ pub(crate) fn build_install_resolver(
         };
         return Ok(InstallResolver::Embedded {
             locals,
+            project_local_count,
             declared,
             precedence,
             short_circuit: args.embedded_short_circuit,
