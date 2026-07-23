@@ -20,8 +20,7 @@ use vibe_registry::{LocalRegistry, MultiRegistryResolver, RegistryError};
 use vibe_resolver::sat::Sat;
 use vibe_resolver::{
     DepSolver, EmbeddedPrecedence, EmbeddedProvider, LocalCompositeProvider, LocalRegistryProvider,
-    MultiRegistryProvider,
-    NaiveDepSolver, ResolvoDepSolver,
+    MultiRegistryProvider, NaiveDepSolver, ResolvoDepSolver,
 };
 
 /// Where a selected value came from. The full chain is
@@ -216,7 +215,9 @@ pub fn dep_solver<'a>(
                 short_circuit,
             },
         ) => Box::new(ResolvoDepSolver::new(EmbeddedProvider::new(
-            LocalCompositeProvider::new(locals.into_iter().map(LocalRegistryProvider::new).collect()),
+            LocalCompositeProvider::new(
+                locals.into_iter().map(LocalRegistryProvider::new).collect(),
+            ),
             declared.map(MultiRegistryProvider::new),
             precedence,
             short_circuit,
@@ -231,7 +232,9 @@ pub fn dep_solver<'a>(
                 short_circuit,
             },
         ) => Box::new(NaiveDepSolver::new(EmbeddedProvider::new(
-            LocalCompositeProvider::new(locals.into_iter().map(LocalRegistryProvider::new).collect()),
+            LocalCompositeProvider::new(
+                locals.into_iter().map(LocalRegistryProvider::new).collect(),
+            ),
             declared.map(MultiRegistryProvider::new),
             precedence,
             short_circuit,
@@ -246,7 +249,9 @@ pub fn dep_solver<'a>(
                 short_circuit,
             },
         ) => Box::new(Sat::new(EmbeddedProvider::new(
-            LocalCompositeProvider::new(locals.into_iter().map(LocalRegistryProvider::new).collect()),
+            LocalCompositeProvider::new(
+                locals.into_iter().map(LocalRegistryProvider::new).collect(),
+            ),
             declared.map(MultiRegistryProvider::new),
             precedence,
             short_circuit,

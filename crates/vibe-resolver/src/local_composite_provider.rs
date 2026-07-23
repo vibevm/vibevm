@@ -52,7 +52,10 @@ impl<'a> LocalCompositeProvider<'a> {
     /// helpers (`resolve_first` / `union_versions` / `first_served_versions`)
     /// that take `&[&dyn VersionEnumerator]`.
     fn ordered(&self) -> Vec<&dyn VersionEnumerator> {
-        self.providers.iter().map(|p| p as &dyn VersionEnumerator).collect()
+        self.providers
+            .iter()
+            .map(|p| p as &dyn VersionEnumerator)
+            .collect()
     }
 }
 
@@ -175,7 +178,13 @@ mod tests {
     /// Seed `<root>/<group>/<name>/v<ver>/vibe.toml` and return the
     /// `LocalRegistry` over `root`. The package carries `label` in its
     /// description so a test can tell which provider answered.
-    fn seed(root: &std::path::Path, group: &str, name: &str, ver: &str, label: &str) -> LocalRegistry {
+    fn seed(
+        root: &std::path::Path,
+        group: &str,
+        name: &str,
+        ver: &str,
+        label: &str,
+    ) -> LocalRegistry {
         let dir = root.join(group).join(name).join(format!("v{ver}"));
         fs::create_dir_all(&dir).unwrap();
         fs::write(
@@ -202,8 +211,20 @@ mod tests {
     fn project_local_wins_over_embedded_on_a_clash() {
         let project_tmp = tempfile::tempdir().unwrap();
         let embedded_tmp = tempfile::tempdir().unwrap();
-        let project = seed(project_tmp.path(), "org.vibevm", "wal", "0.2.0", "project-local");
-        let embedded = seed(embedded_tmp.path(), "org.vibevm", "wal", "0.2.0", "vibe-embedded");
+        let project = seed(
+            project_tmp.path(),
+            "org.vibevm",
+            "wal",
+            "0.2.0",
+            "project-local",
+        );
+        let embedded = seed(
+            embedded_tmp.path(),
+            "org.vibevm",
+            "wal",
+            "0.2.0",
+            "vibe-embedded",
+        );
 
         let composite = LocalCompositeProvider::new(vec![
             LocalRegistryProvider::new(&project),
@@ -231,8 +252,20 @@ mod tests {
         let project_tmp = tempfile::tempdir().unwrap();
         let embedded_tmp = tempfile::tempdir().unwrap();
         // project-local carries `redb`; embedded carries `wal`.
-        let project = seed(project_tmp.path(), "org.vibevm", "redb", "0.1.0", "project-local");
-        let embedded = seed(embedded_tmp.path(), "org.vibevm", "wal", "0.1.0", "vibe-embedded");
+        let project = seed(
+            project_tmp.path(),
+            "org.vibevm",
+            "redb",
+            "0.1.0",
+            "project-local",
+        );
+        let embedded = seed(
+            embedded_tmp.path(),
+            "org.vibevm",
+            "wal",
+            "0.1.0",
+            "vibe-embedded",
+        );
 
         let composite = LocalCompositeProvider::new(vec![
             LocalRegistryProvider::new(&project),
@@ -259,7 +292,13 @@ mod tests {
         let embedded_tmp = tempfile::tempdir().unwrap();
         // both carry `wal` at different versions
         let project = seed(project_tmp.path(), "org.vibevm", "wal", "0.3.0", "project");
-        let embedded = seed(embedded_tmp.path(), "org.vibevm", "wal", "0.2.0", "embedded");
+        let embedded = seed(
+            embedded_tmp.path(),
+            "org.vibevm",
+            "wal",
+            "0.2.0",
+            "embedded",
+        );
 
         let composite = LocalCompositeProvider::new(vec![
             LocalRegistryProvider::new(&project),
@@ -281,7 +320,13 @@ mod tests {
         let project_tmp = tempfile::tempdir().unwrap();
         let embedded_tmp = tempfile::tempdir().unwrap();
         let project = seed(project_tmp.path(), "org.vibevm", "wal", "0.1.0", "project");
-        let embedded = seed(embedded_tmp.path(), "org.vibevm", "wal", "0.1.0", "embedded");
+        let embedded = seed(
+            embedded_tmp.path(),
+            "org.vibevm",
+            "wal",
+            "0.1.0",
+            "embedded",
+        );
         // Corrupt the project-local manifest so reading it fails hard.
         let path = project_tmp
             .path()

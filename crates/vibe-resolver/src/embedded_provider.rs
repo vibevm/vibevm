@@ -21,8 +21,7 @@ use vibe_core::manifest::Manifest;
 use vibe_core::{Group, PackageRef};
 
 use crate::{
-    DepProvider, DepProviderError, LocalCompositeProvider, MultiRegistryProvider,
-    VersionEnumerator,
+    DepProvider, DepProviderError, LocalCompositeProvider, MultiRegistryProvider, VersionEnumerator,
 };
 
 /// Which side wins a coordinate both the embedded registry and the declared
