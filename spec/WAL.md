@@ -4,20 +4,28 @@ _Updated: 2026-07-24_
 
 ## Current phase
 
-**Progress Control (PROP-043) + the spec-actualization campaign — Phase A
-(scaffold) begins.** The 2026-07-24 owner design session ratified the design
-of an inline `<status>` markup system (stage/state/action/audience), the
-`vibe progress` tool (scan/check/report/mirror/weave/rescan/resume), the
-`campaigns/` zone with crash-safe journal+RESUME protocol, and a phased
-campaign (A–G) to mark, verify, stitch, and de-drift the whole spec tree.
-Contract: `spec/modules/vibe-progress/PROP-043-progress-markup.md` (DRAFT,
-awaiting owner ratification). Plan:
-`spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md`. Owner manual (RU):
-`spec/modules/vibe-progress/OWNER-GUIDE.md`. Key laws: paragraph-exhaustive
-campaign granularity, anchored-unit maintenance granularity, separable core
-(no vibevm deps), **no fractality for this campaign** (Fable = high-level,
-Opus = IMPL tasks, SPEC tasks by budget), verdicts live in cache/baseline
-never in markup, campaign zone excluded from scans/packaging.
+**Progress Control (PROP-043) — Phase A (scaffold) is COMPLETE; the
+spec-actualization campaign stands at the Phase B start line.** PROP-043 is
+RATIFIED (owner, 2026-07-24, in session) with one pilot amendment (§3.8:
+the preamble-less-H1 document marker). Landed and green: the standalone
+`progress-core` crate (gated, doctested seams, 25 tests + fixture law),
+the `vibe progress` adapter (scan / check --exhaustive / report / mirror /
+weave / rescan / resume), `campaigns/progress-2026-08/` with cache + state
+projections + generated RESUME.md, the zero-dep dashboard
+(`node tools/progress-dashboard/serve.mjs`, port 7043), and the pilot:
+three genres paragraph-exhaustively marked (PROP-006 freeze/done,
+SHRINK-PLAN-v0.1 freeze/done, spec/design/README doc/done — its index was
+found incomplete and fixed: first real drift caught). Full `self-check`
+green. Crash-recovery proven live: a real power cut left a zero-length
+cache.json; the fsync-before-rename + tolerant-load fixes came out of it.
+Key laws in force: paragraph-exhaustive campaign granularity,
+anchored-unit maintenance granularity, separable core (no vibe-* deps),
+**no fractality for this campaign** (Fable = high-level, Opus = IMPL
+tasks, SPEC tasks by budget), verdicts live in cache/baseline never in
+markup, campaign zone excluded from scans/packaging, the surface is
+called "dashboard" (never "storefront" — taken by the vibevm store).
+Plan: `spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md`. Owner manual
+(RU): `spec/modules/vibe-progress/OWNER-GUIDE.md`.
 
 Previously landed (2026-07-23): the **default registry migration** — the
 vibespecs GitHub + GitVerse `[[registry]]` pair moved from per-project
@@ -57,21 +65,23 @@ seeded by `ensure_default_global_registry()` at the CLI composition root.
 
 ## In progress
 
-**Spec-actualization campaign, Phase A (scaffold).** The document package
-landed this session (PROP-043 + campaign plan + owner guide + task
-templates). Not started yet: owner ratification of PROP-043, the core crate
-+ `vibe progress` adapter, the `campaigns/progress-2026-08/` skeleton, the
-zero-dep dashboard (`tools/progress-dashboard/`), the 2–3-file pilot markup.
-Phase A exit gate: floor green with the new crate, `check --exhaustive`
-correct on the pilot, dashboard renders, RESUME.md generates.
+Nothing mid-flight — Phase A closed cleanly; every Phase A commit is on
+`main` and mirrored. The campaign journal is empty by design (journal
+steps begin with Phase B batches).
 
 ## Next
 
-1. **Owner ratifies PROP-043** (or amends — amendments land before code).
-2. **Phase A build** per SPEC-ACTUALIZATION-CAMPAIGN §5: core crate,
-   `vibe progress`, campaign zone, dashboard, pilot.
-3. Then Phase B (paragraph-exhaustive markup of host `spec/`, 91 files,
-   Fable, batches of ~8–12).
+**Phase B — paragraph-exhaustive markup of the wave-1 corpus (host
+`spec/`, 91 files), executor Fable**, per SPEC-ACTUALIZATION-CAMPAIGN §5:
+
+1. B0: mechanical conversion of the ~55 legacy `**Status:**` lines into
+   document markers (script-assisted, one reviewed diff).
+2. B1…Bn: file batches of ~8–12 — markers + sense-preserving splits +
+   missing anchors + ledger findings in passing; semantic edits forbidden.
+   Wave-1 scope narrowing (only `spec/`) lands as `progress.toml` at the
+   repo root when B starts.
+3. Every campaign session starts by reading
+   `campaigns/progress-2026-08/run/RESUME.md` (or `vibe progress resume`).
 
 Parked follow-ups from earlier work (unchanged): vibe-vvm/term-vvm
 conformance-golden; Linux/macOS install smoke; arbitrary user-repos
