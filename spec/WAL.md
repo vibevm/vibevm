@@ -1,33 +1,36 @@
 # WAL — Project Continuation State
 
-_Updated: 2026-07-25 (session end, part 2 — scope narrowed by owner
-ruling; PROP-005 marked; 14 files / ~1 280 facts left in Phase B)_
+_Updated: 2026-07-25 (Phase B CLOSED mid-session — corpus fully marked,
+exit gate green; awaiting the owner's call to open Phase L)_
 
 ## Current phase
 
-**Progress Control (PROP-043) — Phase B at FACT grain, closing.** The
-owner ruled `spec/terraforms`, `spec/research`, `spec/neworder` **out of
-scope** («рефакторинги и исследования давным-давно» — verbatim in the
-plan LOG §9; `progress.toml` narrowed, commit `8901cd05`): scope is now
-**59 files / 4 894 facts**, expected `check` residue **12** (the
-design/README pilot — burns at its re-mark). B2 modules stand at
-**33/35** after PROP-005 (273→278 facts, batch 19 `e9d330f8`) and the
-late PROP-030 commit (`ff4ca088`); earlier the same day batches 8–18
-swept 18 modules files. **Remaining: PROP-003 (310) → PROP-002 (359) →
-design ×6 (README re-mark burns the 12 errors; structural-loader,
-loading-and-boot-model, action-system, workspace-and-qualified-naming,
-tui-visual-language) → authored boot pair (additive-only — user-owned)
-→ manual-tests ×3 → discipline/README.** Then the Phase B exit:
-`check --exhaustive` green over 59 files + floor + the §4 boundary
-ritual in the plan LOG; Phase C opening is the owner's call. Ledger: 29
-findings (the F-024…F-029 stale-header family + F-023 — one C/D sweep
-fixes all). Opus/DRIFT queue EMPTY. Journal fully closed (b2-prop-003
-opened-and-closed NOT STARTED). Key laws unchanged: fact-exhaustive
+**Progress Control (PROP-043) — Phase B CLOSED; Phase L awaits the
+owner's opening call.** The markup pass is complete: **58 files,
+4 880/4 880 facts marked, `progress check --exhaustive` clean (0
+errors), floor `self-check` all green (real exit 0)** — the §4
+boundary entry is in the plan LOG §9 with the commit map and the §8
+predictions check. Two owner rulings landed in session: **(1) Phase L
+(legacy relocation)** inserted between B and C — inventory every
+reference into `spec/terraforms|research|neworder|discipline` from the
+living corpus AND code (specmark, doctests), port the referenced facts
+into `common/design/modules/manual-tests` (new specs allowed), mark
+them, then `git mv` the four dirs to root `legacy-spec/`; ordering law:
+before Phase C so verification covers the ported facts; **(2)
+spec/discipline left the markup corpus** (the Discipline lives in the
+ai-native packages now) — scope went 59 → 58 files. B2 tail landed as
+batches 20–26: PROP-003 (superseded-arc split #3), PROP-002 (modules
+35/35), design cluster 6/6 (README re-mark burned the last 12 expected
+errors — the gate has read 0 since `cb6e55b0`), boot pair
+(additive-only), manual-tests ×3 (genre precedent: steps + Expected
+paragraphs are separate units). Ledger: **35 findings** (F-030…F-034
+new). Opus/DRIFT queue EMPTY. Key laws unchanged: fact-exhaustive
 granularity, anchored-when-marked, two registers, verdicts never in
 markup, **no fractality** (Fable = markup, Opus = DRIFT coding), engine
 pin `claude-opus-5`. Plan:
-`spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md`. The per-file
-loop, marking conventions, and trap list live in `CONTINUE.md`.
+`spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md`. Open review
+point for the owner: the plan file itself lives in `spec/terraforms/` —
+relocate mid-campaign or at close-out (before L5).
 
 ## Constraints — do not violate
 
@@ -42,14 +45,18 @@ loop, marking conventions, and trap list live in `CONTINUE.md`.
   sanctioned constructor site for embedded/local-composite providers.
 - **Boot pair marking.** `spec/boot/00-core.md` / `90-user.md` are
   user-owned: mark ADDITIVELY only (anchors + markers), never re-form
-  or deconstruct their prose.
+  or deconstruct their prose. (Their B2 markup honoured this —
+  line-for-line in-place edits only.)
 
 ## Done (collapsed — see `git log`)
 
-- **B2 batches 1–19 + scope ruling** — 33/35 modules files fact-marked;
-  scope 94→59; the campaign contract PROP-043 marks itself; grammar
-  precedents complete (tables, checkboxes, blockquote re-forms, REQ
-  grains, superseded arcs, `@impl/plan`).
+- **Phase B (full).** B0 conversion; B1/B1f common at fact grain; B2
+  batches 1–26 — modules 35/35, design 6/6, boot pair, manual-tests;
+  two scope narrowings (94→59→58); the campaign contract PROP-043
+  marks itself; grammar precedents complete (tables per cell, checkbox
+  anchors, blockquote re-forms per F-015, REQ/design register lines,
+  superseded arcs spec/done vs impl/done, `@impl/plan` phases,
+  manual-test step/Expected units, additive-only user-owned files).
 - DRIFT-001…005 through the loop 5/5 no-return; fact-links commission
   complete (PROP-014 §2.1, PROP-035 §5/§7.3, core v0.8.0, vibe-spec).
 - Earlier: default registry migration; PROP-030 §3.3 project-packages;
@@ -57,25 +64,24 @@ loop, marking conventions, and trap list live in `CONTINUE.md`.
 
 ## In progress
 
-Nothing mid-flight — every journal step closed. The B2 tail (14 files)
-is queued, not started; PROP-003 is the first file of the next session.
+Nothing mid-flight — every journal step closed. Phase B is closed;
+the next phase (L) opens only on the owner's word.
 
 ## Next
 
-1. **Finish Phase B (14 files, ~1 280 facts)** in the order recorded in
-   `CONTINUE.md` §"How to start the next session": PROP-003 (§2.2
-   carries a SUPERSEDED-by-PROP-017 blockquote — F-015 re-form;
-   superseded libsolv sections spec/done per the PROP-001 arc pattern)
-   → PROP-002 → design cluster (README re-mark first burns the last 12
-   expected errors) → boot pair (additive-only) → manual-tests →
-   discipline/README.
-2. **Phase B exit gate:** `progress check --exhaustive` green over the
-   59-file scope + `self-check` with the REAL exit code + the §4
-   boundary entry in the plan LOG (commit map, predictions per §5) +
-   plan status-line refresh. **Ask the owner before opening Phase C.**
-3. Opus queue EMPTY; candidate DRIFT material: the F-023…F-029
-   stale-header sweep (Phase C/D), F-016 modules README, F-020
-   OWNER-GUIDE, F-017 aiui scrollbar, engine-family minting.
+1. **Owner call: open Phase L (legacy relocation)** — the §5 Phase L
+   section in the plan carries the owner-ordered steps L1–L5
+   (reference inventory incl. specmark/doctests → fact discovery →
+   relocation into the living corpus, new specs allowed → fact-grain
+   markup + scope growth → `git mv` to `legacy-spec/`). Exit before
+   Phase C opens. Resolve in passing: does the campaign plan itself
+   move with `spec/terraforms/`, or at close-out?
+2. **Then Phase C (verification)** per the plan §5 — every marker gets
+   an evidence-backed verdict; the F-024…F-034 stale-header family is
+   prime drift material for C/D.
+3. Opus queue EMPTY; candidate DRIFT material unchanged: the
+   stale-header sweep (C/D), F-016 modules README, F-020 OWNER-GUIDE,
+   F-017 aiui scrollbar, engine-family minting.
 
 Parked follow-ups (unchanged): vibe-vvm/term-vvm conformance-golden;
 Linux/macOS install smoke; arbitrary user-repos design-doc; `vibe
@@ -83,13 +89,12 @@ doctor` project-local row.
 
 ## Known issues
 
-- **GitVerse SSH link DOWN (all of 2026-07-25).** Banner-exchange
-  timeout — network-level, not divergence: HTTPS `ls-remote` shows a
-  strict ancestor, no foreign commits. GitHub carries everything.
-  Recovery: plain `cargo xtask mirror` when SSH returns; NEVER
-  `--force`. Bound the attempts with
-  `GIT_SSH_COMMAND="ssh -o ConnectTimeout=15 -o BatchMode=yes"` — the
-  fan-out collects per-target failures and still pushes github.
+- **GitVerse SSH link DOWN (2026-07-25).** Banner-exchange timeout —
+  network-level, not divergence: HTTPS `ls-remote` shows a strict
+  ancestor, no foreign commits. GitHub carries everything. Recovery:
+  plain `cargo xtask mirror` when SSH returns; NEVER `--force`. Bound
+  attempts with `GIT_SSH_COMMAND="ssh -o ConnectTimeout=15 -o
+  BatchMode=yes"`.
 - **vibespecs 401 on this machine** — redbook + rust-ai-native resolve
   via vibe-embedded; consuming lockfiles carry
   `source_kind = "embedded"` and trip the reproducibility guard.
@@ -97,8 +102,8 @@ doctor` project-local row.
 
 ## Session context
 
-Next session opens with the resume phrase recorded in `CONTINUE.md`
-§"How to start the next session", boots per `CLAUDE.md`, reads
-`campaigns/progress-2026-08/run/RESUME.md` + the plan LOG §9, then
-re-opens `b2-prop-003` and works the per-file loop. `progress check`
-must stay at 12 expected errors until the design/README re-mark, then 0.
+Phase B closed mid-session with the boundary entry in the plan LOG §9;
+the session continues awaiting the owner's Phase L call. If this
+session ends here, the next one boots per `CLAUDE.md`, reads this WAL +
+the plan LOG §9 tail, and reports — Phase L does not open without the
+owner.
