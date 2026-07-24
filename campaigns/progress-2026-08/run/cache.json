@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-24T20:34:21Z",
+  "updated_at": "2026-07-24T20:42:35Z",
   "files": {
     "spec/boot/00-core.md": {
       "content_hash": "9430b035d1017950ec37c4ce85bab91155334b5fc55d3e1948138a4f6be8b0e5",
@@ -517,7 +517,7 @@
       "issue_count": 0
     },
     "spec/modules/vibe-cli/PROP-036-package-tree.md": {
-      "content_hash": "3c7ac38c62ba0f99bf2797c5f692768e41522b0b7fde79131776cacdbb6e1e03",
+      "content_hash": "cfedc0fe64762fe173e2764b04a719cd575a627798f83fceb969ef1b086ab0f1",
       "rollup": {
         "explicit": [
           "spec",
@@ -531,11 +531,11 @@
           "spec",
           "work"
         ],
-        "marker_count": 1,
-        "fact_count": 54,
-        "unmarked_facts": 54
+        "marker_count": 80,
+        "fact_count": 79,
+        "unmarked_facts": 0
       },
-      "marker_count": 1,
+      "marker_count": 80,
       "unit_count": 18,
       "issue_count": 0
     },
@@ -655,25 +655,25 @@
       "issue_count": 0
     },
     "spec/modules/vibe-mcp/PROP-027-mcp-packages.md": {
-      "content_hash": "b417f3c28bb1ccd47287a752b0cc39cf0a8996e8f603a2f64c760c62f7cc7c79",
+      "content_hash": "4a4186baed236d7cccc939a81773580fca7d7fcd74e75eafbb4ba793e5adae1a",
       "rollup": {
         "explicit": [
           "impl",
           "done"
         ],
         "computed": [
-          "impl",
-          "done"
+          "spec",
+          "work"
         ],
         "effective": [
           "impl",
           "done"
         ],
-        "marker_count": 1,
-        "fact_count": 53,
-        "unmarked_facts": 53
+        "marker_count": 76,
+        "fact_count": 75,
+        "unmarked_facts": 0
       },
-      "marker_count": 1,
+      "marker_count": 76,
       "unit_count": 12,
       "issue_count": 0
     },
