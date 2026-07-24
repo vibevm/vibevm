@@ -2,6 +2,7 @@
 
 | id | title | executor | status |
 |---|---|---|---|
+| DRIFT-001 | cache prunes records that leave the observed scope | opus | queued |
 
 DRIFT-NNN (coding, Opus) and SPEC-NNN (spec stitching, budget-dependent)
 task files live beside this index. Formats:

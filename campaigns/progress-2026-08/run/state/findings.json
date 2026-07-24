@@ -109,6 +109,24 @@
       "status": "open",
       "wave": 0,
       "note": "MCP-SOVEREIGNTY wave 6 deleted vibe-tcg whole and recorded 'PROP-026 superseded in topology, grammar kept normative'; PROP-026's own status line still says 'Module: vibe-tcg (new)' with no superseded notice."
+    },
+    {
+      "id": "F-013",
+      "from": "spec/common/PROP-018-agentic-standalone-modes.md",
+      "to": "crates/vibe-mcp/src/agentic.rs",
+      "type": "reality-mismatch",
+      "status": "open",
+      "wave": 0,
+      "note": "Status line says proposed 2026-06-16, but the S4 MVP is implemented: vibe agentic explain / vibe command / the [[skill]] section / the MCP agentic_explain tool all exist in the tree (found during B1 markup)."
+    },
+    {
+      "id": "F-014",
+      "from": "spec/common/PROP-000.md",
+      "to": "LICENSE.md",
+      "type": "reality-mismatch",
+      "status": "open",
+      "wave": 0,
+      "note": "PROP-000 S3 License still describes the proprietary-EULA posture with UPL as a future intent, but the repository relicensed to UPL-1.0 on 2026-07-12 (MT-05 run, host LICENSE.md swapped; the CLAUDE.md license ledger records it). The S3 text, its 'When to revisit' trigger, and the publish=false rationale need the sync-from-code pass (owner approves spec diffs)."
     }
   ]
 }
