@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-24T20:54:57Z",
+  "updated_at": "2026-07-24T21:00:04Z",
   "files": {
     "spec/boot/00-core.md": {
       "content_hash": "9430b035d1017950ec37c4ce85bab91155334b5fc55d3e1948138a4f6be8b0e5",
@@ -862,7 +862,7 @@
       "issue_count": 0
     },
     "spec/modules/vibe-registry/PROP-010-local-package-cache.md": {
-      "content_hash": "ae1b5e7fdca511849b5d08482b52953b7fdd4033b50d6045c05d00f366c7fa81",
+      "content_hash": "2c51b167f6c1626ca974c369fcc275be04b3df1238396305f104753c1acf1cd2",
       "rollup": {
         "explicit": [
           "spec",
@@ -876,11 +876,11 @@
           "spec",
           "work"
         ],
-        "marker_count": 1,
-        "fact_count": 66,
-        "unmarked_facts": 66
+        "marker_count": 93,
+        "fact_count": 92,
+        "unmarked_facts": 0
       },
-      "marker_count": 1,
+      "marker_count": 93,
       "unit_count": 18,
       "issue_count": 0
     },
@@ -1000,7 +1000,7 @@
       "issue_count": 0
     },
     "spec/modules/vibe-settings/PROP-040-settings.md": {
-      "content_hash": "535abcb3bb8c43c65a3d38552b5859c4c86fd0f182687f23f3ba5130b3356d22",
+      "content_hash": "5e119bdeabfc338f8814fbacd8dfe2eb3cfdb65d54b1e6407bfc239073020127",
       "rollup": {
         "explicit": [
           "spec",
@@ -1014,11 +1014,11 @@
           "spec",
           "work"
         ],
-        "marker_count": 1,
-        "fact_count": 69,
-        "unmarked_facts": 69
+        "marker_count": 74,
+        "fact_count": 73,
+        "unmarked_facts": 0
       },
-      "marker_count": 1,
+      "marker_count": 74,
       "unit_count": 16,
       "issue_count": 0
     },
