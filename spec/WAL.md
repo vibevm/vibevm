@@ -1,30 +1,36 @@
 # WAL — Project Continuation State
 
-_Updated: 2026-07-24_
+_Updated: 2026-07-24 (evening — Phase B open, fact amendment landed)_
 
 ## Current phase
 
-**Progress Control (PROP-043) — Phase A (scaffold) is COMPLETE; the
-spec-actualization campaign stands at the Phase B start line.** PROP-043 is
-RATIFIED (owner, 2026-07-24, in session) with one pilot amendment (§3.8:
-the preamble-less-H1 document marker). Landed and green: the standalone
-`progress-core` crate (gated, doctested seams, 25 tests + fixture law),
-the `vibe progress` adapter (scan / check --exhaustive / report / mirror /
-weave / rescan / resume), `campaigns/progress-2026-08/` with cache + state
-projections + generated RESUME.md, the zero-dep dashboard
-(`node tools/progress-dashboard/serve.mjs`, port 7043), and the pilot:
-three genres paragraph-exhaustively marked (PROP-006 freeze/done,
-SHRINK-PLAN-v0.1 freeze/done, spec/design/README doc/done — its index was
-found incomplete and fixed: first real drift caught). Full `self-check`
-green. Crash-recovery proven live: a real power cut left a zero-length
-cache.json; the fsync-before-rename + tolerant-load fixes came out of it.
-Key laws in force: paragraph-exhaustive campaign granularity,
-anchored-unit maintenance granularity, separable core (no vibe-* deps),
-**no fractality for this campaign** (Fable = high-level, Opus = IMPL
-tasks, SPEC tasks by budget), verdicts live in cache/baseline never in
+**Progress Control (PROP-043) — Phase B is OPEN and running at FACT
+grain.** This session: `progress.toml` narrowed wave 1 to `spec/` (97
+files, `8d5ccc8`); **B0** converted 73 legacy status lines into document
+markers (one reviewed diff, 0 deletions, `2c98a1e`); **B1** marked all 12
+`spec/common` files paragraph-exhaustively (`91274c8`); then the owner
+issued the **FACT-GRAIN DIRECTIVE** (verbatim in the plan LOG): every
+list item and table body cell is a unit, multi-fact prose is
+deconstructed into lists, `##<ID>` fact anchors are mandatory on marked
+units (anchored-when-marked), table rows are addressed by a first-cell
+id. Ratified into PROP-043 (§3.8 items 4–6, §3.9, §8 — `cd2688f`);
+the fact-grain scanner landed (`b67fa97`, 31 tests, cache schema 2);
+PROP-029 re-piloted the grammar: 9 paragraphs → 30 anchored facts, 0
+issues (`6714876`). Scale: wave 1 = **8 219 facts** (was 3 684
+paragraphs); `check` carries **435 expected MissingAnchor** on the
+pre-amendment markup — burns down as files re-mark. Ledger: 14 findings
+(F-001…F-014); first Opus task DRIFT-001 (cache prune) queued
+(`910d545`). Campaign journal is live (`run/journal.jsonl`, step per
+file; a real power cut mid-B1 recovered by the §4 rule — verified, no
+redo needed). Key laws in force: FACT-exhaustive campaign granularity
+(supersedes paragraph grain), anchored-when-marked, separable core,
+**no fractality for this campaign** (Fable = markup/verification/review,
+Opus = DRIFT coding tasks), verdicts live in cache/baseline never in
 markup, campaign zone excluded from scans/packaging, the surface is
-called "dashboard" (never "storefront" — taken by the vibevm store).
-Plan: `spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md`. Owner manual
+called "dashboard". Two OPEN owner review points in the plan LOG:
+anchor-naming convention (UPPER vs kebab mix), generated
+`spec/boot/STATIC.md`+`INDEX.md` inside scope. Plan:
+`spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md`. Owner manual
 (RU): `spec/modules/vibe-progress/OWNER-GUIDE.md`.
 
 Previously landed (2026-07-23): the **default registry migration** — the
@@ -71,17 +77,19 @@ steps begin with Phase B batches).
 
 ## Next
 
-**Phase B — paragraph-exhaustive markup of the wave-1 corpus (host
-`spec/`, 91 files), executor Fable**, per SPEC-ACTUALIZATION-CAMPAIGN §5:
+**Phase B continues at fact grain, executor Fable** (per the plan LOG's
+Next step, 2026-07-24 evening):
 
-1. B0: mechanical conversion of the ~55 legacy `**Status:**` lines into
-   document markers (script-assisted, one reviewed diff).
-2. B1…Bn: file batches of ~8–12 — markers + sense-preserving splits +
-   missing anchors + ledger findings in passing; semantic edits forbidden.
-   Wave-1 scope narrowing (only `spec/`) lands as `progress.toml` at the
-   repo root when B starts.
+1. Re-mark the remaining 11 `spec/common` files under the fact grammar —
+   deconstruction into anchored fact lists per the PROP-029 re-pilot
+   pattern; the cluster's 435 MissingAnchor burn to 0.
+2. Then B2… batches (`spec/modules/**`, design, research, terraforms) —
+   fact-grain from the start; journal step per file, batch commits,
+   ledger findings in passing; semantic edits forbidden.
 3. Every campaign session starts by reading
-   `campaigns/progress-2026-08/run/RESUME.md` (or `vibe progress resume`).
+   `campaigns/progress-2026-08/run/RESUME.md` (or `vibe progress resume`),
+   then the plan LOG (§9) for the next step and the two OPEN owner
+   review points.
 
 Parked follow-ups from earlier work (unchanged): vibe-vvm/term-vvm
 conformance-golden; Linux/macOS install smoke; arbitrary user-repos
