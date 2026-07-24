@@ -1,8 +1,8 @@
 # Spec-Actualization Campaign v0.1 — mark, verify, and de-drift the whole spec tree {#root}
 
-<status stage="spec" state="done" action="continue" actionstage="impl" comment="plan authored; scaffold underway (Phase A); campaign proper not started"/>
+<status stage="spec" state="done" action="continue" actionstage="impl" comment="plan in execution: A closed, B closing (13 of 59 files left), Phase L amendment recorded 2026-07-25"/>
 
-**status: AUTHORED 2026-07-24 · NOT STARTED · vibevm-specific · first consumer of PROP-043 (Progress Control) · Phase A is the scaffold build; the campaign proper starts at Phase B**
+**status: AUTHORED 2026-07-24 · IN FLIGHT — Phase B closing (13 of 59 files left after batch 20) · Phase L (legacy relocation → `legacy-spec/`) added 2026-07-25, runs between B and C · vibevm-specific · first consumer of PROP-043 (Progress Control)**
 
 Contract for everything used here: [PROP-043](../modules/vibe-progress/PROP-043-progress-markup.md).
 Owner's manual: [OWNER-GUIDE](../modules/vibe-progress/OWNER-GUIDE.md).
@@ -142,10 +142,56 @@ populated; batch diffs contain markers/splits/anchors only. *Prediction:*
 91 files ≈ 9–12 batches; the unmarked counter is what catches skipped
 paragraphs, not reviewer attention (expect ≥1 real catch).
 
+### Phase L — Legacy relocation (owner amendment, 2026-07-25) {#phase-l}
+
+*Entry:* B closed. *Ordering law:* L completes **before Phase C opens** —
+verification must cover the relocated facts (owner: «Это нужно сделать до
+фазы верификации, чтобы верификация проверила еще и эти перенесенные
+факты»). *Executor:* Fable (inventory, fact moves, markup); Opus only for
+mechanical bulk the §2 calculus clears. *Mandate (owner, 2026-07-25,
+verbatim):* «После фазы разметки я хочу добавить еще одну фазу: чистка
+terraforms/neworder/discipline/research. Я хочу в итоге убрать их из
+дерева spec и переместить в новую директорию в корне: legacy-spec. Но для
+этого нужно, чтобы на них перестали ссылаться.» Steps, in the owner's
+order:
+
+- L1 — reference inventory: every reference into `spec/terraforms/**`,
+  `spec/research/**`, `spec/neworder/**`, `spec/discipline/**` from (a)
+  the living corpus (`common/` `design/` `modules/` `manual-tests/`
+  `boot/`) and (b) code — specmark scopes / `#[spec(...)]` / `spec://`
+  URIs in crates, doctests included. Cross-references *between* the four
+  legacy dirs don't count — they relocate together.
+- L2 — fact discovery: for each reference, identify the fact(s) the
+  referrer actually cites at the target.
+- L3 — fact relocation: move those facts into the main corpus
+  (`common/design/modules/manual-tests`). Creating new specs is allowed
+  where no natural home exists (owner grant, 2026-07-25: «Если при
+  переносе фактов из устаревших директорий … придется создать какие-то
+  новые спецификации - создавай, это не проблема»).
+- L4 — markup: every relocated fact gets fact-grain markup (`##anchor` +
+  marker) at its new home; new files enter `progress.toml` scope;
+  referrers repoint to the new anchors.
+- L5 — relocation: when zero live references remain, `git mv` the four
+  directories to `legacy-spec/` at the repo root.
+
+Note: `spec/discipline/README.md` stays in the Phase B scope and is
+marked there; L relocates its facts markup-included. (Discipline was not
+part of the 2026-07-25 markup-scope narrowing — it joins the legacy set
+only here.)
+
+*Exit gate:* grep-verified zero references from the living corpus and
+crates into the four directories; `check --exhaustive` green over the
+(possibly grown) scope; floor green — specmap included, repointed scopes
+must resolve. *Review point (OPEN):* this plan file itself lives in
+`spec/terraforms/` — relocate it with the directory mid-campaign
+(campaign-zone pointers update), or keep it in place until close-out and
+move it as the campaign's last act? Owner call before L5 touches
+`spec/terraforms/`.
+
 ### Phase C — Verification (evidence pass) {#phase-c}
 
-*Entry:* B closed (per-cluster start allowed once a cluster's files are
-marked). *Executor:* Fable + machine evidence. *Steps:* every marker gets a
+*Entry:* B **and L** closed (owner amendment 2026-07-25; per-cluster
+start allowed once a cluster's files are marked and untouched by L). *Executor:* Fable + machine evidence. *Steps:* every marker gets a
 verdict in the cache — `confirmed` / `drift` / `unverifiable`:
 
 - machine first: specmap join (implements/verifies), targeted greps, CLI
@@ -506,6 +552,36 @@ read-only, no auth.
   step per file; batch commits ~1–3 files; then the Phase B exit gate
   (`check --exhaustive` clean over the 59-file scope) and the §4
   boundary ritual.
+- **2026-07-25 · B2 batch 20 — PROP-003 marked; third superseded-arc
+  split.** 310 units → 313 anchored facts, 0/0 (`d596c631`). The libsolv
+  engine sections (§2.2/§2.3/§3.x, phase A, migration step 1) record
+  history at spec/done — the SUPERSEDED-by-PROP-017 blockquote re-formed
+  verbatim per F-015; the dependency vocabulary is impl/done **verified
+  against the shipped crates** (features.rs incl. weak `?/` and exclusive
+  groups, activation.rs — `if_os` impl/work per its recorded deviates,
+  conditional.rs + fixpoint, manifest/i18n.rs, the four vibe-check
+  entries, lockfile meta/package fields). Unshipped details stay
+  spec/done: `pin_preferences` (recorded deviates), `VIBE_LANGUAGE`,
+  dotted-key translations, `--all-languages`, `vibe review`, `outdated
+  --upstream`, the LLM emission engine (`vibe-llm` pending); Phase F
+  impl/plan. req-line fact ids dodge the owner-minted `req-*` heading
+  anchors via `-req`/`-design` suffixes. Ledger +2: F-030 (stale
+  design-proposal status line — F-024 family), F-031 (internal r2
+  leftovers: §2.8 fence r1 syntax, §4.3 → §2.5.4 misref, §2.7.5/§2.9
+  examples vs shipped `language_chain`/schema-v5 shape).
+- **2026-07-25 · Owner amendment — Phase L (legacy relocation) inserted
+  between B and C.** Directive quoted verbatim in the §5 Phase L section;
+  the four dirs `spec/terraforms` `spec/research` `spec/neworder`
+  `spec/discipline` leave the spec tree for root `legacy-spec/` once
+  nothing references them: L1 reference inventory (living corpus + code —
+  specmark, doctests) → L2 fact discovery → L3 fact relocation into
+  `common/design/modules/manual-tests` (new specs allowed — owner grant
+  same day) → L4 fact-grain markup at the new homes (+`progress.toml`
+  scope grows) → L5 `git mv` to `legacy-spec/`. Ordering law: before
+  Phase C, so verification covers the relocated facts. Phase C entry
+  updated to "B and L closed". **Review point (OPEN):** the campaign plan
+  itself lives in `spec/terraforms/` — relocate mid-campaign or at
+  close-out? Owner call before L5.
 
 ## 10. Deferrals {#deferrals}
 
