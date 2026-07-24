@@ -1,62 +1,62 @@
 # vibevm — boot snippet: project foundation
 
-**Project:** vibevm — a CLI software project manager for spec-driven AI-assisted development.
+##project-identity **Project:** vibevm — a CLI software project manager for spec-driven AI-assisted development.
 **Binary:** `vibe`.
-**Source of truth:** [`VIBEVM-SPEC.md`](../../VIBEVM-SPEC.md) (project root). This is the entire implementation specification.
+**Source of truth:** [`VIBEVM-SPEC.md`](../../VIBEVM-SPEC.md) (project root). This is the entire implementation specification. @impl/done
 
 ## Session boot sequence
 
-Every session starts here. In order:
-1. Read this file and the rest of `spec/boot/` end to end — including the generated `INDEX.md` (the computed boot manifest) and `STATIC.md` (the priority lane). `vibe` owns the boot order; see `VIBEVM-SPEC.md` §6.
-2. Read `spec/WAL.md` — current project state (checkpoint, not log).
-3. Read the relevant PROP/FEAT under `spec/common/` and `spec/modules/` for the task at hand.
-4. Only then start work.
+##boot-sequence-lead Every session starts here. In order: @impl/done
+1. ##BOOT-STEP-BOOT-DIR Read this file and the rest of `spec/boot/` end to end — including the generated `INDEX.md` (the computed boot manifest) and `STATIC.md` (the priority lane). `vibe` owns the boot order; see `VIBEVM-SPEC.md` §6. @impl/done
+2. ##BOOT-STEP-WAL Read `spec/WAL.md` — current project state (checkpoint, not log). @impl/done
+3. ##BOOT-STEP-PROPS Read the relevant PROP/FEAT under `spec/common/` and `spec/modules/` for the task at hand. @impl/done
+4. ##BOOT-STEP-START-WORK Only then start work. @impl/done
 
-If `spec/WAL.md` is older than 24 hours, verify the state with the user before doing destructive work.
+##WAL-STALENESS-CHECK If `spec/WAL.md` is older than 24 hours, verify the state with the user before doing destructive work. @impl/done
 
 ## The four non-negotiable rules
 
-See [`CLAUDE.md`](../../CLAUDE.md) (and its identical copies `AGENTS.md` / `GEMINI.md`) for the full text. Authoritative reference: [spec://vibevm/common/PROP-000#commits](../common/PROP-000.md#commits). Summary only:
+##four-rules-lead See [`CLAUDE.md`](../../CLAUDE.md) (and its identical copies `AGENTS.md` / `GEMINI.md`) for the full text. Authoritative reference: [spec://vibevm/common/PROP-000#commits](../common/PROP-000.md#commits). Summary only: @impl/done
 
-1. **Attribution — keep this repository human-authored.** Never mark commits, branches, comments, or any artefact as machine-authored. The rule itself (and its copy in PROP-000 §12.1) is the only place in the project where that topic is discussed.
-2. **Conventional Commits** — short subject, long explanatory body answering *why*.
-3. **Group commits by meaning** — one logical unit per commit, split mixed working trees.
-4. **Autonomy on routine changes only** — commit and push routine work without asking; stop and ask for history rewrites, force-push, large blobs, CI/signing changes, and anything whose reversal costs work.
+1. ##RULE-ATTRIBUTION **Attribution — keep this repository human-authored.** Never mark commits, branches, comments, or any artefact as machine-authored. The rule itself (and its copy in PROP-000 §12.1) is the only place in the project where that topic is discussed. @impl/done
+2. ##RULE-CONVENTIONAL-COMMITS **Conventional Commits** — short subject, long explanatory body answering *why*. @impl/done
+3. ##RULE-ATOMIC-GROUPING **Group commits by meaning** — one logical unit per commit, split mixed working trees. @impl/done
+4. ##RULE-AUTONOMY **Autonomy on routine changes only** — commit and push routine work without asking; stop and ask for history rewrites, force-push, large blobs, CI/signing changes, and anything whose reversal costs work. @impl/done
 
 ## Reading layers (per book, `refs/book/`)
 
-vibevm's instance of the **two-process-model** flow (`spec://org.vibevm.world/two-process-model/flows/two-process-model/TWO-PROCESS-MODEL#root`) — human and agent as two processes sharing one repository; these are its reading layers, information flowing top-down, the human winning conflicts:
+##reading-layers-lead vibevm's instance of the **two-process-model** flow (`spec://org.vibevm.world/two-process-model/flows/two-process-model/TWO-PROCESS-MODEL#root`) — human and agent as two processes sharing one repository; these are its reading layers, information flowing top-down, the human winning conflicts: @impl/done
 
-- **Head** (human's memory) — not your concern, but respect that it exists. Human wins conflicts with the spec.
-- **WAL** (`spec/WAL.md`) — volatile, rewritten each session, describes *current* state.
-- **Spec** (other files under `spec/`) — stable decisions, addressable via `spec://…` URIs.
-- **Code** (everything under `crates/`, `tests/`) — artefacts. Losing them is inconvenient; losing the spec is a catastrophe.
+- ##LAYER-HEAD **Head** (human's memory) — not your concern, but respect that it exists. Human wins conflicts with the spec. @impl/done
+- ##LAYER-WAL **WAL** (`spec/WAL.md`) — volatile, rewritten each session, describes *current* state. @impl/done
+- ##LAYER-SPEC **Spec** (other files under `spec/`) — stable decisions, addressable via `spec://…` URIs. @impl/done
+- ##LAYER-CODE **Code** (everything under `crates/`, `tests/`) — artefacts. Losing them is inconvenient; losing the spec is a catastrophe. @impl/done
 
-Information flows top-down. If code changes first, reconcile up via the **sync-from-code** flow (`spec://org.vibevm.world/sync-from-code/flows/sync-from-code/SYNC-PROTOCOL#root`; also `refs/book/` chapter 3) — propose a spec update, do not rewrite code back.
+##SYNC-FROM-CODE-PATH Information flows top-down. If code changes first, reconcile up via the **sync-from-code** flow (`spec://org.vibevm.world/sync-from-code/flows/sync-from-code/SYNC-PROTOCOL#root`; also `refs/book/` chapter 3) — propose a spec update, do not rewrite code back. @impl/done
 
 ## Hard conventions
 
-- **Language:** Rust. See [spec://vibevm/common/PROP-000#language](../common/PROP-000.md#language).
-- **Manifests:** TOML. One `vibe.toml` per node — the role is set by section (`[project]` ⊕ `[package]`, optionally `[workspace]`); lockfile = `vibe.lock`.
-- **Terminology:** only five installable kinds — `flow`, `feat`, `stack`, `tool`, `mcp` (the register grows only by owner amendment to `VIBEVM-SPEC.md` §4.1; `app` is anticipated). Never say "lifecycle", "phase", "goal", "plugin" (except that "plugin" == "package" in passing context). See `VIBEVM-SPEC.md` §4.
-- **Repository URLs:** vibevm source = `git@gitverse.ru:vibevm/vibevm.git` / `https://gitverse.ru/vibevm/vibevm`. Package registry = the GitHub organization `https://github.com/vibespecs` (deliberate split-host posture — see `spec/boot/90-user.md` and [PROP-000 §7](../common/PROP-000.md#registry)). The legacy GitVerse monorepo `git@gitverse.ru:anarchic/vibespecs.git` is read-only transition state.
+- ##CONV-LANGUAGE **Language:** Rust. See [spec://vibevm/common/PROP-000#language](../common/PROP-000.md#language). @impl/done
+- ##CONV-MANIFESTS **Manifests:** TOML. One `vibe.toml` per node — the role is set by section (`[project]` ⊕ `[package]`, optionally `[workspace]`); lockfile = `vibe.lock`. @impl/done
+- ##CONV-TERMINOLOGY **Terminology:** only five installable kinds — `flow`, `feat`, `stack`, `tool`, `mcp` (the register grows only by owner amendment to `VIBEVM-SPEC.md` §4.1; `app` is anticipated). Never say "lifecycle", "phase", "goal", "plugin" (except that "plugin" == "package" in passing context). See `VIBEVM-SPEC.md` §4. @impl/done
+- ##CONV-REPO-URLS **Repository URLs:** vibevm source = `git@gitverse.ru:vibevm/vibevm.git` / `https://gitverse.ru/vibevm/vibevm`. Package registry = the GitHub organization `https://github.com/vibespecs` (deliberate split-host posture — see `spec/boot/90-user.md` and [PROP-000 §7](../common/PROP-000.md#registry)). The legacy GitVerse monorepo `git@gitverse.ru:anarchic/vibespecs.git` is read-only transition state. @impl/done
 
 ## Uncertainty protocol
 
-When the spec is silent on a question:
-1. Re-read the relevant section of `VIBEVM-SPEC.md`.
-2. Re-read the relevant chapter in `refs/book/`.
-3. Look at the closest analog under `refs/src/` (cargo, uv, spec-kit).
-4. If still unclear: mark the decision with `<!-- REVIEW: … -->`, pick the conservative interpretation, proceed, flag in the end-of-session report. Never silently invent semantic behavior.
+##uncertainty-lead When the spec is silent on a question: @impl/done
+1. ##UNC-STEP-SPEC Re-read the relevant section of `VIBEVM-SPEC.md`. @impl/done
+2. ##UNC-STEP-BOOK Re-read the relevant chapter in `refs/book/`. @impl/done
+3. ##UNC-STEP-ANALOGS Look at the closest analog under `refs/src/` (cargo, uv, spec-kit). @impl/done
+4. ##UNC-STEP-REVIEW-MARKER If still unclear: mark the decision with `<!-- REVIEW: … -->`, pick the conservative interpretation, proceed, flag in the end-of-session report. Never silently invent semantic behavior. @impl/done
 
 ## Files you MUST NOT touch without explicit instruction
 
-- `spec/boot/00-core.md` (this file) — user-owned.
-- `spec/boot/90-user.md` — user-owned overrides.
-- `VIBEVM-SPEC.md` — the owner-frozen specification document; edits require the user. (URL corrections landed at the owner's direct request.)
-- `refs/book/` — the user's book, read-only reference material.
+- ##NOTOUCH-00-CORE `spec/boot/00-core.md` (this file) — user-owned. @impl/done
+- ##NOTOUCH-90-USER `spec/boot/90-user.md` — user-owned overrides. @impl/done
+- ##NOTOUCH-VIBEVM-SPEC `VIBEVM-SPEC.md` — the owner-frozen specification document; edits require the user. (URL corrections landed at the owner's direct request.) @impl/done
+- ##NOTOUCH-REFS-BOOK `refs/book/` — the user's book, read-only reference material. @impl/done
 
 ## End of session
 
-- Update `spec/WAL.md` to reflect the *current* state (rewrite, not append — it is a checkpoint).
-- Propose a milestone commit if work is a logical unit. For routine work, follow rule 4 above: commit and push using rules 2–3. For non-routine operations, stop and ask the user first.
+- ##EOS-WAL-REWRITE Update `spec/WAL.md` to reflect the *current* state (rewrite, not append — it is a checkpoint). @impl/done
+- ##EOS-MILESTONE-COMMIT Propose a milestone commit if work is a logical unit. For routine work, follow rule 4 above: commit and push using rules 2–3. For non-routine operations, stop and ask the user first. @impl/done

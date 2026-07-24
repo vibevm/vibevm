@@ -1,26 +1,32 @@
 {
   "schema": 1,
-  "updated_at": "2026-07-24T22:46:56Z",
+  "updated_at": "2026-07-24T22:50:08Z",
   "files": [
     {
       "path": "spec/boot/00-core.md",
-      "effective": null,
+      "effective": {
+        "stage": "impl",
+        "state": "done"
+      },
       "explicit": null,
-      "markers": 0,
+      "markers": 33,
       "units": 8,
       "facts": 33,
-      "unmarked": 33,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "spec/boot/90-user.md",
-      "effective": null,
+      "effective": {
+        "stage": "impl",
+        "state": "done"
+      },
       "explicit": null,
-      "markers": 0,
+      "markers": 31,
       "units": 7,
       "facts": 31,
-      "unmarked": 31,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },

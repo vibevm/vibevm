@@ -1,26 +1,42 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-24T22:46:56Z",
+  "updated_at": "2026-07-24T22:50:08Z",
   "files": {
     "spec/boot/00-core.md": {
-      "content_hash": "9430b035d1017950ec37c4ce85bab91155334b5fc55d3e1948138a4f6be8b0e5",
+      "content_hash": "b256cb2dde84d66733c4a0de68c1862ac2a67f396499efcf1586c0f0ae2f88c9",
       "rollup": {
-        "marker_count": 0,
+        "computed": [
+          "impl",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 33,
         "fact_count": 33,
-        "unmarked_facts": 33
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 33,
       "unit_count": 8,
       "issue_count": 0
     },
     "spec/boot/90-user.md": {
-      "content_hash": "ab3203e252b0c46fb1c23b35c3a9a7ce15f26b523a01e87950eac6ad1eea8ce4",
+      "content_hash": "fa50702facdc42c0d17ace9b80e0c09d0b693d7d3470a987fd8e317550767d55",
       "rollup": {
-        "marker_count": 0,
+        "computed": [
+          "impl",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 31,
         "fact_count": 31,
-        "unmarked_facts": 31
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 31,
       "unit_count": 7,
       "issue_count": 0
     },
