@@ -63,8 +63,8 @@ pub struct ProgressCheckArgs {
     #[command(flatten)]
     pub common: ProgressCommonArgs,
 
-    /// Campaign gate: additionally require zero unmarked paragraphs in
-    /// scope (PROP-043 §3.9).
+    /// Campaign gate: additionally require zero unmarked facts —
+    /// paragraphs, list items, table body cells — in scope (PROP-043 §3.9).
     #[arg(long)]
     pub exhaustive: bool,
 }

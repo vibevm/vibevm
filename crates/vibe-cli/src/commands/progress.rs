@@ -119,8 +119,8 @@ fn scan(ctx: &Context, a: &ProgressCommonArgs) -> Result<()> {
     let g = ground(a)?;
     let wrote = refresh_state(&g)?;
     let markers: usize = g.docs.iter().map(|d| d.markers.len()).sum();
-    let paragraphs: usize = g.docs.iter().map(|d| d.paragraph_count).sum();
-    let unmarked: usize = g.docs.iter().map(|d| d.unmarked_paragraphs.len()).sum();
+    let facts: usize = g.docs.iter().map(|d| d.fact_count).sum();
+    let unmarked: usize = g.docs.iter().map(|d| d.unmarked_facts.len()).sum();
     let errors: usize = g.docs.iter().map(|d| d.error_count()).sum();
     if ctx.is_json() {
         println!(
@@ -128,7 +128,7 @@ fn scan(ctx: &Context, a: &ProgressCommonArgs) -> Result<()> {
             serde_json::json!({
                 "files": g.docs.len(),
                 "markers": markers,
-                "paragraphs": paragraphs,
+                "facts": facts,
                 "unmarked": unmarked,
                 "errors": errors,
                 "state_written": wrote.is_some(),
@@ -136,7 +136,7 @@ fn scan(ctx: &Context, a: &ProgressCommonArgs) -> Result<()> {
         );
     } else {
         println!(
-            "progress scan: {} files, {markers} markers, {unmarked}/{paragraphs} paragraphs unmarked, {errors} errors",
+            "progress scan: {} files, {markers} markers, {unmarked}/{facts} facts unmarked, {errors} errors",
             g.docs.len()
         );
         match wrote {
@@ -165,13 +165,13 @@ fn check(ctx: &Context, a: &ProgressCheckArgs) -> Result<()> {
             }
         }
         if a.exhaustive {
-            for &bi in &doc.unmarked_paragraphs {
+            for &(bi, fi) in &doc.unmarked_facts {
                 errors += 1;
                 if !ctx.is_quiet() {
-                    let b = &doc.blocks[bi];
+                    let f = &doc.blocks[bi].facts[fi];
                     println!(
-                        "{}:{}: Error [unmarked] paragraph carries no marker (--exhaustive)",
-                        doc.path, b.line_start
+                        "{}:{}: Error [unmarked] {:?} unit carries no marker (--exhaustive)",
+                        doc.path, f.line, f.kind
                     );
                 }
             }
@@ -342,11 +342,11 @@ fn resume(ctx: &Context, a: &ProgressCommonArgs) -> Result<()> {
     let run_dir = campaign.join("run");
     let events = journal::read_journal(&run_dir.join("journal.jsonl"))?;
     let open = journal::open_steps(&events);
-    let paragraphs: usize = g.docs.iter().map(|d| d.paragraph_count).sum();
-    let unmarked: usize = g.docs.iter().map(|d| d.unmarked_paragraphs.len()).sum();
+    let facts: usize = g.docs.iter().map(|d| d.fact_count).sum();
+    let unmarked: usize = g.docs.iter().map(|d| d.unmarked_facts.len()).sum();
     let counters = serde_json::json!({
         "files": g.docs.len(),
-        "paragraphs": paragraphs,
+        "facts": facts,
         "unmarked": unmarked,
         "journal_events": events.len(),
     });

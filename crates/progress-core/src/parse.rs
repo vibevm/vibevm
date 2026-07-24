@@ -1,17 +1,21 @@
-//! The fence-aware document scanner: lines → blocks → units → markers.
+//! The fence-aware document scanner: lines → blocks → facts → markers.
 //!
-//! Placement semantics (PROP-043 §3.8): a standalone marker is legal only
-//! in the preamble (document) or immediately after a heading (section);
-//! inside a paragraph a marker must be the first or last token; a paired
-//! `<status>…</status>` wraps a fragment. Anything else is an issue, never
-//! a guess.
+//! Placement semantics (PROP-043 §3.8, fact amendment): a standalone
+//! marker is legal only in the preamble (document) or immediately after a
+//! heading (section); inside a countable unit — paragraph, lead lines,
+//! list item, table body cell — a marker must be the unit's first or last
+//! token (the first token may follow the unit's `##<ID>` fact anchor); a
+//! paired `<status>…</status>` wraps a fragment and counts for the unit
+//! that carries it. A marked paragraph/item without a fact anchor is an
+//! error (anchored-when-marked). Anything else is an issue, never a guess.
 
 specmark::scope!("spec://vibevm/modules/vibe-progress/PROP-043#parsing");
 
-use crate::doc::{Block, BlockKind, Issue, IssueCode, ParsedDoc, Severity, Unit};
+use crate::doc::{Block, BlockKind, Fact, FactKind, Issue, IssueCode, ParsedDoc, Severity, Unit};
 use crate::element::{self, DecodedAttrs};
 use crate::model::{Granularity, Marker, MarkerForm};
 use sha2::{Digest, Sha256};
+use std::collections::HashMap;
 
 /// Parse one Markdown document.
 pub fn parse_document(path: &str, text: &str) -> ParsedDoc {
@@ -23,7 +27,10 @@ pub fn parse_document(path: &str, text: &str) -> ParsedDoc {
     let lines: Vec<&str> = text.lines().collect();
     collect_blocks(&lines, &mut doc);
     collect_units(&lines, &mut doc);
+    segment_facts(&mut doc);
     scan_markers(&mut doc);
+    check_anchor_laws(&mut doc);
+    doc.fact_count = doc.blocks.iter().map(|b| b.facts.len()).sum();
     doc
 }
 
@@ -52,6 +59,7 @@ fn collect_blocks(lines: &[&str], doc: &mut ParsedDoc) {
                 line_start: s,
                 line_end: end_line,
                 scan_text: blank_inline_code(&joined),
+                facts: Vec::new(),
             });
             text.clear();
             *kind = BlockKind::Text;
@@ -120,6 +128,7 @@ fn collect_blocks(lines: &[&str], doc: &mut ParsedDoc) {
                 line_start: lineno,
                 line_end: lineno,
                 scan_text: (*raw).to_string(),
+                facts: Vec::new(),
             });
             continue;
         }
@@ -145,11 +154,6 @@ fn collect_blocks(lines: &[&str], doc: &mut ParsedDoc) {
             b.kind = BlockKind::MarkerOnly;
         }
     }
-    doc.paragraph_count = doc
-        .blocks
-        .iter()
-        .filter(|b| b.kind == BlockKind::Text)
-        .count();
 }
 
 fn is_heading(trimmed: &str) -> bool {
@@ -280,8 +284,234 @@ fn split_anchor(title: &str) -> (String, Option<String>) {
     (title.trim().to_string(), None)
 }
 
+/// Byte offset of a list item's content when the line opens one
+/// (`- ` / `* ` / `+ ` / `N. ` / `N) `), else None.
+fn list_item_content(line: &str) -> Option<usize> {
+    let indent = line.len() - line.trim_start().len();
+    let rest = &line[indent..];
+    for pre in ["- ", "* ", "+ "] {
+        if rest.starts_with(pre) {
+            return Some(indent + pre.len());
+        }
+    }
+    let digits = rest.chars().take_while(|c| c.is_ascii_digit()).count();
+    if (1..=9).contains(&digits) {
+        let after = &rest[digits..];
+        if after.starts_with(". ") || after.starts_with(") ") {
+            return Some(indent + digits + 2);
+        }
+    }
+    None
+}
+
+/// True when every cell of the table row is a `---`/`:--:`-style rule.
+fn is_delimiter_row(cells: &[(usize, usize)], text: &str) -> bool {
+    !cells.is_empty()
+        && cells.iter().all(|&(s, e)| {
+            let t = text[s..e].trim();
+            !t.is_empty() && t.chars().all(|c| c == '-' || c == ':') && t.chars().any(|c| c == '-')
+        })
+}
+
+/// Byte spans of the cells of one `|`-delimited row (segments between
+/// bars, plus a leading/trailing bar-less segment when non-empty).
+fn row_cells(text: &str, s: usize, e: usize) -> Vec<(usize, usize)> {
+    let bytes = text.as_bytes();
+    let bars: Vec<usize> = (s..e).filter(|&i| bytes[i] == b'|').collect();
+    let mut out = Vec::new();
+    if let Some(&first) = bars.first() {
+        if !text[s..first].trim().is_empty() {
+            out.push((s, first));
+        }
+        for w in bars.windows(2) {
+            out.push((w[0] + 1, w[1]));
+        }
+        if let Some(&last) = bars.last()
+            && !text[last + 1..e].trim().is_empty()
+        {
+            out.push((last + 1, e));
+        }
+    }
+    out
+}
+
+/// The `##<ID>` fact anchor at the start of a span: `(id, content_start)`
+/// where `content_start` is the byte just past the id (for the marker
+/// position law). No id ⇒ content_start == span start.
+fn take_fact_id(text: &str, s: usize, e: usize) -> (Option<String>, usize) {
+    let seg = &text[s..e];
+    let lead_ws = seg.len() - seg.trim_start().len();
+    let t = &seg[lead_ws..];
+    if let Some(rest) = t.strip_prefix("##") {
+        let id_len = rest
+            .chars()
+            .take_while(|c| c.is_ascii_alphanumeric() || *c == '-' || *c == '_')
+            .count();
+        if id_len > 0
+            && rest.chars().next().is_some_and(|c| c.is_ascii_alphabetic())
+            && rest[id_len..]
+                .chars()
+                .next()
+                .is_none_or(|c| c.is_whitespace())
+        {
+            let id = rest[..id_len].to_string();
+            return (Some(id), s + lead_ws + 2 + id_len);
+        }
+    }
+    (None, s)
+}
+
+/// Segment every Text block into countable facts (PROP-043 §8):
+/// a plain paragraph, the lead lines before the first list item, each
+/// list item (with its continuation lines), each non-empty table body
+/// cell. Header + delimiter rows of a table are structure, not facts.
+fn segment_facts(doc: &mut ParsedDoc) {
+    for b in &mut doc.blocks {
+        if b.kind != BlockKind::Text {
+            continue;
+        }
+        let text = b.scan_text.clone();
+        // Line starts (byte offsets) inside the block text.
+        let mut offs: Vec<usize> = vec![0];
+        for (i, ch) in text.char_indices() {
+            if ch == '\n' {
+                offs.push(i + 1);
+            }
+        }
+        let n = offs.len();
+        let span_of = |li: usize| -> (usize, usize) {
+            let s = offs[li];
+            let e = if li + 1 < n {
+                offs[li + 1] - 1
+            } else {
+                text.len()
+            };
+            (s, e)
+        };
+
+        #[derive(Clone, Copy, PartialEq)]
+        enum L {
+            Item(usize),
+            Table,
+            Plain,
+        }
+        let classes: Vec<L> = (0..n)
+            .map(|li| {
+                let (s, e) = span_of(li);
+                let line = &text[s..e];
+                if line.trim_start().starts_with('|') {
+                    L::Table
+                } else if let Some(off) = list_item_content(line) {
+                    L::Item(s + off)
+                } else {
+                    L::Plain
+                }
+            })
+            .collect();
+
+        let has_structure = classes.iter().any(|c| !matches!(c, L::Plain));
+        if !has_structure {
+            b.facts
+                .push(mk_fact(FactKind::Para, &text, 0, text.len(), b.line_start));
+            continue;
+        }
+
+        // Table delimiter/header rows to skip (structure, not facts).
+        let mut structural: Vec<bool> = vec![false; n];
+        for li in 0..n {
+            if classes[li] == L::Table {
+                let (s, e) = span_of(li);
+                let cells = row_cells(&text, s, e);
+                if is_delimiter_row(&cells, &text) {
+                    structural[li] = true;
+                    if li > 0 && classes[li - 1] == L::Table {
+                        structural[li - 1] = true; // the header row
+                    }
+                }
+            }
+        }
+
+        let mut li = 0usize;
+        // Lead: plain lines before the first item/table line.
+        if classes[0] == L::Plain {
+            let mut end_li = 0;
+            while end_li + 1 < n && classes[end_li + 1] == L::Plain {
+                end_li += 1;
+            }
+            let (s, _) = span_of(0);
+            let (_, e) = span_of(end_li);
+            b.facts
+                .push(mk_fact(FactKind::Lead, &text, s, e, b.line_start));
+            li = end_li + 1;
+        }
+        while li < n {
+            match classes[li] {
+                L::Item(content) => {
+                    // The item runs until the next item/table line.
+                    let mut end_li = li;
+                    while end_li + 1 < n && classes[end_li + 1] == L::Plain {
+                        end_li += 1;
+                    }
+                    let (_, e) = span_of(end_li);
+                    b.facts.push(mk_fact(
+                        FactKind::Item,
+                        &text,
+                        content,
+                        e,
+                        b.line_start + li,
+                    ));
+                    li = end_li + 1;
+                }
+                L::Table => {
+                    if !structural[li] {
+                        let (s, e) = span_of(li);
+                        for (cs, ce) in row_cells(&text, s, e) {
+                            if !text[cs..ce].trim().is_empty() {
+                                b.facts.push(mk_fact(
+                                    FactKind::Cell,
+                                    &text,
+                                    cs,
+                                    ce,
+                                    b.line_start + li,
+                                ));
+                            }
+                        }
+                    }
+                    li += 1;
+                }
+                L::Plain => {
+                    // Plain lines after a table with no items: their own unit.
+                    let start = li;
+                    while li + 1 < n && classes[li + 1] == L::Plain {
+                        li += 1;
+                    }
+                    let (s, _) = span_of(start);
+                    let (_, e) = span_of(li);
+                    b.facts
+                        .push(mk_fact(FactKind::Para, &text, s, e, b.line_start + start));
+                    li += 1;
+                }
+            }
+        }
+    }
+}
+
+fn mk_fact(kind: FactKind, text: &str, s: usize, e: usize, line: usize) -> Fact {
+    // Cells may carry an id too (first cell of a row ⇒ the row's address,
+    // any other cell ⇒ that cell's — §3.8 table addressing); only the
+    // anchored-when-marked obligation exempts cells.
+    let (id, _) = take_fact_id(text, s, e);
+    Fact {
+        kind,
+        id,
+        line,
+        span: (s, e),
+        marked: false,
+    }
+}
+
 /// Scan every block for markers, assign granularity by position, collect
-/// issues, and compute the unmarked-paragraph list.
+/// issues, and compute the unmarked-fact list.
 fn scan_markers(doc: &mut ParsedDoc) {
     let first_heading_line = doc
         .blocks
@@ -310,7 +540,7 @@ fn scan_markers(doc: &mut ParsedDoc) {
                         line: b.line_start,
                         code: IssueCode::Stranded,
                         message: "standalone marker between paragraphs — attach it inside \
-                                  the paragraph (first/last token) or move it directly \
+                                  the unit (first/last token) or move it directly \
                                   under a heading"
                             .into(),
                     });
@@ -330,12 +560,23 @@ fn scan_markers(doc: &mut ParsedDoc) {
                 let Some((_, gran)) = placements.iter().find(|(bi, _)| *bi == i) else {
                     continue; // stranded — already reported
                 };
-                extract_from_block(doc, b, *gran, true);
+                let span = (0usize, b.scan_text.len());
+                extract_from_span(doc, b, span, span.0, *gran, true);
             }
             BlockKind::Text => {
-                let had = extract_from_block(doc, b, Granularity::Paragraph, false);
-                if !had {
-                    doc.unmarked_paragraphs.push(i);
+                for (fi, f) in b.facts.iter().enumerate() {
+                    let gran = match f.kind {
+                        FactKind::Item => Granularity::Item,
+                        FactKind::Cell => Granularity::Cell,
+                        FactKind::Para | FactKind::Lead => Granularity::Paragraph,
+                    };
+                    let (_, content_start) = take_fact_id(&b.scan_text, f.span.0, f.span.1);
+                    let had = extract_from_span(doc, b, f.span, content_start, gran, false);
+                    if had {
+                        doc.blocks[i].facts[fi].marked = true;
+                    } else {
+                        doc.unmarked_facts.push((i, fi));
+                    }
                 }
             }
         }
@@ -359,16 +600,65 @@ fn scan_markers(doc: &mut ParsedDoc) {
     }
 }
 
-/// Extract markers from one block. Returns true when the block carries at
-/// least one marker usable as its paragraph marker (first/last token or a
-/// wrapper). `standalone` blocks skip the position test.
-fn extract_from_block(doc: &mut ParsedDoc, b: &Block, gran: Granularity, standalone: bool) -> bool {
+/// The anchored-when-marked law + one shared id namespace (PROP-043 §3.8):
+/// a marked paragraph/lead/item needs a `##<ID>`; every id — fact or
+/// heading anchor — is unique per document.
+fn check_anchor_laws(doc: &mut ParsedDoc) {
+    let mut seen: HashMap<String, usize> = HashMap::new();
+    for u in &doc.units {
+        if let Some(a) = &u.anchor {
+            seen.entry(a.clone()).or_insert(u.line_start);
+        }
+    }
+    let mut new_issues = Vec::new();
+    for b in &doc.blocks {
+        for f in &b.facts {
+            if let Some(id) = &f.id {
+                if let Some(&first) = seen.get(id) {
+                    new_issues.push(Issue {
+                        severity: Severity::Error,
+                        line: f.line,
+                        code: IssueCode::DuplicateId,
+                        message: format!("fact id `##{id}` already minted at line {first}"),
+                    });
+                } else {
+                    seen.insert(id.clone(), f.line);
+                }
+            }
+            if f.marked && f.id.is_none() && !matches!(f.kind, FactKind::Cell) {
+                new_issues.push(Issue {
+                    severity: Severity::Error,
+                    line: f.line,
+                    code: IssueCode::MissingAnchor,
+                    message: "marked unit has no `##<ID>` fact anchor \
+                              (anchored-when-marked, PROP-043 §3.8)"
+                        .into(),
+                });
+            }
+        }
+    }
+    doc.issues.extend(new_issues);
+}
+
+/// Extract markers from one span of a block. Returns true when the span
+/// carries at least one marker usable as the unit's own (first/last token
+/// — the first may follow the unit's fact anchor — or a fragment wrapper
+/// inside it). `standalone` spans skip the position test.
+fn extract_from_span(
+    doc: &mut ParsedDoc,
+    b: &Block,
+    span: (usize, usize),
+    content_start: usize,
+    gran: Granularity,
+    standalone: bool,
+) -> bool {
     let text = &b.scan_text;
+    let (s, e) = span;
     let mut found_any = false;
-    let mut i = 0usize;
+    let mut i = s;
     let bytes = text.as_bytes();
-    while i < bytes.len() {
-        if text[i..].starts_with("<status") {
+    while i < e {
+        if text[i..e].starts_with("<status") {
             if let Some(el) = element::lex_element(text, i) {
                 let line = b.line_start + text[..i].matches('\n').count();
                 let d = element::decode_attrs(&el.attrs);
@@ -391,28 +681,27 @@ fn extract_from_block(doc: &mut ParsedDoc, b: &Block, gran: Granularity, standal
                         });
                     }
                 } else if !standalone {
-                    // Point marker inside a paragraph: legal only as the
-                    // first or last token.
-                    let before_ok = text[..i].trim().is_empty();
-                    let after_ok = text[i + el.tag_len..].trim().is_empty();
+                    // Point marker inside a unit: legal only as the
+                    // unit's first (post-anchor) or last token.
+                    let before_ok = text[content_start..i].trim().is_empty();
+                    let after_ok = text[i + el.tag_len..e].trim().is_empty();
                     if !before_ok && !after_ok {
                         doc.issues.push(Issue {
                             severity: Severity::Error,
                             line,
                             code: IssueCode::MidParagraph,
-                            message: "point marker mid-paragraph — move it to the \
-                                      paragraph's first or last token"
+                            message: "point marker mid-unit — move it to the \
+                                      unit's first or last token"
                                 .into(),
                         });
                     }
                 }
                 if let Some(m) = build_marker(&d, form, gran_here, line) {
                     doc.markers.push(m);
-                    if gran_here != Granularity::Fragment {
-                        found_any = true;
-                    } else {
-                        found_any = found_any || standalone;
-                    }
+                    // A point/shorthand marks the unit; a wrapper inside
+                    // the unit counts too (an inline fact is still a
+                    // marked fact — §3.8 item 6).
+                    found_any = true;
                 } else {
                     let missing = if d.stage.is_none() { "stage" } else { "state" };
                     doc.issues.push(Issue {
@@ -438,12 +727,13 @@ fn extract_from_block(doc: &mut ParsedDoc, b: &Block, gran: Granularity, standal
             break;
         }
         if bytes[i] == b'@'
-            && (i == 0 || !bytes[i - 1].is_ascii_alphanumeric())
+            && (i == s || !bytes[i - 1].is_ascii_alphanumeric())
             && let Some(sh) = element::lex_shorthand(text, i)
         {
-            // Position law: standalone token at start or end of the text.
-            let before_ok = text[..i].trim().is_empty();
-            let after_ok = text[i + sh.len..].trim().is_empty();
+            // Position law: standalone token at start (post-anchor) or
+            // end of the unit's text.
+            let before_ok = text[content_start.min(i)..i].trim().is_empty();
+            let after_ok = text[i + sh.len..e].trim().is_empty();
             if standalone || before_ok || after_ok {
                 let line = b.line_start + text[..i].matches('\n').count();
                 doc.markers.push(Marker {
@@ -515,9 +805,5 @@ fn build_marker(
 
 /// Convenience for tests and callers that only need the counters.
 pub fn quick_stats(doc: &ParsedDoc) -> (usize, usize, usize) {
-    (
-        doc.paragraph_count,
-        doc.unmarked_paragraphs.len(),
-        doc.markers.len(),
-    )
+    (doc.fact_count, doc.unmarked_facts.len(), doc.markers.len())
 }

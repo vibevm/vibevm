@@ -38,19 +38,15 @@ pub fn write_state(state_dir: &Path, campaign_id: &str, phase: &str, cache: &Cac
                 "explicit": r.rollup.explicit.map(|(st, s)| json!({"stage": st, "state": s})),
                 "markers": r.marker_count,
                 "units": r.unit_count,
-                "paragraphs": r.rollup.paragraph_count,
-                "unmarked": r.rollup.unmarked_paragraphs,
+                "facts": r.rollup.fact_count,
+                "unmarked": r.rollup.unmarked_facts,
                 "issues": r.issue_count,
                 "campaign": r.campaign,
             })
         })
         .collect();
-    let total_paragraphs: usize = cache.files.values().map(|r| r.rollup.paragraph_count).sum();
-    let total_unmarked: usize = cache
-        .files
-        .values()
-        .map(|r| r.rollup.unmarked_paragraphs)
-        .sum();
+    let total_facts: usize = cache.files.values().map(|r| r.rollup.fact_count).sum();
+    let total_unmarked: usize = cache.files.values().map(|r| r.rollup.unmarked_facts).sum();
     let total_issues: usize = cache.files.values().map(|r| r.issue_count).sum();
 
     let corpus = json!({
@@ -71,7 +67,7 @@ pub fn write_state(state_dir: &Path, campaign_id: &str, phase: &str, cache: &Cac
         wave: 0,
         counters: json!({
             "files": cache.files.len(),
-            "paragraphs": total_paragraphs,
+            "facts": total_facts,
             "unmarked": total_unmarked,
             "issues": total_issues,
         }),

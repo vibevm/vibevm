@@ -105,7 +105,7 @@ async function refresh() {
 
   const c = camp.counters ?? {};
   $("counters").innerHTML =
-    ["files", "paragraphs", "unmarked", "issues"]
+    ["files", "facts", "unmarked", "issues"]
       .map((k) => `<div class="big"><b class="${k === "unmarked" || k === "issues" ? (c[k] ? "warn" : "ok") : ""}">${c[k] ?? "—"}</b><span>${k}</span></div>`)
       .join("");
 
@@ -116,7 +116,7 @@ async function refresh() {
       const eff = f.effective ?? {};
       return `<tr><td>${esc(f.path)}</td><td>${esc(eff.stage ?? "—")}</td><td>${esc(eff.state ?? "—")}</td>
         <td class="num">${f.markers}</td>
-        <td class="num ${f.unmarked ? "warn" : "ok"}">${f.unmarked}/${f.paragraphs}</td>
+        <td class="num ${f.unmarked ? "warn" : "ok"}">${f.unmarked}/${f.facts}</td>
         <td class="num ${f.issues ? "err" : ""}">${f.issues}</td></tr>`;
     });
   $("corpus-body").innerHTML = rows.join("") || `<tr><td colspan="6">no files in state — run \`vibe progress scan\`</td></tr>`;

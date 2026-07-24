@@ -123,12 +123,12 @@ pub fn render_xml(rows: &[Row], rollups: &[(String, DocRollup)]) -> String {
             .map(|(st, sta)| format!(" stage=\"{st}\" state=\"{sta}\""))
             .unwrap_or_default();
         s.push_str(&format!(
-            "    <file path=\"{}\"{} markers=\"{}\" paragraphs=\"{}\" unmarked=\"{}\"/>\n",
+            "    <file path=\"{}\"{} markers=\"{}\" facts=\"{}\" unmarked=\"{}\"/>\n",
             xml_escape(path),
             eff,
             r.marker_count,
-            r.paragraph_count,
-            r.unmarked_paragraphs
+            r.fact_count,
+            r.unmarked_facts
         ));
     }
     s.push_str("  </files>\n  <markers>\n");
@@ -168,16 +168,16 @@ pub fn render_md(rows: &[Row], rollups: &[(String, DocRollup)]) -> String {
                 "| **{}** ({} markers, {}/{} unmarked) | {} | {} |  |  |\n",
                 md_escape(path),
                 r.marker_count,
-                r.unmarked_paragraphs,
-                r.paragraph_count,
+                r.unmarked_facts,
+                r.fact_count,
                 st,
                 sta
             ));
         } else {
             s.push_str(&format!(
-                "| **{}** (no markers, {} paragraphs) | — | — |  |  |\n",
+                "| **{}** (no markers, {} facts) | — | — |  |  |\n",
                 md_escape(path),
-                r.paragraph_count
+                r.fact_count
             ));
         }
     }

@@ -6,7 +6,9 @@ use crate::model::Marker;
 use serde::{Deserialize, Serialize};
 
 /// A contiguous run of non-blank lines (outside fences), or one fenced
-/// code block. The paragraph of PROP-043 §3.8/§3.9 is a `Text` block.
+/// code block. A `Text` block is segmented into countable **facts**
+/// (PROP-043 §3.9 fact amendment): plain paragraph, lead lines, list
+/// items, table body cells.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Block {
     pub kind: BlockKind,
@@ -16,6 +18,39 @@ pub struct Block {
     /// Block text with inline-code spans blanked (marker scanning input).
     #[serde(skip)]
     pub scan_text: String,
+    /// The countable fact units of a Text block (empty for other kinds).
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub facts: Vec<Fact>,
+}
+
+/// One countable unit of the fact grammar (PROP-043 §8).
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct Fact {
+    pub kind: FactKind,
+    /// The `##<ID>` fact anchor, when the unit carries one (§3.8).
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
+    /// 1-based line the unit starts on.
+    pub line: usize,
+    /// Byte span of the unit's own text inside the block's `scan_text`.
+    #[serde(skip)]
+    pub span: (usize, usize),
+    /// Set by the marker scan: the unit carries its own marker.
+    #[serde(default)]
+    pub marked: bool,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum FactKind {
+    /// A whole paragraph (a Text block with no list items or table rows).
+    Para,
+    /// The lead lines of a block before its first list item / table row.
+    Lead,
+    /// One list item (any nesting level).
+    Item,
+    /// One non-empty table body cell.
+    Cell,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -74,14 +109,19 @@ pub enum IssueCode {
     MissingAttr,
     /// Standalone marker between paragraphs (PROP-043 §3.8: forbidden).
     Stranded,
-    /// Marker mid-paragraph (only first/last token positions are legal).
+    /// Marker mid-unit (only first/last token positions are legal).
     MidParagraph,
     /// Second status marker on the same node.
     DuplicateStatus,
     /// A `</status>` with no opening tag, or an unclosed wrapper.
     WrapperMismatch,
-    /// Paragraph without a marker under `--exhaustive`.
+    /// Unit without a marker under `--exhaustive`.
     Unmarked,
+    /// A marked paragraph/list item with no `##<ID>` fact anchor
+    /// (the anchored-when-marked law, PROP-043 §3.8).
+    MissingAnchor,
+    /// A `##<ID>` / `{#anchor}` id minted twice in one document.
+    DuplicateId,
 }
 
 /// One fully parsed document.
@@ -94,11 +134,11 @@ pub struct ParsedDoc {
     pub units: Vec<Unit>,
     pub markers: Vec<Marker>,
     pub issues: Vec<Issue>,
-    /// Indices into `blocks` of Text blocks carrying no paragraph-level
-    /// marker — the exhaustiveness counter (PROP-043 §3.9).
-    pub unmarked_paragraphs: Vec<usize>,
-    /// Total Text blocks (the exhaustiveness denominator).
-    pub paragraph_count: usize,
+    /// `(block index, fact index)` of facts carrying no marker — the
+    /// exhaustiveness counter of the fact grammar (PROP-043 §3.9).
+    pub unmarked_facts: Vec<(usize, usize)>,
+    /// Total countable facts (the exhaustiveness denominator).
+    pub fact_count: usize,
 }
 
 impl ParsedDoc {

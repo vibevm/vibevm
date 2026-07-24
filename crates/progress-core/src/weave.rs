@@ -56,11 +56,11 @@ pub fn weave_digest<'a>(docs: impl IntoIterator<Item = &'a ParsedDoc>) -> String
     let mut s = String::from("# Progress digest\n");
     for doc in docs {
         s.push_str(&format!(
-            "\n## {} — {} markers, {}/{} paragraphs unmarked\n",
+            "\n## {} — {} markers, {}/{} facts unmarked\n",
             doc.path,
             doc.markers.len(),
-            doc.unmarked_paragraphs.len(),
-            doc.paragraph_count
+            doc.unmarked_facts.len(),
+            doc.fact_count
         ));
         for u in &doc.units {
             let anchor = u

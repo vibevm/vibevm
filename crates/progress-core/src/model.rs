@@ -78,6 +78,10 @@ pub enum Granularity {
     Document,
     Section,
     Paragraph,
+    /// A list item unit (fact amendment, §3.8 item 4).
+    Item,
+    /// A table body cell unit (fact amendment, §3.8 item 5).
+    Cell,
     Fragment,
 }
 

@@ -12,7 +12,9 @@ use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 use std::path::Path;
 
-pub const CACHE_SCHEMA: u32 = 1;
+/// Schema 2: the fact amendment — `DocRollup` counts facts
+/// (paragraphs + list items + table cells), not paragraphs.
+pub const CACHE_SCHEMA: u32 = 2;
 
 /// One observed file's record.
 #[derive(Debug, Clone, Serialize, Deserialize)]

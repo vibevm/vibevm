@@ -12,7 +12,7 @@
 //! ```
 //! let doc = progress_core::parse::parse_document(
 //!     "spec/x.md",
-//!     "<status stage=\"impl\" state=\"work\"/>\n\n# T {#t}\n\n@test/plan Body.\n",
+//!     "<status stage=\"impl\" state=\"work\"/>\n\n# T {#t}\n\n##b1 @test/plan Body.\n",
 //! );
 //! assert_eq!(doc.markers.len(), 2);
 //! assert_eq!(doc.error_count(), 0);
@@ -53,7 +53,7 @@ use std::path::Path;
 /// std::fs::create_dir_all(dir.path().join("spec")).expect("mkdir");
 /// std::fs::write(
 ///     dir.path().join("spec/a.md"),
-///     "# A {#a}\n\n<status stage=\"impl\" state=\"work\"/>\n\nBody. @test/plan\n",
+///     "# A {#a}\n\n<status stage=\"impl\" state=\"work\"/>\n\n##b1 Body. @test/plan\n",
 /// ).expect("write");
 ///
 /// let mut cache = Cache::default();

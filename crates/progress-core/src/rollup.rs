@@ -20,8 +20,10 @@ pub struct DocRollup {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub effective: Option<(Stage, State)>,
     pub marker_count: usize,
-    pub paragraph_count: usize,
-    pub unmarked_paragraphs: usize,
+    /// Countable facts (fact amendment: paragraphs + lead lines + list
+    /// items + table body cells).
+    pub fact_count: usize,
+    pub unmarked_facts: usize,
 }
 
 pub fn rollup_doc(doc: &ParsedDoc) -> DocRollup {
@@ -38,8 +40,8 @@ pub fn rollup_doc(doc: &ParsedDoc) -> DocRollup {
         computed,
         effective,
         marker_count: doc.markers.len(),
-        paragraph_count: doc.paragraph_count,
-        unmarked_paragraphs: doc.unmarked_paragraphs.len(),
+        fact_count: doc.fact_count,
+        unmarked_facts: doc.unmarked_facts.len(),
     }
 }
 
