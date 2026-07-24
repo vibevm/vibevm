@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-24T22:32:16Z",
+  "updated_at": "2026-07-24T22:34:57Z",
   "files": {
     "spec/boot/00-core.md": {
       "content_hash": "9430b035d1017950ec37c4ce85bab91155334b5fc55d3e1948138a4f6be8b0e5",
@@ -301,7 +301,7 @@
       "issue_count": 0
     },
     "spec/design/README.md": {
-      "content_hash": "917e029d26b97cae700ffe529f38fe3295c20f9448bef93f49fe713c06f85dcb",
+      "content_hash": "d94bc87b444d5ca4f39317acc22a9fbbb1a9576f44739c6f0d77bdcbceaca16f",
       "rollup": {
         "explicit": [
           "doc",
@@ -315,13 +315,13 @@
           "doc",
           "done"
         ],
-        "marker_count": 17,
-        "fact_count": 30,
-        "unmarked_facts": 18
+        "marker_count": 34,
+        "fact_count": 29,
+        "unmarked_facts": 0
       },
-      "marker_count": 17,
+      "marker_count": 34,
       "unit_count": 5,
-      "issue_count": 12
+      "issue_count": 0
     },
     "spec/design/action-system.md": {
       "content_hash": "b0faf4dc76e4498edeb0b10690fbdbfa7917954e6a1110110af38b9d53520994",
@@ -358,7 +358,7 @@
       "issue_count": 0
     },
     "spec/design/structural-loader.md": {
-      "content_hash": "2449106dc1142113d71096fd3251d1869f1554ab3ef8595150f98f4c37bee30f",
+      "content_hash": "8cba6169f825b9a5a6ceaf228caac49c2201c82052dda30df941759da9d86723",
       "rollup": {
         "explicit": [
           "spec",
@@ -366,17 +366,17 @@
         ],
         "computed": [
           "spec",
-          "done"
+          "work"
         ],
         "effective": [
           "spec",
           "done"
         ],
-        "marker_count": 1,
+        "marker_count": 21,
         "fact_count": 20,
-        "unmarked_facts": 20
+        "unmarked_facts": 0
       },
-      "marker_count": 1,
+      "marker_count": 21,
       "unit_count": 7,
       "issue_count": 0
     },

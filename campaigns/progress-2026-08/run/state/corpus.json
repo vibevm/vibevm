@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-07-24T22:32:16Z",
+  "updated_at": "2026-07-24T22:34:57Z",
   "files": [
     {
       "path": "spec/boot/00-core.md",
@@ -238,11 +238,11 @@
         "stage": "doc",
         "state": "done"
       },
-      "markers": 17,
+      "markers": 34,
       "units": 5,
-      "facts": 30,
-      "unmarked": 18,
-      "issues": 12,
+      "facts": 29,
+      "unmarked": 0,
+      "issues": 0,
       "campaign": {}
     },
     {
@@ -283,10 +283,10 @@
         "stage": "spec",
         "state": "done"
       },
-      "markers": 1,
+      "markers": 21,
       "units": 7,
       "facts": 20,
-      "unmarked": 20,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
