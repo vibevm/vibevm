@@ -24,3 +24,6 @@
 {"kind":"step-done","id":"b1-prop-000","result":"68/68 paragraphs marked spec/done; {#invariants} anchor added; power-cut recovery verified clean (scan 0 issues); license S3 drift noted for ledger F-014","ts":"2026-07-24T16:05:54Z"}
 {"kind":"step-start","id":"b1-prop-019","step_type":"mark-file","target":"spec/common/PROP-019-version-manager.md","actor":"fable","ts":"2026-07-24T16:05:54Z"}
 {"kind":"step-done","id":"b1-prop-019","result":"82/82 paragraphs marked (spec/done + continue)","ts":"2026-07-24T16:08:24Z"}
+{"kind":"step-start","id":"b-fact-scanner","step_type":"impl-tool","target":"crates/progress-core (fact-grain units: list items, lead lines, table cells)","actor":"fable","ts":"2026-07-24T16:21:00Z"}
+{"kind":"step-start","id":"b1f-repilot-prop-029","step_type":"mark-file","target":"spec/common/PROP-029 (fact-grammar re-pilot / demo)","actor":"fable","ts":"2026-07-24T16:37:23Z"}
+{"kind":"step-done","id":"b1f-repilot-prop-029","result":"fact re-pilot: 9 paragraphs deconstructed into 30 facts, all anchored+marked, 0 issues; demo of items/cells/row-ids/inline wrapper","ts":"2026-07-24T16:38:15Z"}
