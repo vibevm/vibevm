@@ -1,184 +1,180 @@
 # CONTINUE — cold-resume checkpoint
 
-_Written 2026-07-21 (end of the terminal-product extraction session). The two-phase plan from this
-session landed: Phase 1 (packages move to vibevm-term) was already done entering the session; Phase 2a
-(host-side tear-down) and Phase 2b (version-manager port) landed this session. `spec/WAL.md` is the
-canonical living state and supersedes this snapshot if they diverge._
+_Written 2026-07-25 (session end: fact-grain campaign day two — B1f/B2 markup,
+the DRIFT loop 5/5, the fact-links commission). `spec/WAL.md` is the canonical
+living state and supersedes this snapshot wherever they diverge._
 
 ## TL;DR
 
-The **vibeterm / vibeframe / vibe-launcher extraction** is complete in two repos:
+Progress-Control campaign (PROP-043, plan
+`spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md`) is mid-**Phase B** at
+**fact grain**. `spec/common` is fully re-marked (1 009 anchored facts, 0
+issues); `spec/modules` stands at **14/35 files**. Five Opus-executed DRIFT
+tasks landed with **zero returned round-trips**, including the owner's
+**fact-links commission**: `##<ID>` fact anchors are now first-class across
+all three layers — the specmap engine (core v0.8.0), the host spec compiler
+(`vibe-spec`), and the contracts (PROP-014 §2.1, PROP-035 §5/§7.3). Code can
+cite `spec://…#<FACT-ID>` per statement. The **coder-tier engine pin
+(`claude-opus-5`) binds from the next session** — this is why the session
+ended here. Floor: **all green**. Both mirrors in sync through `5d567efd`.
 
-1. **`vibevm` (this repo, host)** — Phase 2a, the host-side tear-down. The terminal products moved out;
-   `vibe self install` builds the `vibe` binary only. Terminal apps resolve through
-   `$VIBEVM_<APP>` → packaged `<instance>/<app>/` (back-compat) → `PATH`, with an **in-place fallback**
-   for `vibe tree` when no desktop terminal is resolvable. **10 commits** on `main` this session:
-   the vvm install-pipeline refactor, the term/tree resolver, the vibe-launcher crate removal, the
-   tools-gate drop, the PROP-019/PROP-042 doc rewrites, the specmap regen, the moved-source drop,
-   the WAL checkpoint, and two clippy fixups the floor caught.
-2. **`vibevm-term` (the sibling products repo at `C:/Users/olegc/git/v/vibevm-term/`)** — Phase 2b, the
-   version-manager port. The full `vibe self` verb set ported Rust→TS as a twin
-   (`spec://term-common/PROP-vvm`), cross-platform placement (Win .lnk + Linux .desktop + macOS .app +
-   rename-aside), and per-product self CLIs (`bin/self.mjs` + `scripts/install.mjs` + PROP-self-install
-   for vibeterm/vibeframe/launcher). **6 commits** there this session: the vvm port + tests, the two
-   normative PROPs, the vibeterm/vibeframe self CLIs, the launcher self CLI, the WAL checkpoint.
+## State
 
-**Both repos: floor-green, NOT pushed.** `vibevm` is **N ahead of origin/main**; `vibevm-term` has no
-upstream configured (local repo). The owner's standing push route is `cargo xtask mirror` for vibevm.
+- Branch `main`, synced to **both** mirrors (GitVerse + GitHub) via
+  `cargo xtask mirror`; working tree clean (only the untracked `.zcode/`).
+- Floor (`bash tools/self-check.sh`): **all green**, verified with the real
+  exit code after DRIFT-005.
+- Campaign journal clean (every step closed); dashboard/RESUME render the
+  journal-derived **Phase B**; scope = **94 files** (~8 2xx facts).
+- No blocker. The only deliberate stop: new DRIFT spawns should run on the
+  engine pin, which activates at session start.
 
-**No blocker.** The next session picks up at the **push** decision (§Push), then optional real-build
-verification of `<product> self install` against a real `~/opt` (the version-manager is exercised by a
-fake-builder smoke today; the real Electron-packager / cargo-build paths are spec'd but not yet run
-end-to-end on the products repo).
+## Resume recipe (exact)
 
-## Where work stands
+1. Boot per `CLAUDE.md` (this file's session started the same way), then:
+   - `campaigns/progress-2026-08/run/RESUME.md` — recover/next per §4;
+   - plan LOG §9 (`spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md`) —
+     the **Next step** bullet is authoritative.
+2. **B2 remainder** (21 files, smallest first):
+   `vibe-mcp/PROP-015` (48 facts) → `vibe-workspace/PROP-034` (50) →
+   `vibe-mcp/PROP-027` (53) → `vibe-cli/PROP-036` (54) → PROP-030/011/012/
+   010/040/038 → PROP-008/001/009/017/043/035/037/007 → PROP-005/003/002;
+   then `spec/design` / `spec/research` / `spec/terraforms` (incl. re-mark
+   of the two pilot files carrying the wave's 40 expected errors).
+   Per file: journal `step-start` → mark (fact grammar per the PROP-029
+   pattern; verify with `cargo run -q -p vibe-cli --bin vibe -- progress
+   check` + `scan`, corpus row must read 0 unmarked / 0 issues) → journal
+   `step-done` (write counts AFTER the scan). Batch commits of ~2–4 files;
+   `cargo xtask mirror` at checkpoints.
+3. **New DRIFT tasks**: author per
+   `spec/modules/vibe-progress/templates/impl-task.md`, spawn with
+   `subagent_type: "opus5"` (the committed agent type;
+   `.claude/settings.local.json` also pins `CLAUDE_CODE_SUBAGENT_MODEL` as
+   the blanket override — remove that env line if only selective pinning is
+   wanted). Review gate: read the diff, run the floor with the REAL exit
+   code, close task file + INDEX + `tasks.json` + journal.
+4. Candidate next DRIFT material (owner to prioritise): F-016 (modules
+   README rewrite — Phase D), F-020 (OWNER-GUIDE §1 lags the fact grammar —
+   Phase D/G), F-017 (aiui `scrollbar` sync-from-code), engine-family
+   minting so rust/ts/go pick up the fact-aware mdspec (core v0.8.0 →
+   family versions; a separate release step, NOT part of B).
 
-| Repo | Branch | Ahead of origin | Working tree | Floor |
-|------|--------|-----------------|--------------|-------|
-| vibevm (host) | `main` | `git log --oneline origin/main..HEAD` (10 commits this session) | clean | `cargo check`, `cargo clippy --workspace --all-targets`, `cargo test -p vibe-cli --test vvm` (4/4), `self-check.sh` all green |
-| vibevm-term (products) | `main` | no upstream configured | clean | `node --test` (53/53 in common) green |
+## The fact-links stack (what landed 2026-07-24, in one screen)
 
-Run `git -C C:/Users/olegc/git/v/vibevm log --oneline -12` and
-`git -C C:/Users/olegc/git/v/vibevm-term log --oneline -8` to see the exact commits.
+- **Citation form** (identical for headings and facts, one id space per doc):
+  `spec://vibevm/common/PROP-019#LAYER-CURRENT-FILE`,
+  `spec://vibevm/common/PROP-000#INV-VOCABULARY`; carriers:
+  `#[spec(implements = "…")]` / JSDoc `@spec` / Go `//spec:`.
+- **Declaration ≠ citation**: `##ID` is the source-sigil only; citations are
+  always `#ID`. `UPPER-SLUG` = normative fact, `kebab` = service (owner
+  ruling; the register is a citation-priority signal too).
+- **Contracts**: PROP-014 §2.1 (fact units; kebab law stays for headings,
+  wider grammar for `##` ids) mirrored at PROP-043 §6; PROP-035 §5 (IR fact
+  leaves) + §7.3 (inheritance: section fate by default; **per-fact override**
+  — a source fact redeclaring a contract fact's id supersedes it; merged-view
+  uniqueness gate = build error, with the precision that pure
+  heading-vs-heading repeats are the `:add` artifact, not a collision).
+- **Engine**: `core-ai-native-specmap` mdspec + `is_valid_fact_id`
+  (v0.8.0, the OPEN line — vendored nowhere yet; families inherit at their
+  next minting with zero per-language work).
+- **Compiler**: `crates/vibe-spec` — `NodeKind::Fact`, `facts.rs`
+  recognition, `merge.rs` override, `gate.rs` → `CompileError::DuplicateId`,
+  fact-addressed `#embed`.
 
-## Active blocker — none
+## Non-obvious findings from this session (the trap list)
 
-The floor is green on both sides. The only open item is the **push decision** — see §Push.
+- **`+ ` at the start of a wrapped continuation line** parses as a phantom
+  list item and silently splits the unit — caught by the unmarked counter
+  four times. Reflow the wrap; never let `+`/`-`/`*` open a continuation.
+- **Blockquotes cannot carry `##` anchors** (scanner doesn't strip `> `;
+  grammar never mentions them) — F-015 pending a ruling; workaround: re-form
+  the unit (bold paragraph / fence for template content).
+- **Heading and fact ids share one namespace per document** — PROP-041's
+  `{#tree-widget}` section vs same-named REQ collided; suffix the fact side
+  (`-req`), never rename the cited `{#}`.
+- **Pre-existing owner-minted per-REQ `{#anchor}`s** (PROP-039/041): reuse
+  the exact name in `##` notation; the REQ is the owner's chosen fact grain —
+  do not deconstruct below it.
+- **`EXIT=$?` after a `| tail` lies** (captures tail's code) — redirect to a
+  file and echo `$?` in the same command (90-user.md quirk, bitten live).
+- **Agent-type files and settings-env changes bind at session start**, not
+  mid-session (verified empirically thrice); `claude -p --model <id>` is the
+  in-session fallback for a specific engine.
+- **Journal step-done counts**: write them AFTER the verifying scan (two
+  entries carry pre-scan guesses; corpus.json is authoritative).
+- **Campaign markers record the DOC's claims, not reality** — stale
+  status-vs-shipped-code goes to the ledger (F-013/018/019/021 class),
+  verdicts are Phase C's.
 
-## Exact next-steps recipe
+## Standing decisions in force (long form lives at the anchors)
 
-1. **Verify the floor one more time on vibevm (host):**
-   ```sh
-   cd C:/Users/olegc/git/v/vibevm
-   bash tools/self-check.sh        # the full floor; green per this checkpoint
-   ```
-2. **Decide on the push** (see §Push) — the owner's standing route is `cargo xtask mirror`.
-3. **(Optional) Real-build verify the version-manager end-to-end** — the smoke today uses a fake
-   builder. A real `vibeterm self install` requires `npm install` (Electron + node-pty) in
-   `vibevm-term/.../vibeterm/v0.1.0/app/`, which needs network. Skip if offline.
-4. **(Optional) vibevm-term push** — the repo has no upstream; configure one (`git remote add origin
-   <url>`) if it should mirror, then `git push -u origin main`.
+Fact-exhaustive granularity supersedes paragraph grain (PROP-043 §3.9);
+anchored-when-marked (§3.8); two anchor registers (§3.8 decision); scope =
+94 files (generated boot pair + WAL excluded — include-only enumeration in
+`progress.toml`); verdicts live in cache/baseline, never in markup (§7.5 —
+also why cache pruning drops-with-warning, DRIFT-001 review ruling);
+**no fractality for this campaign** (owner override in plan §0/§2: Fable =
+markup/verification/review/task-authoring, Opus = DRIFT coding);
+coder-tier engine = `claude-opus-5` (plan LOG 2026-07-24); campaign zone
+excluded from scans/packaging; the surface is called "dashboard"; the four
+CLAUDE.md rules bind every executor.
 
-## Push
-
-- **vibevm (host):** the owner's standing push route is `cargo xtask mirror` (mirrors to BOTH gitverse
-  + github, NOT a bare `git push origin`). The extraction commits are routine per Rule 4 — no history
-  rewrites, no force-push, no large blobs, no CI/secrets. The owner's go is the gate (held by
-  convention until the owner says push; this session was not given that go).
-- **vibevm-term:** no upstream configured today. If/when the owner wants to publish it, configure a
-  remote and push.
-
-## Non-obvious findings this session
-
-- **Phase 2a was mostly done entering the session** — the working tree already carried the install /
-  term / tree / doctor / tools / Cargo.toml / conform.toml edits and the deletions, uncommitted. The
-  gap was **N.2 (PROP-042 §5 rewrite)** — the spec still described the dead `apps/<app>` walk-up tier
-  and the silent vibeframe→vibeterm fallback. Fixed in commit `5b0cca1`.
-- **The conform gate caught a Phase-2a miss** — `conform.toml` still listed `vibe-launcher` in
-  `gated_crates` after the crate's directory was deleted; the `every_crate_is_gated_or_exempt` test
-  failed. Fixed in `52f4e58`. (The env_root entry for vibe-launcher was updated in `5b0cca1`; the
-  gated_crates line was the matching edit I missed.)
-- **Two new clippy lints fired on the new code** — `unnecessary_lazy_evaluations` (`.then(|| dir)` →
-  `.then_some(dir)`) and `collapsible_if` (nested `if let` + `if` → let-chain). Both in the new
-  `via_path` resolver in `term.rs`. Fixed in `fb3f8e4` and `8b623f4`.
-- **mtime in the vvm manifest had to be milliseconds, not nanoseconds** — JS's `Number` is IEEE-754
-  and overflows `Number.isSafeInteger` at nanosecond mtime (≈1.78e18 > 2^53 ≈ 9.0e15). The TS port's
-  manifest stores `mtime_ms` (integer, floored); the Rust twin's `.vvm-manifest.toml` carries
-  `mtime_nanos` (i64). Both compare equal-on-equal-API (PROP-019 §2.15), so the cross-floor invariant
-  holds — but a tool reading both manifests MUST account for the unit difference. Documented in
-  `vibevm-term/.../common/v0.1.0/vvm/placer.mjs`.
-- **The TS port has zero runtime deps** — no TOML library, no semver library. `vvm/toml.mjs` is a
-  schema-bound mini TOML for `state.toml` + `.vvm-manifest.toml`; `selectorParse` uses a permissive
-  semver regex. Matches the existing `args.mjs` / `packaging.mjs` style; keeps the product's dep graph
-  empty.
-- **Product `bin/self.mjs` uses a RELATIVE import to term-common** — the product packages have no
-  `node_modules` at `bin/` (the formal `tool:org.vibevm.term/term-common` edge is resolved by `vibe
-  install` at install time, not by Node). The relative import (`../../../common/v0.1.0/vvm/cli.mjs`)
-  keeps the entry script self-contained.
-
-## Repository map
-
-### vibevm (this repo, host)
-
-Top-level layout post-extraction:
-
-- `crates/` — the Rust workspace (vibe-cli, vibe-core, vibe-install, vibe-registry, vibe-resolver,
-  vibe-settings, vibe-actions, vibe-graph, vibe-index, vibe-llm, vibe-mcp, vibe-check, vibe-publish,
-  vibe-spec, vibe-wire, vibe-workspace). **`crates/vibe-launcher/` is GONE** (moved to vibevm-term).
-- `apps/` — **empty** (the vibeterm/vibeframe Electron apps moved to vibevm-term).
-- `spec/` — the normative contracts. `spec/modules/vibeterm/`, `spec/modules/vibeframe/`,
-  `spec/modules/vibe-launcher/` are GONE (moved). `spec/modules/vibe-cli/PROP-042-aiui-observation.md`
-  stays but its §5 now describes the PATH resolver tiers (not the in-tree walk-up).
-- `tools/` — `self-check.sh` (the floor driver), `first-run.sh`. Both dropped the vibeterm gates.
-- `xtask/` — the dev tooling (`cargo xtask specmap`, `cargo xtask conform`, `cargo xtask mirror`).
-- `packages/org.vibevm.fractality/` — the fractality launcher (separate specspace; its own boot).
-- `assets/icons/` — only generic + `vibetree-*` variants remain (the per-product icons moved).
-
-### vibevm-term (the sibling products repo)
-
-- `org.vibevm.term/` — the product group:
-  - `common/v0.1.0/` — term-common: shared TS helpers (`src/args.mjs`, `src/keymap.mjs`,
-    `src/packaging.mjs`) + the ported version-manager (`vvm/*.mjs`) + normative wire contracts
-    (`spec/modules/term-common/PROP-*.md`).
-  - `vibeterm/v0.1.0/` — the complex terminal workspace (Electron + SolidJS). `app/` is the Electron
-    app; `bin/self.mjs` is its version-manager entry.
-  - `vibeframe/v0.1.0/` — the simple terminal frame. Same shape as vibeterm.
-  - `launcher/v0.1.0/` — the GUI launchers (vibetree/vibeterm/vibeframe), Rust crate. `bin/self.mjs`
-    uses `LauncherBuilder` (cargo), not the Electron packager.
-
-## Architectural / policy decisions still in force
-
-- **Hybrid model.** vibevm = open-source core (package manager, vibe CLI, vibe tree, version manager);
-  vibevm-term = closed GUI products (vibeterm, vibeframe, term-common, vibe-launcher). Seamless
-  integration — `vibe.exe` calls the apps when they're on `PATH`.
-- **PATH is the integration surface.** Terminal apps resolve through `$VIBEVM_<APP>` → packaged
-  `<instance>/<app>/` (back-compat) → `PATH`. No in-tree coupling.
-- **In-place fallback for `vibe tree`.** A box without a desktop terminal product installed still
-  gets a working tree — `vibe tree -t` runs the console TUI in place (subprocess), no desktop window.
-- **Per-product version-manager.** Each product (`vibeterm`, `vibeframe`, `launcher`) carries its own
-  version-manager twin of `vibe self`. State under `~/opt/<product>/`; shared `~/opt/bin/` shim dir.
-- **Cross-floor twin contract.** The TS port MUST hold the same invariants the host Rust holds
-  (PROP-019). A drift is a bug, not a divergence to tolerate. The host Rust stays authoritative.
-
-## Recent commit chain (vibevm host, last ~14)
+## Recent commits (this session, newest first)
 
 ```
-8b623f4 fix(term): collapse the via_path if-let (clippy collapsible_if)
-fb3f8e4 fix(term): use then_some in via_path (clippy unnecessary_lazy_evaluations)
-dee6c4e docs(wal): checkpoint — vibeterm/vibeframe/launcher extraction Phase 2a
-acbc020 chore(specmap): drop the moved terminal/launcher anchors
-7e46d84 chore(extract): drop the moved terminal/launcher sources
-5b0cca1 docs(specs): apps and launchers are external products
-220c661 chore(tools): drop the vibeterm gates from self-check and first-run
-e220089 refactor(workspace): remove the vibe-launcher crate
-b95efdb refactor(term): resolve terminal apps via PATH with an in-place fallback
-4221a20 refactor(vvm): stop packaging the terminal products and launchers
-52f4e58 fix(conform): drop vibe-launcher from gated_crates
-84f47de fix(vvm): retry the instance rename through a transient scanner lock
-b49f67d chore(discipline): refresh health snapshot after the local-registry fix
-6dbf6ba fix(registry): narrow the local-directory backend to the file: scheme only
+5d567efd docs(spec): PROP-035 §7.3 heading-repeat precision; F-022 resolved
+5c89839b feat(spec-compiler): fact inheritance lands end to end (DRIFT-005)
+78322dac chore(harness): pin the campaign coder tier to the owner-designated engine
+06b30f31 docs(spec): PROP-035 fact-inheritance ratified — R1-R4 land as contract
+3eeaa53a docs(progress): ledger F-022 — the live merge is fact-blind
+508bbdb9 feat(specmap): fact anchors are addressable spec units (DRIFT-004)
+db6e6ca3 docs(spec): B2 batch 7 — PROP-039 marked at the owner's REQ grain
+37528524 docs(spec): PROP-014 fact-anchor amendment — the contract before the code
+c9007a3f fix(progress): prune cache records that leave the observed scope (DRIFT-001)
+8731c850 docs(spec): B2 batch 6 — the owner guide marked, and it lags its own law
+3e727fad chore(progress): drop the WAL from the observed scope (owner ruling)
+05355fb4 docs(wal): DRIFT-003 through the loop, B2 at 12/35
+5e75ff4d feat(progress): derive the campaign phase from the journal (DRIFT-003)
+51a161c8 docs(spec): B2 batch 5 — PROP-041 marked, owner anchors become fact ids
+ce645e6f docs(spec): B2 batch 4 — PROP-020/022 close the bridge-family marking
+34df2f2e docs(spec): B2 batch 3 — PROP-026/021/023 marked at fact grain
+17232d1c docs(wal): floor green again — DRIFT-002 through the loop
+18ab7cb3 refactor(progress): split the scanner along its seams (DRIFT-002)
+099ff022 docs(spec): B2 batch 2 — PROP-042/025 marked at fact grain
+6f55242a docs(spec): B2 batch 1 — progress templates and the modules index marked
+5f1c11f5 docs(wal): B1f boundary checkpoint — common cluster clean, B2 next
+0759f59e docs(progress): queue DRIFT-002/003 — the red floor and the stale phase
+d639bcf5 docs(spec): B1f batch 3 — PROP-000/019 re-marked; common cluster clean
+4aed13f5 docs(spec): B1f batch 2 — PROP-024/032/018 re-marked at fact grain
+83bed352 docs(spec): B1f batch 1 — six spec/common files re-marked at fact grain
+b15d3d9f docs(spec): resolve the two Phase B review points by owner ruling
 ```
 
-## Quick-start
+## Repository map (top level)
 
-```sh
-# vibevm (host) — floor (from repo root)
-cargo fmt --all -- --check
-cargo test --workspace
-cargo clippy --workspace --all-targets -- -D warnings
-cargo xtask conform check
-cargo xtask specmap            # regenerate; --check for strict CI drift
-cargo run -q -p vibe-cli -- check
-bash tools/self-check.sh       # the full floor driver
+- `spec/` — the corpus: `common/` (12 PROPs, fact-grain DONE), `modules/`
+  (35 files, 14 marked), `design/` `research/` `terraforms/` (B2+ later
+  batches), `boot/` (00-core/90-user authored + generated STATIC/INDEX),
+  `WAL.md` (checkpoint, out of scan scope).
+- `crates/` — host workspace: `progress-core` (the fact scanner, `parse/`
+  split), `vibe-spec` (the compiler — now fact-aware), `vibe-cli`
+  (`commands/progress.rs` adapter), the rest of the vibe product.
+- `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/` — the OPEN engine
+  line (fact-aware mdspec + grammar); v0.7.0 = published, host-pinned.
+- `campaigns/progress-2026-08/` — the campaign zone: `tasks/`
+  (DRIFT-001…005 all done + INDEX), `run/` (journal, state/*.json, RESUME,
+  cache), `deferrals.md`, `harvest/`.
+- `tools/progress-dashboard/serve.mjs` — the read-only dashboard;
+  `tools/self-check.sh` — the floor.
+- `.claude/agents/opus5.md` — the committed coder-tier agent type.
 
-# vibevm (host) — push BOTH mirrors (NOT `git push origin`)
-cargo xtask mirror
-cargo xtask mirror --check
+## Quick start
 
-# vibevm-term (products) — the common floor
-cd C:/Users/olegc/git/v/vibevm-term/org.vibevm.term/common/v0.1.0
-npm test                       # 53 tests (12 vvm + 41 helpers)
-
-# vibevm-term — a product's CLI (help is the no-op smoke)
-node ../vibeterm/v0.1.0/bin/self.mjs help
+```bash
+bash tools/self-check.sh                                  # the floor (check REAL exit code)
+cargo run -q -p vibe-cli --bin vibe -- progress check     # markup gate
+cargo run -q -p vibe-cli --bin vibe -- progress scan      # refresh state
+cargo run -q -p vibe-cli --bin vibe -- progress resume    # regenerate RESUME.md
+node tools/progress-dashboard/serve.mjs                   # dashboard
+cargo xtask mirror                                        # rollout to both mirrors
 ```

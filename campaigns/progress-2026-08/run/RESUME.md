@@ -1,10 +1,10 @@
 # RESUME — campaign `progress-2026-08`
 
-_Generated 2026-07-24T18:53:04Z — do not edit; regenerate with `vibe progress resume`._
+_Generated 2026-07-24T19:51:07Z — do not edit; regenerate with `vibe progress resume`._
 
 **Phase:** B
 
-**Where we are:** {"files":94,"facts":8257,"unmarked":6653,"journal_events":95}
+**Where we are:** {"files":94,"facts":8264,"unmarked":6660,"journal_events":101}
 
 ## Unfinished (recover FIRST)
 

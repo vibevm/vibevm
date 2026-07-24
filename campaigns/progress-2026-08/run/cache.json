@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-24T18:53:04Z",
+  "updated_at": "2026-07-24T19:51:07Z",
   "files": {
     "spec/boot/00-core.md": {
       "content_hash": "9430b035d1017950ec37c4ce85bab91155334b5fc55d3e1948138a4f6be8b0e5",
@@ -1230,7 +1230,7 @@
       "issue_count": 0
     },
     "spec/modules/vibe-workspace/PROP-035-spec-compiler.md": {
-      "content_hash": "f34a38230133325f0e34fea5c6472f2579e136bba2e999f5312ca1a38c0d7132",
+      "content_hash": "e6cf00446b8c2d83742a1138741d302413535c5f92cd59f25ed8f94f1a07eece",
       "rollup": {
         "explicit": [
           "spec",
@@ -1245,8 +1245,8 @@
           "work"
         ],
         "marker_count": 1,
-        "fact_count": 108,
-        "unmarked_facts": 108
+        "fact_count": 113,
+        "unmarked_facts": 113
       },
       "marker_count": 1,
       "unit_count": 22,
@@ -1884,7 +1884,7 @@
       "issue_count": 0
     },
     "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md": {
-      "content_hash": "feaaa297c7c4655711aa6931a38f0052a6f7a0233a58a689f011e783ad092165",
+      "content_hash": "dc322bd687e7f760315d8c94c80c8b63b02d22b5f9cdc8b3a3ec201e1c079d97",
       "rollup": {
         "explicit": [
           "spec",
@@ -1899,8 +1899,8 @@
           "done"
         ],
         "marker_count": 1,
-        "fact_count": 88,
-        "unmarked_facts": 88
+        "fact_count": 90,
+        "unmarked_facts": 90
       },
       "marker_count": 1,
       "unit_count": 21,
