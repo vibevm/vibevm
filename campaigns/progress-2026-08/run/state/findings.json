@@ -289,6 +289,24 @@
       "status": "open",
       "wave": 0,
       "note": "F-024 stale-header family + internal nits: (1) Status line says -accepted 2026-04-24- only, while the whole contract shipped (M1.1-revision, M1.6, M1.13 git-source, M1.14 auth, redirect) and the section text itself records GitHubCreator-primary 2026-04-29 / M1.19 fqdn default; (2) all 14 Phase A acceptance checkboxes in s5 remain [ ] though every item is long green; (3) s2.8/s5 call the impl -ResolvoSolver- while the shipped cell is ResolvoDepSolver (PROP-017 s2); (4) s2.2.1 token-env row claims -symmetric with the publish-side VIBEVM_PUBLISH_TOKEN_<HOST> already specified in s2.10- but s2.10 specifies a host-agnostic VIBEVM_PUBLISH_TOKEN env + per-host token FILES, no per-host env var. Phase C/D sweep material; no semantic edits in Phase B."
+    },
+    {
+      "id": "F-033",
+      "from": "spec/design/loading-and-boot-model.md",
+      "to": "spec/modules/vibe-workspace/PROP-009-loading-model.md",
+      "type": "contradiction",
+      "status": "open",
+      "wave": 0,
+      "note": "Two internal nits in the design record: (1) s6 working syntax reads link = -static- | -static- | -dynamic- - the first alternative should be -inline- (P4 names inline/static/dynamic); (2) the Companion line and s10 pointer still call PROP-009 -forthcoming- while M1.18 phases 1-7 shipped 2026-05-22 (the design record predates the contract landing - F-026 already tracks PROP-009's own stale lines). Lore-doc corrections, Phase C/D material."
+    },
+    {
+      "id": "F-034",
+      "from": "spec/design/action-system.md",
+      "to": "spec/modules/vibe-actions/PROP-039-action-system.md",
+      "type": "reality-mismatch",
+      "status": "open",
+      "wave": 0,
+      "note": "Future-tense staleness in the lore doc: the genre line calls PROP-039 -forthcoming- and s10 says -PROP-039 will carry one granular addressable REQ per Delta- while the contract file exists (marked in B2) and crates/vibe-actions ships (action.rs, context.rs, i18n.rs). Same family as F-033's -forthcoming- PROP-009 refs. Lore correction, Phase C/D."
     }
   ]
 }

@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-24T22:34:57Z",
+  "updated_at": "2026-07-24T22:39:55Z",
   "files": {
     "spec/boot/00-core.md": {
       "content_hash": "9430b035d1017950ec37c4ce85bab91155334b5fc55d3e1948138a4f6be8b0e5",
@@ -324,18 +324,26 @@
       "issue_count": 0
     },
     "spec/design/action-system.md": {
-      "content_hash": "b0faf4dc76e4498edeb0b10690fbdbfa7917954e6a1110110af38b9d53520994",
+      "content_hash": "c03a624a204974ef47ad5aaf7e878ce68ea08ed58bae65d10fd4c9452e889bd5",
       "rollup": {
-        "marker_count": 0,
+        "computed": [
+          "doc",
+          "done"
+        ],
+        "effective": [
+          "doc",
+          "done"
+        ],
+        "marker_count": 78,
         "fact_count": 78,
-        "unmarked_facts": 78
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 78,
       "unit_count": 12,
       "issue_count": 0
     },
     "spec/design/loading-and-boot-model.md": {
-      "content_hash": "5d2b28fe7242962fc57c8fbf3ef990d3f4b5465f74d542c83715d45099067c0a",
+      "content_hash": "89e376c01eacaa09f8c81eaca0c0031d8a546994cc557396d154737421f7712a",
       "rollup": {
         "explicit": [
           "doc",
@@ -349,11 +357,11 @@
           "doc",
           "done"
         ],
-        "marker_count": 1,
+        "marker_count": 75,
         "fact_count": 74,
-        "unmarked_facts": 74
+        "unmarked_facts": 0
       },
-      "marker_count": 1,
+      "marker_count": 75,
       "unit_count": 15,
       "issue_count": 0
     },
