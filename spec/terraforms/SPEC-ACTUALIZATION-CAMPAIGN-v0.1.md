@@ -1,0 +1,277 @@
+# Spec-Actualization Campaign v0.1 — mark, verify, and de-drift the whole spec tree {#root}
+
+**status: AUTHORED 2026-07-24 · NOT STARTED · vibevm-specific · first consumer of PROP-043 (Progress Control) · Phase A is the scaffold build; the campaign proper starts at Phase B**
+
+<status stage="spec" state="done" action="continue" actionstage="impl" comment="plan authored; scaffold not built; campaign not started"/>
+
+Contract for everything used here: [PROP-043](../modules/vibe-progress/PROP-043-progress-markup.md).
+Owner's manual: [OWNER-GUIDE](../modules/vibe-progress/OWNER-GUIDE.md).
+Task formats: [templates/](../modules/vibe-progress/templates/impl-task.md).
+
+---
+
+## 0. Mandate (owner's words, 2026-07-24, recorded verbatim) {#mandate}
+
+- «актуализировать ВСЕ спецификации … Это чудовищная огромная работа. Именно
+  поэтому я и готовлю scaffold для нее, чтобы не сбиться в ходе обхода
+  настолько большого количества документов. Нам нужно разметить корпус
+  фактов, которые дальше нужно будет проверять.» Work may take **a month**;
+  that is accepted; quality over speed.
+- Paragraph-level exhaustiveness is **the point**, not an option: «это
+  in-verbatim контроль того, что мы прошли всё, каждую строчку. LLM очень
+  любит упрощать … нужен алгоритмический надсмотрщик».
+- **No fractality for this campaign.** «Я хочу чтобы Fable сделала максимум
+  высокоуровневых задач (анализ и разметку спецификации и тп)» — outputs:
+  (a) a corpus of coding tasks for **Opus**, (b) a corpus of spec-improvement
+  tasks executed by **whatever model the budget allows** (Fable if it
+  stretches, Opus otherwise). This deliberately overrides the standing
+  delegation-first default for the duration of the campaign — owner decision;
+  do not "optimize" it back.
+- Stitching is **non-linear**: reworking B may reopen A and vice versa —
+  plan it as a multi-pass fixpoint, not a single sweep.
+- Crash-safety: any session may die (budget, power); the next session must
+  resume from **one obvious file** with at most one step lost.
+- Repeatability: re-runs at ~monthly cadence must cost O(delta), not
+  O(corpus).
+- Wave 1 = the host `spec/` tree only; `packages/` waves later; the
+  fractality specspace excluded until the owner says otherwise.
+
+## 1. Baseline (verified at authoring time, 2026-07-24) {#baseline}
+
+- Host `spec/`: **91 md files, 26 699 lines**. Authored packages (no
+  vendored copies): world 154 + ai-native 140 files (~30k lines) — wave 2;
+  fractality 700 files — out of scope.
+- Free-form `**Status:**` lines to convert mechanically: **~55**.
+- specmap: index live; **34 gated orphans** in `vibe-spec` (pre-existing).
+- Progress Control: does not exist yet — no crate, no `vibe progress`, no
+  `campaigns/` zone, no dashboard. `<status` appears nowhere in the tree
+  except PROP-043's own dogfood markers.
+- Existing inline grammars that must not collide: `@spec://` (~17 uses),
+  `#use`/`#embed`/`#source`, `<!-- REVIEW: -->`.
+
+## 2. Executors and the budget law {#executors}
+
+| Role | Who | What |
+|---|---|---|
+| Boss / high-level | **Fable** | markup passes, verification judgment, stitching, task authoring, ALL review |
+| Coder | **Opus** | IMPL tasks (DRIFT-NNN) exactly as written; stop-rule on ambiguity |
+| Spec editor | **budget-dependent** | SPEC tasks (SPEC-NNN): Fable if budget allows, else Opus; Fable reviews regardless |
+
+Rules 1–4 of the repository bind every executor. Worker output is never
+credited; commits are human-authored surface; non-routine red lines stop for
+the owner no matter who is executing.
+
+## 3. Campaign zone layout {#layout}
+
+```
+campaigns/progress-2026-08/        # id fixed at Phase A close
+  baseline.json                    # inter-campaign contract (PROP-043 §7.3)
+  deferrals.md                     # open tails at close-out; next run drains it
+  harvest/                         # doc cards (templates/harvest-card.md)
+  tasks/                           # DRIFT-NNN.md / SPEC-NNN.md + INDEX.md
+  run/                             # EPHEMERAL: journal.jsonl · state/*.json · RESUME.md · mirror/
+```
+
+Excluded from markup scope, packaging, and registries (PROP-043 §7.4).
+Committed at batch boundaries — journal in the same commit as the edits it
+describes; fan-out via `cargo xtask mirror` at phase checkpoints. `run/` of a
+closed campaign may be archived or deleted; the other four entries persist.
+
+## 4. Resume protocol (crash-safety law) {#resume}
+
+1. **Step = unit of atomicity**: mark-file · verify-unit · close-obligation ·
+   execute-task. Journal writes `step-start` (intent, actor) before work and
+   `step-done` (result ref) after; JSONL, append-only, torn tail discarded.
+2. **Recovery rule:** step closed in journal ⇒ its edits stand; step open ⇒
+   `git restore` its files and redo the step. Steps are idempotent by
+   construction. Maximum loss on any crash = one step.
+3. **`RESUME.md` is generated** (`vibe progress resume`) after every
+   step-done: where we are · unresolved steps with literal recovery commands ·
+   next steps · phase rules pointer · dashboard command. Every session of
+   this campaign **starts by reading it** and ends by closing (not starting)
+   a step.
+4. **Claims and staleness:** journal actors (`fable`, `opus:DRIFT-012`);
+   an in-progress task with no journal events past the threshold is returned
+   to `queued` as stale by `resume`.
+5. git = second echelon: batch commits make the worst disk-loss cost one
+   batch, never the campaign.
+
+## 5. Phases {#phases}
+
+Each phase: entry condition → steps → exit gate (+ prediction, per the
+campaign-plan discipline). Every session inside any phase obeys §4.
+
+### Phase A — Scaffold {#phase-a}
+
+*Entry:* this plan + PROP-043 exist. *Steps:*
+
+1. Owner ratifies PROP-043 (or amends; amendments land before code).
+2. Build the core crate + `vibe progress` adapter: scan / check
+   (`--exhaustive`) / report (views, audiences) / mirror / weave
+   (`--digest`, `--max-tokens`) / rescan / resume. Fixtures include the
+   foreign-grammar non-collision corpus.
+3. Create `campaigns/progress-2026-08/` skeleton + journal/state schemas.
+4. Dashboard: `tools/progress-dashboard/serve.mjs` — zero-dependency
+   `node:http`, one vanilla page, poll `run/state/`, read-only. Screens:
+   Resume · Overview · Corpus · Stitching · Tasks.
+5. Pilot: hand-mark 2–3 documents of different genres (one PROP, one
+   terraform plan, one design doc); run the full loop scan→check→report→
+   mirror→weave on the pilot.
+
+*Exit gate:* `self-check` green with the new crate; `check --exhaustive`
+correct on pilot (0 unmarked); dashboard renders pilot state; RESUME.md
+generates. *Prediction:* the pilot exposes ≤ a handful of grammar/placement
+ambiguities — they amend PROP-043 §3 before Phase B, after which the grammar
+holds for the whole wave without further amendment.
+
+### Phase B — Markup (facts pass) {#phase-b}
+
+*Entry:* A closed. *Executor:* Fable. *Steps:*
+
+- B0: mechanical conversion of ~55 `**Status:**` lines into document
+  markers (script-assisted, reviewed as one diff).
+- B1…Bn: file batches (~8–12 files each). Per file: paragraph-exhaustive
+  markers; sense-preserving re-splits of under-granular paragraphs; missing
+  `{#anchor}`s added; `audience` where obvious; cross-doc findings recorded
+  into the ledger **in passing** (first stitching input is free).
+- Semantic edits are FORBIDDEN in this phase — a semantic problem found
+  becomes a ledger finding, not an edit.
+
+*Exit gate:* `check --exhaustive` green over the whole wave-1 scope; mirror
+populated; batch diffs contain markers/splits/anchors only. *Prediction:*
+91 files ≈ 9–12 batches; the unmarked counter is what catches skipped
+paragraphs, not reviewer attention (expect ≥1 real catch).
+
+### Phase C — Verification (evidence pass) {#phase-c}
+
+*Entry:* B closed (per-cluster start allowed once a cluster's files are
+marked). *Executor:* Fable + machine evidence. *Steps:* every marker gets a
+verdict in the cache — `confirmed` / `drift` / `unverifiable`:
+
+- machine first: specmap join (implements/verifies), targeted greps, CLI
+  `--help` snapshots, manifest checks, test presence;
+- Fable judgment where machines are silent; verdict without an evidence ref
+  is rejected by `check` (honesty is enforced: not found ⇒ `unverifiable`,
+  never "probably done");
+- verification runs (`command → real output`) are saved as doc fixtures;
+  harvest cards written while knowledge is hot.
+
+*Exit gate:* 100 % of markers carry verdicts; the X/Y/Z summary is recorded
+in the LOG — the first measured actuality level of the spec tree.
+*Prediction:* drift concentrates in DRAFT/proposed PROPs and terraform plans
+whose `**Status:**` promised more than the tree delivers; IMPLEMENTED-marked
+units mostly confirm.
+
+### Phase D — Stitching (fixpoint over the ledger) {#phase-d}
+
+*Entry:* C verdicts exist for the cluster. *Executor:* per §2 budget law.
+*Mechanics:*
+
+- Obligation types: `contradiction` · `duplication` · `missing-support` ·
+  `terminology` · `relocation` · `reality-mismatch`.
+- **Waves:** wave N = SPEC tasks over all docs with open incoming
+  obligations; closures may open new obligations → wave N+1. Convergence =
+  empty ledger; a wave with zero new findings = converged (loop-until-dry).
+- **Escalation rule:** a doc pair whose open-obligation count fails to fall
+  for two consecutive waves is a conceptual conflict → owner decision;
+  iteration on that pair stops.
+- Clusters: registry (001/002/008/010/021/023/030) · workspace/boot
+  (007/009/011/012/020/022/025/034/035/038) · resolver (003/017) · cli/tui
+  (036/037/039/040/041/042) · common/plans/design/research.
+- `reality-mismatch` resolves via the sync-from-code flow (owner approves
+  spec diffs); `remove` verdicts execute here (delete or demote to
+  idea-archive).
+
+*Exit gate:* ledger empty (or every survivor is an owner-ruled deferral);
+markers of all touched units updated. *Prediction:* obligations per wave
+fall roughly geometrically; ≤3 waves for wave-1 scope; ≤2 owner
+escalations.
+
+### Phase E — Coding (drift-correction by tasks) {#phase-e}
+
+*Entry:* per IMPL task — **unit stability**: every anchor the task cites has
+no open obligation and no `unknown` marker (clusters release independently;
+Opus never codes against a moving spec). *Steps:*
+
+- Fable authors DRIFT-NNN tasks from `drift`+`continue` verdicts, priority:
+  user-facing broken promises → internal mechanics → polish.
+- Opus executes exactly per template (stop-rule on any ambiguity); Fable
+  reviews against §6-acceptance verbatim; markers updated on completion
+  (`impl/work → impl/done → test/plan`…); specmap tags on new code shrink
+  the orphan count.
+- `rework` items: feature-flag disable decision (cargo feature vs runtime
+  gate) is recorded as a decision record at this phase's start, then
+  executed per item.
+
+*Exit gate:* task queue drained or explicitly deferred; floor green;
+`report --view todo` matches the deferrals file exactly. *Prediction:* ≥80 %
+of DRIFT tasks land without a `returned` round-trip — the template carries
+enough context; `returned` clusters indicate spec gaps, feeding D-waves.
+
+### Phase F — Plans and fold {#phase-f}
+
+Three owner plans generated from views: **release/productization**
+(freeze-candidates → showable), **improvement** (rework + disabled),
+**global idea ledger** (idea/hold). Marker density folds: agreeing sections
+collapse to unit markers (lossless, `check`-verified). `vibe progress check`
+enters the standing gate panel. *Exit:* owner accepts the three plans.
+
+### Phase G — Documentation {#phase-g}
+
+Two trees written **from proven behavior** (harvest cards + captured runs),
+never from spec prose: **User Guide** (audience=user) and **Package Author
+Guide** (audience=author). Chapters release as their features stabilize
+(pipeline with E, not a barrier). Each page carries `documents:
+spec://…#anchor` metadata → doc-coverage becomes a ratchet. Owner reads for
+register and truth. *Exit:* every `--view doc` row is either published or
+explicitly deferred; doc-coverage ratchet armed.
+
+### Close-out {#closeout}
+
+`baseline.json` written; open tails → `deferrals.md`; REPORT section below
+filled against every prediction; `run/` archived; WAL updated; version tag
+proposed to the owner.
+
+## 6. Recurrence (the monthly re-run) {#recurrence}
+
+`vibe progress rescan --baseline <prev>/baseline.json` → new / suspect /
+carried-forward lists → mini-B on new+changed → re-verify suspect (+ random
+control of carried-forward) → mini-D on new findings → tasks → new baseline.
+Cost O(delta). Between runs, the maintenance discipline (PROP-043 §10) and a
+health-audit category ("markers vs reality") keep the delta small. This plan
+is the standing playbook for those runs; each run appends its own LOG entry
+and rewrites `baseline.json`.
+
+## 7. Dashboard contract {#dashboard}
+
+Reads `run/state/*.json` only (never Markdown, never computes). Zero npm
+dependencies. Screens: **Resume** (open steps red, next steps, freshness
+plaque), **Overview** (phase lane, counters), **Corpus** (tree colored by
+rollup, five views + audience filter), **Stitching** (ledger table +
+open-obligations-per-wave chart; non-falling pairs highlighted as
+escalations), **Tasks** (both queues, statuses, claim owners). Localhost,
+read-only, no auth.
+
+## 8. Predictions (falsifiable, campaign-wide) {#predictions}
+
+1. Wave-1 full weave fits ≤2 shards of a 1M window (digest fits trivially).
+2. The exhaustive counter catches ≥1 genuinely skipped paragraph that
+   review alone would have missed.
+3. ≥60 % of `**Status:** IMPLEMENTED/SHIPPED` claims confirm without drift;
+   ≤10 % of all units end `unverifiable`.
+4. Stitching converges in ≤3 waves with ≤2 owner escalations.
+5. ≥80 % of DRIFT tasks land without a returned round-trip.
+6. The month budget holds: A ≈ days, B ≈ 1–1.5 weeks, C ≈ 1 week, D ≈ 3–5
+   days, E ≈ open-ended by queue, F+G ≈ 1 week overlapping E.
+
+## 9. LOG (execution ledger — append per batch/wave/phase) {#log}
+
+*(empty — campaign not started)*
+
+## 10. Deferrals {#deferrals}
+
+*(empty — drained into `campaigns/<id>/deferrals.md` at close-out)*
+
+## 11. REPORT (filled at close-out against §8) {#report}
+
+*(empty)*
