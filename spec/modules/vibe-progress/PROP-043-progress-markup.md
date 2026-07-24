@@ -215,6 +215,19 @@ Six granularities, one rule each — and no ambiguous positions:
    (`1. ##RULE-001 rule text @freeze/done` — the owner's canonical
    example shape) or as the unit's last token.
 
+   **Decision — two anchor-id registers (owner ruling, 2026-07-24).**
+   `##UPPER-SLUG` names a **normative fact** (a law, rule, carrier,
+   changelog entry — content with binding weight); `##kebab-case`
+   names a **service unit** (status lines, lead-ins, connective
+   prose). **Why:** the register itself carries the normativity
+   signal at zero syntax cost; ratified from the PROP-029 re-pilot
+   mix reviewed in session. **Considered and rejected:** single UPPER
+   register (service units become shouty; the signal is lost); single
+   kebab register (normative facts stop standing out; the re-pilot
+   would need re-anchoring). **Revisit when:** the post-campaign fold
+   (§3.9) shows the mixed registers confusing report consumers or
+   check tooling.
+
    **Table addressing** *(proposed 2026-07-24, this session — same
    syntax, no new grammar)*. A `##<ID>` as the first token of the
    **first cell of a body row** addresses that **row**

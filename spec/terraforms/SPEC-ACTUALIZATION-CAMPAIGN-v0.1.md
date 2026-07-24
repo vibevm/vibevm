@@ -368,17 +368,24 @@ read-only, no auth.
   session. Ledger: F-013 (PROP-018 MVP implemented vs proposed),
   F-014 (PROP-000 §3 license text predates the 2026-07-12 UPL-1.0
   relicense).
-- **OPEN review point (owner) — anchor naming convention:** the
-  re-pilot mixed `##UPPER-SLUG` for normative facts (ADDR-LAW,
-  RULE-style) with `##kebab` for service units (status-line,
-  carriers-lead). Keep both registers, or fix one? Until ruled, new
-  markup follows the re-pilot mix.
-- **OPEN review point (owner) — generated files in scope:**
-  `spec/boot/STATIC.md` + `INDEX.md` are vibe-generated («do not
-  edit») yet inside the wave-1 globs; markup written there dies on
-  regeneration. Exclude them from `progress.toml`, or carry their
-  markers in the generators? Until ruled, batches skip both files
-  (keeps `check --exhaustive` red on them).
+- **RESOLVED review point (owner, 2026-07-24) — anchor naming
+  convention:** the re-pilot mixed `##UPPER-SLUG` for normative facts
+  (ADDR-LAW, RULE-style) with `##kebab` for service units
+  (status-line, carriers-lead). Keep both registers, or fix one?
+  **Ruling: both registers stay** — UPPER = normative fact, kebab =
+  service unit; the register itself carries the normativity signal.
+  Recorded as a decision at PROP-043 §3.8.
+- **RESOLVED review point (owner, 2026-07-24) — generated files in
+  scope:** `spec/boot/STATIC.md` + `INDEX.md` are vibe-generated
+  («do not edit») yet inside the wave-1 globs; markup written there
+  dies on regeneration. Exclude them from `progress.toml`, or carry
+  their markers in the generators? **Ruling: exclude from scope.**
+  §4 of PROP-043 is include-only by design, so the exclusion is
+  expressed by include enumeration (`spec/boot/[0-9]*.md` admits the
+  authored snippets, skips the generated pair); cache rebuilt from
+  scratch (the DRIFT-001 no-prune defect makes a stale-record purge
+  otherwise impossible). Scope: 97 → **95 files**, 8 219 → **7 872
+  facts**. This also closes the B0-parked scope question above.
 - **Next step:** re-mark the remaining 11 `spec/common` files under
   the fact grammar (deconstruction into anchored fact lists per the
   PROP-029 re-pilot pattern; ~380 paragraph-grain units to deconstruct,
