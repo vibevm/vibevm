@@ -1,16 +1,28 @@
 # WAL — Project Continuation State
 
-_Updated: 2026-07-23_
+_Updated: 2026-07-24_
 
 ## Current phase
 
-The **default registry migration** is landing: the vibespecs GitHub +
-GitVerse `[[registry]]` pair moves from per-project `vibe.toml` templates
-into the machine-global `~/.vibe/registry.toml`, seeded automatically on
-first use. `vibe init` now produces a clean project manifest (no
-`[[registry]]` boilerplate); `~/.vibe/registry.toml` is created by
-`ensure_default_global_registry()` at the CLI composition root on any
-registry-needing command if it does not yet exist.
+**Progress Control (PROP-043) + the spec-actualization campaign — Phase A
+(scaffold) begins.** The 2026-07-24 owner design session ratified the design
+of an inline `<status>` markup system (stage/state/action/audience), the
+`vibe progress` tool (scan/check/report/mirror/weave/rescan/resume), the
+`campaigns/` zone with crash-safe journal+RESUME protocol, and a phased
+campaign (A–G) to mark, verify, stitch, and de-drift the whole spec tree.
+Contract: `spec/modules/vibe-progress/PROP-043-progress-markup.md` (DRAFT,
+awaiting owner ratification). Plan:
+`spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md`. Owner manual (RU):
+`spec/modules/vibe-progress/OWNER-GUIDE.md`. Key laws: paragraph-exhaustive
+campaign granularity, anchored-unit maintenance granularity, separable core
+(no vibevm deps), **no fractality for this campaign** (Fable = high-level,
+Opus = IMPL tasks, SPEC tasks by budget), verdicts live in cache/baseline
+never in markup, campaign zone excluded from scans/packaging.
+
+Previously landed (2026-07-23): the **default registry migration** — the
+vibespecs GitHub + GitVerse `[[registry]]` pair moved from per-project
+`vibe.toml` templates into the machine-global `~/.vibe/registry.toml`,
+seeded by `ensure_default_global_registry()` at the CLI composition root.
 
 ## Constraints — do not violate
 
@@ -45,26 +57,25 @@ registry-needing command if it does not yet exist.
 
 ## In progress
 
-Nothing open. The extraction + auto-discovery campaigns are complete; both
-repos are synced with their remotes and the floors are green.
+**Spec-actualization campaign, Phase A (scaffold).** The document package
+landed this session (PROP-043 + campaign plan + owner guide + task
+templates). Not started yet: owner ratification of PROP-043, the core crate
++ `vibe progress` adapter, the `campaigns/progress-2026-08/` skeleton, the
+zero-dep dashboard (`tools/progress-dashboard/`), the 2–3-file pilot markup.
+Phase A exit gate: floor green with the new crate, `check --exhaustive`
+correct on the pilot, dashboard renders, RESUME.md generates.
 
 ## Next
 
-Candidate follow-ups (no default picked — owner steers):
+1. **Owner ratifies PROP-043** (or amends — amendments land before code).
+2. **Phase A build** per SPEC-ACTUALIZATION-CAMPAIGN §5: core crate,
+   `vibe progress`, campaign zone, dashboard, pilot.
+3. Then Phase B (paragraph-exhaustive markup of host `spec/`, 91 files,
+   Fable, batches of ~8–12).
 
-1. **Conformance-golden** between Rust `vibe-vvm` and TS `term-vvm` — a
-   formal cross-floor golden asserting the two twins agree on the instance
-   layout + manifest shape. Out of scope today; the contracts agree by
-   construction.
-2. **Linux `.desktop` / macOS `.app` smoke** for the install-machinery —
-   Windows is verified; the other two platforms are spec'd but not yet
-   run end-to-end.
-3. **Arbitrary user-repos** — the next expansion after `--prefer-local`
-   (PROP-030 §9 D2 "future expansion under a different name"). Needs a
-   design-doc first.
-4. **vibe doctor reporting project-local** — the §3.3 feature does not yet
-   surface in `vibe self doctor` (which is install-scoped); a project-scoped
-   doctor or a `vibe check` row would close the discoverability gap.
+Parked follow-ups from earlier work (unchanged): vibe-vvm/term-vvm
+conformance-golden; Linux/macOS install smoke; arbitrary user-repos
+design-doc; `vibe doctor` project-local row.
 
 ## Known issues
 
