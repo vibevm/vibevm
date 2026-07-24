@@ -84,9 +84,9 @@ Next step, 2026-07-24 night):
    `spec/design` / `spec/research` / `spec/terraforms` incl. the two
    pilot files' re-mark. Journal step per file; batch commits of ~3–6
    files; ledger findings in passing; semantic edits forbidden.
-2. DRIFT-002 is DONE (Opus executed, Fable accepted; floor all green
-   again). Next Opus tasks: DRIFT-003 (honest phase lane), DRIFT-001
-   (cache prune).
+2. DRIFT-002 and DRIFT-003 are DONE (Opus executed, Fable accepted;
+   floor all green; the phase lane renders the journal-derived "B").
+   Last queued Opus task: DRIFT-001 (cache prune).
 3. Every campaign session starts by reading
    `campaigns/progress-2026-08/run/RESUME.md` (or `vibe progress resume`),
    then the plan LOG (§9) for the next step.

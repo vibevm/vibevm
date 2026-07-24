@@ -421,6 +421,22 @@ read-only, no auth.
   F-017 code-ahead-of-spec `vibe aiui scrollbar`). The §5-E prediction
   ("≥80 % of DRIFT tasks land without a returned round-trip") starts
   1/1.
+- **2026-07-24 · DRIFT-003 landed — the phase lane is honest; B2 runs
+  through batch 5.** Second DRIFT task through the loop, again no
+  returned round-trip (§5-E prediction 2/2): the phase is now an
+  append-only journal event (`{"kind":"phase","value":"B"}`, last
+  wins, absent ⇒ "A"), derived by the adapter — never compiled in,
+  never parsed from Markdown; `read_journal` distinguishes a torn
+  tail (incomplete JSON, stops) from an unknown kind (complete JSON,
+  skipped) with both laws test-pinned; the live journal is
+  backfilled and `campaign.json`/RESUME render **B**. B2 batches
+  3–5 in parallel: PROP-026 (superseded-in-topology arc split
+  impl/done vs spec/done per fact), PROP-021/023 (bridge pair),
+  PROP-020/022 (F-018: hooks ship while the line says proposed),
+  PROP-041 (owner-minted per-REQ `{#anchor}`s reused verbatim as
+  `##` ids — one name, two notations; two heading-vs-REQ same-name
+  collisions surfaced by the shared id space, F-019 for the stale
+  DRAFT line). Ledger: 19 findings. B2 stands at 12/35 files.
 - **Next step:** B2… batches — `spec/modules/**` at fact grain (the
   largest cluster), then `spec/design` / `spec/research` /
   `spec/terraforms` including the two pilot files' re-mark. Journal step
