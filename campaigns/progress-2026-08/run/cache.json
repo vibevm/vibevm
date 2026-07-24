@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-24T21:16:17Z",
+  "updated_at": "2026-07-24T21:20:16Z",
   "files": {
     "spec/boot/00-core.md": {
       "content_hash": "9430b035d1017950ec37c4ce85bab91155334b5fc55d3e1948138a4f6be8b0e5",
@@ -701,7 +701,7 @@
       "issue_count": 0
     },
     "spec/modules/vibe-progress/PROP-043-progress-markup.md": {
-      "content_hash": "fb9102c7e586aade1d70ebabe4d3bc8e5ab2b93425641a573536f0a9d136de88",
+      "content_hash": "94599d1831de9db493690b4b4dc52a3af2e7b78ad60f3fbf3b451183f0305b85",
       "rollup": {
         "explicit": [
           "spec",
@@ -715,11 +715,11 @@
           "spec",
           "done"
         ],
-        "marker_count": 1,
-        "fact_count": 106,
-        "unmarked_facts": 106
+        "marker_count": 159,
+        "fact_count": 158,
+        "unmarked_facts": 0
       },
-      "marker_count": 1,
+      "marker_count": 159,
       "unit_count": 27,
       "issue_count": 0
     },
