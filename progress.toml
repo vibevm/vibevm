@@ -5,13 +5,16 @@
 # The generated boot artifacts `spec/boot/STATIC.md` + `spec/boot/INDEX.md`
 # are OUT of scope (owner ruling 2026-07-24, campaign plan LOG): they are
 # rewritten by `vibe install`, so markup written into them dies on regen.
-# §4 is include-only by design, so the exclusion is expressed by
-# enumeration; `spec/boot/[0-9]*.md` admits the authored snippets
-# (00-core, 90-user) and skips the generated pair. A new spec/ subtree
-# must be added here explicitly — review at batch boundaries.
+# `spec/WAL.md` is OUT for the same reason in session form (owner ruling
+# 2026-07-24, second): the checkpoint is rewritten wholesale every
+# session-end — markup cannot live in it. The authored boot snippets
+# (00-core, 90-user) are NOT generated (user-owned; vibe never writes
+# them) and stay observed via `spec/boot/[0-9]*.md`.
+# §4 is include-only by design, so exclusions are expressed by
+# enumeration; a new spec/ subtree or top-level spec doc must be added
+# here explicitly — review at batch boundaries.
 schema = 1
 include = [
-    "spec/*.md",
     "spec/boot/[0-9]*.md",
     "spec/common/**/*.md",
     "spec/design/**/*.md",

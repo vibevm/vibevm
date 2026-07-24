@@ -437,6 +437,19 @@ read-only, no auth.
   `##` ids — one name, two notations; two heading-vs-REQ same-name
   collisions surfaced by the shared id space, F-019 for the stale
   DRAFT line). Ledger: 19 findings. B2 stands at 12/35 files.
+- **RESOLVED review point (owner, 2026-07-24, in session) — the WAL
+  and the boot files:** «spec/WAL.md не должен участвовать в проверке,
+  это генерирующиеся артефакты; также проверь про файлы внутри
+  spec/boot». **Ruling applied: `spec/WAL.md` is out of scope** — the
+  checkpoint is rewritten wholesale at every session end, so markup
+  cannot live in it (the same mortality argument as the generated
+  boot pair). The boot check reported back: `STATIC.md`/`INDEX.md`
+  are generated and were already excluded by the morning ruling;
+  `00-core.md`/`90-user.md` are **authored, user-owned, never
+  written by vibe** (PROP-000 invariant 3) — they stay observed.
+  Scope: 95 → **94 files**; the `spec/*.md` include is gone (WAL was
+  its only match), so a future top-level spec doc must be added to
+  `progress.toml` explicitly.
 - **Next step:** B2… batches — `spec/modules/**` at fact grain (the
   largest cluster), then `spec/design` / `spec/research` /
   `spec/terraforms` including the two pilot files' re-mark. Journal step

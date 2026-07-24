@@ -1,18 +1,7 @@
 {
   "schema": 1,
-  "updated_at": "2026-07-24T18:10:05Z",
+  "updated_at": "2026-07-24T18:12:18Z",
   "files": [
-    {
-      "path": "spec/WAL.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 8,
-      "facts": 20,
-      "unmarked": 20,
-      "issues": 0,
-      "campaign": {}
-    },
     {
       "path": "spec/boot/00-core.md",
       "effective": null,
@@ -1444,8 +1433,8 @@
       },
       "markers": 1,
       "units": 21,
-      "facts": 86,
-      "unmarked": 86,
+      "facts": 88,
+      "unmarked": 88,
       "issues": 0,
       "campaign": {}
     },
