@@ -1,13 +1,13 @@
 # PROP-043 — Progress Control: inline status markup and the `vibe progress` tool {#root}
 
+<status stage="spec" state="done" action="continue" actionstage="impl" comment="contract ratified 2026-07-24; implementation underway (campaign Phase A)"/>
+
 `spec://vibevm/modules/vibe-progress/PROP-043`
 
-<status stage="spec" state="done" action="continue" actionstage="impl" comment="contract ratified in the 2026-07-24 owner design session; implementation not started"/>
-
-**Status:** DRAFT — requirements ratified in an owner design session, 2026-07-24.
-The markup language, the tool surface, and the data contracts below are decided;
-implementation has not started. Sections marked *(provisional)* are held for the
-implementation task.
+**Status:** RATIFIED 2026-07-24 (owner, in session — «ратифицирую PROP-043»).
+The markup language, the tool surface, and the data contracts below are binding;
+implementation is underway (spec-actualization campaign, Phase A). Sections
+marked *(provisional)* are held for the implementation task.
 
 **Depends on / relates to** (all as *external companions* — see the
 separability law, §2): the `addressable-specs` flow (anchors, `spec://` URIs),
@@ -184,8 +184,14 @@ or end of a paragraph's text, never mid-sentence, never inside code or links.
 Four granularities, one rule each — and no ambiguous positions:
 
 1. **Document** — marker in the preamble, before the first heading.
+   *Pilot amendment (2026-07-24):* a document that **opens with its
+   heading** (the standard shape of this repo's specs) has no preamble;
+   there, the standalone marker immediately after that first heading is
+   the **document** marker, not a section marker.
 2. **Section** — marker on its own line **immediately after the heading
-   line**. This is the only legal standalone position inside a body.
+   line** (for any heading other than a preamble-less file's first one,
+   per the amendment above). This is the only legal standalone position
+   inside a body.
 3. **Paragraph** — marker **inside the paragraph's own text**: the first
    token (right after the newlines) or the last token (right before them).
 4. **Fragment** — paired `<status>…</status>` around text within a paragraph.
@@ -374,4 +380,6 @@ already native to it); second-wave corpora (`packages/org.vibevm.world`,
 `org.vibevm.ai-native`, ~230–250 authored files) and the fractality specspace
 (explicitly excluded from wave 1 by owner decision); extraction into a
 standalone distributable product (the separability law keeps it cheap);
-dashboard evolution beyond the minimal read-only vitrine.
+dashboard evolution beyond the minimal read-only page. (Terminology note:
+this surface is always called the **dashboard** — never "storefront", a
+term already taken by the vibevm store surface.)

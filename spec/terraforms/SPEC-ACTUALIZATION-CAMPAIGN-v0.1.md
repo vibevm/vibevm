@@ -1,8 +1,8 @@
 # Spec-Actualization Campaign v0.1 — mark, verify, and de-drift the whole spec tree {#root}
 
-**status: AUTHORED 2026-07-24 · NOT STARTED · vibevm-specific · first consumer of PROP-043 (Progress Control) · Phase A is the scaffold build; the campaign proper starts at Phase B**
+<status stage="spec" state="done" action="continue" actionstage="impl" comment="plan authored; scaffold underway (Phase A); campaign proper not started"/>
 
-<status stage="spec" state="done" action="continue" actionstage="impl" comment="plan authored; scaffold not built; campaign not started"/>
+**status: AUTHORED 2026-07-24 · NOT STARTED · vibevm-specific · first consumer of PROP-043 (Progress Control) · Phase A is the scaffold build; the campaign proper starts at Phase B**
 
 Contract for everything used here: [PROP-043](../modules/vibe-progress/PROP-043-progress-markup.md).
 Owner's manual: [OWNER-GUIDE](../modules/vibe-progress/OWNER-GUIDE.md).
