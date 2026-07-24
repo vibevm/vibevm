@@ -17,6 +17,7 @@ mod inspect;
 mod mcp;
 mod pkg;
 mod prefs;
+mod progress;
 mod registry;
 mod skill;
 mod term;
@@ -30,6 +31,7 @@ pub use inspect::*;
 pub use mcp::*;
 pub use pkg::*;
 pub use prefs::*;
+pub use progress::*;
 pub use registry::*;
 pub use skill::*;
 pub use term::*;
@@ -228,6 +230,11 @@ pub enum Command {
     /// Modes: `vibe vars`, `vibe vars diff`, `vibe vars full`,
     /// `vibe vars full diff`.
     Vars(VarsArgs),
+
+    /// Progress Control (PROP-043): scan/validate the inline `<status>`
+    /// markup, render reports, and drive the actualization campaign
+    /// (mirror, weave, rescan, resume).
+    Progress(ProgressArgs),
 
     /// Print version information.
     Version,

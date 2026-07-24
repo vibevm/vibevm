@@ -6,6 +6,7 @@ resolver = "3"
 # into them.
 exclude = ["packages", "vibedeps"]
 members = [
+    "crates/progress-core",
     "crates/vibe-actions",
     "crates/vibe-settings",
     "crates/vibe-cli",
@@ -25,6 +26,7 @@ members = [
     "xtask",
 ]
 default-members = [
+    "crates/progress-core",
     "crates/vibe-actions",
     "crates/vibe-settings",
     "crates/vibe-cli",
@@ -58,6 +60,7 @@ categories = ["command-line-utilities", "development-tools"]
 
 [workspace.dependencies]
 # Local crates
+progress-core = { path = "crates/progress-core", version = "0.1.0-dev" }
 vibe-actions = { path = "crates/vibe-actions", version = "0.1.0-dev" }
 vibe-settings = { path = "crates/vibe-settings", version = "0.1.0-dev" }
 vibe-core = { path = "crates/vibe-core", version = "0.1.0-dev" }

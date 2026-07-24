@@ -2240,6 +2240,23 @@ dependencies = [
 ]
 
 [[package]]
+name = "progress-core"
+version = "0.1.0-dev"
+dependencies = [
+ "anyhow",
+ "chrono",
+ "core-ai-native-specmark",
+ "glob",
+ "serde",
+ "serde_json",
+ "sha2",
+ "tempfile",
+ "thiserror 2.0.18",
+ "toml 0.9.12+spec-1.1.0",
+ "walkdir",
+]
+
+[[package]]
 name = "proptest"
 version = "1.11.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3860,6 +3877,7 @@ dependencies = [
  "futures",
  "jsonschema",
  "predicates",
+ "progress-core",
  "rat-salsa",
  "rat-widget",
  "ratatui-core",

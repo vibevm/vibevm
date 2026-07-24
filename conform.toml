@@ -30,6 +30,7 @@ max_file_lines = 600
 # a crate enters when its seams are doctested and its error layer carries REQ
 # edges).
 gated_crates = [
+    "progress-core",
     "vibe-core",
     "vibe-actions",
     "vibe-settings",

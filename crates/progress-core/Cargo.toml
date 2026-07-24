@@ -1,0 +1,28 @@
+[package]
+name = "progress-core"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+license-file.workspace = true
+publish.workspace = true
+repository.workspace = true
+homepage.workspace = true
+description = "Progress Control core: inline <status> markup parser, rollup, reports (PROP-043). Standalone by law — no vibevm dependencies."
+
+[dependencies]
+# Separability law (PROP-043 §2): NO vibe-* crates here, ever. specmark is
+# permitted — it is the neutral traceability tagger, not a vibevm subsystem.
+specmark.workspace = true
+anyhow.workspace = true
+thiserror.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+toml.workspace = true
+walkdir.workspace = true
+glob.workspace = true
+sha2.workspace = true
+chrono.workspace = true
+
+[dev-dependencies]
+tempfile.workspace = true

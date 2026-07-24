@@ -35,6 +35,7 @@ pub mod list;
 pub mod mcp;
 pub mod outdated;
 pub mod prefs;
+pub mod progress;
 pub mod registry;
 pub mod reinstall;
 pub mod search;

@@ -22,6 +22,7 @@ vibe-graph.workspace = true
 vibe-install.workspace = true
 vibe-registry.workspace = true
 vibe-resolver.workspace = true
+progress-core.workspace = true
 vibe-check.workspace = true
 vibe-publish.workspace = true
 vibe-workspace.workspace = true
