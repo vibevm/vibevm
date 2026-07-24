@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-24T17:49:26Z",
+  "updated_at": "2026-07-24T18:00:44Z",
   "files": {
     "spec/WAL.md": {
       "content_hash": "a6f2a5df9b4cb3f891185c6fb4e65420f55c10c00ce307795cdb43f94751fd7d",
@@ -643,25 +643,25 @@
       "issue_count": 0
     },
     "spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md": {
-      "content_hash": "d28d15f1fdd372d5ff2cd265f446f672f88f4bf370b1a5eacb2679d7856e56f4",
+      "content_hash": "a377614449431b183a0b964819de4ba5e94e3accd45da81f5cf9f2349f353894",
       "rollup": {
         "explicit": [
           "impl",
           "done"
         ],
         "computed": [
-          "impl",
+          "spec",
           "done"
         ],
         "effective": [
           "impl",
           "done"
         ],
-        "marker_count": 1,
-        "fact_count": 30,
-        "unmarked_facts": 30
+        "marker_count": 47,
+        "fact_count": 46,
+        "unmarked_facts": 0
       },
-      "marker_count": 1,
+      "marker_count": 47,
       "unit_count": 8,
       "issue_count": 0
     },
@@ -896,7 +896,7 @@
       "issue_count": 0
     },
     "spec/modules/vibe-registry/PROP-021-submodule-sources.md": {
-      "content_hash": "6bcd6ff44eed180d706acf0aa9635c9e01f65dc8782c4f72a82e6d75823f0e0f",
+      "content_hash": "32c5173fbb5998496da34bf4616bd4ea217313e5cd2cf9a08bd2948b2df07665",
       "rollup": {
         "explicit": [
           "spec",
@@ -910,16 +910,16 @@
           "spec",
           "done"
         ],
-        "marker_count": 1,
-        "fact_count": 32,
-        "unmarked_facts": 32
+        "marker_count": 38,
+        "fact_count": 37,
+        "unmarked_facts": 0
       },
-      "marker_count": 1,
+      "marker_count": 38,
       "unit_count": 12,
       "issue_count": 0
     },
     "spec/modules/vibe-registry/PROP-023-bridge-packages.md": {
-      "content_hash": "5211a9658635472472c9a8d9bbf1bb80083e6d9013e48554a5a4c4085208fc86",
+      "content_hash": "c8d50b4e82c4039707a7de7cbd031fcc298e9861629a93fa806128a21991d146",
       "rollup": {
         "explicit": [
           "spec",
@@ -933,11 +933,11 @@
           "spec",
           "done"
         ],
-        "marker_count": 1,
-        "fact_count": 35,
-        "unmarked_facts": 35
+        "marker_count": 46,
+        "fact_count": 45,
+        "unmarked_facts": 0
       },
-      "marker_count": 1,
+      "marker_count": 46,
       "unit_count": 12,
       "issue_count": 0
     },

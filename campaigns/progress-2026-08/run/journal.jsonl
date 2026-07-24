@@ -66,3 +66,9 @@
 {"kind":"step-done","id":"b2-prop-025","result":"26 units -> 45 anchored facts; per-fact impl/done vs spec/done split across the v1-implemented / v2-specified boundary; 0 unmarked, 0 issues","ts":"2026-07-24T17:44:37Z"}
 {"kind":"step-start","id":"drift-002-exec","step_type":"execute-task","target":"DRIFT-002 (parse.rs split)","actor":"opus:DRIFT-002","ts":"2026-07-24T17:48:54Z"}
 {"kind":"step-done","id":"drift-002-exec","result":"parse.rs 809 lines -> parse/ six modules (max 261); motion verified verbatim by spot-diff; differential oracle: corpus identical modulo timestamp; 31 tests green, clippy clean, conform 0 new, self-check all green exit 0; Fable review ACCEPTED (deviation: //! module docs, crate convention)","ts":"2026-07-24T17:48:54Z"}
+{"kind":"step-start","id":"b2-prop-026","step_type":"mark-file","target":"spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md (fact mark)","actor":"fable","ts":"2026-07-24T17:55:48Z"}
+{"kind":"step-done","id":"b2-prop-026","result":"30 units -> 46 anchored facts; superseded-in-topology arc deconstructed (grammar impl/done vs retired topology spec/done per fact); 0 unmarked, 0 issues","ts":"2026-07-24T17:57:27Z"}
+{"kind":"step-start","id":"b2-prop-021","step_type":"mark-file","target":"spec/modules/vibe-registry/PROP-021-submodule-sources.md (fact mark)","actor":"fable","ts":"2026-07-24T17:57:27Z"}
+{"kind":"step-done","id":"b2-prop-021","result":"32 units -> 37 anchored facts (git-native form impl/done per own claim, dependency-declared spec/done), 0 unmarked, 0 issues","ts":"2026-07-24T17:59:32Z"}
+{"kind":"step-start","id":"b2-prop-023","step_type":"mark-file","target":"spec/modules/vibe-registry/PROP-023-bridge-packages.md (fact mark)","actor":"fable","ts":"2026-07-24T17:59:32Z"}
+{"kind":"step-done","id":"b2-prop-023","result":"35 units -> 42 anchored facts, 0 unmarked, 0 issues","ts":"2026-07-24T18:00:26Z"}

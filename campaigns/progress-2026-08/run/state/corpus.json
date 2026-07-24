@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-07-24T17:49:26Z",
+  "updated_at": "2026-07-24T18:00:44Z",
   "files": [
     {
       "path": "spec/WAL.md",
@@ -508,10 +508,10 @@
         "stage": "impl",
         "state": "done"
       },
-      "markers": 1,
+      "markers": 47,
       "units": 8,
-      "facts": 30,
-      "unmarked": 30,
+      "facts": 46,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
@@ -695,10 +695,10 @@
         "stage": "spec",
         "state": "done"
       },
-      "markers": 1,
+      "markers": 38,
       "units": 12,
-      "facts": 32,
-      "unmarked": 32,
+      "facts": 37,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
@@ -712,10 +712,10 @@
         "stage": "spec",
         "state": "done"
       },
-      "markers": 1,
+      "markers": 46,
       "units": 12,
-      "facts": 35,
-      "unmarked": 35,
+      "facts": 45,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
