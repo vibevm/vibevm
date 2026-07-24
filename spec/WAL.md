@@ -84,9 +84,9 @@ Next step, 2026-07-24 night):
    `spec/design` / `spec/research` / `spec/terraforms` incl. the two
    pilot files' re-mark. Journal step per file; batch commits of ~3–6
    files; ledger findings in passing; semantic edits forbidden.
-2. Opus lands DRIFT-002 first (parse.rs split — returns the floor to
-   green; Fable reviews against the task's §6), then DRIFT-003 (honest
-   phase lane) and DRIFT-001 (cache prune).
+2. DRIFT-002 is DONE (Opus executed, Fable accepted; floor all green
+   again). Next Opus tasks: DRIFT-003 (honest phase lane), DRIFT-001
+   (cache prune).
 3. Every campaign session starts by reading
    `campaigns/progress-2026-08/run/RESUME.md` (or `vibe progress resume`),
    then the plan LOG (§9) for the next step.
@@ -97,10 +97,6 @@ design-doc; `vibe doctor` project-local row.
 
 ## Known issues
 
-- **Floor RED: conform file-length on `progress-core/src/parse.rs`**
-  (809 > 600) — introduced by the fact-scanner landing (`b67fa97`),
-  ledgered as DRIFT-002 (HIGH, Opus). One finding; everything else in
-  `self-check` is green. Do not freeze it into the baseline.
 - **vibespecs 401 on this machine** — `redbook` + `rust-ai-native` resolve
   via vibe-embedded (host `packages/`) here, not via the network registries.
   The `vibe.lock` for any project consuming them carries

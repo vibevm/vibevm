@@ -409,6 +409,18 @@ read-only, no auth.
   passing: the §5-B "unmarked counter catches what review misses"
   prediction keeps confirming — the counter caught both phantom-item
   wraps instantly.
+- **2026-07-24 · DRIFT-002 executed and landed — the floor is green
+  again.** First DRIFT task through the full loop: Opus executed the
+  parse.rs split exactly per the task file (six `parse/` modules, max
+  261 lines; motion, not rewrite), Fable reviewed and accepted (spot-diff
+  verbatim, differential oracle — corpus identical modulo timestamp, 31
+  tests green, conform 0 new, `self-check` all green with the real exit
+  code). One accepted deviation: per-file `//!` module docs, the crate's
+  own convention. B2 opened in parallel the same evening: templates +
+  modules README + PROP-042/025 marked (F-016 structural index drift,
+  F-017 code-ahead-of-spec `vibe aiui scrollbar`). The §5-E prediction
+  ("≥80 % of DRIFT tasks land without a returned round-trip") starts
+  1/1.
 - **Next step:** B2… batches — `spec/modules/**` at fact grain (the
   largest cluster), then `spec/design` / `spec/research` /
   `spec/terraforms` including the two pilot files' re-mark. Journal step
