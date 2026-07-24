@@ -3,6 +3,8 @@
 | id | title | executor | status |
 |---|---|---|---|
 | DRIFT-001 | cache prunes records that leave the observed scope | opus | queued |
+| DRIFT-002 | split progress-core parse.rs to hold the file budget (floor red) | opus | queued |
+| DRIFT-003 | campaign phase hardcoded "A" in the progress adapter | opus | queued |
 
 DRIFT-NNN (coding, Opus) and SPEC-NNN (spec stitching, budget-dependent)
 task files live beside this index. Formats:
