@@ -1,6 +1,6 @@
 {
-  "schema": 1,
-  "updated_at": "2026-07-24T16:44:25Z",
+  "schema": 2,
+  "updated_at": "2026-07-24T17:01:03Z",
   "files": {
     "spec/WAL.md": {
       "content_hash": "faac3ff646b050a1b6ec680aaccdc283cb4ef079a0654732d382d43290ed79d8",
@@ -33,28 +33,6 @@
       },
       "marker_count": 0,
       "unit_count": 7,
-      "issue_count": 0
-    },
-    "spec/boot/INDEX.md": {
-      "content_hash": "06e41baa9160f972c9d706211e9d4ee13522562f2ed70d48a913429824de0292",
-      "rollup": {
-        "marker_count": 0,
-        "fact_count": 9,
-        "unmarked_facts": 9
-      },
-      "marker_count": 0,
-      "unit_count": 7,
-      "issue_count": 0
-    },
-    "spec/boot/STATIC.md": {
-      "content_hash": "307ad314fe0caa9eb01a15428eadf2f6fb398631e58890b5805b6d3371c96c64",
-      "rollup": {
-        "marker_count": 0,
-        "fact_count": 350,
-        "unmarked_facts": 350
-      },
-      "marker_count": 0,
-      "unit_count": 117,
       "issue_count": 0
     },
     "spec/common/PROP-000.md": {
@@ -722,7 +700,7 @@
       "issue_count": 0
     },
     "spec/modules/vibe-progress/PROP-043-progress-markup.md": {
-      "content_hash": "3e894e34ed153b220af38dad31a47df21ee09ca68bfc9d72d9386c5d964e75ff",
+      "content_hash": "57a89fad1e44a1bfb42553c9ea43923b65048cab12f45f112a5d0a4fe68742cc",
       "rollup": {
         "explicit": [
           "spec",
@@ -737,8 +715,8 @@
           "done"
         ],
         "marker_count": 1,
-        "fact_count": 104,
-        "unmarked_facts": 104
+        "fact_count": 105,
+        "unmarked_facts": 105
       },
       "marker_count": 1,
       "unit_count": 27,
@@ -1893,7 +1871,7 @@
       "issue_count": 0
     },
     "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md": {
-      "content_hash": "52aec8d9b59ec0bb95430c60e815f0271b9497baa7549b24ea11960d9e95a15a",
+      "content_hash": "0ad9d895465468a3fd91912abdf9c9995f36a6b91497130db3a5cd67466cc856",
       "rollup": {
         "explicit": [
           "spec",

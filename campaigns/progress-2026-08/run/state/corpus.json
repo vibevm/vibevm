@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-07-24T16:44:25Z",
+  "updated_at": "2026-07-24T17:01:03Z",
   "files": [
     {
       "path": "spec/WAL.md",
@@ -32,28 +32,6 @@
       "units": 7,
       "facts": 31,
       "unmarked": 31,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
-      "path": "spec/boot/INDEX.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 7,
-      "facts": 9,
-      "unmarked": 9,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
-      "path": "spec/boot/STATIC.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 117,
-      "facts": 350,
-      "unmarked": 350,
       "issues": 0,
       "campaign": {}
     },
@@ -577,8 +555,8 @@
       },
       "markers": 1,
       "units": 27,
-      "facts": 104,
-      "unmarked": 104,
+      "facts": 105,
+      "unmarked": 105,
       "issues": 0,
       "campaign": {}
     },

@@ -1,14 +1,14 @@
 # RESUME — campaign `progress-2026-08`
 
-_Generated 2026-07-24T16:44:25Z — do not edit; regenerate with `vibe progress resume`._
+_Generated 2026-07-24T17:01:03Z — do not edit; regenerate with `vibe progress resume`._
 
 **Phase:** A
 
-**Where we are:** {"files":97,"facts":8231,"unmarked":7775,"journal_events":29}
+**Where we are:** {"files":95,"facts":7873,"unmarked":7417,"journal_events":32}
 
 ## Unfinished (recover FIRST)
 
-- step `b-fact-scanner` (impl-tool, target `crates/progress-core (fact-grain units: list items, lead lines, table cells)`, actor fable, started 2026-07-24T16:21:00Z) is OPEN → `git restore` the files it touched, then redo the step.
+Nothing open — the journal is clean.
 
 ## Next
 
