@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-24T20:42:35Z",
+  "updated_at": "2026-07-24T20:54:57Z",
   "files": {
     "spec/boot/00-core.md": {
       "content_hash": "9430b035d1017950ec37c4ce85bab91155334b5fc55d3e1948138a4f6be8b0e5",
@@ -931,7 +931,7 @@
       "issue_count": 0
     },
     "spec/modules/vibe-registry/PROP-030-embedded-registry.md": {
-      "content_hash": "f6efcfff42e111119bd741403421c76eabf6471de7875ba935ae945fc5deafe3",
+      "content_hash": "ed4f5ac11090e8b49e729af425da88add99ea4837ee5769351049d58da4c74c7",
       "rollup": {
         "explicit": [
           "spec",
@@ -945,11 +945,11 @@
           "spec",
           "done"
         ],
-        "marker_count": 1,
-        "fact_count": 56,
-        "unmarked_facts": 56
+        "marker_count": 76,
+        "fact_count": 75,
+        "unmarked_facts": 0
       },
-      "marker_count": 1,
+      "marker_count": 76,
       "unit_count": 14,
       "issue_count": 0
     },
@@ -1092,48 +1092,48 @@
       "issue_count": 0
     },
     "spec/modules/vibe-workspace/PROP-011-incremental-install.md": {
-      "content_hash": "287dc455ccac8dfd3c3f1b679a6f8833d443aad541266fe6bd8fed1cd976d812",
+      "content_hash": "f3f38fc6ea2d128a3e2e9172a87b7522a60ab02724d567408863330bf3499296",
       "rollup": {
         "explicit": [
           "impl",
           "done"
         ],
         "computed": [
-          "impl",
+          "spec",
           "done"
         ],
         "effective": [
           "impl",
           "done"
         ],
-        "marker_count": 1,
-        "fact_count": 56,
-        "unmarked_facts": 56
+        "marker_count": 97,
+        "fact_count": 96,
+        "unmarked_facts": 0
       },
-      "marker_count": 1,
+      "marker_count": 97,
       "unit_count": 15,
       "issue_count": 0
     },
     "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md": {
-      "content_hash": "e8c29d01017fa34fcb9379fce6169b1be81d14b4b91d37ed58e5369a6ba9d5a2",
+      "content_hash": "2e00d2aab2e0007ad20916d6e76a933a8f331a043f7c4cf1ef39d9641c320b32",
       "rollup": {
         "explicit": [
           "impl",
           "done"
         ],
         "computed": [
-          "impl",
-          "done"
+          "spec",
+          "work"
         ],
         "effective": [
           "impl",
           "done"
         ],
-        "marker_count": 1,
-        "fact_count": 61,
-        "unmarked_facts": 61
+        "marker_count": 84,
+        "fact_count": 83,
+        "unmarked_facts": 0
       },
-      "marker_count": 1,
+      "marker_count": 84,
       "unit_count": 15,
       "issue_count": 0
     },
