@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-24T19:51:07Z",
+  "updated_at": "2026-07-24T20:34:21Z",
   "files": {
     "spec/boot/00-core.md": {
       "content_hash": "9430b035d1017950ec37c4ce85bab91155334b5fc55d3e1948138a4f6be8b0e5",
@@ -609,25 +609,25 @@
       "issue_count": 0
     },
     "spec/modules/vibe-mcp/PROP-015-mcp-integration.md": {
-      "content_hash": "fcb13e9731a09048070e16e6e5b9099b6f8886ac5d45e80c0d9df96215e93f9b",
+      "content_hash": "e147967cbaa3494c8c6a16a198a048113cf659d4cef1f8567260937c2a2d9636",
       "rollup": {
         "explicit": [
           "impl",
           "done"
         ],
         "computed": [
-          "impl",
+          "spec",
           "done"
         ],
         "effective": [
           "impl",
           "done"
         ],
-        "marker_count": 1,
-        "fact_count": 48,
-        "unmarked_facts": 48
+        "marker_count": 65,
+        "fact_count": 64,
+        "unmarked_facts": 0
       },
-      "marker_count": 1,
+      "marker_count": 65,
       "unit_count": 13,
       "issue_count": 0
     },
@@ -1207,7 +1207,7 @@
       "issue_count": 0
     },
     "spec/modules/vibe-workspace/PROP-034-transitive-links-boot-graph.md": {
-      "content_hash": "9df306483226d1b4754237c00e1189971eab77679efcd108a0955de389ad7e7a",
+      "content_hash": "f9d5e19a8c1a402b87e4159b6079c5f546d2849d599961d05bf92d5e795b339b",
       "rollup": {
         "explicit": [
           "spec",
@@ -1221,11 +1221,11 @@
           "spec",
           "work"
         ],
-        "marker_count": 1,
-        "fact_count": 50,
-        "unmarked_facts": 50
+        "marker_count": 66,
+        "fact_count": 65,
+        "unmarked_facts": 0
       },
-      "marker_count": 1,
+      "marker_count": 66,
       "unit_count": 12,
       "issue_count": 0
     },
