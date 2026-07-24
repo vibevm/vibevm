@@ -386,14 +386,36 @@ read-only, no auth.
   scratch (the DRIFT-001 no-prune defect makes a stale-record purge
   otherwise impossible). Scope: 97 → **95 files**, 8 219 → **7 872
   facts**. This also closes the B0-parked scope question above.
-- **Next step:** re-mark the remaining 11 `spec/common` files under
-  the fact grammar (deconstruction into anchored fact lists per the
-  PROP-029 re-pilot pattern; ~380 paragraph-grain units to deconstruct,
-  MissingAnchor burns to 0 for the cluster), then continue B2… batches
-  (`spec/modules/**`, `spec/design`, `spec/research`, `spec/terraforms`)
-  fact-grain from the start. Every session: `vibe progress resume`
-  first; journal step per file; batch commits; ledger findings in
-  passing.
+- **2026-07-24 · B1f LANDED — spec/common is fact-grain clean; the two
+  review points RESOLVED (above).** The scanner-handover step was closed
+  retroactively (`b67fa97` verified committed; RESUME had prescribed a
+  redo of finished work). All 11 remaining `spec/common` files re-marked
+  under the fact grammar: **386 paragraph-grain units → 979 anchored
+  facts** (batch commits `83bed35` / `4aed13f` / `d639bcf`; the batch-1
+  message overstates its own counts — 109 units → 296 facts is the true
+  figure, corrected here, history left unrewritten). Cluster total:
+  **1 009 facts, 0 unmarked, 0 issues** — cluster MissingAnchor 386 → 0;
+  the wave's residue is 40 expected errors in the two pilot files
+  (SHRINK-PLAN 28, design/README 12), owned by their B2+ batches.
+  Grammar traps found and recorded: blockquote units cannot carry
+  `##` anchors (ledgered **F-015**; two units re-formed — a bold
+  paragraph, a fenced template); a wrapped prose line whose continuation
+  opens with `+ ` parses as a phantom list item (two fixed in PROP-019).
+  Tasks queued for Opus: **DRIFT-002** (`parse.rs` 809 lines > 600
+  budget — the standing floor is RED on this single new conform finding
+  until it lands; the B1f batch commits were made against that known,
+  ledgered red) and **DRIFT-003** (`campaign.json` phase hardcoded
+  `"A"`, dashboard/RESUME render a stale phase). Prediction check in
+  passing: the §5-B "unmarked counter catches what review misses"
+  prediction keeps confirming — the counter caught both phantom-item
+  wraps instantly.
+- **Next step:** B2… batches — `spec/modules/**` at fact grain (the
+  largest cluster), then `spec/design` / `spec/research` /
+  `spec/terraforms` including the two pilot files' re-mark. Journal step
+  per file; batch commits of ~3–6 files (fact density triples the diff
+  per file); ledger findings in passing; semantic edits forbidden.
+  Opus lands DRIFT-002 first so the floor returns green (Fable
+  reviews); DRIFT-003 restores an honest phase lane.
 
 ## 10. Deferrals {#deferrals}
 
