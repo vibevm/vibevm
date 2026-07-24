@@ -450,6 +450,18 @@ read-only, no auth.
   Scope: 95 → **94 files**; the `spec/*.md` include is gone (WAL was
   its only match), so a future top-level spec doc must be added to
   `progress.toml` explicitly.
+- **2026-07-24 · Owner directive — the coder-tier engine version.** The
+  §2 coder tier ("Opus") runs on the owner-designated engine
+  `claude-opus-5` from the next session on. Verified: the id is live
+  (one-shot CLI probe answered); the session-alias default resolves to
+  the previous engine, so two pins are installed — the machine-local
+  subagent-model env pin (`.claude/settings.local.json`, blanket) and
+  the committed selective agent type (`.claude/agents/opus5.md`) —
+  both effective from the next session (agent-type registration and
+  settings-env injection are session-start events; verified
+  empirically mid-session). Tasks DRIFT-002…005 of this date executed
+  on the session-alias engine before the directive; all passed review
+  with no returned round-trip.
 - **Next step:** B2… batches — `spec/modules/**` at fact grain (the
   largest cluster), then `spec/design` / `spec/research` /
   `spec/terraforms` including the two pilot files' re-mark. Journal step
