@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updated_at": "2026-07-24T23:10:00Z",
+ "updated_at": "2026-07-25T00:05:00Z",
  "tasks": [
   {
    "id": "DRIFT-001",
@@ -24,7 +24,7 @@
    "id": "DRIFT-004",
    "title": "specmap learns ##<ID> fact anchors (owner commission)",
    "executor": "opus",
-   "status": "queued"
+   "status": "done"
   }
  ]
 }

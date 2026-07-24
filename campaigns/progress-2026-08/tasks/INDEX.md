@@ -5,7 +5,7 @@
 | DRIFT-001 | cache prunes records that leave the observed scope | opus | done |
 | DRIFT-002 | split progress-core parse.rs to hold the file budget (floor red) | opus | done |
 | DRIFT-003 | campaign phase hardcoded "A" in the progress adapter | opus | done |
-| DRIFT-004 | specmap learns ##<ID> fact anchors (owner commission) | opus | queued |
+| DRIFT-004 | specmap learns ##<ID> fact anchors (owner commission) | opus | done |
 
 DRIFT-NNN (coding, Opus) and SPEC-NNN (spec stitching, budget-dependent)
 task files live beside this index. Formats:

@@ -1,8 +1,20 @@
 # DRIFT-004 — specmap learns `##<ID>` fact anchors (owner commission) {#root}
 
-<status stage="impl" state="plan" ref="DRIFT-004"/>
+<status stage="impl" state="done" ref="DRIFT-004"/>
 
-**Status:** queued
+**Status:** done — executed by Opus 2026-07-24, reviewed and accepted by
+Fable the same day (diff read at the seam hunks: fact_anchor_at /
+list_item_content mirror the host scanner without importing it,
+segment_block_facts implements the span rule, dedup interleaves with
+the heading walk in document order; 81 tests green incl. 13 new
+fact-anchor cases; is_valid_anchor byte-identical; sync-engines
+--check green — v0.8.0 is vendored nowhere; self-check all green,
+exit 0 via sentinel). Accepted clarification: task §4.3's
+`##not valid!` example was imprecise under first-token semantics (it
+mints fact `not`); genuinely-invalid heads (`##9bad`, `##bad!`,
+`##!`, `###`) are the tested ignore cases — matches the host
+reference. No schema change was needed (SpecUnit already models
+untyped units); the §8 stop rule did not fire.
 **Executor:** Opus. **Reviewer:** Fable, against §6 verbatim.
 **Cluster:** package — `core-ai-native` v0.8.0 (the OPEN, unreleased line;
 the host pins 0.7.0 and is untouched by this task)
