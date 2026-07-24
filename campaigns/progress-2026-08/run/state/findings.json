@@ -262,6 +262,24 @@
       "status": "open",
       "wave": 0,
       "note": "The Status line and s9.3 still call workspace-aware vibe install -the remaining piece- / -deferred-, but PROP-009 M1.18 Phase 5 shipped exactly that (workspace-aware install/build, 2026-05-22, one day after PROP-007 s8 was written). s6 q3 records the PROP-009 resolution, s9.3 does not. Phase C/D: refresh the status line and s9.3."
+    },
+    {
+      "id": "F-030",
+      "from": "spec/modules/vibe-resolver/PROP-003-dep-evolution.md",
+      "to": "crates/vibe-resolver/src/features.rs",
+      "type": "reality-mismatch",
+      "status": "open",
+      "wave": 0,
+      "note": "Status line and closing note still say -design proposal, not yet implementation-locked- while the vocabulary ships: features.rs (dep:/weak ?//exclusive groups), activation.rs (all probes; if_os reserved via recorded deviates), conditional.rs (+ fixpoint_model), manifest/i18n.rs + vibe-actions/i18n.rs, vibe-check i18n_coverage/subskill_structure/features_graph/activation_conflict, lockfile meta+package fields (solver/language_chain/active_features/virtual_capabilities/features/subskills_active/describes), show features/subskills CLI. Engine sections superseded by PROP-017. Same stale-header family as F-024..F-029; document marker updated to impl/done at the B2 re-mark. Unshipped details stay spec/done: pin_preferences (deviates in vibe-resolver lib.rs), VIBE_LANGUAGE env, dotted-key field translations (2.7.4), --all-languages, vibe review scoring, outdated --upstream, the whole LLM emission engine (vibe-llm pending, vibe-mcp tools.rs header)."
+    },
+    {
+      "id": "F-031",
+      "from": "spec/modules/vibe-resolver/PROP-003-dep-evolution.md",
+      "to": "spec/modules/vibe-resolver/PROP-003-dep-evolution.md",
+      "type": "contradiction",
+      "status": "open",
+      "wave": 0,
+      "note": "Internal r2 leftovers: (1) the 2.8 consolidated fence still shows r1 syntax __exclusive = [[...]] and a double-underscore __internal-helper while 2.4 (r2) replaced the sigil with named [features.exclusive] groups and a single _ visibility prefix; (2) 4.3 says -already covered in 2.5.3- but the packages-only rationale moved to 2.5.4 when r2 inserted the LLM-virtual-caps section; (3) 2.7.5/2.9 examples carry language/language_fallback and schema_version = 3 while the shipped shape is language_chain and schema v5 (v3 was the PROP-003 bump per lockfile.rs), and the active_features example uses kind:name/feature while the shipped grain is group/name/feature. Phase C/D dedup material; no semantic edits in Phase B."
     }
   ]
 }

@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-24T21:48:44Z",
+  "updated_at": "2026-07-24T22:16:23Z",
   "files": {
     "spec/boot/00-core.md": {
       "content_hash": "9430b035d1017950ec37c4ce85bab91155334b5fc55d3e1948138a4f6be8b0e5",
@@ -954,25 +954,25 @@
       "issue_count": 0
     },
     "spec/modules/vibe-resolver/PROP-003-dep-evolution.md": {
-      "content_hash": "268e42da591de79f5c2c1a0a9ebbb9b9e60ae55645dd70097a25ed7d413db009",
+      "content_hash": "a4b5c9844d0f8bea8112bfee0c795640a84e500cf82c963bd84cffc48ddd473c",
       "rollup": {
         "explicit": [
-          "spec",
+          "impl",
           "done"
         ],
         "computed": [
           "spec",
-          "done"
+          "work"
         ],
         "effective": [
-          "spec",
+          "impl",
           "done"
         ],
-        "marker_count": 1,
-        "fact_count": 310,
-        "unmarked_facts": 310
+        "marker_count": 314,
+        "fact_count": 313,
+        "unmarked_facts": 0
       },
-      "marker_count": 1,
+      "marker_count": 314,
       "unit_count": 56,
       "issue_count": 0
     },

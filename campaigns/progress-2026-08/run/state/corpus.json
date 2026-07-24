@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-07-24T21:48:44Z",
+  "updated_at": "2026-07-24T22:16:23Z",
   "files": [
     {
       "path": "spec/boot/00-core.md",
@@ -728,17 +728,17 @@
     {
       "path": "spec/modules/vibe-resolver/PROP-003-dep-evolution.md",
       "effective": {
-        "stage": "spec",
+        "stage": "impl",
         "state": "done"
       },
       "explicit": {
-        "stage": "spec",
+        "stage": "impl",
         "state": "done"
       },
-      "markers": 1,
+      "markers": 314,
       "units": 56,
-      "facts": 310,
-      "unmarked": 310,
+      "facts": 313,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
