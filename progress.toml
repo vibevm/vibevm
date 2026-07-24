@@ -10,6 +10,11 @@
 # session-end — markup cannot live in it. The authored boot snippets
 # (00-core, 90-user) are NOT generated (user-owned; vibe never writes
 # them) and stay observed via `spec/boot/[0-9]*.md`.
+# `spec/terraforms/`, `spec/research/`, `spec/neworder/` are OUT of scope
+# (owner ruling 2026-07-25, in session): long-executed refactoring plans
+# and research studies — historical records, not living contracts; the
+# campaign does not mark or verify them. Re-add a glob here if one of
+# them is ever promoted back to living-contract status.
 # §4 is include-only by design, so exclusions are expressed by
 # enumeration; a new spec/ subtree or top-level spec doc must be added
 # here explicitly — review at batch boundaries.
@@ -21,7 +26,4 @@ include = [
     "spec/discipline/**/*.md",
     "spec/manual-tests/**/*.md",
     "spec/modules/**/*.md",
-    "spec/neworder/**/*.md",
-    "spec/research/**/*.md",
-    "spec/terraforms/**/*.md",
 ]

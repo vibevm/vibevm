@@ -474,13 +474,38 @@ read-only, no auth.
   `spec://…#<FACT-ID>` per statement, and the §6 evidence join gains
   the campaign grain for Phase C. Session-end: the coder-tier engine
   pin (claude-opus-5) binds from the next session.
-- **Next step:** B2… batches — `spec/modules/**` at fact grain (the
-  largest cluster), then `spec/design` / `spec/research` /
-  `spec/terraforms` including the two pilot files' re-mark. Journal step
-  per file; batch commits of ~3–6 files (fact density triples the diff
-  per file); ledger findings in passing; semantic edits forbidden.
-  Opus lands DRIFT-002 first so the floor returns green (Fable
-  reviews); DRIFT-003 restores an honest phase lane.
+- **2026-07-25 · B2 modules sweep — 18 files in batches 8–18; B2 at
+  32/35.** PROP-015/034/027/036/030/011/012/010/040/038/008/001/009/
+  017/043/035/037/007 marked at fact grain (commits
+  `b27336ae`…`1e7dff01`), ~1 540 units → ~1 770 anchored facts; every
+  file 0 unmarked / 0 issues. Grammar precedents set: the
+  Decision-paragraph idiom, `##req-*`/`##design-*` lines, `##self-uri`,
+  checkbox anchors before `[x]`, `@impl/plan` for unexecuted phase
+  plans, superseded-arc spec/done-vs-impl/done, em-dash cells count.
+  Ledger +7: F-023 (dangling PROP-043 launcher ref) and the
+  stale-header family F-024…F-029 — one Phase C/D sweep fixes all.
+  GitVerse SSH down all session (verified clean ancestor via HTTPS;
+  plain re-fan on recovery, never `--force`); GitHub carries everything.
+- **RESOLVED scope ruling (owner, 2026-07-25, in session):** «я хочу
+  исключить из проверки spec/terraforms, spec/research, spec/neworder.
+  Это те вещи, которые мы делали в качестве рефакторингов и
+  исследований давным-давно». **Ruling applied:** the three subtrees
+  leave the include enumeration in `progress.toml` — long-executed
+  plans and studies are historical records, not living contracts.
+  Scope: 94 → **59 files**, 8 589 → **4 889 facts**; the SHRINK-PLAN
+  pilot (28 expected errors) leaves with terraforms, so the expected
+  `check` residue drops to **12** (design/README, burns at its
+  re-mark). The DRIFT-001 cache prune dropped the out-of-scope records
+  cleanly. The campaign plan itself is now out of scope — its LOG stays
+  the process record, unmarked.
+- **Next step:** finish the B2 tail — PROP-005 → PROP-003 → PROP-002
+  (modules to 35/35), then `spec/design` (incl. the README re-mark
+  burning the last 12 expected errors), `spec/boot` authored pair
+  (additive markers only — user-owned files, zero re-forming),
+  `spec/manual-tests` MT-01/02/03, `spec/discipline/README`. Journal
+  step per file; batch commits ~1–3 files; then the Phase B exit gate
+  (`check --exhaustive` clean over the 59-file scope) and the §4
+  boundary ritual.
 
 ## 10. Deferrals {#deferrals}
 
