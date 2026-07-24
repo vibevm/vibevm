@@ -109,6 +109,16 @@ design-doc; `vibe doctor` project-local row.
 
 ## Known issues
 
+- **GitVerse mirror diverged or degraded (2026-07-25, session end).** The
+  final fan-out reported non-fast-forward on `gitverse:main` +
+  `gitverse:tags` (a direct write to the host, or a degraded link — a
+  follow-up `git fetch origin` timed out, so it could not be inspected).
+  **GitHub carries everything** (synced through the session-end commits).
+  Next session: `git fetch origin` → inspect `main..origin/main` → if the
+  host truly carries foreign commits, reconcile INTO mainline
+  (`cargo xtask mirror --from gitverse` for an accepted merge) and re-fan;
+  if it was transient, a plain `cargo xtask mirror` re-fan suffices.
+  NEVER `--force` (the standing red line).
 - **vibespecs 401 on this machine** — `redbook` + `rust-ai-native` resolve
   via vibe-embedded (host `packages/`) here, not via the network registries.
   The `vibe.lock` for any project consuming them carries
