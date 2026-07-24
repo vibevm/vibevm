@@ -181,7 +181,7 @@ or end of a paragraph's text, never mid-sentence, never inside code or links.
 
 ### 3.8 Placement {#placement}
 
-Four granularities, one rule each — and no ambiguous positions:
+Six granularities, one rule each — and no ambiguous positions:
 
 1. **Document** — marker in the preamble, before the first heading.
    *Pilot amendment (2026-07-24):* a document that **opens with its
@@ -193,28 +193,81 @@ Four granularities, one rule each — and no ambiguous positions:
    per the amendment above). This is the only legal standalone position
    inside a body.
 3. **Paragraph** — marker **inside the paragraph's own text**: the first
-   token (right after the newlines) or the last token (right before them).
-4. **Fragment** — paired `<status>…</status>` around text within a paragraph.
+   token (right after the newlines, or right after the paragraph's `##<ID>`
+   anchor) or the last token (right before them).
+4. **List item** *(fact amendment, 2026-07-24 — owner-directed)* — every
+   item of a bulleted or numbered list is a **unit of its own**, at every
+   nesting level. Its marker — shorthand or XML form alike — sits **inside
+   the item's own text**: the first or last token of the item (before any
+   nested sub-items, which carry their own markers).
+
+   **Fact anchors — the anchored-when-marked law** *(owner, 2026-07-24)*.
+   A stable fact address is written `##<ID>` as the **first token** of a
+   paragraph or list item (double hash — deliberately distinct from the
+   single-hash foreign directives `#use` / `#embed` / `#source`, and from
+   headings, which require a space after the hashes). `<ID>` is
+   `[A-Za-z][A-Za-z0-9_-]*`; the unit is then addressable as
+   `spec://…/<doc>#<ID>`, sharing one address space with the heading
+   `{#anchor}`s — a duplicate across both forms is a `check` error.
+   **Every unit that carries a status marker — paragraph or list item —
+   MUST also carry a `##<ID>` anchor**; a marked, anchor-less unit is a
+   `check` error. The marker may stand immediately after the anchor
+   (`1. ##RULE-001 rule text @freeze/done` — the owner's canonical
+   example shape) or as the unit's last token.
+
+   **Table addressing** *(proposed 2026-07-24, this session — same
+   syntax, no new grammar)*. A `##<ID>` as the first token of the
+   **first cell of a body row** addresses that **row**
+   (`| ##ROW-PKGREF pkgref | … |`); in **any other cell** it addresses
+   that **cell**; the **whole table** is addressed by the anchor of its
+   lead paragraph (`the target set: ##TBL-MIRRORS`) or its section.
+   Positional schemes (`r2c3`) are rejected — a row shuffle breaks
+   them; a minted id travels with its row. Cells stay **exempt from the
+   anchored-when-marked obligation** (mint ids only where something
+   cites them); a table that is really a list of facts is deconstructed
+   into an anchored list instead.
+5. **Table cell** *(fact amendment, 2026-07-24)* — every non-empty body
+   cell of a table is a **unit of its own**; its marker sits inside the
+   cell's text, first or last token. Header rows and the delimiter row are
+   structure, not units. A table whose rows are really a list of facts is
+   better deconstructed into a list (§3.9); cell markup is for tables whose
+   tabular shape is essential.
+6. **Fragment** — paired `<status>…</status>` around text within a
+   paragraph, list item, or cell — the form for an **inline fact** that
+   cannot be pulled out of its sentence.
 
 A standalone marker between two paragraphs is a **`check` error** — there is
 no "nearest paragraph" heuristic. A section's span follows the owner-fixed
 IR rule (PROP-035 §5): from its heading to the next heading of the same or
 higher level.
 
-### 3.9 The two-granularity doctrine {#granularity}
+### 3.9 The granularity doctrine — facts are the campaign grain {#granularity}
 
 - **Anchored units are the maintenance granularity.** Between campaigns,
   markup lives on `{#anchor}`-ed units; reports cite `spec://…#anchor`; this
   is the stable, refactor-proof form.
-- **Paragraphs are the campaign granularity.** An actualization campaign
-  demands verbatim exhaustiveness — every paragraph carries a marker, so an
-  LLM pass cannot silently skip anything; the unmarked-paragraph counter is
-  the algorithmic overseer. Campaign passes also *re-split* under-granular
-  paragraphs and add missing anchors (sense-preserving splits only; semantic
-  edits belong to the drift-correction stage, never to markup passes).
-- After a campaign, density is folded back: a section whose paragraphs agree
+- **Facts are the campaign granularity** *(fact amendment, 2026-07-24 —
+  owner-directed; supersedes the paragraph grain of the original text)*. An
+  actualization campaign demands verbatim exhaustiveness at the grain of
+  individual **facts**, because a paragraph routinely carries several and an
+  LLM pass silently skips the inner ones. Operationally:
+  - every paragraph, list item, and non-empty table body cell carries its
+    own marker — these are the **countable units** the exhaustive counter
+    enforces;
+  - a paragraph that carries **more than one fact is deconstructed** —
+    rewritten, sense-preserving and wording-preserving, into a bulleted or
+    numbered list with one fact per item, each item marked. Most prose is
+    expected to become lists; a paragraph stays prose only when it truly
+    carries one fact (or none — connective tissue);
+  - a fact that cannot leave its sentence (an inline clause, an enumeration
+    inside one sentence that resists splitting) is wrapped as a
+    **fragment**: `<status …>the fact</status>`;
+  - campaign passes still add missing `{#anchor}`s; deconstruction changes
+    *form only* — semantic edits belong to the drift-correction stage,
+    never to markup passes.
+- After a campaign, density is folded back: a section whose units agree
   collapses to one unit marker (`check` verifies the fold is lossless);
-  mixed sections stay paragraph-marked.
+  mixed sections stay fact-marked.
 
 ### 3.10 Inheritance and rollup {#rollup}
 
@@ -345,6 +398,20 @@ O(corpus).
   (headings → units per the PROP-035 §5 body-span rule), then recognizes
   `<status>` elements and shorthand in text nodes only — never inside fenced
   code, inline code, or link targets.
+- **Countable units** *(fact amendment, 2026-07-24)*: inside a text block
+  the scanner recognizes list items (`-` / `*` / `+` and `N.` / `N)`
+  lines, with their indented continuation lines, at every nesting level)
+  and table rows (`|`-delimited); the units the exhaustive counter walks
+  are: plain paragraphs, the lead lines of a block before its first list
+  item, each list item, and each non-empty body cell of a table. Header
+  and delimiter rows of a table are structure. A marker counts for the
+  unit whose text carries it (first/last token of that unit, or a
+  fragment wrapper inside it).
+- **Fact anchors** *(fact amendment, 2026-07-24)*: a `##<ID>` first token
+  of a paragraph or list item is that unit's anchor, recorded alongside
+  the heading anchors; the scanner enforces the anchored-when-marked law
+  (§3.8) — a marked unit with no anchor, and a duplicate id, are `check`
+  errors. `##` inside code spans/fences is opaque, as all markup is.
 - The element grammar is XML: attributes quoted, point markers self-closed.
   A future XML storage frontend consumes the same attribute schema natively;
   the markup language does not change.

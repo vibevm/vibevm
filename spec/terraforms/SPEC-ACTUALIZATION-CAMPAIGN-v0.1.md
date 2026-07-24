@@ -306,10 +306,58 @@ read-only, no auth.
   generators. Until ruled, B1 batches skip both files — which keeps
   `check --exhaustive` red on them, so the Phase B exit gate needs
   this ruling.
-- **Next step:** B1… batches — paragraph-exhaustive markup, ~8–12
-  files per batch, starting with `spec/common/`; per file: markers +
-  sense-preserving splits + missing anchors + ledger findings in
-  passing; semantic edits forbidden.
+- **2026-07-24 · B1 (spec/common, paragraph grammar) landed — then the
+  grain changed.** All 12 `spec/common` files marked
+  paragraph-exhaustively (389 paragraphs; PROP-000 got its document
+  marker + the missing `{#invariants}` anchor; open-questions sections
+  marked `spec/work`), `check` clean, commit `91274c8`. Mid-batch a
+  real power cut killed the session; §4 recovery worked as designed —
+  journal showed one open step (`b1-prop-000`), rescan verified its
+  edits clean, the step closed without redo. In passing: PROP-000 §3
+  still describes the pre-2026-07-12 proprietary-EULA posture
+  (F-014-to-be), PROP-018's MVP is implemented while its line says
+  proposed (F-013-to-be), and the cache does not prune records that
+  fall out of scope after `progress.toml` narrowing — corpus.json
+  carries 497 entries vs 97 observed, dashboard counters inflated
+  (DRIFT-001-to-be).
+- **2026-07-24 · FACT-GRAIN DIRECTIVE (owner, in session, verbatim):**
+  «Каждый элемент такого списка по сути является самостоятельным
+  фактом, и его тоже нужно размечать. В том числе, inline факты
+  перечисленные внутри текста … Я хочу чтобы ты для всех текстов
+  сделала полное деконструирование всех фактов, имеющихся в системе,
+  совершенно всех текстов. … если какой-то абзац можно переписать в
+  виде нумерованного или ненумерованного списка фактов и каждому из
+  них поставить в соответствие разметку статуса — нужно сделать это. В
+  идеале почти все тексты превращаются в какие-то списки … Это
+  означает ЗНАЧИТЕЛЬНОЕ УСЛОЖНЕНИЕ кода Системы, инструкций Системы и
+  рост количества фактов … Уже проиндексированное и размеченное нужно
+  переиндексировать и переразметить». Clarifications the same session:
+  list-item markers go at the item's start or end, `@` or XML notation
+  both; **table cells are marked the same way**. Ratified into
+  PROP-043 as the fact amendment (§3.8 items 4–6, §3.9, §8) — the
+  campaign granularity drops from paragraph to **fact**; deconstruction
+  of multi-fact prose into lists is now part of the markup pass
+  (sense-preserving, wording-preserving; semantic edits still
+  forbidden); everything already marked (pilot + B0 doc markers + B1
+  common) is re-marked under the fact grammar.
+- **2026-07-24 · Fact-anchor addenda (owner, same session):** (1)
+  list-item markers sit at the item's start or end, `@` or XML notation
+  both; (2) «таблицы тоже нужно в ячейках размечать аналогичным
+  способом» — table body cells are units, marked in-cell; (3) list
+  items get hashtag addressing — «Элементам списков стоит придумать
+  адресацию с помощью хэштегов … формат типа `1. #RULE-001 Текст
+  правила @freeze/done`», refined to **`##RULE-001`** (double hash) «чтобы
+  их отличать» from the `#use`-family directives; (4) «каждый абзац,
+  каждый элемент списка … который имеет статус, нужно разметить с
+  помощью якоря» — the anchored-when-marked law: a marked unit without
+  a `##<ID>` anchor is a `check` error. All four ratified into
+  PROP-043 §3.8 / §8.
+- **Next step:** implement the fact-grain scanner in `progress-core`
+  (list items at all nesting levels, lead lines, table body cells as
+  countable units; placement law per §3.8; fixtures + tests), then
+  re-pilot the fact grammar on one small file (PROP-029), then re-mark
+  the marked set and continue B1… batches under the fact grammar —
+  deconstruction + markers + anchors + ledger findings in passing.
 
 ## 10. Deferrals {#deferrals}
 
