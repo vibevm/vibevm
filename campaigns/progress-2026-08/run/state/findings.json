@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-07-24T21:25:40Z",
+  "updated_at": "2026-07-24T21:33:45Z",
   "findings": [
     {
       "id": "F-001",
@@ -253,6 +253,15 @@
       "status": "open",
       "wave": 0,
       "note": "Internal: the Status line reads -DESIGN, provisional 2026-07-14 ... not implementation-locked- while s17 records s5-s13 SHIPPED as the vibe-spec crate (2026-07-15), the link-type rename shipped (07-16), and normal+static compiled end to end (07-20). Only the structural/JIT loader (s13) and link tables (s10) remain pending. Same stale-header class as F-025..F-027. Phase C/D: reword the status line."
+    },
+    {
+      "id": "F-029",
+      "from": "spec/modules/vibe-workspace/PROP-007-workspace.md",
+      "to": "spec/modules/vibe-workspace/PROP-009-loading-model.md",
+      "type": "reality-mismatch",
+      "status": "open",
+      "wave": 0,
+      "note": "The Status line and s9.3 still call workspace-aware vibe install -the remaining piece- / -deferred-, but PROP-009 M1.18 Phase 5 shipped exactly that (workspace-aware install/build, 2026-05-22, one day after PROP-007 s8 was written). s6 q3 records the PROP-009 resolution, s9.3 does not. Phase C/D: refresh the status line and s9.3."
     }
   ]
 }
