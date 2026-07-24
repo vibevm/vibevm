@@ -31,17 +31,32 @@ pub enum Event {
         result: Option<String>,
         ts: String,
     },
+    /// A campaign phase transition. Append-only and machine-readable: the
+    /// `value` of the LAST `phase` event is the campaign's current phase
+    /// (with none present the phase is the opening `"A"`). The tool derives
+    /// the phase from this event and never by parsing the plan's Markdown —
+    /// PROP-043 §state: "the dashboard … computes nothing and parses no
+    /// Markdown ever."
+    Phase { value: String, ts: String },
 }
 
 impl Event {
     pub fn id(&self) -> &str {
         match self {
             Event::StepStart { id, .. } | Event::StepDone { id, .. } => id,
+            // A phase transition is not a step; it carries no step id.
+            Event::Phase { .. } => "",
         }
     }
 }
 
-/// Read the journal, tolerating a torn last line.
+/// Read the journal, tolerating a torn last line and unknown (newer) event
+/// kinds.
+///
+/// A torn tail (writer killed mid-line) is *incomplete* JSON — stop there
+/// and never guess past it. A **complete** JSON line whose `kind` this reader
+/// does not model yet is a newer writer's event — skip it but keep reading,
+/// so a forward-compatible event never truncates the log.
 pub fn read_journal(path: &Path) -> Result<Vec<Event>> {
     if !path.exists() {
         return Ok(Vec::new());
@@ -54,9 +69,14 @@ pub fn read_journal(path: &Path) -> Result<Vec<Event>> {
         if line.is_empty() {
             continue;
         }
-        match serde_json::from_str::<Event>(line) {
-            Ok(e) => out.push(e),
-            Err(_) => break, // torn tail — stop here, never guess past it
+        // Stage 1: is the line even complete JSON? A torn tail is not.
+        let Ok(value) = serde_json::from_str::<serde_json::Value>(line) else {
+            break; // torn/incomplete tail — never guess past it
+        };
+        // Stage 2: a modeled event kind is kept; an unmodeled one is skipped
+        // (forward compatibility), and reading continues past it.
+        if let Ok(event) = serde_json::from_value::<Event>(value) {
+            out.push(event);
         }
     }
     Ok(out)
@@ -139,9 +159,26 @@ pub fn open_steps(events: &[Event]) -> Vec<OpenStep> {
             Event::StepDone { id, .. } => {
                 open.remove(id);
             }
+            // A phase transition touches no step's open/closed state.
+            Event::Phase { .. } => {}
         }
     }
     open.into_values().collect()
+}
+
+/// The campaign phase, derived from the journal: the `value` of the LAST
+/// `phase` event wins; with none present the phase is `"A"` (the campaign's
+/// opening phase). This is the machine-readable derivation PROP-043 §state
+/// requires — the phase is never read from the plan's Markdown.
+pub fn derive_phase(events: &[Event]) -> String {
+    events
+        .iter()
+        .rev()
+        .find_map(|e| match e {
+            Event::Phase { value, .. } => Some(value.clone()),
+            _ => None,
+        })
+        .unwrap_or_else(|| "A".to_string())
 }
 
 /// Render RESUME.md — the one file a cold session reads first.
@@ -217,5 +254,106 @@ mod tests {
         let open = open_steps(&events);
         assert_eq!(open.len(), 1);
         assert_eq!(open[0].id, "b-002");
+    }
+
+    #[test]
+    fn phase_absent_defaults_to_a() {
+        // No events at all, and a journal of only step events, both read "A".
+        assert_eq!(derive_phase(&[]), "A");
+        let dir = tempfile::tempdir().expect("tempdir");
+        let j = dir.path().join("journal.jsonl");
+        start_step(&j, "b-001", "mark-file", "spec/a.md", "fable").expect("start");
+        done_step(&j, "b-001", Some("ok".into())).expect("done");
+        let events = read_journal(&j).expect("read");
+        assert_eq!(
+            derive_phase(&events),
+            "A",
+            "no phase event ⇒ opening phase A"
+        );
+    }
+
+    #[test]
+    fn phase_last_event_wins() {
+        let dir = tempfile::tempdir().expect("tempdir");
+        let j = dir.path().join("journal.jsonl");
+        append_event(
+            &j,
+            &Event::Phase {
+                value: "B".into(),
+                ts: "2026-07-24T00:00:00Z".into(),
+            },
+        )
+        .expect("phase b");
+        start_step(&j, "c-001", "mark-file", "spec/a.md", "fable").expect("start");
+        append_event(
+            &j,
+            &Event::Phase {
+                value: "C".into(),
+                ts: "2026-07-24T01:00:00Z".into(),
+            },
+        )
+        .expect("phase c");
+        let events = read_journal(&j).expect("read");
+        assert_eq!(derive_phase(&events), "C", "the later phase event wins");
+    }
+
+    #[test]
+    fn phase_survives_torn_tail() {
+        let dir = tempfile::tempdir().expect("tempdir");
+        let j = dir.path().join("journal.jsonl");
+        append_event(
+            &j,
+            &Event::Phase {
+                value: "B".into(),
+                ts: "2026-07-24T00:00:00Z".into(),
+            },
+        )
+        .expect("phase");
+        // A torn tail (writer killed mid-line) must not erase the logged phase.
+        let mut f = std::fs::OpenOptions::new()
+            .append(true)
+            .open(&j)
+            .expect("open");
+        f.write_all(b"{\"kind\":\"phase\",\"value\":\"C")
+            .expect("torn");
+        drop(f);
+        let events = read_journal(&j).expect("read");
+        assert_eq!(events.len(), 1, "torn tail discarded");
+        assert_eq!(derive_phase(&events), "B");
+    }
+
+    #[test]
+    fn journal_tolerates_unknown_event_kinds() {
+        let dir = tempfile::tempdir().expect("tempdir");
+        let j = dir.path().join("journal.jsonl");
+        start_step(&j, "b-001", "mark-file", "spec/a.md", "fable").expect("start");
+        // A complete event of a kind a newer writer added that we do not model.
+        // Forward compatibility: it is skipped, not read as a torn tail — the
+        // known events after it must still read.
+        {
+            let mut f = std::fs::OpenOptions::new()
+                .append(true)
+                .open(&j)
+                .expect("open");
+            f.write_all(b"{\"kind\":\"future-thing\",\"whatever\":42}\n")
+                .expect("unknown");
+        }
+        done_step(&j, "b-001", Some("ok".into())).expect("done");
+        append_event(
+            &j,
+            &Event::Phase {
+                value: "B".into(),
+                ts: "2026-07-24T00:00:00Z".into(),
+            },
+        )
+        .expect("phase");
+        let events = read_journal(&j).expect("read");
+        assert_eq!(
+            events.len(),
+            3,
+            "unknown line skipped; known events survive"
+        );
+        assert!(open_steps(&events).is_empty(), "b-001 opened and closed");
+        assert_eq!(derive_phase(&events), "B");
     }
 }

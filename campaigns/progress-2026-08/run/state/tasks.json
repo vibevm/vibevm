@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updated_at": "2026-07-24T19:35:00Z",
+ "updated_at": "2026-07-24T21:40:00Z",
  "tasks": [
   {
    "id": "DRIFT-001",
@@ -18,7 +18,7 @@
    "id": "DRIFT-003",
    "title": "campaign phase hardcoded 'A' in the progress adapter",
    "executor": "opus",
-   "status": "queued"
+   "status": "done"
   }
  ]
 }

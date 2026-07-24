@@ -111,7 +111,10 @@ fn refresh_state(g: &Ground) -> Result<Option<PathBuf>> {
     }
     c.touch();
     c.store(&cache_path)?;
-    state::write_state(&run_dir.join("state"), &campaign_id(campaign), "A", &c)?;
+    // Phase is derived from the campaign's own journal (last `phase` event
+    // wins; absent ⇒ "A") — never compiled in, never parsed from Markdown.
+    let phase = journal::derive_phase(&journal::read_journal(&run_dir.join("journal.jsonl"))?);
+    state::write_state(&run_dir.join("state"), &campaign_id(campaign), &phase, &c)?;
     Ok(Some(campaign.clone()))
 }
 
@@ -358,11 +361,50 @@ fn resume(ctx: &Context, a: &ProgressCommonArgs) -> Result<()> {
         "Take the first unfinished step above; when none remain, continue with the \
          next queued batch/wave/task per the plan's LOG section."
     };
-    let body = journal::render_resume(&campaign_id(campaign), "A", &counters, &open, next_hint);
+    // Same journal-derived phase the state projection carries.
+    let phase = journal::derive_phase(&events);
+    let body = journal::render_resume(&campaign_id(campaign), &phase, &counters, &open, next_hint);
     journal::write_resume(&run_dir.join("RESUME.md"), &body)?;
     refresh_state(&g)?;
     if !ctx.is_quiet() {
         print!("{body}");
     }
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// A fixture campaign zone whose journal carries a hand-appended `phase`
+    /// event: `refresh_state` must derive that phase into `campaign.json`
+    /// instead of the compiled-in opening phase (DRIFT-003 §4).
+    #[test]
+    fn refresh_state_derives_phase_from_journal() {
+        let tmp = tempfile::tempdir().expect("tempdir");
+        let campaign = tmp.path().join("campaigns").join("progress-test");
+        let run = campaign.join("run");
+        std::fs::create_dir_all(&run).expect("mkdir run");
+        // The exact on-disk event the campaign executor appends by hand.
+        std::fs::write(
+            run.join("journal.jsonl"),
+            "{\"kind\":\"phase\",\"value\":\"B\",\"ts\":\"2026-07-24T00:00:00Z\"}\n",
+        )
+        .expect("write journal fixture");
+
+        let g = Ground {
+            root: tmp.path().to_path_buf(),
+            docs: Vec::new(),
+            campaign: Some(campaign.clone()),
+        };
+        refresh_state(&g).expect("refresh_state");
+
+        let text = std::fs::read_to_string(run.join("state").join("campaign.json"))
+            .expect("read campaign.json");
+        let v: serde_json::Value = serde_json::from_str(&text).expect("parse campaign.json");
+        assert_eq!(
+            v["phase"], "B",
+            "campaign.json carries the journal-derived phase"
+        );
+    }
 }

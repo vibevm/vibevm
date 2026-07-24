@@ -78,3 +78,6 @@
 {"kind":"step-done","id":"b2-prop-022","result":"41 units -> 52 anchored facts (status-quo snapshot facts impl/done vs proposed modes spec/done), 0 unmarked, 0 issues","ts":"2026-07-24T18:04:12Z"}
 {"kind":"step-start","id":"b2-prop-041","step_type":"mark-file","target":"spec/modules/vibe-settings/PROP-041-settings-ui.md (fact mark)","actor":"fable","ts":"2026-07-24T18:04:37Z"}
 {"kind":"step-done","id":"b2-prop-041","result":"41 units -> 43 anchored facts; owner-minted per-REQ {#anchor}s reused as ## ids (immutable, one name two notations); two heading-vs-REQ same-name collisions caught by the shared id space -> -req suffix on the fact side; stale DRAFT status vs shipped prefs TUI -> F-019; 0 unmarked, 0 issues","ts":"2026-07-24T18:06:51Z"}
+{"kind":"phase","value":"B","ts":"2026-07-24T18:07:49Z"}
+{"kind":"step-start","id":"drift-003-exec","step_type":"execute-task","target":"DRIFT-003 (journal-derived phase)","actor":"opus:DRIFT-003","ts":"2026-07-24T18:10:05Z"}
+{"kind":"step-done","id":"drift-003-exec","result":"Event::Phase + derive_phase (last wins, default A) + two-stage read_journal (torn tail stops, unknown kind skipped); adapter derives phase in refresh_state+resume; 5 new tests; Fable review ACCEPTED; live journal backfilled kind=phase value=B, campaign.json+RESUME render B; self-check all green exit 0","ts":"2026-07-24T18:10:05Z"}

@@ -1,8 +1,16 @@
 # DRIFT-003 — campaign phase is hardcoded "A" in the progress adapter {#root}
 
-<status stage="impl" state="plan" ref="DRIFT-003"/>
+<status stage="impl" state="done" ref="DRIFT-003"/>
 
-**Status:** queued
+**Status:** done — executed by Opus 2026-07-24, reviewed and accepted by
+Fable the same day (diff read in full; five new tests incl. the
+torn-tail and unknown-kind laws; §6 manual acceptance run live: phase
+event backfilled, `campaign.json` and RESUME render "B";
+`self-check` all green, exit 0). Accepted addition beyond §4's
+minimum: the `journal_tolerates_unknown_event_kinds` test locking the
+forward-compat requirement, with `read_journal` reworked to a
+two-stage parse (torn tail = incomplete JSON stops; a complete line
+of an unmodeled kind is skipped, never truncates).
 **Executor:** Opus. **Reviewer:** Fable, against §6 verbatim.
 **Cluster:** cli (progress adapter / journal)
 **Unit-stability check (release precondition):** every anchor cited in §2 has
