@@ -1,5 +1,7 @@
 # DEFERRALS-CLOSEOUT-PLAN v0.1 — close every §10 deferral of the Self-Sufficiency campaign
 
+<status stage="spec" state="done" action="continue" actionstage="impl" comment="B0 2026-07-24: status line says ACCEPTED with owner amendments 2026-07-07"/>
+
 _Status: ACCEPTED with owner amendments, 2026-07-07. Written against tree
 `57fa42e`; owner review resolved the three open questions: (1) editing
 `spec/boot/90-user.md` is sanctioned ("меняй как хочешь"), (2) PROP-025 is

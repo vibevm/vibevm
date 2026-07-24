@@ -1,5 +1,7 @@
 # PACKAGE-TREE-PLAN v0.1 — `vibe tree`, the algorithmic spec-tree analyzer with an interactive TUI
 
+<status stage="freeze" state="done" comment="B0 2026-07-24: EXECUTED 2026-07-15, all phases shipped - historical plan"/>
+
 _Status: **EXECUTED 2026-07-15** · all phases shipped, floor green at every
 boundary · written against tree `bf2897b` · commit span `7822052` → `007c030`
 on `main`._

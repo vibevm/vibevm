@@ -1,5 +1,7 @@
 # Action-System Research Plan v0.1 — a clean-room study feeding the addressable-action system
 
+<status stage="impl" state="work" comment="B0 2026-07-24: status line says EXECUTING 2026-07-15, autonomous full-arc STUDY to implementation"/>
+
 **status: EXECUTING (2026-07-15) · autonomous full-arc mandate — STUDY → design-doc → Spec 1 → Spec 2 → implementation, run to completion, MAXIMAL (no simplification, owner directive §0.1) · acceptance = a working F1 Search Everywhere in the `vibe tree` TUI (§0.1) · the §1 firewall is held as phase discipline within one continuous run (sources are read only during STUDY, and by read-only subagents; the specs and code are authored from the findings document)**
 
 > **Read-first / boot.** Executed **cold, in a fresh session the owner launches for it**. Boot the normal way (`CLAUDE.md` → `spec/boot/INDEX.md` → its files → `spec/WAL.md` → `CONTINUE.md`), then read this whole file. It is self-contained: the strategic thesis, the **clean-room firewall (non-negotiable)**, the verified sources and where they live, the question-driven agenda, the deliverables, the phases, the predictions, the risks, and the open owner-decisions are all here.

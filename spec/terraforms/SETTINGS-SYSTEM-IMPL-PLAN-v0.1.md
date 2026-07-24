@@ -1,5 +1,7 @@
 # SETTINGS-SYSTEM-IMPL-PLAN v0.1 — реализация `vibe-settings` crate (Шаг 2 мета-плана)
 
+<status stage="spec" state="done" action="continue" actionstage="impl" comment="B0 2026-07-24: status line says PLANNED, written 2026-07-16"/>
+
 _Status: PLANNED · written 2026-07-16 · cold-executable: каждая фаза ends `bash
 tools/self-check.sh` green + `cargo xtask specmap --check`; любая граница — безопасная остановка.
 **Контракт:** [PROP-040](../modules/vibe-settings/PROP-040-settings.md) (каждый REQ — granular

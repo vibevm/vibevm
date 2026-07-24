@@ -1,5 +1,7 @@
 # Design rationale: Loading & boot composition model
 
+<status stage="doc" state="done" comment="B0 2026-07-24: non-normative design record, captured 2026-05-21 in an owner session"/>
+
 **Companion to:** PROP-009 (loading model — forthcoming, [`spec/modules/vibe-workspace/PROP-009-loading-model.md`](../modules/vibe-workspace/PROP-009-loading-model.md)).
 **Status:** non-normative design record. Captured 2026-05-21 in an owner design session.
 **Authority:** the PROP is the contract. If this document and PROP-009 disagree, the PROP wins.

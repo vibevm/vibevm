@@ -1,5 +1,7 @@
 # PROP-015 — MCP server and agent integration {#root}
 
+<status stage="impl" state="done" comment="B0 2026-07-24: IMPLEMENTED; retroactive spec home for vibe-mcp and the vibe mcp family"/>
+
 **Milestone:** M1.7 ([`ROADMAP.md`](../../../ROADMAP.md)). The server slice
 shipped first; the agent-integration surface (`vibe mcp install` /
 `status` / `upgrade` / `uninstall`) followed.

@@ -1,5 +1,7 @@
 # Traceability Relocation Plan v0.1 — move specmap + specmark into the rust-ai-native package
 
+<status stage="spec" state="done" action="continue" actionstage="impl" comment="B0 2026-07-24: status line says PLANNED, not started; deferred sibling of the conform relocation"/>
+
 **status: PLANNED · not started · the deferred sibling of the conform relocation (PROP-024 Ф4) · executes in a fresh session from cold context**
 
 > **Read-first / boot.** This plan is written to be executed cold. Boot the

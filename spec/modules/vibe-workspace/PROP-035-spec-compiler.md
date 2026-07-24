@@ -1,5 +1,7 @@
 # PROP-035: The spec compiler — directive preprocessor, package formats, and the two-mode boot linker {#root}
 
+<status stage="spec" state="work" comment="B0 2026-07-24: DESIGN provisional 2026-07-14; not implementation-locked"/>
+
 **Status:** DESIGN — provisional, 2026-07-14 (owner-requested; the flagship "static-compiler vision"). Requirements captured from an owner design dialogue; **not implementation-locked**. Sections marked *(provisional)* are held for the implementation task, not yet decided.
 **Extends:** [PROP-009](PROP-009-loading-model.md) (the loading model — inclusion types, the two-tree model, the `STATIC.md` / `INDEX.md` artifacts). This PROP turns PROP-009's "ordered list of contributions" into a real **preprocessor + linker**.
 **Supersedes / folds in:** [PROP-034](PROP-034-transitive-links-boot-graph.md) (transitive links + the static boot-link graph). PROP-034's linker becomes the *emission layer* of this system (§12); PROP-034 is retained as the narrower, already-drafted contract for that layer until this PROP is ratified.

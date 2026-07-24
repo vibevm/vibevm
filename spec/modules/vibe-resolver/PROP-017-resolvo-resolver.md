@@ -1,5 +1,7 @@
 # PROP-017 — Resolvo as the production resolver {#prop-017}
 
+<status stage="impl" state="work" comment="B0 2026-07-24: accepted; implementation in progress per status line"/>
+
 **Status.** Design proposal — accepted, implementation in progress (owner
 decision, 2026-06-14). Companion to [PROP-003](PROP-003-dep-evolution.md)
 (dependency-model evolution) and [PROP-002](../vibe-registry/PROP-002-decentralized-registry.md)

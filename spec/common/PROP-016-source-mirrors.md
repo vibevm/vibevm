@@ -1,5 +1,7 @@
 # PROP-016: Decentralized source mirrors — the vibevm setup {#root}
 
+<status stage="spec" state="done" comment="B0 2026-07-24: accepted 2026-06-14, in force; living target set"/>
+
 **Status:** accepted 2026-06-14 — owner-requested; in force. The target set (§2) is **living** — it grows as hosts are added.
 **Related:** [PROP-000 §7](PROP-000.md#registry) (the package-registry split-host — a *different* concern, see §3), [`spec/boot/90-user.md`](../boot/90-user.md) (this machine's repository-access record), [`mirrors.toml`](../../mirrors.toml) (the target registry), `xtask/src/mirror.rs` (`cargo xtask mirror`), [`CLAUDE.md`](../../CLAUDE.md) (the attribution and force-push rules this model never crosses).
 

@@ -1,5 +1,7 @@
 # Self-Sufficiency Plan v0.1 — make the discipline packages complete, orthogonal, and consumer-ready
 
+<status stage="spec" state="done" action="continue" actionstage="impl" comment="B0 2026-07-24: status line says PLANNED, not started"/>
+
 **status: PLANNED · not started · the convergence of two audits (package self-sufficiency + operational-procedure detachment) · executes in a fresh session from cold context**
 
 > **Read-first / boot.** This plan is written to be executed cold. Boot the

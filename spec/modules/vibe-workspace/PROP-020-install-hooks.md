@@ -1,5 +1,7 @@
 # PROP-020 — Install hooks {#root}
 
+<status stage="spec" state="done" action="continue" comment="B0 2026-07-24: proposed 2026-06-24; one of the four bridge-packages specs"/>
+
 **Status:** proposed 2026-06-24 — owner-requested design session. One of four
 orthogonal specs carved from the bridge-packages design (the others:
 [PROP-021](../vibe-registry/PROP-021-submodule-sources.md) submodule sources,

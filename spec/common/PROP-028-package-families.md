@@ -1,5 +1,7 @@
 # PROP-028 — Package families: `<family>` / `-lang` / `-mcp` {#root}
 
+<status stage="impl" state="done" comment="B0 2026-07-24: IMPLEMENTED 2026-07-07; the three families in force"/>
+
 **Status:** IMPLEMENTED 2026-07-07 — owner-directed (the package-family
 rename). The three families in force ship under this convention: requiring one
 aggregator installs its whole family at a single resolved version set, and the

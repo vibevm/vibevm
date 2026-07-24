@@ -1,5 +1,7 @@
 # Action systems in VSCode and IntelliJ IDEA — a comparative study {#root}
 
+<status stage="doc" state="done" comment="B0 2026-07-24: COMPLETE comparative study (VSCode vs IntelliJ action systems)"/>
+
 **Genre:** research (comparative-research flow) — non-binding, evergreen. **Status:** COMPLETE —
 part (a); both source studies (quote-first) including project-wide/**structural** Search Everywhere
 (§3.7) and **i18n** (§3.8); the 18 design obligations (DO1–DO18); the two-way gap analysis; the 16

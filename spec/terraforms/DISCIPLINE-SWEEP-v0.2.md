@@ -1,4 +1,7 @@
 # vibevm Discipline Sweep v0.2 — the project instance {#root}
+
+<status stage="spec" state="done" comment="B0 2026-07-24: STANDING recurring sweep playbook; supersedes v0.1"/>
+
 **status: STANDING · recurring (daily / weekly) · vibevm-specific · supersedes v0.1**
 
 *The METHOD is no longer here. v0.1 of this manual carried three layers in

@@ -1,5 +1,7 @@
 # PROP-026 — the tcg tool family (the agentic type oracle's product seam) {#root}
 
+<status stage="impl" state="done" comment="B0 2026-07-24: proposed and implemented 2026-07-07 (TCG-TS plan phase 4); per MCP-SOVEREIGNTY wave 6 superseded in topology, grammar kept normative"/>
+
 **Status: proposed 2026-07-07 with AGENTIC-TCG-TS-PLAN v0.1 (owner-
 accepted the same day, with the §3 portability amendment); implemented
 by its Phase 4. History: 2026-07-07 (same day, AGENTIC-TCG-RUST-PLAN

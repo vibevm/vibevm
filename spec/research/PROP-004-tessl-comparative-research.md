@@ -1,5 +1,7 @@
 # PROP-004 — Tessl comparative research and vibevm roadmap deltas
 
+<status stage="doc" state="done" comment="B0 2026-07-24: evergreen research reference (Tessl comparative study); deltas ratify downstream"/>
+
 **Status.** Research document — self-contained, evergreen reference. Not implementation-locked. Each numbered roadmap delta in §6 maps to a future PROP / FEAT / milestone update; this file does not itself ratify those. Companion to [PROP-000](../common/PROP-000.md), [PROP-002](../modules/vibe-registry/PROP-002-decentralized-registry.md), and [PROP-003](../modules/vibe-resolver/PROP-003-dep-evolution.md).
 
 **Purpose.** Tessl ([`https://www.tessl.io`](https://www.tessl.io), docs at [`https://docs.tessl.io`](https://docs.tessl.io)) is a commercial platform launched 2025 that occupies adjacent ground to vibevm: managing AI-coding-agent context (skills, documentation, rules) as versioned, evaluated, distributable software artefacts. They have a non-trivial product surface and ~3,000 published skills; understanding what they do well — and what they don't — is load-bearing intelligence for vibevm's own roadmap. This document captures a complete-as-of-2026-05 inventory of Tessl, identifies the gaps where vibevm trails, the gaps where vibevm leads, and translates the actionable subset into concrete roadmap entries.

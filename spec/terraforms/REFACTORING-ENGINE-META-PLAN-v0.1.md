@@ -1,5 +1,7 @@
 # Refactoring Engine — Meta-Plan v0.1 (the program map)
 
+<status stage="spec" state="done" action="continue" actionstage="impl" comment="B0 2026-07-24: umbrella meta-plan, design captured 2026-07-13; next per status line: OpenRewrite research campaign"/>
+
 **status: the umbrella over the whole refactoring-engine program · design captured 2026-07-13 · NEXT = the OpenRewrite research campaign, run cold in a fresh session**
 
 > **What this is.** A single at-a-glance map of everything planned in the refactoring-engine design arc — the vision, the documents, the decisions, the sequencing, the clean-room firewall — so no part is forgotten across sessions. It **indexes** the detailed documents; it does not repeat them. `spec/WAL.md` is the living state; this is the program map that state points at.

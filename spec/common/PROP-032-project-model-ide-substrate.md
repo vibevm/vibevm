@@ -1,5 +1,7 @@
 # PROP-032 — The project model as a universal typed graph; the agent-first IDE substrate {#root}
 
+<status stage="spec" state="done" action="continue" comment="B0 2026-07-24: design proposal v0.1, drafted for review; open to challenge until ratified"/>
+
 **Status.** Design proposal v0.1 — not implementation-locked. Drafted for review; every decision below is open to challenge until ratified. This PROP names a *model and a direction*; it schedules no implementation of its own. It is the umbrella under which [PROP-014](spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#index) (traceability) and [PROP-031](spec://vibevm/common/PROP-031#root) (refactoring) become **consumers of one model**, and it fixes the one foundational extension both need: **code as a first-class addressable node.**
 
 **Companions.** [PROP-014 — specmap bidirectional traceability](spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#index) (the code↔spec *projection* of this model; its `#edges`, `#queries`, `#runtime` are generalised here) · [PROP-031 — algorithmic refactoring](spec://vibevm/common/PROP-031#root) (the *mutations* over this model) · [PROP-003 — dependency evolution](spec://vibevm/modules/vibe-resolver/PROP-003) §2.5.3 and [PROP-014 §2.7](spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#llm-boundary) (the LLM boundary this PROP makes the primary interface) · [PROP-000 §3](spec://vibevm/common/PROP-000#license) (permissive-only dependencies) · prior art: LSP, SCIP/LSIF, rustdoc intra-doc links, Sphinx domains (§6).

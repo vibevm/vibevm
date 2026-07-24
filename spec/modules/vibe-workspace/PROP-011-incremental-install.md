@@ -1,5 +1,7 @@
 # PROP-011: Incremental install — skip resolution when fresh, materialise only the diff {#root}
 
+<status stage="impl" state="done" comment="B0 2026-07-24: SHIPPED 2026-05-22"/>
+
 **Milestone:** M1.21 ([`ROADMAP.md`](../../../ROADMAP.md)) — **shipped 2026-05-22.** Refines the install machinery of [PROP-009](PROP-009-loading-model.md) (M1.18); no dependency on PROP-008 or PROP-010.
 **Status:** SHIPPED 2026-05-22 — the three §5 design questions were resolved in an owner session, then implemented across the four §7 phases (see §8).
 **Related:** [PROP-009](PROP-009-loading-model.md) (the loading model — `apply_resolution`, `regenerate_boot`, `vibedeps::materialise`, the `vibe install` orchestration this PROP refines; §2.10 `vibe reinstall`); [PROP-007](PROP-007-workspace.md) (workspaces — unified resolution, the matryoshka); [PROP-010](../vibe-registry/PROP-010-local-package-cache.md) (the local cache — skip-when-fresh makes the common path offline-clean for free, §2.6 there).

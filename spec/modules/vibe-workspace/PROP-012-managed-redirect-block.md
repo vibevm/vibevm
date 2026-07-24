@@ -1,5 +1,7 @@
 # PROP-012: The managed redirect block — vibevm as a co-tenant of the agent instruction files {#root}
 
+<status stage="impl" state="done" comment="B0 2026-07-24: IMPLEMENTED, M1.18 phase 7 block engine"/>
+
 **Milestone:** design proposal; it refines [PROP-009 §2.3](PROP-009-loading-model.md) (M1.18, Phases 1–6 shipped) and **corrects a destructive defect already in the shipped Phase-4 code** — so it is a prerequisite for PROP-009 §4 / the M1.18 Phase-7 redirect rewrite, not a far-future milestone. Owner to place in [`ROADMAP.md`](../../../ROADMAP.md). Not implementation-locked.
 **Status:** IMPLEMENTED — shipped with M1.18 Phase 7 (the block engine in `vibe-workspace::boot_artifacts`, plan-time validation, the `vibe check` `RedirectBlock` finding, and the self-migration that put the `<vibevm>` block into this repository's own instruction files). Requirements were captured 2026-05-22 (drafts 1–2); decision units typed at REQ grain 2026-06-12 (the depth program).
 **Related:** [PROP-009](PROP-009-loading-model.md) (the loading model — §2.3 the redirect, §4 migration; the Phase-4 implementation `vibe-workspace::boot_artifacts::write_boot_artifacts` / `render_redirect` / `REDIRECT_FILES` this PROP reworks); [PROP-007](PROP-007-workspace.md) (workspaces — every entry-point node carries its own instruction files).

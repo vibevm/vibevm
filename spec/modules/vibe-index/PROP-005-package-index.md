@@ -1,5 +1,7 @@
 # PROP-005: Optional package index — per-org metadata + standalone index server {#root}
 
+<status stage="impl" state="done" comment="B0 2026-07-24: implemented; folded into the workspace 2026-05-22"/>
+
 **Milestone:** retrofits into M2.10 (`vibe search`) and M1.10 (`vibe outdated`) from `ROADMAP.md`. Slices land independently; index is opt-in everywhere.
 **Status:** implemented; folded into the workspace 2026-05-22. Slices 1–8 (the `vibe-index` server + CLI) and slices 9–10 (publisher hook + consumer fast path) are shipped, plus M2.10 `vibe search`. `vibe-index` lives at `crates/vibe-index/` as a workspace member ([§6](#distribution)) and parses through `vibe-core::Manifest`. See [§9](#open) item 11 for the de-rot and fold that got it there.
 **Related:** [PROP-001](../vibe-registry/PROP-001-git-backend.md) (git backend), [PROP-002](../vibe-registry/PROP-002-decentralized-registry.md) (`[[registry]]` / `[[mirror]]` / `[[override]]` / content-hashed identity), [PROP-003](../vibe-resolver/PROP-003-dep-evolution.md) (features / subskills / `describes` / conditional deps), [PROP-004](../../research/PROP-004-tessl-comparative-research.md) §5.x (gap analysis), [`spec://vibevm/common/PROP-000`](../../common/PROP-000.md) (especially §15 dep weight, §16 JTD, §17 production architecture, §18 complexity ≥ RPM, §20 token secrecy).

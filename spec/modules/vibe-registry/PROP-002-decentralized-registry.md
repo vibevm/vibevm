@@ -1,5 +1,7 @@
 # PROP-002: Decentralized, mirror-friendly registry with capability-based depsolver {#root}
 
+<status stage="spec" state="done" comment="B0 2026-07-24: accepted 2026-04-24"/>
+
 **Milestone:** M1.1-revision ([`ROADMAP.md`](../../../ROADMAP.md#m11-revision--decentralized-per-package-registry-active-started-2026-04-24)). Phase B lands in M1.6.
 **Status:** accepted 2026-04-24.
 **Supersedes (partially):** [PROP-001](PROP-001-git-backend.md) §2.3 (`Registry` trait), §2.4 (cache layout), §2.6 (lockfile `source_uri` format). PROP-001 §2.1 (shell-out-to-git), §2.2 (`GitBackend` trait), §2.5 (freshness TTL), §2.7 (Windows UX) remain authoritative.

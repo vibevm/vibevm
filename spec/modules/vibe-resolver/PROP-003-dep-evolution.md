@@ -1,5 +1,7 @@
 # PROP-003 — Dependency-model evolution: SAT solver, features, subskills, context activation, i18n
 
+<status stage="spec" state="done" action="continue" comment="B0 2026-07-24: design proposal, not yet implementation-locked"/>
+
 **Status.** Design proposal — not yet implementation-locked. Companion to [PROP-000](../../common/PROP-000.md) (project foundation), [PROP-002](../vibe-registry/PROP-002-decentralized-registry.md) (registry model). Supersedes the depsolver paragraphs of PROP-002 §2.8 (which left the solver upgrade path as a one-line "resolvo or libsolv slot reserved"); does not touch PROP-002's identity or registry decisions.
 
 **Revision r2 (2026-05-04, post-PROP-004).** First revision shipped 2026-05-04 morning. Second revision shipped same day after the [PROP-004 Tessl comparative research](../../research/PROP-004-tessl-comparative-research.md) surfaced eight architectural improvements that were better folded into the design proposal *before* implementation than retrofitted later. Diff at the section level:

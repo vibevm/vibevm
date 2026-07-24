@@ -1,5 +1,7 @@
 # PROP-038: Hybrid boot linking — per-package compilation units with soft/hard static edges {#root}
 
+<status stage="impl" state="done" comment="B0 2026-07-24: IMPLEMENTED 2026-07-15, all five campaign phases shipped"/>
+
 **Status:** IMPLEMENTED — 2026-07-15 (all five campaign phases shipped, `d487d4e`…`381095e`; see §6). Requirements captured from an owner design dialogue; **ratified by the owner's directive to implement in full** (2026-07-15, "реализуй всю гибридную линковку, включая спеки, код и тесты"). The §5 open questions are **resolved** (Phase 0 of the campaign, recorded inline in §5 with each resolution); implementation follows the [HYBRID-LINKING campaign](../../terraforms/HYBRID-LINKING-PLAN-v0.1.md).
 **Extends:** [PROP-009](PROP-009-loading-model.md) (the loading model — the `STATIC.md` / `INDEX.md` artifacts §2.3, the `static` / `dynamic` link types §2.4), [PROP-035](PROP-035-spec-compiler.md) (the two-mode boot linker §2, `#use` §7.2, the `@spec` read-set §7.4, link tables §10).
 **Supersedes / evolves:** [PROP-034](PROP-034-transitive-links-boot-graph.md) — its **single global** static-link graph and the precedence lattice ([§2.2](PROP-034-transitive-links-boot-graph.md#precedence)) are replaced by **per-edge recursive** linking plus hoisting (§2.2, §2.4 below). PROP-034's dedup + topological-order + cycle-rejection invariants are retained, applied **per compilation unit**.

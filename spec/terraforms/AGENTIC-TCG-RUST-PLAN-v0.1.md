@@ -1,5 +1,7 @@
 # AGENTIC-TCG-RUST-PLAN v0.1 — the agentic type oracle for Rust
 
+<status stage="freeze" state="done" comment="B0 2026-07-24: EXECUTED 2026-07-07, phases 0-7 complete, floor green at close - historical plan"/>
+
 _Status: **EXECUTED 2026-07-07 — Phases 0–7 complete on the owner's
 «выполни план до конца», floor green at close** (self-check 13 steps
 exit 0; conform 0 with 11 crates gated; specmap 592/578/590,

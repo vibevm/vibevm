@@ -1,5 +1,7 @@
 # PROP-029 — Fully-qualified addresses and mechanical refactoring {#root}
 
+<status stage="spec" state="done" comment="B0 2026-07-24: accepted 2026-07-12, owner-ratified"/>
+
 **Status:** accepted 2026-07-12 (owner-ratified). **Builds on:** [`spec://vibevm/modules/vibe-registry/PROP-008#group`](../modules/vibe-registry/PROP-008-qualified-naming.md#group) (the `group` field) and the **addressable-specs** flow, whose `#modules` unit defines the fully-qualified module authority and the joiner-never-`.` rule this PROP applies: `spec://org.vibevm.world/addressable-specs/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL#modules`.
 
 ## 1. Every address is fully qualified {#decision}

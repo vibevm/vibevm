@@ -1,5 +1,7 @@
 # PROP-024 — Code-bearing packages (a package is a project) {#root}
 
+<status stage="spec" state="done" action="continue" comment="B0 2026-07-24: proposed 2026-06-27, owner-directed"/>
+
 **Status:** proposed 2026-06-27 — owner-directed. Makes a vibe package able to
 ship runnable code, not only prompt content, so the discipline's verification
 tools (the conform checker, the specmap/specmark traceability engine) can live

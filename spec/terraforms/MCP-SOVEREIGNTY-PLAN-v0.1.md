@@ -1,5 +1,7 @@
 # MCP-SOVEREIGNTY-PLAN v0.1 — the `mcp` package kind, standalone discipline MCP servers, package-declared MCP delivery, and the vibevm demontage
 
+<status stage="freeze" state="done" comment="B0 2026-07-24: EXECUTED 2026-07-07, waves 0-6 complete - historical plan"/>
+
 _Status: **EXECUTED 2026-07-07 — Waves 0–6 complete on the owner's «план должен быть выполнен до конца, все волны»; the full panel green at close (self-check 22 steps exit 0, corpus 9/9 at cold 2 538 ms / warm p95 60 ms, both mcp live chains vibe-free at 2.55 s / 0.82 s, vibevm's own .mcp.json serving 18+17 tools over the registered command lines). The per-wave commit maps live in §13; the Wave-6 close: `36461ba` (the demontage: vibe-tcg deleted whole, vibe-mcp back to four product tools), `7299e78` (PROP-026 superseded in topology, grammar kept normative; boot snippets re-taught; ROADMAP M1.26 SHIPPED), `1451954` (slots + both demos repinned at the 0.6.0 flow + the committed dogfood .mcp.json). Previously:** ACCEPTED WITH OWNER AMENDMENT — EXECUTION COMMISSIONED 2026-07-07 («выполни план до конца»).** The owner reviewed the draft and
 REVERSED its D1: the four-kinds set is a terminology snapshot, not an
 architectural freeze — «расширь и сделай mcp чем-то отдельным (в

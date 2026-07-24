@@ -1,5 +1,7 @@
 # PROP-041: the vibevm settings UI — the `vibe prefs` TUI surface (`vibe-settings-ui`) {#root}
 
+<status stage="spec" state="work" comment="B0 2026-07-24: status line says DRAFT 2026-07-16; SETTINGS-UI-PLAN executed against it"/>
+
 **Status:** DRAFT — requirements, 2026-07-16 (owner-commissioned). The **contract** for the TUI surface
 that lets a user **view and edit** the application/user preferences of [PROP-040](PROP-040-settings.md):
 a settings tree, per-type edit forms, a provenance ("where does this value come from?") view, validation

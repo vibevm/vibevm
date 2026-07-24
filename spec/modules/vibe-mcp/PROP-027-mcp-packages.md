@@ -1,5 +1,7 @@
 # PROP-027 — `mcp` packages: the agent-server kind and its delivery {#root}
 
+<status stage="impl" state="done" comment="B0 2026-07-24: IMPLEMENTED with the MCP-SOVEREIGNTY waves"/>
+
 **Milestone:** M1.26 candidate («MCP sovereignty» —
 [MCP-SOVEREIGNTY-PLAN-v0.1](../../terraforms/MCP-SOVEREIGNTY-PLAN-v0.1.md)).
 **Status:** IMPLEMENTED — the kind and the manifest laws (§2.1–§2.3)

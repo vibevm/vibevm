@@ -1,5 +1,7 @@
 # PROP-030 — The embedded registry {#root}
 
+<status stage="spec" state="done" action="continue" comment="B0 2026-07-24: status line says proposed 2026-07-13"/>
+
 `spec://vibevm/modules/vibe-registry/PROP-030`
 
 **Status:** proposed (2026-07-13).

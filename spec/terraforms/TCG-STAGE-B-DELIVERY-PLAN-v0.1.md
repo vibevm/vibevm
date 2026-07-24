@@ -1,5 +1,7 @@
 # TCG-STAGE-B-DELIVERY-PLAN v0.1 — delivery experiments for the agentic oracle
 
+<status stage="impl" state="hold" comment="B0 2026-07-24: BACKLOGGED by owner 2026-07-07; the S14 review points stay OPEN; S1 facts must be re-verified on pickup"/>
+
 _Status: **BACKLOGGED (owner, 2026-07-07, same day as authoring)** —
 the owner deferred commissioning; the §14 review points stay OPEN for
 whenever this campaign is picked up, and the §1 facts must be

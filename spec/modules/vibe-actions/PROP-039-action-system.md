@@ -1,5 +1,7 @@
 # PROP-039: the vibevm action system — `vibe-actions` {#root}
 
+<status stage="spec" state="work" comment="B0 2026-07-24: status line says DRAFT 2026-07-15; crates/vibe-actions exists"/>
+
 **Status:** DRAFT — requirements, 2026-07-15 (owner-commissioned). The **contract** for a new crate
 `vibe-actions`: a frontend-agnostic, addressable, programmatically-drivable behaviour layer.
 **Related:** design-doc [`spec/design/action-system.md`](../../design/action-system.md) (the *why* +

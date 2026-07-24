@@ -1,5 +1,7 @@
 # PROP-036: `vibe tree` — the spec-tree analyzer {#root}
 
+<status stage="spec" state="work" comment="B0 2026-07-24: status line says DRAFT requirements 2026-07-15; PACKAGE-TREE-PLAN executed against it"/>
+
 **Status:** DRAFT — requirements, 2026-07-15 (owner-requested). Governs the
 `vibe tree` command in `crates/vibe-cli`. Written in the post-rename link
 vocabulary (PROP-035): two link types, `static` and `dynamic`.

@@ -1,2 +1,4 @@
 {"kind":"step-start","id":"b-open-scope","step_type":"config","target":"progress.toml","actor":"fable","ts":"2026-07-24T15:29:20Z"}
 {"kind":"step-done","id":"b-open-scope","result":"progress.toml landed; scan: 97 files (plan baseline said 91; +6 are the progress-control docs authored after the baseline), 3638/3684 paragraphs unmarked, 0 errors","ts":"2026-07-24T15:29:39Z"}
+{"kind":"step-start","id":"b0-convert-status","step_type":"convert-status-lines","target":"spec/** (~51 legacy Status lines)","actor":"fable","ts":"2026-07-24T15:32:55Z"}
+{"kind":"step-done","id":"b0-convert-status","result":"73 legacy status lines converted to document markers (73 files, +73 markers, 0 deletions); check clean; 12 ledger findings F-001..F-012; scope question re generated boot files parked in the plan LOG","ts":"2026-07-24T15:43:12Z"}

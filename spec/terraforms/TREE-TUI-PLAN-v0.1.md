@@ -1,5 +1,7 @@
 # TREE-TUI-PLAN v0.1 — the `vibe tree` TUI as a real application
 
+<status stage="spec" state="done" action="continue" actionstage="impl" comment="B0 2026-07-24: status line says PLANNED; TREE-TUI-PLAN-v0.2 declares itself the successor"/>
+
 _Status: PLANNED · written against tree `6473ecb` · cold-executable: every phase
 ends with `bash tools/self-check.sh` green; any phase boundary is a safe stop.
 The **contract** is [PROP-037](../modules/vibe-cli/PROP-037-tree-tui.md); this

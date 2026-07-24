@@ -1,5 +1,7 @@
 # Design doc: the `vibe tree` TUI visual language (lore for PROP-037 §2.2)
 
+<status stage="doc" state="done" comment="B0 2026-07-24: FULL 2026-07-16; lore for PROP-037 S2.2, PROP-037 wins on conflict"/>
+
 _Status: **FULL** (2026-07-16, TREE-TUI-PLAN v0.2 Phase 1). This is **lore** — the
 aesthetics, the why, the tables the eye reads. The **normative** surface (the REQs the code is
 traceable to) lives in [PROP-037 §2.2](../modules/vibe-cli/PROP-037-tree-tui.md#theme); this document

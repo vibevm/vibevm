@@ -1,5 +1,7 @@
 # Comparative research: системы настроек VSCode vs IntelliJ — clean-room study for vibevm application/user preferences
 
+<status stage="doc" state="done" comment="B0 2026-07-24: SYNTHESISED 2026-07-16 from 4 research subagents"/>
+
 _Status: **SYNTHESISED** 2026-07-16 из 4 research-сабагентов (VSCode config, IntelliJ settings, web
 pain-points, vibevm-baseline). Comparative-research genre: quote-first, two-way gaps, deltas-not-decrees.
 Не ратифицирует собственные предложения — приём downstream в спеках Шага 1._

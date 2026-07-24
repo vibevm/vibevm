@@ -1,5 +1,7 @@
 # SETTINGS-UI-PLAN v0.1 — the `vibe prefs` TUI surface (PROP-041)
 
+<status stage="freeze" state="done" comment="B0 2026-07-24: EXECUTED 2026-07-16, S1-S7 landed; owner visual sign-off open (MT-03)"/>
+
 _Status: **EXECUTED** (2026-07-16) — all seven phases S1–S7 landed on `main`,
 floor-green throughout (`self-check` all green, 347 vibe-cli tests, conform 0,
 specmap clean); the owner's visual sign-off is the open item

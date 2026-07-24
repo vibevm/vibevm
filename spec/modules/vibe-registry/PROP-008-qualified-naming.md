@@ -1,5 +1,7 @@
 # PROP-008: Qualified package naming — groups, short aliases, collision detection {#root}
 
+<status stage="impl" state="done" comment="B0 2026-07-24: IMPLEMENTED, M1.18 + M1.19"/>
+
 **Milestone:** design proposal; targets a new `M1.18` ([`ROADMAP.md`](../../../ROADMAP.md)). Not implementation-locked.
 **Status:** IMPLEMENTED — Phases 1–4 + 7 landed 2026-05-22 (M1.18, see §7); Phases 5–6 + 8 landed with M1.19 (index-backed short-name resolution at the CLI boundary — `vibe-cli::commands::short_name`; collision detection with exit code `7` — `InstallError::AmbiguousPackage`; the live-registry fqdn migration). Decision units typed at REQ grain 2026-06-12 (the depth program).
 **Related:** [PROP-002 §2.1 / §3.4](PROP-002-decentralized-registry.md) (content-addressed identity; the rejection of *per-registry* identity — and why `group` does not violate it); [PROP-005](../vibe-index/PROP-005-package-index.md) (per-org index — **required** for short-name resolution); [PROP-007](../vibe-workspace/PROP-007-workspace.md) (workspace — companion document, same design session); [`VIBEVM-SPEC.md` §4.1 / §7.1](../../../VIBEVM-SPEC.md) (the installable kinds; current `name`-uniqueness rule).

@@ -1,5 +1,7 @@
 # AINATIVE-ANALYSIS-RAID v0.1 — AI-Native scaffold coverage of the static-analysis engine
 
+<status stage="freeze" state="done" comment="B0 2026-07-24: EXECUTED, phases 0-5 done, floor-green throughout - historical plan"/>
+
 _Status: **EXECUTED** (Phases 0–5 done, floor-green throughout) · opened against
 tree `3227fde`, closed at `d821910` · cold-executable: every phase ends
 floor-green (`bash tools/self-check.sh`); any phase boundary is a safe stop. A

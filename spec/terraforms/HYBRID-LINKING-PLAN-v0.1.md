@@ -1,5 +1,7 @@
 # HYBRID-LINKING-PLAN v0.1 — per-package boot compilation units with soft/hard static edges
 
+<status stage="freeze" state="done" comment="B0 2026-07-24: EXECUTED 2026-07-15 - historical plan; the contract is PROP-038"/>
+
 _Status: EXECUTED 2026-07-15 · written against tree `a9fdd63` · cold-executable: Phase 0 is
 spikes and commits nothing; every later phase ends with the floor green and is a
 safe stop. The **contract** is [PROP-038](../modules/vibe-workspace/PROP-038-hybrid-boot-linking.md);

@@ -1,5 +1,7 @@
 # PROP-010: The local package cache — a shared offline store {#root}
 
+<status stage="spec" state="work" comment="B0 2026-07-24: DRAFT; the S5 open questions need an owner design session"/>
+
 **Milestone:** design proposal; implementation follows [PROP-008](PROP-008-qualified-naming.md) (qualified naming, `M1.19`), on which the identity-keyed cache depends — provisionally `M1.20` (owner to confirm in [`ROADMAP.md`](../../../ROADMAP.md)). Not implementation-locked.
 **Status:** DRAFT — requirements captured in owner discussions on 2026-05-21; draft 2 adopted the cache-keying and user-config decisions (§2.3, §2.4). The remaining §5 open questions need an owner design session before implementation.
 **Related:** [PROP-002](PROP-002-decentralized-registry.md) (the decentralized registry — `[[registry]]`, `[[mirror]]`, `[[override]]`, and the registry cache this PROP elevates); [PROP-008](PROP-008-qualified-naming.md) (qualified naming — the registry-independent package identity the cache is keyed by); [PROP-009](../vibe-workspace/PROP-009-loading-model.md) (the loading model — `vibedeps/`, materialisation, `vibe.lock`); [PROP-005](../vibe-index/PROP-005-package-index.md) (the package index — offline search); [PROP-007](../vibe-workspace/PROP-007-workspace.md) (workspaces — members).

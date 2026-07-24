@@ -1,5 +1,7 @@
 # SETTINGS-SYSTEM-META-PLAN v0.1 — настройки приложения/пользователя vibevm (Vibe Tree + будущий vibe app) + UI (как в VSCode/IntelliJ)
 
+<status stage="spec" state="done" action="continue" actionstage="impl" comment="B0 2026-07-24: PLANNED, reframed 2026-07-16; meta-plan of four steps"/>
+
 _Status: PLANNED · written 2026-07-16, **reframed 2026-07-16 (owner correction — см. §3)** ·
 cold-executable: каждый шаг/фаза ends `bash tools/self-check.sh` green; любая граница — безопасная
 остановка. **Это мета-план** (последовательность четырёх шагов); детали каждого шага — в его

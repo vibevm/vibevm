@@ -1,5 +1,7 @@
 # PROP-009: Loading model — computed boot composition and the effective spec {#root}
 
+<status stage="impl" state="work" comment="B0 2026-07-24: status line says DRAFT; M1.18 phases 1-7 shipped 2026-05-22; phase 8 (effective-spec view) is v1.5 scope"/>
+
 **Milestone:** design proposal; targets a new `M1.18` ([`ROADMAP.md`](../../../ROADMAP.md)). Not implementation-locked.
 **Status:** DRAFT — requirements resolved 2026-05-21; M1.18 phases 1–7 shipped 2026-05-22. The dynamic-entry `when` gate (OS-scoped) shipped 2026-05-22 — see §8. Phase 8 (the effective-spec view) is v1.5 scope.
 **Related:** [`VIBEVM-SPEC.md` §4.2 / §4.6 / §6 / §13.1](../../../VIBEVM-SPEC.md); [PROP-007](PROP-007-workspace.md) (workspace — PROP-009 answers its [§6 question 3](PROP-007-workspace.md#open)); [PROP-003 §2.5](../vibe-resolver/PROP-003-dep-evolution.md) (subskills, delivery modes, the `[activation]` vocabulary); [PROP-002](../vibe-registry/PROP-002-decentralized-registry.md) (identity, registry).

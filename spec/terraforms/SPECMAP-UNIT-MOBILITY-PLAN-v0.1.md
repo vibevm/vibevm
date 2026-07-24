@@ -1,5 +1,7 @@
 # SPECMAP Unit-Mobility Plan v0.1 — moving spec units across package boundaries with their edges intact
 
+<status stage="spec" state="done" action="continue" actionstage="impl" comment="B0 2026-07-24: status line says PLANNED, not started"/>
+
 **status: PLANNED · not started · unblocks the cultural-pattern extraction refactoring · executes cold from a fresh session**
 
 > **Read-first / boot.** Written to be executed cold. Boot the normal way

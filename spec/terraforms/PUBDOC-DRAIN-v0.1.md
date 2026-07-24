@@ -1,4 +1,7 @@
 # vibevm Pub-Doctest Drain v0.1 — teach every public vibe-core type by one compiled example
+
+<status stage="freeze" state="done" comment="B0 2026-07-24: EXECUTED TO COMPLETION 2026-06-14, conform baseline drained to zero - historical plan"/>
+
 **status: EXECUTED TO COMPLETION 2026-06-14 · all 8 batches (B1–B8) landed · conform baseline drained to ZERO · vibevm-specific**
 
 > **Execution record (2026-06-14).** All 55 `pub-doctest` entries drained

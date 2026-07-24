@@ -1,5 +1,7 @@
 # GO-AI-NATIVE-PLAN v0.1 — Go as the third supported language of the Discipline
 
+<status stage="freeze" state="done" comment="B0 2026-07-24: CLOSED 2026-07-17, all phases landed, REPORT filled - historical plan"/>
+
 **Status: CLOSED 2026-07-17 — all phases landed, floor green on the pilot, REPORT
 written (§12).** Deferred by name: registry publishing; host installation of the go
 stack; the bench corpus seeding (see §12 P3); token-level tcg (very-far-future).

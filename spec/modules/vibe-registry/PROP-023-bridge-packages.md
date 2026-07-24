@@ -1,5 +1,7 @@
 # PROP-023 — Bridge packages {#root}
 
+<status stage="spec" state="done" action="continue" comment="B0 2026-07-24: proposed 2026-06-24; umbrella of the four bridge-packages specs"/>
+
 **Status:** proposed 2026-06-24 — owner-requested design session. The umbrella
 spec of the four; it composes three orthogonal mechanisms —
 [PROP-020](../vibe-workspace/PROP-020-install-hooks.md) install hooks,

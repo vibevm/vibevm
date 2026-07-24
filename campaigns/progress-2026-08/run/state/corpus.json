@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-07-24T15:29:42Z",
+  "updated_at": "2026-07-24T15:43:16Z",
   "files": [
     {
       "path": "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/LICENSE.md",
@@ -4487,9 +4487,15 @@
     },
     {
       "path": "spec/common/PROP-013-periodic-health-audit.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 1,
       "units": 6,
       "paragraphs": 18,
       "unmarked": 18,
@@ -4498,9 +4504,15 @@
     },
     {
       "path": "spec/common/PROP-016-source-mirrors.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 1,
       "units": 7,
       "paragraphs": 15,
       "unmarked": 15,
@@ -4509,9 +4521,15 @@
     },
     {
       "path": "spec/common/PROP-018-agentic-standalone-modes.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 1,
       "units": 21,
       "paragraphs": 52,
       "unmarked": 52,
@@ -4520,9 +4538,15 @@
     },
     {
       "path": "spec/common/PROP-019-version-manager.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 1,
       "units": 37,
       "paragraphs": 82,
       "unmarked": 82,
@@ -4531,9 +4555,15 @@
     },
     {
       "path": "spec/common/PROP-024-code-bearing-packages.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 1,
       "units": 16,
       "paragraphs": 37,
       "unmarked": 37,
@@ -4542,9 +4572,15 @@
     },
     {
       "path": "spec/common/PROP-028-package-families.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "markers": 1,
       "units": 9,
       "paragraphs": 17,
       "unmarked": 17,
@@ -4553,9 +4589,15 @@
     },
     {
       "path": "spec/common/PROP-029-fully-qualified-addresses.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 1,
       "units": 6,
       "paragraphs": 9,
       "unmarked": 9,
@@ -4564,9 +4606,15 @@
     },
     {
       "path": "spec/common/PROP-031-algorithmic-refactoring.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 1,
       "units": 13,
       "paragraphs": 28,
       "unmarked": 28,
@@ -4575,9 +4623,15 @@
     },
     {
       "path": "spec/common/PROP-032-project-model-ide-substrate.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 1,
       "units": 16,
       "paragraphs": 38,
       "unmarked": 38,
@@ -4586,9 +4640,15 @@
     },
     {
       "path": "spec/common/PROP-033-refactoring-registry.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 1,
       "units": 14,
       "paragraphs": 25,
       "unmarked": 25,
@@ -4625,9 +4685,15 @@
     },
     {
       "path": "spec/design/loading-and-boot-model.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "doc",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "doc",
+        "state": "done"
+      },
+      "markers": 1,
       "units": 15,
       "paragraphs": 32,
       "unmarked": 32,
@@ -4636,9 +4702,15 @@
     },
     {
       "path": "spec/design/structural-loader.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 1,
       "units": 7,
       "paragraphs": 14,
       "unmarked": 14,
@@ -4647,9 +4719,15 @@
     },
     {
       "path": "spec/design/tui-visual-language.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "doc",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "doc",
+        "state": "done"
+      },
+      "markers": 1,
       "units": 9,
       "paragraphs": 25,
       "unmarked": 25,
@@ -4658,9 +4736,15 @@
     },
     {
       "path": "spec/design/workspace-and-qualified-naming.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "doc",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "doc",
+        "state": "done"
+      },
+      "markers": 1,
       "units": 16,
       "paragraphs": 35,
       "unmarked": 35,
@@ -4724,9 +4808,15 @@
     },
     {
       "path": "spec/modules/vibe-actions/PROP-039-action-system.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "work"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "work"
+      },
+      "markers": 1,
       "units": 48,
       "paragraphs": 42,
       "unmarked": 42,
@@ -4735,9 +4825,15 @@
     },
     {
       "path": "spec/modules/vibe-cli/PROP-036-package-tree.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "work"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "work"
+      },
+      "markers": 1,
       "units": 18,
       "paragraphs": 29,
       "unmarked": 29,
@@ -4746,9 +4842,15 @@
     },
     {
       "path": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "work"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "work"
+      },
+      "markers": 1,
       "units": 61,
       "paragraphs": 76,
       "unmarked": 76,
@@ -4757,9 +4859,15 @@
     },
     {
       "path": "spec/modules/vibe-cli/PROP-042-aiui-observation.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 1,
       "units": 8,
       "paragraphs": 22,
       "unmarked": 22,
@@ -4768,9 +4876,15 @@
     },
     {
       "path": "spec/modules/vibe-index/PROP-005-package-index.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "markers": 1,
       "units": 44,
       "paragraphs": 163,
       "unmarked": 163,
@@ -4779,9 +4893,15 @@
     },
     {
       "path": "spec/modules/vibe-mcp/PROP-015-mcp-integration.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "markers": 1,
       "units": 13,
       "paragraphs": 31,
       "unmarked": 31,
@@ -4790,9 +4910,15 @@
     },
     {
       "path": "spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "markers": 1,
       "units": 8,
       "paragraphs": 20,
       "unmarked": 20,
@@ -4801,9 +4927,15 @@
     },
     {
       "path": "spec/modules/vibe-mcp/PROP-027-mcp-packages.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "markers": 1,
       "units": 12,
       "paragraphs": 20,
       "unmarked": 20,
@@ -4891,9 +5023,15 @@
     },
     {
       "path": "spec/modules/vibe-registry/PROP-001-git-backend.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "markers": 1,
       "units": 20,
       "paragraphs": 52,
       "unmarked": 52,
@@ -4902,9 +5040,15 @@
     },
     {
       "path": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 1,
       "units": 35,
       "paragraphs": 166,
       "unmarked": 166,
@@ -4913,9 +5057,15 @@
     },
     {
       "path": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "markers": 1,
       "units": 17,
       "paragraphs": 45,
       "unmarked": 45,
@@ -4924,9 +5074,15 @@
     },
     {
       "path": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "work"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "work"
+      },
+      "markers": 1,
       "units": 18,
       "paragraphs": 38,
       "unmarked": 38,
@@ -4935,9 +5091,15 @@
     },
     {
       "path": "spec/modules/vibe-registry/PROP-021-submodule-sources.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 1,
       "units": 12,
       "paragraphs": 20,
       "unmarked": 20,
@@ -4946,9 +5108,15 @@
     },
     {
       "path": "spec/modules/vibe-registry/PROP-023-bridge-packages.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 1,
       "units": 12,
       "paragraphs": 21,
       "unmarked": 21,
@@ -4957,9 +5125,15 @@
     },
     {
       "path": "spec/modules/vibe-registry/PROP-030-embedded-registry.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 1,
       "units": 14,
       "paragraphs": 39,
       "unmarked": 39,
@@ -4968,9 +5142,15 @@
     },
     {
       "path": "spec/modules/vibe-resolver/PROP-003-dep-evolution.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 1,
       "units": 56,
       "paragraphs": 139,
       "unmarked": 139,
@@ -4979,9 +5159,15 @@
     },
     {
       "path": "spec/modules/vibe-resolver/PROP-017-resolvo-resolver.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "impl",
+        "state": "work"
+      },
+      "explicit": {
+        "stage": "impl",
+        "state": "work"
+      },
+      "markers": 1,
       "units": 14,
       "paragraphs": 32,
       "unmarked": 32,
@@ -4990,9 +5176,15 @@
     },
     {
       "path": "spec/modules/vibe-settings/PROP-040-settings.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "work"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "work"
+      },
+      "markers": 1,
       "units": 16,
       "paragraphs": 46,
       "unmarked": 46,
@@ -5001,9 +5193,15 @@
     },
     {
       "path": "spec/modules/vibe-settings/PROP-041-settings-ui.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "work"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "work"
+      },
+      "markers": 1,
       "units": 12,
       "paragraphs": 28,
       "unmarked": 28,
@@ -5012,9 +5210,15 @@
     },
     {
       "path": "spec/modules/vibe-workspace/PROP-007-workspace.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "impl",
+        "state": "work"
+      },
+      "explicit": {
+        "stage": "impl",
+        "state": "work"
+      },
+      "markers": 1,
       "units": 24,
       "paragraphs": 72,
       "unmarked": 72,
@@ -5023,9 +5227,15 @@
     },
     {
       "path": "spec/modules/vibe-workspace/PROP-009-loading-model.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "impl",
+        "state": "work"
+      },
+      "explicit": {
+        "stage": "impl",
+        "state": "work"
+      },
+      "markers": 1,
       "units": 20,
       "paragraphs": 45,
       "unmarked": 45,
@@ -5034,9 +5244,15 @@
     },
     {
       "path": "spec/modules/vibe-workspace/PROP-011-incremental-install.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "markers": 1,
       "units": 15,
       "paragraphs": 35,
       "unmarked": 35,
@@ -5045,9 +5261,15 @@
     },
     {
       "path": "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "markers": 1,
       "units": 15,
       "paragraphs": 40,
       "unmarked": 40,
@@ -5056,9 +5278,15 @@
     },
     {
       "path": "spec/modules/vibe-workspace/PROP-020-install-hooks.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 1,
       "units": 13,
       "paragraphs": 26,
       "unmarked": 26,
@@ -5067,9 +5295,15 @@
     },
     {
       "path": "spec/modules/vibe-workspace/PROP-022-materialization-modes.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 1,
       "units": 14,
       "paragraphs": 25,
       "unmarked": 25,
@@ -5078,9 +5312,15 @@
     },
     {
       "path": "spec/modules/vibe-workspace/PROP-025-binary-delivery.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "markers": 1,
       "units": 11,
       "paragraphs": 23,
       "unmarked": 23,
@@ -5089,9 +5329,15 @@
     },
     {
       "path": "spec/modules/vibe-workspace/PROP-034-transitive-links-boot-graph.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "work"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "work"
+      },
+      "markers": 1,
       "units": 12,
       "paragraphs": 29,
       "unmarked": 29,
@@ -5100,9 +5346,15 @@
     },
     {
       "path": "spec/modules/vibe-workspace/PROP-035-spec-compiler.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "work"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "work"
+      },
+      "markers": 1,
       "units": 22,
       "paragraphs": 56,
       "unmarked": 56,
@@ -5111,9 +5363,15 @@
     },
     {
       "path": "spec/modules/vibe-workspace/PROP-038-hybrid-boot-linking.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "impl",
+        "state": "done"
+      },
+      "markers": 1,
       "units": 16,
       "paragraphs": 39,
       "unmarked": 39,
@@ -5133,9 +5391,15 @@
     },
     {
       "path": "spec/research/ACTION-SYSTEM-RESEARCH-PLAN-v0.1.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "impl",
+        "state": "work"
+      },
+      "explicit": {
+        "stage": "impl",
+        "state": "work"
+      },
+      "markers": 1,
       "units": 19,
       "paragraphs": 56,
       "unmarked": 56,
@@ -5155,9 +5419,15 @@
     },
     {
       "path": "spec/research/OPENREWRITE-RESEARCH-PLAN-v0.1.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 1,
       "units": 11,
       "paragraphs": 25,
       "unmarked": 25,
@@ -5166,9 +5436,15 @@
     },
     {
       "path": "spec/research/PROP-004-tessl-comparative-research.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "doc",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "doc",
+        "state": "done"
+      },
+      "markers": 1,
       "units": 83,
       "paragraphs": 257,
       "unmarked": 257,
@@ -5188,9 +5464,15 @@
     },
     {
       "path": "spec/research/SETTINGS-HOME-AND-GLOBAL-REGISTRY-PLAN-v0.1.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "impl",
+        "state": "work"
+      },
+      "explicit": {
+        "stage": "impl",
+        "state": "work"
+      },
+      "markers": 1,
       "units": 11,
       "paragraphs": 21,
       "unmarked": 21,
@@ -5199,9 +5481,15 @@
     },
     {
       "path": "spec/research/action-systems-vscode-idea.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "doc",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "doc",
+        "state": "done"
+      },
+      "markers": 1,
       "units": 25,
       "paragraphs": 75,
       "unmarked": 75,
@@ -5210,9 +5498,15 @@
     },
     {
       "path": "spec/research/settings-system-vscode-idea.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "doc",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "doc",
+        "state": "done"
+      },
+      "markers": 1,
       "units": 35,
       "paragraphs": 50,
       "unmarked": 50,
@@ -5221,9 +5515,15 @@
     },
     {
       "path": "spec/terraforms/AGENTIC-TCG-RUST-PLAN-v0.1.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "freeze",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "freeze",
+        "state": "done"
+      },
+      "markers": 1,
       "units": 32,
       "paragraphs": 50,
       "unmarked": 50,
@@ -5232,9 +5532,15 @@
     },
     {
       "path": "spec/terraforms/AGENTIC-TCG-TS-PLAN-v0.1.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "freeze",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "freeze",
+        "state": "done"
+      },
+      "markers": 1,
       "units": 29,
       "paragraphs": 36,
       "unmarked": 36,
@@ -5243,9 +5549,15 @@
     },
     {
       "path": "spec/terraforms/AINATIVE-ANALYSIS-RAID-v0.1.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "freeze",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "freeze",
+        "state": "done"
+      },
+      "markers": 1,
       "units": 15,
       "paragraphs": 33,
       "unmarked": 33,
@@ -5254,9 +5566,15 @@
     },
     {
       "path": "spec/terraforms/CONVERT-PLAN-v0.1.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 1,
       "units": 12,
       "paragraphs": 38,
       "unmarked": 38,
@@ -5265,9 +5583,15 @@
     },
     {
       "path": "spec/terraforms/CULTURAL-EXTRACTION-PLAN-v0.1.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 1,
       "units": 22,
       "paragraphs": 29,
       "unmarked": 29,
@@ -5276,9 +5600,15 @@
     },
     {
       "path": "spec/terraforms/DEFERRALS-CLOSEOUT-PLAN-v0.1.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 1,
       "units": 26,
       "paragraphs": 45,
       "unmarked": 45,
@@ -5287,9 +5617,15 @@
     },
     {
       "path": "spec/terraforms/DISCIPLINE-SWEEP-v0.2.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 1,
       "units": 5,
       "paragraphs": 8,
       "unmarked": 8,
@@ -5298,9 +5634,15 @@
     },
     {
       "path": "spec/terraforms/GO-AI-NATIVE-PLAN-v0.1.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "freeze",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "freeze",
+        "state": "done"
+      },
+      "markers": 1,
       "units": 14,
       "paragraphs": 19,
       "unmarked": 19,
@@ -5309,9 +5651,15 @@
     },
     {
       "path": "spec/terraforms/HYBRID-LINKING-PLAN-v0.1.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "freeze",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "freeze",
+        "state": "done"
+      },
+      "markers": 1,
       "units": 15,
       "paragraphs": 27,
       "unmarked": 27,
@@ -5320,9 +5668,15 @@
     },
     {
       "path": "spec/terraforms/MCP-SOVEREIGNTY-PLAN-v0.1.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "freeze",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "freeze",
+        "state": "done"
+      },
+      "markers": 1,
       "units": 40,
       "paragraphs": 58,
       "unmarked": 58,
@@ -5331,9 +5685,15 @@
     },
     {
       "path": "spec/terraforms/PACKAGE-TREE-PLAN-v0.1.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "freeze",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "freeze",
+        "state": "done"
+      },
+      "markers": 1,
       "units": 15,
       "paragraphs": 50,
       "unmarked": 50,
@@ -5342,9 +5702,15 @@
     },
     {
       "path": "spec/terraforms/PUBDOC-DRAIN-v0.1.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "freeze",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "freeze",
+        "state": "done"
+      },
+      "markers": 1,
       "units": 7,
       "paragraphs": 28,
       "unmarked": 28,
@@ -5353,9 +5719,15 @@
     },
     {
       "path": "spec/terraforms/REFACTORING-ENGINE-META-PLAN-v0.1.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 1,
       "units": 11,
       "paragraphs": 16,
       "unmarked": 16,
@@ -5364,9 +5736,15 @@
     },
     {
       "path": "spec/terraforms/SELF-SUFFICIENCY-PLAN-v0.1.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 1,
       "units": 19,
       "paragraphs": 37,
       "unmarked": 37,
@@ -5375,9 +5753,15 @@
     },
     {
       "path": "spec/terraforms/SETTINGS-SYSTEM-IMPL-PLAN-v0.1.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 1,
       "units": 12,
       "paragraphs": 19,
       "unmarked": 19,
@@ -5386,9 +5770,15 @@
     },
     {
       "path": "spec/terraforms/SETTINGS-SYSTEM-META-PLAN-v0.1.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 1,
       "units": 17,
       "paragraphs": 32,
       "unmarked": 32,
@@ -5397,9 +5787,15 @@
     },
     {
       "path": "spec/terraforms/SETTINGS-UI-PLAN-v0.1.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "freeze",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "freeze",
+        "state": "done"
+      },
+      "markers": 1,
       "units": 6,
       "paragraphs": 8,
       "unmarked": 8,
@@ -5425,9 +5821,15 @@
     },
     {
       "path": "spec/terraforms/SHRINK-PLAN-v0.2.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "freeze",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "freeze",
+        "state": "done"
+      },
+      "markers": 1,
       "units": 1,
       "paragraphs": 8,
       "unmarked": 8,
@@ -5453,9 +5855,15 @@
     },
     {
       "path": "spec/terraforms/SPECMAP-UNIT-MOBILITY-PLAN-v0.1.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 1,
       "units": 21,
       "paragraphs": 51,
       "unmarked": 51,
@@ -5464,9 +5872,15 @@
     },
     {
       "path": "spec/terraforms/TCG-STAGE-B-DELIVERY-PLAN-v0.1.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "impl",
+        "state": "hold"
+      },
+      "explicit": {
+        "stage": "impl",
+        "state": "hold"
+      },
+      "markers": 1,
       "units": 22,
       "paragraphs": 32,
       "unmarked": 32,
@@ -5475,9 +5889,15 @@
     },
     {
       "path": "spec/terraforms/TERRAFORM-PLAN-v0.3.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 1,
       "units": 8,
       "paragraphs": 21,
       "unmarked": 21,
@@ -5486,9 +5906,15 @@
     },
     {
       "path": "spec/terraforms/TRACEABILITY-RELOCATION-PLAN-v0.1.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 1,
       "units": 16,
       "paragraphs": 32,
       "unmarked": 32,
@@ -5497,9 +5923,15 @@
     },
     {
       "path": "spec/terraforms/TREE-TUI-PLAN-v0.1.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 1,
       "units": 14,
       "paragraphs": 24,
       "unmarked": 24,
@@ -5508,9 +5940,15 @@
     },
     {
       "path": "spec/terraforms/TREE-TUI-PLAN-v0.2.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "freeze",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "freeze",
+        "state": "done"
+      },
+      "markers": 1,
       "units": 11,
       "paragraphs": 13,
       "unmarked": 13,

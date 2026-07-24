@@ -1,5 +1,7 @@
 # AGENTIC-TCG-TS-PLAN v0.1 — the agentic type oracle for TypeScript
 
+<status stage="freeze" state="done" comment="B0 2026-07-24: EXECUTED 2026-07-07, phases 0-7 complete, floor green at close - historical plan"/>
+
 _Status: **EXECUTED 2026-07-07 — Phases 0–7 complete, floor green at
 close** (self-check 13 steps exit 0; conform 0 with 11 crates gated;
 specmap 592/578/590, 0 orphans/0 warnings; demo floor 7/7;

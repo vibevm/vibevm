@@ -1,5 +1,7 @@
 # Design rationale: Workspace & qualified naming
 
+<status stage="doc" state="done" comment="B0 2026-07-24: non-normative design record, captured 2026-05-20 in an owner session"/>
+
 **Companion to:** [PROP-007](../modules/vibe-workspace/PROP-007-workspace.md) (workspace), [PROP-008](../modules/vibe-registry/PROP-008-qualified-naming.md) (qualified naming).
 **Status:** non-normative design record. Captured 2026-05-20 in an owner design session.
 **Authority:** the PROPs are the contract. If this document and a PROP disagree, the PROP wins.

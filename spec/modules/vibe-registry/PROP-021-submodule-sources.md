@@ -1,5 +1,7 @@
 # PROP-021 — Submodule sources {#root}
 
+<status stage="spec" state="done" action="continue" comment="B0 2026-07-24: proposed 2026-06-24; one of the four bridge-packages specs"/>
+
 **Status:** proposed 2026-06-24 — owner-requested design session. One of four
 orthogonal specs from the bridge-packages design (siblings:
 [PROP-020](../vibe-workspace/PROP-020-install-hooks.md) install hooks,

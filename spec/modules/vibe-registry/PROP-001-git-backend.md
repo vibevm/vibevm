@@ -1,5 +1,7 @@
 # PROP-001: Git-backed registry for `vibe-registry` {#root}
 
+<status stage="impl" state="done" comment="B0 2026-07-24: accepted and shipped 2026-04-22; partially superseded by PROP-002"/>
+
 **Milestone:** M1.1 ([`ROADMAP.md`](../../../ROADMAP.md#m11--git-backed-registry)).
 **Status:** accepted 2026-04-22, shipped 2026-04-22. **Partially superseded by [PROP-002](PROP-002-decentralized-registry.md) (2026-04-24).** See the "Superseded parts" block below.
 **Supersedes:** nothing.

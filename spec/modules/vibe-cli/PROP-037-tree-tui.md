@@ -1,5 +1,7 @@
 # PROP-037: `vibe tree` — the interactive TUI application {#root}
 
+<status stage="spec" state="work" comment="B0 2026-07-24: status line says DRAFT, revised to Spec 2 2026-07-15; TREE-TUI-PLAN v0.2 executed against it"/>
+
 **Status:** DRAFT — requirements, 2026-07-15 (owner-commissioned); **revised
 2026-07-15 (Spec 2)** onto the action system: the TUI is a `Surface` on
 `vibe-actions` (PROP-039), every command is an addressed action (§13), Search

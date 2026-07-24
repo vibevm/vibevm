@@ -1,5 +1,7 @@
 # PROP-025 — vibe-native binary delivery {#root}
 
+<status stage="impl" state="done" comment="B0 2026-07-24: v1 IMPLEMENTED SS2-5 (deferrals-closeout campaign); S6-S7 specified v2 surface"/>
+
 **Status: v1 IMPLEMENTED (§§2–5; the deferrals-closeout campaign). §6–§7 are
 specified v2 surface.** Module: `vibe-workspace` / `vibe-install` / `vibe-cli`.
 

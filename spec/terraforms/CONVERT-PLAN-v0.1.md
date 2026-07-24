@@ -1,4 +1,7 @@
 # vibevm Convert Plan v0.1 — declare the surfaces, armor the core, drain the periphery
+
+<status stage="spec" state="done" action="continue" actionstage="impl" comment="B0 2026-07-24: status line says AUTHORED 2026-06-12, NOT STARTED"/>
+
 **status: AUTHORED 2026-06-12 · NOT STARTED · vibevm-specific · the full-depth conversion queue behind the 2026-06-12 audit**
 
 *Origin: the same-day full-depth audit (post-SHRINK-v0.2) found the codebase split into

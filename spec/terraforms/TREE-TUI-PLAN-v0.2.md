@@ -1,5 +1,7 @@
 # TREE-TUI-PLAN v0.2 — полная реализация PROP-037 (`vibe tree` TUI), визуальный язык как primary axis
 
+<status stage="freeze" state="done" comment="B0 2026-07-24: EXECUTED 2026-07-16, P0-P10 landed; owner visual sign-off open (MT-02); supersedes v0.1"/>
+
 _Status: **EXECUTED** (2026-07-16) — all eleven phases P0–P10 landed on `main`,
 floor-green throughout; the owner's visual sign-off is the open item
 (`spec/manual-tests/MT-02-vibe-tree-tui.md`). Supersedes `TREE-TUI-PLAN-v0.1.md`.

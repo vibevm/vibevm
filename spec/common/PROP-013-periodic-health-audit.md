@@ -1,5 +1,7 @@
 # PROP-013: Periodic health audit — vibevm's instance {#root}
 
+<status stage="spec" state="done" comment="B0 2026-07-24: accepted 2026-05-23, in force; living audit-category checklist"/>
+
 **Status:** accepted 2026-05-23 — owner-requested; in force. The audit-category checklist (§2) is **living** — it grows as new defect classes surface.
 **Related:** [PROP-000](PROP-000.md) (the per-commit gate this audit complements), [`CLAUDE.md`](../../CLAUDE.md), [PROP-006](PROP-006-operating-modes.md) (the `move fast and break things` posture an audit-driven fix-up often runs under), `vibe check` (the automated *subset* of what this audit does by hand), [`spec/WAL.md`](../WAL.md) (Known issues — active findings), [`AUDIT.md`](../../AUDIT.md) (the inventory this process writes).
 

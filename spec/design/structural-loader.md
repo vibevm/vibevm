@@ -1,5 +1,7 @@
 # The structural loader — honouring directives without the static compiler {#root}
 
+<status stage="spec" state="done" action="continue" actionstage="impl" comment="B0 2026-07-24: DESIGN provisional (PROP-035 S13); authored, not yet wired into any live boot"/>
+
 **Status:** DESIGN — provisional (PROP-035 §13). These instructions are authored but **not yet wired into any live boot**: migration is demo-corpus-first, `org.vibevm.world` next, vibevm's own boot last (PROP-035 §15). This document is the reference text; a package that adopts the spec-compiler format will load it (or its successor) first.
 
 ---

@@ -1,5 +1,7 @@
 # PROP-019 — VibeVM Version Manager (VVM) {#root}
 
+<status stage="spec" state="done" action="continue" comment="B0 2026-07-24: proposed 2026-06-17, revised to v2 the same day"/>
+
 **Status:** proposed 2026-06-17 — owner-requested design session; **revised
 to v2 the same day** after the owner found two architectural flaws in v1
 (see §9): (a) making `$VIBEVM_HOME` the single source of truth forced a

@@ -1,5 +1,7 @@
 # PROP-040: the vibevm settings system — application/user preferences (`vibe-settings`) {#root}
 
+<status stage="spec" state="work" comment="B0 2026-07-24: status line says DRAFT 2026-07-16; crates/vibe-settings exists"/>
+
 **Status:** DRAFT — requirements, 2026-07-16 (owner-commissioned). The **contract** for a new crate
 `vibe-settings`: a three-level, schema-first, introspectable store for **application/user
 preferences** (Vibe Tree UI — palettes, glyphs, rendering tier, display mode, sort, tree shape, fold

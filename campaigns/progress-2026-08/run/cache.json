@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-07-24T15:29:42Z",
+  "updated_at": "2026-07-24T15:43:16Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/LICENSE.md": {
       "content_hash": "ff62ce25b7887cc01f138039b0ea3217248ece5f92c08fc7f9a5c6758b2d6a29",
@@ -4492,112 +4492,232 @@
       "issue_count": 0
     },
     "spec/common/PROP-013-periodic-health-audit.md": {
-      "content_hash": "1230f736899c7e1bb74f035396657cfec9f8cfa931c218a1684993ead781e53c",
+      "content_hash": "55a06b4d3ae739960c73c7cae5693e43d50f0066c7fad11e15842cb40f3aa06a",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 1,
         "paragraph_count": 18,
         "unmarked_paragraphs": 18
       },
-      "marker_count": 0,
+      "marker_count": 1,
       "unit_count": 6,
       "issue_count": 0
     },
     "spec/common/PROP-016-source-mirrors.md": {
-      "content_hash": "b56336b88df5931ab74c8e85a56e6ba9b79bbb3c9372a99b66e1ba71e68e7ab3",
+      "content_hash": "3f41c2869252d851138c77ea4f8b20467d08ccc1aa02a7ef4d2fdfe530a28e43",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 1,
         "paragraph_count": 15,
         "unmarked_paragraphs": 15
       },
-      "marker_count": 0,
+      "marker_count": 1,
       "unit_count": 7,
       "issue_count": 0
     },
     "spec/common/PROP-018-agentic-standalone-modes.md": {
-      "content_hash": "b9dfb09e88ac928e6cdb1c9e6daf0facedd818a73592bb2bb38518c4fe7c0087",
+      "content_hash": "8f0efd6c1871e647b4f961e544ef574f838786bd4e6c93f17202333873d36e93",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 1,
         "paragraph_count": 52,
         "unmarked_paragraphs": 52
       },
-      "marker_count": 0,
+      "marker_count": 1,
       "unit_count": 21,
       "issue_count": 0
     },
     "spec/common/PROP-019-version-manager.md": {
-      "content_hash": "8476eb48158e84d07d76aec3389e8eae92e26b08d0098dbe6e95b4bffd38a069",
+      "content_hash": "c22220c403a7413ef919569381c23120f08744a59e0eb43810d303949a4bbe8b",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 1,
         "paragraph_count": 82,
         "unmarked_paragraphs": 82
       },
-      "marker_count": 0,
+      "marker_count": 1,
       "unit_count": 37,
       "issue_count": 0
     },
     "spec/common/PROP-024-code-bearing-packages.md": {
-      "content_hash": "4d25d2a6d7e92fe79836919c40553c1328a10b16bc8793bfeb3703eb43d8ae27",
+      "content_hash": "e7afed9e954ae1c0babd374618f3a2fcec9bd6ca68b97b7aee17a50341becaa6",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 1,
         "paragraph_count": 37,
         "unmarked_paragraphs": 37
       },
-      "marker_count": 0,
+      "marker_count": 1,
       "unit_count": 16,
       "issue_count": 0
     },
     "spec/common/PROP-028-package-families.md": {
-      "content_hash": "5fd7ec14aad2cf16b0abba9efdbe65146ac5f259f6ab610053f6b4e8869f1cbf",
+      "content_hash": "e011d6b30bc26035d892e623add68e87996699cf404bdf6d196808a0b5edd8e1",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "impl",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 1,
         "paragraph_count": 17,
         "unmarked_paragraphs": 17
       },
-      "marker_count": 0,
+      "marker_count": 1,
       "unit_count": 9,
       "issue_count": 0
     },
     "spec/common/PROP-029-fully-qualified-addresses.md": {
-      "content_hash": "fd1a99ca40bd6b71a72813537a7eda81ebaf98118a7e80354c4ac17e99cbab0f",
+      "content_hash": "90bfdbddf30e3b98d0de637069ba8eb0f9b62a1d0bc4aa10ccabc9c733e59fa0",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 1,
         "paragraph_count": 9,
         "unmarked_paragraphs": 9
       },
-      "marker_count": 0,
+      "marker_count": 1,
       "unit_count": 6,
       "issue_count": 0
     },
     "spec/common/PROP-031-algorithmic-refactoring.md": {
-      "content_hash": "4add3428ad0c623ef39bf2c1686d6e6645f40099e874c3cdec25606fa61f5675",
+      "content_hash": "51fd75fd6160bf049dafbe836b09c7d0007ff0d9a01257f47dd256fea8e48634",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 1,
         "paragraph_count": 28,
         "unmarked_paragraphs": 28
       },
-      "marker_count": 0,
+      "marker_count": 1,
       "unit_count": 13,
       "issue_count": 0
     },
     "spec/common/PROP-032-project-model-ide-substrate.md": {
-      "content_hash": "c63a4dc687444d03ca929850ebb7903a4dbd0e9d4f44a81d9402b9b8ad45e3dc",
+      "content_hash": "fde569af59f60f745b16e9f2178a5fabd4a794d6bac26fd864f309e02f6b28e0",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 1,
         "paragraph_count": 38,
         "unmarked_paragraphs": 38
       },
-      "marker_count": 0,
+      "marker_count": 1,
       "unit_count": 16,
       "issue_count": 0
     },
     "spec/common/PROP-033-refactoring-registry.md": {
-      "content_hash": "801c4a411f48b19e04e8af11e6f502778a7460232f4bf5b5f3d86025f8e13adc",
+      "content_hash": "82a42af49da00f2ddeffac4644e04154b3cf9b42c42d69cbe9f4b72a36bfa2b1",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 1,
         "paragraph_count": 25,
         "unmarked_paragraphs": 25
       },
-      "marker_count": 0,
+      "marker_count": 1,
       "unit_count": 14,
       "issue_count": 0
     },
@@ -4636,46 +4756,94 @@
       "issue_count": 0
     },
     "spec/design/loading-and-boot-model.md": {
-      "content_hash": "f1f6ef8433e96a4796acd0a85a4b02a3234aaf1c503f7b14b262ef8b2f81d32c",
+      "content_hash": "5d2b28fe7242962fc57c8fbf3ef990d3f4b5465f74d542c83715d45099067c0a",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "doc",
+          "done"
+        ],
+        "computed": [
+          "doc",
+          "done"
+        ],
+        "effective": [
+          "doc",
+          "done"
+        ],
+        "marker_count": 1,
         "paragraph_count": 32,
         "unmarked_paragraphs": 32
       },
-      "marker_count": 0,
+      "marker_count": 1,
       "unit_count": 15,
       "issue_count": 0
     },
     "spec/design/structural-loader.md": {
-      "content_hash": "7dd9db5405425fcf9e238fad426dea2820ff7a0b7efb282b48d49532d2427651",
+      "content_hash": "2449106dc1142113d71096fd3251d1869f1554ab3ef8595150f98f4c37bee30f",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 1,
         "paragraph_count": 14,
         "unmarked_paragraphs": 14
       },
-      "marker_count": 0,
+      "marker_count": 1,
       "unit_count": 7,
       "issue_count": 0
     },
     "spec/design/tui-visual-language.md": {
-      "content_hash": "cbcf649892493d6acab46976e2cb477db380825f451eeff02b874d56c425b791",
+      "content_hash": "d908d18e29930f1e9ae97ec4f9ae6e516e54740e26d1ad1ead350795aeda7dbc",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "doc",
+          "done"
+        ],
+        "computed": [
+          "doc",
+          "done"
+        ],
+        "effective": [
+          "doc",
+          "done"
+        ],
+        "marker_count": 1,
         "paragraph_count": 25,
         "unmarked_paragraphs": 25
       },
-      "marker_count": 0,
+      "marker_count": 1,
       "unit_count": 9,
       "issue_count": 0
     },
     "spec/design/workspace-and-qualified-naming.md": {
-      "content_hash": "49d3d52fc3b002faead3f75068f15c25d43d922157931244fdafa362d57457ac",
+      "content_hash": "cc3cc4fb2648beaa466621120fccc76997b3f733b1f693e3118bc627b16a9c57",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "doc",
+          "done"
+        ],
+        "computed": [
+          "doc",
+          "done"
+        ],
+        "effective": [
+          "doc",
+          "done"
+        ],
+        "marker_count": 1,
         "paragraph_count": 35,
         "unmarked_paragraphs": 35
       },
-      "marker_count": 0,
+      "marker_count": 1,
       "unit_count": 16,
       "issue_count": 0
     },
@@ -4735,90 +4903,186 @@
       "issue_count": 0
     },
     "spec/modules/vibe-actions/PROP-039-action-system.md": {
-      "content_hash": "3ef282ce25fc240752a15cbb67b14c5b1e193a0099fd9b89fa288d8f977ca623",
+      "content_hash": "d7fa49b929265b20b2667390af5053b3569015c44f8f6d1fb20ce2f64bda9ba7",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "spec",
+          "work"
+        ],
+        "computed": [
+          "spec",
+          "work"
+        ],
+        "effective": [
+          "spec",
+          "work"
+        ],
+        "marker_count": 1,
         "paragraph_count": 42,
         "unmarked_paragraphs": 42
       },
-      "marker_count": 0,
+      "marker_count": 1,
       "unit_count": 48,
       "issue_count": 0
     },
     "spec/modules/vibe-cli/PROP-036-package-tree.md": {
-      "content_hash": "48897de67917e98fa0c0c534d84bf3c496ac1af8f18ad1fca3aaddb962015932",
+      "content_hash": "3c7ac38c62ba0f99bf2797c5f692768e41522b0b7fde79131776cacdbb6e1e03",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "spec",
+          "work"
+        ],
+        "computed": [
+          "spec",
+          "work"
+        ],
+        "effective": [
+          "spec",
+          "work"
+        ],
+        "marker_count": 1,
         "paragraph_count": 29,
         "unmarked_paragraphs": 29
       },
-      "marker_count": 0,
+      "marker_count": 1,
       "unit_count": 18,
       "issue_count": 0
     },
     "spec/modules/vibe-cli/PROP-037-tree-tui.md": {
-      "content_hash": "5329ab3823c6e65311aaaa37e5676a876435198b8961689c5fe31d156de6679b",
+      "content_hash": "f42275787b21b71ef42e1fad49d8d694af3a569af6122e6535cb12a7917c34a1",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "spec",
+          "work"
+        ],
+        "computed": [
+          "spec",
+          "work"
+        ],
+        "effective": [
+          "spec",
+          "work"
+        ],
+        "marker_count": 1,
         "paragraph_count": 76,
         "unmarked_paragraphs": 76
       },
-      "marker_count": 0,
+      "marker_count": 1,
       "unit_count": 61,
       "issue_count": 0
     },
     "spec/modules/vibe-cli/PROP-042-aiui-observation.md": {
-      "content_hash": "218c16e29821d8dfccc00657a1648176d3f9265aa30f6fc18485b0368b53c9d6",
+      "content_hash": "d1aef7ff4635086d3b47e5fe828c6b1441e5068b8e54f13aa1adbacbde38912a",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 1,
         "paragraph_count": 22,
         "unmarked_paragraphs": 22
       },
-      "marker_count": 0,
+      "marker_count": 1,
       "unit_count": 8,
       "issue_count": 0
     },
     "spec/modules/vibe-index/PROP-005-package-index.md": {
-      "content_hash": "cc69c82167a92943bc004fe88abdd07899f78a627d8f697ca0a49b1376031ddc",
+      "content_hash": "b458b5dfae74ee3ea221cffe44b0fab9e595d0e79dde4beda4282f70657192a2",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "impl",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 1,
         "paragraph_count": 163,
         "unmarked_paragraphs": 163
       },
-      "marker_count": 0,
+      "marker_count": 1,
       "unit_count": 44,
       "issue_count": 0
     },
     "spec/modules/vibe-mcp/PROP-015-mcp-integration.md": {
-      "content_hash": "3295e242e561852678d4ab5f2d394180a517cb52c825009435a85109b87aef8f",
+      "content_hash": "fcb13e9731a09048070e16e6e5b9099b6f8886ac5d45e80c0d9df96215e93f9b",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "impl",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 1,
         "paragraph_count": 31,
         "unmarked_paragraphs": 31
       },
-      "marker_count": 0,
+      "marker_count": 1,
       "unit_count": 13,
       "issue_count": 0
     },
     "spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md": {
-      "content_hash": "53e5c9b99cb4e1f90f1dc0af51267d70dc4d4fadd797ef946d74e8f90f071c09",
+      "content_hash": "d28d15f1fdd372d5ff2cd265f446f672f88f4bf370b1a5eacb2679d7856e56f4",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "impl",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 1,
         "paragraph_count": 20,
         "unmarked_paragraphs": 20
       },
-      "marker_count": 0,
+      "marker_count": 1,
       "unit_count": 8,
       "issue_count": 0
     },
     "spec/modules/vibe-mcp/PROP-027-mcp-packages.md": {
-      "content_hash": "5ff33ac22cfefaff10c5aaf678cf4194631cdcf93fd4222eb1f6088516d64f17",
+      "content_hash": "b417f3c28bb1ccd47287a752b0cc39cf0a8996e8f603a2f64c760c62f7cc7c79",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "impl",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 1,
         "paragraph_count": 20,
         "unmarked_paragraphs": 20
       },
-      "marker_count": 0,
+      "marker_count": 1,
       "unit_count": 12,
       "issue_count": 0
     },
@@ -4926,233 +5190,485 @@
       "issue_count": 0
     },
     "spec/modules/vibe-registry/PROP-001-git-backend.md": {
-      "content_hash": "18472da54356efb02c688716cf35c369f38ec89c109c21ae464f300480220805",
+      "content_hash": "aa762b5e64f08b6dea46df82dd3b0ed8e9c2b9f4eddfb048d9c9c468aa4b6237",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "impl",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 1,
         "paragraph_count": 52,
         "unmarked_paragraphs": 52
       },
-      "marker_count": 0,
+      "marker_count": 1,
       "unit_count": 20,
       "issue_count": 0
     },
     "spec/modules/vibe-registry/PROP-002-decentralized-registry.md": {
-      "content_hash": "0057ab15c3ec286124fbf125ea0feacb1b2f33fd911b0b11b0f75280945f9d35",
+      "content_hash": "3fea56ccc1cbb2e1048713c099a9642b232af75d3492d3a218933003ae7f216e",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 1,
         "paragraph_count": 166,
         "unmarked_paragraphs": 166
       },
-      "marker_count": 0,
+      "marker_count": 1,
       "unit_count": 35,
       "issue_count": 0
     },
     "spec/modules/vibe-registry/PROP-008-qualified-naming.md": {
-      "content_hash": "4b792fc68056214fd713d452e3990e96f6d729c014a88ad660b11bdda11274b5",
+      "content_hash": "17074ea15cf0f2aafe53269a0e517a755d1ad2753e938ee48d845cbe281c4092",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "impl",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 1,
         "paragraph_count": 45,
         "unmarked_paragraphs": 45
       },
-      "marker_count": 0,
+      "marker_count": 1,
       "unit_count": 17,
       "issue_count": 0
     },
     "spec/modules/vibe-registry/PROP-010-local-package-cache.md": {
-      "content_hash": "feeec45c51b5661fbf80a3ed8a9d7d0eb4c2e6a4a23275003bad7d11a5dfa37b",
+      "content_hash": "ae1b5e7fdca511849b5d08482b52953b7fdd4033b50d6045c05d00f366c7fa81",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "spec",
+          "work"
+        ],
+        "computed": [
+          "spec",
+          "work"
+        ],
+        "effective": [
+          "spec",
+          "work"
+        ],
+        "marker_count": 1,
         "paragraph_count": 38,
         "unmarked_paragraphs": 38
       },
-      "marker_count": 0,
+      "marker_count": 1,
       "unit_count": 18,
       "issue_count": 0
     },
     "spec/modules/vibe-registry/PROP-021-submodule-sources.md": {
-      "content_hash": "87393c0c3fbb19f4a36d726fe93c4f1aa256bae135d269735b2926ec442ded41",
+      "content_hash": "6bcd6ff44eed180d706acf0aa9635c9e01f65dc8782c4f72a82e6d75823f0e0f",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 1,
         "paragraph_count": 20,
         "unmarked_paragraphs": 20
       },
-      "marker_count": 0,
+      "marker_count": 1,
       "unit_count": 12,
       "issue_count": 0
     },
     "spec/modules/vibe-registry/PROP-023-bridge-packages.md": {
-      "content_hash": "18a93e06f842c7f7750505e161772c47aa0496d61b6767f373eb00a527e48d91",
+      "content_hash": "5211a9658635472472c9a8d9bbf1bb80083e6d9013e48554a5a4c4085208fc86",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 1,
         "paragraph_count": 21,
         "unmarked_paragraphs": 21
       },
-      "marker_count": 0,
+      "marker_count": 1,
       "unit_count": 12,
       "issue_count": 0
     },
     "spec/modules/vibe-registry/PROP-030-embedded-registry.md": {
-      "content_hash": "0af82cfe1115430581db2f6435500a671dffb5af5686d1d3d73a90d0d58b3f57",
+      "content_hash": "f6efcfff42e111119bd741403421c76eabf6471de7875ba935ae945fc5deafe3",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 1,
         "paragraph_count": 39,
         "unmarked_paragraphs": 39
       },
-      "marker_count": 0,
+      "marker_count": 1,
       "unit_count": 14,
       "issue_count": 0
     },
     "spec/modules/vibe-resolver/PROP-003-dep-evolution.md": {
-      "content_hash": "1d3cb1173e66d20f4c156330333f27c807e7ea1e90be34e8a9e5eaee25c013f2",
+      "content_hash": "268e42da591de79f5c2c1a0a9ebbb9b9e60ae55645dd70097a25ed7d413db009",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 1,
         "paragraph_count": 139,
         "unmarked_paragraphs": 139
       },
-      "marker_count": 0,
+      "marker_count": 1,
       "unit_count": 56,
       "issue_count": 0
     },
     "spec/modules/vibe-resolver/PROP-017-resolvo-resolver.md": {
-      "content_hash": "8f4b4635e8bab83cce6fcf5a950b93d4f5fa591e5aeaaf89e25524065115e760",
+      "content_hash": "615629a47ac9928f62b50318e95e73b1297465fa02e88b94bc3c1ab0fd881dad",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "impl",
+          "work"
+        ],
+        "computed": [
+          "impl",
+          "work"
+        ],
+        "effective": [
+          "impl",
+          "work"
+        ],
+        "marker_count": 1,
         "paragraph_count": 32,
         "unmarked_paragraphs": 32
       },
-      "marker_count": 0,
+      "marker_count": 1,
       "unit_count": 14,
       "issue_count": 0
     },
     "spec/modules/vibe-settings/PROP-040-settings.md": {
-      "content_hash": "6575c8556592ae1edbba4cac7607e9daa333430c87a6ddc897bd92869a4d2cff",
+      "content_hash": "535abcb3bb8c43c65a3d38552b5859c4c86fd0f182687f23f3ba5130b3356d22",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "spec",
+          "work"
+        ],
+        "computed": [
+          "spec",
+          "work"
+        ],
+        "effective": [
+          "spec",
+          "work"
+        ],
+        "marker_count": 1,
         "paragraph_count": 46,
         "unmarked_paragraphs": 46
       },
-      "marker_count": 0,
+      "marker_count": 1,
       "unit_count": 16,
       "issue_count": 0
     },
     "spec/modules/vibe-settings/PROP-041-settings-ui.md": {
-      "content_hash": "8e83a93e8fc5176c35ceb1b0ea4a32aa6d430a10c59eeae4951de80bd99c0670",
+      "content_hash": "4304d1c2d813ba232a015f63673c3dde7f4046f8c3526842c1467e755d2c7337",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "spec",
+          "work"
+        ],
+        "computed": [
+          "spec",
+          "work"
+        ],
+        "effective": [
+          "spec",
+          "work"
+        ],
+        "marker_count": 1,
         "paragraph_count": 28,
         "unmarked_paragraphs": 28
       },
-      "marker_count": 0,
+      "marker_count": 1,
       "unit_count": 12,
       "issue_count": 0
     },
     "spec/modules/vibe-workspace/PROP-007-workspace.md": {
-      "content_hash": "ce9fad32d7431f3d1be8ae41355d6e71cc8839de6687f6b30ff2cd78edadb50b",
+      "content_hash": "e0c29ecfd3803a6d69bad86ee39b861862ba70e068f6f0979aaa55678be0c3b3",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "impl",
+          "work"
+        ],
+        "computed": [
+          "impl",
+          "work"
+        ],
+        "effective": [
+          "impl",
+          "work"
+        ],
+        "marker_count": 1,
         "paragraph_count": 72,
         "unmarked_paragraphs": 72
       },
-      "marker_count": 0,
+      "marker_count": 1,
       "unit_count": 24,
       "issue_count": 0
     },
     "spec/modules/vibe-workspace/PROP-009-loading-model.md": {
-      "content_hash": "f695ff71d5ca8bfeb2f519a13d69f8b00b11b25349985d036aedd79ebdb8c207",
+      "content_hash": "0bb0da1066da77961b326d990aa6ea664a4673029663b23efba835f2e7b2734a",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "impl",
+          "work"
+        ],
+        "computed": [
+          "impl",
+          "work"
+        ],
+        "effective": [
+          "impl",
+          "work"
+        ],
+        "marker_count": 1,
         "paragraph_count": 45,
         "unmarked_paragraphs": 45
       },
-      "marker_count": 0,
+      "marker_count": 1,
       "unit_count": 20,
       "issue_count": 0
     },
     "spec/modules/vibe-workspace/PROP-011-incremental-install.md": {
-      "content_hash": "e9c3dc946fc1c4dfba67bf5d7bcdc5ddcf222b1f2c545c6d107a78f8e2ffec32",
+      "content_hash": "287dc455ccac8dfd3c3f1b679a6f8833d443aad541266fe6bd8fed1cd976d812",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "impl",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 1,
         "paragraph_count": 35,
         "unmarked_paragraphs": 35
       },
-      "marker_count": 0,
+      "marker_count": 1,
       "unit_count": 15,
       "issue_count": 0
     },
     "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md": {
-      "content_hash": "bfc4c5bdc4fe485c5dce5637dfd97f5a2ec7aa1d236b7d3183c0ac3c6d8c502a",
+      "content_hash": "e8c29d01017fa34fcb9379fce6169b1be81d14b4b91d37ed58e5369a6ba9d5a2",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "impl",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 1,
         "paragraph_count": 40,
         "unmarked_paragraphs": 40
       },
-      "marker_count": 0,
+      "marker_count": 1,
       "unit_count": 15,
       "issue_count": 0
     },
     "spec/modules/vibe-workspace/PROP-020-install-hooks.md": {
-      "content_hash": "1a7b9b40d2a4c46c6063b67290f8fafcc5413090b5125a7afcd61e38bf3ad50b",
+      "content_hash": "15f535c89dda1a40738a6deec3096a7825fff583fda4483613f5a2d03eef9430",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 1,
         "paragraph_count": 26,
         "unmarked_paragraphs": 26
       },
-      "marker_count": 0,
+      "marker_count": 1,
       "unit_count": 13,
       "issue_count": 0
     },
     "spec/modules/vibe-workspace/PROP-022-materialization-modes.md": {
-      "content_hash": "c53d09eeeef9a83b28b40bdc0f2c92b7ac0afe5f1755772dc8f9f554501e7ff8",
+      "content_hash": "c110cb837f7b06619330469b757b59712c7863d7fc85ef658289f3d1c29d03b8",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 1,
         "paragraph_count": 25,
         "unmarked_paragraphs": 25
       },
-      "marker_count": 0,
+      "marker_count": 1,
       "unit_count": 14,
       "issue_count": 0
     },
     "spec/modules/vibe-workspace/PROP-025-binary-delivery.md": {
-      "content_hash": "05fbc6b7e7318e74073d3b586e18c61ff86fe2fb0287c09d177add3f43cf1ef5",
+      "content_hash": "5d9b39938ac034908f5de67cda88f855d6bb81d6d5592cdbe178da3f1376c9d0",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "impl",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 1,
         "paragraph_count": 23,
         "unmarked_paragraphs": 23
       },
-      "marker_count": 0,
+      "marker_count": 1,
       "unit_count": 11,
       "issue_count": 0
     },
     "spec/modules/vibe-workspace/PROP-034-transitive-links-boot-graph.md": {
-      "content_hash": "d4abf2170ea9f61556ec96e80c42e1514dfea32c1ab906d7fd915cc2f770a64c",
+      "content_hash": "9df306483226d1b4754237c00e1189971eab77679efcd108a0955de389ad7e7a",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "spec",
+          "work"
+        ],
+        "computed": [
+          "spec",
+          "work"
+        ],
+        "effective": [
+          "spec",
+          "work"
+        ],
+        "marker_count": 1,
         "paragraph_count": 29,
         "unmarked_paragraphs": 29
       },
-      "marker_count": 0,
+      "marker_count": 1,
       "unit_count": 12,
       "issue_count": 0
     },
     "spec/modules/vibe-workspace/PROP-035-spec-compiler.md": {
-      "content_hash": "1be8b3f570a29267a9aaedda41c80336191a04a312a0fc386457e02c46351265",
+      "content_hash": "f34a38230133325f0e34fea5c6472f2579e136bba2e999f5312ca1a38c0d7132",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "spec",
+          "work"
+        ],
+        "computed": [
+          "spec",
+          "work"
+        ],
+        "effective": [
+          "spec",
+          "work"
+        ],
+        "marker_count": 1,
         "paragraph_count": 56,
         "unmarked_paragraphs": 56
       },
-      "marker_count": 0,
+      "marker_count": 1,
       "unit_count": 22,
       "issue_count": 0
     },
     "spec/modules/vibe-workspace/PROP-038-hybrid-boot-linking.md": {
-      "content_hash": "19cdc2cdbf94f06b2bc9bb93a6ff8b6a22ea3cb6ba3c14a6a6e906e900366374",
+      "content_hash": "af5f3fa471ea3e3563fb24ea03b6afe6f6e3ec5d4d615621e3ff082d9ab38b01",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "impl",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 1,
         "paragraph_count": 39,
         "unmarked_paragraphs": 39
       },
-      "marker_count": 0,
+      "marker_count": 1,
       "unit_count": 16,
       "issue_count": 0
     },
@@ -5168,13 +5684,25 @@
       "issue_count": 0
     },
     "spec/research/ACTION-SYSTEM-RESEARCH-PLAN-v0.1.md": {
-      "content_hash": "a7fd020542e3ef12be4805950369305b2f4958b222e8d7e2087c49c70ebd059a",
+      "content_hash": "b9f094161b65e491fa7b081b80633822335875073ae4f7a44f1c1f08b3fe70f1",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "impl",
+          "work"
+        ],
+        "computed": [
+          "impl",
+          "work"
+        ],
+        "effective": [
+          "impl",
+          "work"
+        ],
+        "marker_count": 1,
         "paragraph_count": 56,
         "unmarked_paragraphs": 56
       },
-      "marker_count": 0,
+      "marker_count": 1,
       "unit_count": 19,
       "issue_count": 0
     },
@@ -5190,24 +5718,48 @@
       "issue_count": 0
     },
     "spec/research/OPENREWRITE-RESEARCH-PLAN-v0.1.md": {
-      "content_hash": "26ebb0b9e6437b8dfe11ae7f7b8db6b8e2dd6ab5e04372561b7606433490b2ca",
+      "content_hash": "276139a32a882edf0f69d96e61dc7886bcd7f582fdf5a588519c86543a363abf",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 1,
         "paragraph_count": 25,
         "unmarked_paragraphs": 25
       },
-      "marker_count": 0,
+      "marker_count": 1,
       "unit_count": 11,
       "issue_count": 0
     },
     "spec/research/PROP-004-tessl-comparative-research.md": {
-      "content_hash": "e1cd384bc778c7c46b6a344f5cc1daad64e57e786b9c7c8ffeecae63a4ebdc33",
+      "content_hash": "eb3d8a7c12b5a1c376a3390b9583d8703950e34ebfc68ea85585580350da3725",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "doc",
+          "done"
+        ],
+        "computed": [
+          "doc",
+          "done"
+        ],
+        "effective": [
+          "doc",
+          "done"
+        ],
+        "marker_count": 1,
         "paragraph_count": 257,
         "unmarked_paragraphs": 257
       },
-      "marker_count": 0,
+      "marker_count": 1,
       "unit_count": 83,
       "issue_count": 0
     },
@@ -5223,222 +5775,462 @@
       "issue_count": 0
     },
     "spec/research/SETTINGS-HOME-AND-GLOBAL-REGISTRY-PLAN-v0.1.md": {
-      "content_hash": "71cf86987f489abad4aebd7bc953ff282806e88d3296eff756ab355ae85fb6d4",
+      "content_hash": "3a9fa54e44f2b5d40d1be946cfb4923c4208ae5bc9a665c779b48c3bcd70a95c",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "impl",
+          "work"
+        ],
+        "computed": [
+          "impl",
+          "work"
+        ],
+        "effective": [
+          "impl",
+          "work"
+        ],
+        "marker_count": 1,
         "paragraph_count": 21,
         "unmarked_paragraphs": 21
       },
-      "marker_count": 0,
+      "marker_count": 1,
       "unit_count": 11,
       "issue_count": 0
     },
     "spec/research/action-systems-vscode-idea.md": {
-      "content_hash": "3ab20e7735b7cb5212811dde7e36405d1c5d9e240ce89d145da9906ee2019328",
+      "content_hash": "61321520a0aa708ad70d436098fd9167d4c54e660e753abf5b71dafe254edd6c",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "doc",
+          "done"
+        ],
+        "computed": [
+          "doc",
+          "done"
+        ],
+        "effective": [
+          "doc",
+          "done"
+        ],
+        "marker_count": 1,
         "paragraph_count": 75,
         "unmarked_paragraphs": 75
       },
-      "marker_count": 0,
+      "marker_count": 1,
       "unit_count": 25,
       "issue_count": 0
     },
     "spec/research/settings-system-vscode-idea.md": {
-      "content_hash": "a34ede1b552b22db9bcb4f064c5a15dcae44bb0d410a0c8c1f23e6bdc0a4b8c6",
+      "content_hash": "31e98fcb51b3efe2d8d0e686071f3a25d72792ab9d4a5cedf4b510ab4c874a81",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "doc",
+          "done"
+        ],
+        "computed": [
+          "doc",
+          "done"
+        ],
+        "effective": [
+          "doc",
+          "done"
+        ],
+        "marker_count": 1,
         "paragraph_count": 50,
         "unmarked_paragraphs": 50
       },
-      "marker_count": 0,
+      "marker_count": 1,
       "unit_count": 35,
       "issue_count": 0
     },
     "spec/terraforms/AGENTIC-TCG-RUST-PLAN-v0.1.md": {
-      "content_hash": "c58d728227100c3718ce43aa45d3b82abe38f339733d4d61def725d35e5700d9",
+      "content_hash": "613ad0c0e12720c166e4dd88c9b2fa86f79d2379a29823a7449e8fee5db92c26",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "freeze",
+          "done"
+        ],
+        "computed": [
+          "freeze",
+          "done"
+        ],
+        "effective": [
+          "freeze",
+          "done"
+        ],
+        "marker_count": 1,
         "paragraph_count": 50,
         "unmarked_paragraphs": 50
       },
-      "marker_count": 0,
+      "marker_count": 1,
       "unit_count": 32,
       "issue_count": 0
     },
     "spec/terraforms/AGENTIC-TCG-TS-PLAN-v0.1.md": {
-      "content_hash": "5fc6cdaf7511e4f2dc61c9577e00e9db31176c8509128b0279c3e145dd07a2ea",
+      "content_hash": "a835b9d8ab20ce6931060d4b24c608509ac513736e46e686ba48544322dd1b52",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "freeze",
+          "done"
+        ],
+        "computed": [
+          "freeze",
+          "done"
+        ],
+        "effective": [
+          "freeze",
+          "done"
+        ],
+        "marker_count": 1,
         "paragraph_count": 36,
         "unmarked_paragraphs": 36
       },
-      "marker_count": 0,
+      "marker_count": 1,
       "unit_count": 29,
       "issue_count": 0
     },
     "spec/terraforms/AINATIVE-ANALYSIS-RAID-v0.1.md": {
-      "content_hash": "9e16594a0c2bb217f8ee0bbb19190b5e1c2b25670697dd2ffe5b7cc2ee4e273a",
+      "content_hash": "9e286dfc5d6ca3d4166182ec95d30d8fd888d33852c590472e1781fac981570d",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "freeze",
+          "done"
+        ],
+        "computed": [
+          "freeze",
+          "done"
+        ],
+        "effective": [
+          "freeze",
+          "done"
+        ],
+        "marker_count": 1,
         "paragraph_count": 33,
         "unmarked_paragraphs": 33
       },
-      "marker_count": 0,
+      "marker_count": 1,
       "unit_count": 15,
       "issue_count": 0
     },
     "spec/terraforms/CONVERT-PLAN-v0.1.md": {
-      "content_hash": "6028115bd555ef3c8a04454630a579cf63d5b011e28f4fc6906973e347166e1a",
+      "content_hash": "97f9f8f68333dac85a9eada5f684a92254a19f1509e5003393a94f8833142691",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 1,
         "paragraph_count": 38,
         "unmarked_paragraphs": 38
       },
-      "marker_count": 0,
+      "marker_count": 1,
       "unit_count": 12,
       "issue_count": 0
     },
     "spec/terraforms/CULTURAL-EXTRACTION-PLAN-v0.1.md": {
-      "content_hash": "c08b74d546ab014b7ac65d3064b5721e582a39b4f684d68f7ba4f98a057bee17",
+      "content_hash": "8a0c11890b595755fef9ba4a9139bfb7bed804cfbfcc8e405c79b29b5328f4c5",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 1,
         "paragraph_count": 29,
         "unmarked_paragraphs": 29
       },
-      "marker_count": 0,
+      "marker_count": 1,
       "unit_count": 22,
       "issue_count": 0
     },
     "spec/terraforms/DEFERRALS-CLOSEOUT-PLAN-v0.1.md": {
-      "content_hash": "0ae0ea8d3795b1adb3ee0c17bf80d7980b4b9f87cfc4ffc79904866973a46529",
+      "content_hash": "510e69eaa2bd9ff51227f4f15e4f7c1aa00a78ac0a1f86d966f985930c80f94c",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 1,
         "paragraph_count": 45,
         "unmarked_paragraphs": 45
       },
-      "marker_count": 0,
+      "marker_count": 1,
       "unit_count": 26,
       "issue_count": 0
     },
     "spec/terraforms/DISCIPLINE-SWEEP-v0.2.md": {
-      "content_hash": "97f2f141e9d91ca74d2b07bffeaf70f38316c07f48b3d4756ce90aea3680d463",
+      "content_hash": "b3d409e70d486607160b09fdc815dedc70999655beb6cf57b7bae1168db19857",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 1,
         "paragraph_count": 8,
         "unmarked_paragraphs": 8
       },
-      "marker_count": 0,
+      "marker_count": 1,
       "unit_count": 5,
       "issue_count": 0
     },
     "spec/terraforms/GO-AI-NATIVE-PLAN-v0.1.md": {
-      "content_hash": "447b2d8507aa42119b79568ba5e1660fe4db594b43f1047f2adedd533712d13c",
+      "content_hash": "149c4a289d04684162ab208d432b1030afeb01d97099d96ee35c6089adcea958",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "freeze",
+          "done"
+        ],
+        "computed": [
+          "freeze",
+          "done"
+        ],
+        "effective": [
+          "freeze",
+          "done"
+        ],
+        "marker_count": 1,
         "paragraph_count": 19,
         "unmarked_paragraphs": 19
       },
-      "marker_count": 0,
+      "marker_count": 1,
       "unit_count": 14,
       "issue_count": 0
     },
     "spec/terraforms/HYBRID-LINKING-PLAN-v0.1.md": {
-      "content_hash": "b4fce730b0e123ba8f9d543384dedaffeeff83fa3292a2b6bcb43643cae938bf",
+      "content_hash": "05eb0e565738f3d85bae170d68905c70da96dbf34830a7826d0def27a330b219",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "freeze",
+          "done"
+        ],
+        "computed": [
+          "freeze",
+          "done"
+        ],
+        "effective": [
+          "freeze",
+          "done"
+        ],
+        "marker_count": 1,
         "paragraph_count": 27,
         "unmarked_paragraphs": 27
       },
-      "marker_count": 0,
+      "marker_count": 1,
       "unit_count": 15,
       "issue_count": 0
     },
     "spec/terraforms/MCP-SOVEREIGNTY-PLAN-v0.1.md": {
-      "content_hash": "8d843714a1eb1b841172000b222a6effe98e815f02e071ffb651c44f1d160726",
+      "content_hash": "b4ee2dad221d673ee4860c3d6c9bd765925d47cc1fadd1a417e7b7740d106f4c",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "freeze",
+          "done"
+        ],
+        "computed": [
+          "freeze",
+          "done"
+        ],
+        "effective": [
+          "freeze",
+          "done"
+        ],
+        "marker_count": 1,
         "paragraph_count": 58,
         "unmarked_paragraphs": 58
       },
-      "marker_count": 0,
+      "marker_count": 1,
       "unit_count": 40,
       "issue_count": 0
     },
     "spec/terraforms/PACKAGE-TREE-PLAN-v0.1.md": {
-      "content_hash": "a71942e6f0522f22405de50aa7ea64747fca989c2d64b7673f86e5f556ccbb03",
+      "content_hash": "e26d0e930bcc96bd37ed36b8b9d6114218ae4b85b92bf04f6ad21d4eb1b8a29c",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "freeze",
+          "done"
+        ],
+        "computed": [
+          "freeze",
+          "done"
+        ],
+        "effective": [
+          "freeze",
+          "done"
+        ],
+        "marker_count": 1,
         "paragraph_count": 50,
         "unmarked_paragraphs": 50
       },
-      "marker_count": 0,
+      "marker_count": 1,
       "unit_count": 15,
       "issue_count": 0
     },
     "spec/terraforms/PUBDOC-DRAIN-v0.1.md": {
-      "content_hash": "9a5f41d943b93f18ea8338b7ce3b1ccc4828accb0ce97b26677a025623803e9a",
+      "content_hash": "803c271560993d73862bdd8265723d655a0f5ebfbe7df7a53f73d0743cbda7f3",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "freeze",
+          "done"
+        ],
+        "computed": [
+          "freeze",
+          "done"
+        ],
+        "effective": [
+          "freeze",
+          "done"
+        ],
+        "marker_count": 1,
         "paragraph_count": 28,
         "unmarked_paragraphs": 28
       },
-      "marker_count": 0,
+      "marker_count": 1,
       "unit_count": 7,
       "issue_count": 0
     },
     "spec/terraforms/REFACTORING-ENGINE-META-PLAN-v0.1.md": {
-      "content_hash": "a5165312a517442ec477b53cb1de0dec0ec61dedb05bf8e717e419ff8055dddc",
+      "content_hash": "761c444f9278a68fbabdb0f462749ce419c419b5b895b8420fb95f1ca5fb0dad",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 1,
         "paragraph_count": 16,
         "unmarked_paragraphs": 16
       },
-      "marker_count": 0,
+      "marker_count": 1,
       "unit_count": 11,
       "issue_count": 0
     },
     "spec/terraforms/SELF-SUFFICIENCY-PLAN-v0.1.md": {
-      "content_hash": "f0ef1aa65cac44af530fbe09fee769ff7ebdb9994c86d21c9c03d1a4ef85d29f",
+      "content_hash": "04cfbab776c970adb772350e5d9688591173293125a286a79fdd02cdc2d90532",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 1,
         "paragraph_count": 37,
         "unmarked_paragraphs": 37
       },
-      "marker_count": 0,
+      "marker_count": 1,
       "unit_count": 19,
       "issue_count": 0
     },
     "spec/terraforms/SETTINGS-SYSTEM-IMPL-PLAN-v0.1.md": {
-      "content_hash": "537b13bf2f8cc09d1d9a2a96f7744545b5bdf38a92f1ab1713720309a37adcc4",
+      "content_hash": "ef7558dac84721cec796e53591a5f6e4cb02b70d268c36604f541129c8c03a49",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 1,
         "paragraph_count": 19,
         "unmarked_paragraphs": 19
       },
-      "marker_count": 0,
+      "marker_count": 1,
       "unit_count": 12,
       "issue_count": 0
     },
     "spec/terraforms/SETTINGS-SYSTEM-META-PLAN-v0.1.md": {
-      "content_hash": "2642e3af69c2bec0af4bac1ab1f63ab01ed6e3701a6a56a4410a36a2fc9ef315",
+      "content_hash": "40753c5c9bb53b0fd21d76d7d0772660480cf3bd2851183115317353c1dac014",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 1,
         "paragraph_count": 32,
         "unmarked_paragraphs": 32
       },
-      "marker_count": 0,
+      "marker_count": 1,
       "unit_count": 17,
       "issue_count": 0
     },
     "spec/terraforms/SETTINGS-UI-PLAN-v0.1.md": {
-      "content_hash": "19eafdaca90cfecfba94b0ca1059f6379b202abf8b339cd1219836f6bc3f67aa",
+      "content_hash": "005eecd2641c5605b95d9d53a4d34faa0c2fa75fa28f31fa89d36cd45d6b7e3d",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "freeze",
+          "done"
+        ],
+        "computed": [
+          "freeze",
+          "done"
+        ],
+        "effective": [
+          "freeze",
+          "done"
+        ],
+        "marker_count": 1,
         "paragraph_count": 8,
         "unmarked_paragraphs": 8
       },
-      "marker_count": 0,
+      "marker_count": 1,
       "unit_count": 6,
       "issue_count": 0
     },
@@ -5466,18 +6258,30 @@
       "issue_count": 0
     },
     "spec/terraforms/SHRINK-PLAN-v0.2.md": {
-      "content_hash": "9aef3f4c7406a9ba041d917e57ef516fd8b2c668bba21fd462bf2fb01e2c6e30",
+      "content_hash": "cfede4c8766c234b73f42bae5302ac4530f769bca16e64acbd529931da46ede5",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "freeze",
+          "done"
+        ],
+        "computed": [
+          "freeze",
+          "done"
+        ],
+        "effective": [
+          "freeze",
+          "done"
+        ],
+        "marker_count": 1,
         "paragraph_count": 8,
         "unmarked_paragraphs": 8
       },
-      "marker_count": 0,
+      "marker_count": 1,
       "unit_count": 1,
       "issue_count": 0
     },
     "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md": {
-      "content_hash": "6fac4258a9d71b45a1ba66c069701e301de051c7469d1a92d05359c36e069c50",
+      "content_hash": "d68511ac771d0c99a0682494bc10d21293b3407d9eb9210edf63cbe5b97ec5b6",
       "rollup": {
         "explicit": [
           "spec",
@@ -5500,68 +6304,140 @@
       "issue_count": 0
     },
     "spec/terraforms/SPECMAP-UNIT-MOBILITY-PLAN-v0.1.md": {
-      "content_hash": "b7cb05699aac14fbda8008f555a2e365294f537956795931c16d06223b0c701f",
+      "content_hash": "0ff8098267c0786dc3f0ca446b01c94cabf03296117580ded65580b5f3fbfbd8",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 1,
         "paragraph_count": 51,
         "unmarked_paragraphs": 51
       },
-      "marker_count": 0,
+      "marker_count": 1,
       "unit_count": 21,
       "issue_count": 0
     },
     "spec/terraforms/TCG-STAGE-B-DELIVERY-PLAN-v0.1.md": {
-      "content_hash": "c10f61604cefe9c8221001e1045cb51b8cb8453b86e726a339a61b7076df4187",
+      "content_hash": "746c2f92bd514231bd5af31ba426c044d3913292cd7e2c7d76dcc83a7e7a0275",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "impl",
+          "hold"
+        ],
+        "computed": [
+          "impl",
+          "hold"
+        ],
+        "effective": [
+          "impl",
+          "hold"
+        ],
+        "marker_count": 1,
         "paragraph_count": 32,
         "unmarked_paragraphs": 32
       },
-      "marker_count": 0,
+      "marker_count": 1,
       "unit_count": 22,
       "issue_count": 0
     },
     "spec/terraforms/TERRAFORM-PLAN-v0.3.md": {
-      "content_hash": "281c17eff8427c34d2fe9be4a9675ddcfcc937ba0978a09733a9a697605f84f6",
+      "content_hash": "2672415ca39ba9d6dc83da963e04f5984546c4c3e863a4749ac621a97f3dfc65",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 1,
         "paragraph_count": 21,
         "unmarked_paragraphs": 21
       },
-      "marker_count": 0,
+      "marker_count": 1,
       "unit_count": 8,
       "issue_count": 0
     },
     "spec/terraforms/TRACEABILITY-RELOCATION-PLAN-v0.1.md": {
-      "content_hash": "6a687c15103aa57f48a5cf0f19ea0de1b1d39c1e85f35229871a56cb10c1d585",
+      "content_hash": "4fbfd8d73633ae12882449e3264f961f52cde419afe223bb44ce3b583d1de925",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 1,
         "paragraph_count": 32,
         "unmarked_paragraphs": 32
       },
-      "marker_count": 0,
+      "marker_count": 1,
       "unit_count": 16,
       "issue_count": 0
     },
     "spec/terraforms/TREE-TUI-PLAN-v0.1.md": {
-      "content_hash": "f9dfe459c47862361bb8a062afe14ff469433a8d87d41a840f5115964366f1b1",
+      "content_hash": "899bdf9401cee37fb0aafc8a51727598cc587660386e9651bd2968ed5e09da62",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 1,
         "paragraph_count": 24,
         "unmarked_paragraphs": 24
       },
-      "marker_count": 0,
+      "marker_count": 1,
       "unit_count": 14,
       "issue_count": 0
     },
     "spec/terraforms/TREE-TUI-PLAN-v0.2.md": {
-      "content_hash": "b00f6bcad598d408e274bfab4465919b69fd7c6eee6d49c13f605ab0c1e84f3c",
+      "content_hash": "b18d193d64795c65803d988f210e760849c46facc7e4b1f06d582d28c87c4c1a",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "freeze",
+          "done"
+        ],
+        "computed": [
+          "freeze",
+          "done"
+        ],
+        "effective": [
+          "freeze",
+          "done"
+        ],
+        "marker_count": 1,
         "paragraph_count": 13,
         "unmarked_paragraphs": 13
       },
-      "marker_count": 0,
+      "marker_count": 1,
       "unit_count": 11,
       "issue_count": 0
     }

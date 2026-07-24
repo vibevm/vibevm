@@ -1,5 +1,7 @@
 # OpenRewrite Research Plan v0.1 — a clean-room study feeding our refactoring engine
 
+<status stage="spec" state="done" action="continue" actionstage="impl" comment="B0 2026-07-24: status line says PLANNED, not started; runs cold in its own session"/>
+
 **status: PLANNED · not started · runs COLD in its own dedicated session · feeds the spec redesign, then the implementation**
 
 > **Read-first / boot.** This plan is executed **cold, in a fresh session the owner launches for it**. Boot the normal way (`CLAUDE.md` → `spec/boot/INDEX.md` → its files → `spec/WAL.md` → `CONTINUE.md`), then read this whole file. It is self-contained: the strategic frame, the **clean-room firewall (non-negotiable)**, what to acquire, the question-driven study agenda, the deliverables, the phases, and the risks are all here.

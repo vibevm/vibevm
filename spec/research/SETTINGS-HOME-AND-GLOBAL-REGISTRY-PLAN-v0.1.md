@@ -1,5 +1,7 @@
 # Settings-Home Consolidation & Global Registry Config — Design Plan v0.1
 
+<status stage="impl" state="work" comment="B0 2026-07-24: status line says EXECUTING 2026-07-20, decisions LOCKED"/>
+
 **status: EXECUTING (2026-07-20) · owner-directed · decisions LOCKED (§2) · two coupled deliverables in one arc — (1) a machine-global registry config at `~/.vibe/registry.toml`, (2) a single `~/.vibe` settings home with a `$VIBE_SETTINGS` override, folding the legacy `~/.vibevm` and the XDG `~/.config/vibe` in · acceptance = one settings chokepoint every read routes through, a working global registry merge (project-first), a refined `--offline` (local repos yes, remote no), all crates rebuilt, floor GREEN**
 
 > **Read-first / boot.** Self-contained. This captures the research (§1), the owner's locked decisions (§2), the architecture (§3–§4), the migration & backward-compat contract (§5), the exact change surface (§6), the AI-native test plan (§7), the phased sequence with the delegation split (§8), and the risks (§9). A cold reader resumes from here plus `spec/WAL.md`.

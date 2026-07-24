@@ -1,4 +1,7 @@
 # vibevm Terraform Plan v0.3 — Adopt Discipline v0.2 (AI-Native)
+
+<status stage="spec" state="done" comment="B0 2026-07-24: adoption playbook (PLAN); supersedes PLAYBOOK-TERRAFORM-VIBEVM-v0.2"/>
+
 **status: PLAN · vibevm-specific · supersedes PLAYBOOK-TERRAFORM-VIBEVM-v0.2**
 
 *This plan is NOT part of the Discipline. The Discipline (in `discipline-v0.2/`) is the product; vibevm is its pilot. This document tells vibevm how to adopt the new Discipline. Per the owner's constraint, the Discipline files are NOT modified for vibevm's sake — vibevm consumes them as-is. Where the Discipline must change, that happens in the Discipline product on its own evidence, not here.*

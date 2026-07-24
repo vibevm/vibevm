@@ -1,5 +1,7 @@
 # PROP-042 — AIUI observation: the render plane & the `vibe aiui` surface
 
+<status stage="spec" state="done" comment="B0 2026-07-24: ACTIVE v0.1, 2026-07-16"/>
+
 **Status:** ACTIVE (v0.1, 2026-07-16). **Module:** `vibe-cli`.
 **Related:** PROP-037 (the `vibe tree` TUI it observes), PROP-039 §11.3 (the model
 plane / `vibe-actions::aiui`), PROP-036 (the tree model). The terminal products

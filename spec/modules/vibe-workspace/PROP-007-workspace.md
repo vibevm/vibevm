@@ -1,5 +1,7 @@
 # PROP-007: Workspace — multi-package projects, recursive nesting, selective publish {#root}
 
+<status stage="impl" state="work" comment="B0 2026-07-24: M1.17 phases 1-5 shipped 2026-05-21; workspace-aware install is the remaining piece (S6, S8)"/>
+
 **Milestone:** design proposal; targets a new `M1.17` ([`ROADMAP.md`](../../../ROADMAP.md)). Not implementation-locked.
 **Status:** M1.17 Phases 1–5 implemented 2026-05-21 — the workspace data model, the `vibe-workspace` discovery engine, path-source dependencies, `[workspace.versions]` placeholders, and `vibe workspace publish` are shipped (clippy-clean, fully tested). Workspace-aware `vibe install` is the remaining piece — see §6 and §8.
 **Related:** [`VIBEVM-SPEC.md` §4.2 / §7 / §8](../../../VIBEVM-SPEC.md); [PROP-002](../vibe-registry/PROP-002-decentralized-registry.md) (identity, registry, git-source, override); [PROP-008](../vibe-registry/PROP-008-qualified-naming.md) (qualified naming — companion document, same design session); [PROP-003 §2.5](../vibe-resolver/PROP-003-dep-evolution.md) (subskills — a *distinct* concept, see §4); [PROP-005](../vibe-index/PROP-005-package-index.md) (index); [PROP-009](PROP-009-loading-model.md) (loading model — answers §6 question 3).

@@ -1,5 +1,7 @@
 # PROP-018 — Agentic and standalone modes {#root}
 
+<status stage="spec" state="done" action="continue" comment="B0 2026-07-24: proposed 2026-06-16; MVP slice in S4, heavier surface parked in S6"/>
+
 **Status:** proposed 2026-06-16 — owner-requested design session. The MVP
 slice this PROP authorises is named in §4; everything heavier is parked in
 §6 (far backlog). This is the spec home for vibevm's *product modes* — a
