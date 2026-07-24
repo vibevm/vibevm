@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-07-24T17:29:13Z",
+  "updated_at": "2026-07-24T17:40:57Z",
   "files": [
     {
       "path": "spec/WAL.md",
@@ -8,8 +8,8 @@
       "explicit": null,
       "markers": 0,
       "units": 8,
-      "facts": 20,
-      "unmarked": 20,
+      "facts": 21,
+      "unmarked": 21,
       "issues": 0,
       "campaign": {}
     },
@@ -381,12 +381,18 @@
     },
     {
       "path": "spec/modules/README.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "doc",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "doc",
+        "state": "done"
+      },
+      "markers": 19,
       "units": 2,
-      "facts": 16,
-      "unmarked": 16,
+      "facts": 18,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
@@ -562,29 +568,35 @@
     },
     {
       "path": "spec/modules/vibe-progress/templates/harvest-card.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 10,
       "units": 1,
-      "facts": 8,
-      "unmarked": 8,
+      "facts": 9,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "spec/modules/vibe-progress/templates/impl-task.md",
       "effective": {
-        "stage": "impl",
-        "state": "plan"
+        "stage": "spec",
+        "state": "done"
       },
       "explicit": {
-        "stage": "impl",
-        "state": "plan"
+        "stage": "spec",
+        "state": "done"
       },
-      "markers": 1,
+      "markers": 23,
       "units": 10,
-      "facts": 23,
-      "unmarked": 23,
+      "facts": 22,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
@@ -592,16 +604,16 @@
       "path": "spec/modules/vibe-progress/templates/spec-task.md",
       "effective": {
         "stage": "spec",
-        "state": "plan"
+        "state": "done"
       },
       "explicit": {
         "stage": "spec",
-        "state": "plan"
+        "state": "done"
       },
-      "markers": 1,
+      "markers": 16,
       "units": 7,
-      "facts": 24,
-      "unmarked": 24,
+      "facts": 15,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
@@ -1432,8 +1444,8 @@
       },
       "markers": 1,
       "units": 21,
-      "facts": 84,
-      "unmarked": 84,
+      "facts": 85,
+      "unmarked": 85,
       "issues": 0,
       "campaign": {}
     },

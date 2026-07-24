@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updated_at": "2026-07-24T17:20:00Z",
+ "updated_at": "2026-07-24T18:20:00Z",
  "findings": [
   {
    "id": "F-001",
@@ -136,6 +136,15 @@
    "status": "open",
    "wave": 0,
    "note": "Blockquote paragraphs are countable units (they can carry a marker) but cannot carry a ##<ID> fact anchor: take_fact_id does not strip the `> ` prefix, and PROP-043 s3.8/s8 never mention blockquotes. Found on PROP-024's package-shape formula (re-marked as a plain bold paragraph as the workaround). Decide: support ##<ID> after the blockquote prefix, or declare blockquotes non-units in s8."
+  },
+  {
+   "id": "F-016",
+   "from": "spec/modules/README.md",
+   "to": "spec/modules/**",
+   "type": "reality-mismatch",
+   "status": "open",
+   "wave": 0,
+   "note": "The module index stops at PROP-012 (2026-05-22 era): vibe-mcp/, vibe-cli/, vibe-settings/, vibe-actions/, vibe-progress/ and PROPs 015-043 are absent. Inline **Status:** mentions inside index rows predate later work (PROP-008 'DRAFT' vs fqdn-default shipped in M1.19; PROP-005 'implemented'; PROP-003 'design proposal'; PROP-007/009/011/012 'DRAFT') - each row needs Phase C adjudication, the rewrite is Phase D material. Document marker carries action=drift."
   }
  ]
 }

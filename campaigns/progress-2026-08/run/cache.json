@@ -1,13 +1,13 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-24T17:29:13Z",
+  "updated_at": "2026-07-24T17:40:57Z",
   "files": {
     "spec/WAL.md": {
-      "content_hash": "faac3ff646b050a1b6ec680aaccdc283cb4ef079a0654732d382d43290ed79d8",
+      "content_hash": "efad66a9e24d015a702723136c0e46e6753a1abb74fe958af2d098914ee546cc",
       "rollup": {
         "marker_count": 0,
-        "fact_count": 20,
-        "unmarked_facts": 20
+        "fact_count": 21,
+        "unmarked_facts": 21
       },
       "marker_count": 0,
       "unit_count": 8,
@@ -482,13 +482,25 @@
       "issue_count": 0
     },
     "spec/modules/README.md": {
-      "content_hash": "8139ead9d3b78efed2f1a28f0080f8b3a6731ac23fca0eaf219d5fa931805b37",
+      "content_hash": "fb255a19d339a02676b98ed36102122ad401d2f7b011360c2c1e2c5316bbc9b2",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 16,
-        "unmarked_facts": 16
+        "explicit": [
+          "doc",
+          "done"
+        ],
+        "computed": [
+          "doc",
+          "done"
+        ],
+        "effective": [
+          "doc",
+          "done"
+        ],
+        "marker_count": 19,
+        "fact_count": 18,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 19,
       "unit_count": 2,
       "issue_count": 0
     },
@@ -723,59 +735,71 @@
       "issue_count": 0
     },
     "spec/modules/vibe-progress/templates/harvest-card.md": {
-      "content_hash": "ab4d654b87077c138311907b14f861bc1137beee5d18b09638bddbd725f0e86b",
+      "content_hash": "f854794e0ca29a21b4874a7d28b8f9a9565545ebe6b391b45e60eabf9fea4baf",
       "rollup": {
-        "marker_count": 0,
-        "fact_count": 8,
-        "unmarked_facts": 8
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 10,
+        "fact_count": 9,
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 10,
       "unit_count": 1,
       "issue_count": 0
     },
     "spec/modules/vibe-progress/templates/impl-task.md": {
-      "content_hash": "2b5fa8511c7169d78ab5edef95c77e935db26c1b7c9edfca3876eacd7e206ccb",
+      "content_hash": "9f85265c1a8e0111664f74f5d7f0addbdddcbc7fc49de38ea100bd617b97805d",
       "rollup": {
         "explicit": [
-          "impl",
-          "plan"
+          "spec",
+          "done"
         ],
         "computed": [
-          "impl",
-          "plan"
+          "spec",
+          "done"
         ],
         "effective": [
-          "impl",
-          "plan"
+          "spec",
+          "done"
         ],
-        "marker_count": 1,
-        "fact_count": 23,
-        "unmarked_facts": 23
+        "marker_count": 23,
+        "fact_count": 22,
+        "unmarked_facts": 0
       },
-      "marker_count": 1,
+      "marker_count": 23,
       "unit_count": 10,
       "issue_count": 0
     },
     "spec/modules/vibe-progress/templates/spec-task.md": {
-      "content_hash": "e9b479336892fdbcc44a22f2435870a265218da1edb465cf4d0cbfd264862d85",
+      "content_hash": "91768f4f76c270cdd4c6ec34b021647af6f771500b04fc22e537b36835e9259b",
       "rollup": {
         "explicit": [
           "spec",
-          "plan"
+          "done"
         ],
         "computed": [
           "spec",
-          "plan"
+          "done"
         ],
         "effective": [
           "spec",
-          "plan"
+          "done"
         ],
-        "marker_count": 1,
-        "fact_count": 24,
-        "unmarked_facts": 24
+        "marker_count": 16,
+        "fact_count": 15,
+        "unmarked_facts": 0
       },
-      "marker_count": 1,
+      "marker_count": 16,
       "unit_count": 7,
       "issue_count": 0
     },
@@ -1871,7 +1895,7 @@
       "issue_count": 0
     },
     "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md": {
-      "content_hash": "0ad9d895465468a3fd91912abdf9c9995f36a6b91497130db3a5cd67466cc856",
+      "content_hash": "33ca1cbbb04ce08d795ef2aa9bfa55f1cd051c24903df947ba4aef616a042201",
       "rollup": {
         "explicit": [
           "spec",
@@ -1886,8 +1910,8 @@
           "done"
         ],
         "marker_count": 1,
-        "fact_count": 84,
-        "unmarked_facts": 84
+        "fact_count": 85,
+        "unmarked_facts": 85
       },
       "marker_count": 1,
       "unit_count": 21,

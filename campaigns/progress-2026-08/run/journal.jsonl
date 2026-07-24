@@ -52,3 +52,11 @@
 {"kind":"step-done","id":"b1f-prop-000","result":"68 units -> 161 anchored facts (foundational decisions itemized; split-host nested sub-facts; invariants anchored INV-*); F-014 license drift text preserved untouched; 0 unmarked, 0 issues","ts":"2026-07-24T17:24:34Z"}
 {"kind":"step-start","id":"b1f-prop-019","step_type":"mark-file","target":"spec/common/PROP-019-version-manager.md (fact re-mark)","actor":"fable","ts":"2026-07-24T17:24:34Z"}
 {"kind":"step-done","id":"b1f-prop-019","result":"82 units -> 208 anchored facts (pipeline steps, rationale 9.1-9.7 fully deconstructed); 2 line-wrap traps fixed (continuation line opening with + parsed as list item); 0 unmarked, 0 issues","ts":"2026-07-24T17:29:13Z"}
+{"kind":"step-start","id":"b2-harvest-card","step_type":"mark-file","target":"spec/modules/vibe-progress/templates/harvest-card.md (fact mark)","actor":"fable","ts":"2026-07-24T17:36:01Z"}
+{"kind":"step-done","id":"b2-harvest-card","result":"8 units -> 9 anchored facts (doc marker + field contract UPPER-anchored), 0 unmarked, 0 issues","ts":"2026-07-24T17:36:58Z"}
+{"kind":"step-start","id":"b2-modules-readme","step_type":"mark-file","target":"spec/modules/README.md (fact mark)","actor":"fable","ts":"2026-07-24T17:36:58Z"}
+{"kind":"step-done","id":"b2-modules-readme","result":"16 units -> 18 anchored facts; STRUCTURAL DRIFT found: index stops at PROP-012, five module dirs + PROPs 015-043 missing, stale inline Status rows -> F-016, doc marker action=drift; one more plus-wrap trap fixed; 0 unmarked, 0 issues","ts":"2026-07-24T17:38:34Z"}
+{"kind":"step-start","id":"b2-impl-task-tpl","step_type":"mark-file","target":"spec/modules/vibe-progress/templates/impl-task.md (fact mark)","actor":"fable","ts":"2026-07-24T17:38:43Z"}
+{"kind":"step-done","id":"b2-impl-task-tpl","result":"template marked: 22 anchored facts; example doc-marker + placeholder skeletons fenced (meta-content vs facts split), 0 unmarked, 0 issues","ts":"2026-07-24T17:39:57Z"}
+{"kind":"step-start","id":"b2-spec-task-tpl","step_type":"mark-file","target":"spec/modules/vibe-progress/templates/spec-task.md (fact mark)","actor":"fable","ts":"2026-07-24T17:39:57Z"}
+{"kind":"step-done","id":"b2-spec-task-tpl","result":"template marked: 18 anchored facts; example marker + placeholder table fenced; 0 unmarked, 0 issues","ts":"2026-07-24T17:40:32Z"}
