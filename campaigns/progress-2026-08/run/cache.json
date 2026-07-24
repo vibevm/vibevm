@@ -1,9 +1,9 @@
 {
   "schema": 1,
-  "updated_at": "2026-07-24T16:38:16Z",
+  "updated_at": "2026-07-24T16:44:25Z",
   "files": {
     "spec/WAL.md": {
-      "content_hash": "2ff1ab661975c005d7df91fab4ad4563afb5b14e4b9faffb929eb49e51994645",
+      "content_hash": "faac3ff646b050a1b6ec680aaccdc283cb4ef079a0654732d382d43290ed79d8",
       "rollup": {
         "marker_count": 0,
         "fact_count": 20,
@@ -1893,7 +1893,7 @@
       "issue_count": 0
     },
     "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md": {
-      "content_hash": "dd084bdfa19fd504c84a891139928ef69bc12cb9a320be7d75c1248e2f286912",
+      "content_hash": "52aec8d9b59ec0bb95430c60e815f0271b9497baa7549b24ea11960d9e95a15a",
       "rollup": {
         "explicit": [
           "spec",
@@ -1908,8 +1908,8 @@
           "done"
         ],
         "marker_count": 1,
-        "fact_count": 81,
-        "unmarked_facts": 81
+        "fact_count": 84,
+        "unmarked_facts": 84
       },
       "marker_count": 1,
       "unit_count": 21,

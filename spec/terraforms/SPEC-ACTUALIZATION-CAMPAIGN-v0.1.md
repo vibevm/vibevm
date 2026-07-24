@@ -352,12 +352,41 @@ read-only, no auth.
   помощью якоря» — the anchored-when-marked law: a marked unit without
   a `##<ID>` anchor is a `check` error. All four ratified into
   PROP-043 §3.8 / §8.
-- **Next step:** implement the fact-grain scanner in `progress-core`
-  (list items at all nesting levels, lead lines, table body cells as
-  countable units; placement law per §3.8; fixtures + tests), then
-  re-pilot the fact grammar on one small file (PROP-029), then re-mark
-  the marked set and continue B1… batches under the fact grammar —
-  deconstruction + markers + anchors + ledger findings in passing.
+- **2026-07-24 · Fact-grain scanner LANDED; fact grammar re-piloted.**
+  PROP-043 amendment ratified and committed (`cd2688f`); the scanner
+  (`b67fa97`): list items at every nesting level, lead lines, table
+  body cells as countable units, `##<ID>` fact anchors in one id space
+  with heading anchors, duplicate detection, the anchored-when-marked
+  error; 31 tests green, cache schema 2 (the rebuild also flushed the
+  400 out-of-scope records — DRIFT-001 still files the general prune
+  defect for Opus, `910d545`). Scale shift measured: wave-1 = 3 684
+  paragraphs → **8 219 facts**; `check` currently carries **435
+  expected MissingAnchor** errors on the pre-amendment markup (pilot +
+  B1 common) — they burn down as files are re-marked. Re-pilot
+  (`6714876`): PROP-029 deconstructed 9 paragraphs → 30 anchored
+  facts, 0 unmarked, 0 issues — the demo the owner reviewed in
+  session. Ledger: F-013 (PROP-018 MVP implemented vs proposed),
+  F-014 (PROP-000 §3 license text predates the 2026-07-12 UPL-1.0
+  relicense).
+- **OPEN review point (owner) — anchor naming convention:** the
+  re-pilot mixed `##UPPER-SLUG` for normative facts (ADDR-LAW,
+  RULE-style) with `##kebab` for service units (status-line,
+  carriers-lead). Keep both registers, or fix one? Until ruled, new
+  markup follows the re-pilot mix.
+- **OPEN review point (owner) — generated files in scope:**
+  `spec/boot/STATIC.md` + `INDEX.md` are vibe-generated («do not
+  edit») yet inside the wave-1 globs; markup written there dies on
+  regeneration. Exclude them from `progress.toml`, or carry their
+  markers in the generators? Until ruled, batches skip both files
+  (keeps `check --exhaustive` red on them).
+- **Next step:** re-mark the remaining 11 `spec/common` files under
+  the fact grammar (deconstruction into anchored fact lists per the
+  PROP-029 re-pilot pattern; ~380 paragraph-grain units to deconstruct,
+  MissingAnchor burns to 0 for the cluster), then continue B2… batches
+  (`spec/modules/**`, `spec/design`, `spec/research`, `spec/terraforms`)
+  fact-grain from the start. Every session: `vibe progress resume`
+  first; journal step per file; batch commits; ledger findings in
+  passing.
 
 ## 10. Deferrals {#deferrals}
 

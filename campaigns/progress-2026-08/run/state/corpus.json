@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-07-24T16:38:16Z",
+  "updated_at": "2026-07-24T16:44:25Z",
   "files": [
     {
       "path": "spec/WAL.md",
@@ -1454,8 +1454,8 @@
       },
       "markers": 1,
       "units": 21,
-      "facts": 81,
-      "unmarked": 81,
+      "facts": 84,
+      "unmarked": 84,
       "issues": 0,
       "campaign": {}
     },
