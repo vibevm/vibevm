@@ -14,7 +14,7 @@ name it replaced), [PROP-027](../modules/vibe-mcp/PROP-027-mcp-packages.md)
 [PROP-024](PROP-024-code-bearing-packages.md) (code-bearing packages — every
 `-lang` / `-mcp` member is one), [PROP-009](../modules/vibe-workspace/PROP-009-loading-model.md)
 (boot loading — the aggregator carries no snippet; members' snippets reach
-`INDEX.md` through the transitive BFS closure of `[requires]`).
+`INDEX.md` through the transitive BFS closure of `[requires]`). @impl/done
 
 ---
 
@@ -28,16 +28,17 @@ name (`rust-ai-native`) meant the stack alone, and the server borrowed an
 unrelated name (`discipline-rust`). Two costs followed: a consumer who wanted
 "the Rust discipline, whole" had to know and hand-pin three loosely-related
 packages, and the server's name hid which stack it served (so the exact-pin law
-of PROP-027 §2.3 read as an accident rather than a family tie).
+of PROP-027 §2.3 read as an accident rather than a family tie). @impl/done
 
 ## 2. Decision {#decision}
 
 ### 2.1 Three roles, one family stem {#roles}
 
 `req r1`
+@impl/done
 
 A **package family** is a set of packages sharing a `<family>` stem and
-delivering one coherent capability across three roles:
+delivering one coherent capability across three roles: @impl/done
 
 - **`<family>`** — the *aggregator*. `kind = "stack"`, content-minimal: a
   `vibe.toml` and a `README.md`, and nothing else — no code, no boot snippet,
@@ -51,14 +52,16 @@ delivering one coherent capability across three roles:
   toolchain served over MCP. It exact-pins its `-lang` stack (PROP-027 §2.3)
   and version-mirrors it, so one engine set answers both the CLI floor and the
   agent's tools.
+@impl/done
 
 The aggregator's exact pins are deliberate, not kind-mandated: a stack may pin
 its dependencies however it likes, but a family is a *tested version set*, so
-the aggregator holds its members equal.
+the aggregator holds its members equal. @impl/done
 
 ### 2.2 The version line follows the name, and the family moves in unison {#versioning}
 
 `req r1`
+@impl/done
 
 A family member's version line is continuous with its NAME. Per PROP-008 §2.2 a
 renamed package is a new identity, so versions do not transfer across a rename:
@@ -66,7 +69,7 @@ when a name is minted it continues past the highest version that name previously
 carried, and no `<name>@X.Y.Z` coordinate is ever reused for a different
 artifact. In particular an aggregator name that reuses a stem the old stack
 used (e.g. `rust-ai-native`, once the 0.5.0 stack, now the aggregator) begins
-its aggregator line ABOVE that history, never at or below it.
+its aggregator line ABOVE that history, never at or below it. @impl/done
 
 Within a family the members move in **unison**: a content change to any member
 bumps EVERY member of that family to one shared version, and the aggregator's
@@ -77,11 +80,12 @@ The `-mcp` member's version-mirroring of `-lang` (PROP-027 §2.3) is the pairwis
 case of this whole-family law. (The families currently stand at: rust
 **0.7.0**, typescript **0.6.0**, and the shared foundation core-ai-native
 **0.7.0** — a foundation is not in any one family's unison, it bumps on its own
-content and every family widens its `^` floor to meet it.)
+content and every family widens its `^` floor to meet it.) @impl/done
 
 ### 2.3 The families in force {#families}
 
 `req r1`
+@impl/done
 
 - **`core-ai-native`** (flow) — the language-neutral discipline core. It stands
   ALONE: it is the shared foundation every language family requires, not itself
@@ -91,14 +95,16 @@ content and every family widens its `^` floor to meet it.)
   `rust-ai-native-mcp` (the server).
 - **`typescript-ai-native`** — aggregator over `typescript-ai-native-lang` and
   `typescript-ai-native-mcp`.
+@impl/done
 
 ### 2.4 Naming below the package: crates, binaries, skills, servers {#surface-naming}
 
 `req r1`
+@impl/done
 
 The family stem is language-FIRST and reaches every named surface a family
 ships, not only the package identities. Each crate, binary, agent skill, and
-MCP server carries the `<family>` prefix:
+MCP server carries the `<family>` prefix: @impl/done
 
 - **The umbrella binary is the family name.** A `-lang` stack's driver binary —
   the tool a consumer puts on PATH — is named `<family>` itself
@@ -125,6 +131,7 @@ MCP server carries the `<family>` prefix:
   `core-ai-native-specmark-grammar`, `core-ai-native-mcp` — because they belong
   to no single language; each `-lang` / `-mcp` package vendors them
   byte-identically (PROP-024; `cargo xtask sync-engines`).
+@impl/done
 
 **Supersession of the `-rust` suffix policy (D13).** The earlier owner policy —
 «every artifact with a cross-language analog ends in `-rust` / `-typescript`»,
@@ -137,7 +144,7 @@ whole surface. The suffix scheme's goal (a cross-language pair differs
 consistently, never sometimes) is preserved and strengthened — the whole name,
 not just its tail, now carries the family. (Language-NEUTRAL artifacts stay
 outside any family stem: vibevm's own generic `vibe-*` crates, the `vibe-tcg`
-product cell.)
+product cell.) @impl/done
 
 ## 3. Rejected alternatives {#rejected}
 
@@ -152,10 +159,14 @@ product cell.)
 - **Caret pins in the aggregator**: a caret would let members skew within a
   single install, dissolving the "one engine, one truth" the `-mcp` exact pin
   exists to guarantee.
+@impl/done
 
 ## 4. Open questions {#open}
+
+<status stage="spec" state="work" comment="B1 2026-07-24: two questions still open, no owner ruling yet"/>
 
 1. A future `<family>-app` role (the anticipated `app` kind, VIBEVM-SPEC §4.1)
    would join the aggregator's `[requires]` under the same exact-pin rule.
 2. Whether `vibe install <family>` should offer per-member opt-out (the mirror
    of PROP-027 §4's multi-server question); v1 is all-or-nothing per family.
+@spec/work

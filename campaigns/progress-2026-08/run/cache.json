@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-07-24T15:43:16Z",
+  "updated_at": "2026-07-24T16:08:24Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/LICENSE.md": {
       "content_hash": "ff62ce25b7887cc01f138039b0ea3217248ece5f92c08fc7f9a5c6758b2d6a29",
@@ -4458,13 +4458,25 @@
       "issue_count": 0
     },
     "spec/common/PROP-000.md": {
-      "content_hash": "204ee9b747c0d88df60b1b80b7367f75b65e29526b219e4464f54c2938dd7e55",
+      "content_hash": "86222f1aad90a0020c01ab43eb8f75f5ba892ec8ae297078dae602d87c002c9e",
       "rollup": {
-        "marker_count": 0,
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 69,
         "paragraph_count": 68,
-        "unmarked_paragraphs": 68
+        "unmarked_paragraphs": 0
       },
-      "marker_count": 0,
+      "marker_count": 69,
       "unit_count": 22,
       "issue_count": 0
     },
@@ -4492,7 +4504,7 @@
       "issue_count": 0
     },
     "spec/common/PROP-013-periodic-health-audit.md": {
-      "content_hash": "55a06b4d3ae739960c73c7cae5693e43d50f0066c7fad11e15842cb40f3aa06a",
+      "content_hash": "4244b58a8d888d3cc819cbc7a42d30799f77251bdc6cd40a84cbd6effb9af2aa",
       "rollup": {
         "explicit": [
           "spec",
@@ -4500,22 +4512,22 @@
         ],
         "computed": [
           "spec",
-          "done"
+          "work"
         ],
         "effective": [
           "spec",
           "done"
         ],
-        "marker_count": 1,
+        "marker_count": 20,
         "paragraph_count": 18,
-        "unmarked_paragraphs": 18
+        "unmarked_paragraphs": 0
       },
-      "marker_count": 1,
+      "marker_count": 20,
       "unit_count": 6,
       "issue_count": 0
     },
     "spec/common/PROP-016-source-mirrors.md": {
-      "content_hash": "3f41c2869252d851138c77ea4f8b20467d08ccc1aa02a7ef4d2fdfe530a28e43",
+      "content_hash": "558cd128a01ad9aec95294ef5a5ef8c54162bd48a18a76f834eb0605c41356c6",
       "rollup": {
         "explicit": [
           "spec",
@@ -4523,22 +4535,22 @@
         ],
         "computed": [
           "spec",
-          "done"
+          "work"
         ],
         "effective": [
           "spec",
           "done"
         ],
-        "marker_count": 1,
+        "marker_count": 17,
         "paragraph_count": 15,
-        "unmarked_paragraphs": 15
+        "unmarked_paragraphs": 0
       },
-      "marker_count": 1,
+      "marker_count": 17,
       "unit_count": 7,
       "issue_count": 0
     },
     "spec/common/PROP-018-agentic-standalone-modes.md": {
-      "content_hash": "8f0efd6c1871e647b4f961e544ef574f838786bd4e6c93f17202333873d36e93",
+      "content_hash": "ccd112f6dbd518780ea9c1aff160e80e5777293fa282d76fda6ee142e5274a15",
       "rollup": {
         "explicit": [
           "spec",
@@ -4552,16 +4564,16 @@
           "spec",
           "done"
         ],
-        "marker_count": 1,
+        "marker_count": 53,
         "paragraph_count": 52,
-        "unmarked_paragraphs": 52
+        "unmarked_paragraphs": 0
       },
-      "marker_count": 1,
+      "marker_count": 53,
       "unit_count": 21,
       "issue_count": 0
     },
     "spec/common/PROP-019-version-manager.md": {
-      "content_hash": "c22220c403a7413ef919569381c23120f08744a59e0eb43810d303949a4bbe8b",
+      "content_hash": "06df64a3d25281587209fc4db97c200ef9e264a30e7b110340c7ac850d96d3f9",
       "rollup": {
         "explicit": [
           "spec",
@@ -4575,16 +4587,16 @@
           "spec",
           "done"
         ],
-        "marker_count": 1,
+        "marker_count": 83,
         "paragraph_count": 82,
-        "unmarked_paragraphs": 82
+        "unmarked_paragraphs": 0
       },
-      "marker_count": 1,
+      "marker_count": 83,
       "unit_count": 37,
       "issue_count": 0
     },
     "spec/common/PROP-024-code-bearing-packages.md": {
-      "content_hash": "e7afed9e954ae1c0babd374618f3a2fcec9bd6ca68b97b7aee17a50341becaa6",
+      "content_hash": "b6f5e145552f448cf343307fcce54c333aa8a92531dcfa71b7c2c0b3389c380f",
       "rollup": {
         "explicit": [
           "spec",
@@ -4598,39 +4610,39 @@
           "spec",
           "done"
         ],
-        "marker_count": 1,
+        "marker_count": 38,
         "paragraph_count": 37,
-        "unmarked_paragraphs": 37
+        "unmarked_paragraphs": 0
       },
-      "marker_count": 1,
+      "marker_count": 38,
       "unit_count": 16,
       "issue_count": 0
     },
     "spec/common/PROP-028-package-families.md": {
-      "content_hash": "e011d6b30bc26035d892e623add68e87996699cf404bdf6d196808a0b5edd8e1",
+      "content_hash": "638db8a0c6c45c7c378c13aeb36ee3a421f2deb3c5084cf37d140975e8e5421e",
       "rollup": {
         "explicit": [
           "impl",
           "done"
         ],
         "computed": [
-          "impl",
-          "done"
+          "spec",
+          "work"
         ],
         "effective": [
           "impl",
           "done"
         ],
-        "marker_count": 1,
+        "marker_count": 19,
         "paragraph_count": 17,
-        "unmarked_paragraphs": 17
+        "unmarked_paragraphs": 0
       },
-      "marker_count": 1,
+      "marker_count": 19,
       "unit_count": 9,
       "issue_count": 0
     },
     "spec/common/PROP-029-fully-qualified-addresses.md": {
-      "content_hash": "90bfdbddf30e3b98d0de637069ba8eb0f9b62a1d0bc4aa10ccabc9c733e59fa0",
+      "content_hash": "197bfca68f7ab72ffbbe31dccdf86480cab1f13a52326a883f589cfe2b1bc387",
       "rollup": {
         "explicit": [
           "spec",
@@ -4644,16 +4656,16 @@
           "spec",
           "done"
         ],
-        "marker_count": 1,
+        "marker_count": 10,
         "paragraph_count": 9,
-        "unmarked_paragraphs": 9
+        "unmarked_paragraphs": 0
       },
-      "marker_count": 1,
+      "marker_count": 10,
       "unit_count": 6,
       "issue_count": 0
     },
     "spec/common/PROP-031-algorithmic-refactoring.md": {
-      "content_hash": "51fd75fd6160bf049dafbe836b09c7d0007ff0d9a01257f47dd256fea8e48634",
+      "content_hash": "73e3313dbab24e497da8ccae7fa294199ec1267c010106381de48138a281985e",
       "rollup": {
         "explicit": [
           "spec",
@@ -4661,22 +4673,22 @@
         ],
         "computed": [
           "spec",
-          "done"
+          "work"
         ],
         "effective": [
           "spec",
           "done"
         ],
-        "marker_count": 1,
+        "marker_count": 30,
         "paragraph_count": 28,
-        "unmarked_paragraphs": 28
+        "unmarked_paragraphs": 0
       },
-      "marker_count": 1,
+      "marker_count": 30,
       "unit_count": 13,
       "issue_count": 0
     },
     "spec/common/PROP-032-project-model-ide-substrate.md": {
-      "content_hash": "fde569af59f60f745b16e9f2178a5fabd4a794d6bac26fd864f309e02f6b28e0",
+      "content_hash": "7137ed9cb7238d66265b43b789d4ddea70b86e4f76a92f74fd0c7f0380ea58f6",
       "rollup": {
         "explicit": [
           "spec",
@@ -4684,22 +4696,22 @@
         ],
         "computed": [
           "spec",
-          "done"
+          "work"
         ],
         "effective": [
           "spec",
           "done"
         ],
-        "marker_count": 1,
+        "marker_count": 40,
         "paragraph_count": 38,
-        "unmarked_paragraphs": 38
+        "unmarked_paragraphs": 0
       },
-      "marker_count": 1,
+      "marker_count": 40,
       "unit_count": 16,
       "issue_count": 0
     },
     "spec/common/PROP-033-refactoring-registry.md": {
-      "content_hash": "82a42af49da00f2ddeffac4644e04154b3cf9b42c42d69cbe9f4b72a36bfa2b1",
+      "content_hash": "db111e38a9077eb9d8a93bc55eadd295c0257dd28a8aed1b5b38ff91e54f6894",
       "rollup": {
         "explicit": [
           "spec",
@@ -4707,17 +4719,17 @@
         ],
         "computed": [
           "spec",
-          "done"
+          "work"
         ],
         "effective": [
           "spec",
           "done"
         ],
-        "marker_count": 1,
+        "marker_count": 27,
         "paragraph_count": 25,
-        "unmarked_paragraphs": 25
+        "unmarked_paragraphs": 0
       },
-      "marker_count": 1,
+      "marker_count": 27,
       "unit_count": 14,
       "issue_count": 0
     },

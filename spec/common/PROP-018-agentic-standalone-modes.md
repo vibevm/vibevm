@@ -19,7 +19,7 @@ provider layer — the standalone built-in inference backend §2.2 names),
 *different* concept, §1.3), [PROP-003 §2.5](../modules/vibe-resolver/PROP-003-dep-evolution.md)
 (subskill *delivery* into the project tree — distinct from agent-skill
 *projection*, §2.5), [PROP-017 §8](../modules/vibe-resolver/PROP-017-resolvo-resolver.md)
-(a sibling far-backlog).
+(a sibling far-backlog). @spec/done
 
 ---
 
@@ -31,7 +31,7 @@ vibevm has commands that are pure algorithm (`install`, `check`, `list`)
 and commands that genuinely need reasoning (explain, build, review). The
 algorithmic ones already run from a bare terminal with no LLM
 (`VIBEVM-SPEC.md` §3.2). The reasoning ones raise a question of *who does
-the reasoning, and how*.
+the reasoning, and how*. @spec/done
 
 vibevm is almost always invoked *by* a coding agent (Claude Code,
 OpenCode, Codex) that already holds a capable LLM, the live context, and
@@ -45,12 +45,12 @@ natural roles — vibevm composes the domain-grounded instruction, the agent
 carries it out — and names the operating contexts so the codebase branches
 on them cleanly. (vibevm can also reason with *no* agent present, via a
 built-in `vibe-llm` engine — `VIBEVM-SPEC.md` §10.4, far-backlog §6 — but
-that is standalone mode; it is not what makes agentic mode worthwhile.)
+that is standalone mode; it is not what makes agentic mode worthwhile.) @spec/done
 
 ### 1.2 The two modes — one axis {#axis}
 
 The modes are not two codebases. They are one question: **where does an
-operation's reasoning happen?**
+operation's reasoning happen?** @spec/done
 
 - **agentic** — vibevm is driven by a host agent during that agent's own
   work. For a step that needs reasoning, vibevm composes a domain-grounded
@@ -64,11 +64,12 @@ operation's reasoning happen?**
   lands — a built-in inference engine. Today the standalone backend has no
   LLM, so the only standalone functionality this PROP ships is the
   **non-reasoning** one: projecting skills into agents (§2.6).
+@spec/done
 
 The unifying statement (§2.1): **a mode is a choice of inference backend.**
 Non-reasoning operations behave identically in both modes; reasoning
 operations branch on the backend. This is the seam everything else hangs
-off.
+off. @spec/done
 
 ### 1.3 What this is NOT — PROP-006 {#not-prop-006}
 
@@ -79,18 +80,19 @@ confirmation, how freely to spend tokens). Those govern the *agent's*
 conduct. PROP-018 modes govern **where vibevm gets inference** — a property
 of *vibevm's* execution, orthogonal to any session posture. A session can
 be in "move fast" posture while vibevm runs in agentic mode; the two never
-collide. Do not overload one onto the other.
+collide. Do not overload one onto the other. @spec/done
 
 ## 2. Decisions {#decisions}
 
 ### 2.1 A mode is a choice of inference backend {#mode-is-backend}
 
 `req r1`
+@spec/done
 
 **Decision.** Mode is not a global flag the user sets; it is **inferred per
 operation from how vibevm was reached and what backend is available.** An
 operation declares whether it needs inference; if it does, the active
-backend decides the realisation:
+backend decides the realisation: @spec/done
 
 - reached as a **subprocess of an agent** (CLI one-shot or MCP call) →
   the **relay backend** (§2.7): delegate the intent back to that agent.
@@ -100,32 +102,36 @@ backend decides the realisation:
   **fails loud** with "this needs an inference backend; run me under an
   agent, or wait for the built-in engine," and a non-reasoning operation
   runs normally.
+@spec/done
 
 ### 2.2 The pluggable inference backend {#pluggable-backend}
 
 `req r2`
+@spec/done
 
 **Decision.** Inference sits behind one trait, `InferenceBackend`, so an
 operation never names a provider. An operation that needs reasoning
 constructs an `Intent` (a structured prompt + the inputs it needs) and
-hands it to the active backend. Two backends are foreseen:
+hands it to the active backend. Two backends are foreseen: @spec/done
 
 - **`RelayBackend`** (agent mode) — vibevm authors the `Intent` and
   *parks* it for the calling agent to execute, returning "delegated"
   (§2.7). Not a stopgap: in agent mode the agent is the right executor.
 - **`BuiltinBackend`** (standalone mode; far backlog §6) — runs the
   `Intent` on `vibe-llm` in-process, for when no agent is present.
+@spec/done
 
 This is deliberately **not** over-built: the trait exists so reasoning
 operations are written once against an abstract backend, and the standalone
 engine slots in later without touching them. Operations with a single
 natural home (skill-install is standalone-only; a "rewrite this spec
 section" op may be agentic-only until the engine exists) simply do not
-offer the other backend (§2.3).
+offer the other backend (§2.3). @spec/done
 
 ### 2.3 Per-operation backend affinity {#affinity}
 
 `req r2`
+@spec/done
 
 **Decision.** Each operation declares an **affinity**: `agentic-only`,
 `standalone-only`, or `both`. Affinity is a property of the *work*, not a
@@ -134,11 +140,12 @@ needs no agent); a free-form "explain this project in prose" is
 `agentic-only` until the built-in engine exists; a task expressible either
 as a deterministic pass or as reasoning is `both`. The dispatcher refuses
 an operation invoked through a backend it has no affinity for, with a
-message naming the right one.
+message naming the right one. @spec/done
 
 ### 2.4 Agent-installable artifacts are declared separately from the package kind {#skill-decl}
 
 `req r3`
+@spec/done
 
 **Decision.** A package declares which of its files are **skills** for
 agents in a dedicated manifest section — **not** by introducing a
@@ -152,10 +159,10 @@ agent." (This unit's original text sketched MCP servers as a second
 any-kind section; that half is SUPERSEDED — MCP servers became their own
 `mcp` kind with their own laws, owner resolution 2026-07-07:
 [PROP-027](../modules/vibe-mcp/PROP-027-mcp-packages.md). The skill law
-here is unchanged.)
+here is unchanged.) @spec/done
 
 The MVP section is an array-of-tables, matching the manifest's existing
-`[[requires_any]]` / `[[registry]]` / `[[mirror]]` shape:
+`[[requires_any]]` / `[[registry]]` / `[[mirror]]` shape: @spec/done
 
 ```toml
 [[skill]]
@@ -167,11 +174,12 @@ agents      = ["claude", "opencode"]      # optional; default = all skill-suppor
 
 A sibling `[[mcp]]` table (command / args / target agents) is specified the
 same way but is **near-term, not MVP** (§6) — the schema is reserved here so
-the vim-style "tool + mcp + skill" package is expressible end to end.
+the vim-style "tool + mcp + skill" package is expressible end to end. @spec/done
 
 ### 2.5 Skills are an orthogonal projection, not a delivery mode {#projection}
 
 `req r3`
+@spec/done
 
 **Decision.** Installing a skill into an agent is a **projection**: read the
 declared skill body from the package (in `vibedeps/…` once installed) and
@@ -181,15 +189,16 @@ convention (`.claude/skills/<name>/…`, `.opencode/skills/<name>/…`,
 is distinct from PROP-003 §2.5 subskill *delivery* (which materialises
 content into the **project tree**). Skill projection materialises **out of**
 the workspace, into the **agent**. The two share no code path beyond the
-`Agent` skill-path resolver.
+`Agent` skill-path resolver. @spec/done
 
 ### 2.6 Standalone MVP — `vibe skill install` {#vibe-skill}
 
 `req r3`
+@spec/done
 
 **Decision.** A new command family projects package-declared skills into
 agents, reusing PROP-015's agent machinery (`Agent` enum, detection, the
-idempotent skill writer, the per-(agent, scope) report records):
+idempotent skill writer, the per-(agent, scope) report records): @spec/done
 
 - **`vibe skill list`** — skills declared by installed packages.
 - **`vibe skill install [--agent …] [--scope project|user|both] [<pkgref>] [<skill>…]`**
@@ -199,13 +208,15 @@ idempotent skill writer, the per-(agent, scope) report records):
   merge discipline as `vibe mcp install` (PROP-015 §2.7).
 - **`vibe skill uninstall …`** — the inverse; strips only vibevm-projected
   skills, leaves foreign skill dirs untouched.
+@spec/done
 
 This is the **only standalone functionality v1 of this PROP ships.** It
-needs no LLM, so it works today, agent-present or not.
+needs no LLM, so it works today, agent-present or not. @spec/done
 
 ### 2.7 The agentic relay — delegate intent back to the caller {#relay}
 
 `req r4`
+@spec/done
 
 **Decision.** When a reasoning operation runs under the relay backend, it
 does not act. It writes an `Intent` — a markdown prompt with light
@@ -215,10 +226,10 @@ pointer telling the caller to drain it. The **consumer seam is one
 command**, `vibe command`: it prints the pending `Intent` to stdout and
 clears the slot (consume-on-read; the spent intent is archived to
 `.vibe/agentic/command.done.md`). Re-running with an empty slot prints "no
-pending command" and exits `0`.
+pending command" and exits `0`. @spec/done
 
 Two properties make the two-step (produce → `vibe command`) worth its
-seam rather than just printing the intent from the producer:
+seam rather than just printing the intent from the producer: @spec/done
 
 1. **Uniformity.** *Any* vibevm command that discovers mid-run it needs
    reasoning parks an intent the same way — not only `vibe agentic …`
@@ -227,20 +238,22 @@ seam rather than just printing the intent from the producer:
 2. **Decoupling.** Producer and consumer need not be the same invocation,
    which is what lets a future deterministic command (`vibe build`) park a
    reasoning step and exit, the agent draining it afterward.
+@spec/done
 
 **MVP carries no write-back** (`req r4`): the relay is fire-and-forget. The
 calling agent orchestrates the conversation — if it wants vibevm to see the
 result, *it* arranges that with a follow-up command. The installed skill
 (§2.9) states this contract explicitly so agents do not wait for a channel
-that is not there. (Full bidirectional conversations are §6.)
+that is not there. (Full bidirectional conversations are §6.) @spec/done
 
 ### 2.8 One operation, two transports {#transports}
 
 `req r5`
+@spec/done
 
 **Decision.** A reasoning/agentic operation is defined **once**, as a
 transport-agnostic core (the `Intent`-producing function over a project
-context), and exposed by **two thin adapters**:
+context), and exposed by **two thin adapters**: @spec/done
 
 - **One-shot CLI** (`vibe agentic <op>`) — stateless, one process per call.
   An intent is delivered through the §2.7 file relay. Best when vibevm is
@@ -252,13 +265,15 @@ context), and exposed by **two thin adapters**:
   MCP tool; an intent is returned **synchronously in the tool result**, so
   no file mailbox is needed on this path. Best for sustained work inside
   one project.
+@spec/done
 
 The choice is the **agent's**, by situation, and the skill (§2.9) teaches
-the heuristic. The core never knows which adapter called it.
+the heuristic. The core never knows which adapter called it. @spec/done
 
 ### 2.9 The vibevm-usage skill teaches the protocol {#usage-skill}
 
 `req r5`
+@spec/done
 
 **Decision.** The skill `vibe mcp install` already projects
 (`skill_template.md`) gains a section that teaches an agent: (a) the
@@ -268,15 +283,16 @@ server for sustained in-project work) — §2.8; (b) the relay contract: some
 run `vibe command`, then **carry out the returned instruction yourself**;
 (c) there is **no automatic write-back** — if the result should reach
 vibevm, the agent issues the follow-up itself. The skill stays *data, not
-code* (PROP-015 §2.6).
+code* (PROP-015 §2.6). @spec/done
 
 ### 2.10 `vibe agentic explain` — the MVP demonstrator {#explain}
 
 `req r4`
+@spec/done
 
 **Decision.** The first `vibe agentic` operation, `explain`, exercises the
 whole relay with zero real risk. Run under an agent, it parks an `Intent`
-to `.vibe/agentic/command.md` of roughly:
+to `.vibe/agentic/command.md` of roughly: @spec/done
 
 > **Task — explain this project.** In ≤3 short paragraphs, tell the reader
 > what this project is and does. Sources, in priority order: (1) `README.md`
@@ -284,17 +300,18 @@ to `.vibe/agentic/command.md` of roughly:
 > what its structure reveals (the package `kind`, what it `requires`, what
 > it `provides`). If `README.md` is absent, say so and explain from
 > `vibe.toml` alone. Write for a developer seeing the repo for the first
-> time. Do not invent features the sources do not support.
+> time. Do not invent features the sources do not support. @spec/done
 
 `vibe agentic explain` does no LLM work and reads no file content itself; it
 only composes the intent (it *may* check which of `README.md` / `vibe.toml`
 exist to tailor the prompt). The agent then runs `vibe command`, gets this
 instruction, and produces the explanation on its own LLM. Affinity:
-`agentic-only` until the built-in backend exists (§2.3).
+`agentic-only` until the built-in backend exists (§2.3). @spec/done
 
 ## 3. The `.vibe/agentic/` relay directory {#vibevm-dir}
 
 `req r4`
+@spec/done
 
 **Decision.** Agentic relay state lives under the existing project-local
 `.vibe/` scratch root, in a dedicated **`.vibe/agentic/`** subdirectory
@@ -305,16 +322,17 @@ package cache) and is already git-ignored by its own `.vibe/.gitignore`
 and no second near-homonym dot-dir sitting beside `.vibe/`. Subdirectories
 disambiguate the two concerns — `.vibe/cache/` is the package cache,
 `.vibe/agentic/` is the agent↔vibevm relay channel (and the future home of
-the §6 conversation state). MVP contents:
+the §6 conversation state). MVP contents: @spec/done
 
 - `.vibe/agentic/command.md` — the single pending intent (absent when none).
 - `.vibe/agentic/command.done.md` — the last consumed intent (archive aid).
+@spec/done
 
 The relay path is an internal detail: the installed skill (§2.9) teaches
 the agent the `vibe command` verb, never the path, so the location carries
 no external contract and can move freely. A future `vibe cache clean` must
 scope to `.vibe/cache/` — never the whole `.vibe/` — so cache eviction
-cannot nuke an in-flight relay intent.
+cannot nuke an in-flight relay intent. @spec/done
 
 ## 4. MVP scope — what this PROP authorises now {#mvp}
 
@@ -329,11 +347,12 @@ cannot nuke an in-flight relay intent.
 5. **Dual transport** — the explain op exposed as both `vibe agentic
    explain` (CLI) and an MCP tool (§2.8).
 6. **Skill** — `skill_template.md` updated to teach the protocol (§2.9).
+@spec/done
 
 Crate placement (flagged to owner): a dedicated **`vibe-agentic`** crate for
 §2.2/§2.3/§2.7 core (it will grow per §6), with adapters in `vibe-cli` and
 `vibe-mcp`. Lighter alternative: fold the core into `vibe-mcp` for the MVP
-and extract later.
+and extract later. @spec/done
 
 ## 5. Out of scope (now) {#out-of-scope}
 
@@ -344,10 +363,11 @@ and extract later.
   (`VIBEVM-SPEC.md` §10.4); MVP relay-only.
 - **Write-back / conversations** — §6.
 - **Changing PROP-006** — untouched (§1.3).
+@spec/done
 
 ## 6. Far backlog {#far-backlog}
 
-Parked deliberately; recorded so the MVP's seams are cut to admit them:
+Parked deliberately; recorded so the MVP's seams are cut to admit them: @spec/done
 
 - **Full vibevm↔agent conversations.** A request/response protocol shaped
   like the OpenAI Chat/Responses API: write-back, multi-turn, and full
@@ -362,9 +382,10 @@ Parked deliberately; recorded so the MVP's seams are cut to admit them:
   engine that lets reasoning operations run with no agent present.
 - **`[[mcp]]` bundled-server projection** (§2.4) — install a package's
   bundled MCP server into agents alongside its skills.
+@spec/done
 
 (Sibling far-backlogs: PROP-017 §8. If these lists keep growing, a
-consolidated backlog doc may be warranted — not today.)
+consolidated backlog doc may be warranted — not today.) @spec/done
 
 ## 7. Acceptance {#acceptance}
 
@@ -386,3 +407,4 @@ consolidated backlog doc may be warranted — not today.)
   the §2.1 message; `vibe skill install` invoked standalone succeeds.
 - The projected `SKILL.md` contains the §2.9 protocol section; the existing
   PROP-015 acceptance still holds.
+@spec/done

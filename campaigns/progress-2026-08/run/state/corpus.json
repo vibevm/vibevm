@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-07-24T15:43:16Z",
+  "updated_at": "2026-07-24T16:08:24Z",
   "files": [
     {
       "path": "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/LICENSE.md",
@@ -4459,12 +4459,18 @@
     },
     {
       "path": "spec/common/PROP-000.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 69,
       "units": 22,
       "paragraphs": 68,
-      "unmarked": 68,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
@@ -4495,10 +4501,10 @@
         "stage": "spec",
         "state": "done"
       },
-      "markers": 1,
+      "markers": 20,
       "units": 6,
       "paragraphs": 18,
-      "unmarked": 18,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
@@ -4512,10 +4518,10 @@
         "stage": "spec",
         "state": "done"
       },
-      "markers": 1,
+      "markers": 17,
       "units": 7,
       "paragraphs": 15,
-      "unmarked": 15,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
@@ -4529,10 +4535,10 @@
         "stage": "spec",
         "state": "done"
       },
-      "markers": 1,
+      "markers": 53,
       "units": 21,
       "paragraphs": 52,
-      "unmarked": 52,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
@@ -4546,10 +4552,10 @@
         "stage": "spec",
         "state": "done"
       },
-      "markers": 1,
+      "markers": 83,
       "units": 37,
       "paragraphs": 82,
-      "unmarked": 82,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
@@ -4563,10 +4569,10 @@
         "stage": "spec",
         "state": "done"
       },
-      "markers": 1,
+      "markers": 38,
       "units": 16,
       "paragraphs": 37,
-      "unmarked": 37,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
@@ -4580,10 +4586,10 @@
         "stage": "impl",
         "state": "done"
       },
-      "markers": 1,
+      "markers": 19,
       "units": 9,
       "paragraphs": 17,
-      "unmarked": 17,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
@@ -4597,10 +4603,10 @@
         "stage": "spec",
         "state": "done"
       },
-      "markers": 1,
+      "markers": 10,
       "units": 6,
       "paragraphs": 9,
-      "unmarked": 9,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
@@ -4614,10 +4620,10 @@
         "stage": "spec",
         "state": "done"
       },
-      "markers": 1,
+      "markers": 30,
       "units": 13,
       "paragraphs": 28,
-      "unmarked": 28,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
@@ -4631,10 +4637,10 @@
         "stage": "spec",
         "state": "done"
       },
-      "markers": 1,
+      "markers": 40,
       "units": 16,
       "paragraphs": 38,
-      "unmarked": 38,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
@@ -4648,10 +4654,10 @@
         "stage": "spec",
         "state": "done"
       },
-      "markers": 1,
+      "markers": 27,
       "units": 14,
       "paragraphs": 25,
-      "unmarked": 25,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },

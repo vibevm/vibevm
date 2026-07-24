@@ -26,7 +26,7 @@ package source), [PROP-020](../modules/vibe-workspace/PROP-020-install-hooks.md)
 layout, §7.2 package contents, §7.3 manifest, §7.4 identity, §12 linter, §13.1
 package layout). The `VIBEVM-SPEC.md` edits required explicit owner sanction; it
 was **granted 2026-06-27** — the same precedent as
-[PROP-009 §5 item 8](../modules/vibe-workspace/PROP-009-loading-model.md#open).
+[PROP-009 §5 item 8](../modules/vibe-workspace/PROP-009-loading-model.md#open). @spec/done
 
 ---
 
@@ -41,36 +41,36 @@ machinery that makes the discipline *real* — the conform checker (Class-F/G
 rules, the file-length budget, the unwrap ban) and the specmap/specmark
 traceability engine — is **hardcoded as crates inside the vibevm workspace**
 (`crates/conform-core`, `crates/conform-frontend-rust`, `crates/specmark`,
-`crates/specmap-core`, the `cargo xtask conform`/`specmap` drivers).
+`crates/specmap-core`, the `cargo xtask conform`/`specmap` drivers). @spec/done
 
 Install `stack:org.vibevm.ai-native/rust-ai-native-lang` today and you get a *description* of
 checkers you do not have. To actually run the discipline you would have to
 re-implement the very tools vibevm already wrote. The discipline is therefore
 **not distributable**: its strong-author artifacts (guide, cards) ship, but its
 runtime (the checkers) does not. This is the gap that, left open, makes
-spec-conformance "fall apart" for any consumer that is not vibevm itself.
+spec-conformance "fall apart" for any consumer that is not vibevm itself. @spec/done
 
 The package format is the cause: a package is defined as a bundle of prompt
 files (`VIBEVM-SPEC.md` §7.2 — "vibe.toml, README.md, other content files
 referenced by the manifest"), materialised verbatim. There is nowhere to put
 code, and the identity/materialisation machinery (`content_hash` over every
 file, full-tree copy) actively fights it — a Rust crate's `target/` would make
-identity non-deterministic and the copy ruinous.
+identity non-deterministic and the copy ruinous. @spec/done
 
 ### 1.2 The shape — a package is a project {#shape}
 
 A vibe *project* already has the right shape: an authored `spec/` corpus
 (`VIBEVM-SPEC.md` §4.2 — "`spec/` is *the* spec directory") plus arbitrary code
 at the root (`Cargo.toml`, `crates/`, `src/`) plus one `vibe.toml`. A *package*
-should be the same object, made installable:
+should be the same object, made installable: @spec/done
 
-> prompt/spec content under `spec/`, arbitrary code at the root, one `vibe.toml`.
+> prompt/spec content under `spec/`, arbitrary code at the root, one `vibe.toml`. @spec/done
 
 Then a package can ship its tools; an installed package is immediately usable;
 and authoring a package *is* authoring a project — the same layout, the same
 `vibe check`, the same boot computation. The discipline's own four-layer model
 lands cleanly: L1/L2/L3 (manifesto, guide, cards — prompts) live under `spec/`,
-and L4 (the implemented checkers — code) lives at the root.
+and L4 (the implemented checkers — code) lives at the root. @spec/done
 
 ---
 
@@ -79,8 +79,9 @@ and L4 (the implemented checkers — code) lives at the root.
 ### 2.1 A package is a project — `spec/` for prompts, the root for code {#package-is-project}
 
 `req r1`
+@spec/done
 
-**Decision.** A package has the identical on-disk shape as a consumer project:
+**Decision.** A package has the identical on-disk shape as a consumer project: @spec/done
 
 - **Prompt/spec content lives under the package's `spec/` subtree** — boot
   snippets (`spec/boot/`), cards, guides, manifesto, appendix — laid out exactly
@@ -89,24 +90,26 @@ and L4 (the implemented checkers — code) lives at the root.
 - **The package root holds arbitrary code** (e.g. `Cargo.toml` + `crates/`) and
   `vibe.toml`, exactly as a project root does. Code is optional — a prompt-only
   package (e.g. `discipline-core`) simply has no code at its root.
+@spec/done
 
 **Consequence.** Developing a package is developing a project. `vibe check`
 applies unchanged (its §12 Check 7 — `spec/boot/` exists and holds only
 markdown — is satisfied by the package's own `spec/boot/`). The package's own
 boot sequence is computed the same way as any project's. There is no
-package-only directory convention to learn.
+package-only directory convention to learn. @spec/done
 
 This **retires the flat package layout** (boot snippets and content at the
 package root) that the real packages drifted into; it aligns them with — and
 extends — `VIBEVM-SPEC.md` §13.1's own canonical example, which already places a
-package's content under `spec/`.
+package's content under `spec/`. @spec/done
 
 ### 2.2 The shippable tree excludes build output {#shippable-tree}
 
 `req r1`
+@spec/done
 
 **Decision.** A package's **shippable tree** is its directory minus a
-build-output denylist:
+build-output denylist: @spec/done
 
 ```
 .git/        .vibe/        target/        node_modules/
@@ -115,29 +118,30 @@ build-output denylist:
 plus any glob listed in an optional `.vibeignore` at the package root. The
 `content_hash` (PROP-002 §2.1), the snapshot copy (PROP-022 §2.2), and the
 verbatim materialised slot (PROP-009 §2.1) all operate over the **shippable
-tree**, never the raw directory.
+tree**, never the raw directory. @spec/done
 
 **Why.** Identity is the *source*, never build artifacts: build output is
 non-deterministic (timestamps, host paths, incremental state) and may be
 gigabytes — hashing or copying it would make identity unstable and
 materialisation ruinous, the exact failure PROP-022 §1.1 names for "big in file
 count". A package's source — what its author commits — is precisely what is
-hashed, copied, and vendored.
+hashed, copied, and vendored. @spec/done
 
 **"Verbatim" is preserved for the source.** PROP-009 §2.1 / `VIBEVM-SPEC.md`
 §13.1 guarantee no path rewriting and no per-file write list — a human reading
 the package directory sees exactly what materialises. That guarantee holds
 unchanged for the shippable tree: build output was never part of the authored
 tree (it is gitignored in the package's own repository too). The denylist
-formalises "what was never source", it does not introduce selection.
+formalises "what was never source", it does not introduce selection. @spec/done
 
 ### 2.3 Code materialises, then builds consumer-side into a gitignored target {#build}
 
 `req r1`
+@spec/done
 
 **Decision.** `vibe install` materialises the shippable tree — including code —
 into the `vibedeps/` slot, as today. Turning that source into a runnable tool is
-consumer-side and **must never write into the committed slot or the hash**:
+consumer-side and **must never write into the committed slot or the hash**: @spec/done
 
 - A code-bearing tool package builds via a **`post-install` hook**
   ([PROP-020](../modules/vibe-workspace/PROP-020-install-hooks.md)) whose build
@@ -151,21 +155,23 @@ consumer-side and **must never write into the committed slot or the hash**:
   reference the shipped crates directly through its own toolchain (§2.4) and
   skip the build hook entirely — the hook is the path for a consumer that wants
   a ready binary without driving the language's build system itself.
+@spec/done
 
 The hook's own reset semantics (PROP-020 §2.1 — slot re-materialised on update,
 edits never compound) are unaffected: the build output lives outside the slot,
-so there is nothing in the slot to reset.
+so there is nothing in the slot to reset. @spec/done
 
 ### 2.4 Consuming shipped code — external-path-dep, no nested workspace {#consume}
 
 `req r1`
+@spec/done
 
 **Decision.** A code-bearing package carries its **own** workspace manifest
 (for Rust, a root `Cargo.toml` with `[workspace]`) — it is a standalone,
 independently-buildable project. A language-native consumer that needs a shipped
 crate — a proc-macro that compiles *into* the consumer's own code (the
 `specmark` case), or a binary it invokes (the `conform`/`specmap` case) —
-references it **by path into the materialised slot**:
+references it **by path into the materialised slot**: @spec/done
 
 ```toml
 # consumer's root Cargo.toml — one pinned alias, updated once per package bump
@@ -183,11 +189,12 @@ exclude = ["vibedeps", "packages"]   # disclaim the package's own workspaces
   repo that contains a sub-project with its own workspace.
 - The slot path is version-qualified; pinning it once in
   `[workspace.dependencies]` means a package version bump touches a single line.
+@spec/done
 
 A binary tool (`conform`, `specmap`) is run from the package's workspace —
 `cargo run --manifest-path vibedeps/<slot>/Cargo.toml --bin conform -- …` with
 `CARGO_TARGET_DIR` pointed at a gitignored dir (§2.3) — so building it pollutes
-neither the slot nor the consumer's own `target/`.
+neither the slot nor the consumer's own `target/`. @spec/done
 
 **Spike before the irreversible move.** Cross-workspace path-deps and the
 `exclude` topology are validated empirically on the target host (Windows, where
@@ -195,31 +202,33 @@ neither the slot nor the consumer's own `target/`.
 *before* any crate is physically relocated. The fallback, if cross-workspace
 path-deps prove unworkable on a host, is §4's rejected-but-retained alternative
 (the consumer adds the slot crates as its own workspace members) — chosen only
-on evidence.
+on evidence. @spec/done
 
 ### 2.5 Self-hosting bootstrap — the toolchain is vendored {#bootstrap}
 
 `req r1`
+@spec/done
 
 **Decision.** vibevm consumes its own discipline toolchain from the **committed**
 `vibedeps/` slot. Because `vibedeps/` is committed (PROP-009 §2.1), a fresh clone
 builds from a clean checkout **with no prior `vibe install`** — the path-dep
 target (`vibedeps/stack-rust-ai-native-lang/0.2.0/crates/specmark`, …) already exists
 in the tree. There is no chicken-and-egg: the toolchain a build needs is vendored
-beside the code that needs it.
+beside the code that needs it. @spec/done
 
 The development loop stays ergonomic: editing the in-repo package source under
 `packages/org.vibevm.ai-native/rust-ai-native/…` re-materialises the slot automatically on
 the next `vibe install` (PROP-011 §2.6 — in-workspace `file://` sources are
 mutable), so the consumed `vibedeps/` copy tracks the edited source without a
-manual `rm -rf`.
+manual `rm -rf`. @spec/done
 
 ### 2.6 Placement follows the layer model; the engine split is a follow-up {#placement}
 
 `req r1`
+@spec/done
 
 **Decision.** The discipline's tools are code and obey the four-layer model:
-L4 (implemented checkers) ships in the package whose language they check.
+L4 (implemented checkers) ships in the package whose language they check. @spec/done
 
 - For **this pass**, the **entire Rust discipline toolchain** — the conform
   engine (`conform-core`), its Rust frontend (`conform-frontend-rust`), the
@@ -238,6 +247,7 @@ L4 (implemented checkers) ships in the package whose language they check.
   Likewise the neutral half of `specmap-core` (markdown parse, index, ledger,
   test-gate) versus its Rust `rscan` frontend. The end state is symmetric; the
   ordering is driven by real second-language demand, not built speculatively.
+@spec/done
 
 ---
 
@@ -252,6 +262,7 @@ L4 (implemented checkers) ships in the package whose language they check.
   is added to the hook environment (§2.3).
 - **`vibe.lock`** is unaffected — identity is still `content_hash`, now over the
   shippable tree (§2.2); no schema bump.
+@spec/done
 
 ---
 
@@ -279,6 +290,7 @@ L4 (implemented checkers) ships in the package whose language they check.
   resurrects the per-file write list PROP-009 §2.6 retired. A denylist of build
   output (§2.2) keeps "what ships" == "the source", preserving the verbatim
   guarantee.
+@spec/done
 
 ---
 
@@ -292,6 +304,7 @@ L4 (implemented checkers) ships in the package whose language they check.
 - **The TypeScript checker implementation** — TypeScript ships no implemented
   tool in vibevm to relocate; its cards keep `specified` checker statuses until
   a TS pilot exists (§2.6 deferral).
+@spec/done
 
 ---
 
@@ -310,6 +323,7 @@ L4 (implemented checkers) ships in the package whose language they check.
 - An external Rust project can install `stack:org.vibevm.ai-native/rust-ai-native-lang` and run
   `conform` / `specmap` against its own code.
 - Full `self-check.sh` green; conform 0/0/0; specmap clean.
+@spec/done
 
 ---
 
@@ -325,3 +339,4 @@ L4 (implemented checkers) ships in the package whose language they check.
   productised to run on an arbitrary external project (config-driven, not
   vibevm-hardcoded); `conform-core` ships in the Rust stack now with the L1
   engine-extraction deferred (§2.6).
+@spec/done

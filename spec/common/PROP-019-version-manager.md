@@ -19,7 +19,7 @@ LLM; §2.1), [PROP-016](PROP-016-source-mirrors.md) (the source mirrors VVM
 clones from when run outside a source tree), [PROP-000 §7](PROP-000.md#registry)
 and [PROP-000 §20](PROP-000.md#token-secrecy) (the publish token VVM never
 touches), [`VIBEVM-SPEC.md`](../../VIBEVM-SPEC.md) (CLI-first posture), and
-the repo's `rust-toolchain.toml` (the pin VVM honours when building).
+the repo's `rust-toolchain.toml` (the pin VVM honours when building). @spec/done
 
 ---
 
@@ -31,12 +31,12 @@ Every other capability of vibevm assumes a `vibe` binary already exists.
 Getting it there is, today, an unspecified manual act: clone, `cargo build`,
 find the artifact, put it on `PATH`. There is no story for *which* version
 you built, switching between versions, reclaiming the disk a Rust build tree
-eats, or doing any of it on a clean machine.
+eats, or doing any of it on a clean machine. @spec/done
 
 Two further forces shaped v2 (§9): the owner iterates fast and must not have
 to **reload the console** after each `self install`/`use`; and a distribution
 is **more than one file** (today a `vibe.exe`, tomorrow DLLs and bundled
-assets), all of which lock while running.
+assets), all of which lock while running. @spec/done
 
 ### 1.2 What VVM is — a self-distribution manager {#what}
 
@@ -45,36 +45,39 @@ VVM is a command group, `vibe self`, described as
 from git, installs the resulting *distribution* under a managed prefix,
 exposes it on `PATH` through a stable shim, and lets the user switch the
 active version (with no console reload), list, garbage-collect, and remove.
-It runs on Windows, macOS, and Linux, across the shells those platforms use.
+It runs on Windows, macOS, and Linux, across the shells those platforms use. @spec/done
 
 ### 1.3 What this is NOT — not `vibe install` {#not-install}
 
 `req r1`
+@spec/done
 
 `vibe install` is the **package** manager (PROP-003 / PROP-017): it resolves
 packages a *project* depends on into that project. VVM manages *the vibevm
 tool itself* on *the machine* — a user-global prefix, not a project's
 `vibedeps/`. The two never share code paths; `vibe self` is its own command
-group so the package verbs stay uncontaminated.
+group so the package verbs stay uncontaminated. @spec/done
 
 ## 2. Decisions {#decisions}
 
 ### 2.1 VVM is a standalone, algorithmic capability {#standalone}
 
 `req r1`
+@spec/done
 
 VVM needs no LLM and no host agent. In PROP-018's terms it is a
 **standalone-mode** capability — the second after `vibe skill` — behaving
 identically with or without an agent. It is fully scriptable: every
 interactive prompt has a non-interactive flag equivalent, so VVM works from
-a bare terminal, CI, or an agent transcript.
+a bare terminal, CI, or an agent transcript. @spec/done
 
 ### 2.2 Command surface — `vibe self` (+ `vibe vars`) {#surface}
 
 `req r2`
+@spec/done
 
 `vibe self` — named after rustup's `self` (a tool that manages its own
-versions), and unambiguous where `man` collided with the Unix manual page:
+versions), and unambiguous where `man` collided with the Unix manual page: @spec/done
 
 - `self install <selector>` — build and install a version (§2.7). Flags:
   `--release` / `--profile <debug|release>` (default **debug**, a single
@@ -98,16 +101,18 @@ versions), and unambiguous where `man` collided with the Unix manual page:
   clear the instances built from the abandoned tree (§2.17). Flags:
   `--from <old-path>` (override the inferred old location); `-y`/`--yes`
   (non-interactive); `--dry-run`.
+@spec/done
 
 Top-level **`vibe vars`** (§2.14) prints the runtime variable context —
 the values vibevm *actually* uses (derived from `current_exe`) versus what
-the environment says — so scripts never break on a stale `$VIBEVM_HOME`.
+the environment says — so scripts never break on a stale `$VIBEVM_HOME`. @spec/done
 
 ### 2.3 Version selectors and resolution {#selectors}
 
 `req r1`
+@spec/done
 
-A *selector* names what to install or use; resolution is deterministic:
+A *selector* names what to install or use; resolution is deterministic: @spec/done
 
 - `latest` → tip of branch `main`.
 - `stable` → highest semantic-version git tag (the newest release).
@@ -116,19 +121,21 @@ A *selector* names what to install or use; resolution is deterministic:
 - the canonical `<kind>:<id>` form (as `self ls` prints) → that exact id.
 - any other bare name → branch, then tag, then commit (hex commits and
   `X.Y.Z` tags are classified before this point).
+@spec/done
 
 `--tag` / `--branch` / `--commit` force interpretation, mapping to
 fully-qualified git refs so a name that is both never resolves by accident.
-No selector: `install` → `latest`; `use`/`remove` → the current active.
+No selector: `install` → `latest`; `use`/`remove` → the current active. @spec/done
 
 ### 2.4 On-disk layout — instances, the `current` pointer, manifests {#layout}
 
 `req r1`
+@spec/done
 
 The **unit of install and switch is a whole distribution directory**
 (an *instance*: the binary plus future DLLs/assets), not a single file
 (§9.3). A version has a **canonical id** `<kind>:<id>` (`kind ∈ {tag, branch,
-commit}`); each id may have several instances (one per install).
+commit}`); each id may have several instances (one per install). @spec/done
 
 ```
 $VIBEVM_INSTALL_ROOT/            install base — default: home dir
@@ -155,15 +162,16 @@ use. One env var relocates everything; tests pin it to a temp dir.
 `<instance>` is a monotonic counter (§9.4) — never a hash of the payload
 (§9.2). The shim dir is stable; switching repoints `current`, never the
 shim. Sources are held **by reference** (§2.7, §2.16), never bulk-copied
-into the root (a checkout's `target/` is tens of GB).
+into the root (a checkout's `target/` is tens of GB). @spec/done
 
 ### 2.5 Activation — live `current` file + `current_exe` truth {#activation}
 
 `req r1`
+@spec/done
 
 **Switching must not reload the console and must not overwrite a running
 file.** (v1's "env is truth" violated the first; see §9.1.) The model has
-three layers:
+three layers: @spec/done
 
 1. **`current_exe()` → the running process's truth.** A managed `vibe` lives
    at `…/opt/vibevm/versions/<kind>/<id>/<instance>/vibe[.exe]`, so it
@@ -181,22 +189,25 @@ three layers:
    and a managed `vibe` whose `current_exe`-derived home disagrees with the
    env prints a one-line stderr warning at startup (suppressed outside a
    managed run).
+@spec/done
 
 The shims (`bin/{vibe,vibe.cmd}`) are minimal: resolve `current`, exec; if
 absent, fall back to `$VIBEVM_HOME`, else print "no active vibevm — run
 `vibe self use <selector>`". Both POSIX and `.cmd` shims exist (Git Bash
-won't resolve `.cmd`; cmd/PowerShell won't run an extensionless script).
+won't resolve `.cmd`; cmd/PowerShell won't run an extensionless script). @spec/done
 
 ### 2.6 PATH and durable environment management {#path}
 
 `req r1`
+@spec/done
 
-VVM detects OS and shell and manages durable settings under strict rules:
+VVM detects OS and shell and manages durable settings under strict rules: @spec/done
 
 - **The shim dir on `PATH`** (stable; set once).
 - **`VIBEVM_HOME` / `VIBEVM_INSTALL_ROOT`** as *advisory* env (§2.5) —
   repointed on `self use` for external tools; truth lives in `current` +
   `current_exe`.
+@spec/done
 
 Rules: **idempotent** (a marker guards the edit; no duplicate lines/entries),
 **never clobber** (only our entry is added; the rest of `PATH` is
@@ -206,15 +217,16 @@ block in the detected shell's rc — bash/zsh/fish/`.profile`), and **consent
 + honesty** (mutating edits need a confirm / `-y` / `self doctor --fix`,
 print the diff, and say the change reaches only new shells). The durable
 writer is an injectable seam so tests exercise the POSIX rc path in a temp
-file and never mutate the real machine.
+file and never mutate the real machine. @spec/done
 
 ### 2.7 The install pipeline — sources by reference, diff-copy to an instance {#build}
 
 `req r1`
+@spec/done
 
 Installing a version is: locate the source (by reference, never copied),
 build it incrementally, place the distribution into a **new immutable
-instance** by diff-copy, record provenance, flip `current`.
+instance** by diff-copy, record provenance, flip `current`. @spec/done
 
 - **Locate source (§2.16).** Two origins, never bulk-copied:
   - *external* — `self install` run inside a committer's own checkout
@@ -249,15 +261,17 @@ instance** by diff-copy, record provenance, flip `current`.
 - **Record + flip.** `state.toml` gets the instance (id, instance, commit,
   toolchain, profile, time, origin, source_path); `current` is flipped
   atomically to the new instance.
+@spec/done
 
 Because every install writes a **new** instance dir and switching is a
 pointer flip, **no in-use file is ever overwritten** — the running process
 keeps its instance dir intact; no lock, no reload, for the `.exe` or any
-DLL, on any OS (§9.3).
+DLL, on any OS (§9.3). @spec/done
 
 ### 2.8 Required toolchain — a single source of truth {#tools}
 
 `req r1`
+@spec/done
 
 A from-source build needs **git**, a **Rust toolchain** (rustc + cargo,
 stable ≥ 1.93, edition 2024 — via rustup so the pin resolves), and a
@@ -266,13 +280,14 @@ Linux: `build-essential`). OpenSSL is deliberately not required (rustls).
 The list lives once as a `REQUIRED_TOOLS` table — `(name, min_version,
 check_command, help_url)` — read by `self doctor` (§2.11) and asserted by a
 test; it is the runnable form of "how to update the stack" (§7). The publish
-token is **never** in this set (§2.13).
+token is **never** in this set (§2.13). @spec/done
 
 ### 2.9 Removal — safe by default {#remove}
 
 `req r1`
+@spec/done
 
-`self remove` never silently wipes everything:
+`self remove` never silently wipes everything: @spec/done
 
 - `self remove <selector>` — remove that version's instances (and, with
   `--src`, the managed source). `--bin`/`--src`/`--both` (default both).
@@ -282,20 +297,23 @@ token is **never** in this set (§2.13).
 - The **active** version and the **running** instance are protected:
   removing the active needs `--force`; a running instance's files are never
   deleted out from under it (best-effort, skipped if locked).
+@spec/done
 
 External sources (committer trees) are **never** removed — VVM only forgets
-their provenance record; managed `src/<kind>/<id>` clones are VVM's to drop.
+their provenance record; managed `src/<kind>/<id>` clones are VVM's to drop. @spec/done
 
 ### 2.10 Garbage collection — `self gc` {#gc}
 
 `req r1`
+@spec/done
 
-`self gc` reclaims disk:
+`self gc` reclaims disk: @spec/done
 
 - `--build` — clean the shared Rust build cache (`build/`); forces a rebuild
   next install but touches no installed instance.
 - `--prune-others` — remove every instance except the active (and managed
   sources), behind a re-confirm.
+@spec/done
 
 Instances are pruned **best-effort**: a dir still locked by a running
 process is skipped and collected on a later run (on POSIX the unlink
@@ -304,49 +322,53 @@ refcount-safe — removing one instance never corrupts another that shares
 inodes (§2.15). **Auto-prune on install** is enabled **only for binary
 artifacts** (§9.5); source builds keep their instances until a manual `gc`
 (cheap once hardlink-sharing lands). `self gc` operates **only** inside the
-install root and **never** touches the shared `~/.cargo` caches.
+install root and **never** touches the shared `~/.cargo` caches. @spec/done
 
 ### 2.11 Introspection — `doctor`, `ls`, `current`, `which`, `env` {#introspection}
 
 `req r1`
+@spec/done
 
 `self doctor` verifies end to end: the shim dir is on `PATH`; the
 `REQUIRED_TOOLS` are present with adequate versions; `current` resolves to
 an installed instance whose binary exists. It prints a panel with
 remediation; `--fix` performs the PATH / env edits (§2.6) with consent.
 `self ls` / `current` / `which` read the **`current` file** for the active
-selection (not the env). `self env` prints shell-specific activation lines.
+selection (not the env). `self env` prints shell-specific activation lines. @spec/done
 
 ### 2.12 Cold-start (bootstrap) {#bootstrap}
 
 `req r1`
+@spec/done
 
 VVM installs `vibe`, so the first binary cannot come from `vibe self`. The
 cold-start path is `git clone <mirror> && cd vibevm && cargo run -p vibe-cli
 -- self install` — one `cargo run` from a fresh clone bootstraps the managed
 install (as nvm is installed by a script, not by node). A generated one-line
-bootstrap script is far-backlog (§6).
+bootstrap script is far-backlog (§6). @spec/done
 
 ### 2.13 Security and trust {#security}
 
 `req r1`
+@spec/done
 
 Building an arbitrary ref is arbitrary code execution — inherent to a build
 tool the user invokes deliberately, and accepted. Constraints: host-key
 (SSH) / TLS verification never disabled on clone; the publish token is
 **never** read by VVM nor shown by `vibe vars`; VVM operates only inside the
 install root and the declared, consented environment edits; the committer's
-own source tree is **never** mutated (§2.7, §2.16).
+own source tree is **never** mutated (§2.7, §2.16). @spec/done
 
 ### 2.14 `vibe vars` — reconciling actual vs environment {#vars}
 
 `req r1`
+@spec/done
 
 Scripts must know the **real** runtime context even when `$VIBEVM_HOME` is
 stale (§9.1). `vibe vars` prints the project's env-configurable variables —
 `VIBEVM_INSTALL_ROOT`, `VIBEVM_HOME` (whose *actual* values are derived from
 `current_exe`, §2.5), plus `VIBE_INVOKED_BY`, `VIBE_UNATTENDED`, `VIBE_LOG`
-— in `NAME=VALUE` form. The publish token is deliberately excluded.
+— in `NAME=VALUE` form. The publish token is deliberately excluded. @spec/done
 
 - `vibe vars` — **actual** values, one `NAME=VALUE` per line.
 - `vibe vars diff` — `NAME=VALUE [ENV_VALUE]`; the bracket appears only when
@@ -354,17 +376,19 @@ stale (§9.1). `vibe vars` prints the project's env-configurable variables —
 - `vibe vars full` — two tables, `# ACTUAL` then `# ENVIRONMENT`.
 - `vibe vars full diff` — both tables, differing names marked
   `NAME=VALUE [*]`.
+@spec/done
 
 "actual" for the VVM vars is the `current_exe`-derived value (falling back
 to env/default outside a managed run); "environment" is the raw env. A
-script reads `vibe vars` and knows exactly the context it runs in.
+script reads `vibe vars` and knows exactly the context it runs in. @spec/done
 
 ### 2.15 Distribution instances and diff-copy {#instances}
 
 `req r1`
+@spec/done
 
 Placing a built distribution into a new instance copies only what changed
-and hardlinks the rest, **without hashing gigabytes** (§9.2):
+and hardlinks the rest, **without hashing gigabytes** (§9.2): @spec/done
 
 - Each instance carries `.vvm-manifest.toml`: per dist file `(rel, size,
   mtime, hash?)`. The build dir is **persistent** (shared `--target-dir`),
@@ -379,20 +403,22 @@ and hardlinks the rest, **without hashing gigabytes** (§9.2):
   ("already up to date"). `--force` always makes a fresh instance.
 - The new instance is staged then atomically renamed, then `current` flips.
 - gc is refcount-safe (§2.10); instances are immutable after publish.
+@spec/done
 
 This scales to a multi-GB distribution: an 80 GB asset that did not change
 is shared by hardlink; only the changed `vibe.exe` is copied (§9.2, §9.6).
 The `vibeterm/` subtree (~220 MB, ~3-4 k files) participates in the same
 diff-copy: small files hashed by the ≤16 MiB rule, the Electron binary by
 `(size, mtime)`; an unchanged vibeterm is hardlinked file-by-file free, and a
-rebuild that changed nothing dedup-skips the whole instance.
+rebuild that changed nothing dedup-skips the whole instance. @spec/done
 
 ### 2.16 Source provenance and linked sources {#provenance}
 
 `req r1`
+@spec/done
 
 Sources are never bulk-copied into the install root (a checkout's `target/`
-is tens of GB). Each instance records its **origin**:
+is tens of GB). Each instance records its **origin**: @spec/done
 
 - `managed` — a VVM-owned clone at `src/<kind>/<id>` (VVM updates it via git
   and may drop it on `remove`/`gc`).
@@ -401,22 +427,24 @@ is tens of GB). Each instance records its **origin**:
   remembers where it is.
 - `binary` (far-backlog) — a prebuilt artifact identified by the publisher's
   digest (computed once at publish, never re-hashed locally).
+@spec/done
 
 The remembered `source_path` makes an external source a **linked source**:
 `self install <id>` can rebuild from the recorded location from anywhere,
 without being in the checkout and without copying it. The installed instance
 is self-contained (it runs without the source); the path is needed only to
-rebuild, and a clear error is given if it has moved.
+rebuild, and a clear error is given if it has moved. @spec/done
 
 ### 2.17 Relocate — repointing provenance after a checkout move {#relocate}
 
 `req r1`
+@spec/done
 
 A committer's checkout is not pinned in place: it is cloned, moved, renamed,
 re-organised on disk. When it moves, every *external* instance's remembered
 `source_path` (§2.16) goes stale — a later linked-source rebuild would miss —
 and the pile of instances built from the abandoned tree clutters `self ls`.
-`self relocate <new-path>` is the maintenance verb for that move.
+`self relocate <new-path>` is the maintenance verb for that move. @spec/done
 
 - **Validate the new location.** `<new-path>` must resolve to a real vibevm
   source tree (the `find_source_root` shape — workspace `Cargo.toml` +
@@ -448,18 +476,20 @@ and the pile of instances built from the abandoned tree clutters `self ls`.
   applying (the same contract as `self remove`/`gc`, §2.9, §2.10). `--dry-run`
   prints the plan and changes nothing. `--json` emits the plan and the applied
   result. A no-op (old already equals new) is reported, not an error.
+@spec/done
 
 Relocate touches only `state.toml` and the install root's own `versions/`
 instance dirs. It never touches a committer's source tree (external sources are
 held by reference, §2.16), never the shared `build/` cache (that is `self gc`,
-§2.10), and never `~/.cargo`.
+§2.10), and never `~/.cargo`. @spec/done
 
 ## 3. Architecture — seams and cells {#architecture}
 
 `req r1`
+@spec/done
 
 VVM is built from testable seams so the slow, machine-mutating parts are
-mockable and unit tests never clone, build, or edit the real environment:
+mockable and unit tests never clone, build, or edit the real environment: @spec/done
 
 - `VersionStore` — the install-root layout (§2.4), instances, `current`,
   `state.toml`, manifests.
@@ -470,11 +500,12 @@ mockable and unit tests never clone, build, or edit the real environment:
 - `EnvPersister` — the durable `PATH`/env edits (§2.6), injectable.
 - `ToolDoctor` — the `REQUIRED_TOOLS` table and checks (§2.8).
 - `vars` — the actual-vs-environment resolver (§2.14), `current_exe`-aware.
+@spec/done
 
 A managed `vibe` resolves its root/active from `current_exe` + the `current`
 file; env is the fallback. The command lives as `cli/vvm.rs` + `cli` for
 `vibe vars`, with logic under `commands/vvm/` (split across module-grain
-files to hold the file-length budget). conform and specmap stay green.
+files to hold the file-length budget). conform and specmap stay green. @spec/done
 
 ## 4. MVP scope {#mvp}
 
@@ -486,13 +517,13 @@ managed clone paths, debug + release, diff-copy into instances), `self use`
 PATH/advisory-env per §2.6 across Windows (cmd/PowerShell/Git Bash), macOS
 (zsh/bash), Linux (bash/zsh/fish). diff-copy with hardlink sharing is in
 scope (§2.15). Linked sources (§2.16) are in scope (the `source_path`
-record + rebuild-from-remembered).
+record + rebuild-from-remembered). @spec/done
 
 ## 5. Out of scope (now) {#out-of-scope}
 
 Prebuilt-binary installs (`--binary`); offline / vendored builds;
 cryptographic signature verification; reflink/CoW placement (hardlink is the
-portable choice). These are §6.
+portable choice). These are §6. @spec/done
 
 ## 6. Far backlog {#far-backlog}
 
@@ -502,19 +533,22 @@ portable choice). These are §6.
 - Offline builds via vendoring or a registry mirror.
 - Reflink/CoW placement where the filesystem supports it (§2.15).
 - Signature/provenance verification of the resolved ref.
+@spec/done
 
 ## 7. Maintenance & evolution — updating the stack {#maintenance}
 
 `req r1`
+@spec/done
 
 Knowledge is runnable, so updates are mechanical: the **required tools** are
 the `REQUIRED_TOOLS` table (§2.8, asserted by a test); the **default
 profile** is one constant (§2.2); the **Rust pin** is `rust-toolchain.toml`
-(read, not hard-coded); the **clone mirrors** are PROP-016's `mirrors.toml`.
+(read, not hard-coded); the **clone mirrors** are PROP-016's `mirrors.toml`. @spec/done
 
 ## 8. Acceptance {#acceptance}
 
 `req r1`
+@spec/done
 
 - From a fresh clone, `cargo run -p vibe-cli -- self install` produces a
   working managed install and a `vibe` on `PATH` (after the printed
@@ -535,11 +569,12 @@ profile** is one constant (§2.2); the **Rust pin** is `rust-toolchain.toml`
   active's source is repointed, not deleted. `--dry-run` changes nothing; a
   non-TTY run without `--yes` errors.
 - Full `self-check.sh` green; conform 0/0/0; specmap clean.
+@spec/done
 
 ## 9. Design rationale & questions explored {#rationale}
 
 The decisions above were reached by working through several sharp questions;
-recording them so a cold reader sees *why*, not just *what*.
+recording them so a cold reader sees *why*, not just *what*. @spec/done
 
 ### 9.1 Why `current` file + `current_exe`, not `$VIBEVM_HOME` (v1) {#rationale-truth}
 
@@ -552,7 +587,7 @@ same shell), and a running `vibe` derives its own identity from
 **`current_exe()`** (it *is* the binary, so it knows its path). `$VIBEVM_HOME`
 stays only as an advisory/compat env for external tools, reconciled by
 `vibe vars` (§2.14) and a startup divergence warning. This reverses v1's
-decision deliberately; env-as-truth was the cause of the reload friction.
+decision deliberately; env-as-truth was the cause of the reload friction. @spec/done
 
 ### 9.2 Why not content-hash the distribution {#rationale-no-hash}
 
@@ -563,7 +598,7 @@ install would be prohibitive. So the instance key never reads the payload
 (§9.4), and change detection for diff-copy hashes only **small** files,
 trusting `(size, mtime)` for large ones (§2.15). Future binary artifacts are
 keyed by the **publisher's** digest (computed once at publish), never
-re-hashed locally.
+re-hashed locally. @spec/done
 
 ### 9.3 Why whole-directory instances, not in-place file replace {#rationale-instances}
 
@@ -574,7 +609,7 @@ empirically verified to work). It handles one file; a distribution is many
 switch became the **whole immutable instance directory**: each install
 writes a *new* dir and switching is a pointer flip, so **nothing in use is
 ever overwritten** — no lock for any file on any OS, and no reload.
-rename-aside was dropped as unnecessary.
+rename-aside was dropped as unnecessary. @spec/done
 
 ### 9.4 Why a monotonic counter for the instance key {#rationale-counter}
 
@@ -582,7 +617,7 @@ With content-hash rejected (§9.2), the instance key is a monotonic counter:
 always unique, O(1), independent of distribution size. "Did anything change"
 is answered cheaply by the diff-copy manifest (§2.15), which also yields the
 *dedup-skip* (no new instance when every file is unchanged) without hashing
-the payload. `--force` bypasses the skip.
+the payload. `--force` bypasses the skip. @spec/done
 
 ### 9.5 Why auto-prune only for binary artifacts {#rationale-prune}
 
@@ -590,7 +625,7 @@ Auto-pruning old instances on install bounds disk. It is enabled only for
 **binary** installs (full copies, no source/git context). Source rebuilds
 keep their instances until a manual `gc`: they are cheap once hardlink-
 sharing lands (instances share unchanged files), and a committer may want
-several around. (The owner chose this split.)
+several around. (The owner chose this split.) @spec/done
 
 ### 9.6 Why sources are held by reference, never copied {#rationale-sources}
 
@@ -600,7 +635,7 @@ VVM updates incrementally, and external (committer) sources are referenced
 by their absolute path and built **in place**, never touched. This also
 gives *linked sources* (§2.16): rebuild from a remembered location without
 being in it. The built distribution *is* copied (small relative to source;
-diff-copy keeps even that minimal), but never the source.
+diff-copy keeps even that minimal), but never the source. @spec/done
 
 ### 9.7 Why the binary, not the shim, emits the divergence warning {#rationale-warning}
 
@@ -608,4 +643,4 @@ When `current` and `$VIBEVM_HOME` disagree, the warning is emitted by the
 `vibe` **binary** at startup, not by the sh/cmd shim: the binary has
 `current_exe` ground truth and the `vibe vars` formatter, and keeps the
 shims trivial. The warning is suppressed outside a managed run (a dev
-`cargo run` has no managed location and should not be nagged).
+`cargo run` has no managed location and should not be nagged). @spec/done

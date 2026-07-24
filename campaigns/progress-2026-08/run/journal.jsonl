@@ -2,3 +2,25 @@
 {"kind":"step-done","id":"b-open-scope","result":"progress.toml landed; scan: 97 files (plan baseline said 91; +6 are the progress-control docs authored after the baseline), 3638/3684 paragraphs unmarked, 0 errors","ts":"2026-07-24T15:29:39Z"}
 {"kind":"step-start","id":"b0-convert-status","step_type":"convert-status-lines","target":"spec/** (~51 legacy Status lines)","actor":"fable","ts":"2026-07-24T15:32:55Z"}
 {"kind":"step-done","id":"b0-convert-status","result":"73 legacy status lines converted to document markers (73 files, +73 markers, 0 deletions); check clean; 12 ledger findings F-001..F-012; scope question re generated boot files parked in the plan LOG","ts":"2026-07-24T15:43:12Z"}
+{"kind":"step-start","id":"b1-prop-029","step_type":"mark-file","target":"spec/common/PROP-029-fully-qualified-addresses.md","actor":"fable","ts":"2026-07-24T15:45:24Z"}
+{"kind":"step-done","id":"b1-prop-029","result":"9/9 paragraphs marked spec/done, 0 issues","ts":"2026-07-24T15:46:22Z"}
+{"kind":"step-start","id":"b1-prop-013","step_type":"mark-file","target":"spec/common/PROP-013-periodic-health-audit.md","actor":"fable","ts":"2026-07-24T15:46:22Z"}
+{"kind":"step-done","id":"b1-prop-013","result":"18/18 paragraphs marked (spec/done; S4 open questions spec/work)","ts":"2026-07-24T15:47:15Z"}
+{"kind":"step-start","id":"b1-prop-016","step_type":"mark-file","target":"spec/common/PROP-016-source-mirrors.md","actor":"fable","ts":"2026-07-24T15:47:15Z"}
+{"kind":"step-done","id":"b1-prop-016","result":"15/15 paragraphs marked (spec/done; S5 open questions spec/work)","ts":"2026-07-24T15:47:54Z"}
+{"kind":"step-start","id":"b1-prop-028","step_type":"mark-file","target":"spec/common/PROP-028-package-families.md","actor":"fable","ts":"2026-07-24T15:47:54Z"}
+{"kind":"step-done","id":"b1-prop-028","result":"17/17 paragraphs marked (impl/done; S4 open questions spec/work)","ts":"2026-07-24T15:49:31Z"}
+{"kind":"step-start","id":"b1-prop-031","step_type":"mark-file","target":"spec/common/PROP-031-algorithmic-refactoring.md","actor":"fable","ts":"2026-07-24T15:49:31Z"}
+{"kind":"step-done","id":"b1-prop-031","result":"28/28 paragraphs marked (spec/done + continue; S6 open questions spec/work)","ts":"2026-07-24T15:50:53Z"}
+{"kind":"step-start","id":"b1-prop-033","step_type":"mark-file","target":"spec/common/PROP-033-refactoring-registry.md","actor":"fable","ts":"2026-07-24T15:50:53Z"}
+{"kind":"step-done","id":"b1-prop-033","result":"25/25 paragraphs marked (spec/done + continue; S7 open questions spec/work)","ts":"2026-07-24T15:51:50Z"}
+{"kind":"step-start","id":"b1-prop-024","step_type":"mark-file","target":"spec/common/PROP-024-code-bearing-packages.md","actor":"fable","ts":"2026-07-24T15:51:50Z"}
+{"kind":"step-done","id":"b1-prop-024","result":"37/37 paragraphs marked (spec/done + continue)","ts":"2026-07-24T15:53:22Z"}
+{"kind":"step-start","id":"b1-prop-032","step_type":"mark-file","target":"spec/common/PROP-032-project-model-ide-substrate.md","actor":"fable","ts":"2026-07-24T15:53:22Z"}
+{"kind":"step-done","id":"b1-prop-032","result":"38/38 paragraphs marked (spec/done + continue; S7 open questions spec/work)","ts":"2026-07-24T15:54:52Z"}
+{"kind":"step-start","id":"b1-prop-018","step_type":"mark-file","target":"spec/common/PROP-018-agentic-standalone-modes.md","actor":"fable","ts":"2026-07-24T15:54:52Z"}
+{"kind":"step-done","id":"b1-prop-018","result":"52/52 paragraphs marked (spec/done + continue); MVP-implemented mismatch noted for ledger F-013","ts":"2026-07-24T15:56:36Z"}
+{"kind":"step-start","id":"b1-prop-000","step_type":"mark-file","target":"spec/common/PROP-000.md","actor":"fable","ts":"2026-07-24T15:56:36Z"}
+{"kind":"step-done","id":"b1-prop-000","result":"68/68 paragraphs marked spec/done; {#invariants} anchor added; power-cut recovery verified clean (scan 0 issues); license S3 drift noted for ledger F-014","ts":"2026-07-24T16:05:54Z"}
+{"kind":"step-start","id":"b1-prop-019","step_type":"mark-file","target":"spec/common/PROP-019-version-manager.md","actor":"fable","ts":"2026-07-24T16:05:54Z"}
+{"kind":"step-done","id":"b1-prop-019","result":"82/82 paragraphs marked (spec/done + continue)","ts":"2026-07-24T16:08:24Z"}
