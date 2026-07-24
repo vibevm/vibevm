@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-24T17:12:04Z",
+  "updated_at": "2026-07-24T17:20:57Z",
   "files": {
     "spec/WAL.md": {
       "content_hash": "faac3ff646b050a1b6ec680aaccdc283cb4ef079a0654732d382d43290ed79d8",
@@ -128,7 +128,7 @@
       "issue_count": 0
     },
     "spec/common/PROP-018-agentic-standalone-modes.md": {
-      "content_hash": "ccd112f6dbd518780ea9c1aff160e80e5777293fa282d76fda6ee142e5274a15",
+      "content_hash": "28cd07e83ec1544d128a78ca9927eb8859495d705d3da62e0a18472afe953fa0",
       "rollup": {
         "explicit": [
           "spec",
@@ -142,13 +142,13 @@
           "spec",
           "done"
         ],
-        "marker_count": 53,
-        "fact_count": 78,
-        "unmarked_facts": 26
+        "marker_count": 113,
+        "fact_count": 112,
+        "unmarked_facts": 0
       },
-      "marker_count": 53,
+      "marker_count": 113,
       "unit_count": 21,
-      "issue_count": 52
+      "issue_count": 0
     },
     "spec/common/PROP-019-version-manager.md": {
       "content_hash": "06df64a3d25281587209fc4db97c200ef9e264a30e7b110340c7ac850d96d3f9",
@@ -174,7 +174,7 @@
       "issue_count": 82
     },
     "spec/common/PROP-024-code-bearing-packages.md": {
-      "content_hash": "b6f5e145552f448cf343307fcce54c333aa8a92531dcfa71b7c2c0b3389c380f",
+      "content_hash": "bf748411cf54a98bf1054ae253e5c375b538bbe7df77b7146767e07df39e97ae",
       "rollup": {
         "explicit": [
           "spec",
@@ -188,13 +188,13 @@
           "spec",
           "done"
         ],
-        "marker_count": 38,
-        "fact_count": 56,
-        "unmarked_facts": 19
+        "marker_count": 77,
+        "fact_count": 76,
+        "unmarked_facts": 0
       },
-      "marker_count": 38,
+      "marker_count": 77,
       "unit_count": 16,
-      "issue_count": 37
+      "issue_count": 0
     },
     "spec/common/PROP-028-package-families.md": {
       "content_hash": "43045c466884d95b85f4a121033a8f2de24737ec67876e63f9f52a90836c7842",
@@ -266,7 +266,7 @@
       "issue_count": 0
     },
     "spec/common/PROP-032-project-model-ide-substrate.md": {
-      "content_hash": "7137ed9cb7238d66265b43b789d4ddea70b86e4f76a92f74fd0c7f0380ea58f6",
+      "content_hash": "b8bd5b21c508b0693e3e58929d008ef365fa09137755c14518ec0d0d7661f771",
       "rollup": {
         "explicit": [
           "spec",
@@ -280,13 +280,13 @@
           "spec",
           "done"
         ],
-        "marker_count": 40,
-        "fact_count": 90,
-        "unmarked_facts": 52
+        "marker_count": 128,
+        "fact_count": 126,
+        "unmarked_facts": 0
       },
-      "marker_count": 40,
+      "marker_count": 128,
       "unit_count": 16,
-      "issue_count": 38
+      "issue_count": 0
     },
     "spec/common/PROP-033-refactoring-registry.md": {
       "content_hash": "781411de33b4434ad1ae7113ccc9272973c9f944faf85a77b6a4be5f836956a9",

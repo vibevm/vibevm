@@ -1,132 +1,141 @@
 {
-  "schema": 1,
-  "updated_at": "2026-07-24T16:20:00Z",
-  "findings": [
-    {
-      "id": "F-001",
-      "from": "spec/terraforms/SELF-SUFFICIENCY-PLAN-v0.1.md",
-      "to": "spec/terraforms/DEFERRALS-CLOSEOUT-PLAN-v0.1.md",
-      "type": "reality-mismatch",
-      "status": "open",
-      "wave": 0,
-      "note": "Status line says PLANNED / not started, but DEFERRALS-CLOSEOUT closes 'every S10 deferral of the Self-Sufficiency campaign' and PROP-025 records 'v1 IMPLEMENTED (the deferrals-closeout campaign)' - the campaign evidently ran to completion; the line was never closed out."
-    },
-    {
-      "id": "F-002",
-      "from": "spec/research/SETTINGS-HOME-AND-GLOBAL-REGISTRY-PLAN-v0.1.md",
-      "to": "spec/WAL.md",
-      "type": "reality-mismatch",
-      "status": "open",
-      "wave": 0,
-      "note": "Status line says EXECUTING (2026-07-20); WAL records the default-registry migration landed 2026-07-23 (~/.vibe/registry.toml, ensure_default_global_registry). Plan finished, line never closed."
-    },
-    {
-      "id": "F-003",
-      "from": "spec/terraforms/CONVERT-PLAN-v0.1.md",
-      "to": "spec/modules/vibe-mcp/PROP-015-mcp-integration.md",
-      "type": "reality-mismatch",
-      "status": "open",
-      "wave": 0,
-      "note": "Status line says AUTHORED / NOT STARTED, but PROP-015 calls itself 'the retroactive spec home the CONVERT-PLAN v0.1 S7 endgame opened' - the plan reached its endgame."
-    },
-    {
-      "id": "F-004",
-      "from": "spec/terraforms/CULTURAL-EXTRACTION-PLAN-v0.1.md",
-      "to": "spec/boot/STATIC.md",
-      "type": "reality-mismatch",
-      "status": "open",
-      "wave": 0,
-      "note": "Status line says EXECUTABLE / awaiting launch, but the redbook 0.2.0 boot lane already ships the cultural-extraction wave (dev-runtime-docs, wal-specspaces) - the extraction evidently happened."
-    },
-    {
-      "id": "F-005",
-      "from": "spec/common/PROP-019-version-manager.md",
-      "to": "spec/modules/vibe-workspace/PROP-025-binary-delivery.md",
-      "type": "reality-mismatch",
-      "status": "open",
-      "wave": 0,
-      "note": "Status line says proposed, but the VVM is implemented (install records / origin / source_path consumed by PROP-025 v1 IMPLEMENTED; the vvm was also ported to TS in vibevm-term per the WAL)."
-    },
-    {
-      "id": "F-006",
-      "from": "spec/common/PROP-024-code-bearing-packages.md",
-      "to": "spec/boot/INDEX.md",
-      "type": "reality-mismatch",
-      "status": "open",
-      "wave": 0,
-      "note": "Status line says proposed, but code-bearing packages are live: the rust/typescript ai-native stacks ship crates consumed via vibe bin exec (PROP-025), exactly what this PROP proposes."
-    },
-    {
-      "id": "F-007",
-      "from": "spec/modules/vibe-registry/PROP-030-embedded-registry.md",
-      "to": "spec/WAL.md",
-      "type": "reality-mismatch",
-      "status": "open",
-      "wave": 0,
-      "note": "Status line says proposed (2026-07-13), but the WAL records PROP-030 S3.3 project-packages auto-discovery landed (12 commits, dc45b24) and the R-001 conform gate guards the shipped EmbeddedProvider composition root."
-    },
-    {
-      "id": "F-008",
-      "from": "spec/modules/vibe-cli/PROP-036-package-tree.md",
-      "to": "spec/terraforms/PACKAGE-TREE-PLAN-v0.1.md",
-      "type": "reality-mismatch",
-      "status": "open",
-      "wave": 0,
-      "note": "Status line says DRAFT requirements, but PACKAGE-TREE-PLAN is EXECUTED 2026-07-15 against this contract."
-    },
-    {
-      "id": "F-009",
-      "from": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
-      "to": "spec/terraforms/TREE-TUI-PLAN-v0.2.md",
-      "type": "reality-mismatch",
-      "status": "open",
-      "wave": 0,
-      "note": "Status line says DRAFT, but TREE-TUI-PLAN v0.2 is EXECUTED 2026-07-16 (P0-P10) against this contract; only the owner visual sign-off (MT-02) is open."
-    },
-    {
-      "id": "F-010",
-      "from": "spec/modules/vibe-settings/PROP-040-settings.md",
-      "to": "spec/terraforms/SETTINGS-SYSTEM-IMPL-PLAN-v0.1.md",
-      "type": "contradiction",
-      "status": "open",
-      "wave": 0,
-      "note": "PROP-040 says DRAFT and SETTINGS-SYSTEM-IMPL-PLAN says PLANNED, yet crates/vibe-settings exists in the tree and SETTINGS-UI-PLAN (EXECUTED) built atop 'the settings system (PROP-040, Shag 2)'. The pair cannot both be right; PROP-041 (DRAFT vs executed SETTINGS-UI-PLAN) and PROP-039 (DRAFT vs crates/vibe-actions) share the pattern."
-    },
-    {
-      "id": "F-011",
-      "from": "spec/terraforms/TREE-TUI-PLAN-v0.1.md",
-      "to": "spec/terraforms/TREE-TUI-PLAN-v0.2.md",
-      "type": "missing-support",
-      "status": "open",
-      "wave": 0,
-      "note": "v0.2 declares 'Supersedes TREE-TUI-PLAN-v0.1.md'; v0.1's own status line still says PLANNED and carries no superseded notice - a cold reader of v0.1 alone could start executing it."
-    },
-    {
-      "id": "F-012",
-      "from": "spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md",
-      "to": "spec/terraforms/MCP-SOVEREIGNTY-PLAN-v0.1.md",
-      "type": "missing-support",
-      "status": "open",
-      "wave": 0,
-      "note": "MCP-SOVEREIGNTY wave 6 deleted vibe-tcg whole and recorded 'PROP-026 superseded in topology, grammar kept normative'; PROP-026's own status line still says 'Module: vibe-tcg (new)' with no superseded notice."
-    },
-    {
-      "id": "F-013",
-      "from": "spec/common/PROP-018-agentic-standalone-modes.md",
-      "to": "crates/vibe-mcp/src/agentic.rs",
-      "type": "reality-mismatch",
-      "status": "open",
-      "wave": 0,
-      "note": "Status line says proposed 2026-06-16, but the S4 MVP is implemented: vibe agentic explain / vibe command / the [[skill]] section / the MCP agentic_explain tool all exist in the tree (found during B1 markup)."
-    },
-    {
-      "id": "F-014",
-      "from": "spec/common/PROP-000.md",
-      "to": "LICENSE.md",
-      "type": "reality-mismatch",
-      "status": "open",
-      "wave": 0,
-      "note": "PROP-000 S3 License still describes the proprietary-EULA posture with UPL as a future intent, but the repository relicensed to UPL-1.0 on 2026-07-12 (MT-05 run, host LICENSE.md swapped; the CLAUDE.md license ledger records it). The S3 text, its 'When to revisit' trigger, and the publish=false rationale need the sync-from-code pass (owner approves spec diffs)."
-    }
-  ]
+ "schema": 1,
+ "updated_at": "2026-07-24T17:20:00Z",
+ "findings": [
+  {
+   "id": "F-001",
+   "from": "spec/terraforms/SELF-SUFFICIENCY-PLAN-v0.1.md",
+   "to": "spec/terraforms/DEFERRALS-CLOSEOUT-PLAN-v0.1.md",
+   "type": "reality-mismatch",
+   "status": "open",
+   "wave": 0,
+   "note": "Status line says PLANNED / not started, but DEFERRALS-CLOSEOUT closes 'every S10 deferral of the Self-Sufficiency campaign' and PROP-025 records 'v1 IMPLEMENTED (the deferrals-closeout campaign)' - the campaign evidently ran to completion; the line was never closed out."
+  },
+  {
+   "id": "F-002",
+   "from": "spec/research/SETTINGS-HOME-AND-GLOBAL-REGISTRY-PLAN-v0.1.md",
+   "to": "spec/WAL.md",
+   "type": "reality-mismatch",
+   "status": "open",
+   "wave": 0,
+   "note": "Status line says EXECUTING (2026-07-20); WAL records the default-registry migration landed 2026-07-23 (~/.vibe/registry.toml, ensure_default_global_registry). Plan finished, line never closed."
+  },
+  {
+   "id": "F-003",
+   "from": "spec/terraforms/CONVERT-PLAN-v0.1.md",
+   "to": "spec/modules/vibe-mcp/PROP-015-mcp-integration.md",
+   "type": "reality-mismatch",
+   "status": "open",
+   "wave": 0,
+   "note": "Status line says AUTHORED / NOT STARTED, but PROP-015 calls itself 'the retroactive spec home the CONVERT-PLAN v0.1 S7 endgame opened' - the plan reached its endgame."
+  },
+  {
+   "id": "F-004",
+   "from": "spec/terraforms/CULTURAL-EXTRACTION-PLAN-v0.1.md",
+   "to": "spec/boot/STATIC.md",
+   "type": "reality-mismatch",
+   "status": "open",
+   "wave": 0,
+   "note": "Status line says EXECUTABLE / awaiting launch, but the redbook 0.2.0 boot lane already ships the cultural-extraction wave (dev-runtime-docs, wal-specspaces) - the extraction evidently happened."
+  },
+  {
+   "id": "F-005",
+   "from": "spec/common/PROP-019-version-manager.md",
+   "to": "spec/modules/vibe-workspace/PROP-025-binary-delivery.md",
+   "type": "reality-mismatch",
+   "status": "open",
+   "wave": 0,
+   "note": "Status line says proposed, but the VVM is implemented (install records / origin / source_path consumed by PROP-025 v1 IMPLEMENTED; the vvm was also ported to TS in vibevm-term per the WAL)."
+  },
+  {
+   "id": "F-006",
+   "from": "spec/common/PROP-024-code-bearing-packages.md",
+   "to": "spec/boot/INDEX.md",
+   "type": "reality-mismatch",
+   "status": "open",
+   "wave": 0,
+   "note": "Status line says proposed, but code-bearing packages are live: the rust/typescript ai-native stacks ship crates consumed via vibe bin exec (PROP-025), exactly what this PROP proposes."
+  },
+  {
+   "id": "F-007",
+   "from": "spec/modules/vibe-registry/PROP-030-embedded-registry.md",
+   "to": "spec/WAL.md",
+   "type": "reality-mismatch",
+   "status": "open",
+   "wave": 0,
+   "note": "Status line says proposed (2026-07-13), but the WAL records PROP-030 S3.3 project-packages auto-discovery landed (12 commits, dc45b24) and the R-001 conform gate guards the shipped EmbeddedProvider composition root."
+  },
+  {
+   "id": "F-008",
+   "from": "spec/modules/vibe-cli/PROP-036-package-tree.md",
+   "to": "spec/terraforms/PACKAGE-TREE-PLAN-v0.1.md",
+   "type": "reality-mismatch",
+   "status": "open",
+   "wave": 0,
+   "note": "Status line says DRAFT requirements, but PACKAGE-TREE-PLAN is EXECUTED 2026-07-15 against this contract."
+  },
+  {
+   "id": "F-009",
+   "from": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
+   "to": "spec/terraforms/TREE-TUI-PLAN-v0.2.md",
+   "type": "reality-mismatch",
+   "status": "open",
+   "wave": 0,
+   "note": "Status line says DRAFT, but TREE-TUI-PLAN v0.2 is EXECUTED 2026-07-16 (P0-P10) against this contract; only the owner visual sign-off (MT-02) is open."
+  },
+  {
+   "id": "F-010",
+   "from": "spec/modules/vibe-settings/PROP-040-settings.md",
+   "to": "spec/terraforms/SETTINGS-SYSTEM-IMPL-PLAN-v0.1.md",
+   "type": "contradiction",
+   "status": "open",
+   "wave": 0,
+   "note": "PROP-040 says DRAFT and SETTINGS-SYSTEM-IMPL-PLAN says PLANNED, yet crates/vibe-settings exists in the tree and SETTINGS-UI-PLAN (EXECUTED) built atop 'the settings system (PROP-040, Shag 2)'. The pair cannot both be right; PROP-041 (DRAFT vs executed SETTINGS-UI-PLAN) and PROP-039 (DRAFT vs crates/vibe-actions) share the pattern."
+  },
+  {
+   "id": "F-011",
+   "from": "spec/terraforms/TREE-TUI-PLAN-v0.1.md",
+   "to": "spec/terraforms/TREE-TUI-PLAN-v0.2.md",
+   "type": "missing-support",
+   "status": "open",
+   "wave": 0,
+   "note": "v0.2 declares 'Supersedes TREE-TUI-PLAN-v0.1.md'; v0.1's own status line still says PLANNED and carries no superseded notice - a cold reader of v0.1 alone could start executing it."
+  },
+  {
+   "id": "F-012",
+   "from": "spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md",
+   "to": "spec/terraforms/MCP-SOVEREIGNTY-PLAN-v0.1.md",
+   "type": "missing-support",
+   "status": "open",
+   "wave": 0,
+   "note": "MCP-SOVEREIGNTY wave 6 deleted vibe-tcg whole and recorded 'PROP-026 superseded in topology, grammar kept normative'; PROP-026's own status line still says 'Module: vibe-tcg (new)' with no superseded notice."
+  },
+  {
+   "id": "F-013",
+   "from": "spec/common/PROP-018-agentic-standalone-modes.md",
+   "to": "crates/vibe-mcp/src/agentic.rs",
+   "type": "reality-mismatch",
+   "status": "open",
+   "wave": 0,
+   "note": "Status line says proposed 2026-06-16, but the S4 MVP is implemented: vibe agentic explain / vibe command / the [[skill]] section / the MCP agentic_explain tool all exist in the tree (found during B1 markup)."
+  },
+  {
+   "id": "F-014",
+   "from": "spec/common/PROP-000.md",
+   "to": "LICENSE.md",
+   "type": "reality-mismatch",
+   "status": "open",
+   "wave": 0,
+   "note": "PROP-000 S3 License still describes the proprietary-EULA posture with UPL as a future intent, but the repository relicensed to UPL-1.0 on 2026-07-12 (MT-05 run, host LICENSE.md swapped; the CLAUDE.md license ledger records it). The S3 text, its 'When to revisit' trigger, and the publish=false rationale need the sync-from-code pass (owner approves spec diffs)."
+  },
+  {
+   "id": "F-015",
+   "from": "spec/common/PROP-024-code-bearing-packages.md",
+   "to": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
+   "type": "missing-support",
+   "status": "open",
+   "wave": 0,
+   "note": "Blockquote paragraphs are countable units (they can carry a marker) but cannot carry a ##<ID> fact anchor: take_fact_id does not strip the `> ` prefix, and PROP-043 s3.8/s8 never mention blockquotes. Found on PROP-024's package-shape formula (re-marked as a plain bold paragraph as the workaround). Decide: support ##<ID> after the blockquote prefix, or declare blockquotes non-units in s8."
+  }
+ ]
 }
