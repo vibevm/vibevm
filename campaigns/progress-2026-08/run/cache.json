@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-24T22:39:55Z",
+  "updated_at": "2026-07-24T22:45:23Z",
   "files": {
     "spec/boot/00-core.md": {
       "content_hash": "9430b035d1017950ec37c4ce85bab91155334b5fc55d3e1948138a4f6be8b0e5",
@@ -389,7 +389,7 @@
       "issue_count": 0
     },
     "spec/design/tui-visual-language.md": {
-      "content_hash": "d908d18e29930f1e9ae97ec4f9ae6e516e54740e26d1ad1ead350795aeda7dbc",
+      "content_hash": "1e3c63c3e790ddf2e2ba96c5101fbbaa256fa213bc72b0a5a9ec90d05d94f1ad",
       "rollup": {
         "explicit": [
           "doc",
@@ -403,16 +403,16 @@
           "doc",
           "done"
         ],
-        "marker_count": 1,
+        "marker_count": 176,
         "fact_count": 175,
-        "unmarked_facts": 175
+        "unmarked_facts": 0
       },
-      "marker_count": 1,
+      "marker_count": 176,
       "unit_count": 9,
       "issue_count": 0
     },
     "spec/design/workspace-and-qualified-naming.md": {
-      "content_hash": "cc3cc4fb2648beaa466621120fccc76997b3f733b1f693e3118bc627b16a9c57",
+      "content_hash": "3910fb0ab6992b0c5b2ebeced4795186233e63c98b54c192119a16f18e514531",
       "rollup": {
         "explicit": [
           "doc",
@@ -426,11 +426,11 @@
           "doc",
           "done"
         ],
-        "marker_count": 1,
+        "marker_count": 100,
         "fact_count": 99,
-        "unmarked_facts": 99
+        "unmarked_facts": 0
       },
-      "marker_count": 1,
+      "marker_count": 100,
       "unit_count": 16,
       "issue_count": 0
     },
