@@ -1,0 +1,2 @@
+{"kind":"step-start","id":"b-open-scope","step_type":"config","target":"progress.toml","actor":"fable","ts":"2026-07-24T15:29:20Z"}
+{"kind":"step-done","id":"b-open-scope","result":"progress.toml landed; scan: 97 files (plan baseline said 91; +6 are the progress-control docs authored after the baseline), 3638/3684 paragraphs unmarked, 0 errors","ts":"2026-07-24T15:29:39Z"}

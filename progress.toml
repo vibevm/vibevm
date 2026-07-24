@@ -1,0 +1,5 @@
+# Progress Control scope (PROP-043 §4) — wave 1 of the spec-actualization
+# campaign: the host `spec/` tree only. `packages/` waves come later;
+# widen this include list when the owner opens wave 2.
+schema = 1
+include = ["spec/**/*.md"]

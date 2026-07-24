@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-07-24T14:47:23Z",
+  "updated_at": "2026-07-24T15:29:42Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/LICENSE.md": {
       "content_hash": "ff62ce25b7887cc01f138039b0ea3217248ece5f92c08fc7f9a5c6758b2d6a29",
@@ -4403,11 +4403,11 @@
       "issue_count": 0
     },
     "spec/WAL.md": {
-      "content_hash": "5470bcf82b5432d9e38522d7635d13a7c13dadc7306ec7f5736c6fcb93889f1a",
+      "content_hash": "2ff1ab661975c005d7df91fab4ad4563afb5b14e4b9faffb929eb49e51994645",
       "rollup": {
         "marker_count": 0,
-        "paragraph_count": 10,
-        "unmarked_paragraphs": 10
+        "paragraph_count": 11,
+        "unmarked_paragraphs": 11
       },
       "marker_count": 0,
       "unit_count": 8,
@@ -5477,7 +5477,7 @@
       "issue_count": 0
     },
     "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md": {
-      "content_hash": "3f689274083b1d3c3fd4ee2d707d68fd41c0e6b6fdc9a97a1648b14fb64a0648",
+      "content_hash": "6fac4258a9d71b45a1ba66c069701e301de051c7469d1a92d05359c36e069c50",
       "rollup": {
         "explicit": [
           "spec",

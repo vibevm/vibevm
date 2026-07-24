@@ -1,10 +1,10 @@
 # RESUME — campaign `progress-2026-08`
 
-_Generated 2026-07-24T14:47:23Z — do not edit; regenerate with `vibe progress resume`._
+_Generated 2026-07-24T15:29:42Z — do not edit; regenerate with `vibe progress resume`._
 
 **Phase:** A
 
-**Where we are:** {"files":497,"paragraphs":8977,"unmarked":8931,"journal_events":0}
+**Where we are:** {"files":97,"paragraphs":3684,"unmarked":3638,"journal_events":2}
 
 ## Unfinished (recover FIRST)
 
@@ -12,7 +12,7 @@ Nothing open — the journal is clean.
 
 ## Next
 
-The campaign journal is empty — the campaign has not started. Next per the plan: Phase A exit gate, then Phase B batch B0 (convert the legacy `**Status:**` lines), then B1… (paragraph-exhaustive markup batches).
+Take the first unfinished step above; when none remain, continue with the next queued batch/wave/task per the plan's LOG section.
 
 ## Rules of the road
 

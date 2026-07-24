@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-07-24T14:47:23Z",
+  "updated_at": "2026-07-24T15:29:42Z",
   "files": [
     {
       "path": "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/LICENSE.md",
@@ -4408,8 +4408,8 @@
       "explicit": null,
       "markers": 0,
       "units": 8,
-      "paragraphs": 10,
-      "unmarked": 10,
+      "paragraphs": 11,
+      "unmarked": 11,
       "issues": 0,
       "campaign": {}
     },
