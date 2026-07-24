@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-24T22:50:08Z",
+  "updated_at": "2026-07-24T22:54:14Z",
   "files": {
     "spec/boot/00-core.md": {
       "content_hash": "b256cb2dde84d66733c4a0de68c1862ac2a67f396499efcf1586c0f0ae2f88c9",
@@ -451,35 +451,59 @@
       "issue_count": 0
     },
     "spec/manual-tests/MT-01-vibe-tree.md": {
-      "content_hash": "ded79f848e920ced974d3d9d246fd5e7ead5ae9745a6521458edade67a25eedc",
+      "content_hash": "9aa3d2ee4fded835a76d233776e602cc5312a5d82164f1a108fb9338ef923f71",
       "rollup": {
-        "marker_count": 0,
+        "computed": [
+          "impl",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 28,
         "fact_count": 28,
-        "unmarked_facts": 28
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 28,
       "unit_count": 6,
       "issue_count": 0
     },
     "spec/manual-tests/MT-02-vibe-tree-tui.md": {
-      "content_hash": "fc9fddd4c1e5a90b74632a7cc18a6e0bac7b1d144ef3d7722c1a61dea90034f1",
+      "content_hash": "081ae05861ec688f4c094443d4c597271ba99f3df20bce102acb765d2387e8d2",
       "rollup": {
-        "marker_count": 0,
+        "computed": [
+          "impl",
+          "work"
+        ],
+        "effective": [
+          "impl",
+          "work"
+        ],
+        "marker_count": 23,
         "fact_count": 23,
-        "unmarked_facts": 23
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 23,
       "unit_count": 5,
       "issue_count": 0
     },
     "spec/manual-tests/MT-03-vibe-prefs-tui.md": {
-      "content_hash": "953a8e2abb0fb31d2e1a42c1a822ad94463c0a4f2d21a2725510dbd0a580cca8",
+      "content_hash": "be2077f10ab9b5695bf870f56f7b66edc841e3868b1d8559c1e50fcb8525c1fa",
       "rollup": {
-        "marker_count": 0,
+        "computed": [
+          "impl",
+          "work"
+        ],
+        "effective": [
+          "impl",
+          "work"
+        ],
+        "marker_count": 16,
         "fact_count": 16,
-        "unmarked_facts": 16
+        "unmarked_facts": 0
       },
-      "marker_count": 0,
+      "marker_count": 16,
       "unit_count": 5,
       "issue_count": 0
     },

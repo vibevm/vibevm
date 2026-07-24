@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-07-24T22:50:08Z",
+  "updated_at": "2026-07-24T22:54:14Z",
   "files": [
     {
       "path": "spec/boot/00-core.md",
@@ -335,34 +335,43 @@
     },
     {
       "path": "spec/manual-tests/MT-01-vibe-tree.md",
-      "effective": null,
+      "effective": {
+        "stage": "impl",
+        "state": "done"
+      },
       "explicit": null,
-      "markers": 0,
+      "markers": 28,
       "units": 6,
       "facts": 28,
-      "unmarked": 28,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "spec/manual-tests/MT-02-vibe-tree-tui.md",
-      "effective": null,
+      "effective": {
+        "stage": "impl",
+        "state": "work"
+      },
       "explicit": null,
-      "markers": 0,
+      "markers": 23,
       "units": 5,
       "facts": 23,
-      "unmarked": 23,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
     {
       "path": "spec/manual-tests/MT-03-vibe-prefs-tui.md",
-      "effective": null,
+      "effective": {
+        "stage": "impl",
+        "state": "work"
+      },
       "explicit": null,
-      "markers": 0,
+      "markers": 16,
       "units": 5,
       "facts": 16,
-      "unmarked": 16,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
