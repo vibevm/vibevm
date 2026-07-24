@@ -72,3 +72,7 @@
 {"kind":"step-done","id":"b2-prop-021","result":"32 units -> 37 anchored facts (git-native form impl/done per own claim, dependency-declared spec/done), 0 unmarked, 0 issues","ts":"2026-07-24T17:59:32Z"}
 {"kind":"step-start","id":"b2-prop-023","step_type":"mark-file","target":"spec/modules/vibe-registry/PROP-023-bridge-packages.md (fact mark)","actor":"fable","ts":"2026-07-24T17:59:32Z"}
 {"kind":"step-done","id":"b2-prop-023","result":"35 units -> 42 anchored facts, 0 unmarked, 0 issues","ts":"2026-07-24T18:00:26Z"}
+{"kind":"step-start","id":"b2-prop-020","step_type":"mark-file","target":"spec/modules/vibe-workspace/PROP-020-install-hooks.md (fact mark)","actor":"fable","ts":"2026-07-24T18:00:51Z"}
+{"kind":"step-done","id":"b2-prop-020","result":"41 units -> 49 anchored facts; stale proposed-status vs shipped hook machinery -> F-018 (F-013 class); 0 unmarked, 0 issues","ts":"2026-07-24T18:02:45Z"}
+{"kind":"step-start","id":"b2-prop-022","step_type":"mark-file","target":"spec/modules/vibe-workspace/PROP-022-materialization-modes.md (fact mark)","actor":"fable","ts":"2026-07-24T18:02:45Z"}
+{"kind":"step-done","id":"b2-prop-022","result":"41 units -> 52 anchored facts (status-quo snapshot facts impl/done vs proposed modes spec/done), 0 unmarked, 0 issues","ts":"2026-07-24T18:04:12Z"}

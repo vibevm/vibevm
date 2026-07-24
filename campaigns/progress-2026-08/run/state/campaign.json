@@ -1,13 +1,13 @@
 {
   "schema": 1,
-  "updated_at": "2026-07-24T18:00:44Z",
+  "updated_at": "2026-07-24T18:04:02Z",
   "campaign_id": "progress-2026-08",
   "phase": "A",
   "wave": 0,
   "counters": {
     "files": 95,
-    "facts": 8227,
-    "unmarked": 6884,
+    "facts": 8246,
+    "unmarked": 6802,
     "issues": 40
   }
 }

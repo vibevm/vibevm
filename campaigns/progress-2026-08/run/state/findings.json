@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updated_at": "2026-07-24T18:50:00Z",
+ "updated_at": "2026-07-24T20:35:00Z",
  "findings": [
   {
    "id": "F-001",
@@ -154,6 +154,15 @@
    "status": "open",
    "wave": 0,
    "note": "Code ships a `vibe aiui scrollbar` verb whose doc comment cites 'PROP-042 s4', but s4 specifies only render/open/send/snapshot/wait/close/state - the code ran ahead of the contract. Sync-from-code candidate: draft the s4 amendment for owner approval (Phase D)."
+  },
+  {
+   "id": "F-018",
+   "from": "spec/modules/vibe-workspace/PROP-020-install-hooks.md",
+   "to": "crates/vibe-install/src/apply.rs",
+   "type": "reality-mismatch",
+   "status": "open",
+   "wave": 0,
+   "note": "Status line says 'proposed 2026-06-24', but the hook machinery ships: vibe-core parses [hooks] (manifest/package/hooks.rs) and vibe-install runs pre-install per PROP-020 s2.1 (apply.rs). Same class as F-013 (PROP-018). Phase C verifies clause-by-clause (consent gate, .ps1 fallback, failure semantics); the status-line rewrite is Phase D."
   }
  ]
 }

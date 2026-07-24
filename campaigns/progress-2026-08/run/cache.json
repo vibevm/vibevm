@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-24T18:00:44Z",
+  "updated_at": "2026-07-24T18:04:02Z",
   "files": {
     "spec/WAL.md": {
       "content_hash": "a6f2a5df9b4cb3f891185c6fb4e65420f55c10c00ce307795cdb43f94751fd7d",
@@ -1149,7 +1149,7 @@
       "issue_count": 0
     },
     "spec/modules/vibe-workspace/PROP-020-install-hooks.md": {
-      "content_hash": "15f535c89dda1a40738a6deec3096a7825fff583fda4483613f5a2d03eef9430",
+      "content_hash": "93061d20397b0c45a2ce8c4215bd7e96a119ecdc3139d569d6bc76a7c7486bae",
       "rollup": {
         "explicit": [
           "spec",
@@ -1163,16 +1163,16 @@
           "spec",
           "done"
         ],
-        "marker_count": 1,
-        "fact_count": 41,
-        "unmarked_facts": 41
+        "marker_count": 50,
+        "fact_count": 49,
+        "unmarked_facts": 0
       },
-      "marker_count": 1,
+      "marker_count": 50,
       "unit_count": 13,
       "issue_count": 0
     },
     "spec/modules/vibe-workspace/PROP-022-materialization-modes.md": {
-      "content_hash": "c110cb837f7b06619330469b757b59712c7863d7fc85ef658289f3d1c29d03b8",
+      "content_hash": "02880c374e25289ecb78b56ee2f2dd806eddf614808ca4fd09b7aa6c2a357750",
       "rollup": {
         "explicit": [
           "spec",
@@ -1186,11 +1186,11 @@
           "spec",
           "done"
         ],
-        "marker_count": 1,
-        "fact_count": 41,
-        "unmarked_facts": 41
+        "marker_count": 53,
+        "fact_count": 52,
+        "unmarked_facts": 0
       },
-      "marker_count": 1,
+      "marker_count": 53,
       "unit_count": 14,
       "issue_count": 0
     },
