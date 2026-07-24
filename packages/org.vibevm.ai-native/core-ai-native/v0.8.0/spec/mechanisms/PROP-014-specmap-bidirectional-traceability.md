@@ -48,7 +48,26 @@ spec://<package>/<doc-path>#<anchor>~r<N>       — a unit at revision N
 
 - `<package>` is today the repo name (`vibevm`); the grammar reserves group-qualification (`spec://org.vibevm.world/wal/...`) for cross-package tracing per PROP-008, deferred (§7.1).
 - `<anchor>` is the explicit `{#kebab-anchor}` already used by every PROP heading. **Anchors are immutable once published and never reused.** Renaming a unit keeps its anchor; retiring a unit tombstones the anchor (`<!-- RETIRED: superseded by #new-anchor -->`) rather than deleting it.
-- A **spec unit** is the span from an anchored heading (or an explicit `REQ` block, §2.2) to the next same-or-higher heading / next unit marker.
+- A **spec unit** is the span from an anchored heading (or an explicit `REQ` block, §2.2) to the next same-or-higher heading / next unit marker; **fact units** (below) are the sub-heading grain.
+- **Fact anchors (fact amendment, 2026-07-24 — owner-directed).** A `##<ID>`
+  written as the **first token of a paragraph or a list item** (at any
+  nesting depth, outside fenced/inline code) mints a **fact unit** — the
+  finest addressable grain. `<ID>` follows `[A-Za-z][A-Za-z0-9_-]*` and
+  carries two registers by convention: `UPPER-SLUG` names a normative
+  fact, `kebab-case` a service one (the grammar originates in the host's
+  Progress Control amendment — the PROP-043 §3.8 twin of this clause).
+  The unit's span is the carrying paragraph or item, continuation lines
+  included; an anchored nested item is its own unit. Fact ids share **one
+  address space with heading anchors per document** — the same
+  `spec://<package>/<doc-path>#<ID>` form cites either, and a duplicate id
+  (fact-vs-fact or fact-vs-heading) is an extraction warning. Heading
+  anchors keep the kebab-only law; the wider id grammar applies to `##`
+  ids only. Immutability and tombstoning bind fact anchors exactly as
+  heading anchors.
+- Fact units carry no `kind:` line (§2.2 typing stays a heading-unit
+  discipline); their normativity signal is the id register. Edges cite
+  them exactly as heading units (`implements`, `verifies`, `documents`),
+  so code can bind to a single statement instead of a whole section.
 
 ### 2.2 Spec units, normativity, and the two-tier revision discipline {#spec-units}
 
@@ -182,7 +201,7 @@ Continuation of PROP-003 §2.5.3's philosophy — *the LLM emits facts and rende
 
 ### 2.9 Language neutrality {#languages}
 
-The grammar (URIs, verbs, `r`, reasons) is language-neutral; only the carrier syntax is per-language. Rust ships first. Sketches, normative later:
+The grammar (URIs, verbs, `r`, reasons) is language-neutral; only the carrier syntax is per-language. The **spec side is one shared engine** (`core-ai-native-specmap`), so fact-unit extraction (§2.1) reaches every language family — rust, typescript, go — identically through the vendored engine; adding a language never re-implements the spec scanner. Rust ships first. Sketches, normative later:
 
 - **JavaScript/TypeScript:** JSDoc carrier — `/** @spec implements spec://… r2 */` on declarations; scanner = tree-sitter.
 - **Python:** decorator `@spec(implements="spec://…", r=2)` from a `specmark` package; module-level `__specmap_scope__ = "spec://…"` (NB: not `__spec__`, which importlib owns).

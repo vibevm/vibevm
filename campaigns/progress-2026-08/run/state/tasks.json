@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updated_at": "2026-07-24T22:45:00Z",
+ "updated_at": "2026-07-24T23:10:00Z",
  "tasks": [
   {
    "id": "DRIFT-001",
@@ -19,6 +19,12 @@
    "title": "campaign phase hardcoded 'A' in the progress adapter",
    "executor": "opus",
    "status": "done"
+  },
+  {
+   "id": "DRIFT-004",
+   "title": "specmap learns ##<ID> fact anchors (owner commission)",
+   "executor": "opus",
+   "status": "queued"
   }
  ]
 }

@@ -358,6 +358,12 @@ column; nothing in the core knows the provider's shape.
 Verification *verdicts* (confirmed / drift / unverifiable) are campaign data
 and live in the cache and baseline — **never in the markup** (§7.5).
 
+*Fact-grain evidence (2026-07-24, owner-directed):* the specmap side
+recognises `##<ID>` fact anchors as addressable units (PROP-014 §2.1, the
+fact amendment's twin), so `implements`/`verifies` edges land **per fact**
+and the provider's mismatch checks apply at the campaign grain, not only
+per section.
+
 ## 7. Data contracts {#data}
 
 All formats are schema-versioned (`"schema": 1`); all writes are atomic
