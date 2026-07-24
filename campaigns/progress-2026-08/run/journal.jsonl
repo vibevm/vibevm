@@ -48,3 +48,7 @@
 {"kind":"step-done","id":"b1f-prop-032","result":"38 units -> 126 anchored facts (carrier constraints nested, free-properties + edge table deconstructed; decided q5 marked spec/done individually), 0 unmarked, 0 issues","ts":"2026-07-24T17:18:11Z"}
 {"kind":"step-start","id":"b1f-prop-018","step_type":"mark-file","target":"spec/common/PROP-018-agentic-standalone-modes.md (fact re-mark)","actor":"fable","ts":"2026-07-24T17:18:11Z"}
 {"kind":"step-done","id":"b1f-prop-018","result":"52 units -> 112 anchored facts (intent template re-formed blockquote->fence, usage-skill teachings deconstructed), 0 unmarked, 0 issues","ts":"2026-07-24T17:20:56Z"}
+{"kind":"step-start","id":"b1f-prop-000","step_type":"mark-file","target":"spec/common/PROP-000.md (fact re-mark)","actor":"fable","ts":"2026-07-24T17:21:02Z"}
+{"kind":"step-done","id":"b1f-prop-000","result":"68 units -> 161 anchored facts (foundational decisions itemized; split-host nested sub-facts; invariants anchored INV-*); F-014 license drift text preserved untouched; 0 unmarked, 0 issues","ts":"2026-07-24T17:24:34Z"}
+{"kind":"step-start","id":"b1f-prop-019","step_type":"mark-file","target":"spec/common/PROP-019-version-manager.md (fact re-mark)","actor":"fable","ts":"2026-07-24T17:24:34Z"}
+{"kind":"step-done","id":"b1f-prop-019","result":"82 units -> 208 anchored facts (pipeline steps, rationale 9.1-9.7 fully deconstructed); 2 line-wrap traps fixed (continuation line opening with + parsed as list item); 0 unmarked, 0 issues","ts":"2026-07-24T17:29:13Z"}

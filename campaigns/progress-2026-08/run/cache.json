@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-24T17:20:57Z",
+  "updated_at": "2026-07-24T17:29:13Z",
   "files": {
     "spec/WAL.md": {
       "content_hash": "faac3ff646b050a1b6ec680aaccdc283cb4ef079a0654732d382d43290ed79d8",
@@ -36,7 +36,7 @@
       "issue_count": 0
     },
     "spec/common/PROP-000.md": {
-      "content_hash": "86222f1aad90a0020c01ab43eb8f75f5ba892ec8ae297078dae602d87c002c9e",
+      "content_hash": "41aaa1a2e111cf71de438482a9c566526ed441273708e7f2084e3a00412d03b2",
       "rollup": {
         "explicit": [
           "spec",
@@ -50,13 +50,13 @@
           "spec",
           "done"
         ],
-        "marker_count": 69,
-        "fact_count": 110,
-        "unmarked_facts": 42
+        "marker_count": 162,
+        "fact_count": 161,
+        "unmarked_facts": 0
       },
-      "marker_count": 69,
+      "marker_count": 162,
       "unit_count": 22,
-      "issue_count": 68
+      "issue_count": 0
     },
     "spec/common/PROP-006-operating-modes.md": {
       "content_hash": "bf798b01c38fb700c3a7d9fa40ad5bb7c21601ca2cce51b6b99c4b81f0cf6d8f",
@@ -151,7 +151,7 @@
       "issue_count": 0
     },
     "spec/common/PROP-019-version-manager.md": {
-      "content_hash": "06df64a3d25281587209fc4db97c200ef9e264a30e7b110340c7ac850d96d3f9",
+      "content_hash": "f86f5c5f945a67b48e306fdd7f4cab35914a631929f7b32fab1bc329be7008bb",
       "rollup": {
         "explicit": [
           "spec",
@@ -165,13 +165,13 @@
           "spec",
           "done"
         ],
-        "marker_count": 83,
-        "fact_count": 143,
-        "unmarked_facts": 61
+        "marker_count": 209,
+        "fact_count": 208,
+        "unmarked_facts": 0
       },
-      "marker_count": 83,
+      "marker_count": 209,
       "unit_count": 37,
-      "issue_count": 82
+      "issue_count": 0
     },
     "spec/common/PROP-024-code-bearing-packages.md": {
       "content_hash": "bf748411cf54a98bf1054ae253e5c375b538bbe7df77b7146767e07df39e97ae",
