@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-07-24T21:00:04Z",
+  "updated_at": "2026-07-24T21:02:59Z",
   "files": [
     {
       "path": "spec/boot/00-core.md",
@@ -956,10 +956,10 @@
         "stage": "impl",
         "state": "done"
       },
-      "markers": 1,
+      "markers": 86,
       "units": 16,
-      "facts": 73,
-      "unmarked": 73,
+      "facts": 85,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },

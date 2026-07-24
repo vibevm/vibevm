@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-24T21:00:04Z",
+  "updated_at": "2026-07-24T21:02:59Z",
   "files": {
     "spec/boot/00-core.md": {
       "content_hash": "9430b035d1017950ec37c4ce85bab91155334b5fc55d3e1948138a4f6be8b0e5",
@@ -1253,25 +1253,25 @@
       "issue_count": 0
     },
     "spec/modules/vibe-workspace/PROP-038-hybrid-boot-linking.md": {
-      "content_hash": "af5f3fa471ea3e3563fb24ea03b6afe6f6e3ec5d4d615621e3ff082d9ab38b01",
+      "content_hash": "4fe0d2e7acb58329abae15b3dc1954e6f727b019085eb6a57482474e67e46427",
       "rollup": {
         "explicit": [
           "impl",
           "done"
         ],
         "computed": [
-          "impl",
-          "done"
+          "spec",
+          "work"
         ],
         "effective": [
           "impl",
           "done"
         ],
-        "marker_count": 1,
-        "fact_count": 73,
-        "unmarked_facts": 73
+        "marker_count": 86,
+        "fact_count": 85,
+        "unmarked_facts": 0
       },
-      "marker_count": 1,
+      "marker_count": 86,
       "unit_count": 16,
       "issue_count": 0
     },

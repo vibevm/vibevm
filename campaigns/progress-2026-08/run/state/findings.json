@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-07-24T20:42:25Z",
+  "updated_at": "2026-07-24T21:02:58Z",
   "findings": [
     {
       "id": "F-001",
@@ -208,6 +208,15 @@
       "status": "open",
       "wave": 0,
       "note": "S2.13 cites PROP-043 as the home of the VibeTree.exe / Start-menu GUI launcher, but PROP-043 is Progress Control (inline status markup) and carries no launcher content - a dangling forward reference, likely a number reused after the draft was written (2026-07-15 predates the 2026-07-24 PROP-043 ratification). Phase C: locate the real launcher home (or mint one) and repoint."
+    },
+    {
+      "id": "F-024",
+      "from": "spec/modules/vibe-workspace/PROP-038-hybrid-boot-linking.md",
+      "to": "spec/modules/vibe-workspace/PROP-038-hybrid-boot-linking.md",
+      "type": "contradiction",
+      "status": "open",
+      "wave": 0,
+      "note": "Internal: s2.7 closes with -Fingerprint storage location and granularity are open (s5)- but s5 records both RESOLVED 2026-07-15 (Q3 header storage, Q4 per-package granularity). The s2.7 tail predates the Phase-0 resolution and was never updated. Phase C/D: drop or rewrite the stale sentence."
     }
   ]
 }
