@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-24T18:12:18Z",
+  "updated_at": "2026-07-24T18:14:10Z",
   "files": {
     "spec/boot/00-core.md": {
       "content_hash": "9430b035d1017950ec37c4ce85bab91155334b5fc55d3e1948138a4f6be8b0e5",
@@ -678,7 +678,7 @@
       "issue_count": 0
     },
     "spec/modules/vibe-progress/OWNER-GUIDE.md": {
-      "content_hash": "f57b546d5f523888e02ea8b9cfa116b43c9260df9e0c5e1632ab37282338c57f",
+      "content_hash": "f71c17197992b09dae40fe5fa42a653d072c1e8bc03081b1a3b6d3dfa3e1a5e9",
       "rollup": {
         "explicit": [
           "doc",
@@ -692,11 +692,11 @@
           "doc",
           "done"
         ],
-        "marker_count": 1,
-        "fact_count": 45,
-        "unmarked_facts": 45
+        "marker_count": 67,
+        "fact_count": 66,
+        "unmarked_facts": 0
       },
-      "marker_count": 1,
+      "marker_count": 67,
       "unit_count": 9,
       "issue_count": 0
     },

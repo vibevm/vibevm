@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updated_at": "2026-07-24T21:05:00Z",
+ "updated_at": "2026-07-24T22:05:00Z",
  "findings": [
   {
    "id": "F-001",
@@ -172,6 +172,15 @@
    "status": "open",
    "wave": 0,
    "note": "Status line says 'DRAFT - requirements, 2026-07-16', but the prefs TUI ships (commands/prefs/tui/** with form lifecycle, provenance edit, controls) - the SETTINGS-UI-PLAN executed against this contract. F-013/F-018 class. Note also: this doc pre-dates the fact grammar with owner-minted per-REQ {#anchor}s; the ## fact anchors reuse those exact ids (one name, two notations) - do not rename either side (anchors immutable)."
+  },
+  {
+   "id": "F-020",
+   "from": "spec/modules/vibe-progress/OWNER-GUIDE.md",
+   "to": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
+   "type": "missing-support",
+   "status": "open",
+   "wave": 0,
+   "note": "S1 of the owner guide predates the fact amendment: the placement vocabulary lists only document/section/paragraph/fragment - no list items, no table cells, no ##<ID> fact anchors, no anchored-when-marked law (PROP-043 s3.8 items 4-6, s3.9). The owner's daily reading of markers now misses half the grammar. Guide update is Phase D/G material; doc marker carries action=drift."
   }
  ]
 }
