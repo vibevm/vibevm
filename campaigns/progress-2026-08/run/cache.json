@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-24T17:40:57Z",
+  "updated_at": "2026-07-24T17:44:38Z",
   "files": {
     "spec/WAL.md": {
       "content_hash": "efad66a9e24d015a702723136c0e46e6753a1abb74fe958af2d098914ee546cc",
@@ -574,7 +574,7 @@
       "issue_count": 0
     },
     "spec/modules/vibe-cli/PROP-042-aiui-observation.md": {
-      "content_hash": "d1aef7ff4635086d3b47e5fe828c6b1441e5068b8e54f13aa1adbacbde38912a",
+      "content_hash": "7596a650dc2fe0df8f2cabe306065050401686d4a5ec3953b276453ce13d5548",
       "rollup": {
         "explicit": [
           "spec",
@@ -588,11 +588,11 @@
           "spec",
           "done"
         ],
-        "marker_count": 1,
-        "fact_count": 26,
-        "unmarked_facts": 26
+        "marker_count": 58,
+        "fact_count": 57,
+        "unmarked_facts": 0
       },
-      "marker_count": 1,
+      "marker_count": 58,
       "unit_count": 8,
       "issue_count": 0
     },
@@ -1195,25 +1195,25 @@
       "issue_count": 0
     },
     "spec/modules/vibe-workspace/PROP-025-binary-delivery.md": {
-      "content_hash": "5d9b39938ac034908f5de67cda88f855d6bb81d6d5592cdbe178da3f1376c9d0",
+      "content_hash": "8d50a37b2c4e3b8421b60f9e912fb9ae726ed88e0a1d72e1fb95bfd0b2d8b8b1",
       "rollup": {
         "explicit": [
           "impl",
           "done"
         ],
         "computed": [
-          "impl",
+          "spec",
           "done"
         ],
         "effective": [
           "impl",
           "done"
         ],
-        "marker_count": 1,
-        "fact_count": 26,
-        "unmarked_facts": 26
+        "marker_count": 46,
+        "fact_count": 45,
+        "unmarked_facts": 0
       },
-      "marker_count": 1,
+      "marker_count": 46,
       "unit_count": 11,
       "issue_count": 0
     },

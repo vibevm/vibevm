@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updated_at": "2026-07-24T18:20:00Z",
+ "updated_at": "2026-07-24T18:50:00Z",
  "findings": [
   {
    "id": "F-001",
@@ -145,6 +145,15 @@
    "status": "open",
    "wave": 0,
    "note": "The module index stops at PROP-012 (2026-05-22 era): vibe-mcp/, vibe-cli/, vibe-settings/, vibe-actions/, vibe-progress/ and PROPs 015-043 are absent. Inline **Status:** mentions inside index rows predate later work (PROP-008 'DRAFT' vs fqdn-default shipped in M1.19; PROP-005 'implemented'; PROP-003 'design proposal'; PROP-007/009/011/012 'DRAFT') - each row needs Phase C adjudication, the rewrite is Phase D material. Document marker carries action=drift."
+  },
+  {
+   "id": "F-017",
+   "from": "crates/vibe-cli/src/cli/aiui.rs",
+   "to": "spec/modules/vibe-cli/PROP-042-aiui-observation.md",
+   "type": "reality-mismatch",
+   "status": "open",
+   "wave": 0,
+   "note": "Code ships a `vibe aiui scrollbar` verb whose doc comment cites 'PROP-042 s4', but s4 specifies only render/open/send/snapshot/wait/close/state - the code ran ahead of the contract. Sync-from-code candidate: draft the s4 amendment for owner approval (Phase D)."
   }
  ]
 }

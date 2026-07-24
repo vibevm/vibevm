@@ -60,3 +60,7 @@
 {"kind":"step-done","id":"b2-impl-task-tpl","result":"template marked: 22 anchored facts; example doc-marker + placeholder skeletons fenced (meta-content vs facts split), 0 unmarked, 0 issues","ts":"2026-07-24T17:39:57Z"}
 {"kind":"step-start","id":"b2-spec-task-tpl","step_type":"mark-file","target":"spec/modules/vibe-progress/templates/spec-task.md (fact mark)","actor":"fable","ts":"2026-07-24T17:39:57Z"}
 {"kind":"step-done","id":"b2-spec-task-tpl","result":"template marked: 18 anchored facts; example marker + placeholder table fenced; 0 unmarked, 0 issues","ts":"2026-07-24T17:40:32Z"}
+{"kind":"step-start","id":"b2-prop-042","step_type":"mark-file","target":"spec/modules/vibe-cli/PROP-042-aiui-observation.md (fact mark)","actor":"fable","ts":"2026-07-24T17:41:03Z"}
+{"kind":"step-done","id":"b2-prop-042","result":"26 units -> 57 anchored facts (REQ paragraphs deconstructed; impl/done per ACTIVE claim); code-ahead-of-spec found: vibe aiui scrollbar cites s4 which lacks it -> F-017; 0 unmarked, 0 issues","ts":"2026-07-24T17:43:19Z"}
+{"kind":"step-start","id":"b2-prop-025","step_type":"mark-file","target":"spec/modules/vibe-workspace/PROP-025-binary-delivery.md (fact mark)","actor":"fable","ts":"2026-07-24T17:43:19Z"}
+{"kind":"step-done","id":"b2-prop-025","result":"26 units -> 45 anchored facts; per-fact impl/done vs spec/done split across the v1-implemented / v2-specified boundary; 0 unmarked, 0 issues","ts":"2026-07-24T17:44:37Z"}
