@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-24T18:23:27Z",
+  "updated_at": "2026-07-24T18:33:47Z",
   "files": {
     "spec/boot/00-core.md": {
       "content_hash": "9430b035d1017950ec37c4ce85bab91155334b5fc55d3e1948138a4f6be8b0e5",
@@ -494,7 +494,7 @@
       "issue_count": 0
     },
     "spec/modules/vibe-actions/PROP-039-action-system.md": {
-      "content_hash": "d7fa49b929265b20b2667390af5053b3569015c44f8f6d1fb20ce2f64bda9ba7",
+      "content_hash": "7682c7401442ea513a7932c554c072a8599e3d3a1cf74dc7431f37a520fe3270",
       "rollup": {
         "explicit": [
           "spec",
@@ -508,11 +508,11 @@
           "spec",
           "work"
         ],
-        "marker_count": 1,
-        "fact_count": 46,
-        "unmarked_facts": 46
+        "marker_count": 52,
+        "fact_count": 51,
+        "unmarked_facts": 0
       },
-      "marker_count": 1,
+      "marker_count": 52,
       "unit_count": 48,
       "issue_count": 0
     },
@@ -701,7 +701,7 @@
       "issue_count": 0
     },
     "spec/modules/vibe-progress/PROP-043-progress-markup.md": {
-      "content_hash": "57a89fad1e44a1bfb42553c9ea43923b65048cab12f45f112a5d0a4fe68742cc",
+      "content_hash": "fb9102c7e586aade1d70ebabe4d3bc8e5ab2b93425641a573536f0a9d136de88",
       "rollup": {
         "explicit": [
           "spec",
@@ -716,8 +716,8 @@
           "done"
         ],
         "marker_count": 1,
-        "fact_count": 105,
-        "unmarked_facts": 105
+        "fact_count": 106,
+        "unmarked_facts": 106
       },
       "marker_count": 1,
       "unit_count": 27,

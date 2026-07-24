@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updated_at": "2026-07-24T22:05:00Z",
+ "updated_at": "2026-07-24T23:30:00Z",
  "findings": [
   {
    "id": "F-001",
@@ -181,6 +181,15 @@
    "status": "open",
    "wave": 0,
    "note": "S1 of the owner guide predates the fact amendment: the placement vocabulary lists only document/section/paragraph/fragment - no list items, no table cells, no ##<ID> fact anchors, no anchored-when-marked law (PROP-043 s3.8 items 4-6, s3.9). The owner's daily reading of markers now misses half the grammar. Guide update is Phase D/G material; doc marker carries action=drift."
+  },
+  {
+   "id": "F-021",
+   "from": "spec/modules/vibe-actions/PROP-039-action-system.md",
+   "to": "crates/vibe-actions/",
+   "type": "reality-mismatch",
+   "status": "open",
+   "wave": 0,
+   "note": "Status line says 'DRAFT - requirements, 2026-07-15', but crates/vibe-actions exists in the workspace (the action system shipped at least in part; the vibe tree TUI and prefs UI consume it). F-013/F-018/F-019 class; Phase C adjudicates REQ-by-REQ."
   }
  ]
 }
