@@ -1,8 +1,8 @@
 # Spec-Actualization Campaign v0.1 — mark, verify, and de-drift the whole spec tree {#root}
 
-<status stage="spec" state="done" action="continue" actionstage="impl" comment="plan in execution: A closed, B closing (13 of 59 files left), Phase L amendment recorded 2026-07-25"/>
+<status stage="spec" state="done" action="continue" actionstage="impl" comment="plan in execution: A and B closed (B exit gate green 2026-07-25); Phase L (legacy relocation) awaits the owner's opening call"/>
 
-**status: AUTHORED 2026-07-24 · IN FLIGHT — Phase B closing (13 of 59 files left after batch 20) · Phase L (legacy relocation → `legacy-spec/`) added 2026-07-25, runs between B and C · vibevm-specific · first consumer of PROP-043 (Progress Control)**
+**status: AUTHORED 2026-07-24 · IN FLIGHT — Phase B CLOSED 2026-07-25 (58 files, 4 880/4 880 facts marked; `check --exhaustive` clean + floor green) · next: Phase L (legacy relocation → `legacy-spec/`) awaits the owner's opening call, then C · vibevm-specific · first consumer of PROP-043 (Progress Control)**
 
 Contract for everything used here: [PROP-043](../modules/vibe-progress/PROP-043-progress-markup.md).
 Owner's manual: [OWNER-GUIDE](../modules/vibe-progress/OWNER-GUIDE.md).
@@ -600,6 +600,40 @@ read-only, no auth.
   Phase L's four-directory relocation list is unchanged — discipline
   still relocates to `legacy-spec/` after L1's reference inventory and
   L3's fact porting.
+
+- **2026-07-25 · PHASE B CLOSED — the corpus is fully marked; exit gate
+  green in full.** **Gate:** `progress check --exhaustive` clean over the
+  final scope (58 files, 4 880 facts, 4 944 markers, 0 errors, 0
+  warnings); floor `bash tools/self-check.sh` → `all green`, real exit
+  code 0. **Final scope after the two 2026-07-25 rulings:** 58 files /
+  4 880 facts (94→59 terraforms/research/neworder; 59→58 discipline).
+  **The B2 tail (batches 20–26, this session):** PROP-003 — 313 facts,
+  the third superseded-arc split, vocabulary verified against the
+  shipped crates (`d596c631`); PROP-002 — 359 facts, modules close
+  35/35 (`9328becb`); design/README re-mark burns the last 12 expected
+  errors — the gate reads **0** for the first time in the campaign
+  (`cb6e55b0`); loading-and-boot-model + action-system (`d1a09275`);
+  workspace-and-qualified-naming + tui-visual-language — design 6/6
+  (`91fde06c`); the authored boot pair, additive-only honoured
+  line-for-line (`ae10dca2`); manual-tests MT-01/02/03 — genre
+  precedent: step items and their Expected paragraphs are separate
+  units, pending sign-offs honestly `impl/work` (`7d9dd964`).
+  Interleaved the same session: the Phase L owner amendment
+  (`c0147947`) and the discipline scope ruling (`1c48019a`). **Ledger
+  at close: 35 findings** (F-030…F-034 new — two stale-header rows,
+  PROP-003's internal r2 drift, the lore "forthcoming" family).
+  **Predictions (§8) at the boundary:** P2 (the counter catches what
+  review misses) CONFIRMED repeatedly — this session it caught the
+  PROP-003 weak-deps continuation and the workspace-naming §7 intro;
+  P5 (DRIFT no-return) holds at 5/5; P6 for B CONFIRMED with room —
+  the markup pass ran 2026-07-24→25, two days against the 1–1.5-week
+  budget — **while the §5-B batch-count guess (9–12) was falsified by
+  the mid-phase fact-grain amendment** (~30 batches at the finer
+  grain; the grain change, not slippage); P1/P3/P4 stay open for C/D.
+  **Phase lane:** the journal-derived phase stays B until the owner
+  opens the next; per the 2026-07-25 amendment the next phase is
+  **L (legacy relocation)**, then C. **Awaiting the owner's call to
+  open Phase L.**
 
 ## 10. Deferrals {#deferrals}
 
