@@ -1,37 +1,45 @@
 # WAL — Project Continuation State
 
-_Updated: 2026-07-24 (night — B1f landed: spec/common fact-grain clean)_
+_Updated: 2026-07-25 (early night — B2 at 14/35; fact-links commission
+complete; DRIFT loop 5/5)_
 
 ## Current phase
 
-**Progress Control (PROP-043) — Phase B at FACT grain; the spec/common
-cluster is DONE.** This session: the two owner review points RESOLVED
-(anchor registers: **both stay** — UPPER=normative / kebab=service,
-decision recorded at PROP-043 §3.8; generated `spec/boot/STATIC.md` +
-`INDEX.md`: **excluded from scope** by include-enumeration in
-`progress.toml` — scope 97 → **95 files**, 8 219 → **7 872 facts**,
-unblocks the B exit gate; `b15d3d9`). The stale `b-fact-scanner`
-journal step was closed retroactively (`4ee4899`). **B1f re-marked all
-11 remaining `spec/common` files**: 386 paragraph-grain units → 979
-anchored facts (`83bed35` / `4aed13f` / `d639bcf`; batch-1 message
-counts corrected in the plan LOG); cluster now **1 009 facts, 0
-unmarked, 0 issues** — MissingAnchor 386 → 0. Wave residue: **40
-expected errors** in the two pilot files (SHRINK-PLAN 28,
-design/README 12), theirs at B2+. Grammar traps ledgered: blockquotes
-cannot carry `##` anchors (**F-015**); a wrapped line opening `+ `
-parses as a phantom list item. **The standing floor is RED on one
-conform finding**: `progress-core/src/parse.rs` 809 > 600-line budget
-(from the scanner landing) — queued as **DRIFT-002** (HIGH, Opus);
-**DRIFT-003** queued for the hardcoded `"A"` phase in `campaign.json`
-(dashboard/RESUME show a stale phase lane until it lands). Ledger: 15
-findings (F-001…F-015); tasks DRIFT-001…003 queued. Key laws in force:
-FACT-exhaustive granularity, anchored-when-marked, two anchor
-registers (owner-ruled), separable core, **no fractality for this
-campaign** (Fable = markup/verification/review, Opus = DRIFT coding),
-verdicts live in cache/baseline never in markup, campaign zone
-excluded from scans/packaging, the surface is called "dashboard".
-Plan: `spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md`. Owner
-manual (RU): `spec/modules/vibe-progress/OWNER-GUIDE.md`.
+**Progress Control (PROP-043) — Phase B at FACT grain.** `spec/common`
+is DONE (1 009 facts, 0 issues); **B2 stands at 14/35 modules files**
+(~166+345 facts marked across batches 1–7: progress templates, modules
+README, PROP-042/025/026/021/023/020/022/041/039, OWNER-GUIDE).
+Scope rulings all landed: generated boot pair OUT, **`spec/WAL.md`
+OUT** (checkpoint mortality), authored `00-core`/`90-user` stay —
+**94 files, ~8 2xx facts**; wave residue = 40 expected errors in the
+two pilot files (SHRINK-PLAN, design/README), theirs at their B2+
+batches. **The DRIFT execute-review loop closed 5/5 with no returned
+round-trip** (§5-E prediction green): DRIFT-001 cache prune,
+DRIFT-002 parse split, DRIFT-003 journal-derived phase (dashboard
+lane honest, `{"kind":"phase"}` events), DRIFT-004 specmap fact
+units (core v0.8.0 mdspec + `is_valid_fact_id`; heading kebab law
+intact), DRIFT-005 fact inheritance (vibe-spec: `NodeKind::Fact` IR
+leaves, per-fact override under `:add`, `CompileError::DuplicateId`
+merged-view gate, fact-addressed `#embed`). **The owner's fact-links
+commission is complete**: contract (PROP-014 §2.1, PROP-035 §5/§7.3
++ heading-repeat precision) → engine → compiler; code can cite
+`spec://…#<FACT-ID>` per statement (same URI form as headings, one
+id space per doc); F-022 RESOLVED. Ledger: 22 findings (F-015
+blockquote anchors, F-016 stale modules index, F-017 aiui scrollbar
+code-ahead, F-018/F-019/F-021 stale status vs shipped code, F-020
+owner guide lags the fact grammar). **Coder-tier engine pin**:
+`claude-opus-5` — committed agent type `.claude/agents/opus5.md`
+(selective) + machine-local subagent env pin; both bind at session
+start, so they are LIVE from the next session (verified empirically;
+the id itself verified live). Key laws in force: FACT-exhaustive
+granularity, anchored-when-marked, two anchor registers, separable
+core, **no fractality for this campaign** (Fable =
+markup/verification/review, Opus = DRIFT coding), verdicts in
+cache/baseline never in markup, campaign zone excluded, the surface
+is "dashboard". Plan:
+`spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md`. Owner manual
+(RU): `spec/modules/vibe-progress/OWNER-GUIDE.md` (lags the fact
+grammar — F-020).
 
 Previously landed (2026-07-23): the **default registry migration** — the
 vibespecs GitHub + GitVerse `[[registry]]` pair moved from per-project
@@ -78,18 +86,22 @@ steps begin with Phase B batches).
 ## Next
 
 **Phase B continues at fact grain, executor Fable** (per the plan LOG's
-Next step, 2026-07-24 night):
+Next step):
 
-1. B2… batches: `spec/modules/**` at fact grain (largest cluster), then
+1. B2 remainder — 21 modules files by size: PROP-015 (48) → PROP-034
+   (50) → PROP-027 (53) → PROP-036 (54) → PROP-030/011/012/010/040/038
+   → PROP-008/001/009/017/043/035/037/007 → PROP-005/003/002; then
    `spec/design` / `spec/research` / `spec/terraforms` incl. the two
-   pilot files' re-mark. Journal step per file; batch commits of ~3–6
-   files; ledger findings in passing; semantic edits forbidden.
-2. DRIFT-002 and DRIFT-003 are DONE (Opus executed, Fable accepted;
-   floor all green; the phase lane renders the journal-derived "B").
-   Last queued Opus task: DRIFT-001 (cache prune).
+   pilot files' re-mark. Journal step per file; batch commits of ~2–4
+   files (fact density); ledger findings in passing; semantic edits
+   forbidden.
+2. The Opus queue is EMPTY (DRIFT-001…005 all done, 5/5 no-return).
+   New DRIFT tasks spawn via `subagent_type: opus5` (the engine pin —
+   live from the next session).
 3. Every campaign session starts by reading
    `campaigns/progress-2026-08/run/RESUME.md` (or `vibe progress resume`),
-   then the plan LOG (§9) for the next step.
+   then the plan LOG (§9) for the next step. `CONTINUE.md` carries the
+   cold-resume snapshot of 2026-07-25.
 
 Parked follow-ups from earlier work (unchanged): vibe-vvm/term-vvm
 conformance-golden; Linux/macOS install smoke; arbitrary user-repos

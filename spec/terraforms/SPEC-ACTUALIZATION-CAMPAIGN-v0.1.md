@@ -462,6 +462,18 @@ read-only, no auth.
   empirically mid-session). Tasks DRIFT-002…005 of this date executed
   on the session-alias engine before the directive; all passed review
   with no returned round-trip.
+- **2026-07-24 · DRIFT-005 landed — F-022 closed end to end; the DRIFT
+  loop stands 5/5 no-return.** The owner's fact-links commission is
+  complete across all three layers: contract (PROP-014 §2.1 + PROP-035
+  §5/§7.3 with the reviewed heading-repeat precision), engine
+  (DRIFT-004, core v0.8.0 mdspec fact units — all language families
+  inherit through the shared engine at their next minting), and host
+  compiler (DRIFT-005, vibe-spec: `NodeKind::Fact` IR leaves, per-fact
+  override under `:add`, `CompileError::DuplicateId` merged-view gate,
+  fact-addressed `#embed`). Code can now cite
+  `spec://…#<FACT-ID>` per statement, and the §6 evidence join gains
+  the campaign grain for Phase C. Session-end: the coder-tier engine
+  pin (claude-opus-5) binds from the next session.
 - **Next step:** B2… batches — `spec/modules/**` at fact grain (the
   largest cluster), then `spec/design` / `spec/research` /
   `spec/terraforms` including the two pilot files' re-mark. Journal step
