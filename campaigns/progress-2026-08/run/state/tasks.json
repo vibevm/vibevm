@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updated_at": "2026-07-25T00:05:00Z",
+ "updated_at": "2026-07-25T01:05:00Z",
  "tasks": [
   {
    "id": "DRIFT-001",
@@ -25,6 +25,12 @@
    "title": "specmap learns ##<ID> fact anchors (owner commission)",
    "executor": "opus",
    "status": "done"
+  },
+  {
+   "id": "DRIFT-005",
+   "title": "spec compiler learns fact inheritance R1-R4",
+   "executor": "opus",
+   "status": "queued"
   }
  ]
 }

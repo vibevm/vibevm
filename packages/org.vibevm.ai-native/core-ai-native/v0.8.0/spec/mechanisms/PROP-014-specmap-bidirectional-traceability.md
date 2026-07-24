@@ -68,6 +68,12 @@ spec://<package>/<doc-path>#<anchor>~r<N>       — a unit at revision N
   discipline); their normativity signal is the id register. Edges cite
   them exactly as heading units (`implements`, `verifies`, `documents`),
   so code can bind to a single statement instead of a whole section.
+- **Merge behaviour** — the host spec-compiler contract (its PROP-035
+  §7.3 fact-inheritance clause, owner-ratified 2026-07-24) owns it:
+  facts follow their section's fate under the contract↔source merge; a
+  source fact redeclaring a contract fact's id is a **per-fact
+  override**; the merged view re-gates id uniqueness as a build error.
+  This PROP only cites that law — one source of truth.
 
 ### 2.2 Spec units, normativity, and the two-tier revision discipline {#spec-units}
 

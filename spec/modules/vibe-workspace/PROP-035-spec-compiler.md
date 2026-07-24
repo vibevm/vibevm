@@ -67,6 +67,7 @@ Everything downstream operates on a single **document IR**: a DOM-like tree. Mar
 
 - **Node** = `{ id (anchor / tag), depth, kind, body-span, children[] }`.
 - **Markdown frontend.** Headings form the tree by level (`#` ⊃ `##` ⊃ `###`). A node's `id` is its explicit `{#anchor}`. A node's **body span runs from its anchored heading to the next heading of the same or higher level** (the owner-fixed rule); its children are the nested headings inside that span.
+- **Fact leaves** *(fact amendment, owner-ratified 2026-07-24)*. A `##<ID>` first token of a paragraph or list item (the fact unit of PROP-014 §2.1 / PROP-043 §3.8) is a **leaf node** of the IR: `kind = fact`, `id = <ID>`, body-span = the carrying paragraph or item with its continuation lines; its parent is the enclosing section node. Fact ids share the document's one anchor namespace. The resolver (§6) resolves a fact address like any node; `#embed` of a fact splices exactly its unit (§7.1's arbitrary granularity, unchanged); `#use` of a fact address pulls the top-level anchored ancestor of its **enclosing section** (the existing rule, unchanged).
 - **XML frontend (future).** Elements already are the tree; `tag`/`id` is the address. Held for later, but the IR is designed for it now.
 - **Addressing depth.** A `spec://…#a.b.c` fragment is a **path down the tree** (`a` → `b` → `c`), which already matches addressable-specs' dotted anchors (`#verification.timeout`). Sections at any depth are addressable.
 
@@ -140,6 +141,12 @@ Merge algorithm, per section (by matching `{#tag}`):
    - **`:replace`** — `# name {#tag} :replace` — the contract text is ignored; the source text is canonical (read by the agent / put in the static build; an already-read contract text is explicitly superseded).
    - **`:add`** — `# name {#tag} :add` — the result is the **sum**: contract text first, then source text. Static: compile the concatenation. Structural: the agent reads both and weights them equally.
    - **Default is `:add`** (absent a `:`-suffix) — so the interface text need not be duplicated to appear in the result.
+
+**Fact inheritance** *(fact amendment, owner-ratified 2026-07-24 — closes F-022)*:
+
+1. **Section fate by default.** Facts ride their section: `:add` carries both sides' facts into the sum; `:replace` supersedes the contract's facts — text and fact anchors together.
+2. **Per-fact override.** Within a merged `:add` section, a source fact redeclaring a contract fact's `##<ID>` **overrides** it: the contract fact's span is dropped from the merged output and the source's is canonical (last-wins in contract→source order). One id, one unit — redeclaration IS the override gesture, so refining a single statement never requires `:replace`-ing the whole section.
+3. **The merged view holds uniqueness.** After merging, the compiler re-runs the anchor-uniqueness check — fact and heading ids, one namespace — over the merged document; a surviving duplicate (a non-override collision across sections, or fact-vs-heading) is a **build error**, never a warning. Per-file cleanliness of the inputs does not exempt the merged output.
 
 ### 7.4 In-place use — the `@spec://` sigil {#in-place-use}
 
