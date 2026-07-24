@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-07-24T21:05:49Z",
+  "updated_at": "2026-07-24T21:16:16Z",
   "findings": [
     {
       "id": "F-001",
@@ -226,6 +226,24 @@
       "status": "open",
       "wave": 0,
       "note": "Internal: the Milestone line still reads -design proposal; targets a new M1.18 ... Not implementation-locked- while the Status line (updated 2026-06-12) says IMPLEMENTED across M1.18+M1.19. The milestone phrasing predates shipping and was never refreshed. Phase C/D: reword the milestone line."
+    },
+    {
+      "id": "F-026",
+      "from": "spec/modules/vibe-workspace/PROP-009-loading-model.md",
+      "to": "spec/modules/vibe-workspace/PROP-009-loading-model.md",
+      "type": "contradiction",
+      "status": "open",
+      "wave": 0,
+      "note": "Internal: the Milestone line reads -design proposal ... Not implementation-locked- and the Status line opens DRAFT, while the same Status line and s7 record M1.18 phases 1-7 SHIPPED 2026-05-22 (only phase 8 is v1.5 scope). Same stale-header class as F-025. Phase C/D: reword milestone+status opening."
+    },
+    {
+      "id": "F-027",
+      "from": "spec/modules/vibe-resolver/PROP-017-resolvo-resolver.md",
+      "to": "spec/modules/vibe-resolver/PROP-017-resolvo-resolver.md",
+      "type": "contradiction",
+      "status": "open",
+      "wave": 0,
+      "note": "Internal: the Status line reads -accepted, implementation in progress (2026-06-14)- while s6 (same date) declares -the port is COMPLETE, resolvo is the default production solver- with only far-backlog reverse weak-deps waiting. The header was never refreshed after the port landed. Same stale-header class as F-025/F-026. Phase C/D: reword the status line."
     }
   ]
 }

@@ -2,82 +2,86 @@
 
 <status stage="impl" state="work" comment="B0 2026-07-24: accepted; implementation in progress per status line"/>
 
-**Status.** Design proposal — accepted, implementation in progress (owner
+##status-line **Status.** Design proposal — accepted, implementation in progress (owner
 decision, 2026-06-14). Companion to [PROP-003](PROP-003-dep-evolution.md)
 (dependency-model evolution) and [PROP-002](../vibe-registry/PROP-002-decentralized-registry.md)
-(registry / depsolver seam).
+(registry / depsolver seam). @impl/work
 
-**Supersedes.** The solver-*backend* decision of [PROP-003 §2.2](PROP-003-dep-evolution.md#solver-backend)
-(libsolv via thin FFI) and the libsolv-specific algorithm detail of
-[§2.3](PROP-003-dep-evolution.md#solver-features) and
-[§3.1–3.2](PROP-003-dep-evolution.md#rule-encoding). **The production
-solver is [`resolvo`](https://github.com/prefix-dev/resolvo) (pure-Rust,
-BSD-3-Clause), not libsolv.** PROP-003's dependency *vocabulary* — features
+- ##SUPERSEDES-BACKEND **Supersedes.** The solver-*backend* decision of [PROP-003 §2.2](PROP-003-dep-evolution.md#solver-backend)
+  (libsolv via thin FFI) and the libsolv-specific algorithm detail of
+  [§2.3](PROP-003-dep-evolution.md#solver-features) and
+  [§3.1–3.2](PROP-003-dep-evolution.md#rule-encoding). @impl/done
+- ##RESOLVO-IS-PRODUCTION **The production
+  solver is [`resolvo`](https://github.com/prefix-dev/resolvo) (pure-Rust,
+BSD-3-Clause), not libsolv.** @impl/done
+- ##VOCABULARY-UNCHANGED PROP-003's dependency *vocabulary* — features
 (§2.4), subskills (§2.5), interface tags (§2.6), conditional deps (§2.6.1),
 i18n (§2.7), manifest/lockfile schema (§2.8–2.9) — is **unchanged**; this
 PROP only swaps the engine that satisfies it and records how the vocabulary
-maps onto resolvo's model.
+maps onto resolvo's model. @impl/done
 
 ---
 
 ## 1. Why resolvo now — reversing the libsolv-first call {#why}
 
-PROP-003 §2.2 picked libsolv "for v1" and explicitly *kept the door open*
-for resolvo (§4.1: "resolvo remains a viable second impl"). It gave three
-reasons to defer resolvo. By 2026-06 all three have decayed, while
+- ##libsolv-first-context PROP-003 §2.2 picked libsolv "for v1" and explicitly *kept the door open*
+  for resolvo (§4.1: "resolvo remains a viable second impl"). It gave three
+  reasons to defer resolvo. @impl/done
+- ##reasons-decayed By 2026-06 all three have decayed, while
 libsolv's costs — which §2.2 underweighted — are structural and do not
-decay:
+  decay: @impl/done
 
-**The three deferral reasons, re-evaluated:**
+##deferral-reasons-lead **The three deferral reasons, re-evaluated:** @impl/done
 
-- *"Younger codebase (~3 years vs ~17)."* resolvo is now ~4–5 years old,
+- ##reason-age *"Younger codebase (~3 years vs ~17)."* resolvo is now ~4–5 years old,
   at `0.11.0`, multi-threaded, and the production resolver for `pixi`,
-  `rattler` (the Rust conda stack), and `rip` (PyPI-in-Rust).
-- *"Less battle-tested under adversarial inputs."* conda dependency graphs
+  `rattler` (the Rust conda stack), and `rip` (PyPI-in-Rust). @impl/done
+- ##reason-battle-tested *"Less battle-tested under adversarial inputs."* conda dependency graphs
   are among the most conflict-rich in existence; resolvo runs against them
-  in production at scale. This is the reason that has decayed most.
-- *"No rule-level introspection for explanation-driven errors."* resolvo
+  in production at scale. This is the reason that has decayed most. @impl/done
+- ##reason-introspection *"No rule-level introspection for explanation-driven errors."* resolvo
   now ships structured conflict explanation
-  (`Conflict::display_user_friendly` / `Conflict::graph`).
+  (`Conflict::display_user_friendly` / `Conflict::graph`). @impl/done
 
-**libsolv's structural costs (do not decay):**
+##structural-costs-lead **libsolv's structural costs (do not decay):** @impl/done
 
-- **C toolchain + FFI + `unsafe`.** libsolv is C; a thin FFI shim is still
+- ##COST-C-FFI **C toolchain + FFI + `unsafe`.** libsolv is C; a thin FFI shim is still
   ~20–30 `unsafe extern` calls — the **first C dependency in the
   workspace** and the first `unsafe` surface in a crate that today carries
   `#![forbid(unsafe_code)]`. It forces a C compiler into CI on every
   platform. resolvo is pure Rust: the `forbid(unsafe_code)` posture on
-  `vibe-resolver` survives intact.
-- **Eager pool population.** libsolv wants the whole pool materialised
+  `vibe-resolver` survives intact. @impl/done
+- ##COST-EAGER-POOL **Eager pool population.** libsolv wants the whole pool materialised
   before solving ([PROP-003 §3.2 phase 1](PROP-003-dep-evolution.md#solver-phases):
   walk `list_versions` for every transitively-reachable package up front).
   PROP-003 §3.4 itself names the *network-bound fetch layer* as the real
   bottleneck — and eager population maximises exactly those fetches.
   resolvo's provider is pulled **lazily / on demand**, so metadata is
-  fetched only for packages the search actually visits.
-- **Windows operational risk.** §2.2 named "libsolv proves operationally
+  fetched only for packages the search actually visits. @impl/done
+- ##COST-WINDOWS **Windows operational risk.** §2.2 named "libsolv proves operationally
   heavy on Windows" as the trigger to switch to resolvo. The maintainer's
   primary platform is Windows; a C library via FFI (MSVC/MinGW, submodule
   or build-script fragility) is precisely that risk, on precisely that
-  platform.
+  platform. @impl/done
 
-**Net:** resolvo is pure-Rust (no `unsafe`, no C toolchain), BSD-3-Clause
-(clean under [PROP-000 §3](../../common/PROP-000.md) with no owner ruling
-needed), lazy-fetch (aligned with the real bottleneck), gives
-human-readable conflict explanations, and gets "prefer newest" almost free
-via candidate ordering. pubgrub was also considered and remains the weaker
+- ##NET-VERDICT **Net:** resolvo is pure-Rust (no `unsafe`, no C toolchain), BSD-3-Clause
+  (clean under [PROP-000 §3](../../common/PROP-000.md) with no owner ruling
+  needed), lazy-fetch (aligned with the real bottleneck), gives
+  human-readable conflict explanations, and gets "prefer newest" almost free
+  via candidate ordering. @impl/done
+- ##pubgrub-weaker pubgrub was also considered and remains the weaker
 fit for vibevm: its range-over-named-packages model encodes the
 capability / virtual-package vocabulary as synthetic packages and degrades
-exactly the explanations we want (PROP-003 §4.2 records this).
+exactly the explanations we want (PROP-003 §4.2 records this). @impl/done
 
-This decision was taken by the owner directly; the libsolv reasoning is
-retained in PROP-003 §2.2 as decision history.
+##owner-decision This decision was taken by the owner directly; the libsolv reasoning is
+retained in PROP-003 §2.2 as decision history. @impl/done
 
 ---
 
 ## 2. Architecture — adapter behind the stable `DepSolver` seam {#architecture}
 
-The consumer seam does not move. `crates/vibe-resolver/src/lib.rs` keeps:
+##SEAM-STABLE The consumer seam does not move. `crates/vibe-resolver/src/lib.rs` keeps: @impl/done
 
 ```rust
 pub trait DepSolver {
@@ -85,220 +89,228 @@ pub trait DepSolver {
 }
 ```
 
-The install / update / vendor / check pipelines call `DepSolver::solve`
-and are untouched. resolvo arrives as one new `impl DepSolver`:
+##consumers-untouched The install / update / vendor / check pipelines call `DepSolver::solve`
+and are untouched. resolvo arrives as one new `impl DepSolver`: @impl/done
 
-- **`ResolvoDepSolver<P: DepProvider>`** — a `#[cell(seam = "DepSolver",
+- ##RESOLVO-DEPSOLVER **`ResolvoDepSolver<P: DepProvider>`** — a `#[cell(seam = "DepSolver",
   variant = "resolvo")]`. Its `solve` builds a `VibevmResolvoProvider`
   from the roots + the vibevm `DepProvider`, runs `resolvo::Solver`, and
-  maps the chosen solvables back into a `ResolvedGraph`.
-- **`VibevmResolvoProvider`** — implements resolvo's two traits, `Interner`
-  + (async) `DependencyProvider`, adapting vibevm's world (package
+  maps the chosen solvables back into a `ResolvedGraph`. @impl/done
+- ##VIBEVM-PROVIDER **`VibevmResolvoProvider`** — implements resolvo's two traits,
+  `Interner` + (async) `DependencyProvider`, adapting vibevm's world (package
   identities, version sets, manifests) to resolvo's `NameId` / `SolvableId`
   / `VersionSetId` model. This struct **is the swap unit** (§5): a
   different engine, or a future resolvo major, means rewriting this adapter
-  and nothing the consumers can see.
-- **`SemverVersionSet`** — a `resolvo::utils::VersionSet` with
+  and nothing the consumers can see. @impl/done
+- ##SEMVER-VERSION-SET **`SemverVersionSet`** — a `resolvo::utils::VersionSet` with
   `type V = semver::Version`; an `enum { Any, Req(semver::VersionReq),
   None }` so that `VersionSpec::Latest → Any`, a `[conflicts]` /
-  obsoletes range → a complement or `None` (match-nothing) set.
+  obsoletes range → a complement or `None` (match-nothing) set. @impl/done
 
 ### 2.1 Sync CLI, no async runtime {#runtime}
 
-resolvo `0.11`'s `DependencyProvider` methods are `async fn`, but `Solver`
-defaults to `NowOrNeverRuntime`, which polls each future exactly once and
-**panics if it ever yields `Pending`**. Our adapter methods compute
+- ##NOW-OR-NEVER resolvo `0.11`'s `DependencyProvider` methods are `async fn`, but `Solver`
+  defaults to `NowOrNeverRuntime`, which polls each future exactly once and
+  **panics if it ever yields `Pending`**. @impl/done
+- ##SYNC-ADAPTER Our adapter methods compute
 synchronously — they read from the sync vibevm `DepProvider` (which may
 block on the network, but blocking is not yielding) — so every future is
-`Ready` on first poll. **vibevm pulls in no async runtime, no `tokio`, no
-`pollster`.** The one sharp edge, recorded so no future edit trips it: an
+  `Ready` on first poll. @impl/done
+- ##NO-ASYNC-RUNTIME **vibevm pulls in no async runtime, no `tokio`, no
+  `pollster`.** @impl/done
+- ##AWAIT-SHARP-EDGE The one sharp edge, recorded so no future edit trips it: an
 adapter method must never `.await` a genuinely-pending future under the
-default runtime.
+  default runtime. @impl/done
 
 ### 2.2 Provider enrichment — candidate enumeration {#provider-enrichment}
 
-vibevm's `DepProvider` was shaped around the naive solver: `resolve_version`
-picks *one* concrete version for a `PackageRef`, baking version selection
-into the provider. A real solver must enumerate candidates and choose the
-optimum itself. So `DepProvider` gains one method:
+- ##provider-history vibevm's `DepProvider` was shaped around the naive solver: `resolve_version`
+  picks *one* concrete version for a `PackageRef`, baking version selection
+  into the provider. @impl/done
+- ##ENUMERATION-NEEDED A real solver must enumerate candidates and choose the
+optimum itself. So `DepProvider` gains one method: @impl/done
 
 ```rust
 fn list_versions(&self, group: &Group, name: &str)
     -> Result<Vec<semver::Version>, DepProviderError>;
 ```
 
-backed by the registry layer's existing `Registry::list_versions`
+##LIST-VERSIONS-BACKING backed by the registry layer's existing `Registry::list_versions`
 (`vibe-registry`), which every registry impl already provides. This is an
 enrichment of the *world model*, not a change to the consumer seam;
-`resolve_version` stays for the naive / sat cells.
+`resolve_version` stays for the naive / sat cells. @impl/done
 
 ### 2.3 Shared output contract {#output}
 
-The roots-first ordering, exact-version pinning (`=x.y.z` on every
+##SHARED-OUTPUT-BUILDER The roots-first ordering, exact-version pinning (`=x.y.z` on every
 dependency edge, the lockfile reproducibility contract), and
 obsolete-dropping that `naive.rs` builds today are extracted into a
 `pub(crate)` output builder and reused by `ResolvoDepSolver`. Both cells
 therefore satisfy the *same* observable contract by construction — which
 is what lets the differential oracle (§4) hold them to byte-identical
-graphs.
+graphs. @impl/done
 
 ### 2.4 Rich conflict explanation {#unsatisfiable}
 
-On `Err(UnsolvableOrCancelled::Unsolvable(conflict))`, resolvo gives a
+##CONFLICT-EXPLANATION On `Err(UnsolvableOrCancelled::Unsolvable(conflict))`, resolvo gives a
 human-readable derivation via `conflict.display_user_friendly(&solver)`.
-`SolveError` gains a variant to carry it:
+`SolveError` gains a variant to carry it: @impl/done
 
 ```rust
 SolveError::Unsatisfiable { explanation: String }
 ```
 
-This is the user-facing payoff of the switch: "package A needs C ^1 but B
-needs C ^2, and only C 1.0 and 2.0 exist" instead of a bare UNSAT. The
-structured `SolveError` variants (`VersionConflict`, `CapabilityUnmet`,
+- ##EXPLANATION-PAYOFF This is the user-facing payoff of the switch: "package A needs C ^1 but B
+  needs C ^2, and only C 1.0 and 2.0 exist" instead of a bare UNSAT. @impl/done
+- ##STRUCTURED-VARIANTS-REMAIN The
+  structured `SolveError` variants (`VersionConflict`, `CapabilityUnmet`,
 `DisjunctionUnsatisfiable`, `ConflictsDeclared`) remain for cases the
-adapter can attribute precisely.
+  adapter can attribute precisely. @impl/done
 
 ---
 
 ## 3. Vocabulary → resolvo encoding {#encoding}
 
-vibevm's dependency vocabulary is RPM-lineage (provides / requires /
-conflicts / obsoletes plus the four weak-dep levels) — the same lineage
-resolvo inherits from libsolv, so the mapping is natural. resolvo's
-constraint channels: `KnownDependencies.requirements: Vec<ConditionalRequirement>`
+- ##RPM-LINEAGE vibevm's dependency vocabulary is RPM-lineage (provides / requires /
+  conflicts / obsoletes plus the four weak-dep levels) — the same lineage
+  resolvo inherits from libsolv, so the mapping is natural. @impl/done
+- ##CONSTRAINT-CHANNELS resolvo's
+  constraint channels: `KnownDependencies.requirements: Vec<ConditionalRequirement>`
 ("must be satisfied", pulls the package in) and
 `KnownDependencies.constrains: Vec<VersionSetId>` ("*if* present, the
-version must match" — does not pull the package in). Requirements are
-`Requirement::Single(VersionSetId)` or `Requirement::Union(VersionSetUnionId)`.
-Single-version-per-name is enforced by resolvo automatically.
+version must match" — does not pull the package in). @impl/done
+- ##REQUIREMENT-FORMS Requirements are
+  `Requirement::Single(VersionSetId)` or `Requirement::Union(VersionSetUnionId)`. @impl/done
+- ##SINGLE-VERSION-AUTO Single-version-per-name is enforced by resolvo automatically. @impl/done
 
 | vibevm concept | resolvo encoding | Slice |
 |---|---|---|
-| `[requires.packages]` (concrete dep `X ^v`) | `requirements += Single(VersionSetId(X, ^v))` | S2 |
-| version selection ("prefer newest") | `sort_candidates` orders a name's solvables by `semver::Version` **descending** → first solution is newest-feasible | S2 |
-| single version per `(kind, name)` | automatic (one `SolvableId` per `NameId`) | S2 |
-| `[[requires_any]]` (`one_of = [A, B, …]`) | `requirements += Union(VersionSetUnionId[A, B, …])` — native OR + backtracking | S4 |
-| capability / interface (`provides` / `requires.capabilities`) | virtual `NameId`; `get_candidates(cap)` returns the providing packages' solvables (a reverse index the adapter builds); a `requires.capabilities` entry is a `Single(VersionSetId(cap, ^v))` | S4 |
-| `[conflicts]` (X conflicts Y) | `constrains += VersionSetId(Y, None)` in X's deps — if Y is forced in, the match-nothing set conflicts | S4 |
-| `[obsoletes]` (X obsoletes Y `< v`) | `constrains += VersionSetId(Y, complement(<v))`; obsoleted entries dropped by the shared output builder | S4 |
-| `[recommends]` (weak forward: prefer, don't fail) | **DONE** — a post-solve greedy expansion: each recommend is tried via a re-solve, kept (as a non-root) only if the graph stays satisfiable, else silently dropped. `soft_requirements` is root-only, so per-package recommends ride the loop (batching them as soft is §8 future work) | done |
-| `[suggests]` (weak forward hint) | **DONE** — never fed to the solver, so never auto-installed (CLI surfacing is a thin follow-up) | done |
-| `[supplements]` (reverse: install me if Y is present) | far backlog (§8) — a reverse weak-dep needing a `who-supplements-Y` index | backlog |
-| `[enhances]` (reverse hint) | far backlog (§8) — `who-enhances-Y` is a reverse lookup | backlog |
-| `[features.exclusive]` (at-most-one group) | **DONE** — validated in `features.rs` (`expand_features`), intra-package, above the solver | done |
-| feature unification | stays in `features.rs` above the solver (already implemented); the solver sees the unified requirement set | — |
+| ##ROW-REQUIRES `[requires.packages]` (concrete dep `X ^v`) @impl/done | `requirements += Single(VersionSetId(X, ^v))` @impl/done | S2 @impl/done |
+| ##ROW-PREFER-NEWEST version selection ("prefer newest") @impl/done | `sort_candidates` orders a name's solvables by `semver::Version` **descending** → first solution is newest-feasible @impl/done | S2 @impl/done |
+| ##ROW-SINGLE-VERSION single version per `(kind, name)` @impl/done | automatic (one `SolvableId` per `NameId`) @impl/done | S2 @impl/done |
+| ##ROW-REQUIRES-ANY `[[requires_any]]` (`one_of = [A, B, …]`) @impl/done | `requirements += Union(VersionSetUnionId[A, B, …])` — native OR + backtracking @impl/done | S4 @impl/done |
+| ##ROW-CAPABILITY capability / interface (`provides` / `requires.capabilities`) @impl/done | virtual `NameId`; `get_candidates(cap)` returns the providing packages' solvables (a reverse index the adapter builds); a `requires.capabilities` entry is a `Single(VersionSetId(cap, ^v))` @impl/done | S4 @impl/done |
+| ##ROW-CONFLICTS `[conflicts]` (X conflicts Y) @impl/done | `constrains += VersionSetId(Y, None)` in X's deps — if Y is forced in, the match-nothing set conflicts @impl/done | S4 @impl/done |
+| ##ROW-OBSOLETES `[obsoletes]` (X obsoletes Y `< v`) @impl/done | `constrains += VersionSetId(Y, complement(<v))`; obsoleted entries dropped by the shared output builder @impl/done | S4 @impl/done |
+| ##ROW-RECOMMENDS `[recommends]` (weak forward: prefer, don't fail) @impl/done | **DONE** — a post-solve greedy expansion: each recommend is tried via a re-solve, kept (as a non-root) only if the graph stays satisfiable, else silently dropped. `soft_requirements` is root-only, so per-package recommends ride the loop (batching them as soft is §8 future work) @impl/done | done @impl/done |
+| ##ROW-SUGGESTS `[suggests]` (weak forward hint) @impl/done | **DONE** — never fed to the solver, so never auto-installed (CLI surfacing is a thin follow-up) @impl/done | done @impl/done |
+| ##ROW-SUPPLEMENTS `[supplements]` (reverse: install me if Y is present) @spec/done | far backlog (§8) — a reverse weak-dep needing a `who-supplements-Y` index @spec/done | backlog @spec/done |
+| ##ROW-ENHANCES `[enhances]` (reverse hint) @spec/done | far backlog (§8) — `who-enhances-Y` is a reverse lookup @spec/done | backlog @spec/done |
+| ##ROW-FEATURES-EXCLUSIVE `[features.exclusive]` (at-most-one group) @impl/done | **DONE** — validated in `features.rs` (`expand_features`), intra-package, above the solver @impl/done | done @impl/done |
+| ##ROW-FEATURE-UNIFICATION feature unification @impl/done | stays in `features.rs` above the solver (already implemented); the solver sees the unified requirement set @impl/done | — @impl/done |
 
-Conditional dependencies ([PROP-003 §2.6.1](PROP-003-dep-evolution.md#conditional-deps))
+##CONDITIONAL-FIXPOINT Conditional dependencies ([PROP-003 §2.6.1](PROP-003-dep-evolution.md#conditional-deps))
 keep their fixpoint shape: solve unconditional → evaluate context
 predicates → add requirements → re-solve. resolvo is cheap to re-run, and
-its laziness means the re-solve only re-touches the changed subtree.
+its laziness means the re-solve only re-touches the changed subtree. @impl/done
 
 ---
 
 ## 4. Correctness — the differential dominance contract {#dominance}
 
-`crates/vibe-resolver/tests/solver_properties.rs` already drives two
+##oracle-socket `crates/vibe-resolver/tests/solver_properties.rs` already drives two
 `DepSolver` cells over the same generated world and demands they agree;
 it was built (its own docs say so) as "DBT-0011's landing pad" for exactly
 this. `ResolvoDepSolver` plugs into the same socket as `Sat`, under a
-**dominance** contract:
+**dominance** contract: @impl/done
 
-- **naive solves ⟹ resolvo solves identically.** Provable for the
+- ##DOM-NAIVE-SOLVES **naive solves ⟹ resolvo solves identically.** Provable for the
   concrete-dep worlds the generator emits: when naive's greedy first-pick
   succeeds, that pick is the highest version satisfying the first
   constraint, and (since it also satisfies all others) it equals the
   highest version satisfying *all* constraints — which is resolvo's
-  optimum. So the graphs are byte-identical. Any drift here is a bug.
-- **naive fails ⟹ resolvo may solve.** The first-pick-wins trap arises
+  optimum. So the graphs are byte-identical. Any drift here is a bug. @impl/done
+- ##DOM-NAIVE-FAILS **naive fails ⟹ resolvo may solve.** The first-pick-wins trap arises
   naturally in generated worlds (a root takes a dep's highest version,
   another path carets a lower major); resolvo's complete CDCL search finds
-  the feasible lower version. This *is* resolvo's reason to exist.
-- **resolvo fails where naive solves ⟹ always a bug.**
-- **both fail ⟹ pass without comparing error discriminants.** Unlike the
+  the feasible lower version. This *is* resolvo's reason to exist. @impl/done
+- ##DOM-RESOLVO-FAILS **resolvo fails where naive solves ⟹ always a bug.** @impl/done
+- ##DOM-BOTH-FAIL **both fail ⟹ pass without comparing error discriminants.** Unlike the
   `Sat` cell — which re-emits naive's own `SolveError` verbatim and so
   shares its discriminant — resolvo produces its own richer errors
   (`Unsatisfiable` with a derivation). Demanding discriminant equality
   would force resolvo to throw away its better diagnostics. The relaxation
   is deliberate and recorded here (card scaffold-d: "a divergence is
-  recorded with its debt id before the assertion is relaxed").
+  recorded with its debt id before the assertion is relaxed"). @impl/done
 
-The capability / disjunction / conflict / obsolete / weak-dep vocabulary
+##VOCAB-UNIT-TESTS The capability / disjunction / conflict / obsolete / weak-dep vocabulary
 is *not* exercised by the generator (it emits `[requires.packages]` only);
 those land with their own unit tests mirroring `naive/tests.rs`, plus
-resolvo-only cases (disjunction backtracking) naive cannot pass.
+resolvo-only cases (disjunction backtracking) naive cannot pass. @impl/done
 
 ---
 
 ## 5. Abstraction & the swap requirement {#swap}
 
-**Requirement (owner, 2026-06-14).** Changing the resolver engine — a
-different solver, or a future incompatible resolvo major — must cost
-*one new provider/adapter and nothing else*. The consumer-facing
+- ##SWAP-REQUIREMENT **Requirement (owner, 2026-06-14).** Changing the resolver engine — a
+  different solver, or a future incompatible resolvo major — must cost
+  *one new provider/adapter and nothing else*. @impl/done
+- ##SWAP-BOUNDARIES The consumer-facing
 `DepSolver` and the world-facing `DepProvider` are the stable boundaries;
 everything resolvo-specific is confined to `ResolvoDepSolver` +
-`VibevmResolvoProvider` + `SemverVersionSet`.
+`VibevmResolvoProvider` + `SemverVersionSet`. @impl/done
 
-Concretely, a future swap is: write a new `impl DepSolver` whose adapter
+##swap-recipe Concretely, a future swap is: write a new `impl DepSolver` whose adapter
 bridges the same vibevm `DepProvider` world to the new engine, register it
 as a `#[cell]` variant, and add it to the differential oracle so it is
 held to the same dominance contract. No consumer, no manifest, no lockfile
 change. This is the same `GitBackend`-style indirection PROP-001 uses to
-keep the git backend swappable, applied to the solver.
+keep the git backend swappable, applied to the solver. @impl/done
 
 ---
 
 ## 6. Phases / staging {#phases}
 
-**Status (2026-06-14): the port is COMPLETE — resolvo is the default
-production solver.** Each slice landed as a topic commit with green gates.
+##PORT-COMPLETE **Status (2026-06-14): the port is COMPLETE — resolvo is the default
+production solver.** Each slice landed as a topic commit with green gates. @impl/done
 
-- **DONE** — this document + the PROP-003 §2.2 supersede note.
-- **DONE** — the shared output builder + the `VersionEnumerator` seam +
-  `SolveError::Unsatisfiable`.
-- **DONE** — `resolvo` dep; `ResolvoDepSolver` + `VibevmResolvoProvider` +
-  `SemverVersionSet`; `[requires.packages]` + newest + narrowing.
-- **DONE** — `differential_naive_vs_resolvo_dominance` (the oracle).
-- **DONE** — `[[requires_any]]`→`Union`, `[conflicts]`, `[obsoletes]`, and
-  capabilities via the closure pre-scan.
-- **DONE** — production version enumeration
+- ##DONE-DOC **DONE** — this document + the PROP-003 §2.2 supersede note. @impl/done
+- ##DONE-OUTPUT-BUILDER **DONE** — the shared output builder + the `VersionEnumerator` seam +
+  `SolveError::Unsatisfiable`. @impl/done
+- ##DONE-ADAPTER **DONE** — `resolvo` dep; `ResolvoDepSolver` + `VibevmResolvoProvider` +
+  `SemverVersionSet`; `[requires.packages]` + newest + narrowing. @impl/done
+- ##DONE-ORACLE **DONE** — `differential_naive_vs_resolvo_dominance` (the oracle). @impl/done
+- ##DONE-VOCAB **DONE** — `[[requires_any]]`→`Union`, `[conflicts]`, `[obsoletes]`, and
+  capabilities via the closure pre-scan. @impl/done
+- ##DONE-ENUMERATION **DONE** — production version enumeration
   (`MultiRegistryResolver::list_versions` + the `VersionEnumerator`
-  provider impls).
-- **DONE** — `--solver <naive|sat|resolvo>` override + **the default
-  flipped to resolvo** in the R-001 selection seam (`vibe-cli`).
-- **DONE (forward weak-deps)** — `[recommends]` (a post-solve greedy
+  provider impls). @impl/done
+- ##DONE-DEFAULT-FLIP **DONE** — `--solver <naive|sat|resolvo>` override + **the default
+  flipped to resolvo** in the R-001 selection seam (`vibe-cli`). @impl/done
+- ##DONE-WEAK-FORWARD **DONE (forward weak-deps)** — `[recommends]` (a post-solve greedy
   best-effort expansion) and `[suggests]` (parsed, never auto-installed)
   gained a `Manifest` schema and solver behaviour;
-  `[features.exclusive]` was already validated in `features.rs`.
-- **FAR BACKLOG (reverse weak-deps + lockfile, §8)** — `[supplements]`
+  `[features.exclusive]` was already validated in `features.rs`. @impl/done
+- ##BACKLOG-REVERSE **FAR BACKLOG (reverse weak-deps + lockfile, §8)** — `[supplements]`
   and `[enhances]` (reverse-direction, need a reverse index) and the
   `[meta].solver` lockfile recording (needs a lockfile schema-version
-  bump) wait until the rest is ready.
+  bump) wait until the rest is ready. @spec/done
 
-naive and sat stay in tree: naive as the small-graph fast path and the
+##CELLS-STAY naive and sat stay in tree: naive as the small-graph fast path and the
 oracle's reference cell; sat as a recorded pure-Rust backtracker — both
-still selectable via `--solver`.
+still selectable via `--solver`. @impl/done
 
 ---
 
 ## 7. Determinism & performance {#determinism}
 
-- **Determinism.** `list_versions` returns a stable order; `sort_candidates`
+- ##DETERMINISM **Determinism.** `list_versions` returns a stable order; `sort_candidates`
   is a total order over `semver::Version`; the output builder re-sorts into
   roots-first + `(group, name)` order. Given deterministic provider
   responses, `solve` is deterministic — the property the oracle's
-  `solve_is_deterministic` pins.
-- **Performance.** resolvo's laziness preserves vibevm's network profile:
+  `solve_is_deterministic` pins. @impl/done
+- ##PERFORMANCE **Performance.** resolvo's laziness preserves vibevm's network profile:
   a package's versions are fetched only when the search first asks for that
   name, a manifest only when a solvable is explored. "Prefer newest" costs
   a sort, not a separate optimisation pass. At vibevm's scale (hundreds of
   packages, depth-3 graphs — PROP-003 §3.4) the solve is far from the
-  bottleneck; the fetch layer is, and laziness is the right lever there.
+  bottleneck; the fetch layer is, and laziness is the right lever there. @impl/done
 
 ---
 
 ## 8. Future work {#future-work}
 
-- **Capability resolution via a registry reverse-index.** The near-term
+- ##FUTURE-CAPABILITY-INDEX **Capability resolution via a registry reverse-index.** The near-term
   capability handling (§3) resolves `[requires.capabilities]` against a
   pre-scan of the transitive package closure — correct, and strictly
   stronger than naive's already-seen-graph matching, but it forgoes
@@ -311,8 +323,8 @@ still selectable via `--solver`.
   is new registry infrastructure — an index format, a publish-time
   emitter, and a query path — recorded here as the capability layer's
   natural evolution. Not scheduled; the trigger is capability routing
-  across packages-not-yet-seen becoming load-bearing.
-- **Reverse weak-deps + the `[meta].solver` lockfile field.** The forward
+  across packages-not-yet-seen becoming load-bearing. @spec/done
+- ##FUTURE-REVERSE-WEAK **Reverse weak-deps + the `[meta].solver` lockfile field.** The forward
   weak-deps (`[recommends]`, `[suggests]`) are implemented (PROP-003
   §2.3.3) — schema in `vibe-core`, behaviour in `ResolvoDepSolver`
   (recommends a greedy best-effort expansion, suggests never installed).
@@ -323,17 +335,17 @@ still selectable via `--solver`.
   `soft_requirements`-batched solve is a perf optimisation that can land
   any time. Separately, the lockfile `[meta]` block has no `solver` field
   (despite PROP-003 §2.1's note); recording the selected cell for a
-  reproducible re-resolve needs a lockfile schema-version bump.
+  reproducible re-resolve needs a lockfile schema-version bump. @spec/done
 
 ## 9. References {#references}
 
-- resolvo: <https://github.com/prefix-dev/resolvo> (BSD-3-Clause), crate
+- ##ref-resolvo resolvo: <https://github.com/prefix-dev/resolvo> (BSD-3-Clause), crate
   `resolvo 0.11` (MSRV 1.85.1); `Interner` + async `DependencyProvider`,
   `Solver` / `Problem` / `Requirement` / `KnownDependencies` /
-  `conflict::Conflict`, `utils::{Pool, VersionSet}`, `runtime::NowOrNeverRuntime`.
-- [PROP-003](PROP-003-dep-evolution.md) — dependency-model evolution
-  (vocabulary retained; §2.2 backend superseded here).
-- [PROP-002 §2.8](../vibe-registry/PROP-002-decentralized-registry.md) —
-  the `DepSolver` / `DepProvider` seam.
-- [PROP-000 §3](../../common/PROP-000.md) — permissive-license policy
-  (resolvo BSD-3-Clause is clean).
+  `conflict::Conflict`, `utils::{Pool, VersionSet}`, `runtime::NowOrNeverRuntime`. @spec/done
+- ##ref-prop-003 [PROP-003](PROP-003-dep-evolution.md) — dependency-model evolution
+  (vocabulary retained; §2.2 backend superseded here). @spec/done
+- ##ref-prop-002 [PROP-002 §2.8](../vibe-registry/PROP-002-decentralized-registry.md) —
+  the `DepSolver` / `DepProvider` seam. @spec/done
+- ##ref-prop-000 [PROP-000 §3](../../common/PROP-000.md) — permissive-license policy
+  (resolvo BSD-3-Clause is clean). @spec/done

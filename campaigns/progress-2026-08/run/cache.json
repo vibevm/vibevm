@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-24T21:09:27Z",
+  "updated_at": "2026-07-24T21:16:17Z",
   "files": {
     "spec/boot/00-core.md": {
       "content_hash": "9430b035d1017950ec37c4ce85bab91155334b5fc55d3e1948138a4f6be8b0e5",
@@ -977,25 +977,25 @@
       "issue_count": 0
     },
     "spec/modules/vibe-resolver/PROP-017-resolvo-resolver.md": {
-      "content_hash": "615629a47ac9928f62b50318e95e73b1297465fa02e88b94bc3c1ab0fd881dad",
+      "content_hash": "6c5269ed866558f5c41694bde48f8c3b18c1511171e5cb16bf3e7759ea19a62d",
       "rollup": {
         "explicit": [
           "impl",
           "work"
         ],
         "computed": [
-          "impl",
-          "work"
+          "spec",
+          "done"
         ],
         "effective": [
           "impl",
           "work"
         ],
-        "marker_count": 1,
-        "fact_count": 93,
-        "unmarked_facts": 93
+        "marker_count": 106,
+        "fact_count": 105,
+        "unmarked_facts": 0
       },
-      "marker_count": 1,
+      "marker_count": 106,
       "unit_count": 14,
       "issue_count": 0
     },
@@ -1069,25 +1069,25 @@
       "issue_count": 0
     },
     "spec/modules/vibe-workspace/PROP-009-loading-model.md": {
-      "content_hash": "0bb0da1066da77961b326d990aa6ea664a4673029663b23efba835f2e7b2734a",
+      "content_hash": "06b5556e9223b24992a54891cda76a4eeace0780ce1edacb2beb3acb178c5e14",
       "rollup": {
         "explicit": [
           "impl",
           "work"
         ],
         "computed": [
-          "impl",
+          "spec",
           "work"
         ],
         "effective": [
           "impl",
           "work"
         ],
-        "marker_count": 1,
-        "fact_count": 89,
-        "unmarked_facts": 89
+        "marker_count": 104,
+        "fact_count": 103,
+        "unmarked_facts": 0
       },
-      "marker_count": 1,
+      "marker_count": 104,
       "unit_count": 20,
       "issue_count": 0
     },
