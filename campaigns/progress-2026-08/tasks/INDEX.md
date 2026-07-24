@@ -6,7 +6,7 @@
 | DRIFT-002 | split progress-core parse.rs to hold the file budget (floor red) | opus | done |
 | DRIFT-003 | campaign phase hardcoded "A" in the progress adapter | opus | done |
 | DRIFT-004 | specmap learns ##<ID> fact anchors (owner commission) | opus | done |
-| DRIFT-005 | spec compiler learns fact inheritance R1-R4 | opus | queued |
+| DRIFT-005 | spec compiler learns fact inheritance R1-R4 | opus | done |
 
 DRIFT-NNN (coding, Opus) and SPEC-NNN (spec stitching, budget-dependent)
 task files live beside this index. Formats:

@@ -12,12 +12,19 @@
 //!   drops the contract's; `:add` (the default) is the sum, contract then
 //!   source.
 //!
+//! **Per-fact override** (§7.3, fact-inheritance clause 2). Within an `:add`
+//! merge, a source fact redeclaring a contract fact's `##<ID>` overrides it: the
+//! contract fact's span is dropped from the merged text and the source's stays
+//! in place (last-wins, contract→source order). Facts on one side only, and all
+//! non-fact text, are carried unchanged; `:replace` supersedes the whole
+//! contract side, facts included.
+//!
 //! There is deliberately no access control (`private`/`public`): a section that
 //! exists only in the source is still usable (§7.3).
 
 use std::collections::HashSet;
 
-use crate::doctree::DocTree;
+use crate::doctree::{DocTree, NodeId, NodeKind};
 
 /// How a section present in both contract and source is combined.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -64,7 +71,7 @@ pub fn merge_contract_source(contract: &DocTree, source: &DocTree) -> Vec<Merged
     let mut out = Vec::new();
     let mut seen: HashSet<String> = HashSet::new();
 
-    for (cid, anchor) in contract.anchored() {
+    for (cid, anchor) in contract.sections() {
         seen.insert(anchor.to_string());
         let section = match source.find_by_anchor(anchor) {
             None => MergedSection {
@@ -76,7 +83,14 @@ pub fn merge_contract_source(contract: &DocTree, source: &DocTree) -> Vec<Merged
                 let mode = MergeMode::from_trailing(&source.node(sid).trailing);
                 let text = match mode {
                     MergeMode::Replace => source.text(sid),
-                    MergeMode::Add => format!("{}\n{}", contract.text(cid), source.text(sid)),
+                    MergeMode::Add => {
+                        let dropped = overridden_facts(contract, cid, source, sid);
+                        format!(
+                            "{}\n{}",
+                            contract.text_without(cid, &dropped),
+                            source.text(sid)
+                        )
+                    }
                 };
                 MergedSection {
                     anchor: anchor.to_string(),
@@ -88,7 +102,9 @@ pub fn merge_contract_source(contract: &DocTree, source: &DocTree) -> Vec<Merged
         out.push(section);
     }
 
-    for (sid, anchor) in source.anchored() {
+    // Source-only heading sections, appended in order; source-only facts ride
+    // inside their section's span, never as their own merge unit.
+    for (sid, anchor) in source.sections() {
         if seen.contains(anchor) {
             continue;
         }
@@ -100,6 +116,23 @@ pub fn merge_contract_source(contract: &DocTree, source: &DocTree) -> Vec<Merged
     }
 
     out
+}
+
+/// The contract facts (in `cid`'s subtree) whose id the source section
+/// (`sid`'s subtree) redeclares — the spans dropped under per-fact override
+/// (PROP-035 §7.3, clause 2). One id, one unit: redeclaration is the override.
+fn overridden_facts(contract: &DocTree, cid: NodeId, source: &DocTree, sid: NodeId) -> Vec<NodeId> {
+    let source_ids: HashSet<&str> = source
+        .facts_under(sid)
+        .into_iter()
+        .map(|(_, a)| a)
+        .collect();
+    contract
+        .facts_under(cid)
+        .into_iter()
+        .filter(|(_, a)| source_ids.contains(a))
+        .map(|(id, _)| id)
+        .collect()
 }
 
 /// Fold `source` into `contract` at the **top level**, producing one document
@@ -115,6 +148,11 @@ pub fn fold_source(contract: &DocTree, source: &DocTree) -> String {
     let mut out = String::new();
 
     for &child in contract.children(contract.root()) {
+        // Top-level fact leaves (preamble facts) ride with the preamble, which
+        // the fold does not re-emit; only heading sections are folded.
+        if contract.node(child).kind != NodeKind::Heading {
+            continue;
+        }
         match contract
             .node(child)
             .id
@@ -124,7 +162,8 @@ pub fn fold_source(contract: &DocTree, source: &DocTree) -> String {
             Some(sid) => match MergeMode::from_trailing(&source.node(sid).trailing) {
                 MergeMode::Replace => out.push_str(&source.text(sid)),
                 MergeMode::Add => {
-                    out.push_str(&contract.text(child));
+                    let dropped = overridden_facts(contract, child, source, sid);
+                    out.push_str(&contract.text_without(child, &dropped));
                     out.push('\n');
                     out.push_str(&source.text(sid));
                 }
@@ -135,7 +174,8 @@ pub fn fold_source(contract: &DocTree, source: &DocTree) -> String {
     }
 
     for &schild in source.children(source.root()) {
-        if let Some(anchor) = source.node(schild).id.as_deref()
+        if source.node(schild).kind == NodeKind::Heading
+            && let Some(anchor) = source.node(schild).id.as_deref()
             && contract.find_by_anchor(anchor).is_none()
         {
             out.push_str(&source.text(schild));
@@ -234,5 +274,76 @@ mod tests {
         let source = DocTree::parse("# A {#a}\nsource-a\n# Extra {#extra}\nsource-extra\n");
         let folded = fold_source(&contract, &source);
         assert!(folded.contains("source-extra"), "{folded}");
+    }
+
+    fn count(hay: &str, needle: &str) -> usize {
+        hay.matches(needle).count()
+    }
+
+    #[test]
+    fn fold_add_overrides_a_redeclared_fact() {
+        // Source's `##fact-a` overrides the contract's; `##fact-b` (contract
+        // only) survives; the id appears exactly once in the merged output.
+        let contract =
+            DocTree::parse("# API {#root}\n- ##fact-a contract version\n- ##fact-b keep me\n");
+        let source = DocTree::parse("# Impl {#root}\n- ##fact-a source version\n");
+        let folded = fold_source(&contract, &source);
+        assert!(folded.contains("source version"), "{folded}");
+        assert!(!folded.contains("contract version"), "{folded}");
+        assert!(folded.contains("##fact-b"), "{folded}");
+        assert_eq!(
+            count(&folded, "##fact-a"),
+            1,
+            "one surviving fact-a:\n{folded}"
+        );
+    }
+
+    #[test]
+    fn fold_add_keeps_both_when_no_redeclaration() {
+        let contract = DocTree::parse("# API {#root}\n- ##fact-a contract\n");
+        let source = DocTree::parse("# Impl {#root}\n- ##fact-b source\n");
+        let folded = fold_source(&contract, &source);
+        assert!(folded.contains("##fact-a"), "{folded}");
+        assert!(folded.contains("##fact-b"), "{folded}");
+    }
+
+    #[test]
+    fn fold_replace_drops_all_contract_facts() {
+        let contract = DocTree::parse("# API {#root}\n- ##fact-a contract\n");
+        let source = DocTree::parse("# Impl {#root} :replace\n- ##fact-z source\n");
+        let folded = fold_source(&contract, &source);
+        assert!(
+            !folded.contains("##fact-a"),
+            "contract facts survive:\n{folded}"
+        );
+        assert!(folded.contains("##fact-z"), "{folded}");
+    }
+
+    #[test]
+    fn merge_contract_source_add_overrides_a_fact() {
+        let contract =
+            DocTree::parse("# API {#root}\n- ##fact-a contract version\n- ##fact-b keep\n");
+        let source = DocTree::parse("# Impl {#root}\n- ##fact-a source version\n");
+        let merged = merge_contract_source(&contract, &source);
+        let s = find(&merged, "root");
+        assert_eq!(s.origin, SectionOrigin::Merged(MergeMode::Add));
+        assert!(s.text.contains("source version"), "{}", s.text);
+        assert!(!s.text.contains("contract version"), "{}", s.text);
+        assert_eq!(count(&s.text, "##fact-a"), 1, "one fact-a:\n{}", s.text);
+    }
+
+    #[test]
+    fn merge_contract_source_ignores_facts_as_units() {
+        // A source-only fact does not surface as its own MergedSection — it
+        // rides inside its section's span (here, the source-only section).
+        let contract = DocTree::parse("# A {#a}\nx\n");
+        let source = DocTree::parse("# B {#b}\n- ##loose-fact y\n");
+        let merged = merge_contract_source(&contract, &source);
+        assert!(
+            merged.iter().all(|s| s.anchor != "loose-fact"),
+            "{merged:?}"
+        );
+        // The fact still travels with its section's text.
+        assert!(find(&merged, "b").text.contains("##loose-fact"));
     }
 }

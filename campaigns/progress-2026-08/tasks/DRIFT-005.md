@@ -1,8 +1,16 @@
 # DRIFT-005 — the spec compiler learns fact inheritance (R1–R4) {#root}
 
-<status stage="impl" state="plan" ref="DRIFT-005"/>
+<status stage="impl" state="done" ref="DRIFT-005"/>
 
-**Status:** queued
+**Status:** done — executed by Opus 2026-07-24, reviewed and accepted by
+Fable the same day (gate.rs read in full, override helper and diff stat
+reviewed; 100 lib + 12 integration tests green; boundaries held —
+vibe-workspace untouched, CompileError::DuplicateId surfaces through
+the existing InlineCompile wrap; stop rule untouched; self-check all
+green, exit 0). Accepted design judgment, enshrined as a PROP-035
+S7.3 precision line: the gate flags a repeat only when at least one
+occurrence is a fact leaf — a pure heading-vs-heading repeat is the
+:add concatenation's own artifact, not a collision.
 **Executor:** Opus. **Reviewer:** Fable, against §6 verbatim.
 **Cluster:** workspace (host `vibe-spec` — doctree / merge / resolver / embed)
 **Unit-stability check (release precondition):** the governing contract

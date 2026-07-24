@@ -20,21 +20,40 @@ use std::ops::Range;
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct NodeId(usize);
 
-/// One node of the document tree: a heading and the subtree it owns. The
-/// synthetic root (`NodeId(0)`) has `level = 0`, no `id`, and spans the whole
-/// document (its own body is the preamble before the first heading).
+/// What kind of IR node this is (PROP-035 §5).
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum NodeKind {
+    /// A heading and the subtree it owns (`#`…`######`, or the synthetic root).
+    Heading,
+    /// A `##<ID>` fact leaf — the finest grain, a paragraph or list item whose
+    /// lead token anchors it. Always childless; its parent is the enclosing
+    /// section.
+    Fact,
+}
+
+/// One node of the document tree: a heading and the subtree it owns, or a
+/// `##<ID>` fact leaf. The synthetic root (`NodeId(0)`) is a [`NodeKind::Heading`]
+/// with `level = 0`, no `id`, spanning the whole document (its own body is the
+/// preamble before the first heading).
 #[derive(Debug, Clone)]
 pub struct Node {
-    /// The heading's `{#anchor}`, if it declared one.
+    /// The heading's `{#anchor}` or the fact's `##<ID>`, if it declared one.
     pub id: Option<String>,
-    /// Heading level: `1..=6` for headings, `0` for the synthetic root.
+    /// Heading level: `1..=6` for headings, `0` for the synthetic root. A
+    /// [`NodeKind::Fact`] leaf is levelless and carries `0` (unused — a fact is
+    /// attached directly to its section, never via the level stack).
     pub level: u8,
+    /// Whether this node is a heading section or a fact leaf.
+    pub kind: NodeKind,
     /// Heading text, with the leading `#`s and trailing `{#anchor}` stripped.
+    /// Empty for a fact leaf.
     pub heading: String,
     /// Any text after the `{#anchor}` on the heading line — e.g. a `#source`
-    /// merge marker `:add` / `:replace` (PROP-035 §7.3). Empty when absent.
+    /// merge marker `:add` / `:replace` (PROP-035 §7.3). Empty when absent and
+    /// for a fact leaf.
     pub trailing: String,
-    /// 0-based source line of the heading (`0` for the root, which has none).
+    /// 0-based source line of the heading (`0` for the root, which has none), or
+    /// the first line of a fact leaf's span.
     pub heading_line: usize,
     /// Source lines `[start, end)` this node covers, subtree included.
     pub span: Range<usize>,
@@ -65,6 +84,7 @@ impl DocTree {
         let mut nodes = vec![Node {
             id: None,
             level: 0,
+            kind: NodeKind::Heading,
             heading: String::new(),
             trailing: String::new(),
             heading_line: 0,
@@ -76,13 +96,49 @@ impl DocTree {
         let mut duplicate_anchors = Vec::new();
         let mut stack: Vec<NodeId> = vec![NodeId(0)];
 
+        // The open text block (a maximal run of non-blank, non-heading,
+        // non-fenced lines), `[block_start, i)`, and the section that encloses
+        // it — captured when the block opened, constant for its life because a
+        // heading is what would change the section and also ends the block.
+        let mut block_start: Option<usize> = None;
+        let mut block_section = NodeId(0);
+
         for (i, line) in lines.iter().enumerate() {
-            if fenced[i] {
+            // A fenced, blank, or heading line all close an open text block.
+            if fenced[i] || line.trim().is_empty() {
+                if let Some(bs) = block_start.take() {
+                    flush_block(
+                        &lines,
+                        bs,
+                        i,
+                        block_section,
+                        &mut nodes,
+                        &mut anchors,
+                        &mut duplicate_anchors,
+                    );
+                }
                 continue;
             }
             let Some((level, heading, anchor, trailing)) = parse_heading(line) else {
+                // A content line: open a block if none is open, else extend it.
+                if block_start.is_none() {
+                    block_start = Some(i);
+                    block_section = *stack.last().unwrap();
+                }
                 continue;
             };
+
+            if let Some(bs) = block_start.take() {
+                flush_block(
+                    &lines,
+                    bs,
+                    i,
+                    block_section,
+                    &mut nodes,
+                    &mut anchors,
+                    &mut duplicate_anchors,
+                );
+            }
 
             // Close every open node the new heading is a sibling of or an
             // ancestor break from: level >= this one ends here.
@@ -101,6 +157,7 @@ impl DocTree {
             nodes.push(Node {
                 id: anchor.clone(),
                 level,
+                kind: NodeKind::Heading,
                 heading,
                 trailing,
                 heading_line: i,
@@ -120,7 +177,18 @@ impl DocTree {
             }
             stack.push(id);
         }
-        // Nodes left open run to end of document (their provisional span end).
+        // A block still open at EOF, and any nodes left open, run to end of doc.
+        if let Some(bs) = block_start.take() {
+            flush_block(
+                &lines,
+                bs,
+                lines.len(),
+                block_section,
+                &mut nodes,
+                &mut anchors,
+                &mut duplicate_anchors,
+            );
+        }
 
         DocTree {
             nodes,
@@ -177,14 +245,66 @@ impl DocTree {
         &self.duplicate_anchors
     }
 
-    /// The anchored nodes, in document order, as `(id, anchor)`. Skips the root
-    /// and any heading without an anchor.
+    /// Every anchored node — heading **and** fact leaf — in document order, as
+    /// `(id, anchor)`. Skips the root and any heading without an anchor. Fact
+    /// ids share the one anchor namespace (PROP-035 §5), so both grains appear;
+    /// [`sections`](Self::sections) is the heading-only view.
     pub fn anchored(&self) -> impl Iterator<Item = (NodeId, &str)> {
         self.nodes
             .iter()
             .enumerate()
             .skip(1)
             .filter_map(|(i, n)| n.id.as_deref().map(|a| (NodeId(i), a)))
+    }
+
+    /// The anchored **heading** sections, in document order, as `(id, anchor)`.
+    /// Fact leaves are excluded — this is the section-grain view the `#source`
+    /// merge (PROP-035 §7.3) iterates, where a fact rides inside its section's
+    /// span rather than as its own merge unit.
+    pub fn sections(&self) -> impl Iterator<Item = (NodeId, &str)> {
+        self.nodes
+            .iter()
+            .enumerate()
+            .skip(1)
+            .filter(|(_, n)| n.kind == NodeKind::Heading)
+            .filter_map(|(i, n)| n.id.as_deref().map(|a| (NodeId(i), a)))
+    }
+
+    /// The fact leaves inside a node's subtree (the node itself and every
+    /// descendant), in document order, as `(NodeId, id)`. Used by the `:add`
+    /// merge to find which contract facts a source section redeclares
+    /// (PROP-035 §7.3, per-fact override).
+    pub fn facts_under(&self, root: NodeId) -> Vec<(NodeId, &str)> {
+        let mut out = Vec::new();
+        let mut stack = vec![root];
+        while let Some(id) = stack.pop() {
+            let n = &self.nodes[id.0];
+            if n.kind == NodeKind::Fact
+                && let Some(a) = n.id.as_deref()
+            {
+                out.push((id, a));
+            }
+            // Push children reversed so the pop order is document order.
+            stack.extend(n.children.iter().rev().copied());
+        }
+        out.sort_by_key(|(id, _)| self.nodes[id.0].span.start);
+        out
+    }
+
+    /// A node's text (its span, joined) with the given fact leaves' line spans
+    /// removed — the per-fact override of PROP-035 §7.3: a contract section's
+    /// text minus the facts the source redeclares. `drop` leaves outside the
+    /// section's span are ignored.
+    pub fn text_without(&self, node: NodeId, drop: &[NodeId]) -> String {
+        let dropped: std::collections::HashSet<usize> = drop
+            .iter()
+            .flat_map(|&f| self.nodes[f.0].span.clone())
+            .collect();
+        let span = self.nodes[node.0].span.clone();
+        span.filter(|i| !dropped.contains(i))
+            .map(|i| self.lines[i].as_str())
+            .collect::<Vec<_>>()
+            .join("\n")
     }
 
     /// The source text a node covers (heading line through its whole subtree),
@@ -202,6 +322,44 @@ impl DocTree {
     /// [`len`](Self::len).
     pub fn is_empty(&self) -> bool {
         false
+    }
+}
+
+/// Segment a closed text block `[start, end)` into `##<ID>` fact leaves, push
+/// each as a childless [`NodeKind::Fact`] node parented at `section`, and register
+/// its id in the shared anchor namespace (a repeat records a duplicate, exactly
+/// as a heading collision does — PROP-035 §5). Fact NodeIds are minted here so
+/// they interleave with heading nodes in document order.
+#[allow(clippy::too_many_arguments)]
+fn flush_block(
+    lines: &[String],
+    start: usize,
+    end: usize,
+    section: NodeId,
+    nodes: &mut Vec<Node>,
+    anchors: &mut HashMap<String, NodeId>,
+    duplicate_anchors: &mut Vec<String>,
+) {
+    for seg in crate::facts::segment_block(lines, start, end) {
+        let id = NodeId(nodes.len());
+        nodes.push(Node {
+            id: Some(seg.id.clone()),
+            level: 0,
+            kind: NodeKind::Fact,
+            heading: String::new(),
+            trailing: String::new(),
+            heading_line: start + seg.start,
+            span: (start + seg.start)..(start + seg.end),
+            parent: Some(section),
+            children: Vec::new(),
+        });
+        nodes[section.0].children.push(id);
+        match anchors.entry(seg.id) {
+            Entry::Vacant(slot) => {
+                slot.insert(id);
+            }
+            Entry::Occupied(slot) => duplicate_anchors.push(slot.key().clone()),
+        }
     }
 }
 
@@ -268,142 +426,4 @@ fn split_anchor(text: &str) -> (String, Option<String>, String) {
 }
 
 #[cfg(test)]
-mod tests {
-    use super::*;
-
-    const DOC: &str = "\
-preamble line
-# Title {#root}
-intro under title
-## First {#first}
-first body
-### Deep {#deep}
-deep body
-## Second {#second}
-second body
-";
-
-    #[test]
-    fn builds_hierarchy() {
-        let t = DocTree::parse(DOC);
-        let root = t.root();
-        // One top-level heading (Title) under the synthetic root.
-        let top = t.children(root);
-        assert_eq!(top.len(), 1);
-        let title = top[0];
-        assert_eq!(t.node(title).id.as_deref(), Some("root"));
-        assert_eq!(t.node(title).level, 1);
-
-        // Title owns First and Second (both h2).
-        let under_title = t.children(title);
-        assert_eq!(under_title.len(), 2);
-        assert_eq!(t.node(under_title[0]).id.as_deref(), Some("first"));
-        assert_eq!(t.node(under_title[1]).id.as_deref(), Some("second"));
-
-        // First owns Deep (h3); Second owns nothing.
-        assert_eq!(t.children(under_title[0]).len(), 1);
-        assert_eq!(
-            t.node(t.children(under_title[0])[0]).id.as_deref(),
-            Some("deep")
-        );
-        assert!(t.children(under_title[1]).is_empty());
-    }
-
-    #[test]
-    fn find_by_anchor_and_heading_text() {
-        let t = DocTree::parse(DOC);
-        let deep = t.find_by_anchor("deep").unwrap();
-        assert_eq!(t.node(deep).heading, "Deep");
-        assert_eq!(t.node(deep).level, 3);
-        assert!(t.find_by_anchor("missing").is_none());
-    }
-
-    #[test]
-    fn span_covers_subtree_and_stops_at_sibling() {
-        let t = DocTree::parse(DOC);
-        // `First` spans its own body plus `Deep`, and stops at `Second`.
-        let first = t.find_by_anchor("first").unwrap();
-        let text = t.text(first);
-        assert!(text.contains("first body"));
-        assert!(text.contains("### Deep"));
-        assert!(text.contains("deep body"));
-        assert!(!text.contains("Second"));
-    }
-
-    #[test]
-    fn root_spans_whole_document_including_preamble() {
-        let t = DocTree::parse(DOC);
-        let text = t.text(t.root());
-        assert!(text.contains("preamble line"));
-        assert!(text.contains("second body"));
-    }
-
-    #[test]
-    fn headings_in_fences_are_not_nodes() {
-        let src = "\
-# Real {#real}
-```
-# Fake heading in code
-```
-after
-";
-        let t = DocTree::parse(src);
-        assert!(t.find_by_anchor("real").is_some());
-        // The fenced `#` produced no node: Real has no children.
-        let real = t.find_by_anchor("real").unwrap();
-        assert!(t.children(real).is_empty());
-        assert_eq!(t.len(), 2); // root + Real
-    }
-
-    #[test]
-    fn duplicate_anchor_keeps_first_and_reports() {
-        let src = "\
-# One {#dup}
-a
-# Two {#dup}
-b
-";
-        let t = DocTree::parse(src);
-        let first = t.find_by_anchor("dup").unwrap();
-        assert_eq!(t.node(first).heading, "One");
-        assert_eq!(t.duplicate_anchors(), &["dup".to_string()]);
-    }
-
-    #[test]
-    fn heading_without_anchor_has_none() {
-        let t = DocTree::parse("# Plain heading\nbody\n");
-        let top = t.children(t.root())[0];
-        assert_eq!(t.node(top).id, None);
-        assert_eq!(t.node(top).heading, "Plain heading");
-    }
-
-    #[test]
-    fn anchor_trailing_marker_is_captured() {
-        let t = DocTree::parse("## Name {#tag} :replace\nbody\n");
-        let n = t.find_by_anchor("tag").unwrap();
-        assert_eq!(t.node(n).heading, "Name");
-        assert_eq!(t.node(n).trailing, ":replace");
-    }
-
-    #[test]
-    fn hash_without_space_is_not_a_heading() {
-        let t = DocTree::parse("#notaheading\ntext\n");
-        assert_eq!(t.len(), 1); // root only
-    }
-
-    #[test]
-    fn resolve_flat_and_tree_path() {
-        let t = DocTree::parse(DOC);
-        // A single segment matches flat.
-        assert_eq!(t.resolve_path(&["first".into()]), t.find_by_anchor("first"));
-        // A tree path descends: `deep` is a child of `first`.
-        let deep = t.resolve_path(&["first".into(), "deep".into()]).unwrap();
-        assert_eq!(t.node(deep).heading, "Deep");
-        // An empty path is the whole document.
-        assert_eq!(t.resolve_path(&[]), Some(t.root()));
-        // A wrong descent fails: `second` is a sibling of `first`, not a child.
-        assert!(t.resolve_path(&["first".into(), "second".into()]).is_none());
-        // A missing first segment fails.
-        assert!(t.resolve_path(&["nope".into()]).is_none());
-    }
-}
+mod tests;

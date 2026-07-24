@@ -26,6 +26,7 @@ use crate::address::{SpecAddress, SpecAddressError};
 use crate::directives::{DirectiveKind, Directives};
 use crate::doctree::DocTree;
 use crate::embed::{EmbedError, SectionSource, expand_embeds};
+use crate::gate::{DuplicateId, first_duplicate};
 use crate::merge::fold_source;
 use crate::use_graph::{UseGraphError, topo_order_from};
 
@@ -40,6 +41,11 @@ pub enum CompileError {
     Address(#[from] SpecAddressError),
     #[error("cannot load {addr}: {reason}")]
     Unresolved { addr: String, reason: String },
+    /// The `#source` merge produced a document whose anchor namespace is no
+    /// longer unique — a collision the per-fact override did not cancel
+    /// (PROP-035 §7.3, clause 3). Fails the build; never a warning.
+    #[error("merged {addr}: {dup}")]
+    DuplicateId { addr: String, dup: DuplicateId },
 }
 
 /// Compile the closure reachable from `seed` into a single static document.
@@ -59,7 +65,9 @@ pub fn compile_static(
                 reason,
             })?;
 
-        // phase 3 — fold source into a contract that declares #source.
+        // phase 3 — fold source into a contract that declares #source, then
+        // re-gate id uniqueness over the merged view (§7.3, clause 3): a
+        // duplicate the per-fact override did not cancel fails the build.
         let folded = match first_source_directive(&text) {
             Some(source_addr) => {
                 let contract_tree = DocTree::parse(&text);
@@ -69,7 +77,14 @@ pub fn compile_static(
                         reason,
                     }
                 })?;
-                fold_source(&contract_tree, &DocTree::parse(&src_text))
+                let merged = fold_source(&contract_tree, &DocTree::parse(&src_text));
+                if let Some(dup) = first_duplicate(&DocTree::parse(&merged)) {
+                    return Err(CompileError::DuplicateId {
+                        addr: key.clone(),
+                        dup,
+                    });
+                }
+                merged
             }
             None => text,
         };
@@ -191,6 +206,53 @@ mod tests {
             compile_static(&seed, &src),
             Err(CompileError::UseGraph(_))
         ));
+    }
+
+    #[test]
+    fn a_clean_fact_override_compiles_to_the_source_version() {
+        // Source's `##fact-a` overrides the contract's; the merged view holds one
+        // `fact-a`, so the gate passes and the source text wins.
+        let src = MockSource::new(&[
+            (
+                "spec://vibevm/c#root",
+                "# API {#root}\n#source spec://vibevm/impl#root\n- ##fact-a contract version\n",
+            ),
+            (
+                "spec://vibevm/impl#root",
+                "# Impl {#root}\n- ##fact-a source version\n",
+            ),
+        ]);
+        let seed = SpecAddress::parse("spec://vibevm/c#root").unwrap();
+        let out = compile_static(&seed, &src).unwrap();
+        assert!(out.contains("source version"), "{out}");
+        assert!(!out.contains("contract version"), "{out}");
+        assert!(!out.contains("#source"), "{out}");
+    }
+
+    #[test]
+    fn a_cross_section_fact_collision_fails_the_gate() {
+        // The contract's `##dup` (in #a) is not overridden — the matching source
+        // section carries no `##dup` — and a source-only section #b re-declares
+        // it, so the merged document holds `dup` twice across sections.
+        let src = MockSource::new(&[
+            (
+                "spec://vibevm/c#root",
+                "# A {#a}\n#source spec://vibevm/impl#whole\n- ##dup contract's\n",
+            ),
+            (
+                "spec://vibevm/impl#whole",
+                "# A {#a}\nplain source a\n# B {#b}\n- ##dup source's\n",
+            ),
+        ]);
+        let seed = SpecAddress::parse("spec://vibevm/c#root").unwrap();
+        match compile_static(&seed, &src) {
+            Err(CompileError::DuplicateId { dup, .. }) => {
+                assert_eq!(dup.id, "dup");
+                assert_eq!(dup.first_section, "a");
+                assert_eq!(dup.second_section, "b");
+            }
+            other => panic!("expected a DuplicateId gate error, got {other:?}"),
+        }
     }
 
     #[test]

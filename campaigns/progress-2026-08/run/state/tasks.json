@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updated_at": "2026-07-25T01:05:00Z",
+ "updated_at": "2026-07-25T02:40:00Z",
  "tasks": [
   {
    "id": "DRIFT-001",
@@ -30,7 +30,7 @@
    "id": "DRIFT-005",
    "title": "spec compiler learns fact inheritance R1-R4",
    "executor": "opus",
-   "status": "queued"
+   "status": "done"
   }
  ]
 }

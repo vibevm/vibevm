@@ -203,4 +203,32 @@ mod tests {
         assert!(out.contains("<!-- embed: spec://vibevm/a#x -->"));
         assert!(out.contains("<!-- /embed: spec://vibevm/a#x -->"));
     }
+
+    /// A [`SectionSource`] backed by a real [`DocTree`]: it resolves an address's
+    /// anchor to a node — heading **or** fact leaf — and returns that node's
+    /// span, proving fact resolution + splice end to end (PROP-035 §5/§7.1).
+    struct DocSource(DocTree);
+
+    impl SectionSource for DocSource {
+        fn section_text(&self, addr: &SpecAddress) -> Result<String, String> {
+            let node = self
+                .0
+                .resolve_path(&addr.anchor)
+                .ok_or_else(|| "anchor not found".to_string())?;
+            Ok(self.0.text(node))
+        }
+    }
+
+    #[test]
+    fn embeds_a_fact_leafs_exact_span() {
+        // `#embed` of a fact address splices exactly that fact's unit — not its
+        // sibling, and not the whole section.
+        let doc = DocTree::parse("# Doc {#root}\n- ##fact-a the exact unit\n- ##fact-b other\n");
+        let src = DocSource(doc);
+        let out = expand_embeds("before\n#embed spec://vibevm/d#fact-a\nafter\n", &src).unwrap();
+        assert!(out.contains("##fact-a the exact unit"), "{out}");
+        assert!(!out.contains("##fact-b"), "spliced too much:\n{out}");
+        assert!(out.contains("before") && out.contains("after"));
+        assert!(!out.contains("#embed"));
+    }
 }
