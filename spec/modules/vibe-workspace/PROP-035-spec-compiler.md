@@ -146,7 +146,7 @@ Merge algorithm, per section (by matching `{#tag}`):
 
 1. **Section fate by default.** Facts ride their section: `:add` carries both sides' facts into the sum; `:replace` supersedes the contract's facts — text and fact anchors together.
 2. **Per-fact override.** Within a merged `:add` section, a source fact redeclaring a contract fact's `##<ID>` **overrides** it: the contract fact's span is dropped from the merged output and the source's is canonical (last-wins in contract→source order). One id, one unit — redeclaration IS the override gesture, so refining a single statement never requires `:replace`-ing the whole section.
-3. **The merged view holds uniqueness.** After merging, the compiler re-runs the anchor-uniqueness check — fact and heading ids, one namespace — over the merged document; a surviving duplicate (a non-override collision across sections, or fact-vs-heading) is a **build error**, never a warning. Per-file cleanliness of the inputs does not exempt the merged output.
+3. **The merged view holds uniqueness.** After merging, the compiler re-runs the anchor-uniqueness check — fact and heading ids, one namespace — over the merged document; a surviving duplicate (a non-override collision across sections, or fact-vs-heading) is a **build error**, never a warning. Per-file cleanliness of the inputs does not exempt the merged output. *(Precision, from the implementation review 2026-07-24: the gate flags a repeat only when at least one occurrence is a fact leaf — a pure heading-vs-heading repeat is the `:add` concatenation's own artifact (both section versions legitimately carry the same `{#tag}`), not a collision.)*
 
 ### 7.4 In-place use — the `@spec://` sigil {#in-place-use}
 

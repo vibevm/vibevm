@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updated_at": "2026-07-25T00:40:00Z",
+ "updated_at": "2026-07-25T02:40:00Z",
  "findings": [
   {
    "id": "F-001",
@@ -196,9 +196,9 @@
    "from": "spec/modules/vibe-workspace/PROP-035-spec-compiler.md",
    "to": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
    "type": "missing-support",
-   "status": "open",
+   "status": "resolved",
    "wave": 0,
-   "note": "The live s7.3 contract<->source merge (crates/vibe-spec/src/merge.rs) is section-grain and fact-blind: facts ride as opaque body text. Three unspecified joints with the fact amendment: (1) :add (the DEFAULT) concatenates contract+source section bodies - a fact id declared on both sides becomes a DUPLICATE in the merged view, and no gate sees it (per-file checks are clean; the compiled artifact is scanned by nobody); (2) :replace drops contract facts from the compiled view wholesale (source-file specmap resolution unaffected; compiled-view readers lose the ids); (3) there is no per-fact override gesture - overriding one statement requires :replace of the whole section. Fact-inheritance mechanism needs ratifying into PROP-035 s5 (IR fact leaves) + s7.3 (fact-merge clause), mirrored in PROP-014 s2.1; implementation would be a host DRIFT (vibe-spec merge/doctree/router)."
+   "note": "The live s7.3 contract<->source merge (crates/vibe-spec/src/merge.rs) is section-grain and fact-blind: facts ride as opaque body text. Three unspecified joints with the fact amendment: (1) :add (the DEFAULT) concatenates contract+source section bodies - a fact id declared on both sides becomes a DUPLICATE in the merged view, and no gate sees it (per-file checks are clean; the compiled artifact is scanned by nobody); (2) :replace drops contract facts from the compiled view wholesale (source-file specmap resolution unaffected; compiled-view readers lose the ids); (3) there is no per-fact override gesture - overriding one statement requires :replace of the whole section. Fact-inheritance mechanism needs ratifying into PROP-035 s5 (IR fact leaves) + s7.3 (fact-merge clause), mirrored in PROP-014 s2.1; implementation would be a host DRIFT (vibe-spec merge/doctree/router). RESOLVED 2026-07-24: contract ratified (PROP-035 s5 fact leaves + s7.3 fact-inheritance R1-R3 with the heading-repeat precision; PROP-014 s2.1 cites), engine landed (DRIFT-004, core v0.8.0 mdspec), compiler landed (DRIFT-005, vibe-spec: NodeKind::Fact leaves, per-fact override in add-merge, CompileError::DuplicateId gate, fact-addressed embed)."
   }
  ]
 }
