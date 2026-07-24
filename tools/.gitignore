@@ -14,3 +14,7 @@
 !*/README.md
 !*.sh
 !*.ps1
+# The progress dashboard (campaign plan §7) is committed source, not a
+# vendored binary: zero-dependency node:http server + one static page.
+!progress-dashboard/serve.mjs
+!progress-dashboard/index.html

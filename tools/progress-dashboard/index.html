@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Progress Control — campaign dashboard</title>
+<style>
+  :root { --bg:#fff; --fg:#1a1a1a; --dim:#777; --line:#e3e3e3; --accent:#2563eb;
+          --warn:#b45309; --err:#b91c1c; --ok:#15803d; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#111; --fg:#e8e8e8; --dim:#999; --line:#333; --accent:#60a5fa;
+            --warn:#fbbf24; --err:#f87171; --ok:#4ade80; }
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; font:14px/1.5 system-ui,sans-serif; background:var(--bg); color:var(--fg); }
+  header { display:flex; gap:1rem; align-items:baseline; padding:.7rem 1rem;
+           border-bottom:1px solid var(--line); flex-wrap:wrap; }
+  header h1 { font-size:1rem; margin:0; }
+  #fresh { font-size:.8rem; color:var(--dim); }
+  #fresh.stale { color:var(--warn); font-weight:600; }
+  nav { display:flex; gap:.25rem; padding:.4rem 1rem; border-bottom:1px solid var(--line); }
+  nav button { border:1px solid var(--line); background:none; color:var(--fg);
+               padding:.3rem .8rem; border-radius:.4rem; cursor:pointer; }
+  nav button.on { background:var(--accent); color:#fff; border-color:var(--accent); }
+  main { padding:1rem; max-width:72rem; margin:0 auto; }
+  section { display:none; }
+  section.on { display:block; }
+  table { border-collapse:collapse; width:100%; }
+  th,td { text-align:left; padding:.25rem .5rem; border-bottom:1px solid var(--line);
+          font-variant-numeric:tabular-nums; }
+  th { color:var(--dim); font-weight:600; }
+  .num { text-align:right; }
+  .big { display:inline-block; margin:0 1.2rem .6rem 0; }
+  .big b { display:block; font-size:1.6rem; }
+  .big span { color:var(--dim); font-size:.8rem; }
+  .err { color:var(--err); } .ok { color:var(--ok); } .warn { color:var(--warn); }
+  pre { background:none; border:1px solid var(--line); border-radius:.4rem;
+        padding: .8rem; overflow-x:auto; white-space:pre-wrap; }
+  .badge { display:inline-block; padding:0 .45rem; border-radius:.6rem;
+           font-size:.75rem; border:1px solid var(--line); }
+</style>
+</head>
+<body>
+<header>
+  <h1>Progress Control</h1>
+  <span id="cid" class="badge"></span>
+  <span>phase <b id="phase">—</b></span>
+  <span id="fresh">—</span>
+</header>
+<nav id="tabs">
+  <button data-t="resume" class="on">Resume</button>
+  <button data-t="overview">Overview</button>
+  <button data-t="corpus">Corpus</button>
+  <button data-t="stitching">Stitching</button>
+  <button data-t="tasks">Tasks</button>
+</nav>
+<main>
+  <section id="resume" class="on"><pre id="resume-body">loading…</pre></section>
+  <section id="overview"><div id="counters"></div></section>
+  <section id="corpus">
+    <p><label>filter <input id="corpus-filter" placeholder="path substring"></label></p>
+    <table><thead><tr>
+      <th>file</th><th>stage</th><th>state</th>
+      <th class="num">markers</th><th class="num">unmarked</th><th class="num">issues</th>
+    </tr></thead><tbody id="corpus-body"></tbody></table>
+  </section>
+  <section id="stitching">
+    <table><thead><tr>
+      <th>id</th><th>from</th><th>to</th><th>type</th><th>status</th><th class="num">wave</th>
+    </tr></thead><tbody id="findings-body"></tbody></table>
+  </section>
+  <section id="tasks">
+    <table><thead><tr>
+      <th>id</th><th>title</th><th>executor</th><th>status</th>
+    </tr></thead><tbody id="tasks-body"></tbody></table>
+  </section>
+</main>
+<script>
+"use strict";
+const $ = (id) => document.getElementById(id);
+document.querySelectorAll("#tabs button").forEach((b) => {
+  b.onclick = () => {
+    document.querySelectorAll("#tabs button").forEach((x) => x.classList.remove("on"));
+    document.querySelectorAll("main section").forEach((x) => x.classList.remove("on"));
+    b.classList.add("on");
+    $(b.dataset.t).classList.add("on");
+  };
+});
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) =>
+  ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+async function j(name) {
+  try { return await (await fetch(name)).json(); } catch { return {}; }
+}
+
+async function refresh() {
+  const [camp, corpus, findings, tasks] = await Promise.all([
+    j("campaign.json"), j("corpus.json"), j("findings.json"), j("tasks.json"),
+  ]);
+  $("cid").textContent = camp.campaign_id ?? "no campaign";
+  $("phase").textContent = camp.phase ?? "—";
+  const upd = camp.updated_at ? new Date(camp.updated_at) : null;
+  const ageH = upd ? (Date.now() - upd.getTime()) / 3.6e6 : Infinity;
+  $("fresh").textContent = upd ? `state updated ${upd.toLocaleString()}` : "no state yet — run `vibe progress scan`";
+  $("fresh").classList.toggle("stale", ageH > 24);
+
+  const c = camp.counters ?? {};
+  $("counters").innerHTML =
+    ["files", "paragraphs", "unmarked", "issues"]
+      .map((k) => `<div class="big"><b class="${k === "unmarked" || k === "issues" ? (c[k] ? "warn" : "ok") : ""}">${c[k] ?? "—"}</b><span>${k}</span></div>`)
+      .join("");
+
+  const filter = ($("corpus-filter").value ?? "").toLowerCase();
+  const rows = (corpus.files ?? [])
+    .filter((f) => f.path.toLowerCase().includes(filter))
+    .map((f) => {
+      const eff = f.effective ?? {};
+      return `<tr><td>${esc(f.path)}</td><td>${esc(eff.stage ?? "—")}</td><td>${esc(eff.state ?? "—")}</td>
+        <td class="num">${f.markers}</td>
+        <td class="num ${f.unmarked ? "warn" : "ok"}">${f.unmarked}/${f.paragraphs}</td>
+        <td class="num ${f.issues ? "err" : ""}">${f.issues}</td></tr>`;
+    });
+  $("corpus-body").innerHTML = rows.join("") || `<tr><td colspan="6">no files in state — run \`vibe progress scan\`</td></tr>`;
+
+  $("findings-body").innerHTML = ((findings.findings ?? [])
+    .map((f) => `<tr><td>${esc(f.id)}</td><td>${esc(f.from)}</td><td>${esc(f.to)}</td>
+      <td>${esc(f.type)}</td><td>${esc(f.status)}</td><td class="num">${esc(f.wave)}</td></tr>`)
+    .join("")) || `<tr><td colspan="6">ledger empty</td></tr>`;
+
+  $("tasks-body").innerHTML = ((tasks.tasks ?? [])
+    .map((t) => `<tr><td>${esc(t.id)}</td><td>${esc(t.title)}</td><td>${esc(t.executor)}</td><td>${esc(t.status)}</td></tr>`)
+    .join("")) || `<tr><td colspan="4">no tasks queued</td></tr>`;
+
+  try {
+    const md = await (await fetch("resume.md")).text();
+    $("resume-body").textContent = md || "RESUME.md not generated yet — run `vibe progress resume`.";
+  } catch { /* keep last */ }
+}
+$("corpus-filter").addEventListener("input", refresh);
+refresh();
+setInterval(refresh, 5000);
+</script>
+</body>
+</html>
