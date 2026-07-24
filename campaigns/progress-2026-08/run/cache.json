@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-24T21:25:41Z",
+  "updated_at": "2026-07-24T21:29:53Z",
   "files": {
     "spec/boot/00-core.md": {
       "content_hash": "9430b035d1017950ec37c4ce85bab91155334b5fc55d3e1948138a4f6be8b0e5",
@@ -540,7 +540,7 @@
       "issue_count": 0
     },
     "spec/modules/vibe-cli/PROP-037-tree-tui.md": {
-      "content_hash": "f42275787b21b71ef42e1fad49d8d694af3a569af6122e6535cb12a7917c34a1",
+      "content_hash": "dcb2c5adb0e6d535d7042643b2f9d6bb5bc4451c7ef088933f996cabe6e9824b",
       "rollup": {
         "explicit": [
           "spec",
@@ -554,11 +554,11 @@
           "spec",
           "work"
         ],
-        "marker_count": 1,
-        "fact_count": 133,
-        "unmarked_facts": 133
+        "marker_count": 137,
+        "fact_count": 136,
+        "unmarked_facts": 0
       },
-      "marker_count": 1,
+      "marker_count": 137,
       "unit_count": 61,
       "issue_count": 0
     },
