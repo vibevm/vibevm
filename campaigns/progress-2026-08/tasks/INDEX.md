@@ -2,7 +2,7 @@
 
 | id | title | executor | status |
 |---|---|---|---|
-| DRIFT-001 | cache prunes records that leave the observed scope | opus | queued |
+| DRIFT-001 | cache prunes records that leave the observed scope | opus | done |
 | DRIFT-002 | split progress-core parse.rs to hold the file budget (floor red) | opus | done |
 | DRIFT-003 | campaign phase hardcoded "A" in the progress adapter | opus | done |
 

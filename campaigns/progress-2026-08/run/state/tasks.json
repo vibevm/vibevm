@@ -1,12 +1,12 @@
 {
  "schema": 1,
- "updated_at": "2026-07-24T21:40:00Z",
+ "updated_at": "2026-07-24T22:45:00Z",
  "tasks": [
   {
    "id": "DRIFT-001",
    "title": "cache prunes records that leave the observed scope",
    "executor": "opus",
-   "status": "queued"
+   "status": "done"
   },
   {
    "id": "DRIFT-002",

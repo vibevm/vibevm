@@ -4,6 +4,7 @@
 
 specmark::scope!("spec://vibevm/modules/vibe-progress/PROP-043#tool");
 
+use std::collections::BTreeSet;
 use std::path::{Path, PathBuf};
 
 use anyhow::{Context as _, Result, bail};
@@ -108,6 +109,17 @@ fn refresh_state(g: &Ground) -> Result<Option<PathBuf>> {
     for doc in &g.docs {
         let r = rollup::rollup_doc(doc);
         c.upsert(doc, &r);
+    }
+    // Prune records whose file left the observed scope, so the cache — and
+    // thus `corpus.json` / `campaign.json` — describes exactly the parsed
+    // corpus, not the union across every past scan (DRIFT-001). A pruned
+    // record that still carried campaign verdicts is surfaced loudly, never
+    // silently discarded (DRIFT-001 §5).
+    let observed: BTreeSet<String> = g.docs.iter().map(|d| d.path.clone()).collect();
+    for lost in c.retain_paths(&observed) {
+        eprintln!(
+            "vibe progress: warning: pruned out-of-scope record `{lost}` that carried campaign verdicts"
+        );
     }
     c.touch();
     c.store(&cache_path)?;
@@ -406,5 +418,51 @@ mod tests {
             v["phase"], "B",
             "campaign.json carries the journal-derived phase"
         );
+    }
+
+    /// The scope-narrowing prune (DRIFT-001 §4): scan a two-file tree, then
+    /// narrow `progress.toml` to a single file and rescan. `corpus.json`
+    /// must carry exactly the observed set — not the union across scans, the
+    /// stale-row defect §3 records.
+    #[test]
+    fn refresh_state_prunes_records_that_leave_scope() {
+        let tmp = tempfile::tempdir().expect("tempdir");
+        let root = tmp.path();
+        std::fs::create_dir_all(root.join("spec")).expect("mkdir spec");
+        std::fs::write(root.join("spec/a.md"), "@impl a\n").expect("write a");
+        std::fs::write(root.join("spec/b.md"), "@impl b\n").expect("write b");
+        let campaign = root.join("campaigns").join("progress-test");
+        std::fs::create_dir_all(campaign.join("run")).expect("mkdir run");
+
+        let common = ProgressCommonArgs {
+            path: root.to_path_buf(),
+            campaign: Some(campaign.clone()),
+        };
+
+        // Wide scope: both files observed and cached.
+        std::fs::write(root.join("progress.toml"), "include = [\"spec/**/*.md\"]\n")
+            .expect("write wide cfg");
+        let g = ground(&common).expect("ground wide");
+        assert_eq!(g.docs.len(), 2, "both files in scope");
+        refresh_state(&g).expect("refresh wide");
+
+        // Narrow scope: only a.md observed.
+        std::fs::write(root.join("progress.toml"), "include = [\"spec/a.md\"]\n")
+            .expect("write narrow cfg");
+        let g = ground(&common).expect("ground narrow");
+        assert_eq!(g.docs.len(), 1, "only a.md in scope");
+        refresh_state(&g).expect("refresh narrow");
+
+        // corpus.json rows equal the observed set — the b.md row is gone.
+        let corpus = campaign.join("run").join("state").join("corpus.json");
+        let text = std::fs::read_to_string(&corpus).expect("read corpus.json");
+        let v: serde_json::Value = serde_json::from_str(&text).expect("parse corpus.json");
+        let paths: Vec<&str> = v["files"]
+            .as_array()
+            .expect("files array")
+            .iter()
+            .map(|f| f["path"].as_str().expect("path str"))
+            .collect();
+        assert_eq!(paths, vec!["spec/a.md"], "corpus.json == observed set");
     }
 }

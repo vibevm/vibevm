@@ -9,7 +9,7 @@ use crate::doc::ParsedDoc;
 use crate::rollup::DocRollup;
 use anyhow::{Context, Result};
 use serde::{Deserialize, Serialize};
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 use std::path::Path;
 
 /// Schema 2: the fact amendment — `DocRollup` counts facts
@@ -103,6 +103,28 @@ impl Cache {
         );
     }
 
+    /// Drop every record whose path is **not** in `observed`; the records
+    /// that stay keep their `campaign` maps untouched. A file outside the
+    /// observed set has no contract right to a record (PROP-043 §7.1), so
+    /// scope-narrowing must not leave stale rows inflating the projections
+    /// (DRIFT-001).
+    ///
+    /// Returns the paths of any dropped records that carried a **non-empty**
+    /// `campaign` map — campaign verdicts that left the observed scope. The
+    /// prune is never *silent* about that loss: the caller surfaces the
+    /// list (DRIFT-001 §5). An empty return means no verdict data was lost.
+    pub fn retain_paths(&mut self, observed: &BTreeSet<String>) -> Vec<String> {
+        let mut dropped_with_campaign = Vec::new();
+        self.files.retain(|path, record| {
+            let keep = observed.contains(path);
+            if !keep && !record.campaign.is_empty() {
+                dropped_with_campaign.push(path.clone());
+            }
+            keep
+        });
+        dropped_with_campaign
+    }
+
     pub fn touch(&mut self) {
         self.updated_at = now_utc();
     }
@@ -168,5 +190,44 @@ mod tests {
         let back = Cache::load(&path).expect("load");
         assert!(back.is_current("a.md", &doc.content_hash));
         assert!(!back.is_current("a.md", "deadbeef"));
+    }
+
+    #[test]
+    fn retain_paths_prunes_out_of_scope_and_preserves_campaign() {
+        use std::collections::BTreeSet;
+        let mut c = Cache {
+            schema: CACHE_SCHEMA,
+            ..Cache::default()
+        };
+        let a = crate::parse::parse_document("a.md", "@impl keep\n");
+        let b = crate::parse::parse_document("b.md", "@impl drop\n");
+        c.upsert(&a, &crate::rollup::rollup_doc(&a));
+        c.upsert(&b, &crate::rollup::rollup_doc(&b));
+        // A campaign verdict on the survivor (must be preserved) and on the
+        // record that leaves scope (its loss must be reported, not silent).
+        c.files
+            .get_mut("a.md")
+            .expect("a record")
+            .campaign
+            .insert("verdict".into(), serde_json::json!("pass"));
+        c.files
+            .get_mut("b.md")
+            .expect("b record")
+            .campaign
+            .insert("verdict".into(), serde_json::json!("fail"));
+
+        let observed: BTreeSet<String> = ["a.md".to_string()].into_iter().collect();
+        let dropped = c.retain_paths(&observed);
+
+        // b.md left the scope: its record is gone …
+        assert!(!c.files.contains_key("b.md"), "out-of-scope record pruned");
+        // … and because it carried a verdict, the drop was reported.
+        assert_eq!(dropped, vec!["b.md".to_string()]);
+        // a.md stayed, its campaign map intact.
+        let survivor = c.files.get("a.md").expect("survivor kept");
+        assert_eq!(
+            survivor.campaign.get("verdict"),
+            Some(&serde_json::json!("pass")),
+        );
     }
 }

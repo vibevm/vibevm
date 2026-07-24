@@ -1,8 +1,16 @@
 # DRIFT-001 — cache prunes records that leave the observed scope {#root}
 
-<status stage="impl" state="plan" ref="DRIFT-001"/>
+<status stage="impl" state="done" ref="DRIFT-001"/>
 
-**Status:** queued
+**Status:** done — executed by Opus 2026-07-24, reviewed and accepted by
+Fable the same day (diff read in full; retain_paths preserves survivors'
+campaign maps and returns dropped-verdict paths for a loud warning;
+adapter test proves corpus.json == observed set after narrowing;
+self-check all green, exit 0). Reviewer ruling on the surfaced §5
+residual: drop-with-loud-warning is CORRECT per the erasure law
+(PROP-043 §7.5 — the cache is erasable acceleration; baseline.json §7.3
+is the durable verdict home); if a mid-campaign narrowing ever
+threatens live verdicts, land them into the baseline first.
 **Executor:** Opus. **Reviewer:** Fable, against §6 verbatim.
 **Cluster:** cli (progress adapter / progress-core cache)
 **Unit-stability check (release precondition):** every anchor cited in §2 has
