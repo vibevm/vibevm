@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-24T18:04:02Z",
+  "updated_at": "2026-07-24T18:07:09Z",
   "files": {
     "spec/WAL.md": {
       "content_hash": "a6f2a5df9b4cb3f891185c6fb4e65420f55c10c00ce307795cdb43f94751fd7d",
@@ -1034,7 +1034,7 @@
       "issue_count": 0
     },
     "spec/modules/vibe-settings/PROP-041-settings-ui.md": {
-      "content_hash": "4304d1c2d813ba232a015f63673c3dde7f4046f8c3526842c1467e755d2c7337",
+      "content_hash": "a359b802405cad0f180d1a2ae7263494f0f7f3ecd432ed529c9de16edf9369c1",
       "rollup": {
         "explicit": [
           "spec",
@@ -1048,11 +1048,11 @@
           "spec",
           "work"
         ],
-        "marker_count": 1,
-        "fact_count": 41,
-        "unmarked_facts": 41
+        "marker_count": 44,
+        "fact_count": 43,
+        "unmarked_facts": 0
       },
-      "marker_count": 1,
+      "marker_count": 44,
       "unit_count": 12,
       "issue_count": 0
     },

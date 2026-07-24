@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updated_at": "2026-07-24T20:35:00Z",
+ "updated_at": "2026-07-24T21:05:00Z",
  "findings": [
   {
    "id": "F-001",
@@ -163,6 +163,15 @@
    "status": "open",
    "wave": 0,
    "note": "Status line says 'proposed 2026-06-24', but the hook machinery ships: vibe-core parses [hooks] (manifest/package/hooks.rs) and vibe-install runs pre-install per PROP-020 s2.1 (apply.rs). Same class as F-013 (PROP-018). Phase C verifies clause-by-clause (consent gate, .ps1 fallback, failure semantics); the status-line rewrite is Phase D."
+  },
+  {
+   "id": "F-019",
+   "from": "spec/modules/vibe-settings/PROP-041-settings-ui.md",
+   "to": "crates/vibe-cli/src/commands/prefs/tui/",
+   "type": "reality-mismatch",
+   "status": "open",
+   "wave": 0,
+   "note": "Status line says 'DRAFT - requirements, 2026-07-16', but the prefs TUI ships (commands/prefs/tui/** with form lifecycle, provenance edit, controls) - the SETTINGS-UI-PLAN executed against this contract. F-013/F-018 class. Note also: this doc pre-dates the fact grammar with owner-minted per-REQ {#anchor}s; the ## fact anchors reuse those exact ids (one name, two notations) - do not rename either side (anchors immutable)."
   }
  ]
 }

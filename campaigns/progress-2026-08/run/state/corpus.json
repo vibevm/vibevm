@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-07-24T18:04:02Z",
+  "updated_at": "2026-07-24T18:07:09Z",
   "files": [
     {
       "path": "spec/WAL.md",
@@ -797,10 +797,10 @@
         "stage": "spec",
         "state": "work"
       },
-      "markers": 1,
+      "markers": 44,
       "units": 12,
-      "facts": 41,
-      "unmarked": 41,
+      "facts": 43,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
