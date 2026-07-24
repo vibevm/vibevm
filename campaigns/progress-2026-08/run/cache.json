@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-24T22:19:28Z",
+  "updated_at": "2026-07-24T22:32:16Z",
   "files": {
     "spec/boot/00-core.md": {
       "content_hash": "9430b035d1017950ec37c4ce85bab91155334b5fc55d3e1948138a4f6be8b0e5",
@@ -816,25 +816,25 @@
       "issue_count": 0
     },
     "spec/modules/vibe-registry/PROP-002-decentralized-registry.md": {
-      "content_hash": "3fea56ccc1cbb2e1048713c099a9642b232af75d3492d3a218933003ae7f216e",
+      "content_hash": "f75f8def5bc1eed2f9548a76c15f3f18863a984a119bd3b70262ee2d1949366e",
       "rollup": {
         "explicit": [
-          "spec",
+          "impl",
           "done"
         ],
         "computed": [
           "spec",
-          "done"
+          "work"
         ],
         "effective": [
-          "spec",
+          "impl",
           "done"
         ],
-        "marker_count": 1,
+        "marker_count": 360,
         "fact_count": 359,
-        "unmarked_facts": 359
+        "unmarked_facts": 0
       },
-      "marker_count": 1,
+      "marker_count": 360,
       "unit_count": 35,
       "issue_count": 0
     },

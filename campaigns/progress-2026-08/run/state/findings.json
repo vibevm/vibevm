@@ -280,6 +280,15 @@
       "status": "open",
       "wave": 0,
       "note": "Internal r2 leftovers: (1) the 2.8 consolidated fence still shows r1 syntax __exclusive = [[...]] and a double-underscore __internal-helper while 2.4 (r2) replaced the sigil with named [features.exclusive] groups and a single _ visibility prefix; (2) 4.3 says -already covered in 2.5.3- but the packages-only rationale moved to 2.5.4 when r2 inserted the LLM-virtual-caps section; (3) 2.7.5/2.9 examples carry language/language_fallback and schema_version = 3 while the shipped shape is language_chain and schema v5 (v3 was the PROP-003 bump per lockfile.rs), and the active_features example uses kind:name/feature while the shipped grain is group/name/feature. Phase C/D dedup material; no semantic edits in Phase B."
+    },
+    {
+      "id": "F-032",
+      "from": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
+      "to": "crates/vibe-registry/src/lib.rs",
+      "type": "reality-mismatch",
+      "status": "open",
+      "wave": 0,
+      "note": "F-024 stale-header family + internal nits: (1) Status line says -accepted 2026-04-24- only, while the whole contract shipped (M1.1-revision, M1.6, M1.13 git-source, M1.14 auth, redirect) and the section text itself records GitHubCreator-primary 2026-04-29 / M1.19 fqdn default; (2) all 14 Phase A acceptance checkboxes in s5 remain [ ] though every item is long green; (3) s2.8/s5 call the impl -ResolvoSolver- while the shipped cell is ResolvoDepSolver (PROP-017 s2); (4) s2.2.1 token-env row claims -symmetric with the publish-side VIBEVM_PUBLISH_TOKEN_<HOST> already specified in s2.10- but s2.10 specifies a host-agnostic VIBEVM_PUBLISH_TOKEN env + per-host token FILES, no per-host env var. Phase C/D sweep material; no semantic edits in Phase B."
     }
   ]
 }

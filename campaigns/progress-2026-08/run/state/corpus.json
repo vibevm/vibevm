@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-07-24T22:19:28Z",
+  "updated_at": "2026-07-24T22:32:16Z",
   "files": [
     {
       "path": "spec/boot/00-core.md",
@@ -626,17 +626,17 @@
     {
       "path": "spec/modules/vibe-registry/PROP-002-decentralized-registry.md",
       "effective": {
-        "stage": "spec",
+        "stage": "impl",
         "state": "done"
       },
       "explicit": {
-        "stage": "spec",
+        "stage": "impl",
         "state": "done"
       },
-      "markers": 1,
+      "markers": 360,
       "units": 35,
       "facts": 359,
-      "unmarked": 359,
+      "unmarked": 0,
       "issues": 0,
       "campaign": {}
     },
