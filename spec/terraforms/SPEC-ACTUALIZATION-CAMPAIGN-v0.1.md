@@ -266,7 +266,25 @@ read-only, no auth.
 
 ## 9. LOG (execution ledger — append per batch/wave/phase) {#log}
 
-*(empty — campaign not started)*
+- **2026-07-24 · Phase A CLOSED, exit gate green in full.** Commits
+  `9446a2c` `b1276c3` `edd487b` (document package) · `8b18152` (core +
+  adapter) · `38855c0` (campaign zone + dashboard) · `ac97f26` (pilot +
+  ratification + §3.8 amendment) · `9a69b6f` (WAL). PROP-043 RATIFIED
+  in session. Pilot: 3 genres, 46/46 paragraphs marked, one real drift
+  caught (design/README index was incomplete — fixed). Predictions:
+  "pilot exposes placement ambiguities" CONFIRMED (the preamble-less-H1
+  amendment); bonus finding outside any prediction — a live power cut
+  exposed missing fsync-before-rename in `write_atomic`; fixed with
+  tolerant cache load + tests. Floor (`self-check`) green;
+  `progress-core` gated in conform.
+- **2026-07-24 · B0 default ruled (Fable, owner-visible in session):**
+  the converted `**Status:**` lines are NOT deleted — the document
+  marker is ADDED and the legacy line stays (its dates and prose are
+  history; deduplication is Phase D material). Phase B makes no
+  semantic edits, per its own law.
+- **Next step:** open Phase B — land `progress.toml` (wave-1 scope:
+  `include = ["spec/**/*.md"]`) as the campaign's first journal step,
+  then B0.
 
 ## 10. Deferrals {#deferrals}
 
