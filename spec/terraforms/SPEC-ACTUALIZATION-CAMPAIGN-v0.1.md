@@ -174,10 +174,12 @@ order:
 - L5 — relocation: when zero live references remain, `git mv` the four
   directories to `legacy-spec/` at the repo root.
 
-Note: `spec/discipline/README.md` stays in the Phase B scope and is
-marked there; L relocates its facts markup-included. (Discipline was not
-part of the 2026-07-25 markup-scope narrowing — it joins the legacy set
-only here.)
+Note *(superseded the same day — see the LOG)*: the original amendment
+kept `spec/discipline/README.md` in the Phase B markup scope. The
+owner's second 2026-07-25 ruling overrode that: **discipline is out of
+the analysed corpus entirely** («теперь Дисциплина — это часть пакетов
+ai-native»); `progress.toml` dropped its glob, and the directory awaits
+Phase L's reference inventory + relocation like the other three.
 
 *Exit gate:* grep-verified zero references from the living corpus and
 crates into the four directories; `check --exhaustive` green over the
@@ -582,6 +584,22 @@ read-only, no auth.
   updated to "B and L closed". **Review point (OPEN):** the campaign plan
   itself lives in `spec/terraforms/` — relocate mid-campaign or at
   close-out? Owner call before L5.
+
+- **RESOLVED scope ruling (owner, 2026-07-25, second in session):**
+  «spec/discipline нужно исключить из анализируемого корпуса, потому что
+  теперь Дисциплина - это часть пакетов ai-native, а саму spec/discipline
+  после определения и портирования ссылок - перенести в legacy-spec.
+  Сейчас она всё ещё в основном корпусе». **Ruling applied:**
+  `spec/discipline/**` leaves the `progress.toml` include enumeration —
+  the Discipline's living home is the ai-native packages
+  (`core-ai-native` + the language stacks), so the host copy is a
+  historical record like terraforms/research/neworder. Scope: 59 → **58
+  files**; discipline/README's 16 facts leave the corpus; the B2 tail is
+  now boot pair + manual-tests only. The Phase L §5 note that kept
+  discipline/README in the B scope is superseded (corrected in place);
+  Phase L's four-directory relocation list is unchanged — discipline
+  still relocates to `legacy-spec/` after L1's reference inventory and
+  L3's fact porting.
 
 ## 10. Deferrals {#deferrals}
 

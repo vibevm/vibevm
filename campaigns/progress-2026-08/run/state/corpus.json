@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-07-24T22:45:23Z",
+  "updated_at": "2026-07-24T22:46:56Z",
   "files": [
     {
       "path": "spec/boot/00-core.md",
@@ -324,17 +324,6 @@
       "units": 16,
       "facts": 99,
       "unmarked": 0,
-      "issues": 0,
-      "campaign": {}
-    },
-    {
-      "path": "spec/discipline/README.md",
-      "effective": null,
-      "explicit": null,
-      "markers": 0,
-      "units": 1,
-      "facts": 16,
-      "unmarked": 16,
       "issues": 0,
       "campaign": {}
     },

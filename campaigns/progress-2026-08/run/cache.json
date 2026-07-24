@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-24T22:45:23Z",
+  "updated_at": "2026-07-24T22:46:56Z",
   "files": {
     "spec/boot/00-core.md": {
       "content_hash": "9430b035d1017950ec37c4ce85bab91155334b5fc55d3e1948138a4f6be8b0e5",
@@ -432,17 +432,6 @@
       },
       "marker_count": 100,
       "unit_count": 16,
-      "issue_count": 0
-    },
-    "spec/discipline/README.md": {
-      "content_hash": "54a8c9fa0157e4888621787f44ee415cf3745d3e934ef26f0c381ee464e14484",
-      "rollup": {
-        "marker_count": 0,
-        "fact_count": 16,
-        "unmarked_facts": 16
-      },
-      "marker_count": 0,
-      "unit_count": 1,
       "issue_count": 0
     },
     "spec/manual-tests/MT-01-vibe-tree.md": {

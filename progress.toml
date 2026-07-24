@@ -15,6 +15,10 @@
 # and research studies — historical records, not living contracts; the
 # campaign does not mark or verify them. Re-add a glob here if one of
 # them is ever promoted back to living-contract status.
+# `spec/discipline/` is OUT of scope (owner ruling 2026-07-25, second in
+# session): the Discipline is part of the ai-native packages now; the
+# directory itself relocates to `legacy-spec/` in Phase L once its
+# inbound references are inventoried and ported.
 # §4 is include-only by design, so exclusions are expressed by
 # enumeration; a new spec/ subtree or top-level spec doc must be added
 # here explicitly — review at batch boundaries.
@@ -23,7 +27,6 @@ include = [
     "spec/boot/[0-9]*.md",
     "spec/common/**/*.md",
     "spec/design/**/*.md",
-    "spec/discipline/**/*.md",
     "spec/manual-tests/**/*.md",
     "spec/modules/**/*.md",
 ]
