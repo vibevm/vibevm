@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updated_at": "2026-07-24T17:55:00Z",
+ "updated_at": "2026-07-24T19:35:00Z",
  "tasks": [
   {
    "id": "DRIFT-001",
@@ -12,7 +12,7 @@
    "id": "DRIFT-002",
    "title": "split progress-core parse.rs to hold the file budget (floor red)",
    "executor": "opus",
-   "status": "queued"
+   "status": "done"
   },
   {
    "id": "DRIFT-003",

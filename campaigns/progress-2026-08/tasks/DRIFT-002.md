@@ -1,8 +1,13 @@
 # DRIFT-002 — split progress-core `parse.rs` to hold the file budget {#root}
 
-<status stage="impl" state="plan" ref="DRIFT-002"/>
+<status stage="impl" state="done" ref="DRIFT-002"/>
 
-**Status:** queued
+**Status:** done — executed by Opus 2026-07-24, reviewed and accepted by
+Fable the same day (motion verified by spot-diff, behavior by the §6
+differential oracle — corpus identical modulo timestamp; 31 tests green;
+conform 0 new findings; `self-check` all green, exit 0). Accepted
+deviation: one-line `//!` module docs per new file, the crate's own
+convention.
 **Executor:** Opus. **Reviewer:** Fable, against §6 verbatim.
 **Cluster:** cli (progress-core scanner)
 **Unit-stability check (release precondition):** every anchor cited in §2 has
