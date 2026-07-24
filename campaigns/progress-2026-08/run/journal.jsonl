@@ -30,3 +30,15 @@
 {"kind":"step-done","id":"b-fact-scanner","result":"scanner landed as b67fa97 (31 tests, cache schema 2) + PROP-043 amendment cd2688f; step closed retroactively 2026-07-24T16:51:00Z - prior session ended before the journal close; edits verified committed, tree clean, no redo per the §4 rule","ts":"2026-07-24T16:51:00Z"}
 {"kind":"step-start","id":"b-scope-exclude-generated","step_type":"config","target":"progress.toml (owner ruling: generated boot artifacts out of scope)","actor":"fable","ts":"2026-07-24T17:01:02Z"}
 {"kind":"step-done","id":"b-scope-exclude-generated","result":"include enumeration lands the ruling (spec/boot/[0-9]*.md admits authored snippets, skips STATIC/INDEX); cache rebuilt from scratch (DRIFT-001 no-prune workaround); scope 97 -> 95 files, 8219 -> 7872 facts, 426 expected MissingAnchor unchanged; both plan LOG review points RESOLVED; anchor-register ruling recorded at PROP-043 s3.8","ts":"2026-07-24T17:01:02Z"}
+{"kind":"step-start","id":"b1f-prop-006","step_type":"mark-file","target":"spec/common/PROP-006-operating-modes.md (fact re-mark)","actor":"fable","ts":"2026-07-24T17:02:14Z"}
+{"kind":"step-done","id":"b1f-prop-006","result":"6 pilot units -> 9 anchored facts (2 lists deconstructed), 0 unmarked, 0 issues","ts":"2026-07-24T17:03:34Z"}
+{"kind":"step-start","id":"b1f-prop-016","step_type":"mark-file","target":"spec/common/PROP-016-source-mirrors.md (fact re-mark)","actor":"fable","ts":"2026-07-24T17:03:34Z"}
+{"kind":"step-done","id":"b1f-prop-016","result":"15 units -> 29 anchored facts (summary+capital paragraphs deconstructed), 0 unmarked, 0 issues","ts":"2026-07-24T17:05:05Z"}
+{"kind":"step-start","id":"b1f-prop-028","step_type":"mark-file","target":"spec/common/PROP-028-package-families.md (fact re-mark)","actor":"fable","ts":"2026-07-24T17:05:05Z"}
+{"kind":"step-done","id":"b1f-prop-028","result":"17 units -> 40 anchored facts (context/versioning/D13 deconstructed, req-grain lines anchored), 0 unmarked, 0 issues","ts":"2026-07-24T17:06:37Z"}
+{"kind":"step-start","id":"b1f-prop-013","step_type":"mark-file","target":"spec/common/PROP-013-periodic-health-audit.md (fact re-mark)","actor":"fable","ts":"2026-07-24T17:06:37Z"}
+{"kind":"step-done","id":"b1f-prop-013","result":"18 units -> 43 anchored facts (M1.19 proof + categories A-E deconstructed), 0 unmarked, 0 issues","ts":"2026-07-24T17:08:00Z"}
+{"kind":"step-start","id":"b1f-prop-033","step_type":"mark-file","target":"spec/common/PROP-033-refactoring-registry.md (fact re-mark)","actor":"fable","ts":"2026-07-24T17:08:00Z"}
+{"kind":"step-done","id":"b1f-prop-033","result":"25 units -> 81 anchored facts (2 tables cell-marked with row ids, differentiators/anticipation/postscript deconstructed), 0 unmarked, 0 issues","ts":"2026-07-24T17:09:54Z"}
+{"kind":"step-start","id":"b1f-prop-031","step_type":"mark-file","target":"spec/common/PROP-031-algorithmic-refactoring.md (fact re-mark)","actor":"fable","ts":"2026-07-24T17:09:54Z"}
+{"kind":"step-done","id":"b1f-prop-031","result":"28 units -> 94 anchored facts (write-side/LLM-boundary/anticipation deconstructed; 2 tables cell-marked), 0 unmarked, 0 issues","ts":"2026-07-24T17:12:04Z"}

@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-24T17:01:03Z",
+  "updated_at": "2026-07-24T17:12:04Z",
   "files": {
     "spec/WAL.md": {
       "content_hash": "faac3ff646b050a1b6ec680aaccdc283cb4ef079a0654732d382d43290ed79d8",
@@ -59,7 +59,7 @@
       "issue_count": 68
     },
     "spec/common/PROP-006-operating-modes.md": {
-      "content_hash": "a9cd5a59d89fd62848c0c27c099d58a5fe99d2bf89d09dc67fe34557fe8bbf7b",
+      "content_hash": "bf798b01c38fb700c3a7d9fa40ad5bb7c21601ca2cce51b6b99c4b81f0cf6d8f",
       "rollup": {
         "explicit": [
           "freeze",
@@ -73,16 +73,16 @@
           "freeze",
           "done"
         ],
-        "marker_count": 8,
-        "fact_count": 7,
-        "unmarked_facts": 1
+        "marker_count": 11,
+        "fact_count": 9,
+        "unmarked_facts": 0
       },
-      "marker_count": 8,
+      "marker_count": 11,
       "unit_count": 2,
-      "issue_count": 6
+      "issue_count": 0
     },
     "spec/common/PROP-013-periodic-health-audit.md": {
-      "content_hash": "4244b58a8d888d3cc819cbc7a42d30799f77251bdc6cd40a84cbd6effb9af2aa",
+      "content_hash": "966695c7f83560f4f38cfbb01247f3c02529383a9882af1bcbfa6d37ea36ae27",
       "rollup": {
         "explicit": [
           "spec",
@@ -96,16 +96,16 @@
           "spec",
           "done"
         ],
-        "marker_count": 20,
-        "fact_count": 31,
-        "unmarked_facts": 13
+        "marker_count": 45,
+        "fact_count": 43,
+        "unmarked_facts": 0
       },
-      "marker_count": 20,
+      "marker_count": 45,
       "unit_count": 6,
-      "issue_count": 18
+      "issue_count": 0
     },
     "spec/common/PROP-016-source-mirrors.md": {
-      "content_hash": "558cd128a01ad9aec95294ef5a5ef8c54162bd48a18a76f834eb0605c41356c6",
+      "content_hash": "c6592a970be72b92ec5f995139652d11499e30c1c02fc63334a6b951be69fb94",
       "rollup": {
         "explicit": [
           "spec",
@@ -119,13 +119,13 @@
           "spec",
           "done"
         ],
-        "marker_count": 17,
-        "fact_count": 24,
-        "unmarked_facts": 9
+        "marker_count": 31,
+        "fact_count": 29,
+        "unmarked_facts": 0
       },
-      "marker_count": 17,
+      "marker_count": 31,
       "unit_count": 7,
-      "issue_count": 15
+      "issue_count": 0
     },
     "spec/common/PROP-018-agentic-standalone-modes.md": {
       "content_hash": "ccd112f6dbd518780ea9c1aff160e80e5777293fa282d76fda6ee142e5274a15",
@@ -197,7 +197,7 @@
       "issue_count": 37
     },
     "spec/common/PROP-028-package-families.md": {
-      "content_hash": "638db8a0c6c45c7c378c13aeb36ee3a421f2deb3c5084cf37d140975e8e5421e",
+      "content_hash": "43045c466884d95b85f4a121033a8f2de24737ec67876e63f9f52a90836c7842",
       "rollup": {
         "explicit": [
           "impl",
@@ -211,13 +211,13 @@
           "impl",
           "done"
         ],
-        "marker_count": 19,
-        "fact_count": 28,
-        "unmarked_facts": 11
+        "marker_count": 42,
+        "fact_count": 40,
+        "unmarked_facts": 0
       },
-      "marker_count": 19,
+      "marker_count": 42,
       "unit_count": 9,
-      "issue_count": 17
+      "issue_count": 0
     },
     "spec/common/PROP-029-fully-qualified-addresses.md": {
       "content_hash": "884c6b872ba4833b3608abd9862bf7c88fdc2e6b4de6bb0db52f5c4debb9c405",
@@ -243,7 +243,7 @@
       "issue_count": 0
     },
     "spec/common/PROP-031-algorithmic-refactoring.md": {
-      "content_hash": "73e3313dbab24e497da8ccae7fa294199ec1267c010106381de48138a281985e",
+      "content_hash": "f143c2a7aac7bd170611961bef829711e0e696008ea24a325827e4f1449ec48d",
       "rollup": {
         "explicit": [
           "spec",
@@ -257,13 +257,13 @@
           "spec",
           "done"
         ],
-        "marker_count": 30,
-        "fact_count": 75,
-        "unmarked_facts": 47
+        "marker_count": 96,
+        "fact_count": 94,
+        "unmarked_facts": 0
       },
-      "marker_count": 30,
+      "marker_count": 96,
       "unit_count": 13,
-      "issue_count": 28
+      "issue_count": 0
     },
     "spec/common/PROP-032-project-model-ide-substrate.md": {
       "content_hash": "7137ed9cb7238d66265b43b789d4ddea70b86e4f76a92f74fd0c7f0380ea58f6",
@@ -289,7 +289,7 @@
       "issue_count": 38
     },
     "spec/common/PROP-033-refactoring-registry.md": {
-      "content_hash": "db111e38a9077eb9d8a93bc55eadd295c0257dd28a8aed1b5b38ff91e54f6894",
+      "content_hash": "781411de33b4434ad1ae7113ccc9272973c9f944faf85a77b6a4be5f836956a9",
       "rollup": {
         "explicit": [
           "spec",
@@ -303,13 +303,13 @@
           "spec",
           "done"
         ],
-        "marker_count": 27,
-        "fact_count": 59,
-        "unmarked_facts": 34
+        "marker_count": 83,
+        "fact_count": 81,
+        "unmarked_facts": 0
       },
-      "marker_count": 27,
+      "marker_count": 83,
       "unit_count": 14,
-      "issue_count": 25
+      "issue_count": 0
     },
     "spec/design/README.md": {
       "content_hash": "917e029d26b97cae700ffe529f38fe3295c20f9448bef93f49fe713c06f85dcb",
