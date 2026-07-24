@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-07-24T21:16:16Z",
+  "updated_at": "2026-07-24T21:25:40Z",
   "findings": [
     {
       "id": "F-001",
@@ -244,6 +244,15 @@
       "status": "open",
       "wave": 0,
       "note": "Internal: the Status line reads -accepted, implementation in progress (2026-06-14)- while s6 (same date) declares -the port is COMPLETE, resolvo is the default production solver- with only far-backlog reverse weak-deps waiting. The header was never refreshed after the port landed. Same stale-header class as F-025/F-026. Phase C/D: reword the status line."
+    },
+    {
+      "id": "F-028",
+      "from": "spec/modules/vibe-workspace/PROP-035-spec-compiler.md",
+      "to": "spec/modules/vibe-workspace/PROP-035-spec-compiler.md",
+      "type": "contradiction",
+      "status": "open",
+      "wave": 0,
+      "note": "Internal: the Status line reads -DESIGN, provisional 2026-07-14 ... not implementation-locked- while s17 records s5-s13 SHIPPED as the vibe-spec crate (2026-07-15), the link-type rename shipped (07-16), and normal+static compiled end to end (07-20). Only the structural/JIT loader (s13) and link tables (s10) remain pending. Same stale-header class as F-025..F-027. Phase C/D: reword the status line."
     }
   ]
 }
