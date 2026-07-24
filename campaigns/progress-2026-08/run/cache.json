@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-24T21:02:59Z",
+  "updated_at": "2026-07-24T21:09:27Z",
   "files": {
     "spec/boot/00-core.md": {
       "content_hash": "9430b035d1017950ec37c4ce85bab91155334b5fc55d3e1948138a4f6be8b0e5",
@@ -793,25 +793,25 @@
       "issue_count": 0
     },
     "spec/modules/vibe-registry/PROP-001-git-backend.md": {
-      "content_hash": "aa762b5e64f08b6dea46df82dd3b0ed8e9c2b9f4eddfb048d9c9c468aa4b6237",
+      "content_hash": "a7965e9d25d4b9a70f0297007a274ed3eca248059ef014e26afff8c3b51625af",
       "rollup": {
         "explicit": [
           "impl",
           "done"
         ],
         "computed": [
-          "impl",
-          "done"
+          "spec",
+          "work"
         ],
         "effective": [
           "impl",
           "done"
         ],
-        "marker_count": 1,
-        "fact_count": 88,
-        "unmarked_facts": 88
+        "marker_count": 93,
+        "fact_count": 92,
+        "unmarked_facts": 0
       },
-      "marker_count": 1,
+      "marker_count": 93,
       "unit_count": 20,
       "issue_count": 0
     },
@@ -839,25 +839,25 @@
       "issue_count": 0
     },
     "spec/modules/vibe-registry/PROP-008-qualified-naming.md": {
-      "content_hash": "17074ea15cf0f2aafe53269a0e517a755d1ad2753e938ee48d845cbe281c4092",
+      "content_hash": "765e66d00310b7af2845490e9633f321d87695af78bf71a219aaa06e3c475e49",
       "rollup": {
         "explicit": [
           "impl",
           "done"
         ],
         "computed": [
-          "impl",
-          "done"
+          "spec",
+          "work"
         ],
         "effective": [
           "impl",
           "done"
         ],
-        "marker_count": 1,
-        "fact_count": 87,
-        "unmarked_facts": 87
+        "marker_count": 100,
+        "fact_count": 99,
+        "unmarked_facts": 0
       },
-      "marker_count": 1,
+      "marker_count": 100,
       "unit_count": 17,
       "issue_count": 0
     },

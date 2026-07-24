@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-07-24T21:02:58Z",
+  "updated_at": "2026-07-24T21:05:49Z",
   "findings": [
     {
       "id": "F-001",
@@ -217,6 +217,15 @@
       "status": "open",
       "wave": 0,
       "note": "Internal: s2.7 closes with -Fingerprint storage location and granularity are open (s5)- but s5 records both RESOLVED 2026-07-15 (Q3 header storage, Q4 per-package granularity). The s2.7 tail predates the Phase-0 resolution and was never updated. Phase C/D: drop or rewrite the stale sentence."
+    },
+    {
+      "id": "F-025",
+      "from": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
+      "to": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
+      "type": "contradiction",
+      "status": "open",
+      "wave": 0,
+      "note": "Internal: the Milestone line still reads -design proposal; targets a new M1.18 ... Not implementation-locked- while the Status line (updated 2026-06-12) says IMPLEMENTED across M1.18+M1.19. The milestone phrasing predates shipping and was never refreshed. Phase C/D: reword the milestone line."
     }
   ]
 }
