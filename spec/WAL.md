@@ -1,31 +1,37 @@
 # WAL — Project Continuation State
 
-_Updated: 2026-07-25 (session end — Phase L closed; Phase C in flight:
-4 of 5 clusters verified, spec/common closed 12/12; modules cluster
-handed to the next session)_
+_Updated: 2026-07-25 (mid-session checkpoint — Phase C modules cluster:
+12 of 35 module files verified in five batches c4a…c4d2; workspace
+cluster closed; cli/actions (c4e) and the mcp/index/settings/registry
+tail (c4f) remain)_
 
 ## Current phase
 
-**Progress Control (PROP-043) — Phase L CLOSED; Phase C (verification)
-IN FLIGHT.** The verify loop is proven and its conventions are durable
-in the plan LOG §9 (cache campaign maps `{verify_batch, processed_hash,
-verdicts{anchor→{v,ev[]}}, summary}`; verdicts never in markup; stage
-semantics: impl/done ⇒ presence, spec/done ⇒ absence, doc/done ⇒
-no-contradiction; assert-gated coverage; `_elements` for status tags).
-**Tally: 1 398 / 4 944 units — 1 353 confirmed / 42 drift / 3
-unverifiable; findings 44** (F-035…F-044 new). Verified: boot (c0),
-manual-tests (c1), design (c2), common 12/12 (c3a–c3d) = 23 of 58
-files. Drift profile settled: "the spec aged behind its own success" —
-fired triggers (UPL relicense → F-043; the §2.6 engine split → F-044),
-proposed-era headers over shipped systems (F-005/F-006/F-013), the MT
-keymap era (F-037/F-038), one code-side stale clap help (F-036, Phase
-E DRIFT candidate). Honest design proposals (031/032/033) pass clean —
-every absence claim grep-verified. **Remaining: the modules cluster
-(35 files, 3 300 markers)** — batch map + loop recipe in
-`CONTINUE.md`. Phase L record: 26 gate-binding sites repointed in 4
-batches; 35 files moved to `legacy-spec/` (plan carve-out honoured);
-specmap regenerated (`f311f429`). Key laws unchanged: no fractality
-(Fable = verification, Opus = DRIFT coding), engine pin
+**Progress Control (PROP-043) — Phase C (verification) IN FLIGHT, the
+modules cluster past half.** Conventions stay per LOG §9 (verdicts in
+cache campaign maps only; impl/done ⇒ presence, spec/done ⇒ absence,
+doc/done ⇒ no-contradiction; coverage from `progress mirror`'s
+ParsedDoc — the raw-grep extractor over-counts code-span shorthands;
+assert-gated; `_elements` for document markers). **Tally: 3 233 /
+4 944 — 3 062 confirmed / 168 drift / 3 unverifiable; findings 51**
+(F-045…F-051 new this session; F-018/F-024/F-047/F-048 extended).
+Verified: boot, manual-tests, design, common 12/12, vibe-progress
+(c4a), registry core 002+001 (c4b), resolver 003+017 (c4c), workspace
+10/10 (c4d1+c4d2) = 35 of 58 files. Session findings of note: F-046
+(PROP-043's own §5–§7 marker-vs-implementation parity, both
+directions), F-047 (stale in-code deviates denying the shipped
+ResolvoDepSolver — production default `unwrap_or("resolvo")`), F-048
+(--trust-mirror and `list --overrides` promised-absent; SOLVER-IDENTITY
+corrected from a wrong c4b confirm), F-050 (PROP-003's solver tail
+outside its §2.2 supersede marker), F-018-extended (PROP-020/022:
+whole shipped systems — hooks.rs runner, Materialization modes — under
+proposed headers; 78 drift rows, one re-mark sweep each). First
+zero-drift files: PROP-011/012/025 (227/227). **Remaining: c4e
+(vibe-cli+vibe-actions: 037/036/042/039 — 327 markers) and c4f
+(vibe-mcp ×3, index 005, settings ×2, registry rest — 957)** per the
+`CONTINUE.md` batch map. Exit gate: 100 % markers carry verdicts;
+ask the owner before Phase D. Key laws unchanged: no fractality
+(Fable = verification, Opus = DRIFT coding, queue EMPTY), engine pin
 `claude-opus-5`. Plan: `spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md`.
 
 ## Constraints — do not violate
