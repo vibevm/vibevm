@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-07-25T17:53:51Z",
+  "updated_at": "2026-07-25T18:10:53Z",
   "files": [
     {
       "path": "spec/boot/00-core.md",
@@ -14625,8 +14625,8 @@
         "marker_count": 159,
         "processed_hash": "f5f58f90b59b20a575fa2f14ab213ab75cf6e8aa7f277021095001bf99fe5655",
         "summary": {
-          "confirmed": 138,
-          "drift": 7,
+          "confirmed": 139,
+          "drift": 6,
           "unverifiable": 0
         },
         "verdicts": {
@@ -15328,9 +15328,10 @@
             ]
           },
           "STATE-FILES": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "F-046(d): live campaign.json fields = schema/updated_at/campaign_id/phase/wave/counters - no 'gates' field (grep gates in state.rs = 0); the five files themselves exist and feed the dashboard"
+              "F-046(d): live campaign.json fields = schema/updated_at/campaign_id/phase/wave/counters - no 'gates' field (grep gates in state.rs = 0); the five files themselves exist and feed the dashboard",
+              "E DRIFT-008 2026-07-25: the gate panel ships - CampaignState.gates + GateRecord/GateStatus in progress-core, record_gate (replace-by-name, atomic, no process spawn), write_state carries the panel across a scan, and the vibe progress gate subcommand is the automation seam. Byte-identical pre-panel shape until a gate is recorded"
             ]
           },
           "DASHBOARD-READS-ONLY": {
@@ -15505,7 +15506,7 @@
           }
         },
         "verified_at": "2026-07-25T14:01:39Z",
-        "verify_batch": "c4a-vibe-progress + d2f"
+        "verify_batch": "c4a-vibe-progress + d2f + E"
       }
     },
     {

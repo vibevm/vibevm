@@ -1,8 +1,16 @@
 # DRIFT-011 — a blockquote can carry a fact anchor {#root}
 
-<status stage="impl" state="plan" ref="DRIFT-011"/>
+<status stage="impl" state="done" ref="DRIFT-011"/>
 
-**Status:** queued
+**Status:** done — executed by Opus 2026-07-25, reviewed and accepted by Fable
+the same day (diff read in full; the offset stays an index into the original
+`text` and its own test proves it; the fence and mid-line-`>` negatives hold).
+**Reviewer's finish:** the executor implemented §4.1's "single space" literally
+and flagged it — `>   ##ID` did not mint, while the plain `   ##ID` does. The
+quoted form must not be pickier than the plain one, so `blockquote_prefix_len`
+now eats the spacing after each `>` greedily. The reviewer's own added test
+caught the half-fix (`>  >  ##ID`, spaces *between* the markers) before it
+shipped.
 **Executor:** Opus. **Reviewer:** Fable, against §6 verbatim.
 **Cluster:** cli (progress-core parser)
 **Unit-stability check:** F-015 carries the owner's 2026-07-25 ruling —
@@ -118,3 +126,15 @@ small, surgical change.
 ## 9. Log {#log}
 
 - queued 2026-07-25 (Fable), on the owner's ruling «научи срезать префикс».
+- impl 2026-07-25 — `take_fact_id` now consumes a leading blockquote
+  prefix (`(> ?)+`) after the whitespace trim; the returned offset stays an
+  index into the original `text`. Seven unit tests added in
+  `crates/progress-core/src/parse/facts.rs`. §8 clean: the live corpus did
+  not move — `progress scan` stays 58 files / 4975 markers / 0 of 4911
+  facts unmarked / 0 errors, `progress check` clean; a tree-wide grep found
+  no pre-existing `> ##…` line in the observed corpus, so no span shifted.
+  One decision the task left open, recorded for the reviewer: the prefix
+  grammar is applied literally (one optional space per `>`), so
+  `>   ##ID` — three spaces, still a legal blockquote in CommonMark — does
+  **not** mint an anchor. Widening it to re-trim whitespace after the
+  prefix is a one-line change if the reviewer wants it.

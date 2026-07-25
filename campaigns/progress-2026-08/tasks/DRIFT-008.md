@@ -1,8 +1,17 @@
 # DRIFT-008 — `campaign.json` carries the gate panel {#root}
 
-<status stage="impl" state="plan" ref="DRIFT-008"/>
+<status stage="impl" state="done" ref="DRIFT-008"/>
 
-**Status:** queued
+**Status:** done — executed by Opus 2026-07-25, reviewed and accepted by Fable
+the same day (diff read in full; the no-gate shape is byte-compared against the
+pre-panel bytes, the panel survives a scan, the error names both the file and
+the command that writes it, and the core spawns nothing).
+**Reviewer ruling on the surfaced residual:** `write_state`'s tolerant read
+means a *corrupt* `campaign.json` silently loses the reported panel. Accepted:
+`progress-core` is a pure library with no logging seam, inventing one for this
+corner would cost more than the data — which is re-reportable by re-running the
+gate — and the erasure law (§7.5) makes the projection expendable by design.
+Revisit if the panel ever carries something that is not re-derivable.
 **Executor:** Opus. **Reviewer:** Fable, against §6 verbatim.
 **Cluster:** cli (progress-core state / progress adapter)
 **Unit-stability check:** `STATE-FILES` carries the owner's 2026-07-25 ruling
@@ -111,3 +120,22 @@ Budget signal: past ~5 files or ~350 lines, stop and return.
 ## 9. Log {#log}
 
 - queued 2026-07-25 (Fable), on the owner's ruling.
+- implemented 2026-07-25. §8 stop rule checked first: PROP-043 §7.2
+  (`STATE-FILES`) names `gates` in the `campaign.json` field list and
+  specifies no shape, so §4's design stands unconflicted — no `REVIEW`
+  marker raised. Two points §4 left open, decided against in-repo
+  precedent and recorded for the reviewer: (a) `detail` is
+  `skip_serializing_if = "Option::is_none"`, mirroring `journal.rs`'s
+  `StepDone::result` (§7's named analogy); (b) `write_state` reads the
+  previous `campaign.json` *tolerantly* — an unreadable projection
+  degrades to an empty panel instead of wedging every scan, since the
+  file is a derived artifact (§7.5) and `record_gate` is the path that
+  fails loudly. `unknown` is representable in `GateStatus` but not
+  offered by the CLI, exactly as §4.2/§4.4 are written.
+- §6 CLI scenario was run against a **copy** of this campaign's
+  `run/state/campaign.json` in a scratch zone (`--campaign <scratch>`),
+  not against the live file: the executor was instructed not to write
+  under `campaigns/progress-2026-08/run/`. Output identical in kind —
+  the `gates` array appears with `floor`/`red`/the detail string, and a
+  following full-corpus `vibe progress scan` (58 files, 4911 facts)
+  preserved it.

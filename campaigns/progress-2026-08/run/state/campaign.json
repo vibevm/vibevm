@@ -1,13 +1,27 @@
 {
   "schema": 1,
-  "updated_at": "2026-07-25T17:53:51Z",
+  "updated_at": "2026-07-25T18:10:53Z",
   "campaign_id": "progress-2026-08",
-  "phase": "D",
+  "phase": "E",
   "wave": 0,
   "counters": {
     "files": 58,
     "facts": 4911,
     "unmarked": 0,
     "issues": 0
-  }
+  },
+  "gates": [
+    {
+      "name": "floor",
+      "status": "green",
+      "ran_at": "2026-07-25T18:10:43Z",
+      "detail": "self-check exit 0 with VIBE_SETTINGS isolated; F-055 is the only un-isolated red"
+    },
+    {
+      "name": "check",
+      "status": "green",
+      "ran_at": "2026-07-25T18:10:43Z",
+      "detail": "progress check: clean, 58 files, 0 warnings"
+    }
+  ]
 }

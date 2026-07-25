@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updated_at": "2026-07-25T18:35:00Z",
+ "updated_at": "2026-07-25T19:11:00Z",
  "findings": [
   {
    "id": "F-001",
@@ -133,9 +133,9 @@
    "from": "spec/common/PROP-024-code-bearing-packages.md",
    "to": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
    "type": "missing-support",
-   "status": "open",
-   "wave": 0,
-   "note": "Blockquote paragraphs are countable units (they can carry a marker) but cannot carry a ##<ID> fact anchor: take_fact_id does not strip the `> ` prefix, and PROP-043 s3.8/s8 never mention blockquotes. Found on PROP-024's package-shape formula (re-marked as a plain bold paragraph as the workaround). Decide: support ##<ID> after the blockquote prefix, or declare blockquotes non-units in s8."
+   "status": "resolved",
+   "wave": 2,
+   "note": "Blockquote paragraphs are countable units (they can carry a marker) but cannot carry a ##<ID> fact anchor: take_fact_id does not strip the `> ` prefix, and PROP-043 s3.8/s8 never mention blockquotes. Found on PROP-024's package-shape formula (re-marked as a plain bold paragraph as the workaround). Decide: support ##<ID> after the blockquote prefix, or declare blockquotes non-units in s8. || RESOLVED by DRIFT-011 2026-07-25 (owner ruled: teach it to strip the prefix): take_fact_id consumes the blockquote prefix, so a quoted normative statement is addressable and anchored-when-marked reaches it. The corpus did not move - no pre-existing \"> ##\" line existed."
   },
   {
    "id": "F-016",
@@ -414,7 +414,7 @@
    "type": "reality-mismatch",
    "status": "open",
    "wave": 0,
-   "note": "Marker-vs-implementation parity family, both directions: impl/done over unshipped fragments - (a) EVIDENCE-SPECMAP: EvidenceProvider wired nowhere outside progress-core, no specmap join in report; (b) FACT-GRAIN-EVIDENCE: 0 fact units/edges in host specmap.json, consumed stack engine v0.7.0 predates the amendment (PROP-014 v0.8.0 S2.1 exists authored-side; awaits stack re-mint); (c) CMD-CHECK lists 'lossless folds' - no fold code anywhere; (d) STATE-FILES: campaign.json has no 'gates' field; (e) CMD-REPORT evidence column absent; (g) TOOL-INCREMENTAL: every run re-parses the full tree, Cache::is_current unused outside tests. AND spec/done under shipped code - (f) S7.3: BaselineUnit matches the record field-for-field, rescan CLI live with hash-suspect + marker-diverged (named-crates + control-sample still unimplemented). One Phase E DRIFT task (wire evidence/folds/gates/incremental + promote S7.3 markers) or one sync-from-code demotion sweep closes the family."
+   "note": "Marker-vs-implementation parity family, both directions: impl/done over unshipped fragments - (a) EVIDENCE-SPECMAP: EvidenceProvider wired nowhere outside progress-core, no specmap join in report; (b) FACT-GRAIN-EVIDENCE: 0 fact units/edges in host specmap.json, consumed stack engine v0.7.0 predates the amendment (PROP-014 v0.8.0 S2.1 exists authored-side; awaits stack re-mint); (c) CMD-CHECK lists 'lossless folds' - no fold code anywhere; (d) STATE-FILES: campaign.json has no 'gates' field; (e) CMD-REPORT evidence column absent; (g) TOOL-INCREMENTAL: every run re-parses the full tree, Cache::is_current unused outside tests. AND spec/done under shipped code - (f) S7.3: BaselineUnit matches the record field-for-field, rescan CLI live with hash-suspect + marker-diverged (named-crates + control-sample still unimplemented). One Phase E DRIFT task (wire evidence/folds/gates/incremental + promote S7.3 markers) or one sync-from-code demotion sweep closes the family. || 2026-07-25 owner ruled WIRE on all seven rows (not demote). Routed to Phase E as DRIFT-006/007/008/009/010. BASELINE-RECORD closed in d2f as a plain re-mark; STATE-FILES closed by DRIFT-008. Five rows remain, each with a queued task."
   },
   {
    "id": "F-047",

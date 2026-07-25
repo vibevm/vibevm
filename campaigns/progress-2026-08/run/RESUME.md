@@ -1,6 +1,6 @@
 # RESUME — campaign `progress-2026-08`
 
-_Generated 2026-07-25T17:29:12Z — do not edit; regenerate with `vibe progress resume`._
+_Generated 2026-07-25T18:10:35Z — do not edit; regenerate with `vibe progress resume`._
 
 **Phase:** D
 
