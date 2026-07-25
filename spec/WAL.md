@@ -1,36 +1,39 @@
 # WAL — Project Continuation State
 
-_Updated: 2026-07-25 (session end — **PHASE C COMPLETE, exit gate
-green**: 58/58 files, 4 944/4 944 markers carry verdicts; the corpus
-is measured at 93.0 % confirmed; Phase D awaits the owner's call)_
+_Updated: 2026-07-26 (session end — **Phases D and E driven end to end**:
+the drift ledger fell from 311 rows to 1, twelve DRIFT tasks executed,
+and the floor is green with no workaround for the first time)_
 
 ## Current phase
 
-**Progress Control (PROP-043) — Phase C (verification) COMPLETE; the
-phase lane stays C until the owner opens Phase D (§5 entry law).**
-**Final tally: 4 455 units judged — 4 141 confirmed / 311 drift / 3
-unverifiable = 93.0 % / 7.0 % / 0.07 % — the first measured actuality
-level of the spec tree. Findings 55** (F-001…F-054; this session
-minted F-045…F-054 and extended F-018/F-024/F-047/F-048 across ten
-batches c4a…c4f3). The §5-C prediction confirmed **mirrored**: drift
-concentrates in Status lines that promised *less* than the tree
-delivers — the shipped-under-proposed families (PROP-030 63 rows;
-the bridge four PROP-020/021/022/023 = 137; PROP-000's F-043 six;
-the DRAFT-era cli/actions headers F-052) — while honestly-updated
-files confirm nearly wholesale (**eight zero-drift files**:
-PROP-011/012/025/042/015/026/027/005). Notable code-side rows for
-Phase E: F-036 (--plain clap lie), F-047 (three stale deviates
-denying the shipped ResolvoDepSolver). One verdict was corrected
-mid-phase (c4b SOLVER-IDENTITY-FIELD confirm → drift in c4c; F-048f).
-The 311-row drift ledger is sweep-shaped for Phase D: ~15 family rows
-cover ~80 % of it. **Next: the owner reads the measurement and rules
-on opening Phase D (stitching)**; the Opus DRIFT queue stays EMPTY.
-Key laws unchanged: no fractality (Fable = verification, Opus = DRIFT
-coding), engine pin `claude-opus-5`. Plan:
-`spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md` (LOG §9 carries
-the full ten-batch record and the exit-gate boundary entry).
+**Progress Control (PROP-043) — Phase E; the queue is drained.** The spec
+tree measured 93.0 % true at the Phase C gate and now measures **4 486
+confirmed / 1 drift / 3 unverifiable of 4 490 = 99.9 %**. Findings **61
+of 64 resolved**. The single remaining drift row
+(`FACT-GRAIN-EVIDENCE`) cannot close here: it waits on
+`rust-ai-native-lang` v0.8.0 re-vendoring the fact-aware specmap engine,
+which is wave 2's Phase A2.
+
+**`bash tools/self-check.sh` exits 0 against the real `~/.vibe/` with no
+`VIBE_SETTINGS` override** — F-055 is genuinely fixed rather than worked
+around. Gate panel in `campaign.json`: floor / check / specmap / conform
+all green.
+
+**Parked on the owner, nothing else blocked:** (1) DRIFT-022 needs a
+letter — (a) allowlist `VIBE_*`/`VIBEVM_*` for the `[env]` promotion, or
+(b) remove it; (2) DRIFT-020 is ready to run and needs only a go;
+(3) F-063 needs a sync-from-code diff plus one edit only the owner may
+make. **Phases F and G were never opened, and close-out has not started** —
+`baseline.json`, deferrals, and the REPORT against §8's six predictions.
+Wave 2 is planned and unratified:
+`spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md`.
+
+Key laws unchanged: no fractality (Fable = judgment and ALL review,
+Opus = DRIFT execution), engine pin `claude-opus-5`, `reality-mismatch`
+closes only through sync-from-code with owner approval.
 
 ## Constraints — do not violate
+
 
 - **mtime unit in the vvm manifest.** TS port stores `mtime_ms`; Rust
   twin stores `mtime_nanos` (PROP-019 §2.15) — account for the unit
@@ -50,89 +53,105 @@ the full ten-batch record and the exit-gate boundary entry).
 - **Cache campaign maps are load-bearing.** `run/cache.json` carries
   the C-phase verdicts; mutate it by load-and-merge only (scan
   preserves the maps; a from-scratch rewrite would erase them).
+- **The parse payload lives outside the repository** since 2026-07-26:
+  `~/.vibe/progress-cache/<repo-id>/<branch-slug>/<campaign>/`. It is
+  pure acceleration — deleting it is silent and harmless. Never put a
+  verdict there.
+- **Never trust a substring match about a data file.** `"parsed"`,
+  `"verdicts"` and `updated_at` each read as present when they were not,
+  in one day. Walk the structure or anchor on bytes.
+- **Commit delegated work on the completion notification**, never on a
+  filled-in task journal — executors write §9 as they go.
+- **Outstanding manual runs (owner sign-off pending):** MT-02
+  (`vibe tree` TUI) and MT-03 (`vibe prefs ui`). An agent may pre-run;
+  only a person signs off.
 
 ## Done (collapsed — see `git log`)
 
-- **Phase C, modules cluster c4a…c4f3 (2026-07-25, this session).**
-  Ten batches, 3 057 units: vibe-progress self-verification (F-045
-  self-status, F-046 parity family), registry core (F-047 stale
-  deviates, F-048 promised-absent, resolvo confirmed as production
-  default), resolver pair (F-050 un-marked supersession tail; c4b
-  verdict corrected), workspace 10/10 (F-018 mass families PROP-020/
-  022; F-029/F-026/F-028 land; PROP-011/012/025 zero-drift),
-  cli/actions (F-052 DRAFT-era headers; PROP-042 clean), registry
-  rest (F-053 PROP-030 63 rows — the densest; F-054 nits; bridge
-  family completed), mcp+settings (three zero-drift; F-010/F-019
-  land), index PROP-005 all-confirmed. Exit gate green.
-- **Phase C, clusters 1–4 (2026-07-25).** c0 boot 64u (F-035
-  tests/-path drift); c1 manual-tests 67u (MT keymap era F-037/F-038 +
-  clap-help F-036); c2 design 306u (aged-tense family F-039/040/041 +
-  F-034); c3a common-small 150u (family roster F-042); c3b PROP-000
-  162u (six aged spots F-043); c3c 018+019 322u (headers F-013/F-005);
-  c3d common tail 327u (deferral-fired F-044; spec/common closed).
-- **Phase L (full, 2026-07-25).** Inventory → no-port verdict → 4
-  repoint batches → `git mv` 35 files → `legacy-spec/`; exit gate
-  green; specmap regen.
-- **Phase B (full).** 58 files, 4 880/4 880 facts marked; grammar
-  precedents complete. DRIFT-001…005 5/5 no-return.
-- Earlier: default registry migration; PROP-030 §3.3; vibevm-term
-  Phase 2b; M1.17/M1.18/M1.19.
+- **Phase D — stitching, complete (2026-07-25/26).** Waves d1 and
+  d2a–d2h closed **310 of 311 drift rows** across 36 files. d1 took the
+  shipped-under-proposed families in one sweep (F-053 PROP-030's 63 rows;
+  F-018's bridge four, 137; F-043's PROP-000 twelve) — 191 of those were
+  scripted straight off the C-phase verdict map, since a deterministic
+  transform beats a re-reading. d2 took the stale headers (22 rows,
+  13 files), the design-doc tense family, PROP-003's solver tail
+  corrected clause-by-clause, the module index completed to the live tree
+  (26 rows added), the MT keymap re-authoring, and the archive's status
+  lines. Every row ran through sync-from-code with owner approval.
+- **Phase E — coding, queue drained (2026-07-25/26).** DRIFT-006…021
+  executed by Opus, each reviewed diff-by-diff; DRIFT-015 superseded
+  before it ran. Landed: the specmap evidence join with its report
+  column, the lossless-fold check (warning severity — `EXPLICIT-BEATS`
+  blesses the divergence a document cannot distinguish from a lying
+  fold), the gate panel in `campaign.json`, baseline invalidation's two
+  missing rules, blockquote fact anchors, the incremental parse path, the
+  `--plain` and resolver-doc corrections, two `deviates` that turned out
+  never to have been deviations, the cache split, the no-op-write skip,
+  and the removal of the legacy `~/.vibevm` read leg.
+- **The test suite stopped reading the developer's home.** F-055, F-056
+  and F-057 were one forgotten discipline caught three times by accident.
+  Six e2e files now route through a `UserScratch` helper that isolates
+  settings, registry cache and search cache together. DRIFT-021 then
+  removed the leg no isolation could reach — and found a third read path
+  nobody had measured, carrying the vibeterm control-server token.
+- Earlier: Phase C (2026-07-25, 93.0 % measured), Phase L, Phase B,
+  M1.17/M1.18/M1.19.
 
 ## In progress
 
-Nothing open — Phase C closed at its exit gate; the journal's last
-step (`c4f3-index`) is done and the boundary entry is in LOG §9. The
-campaign holds at the C→D boundary for the owner's ruling.
+Nothing running. Two tasks are queued: **DRIFT-020** (test isolation as a
+guarantee — ready, needs only a go) and **DRIFT-022** (the `[env]`
+promotion — refuses to start until the owner picks (a) allowlist or
+(b) remove).
 
 ## Next
 
-1. **Phase C is COMPLETE** — exit gate green (58/58 files, 4 944/4 944
-   markers, final 4 141C/311D/3U = 93.0 %). **Ask the owner to open
-   Phase D (stitching)** over the 54-row ledger — ~15 family rows
-   cover ~80 % of the 311 drift verdicts.
-2. Phase D shape when opened: the shipped-under-proposed re-mark
-   sweeps (F-018 four-spec bridge family, F-053 PROP-030, F-052
-   cli/actions, F-043 PROP-000, F-046 PROP-043 parity) close most of
-   the ledger; reality-mismatch rows route through sync-from-code.
-3. Opus queue EMPTY; Phase E DRIFT candidates grew: F-036 (`--plain`
-   clap lie), F-047 (three stale deviates denying the shipped
-   ResolvoDepSolver), F-048 (--trust-mirror / `list --overrides`
-   promised-absent), F-016 modules README, F-020 OWNER-GUIDE, F-017
-   aiui scrollbar.
-
-**Outstanding manual runs (owner sign-off pending)** — the naming
-practice PROP-000 `MT-WAL-NAMES` requires, restored in Phase D:
-**MT-02** (`vibe tree` TUI, PROP-037 Spec 2 — the visual sign-off the
-TREE-TUI plan left open) and **MT-03** (`vibe prefs ui`, PROP-040/041).
-Both need re-authoring against the shipped F-key keymap first
-(F-037/F-038); an agent may pre-run, only a human signs off.
+1. **Answer DRIFT-022's letter** and **release DRIFT-020.** Both close
+   F-061 between them.
+2. **F-063 — a sync-from-code diff for the token precedence.** Both
+   `PROP-002` `##PUB-TOKEN-LOADING` and `spec/boot/90-user.md`
+   `##TOKEN-FILE-CONVENTION` name `VIBEVM_PUBLISH_TOKEN` as the highest
+   precedence; `VIBEVM_PUBLISH_TOKEN_<HOST>` sits above it. The
+   `90-user.md` edit is the owner's — that file is user-owned.
+3. **Close wave 1 out.** `baseline.json`, the deferrals file, and the
+   REPORT against §8's six predictions — four are already checkable, and
+   prediction 3 (≥60 % of IMPLEMENTED claims confirm; ≤10 % unverifiable)
+   is comfortably met at 99.9 % / 0.07 %.
+4. **Phases F and G were never opened.** F: three owner plans generated
+   from views (release/productization, improvement, global idea ledger).
+   G: the User Guide and Package Author Guide, written from proven
+   behaviour rather than spec prose.
+5. **Wave 2 awaits ratification** —
+   `spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md`, 37 packages
+   / 294 files. Its Phase A2 (re-mint `rust-ai-native-lang` v0.8.0) is
+   what unblocks wave 1's last drift row.
 
 Parked follow-ups (unchanged): vibe-vvm/term-vvm conformance-golden;
-Linux/macOS install smoke; arbitrary user-repos design-doc; `vibe
-doctor` project-local row.
+Linux/macOS install smoke; arbitrary user-repos design-doc; `vibe doctor`
+project-local row.
 
 ## Known issues
 
-- **GitVerse SSH link DOWN (2026-07-25).** Banner-exchange timeout —
-  network-level, not divergence (HTTPS `ls-remote`: strict ancestor).
-  GitHub carries everything through `9baa7fa6`. Recovery: plain
-  `cargo xtask mirror`; NEVER `--force`.
+- **GitVerse SSH link DOWN all of 2026-07-25/26.** Banner-exchange
+  timeout — network-level, not divergence. GitHub carries everything
+  through `97c26bf6`. Recovery: plain `cargo xtask mirror`; NEVER
+  `--force`.
+- **F-063 — the documented token precedence is wrong** in a
+  security-relevant way (see Next 2).
+- **F-064 — a second config home** (`legacy_xdg_config_path()`,
+  `user_config.rs:285`) that `$VIBE_SETTINGS` does not relocate. Same
+  shape as the leg DRIFT-021 removed, one severity lower.
 - **vibespecs 401 on this machine** — redbook + rust-ai-native resolve
-  via vibe-embedded; consuming lockfiles carry
-  `source_kind = "embedded"` and trip the reproducibility guard.
-- **specmap ratchet** — 37 gated orphans host-side (re-based at the
-  2026-07-25 regen `f311f429`; gate passes, 0 suspects).
+  via vibe-embedded; consuming lockfiles carry `source_kind = "embedded"`.
+- **specmap ratchet** — 37 gated orphans host-side, unmoved.
 
 ## Session context
 
-One session drove the entire modules cluster (ten batches, 3 057
-units) and closed Phase C at its exit gate. The journal is closed, all
-verdicts committed batch-by-batch, GitHub synced throughout (GitVerse
-still SSH-down; plain re-fan on recovery). The next session opens by
-reporting the measurement to the owner and asking whether to open
-Phase D — a `phase` journal event lands only on that ruling.
-`progress check` must stay 0; the cache's campaign maps must survive
-every write (load-and-merge only). Method note kept durable: coverage
-counts come from `progress mirror`'s ParsedDoc, never the raw-grep
-extractor (code-span shorthands over-count); `run/mirror/` is
-ephemeral and safe to delete.
+One session ran Phase D and Phase E end to end: twelve DRIFT tasks
+dispatched to Opus, every diff reviewed before it was committed, and the
+ledger taken from 311 open rows to 1. The lasting lessons are in the
+Constraints above — the three substring false positives, the two
+measurements that corrected each other, and the reviewer error of
+committing a worker's output on journal evidence rather than on its
+completion. The floor is green plainly for the first time, which is the
+one fact a cold reader should verify first.
