@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updated_at": "2026-07-25T12:50:16Z",
+ "updated_at": "2026-07-25T13:00:46Z",
  "findings": [
   {
    "id": "F-001",
@@ -343,6 +343,33 @@
    "status": "open",
    "wave": 0,
    "note": "MT-02 S1-FOOTER quote omits F4 settings and says q quit (shipped: Esc quit + confirm); STEP-9 parenthetical -once a picker lands- is superseded by the F4 settings menu. Small re-wording; the rest of MT-02 verified clean (22/23 confirmed). Found by C c1."
+  },
+  {
+   "id": "F-039",
+   "from": "spec/design/loading-and-boot-model.md",
+   "to": "spec/modules/vibe-workspace/PROP-009-loading-model.md",
+   "type": "reality-mismatch",
+   "status": "open",
+   "wave": 0,
+   "note": "Lore vs shipped PROP-009 grammar: the design records three inclusion types inline/static/dynamic (default static) while the shipped manifest field is link = static|dynamic (default dynamic; design-inline became link=static, the STATIC.md lane). Plus PROP-009 called forthcoming twice (companion-line, ptr) and the SS6 lead has the literal typo static|static|dynamic. Correct the lore per spec-genres (the PROP wins). 8 drift verdicts in c2."
+  },
+  {
+   "id": "F-040",
+   "from": "spec/design/workspace-and-qualified-naming.md",
+   "to": "ROADMAP.md",
+   "type": "reality-mismatch",
+   "status": "open",
+   "wave": 0,
+   "note": "ptr-roadmap names M1.18 (qualified naming); the ROADMAP ships M1.18 = Loading model (PROP-009) and M1.19 = Qualified naming (PROP-008). The milestone number shifted after the 2026-05-20 capture. One-line fix."
+  },
+  {
+   "id": "F-041",
+   "from": "spec/design/tui-visual-language.md",
+   "to": "crates/vibe-cli/src/commands/tree/tui/theme/glyphs.rs",
+   "type": "reality-mismatch",
+   "status": "open",
+   "wave": 0,
+   "note": "Aged present-tense in the FULL lore: glyph-lead calls ASCII the current scaffolding and the SS2 Today column reads as current state while the Tier-3 targets shipped (glyphs.rs, goldens, MT-02); SS8 When SS2.2 carries the anchors - all five anchors exist. Reword to historical (captured-at) framing. F-024 family. 2 drift verdicts in c2."
   }
  ]
 }

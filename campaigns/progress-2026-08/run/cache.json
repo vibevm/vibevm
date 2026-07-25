@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-25T12:50:17Z",
+  "updated_at": "2026-07-25T13:00:47Z",
   "files": {
     "spec/boot/00-core.md": {
       "content_hash": "b256cb2dde84d66733c4a0de68c1862ac2a67f396499efcf1586c0f0ae2f88c9",
@@ -747,7 +747,131 @@
       },
       "marker_count": 34,
       "unit_count": 5,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "anchors_judged": 17,
+        "coverage_note": "verdicts keyed by fact anchors; table cell-markers inherit their row anchor; <status> elements judged as _elements",
+        "fact_count": 29,
+        "marker_count": 34,
+        "processed_hash": "3d0268e76f05dcdb7b8b6c8240509c36382a767966a7bf904b80cbf79dd6d70f",
+        "summary": {
+          "confirmed": 18,
+          "drift": 0,
+          "unverifiable": 0
+        },
+        "verdicts": {
+          "genre-definition": {
+            "v": "confirmed",
+            "ev": [
+              "genre + layout rows verified against the tree (boot/common/modules exist; research row repointed by L4 and resolves to legacy-spec/research/); two-way-linking law verified live: PROP-009/007/008/037 all carry design-rationale backlinks (grep 2026-07-25); structural-loader parked (spec/hold, held-for framing) so the law binds the four live pairings; index complete: 5 docs listed = 5 non-README files in the dir"
+            ]
+          },
+          "PROP-WINS-PRECEDENCE": {
+            "v": "confirmed",
+            "ev": [
+              "genre + layout rows verified against the tree (boot/common/modules exist; research row repointed by L4 and resolves to legacy-spec/research/); two-way-linking law verified live: PROP-009/007/008/037 all carry design-rationale backlinks (grep 2026-07-25); structural-loader parked (spec/hold, held-for framing) so the law binds the four live pairings; index complete: 5 docs listed = 5 non-README files in the dir"
+            ]
+          },
+          "genre-table-lead": {
+            "v": "confirmed",
+            "ev": [
+              "genre + layout rows verified against the tree (boot/common/modules exist; research row repointed by L4 and resolves to legacy-spec/research/); two-way-linking law verified live: PROP-009/007/008/037 all carry design-rationale backlinks (grep 2026-07-25); structural-loader parked (spec/hold, held-for framing) so the law binds the four live pairings; index complete: 5 docs listed = 5 non-README files in the dir"
+            ]
+          },
+          "ROW-BOOT": {
+            "v": "confirmed",
+            "ev": [
+              "genre + layout rows verified against the tree (boot/common/modules exist; research row repointed by L4 and resolves to legacy-spec/research/); two-way-linking law verified live: PROP-009/007/008/037 all carry design-rationale backlinks (grep 2026-07-25); structural-loader parked (spec/hold, held-for framing) so the law binds the four live pairings; index complete: 5 docs listed = 5 non-README files in the dir"
+            ]
+          },
+          "ROW-COMMON": {
+            "v": "confirmed",
+            "ev": [
+              "genre + layout rows verified against the tree (boot/common/modules exist; research row repointed by L4 and resolves to legacy-spec/research/); two-way-linking law verified live: PROP-009/007/008/037 all carry design-rationale backlinks (grep 2026-07-25); structural-loader parked (spec/hold, held-for framing) so the law binds the four live pairings; index complete: 5 docs listed = 5 non-README files in the dir"
+            ]
+          },
+          "ROW-MODULES": {
+            "v": "confirmed",
+            "ev": [
+              "genre + layout rows verified against the tree (boot/common/modules exist; research row repointed by L4 and resolves to legacy-spec/research/); two-way-linking law verified live: PROP-009/007/008/037 all carry design-rationale backlinks (grep 2026-07-25); structural-loader parked (spec/hold, held-for framing) so the law binds the four live pairings; index complete: 5 docs listed = 5 non-README files in the dir"
+            ]
+          },
+          "ROW-RESEARCH": {
+            "v": "confirmed",
+            "ev": [
+              "genre + layout rows verified against the tree (boot/common/modules exist; research row repointed by L4 and resolves to legacy-spec/research/); two-way-linking law verified live: PROP-009/007/008/037 all carry design-rationale backlinks (grep 2026-07-25); structural-loader parked (spec/hold, held-for framing) so the law binds the four live pairings; index complete: 5 docs listed = 5 non-README files in the dir"
+            ]
+          },
+          "ROW-DESIGN": {
+            "v": "confirmed",
+            "ev": [
+              "genre + layout rows verified against the tree (boot/common/modules exist; research row repointed by L4 and resolves to legacy-spec/research/); two-way-linking law verified live: PROP-009/007/008/037 all carry design-rationale backlinks (grep 2026-07-25); structural-loader parked (spec/hold, held-for framing) so the law binds the four live pairings; index complete: 5 docs listed = 5 non-README files in the dir"
+            ]
+          },
+          "ROW-WAL": {
+            "v": "confirmed",
+            "ev": [
+              "genre + layout rows verified against the tree (boot/common/modules exist; research row repointed by L4 and resolves to legacy-spec/research/); two-way-linking law verified live: PROP-009/007/008/037 all carry design-rationale backlinks (grep 2026-07-25); structural-loader parked (spec/hold, held-for framing) so the law binds the four live pairings; index complete: 5 docs listed = 5 non-README files in the dir"
+            ]
+          },
+          "research-vs-design": {
+            "v": "confirmed",
+            "ev": [
+              "genre + layout rows verified against the tree (boot/common/modules exist; research row repointed by L4 and resolves to legacy-spec/research/); two-way-linking law verified live: PROP-009/007/008/037 all carry design-rationale backlinks (grep 2026-07-25); structural-loader parked (spec/hold, held-for framing) so the law binds the four live pairings; index complete: 5 docs listed = 5 non-README files in the dir"
+            ]
+          },
+          "TWO-WAY-LINKING": {
+            "v": "confirmed",
+            "ev": [
+              "genre + layout rows verified against the tree (boot/common/modules exist; research row repointed by L4 and resolves to legacy-spec/research/); two-way-linking law verified live: PROP-009/007/008/037 all carry design-rationale backlinks (grep 2026-07-25); structural-loader parked (spec/hold, held-for framing) so the law binds the four live pairings; index complete: 5 docs listed = 5 non-README files in the dir"
+            ]
+          },
+          "when-to-write": {
+            "v": "confirmed",
+            "ev": [
+              "genre + layout rows verified against the tree (boot/common/modules exist; research row repointed by L4 and resolves to legacy-spec/research/); two-way-linking law verified live: PROP-009/007/008/037 all carry design-rationale backlinks (grep 2026-07-25); structural-loader parked (spec/hold, held-for framing) so the law binds the four live pairings; index complete: 5 docs listed = 5 non-README files in the dir"
+            ]
+          },
+          "idx-workspace-naming": {
+            "v": "confirmed",
+            "ev": [
+              "genre + layout rows verified against the tree (boot/common/modules exist; research row repointed by L4 and resolves to legacy-spec/research/); two-way-linking law verified live: PROP-009/007/008/037 all carry design-rationale backlinks (grep 2026-07-25); structural-loader parked (spec/hold, held-for framing) so the law binds the four live pairings; index complete: 5 docs listed = 5 non-README files in the dir"
+            ]
+          },
+          "idx-loading-boot": {
+            "v": "confirmed",
+            "ev": [
+              "genre + layout rows verified against the tree (boot/common/modules exist; research row repointed by L4 and resolves to legacy-spec/research/); two-way-linking law verified live: PROP-009/007/008/037 all carry design-rationale backlinks (grep 2026-07-25); structural-loader parked (spec/hold, held-for framing) so the law binds the four live pairings; index complete: 5 docs listed = 5 non-README files in the dir"
+            ]
+          },
+          "idx-action-system": {
+            "v": "confirmed",
+            "ev": [
+              "genre + layout rows verified against the tree (boot/common/modules exist; research row repointed by L4 and resolves to legacy-spec/research/); two-way-linking law verified live: PROP-009/007/008/037 all carry design-rationale backlinks (grep 2026-07-25); structural-loader parked (spec/hold, held-for framing) so the law binds the four live pairings; index complete: 5 docs listed = 5 non-README files in the dir"
+            ]
+          },
+          "idx-tui-visual": {
+            "v": "confirmed",
+            "ev": [
+              "genre + layout rows verified against the tree (boot/common/modules exist; research row repointed by L4 and resolves to legacy-spec/research/); two-way-linking law verified live: PROP-009/007/008/037 all carry design-rationale backlinks (grep 2026-07-25); structural-loader parked (spec/hold, held-for framing) so the law binds the four live pairings; index complete: 5 docs listed = 5 non-README files in the dir"
+            ]
+          },
+          "idx-structural-loader": {
+            "v": "confirmed",
+            "ev": [
+              "genre + layout rows verified against the tree (boot/common/modules exist; research row repointed by L4 and resolves to legacy-spec/research/); two-way-linking law verified live: PROP-009/007/008/037 all carry design-rationale backlinks (grep 2026-07-25); structural-loader parked (spec/hold, held-for framing) so the law binds the four live pairings; index complete: 5 docs listed = 5 non-README files in the dir"
+            ]
+          },
+          "_elements": {
+            "v": "confirmed",
+            "ev": [
+              "5 status tags accurate: doc-level living guide; Index state=work living-and-complete (checked against dir 2026-07-25)"
+            ]
+          }
+        },
+        "verified_at": "2026-07-25T13:00:46Z",
+        "verify_batch": "c2-design"
+      }
     },
     "spec/design/action-system.md": {
       "content_hash": "552f99cab1611a344e426071684edffdafe73cd891178fd855b8bf859ebd39f0",
@@ -766,7 +890,377 @@
       },
       "marker_count": 78,
       "unit_count": 12,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "anchors_judged": 58,
+        "coverage_note": "verdicts keyed by fact anchors; table cell-markers inherit their row anchor; <status> elements judged as _elements",
+        "fact_count": 78,
+        "marker_count": 78,
+        "processed_hash": "552f99cab1611a344e426071684edffdafe73cd891178fd855b8bf859ebd39f0",
+        "summary": {
+          "confirmed": 55,
+          "drift": 4,
+          "unverifiable": 0
+        },
+        "verdicts": {
+          "genre-line": {
+            "v": "drift",
+            "ev": [
+              "says PROP-039 forthcoming while the contract file + crates/vibe-actions exist -> F-034 (recorded in B2)"
+            ]
+          },
+          "THESIS": {
+            "v": "confirmed",
+            "ev": [
+              "crate evidence 2026-07-25: crates/vibe-actions/src modules {address,action,registry,params,context,invoke,i18n,keymap,search,aiui,gate} match the SS2 module table (surface row ships as aiui.rs; gate.rs is the D7 legibility gate); Cargo.toml carries no ratatui/crossterm (CRATE-INVARIANT grep clean); vibe-cli consumes the crate (Cargo.toml + tree/tui/keymap_bridge.rs) - Spec 2 landed; dispatch.rs routes action ids (fold.all); F1 search shipped (goldens footer); D1 rejected-FQDN matches the ported RP1 record"
+            ]
+          },
+          "principles-lead": {
+            "v": "confirmed",
+            "ev": [
+              "crate evidence 2026-07-25: crates/vibe-actions/src modules {address,action,registry,params,context,invoke,i18n,keymap,search,aiui,gate} match the SS2 module table (surface row ships as aiui.rs; gate.rs is the D7 legibility gate); Cargo.toml carries no ratatui/crossterm (CRATE-INVARIANT grep clean); vibe-cli consumes the crate (Cargo.toml + tree/tui/keymap_bridge.rs) - Spec 2 landed; dispatch.rs routes action ids (fold.all); F1 search shipped (goldens footer); D1 rejected-FQDN matches the ported RP1 record"
+            ]
+          },
+          "P-ADDRESSABILITY": {
+            "v": "confirmed",
+            "ev": [
+              "crate evidence 2026-07-25: crates/vibe-actions/src modules {address,action,registry,params,context,invoke,i18n,keymap,search,aiui,gate} match the SS2 module table (surface row ships as aiui.rs; gate.rs is the D7 legibility gate); Cargo.toml carries no ratatui/crossterm (CRATE-INVARIANT grep clean); vibe-cli consumes the crate (Cargo.toml + tree/tui/keymap_bridge.rs) - Spec 2 landed; dispatch.rs routes action ids (fold.all); F1 search shipped (goldens footer); D1 rejected-FQDN matches the ported RP1 record"
+            ]
+          },
+          "P-PROGRAMMATIC-PRIMARY": {
+            "v": "confirmed",
+            "ev": [
+              "crate evidence 2026-07-25: crates/vibe-actions/src modules {address,action,registry,params,context,invoke,i18n,keymap,search,aiui,gate} match the SS2 module table (surface row ships as aiui.rs; gate.rs is the D7 legibility gate); Cargo.toml carries no ratatui/crossterm (CRATE-INVARIANT grep clean); vibe-cli consumes the crate (Cargo.toml + tree/tui/keymap_bridge.rs) - Spec 2 landed; dispatch.rs routes action ids (fold.all); F1 search shipped (goldens footer); D1 rejected-FQDN matches the ported RP1 record"
+            ]
+          },
+          "P-FRONTEND-AGNOSTIC": {
+            "v": "confirmed",
+            "ev": [
+              "crate evidence 2026-07-25: crates/vibe-actions/src modules {address,action,registry,params,context,invoke,i18n,keymap,search,aiui,gate} match the SS2 module table (surface row ships as aiui.rs; gate.rs is the D7 legibility gate); Cargo.toml carries no ratatui/crossterm (CRATE-INVARIANT grep clean); vibe-cli consumes the crate (Cargo.toml + tree/tui/keymap_bridge.rs) - Spec 2 landed; dispatch.rs routes action ids (fold.all); F1 search shipped (goldens footer); D1 rejected-FQDN matches the ported RP1 record"
+            ]
+          },
+          "P-HUMAN-LEGIBILITY": {
+            "v": "confirmed",
+            "ev": [
+              "crate evidence 2026-07-25: crates/vibe-actions/src modules {address,action,registry,params,context,invoke,i18n,keymap,search,aiui,gate} match the SS2 module table (surface row ships as aiui.rs; gate.rs is the D7 legibility gate); Cargo.toml carries no ratatui/crossterm (CRATE-INVARIANT grep clean); vibe-cli consumes the crate (Cargo.toml + tree/tui/keymap_bridge.rs) - Spec 2 landed; dispatch.rs routes action ids (fold.all); F1 search shipped (goldens footer); D1 rejected-FQDN matches the ported RP1 record"
+            ]
+          },
+          "P-DISCOVERY-UNIVERSE": {
+            "v": "confirmed",
+            "ev": [
+              "crate evidence 2026-07-25: crates/vibe-actions/src modules {address,action,registry,params,context,invoke,i18n,keymap,search,aiui,gate} match the SS2 module table (surface row ships as aiui.rs; gate.rs is the D7 legibility gate); Cargo.toml carries no ratatui/crossterm (CRATE-INVARIANT grep clean); vibe-cli consumes the crate (Cargo.toml + tree/tui/keymap_bridge.rs) - Spec 2 landed; dispatch.rs routes action ids (fold.all); F1 search shipped (goldens footer); D1 rejected-FQDN matches the ported RP1 record"
+            ]
+          },
+          "P-TYPED-EVERYTHING": {
+            "v": "confirmed",
+            "ev": [
+              "crate evidence 2026-07-25: crates/vibe-actions/src modules {address,action,registry,params,context,invoke,i18n,keymap,search,aiui,gate} match the SS2 module table (surface row ships as aiui.rs; gate.rs is the D7 legibility gate); Cargo.toml carries no ratatui/crossterm (CRATE-INVARIANT grep clean); vibe-cli consumes the crate (Cargo.toml + tree/tui/keymap_bridge.rs) - Spec 2 landed; dispatch.rs routes action ids (fold.all); F1 search shipped (goldens footer); D1 rejected-FQDN matches the ported RP1 record"
+            ]
+          },
+          "CRATE-INVARIANT": {
+            "v": "confirmed",
+            "ev": [
+              "crate evidence 2026-07-25: crates/vibe-actions/src modules {address,action,registry,params,context,invoke,i18n,keymap,search,aiui,gate} match the SS2 module table (surface row ships as aiui.rs; gate.rs is the D7 legibility gate); Cargo.toml carries no ratatui/crossterm (CRATE-INVARIANT grep clean); vibe-cli consumes the crate (Cargo.toml + tree/tui/keymap_bridge.rs) - Spec 2 landed; dispatch.rs routes action ids (fold.all); F1 search shipped (goldens footer); D1 rejected-FQDN matches the ported RP1 record"
+            ]
+          },
+          "ROW-MOD-ADDRESS": {
+            "v": "confirmed",
+            "ev": [
+              "crate evidence 2026-07-25: crates/vibe-actions/src modules {address,action,registry,params,context,invoke,i18n,keymap,search,aiui,gate} match the SS2 module table (surface row ships as aiui.rs; gate.rs is the D7 legibility gate); Cargo.toml carries no ratatui/crossterm (CRATE-INVARIANT grep clean); vibe-cli consumes the crate (Cargo.toml + tree/tui/keymap_bridge.rs) - Spec 2 landed; dispatch.rs routes action ids (fold.all); F1 search shipped (goldens footer); D1 rejected-FQDN matches the ported RP1 record"
+            ]
+          },
+          "ROW-MOD-ACTION": {
+            "v": "confirmed",
+            "ev": [
+              "crate evidence 2026-07-25: crates/vibe-actions/src modules {address,action,registry,params,context,invoke,i18n,keymap,search,aiui,gate} match the SS2 module table (surface row ships as aiui.rs; gate.rs is the D7 legibility gate); Cargo.toml carries no ratatui/crossterm (CRATE-INVARIANT grep clean); vibe-cli consumes the crate (Cargo.toml + tree/tui/keymap_bridge.rs) - Spec 2 landed; dispatch.rs routes action ids (fold.all); F1 search shipped (goldens footer); D1 rejected-FQDN matches the ported RP1 record"
+            ]
+          },
+          "ROW-MOD-REGISTRY": {
+            "v": "confirmed",
+            "ev": [
+              "crate evidence 2026-07-25: crates/vibe-actions/src modules {address,action,registry,params,context,invoke,i18n,keymap,search,aiui,gate} match the SS2 module table (surface row ships as aiui.rs; gate.rs is the D7 legibility gate); Cargo.toml carries no ratatui/crossterm (CRATE-INVARIANT grep clean); vibe-cli consumes the crate (Cargo.toml + tree/tui/keymap_bridge.rs) - Spec 2 landed; dispatch.rs routes action ids (fold.all); F1 search shipped (goldens footer); D1 rejected-FQDN matches the ported RP1 record"
+            ]
+          },
+          "ROW-MOD-PARAMS": {
+            "v": "confirmed",
+            "ev": [
+              "crate evidence 2026-07-25: crates/vibe-actions/src modules {address,action,registry,params,context,invoke,i18n,keymap,search,aiui,gate} match the SS2 module table (surface row ships as aiui.rs; gate.rs is the D7 legibility gate); Cargo.toml carries no ratatui/crossterm (CRATE-INVARIANT grep clean); vibe-cli consumes the crate (Cargo.toml + tree/tui/keymap_bridge.rs) - Spec 2 landed; dispatch.rs routes action ids (fold.all); F1 search shipped (goldens footer); D1 rejected-FQDN matches the ported RP1 record"
+            ]
+          },
+          "ROW-MOD-CONTEXT": {
+            "v": "confirmed",
+            "ev": [
+              "crate evidence 2026-07-25: crates/vibe-actions/src modules {address,action,registry,params,context,invoke,i18n,keymap,search,aiui,gate} match the SS2 module table (surface row ships as aiui.rs; gate.rs is the D7 legibility gate); Cargo.toml carries no ratatui/crossterm (CRATE-INVARIANT grep clean); vibe-cli consumes the crate (Cargo.toml + tree/tui/keymap_bridge.rs) - Spec 2 landed; dispatch.rs routes action ids (fold.all); F1 search shipped (goldens footer); D1 rejected-FQDN matches the ported RP1 record"
+            ]
+          },
+          "ROW-MOD-INVOKE": {
+            "v": "confirmed",
+            "ev": [
+              "crate evidence 2026-07-25: crates/vibe-actions/src modules {address,action,registry,params,context,invoke,i18n,keymap,search,aiui,gate} match the SS2 module table (surface row ships as aiui.rs; gate.rs is the D7 legibility gate); Cargo.toml carries no ratatui/crossterm (CRATE-INVARIANT grep clean); vibe-cli consumes the crate (Cargo.toml + tree/tui/keymap_bridge.rs) - Spec 2 landed; dispatch.rs routes action ids (fold.all); F1 search shipped (goldens footer); D1 rejected-FQDN matches the ported RP1 record"
+            ]
+          },
+          "ROW-MOD-I18N": {
+            "v": "confirmed",
+            "ev": [
+              "crate evidence 2026-07-25: crates/vibe-actions/src modules {address,action,registry,params,context,invoke,i18n,keymap,search,aiui,gate} match the SS2 module table (surface row ships as aiui.rs; gate.rs is the D7 legibility gate); Cargo.toml carries no ratatui/crossterm (CRATE-INVARIANT grep clean); vibe-cli consumes the crate (Cargo.toml + tree/tui/keymap_bridge.rs) - Spec 2 landed; dispatch.rs routes action ids (fold.all); F1 search shipped (goldens footer); D1 rejected-FQDN matches the ported RP1 record"
+            ]
+          },
+          "ROW-MOD-KEYMAP": {
+            "v": "confirmed",
+            "ev": [
+              "crate evidence 2026-07-25: crates/vibe-actions/src modules {address,action,registry,params,context,invoke,i18n,keymap,search,aiui,gate} match the SS2 module table (surface row ships as aiui.rs; gate.rs is the D7 legibility gate); Cargo.toml carries no ratatui/crossterm (CRATE-INVARIANT grep clean); vibe-cli consumes the crate (Cargo.toml + tree/tui/keymap_bridge.rs) - Spec 2 landed; dispatch.rs routes action ids (fold.all); F1 search shipped (goldens footer); D1 rejected-FQDN matches the ported RP1 record"
+            ]
+          },
+          "ROW-MOD-SEARCH": {
+            "v": "confirmed",
+            "ev": [
+              "crate evidence 2026-07-25: crates/vibe-actions/src modules {address,action,registry,params,context,invoke,i18n,keymap,search,aiui,gate} match the SS2 module table (surface row ships as aiui.rs; gate.rs is the D7 legibility gate); Cargo.toml carries no ratatui/crossterm (CRATE-INVARIANT grep clean); vibe-cli consumes the crate (Cargo.toml + tree/tui/keymap_bridge.rs) - Spec 2 landed; dispatch.rs routes action ids (fold.all); F1 search shipped (goldens footer); D1 rejected-FQDN matches the ported RP1 record"
+            ]
+          },
+          "ROW-MOD-SURFACE": {
+            "v": "confirmed",
+            "ev": [
+              "crate evidence 2026-07-25: crates/vibe-actions/src modules {address,action,registry,params,context,invoke,i18n,keymap,search,aiui,gate} match the SS2 module table (surface row ships as aiui.rs; gate.rs is the D7 legibility gate); Cargo.toml carries no ratatui/crossterm (CRATE-INVARIANT grep clean); vibe-cli consumes the crate (Cargo.toml + tree/tui/keymap_bridge.rs) - Spec 2 landed; dispatch.rs routes action ids (fold.all); F1 search shipped (goldens footer); D1 rejected-FQDN matches the ported RP1 record"
+            ]
+          },
+          "crate-consumers": {
+            "v": "confirmed",
+            "ev": [
+              "crate evidence 2026-07-25: crates/vibe-actions/src modules {address,action,registry,params,context,invoke,i18n,keymap,search,aiui,gate} match the SS2 module table (surface row ships as aiui.rs; gate.rs is the D7 legibility gate); Cargo.toml carries no ratatui/crossterm (CRATE-INVARIANT grep clean); vibe-cli consumes the crate (Cargo.toml + tree/tui/keymap_bridge.rs) - Spec 2 landed; dispatch.rs routes action ids (fold.all); F1 search shipped (goldens footer); D1 rejected-FQDN matches the ported RP1 record"
+            ]
+          },
+          "types-lead": {
+            "v": "confirmed",
+            "ev": [
+              "crate evidence 2026-07-25: crates/vibe-actions/src modules {address,action,registry,params,context,invoke,i18n,keymap,search,aiui,gate} match the SS2 module table (surface row ships as aiui.rs; gate.rs is the D7 legibility gate); Cargo.toml carries no ratatui/crossterm (CRATE-INVARIANT grep clean); vibe-cli consumes the crate (Cargo.toml + tree/tui/keymap_bridge.rs) - Spec 2 landed; dispatch.rs routes action ids (fold.all); F1 search shipped (goldens footer); D1 rejected-FQDN matches the ported RP1 record"
+            ]
+          },
+          "MODEL-IS-THE-INTERFACE": {
+            "v": "confirmed",
+            "ev": [
+              "crate evidence 2026-07-25: crates/vibe-actions/src modules {address,action,registry,params,context,invoke,i18n,keymap,search,aiui,gate} match the SS2 module table (surface row ships as aiui.rs; gate.rs is the D7 legibility gate); Cargo.toml carries no ratatui/crossterm (CRATE-INVARIANT grep clean); vibe-cli consumes the crate (Cargo.toml + tree/tui/keymap_bridge.rs) - Spec 2 landed; dispatch.rs routes action ids (fold.all); F1 search shipped (goldens footer); D1 rejected-FQDN matches the ported RP1 record"
+            ]
+          },
+          "decisions-lead": {
+            "v": "confirmed",
+            "ev": [
+              "crate evidence 2026-07-25: crates/vibe-actions/src modules {address,action,registry,params,context,invoke,i18n,keymap,search,aiui,gate} match the SS2 module table (surface row ships as aiui.rs; gate.rs is the D7 legibility gate); Cargo.toml carries no ratatui/crossterm (CRATE-INVARIANT grep clean); vibe-cli consumes the crate (Cargo.toml + tree/tui/keymap_bridge.rs) - Spec 2 landed; dispatch.rs routes action ids (fold.all); F1 search shipped (goldens footer); D1 rejected-FQDN matches the ported RP1 record"
+            ]
+          },
+          "D1-URI-ADDRESS": {
+            "v": "confirmed",
+            "ev": [
+              "crate evidence 2026-07-25: crates/vibe-actions/src modules {address,action,registry,params,context,invoke,i18n,keymap,search,aiui,gate} match the SS2 module table (surface row ships as aiui.rs; gate.rs is the D7 legibility gate); Cargo.toml carries no ratatui/crossterm (CRATE-INVARIANT grep clean); vibe-cli consumes the crate (Cargo.toml + tree/tui/keymap_bridge.rs) - Spec 2 landed; dispatch.rs routes action ids (fold.all); F1 search shipped (goldens footer); D1 rejected-FQDN matches the ported RP1 record"
+            ]
+          },
+          "D2-COLLISION-ERROR": {
+            "v": "confirmed",
+            "ev": [
+              "crate evidence 2026-07-25: crates/vibe-actions/src modules {address,action,registry,params,context,invoke,i18n,keymap,search,aiui,gate} match the SS2 module table (surface row ships as aiui.rs; gate.rs is the D7 legibility gate); Cargo.toml carries no ratatui/crossterm (CRATE-INVARIANT grep clean); vibe-cli consumes the crate (Cargo.toml + tree/tui/keymap_bridge.rs) - Spec 2 landed; dispatch.rs routes action ids (fold.all); F1 search shipped (goldens footer); D1 rejected-FQDN matches the ported RP1 record"
+            ]
+          },
+          "D3-TYPED-CONTEXT": {
+            "v": "confirmed",
+            "ev": [
+              "crate evidence 2026-07-25: crates/vibe-actions/src modules {address,action,registry,params,context,invoke,i18n,keymap,search,aiui,gate} match the SS2 module table (surface row ships as aiui.rs; gate.rs is the D7 legibility gate); Cargo.toml carries no ratatui/crossterm (CRATE-INVARIANT grep clean); vibe-cli consumes the crate (Cargo.toml + tree/tui/keymap_bridge.rs) - Spec 2 landed; dispatch.rs routes action ids (fold.all); F1 search shipped (goldens footer); D1 rejected-FQDN matches the ported RP1 record"
+            ]
+          },
+          "D4-PROGRAMMATIC-PRIMARY": {
+            "v": "confirmed",
+            "ev": [
+              "crate evidence 2026-07-25: crates/vibe-actions/src modules {address,action,registry,params,context,invoke,i18n,keymap,search,aiui,gate} match the SS2 module table (surface row ships as aiui.rs; gate.rs is the D7 legibility gate); Cargo.toml carries no ratatui/crossterm (CRATE-INVARIANT grep clean); vibe-cli consumes the crate (Cargo.toml + tree/tui/keymap_bridge.rs) - Spec 2 landed; dispatch.rs routes action ids (fold.all); F1 search shipped (goldens footer); D1 rejected-FQDN matches the ported RP1 record"
+            ]
+          },
+          "D5-PROVIDER-MODEL": {
+            "v": "confirmed",
+            "ev": [
+              "crate evidence 2026-07-25: crates/vibe-actions/src modules {address,action,registry,params,context,invoke,i18n,keymap,search,aiui,gate} match the SS2 module table (surface row ships as aiui.rs; gate.rs is the D7 legibility gate); Cargo.toml carries no ratatui/crossterm (CRATE-INVARIANT grep clean); vibe-cli consumes the crate (Cargo.toml + tree/tui/keymap_bridge.rs) - Spec 2 landed; dispatch.rs routes action ids (fold.all); F1 search shipped (goldens footer); D1 rejected-FQDN matches the ported RP1 record"
+            ]
+          },
+          "D6-I18N-KEYS": {
+            "v": "confirmed",
+            "ev": [
+              "crate evidence 2026-07-25: crates/vibe-actions/src modules {address,action,registry,params,context,invoke,i18n,keymap,search,aiui,gate} match the SS2 module table (surface row ships as aiui.rs; gate.rs is the D7 legibility gate); Cargo.toml carries no ratatui/crossterm (CRATE-INVARIANT grep clean); vibe-cli consumes the crate (Cargo.toml + tree/tui/keymap_bridge.rs) - Spec 2 landed; dispatch.rs routes action ids (fold.all); F1 search shipped (goldens footer); D1 rejected-FQDN matches the ported RP1 record"
+            ]
+          },
+          "D7-ENGLISH-GATE": {
+            "v": "confirmed",
+            "ev": [
+              "crate evidence 2026-07-25: crates/vibe-actions/src modules {address,action,registry,params,context,invoke,i18n,keymap,search,aiui,gate} match the SS2 module table (surface row ships as aiui.rs; gate.rs is the D7 legibility gate); Cargo.toml carries no ratatui/crossterm (CRATE-INVARIANT grep clean); vibe-cli consumes the crate (Cargo.toml + tree/tui/keymap_bridge.rs) - Spec 2 landed; dispatch.rs routes action ids (fold.all); F1 search shipped (goldens footer); D1 rejected-FQDN matches the ported RP1 record"
+            ]
+          },
+          "D8-ONE-RENDERER": {
+            "v": "confirmed",
+            "ev": [
+              "crate evidence 2026-07-25: crates/vibe-actions/src modules {address,action,registry,params,context,invoke,i18n,keymap,search,aiui,gate} match the SS2 module table (surface row ships as aiui.rs; gate.rs is the D7 legibility gate); Cargo.toml carries no ratatui/crossterm (CRATE-INVARIANT grep clean); vibe-cli consumes the crate (Cargo.toml + tree/tui/keymap_bridge.rs) - Spec 2 landed; dispatch.rs routes action ids (fold.all); F1 search shipped (goldens footer); D1 rejected-FQDN matches the ported RP1 record"
+            ]
+          },
+          "D9-PURE-RESOLVER": {
+            "v": "confirmed",
+            "ev": [
+              "crate evidence 2026-07-25: crates/vibe-actions/src modules {address,action,registry,params,context,invoke,i18n,keymap,search,aiui,gate} match the SS2 module table (surface row ships as aiui.rs; gate.rs is the D7 legibility gate); Cargo.toml carries no ratatui/crossterm (CRATE-INVARIANT grep clean); vibe-cli consumes the crate (Cargo.toml + tree/tui/keymap_bridge.rs) - Spec 2 landed; dispatch.rs routes action ids (fold.all); F1 search shipped (goldens footer); D1 rejected-FQDN matches the ported RP1 record"
+            ]
+          },
+          "D10-ONE-SCORER": {
+            "v": "confirmed",
+            "ev": [
+              "crate evidence 2026-07-25: crates/vibe-actions/src modules {address,action,registry,params,context,invoke,i18n,keymap,search,aiui,gate} match the SS2 module table (surface row ships as aiui.rs; gate.rs is the D7 legibility gate); Cargo.toml carries no ratatui/crossterm (CRATE-INVARIANT grep clean); vibe-cli consumes the crate (Cargo.toml + tree/tui/keymap_bridge.rs) - Spec 2 landed; dispatch.rs routes action ids (fold.all); F1 search shipped (goldens footer); D1 rejected-FQDN matches the ported RP1 record"
+            ]
+          },
+          "SEARCH-ACCEPTANCE": {
+            "v": "confirmed",
+            "ev": [
+              "crate evidence 2026-07-25: crates/vibe-actions/src modules {address,action,registry,params,context,invoke,i18n,keymap,search,aiui,gate} match the SS2 module table (surface row ships as aiui.rs; gate.rs is the D7 legibility gate); Cargo.toml carries no ratatui/crossterm (CRATE-INVARIANT grep clean); vibe-cli consumes the crate (Cargo.toml + tree/tui/keymap_bridge.rs) - Spec 2 landed; dispatch.rs routes action ids (fold.all); F1 search shipped (goldens footer); D1 rejected-FQDN matches the ported RP1 record"
+            ]
+          },
+          "providers-lead": {
+            "v": "confirmed",
+            "ev": [
+              "crate evidence 2026-07-25: crates/vibe-actions/src modules {address,action,registry,params,context,invoke,i18n,keymap,search,aiui,gate} match the SS2 module table (surface row ships as aiui.rs; gate.rs is the D7 legibility gate); Cargo.toml carries no ratatui/crossterm (CRATE-INVARIANT grep clean); vibe-cli consumes the crate (Cargo.toml + tree/tui/keymap_bridge.rs) - Spec 2 landed; dispatch.rs routes action ids (fold.all); F1 search shipped (goldens footer); D1 rejected-FQDN matches the ported RP1 record"
+            ]
+          },
+          "PROVIDER-PACKAGE": {
+            "v": "confirmed",
+            "ev": [
+              "crate evidence 2026-07-25: crates/vibe-actions/src modules {address,action,registry,params,context,invoke,i18n,keymap,search,aiui,gate} match the SS2 module table (surface row ships as aiui.rs; gate.rs is the D7 legibility gate); Cargo.toml carries no ratatui/crossterm (CRATE-INVARIANT grep clean); vibe-cli consumes the crate (Cargo.toml + tree/tui/keymap_bridge.rs) - Spec 2 landed; dispatch.rs routes action ids (fold.all); F1 search shipped (goldens footer); D1 rejected-FQDN matches the ported RP1 record"
+            ]
+          },
+          "PROVIDER-PACKAGE-FIELD": {
+            "v": "confirmed",
+            "ev": [
+              "crate evidence 2026-07-25: crates/vibe-actions/src modules {address,action,registry,params,context,invoke,i18n,keymap,search,aiui,gate} match the SS2 module table (surface row ships as aiui.rs; gate.rs is the D7 legibility gate); Cargo.toml carries no ratatui/crossterm (CRATE-INVARIANT grep clean); vibe-cli consumes the crate (Cargo.toml + tree/tui/keymap_bridge.rs) - Spec 2 landed; dispatch.rs routes action ids (fold.all); F1 search shipped (goldens footer); D1 rejected-FQDN matches the ported RP1 record"
+            ]
+          },
+          "PROVIDER-ACTION": {
+            "v": "confirmed",
+            "ev": [
+              "crate evidence 2026-07-25: crates/vibe-actions/src modules {address,action,registry,params,context,invoke,i18n,keymap,search,aiui,gate} match the SS2 module table (surface row ships as aiui.rs; gate.rs is the D7 legibility gate); Cargo.toml carries no ratatui/crossterm (CRATE-INVARIANT grep clean); vibe-cli consumes the crate (Cargo.toml + tree/tui/keymap_bridge.rs) - Spec 2 landed; dispatch.rs routes action ids (fold.all); F1 search shipped (goldens footer); D1 rejected-FQDN matches the ported RP1 record"
+            ]
+          },
+          "PROVIDER-STRUCTURE-RESERVED": {
+            "v": "confirmed",
+            "ev": [
+              "crate evidence 2026-07-25: crates/vibe-actions/src modules {address,action,registry,params,context,invoke,i18n,keymap,search,aiui,gate} match the SS2 module table (surface row ships as aiui.rs; gate.rs is the D7 legibility gate); Cargo.toml carries no ratatui/crossterm (CRATE-INVARIANT grep clean); vibe-cli consumes the crate (Cargo.toml + tree/tui/keymap_bridge.rs) - Spec 2 landed; dispatch.rs routes action ids (fold.all); F1 search shipped (goldens footer); D1 rejected-FQDN matches the ported RP1 record"
+            ]
+          },
+          "engine-lead": {
+            "v": "confirmed",
+            "ev": [
+              "crate evidence 2026-07-25: crates/vibe-actions/src modules {address,action,registry,params,context,invoke,i18n,keymap,search,aiui,gate} match the SS2 module table (surface row ships as aiui.rs; gate.rs is the D7 legibility gate); Cargo.toml carries no ratatui/crossterm (CRATE-INVARIANT grep clean); vibe-cli consumes the crate (Cargo.toml + tree/tui/keymap_bridge.rs) - Spec 2 landed; dispatch.rs routes action ids (fold.all); F1 search shipped (goldens footer); D1 rejected-FQDN matches the ported RP1 record"
+            ]
+          },
+          "ENG-DEBOUNCE": {
+            "v": "confirmed",
+            "ev": [
+              "crate evidence 2026-07-25: crates/vibe-actions/src modules {address,action,registry,params,context,invoke,i18n,keymap,search,aiui,gate} match the SS2 module table (surface row ships as aiui.rs; gate.rs is the D7 legibility gate); Cargo.toml carries no ratatui/crossterm (CRATE-INVARIANT grep clean); vibe-cli consumes the crate (Cargo.toml + tree/tui/keymap_bridge.rs) - Spec 2 landed; dispatch.rs routes action ids (fold.all); F1 search shipped (goldens footer); D1 rejected-FQDN matches the ported RP1 record"
+            ]
+          },
+          "ENG-PROVIDER-SET": {
+            "v": "confirmed",
+            "ev": [
+              "crate evidence 2026-07-25: crates/vibe-actions/src modules {address,action,registry,params,context,invoke,i18n,keymap,search,aiui,gate} match the SS2 module table (surface row ships as aiui.rs; gate.rs is the D7 legibility gate); Cargo.toml carries no ratatui/crossterm (CRATE-INVARIANT grep clean); vibe-cli consumes the crate (Cargo.toml + tree/tui/keymap_bridge.rs) - Spec 2 landed; dispatch.rs routes action ids (fold.all); F1 search shipped (goldens footer); D1 rejected-FQDN matches the ported RP1 record"
+            ]
+          },
+          "ENG-MATCH-LADDER": {
+            "v": "confirmed",
+            "ev": [
+              "crate evidence 2026-07-25: crates/vibe-actions/src modules {address,action,registry,params,context,invoke,i18n,keymap,search,aiui,gate} match the SS2 module table (surface row ships as aiui.rs; gate.rs is the D7 legibility gate); Cargo.toml carries no ratatui/crossterm (CRATE-INVARIANT grep clean); vibe-cli consumes the crate (Cargo.toml + tree/tui/keymap_bridge.rs) - Spec 2 landed; dispatch.rs routes action ids (fold.all); F1 search shipped (goldens footer); D1 rejected-FQDN matches the ported RP1 record"
+            ]
+          },
+          "ENG-COMMENSURABLE-SCALE": {
+            "v": "confirmed",
+            "ev": [
+              "crate evidence 2026-07-25: crates/vibe-actions/src modules {address,action,registry,params,context,invoke,i18n,keymap,search,aiui,gate} match the SS2 module table (surface row ships as aiui.rs; gate.rs is the D7 legibility gate); Cargo.toml carries no ratatui/crossterm (CRATE-INVARIANT grep clean); vibe-cli consumes the crate (Cargo.toml + tree/tui/keymap_bridge.rs) - Spec 2 landed; dispatch.rs routes action ids (fold.all); F1 search shipped (goldens footer); D1 rejected-FQDN matches the ported RP1 record"
+            ]
+          },
+          "ENG-ORDERING": {
+            "v": "confirmed",
+            "ev": [
+              "crate evidence 2026-07-25: crates/vibe-actions/src modules {address,action,registry,params,context,invoke,i18n,keymap,search,aiui,gate} match the SS2 module table (surface row ships as aiui.rs; gate.rs is the D7 legibility gate); Cargo.toml carries no ratatui/crossterm (CRATE-INVARIANT grep clean); vibe-cli consumes the crate (Cargo.toml + tree/tui/keymap_bridge.rs) - Spec 2 landed; dispatch.rs routes action ids (fold.all); F1 search shipped (goldens footer); D1 rejected-FQDN matches the ported RP1 record"
+            ]
+          },
+          "ENG-FREEZE-ON-MORE": {
+            "v": "confirmed",
+            "ev": [
+              "crate evidence 2026-07-25: crates/vibe-actions/src modules {address,action,registry,params,context,invoke,i18n,keymap,search,aiui,gate} match the SS2 module table (surface row ships as aiui.rs; gate.rs is the D7 legibility gate); Cargo.toml carries no ratatui/crossterm (CRATE-INVARIANT grep clean); vibe-cli consumes the crate (Cargo.toml + tree/tui/keymap_bridge.rs) - Spec 2 landed; dispatch.rs routes action ids (fold.all); F1 search shipped (goldens footer); D1 rejected-FQDN matches the ported RP1 record"
+            ]
+          },
+          "ENG-NORMALIZED-RENDERER": {
+            "v": "confirmed",
+            "ev": [
+              "crate evidence 2026-07-25: crates/vibe-actions/src modules {address,action,registry,params,context,invoke,i18n,keymap,search,aiui,gate} match the SS2 module table (surface row ships as aiui.rs; gate.rs is the D7 legibility gate); Cargo.toml carries no ratatui/crossterm (CRATE-INVARIANT grep clean); vibe-cli consumes the crate (Cargo.toml + tree/tui/keymap_bridge.rs) - Spec 2 landed; dispatch.rs routes action ids (fold.all); F1 search shipped (goldens footer); D1 rejected-FQDN matches the ported RP1 record"
+            ]
+          },
+          "TABS-MODEL": {
+            "v": "confirmed",
+            "ev": [
+              "crate evidence 2026-07-25: crates/vibe-actions/src modules {address,action,registry,params,context,invoke,i18n,keymap,search,aiui,gate} match the SS2 module table (surface row ships as aiui.rs; gate.rs is the D7 legibility gate); Cargo.toml carries no ratatui/crossterm (CRATE-INVARIANT grep clean); vibe-cli consumes the crate (Cargo.toml + tree/tui/keymap_bridge.rs) - Spec 2 landed; dispatch.rs routes action ids (fold.all); F1 search shipped (goldens footer); D1 rejected-FQDN matches the ported RP1 record"
+            ]
+          },
+          "aiui-lead": {
+            "v": "drift",
+            "ev": [
+              "says Not built now; designed-for - but aiui.rs ships list_actions + invoke (the in-process core of the protocol); state/search calls still pending -> F-034 family"
+            ]
+          },
+          "AIUI-LIST-ACTIONS": {
+            "v": "confirmed",
+            "ev": [
+              "crate evidence 2026-07-25: crates/vibe-actions/src modules {address,action,registry,params,context,invoke,i18n,keymap,search,aiui,gate} match the SS2 module table (surface row ships as aiui.rs; gate.rs is the D7 legibility gate); Cargo.toml carries no ratatui/crossterm (CRATE-INVARIANT grep clean); vibe-cli consumes the crate (Cargo.toml + tree/tui/keymap_bridge.rs) - Spec 2 landed; dispatch.rs routes action ids (fold.all); F1 search shipped (goldens footer); D1 rejected-FQDN matches the ported RP1 record"
+            ]
+          },
+          "AIUI-INVOKE": {
+            "v": "confirmed",
+            "ev": [
+              "crate evidence 2026-07-25: crates/vibe-actions/src modules {address,action,registry,params,context,invoke,i18n,keymap,search,aiui,gate} match the SS2 module table (surface row ships as aiui.rs; gate.rs is the D7 legibility gate); Cargo.toml carries no ratatui/crossterm (CRATE-INVARIANT grep clean); vibe-cli consumes the crate (Cargo.toml + tree/tui/keymap_bridge.rs) - Spec 2 landed; dispatch.rs routes action ids (fold.all); F1 search shipped (goldens footer); D1 rejected-FQDN matches the ported RP1 record"
+            ]
+          },
+          "AIUI-STATE": {
+            "v": "confirmed",
+            "ev": [
+              "crate evidence 2026-07-25: crates/vibe-actions/src modules {address,action,registry,params,context,invoke,i18n,keymap,search,aiui,gate} match the SS2 module table (surface row ships as aiui.rs; gate.rs is the D7 legibility gate); Cargo.toml carries no ratatui/crossterm (CRATE-INVARIANT grep clean); vibe-cli consumes the crate (Cargo.toml + tree/tui/keymap_bridge.rs) - Spec 2 landed; dispatch.rs routes action ids (fold.all); F1 search shipped (goldens footer); D1 rejected-FQDN matches the ported RP1 record"
+            ]
+          },
+          "AIUI-SEARCH": {
+            "v": "confirmed",
+            "ev": [
+              "crate evidence 2026-07-25: crates/vibe-actions/src modules {address,action,registry,params,context,invoke,i18n,keymap,search,aiui,gate} match the SS2 module table (surface row ships as aiui.rs; gate.rs is the D7 legibility gate); Cargo.toml carries no ratatui/crossterm (CRATE-INVARIANT grep clean); vibe-cli consumes the crate (Cargo.toml + tree/tui/keymap_bridge.rs) - Spec 2 landed; dispatch.rs routes action ids (fold.all); F1 search shipped (goldens footer); D1 rejected-FQDN matches the ported RP1 record"
+            ]
+          },
+          "AIUI-THIN-ADAPTER": {
+            "v": "confirmed",
+            "ev": [
+              "crate evidence 2026-07-25: crates/vibe-actions/src modules {address,action,registry,params,context,invoke,i18n,keymap,search,aiui,gate} match the SS2 module table (surface row ships as aiui.rs; gate.rs is the D7 legibility gate); Cargo.toml carries no ratatui/crossterm (CRATE-INVARIANT grep clean); vibe-cli consumes the crate (Cargo.toml + tree/tui/keymap_bridge.rs) - Spec 2 landed; dispatch.rs routes action ids (fold.all); F1 search shipped (goldens footer); D1 rejected-FQDN matches the ported RP1 record"
+            ]
+          },
+          "I18N-ARCHITECTURE": {
+            "v": "confirmed",
+            "ev": [
+              "crate evidence 2026-07-25: crates/vibe-actions/src modules {address,action,registry,params,context,invoke,i18n,keymap,search,aiui,gate} match the SS2 module table (surface row ships as aiui.rs; gate.rs is the D7 legibility gate); Cargo.toml carries no ratatui/crossterm (CRATE-INVARIANT grep clean); vibe-cli consumes the crate (Cargo.toml + tree/tui/keymap_bridge.rs) - Spec 2 landed; dispatch.rs routes action ids (fold.all); F1 search shipped (goldens footer); D1 rejected-FQDN matches the ported RP1 record"
+            ]
+          },
+          "VIBE-TREE-MAPPING": {
+            "v": "drift",
+            "ev": [
+              "SS9 future tense (Spec 2 revises... becomes...) about the landed revision: keymap_bridge.rs + action dispatch + F1 SE are shipped -> F-034 family"
+            ]
+          },
+          "CONTRACT-POINTER": {
+            "v": "drift",
+            "ev": [
+              "SS10 says PROP-039 will carry one REQ per Delta - the contract file exists and carries them -> F-034 (its explicit target)"
+            ]
+          },
+          "_elements": {
+            "v": "confirmed",
+            "ev": [
+              "doc + section status tags consistent with the B0 record"
+            ]
+          }
+        },
+        "verified_at": "2026-07-25T13:00:46Z",
+        "verify_batch": "c2-design"
+      }
     },
     "spec/design/loading-and-boot-model.md": {
       "content_hash": "89e376c01eacaa09f8c81eaca0c0031d8a546994cc557396d154737421f7712a",
@@ -789,7 +1283,377 @@
       },
       "marker_count": 75,
       "unit_count": 15,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "anchors_judged": 58,
+        "coverage_note": "verdicts keyed by fact anchors; table cell-markers inherit their row anchor; <status> elements judged as _elements",
+        "fact_count": 74,
+        "marker_count": 75,
+        "processed_hash": "89e376c01eacaa09f8c81eaca0c0031d8a546994cc557396d154737421f7712a",
+        "summary": {
+          "confirmed": 51,
+          "drift": 8,
+          "unverifiable": 0
+        },
+        "verdicts": {
+          "companion-line": {
+            "v": "drift",
+            "ev": [
+              "PROP-009 called forthcoming; M1.18 phases 1-7 shipped 2026-05-22 (PROP-009 status-line) -> F-039"
+            ]
+          },
+          "status-line": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-model evidence: STATIC.md + INDEX.md generated and read at boot (this session); CLAUDE.md redirect block live; vibedeps/ separate committed tree (P1/FORK2); INDEX static entries read direct + dynamic INCLUDE with os: when (P3/GEN-INDEX-MD match the shipped INDEX.md header verbatim); session-start order CLAUDE->STATIC->INDEX is the shipped boot block; dated fork/session records consistent"
+            ]
+          },
+          "authority-line": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-model evidence: STATIC.md + INDEX.md generated and read at boot (this session); CLAUDE.md redirect block live; vibedeps/ separate committed tree (P1/FORK2); INDEX static entries read direct + dynamic INCLUDE with os: when (P3/GEN-INDEX-MD match the shipped INDEX.md header verbatim); session-start order CLAUDE->STATIC->INDEX is the shipped boot block; dated fork/session records consistent"
+            ]
+          },
+          "origin-question": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-model evidence: STATIC.md + INDEX.md generated and read at boot (this session); CLAUDE.md redirect block live; vibedeps/ separate committed tree (P1/FORK2); INDEX static entries read direct + dynamic INCLUDE with os: when (P3/GEN-INDEX-MD match the shipped INDEX.md header verbatim); session-start order CLAUDE->STATIC->INDEX is the shipped boot block; dated fork/session records consistent"
+            ]
+          },
+          "scope-of-answer": {
+            "v": "drift",
+            "ev": [
+              "PROP-009 will be the contract - it is (shipped) -> F-039"
+            ]
+          },
+          "workspace-arc-continuity": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-model evidence: STATIC.md + INDEX.md generated and read at boot (this session); CLAUDE.md redirect block live; vibedeps/ separate committed tree (P1/FORK2); INDEX static entries read direct + dynamic INCLUDE with os: when (P3/GEN-INDEX-MD match the shipped INDEX.md header verbatim); session-start order CLAUDE->STATIC->INDEX is the shipped boot block; dated fork/session records consistent"
+            ]
+          },
+          "narrow-question-illusion": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-model evidence: STATIC.md + INDEX.md generated and read at boot (this session); CLAUDE.md redirect block live; vibedeps/ separate committed tree (P1/FORK2); INDEX static entries read direct + dynamic INCLUDE with os: when (P3/GEN-INDEX-MD match the shipped INDEX.md header verbatim); session-start order CLAUDE->STATIC->INDEX is the shipped boot block; dated fork/session records consistent"
+            ]
+          },
+          "flat-model-shape": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-model evidence: STATIC.md + INDEX.md generated and read at boot (this session); CLAUDE.md redirect block live; vibedeps/ separate committed tree (P1/FORK2); INDEX static entries read direct + dynamic INCLUDE with os: when (P3/GEN-INDEX-MD match the shipped INDEX.md header verbatim); session-start order CLAUDE->STATIC->INDEX is the shipped boot block; dated fork/session records consistent"
+            ]
+          },
+          "workspace-breaks-lead": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-model evidence: STATIC.md + INDEX.md generated and read at boot (this session); CLAUDE.md redirect block live; vibedeps/ separate committed tree (P1/FORK2); INDEX static entries read direct + dynamic INCLUDE with os: when (P3/GEN-INDEX-MD match the shipped INDEX.md header verbatim); session-start order CLAUDE->STATIC->INDEX is the shipped boot block; dated fork/session records consistent"
+            ]
+          },
+          "break-n-nodes": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-model evidence: STATIC.md + INDEX.md generated and read at boot (this session); CLAUDE.md redirect block live; vibedeps/ separate committed tree (P1/FORK2); INDEX static entries read direct + dynamic INCLUDE with os: when (P3/GEN-INDEX-MD match the shipped INDEX.md header verbatim); session-start order CLAUDE->STATIC->INDEX is the shipped boot block; dated fork/session records consistent"
+            ]
+          },
+          "break-n-entry-points": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-model evidence: STATIC.md + INDEX.md generated and read at boot (this session); CLAUDE.md redirect block live; vibedeps/ separate committed tree (P1/FORK2); INDEX static entries read direct + dynamic INCLUDE with os: when (P3/GEN-INDEX-MD match the shipped INDEX.md header verbatim); session-start order CLAUDE->STATIC->INDEX is the shipped boot block; dated fork/session records consistent"
+            ]
+          },
+          "break-n-boot-sequences": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-model evidence: STATIC.md + INDEX.md generated and read at boot (this session); CLAUDE.md redirect block live; vibedeps/ separate committed tree (P1/FORK2); INDEX static entries read direct + dynamic INCLUDE with os: when (P3/GEN-INDEX-MD match the shipped INDEX.md header verbatim); session-start order CLAUDE->STATIC->INDEX is the shipped boot block; dated fork/session records consistent"
+            ]
+          },
+          "break-shared-deps": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-model evidence: STATIC.md + INDEX.md generated and read at boot (this session); CLAUDE.md redirect block live; vibedeps/ separate committed tree (P1/FORK2); INDEX static entries read direct + dynamic INCLUDE with os: when (P3/GEN-INDEX-MD match the shipped INDEX.md header verbatim); session-start order CLAUDE->STATIC->INDEX is the shipped boot block; dated fork/session records consistent"
+            ]
+          },
+          "flat-model-verdict": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-model evidence: STATIC.md + INDEX.md generated and read at boot (this session); CLAUDE.md redirect block live; vibedeps/ separate committed tree (P1/FORK2); INDEX static entries read direct + dynamic INCLUDE with os: when (P3/GEN-INDEX-MD match the shipped INDEX.md header verbatim); session-start order CLAUDE->STATIC->INDEX is the shipped boot block; dated fork/session records consistent"
+            ]
+          },
+          "OWNER-CONSTRAINT-NO-REWRITE": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-model evidence: STATIC.md + INDEX.md generated and read at boot (this session); CLAUDE.md redirect block live; vibedeps/ separate committed tree (P1/FORK2); INDEX static entries read direct + dynamic INCLUDE with os: when (P3/GEN-INDEX-MD match the shipped INDEX.md header verbatim); session-start order CLAUDE->STATIC->INDEX is the shipped boot block; dated fork/session records consistent"
+            ]
+          },
+          "linking-frame": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-model evidence: STATIC.md + INDEX.md generated and read at boot (this session); CLAUDE.md redirect block live; vibedeps/ separate committed tree (P1/FORK2); INDEX static entries read direct + dynamic INCLUDE with os: when (P3/GEN-INDEX-MD match the shipped INDEX.md header verbatim); session-start order CLAUDE->STATIC->INDEX is the shipped boot block; dated fork/session records consistent"
+            ]
+          },
+          "ROW-LINK-COMPILE": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-model evidence: STATIC.md + INDEX.md generated and read at boot (this session); CLAUDE.md redirect block live; vibedeps/ separate committed tree (P1/FORK2); INDEX static entries read direct + dynamic INCLUDE with os: when (P3/GEN-INDEX-MD match the shipped INDEX.md header verbatim); session-start order CLAUDE->STATIC->INDEX is the shipped boot block; dated fork/session records consistent"
+            ]
+          },
+          "ROW-LINK-LOAD": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-model evidence: STATIC.md + INDEX.md generated and read at boot (this session); CLAUDE.md redirect block live; vibedeps/ separate committed tree (P1/FORK2); INDEX static entries read direct + dynamic INCLUDE with os: when (P3/GEN-INDEX-MD match the shipped INDEX.md header verbatim); session-start order CLAUDE->STATIC->INDEX is the shipped boot block; dated fork/session records consistent"
+            ]
+          },
+          "ROW-LINK-OBJECT": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-model evidence: STATIC.md + INDEX.md generated and read at boot (this session); CLAUDE.md redirect block live; vibedeps/ separate committed tree (P1/FORK2); INDEX static entries read direct + dynamic INCLUDE with os: when (P3/GEN-INDEX-MD match the shipped INDEX.md header verbatim); session-start order CLAUDE->STATIC->INDEX is the shipped boot block; dated fork/session records consistent"
+            ]
+          },
+          "ROW-LINK-EXECUTABLE": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-model evidence: STATIC.md + INDEX.md generated and read at boot (this session); CLAUDE.md redirect block live; vibedeps/ separate committed tree (P1/FORK2); INDEX static entries read direct + dynamic INCLUDE with os: when (P3/GEN-INDEX-MD match the shipped INDEX.md header verbatim); session-start order CLAUDE->STATIC->INDEX is the shipped boot block; dated fork/session records consistent"
+            ]
+          },
+          "ROW-LINK-LOADER": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-model evidence: STATIC.md + INDEX.md generated and read at boot (this session); CLAUDE.md redirect block live; vibedeps/ separate committed tree (P1/FORK2); INDEX static entries read direct + dynamic INCLUDE with os: when (P3/GEN-INDEX-MD match the shipped INDEX.md header verbatim); session-start order CLAUDE->STATIC->INDEX is the shipped boot block; dated fork/session records consistent"
+            ]
+          },
+          "ROW-LINK-DT-NEEDED": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-model evidence: STATIC.md + INDEX.md generated and read at boot (this session); CLAUDE.md redirect block live; vibedeps/ separate committed tree (P1/FORK2); INDEX static entries read direct + dynamic INCLUDE with os: when (P3/GEN-INDEX-MD match the shipped INDEX.md header verbatim); session-start order CLAUDE->STATIC->INDEX is the shipped boot block; dated fork/session records consistent"
+            ]
+          },
+          "ROW-LINK-STATIC": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-model evidence: STATIC.md + INDEX.md generated and read at boot (this session); CLAUDE.md redirect block live; vibedeps/ separate committed tree (P1/FORK2); INDEX static entries read direct + dynamic INCLUDE with os: when (P3/GEN-INDEX-MD match the shipped INDEX.md header verbatim); session-start order CLAUDE->STATIC->INDEX is the shipped boot block; dated fork/session records consistent"
+            ]
+          },
+          "ROW-LINK-DYNAMIC": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-model evidence: STATIC.md + INDEX.md generated and read at boot (this session); CLAUDE.md redirect block live; vibedeps/ separate committed tree (P1/FORK2); INDEX static entries read direct + dynamic INCLUDE with os: when (P3/GEN-INDEX-MD match the shipped INDEX.md header verbatim); session-start order CLAUDE->STATIC->INDEX is the shipped boot block; dated fork/session records consistent"
+            ]
+          },
+          "ROW-LINK-VENDOR": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-model evidence: STATIC.md + INDEX.md generated and read at boot (this session); CLAUDE.md redirect block live; vibedeps/ separate committed tree (P1/FORK2); INDEX static entries read direct + dynamic INCLUDE with os: when (P3/GEN-INDEX-MD match the shipped INDEX.md header verbatim); session-start order CLAUDE->STATIC->INDEX is the shipped boot block; dated fork/session records consistent"
+            ]
+          },
+          "AGENT-IS-THE-LOADER": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-model evidence: STATIC.md + INDEX.md generated and read at boot (this session); CLAUDE.md redirect block live; vibedeps/ separate committed tree (P1/FORK2); INDEX static entries read direct + dynamic INCLUDE with os: when (P3/GEN-INDEX-MD match the shipped INDEX.md header verbatim); session-start order CLAUDE->STATIC->INDEX is the shipped boot block; dated fork/session records consistent"
+            ]
+          },
+          "P1-TWO-TREES": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-model evidence: STATIC.md + INDEX.md generated and read at boot (this session); CLAUDE.md redirect block live; vibedeps/ separate committed tree (P1/FORK2); INDEX static entries read direct + dynamic INCLUDE with os: when (P3/GEN-INDEX-MD match the shipped INDEX.md header verbatim); session-start order CLAUDE->STATIC->INDEX is the shipped boot block; dated fork/session records consistent"
+            ]
+          },
+          "P2-COMPUTED-SEQUENCE": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-model evidence: STATIC.md + INDEX.md generated and read at boot (this session); CLAUDE.md redirect block live; vibedeps/ separate committed tree (P1/FORK2); INDEX static entries read direct + dynamic INCLUDE with os: when (P3/GEN-INDEX-MD match the shipped INDEX.md header verbatim); session-start order CLAUDE->STATIC->INDEX is the shipped boot block; dated fork/session records consistent"
+            ]
+          },
+          "P3-INDEX-PER-ENTRY-POINT": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-model evidence: STATIC.md + INDEX.md generated and read at boot (this session); CLAUDE.md redirect block live; vibedeps/ separate committed tree (P1/FORK2); INDEX static entries read direct + dynamic INCLUDE with os: when (P3/GEN-INDEX-MD match the shipped INDEX.md header verbatim); session-start order CLAUDE->STATIC->INDEX is the shipped boot block; dated fork/session records consistent"
+            ]
+          },
+          "P4-THREE-INCLUSION-TYPES": {
+            "v": "drift",
+            "ev": [
+              "lore: three types inline/static/dynamic, default static; shipped PROP-009 SCHEMA-LINK-FIELD: link = static|dynamic, default dynamic; design-inline became link=static (the STATIC.md lane) -> F-039"
+            ]
+          },
+          "forks-lead": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-model evidence: STATIC.md + INDEX.md generated and read at boot (this session); CLAUDE.md redirect block live; vibedeps/ separate committed tree (P1/FORK2); INDEX static entries read direct + dynamic INCLUDE with os: when (P3/GEN-INDEX-MD match the shipped INDEX.md header verbatim); session-start order CLAUDE->STATIC->INDEX is the shipped boot block; dated fork/session records consistent"
+            ]
+          },
+          "fork1-options": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-model evidence: STATIC.md + INDEX.md generated and read at boot (this session); CLAUDE.md redirect block live; vibedeps/ separate committed tree (P1/FORK2); INDEX static entries read direct + dynamic INCLUDE with os: when (P3/GEN-INDEX-MD match the shipped INDEX.md header verbatim); session-start order CLAUDE->STATIC->INDEX is the shipped boot block; dated fork/session records consistent"
+            ]
+          },
+          "FORK1-REFINED-HYBRID": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-model evidence: STATIC.md + INDEX.md generated and read at boot (this session); CLAUDE.md redirect block live; vibedeps/ separate committed tree (P1/FORK2); INDEX static entries read direct + dynamic INCLUDE with os: when (P3/GEN-INDEX-MD match the shipped INDEX.md header verbatim); session-start order CLAUDE->STATIC->INDEX is the shipped boot block; dated fork/session records consistent"
+            ]
+          },
+          "FORK2-COMMITTED-TREE": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-model evidence: STATIC.md + INDEX.md generated and read at boot (this session); CLAUDE.md redirect block live; vibedeps/ separate committed tree (P1/FORK2); INDEX static entries read direct + dynamic INCLUDE with os: when (P3/GEN-INDEX-MD match the shipped INDEX.md header verbatim); session-start order CLAUDE->STATIC->INDEX is the shipped boot block; dated fork/session records consistent"
+            ]
+          },
+          "FORK3-UNIFORM": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-model evidence: STATIC.md + INDEX.md generated and read at boot (this session); CLAUDE.md redirect block live; vibedeps/ separate committed tree (P1/FORK2); INDEX static entries read direct + dynamic INCLUDE with os: when (P3/GEN-INDEX-MD match the shipped INDEX.md header verbatim); session-start order CLAUDE->STATIC->INDEX is the shipped boot block; dated fork/session records consistent"
+            ]
+          },
+          "FORK4-UNIFIED-VIEWS": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-model evidence: STATIC.md + INDEX.md generated and read at boot (this session); CLAUDE.md redirect block live; vibedeps/ separate committed tree (P1/FORK2); INDEX static entries read direct + dynamic INCLUDE with os: when (P3/GEN-INDEX-MD match the shipped INDEX.md header verbatim); session-start order CLAUDE->STATIC->INDEX is the shipped boot block; dated fork/session records consistent"
+            ]
+          },
+          "inclusion-types-lead": {
+            "v": "drift",
+            "ev": [
+              "same vocabulary drift + the literal typo: working syntax reads static|static|dynamic (inline missing) -> F-039"
+            ]
+          },
+          "GEN-STATIC-MD": {
+            "v": "drift",
+            "ev": [
+              "generated only when the node has inline contributions - shipped vocabulary: static contributions (vibe:static markers in STATIC.md); mechanism identical, name stale -> F-039"
+            ]
+          },
+          "GEN-INDEX-MD": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-model evidence: STATIC.md + INDEX.md generated and read at boot (this session); CLAUDE.md redirect block live; vibedeps/ separate committed tree (P1/FORK2); INDEX static entries read direct + dynamic INCLUDE with os: when (P3/GEN-INDEX-MD match the shipped INDEX.md header verbatim); session-start order CLAUDE->STATIC->INDEX is the shipped boot block; dated fork/session records consistent"
+            ]
+          },
+          "SESSION-START-ORDER": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-model evidence: STATIC.md + INDEX.md generated and read at boot (this session); CLAUDE.md redirect block live; vibedeps/ separate committed tree (P1/FORK2); INDEX static entries read direct + dynamic INCLUDE with os: when (P3/GEN-INDEX-MD match the shipped INDEX.md header verbatim); session-start order CLAUDE->STATIC->INDEX is the shipped boot block; dated fork/session records consistent"
+            ]
+          },
+          "cost-profile-lead": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-model evidence: STATIC.md + INDEX.md generated and read at boot (this session); CLAUDE.md redirect block live; vibedeps/ separate committed tree (P1/FORK2); INDEX static entries read direct + dynamic INCLUDE with os: when (P3/GEN-INDEX-MD match the shipped INDEX.md header verbatim); session-start order CLAUDE->STATIC->INDEX is the shipped boot block; dated fork/session records consistent"
+            ]
+          },
+          "ROW-COST-INLINE": {
+            "v": "drift",
+            "ev": [
+              "no link=inline value shipped; the row semantics live under link=static -> F-039"
+            ]
+          },
+          "ROW-COST-STATIC": {
+            "v": "drift",
+            "ev": [
+              "design-static (INDEX direct read, 1+N) ships as unconditional link=dynamic; the name points at the wrong shipped value -> F-039"
+            ]
+          },
+          "ROW-COST-DYNAMIC": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-model evidence: STATIC.md + INDEX.md generated and read at boot (this session); CLAUDE.md redirect block live; vibedeps/ separate committed tree (P1/FORK2); INDEX static entries read direct + dynamic INCLUDE with os: when (P3/GEN-INDEX-MD match the shipped INDEX.md header verbatim); session-start order CLAUDE->STATIC->INDEX is the shipped boot block; dated fork/session records consistent"
+            ]
+          },
+          "dynamic-is-lazy-pull": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-model evidence: STATIC.md + INDEX.md generated and read at boot (this session); CLAUDE.md redirect block live; vibedeps/ separate committed tree (P1/FORK2); INDEX static entries read direct + dynamic INCLUDE with os: when (P3/GEN-INDEX-MD match the shipped INDEX.md header verbatim); session-start order CLAUDE->STATIC->INDEX is the shipped boot block; dated fork/session records consistent"
+            ]
+          },
+          "FINDING-NUMBERING": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-model evidence: STATIC.md + INDEX.md generated and read at boot (this session); CLAUDE.md redirect block live; vibedeps/ separate committed tree (P1/FORK2); INDEX static entries read direct + dynamic INCLUDE with os: when (P3/GEN-INDEX-MD match the shipped INDEX.md header verbatim); session-start order CLAUDE->STATIC->INDEX is the shipped boot block; dated fork/session records consistent"
+            ]
+          },
+          "FINDING-MIRROR-BREAKAGE": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-model evidence: STATIC.md + INDEX.md generated and read at boot (this session); CLAUDE.md redirect block live; vibedeps/ separate committed tree (P1/FORK2); INDEX static entries read direct + dynamic INCLUDE with os: when (P3/GEN-INDEX-MD match the shipped INDEX.md header verbatim); session-start order CLAUDE->STATIC->INDEX is the shipped boot block; dated fork/session records consistent"
+            ]
+          },
+          "FINDING-PUBLISH-REGEN": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-model evidence: STATIC.md + INDEX.md generated and read at boot (this session); CLAUDE.md redirect block live; vibedeps/ separate committed tree (P1/FORK2); INDEX static entries read direct + dynamic INCLUDE with os: when (P3/GEN-INDEX-MD match the shipped INDEX.md header verbatim); session-start order CLAUDE->STATIC->INDEX is the shipped boot block; dated fork/session records consistent"
+            ]
+          },
+          "FINDING-DOGFOOD": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-model evidence: STATIC.md + INDEX.md generated and read at boot (this session); CLAUDE.md redirect block live; vibedeps/ separate committed tree (P1/FORK2); INDEX static entries read direct + dynamic INCLUDE with os: when (P3/GEN-INDEX-MD match the shipped INDEX.md header verbatim); session-start order CLAUDE->STATIC->INDEX is the shipped boot block; dated fork/session records consistent"
+            ]
+          },
+          "SUBSUMES-INSTALL-BUILD": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-model evidence: STATIC.md + INDEX.md generated and read at boot (this session); CLAUDE.md redirect block live; vibedeps/ separate committed tree (P1/FORK2); INDEX static entries read direct + dynamic INCLUDE with os: when (P3/GEN-INDEX-MD match the shipped INDEX.md header verbatim); session-start order CLAUDE->STATIC->INDEX is the shipped boot block; dated fork/session records consistent"
+            ]
+          },
+          "parks-version-workspace": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-model evidence: STATIC.md + INDEX.md generated and read at boot (this session); CLAUDE.md redirect block live; vibedeps/ separate committed tree (P1/FORK2); INDEX static entries read direct + dynamic INCLUDE with os: when (P3/GEN-INDEX-MD match the shipped INDEX.md header verbatim); session-start order CLAUDE->STATIC->INDEX is the shipped boot block; dated fork/session records consistent"
+            ]
+          },
+          "prop-008-unaffected": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-model evidence: STATIC.md + INDEX.md generated and read at boot (this session); CLAUDE.md redirect block live; vibedeps/ separate committed tree (P1/FORK2); INDEX static entries read direct + dynamic INCLUDE with os: when (P3/GEN-INDEX-MD match the shipped INDEX.md header verbatim); session-start order CLAUDE->STATIC->INDEX is the shipped boot block; dated fork/session records consistent"
+            ]
+          },
+          "session-log-2026-05-21": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-model evidence: STATIC.md + INDEX.md generated and read at boot (this session); CLAUDE.md redirect block live; vibedeps/ separate committed tree (P1/FORK2); INDEX static entries read direct + dynamic INCLUDE with os: when (P3/GEN-INDEX-MD match the shipped INDEX.md header verbatim); session-start order CLAUDE->STATIC->INDEX is the shipped boot block; dated fork/session records consistent"
+            ]
+          },
+          "ptr-prop-009": {
+            "v": "drift",
+            "ev": [
+              "PROP-009 (forthcoming) - shipped -> F-039"
+            ]
+          },
+          "ptr-prop-007": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-model evidence: STATIC.md + INDEX.md generated and read at boot (this session); CLAUDE.md redirect block live; vibedeps/ separate committed tree (P1/FORK2); INDEX static entries read direct + dynamic INCLUDE with os: when (P3/GEN-INDEX-MD match the shipped INDEX.md header verbatim); session-start order CLAUDE->STATIC->INDEX is the shipped boot block; dated fork/session records consistent"
+            ]
+          },
+          "ptr-workspace-naming": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-model evidence: STATIC.md + INDEX.md generated and read at boot (this session); CLAUDE.md redirect block live; vibedeps/ separate committed tree (P1/FORK2); INDEX static entries read direct + dynamic INCLUDE with os: when (P3/GEN-INDEX-MD match the shipped INDEX.md header verbatim); session-start order CLAUDE->STATIC->INDEX is the shipped boot block; dated fork/session records consistent"
+            ]
+          },
+          "ptr-vibevm-spec": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-model evidence: STATIC.md + INDEX.md generated and read at boot (this session); CLAUDE.md redirect block live; vibedeps/ separate committed tree (P1/FORK2); INDEX static entries read direct + dynamic INCLUDE with os: when (P3/GEN-INDEX-MD match the shipped INDEX.md header verbatim); session-start order CLAUDE->STATIC->INDEX is the shipped boot block; dated fork/session records consistent"
+            ]
+          },
+          "ptr-prop-003": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-model evidence: STATIC.md + INDEX.md generated and read at boot (this session); CLAUDE.md redirect block live; vibedeps/ separate committed tree (P1/FORK2); INDEX static entries read direct + dynamic INCLUDE with os: when (P3/GEN-INDEX-MD match the shipped INDEX.md header verbatim); session-start order CLAUDE->STATIC->INDEX is the shipped boot block; dated fork/session records consistent"
+            ]
+          },
+          "_elements": {
+            "v": "confirmed",
+            "ev": [
+              "doc status tag consistent (captured 2026-05-21 design record)"
+            ]
+          }
+        },
+        "verified_at": "2026-07-25T13:00:46Z",
+        "verify_batch": "c2-design"
+      }
     },
     "spec/design/structural-loader.md": {
       "content_hash": "8cba6169f825b9a5a6ceaf228caac49c2201c82052dda30df941759da9d86723",
@@ -812,7 +1676,149 @@
       },
       "marker_count": 21,
       "unit_count": 7,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "anchors_judged": 20,
+        "coverage_note": "verdicts keyed by fact anchors; table cell-markers inherit their row anchor; <status> elements judged as _elements",
+        "fact_count": 20,
+        "marker_count": 21,
+        "processed_hash": "8cba6169f825b9a5a6ceaf228caac49c2201c82052dda30df941759da9d86723",
+        "summary": {
+          "confirmed": 21,
+          "drift": 0,
+          "unverifiable": 0
+        },
+        "verdicts": {
+          "status-line": {
+            "v": "confirmed",
+            "ev": [
+              "PROP-035 SS13 is exactly The structural loader {#loader-prompt} (verified); not wired into any live boot (INDEX.md/STATIC.md carry no reference - grep clean 2026-07-25); the directive vocabulary it teaches (#use/#embed/#source/@spec) exists in vibe-spec (directives.rs DirectiveKind); read-set is PROP-035 SS7.4; instructions text stands as drafted (spec/done claims draftedness, nothing contradicts)"
+            ]
+          },
+          "LOADER-DEFINITION": {
+            "v": "confirmed",
+            "ev": [
+              "PROP-035 SS13 is exactly The structural loader {#loader-prompt} (verified); not wired into any live boot (INDEX.md/STATIC.md carry no reference - grep clean 2026-07-25); the directive vocabulary it teaches (#use/#embed/#source/@spec) exists in vibe-spec (directives.rs DirectiveKind); read-set is PROP-035 SS7.4; instructions text stands as drafted (spec/done claims draftedness, nothing contradicts)"
+            ]
+          },
+          "MUST-LOAD-FIRST": {
+            "v": "confirmed",
+            "ev": [
+              "PROP-035 SS13 is exactly The structural loader {#loader-prompt} (verified); not wired into any live boot (INDEX.md/STATIC.md carry no reference - grep clean 2026-07-25); the directive vocabulary it teaches (#use/#embed/#source/@spec) exists in vibe-spec (directives.rs DirectiveKind); read-set is PROP-035 SS7.4; instructions text stands as drafted (spec/done claims draftedness, nothing contradicts)"
+            ]
+          },
+          "SAME-EFFECTIVE-SPEC": {
+            "v": "confirmed",
+            "ev": [
+              "PROP-035 SS13 is exactly The structural loader {#loader-prompt} (verified); not wired into any live boot (INDEX.md/STATIC.md carry no reference - grep clean 2026-07-25); the directive vocabulary it teaches (#use/#embed/#source/@spec) exists in vibe-spec (directives.rs DirectiveKind); read-set is PROP-035 SS7.4; instructions text stands as drafted (spec/done claims draftedness, nothing contradicts)"
+            ]
+          },
+          "use-lead": {
+            "v": "confirmed",
+            "ev": [
+              "PROP-035 SS13 is exactly The structural loader {#loader-prompt} (verified); not wired into any live boot (INDEX.md/STATIC.md carry no reference - grep clean 2026-07-25); the directive vocabulary it teaches (#use/#embed/#source/@spec) exists in vibe-spec (directives.rs DirectiveKind); read-set is PROP-035 SS7.4; instructions text stands as drafted (spec/done claims draftedness, nothing contradicts)"
+            ]
+          },
+          "USE-READ-BEFORE-USE": {
+            "v": "confirmed",
+            "ev": [
+              "PROP-035 SS13 is exactly The structural loader {#loader-prompt} (verified); not wired into any live boot (INDEX.md/STATIC.md carry no reference - grep clean 2026-07-25); the directive vocabulary it teaches (#use/#embed/#source/@spec) exists in vibe-spec (directives.rs DirectiveKind); read-set is PROP-035 SS7.4; instructions text stands as drafted (spec/done claims draftedness, nothing contradicts)"
+            ]
+          },
+          "USE-CASCADE": {
+            "v": "confirmed",
+            "ev": [
+              "PROP-035 SS13 is exactly The structural loader {#loader-prompt} (verified); not wired into any live boot (INDEX.md/STATIC.md carry no reference - grep clean 2026-07-25); the directive vocabulary it teaches (#use/#embed/#source/@spec) exists in vibe-spec (directives.rs DirectiveKind); read-set is PROP-035 SS7.4; instructions text stands as drafted (spec/done claims draftedness, nothing contradicts)"
+            ]
+          },
+          "USE-AT-MANDATORY": {
+            "v": "confirmed",
+            "ev": [
+              "PROP-035 SS13 is exactly The structural loader {#loader-prompt} (verified); not wired into any live boot (INDEX.md/STATIC.md carry no reference - grep clean 2026-07-25); the directive vocabulary it teaches (#use/#embed/#source/@spec) exists in vibe-spec (directives.rs DirectiveKind); read-set is PROP-035 SS7.4; instructions text stands as drafted (spec/done claims draftedness, nothing contradicts)"
+            ]
+          },
+          "EMBED-MACRO": {
+            "v": "confirmed",
+            "ev": [
+              "PROP-035 SS13 is exactly The structural loader {#loader-prompt} (verified); not wired into any live boot (INDEX.md/STATIC.md carry no reference - grep clean 2026-07-25); the directive vocabulary it teaches (#use/#embed/#source/@spec) exists in vibe-spec (directives.rs DirectiveKind); read-set is PROP-035 SS7.4; instructions text stands as drafted (spec/done claims draftedness, nothing contradicts)"
+            ]
+          },
+          "SOURCE-CONTRACT-IMPL": {
+            "v": "confirmed",
+            "ev": [
+              "PROP-035 SS13 is exactly The structural loader {#loader-prompt} (verified); not wired into any live boot (INDEX.md/STATIC.md carry no reference - grep clean 2026-07-25); the directive vocabulary it teaches (#use/#embed/#source/@spec) exists in vibe-spec (directives.rs DirectiveKind); read-set is PROP-035 SS7.4; instructions text stands as drafted (spec/done claims draftedness, nothing contradicts)"
+            ]
+          },
+          "SOURCE-REPLACE": {
+            "v": "confirmed",
+            "ev": [
+              "PROP-035 SS13 is exactly The structural loader {#loader-prompt} (verified); not wired into any live boot (INDEX.md/STATIC.md carry no reference - grep clean 2026-07-25); the directive vocabulary it teaches (#use/#embed/#source/@spec) exists in vibe-spec (directives.rs DirectiveKind); read-set is PROP-035 SS7.4; instructions text stands as drafted (spec/done claims draftedness, nothing contradicts)"
+            ]
+          },
+          "SOURCE-ADD-DEFAULT": {
+            "v": "confirmed",
+            "ev": [
+              "PROP-035 SS13 is exactly The structural loader {#loader-prompt} (verified); not wired into any live boot (INDEX.md/STATIC.md carry no reference - grep clean 2026-07-25); the directive vocabulary it teaches (#use/#embed/#source/@spec) exists in vibe-spec (directives.rs DirectiveKind); read-set is PROP-035 SS7.4; instructions text stands as drafted (spec/done claims draftedness, nothing contradicts)"
+            ]
+          },
+          "SOURCE-OPTIONAL": {
+            "v": "confirmed",
+            "ev": [
+              "PROP-035 SS13 is exactly The structural loader {#loader-prompt} (verified); not wired into any live boot (INDEX.md/STATIC.md carry no reference - grep clean 2026-07-25); the directive vocabulary it teaches (#use/#embed/#source/@spec) exists in vibe-spec (directives.rs DirectiveKind); read-set is PROP-035 SS7.4; instructions text stands as drafted (spec/done claims draftedness, nothing contradicts)"
+            ]
+          },
+          "READ-SET-FILE": {
+            "v": "confirmed",
+            "ev": [
+              "PROP-035 SS13 is exactly The structural loader {#loader-prompt} (verified); not wired into any live boot (INDEX.md/STATIC.md carry no reference - grep clean 2026-07-25); the directive vocabulary it teaches (#use/#embed/#source/@spec) exists in vibe-spec (directives.rs DirectiveKind); read-set is PROP-035 SS7.4; instructions text stands as drafted (spec/done claims draftedness, nothing contradicts)"
+            ]
+          },
+          "READ-SET-SURVIVES-COMPACTION": {
+            "v": "confirmed",
+            "ev": [
+              "PROP-035 SS13 is exactly The structural loader {#loader-prompt} (verified); not wired into any live boot (INDEX.md/STATIC.md carry no reference - grep clean 2026-07-25); the directive vocabulary it teaches (#use/#embed/#source/@spec) exists in vibe-spec (directives.rs DirectiveKind); read-set is PROP-035 SS7.4; instructions text stands as drafted (spec/done claims draftedness, nothing contradicts)"
+            ]
+          },
+          "READ-SET-SEMANTICS": {
+            "v": "confirmed",
+            "ev": [
+              "PROP-035 SS13 is exactly The structural loader {#loader-prompt} (verified); not wired into any live boot (INDEX.md/STATIC.md carry no reference - grep clean 2026-07-25); the directive vocabulary it teaches (#use/#embed/#source/@spec) exists in vibe-spec (directives.rs DirectiveKind); read-set is PROP-035 SS7.4; instructions text stands as drafted (spec/done claims draftedness, nothing contradicts)"
+            ]
+          },
+          "NEVER-USE-UNREAD": {
+            "v": "confirmed",
+            "ev": [
+              "PROP-035 SS13 is exactly The structural loader {#loader-prompt} (verified); not wired into any live boot (INDEX.md/STATIC.md carry no reference - grep clean 2026-07-25); the directive vocabulary it teaches (#use/#embed/#source/@spec) exists in vibe-spec (directives.rs DirectiveKind); read-set is PROP-035 SS7.4; instructions text stands as drafted (spec/done claims draftedness, nothing contradicts)"
+            ]
+          },
+          "NEVER-DOUBLE-READ": {
+            "v": "confirmed",
+            "ev": [
+              "PROP-035 SS13 is exactly The structural loader {#loader-prompt} (verified); not wired into any live boot (INDEX.md/STATIC.md carry no reference - grep clean 2026-07-25); the directive vocabulary it teaches (#use/#embed/#source/@spec) exists in vibe-spec (directives.rs DirectiveKind); read-set is PROP-035 SS7.4; instructions text stands as drafted (spec/done claims draftedness, nothing contradicts)"
+            ]
+          },
+          "NEVER-BARE-MANDATORY": {
+            "v": "confirmed",
+            "ev": [
+              "PROP-035 SS13 is exactly The structural loader {#loader-prompt} (verified); not wired into any live boot (INDEX.md/STATIC.md carry no reference - grep clean 2026-07-25); the directive vocabulary it teaches (#use/#embed/#source/@spec) exists in vibe-spec (directives.rs DirectiveKind); read-set is PROP-035 SS7.4; instructions text stands as drafted (spec/done claims draftedness, nothing contradicts)"
+            ]
+          },
+          "NEVER-DIVERGE": {
+            "v": "confirmed",
+            "ev": [
+              "PROP-035 SS13 is exactly The structural loader {#loader-prompt} (verified); not wired into any live boot (INDEX.md/STATIC.md carry no reference - grep clean 2026-07-25); the directive vocabulary it teaches (#use/#embed/#source/@spec) exists in vibe-spec (directives.rs DirectiveKind); read-set is PROP-035 SS7.4; instructions text stands as drafted (spec/done claims draftedness, nothing contradicts)"
+            ]
+          },
+          "_elements": {
+            "v": "confirmed",
+            "ev": [
+              "status tag honest: authored, not wired, provisional per PROP-035 SS13"
+            ]
+          }
+        },
+        "verified_at": "2026-07-25T13:00:46Z",
+        "verify_batch": "c2-design"
+      }
     },
     "spec/design/tui-visual-language.md": {
       "content_hash": "ef320a3420aa76cc2b4c9989287d20e48d4f10e58b7b4076f00d04c53de203a2",
@@ -835,7 +1841,449 @@
       },
       "marker_count": 176,
       "unit_count": 9,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "anchors_judged": 70,
+        "coverage_note": "verdicts keyed by fact anchors; table cell-markers inherit their row anchor; <status> elements judged as _elements",
+        "fact_count": 175,
+        "marker_count": 176,
+        "processed_hash": "ef320a3420aa76cc2b4c9989287d20e48d4f10e58b7b4076f00d04c53de203a2",
+        "summary": {
+          "confirmed": 69,
+          "drift": 2,
+          "unverifiable": 0
+        },
+        "verdicts": {
+          "status-line": {
+            "v": "confirmed",
+            "ev": [
+              "code verification 2026-07-25: rose_pine.rs carries the locked hexes (191724/c4a7e7/1f1d2e), catppuccin.rs the four flavours (mocha base 1e1e2e); detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier exists literally as the lore claims (theme/tier.rs:93); PAD_X=2 PAD_Y=1 GUTTER=1 exact (ui/mod.rs:43-50); glyphs.rs ships the fold/DAG/flag/close vocabulary (fold_expanded = the target glyph + pinning test); is_light on the Palette trait; all five PROP-037 SS2.2 anchors exist (#palette-tokens #glyph-vocabulary #rendering-tiers #window-aesthetics #spacing); related-line repointed by L4"
+            ]
+          },
+          "genre-line": {
+            "v": "confirmed",
+            "ev": [
+              "code verification 2026-07-25: rose_pine.rs carries the locked hexes (191724/c4a7e7/1f1d2e), catppuccin.rs the four flavours (mocha base 1e1e2e); detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier exists literally as the lore claims (theme/tier.rs:93); PAD_X=2 PAD_Y=1 GUTTER=1 exact (ui/mod.rs:43-50); glyphs.rs ships the fold/DAG/flag/close vocabulary (fold_expanded = the target glyph + pinning test); is_light on the Palette trait; all five PROP-037 SS2.2 anchors exist (#palette-tokens #glyph-vocabulary #rendering-tiers #window-aesthetics #spacing); related-line repointed by L4"
+            ]
+          },
+          "related": {
+            "v": "confirmed",
+            "ev": [
+              "code verification 2026-07-25: rose_pine.rs carries the locked hexes (191724/c4a7e7/1f1d2e), catppuccin.rs the four flavours (mocha base 1e1e2e); detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier exists literally as the lore claims (theme/tier.rs:93); PAD_X=2 PAD_Y=1 GUTTER=1 exact (ui/mod.rs:43-50); glyphs.rs ships the fold/DAG/flag/close vocabulary (fold_expanded = the target glyph + pinning test); is_light on the Palette trait; all five PROP-037 SS2.2 anchors exist (#palette-tokens #glyph-vocabulary #rendering-tiers #window-aesthetics #spacing); related-line repointed by L4"
+            ]
+          },
+          "OWNER-VISION": {
+            "v": "confirmed",
+            "ev": [
+              "code verification 2026-07-25: rose_pine.rs carries the locked hexes (191724/c4a7e7/1f1d2e), catppuccin.rs the four flavours (mocha base 1e1e2e); detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier exists literally as the lore claims (theme/tier.rs:93); PAD_X=2 PAD_Y=1 GUTTER=1 exact (ui/mod.rs:43-50); glyphs.rs ships the fold/DAG/flag/close vocabulary (fold_expanded = the target glyph + pinning test); is_light on the Palette trait; all five PROP-037 SS2.2 anchors exist (#palette-tokens #glyph-vocabulary #rendering-tiers #window-aesthetics #spacing); related-line repointed by L4"
+            ]
+          },
+          "PRIN-SYMBOLIC-PRECISION": {
+            "v": "confirmed",
+            "ev": [
+              "code verification 2026-07-25: rose_pine.rs carries the locked hexes (191724/c4a7e7/1f1d2e), catppuccin.rs the four flavours (mocha base 1e1e2e); detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier exists literally as the lore claims (theme/tier.rs:93); PAD_X=2 PAD_Y=1 GUTTER=1 exact (ui/mod.rs:43-50); glyphs.rs ships the fold/DAG/flag/close vocabulary (fold_expanded = the target glyph + pinning test); is_light on the Palette trait; all five PROP-037 SS2.2 anchors exist (#palette-tokens #glyph-vocabulary #rendering-tiers #window-aesthetics #spacing); related-line repointed by L4"
+            ]
+          },
+          "PRIN-TRUECOLOR-FIRST": {
+            "v": "confirmed",
+            "ev": [
+              "code verification 2026-07-25: rose_pine.rs carries the locked hexes (191724/c4a7e7/1f1d2e), catppuccin.rs the four flavours (mocha base 1e1e2e); detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier exists literally as the lore claims (theme/tier.rs:93); PAD_X=2 PAD_Y=1 GUTTER=1 exact (ui/mod.rs:43-50); glyphs.rs ships the fold/DAG/flag/close vocabulary (fold_expanded = the target glyph + pinning test); is_light on the Palette trait; all five PROP-037 SS2.2 anchors exist (#palette-tokens #glyph-vocabulary #rendering-tiers #window-aesthetics #spacing); related-line repointed by L4"
+            ]
+          },
+          "PRIN-PORTABILITY": {
+            "v": "confirmed",
+            "ev": [
+              "code verification 2026-07-25: rose_pine.rs carries the locked hexes (191724/c4a7e7/1f1d2e), catppuccin.rs the four flavours (mocha base 1e1e2e); detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier exists literally as the lore claims (theme/tier.rs:93); PAD_X=2 PAD_Y=1 GUTTER=1 exact (ui/mod.rs:43-50); glyphs.rs ships the fold/DAG/flag/close vocabulary (fold_expanded = the target glyph + pinning test); is_light on the Palette trait; all five PROP-037 SS2.2 anchors exist (#palette-tokens #glyph-vocabulary #rendering-tiers #window-aesthetics #spacing); related-line repointed by L4"
+            ]
+          },
+          "PRIN-GRACEFUL-DEGRADATION": {
+            "v": "confirmed",
+            "ev": [
+              "code verification 2026-07-25: rose_pine.rs carries the locked hexes (191724/c4a7e7/1f1d2e), catppuccin.rs the four flavours (mocha base 1e1e2e); detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier exists literally as the lore claims (theme/tier.rs:93); PAD_X=2 PAD_Y=1 GUTTER=1 exact (ui/mod.rs:43-50); glyphs.rs ships the fold/DAG/flag/close vocabulary (fold_expanded = the target glyph + pinning test); is_light on the Palette trait; all five PROP-037 SS2.2 anchors exist (#palette-tokens #glyph-vocabulary #rendering-tiers #window-aesthetics #spacing); related-line repointed by L4"
+            ]
+          },
+          "PRIN-WINDOWS-ARE-WINDOWS": {
+            "v": "confirmed",
+            "ev": [
+              "code verification 2026-07-25: rose_pine.rs carries the locked hexes (191724/c4a7e7/1f1d2e), catppuccin.rs the four flavours (mocha base 1e1e2e); detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier exists literally as the lore claims (theme/tier.rs:93); PAD_X=2 PAD_Y=1 GUTTER=1 exact (ui/mod.rs:43-50); glyphs.rs ships the fold/DAG/flag/close vocabulary (fold_expanded = the target glyph + pinning test); is_light on the Palette trait; all five PROP-037 SS2.2 anchors exist (#palette-tokens #glyph-vocabulary #rendering-tiers #window-aesthetics #spacing); related-line repointed by L4"
+            ]
+          },
+          "PRIN-ONE-CSS": {
+            "v": "confirmed",
+            "ev": [
+              "code verification 2026-07-25: rose_pine.rs carries the locked hexes (191724/c4a7e7/1f1d2e), catppuccin.rs the four flavours (mocha base 1e1e2e); detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier exists literally as the lore claims (theme/tier.rs:93); PAD_X=2 PAD_Y=1 GUTTER=1 exact (ui/mod.rs:43-50); glyphs.rs ships the fold/DAG/flag/close vocabulary (fold_expanded = the target glyph + pinning test); is_light on the Palette trait; all five PROP-037 SS2.2 anchors exist (#palette-tokens #glyph-vocabulary #rendering-tiers #window-aesthetics #spacing); related-line repointed by L4"
+            ]
+          },
+          "glyph-lead": {
+            "v": "drift",
+            "ev": [
+              "the current ASCII scaffolding -> the target vocabulary is present-tense about the pre-v0.2 state; the targets shipped (glyphs.rs + goldens + MT-02) so the Today column is a dated snapshot reading as current -> F-041"
+            ]
+          },
+          "ROW-GLYPH-TREE": {
+            "v": "confirmed",
+            "ev": [
+              "code verification 2026-07-25: rose_pine.rs carries the locked hexes (191724/c4a7e7/1f1d2e), catppuccin.rs the four flavours (mocha base 1e1e2e); detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier exists literally as the lore claims (theme/tier.rs:93); PAD_X=2 PAD_Y=1 GUTTER=1 exact (ui/mod.rs:43-50); glyphs.rs ships the fold/DAG/flag/close vocabulary (fold_expanded = the target glyph + pinning test); is_light on the Palette trait; all five PROP-037 SS2.2 anchors exist (#palette-tokens #glyph-vocabulary #rendering-tiers #window-aesthetics #spacing); related-line repointed by L4"
+            ]
+          },
+          "ROW-GLYPH-FOLD": {
+            "v": "confirmed",
+            "ev": [
+              "code verification 2026-07-25: rose_pine.rs carries the locked hexes (191724/c4a7e7/1f1d2e), catppuccin.rs the four flavours (mocha base 1e1e2e); detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier exists literally as the lore claims (theme/tier.rs:93); PAD_X=2 PAD_Y=1 GUTTER=1 exact (ui/mod.rs:43-50); glyphs.rs ships the fold/DAG/flag/close vocabulary (fold_expanded = the target glyph + pinning test); is_light on the Palette trait; all five PROP-037 SS2.2 anchors exist (#palette-tokens #glyph-vocabulary #rendering-tiers #window-aesthetics #spacing); related-line repointed by L4"
+            ]
+          },
+          "ROW-GLYPH-DAG": {
+            "v": "confirmed",
+            "ev": [
+              "code verification 2026-07-25: rose_pine.rs carries the locked hexes (191724/c4a7e7/1f1d2e), catppuccin.rs the four flavours (mocha base 1e1e2e); detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier exists literally as the lore claims (theme/tier.rs:93); PAD_X=2 PAD_Y=1 GUTTER=1 exact (ui/mod.rs:43-50); glyphs.rs ships the fold/DAG/flag/close vocabulary (fold_expanded = the target glyph + pinning test); is_light on the Palette trait; all five PROP-037 SS2.2 anchors exist (#palette-tokens #glyph-vocabulary #rendering-tiers #window-aesthetics #spacing); related-line repointed by L4"
+            ]
+          },
+          "ROW-GLYPH-FLAGS": {
+            "v": "confirmed",
+            "ev": [
+              "code verification 2026-07-25: rose_pine.rs carries the locked hexes (191724/c4a7e7/1f1d2e), catppuccin.rs the four flavours (mocha base 1e1e2e); detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier exists literally as the lore claims (theme/tier.rs:93); PAD_X=2 PAD_Y=1 GUTTER=1 exact (ui/mod.rs:43-50); glyphs.rs ships the fold/DAG/flag/close vocabulary (fold_expanded = the target glyph + pinning test); is_light on the Palette trait; all five PROP-037 SS2.2 anchors exist (#palette-tokens #glyph-vocabulary #rendering-tiers #window-aesthetics #spacing); related-line repointed by L4"
+            ]
+          },
+          "ROW-GLYPH-ROUNDED": {
+            "v": "confirmed",
+            "ev": [
+              "code verification 2026-07-25: rose_pine.rs carries the locked hexes (191724/c4a7e7/1f1d2e), catppuccin.rs the four flavours (mocha base 1e1e2e); detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier exists literally as the lore claims (theme/tier.rs:93); PAD_X=2 PAD_Y=1 GUTTER=1 exact (ui/mod.rs:43-50); glyphs.rs ships the fold/DAG/flag/close vocabulary (fold_expanded = the target glyph + pinning test); is_light on the Palette trait; all five PROP-037 SS2.2 anchors exist (#palette-tokens #glyph-vocabulary #rendering-tiers #window-aesthetics #spacing); related-line repointed by L4"
+            ]
+          },
+          "ROW-GLYPH-SQUARE": {
+            "v": "confirmed",
+            "ev": [
+              "code verification 2026-07-25: rose_pine.rs carries the locked hexes (191724/c4a7e7/1f1d2e), catppuccin.rs the four flavours (mocha base 1e1e2e); detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier exists literally as the lore claims (theme/tier.rs:93); PAD_X=2 PAD_Y=1 GUTTER=1 exact (ui/mod.rs:43-50); glyphs.rs ships the fold/DAG/flag/close vocabulary (fold_expanded = the target glyph + pinning test); is_light on the Palette trait; all five PROP-037 SS2.2 anchors exist (#palette-tokens #glyph-vocabulary #rendering-tiers #window-aesthetics #spacing); related-line repointed by L4"
+            ]
+          },
+          "ROW-GLYPH-CLOSE": {
+            "v": "confirmed",
+            "ev": [
+              "code verification 2026-07-25: rose_pine.rs carries the locked hexes (191724/c4a7e7/1f1d2e), catppuccin.rs the four flavours (mocha base 1e1e2e); detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier exists literally as the lore claims (theme/tier.rs:93); PAD_X=2 PAD_Y=1 GUTTER=1 exact (ui/mod.rs:43-50); glyphs.rs ships the fold/DAG/flag/close vocabulary (fold_expanded = the target glyph + pinning test); is_light on the Palette trait; all five PROP-037 SS2.2 anchors exist (#palette-tokens #glyph-vocabulary #rendering-tiers #window-aesthetics #spacing); related-line repointed by L4"
+            ]
+          },
+          "ROW-GLYPH-SEPARATOR": {
+            "v": "confirmed",
+            "ev": [
+              "code verification 2026-07-25: rose_pine.rs carries the locked hexes (191724/c4a7e7/1f1d2e), catppuccin.rs the four flavours (mocha base 1e1e2e); detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier exists literally as the lore claims (theme/tier.rs:93); PAD_X=2 PAD_Y=1 GUTTER=1 exact (ui/mod.rs:43-50); glyphs.rs ships the fold/DAG/flag/close vocabulary (fold_expanded = the target glyph + pinning test); is_light on the Palette trait; all five PROP-037 SS2.2 anchors exist (#palette-tokens #glyph-vocabulary #rendering-tiers #window-aesthetics #spacing); related-line repointed by L4"
+            ]
+          },
+          "ROW-GLYPH-BAR": {
+            "v": "confirmed",
+            "ev": [
+              "code verification 2026-07-25: rose_pine.rs carries the locked hexes (191724/c4a7e7/1f1d2e), catppuccin.rs the four flavours (mocha base 1e1e2e); detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier exists literally as the lore claims (theme/tier.rs:93); PAD_X=2 PAD_Y=1 GUTTER=1 exact (ui/mod.rs:43-50); glyphs.rs ships the fold/DAG/flag/close vocabulary (fold_expanded = the target glyph + pinning test); is_light on the Palette trait; all five PROP-037 SS2.2 anchors exist (#palette-tokens #glyph-vocabulary #rendering-tiers #window-aesthetics #spacing); related-line repointed by L4"
+            ]
+          },
+          "ROW-GLYPH-SCROLL": {
+            "v": "confirmed",
+            "ev": [
+              "code verification 2026-07-25: rose_pine.rs carries the locked hexes (191724/c4a7e7/1f1d2e), catppuccin.rs the four flavours (mocha base 1e1e2e); detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier exists literally as the lore claims (theme/tier.rs:93); PAD_X=2 PAD_Y=1 GUTTER=1 exact (ui/mod.rs:43-50); glyphs.rs ships the fold/DAG/flag/close vocabulary (fold_expanded = the target glyph + pinning test); is_light on the Palette trait; all five PROP-037 SS2.2 anchors exist (#palette-tokens #glyph-vocabulary #rendering-tiers #window-aesthetics #spacing); related-line repointed by L4"
+            ]
+          },
+          "NO-ASCII-PRIMARY": {
+            "v": "confirmed",
+            "ev": [
+              "code verification 2026-07-25: rose_pine.rs carries the locked hexes (191724/c4a7e7/1f1d2e), catppuccin.rs the four flavours (mocha base 1e1e2e); detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier exists literally as the lore claims (theme/tier.rs:93); PAD_X=2 PAD_Y=1 GUTTER=1 exact (ui/mod.rs:43-50); glyphs.rs ships the fold/DAG/flag/close vocabulary (fold_expanded = the target glyph + pinning test); is_light on the Palette trait; all five PROP-037 SS2.2 anchors exist (#palette-tokens #glyph-vocabulary #rendering-tiers #window-aesthetics #spacing); related-line repointed by L4"
+            ]
+          },
+          "palette-definition": {
+            "v": "confirmed",
+            "ev": [
+              "code verification 2026-07-25: rose_pine.rs carries the locked hexes (191724/c4a7e7/1f1d2e), catppuccin.rs the four flavours (mocha base 1e1e2e); detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier exists literally as the lore claims (theme/tier.rs:93); PAD_X=2 PAD_Y=1 GUTTER=1 exact (ui/mod.rs:43-50); glyphs.rs ships the fold/DAG/flag/close vocabulary (fold_expanded = the target glyph + pinning test); is_light on the Palette trait; all five PROP-037 SS2.2 anchors exist (#palette-tokens #glyph-vocabulary #rendering-tiers #window-aesthetics #spacing); related-line repointed by L4"
+            ]
+          },
+          "palette-roles-list": {
+            "v": "confirmed",
+            "ev": [
+              "code verification 2026-07-25: rose_pine.rs carries the locked hexes (191724/c4a7e7/1f1d2e), catppuccin.rs the four flavours (mocha base 1e1e2e); detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier exists literally as the lore claims (theme/tier.rs:93); PAD_X=2 PAD_Y=1 GUTTER=1 exact (ui/mod.rs:43-50); glyphs.rs ships the fold/DAG/flag/close vocabulary (fold_expanded = the target glyph + pinning test); is_light on the Palette trait; all five PROP-037 SS2.2 anchors exist (#palette-tokens #glyph-vocabulary #rendering-tiers #window-aesthetics #spacing); related-line repointed by L4"
+            ]
+          },
+          "role-semantics-lead": {
+            "v": "confirmed",
+            "ev": [
+              "code verification 2026-07-25: rose_pine.rs carries the locked hexes (191724/c4a7e7/1f1d2e), catppuccin.rs the four flavours (mocha base 1e1e2e); detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier exists literally as the lore claims (theme/tier.rs:93); PAD_X=2 PAD_Y=1 GUTTER=1 exact (ui/mod.rs:43-50); glyphs.rs ships the fold/DAG/flag/close vocabulary (fold_expanded = the target glyph + pinning test); is_light on the Palette trait; all five PROP-037 SS2.2 anchors exist (#palette-tokens #glyph-vocabulary #rendering-tiers #window-aesthetics #spacing); related-line repointed by L4"
+            ]
+          },
+          "ROLE-BASE": {
+            "v": "confirmed",
+            "ev": [
+              "code verification 2026-07-25: rose_pine.rs carries the locked hexes (191724/c4a7e7/1f1d2e), catppuccin.rs the four flavours (mocha base 1e1e2e); detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier exists literally as the lore claims (theme/tier.rs:93); PAD_X=2 PAD_Y=1 GUTTER=1 exact (ui/mod.rs:43-50); glyphs.rs ships the fold/DAG/flag/close vocabulary (fold_expanded = the target glyph + pinning test); is_light on the Palette trait; all five PROP-037 SS2.2 anchors exist (#palette-tokens #glyph-vocabulary #rendering-tiers #window-aesthetics #spacing); related-line repointed by L4"
+            ]
+          },
+          "ROLE-SURFACES": {
+            "v": "confirmed",
+            "ev": [
+              "code verification 2026-07-25: rose_pine.rs carries the locked hexes (191724/c4a7e7/1f1d2e), catppuccin.rs the four flavours (mocha base 1e1e2e); detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier exists literally as the lore claims (theme/tier.rs:93); PAD_X=2 PAD_Y=1 GUTTER=1 exact (ui/mod.rs:43-50); glyphs.rs ships the fold/DAG/flag/close vocabulary (fold_expanded = the target glyph + pinning test); is_light on the Palette trait; all five PROP-037 SS2.2 anchors exist (#palette-tokens #glyph-vocabulary #rendering-tiers #window-aesthetics #spacing); related-line repointed by L4"
+            ]
+          },
+          "ROLE-MUTED": {
+            "v": "confirmed",
+            "ev": [
+              "code verification 2026-07-25: rose_pine.rs carries the locked hexes (191724/c4a7e7/1f1d2e), catppuccin.rs the four flavours (mocha base 1e1e2e); detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier exists literally as the lore claims (theme/tier.rs:93); PAD_X=2 PAD_Y=1 GUTTER=1 exact (ui/mod.rs:43-50); glyphs.rs ships the fold/DAG/flag/close vocabulary (fold_expanded = the target glyph + pinning test); is_light on the Palette trait; all five PROP-037 SS2.2 anchors exist (#palette-tokens #glyph-vocabulary #rendering-tiers #window-aesthetics #spacing); related-line repointed by L4"
+            ]
+          },
+          "ROLE-SUBTEXT": {
+            "v": "confirmed",
+            "ev": [
+              "code verification 2026-07-25: rose_pine.rs carries the locked hexes (191724/c4a7e7/1f1d2e), catppuccin.rs the four flavours (mocha base 1e1e2e); detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier exists literally as the lore claims (theme/tier.rs:93); PAD_X=2 PAD_Y=1 GUTTER=1 exact (ui/mod.rs:43-50); glyphs.rs ships the fold/DAG/flag/close vocabulary (fold_expanded = the target glyph + pinning test); is_light on the Palette trait; all five PROP-037 SS2.2 anchors exist (#palette-tokens #glyph-vocabulary #rendering-tiers #window-aesthetics #spacing); related-line repointed by L4"
+            ]
+          },
+          "ROLE-TEXT": {
+            "v": "confirmed",
+            "ev": [
+              "code verification 2026-07-25: rose_pine.rs carries the locked hexes (191724/c4a7e7/1f1d2e), catppuccin.rs the four flavours (mocha base 1e1e2e); detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier exists literally as the lore claims (theme/tier.rs:93); PAD_X=2 PAD_Y=1 GUTTER=1 exact (ui/mod.rs:43-50); glyphs.rs ships the fold/DAG/flag/close vocabulary (fold_expanded = the target glyph + pinning test); is_light on the Palette trait; all five PROP-037 SS2.2 anchors exist (#palette-tokens #glyph-vocabulary #rendering-tiers #window-aesthetics #spacing); related-line repointed by L4"
+            ]
+          },
+          "ROLE-ACCENT": {
+            "v": "confirmed",
+            "ev": [
+              "code verification 2026-07-25: rose_pine.rs carries the locked hexes (191724/c4a7e7/1f1d2e), catppuccin.rs the four flavours (mocha base 1e1e2e); detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier exists literally as the lore claims (theme/tier.rs:93); PAD_X=2 PAD_Y=1 GUTTER=1 exact (ui/mod.rs:43-50); glyphs.rs ships the fold/DAG/flag/close vocabulary (fold_expanded = the target glyph + pinning test); is_light on the Palette trait; all five PROP-037 SS2.2 anchors exist (#palette-tokens #glyph-vocabulary #rendering-tiers #window-aesthetics #spacing); related-line repointed by L4"
+            ]
+          },
+          "ROLE-TONAL-ACCENTS": {
+            "v": "confirmed",
+            "ev": [
+              "code verification 2026-07-25: rose_pine.rs carries the locked hexes (191724/c4a7e7/1f1d2e), catppuccin.rs the four flavours (mocha base 1e1e2e); detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier exists literally as the lore claims (theme/tier.rs:93); PAD_X=2 PAD_Y=1 GUTTER=1 exact (ui/mod.rs:43-50); glyphs.rs ships the fold/DAG/flag/close vocabulary (fold_expanded = the target glyph + pinning test); is_light on the Palette trait; all five PROP-037 SS2.2 anchors exist (#palette-tokens #glyph-vocabulary #rendering-tiers #window-aesthetics #spacing); related-line repointed by L4"
+            ]
+          },
+          "ROLE-SELECTION": {
+            "v": "confirmed",
+            "ev": [
+              "code verification 2026-07-25: rose_pine.rs carries the locked hexes (191724/c4a7e7/1f1d2e), catppuccin.rs the four flavours (mocha base 1e1e2e); detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier exists literally as the lore claims (theme/tier.rs:93); PAD_X=2 PAD_Y=1 GUTTER=1 exact (ui/mod.rs:43-50); glyphs.rs ships the fold/DAG/flag/close vocabulary (fold_expanded = the target glyph + pinning test); is_light on the Palette trait; all five PROP-037 SS2.2 anchors exist (#palette-tokens #glyph-vocabulary #rendering-tiers #window-aesthetics #spacing); related-line repointed by L4"
+            ]
+          },
+          "ROLE-BORDER": {
+            "v": "confirmed",
+            "ev": [
+              "code verification 2026-07-25: rose_pine.rs carries the locked hexes (191724/c4a7e7/1f1d2e), catppuccin.rs the four flavours (mocha base 1e1e2e); detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier exists literally as the lore claims (theme/tier.rs:93); PAD_X=2 PAD_Y=1 GUTTER=1 exact (ui/mod.rs:43-50); glyphs.rs ships the fold/DAG/flag/close vocabulary (fold_expanded = the target glyph + pinning test); is_light on the Palette trait; all five PROP-037 SS2.2 anchors exist (#palette-tokens #glyph-vocabulary #rendering-tiers #window-aesthetics #spacing); related-line repointed by L4"
+            ]
+          },
+          "ROLE-PAPER": {
+            "v": "confirmed",
+            "ev": [
+              "code verification 2026-07-25: rose_pine.rs carries the locked hexes (191724/c4a7e7/1f1d2e), catppuccin.rs the four flavours (mocha base 1e1e2e); detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier exists literally as the lore claims (theme/tier.rs:93); PAD_X=2 PAD_Y=1 GUTTER=1 exact (ui/mod.rs:43-50); glyphs.rs ships the fold/DAG/flag/close vocabulary (fold_expanded = the target glyph + pinning test); is_light on the Palette trait; all five PROP-037 SS2.2 anchors exist (#palette-tokens #glyph-vocabulary #rendering-tiers #window-aesthetics #spacing); related-line repointed by L4"
+            ]
+          },
+          "ROLE-BUTTONS": {
+            "v": "confirmed",
+            "ev": [
+              "code verification 2026-07-25: rose_pine.rs carries the locked hexes (191724/c4a7e7/1f1d2e), catppuccin.rs the four flavours (mocha base 1e1e2e); detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier exists literally as the lore claims (theme/tier.rs:93); PAD_X=2 PAD_Y=1 GUTTER=1 exact (ui/mod.rs:43-50); glyphs.rs ships the fold/DAG/flag/close vocabulary (fold_expanded = the target glyph + pinning test); is_light on the Palette trait; all five PROP-037 SS2.2 anchors exist (#palette-tokens #glyph-vocabulary #rendering-tiers #window-aesthetics #spacing); related-line repointed by L4"
+            ]
+          },
+          "five-palettes-lead": {
+            "v": "confirmed",
+            "ev": [
+              "code verification 2026-07-25: rose_pine.rs carries the locked hexes (191724/c4a7e7/1f1d2e), catppuccin.rs the four flavours (mocha base 1e1e2e); detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier exists literally as the lore claims (theme/tier.rs:93); PAD_X=2 PAD_Y=1 GUTTER=1 exact (ui/mod.rs:43-50); glyphs.rs ships the fold/DAG/flag/close vocabulary (fold_expanded = the target glyph + pinning test); is_light on the Palette trait; all five PROP-037 SS2.2 anchors exist (#palette-tokens #glyph-vocabulary #rendering-tiers #window-aesthetics #spacing); related-line repointed by L4"
+            ]
+          },
+          "ROW-PAL-ROSE-PINE": {
+            "v": "confirmed",
+            "ev": [
+              "code verification 2026-07-25: rose_pine.rs carries the locked hexes (191724/c4a7e7/1f1d2e), catppuccin.rs the four flavours (mocha base 1e1e2e); detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier exists literally as the lore claims (theme/tier.rs:93); PAD_X=2 PAD_Y=1 GUTTER=1 exact (ui/mod.rs:43-50); glyphs.rs ships the fold/DAG/flag/close vocabulary (fold_expanded = the target glyph + pinning test); is_light on the Palette trait; all five PROP-037 SS2.2 anchors exist (#palette-tokens #glyph-vocabulary #rendering-tiers #window-aesthetics #spacing); related-line repointed by L4"
+            ]
+          },
+          "ROW-PAL-MOCHA": {
+            "v": "confirmed",
+            "ev": [
+              "code verification 2026-07-25: rose_pine.rs carries the locked hexes (191724/c4a7e7/1f1d2e), catppuccin.rs the four flavours (mocha base 1e1e2e); detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier exists literally as the lore claims (theme/tier.rs:93); PAD_X=2 PAD_Y=1 GUTTER=1 exact (ui/mod.rs:43-50); glyphs.rs ships the fold/DAG/flag/close vocabulary (fold_expanded = the target glyph + pinning test); is_light on the Palette trait; all five PROP-037 SS2.2 anchors exist (#palette-tokens #glyph-vocabulary #rendering-tiers #window-aesthetics #spacing); related-line repointed by L4"
+            ]
+          },
+          "ROW-PAL-MACCHIATO": {
+            "v": "confirmed",
+            "ev": [
+              "code verification 2026-07-25: rose_pine.rs carries the locked hexes (191724/c4a7e7/1f1d2e), catppuccin.rs the four flavours (mocha base 1e1e2e); detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier exists literally as the lore claims (theme/tier.rs:93); PAD_X=2 PAD_Y=1 GUTTER=1 exact (ui/mod.rs:43-50); glyphs.rs ships the fold/DAG/flag/close vocabulary (fold_expanded = the target glyph + pinning test); is_light on the Palette trait; all five PROP-037 SS2.2 anchors exist (#palette-tokens #glyph-vocabulary #rendering-tiers #window-aesthetics #spacing); related-line repointed by L4"
+            ]
+          },
+          "ROW-PAL-FRAPPE": {
+            "v": "confirmed",
+            "ev": [
+              "code verification 2026-07-25: rose_pine.rs carries the locked hexes (191724/c4a7e7/1f1d2e), catppuccin.rs the four flavours (mocha base 1e1e2e); detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier exists literally as the lore claims (theme/tier.rs:93); PAD_X=2 PAD_Y=1 GUTTER=1 exact (ui/mod.rs:43-50); glyphs.rs ships the fold/DAG/flag/close vocabulary (fold_expanded = the target glyph + pinning test); is_light on the Palette trait; all five PROP-037 SS2.2 anchors exist (#palette-tokens #glyph-vocabulary #rendering-tiers #window-aesthetics #spacing); related-line repointed by L4"
+            ]
+          },
+          "ROW-PAL-LATTE": {
+            "v": "confirmed",
+            "ev": [
+              "code verification 2026-07-25: rose_pine.rs carries the locked hexes (191724/c4a7e7/1f1d2e), catppuccin.rs the four flavours (mocha base 1e1e2e); detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier exists literally as the lore claims (theme/tier.rs:93); PAD_X=2 PAD_Y=1 GUTTER=1 exact (ui/mod.rs:43-50); glyphs.rs ships the fold/DAG/flag/close vocabulary (fold_expanded = the target glyph + pinning test); is_light on the Palette trait; all five PROP-037 SS2.2 anchors exist (#palette-tokens #glyph-vocabulary #rendering-tiers #window-aesthetics #spacing); related-line repointed by L4"
+            ]
+          },
+          "ROSE-PINE-LOCKED": {
+            "v": "confirmed",
+            "ev": [
+              "code verification 2026-07-25: rose_pine.rs carries the locked hexes (191724/c4a7e7/1f1d2e), catppuccin.rs the four flavours (mocha base 1e1e2e); detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier exists literally as the lore claims (theme/tier.rs:93); PAD_X=2 PAD_Y=1 GUTTER=1 exact (ui/mod.rs:43-50); glyphs.rs ships the fold/DAG/flag/close vocabulary (fold_expanded = the target glyph + pinning test); is_light on the Palette trait; all five PROP-037 SS2.2 anchors exist (#palette-tokens #glyph-vocabulary #rendering-tiers #window-aesthetics #spacing); related-line repointed by L4"
+            ]
+          },
+          "CATPPUCCIN-MAPPING": {
+            "v": "confirmed",
+            "ev": [
+              "code verification 2026-07-25: rose_pine.rs carries the locked hexes (191724/c4a7e7/1f1d2e), catppuccin.rs the four flavours (mocha base 1e1e2e); detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier exists literally as the lore claims (theme/tier.rs:93); PAD_X=2 PAD_Y=1 GUTTER=1 exact (ui/mod.rs:43-50); glyphs.rs ships the fold/DAG/flag/close vocabulary (fold_expanded = the target glyph + pinning test); is_light on the Palette trait; all five PROP-037 SS2.2 anchors exist (#palette-tokens #glyph-vocabulary #rendering-tiers #window-aesthetics #spacing); related-line repointed by L4"
+            ]
+          },
+          "LIGHT-DARK-AWARENESS": {
+            "v": "confirmed",
+            "ev": [
+              "code verification 2026-07-25: rose_pine.rs carries the locked hexes (191724/c4a7e7/1f1d2e), catppuccin.rs the four flavours (mocha base 1e1e2e); detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier exists literally as the lore claims (theme/tier.rs:93); PAD_X=2 PAD_Y=1 GUTTER=1 exact (ui/mod.rs:43-50); glyphs.rs ships the fold/DAG/flag/close vocabulary (fold_expanded = the target glyph + pinning test); is_light on the Palette trait; all five PROP-037 SS2.2 anchors exist (#palette-tokens #glyph-vocabulary #rendering-tiers #window-aesthetics #spacing); related-line repointed by L4"
+            ]
+          },
+          "DERIVED-SELECTION": {
+            "v": "confirmed",
+            "ev": [
+              "code verification 2026-07-25: rose_pine.rs carries the locked hexes (191724/c4a7e7/1f1d2e), catppuccin.rs the four flavours (mocha base 1e1e2e); detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier exists literally as the lore claims (theme/tier.rs:93); PAD_X=2 PAD_Y=1 GUTTER=1 exact (ui/mod.rs:43-50); glyphs.rs ships the fold/DAG/flag/close vocabulary (fold_expanded = the target glyph + pinning test); is_light on the Palette trait; all five PROP-037 SS2.2 anchors exist (#palette-tokens #glyph-vocabulary #rendering-tiers #window-aesthetics #spacing); related-line repointed by L4"
+            ]
+          },
+          "DERIVED-BORDER": {
+            "v": "confirmed",
+            "ev": [
+              "code verification 2026-07-25: rose_pine.rs carries the locked hexes (191724/c4a7e7/1f1d2e), catppuccin.rs the four flavours (mocha base 1e1e2e); detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier exists literally as the lore claims (theme/tier.rs:93); PAD_X=2 PAD_Y=1 GUTTER=1 exact (ui/mod.rs:43-50); glyphs.rs ships the fold/DAG/flag/close vocabulary (fold_expanded = the target glyph + pinning test); is_light on the Palette trait; all five PROP-037 SS2.2 anchors exist (#palette-tokens #glyph-vocabulary #rendering-tiers #window-aesthetics #spacing); related-line repointed by L4"
+            ]
+          },
+          "DERIVED-PAPER": {
+            "v": "confirmed",
+            "ev": [
+              "code verification 2026-07-25: rose_pine.rs carries the locked hexes (191724/c4a7e7/1f1d2e), catppuccin.rs the four flavours (mocha base 1e1e2e); detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier exists literally as the lore claims (theme/tier.rs:93); PAD_X=2 PAD_Y=1 GUTTER=1 exact (ui/mod.rs:43-50); glyphs.rs ships the fold/DAG/flag/close vocabulary (fold_expanded = the target glyph + pinning test); is_light on the Palette trait; all five PROP-037 SS2.2 anchors exist (#palette-tokens #glyph-vocabulary #rendering-tiers #window-aesthetics #spacing); related-line repointed by L4"
+            ]
+          },
+          "DERIVED-BUTTONS": {
+            "v": "confirmed",
+            "ev": [
+              "code verification 2026-07-25: rose_pine.rs carries the locked hexes (191724/c4a7e7/1f1d2e), catppuccin.rs the four flavours (mocha base 1e1e2e); detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier exists literally as the lore claims (theme/tier.rs:93); PAD_X=2 PAD_Y=1 GUTTER=1 exact (ui/mod.rs:43-50); glyphs.rs ships the fold/DAG/flag/close vocabulary (fold_expanded = the target glyph + pinning test); is_light on the Palette trait; all five PROP-037 SS2.2 anchors exist (#palette-tokens #glyph-vocabulary #rendering-tiers #window-aesthetics #spacing); related-line repointed by L4"
+            ]
+          },
+          "palette-is-setting": {
+            "v": "confirmed",
+            "ev": [
+              "code verification 2026-07-25: rose_pine.rs carries the locked hexes (191724/c4a7e7/1f1d2e), catppuccin.rs the four flavours (mocha base 1e1e2e); detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier exists literally as the lore claims (theme/tier.rs:93); PAD_X=2 PAD_Y=1 GUTTER=1 exact (ui/mod.rs:43-50); glyphs.rs ships the fold/DAG/flag/close vocabulary (fold_expanded = the target glyph + pinning test); is_light on the Palette trait; all five PROP-037 SS2.2 anchors exist (#palette-tokens #glyph-vocabulary #rendering-tiers #window-aesthetics #spacing); related-line repointed by L4"
+            ]
+          },
+          "ROW-TIER-3": {
+            "v": "confirmed",
+            "ev": [
+              "code verification 2026-07-25: rose_pine.rs carries the locked hexes (191724/c4a7e7/1f1d2e), catppuccin.rs the four flavours (mocha base 1e1e2e); detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier exists literally as the lore claims (theme/tier.rs:93); PAD_X=2 PAD_Y=1 GUTTER=1 exact (ui/mod.rs:43-50); glyphs.rs ships the fold/DAG/flag/close vocabulary (fold_expanded = the target glyph + pinning test); is_light on the Palette trait; all five PROP-037 SS2.2 anchors exist (#palette-tokens #glyph-vocabulary #rendering-tiers #window-aesthetics #spacing); related-line repointed by L4"
+            ]
+          },
+          "ROW-TIER-2": {
+            "v": "confirmed",
+            "ev": [
+              "code verification 2026-07-25: rose_pine.rs carries the locked hexes (191724/c4a7e7/1f1d2e), catppuccin.rs the four flavours (mocha base 1e1e2e); detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier exists literally as the lore claims (theme/tier.rs:93); PAD_X=2 PAD_Y=1 GUTTER=1 exact (ui/mod.rs:43-50); glyphs.rs ships the fold/DAG/flag/close vocabulary (fold_expanded = the target glyph + pinning test); is_light on the Palette trait; all five PROP-037 SS2.2 anchors exist (#palette-tokens #glyph-vocabulary #rendering-tiers #window-aesthetics #spacing); related-line repointed by L4"
+            ]
+          },
+          "ROW-TIER-1": {
+            "v": "confirmed",
+            "ev": [
+              "code verification 2026-07-25: rose_pine.rs carries the locked hexes (191724/c4a7e7/1f1d2e), catppuccin.rs the four flavours (mocha base 1e1e2e); detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier exists literally as the lore claims (theme/tier.rs:93); PAD_X=2 PAD_Y=1 GUTTER=1 exact (ui/mod.rs:43-50); glyphs.rs ships the fold/DAG/flag/close vocabulary (fold_expanded = the target glyph + pinning test); is_light on the Palette trait; all five PROP-037 SS2.2 anchors exist (#palette-tokens #glyph-vocabulary #rendering-tiers #window-aesthetics #spacing); related-line repointed by L4"
+            ]
+          },
+          "ROW-TIER-0": {
+            "v": "confirmed",
+            "ev": [
+              "code verification 2026-07-25: rose_pine.rs carries the locked hexes (191724/c4a7e7/1f1d2e), catppuccin.rs the four flavours (mocha base 1e1e2e); detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier exists literally as the lore claims (theme/tier.rs:93); PAD_X=2 PAD_Y=1 GUTTER=1 exact (ui/mod.rs:43-50); glyphs.rs ships the fold/DAG/flag/close vocabulary (fold_expanded = the target glyph + pinning test); is_light on the Palette trait; all five PROP-037 SS2.2 anchors exist (#palette-tokens #glyph-vocabulary #rendering-tiers #window-aesthetics #spacing); related-line repointed by L4"
+            ]
+          },
+          "TIER-DETECTION": {
+            "v": "confirmed",
+            "ev": [
+              "code verification 2026-07-25: rose_pine.rs carries the locked hexes (191724/c4a7e7/1f1d2e), catppuccin.rs the four flavours (mocha base 1e1e2e); detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier exists literally as the lore claims (theme/tier.rs:93); PAD_X=2 PAD_Y=1 GUTTER=1 exact (ui/mod.rs:43-50); glyphs.rs ships the fold/DAG/flag/close vocabulary (fold_expanded = the target glyph + pinning test); is_light on the Palette trait; all five PROP-037 SS2.2 anchors exist (#palette-tokens #glyph-vocabulary #rendering-tiers #window-aesthetics #spacing); related-line repointed by L4"
+            ]
+          },
+          "DEGRADATION-PROJECTION": {
+            "v": "confirmed",
+            "ev": [
+              "code verification 2026-07-25: rose_pine.rs carries the locked hexes (191724/c4a7e7/1f1d2e), catppuccin.rs the four flavours (mocha base 1e1e2e); detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier exists literally as the lore claims (theme/tier.rs:93); PAD_X=2 PAD_Y=1 GUTTER=1 exact (ui/mod.rs:43-50); glyphs.rs ships the fold/DAG/flag/close vocabulary (fold_expanded = the target glyph + pinning test); is_light on the Palette trait; all five PROP-037 SS2.2 anchors exist (#palette-tokens #glyph-vocabulary #rendering-tiers #window-aesthetics #spacing); related-line repointed by L4"
+            ]
+          },
+          "window-composition-lead": {
+            "v": "confirmed",
+            "ev": [
+              "code verification 2026-07-25: rose_pine.rs carries the locked hexes (191724/c4a7e7/1f1d2e), catppuccin.rs the four flavours (mocha base 1e1e2e); detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier exists literally as the lore claims (theme/tier.rs:93); PAD_X=2 PAD_Y=1 GUTTER=1 exact (ui/mod.rs:43-50); glyphs.rs ships the fold/DAG/flag/close vocabulary (fold_expanded = the target glyph + pinning test); is_light on the Palette trait; all five PROP-037 SS2.2 anchors exist (#palette-tokens #glyph-vocabulary #rendering-tiers #window-aesthetics #spacing); related-line repointed by L4"
+            ]
+          },
+          "WIN-SOLID-PANEL": {
+            "v": "confirmed",
+            "ev": [
+              "code verification 2026-07-25: rose_pine.rs carries the locked hexes (191724/c4a7e7/1f1d2e), catppuccin.rs the four flavours (mocha base 1e1e2e); detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier exists literally as the lore claims (theme/tier.rs:93); PAD_X=2 PAD_Y=1 GUTTER=1 exact (ui/mod.rs:43-50); glyphs.rs ships the fold/DAG/flag/close vocabulary (fold_expanded = the target glyph + pinning test); is_light on the Palette trait; all five PROP-037 SS2.2 anchors exist (#palette-tokens #glyph-vocabulary #rendering-tiers #window-aesthetics #spacing); related-line repointed by L4"
+            ]
+          },
+          "WIN-ROUNDED-FRAME": {
+            "v": "confirmed",
+            "ev": [
+              "code verification 2026-07-25: rose_pine.rs carries the locked hexes (191724/c4a7e7/1f1d2e), catppuccin.rs the four flavours (mocha base 1e1e2e); detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier exists literally as the lore claims (theme/tier.rs:93); PAD_X=2 PAD_Y=1 GUTTER=1 exact (ui/mod.rs:43-50); glyphs.rs ships the fold/DAG/flag/close vocabulary (fold_expanded = the target glyph + pinning test); is_light on the Palette trait; all five PROP-037 SS2.2 anchors exist (#palette-tokens #glyph-vocabulary #rendering-tiers #window-aesthetics #spacing); related-line repointed by L4"
+            ]
+          },
+          "WIN-TITLE-CHIP": {
+            "v": "confirmed",
+            "ev": [
+              "code verification 2026-07-25: rose_pine.rs carries the locked hexes (191724/c4a7e7/1f1d2e), catppuccin.rs the four flavours (mocha base 1e1e2e); detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier exists literally as the lore claims (theme/tier.rs:93); PAD_X=2 PAD_Y=1 GUTTER=1 exact (ui/mod.rs:43-50); glyphs.rs ships the fold/DAG/flag/close vocabulary (fold_expanded = the target glyph + pinning test); is_light on the Palette trait; all five PROP-037 SS2.2 anchors exist (#palette-tokens #glyph-vocabulary #rendering-tiers #window-aesthetics #spacing); related-line repointed by L4"
+            ]
+          },
+          "WIN-PADDING-SHADOW": {
+            "v": "confirmed",
+            "ev": [
+              "code verification 2026-07-25: rose_pine.rs carries the locked hexes (191724/c4a7e7/1f1d2e), catppuccin.rs the four flavours (mocha base 1e1e2e); detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier exists literally as the lore claims (theme/tier.rs:93); PAD_X=2 PAD_Y=1 GUTTER=1 exact (ui/mod.rs:43-50); glyphs.rs ships the fold/DAG/flag/close vocabulary (fold_expanded = the target glyph + pinning test); is_light on the Palette trait; all five PROP-037 SS2.2 anchors exist (#palette-tokens #glyph-vocabulary #rendering-tiers #window-aesthetics #spacing); related-line repointed by L4"
+            ]
+          },
+          "WIN-CLOSE-AFFORDANCE": {
+            "v": "confirmed",
+            "ev": [
+              "code verification 2026-07-25: rose_pine.rs carries the locked hexes (191724/c4a7e7/1f1d2e), catppuccin.rs the four flavours (mocha base 1e1e2e); detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier exists literally as the lore claims (theme/tier.rs:93); PAD_X=2 PAD_Y=1 GUTTER=1 exact (ui/mod.rs:43-50); glyphs.rs ships the fold/DAG/flag/close vocabulary (fold_expanded = the target glyph + pinning test); is_light on the Palette trait; all five PROP-037 SS2.2 anchors exist (#palette-tokens #glyph-vocabulary #rendering-tiers #window-aesthetics #spacing); related-line repointed by L4"
+            ]
+          },
+          "WINDOW-AT-TIER-1": {
+            "v": "confirmed",
+            "ev": [
+              "code verification 2026-07-25: rose_pine.rs carries the locked hexes (191724/c4a7e7/1f1d2e), catppuccin.rs the four flavours (mocha base 1e1e2e); detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier exists literally as the lore claims (theme/tier.rs:93); PAD_X=2 PAD_Y=1 GUTTER=1 exact (ui/mod.rs:43-50); glyphs.rs ships the fold/DAG/flag/close vocabulary (fold_expanded = the target glyph + pinning test); is_light on the Palette trait; all five PROP-037 SS2.2 anchors exist (#palette-tokens #glyph-vocabulary #rendering-tiers #window-aesthetics #spacing); related-line repointed by L4"
+            ]
+          },
+          "spacing-vocabulary-lead": {
+            "v": "confirmed",
+            "ev": [
+              "code verification 2026-07-25: rose_pine.rs carries the locked hexes (191724/c4a7e7/1f1d2e), catppuccin.rs the four flavours (mocha base 1e1e2e); detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier exists literally as the lore claims (theme/tier.rs:93); PAD_X=2 PAD_Y=1 GUTTER=1 exact (ui/mod.rs:43-50); glyphs.rs ships the fold/DAG/flag/close vocabulary (fold_expanded = the target glyph + pinning test); is_light on the Palette trait; all five PROP-037 SS2.2 anchors exist (#palette-tokens #glyph-vocabulary #rendering-tiers #window-aesthetics #spacing); related-line repointed by L4"
+            ]
+          },
+          "SPACE-INTERIOR-PADDING": {
+            "v": "confirmed",
+            "ev": [
+              "code verification 2026-07-25: rose_pine.rs carries the locked hexes (191724/c4a7e7/1f1d2e), catppuccin.rs the four flavours (mocha base 1e1e2e); detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier exists literally as the lore claims (theme/tier.rs:93); PAD_X=2 PAD_Y=1 GUTTER=1 exact (ui/mod.rs:43-50); glyphs.rs ships the fold/DAG/flag/close vocabulary (fold_expanded = the target glyph + pinning test); is_light on the Palette trait; all five PROP-037 SS2.2 anchors exist (#palette-tokens #glyph-vocabulary #rendering-tiers #window-aesthetics #spacing); related-line repointed by L4"
+            ]
+          },
+          "SPACE-GROUP-GUTTER": {
+            "v": "confirmed",
+            "ev": [
+              "code verification 2026-07-25: rose_pine.rs carries the locked hexes (191724/c4a7e7/1f1d2e), catppuccin.rs the four flavours (mocha base 1e1e2e); detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier exists literally as the lore claims (theme/tier.rs:93); PAD_X=2 PAD_Y=1 GUTTER=1 exact (ui/mod.rs:43-50); glyphs.rs ships the fold/DAG/flag/close vocabulary (fold_expanded = the target glyph + pinning test); is_light on the Palette trait; all five PROP-037 SS2.2 anchors exist (#palette-tokens #glyph-vocabulary #rendering-tiers #window-aesthetics #spacing); related-line repointed by L4"
+            ]
+          },
+          "SPACE-RHYTHM-CENTRING": {
+            "v": "confirmed",
+            "ev": [
+              "code verification 2026-07-25: rose_pine.rs carries the locked hexes (191724/c4a7e7/1f1d2e), catppuccin.rs the four flavours (mocha base 1e1e2e); detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier exists literally as the lore claims (theme/tier.rs:93); PAD_X=2 PAD_Y=1 GUTTER=1 exact (ui/mod.rs:43-50); glyphs.rs ships the fold/DAG/flag/close vocabulary (fold_expanded = the target glyph + pinning test); is_light on the Palette trait; all five PROP-037 SS2.2 anchors exist (#palette-tokens #glyph-vocabulary #rendering-tiers #window-aesthetics #spacing); related-line repointed by L4"
+            ]
+          },
+          "AIR-RULE": {
+            "v": "confirmed",
+            "ev": [
+              "code verification 2026-07-25: rose_pine.rs carries the locked hexes (191724/c4a7e7/1f1d2e), catppuccin.rs the four flavours (mocha base 1e1e2e); detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier exists literally as the lore claims (theme/tier.rs:93); PAD_X=2 PAD_Y=1 GUTTER=1 exact (ui/mod.rs:43-50); glyphs.rs ships the fold/DAG/flag/close vocabulary (fold_expanded = the target glyph + pinning test); is_light on the Palette trait; all five PROP-037 SS2.2 anchors exist (#palette-tokens #glyph-vocabulary #rendering-tiers #window-aesthetics #spacing); related-line repointed by L4"
+            ]
+          },
+          "IMAGE-READINESS": {
+            "v": "confirmed",
+            "ev": [
+              "code verification 2026-07-25: rose_pine.rs carries the locked hexes (191724/c4a7e7/1f1d2e), catppuccin.rs the four flavours (mocha base 1e1e2e); detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier exists literally as the lore claims (theme/tier.rs:93); PAD_X=2 PAD_Y=1 GUTTER=1 exact (ui/mod.rs:43-50); glyphs.rs ships the fold/DAG/flag/close vocabulary (fold_expanded = the target glyph + pinning test); is_light on the Palette trait; all five PROP-037 SS2.2 anchors exist (#palette-tokens #glyph-vocabulary #rendering-tiers #window-aesthetics #spacing); related-line repointed by L4"
+            ]
+          },
+          "normative-pointer": {
+            "v": "drift",
+            "ev": [
+              "SS8 When SS2.2 carries the anchors - it does (all five verified) - the conditional framing aged -> F-041"
+            ]
+          },
+          "_elements": {
+            "v": "confirmed",
+            "ev": [
+              "doc status tag: FULL 2026-07-16 lore for PROP-037 SS2.2, PROP-037 wins - consistent"
+            ]
+          }
+        },
+        "verified_at": "2026-07-25T13:00:46Z",
+        "verify_batch": "c2-design"
+      }
     },
     "spec/design/workspace-and-qualified-naming.md": {
       "content_hash": "3910fb0ab6992b0c5b2ebeced4795186233e63c98b54c192119a16f18e514531",
@@ -858,7 +2306,491 @@
       },
       "marker_count": 100,
       "unit_count": 16,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "anchors_judged": 77,
+        "coverage_note": "verdicts keyed by fact anchors; table cell-markers inherit their row anchor; <status> elements judged as _elements",
+        "fact_count": 99,
+        "marker_count": 100,
+        "processed_hash": "3910fb0ab6992b0c5b2ebeced4795186233e63c98b54c192119a16f18e514531",
+        "summary": {
+          "confirmed": 77,
+          "drift": 1,
+          "unverifiable": 0
+        },
+        "verdicts": {
+          "companion-line": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "status-line": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "authority-line": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "what-this-is": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "why-exists": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "owner-request": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "extremes-lead": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "extreme-invisible": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "extreme-published": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "in-between-first-class": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "INVISIBLE-SUBPROJECT-PHRASE": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "flexibility-spirit": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "four-axes-lead": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "ROW-AXIS-A": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "ROW-AXIS-B": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "ROW-AXIS-C": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "ROW-AXIS-D": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "axis-a-eighty-percent": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "chain-key-finding": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "c-needs-index": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "d-needs-c": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "conflict-half-exists": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "recommended-sequencing": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "forks-lead": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "fork-separator": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "fork-group-mandatory": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "fork-no-fqdn-enforcement": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "fork-canonical-group": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "fork-kind-out-of-repo-name": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "fork-kind-prefix-optional": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "fork-qualified-in-manifests": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "fork-exit-code-7": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "fork-7a-universal-node": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "fork-7b-member-consumer": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "fork-7c-one-lockfile": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "fork-7d-cascade-override": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "fork-7e-one-manifest": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "fork-r1-project-package": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "fork-r2-qualified-confirmed": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "fork-r3-versions-recursion": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "fork-r4-org-vibevm": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "fork-r5-kind-out": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "fork-r6-owner-sanction": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "fork-dual-form-path-dep": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "w-defaults": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "precedent-lead": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "ROW-PREC-LOCKFILE": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "ROW-PREC-RESOLUTION": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "ROW-PREC-MEMBERS": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "ROW-PREC-VERSION-INHERITANCE": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "ROW-PREC-CENTRAL-VERSIONS": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "ROW-PREC-NESTED": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "ROW-PREC-PUBLISH": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "ROW-PREC-NAMING": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "drawn-lead": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "DRAWN-LOCKFILE-CARGO": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "DRAWN-NESTED-PERMITTED": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "DRAWN-MAVEN-PROPERTIES": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "DRAWN-GROUPID": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "publication-model-lead": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "PUBLICATION-MODEL": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "NO-FILE-MOVING": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "flat-siblings-recommendation": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "signalling-question": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "prior-art-mirrors": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "layered-answer": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "terminology-published-repo": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "parked-registry-explorer": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "parked-workspace-dependencies": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "parked-inverse-model": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "session-log-2026-05-20": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "session-log-2026-05-21": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "ptr-prop-007": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "ptr-prop-008": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "ptr-prop-002": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "ptr-prop-005": {
+            "v": "confirmed",
+            "ev": [
+              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+            ]
+          },
+          "ptr-roadmap": {
+            "v": "drift",
+            "ev": [
+              "names M1.18 (qualified naming); the ROADMAP ships M1.18 = Loading model, M1.19 = Qualified naming (headings verified) - the milestone number shifted after capture -> F-040"
+            ]
+          },
+          "_elements": {
+            "v": "confirmed",
+            "ev": [
+              "doc status tag consistent (captured 2026-05-20 design record)"
+            ]
+          }
+        },
+        "verified_at": "2026-07-25T13:00:46Z",
+        "verify_batch": "c2-design"
+      }
     },
     "spec/manual-tests/MT-01-vibe-tree.md": {
       "content_hash": "9aa3d2ee4fded835a76d233776e602cc5312a5d82164f1a108fb9338ef923f71",

@@ -727,6 +727,30 @@ read-only, no auth.
   so the module cluster is the evidence-rich grind; design (6 files) →
   common → modules is the queued order.
 
+- **2026-07-25 · c2-design — the design cluster verified; the drift
+  is the aged-tense family.** 306 units judged (300 fact anchors + 6
+  status-element bundles; coverage law recorded in the cache maps:
+  verdicts key on fact anchors, table cell-markers inherit their row,
+  `<status>` elements judged as `_elements`): **291 confirmed / 15
+  drift / 0 unverifiable**. The drift map: loading-and-boot-model 8 —
+  the lore's three inclusion types `inline/static/dynamic` (default
+  `static`) against the shipped `link = "static" | "dynamic"` (default
+  `dynamic`), plus "forthcoming" ×2 and the §6 `static|static` typo →
+  **F-039**; action-system 4 — the F-034 forthcoming family, sharpened
+  by `aiui.rs` actually shipping `list_actions` + `invoke` against the
+  doc's "Not built now"; workspace-naming 1 — the M1.18-vs-M1.19
+  milestone shift → **F-040**; tui-visual-language 2 — the "current
+  ASCII scaffolding" present-tense and "When §2.2 carries" against
+  five existing anchors → **F-041**. Hard confirmations: the
+  `detect_tier` signature matches the lore literally, `PAD_X/PAD_Y/
+  GUTTER` exact, palette hexes byte-equal in `rose_pine.rs`/
+  `catppuccin.rs`, exit code 7 = `AMBIGUOUS_PACKAGE`, the §2 module
+  table maps 1:1 onto `crates/vibe-actions/src`, and the two-way
+  design↔PROP backlinks hold 4/4 (structural-loader parked by its own
+  `spec/hold`). **Running tally: 437 units judged — 413 confirmed /
+  22 drift / 2 unverifiable; findings 41.** Next: `spec/common` →
+  `spec/modules` (the specmap-evidence-rich grind).
+
 ## 10. Deferrals {#deferrals}
 
 *(empty — drained into `campaigns/<id>/deferrals.md` at close-out)*
