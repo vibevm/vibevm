@@ -23,7 +23,8 @@
 | DRIFT-019 | three module docs stop describing the pre-port world | opus | done |
 | DRIFT-020 | test isolation stops being a convention | opus | queued |
 | DRIFT-021 | the legacy `~/.vibevm` read leg goes away | opus | done |
-| DRIFT-022 | the `[env]` promotion stops being able to set anything | opus | queued (owner picks (a) or (b) first) |
+| DRIFT-022 | the `[env]` promotion stops being able to set anything | opus | ready (owner picked (a): allowlist) |
+| DRIFT-023 | the baseline gets a writer, and §6 becomes runnable | opus | ready |
 
 DRIFT-006…011 are Phase E, opened by the owner's 2026-07-25 ruling on the
 seven F-046 parity rows (wire, not demote) plus F-015. They close the last
@@ -46,6 +47,16 @@ campaign may cache. 017 takes the lever DRIFT-010 identified and declined
 to pull: parsing was never the expensive part, the JSON writes are, and a
 run that changes nothing should write nothing. 017 is blocked on 016
 because they rewrite the same paths.
+
+DRIFT-023 comes out of close-out rather than out of the ledger: preparing
+`baseline.json` found that nothing can write one. `PROP-043` §7.3 claims
+`Baseline::load` / `store`, and only `load` exists — so the campaign's own
+Phase D authored a false `Shipped:` line, and the §6 monthly recurrence has
+never been runnable, because `rescan --baseline` consumes a file no command
+produces (F-065). The task also settles the granularity question the writer
+runs into: the campaign judges **fact anchors**, the baseline contract is
+**per unit**, and §4.1 fixes the rollup rather than leaving it to the
+executor.
 
 DRIFT-NNN (coding, Opus) and SPEC-NNN (spec stitching, budget-dependent)
 task files live beside this index. Formats:

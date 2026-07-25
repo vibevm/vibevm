@@ -2,7 +2,7 @@
 
 <status stage="impl" state="plan" ref="DRIFT-022"/>
 
-**Status:** queued — **§4.1 is an owner decision; confirm before executing**
+**Status:** ready — **the owner picked (a); §4.1 is settled, execute it**
 **Executor:** Opus. **Reviewer:** Fable, against §6 verbatim.
 **Cluster:** cli (process bootstrap)
 

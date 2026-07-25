@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updated_at": "2026-07-26T01:10:00Z",
+ "updated_at": "2026-07-26T12:00:00Z",
  "findings": [
   {
    "id": "F-001",
@@ -577,6 +577,15 @@
    "status": "open",
    "wave": 2,
    "note": "The natural DRIFT-021 sequel, surfaced and deliberately not taken. user_config.rs:285 legacy_xdg_config_path(), read at :168, is a SECOND config home resolved from $XDG_CONFIG_HOME / %APPDATA% / $HOME - which $VIBE_SETTINGS does not relocate either. So an isolated run can still read the operator's real config.toml through it. Config rather than a credential, which is why it is a lower-severity sibling of the leg DRIFT-021 removed; and DRIFT-021's §5 forbade touching other precedence legs, so it was left. Same shape, same fix: delete the leg, keep one home. Note the invariant test DRIFT-021 added to settings.rs (every_accessor_is_rooted_in_the_one_settings_dir) does not cover user_config.rs, so it would not catch this."
+  },
+  {
+   "id": "F-065",
+   "from": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
+   "to": "crates/progress-core/src/baseline.rs",
+   "type": "reality-mismatch",
+   "status": "open",
+   "wave": 1,
+   "note": "CLOSE-OUT BLOCKER, and the campaign's own Phase D authored it. ##BASELINE-RECORD (PROP-043 7.3, lines 421-423) asserts verbatim: 'Shipped: baseline.rs's BaselineUnit carries exactly these fields, with Baseline::load / store and the rescan CLI live.' Baseline::store DOES NOT EXIST. The only impl Baseline in baseline.rs is `load` (:172-179); the file defines no writer, and nothing in the workspace constructs or serialises a Baseline. The `store` that does exist is Cache::store (cache.rs:106) - a DIFFERENT type in the same crate, which is almost certainly what the eye landed on. That is the substring-lie pattern the WAL already warns about, striking a third time and this time inside the campaign's own correction. Two real consequences: (1) the Close-out step 'baseline.json written' (plan section 5) has NO TOOL - scan/check/report/mirror/weave/rescan/resume/gate is the whole `vibe progress` subcommand list, there is no baseline verb; (2) section 6's entire monthly recurrence consumes `rescan --baseline <prev>/baseline.json`, a file nothing in the tree can produce, so the recurrence loop has never been runnable end to end. Also a VERDICT CORRECTION: BASELINE-RECORD was flipped drift -> confirmed by commit 0064fd4a ('one parity row needed no ruling') on exactly this false evidence, so the ledger currently counts as confirmed a row that is not true. Fix direction: build the writer (a Baseline projected from the campaign verdict map, plus a `vibe progress baseline` subcommand) and then re-seal the verdict - NOT soften the spec, because close-out and section 6 recurrence both need the artefact."
   }
  ]
 }
