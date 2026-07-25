@@ -751,6 +751,28 @@ read-only, no auth.
   22 drift / 2 unverifiable; findings 41.** Next: `spec/common` →
   `spec/modules` (the specmap-evidence-rich grind).
 
+- **2026-07-25 · c3a-common-small — five common PROPs verified; one
+  roster drift.** PROP-006 (frozen pointer), PROP-013 (audit
+  instance), PROP-016 (source mirrors), PROP-028 (families), PROP-029
+  (FQ addresses): **150 units — 149 confirmed / 1 drift / 0
+  unverifiable.** The drift is PROP-028's family roster aged against
+  the tree: `core-ai-native` ships v0.8.0 (the fact says 0.7.0), the
+  **go-ai-native family is in force** (aggregator v0.1.0 + `-lang` +
+  `-mcp`) but absent from §2.2/§2.3, and aggregators carry a
+  `LICENSE.md` from the UPL relicense wave against the "vibe.toml +
+  README and nothing else" letter → **F-042** (one roster refresh
+  fixes all three). Prime confirmations: `cargo xtask mirror` ran
+  three times in-session (the tracking-ref refresh of
+  HIST-TRACKING-REFS observed live in its output),
+  `push_args_never_force` exists at `xtask/src/mirror.rs:426`,
+  `mirrors.toml` matches the §2 block verbatim, every §open question
+  across the five files verified genuinely open, and PROP-029's three
+  carriers match the generated INDEX/STATIC forms character-for-
+  character. **Running tally: 587 units — 562 confirmed / 23 drift /
+  2 unverifiable; findings 42.** Remaining: the common big seven
+  (PROP-000, 018, 019, 024, 031, 032, 033 — 868 markers; specmap-rich
+  on 018/019) → the modules cluster (3 300 markers).
+
 ## 10. Deferrals {#deferrals}
 
 *(empty — drained into `campaigns/<id>/deferrals.md` at close-out)*

@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updated_at": "2026-07-25T13:00:46Z",
+ "updated_at": "2026-07-25T13:05:25Z",
  "findings": [
   {
    "id": "F-001",
@@ -370,6 +370,15 @@
    "status": "open",
    "wave": 0,
    "note": "Aged present-tense in the FULL lore: glyph-lead calls ASCII the current scaffolding and the SS2 Today column reads as current state while the Tier-3 targets shipped (glyphs.rs, goldens, MT-02); SS8 When SS2.2 carries the anchors - all five anchors exist. Reword to historical (captured-at) framing. F-024 family. 2 drift verdicts in c2."
+  },
+  {
+   "id": "F-042",
+   "from": "spec/common/PROP-028-package-families.md",
+   "to": "packages/org.vibevm.ai-native/",
+   "type": "reality-mismatch",
+   "status": "open",
+   "wave": 0,
+   "note": "Family roster aged: family-standings says core-ai-native 0.7.0 while packages/ ships v0.8.0, and the go-ai-native family (aggregator v0.1.0 + -lang + -mcp) is in force but absent from SS2.2/SS2.3. Also letter-vs-spirit: aggregators now carry LICENSE.md from the UPL relicense wave; ROLE-AGGREGATOR says vibe.toml + README and nothing else. One roster refresh fixes all three. Found by C c3a."
   }
  ]
 }

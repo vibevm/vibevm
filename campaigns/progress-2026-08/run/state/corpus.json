@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-07-25T13:00:47Z",
+  "updated_at": "2026-07-25T13:05:26Z",
   "files": [
     {
       "path": "spec/boot/00-core.md",
@@ -470,7 +470,82 @@
       "facts": 9,
       "unmarked": 0,
       "issues": 0,
-      "campaign": {}
+      "campaign": {
+        "anchors_judged": 9,
+        "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor; <status> elements judged as _elements",
+        "fact_count": 9,
+        "marker_count": 11,
+        "processed_hash": "bf798b01c38fb700c3a7d9fa40ad5bb7c21601ca2cce51b6b99c4b81f0cf6d8f",
+        "summary": {
+          "confirmed": 10,
+          "drift": 0,
+          "unverifiable": 0
+        },
+        "verdicts": {
+          "status-line": {
+            "v": "confirmed",
+            "ev": [
+              "frozen thin pointer verified: the operating-modes flow is installed and in STATIC.md (framework + mfbt-mode); the codeword catalogue IS surfaced by spec/boot/90-user.md (c0-verified codewords-lead/CODEWORD-MFBT); the mfbt semantics here match the flow snippet (suspends only routine-ask; red lines survive)"
+            ]
+          },
+          "modes-extracted": {
+            "v": "confirmed",
+            "ev": [
+              "frozen thin pointer verified: the operating-modes flow is installed and in STATIC.md (framework + mfbt-mode); the codeword catalogue IS surfaced by spec/boot/90-user.md (c0-verified codewords-lead/CODEWORD-MFBT); the mfbt semantics here match the flow snippet (suspends only routine-ask; red lines survive)"
+            ]
+          },
+          "flow-framework": {
+            "v": "confirmed",
+            "ev": [
+              "frozen thin pointer verified: the operating-modes flow is installed and in STATIC.md (framework + mfbt-mode); the codeword catalogue IS surfaced by spec/boot/90-user.md (c0-verified codewords-lead/CODEWORD-MFBT); the mfbt semantics here match the flow snippet (suspends only routine-ask; red lines survive)"
+            ]
+          },
+          "flow-writing-codeword": {
+            "v": "confirmed",
+            "ev": [
+              "frozen thin pointer verified: the operating-modes flow is installed and in STATIC.md (framework + mfbt-mode); the codeword catalogue IS surfaced by spec/boot/90-user.md (c0-verified codewords-lead/CODEWORD-MFBT); the mfbt semantics here match the flow snippet (suspends only routine-ask; red lines survive)"
+            ]
+          },
+          "CATALOGUE-AT-BOOT": {
+            "v": "confirmed",
+            "ev": [
+              "frozen thin pointer verified: the operating-modes flow is installed and in STATIC.md (framework + mfbt-mode); the codeword catalogue IS surfaced by spec/boot/90-user.md (c0-verified codewords-lead/CODEWORD-MFBT); the mfbt semantics here match the flow snippet (suspends only routine-ask; red lines survive)"
+            ]
+          },
+          "mfbt-pointer": {
+            "v": "confirmed",
+            "ev": [
+              "frozen thin pointer verified: the operating-modes flow is installed and in STATIC.md (framework + mfbt-mode); the codeword catalogue IS surfaced by spec/boot/90-user.md (c0-verified codewords-lead/CODEWORD-MFBT); the mfbt semantics here match the flow snippet (suspends only routine-ask; red lines survive)"
+            ]
+          },
+          "MFBT-SUSPENDS": {
+            "v": "confirmed",
+            "ev": [
+              "frozen thin pointer verified: the operating-modes flow is installed and in STATIC.md (framework + mfbt-mode); the codeword catalogue IS surfaced by spec/boot/90-user.md (c0-verified codewords-lead/CODEWORD-MFBT); the mfbt semantics here match the flow snippet (suspends only routine-ask; red lines survive)"
+            ]
+          },
+          "MFBT-RULES-SURVIVE": {
+            "v": "confirmed",
+            "ev": [
+              "frozen thin pointer verified: the operating-modes flow is installed and in STATIC.md (framework + mfbt-mode); the codeword catalogue IS surfaced by spec/boot/90-user.md (c0-verified codewords-lead/CODEWORD-MFBT); the mfbt semantics here match the flow snippet (suspends only routine-ask; red lines survive)"
+            ]
+          },
+          "MFBT-RED-LINES": {
+            "v": "confirmed",
+            "ev": [
+              "frozen thin pointer verified: the operating-modes flow is installed and in STATIC.md (framework + mfbt-mode); the codeword catalogue IS surfaced by spec/boot/90-user.md (c0-verified codewords-lead/CODEWORD-MFBT); the mfbt semantics here match the flow snippet (suspends only routine-ask; red lines survive)"
+            ]
+          },
+          "_elements": {
+            "v": "confirmed",
+            "ev": [
+              "freeze/done tags consistent: extracted 2026-07-14, pointer verified against the flow"
+            ]
+          }
+        },
+        "verified_at": "2026-07-25T13:05:25Z",
+        "verify_batch": "c3a-common-small"
+      }
     },
     {
       "path": "spec/common/PROP-013-periodic-health-audit.md",
@@ -487,7 +562,286 @@
       "facts": 43,
       "unmarked": 0,
       "issues": 0,
-      "campaign": {}
+      "campaign": {
+        "anchors_judged": 43,
+        "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor; <status> elements judged as _elements",
+        "fact_count": 43,
+        "marker_count": 45,
+        "processed_hash": "966695c7f83560f4f38cfbb01247f3c02529383a9882af1bcbfa6d37ea36ae27",
+        "summary": {
+          "confirmed": 44,
+          "drift": 0,
+          "unverifiable": 0
+        },
+        "verdicts": {
+          "status-line": {
+            "v": "confirmed",
+            "ev": [
+              "AUDIT.md exists at repo root (the inventory); the health-audit flow installed (STATIC.md); the M1.19 incident units are dated records of documented failures; category checklist rows carry their known instances as records; open questions genuinely open (no RUN AUDIT trigger in CLAUDE.md, no vibe audit subcommand, no health metric) - all grep-checked absent; GATE-DEF core claim true (tools/self-check.sh is the gate; note: the panel has since grown beyond the four listed steps - conform/specmap/package self-traces - enumeration is era-2026-05, core claim intact)"
+            ]
+          },
+          "model-pointer": {
+            "v": "confirmed",
+            "ev": [
+              "AUDIT.md exists at repo root (the inventory); the health-audit flow installed (STATIC.md); the M1.19 incident units are dated records of documented failures; category checklist rows carry their known instances as records; open questions genuinely open (no RUN AUDIT trigger in CLAUDE.md, no vibe audit subcommand, no health metric) - all grep-checked absent; GATE-DEF core claim true (tools/self-check.sh is the gate; note: the panel has since grown beyond the four listed steps - conform/specmap/package self-traces - enumeration is era-2026-05, core claim intact)"
+            ]
+          },
+          "prop-scope": {
+            "v": "confirmed",
+            "ev": [
+              "AUDIT.md exists at repo root (the inventory); the health-audit flow installed (STATIC.md); the M1.19 incident units are dated records of documented failures; category checklist rows carry their known instances as records; open questions genuinely open (no RUN AUDIT trigger in CLAUDE.md, no vibe audit subcommand, no health metric) - all grep-checked absent; GATE-DEF core claim true (tools/self-check.sh is the gate; note: the panel has since grown beyond the four listed steps - conform/specmap/package self-traces - enumeration is era-2026-05, core claim intact)"
+            ]
+          },
+          "GATE-DEF": {
+            "v": "confirmed",
+            "ev": [
+              "AUDIT.md exists at repo root (the inventory); the health-audit flow installed (STATIC.md); the M1.19 incident units are dated records of documented failures; category checklist rows carry their known instances as records; open questions genuinely open (no RUN AUDIT trigger in CLAUDE.md, no vibe audit subcommand, no health metric) - all grep-checked absent; GATE-DEF core claim true (tools/self-check.sh is the gate; note: the panel has since grown beyond the four listed steps - conform/specmap/package self-traces - enumeration is era-2026-05, core claim intact)"
+            ]
+          },
+          "GATE-BLIND-SPOTS": {
+            "v": "confirmed",
+            "ev": [
+              "AUDIT.md exists at repo root (the inventory); the health-audit flow installed (STATIC.md); the M1.19 incident units are dated records of documented failures; category checklist rows carry their known instances as records; open questions genuinely open (no RUN AUDIT trigger in CLAUDE.md, no vibe audit subcommand, no health metric) - all grep-checked absent; GATE-DEF core claim true (tools/self-check.sh is the gate; note: the panel has since grown beyond the four listed steps - conform/specmap/package self-traces - enumeration is era-2026-05, core claim intact)"
+            ]
+          },
+          "m119-lead": {
+            "v": "confirmed",
+            "ev": [
+              "AUDIT.md exists at repo root (the inventory); the health-audit flow installed (STATIC.md); the M1.19 incident units are dated records of documented failures; category checklist rows carry their known instances as records; open questions genuinely open (no RUN AUDIT trigger in CLAUDE.md, no vibe audit subcommand, no health metric) - all grep-checked absent; GATE-DEF core claim true (tools/self-check.sh is the gate; note: the panel has since grown beyond the four listed steps - conform/specmap/package self-traces - enumeration is era-2026-05, core claim intact)"
+            ]
+          },
+          "M119-INIT-DEFECT": {
+            "v": "confirmed",
+            "ev": [
+              "AUDIT.md exists at repo root (the inventory); the health-audit flow installed (STATIC.md); the M1.19 incident units are dated records of documented failures; category checklist rows carry their known instances as records; open questions genuinely open (no RUN AUDIT trigger in CLAUDE.md, no vibe audit subcommand, no health metric) - all grep-checked absent; GATE-DEF core claim true (tools/self-check.sh is the gate; note: the panel has since grown beyond the four listed steps - conform/specmap/package self-traces - enumeration is era-2026-05, core claim intact)"
+            ]
+          },
+          "M119-TEST-ASSERTED-BROKEN": {
+            "v": "confirmed",
+            "ev": [
+              "AUDIT.md exists at repo root (the inventory); the health-audit flow installed (STATIC.md); the M1.19 incident units are dated records of documented failures; category checklist rows carry their known instances as records; open questions genuinely open (no RUN AUDIT trigger in CLAUDE.md, no vibe audit subcommand, no health metric) - all grep-checked absent; GATE-DEF core claim true (tools/self-check.sh is the gate; note: the panel has since grown beyond the four listed steps - conform/specmap/package self-traces - enumeration is era-2026-05, core claim intact)"
+            ]
+          },
+          "M119-CAUGHT-BY-SMOKE": {
+            "v": "confirmed",
+            "ev": [
+              "AUDIT.md exists at repo root (the inventory); the health-audit flow installed (STATIC.md); the M1.19 incident units are dated records of documented failures; category checklist rows carry their known instances as records; open questions genuinely open (no RUN AUDIT trigger in CLAUDE.md, no vibe audit subcommand, no health metric) - all grep-checked absent; GATE-DEF core claim true (tools/self-check.sh is the gate; note: the panel has since grown beyond the four listed steps - conform/specmap/package self-traces - enumeration is era-2026-05, core claim intact)"
+            ]
+          },
+          "VIBE-INDEX-ROT": {
+            "v": "confirmed",
+            "ev": [
+              "AUDIT.md exists at repo root (the inventory); the health-audit flow installed (STATIC.md); the M1.19 incident units are dated records of documented failures; category checklist rows carry their known instances as records; open questions genuinely open (no RUN AUDIT trigger in CLAUDE.md, no vibe audit subcommand, no health metric) - all grep-checked absent; GATE-DEF core claim true (tools/self-check.sh is the gate; note: the panel has since grown beyond the four listed steps - conform/specmap/package self-traces - enumeration is era-2026-05, core claim intact)"
+            ]
+          },
+          "AUDIT-NON-OPTIONAL": {
+            "v": "confirmed",
+            "ev": [
+              "AUDIT.md exists at repo root (the inventory); the health-audit flow installed (STATIC.md); the M1.19 incident units are dated records of documented failures; category checklist rows carry their known instances as records; open questions genuinely open (no RUN AUDIT trigger in CLAUDE.md, no vibe audit subcommand, no health metric) - all grep-checked absent; GATE-DEF core claim true (tools/self-check.sh is the gate; note: the panel has since grown beyond the four listed steps - conform/specmap/package self-traces - enumeration is era-2026-05, core claim intact)"
+            ]
+          },
+          "CHECKLIST-WALK": {
+            "v": "confirmed",
+            "ev": [
+              "AUDIT.md exists at repo root (the inventory); the health-audit flow installed (STATIC.md); the M1.19 incident units are dated records of documented failures; category checklist rows carry their known instances as records; open questions genuinely open (no RUN AUDIT trigger in CLAUDE.md, no vibe audit subcommand, no health metric) - all grep-checked absent; GATE-DEF core claim true (tools/self-check.sh is the gate; note: the panel has since grown beyond the four listed steps - conform/specmap/package self-traces - enumeration is era-2026-05, core claim intact)"
+            ]
+          },
+          "CAT-A": {
+            "v": "confirmed",
+            "ev": [
+              "AUDIT.md exists at repo root (the inventory); the health-audit flow installed (STATIC.md); the M1.19 incident units are dated records of documented failures; category checklist rows carry their known instances as records; open questions genuinely open (no RUN AUDIT trigger in CLAUDE.md, no vibe audit subcommand, no health metric) - all grep-checked absent; GATE-DEF core claim true (tools/self-check.sh is the gate; note: the panel has since grown beyond the four listed steps - conform/specmap/package self-traces - enumeration is era-2026-05, core claim intact)"
+            ]
+          },
+          "A1-COVERAGE-GAPS": {
+            "v": "confirmed",
+            "ev": [
+              "AUDIT.md exists at repo root (the inventory); the health-audit flow installed (STATIC.md); the M1.19 incident units are dated records of documented failures; category checklist rows carry their known instances as records; open questions genuinely open (no RUN AUDIT trigger in CLAUDE.md, no vibe audit subcommand, no health metric) - all grep-checked absent; GATE-DEF core claim true (tools/self-check.sh is the gate; note: the panel has since grown beyond the four listed steps - conform/specmap/package self-traces - enumeration is era-2026-05, core claim intact)"
+            ]
+          },
+          "A2-QUARANTINED": {
+            "v": "confirmed",
+            "ev": [
+              "AUDIT.md exists at repo root (the inventory); the health-audit flow installed (STATIC.md); the M1.19 incident units are dated records of documented failures; category checklist rows carry their known instances as records; open questions genuinely open (no RUN AUDIT trigger in CLAUDE.md, no vibe audit subcommand, no health metric) - all grep-checked absent; GATE-DEF core claim true (tools/self-check.sh is the gate; note: the panel has since grown beyond the four listed steps - conform/specmap/package self-traces - enumeration is era-2026-05, core claim intact)"
+            ]
+          },
+          "A3-WRONG-BEHAVIOR": {
+            "v": "confirmed",
+            "ev": [
+              "AUDIT.md exists at repo root (the inventory); the health-audit flow installed (STATIC.md); the M1.19 incident units are dated records of documented failures; category checklist rows carry their known instances as records; open questions genuinely open (no RUN AUDIT trigger in CLAUDE.md, no vibe audit subcommand, no health metric) - all grep-checked absent; GATE-DEF core claim true (tools/self-check.sh is the gate; note: the panel has since grown beyond the four listed steps - conform/specmap/package self-traces - enumeration is era-2026-05, core claim intact)"
+            ]
+          },
+          "CAT-B": {
+            "v": "confirmed",
+            "ev": [
+              "AUDIT.md exists at repo root (the inventory); the health-audit flow installed (STATIC.md); the M1.19 incident units are dated records of documented failures; category checklist rows carry their known instances as records; open questions genuinely open (no RUN AUDIT trigger in CLAUDE.md, no vibe audit subcommand, no health metric) - all grep-checked absent; GATE-DEF core claim true (tools/self-check.sh is the gate; note: the panel has since grown beyond the four listed steps - conform/specmap/package self-traces - enumeration is era-2026-05, core claim intact)"
+            ]
+          },
+          "B1-UNREACHED-TREES": {
+            "v": "confirmed",
+            "ev": [
+              "AUDIT.md exists at repo root (the inventory); the health-audit flow installed (STATIC.md); the M1.19 incident units are dated records of documented failures; category checklist rows carry their known instances as records; open questions genuinely open (no RUN AUDIT trigger in CLAUDE.md, no vibe audit subcommand, no health metric) - all grep-checked absent; GATE-DEF core claim true (tools/self-check.sh is the gate; note: the panel has since grown beyond the four listed steps - conform/specmap/package self-traces - enumeration is era-2026-05, core claim intact)"
+            ]
+          },
+          "B2-GATE-COMPLETENESS": {
+            "v": "confirmed",
+            "ev": [
+              "AUDIT.md exists at repo root (the inventory); the health-audit flow installed (STATIC.md); the M1.19 incident units are dated records of documented failures; category checklist rows carry their known instances as records; open questions genuinely open (no RUN AUDIT trigger in CLAUDE.md, no vibe audit subcommand, no health metric) - all grep-checked absent; GATE-DEF core claim true (tools/self-check.sh is the gate; note: the panel has since grown beyond the four listed steps - conform/specmap/package self-traces - enumeration is era-2026-05, core claim intact)"
+            ]
+          },
+          "CAT-C": {
+            "v": "confirmed",
+            "ev": [
+              "AUDIT.md exists at repo root (the inventory); the health-audit flow installed (STATIC.md); the M1.19 incident units are dated records of documented failures; category checklist rows carry their known instances as records; open questions genuinely open (no RUN AUDIT trigger in CLAUDE.md, no vibe audit subcommand, no health metric) - all grep-checked absent; GATE-DEF core claim true (tools/self-check.sh is the gate; note: the panel has since grown beyond the four listed steps - conform/specmap/package self-traces - enumeration is era-2026-05, core claim intact)"
+            ]
+          },
+          "C1-DOC-DRIFT": {
+            "v": "confirmed",
+            "ev": [
+              "AUDIT.md exists at repo root (the inventory); the health-audit flow installed (STATIC.md); the M1.19 incident units are dated records of documented failures; category checklist rows carry their known instances as records; open questions genuinely open (no RUN AUDIT trigger in CLAUDE.md, no vibe audit subcommand, no health metric) - all grep-checked absent; GATE-DEF core claim true (tools/self-check.sh is the gate; note: the panel has since grown beyond the four listed steps - conform/specmap/package self-traces - enumeration is era-2026-05, core claim intact)"
+            ]
+          },
+          "C2-SPEC-DRIFT": {
+            "v": "confirmed",
+            "ev": [
+              "AUDIT.md exists at repo root (the inventory); the health-audit flow installed (STATIC.md); the M1.19 incident units are dated records of documented failures; category checklist rows carry their known instances as records; open questions genuinely open (no RUN AUDIT trigger in CLAUDE.md, no vibe audit subcommand, no health metric) - all grep-checked absent; GATE-DEF core claim true (tools/self-check.sh is the gate; note: the panel has since grown beyond the four listed steps - conform/specmap/package self-traces - enumeration is era-2026-05, core claim intact)"
+            ]
+          },
+          "C3-WAL-DRIFT": {
+            "v": "confirmed",
+            "ev": [
+              "AUDIT.md exists at repo root (the inventory); the health-audit flow installed (STATIC.md); the M1.19 incident units are dated records of documented failures; category checklist rows carry their known instances as records; open questions genuinely open (no RUN AUDIT trigger in CLAUDE.md, no vibe audit subcommand, no health metric) - all grep-checked absent; GATE-DEF core claim true (tools/self-check.sh is the gate; note: the panel has since grown beyond the four listed steps - conform/specmap/package self-traces - enumeration is era-2026-05, core claim intact)"
+            ]
+          },
+          "C4-OUTWARD-DRIFT": {
+            "v": "confirmed",
+            "ev": [
+              "AUDIT.md exists at repo root (the inventory); the health-audit flow installed (STATIC.md); the M1.19 incident units are dated records of documented failures; category checklist rows carry their known instances as records; open questions genuinely open (no RUN AUDIT trigger in CLAUDE.md, no vibe audit subcommand, no health metric) - all grep-checked absent; GATE-DEF core claim true (tools/self-check.sh is the gate; note: the panel has since grown beyond the four listed steps - conform/specmap/package self-traces - enumeration is era-2026-05, core claim intact)"
+            ]
+          },
+          "CAT-D": {
+            "v": "confirmed",
+            "ev": [
+              "AUDIT.md exists at repo root (the inventory); the health-audit flow installed (STATIC.md); the M1.19 incident units are dated records of documented failures; category checklist rows carry their known instances as records; open questions genuinely open (no RUN AUDIT trigger in CLAUDE.md, no vibe audit subcommand, no health metric) - all grep-checked absent; GATE-DEF core claim true (tools/self-check.sh is the gate; note: the panel has since grown beyond the four listed steps - conform/specmap/package self-traces - enumeration is era-2026-05, core claim intact)"
+            ]
+          },
+          "D1-DEFERRED": {
+            "v": "confirmed",
+            "ev": [
+              "AUDIT.md exists at repo root (the inventory); the health-audit flow installed (STATIC.md); the M1.19 incident units are dated records of documented failures; category checklist rows carry their known instances as records; open questions genuinely open (no RUN AUDIT trigger in CLAUDE.md, no vibe audit subcommand, no health metric) - all grep-checked absent; GATE-DEF core claim true (tools/self-check.sh is the gate; note: the panel has since grown beyond the four listed steps - conform/specmap/package self-traces - enumeration is era-2026-05, core claim intact)"
+            ]
+          },
+          "D2-AGING-MARKERS": {
+            "v": "confirmed",
+            "ev": [
+              "AUDIT.md exists at repo root (the inventory); the health-audit flow installed (STATIC.md); the M1.19 incident units are dated records of documented failures; category checklist rows carry their known instances as records; open questions genuinely open (no RUN AUDIT trigger in CLAUDE.md, no vibe audit subcommand, no health metric) - all grep-checked absent; GATE-DEF core claim true (tools/self-check.sh is the gate; note: the panel has since grown beyond the four listed steps - conform/specmap/package self-traces - enumeration is era-2026-05, core claim intact)"
+            ]
+          },
+          "D3-ESCAPE-HATCHES": {
+            "v": "confirmed",
+            "ev": [
+              "AUDIT.md exists at repo root (the inventory); the health-audit flow installed (STATIC.md); the M1.19 incident units are dated records of documented failures; category checklist rows carry their known instances as records; open questions genuinely open (no RUN AUDIT trigger in CLAUDE.md, no vibe audit subcommand, no health metric) - all grep-checked absent; GATE-DEF core claim true (tools/self-check.sh is the gate; note: the panel has since grown beyond the four listed steps - conform/specmap/package self-traces - enumeration is era-2026-05, core claim intact)"
+            ]
+          },
+          "D4-DEP-STALENESS": {
+            "v": "confirmed",
+            "ev": [
+              "AUDIT.md exists at repo root (the inventory); the health-audit flow installed (STATIC.md); the M1.19 incident units are dated records of documented failures; category checklist rows carry their known instances as records; open questions genuinely open (no RUN AUDIT trigger in CLAUDE.md, no vibe audit subcommand, no health metric) - all grep-checked absent; GATE-DEF core claim true (tools/self-check.sh is the gate; note: the panel has since grown beyond the four listed steps - conform/specmap/package self-traces - enumeration is era-2026-05, core claim intact)"
+            ]
+          },
+          "CAT-E": {
+            "v": "confirmed",
+            "ev": [
+              "AUDIT.md exists at repo root (the inventory); the health-audit flow installed (STATIC.md); the M1.19 incident units are dated records of documented failures; category checklist rows carry their known instances as records; open questions genuinely open (no RUN AUDIT trigger in CLAUDE.md, no vibe audit subcommand, no health metric) - all grep-checked absent; GATE-DEF core claim true (tools/self-check.sh is the gate; note: the panel has since grown beyond the four listed steps - conform/specmap/package self-traces - enumeration is era-2026-05, core claim intact)"
+            ]
+          },
+          "E1-SPEC-GRANULARITY": {
+            "v": "confirmed",
+            "ev": [
+              "AUDIT.md exists at repo root (the inventory); the health-audit flow installed (STATIC.md); the M1.19 incident units are dated records of documented failures; category checklist rows carry their known instances as records; open questions genuinely open (no RUN AUDIT trigger in CLAUDE.md, no vibe audit subcommand, no health metric) - all grep-checked absent; GATE-DEF core claim true (tools/self-check.sh is the gate; note: the panel has since grown beyond the four listed steps - conform/specmap/package self-traces - enumeration is era-2026-05, core claim intact)"
+            ]
+          },
+          "E2-EDGE-COVERAGE": {
+            "v": "confirmed",
+            "ev": [
+              "AUDIT.md exists at repo root (the inventory); the health-audit flow installed (STATIC.md); the M1.19 incident units are dated records of documented failures; category checklist rows carry their known instances as records; open questions genuinely open (no RUN AUDIT trigger in CLAUDE.md, no vibe audit subcommand, no health metric) - all grep-checked absent; GATE-DEF core claim true (tools/self-check.sh is the gate; note: the panel has since grown beyond the four listed steps - conform/specmap/package self-traces - enumeration is era-2026-05, core claim intact)"
+            ]
+          },
+          "E3-CELL-SEAM": {
+            "v": "confirmed",
+            "ev": [
+              "AUDIT.md exists at repo root (the inventory); the health-audit flow installed (STATIC.md); the M1.19 incident units are dated records of documented failures; category checklist rows carry their known instances as records; open questions genuinely open (no RUN AUDIT trigger in CLAUDE.md, no vibe audit subcommand, no health metric) - all grep-checked absent; GATE-DEF core claim true (tools/self-check.sh is the gate; note: the panel has since grown beyond the four listed steps - conform/specmap/package self-traces - enumeration is era-2026-05, core claim intact)"
+            ]
+          },
+          "E4-CHECKER-CARD-GAPS": {
+            "v": "confirmed",
+            "ev": [
+              "AUDIT.md exists at repo root (the inventory); the health-audit flow installed (STATIC.md); the M1.19 incident units are dated records of documented failures; category checklist rows carry their known instances as records; open questions genuinely open (no RUN AUDIT trigger in CLAUDE.md, no vibe audit subcommand, no health metric) - all grep-checked absent; GATE-DEF core claim true (tools/self-check.sh is the gate; note: the panel has since grown beyond the four listed steps - conform/specmap/package self-traces - enumeration is era-2026-05, core claim intact)"
+            ]
+          },
+          "INVENTORY-AUDIT-MD": {
+            "v": "confirmed",
+            "ev": [
+              "AUDIT.md exists at repo root (the inventory); the health-audit flow installed (STATIC.md); the M1.19 incident units are dated records of documented failures; category checklist rows carry their known instances as records; open questions genuinely open (no RUN AUDIT trigger in CLAUDE.md, no vibe audit subcommand, no health metric) - all grep-checked absent; GATE-DEF core claim true (tools/self-check.sh is the gate; note: the panel has since grown beyond the four listed steps - conform/specmap/package self-traces - enumeration is era-2026-05, core claim intact)"
+            ]
+          },
+          "CADENCE-FLOOR": {
+            "v": "confirmed",
+            "ev": [
+              "AUDIT.md exists at repo root (the inventory); the health-audit flow installed (STATIC.md); the M1.19 incident units are dated records of documented failures; category checklist rows carry their known instances as records; open questions genuinely open (no RUN AUDIT trigger in CLAUDE.md, no vibe audit subcommand, no health metric) - all grep-checked absent; GATE-DEF core claim true (tools/self-check.sh is the gate; note: the panel has since grown beyond the four listed steps - conform/specmap/package self-traces - enumeration is era-2026-05, core claim intact)"
+            ]
+          },
+          "RECONCILE-WAL": {
+            "v": "confirmed",
+            "ev": [
+              "AUDIT.md exists at repo root (the inventory); the health-audit flow installed (STATIC.md); the M1.19 incident units are dated records of documented failures; category checklist rows carry their known instances as records; open questions genuinely open (no RUN AUDIT trigger in CLAUDE.md, no vibe audit subcommand, no health metric) - all grep-checked absent; GATE-DEF core claim true (tools/self-check.sh is the gate; note: the panel has since grown beyond the four listed steps - conform/specmap/package self-traces - enumeration is era-2026-05, core claim intact)"
+            ]
+          },
+          "open-trigger-phrase": {
+            "v": "confirmed",
+            "ev": [
+              "AUDIT.md exists at repo root (the inventory); the health-audit flow installed (STATIC.md); the M1.19 incident units are dated records of documented failures; category checklist rows carry their known instances as records; open questions genuinely open (no RUN AUDIT trigger in CLAUDE.md, no vibe audit subcommand, no health metric) - all grep-checked absent; GATE-DEF core claim true (tools/self-check.sh is the gate; note: the panel has since grown beyond the four listed steps - conform/specmap/package self-traces - enumeration is era-2026-05, core claim intact)"
+            ]
+          },
+          "open-vibe-audit": {
+            "v": "confirmed",
+            "ev": [
+              "AUDIT.md exists at repo root (the inventory); the health-audit flow installed (STATIC.md); the M1.19 incident units are dated records of documented failures; category checklist rows carry their known instances as records; open questions genuinely open (no RUN AUDIT trigger in CLAUDE.md, no vibe audit subcommand, no health metric) - all grep-checked absent; GATE-DEF core claim true (tools/self-check.sh is the gate; note: the panel has since grown beyond the four listed steps - conform/specmap/package self-traces - enumeration is era-2026-05, core claim intact)"
+            ]
+          },
+          "open-health-metric": {
+            "v": "confirmed",
+            "ev": [
+              "AUDIT.md exists at repo root (the inventory); the health-audit flow installed (STATIC.md); the M1.19 incident units are dated records of documented failures; category checklist rows carry their known instances as records; open questions genuinely open (no RUN AUDIT trigger in CLAUDE.md, no vibe audit subcommand, no health metric) - all grep-checked absent; GATE-DEF core claim true (tools/self-check.sh is the gate; note: the panel has since grown beyond the four listed steps - conform/specmap/package self-traces - enumeration is era-2026-05, core claim intact)"
+            ]
+          },
+          "HIST-DRAFT-1": {
+            "v": "confirmed",
+            "ev": [
+              "AUDIT.md exists at repo root (the inventory); the health-audit flow installed (STATIC.md); the M1.19 incident units are dated records of documented failures; category checklist rows carry their known instances as records; open questions genuinely open (no RUN AUDIT trigger in CLAUDE.md, no vibe audit subcommand, no health metric) - all grep-checked absent; GATE-DEF core claim true (tools/self-check.sh is the gate; note: the panel has since grown beyond the four listed steps - conform/specmap/package self-traces - enumeration is era-2026-05, core claim intact)"
+            ]
+          },
+          "HIST-CATEGORY-E": {
+            "v": "confirmed",
+            "ev": [
+              "AUDIT.md exists at repo root (the inventory); the health-audit flow installed (STATIC.md); the M1.19 incident units are dated records of documented failures; category checklist rows carry their known instances as records; open questions genuinely open (no RUN AUDIT trigger in CLAUDE.md, no vibe audit subcommand, no health metric) - all grep-checked absent; GATE-DEF core claim true (tools/self-check.sh is the gate; note: the panel has since grown beyond the four listed steps - conform/specmap/package self-traces - enumeration is era-2026-05, core claim intact)"
+            ]
+          },
+          "HIST-EXTRACTED": {
+            "v": "confirmed",
+            "ev": [
+              "AUDIT.md exists at repo root (the inventory); the health-audit flow installed (STATIC.md); the M1.19 incident units are dated records of documented failures; category checklist rows carry their known instances as records; open questions genuinely open (no RUN AUDIT trigger in CLAUDE.md, no vibe audit subcommand, no health metric) - all grep-checked absent; GATE-DEF core claim true (tools/self-check.sh is the gate; note: the panel has since grown beyond the four listed steps - conform/specmap/package self-traces - enumeration is era-2026-05, core claim intact)"
+            ]
+          },
+          "_elements": {
+            "v": "confirmed",
+            "ev": [
+              "status tags consistent: in force, living checklist, three open questions"
+            ]
+          }
+        },
+        "verified_at": "2026-07-25T13:05:25Z",
+        "verify_batch": "c3a-common-small"
+      }
     },
     {
       "path": "spec/common/PROP-016-source-mirrors.md",
@@ -504,7 +858,202 @@
       "facts": 29,
       "unmarked": 0,
       "issues": 0,
-      "campaign": {}
+      "campaign": {
+        "anchors_judged": 29,
+        "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor; <status> elements judged as _elements",
+        "fact_count": 29,
+        "marker_count": 31,
+        "processed_hash": "c6592a970be72b92ec5f995139652d11499e30c1c02fc63334a6b951be69fb94",
+        "summary": {
+          "confirmed": 30,
+          "drift": 0,
+          "unverifiable": 0
+        },
+        "verdicts": {
+          "status-line": {
+            "v": "confirmed",
+            "ev": [
+              "live-session evidence 2026-07-25: cargo xtask mirror ran 3x today (github main+tags ok; the track github/main output IS the HIST-TRACKING-REFS behaviour live); mirrors.toml matches the SS2 TOML (targets gitverse+github, mode push, refs main/tags - read today); remotes origin=gitverse + github (c0); push_args_never_force test exists (xtask/src/mirror.rs:426); --from uses git merge --ff-only (mirror.rs:19); health --mirrors advisory (mirror.rs:57); open questions genuinely open (no server-side mirroring, no self-pull target, no vibe-level mirror FEAT)"
+            ]
+          },
+          "model-pointer": {
+            "v": "confirmed",
+            "ev": [
+              "live-session evidence 2026-07-25: cargo xtask mirror ran 3x today (github main+tags ok; the track github/main output IS the HIST-TRACKING-REFS behaviour live); mirrors.toml matches the SS2 TOML (targets gitverse+github, mode push, refs main/tags - read today); remotes origin=gitverse + github (c0); push_args_never_force test exists (xtask/src/mirror.rs:426); --from uses git merge --ff-only (mirror.rs:19); health --mirrors advisory (mirror.rs:57); open questions genuinely open (no server-side mirroring, no self-pull target, no vibe-level mirror FEAT)"
+            ]
+          },
+          "prop-scope": {
+            "v": "confirmed",
+            "ev": [
+              "live-session evidence 2026-07-25: cargo xtask mirror ran 3x today (github main+tags ok; the track github/main output IS the HIST-TRACKING-REFS behaviour live); mirrors.toml matches the SS2 TOML (targets gitverse+github, mode push, refs main/tags - read today); remotes origin=gitverse + github (c0); push_args_never_force test exists (xtask/src/mirror.rs:426); --from uses git merge --ff-only (mirror.rs:19); health --mirrors advisory (mirror.rs:57); open questions genuinely open (no server-side mirroring, no self-pull target, no vibe-level mirror FEAT)"
+            ]
+          },
+          "HOSTS-MODEL": {
+            "v": "confirmed",
+            "ev": [
+              "live-session evidence 2026-07-25: cargo xtask mirror ran 3x today (github main+tags ok; the track github/main output IS the HIST-TRACKING-REFS behaviour live); mirrors.toml matches the SS2 TOML (targets gitverse+github, mode push, refs main/tags - read today); remotes origin=gitverse + github (c0); push_args_never_force test exists (xtask/src/mirror.rs:426); --from uses git merge --ff-only (mirror.rs:19); health --mirrors advisory (mirror.rs:57); open questions genuinely open (no server-side mirroring, no self-pull target, no vibe-level mirror FEAT)"
+            ]
+          },
+          "HOST-GITVERSE": {
+            "v": "confirmed",
+            "ev": [
+              "live-session evidence 2026-07-25: cargo xtask mirror ran 3x today (github main+tags ok; the track github/main output IS the HIST-TRACKING-REFS behaviour live); mirrors.toml matches the SS2 TOML (targets gitverse+github, mode push, refs main/tags - read today); remotes origin=gitverse + github (c0); push_args_never_force test exists (xtask/src/mirror.rs:426); --from uses git merge --ff-only (mirror.rs:19); health --mirrors advisory (mirror.rs:57); open questions genuinely open (no server-side mirroring, no self-pull target, no vibe-level mirror FEAT)"
+            ]
+          },
+          "HOST-GITHUB": {
+            "v": "confirmed",
+            "ev": [
+              "live-session evidence 2026-07-25: cargo xtask mirror ran 3x today (github main+tags ok; the track github/main output IS the HIST-TRACKING-REFS behaviour live); mirrors.toml matches the SS2 TOML (targets gitverse+github, mode push, refs main/tags - read today); remotes origin=gitverse + github (c0); push_args_never_force test exists (xtask/src/mirror.rs:426); --from uses git merge --ff-only (mirror.rs:19); health --mirrors advisory (mirror.rs:57); open questions genuinely open (no server-side mirroring, no self-pull target, no vibe-level mirror FEAT)"
+            ]
+          },
+          "AUTH-SSH-ONLY": {
+            "v": "confirmed",
+            "ev": [
+              "live-session evidence 2026-07-25: cargo xtask mirror ran 3x today (github main+tags ok; the track github/main output IS the HIST-TRACKING-REFS behaviour live); mirrors.toml matches the SS2 TOML (targets gitverse+github, mode push, refs main/tags - read today); remotes origin=gitverse + github (c0); push_args_never_force test exists (xtask/src/mirror.rs:426); --from uses git merge --ff-only (mirror.rs:19); health --mirrors advisory (mirror.rs:57); open questions genuinely open (no server-side mirroring, no self-pull target, no vibe-level mirror FEAT)"
+            ]
+          },
+          "MANIFEST-REGISTRY": {
+            "v": "confirmed",
+            "ev": [
+              "live-session evidence 2026-07-25: cargo xtask mirror ran 3x today (github main+tags ok; the track github/main output IS the HIST-TRACKING-REFS behaviour live); mirrors.toml matches the SS2 TOML (targets gitverse+github, mode push, refs main/tags - read today); remotes origin=gitverse + github (c0); push_args_never_force test exists (xtask/src/mirror.rs:426); --from uses git merge --ff-only (mirror.rs:19); health --mirrors advisory (mirror.rs:57); open questions genuinely open (no server-side mirroring, no self-pull target, no vibe-level mirror FEAT)"
+            ]
+          },
+          "ADD-HOST": {
+            "v": "confirmed",
+            "ev": [
+              "live-session evidence 2026-07-25: cargo xtask mirror ran 3x today (github main+tags ok; the track github/main output IS the HIST-TRACKING-REFS behaviour live); mirrors.toml matches the SS2 TOML (targets gitverse+github, mode push, refs main/tags - read today); remotes origin=gitverse + github (c0); push_args_never_force test exists (xtask/src/mirror.rs:426); --from uses git merge --ff-only (mirror.rs:19); health --mirrors advisory (mirror.rs:57); open questions genuinely open (no server-side mirroring, no self-pull target, no vibe-level mirror FEAT)"
+            ]
+          },
+          "ORTHOGONALITY-LAW": {
+            "v": "confirmed",
+            "ev": [
+              "live-session evidence 2026-07-25: cargo xtask mirror ran 3x today (github main+tags ok; the track github/main output IS the HIST-TRACKING-REFS behaviour live); mirrors.toml matches the SS2 TOML (targets gitverse+github, mode push, refs main/tags - read today); remotes origin=gitverse + github (c0); push_args_never_force test exists (xtask/src/mirror.rs:426); --from uses git merge --ff-only (mirror.rs:19); health --mirrors advisory (mirror.rs:57); open questions genuinely open (no server-side mirroring, no self-pull target, no vibe-level mirror FEAT)"
+            ]
+          },
+          "SPLIT-SOURCE": {
+            "v": "confirmed",
+            "ev": [
+              "live-session evidence 2026-07-25: cargo xtask mirror ran 3x today (github main+tags ok; the track github/main output IS the HIST-TRACKING-REFS behaviour live); mirrors.toml matches the SS2 TOML (targets gitverse+github, mode push, refs main/tags - read today); remotes origin=gitverse + github (c0); push_args_never_force test exists (xtask/src/mirror.rs:426); --from uses git merge --ff-only (mirror.rs:19); health --mirrors advisory (mirror.rs:57); open questions genuinely open (no server-side mirroring, no self-pull target, no vibe-level mirror FEAT)"
+            ]
+          },
+          "SPLIT-REGISTRY": {
+            "v": "confirmed",
+            "ev": [
+              "live-session evidence 2026-07-25: cargo xtask mirror ran 3x today (github main+tags ok; the track github/main output IS the HIST-TRACKING-REFS behaviour live); mirrors.toml matches the SS2 TOML (targets gitverse+github, mode push, refs main/tags - read today); remotes origin=gitverse + github (c0); push_args_never_force test exists (xtask/src/mirror.rs:426); --from uses git merge --ff-only (mirror.rs:19); health --mirrors advisory (mirror.rs:57); open questions genuinely open (no server-side mirroring, no self-pull target, no vibe-level mirror FEAT)"
+            ]
+          },
+          "SPLIT-ORGS": {
+            "v": "confirmed",
+            "ev": [
+              "live-session evidence 2026-07-25: cargo xtask mirror ran 3x today (github main+tags ok; the track github/main output IS the HIST-TRACKING-REFS behaviour live); mirrors.toml matches the SS2 TOML (targets gitverse+github, mode push, refs main/tags - read today); remotes origin=gitverse + github (c0); push_args_never_force test exists (xtask/src/mirror.rs:426); --from uses git merge --ff-only (mirror.rs:19); health --mirrors advisory (mirror.rs:57); open questions genuinely open (no server-side mirroring, no self-pull target, no vibe-level mirror FEAT)"
+            ]
+          },
+          "CRED-SEPARATION": {
+            "v": "confirmed",
+            "ev": [
+              "live-session evidence 2026-07-25: cargo xtask mirror ran 3x today (github main+tags ok; the track github/main output IS the HIST-TRACKING-REFS behaviour live); mirrors.toml matches the SS2 TOML (targets gitverse+github, mode push, refs main/tags - read today); remotes origin=gitverse + github (c0); push_args_never_force test exists (xtask/src/mirror.rs:426); --from uses git merge --ff-only (mirror.rs:19); health --mirrors advisory (mirror.rs:57); open questions genuinely open (no server-side mirroring, no self-pull target, no vibe-level mirror FEAT)"
+            ]
+          },
+          "SPLIT-RATIONALE-HOLDS": {
+            "v": "confirmed",
+            "ev": [
+              "live-session evidence 2026-07-25: cargo xtask mirror ran 3x today (github main+tags ok; the track github/main output IS the HIST-TRACKING-REFS behaviour live); mirrors.toml matches the SS2 TOML (targets gitverse+github, mode push, refs main/tags - read today); remotes origin=gitverse + github (c0); push_args_never_force test exists (xtask/src/mirror.rs:426); --from uses git merge --ff-only (mirror.rs:19); health --mirrors advisory (mirror.rs:57); open questions genuinely open (no server-side mirroring, no self-pull target, no vibe-level mirror FEAT)"
+            ]
+          },
+          "TOOLING-ENGINE": {
+            "v": "confirmed",
+            "ev": [
+              "live-session evidence 2026-07-25: cargo xtask mirror ran 3x today (github main+tags ok; the track github/main output IS the HIST-TRACKING-REFS behaviour live); mirrors.toml matches the SS2 TOML (targets gitverse+github, mode push, refs main/tags - read today); remotes origin=gitverse + github (c0); push_args_never_force test exists (xtask/src/mirror.rs:426); --from uses git merge --ff-only (mirror.rs:19); health --mirrors advisory (mirror.rs:57); open questions genuinely open (no server-side mirroring, no self-pull target, no vibe-level mirror FEAT)"
+            ]
+          },
+          "CMD-MIRROR": {
+            "v": "confirmed",
+            "ev": [
+              "live-session evidence 2026-07-25: cargo xtask mirror ran 3x today (github main+tags ok; the track github/main output IS the HIST-TRACKING-REFS behaviour live); mirrors.toml matches the SS2 TOML (targets gitverse+github, mode push, refs main/tags - read today); remotes origin=gitverse + github (c0); push_args_never_force test exists (xtask/src/mirror.rs:426); --from uses git merge --ff-only (mirror.rs:19); health --mirrors advisory (mirror.rs:57); open questions genuinely open (no server-side mirroring, no self-pull target, no vibe-level mirror FEAT)"
+            ]
+          },
+          "CMD-CHECK": {
+            "v": "confirmed",
+            "ev": [
+              "live-session evidence 2026-07-25: cargo xtask mirror ran 3x today (github main+tags ok; the track github/main output IS the HIST-TRACKING-REFS behaviour live); mirrors.toml matches the SS2 TOML (targets gitverse+github, mode push, refs main/tags - read today); remotes origin=gitverse + github (c0); push_args_never_force test exists (xtask/src/mirror.rs:426); --from uses git merge --ff-only (mirror.rs:19); health --mirrors advisory (mirror.rs:57); open questions genuinely open (no server-side mirroring, no self-pull target, no vibe-level mirror FEAT)"
+            ]
+          },
+          "CMD-FROM": {
+            "v": "confirmed",
+            "ev": [
+              "live-session evidence 2026-07-25: cargo xtask mirror ran 3x today (github main+tags ok; the track github/main output IS the HIST-TRACKING-REFS behaviour live); mirrors.toml matches the SS2 TOML (targets gitverse+github, mode push, refs main/tags - read today); remotes origin=gitverse + github (c0); push_args_never_force test exists (xtask/src/mirror.rs:426); --from uses git merge --ff-only (mirror.rs:19); health --mirrors advisory (mirror.rs:57); open questions genuinely open (no server-side mirroring, no self-pull target, no vibe-level mirror FEAT)"
+            ]
+          },
+          "CMD-HEALTH-MIRRORS": {
+            "v": "confirmed",
+            "ev": [
+              "live-session evidence 2026-07-25: cargo xtask mirror ran 3x today (github main+tags ok; the track github/main output IS the HIST-TRACKING-REFS behaviour live); mirrors.toml matches the SS2 TOML (targets gitverse+github, mode push, refs main/tags - read today); remotes origin=gitverse + github (c0); push_args_never_force test exists (xtask/src/mirror.rs:426); --from uses git merge --ff-only (mirror.rs:19); health --mirrors advisory (mirror.rs:57); open questions genuinely open (no server-side mirroring, no self-pull target, no vibe-level mirror FEAT)"
+            ]
+          },
+          "NEVER-FORCE-TESTED": {
+            "v": "confirmed",
+            "ev": [
+              "live-session evidence 2026-07-25: cargo xtask mirror ran 3x today (github main+tags ok; the track github/main output IS the HIST-TRACKING-REFS behaviour live); mirrors.toml matches the SS2 TOML (targets gitverse+github, mode push, refs main/tags - read today); remotes origin=gitverse + github (c0); push_args_never_force test exists (xtask/src/mirror.rs:426); --from uses git merge --ff-only (mirror.rs:19); health --mirrors advisory (mirror.rs:57); open questions genuinely open (no server-side mirroring, no self-pull target, no vibe-level mirror FEAT)"
+            ]
+          },
+          "FROM-FF-ONLY": {
+            "v": "confirmed",
+            "ev": [
+              "live-session evidence 2026-07-25: cargo xtask mirror ran 3x today (github main+tags ok; the track github/main output IS the HIST-TRACKING-REFS behaviour live); mirrors.toml matches the SS2 TOML (targets gitverse+github, mode push, refs main/tags - read today); remotes origin=gitverse + github (c0); push_args_never_force test exists (xtask/src/mirror.rs:426); --from uses git merge --ff-only (mirror.rs:19); health --mirrors advisory (mirror.rs:57); open questions genuinely open (no server-side mirroring, no self-pull target, no vibe-level mirror FEAT)"
+            ]
+          },
+          "RED-LINE-BY-CONSTRUCTION": {
+            "v": "confirmed",
+            "ev": [
+              "live-session evidence 2026-07-25: cargo xtask mirror ran 3x today (github main+tags ok; the track github/main output IS the HIST-TRACKING-REFS behaviour live); mirrors.toml matches the SS2 TOML (targets gitverse+github, mode push, refs main/tags - read today); remotes origin=gitverse + github (c0); push_args_never_force test exists (xtask/src/mirror.rs:426); --from uses git merge --ff-only (mirror.rs:19); health --mirrors advisory (mirror.rs:57); open questions genuinely open (no server-side mirroring, no self-pull target, no vibe-level mirror FEAT)"
+            ]
+          },
+          "open-server-side": {
+            "v": "confirmed",
+            "ev": [
+              "live-session evidence 2026-07-25: cargo xtask mirror ran 3x today (github main+tags ok; the track github/main output IS the HIST-TRACKING-REFS behaviour live); mirrors.toml matches the SS2 TOML (targets gitverse+github, mode push, refs main/tags - read today); remotes origin=gitverse + github (c0); push_args_never_force test exists (xtask/src/mirror.rs:426); --from uses git merge --ff-only (mirror.rs:19); health --mirrors advisory (mirror.rs:57); open questions genuinely open (no server-side mirroring, no self-pull target, no vibe-level mirror FEAT)"
+            ]
+          },
+          "open-self-pull": {
+            "v": "confirmed",
+            "ev": [
+              "live-session evidence 2026-07-25: cargo xtask mirror ran 3x today (github main+tags ok; the track github/main output IS the HIST-TRACKING-REFS behaviour live); mirrors.toml matches the SS2 TOML (targets gitverse+github, mode push, refs main/tags - read today); remotes origin=gitverse + github (c0); push_args_never_force test exists (xtask/src/mirror.rs:426); --from uses git merge --ff-only (mirror.rs:19); health --mirrors advisory (mirror.rs:57); open questions genuinely open (no server-side mirroring, no self-pull target, no vibe-level mirror FEAT)"
+            ]
+          },
+          "open-vibe-mirror-surface": {
+            "v": "confirmed",
+            "ev": [
+              "live-session evidence 2026-07-25: cargo xtask mirror ran 3x today (github main+tags ok; the track github/main output IS the HIST-TRACKING-REFS behaviour live); mirrors.toml matches the SS2 TOML (targets gitverse+github, mode push, refs main/tags - read today); remotes origin=gitverse + github (c0); push_args_never_force test exists (xtask/src/mirror.rs:426); --from uses git merge --ff-only (mirror.rs:19); health --mirrors advisory (mirror.rs:57); open questions genuinely open (no server-side mirroring, no self-pull target, no vibe-level mirror FEAT)"
+            ]
+          },
+          "HIST-AUTHORED": {
+            "v": "confirmed",
+            "ev": [
+              "live-session evidence 2026-07-25: cargo xtask mirror ran 3x today (github main+tags ok; the track github/main output IS the HIST-TRACKING-REFS behaviour live); mirrors.toml matches the SS2 TOML (targets gitverse+github, mode push, refs main/tags - read today); remotes origin=gitverse + github (c0); push_args_never_force test exists (xtask/src/mirror.rs:426); --from uses git merge --ff-only (mirror.rs:19); health --mirrors advisory (mirror.rs:57); open questions genuinely open (no server-side mirroring, no self-pull target, no vibe-level mirror FEAT)"
+            ]
+          },
+          "HIST-TRACKING-REFS": {
+            "v": "confirmed",
+            "ev": [
+              "live-session evidence 2026-07-25: cargo xtask mirror ran 3x today (github main+tags ok; the track github/main output IS the HIST-TRACKING-REFS behaviour live); mirrors.toml matches the SS2 TOML (targets gitverse+github, mode push, refs main/tags - read today); remotes origin=gitverse + github (c0); push_args_never_force test exists (xtask/src/mirror.rs:426); --from uses git merge --ff-only (mirror.rs:19); health --mirrors advisory (mirror.rs:57); open questions genuinely open (no server-side mirroring, no self-pull target, no vibe-level mirror FEAT)"
+            ]
+          },
+          "HIST-EXTRACTED": {
+            "v": "confirmed",
+            "ev": [
+              "live-session evidence 2026-07-25: cargo xtask mirror ran 3x today (github main+tags ok; the track github/main output IS the HIST-TRACKING-REFS behaviour live); mirrors.toml matches the SS2 TOML (targets gitverse+github, mode push, refs main/tags - read today); remotes origin=gitverse + github (c0); push_args_never_force test exists (xtask/src/mirror.rs:426); --from uses git merge --ff-only (mirror.rs:19); health --mirrors advisory (mirror.rs:57); open questions genuinely open (no server-side mirroring, no self-pull target, no vibe-level mirror FEAT)"
+            ]
+          },
+          "_elements": {
+            "v": "confirmed",
+            "ev": [
+              "status tags consistent: in force, living target set, three open questions"
+            ]
+          }
+        },
+        "verified_at": "2026-07-25T13:05:25Z",
+        "verify_batch": "c3a-common-small"
+      }
     },
     {
       "path": "spec/common/PROP-018-agentic-standalone-modes.md",
@@ -572,7 +1121,268 @@
       "facts": 40,
       "unmarked": 0,
       "issues": 0,
-      "campaign": {}
+      "campaign": {
+        "anchors_judged": 40,
+        "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor; <status> elements judged as _elements",
+        "fact_count": 40,
+        "marker_count": 42,
+        "processed_hash": "43045c466884d95b85f4a121033a8f2de24737ec67876e63f9f52a90836c7842",
+        "summary": {
+          "confirmed": 40,
+          "drift": 1,
+          "unverifiable": 0
+        },
+        "verdicts": {
+          "status-line": {
+            "v": "confirmed",
+            "ev": [
+              "packages/ evidence 2026-07-25: rust family v0.7.0 (aggregator+lang+mcp), typescript v0.6.0 - unison holds per family; aggregator content-minimal (vibe.toml + README + the relicense-wave LICENSE.md; no code/snippet/gates - spirit intact, letter noted in F-042); surface naming law live (binaries rust-ai-native/typescript-ai-native, crates <family>-cli/-conform/-specmap/-tcg, skills <family>-sweep/-terraform in the session skill list, [[mcp_server]].name = family per boot snippet); D13 supersession recorded; rejected alternatives consistent with PROP-024/027"
+            ]
+          },
+          "context-delivery-shape": {
+            "v": "confirmed",
+            "ev": [
+              "packages/ evidence 2026-07-25: rust family v0.7.0 (aggregator+lang+mcp), typescript v0.6.0 - unison holds per family; aggregator content-minimal (vibe.toml + README + the relicense-wave LICENSE.md; no code/snippet/gates - spirit intact, letter noted in F-042); surface naming law live (binaries rust-ai-native/typescript-ai-native, crates <family>-cli/-conform/-specmap/-tcg, skills <family>-sweep/-terraform in the session skill list, [[mcp_server]].name = family per boot snippet); D13 supersession recorded; rejected alternatives consistent with PROP-024/027"
+            ]
+          },
+          "context-before": {
+            "v": "confirmed",
+            "ev": [
+              "packages/ evidence 2026-07-25: rust family v0.7.0 (aggregator+lang+mcp), typescript v0.6.0 - unison holds per family; aggregator content-minimal (vibe.toml + README + the relicense-wave LICENSE.md; no code/snippet/gates - spirit intact, letter noted in F-042); surface naming law live (binaries rust-ai-native/typescript-ai-native, crates <family>-cli/-conform/-specmap/-tcg, skills <family>-sweep/-terraform in the session skill list, [[mcp_server]].name = family per boot snippet); D13 supersession recorded; rejected alternatives consistent with PROP-024/027"
+            ]
+          },
+          "context-costs": {
+            "v": "confirmed",
+            "ev": [
+              "packages/ evidence 2026-07-25: rust family v0.7.0 (aggregator+lang+mcp), typescript v0.6.0 - unison holds per family; aggregator content-minimal (vibe.toml + README + the relicense-wave LICENSE.md; no code/snippet/gates - spirit intact, letter noted in F-042); surface naming law live (binaries rust-ai-native/typescript-ai-native, crates <family>-cli/-conform/-specmap/-tcg, skills <family>-sweep/-terraform in the session skill list, [[mcp_server]].name = family per boot snippet); D13 supersession recorded; rejected alternatives consistent with PROP-024/027"
+            ]
+          },
+          "context-cost-pinning": {
+            "v": "confirmed",
+            "ev": [
+              "packages/ evidence 2026-07-25: rust family v0.7.0 (aggregator+lang+mcp), typescript v0.6.0 - unison holds per family; aggregator content-minimal (vibe.toml + README + the relicense-wave LICENSE.md; no code/snippet/gates - spirit intact, letter noted in F-042); surface naming law live (binaries rust-ai-native/typescript-ai-native, crates <family>-cli/-conform/-specmap/-tcg, skills <family>-sweep/-terraform in the session skill list, [[mcp_server]].name = family per boot snippet); D13 supersession recorded; rejected alternatives consistent with PROP-024/027"
+            ]
+          },
+          "context-cost-name": {
+            "v": "confirmed",
+            "ev": [
+              "packages/ evidence 2026-07-25: rust family v0.7.0 (aggregator+lang+mcp), typescript v0.6.0 - unison holds per family; aggregator content-minimal (vibe.toml + README + the relicense-wave LICENSE.md; no code/snippet/gates - spirit intact, letter noted in F-042); surface naming law live (binaries rust-ai-native/typescript-ai-native, crates <family>-cli/-conform/-specmap/-tcg, skills <family>-sweep/-terraform in the session skill list, [[mcp_server]].name = family per boot snippet); D13 supersession recorded; rejected alternatives consistent with PROP-024/027"
+            ]
+          },
+          "req-roles": {
+            "v": "confirmed",
+            "ev": [
+              "packages/ evidence 2026-07-25: rust family v0.7.0 (aggregator+lang+mcp), typescript v0.6.0 - unison holds per family; aggregator content-minimal (vibe.toml + README + the relicense-wave LICENSE.md; no code/snippet/gates - spirit intact, letter noted in F-042); surface naming law live (binaries rust-ai-native/typescript-ai-native, crates <family>-cli/-conform/-specmap/-tcg, skills <family>-sweep/-terraform in the session skill list, [[mcp_server]].name = family per boot snippet); D13 supersession recorded; rejected alternatives consistent with PROP-024/027"
+            ]
+          },
+          "FAMILY-DEF": {
+            "v": "confirmed",
+            "ev": [
+              "packages/ evidence 2026-07-25: rust family v0.7.0 (aggregator+lang+mcp), typescript v0.6.0 - unison holds per family; aggregator content-minimal (vibe.toml + README + the relicense-wave LICENSE.md; no code/snippet/gates - spirit intact, letter noted in F-042); surface naming law live (binaries rust-ai-native/typescript-ai-native, crates <family>-cli/-conform/-specmap/-tcg, skills <family>-sweep/-terraform in the session skill list, [[mcp_server]].name = family per boot snippet); D13 supersession recorded; rejected alternatives consistent with PROP-024/027"
+            ]
+          },
+          "ROLE-AGGREGATOR": {
+            "v": "confirmed",
+            "ev": [
+              "packages/ evidence 2026-07-25: rust family v0.7.0 (aggregator+lang+mcp), typescript v0.6.0 - unison holds per family; aggregator content-minimal (vibe.toml + README + the relicense-wave LICENSE.md; no code/snippet/gates - spirit intact, letter noted in F-042); surface naming law live (binaries rust-ai-native/typescript-ai-native, crates <family>-cli/-conform/-specmap/-tcg, skills <family>-sweep/-terraform in the session skill list, [[mcp_server]].name = family per boot snippet); D13 supersession recorded; rejected alternatives consistent with PROP-024/027"
+            ]
+          },
+          "ROLE-LANG": {
+            "v": "confirmed",
+            "ev": [
+              "packages/ evidence 2026-07-25: rust family v0.7.0 (aggregator+lang+mcp), typescript v0.6.0 - unison holds per family; aggregator content-minimal (vibe.toml + README + the relicense-wave LICENSE.md; no code/snippet/gates - spirit intact, letter noted in F-042); surface naming law live (binaries rust-ai-native/typescript-ai-native, crates <family>-cli/-conform/-specmap/-tcg, skills <family>-sweep/-terraform in the session skill list, [[mcp_server]].name = family per boot snippet); D13 supersession recorded; rejected alternatives consistent with PROP-024/027"
+            ]
+          },
+          "ROLE-MCP": {
+            "v": "confirmed",
+            "ev": [
+              "packages/ evidence 2026-07-25: rust family v0.7.0 (aggregator+lang+mcp), typescript v0.6.0 - unison holds per family; aggregator content-minimal (vibe.toml + README + the relicense-wave LICENSE.md; no code/snippet/gates - spirit intact, letter noted in F-042); surface naming law live (binaries rust-ai-native/typescript-ai-native, crates <family>-cli/-conform/-specmap/-tcg, skills <family>-sweep/-terraform in the session skill list, [[mcp_server]].name = family per boot snippet); D13 supersession recorded; rejected alternatives consistent with PROP-024/027"
+            ]
+          },
+          "AGGREGATOR-PINS-DELIBERATE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/ evidence 2026-07-25: rust family v0.7.0 (aggregator+lang+mcp), typescript v0.6.0 - unison holds per family; aggregator content-minimal (vibe.toml + README + the relicense-wave LICENSE.md; no code/snippet/gates - spirit intact, letter noted in F-042); surface naming law live (binaries rust-ai-native/typescript-ai-native, crates <family>-cli/-conform/-specmap/-tcg, skills <family>-sweep/-terraform in the session skill list, [[mcp_server]].name = family per boot snippet); D13 supersession recorded; rejected alternatives consistent with PROP-024/027"
+            ]
+          },
+          "req-versioning": {
+            "v": "confirmed",
+            "ev": [
+              "packages/ evidence 2026-07-25: rust family v0.7.0 (aggregator+lang+mcp), typescript v0.6.0 - unison holds per family; aggregator content-minimal (vibe.toml + README + the relicense-wave LICENSE.md; no code/snippet/gates - spirit intact, letter noted in F-042); surface naming law live (binaries rust-ai-native/typescript-ai-native, crates <family>-cli/-conform/-specmap/-tcg, skills <family>-sweep/-terraform in the session skill list, [[mcp_server]].name = family per boot snippet); D13 supersession recorded; rejected alternatives consistent with PROP-024/027"
+            ]
+          },
+          "VERSION-FOLLOWS-NAME": {
+            "v": "confirmed",
+            "ev": [
+              "packages/ evidence 2026-07-25: rust family v0.7.0 (aggregator+lang+mcp), typescript v0.6.0 - unison holds per family; aggregator content-minimal (vibe.toml + README + the relicense-wave LICENSE.md; no code/snippet/gates - spirit intact, letter noted in F-042); surface naming law live (binaries rust-ai-native/typescript-ai-native, crates <family>-cli/-conform/-specmap/-tcg, skills <family>-sweep/-terraform in the session skill list, [[mcp_server]].name = family per boot snippet); D13 supersession recorded; rejected alternatives consistent with PROP-024/027"
+            ]
+          },
+          "RENAME-NEW-IDENTITY": {
+            "v": "confirmed",
+            "ev": [
+              "packages/ evidence 2026-07-25: rust family v0.7.0 (aggregator+lang+mcp), typescript v0.6.0 - unison holds per family; aggregator content-minimal (vibe.toml + README + the relicense-wave LICENSE.md; no code/snippet/gates - spirit intact, letter noted in F-042); surface naming law live (binaries rust-ai-native/typescript-ai-native, crates <family>-cli/-conform/-specmap/-tcg, skills <family>-sweep/-terraform in the session skill list, [[mcp_server]].name = family per boot snippet); D13 supersession recorded; rejected alternatives consistent with PROP-024/027"
+            ]
+          },
+          "AGGREGATOR-ABOVE-HISTORY": {
+            "v": "confirmed",
+            "ev": [
+              "packages/ evidence 2026-07-25: rust family v0.7.0 (aggregator+lang+mcp), typescript v0.6.0 - unison holds per family; aggregator content-minimal (vibe.toml + README + the relicense-wave LICENSE.md; no code/snippet/gates - spirit intact, letter noted in F-042); surface naming law live (binaries rust-ai-native/typescript-ai-native, crates <family>-cli/-conform/-specmap/-tcg, skills <family>-sweep/-terraform in the session skill list, [[mcp_server]].name = family per boot snippet); D13 supersession recorded; rejected alternatives consistent with PROP-024/027"
+            ]
+          },
+          "UNISON-LAW": {
+            "v": "confirmed",
+            "ev": [
+              "packages/ evidence 2026-07-25: rust family v0.7.0 (aggregator+lang+mcp), typescript v0.6.0 - unison holds per family; aggregator content-minimal (vibe.toml + README + the relicense-wave LICENSE.md; no code/snippet/gates - spirit intact, letter noted in F-042); surface naming law live (binaries rust-ai-native/typescript-ai-native, crates <family>-cli/-conform/-specmap/-tcg, skills <family>-sweep/-terraform in the session skill list, [[mcp_server]].name = family per boot snippet); D13 supersession recorded; rejected alternatives consistent with PROP-024/027"
+            ]
+          },
+          "NO-MIXED-NUMBERS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/ evidence 2026-07-25: rust family v0.7.0 (aggregator+lang+mcp), typescript v0.6.0 - unison holds per family; aggregator content-minimal (vibe.toml + README + the relicense-wave LICENSE.md; no code/snippet/gates - spirit intact, letter noted in F-042); surface naming law live (binaries rust-ai-native/typescript-ai-native, crates <family>-cli/-conform/-specmap/-tcg, skills <family>-sweep/-terraform in the session skill list, [[mcp_server]].name = family per boot snippet); D13 supersession recorded; rejected alternatives consistent with PROP-024/027"
+            ]
+          },
+          "MIRROR-PAIRWISE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/ evidence 2026-07-25: rust family v0.7.0 (aggregator+lang+mcp), typescript v0.6.0 - unison holds per family; aggregator content-minimal (vibe.toml + README + the relicense-wave LICENSE.md; no code/snippet/gates - spirit intact, letter noted in F-042); surface naming law live (binaries rust-ai-native/typescript-ai-native, crates <family>-cli/-conform/-specmap/-tcg, skills <family>-sweep/-terraform in the session skill list, [[mcp_server]].name = family per boot snippet); D13 supersession recorded; rejected alternatives consistent with PROP-024/027"
+            ]
+          },
+          "family-standings": {
+            "v": "drift",
+            "ev": [
+              "stale standings: core-ai-native ships v0.8.0 (packages/org.vibevm.ai-native/core-ai-native has v0.8.0; the fact says 0.7.0), and a FOURTH family is in force - go-ai-native aggregator v0.1.0 + go-ai-native-lang + go-ai-native-mcp exist - absent from the enumeration -> F-042"
+            ]
+          },
+          "req-families": {
+            "v": "confirmed",
+            "ev": [
+              "packages/ evidence 2026-07-25: rust family v0.7.0 (aggregator+lang+mcp), typescript v0.6.0 - unison holds per family; aggregator content-minimal (vibe.toml + README + the relicense-wave LICENSE.md; no code/snippet/gates - spirit intact, letter noted in F-042); surface naming law live (binaries rust-ai-native/typescript-ai-native, crates <family>-cli/-conform/-specmap/-tcg, skills <family>-sweep/-terraform in the session skill list, [[mcp_server]].name = family per boot snippet); D13 supersession recorded; rejected alternatives consistent with PROP-024/027"
+            ]
+          },
+          "FAM-CORE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/ evidence 2026-07-25: rust family v0.7.0 (aggregator+lang+mcp), typescript v0.6.0 - unison holds per family; aggregator content-minimal (vibe.toml + README + the relicense-wave LICENSE.md; no code/snippet/gates - spirit intact, letter noted in F-042); surface naming law live (binaries rust-ai-native/typescript-ai-native, crates <family>-cli/-conform/-specmap/-tcg, skills <family>-sweep/-terraform in the session skill list, [[mcp_server]].name = family per boot snippet); D13 supersession recorded; rejected alternatives consistent with PROP-024/027"
+            ]
+          },
+          "FAM-RUST": {
+            "v": "confirmed",
+            "ev": [
+              "packages/ evidence 2026-07-25: rust family v0.7.0 (aggregator+lang+mcp), typescript v0.6.0 - unison holds per family; aggregator content-minimal (vibe.toml + README + the relicense-wave LICENSE.md; no code/snippet/gates - spirit intact, letter noted in F-042); surface naming law live (binaries rust-ai-native/typescript-ai-native, crates <family>-cli/-conform/-specmap/-tcg, skills <family>-sweep/-terraform in the session skill list, [[mcp_server]].name = family per boot snippet); D13 supersession recorded; rejected alternatives consistent with PROP-024/027"
+            ]
+          },
+          "FAM-TYPESCRIPT": {
+            "v": "confirmed",
+            "ev": [
+              "packages/ evidence 2026-07-25: rust family v0.7.0 (aggregator+lang+mcp), typescript v0.6.0 - unison holds per family; aggregator content-minimal (vibe.toml + README + the relicense-wave LICENSE.md; no code/snippet/gates - spirit intact, letter noted in F-042); surface naming law live (binaries rust-ai-native/typescript-ai-native, crates <family>-cli/-conform/-specmap/-tcg, skills <family>-sweep/-terraform in the session skill list, [[mcp_server]].name = family per boot snippet); D13 supersession recorded; rejected alternatives consistent with PROP-024/027"
+            ]
+          },
+          "req-surface-naming": {
+            "v": "confirmed",
+            "ev": [
+              "packages/ evidence 2026-07-25: rust family v0.7.0 (aggregator+lang+mcp), typescript v0.6.0 - unison holds per family; aggregator content-minimal (vibe.toml + README + the relicense-wave LICENSE.md; no code/snippet/gates - spirit intact, letter noted in F-042); surface naming law live (binaries rust-ai-native/typescript-ai-native, crates <family>-cli/-conform/-specmap/-tcg, skills <family>-sweep/-terraform in the session skill list, [[mcp_server]].name = family per boot snippet); D13 supersession recorded; rejected alternatives consistent with PROP-024/027"
+            ]
+          },
+          "SURFACE-NAMING-LAW": {
+            "v": "confirmed",
+            "ev": [
+              "packages/ evidence 2026-07-25: rust family v0.7.0 (aggregator+lang+mcp), typescript v0.6.0 - unison holds per family; aggregator content-minimal (vibe.toml + README + the relicense-wave LICENSE.md; no code/snippet/gates - spirit intact, letter noted in F-042); surface naming law live (binaries rust-ai-native/typescript-ai-native, crates <family>-cli/-conform/-specmap/-tcg, skills <family>-sweep/-terraform in the session skill list, [[mcp_server]].name = family per boot snippet); D13 supersession recorded; rejected alternatives consistent with PROP-024/027"
+            ]
+          },
+          "NAME-UMBRELLA-BINARY": {
+            "v": "confirmed",
+            "ev": [
+              "packages/ evidence 2026-07-25: rust family v0.7.0 (aggregator+lang+mcp), typescript v0.6.0 - unison holds per family; aggregator content-minimal (vibe.toml + README + the relicense-wave LICENSE.md; no code/snippet/gates - spirit intact, letter noted in F-042); surface naming law live (binaries rust-ai-native/typescript-ai-native, crates <family>-cli/-conform/-specmap/-tcg, skills <family>-sweep/-terraform in the session skill list, [[mcp_server]].name = family per boot snippet); D13 supersession recorded; rejected alternatives consistent with PROP-024/027"
+            ]
+          },
+          "NAME-ROLE-BINARIES": {
+            "v": "confirmed",
+            "ev": [
+              "packages/ evidence 2026-07-25: rust family v0.7.0 (aggregator+lang+mcp), typescript v0.6.0 - unison holds per family; aggregator content-minimal (vibe.toml + README + the relicense-wave LICENSE.md; no code/snippet/gates - spirit intact, letter noted in F-042); surface naming law live (binaries rust-ai-native/typescript-ai-native, crates <family>-cli/-conform/-specmap/-tcg, skills <family>-sweep/-terraform in the session skill list, [[mcp_server]].name = family per boot snippet); D13 supersession recorded; rejected alternatives consistent with PROP-024/027"
+            ]
+          },
+          "NAME-MCP-SURFACE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/ evidence 2026-07-25: rust family v0.7.0 (aggregator+lang+mcp), typescript v0.6.0 - unison holds per family; aggregator content-minimal (vibe.toml + README + the relicense-wave LICENSE.md; no code/snippet/gates - spirit intact, letter noted in F-042); surface naming law live (binaries rust-ai-native/typescript-ai-native, crates <family>-cli/-conform/-specmap/-tcg, skills <family>-sweep/-terraform in the session skill list, [[mcp_server]].name = family per boot snippet); D13 supersession recorded; rejected alternatives consistent with PROP-024/027"
+            ]
+          },
+          "NAME-SKILLS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/ evidence 2026-07-25: rust family v0.7.0 (aggregator+lang+mcp), typescript v0.6.0 - unison holds per family; aggregator content-minimal (vibe.toml + README + the relicense-wave LICENSE.md; no code/snippet/gates - spirit intact, letter noted in F-042); surface naming law live (binaries rust-ai-native/typescript-ai-native, crates <family>-cli/-conform/-specmap/-tcg, skills <family>-sweep/-terraform in the session skill list, [[mcp_server]].name = family per boot snippet); D13 supersession recorded; rejected alternatives consistent with PROP-024/027"
+            ]
+          },
+          "NAME-NEUTRAL-ENGINES": {
+            "v": "confirmed",
+            "ev": [
+              "packages/ evidence 2026-07-25: rust family v0.7.0 (aggregator+lang+mcp), typescript v0.6.0 - unison holds per family; aggregator content-minimal (vibe.toml + README + the relicense-wave LICENSE.md; no code/snippet/gates - spirit intact, letter noted in F-042); surface naming law live (binaries rust-ai-native/typescript-ai-native, crates <family>-cli/-conform/-specmap/-tcg, skills <family>-sweep/-terraform in the session skill list, [[mcp_server]].name = family per boot snippet); D13 supersession recorded; rejected alternatives consistent with PROP-024/027"
+            ]
+          },
+          "D13-SUPERSEDED": {
+            "v": "confirmed",
+            "ev": [
+              "packages/ evidence 2026-07-25: rust family v0.7.0 (aggregator+lang+mcp), typescript v0.6.0 - unison holds per family; aggregator content-minimal (vibe.toml + README + the relicense-wave LICENSE.md; no code/snippet/gates - spirit intact, letter noted in F-042); surface naming law live (binaries rust-ai-native/typescript-ai-native, crates <family>-cli/-conform/-specmap/-tcg, skills <family>-sweep/-terraform in the session skill list, [[mcp_server]].name = family per boot snippet); D13 supersession recorded; rejected alternatives consistent with PROP-024/027"
+            ]
+          },
+          "D13-LANGUAGE-LEADS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/ evidence 2026-07-25: rust family v0.7.0 (aggregator+lang+mcp), typescript v0.6.0 - unison holds per family; aggregator content-minimal (vibe.toml + README + the relicense-wave LICENSE.md; no code/snippet/gates - spirit intact, letter noted in F-042); surface naming law live (binaries rust-ai-native/typescript-ai-native, crates <family>-cli/-conform/-specmap/-tcg, skills <family>-sweep/-terraform in the session skill list, [[mcp_server]].name = family per boot snippet); D13 supersession recorded; rejected alternatives consistent with PROP-024/027"
+            ]
+          },
+          "D13-GOAL-PRESERVED": {
+            "v": "confirmed",
+            "ev": [
+              "packages/ evidence 2026-07-25: rust family v0.7.0 (aggregator+lang+mcp), typescript v0.6.0 - unison holds per family; aggregator content-minimal (vibe.toml + README + the relicense-wave LICENSE.md; no code/snippet/gates - spirit intact, letter noted in F-042); surface naming law live (binaries rust-ai-native/typescript-ai-native, crates <family>-cli/-conform/-specmap/-tcg, skills <family>-sweep/-terraform in the session skill list, [[mcp_server]].name = family per boot snippet); D13 supersession recorded; rejected alternatives consistent with PROP-024/027"
+            ]
+          },
+          "D13-NEUTRAL-OUTSIDE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/ evidence 2026-07-25: rust family v0.7.0 (aggregator+lang+mcp), typescript v0.6.0 - unison holds per family; aggregator content-minimal (vibe.toml + README + the relicense-wave LICENSE.md; no code/snippet/gates - spirit intact, letter noted in F-042); surface naming law live (binaries rust-ai-native/typescript-ai-native, crates <family>-cli/-conform/-specmap/-tcg, skills <family>-sweep/-terraform in the session skill list, [[mcp_server]].name = family per boot snippet); D13 supersession recorded; rejected alternatives consistent with PROP-024/027"
+            ]
+          },
+          "REJ-FEATURE-FLAGS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/ evidence 2026-07-25: rust family v0.7.0 (aggregator+lang+mcp), typescript v0.6.0 - unison holds per family; aggregator content-minimal (vibe.toml + README + the relicense-wave LICENSE.md; no code/snippet/gates - spirit intact, letter noted in F-042); surface naming law live (binaries rust-ai-native/typescript-ai-native, crates <family>-cli/-conform/-specmap/-tcg, skills <family>-sweep/-terraform in the session skill list, [[mcp_server]].name = family per boot snippet); D13 supersession recorded; rejected alternatives consistent with PROP-024/027"
+            ]
+          },
+          "REJ-ALIAS-WITH-CONTENT": {
+            "v": "confirmed",
+            "ev": [
+              "packages/ evidence 2026-07-25: rust family v0.7.0 (aggregator+lang+mcp), typescript v0.6.0 - unison holds per family; aggregator content-minimal (vibe.toml + README + the relicense-wave LICENSE.md; no code/snippet/gates - spirit intact, letter noted in F-042); surface naming law live (binaries rust-ai-native/typescript-ai-native, crates <family>-cli/-conform/-specmap/-tcg, skills <family>-sweep/-terraform in the session skill list, [[mcp_server]].name = family per boot snippet); D13 supersession recorded; rejected alternatives consistent with PROP-024/027"
+            ]
+          },
+          "REJ-CARET-PINS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/ evidence 2026-07-25: rust family v0.7.0 (aggregator+lang+mcp), typescript v0.6.0 - unison holds per family; aggregator content-minimal (vibe.toml + README + the relicense-wave LICENSE.md; no code/snippet/gates - spirit intact, letter noted in F-042); surface naming law live (binaries rust-ai-native/typescript-ai-native, crates <family>-cli/-conform/-specmap/-tcg, skills <family>-sweep/-terraform in the session skill list, [[mcp_server]].name = family per boot snippet); D13 supersession recorded; rejected alternatives consistent with PROP-024/027"
+            ]
+          },
+          "open-family-app": {
+            "v": "confirmed",
+            "ev": [
+              "packages/ evidence 2026-07-25: rust family v0.7.0 (aggregator+lang+mcp), typescript v0.6.0 - unison holds per family; aggregator content-minimal (vibe.toml + README + the relicense-wave LICENSE.md; no code/snippet/gates - spirit intact, letter noted in F-042); surface naming law live (binaries rust-ai-native/typescript-ai-native, crates <family>-cli/-conform/-specmap/-tcg, skills <family>-sweep/-terraform in the session skill list, [[mcp_server]].name = family per boot snippet); D13 supersession recorded; rejected alternatives consistent with PROP-024/027"
+            ]
+          },
+          "open-member-opt-out": {
+            "v": "confirmed",
+            "ev": [
+              "packages/ evidence 2026-07-25: rust family v0.7.0 (aggregator+lang+mcp), typescript v0.6.0 - unison holds per family; aggregator content-minimal (vibe.toml + README + the relicense-wave LICENSE.md; no code/snippet/gates - spirit intact, letter noted in F-042); surface naming law live (binaries rust-ai-native/typescript-ai-native, crates <family>-cli/-conform/-specmap/-tcg, skills <family>-sweep/-terraform in the session skill list, [[mcp_server]].name = family per boot snippet); D13 supersession recorded; rejected alternatives consistent with PROP-024/027"
+            ]
+          },
+          "_elements": {
+            "v": "confirmed",
+            "ev": [
+              "impl/done doc tag consistent; SS4 spec/work tag consistent (two open questions, no app kind, no per-member opt-out)"
+            ]
+          }
+        },
+        "verified_at": "2026-07-25T13:05:25Z",
+        "verify_batch": "c3a-common-small"
+      }
     },
     {
       "path": "spec/common/PROP-029-fully-qualified-addresses.md",
@@ -589,7 +1399,172 @@
       "facts": 30,
       "unmarked": 0,
       "issues": 0,
-      "campaign": {}
+      "campaign": {
+        "anchors_judged": 24,
+        "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor; <status> elements judged as _elements",
+        "fact_count": 30,
+        "marker_count": 32,
+        "processed_hash": "884c6b872ba4833b3608abd9862bf7c88fdc2e6b4de6bb0db52f5c4debb9c405",
+        "summary": {
+          "confirmed": 25,
+          "drift": 0,
+          "unverifiable": 0
+        },
+        "verdicts": {
+          "status-line": {
+            "v": "confirmed",
+            "ev": [
+              "address law observed across the tree: manifests/lockfiles/INDEX entries carry qualified group/name forms (stack:org.vibevm.ai-native/rust-ai-native-lang etc. in the generated boot); the three carriers match live examples (spec:// authorities in STATIC.md, repo naming per PROP-008 SS2.5 Fqdn - global_registry.rs:113); the 2026-07-12 group restructure is the recorded first SS3 refactor; rename engine genuinely future (no FEAT); scope rules consistent (host specs use spec://vibevm authority; demo fixtures as written)"
+            ]
+          },
+          "ADDR-LAW": {
+            "v": "confirmed",
+            "ev": [
+              "address law observed across the tree: manifests/lockfiles/INDEX entries carry qualified group/name forms (stack:org.vibevm.ai-native/rust-ai-native-lang etc. in the generated boot); the three carriers match live examples (spec:// authorities in STATIC.md, repo naming per PROP-008 SS2.5 Fqdn - global_registry.rs:113); the 2026-07-12 group restructure is the recorded first SS3 refactor; rename engine genuinely future (no FEAT); scope rules consistent (host specs use spec://vibevm authority; demo fixtures as written)"
+            ]
+          },
+          "ADDR-SURFACES": {
+            "v": "confirmed",
+            "ev": [
+              "address law observed across the tree: manifests/lockfiles/INDEX entries carry qualified group/name forms (stack:org.vibevm.ai-native/rust-ai-native-lang etc. in the generated boot); the three carriers match live examples (spec:// authorities in STATIC.md, repo naming per PROP-008 SS2.5 Fqdn - global_registry.rs:113); the 2026-07-12 group restructure is the recorded first SS3 refactor; rename engine genuinely future (no FEAT); scope rules consistent (host specs use spec://vibevm authority; demo fixtures as written)"
+            ]
+          },
+          "ADDR-SHORT-NAMES": {
+            "v": "confirmed",
+            "ev": [
+              "address law observed across the tree: manifests/lockfiles/INDEX entries carry qualified group/name forms (stack:org.vibevm.ai-native/rust-ai-native-lang etc. in the generated boot); the three carriers match live examples (spec:// authorities in STATIC.md, repo naming per PROP-008 SS2.5 Fqdn - global_registry.rs:113); the 2026-07-12 group restructure is the recorded first SS3 refactor; rename engine genuinely future (no FEAT); scope rules consistent (host specs use spec://vibevm authority; demo fixtures as written)"
+            ]
+          },
+          "ADDR-NO-BARE-ON-DISK": {
+            "v": "confirmed",
+            "ev": [
+              "address law observed across the tree: manifests/lockfiles/INDEX entries carry qualified group/name forms (stack:org.vibevm.ai-native/rust-ai-native-lang etc. in the generated boot); the three carriers match live examples (spec:// authorities in STATIC.md, repo naming per PROP-008 SS2.5 Fqdn - global_registry.rs:113); the 2026-07-12 group restructure is the recorded first SS3 refactor; rename engine genuinely future (no FEAT); scope rules consistent (host specs use spec://vibevm authority; demo fixtures as written)"
+            ]
+          },
+          "joiner-why": {
+            "v": "confirmed",
+            "ev": [
+              "address law observed across the tree: manifests/lockfiles/INDEX entries carry qualified group/name forms (stack:org.vibevm.ai-native/rust-ai-native-lang etc. in the generated boot); the three carriers match live examples (spec:// authorities in STATIC.md, repo naming per PROP-008 SS2.5 Fqdn - global_registry.rs:113); the 2026-07-12 group restructure is the recorded first SS3 refactor; rename engine genuinely future (no FEAT); scope rules consistent (host specs use spec://vibevm authority; demo fixtures as written)"
+            ]
+          },
+          "carriers-lead": {
+            "v": "confirmed",
+            "ev": [
+              "address law observed across the tree: manifests/lockfiles/INDEX entries carry qualified group/name forms (stack:org.vibevm.ai-native/rust-ai-native-lang etc. in the generated boot); the three carriers match live examples (spec:// authorities in STATIC.md, repo naming per PROP-008 SS2.5 Fqdn - global_registry.rs:113); the 2026-07-12 group restructure is the recorded first SS3 refactor; rename engine genuinely future (no FEAT); scope rules consistent (host specs use spec://vibevm authority; demo fixtures as written)"
+            ]
+          },
+          "CARRIER-PKGREF": {
+            "v": "confirmed",
+            "ev": [
+              "address law observed across the tree: manifests/lockfiles/INDEX entries carry qualified group/name forms (stack:org.vibevm.ai-native/rust-ai-native-lang etc. in the generated boot); the three carriers match live examples (spec:// authorities in STATIC.md, repo naming per PROP-008 SS2.5 Fqdn - global_registry.rs:113); the 2026-07-12 group restructure is the recorded first SS3 refactor; rename engine genuinely future (no FEAT); scope rules consistent (host specs use spec://vibevm authority; demo fixtures as written)"
+            ]
+          },
+          "CARRIER-SPEC-URI": {
+            "v": "confirmed",
+            "ev": [
+              "address law observed across the tree: manifests/lockfiles/INDEX entries carry qualified group/name forms (stack:org.vibevm.ai-native/rust-ai-native-lang etc. in the generated boot); the three carriers match live examples (spec:// authorities in STATIC.md, repo naming per PROP-008 SS2.5 Fqdn - global_registry.rs:113); the 2026-07-12 group restructure is the recorded first SS3 refactor; rename engine genuinely future (no FEAT); scope rules consistent (host specs use spec://vibevm authority; demo fixtures as written)"
+            ]
+          },
+          "CARRIER-REPO-NAME": {
+            "v": "confirmed",
+            "ev": [
+              "address law observed across the tree: manifests/lockfiles/INDEX entries carry qualified group/name forms (stack:org.vibevm.ai-native/rust-ai-native-lang etc. in the generated boot); the three carriers match live examples (spec:// authorities in STATIC.md, repo naming per PROP-008 SS2.5 Fqdn - global_registry.rs:113); the 2026-07-12 group restructure is the recorded first SS3 refactor; rename engine genuinely future (no FEAT); scope rules consistent (host specs use spec://vibevm authority; demo fixtures as written)"
+            ]
+          },
+          "CARRIER-BYTE-IDENTITY": {
+            "v": "confirmed",
+            "ev": [
+              "address law observed across the tree: manifests/lockfiles/INDEX entries carry qualified group/name forms (stack:org.vibevm.ai-native/rust-ai-native-lang etc. in the generated boot); the three carriers match live examples (spec:// authorities in STATIC.md, repo naming per PROP-008 SS2.5 Fqdn - global_registry.rs:113); the 2026-07-12 group restructure is the recorded first SS3 refactor; rename engine genuinely future (no FEAT); scope rules consistent (host specs use spec://vibevm authority; demo fixtures as written)"
+            ]
+          },
+          "CARRIER-REPO-SWAP": {
+            "v": "confirmed",
+            "ev": [
+              "address law observed across the tree: manifests/lockfiles/INDEX entries carry qualified group/name forms (stack:org.vibevm.ai-native/rust-ai-native-lang etc. in the generated boot); the three carriers match live examples (spec:// authorities in STATIC.md, repo naming per PROP-008 SS2.5 Fqdn - global_registry.rs:113); the 2026-07-12 group restructure is the recorded first SS3 refactor; rename engine genuinely future (no FEAT); scope rules consistent (host specs use spec://vibevm authority; demo fixtures as written)"
+            ]
+          },
+          "ADDR-STRUCTURE-FREE": {
+            "v": "confirmed",
+            "ev": [
+              "address law observed across the tree: manifests/lockfiles/INDEX entries carry qualified group/name forms (stack:org.vibevm.ai-native/rust-ai-native-lang etc. in the generated boot); the three carriers match live examples (spec:// authorities in STATIC.md, repo naming per PROP-008 SS2.5 Fqdn - global_registry.rs:113); the 2026-07-12 group restructure is the recorded first SS3 refactor; rename engine genuinely future (no FEAT); scope rules consistent (host specs use spec://vibevm authority; demo fixtures as written)"
+            ]
+          },
+          "ADDR-REFACTOR-PRECONDITION": {
+            "v": "confirmed",
+            "ev": [
+              "address law observed across the tree: manifests/lockfiles/INDEX entries carry qualified group/name forms (stack:org.vibevm.ai-native/rust-ai-native-lang etc. in the generated boot); the three carriers match live examples (spec:// authorities in STATIC.md, repo naming per PROP-008 SS2.5 Fqdn - global_registry.rs:113); the 2026-07-12 group restructure is the recorded first SS3 refactor; rename engine genuinely future (no FEAT); scope rules consistent (host specs use spec://vibevm authority; demo fixtures as written)"
+            ]
+          },
+          "ADDR-RENAME-IS-LOOKUP": {
+            "v": "confirmed",
+            "ev": [
+              "address law observed across the tree: manifests/lockfiles/INDEX entries carry qualified group/name forms (stack:org.vibevm.ai-native/rust-ai-native-lang etc. in the generated boot); the three carriers match live examples (spec:// authorities in STATIC.md, repo naming per PROP-008 SS2.5 Fqdn - global_registry.rs:113); the 2026-07-12 group restructure is the recorded first SS3 refactor; rename engine genuinely future (no FEAT); scope rules consistent (host specs use spec://vibevm authority; demo fixtures as written)"
+            ]
+          },
+          "REFACTOR-LAW": {
+            "v": "confirmed",
+            "ev": [
+              "address law observed across the tree: manifests/lockfiles/INDEX entries carry qualified group/name forms (stack:org.vibevm.ai-native/rust-ai-native-lang etc. in the generated boot); the three carriers match live examples (spec:// authorities in STATIC.md, repo naming per PROP-008 SS2.5 Fqdn - global_registry.rs:113); the 2026-07-12 group restructure is the recorded first SS3 refactor; rename engine genuinely future (no FEAT); scope rules consistent (host specs use spec://vibevm authority; demo fixtures as written)"
+            ]
+          },
+          "REFACTOR-TODAY": {
+            "v": "confirmed",
+            "ev": [
+              "address law observed across the tree: manifests/lockfiles/INDEX entries carry qualified group/name forms (stack:org.vibevm.ai-native/rust-ai-native-lang etc. in the generated boot); the three carriers match live examples (spec:// authorities in STATIC.md, repo naming per PROP-008 SS2.5 Fqdn - global_registry.rs:113); the 2026-07-12 group restructure is the recorded first SS3 refactor; rename engine genuinely future (no FEAT); scope rules consistent (host specs use spec://vibevm authority; demo fixtures as written)"
+            ]
+          },
+          "REFACTOR-TARGET": {
+            "v": "confirmed",
+            "ev": [
+              "address law observed across the tree: manifests/lockfiles/INDEX entries carry qualified group/name forms (stack:org.vibevm.ai-native/rust-ai-native-lang etc. in the generated boot); the three carriers match live examples (spec:// authorities in STATIC.md, repo naming per PROP-008 SS2.5 Fqdn - global_registry.rs:113); the 2026-07-12 group restructure is the recorded first SS3 refactor; rename engine genuinely future (no FEAT); scope rules consistent (host specs use spec://vibevm authority; demo fixtures as written)"
+            ]
+          },
+          "REFACTOR-DEPENDS-ON-LAW": {
+            "v": "confirmed",
+            "ev": [
+              "address law observed across the tree: manifests/lockfiles/INDEX entries carry qualified group/name forms (stack:org.vibevm.ai-native/rust-ai-native-lang etc. in the generated boot); the three carriers match live examples (spec:// authorities in STATIC.md, repo naming per PROP-008 SS2.5 Fqdn - global_registry.rs:113); the 2026-07-12 group restructure is the recorded first SS3 refactor; rename engine genuinely future (no FEAT); scope rules consistent (host specs use spec://vibevm authority; demo fixtures as written)"
+            ]
+          },
+          "SCOPE-HOST": {
+            "v": "confirmed",
+            "ev": [
+              "address law observed across the tree: manifests/lockfiles/INDEX entries carry qualified group/name forms (stack:org.vibevm.ai-native/rust-ai-native-lang etc. in the generated boot); the three carriers match live examples (spec:// authorities in STATIC.md, repo naming per PROP-008 SS2.5 Fqdn - global_registry.rs:113); the 2026-07-12 group restructure is the recorded first SS3 refactor; rename engine genuinely future (no FEAT); scope rules consistent (host specs use spec://vibevm authority; demo fixtures as written)"
+            ]
+          },
+          "SCOPE-FIXTURES": {
+            "v": "confirmed",
+            "ev": [
+              "address law observed across the tree: manifests/lockfiles/INDEX entries carry qualified group/name forms (stack:org.vibevm.ai-native/rust-ai-native-lang etc. in the generated boot); the three carriers match live examples (spec:// authorities in STATIC.md, repo naming per PROP-008 SS2.5 Fqdn - global_registry.rs:113); the 2026-07-12 group restructure is the recorded first SS3 refactor; rename engine genuinely future (no FEAT); scope rules consistent (host specs use spec://vibevm authority; demo fixtures as written)"
+            ]
+          },
+          "SCOPE-GROUP-CHANGE": {
+            "v": "confirmed",
+            "ev": [
+              "address law observed across the tree: manifests/lockfiles/INDEX entries carry qualified group/name forms (stack:org.vibevm.ai-native/rust-ai-native-lang etc. in the generated boot); the three carriers match live examples (spec:// authorities in STATIC.md, repo naming per PROP-008 SS2.5 Fqdn - global_registry.rs:113); the 2026-07-12 group restructure is the recorded first SS3 refactor; rename engine genuinely future (no FEAT); scope rules consistent (host specs use spec://vibevm authority; demo fixtures as written)"
+            ]
+          },
+          "CHANGELOG-CREATED": {
+            "v": "confirmed",
+            "ev": [
+              "address law observed across the tree: manifests/lockfiles/INDEX entries carry qualified group/name forms (stack:org.vibevm.ai-native/rust-ai-native-lang etc. in the generated boot); the three carriers match live examples (spec:// authorities in STATIC.md, repo naming per PROP-008 SS2.5 Fqdn - global_registry.rs:113); the 2026-07-12 group restructure is the recorded first SS3 refactor; rename engine genuinely future (no FEAT); scope rules consistent (host specs use spec://vibevm authority; demo fixtures as written)"
+            ]
+          },
+          "CHANGELOG-EXTRACTED": {
+            "v": "confirmed",
+            "ev": [
+              "address law observed across the tree: manifests/lockfiles/INDEX entries carry qualified group/name forms (stack:org.vibevm.ai-native/rust-ai-native-lang etc. in the generated boot); the three carriers match live examples (spec:// authorities in STATIC.md, repo naming per PROP-008 SS2.5 Fqdn - global_registry.rs:113); the 2026-07-12 group restructure is the recorded first SS3 refactor; rename engine genuinely future (no FEAT); scope rules consistent (host specs use spec://vibevm authority; demo fixtures as written)"
+            ]
+          },
+          "_elements": {
+            "v": "confirmed",
+            "ev": [
+              "spec/done tags consistent (accepted 2026-07-12; changelog carries the extraction record)"
+            ]
+          }
+        },
+        "verified_at": "2026-07-25T13:05:25Z",
+        "verify_batch": "c3a-common-small"
+      }
     },
     {
       "path": "spec/common/PROP-031-algorithmic-refactoring.md",
