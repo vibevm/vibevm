@@ -1,7 +1,8 @@
 # WAL — Project Continuation State
 
-_Updated: 2026-07-25 (Phase B CLOSED mid-session — corpus fully marked,
-exit gate green; awaiting the owner's call to open Phase L)_
+_Updated: 2026-07-25 (session end — Phase B CLOSED, exit gate green;
+Phase L handed off to the next session by the owner; the campaign plan
+stays in spec/terraforms per the owner's reversal)_
 
 ## Current phase
 
@@ -28,9 +29,13 @@ new). Opus/DRIFT queue EMPTY. Key laws unchanged: fact-exhaustive
 granularity, anchored-when-marked, two registers, verdicts never in
 markup, **no fractality** (Fable = markup, Opus = DRIFT coding), engine
 pin `claude-opus-5`. Plan:
-`spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md`. Open review
-point for the owner: the plan file itself lives in `spec/terraforms/` —
-relocate mid-campaign or at close-out (before L5).
+`spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md`. The plan-file
+review point is RESOLVED (owner, session close): **the plan stays in
+`spec/terraforms/`** — the §6 monthly recurrence needs the instruction
+set in place; **L5 excludes the plan file** from the move. Phase L
+execution is handed off wholesale to the next session («Перенеси все
+эти активности в следующую сессию») — the opening phrase and the full
+L1–L5 recipe (inventory greps included) are in `CONTINUE.md`.
 
 ## Constraints — do not violate
 
@@ -69,13 +74,14 @@ the next phase (L) opens only on the owner's word.
 
 ## Next
 
-1. **Owner call: open Phase L (legacy relocation)** — the §5 Phase L
-   section in the plan carries the owner-ordered steps L1–L5
-   (reference inventory incl. specmark/doctests → fact discovery →
-   relocation into the living corpus, new specs allowed → fact-grain
-   markup + scope growth → `git mv` to `legacy-spec/`). Exit before
-   Phase C opens. Resolve in passing: does the campaign plan itself
-   move with `spec/terraforms/`, or at close-out?
+1. **Next session: open Phase L (legacy relocation)** — pre-authorized
+   by the owner's handoff; the session opens with the phrase recorded
+   in `CONTINUE.md`, appends the `{"kind":"phase","value":"L"}` journal
+   event, then works L1–L5 (reference inventory incl. specmark/doctests
+   → fact discovery → relocation into the living corpus, new specs
+   allowed → fact-grain markup + scope growth → `git mv` to
+   `legacy-spec/`, **excluding the campaign plan file**). Exit before
+   Phase C opens.
 2. **Then Phase C (verification)** per the plan §5 — every marker gets
    an evidence-backed verdict; the F-024…F-034 stale-header family is
    prime drift material for C/D.
@@ -102,8 +108,8 @@ doctor` project-local row.
 
 ## Session context
 
-Phase B closed mid-session with the boundary entry in the plan LOG §9;
-the session continues awaiting the owner's Phase L call. If this
-session ends here, the next one boots per `CLAUDE.md`, reads this WAL +
-the plan LOG §9 tail, and reports — Phase L does not open without the
-owner.
+The session closed at the Phase-B boundary; Phase L is handed off. The
+next session opens with the resume phrase from `CONTINUE.md` §"How to
+start the next session" (it carries the owner's explicit Phase-L
+opening), boots per `CLAUDE.md`, appends the phase event, and works
+L1–L5. `progress check` must stay at 0 throughout.
