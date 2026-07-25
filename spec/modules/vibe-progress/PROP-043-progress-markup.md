@@ -362,12 +362,28 @@ include = ["spec/**/*.md", "packages/**/*.md"]   # the default when absent
 - ##CMD-WEAVE **`weave`** {#weave} — algorithmic stitch of the observed corpus into one
   document for whole-context LLM loading. `--digest` emits the map form
   (headings + markers + unmarked counts — always fits); `--max-tokens N`
-  shards the full form with a shard manifest. Wave-1 corpus (~27k lines)
-  is expected to fit one modern window nearly whole. @impl/done
+  shards the full form with a shard manifest. **Measured 2026-07-26** on the
+  58-file wave-1 corpus: the full weave is **one shard of 1 138 441 bytes**
+  (≈ a third of a 1M-token window, so the sharder never had to split) and
+  `--digest` is **200 454 bytes**. @impl/done
 - ##CMD-RESCAN **`rescan --baseline <file>`** {#rescan} — the recurrence entry point:
   three-way compare (sources ↔ markers ↔ baseline, §7.3) emitting
   new / changed(suspect) / carried-forward unit lists, plus
   "marker changed outside any campaign" flags. @impl/done
+- ##CMD-BASELINE **`baseline [--out <file>]`** {#baseline} — write the campaign's
+  `baseline.json` (§7.3), the file `rescan` consumes. Projects the cache's
+  **fact-grain** verdicts onto the **unit** granularity the baseline contract
+  is defined at: a fact rolls up into every unit whose span carries it, the
+  worst verdict wins (`drift` > `unverifiable` > `confirmed`), evidence is the
+  deduplicated union, and the marker snapshot is resolved by the same code path
+  `rescan` compares against. It re-verifies nothing and invents no verdict — a
+  unit with no judged fact is omitted rather than filled in, so the artifact
+  fails toward re-verifying. Default output is `campaigns/<id>/baseline.json`.
+  @impl/done
+- ##CMD-GATE **`gate`** {#gate} — record one gate's verdict into the campaign's
+  gate panel in `campaign.json`. The automation seam: whoever ran the real
+  gate reports the result here, and the dashboard reads it back out. Spawns
+  nothing and computes nothing — gates are *recorded*, never run here. @impl/done
 - ##CMD-RESUME **`resume`** {#resume} — render `RESUME.md` from the campaign journal and
   state (operates on the campaign zone when present; a no-op outside one). @impl/done
 
@@ -420,7 +436,11 @@ campaign is active: verdict per marker (`confirmed` / `drift` /
 - ##BASELINE-RECORD `baseline.json` — per unit: URI#anchor, unit content-hash at verdict time,
   verdict, evidence refs, date, named crates, marker snapshot. **Shipped:**
   `baseline.rs`'s `BaselineUnit` carries exactly these fields, with
-  `Baseline::load` / `store` and the `rescan` CLI live. @impl/done
+  `Baseline::load`, `Baseline::store` (`baseline/project.rs`), the
+  `##CMD-BASELINE` writer and the `rescan` CLI all live. `store` was claimed
+  here before it existed and was built to match on 2026-07-26 (F-065); the
+  round trip — write the baseline, rescan against it on an unchanged tree —
+  is what pins the two halves together. @impl/done
 - ##BASELINE-INVALIDATION Invalidation:
   unit hash changed ⇒ suspect; named crate has commits after the verdict date
   ⇒ suspect; marker diverged from snapshot without a campaign ⇒ flagged;

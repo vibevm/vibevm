@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-07-25T22:32:58Z",
+  "updated_at": "2026-07-25T23:33:59Z",
   "files": [
     {
       "path": "spec/boot/00-core.md",
@@ -14637,9 +14637,9 @@
         "stage": "impl",
         "state": "done"
       },
-      "markers": 159,
+      "markers": 161,
       "units": 27,
-      "facts": 158,
+      "facts": 160,
       "unmarked": 0,
       "issues": 0,
       "campaign": {
@@ -15291,7 +15291,7 @@
           "CMD-WEAVE": {
             "v": "confirmed",
             "ev": [
-              "CLI --help snapshots this session: all 7 subcommands; report --md/--json/--view done|todo|qa|remove|doc/--audience user|author|dev; weave --digest/--max-tokens (never-truncate law in weave.rs); rescan --baseline required; scan/mirror/resume ran live this session"
+              "Measured by the reviewer 2026-07-26, not estimated: `vibe progress weave --max-tokens 1000000 --out <dir>` over the 58-file wave-1 corpus emits exactly 1 shard of 1 138 441 bytes; `weave --digest` is 200 454 bytes. Replaces the prior 'is expected to fit' wording, which had never been exercised - no LOG entry records a weave run anywhere in wave 1 (REPORT prediction 1)."
             ]
           },
           "CMD-RESCAN": {
@@ -15371,8 +15371,7 @@
           "BASELINE-RECORD": {
             "v": "confirmed",
             "ev": [
-              "F-046(f): shipped while marked spec/done - baseline.rs BaselineUnit{addr,unit_hash,verdict,evidence,verified_at,crates,marker} matches §7.3 field-for-field; Baseline::load/store + rescan CLI live (--baseline required)",
-              "D d2f 2026-07-25 (F-046 partial): BASELINE-RECORD needed no owner call - baseline.rs BaselineUnit matches §7.3 field for field with load/store and the rescan CLI live, so it is a plain shipped-under-spec re-mark, not a wire-or-demote decision"
+              "F-065 closed 2026-07-26 by DRIFT-023. `Baseline::store` now exists (crates/progress-core/src/baseline/project.rs, mirroring Cache::store incl. the DRIFT-017 no-op-write skip) and `vibe progress baseline` writes the artefact. PINNED BY ROUND TRIP, not by reading: `progress baseline` then `progress rescan --baseline campaigns/progress-2026-08/baseline.json --control-rate 0` on an unchanged tree = 0 new, 919 carried-forward, 1 changed, and the 1 is invalidation rule 2 firing correctly (crate vibe-cli moved after the verdict), not a writer/reader disagreement; marker_diverged false on all 920 rows. Re-verified independently by the reviewer. PRIOR VERDICT WAS WRONG: this row was flipped drift->confirmed by 0064fd4a on a `Shipped:` line claiming a `store` that had never been written - the `store` in view was Cache::store, a different type in the same crate."
             ]
           },
           "BASELINE-INVALIDATION": {
@@ -15532,9 +15531,21 @@
               "F-045: document marker comment 'implementation underway (campaign Phase A)' aged - the journal-derived phase lane reads C and the §5 tool is shipped; the marker value spec/done+continue/impl itself is defensible",
               "D d2f 2026-07-25 (F-045 closed): PROP-043's own status caught up with the campaign it governs - RATIFIED and IMPLEMENTED, the phase lane named as D, zero (provisional) sections left, and the two real gaps named as parity items rather than as unfinished specification"
             ]
+          },
+          "CMD-BASELINE": {
+            "v": "confirmed",
+            "ev": [
+              "DRIFT-023 sync-from-code 2026-07-26. Verified against the shipped CLI: ProgressSubcommand (crates/vibe-cli/src/cli/progress.rs) carries Scan/Check/Report/Mirror/Weave/Rescan/Resume/Gate/Baseline. `baseline` implemented in crates/vibe-cli/src/commands/progress/baseline.rs, `gate` in progress-core state.rs record_gate. Both verbs were shipped and undocumented - `gate` since DRIFT-008, `baseline` as of today - so this list was two commands short of the tool."
+            ]
+          },
+          "CMD-GATE": {
+            "v": "confirmed",
+            "ev": [
+              "DRIFT-023 sync-from-code 2026-07-26. Verified against the shipped CLI: ProgressSubcommand (crates/vibe-cli/src/cli/progress.rs) carries Scan/Check/Report/Mirror/Weave/Rescan/Resume/Gate/Baseline. `baseline` implemented in crates/vibe-cli/src/commands/progress/baseline.rs, `gate` in progress-core state.rs record_gate. Both verbs were shipped and undocumented - `gate` since DRIFT-008, `baseline` as of today - so this list was two commands short of the tool."
+            ]
           }
         },
-        "verified_at": "2026-07-25T14:01:39Z",
+        "verified_at": "2026-07-26T14:45:00Z",
         "verify_batch": "c4a-vibe-progress + d2f + E"
       }
     },
