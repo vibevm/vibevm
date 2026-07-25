@@ -1048,6 +1048,31 @@ read-only, no auth.
   c4f3 — vibe-index PROP-005 (279 markers), the last file of the
   phase.**
 
+- **2026-07-25 · c4f3 + PHASE C EXIT GATE — the corpus is measured.**
+  PROP-005 (279 markers, 91 edges) closes the phase **all-confirmed —
+  the eighth zero-drift file**: an "implemented; folded into the
+  workspace" header verified against the living crate, the
+  group-native M1.19 index shape (`workspace_origin` in both the §2.6
+  schema and the shipped JTD), `vibe search`/`outdated` surfaces, and
+  the M2.10 smoke. **The exit gate is green in full: 58/58 files carry
+  campaign maps; 4 944 / 4 944 markers carry verdicts** (anchors +
+  row-inherited cells + document elements). **Phase C final tally:
+  4 455 units judged — 4 141 confirmed / 311 drift / 3 unverifiable =
+  93.0 % / 7.0 % / 0.07 % — the first measured actuality level of the
+  spec tree.** Findings stand at 54 (F-001…F-054; F-045…F-054 minted
+  and F-018/F-024/F-047/F-048 extended by this phase's modules
+  cluster). **The §5-C prediction confirms, mirrored:** drift indeed
+  concentrates around Status lines — but in the *inverse* polarity:
+  headers promised **less** than the tree delivers (the
+  shipped-under-proposed families: PROP-030's 63 rows, the bridge
+  four's 137, PROP-000's F-043 six), while honestly-updated
+  IMPLEMENTED files confirm nearly wholesale (eight zero-drift files:
+  PROP-011/012/025/042/015/026/027/005). The three unverifiable stay
+  network-bound (the GitVerse legacy-registry claims). The drift
+  ledger is sweep-shaped for Phase D: ~15 family rows cover ~80 % of
+  the 311 rows. **Phase C is complete; the phase lane stays C — Phase
+  D opens only on the owner's call, per the §5 entry law.**
+
 ## 10. Deferrals {#deferrals}
 
 *(empty — drained into `campaigns/<id>/deferrals.md` at close-out)*

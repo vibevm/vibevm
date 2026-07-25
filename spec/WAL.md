@@ -1,38 +1,34 @@
 # WAL — Project Continuation State
 
-_Updated: 2026-07-25 (mid-session checkpoint — Phase C modules cluster:
-12 of 35 module files verified in five batches c4a…c4d2; workspace
-cluster closed; cli/actions (c4e) and the mcp/index/settings/registry
-tail (c4f) remain)_
+_Updated: 2026-07-25 (session end — **PHASE C COMPLETE, exit gate
+green**: 58/58 files, 4 944/4 944 markers carry verdicts; the corpus
+is measured at 93.0 % confirmed; Phase D awaits the owner's call)_
 
 ## Current phase
 
-**Progress Control (PROP-043) — Phase C (verification) IN FLIGHT, the
-modules cluster past half.** Conventions stay per LOG §9 (verdicts in
-cache campaign maps only; impl/done ⇒ presence, spec/done ⇒ absence,
-doc/done ⇒ no-contradiction; coverage from `progress mirror`'s
-ParsedDoc — the raw-grep extractor over-counts code-span shorthands;
-assert-gated; `_elements` for document markers). **Tally: 3 233 /
-4 944 — 3 062 confirmed / 168 drift / 3 unverifiable; findings 51**
-(F-045…F-051 new this session; F-018/F-024/F-047/F-048 extended).
-Verified: boot, manual-tests, design, common 12/12, vibe-progress
-(c4a), registry core 002+001 (c4b), resolver 003+017 (c4c), workspace
-10/10 (c4d1+c4d2) = 35 of 58 files. Session findings of note: F-046
-(PROP-043's own §5–§7 marker-vs-implementation parity, both
-directions), F-047 (stale in-code deviates denying the shipped
-ResolvoDepSolver — production default `unwrap_or("resolvo")`), F-048
-(--trust-mirror and `list --overrides` promised-absent; SOLVER-IDENTITY
-corrected from a wrong c4b confirm), F-050 (PROP-003's solver tail
-outside its §2.2 supersede marker), F-018-extended (PROP-020/022:
-whole shipped systems — hooks.rs runner, Materialization modes — under
-proposed headers; 78 drift rows, one re-mark sweep each). First
-zero-drift files: PROP-011/012/025 (227/227). **Remaining: c4e
-(vibe-cli+vibe-actions: 037/036/042/039 — 327 markers) and c4f
-(vibe-mcp ×3, index 005, settings ×2, registry rest — 957)** per the
-`CONTINUE.md` batch map. Exit gate: 100 % markers carry verdicts;
-ask the owner before Phase D. Key laws unchanged: no fractality
-(Fable = verification, Opus = DRIFT coding, queue EMPTY), engine pin
-`claude-opus-5`. Plan: `spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md`.
+**Progress Control (PROP-043) — Phase C (verification) COMPLETE; the
+phase lane stays C until the owner opens Phase D (§5 entry law).**
+**Final tally: 4 455 units judged — 4 141 confirmed / 311 drift / 3
+unverifiable = 93.0 % / 7.0 % / 0.07 % — the first measured actuality
+level of the spec tree. Findings 54** (F-001…F-054; this session
+minted F-045…F-054 and extended F-018/F-024/F-047/F-048 across ten
+batches c4a…c4f3). The §5-C prediction confirmed **mirrored**: drift
+concentrates in Status lines that promised *less* than the tree
+delivers — the shipped-under-proposed families (PROP-030 63 rows;
+the bridge four PROP-020/021/022/023 = 137; PROP-000's F-043 six;
+the DRAFT-era cli/actions headers F-052) — while honestly-updated
+files confirm nearly wholesale (**eight zero-drift files**:
+PROP-011/012/025/042/015/026/027/005). Notable code-side rows for
+Phase E: F-036 (--plain clap lie), F-047 (three stale deviates
+denying the shipped ResolvoDepSolver). One verdict was corrected
+mid-phase (c4b SOLVER-IDENTITY-FIELD confirm → drift in c4c; F-048f).
+The 311-row drift ledger is sweep-shaped for Phase D: ~15 family rows
+cover ~80 % of it. **Next: the owner reads the measurement and rules
+on opening Phase D (stitching)**; the Opus DRIFT queue stays EMPTY.
+Key laws unchanged: no fractality (Fable = verification, Opus = DRIFT
+coding), engine pin `claude-opus-5`. Plan:
+`spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md` (LOG §9 carries
+the full ten-batch record and the exit-gate boundary entry).
 
 ## Constraints — do not violate
 
@@ -57,6 +53,17 @@ ask the owner before Phase D. Key laws unchanged: no fractality
 
 ## Done (collapsed — see `git log`)
 
+- **Phase C, modules cluster c4a…c4f3 (2026-07-25, this session).**
+  Ten batches, 3 057 units: vibe-progress self-verification (F-045
+  self-status, F-046 parity family), registry core (F-047 stale
+  deviates, F-048 promised-absent, resolvo confirmed as production
+  default), resolver pair (F-050 un-marked supersession tail; c4b
+  verdict corrected), workspace 10/10 (F-018 mass families PROP-020/
+  022; F-029/F-026/F-028 land; PROP-011/012/025 zero-drift),
+  cli/actions (F-052 DRAFT-era headers; PROP-042 clean), registry
+  rest (F-053 PROP-030 63 rows — the densest; F-054 nits; bridge
+  family completed), mcp+settings (three zero-drift; F-010/F-019
+  land), index PROP-005 all-confirmed. Exit gate green.
 - **Phase C, clusters 1–4 (2026-07-25).** c0 boot 64u (F-035
   tests/-path drift); c1 manual-tests 67u (MT keymap era F-037/F-038 +
   clap-help F-036); c2 design 306u (aged-tense family F-039/040/041 +
@@ -73,22 +80,25 @@ ask the owner before Phase D. Key laws unchanged: no fractality
 
 ## In progress
 
-Phase C mid-flight at a clean batch boundary — journal closed (last
-step `c3d-common-tail` done), no step open. The next batch is `c4a`
-(vibe-progress family) per the `CONTINUE.md` batch map.
+Nothing open — Phase C closed at its exit gate; the journal's last
+step (`c4f3-index`) is done and the boundary entry is in LOG §9. The
+campaign holds at the C→D boundary for the owner's ruling.
 
 ## Next
 
-1. **Phase C, modules cluster** — batches c4a…c4f per `CONTINUE.md`
-   (35 files, 3 300 markers; specmap join gives 626 edges — PROP-002
-   alone carries 110). Loop, conventions, and pitfalls are recorded
-   there and in LOG §9. Exit gate: 100 % markers carry verdicts;
-   X/Y/Z in the LOG; **ask the owner before opening Phase D**.
-2. Then Phase D (stitching) over the 44-row ledger — the F-024…F-044
-   families are sweep-shaped (one fix per family).
-3. Opus queue EMPTY; DRIFT candidates: F-036 (stale clap help on
-   `--plain`), the stale-header sweep, F-016 modules README, F-020
-   OWNER-GUIDE, F-017 aiui scrollbar, engine-family minting.
+1. **Phase C is COMPLETE** — exit gate green (58/58 files, 4 944/4 944
+   markers, final 4 141C/311D/3U = 93.0 %). **Ask the owner to open
+   Phase D (stitching)** over the 54-row ledger — ~15 family rows
+   cover ~80 % of the 311 drift verdicts.
+2. Phase D shape when opened: the shipped-under-proposed re-mark
+   sweeps (F-018 four-spec bridge family, F-053 PROP-030, F-052
+   cli/actions, F-043 PROP-000, F-046 PROP-043 parity) close most of
+   the ledger; reality-mismatch rows route through sync-from-code.
+3. Opus queue EMPTY; Phase E DRIFT candidates grew: F-036 (`--plain`
+   clap lie), F-047 (three stale deviates denying the shipped
+   ResolvoDepSolver), F-048 (--trust-mirror / `list --overrides`
+   promised-absent), F-016 modules README, F-020 OWNER-GUIDE, F-017
+   aiui scrollbar.
 
 Parked follow-ups (unchanged): vibe-vvm/term-vvm conformance-golden;
 Linux/macOS install smoke; arbitrary user-repos design-doc; `vibe
@@ -108,10 +118,14 @@ doctor` project-local row.
 
 ## Session context
 
-One session executed Phase L wholesale and drove Phase C through four
-of five clusters. The session boundary is a clean batch boundary: the
-journal is closed, all verdicts committed, GitHub synced. The next
-session opens with the phrase in `CONTINUE.md` §"How to start" and
-continues at c4a; the phase lane already reads C (no new phase event).
+One session drove the entire modules cluster (ten batches, 3 057
+units) and closed Phase C at its exit gate. The journal is closed, all
+verdicts committed batch-by-batch, GitHub synced throughout (GitVerse
+still SSH-down; plain re-fan on recovery). The next session opens by
+reporting the measurement to the owner and asking whether to open
+Phase D — a `phase` journal event lands only on that ruling.
 `progress check` must stay 0; the cache's campaign maps must survive
-every write (load-and-merge only).
+every write (load-and-merge only). Method note kept durable: coverage
+counts come from `progress mirror`'s ParsedDoc, never the raw-grep
+extractor (code-span shorthands over-count); `run/mirror/` is
+ephemeral and safe to delete.
