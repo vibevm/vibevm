@@ -2,7 +2,12 @@
 
 <status stage="impl" state="done" action="continue" comment="B2 2026-07-25: vocabulary (features/subskills/conditional deps/i18n/checks/lockfile records) shipped via the PROP-017 resolvo arc; libsolv engine sections superseded; status line still claims design-proposal - F-030"/>
 
-##status-line **Status.** Design proposal — not yet implementation-locked. Companion to [PROP-000](../../common/PROP-000.md) (project foundation), [PROP-002](../vibe-registry/PROP-002-decentralized-registry.md) (registry model). Supersedes the depsolver paragraphs of PROP-002 §2.8 (which left the solver upgrade path as a one-line "resolvo or libsolv slot reserved"); does not touch PROP-002's identity or registry decisions. @spec/done
+##status-line **Status. IMPLEMENTED as vocabulary; the engine question is settled elsewhere.** The
+dependency vocabulary of §2.4–§2.10 — features, subskills, conditional deps, i18n, the checks and the
+lockfile records — ships in `vibe-core` / `vibe-install` / `vibe-cli` (verified against the tree
+2026-07-25 by the spec-actualization campaign). The **solver engine** sections (§2.1–§2.2 and the
+default-flip clauses that follow from them) are superseded by [PROP-017](PROP-017-resolvo-resolver.md):
+the production default is **resolvo**, never the `sat` this document planned. Companion to [PROP-000](../../common/PROP-000.md) (project foundation), [PROP-002](../vibe-registry/PROP-002-decentralized-registry.md) (registry model). Supersedes the depsolver paragraphs of PROP-002 §2.8 (which left the solver upgrade path as a one-line "resolvo or libsolv slot reserved"); does not touch PROP-002's identity or registry decisions. @spec/done
 
 ##revision-r2 **Revision r2 (2026-05-04, post-PROP-004).** First revision shipped 2026-05-04 morning. Second revision shipped same day after the [PROP-004 Tessl comparative research](../../../legacy-spec/research/PROP-004-tessl-comparative-research.md) surfaced eight architectural improvements that were better folded into the design proposal *before* implementation than retrofitted later. Diff at the section level: @spec/done
 
@@ -50,9 +55,9 @@
 
 ### 2.1 Solver upgrade path: SAT-class engine behind the existing `DepSolver` trait {#solver-upgrade}
 
-##SOLVER-TWO-IMPLS **Decision.** Add a second `DepSolver` impl, `SatDepSolver`, alongside `NaiveDepSolver`. Both implement the same `crates/vibe-resolver/src/lib.rs::DepSolver` trait (`fn solve(&self, roots: &[PackageRef]) -> Result<ResolvedGraph, SolveError>`). `NaiveDepSolver` stays in tree as the "small graphs / no features / no disjunctions" fast path; `SatDepSolver` becomes the default once the second-tier features in this PROP land. @impl/done
+##SOLVER-TWO-IMPLS **Decision.** Add a second `DepSolver` impl, `SatDepSolver`, alongside `NaiveDepSolver`. Both implement the same `crates/vibe-resolver/src/lib.rs::DepSolver` trait (`fn solve(&self, roots: &[PackageRef]) -> Result<ResolvedGraph, SolveError>`). `NaiveDepSolver` stays in tree as the "small graphs / no features / no disjunctions" fast path. **The default clause is superseded** ([PROP-017](PROP-017-resolvo-resolver.md)): both impls shipped (`naive.rs`, `sat.rs`), but the production default became **resolvo**, not `sat`. @impl/done
 
-##SOLVER-SELECTOR The selector is a single line in `vibe-cli/install.rs` (and the parallel paths in `update`, `vendor`, `check`); selection key is `[meta].solver` in the lockfile (already wired in PROP-002 §2.7) plus an optional `--solver <naive|sat>` CLI override for debugging. Default after this PROP lands: `sat`. @impl/done
+##SOLVER-SELECTOR The selector is a single line in `vibe-cli/install.rs` (and the parallel paths in `update`, `vendor`, `check`). **Three clauses aged and are corrected here:** the lockfile selection key `[meta].solver` was never wired ([PROP-017 §8](PROP-017-resolvo-resolver.md) records the gap — the live `vibe.lock` carries no `solver` key); the shipped CLI override is `--solver <naive|sat|resolvo>`, not `<naive|sat>`; and the default is **`resolvo`**, as the flag's own help states. @impl/done
 
 ##two-impls-why **Why two impls, not "rip out Naive."** Naive is ~250 lines of straightforward Rust covering ~95 % of today's fixture graphs at constant-fold-of-DFS speed. The SAT-class engine, even when wrapping libsolv, is heavier to cold-start (rule encoding, watched-literals init); for trivial graphs that's pure overhead. Keeping both lets us regression-test the SAT impl against Naive's outputs on simple graphs, which is the cheapest oracle we'll ever have. @impl/done
 
@@ -553,20 +558,21 @@ ja = "追記専用チェックポイント・プロトコル"
 
 #### 2.7.5 Lockfile impact {#i18n-lockfile}
 
-##I18N-LOCKFILE-META The lockfile records the **resolved language preference** under `[meta]` so a re-install on a different machine without an explicit flag produces the same materialised files: @impl/done
+##I18N-LOCKFILE-META The lockfile records the **resolved language preference** under `[meta]` so a re-install on a different machine without an explicit flag produces the same materialised files. **As shipped**, the preference and its fallback are merged into a single ordered `language_chain` field (`vibe-lock`'s `lockfile.rs`), and the live schema version is 5 — the fence below is the r2 draft shape, kept for the reasoning it carries: @impl/done
 
 ```toml
 [meta]
 schema_version = 2
 language = "ru"
 language_fallback = ["en"]
+# shipped shape: schema_version = 5, language_chain = ["ru", "en"]
 ```
 
-##language-fallback-clearing `language_fallback` is the post-resolution chain, with built-in `en` appended if absent. Clearing this metadata (e.g. a checked-in lockfile from a teammate using `ru` when the current operator wants the canonical form) requires explicit `vibe update --language en` or hand-editing. @impl/done
+##language-fallback-clearing The post-resolution chain (shipped as `language_chain`) carries the built-in `en` appended if absent. Clearing this metadata (e.g. a checked-in lockfile from a teammate using `ru` when the current operator wants the canonical form) requires explicit `vibe update --language en` or hand-editing. @impl/done
 
 ### 2.8 Manifest schema additions — the consolidated picture {#manifest}
 
-##manifest-consolidated-lead Pulling together every section above, `vibe-package.toml` v0.2 schema looks like: @impl/done
+##manifest-consolidated-lead Pulling together every section above, the v0.2 package schema looks like the fence below. Two r1 leftovers survive in it and are **not** the shipped grammar: the `__exclusive = [[…]]` sigil was replaced by named `[features.exclusive]` groups in r2's own §2.4, and the manifest file itself is `vibe.toml`'s `[package]` section, not the retired `vibe-package.toml`: @impl/done
 
 ```toml
 [package]
@@ -637,7 +643,7 @@ files_written = [
 
 ##lockfile-v3-lead The lockfile gains: @impl/done
 
-- ##LF-META-LANGUAGE `[meta].language` and `[meta].language_fallback` (§2.7.5). @impl/done
+- ##LF-META-LANGUAGE `[meta].language_chain` (§2.7.5) — shipped as **one** ordered field merging the preference and its fallback, not the `language` + `language_fallback` pair this section drafted. @impl/done
 - ##LF-META-ACTIVE-FEATURES `[meta].active_features = [...]` — full list of features active in the resolution. Per-package activation goes under each `[[package]]` entry. @impl/done
 - ##LF-META-VIRTUAL-CAPS `[meta].virtual_capabilities = [...]` — capabilities emitted by the LLM during resolution (§2.5.3). Each entry carries `name`, `emitter` (the LLM provider/model identifier), `trace_id` (link into the audit log), and `emitted_at`. @impl/done
 - ##LF-PKG-FEATURES-SUBSKILLS `[[package]]` entries gain `features = ["..."]`, `subskills_active = [...]` (with each entry being `{ path = "stack/rust", delivery = "lazy-push" }` so the materialisation behaviour is reproducible) and the latter's delivery mode persisted because eager / lazy-push / lazy-pull are operationally distinct on the consumer side. @impl/done
@@ -692,7 +698,7 @@ files_written = [
 
 ##cli-existing-lead Existing flags pick up new behaviours: @impl/done
 
-- ##CLI-UPDATE-FEATURES `vibe update --features <list>` — re-resolve with a different feature set. @impl/done
+- ##CLI-UPDATE-FEATURES `vibe update --features <list>` — re-resolve with a different feature set. **Specified, not shipped:** the install-side `--features` is live, but the update-side re-resolve was never wired (`vibe update --help` carries only `all` / `json` / `path` / `quiet` plus the global flags). @spec/done
 - ##CLI-SHOW-CONFIG-LANGUAGE `vibe show config` exposes the resolved language preference and its provenance per the existing precedence chain. @impl/done
 - ##CLI-SHOW-EFFECTIVE-LANGUAGE `vibe show effective` materialises the effective spec at the project's resolved language, falling back per §2.7.2; `--all-languages` shows every available language side-by-side (debugging aid). @impl/work
 
@@ -705,7 +711,7 @@ files_written = [
 3. ##MIG-FEATURES **Land features semantics** in `SatDepSolver` (rule encoding, solving, activation map); `vibe install --features` and `--no-default-features` start working. Naive remains feature-blind. @impl/done
 4. ##MIG-SUBSKILL-MAT **Land subskill materialisation** in `vibe-install`: walk activation rules post-solve, write subskill files, integrity-check (boot collision, file collision). @impl/done
 5. ##MIG-I18N **Land i18n resolution** in `vibe-install`: at file-write time, walk the language fallback chain. CLI flag wired. @impl/done
-6. ##MIG-DEFAULT-SAT **Switch default solver** to `sat` in `vibe init` output and runtime resolution. Naive remains for fixtures/tests. @impl/done
+6. ##MIG-DEFAULT-SAT **Switch default solver** — executed, but to **`resolvo`**, not `sat`: [PROP-017](PROP-017-resolvo-resolver.md) reversed the engine call before this step ran, and runtime resolution defaults to resolvo in the R-001 selection seam. Naive remains for fixtures/tests exactly as written. @impl/done
 7. ##MIG-LOCKFILE-V3 **Lockfile v3 migration** on read; unconditional v3 write. @impl/done
 
 ##migration-cadence Each step is its own PR, lockfile-shape-stable mid-step (we control the format pre-release; if a step needs to break, we break and don't carry compatibility). @spec/done
@@ -771,7 +777,7 @@ files_written = [
 
 ### 4.3 Composite content via packages-only (no subskills)
 
-##REJ-PACKAGES-ONLY i.e. split `flow:wal` into N packages instead of one with subskills. Already covered in §2.5.3. Discoverability + cohesion losses outweigh the schema simplicity. @spec/done
+##REJ-PACKAGES-ONLY i.e. split `flow:wal` into N packages instead of one with subskills. Already covered in [§2.5.4](#subskill-rationale) (the rationale moved there when r2 inserted the LLM virtual-capabilities section at §2.5.3). Discoverability + cohesion losses outweigh the schema simplicity. @spec/done
 
 ### 4.4 `_<lang>` filename suffix instead of `.<lang>`
 
@@ -839,7 +845,7 @@ files_written = [
 
 ### Phase E — switch default solver to SAT
 
-- ##PE-DEFAULT-FLIP Default flips to `sat` in `vibe init`-generated lockfiles. @impl/done
+- ##PE-DEFAULT-FLIP Default flips — to **`resolvo`**, in the R-001 selection seam ([PROP-017](PROP-017-resolvo-resolver.md) `DONE-DEFAULT-FLIP`; `--solver`'s help reads "Defaults to resolvo"). The `sat` this line named was superseded before the flip shipped. @impl/done
 - ##PE-NAIVE-DEMOTED Naive demoted to "tests + small graphs" path. @impl/done
 - ##PE-ACCEPTANCE Acceptance: clean runs of every smoke (M1.5-gate-v2, M1.6-mirror-vendor, plus new feature/subskill smokes) green on fresh install. @impl/done
 
