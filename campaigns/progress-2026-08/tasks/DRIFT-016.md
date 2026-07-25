@@ -172,3 +172,110 @@ Budget signal: past ~6 files or ~450 lines, stop and return.
 - queued 2026-07-25 (Fable), on the owner's ruling — his phrasing was
   «важные вещи типа вердиктов, конечно, стоит хранить в git на случай
   потери кэша», which is the whole design in one line.
+- implemented 2026-07-25 (Opus). **§8 did not fire.** The verdict map's
+  shape, its file and its load-and-merge are untouched: the split *removes*
+  one key (`FileRecord.parsed`) and adds none, which is exactly as additive
+  in reverse as DRIFT-010's addition was forward — an old record's key is
+  ignored on load, a new record's absence reads as the miss it already
+  meant. No record is re-keyed, so `CACHE_SCHEMA` stays **2** and there is
+  no migration for the live verdict maps to survive. Verified on the real
+  thing rather than argued: **4 490 verdicts across 58/58 campaign maps
+  before the scan, 4 490 across 58/58 after** — and again after the cold
+  run below.
+- **Where it landed.** §4.2 was rewritten mid-task (settings home, no
+  dedicated env var) and the implementation follows the new text:
+  `[progress] cache_dir` from `progress.toml` first, else
+  `<settings-home>/progress-cache/<repo-id>/<branch-slug>/<campaign-id>/`.
+  Live path on this machine:
+  `~/.vibe/progress-cache/vibevm-35b1c3/main-0d6e40/progress-2026-08/payloads.json`.
+  `<repo-id>` and `<branch-slug>` are slug + 6 hex of sha256 of the
+  original (canonical repo path / branch name), so `feature/foo` neither
+  nests nor collides with `feature-foo`, and two clones never share a
+  bucket. No `VIBE_PROGRESS_CACHE`: `VIBE_SETTINGS` moves the store with
+  the rest of the home, which is one variable to forget instead of two
+  (F-055).
+- **Sizes (§4.5).** `run/cache.json` **5 142 927 → 2 684 898 bytes** — the
+  2.68 MB §3 names as the pre-DRIFT-010 figure, hit on the nose, because
+  the record is byte-for-byte what it was before the payload landed. The
+  payload itself is **1 114 548 bytes** outside the repository — smaller
+  than the 2.46 MB it occupied inside it, since the sidecar is written
+  compact (nothing diffs a file that exists so no one has to).
+- **Live check (§6).** `progress scan` on this repository: 58 files, 4 979
+  markers, 0 errors; `progress check`: clean, exit 0. `git status` shows
+  `run/cache.json` plus the two state projections, and the state
+  projections differ **only in `updated_at`** — the byte-identity claim,
+  stated on the live campaign rather than a fixture. `cache.json`'s own
+  diff is the one-time 94 430-line deletion (that *is* the change); the
+  ordinary diff §6 asks about is the steady state after it, measured by
+  scanning twice and diffing the results: **one line, the timestamp**.
+  Before this task every scan rewrote 2.5 MB of payload into that diff.
+- **The erasure law, demonstrated live.** Deleted `~/.vibe/progress-cache`
+  wholesale and rescanned: **stderr 0 bytes**, `corpus.json` and
+  `campaign.json` byte-identical to the warm run, `cache.json` identical
+  bar its stamp, 4 490 verdicts intact, and the store rebuilt itself. A
+  machine that has never seen the sidecar runs this campaign identically.
+  The sidecar was also checked structurally, not just by grep: parsed as
+  JSON and walked, its key set across all 58 documents is exactly
+  `ParsedDoc`'s fields plus the document paths — **no `campaign` key
+  anywhere**, no `verdicts`, no `processed_hash`.
+- Decisions §4 left open, taken here and named so a reviewer can overturn
+  them cheaply:
+  - **One `payloads.json` per campaign bucket**, not one file per
+    document. DRIFT-010's own measurement says the fsync'd atomic writes
+    dominate a run, and 58 files would be 58 of them; this keeps the
+    sidecar's write shape identical to `cache.json`'s — one read at the
+    head, one write at the end.
+  - **No sidecar without a campaign zone.** The leaf is keyed by campaign
+    id, and a run with no campaign has no `cache.json` either, so every
+    lookup would miss regardless. `payload_dir` returns `None` and the
+    store is inert.
+  - **The store is rewritten as exactly the observed set**, so a file that
+    leaves scope loses its payload for free — the DRIFT-001 prune, without
+    a second implementation of it.
+  - **The git-side record stays the authority.** `cached_doc` consults the
+    sidecar only after `record.content_hash == hash`; a payload is never a
+    substitute for a record.
+  - `PAYLOAD_SCHEMA = 1`, and a schema this build does not know reads as an
+    empty store. There will never be a payload migration — the thing
+    migrations exist to protect is in the other file.
+  - `ShellGit::branch` answers on `run_raw`: a detached HEAD's non-zero
+    exit is an *answer*, not an error worth classifying.
+- The floor caught two things in this change and both are fixed. Adding a
+  verb pushed `crates/vibe-registry/src/git_backend/shell.rs` to 614 lines,
+  over the 600-line budget, so the two read-only checkout queries
+  (`last_commit_iso`, `branch`) moved to a cell of their own,
+  `git_backend/shell/query.rs` — the seam the file already uses for `tar`,
+  and a real one: those two only ask, they never clone, fetch or reset
+  (shell.rs is now 581). The same gate then caught `.expect()` in the new
+  test helper, exactly as it did in DRIFT-010: `payload_for` returns
+  `Option<ParsedDoc>` and each `#[test]` decides to panic.
+- Tests added (§6's four, plus the seam-level ones the split created):
+  - `progress-core`: `branch_keys_the_bucket`,
+    `two_clones_of_one_repo_never_share_a_bucket`,
+    `cfg_dir_and_campaign_id_shape_the_leaf`,
+    `absent_or_corrupt_store_is_an_empty_store`,
+    `store_round_trips_and_answers_only_for_its_own_bytes`,
+    `sidecar_stale_hash_is_a_miss`; `cached_doc_misses_are_misses` and
+    `cached_doc_round_trips_the_parse` were rewritten across the split, the
+    latter now also asserting that the tracked `cache.json` carries the
+    hash and *not* the text it stands for.
+  - `vibe-cli`: `verdicts_never_leave_cache_json` (in-process, asserting on
+    the serialised sidecar bytes), and `sidecar_absent_runs_cold` out of
+    process in `tests/cli_progress_sidecar.rs` — the only place stderr can
+    actually be read, which is what "emits nothing about it" requires. That
+    test uses `UserScratch` to relocate `VIBE_SETTINGS`, so it exercises the
+    **default** location without touching the developer's real `~/.vibe`;
+    every in-process fixture pins `[progress] cache_dir` inside its own
+    tempdir for the same reason.
+- Over the file budget, deliberately: 10 files rather than ~6, three of
+  them one-line touches (`lib.rs` module line, `rescan.rs`'s "only place
+  that knows this is a git checkout" claim, which is now two, and this
+  log). The split does not compile half-applied, so stopping at six would
+  have left the tree broken rather than smaller.
+- Not done here, deliberately: `specmap.json` is **not** regenerated, so
+  the new `#[specmark::spec]` tags on the sidecar seam are not in the index
+  yet — DRIFT-010's precedent, and other agents were live in this tree
+  throughout (DRIFT-013 and DRIFT-019 landed in `cli/inspect.rs`,
+  `vibe-resolver/src/lib.rs`, `vibe-workspace/src/freshness.rs` and
+  `run/state/findings.json` while this task ran; none of it was touched
+  here).

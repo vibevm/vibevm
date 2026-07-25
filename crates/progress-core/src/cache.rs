@@ -7,6 +7,7 @@ specmark::scope!("spec://vibevm/modules/vibe-progress/PROP-043#cache");
 
 use crate::doc::ParsedDoc;
 use crate::rollup::DocRollup;
+use crate::sidecar::Payloads;
 use anyhow::{Context, Result};
 use serde::{Deserialize, Serialize};
 use std::collections::{BTreeMap, BTreeSet};
@@ -15,14 +16,23 @@ use std::path::Path;
 /// Schema 2: the fact amendment — `DocRollup` counts facts
 /// (paragraphs + list items + table cells), not paragraphs.
 ///
-/// The `parsed` payload (DRIFT-010) landed **without** a bump, and
-/// deliberately: it is additive in both directions. A schema-2 record
-/// written before it loads unchanged and simply reads as a miss, and a
-/// reader that predates it ignores the key. No record is re-keyed, so no
-/// migration exists for a live campaign's verdict maps to survive.
+/// Neither DRIFT-010's `parsed` payload nor DRIFT-016's removal of it
+/// bumped this, and for the same reason in both directions: the key was
+/// additive going in and is additive going out. A record still carrying
+/// one loads unchanged and the key is ignored; a record without one reads
+/// as a miss, which is what a miss already meant. No record is re-keyed,
+/// so no migration exists for a live campaign's verdict maps to survive —
+/// which is the one thing in this file that could not be redone.
 pub const CACHE_SCHEMA: u32 = 2;
 
-/// One observed file's record.
+/// One observed file's record — everything a cold reader needs to know
+/// what was judged and what it was judged against (DRIFT-016 §4.1).
+///
+/// This file is tracked in git, so what it holds is chosen by what cannot
+/// be recomputed: the content hash a verdict was formed against, the
+/// rollup, and the campaign map. The parse those bytes produce is
+/// regenerable, and since DRIFT-016 it lives in [`crate::sidecar`],
+/// outside the repository.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct FileRecord {
     pub content_hash: String,
@@ -34,17 +44,6 @@ pub struct FileRecord {
     /// until then.
     #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
     pub campaign: BTreeMap<String, serde_json::Value>,
-    /// The parse payload — the blocks, facts, units, markers and issues
-    /// this file's text produced (PROP-043 §7.1: "extracted markers with
-    /// positions"). Its presence is what makes a scan *incremental*: a
-    /// record current for the file's hash hands its `ParsedDoc` back
-    /// instead of parsing again.
-    ///
-    /// Absent on every record written before DRIFT-010, and those read as
-    /// misses — a record that cannot produce a document is never allowed
-    /// to stand in for one.
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub parsed: Option<ParsedDoc>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -108,23 +107,32 @@ impl Cache {
             .unwrap_or(false)
     }
 
-    /// The cached parse for `path`, when the record is current for `hash`
-    /// **and** carries a payload that agrees with its own record.
+    /// The cached parse for `path`, when the record **in git** is current
+    /// for `hash` and the sidecar holds a payload that agrees with it.
     ///
     /// Everything else is a miss and the caller parses (PROP-043 §7.1,
-    /// DRIFT-010 §4): no record, a stale hash, a record written before the
-    /// payload existed, or — the case a hand-edited cache creates — a
-    /// payload whose own `path`/`content_hash` disagree with the record
-    /// filing it. The cache is allowed to be *empty*; it is never allowed
-    /// to be *wrong*.
+    /// DRIFT-010 §4, DRIFT-016 §4.3): no record, a stale hash, a sidecar
+    /// that was erased or never written, or — the case a hand-edited store
+    /// creates — a payload whose own `path`/`content_hash` disagree with
+    /// the record filing it. The cache is allowed to be *empty*; it is
+    /// never allowed to be *wrong*.
+    ///
+    /// The asymmetry is deliberate and is the whole design: the record is
+    /// the authority and it is in the repository; the payload is an
+    /// accelerator and it is not. A run whose sidecar is gone is a slow
+    /// run, and nothing else about it differs.
     #[specmark::spec(implements = "spec://vibevm/modules/vibe-progress/PROP-043#cache")]
-    pub fn cached_doc(&self, path: &str, hash: &str) -> Option<&ParsedDoc> {
+    pub fn cached_doc<'p>(
+        &self,
+        path: &str,
+        hash: &str,
+        payloads: &'p Payloads,
+    ) -> Option<&'p ParsedDoc> {
         let record = self.files.get(path)?;
         if record.content_hash != hash {
             return None;
         }
-        let doc = record.parsed.as_ref()?;
-        (doc.path == path && doc.content_hash == hash).then_some(doc)
+        payloads.get(path, hash)
     }
 
     pub fn upsert(&mut self, doc: &ParsedDoc, rollup: &DocRollup) {
@@ -142,7 +150,6 @@ impl Cache {
                 unit_count: doc.units.len(),
                 issue_count: doc.issues.len(),
                 campaign,
-                parsed: Some(doc.clone()),
             },
         );
     }
@@ -206,6 +213,14 @@ pub fn write_atomic(path: &Path, bytes: &[u8]) -> Result<()> {
 mod tests {
     use super::*;
 
+    /// A payload sidecar on disk under `dir` holding exactly `docs` — the
+    /// shape a finished run leaves behind, built somewhere a test owns.
+    fn stored(dir: &Path, docs: &[&ParsedDoc]) -> Payloads {
+        let store = Payloads::load(Some(dir.to_path_buf()));
+        store.store(docs.iter().copied());
+        Payloads::load(Some(dir.to_path_buf()))
+    }
+
     #[test]
     fn corrupt_cache_degrades_to_empty_with_warning() {
         let dir = tempfile::tempdir().expect("tempdir");
@@ -236,11 +251,15 @@ mod tests {
         assert!(!back.is_current("a.md", "deadbeef"));
     }
 
-    /// The payload's whole claim: what comes back out of a stored cache is
+    /// The payload's whole claim: what comes back out of a stored run is
     /// the document that went in. Asserted on the struct, not on a few
     /// hand-picked counters — everything `ParsedDoc` persists must survive
     /// the JSON, or a warm run is quietly answering from a different
     /// document than a cold one.
+    ///
+    /// Since DRIFT-016 it also asserts *where*: the tracked `cache.json`
+    /// carries the identity a verdict is formed against and none of the
+    /// text that identity stands for.
     ///
     /// The two `#[serde(skip)]` fields are cleared on the freshly parsed
     /// side before comparing, and that is the *whole* of the residue: they
@@ -265,10 +284,11 @@ mod tests {
         let mut c = Cache::default();
         c.upsert(&doc, &crate::rollup::rollup_doc(&doc));
         c.store(&path).expect("store");
+        let side = stored(&dir.path().join("payloads"), &[&doc]);
         let back = Cache::load(&path).expect("load");
 
         let got = back
-            .cached_doc("spec/x.md", &doc.content_hash)
+            .cached_doc("spec/x.md", &doc.content_hash, &side)
             .expect("payload survives the JSON");
 
         let mut expected = doc.clone();
@@ -279,37 +299,77 @@ mod tests {
             }
         }
         assert_eq!(got, &expected, "the parse comes back whole");
+
+        // …and it came out of the sidecar, not out of git.
+        let tracked = std::fs::read_to_string(&path).expect("read cache.json");
+        assert!(tracked.contains(&doc.content_hash), "the identity stays");
+        assert!(!tracked.contains("A paragraph"), "the payload does not");
     }
 
-    /// Three ways to be stale, one answer: parse it. A cache is allowed to
+    /// Four ways to be stale, one answer: parse it. A cache is allowed to
     /// know nothing; it is never allowed to answer for the wrong bytes.
     #[test]
     fn cached_doc_misses_are_misses() {
+        let dir = tempfile::tempdir().expect("tempdir");
         let doc = crate::parse::parse_document("a.md", "@impl hello\n");
         let mut c = Cache::default();
         c.upsert(&doc, &crate::rollup::rollup_doc(&doc));
+        let side = stored(&dir.path().join("warm"), &[&doc]);
 
         assert!(
-            c.cached_doc("b.md", &doc.content_hash).is_none(),
+            c.cached_doc("b.md", &doc.content_hash, &side).is_none(),
             "no record"
         );
-        assert!(c.cached_doc("a.md", "deadbeef").is_none(), "stale hash");
+        assert!(
+            c.cached_doc("a.md", "deadbeef", &side).is_none(),
+            "stale hash"
+        );
 
-        // A record written before the payload existed: current for the
-        // hash, but with nothing to hand back.
-        c.files.get_mut("a.md").expect("record").parsed = None;
+        // The sidecar erased between runs — the case DRIFT-016 exists to
+        // make ordinary. The record is still current and still
+        // authoritative; there is simply nothing to hand back.
+        let erased = Payloads::load(Some(dir.path().join("gone")));
         assert!(c.is_current("a.md", &doc.content_hash), "still current");
         assert!(
-            c.cached_doc("a.md", &doc.content_hash).is_none(),
-            "a pre-payload record is a miss, not an empty document"
+            c.cached_doc("a.md", &doc.content_hash, &erased).is_none(),
+            "an erased sidecar is a miss, not an empty document"
         );
 
         // A payload that disagrees with the record filing it.
         let other = crate::parse::parse_document("a.md", "@spec other\n");
-        c.files.get_mut("a.md").expect("record").parsed = Some(other);
+        let lying = stored(&dir.path().join("lying"), &[&other]);
         assert!(
-            c.cached_doc("a.md", &doc.content_hash).is_none(),
+            c.cached_doc("a.md", &doc.content_hash, &lying).is_none(),
             "a payload whose identity disagrees is a miss"
+        );
+    }
+
+    /// DRIFT-016 §4.3, stated on the seam: a payload whose hash disagrees
+    /// with the record in git is ignored, not trusted. The record is the
+    /// authority precisely because it is the half a verdict was formed
+    /// against and the half that a clone still has.
+    #[test]
+    fn sidecar_stale_hash_is_a_miss() {
+        let dir = tempfile::tempdir().expect("tempdir");
+        // The file as the campaign judged it …
+        let judged = crate::parse::parse_document("a.md", "@impl judged\n");
+        let mut c = Cache::default();
+        c.upsert(&judged, &crate::rollup::rollup_doc(&judged));
+        // … and a sidecar left behind by an older state of that same file,
+        // which a branch switch or a stale bucket produces for free.
+        let stale = crate::parse::parse_document("a.md", "@impl an older draft\n");
+        assert_ne!(judged.content_hash, stale.content_hash, "two states");
+        let side = stored(dir.path(), &[&stale]);
+
+        assert!(
+            c.cached_doc("a.md", &judged.content_hash, &side).is_none(),
+            "the stale payload is never handed back"
+        );
+        // And the store is not merely broken: asked for the bytes it does
+        // hold, it still answers. Wrong-for-this-run, not corrupt.
+        assert!(
+            side.get("a.md", &stale.content_hash).is_some(),
+            "the store is honest about what it has"
         );
     }
 
@@ -318,6 +378,7 @@ mod tests {
     /// verdicts forward untouched.
     #[test]
     fn upsert_preserves_campaign_across_a_warm_write() {
+        let dir = tempfile::tempdir().expect("tempdir");
         let doc = crate::parse::parse_document("a.md", "@impl hello\n");
         let r = crate::rollup::rollup_doc(&doc);
         let mut c = Cache::default();
@@ -327,11 +388,12 @@ mod tests {
             .expect("record")
             .campaign
             .insert("verdicts".into(), serde_json::json!({"x": "confirmed"}));
+        let side = stored(dir.path(), &[&doc]);
 
         // The warm path: the payload comes back out and goes straight
         // back in, exactly as `ground` + `refresh_state` do it.
         let warm = c
-            .cached_doc("a.md", &doc.content_hash)
+            .cached_doc("a.md", &doc.content_hash, &side)
             .expect("hit")
             .clone();
         c.upsert(&warm, &r);

@@ -33,6 +33,7 @@ pub mod parse;
 pub mod report;
 pub mod rollup;
 pub mod scope;
+pub mod sidecar;
 pub mod state;
 pub mod weave;
 
@@ -40,16 +41,22 @@ use anyhow::{Context, Result};
 use std::path::Path;
 
 /// One full scan of an observed tree: hash every in-scope file, take its
-/// parse from the cache when the record is current for those bytes, parse
-/// it when it is not, and refresh the cache either way.
+/// parse from the sidecar when the cache record is current for those
+/// bytes, parse it when it is not, and refresh the cache either way.
 ///
-/// The cache may start empty — an empty cache is a cold scan, never an
-/// error. Reuse is decided per file by content hash alone (PROP-043 §7.1),
-/// so a warm scan and a cold one return the same documents; the cache
-/// accelerates the scan and never changes its answer.
+/// Both stores may start empty — an empty cache is a cold scan, never an
+/// error, and an absent `payloads` store is the same (PROP-043 §7.5).
+/// Reuse is decided per file by content hash alone (§7.1), so a warm scan
+/// and a cold one return the same documents; the stores accelerate the
+/// scan and never change its answer.
+///
+/// Persisting is the caller's: this refreshes the in-memory cache and
+/// returns the documents, and whoever owns the campaign zone writes
+/// `cache.json` and hands the same documents to
+/// [`sidecar::Payloads::store`].
 ///
 /// ```
-/// use progress_core::{cache::Cache, scope::ScopeConfig, scan_tree};
+/// use progress_core::{cache::Cache, scope::ScopeConfig, sidecar::Payloads, scan_tree};
 ///
 /// let dir = tempfile::tempdir().expect("tempdir");
 /// std::fs::create_dir_all(dir.path().join("spec")).expect("mkdir");
@@ -59,7 +66,9 @@ use std::path::Path;
 /// ).expect("write");
 ///
 /// let mut cache = Cache::default();
-/// let docs = scan_tree(dir.path(), &ScopeConfig::default(), &mut cache)
+/// // A store with nowhere to live: every lookup misses, every file parses.
+/// let payloads = Payloads::load(None);
+/// let docs = scan_tree(dir.path(), &ScopeConfig::default(), &mut cache, &payloads)
 ///     .expect("scan");
 /// assert_eq!(docs.len(), 1);
 /// assert_eq!(docs[0].markers.len(), 2);
@@ -69,6 +78,7 @@ pub fn scan_tree(
     root: &Path,
     cfg: &scope::ScopeConfig,
     cache: &mut cache::Cache,
+    payloads: &sidecar::Payloads,
 ) -> Result<Vec<doc::ParsedDoc>> {
     let files = scope::observed_files(root, cfg)?;
     let mut docs = Vec::new();
@@ -78,7 +88,7 @@ pub fn scan_tree(
             .with_context(|| format!("reading {}", full.display()))?;
         let path = scope::rel_str(&rel);
         let hash = parse::content_hash(&text);
-        let doc = match cache.cached_doc(&path, &hash) {
+        let doc = match cache.cached_doc(&path, &hash, payloads) {
             Some(cached) => cached.clone(),
             None => parse::parse_document(&path, &text),
         };

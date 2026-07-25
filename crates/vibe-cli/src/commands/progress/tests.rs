@@ -4,8 +4,50 @@
 //! the 600-line AI-Native file budget. Every test builds its own fixture
 //! tree and campaign zone in a tempdir, so no run here can reach the live
 //! campaign's cache or state projections.
+//!
+//! The same rule binds the payload sidecar, which by default lives under
+//! the developer's real per-user home: every fixture `progress.toml` here
+//! sets `[progress] cache_dir` inside its own tempdir, which is the escape
+//! hatch DRIFT-016 §4.2 exists for. A test that writes a real user
+//! location is the defect DRIFT-012 spent a day on. The *default*
+//! location — the one a real run takes — is exercised out-of-process in
+//! `tests/cli_progress_sidecar.rs`, under a relocated `VIBE_SETTINGS`.
 
 use super::*;
+
+/// Where every fixture in this file pins its payload sidecar, relative to
+/// the fixture root.
+const FIXTURE_CACHE_DIR: &str = "payload-cache";
+
+/// The `progress.toml` body a fixture writes: an include list plus the
+/// pinned sidecar. Kept in one place so no fixture can forget the pin.
+fn fixture_config(include: &str) -> String {
+    format!("include = [\"{include}\"]\n\n[progress]\ncache_dir = \"{FIXTURE_CACHE_DIR}\"\n")
+}
+
+/// The fixture campaign's payload bucket — `<cache_dir>/<campaign id>`,
+/// the leaf `sidecar::resolve_dir` builds.
+fn sidecar_dir(root: &Path) -> PathBuf {
+    root.join(FIXTURE_CACHE_DIR).join("progress-test")
+}
+
+/// The sidecar as it stands on disk right now.
+fn payloads(root: &Path) -> sidecar::Payloads {
+    sidecar::Payloads::load(Some(sidecar_dir(root)))
+}
+
+/// The payload a finished run left for `rel`, by re-reading the file and
+/// asking for exactly those bytes.
+///
+/// `None` covers both "the file is unreadable" and "the store has nothing
+/// for these bytes"; the `#[test]` that called it decides whether that is
+/// a failure, which is the helper rule's actual point (DRIFT-010 §9).
+fn payload_for(root: &Path, rel: &str) -> Option<ParsedDoc> {
+    let text = std::fs::read_to_string(root.join(rel)).ok()?;
+    payloads(root)
+        .get(rel, &progress_core::parse::content_hash(&text))
+        .cloned()
+}
 
 /// A fixture campaign zone whose journal carries a hand-appended `phase`
 /// event: `refresh_state` must derive that phase into `campaign.json`
@@ -28,6 +70,7 @@ fn refresh_state_derives_phase_from_journal() {
         docs: Vec::new(),
         campaign: Some(campaign.clone()),
         cache: cache::Cache::load_tolerant(&run.join("cache.json")).0,
+        payloads: sidecar::Payloads::load(Some(tmp.path().join(FIXTURE_CACHE_DIR))),
     };
     refresh_state(&mut g).expect("refresh_state");
 
@@ -61,14 +104,14 @@ fn refresh_state_prunes_records_that_leave_scope() {
     };
 
     // Wide scope: both files observed and cached.
-    std::fs::write(root.join("progress.toml"), "include = [\"spec/**/*.md\"]\n")
+    std::fs::write(root.join("progress.toml"), fixture_config("spec/**/*.md"))
         .expect("write wide cfg");
     let mut g = ground(&common).expect("ground wide");
     assert_eq!(g.docs.len(), 2, "both files in scope");
     refresh_state(&mut g).expect("refresh wide");
 
     // Narrow scope: only a.md observed.
-    std::fs::write(root.join("progress.toml"), "include = [\"spec/a.md\"]\n")
+    std::fs::write(root.join("progress.toml"), fixture_config("spec/a.md"))
         .expect("write narrow cfg");
     let mut g = ground(&common).expect("ground narrow");
     assert_eq!(g.docs.len(), 1, "only a.md in scope");
@@ -96,8 +139,7 @@ fn progress_gate_cli_records() {
     let root = tmp.path();
     std::fs::create_dir_all(root.join("spec")).expect("mkdir spec");
     std::fs::write(root.join("spec/a.md"), "@impl a\n").expect("write a");
-    std::fs::write(root.join("progress.toml"), "include = [\"spec/**/*.md\"]\n")
-        .expect("write cfg");
+    std::fs::write(root.join("progress.toml"), fixture_config("spec/**/*.md")).expect("write cfg");
     let campaign = root.join("campaigns").join("progress-test");
     std::fs::create_dir_all(campaign.join("run")).expect("mkdir run");
     let ctx = crate::output::Context::from_flags(true, false, None, true);
@@ -167,7 +209,7 @@ fn incremental_fixture(root: &Path) -> std::io::Result<()> {
          | --- | --- |\n\
          | ##b2 cell one @impl/done | ##b3 cell two @impl/work |\n",
     )?;
-    std::fs::write(root.join("progress.toml"), "include = [\"spec/**/*.md\"]\n")?;
+    std::fs::write(root.join("progress.toml"), fixture_config("spec/**/*.md"))?;
     std::fs::create_dir_all(root.join("campaigns/progress-test/run"))
 }
 
@@ -243,7 +285,11 @@ fn warm_and_cold_agree() {
         let text = std::fs::read_to_string(root.join(&doc.path)).expect("read fixture");
         assert!(
             g.cache
-                .cached_doc(&doc.path, &progress_core::parse::content_hash(&text))
+                .cached_doc(
+                    &doc.path,
+                    &progress_core::parse::content_hash(&text),
+                    &g.payloads
+                )
                 .is_some(),
             "`{}` is served from the cache on the warm run",
             doc.path
@@ -323,9 +369,10 @@ fn warm_and_cold_agree_on_every_rendering() {
 }
 
 /// Reuse is keyed on content, so an edit must land and only that file's
-/// row may move. The record's `parsed` payload is compared too — a
-/// stale payload behind a fresh hash is exactly the failure the
-/// content check exists to prevent.
+/// row may move. The sidecar payload is compared too — a stale payload
+/// behind a fresh hash is exactly the failure the content check exists
+/// to prevent, and since DRIFT-016 the two halves are separate files
+/// that must move together.
 #[test]
 fn edited_file_is_reparsed() {
     let tmp = tempfile::tempdir().expect("tempdir");
@@ -359,14 +406,12 @@ fn edited_file_is_reparsed() {
         "the new marker is in the record, so the file was re-parsed"
     );
     assert!(
-        a_after
-            .parsed
-            .as_ref()
-            .expect("payload")
+        payload_for(root, "spec/a.md")
+            .expect("sidecar payload for the edited file")
             .markers
             .iter()
             .any(|m| m.stage == progress_core::model::Stage::Freeze),
-        "the new marker is in the payload too"
+        "the new marker is in the sidecar payload too"
     );
     assert_eq!(
         serde_json::to_string(&before.files["spec/b.md"]).expect("before b"),
@@ -422,28 +467,13 @@ fn no_cache_flag_forces_full_parse() {
     let root = tmp.path();
     incremental_fixture(root).expect("fixture tree");
     let ctx = crate::output::Context::from_flags(true, false, None, true);
-    let cache_path = root.join("campaigns/progress-test/run/cache.json");
 
     scan(&ctx, &args(root, false)).expect("cold scan");
-    let mut c = cache::Cache::load(&cache_path).expect("load");
-    let truthful = c.files["spec/a.md"]
-        .parsed
-        .as_ref()
-        .expect("payload")
-        .markers
-        .len();
+    let mut poisoned = payload_for(root, "spec/a.md").expect("payload to poison");
+    let truthful = poisoned.markers.len();
     assert!(truthful > 1, "a.md has markers to lose");
-    {
-        let payload = c
-            .files
-            .get_mut("spec/a.md")
-            .expect("record")
-            .parsed
-            .as_mut()
-            .expect("payload");
-        payload.markers.truncate(1);
-    }
-    c.store(&cache_path).expect("store the poisoned cache");
+    poisoned.markers.truncate(1);
+    payloads(root).store([&poisoned]);
 
     // Default: the payload is trusted, so the lie shows through.
     let warm = ground(&args(root, false)).expect("warm ground");
@@ -466,15 +496,48 @@ fn no_cache_flag_forces_full_parse() {
     // And the flag still leaves the campaign's records refreshed: a
     // `--no-cache` run is a full run, not a read-only one.
     scan(&ctx, &args(root, true)).expect("no-cache scan");
-    let healed = cache::Cache::load(&cache_path).expect("reload");
     assert_eq!(
-        healed.files["spec/a.md"]
-            .parsed
-            .as_ref()
-            .expect("payload")
+        payload_for(root, "spec/a.md")
+            .expect("payload rewritten")
             .markers
             .len(),
         truthful,
-        "the run rewrote the record it refused to trust"
+        "the run rewrote the payload it refused to trust"
     );
+}
+
+// ---- DRIFT-016: the irreplaceable stays in git, the payload leaves ----
+
+/// §5, asserted where it can actually be violated: on the bytes. A
+/// verdict lives in the tracked `cache.json` and nowhere else — a verdict
+/// that leaked into the sidecar would be a verdict a fresh clone loses
+/// without ever knowing it had one.
+#[test]
+fn verdicts_never_leave_cache_json() {
+    let tmp = tempfile::tempdir().expect("tempdir");
+    let root = tmp.path();
+    incremental_fixture(root).expect("fixture tree");
+    let ctx = crate::output::Context::from_flags(true, false, None, true);
+    let cache_path = root.join("campaigns/progress-test/run/cache.json");
+
+    scan(&ctx, &args(root, false)).expect("cold scan");
+    // A verdict written the way the campaign writes them, then a warm run
+    // over it — the run that would carry it anywhere it should not go.
+    let mut c = cache::Cache::load(&cache_path).expect("load");
+    c.files
+        .get_mut("spec/a.md")
+        .expect("record")
+        .campaign
+        .insert("verdicts".into(), serde_json::json!({"alpha": "confirmed"}));
+    c.store(&cache_path).expect("store");
+    scan(&ctx, &args(root, false)).expect("warm scan");
+
+    let tracked = std::fs::read_to_string(&cache_path).expect("read cache.json");
+    assert!(tracked.contains("confirmed"), "the verdict is in git");
+
+    let store = std::fs::read_to_string(sidecar_dir(root).join(sidecar::PAYLOAD_FILE))
+        .expect("the sidecar was written");
+    assert!(store.contains("spec/a.md"), "a store worth searching");
+    assert!(!store.contains("campaign"), "no campaign key reaches it");
+    assert!(!store.contains("confirmed"), "and no verdict rides along");
 }

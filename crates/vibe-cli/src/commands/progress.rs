@@ -12,7 +12,8 @@ use progress_core::doc::{ParsedDoc, Severity};
 use progress_core::evidence::{EvidenceProvider, NoEvidence};
 use progress_core::model::Audience;
 use progress_core::report::View;
-use progress_core::{cache, journal, report, rollup, scope, state, weave};
+use progress_core::{cache, journal, report, rollup, scope, sidecar, state, weave};
+use vibe_registry::ShellGit;
 
 use crate::cli::{
     GateStatusArg, ProgressArgs, ProgressCheckArgs, ProgressCommonArgs, ProgressGateArgs,
@@ -42,17 +43,23 @@ struct Ground {
     root: PathBuf,
     docs: Vec<ParsedDoc>,
     campaign: Option<PathBuf>,
-    /// The campaign cache, read once at the head of the run: `ground`
-    /// takes its parses out of it and `refresh_state` writes it back.
-    /// One read and one write per invocation — a second `load` here would
-    /// be a second 2 MB of JSON for the same bytes, and worse, a second
-    /// opinion about them.
+    /// The campaign cache, read once at the head of the run: it says what
+    /// each observed file hashed to when it was judged, and carries the
+    /// verdicts. `refresh_state` writes it back. One read and one write
+    /// per invocation — a second `load` here would be a second megabyte of
+    /// JSON for the same bytes, and worse, a second opinion about them.
     cache: cache::Cache,
+    /// The parse-payload sidecar, outside the repository (DRIFT-016).
+    /// Read alongside the cache and written alongside it; every way of not
+    /// having it is an empty store, so a run whose bucket was never
+    /// created is a cold run and says nothing about it.
+    payloads: sidecar::Payloads,
 }
 
 /// Resolve the tree, then produce one `ParsedDoc` per observed file —
-/// from the cache where the file's content hash says nothing changed,
-/// from the parser where it does not (PROP-043 §7.1, DRIFT-010 §4).
+/// from the sidecar where the cache's content hash says nothing changed,
+/// from the parser where it does not (PROP-043 §7.1, DRIFT-010 §4,
+/// DRIFT-016 §4).
 ///
 /// The file is read either way: the hash is over its bytes, so there is no
 /// version of this that trusts a timestamp. What a hit buys is the parse,
@@ -86,6 +93,11 @@ fn ground(common: &ProgressCommonArgs) -> Result<Ground> {
         }
         None => cache::Cache::default(),
     };
+    // The payload store is pure acceleration and lives outside the tree,
+    // so it has no warning to print and no failure to report: an absent
+    // bucket, an unreadable file and a machine that has never run this
+    // campaign are one case, and that case is "parse" (DRIFT-016 §4.3).
+    let payloads = sidecar::Payloads::load(payload_dir(&root, &cfg, campaign.as_deref()));
 
     let files = scope::observed_files(&root, &cfg)?;
     let mut docs = Vec::new();
@@ -96,7 +108,7 @@ fn ground(common: &ProgressCommonArgs) -> Result<Ground> {
         let path = scope::rel_str(&rel);
         let hash = progress_core::parse::content_hash(&text);
         let cached = (!common.no_cache)
-            .then(|| cache.cached_doc(&path, &hash))
+            .then(|| cache.cached_doc(&path, &hash, &payloads))
             .flatten();
         docs.push(match cached {
             Some(hit) => hit.clone(),
@@ -108,7 +120,41 @@ fn ground(common: &ProgressCommonArgs) -> Result<Ground> {
         docs,
         campaign,
         cache,
+        payloads,
     })
+}
+
+/// Where this run's payload sidecar lives, or `None` for a run without one
+/// — no campaign zone to key it by, or no per-user home to hang it off.
+///
+/// Two pieces of knowledge the core is not allowed to have meet here, and
+/// only here. Which checkout this is comes from git, asked exactly once
+/// per run and answered as data — the same seam DRIFT-009 uses for the
+/// crate→commit map (PROP-043 §2). And the per-user home comes from the
+/// settings chokepoint, so `VIBE_SETTINGS` relocates this store with
+/// everything else and the sidecar needs no environment variable of its
+/// own — one variable to remember rather than two (F-055).
+fn payload_dir(root: &Path, cfg: &scope::ScopeConfig, campaign: Option<&Path>) -> Option<PathBuf> {
+    let campaign = campaign?;
+    let home = vibe_core::settings::settings_dir();
+    let branch = current_branch(root);
+    sidecar::resolve_dir(
+        root,
+        cfg.progress.cache_dir.as_deref(),
+        home.as_deref(),
+        branch.as_deref(),
+        &campaign_id(campaign),
+    )
+}
+
+/// The branch checked out at `root`, or `None` when there is none to name.
+///
+/// A detached HEAD, a tree that is not a checkout, no git binary at all:
+/// every one of them lands in the `detached` bucket rather than failing a
+/// run. The payload is optional by construction, and so is knowing which
+/// branch produced it.
+fn current_branch(root: &Path) -> Option<String> {
+    ShellGit::new().branch(root).ok().flatten()
 }
 
 /// `--campaign` wins; otherwise the single `campaigns/<id>/` when exactly
@@ -141,11 +187,17 @@ fn campaign_id(campaign: &Path) -> String {
         .unwrap_or_else(|| "campaign".into())
 }
 
-/// Refresh cache + state under the campaign zone from parsed docs.
+/// Refresh cache + sidecar + state under the campaign zone from parsed
+/// docs.
 ///
 /// Takes the cache `ground` already read — the upsert is over the same
 /// records the reuse decision was made against, and the campaign fields
 /// those records carry ride through untouched (`upsert` preserves them).
+///
+/// The two writes are deliberately unequal. `cache.json` is tracked, holds
+/// the verdicts, and a failure to write it fails the run. The sidecar is
+/// derived, lives outside the tree, and a failure to write it is a slower
+/// next run — so it goes second and says nothing either way.
 fn refresh_state(g: &mut Ground) -> Result<Option<PathBuf>> {
     let Some(campaign) = &g.campaign else {
         return Ok(None);
@@ -170,6 +222,7 @@ fn refresh_state(g: &mut Ground) -> Result<Option<PathBuf>> {
     }
     c.touch();
     c.store(&cache_path)?;
+    g.payloads.store(g.docs.iter());
     // Phase is derived from the campaign's own journal (last `phase` event
     // wins; absent ⇒ "A") — never compiled in, never parsed from Markdown.
     let phase = journal::derive_phase(&journal::read_journal(&run_dir.join("journal.jsonl"))?);

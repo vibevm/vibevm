@@ -21,12 +21,27 @@ pub const DEFAULT_EXCLUDES: [&str; 8] = [
 
 pub const DEFAULT_INCLUDES: [&str; 2] = ["spec/**/*.md", "packages/**/*.md"];
 
+/// The `[progress]` table — knobs that are not about which files are
+/// observed. Absent in most projects, and absent means "the defaults".
+#[derive(Debug, Clone, Default, Deserialize)]
+pub struct ProgressSection {
+    /// Explicit home for the parse-payload sidecar (DRIFT-016 §4.2):
+    /// absolute, or relative to the project root. Absent ⇒ the per-user
+    /// default under the settings home. This is the escape hatch for a
+    /// project that wants the store somewhere it can see, and for a test
+    /// that must not write a real per-user directory.
+    #[serde(default)]
+    pub cache_dir: Option<String>,
+}
+
 #[derive(Debug, Clone, Deserialize)]
 pub struct ScopeConfig {
     #[serde(default)]
     pub schema: Option<u32>,
     #[serde(default)]
     pub include: Vec<String>,
+    #[serde(default)]
+    pub progress: ProgressSection,
 }
 
 impl Default for ScopeConfig {
@@ -34,6 +49,7 @@ impl Default for ScopeConfig {
         ScopeConfig {
             schema: Some(1),
             include: DEFAULT_INCLUDES.iter().map(|s| s.to_string()).collect(),
+            progress: ProgressSection::default(),
         }
     }
 }
