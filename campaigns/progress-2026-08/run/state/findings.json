@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updated_at": "2026-07-25T20:07:00Z",
+ "updated_at": "2026-07-25T21:35:00Z",
  "findings": [
   {
    "id": "F-001",
@@ -151,9 +151,9 @@
    "from": "crates/vibe-cli/src/cli/aiui.rs",
    "to": "spec/modules/vibe-cli/PROP-042-aiui-observation.md",
    "type": "reality-mismatch",
-   "status": "open",
-   "wave": 0,
-   "note": "Code ships a `vibe aiui scrollbar` verb whose doc comment cites 'PROP-042 s4', but s4 specifies only render/open/send/snapshot/wait/close/state - the code ran ahead of the contract. Sync-from-code candidate: draft the s4 amendment for owner approval (Phase D)."
+   "status": "resolved",
+   "wave": 2,
+   "note": "Code ships a `vibe aiui scrollbar` verb whose doc comment cites 'PROP-042 s4', but s4 specifies only render/open/send/snapshot/wait/close/state - the code ran ahead of the contract. Sync-from-code candidate: draft the s4 amendment for owner approval (Phase D). || RESOLVED 2026-07-25 via sync-from-code, owner approved the diff in session and declined to add constraints on inspect (\"не хочу, пусть будет как есть\"): PROP-042 §4 gains the four shipped verbs - inspect, pty-stop, pty-start, scrollbar - in the TERMINAL-VERBS fence plus four anchored facts. Zero code changes; the code was right and the contract caught up."
   },
   {
    "id": "F-018",
@@ -493,9 +493,45 @@
    "from": "crates/vibe-cli/tests/cli_pkg_cycle.rs",
    "to": "crates/vibe-core/src/settings.rs",
    "type": "missing-support",
+   "status": "resolved",
+   "wave": 2,
+   "note": "Test-isolation defect, caught by the phase-close floor run: install_from_git_registry isolates VIBE_REGISTRY_CACHE but NOT the settings chokepoint, so a real ~/.vibe/registry.toml (present on this machine since 2026-07-25 15:37, carrying vibespecs + vibespecs-gitverse) merges into the test resolver and produces a second cache bucket - the one-bucket assert at cli_pkg_cycle.rs:836 fails and the floor goes red. PROVEN: the same test passes with VIBE_SETTINGS pointed at an empty dir. The campaign touched no code (docs-only batches); the red is environmental. Phase E: the vibe() test harness (and any sibling e2e that resolves registries) must pin VIBE_SETTINGS to a tempdir - the same never-touch-real-user-state law the manual-tests flow states, applied inbound. || RESOLVED by DRIFT-012 2026-07-25: a UserScratch helper in tests/common/mod.rs owns a per-test tempdir and sets BOTH VIBE_SETTINGS and VIBE_REGISTRY_CACHE; four e2e files routed through it (cli_pkg_cycle 20 scratches/49 commands, cli_mcp_kind 2/7 which had ZERO isolation, cli_redirect 8/13, cli_registry_mgmt 67/148). The assert was not weakened. Isolation proven to bite in both directions: a probe registry seeded into the scratch moved the bucket count 1->2, and the real ~/.vibe/ mtimes were unchanged after 59 vibe init calls. The floor is green on the real home except for the separate F-058 file-length regression."
+  },
+  {
+   "id": "F-056",
+   "from": "crates/vibe-cli/tests/cli_init.rs",
+   "to": "crates/vibe-cli/src/commands/init/prompts.rs",
+   "type": "missing-support",
    "status": "open",
-   "wave": 0,
-   "note": "Test-isolation defect, caught by the phase-close floor run: install_from_git_registry isolates VIBE_REGISTRY_CACHE but NOT the settings chokepoint, so a real ~/.vibe/registry.toml (present on this machine since 2026-07-25 15:37, carrying vibespecs + vibespecs-gitverse) merges into the test resolver and produces a second cache bucket - the one-bucket assert at cli_pkg_cycle.rs:836 fails and the floor goes red. PROVEN: the same test passes with VIBE_SETTINGS pointed at an empty dir. The campaign touched no code (docs-only batches); the red is environmental. Phase E: the vibe() test harness (and any sibling e2e that resolves registries) must pin VIBE_SETTINGS to a tempdir - the same never-touch-real-user-state law the manual-tests flow states, applied inbound."
+   "wave": 2,
+   "note": "Test-isolation defect, OUTBOUND and worse than F-055: all 11 tests in cli_init.rs call `vibe init`, which writes `last_author` back into the REAL ~/.vibe/config.toml (commands/init/mod.rs:177 -> prompts.rs:128-137 maybe_save_author -> user_config.save()). The manual-tests law - never let a test touch real user state - is broken in the writing direction on every run. Not red today (the tests assert on the project manifest, not on resolution), so it leaks silently. cli_init.rs has its own local vibe() builder at :10-16 and needs the UserScratch treatment DRIFT-012 gave the other four files. Found by DRIFT-012 while fixing F-055; deliberately left for its own task per the budget signal."
+  },
+  {
+   "id": "F-057",
+   "from": "crates/vibe-cli/tests/cli_search.rs",
+   "to": "~/.vibe/search-cache/",
+   "type": "missing-support",
+   "status": "open",
+   "wave": 2,
+   "note": "Four bare vibe() sites (cli_search.rs:1077, 1135, 1157, 1181) with no VIBEVM_SEARCH_CACHE_DIR, so they fall back to the real ~/.vibe/search-cache/. Same class as F-055/F-056: the automated tier reading and populating real user state. Found by DRIFT-012's sweep; out of its four-file budget."
+  },
+  {
+   "id": "F-058",
+   "from": "crates/vibe-cli/src/commands/progress.rs",
+   "to": "discipline://rust-ai-native-lang/guide#surface-form",
+   "type": "reality-mismatch",
+   "status": "open",
+   "wave": 2,
+   "note": "Floor regression raised by the Phase E batch: commands/progress.rs reached 892 lines against the 600-line file budget, so `cargo xtask conform check` reports 1 NEW file-length finding and self-check exits 1. The adapter absorbed the gate subcommand (DRIFT-008), the evidence provider selection (DRIFT-006), the fold-check wiring (DRIFT-007) and the incremental ground() (DRIFT-010) in one day. Precedent for the fix: DRIFT-002 split progress-core/parse.rs for exactly this, and DRIFT-009 already moved rescan into commands/progress/rescan.rs - the same module dir takes the rest."
+  },
+  {
+   "id": "F-059",
+   "from": "crates/vibe-resolver/src/lib.rs",
+   "to": "crates/vibe-workspace/src/freshness.rs",
+   "type": "reality-mismatch",
+   "status": "open",
+   "wave": 2,
+   "note": "F-047's blast radius is wider than its three deviates - found by DRIFT-014 and deliberately left standing rather than absorbed silently. Three module-doc sites still describe the pre-port world: lib.rs:3 says 'Two traits and ONE implementation in this crate' (there are three); lib.rs:27-33 names 'adding a ResolvoSolver (PROP-002 S2.8 primary)' as a FUTURE trigger, three lines above a site DRIFT-014 just corrected; and vibe-workspace/src/freshness.rs:218 says a behaviour was 'deferred with the SAT solver', which shipped. Also durable for future tasks: specmark's grammar REJECTS `reason` on every verb except `deviates`, so an implements-with-a-note must put the note in rustdoc, not the attribute. Note: vibe-resolver/src/lib.rs is now 571 lines, 29 from the 600-line conform budget."
   }
  ]
 }

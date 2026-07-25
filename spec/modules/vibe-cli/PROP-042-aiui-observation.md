@@ -108,6 +108,10 @@ vibe aiui send     <key>... [--text <literal>] [--session <pid>]
 vibe aiui snapshot [--session <pid>]
 vibe aiui wait     [--idle-ms <n>] [--timeout-ms <n>] [--session <pid>]
 vibe aiui close    [--session <pid>]
+vibe aiui inspect   <expr> [--session <pid>]
+vibe aiui pty-stop  [--session <pid>]
+vibe aiui pty-start [--session <pid>]
+vibe aiui scrollbar <auto|on|off> [--session <pid>]
 ```
 
 - ##VERB-OPEN `open` launches a **windowless** vibeterm running `--exec` (default: the console
@@ -118,6 +122,19 @@ vibe aiui close    [--session <pid>]
 - ##VERB-WAIT `wait` blocks until the hosted program has answered the last input **and** the
   grid has settled (deterministic snapshots — never the pre-key screen). @impl/done
 - ##VERB-CLOSE `close` tears the session down. @impl/done
+- ##VERB-INSPECT `inspect` evaluates a JavaScript expression in the live renderer page over
+  CDP and prints its return value as JSON — the agent reads the renderer's **real** runtime
+  state (the xterm grid's cols and cell metrics, the scrollbar box) instead of inferring it
+  from a snapshot. Requires a `--control` session. @impl/done
+- ##VERB-PTY-STOP `pty-stop` stops the hosted program — the PTY child — **without** restarting
+  Electron: the renderer, the CDP endpoint and the discovery file all stay live, so the
+  program's binary is freed for a rebuild while the session survives. @impl/done
+- ##VERB-PTY-START `pty-start` (re)spawns the hosted program at the current grid. Paired with
+  `pty-stop` around a rebuild it is the fast TUI-preview loop: the agent sees the change
+  without reconnecting CDP or relaunching Electron. @impl/done
+- ##VERB-SCROLLBAR `scrollbar` sets the scrollbar policy live — `auto` (hidden for a
+  full-screen TUI, shown for a shell), `on` (always), `off` (never). The renderer refits the
+  grid; no Electron restart. Requires a `--control` session. @impl/done
 - ##SESSION-DEFAULT A verb defaults to the most recent session; `--session <pid>`
   targets a specific one. @impl/done
 

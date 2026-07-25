@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-07-25T18:38:13Z",
+  "updated_at": "2026-07-25T19:05:43Z",
   "files": [
     {
       "path": "spec/boot/00-core.md",
@@ -11021,19 +11021,19 @@
         "stage": "spec",
         "state": "done"
       },
-      "markers": 58,
+      "markers": 62,
       "units": 8,
-      "facts": 57,
+      "facts": 61,
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "anchors_judged": 57,
+        "anchors_judged": 61,
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (0 cells); document <status> judged as _elements",
-        "fact_count": 57,
-        "marker_count": 58,
-        "processed_hash": "7596a650dc2fe0df8f2cabe306065050401686d4a5ec3953b276453ce13d5548",
+        "fact_count": 61,
+        "marker_count": 62,
+        "processed_hash": "94c63143b2c7874ceb35ca36ef763dbf15d5fa3a478dc1f7d2c97a54104dd652",
         "summary": {
-          "confirmed": 58,
+          "confirmed": 62,
           "drift": 0,
           "unverifiable": 0
         },
@@ -11384,6 +11384,30 @@
             "v": "confirmed",
             "ev": [
               "accurate: ACTIVE v0.1 — all seven aiui verbs + vibe term live; F-017 (scrollbar code-ahead) is a missing-support row, not a marker lie"
+            ]
+          },
+          "VERB-INSPECT": {
+            "v": "confirmed",
+            "ev": [
+              "D 2026-07-25 sync-from-code (F-017, owner-approved in session): the four verbs the code shipped ahead of §4 - inspect, pty-stop, pty-start, scrollbar - each verified against crates/vibe-cli/src/cli/aiui.rs and its own --help, which was already citing this section"
+            ]
+          },
+          "VERB-PTY-STOP": {
+            "v": "confirmed",
+            "ev": [
+              "D 2026-07-25 sync-from-code (F-017, owner-approved in session): the four verbs the code shipped ahead of §4 - inspect, pty-stop, pty-start, scrollbar - each verified against crates/vibe-cli/src/cli/aiui.rs and its own --help, which was already citing this section"
+            ]
+          },
+          "VERB-PTY-START": {
+            "v": "confirmed",
+            "ev": [
+              "D 2026-07-25 sync-from-code (F-017, owner-approved in session): the four verbs the code shipped ahead of §4 - inspect, pty-stop, pty-start, scrollbar - each verified against crates/vibe-cli/src/cli/aiui.rs and its own --help, which was already citing this section"
+            ]
+          },
+          "VERB-SCROLLBAR": {
+            "v": "confirmed",
+            "ev": [
+              "D 2026-07-25 sync-from-code (F-017, owner-approved in session): the four verbs the code shipped ahead of §4 - inspect, pty-stop, pty-start, scrollbar - each verified against crates/vibe-cli/src/cli/aiui.rs and its own --help, which was already citing this section"
             ]
           }
         },
@@ -14625,8 +14649,8 @@
         "marker_count": 159,
         "processed_hash": "f5f58f90b59b20a575fa2f14ab213ab75cf6e8aa7f277021095001bf99fe5655",
         "summary": {
-          "confirmed": 143,
-          "drift": 2,
+          "confirmed": 144,
+          "drift": 1,
           "unverifiable": 0
         },
         "verdicts": {
@@ -15232,9 +15256,10 @@
             ]
           },
           "TOOL-INCREMENTAL": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "F-046(g): adapter ground() re-parses every observed file per run ('Parse without touching any cache', commands/progress.rs:48); Cache::is_current exists but is called only by its own unit test and doctest - no subcommand takes the incremental path"
+              "F-046(g): adapter ground() re-parses every observed file per run ('Parse without touching any cache', commands/progress.rs:48); Cache::is_current exists but is called only by its own unit test and doctest - no subcommand takes the incremental path",
+              "E DRIFT-010 2026-07-25: ground() takes the incremental path - FileRecord.parsed carries the ParsedDoc, additive in both directions so CACHE_SCHEMA stays 2 and the live verdict maps needed no migration; --no-cache forces the full parse; warm output byte-identical to cold"
             ]
           },
           "CMD-SCAN": {
