@@ -17,9 +17,9 @@
 | DRIFT-013 | `--plain`'s help stops describing a Phase 2 that shipped | opus | done |
 | DRIFT-014 | three deviate reasons stop denying the shipped resolver | opus | done |
 | DRIFT-015 | the progress adapter goes back under its file budget | opus | superseded |
-| DRIFT-016 | the irreplaceable stays in git, the acceleration leaves the repo | opus | queued |
-| DRIFT-017 | a run that changes nothing writes nothing | opus | queued (blocked on 016) |
-| DRIFT-018 | the last two test files stop touching the real user home | opus | queued (blocked on 016) |
+| DRIFT-016 | the irreplaceable stays in git, the acceleration leaves the repo | opus | done |
+| DRIFT-017 | a run that changes nothing writes nothing | opus | queued |
+| DRIFT-018 | the last two test files stop touching the real user home | opus | queued |
 | DRIFT-019 | three module docs stop describing the pre-port world | opus | done |
 
 DRIFT-006…011 are Phase E, opened by the owner's 2026-07-25 ruling on the
