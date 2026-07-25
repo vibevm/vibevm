@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updated_at": "2026-07-25T23:20:00Z",
+ "updated_at": "2026-07-25T23:55:00Z",
  "findings": [
   {
    "id": "F-001",
@@ -502,18 +502,18 @@
    "from": "crates/vibe-cli/tests/cli_init.rs",
    "to": "crates/vibe-cli/src/commands/init/prompts.rs",
    "type": "missing-support",
-   "status": "open",
+   "status": "resolved",
    "wave": 2,
-   "note": "Test-isolation defect in cli_init.rs, CORRECTED 2026-07-25 after the owner asked which side leaks. Production behaviour is CORRECT and out of scope: `vibe init` remembering last_author is the feature, and nothing in the command should change. The defect is test-side and has two halves of different severity. (a) READING - unconditional and live: all 11 tests in cli_init.rs isolate nothing but VIBE_NO_DEFAULT_REGISTRY (their local vibe() builder at :10-16), so the non-interactive author resolves out of the developer's REAL ~/.vibe/config.toml via prompts.rs:99-110 (--author -> user_config.init.last_author -> detect_git_author). Their behaviour depends on the machine - the same class that let cli_mcp_kind pass all day by accident. (b) WRITING - real but CONDITIONAL, not every-run as first reported: maybe_save_author (init/mod.rs:178) is called outside the `if interactive` branch so it runs every time, but prompts.rs:132 writes only when the computed author differs from the stored one. On this machine last_author is already set, so the tests read it, it matches, and nothing is written. On a fresh machine or in CI - last_author unset, `git config user.name` set - the first test run DOES write it into the real user config. Fix: give cli_init.rs the UserScratch treatment DRIFT-012 gave the other four files. Found by DRIFT-012, left for its own task per the budget signal."
+   "note": "Test-isolation defect in cli_init.rs, CORRECTED 2026-07-25 after the owner asked which side leaks. Production behaviour is CORRECT and out of scope: `vibe init` remembering last_author is the feature, and nothing in the command should change. The defect is test-side and has two halves of different severity. (a) READING - unconditional and live: all 11 tests in cli_init.rs isolate nothing but VIBE_NO_DEFAULT_REGISTRY (their local vibe() builder at :10-16), so the non-interactive author resolves out of the developer's REAL ~/.vibe/config.toml via prompts.rs:99-110 (--author -> user_config.init.last_author -> detect_git_author). Their behaviour depends on the machine - the same class that let cli_mcp_kind pass all day by accident. (b) WRITING - real but CONDITIONAL, not every-run as first reported: maybe_save_author (init/mod.rs:178) is called outside the `if interactive` branch so it runs every time, but prompts.rs:132 writes only when the computed author differs from the stored one. On this machine last_author is already set, so the tests read it, it matches, and nothing is written. On a fresh machine or in CI - last_author unset, `git config user.name` set - the first test run DOES write it into the real user config. Fix: give cli_init.rs the UserScratch treatment DRIFT-012 gave the other four files. Found by DRIFT-012, left for its own task per the budget signal. || RESOLVED by DRIFT-018 2026-07-25: both local builders deleted, UserScratch grew VIBEVM_SEARCH_CACHE_DIR beside the other two. Proof was NOT a green suite - the task recipe for the reading half was a false negative here (git user.name and last_author are the same string on this box), so it took a seeded scratch plus an A/B with git identity silenced. Writing half closed against the fresh-machine condition with a counterfactual showing the deleted builder DOES create the settings file. A 266-path snapshot of the real ~/.vibe before and after the whole suite and the full floor is identical."
   },
   {
    "id": "F-057",
    "from": "crates/vibe-cli/tests/cli_search.rs",
    "to": "~/.vibe/search-cache/",
    "type": "missing-support",
-   "status": "open",
+   "status": "resolved",
    "wave": 2,
-   "note": "Four bare vibe() sites (cli_search.rs:1077, 1135, 1157, 1181) with no VIBEVM_SEARCH_CACHE_DIR, so they fall back to the real ~/.vibe/search-cache/. Same class as F-055/F-056: the automated tier reading and populating real user state. Found by DRIFT-012's sweep; out of its four-file budget."
+   "note": "Four bare vibe() sites (cli_search.rs:1077, 1135, 1157, 1181) with no VIBEVM_SEARCH_CACHE_DIR, so they fall back to the real ~/.vibe/search-cache/. Same class as F-055/F-056: the automated tier reading and populating real user state. Found by DRIFT-012's sweep; out of its four-file budget. || RESOLVED by DRIFT-018 2026-07-25: both local builders deleted, UserScratch grew VIBEVM_SEARCH_CACHE_DIR beside the other two. Proof was NOT a green suite - the task recipe for the reading half was a false negative here (git user.name and last_author are the same string on this box), so it took a seeded scratch plus an A/B with git identity silenced. Writing half closed against the fresh-machine condition with a counterfactual showing the deleted builder DOES create the settings file. A 266-path snapshot of the real ~/.vibe before and after the whole suite and the full floor is identical."
   },
   {
    "id": "F-058",
@@ -541,6 +541,24 @@
    "status": "open",
    "wave": 2,
    "note": "naive.rs:3-4 points the reader at the crate module docs for 'the pinned limitations and WHEN TO UPGRADE to a SAT-style solver'. That upgrade landed twice - sat, then resolvo as the production default - so the file contradicts itself twenty-five lines lower, in the rustdoc DRIFT-014 wrote at naive.rs:31-39. Two-line fix, F-059's shape exactly. Recorded rather than folded in: DRIFT-019's §4.1 named three sites, and absorbing a fourth silently is precisely what F-059 exists to prevent. Following the pointer still lands a reader on correct text, so this misleads only someone who stops at the pointer. Also recorded here because it has no other home: crates/vibe-workspace/src/freshness.rs is now 592 lines against the 600-line conform budget (8 of headroom) - the next edit to that file should expect to split it, and DRIFT-019 compressed its own change to seven lines for that reason."
+  },
+  {
+   "id": "F-061",
+   "from": "crates/vibe-cli/tests/cli_workspace_publish.rs",
+   "to": "crates/vibe-cli/src/commands/init/prompts.rs",
+   "type": "missing-support",
+   "status": "open",
+   "wave": 2,
+   "note": "A THIRD file with F-056's shape, found by DRIFT-018's sweep and left unconverted because the task scoped itself to two files. cli_workspace_publish.rs:9 imports the FREE common::vibe/init_project, and four tests (:27, :113, :206, :253) run `vibe init` against the real settings home - plus the publish-token precedence leg F-062 describes. Until it lands, the 'real config.toml unchanged after the full suite' result holds only because this machine's last_author is already set. Fix: route it through UserScratch like the six files already converted. Also recorded here: main.rs:51 promote_user_config_env() runs before dispatch for EVERY subcommand and promotes <settings-dir>/config.toml [env] into the process env, so any un-isolated cargo_bin(\"vibe\") reads the real config - inert on this box only because that table is empty."
+  },
+  {
+   "id": "F-062",
+   "from": "crates/vibe-cli/tests/cli_search.rs",
+   "to": "crates/vibe-cli/src/commands/search.rs",
+   "type": "missing-support",
+   "status": "open",
+   "wave": 2,
+   "note": "SECURITY-RELEVANT, owner decision needed. F-057 was filed as a stray cache directory; it is more than that. search.rs:427 calls vibe_publish::token::load_token_for_host(\"github.com\"), whose 4th precedence leg is <settings-dir>/github.publish.token - present on this machine. The full-scan test clears legs 2-3 by env but could not reach leg 4, so an un-isolated run attached the real publish token to its outbound request. Measured against a loopback listener recording header NAMES AND LENGTH ONLY, never the value: pre-fix the request carried an Authorization header of 47 bytes (Bearer + a 40-char token); under UserScratch there is no Authorization header at all. DRIFT-018 closed the leg. TWO THINGS REMAIN FOR THE OWNER: (a) whether the token ever reached a real host rather than a fixture endpoint - if any of these tests ever pointed at a live github.com, the secrets-hygiene rule is rotate first, investigate second; (b) residue on disk - ~/.vibe/search-cache/primary/ and secondary/ hold three JSON files dated 2026-05-06 whose payloads are verbatim cli_search.rs mock fixtures. Left in place deliberately: deleting the developer's files is not an executor's call."
   }
  ]
 }
