@@ -23,6 +23,19 @@
 # §4 is include-only by design, so exclusions are expressed by
 # enumeration; a new spec/ subtree or top-level spec doc must be added
 # here explicitly — review at batch boundaries.
+# WAVE 2 opened 2026-07-26 (PACKAGES-ACTUALIZATION-CAMPAIGN ratified): the two
+# authored package namespaces join the scope. The host's 58 files STAY in
+# scope — wave 2 does not un-measure wave 1, and both corpora share one
+# `progress check` gate that must stay at 0.
+# Out of scope and deliberately so: `packages/org.vibevm.fractality/**` (its
+# own specspace, its own boot contract and WAL) and `vibedeps/**` (regenerated
+# consumer copies of the same packages — marking a copy is marking nothing).
+#
+# NOTE, and it bites immediately: with two `campaigns/<id>/` zones present, a
+# BARE `vibe progress …` no longer resolves a campaign — `resolve_campaign`
+# returns the single zone only when exactly one exists, and otherwise drops to
+# ad-hoc mode, where reports work and STATE IS SILENTLY NOT WRITTEN. Always
+# pass `--campaign campaigns/packages-2026-09` (or the wave-1 zone) from here on.
 schema = 1
 include = [
     "spec/boot/[0-9]*.md",
@@ -30,4 +43,6 @@ include = [
     "spec/design/**/*.md",
     "spec/manual-tests/**/*.md",
     "spec/modules/**/*.md",
+    "packages/org.vibevm.world/**/*.md",
+    "packages/org.vibevm.ai-native/**/*.md",
 ]

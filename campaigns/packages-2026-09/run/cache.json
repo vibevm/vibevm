@@ -1,0 +1,4462 @@
+{
+  "schema": 2,
+  "updated_at": "2026-07-25T23:48:03Z",
+  "files": {
+    "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/LICENSE.md": {
+      "content_hash": "ff62ce25b7887cc01f138039b0ea3217248ece5f92c08fc7f9a5c6758b2d6a29",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 8,
+        "unmarked_facts": 8
+      },
+      "marker_count": 0,
+      "unit_count": 0,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/README.md": {
+      "content_hash": "5a31a151790f6036089501351a146e5353ca0f8d30b9b0f739fbdb6060ad5e83",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 13,
+        "unmarked_facts": 13
+      },
+      "marker_count": 0,
+      "unit_count": 4,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/spec/00-MANIFESTO.md": {
+      "content_hash": "da31662f11a411473eba30824737ecaeb32b98a515f6240102d85db5ecfebdff",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 61,
+        "unmarked_facts": 61
+      },
+      "marker_count": 0,
+      "unit_count": 10,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/spec/01-PATTERN-CARD-FORMAT.md": {
+      "content_hash": "f722973ab8bb737da7a9fb56bb95eb968c8c8a168ca29b1748297871140b5b75",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 25,
+        "unmarked_facts": 25
+      },
+      "marker_count": 0,
+      "unit_count": 9,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/spec/02-EXECUTABLE-SCAFFOLDS.md": {
+      "content_hash": "f86adb921249df502205f2795b16ef597ad8664729859574e2a3a566d7d6ca98",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 66,
+        "unmarked_facts": 66
+      },
+      "marker_count": 0,
+      "unit_count": 6,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/spec/03-RAID-PLAYBOOK.md": {
+      "content_hash": "eda8f13a12deb299aeb13616c2e5deacc4928beb46fd8c16e04ff789ab7e7f15",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 22,
+        "unmarked_facts": 22
+      },
+      "marker_count": 0,
+      "unit_count": 6,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/spec/04-SWEEP-PLAYBOOK.md": {
+      "content_hash": "699dd53388813d3a04395b8def3f1174ce23110c4fdc9a121129e4e3c4158e11",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 41,
+        "unmarked_facts": 41
+      },
+      "marker_count": 0,
+      "unit_count": 8,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/spec/05-CAMPAIGN-FORM.md": {
+      "content_hash": "6cc32d1db0ebb548b25cc8b85d6c3e8fc03620f3f6f8ec0e56936b055725d07f",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 37,
+        "unmarked_facts": 37
+      },
+      "marker_count": 0,
+      "unit_count": 6,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/spec/06-WAL-CONVENTION.md": {
+      "content_hash": "45828526ed6094099743a79ba188ee44c182ac15f3aa6542a251d72c348957da",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 16,
+        "unmarked_facts": 16
+      },
+      "marker_count": 0,
+      "unit_count": 6,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/spec/appendix/ATLAS.md": {
+      "content_hash": "b97f0d255dd1c1573c3880528baf56ee06ad74b00ba4978a1916fbc829aaf025",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 93,
+        "unmarked_facts": 93
+      },
+      "marker_count": 0,
+      "unit_count": 10,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/spec/appendix/CONTRADICTION-MAP.md": {
+      "content_hash": "b3175f9f58372048f806810d20b59b334aa81ab372e205fa5f774cdb2aaf1d00",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 24,
+        "unmarked_facts": 24
+      },
+      "marker_count": 0,
+      "unit_count": 8,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/spec/boot/10-flow-core-ai-native.md": {
+      "content_hash": "949385221b0e1da538b091bef2736a4355a0307099a2f56870c202efa1b6d53b",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 5,
+        "unmarked_facts": 5
+      },
+      "marker_count": 0,
+      "unit_count": 1,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/spec/legacy-projections/GUIDE-CPP-MISRA2008-v0.1.md": {
+      "content_hash": "f7cee6e6ef54ce6506e467513f370166ae6087c6370747acedf4df60b8d51e2f",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 58,
+        "unmarked_facts": 58
+      },
+      "marker_count": 0,
+      "unit_count": 11,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/spec/legacy-projections/GUIDE-CPP-MODERN-v0.1.md": {
+      "content_hash": "80b81216c377e889eebe519dce6373cbc9079e6167ea4d2c83851e92524d88be",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 71,
+        "unmarked_facts": 71
+      },
+      "marker_count": 0,
+      "unit_count": 11,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/spec/legacy-projections/GUIDE-CPP-TRADITIONAL-v0.1.md": {
+      "content_hash": "31e45c6569fa3941d79475880c4710c2b753b53ee3dc4a86f334f7b321efcc76",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 82,
+        "unmarked_facts": 82
+      },
+      "marker_count": 0,
+      "unit_count": 11,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/spec/legacy-projections/GUIDE-GO-v0.1.md": {
+      "content_hash": "20489efef19664b21955e7c58e2bd014ecc3be98599120b88a4c0078cb3adcdc",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 88,
+        "unmarked_facts": 88
+      },
+      "marker_count": 0,
+      "unit_count": 11,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/spec/legacy-projections/GUIDE-JAVA-GRAALVM-v0.1.md": {
+      "content_hash": "b3ac943494544b72faa712ded3a2fc8d54faa1cc1122aeb6cc8f0b5d8c616e60",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 36,
+        "unmarked_facts": 36
+      },
+      "marker_count": 0,
+      "unit_count": 6,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/spec/legacy-projections/GUIDE-JAVA-JAKARTA-v0.1.md": {
+      "content_hash": "dae6a66ffb73f5098ca8438d9a45ff8e865764b4ad078cdaf23fea9625f412e7",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 34,
+        "unmarked_facts": 34
+      },
+      "marker_count": 0,
+      "unit_count": 5,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/spec/legacy-projections/GUIDE-JAVA-SPRING-v0.1.md": {
+      "content_hash": "2b5f9a61a2c1c867230deceab5e57ef4e177957725ca9f9f2e4b9e232a7213a1",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 44,
+        "unmarked_facts": 44
+      },
+      "marker_count": 0,
+      "unit_count": 8,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/spec/legacy-projections/GUIDE-JAVA-v0.1.md": {
+      "content_hash": "8d57cd7f457348d3d02dff475e9c54e57acd7cd2b62671a4d66e1f783a1578d2",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 84,
+        "unmarked_facts": 84
+      },
+      "marker_count": 0,
+      "unit_count": 11,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/spec/legacy-projections/GUIDE-KOTLIN-v0.1.md": {
+      "content_hash": "00af5805ffd96f33ec95d25d7828f1e64e37c0f608863e55db24f84c2aa1c535",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 131,
+        "unmarked_facts": 131
+      },
+      "marker_count": 0,
+      "unit_count": 15,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/spec/legacy-projections/GUIDE-PYTHON-v0.1.md": {
+      "content_hash": "9e5efcec5f39de5a6b14184049453c8cebd6f3a94793e796be8b577d5fe7595c",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 86,
+        "unmarked_facts": 86
+      },
+      "marker_count": 0,
+      "unit_count": 11,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/spec/legacy-projections/GUIDE-TYPESCRIPT-v0.1.md": {
+      "content_hash": "e27e9eef934b2be0cb8bfaa93238e2a9298ce8dbe72271e7520fb02bcae9213e",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 77,
+        "unmarked_facts": 77
+      },
+      "marker_count": 0,
+      "unit_count": 11,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/spec/mechanisms/BROWNFIELD-PROTOCOL-v0.1.md": {
+      "content_hash": "ba522ed286fc6929aaca6f969576152acea47162dd9b820fb0da7a53db49b74f",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 35,
+        "unmarked_facts": 35
+      },
+      "marker_count": 0,
+      "unit_count": 12,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/spec/mechanisms/ENGINE-CONFORM-v0.1.md": {
+      "content_hash": "2fd96af86467ccf1acae3b4836e584c79636cdee9218da464f390fa94b0c4b32",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 45,
+        "unmarked_facts": 45
+      },
+      "marker_count": 0,
+      "unit_count": 7,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/spec/mechanisms/LEDGER-INTENT-v0.1.md": {
+      "content_hash": "a9bdcd4459d3b32adc288ebdc2d366e98038fd3f03f370fdd48ad7a72c60cbdc",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 29,
+        "unmarked_facts": 29
+      },
+      "marker_count": 0,
+      "unit_count": 9,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/spec/mechanisms/MCP-CORE-v0.1.md": {
+      "content_hash": "9294a7fafd9bd0bc8baebc3dac84cb8d0e2bad2e825a195826ef486fed0d9cd7",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 19,
+        "unmarked_facts": 19
+      },
+      "marker_count": 0,
+      "unit_count": 6,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/core-ai-native/v0.7.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md": {
+      "content_hash": "9aba7a5ca10c606d01c11af7de4bcd341424129ee21bd999ecbd344bb3a5726f",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 158,
+        "unmarked_facts": 158
+      },
+      "marker_count": 0,
+      "unit_count": 27,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/LICENSE.md": {
+      "content_hash": "ff62ce25b7887cc01f138039b0ea3217248ece5f92c08fc7f9a5c6758b2d6a29",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 8,
+        "unmarked_facts": 8
+      },
+      "marker_count": 0,
+      "unit_count": 0,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
+      "content_hash": "5a31a151790f6036089501351a146e5353ca0f8d30b9b0f739fbdb6060ad5e83",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 13,
+        "unmarked_facts": 13
+      },
+      "marker_count": 0,
+      "unit_count": 4,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md": {
+      "content_hash": "da31662f11a411473eba30824737ecaeb32b98a515f6240102d85db5ecfebdff",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 61,
+        "unmarked_facts": 61
+      },
+      "marker_count": 0,
+      "unit_count": 10,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/01-PATTERN-CARD-FORMAT.md": {
+      "content_hash": "f722973ab8bb737da7a9fb56bb95eb968c8c8a168ca29b1748297871140b5b75",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 25,
+        "unmarked_facts": 25
+      },
+      "marker_count": 0,
+      "unit_count": 9,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/02-EXECUTABLE-SCAFFOLDS.md": {
+      "content_hash": "f86adb921249df502205f2795b16ef597ad8664729859574e2a3a566d7d6ca98",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 66,
+        "unmarked_facts": 66
+      },
+      "marker_count": 0,
+      "unit_count": 6,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/03-RAID-PLAYBOOK.md": {
+      "content_hash": "eda8f13a12deb299aeb13616c2e5deacc4928beb46fd8c16e04ff789ab7e7f15",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 22,
+        "unmarked_facts": 22
+      },
+      "marker_count": 0,
+      "unit_count": 6,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/04-SWEEP-PLAYBOOK.md": {
+      "content_hash": "699dd53388813d3a04395b8def3f1174ce23110c4fdc9a121129e4e3c4158e11",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 41,
+        "unmarked_facts": 41
+      },
+      "marker_count": 0,
+      "unit_count": 8,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/05-CAMPAIGN-FORM.md": {
+      "content_hash": "6cc32d1db0ebb548b25cc8b85d6c3e8fc03620f3f6f8ec0e56936b055725d07f",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 37,
+        "unmarked_facts": 37
+      },
+      "marker_count": 0,
+      "unit_count": 6,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/06-WAL-CONVENTION.md": {
+      "content_hash": "45828526ed6094099743a79ba188ee44c182ac15f3aa6542a251d72c348957da",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 16,
+        "unmarked_facts": 16
+      },
+      "marker_count": 0,
+      "unit_count": 6,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md": {
+      "content_hash": "b97f0d255dd1c1573c3880528baf56ee06ad74b00ba4978a1916fbc829aaf025",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 93,
+        "unmarked_facts": 93
+      },
+      "marker_count": 0,
+      "unit_count": 10,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md": {
+      "content_hash": "b3175f9f58372048f806810d20b59b334aa81ab372e205fa5f774cdb2aaf1d00",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 24,
+        "unmarked_facts": 24
+      },
+      "marker_count": 0,
+      "unit_count": 8,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/boot/10-flow-core-ai-native.md": {
+      "content_hash": "949385221b0e1da538b091bef2736a4355a0307099a2f56870c202efa1b6d53b",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 5,
+        "unmarked_facts": 5
+      },
+      "marker_count": 0,
+      "unit_count": 1,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/legacy-projections/GUIDE-CPP-MISRA2008-v0.1.md": {
+      "content_hash": "f7cee6e6ef54ce6506e467513f370166ae6087c6370747acedf4df60b8d51e2f",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 58,
+        "unmarked_facts": 58
+      },
+      "marker_count": 0,
+      "unit_count": 11,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/legacy-projections/GUIDE-CPP-MODERN-v0.1.md": {
+      "content_hash": "80b81216c377e889eebe519dce6373cbc9079e6167ea4d2c83851e92524d88be",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 71,
+        "unmarked_facts": 71
+      },
+      "marker_count": 0,
+      "unit_count": 11,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/legacy-projections/GUIDE-CPP-TRADITIONAL-v0.1.md": {
+      "content_hash": "31e45c6569fa3941d79475880c4710c2b753b53ee3dc4a86f334f7b321efcc76",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 82,
+        "unmarked_facts": 82
+      },
+      "marker_count": 0,
+      "unit_count": 11,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/legacy-projections/GUIDE-GO-v0.1.md": {
+      "content_hash": "20489efef19664b21955e7c58e2bd014ecc3be98599120b88a4c0078cb3adcdc",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 88,
+        "unmarked_facts": 88
+      },
+      "marker_count": 0,
+      "unit_count": 11,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/legacy-projections/GUIDE-JAVA-GRAALVM-v0.1.md": {
+      "content_hash": "b3ac943494544b72faa712ded3a2fc8d54faa1cc1122aeb6cc8f0b5d8c616e60",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 36,
+        "unmarked_facts": 36
+      },
+      "marker_count": 0,
+      "unit_count": 6,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/legacy-projections/GUIDE-JAVA-JAKARTA-v0.1.md": {
+      "content_hash": "dae6a66ffb73f5098ca8438d9a45ff8e865764b4ad078cdaf23fea9625f412e7",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 34,
+        "unmarked_facts": 34
+      },
+      "marker_count": 0,
+      "unit_count": 5,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/legacy-projections/GUIDE-JAVA-SPRING-v0.1.md": {
+      "content_hash": "2b5f9a61a2c1c867230deceab5e57ef4e177957725ca9f9f2e4b9e232a7213a1",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 44,
+        "unmarked_facts": 44
+      },
+      "marker_count": 0,
+      "unit_count": 8,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/legacy-projections/GUIDE-JAVA-v0.1.md": {
+      "content_hash": "8d57cd7f457348d3d02dff475e9c54e57acd7cd2b62671a4d66e1f783a1578d2",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 84,
+        "unmarked_facts": 84
+      },
+      "marker_count": 0,
+      "unit_count": 11,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/legacy-projections/GUIDE-KOTLIN-v0.1.md": {
+      "content_hash": "00af5805ffd96f33ec95d25d7828f1e64e37c0f608863e55db24f84c2aa1c535",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 131,
+        "unmarked_facts": 131
+      },
+      "marker_count": 0,
+      "unit_count": 15,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/legacy-projections/GUIDE-PYTHON-v0.1.md": {
+      "content_hash": "9e5efcec5f39de5a6b14184049453c8cebd6f3a94793e796be8b577d5fe7595c",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 86,
+        "unmarked_facts": 86
+      },
+      "marker_count": 0,
+      "unit_count": 11,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/legacy-projections/GUIDE-TYPESCRIPT-v0.1.md": {
+      "content_hash": "e27e9eef934b2be0cb8bfaa93238e2a9298ce8dbe72271e7520fb02bcae9213e",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 77,
+        "unmarked_facts": 77
+      },
+      "marker_count": 0,
+      "unit_count": 11,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/BROWNFIELD-PROTOCOL-v0.1.md": {
+      "content_hash": "ba522ed286fc6929aaca6f969576152acea47162dd9b820fb0da7a53db49b74f",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 35,
+        "unmarked_facts": 35
+      },
+      "marker_count": 0,
+      "unit_count": 12,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/ENGINE-CONFORM-v0.1.md": {
+      "content_hash": "48ced85d70c23267da23d06410a37a53b4f48d1df54d40dd8dcc3e32596c2cb7",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 49,
+        "unmarked_facts": 49
+      },
+      "marker_count": 0,
+      "unit_count": 7,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/LEDGER-INTENT-v0.1.md": {
+      "content_hash": "a9bdcd4459d3b32adc288ebdc2d366e98038fd3f03f370fdd48ad7a72c60cbdc",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 29,
+        "unmarked_facts": 29
+      },
+      "marker_count": 0,
+      "unit_count": 9,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/MCP-CORE-v0.1.md": {
+      "content_hash": "9294a7fafd9bd0bc8baebc3dac84cb8d0e2bad2e825a195826ef486fed0d9cd7",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 19,
+        "unmarked_facts": 19
+      },
+      "marker_count": 0,
+      "unit_count": 6,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md": {
+      "content_hash": "9cee7f8a4188a8bd9fcfbf2c2910a4a005ba5f3108e7f2a609ad866f712d2c6f",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 161,
+        "unmarked_facts": 161
+      },
+      "marker_count": 0,
+      "unit_count": 27,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/LICENSE.md": {
+      "content_hash": "ff62ce25b7887cc01f138039b0ea3217248ece5f92c08fc7f9a5c6758b2d6a29",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 8,
+        "unmarked_facts": 8
+      },
+      "marker_count": 0,
+      "unit_count": 0,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/README.md": {
+      "content_hash": "cd97953e81706baf0f7010bf99195b11ba655cf29ab7536fbec656dfed41f2e4",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 49,
+        "unmarked_facts": 49
+      },
+      "marker_count": 0,
+      "unit_count": 5,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/boot/20-stack-go-ai-native-lang.md": {
+      "content_hash": "f0391ed2119c3a048c41eb139f5cef6ab0d9894fee473e864a86a9ed34d05075",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 10,
+        "unmarked_facts": 10
+      },
+      "marker_count": 0,
+      "unit_count": 1,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/INDEX.md": {
+      "content_hash": "372d0709f0034e557ea8c70129e476806e1aa6a47f7b21d31131f36dcddae58b",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 92,
+        "unmarked_facts": 92
+      },
+      "marker_count": 0,
+      "unit_count": 8,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-a-generators.md": {
+      "content_hash": "c22822498789e5befbd0249d46cf4a78760293bfbc95b025cd0795e6d618668c",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 3,
+        "unmarked_facts": 3
+      },
+      "marker_count": 0,
+      "unit_count": 4,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-b-typed-builders.md": {
+      "content_hash": "0a8cde73c30e71ab1914492887653ba6a7484362b63479f8bf324ef8c4aaf98e",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 3,
+        "unmarked_facts": 3
+      },
+      "marker_count": 0,
+      "unit_count": 4,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-c-runnable-contracts.md": {
+      "content_hash": "6c23de899075d81cc71bf45424573237dff4c246f0eb1f9c1192fcd7c2bb4a98",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 3,
+        "unmarked_facts": 3
+      },
+      "marker_count": 0,
+      "unit_count": 4,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-d-differential-oracle.md": {
+      "content_hash": "f4d52fe0f4ac02f679f11f76f632bd2d82fea0db8797a278ebc585cc4b62269c",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 48,
+        "unmarked_facts": 48
+      },
+      "marker_count": 0,
+      "unit_count": 4,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-e-fast-loop.md": {
+      "content_hash": "9341737e712d5be80eb80dcdb836e8f0f8f86cc9a080f30b1b15ed8da5206f0e",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 3,
+        "unmarked_facts": 3
+      },
+      "marker_count": 0,
+      "unit_count": 4,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-f-structured-diagnostics.md": {
+      "content_hash": "5805d43437ecc1bf0a81773a0512b962688cdcf441005ab7d482c8240845ba60",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 3,
+        "unmarked_facts": 3
+      },
+      "marker_count": 0,
+      "unit_count": 4,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-g-doctests.md": {
+      "content_hash": "74e6fa5d39f037df7b1868e99bcd2e13f4c0b7468d2e1be5ca7264174ac078bb",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 3,
+        "unmarked_facts": 3
+      },
+      "marker_count": 0,
+      "unit_count": 4,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-h-simulators.md": {
+      "content_hash": "b5c00980e0b62b0f46bbba1ffcf4a67e645cc174bf47b95cf31319c9d11aa8af",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 3,
+        "unmarked_facts": 3
+      },
+      "marker_count": 0,
+      "unit_count": 4,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-i-codemods.md": {
+      "content_hash": "6e2c884b7e562229ee059c9aa63f6fced9cbb9d28ce30aa01547b2a0de7b3635",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 3,
+        "unmarked_facts": 3
+      },
+      "marker_count": 0,
+      "unit_count": 4,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.md": {
+      "content_hash": "42b1e2754b737503f27b50d1dc3dcd036d7d0e45caa818a34384d15a60c94b1a",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 103,
+        "unmarked_facts": 103
+      },
+      "marker_count": 0,
+      "unit_count": 17,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md": {
+      "content_hash": "2104176c7a9a13deff7b49664d891880a94edfdded3b29bb193cf3b8cdfbda83",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 34,
+        "unmarked_facts": 34
+      },
+      "marker_count": 0,
+      "unit_count": 9,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-PROTOCOL-GO-v0.1.md": {
+      "content_hash": "4b4b761842ee698e2e3346200154606a6b9c378ad3e1fac8c4ad2de56ef60823",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 34,
+        "unmarked_facts": 34
+      },
+      "marker_count": 0,
+      "unit_count": 6,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/conform-frontend-go.md": {
+      "content_hash": "32dd5e00cd69a5c15d759a438e6409963820bd9290b5fb73d5a1761186dbf95f",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 21,
+        "unmarked_facts": 21
+      },
+      "marker_count": 0,
+      "unit_count": 6,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/go-ai-native-tcg.md": {
+      "content_hash": "cc53c0da9432d1e2eca57179c4b8664c62fb96f90e34a08d4052216923225750",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 16,
+        "unmarked_facts": 16
+      },
+      "marker_count": 0,
+      "unit_count": 6,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/vibe-agentic-tcg-go.md": {
+      "content_hash": "365ee3f39fb6ddb92329065137379b9998aa687bc3e43e8e43b2b05351926f24",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 32,
+        "unmarked_facts": 32
+      },
+      "marker_count": 0,
+      "unit_count": 8,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/skills/go-ai-native-sweep/SKILL.md": {
+      "content_hash": "7a8cb1892c81ec8be3d602065a0044a0253aa5c8ca838712ea50d946cd373abf",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 18,
+        "unmarked_facts": 18
+      },
+      "marker_count": 0,
+      "unit_count": 7,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/skills/go-ai-native-terraform/SKILL.md": {
+      "content_hash": "bd9ab3f75667a0cc95f77bb96f775d4262aae4ab5f3652d274af0e0be6c349d4",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 22,
+        "unmarked_facts": 22
+      },
+      "marker_count": 0,
+      "unit_count": 6,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/LICENSE.md": {
+      "content_hash": "ff62ce25b7887cc01f138039b0ea3217248ece5f92c08fc7f9a5c6758b2d6a29",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 8,
+        "unmarked_facts": 8
+      },
+      "marker_count": 0,
+      "unit_count": 0,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/README.md": {
+      "content_hash": "11cb71296f139658b40a5812597263e7306ad131445367f6b32c245286b58449",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 2,
+        "unmarked_facts": 2
+      },
+      "marker_count": 0,
+      "unit_count": 1,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/spec/tools/discipline-mcp-go.md": {
+      "content_hash": "0d729cc7b387b225ffc5ee731e5c3569209fe5bcbb9519b1987b7876cb9776f4",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 41,
+        "unmarked_facts": 41
+      },
+      "marker_count": 0,
+      "unit_count": 4,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/go-ai-native/v0.1.0/LICENSE.md": {
+      "content_hash": "ff62ce25b7887cc01f138039b0ea3217248ece5f92c08fc7f9a5c6758b2d6a29",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 8,
+        "unmarked_facts": 8
+      },
+      "marker_count": 0,
+      "unit_count": 0,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/go-ai-native/v0.1.0/README.md": {
+      "content_hash": "9b1e4218af41d0da5eb3601ae2525b4c7625d3f3e8e897e0834965d2f494f770",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 5,
+        "unmarked_facts": 5
+      },
+      "marker_count": 0,
+      "unit_count": 1,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/LICENSE.md": {
+      "content_hash": "ff62ce25b7887cc01f138039b0ea3217248ece5f92c08fc7f9a5c6758b2d6a29",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 8,
+        "unmarked_facts": 8
+      },
+      "marker_count": 0,
+      "unit_count": 0,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/README.md": {
+      "content_hash": "68b7288c89d5cec37eca3a27b4c5396f587d83c01ce8549b06e6deda035b0944",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 13,
+        "unmarked_facts": 13
+      },
+      "marker_count": 0,
+      "unit_count": 4,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/boot/20-stack-rust-ai-native-lang.md": {
+      "content_hash": "be10c5acb16aea6ae08325cdf0a0f28acbe2526bb0c9fc95b797dd36feffa473",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 9,
+        "unmarked_facts": 9
+      },
+      "marker_count": 0,
+      "unit_count": 1,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md": {
+      "content_hash": "7861bea547599abfcf63d5cbfe65d3195ff616d503f2dedb518fff571aa5d9da",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 81,
+        "unmarked_facts": 81
+      },
+      "marker_count": 0,
+      "unit_count": 6,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-a-generators.md": {
+      "content_hash": "1bfbe6590087d205eb92b0882fcbb1327b96077f14455821ba357fd1b0950ee2",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 3,
+        "unmarked_facts": 3
+      },
+      "marker_count": 0,
+      "unit_count": 4,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-b-typed-builders.md": {
+      "content_hash": "54432d46dad81ea965ce89438836bd2ea1c8f7b4bb908365de97faf0f93890c9",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 3,
+        "unmarked_facts": 3
+      },
+      "marker_count": 0,
+      "unit_count": 4,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-c-runnable-contracts.md": {
+      "content_hash": "b0f09c947c40a7fdff923234899f963b197952e6335c973786f039a0683eb4cb",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 3,
+        "unmarked_facts": 3
+      },
+      "marker_count": 0,
+      "unit_count": 4,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-d-differential-oracle.md": {
+      "content_hash": "9e35877aa22eb46a425050310252164e378f52986e917af771cd1d7ed3f5b988",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 47,
+        "unmarked_facts": 47
+      },
+      "marker_count": 0,
+      "unit_count": 4,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-e-fast-loop.md": {
+      "content_hash": "3327490af5999723b1aadd1d3db726ee8dbf2edbc5c4fa15017c741243579da9",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 3,
+        "unmarked_facts": 3
+      },
+      "marker_count": 0,
+      "unit_count": 4,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-f-structured-diagnostics.md": {
+      "content_hash": "d9050315b2bd84af7281229093a2ffb8d8ce66b174f4bad71a0f5891208dd39d",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 3,
+        "unmarked_facts": 3
+      },
+      "marker_count": 0,
+      "unit_count": 4,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-g-doctests.md": {
+      "content_hash": "909c847ee439a7cf8d9f29ef0d0299fcbcb333d8b53f27150eafab10f4e1e531",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 3,
+        "unmarked_facts": 3
+      },
+      "marker_count": 0,
+      "unit_count": 4,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-h-simulators.md": {
+      "content_hash": "e6950480611c1ccb91ac02eca15b48749e6db38b2203853b52a5d1b925fb669b",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 3,
+        "unmarked_facts": 3
+      },
+      "marker_count": 0,
+      "unit_count": 4,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-i-codemods.md": {
+      "content_hash": "5d4d380aa9373232723093ab25db8e41958850c02649b2284e5b2bb5e549673a",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 3,
+        "unmarked_facts": 3
+      },
+      "marker_count": 0,
+      "unit_count": 4,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md": {
+      "content_hash": "a51e783392a6c9a8d553ae32d30323faa40fc5f17b116457141fd712f63ca4c7",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 55,
+        "unmarked_facts": 55
+      },
+      "marker_count": 0,
+      "unit_count": 16,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-ORACLE-RUST-v0.1.md": {
+      "content_hash": "c1dfa5a9e859d0ee0f65f6cd55734e9827784b9d3478f2f5c77293b4ea7185c3",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 29,
+        "unmarked_facts": 29
+      },
+      "marker_count": 0,
+      "unit_count": 9,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-PROTOCOL-RUST-v0.1.md": {
+      "content_hash": "dc0cf1b9ff5ac857ca298166fe6d0e75e407c68536c1291973167038e5f5aca4",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 34,
+        "unmarked_facts": 34
+      },
+      "marker_count": 0,
+      "unit_count": 6,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/rust-ai-native-tcg.md": {
+      "content_hash": "3572273eb3d4132fe5ef1ba69e59cb9446588a29b59987a031af0f42b8a36732",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 28,
+        "unmarked_facts": 28
+      },
+      "marker_count": 0,
+      "unit_count": 8,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/vibe-agentic-tcg-rust.md": {
+      "content_hash": "da2f0d7c040e895c72b30f46e6bf62da445812076218901a016bb859d5f4ba20",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 34,
+        "unmarked_facts": 34
+      },
+      "marker_count": 0,
+      "unit_count": 8,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md": {
+      "content_hash": "5891df576cf9319d21ae67bc45991274ae30f9946c296306e595ada452524fe9",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 19,
+        "unmarked_facts": 19
+      },
+      "marker_count": 0,
+      "unit_count": 7,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-terraform/SKILL.md": {
+      "content_hash": "3acc7cd3380098972078b02d1afe7b49eb77474b0494ebfd3e7b6035aa6f7e25",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 20,
+        "unmarked_facts": 20
+      },
+      "marker_count": 0,
+      "unit_count": 6,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/LICENSE.md": {
+      "content_hash": "ff62ce25b7887cc01f138039b0ea3217248ece5f92c08fc7f9a5c6758b2d6a29",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 8,
+        "unmarked_facts": 8
+      },
+      "marker_count": 0,
+      "unit_count": 0,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/README.md": {
+      "content_hash": "342272026b78c3be88f9118156520233a8eecb5e6906ad81083cd42d45d5ec4e",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 5,
+        "unmarked_facts": 5
+      },
+      "marker_count": 0,
+      "unit_count": 1,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/spec/tools/discipline-mcp-rust.md": {
+      "content_hash": "2d2e8e8789d884a1c40bbe8ecfc656826c2897a582c606a8a5e144c9a9e76d40",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 43,
+        "unmarked_facts": 43
+      },
+      "marker_count": 0,
+      "unit_count": 4,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/rust-ai-native/v0.7.0/LICENSE.md": {
+      "content_hash": "ff62ce25b7887cc01f138039b0ea3217248ece5f92c08fc7f9a5c6758b2d6a29",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 8,
+        "unmarked_facts": 8
+      },
+      "marker_count": 0,
+      "unit_count": 0,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/rust-ai-native/v0.7.0/README.md": {
+      "content_hash": "3a4fc05ecb48881435f7106bd9d1a6dc83bec1eaf208309e3839deaefb72410e",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 5,
+        "unmarked_facts": 5
+      },
+      "marker_count": 0,
+      "unit_count": 1,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/LICENSE.md": {
+      "content_hash": "ff62ce25b7887cc01f138039b0ea3217248ece5f92c08fc7f9a5c6758b2d6a29",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 8,
+        "unmarked_facts": 8
+      },
+      "marker_count": 0,
+      "unit_count": 0,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md": {
+      "content_hash": "8c443240b6628a69c157bb447765f643e93f97465da4a7b2b0f4dbe0e9df4bd4",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 13,
+        "unmarked_facts": 13
+      },
+      "marker_count": 0,
+      "unit_count": 1,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/INDEX.md": {
+      "content_hash": "e9404cdc54c07c779afc34adc8ae24788d09709bc4b98ea7338bee2dd6dea995",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 92,
+        "unmarked_facts": 92
+      },
+      "marker_count": 0,
+      "unit_count": 8,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-a-generators.md": {
+      "content_hash": "9b5debc73e9728bb209a75c3514fa499a9c926f173e0a74442b685af8c4ac68d",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 3,
+        "unmarked_facts": 3
+      },
+      "marker_count": 0,
+      "unit_count": 4,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-b-typed-builders.md": {
+      "content_hash": "6bff49c6f2fc9983a30950224eedb7d0be33a61a830ca02a7a1f27ad6f4ea8e7",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 3,
+        "unmarked_facts": 3
+      },
+      "marker_count": 0,
+      "unit_count": 4,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-c-runnable-contracts.md": {
+      "content_hash": "afe402772c23f7235007f0cdbfb37275212a4030d93c7bc5d9dac712487032f1",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 3,
+        "unmarked_facts": 3
+      },
+      "marker_count": 0,
+      "unit_count": 4,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-d-differential-oracle.md": {
+      "content_hash": "1f0038c9848f8125a95f62313bb8b92908a1590f731610add2cef32fc86258cd",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 48,
+        "unmarked_facts": 48
+      },
+      "marker_count": 0,
+      "unit_count": 4,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-e-fast-loop.md": {
+      "content_hash": "ab65aecaf5b5a97ca5ba3b714262aa9a23c04f123a9007cc797ada1ec9d8ec32",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 3,
+        "unmarked_facts": 3
+      },
+      "marker_count": 0,
+      "unit_count": 4,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-f-structured-diagnostics.md": {
+      "content_hash": "3416e68cb97e37668db864eb06f2db9949ca977dbd4b2288c3369746bc31a040",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 3,
+        "unmarked_facts": 3
+      },
+      "marker_count": 0,
+      "unit_count": 4,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-g-doctests.md": {
+      "content_hash": "4c5b0f1956343c71abf8e7aeb5c2a729358c58fca119265924b0f642fa006d7e",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 3,
+        "unmarked_facts": 3
+      },
+      "marker_count": 0,
+      "unit_count": 4,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-h-simulators.md": {
+      "content_hash": "b2d32a158282890ee373c48c06aabfc0cc7495993d629f7229c15e7ef1b11d8f",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 3,
+        "unmarked_facts": 3
+      },
+      "marker_count": 0,
+      "unit_count": 4,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-i-codemods.md": {
+      "content_hash": "7c71137a68a33c670f856ab25ad9fecb15aee7f620e4882c493ee688dfc00b14",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 3,
+        "unmarked_facts": 3
+      },
+      "marker_count": 0,
+      "unit_count": 4,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/skills/typescript-ai-native-sweep/SKILL.md": {
+      "content_hash": "62e37d2cc9e932c6014ff4098e53118370343ff530351232aedec95f66750ef0",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 15,
+        "unmarked_facts": 15
+      },
+      "marker_count": 0,
+      "unit_count": 6,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/skills/typescript-ai-native-terraform/SKILL.md": {
+      "content_hash": "8621dc1d43c407d6cf3a86f0d2d344cd5e41f37187102ec99df841e14076826a",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 20,
+        "unmarked_facts": 20
+      },
+      "marker_count": 0,
+      "unit_count": 6,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md": {
+      "content_hash": "0bb855210eead0ca5c6d610a27ad398a6985195970c1575caa64249d7695452a",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 80,
+        "unmarked_facts": 80
+      },
+      "marker_count": 0,
+      "unit_count": 18,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/mechanisms/TCG-ORACLE-v0.1.md": {
+      "content_hash": "107d60c1c05df5d9ddfb8fd6a7789cb51da4bf5fa29196dbe9b98a13c2d52e76",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 26,
+        "unmarked_facts": 26
+      },
+      "marker_count": 0,
+      "unit_count": 8,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/mechanisms/TCG-PROTOCOL-v0.1.md": {
+      "content_hash": "41ff0adba3db0c9548e9302aa31953bd7eb3b91dc2937f2348e0ad6144ed3406",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 39,
+        "unmarked_facts": 39
+      },
+      "marker_count": 0,
+      "unit_count": 6,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/tools/conform-frontend-typescript.md": {
+      "content_hash": "6189ecf613130f71fd686b64a7b8ce9cafc3381c788f320f85276203c5685cc7",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 20,
+        "unmarked_facts": 20
+      },
+      "marker_count": 0,
+      "unit_count": 6,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/tools/typescript-ai-native-tcg.md": {
+      "content_hash": "f229454f282b078b21158cda6e542bc6dc10d1336a6621463e10f7d600b50c16",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 18,
+        "unmarked_facts": 18
+      },
+      "marker_count": 0,
+      "unit_count": 6,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/tools/vibe-agentic-tcg-ts.md": {
+      "content_hash": "7ef0daecdff0113d6bc0dd4a5cc0b4109d72fc9deee24753b6f9e9f5decad633",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 35,
+        "unmarked_facts": 35
+      },
+      "marker_count": 0,
+      "unit_count": 8,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/LICENSE.md": {
+      "content_hash": "ff62ce25b7887cc01f138039b0ea3217248ece5f92c08fc7f9a5c6758b2d6a29",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 8,
+        "unmarked_facts": 8
+      },
+      "marker_count": 0,
+      "unit_count": 0,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/README.md": {
+      "content_hash": "624bb51f5aefbc3b3d0c294d8f35fe786dbac7882dad0c598a194bf9eb92a484",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 5,
+        "unmarked_facts": 5
+      },
+      "marker_count": 0,
+      "unit_count": 1,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/spec/tools/discipline-mcp-typescript.md": {
+      "content_hash": "06c7c29897e04353b4d50d0d6840cd0eab5ff14c1e17fbdc6dd9936530867aeb",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 39,
+        "unmarked_facts": 39
+      },
+      "marker_count": 0,
+      "unit_count": 4,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/typescript-ai-native/v0.6.0/LICENSE.md": {
+      "content_hash": "ff62ce25b7887cc01f138039b0ea3217248ece5f92c08fc7f9a5c6758b2d6a29",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 8,
+        "unmarked_facts": 8
+      },
+      "marker_count": 0,
+      "unit_count": 0,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.ai-native/typescript-ai-native/v0.6.0/README.md": {
+      "content_hash": "0641f09176f29ec7c4c5d5c7cfc1f15944db8c3faa0fb9a500464c3be65f9c8c",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 5,
+        "unmarked_facts": 5
+      },
+      "marker_count": 0,
+      "unit_count": 1,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/addressable-specs/v0.1.0/LICENSE.md": {
+      "content_hash": "ff62ce25b7887cc01f138039b0ea3217248ece5f92c08fc7f9a5c6758b2d6a29",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 8,
+        "unmarked_facts": 8
+      },
+      "marker_count": 0,
+      "unit_count": 0,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/addressable-specs/v0.1.0/README.md": {
+      "content_hash": "39381f7a90f3212e2cf8390abc67940297d9a556fa2095cc1cba65ed08e4d687",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 15,
+        "unmarked_facts": 15
+      },
+      "marker_count": 0,
+      "unit_count": 6,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/boot/15-flow-addressable-specs.md": {
+      "content_hash": "0e493aa45b21153ae04f5ed8c5e7047a1680dd8639bc296ce60f4c50331f9018",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 13,
+        "unmarked_facts": 13
+      },
+      "marker_count": 0,
+      "unit_count": 6,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md": {
+      "content_hash": "e6d6862b805d030468d60a81d955fe7800c6fe8a160d767ee6590f194c9b77c0",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 45,
+        "unmarked_facts": 45
+      },
+      "marker_count": 0,
+      "unit_count": 11,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/authoring-rules.md": {
+      "content_hash": "5211be8866c53d0d9e733175d04c0319b0ed6e58762568db3220a1f14bd3cd33",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 57,
+        "unmarked_facts": 57
+      },
+      "marker_count": 0,
+      "unit_count": 12,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/spec-tree-layout.md": {
+      "content_hash": "e2eda2f1cd7d3f5b169415b7526471fca169a846273a8cb51c7ca6971ef77463",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 52,
+        "unmarked_facts": 52
+      },
+      "marker_count": 0,
+      "unit_count": 8,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/campaign-plans/v0.1.0/LICENSE.md": {
+      "content_hash": "ff62ce25b7887cc01f138039b0ea3217248ece5f92c08fc7f9a5c6758b2d6a29",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 8,
+        "unmarked_facts": 8
+      },
+      "marker_count": 0,
+      "unit_count": 0,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/campaign-plans/v0.1.0/README.md": {
+      "content_hash": "08775d4c24f8a34818236070254918e659e47d897581924502b3d325fb48b20b",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 14,
+        "unmarked_facts": 14
+      },
+      "marker_count": 0,
+      "unit_count": 7,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/boot/40-flow-campaign-plans.md": {
+      "content_hash": "24292ffe3efafd30ac5ff971d1ab3709536b382d52f65067a016104c1c627995",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 13,
+        "unmarked_facts": 13
+      },
+      "marker_count": 0,
+      "unit_count": 6,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md": {
+      "content_hash": "2da3a790c4a93088e774fcbd45b48d49c0589063cfd3fcd353bf114252834f95",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 42,
+        "unmarked_facts": 42
+      },
+      "marker_count": 0,
+      "unit_count": 22,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/execution-ledger.md": {
+      "content_hash": "44bf41935d486b79833d968bf14123bcd8e74b0c8df28d4adcb11741fde9b70a",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 32,
+        "unmarked_facts": 32
+      },
+      "marker_count": 0,
+      "unit_count": 10,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/phase-gates.md": {
+      "content_hash": "9725af32c821f293e1e63955da4c2038e1d9bcecce97cbf6988bf2b483972b20",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 37,
+        "unmarked_facts": 37
+      },
+      "marker_count": 0,
+      "unit_count": 8,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/comparative-research/v0.1.0/LICENSE.md": {
+      "content_hash": "ff62ce25b7887cc01f138039b0ea3217248ece5f92c08fc7f9a5c6758b2d6a29",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 8,
+        "unmarked_facts": 8
+      },
+      "marker_count": 0,
+      "unit_count": 0,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/comparative-research/v0.1.0/README.md": {
+      "content_hash": "a4ad1653c4a68ba7cc9dab245d4576fd38a4104d7501c636a0f9cee889a63d39",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 13,
+        "unmarked_facts": 13
+      },
+      "marker_count": 0,
+      "unit_count": 6,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/comparative-research/v0.1.0/spec/boot/52-flow-comparative-research.md": {
+      "content_hash": "a77938efc93a08fa895d756cd0e57e304da36fcf7ad6b1ec9d8db4cbabebcf48",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 10,
+        "unmarked_facts": 10
+      },
+      "marker_count": 0,
+      "unit_count": 3,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL.md": {
+      "content_hash": "c3f95b7dbf72d30b2aca5ac6201784cfa41cf91090d2c5030bf565abff2ea395",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 38,
+        "unmarked_facts": 38
+      },
+      "marker_count": 0,
+      "unit_count": 13,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/from-research-to-roadmap.md": {
+      "content_hash": "ded8d134390757037f2175172a904044a743eb5b18a05fd089580e4f94a0fe17",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 44,
+        "unmarked_facts": 44
+      },
+      "marker_count": 0,
+      "unit_count": 8,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/comparative-research/v0.1.0/spec/flows/comparative-research/research-template.md": {
+      "content_hash": "3ecf4c6780037e1e3683a2986349338ae5afd9f8405944836b4142e87f5cc9f1",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 19,
+        "unmarked_facts": 19
+      },
+      "marker_count": 0,
+      "unit_count": 5,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/conflict-protocol/v0.1.0/LICENSE.md": {
+      "content_hash": "ff62ce25b7887cc01f138039b0ea3217248ece5f92c08fc7f9a5c6758b2d6a29",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 8,
+        "unmarked_facts": 8
+      },
+      "marker_count": 0,
+      "unit_count": 0,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/conflict-protocol/v0.1.0/README.md": {
+      "content_hash": "8ecd0060a3936d4b2cfe4bbb39275df88950d8d1a25b2b0da818845fec68267c",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 16,
+        "unmarked_facts": 16
+      },
+      "marker_count": 0,
+      "unit_count": 6,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/boot/35-flow-conflict-protocol.md": {
+      "content_hash": "7894d5e4190173e3de7138e341c56cab1b82bde7e3c33beeb049b5116eb36310",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 15,
+        "unmarked_facts": 15
+      },
+      "marker_count": 0,
+      "unit_count": 5,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/flows/conflict-protocol/CONFLICT-PROTOCOL.md": {
+      "content_hash": "f0108a36efd765ff4b738ad64731b9e9d0a152fd2f02b62d97adeba046884914",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 42,
+        "unmarked_facts": 42
+      },
+      "marker_count": 0,
+      "unit_count": 11,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/flows/conflict-protocol/failure-modes.md": {
+      "content_hash": "efdb41a56530b8cd3258315242bf439a57f8912cadeec19fe8e339e961ed072d",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 42,
+        "unmarked_facts": 42
+      },
+      "marker_count": 0,
+      "unit_count": 5,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/flows/conflict-protocol/uncertainty-protocol.md": {
+      "content_hash": "914b3ba439415a463150c2f1887d5c8147b59cae742c48c410edc96b3829c9c2",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 48,
+        "unmarked_facts": 48
+      },
+      "marker_count": 0,
+      "unit_count": 7,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/decision-records/v0.1.0/LICENSE.md": {
+      "content_hash": "ff62ce25b7887cc01f138039b0ea3217248ece5f92c08fc7f9a5c6758b2d6a29",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 8,
+        "unmarked_facts": 8
+      },
+      "marker_count": 0,
+      "unit_count": 0,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/decision-records/v0.1.0/README.md": {
+      "content_hash": "9c834d60bcf9e7a8c866325313ed9dcdf258d4937d1ec6e8f31acc823fb8040e",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 15,
+        "unmarked_facts": 15
+      },
+      "marker_count": 0,
+      "unit_count": 6,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md": {
+      "content_hash": "975d016c834c4fc35c66f90788c7e6c94c26dbc9d997c7d23de5003f3790e477",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 22,
+        "unmarked_facts": 22
+      },
+      "marker_count": 0,
+      "unit_count": 5,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md": {
+      "content_hash": "785053e59fd1d06049a6c267433b08efc78826bba2cd2abecab4550004c09284",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 58,
+        "unmarked_facts": 58
+      },
+      "marker_count": 0,
+      "unit_count": 10,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md": {
+      "content_hash": "c5d0da0332e26266ce966899c8f93ba6e38e33f9e396f9510b98b18cfb9ac282",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 50,
+        "unmarked_facts": 50
+      },
+      "marker_count": 0,
+      "unit_count": 7,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md": {
+      "content_hash": "eeb25bc0e537c70787f0030e21daf2e3eb47d397d2cea5fd5793e53675b4b67c",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 62,
+        "unmarked_facts": 62
+      },
+      "marker_count": 0,
+      "unit_count": 7,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/dev-runtime-docs/v0.1.0/README.md": {
+      "content_hash": "c22daf2e5abc5c3adc2a5aa05f784109fbdb45b1420e3e728f7556ade8848765",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 8,
+        "unmarked_facts": 8
+      },
+      "marker_count": 0,
+      "unit_count": 5,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/dev-runtime-docs/v0.1.0/boot/58-flow-dev-runtime-docs.md": {
+      "content_hash": "eb72e333851c3aabe277b9859400e3349156f8d67c17f92b29d8029aa4238b8f",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 5,
+        "unmarked_facts": 5
+      },
+      "marker_count": 0,
+      "unit_count": 3,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/dev-runtime-docs/v0.1.0/spec/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.md": {
+      "content_hash": "0be0976348847006d2afc766a30351130648b985ad5b8b5863110288065f0249",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 10,
+        "unmarked_facts": 10
+      },
+      "marker_count": 0,
+      "unit_count": 6,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/discovery-prompt/v0.1.0/LICENSE.md": {
+      "content_hash": "ff62ce25b7887cc01f138039b0ea3217248ece5f92c08fc7f9a5c6758b2d6a29",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 8,
+        "unmarked_facts": 8
+      },
+      "marker_count": 0,
+      "unit_count": 0,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/discovery-prompt/v0.1.0/README.md": {
+      "content_hash": "90900ca5786256cdbac24b2768e9e77eb9c2782e56f8fb5f95e12cd414e3193d",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 11,
+        "unmarked_facts": 11
+      },
+      "marker_count": 0,
+      "unit_count": 6,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/boot/50-flow-discovery-prompt.md": {
+      "content_hash": "ccebf47dbf147cccf809ca984256f85eddbd009211de9c6b5bc5fedf7fb96408",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 6,
+        "unmarked_facts": 6
+      },
+      "marker_count": 0,
+      "unit_count": 4,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md": {
+      "content_hash": "2e24d9f0382701df022eb9d2e4c55dd6782f442fe0a46cc6b0449723ddf00ad9",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 169,
+        "unmarked_facts": 169
+      },
+      "marker_count": 0,
+      "unit_count": 0,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md": {
+      "content_hash": "66360dbcd090a43077fe3a01845a0070b077badf356d6341e5fa2e7866fe3c37",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 62,
+        "unmarked_facts": 62
+      },
+      "marker_count": 0,
+      "unit_count": 10,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/git-atomic-commits/v0.1.0/README.md": {
+      "content_hash": "df10b022d2e974ac040212ee1fbdd427ee85826c3c53ff0bccfd95ca91cc9287",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 12,
+        "unmarked_facts": 12
+      },
+      "marker_count": 0,
+      "unit_count": 6,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/git-atomic-commits/v0.1.0/boot/30-flow-atomic-commits.md": {
+      "content_hash": "c24570ee06473bd59158663dcaa55d9d6aa60a7982385c7b4de58dfa6574894c",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 17,
+        "unmarked_facts": 17
+      },
+      "marker_count": 0,
+      "unit_count": 6,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md": {
+      "content_hash": "aa94c3532ff20d8143aadd777a4a9bcf74884c48d0a819cd75cbc3cbb7eb9d9c",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 37,
+        "unmarked_facts": 37
+      },
+      "marker_count": 0,
+      "unit_count": 12,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md": {
+      "content_hash": "86ce29641a247095558471eae6b3332835be0995d3361acd0f6f6ee5b3af8234",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 35,
+        "unmarked_facts": 35
+      },
+      "marker_count": 0,
+      "unit_count": 12,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/git-attribution-policy/v0.1.0/LICENSE.md": {
+      "content_hash": "ff62ce25b7887cc01f138039b0ea3217248ece5f92c08fc7f9a5c6758b2d6a29",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 8,
+        "unmarked_facts": 8
+      },
+      "marker_count": 0,
+      "unit_count": 0,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/git-attribution-policy/v0.1.0/README.md": {
+      "content_hash": "dac110d8b2be3d01e779872be236171f376cec7da98f6afd080d571ac6650f9e",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 13,
+        "unmarked_facts": 13
+      },
+      "marker_count": 0,
+      "unit_count": 6,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/boot/55-flow-attribution-policy.md": {
+      "content_hash": "1685c00d87e6ac73acea7c3c9a83fe92c67a76665a6d78a7ae1e64efa3905da0",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 12,
+        "unmarked_facts": 12
+      },
+      "marker_count": 0,
+      "unit_count": 5,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md": {
+      "content_hash": "8fb72cd70d8644e721634170b7aee36adc38064ef49ae997ffa8949a2183428e",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 25,
+        "unmarked_facts": 25
+      },
+      "marker_count": 0,
+      "unit_count": 9,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md": {
+      "content_hash": "189182abb66a6ef1a1a334a126ca05a00a4e5d381b4af58ef5cef7632c744e5a",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 40,
+        "unmarked_facts": 40
+      },
+      "marker_count": 0,
+      "unit_count": 7,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/enforcement-checklist.md": {
+      "content_hash": "9d542eb70015ba6ac5daba66b063a17d25fcd4ba34f5f4361273e5f8bef41bfe",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 37,
+        "unmarked_facts": 37
+      },
+      "marker_count": 0,
+      "unit_count": 7,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/git-autonomy/v0.1.0/README.md": {
+      "content_hash": "384218935e87d3242ee73e00d32d49669fda83e738f6ca6397f504c58c472ebc",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 7,
+        "unmarked_facts": 7
+      },
+      "marker_count": 0,
+      "unit_count": 4,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/git-autonomy/v0.1.0/boot/32-flow-autonomy.md": {
+      "content_hash": "b73a70379479aa6a11f2c181e9eab1a82f4cdacb95e48e78940bce5449d6a7aa",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 10,
+        "unmarked_facts": 10
+      },
+      "marker_count": 0,
+      "unit_count": 3,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/git-autonomy/v0.1.0/spec/flows/autonomy/AUTONOMY-PROTOCOL.md": {
+      "content_hash": "53028afc89b2d4e2b9a96ec6b0d408689b8fdbfa2ebd9190ba053f7f6afcfa02",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 12,
+        "unmarked_facts": 12
+      },
+      "marker_count": 0,
+      "unit_count": 5,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/git-conventional-commits/v0.1.0/README.md": {
+      "content_hash": "8bbff643fd78780799e86bb99f460b456a0870b1651b08a8d64e320f4339303c",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 7,
+        "unmarked_facts": 7
+      },
+      "marker_count": 0,
+      "unit_count": 4,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/git-conventional-commits/v0.1.0/boot/31-flow-conventional-commits.md": {
+      "content_hash": "6f050c3a440bd7b2e0cf3dc07b27d23c800835d0e22950f0a4d957bd1cc50710",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 8,
+        "unmarked_facts": 8
+      },
+      "marker_count": 0,
+      "unit_count": 5,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/git-conventional-commits/v0.1.0/spec/flows/conventional-commits/conventional-commits.md": {
+      "content_hash": "3ad15763b109e8aa2d13df4aaa2c4d3442f01e1b83add9e35c875e36f365addc",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 60,
+        "unmarked_facts": 60
+      },
+      "marker_count": 0,
+      "unit_count": 17,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/git-practices/v0.1.0/README.md": {
+      "content_hash": "b47050e995249ecf0bdf714921b80401c8558fd7fd3516b6af4c1faf3950d070",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 7,
+        "unmarked_facts": 7
+      },
+      "marker_count": 0,
+      "unit_count": 3,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/health-audit/v0.1.0/LICENSE.md": {
+      "content_hash": "ff62ce25b7887cc01f138039b0ea3217248ece5f92c08fc7f9a5c6758b2d6a29",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 8,
+        "unmarked_facts": 8
+      },
+      "marker_count": 0,
+      "unit_count": 0,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/health-audit/v0.1.0/README.md": {
+      "content_hash": "800a634a753e7594f3a233cda28439863913caf3d2f91313ec6a774d18bbb4d6",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 15,
+        "unmarked_facts": 15
+      },
+      "marker_count": 0,
+      "unit_count": 7,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/health-audit/v0.1.0/spec/boot/42-flow-health-audit.md": {
+      "content_hash": "f710fb4280e401377095f32fc6b50f22eb3cc60b8bb5d4ab4ed855942b9960e6",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 10,
+        "unmarked_facts": 10
+      },
+      "marker_count": 0,
+      "unit_count": 6,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md": {
+      "content_hash": "28a4c50f4bfecf9fb050b4f22da5d1bb82dcf1fd71bbff4eaa86d37824f7f20c",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 60,
+        "unmarked_facts": 60
+      },
+      "marker_count": 0,
+      "unit_count": 12,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/audit-checklist.md": {
+      "content_hash": "91a1d6b8370d4365e62c5999dc20d55cdd1dc056b68995f93e1cb3f0b781c6e3",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 53,
+        "unmarked_facts": 53
+      },
+      "marker_count": 0,
+      "unit_count": 20,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/running-an-audit.md": {
+      "content_hash": "982a177cb9461495cf192df8666d5678d669386c9a6e325676a6f671c1fc271b",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 23,
+        "unmarked_facts": 23
+      },
+      "marker_count": 0,
+      "unit_count": 6,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/health-audit/v0.1.0/spec/skills/health-audit/SKILL.md": {
+      "content_hash": "80df60e05cb140f306a6993dd3c8a9cdfcc2daeaf3ddec5ce1926ac88cf9fea8",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 13,
+        "unmarked_facts": 13
+      },
+      "marker_count": 0,
+      "unit_count": 4,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/licensing/v0.1.0/LICENSE.md": {
+      "content_hash": "ff62ce25b7887cc01f138039b0ea3217248ece5f92c08fc7f9a5c6758b2d6a29",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 8,
+        "unmarked_facts": 8
+      },
+      "marker_count": 0,
+      "unit_count": 0,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/licensing/v0.1.0/README.md": {
+      "content_hash": "ec0933226f9bf38746a2675a6f4695e70695644115d8fe62b33089e9f8a3a77b",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 16,
+        "unmarked_facts": 16
+      },
+      "marker_count": 0,
+      "unit_count": 7,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/licensing/v0.1.0/spec/boot/60-flow-licensing.md": {
+      "content_hash": "f6b0cbe36ddf8a130fd67bdb24df7a8b874472ac1fa144ecc1e570086a97e663",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 13,
+        "unmarked_facts": 13
+      },
+      "marker_count": 0,
+      "unit_count": 4,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/licensing/v0.1.0/spec/flows/licensing/LICENSING-PROTOCOL.md": {
+      "content_hash": "4dd99b2071503b02666b23a5800f201121b1cb3d000c237dad364e8c0f3c83ac",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 31,
+        "unmarked_facts": 31
+      },
+      "marker_count": 0,
+      "unit_count": 9,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/licensing/v0.1.0/spec/flows/licensing/dependency-licenses.md": {
+      "content_hash": "0ea9306cc4388c9bc554b94ae29153e1b61c7ae325085c15aeee7e38977351b6",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 28,
+        "unmarked_facts": 28
+      },
+      "marker_count": 0,
+      "unit_count": 7,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/licensing/v0.1.0/spec/flows/licensing/eula-template.md": {
+      "content_hash": "6e1d7989947359ab3b1cfd91bcc43c6b2344971333f37da7c5d0e2f1e2f24c3b",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 20,
+        "unmarked_facts": 20
+      },
+      "marker_count": 0,
+      "unit_count": 6,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/licensing/v0.1.0/spec/skills/draft-eula/SKILL.md": {
+      "content_hash": "5200a3ceffc8f939ae73c603aa92a945b6c1107f0c42747e515e3fbd5d72b71b",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 8,
+        "unmarked_facts": 8
+      },
+      "marker_count": 0,
+      "unit_count": 3,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/managed-blocks/v0.1.0/LICENSE.md": {
+      "content_hash": "ff62ce25b7887cc01f138039b0ea3217248ece5f92c08fc7f9a5c6758b2d6a29",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 8,
+        "unmarked_facts": 8
+      },
+      "marker_count": 0,
+      "unit_count": 0,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/managed-blocks/v0.1.0/README.md": {
+      "content_hash": "57955b0a4fdbe94270965dd745e58987a97f05cd529f1d081ef695d4cce4de1a",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 13,
+        "unmarked_facts": 13
+      },
+      "marker_count": 0,
+      "unit_count": 6,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/boot/65-flow-managed-blocks.md": {
+      "content_hash": "7b6289e2c943976e42dd211c41245cb19d2e3a88ac5b7c10b8eef9bc1ce9986e",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 6,
+        "unmarked_facts": 6
+      },
+      "marker_count": 0,
+      "unit_count": 3,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL.md": {
+      "content_hash": "cc37fb0b4a2766d8fb7490c53df85b37ab4873462c49e8928887a3d36c1a0f92",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 50,
+        "unmarked_facts": 50
+      },
+      "marker_count": 0,
+      "unit_count": 13,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/adoption-guide.md": {
+      "content_hash": "c29b6edbab0b2bdc8bb8c62402dc0b9935cebf10d13dd2b6895603e6ba3d3b67",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 54,
+        "unmarked_facts": 54
+      },
+      "marker_count": 0,
+      "unit_count": 8,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md": {
+      "content_hash": "5d476ab85b7427fbbb36ef18fa860dacefc10a0ec82c118893e278cc4283dbe5",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 28,
+        "unmarked_facts": 28
+      },
+      "marker_count": 0,
+      "unit_count": 7,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/manual-tests/v0.1.0/LICENSE.md": {
+      "content_hash": "ff62ce25b7887cc01f138039b0ea3217248ece5f92c08fc7f9a5c6758b2d6a29",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 8,
+        "unmarked_facts": 8
+      },
+      "marker_count": 0,
+      "unit_count": 0,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/manual-tests/v0.1.0/README.md": {
+      "content_hash": "5fd724debe3ed3cff188bfa54be6fd739f26b072d4e0a383a68f9d8b13797d15",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 13,
+        "unmarked_facts": 13
+      },
+      "marker_count": 0,
+      "unit_count": 6,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/manual-tests/v0.1.0/spec/boot/44-flow-manual-tests.md": {
+      "content_hash": "6d0a4a0e5d43328f340c4f2c2599aa723844b47780f9099a1050b53cd4a2055d",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 11,
+        "unmarked_facts": 11
+      },
+      "marker_count": 0,
+      "unit_count": 4,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/manual-tests/v0.1.0/spec/flows/manual-tests/MANUAL-TESTS-PROTOCOL.md": {
+      "content_hash": "490f73b4062dababf3687d9bde1eedbc876d2605a68dfa098b9b39d9b37ee099",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 37,
+        "unmarked_facts": 37
+      },
+      "marker_count": 0,
+      "unit_count": 9,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/manual-tests/v0.1.0/spec/flows/manual-tests/authoring-rules.md": {
+      "content_hash": "f393eef8f7d165ad4f0c39b8c7c1a72089f27ef69cd68c620034a6e306b8ffc5",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 23,
+        "unmarked_facts": 23
+      },
+      "marker_count": 0,
+      "unit_count": 6,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/manual-tests/v0.1.0/spec/flows/manual-tests/test-template.md": {
+      "content_hash": "f82aec83e167d62868ce7bb30a8b8849efea5eb73765eeb055735a04de481eb5",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 22,
+        "unmarked_facts": 22
+      },
+      "marker_count": 0,
+      "unit_count": 5,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/operating-modes/v0.1.0/LICENSE.md": {
+      "content_hash": "ff62ce25b7887cc01f138039b0ea3217248ece5f92c08fc7f9a5c6758b2d6a29",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 8,
+        "unmarked_facts": 8
+      },
+      "marker_count": 0,
+      "unit_count": 0,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/operating-modes/v0.1.0/README.md": {
+      "content_hash": "e88660056adadfd5e1fc65fb70326ef69a4758a460653a59c20c21d4ca240b1c",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 14,
+        "unmarked_facts": 14
+      },
+      "marker_count": 0,
+      "unit_count": 6,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/operating-modes/v0.1.0/spec/boot/45-flow-operating-modes.md": {
+      "content_hash": "c0913c09f2d93a5dfcc7b238e46ec1063fdbc5d51352bafd36f45578284f351a",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 13,
+        "unmarked_facts": 13
+      },
+      "marker_count": 0,
+      "unit_count": 6,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/operating-modes/v0.1.0/spec/flows/operating-modes/OPERATING-MODES-PROTOCOL.md": {
+      "content_hash": "850a99e273e3a6ebeacf8e48863d96d3e7714936328d2458b342fadec059ab4c",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 40,
+        "unmarked_facts": 40
+      },
+      "marker_count": 0,
+      "unit_count": 9,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/operating-modes/v0.1.0/spec/flows/operating-modes/mfbt-mode.md": {
+      "content_hash": "501484c6d6c50bb79e7bc7cf6da27d16d5e0606c1e685107d67fadca185a83d0",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 29,
+        "unmarked_facts": 29
+      },
+      "marker_count": 0,
+      "unit_count": 7,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/operating-modes/v0.1.0/spec/flows/operating-modes/writing-a-codeword.md": {
+      "content_hash": "4909375a5c01aaca06586b3ee09eec4878b87ab7a0e03c4b783e9728b82d5e1d",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 35,
+        "unmarked_facts": 35
+      },
+      "marker_count": 0,
+      "unit_count": 12,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/qualified-naming/v0.1.0/LICENSE.md": {
+      "content_hash": "ff62ce25b7887cc01f138039b0ea3217248ece5f92c08fc7f9a5c6758b2d6a29",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 8,
+        "unmarked_facts": 8
+      },
+      "marker_count": 0,
+      "unit_count": 0,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/qualified-naming/v0.1.0/README.md": {
+      "content_hash": "85403f7f4f3c7821b30bafbac2b534299408f6e524a60a143b6565269d9db727",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 15,
+        "unmarked_facts": 15
+      },
+      "marker_count": 0,
+      "unit_count": 6,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/boot/67-flow-qualified-naming.md": {
+      "content_hash": "a070b23e544be31ffcf44e6419984a714412e036f9e87eaa8804dceae0825f0c",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 11,
+        "unmarked_facts": 11
+      },
+      "marker_count": 0,
+      "unit_count": 4,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL.md": {
+      "content_hash": "b9069f295765d7faaef2267431e3c3bec0789c212a49f471b8e341dee444e216",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 40,
+        "unmarked_facts": 40
+      },
+      "marker_count": 0,
+      "unit_count": 9,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/naming-forks.md": {
+      "content_hash": "3cd3c84d77ca27acaf3d5a4dcdcf7bd2e455ae4fbd44f851f36881459fa2d164",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 39,
+        "unmarked_facts": 39
+      },
+      "marker_count": 0,
+      "unit_count": 6,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/ref-grammar.md": {
+      "content_hash": "cf6b172266daf6dd368dc0a9e652fe46ed403eb035fae67cc8de8fea9e4be789",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 44,
+        "unmarked_facts": 44
+      },
+      "marker_count": 0,
+      "unit_count": 7,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/redbook/v0.1.0/LICENSE.md": {
+      "content_hash": "ff62ce25b7887cc01f138039b0ea3217248ece5f92c08fc7f9a5c6758b2d6a29",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 8,
+        "unmarked_facts": 8
+      },
+      "marker_count": 0,
+      "unit_count": 0,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/redbook/v0.1.0/README.md": {
+      "content_hash": "35256a90d1676491ca2dfa4ab16766edce1b46604dac757cd057913b19a1607b",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 31,
+        "unmarked_facts": 31
+      },
+      "marker_count": 0,
+      "unit_count": 8,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/redbook/v0.1.0/spec/book/README.md": {
+      "content_hash": "5adb8e5bdf1c9249657a7ca9ef1f0f1ac40b4b0b7925fba13792e038ef36ffef",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 8,
+        "unmarked_facts": 8
+      },
+      "marker_count": 0,
+      "unit_count": 3,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/redbook/v0.1.0/spec/book/ru/chapter-1-two-process-model.md": {
+      "content_hash": "8b4406d7112144d3b75a9e436343abdb8ffd51b8e97fdd68374318e2b92138b8",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 161,
+        "unmarked_facts": 161
+      },
+      "marker_count": 0,
+      "unit_count": 10,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/redbook/v0.1.0/spec/book/ru/chapter-2-shared-state-and-files.md": {
+      "content_hash": "5a6df14aa0efad64c755c3f4c0f6e6725facd3bb0390de4a6a27a432269be4bc",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 142,
+        "unmarked_facts": 142
+      },
+      "marker_count": 0,
+      "unit_count": 20,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/redbook/v0.1.0/spec/book/ru/chapter-3-memory-individual.md": {
+      "content_hash": "5c4bf31b63b4e52277362af31f2c9882097d50864bd92959af0dfdf13835cf8a",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 72,
+        "unmarked_facts": 72
+      },
+      "marker_count": 0,
+      "unit_count": 17,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/redbook/v0.1.0/spec/boot/03-flow-redbook.md": {
+      "content_hash": "4b85f98597d95aed250b039d51b1957fea0b37ebf9fb5357d6099eaccbe95e99",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 14,
+        "unmarked_facts": 14
+      },
+      "marker_count": 0,
+      "unit_count": 3,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/redbook/v0.2.0/LICENSE.md": {
+      "content_hash": "ff62ce25b7887cc01f138039b0ea3217248ece5f92c08fc7f9a5c6758b2d6a29",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 8,
+        "unmarked_facts": 8
+      },
+      "marker_count": 0,
+      "unit_count": 0,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/redbook/v0.2.0/README.md": {
+      "content_hash": "851c39ecbe69fe444dbc28519a8040eb797a54259cc83795556ef290f52ed01d",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 57,
+        "unmarked_facts": 57
+      },
+      "marker_count": 0,
+      "unit_count": 8,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/redbook/v0.2.0/spec/book/README.md": {
+      "content_hash": "5adb8e5bdf1c9249657a7ca9ef1f0f1ac40b4b0b7925fba13792e038ef36ffef",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 8,
+        "unmarked_facts": 8
+      },
+      "marker_count": 0,
+      "unit_count": 3,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-1-two-process-model.md": {
+      "content_hash": "8b4406d7112144d3b75a9e436343abdb8ffd51b8e97fdd68374318e2b92138b8",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 161,
+        "unmarked_facts": 161
+      },
+      "marker_count": 0,
+      "unit_count": 10,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-2-shared-state-and-files.md": {
+      "content_hash": "5a6df14aa0efad64c755c3f4c0f6e6725facd3bb0390de4a6a27a432269be4bc",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 142,
+        "unmarked_facts": 142
+      },
+      "marker_count": 0,
+      "unit_count": 20,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/redbook/v0.2.0/spec/book/ru/chapter-3-memory-individual.md": {
+      "content_hash": "5c4bf31b63b4e52277362af31f2c9882097d50864bd92959af0dfdf13835cf8a",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 72,
+        "unmarked_facts": 72
+      },
+      "marker_count": 0,
+      "unit_count": 17,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/redbook/v0.2.0/spec/boot/03-flow-redbook.md": {
+      "content_hash": "05c11c008819a920a7b14eb74cc3f52816a025782ed83cb43f5e9b89911fc20c",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 30,
+        "unmarked_facts": 30
+      },
+      "marker_count": 0,
+      "unit_count": 3,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/secrets-hygiene/v0.1.0/LICENSE.md": {
+      "content_hash": "ff62ce25b7887cc01f138039b0ea3217248ece5f92c08fc7f9a5c6758b2d6a29",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 8,
+        "unmarked_facts": 8
+      },
+      "marker_count": 0,
+      "unit_count": 0,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/secrets-hygiene/v0.1.0/README.md": {
+      "content_hash": "1f8a8df1a723bcadbbe59c1b172e462388691ab2b3b5eb55b0d0edf86c18108e",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 14,
+        "unmarked_facts": 14
+      },
+      "marker_count": 0,
+      "unit_count": 6,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/boot/57-flow-secrets-hygiene.md": {
+      "content_hash": "5fc82f3d2feb3464604cb1066d7d1cf0f5deb3660f33d5a640512c80463a9fc5",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 14,
+        "unmarked_facts": 14
+      },
+      "marker_count": 0,
+      "unit_count": 5,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL.md": {
+      "content_hash": "678a9eb271ab184367dbff2bccf7d70937bdc8485e8608ad9565c1e36288db28",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 48,
+        "unmarked_facts": 48
+      },
+      "marker_count": 0,
+      "unit_count": 13,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/flows/secrets-hygiene/scope-discipline.md": {
+      "content_hash": "e62b3328978c6dc56f0f41423fe6f69a21ab5b0eddaff57b91f2c43887d06e9e",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 26,
+        "unmarked_facts": 26
+      },
+      "marker_count": 0,
+      "unit_count": 7,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/flows/secrets-hygiene/third-party-code-consent.md": {
+      "content_hash": "b5500251c5e7fb4d67f6821d223ec339e545c0b5eed3f85b9e79ca80af09266b",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 25,
+        "unmarked_facts": 25
+      },
+      "marker_count": 0,
+      "unit_count": 8,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/source-mirrors/v0.1.0/LICENSE.md": {
+      "content_hash": "ff62ce25b7887cc01f138039b0ea3217248ece5f92c08fc7f9a5c6758b2d6a29",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 8,
+        "unmarked_facts": 8
+      },
+      "marker_count": 0,
+      "unit_count": 0,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/source-mirrors/v0.1.0/README.md": {
+      "content_hash": "b64b5b414d9e3689f57857f64a3f01cc1c537c600b31ef8cc7a1b71ddf6fa55a",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 14,
+        "unmarked_facts": 14
+      },
+      "marker_count": 0,
+      "unit_count": 7,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/boot/62-flow-source-mirrors.md": {
+      "content_hash": "498e8d546527552ab38b5ab846c3178ae472db0a44837684e51ed6558aa3c555",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 10,
+        "unmarked_facts": 10
+      },
+      "marker_count": 0,
+      "unit_count": 4,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.md": {
+      "content_hash": "6e1f6272a8d0994872f433e66b6f133c04d02621b0322fcee7c3de72843dce17",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 38,
+        "unmarked_facts": 38
+      },
+      "marker_count": 0,
+      "unit_count": 10,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/daily-loop.md": {
+      "content_hash": "b3cd0d195fb79a1c8ceb33be3d8afcedb3950d229de122ae446c0129611072bb",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 42,
+        "unmarked_facts": 42
+      },
+      "marker_count": 0,
+      "unit_count": 8,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/fanout-mechanics.md": {
+      "content_hash": "f0c79a218a7b4800a1f1ab1839d0517b4484121a68ff0014b1489b8b207b87b5",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 47,
+        "unmarked_facts": 47
+      },
+      "marker_count": 0,
+      "unit_count": 10,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/spec-genres/v0.1.0/LICENSE.md": {
+      "content_hash": "ff62ce25b7887cc01f138039b0ea3217248ece5f92c08fc7f9a5c6758b2d6a29",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 8,
+        "unmarked_facts": 8
+      },
+      "marker_count": 0,
+      "unit_count": 0,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/spec-genres/v0.1.0/README.md": {
+      "content_hash": "e6845eaeeab79ed77224b4de55d88ccae0bda2987460f378dbc49119afb4123b",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 14,
+        "unmarked_facts": 14
+      },
+      "marker_count": 0,
+      "unit_count": 6,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/spec-genres/v0.1.0/spec/boot/17-flow-spec-genres.md": {
+      "content_hash": "00619c9794030a27b362af33a19d8bd19b1a33be02f81061eb2251e5550a482f",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 32,
+        "unmarked_facts": 32
+      },
+      "marker_count": 0,
+      "unit_count": 5,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.md": {
+      "content_hash": "d0ab7218ca40acb2958efc8152c89a399c3fedf4030dea9885676c4aaaaac942",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 70,
+        "unmarked_facts": 70
+      },
+      "marker_count": 0,
+      "unit_count": 9,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/design-docs.md": {
+      "content_hash": "38ee602297b392eb3fa410511e61defa48666eb6c7fc58db552e777fcc8a8920",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 29,
+        "unmarked_facts": 29
+      },
+      "marker_count": 0,
+      "unit_count": 6,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/when-to-write-what.md": {
+      "content_hash": "3fbf082faca8ba3bacee6c7efb75f05e7404e91f7d6021a963f43af24cdaf61a",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 54,
+        "unmarked_facts": 54
+      },
+      "marker_count": 0,
+      "unit_count": 6,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/sync-from-code/v0.1.0/README.md": {
+      "content_hash": "e7e15a042deecbdc83a6a09dbef6687ba9c56ee532616f8cbf8bbfbfafeeaa8a",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 16,
+        "unmarked_facts": 16
+      },
+      "marker_count": 0,
+      "unit_count": 6,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/sync-from-code/v0.1.0/boot/20-flow-sync-from-code.md": {
+      "content_hash": "dc727d851c9aa69154c75f2cd60c2c3ee0845fe18367eb5ee153177f5ac20bac",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 15,
+        "unmarked_facts": 15
+      },
+      "marker_count": 0,
+      "unit_count": 4,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/SYNC-PROTOCOL.md": {
+      "content_hash": "53927e2217006aa4d450fb8e05cb70a2fc46f8d4399716496abecbac1702ef4c",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 37,
+        "unmarked_facts": 37
+      },
+      "marker_count": 0,
+      "unit_count": 11,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/review-workflow.md": {
+      "content_hash": "6088ae3917a7187d607fd15747af4680a3af1e0f6ca78b250aec4577a99d09dd",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 30,
+        "unmarked_facts": 30
+      },
+      "marker_count": 0,
+      "unit_count": 12,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/flows/sync-from-code/when-to-apply.md": {
+      "content_hash": "b4306e80742a4e06385768c54cb4edc7d4b125d693b58bd81d475ffa6e4fee83",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 19,
+        "unmarked_facts": 19
+      },
+      "marker_count": 0,
+      "unit_count": 12,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/tool-design-lessons/v0.1.0/LICENSE.md": {
+      "content_hash": "ff62ce25b7887cc01f138039b0ea3217248ece5f92c08fc7f9a5c6758b2d6a29",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 8,
+        "unmarked_facts": 8
+      },
+      "marker_count": 0,
+      "unit_count": 0,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/tool-design-lessons/v0.1.0/README.md": {
+      "content_hash": "bc3200ac49ccf9604993ae25368eca84e171db829f92c3526a8376cb9f2bd2c9",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 14,
+        "unmarked_facts": 14
+      },
+      "marker_count": 0,
+      "unit_count": 6,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/boot/70-flow-tool-design-lessons.md": {
+      "content_hash": "915af16967e4fef88c3996f436dd136b5f16483585a32afa8bbd3ffc3d178b30",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 10,
+        "unmarked_facts": 10
+      },
+      "marker_count": 0,
+      "unit_count": 3,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/TOOL-DESIGN-LESSONS.md": {
+      "content_hash": "108e78b1ab2a4311fd0486d01c4945051f708b88a6d06f78784183223d172b51",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 55,
+        "unmarked_facts": 55
+      },
+      "marker_count": 0,
+      "unit_count": 10,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/packaging-lessons.md": {
+      "content_hash": "18cfefc18ba763ef71fc36372b284dfdda0a30939322159d11615b380087245e",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 36,
+        "unmarked_facts": 36
+      },
+      "marker_count": 0,
+      "unit_count": 9,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md": {
+      "content_hash": "2b8609927c69ba21243316a492fb7b045c185f6258ad88f159b4ac5362f03748",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 36,
+        "unmarked_facts": 36
+      },
+      "marker_count": 0,
+      "unit_count": 9,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/two-process-model/v0.1.0/LICENSE.md": {
+      "content_hash": "ff62ce25b7887cc01f138039b0ea3217248ece5f92c08fc7f9a5c6758b2d6a29",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 8,
+        "unmarked_facts": 8
+      },
+      "marker_count": 0,
+      "unit_count": 0,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/two-process-model/v0.1.0/README.md": {
+      "content_hash": "364e7702aac2e1f935c000f675c19eb79b29496fd8b468107e43c6c36bfea3fd",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 15,
+        "unmarked_facts": 15
+      },
+      "marker_count": 0,
+      "unit_count": 6,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/two-process-model/v0.1.0/spec/boot/05-flow-two-process-model.md": {
+      "content_hash": "a74985717dc6f2bfcc351525f502e27dcf4da731d28b2ae9339d64a0ebc35a02",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 13,
+        "unmarked_facts": 13
+      },
+      "marker_count": 0,
+      "unit_count": 4,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/TWO-PROCESS-MODEL.md": {
+      "content_hash": "3f9ebeef4556c1f0388d67ca2cc8b4969e182d7f7611b7af3879655d05fbfe99",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 29,
+        "unmarked_facts": 29
+      },
+      "marker_count": 0,
+      "unit_count": 11,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/cognitive-load-split.md": {
+      "content_hash": "9fae56ef284f33dce7e5caf6b91d43fcadeb08e4e2b2494521d09910e1d07538",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 39,
+        "unmarked_facts": 39
+      },
+      "marker_count": 0,
+      "unit_count": 12,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/files-as-ipc.md": {
+      "content_hash": "d4812fda11f9ed7d7fdd0d4209c8f609deaa8b8dce1ef8edf2da647831d61dcc",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 38,
+        "unmarked_facts": 38
+      },
+      "marker_count": 0,
+      "unit_count": 7,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/wal-specspaces/v0.1.0/LICENSE.md": {
+      "content_hash": "ff62ce25b7887cc01f138039b0ea3217248ece5f92c08fc7f9a5c6758b2d6a29",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 8,
+        "unmarked_facts": 8
+      },
+      "marker_count": 0,
+      "unit_count": 0,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/wal-specspaces/v0.1.0/README.md": {
+      "content_hash": "d88f01265744287eb899b88967c0f81d744178d77516422405eaa52849bf7c2f",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 8,
+        "unmarked_facts": 8
+      },
+      "marker_count": 0,
+      "unit_count": 1,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/wal-specspaces/v0.1.0/spec/boot/11-flow-wal-specspaces.md": {
+      "content_hash": "62fae676a57c13a5778692a88ca41e84718f04bce1c8ce5409c0dfbe408470c3",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 17,
+        "unmarked_facts": 17
+      },
+      "marker_count": 0,
+      "unit_count": 5,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/wal-specspaces/v0.1.0/spec/flows/wal-specspaces/SPECSPACES-PROTOCOL.md": {
+      "content_hash": "56274c45f0b3c1d80d268aab839f7afeb41127ed4f71d918f5db05d179e7dbe7",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 40,
+        "unmarked_facts": 40
+      },
+      "marker_count": 0,
+      "unit_count": 9,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/wal/v0.2.0/LICENSE.md": {
+      "content_hash": "ff62ce25b7887cc01f138039b0ea3217248ece5f92c08fc7f9a5c6758b2d6a29",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 8,
+        "unmarked_facts": 8
+      },
+      "marker_count": 0,
+      "unit_count": 0,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/wal/v0.2.0/README.md": {
+      "content_hash": "79dd387cbd0dc674cd3a1ac659f49383a2f04f693932d9a496ac196e48ad63c8",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 23,
+        "unmarked_facts": 23
+      },
+      "marker_count": 0,
+      "unit_count": 7,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/wal/v0.2.0/spec/boot/10-flow-wal.md": {
+      "content_hash": "835adcb504edafffd260a42ae35eef8a0ba5392b9ac2fe630b85d605234158e6",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 14,
+        "unmarked_facts": 14
+      },
+      "marker_count": 0,
+      "unit_count": 6,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md": {
+      "content_hash": "b367679ce2a50e72f97e4ca57601824401becc444d47fcdbb1bc24f2c93ed666",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 40,
+        "unmarked_facts": 40
+      },
+      "marker_count": 0,
+      "unit_count": 15,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/cold-resume.md": {
+      "content_hash": "03af081296f32de853ef36f72affd17669b4a4d924eb804e51201f8bd7d060b9",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 46,
+        "unmarked_facts": 46
+      },
+      "marker_count": 0,
+      "unit_count": 10,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/morning-routine.md": {
+      "content_hash": "c9e034606031160a317c50398f6e73517e02dc1ea58ed305c7c86d1b62f96830",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 31,
+        "unmarked_facts": 31
+      },
+      "marker_count": 0,
+      "unit_count": 9,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/session-end-hook.md": {
+      "content_hash": "024319aff31a133836778b26e947792916a90fbda09e00a2d109b176a67a54b7",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 33,
+        "unmarked_facts": 33
+      },
+      "marker_count": 0,
+      "unit_count": 10,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/wal/v0.2.0/spec/skills/wal-status/SKILL.md": {
+      "content_hash": "e69dfea498662a07e8d2207be171b793e7192f452fde7a06b6fac7f72f829ef5",
+      "rollup": {
+        "marker_count": 0,
+        "fact_count": 10,
+        "unmarked_facts": 10
+      },
+      "marker_count": 0,
+      "unit_count": 3,
+      "issue_count": 0
+    },
+    "spec/boot/00-core.md": {
+      "content_hash": "550ff9380a3e690f6f55e1b685d8317b43c6eda59b935b5cf2f0c1dc683b4874",
+      "rollup": {
+        "computed": [
+          "impl",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 33,
+        "fact_count": 33,
+        "unmarked_facts": 0
+      },
+      "marker_count": 33,
+      "unit_count": 8,
+      "issue_count": 0
+    },
+    "spec/boot/90-user.md": {
+      "content_hash": "fa50702facdc42c0d17ace9b80e0c09d0b693d7d3470a987fd8e317550767d55",
+      "rollup": {
+        "computed": [
+          "impl",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 31,
+        "fact_count": 31,
+        "unmarked_facts": 0
+      },
+      "marker_count": 31,
+      "unit_count": 7,
+      "issue_count": 0
+    },
+    "spec/common/PROP-000.md": {
+      "content_hash": "dc343dad5b950ce23f51f3b94c08387c23ffe92f0bed1c2fd6e2e720407107b8",
+      "rollup": {
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 162,
+        "fact_count": 161,
+        "unmarked_facts": 0
+      },
+      "marker_count": 162,
+      "unit_count": 22,
+      "issue_count": 0
+    },
+    "spec/common/PROP-006-operating-modes.md": {
+      "content_hash": "bf798b01c38fb700c3a7d9fa40ad5bb7c21601ca2cce51b6b99c4b81f0cf6d8f",
+      "rollup": {
+        "explicit": [
+          "freeze",
+          "done"
+        ],
+        "computed": [
+          "freeze",
+          "done"
+        ],
+        "effective": [
+          "freeze",
+          "done"
+        ],
+        "marker_count": 11,
+        "fact_count": 9,
+        "unmarked_facts": 0
+      },
+      "marker_count": 11,
+      "unit_count": 2,
+      "issue_count": 0
+    },
+    "spec/common/PROP-013-periodic-health-audit.md": {
+      "content_hash": "966695c7f83560f4f38cfbb01247f3c02529383a9882af1bcbfa6d37ea36ae27",
+      "rollup": {
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "work"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 45,
+        "fact_count": 43,
+        "unmarked_facts": 0
+      },
+      "marker_count": 45,
+      "unit_count": 6,
+      "issue_count": 0
+    },
+    "spec/common/PROP-016-source-mirrors.md": {
+      "content_hash": "c6592a970be72b92ec5f995139652d11499e30c1c02fc63334a6b951be69fb94",
+      "rollup": {
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "work"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 31,
+        "fact_count": 29,
+        "unmarked_facts": 0
+      },
+      "marker_count": 31,
+      "unit_count": 7,
+      "issue_count": 0
+    },
+    "spec/common/PROP-018-agentic-standalone-modes.md": {
+      "content_hash": "6f0cdc165d1208b475749507386865039b029994f6b1ac24cb4248f9332398dd",
+      "rollup": {
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 113,
+        "fact_count": 112,
+        "unmarked_facts": 0
+      },
+      "marker_count": 113,
+      "unit_count": 21,
+      "issue_count": 0
+    },
+    "spec/common/PROP-019-version-manager.md": {
+      "content_hash": "9d179b5dffb4fc850e88d39cdf1577d534484aa1356feeb9d55235ab1b470dd3",
+      "rollup": {
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 209,
+        "fact_count": 208,
+        "unmarked_facts": 0
+      },
+      "marker_count": 209,
+      "unit_count": 37,
+      "issue_count": 0
+    },
+    "spec/common/PROP-024-code-bearing-packages.md": {
+      "content_hash": "cfaa3c9b4d0530f780db587eadfc67ef4cfbb1da4b4be7870892b4a6e53910f7",
+      "rollup": {
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 77,
+        "fact_count": 76,
+        "unmarked_facts": 0
+      },
+      "marker_count": 77,
+      "unit_count": 16,
+      "issue_count": 0
+    },
+    "spec/common/PROP-028-package-families.md": {
+      "content_hash": "d84af88d9fc2529e7d0bd104a3a628ffc9d033758a967e652b49a5d5fb20535d",
+      "rollup": {
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "work"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 42,
+        "fact_count": 40,
+        "unmarked_facts": 0
+      },
+      "marker_count": 42,
+      "unit_count": 9,
+      "issue_count": 0
+    },
+    "spec/common/PROP-029-fully-qualified-addresses.md": {
+      "content_hash": "884c6b872ba4833b3608abd9862bf7c88fdc2e6b4de6bb0db52f5c4debb9c405",
+      "rollup": {
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 32,
+        "fact_count": 30,
+        "unmarked_facts": 0
+      },
+      "marker_count": 32,
+      "unit_count": 6,
+      "issue_count": 0
+    },
+    "spec/common/PROP-031-algorithmic-refactoring.md": {
+      "content_hash": "a9a4a9ddea1568bebaef341c37fc0b2c142a04be20c989b73eda6a7a18beda2d",
+      "rollup": {
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "work"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 96,
+        "fact_count": 94,
+        "unmarked_facts": 0
+      },
+      "marker_count": 96,
+      "unit_count": 13,
+      "issue_count": 0
+    },
+    "spec/common/PROP-032-project-model-ide-substrate.md": {
+      "content_hash": "b8bd5b21c508b0693e3e58929d008ef365fa09137755c14518ec0d0d7661f771",
+      "rollup": {
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "work"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 128,
+        "fact_count": 126,
+        "unmarked_facts": 0
+      },
+      "marker_count": 128,
+      "unit_count": 16,
+      "issue_count": 0
+    },
+    "spec/common/PROP-033-refactoring-registry.md": {
+      "content_hash": "781411de33b4434ad1ae7113ccc9272973c9f944faf85a77b6a4be5f836956a9",
+      "rollup": {
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "work"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 83,
+        "fact_count": 81,
+        "unmarked_facts": 0
+      },
+      "marker_count": 83,
+      "unit_count": 14,
+      "issue_count": 0
+    },
+    "spec/design/README.md": {
+      "content_hash": "3d0268e76f05dcdb7b8b6c8240509c36382a767966a7bf904b80cbf79dd6d70f",
+      "rollup": {
+        "explicit": [
+          "doc",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "hold"
+        ],
+        "effective": [
+          "doc",
+          "done"
+        ],
+        "marker_count": 34,
+        "fact_count": 29,
+        "unmarked_facts": 0
+      },
+      "marker_count": 34,
+      "unit_count": 5,
+      "issue_count": 0
+    },
+    "spec/design/action-system.md": {
+      "content_hash": "5ed13c61b05d66a48b3cb5579e59dfc3eb0db65c837178d1972c95aa065e18f5",
+      "rollup": {
+        "computed": [
+          "doc",
+          "done"
+        ],
+        "effective": [
+          "doc",
+          "done"
+        ],
+        "marker_count": 78,
+        "fact_count": 78,
+        "unmarked_facts": 0
+      },
+      "marker_count": 78,
+      "unit_count": 12,
+      "issue_count": 0
+    },
+    "spec/design/loading-and-boot-model.md": {
+      "content_hash": "346279d5d1c2f87bc27bbe9e5c8677d55f59b77e361ebe8ddb53b29e74ba39c1",
+      "rollup": {
+        "explicit": [
+          "doc",
+          "done"
+        ],
+        "computed": [
+          "doc",
+          "done"
+        ],
+        "effective": [
+          "doc",
+          "done"
+        ],
+        "marker_count": 76,
+        "fact_count": 75,
+        "unmarked_facts": 0
+      },
+      "marker_count": 76,
+      "unit_count": 15,
+      "issue_count": 0
+    },
+    "spec/design/structural-loader.md": {
+      "content_hash": "8cba6169f825b9a5a6ceaf228caac49c2201c82052dda30df941759da9d86723",
+      "rollup": {
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "work"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 21,
+        "fact_count": 20,
+        "unmarked_facts": 0
+      },
+      "marker_count": 21,
+      "unit_count": 7,
+      "issue_count": 0
+    },
+    "spec/design/tui-visual-language.md": {
+      "content_hash": "a27b95ee35e289f3ac149be96121a413b3a8d5f2d330306d288e4b5e836d5c5f",
+      "rollup": {
+        "explicit": [
+          "doc",
+          "done"
+        ],
+        "computed": [
+          "doc",
+          "done"
+        ],
+        "effective": [
+          "doc",
+          "done"
+        ],
+        "marker_count": 176,
+        "fact_count": 175,
+        "unmarked_facts": 0
+      },
+      "marker_count": 176,
+      "unit_count": 9,
+      "issue_count": 0
+    },
+    "spec/design/workspace-and-qualified-naming.md": {
+      "content_hash": "0dbdd3b2653908418911c036da3f4bc18c239fb95bb0745f8203589332a13bcd",
+      "rollup": {
+        "explicit": [
+          "doc",
+          "done"
+        ],
+        "computed": [
+          "doc",
+          "done"
+        ],
+        "effective": [
+          "doc",
+          "done"
+        ],
+        "marker_count": 100,
+        "fact_count": 99,
+        "unmarked_facts": 0
+      },
+      "marker_count": 100,
+      "unit_count": 16,
+      "issue_count": 0
+    },
+    "spec/manual-tests/MT-01-vibe-tree.md": {
+      "content_hash": "8aa920ab86a36b0723b1a5440d0adb31c3f0490eb78b174b9f361310f28dd755",
+      "rollup": {
+        "computed": [
+          "impl",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 28,
+        "fact_count": 28,
+        "unmarked_facts": 0
+      },
+      "marker_count": 28,
+      "unit_count": 6,
+      "issue_count": 0
+    },
+    "spec/manual-tests/MT-02-vibe-tree-tui.md": {
+      "content_hash": "2388051c281032c1174d668a76ad19cf66e7794fceee8554b9bf03bd4d632add",
+      "rollup": {
+        "computed": [
+          "impl",
+          "work"
+        ],
+        "effective": [
+          "impl",
+          "work"
+        ],
+        "marker_count": 23,
+        "fact_count": 23,
+        "unmarked_facts": 0
+      },
+      "marker_count": 23,
+      "unit_count": 5,
+      "issue_count": 0
+    },
+    "spec/manual-tests/MT-03-vibe-prefs-tui.md": {
+      "content_hash": "be2077f10ab9b5695bf870f56f7b66edc841e3868b1d8559c1e50fcb8525c1fa",
+      "rollup": {
+        "computed": [
+          "impl",
+          "work"
+        ],
+        "effective": [
+          "impl",
+          "work"
+        ],
+        "marker_count": 16,
+        "fact_count": 16,
+        "unmarked_facts": 0
+      },
+      "marker_count": 16,
+      "unit_count": 5,
+      "issue_count": 0
+    },
+    "spec/modules/README.md": {
+      "content_hash": "5910b10816793785f6cb21cbb096f7eb5d3f522a083c58c588b331c796e29e7b",
+      "rollup": {
+        "explicit": [
+          "doc",
+          "done"
+        ],
+        "computed": [
+          "doc",
+          "done"
+        ],
+        "effective": [
+          "doc",
+          "done"
+        ],
+        "marker_count": 45,
+        "fact_count": 44,
+        "unmarked_facts": 0
+      },
+      "marker_count": 45,
+      "unit_count": 2,
+      "issue_count": 0
+    },
+    "spec/modules/vibe-actions/PROP-039-action-system.md": {
+      "content_hash": "11ed95bb2f854fa300c635668b6e855a1161d10e10a5e5a1a3b92cdc4bbbd28f",
+      "rollup": {
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 52,
+        "fact_count": 51,
+        "unmarked_facts": 0
+      },
+      "marker_count": 52,
+      "unit_count": 48,
+      "issue_count": 0
+    },
+    "spec/modules/vibe-cli/PROP-036-package-tree.md": {
+      "content_hash": "b86f273c7fce0d9bda7533f30bd4c27fff19ca92707c164c62b0daed97a99418",
+      "rollup": {
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 81,
+        "fact_count": 80,
+        "unmarked_facts": 0
+      },
+      "marker_count": 81,
+      "unit_count": 18,
+      "issue_count": 0
+    },
+    "spec/modules/vibe-cli/PROP-037-tree-tui.md": {
+      "content_hash": "8ba9828249c828aceddd46ff0d94f58eab1aa675fa6f645876c95e9b04b47363",
+      "rollup": {
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 137,
+        "fact_count": 136,
+        "unmarked_facts": 0
+      },
+      "marker_count": 137,
+      "unit_count": 61,
+      "issue_count": 0
+    },
+    "spec/modules/vibe-cli/PROP-042-aiui-observation.md": {
+      "content_hash": "94c63143b2c7874ceb35ca36ef763dbf15d5fa3a478dc1f7d2c97a54104dd652",
+      "rollup": {
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 62,
+        "fact_count": 61,
+        "unmarked_facts": 0
+      },
+      "marker_count": 62,
+      "unit_count": 8,
+      "issue_count": 0
+    },
+    "spec/modules/vibe-index/PROP-005-package-index.md": {
+      "content_hash": "dc156b690a46e7c409a2e729791ef471aa66e43f8cbc80ec49327bd102ac4157",
+      "rollup": {
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "work"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 279,
+        "fact_count": 278,
+        "unmarked_facts": 0
+      },
+      "marker_count": 279,
+      "unit_count": 44,
+      "issue_count": 0
+    },
+    "spec/modules/vibe-mcp/PROP-015-mcp-integration.md": {
+      "content_hash": "e147967cbaa3494c8c6a16a198a048113cf659d4cef1f8567260937c2a2d9636",
+      "rollup": {
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 65,
+        "fact_count": 64,
+        "unmarked_facts": 0
+      },
+      "marker_count": 65,
+      "unit_count": 13,
+      "issue_count": 0
+    },
+    "spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md": {
+      "content_hash": "a2efd8745749be8707ad93362bc3ff557ffbebff33f939b2dc85ccfb9b642abb",
+      "rollup": {
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 47,
+        "fact_count": 46,
+        "unmarked_facts": 0
+      },
+      "marker_count": 47,
+      "unit_count": 8,
+      "issue_count": 0
+    },
+    "spec/modules/vibe-mcp/PROP-027-mcp-packages.md": {
+      "content_hash": "9f7c54fcb9d7fd20488b8bc1705e5f5e18c12778470a69568e5ab243d0b37148",
+      "rollup": {
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "work"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 76,
+        "fact_count": 75,
+        "unmarked_facts": 0
+      },
+      "marker_count": 76,
+      "unit_count": 12,
+      "issue_count": 0
+    },
+    "spec/modules/vibe-progress/OWNER-GUIDE.md": {
+      "content_hash": "351b6bb9d888a9c29a4d2e279528572c19664d61665f503c4880b6d4c8c485e3",
+      "rollup": {
+        "explicit": [
+          "doc",
+          "done"
+        ],
+        "computed": [
+          "doc",
+          "done"
+        ],
+        "effective": [
+          "doc",
+          "done"
+        ],
+        "marker_count": 70,
+        "fact_count": 69,
+        "unmarked_facts": 0
+      },
+      "marker_count": 70,
+      "unit_count": 9,
+      "issue_count": 0
+    },
+    "spec/modules/vibe-progress/PROP-043-progress-markup.md": {
+      "content_hash": "a8e78ad435d4d2a71aa75160539a9109a092c00632516226be0347fe4ee91583",
+      "rollup": {
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 161,
+        "fact_count": 160,
+        "unmarked_facts": 0
+      },
+      "marker_count": 161,
+      "unit_count": 27,
+      "issue_count": 0
+    },
+    "spec/modules/vibe-progress/templates/harvest-card.md": {
+      "content_hash": "f854794e0ca29a21b4874a7d28b8f9a9565545ebe6b391b45e60eabf9fea4baf",
+      "rollup": {
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 10,
+        "fact_count": 9,
+        "unmarked_facts": 0
+      },
+      "marker_count": 10,
+      "unit_count": 1,
+      "issue_count": 0
+    },
+    "spec/modules/vibe-progress/templates/impl-task.md": {
+      "content_hash": "9f85265c1a8e0111664f74f5d7f0addbdddcbc7fc49de38ea100bd617b97805d",
+      "rollup": {
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 23,
+        "fact_count": 22,
+        "unmarked_facts": 0
+      },
+      "marker_count": 23,
+      "unit_count": 10,
+      "issue_count": 0
+    },
+    "spec/modules/vibe-progress/templates/spec-task.md": {
+      "content_hash": "91768f4f76c270cdd4c6ec34b021647af6f771500b04fc22e537b36835e9259b",
+      "rollup": {
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 16,
+        "fact_count": 15,
+        "unmarked_facts": 0
+      },
+      "marker_count": 16,
+      "unit_count": 7,
+      "issue_count": 0
+    },
+    "spec/modules/vibe-registry/PROP-001-git-backend.md": {
+      "content_hash": "78efc2f8dca1c4951cf6f2ea098fbef228124a06c1b6a5878b106446b5561e07",
+      "rollup": {
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "work"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 93,
+        "fact_count": 92,
+        "unmarked_facts": 0
+      },
+      "marker_count": 93,
+      "unit_count": 20,
+      "issue_count": 0
+    },
+    "spec/modules/vibe-registry/PROP-002-decentralized-registry.md": {
+      "content_hash": "a4aa3c9909ffe89ead7c9ed3c71e25799810eb28b870a16a9bacd070d52a7f85",
+      "rollup": {
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "work"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 362,
+        "fact_count": 361,
+        "unmarked_facts": 0
+      },
+      "marker_count": 362,
+      "unit_count": 35,
+      "issue_count": 0
+    },
+    "spec/modules/vibe-registry/PROP-008-qualified-naming.md": {
+      "content_hash": "281c74bb6c891b02729d113da9ded346b14c18ca9277c98ac9897962602763b2",
+      "rollup": {
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "work"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 100,
+        "fact_count": 99,
+        "unmarked_facts": 0
+      },
+      "marker_count": 100,
+      "unit_count": 17,
+      "issue_count": 0
+    },
+    "spec/modules/vibe-registry/PROP-010-local-package-cache.md": {
+      "content_hash": "16b4c47e68cdc8f18c14dbd429cf65789578c6077d870b6e1f308a525c259fd2",
+      "rollup": {
+        "explicit": [
+          "spec",
+          "work"
+        ],
+        "computed": [
+          "spec",
+          "work"
+        ],
+        "effective": [
+          "spec",
+          "work"
+        ],
+        "marker_count": 93,
+        "fact_count": 92,
+        "unmarked_facts": 0
+      },
+      "marker_count": 93,
+      "unit_count": 18,
+      "issue_count": 0
+    },
+    "spec/modules/vibe-registry/PROP-021-submodule-sources.md": {
+      "content_hash": "c94b2a6794dee360ec49179b01af90626922bb4b5a4c78c68869335fc3df5300",
+      "rollup": {
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 38,
+        "fact_count": 37,
+        "unmarked_facts": 0
+      },
+      "marker_count": 38,
+      "unit_count": 12,
+      "issue_count": 0
+    },
+    "spec/modules/vibe-registry/PROP-023-bridge-packages.md": {
+      "content_hash": "ea93a3ed159488ee2de216e6e8e4f033a6cc6bd4aea939512154e044e96b2c0f",
+      "rollup": {
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 46,
+        "fact_count": 45,
+        "unmarked_facts": 0
+      },
+      "marker_count": 46,
+      "unit_count": 12,
+      "issue_count": 0
+    },
+    "spec/modules/vibe-registry/PROP-030-embedded-registry.md": {
+      "content_hash": "58d2569e3e769e56c001ec98527400a0a3515188dcaa79f505623fce6ca984aa",
+      "rollup": {
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 76,
+        "fact_count": 75,
+        "unmarked_facts": 0
+      },
+      "marker_count": 76,
+      "unit_count": 14,
+      "issue_count": 0
+    },
+    "spec/modules/vibe-resolver/PROP-003-dep-evolution.md": {
+      "content_hash": "26cd5ca4c0ae6a73c874c7bc45f41c570d4325ad96f132d4a2c62c36830b2778",
+      "rollup": {
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "work"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 314,
+        "fact_count": 313,
+        "unmarked_facts": 0
+      },
+      "marker_count": 314,
+      "unit_count": 56,
+      "issue_count": 0
+    },
+    "spec/modules/vibe-resolver/PROP-017-resolvo-resolver.md": {
+      "content_hash": "3c6d6bd69b62a56684b7ccc4113e61851bd02eecede004c5763871d601705b9b",
+      "rollup": {
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 106,
+        "fact_count": 105,
+        "unmarked_facts": 0
+      },
+      "marker_count": 106,
+      "unit_count": 14,
+      "issue_count": 0
+    },
+    "spec/modules/vibe-settings/PROP-040-settings.md": {
+      "content_hash": "7858318e90c4e16cbb3cd7106a589959c131b764cb92c2c5c28408d4bb790c1e",
+      "rollup": {
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 74,
+        "fact_count": 73,
+        "unmarked_facts": 0
+      },
+      "marker_count": 74,
+      "unit_count": 16,
+      "issue_count": 0
+    },
+    "spec/modules/vibe-settings/PROP-041-settings-ui.md": {
+      "content_hash": "dd3c69c5baeed751d77e854903dae5189f4d4d667063cec152bf967e4b79509d",
+      "rollup": {
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 44,
+        "fact_count": 43,
+        "unmarked_facts": 0
+      },
+      "marker_count": 44,
+      "unit_count": 12,
+      "issue_count": 0
+    },
+    "spec/modules/vibe-workspace/PROP-007-workspace.md": {
+      "content_hash": "b940150108bf0ce4e70140970e45f5eec269723686cb98f46a6b8c6e3481c2ed",
+      "rollup": {
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "work"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 147,
+        "fact_count": 146,
+        "unmarked_facts": 0
+      },
+      "marker_count": 147,
+      "unit_count": 24,
+      "issue_count": 0
+    },
+    "spec/modules/vibe-workspace/PROP-009-loading-model.md": {
+      "content_hash": "abecd46d4e84b936f5f6bd4240f397f89067b905e6b2b7938652087555903444",
+      "rollup": {
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 104,
+        "fact_count": 103,
+        "unmarked_facts": 0
+      },
+      "marker_count": 104,
+      "unit_count": 20,
+      "issue_count": 0
+    },
+    "spec/modules/vibe-workspace/PROP-011-incremental-install.md": {
+      "content_hash": "f3f38fc6ea2d128a3e2e9172a87b7522a60ab02724d567408863330bf3499296",
+      "rollup": {
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 97,
+        "fact_count": 96,
+        "unmarked_facts": 0
+      },
+      "marker_count": 97,
+      "unit_count": 15,
+      "issue_count": 0
+    },
+    "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md": {
+      "content_hash": "2e00d2aab2e0007ad20916d6e76a933a8f331a043f7c4cf1ef39d9641c320b32",
+      "rollup": {
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "work"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 84,
+        "fact_count": 83,
+        "unmarked_facts": 0
+      },
+      "marker_count": 84,
+      "unit_count": 15,
+      "issue_count": 0
+    },
+    "spec/modules/vibe-workspace/PROP-020-install-hooks.md": {
+      "content_hash": "9f092c76471e158b4bb04c5744ced93d245bce5a509864804c10d1035a28f09e",
+      "rollup": {
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 50,
+        "fact_count": 49,
+        "unmarked_facts": 0
+      },
+      "marker_count": 50,
+      "unit_count": 13,
+      "issue_count": 0
+    },
+    "spec/modules/vibe-workspace/PROP-022-materialization-modes.md": {
+      "content_hash": "27f1bad149d671ea82ae3e1bcec989cd35194721d97a49f9bda474803abc0e7f",
+      "rollup": {
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 53,
+        "fact_count": 52,
+        "unmarked_facts": 0
+      },
+      "marker_count": 53,
+      "unit_count": 14,
+      "issue_count": 0
+    },
+    "spec/modules/vibe-workspace/PROP-025-binary-delivery.md": {
+      "content_hash": "8d50a37b2c4e3b8421b60f9e912fb9ae726ed88e0a1d72e1fb95bfd0b2d8b8b1",
+      "rollup": {
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 46,
+        "fact_count": 45,
+        "unmarked_facts": 0
+      },
+      "marker_count": 46,
+      "unit_count": 11,
+      "issue_count": 0
+    },
+    "spec/modules/vibe-workspace/PROP-034-transitive-links-boot-graph.md": {
+      "content_hash": "4150b1a3d9e61ce8fbe60099fccff098d31a0e9a00ba233585de2efe9e765405",
+      "rollup": {
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "work"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 66,
+        "fact_count": 65,
+        "unmarked_facts": 0
+      },
+      "marker_count": 66,
+      "unit_count": 12,
+      "issue_count": 0
+    },
+    "spec/modules/vibe-workspace/PROP-035-spec-compiler.md": {
+      "content_hash": "16f282502a1076facfeb02a35cf10791ad611ad62e4512a2c805e0c5c47aa1ff",
+      "rollup": {
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "work"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 135,
+        "fact_count": 134,
+        "unmarked_facts": 0
+      },
+      "marker_count": 135,
+      "unit_count": 22,
+      "issue_count": 0
+    },
+    "spec/modules/vibe-workspace/PROP-038-hybrid-boot-linking.md": {
+      "content_hash": "f8c3799d364dc48ba8fe3eeb1e2d5865b9b44b28f2e5dc79fe9929bbb6262386",
+      "rollup": {
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 86,
+        "fact_count": 85,
+        "unmarked_facts": 0
+      },
+      "marker_count": 86,
+      "unit_count": 16,
+      "issue_count": 0
+    }
+  }
+}

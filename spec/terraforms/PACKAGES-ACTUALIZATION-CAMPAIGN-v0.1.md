@@ -39,6 +39,10 @@ Two things are being asked, and only the first is obvious:
 | `org.vibevm.ai-native` | 10 | 140 | 11 629 | 8 of 10 carry `crates/` |
 | **total** | **37** | **294** | **28 733** | |
 
+Of those 294 `.md` files, **286 are observable**: eight are extractor test
+fixtures under a `fixtures/` directory, which `DEFAULT_EXCLUDES` drops even
+under an explicit include (PROP-043 §4). Measured 2026-07-26 at Phase A step 1.
+
 - **Marker state: zero.** `grep -rl "<status " packages/` = 0 files. Wave 2
   starts from nothing, exactly as wave 1 did.
 - **Code-side traceability already exists** in the ai-native crates: **703
@@ -217,8 +221,18 @@ and A1 and A4 change phases that follow, so read them before opening C.**
 
 *Entry:* this plan ratified. *Steps:*
 
-1. Widen `progress.toml`; confirm `scan` sees 294 new files and reports them
-   all unmarked.
+1. Widen `progress.toml`; confirm `scan` sees the package files and reports
+   them all unmarked. **DONE 2026-07-26 — and the expected number was wrong:
+   `scan` observes 286 package files, not 294.** The eight difference are
+   extractor test fixtures
+   (`{go,ts}-ai-native-{lang,mcp}/…/tools/*-extract/test/fixtures/{clean,dirty}/spec/PROP-001.md`),
+   excluded by `DEFAULT_EXCLUDES`' always-on `fixtures` rule (PROP-043 §4) —
+   correctly, since one of each pair is *deliberately malformed* and marking it
+   would be marking a lie. Observed total **344 files** (58 host + 286
+   packages), **13 916 facts**, of which **8 997 unmarked** — the package
+   corpus is 1.8× the host in facts while being only 1.07× in lines, so
+   prediction 5's "comparable cost" reads right on lines and light on facts.
+   `progress check` **0** across both corpora.
 2. **Close the fact-grain specmap gap first.** `core-ai-native` **v0.8.0**
    carries the fact-aware engine (`mdspec.rs` uses `is_valid_fact_id`);
    `rust-ai-native-lang` **v0.7.0** vendors the **v0.7.0** engine, which
