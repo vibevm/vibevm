@@ -51,6 +51,13 @@
     },
     {
       "crate_name": "progress-core",
+      "file": "crates/progress-core/src/cache.rs",
+      "item_kind": "fn",
+      "line": 111,
+      "symbol": "progress_core::cache::Cache::cached_doc"
+    },
+    {
+      "crate_name": "progress-core",
       "file": "crates/progress-core/src/doc.rs",
       "item_kind": "mod",
       "line": 3,
@@ -937,6 +944,13 @@
       "item_kind": "mod",
       "line": 5,
       "symbol": "vibe_cli::commands::progress"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/progress.rs",
+      "item_kind": "fn",
+      "line": 53,
+      "symbol": "vibe_cli::commands::progress::ground"
     },
     {
       "crate_name": "vibe-cli",
@@ -2405,7 +2419,7 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/tests/cli_mcp_kind.rs",
       "item_kind": "fn",
-      "line": 78,
+      "line": 79,
       "symbol": "vibe_cli::tests::cli_mcp_kind::mcp_install_registers_and_uninstall_removes_package_servers"
     },
     {
@@ -2419,28 +2433,28 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/tests/cli_pkg_cycle.rs",
       "item_kind": "fn",
-      "line": 21,
+      "line": 20,
       "symbol": "vibe_cli::tests::cli_pkg_cycle::full_install_cycle"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/tests/cli_pkg_cycle.rs",
       "item_kind": "fn",
-      "line": 946,
+      "line": 962,
       "symbol": "vibe_cli::tests::cli_pkg_cycle::install_from_git_source_with_branch_pins_lockfile_to_resolved_commit"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/tests/cli_pkg_cycle.rs",
       "item_kind": "fn",
-      "line": 855,
+      "line": 874,
       "symbol": "vibe_cli::tests::cli_pkg_cycle::install_from_git_source_with_tag_records_source_kind_git"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/tests/cli_pkg_cycle.rs",
       "item_kind": "fn",
-      "line": 1010,
+      "line": 1023,
       "symbol": "vibe_cli::tests::cli_pkg_cycle::install_git_source_then_repeat_install_no_args_is_idempotent"
     },
     {
@@ -2454,21 +2468,21 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/tests/cli_pkg_cycle.rs",
       "item_kind": "fn",
-      "line": 339,
+      "line": 344,
       "symbol": "vibe_cli::tests::cli_pkg_cycle::install_skips_resolution_when_the_lockfile_is_fresh"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/tests/cli_redirect.rs",
       "item_kind": "fn",
-      "line": 337,
+      "line": 328,
       "symbol": "vibe_cli::tests::cli_redirect::install_via_redirect_chain_rejected_at_hop_two"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/tests/cli_redirect.rs",
       "item_kind": "fn",
-      "line": 266,
+      "line": 260,
       "symbol": "vibe_cli::tests::cli_redirect::install_via_redirect_identity_mismatch_rejected"
     },
     {
@@ -2482,21 +2496,21 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/tests/cli_redirect.rs",
       "item_kind": "fn",
-      "line": 187,
+      "line": 184,
       "symbol": "vibe_cli::tests::cli_redirect::install_via_redirect_pinned_policy_uses_pinned_ref"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/tests/cli_redirect.rs",
       "item_kind": "fn",
-      "line": 453,
+      "line": 443,
       "symbol": "vibe_cli::tests::cli_redirect::redirect_update_rejects_description_and_clear_combined"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/tests/cli_redirect.rs",
       "item_kind": "fn",
-      "line": 474,
+      "line": 465,
       "symbol": "vibe_cli::tests::cli_redirect::redirect_update_rejects_invalid_pkgref"
     },
     {
@@ -4603,7 +4617,7 @@
       "crate_name": "vibe-resolver",
       "file": "crates/vibe-resolver/src/lib.rs",
       "item_kind": "enum",
-      "line": 306,
+      "line": 310,
       "symbol": "vibe_resolver::DepProviderError"
     },
     {
@@ -4638,7 +4652,7 @@
       "crate_name": "vibe-resolver",
       "file": "crates/vibe-resolver/src/lib.rs",
       "item_kind": "enum",
-      "line": 374,
+      "line": 378,
       "symbol": "vibe_resolver::SolveError"
     },
     {
@@ -5107,7 +5121,7 @@
       "crate_name": "vibe-resolver",
       "file": "crates/vibe-resolver/src/naive.rs",
       "item_kind": "fn",
-      "line": 54,
+      "line": 58,
       "symbol": "vibe_resolver::naive::NaiveDepSolver<P>::solve"
     },
     {
@@ -5198,14 +5212,14 @@
       "crate_name": "vibe-resolver",
       "file": "crates/vibe-resolver/src/sat.rs",
       "item_kind": "impl",
-      "line": 174,
+      "line": 177,
       "symbol": "vibe_resolver::sat::<impl DepSolver for Sat<P>>"
     },
     {
       "crate_name": "vibe-resolver",
       "file": "crates/vibe-resolver/src/sat.rs",
       "item_kind": "struct",
-      "line": 93,
+      "line": 96,
       "symbol": "vibe_resolver::sat::Sat"
     },
     {
@@ -6254,6 +6268,14 @@
       "verb": "implements"
     },
     {
+      "file": "crates/progress-core/src/cache.rs",
+      "from_symbol": "progress_core::cache::Cache::cached_doc",
+      "line": 120,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-progress/PROP-043#cache",
+      "verb": "implements"
+    },
+    {
       "file": "crates/progress-core/src/doc.rs",
       "from_symbol": "progress_core::doc",
       "line": 3,
@@ -7269,6 +7291,14 @@
       "file": "crates/vibe-cli/src/commands/progress.rs",
       "from_symbol": "vibe_cli::commands::progress",
       "line": 5,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-progress/PROP-043#tool",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/progress.rs",
+      "from_symbol": "vibe_cli::commands::progress::ground",
+      "line": 65,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-progress/PROP-043#tool",
       "verb": "implements"
@@ -8989,7 +9019,7 @@
     {
       "file": "crates/vibe-cli/tests/cli_mcp_kind.rs",
       "from_symbol": "vibe_cli::tests::cli_mcp_kind::mcp_install_registers_and_uninstall_removes_package_servers",
-      "line": 80,
+      "line": 81,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-mcp/PROP-027#consent",
       "verb": "verifies"
@@ -8997,7 +9027,7 @@
     {
       "file": "crates/vibe-cli/tests/cli_mcp_kind.rs",
       "from_symbol": "vibe_cli::tests::cli_mcp_kind::mcp_install_registers_and_uninstall_removes_package_servers",
-      "line": 79,
+      "line": 80,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-mcp/PROP-027#registration",
       "verb": "verifies"
@@ -9021,7 +9051,7 @@
     {
       "file": "crates/vibe-cli/tests/cli_pkg_cycle.rs",
       "from_symbol": "vibe_cli::tests::cli_pkg_cycle::full_install_cycle",
-      "line": 22,
+      "line": 21,
       "provenance": "authored",
       "uri": "spec://vibevm/VIBEVM-SPEC#install-workflow-in-detail",
       "verb": "verifies"
@@ -9029,7 +9059,7 @@
     {
       "file": "crates/vibe-cli/tests/cli_pkg_cycle.rs",
       "from_symbol": "vibe_cli::tests::cli_pkg_cycle::install_from_git_source_with_branch_pins_lockfile_to_resolved_commit",
-      "line": 947,
+      "line": 963,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#git-source",
       "verb": "verifies",
@@ -9038,7 +9068,7 @@
     {
       "file": "crates/vibe-cli/tests/cli_pkg_cycle.rs",
       "from_symbol": "vibe_cli::tests::cli_pkg_cycle::install_from_git_source_with_tag_records_source_kind_git",
-      "line": 856,
+      "line": 875,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#git-source",
       "verb": "verifies",
@@ -9047,7 +9077,7 @@
     {
       "file": "crates/vibe-cli/tests/cli_pkg_cycle.rs",
       "from_symbol": "vibe_cli::tests::cli_pkg_cycle::install_git_source_then_repeat_install_no_args_is_idempotent",
-      "line": 1016,
+      "line": 1029,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#git-source",
       "verb": "verifies",
@@ -9064,7 +9094,7 @@
     {
       "file": "crates/vibe-cli/tests/cli_pkg_cycle.rs",
       "from_symbol": "vibe_cli::tests::cli_pkg_cycle::install_skips_resolution_when_the_lockfile_is_fresh",
-      "line": 343,
+      "line": 348,
       "provenance": "authored",
       "uri": "spec://vibevm/VIBEVM-SPEC#install-workflow-in-detail",
       "verb": "verifies"
@@ -9072,7 +9102,7 @@
     {
       "file": "crates/vibe-cli/tests/cli_redirect.rs",
       "from_symbol": "vibe_cli::tests::cli_redirect::install_via_redirect_chain_rejected_at_hop_two",
-      "line": 338,
+      "line": 329,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#redirect",
       "verb": "verifies",
@@ -9081,7 +9111,7 @@
     {
       "file": "crates/vibe-cli/tests/cli_redirect.rs",
       "from_symbol": "vibe_cli::tests::cli_redirect::install_via_redirect_identity_mismatch_rejected",
-      "line": 267,
+      "line": 261,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#redirect",
       "verb": "verifies",
@@ -9099,7 +9129,7 @@
     {
       "file": "crates/vibe-cli/tests/cli_redirect.rs",
       "from_symbol": "vibe_cli::tests::cli_redirect::install_via_redirect_pinned_policy_uses_pinned_ref",
-      "line": 188,
+      "line": 185,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#redirect",
       "verb": "verifies",
@@ -9108,7 +9138,7 @@
     {
       "file": "crates/vibe-cli/tests/cli_redirect.rs",
       "from_symbol": "vibe_cli::tests::cli_redirect::redirect_update_rejects_description_and_clear_combined",
-      "line": 454,
+      "line": 444,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#redirect",
       "verb": "verifies",
@@ -9117,7 +9147,7 @@
     {
       "file": "crates/vibe-cli/tests/cli_redirect.rs",
       "from_symbol": "vibe_cli::tests::cli_redirect::redirect_update_rejects_invalid_pkgref",
-      "line": 475,
+      "line": 466,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#redirect",
       "verb": "verifies",
@@ -11619,7 +11649,7 @@
     {
       "file": "crates/vibe-resolver/src/lib.rs",
       "from_symbol": "vibe_resolver::DepProviderError",
-      "line": 325,
+      "line": 329,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#failure-discriminator",
       "verb": "implements"
@@ -11639,7 +11669,7 @@
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#solver-upgrade",
       "verb": "deviates",
-      "reason": "PROP-003 §2.1 adds `pin_preferences(&mut self, pins)` to this trait for minimum-churn re-resolution; the method is absent — PROP-011 Phase 3 holds pins via constraint-tightening at the install layer instead, and SatDepSolver is not in tree (see DBT-0011)"
+      "reason": "PROP-003 §2.1 adds `pin_preferences(&mut self, pins)` to this trait for minimum-churn re-resolution; the method is still absent. PROP-011 Phase 3 holds pins at the install layer instead — `freshness::hold_pins` rewrites every unchanged root to `=<locked>` before the solve — so the property ships without the trait method, at the cost of a registry walk the solver could have skipped. It stops being acceptable when a re-resolve needs preference *inside* the solve; resolvo's `sort_candidates` (PROP-017 §3) is where that would land"
     },
     {
       "file": "crates/vibe-resolver/src/lib.rs",
@@ -11676,7 +11706,7 @@
     {
       "file": "crates/vibe-resolver/src/lib.rs",
       "from_symbol": "vibe_resolver::SolveError",
-      "line": 389,
+      "line": 393,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#capability",
       "verb": "implements"
@@ -11684,7 +11714,7 @@
     {
       "file": "crates/vibe-resolver/src/lib.rs",
       "from_symbol": "vibe_resolver::SolveError",
-      "line": 390,
+      "line": 394,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-017#unsatisfiable",
       "verb": "implements"
@@ -12256,24 +12286,23 @@
     {
       "file": "crates/vibe-resolver/src/naive.rs",
       "from_symbol": "vibe_resolver::naive::NaiveDepSolver",
-      "line": 31,
+      "line": 42,
+      "provenance": "authored",
+      "uri": "spec://vibevm/modules/vibe-registry/PROP-002#solver",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-resolver/src/naive.rs",
+      "from_symbol": "vibe_resolver::naive::NaiveDepSolver",
+      "line": 41,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#solver-upgrade",
       "verb": "implements"
     },
     {
       "file": "crates/vibe-resolver/src/naive.rs",
-      "from_symbol": "vibe_resolver::naive::NaiveDepSolver",
-      "line": 32,
-      "provenance": "authored",
-      "uri": "spec://vibevm/modules/vibe-registry/PROP-002#solver",
-      "verb": "deviates",
-      "reason": "PROP-002 §2.8 decides resolvo is the PRIMARY depsolver; no ResolvoSolver exists in tree and NaiveDepSolver is the only DepSolver impl — the known SAT/resolvo upgrade debt (DBT-0011), recorded honestly until the second impl lands"
-    },
-    {
-      "file": "crates/vibe-resolver/src/naive.rs",
       "from_symbol": "vibe_resolver::naive::NaiveDepSolver<P>::solve",
-      "line": 54,
+      "line": 58,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#lockfile",
       "verb": "implements"
@@ -12281,7 +12310,7 @@
     {
       "file": "crates/vibe-resolver/src/naive.rs",
       "from_symbol": "vibe_resolver::naive::NaiveDepSolver<P>::solve",
-      "line": 55,
+      "line": 59,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#determinism",
       "verb": "implements"
@@ -12393,16 +12422,15 @@
     {
       "file": "crates/vibe-resolver/src/sat.rs",
       "from_symbol": "vibe_resolver::sat::<impl DepSolver for Sat<P>>",
-      "line": 174,
+      "line": 182,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-registry/PROP-002#solver",
-      "verb": "deviates",
-      "reason": "PROP-002 §2.8 names resolvo as the primary industrial solver; this cell implements chronological backtracking natively over the unmodified DepProvider trait instead, reusing the naive cell as its branch checker. The backtracking half of DBT-0011 retires here; adopting resolvo stays an owner decision the DepSolver seam keeps open"
+      "verb": "implements"
     },
     {
       "file": "crates/vibe-resolver/src/sat.rs",
       "from_symbol": "vibe_resolver::sat::Sat",
-      "line": 124,
+      "line": 127,
       "provenance": "authored",
       "uri": "spec://vibevm/modules/vibe-resolver/PROP-003#solver-upgrade",
       "verb": "implements"
@@ -18190,7 +18218,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:41f1c4aa77caf950ba2989ed2362c1cafc20a7396313731214b5387c4214f8db",
+      "content_hash": "sha256:b4685f9e2fcb540c800eec419397863ccbf75bb143ea66d01105513321416b46",
       "doc_path": "modules/vibe-cli/PROP-042",
       "file": "spec/modules/vibe-cli/PROP-042-aiui-observation.md",
       "heading": "PROP-042 — AIUI observation: the render plane & the `vibe aiui` surface",
@@ -18226,7 +18254,7 @@
     },
     {
       "anchor": "aiui-cli",
-      "content_hash": "sha256:464f3f00cd35cca31a48a65cfd93050ffd1f3cb64d0793f09827ed54c46312e8",
+      "content_hash": "sha256:3139f9a425a9513f6361a955a744bef2e860841ade3eef66b7baa1acf1e49b38",
       "doc_path": "modules/vibe-cli/PROP-042",
       "file": "spec/modules/vibe-cli/PROP-042-aiui-observation.md",
       "heading": "4. The `vibe aiui` surface",
@@ -18239,7 +18267,7 @@
       "doc_path": "modules/vibe-cli/PROP-042",
       "file": "spec/modules/vibe-cli/PROP-042-aiui-observation.md",
       "heading": "5. The `vibe term` launcher",
-      "line": 152,
+      "line": 169,
       "uri": "spec://vibevm/modules/vibe-cli/PROP-042#vibe-term"
     },
     {
@@ -18248,7 +18276,7 @@
       "doc_path": "modules/vibe-cli/PROP-042",
       "file": "spec/modules/vibe-cli/PROP-042-aiui-observation.md",
       "heading": "5.1 In-place upgrade & the icon protocol",
-      "line": 190,
+      "line": 207,
       "uri": "spec://vibevm/modules/vibe-cli/PROP-042#in-place-upgrade"
     },
     {
@@ -18257,7 +18285,7 @@
       "doc_path": "modules/vibe-cli/PROP-042",
       "file": "spec/modules/vibe-cli/PROP-042-aiui-observation.md",
       "heading": "6. Never",
-      "line": 210,
+      "line": 227,
       "uri": "spec://vibevm/modules/vibe-cli/PROP-042#never"
     },
     {
@@ -23378,19 +23406,19 @@
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-cli/tests/cli_pkg_cycle.rs",
-      "line": 856,
+      "line": 875,
       "message": "edge `vibe_cli::tests::cli_pkg_cycle::install_from_git_source_with_tag_records_source_kind_git` pins r1 but `spec://vibevm/modules/vibe-registry/PROP-002#git-source` carries no kind/revision line yet"
     },
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-cli/tests/cli_pkg_cycle.rs",
-      "line": 947,
+      "line": 963,
       "message": "edge `vibe_cli::tests::cli_pkg_cycle::install_from_git_source_with_branch_pins_lockfile_to_resolved_commit` pins r1 but `spec://vibevm/modules/vibe-registry/PROP-002#git-source` carries no kind/revision line yet"
     },
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-cli/tests/cli_pkg_cycle.rs",
-      "line": 1016,
+      "line": 1029,
       "message": "edge `vibe_cli::tests::cli_pkg_cycle::install_git_source_then_repeat_install_no_args_is_idempotent` pins r1 but `spec://vibevm/modules/vibe-registry/PROP-002#git-source` carries no kind/revision line yet"
     },
     {
@@ -23402,31 +23430,31 @@
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-cli/tests/cli_redirect.rs",
-      "line": 188,
+      "line": 185,
       "message": "edge `vibe_cli::tests::cli_redirect::install_via_redirect_pinned_policy_uses_pinned_ref` pins r1 but `spec://vibevm/modules/vibe-registry/PROP-002#redirect` carries no kind/revision line yet"
     },
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-cli/tests/cli_redirect.rs",
-      "line": 267,
+      "line": 261,
       "message": "edge `vibe_cli::tests::cli_redirect::install_via_redirect_identity_mismatch_rejected` pins r1 but `spec://vibevm/modules/vibe-registry/PROP-002#redirect` carries no kind/revision line yet"
     },
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-cli/tests/cli_redirect.rs",
-      "line": 338,
+      "line": 329,
       "message": "edge `vibe_cli::tests::cli_redirect::install_via_redirect_chain_rejected_at_hop_two` pins r1 but `spec://vibevm/modules/vibe-registry/PROP-002#redirect` carries no kind/revision line yet"
     },
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-cli/tests/cli_redirect.rs",
-      "line": 454,
+      "line": 444,
       "message": "edge `vibe_cli::tests::cli_redirect::redirect_update_rejects_description_and_clear_combined` pins r1 but `spec://vibevm/modules/vibe-registry/PROP-002#redirect` carries no kind/revision line yet"
     },
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-cli/tests/cli_redirect.rs",
-      "line": 475,
+      "line": 466,
       "message": "edge `vibe_cli::tests::cli_redirect::redirect_update_rejects_invalid_pkgref` pins r1 but `spec://vibevm/modules/vibe-registry/PROP-002#redirect` carries no kind/revision line yet"
     },
     {
