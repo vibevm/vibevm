@@ -41,9 +41,20 @@ Two things are being asked, and only the first is obvious:
 
 - **Marker state: zero.** `grep -rl "<status " packages/` = 0 files. Wave 2
   starts from nothing, exactly as wave 1 did.
-- **Code-side traceability already exists** in the ai-native crates: 247
-  `specmark::scope!` / `#[spec(…)]` sites. That is the join target Phase C
-  verifies against — it is *not* evidence that the prose is true.
+- **Code-side traceability already exists** in the ai-native crates: **703
+  `specmark::scope!` / `#[spec(…)]` sites** across the live version slots
+  (781 counting the superseded `core-ai-native` v0.7.0). That is the join
+  target Phase C verifies against — it is *not* evidence that the prose is true.
+  *(Corrected at ratification, 2026-07-26. This line read **247**, which is the
+  **rust family alone** — `rust-ai-native-lang` + `rust-ai-native-mcp` measure
+  248 today. The join target is ~3× what the plan budgeted for, and Phase C's
+  cost scales with it. A plan's own numbers are the first thing a campaign
+  about unmeasured numbers should re-measure.)*
+- **Seven of the ten carry `crates/`**, not eight (counted at ratification):
+  `core-ai-native` plus the `-lang` and `-mcp` member of each of the three
+  language families. The three bare family umbrellas — `rust-ai-native`,
+  `go-ai-native`, `typescript-ai-native` — carry none, which makes them the
+  aggregator genre §5-A's prediction is about.
 - **Version slots.** All of `world` is `v0.1.0` except `redbook` (v0.1.0 +
   v0.2.0) and `wal` (v0.2.0 only). In `ai-native`, `core-ai-native` carries
   **two live slots** (v0.7.0 consumed, v0.8.0 authored); the rust family is
@@ -144,6 +155,61 @@ regenerated, maximum loss on any crash is one step.
 **Scope config.** `progress.toml` gains the two package globs. The host's 58
 files stay in scope: wave 2 does not un-measure wave 1, and the two corpora
 share one `progress check` gate that must stay at 0.
+
+## 4.5 Amendments carried in from wave 1's close-out {#amendments}
+
+*Proposed at ratification, 2026-07-26, from what wave 1 actually cost rather
+than from what it planned. Wave 1's REPORT (§11 there) carries the evidence for
+each. These are the review's recommendations; the owner ratifies or strikes
+them individually.*
+
+- **A1 — every phase's exit gate enumerates that phase's own steps.** Wave 1's
+  Phase C listed "harvest cards written while knowledge is hot" among its steps
+  and gated only on "100 % of markers carry verdicts". The step was skipped, it
+  cost nothing at the time, and Phase G arrived to consume an empty directory
+  and had to be deferred. **This plan has the identical defect today:** §3.2
+  says the checker runs are "captured as a doc fixture", and §5-C's exit gate
+  says only that markers carry verdicts. A phase gate that does not check the
+  phase's own steps will skip whichever ones nothing downstream fails on.
+- **A2 — a verdict's evidence must name which source class it rests on.** F-063
+  — a security-relevant drift in the token precedence — survived wave 1's
+  verification with a `confirmed` verdict because its evidence cross-checked
+  one spec document against another spec document carrying the identical error.
+  §3.1 makes document-against-document verification the *method* for `world`,
+  legitimately, because a prompt-only flow has no crate to point at. That makes
+  the hazard structural here rather than accidental: each `world` verdict must
+  record which of §3.1's three sources it used, and **a verdict resting only on
+  source 1 (the package's own artifacts) is self-referential** — the package
+  agreeing with itself — and is marked as such rather than counted as
+  independent confirmation.
+- **A3 — wave 2 inherits two phases wave 1 could not run.** Both were deferred
+  by owner ruling on 2026-07-26 after close-out measured their inputs missing
+  (wave 1's `deferrals.md` §6). They must appear here as phases or they will be
+  lost: **(i)** a *judgment-marking pass* — wave 1 marked what 4 917 facts
+  **are** and never what should **happen** to them, which left every
+  forward-looking view empty (`freeze/plan` 0, `action="rework"` 0,
+  `stage="idea"` 0); wave 2 should mark judgment as it marks state, in one
+  sweep over both corpora. **(ii)** the *harvest pass and the two doc trees*
+  (User Guide, Package Author Guide) — the Package Author Guide in particular
+  belongs here, since `packages/` is the corpus it documents.
+- **A4 — fix the hand-seal staleness gap before Phase C, not after (F-067).**
+  `processed_hash` records the text a file's verdicts were computed against and
+  is only written by a real verify batch; wave 1 sealed by hand throughout, so
+  the staleness warning ended up pointing at the *freshest* files in the corpus.
+  Wave 2 will hand-seal thousands of verdicts across 294 files. Unfixed, the
+  signal is noise from the first row.
+- **A5 — every prediction names the step that tests it.** Wave 1's prediction 1
+  was confirmed only because close-out went and measured it specially: no step
+  of the plan required a `weave`, so the claim sat untested for the whole
+  campaign. A prediction with no step behind it is one this campaign will also
+  finish without testing. §6's five predictions each need a step, or a note
+  saying they are scored at close-out on purpose.
+- **A6 — write `baseline.json` at every phase close, now that a writer exists.**
+  Wave 1 could not: `Baseline::store` was claimed by the spec and had never been
+  built (F-065), so the recurrence loop had never run end to end. It exists as
+  of 2026-07-26 and round-trips clean. Wave 2 is the first campaign that can
+  checkpoint cheaply — a crash or a long gap should cost O(delta), which is the
+  entire argument §7.5 makes for keeping the artifact at all.
 
 ## 5. Phases {#phases}
 
