@@ -3,18 +3,22 @@
 //!
 //! Before this module the settings home was resolved eight different ways
 //! across the workspace — `dirs::home_dir()` in some crates, a hand-rolled
-//! `HOME → USERPROFILE` walk in others — each joining its own `".vibe"` /
-//! `".vibevm"` string literal. This module is the single authority:
+//! `HOME → USERPROFILE` walk in others — each joining its own settings-dir
+//! string literal. This module is the single authority:
 //!
 //! - `$VIBE_SETTINGS`, when set, is the settings directory, verbatim. It
 //!   lets a second application that contends for `~/.vibe` push vibevm's
 //!   settings elsewhere without touching config.
 //! - Otherwise the settings directory is `<home>/.vibe` — the canonical
 //!   location.
-//! - The pre-consolidation `<home>/.vibevm` survives only as a
-//!   backward-compatible *read* fallback ([`legacy_settings_dir`]) so a
-//!   machine (or teammate) mid-migration keeps working; nothing is ever
-//!   written there.
+//!
+//! There is no second location. The pre-consolidation settings dir was
+//! read as a migration fallback until 2026-07-26, when that leg was
+//! removed: nothing was ever written there, and `$VIBE_SETTINGS`
+//! deliberately did not relocate it — which made it the one settings path
+//! a test could not isolate away from the operator's real home. Files left
+//! in the old directory are the operator's to move into `~/.vibe`; vibevm
+//! does not look there and does not touch them.
 //!
 //! Home is resolved one way for the whole workspace (`HOME`, then
 //! `USERPROFILE` on Windows), so every settings path agrees. VIBEVM-SPEC
@@ -31,9 +35,6 @@ pub const SETTINGS_DIR_ENV: &str = "VIBE_SETTINGS";
 
 /// Canonical settings-dir name under the user's home.
 const CANONICAL_DIR: &str = ".vibe";
-
-/// Pre-consolidation settings-dir name — a read-only migration fallback.
-const LEGACY_DIR: &str = ".vibevm";
 
 /// The canonical per-user settings directory.
 ///
@@ -68,17 +69,6 @@ pub fn settings_dir_from(override_dir: Option<PathBuf>, home: Option<PathBuf>) -
         return Some(o);
     }
     Some(home?.join(CANONICAL_DIR))
-}
-
-/// The pre-consolidation settings directory `<home>/.vibevm`.
-///
-/// A backward-compatible **read** fallback only — publish-token and
-/// user-config readers consult it when the canonical `~/.vibe` file is
-/// absent, so a not-yet-migrated machine keeps working. Nothing is
-/// written here, and `$VIBE_SETTINGS` deliberately does *not* affect it:
-/// the legacy location was always `~/.vibevm`.
-pub fn legacy_settings_dir() -> Option<PathBuf> {
-    Some(home_dir()?.join(LEGACY_DIR))
 }
 
 /// Machine-global registry config: `<settings-dir>/registry.toml`.
@@ -169,11 +159,30 @@ mod tests {
     }
 
     #[test]
-    fn legacy_dir_is_dot_vibevm_and_never_the_canonical() {
-        // The migration fallback points at the historical `~/.vibevm`,
-        // distinct from the canonical `.vibe`.
-        let legacy = legacy_settings_dir().expect("home dir present in test env");
-        assert!(legacy.ends_with(".vibevm"));
+    fn every_accessor_is_rooted_in_the_one_settings_dir() {
+        // The invariant the removed migration fallback used to break:
+        // every path this module hands out lives under `settings_dir()`,
+        // so `$VIBE_SETTINGS` relocates the whole surface at once and a
+        // test can isolate it by setting one variable. A second home that
+        // the override did not move is exactly what made the old fallback
+        // reachable from an isolated run.
+        let root = settings_dir().expect("home dir present in test env");
+        for path in [
+            registry_config_path(),
+            user_config_path(),
+            settings_toml_path(),
+            registries_cache_dir(),
+            search_cache_dir(),
+            aiui_dir(),
+        ] {
+            let path = path.expect("home dir present in test env");
+            assert!(
+                path.starts_with(&root),
+                "{} escapes the settings dir {}",
+                path.display(),
+                root.display()
+            );
+        }
     }
 
     #[test]

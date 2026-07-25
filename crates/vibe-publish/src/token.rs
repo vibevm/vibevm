@@ -17,14 +17,19 @@
 //!    is the **first label** of the host: `github` for `github.com`,
 //!    `gitverse` for `gitverse.ru`, `gitlab` for `gitlab.com`. Lets one
 //!    operator hold tokens for several hosts without juggling env vars.
-//! 5. `~/.vibevm/<host-prefix>.publish.token` — the same per-host file in
-//!    the pre-consolidation dir; a read-only migration fallback.
-//! 6. `<settings-dir>/git.publish.token` — legacy host-agnostic file.
+//! 5. `<settings-dir>/git.publish.token` — legacy host-agnostic file.
 //!    Kept so existing GitVerse-only setups keep working without a
 //!    rename. Will be retired in a future major version once the
 //!    per-host pattern is universal.
-//! 7. `~/.vibevm/git.publish.token` — the same host-agnostic file in the
-//!    pre-consolidation dir; a read-only migration fallback.
+//!
+//! That is the whole list. Both file legs hang off the one settings dir,
+//! so `$VIBE_SETTINGS` redirects every on-disk credential read together.
+//! The pre-consolidation settings dir supplied a sixth and seventh leg
+//! until 2026-07-26; those reads were removed because `$VIBE_SETTINGS`
+//! deliberately did not relocate that directory, which left a path by
+//! which an isolated run could still reach the operator's real
+//! credential. A token file still sitting there is the operator's to move
+//! into `~/.vibe` — vibevm does not read it and does not touch it.
 //!
 //! Tokens are surface secrets; never logged at any level. The
 //! [`Token`] type wraps the string and `Display`s as `***` to make
@@ -126,10 +131,11 @@ pub fn host_env_var(host: &str) -> Option<String> {
 /// Walks (in order):
 /// 1. `VIBEVM_PUBLISH_TOKEN_<HOST>` env var (host-specific).
 /// 2. `VIBEVM_PUBLISH_TOKEN` env var (legacy host-agnostic).
-/// 3. `<settings-dir>/<host-prefix>.publish.token` file (host-specific),
-///    then the same file under the legacy `~/.vibevm` dir.
-/// 4. `<settings-dir>/git.publish.token` file (legacy host-agnostic),
-///    then the same file under the legacy `~/.vibevm` dir.
+/// 3. `<settings-dir>/<host-prefix>.publish.token` file (host-specific).
+/// 4. `<settings-dir>/git.publish.token` file (legacy host-agnostic).
+///
+/// The two file legs are [`token_file_candidates`] — the single authority
+/// for where on disk a token may be read from.
 ///
 /// The `host` argument shapes the per-host lookup and surfaces in the
 /// `AuthMissing` error. The `<host-prefix>` is derived as the first
@@ -146,12 +152,10 @@ pub fn load_token_for_host(host: &str) -> Result<Token, PublishError> {
         return Ok(t);
     }
 
-    if let Some(t) = read_per_host_token(host)? {
-        return Ok(t);
-    }
-
-    if let Some(t) = read_legacy_token()? {
-        return Ok(t);
+    for path in token_file_candidates(host) {
+        if let Some(t) = read_token_file(path)? {
+            return Ok(t);
+        }
     }
 
     Err(PublishError::AuthMissing {
@@ -212,36 +216,20 @@ fn read_token_file(path: PathBuf) -> Result<Option<Token>, PublishError> {
     }))
 }
 
-/// Per-host token file: the canonical settings dir first, then the legacy
-/// `~/.vibevm` dir as a read-only migration fallback.
-fn read_per_host_token(host: &str) -> Result<Option<Token>, PublishError> {
-    for path in [
-        per_host_token_path(host),
-        dot_vibevm_per_host_token_path(host),
-    ]
-    .into_iter()
-    .flatten()
-    {
-        if let Some(t) = read_token_file(path)? {
-            return Ok(Some(t));
-        }
-    }
-    Ok(None)
-}
-
-/// Host-agnostic legacy-format token file: the canonical settings dir
-/// first, then the legacy `~/.vibevm` dir as a read-only migration
-/// fallback.
-fn read_legacy_token() -> Result<Option<Token>, PublishError> {
-    for path in [legacy_token_path(), dot_vibevm_token_path()]
+/// The ordered on-disk token candidates for `host`: the per-host file,
+/// then the legacy host-agnostic one — both in the canonical settings dir
+/// (`~/.vibe`, or `$VIBE_SETTINGS`).
+///
+/// This is the entire disk surface for credentials. One directory means
+/// `$VIBE_SETTINGS` relocates every candidate at once, so an isolated run
+/// cannot reach the operator's real token file. A host whose first label
+/// can't be derived contributes no per-host candidate and falls straight
+/// through to the host-agnostic file.
+fn token_file_candidates(host: &str) -> Vec<PathBuf> {
+    [per_host_token_path(host), legacy_token_path()]
         .into_iter()
         .flatten()
-    {
-        if let Some(t) = read_token_file(path)? {
-            return Ok(Some(t));
-        }
-    }
-    Ok(None)
+        .collect()
 }
 
 /// Path to the per-host token file `<settings-dir>/<prefix>.publish.token`
@@ -253,23 +241,10 @@ pub fn per_host_token_path(host: &str) -> Option<PathBuf> {
     Some(vibe_core::settings::settings_dir()?.join(format!("{prefix}.publish.token")))
 }
 
-/// The per-host token file under the pre-consolidation `~/.vibevm` dir —
-/// a read-only migration fallback for [`per_host_token_path`].
-fn dot_vibevm_per_host_token_path(host: &str) -> Option<PathBuf> {
-    let prefix = host_prefix(host)?;
-    Some(vibe_core::settings::legacy_settings_dir()?.join(format!("{prefix}.publish.token")))
-}
-
 /// Path to the legacy host-agnostic token file
 /// `<settings-dir>/git.publish.token` (canonical `~/.vibe`).
 pub fn legacy_token_path() -> Option<PathBuf> {
     Some(vibe_core::settings::settings_dir()?.join("git.publish.token"))
-}
-
-/// The host-agnostic token file under the pre-consolidation `~/.vibevm`
-/// dir — a read-only migration fallback for [`legacy_token_path`].
-fn dot_vibevm_token_path() -> Option<PathBuf> {
-    Some(vibe_core::settings::legacy_settings_dir()?.join("git.publish.token"))
 }
 
 /// Backwards-compatible alias. Prefer [`legacy_token_path`] in new code.
@@ -387,16 +362,47 @@ mod tests {
     #[test]
     fn per_host_token_path_renders_under_canonical_settings_dir() {
         // We can't assert the exact home dir, but the file name is fixed
-        // and the path now lands in the canonical settings dir (`~/.vibe`),
-        // not the legacy `~/.vibevm` — whose reads are a fallback only.
+        // and the path hangs off the one settings dir — so `$VIBE_SETTINGS`
+        // moves it along with everything else.
+        let root = vibe_core::settings::settings_dir().expect("home dir present in test env");
         let p = per_host_token_path("github.com").expect("home dir present in test env");
-        let s = p.to_string_lossy().to_string();
-        assert!(s.ends_with("github.publish.token"));
-        assert!(!s.contains(".vibevm"));
+        assert!(p.ends_with("github.publish.token"));
+        assert!(p.starts_with(&root));
     }
 
     #[test]
     fn per_host_token_path_blank_host_returns_none() {
         assert!(per_host_token_path("").is_none());
+    }
+
+    #[test]
+    fn token_file_precedence_holds_no_second_home() {
+        // The disk precedence is exactly two candidates, in order, both
+        // under the single settings dir. The pre-consolidation directory
+        // was a third and fourth candidate that `$VIBE_SETTINGS` could not
+        // relocate; it is no longer consulted, so redirecting the settings
+        // dir now redirects every credential read there is.
+        let root = vibe_core::settings::settings_dir().expect("home dir present in test env");
+        let candidates = token_file_candidates("github.com");
+        assert_eq!(candidates.len(), 2, "expected exactly two on-disk legs");
+        assert!(candidates[0].ends_with("github.publish.token"));
+        assert!(candidates[1].ends_with("git.publish.token"));
+        for c in &candidates {
+            assert!(
+                c.starts_with(&root),
+                "{} escapes the settings dir {}",
+                c.display(),
+                root.display()
+            );
+        }
+    }
+
+    #[test]
+    fn token_file_precedence_skips_per_host_leg_for_an_underivable_host() {
+        // A host with no derivable first label contributes no per-host
+        // candidate and falls straight through to the host-agnostic file.
+        let candidates = token_file_candidates("");
+        assert_eq!(candidates.len(), 1);
+        assert!(candidates[0].ends_with("git.publish.token"));
     }
 }

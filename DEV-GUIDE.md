@@ -40,7 +40,7 @@ The package registry organization (`vibespecs`) lives on GitHub at <https://gith
 - POSIX: `~/.vibe/github.publish.token`
 - Windows: `%USERPROFILE%\.vibe\github.publish.token`
 
-The publish-token loader also accepts the legacy `~/.vibe/git.publish.token` (host-agnostic fallback) and the env-var `VIBEVM_PUBLISH_TOKEN` (wins over both). Per-host file precedence — `~/.vibe/<host-prefix>.publish.token` — exists so you can hold tokens for several hosts without juggling env vars. Files still under the pre-consolidation `~/.vibevm/` are read as a fallback when the `~/.vibe/` copy is absent.
+The publish-token loader also accepts the legacy `~/.vibe/git.publish.token` (host-agnostic fallback) and the env-var `VIBEVM_PUBLISH_TOKEN` (wins over both). Per-host file precedence — `~/.vibe/<host-prefix>.publish.token` — exists so you can hold tokens for several hosts without juggling env vars. The pre-consolidation `~/.vibevm/` is no longer read (removed 2026-07-26): if a token still lives there, move it into `~/.vibe/` yourself — `vibe` will not find it, and never reads or moves anything in that directory.
 
 **Token files are surface secrets per [PROP-000 §20](spec/common/PROP-000.md#token-secrecy):**
 

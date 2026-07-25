@@ -46,7 +46,9 @@ For SSH-based access (faster on subsequent fetches, mandatory for some self-host
 | `VIBE_REGISTRY_CACHE` | override for the registry clone cache root | unset |
 | `VIBEVM_PUBLISH_TOKEN` | publish token (wins over per-host and legacy files) | unset |
 
-`~/.vibe/` on Windows resolves to `%USERPROFILE%\.vibe\` (or `$VIBE_SETTINGS`). Tokens and config formerly under `~/.vibevm/` (and the XDG `~/.config/vibe/config.toml`) are still read as a migration fallback when the `~/.vibe/` copy is absent; new writes always go to `~/.vibe/`.
+`~/.vibe/` on Windows resolves to `%USERPROFILE%\.vibe\` (or `$VIBE_SETTINGS`). Config formerly at the XDG `~/.config/vibe/config.toml` is still read as a migration fallback when the `~/.vibe/` copy is absent; new writes always go to `~/.vibe/`.
+
+The pre-consolidation `~/.vibevm/` is **no longer read at all** (its last read legs — publish tokens and aiui discovery — were removed 2026-07-26). If a token or config file still lives there, move it into `~/.vibe/` yourself: `vibe` will not find it, and deliberately never reads, moves, or deletes anything in that directory.
 
 **Token files are surface secrets** — set chmod 600 (POSIX) or restrict ACLs to your user (Windows), never commit, never paste into chat / logs / screenshots / video. `vibe` redacts the value at every level (CLI output, JSON event stream, error messages); the operator must extend the same discipline. See [PROP-000 §20](spec/common/PROP-000.md#token-secrecy).
 

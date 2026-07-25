@@ -15,9 +15,9 @@
 //! - [`Token`] — token loading per [PROP-000 §20](../../../spec/common/PROP-000.md#token-secrecy).
 //!   Per-host file precedence: `VIBEVM_PUBLISH_TOKEN` env →
 //!   `~/.vibe/<host-prefix>.publish.token` → legacy
-//!   `~/.vibe/git.publish.token` (with `~/.vibevm` read as a migration
-//!   fallback). Token never logged, never persisted, never leaks out of
-//!   process.
+//!   `~/.vibe/git.publish.token`. Both file legs live in the one settings
+//!   dir, so `$VIBE_SETTINGS` redirects every on-disk read. Token never
+//!   logged, never persisted, never leaks out of process.
 //!
 //! Consuming code (the CLI command) instantiates a `RepoCreator`,
 //! constructs a `Publisher`, calls `Publisher::publish`, and renders
