@@ -3,7 +3,7 @@
 <status stage="impl" state="done" comment="B0 2026-07-24: IMPLEMENTED with the MCP-SOVEREIGNTY waves"/>
 
 ##milestone-line **Milestone:** M1.26 candidate («MCP sovereignty» —
-[MCP-SOVEREIGNTY-PLAN-v0.1](../../terraforms/MCP-SOVEREIGNTY-PLAN-v0.1.md)). @impl/done
+[MCP-SOVEREIGNTY-PLAN-v0.1](../../../legacy-spec/terraforms/MCP-SOVEREIGNTY-PLAN-v0.1.md)). @impl/done
 
 ##status-line **Status:** IMPLEMENTED — the kind and the manifest laws (§2.1–§2.3)
 shipped with the plan's Wave 1; the servers themselves (Waves 3–4:

@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-25T08:58:45Z",
+  "updated_at": "2026-07-25T08:59:20Z",
   "files": {
     "spec/boot/00-core.md": {
       "content_hash": "b256cb2dde84d66733c4a0de68c1862ac2a67f396499efcf1586c0f0ae2f88c9",
@@ -508,7 +508,7 @@
       "issue_count": 0
     },
     "spec/modules/README.md": {
-      "content_hash": "fb255a19d339a02676b98ed36102122ad401d2f7b011360c2c1e2c5316bbc9b2",
+      "content_hash": "324ce292fdf762c03ce222b3d67b321eb9107d4f0c7929e56a59eab94e76723d",
       "rollup": {
         "explicit": [
           "doc",
@@ -692,7 +692,7 @@
       "issue_count": 0
     },
     "spec/modules/vibe-mcp/PROP-027-mcp-packages.md": {
-      "content_hash": "4a4186baed236d7cccc939a81773580fca7d7fcd74e75eafbb4ba793e5adae1a",
+      "content_hash": "9f7c54fcb9d7fd20488b8bc1705e5f5e18c12778470a69568e5ab243d0b37148",
       "rollup": {
         "explicit": [
           "impl",
@@ -1290,7 +1290,7 @@
       "issue_count": 0
     },
     "spec/modules/vibe-workspace/PROP-038-hybrid-boot-linking.md": {
-      "content_hash": "4fe0d2e7acb58329abae15b3dc1954e6f727b019085eb6a57482474e67e46427",
+      "content_hash": "e1e0b273b23624e46d9f6c30cd1b008e11e0163b2ed4d2b2c1692b10619bb158",
       "rollup": {
         "explicit": [
           "impl",
