@@ -44,17 +44,17 @@
 
 ## 3. License {#license}
 
-- ##LICENSE-EULA **Decision:** vibevm itself ships under a **proprietary EULA** in this phase (source-available, not open source). See [`LICENSE.md`](../../LICENSE.md) at the repo root for the placeholder terms. @spec/done
+- ##LICENSE-EULA **Decision:** vibevm ships under the **Universal Permissive License 1.0** (UPL-1.0) — open source, relicensed 2026-07-12. See [`LICENSE.md`](../../LICENSE.md) at the repo root for the terms. The scope is *this* repository's shipped surface — the host tree and every `packages/org.vibevm.*` package; separately-developed products carry their own licences and are not governed here. The project's first phase shipped under a placeholder proprietary EULA; that phase is over. @impl/done
 - ##NO-CRATES-IO Crates in this workspace set `license-file = "LICENSE.md"` and `publish = false` so none of them can be accidentally pushed to crates.io. @spec/done
 
-- ##LICENSE-OWNER-CALL **Why:** Owner's call — intent is to eventually relicense under the Universal Permissive License 1.0 (UPL), but that decision is not final. Until then, vibevm stays proprietary. @spec/done
-- ##LICENSE-SPEC-DEFERS `VIBEVM-SPEC.md` §1 explicitly defers the *produced* software's license to the owner; the owner's choice is this proprietary EULA. @spec/done
+- ##LICENSE-OWNER-CALL **Why:** Owner's call, taken 2026-07-12 and executed the same day: the whole shipped surface — the host tree and every `packages/org.vibevm.*` package — carries UPL-1.0, so a consumer of any part of vibevm gets one permissive licence and no per-package archaeology. @spec/done
+- ##LICENSE-SPEC-DEFERS `VIBEVM-SPEC.md` §1 explicitly defers the *produced* software's license to the owner; the owner's choice is UPL-1.0. @spec/done
 
 - ##DEPS-PERMISSIVE-ONLY **Third-party dependencies remain permissive-only.** Per `VIBEVM-SPEC.md` §10.3: every crate we depend on must be MIT / Apache-2.0 / BSD or equivalent. @spec/done
 - ##COPYLEFT-FORBIDDEN GPL / AGPL / LGPL are forbidden, period. @spec/done
-- ##PROPRIETARY-TIGHTENS The proprietary license of vibevm itself does not relax that constraint — it makes it more important, because anything we link becomes mingled with our proprietary code, and copyleft would force relicensing. @spec/done
+- ##PROPRIETARY-TIGHTENS The permissive license of vibevm itself does not relax that constraint — a copyleft dependency mingles with our code and would force the whole product to relicense, which is exactly what UPL-1.0 exists to prevent. @spec/done
 
-##LICENSE-REVISIT **When to revisit:** When the owner decides to relicense (most likely UPL 1.0). At that point, swap `LICENSE.md`, update the workspace `license-file` (or switch back to an SPDX `license` string like `UPL-1.0`), and remove `publish = false` if desired. @spec/done
+##LICENSE-REVISIT **When to revisit:** the previous trigger — "when the owner decides to relicense (most likely UPL 1.0)" — **fired on 2026-07-12** and is spent. Re-open when either (a) a crate is to be published to crates.io: swap `license-file` for the SPDX string `license = "UPL-1.0"` and drop `publish = false`; or (b) a dependency or contribution arrives under terms UPL-1.0 cannot absorb. @spec/done
 
 ---
 
@@ -65,7 +65,7 @@
 ##files-lead Files: @spec/done
 
 - ##FILE-VIBE-TOML `vibe.toml` — project manifest. Schema: `VIBEVM-SPEC.md` §7.5. @spec/done
-- ##FILE-PACKAGE-TOML `vibe-package.toml` — package manifest. Schema: `VIBEVM-SPEC.md` §7.3. @spec/done
+- ##FILE-PACKAGE-TOML `vibe.toml` is the *only* manifest: one file per node, the role set by section (`[project]` ⊕ `[package]`, optionally `[workspace]`). The separate `vibe-package.toml` of the early schema is **retired** (workspace fork 7e); the package schema of `VIBEVM-SPEC.md` §7.3 now lives in `vibe.toml`'s `[package]` section. @impl/done
 - ##FILE-LOCK `vibe.lock` — lockfile. Schema: `VIBEVM-SPEC.md` §7.4. @spec/done
 
 ##TOML-WHY **Why:** TOML is the Rust ecosystem default (cargo), readable, has clear escaping rules, and maps cleanly to `serde` structs. See `VIBEVM-SPEC.md` §10.1. @spec/done
@@ -83,9 +83,9 @@
 
 ## 6. Package identity {#identity}
 
-- ##IDENTITY-FORM **Decision:** `<kind>:<name>@<version>` per `VIBEVM-SPEC.md` §7.1. @spec/done
-- ##KIND-SET `kind ∈ {flow, feat, stack, tool}`. @spec/done
-- ##NAME-VERSION-RULES `name` is kebab-case, unique within kind. `version` is semver. @spec/done
+- ##IDENTITY-FORM **Decision:** `[<kind>:]<group>/<name>@<version>` — identity is **qualified** since M1.19 ([PROP-008 §2.2](../modules/vibe-registry/PROP-008-qualified-naming.md#identity)); the unqualified `<kind>:<name>@<version>` of `VIBEVM-SPEC.md` §7.1 is CLI sugar that resolves once, at the human boundary. @impl/done
+- ##KIND-SET `kind ∈ {flow, feat, stack, tool, mcp}` — five kinds; `mcp` shipped with [PROP-027](../modules/vibe-mcp/PROP-027-mcp-packages.md). (§Invariants `INV-VOCABULARY` in this file carries the same list.) @impl/done
+- ##NAME-VERSION-RULES `name` is kebab-case and `(group, name)` is globally unique ([PROP-008](../modules/vibe-registry/PROP-008-qualified-naming.md#identity) — uniqueness moved from *within kind* to *within group*). `version` is semver. @impl/done
 
 ##constraint-forms-lead Constraint forms in CLI: @spec/done
 
@@ -107,8 +107,8 @@
 
 ##SPLIT-HOST-POSTURE **Source repositories — split-host posture.** The vibevm project and the package registry live on **separate hosts** by deliberate decision (2026-04-29). Each host is chosen on its own merits: @spec/done
 
-- ##HOST-SOURCE-GITVERSE **vibevm tool source: GitVerse.** `git@gitverse.ru:vibevm/vibevm.git` (SSH) / `https://gitverse.ru/vibevm/vibevm` (web). Stays on GitVerse — the source-of-truth repository, contributor SSH keys, mirroring posture, and Russian-jurisdiction hosting are all already wired up here. @spec/done
-- ##HOST-REGISTRY-GITHUB **Package registry: GitHub, organization `vibespecs`.** `https://github.com/vibespecs` (org root) — per-package repos are `https://github.com/vibespecs/<kind>-<name>` per [PROP-002](../modules/vibe-registry/PROP-002-decentralized-registry.md#registry-model) `NamingConvention::KindName`. @spec/done
+- ##HOST-SOURCE-GITVERSE **vibevm tool source: multi-homed.** GitVerse `git@gitverse.ru:vibevm/vibevm.git` (web `https://gitverse.ru/vibevm/vibevm`) and GitHub `git@github.com:vibevm/vibevm.git` (web `https://github.com/vibevm/vibevm`), both public and canonical for reading. **No host is primary** — mainline is the maintainer's local `main`, every host is a downstream read-replica, and rollout is the fast-forward-only fan-out `cargo xtask mirror` ([PROP-016](PROP-016-source-mirrors.md), 2026-06-14, which supersedes the single-source-of-truth reading recorded here before it). @impl/done
+- ##HOST-REGISTRY-GITHUB **Package registry: GitHub, organization `vibespecs`.** `https://github.com/vibespecs` (org root) — per-package repos are `https://github.com/vibespecs/<group>_<name>` per [PROP-008 §2.5](../modules/vibe-registry/PROP-008-qualified-naming.md#repo-naming) `NamingConvention::Fqdn`, the default since M1.19 (e.g. `org.vibevm_wal`). The earlier `<kind>-<name>` repos (`NamingConvention::KindName`, [PROP-002](../modules/vibe-registry/PROP-002-decentralized-registry.md#registry-model)) are archived read-only. @impl/done
   - ##REG-MIGRATION-WHY The migration from `git@gitverse.ru:vibespecs/*` happened on 2026-04-29 because GitVerse's public REST API does not expose org-scoped repo creation (`POST /orgs/{org}/repos` returns 404 / WAF 403; documented exhaustively in [PROP-002 §2.10](../modules/vibe-registry/PROP-002-decentralized-registry.md#publish) and `crates/vibe-publish/src/gitverse.rs`). Without that endpoint `vibe registry publish` cannot fully drive the publish loop end to end. @spec/done
   - ##REG-GITHUB-WORKS GitHub's equivalent endpoint works natively, so the registry organization moved while the vibevm project repository stays put. @spec/done
   - ##REG-HASH-STABLE Identity is content-hashed (PROP-002 §2.1) — the lockfile's `source_url` rotates but no `content_hash` value is invalidated by the host change. @spec/done
@@ -199,7 +199,7 @@
 - ##MT-WHEN-CHANGES after changes to the git backend, CLI arg parsing, or lockfile format even when `cargo test` stays green; @spec/done
 - ##MT-WHEN-REPRO and as reproducers whenever a user files an integration bug. @spec/done
 
-##MT-WAL-NAMES [`spec/WAL.md`](../WAL.md) names the outstanding manual runs for the current milestone. @spec/done
+##MT-WAL-NAMES [`spec/WAL.md`](../WAL.md) names the outstanding manual runs for the current milestone — a practice that must not lapse: MT-02 and MT-03 have been awaiting owner sign-off since the TUI work landed, and a WAL that names none reads as "nothing pending". @spec/done
 
 ---
 
@@ -270,7 +270,7 @@
 ## 18. Complexity expectation: higher than RPM {#complexity}
 
 - ##RPM-CLASS-TARGET **Decision:** The dependency / package model is designed to handle complexity **at least** matching RPM-class systems (zypper, DNF), and in several dimensions greater. @spec/done
-- ##RICH-DEPS-DAY-ONE Manifest grammar and lockfile schema reserve fields for — and the resolver actually implements — capabilities, provides / requires / obsoletes / conflicts / supplements / recommends, disjunctions (`A or B`), boolean rich-dep syntax, capability-based resolve, multi-kind cross-deps, and semantic (LLM-reviewed) conflicts. These are designed in from day one, not deferred. @spec/done
+- ##RICH-DEPS-DAY-ONE Manifest grammar and lockfile schema reserve fields for — and the resolver implements — capabilities, provides / requires / obsoletes / conflicts / supplements / recommends, disjunctions (`A or B`), boolean rich-dep syntax, capability-based resolve, and multi-kind cross-deps. **Semantic (LLM-reviewed) conflicts are the one exception:** the heuristic static check ships ([PROP-003](../modules/vibe-resolver/PROP-003-dep-evolution.md) `CHECK-ACTIVATION-CONFLICT`) while the LLM lane waits on the unbuilt `vibe-llm` emission engine. All of it is designed in from day one, not deferred. @impl/done
 
 - ##WIDER-THAN-RPM **Why:** vibevm's dependency surface is not simpler than RPM — it is wider. A `feat` package may require a `stack` providing a specific capability, `flow`s may declare semantic compatibility with other `flow`s, LLM-backed review adds a non-mechanical conflict dimension RPM never had. @spec/done
 - ##UNDERSHOOT-COST Undershoot — picking a resolver that lacks virtual packages or disjunctions, or a manifest that cannot express capability-based requires — would force an incompatible schema migration after users exist. @spec/done

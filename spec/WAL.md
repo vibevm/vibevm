@@ -100,6 +100,13 @@ campaign holds at the C→D boundary for the owner's ruling.
    promised-absent), F-016 modules README, F-020 OWNER-GUIDE, F-017
    aiui scrollbar.
 
+**Outstanding manual runs (owner sign-off pending)** — the naming
+practice PROP-000 `MT-WAL-NAMES` requires, restored in Phase D:
+**MT-02** (`vibe tree` TUI, PROP-037 Spec 2 — the visual sign-off the
+TREE-TUI plan left open) and **MT-03** (`vibe prefs ui`, PROP-040/041).
+Both need re-authoring against the shipped F-key keymap first
+(F-037/F-038); an agent may pre-run, only a human signs off.
+
 Parked follow-ups (unchanged): vibe-vvm/term-vvm conformance-golden;
 Linux/macOS install smoke; arbitrary user-repos design-doc; `vibe
 doctor` project-local row.
