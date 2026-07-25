@@ -501,6 +501,102 @@ fn show_config_user_token_default_redacts_value() {
 }
 
 #[test]
+fn show_config_user_env_allowlist_drops_non_vibe_names() {
+    // The `[env]` table may only set `VIBE_*` / `VIBEVM_*` names. It is
+    // a per-user file that no invocation opts into and that every
+    // subcommand reads before dispatch, so an unbounded table is how a
+    // test run inherits the operator's real `DATABASE_URL` and reaches
+    // a production database. The refused key is still named — a
+    // silently dropped variable is a debugging nightmare — and its
+    // value is never printed, because `[env]` is a plausible place to
+    // have parked a credential.
+    //
+    // Three keys, one file: the refused one, an accepted one, and an
+    // accepted one whose landing in the live process env is observable
+    // (`provenance = user-config` is set only for names the startup
+    // promotion actually wrote, and the value shown is read back out of
+    // the environment). The name-level verdict itself is unit-tested in
+    // `vibe-cli`'s `main.rs`.
+    const SECRET: &str = "postgres://admin:do-not-print-me@db.internal/prod";
+
+    let user = UserScratch::new();
+    let project = tempfile::tempdir().unwrap();
+    user.init_project(project.path());
+
+    let user_cfg_dir = tempfile::tempdir().unwrap();
+    let user_cfg_path = user_cfg_dir.path().join("config.toml");
+    fs::write(
+        &user_cfg_path,
+        format!(
+            "[env]\n\
+             DATABASE_URL = \"{SECRET}\"\n\
+             VIBE_THING = \"promoted-ok\"\n\
+             VIBE_REGISTRY_CACHE = \"/from-user-config\"\n"
+        ),
+    )
+    .unwrap();
+
+    let out = user
+        .vibe()
+        .env("VIBEVM_USER_CONFIG", &user_cfg_path)
+        .env_remove("DATABASE_URL")
+        .env_remove("VIBE_THING")
+        .env_remove("VIBE_REGISTRY_CACHE")
+        .arg("--json")
+        .arg("show")
+        .arg("config")
+        .arg("--path")
+        .arg(project.path())
+        .output()
+        .unwrap();
+    assert!(
+        out.status.success(),
+        "stderr: {}",
+        String::from_utf8_lossy(&out.stderr)
+    );
+    let stdout = String::from_utf8_lossy(&out.stdout);
+    let stderr = String::from_utf8_lossy(&out.stderr);
+
+    // An allowlisted name still reaches the process environment: the
+    // feature keeps working for what it was built for.
+    let payload: serde_json::Value = serde_json::from_str(&stdout).expect("valid JSON");
+    let cache = payload["env"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .find(|e| e["name"] == "VIBE_REGISTRY_CACHE")
+        .unwrap();
+    assert_eq!(cache["provenance"], "user-config");
+    assert_eq!(cache["value"], "/from-user-config");
+
+    // The refused name is reported, by name, exactly once.
+    assert_eq!(
+        stderr.matches("DATABASE_URL").count(),
+        1,
+        "the rejected key must be named on stderr exactly once:\n{stderr}"
+    );
+    // An accepted name is not reported at all.
+    assert!(
+        !stderr.contains("VIBE_THING"),
+        "an accepted key must not be reported as rejected:\n{stderr}"
+    );
+
+    // ...and the value appears nowhere. Whole string and the credential
+    // fragment separately: a truncated or re-wrapped render would still
+    // be a leak.
+    for (stream, text) in [("stdout", &stdout), ("stderr", &stderr)] {
+        assert!(
+            !text.contains(SECRET),
+            "the rejected value leaked into {stream}:\n{text}"
+        );
+        assert!(
+            !text.contains("do-not-print-me"),
+            "a fragment of the rejected value leaked into {stream}:\n{text}"
+        );
+    }
+}
+
+#[test]
 fn show_config_emits_registry_block_with_provenance() {
     let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();

@@ -6,7 +6,7 @@
 
 specmark::scope!("spec://vibevm/VIBEVM-SPEC#cli-surface");
 
-use std::collections::BTreeSet;
+use std::collections::{BTreeMap, BTreeSet};
 use std::path::PathBuf;
 use std::process::ExitCode;
 use std::sync::OnceLock;
@@ -235,18 +235,112 @@ fn main() -> ExitCode {
     }
 }
 
-/// Read `~/.config/vibe/config.toml` (per `vibe-core::user_config`)
-/// and promote any `[env]` entries that aren't already set in the
-/// live environment. This makes the user-config layer actually
-/// load-bearing per `VIBEVM-SPEC.md` §9.5: subsequent consumers
-/// (`vibe-registry::default_cache_root`, the tracing init, future
-/// LLM-key paths) read whatever is in the process env without
+/// The environment-variable name prefixes a user-config `[env]` table
+/// is allowed to set. Closed on purpose; [`promote_user_config_env`]
+/// carries the reasoning, and widening it is an edit here.
+const PROMOTABLE_ENV_PREFIXES: [&str; 2] = ["VIBE_", "VIBEVM_"];
+
+/// Whether `name` is inside the promotion allowlist.
+///
+/// `VIBEVM_` needs its own entry rather than falling out of `VIBE_`:
+/// `VIBEVM_HOME` does not start with `VIBE_` — the fifth character is
+/// `V`, not the separator.
+fn is_promotable_env_name(name: &str) -> bool {
+    PROMOTABLE_ENV_PREFIXES
+        .iter()
+        .any(|prefix| name.starts_with(prefix))
+}
+
+/// Split a `[env]` table into the entries the allowlist admits (as
+/// name/value pairs) and the names it turns away.
+///
+/// Pure, and separate from the mutation, so the rule that decides what
+/// reaches the process can be tested without a test that mutates the
+/// process environment to check it.
+fn partition_env_promotions(env: &BTreeMap<String, String>) -> (Vec<(&str, &str)>, Vec<&str>) {
+    let mut admitted = Vec::new();
+    let mut rejected = Vec::new();
+    for (name, value) in env {
+        if is_promotable_env_name(name) {
+            admitted.push((name.as_str(), value.as_str()));
+        } else {
+            rejected.push(name.as_str());
+        }
+    }
+    (admitted, rejected)
+}
+
+/// Read `<settings-dir>/config.toml` (per `vibe-core::user_config`)
+/// and promote its `[env]` entries into the process environment. This
+/// makes the user-config layer actually load-bearing per
+/// `VIBEVM-SPEC.md` §9.5: subsequent consumers
+/// (`vibe-registry::default_cache_root`, the tracing init, the
+/// publish-token loader) read whatever is in the process env without
 /// caring who put it there.
 ///
-/// Live env-vars set by the operator at invocation time always
-/// win — they were already in the process env by the time we
-/// observe them via `std::env::var_os`, so the `if !is_set` guard
-/// is sufficient.
+/// # What may be promoted
+///
+/// Only names beginning `VIBE_` or `VIBEVM_`
+/// ([`PROMOTABLE_ENV_PREFIXES`]). Every other name in the table is
+/// ignored, and the rejected set is reported once, by name.
+///
+/// The table used to accept any name at all. That made one per-user
+/// file — which no invocation opts into, and which *every* subcommand
+/// reads before dispatch — able to set `DATABASE_URL`, `AWS_*`,
+/// `KUBECONFIG` or `PATH` for vibe and for everything vibe spawns. The
+/// concrete failure mode is a test run that forgot to isolate
+/// `$VIBE_SETTINGS`, inheriting the operator's real config and reaching
+/// a production database. An allowlist bounds the blast radius to
+/// vibevm's own namespace: the feature keeps doing the job it was built
+/// for — defaulting `VIBE_REGISTRY_CACHE`, `VIBE_LOG` — and can no
+/// longer reach anything outside vibevm. Widening the list later is one
+/// entry; resurrecting a capability that was deleted is an argument, so
+/// this is the reversible half.
+///
+/// Matching is case-sensitive against those exact uppercase prefixes.
+/// vibevm's variables are uppercase by convention, so the only thing
+/// case-folding would buy is admitting more names — and on Windows,
+/// where the environment compares names case-insensitively, refusing
+/// `vibe_thing` costs an operator a rename while refusing
+/// `database_url` is the whole point.
+///
+/// Two of vibevm's own variables fall outside the list, and should:
+/// `VIBETERM` / `VIBEFRAME` are markers a vibe desktop terminal sets in
+/// the PTY it spawns (`commands::tree::host`), so a config file
+/// claiming one would be lying to `vibe tree` about where it is
+/// running. The one shape that could legitimately want a name outside
+/// the namespace is a manifest that overrides `token_env` on a
+/// `[[registry]]` / `[redirect]` block: the defaults
+/// (`VIBEVM_REGISTRY_TOKEN_<HOST>`, `VIBEVM_TARGET_TOKEN_<HOST>`) are
+/// admitted, an arbitrary override is not. No such configuration exists
+/// in this repository, and a token's home is
+/// `~/.vibe/<host>.publish.token` (PROP-000 §20) rather than a config
+/// file either way — but that is the edge to widen the list for, if it
+/// ever shows up.
+///
+/// # What wins
+///
+/// 1. **The live environment.** A name already set when vibe starts is
+///    left exactly as the operator set it — it was in the process env
+///    by the time we observe it via `std::env::var_os`, so the
+///    `is_some` guard is the whole mechanism. An `[env]` entry is a
+///    default, never an override.
+/// 2. **The `[env]` value**, for an allowlisted name that is unset.
+/// 3. **The built-in default**, for everything else.
+///
+/// The allowlist is consulted *before* the live environment, so a
+/// refused name is reported whether or not the operator also exports
+/// it: the verdict is a property of the name, and a diagnostic that
+/// came and went with the ambient environment would be worse than none.
+///
+/// # What is never printed
+///
+/// The value. A refused name is named; its value is not, at any
+/// verbosity. `[env]` is a plausible place for someone to have parked a
+/// credential, and the discipline `vibe-publish`'s `Token` applies to
+/// publish tokens applies here for the same reason. Reporting is not
+/// optional either — a silently dropped variable is a debugging
+/// nightmare — so the rule is exactly: once, by name, never the value.
 ///
 /// A malformed user-config file is reported via `eprintln!` and the
 /// promotion silently continues with whatever fields parsed —
@@ -271,8 +365,17 @@ fn promote_user_config_env() {
             return;
         }
     };
+    let (admitted, rejected) = partition_env_promotions(&cfg.env);
+    if !rejected.is_empty() {
+        // Once, by name, never the value.
+        eprintln!(
+            "vibe: warning: user config `[env]` may only set VIBE_* / VIBEVM_* names; \
+             ignored: {}",
+            rejected.join(", ")
+        );
+    }
     let mut promoted: BTreeSet<String> = BTreeSet::new();
-    for (name, value) in &cfg.env {
+    for (name, value) in admitted {
         if std::env::var_os(name).is_some() {
             // Live env wins — leave it alone.
             continue;
@@ -289,7 +392,7 @@ fn promote_user_config_env() {
         unsafe {
             std::env::set_var(name, value);
         }
-        promoted.insert(name.clone());
+        promoted.insert(name.to_string());
     }
     let _ = PROMOTED_FROM_USER_CONFIG.set(promoted);
 }
@@ -331,4 +434,82 @@ fn needs_global_registry(cmd: &cli::Command) -> bool {
             | Command::Search(_)
             | Command::Registry(_)
     )
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn env_table(pairs: &[(&str, &str)]) -> BTreeMap<String, String> {
+        pairs
+            .iter()
+            .map(|(k, v)| ((*k).to_string(), (*v).to_string()))
+            .collect()
+    }
+
+    /// The whole point, stated as the smallest case that shows it: a
+    /// user config declaring a database URL next to a vibevm variable
+    /// hands the process the second one and never the first. Asserted
+    /// on the decision rather than on the live environment, because a
+    /// test that promotes into its own process env would be mutating
+    /// global state to observe a rule that is pure.
+    #[test]
+    fn allowlist_admits_vibe_names_and_refuses_the_rest() {
+        let env = env_table(&[
+            ("DATABASE_URL", "postgres://admin:hunter2@db.internal/prod"),
+            ("VIBE_THING", "promoted-ok"),
+        ]);
+
+        let (admitted, rejected) = partition_env_promotions(&env);
+
+        assert_eq!(admitted, vec![("VIBE_THING", "promoted-ok")]);
+        assert_eq!(rejected, vec!["DATABASE_URL"]);
+    }
+
+    #[test]
+    fn allowlist_covers_both_prefixes() {
+        for name in [
+            "VIBE_LOG",
+            "VIBE_REGISTRY_CACHE",
+            "VIBE_NO_DEFAULT_REGISTRY",
+            // `VIBEVM_*` is a second prefix, not a special case of the
+            // first: `VIBEVM_HOME` does not start with `VIBE_`.
+            "VIBEVM_HOME",
+            "VIBEVM_PUBLISH_TOKEN_GITHUB",
+        ] {
+            assert!(is_promotable_env_name(name), "{name} must be promotable");
+        }
+    }
+
+    #[test]
+    fn allowlist_refuses_everything_outside_the_namespace() {
+        for name in [
+            // The names this rule exists for.
+            "DATABASE_URL",
+            "AWS_SECRET_ACCESS_KEY",
+            "KUBECONFIG",
+            "PATH",
+            "LD_PRELOAD",
+            "HOME",
+            // Near-misses: prefix means prefix, and it means the
+            // separator too.
+            "VIBE",
+            "VIBEX_LOG",
+            "MY_VIBE_LOG",
+            // Case-sensitive on purpose — see `promote_user_config_env`.
+            "vibe_thing",
+        ] {
+            assert!(!is_promotable_env_name(name), "{name} must be refused");
+        }
+    }
+
+    /// An empty or absent `[env]` is unchanged and silent: nothing to
+    /// promote, and nothing to warn about.
+    #[test]
+    fn an_empty_table_admits_and_refuses_nothing() {
+        let empty = BTreeMap::new();
+        let (admitted, rejected) = partition_env_promotions(&empty);
+        assert!(admitted.is_empty());
+        assert!(rejected.is_empty());
+    }
 }

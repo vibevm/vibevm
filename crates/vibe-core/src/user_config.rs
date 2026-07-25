@@ -4,8 +4,9 @@
 //! VIBEVM-SPEC §9.5 places this file fourth in the configuration
 //! precedence chain (CLI flags > env vars > project `vibe.toml` >
 //! user-level config > built-in defaults). The user-config layer
-//! carries two sections: `[env]` — environment-variable defaults,
-//! surfaced by `vibe show config` — and `[install]`, the install-
+//! carries two sections: `[env]` — environment-variable defaults for
+//! `VIBE_*` / `VIBEVM_*` names only, surfaced by `vibe show config` —
+//! and `[install]`, the install-
 //! behaviour settings of [PROP-011](../../../spec/modules/vibe-workspace/PROP-011-incremental-install.md).
 //!
 //! Path resolution:
@@ -51,6 +52,15 @@ pub struct UserConfig {
     /// Default values for environment variables. Treated as fallbacks
     /// — a real env-var (set in the live environment at vibe
     /// invocation time) wins.
+    ///
+    /// Only `VIBE_*` / `VIBEVM_*` names are ever promoted into the
+    /// process environment: the CLI's startup promotion
+    /// (`vibe_cli::promote_user_config_env`, which owns the rule and
+    /// the reasoning) ignores every other name and reports it once, by
+    /// name. The allowlist is a promotion rule, not a schema rule —
+    /// parsing keeps the whole table, so an entry that does nothing is
+    /// still visible to whoever reads the file back rather than
+    /// vanishing between the disk and the struct.
     #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
     pub env: BTreeMap<String, String>,
 

@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updated_at": "2026-07-26T13:30:00Z",
+ "updated_at": "2026-07-26T14:15:00Z",
  "tasks": [
   {
    "id": "DRIFT-001",
@@ -132,7 +132,7 @@
    "id": "DRIFT-022",
    "title": "the [env] promotion stops being able to set anything",
    "executor": "opus",
-   "status": "ready"
+   "status": "done"
   },
   {
    "id": "DRIFT-023",

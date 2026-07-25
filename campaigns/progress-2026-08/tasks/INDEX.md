@@ -23,7 +23,7 @@
 | DRIFT-019 | three module docs stop describing the pre-port world | opus | done |
 | DRIFT-020 | test isolation stops being a convention | opus | done |
 | DRIFT-021 | the legacy `~/.vibevm` read leg goes away | opus | done |
-| DRIFT-022 | the `[env]` promotion stops being able to set anything | opus | ready (owner picked (a): allowlist) |
+| DRIFT-022 | the `[env]` promotion stops being able to set anything | opus | done |
 | DRIFT-023 | the baseline gets a writer, and §6 becomes runnable | opus | ready |
 
 DRIFT-006…011 are Phase E, opened by the owner's 2026-07-25 ruling on the

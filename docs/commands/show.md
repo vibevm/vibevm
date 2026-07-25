@@ -160,7 +160,15 @@ Path resolution order:
 
 Schema is `deny_unknown_fields` strict — a typo in `[env]` (`[envv]`, `[environment]`) surfaces as a parse error rather than silently ignored.
 
-**Runtime injection.** Every value listed in `[env]` is promoted into the process environment at the very top of `main`, before the dispatcher selects a subcommand and before any thread is spawned. Subsequent runtime consumers (`vibe-registry::default_cache_root`, the tracing init, future LLM-key paths) read whatever is in the process env without caring who put it there. Live env-vars set by the operator at invocation time always win — promotion only fires when the variable was unset.
+**Runtime injection.** Values listed in `[env]` are promoted into the process environment at the very top of `main`, before the dispatcher selects a subcommand and before any thread is spawned. Subsequent runtime consumers (`vibe-registry::default_cache_root`, the tracing init, the publish-token loader) read whatever is in the process env without caring who put it there. Live env-vars set by the operator at invocation time always win — promotion only fires when the variable was unset.
+
+**Only `VIBE_*` and `VIBEVM_*` names are promoted.** Any other name in the table is ignored, and the refused names are reported once on stderr, by name — never with their values, since `[env]` is a plausible place to have parked a credential:
+
+```
+vibe: warning: user config `[env]` may only set VIBE_* / VIBEVM_* names; ignored: DATABASE_URL
+```
+
+This is one per-user file that no invocation opts into and that every subcommand reads before dispatch, so an unbounded table let it hand vibe — and everything vibe spawns — a `DATABASE_URL`, an `AWS_*` key, a `KUBECONFIG` or a `PATH`. The allowlist bounds it to vibevm's own namespace. Matching is case-sensitive against those exact prefixes, and it is a prefix, so the vibeterm PTY markers `VIBETERM` / `VIBEFRAME` are outside it too — correctly, since the desktop terminal sets those in the PTY it spawns and a config file claiming one would simply be lying to `vibe tree`.
 
 This means a user-config file that pins `VIBE_REGISTRY_CACHE = "/data/vibe-cache"` actually relocates the cache for `vibe install` / `vibe registry sync` invocations on the same machine — no `export` needed. `vibe show config` distinguishes operator-set values (`provenance = "env"`) from promoted defaults (`provenance = "user-config"`) by tracking which names the startup promotion wrote.
 
