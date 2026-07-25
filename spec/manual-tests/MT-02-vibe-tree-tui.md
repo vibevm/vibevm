@@ -32,8 +32,9 @@ delta. @impl/done
    ```
    - ##S1-GLYPHS Tree connectors `│├└─` align; fold indicator is `▾`/`▸` (not `+`/`-`); DAG
      re-occurrence is `↩` (not `(*)`); flags are `●`/`○` (not `x`/`.`). @impl/done
-   - ##S1-FOOTER The footer lists `F1 search · F2 sort · F3 mode · F6 copy · ↑↓ move · ←→ pan
-     · Space fold · Enter details · q quit` (Tabs mode adds `↑←↑→ tab`). @impl/done
+   - ##S1-FOOTER The footer lists `F1 search · F2 sort · F3 mode · F4 settings · F6 copy
+     · ↑↓ move · ←→ pan · Space fold · Enter details · Esc quit` (Tabs mode adds
+     `Shift+←/→ tab`). @impl/done
    - ##S1-STATUS-LINE The status line shows ordering · mode · STATIC.md size · package count. @impl/done
 
 2. ##STEP-2-NAVIGATION **Navigation + fold (every mode is a tree).** `↑`/`↓` move, `←`/`→` pan,
@@ -67,7 +68,7 @@ delta. @impl/done
 
 9. ##STEP-9-PALETTE **Switchable palette (§2.2.1, the owner vision).** Quit, set the palette: @impl/done
    ```
-   # edit (or use the CLI/env once a picker lands)  ~/.vibe/settings.toml
+   # edit directly, or pick it in the F4 settings menu    ~/.vibe/settings.toml
    [vibe.tree]
    palette = "catppuccin-mocha"   # or -macchiato / -frappe / -latte (light) / rose-pine
    ```

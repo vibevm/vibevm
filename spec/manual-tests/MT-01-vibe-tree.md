@@ -56,8 +56,9 @@ manifests, and the committed boot artifacts, and writes nothing. @impl/done
 
    ##EXP-2-LAUNCH-TUI **Expected.** The terminal switches to a full-screen view. A **status line**
    reads `ordering: topological   mode: all   STATIC.md: <N> bytes / <N> lines
-   packages: <N>`. A **footer** shows the keymap hint (`↑/↓ move  ←→ pan  Space
-   fold  F fold-all  n order  x mode  t swap  [ ] tabs  Enter detail  q quit`).
+   packages: <N>`. A **footer** shows the keymap hint (`F1 search · F2 sort ·
+   F3 mode · F4 settings · F6 copy · ↑↓ move · ←→ pan · Space fold ·
+   Enter details · Esc quit`).
    The tree fills the body; the first row is highlighted (reverse/coloured). @impl/done
 
 3. ##STEP-3-NAVIGATE Navigate with the arrow keys. @impl/done
@@ -88,46 +89,48 @@ manifests, and the committed boot artifacts, and writes nothing. @impl/done
    and returns to the tree at the same selection. While the modal is open, other
    keys are swallowed (do not move the tree). @impl/done
 
-6. ##STEP-6-ORDERING Toggle the ordering. @impl/done
+6. ##STEP-6-ORDERING Change the ordering. @impl/done
 
    ```
-   (press n)
+   (press F2, choose "alphabetical")
    ```
 
-   ##EXP-6-ORDERING **Expected.** The status line's `ordering:` flips to `alphabetical` and the
+   ##EXP-6-ORDERING **Expected.** The F2 sort menu opens. Choosing `alphabetical` closes it, the
+   status line's `ordering:` flips to `alphabetical`, and the
    siblings re-sort by `group/name` (the tree structure is preserved — a parent
-   still precedes its children). `n` again returns to `topological`. @impl/done
+   still precedes its children). F2 again and `topological` returns. @impl/done
 
 7. ##STEP-7-MODES Cycle the display modes. @impl/done
 
    ```
-   (press x, then x, then x)
+   (press F3, choose each mode in turn)
    ```
 
-   ##EXP-7-MODES **Expected.** `x` → **sub-tables**: a flat list under bold subheaders
-   `static dependencies`, `dynamic dependencies`, `no-boot` (`mode: sub-tables`
-   in the status line). `x` again → **tabs**: a tab bar `Static | Dynamic |
-   No-boot` with one group's flat list below (`mode: tabs`). `x` again → back to
-   `all` (the tree). In every mode the `load`/T/C/S columns stay meaningful. @impl/done
+   ##EXP-7-MODES **Expected.** The F3 mode menu opens. **sub-tables**: a flat list under bold
+   subheaders `static dependencies`, `dynamic dependencies`, `no-boot`
+   (`mode: sub-tables` in the status line). **tabs**: a tab bar `Static | Dynamic |
+   No-boot` with one group's flat list below (`mode: tabs`). **all**: back to
+   the tree. In every mode the `load`/T/C/S columns stay meaningful. @impl/done
 
 8. ##STEP-8-SWAP-TABS Swap priority and switch tabs. @impl/done
 
    ```
-   (in sub-tables or tabs mode: press t; in tabs mode: press Tab, ], [)
+   (in tabs mode: press Shift+→, then Shift+←)
    ```
 
-   ##EXP-8-SWAP-TABS **Expected.** `t` swaps the section/tab order so `dynamic` comes before
-   `static`; `t` again restores `static`-first. In tabs mode, `Tab` and `]`
-   advance to the next tab (wrapping), `[` goes back; the shown flat list
-   changes to the active group. @impl/done
+   ##EXP-8-SWAP-TABS **Expected.** In tabs mode `Shift+→` advances to the next tab (wrapping) and
+   `Shift+←` goes back; the shown flat list changes to the active group. The
+   static/dynamic priority is a setting, reachable from the F4 settings menu —
+   the pre-Spec-2 bare `t` / `Tab` / `[` / `]` bindings do not ship. @impl/done
 
 9. ##STEP-9-QUIT Quit. @impl/done
 
    ```
-   (press q)
+   (press Esc, then confirm)
    ```
 
-   ##EXP-9-QUIT **Expected.** The TUI exits, the alternate screen is torn down, and the
+   ##EXP-9-QUIT **Expected.** A `Really quit?` confirm dialog appears; confirming exits the TUI,
+   the alternate screen is torn down, and the
    normal terminal (with your scrollback intact) is restored — no leftover
    raw-mode, no garbled prompt, exit code 0. @impl/done
 
