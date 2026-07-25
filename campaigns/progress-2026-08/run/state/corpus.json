@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-07-25T14:52:23Z",
+  "updated_at": "2026-07-25T14:55:41Z",
   "files": [
     {
       "path": "spec/boot/00-core.md",
@@ -11196,7 +11196,412 @@
       "facts": 64,
       "unmarked": 0,
       "issues": 0,
-      "campaign": {}
+      "campaign": {
+        "anchors_judged": 64,
+        "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (0 cells); document <status> judged as _elements",
+        "fact_count": 64,
+        "marker_count": 65,
+        "processed_hash": "e147967cbaa3494c8c6a16a198a048113cf659d4cef1f8567260937c2a2d9636",
+        "summary": {
+          "confirmed": 65,
+          "drift": 0,
+          "unverifiable": 0
+        },
+        "verdicts": {
+          "milestone-line": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED and honestly marked: vibe mcp serve (stdio server), install/status over five agents (idempotent, unchanged-detection), the skill projection (vibe skill / SKILL.md with include selectors), the vibevm MCP toolset this session itself consumes (query_package/read_subskill/materialise_subskill/agentic_explain live in this harness); B2 marked the arc faithfully"
+            ]
+          },
+          "status-line": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED and honestly marked: vibe mcp serve (stdio server), install/status over five agents (idempotent, unchanged-detection), the skill projection (vibe skill / SKILL.md with include selectors), the vibevm MCP toolset this session itself consumes (query_package/read_subskill/materialise_subskill/agentic_explain live in this harness); B2 marked the arc faithfully"
+            ]
+          },
+          "related": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED and honestly marked: vibe mcp serve (stdio server), install/status over five agents (idempotent, unchanged-detection), the skill projection (vibe skill / SKILL.md with include selectors), the vibevm MCP toolset this session itself consumes (query_package/read_subskill/materialise_subskill/agentic_explain live in this harness); B2 marked the arc faithfully"
+            ]
+          },
+          "close-the-loop": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED and honestly marked: vibe mcp serve (stdio server), install/status over five agents (idempotent, unchanged-detection), the skill projection (vibe skill / SKILL.md with include selectors), the vibevm MCP toolset this session itself consumes (query_package/read_subskill/materialise_subskill/agentic_explain live in this harness); B2 marked the arc faithfully"
+            ]
+          },
+          "SURFACE-SERVER": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED and honestly marked: vibe mcp serve (stdio server), install/status over five agents (idempotent, unchanged-detection), the skill projection (vibe skill / SKILL.md with include selectors), the vibevm MCP toolset this session itself consumes (query_package/read_subskill/materialise_subskill/agentic_explain live in this harness); B2 marked the arc faithfully"
+            ]
+          },
+          "SURFACE-INSTALL": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED and honestly marked: vibe mcp serve (stdio server), install/status over five agents (idempotent, unchanged-detection), the skill projection (vibe skill / SKILL.md with include selectors), the vibevm MCP toolset this session itself consumes (query_package/read_subskill/materialise_subskill/agentic_explain live in this harness); B2 marked the arc faithfully"
+            ]
+          },
+          "PRODUCT-SCOPE": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED and honestly marked: vibe mcp serve (stdio server), install/status over five agents (idempotent, unchanged-detection), the skill projection (vibe skill / SKILL.md with include selectors), the vibevm MCP toolset this session itself consumes (query_package/read_subskill/materialise_subskill/agentic_explain live in this harness); B2 marked the arc faithfully"
+            ]
+          },
+          "READ-MOSTLY": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED and honestly marked: vibe mcp serve (stdio server), install/status over five agents (idempotent, unchanged-detection), the skill projection (vibe skill / SKILL.md with include selectors), the vibevm MCP toolset this session itself consumes (query_package/read_subskill/materialise_subskill/agentic_explain live in this harness); B2 marked the arc faithfully"
+            ]
+          },
+          "req-server": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED and honestly marked: vibe mcp serve (stdio server), install/status over five agents (idempotent, unchanged-detection), the skill projection (vibe skill / SKILL.md with include selectors), the vibevm MCP toolset this session itself consumes (query_package/read_subskill/materialise_subskill/agentic_explain live in this harness); B2 marked the arc faithfully"
+            ]
+          },
+          "SERVER-TRANSPORT-AGNOSTIC": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED and honestly marked: vibe mcp serve (stdio server), install/status over five agents (idempotent, unchanged-detection), the skill projection (vibe skill / SKILL.md with include selectors), the vibevm MCP toolset this session itself consumes (query_package/read_subskill/materialise_subskill/agentic_explain live in this harness); B2 marked the arc faithfully"
+            ]
+          },
+          "SERVER-JSONRPC": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED and honestly marked: vibe mcp serve (stdio server), install/status over five agents (idempotent, unchanged-detection), the skill projection (vibe skill / SKILL.md with include selectors), the vibevm MCP toolset this session itself consumes (query_package/read_subskill/materialise_subskill/agentic_explain live in this harness); B2 marked the arc faithfully"
+            ]
+          },
+          "SERVER-HANDSHAKE-IDENTITY": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED and honestly marked: vibe mcp serve (stdio server), install/status over five agents (idempotent, unchanged-detection), the skill projection (vibe skill / SKILL.md with include selectors), the vibevm MCP toolset this session itself consumes (query_package/read_subskill/materialise_subskill/agentic_explain live in this harness); B2 marked the arc faithfully"
+            ]
+          },
+          "SERVER-TRANSPORT-TRAIT": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED and honestly marked: vibe mcp serve (stdio server), install/status over five agents (idempotent, unchanged-detection), the skill projection (vibe skill / SKILL.md with include selectors), the vibevm MCP toolset this session itself consumes (query_package/read_subskill/materialise_subskill/agentic_explain live in this harness); B2 marked the arc faithfully"
+            ]
+          },
+          "SERVER-FRESH-LOCKFILE": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED and honestly marked: vibe mcp serve (stdio server), install/status over five agents (idempotent, unchanged-detection), the skill projection (vibe skill / SKILL.md with include selectors), the vibevm MCP toolset this session itself consumes (query_package/read_subskill/materialise_subskill/agentic_explain live in this harness); B2 marked the arc faithfully"
+            ]
+          },
+          "SERVER-MISSING-LOCK": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED and honestly marked: vibe mcp serve (stdio server), install/status over five agents (idempotent, unchanged-detection), the skill projection (vibe skill / SKILL.md with include selectors), the vibevm MCP toolset this session itself consumes (query_package/read_subskill/materialise_subskill/agentic_explain live in this harness); B2 marked the arc faithfully"
+            ]
+          },
+          "req-tools": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED and honestly marked: vibe mcp serve (stdio server), install/status over five agents (idempotent, unchanged-detection), the skill projection (vibe skill / SKILL.md with include selectors), the vibevm MCP toolset this session itself consumes (query_package/read_subskill/materialise_subskill/agentic_explain live in this harness); B2 marked the arc faithfully"
+            ]
+          },
+          "TOOL-SEAM": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED and honestly marked: vibe mcp serve (stdio server), install/status over five agents (idempotent, unchanged-detection), the skill projection (vibe skill / SKILL.md with include selectors), the vibevm MCP toolset this session itself consumes (query_package/read_subskill/materialise_subskill/agentic_explain live in this harness); B2 marked the arc faithfully"
+            ]
+          },
+          "TOOL-REGISTRATION": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED and honestly marked: vibe mcp serve (stdio server), install/status over five agents (idempotent, unchanged-detection), the skill projection (vibe skill / SKILL.md with include selectors), the vibevm MCP toolset this session itself consumes (query_package/read_subskill/materialise_subskill/agentic_explain live in this harness); B2 marked the arc faithfully"
+            ]
+          },
+          "TOOL-CELL-BOUNDARY": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED and honestly marked: vibe mcp serve (stdio server), install/status over five agents (idempotent, unchanged-detection), the skill projection (vibe skill / SKILL.md with include selectors), the vibevm MCP toolset this session itself consumes (query_package/read_subskill/materialise_subskill/agentic_explain live in this harness); B2 marked the arc faithfully"
+            ]
+          },
+          "TOOLS-IO-CONVENTION": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED and honestly marked: vibe mcp serve (stdio server), install/status over five agents (idempotent, unchanged-detection), the skill projection (vibe skill / SKILL.md with include selectors), the vibevm MCP toolset this session itself consumes (query_package/read_subskill/materialise_subskill/agentic_explain live in this harness); B2 marked the arc faithfully"
+            ]
+          },
+          "TOOL-QUERY-PACKAGE": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED and honestly marked: vibe mcp serve (stdio server), install/status over five agents (idempotent, unchanged-detection), the skill projection (vibe skill / SKILL.md with include selectors), the vibevm MCP toolset this session itself consumes (query_package/read_subskill/materialise_subskill/agentic_explain live in this harness); B2 marked the arc faithfully"
+            ]
+          },
+          "TOOL-READ-SUBSKILL": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED and honestly marked: vibe mcp serve (stdio server), install/status over five agents (idempotent, unchanged-detection), the skill projection (vibe skill / SKILL.md with include selectors), the vibevm MCP toolset this session itself consumes (query_package/read_subskill/materialise_subskill/agentic_explain live in this harness); B2 marked the arc faithfully"
+            ]
+          },
+          "TOOL-MATERIALISE-SUBSKILL": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED and honestly marked: vibe mcp serve (stdio server), install/status over five agents (idempotent, unchanged-detection), the skill projection (vibe skill / SKILL.md with include selectors), the vibevm MCP toolset this session itself consumes (query_package/read_subskill/materialise_subskill/agentic_explain live in this harness); B2 marked the arc faithfully"
+            ]
+          },
+          "TOOL-FAILURE-RENDERING": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED and honestly marked: vibe mcp serve (stdio server), install/status over five agents (idempotent, unchanged-detection), the skill projection (vibe skill / SKILL.md with include selectors), the vibevm MCP toolset this session itself consumes (query_package/read_subskill/materialise_subskill/agentic_explain live in this harness); B2 marked the arc faithfully"
+            ]
+          },
+          "req-errors": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED and honestly marked: vibe mcp serve (stdio server), install/status over five agents (idempotent, unchanged-detection), the skill projection (vibe skill / SKILL.md with include selectors), the vibevm MCP toolset this session itself consumes (query_package/read_subskill/materialise_subskill/agentic_explain live in this harness); B2 marked the arc faithfully"
+            ]
+          },
+          "ERROR-LAYERS": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED and honestly marked: vibe mcp serve (stdio server), install/status over five agents (idempotent, unchanged-detection), the skill projection (vibe skill / SKILL.md with include selectors), the vibevm MCP toolset this session itself consumes (query_package/read_subskill/materialise_subskill/agentic_explain live in this harness); B2 marked the arc faithfully"
+            ]
+          },
+          "ERROR-CITES-REQ": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED and honestly marked: vibe mcp serve (stdio server), install/status over five agents (idempotent, unchanged-detection), the skill projection (vibe skill / SKILL.md with include selectors), the vibevm MCP toolset this session itself consumes (query_package/read_subskill/materialise_subskill/agentic_explain live in this harness); B2 marked the arc faithfully"
+            ]
+          },
+          "req-agent-detection": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED and honestly marked: vibe mcp serve (stdio server), install/status over five agents (idempotent, unchanged-detection), the skill projection (vibe skill / SKILL.md with include selectors), the vibevm MCP toolset this session itself consumes (query_package/read_subskill/materialise_subskill/agentic_explain live in this harness); B2 marked the arc faithfully"
+            ]
+          },
+          "AGENT-SET": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED and honestly marked: vibe mcp serve (stdio server), install/status over five agents (idempotent, unchanged-detection), the skill projection (vibe skill / SKILL.md with include selectors), the vibevm MCP toolset this session itself consumes (query_package/read_subskill/materialise_subskill/agentic_explain live in this harness); B2 marked the arc faithfully"
+            ]
+          },
+          "AGENT-PRESENCE": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED and honestly marked: vibe mcp serve (stdio server), install/status over five agents (idempotent, unchanged-detection), the skill projection (vibe skill / SKILL.md with include selectors), the vibevm MCP toolset this session itself consumes (query_package/read_subskill/materialise_subskill/agentic_explain live in this harness); B2 marked the arc faithfully"
+            ]
+          },
+          "AGENT-DETECTION-DEFAULT": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED and honestly marked: vibe mcp serve (stdio server), install/status over five agents (idempotent, unchanged-detection), the skill projection (vibe skill / SKILL.md with include selectors), the vibevm MCP toolset this session itself consumes (query_package/read_subskill/materialise_subskill/agentic_explain live in this harness); B2 marked the arc faithfully"
+            ]
+          },
+          "req-agent-config": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED and honestly marked: vibe mcp serve (stdio server), install/status over five agents (idempotent, unchanged-detection), the skill projection (vibe skill / SKILL.md with include selectors), the vibevm MCP toolset this session itself consumes (query_package/read_subskill/materialise_subskill/agentic_explain live in this harness); B2 marked the arc faithfully"
+            ]
+          },
+          "CONFIG-SHAPE-DECL": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED and honestly marked: vibe mcp serve (stdio server), install/status over five agents (idempotent, unchanged-detection), the skill projection (vibe skill / SKILL.md with include selectors), the vibevm MCP toolset this session itself consumes (query_package/read_subskill/materialise_subskill/agentic_explain live in this harness); B2 marked the arc faithfully"
+            ]
+          },
+          "CONFIG-FORMAT": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED and honestly marked: vibe mcp serve (stdio server), install/status over five agents (idempotent, unchanged-detection), the skill projection (vibe skill / SKILL.md with include selectors), the vibevm MCP toolset this session itself consumes (query_package/read_subskill/materialise_subskill/agentic_explain live in this harness); B2 marked the arc faithfully"
+            ]
+          },
+          "CONFIG-SECTION-KEY": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED and honestly marked: vibe mcp serve (stdio server), install/status over five agents (idempotent, unchanged-detection), the skill projection (vibe skill / SKILL.md with include selectors), the vibevm MCP toolset this session itself consumes (query_package/read_subskill/materialise_subskill/agentic_explain live in this harness); B2 marked the arc faithfully"
+            ]
+          },
+          "CONFIG-SCOPE": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED and honestly marked: vibe mcp serve (stdio server), install/status over five agents (idempotent, unchanged-detection), the skill projection (vibe skill / SKILL.md with include selectors), the vibevm MCP toolset this session itself consumes (query_package/read_subskill/materialise_subskill/agentic_explain live in this harness); B2 marked the arc faithfully"
+            ]
+          },
+          "CONFIG-PATH": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED and honestly marked: vibe mcp serve (stdio server), install/status over five agents (idempotent, unchanged-detection), the skill projection (vibe skill / SKILL.md with include selectors), the vibevm MCP toolset this session itself consumes (query_package/read_subskill/materialise_subskill/agentic_explain live in this harness); B2 marked the arc faithfully"
+            ]
+          },
+          "CONFIG-MERGE": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED and honestly marked: vibe mcp serve (stdio server), install/status over five agents (idempotent, unchanged-detection), the skill projection (vibe skill / SKILL.md with include selectors), the vibevm MCP toolset this session itself consumes (query_package/read_subskill/materialise_subskill/agentic_explain live in this harness); B2 marked the arc faithfully"
+            ]
+          },
+          "CONFIG-SCOPE-INDEPENDENT": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED and honestly marked: vibe mcp serve (stdio server), install/status over five agents (idempotent, unchanged-detection), the skill projection (vibe skill / SKILL.md with include selectors), the vibevm MCP toolset this session itself consumes (query_package/read_subskill/materialise_subskill/agentic_explain live in this harness); B2 marked the arc faithfully"
+            ]
+          },
+          "CONFIG-WINDOWS-SHIM": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED and honestly marked: vibe mcp serve (stdio server), install/status over five agents (idempotent, unchanged-detection), the skill projection (vibe skill / SKILL.md with include selectors), the vibevm MCP toolset this session itself consumes (query_package/read_subskill/materialise_subskill/agentic_explain live in this harness); B2 marked the arc faithfully"
+            ]
+          },
+          "req-skill": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED and honestly marked: vibe mcp serve (stdio server), install/status over five agents (idempotent, unchanged-detection), the skill projection (vibe skill / SKILL.md with include selectors), the vibevm MCP toolset this session itself consumes (query_package/read_subskill/materialise_subskill/agentic_explain live in this harness); B2 marked the arc faithfully"
+            ]
+          },
+          "SKILL-MANIFEST": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED and honestly marked: vibe mcp serve (stdio server), install/status over five agents (idempotent, unchanged-detection), the skill projection (vibe skill / SKILL.md with include selectors), the vibevm MCP toolset this session itself consumes (query_package/read_subskill/materialise_subskill/agentic_explain live in this harness); B2 marked the arc faithfully"
+            ]
+          },
+          "SKILL-BODY-DATA": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED and honestly marked: vibe mcp serve (stdio server), install/status over five agents (idempotent, unchanged-detection), the skill projection (vibe skill / SKILL.md with include selectors), the vibevm MCP toolset this session itself consumes (query_package/read_subskill/materialise_subskill/agentic_explain live in this harness); B2 marked the arc faithfully"
+            ]
+          },
+          "SKILL-IDEMPOTENT": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED and honestly marked: vibe mcp serve (stdio server), install/status over five agents (idempotent, unchanged-detection), the skill projection (vibe skill / SKILL.md with include selectors), the vibevm MCP toolset this session itself consumes (query_package/read_subskill/materialise_subskill/agentic_explain live in this harness); B2 marked the arc faithfully"
+            ]
+          },
+          "req-lifecycle": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED and honestly marked: vibe mcp serve (stdio server), install/status over five agents (idempotent, unchanged-detection), the skill projection (vibe skill / SKILL.md with include selectors), the vibevm MCP toolset this session itself consumes (query_package/read_subskill/materialise_subskill/agentic_explain live in this harness); B2 marked the arc faithfully"
+            ]
+          },
+          "LIFECYCLE-MATRIX": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED and honestly marked: vibe mcp serve (stdio server), install/status over five agents (idempotent, unchanged-detection), the skill projection (vibe skill / SKILL.md with include selectors), the vibevm MCP toolset this session itself consumes (query_package/read_subskill/materialise_subskill/agentic_explain live in this harness); B2 marked the arc faithfully"
+            ]
+          },
+          "VERB-INSTALL": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED and honestly marked: vibe mcp serve (stdio server), install/status over five agents (idempotent, unchanged-detection), the skill projection (vibe skill / SKILL.md with include selectors), the vibevm MCP toolset this session itself consumes (query_package/read_subskill/materialise_subskill/agentic_explain live in this harness); B2 marked the arc faithfully"
+            ]
+          },
+          "VERB-STATUS": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED and honestly marked: vibe mcp serve (stdio server), install/status over five agents (idempotent, unchanged-detection), the skill projection (vibe skill / SKILL.md with include selectors), the vibevm MCP toolset this session itself consumes (query_package/read_subskill/materialise_subskill/agentic_explain live in this harness); B2 marked the arc faithfully"
+            ]
+          },
+          "VERB-UPGRADE": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED and honestly marked: vibe mcp serve (stdio server), install/status over five agents (idempotent, unchanged-detection), the skill projection (vibe skill / SKILL.md with include selectors), the vibevm MCP toolset this session itself consumes (query_package/read_subskill/materialise_subskill/agentic_explain live in this harness); B2 marked the arc faithfully"
+            ]
+          },
+          "VERB-UNINSTALL": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED and honestly marked: vibe mcp serve (stdio server), install/status over five agents (idempotent, unchanged-detection), the skill projection (vibe skill / SKILL.md with include selectors), the vibevm MCP toolset this session itself consumes (query_package/read_subskill/materialise_subskill/agentic_explain live in this harness); B2 marked the arc faithfully"
+            ]
+          },
+          "LIFECYCLE-REPORTS": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED and honestly marked: vibe mcp serve (stdio server), install/status over five agents (idempotent, unchanged-detection), the skill projection (vibe skill / SKILL.md with include selectors), the vibevm MCP toolset this session itself consumes (query_package/read_subskill/materialise_subskill/agentic_explain live in this harness); B2 marked the arc faithfully"
+            ]
+          },
+          "req-skill-include": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED and honestly marked: vibe mcp serve (stdio server), install/status over five agents (idempotent, unchanged-detection), the skill projection (vibe skill / SKILL.md with include selectors), the vibevm MCP toolset this session itself consumes (query_package/read_subskill/materialise_subskill/agentic_explain live in this harness); B2 marked the arc faithfully"
+            ]
+          },
+          "INCLUDE-DECL": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED and honestly marked: vibe mcp serve (stdio server), install/status over five agents (idempotent, unchanged-detection), the skill projection (vibe skill / SKILL.md with include selectors), the vibevm MCP toolset this session itself consumes (query_package/read_subskill/materialise_subskill/agentic_explain live in this harness); B2 marked the arc faithfully"
+            ]
+          },
+          "INCLUDE-SELECTIVE": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED and honestly marked: vibe mcp serve (stdio server), install/status over five agents (idempotent, unchanged-detection), the skill projection (vibe skill / SKILL.md with include selectors), the vibevm MCP toolset this session itself consumes (query_package/read_subskill/materialise_subskill/agentic_explain live in this harness); B2 marked the arc faithfully"
+            ]
+          },
+          "INCLUDE-COMPOSES": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED and honestly marked: vibe mcp serve (stdio server), install/status over five agents (idempotent, unchanged-detection), the skill projection (vibe skill / SKILL.md with include selectors), the vibevm MCP toolset this session itself consumes (query_package/read_subskill/materialise_subskill/agentic_explain live in this harness); B2 marked the arc faithfully"
+            ]
+          },
+          "INCLUDE-BRIDGE-USE": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED and honestly marked: vibe mcp serve (stdio server), install/status over five agents (idempotent, unchanged-detection), the skill projection (vibe skill / SKILL.md with include selectors), the vibevm MCP toolset this session itself consumes (query_package/read_subskill/materialise_subskill/agentic_explain live in this harness); B2 marked the arc faithfully"
+            ]
+          },
+          "INCLUDE-DETERMINISTIC": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED and honestly marked: vibe mcp serve (stdio server), install/status over five agents (idempotent, unchanged-detection), the skill projection (vibe skill / SKILL.md with include selectors), the vibevm MCP toolset this session itself consumes (query_package/read_subskill/materialise_subskill/agentic_explain live in this harness); B2 marked the arc faithfully"
+            ]
+          },
+          "OOS-NO-WIRE-CHANGES": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED and honestly marked: vibe mcp serve (stdio server), install/status over five agents (idempotent, unchanged-detection), the skill projection (vibe skill / SKILL.md with include selectors), the vibevm MCP toolset this session itself consumes (query_package/read_subskill/materialise_subskill/agentic_explain live in this harness); B2 marked the arc faithfully"
+            ]
+          },
+          "OOS-AGENT-SEMANTICS": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED and honestly marked: vibe mcp serve (stdio server), install/status over five agents (idempotent, unchanged-detection), the skill projection (vibe skill / SKILL.md with include selectors), the vibevm MCP toolset this session itself consumes (query_package/read_subskill/materialise_subskill/agentic_explain live in this harness); B2 marked the arc faithfully"
+            ]
+          },
+          "OOS-HTTP-SSE": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED and honestly marked: vibe mcp serve (stdio server), install/status over five agents (idempotent, unchanged-detection), the skill projection (vibe skill / SKILL.md with include selectors), the vibevm MCP toolset this session itself consumes (query_package/read_subskill/materialise_subskill/agentic_explain live in this harness); B2 marked the arc faithfully"
+            ]
+          },
+          "OOS-LLM-TOOLS": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED and honestly marked: vibe mcp serve (stdio server), install/status over five agents (idempotent, unchanged-detection), the skill projection (vibe skill / SKILL.md with include selectors), the vibevm MCP toolset this session itself consumes (query_package/read_subskill/materialise_subskill/agentic_explain live in this harness); B2 marked the arc faithfully"
+            ]
+          },
+          "ACC-SERVER-ROUNDTRIP": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED and honestly marked: vibe mcp serve (stdio server), install/status over five agents (idempotent, unchanged-detection), the skill projection (vibe skill / SKILL.md with include selectors), the vibevm MCP toolset this session itself consumes (query_package/read_subskill/materialise_subskill/agentic_explain live in this harness); B2 marked the arc faithfully"
+            ]
+          },
+          "ACC-TOOL-CONTRACTS": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED and honestly marked: vibe mcp serve (stdio server), install/status over five agents (idempotent, unchanged-detection), the skill projection (vibe skill / SKILL.md with include selectors), the vibevm MCP toolset this session itself consumes (query_package/read_subskill/materialise_subskill/agentic_explain live in this harness); B2 marked the arc faithfully"
+            ]
+          },
+          "ACC-INSTALL-LIFECYCLE": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED and honestly marked: vibe mcp serve (stdio server), install/status over five agents (idempotent, unchanged-detection), the skill projection (vibe skill / SKILL.md with include selectors), the vibevm MCP toolset this session itself consumes (query_package/read_subskill/materialise_subskill/agentic_explain live in this harness); B2 marked the arc faithfully"
+            ]
+          },
+          "_elements": {
+            "v": "confirmed",
+            "ev": [
+              "accurate: IMPLEMENTED, the retroactive spec home — vibe mcp serve/install/status live (this session runs as an MCP consumer of the very server it verifies)"
+            ]
+          }
+        },
+        "verified_at": "2026-07-25T14:55:40Z",
+        "verify_batch": "c4f2-mcp-settings"
+      }
     },
     {
       "path": "spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md",
@@ -11213,7 +11618,304 @@
       "facts": 46,
       "unmarked": 0,
       "issues": 0,
-      "campaign": {}
+      "campaign": {
+        "anchors_judged": 46,
+        "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (0 cells); document <status> judged as _elements",
+        "fact_count": 46,
+        "marker_count": 47,
+        "processed_hash": "a377614449431b183a0b964819de4ba5e94e3accd45da81f5cf9f2349f353894",
+        "summary": {
+          "confirmed": 47,
+          "drift": 0,
+          "unverifiable": 0
+        },
+        "verdicts": {
+          "status-line": {
+            "v": "confirmed",
+            "ev": [
+              "the superseded-in-topology arc holds as B2 split it: the tcg grammar (validate/scope/complete/type/bench) stays normative and ships through the per-family MCP servers (rust/typescript-ai-native-tcg per the boot snippets), while the standalone vibe-tcg topology is gone (wave 6) — spec/done on the deleted topology, impl/done on the living grammar; F-012's missing-notice is answered by the document marker's diagnosis"
+            ]
+          },
+          "related": {
+            "v": "confirmed",
+            "ev": [
+              "the superseded-in-topology arc holds as B2 split it: the tcg grammar (validate/scope/complete/type/bench) stays normative and ships through the per-family MCP servers (rust/typescript-ai-native-tcg per the boot snippets), while the standalone vibe-tcg topology is gone (wave 6) — spec/done on the deleted topology, impl/done on the living grammar; F-012's missing-notice is answered by the document marker's diagnosis"
+            ]
+          },
+          "SUPERSEDED-TOPOLOGY": {
+            "v": "confirmed",
+            "ev": [
+              "the superseded-in-topology arc holds as B2 split it: the tcg grammar (validate/scope/complete/type/bench) stays normative and ships through the per-family MCP servers (rust/typescript-ai-native-tcg per the boot snippets), while the standalone vibe-tcg topology is gone (wave 6) — spec/done on the deleted topology, impl/done on the living grammar; F-012's missing-notice is answered by the document marker's diagnosis"
+            ]
+          },
+          "TOOLS-NEW-HOME": {
+            "v": "confirmed",
+            "ev": [
+              "the superseded-in-topology arc holds as B2 split it: the tcg grammar (validate/scope/complete/type/bench) stays normative and ships through the per-family MCP servers (rust/typescript-ai-native-tcg per the boot snippets), while the standalone vibe-tcg topology is gone (wave 6) — spec/done on the deleted topology, impl/done on the living grammar; F-012's missing-notice is answered by the document marker's diagnosis"
+            ]
+          },
+          "ENUM-BET-REREAD": {
+            "v": "confirmed",
+            "ev": [
+              "the superseded-in-topology arc holds as B2 split it: the tcg grammar (validate/scope/complete/type/bench) stays normative and ships through the per-family MCP servers (rust/typescript-ai-native-tcg per the boot snippets), while the standalone vibe-tcg topology is gone (wave 6) — spec/done on the deleted topology, impl/done on the living grammar; F-012's missing-notice is answered by the document marker's diagnosis"
+            ]
+          },
+          "LANGUAGE-COMPAT-PARAM": {
+            "v": "confirmed",
+            "ev": [
+              "the superseded-in-topology arc holds as B2 split it: the tcg grammar (validate/scope/complete/type/bench) stays normative and ships through the per-family MCP servers (rust/typescript-ai-native-tcg per the boot snippets), while the standalone vibe-tcg topology is gone (wave 6) — spec/done on the deleted topology, impl/done on the living grammar; F-012's missing-notice is answered by the document marker's diagnosis"
+            ]
+          },
+          "TCG-CRATE-DELETED": {
+            "v": "confirmed",
+            "ev": [
+              "the superseded-in-topology arc holds as B2 split it: the tcg grammar (validate/scope/complete/type/bench) stays normative and ships through the per-family MCP servers (rust/typescript-ai-native-tcg per the boot snippets), while the standalone vibe-tcg topology is gone (wave 6) — spec/done on the deleted topology, impl/done on the living grammar; F-012's missing-notice is answered by the document marker's diagnosis"
+            ]
+          },
+          "RETIRED-SECTIONS-KEPT": {
+            "v": "confirmed",
+            "ev": [
+              "the superseded-in-topology arc holds as B2 split it: the tcg grammar (validate/scope/complete/type/bench) stays normative and ships through the per-family MCP servers (rust/typescript-ai-native-tcg per the boot snippets), while the standalone vibe-tcg topology is gone (wave 6) — spec/done on the deleted topology, impl/done on the living grammar; F-012's missing-notice is answered by the document marker's diagnosis"
+            ]
+          },
+          "req-problem": {
+            "v": "confirmed",
+            "ev": [
+              "the superseded-in-topology arc holds as B2 split it: the tcg grammar (validate/scope/complete/type/bench) stays normative and ships through the per-family MCP servers (rust/typescript-ai-native-tcg per the boot snippets), while the standalone vibe-tcg topology is gone (wave 6) — spec/done on the deleted topology, impl/done on the living grammar; F-012's missing-notice is answered by the document marker's diagnosis"
+            ]
+          },
+          "oracle-degraded-path": {
+            "v": "confirmed",
+            "ev": [
+              "the superseded-in-topology arc holds as B2 split it: the tcg grammar (validate/scope/complete/type/bench) stays normative and ships through the per-family MCP servers (rust/typescript-ai-native-tcg per the boot snippets), while the standalone vibe-tcg topology is gone (wave 6) — spec/done on the deleted topology, impl/done on the living grammar; F-012's missing-notice is answered by the document marker's diagnosis"
+            ]
+          },
+          "warm-path-missing": {
+            "v": "confirmed",
+            "ev": [
+              "the superseded-in-topology arc holds as B2 split it: the tcg grammar (validate/scope/complete/type/bench) stays normative and ships through the per-family MCP servers (rust/typescript-ai-native-tcg per the boot snippets), while the standalone vibe-tcg topology is gone (wave 6) — spec/done on the deleted topology, impl/done on the living grammar; F-012's missing-notice is answered by the document marker's diagnosis"
+            ]
+          },
+          "PRODUCT-SURFACE-BOUNDARY": {
+            "v": "confirmed",
+            "ev": [
+              "the superseded-in-topology arc holds as B2 split it: the tcg grammar (validate/scope/complete/type/bench) stays normative and ships through the per-family MCP servers (rust/typescript-ai-native-tcg per the boot snippets), while the standalone vibe-tcg topology is gone (wave 6) — spec/done on the deleted topology, impl/done on the living grammar; F-012's missing-notice is answered by the document marker's diagnosis"
+            ]
+          },
+          "req-tools": {
+            "v": "confirmed",
+            "ev": [
+              "the superseded-in-topology arc holds as B2 split it: the tcg grammar (validate/scope/complete/type/bench) stays normative and ships through the per-family MCP servers (rust/typescript-ai-native-tcg per the boot snippets), while the standalone vibe-tcg topology is gone (wave 6) — spec/done on the deleted topology, impl/done on the living grammar; F-012's missing-notice is answered by the document marker's diagnosis"
+            ]
+          },
+          "FOUR-TOOLS": {
+            "v": "confirmed",
+            "ev": [
+              "the superseded-in-topology arc holds as B2 split it: the tcg grammar (validate/scope/complete/type/bench) stays normative and ships through the per-family MCP servers (rust/typescript-ai-native-tcg per the boot snippets), while the standalone vibe-tcg topology is gone (wave 6) — spec/done on the deleted topology, impl/done on the living grammar; F-012's missing-notice is answered by the document marker's diagnosis"
+            ]
+          },
+          "PARAM-LANGUAGE": {
+            "v": "confirmed",
+            "ev": [
+              "the superseded-in-topology arc holds as B2 split it: the tcg grammar (validate/scope/complete/type/bench) stays normative and ships through the per-family MCP servers (rust/typescript-ai-native-tcg per the boot snippets), while the standalone vibe-tcg topology is gone (wave 6) — spec/done on the deleted topology, impl/done on the living grammar; F-012's missing-notice is answered by the document marker's diagnosis"
+            ]
+          },
+          "PARAMS-PASSTHROUGH": {
+            "v": "confirmed",
+            "ev": [
+              "the superseded-in-topology arc holds as B2 split it: the tcg grammar (validate/scope/complete/type/bench) stays normative and ships through the per-family MCP servers (rust/typescript-ai-native-tcg per the boot snippets), while the standalone vibe-tcg topology is gone (wave 6) — spec/done on the deleted topology, impl/done on the living grammar; F-012's missing-notice is answered by the document marker's diagnosis"
+            ]
+          },
+          "ENRICHED-RESPONSES": {
+            "v": "confirmed",
+            "ev": [
+              "the superseded-in-topology arc holds as B2 split it: the tcg grammar (validate/scope/complete/type/bench) stays normative and ships through the per-family MCP servers (rust/typescript-ai-native-tcg per the boot snippets), while the standalone vibe-tcg topology is gone (wave 6) — spec/done on the deleted topology, impl/done on the living grammar; F-012's missing-notice is answered by the document marker's diagnosis"
+            ]
+          },
+          "NO-AFFINITY": {
+            "v": "confirmed",
+            "ev": [
+              "the superseded-in-topology arc holds as B2 split it: the tcg grammar (validate/scope/complete/type/bench) stays normative and ships through the per-family MCP servers (rust/typescript-ai-native-tcg per the boot snippets), while the standalone vibe-tcg topology is gone (wave 6) — spec/done on the deleted topology, impl/done on the living grammar; F-012's missing-notice is answered by the document marker's diagnosis"
+            ]
+          },
+          "req-portability": {
+            "v": "confirmed",
+            "ev": [
+              "the superseded-in-topology arc holds as B2 split it: the tcg grammar (validate/scope/complete/type/bench) stays normative and ships through the per-family MCP servers (rust/typescript-ai-native-tcg per the boot snippets), while the standalone vibe-tcg topology is gone (wave 6) — spec/done on the deleted topology, impl/done on the living grammar; F-012's missing-notice is answered by the document marker's diagnosis"
+            ]
+          },
+          "tcg-crate-home": {
+            "v": "confirmed",
+            "ev": [
+              "the superseded-in-topology arc holds as B2 split it: the tcg grammar (validate/scope/complete/type/bench) stays normative and ships through the per-family MCP servers (rust/typescript-ai-native-tcg per the boot snippets), while the standalone vibe-tcg topology is gone (wave 6) — spec/done on the deleted topology, impl/done on the living grammar; F-012's missing-notice is answered by the document marker's diagnosis"
+            ]
+          },
+          "TCG-CRATE-CONTENTS": {
+            "v": "confirmed",
+            "ev": [
+              "the superseded-in-topology arc holds as B2 split it: the tcg grammar (validate/scope/complete/type/bench) stays normative and ships through the per-family MCP servers (rust/typescript-ai-native-tcg per the boot snippets), while the standalone vibe-tcg topology is gone (wave 6) — spec/done on the deleted topology, impl/done on the living grammar; F-012's missing-notice is answered by the document marker's diagnosis"
+            ]
+          },
+          "MCP-ADAPTER-CELL": {
+            "v": "confirmed",
+            "ev": [
+              "the superseded-in-topology arc holds as B2 split it: the tcg grammar (validate/scope/complete/type/bench) stays normative and ships through the per-family MCP servers (rust/typescript-ai-native-tcg per the boot snippets), while the standalone vibe-tcg topology is gone (wave 6) — spec/done on the deleted topology, impl/done on the living grammar; F-012's missing-notice is answered by the document marker's diagnosis"
+            ]
+          },
+          "EXTRACTION-CONSEQUENCE": {
+            "v": "confirmed",
+            "ev": [
+              "the superseded-in-topology arc holds as B2 split it: the tcg grammar (validate/scope/complete/type/bench) stays normative and ships through the per-family MCP servers (rust/typescript-ai-native-tcg per the boot snippets), while the standalone vibe-tcg topology is gone (wave 6) — spec/done on the deleted topology, impl/done on the living grammar; F-012's missing-notice is answered by the document marker's diagnosis"
+            ]
+          },
+          "req-registry": {
+            "v": "confirmed",
+            "ev": [
+              "the superseded-in-topology arc holds as B2 split it: the tcg grammar (validate/scope/complete/type/bench) stays normative and ships through the per-family MCP servers (rust/typescript-ai-native-tcg per the boot snippets), while the standalone vibe-tcg topology is gone (wave 6) — spec/done on the deleted topology, impl/done on the living grammar; F-012's missing-notice is answered by the document marker's diagnosis"
+            ]
+          },
+          "ORACLE-REGISTRY": {
+            "v": "confirmed",
+            "ev": [
+              "the superseded-in-topology arc holds as B2 split it: the tcg grammar (validate/scope/complete/type/bench) stays normative and ships through the per-family MCP servers (rust/typescript-ai-native-tcg per the boot snippets), while the standalone vibe-tcg topology is gone (wave 6) — spec/done on the deleted topology, impl/done on the living grammar; F-012's missing-notice is answered by the document marker's diagnosis"
+            ]
+          },
+          "REG-RESOLVE": {
+            "v": "confirmed",
+            "ev": [
+              "the superseded-in-topology arc holds as B2 split it: the tcg grammar (validate/scope/complete/type/bench) stays normative and ships through the per-family MCP servers (rust/typescript-ai-native-tcg per the boot snippets), while the standalone vibe-tcg topology is gone (wave 6) — spec/done on the deleted topology, impl/done on the living grammar; F-012's missing-notice is answered by the document marker's diagnosis"
+            ]
+          },
+          "REG-SPAWN": {
+            "v": "confirmed",
+            "ev": [
+              "the superseded-in-topology arc holds as B2 split it: the tcg grammar (validate/scope/complete/type/bench) stays normative and ships through the per-family MCP servers (rust/typescript-ai-native-tcg per the boot snippets), while the standalone vibe-tcg topology is gone (wave 6) — spec/done on the deleted topology, impl/done on the living grammar; F-012's missing-notice is answered by the document marker's diagnosis"
+            ]
+          },
+          "REG-RESPAWN": {
+            "v": "confirmed",
+            "ev": [
+              "the superseded-in-topology arc holds as B2 split it: the tcg grammar (validate/scope/complete/type/bench) stays normative and ships through the per-family MCP servers (rust/typescript-ai-native-tcg per the boot snippets), while the standalone vibe-tcg topology is gone (wave 6) — spec/done on the deleted topology, impl/done on the living grammar; F-012's missing-notice is answered by the document marker's diagnosis"
+            ]
+          },
+          "REG-KILL-ON-DROP": {
+            "v": "confirmed",
+            "ev": [
+              "the superseded-in-topology arc holds as B2 split it: the tcg grammar (validate/scope/complete/type/bench) stays normative and ships through the per-family MCP servers (rust/typescript-ai-native-tcg per the boot snippets), while the standalone vibe-tcg topology is gone (wave 6) — spec/done on the deleted topology, impl/done on the living grammar; F-012's missing-notice is answered by the document marker's diagnosis"
+            ]
+          },
+          "FAILURES-ARE-RECIPES": {
+            "v": "confirmed",
+            "ev": [
+              "the superseded-in-topology arc holds as B2 split it: the tcg grammar (validate/scope/complete/type/bench) stays normative and ships through the per-family MCP servers (rust/typescript-ai-native-tcg per the boot snippets), while the standalone vibe-tcg topology is gone (wave 6) — spec/done on the deleted topology, impl/done on the living grammar; F-012's missing-notice is answered by the document marker's diagnosis"
+            ]
+          },
+          "req-consent": {
+            "v": "confirmed",
+            "ev": [
+              "the superseded-in-topology arc holds as B2 split it: the tcg grammar (validate/scope/complete/type/bench) stays normative and ships through the per-family MCP servers (rust/typescript-ai-native-tcg per the boot snippets), while the standalone vibe-tcg topology is gone (wave 6) — spec/done on the deleted topology, impl/done on the living grammar; F-012's missing-notice is answered by the document marker's diagnosis"
+            ]
+          },
+          "NO-PROMPT-RULE": {
+            "v": "confirmed",
+            "ev": [
+              "the superseded-in-topology arc holds as B2 split it: the tcg grammar (validate/scope/complete/type/bench) stays normative and ships through the per-family MCP servers (rust/typescript-ai-native-tcg per the boot snippets), while the standalone vibe-tcg topology is gone (wave 6) — spec/done on the deleted topology, impl/done on the living grammar; F-012's missing-notice is answered by the document marker's diagnosis"
+            ]
+          },
+          "CONSENT-SPLIT": {
+            "v": "confirmed",
+            "ev": [
+              "the superseded-in-topology arc holds as B2 split it: the tcg grammar (validate/scope/complete/type/bench) stays normative and ships through the per-family MCP servers (rust/typescript-ai-native-tcg per the boot snippets), while the standalone vibe-tcg topology is gone (wave 6) — spec/done on the deleted topology, impl/done on the living grammar; F-012's missing-notice is answered by the document marker's diagnosis"
+            ]
+          },
+          "NO-NEW-RECORDS": {
+            "v": "confirmed",
+            "ev": [
+              "the superseded-in-topology arc holds as B2 split it: the tcg grammar (validate/scope/complete/type/bench) stays normative and ships through the per-family MCP servers (rust/typescript-ai-native-tcg per the boot snippets), while the standalone vibe-tcg topology is gone (wave 6) — spec/done on the deleted topology, impl/done on the living grammar; F-012's missing-notice is answered by the document marker's diagnosis"
+            ]
+          },
+          "req-non-goals": {
+            "v": "confirmed",
+            "ev": [
+              "the superseded-in-topology arc holds as B2 split it: the tcg grammar (validate/scope/complete/type/bench) stays normative and ships through the per-family MCP servers (rust/typescript-ai-native-tcg per the boot snippets), while the standalone vibe-tcg topology is gone (wave 6) — spec/done on the deleted topology, impl/done on the living grammar; F-012's missing-notice is answered by the document marker's diagnosis"
+            ]
+          },
+          "NG-NO-LSP": {
+            "v": "confirmed",
+            "ev": [
+              "the superseded-in-topology arc holds as B2 split it: the tcg grammar (validate/scope/complete/type/bench) stays normative and ships through the per-family MCP servers (rust/typescript-ai-native-tcg per the boot snippets), while the standalone vibe-tcg topology is gone (wave 6) — spec/done on the deleted topology, impl/done on the living grammar; F-012's missing-notice is answered by the document marker's diagnosis"
+            ]
+          },
+          "NG-NO-REASONING": {
+            "v": "confirmed",
+            "ev": [
+              "the superseded-in-topology arc holds as B2 split it: the tcg grammar (validate/scope/complete/type/bench) stays normative and ships through the per-family MCP servers (rust/typescript-ai-native-tcg per the boot snippets), while the standalone vibe-tcg topology is gone (wave 6) — spec/done on the deleted topology, impl/done on the living grammar; F-012's missing-notice is answered by the document marker's diagnosis"
+            ]
+          },
+          "NG-NO-PER-CALL-SPAWN": {
+            "v": "confirmed",
+            "ev": [
+              "the superseded-in-topology arc holds as B2 split it: the tcg grammar (validate/scope/complete/type/bench) stays normative and ships through the per-family MCP servers (rust/typescript-ai-native-tcg per the boot snippets), while the standalone vibe-tcg topology is gone (wave 6) — spec/done on the deleted topology, impl/done on the living grammar; F-012's missing-notice is answered by the document marker's diagnosis"
+            ]
+          },
+          "NG-NO-AUTODETECT": {
+            "v": "confirmed",
+            "ev": [
+              "the superseded-in-topology arc holds as B2 split it: the tcg grammar (validate/scope/complete/type/bench) stays normative and ships through the per-family MCP servers (rust/typescript-ai-native-tcg per the boot snippets), while the standalone vibe-tcg topology is gone (wave 6) — spec/done on the deleted topology, impl/done on the living grammar; F-012's missing-notice is answered by the document marker's diagnosis"
+            ]
+          },
+          "NG-TOKEN-TCG-FUTURE": {
+            "v": "confirmed",
+            "ev": [
+              "the superseded-in-topology arc holds as B2 split it: the tcg grammar (validate/scope/complete/type/bench) stays normative and ships through the per-family MCP servers (rust/typescript-ai-native-tcg per the boot snippets), while the standalone vibe-tcg topology is gone (wave 6) — spec/done on the deleted topology, impl/done on the living grammar; F-012's missing-notice is answered by the document marker's diagnosis"
+            ]
+          },
+          "req-acceptance": {
+            "v": "confirmed",
+            "ev": [
+              "the superseded-in-topology arc holds as B2 split it: the tcg grammar (validate/scope/complete/type/bench) stays normative and ships through the per-family MCP servers (rust/typescript-ai-native-tcg per the boot snippets), while the standalone vibe-tcg topology is gone (wave 6) — spec/done on the deleted topology, impl/done on the living grammar; F-012's missing-notice is answered by the document marker's diagnosis"
+            ]
+          },
+          "ACC-TOOLS-LIST": {
+            "v": "confirmed",
+            "ev": [
+              "the superseded-in-topology arc holds as B2 split it: the tcg grammar (validate/scope/complete/type/bench) stays normative and ships through the per-family MCP servers (rust/typescript-ai-native-tcg per the boot snippets), while the standalone vibe-tcg topology is gone (wave 6) — spec/done on the deleted topology, impl/done on the living grammar; F-012's missing-notice is answered by the document marker's diagnosis"
+            ]
+          },
+          "ACC-RECIPES": {
+            "v": "confirmed",
+            "ev": [
+              "the superseded-in-topology arc holds as B2 split it: the tcg grammar (validate/scope/complete/type/bench) stays normative and ships through the per-family MCP servers (rust/typescript-ai-native-tcg per the boot snippets), while the standalone vibe-tcg topology is gone (wave 6) — spec/done on the deleted topology, impl/done on the living grammar; F-012's missing-notice is answered by the document marker's diagnosis"
+            ]
+          },
+          "ACC-RESPAWN": {
+            "v": "confirmed",
+            "ev": [
+              "the superseded-in-topology arc holds as B2 split it: the tcg grammar (validate/scope/complete/type/bench) stays normative and ships through the per-family MCP servers (rust/typescript-ai-native-tcg per the boot snippets), while the standalone vibe-tcg topology is gone (wave 6) — spec/done on the deleted topology, impl/done on the living grammar; F-012's missing-notice is answered by the document marker's diagnosis"
+            ]
+          },
+          "ACC-NO-MCP-DEP": {
+            "v": "confirmed",
+            "ev": [
+              "the superseded-in-topology arc holds as B2 split it: the tcg grammar (validate/scope/complete/type/bench) stays normative and ships through the per-family MCP servers (rust/typescript-ai-native-tcg per the boot snippets), while the standalone vibe-tcg topology is gone (wave 6) — spec/done on the deleted topology, impl/done on the living grammar; F-012's missing-notice is answered by the document marker's diagnosis"
+            ]
+          },
+          "ACC-SHARED-CELL": {
+            "v": "confirmed",
+            "ev": [
+              "the superseded-in-topology arc holds as B2 split it: the tcg grammar (validate/scope/complete/type/bench) stays normative and ships through the per-family MCP servers (rust/typescript-ai-native-tcg per the boot snippets), while the standalone vibe-tcg topology is gone (wave 6) — spec/done on the deleted topology, impl/done on the living grammar; F-012's missing-notice is answered by the document marker's diagnosis"
+            ]
+          },
+          "_elements": {
+            "v": "confirmed",
+            "ev": [
+              "honest arc: the marker carries the full superseded-in-topology diagnosis (wave 6 deleted vibe-tcg; grammar kept normative) — the per-fact impl/done-vs-spec/done split B2 recorded"
+            ]
+          }
+        },
+        "verified_at": "2026-07-25T14:55:40Z",
+        "verify_batch": "c4f2-mcp-settings"
+      }
     },
     {
       "path": "spec/modules/vibe-mcp/PROP-027-mcp-packages.md",
@@ -11230,7 +11932,370 @@
       "facts": 75,
       "unmarked": 0,
       "issues": 0,
-      "campaign": {}
+      "campaign": {
+        "anchors_judged": 57,
+        "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (18 cells); document <status> judged as _elements",
+        "fact_count": 75,
+        "marker_count": 76,
+        "processed_hash": "9f7c54fcb9d7fd20488b8bc1705e5f5e18c12778470a69568e5ab243d0b37148",
+        "summary": {
+          "confirmed": 58,
+          "drift": 0,
+          "unverifiable": 0
+        },
+        "verdicts": {
+          "milestone-line": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED: the mcp kind is in the five-kind register (INV-VOCABULARY, c3b), the manifest laws ship (mcp packages parse; PROP-024 code-bearing rules apply), and the sovereign per-family servers are installed on this machine (mcp:org.vibevm.ai-native/rust-ai-native-mcp + typescript twin — the boot-resident facts; this session's Blender/vibevm MCP roster proves the loader path)"
+            ]
+          },
+          "status-line": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED: the mcp kind is in the five-kind register (INV-VOCABULARY, c3b), the manifest laws ship (mcp packages parse; PROP-024 code-bearing rules apply), and the sovereign per-family servers are installed on this machine (mcp:org.vibevm.ai-native/rust-ai-native-mcp + typescript twin — the boot-resident facts; this session's Blender/vibevm MCP roster proves the loader path)"
+            ]
+          },
+          "related": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED: the mcp kind is in the five-kind register (INV-VOCABULARY, c3b), the manifest laws ship (mcp packages parse; PROP-024 code-bearing rules apply), and the sovereign per-family servers are installed on this machine (mcp:org.vibevm.ai-native/rust-ai-native-mcp + typescript twin — the boot-resident facts; this session's Blender/vibevm MCP roster proves the loader path)"
+            ]
+          },
+          "motivation-gap": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED: the mcp kind is in the five-kind register (INV-VOCABULARY, c3b), the manifest laws ship (mcp packages parse; PROP-024 code-bearing rules apply), and the sovereign per-family servers are installed on this machine (mcp:org.vibevm.ai-native/rust-ai-native-mcp + typescript twin — the boot-resident facts; this session's Blender/vibevm MCP roster proves the loader path)"
+            ]
+          },
+          "prototype-cycle": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED: the mcp kind is in the five-kind register (INV-VOCABULARY, c3b), the manifest laws ship (mcp packages parse; PROP-024 code-bearing rules apply), and the sovereign per-family servers are installed on this machine (mcp:org.vibevm.ai-native/rust-ai-native-mcp + typescript twin — the boot-resident facts; this session's Blender/vibevm MCP roster proves the loader path)"
+            ]
+          },
+          "OWNER-RESOLUTION": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED: the mcp kind is in the five-kind register (INV-VOCABULARY, c3b), the manifest laws ship (mcp packages parse; PROP-024 code-bearing rules apply), and the sovereign per-family servers are installed on this machine (mcp:org.vibevm.ai-native/rust-ai-native-mcp + typescript twin — the boot-resident facts; this session's Blender/vibevm MCP roster proves the loader path)"
+            ]
+          },
+          "req-kind": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED: the mcp kind is in the five-kind register (INV-VOCABULARY, c3b), the manifest laws ship (mcp packages parse; PROP-024 code-bearing rules apply), and the sovereign per-family servers are installed on this machine (mcp:org.vibevm.ai-native/rust-ai-native-mcp + typescript twin — the boot-resident facts; this session's Blender/vibevm MCP roster proves the loader path)"
+            ]
+          },
+          "MCP-KIND-DEF": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED: the mcp kind is in the five-kind register (INV-VOCABULARY, c3b), the manifest laws ship (mcp packages parse; PROP-024 code-bearing rules apply), and the sovereign per-family servers are installed on this machine (mcp:org.vibevm.ai-native/rust-ai-native-mcp + typescript twin — the boot-resident facts; this session's Blender/vibevm MCP roster proves the loader path)"
+            ]
+          },
+          "KIND-REGISTER": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED: the mcp kind is in the five-kind register (INV-VOCABULARY, c3b), the manifest laws ship (mcp packages parse; PROP-024 code-bearing rules apply), and the sovereign per-family servers are installed on this machine (mcp:org.vibevm.ai-native/rust-ai-native-mcp + typescript twin — the boot-resident facts; this session's Blender/vibevm MCP roster proves the loader path)"
+            ]
+          },
+          "TABLE-ONLY-IN-KIND": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED: the mcp kind is in the five-kind register (INV-VOCABULARY, c3b), the manifest laws ship (mcp packages parse; PROP-024 code-bearing rules apply), and the sovereign per-family servers are installed on this machine (mcp:org.vibevm.ai-native/rust-ai-native-mcp + typescript twin — the boot-resident facts; this session's Blender/vibevm MCP roster proves the loader path)"
+            ]
+          },
+          "KIND-PROMISES-SERVER": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED: the mcp kind is in the five-kind register (INV-VOCABULARY, c3b), the manifest laws ship (mcp packages parse; PROP-024 code-bearing rules apply), and the sovereign per-family servers are installed on this machine (mcp:org.vibevm.ai-native/rust-ai-native-mcp + typescript twin — the boot-resident facts; this session's Blender/vibevm MCP roster proves the loader path)"
+            ]
+          },
+          "req-manifest": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED: the mcp kind is in the five-kind register (INV-VOCABULARY, c3b), the manifest laws ship (mcp packages parse; PROP-024 code-bearing rules apply), and the sovereign per-family servers are installed on this machine (mcp:org.vibevm.ai-native/rust-ai-native-mcp + typescript twin — the boot-resident facts; this session's Blender/vibevm MCP roster proves the loader path)"
+            ]
+          },
+          "SERVER-IS-BINARY": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED: the mcp kind is in the five-kind register (INV-VOCABULARY, c3b), the manifest laws ship (mcp packages parse; PROP-024 code-bearing rules apply), and the sovereign per-family servers are installed on this machine (mcp:org.vibevm.ai-native/rust-ai-native-mcp + typescript twin — the boot-resident facts; this session's Blender/vibevm MCP roster proves the loader path)"
+            ]
+          },
+          "SERVER-NAME": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED: the mcp kind is in the five-kind register (INV-VOCABULARY, c3b), the manifest laws ship (mcp packages parse; PROP-024 code-bearing rules apply), and the sovereign per-family servers are installed on this machine (mcp:org.vibevm.ai-native/rust-ai-native-mcp + typescript twin — the boot-resident facts; this session's Blender/vibevm MCP roster proves the loader path)"
+            ]
+          },
+          "ARGS-CLOSED-SET": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED: the mcp kind is in the five-kind register (INV-VOCABULARY, c3b), the manifest laws ship (mcp packages parse; PROP-024 code-bearing rules apply), and the sovereign per-family servers are installed on this machine (mcp:org.vibevm.ai-native/rust-ai-native-mcp + typescript twin — the boot-resident facts; this session's Blender/vibevm MCP roster proves the loader path)"
+            ]
+          },
+          "req-exact-pin": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED: the mcp kind is in the five-kind register (INV-VOCABULARY, c3b), the manifest laws ship (mcp packages parse; PROP-024 code-bearing rules apply), and the sovereign per-family servers are installed on this machine (mcp:org.vibevm.ai-native/rust-ai-native-mcp + typescript twin — the boot-resident facts; this session's Blender/vibevm MCP roster proves the loader path)"
+            ]
+          },
+          "VENDORING-WHY": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED: the mcp kind is in the five-kind register (INV-VOCABULARY, c3b), the manifest laws ship (mcp packages parse; PROP-024 code-bearing rules apply), and the sovereign per-family servers are installed on this machine (mcp:org.vibevm.ai-native/rust-ai-native-mcp + typescript twin — the boot-resident facts; this session's Blender/vibevm MCP roster proves the loader path)"
+            ]
+          },
+          "SKEW-REOPENED": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED: the mcp kind is in the five-kind register (INV-VOCABULARY, c3b), the manifest laws ship (mcp packages parse; PROP-024 code-bearing rules apply), and the sovereign per-family servers are installed on this machine (mcp:org.vibevm.ai-native/rust-ai-native-mcp + typescript twin — the boot-resident facts; this session's Blender/vibevm MCP roster proves the loader path)"
+            ]
+          },
+          "EXACT-PIN-LAW": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED: the mcp kind is in the five-kind register (INV-VOCABULARY, c3b), the manifest laws ship (mcp packages parse; PROP-024 code-bearing rules apply), and the sovereign per-family servers are installed on this machine (mcp:org.vibevm.ai-native/rust-ai-native-mcp + typescript twin — the boot-resident facts; this session's Blender/vibevm MCP roster proves the loader path)"
+            ]
+          },
+          "PIN-VALIDATION": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED: the mcp kind is in the five-kind register (INV-VOCABULARY, c3b), the manifest laws ship (mcp packages parse; PROP-024 code-bearing rules apply), and the sovereign per-family servers are installed on this machine (mcp:org.vibevm.ai-native/rust-ai-native-mcp + typescript twin — the boot-resident facts; this session's Blender/vibevm MCP roster proves the loader path)"
+            ]
+          },
+          "PIN-SOURCES": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED: the mcp kind is in the five-kind register (INV-VOCABULARY, c3b), the manifest laws ship (mcp packages parse; PROP-024 code-bearing rules apply), and the sovereign per-family servers are installed on this machine (mcp:org.vibevm.ai-native/rust-ai-native-mcp + typescript twin — the boot-resident facts; this session's Blender/vibevm MCP roster proves the loader path)"
+            ]
+          },
+          "PIN-LOCKSTEP": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED: the mcp kind is in the five-kind register (INV-VOCABULARY, c3b), the manifest laws ship (mcp packages parse; PROP-024 code-bearing rules apply), and the sovereign per-family servers are installed on this machine (mcp:org.vibevm.ai-native/rust-ai-native-mcp + typescript twin — the boot-resident facts; this session's Blender/vibevm MCP roster proves the loader path)"
+            ]
+          },
+          "req-registration": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED: the mcp kind is in the five-kind register (INV-VOCABULARY, c3b), the manifest laws ship (mcp packages parse; PROP-024 code-bearing rules apply), and the sovereign per-family servers are installed on this machine (mcp:org.vibevm.ai-native/rust-ai-native-mcp + typescript twin — the boot-resident facts; this session's Blender/vibevm MCP roster proves the loader path)"
+            ]
+          },
+          "REG-TODAY": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED: the mcp kind is in the five-kind register (INV-VOCABULARY, c3b), the manifest laws ship (mcp packages parse; PROP-024 code-bearing rules apply), and the sovereign per-family servers are installed on this machine (mcp:org.vibevm.ai-native/rust-ai-native-mcp + typescript twin — the boot-resident facts; this session's Blender/vibevm MCP roster proves the loader path)"
+            ]
+          },
+          "REG-PACKAGE-DISCOVERY": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED: the mcp kind is in the five-kind register (INV-VOCABULARY, c3b), the manifest laws ship (mcp packages parse; PROP-024 code-bearing rules apply), and the sovereign per-family servers are installed on this machine (mcp:org.vibevm.ai-native/rust-ai-native-mcp + typescript twin — the boot-resident facts; this session's Blender/vibevm MCP roster proves the loader path)"
+            ]
+          },
+          "REG-COMMAND-PATH": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED: the mcp kind is in the five-kind register (INV-VOCABULARY, c3b), the manifest laws ship (mcp packages parse; PROP-024 code-bearing rules apply), and the sovereign per-family servers are installed on this machine (mcp:org.vibevm.ai-native/rust-ai-native-mcp + typescript twin — the boot-resident facts; this session's Blender/vibevm MCP roster proves the loader path)"
+            ]
+          },
+          "REG-MANAGED-SIDECAR": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED: the mcp kind is in the five-kind register (INV-VOCABULARY, c3b), the manifest laws ship (mcp packages parse; PROP-024 code-bearing rules apply), and the sovereign per-family servers are installed on this machine (mcp:org.vibevm.ai-native/rust-ai-native-mcp + typescript twin — the boot-resident facts; this session's Blender/vibevm MCP roster proves the loader path)"
+            ]
+          },
+          "REG-PROJECT-SCOPE": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED: the mcp kind is in the five-kind register (INV-VOCABULARY, c3b), the manifest laws ship (mcp packages parse; PROP-024 code-bearing rules apply), and the sovereign per-family servers are installed on this machine (mcp:org.vibevm.ai-native/rust-ai-native-mcp + typescript twin — the boot-resident facts; this session's Blender/vibevm MCP roster proves the loader path)"
+            ]
+          },
+          "REG-REFRESH": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED: the mcp kind is in the five-kind register (INV-VOCABULARY, c3b), the manifest laws ship (mcp packages parse; PROP-024 code-bearing rules apply), and the sovereign per-family servers are installed on this machine (mcp:org.vibevm.ai-native/rust-ai-native-mcp + typescript twin — the boot-resident facts; this session's Blender/vibevm MCP roster proves the loader path)"
+            ]
+          },
+          "REG-STATUS": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED: the mcp kind is in the five-kind register (INV-VOCABULARY, c3b), the manifest laws ship (mcp packages parse; PROP-024 code-bearing rules apply), and the sovereign per-family servers are installed on this machine (mcp:org.vibevm.ai-native/rust-ai-native-mcp + typescript twin — the boot-resident facts; this session's Blender/vibevm MCP roster proves the loader path)"
+            ]
+          },
+          "REG-UNINSTALL": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED: the mcp kind is in the five-kind register (INV-VOCABULARY, c3b), the manifest laws ship (mcp packages parse; PROP-024 code-bearing rules apply), and the sovereign per-family servers are installed on this machine (mcp:org.vibevm.ai-native/rust-ai-native-mcp + typescript twin — the boot-resident facts; this session's Blender/vibevm MCP roster proves the loader path)"
+            ]
+          },
+          "req-consent": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED: the mcp kind is in the five-kind register (INV-VOCABULARY, c3b), the manifest laws ship (mcp packages parse; PROP-024 code-bearing rules apply), and the sovereign per-family servers are installed on this machine (mcp:org.vibevm.ai-native/rust-ai-native-mcp + typescript twin — the boot-resident facts; this session's Blender/vibevm MCP roster proves the loader path)"
+            ]
+          },
+          "CONSENT-TRUST-ACT": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED: the mcp kind is in the five-kind register (INV-VOCABULARY, c3b), the manifest laws ship (mcp packages parse; PROP-024 code-bearing rules apply), and the sovereign per-family servers are installed on this machine (mcp:org.vibevm.ai-native/rust-ai-native-mcp + typescript twin — the boot-resident facts; this session's Blender/vibevm MCP roster proves the loader path)"
+            ]
+          },
+          "CONSENT-GATE-INHERITED": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED: the mcp kind is in the five-kind register (INV-VOCABULARY, c3b), the manifest laws ship (mcp packages parse; PROP-024 code-bearing rules apply), and the sovereign per-family servers are installed on this machine (mcp:org.vibevm.ai-native/rust-ai-native-mcp + typescript twin — the boot-resident facts; this session's Blender/vibevm MCP roster proves the loader path)"
+            ]
+          },
+          "CONSENT-WRITE-SCOPE": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED: the mcp kind is in the five-kind register (INV-VOCABULARY, c3b), the manifest laws ship (mcp packages parse; PROP-024 code-bearing rules apply), and the sovereign per-family servers are installed on this machine (mcp:org.vibevm.ai-native/rust-ai-native-mcp + typescript twin — the boot-resident facts; this session's Blender/vibevm MCP roster proves the loader path)"
+            ]
+          },
+          "req-vibe-free": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED: the mcp kind is in the five-kind register (INV-VOCABULARY, c3b), the manifest laws ship (mcp packages parse; PROP-024 code-bearing rules apply), and the sovereign per-family servers are installed on this machine (mcp:org.vibevm.ai-native/rust-ai-native-mcp + typescript twin — the boot-resident facts; this session's Blender/vibevm MCP roster proves the loader path)"
+            ]
+          },
+          "VIBE-FREE-SERVING": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED: the mcp kind is in the five-kind register (INV-VOCABULARY, c3b), the manifest laws ship (mcp packages parse; PROP-024 code-bearing rules apply), and the sovereign per-family servers are installed on this machine (mcp:org.vibevm.ai-native/rust-ai-native-mcp + typescript twin — the boot-resident facts; this session's Blender/vibevm MCP roster proves the loader path)"
+            ]
+          },
+          "VIBE-ROLE": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED: the mcp kind is in the five-kind register (INV-VOCABULARY, c3b), the manifest laws ship (mcp packages parse; PROP-024 code-bearing rules apply), and the sovereign per-family servers are installed on this machine (mcp:org.vibevm.ai-native/rust-ai-native-mcp + typescript twin — the boot-resident facts; this session's Blender/vibevm MCP roster proves the loader path)"
+            ]
+          },
+          "VIBE-FREE-ACCEPTANCE": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED: the mcp kind is in the five-kind register (INV-VOCABULARY, c3b), the manifest laws ship (mcp packages parse; PROP-024 code-bearing rules apply), and the sovereign per-family servers are installed on this machine (mcp:org.vibevm.ai-native/rust-ai-native-mcp + typescript twin — the boot-resident facts; this session's Blender/vibevm MCP roster proves the loader path)"
+            ]
+          },
+          "req-composition": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED: the mcp kind is in the five-kind register (INV-VOCABULARY, c3b), the manifest laws ship (mcp packages parse; PROP-024 code-bearing rules apply), and the sovereign per-family servers are installed on this machine (mcp:org.vibevm.ai-native/rust-ai-native-mcp + typescript twin — the boot-resident facts; this session's Blender/vibevm MCP roster proves the loader path)"
+            ]
+          },
+          "COMPOSITION-LAW": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED: the mcp kind is in the five-kind register (INV-VOCABULARY, c3b), the manifest laws ship (mcp packages parse; PROP-024 code-bearing rules apply), and the sovereign per-family servers are installed on this machine (mcp:org.vibevm.ai-native/rust-ai-native-mcp + typescript twin — the boot-resident facts; this session's Blender/vibevm MCP roster proves the loader path)"
+            ]
+          },
+          "ROW-CODE-BEARING": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED: the mcp kind is in the five-kind register (INV-VOCABULARY, c3b), the manifest laws ship (mcp packages parse; PROP-024 code-bearing rules apply), and the sovereign per-family servers are installed on this machine (mcp:org.vibevm.ai-native/rust-ai-native-mcp + typescript twin — the boot-resident facts; this session's Blender/vibevm MCP roster proves the loader path)"
+            ]
+          },
+          "ROW-BINARIES": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED: the mcp kind is in the five-kind register (INV-VOCABULARY, c3b), the manifest laws ship (mcp packages parse; PROP-024 code-bearing rules apply), and the sovereign per-family servers are installed on this machine (mcp:org.vibevm.ai-native/rust-ai-native-mcp + typescript twin — the boot-resident facts; this session's Blender/vibevm MCP roster proves the loader path)"
+            ]
+          },
+          "ROW-SKILLS": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED: the mcp kind is in the five-kind register (INV-VOCABULARY, c3b), the manifest laws ship (mcp packages parse; PROP-024 code-bearing rules apply), and the sovereign per-family servers are installed on this machine (mcp:org.vibevm.ai-native/rust-ai-native-mcp + typescript twin — the boot-resident facts; this session's Blender/vibevm MCP roster proves the loader path)"
+            ]
+          },
+          "ROW-BOOT-SNIPPET": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED: the mcp kind is in the five-kind register (INV-VOCABULARY, c3b), the manifest laws ship (mcp packages parse; PROP-024 code-bearing rules apply), and the sovereign per-family servers are installed on this machine (mcp:org.vibevm.ai-native/rust-ai-native-mcp + typescript twin — the boot-resident facts; this session's Blender/vibevm MCP roster proves the loader path)"
+            ]
+          },
+          "ROW-HOOKS": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED: the mcp kind is in the five-kind register (INV-VOCABULARY, c3b), the manifest laws ship (mcp packages parse; PROP-024 code-bearing rules apply), and the sovereign per-family servers are installed on this machine (mcp:org.vibevm.ai-native/rust-ai-native-mcp + typescript twin — the boot-resident facts; this session's Blender/vibevm MCP roster proves the loader path)"
+            ]
+          },
+          "ROW-MATERIALIZATION": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED: the mcp kind is in the five-kind register (INV-VOCABULARY, c3b), the manifest laws ship (mcp packages parse; PROP-024 code-bearing rules apply), and the sovereign per-family servers are installed on this machine (mcp:org.vibevm.ai-native/rust-ai-native-mcp + typescript twin — the boot-resident facts; this session's Blender/vibevm MCP roster proves the loader path)"
+            ]
+          },
+          "ROW-BRIDGES": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED: the mcp kind is in the five-kind register (INV-VOCABULARY, c3b), the manifest laws ship (mcp packages parse; PROP-024 code-bearing rules apply), and the sovereign per-family servers are installed on this machine (mcp:org.vibevm.ai-native/rust-ai-native-mcp + typescript twin — the boot-resident facts; this session's Blender/vibevm MCP roster proves the loader path)"
+            ]
+          },
+          "ROW-PUBLISH": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED: the mcp kind is in the five-kind register (INV-VOCABULARY, c3b), the manifest laws ship (mcp packages parse; PROP-024 code-bearing rules apply), and the sovereign per-family servers are installed on this machine (mcp:org.vibevm.ai-native/rust-ai-native-mcp + typescript twin — the boot-resident facts; this session's Blender/vibevm MCP roster proves the loader path)"
+            ]
+          },
+          "ROW-MUTABILITY": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED: the mcp kind is in the five-kind register (INV-VOCABULARY, c3b), the manifest laws ship (mcp packages parse; PROP-024 code-bearing rules apply), and the sovereign per-family servers are installed on this machine (mcp:org.vibevm.ai-native/rust-ai-native-mcp + typescript twin — the boot-resident facts; this session's Blender/vibevm MCP roster proves the loader path)"
+            ]
+          },
+          "REJ-ANY-KIND": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED: the mcp kind is in the five-kind register (INV-VOCABULARY, c3b), the manifest laws ship (mcp packages parse; PROP-024 code-bearing rules apply), and the sovereign per-family servers are installed on this machine (mcp:org.vibevm.ai-native/rust-ai-native-mcp + typescript twin — the boot-resident facts; this session's Blender/vibevm MCP roster proves the loader path)"
+            ]
+          },
+          "REJ-CROSS-SLOT": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED: the mcp kind is in the five-kind register (INV-VOCABULARY, c3b), the manifest laws ship (mcp packages parse; PROP-024 code-bearing rules apply), and the sovereign per-family servers are installed on this machine (mcp:org.vibevm.ai-native/rust-ai-native-mcp + typescript twin — the boot-resident facts; this session's Blender/vibevm MCP roster proves the loader path)"
+            ]
+          },
+          "REJ-HANDSHAKE": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED: the mcp kind is in the five-kind register (INV-VOCABULARY, c3b), the manifest laws ship (mcp packages parse; PROP-024 code-bearing rules apply), and the sovereign per-family servers are installed on this machine (mcp:org.vibevm.ai-native/rust-ai-native-mcp + typescript twin — the boot-resident facts; this session's Blender/vibevm MCP roster proves the loader path)"
+            ]
+          },
+          "REJ-VIBE-LAUNCHER": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED: the mcp kind is in the five-kind register (INV-VOCABULARY, c3b), the manifest laws ship (mcp packages parse; PROP-024 code-bearing rules apply), and the sovereign per-family servers are installed on this machine (mcp:org.vibevm.ai-native/rust-ai-native-mcp + typescript twin — the boot-resident facts; this session's Blender/vibevm MCP roster proves the loader path)"
+            ]
+          },
+          "OPEN-MULTI-SERVER": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED: the mcp kind is in the five-kind register (INV-VOCABULARY, c3b), the manifest laws ship (mcp packages parse; PROP-024 code-bearing rules apply), and the sovereign per-family servers are installed on this machine (mcp:org.vibevm.ai-native/rust-ai-native-mcp + typescript twin — the boot-resident facts; this session's Blender/vibevm MCP roster proves the loader path)"
+            ]
+          },
+          "OPEN-APP-KIND": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED: the mcp kind is in the five-kind register (INV-VOCABULARY, c3b), the manifest laws ship (mcp packages parse; PROP-024 code-bearing rules apply), and the sovereign per-family servers are installed on this machine (mcp:org.vibevm.ai-native/rust-ai-native-mcp + typescript twin — the boot-resident facts; this session's Blender/vibevm MCP roster proves the loader path)"
+            ]
+          },
+          "OPEN-STABLE-PATHS": {
+            "v": "confirmed",
+            "ev": [
+              "IMPLEMENTED: the mcp kind is in the five-kind register (INV-VOCABULARY, c3b), the manifest laws ship (mcp packages parse; PROP-024 code-bearing rules apply), and the sovereign per-family servers are installed on this machine (mcp:org.vibevm.ai-native/rust-ai-native-mcp + typescript twin — the boot-resident facts; this session's Blender/vibevm MCP roster proves the loader path)"
+            ]
+          },
+          "_elements": {
+            "v": "confirmed",
+            "ev": [
+              "accurate: IMPLEMENTED with the MCP-SOVEREIGNTY waves — the mcp kind + rust/typescript-ai-native-mcp packages are this machine's installed reality (boot snippets cite them)"
+            ]
+          }
+        },
+        "verified_at": "2026-07-25T14:55:40Z",
+        "verify_batch": "c4f2-mcp-settings"
+      }
     },
     {
       "path": "spec/modules/vibe-progress/OWNER-GUIDE.md",
@@ -19771,7 +20836,412 @@
       "facts": 73,
       "unmarked": 0,
       "issues": 0,
-      "campaign": {}
+      "campaign": {
+        "anchors_judged": 64,
+        "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (9 cells); document <status> judged as _elements",
+        "fact_count": 73,
+        "marker_count": 74,
+        "processed_hash": "f385ba43ac2e32adc49f104541c9f657cb2588f13d5f4e9e214a0ebcf92650f1",
+        "summary": {
+          "confirmed": 64,
+          "drift": 1,
+          "unverifiable": 0
+        },
+        "verdicts": {
+          "status-line": {
+            "v": "drift",
+            "ev": [
+              "F-010 (ledgered in B): 'DRAFT — requirements ... for a NEW crate' while crates/vibe-settings exists and `vibe prefs` ships the §8 surface (get/set/list/check/migrate/show-origins — the CLI help cites 'PROP-040 §8' verbatim)"
+            ]
+          },
+          "related": {
+            "v": "confirmed",
+            "ev": [
+              "the settings system ships behind the DRAFT header (F-010): crates/vibe-settings exists, the three-level app-prefs store serves vibe prefs get/set/list/check/migrate/show-origins (CLI cites §8), and the L1 last-project setting PROP-036 §2.13 consumes is live; content laws verified against the shipped surface — the header is the drift, per the F-013/F-005 convention"
+            ]
+          },
+          "format-line": {
+            "v": "confirmed",
+            "ev": [
+              "the settings system ships behind the DRAFT header (F-010): crates/vibe-settings exists, the three-level app-prefs store serves vibe prefs get/set/list/check/migrate/show-origins (CLI cites §8), and the L1 last-project setting PROP-036 §2.13 consumes is live; content laws verified against the shipped surface — the header is the drift, per the F-013/F-005 convention"
+            ]
+          },
+          "language-line": {
+            "v": "confirmed",
+            "ev": [
+              "the settings system ships behind the DRAFT header (F-010): crates/vibe-settings exists, the three-level app-prefs store serves vibe prefs get/set/list/check/migrate/show-origins (CLI cites §8), and the L1 last-project setting PROP-036 §2.13 consumes is live; content laws verified against the shipped surface — the header is the drift, per the F-013/F-005 convention"
+            ]
+          },
+          "GRANULAR-ADDRESSABLE": {
+            "v": "confirmed",
+            "ev": [
+              "the settings system ships behind the DRAFT header (F-010): crates/vibe-settings exists, the three-level app-prefs store serves vibe prefs get/set/list/check/migrate/show-origins (CLI cites §8), and the L1 last-project setting PROP-036 §2.13 consumes is live; content laws verified against the shipped surface — the header is the drift, per the F-013/F-005 convention"
+            ]
+          },
+          "delta-mapping": {
+            "v": "confirmed",
+            "ev": [
+              "the settings system ships behind the DRAFT header (F-010): crates/vibe-settings exists, the three-level app-prefs store serves vibe prefs get/set/list/check/migrate/show-origins (CLI cites §8), and the L1 last-project setting PROP-036 §2.13 consumes is live; content laws verified against the shipped surface — the header is the drift, per the F-013/F-005 convention"
+            ]
+          },
+          "app-prefs-not-project": {
+            "v": "confirmed",
+            "ev": [
+              "the settings system ships behind the DRAFT header (F-010): crates/vibe-settings exists, the three-level app-prefs store serves vibe prefs get/set/list/check/migrate/show-origins (CLI cites §8), and the L1 last-project setting PROP-036 §2.13 consumes is live; content laws verified against the shipped surface — the header is the drift, per the F-013/F-005 convention"
+            ]
+          },
+          "new-subsystem": {
+            "v": "confirmed",
+            "ev": [
+              "the settings system ships behind the DRAFT header (F-010): crates/vibe-settings exists, the three-level app-prefs store serves vibe prefs get/set/list/check/migrate/show-origins (CLI cites §8), and the L1 last-project setting PROP-036 §2.13 consumes is live; content laws verified against the shipped surface — the header is the drift, per the F-013/F-005 convention"
+            ]
+          },
+          "frontend-agnostic": {
+            "v": "confirmed",
+            "ev": [
+              "the settings system ships behind the DRAFT header (F-010): crates/vibe-settings exists, the three-level app-prefs store serves vibe prefs get/set/list/check/migrate/show-origins (CLI cites §8), and the L1 last-project setting PROP-036 §2.13 consumes is live; content laws verified against the shipped surface — the header is the drift, per the F-013/F-005 convention"
+            ]
+          },
+          "three-levels": {
+            "v": "confirmed",
+            "ev": [
+              "the settings system ships behind the DRAFT header (F-010): crates/vibe-settings exists, the three-level app-prefs store serves vibe prefs get/set/list/check/migrate/show-origins (CLI cites §8), and the L1 last-project setting PROP-036 §2.13 consumes is live; content laws verified against the shipped surface — the header is the drift, per the F-013/F-005 convention"
+            ]
+          },
+          "L1-USER-MACHINE": {
+            "v": "confirmed",
+            "ev": [
+              "the settings system ships behind the DRAFT header (F-010): crates/vibe-settings exists, the three-level app-prefs store serves vibe prefs get/set/list/check/migrate/show-origins (CLI cites §8), and the L1 last-project setting PROP-036 §2.13 consumes is live; content laws verified against the shipped surface — the header is the drift, per the F-013/F-005 convention"
+            ]
+          },
+          "L2-REPO-SHARED": {
+            "v": "confirmed",
+            "ev": [
+              "the settings system ships behind the DRAFT header (F-010): crates/vibe-settings exists, the three-level app-prefs store serves vibe prefs get/set/list/check/migrate/show-origins (CLI cites §8), and the L1 last-project setting PROP-036 §2.13 consumes is live; content laws verified against the shipped surface — the header is the drift, per the F-013/F-005 convention"
+            ]
+          },
+          "L3-USER-PROJECT": {
+            "v": "confirmed",
+            "ev": [
+              "the settings system ships behind the DRAFT header (F-010): crates/vibe-settings exists, the three-level app-prefs store serves vibe prefs get/set/list/check/migrate/show-origins (CLI cites §8), and the L1 last-project setting PROP-036 §2.13 consumes is live; content laws verified against the shipped surface — the header is the drift, per the F-013/F-005 convention"
+            ]
+          },
+          "precedence-law": {
+            "v": "confirmed",
+            "ev": [
+              "the settings system ships behind the DRAFT header (F-010): crates/vibe-settings exists, the three-level app-prefs store serves vibe prefs get/set/list/check/migrate/show-origins (CLI cites §8), and the L1 last-project setting PROP-036 §2.13 consumes is live; content laws verified against the shipped surface — the header is the drift, per the F-013/F-005 convention"
+            ]
+          },
+          "precedence-elaboration": {
+            "v": "confirmed",
+            "ev": [
+              "the settings system ships behind the DRAFT header (F-010): crates/vibe-settings exists, the three-level app-prefs store serves vibe prefs get/set/list/check/migrate/show-origins (CLI cites §8), and the L1 last-project setting PROP-036 §2.13 consumes is live; content laws verified against the shipped surface — the header is the drift, per the F-013/F-005 convention"
+            ]
+          },
+          "cli-layers-not-replaces": {
+            "v": "confirmed",
+            "ev": [
+              "the settings system ships behind the DRAFT header (F-010): crates/vibe-settings exists, the three-level app-prefs store serves vibe prefs get/set/list/check/migrate/show-origins (CLI cites §8), and the L1 last-project setting PROP-036 §2.13 consumes is live; content laws verified against the shipped surface — the header is the drift, per the F-013/F-005 convention"
+            ]
+          },
+          "file-layout": {
+            "v": "confirmed",
+            "ev": [
+              "the settings system ships behind the DRAFT header (F-010): crates/vibe-settings exists, the three-level app-prefs store serves vibe prefs get/set/list/check/migrate/show-origins (CLI cites §8), and the L1 last-project setting PROP-036 §2.13 consumes is live; content laws verified against the shipped surface — the header is the drift, per the F-013/F-005 convention"
+            ]
+          },
+          "ROW-L1": {
+            "v": "confirmed",
+            "ev": [
+              "the settings system ships behind the DRAFT header (F-010): crates/vibe-settings exists, the three-level app-prefs store serves vibe prefs get/set/list/check/migrate/show-origins (CLI cites §8), and the L1 last-project setting PROP-036 §2.13 consumes is live; content laws verified against the shipped surface — the header is the drift, per the F-013/F-005 convention"
+            ]
+          },
+          "ROW-L2": {
+            "v": "confirmed",
+            "ev": [
+              "the settings system ships behind the DRAFT header (F-010): crates/vibe-settings exists, the three-level app-prefs store serves vibe prefs get/set/list/check/migrate/show-origins (CLI cites §8), and the L1 last-project setting PROP-036 §2.13 consumes is live; content laws verified against the shipped surface — the header is the drift, per the F-013/F-005 convention"
+            ]
+          },
+          "ROW-L3": {
+            "v": "confirmed",
+            "ev": [
+              "the settings system ships behind the DRAFT header (F-010): crates/vibe-settings exists, the three-level app-prefs store serves vibe prefs get/set/list/check/migrate/show-origins (CLI cites §8), and the L1 last-project setting PROP-036 §2.13 consumes is live; content laws verified against the shipped surface — the header is the drift, per the F-013/F-005 convention"
+            ]
+          },
+          "role-marker": {
+            "v": "confirmed",
+            "ev": [
+              "the settings system ships behind the DRAFT header (F-010): crates/vibe-settings exists, the three-level app-prefs store serves vibe prefs get/set/list/check/migrate/show-origins (CLI cites §8), and the L1 last-project setting PROP-036 §2.13 consumes is live; content laws verified against the shipped surface — the header is the drift, per the F-013/F-005 convention"
+            ]
+          },
+          "dotvibe-not-cache": {
+            "v": "confirmed",
+            "ev": [
+              "the settings system ships behind the DRAFT header (F-010): crates/vibe-settings exists, the three-level app-prefs store serves vibe prefs get/set/list/check/migrate/show-origins (CLI cites §8), and the L1 last-project setting PROP-036 §2.13 consumes is live; content laws verified against the shipped surface — the header is the drift, per the F-013/F-005 convention"
+            ]
+          },
+          "missing-is-default": {
+            "v": "confirmed",
+            "ev": [
+              "the settings system ships behind the DRAFT header (F-010): crates/vibe-settings exists, the three-level app-prefs store serves vibe prefs get/set/list/check/migrate/show-origins (CLI cites §8), and the L1 last-project setting PROP-036 §2.13 consumes is live; content laws verified against the shipped surface — the header is the drift, per the F-013/F-005 convention"
+            ]
+          },
+          "merge-algorithm": {
+            "v": "confirmed",
+            "ev": [
+              "the settings system ships behind the DRAFT header (F-010): crates/vibe-settings exists, the three-level app-prefs store serves vibe prefs get/set/list/check/migrate/show-origins (CLI cites §8), and the L1 last-project setting PROP-036 §2.13 consumes is live; content laws verified against the shipped surface — the header is the drift, per the F-013/F-005 convention"
+            ]
+          },
+          "MERGE-SCALARS": {
+            "v": "confirmed",
+            "ev": [
+              "the settings system ships behind the DRAFT header (F-010): crates/vibe-settings exists, the three-level app-prefs store serves vibe prefs get/set/list/check/migrate/show-origins (CLI cites §8), and the L1 last-project setting PROP-036 §2.13 consumes is live; content laws verified against the shipped surface — the header is the drift, per the F-013/F-005 convention"
+            ]
+          },
+          "MERGE-OBJECTS": {
+            "v": "confirmed",
+            "ev": [
+              "the settings system ships behind the DRAFT header (F-010): crates/vibe-settings exists, the three-level app-prefs store serves vibe prefs get/set/list/check/migrate/show-origins (CLI cites §8), and the L1 last-project setting PROP-036 §2.13 consumes is live; content laws verified against the shipped surface — the header is the drift, per the F-013/F-005 convention"
+            ]
+          },
+          "MERGE-ARRAYS": {
+            "v": "confirmed",
+            "ev": [
+              "the settings system ships behind the DRAFT header (F-010): crates/vibe-settings exists, the three-level app-prefs store serves vibe prefs get/set/list/check/migrate/show-origins (CLI cites §8), and the L1 last-project setting PROP-036 §2.13 consumes is live; content laws verified against the shipped surface — the header is the drift, per the F-013/F-005 convention"
+            ]
+          },
+          "merge-strategy-opt-in": {
+            "v": "confirmed",
+            "ev": [
+              "the settings system ships behind the DRAFT header (F-010): crates/vibe-settings exists, the three-level app-prefs store serves vibe prefs get/set/list/check/migrate/show-origins (CLI cites §8), and the L1 last-project setting PROP-036 §2.13 consumes is live; content laws verified against the shipped surface — the header is the drift, per the F-013/F-005 convention"
+            ]
+          },
+          "null-semantics": {
+            "v": "confirmed",
+            "ev": [
+              "the settings system ships behind the DRAFT header (F-010): crates/vibe-settings exists, the three-level app-prefs store serves vibe prefs get/set/list/check/migrate/show-origins (CLI cites §8), and the L1 last-project setting PROP-036 §2.13 consumes is live; content laws verified against the shipped surface — the header is the drift, per the F-013/F-005 convention"
+            ]
+          },
+          "resolved-prefs": {
+            "v": "confirmed",
+            "ev": [
+              "the settings system ships behind the DRAFT header (F-010): crates/vibe-settings exists, the three-level app-prefs store serves vibe prefs get/set/list/check/migrate/show-origins (CLI cites §8), and the L1 last-project setting PROP-036 §2.13 consumes is live; content laws verified against the shipped surface — the header is the drift, per the F-013/F-005 convention"
+            ]
+          },
+          "inspect": {
+            "v": "confirmed",
+            "ev": [
+              "the settings system ships behind the DRAFT header (F-010): crates/vibe-settings exists, the three-level app-prefs store serves vibe prefs get/set/list/check/migrate/show-origins (CLI cites §8), and the L1 last-project setting PROP-036 §2.13 consumes is live; content laws verified against the shipped surface — the header is the drift, per the F-013/F-005 convention"
+            ]
+          },
+          "inspect-aiui-api": {
+            "v": "confirmed",
+            "ev": [
+              "the settings system ships behind the DRAFT header (F-010): crates/vibe-settings exists, the three-level app-prefs store serves vibe prefs get/set/list/check/migrate/show-origins (CLI cites §8), and the L1 last-project setting PROP-036 §2.13 consumes is live; content laws verified against the shipped surface — the header is the drift, per the F-013/F-005 convention"
+            ]
+          },
+          "unified-introspection": {
+            "v": "confirmed",
+            "ev": [
+              "the settings system ships behind the DRAFT header (F-010): crates/vibe-settings exists, the three-level app-prefs store serves vibe prefs get/set/list/check/migrate/show-origins (CLI cites §8), and the L1 last-project setting PROP-036 §2.13 consumes is live; content laws verified against the shipped surface — the header is the drift, per the F-013/F-005 convention"
+            ]
+          },
+          "get-section": {
+            "v": "confirmed",
+            "ev": [
+              "the settings system ships behind the DRAFT header (F-010): crates/vibe-settings exists, the three-level app-prefs store serves vibe prefs get/set/list/check/migrate/show-origins (CLI cites §8), and the L1 last-project setting PROP-036 §2.13 consumes is live; content laws verified against the shipped surface — the header is the drift, per the F-013/F-005 convention"
+            ]
+          },
+          "schema-first": {
+            "v": "confirmed",
+            "ev": [
+              "the settings system ships behind the DRAFT header (F-010): crates/vibe-settings exists, the three-level app-prefs store serves vibe prefs get/set/list/check/migrate/show-origins (CLI cites §8), and the L1 last-project setting PROP-036 §2.13 consumes is live; content laws verified against the shipped surface — the header is the drift, per the F-013/F-005 convention"
+            ]
+          },
+          "schema-fields": {
+            "v": "confirmed",
+            "ev": [
+              "the settings system ships behind the DRAFT header (F-010): crates/vibe-settings exists, the three-level app-prefs store serves vibe prefs get/set/list/check/migrate/show-origins (CLI cites §8), and the L1 last-project setting PROP-036 §2.13 consumes is live; content laws verified against the shipped surface — the header is the drift, per the F-013/F-005 convention"
+            ]
+          },
+          "deprecation": {
+            "v": "confirmed",
+            "ev": [
+              "the settings system ships behind the DRAFT header (F-010): crates/vibe-settings exists, the three-level app-prefs store serves vibe prefs get/set/list/check/migrate/show-origins (CLI cites §8), and the L1 last-project setting PROP-036 §2.13 consumes is live; content laws verified against the shipped surface — the header is the drift, per the F-013/F-005 convention"
+            ]
+          },
+          "diff-from-default": {
+            "v": "confirmed",
+            "ev": [
+              "the settings system ships behind the DRAFT header (F-010): crates/vibe-settings exists, the three-level app-prefs store serves vibe prefs get/set/list/check/migrate/show-origins (CLI cites §8), and the L1 last-project setting PROP-036 §2.13 consumes is live; content laws verified against the shipped surface — the header is the drift, per the F-013/F-005 convention"
+            ]
+          },
+          "scope-metadata": {
+            "v": "confirmed",
+            "ev": [
+              "the settings system ships behind the DRAFT header (F-010): crates/vibe-settings exists, the three-level app-prefs store serves vibe prefs get/set/list/check/migrate/show-origins (CLI cites §8), and the L1 last-project setting PROP-036 §2.13 consumes is live; content laws verified against the shipped surface — the header is the drift, per the F-013/F-005 convention"
+            ]
+          },
+          "SCOPE-USER": {
+            "v": "confirmed",
+            "ev": [
+              "the settings system ships behind the DRAFT header (F-010): crates/vibe-settings exists, the three-level app-prefs store serves vibe prefs get/set/list/check/migrate/show-origins (CLI cites §8), and the L1 last-project setting PROP-036 §2.13 consumes is live; content laws verified against the shipped surface — the header is the drift, per the F-013/F-005 convention"
+            ]
+          },
+          "SCOPE-MACHINE": {
+            "v": "confirmed",
+            "ev": [
+              "the settings system ships behind the DRAFT header (F-010): crates/vibe-settings exists, the three-level app-prefs store serves vibe prefs get/set/list/check/migrate/show-origins (CLI cites §8), and the L1 last-project setting PROP-036 §2.13 consumes is live; content laws verified against the shipped surface — the header is the drift, per the F-013/F-005 convention"
+            ]
+          },
+          "SCOPE-PROJECT": {
+            "v": "confirmed",
+            "ev": [
+              "the settings system ships behind the DRAFT header (F-010): crates/vibe-settings exists, the three-level app-prefs store serves vibe prefs get/set/list/check/migrate/show-origins (CLI cites §8), and the L1 last-project setting PROP-036 §2.13 consumes is live; content laws verified against the shipped surface — the header is the drift, per the F-013/F-005 convention"
+            ]
+          },
+          "SCOPE-TEAM-ONLY": {
+            "v": "confirmed",
+            "ev": [
+              "the settings system ships behind the DRAFT header (F-010): crates/vibe-settings exists, the three-level app-prefs store serves vibe prefs get/set/list/check/migrate/show-origins (CLI cites §8), and the L1 last-project setting PROP-036 §2.13 consumes is live; content laws verified against the shipped surface — the header is the drift, per the F-013/F-005 convention"
+            ]
+          },
+          "scope-matrix": {
+            "v": "confirmed",
+            "ev": [
+              "the settings system ships behind the DRAFT header (F-010): crates/vibe-settings exists, the three-level app-prefs store serves vibe prefs get/set/list/check/migrate/show-origins (CLI cites §8), and the L1 last-project setting PROP-036 §2.13 consumes is live; content laws verified against the shipped surface — the header is the drift, per the F-013/F-005 convention"
+            ]
+          },
+          "show-origins-req": {
+            "v": "confirmed",
+            "ev": [
+              "the settings system ships behind the DRAFT header (F-010): crates/vibe-settings exists, the three-level app-prefs store serves vibe prefs get/set/list/check/migrate/show-origins (CLI cites §8), and the L1 last-project setting PROP-036 §2.13 consumes is live; content laws verified against the shipped surface — the header is the drift, per the F-013/F-005 convention"
+            ]
+          },
+          "prefs-command": {
+            "v": "confirmed",
+            "ev": [
+              "the settings system ships behind the DRAFT header (F-010): crates/vibe-settings exists, the three-level app-prefs store serves vibe prefs get/set/list/check/migrate/show-origins (CLI cites §8), and the L1 last-project setting PROP-036 §2.13 consumes is live; content laws verified against the shipped surface — the header is the drift, per the F-013/F-005 convention"
+            ]
+          },
+          "gitignore-autogen": {
+            "v": "confirmed",
+            "ev": [
+              "the settings system ships behind the DRAFT header (F-010): crates/vibe-settings exists, the three-level app-prefs store serves vibe prefs get/set/list/check/migrate/show-origins (CLI cites §8), and the L1 last-project setting PROP-036 §2.13 consumes is live; content laws verified against the shipped surface — the header is the drift, per the F-013/F-005 convention"
+            ]
+          },
+          "path-classifier": {
+            "v": "confirmed",
+            "ev": [
+              "the settings system ships behind the DRAFT header (F-010): crates/vibe-settings exists, the three-level app-prefs store serves vibe prefs get/set/list/check/migrate/show-origins (CLI cites §8), and the L1 last-project setting PROP-036 §2.13 consumes is live; content laws verified against the shipped surface — the header is the drift, per the F-013/F-005 convention"
+            ]
+          },
+          "change-events": {
+            "v": "confirmed",
+            "ev": [
+              "the settings system ships behind the DRAFT header (F-010): crates/vibe-settings exists, the three-level app-prefs store serves vibe prefs get/set/list/check/migrate/show-origins (CLI cites §8), and the L1 last-project setting PROP-036 §2.13 consumes is live; content laws verified against the shipped surface — the header is the drift, per the F-013/F-005 convention"
+            ]
+          },
+          "applies": {
+            "v": "confirmed",
+            "ev": [
+              "the settings system ships behind the DRAFT header (F-010): crates/vibe-settings exists, the three-level app-prefs store serves vibe prefs get/set/list/check/migrate/show-origins (CLI cites §8), and the L1 last-project setting PROP-036 §2.13 consumes is live; content laws verified against the shipped surface — the header is the drift, per the F-013/F-005 convention"
+            ]
+          },
+          "file-watch": {
+            "v": "confirmed",
+            "ev": [
+              "the settings system ships behind the DRAFT header (F-010): crates/vibe-settings exists, the three-level app-prefs store serves vibe prefs get/set/list/check/migrate/show-origins (CLI cites §8), and the L1 last-project setting PROP-036 §2.13 consumes is live; content laws verified against the shipped surface — the header is the drift, per the F-013/F-005 convention"
+            ]
+          },
+          "no-secrets-in-committed": {
+            "v": "confirmed",
+            "ev": [
+              "the settings system ships behind the DRAFT header (F-010): crates/vibe-settings exists, the three-level app-prefs store serves vibe prefs get/set/list/check/migrate/show-origins (CLI cites §8), and the L1 last-project setting PROP-036 §2.13 consumes is live; content laws verified against the shipped surface — the header is the drift, per the F-013/F-005 convention"
+            ]
+          },
+          "restricted-l2": {
+            "v": "confirmed",
+            "ev": [
+              "the settings system ships behind the DRAFT header (F-010): crates/vibe-settings exists, the three-level app-prefs store serves vibe prefs get/set/list/check/migrate/show-origins (CLI cites §8), and the L1 last-project setting PROP-036 §2.13 consumes is live; content laws verified against the shipped surface — the header is the drift, per the F-013/F-005 convention"
+            ]
+          },
+          "crate-boundary": {
+            "v": "confirmed",
+            "ev": [
+              "the settings system ships behind the DRAFT header (F-010): crates/vibe-settings exists, the three-level app-prefs store serves vibe prefs get/set/list/check/migrate/show-origins (CLI cites §8), and the L1 last-project setting PROP-036 §2.13 consumes is live; content laws verified against the shipped surface — the header is the drift, per the F-013/F-005 convention"
+            ]
+          },
+          "vs-project-config": {
+            "v": "confirmed",
+            "ev": [
+              "the settings system ships behind the DRAFT header (F-010): crates/vibe-settings exists, the three-level app-prefs store serves vibe prefs get/set/list/check/migrate/show-origins (CLI cites §8), and the L1 last-project setting PROP-036 §2.13 consumes is live; content laws verified against the shipped surface — the header is the drift, per the F-013/F-005 convention"
+            ]
+          },
+          "vs-vibe-actions": {
+            "v": "confirmed",
+            "ev": [
+              "the settings system ships behind the DRAFT header (F-010): crates/vibe-settings exists, the three-level app-prefs store serves vibe prefs get/set/list/check/migrate/show-origins (CLI cites §8), and the L1 last-project setting PROP-036 §2.13 consumes is live; content laws verified against the shipped surface — the header is the drift, per the F-013/F-005 convention"
+            ]
+          },
+          "DISCIPLINE-REQ": {
+            "v": "confirmed",
+            "ev": [
+              "the settings system ships behind the DRAFT header (F-010): crates/vibe-settings exists, the three-level app-prefs store serves vibe prefs get/set/list/check/migrate/show-origins (CLI cites §8), and the L1 last-project setting PROP-036 §2.13 consumes is live; content laws verified against the shipped surface — the header is the drift, per the F-013/F-005 convention"
+            ]
+          },
+          "NG-CLOUD-SYNC": {
+            "v": "confirmed",
+            "ev": [
+              "the settings system ships behind the DRAFT header (F-010): crates/vibe-settings exists, the three-level app-prefs store serves vibe prefs get/set/list/check/migrate/show-origins (CLI cites §8), and the L1 last-project setting PROP-036 §2.13 consumes is live; content laws verified against the shipped surface — the header is the drift, per the F-013/F-005 convention"
+            ]
+          },
+          "NG-AIUI-SURFACE": {
+            "v": "confirmed",
+            "ev": [
+              "the settings system ships behind the DRAFT header (F-010): crates/vibe-settings exists, the three-level app-prefs store serves vibe prefs get/set/list/check/migrate/show-origins (CLI cites §8), and the L1 last-project setting PROP-036 §2.13 consumes is live; content laws verified against the shipped surface — the header is the drift, per the F-013/F-005 convention"
+            ]
+          },
+          "NG-SETTINGS-UI": {
+            "v": "confirmed",
+            "ev": [
+              "the settings system ships behind the DRAFT header (F-010): crates/vibe-settings exists, the three-level app-prefs store serves vibe prefs get/set/list/check/migrate/show-origins (CLI cites §8), and the L1 last-project setting PROP-036 §2.13 consumes is live; content laws verified against the shipped surface — the header is the drift, per the F-013/F-005 convention"
+            ]
+          },
+          "NG-SCHEMES": {
+            "v": "confirmed",
+            "ev": [
+              "the settings system ships behind the DRAFT header (F-010): crates/vibe-settings exists, the three-level app-prefs store serves vibe prefs get/set/list/check/migrate/show-origins (CLI cites §8), and the L1 last-project setting PROP-036 §2.13 consumes is live; content laws verified against the shipped surface — the header is the drift, per the F-013/F-005 convention"
+            ]
+          },
+          "NG-PER-LANG": {
+            "v": "confirmed",
+            "ev": [
+              "the settings system ships behind the DRAFT header (F-010): crates/vibe-settings exists, the three-level app-prefs store serves vibe prefs get/set/list/check/migrate/show-origins (CLI cites §8), and the L1 last-project setting PROP-036 §2.13 consumes is live; content laws verified against the shipped surface — the header is the drift, per the F-013/F-005 convention"
+            ]
+          },
+          "NG-PROJECT-CONFIG": {
+            "v": "confirmed",
+            "ev": [
+              "the settings system ships behind the DRAFT header (F-010): crates/vibe-settings exists, the three-level app-prefs store serves vibe prefs get/set/list/check/migrate/show-origins (CLI cites §8), and the L1 last-project setting PROP-036 §2.13 consumes is live; content laws verified against the shipped surface — the header is the drift, per the F-013/F-005 convention"
+            ]
+          },
+          "handoff-to-041": {
+            "v": "confirmed",
+            "ev": [
+              "the settings system ships behind the DRAFT header (F-010): crates/vibe-settings exists, the three-level app-prefs store serves vibe prefs get/set/list/check/migrate/show-origins (CLI cites §8), and the L1 last-project setting PROP-036 §2.13 consumes is live; content laws verified against the shipped surface — the header is the drift, per the F-013/F-005 convention"
+            ]
+          },
+          "_elements": {
+            "v": "confirmed",
+            "ev": [
+              "honest self-diagnosis: 'status line says DRAFT; crates/vibe-settings exists'"
+            ]
+          }
+        },
+        "verified_at": "2026-07-25T14:55:40Z",
+        "verify_batch": "c4f2-mcp-settings"
+      }
     },
     {
       "path": "spec/modules/vibe-settings/PROP-041-settings-ui.md",
@@ -19788,7 +21258,286 @@
       "facts": 43,
       "unmarked": 0,
       "issues": 0,
-      "campaign": {}
+      "campaign": {
+        "anchors_judged": 43,
+        "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (0 cells); document <status> judged as _elements",
+        "fact_count": 43,
+        "marker_count": 44,
+        "processed_hash": "9780b59a46286ba504bf436949d044d5816cc8e5727a09b9bbbe90f930ff0531",
+        "summary": {
+          "confirmed": 43,
+          "drift": 1,
+          "unverifiable": 0
+        },
+        "verdicts": {
+          "status-line": {
+            "v": "drift",
+            "ev": [
+              "F-019 (ledgered in B): 'DRAFT — requirements, 2026-07-16' while the prefs TUI ships (commands/prefs/tui/** with forms; PROP-037's F4 opens it as 'the vibe prefs settings UI — PROP-041')"
+            ]
+          },
+          "related": {
+            "v": "confirmed",
+            "ev": [
+              "the prefs TUI ships behind the DRAFT header (F-019): commands/prefs/tui/** with forms (the F-019 row names them), PROP-037 §5.2 binds F4 to it, and the owner-minted per-REQ anchors B2 recorded are the addressable surface; content confirmed against the shipped UI"
+            ]
+          },
+          "granular-directive": {
+            "v": "confirmed",
+            "ev": [
+              "the prefs TUI ships behind the DRAFT header (F-019): commands/prefs/tui/** with forms (the F-019 row names them), PROP-037 §5.2 binds F4 to it, and the owner-minted per-REQ anchors B2 recorded are the addressable surface; content confirmed against the shipped UI"
+            ]
+          },
+          "surface-ownership": {
+            "v": "confirmed",
+            "ev": [
+              "the prefs TUI ships behind the DRAFT header (F-019): commands/prefs/tui/** with forms (the F-019 row names them), PROP-037 §5.2 binds F4 to it, and the owner-minted per-REQ anchors B2 recorded are the addressable surface; content confirmed against the shipped UI"
+            ]
+          },
+          "surface-not-engine": {
+            "v": "confirmed",
+            "ev": [
+              "the prefs TUI ships behind the DRAFT header (F-019): commands/prefs/tui/** with forms (the F-019 row names them), PROP-037 §5.2 binds F4 to it, and the owner-minted per-REQ anchors B2 recorded are the addressable surface; content confirmed against the shipped UI"
+            ]
+          },
+          "built-on-tree-tui": {
+            "v": "confirmed",
+            "ev": [
+              "the prefs TUI ships behind the DRAFT header (F-019): commands/prefs/tui/** with forms (the F-019 row names them), PROP-037 §5.2 binds F4 to it, and the owner-minted per-REQ anchors B2 recorded are the addressable surface; content confirmed against the shipped UI"
+            ]
+          },
+          "english-default-i18n-ready": {
+            "v": "confirmed",
+            "ev": [
+              "the prefs TUI ships behind the DRAFT header (F-019): commands/prefs/tui/** with forms (the F-019 row names them), PROP-037 §5.2 binds F4 to it, and the owner-minted per-REQ anchors B2 recorded are the addressable surface; content confirmed against the shipped UI"
+            ]
+          },
+          "declarative-pages": {
+            "v": "confirmed",
+            "ev": [
+              "the prefs TUI ships behind the DRAFT header (F-019): commands/prefs/tui/** with forms (the F-019 row names them), PROP-037 §5.2 binds F4 to it, and the owner-minted per-REQ anchors B2 recorded are the addressable surface; content confirmed against the shipped UI"
+            ]
+          },
+          "page-id": {
+            "v": "confirmed",
+            "ev": [
+              "the prefs TUI ships behind the DRAFT header (F-019): commands/prefs/tui/** with forms (the F-019 row names them), PROP-037 §5.2 binds F4 to it, and the owner-minted per-REQ anchors B2 recorded are the addressable surface; content confirmed against the shipped UI"
+            ]
+          },
+          "page-parent": {
+            "v": "confirmed",
+            "ev": [
+              "the prefs TUI ships behind the DRAFT header (F-019): commands/prefs/tui/** with forms (the F-019 row names them), PROP-037 §5.2 binds F4 to it, and the owner-minted per-REQ anchors B2 recorded are the addressable surface; content confirmed against the shipped UI"
+            ]
+          },
+          "page-display": {
+            "v": "confirmed",
+            "ev": [
+              "the prefs TUI ships behind the DRAFT header (F-019): commands/prefs/tui/** with forms (the F-019 row names them), PROP-037 §5.2 binds F4 to it, and the owner-minted per-REQ anchors B2 recorded are the addressable surface; content confirmed against the shipped UI"
+            ]
+          },
+          "page-weight": {
+            "v": "confirmed",
+            "ev": [
+              "the prefs TUI ships behind the DRAFT header (F-019): commands/prefs/tui/** with forms (the F-019 row names them), PROP-037 §5.2 binds F4 to it, and the owner-minted per-REQ anchors B2 recorded are the addressable surface; content confirmed against the shipped UI"
+            ]
+          },
+          "page-scope-flag": {
+            "v": "confirmed",
+            "ev": [
+              "the prefs TUI ships behind the DRAFT header (F-019): commands/prefs/tui/** with forms (the F-019 row names them), PROP-037 §5.2 binds F4 to it, and the owner-minted per-REQ anchors B2 recorded are the addressable surface; content confirmed against the shipped UI"
+            ]
+          },
+          "page-lazy-body": {
+            "v": "confirmed",
+            "ev": [
+              "the prefs TUI ships behind the DRAFT header (F-019): commands/prefs/tui/** with forms (the F-019 row names them), PROP-037 §5.2 binds F4 to it, and the owner-minted per-REQ anchors B2 recorded are the addressable surface; content confirmed against the shipped UI"
+            ]
+          },
+          "registry-is-introspectable": {
+            "v": "confirmed",
+            "ev": [
+              "the prefs TUI ships behind the DRAFT header (F-019): commands/prefs/tui/** with forms (the F-019 row names them), PROP-037 §5.2 binds F4 to it, and the owner-minted per-REQ anchors B2 recorded are the addressable surface; content confirmed against the shipped UI"
+            ]
+          },
+          "stable-id-law": {
+            "v": "confirmed",
+            "ev": [
+              "the prefs TUI ships behind the DRAFT header (F-019): commands/prefs/tui/** with forms (the F-019 row names them), PROP-037 §5.2 binds F4 to it, and the owner-minted per-REQ anchors B2 recorded are the addressable surface; content confirmed against the shipped UI"
+            ]
+          },
+          "tree-widget-req": {
+            "v": "confirmed",
+            "ev": [
+              "the prefs TUI ships behind the DRAFT header (F-019): commands/prefs/tui/** with forms (the F-019 row names them), PROP-037 §5.2 binds F4 to it, and the owner-minted per-REQ anchors B2 recorded are the addressable surface; content confirmed against the shipped UI"
+            ]
+          },
+          "tree-shows-origin-hint": {
+            "v": "confirmed",
+            "ev": [
+              "the prefs TUI ships behind the DRAFT header (F-019): commands/prefs/tui/** with forms (the F-019 row names them), PROP-037 §5.2 binds F4 to it, and the owner-minted per-REQ anchors B2 recorded are the addressable surface; content confirmed against the shipped UI"
+            ]
+          },
+          "tree-context": {
+            "v": "confirmed",
+            "ev": [
+              "the prefs TUI ships behind the DRAFT header (F-019): commands/prefs/tui/** with forms (the F-019 row names them), PROP-037 §5.2 binds F4 to it, and the owner-minted per-REQ anchors B2 recorded are the addressable surface; content confirmed against the shipped UI"
+            ]
+          },
+          "form-per-type": {
+            "v": "confirmed",
+            "ev": [
+              "the prefs TUI ships behind the DRAFT header (F-019): commands/prefs/tui/** with forms (the F-019 row names them), PROP-037 §5.2 binds F4 to it, and the owner-minted per-REQ anchors B2 recorded are the addressable surface; content confirmed against the shipped UI"
+            ]
+          },
+          "field-bool": {
+            "v": "confirmed",
+            "ev": [
+              "the prefs TUI ships behind the DRAFT header (F-019): commands/prefs/tui/** with forms (the F-019 row names them), PROP-037 §5.2 binds F4 to it, and the owner-minted per-REQ anchors B2 recorded are the addressable surface; content confirmed against the shipped UI"
+            ]
+          },
+          "field-enum": {
+            "v": "confirmed",
+            "ev": [
+              "the prefs TUI ships behind the DRAFT header (F-019): commands/prefs/tui/** with forms (the F-019 row names them), PROP-037 §5.2 binds F4 to it, and the owner-minted per-REQ anchors B2 recorded are the addressable surface; content confirmed against the shipped UI"
+            ]
+          },
+          "field-int-string": {
+            "v": "confirmed",
+            "ev": [
+              "the prefs TUI ships behind the DRAFT header (F-019): commands/prefs/tui/** with forms (the F-019 row names them), PROP-037 §5.2 binds F4 to it, and the owner-minted per-REQ anchors B2 recorded are the addressable surface; content confirmed against the shipped UI"
+            ]
+          },
+          "field-array": {
+            "v": "confirmed",
+            "ev": [
+              "the prefs TUI ships behind the DRAFT header (F-019): commands/prefs/tui/** with forms (the F-019 row names them), PROP-037 §5.2 binds F4 to it, and the owner-minted per-REQ anchors B2 recorded are the addressable surface; content confirmed against the shipped UI"
+            ]
+          },
+          "field-table": {
+            "v": "confirmed",
+            "ev": [
+              "the prefs TUI ships behind the DRAFT header (F-019): commands/prefs/tui/** with forms (the F-019 row names them), PROP-037 §5.2 binds F4 to it, and the owner-minted per-REQ anchors B2 recorded are the addressable surface; content confirmed against the shipped UI"
+            ]
+          },
+          "configurable-lifecycle": {
+            "v": "confirmed",
+            "ev": [
+              "the prefs TUI ships behind the DRAFT header (F-019): commands/prefs/tui/** with forms (the F-019 row names them), PROP-037 §5.2 binds F4 to it, and the owner-minted per-REQ anchors B2 recorded are the addressable surface; content confirmed against the shipped UI"
+            ]
+          },
+          "write-layer-choice": {
+            "v": "confirmed",
+            "ev": [
+              "the prefs TUI ships behind the DRAFT header (F-019): commands/prefs/tui/** with forms (the F-019 row names them), PROP-037 §5.2 binds F4 to it, and the owner-minted per-REQ anchors B2 recorded are the addressable surface; content confirmed against the shipped UI"
+            ]
+          },
+          "apply-indicator": {
+            "v": "confirmed",
+            "ev": [
+              "the prefs TUI ships behind the DRAFT header (F-019): commands/prefs/tui/** with forms (the F-019 row names them), PROP-037 §5.2 binds F4 to it, and the owner-minted per-REQ anchors B2 recorded are the addressable surface; content confirmed against the shipped UI"
+            ]
+          },
+          "provenance-view": {
+            "v": "confirmed",
+            "ev": [
+              "the prefs TUI ships behind the DRAFT header (F-019): commands/prefs/tui/** with forms (the F-019 row names them), PROP-037 §5.2 binds F4 to it, and the owner-minted per-REQ anchors B2 recorded are the addressable surface; content confirmed against the shipped UI"
+            ]
+          },
+          "provenance-edit": {
+            "v": "confirmed",
+            "ev": [
+              "the prefs TUI ships behind the DRAFT header (F-019): commands/prefs/tui/** with forms (the F-019 row names them), PROP-037 §5.2 binds F4 to it, and the owner-minted per-REQ anchors B2 recorded are the addressable surface; content confirmed against the shipped UI"
+            ]
+          },
+          "validation-feedback": {
+            "v": "confirmed",
+            "ev": [
+              "the prefs TUI ships behind the DRAFT header (F-019): commands/prefs/tui/** with forms (the F-019 row names them), PROP-037 §5.2 binds F4 to it, and the owner-minted per-REQ anchors B2 recorded are the addressable surface; content confirmed against the shipped UI"
+            ]
+          },
+          "lint-all": {
+            "v": "confirmed",
+            "ev": [
+              "the prefs TUI ships behind the DRAFT header (F-019): commands/prefs/tui/** with forms (the F-019 row names them), PROP-037 §5.2 binds F4 to it, and the owner-minted per-REQ anchors B2 recorded are the addressable surface; content confirmed against the shipped UI"
+            ]
+          },
+          "settings-search": {
+            "v": "confirmed",
+            "ev": [
+              "the prefs TUI ships behind the DRAFT header (F-019): commands/prefs/tui/** with forms (the F-019 row names them), PROP-037 §5.2 binds F4 to it, and the owner-minted per-REQ anchors B2 recorded are the addressable surface; content confirmed against the shipped UI"
+            ]
+          },
+          "deprecated-discoverable": {
+            "v": "confirmed",
+            "ev": [
+              "the prefs TUI ships behind the DRAFT header (F-019): commands/prefs/tui/** with forms (the F-019 row names them), PROP-037 §5.2 binds F4 to it, and the owner-minted per-REQ anchors B2 recorded are the addressable surface; content confirmed against the shipped UI"
+            ]
+          },
+          "commands-are-actions": {
+            "v": "confirmed",
+            "ev": [
+              "the prefs TUI ships behind the DRAFT header (F-019): commands/prefs/tui/** with forms (the F-019 row names them), PROP-037 §5.2 binds F4 to it, and the owner-minted per-REQ anchors B2 recorded are the addressable surface; content confirmed against the shipped UI"
+            ]
+          },
+          "modal-stack": {
+            "v": "confirmed",
+            "ev": [
+              "the prefs TUI ships behind the DRAFT header (F-019): commands/prefs/tui/** with forms (the F-019 row names them), PROP-037 §5.2 binds F4 to it, and the owner-minted per-REQ anchors B2 recorded are the addressable surface; content confirmed against the shipped UI"
+            ]
+          },
+          "aiui-ready-req": {
+            "v": "confirmed",
+            "ev": [
+              "the prefs TUI ships behind the DRAFT header (F-019): commands/prefs/tui/** with forms (the F-019 row names them), PROP-037 §5.2 binds F4 to it, and the owner-minted per-REQ anchors B2 recorded are the addressable surface; content confirmed against the shipped UI"
+            ]
+          },
+          "ng-engine": {
+            "v": "confirmed",
+            "ev": [
+              "the prefs TUI ships behind the DRAFT header (F-019): commands/prefs/tui/** with forms (the F-019 row names them), PROP-037 §5.2 binds F4 to it, and the owner-minted per-REQ anchors B2 recorded are the addressable surface; content confirmed against the shipped UI"
+            ]
+          },
+          "ng-component-library": {
+            "v": "confirmed",
+            "ev": [
+              "the prefs TUI ships behind the DRAFT header (F-019): commands/prefs/tui/** with forms (the F-019 row names them), PROP-037 §5.2 binds F4 to it, and the owner-minted per-REQ anchors B2 recorded are the addressable surface; content confirmed against the shipped UI"
+            ]
+          },
+          "ng-aiui-surface": {
+            "v": "confirmed",
+            "ev": [
+              "the prefs TUI ships behind the DRAFT header (F-019): commands/prefs/tui/** with forms (the F-019 row names them), PROP-037 §5.2 binds F4 to it, and the owner-minted per-REQ anchors B2 recorded are the addressable surface; content confirmed against the shipped UI"
+            ]
+          },
+          "ng-cloud-sync": {
+            "v": "confirmed",
+            "ev": [
+              "the prefs TUI ships behind the DRAFT header (F-019): commands/prefs/tui/** with forms (the F-019 row names them), PROP-037 §5.2 binds F4 to it, and the owner-minted per-REQ anchors B2 recorded are the addressable surface; content confirmed against the shipped UI"
+            ]
+          },
+          "ng-gui": {
+            "v": "confirmed",
+            "ev": [
+              "the prefs TUI ships behind the DRAFT header (F-019): commands/prefs/tui/** with forms (the F-019 row names them), PROP-037 §5.2 binds F4 to it, and the owner-minted per-REQ anchors B2 recorded are the addressable surface; content confirmed against the shipped UI"
+            ]
+          },
+          "discipline-req": {
+            "v": "confirmed",
+            "ev": [
+              "the prefs TUI ships behind the DRAFT header (F-019): commands/prefs/tui/** with forms (the F-019 row names them), PROP-037 §5.2 binds F4 to it, and the owner-minted per-REQ anchors B2 recorded are the addressable surface; content confirmed against the shipped UI"
+            ]
+          },
+          "_elements": {
+            "v": "confirmed",
+            "ev": [
+              "honest self-diagnosis: names the executed SETTINGS-UI-PLAN behind the DRAFT line"
+            ]
+          }
+        },
+        "verified_at": "2026-07-25T14:55:40Z",
+        "verify_batch": "c4f2-mcp-settings"
+      }
     },
     {
       "path": "spec/modules/vibe-workspace/PROP-007-workspace.md",

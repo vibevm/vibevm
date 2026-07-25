@@ -1030,6 +1030,24 @@ read-only, no auth.
   c4f2 (vibe-mcp ×3 + vibe-settings ×2, 306 markers) and c4f3
   (vibe-index PROP-005, 279).**
 
+- **2026-07-25 · c4f2 — mcp + settings; the cleanest batch of the
+  phase.** PROP-015/026/027 + PROP-040/041 (306 markers): **279 units —
+  277 confirmed / 2 drift / 0 unverifiable.** Three zero-drift files in
+  a row: PROP-015 (65/65 — `vibe mcp serve/install/status` live, and
+  the judging session is itself an MCP consumer of the judged server),
+  PROP-026 (47/47 — the superseded-in-topology arc holds exactly as
+  the B2 markup split it: the tcg grammar normative through the
+  family MCP servers, the standalone topology gone with wave 6), and
+  PROP-027 (58/58 — the `mcp` kind and the sovereign per-family
+  servers are this machine's installed reality). The two drift rows
+  are the settings pair's ledgered headers: **F-010** (PROP-040's
+  DRAFT over a `crates/vibe-settings` whose CLI cites "§8" in its own
+  help) and **F-019** (PROP-041's DRAFT over the prefs TUI that
+  PROP-037's F4 opens by name). **Running tally: 4 176 / 4 944 —
+  3 862 confirmed / 311 drift / 3 unverifiable; findings 54. Remaining:
+  c4f3 — vibe-index PROP-005 (279 markers), the last file of the
+  phase.**
+
 ## 10. Deferrals {#deferrals}
 
 *(empty — drained into `campaigns/<id>/deferrals.md` at close-out)*
