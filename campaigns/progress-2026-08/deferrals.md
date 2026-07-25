@@ -46,7 +46,28 @@ being worked is in `tasks/INDEX.md`, not here.
   place because deleting a developer's files is not an executor's call, and
   the residue is inert. *Owner's to remove or keep.*
 
-## 3. Awaiting a person, not a session {#human}
+## 3. Re-verify first, next campaign {#reverify}
+
+- **Two files carry verdicts formed against text that has since moved:**
+  `spec/manual-tests/MT-02-vibe-tree-tui.md` (edited by Phase D wave d2e,
+  `389abc68`, after its 12:50 verdict) and
+  `spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md` (edited by d2g/d2h,
+  `f6c17f92`, after its 14:55 verdict). `vibe progress baseline` names both on
+  every run. In each case the edit was a sync-from-code correction that moved
+  the prose *toward* reality with the ledger updated in the same commit, so
+  the verdicts are very likely still true — but "very likely" is not the
+  standard this campaign holds itself to, and **nobody has re-verified them
+  against the current text.** They are written into `baseline.json` with the
+  warning standing rather than filtered out, so the next campaign inherits the
+  signal instead of a silent gap. *Two files, minutes of work — do it before
+  trusting anything downstream of them.*
+
+  Not deferred, by contrast: `PROP-002` and `PROP-043` carried the same flag
+  and it was cleared, because their verdicts **were** re-derived against the
+  code this session (F-063 and DRIFT-023). See F-067 for why the flag pointed
+  at the freshest files in the corpus rather than the stalest.
+
+## 4. Awaiting a person, not a session {#human}
 
 - **MT-02 (`vibe tree` TUI) and MT-03 (`vibe prefs ui`) are unsigned.** Both
   were re-authored in Phase D against the shipped F-key surface (the old steps
@@ -55,7 +76,7 @@ being worked is in `tasks/INDEX.md`, not here.
   move and `spec/WAL.md` names them as outstanding — which is itself what
   makes `MT-WAL-NAMES` true rather than merely worded.
 
-## 4. Standing conditions carried forward {#standing}
+## 5. Standing conditions carried forward {#standing}
 
 - **specmap ratchet: 37 gated orphans, host-side, unmoved all campaign.** The
   gate holds them; nothing regressed. Not campaign work — it is the standing
@@ -70,7 +91,7 @@ being worked is in `tasks/INDEX.md`, not here.
   vibe-vvm / term-vvm conformance-golden; Linux/macOS install smoke;
   arbitrary user-repos design-doc; the `vibe doctor` project-local row.
 
-## 5. Two whole phases, deferred by owner ruling {#phases}
+## 6. Two whole phases, deferred by owner ruling {#phases}
 
 Both were measured before they were deferred, and both turned out to depend on
 work an earlier phase was supposed to do and did not. Neither is "we ran out of
@@ -86,7 +107,7 @@ time" — the inputs are not there.
   (action / idea / freeze-candidacy) *before* F is attempted — folded into
   wave 2 deliberately, so one sweep covers the `packages/` corpus too. Note
   for whoever picks it up: wave 1's forward-looking knowledge does exist, it
-  just went somewhere else — the 66-row findings ledger and this file.
+  just went somewhere else — the 67-row findings ledger and this file.
 
 - **Phase G — documentation → wave 2.** Its stated input does not exist:
   `harvest/` is empty and `docdebt.json` has zero cards, because Phase C
@@ -96,11 +117,12 @@ time" — the inputs are not there.
   The Package Author Guide in particular belongs there rather than here — it
   documents the `packages/` corpus, which is wave 2's subject.
 
-## 6. Predictions left unscored {#unscored}
+## 7. Predictions left unscored {#unscored}
 
 Recorded so the REPORT's honesty survives contact with the next campaign —
 see §11 of the plan for the full scoring.
 
-- **§8 prediction 6's "F+G ≈ 1 week overlapping E" clause** could not be
-  scored at the time the REPORT was written, because close-out ran *before*
-  Phases F and G at the owner's direction. The row is explicitly re-openable.
+- **§8 prediction 6's "F+G ≈ 1 week overlapping E" clause** is unscoreable for
+  wave 1, not merely unscored: both phases were deferred (§6 above) because
+  their inputs did not exist, so wave 1 produced no evidence about how long
+  they take. Wave 2 will be the first run that can answer it.

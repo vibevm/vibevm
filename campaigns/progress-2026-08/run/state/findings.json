@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updated_at": "2026-07-26T14:15:00Z",
+ "updated_at": "2026-07-26T15:00:00Z",
  "findings": [
   {
    "id": "F-001",
@@ -595,6 +595,15 @@
    "status": "open",
    "wave": 2,
    "note": "VIBEVM-SPEC.md:1075 (section 9.5, precedence list) names the user-level config as `~/.config/vibe/config.toml`. That is the PRE-CONSOLIDATION path: user_config.rs:1-2 and :38 make the canonical location `<settings-dir>/config.toml` (`~/.vibe/config.toml`, or under $VIBE_SETTINGS), and the XDG/APPDATA/$HOME location is read only as a migration fallback (:16-19, :292). So the spec names the fallback as if it were the home. Same drift in docs/commands/show.md:139,146,154-159. Surfaced by DRIFT-022 while documenting the [env] allowlist and deliberately not absorbed - the task's section 5 forbade spec edits and the docs line it DID fix was one its own change had falsified, which is a different case. COUPLING WORTH NOTING: F-064 proposes deleting that very fallback leg (legacy_xdg_config_path). Today the spec line is wrong about which path is canonical; the moment F-064 lands it becomes wrong about a path that no longer exists at all, so the two should be closed together or in that order. Out of wave-1 ledger scope: progress.toml observes spec/boot, spec/common, spec/design, spec/manual-tests and spec/modules only - VIBEVM-SPEC.md sits at the repository root and docs/ is not observed at all, so neither carries a marker or a verdict."
+  },
+  {
+   "id": "F-067",
+   "from": "campaigns/progress-2026-08/run/cache.json",
+   "to": "crates/progress-core/src/baseline/project.rs",
+   "type": "missing-support",
+   "status": "open",
+   "wave": 2,
+   "note": "THE STALENESS SIGNAL INVERTS, and it took DRIFT-023 shipping the warning to expose it. `campaign.processed_hash` records the content hash a file's verdicts were computed against, and `progress baseline` warns when it differs from the hash just parsed. But processed_hash is only ever written by a real verify batch, and this campaign sealed verdicts BY HAND throughout - Phase D's sync-from-code waves and this session's F-063/DRIFT-023 seals all set `verified_at` and left processed_hash pointing at superseded text. Result: the files with the FRESHEST verdicts in the corpus are the ones flagged stale. On 2026-07-26 the warning fired on PROP-002 and PROP-043 - the two files whose verdicts had been re-derived against code hours earlier - and would have sent the next campaign to re-verify precisely the work just done. Corrected by hand for those two (processed_hash := content_hash, a truthful assertion since the seal WAS made against that text); deliberately left standing for MT-02 and PROP-026, whose verdicts Phase D maintained but which nobody has personally re-verified. Fix direction: the hand-seal path needs a way to record 'these verdicts are valid for this content' - either a `progress verify --seal` verb, or make the documented seal procedure set processed_hash alongside verified_at. Until then the warning is only trustworthy if every seal remembers to bump it, which is exactly the shape of discipline DRIFT-020 was built to stop relying on."
   }
  ]
 }
