@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-24T22:54:14Z",
+  "updated_at": "2026-07-25T08:56:41Z",
   "files": {
     "spec/boot/00-core.md": {
       "content_hash": "b256cb2dde84d66733c4a0de68c1862ac2a67f396499efcf1586c0f0ae2f88c9",
@@ -317,7 +317,7 @@
       "issue_count": 0
     },
     "spec/design/README.md": {
-      "content_hash": "d94bc87b444d5ca4f39317acc22a9fbbb1a9576f44739c6f0d77bdcbceaca16f",
+      "content_hash": "3d0268e76f05dcdb7b8b6c8240509c36382a767966a7bf904b80cbf79dd6d70f",
       "rollup": {
         "explicit": [
           "doc",
@@ -340,7 +340,7 @@
       "issue_count": 0
     },
     "spec/design/action-system.md": {
-      "content_hash": "c03a624a204974ef47ad5aaf7e878ce68ea08ed58bae65d10fd4c9452e889bd5",
+      "content_hash": "552f99cab1611a344e426071684edffdafe73cd891178fd855b8bf859ebd39f0",
       "rollup": {
         "computed": [
           "doc",
@@ -405,7 +405,7 @@
       "issue_count": 0
     },
     "spec/design/tui-visual-language.md": {
-      "content_hash": "1e3c63c3e790ddf2e2ba96c5101fbbaa256fa213bc72b0a5a9ec90d05d94f1ad",
+      "content_hash": "ef320a3420aa76cc2b4c9989287d20e48d4f10e58b7b4076f00d04c53de203a2",
       "rollup": {
         "explicit": [
           "doc",

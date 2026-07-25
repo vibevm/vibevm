@@ -17,11 +17,11 @@
 | ##ROW-BOOT [`boot/`](../boot/) @doc/done | Session-boot instructions read at the start of every session @doc/done | yes @doc/done |
 | ##ROW-COMMON [`common/`](../common/) @doc/done | Foundation decisions crossing every crate (PROP-000, PROP-006) @doc/done | yes @doc/done |
 | ##ROW-MODULES [`modules/`](../modules/) @doc/done | Per-crate PROP / FEAT — the implementation contract @doc/done | yes @doc/done |
-| ##ROW-RESEARCH [`research/`](../research/) @doc/done | Backgrounders on **external** systems (Tessl, threat models, prior-art surveys) @doc/done | no @doc/done |
+| ##ROW-RESEARCH [`legacy-spec/research/`](../../legacy-spec/research/) — archived 2026-07-25 @doc/done | Backgrounders on **external** systems (Tessl, threat models, prior-art surveys) @doc/done | no @doc/done |
 | ##ROW-DESIGN `design/` (this directory) @doc/done | Rationale for vibevm's **own** decisions — the why and the lore behind our PROPs @doc/done | no @doc/done |
 | ##ROW-WAL [`WAL.md`](../WAL.md) @doc/done | Volatile current-state checkpoint, rewritten each session @doc/done | n/a @doc/done |
 
-##research-vs-design `research/` and `design/` are both non-normative, but they look in opposite directions: `research/` studies what *other* projects did; `design/` records why *we* chose what we chose. @doc/done
+##research-vs-design `legacy-spec/research/` (archived) and `design/` are both non-normative, but they look in opposite directions: the archived research studies what *other* projects did; `design/` records why *we* chose what we chose. @doc/done
 
 ## Linking rule
 
@@ -43,7 +43,7 @@
 
 - ##idx-loading-boot [Loading & boot composition model](loading-and-boot-model.md) — rationale for PROP-009 (loading model): why the flat boot model fails under a workspace, the static/dynamic linking spine, the two-trees + computed-index design, the three inclusion types (`inline` / `static` / `dynamic`) and the `STATIC.md` priority lane, and the fork-by-fork record. Captured 2026-05-21. @doc/done
 
-- ##idx-action-system [The action system](action-system.md) — rationale + architecture for [PROP-039](../modules/vibe-actions/PROP-039-action-system.md) (the `vibe-actions` contract): the addressable, frontend-agnostic, programmatically-drivable behaviour layer (`action://`) — the behaviour-layer twin of `spec://`. The crate/module architecture, the core types, the MVC-plus data flow (the model is the real interface), the ten design decisions (URI address grammar, collision-erroring registry, typed pure enablement, primary programmatic invocation + the **headless AIUI reference surface**, the two-phase Search Everywhere provider seam, address-keyed i18n, …), the Search Everywhere architecture (packages + every card-field + actions now, structural/AI-Native later through one seam), and the AIUI surface. Derived clean-room from the [VSCode/IntelliJ study](../research/action-systems-vscode-idea.md). Captured 2026-07-15. @doc/done
+- ##idx-action-system [The action system](action-system.md) — rationale + architecture for [PROP-039](../modules/vibe-actions/PROP-039-action-system.md) (the `vibe-actions` contract): the addressable, frontend-agnostic, programmatically-drivable behaviour layer (`action://`) — the behaviour-layer twin of `spec://`. The crate/module architecture, the core types, the MVC-plus data flow (the model is the real interface), the ten design decisions (URI address grammar, collision-erroring registry, typed pure enablement, primary programmatic invocation + the **headless AIUI reference surface**, the two-phase Search Everywhere provider seam, address-keyed i18n, …), the Search Everywhere architecture (packages + every card-field + actions now, structural/AI-Native later through one seam), and the AIUI surface. Derived clean-room from the [VSCode/IntelliJ study](../../legacy-spec/research/action-systems-vscode-idea.md). Captured 2026-07-15. @doc/done
 
 - ##idx-tui-visual [TUI visual language](tui-visual-language.md) — the shared visual conventions of the `vibe` TUIs. @doc/done
 

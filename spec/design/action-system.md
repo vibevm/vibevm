@@ -4,9 +4,9 @@
 **Spec 1 = PROP-039** (`spec://vibevm/modules/vibe-actions/PROP-039`, forthcoming); this document
 explains *why* the system is shaped as it is and *how* the pieces fit. It is derived, behind the
 clean-room firewall, from the study
-[`action-systems-vscode-idea.md`](../research/action-systems-vscode-idea.md) (the design
+[`action-systems-vscode-idea.md`](../../legacy-spec/research/action-systems-vscode-idea.md) (the design
 obligations DO1–DO18 and roadmap deltas Δ1–Δ16 cited throughout) and governed by the mandate in
-[`ACTION-SYSTEM-RESEARCH-PLAN`](../research/ACTION-SYSTEM-RESEARCH-PLAN-v0.1.md#mandate). When this
+[`ACTION-SYSTEM-RESEARCH-PLAN`](../../legacy-spec/research/ACTION-SYSTEM-RESEARCH-PLAN-v0.1.md#mandate). When this
 lore and the contract disagree, **the contract wins** and this file is corrected (spec-genres). @doc/done
 
 ## 0. Thesis — in one paragraph {#thesis}
@@ -274,5 +274,5 @@ reserved stub to a shipped feature. @doc/done
 cited by the code via `specmark`. The human-legibility gate (D7) and the enumerable-registry golden
 (Δ12) are floor gates. This design-doc is the lore that explains those REQs; the two-way links are
 kept per spec-genres. No open owner-decisions remain (RP1–RP5 resolved,
-`spec://vibevm/research/ACTION-SYSTEM-RESEARCH-PLAN#review-points`); the address form is `action://`
+`legacy-spec/research/ACTION-SYSTEM-RESEARCH-PLAN-v0.1.md#review-points`); the address form is `action://`
 and the crate is `vibe-actions`. @doc/done

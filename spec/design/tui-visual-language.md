@@ -9,7 +9,7 @@ expands it. When the two disagree, PROP-037 wins._ @doc/done
 
 ##genre-line **Genre:** design doc (lore). **Contract:** [PROP-037 §2.2](../modules/vibe-cli/PROP-037-tree-tui.md#theme). @doc/done
 ##related **Related:** [the action-system design](action-system.md); the settings meta-plan
-(`../terraforms/SETTINGS-SYSTEM-META-PLAN-v0.1.md`) — the active palette + tier are a user setting. @doc/done
+(archived: `legacy-spec/terraforms/SETTINGS-SYSTEM-META-PLAN-v0.1.md`) — the active palette + tier are a user setting. @doc/done
 
 ##OWNER-VISION **Owner vision (2026-07-16):** the TUI must look **deliberately beautiful**, not like ASCII
 scaffolding. Unicode box-drawing with rounded corners (`╭╮╰╯`); truecolor with a **formal,
