@@ -2,11 +2,19 @@
 //! server. Exercises the multi-registry walk, dedup, env-var
 //! attribution, and the JSON envelope shape — without any live
 //! internet or a `vibe-index` binary dependency.
+//!
+//! Every command here is built by [`common::UserScratch`], which owns a
+//! per-test `search_cache` tempdir. This file used to carry two builders
+//! of its own — a bare `vibe()` and a `vibe_isolated_cache()` that
+//! bolted `VIBEVM_SEARCH_CACHE_DIR` on top of it — and the tests that
+//! reached for the bare one cached into the developer's real
+//! `~/.vibe/search-cache/`, where entries outlive the run that wrote
+//! them. That was F-057. One helper, not N: a test that wants to read
+//! the bucket layout back reads `user.search_cache`.
 
 use std::sync::{Arc, Mutex, mpsc};
 use std::thread;
 
-use assert_cmd::Command;
 use axum::Router;
 use axum::extract::{Path, Query, State};
 use axum::http::StatusCode;
@@ -15,21 +23,9 @@ use axum::routing::get;
 use serde::Deserialize;
 use tokio::net::TcpListener;
 
-fn vibe() -> Command {
-    let mut cmd = Command::cargo_bin("vibe").expect("vibe binary built");
-    cmd.env("VIBE_NO_DEFAULT_REGISTRY", "1");
-    cmd
-}
+mod common;
 
-/// Cache-isolating wrapper. Every test gets its own tempdir for the
-/// search-cache so successive runs do not poison each other through
-/// `~/.vibe/search-cache/`. Tests that explicitly need a shared
-/// cache (the cache hit/miss e2e) pass an explicit dir instead.
-fn vibe_isolated_cache(cache_dir: &std::path::Path) -> Command {
-    let mut c = vibe();
-    c.env("VIBEVM_SEARCH_CACHE_DIR", cache_dir);
-    c
-}
+use common::UserScratch;
 
 #[derive(Clone)]
 struct MockState {
@@ -295,8 +291,8 @@ fn spawn_mock(canned: Canned) -> Mock {
     }
 }
 
-fn init_project(dir: &std::path::Path) {
-    vibe()
+fn init_project(user: &UserScratch, dir: &std::path::Path) {
+    user.vibe()
         .arg("init")
         .arg("--path")
         .arg(dir)
@@ -342,14 +338,15 @@ fn search_aggregates_hits_from_configured_registries() {
         ..Canned::default()
     });
 
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    init_project(&user, project.path());
     write_two_registry_manifest(project.path());
-    let cache_dir = tempfile::tempdir().unwrap();
 
     // Only `primary` has an index URL set; `secondary` lands in
     // `registries_unconfigured`.
-    let out = vibe_isolated_cache(cache_dir.path())
+    let out = user
+        .vibe()
         .env("VIBEVM_INDEX_URL_PRIMARY", &mock.base_url)
         .env_remove("VIBEVM_INDEX_URL_SECONDARY")
         .arg("--json")
@@ -431,12 +428,13 @@ fn search_dedup_keeps_highest_score_across_registries() {
     let mock_primary = spawn_mock(canned1);
     let mock_secondary = spawn_mock(canned2);
 
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    init_project(&user, project.path());
     write_two_registry_manifest(project.path());
-    let cache_dir = tempfile::tempdir().unwrap();
 
-    let out = vibe_isolated_cache(cache_dir.path())
+    let out = user
+        .vibe()
         .env("VIBEVM_INDEX_URL_PRIMARY", &mock_primary.base_url)
         .env("VIBEVM_INDEX_URL_SECONDARY", &mock_secondary.base_url)
         .arg("--json")
@@ -489,12 +487,13 @@ fn search_reports_unreachable_registry_without_aborting() {
         ..Canned::default()
     });
 
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    init_project(&user, project.path());
     write_two_registry_manifest(project.path());
-    let cache_dir = tempfile::tempdir().unwrap();
 
-    let out = vibe_isolated_cache(cache_dir.path())
+    let out = user
+        .vibe()
         .env("VIBEVM_INDEX_URL_PRIMARY", &mock_primary.base_url)
         .env("VIBEVM_INDEX_URL_SECONDARY", &mock_secondary.base_url)
         .arg("--json")
@@ -541,12 +540,13 @@ fn search_filters_to_one_registry_via_flag() {
         ..Canned::default()
     });
 
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    init_project(&user, project.path());
     write_two_registry_manifest(project.path());
-    let cache_dir = tempfile::tempdir().unwrap();
 
-    let out = vibe_isolated_cache(cache_dir.path())
+    let out = user
+        .vibe()
         .env("VIBEVM_INDEX_URL_PRIMARY", &mock.base_url)
         .env("VIBEVM_INDEX_URL_SECONDARY", &mock.base_url)
         .arg("--json")
@@ -587,12 +587,13 @@ fn search_kind_flag_is_propagated_to_index() {
         ..Canned::default()
     });
 
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    init_project(&user, project.path());
     write_two_registry_manifest(project.path());
-    let cache_dir = tempfile::tempdir().unwrap();
 
-    let out = vibe_isolated_cache(cache_dir.path())
+    let out = user
+        .vibe()
         .env("VIBEVM_INDEX_URL_PRIMARY", &mock.base_url)
         .env_remove("VIBEVM_INDEX_URL_SECONDARY")
         .arg("--json")
@@ -652,12 +653,13 @@ description = "Atomic-commits checks."
     // feat-without-manifest: no package_files entry → 404
     let github = spawn_github_mock(canned);
 
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    init_project(&user, project.path());
     write_github_only_manifest(project.path());
-    let cache_dir = tempfile::tempdir().unwrap();
 
-    let out = vibe_isolated_cache(cache_dir.path())
+    let out = user
+        .vibe()
         .env("VIBEVM_GITHUB_API_BASE", &github.base_url)
         .env_remove("VIBEVM_INDEX_URL_VIBESPECS")
         .env_remove("VIBEVM_PUBLISH_TOKEN_GITHUB")
@@ -703,12 +705,13 @@ description = "Atomic-commits checks."
 
 #[test]
 fn search_full_scan_unsupported_for_non_github_host() {
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    init_project(&user, project.path());
     write_gitverse_only_manifest(project.path());
-    let cache_dir = tempfile::tempdir().unwrap();
 
-    let out = vibe_isolated_cache(cache_dir.path())
+    let out = user
+        .vibe()
         .env_remove("VIBEVM_INDEX_URL_VIBESPECS_GITVERSE")
         .arg("--json")
         .arg("search")
@@ -735,12 +738,13 @@ fn search_full_scan_unsupported_for_non_github_host() {
 
 #[test]
 fn search_without_full_scan_keeps_unconfigured_status() {
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    init_project(&user, project.path());
     write_github_only_manifest(project.path());
-    let cache_dir = tempfile::tempdir().unwrap();
 
-    let out = vibe_isolated_cache(cache_dir.path())
+    let out = user
+        .vibe()
         .env_remove("VIBEVM_INDEX_URL_VIBESPECS")
         .arg("--json")
         .arg("search")
@@ -777,12 +781,13 @@ fn search_without_full_scan_keeps_unconfigured_status() {
 /// the missing index.
 #[test]
 fn search_text_hint_directs_agent_to_install_when_no_index_configured() {
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    init_project(&user, project.path());
     write_github_only_manifest(project.path());
-    let cache_dir = tempfile::tempdir().unwrap();
 
-    let out = vibe_isolated_cache(cache_dir.path())
+    let out = user
+        .vibe()
         .env_remove("VIBEVM_INDEX_URL_VIBESPECS")
         .arg("search")
         .arg("wal")
@@ -832,16 +837,18 @@ fn search_caches_results_and_serves_subsequent_runs_from_disk() {
         ..Canned::default()
     });
 
+    // All three runs below share one cache — `user.search_cache` — which
+    // is what makes the cold/warm/bypass sequence meaningful.
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    init_project(&user, project.path());
     write_two_registry_manifest(project.path());
-    let cache_dir = tempfile::tempdir().unwrap();
 
     // Run 1: cold cache → fetch from mock, write entry to disk.
-    let out = vibe()
+    let out = user
+        .vibe()
         .env("VIBEVM_INDEX_URL_PRIMARY", &mock.base_url)
         .env_remove("VIBEVM_INDEX_URL_SECONDARY")
-        .env("VIBEVM_SEARCH_CACHE_DIR", cache_dir.path())
         .arg("--json")
         .arg("search")
         .arg("wal")
@@ -859,7 +866,7 @@ fn search_caches_results_and_serves_subsequent_runs_from_disk() {
     assert_eq!(cold["description"], "Pre-cache version.");
 
     // The cache directory now has a file under primary/.
-    let primary_cache_dir = cache_dir.path().join("primary");
+    let primary_cache_dir = user.search_cache.join("primary");
     assert!(
         primary_cache_dir.is_dir(),
         "expected per-registry cache dir"
@@ -892,10 +899,10 @@ fn search_caches_results_and_serves_subsequent_runs_from_disk() {
     }
 
     // Run 2: warm cache → server change is INVISIBLE because we read from disk.
-    let out = vibe()
+    let out = user
+        .vibe()
         .env("VIBEVM_INDEX_URL_PRIMARY", &mock.base_url)
         .env_remove("VIBEVM_INDEX_URL_SECONDARY")
-        .env("VIBEVM_SEARCH_CACHE_DIR", cache_dir.path())
         .arg("--json")
         .arg("search")
         .arg("wal")
@@ -914,10 +921,10 @@ fn search_caches_results_and_serves_subsequent_runs_from_disk() {
 
     // Run 3: --no-cache bypasses both read and write — server's mutated
     // response surfaces.
-    let out = vibe()
+    let out = user
+        .vibe()
         .env("VIBEVM_INDEX_URL_PRIMARY", &mock.base_url)
         .env_remove("VIBEVM_INDEX_URL_SECONDARY")
-        .env("VIBEVM_SEARCH_CACHE_DIR", cache_dir.path())
         .arg("--json")
         .arg("search")
         .arg("wal")
@@ -962,15 +969,17 @@ fn search_cache_ttl_zero_forces_refetch() {
         ..Canned::default()
     });
 
+    // Both runs share `user.search_cache`, so the second one sees the
+    // entry the first wrote — and rejects it only because of the TTL.
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    init_project(&user, project.path());
     write_two_registry_manifest(project.path());
-    let cache_dir = tempfile::tempdir().unwrap();
 
-    let out = vibe()
+    let out = user
+        .vibe()
         .env("VIBEVM_INDEX_URL_PRIMARY", &mock.base_url)
         .env_remove("VIBEVM_INDEX_URL_SECONDARY")
-        .env("VIBEVM_SEARCH_CACHE_DIR", cache_dir.path())
         .arg("--json")
         .arg("search")
         .arg("wal")
@@ -1006,10 +1015,10 @@ fn search_cache_ttl_zero_forces_refetch() {
     // ttl=0 => not stale.
     std::thread::sleep(std::time::Duration::from_secs(1));
 
-    let out = vibe()
+    let out = user
+        .vibe()
         .env("VIBEVM_INDEX_URL_PRIMARY", &mock.base_url)
         .env_remove("VIBEVM_INDEX_URL_SECONDARY")
-        .env("VIBEVM_SEARCH_CACHE_DIR", cache_dir.path())
         .arg("--json")
         .arg("search")
         .arg("wal")
@@ -1070,11 +1079,13 @@ fn search_purl_lookup_returns_binding_site_and_dedups_across_registries() {
     let mock_primary = spawn_mock(canned1);
     let mock_secondary = spawn_mock(canned2);
 
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    init_project(&user, project.path());
     write_two_registry_manifest(project.path());
 
-    let out = vibe()
+    let out = user
+        .vibe()
         .env("VIBEVM_INDEX_URL_PRIMARY", &mock_primary.base_url)
         .env("VIBEVM_INDEX_URL_SECONDARY", &mock_secondary.base_url)
         .arg("--json")
@@ -1128,11 +1139,13 @@ fn search_purl_lookup_returns_binding_site_and_dedups_across_registries() {
 
 #[test]
 fn search_purl_rejects_non_pkg_scheme() {
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    init_project(&user, project.path());
     write_two_registry_manifest(project.path());
 
-    let out = vibe()
+    let out = user
+        .vibe()
         .arg("search")
         .arg("--purl")
         .arg("npm:fastapi@0.116.1") // missing `pkg:` scheme
@@ -1150,11 +1163,13 @@ fn search_purl_rejects_non_pkg_scheme() {
 
 #[test]
 fn search_purl_and_query_are_mutually_exclusive() {
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    init_project(&user, project.path());
     write_two_registry_manifest(project.path());
 
-    let out = vibe()
+    let out = user
+        .vibe()
         .arg("search")
         .arg("wal")
         .arg("--purl")
@@ -1174,11 +1189,13 @@ fn search_purl_and_query_are_mutually_exclusive() {
 
 #[test]
 fn search_errors_when_registry_name_unknown() {
+    let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
-    init_project(project.path());
+    init_project(&user, project.path());
     write_two_registry_manifest(project.path());
 
-    let out = vibe()
+    let out = user
+        .vibe()
         .arg("search")
         .arg("wal")
         .arg("--registry")

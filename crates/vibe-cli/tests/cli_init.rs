@@ -1,26 +1,32 @@
 //! Integration tests for `vibe init`.
 //!
 //! Spec: `VIBEVM-SPEC.md` §11.1 and the M0 acceptance checklist in §16.
+//!
+//! Every command here is built by [`common::UserScratch`], never by a
+//! local builder. `vibe init` resolves its author `--author` →
+//! `<settings>/config.toml` `[init] last_author` → `git config user.name`
+//! and writes the result back to that same file when it differs, so a
+//! command pointed at the real home both *reads* the developer's name and
+//! — on a machine where `last_author` is unset — *writes* into their
+//! `~/.vibe/config.toml`. That was F-056, and it existed because this file
+//! carried a builder of its own that set `VIBE_NO_DEFAULT_REGISTRY` and
+//! stopped there.
 
 use std::fs;
 
-use assert_cmd::Command;
 use predicates::prelude::*;
 
-fn vibe() -> Command {
-    let mut cmd = Command::cargo_bin("vibe").expect("vibe binary built");
-    // Suppress global-registry seeding so tests don't pollute the real
-    // ~/.vibe/registry.toml or pick up real-world registries.
-    cmd.env("VIBE_NO_DEFAULT_REGISTRY", "1");
-    cmd
-}
+mod common;
+
+use common::UserScratch;
 
 #[test]
 fn init_creates_expected_layout() {
+    let user = UserScratch::new();
     let dir = tempfile::tempdir().unwrap();
     let path = dir.path();
 
-    vibe()
+    user.vibe()
         .arg("init")
         .arg("--path")
         .arg(path)
@@ -89,11 +95,12 @@ fn init_creates_expected_layout() {
 
 #[test]
 fn init_is_idempotent() {
+    let user = UserScratch::new();
     let dir = tempfile::tempdir().unwrap();
     let path = dir.path();
 
     // First run.
-    vibe()
+    user.vibe()
         .arg("init")
         .arg("--path")
         .arg(path)
@@ -105,7 +112,7 @@ fn init_is_idempotent() {
     let core_path = path.join("spec/boot/00-core.md");
     fs::write(&core_path, user_marker).unwrap();
 
-    vibe()
+    user.vibe()
         .arg("init")
         .arg("--path")
         .arg(path)
@@ -120,10 +127,11 @@ fn init_is_idempotent() {
 
 #[test]
 fn init_stack_flag_sets_active_stack() {
+    let user = UserScratch::new();
     let dir = tempfile::tempdir().unwrap();
     let path = dir.path();
 
-    vibe()
+    user.vibe()
         .arg("init")
         .arg("--path")
         .arg(path)
@@ -142,10 +150,11 @@ fn init_stack_flag_sets_active_stack() {
 
 #[test]
 fn init_custom_name() {
+    let user = UserScratch::new();
     let dir = tempfile::tempdir().unwrap();
     let path = dir.path();
 
-    vibe()
+    user.vibe()
         .arg("init")
         .arg("--path")
         .arg(path)
@@ -161,10 +170,12 @@ fn init_custom_name() {
 
 #[test]
 fn init_json_output_parses() {
+    let user = UserScratch::new();
     let dir = tempfile::tempdir().unwrap();
     let path = dir.path();
 
-    let out = vibe()
+    let out = user
+        .vibe()
         .arg("--json")
         .arg("init")
         .arg("--path")
@@ -190,10 +201,12 @@ fn init_json_output_parses() {
 
 #[test]
 fn init_quiet_emits_single_line() {
+    let user = UserScratch::new();
     let dir = tempfile::tempdir().unwrap();
     let path = dir.path();
 
-    let out = vibe()
+    let out = user
+        .vibe()
         .arg("--quiet")
         .arg("init")
         .arg("--path")
@@ -213,8 +226,9 @@ fn init_quiet_emits_single_line() {
 
 #[test]
 fn init_version() {
-    vibe().arg("version").assert().success();
-    vibe().arg("--version").assert().success();
+    let user = UserScratch::new();
+    user.vibe().arg("version").assert().success();
+    user.vibe().arg("--version").assert().success();
 }
 
 #[test]
@@ -225,10 +239,11 @@ fn init_default_has_no_project_registries() {
     // produces a project `vibe.toml` with NO `[[registry]]` sections.
     // The project stays clean of registry boilerplate; a project only
     // carries `[[registry]]` entries it needs *beyond* the machine default.
+    let user = UserScratch::new();
     let dir = tempfile::tempdir().unwrap();
     let path = dir.path();
 
-    vibe()
+    user.vibe()
         .arg("init")
         .arg("--path")
         .arg(path)
@@ -251,10 +266,11 @@ fn init_default_has_no_project_registries() {
 
 #[test]
 fn init_no_registry_flag_omits_section() {
+    let user = UserScratch::new();
     let dir = tempfile::tempdir().unwrap();
     let path = dir.path();
 
-    vibe()
+    user.vibe()
         .arg("init")
         .arg("--path")
         .arg(path)
@@ -278,10 +294,11 @@ fn init_registry_url_override() {
     // operator-controlled one. The GitVerse fall-through default is
     // intentionally dropped — the operator who supplied a custom URL
     // is asking for an explicit, single-source layout.
+    let user = UserScratch::new();
     let dir = tempfile::tempdir().unwrap();
     let path = dir.path();
 
-    vibe()
+    user.vibe()
         .arg("init")
         .arg("--path")
         .arg(path)
@@ -314,10 +331,11 @@ fn init_registry_url_override() {
 
 #[test]
 fn init_registry_url_and_no_registry_conflict() {
+    let user = UserScratch::new();
     let dir = tempfile::tempdir().unwrap();
     let path = dir.path();
 
-    vibe()
+    user.vibe()
         .arg("init")
         .arg("--path")
         .arg(path)
