@@ -3,6 +3,7 @@
 specmark::scope!("spec://vibevm/modules/vibe-progress/PROP-043#parsing");
 
 use crate::doc::{BlockKind, Fact, FactKind, ParsedDoc};
+use specmark::spec;
 
 /// Byte offset of a list item's content when the line opens one
 /// (`- ` / `* ` / `+ ` / `N. ` / `N) `), else None.
@@ -55,13 +56,40 @@ fn row_cells(text: &str, s: usize, e: usize) -> Vec<(usize, usize)> {
     out
 }
 
+/// Byte length of the blockquote prefix opening `t`: a run of `>`
+/// characters, each followed by any spacing (`> `, `>> `, `> > `, `>`,
+/// `>   `). Zero when `t` does not open with `>` — a `>` that sits
+/// mid-line, or inside inline code, is ordinary text and is never
+/// stripped.
+///
+/// The spacing is eaten greedily rather than one space at a time so the
+/// quoted form is no pickier than the plain one: `   ##ID` already mints
+/// an anchor through the caller's leading trim, and `>   ##ID` must too.
+#[spec(implements = "spec://vibevm/modules/vibe-progress/PROP-043#granularity")]
+fn blockquote_prefix_len(t: &str) -> usize {
+    let b = t.as_bytes();
+    let mut i = 0usize;
+    while i < b.len() && b[i] == b'>' {
+        i += 1;
+        while i < b.len() && (b[i] == b' ' || b[i] == b'\t') {
+            i += 1;
+        }
+    }
+    i
+}
+
 /// The `##<ID>` fact anchor at the start of a span: `(id, content_start)`
 /// where `content_start` is the byte just past the id (for the marker
 /// position law). No id ⇒ content_start == span start.
+///
+/// A blockquote paragraph is a countable unit like any other, so its `>`
+/// prefix is consumed before the anchor is looked for — a quoted normative
+/// statement is addressable, and anchored-when-marked reaches it.
 pub(super) fn take_fact_id(text: &str, s: usize, e: usize) -> (Option<String>, usize) {
     let seg = &text[s..e];
     let lead_ws = seg.len() - seg.trim_start().len();
-    let t = &seg[lead_ws..];
+    let lead = lead_ws + blockquote_prefix_len(&seg[lead_ws..]);
+    let t = &seg[lead..];
     if let Some(rest) = t.strip_prefix("##") {
         let id_len = rest
             .chars()
@@ -75,7 +103,7 @@ pub(super) fn take_fact_id(text: &str, s: usize, e: usize) -> (Option<String>, u
                 .is_none_or(|c| c.is_whitespace())
         {
             let id = rest[..id_len].to_string();
-            return (Some(id), s + lead_ws + 2 + id_len);
+            return (Some(id), s + lead + 2 + id_len);
         }
     }
     (None, s)
@@ -227,5 +255,99 @@ fn mk_fact(kind: FactKind, text: &str, s: usize, e: usize, line: usize) -> Fact 
         line,
         span: (s, e),
         marked: false,
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::parse::parse_document;
+
+    #[test]
+    fn blockquote_fact_anchor_is_taken() {
+        let text = "> ##MY-FACT text @spec/done";
+        let (id, at) = take_fact_id(text, 0, text.len());
+        assert_eq!(id.as_deref(), Some("MY-FACT"));
+        assert_eq!(&text[..at], "> ##MY-FACT");
+        assert_eq!(&text[at..], " text @spec/done");
+    }
+
+    #[test]
+    fn blockquote_anchor_offset_is_into_the_original_text() {
+        // The span starts mid-`text`; the returned offset must still index
+        // `text`, or every downstream span shifts.
+        let text = "lead line\n> ##MY-FACT text @spec/done";
+        let s = "lead line\n".len();
+        let (id, at) = take_fact_id(text, s, text.len());
+        assert_eq!(id.as_deref(), Some("MY-FACT"));
+        assert_eq!(&text[at..], " text @spec/done");
+    }
+
+    #[test]
+    fn nested_blockquote_anchor_is_taken() {
+        for text in ["> > ##MY-FACT", ">> ##MY-FACT"] {
+            let (id, at) = take_fact_id(text, 0, text.len());
+            assert_eq!(id.as_deref(), Some("MY-FACT"), "text: {text}");
+            assert_eq!(at, text.len(), "text: {text}");
+        }
+    }
+
+    #[test]
+    fn no_space_blockquote_anchor_is_taken() {
+        let text = ">##MY-FACT rest";
+        let (id, at) = take_fact_id(text, 0, text.len());
+        assert_eq!(id.as_deref(), Some("MY-FACT"));
+        assert_eq!(&text[at..], " rest");
+    }
+
+    /// The quoted form is no pickier than the plain one: whitespace is
+    /// trimmed on both sides of the `>` prefix, so an author who lines a
+    /// quote up with the text above it still gets an anchor.
+    #[test]
+    fn padded_blockquote_anchor_is_taken() {
+        for text in [">   ##MY-FACT rest", ">  >  ##MY-FACT rest"] {
+            let (id, at) = take_fact_id(text, 0, text.len());
+            assert_eq!(id.as_deref(), Some("MY-FACT"), "text: {text}");
+            assert_eq!(&text[at..], " rest", "text: {text}");
+        }
+    }
+
+    #[test]
+    fn gt_inside_text_is_not_stripped() {
+        // Only a prefix counts: a mid-line `>` is prose.
+        assert_eq!(take_fact_id("a > b ##NOT-AN-ANCHOR", 0, 21), (None, 0));
+        // A quoted heading keeps the id grammar: `## ` is not `##<ID>`.
+        let text = "> ## Quoted heading";
+        assert_eq!(take_fact_id(text, 0, text.len()), (None, 0));
+        // One `#` is not an anchor either.
+        let text = "> > #hash";
+        assert_eq!(take_fact_id(text, 0, text.len()), (None, 0));
+    }
+
+    #[test]
+    fn blockquote_in_fence_is_not_an_anchor() {
+        let text = "# H {#h}\n\n```md\n> ##QUOTED inside a fence @impl/done\n```\n";
+        let doc = parse_document("x.md", text);
+        assert!(
+            doc.blocks.iter().all(|b| b.facts.is_empty()),
+            "blocks: {:#?}",
+            doc.blocks
+        );
+        assert!(doc.markers.is_empty(), "markers: {:#?}", doc.markers);
+    }
+
+    #[test]
+    fn blockquote_paragraph_is_an_anchored_marked_fact() {
+        let text = "# H {#h}\n\n> ##QUOTE-1 A quoted normative statement. @spec/done\n";
+        let doc = parse_document("x.md", text);
+        assert_eq!(doc.error_count(), 0, "issues: {:#?}", doc.issues);
+        assert_eq!(doc.fact_count, 1, "blocks: {:#?}", doc.blocks);
+        assert_eq!(doc.unmarked_facts.len(), 0);
+        let ids: Vec<&str> = doc
+            .blocks
+            .iter()
+            .flat_map(|b| b.facts.iter().filter_map(|f| f.id.as_deref()))
+            .collect();
+        assert_eq!(ids, ["QUOTE-1"]);
     }
 }
