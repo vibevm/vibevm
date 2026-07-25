@@ -1,7 +1,10 @@
 //! Naive depth-first dependency solver.
 //!
 //! Single pass, no backtracking. See [`crate`] module docs for the
-//! pinned limitations and when to upgrade to a SAT-style solver.
+//! pinned limitations, and the note on the struct below for why this cell
+//! stays in tree now that the SAT-style upgrade has happened twice over —
+//! `Sat` and `ResolvoDepSolver` both sit beside it, and resolvo is the
+//! production default.
 
 use specmark::{cell, spec};
 use vibe_core::manifest::Manifest;

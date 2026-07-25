@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updated_at": "2026-07-25T23:55:00Z",
+ "updated_at": "2026-07-26T00:45:00Z",
  "findings": [
   {
    "id": "F-001",
@@ -538,9 +538,9 @@
    "from": "crates/vibe-resolver/src/naive.rs",
    "to": "crates/vibe-resolver/src/naive.rs",
    "type": "contradiction",
-   "status": "open",
+   "status": "resolved",
    "wave": 2,
-   "note": "naive.rs:3-4 points the reader at the crate module docs for 'the pinned limitations and WHEN TO UPGRADE to a SAT-style solver'. That upgrade landed twice - sat, then resolvo as the production default - so the file contradicts itself twenty-five lines lower, in the rustdoc DRIFT-014 wrote at naive.rs:31-39. Two-line fix, F-059's shape exactly. Recorded rather than folded in: DRIFT-019's §4.1 named three sites, and absorbing a fourth silently is precisely what F-059 exists to prevent. Following the pointer still lands a reader on correct text, so this misleads only someone who stops at the pointer. Also recorded here because it has no other home: crates/vibe-workspace/src/freshness.rs is now 592 lines against the 600-line conform budget (8 of headroom) - the next edit to that file should expect to split it, and DRIFT-019 compressed its own change to seven lines for that reason."
+   "note": "naive.rs:3-4 points the reader at the crate module docs for 'the pinned limitations and WHEN TO UPGRADE to a SAT-style solver'. That upgrade landed twice - sat, then resolvo as the production default - so the file contradicts itself twenty-five lines lower, in the rustdoc DRIFT-014 wrote at naive.rs:31-39. Two-line fix, F-059's shape exactly. Recorded rather than folded in: DRIFT-019's §4.1 named three sites, and absorbing a fourth silently is precisely what F-059 exists to prevent. Following the pointer still lands a reader on correct text, so this misleads only someone who stops at the pointer. Also recorded here because it has no other home: crates/vibe-workspace/src/freshness.rs is now 592 lines against the 600-line conform budget (8 of headroom) - the next edit to that file should expect to split it, and DRIFT-019 compressed its own change to seven lines for that reason. || RESOLVED 2026-07-26: the pointer now says why the cell stays rather than promising an upgrade that happened twice; it points at the struct note DRIFT-014 wrote 25 lines below, which the old text contradicted."
   },
   {
    "id": "F-061",
@@ -556,9 +556,9 @@
    "from": "crates/vibe-cli/tests/cli_search.rs",
    "to": "crates/vibe-cli/src/commands/search.rs",
    "type": "missing-support",
-   "status": "open",
+   "status": "resolved",
    "wave": 2,
-   "note": "SECURITY-RELEVANT, owner decision needed. F-057 was filed as a stray cache directory; it is more than that. search.rs:427 calls vibe_publish::token::load_token_for_host(\"github.com\"), whose 4th precedence leg is <settings-dir>/github.publish.token - present on this machine. The full-scan test clears legs 2-3 by env but could not reach leg 4, so an un-isolated run attached the real publish token to its outbound request. Measured against a loopback listener recording header NAMES AND LENGTH ONLY, never the value: pre-fix the request carried an Authorization header of 47 bytes (Bearer + a 40-char token); under UserScratch there is no Authorization header at all. DRIFT-018 closed the leg. TWO THINGS REMAIN FOR THE OWNER: (a) whether the token ever reached a real host rather than a fixture endpoint - if any of these tests ever pointed at a live github.com, the secrets-hygiene rule is rotate first, investigate second; (b) residue on disk - ~/.vibe/search-cache/primary/ and secondary/ hold three JSON files dated 2026-05-06 whose payloads are verbatim cli_search.rs mock fixtures. Left in place deliberately: deleting the developer's files is not an executor's call."
+   "note": "SECURITY-RELEVANT, owner decision needed. F-057 was filed as a stray cache directory; it is more than that. search.rs:427 calls vibe_publish::token::load_token_for_host(\"github.com\"), whose 4th precedence leg is <settings-dir>/github.publish.token - present on this machine. The full-scan test clears legs 2-3 by env but could not reach leg 4, so an un-isolated run attached the real publish token to its outbound request. Measured against a loopback listener recording header NAMES AND LENGTH ONLY, never the value: pre-fix the request carried an Authorization header of 47 bytes (Bearer + a 40-char token); under UserScratch there is no Authorization header at all. DRIFT-018 closed the leg. TWO THINGS REMAIN FOR THE OWNER: (a) whether the token ever reached a real host rather than a fixture endpoint - if any of these tests ever pointed at a live github.com, the secrets-hygiene rule is rotate first, investigate second; (b) residue on disk - ~/.vibe/search-cache/primary/ and secondary/ hold three JSON files dated 2026-05-06 whose payloads are verbatim cli_search.rs mock fixtures. Left in place deliberately: deleting the developer's files is not an executor's call. || INVESTIGATED AND CLOSED 2026-07-26 by the reviewer, on the owner asking for a code answer rather than a guess: NO ROTATION NEEDED - the token never left the machine. Proof by code path, not inference. search.rs:426 loads the token only AFTER detect_github_org(&reg.url) succeeds, and the request then goes to `api_base`, i.e. whatever VIBEVM_GITHUB_API_BASE says. Exactly one test reaches that path with a github.com registry - search_full_scan_finds_matching_packages_in_github_org (cli_search.rs:614) - and it sets VIBEVM_GITHUB_API_BASE to a 127.0.0.1 mock (:663) and removes both publish-token env legs. The other two --full-scan tests use a gitverse registry, which detect_github_org REJECTS before the token is loaded. The remaining fixture hosts are example.invalid (the reserved never-resolves TLD). So the 47-byte Authorization header DRIFT-018 measured went to the loopback mock, not to github.com. The defect was real and is fixed - a test that can pick up a live credential is one env-var default away from sending it somewhere real - but no exposure occurred. The github.com/vibespecs and gitverse.ru/vibespecs strings in the fixtures are registry URLs (the spec storage the owner named), used only to parse an org name. Residue in ~/.vibe/search-cache/ (three mock-fixture JSONs from 2026-05-06) still awaits the owner; it is his file to delete."
   }
  ]
 }
