@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updated_at": "2026-07-26T12:00:00Z",
+ "updated_at": "2026-07-26T14:15:00Z",
  "findings": [
   {
    "id": "F-001",
@@ -586,6 +586,15 @@
    "status": "open",
    "wave": 1,
    "note": "CLOSE-OUT BLOCKER, and the campaign's own Phase D authored it. ##BASELINE-RECORD (PROP-043 7.3, lines 421-423) asserts verbatim: 'Shipped: baseline.rs's BaselineUnit carries exactly these fields, with Baseline::load / store and the rescan CLI live.' Baseline::store DOES NOT EXIST. The only impl Baseline in baseline.rs is `load` (:172-179); the file defines no writer, and nothing in the workspace constructs or serialises a Baseline. The `store` that does exist is Cache::store (cache.rs:106) - a DIFFERENT type in the same crate, which is almost certainly what the eye landed on. That is the substring-lie pattern the WAL already warns about, striking a third time and this time inside the campaign's own correction. Two real consequences: (1) the Close-out step 'baseline.json written' (plan section 5) has NO TOOL - scan/check/report/mirror/weave/rescan/resume/gate is the whole `vibe progress` subcommand list, there is no baseline verb; (2) section 6's entire monthly recurrence consumes `rescan --baseline <prev>/baseline.json`, a file nothing in the tree can produce, so the recurrence loop has never been runnable end to end. Also a VERDICT CORRECTION: BASELINE-RECORD was flipped drift -> confirmed by commit 0064fd4a ('one parity row needed no ruling') on exactly this false evidence, so the ledger currently counts as confirmed a row that is not true. Fix direction: build the writer (a Baseline projected from the campaign verdict map, plus a `vibe progress baseline` subcommand) and then re-seal the verdict - NOT soften the spec, because close-out and section 6 recurrence both need the artefact."
+  },
+  {
+   "id": "F-066",
+   "from": "VIBEVM-SPEC.md",
+   "to": "crates/vibe-core/src/user_config.rs",
+   "type": "reality-mismatch",
+   "status": "open",
+   "wave": 2,
+   "note": "VIBEVM-SPEC.md:1075 (section 9.5, precedence list) names the user-level config as `~/.config/vibe/config.toml`. That is the PRE-CONSOLIDATION path: user_config.rs:1-2 and :38 make the canonical location `<settings-dir>/config.toml` (`~/.vibe/config.toml`, or under $VIBE_SETTINGS), and the XDG/APPDATA/$HOME location is read only as a migration fallback (:16-19, :292). So the spec names the fallback as if it were the home. Same drift in docs/commands/show.md:139,146,154-159. Surfaced by DRIFT-022 while documenting the [env] allowlist and deliberately not absorbed - the task's section 5 forbade spec edits and the docs line it DID fix was one its own change had falsified, which is a different case. COUPLING WORTH NOTING: F-064 proposes deleting that very fallback leg (legacy_xdg_config_path). Today the spec line is wrong about which path is canonical; the moment F-064 lands it becomes wrong about a path that no longer exists at all, so the two should be closed together or in that order. Out of wave-1 ledger scope: progress.toml observes spec/boot, spec/common, spec/design, spec/manual-tests and spec/modules only - VIBEVM-SPEC.md sits at the repository root and docs/ is not observed at all, so neither carries a marker or a verdict."
   }
  ]
 }
