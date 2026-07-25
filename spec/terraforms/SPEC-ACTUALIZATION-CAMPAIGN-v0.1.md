@@ -184,11 +184,14 @@ Phase L's reference inventory + relocation like the other three.
 *Exit gate:* grep-verified zero references from the living corpus and
 crates into the four directories; `check --exhaustive` green over the
 (possibly grown) scope; floor green — specmap included, repointed scopes
-must resolve. *Review point (OPEN):* this plan file itself lives in
-`spec/terraforms/` — relocate it with the directory mid-campaign
-(campaign-zone pointers update), or keep it in place until close-out and
-move it as the campaign's last act? Owner call before L5 touches
-`spec/terraforms/`.
+must resolve. *Review point (RESOLVED, owner, 2026-07-25):* this plan
+file **stays in `spec/terraforms/` for now** — «Я передумал. План этой
+кампании пока переносить не нужно. Я хочу чтобы у нас остался правильный
+набор спецификаций и других инструкций, чтобы мы могли делать
+периодические проверки каждый месяц» — the §6 monthly recurrence needs
+the plan and its instruction set in place. **L5 therefore excludes this
+plan file** from the `spec/terraforms/` move; its eventual home is a
+future owner call, no earlier than campaign close-out.
 
 ### Phase C — Verification (evidence pass) {#phase-c}
 
@@ -634,6 +637,24 @@ read-only, no auth.
   opens the next; per the 2026-07-25 amendment the next phase is
   **L (legacy relocation)**, then C. **Awaiting the owner's call to
   open Phase L.**
+
+- **RESOLVED review point + the B→L handoff (owner, 2026-07-25, closing
+  the session).** The plan-file question is settled: the first instinct
+  («Сам план кампании тоже перенеси в legacy-spec») was reversed in the
+  same message — «Я передумал. План этой кампании пока переносить не
+  нужно. Я хочу чтобы у нас остался правильный набор спецификаций и
+  других инструкций, чтобы мы могли делать периодические проверки
+  каждый месяц». **Ruling applied:** the campaign plan stays in
+  `spec/terraforms/`; L5's move excludes it (the §5 Phase L review point
+  is rewritten RESOLVED in place); its eventual relocation is a future
+  owner call, no earlier than close-out — the §6 monthly recurrence
+  keeps consuming it in place. And the handoff: «Перенеси все эти
+  активности в следующую сессию и напиши как мне ее продолжить» —
+  **Phase L execution moves wholesale to the next session**; this
+  session ends at the closed-B boundary; `CONTINUE.md` carries the
+  cold-resume recipe and the recommended opening phrase by which the
+  owner opens Phase L explicitly (the phase event lands in the journal
+  only then, per the DRIFT-003 phase lane).
 
 ## 10. Deferrals {#deferrals}
 
